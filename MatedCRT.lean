@@ -14,6 +14,8 @@ import MatedCRT.Draft.Section6
 import MatedCRT.Draft.Section7
 import MatedCRT.Draft.Section8
 import MatedCRT.Draft.SectionA
+import MatedCRT.External.SLE
+import MatedCRT.External.QuantumCone
 import MatedCRT.Proofs.Infra.DiscretePotential
 import MatedCRT.Steps.SecA.DiscreteObstacle
 import MatedCRT.Proofs.SecA.DiscreteObstacle

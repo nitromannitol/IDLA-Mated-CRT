@@ -17,7 +17,8 @@ Objects (MatedCRT/Defs/Sandpile.lean), for the map `𝒢^ε = cellMult ε (S.η 
   `HarmonicBalls.greenFunction (ball 0 ρ)`;
 * `T = clusterExitTime Λ ρ = sup {t > 0 : Λ_t ⊆ B_{ρ/3}}` (eq:cluster-stopping-time).
 A deterministic sequence `ε_n → 0` is `εs : ℕ → ℝ` with `εs n > 0`, `εs n → 0`.
-The constant `m₀/6` of Theorem 4.1 and Lemma 4.8: see ESCALATIONS E-A3.
+The constant of Theorem 4.1 and Lemma 4.8 is `c₀/6` with `c₀ = 2/m₀` (`MatedCRTEnv.c₀`), CORRECTION [C1]
+(ESCALATIONS E-A3: the printed `m₀/6` is false).
 -/
 
 namespace MatedCRT
@@ -31,15 +32,16 @@ noncomputable def rescaledMatedLeastSupersolution {Ω : Type} [MeasurableSpace �
   rescale (S.mε ε) ε (S.η ω) (matedLeastSupersolution ε (S.η ω) ρ t)
 
 /-- **Theorem 4.1** (theorem:convergence-divisible, line 1594). For each `t > 0`, on the event `{t < T}`, `w̄^ε_t`
-converges uniformly on `B_ρ` as `ε → 0` to `(m₀/6) w̄^{B_ρ}_t` in probability: for each `δ > 0`,
-`P[t < T, sup_{B_ρ} |w̄^ε_t - (m₀/6) w̄^{B_ρ}_t| > δ] → 0`. -/
+converges uniformly on `B_ρ` as `ε → 0` to `(c₀/6) w̄^{B_ρ}_t` in probability: for each `δ > 0`,
+`P[t < T, sup_{B_ρ} |w̄^ε_t - (c₀/6) w̄^{B_ρ}_t| > δ] → 0`. CORRECTION [C1]: `c₀ = 2/m₀` (`MatedCRTEnv.c₀`) in
+place of the printed `m₀`. -/
 def ConvergenceDivisibleStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
   ∀ t : ℝ, 0 < t → ∀ δ : ℝ, 0 < δ →
     Tendsto (fun ε => S.P {ω | t < clusterExitTime (Λ ω) ρ ∧ ∃ x ∈ ball (0 : ℂ) ρ,
-        δ < |rescaledMatedLeastSupersolution S ρ t ε ω x - S.m₀ / 6 * leastSupersolution (S.μ ω) ρ 0 t x|})
+        δ < |rescaledMatedLeastSupersolution S ρ t ε ω x - S.c₀ / 6 * leastSupersolution (S.μ ω) ρ 0 t x|})
       (𝓝[>] 0) (𝓝 0)
 
 /-- **Proposition 4.2** (prop:div-sandpile-lower-bound, line 1611). For each `δ ∈ (0, ρ)` and `t > 0`, on the event
@@ -126,11 +128,14 @@ def EquiboundedStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
 /-- **Lemma 4.8** (lemma:subsequential-properties, line 1761). A.s., for each deterministic sequence `ε_n → 0` there is
 a deterministic subsequence such that a subsequential limit `w̄*_t` of `w̄^ε_t` along it (as in Lemma 4.6: uniform on
 `cl(B_ρ)`) satisfies
-1. `0 ≥ w̄*_t ≥ -t (m₀/6) G_{B_ρ}(0, ·)` on `cl(B_ρ)`;
+1. `0 ≥ w̄*_t ≥ -t (c₀/6) G_{B_ρ}(0, ·)` on `cl(B_ρ)`;
 2. `Δw̄*_t ≥ 0` on `B_ρ`;
-3. `Δw̄*_t ≤ (m₀/6) μ_h` on `B_ρ`, and `Δw̄*_t = (m₀/6) μ_h` on `{x ∈ B_ρ : w̄*_t(x) > -t (m₀/6) G_{B_ρ}(0, x)}` (the
+3. `Δw̄*_t ≤ (c₀/6) μ_h` on `B_ρ`, and `Δw̄*_t = (c₀/6) μ_h` on `{x ∈ B_ρ : w̄*_t(x) > -t (c₀/6) G_{B_ρ}(0, x)}` (the
    pole `0`, where `G = +∞`, included).
-Read for every `t > 0` and every subsequential limit along the subsequence. -/
+Read for every `t > 0` and every subsequential limit along the subsequence. CORRECTION [C1]: `c₀ = 2/m₀`
+(`MatedCRTEnv.c₀`) in place of the printed `m₀`. Review-S (S3): the lower bound of item 1 is stated off the pole,
+for `x ≠ 0`; at the pole the printed bound is `-∞` (no constraint), while HB's `greenFunction` has the junk value
+`G(0, 0) = 0`, with which item 1 would force `w̄*_t(0) = 0` and make the lemma false. -/
 def SubsequentialPropertiesStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
@@ -139,10 +144,10 @@ def SubsequentialPropertiesStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
       (ContinuousOn w (closedBall 0 ρ) ∧ ∃ ψ : ℕ → ℕ, StrictMono ψ ∧
         TendstoUniformlyOn (fun k => rescaledMatedLeastSupersolution S ρ t (εs (φ (ψ k))) ω) w atTop
           (closedBall 0 ρ)) →
-      (∀ x ∈ closedBall (0 : ℂ) ρ, w x ≤ 0 ∧ -t * (S.m₀ / 6) * greenFunction (ball 0 ρ) 0 x ≤ w x) ∧
+      (∀ x ∈ closedBall (0 : ℂ) ρ, w x ≤ 0 ∧ (x ≠ 0 → -t * (S.c₀ / 6) * greenFunction (ball 0 ρ) 0 x ≤ w x)) ∧
       LaplacianGE w 0 (ball 0 ρ) ∧
-      LaplacianLE w (ENNReal.ofReal (S.m₀ / 6) • S.μ ω) (ball 0 ρ) ∧
-      HasLaplacian w (ENNReal.ofReal (S.m₀ / 6) • S.μ ω) 0
-        {x ∈ ball (0 : ℂ) ρ | x = 0 ∨ -t * (S.m₀ / 6) * greenFunction (ball 0 ρ) 0 x < w x}
+      LaplacianLE w (ENNReal.ofReal (S.c₀ / 6) • S.μ ω) (ball 0 ρ) ∧
+      HasLaplacian w (ENNReal.ofReal (S.c₀ / 6) • S.μ ω) 0
+        {x ∈ ball (0 : ℂ) ρ | x = 0 ∨ -t * (S.c₀ / 6) * greenFunction (ball 0 ρ) 0 x < w x}
 
 end MatedCRT

@@ -39,6 +39,28 @@ def ProbTendsToOne {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (E : ℝ �
 def TendsToOneOn {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (F : Set Ω) (E : ℝ → Set Ω) : Prop :=
   Tendsto (fun ε => P (F ∩ (E ε)ᶜ)) (𝓝[>] 0) (𝓝 0)
 
+/-- The *outer integral* `∫* f dP = inf {∫ g dP : g ≥ f, g measurable}` of a function `f : Ω → [0, ∞]` which need
+not be measurable (the outer expectation of Hoffmann-Jørgensen; van der Vaart-Wellner, Section 1.2). It is `∫⁻ f dP`
+when `f` is measurable, monotone and countably subadditive in `f`. (Mathlib's `∫⁻` of a non-measurable function is
+the *lower* integral, which is only superadditive.) -/
+noncomputable def outerLIntegral {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (f : Ω → ℝ≥0∞) : ℝ≥0∞ :=
+  ⨅ (g : Ω → ℝ≥0∞) (_ : Measurable g) (_ : f ≤ g), ∫⁻ ω, g ω ∂P
+
+/-- The *annealed outer probability* of an event `E ⊆ Ω × X` of the environment `ω` (law `P`) and of a random
+object `x` whose conditional law given the environment is `κ ω` (the quenched law): the outer integral of the
+quenched probability `ω ↦ κ ω (E_ω)` of the section `E_ω = {x | (ω, x) ∈ E}`.
+
+This is the convention for all annealed probabilities ("with probability tending to `1`" for the IDLA walkers): the
+outer measure of the event under the annealed (joint) law on the product space `Ω × X`. As a function of `E` it is an
+outer measure on `Ω × X` (countably subadditive, so union bounds apply), and it is `∫⁻ κ ω (E_ω) dP` whenever the
+quenched probability is measurable. When `κ` is a measurable kernel, so that the joint law `P ⊗ κ` exists, it is
+`(P ⊗ κ)(E)` for every measurable `E`, and at most the outer measure `(P ⊗ κ)*(E)` for every `E`. The map `ω ↦ κ ω` is
+not assumed to be measurable (the environment does not make `ω ↦ 𝒢^ε` measurable), so the joint law itself is not
+formed. For probabilities `κ ω`, if `κ ω (E_ω) ≤ θ` for `ω ∈ G` then this is at most `θ + P(Gᶜ)` (outer measure). -/
+noncomputable def annealedOuterProb {Ω X : Type*} [MeasurableSpace Ω] [MeasurableSpace X] (P : Measure Ω)
+    (κ : Ω → Measure X) (E : Set (Ω × X)) : ℝ≥0∞ :=
+  outerLIntegral P fun ω => κ ω (Prod.mk ω ⁻¹' E)
+
 /-- Real random variables `X ε` *converge in probability* to `Y` as `ε → 0`: for each `δ > 0`,
 `P[|X ε - Y| > δ] → 0` as `ε → 0⁺`. -/
 def TendstoInProbability {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (X : ℝ → Ω → ℝ) (Y : Ω → ℝ) : Prop :=

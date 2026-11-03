@@ -33,8 +33,8 @@ def IDLAUpperBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
   ∀ δ t : ℝ, 0 < δ → δ < ρ → 0 < t →
-    Tendsto (fun ε => ∫⁻ ω in {ω | t < clusterExitTime (Λ ω) ρ}, walkerSequenceLaw (S.mult ε ω) 0
-        {xs | ¬ fillCells ε (S.η ω) (idlaCluster xs ⌊t / ε⌋₊) ⊆ outerNbhd δ (Λ ω t)} ∂S.P)
+    Tendsto (fun ε => S.idlaProb ε {p | t < clusterExitTime (Λ p.1) ρ ∧
+        ¬ fillCells ε (S.η p.1) (idlaCluster p.2 ⌊t / ε⌋₊) ⊆ outerNbhd δ (Λ p.1 t)})
       (𝓝[>] 0) (𝓝 0)
 
 /-- **Lemma 6.3** (lemma:abelian-IDLA, line 2289; Diaconis-Fulton 1991, Section 4). For `Θ ⊆ Θ' ⊆ V^ε` and
@@ -66,7 +66,9 @@ def GoodAnnulusPrevalenceStmt : Prop :=
     ∃ r : ℝ, δ ≤ r ∧ r ≤ Real.sqrt δ ∧ (∃ n : ℕ, r = (7 : ℝ)⁻¹ ^ n) ∧ IsGoodAnnulusEvent (μ ω) c₀ C r z}
 
 /-- **Lemma 6.5** (lemma:annulus-hit, line 2333). For each `p ∈ (0, 1)` there is `C = C(p) > 0` such that
-`P[E_r(z; C)] ≥ p` for all `r > 0` and all `z` with `𝔸_{r/3,3r}(z) ⊆ B_ρ` and `dist(𝔸_{r/3,3r}(z), {0}) ≥ r/100`. -/
+`P[E_r(z; C)] ≥ p` for all `r > 0` and all `z` with `𝔸_{r/3,3r}(z) ⊆ B_ρ` and `dist(𝔸_{r/3,3r}(z), {0}) ≥ r/100`.
+The probability is the inner measure `1 - P[E_r(z; C)ᶜ]` (review-S (S5): positive-probability lower bounds). The event
+is the corrected one, CORRECTION [C5] (`IsGoodAnnulusEvent`); E-A10 open, statement unfrozen. -/
 def AnnulusHitStmt : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∀ c₀ : ℝ, 0 < c₀ → c₀ < 1 / 5 →
   ∀ p : ℝ, 0 < p → p < 1 → ∃ C : ℝ, 0 < C ∧
@@ -74,7 +76,7 @@ def AnnulusHitStmt : Prop :=
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
   ∀ (r : ℝ) (z : ℂ), 0 < r → annulus z (r / 3) (3 * r) ⊆ ball 0 ρ →
     r / 100 ≤ infDist 0 (annulus z (r / 3) (3 * r)) →
-    ENNReal.ofReal p ≤ P {ω | IsGoodAnnulusEvent (μ ω) c₀ C r z}
+    P {ω | ¬ IsGoodAnnulusEvent (μ ω) c₀ C r z} ≤ ENNReal.ofReal (1 - p)
 
 /-- **Lemma 6.6** (lemma:annulus-iterate, line 2371; Gwynne-Miller). Fix `0 < s₁ < s₂ < 1`. Let `{r_k}` be decreasing
 positive numbers with `r_{k+1}/r_k ≤ s₁`, and `{E_{r_k}}` events with `E_{r_k}` a.s. determined by `h|_{𝔸_{s₁ r_k, s₂ r_k}(0)}`
@@ -154,20 +156,22 @@ probability tending to `1` as `ε → 0`, for each `Θ` with `Θ̄ ⋐ B_{ρ/2}`
 cluster started with `Θ` occupied and `j ≤ ⌈δ₀ ε⁻¹⌉` walkers at sites `a₁, …, a_j ∈ cl(Θ)` satisfies
 `A(Θ; a₁, …, a_j) ⊆ V^ε(B⁺_{C δ₀^β}(Θ̄)) ⊆ V^ε(B_ρ)`.
 The cluster is random given `(h, η)`; "with probability tending to `1`" is read for the annealed probability, uniformly
-over `Θ`, `δ₀`, `j` and the starting sites: the `P`-integral of the supremum over these of the conditional
-probability that the inclusion fails tends to `0`. The printed `B_{s₀} ⊂ Θ` is read as `B_{s₀} ⊆ Θ̄`. -/
+over `Θ`, `δ₀`, `j` and the starting sites: the outer integral (`outerLIntegral`, the convention of review-S (S5))
+of the supremum over these of the conditional probability that the inclusion fails tends to `0`. The printed
+`B_{s₀} ⊂ Θ` is read as `B_{s₀} ⊆ Θ̄`. -/
 def IterativeBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ β C : ℝ, 0 < β ∧ 0 < C ∧
   ∀ s₀ : ℝ, 0 < s₀ → s₀ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∃ dd : Ω → ℝ, Measurable[S.fieldSigma] dd ∧ (∀ ω, 0 < dd ω) ∧
-    Tendsto (fun ε => ∫⁻ ω, ⨆ (Θ : Set ℤ) (_ : closure (fillCells ε (S.η ω) Θ) ⊆ ball 0 (ρ / 2))
+    Tendsto (fun ε => outerLIntegral S.P fun ω =>
+        ⨆ (Θ : Set ℤ) (_ : closure (fillCells ε (S.η ω) Θ) ⊆ ball 0 (ρ / 2))
         (_ : ball 0 s₀ ⊆ fillCells ε (S.η ω) Θ) (δ₀ : ℝ) (_ : 0 < δ₀) (_ : δ₀ < dd ω) (j : ℕ)
         (_ : j ≤ ⌈δ₀ / ε⌉₊) (a : Fin j → ℤ) (_ : ∀ i, a i ∈ vClosure (S.mult ε ω) Θ),
           walkersLaw (S.mult ε ω) a {xs | ¬ (idlaAggregate Θ univ (List.ofFn xs) ⊆
             cellVertices ε (S.η ω) (outerNbhd (C * δ₀ ^ β) (fillCells ε (S.η ω) Θ)) ∧
             cellVertices ε (S.η ω) (outerNbhd (C * δ₀ ^ β) (fillCells ε (S.η ω) Θ)) ⊆
-              cellVertices ε (S.η ω) (ball 0 ρ))} ∂S.P)
+              cellVertices ε (S.η ω) (ball 0 ρ))})
       (𝓝[>] 0) (𝓝 0)
 
 end MatedCRT

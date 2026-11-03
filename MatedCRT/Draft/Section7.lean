@@ -52,14 +52,23 @@ def OdometerBoundMassStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
         (srwLaw (S.mult ε ω) b {x | vExitTime B x < vHitTime (B \ matedDiscreteCluster ε (S.η ω) ρ t) x}).toReal
 
 /-- **Lemma 7.4** (lemma:crude-upper-bound, line 3058; Levine-Peres 2009, Lemma 4.2). For all `t > 0`, with
-polynomially high probability as `ε → 0`: for every `a ∈ D_ε(t ε⁻¹) \ {0}` there is a path
-`a = a₀ ∼ a₁ ∼ ⋯ ∼ a_m = 0` in `D_ε(t ε⁻¹)` with `u^ε_t(a_{i+1}) ≥ u^ε_t(a_i) + log(ε⁻¹)⁻²`. -/
+polynomially high probability as `ε → 0`: for every `a ∈ Λ^ε_t \ {0}` there is a path `a = a₀ ∼ a₁ ∼ ⋯ ∼ a_m = 0` in
+`Λ^ε_t` with `u^ε_t(a_{i+1}) ≥ u^ε_t(a_i) + log(ε⁻¹)⁻²`.
+
+Review-S (S4): the printed statement takes `a` and the path in `D_ε(t ε⁻¹) = cl(Λ^ε_t)` (eq:cluster-contained-in)
+for the stopped odometer `u^ε_t`, which is defined on `V^ε(B_ρ)` only; read with `D_ε` the true sandpile cluster it
+is false (when `D_ε(t ε⁻¹) ⊄ V^ε(B_{2ρ})`, which has positive probability, `u^ε_t = 0` at and around its far points).
+The paper's object is the stopped odometer with its own cluster `Λ^ε_t = {u^ε_t > 0}` (`matedDiscreteCluster`,
+inside `V^ε(B_ρ) \ V^ε(∂B_ρ)`, where the degree bound eq:degree-bound holds), and its use (Step 3 of the proof of
+Proposition 7.1, lines 3236-3244: paths from the support of `u^ε_t`) needs exactly the points of the support. The
+points of `cl(Λ^ε_t) \ Λ^ε_t` are not covered: there the printed proof (lines 3074-3076) only gives
+`u^ε_t(a₁) > 0`, not the increment `log(ε⁻¹)⁻²`. -/
 def CrudeUpperBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ t : ℝ, 0 < t →
-  PolyHighProb S.P fun ε => {ω | ∀ a ∈ sandpileCluster (S.mult ε ω) (t / ε) \ {0}, ∃ p : List ℤ,
-    IsVPathIn (S.mult ε ω) (sandpileCluster (S.mult ε ω) (t / ε)) p a 0 ∧
+  PolyHighProb S.P fun ε => {ω | ∀ a ∈ matedDiscreteCluster ε (S.η ω) ρ t \ {0}, ∃ p : List ℤ,
+    IsVPathIn (S.mult ε ω) (matedDiscreteCluster ε (S.η ω) ρ t) p a 0 ∧
     p.IsChain fun c d => stoppedOdometer ε (S.η ω) ρ t c + (Real.log ε⁻¹)⁻¹ ^ 2 ≤ stoppedOdometer ε (S.η ω) ρ t d}
 
 end MatedCRT

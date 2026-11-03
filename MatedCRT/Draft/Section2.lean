@@ -31,9 +31,11 @@ open scoped ENNReal NNReal
   the LQG measure (vague limit of the circle average approximations) of `h + f`;
 * IV. (Conformal covariance) a.s., for every complex affine map `φ(z) = a z + w` (`a ≠ 0`), the measure
   `A ↦ μ_h(φ(A))` is the LQG measure of `h ∘ φ + Q log |φ'|`, whose circle averages are
-  `(r, z) ↦ h_{|a| r}(a z + w) + Q log |a|`. The printed statement is for all conformal maps between open sets; only
-  affine maps are used (lines 578, 2367), and general ones are not expressible with circle averages (ESCALATIONS
-  E-A6). -/
+  `(r, z) ↦ h_{|a| r}(a z + w) + Q log |a|`.
+Cited (DS11 Proposition 2.1, SW16); IV is stated for the affine maps used. The printed IV, for all conformal maps
+between open sets, is a true cited theorem; only affine maps are used (line 578, with the random `a = R_b`, which
+needs the "a.s. simultaneously for all maps" form stated here; line 2367), and general ones are not expressible with
+circle averages (ESCALATIONS E-A6, review-C: rejected as a printed error; scope choice). -/
 def LQGMeasurePropertiesStmt : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
@@ -75,8 +77,14 @@ Lemma 2.4 (any random family which a.s. has its properties). For `b > 0` let `R_
 satisfying the properties of Theorem 2.3 on `(0, b T^b)`, where `T^b = sup {t > 0 : R_b⁻¹ Λ^b_{bt} ⊆ B_{1/2}}`
 (`IsStoppedAtHalfBall` for the rescaled family), and the joint laws agree:
 `(h, {Λ_t}_{0<t<T}) =d (h(R_b ·) + Q log R_b - γ⁻¹ log b, {R_b⁻¹ Λ^b_{bt}}_{0<t<T^b})`
-(the field through all its admissible observables, the family through its indicator process `familyProcess`). The
-first assertion of the lemma (equality in law of the families) is the second marginal of the joint law. -/
+(the field through its circle average process `circleProcess`, the family through its indicator process
+`familyProcess`). The first assertion of the lemma (equality in law of the families) is the second marginal of the
+joint law.
+Review-S (S1): the rescaled field is evaluated at the random scale `R_b` pathwise, as in the paper. The pairings
+`hC ω φ` are only constrained for each fixed `φ` (a null-set modification for each `φ` keeps `IsQuantumCone`), so
+their evaluation at the random test function `φ(R_b⁻¹ ·)` is not well defined; the circle average process is a.s.
+continuous, hence pathwise, and determines the field, so the field part of the law is that of the circle averages
+`(r, z) ↦ h_{R_b r}(R_b z) + Q log R_b - γ⁻¹ log b` (`rescaledCircle`). -/
 def ConeScaleInvarianceUpToFixedTimeStmt : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
@@ -89,23 +97,22 @@ def ConeScaleInvarianceUpToFixedTimeStmt : Prop :=
         ∀ (T' : ℝ) (Λ' : ℝ → Set ℂ), 0 < T' → IsConeHarmonicBallFamilyOn (μ ω) Λ' (b * T') →
           IsStoppedAtHalfBall (rescaledFamily Λ' (coneScaleRadius γ (hcirc ω) b) b) T' →
           T' = Tb ω ∧ EqOn Λ' (Λb ω) (Ioo 0 (b * Tb ω))) ∧
-      P.map (fun ω => (fieldProcess (hC ω) (hcirc ω), familyProcess (Λ ω) (T ω))) =
+      P.map (fun ω => (circleProcess (hcirc ω), familyProcess (Λ ω) (T ω))) =
         P.map (fun ω =>
-          (fieldProcess (rescaledPairing γ (hC ω) (coneScaleRadius γ (hcirc ω) b) b)
-              (rescaledCircle γ (hcirc ω) (coneScaleRadius γ (hcirc ω) b) b),
+          (circleProcess (rescaledCircle γ (hcirc ω) (coneScaleRadius γ (hcirc ω) b) b),
             familyProcess (rescaledFamily (Λb ω) (coneScaleRadius γ (hcirc ω) b) b) (Tb ω)))
 
 /-- **Lemma 2.6** (lemma:scale-invariance, line 597). For the family `{Λ_t}_{t > 0}` of Theorem 2.3 and each `b > 0`,
-`(h, {Λ_t}_{t > 0}) =d (h(R_b ·) + Q log R_b - γ⁻¹ log b, {R_b⁻¹ Λ_{bt}}_{t > 0})`. -/
+`(h, {Λ_t}_{t > 0}) =d (h(R_b ·) + Q log R_b - γ⁻¹ log b, {R_b⁻¹ Λ_{bt}}_{t > 0})`, the field through its circle
+average process (review-S (S1), see Lemma 2.5). -/
 def ConeScaleInvarianceStmt : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
   ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂P, IsConeHarmonicBallFamily (μ ω) (Λ ω)) →
   ∀ b : ℝ, 0 < b →
-    P.map (fun ω => (fieldProcess (hC ω) (hcirc ω), globalFamilyProcess (Λ ω))) =
+    P.map (fun ω => (circleProcess (hcirc ω), globalFamilyProcess (Λ ω))) =
       P.map (fun ω =>
-        (fieldProcess (rescaledPairing γ (hC ω) (coneScaleRadius γ (hcirc ω) b) b)
-            (rescaledCircle γ (hcirc ω) (coneScaleRadius γ (hcirc ω) b) b),
+        (circleProcess (rescaledCircle γ (hcirc ω) (coneScaleRadius γ (hcirc ω) b) b),
           globalFamilyProcess (rescaledFamily (Λ ω) (coneScaleRadius γ (hcirc ω) b) b)))
 
 /-- **Lemma 2.7** (lemma:volume-growth, line 658; BG20 Lemma A.1). For each `β⁺ ∈ (0, (2-γ)²/2)` and
@@ -166,13 +173,16 @@ def RandomWalkToLBMStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
       (fun ε ω => ∫ x, F (interpolatedWalk ε (S.η ω) (S.mε ε) x) ∂srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) z))
       (fun ω => ∫ b, F (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion z)
 
-/-- **Lemma 2.13** (lemma:maximum-principle, line 824). For every connected `A ⊆ V^ε`, if `u : cl(A) → ℝ` is
-subharmonic on `A` then `max_A u ≤ max_{∂A} u`; stated as: every value `u(a)`, `a ∈ A`, is at most some boundary value.
-As printed this is FALSE for infinite `A` (e.g. `A = V^ε`, `∂A = ∅`); see ESCALATIONS E-A4 (correction: `A` finite).
-Stated a.s., for every `ε > 0`. -/
+/-- **Lemma 2.13** (lemma:maximum-principle, line 824, as corrected). For every nonempty finite `A ⊆ V^ε`, if
+`u : cl(A) → ℝ` is subharmonic on `A` then `max_A u ≤ max_{∂A} u`; stated as: every value `u(a)`, `a ∈ A`, is at most
+some boundary value. Stated a.s., for every `ε > 0`.
+CORRECTION [C2] (ESCALATIONS E-A4, review-C): the printed "for every connected subset `A`" is false for infinite `A`
+(`A = V^ε`, `∂A = ∅`, `u = 1`); the lemma holds for every nonempty finite `A` (the boundary of a nonempty finite set is
+nonempty, `V^ε` being infinite and connected), and connectedness is not needed (apply it to each component) and is
+dropped, since several uses (lines 1039-1508, 1806, 2986, 3046) are not evidently connected. -/
 def MaximumPrincipleStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
-  ∀ᵐ ω ∂S.P, ∀ ε : ℝ, 0 < ε → ∀ A : Set ℤ, IsVConnected (S.mult ε ω) A → ∀ u : ℤ → ℝ,
+  ∀ᵐ ω ∂S.P, ∀ ε : ℝ, 0 < ε → ∀ A : Set ℤ, A.Nonempty → A.Finite → ∀ u : ℤ → ℝ,
     IsSubharmonicOn (S.mult ε ω) u A → ∀ a ∈ A, ∃ b ∈ vBoundary (S.mult ε ω) A, u a ≤ u b
 
 /-- **Lemma 2.14** (lemma:bounded-greens-function, line 843; BG20 Lemma 5.4). There are `β = β(γ) > 0` and

@@ -6,12 +6,14 @@ import MatedCRT.Defs.Sandpile
 
 The IDLA lower bound. Conventions: see `MatedCRT/Draft/Section1.lean` and `MatedCRT/Draft/Section4.lean`.
 `ρ ∈ (0, 1)` is fixed and universally quantified. `G^ε_A` for a vertex set `A` is `greenFn (S.mult ε ω) A`
-(Remark 2.12). Annealed probabilities of IDLA events restricted to an event `F` of the environment are
-`∫⁻ ω in F, (conditional probability given (h, η)) ∂P`.
+(Remark 2.12). "On the event `F` of the environment, except on an event of probability tending to `0`" for IDLA
+events is: the annealed outer probability (`MatedCRTEnv.idlaProb`, review-S (S5)) of
+`{(ω, xs) | ω ∈ F, the event fails for xs}` tends to `0`.
 
-The condition `dist(η(a), ∂η(Λ^ε_t)) > δ` (lines 1999, 2009) is read with `η(Λ^ε_t)` the union of the cells of
-`Λ^ε_t` (`fillCells`): for the finite point set `{η(a) : a ∈ Λ^ε_t}` the distance would be `0` and the lemmas empty
-(ESCALATIONS E-A8).
+CORRECTION [C4] (ESCALATIONS E-A8, review-C): the condition `dist(η(a), ∂η(Λ^ε_t)) > δ` (lines 1999, 2009) is the
+distance to the boundary of `Λ̄^ε_t`, the union of the cells of `Λ^ε_t` (`fillCells`, a closed set,
+eq:vertex-scaling): for the finite point set `{η(a) : a ∈ Λ^ε_t}` the condition never holds and the lemmas are
+vacuous, while the proof of Proposition 5.1 (line 2024) needs the cell union.
 -/
 
 namespace MatedCRT
@@ -27,12 +29,12 @@ def IDLALowerBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
   ∀ δ t : ℝ, 0 < δ → δ < ρ → 0 < t →
-    Tendsto (fun ε => ∫⁻ ω in {ω | t < clusterExitTime (Λ ω) ρ}, walkerSequenceLaw (S.mult ε ω) 0
-        {xs | ¬ innerNbhd δ (Λ ω t) ⊆ fillCells ε (S.η ω) (idlaCluster xs ⌊t / ε⌋₊)} ∂S.P)
+    Tendsto (fun ε => S.idlaProb ε {p | t < clusterExitTime (Λ p.1) ρ ∧
+        ¬ innerNbhd δ (Λ p.1 t) ⊆ fillCells ε (S.η p.1) (idlaCluster p.2 ⌊t / ε⌋₊)})
       (𝓝[>] 0) (𝓝 0) ∧
-    Tendsto (fun ε => ∫⁻ ω in {ω | t < clusterExitTime (Λ ω) ρ}, walkerSequenceLaw (S.mult ε ω) 0
-        {xs | ¬ innerNbhd δ (Λ ω t) ⊆
-          fillCells ε (S.η ω) (stoppedIDLACluster (cellVertices ε (S.η ω) (Λ ω t)) xs ⌊t / ε⌋₊)} ∂S.P)
+    Tendsto (fun ε => S.idlaProb ε {p | t < clusterExitTime (Λ p.1) ρ ∧
+        ¬ innerNbhd δ (Λ p.1 t) ⊆
+          fillCells ε (S.η p.1) (stoppedIDLACluster (cellVertices ε (S.η p.1) (Λ p.1 t)) p.2 ⌊t / ε⌋₊)})
       (𝓝[>] 0) (𝓝 0)
 
 /-- **Lemma 5.2** (lemma:general-idla-lower-bound, line 1974; reformulation of LBG92 Section 3). Suppose
@@ -54,10 +56,9 @@ def GeneralIDLALowerBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
       (1 + s ω) * ∑' b : O₂ ε ω, greenFn (S.mult ε ω) (O₂ ε ω) b a ≤
         K ε * greenFn (S.mult ε ω) (O₂ ε ω) 0 a ∧
       ε ^ (-q) ≤ (∑' b : O₂ ε ω, greenFn (S.mult ε ω) (O₂ ε ω) b a) / greenFn (S.mult ε ω) (O₂ ε ω) a a}) →
-    Tendsto (fun ε => ∫⁻ ω, walkerSequenceLaw (S.mult ε ω) 0
-        {xs | ¬ O₁ ε ω ⊆ idlaCluster xs ⌊K ε⌋₊} ∂S.P) (𝓝[>] 0) (𝓝 0) ∧
-    Tendsto (fun ε => ∫⁻ ω, walkerSequenceLaw (S.mult ε ω) 0
-        {xs | ¬ O₁ ε ω ⊆ stoppedIDLACluster (O₂ ε ω) xs ⌊K ε⌋₊} ∂S.P) (𝓝[>] 0) (𝓝 0)
+    Tendsto (fun ε => S.idlaProb ε {p | ¬ O₁ ε p.1 ⊆ idlaCluster p.2 ⌊K ε⌋₊}) (𝓝[>] 0) (𝓝 0) ∧
+    Tendsto (fun ε => S.idlaProb ε {p | ¬ O₁ ε p.1 ⊆ stoppedIDLACluster (O₂ ε p.1) p.2 ⌊K ε⌋₊})
+      (𝓝[>] 0) (𝓝 0)
 
 /-- **Lemma 5.3** (lemma:mean-value-ineq, line 1995). For each `δ ∈ (0, ρ)` and `t > 0`, on the event `{t < T}`, there
 is a `σ(h, η)`-measurable finite random variable `𝔰 = 𝔰(δ) > 0` such that, except on an event of probability tending

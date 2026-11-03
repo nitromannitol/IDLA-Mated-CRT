@@ -117,4 +117,12 @@ sample `(hC, hcirc)` of a random generalized function: its law is the law of the
 noncomputable def fieldProcess (hC : (ℂ → ℝ) → ℝ) (hcirc : ℝ → ℂ → ℝ) : GFFObservable.Admissible → ℝ :=
   fun o => o.1.eval hC hcirc
 
+/-- The *circle average process* `(r, z) ↦ h_r(z)`, `r > 0`, of a sample. It is a.s. continuous (`IsQuantumCone`), so
+it is a pathwise object: two versions of it which are a.s. continuous agree a.s. at all `(r, z)` at once, and its
+evaluation at random points (such as `(R_b r, R_b z)` for the rescaled field of Lemmas 2.5, 2.6) does not depend on
+the version. It determines the field, `(h, φ) = lim_{r → 0} ∫ φ(z) h_r(z) dz`, and its law (product σ-algebra on
+`(0, ∞) × ℂ → ℝ`) is the law of the field. -/
+def circleProcess (hcirc : ℝ → ℂ → ℝ) : Set.Ioi (0 : ℝ) × ℂ → ℝ :=
+  fun p => hcirc p.1 p.2
+
 end MatedCRT

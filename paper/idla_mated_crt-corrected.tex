@@ -717,7 +717,9 @@ X^z_t = B^z_{\phi^{-1}(t m_0)}, \quad \forall z \in \C,
 where 
 \begin{equation} \label{eq:mo} 
 m_0 = \mbox{median}(\inf\{t > 0 : |B^z_{\phi^{-1}(t)}| \geq 1/2\}).
-\end{equation}	
+\end{equation}
+% CORRECTION [C1]: new definition; the limits of Lemmas 3.3-3.5, 3.7, Theorem 4.1 and Lemma 4.8 carry c_0 = 2/m_0 (printed: m_0).
+We also set $c_0 := 2/m_0$. Here and below the continuum Green's function $G$ is normalized by $\Delta G = -\delta$, so that the occupation density of standard Brownian motion killed upon exiting a domain is $2G$.
 For $z \in \C$ and ${\eps} > 0$, let $X^{z, {\eps}} : \N \to {\VGeps}$ be a simple random walk on ${\Geps}$ started from $a_z^{{\eps}}$ (defined in \eqref{eq:plane-to-embedding}).
 On occasion we will also write, for $a \in {\VGeps}$, the walk started from $a$ as $X^{a, {\eps}}$. 
 
@@ -822,7 +824,8 @@ We also write $\Delta$ for the continuum Laplacian on $\C$. The operator $\Delta
 
 
 \begin{lemma} \label{lemma:maximum-principle}
-	For every connected subset $A \subset {\VGeps}$, if $u: \cl(A) \to \R$ is subharmonic on $A$, then 
+	% CORRECTION [C2]: printed "For every connected subset" (false for infinite A, e.g. A = V^eps, boundary empty).
+	For every nonempty finite subset $A \subset {\VGeps}$, if $u: \cl(A) \to \R$ is subharmonic on $A$, then
 	\begin{equation} \label{eq:maximum-principle}
 	\max_{a \in A} u(a) \leq \max_{b \in \partial A} u(b). 
 	\end{equation}
@@ -977,7 +980,8 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		\[
 		\begin{aligned}
 		|\Delta^{{\eps}} u^{{\eps}}| \leq C &\quad \mbox{on ${\VGeps}(D) \setminus {\VGeps}(\partial D)$} \\
-		u^{{\eps}} \leq C {\eps}^{-1} &\quad \mbox{on ${\VGeps}(D)$} 
+		% CORRECTION [C3]: printed one-sided "u^{eps} \leq C eps^{-1}" (false: u^eps = -eps^{-2}); the proof (l.1016, 1040) and all uses have |u^eps|.
+		|u^{{\eps}}| \leq C {\eps}^{-1} &\quad \mbox{on ${\VGeps}(D)$}
 		\end{aligned}
 		\]
 		uniformly over ${\eps} \in \mathcal{E}$ for some $\sigma(h,\eta)$-measurable $C > 0$, then the following is true. 
@@ -1109,7 +1113,8 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		For each small $\delta > 0$ and $O \subset \cl(B_r(z)) \setminus \{y\}$ which lies at positive distance from $y$, 
 		with probability tending to 1 as ${\eps} \to 0$, 
 		\begin{equation} \label{eq:green-uniform}
-		\sup_{x \in O} \left|\overline{g}^{{\eps}}(x)  - \frac{m_0}{6} \times G_{B_r(z)}(y , x)\right| \leq \delta,
+		% CORRECTION [C1]: printed \frac{m_0}{6}.
+		\sup_{x \in O} \left|\overline{g}^{{\eps}}(x)  - \frac{c_0}{6} \times G_{B_r(z)}(y , x)\right| \leq \delta,
 		\end{equation}
 		where $G_{B_r(z)}(y,x)$ is the continuum Green's function for standard Brownian motion killed upon exiting $B_r(z)$.
 	\end{lemma}
@@ -1120,7 +1125,8 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		For each deterministic choice of $z\in\C$ and $r > 0$ such that $B_r(z) \subset B_{\rho}$, each $y \in B_r(z)$, and each bounded, H\"{o}lder-continuous, $\sigma(h, \eta)$-measurable function $f: B_{r}(z) \to \R$, 
 		\[
 		\begin{aligned}
-		{\meps}^{-1}  \sum_{x \in {\VGeps}(B_r(z))} \Gr{{\eps}}{B_r(z)}(a^{{\eps}}_{y}, x) f(\eta(x)) \to m_0 \times \int_{B_r(z)} G_{B_r(z)} (y, x) f(x) d \mu_h(x), 
+		% CORRECTION [C1]: printed m_0 \times.
+		{\meps}^{-1}  \sum_{x \in {\VGeps}(B_r(z))} \Gr{{\eps}}{B_r(z)}(a^{{\eps}}_{y}, x) f(\eta(x)) \to c_0 \times \int_{B_r(z)} G_{B_r(z)} (y, x) f(x) d \mu_h(x),
 		\end{aligned}
 		\]
 		in probability as ${\eps} \to 0$, where $G_{B_r(z)}$ is the continuum Green's function, and $a^{{\eps}}_{y}$ is as in \eqref{eq:plane-to-embedding}.  
@@ -1169,9 +1175,10 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		{\meps}^{-1} \sum_{b \in {\VGeps}(B_r(z))} \Gr{{\eps}}{B_r(z)}(a^{{\eps}}_y, b) f(\eta(b))  
 		&= {\meps}^{-1}\E\left[ \sum_{t=0}^{\infty } f(\eta(X^{y, {\eps}}_t))  | h , \eta\right]  \\
 		&\overset{{\eps} \to 0}{\rightarrow}  \E\left[ \int_0^\infty f(X^y_t) dt | h, \eta\right] \\
-		&= m_0 \times \int_{B_r(z)} G_{B_r(z)} (y, x) f(x) d \mu_h(x),
+		% CORRECTION [C1]: printed m_0 \times; E \int_0^{\tau} f(X_t) dt = m_0^{-1} E \int_0^{\tau_{LBM}} f(LBM_s) ds = m_0^{-1} \int 2G f d\mu_h.
+		&= c_0 \times \int_{B_r(z)} G_{B_r(z)} (y, x) f(x) d \mu_h(x),
 		\end{align*}
-		completing the proof. 	
+		completing the proof.
 	\end{proof}
 	
 	We now use the integral convergence of the Green's function (Lemma~\ref{lemma:integral-convergence-of-greens-function}) together with Lemma \ref{lemma:mu_h_degree-convergence} and tightness to show uniform convergence of the Green's kernel away from its pole. 
@@ -1243,7 +1250,8 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		converges in probability in the uniform topology on $\cl(B_r(z))$ to the solution of the continuum Dirichlet problem, 
 		\[
 		\begin{cases}
-		\Delta \overline{f} = m_0 \psi \times \mu_h  \quad\mbox{on $B_r(z)$} \\
+		% CORRECTION [C1]: printed m_0 \psi.
+		\Delta \overline{f} = c_0 \psi \times \mu_h  \quad\mbox{on $B_r(z)$} \\
 		\overline{f}  = \phi \quad \mbox{on $\partial B_r(z)$}.
 		\end{cases}
 		\]
@@ -1396,7 +1404,8 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		where
 		\[
 		\begin{cases}
-		\Delta \overline{\mathfrak q}_{B_r(z)} = -m_0/6 \times \mu_h \quad \mbox{on $B_r(z)$} \\
+		% CORRECTION [C1]: printed -m_0/6.
+		\Delta \overline{\mathfrak q}_{B_r(z)} = -c_0/6 \times \mu_h \quad \mbox{on $B_r(z)$} \\
 		\overline{\mathfrak q}_{B_r(z)} = 0 \quad \mbox{ on $\partial B_{r}(z)$}.
 		\end{cases}
 		\]
@@ -1592,12 +1601,14 @@ By combining the previous two lemmas, we have the following bound on the expecte
 	to allow some room for error in the discrete estimates of Section \ref{sec:idla-upper-bound}. 
 	
 	\begin{theorem} \label{theorem:convergence-divisible}
-		Recall the median exit time $m_0$ defined in \eqref{eq:mo}. 
-		For each $t > 0$, on the event $\{t < \TT\}$ we have that $\olwteps$ converges uniformly in 
-		$B_{\rho}$ as ${\eps} \to 0$ to $\frac{m_0}{6} \overline{w}^{B_\rho}_t$
+		Recall the median exit time $m_0$ defined in \eqref{eq:mo} and $c_0 = 2/m_0$.
+		For each $t > 0$, on the event $\{t < \TT\}$ we have that $\olwteps$ converges uniformly in
+		% CORRECTION [C1]: printed \frac{m_0}{6}.
+		$B_{\rho}$ as ${\eps} \to 0$ to $\frac{c_0}{6} \overline{w}^{B_\rho}_t$
 		in probability, where $\overline w_t^{B_\rho}$ is as in Theorem~\ref{theorem:harmonic-balls}. 
 	\end{theorem}
-	The extra factor of $\frac{m_0}{6}$ in Theorem \ref{theorem:convergence-divisible} is a result of the factor ${\meps}$
+	% CORRECTION [C1]: printed \frac{m_0}{6}.
+	The extra factor of $\frac{c_0}{6}$ in Theorem \ref{theorem:convergence-divisible} is a result of the factor ${\meps}$
 	appearing in the scaling definition \eqref{eq:discrete-scaling} and the fact that since the mated-CRT map is a planar triangulation,
 	$\E[\deg^{{\eps}}(0)] = 6$. 
 	
@@ -1762,9 +1773,10 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		A.s., for each deterministic sequence of ${\eps} \to 0$, 
 		there exists a deterministic subsequence so that a subsequential limit $\overline{w}^*_t$ of $\overline \wteps$ along this subsequence (as given by Lemma \ref{lemma:subsequential-convergence}) satisfies the following:
 		\begin{enumerate}
-			\item $0 \geq \overline{w}^*_t \geq -t \frac{m_0}{6} G_{B_{\rho}}(0, \cdot)$ on $\cl(B_{\rho})$;
+			% CORRECTION [C1]: printed \frac{m_0}{6} (three times in items 1 and 3).
+			\item $0 \geq \overline{w}^*_t \geq -t \frac{c_0}{6} G_{B_{\rho}}(0, \cdot)$ on $\cl(B_{\rho})$;
 			\item $\Delta \overline{w}^*_t \geq 0$ on $B_{\rho}$;
-			\item $\Delta \overline{w}^*_t \leq \frac{m_0}{6} \mu_h$ on $B_{\rho}$ and $\Delta \overline{w}^*_t = \frac{m_0}{6} \mu_h$ on $\{x \in B_{\rho} : \overline{w}^*_t(x) > -t \frac{m_0}{6} G_{B_{\rho}}(0, x)\}$.
+			\item $\Delta \overline{w}^*_t \leq \frac{c_0}{6} \mu_h$ on $B_{\rho}$ and $\Delta \overline{w}^*_t = \frac{c_0}{6} \mu_h$ on $\{x \in B_{\rho} : \overline{w}^*_t(x) > -t \frac{c_0}{6} G_{B_{\rho}}(0, x)\}$.
 		\end{enumerate}
 	\end{lemma}
 	
@@ -1869,7 +1881,8 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		where	
 		\begin{equation} \label{eq:limit-equation-laplacian}
 		\begin{cases}
-		\Delta \overline{\mathfrak q}_{B_r(z)} = -m_0/6 \times \mu_h \quad \mbox{on $B_r(z)$} \\
+		% CORRECTION [C1]: printed -m_0/6.
+		\Delta \overline{\mathfrak q}_{B_r(z)} = -c_0/6 \times \mu_h \quad \mbox{on $B_r(z)$} \\
 		\overline{\mathfrak q}_{B_r(z)} = 0 \quad \mbox{ on $\partial B_{r}(z)$}.
 		\end{cases}
 		\end{equation}
@@ -1996,7 +2009,8 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		For each $\delta \in (0, \rho)$ and $t > 0$ on the event $\{t < \TT\}$, 
 		there exists a $\sigma(h,\eta)$-measurable finite random variable $\mathfrak{s} = \mathfrak{s}(\delta) > 0$ such that, except on an event of probability tending to 0 as ${\eps} \to 0$ , 
 		\begin{equation} \label{eq:mean-value-ineq-verify}
-		(t {\eps}^{-1}) \Gr{{\eps}}{\Lambdateps}(0, a) \geq (1 + \mathfrak{s}) \sum_{b \in \Lambdateps} \Gr{{\eps}}{\Lambdateps}(b, a), \quad  \mbox{for all $a \in \Lambdateps$ s.t. $\dist(\eta(a), \partial \eta(\Lambdateps)) > \delta$}.
+		% CORRECTION [C4]: printed \partial \eta(\Lambdateps) (boundary of a finite point set); intended: boundary of the cell union \overline{\Lambdateps} (eq:vertex-scaling).
+		(t {\eps}^{-1}) \Gr{{\eps}}{\Lambdateps}(0, a) \geq (1 + \mathfrak{s}) \sum_{b \in \Lambdateps} \Gr{{\eps}}{\Lambdateps}(b, a), \quad  \mbox{for all $a \in \Lambdateps$ s.t. $\dist(\eta(a), \partial \overline{\Lambdateps}) > \delta$}.
 		\end{equation}
 	\end{lemma}
 	
@@ -2007,15 +2021,17 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		it holds except on an event of probability tending to 0 as ${\eps} \to 0$  that
 		\begin{equation} \label{eq:L-lower-bound-verify}
 		\frac{\sum_{b \in \Lambdateps} \Gr{{\eps}}{\Lambdateps}(b, a)  }{ {\Gr{{\eps}}{\Lambdateps}(a, a)}} \geq {\eps}^{-q},
-		\quad  \mbox{for all $a \in \Lambdateps$ s.t. $\dist(\eta(a), \partial \eta(\Lambdateps)) > \delta$}.
-		\end{equation} 
+		% CORRECTION [C4]: printed \partial \eta(\Lambdateps).
+		\quad  \mbox{for all $a \in \Lambdateps$ s.t. $\dist(\eta(a), \partial \overline{\Lambdateps}) > \delta$}.
+		\end{equation}
 	\end{lemma}
 	These lemmas imply Proposition \ref{prop:IDLA-lower-bound}. 
 	
 	\begin{proof}[Proof of Proposition \ref{prop:IDLA-lower-bound}, assuming Lemmas \ref{lemma:general-idla-lower-bound}, \ref{lemma:mean-value-ineq}, and \ref{lemma:L-lower-bound}]
 		We restrict to the event that $\{t < \TT\}$ for $t > 0$. 
 		By Lemmas \ref{lemma:mean-value-ineq} and  \ref{lemma:L-lower-bound} (with $\delta/4$ instead of $\delta$) we may apply Lemma \ref{lemma:general-idla-lower-bound} 
-		with the sets $O^{{\eps}}_1 = \{a \in \Lambdateps:\dist(\eta(a), \partial \eta(\Lambdateps)) > \delta/4 \}$ and $O_2^{{\eps}} = \Lambdateps$ 
+		% CORRECTION [C4]: printed \partial \eta(\Lambdateps).
+		with the sets $O^{{\eps}}_1 = \{a \in \Lambdateps:\dist(\eta(a), \partial \overline{\Lambdateps}) > \delta/4 \}$ and $O_2^{{\eps}} = \Lambdateps$
 		and $K_{\eps} = t \eps^{-1}$ 
 		which shows, together 
 		with the cell-size estimates given by 
@@ -2312,7 +2328,8 @@ By combining the previous two lemmas, we have the following bound on the expecte
 	For $z \in \C$, $r > 0$, and parameter $C >0$, let $E_r(z) := E_r(z; C)$ be the event that the following
 	is true:
 	\begin{equation} \label{eq:good-annulus-event}
-	\sup_{v \in \A_{r, 2r}(z)} \int_{\A_{r,2r}(z)} \left(\log \frac{1}{|u-v|} + 1 \right) d \mu_h(u) \leq C \min_{w \in \A_{r, 2 r}(z)} \mu_h(B_{\boldsymbol{c_0} r}(w)).
+	% CORRECTION [C5] (provisional, E-A10): printed \log \frac{1}{|u-v|}, not scale invariant (E_r(z) a.s. empty for r < e^{1-C}/4, contradicting Lemmas 6.4-6.5).
+\sup_{v \in \A_{r, 2r}(z)} \int_{\A_{r,2r}(z)} \left(\log \frac{r}{|u-v|} + 1 \right) d \mu_h(u) \leq C \min_{w \in \A_{r, 2 r}(z)} \mu_h(B_{\boldsymbol{c_0} r}(w)).
 	\end{equation}
 	An annulus $\A_{r, 2 r}(z)$ for which $E_r(z)$ holds it said to be {\it good}. In this subsection we prove that there are many good annuli in $B_{\rho}$. 
 	\begin{lemma} \label{lemma:good-prevalance}
