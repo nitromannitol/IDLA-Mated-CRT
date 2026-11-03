@@ -37,14 +37,16 @@ def DiscreteBasicPropertiesGeneralStmt : Prop :=
     ∀ a ∈ V, mLaplacian m (discreteLeastSupersolution m V (vClosure m V) 𝔯 φ) a ≤ 𝔯 a
 
 /-- **Lemma A.3** (lemma:discrete-laplacian-bound-general, line 3448). In the setting of Appendix A, `Δw = 𝔯` on `Λ` and
-`𝔯 ≥ Δw ≥ 0` on `V`. Moreover `Λ` is connected and, if `𝔱 > 𝔯(o)`, contains the origin. -/
+`𝔯 ≥ Δw ≥ 0` on `V`. Moreover `Λ` is connected and, if `𝔱 > 𝔯(o)`, contains the origin. Connected is
+`IsVPreconnected` (the empty set is connected): for `𝔱 ≤ 𝔯(o)` the obstacle `φ` is itself admissible, `w = φ` and
+`Λ = ∅`. -/
 def DiscreteLaplacianBoundGeneralStmt : Prop :=
   ∀ (α : Type) (m : α → α → ℕ) (V : Set α) (o : α) (𝔯 φ : α → ℝ) (𝔱 : ℝ), IsObstacleSetting m V o 𝔯 φ 𝔱 →
     (∀ a ∈ discreteCluster (vClosure m V) (discreteLeastSupersolution m V (vClosure m V) 𝔯 φ) φ,
       mLaplacian m (discreteLeastSupersolution m V (vClosure m V) 𝔯 φ) a = 𝔯 a) ∧
     (∀ a ∈ V, 0 ≤ mLaplacian m (discreteLeastSupersolution m V (vClosure m V) 𝔯 φ) a ∧
       mLaplacian m (discreteLeastSupersolution m V (vClosure m V) 𝔯 φ) a ≤ 𝔯 a) ∧
-    IsVConnected m (discreteCluster (vClosure m V) (discreteLeastSupersolution m V (vClosure m V) 𝔯 φ) φ) ∧
+    IsVPreconnected m (discreteCluster (vClosure m V) (discreteLeastSupersolution m V (vClosure m V) 𝔯 φ) φ) ∧
     (𝔯 o < 𝔱 → o ∈ discreteCluster (vClosure m V) (discreteLeastSupersolution m V (vClosure m V) 𝔯 φ) φ)
 
 /-- **Lemma A.4** (lemma:discrete-conservation-of-mass-general, line 3528). In the setting of Appendix A with

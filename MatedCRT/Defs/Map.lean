@@ -76,6 +76,12 @@ def adjGraph (m : V → V → ℕ) : SimpleGraph V :=
 def IsVConnected (m : V → V → ℕ) (A : Set V) : Prop :=
   ((adjGraph m).induce A).Connected
 
+/-- `A` is *connected* in the sense which allows the empty set: any two vertices of `A` are joined by a path in `A`
+(the induced subgraph is preconnected). Used where the printed "connected" must include `∅` (Lemmas 4.4, A.3: the
+discrete cluster is empty when the initial mass is below the threshold). -/
+def IsVPreconnected (m : V → V → ℕ) (A : Set V) : Prop :=
+  ((adjGraph m).induce A).Preconnected
+
 /-- `u` is *subharmonic* on `A`: `Δu ≥ 0` on `A` (line 818). -/
 def IsSubharmonicOn (m : V → V → ℕ) (u : V → ℝ) (A : Set V) : Prop :=
   ∀ a ∈ A, 0 ≤ mLaplacian m u a

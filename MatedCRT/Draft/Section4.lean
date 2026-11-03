@@ -66,7 +66,7 @@ def DiscreteBasicPropertiesStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
       matedLaplacian ε (S.η ω) (matedLeastSupersolution ε (S.η ω) ρ t) a ≤ ((matedDeg ε (S.η ω) a : ℕ) : ℝ)⁻¹
 
 /-- **Lemma 4.4** (lemma:discrete-laplacian-bound, line 1697). For all `t > 0` and `ε > 0`, `Δ^ε w̃^ε_t = (deg^ε)⁻¹` on
-`Λ^ε_t` and `0 ≤ Δ^ε w̃^ε_t ≤ (deg^ε)⁻¹` on `V^ε(B_ρ) \ V^ε(∂B_ρ)`. Moreover `Λ^ε_t` is connected, and if
+`Λ^ε_t` and `0 ≤ Δ^ε w̃^ε_t ≤ (deg^ε)⁻¹` on `V^ε(B_ρ) \ V^ε(∂B_ρ)`. Moreover `Λ^ε_t` is connected (`IsVPreconnected`; `Λ^ε_t = ∅` when `t ε⁻¹ ≤ 1`), and if
 `t ε⁻¹ > 1` then `0 ∈ Λ^ε_t`. Stated almost surely. -/
 def DiscreteLaplacianBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
@@ -77,7 +77,7 @@ def DiscreteLaplacianBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
     (∀ a ∈ ballInterior ε (S.η ω) ρ,
       0 ≤ matedLaplacian ε (S.η ω) (matedLeastSupersolution ε (S.η ω) ρ t) a ∧
       matedLaplacian ε (S.η ω) (matedLeastSupersolution ε (S.η ω) ρ t) a ≤ ((matedDeg ε (S.η ω) a : ℕ) : ℝ)⁻¹) ∧
-    IsVConnected (S.mult ε ω) (matedDiscreteCluster ε (S.η ω) ρ t) ∧
+    IsVPreconnected (S.mult ε ω) (matedDiscreteCluster ε (S.η ω) ρ t) ∧
     (1 < t / ε → (0 : ℤ) ∈ matedDiscreteCluster ε (S.η ω) ρ t)
 
 /-- **Lemma 4.5** (lemma:discrete-conservation-of-mass, line 1705). For all `t > 0` and `ε > 0`, `|Λ^ε_t| ≤ t ε⁻¹`.

@@ -67,7 +67,8 @@ and every `f : V^ε(D) → ℝ` which is `Δ^ε`-harmonic on `V^ε(D) \ V^ε(∂
 `D` is simply connected and `f` has Hölder boundary data (eq:holder-boundary-data with constants `χ, C'`), then
 `|f(a) - f(b)| ≤ max {C, A sup_{V^ε(D)} |f|} (ε ∨ |η(a) - η(b)|)^ξ` for all `a, b ∈ V^ε(D)`, for a constant `C > 0`.
 The constant `C` is read as deterministic, depending on `χ, C'` (and `ρ, γ`): an `ε`-dependent `C` would make the
-estimate empty. "Connected domain" is a connected open set. -/
+estimate empty. "Connected domain" is a connected open set. The first estimate is written multiplied out by
+`dist(η(a), ∂D)^ξ` (equivalent for `dist > 0`; for `dist = 0` the printed right side is `+∞`). -/
 def DiscreteHolderContinuityStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ ξ A : ℝ, 0 < ξ ∧ ξ < 1 ∧ 0 < A ∧
   ∀ χ C' : ℝ, 0 < χ → χ ≤ 1 → 0 < C' → ∃ C : ℝ, 0 < C ∧
@@ -75,9 +76,9 @@ def DiscreteHolderContinuityStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   PolyHighProb S.P fun ε => {ω | ∀ (D : Set ℂ) (f : ℤ → ℝ), D ⊆ ball 0 ρ → IsOpen D → IsConnected D →
     (∀ a ∈ interiorCellVertices ε (S.η ω) D, matedLaplacian ε (S.η ω) f a = 0) →
     (∀ a ∈ cellVertices ε (S.η ω) D, ∀ b ∈ cellVertices ε (S.η ω) D,
-      |f a - f b| ≤ A * (⨆ a' : cellVertices ε (S.η ω) D, |f a'|) *
-        (max ε ‖vertexPoint ε (S.η ω) a - vertexPoint ε (S.η ω) b‖ /
-          infDist (vertexPoint ε (S.η ω) a) (frontier D)) ^ ξ) ∧
+      |f a - f b| * infDist (vertexPoint ε (S.η ω) a) (frontier D) ^ ξ ≤
+        A * (⨆ a' : cellVertices ε (S.η ω) D, |f a'|) *
+          max ε ‖vertexPoint ε (S.η ω) a - vertexPoint ε (S.η ω) b‖ ^ ξ) ∧
     ((SimplyConnectedSpace D ∧ ∀ a ∈ cellVertices ε (S.η ω) (frontier D),
         ∀ b ∈ cellVertices ε (S.η ω) (frontier D),
           |f a - f b| ≤ C' * max ε ‖vertexPoint ε (S.η ω) a - vertexPoint ε (S.η ω) b‖ ^ χ) →
@@ -121,7 +122,8 @@ def IntegralConvergenceGreenFunctionStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
 solution `f̄^ε` of the discrete Dirichlet problem `Δ^ε f^ε(a) = ψ(η(a))` on `V^ε(B_r(z)) \ V^ε(∂B_r(z))`,
 `f^ε(b) = m_ε φ(η(b))` on `V^ε(∂B_r(z))`, converges in probability, uniformly on `cl(B_r(z))`, to the solution of
 `Δf̄ = m₀ ψ μ_h` on `B_r(z)`, `f̄ = φ` on `∂B_r(z)`; moreover a.s. `f̄` is Hölder continuous on `cl(B_r(z))`.
-The discrete solutions are any functions `F ε ω` satisfying the discrete problem (it has a unique solution). -/
+The discrete solutions are any functions `F ε ω` satisfying the discrete problem for a.e. `ω` (it has a unique
+solution). -/
 def DiscreteDirichletProblemStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
@@ -129,7 +131,7 @@ def DiscreteDirichletProblemStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ ψ φ : ℂ → ℝ, (∃ M : ℝ, ∀ x ∈ ball z r, |ψ x| ≤ M) → IsHolderContinuousOn ψ (ball z r) →
     IsHolderContinuousOn φ (closedBall z r) →
   ∀ F : ℝ → Ω → ℤ → ℝ,
-    (∀ ε, 0 < ε → ∀ ω,
+    (∀ ε, 0 < ε → ∀ᵐ ω ∂S.P,
       (∀ a ∈ interiorCellVertices ε (S.η ω) (ball z r),
         matedLaplacian ε (S.η ω) (F ε ω) a = ψ (vertexPoint ε (S.η ω) a)) ∧
       ∀ b ∈ cellVertices ε (S.η ω) (sphere z r), F ε ω b = S.mε ε * φ (vertexPoint ε (S.η ω) b)) →

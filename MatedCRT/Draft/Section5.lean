@@ -47,7 +47,7 @@ def GeneralIDLALowerBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ (O₁ O₂ : ℝ → Ω → Set ℤ) (K : ℝ → ℝ) (q : ℝ) (s : Ω → ℝ),
     (∀ ε k, MeasurableSet[S.envSigma] {ω | k ∈ O₁ ε ω}) → (∀ ε k, MeasurableSet[S.envSigma] {ω | k ∈ O₂ ε ω}) →
-    (∀ ε ω, O₁ ε ω ⊆ O₂ ε ω ∧ O₂ ε ω ⊆ cellVertices ε (S.η ω) (ball 0 ρ) ∧ (0 : ℤ) ∈ O₁ ε ω ∧
+    (∀ ε, 0 < ε → ∀ᵐ ω ∂S.P, O₁ ε ω ⊆ O₂ ε ω ∧ O₂ ε ω ⊆ cellVertices ε (S.η ω) (ball 0 ρ) ∧ (0 : ℤ) ∈ O₁ ε ω ∧
       IsVConnected (S.mult ε ω) (O₁ ε ω) ∧ IsVConnected (S.mult ε ω) (O₂ ε ω)) →
     (∀ ε, 0 < K ε) → 0 < q → Measurable[S.envSigma] s → (∀ ω, 0 < s ω) →
     ProbTendsToOne S.P (fun ε => {ω | ∀ a ∈ O₁ ε ω,
