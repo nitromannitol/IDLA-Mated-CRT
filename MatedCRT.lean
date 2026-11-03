@@ -19,3 +19,4 @@ import MatedCRT.Steps.SecA.DiscreteObstacle
 import MatedCRT.Proofs.SecA.DiscreteObstacle
 import MatedCRT.Proofs.SecA.DiscreteDivergence
 import MatedCRT.Proofs.SecA.Statements
+import MatedCRT.Proofs.Infra.RandomWalk
