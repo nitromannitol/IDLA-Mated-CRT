@@ -10,12 +10,13 @@ import MatedCRT.Proofs.Sec7.CrudeUpperBound.PolyHighProb
 
 `CrudeUpperBoundStmt` (MatedCRT/Draft/Section7.lean) transcribes the printed statement: increasing paths of the
 *stopped* odometer `u^ε_t` from every `a ∈ D_ε(t ε⁻¹) \ {0}` (the divisible sandpile cluster). It is false
-(reported, escalation F1 of worker c3): `u^ε_t` vanishes off `V^ε(cl(B_ρ))` while `|D_ε(t ε⁻¹)| ≥ t ε⁻¹`, so on the
+(ESCALATIONS.md, entry E-c3-1): `u^ε_t` vanishes off `V^ε(cl(B_ρ))` while `|D_ε(t ε⁻¹)| ≥ t ε⁻¹`, so on the
 event `{μ_h(B_{2ρ}) < t/2}`, of positive probability not depending on `ε`, there is `a ∈ D_ε(t ε⁻¹)` all of whose
 neighbours lie outside `V^ε(cl(B_ρ))`, and no path from `a` starts with an increase of `u^ε_t`. The printed proof also
 applies `Δ^ε u^ε_t = (deg^ε)⁻¹` at `a_0 ∈ D_ε(t ε⁻¹) \ Λ^ε_t` (line 3076), where it fails. The lemma is used
 (line 3240) for paths starting from the support of `u^ε_t`, i.e. from `Λ^ε_t` (`mem_matedDiscreteCluster_of_stoppedOdometer_pos`);
-`CrudeUpperBoundClusterStmt` is that statement, and is proved here from the steps.
+`CrudeUpperBoundClusterStmt` is that statement (the correction proposed in E-c3-1, pending the operator's ruling; it is
+not presented as Lemma 7.4), and is proved here from the steps.
 
 ## Steps
 * `DegreeBoundStep` (literature: GMS19 Lemma 2.6, eq:degree-bound, line 3071);
@@ -36,7 +37,8 @@ def DegreeBoundStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   PolyHighProb S.P fun ε => {ω | ∀ a ∈ cellVertices ε (S.η ω) (ball 0 ρ),
     (matedDeg ε (S.η ω) a : ℝ) ≤ Real.log ε⁻¹ ^ 2}
 
-/-- **Lemma 7.4, corrected** (paths from the discrete cluster `Λ^ε_t`, as used at line 3240): for all `t > 0`, with
+/-- **Crude upper bound along the discrete cluster** (the `Λ^ε_t`-version of Lemma 7.4 proposed in E-c3-1, as used
+at line 3240; not Lemma 7.4 until the operator rules): for all `t > 0`, with
 polynomially high probability as `ε → 0`, for every `a ∈ Λ^ε_t \ {0}` there is a path `a = a₀ ∼ a₁ ∼ ⋯ ∼ a_m = 0` in
 `Λ^ε_t` with `u^ε_t(a_{i+1}) ≥ u^ε_t(a_i) + log(ε⁻¹)⁻²`. -/
 def CrudeUpperBoundClusterStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -47,7 +49,7 @@ def CrudeUpperBoundClusterStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
     IsVPathIn (S.mult ε ω) (matedDiscreteCluster ε (S.η ω) ρ t) p a 0 ∧
     p.IsChain fun c d => stoppedOdometer ε (S.η ω) ρ t c + (Real.log ε⁻¹)⁻¹ ^ 2 ≤ stoppedOdometer ε (S.η ω) ρ t d}
 
-/-- **Lemma 7.4 (corrected)** from its steps. -/
+/-- The crude upper bound along the discrete cluster (E-c3-1) from its steps. -/
 theorem crudeUpperBoundCluster_of_steps (𝒮 : SpaceFillingSLEModel) (hstr : MatedMapStructureStep 𝒮)
     (hlap : StoppedOdometerLaplacianStep 𝒮) (hdeg : DegreeBoundStep 𝒮) (h45 : DiscreteConservationOfMassStmt 𝒮) :
     CrudeUpperBoundClusterStmt 𝒮 := by
