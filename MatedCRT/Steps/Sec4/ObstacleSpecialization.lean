@@ -503,6 +503,16 @@ def MatedObstacleSettingStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ᵐ ω ∂S.P, ∀ t ε : ℝ, 0 < t → 0 < ε → (0 : ℤ) ∈ ballInterior ε (S.η ω) ρ →
     IsMatedObstacleSetting ε (S.η ω) ρ t
 
+/-- *Connectivity of `V^ε(B_ρ) \ V^ε(∂B_ρ)`*, required only by the field `IsObstacleSetting.connected` (paper line 3339,
+"a finite, connected set of vertices V", applied at line 3406). Not a literature fact and suspected false: a cell inside
+`B_ρ` can be enclosed by cells meeting `∂B_ρ` (ESCALATIONS E-c1-2). Lemmas 4.3-4.5 do not need it; this step disappears
+once the field is weakened (owner A). -/
+def BallInteriorConnectedStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ᵐ ω ∂S.P, ∀ ε : ℝ, 0 < ε → (0 : ℤ) ∈ ballInterior ε (S.η ω) ρ →
+    IsVConnected (S.mult ε ω) (ballInterior ε (S.η ω) ρ)
+
 /-! ## Corrected statements of Lemmas 4.4 and 4.5 (ESCALATIONS E-c1-1) -/
 
 /-- **Lemma 4.4**, corrected: the claim `0 ∈ Λ^ε_t` needs `0 ∈ V^ε(B_ρ) \ V^ε(∂B_ρ)` (the origin of Appendix A). -/

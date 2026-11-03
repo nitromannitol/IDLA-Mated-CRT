@@ -60,14 +60,10 @@ theorem ballInterior_finite (hη : Continuous η) (hp : Tendsto η (cocompact �
 
 end Deterministic
 
-/-- `MatedObstacleSettingStep` from the inputs, given the connectivity required by `IsObstacleSetting.connected`
-(ESCALATIONS E-c1-2). -/
+/-- `MatedObstacleSettingStep` from the inputs, given the connectivity `BallInteriorConnectedStep` required by
+`IsObstacleSetting.connected` (ESCALATIONS E-c1-2). -/
 theorem matedObstacleSettingStep_of {𝒮 : SpaceFillingSLEModel} (hp : EtaProperStep 𝒮)
-    (hcons : ConsecutiveCellsAdjacentStep 𝒮) (hG : GreenKernelLaplacianStep)
-    (hconn : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
-      ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
-      ∀ᵐ ω ∂S.P, ∀ ε : ℝ, 0 < ε → (0 : ℤ) ∈ ballInterior ε (S.η ω) ρ →
-        IsVConnected (S.mult ε ω) (ballInterior ε (S.η ω) ρ)) :
+    (hcons : ConsecutiveCellsAdjacentStep 𝒮) (hG : GreenKernelLaplacianStep) (hconn : BallInteriorConnectedStep 𝒮) :
     MatedObstacleSettingStep 𝒮 := by
   intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS
   filter_upwards [hp γ hγ hγ2 Ω S hS, hcons γ hγ hγ2 Ω S hS, hS.isAreaParametrized,
@@ -81,11 +77,7 @@ theorem matedObstacleSettingStep_of {𝒮 : SpaceFillingSLEModel} (hp : EtaPrope
 /-- **Lemma 4.3** (lemma:discrete-basic-properties, line 1679) from the inputs (and the connectivity of E-c1-2). -/
 theorem discreteBasicProperties_of_inputs {𝒮 : SpaceFillingSLEModel} (hp : EtaProperStep 𝒮)
     (hcons : ConsecutiveCellsAdjacentStep 𝒮) (hG : GreenKernelLaplacianStep) (hq : NormExitTimeLaplacianStep)
-    (hconn : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
-      ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
-      ∀ᵐ ω ∂S.P, ∀ ε : ℝ, 0 < ε → (0 : ℤ) ∈ ballInterior ε (S.η ω) ρ →
-        IsVConnected (S.mult ε ω) (ballInterior ε (S.η ω) ρ)) :
-    DiscreteBasicPropertiesStmt 𝒮 :=
+    (hconn : BallInteriorConnectedStep 𝒮) : DiscreteBasicPropertiesStmt 𝒮 :=
   discreteBasicProperties_of_steps (matedObstacleSettingStep_of hp hcons hG hconn) hcons hq
 
 end MatedCRT
