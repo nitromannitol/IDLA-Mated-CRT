@@ -11,3 +11,6 @@ import MatedCRT.Draft.Section3
 import MatedCRT.Draft.Section4
 import MatedCRT.Draft.Section5
 import MatedCRT.Draft.Section6
+import MatedCRT.Draft.Section7
+import MatedCRT.Draft.Section8
+import MatedCRT.Draft.SectionA
