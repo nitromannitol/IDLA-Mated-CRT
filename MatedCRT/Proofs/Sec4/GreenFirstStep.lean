@@ -1,4 +1,5 @@
 import MatedCRT.Proofs.Sec4.GreenLaplacian
+import MatedCRT.Proofs.IDLA.Measurable
 
 /-!
 # First-step decomposition of exit times and visit counts (path level)
@@ -84,5 +85,10 @@ theorem visitsTrunc_succ (hx : x 0 ∈ A) (b : ℤ) (N : ℕ) :
         norm_cast
         omega
     simp only [hlt]
+
+theorem measurable_visitsTrunc (A : Set ℤ) (b : ℤ) (N : ℕ) : Measurable (visitsTrunc A b N) := by
+  unfold visitsTrunc
+  refine Finset.measurable_sum _ fun n _ => Measurable.ite ?_ measurable_const measurable_const
+  exact (measurableSet_natCast_lt_vExitTime A n).inter (measurableSet_coord n {b})
 
 end MatedCRT
