@@ -112,6 +112,10 @@ noncomputable def exitTimeMoment (m : ℤ → ℤ → ℕ) (A : Set ℤ) (a : �
 noncomputable def normExitTime (m : ℤ → ℤ → ℕ) (A : Set ℤ) (a : ℤ) : ℝ :=
   ∑' b : A, greenKernel m A a b
 
+/-- The position `x_{τ_A}` of a path at its exit time from `A` (junk `x 0` if it never exits). -/
+noncomputable def vExitPosition (A : Set ℤ) (x : ℕ → ℤ) : ℤ :=
+  x (vExitTime A x).toNat
+
 /-! ## IDLA (Section 1.2.1 and Definition 6.2) -/
 
 open Classical in

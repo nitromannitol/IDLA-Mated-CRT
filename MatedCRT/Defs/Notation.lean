@@ -1,5 +1,6 @@
 import HarmonicBalls.Defs.Notation
 import HarmonicBalls.Defs.Brownian
+import Mathlib.Topology.MetricSpace.Holder
 
 /-!
 # Notation and conventions (Section 1.5, lines 370-391; eq:outer-inner-neighborhoods, lines 238-243)
@@ -69,5 +70,10 @@ uniform metric is equivalent to convergence of the integrals of every such funct
 Dudley, Real Analysis and Probability, Theorem 11.3.3). -/
 def IsBoundedLipschitzPathFunctional (F : (ℝ≥0 → ℂ) → ℝ) : Prop :=
   (∀ f, |F f| ≤ 1) ∧ ∃ L : ℝ, ∀ f g, |F f - F g| ≤ L * localUniformDist f g
+
+/-- `f` is *Hölder continuous* on `s`: `|f x - f y| ≤ C |x - y|^χ` on `s` for some `C ≥ 0` and exponent `χ ∈ (0, 1]`
+(Mathlib's `HolderOnWith`). -/
+def IsHolderContinuousOn (f : ℂ → ℝ) (s : Set ℂ) : Prop :=
+  ∃ C χ : ℝ≥0, 0 < χ ∧ χ ≤ 1 ∧ HolderOnWith C χ f s
 
 end MatedCRT
