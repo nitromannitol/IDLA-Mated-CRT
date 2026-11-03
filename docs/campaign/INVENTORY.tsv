@@ -1,0 +1,57 @@
+number	label	tex_line	env	kind	source_or_inputs	content	draft_stmt
+1.4	theorem:convergence-of-IDLA	251	theorem	paper-owned		IDLA cluster cells after floor(t/eps) walkers lie between inner/outer delta-nbhds of Lambda_t whp	Section1.ConvergenceOfIDLAStmt
+1.6	theorem:convergence-of-div-sandpile	283	theorem	paper-owned		Thm 1.4 for the divisible sandpile cluster with mass t/eps	Section1.ConvergenceOfDivSandpileStmt
+2.2	fact:lqg-measure	474	fact	cited	DS11 (measure-lim), SW16 Thm (conformal covariance all maps); DS11 Prop 2.1	LQG measure: Radon non-atomic, locality, Weyl scaling, conformal covariance	Section2.LQGMeasurePropertiesStmt
+2.3	theorem:harmonic-balls	509	theorem	paper-owned (transfer)	HB22 Thm 1.1, Thm 5.5, Lemma 3.2 (proof: from Lemmas 2.4, 2.5)	a.s. unique family of harmonic balls of the quantum cone with (a)(b)(c)	Section2.ConeHarmonicBallsStmt
+2.4	lemma:existence-up-to-fixed-time	533	lemma	paper-owned	uses HB22 Prop 1.3, Thms 1.1/5.5, L3.2, Prop 5.6	harmonic balls of the cone exist uniquely up to T=sup{t: Lambda_t in B_1/2}	Section2.ConeHarmonicBallsUpToFixedTimeStmt
+2.5	lemma:scale-invariance-up-to-fixed-time	548	lemma	paper-owned	uses DMS14 Prop 4.13(i), HB22 Prop 5.6	scale invariance of (h, Lambda) up to time b T^b	Section2.ConeScaleInvarianceUpToFixedTimeStmt
+2.6	lemma:scale-invariance	597	lemma	paper-owned		(h,{Lambda_t}) =d (h(R_b.)+Q log R_b - log b/gamma, {R_b^-1 Lambda_bt})	Section2.ConeScaleInvarianceStmt
+2.7	lemma:volume-growth	658	lemma	cited	BG20 Lemma A.1	delta^beta- <= mu_h(B_delta(z)) <= delta^beta+ for z in B_{1-delta}, polyhp	Section2.VolumeGrowthStmt
+2.8	lemma:cell-size-estimate	669	lemma	cited	BG20 Lemma 2.4	cell diameters in [eps^{2/(2-g)^2+z}, eps^{2/(2+g)^2-z}] for cells meeting B_rho, polyhp	Section2.CellSizeEstimateStmt
+2.9	lemma:mu_h-convergence	680	lemma	cited	BG20 Lemma A.4	counting measure on cells approximates eps^-1 mu_h, quantitative, polyhp	Section2.CountingMeasureConvergenceStmt
+2.10	lemma:mu_h_degree-convergence	698	lemma	cited	BG20 Corollary A.6	degree-weighted cell measure -> 6 mu_h vaguely in probability	Section2.DegreeMeasureConvergenceStmt
+2.11	theorem:rw-to-lbm	735	theorem	cited	BG20 Theorem 1.2	embedded rescaled walk -> rescaled LBM, conditional laws in probability (Prokhorov)	Section2.RandomWalkToLBMStmt
+2.13	lemma:maximum-principle	824	lemma	paper-owned	standard	max principle for subharmonic u on connected A (finite A needed: ESCALATION)	Section2.MaximumPrincipleStmt
+2.14	lemma:bounded-greens-function	843	lemma	cited	BG20 Lemma 5.4	g_{B_rho}(a,b) <= C log(1/|eta(a)-eta(b)|)+C for |eta(a)-eta(b)|>=eps^beta, polyhp	Section2.GreenKernelUpperBoundStmt
+2.15	lemma:greens-function-log-bound	857	lemma	cited	BG20 Lemma 5.6	sup G_{B_rho} <= eps^-zeta, polyhp	Section2.GreenFunctionCrudeBoundStmt
+2.16	lemma:greens-kernel-lower-bound	867	lemma	cited	BG20 Lemma 4.4	G >= g >= C^-1 log(r/|eta(a)-eta(b)| ^ eps^-1) - 1 on B_{r/3}(eta(a)), polyhp	Section2.GreenKernelLowerBoundStmt
+2.17	lemma:bounded-exit-time	888	lemma	paper-owned	proof uses BG20 Lemma A.3, (5.3) of BG20 Cor 5.2	sup_{D in B_rho} M(D) < inf a.s.; sup_y M(B_delta(y)) <= delta^q polyhp	Section2.BoundedExitTimeRVStmt
+2.18	lemma:exit-time-upper-bound	916	lemma	cited	BG20 Proposition 5.1	E[tau_D^N] <= N! C^N eps^-N (sup int (log+1) dmu)^N; q<=Q<=C eps^-1 M(B_{eps^alpha}(D))	Section2.ExitTimeUpperBoundStmt
+2.19	lemma:expected-exit-time-explicit-bound	933	lemma	paper-owned		q<=Q<inf for mu_h(D)>=eps^alpha; Q_{B_delta(y)} <= eps^-1 delta^q	Section2.ExpectedExitTimeExplicitBoundStmt
+3.1	lemma:discrete-potential-tightness	973	lemma	paper-owned		bounded functions with bounded Laplacian: rescaled subsequence converges loc. unif. (unif. on cl D if harmonic + Holder bdry)	Section3.DiscretePotentialTightnessStmt
+3.2	lemma:discrete-holder-continuity	997	lemma	cited	GMS19 (gwynne2019harmonic) Theorem 3.9	Holder continuity of discrete harmonic functions on the mated-CRT map, polyhp	Section3.DiscreteHolderContinuityStmt
+3.3	lemma:uniform-convergence-of-greens-function	1106	lemma	paper-owned		rescaled Green kernel -> (m0/6) G_{B_r(z)}(y,.) uniformly away from y, in probability	Section3.UniformConvergenceGreenKernelStmt
+3.4	lemma:integral-convergence-of-greens-function	1119	lemma	paper-owned		m_eps^-1 sum G f(eta) -> m0 int G f dmu_h in probability	Section3.IntegralConvergenceGreenFunctionStmt
+3.5	lemma:discrete-dirichlet-problem	1233	lemma	paper-owned	cites LL10 Cor 6.2.4, HB22 Prop 2.5	rescaled discrete Dirichlet solution -> continuum solution (Delta f = m0 psi mu_h), unif. in prob.	Section3.DiscreteDirichletProblemStmt
+3.6	lemma:convergence-of-harmonic-functions	1254	lemma	paper-owned		E[psi(eta(X_tau))|h,eta] -> E[psi(X^y_tau)|h,eta] in probability	Section3.ConvergenceHarmonicFunctionsStmt
+3.7	lemma:convergence-of-the-normalized-exit-time	1391	lemma	paper-owned		rescaled q_{B_r(z)} -> solution of Delta q = -(m0/6) mu_h, unif. in prob.	Section3.ConvergenceNormalizedExitTimeStmt
+4.1	theorem:convergence-divisible	1594	theorem	paper-owned		on {t<T}, rescaled w~ -> (m0/6) w_t^{B_rho} uniformly on B_rho in probability	Section4.ConvergenceDivisibleStmt
+4.2	prop:div-sandpile-lower-bound	1611	prop	paper-owned		on {t<T}, B^-_delta(Lambda_t) in D_eps(t/eps) cells, whp	Section4.DivSandpileLowerBoundStmt
+4.3	lemma:discrete-basic-properties	1679	lemma	paper-owned	special case of Lemma A.2	max(-q, -(t/eps) g) <= w~ <= 0 and Delta w~ <= 1/deg	Section4.DiscreteBasicPropertiesStmt
+4.4	lemma:discrete-laplacian-bound	1697	lemma	paper-owned	special case of Lemma A.3	Delta w~ = 1/deg on Lambda^eps_t, 0<=Delta w~<=1/deg; Lambda^eps_t connected, contains 0 if t/eps>1	Section4.DiscreteLaplacianBoundStmt
+4.5	lemma:discrete-conservation-of-mass	1705	lemma	paper-owned	special case of Lemma A.4	|Lambda^eps_t| <= t/eps; mass identity if Lambda^eps_t in int	Section4.DiscreteConservationOfMassStmt
+4.6	lemma:subsequential-convergence	1720	lemma	paper-owned		a.s. subsequential uniform limit of rescaled w~ on cl B_rho, Holder	Section4.SubsequentialConvergenceStmt
+4.7	lemma:equibounded	1729	lemma	paper-owned		a.s. rescaled w~ bounded along a deterministic subsequence	Section4.EquiboundedStmt
+4.8	lemma:subsequential-properties	1761	lemma	paper-owned		subsequential limit: bounds, Delta >= 0, Delta <= (m0/6) mu_h, equality off contact set	Section4.SubsequentialPropertiesStmt
+5.1	prop:IDLA-lower-bound	1959	prop	paper-owned		on {t<T}, B^-_delta(Lambda_t) in A_eps(floor(t/eps)) cells whp; also for walkers stopped on exiting V(Lambda_t)	Section5.IDLALowerBoundStmt
+5.2	lemma:general-idla-lower-bound	1974	lemma	paper-owned (reformulation)	LBG92 Section 3 (proof given, cites LL10 Lemma 4.6.1, LBG92 Lemma 3.3)	mean-value inequality + L lower bound => O_1 in A(floor K) whp	Section5.GeneralIDLALowerBoundStmt
+5.3	lemma:mean-value-ineq	1995	lemma	paper-owned	cites Lyons-Peres Exercise 2.1	(t/eps) G_{Lambda^eps_t}(0,a) >= (1+s) sum_b G(b,a) for a delta-inside	Section5.MeanValueInequalityStmt
+5.4	lemma:L-lower-bound	2005	lemma	paper-owned		sum_b G(b,a)/G(a,a) >= eps^-q for a delta-inside	Section5.LLowerBoundStmt
+6.1	prop:IDLA-upper-bound	2236	prop	paper-owned		on {t<T}, A_eps(floor(t/eps)) cells in B^+_delta(Lambda_t) whp	Section6.IDLAUpperBoundStmt
+6.3	lemma:abelian-IDLA	2289	lemma	cited	Diaconis-Fulton 1991 Section 4	abelian property: stopped-and-restarted aggregate has the same conditional law	Section6.AbelianIDLAStmt
+6.4	lemma:good-prevalance	2318	lemma	paper-owned		polyhp every grid z has a good annulus radius in [delta, delta^1/2]	Section6.GoodAnnulusPrevalenceStmt
+6.5	lemma:annulus-hit	2333	lemma	paper-owned		P[E_r(z;C)] >= p uniformly in r,z	Section6.AnnulusHitStmt
+6.6	lemma:annulus-iterate	2371	lemma	cited	Gwynne-Miller local metrics (gwynne2020local); no theorem number printed	iteration of annulus events determined by h on annuli: P[N(K)=0] <= C e^{-alpha K}	Section6.AnnulusIterateStmt
+6.7	lemma:constant-order-lower-bound	2410	lemma	paper-owned		walk from cl(Theta) leaves S cup Theta with prob >= s2	Section6.ConstantOrderLowerBoundStmt
+6.8	lemma:constant-order-lower-bound-div	2438	lemma	paper-owned		walk exits through sparse A with prob <= 1-s2	Section6.ConstantOrderLowerBoundDivStmt
+6.9	lemma:chance-of-being-absorbed	2626	lemma	paper-owned		P[|A(Theta;a_1..a_k -> V(Theta+B_r)) \ Theta| <= s4 k] <= exp(-s3 k)	Section6.ChanceOfBeingAbsorbedStmt
+6.10	lemma:iterative-bound	2679	lemma	paper-owned		A(Theta;a_1..a_j) in V(B^+_{C delta0^beta}(Theta-bar)) for j <= ceil(delta0/eps)	Section6.IterativeBoundStmt
+7.1	prop:div-sandpile-upper-bound	2917	prop	paper-owned		on {t<T}, D_eps(t/eps) cells in B^+_delta(Lambda_t) whp	Section7.DivSandpileUpperBoundStmt
+7.2	lemma:mass-bound-odometer	2974	lemma	paper-owned		|V(B_{c0 s}(z)) cap Lambda^eps_t| <= C sup_{dTheta} u_t	Section7.MassBoundOdometerStmt
+7.3	lemma:odometer-bound-mass	3018	lemma	paper-owned		u_t(b) <= sup_{dB} u_t * P[X^b exits B before hitting B \ Lambda^eps_t]	Section7.OdometerBoundMassStmt
+7.4	lemma:crude-upper-bound	3058	lemma	cited (proof given)	LP09 Lemma 4.2; proof cites GMS19 Lemma 2.6	odometer increases by >= log(1/eps)^-2 along a path to 0, polyhp	Section7.CrudeUpperBoundStmt
+8.1	prop:IDLA-constrained-convergence	3270	prop	paper-owned		on {t<T}, both IDLA and sandpile clusters between B^-_delta and B^+_delta of Lambda_t whp	Section8.IDLAConstrainedConvergenceStmt
+A.1	lemma:discrete-divergence-theorem	3347	lemma	paper-owned (standard)	Telcs 2006 (2.17), BG20 Lemma 3.6	sum f Delta g deg = sum g Delta f deg for finitely supported f,g	SectionA.DiscreteDivergenceTheoremStmt
+A.2	lemma:discrete-basic-properties-general	3413	lemma	paper-owned		max(q,phi) <= w <= 0 and Delta w <= r on V	SectionA.DiscreteBasicPropertiesGeneralStmt
+A.3	lemma:discrete-laplacian-bound-general	3448	lemma	paper-owned		Delta w = r on Lambda, 0 <= Delta w <= r on V; Lambda connected, contains 0 if t > r(0)	SectionA.DiscreteLaplacianBoundGeneralStmt
+A.4	lemma:discrete-conservation-of-mass-general	3528	lemma	paper-owned		r = 1/deg: |Lambda| <= t deg(0); sum_V Delta w deg = t deg(0) if Lambda in int V	SectionA.DiscreteConservationOfMassGeneralStmt
