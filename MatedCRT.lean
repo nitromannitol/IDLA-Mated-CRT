@@ -6,3 +6,4 @@ import MatedCRT.Defs.QuantumCone
 import MatedCRT.Defs.Setting
 import MatedCRT.Defs.Sandpile
 import MatedCRT.Draft.Section1
+import MatedCRT.Draft.Section2

@@ -201,4 +201,19 @@ def familyProcess (Λ : ℝ → Set ℂ) (T : ℝ) : ℝ × ℂ → Prop :=
 def rescaledFamily (Λ : ℝ → Set ℂ) (R b : ℝ) : ℝ → Set ℂ :=
   fun t => {x | (R : ℂ) * x ∈ Λ (b * t)}
 
+/-- The field of the quantum cone and its LQG measure, without the curve: `P` is a probability, `(hC, hcirc)` is the
+circle average embedding of the `γ`-quantum cone (Definition 2.1) and `μ = μ_h` its `γ`-LQG measure. The results of
+Section 2 which do not involve `η` (Fact 2.2, Theorem 2.3, Lemmas 2.4-2.7, 2.17) are stated for such data. -/
+def IsConeField {Ω : Type} [MeasurableSpace Ω] (γ : ℝ) (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) : Prop :=
+  IsProbabilityMeasure P ∧ IsQuantumCone γ P hC hcirc ∧ IsLQGMeasure P γ hcirc μ
+
+/-- A family `{Λ_t}_{t > 0}` as a `Prop`-valued process `(t, x) ↦ (t > 0 ∧ x ∈ Λ_t)` on `ℝ × ℂ` (Lemma 2.6). -/
+def globalFamilyProcess (Λ : ℝ → Set ℂ) : ℝ × ℂ → Prop :=
+  fun p => 0 < p.1 ∧ p.2 ∈ Λ p.1
+
+/-- The measure `μ^ε_h` whose restriction to each cell `H^ε_a` is `deg^ε(a) μ_h|_{H^ε_a}` (Lemma 2.10, line 699). -/
+noncomputable def degreeWeightedMeasure (ε : ℝ) (η : ℝ → ℂ) (μ : Measure ℂ) : Measure ℂ :=
+  Measure.sum fun k : ℤ => ((matedDeg ε η k : ℕ) : ℝ≥0∞) • μ.restrict (cell ε η k)
+
 end MatedCRT
