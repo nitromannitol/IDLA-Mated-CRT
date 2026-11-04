@@ -31,6 +31,24 @@ theorem eventually_shell_survival_floor
     ∀ᶠ ε : ℝ in 𝓝[>] 0, 10 * ε ^ ω < (c / 8) * ε ^ q :=
   eventually_mul_rpow_lt_mul_rpow hqω (by positivity)
 
+/-- One polynomial radius floor simultaneously dominates the cell diameter
+and the minimum scale in the survival estimate. -/
+theorem exists_shell_radius_floor_exponent
+    {ω d c : ℝ} (hω : 0 < ω) (hd : 0 < d) (hc : 0 < c) :
+    ∃ q : ℝ, 0 < q ∧ q < ω ∧ q < d ∧
+      ∀ᶠ ε : ℝ in 𝓝[>] 0,
+        ε ^ d ≤ ε ^ q / 2 ∧ 10 * ε ^ ω ≤ (c / 8) * ε ^ q := by
+  let q := min ω d / 2
+  have hq : 0 < q := by dsimp [q]; positivity
+  have hqω : q < ω := by dsimp [q]; linarith [min_le_left ω d]
+  have hqd : q < d := by dsimp [q]; linarith [min_le_right ω d]
+  refine ⟨q, hq, hqω, hqd, ?_⟩
+  filter_upwards [eventually_mul_rpow_lt_mul_rpow (A := 2) (B := 1) hqd (by norm_num),
+    eventually_shell_survival_floor hqω hc] with ε hdiam hsurv
+  constructor
+  · linarith
+  · exact hsurv.le
+
 /-- Lower and upper radius envelopes supply the geometric margins required by
 the local mass and survival estimates. -/
 theorem shell_margins_of_radius_bounds
