@@ -41,4 +41,26 @@ theorem exists_cubic_log_halving_horizon (a s C : ℝ) (hs : 0 < s) (hC : 0 ≤ 
   push_cast
   nlinarith
 
+/-- A logarithmic bound on the ratio of initial maximum to target threshold
+turns the block count into the required number of halvings. -/
+theorem halving_blocks_reach_threshold
+    (x B L C : ℝ) (M : ℕ) (hx : 0 < x) (hB : 0 < B)
+    (hratio : Real.log (x / B) ≤ C * L * Real.log 2)
+    (hblocks : C * L ≤ (M : ℝ)) :
+    x * (1 / 2 : ℝ) ^ M ≤ B := by
+  have hlog : Real.log (x / B) ≤ Real.log ((2 : ℝ) ^ M) := by
+    rw [Real.log_pow]
+    exact hratio.trans (mul_le_mul_of_nonneg_right hblocks (Real.log_nonneg (by norm_num)))
+  have hratio' : x / B ≤ (2 : ℝ) ^ M :=
+    (Real.log_le_log_iff (div_pos hx hB) (pow_pos (by norm_num) _)).1 hlog
+  have hprod : x ≤ B * (2 : ℝ) ^ M := by
+    simpa only [mul_comm] using (div_le_iff₀ hB).1 hratio'
+  have h := mul_le_mul_of_nonneg_right hprod (pow_nonneg (by norm_num : (0 : ℝ) ≤ 1 / 2) M)
+  have hcancel : (2 : ℝ) ^ M * (1 / 2 : ℝ) ^ M = 1 := by
+    rw [← mul_pow]
+    norm_num
+  calc
+    x * (1 / 2 : ℝ) ^ M ≤ (B * (2 : ℝ) ^ M) * (1 / 2 : ℝ) ^ M := h
+    _ = B := by rw [mul_assoc, hcancel, mul_one]
+
 end MatedCRT.Sec7
