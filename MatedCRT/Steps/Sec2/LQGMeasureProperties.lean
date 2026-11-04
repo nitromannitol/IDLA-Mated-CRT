@@ -90,6 +90,17 @@ def LQGMeasureDilationCovariancePart : Prop :=
     IsLQGLimit γ (fun r z => hcirc ω (s * r) ((s : ℂ) * z) + lqgQ γ * Real.log s)
       ((μ ω).map fun x => (s : ℂ)⁻¹ * x)
 
+/-- **Fact 2.2 IV for the non-dyadic dilations** `φ(z) = s z`, `1 < s < 2`. The dilations by powers of `2` only shift
+the dyadic sequence of scales `2⁻ᵏ` defining `μ_h`, so `LQGMeasureDilationCovariancePart` reduces to this case. A.s.,
+for every `s ∈ (1, 2)`, the circle average approximations of `h` converge vaguely to `μ_h` along `s 2⁻ᵏ`, in the form of
+Fact 2.2 IV for `φ(z) = s z`. Cited: DS11 Proposition 2.1 (a fixed map), SW16 (all maps simultaneously). -/
+def LQGMeasureNonDyadicDilationPart : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
+  ∀ᵐ ω ∂P, ∀ s : ℝ, 1 < s → s < 2 →
+    IsLQGLimit γ (fun r z => hcirc ω (s * r) ((s : ℂ) * z) + lqgQ γ * Real.log s)
+      ((μ ω).map fun x => (s : ℂ)⁻¹ * x)
+
 /-- **Fact 2.2 from its parts.** -/
 theorem lqgMeasureProperties_of_parts (hI : LQGMeasureRadonPart) (hII : LQGMeasureLocalityPart)
     (hIII : LQGMeasureWeylScalingPart) (hIV : LQGMeasureConformalCovariancePart) :
