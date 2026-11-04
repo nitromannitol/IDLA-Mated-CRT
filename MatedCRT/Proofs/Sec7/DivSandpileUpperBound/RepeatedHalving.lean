@@ -88,4 +88,44 @@ theorem exists_threshold_before_repeated_log_halvings
     have h := hstep k hk hactive
     nlinarith
 
+/-- A sufficiently long contraction block decreases a geometric majorant by
+at least one half; repeating blocks produces a quantitative stopping horizon. -/
+theorem geometric_majorant_le_of_halving_blocks
+    (x p B : ℝ) (M N : ℕ) (hx : 0 ≤ x) (hp : 0 < p) (hp1 : p ≤ 1)
+    (hB : 0 < B) (hN : 2 < (N : ℝ) * p)
+    (hend : x * (1 / 2 : ℝ) ^ M ≤ B) :
+    x * (1 - p) ^ (M * N) ≤ B := by
+  let q := 1 - p
+  have hq : 0 ≤ q := sub_nonneg.mpr hp1
+  have hq1 : q ≤ 1 := by dsimp [q]; linarith
+  let O : ℕ → ℝ := fun k => x * q ^ k
+  have hO : ∀ k ≤ M * N, 0 ≤ O k := by
+    intro k _
+    exact mul_nonneg hx (pow_nonneg hq k)
+  have hstep : ∀ k < M * N, B < O k → O (k + 1) ≤ (1 - p) * O k := by
+    intro k _ _
+    dsimp [O, q]
+    rw [pow_succ]
+    ring_nf
+    exact le_rfl
+  obtain ⟨τ, hτ, hsmall, _⟩ :=
+    exists_threshold_before_repeated_halvings O p B M N hp hB hN hO
+      (by simpa [O] using hend) hstep
+  have hpow : q ^ (M * N) ≤ q ^ τ := pow_le_pow_of_le_one hq hq1 hτ
+  exact (mul_le_mul_of_nonneg_left hpow hx).trans hsmall
+
+/-- A polynomial radius floor gives a uniform logarithmic contraction rate;
+halving blocks then bound the geometric majorant at a finite horizon. -/
+theorem geometric_majorant_le_of_log_halving_blocks
+    (x s a B : ℝ) (M N : ℕ) (hx : 0 ≤ x) (hs : 0 < s)
+    (hsbound : s ≤ (1 + |Real.log a|) ^ 2)
+    (hB : 0 < B) (hN : 2 * (1 + |Real.log a|) ^ 2 < (N : ℝ) * s)
+    (hend : x * (1 / 2 : ℝ) ^ M ≤ B) :
+    x * (1 - s / (1 + |Real.log a|) ^ 2) ^ (M * N) ≤ B := by
+  have hden : 0 < (1 + |Real.log a|) ^ 2 := by positivity
+  apply geometric_majorant_le_of_halving_blocks x (s / (1 + |Real.log a|) ^ 2)
+    B M N hx (div_pos hs hden) ((div_le_one₀ hden).2 hsbound) hB ?_ hend
+  rw [← mul_div_assoc, lt_div_iff₀ hden]
+  exact hN
+
 end MatedCRT.Sec7
