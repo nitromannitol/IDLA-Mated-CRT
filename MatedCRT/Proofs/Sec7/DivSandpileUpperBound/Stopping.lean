@@ -120,6 +120,56 @@ theorem shell_radius_tail_sum_le (r : ℕ → ℝ) (R : ℝ) (n : ℕ)
       Finset.sum_le_sum fun k hk => hr k (Finset.mem_range.mp hk)
     _ = (n : ℝ) * R := by simp
 
+/-- A maximum of a geometric radius and a nonnegative floor is bounded in
+total by the geometric series plus the accumulated floor. -/
+theorem shell_radii_max_sum_le (r : ℕ → ℝ) (A q R : ℝ)
+    (hA : 0 ≤ A) (hq : 0 ≤ q) (hq1 : q < 1) (hR : 0 ≤ R) (n : ℕ)
+    (hr : ∀ k < n, r k ≤ max (A * q ^ k) R) :
+    ∑ k ∈ Finset.range n, r k ≤ A / (1 - q) + (n : ℝ) * R := by
+  have hgeom : ∀ k, 0 ≤ A * q ^ k := fun k => mul_nonneg hA (pow_nonneg hq k)
+  have hsum := shell_radii_sum_le (fun k => r k - R) A q hA hq hq1 n
+    (fun k hk => by
+      have hmax : max (A * q ^ k) R ≤ A * q ^ k + R := max_le (by linarith) (by linarith [hgeom k])
+      linarith [hr k hk])
+  rw [Finset.sum_sub_distrib] at hsum
+  simp only [Finset.sum_const, Finset.card_range, nsmul_eq_mul] at hsum
+  linarith
+
+/-- The geometric, floor, and cell-diameter contributions fit a common
+iteration budget when the stopping index has a deterministic upper bound. -/
+theorem shell_iteration_budget_le (r : ℕ → ℝ) (A q R D L : ℝ)
+    (hA : 0 ≤ A) (hq : 0 ≤ q) (hq1 : q < 1) (hR : 0 ≤ R) (hD : 0 ≤ D)
+    (n : ℕ) (hn : (n : ℝ) ≤ L)
+    (hr : ∀ k < n, r k ≤ max (A * q ^ k) R) :
+    (∑ k ∈ Finset.range n, r k) + ((n : ℝ) + 1) * (2 * D) ≤
+      A / (1 - q) + L * R + (L + 1) * (2 * D) := by
+  have hsum := shell_radii_max_sum_le r A q R hA hq hq1 hR n hr
+  have hfloor := mul_le_mul_of_nonneg_right hn hR
+  have hdiam := mul_le_mul_of_nonneg_right (add_le_add_right hn 1) (by linarith : 0 ≤ 2 * D)
+  linarith
+
+/-- Fixed-factor odometer contraction and a logarithmic radius budget give a
+stopping shell with both a small boundary maximum and controlled total growth. -/
+theorem exists_shell_threshold_with_iteration_budget
+    (O r : ℕ → ℝ) (q p C ε ω A R D δ : ℝ)
+    (hq : 0 < q) (hq1 : q < 1) (hp : 0 ≤ p) (hp1 : p < 1)
+    (hC : 0 < C) (hε : 0 < ε) (hA : 0 ≤ A) (hR : 0 ≤ R) (hD : 0 ≤ D)
+    (hinitial : ε ^ (-ω) < O 0) (hupper : O 0 ≤ C / ε)
+    (hstep : ∀ k, ε ^ (-ω) < O k → O (k + 1) ≤ q * O k)
+    (hr : ∀ k, (∀ j < k, ε ^ (-ω) < O j) → r k ≤ max (A * p ^ k) R)
+    (hbudget : let L := (Real.log C + (1 - ω) * Real.log ε⁻¹) / (-Real.log q) + 1
+      A / (1 - p) + L * R + (L + 1) * (2 * D) ≤ δ) :
+    ∃ n : ℕ, O n ≤ ε ^ (-ω) ∧
+      (∑ k ∈ Finset.range n, r k) + ((n : ℝ) + 1) * (2 * D) ≤ δ := by
+  obtain ⟨n, hn, hbefore, hbound⟩ :=
+    exists_first_shell_threshold_log_scale O q C ε ω hq hq1 hC hε hinitial hupper hstep
+  refine ⟨n, hn, ?_⟩
+  apply (shell_iteration_budget_le r A p R D _ hA hp hp1 hR hD n hbound.le ?_).trans hbudget
+  intro k hk
+  apply hr k
+  intro j hj
+  exact hbefore j (lt_trans hj hk)
+
 /-- The floor-scale contribution to the total radius vanishes, even with a
 logarithmic number of shell steps. -/
 theorem tendsto_shell_floor_log_bound (A B ω : ℝ) (hω : 0 < ω) :

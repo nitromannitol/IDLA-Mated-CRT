@@ -1,4 +1,5 @@
 import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.CrudeCells
+import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.Stopping
 import Mathlib.Tactic
 
 /-! Euclidean growth of the filled graph closures in the shell iteration. -/
@@ -175,5 +176,37 @@ theorem exists_localized_intermediate_shell
     hadj h0 hstep' hdiam
   refine ⟨Θ n, hzero', hbound, ?_⟩
   exact hfill.trans (cthickening_mono hbudget X)
+
+/-- A fixed-factor contraction and its radius budget produce a localized shell
+whose boundary odometer is below the stopping threshold. -/
+theorem localized_shell_of_geometric_iteration
+    {m : ℤ → ℤ → ℕ} {η : ℝ → ℂ} {X : Set ℂ}
+    (Θ : ℕ → Set ℤ) (r O : ℕ → ℝ) (u : ℤ → ℝ)
+    (ε q p C ω A R D δ : ℝ)
+    (hε : 0 < ε) (hη : Continuous η) (hq : 0 < q) (hq1 : q < 1)
+    (hp : 0 ≤ p) (hp1 : p < 1) (hC : 0 < C) (hA : 0 ≤ A)
+    (hR : 0 ≤ R) (hD : 0 ≤ D)
+    (hadj : ∀ a b, m a b ≠ 0 → (cell ε η a ∩ cell ε η b).Nonempty)
+    (hzero : (0 : ℤ) ∈ Θ 0) (h0 : Θ 0 ⊆ cellVertices ε η X)
+    (hrpos : ∀ k, 0 < r k)
+    (hshell : ∀ k, Θ (k + 1) = cellVertices ε η
+      (thickening (r k) (fillCells ε η (Θ k))))
+    (hdiam : ∀ k a, a ∈ vClosure m (Θ k) → diam (cell ε η a) ≤ D)
+    (hmaximum : ∀ k a, a ∈ vBoundary m (Θ k) → u a ≤ O k)
+    (hinitial : ε ^ (-ω) < O 0) (hupper : O 0 ≤ C / ε)
+    (hcontract : ∀ k, ε ^ (-ω) < O k → O (k + 1) ≤ q * O k)
+    (hradius : ∀ k, (∀ j < k, ε ^ (-ω) < O j) → r k ≤ max (A * p ^ k) R)
+    (hbudget : let L := (Real.log C + (1 - ω) * Real.log ε⁻¹) / (-Real.log q) + 1
+      A / (1 - p) + L * R + (L + 1) * (2 * D) ≤ δ) :
+    ∃ T : Set ℤ, (0 : ℤ) ∈ T ∧
+      (∀ a ∈ vBoundary m T, u a ≤ ε ^ (-ω)) ∧
+      fillCells ε η (vClosure m T) ⊆ outerNbhd δ X := by
+  obtain ⟨n, hn, hsum⟩ := exists_shell_threshold_with_iteration_budget O r q p C ε ω A R D δ
+    hq hq1 hp hp1 hC hε hA hR hD hinitial hupper hcontract hradius hbudget
+  apply exists_localized_intermediate_shell Θ r u n hε.le hη hD
+    (fun k _ => hrpos k) hadj hzero h0 (fun k _ => hshell k)
+    (fun k _ => hdiam k) ?_ hsum
+  intro a ha
+  exact (hmaximum n a ha).trans hn
 
 end MatedCRT.Sec7
