@@ -41,6 +41,32 @@ verdicts in the inbox entry of 13:55 UTC). Line numbers refer to the published s
   step valid. Provisional: Step 4 of Lemma 6.8 (l.2600) bounds the event through Lemma 2.18 (absolute `log(1/|z-w|)`);
   route (a) scale-invariant Lemma 2.18 vs (b) `r`-dependent `s_2` is open (E-A10). Lemmas 6.4-6.10 are not frozen.
 
+## Readings (not corrections of the paper; line numbers of the corrected draft)
+
+### (R1) The origin vertex `0` and `a^eps_0` (ESCALATIONS E-x3-3, worker A, 2026-11-04)
+- Where: the paper writes `0` for the point `eta(0) = 0` of `C` and for the vertex `0` of `eps Z`, whose cell
+  `H^eps_0 = eta([-eps, 0])` contains it. The vertex `0` is the source of IDLA and of the divisible sandpile (l.246,
+  l.1537-1557), of the obstacle `-(t eps^{-1}) g^eps_{B_rho}(0, .)` (eq:discrete-least-supersolution, l.1570-1571) and
+  of `G^eps(0, .)` in Lemmas 5.2-5.3. The vertex `a^eps_y` (smallest vertex whose cell contains `y`,
+  eq:plane-to-embedding, l.637) is the source in Theorem 2.11 and Lemmas 3.3, 3.4, 3.6; `X^{0,eps}` in eq:meps (l.729)
+  is the walk from `a^eps_0` (`X^{z,eps}` starts at `a^eps_z`, l.723) or from the vertex `0` (l.724). The paper passes
+  between the two silently (Lemma 3.3 at `y = 0` gives the convergence of the Section 4 obstacle; same in Section 5).
+- Reading: literal at each place, no Lean edit. Vertex `(0 : ℤ)`: `sandpileNormOdometer`, `matedObstacle`
+  (Defs/Sandpile.lean:43, 75), `idlaProb` (Defs/Setting.lean), Drafts 4.4, 5.2, 5.3, 7.2-7.4. `vertexOf ε η 0`:
+  `MatedCRTEnv.mε` (Defs/Setting.lean:205, the reading `z = 0`); `vertexOf ε η y`: Drafts 2.11, 3.3, 3.4, 3.6.
+- Why this is consistent: `a^eps_0 = 0` iff `eta` does not visit `0` before time `-eps`, and almost surely `eta` has no
+  negative-time visit to `0`, simultaneously for all `eps > 0`: `MatedCRTEnv.IsValid.ae_vertexOf_zero_eq_zero`
+  (MatedCRT/Proofs/Sec4/DivSandpileLowerBound/SourceVertex.lean:125, worker x3, commit 1326986), from the identity case
+  of the coordinate-change rule of the mating-of-trees coupling (`igMap`: the curve is rooted at its first visit to `0`)
+  and transience. All statements concerned conclude almost surely or in probability, so the two sources are
+  interchangeable there. Caveat: the proof rests on the `igMap` field of the bundle (stated in whole-plane form for a
+  fixed witness, a documented weak spot, Defs/Setting.lean module docstring); for SLE itself the fact holds because the
+  point `eta(0)` of the fixed time `0` is a.s. not a multiple point.
+- Lean call sites of the bridge: Proofs/Sec4/DivSandpileLowerBound/ObstacleConvergence.lean:29 (x3, Theorem 4.1 /
+  Prop 4.2 obstacle via Lemma 3.3 at `y = 0`); Proofs/Sec5/MeanValueInequality/CellRepresentative.lean:113 (x1,
+  deterministic copy `vertexOf_zero_of_no_earlier_visit`, to be fed by x3's `ae_no_earlier_origin_visit`, :98); any
+  future comparison of `m_eps` (walk from `vertexOf ε η 0`) with IDLA walkers from the vertex `0` (Sections 5, 6).
+
 ## Not corrections of the paper (Lean statement fidelity, review-S.md, inbox 14:05 UTC)
 (S1)-(S7) change the Lean statements only; each is documented in the docstring of the statement it affects:
 (S1) Lemmas 2.5, 2.6: field through its circle average process; (S2) Lemmas 3.5, 3.6: `phi`, `psi` Hölder on a
