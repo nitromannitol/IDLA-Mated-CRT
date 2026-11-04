@@ -65,4 +65,23 @@ theorem exists_rescale_eq_at_cell_of_area_parametrized {μ : Measure ℂ} {η : 
   obtain ⟨x, hx, hxa⟩ := exists_vertexOf_eq_of_area_parametrized hη hp hε a
   exact ⟨x, hx, by simp [rescale, hxa]⟩
 
+/-- Transfer two uniform approximation bounds and a continuum lower bound
+to a lower bound for the corresponding weighted sum at a graph vertex. -/
+theorem weighted_vertex_lower_of_uniform_bounds {μ : Measure ℂ} {η : ℝ → ℂ}
+    {ε : ℝ} (hη : IsAreaParametrized μ η)
+    (hp : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε)
+    (a : ℤ) (mε t L e₁ e₂ : ℝ) (u v : ℤ → ℝ) (f g : ℂ → ℝ) (O : Set ℂ)
+    (ht : 0 ≤ t) (hcell : cell ε η a ⊆ O)
+    (hf : ∀ x ∈ O, |rescale mε ε η u x - f x| ≤ e₁)
+    (hg : ∀ x ∈ O, |rescale mε ε η v x - g x| ≤ e₂)
+    (hlower : ∀ x ∈ O, L ≤ f x + t * g x) :
+    L - e₁ - t * e₂ ≤ mε⁻¹ * (u a + t * v a) := by
+  obtain ⟨x, hx, hxa⟩ := exists_vertexOf_eq_of_area_parametrized hη hp hε a
+  have hxO := hcell hx
+  have hf' := (abs_le.mp (hf x hxO)).1
+  have hg' := (abs_le.mp (hg x hxO)).1
+  have hl := hlower x hxO
+  simp only [rescale, hxa] at hf' hg'
+  nlinarith
+
 end MatedCRT
