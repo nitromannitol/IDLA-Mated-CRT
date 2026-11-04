@@ -54,4 +54,29 @@ theorem probTendsToOne_shell_radii_le_field_cutoff
   exact (shell_radii_le_initial_envelope (O ε ω) (r ε ω) (K ε) (α ε) (R ε)
     (n ε ω) hK hα hO hmono hr k hk).trans ((hε ω hω.1).trans hω.2)
 
+/-- The cutoff bound holds at each shell under monotonicity of the preceding
+maxima, making it available inside the shell-contraction induction. -/
+theorem probTendsToOne_shell_radius_le_field_cutoff_of_prefix
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
+    (dd : Ω → ℝ) (hdd : Measurable[S.fieldSigma] dd) (hpos : ∀ ω, 0 < dd ω)
+    (O r : ℝ → Ω → ℕ → ℝ) (K α R : ℝ → ℝ) (n : ℝ → Ω → ℕ)
+    (G : ℝ → Set Ω) (hG : ProbTendsToOne S.P G)
+    (hdata : ∀ ε ω, ω ∈ G ε → 0 ≤ K ε ∧ 0 ≤ α ε ∧
+      (∀ k < n ε ω, 0 ≤ O ε ω k) ∧
+      (∀ k < n ε ω, r ε ω (k + 1) ≤ max ((O ε ω k * K ε) ^ (α ε)) (R ε)))
+    (scale : ℝ → ℝ) (hscale : Tendsto scale (𝓝[>] 0) (𝓝 0))
+    (henvelope : ∀ᶠ ε in 𝓝[>] 0, ∀ ω ∈ G ε,
+      max (r ε ω 0) (max ((O ε ω 0 * K ε) ^ (α ε)) (R ε)) ≤ scale ε) :
+    ProbTendsToOne S.P (fun ε => {ω | ∀ k ≤ n ε ω,
+      (∀ j < k, O ε ω (j + 1) ≤ O ε ω j) → r ε ω k ≤ dd ω}) := by
+  have hcut := probTendsToOne_le_field_cutoff S hS dd hdd hpos scale hscale
+  apply (hG.inter hcut).mono_ev
+  filter_upwards [henvelope] with ε hε ω hω
+  obtain ⟨hK, hα, hO, hr⟩ := hdata ε ω hω.1
+  intro k hk hmono
+  exact (shell_radii_le_initial_envelope (O ε ω) (r ε ω) (K ε) (α ε) (R ε) k
+    hK hα (fun j hj => hO j (lt_of_lt_of_le hj hk)) hmono
+    (fun j hj => hr j (lt_of_lt_of_le hj hk)) k le_rfl).trans ((hε ω hω.1).trans hω.2)
+
 end MatedCRT.Sec7
