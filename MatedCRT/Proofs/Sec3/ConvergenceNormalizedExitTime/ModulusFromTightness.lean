@@ -10,11 +10,13 @@ open Set Metric MeasureTheory Filter Topology
 forces the oscillation probabilities at reciprocal scales to tend to zero. -/
 theorem tendsto_oscillation_probability_of_random_compactness
     {Ω α : Type*} [mΩ : MeasurableSpace Ω] [PseudoMetricSpace α]
-    (P : Measure Ω) [IsFiniteMeasure P] (m : MeasurableSpace Ω) (hm : m ≤ mΩ)
+    (P : Measure Ω) [IsFiniteMeasure P] (m : MeasurableSpace Ω)
     (K : Set α) (hK : IsCompact K) (F : ℕ → Ω → α → ℝ)
     (t : ℝ) (ht : 0 < t)
     (hA : ∀ n : ℕ, MeasurableSet[m] {ω | ∃ x ∈ K, ∃ y ∈ K,
       dist x y < 1 / ((n : ℝ) + 1) ∧ t < |F n ω x - F n ω y|})
+    (hAnull : ∀ n : ℕ, @NullMeasurableSet Ω mΩ {ω | ∃ x ∈ K, ∃ y ∈ K,
+      dist x y < 1 / ((n : ℝ) + 1) ∧ t < |F n ω x - F n ω y|} P)
     (hcompact : ∀ I : Ω → ℕ → ℕ, (∀ n, Measurable[m] fun ω => I ω n) →
       (∀ ω n, n ≤ I ω n) → ∀ᵐ ω ∂P, ∃ φ : ℕ → ℕ, StrictMono φ ∧
         ∃ u : α → ℝ, ContinuousOn u K ∧
@@ -23,7 +25,7 @@ theorem tendsto_oscillation_probability_of_random_compactness
       dist x y < 1 / ((n : ℝ) + 1) ∧ t < |F n ω x - F n ω y|}) atTop (𝓝 0) := by
   let A : ℕ → Set Ω := fun n => {ω | ∃ x ∈ K, ∃ y ∈ K,
     dist x y < 1 / ((n : ℝ) + 1) ∧ t < |F n ω x - F n ω y|}
-  refine @tendsto_measure_zero_of_random_subsequence Ω mΩ P ‹IsFiniteMeasure P› m hm A hA ?_
+  refine @tendsto_measure_zero_of_random_subsequence Ω mΩ P ‹IsFiniteMeasure P› m A hA hAnull ?_
   intro I hI hIge
   filter_upwards [hcompact I hI hIge] with ω hω
   obtain ⟨φ, hφ, u, hu, hconv⟩ := hω

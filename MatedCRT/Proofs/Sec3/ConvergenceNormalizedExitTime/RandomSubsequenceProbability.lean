@@ -12,16 +12,16 @@ probabilities tend to zero. The choice is measurable for the specified
 sub-sigma-algebra, while probabilities use the ambient sigma-algebra. -/
 theorem tendsto_measure_zero_of_random_subsequence
     {Ω : Type*} [mΩ : MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
-    (m : MeasurableSpace Ω) (hm : m ≤ mΩ) (A : ℕ → Set Ω)
+    (m : MeasurableSpace Ω) (A : ℕ → Set Ω)
     (hA : ∀ n, MeasurableSet[m] (A n))
+    (hAnull : ∀ n, @NullMeasurableSet Ω mΩ (A n) P)
     (hsub : ∀ I : Ω → ℕ → ℕ, (∀ n, Measurable[m] fun ω => I ω n) →
       (∀ ω n, n ≤ I ω n) → ∀ᵐ ω ∂P, ∃ φ : ℕ → ℕ,
         ∀ᶠ k in atTop, ω ∉ A (I ω (φ k))) :
     Tendsto (fun n => P (A n)) atTop (𝓝 0) := by
   obtain ⟨I, hImeas, hIge, hIbad⟩ := @exists_measurable_bad_scale_selection Ω m A hA
   refine @tendsto_measure_zero_of_ae_eventually_not_mem Ω mΩ P ‹IsFiniteMeasure P› A ?_ ?_
-  · intro n
-    exact (hm _ (hA n)).nullMeasurableSet
+  · exact hAnull
   · filter_upwards [hsub I hImeas hIge] with ω hω
     by_contra hnot
     have hfrequent : ∀ n, ∃ j, n ≤ j ∧ ω ∈ A j := by
