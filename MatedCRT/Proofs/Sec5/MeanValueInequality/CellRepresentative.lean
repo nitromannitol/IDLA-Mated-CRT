@@ -108,4 +108,21 @@ theorem weighted_vertex_lower_div_epsilon {μ : Measure ℂ} {η : ℝ → ℂ}
     simpa [div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm] using hscaled
   exact this.trans hunscaled
 
+/-- If the marked point is not visited before time zero, its least
+containing cell is the cell indexed by zero. -/
+theorem vertexOf_zero_of_no_earlier_visit {η : ℝ → ℂ} {ε : ℝ}
+    (hε : 0 < ε) (hzero : η 0 = 0)
+    (hprev : ∀ s : ℝ, s < 0 → η s ≠ 0) : vertexOf ε η 0 = 0 := by
+  have hleast : IsLeast {k : ℤ | (0 : ℂ) ∈ cell ε η k} 0 := by
+    constructor
+    · exact ⟨0, ⟨by simp; linarith, by simp⟩, hzero⟩
+    · intro b hb
+      by_contra hn
+      have hbneg : b < 0 := lt_of_not_ge hn
+      obtain ⟨s, hs, hs0⟩ := hb
+      have hbneg' : (b : ℝ) < 0 := by exact_mod_cast hbneg
+      have hsneg : s < 0 := lt_of_le_of_lt hs.2 (mul_neg_of_pos_of_neg hε hbneg')
+      exact hprev s hsneg hs0
+  exact hleast.csInf_eq
+
 end MatedCRT
