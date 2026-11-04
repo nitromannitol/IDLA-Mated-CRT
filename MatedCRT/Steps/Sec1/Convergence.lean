@@ -40,7 +40,8 @@ The random width `δ / R_b` of the printed proof is replaced by a deterministic 
 * `ScaledClusterExitTimeStep`: eq:btb-converge-to-inf, `P[b T^b ≤ t] → 0` as `b → ∞`.
 
 Lemma 2.6 (`ConeScaleInvarianceStmt`) is NOT a hypothesis: in its Lean form it is an equality of image measures
-`P.map (circleProcess h, globalFamilyProcess Λ)`, and `Measure.map` of a map which is not a.e.-measurable is `0`.
+`P.map (circleProcess h, globalFamilyProcess Λ)`, and `Measure.map` of a map which is not a.e.-measurable is a junk
+value which does not depend on the map, so the equality says nothing about non-measurable families.
 Theorem 1.4 does not assume that `ω ↦ {Λ_t}` is measurable, and `{T ≤ s}` is not determined by countably many
 coordinates of the indicator process, so `T^b =d T` cannot be read off from it. Its use (line 3292) enters through
 `ScaledClusterExitTimeStep` (law of `T^b`) and `ConeEnvironmentScalingStep` + `HarmonicBallFamilyScalingStep`
