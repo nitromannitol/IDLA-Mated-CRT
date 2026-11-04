@@ -83,6 +83,19 @@ def WholePlaneGoodAnnulusTightnessStep : Prop :=
     IsProbabilityMeasure P' → IsWholePlaneGFF P' hC' hcirc' → IsLQGMeasure P' γ hcirc' μ' →
     P' {ω | ¬ IsGoodAnnulusEvent (μ' ω) c₀ C 1 0} ≤ ENNReal.ofReal (1 - p)
 
+/-- **Uniform upper volume bound for the whole-plane LQG measure with polynomially high probability** (the literature
+content of IR-c4-4; Rhodes-Vargas 2014 Theorem 2.6, BG20 arXiv:2003.10320 eq. (A.2), from the positive moments of
+Gaussian multiplicative chaos). There are `β, q > 0` such that `μ_{h^ℂ}(B_s(z)) ≤ s^β` for all `z ∈ B_3` at once,
+except on an event of probability `O(s^q)`. With it and `WholePlaneLQGExistenceStep`, the tightness step
+`WholePlaneGoodAnnulusTightnessStep` is proved (`MatedCRT/Proofs/Sec6/AnnulusHit/Main.lean`): the denominator
+`min_w μ(B_{𝐜₀}(w))` is a.s. positive by full support of the whole-plane LQG measure, and the bound on the
+logarithmic potential of `𝔸_{1,2}` is deterministic. -/
+def WholePlaneUpperVolumeTailStep : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsWholePlaneGFF P hC hcirc → IsLQGMeasure P γ hcirc μ →
+    ∃ β q K r₀ : ℝ, 0 < β ∧ 0 < q ∧ 0 < r₀ ∧ ∀ s : ℝ, 0 < s → s < r₀ →
+      P {ω | ∀ z ∈ ball (0 : ℂ) 3, μ ω (ball z s) ≤ ENNReal.ofReal (s ^ β)}ᶜ ≤ ENNReal.ofReal (K * s ^ q)
+
 /-- **Lemma 6.5 from its steps** (proof lines 2343-2368). With `C₁` from the tightness step and
 `C = 601^{2γ²} C₁`, compare the cone field with a whole-plane field (Step 1), then move the annulus to `𝔸_{1,2}(0)`
 (Step 2). -/
