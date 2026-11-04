@@ -64,6 +64,22 @@ def ConeMeanZeroRestrictionStep : Prop :=
     P.map (fun ω (φ : {φ : ℂ → ℝ // IsTestFunction (ball 0 1) φ ∧ ∫ x, φ x = 0}) => hC ω φ.1) =
       P'.map (fun ω φ => hC' ω φ.1 - γ * ∫ x, φ.1 x * Real.log ‖x‖)
 
+/-- **Circle-average differences are determined by the field modulo additive constant** (the field input of
+IR-c4-6). For the cone field and an open `U ⊆ B_1`, a difference `h_ε(x) - h_s(y)` of circle averages over circles whose
+closed discs lie in `U` is a.s. equal to a random variable measurable for `σ(h|_U)` modulo additive constant
+(`modConstSigma`). It is the pairing of `h` with the mean-zero measure `ν_{ε,x} - ν_{s,y}` (uniform measures on the
+two circles), supported in `U`, hence the `L²` limit of the pairings with the mean-zero test functions
+`(ν_{ε,x} - ν_{s,y}) * ψ_δ` supported in `U` (mollifier `ψ_δ`, `δ → 0`): DS11 Section 3.1 for `h^ℂ`, and for the cone
+field through Definition 2.1 (the lateral part has the law of that of `h^ℂ`, jointly in pairings and circle averages; the
+radial part enters both continuously). It is the only ingredient of `GoodAnnulusEventLocalityStep` not proved here
+(`MatedCRT/Proofs/Sec6/GoodAnnulusPrevalence/Locality.lean`). -/
+def CircleAverageModConstStep : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ), IsProbabilityMeasure P → IsQuantumCone γ P hC hcirc →
+  ∀ U : Set ℂ, IsOpen U → U ⊆ ball 0 1 → ∀ (ε s : ℝ) (x y : ℂ), 0 < ε → 0 < s → closedBall x ε ⊆ U →
+    closedBall y s ⊆ U →
+    ∃ D : Ω → ℝ, Measurable[modConstSigma hC U] D ∧ (fun ω => hcirc ω ε x - hcirc ω s y) =ᵐ[P] D
+
 /-- **`E_r(z)` is a.s. determined by `h|_{𝔸_{r/3,3r}(z)}` modulo additive constant** (lines 2388-2390;
 INPUT-REQUESTS IR-c4-6). Locality and Weyl scaling of `μ_h` (Fact 2.2) with `isGoodAnnulusEvent_smul_iff`. -/
 def GoodAnnulusEventLocalityStep : Prop :=
