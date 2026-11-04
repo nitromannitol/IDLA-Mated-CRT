@@ -185,4 +185,70 @@ theorem tendsto_shell_floor_log_bound (A B ω : ℝ) (hω : 0 < ω) :
   rw [Real.log_inv]
   ring
 
+/-- With logarithmically many shells, power-law radius floors and cell
+diameters do not contribute to the limiting spatial budget. -/
+theorem tendsto_shell_iteration_budget
+    (A p a b R D ω ζ : ℝ) (hω : 0 < ω) (hζ : 0 < ζ) :
+    Tendsto (fun ε : ℝ => A / (1 - p) +
+      (a + b * Real.log ε⁻¹) * (R * ε ^ ω) +
+      (a + b * Real.log ε⁻¹ + 1) * (2 * (D * ε ^ ζ)))
+      (𝓝[>] 0) (𝓝 (A / (1 - p))) := by
+  have hf := (tendsto_shell_floor_log_bound a b ω hω).const_mul R
+  have hd := (tendsto_shell_floor_log_bound (a + 1) b ζ hζ).const_mul (2 * D)
+  simp only [mul_zero] at hf hd
+  have hsum := ((tendsto_const_nhds (x := A / (1 - p))).add hf).add hd
+  simp only [add_zero] at hsum
+  apply hsum.congr'
+  filter_upwards [] with ε
+  ring
+
+/-- Any strict margin above the geometric contribution eventually covers the
+floor and cell-diameter terms in the shell budget. -/
+theorem eventually_shell_iteration_budget_lt
+    (A p a b R D ω ζ δ : ℝ) (hω : 0 < ω) (hζ : 0 < ζ)
+    (hδ : A / (1 - p) < δ) :
+    ∀ᶠ ε : ℝ in 𝓝[>] 0,
+      A / (1 - p) + (a + b * Real.log ε⁻¹) * (R * ε ^ ω) +
+        (a + b * Real.log ε⁻¹ + 1) * (2 * (D * ε ^ ζ)) < δ :=
+  (tendsto_order.1 (tendsto_shell_iteration_budget A p a b R D ω ζ hω hζ)).2 δ hδ
+
+/-- The logarithmic first-crossing bound yields an admissible shell budget at
+all sufficiently small scales whenever the geometric contribution has a strict
+margin below the target. -/
+theorem eventually_first_crossing_budget_lt
+    (A p q C ω R D α β δ : ℝ) (hα : 0 < α) (hβ : 0 < β)
+    (hδ : A / (1 - p) < δ) :
+    ∀ᶠ ε : ℝ in 𝓝[>] 0,
+      let L := (Real.log C + (1 - ω) * Real.log ε⁻¹) / (-Real.log q) + 1
+      A / (1 - p) + L * (R * ε ^ α) + (L + 1) * (2 * (D * ε ^ β)) < δ := by
+  have h := eventually_shell_iteration_budget_lt A p
+    (Real.log C / (-Real.log q) + 1) ((1 - ω) / (-Real.log q)) R D α β δ hα hβ hδ
+  filter_upwards [h] with ε hε
+  convert hε using 1
+  simp only [div_eq_mul_inv]
+  ring
+
+/-- At sufficiently small scales, every fixed-factor shell iteration satisfying
+the stated odometer and radius bounds reaches its threshold within the target
+spatial budget. -/
+theorem eventually_exists_shell_threshold_with_budget
+    (q p C ω A R D α β δ : ℝ)
+    (hq : 0 < q) (hq1 : q < 1) (hp : 0 ≤ p) (hp1 : p < 1)
+    (hC : 0 < C) (hA : 0 ≤ A) (hR : 0 ≤ R) (hD : 0 ≤ D)
+    (hα : 0 < α) (hβ : 0 < β) (hδ : A / (1 - p) < δ) :
+    ∀ᶠ ε : ℝ in 𝓝[>] 0, ∀ O r : ℕ → ℝ,
+      ε ^ (-ω) < O 0 → O 0 ≤ C / ε →
+      (∀ k, ε ^ (-ω) < O k → O (k + 1) ≤ q * O k) →
+      (∀ k, (∀ j < k, ε ^ (-ω) < O j) →
+        r k ≤ max (A * p ^ k) (R * ε ^ α)) →
+      ∃ n : ℕ, O n ≤ ε ^ (-ω) ∧
+        (∑ k ∈ Finset.range n, r k) + ((n : ℝ) + 1) * (2 * (D * ε ^ β)) ≤ δ := by
+  filter_upwards [eventually_first_crossing_budget_lt A p q C ω R D α β δ hα hβ hδ,
+    self_mem_nhdsWithin] with ε hbudget hε O r hinitial hupper hstep hr
+  exact exists_shell_threshold_with_iteration_budget O r q p C ε ω A (R * ε ^ α)
+    (D * ε ^ β) δ hq hq1 hp hp1 hC hε hA
+    (mul_nonneg hR (Real.rpow_pos_of_pos hε α).le)
+    (mul_nonneg hD (Real.rpow_pos_of_pos hε β).le)
+    hinitial hupper hstep hr hbudget.le
+
 end MatedCRT.Sec7
