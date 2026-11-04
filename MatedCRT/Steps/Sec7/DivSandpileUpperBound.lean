@@ -4,6 +4,7 @@ import MatedCRT.Draft.Section4
 import MatedCRT.Draft.Section6
 import MatedCRT.Draft.Section7
 import MatedCRT.Steps.Infra.MatingOfTrees
+import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 import MatedCRT.Proofs.Sandpile.Witness
 import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.Geometry
 import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.Interior
@@ -145,6 +146,31 @@ theorem divSandpileUpperBound_of_carved_steps (𝒮 : SpaceFillingSLEModel)
     DivSandpileUpperBoundStmt 𝒮 :=
   divSandpileUpperBound_of_steps 𝒮 hcone hlower hvolume hmass hconv hgreen hcell hodo
     hcrude hadj (stoppedShellLocalization_of_steps 𝒮 hsetup hshell)
+
+/-- Proposition 7.1 from stopped-shell localization and the numbered inputs,
+using the proved almost-sure contact of adjacent cells. -/
+theorem divSandpileUpperBound_of_inputs (𝒮 : SpaceFillingSLEModel)
+    (hcone : ConeHarmonicBallsStmt) (hlower : ConstantOrderLowerBoundDivStmt 𝒮)
+    (hvolume : VolumeGrowthStmt) (hmass : MassBoundOdometerStmt 𝒮)
+    (hconv : ConvergenceDivisibleStmt 𝒮) (hgreen : UniformConvergenceGreenKernelStmt 𝒮)
+    (hcell : CellSizeEstimateStmt 𝒮) (hodo : OdometerBoundMassStmt 𝒮)
+    (hcrude : CrudeUpperBoundStmt 𝒮) (hloc : StoppedShellLocalizationStep 𝒮) :
+    DivSandpileUpperBoundStmt 𝒮 :=
+  divSandpileUpperBound_of_steps 𝒮 hcone hlower hvolume hmass hconv hgreen hcell hodo
+    hcrude (adjacentCellsMeetAeStep 𝒮) hloc
+
+/-- Proposition 7.1 from the obstacle and shell steps, with adjacent-cell
+contact discharged by the mating-of-trees construction. -/
+theorem divSandpileUpperBound_of_carved_inputs (𝒮 : SpaceFillingSLEModel)
+    (hcone : ConeHarmonicBallsStmt) (hlower : ConstantOrderLowerBoundDivStmt 𝒮)
+    (hvolume : VolumeGrowthStmt) (hmass : MassBoundOdometerStmt 𝒮)
+    (hconv : ConvergenceDivisibleStmt 𝒮) (hgreen : UniformConvergenceGreenKernelStmt 𝒮)
+    (hcell : CellSizeEstimateStmt 𝒮) (hodo : OdometerBoundMassStmt 𝒮)
+    (hcrude : CrudeUpperBoundStmt 𝒮)
+    (hsetup : StoppedObstacleSetupStep 𝒮) (hshell : StoppedShellConfinementStep 𝒮) :
+    DivSandpileUpperBoundStmt 𝒮 :=
+  divSandpileUpperBound_of_carved_steps 𝒮 hcone hlower hvolume hmass hconv hgreen hcell
+    hodo hcrude (adjacentCellsMeetAeStep 𝒮) hsetup hshell
 
 /-- The unresolved shell construction produces an intermediate set with a small
 boundary odometer and localized filled closure on the exit-time event. -/
