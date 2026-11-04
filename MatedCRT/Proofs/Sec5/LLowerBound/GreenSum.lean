@@ -159,4 +159,11 @@ theorem lLowerBoundSumStep_of_local (𝒮 : SpaceFillingSLEModel)
   obtain ⟨D, C, α, M, hC, hDC, hCA, hkernel, hcount, herr, hsmall⟩ := hlocal' a ha hdist
   exact greenSum_lower_of_count (S.mult_symm ε ω) hlf hcons hA hC hDC hCA hε hkernel hcount herr hsmall
 
+/-- Lemma 5.4 from its local kernel, counting and geometric event. -/
+theorem lLowerBound_of_local (𝒮 : SpaceFillingSLEModel)
+    (h215 : GreenFunctionCrudeBoundStmt 𝒮) (h216 : GreenKernelLowerBoundStmt 𝒮)
+    (h29 : CountingMeasureConvergenceStmt 𝒮) (hlocal : LLowerBoundLocalStep 𝒮) :
+    LLowerBoundStmt 𝒮 :=
+  lLowerBound_of_sum_step 𝒮 h215 h216 h29 (lLowerBoundSumStep_of_local 𝒮 hlocal)
+
 end MatedCRT
