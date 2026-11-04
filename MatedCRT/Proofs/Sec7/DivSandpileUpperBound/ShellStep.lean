@@ -6,6 +6,42 @@ namespace MatedCRT.Sec7
 
 open MeasureTheory Set Metric
 
+/-- A positive shell expansion contains every vertex of the preceding shell. -/
+theorem subset_cellVertices_thickening_fill
+    {ε r : ℝ} {η : ℝ → ℂ} {Θ : Set ℤ} (hε : 0 ≤ ε) (hr : 0 < r) :
+    Θ ⊆ cellVertices ε η (thickening r (fillCells ε η Θ)) := by
+  intro a ha
+  refine ⟨vertexPoint ε η a, vertexPoint_mem_cell hε η a, ?_⟩
+  exact self_subset_thickening hr _ (mem_iUnion₂.mpr ⟨a, ha, vertexPoint_mem_cell hε η a⟩)
+
+/-- Each iterated shell contains the initial shell and hence its filled cells. -/
+theorem initial_fill_subset_iterated_shell
+    {ε : ℝ} {η : ℝ → ℂ} (Θ : ℕ → Set ℤ) (r : ℕ → ℝ)
+    (hε : 0 ≤ ε) (hr : ∀ k, 0 < r k)
+    (hstep : ∀ k, Θ (k + 1) = cellVertices ε η (thickening (r k) (fillCells ε η (Θ k))))
+    (n : ℕ) : fillCells ε η (Θ 0) ⊆ fillCells ε η (Θ n) := by
+  have hsub : ∀ n, Θ 0 ⊆ Θ n := by
+    intro n
+    induction n with
+    | zero => exact Subset.rfl
+    | succ n ih =>
+      rw [hstep n]
+      exact ih.trans (subset_cellVertices_thickening_fill hε (hr n))
+  intro z hz
+  obtain ⟨a, ha, hza⟩ := mem_iUnion₂.mp hz
+  exact mem_iUnion₂.mpr ⟨a, hsub n ha, hza⟩
+
+/-- A shell expansion is finite if it remains in a ball whose cells are finite. -/
+theorem finite_cellVertices_thickening_fill_of_ball
+    {ε ρ r R : ℝ} {η : ℝ → ℂ} {Θ : Set ℤ}
+    (hΘ : fillCells ε η Θ ⊆ ball 0 R) (hmargin : r + R ≤ ρ)
+    (hfin : (cellVertices ε η (closedBall 0 ρ)).Finite) :
+    (cellVertices ε η (thickening r (fillCells ε η Θ))).Finite := by
+  apply hfin.subset
+  apply cellVertices_mono
+  exact (thickening_subset_of_subset r hΘ).trans
+    ((Metric.thickening_ball 0 r R).trans ((ball_subset_ball hmargin).trans ball_subset_closedBall))
+
 /-- The geometric and stopped-odometer conditions imply contraction across
 one shell once the intermediate-annulus survival estimate holds. -/
 theorem shell_boundary_contracts_of_survival_bound
