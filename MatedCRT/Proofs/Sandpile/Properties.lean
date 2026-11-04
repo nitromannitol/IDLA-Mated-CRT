@@ -76,6 +76,28 @@ theorem global_cluster_connected (hlf : IsLocallyFiniteMult m)
   obtain ⟨w, hw, _⟩ := exists_finite_stabilizer hlf hsymm hloop hdeg hconn M
   exact cluster_connected hlf hsymm hloop hdeg ⟨w, hw⟩ hM
 
+theorem global_final_bounds (hlf : IsLocallyFiniteMult m)
+    (hsymm : ∀ a b, m a b = m b a) (hloop : ∀ a, m a a = 0)
+    (hdeg : ∀ a, 0 < mdeg m a) (hconn : IsVConnected m Set.univ) (hM : 0 ≤ M) (a : ℤ) :
+    0 ≤ sandpileFinal m M a ∧ sandpileFinal m M a ≤ 1 := by
+  obtain ⟨w, hw, _⟩ := exists_finite_stabilizer hlf hsymm hloop hdeg hconn M
+  exact ⟨final_nonneg hlf hloop hdeg ⟨w, hw⟩ hM a, final_le_one hlf ⟨w, hw⟩ (hdeg 0) a⟩
+
+theorem global_normOdometer_mono (hlf : IsLocallyFiniteMult m)
+    (hsymm : ∀ a b, m a b = m b a) (hloop : ∀ a, m a a = 0)
+    (hdeg : ∀ a, 0 < mdeg m a) (hconn : IsVConnected m Set.univ)
+    {M₁ M₂ : ℝ} (hM : M₁ ≤ M₂) (a : ℤ) :
+    sandpileNormOdometer m M₁ a ≤ sandpileNormOdometer m M₂ a := by
+  obtain ⟨w, hw, _⟩ := exists_finite_stabilizer hlf hsymm hloop hdeg hconn M₂
+  exact normOdometer_mono hM ⟨w, hw⟩ a
+
+theorem global_origin_mem_cluster (hlf : IsLocallyFiniteMult m)
+    (hsymm : ∀ a b, m a b = m b a) (hloop : ∀ a, m a a = 0)
+    (hdeg : ∀ a, 0 < mdeg m a) (hconn : IsVConnected m Set.univ) (hM : 1 < M) :
+    0 ∈ sandpileCluster m M := by
+  obtain ⟨w, hw, _⟩ := exists_finite_stabilizer hlf hsymm hloop hdeg hconn M
+  exact origin_mem_cluster hlf hloop hdeg ⟨w, hw⟩ hM
+
 theorem global_cluster_mono (hlf : IsLocallyFiniteMult m)
     (hsymm : ∀ a b, m a b = m b a) (hloop : ∀ a, m a a = 0)
     (hdeg : ∀ a, 0 < mdeg m a) (hconn : IsVConnected m Set.univ)
