@@ -16,6 +16,7 @@ theorem exists_shell_threshold_of_budget_bootstrap
     (hr : ∀ k < n, r (k + 1) ≤ max ((O k * K) ^ α) R)
     (hstep : ∀ k < n, B < O k →
       (∑ j ∈ Finset.range k, r j) + ((k : ℝ) + 1) * (2 * D) ≤ δ →
+      (∀ j < k, O (j + 1) ≤ q * O j) →
       O (k + 1) ≤ q * O k)
     (hbudget : r 0 + (O 0 * K) ^ α / (1 - q ^ α) +
       (n : ℝ) * R + ((n : ℝ) + 1) * (2 * D) ≤ δ) :
@@ -41,7 +42,7 @@ theorem exists_shell_threshold_of_budget_bootstrap
       intro habove
       obtain ⟨hprev, hbudgetprev⟩ := ih (by omega) (fun j hj => habove j (by omega))
       have hnext : O (k + 1) ≤ q * O k :=
-        hstep k (by omega) (habove k (by omega)) hbudgetprev
+        hstep k (by omega) (habove k (by omega)) hbudgetprev hprev
       have hsteps : ∀ j < k + 1, O (j + 1) ≤ q * O j := by
         intro j hj
         by_cases h : j < k

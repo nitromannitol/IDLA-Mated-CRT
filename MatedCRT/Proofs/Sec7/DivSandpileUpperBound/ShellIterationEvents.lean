@@ -30,6 +30,8 @@ theorem iterated_shell_contracts_of_mass_and_survival_events
     (hK : 0 ≤ K) (hC : 0 ≤ C) (hβ : 0 < β) (hs₁ : 0 < s₁)
     (hcoeff : C < s₁ * (c / 8) ^ β * K)
     (hrad : ∀ k < n, B < (⨆ b : vBoundary m (Θ k), stoppedOdometer m ε η ρ t b) →
+      (∀ j < k, (⨆ b : vBoundary m (Θ (j + 1)), stoppedOdometer m ε η ρ t b) ≤
+        (1 - s₂) * (⨆ b : vBoundary m (Θ j), stoppedOdometer m ε η ρ t b)) →
       ((⨆ b : vBoundary m (Θ k), stoppedOdometer m ε η ρ t b) * ε * K) ^ (1 / β) ≤ r k)
     (hmargins : ∀ k < n, D ≤ r k / 2 ∧ r k + R ≤ ρ ∧
       R + r k / 4 + D < ρ / 2 ∧
@@ -56,11 +58,13 @@ theorem iterated_shell_contracts_of_mass_and_survival_events
             x j ∈ A} ≤ ENNReal.ofReal (1 - s₂)) :
     ∀ k < n, B < (⨆ b : vBoundary m (Θ k), stoppedOdometer m ε η ρ t b) →
       (∑ j ∈ Finset.range k, r j) + ((k : ℝ) + 1) * (2 * D) ≤ δ →
+      (∀ j < k, (⨆ b : vBoundary m (Θ (j + 1)), stoppedOdometer m ε η ρ t b) ≤
+        (1 - s₂) * (⨆ b : vBoundary m (Θ j), stoppedOdometer m ε η ρ t b)) →
       (⨆ b : vBoundary m (Θ (k + 1)), stoppedOdometer m ε η ρ t b) ≤
       (1 - s₂) * (⨆ b : vBoundary m (Θ k), stoppedOdometer m ε η ρ t b) := by
   have hsizeR : ∀ a ∈ cellVertices ε η (ball 0 R), diam (cell ε η a) ≤ D :=
     fun a ha => hsize a (cellVertices_mono (ball_subset_ball hR) ha)
-  intro k hk hactive hbudget
+  intro k hk hactive hbudget hprev
   have hgeom := iterated_shell_admissibility_of_total_budget Θ r k hε.le hη hD hR₀
     (fun j hj => hr j (by omega)) hadj hinit hzero hball
     (fun j hj => hstep j (by omega)) (by linarith) hsizeR
@@ -70,7 +74,7 @@ theorem iterated_shell_contracts_of_mass_and_survival_events
     shell_mass_test_above_scale hε hε1 hω hc' (hr k hk).le hmin
   have hcontract := shell_boundary_contracts_of_mass_and_survival_events
     hε ht (hr k hk) hc hc' hs₂ hDr hη hsymm hlf hsucc hadj hfin hlap (hconn k hk)
-    hzero' hK hC hβ hs₁ hcoeff (hrad k hk hactive) hfill hball' hambient hclosure
+    hzero' hK hC hβ hs₁ hcoeff (hrad k hk hactive hprev) hfill hball' hambient hclosure
     hmargin hmin hmax hmassMin hsize hmass hodo hgood
   rw [hstep k hk]
   simpa only [mul_comm] using hcontract
