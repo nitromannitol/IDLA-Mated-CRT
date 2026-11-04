@@ -1,10 +1,10 @@
-import MatedCRT.Defs.Notation
+import MatedCRT.Proofs.LBM.ExitTimeContinuity
 
 /-! The local uniform distance controls uniform distance on finite horizons. -/
 
 namespace MatedCRT
 
-open MeasureTheory Set Filter Topology Metric
+open MeasureTheory Set Filter Topology Metric HarmonicBalls MarkovProcess
 open scoped ENNReal NNReal
 
 /-- Each term of the local uniform distance is bounded by the corresponding
@@ -72,5 +72,31 @@ theorem locally_uniform_of_tendsto_localUniformDist {ι : Type*} {l : Filter ι}
   have hmin : min 1 δ ≤ min 1 (dist (g i t) (f t)) := min_le_min le_rfl hle
   have hmul := mul_le_mul_of_nonneg_left hmin hw.le
   linarith
+
+/-- Local-uniform distance convergence preserves the exit time at a regular exit. -/
+theorem tendsto_ball_exitTime_of_localUniformDist {ι : Type*} {l : Filter ι}
+    (p : ContinuousPath ℂ) (z : ℂ) (r : ℝ)
+    (hfin : ContinuousPath.exitTime (ball z r) p < ⊤)
+    (hregular : ∃ᶠ t in 𝓝[>] (ContinuousPath.exitTime (ball z r) p).toNNReal,
+      p t ∉ closedBall z r)
+    (g : ι → ℝ≥0 → ℂ)
+    (hconv : Tendsto (fun i => localUniformDist (g i) p) l (𝓝 0)) :
+    Tendsto (fun i => pathExitTime (ball z r) (g i)) l
+      (𝓝 (ContinuousPath.exitTime (ball z r) p)) :=
+  tendsto_ball_exitTime_of_locally_uniform p z r hfin hregular g
+    (locally_uniform_of_tendsto_localUniformDist g p hconv)
+
+/-- Local-uniform distance convergence preserves the exit position at a regular exit. -/
+theorem tendsto_ball_exitPosition_of_localUniformDist {ι : Type*} {l : Filter ι}
+    (p : ContinuousPath ℂ) (z : ℂ) (r : ℝ)
+    (hfin : ContinuousPath.exitTime (ball z r) p < ⊤)
+    (hregular : ∃ᶠ t in 𝓝[>] (ContinuousPath.exitTime (ball z r) p).toNNReal,
+      p t ∉ closedBall z r)
+    (g : ι → ℝ≥0 → ℂ)
+    (hconv : Tendsto (fun i => localUniformDist (g i) p) l (𝓝 0)) :
+    Tendsto (fun i => pathExitPosition (ball z r) (g i)) l
+      (𝓝 (p (ContinuousPath.exitTime (ball z r) p).toNNReal)) :=
+  tendsto_ball_exitPosition_of_locally_uniform p z r hfin hregular g
+    (locally_uniform_of_tendsto_localUniformDist g p hconv)
 
 end MatedCRT
