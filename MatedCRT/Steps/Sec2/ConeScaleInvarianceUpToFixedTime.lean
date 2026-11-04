@@ -43,6 +43,16 @@ def ConeLQGScalingStep : Prop :=
       IsLQGLimit γ (rescaledCircle γ (hcirc ω) (coneScaleRadius γ (hcirc ω) b) b)
         (rescaledMeasure (μ ω) (coneScaleRadius γ (hcirc ω) b) b)
 
+/-- **Step (the cone scale radius is positive).** For `b > 0`, a.s. `R_b = sup {r > 0 : h_r(0) + Q log r = γ⁻¹ log b}`
+is positive (eq:cone-scale-radius, line 451): by Definition 2.1, `r ↦ h_r(0) + Q log r` is a.s. continuous, tends to
+`-∞` as `r → 0` (`B_t + (γ - Q) t`, `t = log r⁻¹ → ∞`) and to `+∞` as `r → ∞` (`B̂_s + (Q - γ) s`, `s = log r`), so the
+level set is nonempty and bounded above. Together with Fact 2.2 it gives `ConeLQGScalingStep`
+(`coneLQGScalingStep_of_steps`). -/
+def ConeScaleRadiusPosStep : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ), IsProbabilityMeasure P → IsQuantumCone γ P hC hcirc → ∀ b : ℝ, 0 < b →
+    ∀ᵐ ω ∂P, 0 < coneScaleRadius γ (hcirc ω) b
+
 /-- **Step (the rescaled cone field is a random variable).** For `b > 0`, the circle average process of
 `h(R_b ·) + Q log R_b - γ⁻¹ log b` is a random variable (`R_b` is a random variable and the circle average process is a.s.
 continuous). Implicit in eq:quantum-cone-scaling (line 455), which speaks of its law. -/
@@ -75,7 +85,8 @@ def ConeHalfBallFamilyFunctionalStep : Prop :=
 with the properties of Theorem 2.3, then `{R⁻¹ Λ_{bt}}_{0 < t < T}` is one for `b⁻¹ μ(R ·)` (`R, b > 0`): the
 mean value property, (a) and (b) are transported by `x ↦ R⁻¹ x`, and the obstacle problem (c) scales by
 `w̄^{B_ρ}_t[b⁻¹ μ(R ·)](x) = b⁻¹ w̄^{B_{Rρ}}_{bt}[μ](R x)` (the Green function of a disk is scale invariant). Line 582
-("for similar reasons"). -/
+("for similar reasons"). Proved: `coneHarmonicBallFamilyOnScalingStep`
+(`MatedCRT/Proofs/Sec2/ConeScaleInvarianceUpToFixedTime/Obstacle.lean`). -/
 def ConeHarmonicBallFamilyOnScalingStep : Prop :=
   ∀ (μ : Measure ℂ) (Λ : ℝ → Set ℂ) (R b T : ℝ), 0 < R → 0 < b → IsConeHarmonicBallFamilyOn μ Λ (b * T) →
     IsConeHarmonicBallFamilyOn (rescaledMeasure μ R b) (rescaledFamily Λ R b) T
