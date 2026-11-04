@@ -1,11 +1,68 @@
 import MatedCRT.Draft.Section7
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.Visit
+import MatedCRT.Proofs.Sec7.MassBoundOdometer.Comparison
+import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.CrudeCells
 
 /-! Comparison of the walk events in the shell contraction argument. -/
 
 namespace MatedCRT.Sec7
 
 open MeasureTheory Set
+
+/-- A positive Euclidean thickening of filled cells contains the graph closure
+when adjacent cells meet. -/
+theorem graph_closure_subset_thickened_cell_vertices
+    {m : ℤ → ℤ → ℕ} {ε r : ℝ} {η : ℝ → ℂ} {Θ : Set ℤ}
+    (hε : 0 ≤ ε) (hr : 0 < r)
+    (hadj : ∀ a b, m a b ≠ 0 → (cell ε η a ∩ cell ε η b).Nonempty) :
+    vClosure m Θ ⊆ cellVertices ε η (Metric.thickening r (fillCells ε η Θ)) := by
+  intro a ha
+  rcases ha with ha | ⟨_, b, hb, hba⟩
+  · have hz := vertexPoint_mem_cell hε η a
+    exact ⟨vertexPoint ε η a, hz, Metric.self_subset_thickening hr _
+      (mem_iUnion₂.mpr ⟨a, ha, hz⟩)⟩
+  · obtain ⟨z, hzb, hza⟩ := hadj b a hba
+    exact ⟨z, hza, Metric.self_subset_thickening hr _ (mem_iUnion₂.mpr ⟨b, hb, hzb⟩)⟩
+
+/-- Removing the inner thickening keeps an annulus disjoint from the graph
+closure of its preceding shell. -/
+theorem thickened_annulus_disjoint_graph_closure
+    {m : ℤ → ℤ → ℕ} {ε r : ℝ} {η : ℝ → ℂ} {Θ E : Set ℤ}
+    (hε : 0 ≤ ε) (hr : 0 < r)
+    (hadj : ∀ a b, m a b ≠ 0 → (cell ε η a ∩ cell ε η b).Nonempty) :
+    E \ cellVertices ε η (Metric.thickening r (fillCells ε η Θ)) ⊆ (vClosure m Θ)ᶜ := by
+  intro a ha hac
+  exact ha.2 (graph_closure_subset_thickened_cell_vertices hε hr hadj hac)
+
+/-- If an annulus avoids the graph closure of the previous shell, its graph
+boundary avoids the previous shell itself. -/
+theorem annulus_boundary_disjoint_previous_shell
+    {m : ℤ → ℤ → ℕ} (hsymm : ∀ a b, m a b = m b a)
+    {B Θ : Set ℤ} (hB : B ⊆ (vClosure m Θ)ᶜ) :
+    vBoundary m B ⊆ Θᶜ := by
+  intro b hb hbΘ
+  obtain ⟨hbB, a, haB, hab⟩ := hb
+  have haΘ : a ∉ Θ := fun ha => hB haB (Or.inl ha)
+  have haBd : a ∈ vBoundary m Θ := ⟨haΘ, b, hbΘ, by simpa [hsymm a b] using hab⟩
+  exact hB haB (Or.inr haBd)
+
+/-- The annulus boundary maximum is controlled by the previous shell boundary
+maximum by the discrete maximum principle. -/
+theorem annulus_boundary_odometer_le_previous
+    {m : ℤ → ℤ → ℕ} {ε ρ t : ℝ} {η : ℝ → ℂ} {B Θ : Set ℤ}
+    (hε : 0 < ε) (ht : 0 < t) (hsymm : ∀ a b, m a b = m b a)
+    (hlf : ∀ a, {b | m a b ≠ 0}.Finite) (hsucc : ∀ k : ℤ, m k (k + 1) ≠ 0)
+    (hfin : (cellVertices ε η (Metric.closedBall 0 ρ)).Finite)
+    (hlap : ∀ a ∈ matedDiscreteCluster m ε η ρ t, a ≠ 0 →
+      matedLaplacian m (stoppedOdometer m ε η ρ t) a = ((matedDeg m a : ℕ) : ℝ)⁻¹)
+    (hΘ : Θ.Finite) (h0 : (0 : ℤ) ∈ Θ) (hB : B ⊆ (vClosure m Θ)ᶜ) :
+    (⨆ b : vBoundary m B, stoppedOdometer m ε η ρ t b) ≤
+      ⨆ b : vBoundary m Θ, stoppedOdometer m ε η ρ t b := by
+  apply Real.iSup_le
+  · intro b
+    exact stoppedOdometer_le_iSup_vBoundary hε ht hsymm hlf hsucc hfin hlap hΘ h0
+      (annulus_boundary_disjoint_previous_shell hsymm hB b.property)
+  · exact Real.iSup_nonneg fun b => stoppedOdometer_nonneg hε ht b
 
 /-- A path which exits `B` before hitting `B \ Λ` remains in `A` up to its
 exit, provided `A` contains the occupied part of `B`. -/
@@ -48,6 +105,31 @@ theorem stopped_odometer_le_of_survival_bound
     stoppedOdometer m ε η ρ t b ≤ M * q := by
   exact hodo.trans (mul_le_mul_of_nonneg_left
     (exit_before_hit_probability_le m b B (matedDiscreteCluster m ε η ρ t) A q hq hA hprob) hM)
+
+/-- The walk estimate and the maximum principle bound the annulus odometer by
+the previous shell's boundary maximum times the survival probability. -/
+theorem stopped_odometer_le_previous_boundary_of_survival_bound
+    {m : ℤ → ℤ → ℕ} {ε ρ t q : ℝ} {η : ℝ → ℂ} {B Θ A : Set ℤ} {b : ℤ}
+    (hε : 0 < ε) (ht : 0 < t) (hq : 0 ≤ q) (hsymm : ∀ a b, m a b = m b a)
+    (hlf : ∀ a, {b | m a b ≠ 0}.Finite) (hsucc : ∀ k : ℤ, m k (k + 1) ≠ 0)
+    (hfin : (cellVertices ε η (Metric.closedBall 0 ρ)).Finite)
+    (hlap : ∀ a ∈ matedDiscreteCluster m ε η ρ t, a ≠ 0 →
+      matedLaplacian m (stoppedOdometer m ε η ρ t) a = ((matedDeg m a : ℕ) : ℝ)⁻¹)
+    (hΘ : Θ.Finite) (h0 : (0 : ℤ) ∈ Θ) (hB : B ⊆ (vClosure m Θ)ᶜ)
+    (hA : B ∩ matedDiscreteCluster m ε η ρ t ⊆ A)
+    (hodo : stoppedOdometer m ε η ρ t b ≤
+      (⨆ c : vBoundary m B, stoppedOdometer m ε η ρ t c) *
+        (srwLaw m b {x | vExitTime B x <
+          vHitTime (B \ matedDiscreteCluster m ε η ρ t) x}).toReal)
+    (hprob : srwLaw m b {x | ∀ n : ℕ, (n : ℕ∞) < vExitTime B x → x n ∈ A} ≤
+      ENNReal.ofReal q) :
+    stoppedOdometer m ε η ρ t b ≤
+      (⨆ c : vBoundary m Θ, stoppedOdometer m ε η ρ t c) * q := by
+  have hM : 0 ≤ ⨆ c : vBoundary m B, stoppedOdometer m ε η ρ t c :=
+    Real.iSup_nonneg fun c => stoppedOdometer_nonneg hε ht c
+  exact (stopped_odometer_le_of_survival_bound m ε ρ t η B A b _ q hM hq hA hodo hprob).trans
+    (mul_le_mul_of_nonneg_right
+      (annulus_boundary_odometer_le_previous hε ht hsymm hlf hsucc hfin hlap hΘ h0 hB) hq)
 
 /-- Lemma 7.3 and a survival bound imply pointwise odometer contraction on the
 annulus, simultaneously for all admissible scales and annuli. -/
