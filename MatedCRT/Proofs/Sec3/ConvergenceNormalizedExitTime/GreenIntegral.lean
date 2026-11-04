@@ -1,14 +1,14 @@
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.AwayFromPole
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.MassTight
-import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.CellIntegrable
+import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.UniformIntegrable
 
 /-!
 # Truncated Green integrals in probability
 
 Uniform Green-kernel convergence away from the pole implies convergence of
-its integrals over a fixed set, provided the continuum integrand is almost
-surely integrable. The area-parametrized curve supplies tightness of the mass
-and discrete integrability; no Hölder estimate on an annulus is used.
+its integrals over a fixed set. The area-parametrized curve supplies tightness
+of the mass and discrete integrability; the same Green-kernel convergence
+gives continuum integrability without a Hölder estimate on an annulus.
 -/
 
 namespace MatedCRT
@@ -23,9 +23,7 @@ theorem greenIntegral_converges_away_from_pole
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
     {r : ℝ} {z y : ℂ} (hr : 0 < r) (hball : ball z r ⊆ ball 0 ρ) (hy : y ∈ ball z r)
     (D : Set ℂ) (hD : D ⊆ closedBall z r \ {y}) (hDρ : D ⊆ ball 0 ρ)
-    (hdist : 0 < infDist y D)
-    (hint : ∀ᵐ ω ∂S.P,
-      IntegrableOn (fun x => S.c₀ / 6 * greenFunction (ball z r) y x) D (S.μ ω)) :
+    (hdist : 0 < infDist y D) :
     TendstoInProbability S.P
       (fun ε ω => ∫ x in D, rescale (S.mε ε) ε (S.η ω)
         (fun a => ε⁻¹ * greenKernel (S.mult ε ω)
@@ -38,6 +36,8 @@ theorem greenIntegral_converges_away_from_pole
     refine ⟨2 * ((n : ℝ) + 1), by positivity, ?_⟩
     exact (measure_mono fun ω hω => lt_of_lt_of_le hω (measure_mono hDρ)).trans hn
   · intro ε hε
+    have hint := greenFunction_ae_integrableOn_away_from_pole 𝒮 h33 hγ hγ2 hρ hρ1
+      S hS hr hball hy D hD hDρ hdist
     filter_upwards [hS.ae_integrableOn_rescale_ball hε ρ (fun ω a =>
       ε⁻¹ * greenKernel (S.mult ε ω)
         (interiorCellVertices ε (S.η ω) (ball z r)) (vertexOf ε (S.η ω) y) a), hint]
