@@ -9,7 +9,7 @@ open MeasureTheory Set Metric
 /-- The two good events give contraction at each active connected shell whose
 preceding shells satisfy the ambient budget. -/
 theorem iterated_shell_contracts_of_mass_and_survival_events
-    {m : ℤ → ℤ → ℕ} {ε ρ t R₀ R D c K C β s₀ s₁ s₂ ω₀ dd B δ : ℝ}
+    {m : ℤ → ℤ → ℕ} {ε ρ t R₀ R D c K C β βₘ s₀ s₁ s₂ ω₀ dd B δ : ℝ}
     {η : ℝ → ℂ} (Θ : ℕ → Set ℤ) (r : ℕ → ℝ) (n : ℕ)
     (hε : 0 < ε) (ht : 0 < t) (hc : 0 < c) (hc' : c ≤ 1)
     (hs₂ : s₂ ≤ 1) (hη : Continuous η) (hD : 0 ≤ D) (hR₀ : 0 ≤ R₀) (hR : R ≤ ρ)
@@ -32,10 +32,10 @@ theorem iterated_shell_contracts_of_mass_and_survival_events
     (hmargins : ∀ k < n, D ≤ r k / 2 ∧ r k + R ≤ ρ ∧
       R + r k / 4 + D < ρ / 2 ∧
       R + (((c / 8) * r k + D) + r k / 4) + D + r k / 4 ≤ ρ ∧
-      10 * ε ^ ω₀ ≤ (c / 8) * r k ∧ (c / 8) * r k ≤ dd)
+      10 * ε ^ ω₀ ≤ (c / 8) * r k ∧ (c / 8) * r k ≤ dd ∧ ε ^ βₘ ≤ r k / 4)
     (hsize : ∀ a ∈ cellVertices ε η (ball 0 ρ), diam (cell ε η a) ≤ D)
     (hmass : ∀ T : Set ℤ, T ⊆ cellVertices ε η (ball 0 ρ) → IsVConnected m T →
-      (0 : ℤ) ∈ T → ∀ (s : ℝ) (z : ℂ), 0 < s →
+      (0 : ℤ) ∈ T → ∀ (s : ℝ) (z : ℂ), 0 < s → ε ^ βₘ ≤ s →
       cellVertices ε η (ball z s) ⊆ cellVertices ε η (ball 0 ρ) \ T →
       ((cellVertices ε η (ball z (c * s)) ∩ matedDiscreteCluster m ε η ρ t).ncard : ℝ) ≤
         C * ⨆ b : vBoundary m T, stoppedOdometer m ε η ρ t b)
@@ -63,11 +63,11 @@ theorem iterated_shell_contracts_of_mass_and_survival_events
     (fun j hj => hr j (by omega)) hadj hinit hzero hball
     (fun j hj => hstep j (by omega)) (by linarith) hsizeR
   obtain ⟨hfill, _, hzero', hball'⟩ := hgeom k le_rfl
-  obtain ⟨hDr, hambient, hclosure, hmargin, hmin, hmax⟩ := hmargins k hk
+  obtain ⟨hDr, hambient, hclosure, hmargin, hmin, hmax, hmassMin⟩ := hmargins k hk
   have hcontract := shell_boundary_contracts_of_mass_and_survival_events
     hε ht (hr k hk) hc hc' hs₂ hDr hη hsymm hlf hsucc hadj hfin hlap (hconn k hk)
     hzero' hK hC hβ hs₁ hcoeff (hrad k hk hactive) hfill hball' hambient hclosure
-    hmargin hmin hmax hsize hmass hodo hgood
+    hmargin hmin hmax hmassMin hsize hmass hodo hgood
   rw [hstep k hk]
   simpa only [mul_comm] using hcontract
 
