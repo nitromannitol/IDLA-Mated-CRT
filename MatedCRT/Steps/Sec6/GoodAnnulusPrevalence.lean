@@ -49,6 +49,21 @@ def ConeAnnulusIterateProp : Prop :=
 (eq:gff-scaling). -/
 def AnnulusIterateConeTransferStep : Prop := AnnulusIterateStmt → ConeAnnulusIterateProp
 
+/-- **eq:gff on the mean-zero pairings** (line 444): `h|_{B_1} =d (h^ℂ - γ log |·|)|_{B_1}`, viewed modulo additive
+constant. For the cone field `h` and a whole-plane GFF `h^ℂ`, the families of pairings `(h, φ)` and
+`(h^ℂ, φ) - γ ∫ φ(x) log |x| dx`, indexed by the test functions `φ` supported in `B_1` with `∫ φ = 0`, have the same law
+(product σ-algebra). The paper calls eq:gff "immediate from Definition 2.1" (INPUT-REQUESTS IR-A3: provable, lemma
+target): it amounts to the radial part `t ↦ h^ℂ_{e^{-t}}(0)`, `t ≥ 0`, of the normalized whole-plane GFF being a standard
+Brownian motion independent of its lateral part. It is the only ingredient of `AnnulusIterateConeTransferStep` not
+proved here (`MatedCRT/Proofs/Sec6/GoodAnnulusPrevalence/ConeTransfer.lean`). -/
+def ConeMeanZeroRestrictionStep : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ), IsProbabilityMeasure P → IsQuantumCone γ P hC hcirc →
+  ∀ (Ω' : Type) [MeasurableSpace Ω'] (P' : Measure Ω') (hC' : Ω' → (ℂ → ℝ) → ℝ) (hcirc' : Ω' → ℝ → ℂ → ℝ),
+    IsWholePlaneGFF P' hC' hcirc' →
+    P.map (fun ω (φ : {φ : ℂ → ℝ // IsTestFunction (ball 0 1) φ ∧ ∫ x, φ x = 0}) => hC ω φ.1) =
+      P'.map (fun ω φ => hC' ω φ.1 - γ * ∫ x, φ.1 x * Real.log ‖x‖)
+
 /-- **`E_r(z)` is a.s. determined by `h|_{𝔸_{r/3,3r}(z)}` modulo additive constant** (lines 2388-2390;
 INPUT-REQUESTS IR-c4-6). Locality and Weyl scaling of `μ_h` (Fact 2.2) with `isGoodAnnulusEvent_smul_iff`. -/
 def GoodAnnulusEventLocalityStep : Prop :=
