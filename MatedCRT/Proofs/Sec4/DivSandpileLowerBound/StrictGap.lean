@@ -34,7 +34,7 @@ theorem subset_fillCells_matedDiscreteCluster_of_strict_gap
     {m : ℤ → ℤ → ℕ} {ε ρ t mε s : ℝ} {η : ℝ → ℂ}
     {K : Set ℂ} {w φ : ℂ → ℝ}
     (hη : Continuous η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ))
-    (hsurj : Function.Surjective η) (hε : 0 < ε) (hmε : 0 < mε)
+    (hsurj : Function.Surjective η) (hε : 0 < ε) (hmε : 0 ≤ mε)
     (hK : K ⊆ ball 0 ρ) (_hs : 0 < s)
     (hgap : ∀ x ∈ K, s ≤ w x - φ x)
     (hw : ∀ x ∈ K,
@@ -56,7 +56,7 @@ theorem subset_fillCells_matedDiscreteCluster_of_strict_gap
   have hpositive : 0 < matedLeastSupersolution m ε η ρ t (vertexOf ε η x) -
       matedObstacle m ε η ρ t (vertexOf ε η x) := by
     simp only [rescale, ← mul_sub] at hdiff
-    exact pos_of_mul_pos_right hdiff (inv_nonneg.mpr hmε.le)
+    exact pos_of_mul_pos_right hdiff (inv_nonneg.mpr hmε)
   simp only [fillCells, mem_iUnion]
   refine ⟨vertexOf ε η x, ?_, hcell⟩
   change vertexOf ε η x ∈ cellVertices ε η (ball 0 ρ) ∧ _
@@ -68,7 +68,7 @@ theorem eventually_subset_fillCells_matedDiscreteCluster_of_strict_gap
     {m : ℕ → ℤ → ℤ → ℕ} {ε mε : ℕ → ℝ} {ρ t : ℝ} {η : ℝ → ℂ}
     {K : Set ℂ} {w φ : ℂ → ℝ}
     (hη : Continuous η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ))
-    (hsurj : Function.Surjective η) (hε : ∀ n, 0 < ε n) (hmε : ∀ n, 0 < mε n)
+    (hsurj : Function.Surjective η) (hε : ∀ n, 0 < ε n) (hmε : ∀ n, 0 ≤ mε n)
     (hK : K ⊆ ball 0 ρ) (hcompact : IsCompact K)
     (hwc : ContinuousOn w K) (hφc : ContinuousOn φ K)
     (hgap : ∀ x ∈ K, φ x < w x)
