@@ -61,4 +61,68 @@ theorem intermediate_annulus_survival_of_good_event
     hball.trans (fillCells_subset_fill_intermediate (by linarith : 0 < r / 4))
   exact hgood ((c / 8) * r) hmin hmax I hclose hballI (B ∩ Λ) inter_subset_left hcount
 
+/-- The intermediate annulus is admissible for the stopped-odometer
+estimate whenever the thickening and cell-diameter errors fit in the ambient
+ball. The origin belongs to the filled intermediate shell. -/
+theorem intermediate_annulus_subset_ambient_sdiff_origin
+    {ε ρ s v R D : ℝ} {η : ℝ → ℂ} {Θ : Set ℤ}
+    (hε : 0 ≤ ε) (hs : 0 < s) (hη : Continuous η) (h0 : (0 : ℤ) ∈ Θ)
+    (hΘ : fillCells ε η Θ ⊆ ball 0 R)
+    (hdiam : ∀ a ∈ cellVertices ε η (thickening s (fillCells ε η Θ)),
+      diam (cell ε η a) ≤ D)
+    (hmargin : R + (v + D + s) ≤ ρ) :
+    cellVertices ε η (thickening v
+      (fillCells ε η (cellVertices ε η (thickening s (fillCells ε η Θ))))) \
+      cellVertices ε η (thickening s (fillCells ε η Θ)) ⊆
+      cellVertices ε η (ball 0 ρ) \ {0} := by
+  have h0I : (0 : ℤ) ∈ cellVertices ε η (thickening s (fillCells ε η Θ)) := by
+    refine ⟨vertexPoint ε η 0, vertexPoint_mem_cell hε η 0, ?_⟩
+    exact self_subset_thickening hs _
+      (mem_iUnion₂.mpr ⟨0, h0, vertexPoint_mem_cell hε η 0⟩)
+  have hcontain : thickening v
+      (fillCells ε η (cellVertices ε η (thickening s (fillCells ε η Θ)))) ⊆ ball 0 ρ := by
+    refine (thickening_fill_intermediate_subset hη Subset.rfl hdiam).trans ?_
+    refine (thickening_subset_of_subset (v + D + s) hΘ).trans ?_
+    exact (Metric.thickening_ball 0 (v + D + s) R).trans
+      (ball_subset_ball (by linarith))
+  intro a ha
+  exact ⟨cellVertices_mono hcontain ha.1, by simpa using (ne_of_mem_of_not_mem h0I ha.2).symm⟩
+
+/-- The stopped-odometer estimate applies almost surely to every intermediate
+annulus satisfying the ambient margin. -/
+theorem intermediate_annulus_odometer_bound_ae
+    (𝒮 : SpaceFillingSLEModel) (hodo : OdometerBoundMassStmt 𝒮)
+    (γ ρ : ℝ) (hγ : 0 < γ) (hγ' : γ < 2) (hρ : 0 < ρ) (hρ' : ρ < 1)
+    (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ) :
+    ∀ᵐ ω ∂S.P, ∀ ε t s v R D : ℝ, 0 < ε → 0 < t → 0 < s →
+      Continuous (S.η ω) → ∀ Θ : Set ℤ, (0 : ℤ) ∈ Θ →
+      fillCells ε (S.η ω) Θ ⊆ ball 0 R →
+      (∀ a ∈ cellVertices ε (S.η ω) (thickening s (fillCells ε (S.η ω) Θ)),
+        diam (cell ε (S.η ω) a) ≤ D) → R + (v + D + s) ≤ ρ →
+      ∀ b ∈ cellVertices ε (S.η ω) (thickening v
+        (fillCells ε (S.η ω) (cellVertices ε (S.η ω)
+          (thickening s (fillCells ε (S.η ω) Θ))))) \
+        cellVertices ε (S.η ω) (thickening s (fillCells ε (S.η ω) Θ)),
+      stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t b ≤
+        (⨆ c : vBoundary (S.mult ε ω)
+          (cellVertices ε (S.η ω) (thickening v
+            (fillCells ε (S.η ω) (cellVertices ε (S.η ω)
+              (thickening s (fillCells ε (S.η ω) Θ))))) \
+            cellVertices ε (S.η ω) (thickening s (fillCells ε (S.η ω) Θ))),
+          stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t c) *
+        (srwLaw (S.mult ε ω) b {x |
+          vExitTime (cellVertices ε (S.η ω) (thickening v
+            (fillCells ε (S.η ω) (cellVertices ε (S.η ω)
+              (thickening s (fillCells ε (S.η ω) Θ))))) \
+            cellVertices ε (S.η ω) (thickening s (fillCells ε (S.η ω) Θ))) x <
+          vHitTime ((cellVertices ε (S.η ω) (thickening v
+            (fillCells ε (S.η ω) (cellVertices ε (S.η ω)
+              (thickening s (fillCells ε (S.η ω) Θ))))) \
+            cellVertices ε (S.η ω) (thickening s (fillCells ε (S.η ω) Θ))) \
+            matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t) x}).toReal := by
+  filter_upwards [hodo γ hγ hγ' ρ hρ hρ' Ω S hS] with ω hω
+  intro ε t s v R D hε ht hs hη Θ h0 hΘ hdiam hmargin
+  apply hω ε t hε ht
+  exact intermediate_annulus_subset_ambient_sdiff_origin hε.le hs hη h0 hΘ hdiam hmargin
+
 end MatedCRT.Sec7
