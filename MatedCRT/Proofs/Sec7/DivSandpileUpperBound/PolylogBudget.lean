@@ -60,4 +60,21 @@ theorem tendsto_rpow_mul_log_polynomial_floor_pow
     rw [mul_pow] at hmul
     nlinarith
 
+/-- A polylogarithmic number of shells times a polynomial mesh error vanishes. -/
+theorem tendsto_polylog_horizon_mul_rpow
+    {α ω A C : ℝ} (hα : 0 < α) (hA : 0 < A) (n : ℕ) (horizon : ℝ → ℕ)
+    (hbound : ∀ᶠ ε in 𝓝[>] 0, (horizon ε : ℝ) ≤
+      C * (1 + |Real.log (A * ε ^ ω)|) ^ n) :
+    Tendsto (fun ε : ℝ => (horizon ε : ℝ) * ε ^ α) (𝓝[>] 0) (𝓝 0) := by
+  have hlim := (tendsto_rpow_mul_log_polynomial_floor_pow (ω := ω) hα hA n).const_mul C
+  have hlim' : Tendsto (fun ε : ℝ => C *
+      (ε ^ α * (1 + |Real.log (A * ε ^ ω)|) ^ n)) (𝓝[>] 0) (𝓝 0) := by
+    simpa using hlim
+  apply squeeze_zero' ?_ ?_ hlim'
+  · filter_upwards [self_mem_nhdsWithin] with ε hε
+    exact mul_nonneg (Nat.cast_nonneg _) (Real.rpow_nonneg hε.le α)
+  · filter_upwards [self_mem_nhdsWithin, hbound] with ε hε hεbound
+    have h := mul_le_mul_of_nonneg_right hεbound (Real.rpow_nonneg hε.le α)
+    nlinarith
+
 end MatedCRT.Sec7
