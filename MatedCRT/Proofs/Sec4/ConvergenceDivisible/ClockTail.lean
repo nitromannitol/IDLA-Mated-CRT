@@ -242,4 +242,77 @@ theorem MatedCRTEnv.IsValid.annealed_clock_lower_tail_tendsto_zero
   filter_upwards [hEsand] with ω hE
   exact (hE n).1
 
+/-- Measurable envelopes for the upper tail of the clock. -/
+theorem MatedCRTEnv.IsValid.exists_measurable_upper_clock_tail_envelopes
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel}
+    {γ : ℝ} (hS : S.IsValid 𝒮 γ) (r : ℝ≥0) :
+    ∃ E : ℕ → Ω → ℝ≥0∞, (∀ n, Measurable (E n)) ∧
+      ∀ᵐ ω ∂S.P, ∀ n : ℕ,
+        planarBrownianMotion 0 {b | 3 * ((n : ℝ) + 1) ≤ S.clock ω b r} ≤ E n ω ∧
+        E n ω ≤ planarBrownianMotion 0 {b | (n : ℝ) + 1 ≤ S.clock ω b r} := by
+  classical
+  choose G hGmeas hGsame using fun k : ℕ =>
+    IsQuantumCone.exists_measurable_clockApprox_version hS.isQuantumCone k r
+  let E : ℕ → Ω → ℝ≥0∞ := fun n ω => liminf (fun k => planarBrownianMotion 0
+    {b | 2 * ((n : ℝ) + 1) ≤ G k (ω, b)}) atTop
+  refine ⟨E, ?_, ?_⟩
+  · intro n
+    exact Measurable.liminf (fun k => measurable_measure_joint_upperTail (hGmeas k) _)
+  · filter_upwards [hS.isLQGClock, ae_all_iff.mpr hGsame] with ω hclock hsame
+    intro n
+    have hconv : TendstoInMeasure (planarBrownianMotion 0) (fun k b => G k (ω, b)) atTop
+        (fun b => S.clock ω b r) := by
+      have h := IsLQGClock.tendstoInMeasure_at_time (hclock 0).1 r
+      have heq : (fun k b => G k (ω, b)) =
+          (fun k b => lqgClockApprox γ (S.hcirc ω) (dyadicScale k) b r) := by
+        funext k b
+        exact hsame k b
+      rw [heq]
+      exact h
+    have hpos : (0 : ℝ) < (n : ℝ) + 1 := by positivity
+    have h := upperTail_liminf_bounds_of_tendstoInMeasure hconv
+      (a := 3 * ((n : ℝ) + 1)) hpos
+    convert h using 1 <;> simp only [E] <;> try ring
+
+/-- The annealed upper tail of the clock at positive deterministic time tends to zero. -/
+theorem MatedCRTEnv.IsValid.annealed_clock_upper_tail_tendsto_zero
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel}
+    {γ : ℝ} (hS : S.IsValid 𝒮 γ) {r : ℝ≥0} (hr : 0 < r) :
+    Tendsto (fun n : ℕ => ∫⁻ ω, planarBrownianMotion 0
+      {b | 3 * ((n : ℝ) + 1) ≤ S.clock ω b r} ∂S.P) atTop (𝓝 0) := by
+  let : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
+  obtain ⟨E, hEmeas, hEsand⟩ := hS.exists_measurable_upper_clock_tail_envelopes r
+  have hElim : ∀ᵐ ω ∂S.P, Tendsto (fun n => E n ω) atTop (𝓝 0) := by
+    filter_upwards [hEsand, hS.ae_clock_tail_limits] with ω hE ht
+    refine tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds (ht r hr).2
+      (Eventually.of_forall fun _ => bot_le) ?_
+    apply Eventually.of_forall
+    intro n
+    calc
+      E n ω ≤ planarBrownianMotion 0 {b | (n : ℝ) + 1 ≤ S.clock ω b r} := (hE n).2
+      _ ≤ planarBrownianMotion 0 {b | (n : ℝ) ≤ S.clock ω b r} := by
+        apply measure_mono
+        intro b hb
+        change (n : ℝ) + 1 ≤ S.clock ω b r at hb
+        change (n : ℝ) ≤ S.clock ω b r
+        linarith
+  have hEbound : ∀ n, E n ≤ᵐ[S.P] fun _ => (1 : ℝ≥0∞) := by
+    intro n
+    filter_upwards [hEsand] with ω hE
+    calc
+      E n ω ≤ planarBrownianMotion 0 {b | (n : ℝ) + 1 ≤ S.clock ω b r} := (hE n).2
+      _ ≤ planarBrownianMotion 0 univ := measure_mono (subset_univ _)
+      _ = 1 := measure_univ
+  have hEint := tendsto_lintegral_of_dominated_convergence (fun _ => 1) hEmeas hEbound
+    (by simp) hElim
+  have hEint' : Tendsto (fun n => ∫⁻ ω, E n ω ∂S.P) atTop (𝓝 0) := by
+    simpa using hEint
+  refine tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hEint'
+    (Eventually.of_forall fun _ => bot_le) ?_
+  apply Eventually.of_forall
+  intro n
+  apply lintegral_mono_ae
+  filter_upwards [hEsand] with ω hE
+  exact (hE n).1
+
 end MatedCRT
