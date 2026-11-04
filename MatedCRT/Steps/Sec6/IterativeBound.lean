@@ -149,7 +149,7 @@ the cell-size bound in `B_{(1+ρ)/2}`, and all `Θ̄ ⋐ B_{ρ/2}` with `B_{s₀
 (`β < min(1/(2β⁻), ω, κ)/2`, so that the error terms `C(s₄, s₅) δ₀^{1/2β⁻} (1 + log δ₀⁻¹)²`,
 `C log³ε⁻¹ (ε^ω + ε^κ)` and `ε^{κ - ω₀}` of Steps 1-3 are at most `δ₀^β` uniformly in `δ₀`.) -/
 def QuenchedIterationStep : Prop :=
-  ∀ ρ βm ω₀ κ : ℝ, 0 < ρ → ρ < 1 → 0 < βm → 0 < ω₀ → 0 < κ →
+  ∀ ρ βm ω₀ κ : ℝ, 0 < ρ → ρ < 1 → 1 ≤ βm → 0 < ω₀ → 0 < κ →
   ∃ β : ℝ, 0 < β ∧
   ∀ s₀ s₃ s₄ s₅ : ℝ, 0 < s₀ → 0 < s₃ → 0 < s₄ → s₄ < 1 → 0 < s₅ → s₅ < 1 →
   ∃ D₀ : ℝ, 0 < D₀ ∧

@@ -126,7 +126,7 @@ theorem iterativeBound_of_steps (𝒮 : SpaceFillingSLEModel) (h69 : ChanceOfBei
   have hρ'0 : 0 < (1 + ρ) / 2 := by linarith
   have hρ'1 : (1 + ρ) / 2 < 1 := by linarith
   have hβm : (2 + γ) ^ 2 / 2 < (2 + γ) ^ 2 / 2 + 1 := by linarith
-  have hβm0 : 0 < (2 + γ) ^ 2 / 2 + 1 := by positivity
+  have hβm0 : 1 ≤ (2 + γ) ^ 2 / 2 + 1 := le_add_of_nonneg_left (by positivity)
   have hγ' : 0 < (2 + γ) ^ 2 := by positivity
   have hζ0 : 0 < 1 / (2 + γ) ^ 2 := by positivity
   have hζ1 : 1 / (2 + γ) ^ 2 < 1 := by
