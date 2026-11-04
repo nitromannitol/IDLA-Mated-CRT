@@ -34,4 +34,50 @@ theorem MatedCRTEnv.IsValid.measurableSet_discreteSupersolution
     (measurableSet_le (hS.measurable_mLaplacian ε u hu b) (hr b))).inter
     (MeasurableSet.iInter fun b => (hWb b).compl.union (measurableSet_le (hφ b) (hu b)))
 
+/-- A countable family of measurable supersolutions with arbitrarily good pointwise
+values makes the least supersolution measurable. The approximation hypothesis
+is stated separately because it requires analysis of the finite graph. -/
+theorem MatedCRTEnv.IsValid.measurable_discreteLeastSupersolution_of_countable
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
+    (ε : ℝ) (V W : Ω → Set ℤ) (hV : Measurable V) (hW : Measurable W)
+    (r φ : Ω → ℤ → ℝ) (hr : ∀ b, Measurable fun ω => r ω b)
+    (hφ : ∀ b, Measurable fun ω => φ ω b) (a : ℤ)
+    (u : ℕ → Ω → ℤ → ℝ) (hu : ∀ n b, Measurable fun ω => u n ω b)
+    (hne : ∀ ω, ∃ v : ℤ → ℝ,
+      (∀ b ∈ V ω, mLaplacian (S.mult ε ω) v b ≤ r ω b) ∧
+      ∀ b ∈ W ω, φ ω b ≤ v b)
+    (hbdd : ∀ ω, BddBelow ((fun v : ℤ → ℝ => v a) ''
+      {v | (∀ b ∈ V ω, mLaplacian (S.mult ε ω) v b ≤ r ω b) ∧
+        ∀ b ∈ W ω, φ ω b ≤ v b}))
+    (happrox : ∀ ω (v : ℤ → ℝ),
+      ((∀ b ∈ V ω, mLaplacian (S.mult ε ω) v b ≤ r ω b) ∧
+        ∀ b ∈ W ω, φ ω b ≤ v b) → ∀ q : ℝ, v a < q →
+      ∃ n, ((∀ b ∈ V ω, mLaplacian (S.mult ε ω) (u n ω) b ≤ r ω b) ∧
+        ∀ b ∈ W ω, φ ω b ≤ u n ω b) ∧ u n ω a < q) :
+    Measurable fun ω => discreteLeastSupersolution (S.mult ε ω) (V ω) (W ω)
+      (r ω) (φ ω) a := by
+  apply measurable_of_Iio
+  intro q
+  have heq : {ω | discreteLeastSupersolution (S.mult ε ω) (V ω) (W ω)
+      (r ω) (φ ω) a < q} =
+      ⋃ n, ({ω | (∀ b ∈ V ω, mLaplacian (S.mult ε ω) (u n ω) b ≤ r ω b) ∧
+        ∀ b ∈ W ω, φ ω b ≤ u n ω b} ∩ {ω | u n ω a < q}) := by
+    ext ω
+    simp only [mem_ofPred_eq, mem_iUnion, mem_inter_iff]
+    rw [discreteLeastSupersolution, csInf_lt_iff (hbdd ω) (by
+      obtain ⟨v, hv⟩ := hne ω
+      exact ⟨v a, ⟨v, hv, rfl⟩⟩)]
+    constructor
+    · rintro ⟨_, ⟨v, hv, rfl⟩, hlt⟩
+      exact happrox ω v hv q hlt
+    · rintro ⟨n, hn, hlt⟩
+      exact ⟨u n ω a, ⟨u n ω, hn, rfl⟩, hlt⟩
+  change MeasurableSet {ω | discreteLeastSupersolution (S.mult ε ω) (V ω) (W ω)
+    (r ω) (φ ω) a < q}
+  rw [heq]
+  exact MeasurableSet.iUnion fun n =>
+    (hS.measurableSet_discreteSupersolution ε V W hV hW r φ (u n) hr hφ (hu n)).inter
+      (measurableSet_lt (hu n a) measurable_const)
+
 end MatedCRT
