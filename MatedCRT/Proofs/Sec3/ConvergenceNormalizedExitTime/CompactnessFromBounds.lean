@@ -1,6 +1,7 @@
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.CompactnessFromClipping
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.ExitTimeClipping
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.ExitTimeMeasurable
+import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.ExitLaplacianBound
 
 /-! Random compactness from eventual bounds on normalized exit times. -/
 
@@ -75,5 +76,36 @@ theorem exit_compactness_of_eventual_bounds
   exact exit_compactness_of_admissible_approximations 𝒮 h31 hγ hγ2 hρ hρ1
     S hS D hD hconn K hK hKD E v' C hEm hEpos hElim hvm hCm hCpos
     (fun ω n a => hlap n ω a) (fun ω n a => hsize n ω a) heq
+
+/-- The normalized exit-time Laplacian bound is automatic, so only an
+eventual size bound remains to apply discrete potential tightness. -/
+theorem exit_compactness_of_eventual_size
+    (𝒮 : SpaceFillingSLEModel) (h31 : DiscretePotentialTightnessStmt 𝒮)
+    {γ ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hρ : 0 < ρ) (hρ1 : ρ < 1)
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
+    (D : Set ℂ) (hD : D ⊆ ball 0 ρ) (hconn : IsConnected D)
+    (hDtop : IsOpen D ∨ IsClosed D)
+    (K : Set ℂ) (hK : IsCompact K) (hKD : closure K ⊆ D)
+    (ε : ℕ → ℝ) (I : Ω → ℕ → ℕ)
+    (hI : ∀ n, Measurable[S.envSigma] fun ω => I ω n)
+    (hEpos : ∀ ω n, 0 < ε (I ω n))
+    (hElim : ∀ ω, Tendsto (fun n => ε (I ω n)) atTop (𝓝 0))
+    (hM : ∀ n j k, Measurable[S.envSigma] fun ω => S.mult (ε (I ω n)) ω j k)
+    (hV : ∀ n, Measurable[S.envSigma] fun ω => cellVertices (ε (I ω n)) (S.η ω) D)
+    (hW : ∀ n, Measurable[S.envSigma] fun ω => interiorCellVertices (ε (I ω n)) (S.η ω) D)
+    (C : Ω → ℝ) (hCm : Measurable[S.envSigma] C) (hC : ∀ ω, 1 ≤ C ω)
+    (hsize : ∀ᵐ ω ∂S.P, ∀ᶠ n in atTop,
+      ∀ a ∈ cellVertices (ε (I ω n)) (S.η ω) D,
+        |normExitTime (S.mult (ε (I ω n)) ω)
+          (interiorCellVertices (ε (I ω n)) (S.η ω) D) a| ≤ C ω / ε (I ω n)) :
+    ∀ᵐ ω ∂S.P, ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∃ u : ℂ → ℝ,
+      ContinuousOn u K ∧ TendstoUniformlyOn
+        (fun k => rescale (S.mε (ε (I ω (φ k)))) (ε (I ω (φ k))) (S.η ω)
+          (normExitTime (S.mult (ε (I ω (φ k))) ω)
+            (interiorCellVertices (ε (I ω (φ k))) (S.η ω) D))) u atTop K := by
+  apply exit_compactness_of_eventual_bounds 𝒮 h31 hγ hγ2 hρ hρ1 S hS D hD hconn hDtop
+    K hK hKD ε I hI hEpos hElim hM hV hW C hCm (fun ω => (zero_lt_one.trans_le (hC ω)))
+  exact hS.ae_exit_bounds_of_eventual_size hγ hγ2 D (isBounded_ball.subset hD)
+    (fun ω n => ε (I ω n)) hEpos C hC hsize
 
 end MatedCRT
