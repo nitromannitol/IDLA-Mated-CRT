@@ -4,6 +4,33 @@ import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.RadiusEnvelope
 
 namespace MatedCRT.Sec7
 
+open Filter Topology
+
+/-- A larger mesh exponent beats any fixed coefficient times a smaller mesh
+exponent near zero. -/
+theorem eventually_mul_rpow_lt_mul_rpow
+    {a b A B : ℝ} (hab : b < a) (hB : 0 < B) :
+    ∀ᶠ ε : ℝ in 𝓝[>] 0, A * ε ^ a < B * ε ^ b := by
+  have hpow := tendsto_rpow_nhdsGT_zero (sub_pos.mpr hab)
+  have hlim : Tendsto (fun ε : ℝ => A * ε ^ (a - b)) (𝓝[>] 0) (𝓝 0) := by
+    simpa using hpow.const_mul A
+  filter_upwards [self_mem_nhdsWithin, (tendsto_order.1 hlim).2 B hB] with ε hε hsmall
+  have hmul := mul_lt_mul_of_pos_right hsmall (Real.rpow_pos_of_pos hε b)
+  have hpow' : ε ^ (a - b) * ε ^ b = ε ^ a := by
+    rw [← Real.rpow_add hε]
+    congr 1
+    ring
+  calc
+    A * ε ^ a = (A * ε ^ (a - b)) * ε ^ b := by rw [← hpow']; ring
+    _ < B * ε ^ b := hmul
+
+/-- A polynomial shell-radius floor with a smaller exponent lies above the
+minimum radius required by the survival estimate. -/
+theorem eventually_shell_survival_floor
+    {ω q c : ℝ} (hqω : q < ω) (hc : 0 < c) :
+    ∀ᶠ ε : ℝ in 𝓝[>] 0, 10 * ε ^ ω < (c / 8) * ε ^ q :=
+  eventually_mul_rpow_lt_mul_rpow hqω (by positivity)
+
 /-- Lower and upper radius envelopes supply the geometric margins required by
 the local mass and survival estimates. -/
 theorem shell_margins_of_radius_bounds
