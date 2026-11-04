@@ -1,5 +1,6 @@
 import MatedCRT.Proofs.Sec5.MeanValueInequality.BoundaryContact
 import MatedCRT.Proofs.Sec7.OdometerBoundMass.StoppedOdometer
+import MatedCRT.Proofs.Sec5.MeanValueInequality.NormalizedStep
 
 /-!
 # Contact outside the cluster without a connectivity hypothesis
@@ -45,5 +46,32 @@ theorem mated_surplus_zero_off_cluster_direct {m : ℤ → ℤ → ℕ}
       t / ε * greenKernel m (ballInterior ε η ρ) 0 a = 0 := by
   rw [mated_surplus_eq_zero_off_cluster_direct hε ht ha]
   simp [matedObstacle]
+
+/-- The deterministic mean-value comparison uses the surplus estimates and
+finite-graph data, but does not require an obstacle-setting connectivity field. -/
+theorem normalized_meanValue_of_surplus_direct {m : ℤ → ℤ → ℕ}
+    {ε ρ t δ c C : ℝ} {η : ℝ → ℂ} (hε : 0 < ε) (ht : 0 < t)
+    (hc : 0 < c) (hC : 0 < C)
+    (hdata : MeanValueSurplusData m (matedDiscreteCluster m ε η ρ t)
+      (ballInterior ε η ρ)
+      {a ∈ matedDiscreteCluster m ε η ρ t |
+        δ < infDist (vertexPoint ε η a)
+          (frontier (fillCells ε η (matedDiscreteCluster m ε η ρ t)))}
+      (matedLeastSupersolution m ε η ρ t) (t / ε) ε c C)
+    {a : ℤ} (ha : a ∈ matedDiscreteCluster m ε η ρ t)
+    (hdist : δ < infDist (vertexPoint ε η a)
+      (frontier (fillCells ε η (matedDiscreteCluster m ε η ρ t)))) :
+    (1 + c / C) * normExitTime m (matedDiscreteCluster m ε η ρ t) a ≤
+      (t / ε) * greenKernel m (matedDiscreteCluster m ε η ρ t) a 0 := by
+  obtain ⟨⟨hsymm, hlf, hA, hdeg, hfirstA⟩, hcons, hB, hAB, h0, hfirstB, hw, hbounds⟩ := hdata
+  obtain ⟨hv, hq⟩ := hbounds a ⟨ha, hdist⟩
+  have hboundary : ∀ x ∉ matedDiscreteCluster m ε η ρ t,
+      matedLeastSupersolution m ε η ρ t x +
+        (t / ε) * greenKernel m (ballInterior ε η ρ) 0 x ≤ 0 :=
+    fun _ hx => (mated_surplus_zero_off_cluster_direct hε ht hx).le
+  have hcomp := obstacle_surplus_le_green_sub_exit hsymm hlf hcons hA hB hAB h0 hfirstA hfirstB
+    (matedLeastSupersolution m ε η ρ t) (t / ε) hw hboundary a
+  rw [greenKernel_symm_of_firstStep hsymm hlf hA hdeg hfirstA 0 a] at hcomp
+  exact normalized_meanValue_of_surplus_bounds hε hc hC hcomp hv hq
 
 end MatedCRT
