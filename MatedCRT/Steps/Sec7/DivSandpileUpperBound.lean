@@ -6,6 +6,7 @@ import MatedCRT.Draft.Section7
 import MatedCRT.Steps.Infra.MatingOfTrees
 import MatedCRT.Proofs.Sandpile.Witness
 import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.Geometry
+import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.CrudeShell
 
 /-!
 # Proposition 7.1: reduction to stopped-shell localization
@@ -16,7 +17,7 @@ The passage from the stopped cluster to the global sandpile cluster is determini
 
 namespace MatedCRT
 
-open MeasureTheory Filter Topology Set Metric HarmonicBalls
+open MeasureTheory Filter Topology Set Metric _root_.HarmonicBalls
 
 /-- The stopped-shell localization needed in the proof of Proposition 7.1. This step
 includes the obstacle setting, interior containment of the
@@ -143,5 +144,38 @@ theorem divSandpileUpperBound_of_carved_steps (𝒮 : SpaceFillingSLEModel)
     DivSandpileUpperBoundStmt 𝒮 :=
   divSandpileUpperBound_of_steps 𝒮 hcone hlower hvolume hmass hconv hgreen hcell hodo
     hcrude hadj (stoppedShellLocalization_of_steps 𝒮 hsetup hshell)
+
+/-- The unresolved shell construction: on the exit-time event it produces an
+intermediate set with a small boundary odometer and localized filled closure, and
+puts the stopped cluster in the graph interior. -/
+def IntermediateShellStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ConeHarmonicBallsStmt → ConstantOrderLowerBoundDivStmt 𝒮 → VolumeGrowthStmt →
+  MassBoundOdometerStmt 𝒮 → ConvergenceDivisibleStmt 𝒮 →
+  UniformConvergenceGreenKernelStmt 𝒮 → CellSizeEstimateStmt 𝒮 →
+  OdometerBoundMassStmt 𝒮 → AdjacentCellsMeetAeStep 𝒮 →
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
+  ∀ δ t : ℝ, 0 < δ → δ < ρ → 0 < t →
+  ∃ ζ ω₀ : ℝ, 0 < ζ ∧ ζ < 1 ∧ 0 < ω₀ ∧ ω₀ < 2 / (2 + γ) ^ 2 - ζ ∧
+    TendsToOneOn S.P {ω | t < clusterExitTime (Λ ω) ρ} fun ε => {ω |
+      let m := S.mult ε ω
+      let η := S.η ω
+      matedDiscreteCluster m ε η ρ t ⊆ vInterior m (ballInterior ε η ρ) ∧
+        ∃ Θ : Set ℤ, (0 : ℤ) ∈ Θ ∧
+          (∀ c ∈ vBoundary m Θ, stoppedOdometer m ε η ρ t c ≤ ε ^ (-ω₀)) ∧
+          fillCells ε η (vClosure m Θ) ⊆ outerNbhd (δ / 2) (Λ ω t)}
+
+/-- The final crude estimate turns the intermediate-shell step into the full
+stopped-shell confinement step. -/
+theorem stoppedShellConfinement_of_intermediateShell (𝒮 : SpaceFillingSLEModel)
+    (hshell : IntermediateShellStep 𝒮) : StoppedShellConfinementStep 𝒮 := by
+  intro hcone hlower hvolume hmass hconv hgreen hcell hodo hcrude hadj
+    γ hγ hγ' ρ hρ hρ' Ω _ S hS Λ hΛ δ t hδ hδρ ht
+  obtain ⟨ζ, ω₀, hζ, hζ1, hω, hωα, hstep⟩ :=
+    hshell hcone hlower hvolume hmass hconv hgreen hcell hodo hadj
+      γ hγ hγ' ρ hρ hρ' Ω S hS Λ hΛ δ t hδ hδρ ht
+  exact Sec7.stopped_confinement_of_intermediate_shell 𝒮 hcell hcrude hadj
+    γ hγ hγ' ζ ρ ω₀ δ hζ hζ1 hρ hρ' hω hωα hδ Ω S hS Λ t ht _ hstep
 
 end MatedCRT
