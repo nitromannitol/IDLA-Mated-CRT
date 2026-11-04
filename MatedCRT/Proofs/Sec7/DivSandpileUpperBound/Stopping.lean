@@ -120,6 +120,38 @@ theorem shell_radius_tail_sum_le (r : ℕ → ℝ) (R : ℝ) (n : ℕ)
       Finset.sum_le_sum fun k hk => hr k (Finset.mem_range.mp hk)
     _ = (n : ℝ) * R := by simp
 
+/-- The radius at the next shell inherits geometric decay from the current
+odometer maximum, up to the prescribed floor. The exponent retains the index
+shift in the definition of the radius. -/
+theorem shell_radius_from_odometer_contraction
+    (O r : ℕ → ℝ) (q K α R : ℝ) (n : ℕ)
+    (hq : 0 ≤ q) (hK : 0 ≤ K) (hα : 0 ≤ α)
+    (hO : ∀ k ≤ n, 0 ≤ O k)
+    (hstep : ∀ k < n, O (k + 1) ≤ q * O k)
+    (hr : ∀ k < n, r (k + 1) ≤ max ((O k * K) ^ α) R) :
+    ∀ k < n, r (k + 1) ≤ max (((O 0 * K) ^ α) * (q ^ α) ^ k) R := by
+  have hgeom : ∀ k ≤ n, O k ≤ O 0 * q ^ k := by
+    intro k hk
+    induction k with
+    | zero => simp
+    | succ k ih =>
+      calc
+        O (k + 1) ≤ q * O k := hstep k (by omega)
+        _ ≤ q * (O 0 * q ^ k) := mul_le_mul_of_nonneg_left (ih (by omega)) hq
+        _ = O 0 * q ^ (k + 1) := by rw [pow_succ]; ring
+  intro k hk
+  apply (hr k hk).trans
+  apply max_le_max_right
+  calc
+    (O k * K) ^ α ≤ ((O 0 * q ^ k) * K) ^ α :=
+      Real.rpow_le_rpow (mul_nonneg (hO k (by omega)) hK)
+        (mul_le_mul_of_nonneg_right (hgeom k (by omega)) hK) hα
+    _ = ((O 0 * K) ^ α) * (q ^ α) ^ k := by
+      rw [show O 0 * q ^ k * K = (O 0 * K) * q ^ k by ring,
+        Real.mul_rpow (mul_nonneg (hO 0 (by omega)) hK) (pow_nonneg hq k),
+        ← Real.rpow_natCast_mul hq k α, mul_comm (k : ℝ) α,
+        Real.rpow_mul_natCast hq α k]
+
 /-- A maximum of a geometric radius and a nonnegative floor is bounded in
 total by the geometric series plus the accumulated floor. -/
 theorem shell_radii_max_sum_le (r : ℕ → ℝ) (A q R : ℝ)
@@ -133,6 +165,55 @@ theorem shell_radii_max_sum_le (r : ℕ → ℝ) (A q R : ℝ)
       linarith [hr k hk])
   rw [Finset.sum_sub_distrib] at hsum
   simp only [Finset.sum_const, Finset.card_range, nsmul_eq_mul] at hsum
+  linarith
+
+/-- For the paper's shifted radius definition, a contracting odometer gives a
+geometric-series bound plus the radius floor and the initial radius. -/
+theorem shell_radii_sum_from_odometer_contraction
+    (O r : ℕ → ℝ) (q K α R : ℝ) (n : ℕ)
+    (hq : 0 ≤ q) (hq1 : q < 1) (hK : 0 ≤ K) (hα : 0 < α) (hR : 0 ≤ R)
+    (hO : ∀ k ≤ n, 0 ≤ O k)
+    (hstep : ∀ k < n, O (k + 1) ≤ q * O k)
+    (hr : ∀ k < n, r (k + 1) ≤ max ((O k * K) ^ α) R) :
+    ∑ k ∈ Finset.range (n + 1), r k ≤
+      r 0 + (O 0 * K) ^ α / (1 - q ^ α) + (n : ℝ) * R := by
+  have hdecay := shell_radius_from_odometer_contraction O r q K α R n hq hK hα.le hO hstep hr
+  have hsum := shell_radii_max_sum_le (fun k => r (k + 1)) ((O 0 * K) ^ α) (q ^ α) R
+    (Real.rpow_nonneg (mul_nonneg (hO 0 (Nat.zero_le n)) hK) α)
+    (Real.rpow_nonneg hq α) (Real.rpow_lt_one hq hq1 hα) hR n hdecay
+  rw [Finset.sum_range_succ']
+  linarith
+
+/-- First threshold crossing with the radius indexed by the previous maximum.
+This combines the stopping-time estimate with the radius formula, including the
+initial radius and the cell-diameter error. -/
+theorem exists_shell_threshold_with_shifted_radius_budget
+    (O r : ℕ → ℝ) (q K α R D C ε ω δ : ℝ)
+    (hq : 0 < q) (hq1 : q < 1) (hK : 0 ≤ K) (hα : 0 < α)
+    (hR : 0 ≤ R) (hD : 0 ≤ D) (hC : 0 < C) (hε : 0 < ε)
+    (hO : ∀ k, 0 ≤ O k) (hinitial : ε ^ (-ω) < O 0) (hupper : O 0 ≤ C / ε)
+    (hstep : ∀ k, ε ^ (-ω) < O k → O (k + 1) ≤ q * O k)
+    (hr : ∀ k, r (k + 1) ≤ max ((O k * K) ^ α) R)
+    (hbudget : let L := (Real.log C + (1 - ω) * Real.log ε⁻¹) / (-Real.log q) + 1
+      r 0 + (O 0 * K) ^ α / (1 - q ^ α) + L * R + (L + 1) * (2 * D) ≤ δ) :
+    ∃ n : ℕ, O n ≤ ε ^ (-ω) ∧
+      (∑ k ∈ Finset.range n, r k) + ((n : ℝ) + 1) * (2 * D) ≤ δ := by
+  obtain ⟨n, hn, hbefore, hlog⟩ :=
+    exists_first_shell_threshold_log_scale O q C ε ω hq hq1 hC hε hinitial hupper hstep
+  have hnpos : 0 < n := by
+    by_contra hn'
+    have : n = 0 := Nat.eq_zero_of_not_pos hn'
+    subst n
+    exact (not_le_of_gt hinitial) hn
+  obtain ⟨m, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (Nat.ne_of_gt hnpos)
+  refine ⟨m + 1, hn, ?_⟩
+  have hsum := shell_radii_sum_from_odometer_contraction O r q K α R m
+    hq.le hq1 hK hα hR (fun k _ => hO k)
+    (fun k hk => hstep k (hbefore k (by omega))) (fun k _ => hr k)
+  have hm : (m : ℝ) ≤ (m + 1 : ℕ) := by exact_mod_cast Nat.le_succ m
+  have hfloor := mul_le_mul_of_nonneg_right (hm.trans hlog.le) hR
+  have hdiam := mul_le_mul_of_nonneg_right (add_le_add_right hlog.le 1) (by linarith : 0 ≤ 2 * D)
+  dsimp only at hbudget
   linarith
 
 /-- The geometric, floor, and cell-diameter contributions fit a common
