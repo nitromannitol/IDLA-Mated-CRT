@@ -2,6 +2,7 @@ import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.CompactnessFromClippin
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.ExitTimeClipping
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.ExitTimeMeasurable
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.ExitLaplacianBound
+import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.MeasurableUniformBound
 
 /-! Random compactness from eventual bounds on normalized exit times. -/
 
@@ -107,5 +108,37 @@ theorem exit_compactness_of_eventual_size
     K hK hKD ε I hI hEpos hElim hM hV hW C hCm (fun ω => (zero_lt_one.trans_le (hC ω)))
   exact hS.ae_exit_bounds_of_eventual_size hγ hγ2 D (isBounded_ball.subset hD)
     (fun ω n => ε (I ω n)) hEpos C hC hsize
+
+/-- A pathwise eventual size estimate yields compactness when the selected
+graph and cell sets are measurable. -/
+theorem exit_compactness_of_pathwise_eventual_size
+    (𝒮 : SpaceFillingSLEModel) (h31 : DiscretePotentialTightnessStmt 𝒮)
+    {γ ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hρ : 0 < ρ) (hρ1 : ρ < 1)
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
+    (D : Set ℂ) (hD : D ⊆ ball 0 ρ) (hconn : IsConnected D)
+    (hDtop : IsOpen D ∨ IsClosed D)
+    (K : Set ℂ) (hK : IsCompact K) (hKD : closure K ⊆ D)
+    (ε : ℕ → ℝ) (I : Ω → ℕ → ℕ)
+    (hI : ∀ n, Measurable[S.envSigma] fun ω => I ω n)
+    (hEpos : ∀ ω n, 0 < ε (I ω n))
+    (hElim : ∀ ω, Tendsto (fun n => ε (I ω n)) atTop (𝓝 0))
+    (hM : ∀ n j k, Measurable[S.envSigma] fun ω => S.mult (ε (I ω n)) ω j k)
+    (hV : ∀ n, Measurable[S.envSigma] fun ω => cellVertices (ε (I ω n)) (S.η ω) D)
+    (hW : ∀ n, Measurable[S.envSigma] fun ω => interiorCellVertices (ε (I ω n)) (S.η ω) D)
+    (hsize : ∀ᵐ ω ∂S.P, ∃ C : ℝ, ∀ᶠ n in atTop,
+      ∀ a ∈ cellVertices (ε (I ω n)) (S.η ω) D,
+        ε (I ω n) * |normExitTime (S.mult (ε (I ω n)) ω)
+          (interiorCellVertices (ε (I ω n)) (S.η ω) D) a| ≤ C) :
+    ∀ᵐ ω ∂S.P, ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∃ u : ℂ → ℝ,
+      ContinuousOn u K ∧ TendstoUniformlyOn
+        (fun k => rescale (S.mε (ε (I ω (φ k)))) (ε (I ω (φ k))) (S.η ω)
+          (normExitTime (S.mult (ε (I ω (φ k))) ω)
+            (interiorCellVertices (ε (I ω (φ k))) (S.η ω) D))) u atTop K := by
+  obtain ⟨C, hCm, hC, hCa⟩ := hS.exists_measurable_exit_time_bound_of_eventual
+    ε I hI hEpos D hDtop (isBounded_ball.subset hD) hsize
+  apply exit_compactness_of_eventual_size 𝒮 h31 hγ hγ2 hρ hρ1 S hS D hD hconn hDtop
+    K hK hKD ε I hI hEpos hElim hM hV hW C hCm hC
+  filter_upwards [hCa] with ω hω
+  exact Filter.Eventually.of_forall (fun n a _ => hω n a)
 
 end MatedCRT
