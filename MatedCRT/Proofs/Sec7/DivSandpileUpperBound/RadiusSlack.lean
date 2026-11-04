@@ -83,4 +83,16 @@ theorem shell_local_count_lt_of_radius
   convert hcount using 1
   ring
 
+/-- The lower scale required by the survival event also places the larger
+mass-test ball above the mesh-dependent scale, when its exponent is chosen
+at least as large as the survival exponent. -/
+theorem shell_mass_test_above_scale
+    {ε ω βₘ c r : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1) (hω : ω ≤ βₘ)
+    (hc : c ≤ 1) (hr : 0 ≤ r) (hmin : 10 * ε ^ ω ≤ (c / 8) * r) :
+    ε ^ βₘ ≤ r / 4 := by
+  have hpow := Real.rpow_le_rpow_of_exponent_ge hε hε1 hω
+  have hpow_nonneg : 0 ≤ ε ^ ω := Real.rpow_nonneg hε.le ω
+  have hcr : c * r ≤ r := by simpa using mul_le_mul_of_nonneg_right hc hr
+  nlinarith
+
 end MatedCRT.Sec7
