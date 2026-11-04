@@ -84,4 +84,28 @@ theorem weighted_vertex_lower_of_uniform_bounds {μ : Measure ℂ} {η : ℝ →
   simp only [rescale, hxa] at hf' hg'
   nlinarith
 
+/-- The lower median scaling converts the normalized estimate into a bound
+of order `ε⁻¹` for the unscaled weighted sum. -/
+theorem weighted_vertex_lower_div_epsilon {μ : Measure ℂ} {η : ℝ → ℂ}
+    {ε : ℝ} (hη : IsAreaParametrized μ η)
+    (hp : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε)
+    (a : ℤ) (mε t L e₁ e₂ C : ℝ) (u v : ℤ → ℝ) (f g : ℂ → ℝ) (O : Set ℂ)
+    (ht : 0 ≤ t) (hC : 0 < C) (hscale : C⁻¹ * ε⁻¹ ≤ mε)
+    (hmargin : 0 ≤ L - e₁ - t * e₂) (hcell : cell ε η a ⊆ O)
+    (hf : ∀ x ∈ O, |rescale mε ε η u x - f x| ≤ e₁)
+    (hg : ∀ x ∈ O, |rescale mε ε η v x - g x| ≤ e₂)
+    (hlower : ∀ x ∈ O, L ≤ f x + t * g x) :
+    (L - e₁ - t * e₂) / C / ε ≤ u a + t * v a := by
+  have hm : 0 < mε :=
+    lt_of_lt_of_le (mul_pos (inv_pos.mpr hC) (inv_pos.mpr hε)) hscale
+  have hnormalized := weighted_vertex_lower_of_uniform_bounds hη hp hε a mε t L e₁ e₂
+    u v f g O ht hcell hf hg hlower
+  have hunscaled : (L - e₁ - t * e₂) * mε ≤ u a + t * v a := by
+    apply (le_div_iff₀ hm).mp
+    simpa [div_eq_mul_inv, mul_comm] using hnormalized
+  have hscaled := mul_le_mul_of_nonneg_left hscale hmargin
+  have : (L - e₁ - t * e₂) / C / ε ≤ (L - e₁ - t * e₂) * mε := by
+    simpa [div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm] using hscaled
+  exact this.trans hunscaled
+
 end MatedCRT
