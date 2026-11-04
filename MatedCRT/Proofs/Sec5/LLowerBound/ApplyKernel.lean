@@ -1,5 +1,6 @@
 import MatedCRT.Proofs.Sec5.LLowerBound.LocalData
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.Core
+import MatedCRT.Proofs.Sec7.OdometerBoundMass.StoppedOdometer
 
 /-!
 # Applying the Green-kernel estimate on a smaller ball
@@ -11,6 +12,19 @@ ambient ball when the radius is smaller than the distance to its boundary.
 namespace MatedCRT
 
 open Set Metric
+
+/-- The discrete cluster lies in the interior vertex set, without requiring
+that the interior vertex set be connected. -/
+theorem matedDiscreteCluster_subset_ballInterior {m : ℤ → ℤ → ℕ}
+    {ε : ℝ} {η : ℝ → ℂ} {ρ t : ℝ} (hε : 0 < ε) (ht : 0 < t) :
+    matedDiscreteCluster m ε η ρ t ⊆ ballInterior ε η ρ := by
+  intro a ha
+  by_contra haV
+  have haW : a ∈ cellVertices ε η (closedBall 0 ρ) :=
+    Sec7.cellVertices_mono ball_subset_closedBall ha.1
+  have hle := Sec7.matedLeastSupersolution_le_obstacle_of_not_mem_ballInterior
+    (m := m) (η := η) (ρ := ρ) hε ht haW haV
+  exact (not_lt_of_ge hle) ha.2
 
 /-- A ball centred inside a concentric ball is contained in a larger ball. -/
 theorem ball_subset_ball_of_norm_add {z : ℂ} {r ρ : ℝ}
