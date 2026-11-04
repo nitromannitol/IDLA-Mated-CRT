@@ -60,4 +60,27 @@ theorem tsum_greenFn_eq_degree_mul_normExitTime_of_firstStep
   simp_rw [hpoint]
   exact tsum_mul_left
 
+/-- Convert the normalized inequality in the proof of Lemma 5.3 into its
+Green-function form. -/
+theorem meanValue_of_normalized_of_firstStep {m : ℤ → ℤ → ℕ} {A : Set ℤ}
+    (hsymm : ∀ a b, m a b = m b a)
+    (hlf : ∀ a, {b | m a b ≠ 0}.Finite) (hA : A.Finite)
+    (hdeg : ∀ a, mdeg m a ≠ 0)
+    (hfirst : ∀ b, ∀ a ∈ A,
+      mLaplacian m (fun x => greenFn m A x b) a = -(if a = b then 1 else 0))
+    (a : ℤ) (K s : ℝ)
+    (h : (1 + s) * normExitTime m A a ≤ K * greenKernel m A a 0) :
+    (1 + s) * (∑' b : A, greenFn m A b a) ≤ K * greenFn m A 0 a := by
+  have ha : (0 : ℝ) < mdeg m a := Nat.cast_pos.2 (Nat.pos_of_ne_zero (hdeg a))
+  have hG : (mdeg m a : ℝ) * greenKernel m A a 0 = greenFn m A 0 a := by
+    rw [greenKernel_symm_of_firstStep hsymm hlf hA hdeg hfirst a 0]
+    unfold greenKernel
+    field_simp
+  rw [tsum_greenFn_eq_degree_mul_normExitTime_of_firstStep hsymm hlf hA hdeg hfirst]
+  calc
+    (1 + s) * ((mdeg m a : ℝ) * normExitTime m A a) =
+        (mdeg m a : ℝ) * ((1 + s) * normExitTime m A a) := by ring
+    _ ≤ (mdeg m a : ℝ) * (K * greenKernel m A a 0) := mul_le_mul_of_nonneg_left h ha.le
+    _ = K * greenFn m A 0 a := by rw [← hG]; ring
+
 end MatedCRT
