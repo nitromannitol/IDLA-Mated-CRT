@@ -126,4 +126,43 @@ theorem convergenceDivisible_of_countable_continuum_evaluations
       hC hdense hzero (hpoint γ hγ hγ' Ω S hS q hq) z
   exact nullMeasurableSet_lt_clusterExitTime_of_membership S.P S.μ Λ hΛ hloc hmem ρ t ht
 
+/-- The event-measurability step follows from the pathwise inputs and null
+measurability of cluster exit events. -/
+theorem convergenceDivisibleEventMeasurable_of_measurable_exit
+    (𝒮 : SpaceFillingSLEModel) (h48 : SubsequentialPropertiesStmt 𝒮)
+    (h46 : SubsequentialConvergenceStmt 𝒮) (hu : ObstacleLimitUniquenessStep 𝒮)
+    (hcell : AdjacentCellsMeetAeStep 𝒮)
+    (hexit : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+      ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
+      ∀ t : ℝ, 0 < t → NullMeasurableSet {ω | t < clusterExitTime (Λ ω) ρ} S.P) :
+    ConvergenceDivisibleEventMeasurableStep 𝒮 := by
+  intro γ hγ hγ' ρ hρ hρ' Ω _ S hS Λ hΛ t δ ε ht _ hε
+  exact nullMeasurableSet_convergenceError_of_pathwise hS hγ hγ' hρ hρ' ht hε Λ hΛ
+    h48 h46 hu hcell (hexit γ hγ hγ' ρ hρ hρ' Ω S hS Λ hΛ t ht)
+
+/-- Countably many continuum evaluations suffice for the event-measurability
+step once pathwise convergence has been established. -/
+theorem convergenceDivisibleEventMeasurable_of_countable_continuum_evaluations
+    (𝒮 : SpaceFillingSLEModel) (h48 : SubsequentialPropertiesStmt 𝒮)
+    (h46 : SubsequentialConvergenceStmt 𝒮) (hu : ObstacleLimitUniquenessStep 𝒮)
+    (hcell : AdjacentCellsMeetAeStep 𝒮)
+    (C : Set ℂ) (hC : C.Countable) (hdense : Dense C) (hzero : (0 : ℂ) ∈ C)
+    (hpoint : ∀ (γ : ℝ), 0 < γ → γ < 2 →
+      ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      ∀ (q : ℚ), 0 < (q : ℝ) → ∀ (n : ℕ) (z : ℂ), z ∈ C → AEMeasurable
+        (fun ω => leastSupersolution (S.μ ω) ((n : ℝ) + 1) 0 q z) S.P) :
+    ConvergenceDivisibleEventMeasurableStep 𝒮 := by
+  apply convergenceDivisibleEventMeasurable_of_measurable_exit 𝒮 h48 h46 hu hcell
+  intro γ hγ hγ' ρ hρ hρ' Ω _ S hS Λ hΛ t ht
+  have hloc : ∀ᵐ ω ∂S.P, IsLocallyFiniteMeasure (S.μ ω) := by
+    filter_upwards [hS.isLQGMeasure] with ω hω
+    exact hω.isLocallyFiniteMeasure
+  have hmem : ∀ (q : ℚ), 0 < (q : ℝ) → ∀ z : ℂ,
+      NullMeasurableSet {ω | z ∈ Λ ω q} S.P := by
+    intro q hq z
+    exact nullMeasurableSet_mem_coneFamily_of_dense_leastSupersolutions S.P S.μ Λ q hq hΛ
+      hC hdense hzero (hpoint γ hγ hγ' Ω S hS q hq) z
+  exact nullMeasurableSet_lt_clusterExitTime_of_membership S.P S.μ Λ hΛ hloc hmem ρ t ht
+
 end MatedCRT
