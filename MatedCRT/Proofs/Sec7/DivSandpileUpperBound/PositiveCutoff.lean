@@ -44,12 +44,13 @@ theorem probTendsToOne_le_positive_cutoff
 /-- The cutoff in Lemma 6.8 is field-measurable; validity promotes this to
 measurability on the ambient probability space. -/
 theorem probTendsToOne_le_field_cutoff
-    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) [IsFiniteMeasure S.P]
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
     (dd : Ω → ℝ) (hdd : Measurable[S.fieldSigma] dd) (hpos : ∀ ω, 0 < dd ω)
     (scale : ℝ → ℝ) (hscale : Tendsto scale (𝓝[>] 0) (𝓝 0)) :
-    ProbTendsToOne S.P (fun ε => {ω | scale ε ≤ dd ω}) :=
-  probTendsToOne_le_positive_cutoff S.P dd (hdd.mono (S.fieldSigma_le hS) le_rfl)
+    ProbTendsToOne S.P (fun ε => {ω | scale ε ≤ dd ω}) := by
+  let : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
+  exact probTendsToOne_le_positive_cutoff S.P dd (hdd.mono (S.fieldSigma_le hS) le_rfl)
     hpos scale hscale
 
 end MatedCRT.Sec7
