@@ -1,5 +1,6 @@
 import MatedCRT.Steps.Sec5.MeanValueInequality
 import MatedCRT.Proofs.Sec5.MeanValueInequality.ObstacleComparison
+import MatedCRT.Proofs.Sec5.MeanValueInequality.BoundaryContact
 
 /-!
 # Reduction of the normalized mean-value step
@@ -23,7 +24,6 @@ def MeanValueSurplusData (m : ℤ → ℤ → ℕ) (A B I : Set ℤ) (w : ℤ �
   (∀ a, m a (a + 1) ≠ 0) ∧ B.Finite ∧ A ⊆ B ∧ (0 : ℤ) ∈ A ∧
   (∀ b, ∀ a ∈ B, mLaplacian m (fun x => greenFn m B x b) a = -(if a = b then 1 else 0)) ∧
   (∀ a ∈ A, mLaplacian m w a = (mdeg m a : ℝ)⁻¹) ∧
-  (∀ a ∉ A, w a + K * greenKernel m B 0 a ≤ 0) ∧
   (∀ a ∈ I, c / ε ≤ w a + K * greenKernel m B 0 a ∧ normExitTime m A a ≤ C / ε)
 
 /-- Remaining event estimate for Lemma 5.3: the surplus has a positive
@@ -43,6 +43,8 @@ def MeanValueSurplusStep (𝒮 : SpaceFillingSLEModel) : Prop :=
       let A := matedDiscreteCluster m ε (S.η ω) ρ t
       let B := ballInterior ε (S.η ω) ρ
       let I := {a ∈ A | δ < infDist (vertexPoint ε (S.η ω) a) (frontier (fillCells ε (S.η ω) A))}
+      IsMatedObstacleSetting m ε (S.η ω) ρ t ∧
+      vClosure m B ⊆ cellVertices ε (S.η ω) (closedBall 0 ρ) ∧
       MeanValueSurplusData m A B I (matedLeastSupersolution m ε (S.η ω) ρ t) (t / ε) ε (c ω) (C ω)}
 
 set_option maxHeartbeats 400000 in
@@ -64,11 +66,15 @@ theorem meanValueNormalizedStep_of_surplus (𝒮 : SpaceFillingSLEModel)
   intro hgood
   apply hω.2
   dsimp only at hgood
-  obtain ⟨hdata, hcons, hB, hAB, h0, hfirstB, hw, hboundary, hbounds⟩ := hgood
+  obtain ⟨hsetting, hW, hdata, hcons, hB, hAB, h0, hfirstB, hw, hbounds⟩ := hgood
   refine ⟨hdata, ?_⟩
   intro a ha hdist
   obtain ⟨hsymm, hlf, hA, hdeg, hfirstA⟩ := hdata
   obtain ⟨hv, hq⟩ := hbounds a ⟨ha, hdist⟩
+  have hboundary : ∀ x ∉ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t,
+      matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t x +
+        (t / ε) * greenKernel (S.mult ε ω) (ballInterior ε (S.η ω) ρ) 0 x ≤ 0 :=
+    fun _ hx => (mated_surplus_zero_off_cluster hsetting hW hx).le
   have hcomp := obstacle_surplus_le_green_sub_exit hsymm hlf hcons hA hB hAB h0 hfirstA hfirstB
     (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t) (t / ε) hw hboundary a
   rw [greenKernel_symm_of_firstStep hsymm hlf hA hdeg hfirstA 0 a] at hcomp
