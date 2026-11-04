@@ -4,6 +4,8 @@ import MatedCRT.Proofs.WalkPotential.Comparison
 import MatedCRT.Proofs.Sec7.OdometerBoundMass.StoppedOdometer
 import MatedCRT.Proofs.Sec7.OdometerBoundMass.Laplacian
 import MatedCRT.Proofs.Sec7.OdometerBoundMass.MapStructure
+import MatedCRT.Proofs.Infra.LocallyFinite
+import MatedCRT.Proofs.WalkPotential.GreenFirstStep
 
 /-!
 # Lemma 7.3 (lemma:odometer-bound-mass, line 3018; proof lines 3025-3047): steps
@@ -23,6 +25,15 @@ principle (line 3046). It uses:
 The other ingredients are proved without hypothesis: `u^ε_t ≥ 0` and `u^ε_t = 0` on `V^ε(B_ρ) \ Λ^ε_t`
 (MatedCRT/Proofs/Sec7/OdometerBoundMass/StoppedOdometer.lean), the harmonicity of the exit probability (Markov property
 of simple random walk) and the maximum principle (MatedCRT/Proofs/WalkPotential).
+
+## Reduction of the steps
+* `MatedMapStructureStep` follows from `AdjacentCellsMeetAeStep` (MatedCRT/Steps/Infra/MatingOfTrees.lean) and the
+  properness of `η` (`MatedCRTEnv.IsValid.ae_tendsto_cocompact`): `matedMapStructureStep_of_adjacentCellsMeet`.
+* `GreenKernelHarmonicStep` (the Green's kernel part of eq:laplacian-of-uteps) follows from `MatedMapStructureStep` by
+  first-step analysis and the reversibility `deg(a) G(a,b) = deg(b) G(b,a)`: `greenKernelHarmonicStep_of_steps`.
+* `StoppedOdometerLaplacianStep` follows from these and the first conjunct of Lemma 4.4 (`Δ^ε w̃^ε_t = (deg^ε)⁻¹` on
+  `Λ^ε_t`; the origin claim of the Draft statement, ESCALATIONS E-c1-1, is not used).
+Hence Lemma 7.3 rests on Lemma 4.4 and `AdjacentCellsMeetAeStep` only (`odometerBoundMass_of_draft`).
 -/
 
 namespace MatedCRT
@@ -38,6 +49,18 @@ def MatedMapStructureStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ᵐ ω ∂S.P, ∀ ε : ℝ, 0 < ε →
     (∀ a : ℤ, {b | S.mult ε ω a b ≠ 0}.Finite) ∧ ∀ r : ℝ, (cellVertices ε (S.η ω) (closedBall 0 r)).Finite
+
+/-- `MatedMapStructureStep` from `AdjacentCellsMeetAeStep`: almost surely `η` is continuous and proper
+(`IsAreaParametrized`, `MatedCRTEnv.IsValid.ae_tendsto_cocompact`), so finitely many cells meet each compact set
+(`cellVertices_finite_of_isCompact`), and the neighbours of `a` have cells meeting the compact cell of `a`
+(`isLocallyFiniteMult_of_cells_meet`). -/
+theorem matedMapStructureStep_of_adjacentCellsMeet (𝒮 : SpaceFillingSLEModel) (hcell : AdjacentCellsMeetAeStep 𝒮) :
+    MatedMapStructureStep 𝒮 := by
+  intro γ hγ hγ2 Ω _ S hS
+  filter_upwards [hcell γ hγ hγ2 Ω S hS, hS.ae_tendsto_cocompact, hS.isAreaParametrized] with ω hmeet hp hap
+  intro ε hε
+  exact ⟨isLocallyFiniteMult_of_cells_meet hap.1 hp hε (hmeet ε hε),
+    fun r => cellVertices_finite_of_isCompact hap.1 hp hε (isCompact_closedBall 0 r)⟩
 
 /-- **eq:laplacian-of-uteps** (line 2968) away from the origin: almost surely, for all `ε, t > 0`,
 `Δ^ε u^ε_t = (deg^ε)⁻¹` on `Λ^ε_t \ {0}`. -/
@@ -116,5 +139,42 @@ theorem stoppedOdometerLaplacianStep_of_steps (𝒮 : SpaceFillingSLEModel) (hst
 theorem odometerBoundMass_of_inputs (𝒮 : SpaceFillingSLEModel) (hstr : MatedMapStructureStep 𝒮)
     (h44 : DiscreteLaplacianBoundStmt 𝒮) (hgreen : GreenKernelHarmonicStep 𝒮) : OdometerBoundMassStmt 𝒮 :=
   odometerBoundMass_of_steps 𝒮 hstr (stoppedOdometerLaplacianStep_of_steps 𝒮 hstr h44 hgreen)
+
+/-- `GreenKernelHarmonicStep` (eq:discrete-normalized-green-laplacian away from the pole) from the map structure: the
+first-variable identity `Δ G_A(·, b) = -δ_b` on the finite set `A = V^ε(B_ρ) \ V^ε(∂B_ρ)` (first-step analysis,
+`WalkPotential.mLaplacian_greenFn`) and the symmetry `deg(a) G(a,b) = deg(b) G(b,a)`
+(`greenKernel_laplacian_of_firstStep`, MatedCRT/Proofs/Sec4/GreenLaplacian.lean). -/
+theorem greenKernelHarmonicStep_of_steps (𝒮 : SpaceFillingSLEModel) (hstr : MatedMapStructureStep 𝒮) :
+    GreenKernelHarmonicStep 𝒮 := by
+  intro γ hγ hγ2 ρ _ _ Ω _ S hS
+  filter_upwards [hstr γ hγ hγ2 Ω S hS] with ω hω
+  intro ε hε b hb hb0
+  obtain ⟨hlf, hfin⟩ := hω ε hε
+  have hA : (ballInterior ε (S.η ω) ρ).Finite :=
+    (hfin ρ).subset fun k hk => Sec7.cellVertices_mono ball_subset_closedBall hk.1
+  have hcons := S.mult_succ_ne_zero hε.le ω
+  show mLaplacian (S.mult ε ω) (greenKernel (S.mult ε ω) (ballInterior ε (S.η ω) ρ) 0) b = 0
+  by_cases h0 : (0 : ℤ) ∈ ballInterior ε (S.η ω) ρ
+  · rw [greenKernel_laplacian_of_firstStep (S.mult_symm ε ω) hlf hcons hA
+      (WalkPotential.mLaplacian_greenFn hlf hcons hA) 0 h0 b hb]
+    simp [hb0]
+  · have hz : greenKernel (S.mult ε ω) (ballInterior ε (S.η ω) ρ) 0 = fun _ => 0 := by
+      funext c
+      simp [greenKernel, greenFn_eq_zero_of_not_mem _ h0 c]
+    rw [hz]
+    exact Sec7.mLaplacian_const_zero _ b
+
+/-- `StoppedOdometerLaplacianStep` (eq:laplacian-of-uteps away from the origin) from Lemma 4.4 and
+`AdjacentCellsMeetAeStep`. -/
+theorem stoppedOdometerLaplacianStep_of_draft (𝒮 : SpaceFillingSLEModel) (h44 : DiscreteLaplacianBoundStmt 𝒮)
+    (hcell : AdjacentCellsMeetAeStep 𝒮) : StoppedOdometerLaplacianStep 𝒮 :=
+  have hstr := matedMapStructureStep_of_adjacentCellsMeet 𝒮 hcell
+  stoppedOdometerLaplacianStep_of_steps 𝒮 hstr h44 (greenKernelHarmonicStep_of_steps 𝒮 hstr)
+
+/-- **Lemma 7.3** from Lemma 4.4 (its first conjunct) and `AdjacentCellsMeetAeStep`. -/
+theorem odometerBoundMass_of_draft (𝒮 : SpaceFillingSLEModel) (h44 : DiscreteLaplacianBoundStmt 𝒮)
+    (hcell : AdjacentCellsMeetAeStep 𝒮) : OdometerBoundMassStmt 𝒮 :=
+  odometerBoundMass_of_steps 𝒮 (matedMapStructureStep_of_adjacentCellsMeet 𝒮 hcell)
+    (stoppedOdometerLaplacianStep_of_draft 𝒮 h44 hcell)
 
 end MatedCRT

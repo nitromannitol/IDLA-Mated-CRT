@@ -33,8 +33,9 @@ conclusion of lemma:constant-order-lower-bound-div for all `r ≥ 10 ε^ω` impl
   `AdjacentCellsMeetAeStep` (MatedCRT/Steps/Infra/MatingOfTrees.lean);
 * `GreenFnFirstVariableStep` (eq:discrete-green-laplacian, line 797; Lawler-Limic Prop. 6.2.3): deterministic,
   `Δ G_A(·, b) = -δ_b` on a finite set `A`; proved (`greenFnFirstVariableStep_holds`, first-step analysis), so
-  `massBoundOdometerAboveScale_of_inputs` needs only the first three steps. It also proves `GreenKernelHarmonicStep`
-  of Lemma 7.3 (`greenKernelHarmonicStep_of_steps`).
+  `massBoundOdometerAboveScale_of_inputs` needs only the first three steps. The first two follow from
+  `AdjacentCellsMeetAeStep` and Lemma 4.4 (MatedCRT/Steps/Sec7/OdometerBoundMass.lean), so
+  `massBoundOdometerAboveScale_of_draft` rests on Lemmas 2.16, 2.8, 4.4 and `AdjacentCellsMeetAeStep` only.
 The rest is proved: the maximum principle for `u^ε_t` off `Θ`, the comparison with `∑_b g_D(·, b)` and the counting
 (MatedCRT/Proofs/Sec7/MassBoundOdometer).
 -/
@@ -151,27 +152,13 @@ theorem massBoundOdometerAboveScale_of_inputs (𝒮 : SpaceFillingSLEModel)
     (hadj : AdjacentCellsMeetAeStep 𝒮) : MassBoundOdometerAboveScaleStmt 𝒮 :=
   massBoundOdometerAboveScale_of_steps 𝒮 h216 h28 hstr hlap hadj greenFnFirstVariableStep_holds
 
-/-- `GreenKernelHarmonicStep` (Lemma 7.3's reduction of eq:laplacian-of-uteps, MatedCRT/Steps/Sec7/OdometerBoundMass.lean)
-from the map structure: eq:discrete-normalized-green-laplacian by the symmetry `deg(a) G(a,b) = deg(b) G(b,a)`
-(`greenKernel_laplacian_of_firstStep`, MatedCRT/Proofs/Sec4/GreenLaplacian.lean) and the first-variable identity. -/
-theorem greenKernelHarmonicStep_of_steps (𝒮 : SpaceFillingSLEModel) (hstr : MatedMapStructureStep 𝒮) :
-    GreenKernelHarmonicStep 𝒮 := by
-  intro γ hγ hγ2 ρ _ _ Ω _ S hS
-  filter_upwards [hstr γ hγ hγ2 Ω S hS] with ω hω
-  intro ε hε b hb hb0
-  obtain ⟨hlf, hfin⟩ := hω ε hε
-  have hA : (ballInterior ε (S.η ω) ρ).Finite :=
-    (hfin ρ).subset fun k hk => Sec7.cellVertices_mono ball_subset_closedBall hk.1
-  have hcons := S.mult_succ_ne_zero hε.le ω
-  show mLaplacian (S.mult ε ω) (greenKernel (S.mult ε ω) (ballInterior ε (S.η ω) ρ) 0) b = 0
-  by_cases h0 : (0 : ℤ) ∈ ballInterior ε (S.η ω) ρ
-  · rw [greenKernel_laplacian_of_firstStep (S.mult_symm ε ω) hlf hcons hA
-      (WalkPotential.mLaplacian_greenFn hlf hcons hA) 0 h0 b hb]
-    simp [hb0]
-  · have hz : greenKernel (S.mult ε ω) (ballInterior ε (S.η ω) ρ) 0 = fun _ => 0 := by
-      funext c
-      simp [greenKernel, greenFn_eq_zero_of_not_mem _ h0 c]
-    rw [hz]
-    exact Sec7.mLaplacian_const_zero _ b
+/-- **Lemma 7.2 (corrected)** from Lemmas 2.16, 2.8, 4.4 (its first conjunct) and `AdjacentCellsMeetAeStep` only:
+`MatedMapStructureStep` and `StoppedOdometerLaplacianStep` are discharged in
+MatedCRT/Steps/Sec7/OdometerBoundMass.lean (`GreenKernelHarmonicStep` is `greenKernelHarmonicStep_of_steps`). -/
+theorem massBoundOdometerAboveScale_of_draft (𝒮 : SpaceFillingSLEModel)
+    (h216 : GreenKernelLowerBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮) (h44 : DiscreteLaplacianBoundStmt 𝒮)
+    (hadj : AdjacentCellsMeetAeStep 𝒮) : MassBoundOdometerAboveScaleStmt 𝒮 :=
+  massBoundOdometerAboveScale_of_inputs 𝒮 h216 h28 (matedMapStructureStep_of_adjacentCellsMeet 𝒮 hadj)
+    (stoppedOdometerLaplacianStep_of_draft 𝒮 h44 hadj) hadj
 
 end MatedCRT
