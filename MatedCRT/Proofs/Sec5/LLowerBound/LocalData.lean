@@ -11,6 +11,25 @@ namespace MatedCRT
 
 open MeasureTheory Set Metric
 
+/-- Choose fixed radii which fit inside the cluster and the ambient ball and
+make the logarithmic Green estimate at least one half. -/
+theorem exists_green_lower_radii {δ ρ C : ℝ} (hδ : 0 < δ) (hρ : ρ < 1) :
+    ∃ R r d : ℝ, 0 < R ∧ 0 < r ∧ 0 < d ∧ R ≤ δ / 2 ∧ R ≤ (1 - ρ) / 4 ∧
+      r ≤ R / 3 ∧ r + d < R ∧ d ≤ δ / 4 ∧
+      Real.exp (3 / 2 * C) * (r + d) ≤ R := by
+  let R := min (δ / 2) ((1 - ρ) / 4)
+  let E := Real.exp (3 / 2 * C)
+  let r := R / (8 * (E + 1))
+  have hR : 0 < R := lt_min (by linarith) (by linarith)
+  have hRδ : R ≤ δ / 2 := min_le_left _ _
+  have hRρ : R ≤ (1 - ρ) / 4 := min_le_right _ _
+  have hE : 0 < E := Real.exp_pos _
+  have hr : 0 < r := div_pos hR (by positivity)
+  have heq : 8 * (E + 1) * r = R := by
+    dsimp [r]
+    field_simp
+  refine ⟨R, r, r, hR, hr, hr, hRδ, hRρ, ?_, ?_, ?_, ?_⟩ <;> nlinarith
+
 /-- Construct the local vertex sets and mass used in the Green-sum estimate. -/
 theorem localData_of_geometry_and_counting {m : ℤ → ℤ → ℕ}
     {μ : Measure ℂ} {η : ℝ → ℂ} {ε δ ρ R r d C α β : ℝ} {A : Set ℤ} {a : ℤ}
