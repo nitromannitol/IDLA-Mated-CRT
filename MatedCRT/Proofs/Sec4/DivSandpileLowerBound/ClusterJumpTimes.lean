@@ -83,4 +83,54 @@ theorem coneFamily_regularized_earlier_except_countably_many
   · exact hΛ.2.1.isRegularOpen
   · exact fun s t hs hst => hΛ.2.1.monotoneOn hs (hs.trans_le hst) hst
 
+/-- Hausdorff continuity rules out jumps of the closures of cone harmonic
+balls from earlier positive times. -/
+theorem coneFamily_subset_closure_earlier
+    {μ : MeasureTheory.Measure ℂ} {Λ : ℝ → Set ℂ} (hΛ : IsConeHarmonicBallFamily μ Λ)
+    {t : ℝ} (ht : 0 < t) :
+    Λ t ⊆ closure (⋃ s ∈ Ioo (0 : ℝ) t, Λ s) := by
+  intro x hx
+  apply EMetric.mem_closure_iff.mpr
+  intro ε hε
+  have hevent : ∀ᶠ s in nhdsWithin t (Ioi (0 : ℝ)),
+      Metric.hausdorffEDist (Λ s) (Λ t) < ε :=
+    hΛ.2.1.hausdorffContinuousOn t ht ε hε
+  have hevent' : ∀ᶠ s in 𝓝 t, s ∈ Ioi (0 : ℝ) →
+      Metric.hausdorffEDist (Λ s) (Λ t) < ε := eventually_nhdsWithin_iff.mp hevent
+  obtain ⟨δ, hδ, hδprop⟩ := Metric.eventually_nhds_iff.mp hevent'
+  let s : ℝ := t - min δ t / 2
+  have hmin : 0 < min δ t := lt_min hδ ht
+  have hs : 0 < s ∧ s < t := by
+    dsimp [s]
+    constructor <;> linarith [min_le_right δ t]
+  have hdist : dist s t < δ := by
+    rw [Real.dist_eq]
+    have : s - t = -(min δ t / 2) := by dsimp [s]; ring
+    rw [this, abs_neg, abs_of_pos (half_pos hmin)]
+    linarith [min_le_left δ t]
+  have hhaus := hδprop hdist hs.1
+  rw [Metric.hausdorffEDist_comm] at hhaus
+  obtain ⟨y, hy, hydist⟩ := Metric.exists_edist_lt_of_hausdorffEDist_lt hx hhaus
+  exact ⟨y, by simp only [mem_iUnion]; exact ⟨s, hs, hy⟩, hydist⟩
+
+/-- Every cone harmonic ball is the regularization of the union of all
+strictly earlier balls. -/
+theorem coneFamily_eq_regularized_earlier
+    {μ : MeasureTheory.Measure ℂ} {Λ : ℝ → Set ℂ} (hΛ : IsConeHarmonicBallFamily μ Λ)
+    {t : ℝ} (ht : 0 < t) :
+    Λ t = interior (closure (⋃ s ∈ Ioo (0 : ℝ) t, Λ s)) := by
+  have hopen : IsOpen (Λ t) := by
+    rw [← hΛ.2.1.isRegularOpen t ht]
+    exact isOpen_interior
+  apply Subset.antisymm (interior_maximal (coneFamily_subset_closure_earlier hΛ ht) hopen)
+  calc
+    interior (closure (⋃ s ∈ Ioo (0 : ℝ) t, Λ s)) ⊆ interior (closure (Λ t)) := by
+      apply interior_mono
+      apply closure_mono
+      intro x hx
+      simp only [mem_iUnion] at hx
+      obtain ⟨s, hs, hx⟩ := hx
+      exact hΛ.2.1.monotoneOn hs.1 ht hs.2.le hx
+    _ = Λ t := hΛ.2.1.isRegularOpen t ht
+
 end MatedCRT
