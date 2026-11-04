@@ -4,12 +4,55 @@ import HarmonicBalls.Defs.LBM
 import HarmonicBalls.Defs.Obstacle
 import HarmonicBalls.Draft.Section1
 import HarmonicBalls.Draft.Section5
+import LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.IsMatingOfTreesCoupling
 
 /-!
 # The random setting: quantum cone, space-filling SLE, the embedded mated-CRT map and LBM
-(Sections 1.1.4, 2.1-2.7, lines 185-205, 402-740)
+(Sections 1.1.4, 2.1-2.7, lines 165-205, 402-740)
 
-## Whole-plane space-filling SLE
+Uses Leonardo Bonanno's mated-CRT bundle, as ported to Lattice-Probability (`LatticeProb.Bonanno.*`, adapted from
+Leonardo Bonanno's lean-formalizations, MatedCRTHarmonic, commit 31e7483): `MatedCRTHarmonic.MatedCRT.IsMatingOfTreesCoupling`
+(module `LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.IsMatingOfTreesCoupling`), with `coneField`, `coneRadial` (modules
+`...Frozen.MatedCRTConeField`, `...Frozen.MatedCRTConeRadial`), `Field` and `Path2`, and Leo's test functions
+`LQGMetric.TestC` (module `LatticeProb.Bonanno.LQGMetric.Statement.Field`).
+
+## The map: Definition 1.1 (operator decision (L1), inbox 2026-11-03 16:20 UTC)
+
+The paper defines the mated-CRT map by Definition 1.1, from the boundary-length Brownian pair `(L, R)`. So the
+environment carries this pair, `bm`, and the edge multiplicity of the map with cell size `ε` is
+`MatedCRTEnv.mult S ε ω = bmEdgeCount ε L R` with `(L_t, R_t) = bm ω t`. It agrees with Leo's edge count of
+`MatedCRTHarmonic.MatedCRT.graph`. The SLE/LQG description (Definition 1.2, `cellMult`) is the same graph a.s. by
+DMS14 Theorem 1.9 / Lemma 8.8 (line 207); this equivalence is not used by any statement, and it is an optional DMS input
+(INPUT-REQUESTS IR-A2). The embedding of Definition 1.2 is used through the cells `η([a - ε, a])` and the positions
+`η(a)`, which only involve `η`.
+
+## Whole-plane space-filling SLE: the mating-of-trees coupling
+
+`MatedCRTEnv.IsValid` requires Leo's mating-of-trees coupling (`IsMatingOfTreesCoupling`, 24 fields: REUSE-LEO.md 1.5)
+for the curve `η`, the pair `bm` and a `γ`-quantum cone whose pairings with test functions are those of our field. It
+gives, among others: `η` is a reparametrization of a whole-plane space-filling SLE_{16/γ²} `ηL` (a measurable
+function of an independent imaginary-geometry field, `igMap`) which is surjective and transient (`spaceFilling`),
+parametrized by the LQG area (`areaParam`); `bm` is a correlated two-sided Brownian motion (`boundaryLawBM`, DMS14
+Theorem 1.9 and GHMS Theorem 1.1) and the boundary-length pair of `(h, η)` (`boundaryLength`); DMS14 Lemmas 8.8, 8.9,
+8.13, 8.14 (`merge`, `onlyMerge`, `visitBound`); GHM15 Prop 3.4 (`segmentsContainBalls`), GHS Lemma A.4 (`coverage`),
+GMS-T Props 4.4, 4.6 (`cellMoments`). These fields are literature statements taken as hypotheses (their sources are
+quoted in the bundle).
+
+Documented weak spots of the bundle (Leo's disclosures, REUSE-LEO.md 1.3, 1.5): the case `γ = √2` (`κ' = 8`) of
+`boundaryLawBM` rests on a step of DMS14 which the cited proof leaves unresolved; `onlyMerge` and `visitBound` rest on
+the sketched DMS14 Lemma 8.13; `igMap` is stated in whole-plane form (coordinate change, locality) for a fixed witness;
+a 24-field bundle could be inconsistent where an abstract predicate cannot; cells adjacent in Definition 1.1 are only
+known (from `merge`) to intersect, not to share a boundary arc; the bundle contains no Liouville Brownian motion.
+
+## The abstract SLE model (E-A1), kept for the remaining inputs
+
+Every statement also takes a `SpaceFillingSLEModel` `𝒮`, whose predicate `𝒮.IsSLE P 𝓕 κ η` stands for: *under `P`, the
+random curve `η`, viewed modulo increasing reparametrization, is a whole-plane space-filling SLE_κ from `∞` to `∞`,
+independent of the σ-algebra `𝓕`*. It is kept because the SLE inputs which the bundle does not provide in our form
+(MatedCRT/External/SLE.lean: scale invariance with a random factor, invariance under reparametrization, independence of
+a smaller σ-algebra) are stated over it. See ESCALATIONS, entry "space-filling SLE".
+
+## Whole-plane space-filling SLE (the model)
 
 Whole-plane space-filling SLE_κ from `∞` to `∞` (Miller-Sheffield, Imaginary geometry IV, Sections 1.2.3 and 4.3;
 lines 606-621) is not defined in Lean. Every statement takes as a parameter a `SpaceFillingSLEModel` `𝒮`, whose
@@ -28,8 +71,9 @@ whole-plane space-filling SLE_{16/γ²} independent of `h` (line 192); parametri
 `μ_h(η([a,b])) = b - a` (line 193); and, for every starting point, the LQG clock of planar Brownian motion for `h`
 (Section 2.7, line 712; `HarmonicBalls.IsLQGClock`), which is a time change clock.
 
-The mated-CRT map with cell size `ε` is the multigraph `cellMult ε (η ω)` on `ℤ` (Definition 1.2); simple random walk
-on it is `srwLaw`.
+The mated-CRT map with cell size `ε` is the multigraph `bmEdgeCount ε L R` on `ℤ` of the pair `(L, R) = bm ω`
+(Definition 1.1); simple random walk on it is `srwLaw`. Leo's walk `LFMultigraph.walkLaw` (an edge-end walk) and
+`exitGreen` are related to `srwLaw` and `greenFn` by bridges (REUSE-LEO.md 1.2), written in Lattice-Probability.
 
 ## Liouville Brownian motion and the scaling constants
 
@@ -71,6 +115,10 @@ structure MatedCRTEnv (Ω : Type) [MeasurableSpace Ω] where
   η : Ω → ℝ → ℂ
   /-- The LQG clock `φ` of planar Brownian motion (Liouville Brownian motion is `B_{φ⁻¹(t)}`). -/
   clock : Ω → ContinuousPath ℂ → ℝ≥0 → ℝ
+  /-- The boundary-length pair `t ↦ (L_t, R_t)` of `(h, η)`, a continuous path `ℝ → ℝ × ℝ` (Leo's
+  `MatedCRTHarmonic.MatedCRT.Path2`): the two-dimensional Brownian motion of Definition 1.1 (line 170) which
+  defines the mated-CRT map. -/
+  bm : Ω → C(ℝ, ℝ × ℝ)
 
 /-- `η` is a space-filling curve parametrized by `μ`-area with `η(0) = 0` (line 193): continuous, onto `ℂ`, with
 `μ(η([a,b])) = b - a` for all `a < b`. -/
@@ -106,11 +154,26 @@ structure MatedCRTEnv.IsValid {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv 
   Brownian path) a time change clock. -/
   isLQGClock : ∀ᵐ ω ∂S.P, ∀ z : ℂ, IsLQGClock planarBrownianMotion γ (S.hcirc ω) z (S.clock ω) ∧
     ∀ᵐ b ∂planarBrownianMotion z, IsTimeChangeClock (S.clock ω b)
+  /-- **The mating-of-trees coupling** (operator decision (L1); Leo's `IsMatingOfTreesCoupling`, REUSE-LEO.md 1.5;
+  module docstring): there are a whole-plane GFF `X` and Brownian motions `B, B'` (the `γ`-quantum cone
+  `coneField X (coneRadial γ γ B B')`, DMS14 Definition 4.10), the data `X₀, B₀, B₀'` of the `0`-quantum cone, the
+  imaginary-geometry field `hIG₀ + U`, the whole-plane space-filling SLE_{16/γ²} `ηL` and its reparametrizations
+  `η'`, `η₀` by LQG area, forming a mating-of-trees coupling with boundary-length pair `bm`, such that a.s. the curve
+  `η'` is `η` and the pairings of the cone field with test functions are those of `h`. -/
+  matingOfTrees : ∃ (X X₀ hIG₀ : Ω → MatedCRTHarmonic.MatedCRT.Field) (B B' B₀ B₀' : ℝ≥0 → Ω → ℝ) (U : Ω → ℝ)
+      (ηL η' η₀ : Ω → C(ℝ, ℂ)),
+    MatedCRTHarmonic.MatedCRT.IsMatingOfTreesCoupling γ S.P X X₀ hIG₀ B B' B₀ B₀' U ηL η' η₀ S.bm ∧
+      ∀ᵐ ω ∂S.P, ⇑(η' ω) = S.η ω ∧ ∀ φ : LQGMetric.TestC,
+        S.hC ω ⇑φ = MatedCRTHarmonic.MatedCRT.coneField (X ω)
+          (MatedCRTHarmonic.MatedCRT.coneRadial γ γ (fun u => B u ω) (fun u => B' u ω)) φ
 
-/-- The `γ`-mated-CRT map with cell size `ε` of the environment, as an edge multiplicity on `ℤ` (Definition 1.2). -/
+/-- The `γ`-mated-CRT map with cell size `ε` of the environment, as an edge multiplicity on `ℤ`: Definition 1.1 for
+the boundary-length pair `(L_t, R_t) = bm ω t` (`bmEdgeCount`; operator decision (L1)). Under the mating-of-trees
+coupling it is a.s. the SLE/LQG description `cellMult ε (S.η ω)` of Definition 1.2 (DMS14 Theorem 1.9 / Lemma 8.8,
+line 207; optional input, INPUT-REQUESTS IR-A2). -/
 noncomputable def MatedCRTEnv.mult {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ε : ℝ) (ω : Ω) :
     ℤ → ℤ → ℕ :=
-  cellMult ε (S.η ω)
+  bmEdgeCount ε (fun t => (S.bm ω t).1) (fun t => (S.bm ω t).2)
 
 /-- `m₀`: the median of the annealed exit time of Liouville Brownian motion started at `0` from `B_{1/2}`
 (eq:mo, line 727). -/
@@ -226,9 +289,10 @@ def IsConeField {Ω : Type} [MeasurableSpace Ω] (γ : ℝ) (P : Measure Ω) (hC
 def globalFamilyProcess (Λ : ℝ → Set ℂ) : ℝ × ℂ → Prop :=
   fun p => 0 < p.1 ∧ p.2 ∈ Λ p.1
 
-/-- The measure `μ^ε_h` whose restriction to each cell `H^ε_a` is `deg^ε(a) μ_h|_{H^ε_a}` (Lemma 2.10, line 699). -/
-noncomputable def degreeWeightedMeasure (ε : ℝ) (η : ℝ → ℂ) (μ : Measure ℂ) : Measure ℂ :=
-  Measure.sum fun k : ℤ => ((matedDeg ε η k : ℕ) : ℝ≥0∞) • μ.restrict (cell ε η k)
+/-- The measure `μ^ε_h` whose restriction to each cell `H^ε_a` is `deg^ε(a) μ_h|_{H^ε_a}` (Lemma 2.10, line 699), for
+the map with edge multiplicity `m` (`MatedCRTEnv.mult S ε ω`) and the cells of `η`. -/
+noncomputable def degreeWeightedMeasure (m : ℤ → ℤ → ℕ) (ε : ℝ) (η : ℝ → ℂ) (μ : Measure ℂ) : Measure ℂ :=
+  Measure.sum fun k : ℤ => ((matedDeg m k : ℕ) : ℝ≥0∞) • μ.restrict (cell ε η k)
 
 /-- The good annulus event `E_r(z) = E_r(z; C)` (eq:good-annulus-event, line 2314, as corrected) for the measure
 `μ = μ_h` and the constant `c₀ = 𝐜₀ ∈ (0, 1/5)` of eq:choice-of-constant-annulus:

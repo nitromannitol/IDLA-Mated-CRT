@@ -48,7 +48,7 @@ def DiscretePotentialTightnessStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
     (∀ n a, Measurable[S.envSigma] fun ω => u ω n a) →
     Measurable[S.envSigma] C → (∀ ω, 0 < C ω) →
     (∀ ω n, ∀ a ∈ interiorCellVertices (E ω n) (S.η ω) D,
-      |matedLaplacian (E ω n) (S.η ω) (u ω n) a| ≤ C ω) →
+      |matedLaplacian (S.mult (E ω n) ω) (u ω n) a| ≤ C ω) →
     (∀ ω n, ∀ a ∈ cellVertices (E ω n) (S.η ω) D, |u ω n a| ≤ C ω / E ω n) →
   ∃ Φ : Ω → ℕ → ℕ, (∀ k, Measurable[S.envSigma] fun ω => Φ ω k) ∧
     ∀ᵐ ω ∂S.P, StrictMono (Φ ω) ∧ ∃ ubar : ℂ → ℝ, ContinuousOn ubar D ∧
@@ -56,7 +56,7 @@ def DiscretePotentialTightnessStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
         TendstoUniformlyOn (fun k => rescale (S.mε (E ω (Φ ω k))) (E ω (Φ ω k)) (S.η ω) (u ω (Φ ω k)))
           ubar atTop O) ∧
       ((SimplyConnectedSpace D ∧
-          (∀ n, ∀ a ∈ interiorCellVertices (E ω n) (S.η ω) D, matedLaplacian (E ω n) (S.η ω) (u ω n) a = 0) ∧
+          (∀ n, ∀ a ∈ interiorCellVertices (E ω n) (S.η ω) D, matedLaplacian (S.mult (E ω n) ω) (u ω n) a = 0) ∧
           ∃ χ C' : ℝ, 0 < χ ∧ χ ≤ 1 ∧ 0 < C' ∧ ∀ n, E ω n < 1 →
             ∀ a ∈ cellVertices (E ω n) (S.η ω) (frontier D), ∀ b ∈ cellVertices (E ω n) (S.η ω) (frontier D),
               |u ω n a - u ω n b| ≤
@@ -78,7 +78,7 @@ def DiscreteHolderContinuityStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ χ C' : ℝ, 0 < χ → χ ≤ 1 → 0 < C' → ∃ C : ℝ, 0 < C ∧
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   PolyHighProb S.P fun ε => {ω | ∀ (D : Set ℂ) (f : ℤ → ℝ), D ⊆ ball 0 ρ → IsOpen D → IsConnected D →
-    (∀ a ∈ interiorCellVertices ε (S.η ω) D, matedLaplacian ε (S.η ω) f a = 0) →
+    (∀ a ∈ interiorCellVertices ε (S.η ω) D, matedLaplacian (S.mult ε ω) f a = 0) →
     (∀ a ∈ cellVertices ε (S.η ω) D, ∀ b ∈ cellVertices ε (S.η ω) D,
       |f a - f b| * infDist (vertexPoint ε (S.η ω) a) (frontier D) ^ ξ ≤
         A * (⨆ a' : cellVertices ε (S.η ω) D, |f a'|) *
@@ -142,7 +142,7 @@ def DiscreteDirichletProblemStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ F : ℝ → Ω → ℤ → ℝ,
     (∀ ε, 0 < ε → ∀ᵐ ω ∂S.P,
       (∀ a ∈ interiorCellVertices ε (S.η ω) (ball z r),
-        matedLaplacian ε (S.η ω) (F ε ω) a = ψ (vertexPoint ε (S.η ω) a)) ∧
+        matedLaplacian (S.mult ε ω) (F ε ω) a = ψ (vertexPoint ε (S.η ω) a)) ∧
       ∀ b ∈ cellVertices ε (S.η ω) (sphere z r), F ε ω b = S.mε ε * φ (vertexPoint ε (S.η ω) b)) →
   ∃ fbar : Ω → ℂ → ℝ,
     (∀ᵐ ω ∂S.P, ContinuousOn (fbar ω) (closedBall z r) ∧

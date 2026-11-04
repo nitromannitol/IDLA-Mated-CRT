@@ -13,7 +13,8 @@ line 1557; Levine-Peres 2009, Lemma 3.2):
 `v/deg = min {w : V → [0, ∞) : Δw + deg(0)⁻¹ M δ₀ ≤ deg⁻¹}` (pointwise minimum),
 which is how it is defined here (`sandpileNormOdometer`, the pointwise infimum). The final configuration is
 `s = M δ₀ + deg · Δ(v/deg)` (eq:final-sandpile-definition, line 1546) and the cluster is `D(M) = {s > 0}`
-(eq:cluster-definition, line 1552). The paper's `D_ε(t ε⁻¹)` is `sandpileCluster (cellMult ε η) (t / ε)`.
+(eq:cluster-definition, line 1552). The paper's `D_ε(t ε⁻¹)` is `sandpileCluster (S.mult ε ω) (t / ε)`, for the map
+`S.mult ε ω` of Definition 1.1 (MatedCRT/Defs/Setting.lean).
 
 ## The discrete obstacle problem
 
@@ -69,27 +70,29 @@ def discreteCluster {α : Type*} (W : Set α) (w φ : α → ℝ) : Set α :=
 def ballInterior (ε : ℝ) (η : ℝ → ℂ) (ρ : ℝ) : Set ℤ :=
   interiorCellVertices ε η (ball 0 ρ)
 
-/-- The obstacle `-(t ε⁻¹) g^ε_{B_ρ}(0, ·)` of eq:discrete-least-supersolution (line 1571). -/
-noncomputable def matedObstacle (ε : ℝ) (η : ℝ → ℂ) (ρ t : ℝ) (a : ℤ) : ℝ :=
-  -(t / ε) * greenKernel (cellMult ε η) (ballInterior ε η ρ) 0 a
+/-- The obstacle `-(t ε⁻¹) g^ε_{B_ρ}(0, ·)` of eq:discrete-least-supersolution (line 1571), for the map with edge
+multiplicity `m` (`MatedCRTEnv.mult S ε ω`, Definition 1.1) and the cells of `η`. -/
+noncomputable def matedObstacle (m : ℤ → ℤ → ℕ) (ε : ℝ) (η : ℝ → ℂ) (ρ t : ℝ) (a : ℤ) : ℝ :=
+  -(t / ε) * greenKernel m (ballInterior ε η ρ) 0 a
 
 /-- `w̃^ε_t` (eq:discrete-least-supersolution, line 1570): the pointwise minimum of the `w` on `V^ε(cl(B_ρ))` with
-`Δ^ε w ≤ (deg^ε)⁻¹` on `V^ε(B_ρ) \ V^ε(∂B_ρ)` and `w ≥ -(t ε⁻¹) g^ε_{B_ρ}(0, ·)`. -/
-noncomputable def matedLeastSupersolution (ε : ℝ) (η : ℝ → ℂ) (ρ t : ℝ) (a : ℤ) : ℝ :=
-  discreteLeastSupersolution (cellMult ε η) (ballInterior ε η ρ) (cellVertices ε η (closedBall 0 ρ))
-    (fun b => ((matedDeg ε η b : ℕ) : ℝ)⁻¹) (matedObstacle ε η ρ t) a
+`Δ^ε w ≤ (deg^ε)⁻¹` on `V^ε(B_ρ) \ V^ε(∂B_ρ)` and `w ≥ -(t ε⁻¹) g^ε_{B_ρ}(0, ·)`, for the map with edge multiplicity
+`m`. -/
+noncomputable def matedLeastSupersolution (m : ℤ → ℤ → ℕ) (ε : ℝ) (η : ℝ → ℂ) (ρ t : ℝ) (a : ℤ) : ℝ :=
+  discreteLeastSupersolution m (ballInterior ε η ρ) (cellVertices ε η (closedBall 0 ρ))
+    (fun b => ((matedDeg m b : ℕ) : ℝ)⁻¹) (matedObstacle m ε η ρ t) a
 
 /-- The discrete cluster `Λ^ε_t = {a ∈ V^ε(B_ρ) : w̃^ε_t(a) > -(t ε⁻¹) g^ε_{B_ρ}(0, a)}` (eq:discrete-cluster,
-line 1690). -/
-def matedDiscreteCluster (ε : ℝ) (η : ℝ → ℂ) (ρ t : ℝ) : Set ℤ :=
-  discreteCluster (cellVertices ε η (ball 0 ρ)) (matedLeastSupersolution ε η ρ t) (matedObstacle ε η ρ t)
+line 1690), for the map with edge multiplicity `m`. -/
+def matedDiscreteCluster (m : ℤ → ℤ → ℕ) (ε : ℝ) (η : ℝ → ℂ) (ρ t : ℝ) : Set ℤ :=
+  discreteCluster (cellVertices ε η (ball 0 ρ)) (matedLeastSupersolution m ε η ρ t) (matedObstacle m ε η ρ t)
 
 open Classical in
 /-- The stopped odometer `u^ε_t = w̃^ε_t + (t ε⁻¹) g^ε_{B_ρ}(0, ·)` on `V^ε(cl(B_ρ))`, `0` elsewhere
-(eq:stopped-odometer-de and line 2941). -/
-noncomputable def stoppedOdometer (ε : ℝ) (η : ℝ → ℂ) (ρ t : ℝ) (a : ℤ) : ℝ :=
+(eq:stopped-odometer-de and line 2941), for the map with edge multiplicity `m`. -/
+noncomputable def stoppedOdometer (m : ℤ → ℤ → ℕ) (ε : ℝ) (η : ℝ → ℂ) (ρ t : ℝ) (a : ℤ) : ℝ :=
   if a ∈ cellVertices ε η (closedBall 0 ρ) then
-    matedLeastSupersolution ε η ρ t a - matedObstacle ε η ρ t a
+    matedLeastSupersolution m ε η ρ t a - matedObstacle m ε η ρ t a
   else 0
 
 /-- The setting of Appendix A (lines 3339-3370): an undirected (symmetric multiplicity, no loops), locally finite,

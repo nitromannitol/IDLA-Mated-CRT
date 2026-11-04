@@ -15,9 +15,13 @@ INPUT-REQUESTS.md (IR-A3).
   up to null sets, independent of `𝓕` (meaning of the model, lines 192-193, 621).
 * `MepsScalingInput`: `m_ε ≍ ε⁻¹` (eq:meps-scaling, line 733; BG20 (1.8)).
 * `DegreeBoundInput`: `max_{V^ε(B_ρ)} deg^ε ≤ (log ε⁻¹)²` (eq:degree-bound, line 3071; GMS19 Lemma 2.6).
-* `SpaceFillingSLEPathInput`: a.s. `|η(t)| → ∞` as `|t| → ∞` (so `V^ε(K)` is finite for bounded `K` and every cell
-  has finitely many neighbours), and consecutive vertices `a, a + 1` are adjacent in `𝒢^ε`. (`η` is a.s. continuous by
-  `MatedCRTEnv.IsValid`.)
+
+Dropped after the graph switch (L1): `SpaceFillingSLEPathInput` (a.s. `|η(t)| → ∞`, and `a ∼ a + 1` in `𝒢^ε`). Both are
+now theorems (MatedCRT/Proofs/Infra/MatingOfTrees.lean): `MatedCRTEnv.IsValid.ae_tendsto_cocompact` from the
+mating-of-trees coupling of `MatedCRTEnv.IsValid` (fields `spaceFilling`, `areaParam`), and
+`MatedCRTEnv.mult_succ_ne_zero` from Definition 1.1 for the continuous pair `bm` (deterministic). Local finiteness of
+`𝒢^ε` follows from these and `AdjacentCellsMeetStep` (MatedCRT/Steps/Infra/MatingOfTrees.lean), a consequence of the
+coupling (DMS14 Lemma 8.8, field `merge`), not an input.
 -/
 
 namespace MatedCRT
@@ -67,22 +71,6 @@ def DegreeBoundInput (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
     PolyHighProb S.P fun ε => {ω | ∀ a ∈ cellVertices ε (S.η ω) (ball 0 ρ),
-      ((matedDeg ε (S.η ω) a : ℕ) : ℝ) ≤ Real.log ε⁻¹ ^ 2}
-
-/-- **Path properties of whole-plane space-filling SLE and adjacency of consecutive cells.** A.s.:
-* `|η(t)| → ∞` as `|t| → ∞`: whole-plane space-filling SLE_κ' runs from `∞` to `∞` (Miller-Sheffield, Imaginary
-  Geometry IV, Sections 1.2.3 and 4.3, cited at line 611; with the `μ_h`-area parametrization, line 193). Hence, the
-  cells being compact, `V^ε(K)` is finite for bounded `K` and every cell meets finitely many cells;
-* for every `ε > 0` consecutive vertices `a, a + 1` are adjacent in `𝒢^ε` (Definition 1.2): the cells
-  `η([a - ε, a])`, `η([a, a + ε])` share a non-trivial boundary arc. This is the adjacency of consecutive vertices
-  in Definition 1.1 (eq:edge-map: `X_a` lies in both windows, review-C E-A4) transported by the equivalence of
-  Definitions 1.1 and 1.2 (Duplantier-Miller-Sheffield, mating of trees, Theorem 1.9; survey GHS19, Section 3.1).
-Theorem numbers to be confirmed by the operator (the sources were not available to worker A). `η` is a.s. continuous
-by `MatedCRTEnv.IsValid`. Used: connectivity and local finiteness of `𝒢^ε` (Lemma 2.13 as corrected, simple random
-walk, Section 4 and Appendix A for the vertex sets `V^ε(B_ρ)`). -/
-def SpaceFillingSLEPathInput (𝒮 : SpaceFillingSLEModel) : Prop :=
-  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
-    ∀ᵐ ω ∂S.P, Tendsto (fun t => ‖S.η ω t‖) (cocompact ℝ) atTop ∧
-      ∀ ε : ℝ, 0 < ε → ∀ k : ℤ, 0 < S.mult ε ω k (k + 1)
+      ((matedDeg (S.mult ε ω) a : ℕ) : ℝ) ≤ Real.log ε⁻¹ ^ 2}
 
 end MatedCRT

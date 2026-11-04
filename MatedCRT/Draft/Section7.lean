@@ -6,8 +6,8 @@ import MatedCRT.Defs.Sandpile
 
 The divisible sandpile upper bound. Conventions: see `MatedCRT/Draft/Section1.lean` and
 `MatedCRT/Draft/Section4.lean`. `ρ ∈ (0, 1)` is fixed and universally quantified. `u^ε_t` is the stopped odometer
-`stoppedOdometer ε η ρ t` (eq:stopped-odometer-de, line 2939, through `u^ε_t = w̃^ε_t + (t ε⁻¹) g^ε_{B_ρ}(0, ·)`,
-line 2941); `Λ^ε_t` is `matedDiscreteCluster ε η ρ t`.
+`stoppedOdometer m ε η ρ t` (eq:stopped-odometer-de, line 2939, through `u^ε_t = w̃^ε_t + (t ε⁻¹) g^ε_{B_ρ}(0, ·)`,
+line 2941); `Λ^ε_t` is `matedDiscreteCluster m ε η ρ t`; here `m = S.mult ε ω` (Definition 1.1) and `η = S.η ω`.
 
 Cited: Lemma 7.4 (Levine-Peres 2009, Lemma 4.2; the paper gives a proof using GMS19 Lemma 2.6).
 -/
@@ -37,8 +37,8 @@ def MassBoundOdometerStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   PolyHighProb S.P fun ε => {ω | ∀ t : ℝ, 0 < t → ∀ Θ : Set ℤ, Θ ⊆ cellVertices ε (S.η ω) (ball 0 ρ) →
     IsVConnected (S.mult ε ω) Θ → (0 : ℤ) ∈ Θ → ∀ (s : ℝ) (z : ℂ), 0 < s →
       cellVertices ε (S.η ω) (ball z s) ⊆ cellVertices ε (S.η ω) (ball 0 ρ) \ Θ →
-      ((cellVertices ε (S.η ω) (ball z (c₀ * s)) ∩ matedDiscreteCluster ε (S.η ω) ρ t).ncard : ℝ) ≤
-        C * ⨆ b : vBoundary (S.mult ε ω) Θ, stoppedOdometer ε (S.η ω) ρ t b}
+      ((cellVertices ε (S.η ω) (ball z (c₀ * s)) ∩ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t).ncard : ℝ) ≤
+        C * ⨆ b : vBoundary (S.mult ε ω) Θ, stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t b}
 
 /-- **Lemma 7.3** (lemma:odometer-bound-mass, line 3018). For all `t > 0` and all `B ⊆ V^ε(B_ρ) \ {0}`,
 `u^ε_t(b) ≤ (sup_{∂B} u^ε_t) P[X^{b,ε} exits B before hitting B \ Λ^ε_t | h, η]` for all `b ∈ B`. Stated almost
@@ -47,9 +47,10 @@ def OdometerBoundMassStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ᵐ ω ∂S.P, ∀ ε t : ℝ, 0 < ε → 0 < t → ∀ B : Set ℤ, B ⊆ cellVertices ε (S.η ω) (ball 0 ρ) \ {0} →
-    ∀ b ∈ B, stoppedOdometer ε (S.η ω) ρ t b ≤
-      (⨆ c : vBoundary (S.mult ε ω) B, stoppedOdometer ε (S.η ω) ρ t c) *
-        (srwLaw (S.mult ε ω) b {x | vExitTime B x < vHitTime (B \ matedDiscreteCluster ε (S.η ω) ρ t) x}).toReal
+    ∀ b ∈ B, stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t b ≤
+      (⨆ c : vBoundary (S.mult ε ω) B, stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t c) *
+        (srwLaw (S.mult ε ω) b
+          {x | vExitTime B x < vHitTime (B \ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t) x}).toReal
 
 /-- **Lemma 7.4** (lemma:crude-upper-bound, line 3058; Levine-Peres 2009, Lemma 4.2). For all `t > 0`, with
 polynomially high probability as `ε → 0`: for every `a ∈ Λ^ε_t \ {0}` there is a path `a = a₀ ∼ a₁ ∼ ⋯ ∼ a_m = 0` in
@@ -67,8 +68,9 @@ def CrudeUpperBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ t : ℝ, 0 < t →
-  PolyHighProb S.P fun ε => {ω | ∀ a ∈ matedDiscreteCluster ε (S.η ω) ρ t \ {0}, ∃ p : List ℤ,
-    IsVPathIn (S.mult ε ω) (matedDiscreteCluster ε (S.η ω) ρ t) p a 0 ∧
-    p.IsChain fun c d => stoppedOdometer ε (S.η ω) ρ t c + (Real.log ε⁻¹)⁻¹ ^ 2 ≤ stoppedOdometer ε (S.η ω) ρ t d}
+  PolyHighProb S.P fun ε => {ω | ∀ a ∈ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t \ {0}, ∃ p : List ℤ,
+    IsVPathIn (S.mult ε ω) (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t) p a 0 ∧
+    p.IsChain fun c d => stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t c + (Real.log ε⁻¹)⁻¹ ^ 2 ≤
+      stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t d}
 
 end MatedCRT

@@ -1,5 +1,6 @@
 import MatedCRT.Steps.Sec6.ConstantOrderLowerBound
 import MatedCRT.Proofs.Infra.RandomWalk
+import MatedCRT.Steps.Infra.MatingOfTrees
 
 /-!
 # Lemma 6.7 from Lemma 6.8 (proof of lines 2449-2461)
@@ -64,12 +65,13 @@ theorem cellVertices_mono {ε : ℝ} {η : ℝ → ℂ} {D D' : Set ℂ} (h : D 
     cellVertices ε η D ⊆ cellVertices ε η D' :=
   fun _ ⟨p, hp1, hp2⟩ => ⟨p, hp1, h hp2⟩
 
-theorem cell_inter_fillCells_of_mem_vClosure {ε : ℝ} {η : ℝ → ℂ} (hε : 0 ≤ ε) {Θ : Set ℤ} {a : ℤ}
-    (ha : a ∈ vClosure (cellMult ε η) Θ) : (cell ε η a ∩ fillCells ε η Θ).Nonempty := by
+theorem cell_inter_fillCells_of_mem_vClosure {m : ℤ → ℤ → ℕ} {ε : ℝ} {η : ℝ → ℂ} (hε : 0 ≤ ε)
+    (hcell : ∀ j k, m j k ≠ 0 → (cell ε η j ∩ cell ε η k).Nonempty) {Θ : Set ℤ} {a : ℤ}
+    (ha : a ∈ vClosure m Θ) : (cell ε η a ∩ fillCells ε η Θ).Nonempty := by
   rcases ha with ha | ⟨-, a', ha', hm⟩
   · obtain ⟨p, hp⟩ := cell_nonempty hε η a
     exact ⟨p, hp, mem_iUnion₂.2 ⟨a, ha, hp⟩⟩
-  · obtain ⟨p, hp1, hp2⟩ := cells_inter_of_cellMult_ne_zero hm
+  · obtain ⟨p, hp1, hp2⟩ := hcell _ _ hm
     exact ⟨p, hp2, mem_iUnion₂.2 ⟨a', ha', hp1⟩⟩
 
 theorem thickening_subset_ball {Θb : Set ℂ} {ρ δ : ℝ} (h : closure Θb ⊆ ball 0 (ρ / 2)) (hδ : δ ≤ ρ / 2) :
@@ -104,9 +106,11 @@ theorem IsPreconnected.inter_frontier_nonempty_of_isOpen {α : Type*} [Topologic
   exact hycl (subset_closure hyO)
 
 /-- A walk along edges of `𝒢^ε` from a vertex whose cell meets the open set `O` to a vertex whose cell does not meet
-`O` visits a vertex whose cell meets `∂O`. -/
-theorem exists_cell_meets_frontier {ε : ℝ} {η : ℝ → ℂ} (hε : 0 ≤ ε) (hη : Continuous η) {O : Set ℂ}
-    (hO : IsOpen O) {x : ℕ → ℤ} (hadj : ∀ n, x (n + 1) = x n ∨ cellMult ε η (x n) (x (n + 1)) ≠ 0)
+`O` visits a vertex whose cell meets `∂O` (for a map `m` whose adjacent vertices have intersecting cells; for the map
+of Definition 1.1 this is `AdjacentCellsMeetStep`, MatedCRT/Steps/Infra/MatingOfTrees.lean). -/
+theorem exists_cell_meets_frontier {m : ℤ → ℤ → ℕ} {ε : ℝ} {η : ℝ → ℂ} (hε : 0 ≤ ε) (hη : Continuous η)
+    (hcell : ∀ j k, m j k ≠ 0 → (cell ε η j ∩ cell ε η k).Nonempty) {O : Set ℂ}
+    (hO : IsOpen O) {x : ℕ → ℤ} (hadj : ∀ n, x (n + 1) = x n ∨ m (x n) (x (n + 1)) ≠ 0)
     (h0 : (cell ε η (x 0) ∩ O).Nonempty) {t : ℕ} (ht : ¬ (cell ε η (x t) ∩ O).Nonempty) :
     ∃ j ≤ t, (cell ε η (x j) ∩ frontier O).Nonempty := by
   classical
@@ -122,7 +126,7 @@ theorem exists_cell_meets_frontier {ε : ℝ} {η : ℝ → ℂ} (hε : 0 ≤ ε
   rw [hi] at hout
   rcases hadj i with heq | hm
   · exact absurd (by rw [heq]; exact hin) hout
-  · obtain ⟨p, hp1, hp2⟩ := cells_inter_of_cellMult_ne_zero hm
+  · obtain ⟨p, hp1, hp2⟩ := hcell _ _ hm
     have hC := IsPreconnected.union p hp1 hp2 (cell_isPreconnected hη (x i)) (cell_isPreconnected hη (x (i + 1)))
     obtain ⟨q, hq⟩ := cell_nonempty hε η (x (i + 1))
     obtain ⟨y, hyC, hyF⟩ := IsPreconnected.inter_frontier_nonempty_of_isOpen hC hO
@@ -174,38 +178,39 @@ theorem measurableSet_forall_lt_vExitTime (W A : Set ℤ) :
 
 /-- **Proof of Lemma 6.7 from Lemma 6.8, given the map.** `U` plays `V^ε(Θ̄ + B_r)` and `O` plays `Θ̄ + B_{r/2}`. -/
 theorem constantOrderLowerBound_core (hW : SrwHitDecompositionStep) (hN : SrwAeAdjacentStep)
-    {ε : ℝ} {η : ℝ → ℂ} (hε : 0 ≤ ε) (hη : Continuous η) {Θ S' U : Set ℤ} {O : Set ℂ} {r L s₂ : ℝ} {a : ℤ}
+    {m : ℤ → ℤ → ℕ} {ε : ℝ} {η : ℝ → ℂ} (hε : 0 ≤ ε) (hη : Continuous η)
+    (hcell : ∀ j k, m j k ≠ 0 → (cell ε η j ∩ cell ε η k).Nonempty) {Θ S' U : Set ℤ} {O : Set ℂ} {r L s₂ : ℝ} {a : ℤ}
     (hO : IsOpen O) (hΘO : fillCells ε η Θ ⊆ O) (hOU : cellVertices ε η (closure O) ⊆ U) (hUfin : U.Finite)
-    (hexit : ∀ b : ℤ, srwLaw (cellMult ε η) b {x | vExitTime (interiorCellVertices ε η O) x = ⊤} = 0)
+    (hexit : ∀ b : ℤ, srwLaw m b {x | vExitTime (interiorCellVertices ε η O) x = ⊤} = 0)
     (h68 : ∀ A ⊆ U \ Θ, (∀ z : ℂ, ((A ∩ cellVertices ε η (ball z r)).ncard : ℝ) < L) →
-      ∀ b ∈ cellVertices ε η (frontier O), srwLaw (cellMult ε η) b
+      ∀ b ∈ cellVertices ε η (frontier O), srwLaw m b
         {x | ∀ n : ℕ, (n : ℕ∞) < vExitTime (U \ Θ) x → x n ∈ A} ≤ ENNReal.ofReal (1 - s₂))
-    (hs₂ : 0 ≤ s₂) (hs₂1 : s₂ ≤ 1) (ha : a ∈ vClosure (cellMult ε η) Θ) (hS' : S' ⊆ U)
+    (hs₂ : 0 ≤ s₂) (hs₂1 : s₂ ≤ 1) (ha : a ∈ vClosure m Θ) (hS' : S' ⊆ U)
     (hcard : ((S' \ Θ).ncard : ℝ) < L) :
     ENNReal.ofReal s₂ ≤
-      srwLaw (cellMult ε η) a {x | ∃ n : ℕ, (n : ℕ∞) < vExitTime U x ∧ x n ∈ U \ (S' ∪ Θ)} := by
-  set μ := srwLaw (cellMult ε η) a
+      srwLaw m a {x | ∃ n : ℕ, (n : ℕ∞) < vExitTime U x ∧ x n ∈ U \ (S' ∪ Θ)} := by
+  set μ := srwLaw m a
   set E : Set (ℕ → ℤ) := {x | ∃ n : ℕ, (n : ℕ∞) < vExitTime U x ∧ x n ∈ U \ (S' ∪ Θ)} with hE
   set B := cellVertices ε η (frontier O) with hB
   set F : Set (ℕ → ℤ) := {y | ∀ n : ℕ, (n : ℕ∞) < vExitTime (U \ Θ) y → y n ∈ S' \ Θ} with hF
-  set N1 : Set (ℕ → ℤ) := {x | ¬ (x 0 = a ∧ ∀ n, x (n + 1) = x n ∨ cellMult ε η (x n) (x (n + 1)) ≠ 0)} with hN1
+  set N1 : Set (ℕ → ℤ) := {x | ¬ (x 0 = a ∧ ∀ n, x (n + 1) = x n ∨ m (x n) (x (n + 1)) ≠ 0)} with hN1
   set N2 : Set (ℕ → ℤ) := {x | vExitTime (interiorCellVertices ε η O) x = ⊤} with hN2
   set H : Set (ℕ → ℤ) := {x | ∃ n : ℕ, x n ∈ B ∧ (∀ j < n, x j ∉ B) ∧ (fun i => x (n + i)) ∈ F} with hH
   have hBU : B ⊆ U := (cellVertices_mono frontier_subset_closure).trans hOU
   have hVU : cellVertices ε η O ⊆ U := (cellVertices_mono subset_closure).trans hOU
   have hAfin : (S' \ Θ).Finite := hUfin.subset fun y hy => hS' hy.1
   have hHle : μ H ≤ ENNReal.ofReal (1 - s₂) :=
-    hW (cellMult ε η) a B F _ (measurableSet_forall_lt_vExitTime _ _) fun b hb =>
+    hW m a B F _ (measurableSet_forall_lt_vExitTime _ _) fun b hb =>
       h68 (S' \ Θ) (fun y hy => ⟨hS' hy.1, hy.2⟩)
         (fun z => lt_of_le_of_lt (by exact_mod_cast Set.ncard_inter_le_ncard_left _ _ hAfin) hcard) b hb
-  have hN1z : μ N1 = 0 := ae_iff.1 ((srwLaw_ae_start (cellMult ε η) a).and (hN (cellMult ε η) a))
+  have hN1z : μ N1 = 0 := ae_iff.1 ((srwLaw_ae_start m a).and (hN m a))
   have hN2z : μ N2 = 0 := hexit a
   have hsub : Eᶜ ⊆ N1 ∪ N2 ∪ H := by
     intro x hx
     by_contra hcon
     simp only [mem_union, not_or] at hcon
     obtain ⟨⟨hN1x, hN2x⟩, hHx⟩ := hcon
-    have hgood : x 0 = a ∧ ∀ n, x (n + 1) = x n ∨ cellMult ε η (x n) (x (n + 1)) ≠ 0 :=
+    have hgood : x 0 = a ∧ ∀ n, x (n + 1) = x n ∨ m (x n) (x (n + 1)) ≠ 0 :=
       not_not.1 hN1x
     obtain ⟨t, ht, hbefore⟩ := exists_of_vExitTime_ne_top (W := interiorCellVertices ε η O) hN2x
     have hexB : ∃ j, x j ∈ B ∧ j ≤ t := by
@@ -213,9 +218,9 @@ theorem constantOrderLowerBound_core (hW : SrwHitDecompositionStep) (hN : SrwAeA
       · exact ⟨t, not_not.1 fun hB' => ht ⟨hxt, hB'⟩, le_rfl⟩
       · have h0 : (cell ε η (x 0) ∩ O).Nonempty := by
           rw [hgood.1]
-          obtain ⟨p, hp1, hp2⟩ := cell_inter_fillCells_of_mem_vClosure hε ha
+          obtain ⟨p, hp1, hp2⟩ := cell_inter_fillCells_of_mem_vClosure hε hcell ha
           exact ⟨p, hp1, hΘO hp2⟩
-        obtain ⟨j, hjt, hj⟩ := exists_cell_meets_frontier hε hη hO hgood.2 h0 hxt
+        obtain ⟨j, hjt, hj⟩ := exists_cell_meets_frontier hε hη hcell hO hgood.2 h0 hxt
         exact ⟨j, hj, hjt⟩
     classical
     obtain ⟨j, hjB, hjt⟩ := hexB
@@ -269,7 +274,7 @@ open ConstantOrder in
 `𝛅 ∧ ρ/4` in place of the `𝛅` of Lemma 6.8. -/
 theorem constantOrderLowerBound_of_steps (𝒮 : SpaceFillingSLEModel) (h68 : ConstantOrderLowerBoundDivStmt 𝒮)
     (hW : SrwHitDecompositionStep) (hN : SrwAeAdjacentStep) (hF : CellVerticesBallFiniteStep 𝒮)
-    (hE : WalkExitsStep 𝒮) : ConstantOrderLowerBoundStmt 𝒮 := by
+    (hE : WalkExitsStep 𝒮) (hcell : AdjacentCellsMeetStep 𝒮) : ConstantOrderLowerBoundStmt 𝒮 := by
   intro γ hγ hγ2 ρ hρ hρ1 βm hβ
   obtain ⟨ω₀, hω₀, h⟩ := h68 γ hγ hγ2 ρ hρ hρ1 βm hβ
   refine ⟨ω₀, hω₀, fun s₀ hs₀ hs₀1 => ?_⟩
@@ -277,7 +282,9 @@ theorem constantOrderLowerBound_of_steps (𝒮 : SpaceFillingSLEModel) (h68 : Co
   refine ⟨s₁, s₂, hs₁, hs₁1, hs₂, hs₂1, fun Ω _ S hS => ?_⟩
   obtain ⟨dd, hdd, hddpos, hP⟩ := h' Ω S hS
   refine ⟨fun ω => min (dd ω) (ρ / 4), hdd.min measurable_const, fun ω => lt_min (hddpos ω) (by positivity), ?_⟩
-  have hcont : ∀ᵐ ω ∂S.P, ω ∈ {ω | Continuous (S.η ω)} := hS.isAreaParametrized.mono fun ω hω => hω.1
+  have hcont : ∀ᵐ ω ∂S.P, ω ∈ {ω | Continuous (S.η ω) ∧ ∀ ε : ℝ, 0 < ε → ∀ j k : ℤ, S.mult ε ω j k ≠ 0 →
+      (cell ε (S.η ω) j ∩ cell ε (S.η ω) k).Nonempty} :=
+    (hS.isAreaParametrized.and (hcell γ hγ hγ2 Ω S hS)).mono fun ω hω => ⟨hω.1.1, hω.2⟩
   have hall := ((hP.inter (hF γ hγ hγ2 ρ hρ hρ1 Ω S hS)).inter
     (hE γ hγ hγ2 ρ s₀ hρ hρ1 hs₀ Ω S hS)).inter (probTendsToOne_of_ae hcont)
   refine hall.mono_pos fun ε hε ω hω => ?_
@@ -288,7 +295,7 @@ theorem constantOrderLowerBound_of_steps (𝒮 : SpaceFillingSLEModel) (h68 : Co
   have hrρ : r ≤ ρ / 4 := hr2.trans (min_le_right _ _)
   have hthick : ∀ δ, δ ≤ ρ / 2 → thickening δ (fillCells ε (S.η ω) Θ) ⊆ ball 0 ρ :=
     fun δ hδ => thickening_subset_ball hΘ1 hδ
-  exact constantOrderLowerBound_core hW hN hε.le hcontω
+  exact constantOrderLowerBound_core hW hN hε.le hcontω.1 (hcontω.2 ε hε)
     (U := cellVertices ε (S.η ω) (thickening r (fillCells ε (S.η ω) Θ)))
     (O := thickening (r / 2) (fillCells ε (S.η ω) Θ)) isOpen_thickening
     (self_subset_thickening (by linarith) _)

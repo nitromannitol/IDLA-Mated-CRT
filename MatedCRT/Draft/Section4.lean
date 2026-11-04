@@ -7,12 +7,13 @@ import MatedCRT.Defs.Sandpile
 Convergence of the divisible sandpile odometer. Conventions: see `MatedCRT/Draft/Section1.lean` and
 `MatedCRT/Draft/Section3.lean`. `ρ ∈ (0, 1)` is fixed (line 1536) and universally quantified.
 
-Objects (MatedCRT/Defs/Sandpile.lean), for the map `𝒢^ε = cellMult ε (S.η ω)`:
-* `w̃^ε_t` = `matedLeastSupersolution ε η ρ t` (eq:discrete-least-supersolution), its rescaling
+Objects (MatedCRT/Defs/Sandpile.lean), for the map `𝒢^ε` with edge multiplicity `m = S.mult ε ω` (Definition 1.1,
+operator decision (L1)) and the cells of `η = S.η ω`:
+* `w̃^ε_t` = `matedLeastSupersolution m ε η ρ t` (eq:discrete-least-supersolution), its rescaling
   `w̄^ε_t = rescale (S.mε ε) ε η w̃^ε_t`;
-* `Λ^ε_t` = `matedDiscreteCluster ε η ρ t` (eq:discrete-cluster);
-* `q^ε_{B_ρ}` = `normExitTime (cellMult ε η) (ballInterior ε η ρ)`, `g^ε_{B_ρ}(0, ·)` = `greenKernel … 0`;
-* `D_ε(t ε⁻¹)` = `sandpileCluster (cellMult ε η) (t / ε)`;
+* `Λ^ε_t` = `matedDiscreteCluster m ε η ρ t` (eq:discrete-cluster);
+* `q^ε_{B_ρ}` = `normExitTime m (ballInterior ε η ρ)`, `g^ε_{B_ρ}(0, ·)` = `greenKernel … 0`;
+* `D_ε(t ε⁻¹)` = `sandpileCluster m (t / ε)`;
 * `w̄^{B_ρ}_t` = `HarmonicBalls.leastSupersolution μ_h ρ 0 t` (eq:least-super-solution), `G_{B_ρ}` =
   `HarmonicBalls.greenFunction (ball 0 ρ)`;
 * `T = clusterExitTime Λ ρ = sup {t > 0 : Λ_t ⊆ B_{ρ/3}}` (eq:cluster-stopping-time).
@@ -29,7 +30,7 @@ open scoped ENNReal NNReal
 /-- The rescaled discrete least supersolution `w̄^ε_t` (eq:discrete-scaling applied to `w̃^ε_t`). -/
 noncomputable def rescaledMatedLeastSupersolution {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ρ t ε : ℝ)
     (ω : Ω) : ℂ → ℝ :=
-  rescale (S.mε ε) ε (S.η ω) (matedLeastSupersolution ε (S.η ω) ρ t)
+  rescale (S.mε ε) ε (S.η ω) (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t)
 
 /-- **Theorem 4.1** (theorem:convergence-divisible, line 1594). For each `t > 0`, on the event `{t < T}`, `w̄^ε_t`
 converges uniformly on `B_ρ` as `ε → 0` to `(c₀/6) w̄^{B_ρ}_t` in probability: for each `δ > 0`,
@@ -62,10 +63,12 @@ def DiscreteBasicPropertiesStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ᵐ ω ∂S.P, ∀ t ε : ℝ, 0 < t → 0 < ε →
     (∀ a ∈ cellVertices ε (S.η ω) (closedBall 0 ρ),
-      max (-normExitTime (S.mult ε ω) (ballInterior ε (S.η ω) ρ) a) (matedObstacle ε (S.η ω) ρ t a) ≤
-        matedLeastSupersolution ε (S.η ω) ρ t a ∧ matedLeastSupersolution ε (S.η ω) ρ t a ≤ 0) ∧
+      max (-normExitTime (S.mult ε ω) (ballInterior ε (S.η ω) ρ) a) (matedObstacle (S.mult ε ω) ε (S.η ω) ρ t a) ≤
+        matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t a ∧
+          matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t a ≤ 0) ∧
     ∀ a ∈ ballInterior ε (S.η ω) ρ,
-      matedLaplacian ε (S.η ω) (matedLeastSupersolution ε (S.η ω) ρ t) a ≤ ((matedDeg ε (S.η ω) a : ℕ) : ℝ)⁻¹
+      matedLaplacian (S.mult ε ω) (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t) a ≤
+        ((matedDeg (S.mult ε ω) a : ℕ) : ℝ)⁻¹
 
 /-- **Lemma 4.4** (lemma:discrete-laplacian-bound, line 1697). For all `t > 0` and `ε > 0`, `Δ^ε w̃^ε_t = (deg^ε)⁻¹` on
 `Λ^ε_t` and `0 ≤ Δ^ε w̃^ε_t ≤ (deg^ε)⁻¹` on `V^ε(B_ρ) \ V^ε(∂B_ρ)`. Moreover `Λ^ε_t` is connected (`IsVPreconnected`; `Λ^ε_t = ∅` when `t ε⁻¹ ≤ 1`), and if
@@ -74,13 +77,15 @@ def DiscreteLaplacianBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ᵐ ω ∂S.P, ∀ t ε : ℝ, 0 < t → 0 < ε →
-    (∀ a ∈ matedDiscreteCluster ε (S.η ω) ρ t,
-      matedLaplacian ε (S.η ω) (matedLeastSupersolution ε (S.η ω) ρ t) a = ((matedDeg ε (S.η ω) a : ℕ) : ℝ)⁻¹) ∧
+    (∀ a ∈ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t,
+      matedLaplacian (S.mult ε ω) (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t) a =
+        ((matedDeg (S.mult ε ω) a : ℕ) : ℝ)⁻¹) ∧
     (∀ a ∈ ballInterior ε (S.η ω) ρ,
-      0 ≤ matedLaplacian ε (S.η ω) (matedLeastSupersolution ε (S.η ω) ρ t) a ∧
-      matedLaplacian ε (S.η ω) (matedLeastSupersolution ε (S.η ω) ρ t) a ≤ ((matedDeg ε (S.η ω) a : ℕ) : ℝ)⁻¹) ∧
-    IsVPreconnected (S.mult ε ω) (matedDiscreteCluster ε (S.η ω) ρ t) ∧
-    (1 < t / ε → (0 : ℤ) ∈ matedDiscreteCluster ε (S.η ω) ρ t)
+      0 ≤ matedLaplacian (S.mult ε ω) (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t) a ∧
+      matedLaplacian (S.mult ε ω) (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t) a ≤
+        ((matedDeg (S.mult ε ω) a : ℕ) : ℝ)⁻¹) ∧
+    IsVPreconnected (S.mult ε ω) (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t) ∧
+    (1 < t / ε → (0 : ℤ) ∈ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t)
 
 /-- **Lemma 4.5** (lemma:discrete-conservation-of-mass, line 1705). For all `t > 0` and `ε > 0`, `|Λ^ε_t| ≤ t ε⁻¹`.
 Moreover, if `Λ^ε_t ⊆ int(V^ε(B_ρ) \ V^ε(∂B_ρ))`, then
@@ -90,11 +95,12 @@ def DiscreteConservationOfMassStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ᵐ ω ∂S.P, ∀ t ε : ℝ, 0 < t → 0 < ε →
-    (matedDiscreteCluster ε (S.η ω) ρ t).Finite ∧
-    ((matedDiscreteCluster ε (S.η ω) ρ t).ncard : ℝ) ≤ t / ε ∧
-    (matedDiscreteCluster ε (S.η ω) ρ t ⊆ vInterior (S.mult ε ω) (ballInterior ε (S.η ω) ρ) →
+    (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t).Finite ∧
+    ((matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t).ncard : ℝ) ≤ t / ε ∧
+    (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t ⊆ vInterior (S.mult ε ω) (ballInterior ε (S.η ω) ρ) →
       ∑' a : ballInterior ε (S.η ω) ρ,
-        matedLaplacian ε (S.η ω) (matedLeastSupersolution ε (S.η ω) ρ t) a * (matedDeg ε (S.η ω) a : ℝ) = t / ε)
+        matedLaplacian (S.mult ε ω) (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t) a *
+          (matedDeg (S.mult ε ω) a : ℝ) = t / ε)
 
 /-- **Lemma 4.6** (lemma:subsequential-convergence, line 1720). Almost surely, for each `t > 0` and each deterministic
 sequence `ε_n → 0`, there are a subsequence and a Hölder continuous `w̄*_t ∈ C(cl(B_ρ))` with `w̄^ε_t → w̄*_t`

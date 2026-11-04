@@ -1,6 +1,8 @@
 import MatedCRT.Draft.Section4
 import MatedCRT.Proofs.SecA.Statements
 import MatedCRT.Proofs.Infra.RandomWalk
+import MatedCRT.Proofs.Infra.MatingOfTrees
+import MatedCRT.Steps.Infra.MatingOfTrees
 
 /-!
 # Section 4: Lemmas 4.3-4.5 as special cases of Appendix A (lines 1672-1712, 3398-3411)
@@ -175,7 +177,7 @@ end Enlarged
 
 section Mated
 
-variable {ε : ℝ} {η : ℝ → ℂ} {ρ t : ℝ}
+variable {m : ℤ → ℤ → ℕ} {ε : ℝ} {η : ℝ → ℂ} {ρ t : ℝ}
 
 theorem cellMult_symm (ε : ℝ) (η : ℝ → ℂ) (j k : ℤ) : cellMult ε η j k = cellMult ε η k j := by
   unfold cellMult
@@ -186,7 +188,7 @@ theorem cellMult_symm (ε : ℝ) (η : ℝ → ℂ) (j k : ℤ) : cellMult ε η
 theorem cellMult_self (ε : ℝ) (η : ℝ → ℂ) (k : ℤ) : cellMult ε η k k = 0 := by
   simp [cellMult]
 
-/-- Adjacent cells meet. -/
+/-- Adjacent cells meet (Definition 1.2). -/
 theorem cell_inter_nonempty_of_cellMult_ne_zero {j k : ℤ} (h : cellMult ε η j k ≠ 0) :
     (cell ε η j ∩ cell ε η k).Nonempty := by
   unfold cellMult at h
@@ -223,12 +225,14 @@ theorem ballInterior_subset_cellVertices_ball : ballInterior ε η ρ ⊆ cellVe
 theorem cellVertices_ball_subset_closedBall : cellVertices ε η (ball 0 ρ) ⊆ cellVertices ε η (closedBall 0 ρ) :=
   fun _ ⟨z, hz, hzb⟩ => ⟨z, hz, ball_subset_closedBall hzb⟩
 
-/-- `cl(V^ε(B_ρ) \ V^ε(∂B_ρ)) ⊆ V^ε(cl B_ρ)`. -/
-theorem vClosure_ballInterior_subset (hη : Continuous η) :
-    vClosure (cellMult ε η) (ballInterior ε η ρ) ⊆ cellVertices ε η (closedBall 0 ρ) := by
+/-- `cl(V^ε(B_ρ) \ V^ε(∂B_ρ)) ⊆ V^ε(cl B_ρ)`, for a map `m` whose adjacent vertices have intersecting cells (for the
+map of Definition 1.1: `AdjacentCellsMeetStep`, MatedCRT/Steps/Infra/MatingOfTrees.lean). -/
+theorem vClosure_ballInterior_subset (hη : Continuous η)
+    (hcell : ∀ j k, m j k ≠ 0 → (cell ε η j ∩ cell ε η k).Nonempty) :
+    vClosure m (ballInterior ε η ρ) ⊆ cellVertices ε η (closedBall 0 ρ) := by
   rintro b (hb | ⟨-, a, ha, hab⟩)
   · exact cellVertices_ball_subset_closedBall (ballInterior_subset_cellVertices_ball hb)
-  · obtain ⟨z, hza, hzb⟩ := cell_inter_nonempty_of_cellMult_ne_zero hab
+  · obtain ⟨z, hza, hzb⟩ := hcell a b hab
     exact ⟨z, hzb, ball_subset_closedBall (mem_ball_of_mem_cell hη ha hza)⟩
 
 theorem visitsBeforeExit_eq_zero_of_not_mem {A : Set ℤ} {b : ℤ} (hb : b ∉ A) (x : ℕ → ℤ) :
@@ -256,40 +260,41 @@ theorem greenKernel_nonneg (m : ℤ → ℤ → ℕ) (A : Set ℤ) (a b : ℤ) :
 theorem normExitTime_nonneg (m : ℤ → ℤ → ℕ) (A : Set ℤ) (a : ℤ) : 0 ≤ normExitTime m A a :=
   tsum_nonneg fun _ => greenKernel_nonneg _ _ _ _
 
-theorem matedObstacle_nonpos (ht : 0 ≤ t) (hε : 0 ≤ ε) (a : ℤ) : matedObstacle ε η ρ t a ≤ 0 := by
+theorem matedObstacle_nonpos (ht : 0 ≤ t) (hε : 0 ≤ ε) (a : ℤ) : matedObstacle m ε η ρ t a ≤ 0 := by
   unfold matedObstacle
   rw [neg_mul]
   exact neg_nonpos.2 (mul_nonneg (div_nonneg ht hε) (greenKernel_nonneg _ _ _ _))
 
-theorem matedObstacle_eq_zero_of_not_mem {a : ℤ} (ha : a ∉ ballInterior ε η ρ) : matedObstacle ε η ρ t a = 0 := by
+theorem matedObstacle_eq_zero_of_not_mem {a : ℤ} (ha : a ∉ ballInterior ε η ρ) : matedObstacle m ε η ρ t a = 0 := by
   simp [matedObstacle, greenKernel_eq_zero_of_not_mem_right _ _ ha]
 
 theorem matedObstacle_eq_zero_of_origin_not_mem (h0 : (0 : ℤ) ∉ ballInterior ε η ρ) (a : ℤ) :
-    matedObstacle ε η ρ t a = 0 := by
+    matedObstacle m ε η ρ t a = 0 := by
   simp [matedObstacle, greenKernel_eq_zero_of_not_mem _ h0]
 
 /-- `Δ^ε φ = 𝔱 δ_0` on `V`, from eq:discrete-normalized-green-laplacian. -/
 theorem matedObstacle_laplacian
-    (hG : ∀ b ∈ ballInterior ε η ρ, mLaplacian (cellMult ε η) (greenKernel (cellMult ε η) (ballInterior ε η ρ) 0) b =
-      -((mdeg (cellMult ε η) 0 : ℝ)⁻¹ * if b = 0 then 1 else 0))
+    (hG : ∀ b ∈ ballInterior ε η ρ, mLaplacian m (greenKernel m (ballInterior ε η ρ) 0) b =
+      -((mdeg m 0 : ℝ)⁻¹ * if b = 0 then 1 else 0))
     {a : ℤ} (ha : a ∈ ballInterior ε η ρ) :
-    mLaplacian (cellMult ε η) (matedObstacle ε η ρ t) a =
-      t / ε * ((matedDeg ε η 0 : ℕ) : ℝ)⁻¹ * (if a = 0 then 1 else 0) := by
-  have : matedObstacle ε η ρ t = fun b => -(t / ε) * greenKernel (cellMult ε η) (ballInterior ε η ρ) 0 b := rfl
+    mLaplacian m (matedObstacle m ε η ρ t) a =
+      t / ε * ((matedDeg m 0 : ℕ) : ℝ)⁻¹ * (if a = 0 then 1 else 0) := by
+  have : matedObstacle m ε η ρ t = fun b => -(t / ε) * greenKernel m (ballInterior ε η ρ) 0 b := rfl
   rw [this, mLaplacian_const_mul, hG a ha]
   unfold matedDeg
   ring
 
 /-- The Section 4 data satisfy the hypotheses of Appendix A when `0 ∈ V` and `V` is connected (ESCALATIONS E-c1-2). -/
-theorem matedObstacle_isObstacleSetting (ht : 0 < t) (hε : 0 < ε) (hlf : ∀ a, {b | cellMult ε η a b ≠ 0}.Finite)
-    (hfin : (ballInterior ε η ρ).Finite) (hcons : ∀ k, cellMult ε η k (k + 1) ≠ 0)
-    (hconn : IsVConnected (cellMult ε η) (ballInterior ε η ρ)) (h0 : (0 : ℤ) ∈ ballInterior ε η ρ)
-    (hG : ∀ b ∈ ballInterior ε η ρ, mLaplacian (cellMult ε η) (greenKernel (cellMult ε η) (ballInterior ε η ρ) 0) b =
-      -((mdeg (cellMult ε η) 0 : ℝ)⁻¹ * if b = 0 then 1 else 0)) :
-    IsObstacleSetting (cellMult ε η) (ballInterior ε η ρ) 0 (fun b => ((matedDeg ε η b : ℕ) : ℝ)⁻¹)
-      (matedObstacle ε η ρ t) (t / ε * ((matedDeg ε η 0 : ℕ) : ℝ)⁻¹) where
-  symm := cellMult_symm ε η
-  loopless := cellMult_self ε η
+theorem matedObstacle_isObstacleSetting (ht : 0 < t) (hε : 0 < ε) (hsymm : ∀ a b, m a b = m b a)
+    (hloop : ∀ a, m a a = 0) (hlf : ∀ a, {b | m a b ≠ 0}.Finite)
+    (hfin : (ballInterior ε η ρ).Finite) (hcons : ∀ k, m k (k + 1) ≠ 0)
+    (hconn : IsVConnected m (ballInterior ε η ρ)) (h0 : (0 : ℤ) ∈ ballInterior ε η ρ)
+    (hG : ∀ b ∈ ballInterior ε η ρ, mLaplacian m (greenKernel m (ballInterior ε η ρ) 0) b =
+      -((mdeg m 0 : ℝ)⁻¹ * if b = 0 then 1 else 0)) :
+    IsObstacleSetting m (ballInterior ε η ρ) 0 (fun b => ((matedDeg m b : ℕ) : ℝ)⁻¹)
+      (matedObstacle m ε η ρ t) (t / ε * ((matedDeg m 0 : ℕ) : ℝ)⁻¹) where
+  symm := hsymm
+  loopless := hloop
   locallyFinite := hlf
   infinite := inferInstance
   finite := hfin
@@ -309,36 +314,36 @@ end Mated
 
 /-- The Section 4 data satisfy the hypotheses of Appendix A under the map of lines 3400-3411:
 `V = V^ε(B_ρ) \ V^ε(∂B_ρ)`, origin `0`, `𝔯 = (deg^ε)⁻¹`, `φ = -(t ε⁻¹) g^ε_{B_ρ}(0, ·)`, `𝔱 = ε⁻¹ t deg^ε(0)⁻¹`. -/
-abbrev IsMatedObstacleSetting (ε : ℝ) (η : ℝ → ℂ) (ρ t : ℝ) : Prop :=
-  IsObstacleSetting (cellMult ε η) (ballInterior ε η ρ) 0 (fun b => ((matedDeg ε η b : ℕ) : ℝ)⁻¹)
-    (matedObstacle ε η ρ t) (t / ε * ((matedDeg ε η 0 : ℕ) : ℝ)⁻¹)
+abbrev IsMatedObstacleSetting (m : ℤ → ℤ → ℕ) (ε : ℝ) (η : ℝ → ℂ) (ρ t : ℝ) : Prop :=
+  IsObstacleSetting m (ballInterior ε η ρ) 0 (fun b => ((matedDeg m b : ℕ) : ℝ)⁻¹)
+    (matedObstacle m ε η ρ t) (t / ε * ((matedDeg m 0 : ℕ) : ℝ)⁻¹)
 
 section Fixed
 
-variable {ε : ℝ} {η : ℝ → ℂ} {ρ t : ℝ}
+variable {m : ℤ → ℤ → ℕ} {ε : ℝ} {η : ℝ → ℂ} {ρ t : ℝ}
 
-theorem matedLeastSupersolution_eq : matedLeastSupersolution ε η ρ t =
-    discreteLeastSupersolution (cellMult ε η) (ballInterior ε η ρ) (cellVertices ε η (closedBall 0 ρ))
-      (fun b => ((matedDeg ε η b : ℕ) : ℝ)⁻¹) (matedObstacle ε η ρ t) :=
+theorem matedLeastSupersolution_eq : matedLeastSupersolution m ε η ρ t =
+    discreteLeastSupersolution m (ballInterior ε η ρ) (cellVertices ε η (closedBall 0 ρ))
+      (fun b => ((matedDeg m b : ℕ) : ℝ)⁻¹) (matedObstacle m ε η ρ t) :=
   rfl
 
-theorem matedDiscreteCluster_eq : matedDiscreteCluster ε η ρ t =
-    discreteCluster (cellVertices ε η (ball 0 ρ)) (matedLeastSupersolution ε η ρ t) (matedObstacle ε η ρ t) :=
+theorem matedDiscreteCluster_eq : matedDiscreteCluster m ε η ρ t =
+    discreteCluster (cellVertices ε η (ball 0 ρ)) (matedLeastSupersolution m ε η ρ t) (matedObstacle m ε η ρ t) :=
   rfl
 
 theorem matedObstacle_eq_zero_off_vClosure :
-    ∀ b ∈ cellVertices ε η (closedBall 0 ρ), b ∉ vClosure (cellMult ε η) (ballInterior ε η ρ) →
-      matedObstacle ε η ρ t b = 0 :=
+    ∀ b ∈ cellVertices ε η (closedBall 0 ρ), b ∉ vClosure m (ballInterior ε η ρ) →
+      matedObstacle m ε η ρ t b = 0 :=
   fun _ _ hb => matedObstacle_eq_zero_of_not_mem fun h => hb (Or.inl h)
 
 /-- If `0 ∉ V`, the obstacle vanishes and so does `w̃^ε_t` on `V^ε(cl B_ρ)`. -/
 theorem matedLeastSupersolution_eq_zero_of_origin_not_mem (h0 : (0 : ℤ) ∉ ballInterior ε η ρ) {a : ℤ}
-    (ha : a ∈ cellVertices ε η (closedBall 0 ρ)) : matedLeastSupersolution ε η ρ t a = 0 :=
+    (ha : a ∈ cellVertices ε η (closedBall 0 ρ)) : matedLeastSupersolution m ε η ρ t a = 0 :=
   dls_eq_zero_of_obstacle_zero (fun _ _ => inv_nonneg.2 (Nat.cast_nonneg _))
     (fun b _ => matedObstacle_eq_zero_of_origin_not_mem h0 b) ha
 
 /-- If `0 ∉ V`, the discrete cluster is empty. -/
-theorem matedDiscreteCluster_eq_empty (h0 : (0 : ℤ) ∉ ballInterior ε η ρ) : matedDiscreteCluster ε η ρ t = ∅ := by
+theorem matedDiscreteCluster_eq_empty (h0 : (0 : ℤ) ∉ ballInterior ε η ρ) : matedDiscreteCluster m ε η ρ t = ∅ := by
   ext a
   simp only [Set.mem_empty_iff_false, iff_false]
   rintro ⟨ha, hlt⟩
@@ -346,39 +351,41 @@ theorem matedDiscreteCluster_eq_empty (h0 : (0 : ℤ) ∉ ballInterior ε η ρ)
     matedObstacle_eq_zero_of_origin_not_mem h0 a] at hlt
   exact lt_irrefl _ hlt
 
-theorem matedLaplacian_eq_zero_of_origin_not_mem (hη : Continuous η) (h0 : (0 : ℤ) ∉ ballInterior ε η ρ) {a : ℤ}
-    (ha : a ∈ ballInterior ε η ρ) : matedLaplacian ε η (matedLeastSupersolution ε η ρ t) a = 0 :=
+theorem matedLaplacian_eq_zero_of_origin_not_mem (hη : Continuous η)
+    (hcell : ∀ j k, m j k ≠ 0 → (cell ε η j ∩ cell ε η k).Nonempty) (h0 : (0 : ℤ) ∉ ballInterior ε η ρ) {a : ℤ}
+    (ha : a ∈ ballInterior ε η ρ) : matedLaplacian m (matedLeastSupersolution m ε η ρ t) a = 0 :=
   mLaplacian_eq_zero_of_vClosure
-    (fun _ hb => matedLeastSupersolution_eq_zero_of_origin_not_mem h0 (vClosure_ballInterior_subset hη hb)) ha
+    (fun _ hb => matedLeastSupersolution_eq_zero_of_origin_not_mem h0 (vClosure_ballInterior_subset hη hcell hb)) ha
 
 /-- Lemma 4.3 for fixed `t, ε`. -/
 theorem matedBasicProperties_fixed (hη : Continuous η)
-    (hS : (0 : ℤ) ∈ ballInterior ε η ρ → IsMatedObstacleSetting ε η ρ t)
+    (hcell : ∀ j k, m j k ≠ 0 → (cell ε η j ∩ cell ε η k).Nonempty)
+    (hS : (0 : ℤ) ∈ ballInterior ε η ρ → IsMatedObstacleSetting m ε η ρ t)
     (hq : (0 : ℤ) ∈ ballInterior ε η ρ → ∀ a ∈ ballInterior ε η ρ,
-      mLaplacian (cellMult ε η) (normExitTime (cellMult ε η) (ballInterior ε η ρ)) a = -((matedDeg ε η a : ℕ) : ℝ)⁻¹) :
+      mLaplacian m (normExitTime m (ballInterior ε η ρ)) a = -((matedDeg m a : ℕ) : ℝ)⁻¹) :
     (∀ a ∈ cellVertices ε η (closedBall 0 ρ),
-      max (-normExitTime (cellMult ε η) (ballInterior ε η ρ) a) (matedObstacle ε η ρ t a) ≤
-        matedLeastSupersolution ε η ρ t a ∧ matedLeastSupersolution ε η ρ t a ≤ 0) ∧
+      max (-normExitTime m (ballInterior ε η ρ) a) (matedObstacle m ε η ρ t a) ≤
+        matedLeastSupersolution m ε η ρ t a ∧ matedLeastSupersolution m ε η ρ t a ≤ 0) ∧
     ∀ a ∈ ballInterior ε η ρ,
-      matedLaplacian ε η (matedLeastSupersolution ε η ρ t) a ≤ ((matedDeg ε η a : ℕ) : ℝ)⁻¹ := by
-  have hW := vClosure_ballInterior_subset (ε := ε) (ρ := ρ) hη
+      matedLaplacian m (matedLeastSupersolution m ε η ρ t) a ≤ ((matedDeg m a : ℕ) : ℝ)⁻¹ := by
+  have hW := vClosure_ballInterior_subset (ε := ε) (ρ := ρ) hη hcell
   by_cases h0 : (0 : ℤ) ∈ ballInterior ε η ρ
   · have hS := hS h0
-    have hφ := matedObstacle_eq_zero_off_vClosure (ε := ε) (η := η) (ρ := ρ) (t := t)
-    have hq' : ∀ a ∈ ballInterior ε η ρ, mLaplacian (cellMult ε η)
-        (fun b => -normExitTime (cellMult ε η) (ballInterior ε η ρ) b) a = ((matedDeg ε η a : ℕ) : ℝ)⁻¹ := by
+    have hφ := matedObstacle_eq_zero_off_vClosure (m := m) (ε := ε) (η := η) (ρ := ρ) (t := t)
+    have hq' : ∀ a ∈ ballInterior ε η ρ, mLaplacian m
+        (fun b => -normExitTime m (ballInterior ε η ρ) b) a = ((matedDeg m a : ℕ) : ℝ)⁻¹ := by
       intro a ha
-      have : (fun b => -normExitTime (cellMult ε η) (ballInterior ε η ρ) b) =
-          fun b => (-1) * normExitTime (cellMult ε η) (ballInterior ε η ρ) b := funext fun _ => by ring
+      have : (fun b => -normExitTime m (ballInterior ε η ρ) b) =
+          fun b => (-1) * normExitTime m (ballInterior ε η ρ) b := funext fun _ => by ring
       rw [this, mLaplacian_const_mul, hq h0 a ha]
       ring
-    have hqb : ∀ a ∈ vBoundary (cellMult ε η) (ballInterior ε η ρ),
-        -normExitTime (cellMult ε η) (ballInterior ε η ρ) a = 0 := fun a ha => by
+    have hqb : ∀ a ∈ vBoundary m (ballInterior ε η ρ),
+        -normExitTime m (ballInterior ε η ρ) a = 0 := fun a ha => by
       rw [normExitTime_eq_zero_of_not_mem _ ha.1, neg_zero]
     have hA := discreteBasicPropertiesGeneral ℤ _ _ _ _ _ _ hS _ hq' hqb
     rw [matedLeastSupersolution_eq]
     refine ⟨fun a ha => ?_, fun a ha => ?_⟩
-    · by_cases hac : a ∈ vClosure (cellMult ε η) (ballInterior ε η ρ)
+    · by_cases hac : a ∈ vClosure m (ballInterior ε η ρ)
       · rw [dls_eq_of_mem_vClosure hS hW hφ hac]
         exact hA.1 a hac
       · rw [dls_eq_zero_of_not_mem_vClosure hS hφ ha hac, hφ a ha hac,
@@ -389,23 +396,24 @@ theorem matedBasicProperties_fixed (hη : Continuous η)
   · refine ⟨fun a ha => ?_, fun a ha => ?_⟩
     · rw [matedLeastSupersolution_eq_zero_of_origin_not_mem h0 ha, matedObstacle_eq_zero_of_origin_not_mem h0 a]
       exact ⟨max_le (neg_nonpos.2 (normExitTime_nonneg _ _ _)) le_rfl, le_rfl⟩
-    · rw [matedLaplacian_eq_zero_of_origin_not_mem hη h0 ha]
+    · rw [matedLaplacian_eq_zero_of_origin_not_mem hη hcell h0 ha]
       exact inv_nonneg.2 (Nat.cast_nonneg _)
 
 /-- Lemma 4.4 for fixed `t, ε`, with the origin claim under `0 ∈ V` (ESCALATIONS E-c1-1). -/
 theorem matedLaplacianBound_fixed (hη : Continuous η)
-    (hS : (0 : ℤ) ∈ ballInterior ε η ρ → IsMatedObstacleSetting ε η ρ t) :
-    (∀ a ∈ matedDiscreteCluster ε η ρ t,
-      matedLaplacian ε η (matedLeastSupersolution ε η ρ t) a = ((matedDeg ε η a : ℕ) : ℝ)⁻¹) ∧
+    (hcell : ∀ j k, m j k ≠ 0 → (cell ε η j ∩ cell ε η k).Nonempty)
+    (hS : (0 : ℤ) ∈ ballInterior ε η ρ → IsMatedObstacleSetting m ε η ρ t) :
+    (∀ a ∈ matedDiscreteCluster m ε η ρ t,
+      matedLaplacian m (matedLeastSupersolution m ε η ρ t) a = ((matedDeg m a : ℕ) : ℝ)⁻¹) ∧
     (∀ a ∈ ballInterior ε η ρ,
-      0 ≤ matedLaplacian ε η (matedLeastSupersolution ε η ρ t) a ∧
-      matedLaplacian ε η (matedLeastSupersolution ε η ρ t) a ≤ ((matedDeg ε η a : ℕ) : ℝ)⁻¹) ∧
-    IsVPreconnected (cellMult ε η) (matedDiscreteCluster ε η ρ t) ∧
-    (1 < t / ε → (0 : ℤ) ∈ ballInterior ε η ρ → (0 : ℤ) ∈ matedDiscreteCluster ε η ρ t) := by
-  have hW := vClosure_ballInterior_subset (ε := ε) (ρ := ρ) hη
+      0 ≤ matedLaplacian m (matedLeastSupersolution m ε η ρ t) a ∧
+      matedLaplacian m (matedLeastSupersolution m ε η ρ t) a ≤ ((matedDeg m a : ℕ) : ℝ)⁻¹) ∧
+    IsVPreconnected m (matedDiscreteCluster m ε η ρ t) ∧
+    (1 < t / ε → (0 : ℤ) ∈ ballInterior ε η ρ → (0 : ℤ) ∈ matedDiscreteCluster m ε η ρ t) := by
+  have hW := vClosure_ballInterior_subset (ε := ε) (ρ := ρ) hη hcell
   by_cases h0 : (0 : ℤ) ∈ ballInterior ε η ρ
   · have hS := hS h0
-    have hφ := matedObstacle_eq_zero_off_vClosure (ε := ε) (η := η) (ρ := ρ) (t := t)
+    have hφ := matedObstacle_eq_zero_off_vClosure (m := m) (ε := ε) (η := η) (ρ := ρ) (t := t)
     have hA := discreteLaplacianBoundGeneral ℤ _ _ _ _ _ _ hS
     rw [matedDiscreteCluster_eq, matedLeastSupersolution_eq,
       discreteCluster_eq hS hW hφ ballInterior_subset_cellVertices_ball cellVertices_ball_subset_closedBall]
@@ -414,47 +422,48 @@ theorem matedLaplacianBound_fixed (hη : Continuous η)
       exact hA.1 a ha
     · rw [matedLaplacian, mLaplacian_dls_eq hS hW hφ ha]
       exact hA.2.1 a ha
-    · show ((matedDeg ε η 0 : ℕ) : ℝ)⁻¹ < t / ε * ((matedDeg ε η 0 : ℕ) : ℝ)⁻¹
+    · show ((matedDeg m 0 : ℕ) : ℝ)⁻¹ < t / ε * ((matedDeg m 0 : ℕ) : ℝ)⁻¹
       exact lt_mul_of_one_lt_left (inv_pos.2 (Nat.cast_pos.2 (IsObstacleSetting.mdeg_origin_pos hS))) h1
   · rw [matedDiscreteCluster_eq_empty h0]
     refine ⟨fun a ha => absurd ha (by simp), fun a ha => ?_, ?_, fun _ h => absurd h h0⟩
-    · rw [matedLaplacian_eq_zero_of_origin_not_mem hη h0 ha]
+    · rw [matedLaplacian_eq_zero_of_origin_not_mem hη hcell h0 ha]
       exact ⟨le_rfl, inv_nonneg.2 (Nat.cast_nonneg _)⟩
     · intro u
       exact ((Set.mem_empty_iff_false _).mp u.2).elim
 
 /-- Lemma 4.5 for fixed `t, ε`, with the mass identity under `0 ∈ V` (ESCALATIONS E-c1-1). -/
-theorem matedConservationOfMass_fixed (hη : Continuous η) (ht : 0 < t) (hε : 0 < ε)
-    (hS : (0 : ℤ) ∈ ballInterior ε η ρ → IsMatedObstacleSetting ε η ρ t) :
-    (matedDiscreteCluster ε η ρ t).Finite ∧
-    ((matedDiscreteCluster ε η ρ t).ncard : ℝ) ≤ t / ε ∧
+theorem matedConservationOfMass_fixed (hη : Continuous η)
+    (hcell : ∀ j k, m j k ≠ 0 → (cell ε η j ∩ cell ε η k).Nonempty) (ht : 0 < t) (hε : 0 < ε)
+    (hS : (0 : ℤ) ∈ ballInterior ε η ρ → IsMatedObstacleSetting m ε η ρ t) :
+    (matedDiscreteCluster m ε η ρ t).Finite ∧
+    ((matedDiscreteCluster m ε η ρ t).ncard : ℝ) ≤ t / ε ∧
     ((0 : ℤ) ∈ ballInterior ε η ρ →
-      matedDiscreteCluster ε η ρ t ⊆ vInterior (cellMult ε η) (ballInterior ε η ρ) →
+      matedDiscreteCluster m ε η ρ t ⊆ vInterior m (ballInterior ε η ρ) →
       ∑' a : ballInterior ε η ρ,
-        matedLaplacian ε η (matedLeastSupersolution ε η ρ t) a * (matedDeg ε η a : ℝ) = t / ε) := by
-  have hW := vClosure_ballInterior_subset (ε := ε) (ρ := ρ) hη
+        matedLaplacian m (matedLeastSupersolution m ε η ρ t) a * (matedDeg m a : ℝ) = t / ε) := by
+  have hW := vClosure_ballInterior_subset (ε := ε) (ρ := ρ) hη hcell
   by_cases h0 : (0 : ℤ) ∈ ballInterior ε η ρ
   · have hS := hS h0
-    have hφ := matedObstacle_eq_zero_off_vClosure (ε := ε) (η := η) (ρ := ρ) (t := t)
+    have hφ := matedObstacle_eq_zero_off_vClosure (m := m) (ε := ε) (η := η) (ρ := ρ) (t := t)
     have hA := discreteConservationOfMassGeneral ℤ _ _ _ _ _ _ hS fun _ _ => rfl
-    have hd : ((mdeg (cellMult ε η) 0 : ℕ) : ℝ) ≠ 0 :=
+    have hd : ((mdeg m 0 : ℕ) : ℝ) ≠ 0 :=
       Nat.cast_ne_zero.2 (IsObstacleSetting.mdeg_origin_pos hS).ne'
-    have h𝔱 : t / ε * ((matedDeg ε η 0 : ℕ) : ℝ)⁻¹ * (mdeg (cellMult ε η) 0 : ℝ) = t / ε :=
+    have h𝔱 : t / ε * ((matedDeg m 0 : ℕ) : ℝ)⁻¹ * (mdeg m 0 : ℝ) = t / ε :=
       inv_mul_cancel_right₀ hd _
     rw [matedDiscreteCluster_eq, matedLeastSupersolution_eq,
       discreteCluster_eq hS hW hφ ballInterior_subset_cellVertices_ball cellVertices_ball_subset_closedBall]
     refine ⟨IsObstacleSetting.cluster_finite hS, hA.1.trans_eq h𝔱, fun _ hint => ?_⟩
     have hfs : (Function.support ((ballInterior ε η ρ).indicator fun a =>
-        matedLaplacian ε η (discreteLeastSupersolution (cellMult ε η) (ballInterior ε η ρ)
-          (cellVertices ε η (closedBall 0 ρ)) (fun b => ((matedDeg ε η b : ℕ) : ℝ)⁻¹) (matedObstacle ε η ρ t)) a *
-            (matedDeg ε η a : ℝ))).Finite :=
+        matedLaplacian m (discreteLeastSupersolution m (ballInterior ε η ρ)
+          (cellVertices ε η (closedBall 0 ρ)) (fun b => ((matedDeg m b : ℕ) : ℝ)⁻¹) (matedObstacle m ε η ρ t)) a *
+            (matedDeg m a : ℝ))).Finite :=
       (IsObstacleSetting.finite hS).subset (Set.support_indicator_subset)
-    rw [tsum_subtype (ballInterior ε η ρ) (fun a => matedLaplacian ε η (discreteLeastSupersolution (cellMult ε η)
-        (ballInterior ε η ρ) (cellVertices ε η (closedBall 0 ρ)) (fun b => ((matedDeg ε η b : ℕ) : ℝ)⁻¹)
-          (matedObstacle ε η ρ t)) a * (matedDeg ε η a : ℝ)), tsum_eq_finsum hfs, ← finsum_mem_def, ← h𝔱,
+    rw [tsum_subtype (ballInterior ε η ρ) (fun a => matedLaplacian m (discreteLeastSupersolution m
+        (ballInterior ε η ρ) (cellVertices ε η (closedBall 0 ρ)) (fun b => ((matedDeg m b : ℕ) : ℝ)⁻¹)
+          (matedObstacle m ε η ρ t)) a * (matedDeg m a : ℝ)), tsum_eq_finsum hfs, ← finsum_mem_def, ← h𝔱,
       ← hA.2 hint]
     exact finsum_mem_congr rfl fun a ha =>
-      congrArg (· * (mdeg (cellMult ε η) a : ℝ)) (mLaplacian_dls_eq hS hW hφ ha)
+      congrArg (· * (mdeg m a : ℝ)) (mLaplacian_dls_eq hS hW hφ ha)
   · rw [matedDiscreteCluster_eq_empty h0, Set.ncard_empty, Nat.cast_zero]
     exact ⟨Set.finite_empty, div_nonneg ht.le hε.le, fun h => absurd h h0⟩
 
@@ -501,7 +510,7 @@ def MatedObstacleSettingStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ᵐ ω ∂S.P, ∀ t ε : ℝ, 0 < t → 0 < ε → (0 : ℤ) ∈ ballInterior ε (S.η ω) ρ →
-    IsMatedObstacleSetting ε (S.η ω) ρ t
+    IsMatedObstacleSetting (S.mult ε ω) ε (S.η ω) ρ t
 
 /-- *Connectivity of `V^ε(B_ρ) \ V^ε(∂B_ρ)`*, required only by the field `IsObstacleSetting.connected` (paper line 3339,
 "a finite, connected set of vertices V", applied at line 3406). Not a literature fact and suspected false: a cell inside
@@ -520,51 +529,54 @@ def DiscreteLaplacianBoundCorrectedStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ᵐ ω ∂S.P, ∀ t ε : ℝ, 0 < t → 0 < ε →
-    (∀ a ∈ matedDiscreteCluster ε (S.η ω) ρ t,
-      matedLaplacian ε (S.η ω) (matedLeastSupersolution ε (S.η ω) ρ t) a = ((matedDeg ε (S.η ω) a : ℕ) : ℝ)⁻¹) ∧
+    (∀ a ∈ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t,
+      matedLaplacian (S.mult ε ω) (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t) a = ((matedDeg (S.mult ε ω) a : ℕ) : ℝ)⁻¹) ∧
     (∀ a ∈ ballInterior ε (S.η ω) ρ,
-      0 ≤ matedLaplacian ε (S.η ω) (matedLeastSupersolution ε (S.η ω) ρ t) a ∧
-      matedLaplacian ε (S.η ω) (matedLeastSupersolution ε (S.η ω) ρ t) a ≤ ((matedDeg ε (S.η ω) a : ℕ) : ℝ)⁻¹) ∧
-    IsVPreconnected (S.mult ε ω) (matedDiscreteCluster ε (S.η ω) ρ t) ∧
-    (1 < t / ε → (0 : ℤ) ∈ ballInterior ε (S.η ω) ρ → (0 : ℤ) ∈ matedDiscreteCluster ε (S.η ω) ρ t)
+      0 ≤ matedLaplacian (S.mult ε ω) (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t) a ∧
+      matedLaplacian (S.mult ε ω) (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t) a ≤ ((matedDeg (S.mult ε ω) a : ℕ) : ℝ)⁻¹) ∧
+    IsVPreconnected (S.mult ε ω) (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t) ∧
+    (1 < t / ε → (0 : ℤ) ∈ ballInterior ε (S.η ω) ρ → (0 : ℤ) ∈ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t)
 
 /-- **Lemma 4.5**, corrected: the mass identity needs `0 ∈ V^ε(B_ρ) \ V^ε(∂B_ρ)`. -/
 def DiscreteConservationOfMassCorrectedStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ᵐ ω ∂S.P, ∀ t ε : ℝ, 0 < t → 0 < ε →
-    (matedDiscreteCluster ε (S.η ω) ρ t).Finite ∧
-    ((matedDiscreteCluster ε (S.η ω) ρ t).ncard : ℝ) ≤ t / ε ∧
+    (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t).Finite ∧
+    ((matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t).ncard : ℝ) ≤ t / ε ∧
     ((0 : ℤ) ∈ ballInterior ε (S.η ω) ρ →
-      matedDiscreteCluster ε (S.η ω) ρ t ⊆ vInterior (S.mult ε ω) (ballInterior ε (S.η ω) ρ) →
+      matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t ⊆ vInterior (S.mult ε ω) (ballInterior ε (S.η ω) ρ) →
       ∑' a : ballInterior ε (S.η ω) ρ,
-        matedLaplacian ε (S.η ω) (matedLeastSupersolution ε (S.η ω) ρ t) a * (matedDeg ε (S.η ω) a : ℝ) = t / ε)
+        matedLaplacian (S.mult ε ω) (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t) a * (matedDeg (S.mult ε ω) a : ℝ) = t / ε)
 
 /-! ## Lemmas 4.3-4.5 from the steps -/
 
 /-- **Lemma 4.3** (lemma:discrete-basic-properties, line 1679) from the steps. -/
 theorem discreteBasicProperties_of_steps {𝒮 : SpaceFillingSLEModel} (hset : MatedObstacleSettingStep 𝒮)
-    (hcons : ConsecutiveCellsAdjacentStep 𝒮) (hq : NormExitTimeLaplacianStep) : DiscreteBasicPropertiesStmt 𝒮 := by
+    (hcons : ConsecutiveCellsAdjacentStep 𝒮) (hq : NormExitTimeLaplacianStep) (hcell : AdjacentCellsMeetStep 𝒮) :
+    DiscreteBasicPropertiesStmt 𝒮 := by
   intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS
-  filter_upwards [hset γ hγ hγ2 ρ hρ hρ1 Ω S hS, hcons γ hγ hγ2 Ω S hS, hS.isAreaParametrized] with ω hω hc hη
+  filter_upwards [hset γ hγ hγ2 ρ hρ hρ1 Ω S hS, hcons γ hγ hγ2 Ω S hS, hS.isAreaParametrized,
+    hcell γ hγ hγ2 Ω S hS] with ω hω hc hη hcω
   intro t ε ht hε
-  exact matedBasicProperties_fixed hη.1 (hω t ε ht hε) fun h0 a ha =>
-    hq _ _ (cellMult_symm ε (S.η ω)) (hω t ε ht hε h0).locallyFinite (hc ε hε) (hω t ε ht hε h0).finite a ha
+  exact matedBasicProperties_fixed hη.1 (hcω ε hε) (hω t ε ht hε) fun h0 a ha =>
+    hq _ _ (S.mult_symm ε ω) (hω t ε ht hε h0).locallyFinite (hc ε hε) (hω t ε ht hε h0).finite a ha
 
 /-- **Lemma 4.4** (lemma:discrete-laplacian-bound, line 1697), corrected (E-c1-1), from the steps. -/
-theorem discreteLaplacianBoundCorrected_of_steps {𝒮 : SpaceFillingSLEModel} (hset : MatedObstacleSettingStep 𝒮) :
-    DiscreteLaplacianBoundCorrectedStmt 𝒮 := by
+theorem discreteLaplacianBoundCorrected_of_steps {𝒮 : SpaceFillingSLEModel} (hset : MatedObstacleSettingStep 𝒮)
+    (hcell : AdjacentCellsMeetStep 𝒮) : DiscreteLaplacianBoundCorrectedStmt 𝒮 := by
   intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS
-  filter_upwards [hset γ hγ hγ2 ρ hρ hρ1 Ω S hS, hS.isAreaParametrized] with ω hω hη
+  filter_upwards [hset γ hγ hγ2 ρ hρ hρ1 Ω S hS, hS.isAreaParametrized, hcell γ hγ hγ2 Ω S hS] with ω hω hη hcω
   intro t ε ht hε
-  exact matedLaplacianBound_fixed hη.1 (hω t ε ht hε)
+  exact matedLaplacianBound_fixed hη.1 (hcω ε hε) (hω t ε ht hε)
 
 /-- **Lemma 4.5** (lemma:discrete-conservation-of-mass, line 1705), corrected (E-c1-1), from the steps. -/
 theorem discreteConservationOfMassCorrected_of_steps {𝒮 : SpaceFillingSLEModel}
-    (hset : MatedObstacleSettingStep 𝒮) : DiscreteConservationOfMassCorrectedStmt 𝒮 := by
+    (hset : MatedObstacleSettingStep 𝒮) (hcell : AdjacentCellsMeetStep 𝒮) :
+    DiscreteConservationOfMassCorrectedStmt 𝒮 := by
   intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS
-  filter_upwards [hset γ hγ hγ2 ρ hρ hρ1 Ω S hS, hS.isAreaParametrized] with ω hω hη
+  filter_upwards [hset γ hγ hγ2 ρ hρ hρ1 Ω S hS, hS.isAreaParametrized, hcell γ hγ hγ2 Ω S hS] with ω hω hη hcω
   intro t ε ht hε
-  exact matedConservationOfMass_fixed hη.1 ht hε (hω t ε ht hε)
+  exact matedConservationOfMass_fixed hη.1 (hcω ε hε) ht hε (hω t ε ht hε)
 
 end MatedCRT

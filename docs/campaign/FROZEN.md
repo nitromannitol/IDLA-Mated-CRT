@@ -1,4 +1,13 @@
-# FROZEN pending operator approval
+# NOT IN FORCE: draft freeze list; the freeze follows (L1) and (L2) and the operator's approval
+
+(L1) = the graph switch to Definition 1.1 (inbox 2026-11-03 16:20 UTC; REUSE-LEO.md 1.2, 1.5): `MatedCRTEnv.mult` is
+`bmEdgeCount` of the boundary-length pair `bm`. (L2) = Lemma 3.2 (`DiscreteHolderContinuityStmt`), suspected false as
+printed and as drafted (REUSE-LEO.md 1.4 F1/F2), under check by worker chk (review-L32.md). Until both are settled and the
+operator approves, every line below is a draft status, not a freeze.
+The (L1) edits changed the signatures of the graph-dependent objects (`matedDeg m`, `matedLaplacian m`,
+`matedObstacle m ε η ρ t`, `matedLeastSupersolution`, `matedDiscreteCluster`, `stoppedOdometer`,
+`degreeWeightedMeasure m ε η μ`; `m = S.mult ε ω`), used in 2.10, 3.1, 3.2, 3.5, 4.1, 4.3-4.8, 5.3, 5.4, 7.2-7.4; the
+line numbers below are those of 12219de (Sections 4 and 7 shifted by a few lines) and are regenerated at the freeze.
 
 Draft statements of "Internal DLA on mated-CRT maps" (arXiv:2211.04891), after the corrections [C1]-[C5]
 (docs/campaign/CORRECTIONS.md; review-C, inbox 13:55 UTC) and the statement-fidelity fixes (S1)-(S7) (review-S, inbox
@@ -27,7 +36,7 @@ are frozen with it, except `IsGoodAnnulusEvent` (Defs/Setting.lean, open with 6.
 2.18 ExitTimeUpperBoundStmt, MatedCRT/Draft/Section2.lean:239, -, FROZEN
 2.19 ExpectedExitTimeExplicitBoundStmt, MatedCRT/Draft/Section2.lean:260, -, FROZEN
 3.1 DiscretePotentialTightnessStmt, MatedCRT/Draft/Section3.lean:42, [C3] (S6), FROZEN
-3.2 DiscreteHolderContinuityStmt, MatedCRT/Draft/Section3.lean:76, -, FROZEN
+3.2 DiscreteHolderContinuityStmt, MatedCRT/Draft/Section3.lean:76, -, OPEN ((L2): suspected false, REUSE-LEO.md 1.4 F1/F2; check by worker chk, review-L32.md)
 3.3 UniformConvergenceGreenKernelStmt, MatedCRT/Draft/Section3.lean:97, [C1], FROZEN
 3.4 IntegralConvergenceGreenFunctionStmt, MatedCRT/Draft/Section3.lean:113, [C1], FROZEN
 3.5 DiscreteDirichletProblemStmt, MatedCRT/Draft/Section3.lean:136, [C1] (S2), FROZEN

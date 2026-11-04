@@ -157,7 +157,7 @@ probability. -/
 def DegreeMeasureConvergenceStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
-    TendstoInProbability S.P (fun ε ω => ∫ x, f x ∂degreeWeightedMeasure ε (S.η ω) (S.μ ω))
+    TendstoInProbability S.P (fun ε ω => ∫ x, f x ∂degreeWeightedMeasure (S.mult ε ω) ε (S.η ω) (S.μ ω))
       (fun ω => 6 * ∫ x, f x ∂S.μ ω)
 
 /-- **Theorem 2.11** (theorem:rw-to-lbm, line 735; BG20 Theorem 1.2). For each compact `K ⊆ ℂ` and `z ∈ K`, the

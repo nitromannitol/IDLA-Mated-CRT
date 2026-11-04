@@ -27,11 +27,18 @@ Vertices `a ∈ εℤ` are written `a = ε k` with `k ∈ ℤ`. For a real path 
 (eq:edge-map, line 175) is
 `(inf_{[εj-ε, εj]} X) ∨ (inf_{[εk-ε, εk]} X) ≤ inf_{[εj, εk-ε]} X`.
 
+The map of the statements is this one (`bmEdgeCount` of the boundary-length pair `(L, R)`; `MatedCRTEnv.mult`,
+MatedCRT/Defs/Setting.lean). It agrees with Leo's edge count of `MatedCRTHarmonic.MatedCRT.graph` (Lattice-Probability
+`LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.MatedCRTGraph`, `...MatedCRTIsEdge`, `...MatedCRTSideCond`; adapted from
+Leonardo Bonanno's lean-formalizations): his `SideCond` is `bmAdjacent`, and his consecutive vertices carry one edge,
+as here for continuous paths. The graph-dependent objects (`matedDeg`, `matedLaplacian`, the sandpile and obstacle
+problem of MatedCRT/Defs/Sandpile.lean) take the edge multiplicity `m` as an argument.
+
 ## The SLE/LQG embedding (Definition 1.2)
 
 The vertex `a = εk` corresponds to the *cell* `H^ε_a = η([a - ε, a])` (eq:sle-cell, line 200) of a space-filling curve
 `η : ℝ → ℂ`, and two distinct vertices are joined by as many edges as `H^ε_a ∩ H^ε_b` has connected components which
-are not singletons (line 202). For `x ∈ ℂ`, `a^ε_x` is the smallest vertex whose cell contains `x`
+are not singletons (line 202; `cellMult`, a documented equivalent of Definition 1.1, not used by the statements). For `x ∈ ℂ`, `a^ε_x` is the smallest vertex whose cell contains `x`
 (eq:plane-to-embedding, line 637); `V^ε(D)` is the set of vertices whose cells meet `D`
 (eq:cells-domain-restriction, line 641); a vertex set `A` is mapped to the union `Ā` of its cells
 (eq:vertex-scaling, line 248).
@@ -147,19 +154,24 @@ def cell (ε : ℝ) (η : ℝ → ℂ) (k : ℤ) : Set ℂ :=
 
 /-- The number of edges joining the vertices `εj` and `εk` in the SLE/LQG embedding (Definition 1.2, line 202): for
 `j ≠ k`, the number of connected components of `H^ε_{εj} ∩ H^ε_{εk}` which are not singletons (`Set.ncard`, junk `0`
-if there are infinitely many); `0` for `j = k`. -/
+if there are infinitely many); `0` for `j = k`.
+Not the map of the statements: the map is Definition 1.1 (`bmEdgeCount` of the boundary-length pair,
+`MatedCRTEnv.mult`; operator decision (L1)). `cellMult` is a documented equivalent: a.s. equal to it under the
+mating-of-trees coupling by DMS14 Theorem 1.9 / Lemma 8.8 (line 207), an optional DMS input (INPUT-REQUESTS IR-A2). -/
 noncomputable def cellMult (ε : ℝ) (η : ℝ → ℂ) (j k : ℤ) : ℕ :=
   open Classical in
   if j = k then 0
   else {C ∈ HarmonicBalls.connectedComponentsIn (cell ε η j ∩ cell ε η k) | ¬ C.Subsingleton}.ncard
 
-/-- The degree `deg^ε(a)` of the vertex `a = εk` of the mated-CRT map `𝒢^ε` (line 635). -/
-noncomputable def matedDeg (ε : ℝ) (η : ℝ → ℂ) (k : ℤ) : ℕ :=
-  mdeg (cellMult ε η) k
+/-- The degree `deg^ε(a)` of the vertex `a = εk` of the mated-CRT map `𝒢^ε` (line 635), for the edge multiplicity
+`m` of the map (`MatedCRTEnv.mult S ε ω`, Definition 1.1). -/
+noncomputable def matedDeg (m : ℤ → ℤ → ℕ) (k : ℤ) : ℕ :=
+  mdeg m k
 
-/-- The degree normalized Laplacian `Δ^ε` of the mated-CRT map (eq:degree-normalized-laplacian, line 776). -/
-noncomputable def matedLaplacian (ε : ℝ) (η : ℝ → ℂ) (u : ℤ → ℝ) (k : ℤ) : ℝ :=
-  mLaplacian (cellMult ε η) u k
+/-- The degree normalized Laplacian `Δ^ε` of the mated-CRT map (eq:degree-normalized-laplacian, line 776), for the edge
+multiplicity `m` of the map (`MatedCRTEnv.mult S ε ω`, Definition 1.1). -/
+noncomputable def matedLaplacian (m : ℤ → ℤ → ℕ) (u : ℤ → ℝ) (k : ℤ) : ℝ :=
+  mLaplacian m u k
 
 /-- The embedded position `η(a)` of the vertex `a = εk` (Definition 1.2, line 204). -/
 def vertexPoint (ε : ℝ) (η : ℝ → ℂ) (k : ℤ) : ℂ :=

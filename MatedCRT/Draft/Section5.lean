@@ -71,12 +71,12 @@ def MeanValueInequalityStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ δ t : ℝ, 0 < δ → δ < ρ → 0 < t →
   ∃ s : Ω → ℝ, Measurable[S.envSigma] s ∧ (∀ ω, 0 < s ω) ∧
     TendsToOneOn S.P {ω | t < clusterExitTime (Λ ω) ρ} fun ε => {ω |
-      ∀ a ∈ matedDiscreteCluster ε (S.η ω) ρ t,
+      ∀ a ∈ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t,
         δ < infDist (vertexPoint ε (S.η ω) a)
-          (frontier (fillCells ε (S.η ω) (matedDiscreteCluster ε (S.η ω) ρ t))) →
-        (1 + s ω) * ∑' b : matedDiscreteCluster ε (S.η ω) ρ t,
-            greenFn (S.mult ε ω) (matedDiscreteCluster ε (S.η ω) ρ t) b a ≤
-          t / ε * greenFn (S.mult ε ω) (matedDiscreteCluster ε (S.η ω) ρ t) 0 a}
+          (frontier (fillCells ε (S.η ω) (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t))) →
+        (1 + s ω) * ∑' b : matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t,
+            greenFn (S.mult ε ω) (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t) b a ≤
+          t / ε * greenFn (S.mult ε ω) (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t) 0 a}
 
 /-- **Lemma 5.4** (lemma:L-lower-bound, line 2005). There is a deterministic `q > 0` such that for each `δ ∈ (0, ρ)` and
 `t > 0`, on the event `{t < T}`, except on an event of probability tending to `0` as `ε → 0`,
@@ -88,11 +88,11 @@ def LLowerBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
   ∀ δ t : ℝ, 0 < δ → δ < ρ → 0 < t →
     TendsToOneOn S.P {ω | t < clusterExitTime (Λ ω) ρ} fun ε => {ω |
-      ∀ a ∈ matedDiscreteCluster ε (S.η ω) ρ t,
+      ∀ a ∈ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t,
         δ < infDist (vertexPoint ε (S.η ω) a)
-          (frontier (fillCells ε (S.η ω) (matedDiscreteCluster ε (S.η ω) ρ t))) →
-        ε ^ (-q) ≤ (∑' b : matedDiscreteCluster ε (S.η ω) ρ t,
-            greenFn (S.mult ε ω) (matedDiscreteCluster ε (S.η ω) ρ t) b a) /
-          greenFn (S.mult ε ω) (matedDiscreteCluster ε (S.η ω) ρ t) a a}
+          (frontier (fillCells ε (S.η ω) (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t))) →
+        ε ^ (-q) ≤ (∑' b : matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t,
+            greenFn (S.mult ε ω) (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t) b a) /
+          greenFn (S.mult ε ω) (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t) a a}
 
 end MatedCRT
