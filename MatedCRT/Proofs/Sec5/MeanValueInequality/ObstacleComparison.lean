@@ -12,6 +12,36 @@ namespace MatedCRT
 
 open Set
 
+/-- Maximum principle for a subharmonic function with nonpositive values
+outside a finite set. -/
+theorem le_zero_of_subharmonic_of_nonpos_off {m : ℤ → ℤ → ℕ} {A : Set ℤ}
+    (hcons : ∀ a, m a (a + 1) ≠ 0) (hlf : ∀ a, {b | m a b ≠ 0}.Finite)
+    (hA : A.Finite) {f : ℤ → ℝ} (hf0 : ∀ x ∉ A, f x ≤ 0)
+    (hsub : ∀ x ∈ A, 0 ≤ mLaplacian m f x) (a : ℤ) : f a ≤ 0 := by
+  classical
+  by_cases ha : a ∈ A
+  · let g : ℤ → ℝ := fun x => if x ∈ A then f x else 0
+    have hg0 : ∀ x ∉ A, g x = 0 := by intro x hx; simp [g, hx]
+    have hgsub : ∀ x ∈ A, 0 ≤ mLaplacian m g x := by
+      intro x hx
+      have hcomp : mLaplacian m f x ≤ mLaplacian m g x := by
+        unfold mLaplacian
+        have hgx : g x = f x := by simp [g, hx]
+        rw [hgx]
+        apply mul_le_mul_of_nonneg_left _ (inv_nonneg.mpr (Nat.cast_nonneg _))
+        refine finsum_le_finsum ?_ ?_ fun y => ?_
+        · exact (hlf x).subset fun y hy hy0 => hy (by simp [hy0])
+        · exact (hlf x).subset fun y hy hy0 => hy (by simp [hy0])
+        · have hy : f y ≤ g y := by
+            by_cases hyA : y ∈ A
+            · simp [g, hyA]
+            · simpa [g, hyA] using hf0 y hyA
+          exact mul_le_mul_of_nonneg_left (sub_le_sub_right hy _) (Nat.cast_nonneg _)
+      exact (hsub x hx).trans hcomp
+    have := le_zero_of_subharmonic hcons hlf hA hg0 hgsub a
+    simpa [g, ha] using this
+  · exact hf0 a ha
+
 /-- If the obstacle surplus vanishes outside `A` and has the prescribed
 Laplacian on `A`, it is bounded by the Green potential minus the normalized
 exit time.  The boundary hypothesis concerns the *sum* `w + K g_B`, not its
@@ -51,29 +81,7 @@ theorem obstacle_surplus_le_green_sub_exit {m : ℤ → ℤ → ℕ} {A B : Set 
       hw x hx, hgB, hgA, hq]
     ring_nf
     exact le_refl 0
-  have hf : f a ≤ 0 := by
-    by_cases ha : a ∈ A
-    · let g : ℤ → ℝ := fun x => if x ∈ A then f x else 0
-      have hg0 : ∀ x ∉ A, g x = 0 := by intro x hx; simp [g, hx]
-      have hgsub : ∀ x ∈ A, 0 ≤ mLaplacian m g x := by
-        intro x hx
-        have hcomp : mLaplacian m f x ≤ mLaplacian m g x := by
-          unfold mLaplacian
-          have hgx : g x = f x := by simp [g, hx]
-          rw [hgx]
-          apply mul_le_mul_of_nonneg_left _ (inv_nonneg.mpr (Nat.cast_nonneg _))
-          refine finsum_le_finsum ?_ ?_ fun y => ?_
-          · exact (hlf x).subset fun y hy hy0 => hy (by simp [hy0])
-          · exact (hlf x).subset fun y hy hy0 => hy (by simp [hy0])
-          · have hy : f y ≤ g y := by
-              by_cases hyA : y ∈ A
-              · simp [g, hyA]
-              · simpa [g, hyA] using hf0 y hyA
-            exact mul_le_mul_of_nonneg_left (sub_le_sub_right hy _) (Nat.cast_nonneg _)
-        exact (hsub x hx).trans hcomp
-      have := le_zero_of_subharmonic hcons hlf hA hg0 hgsub a
-      simpa [g, ha] using this
-    · exact hf0 a ha
+  have hf : f a ≤ 0 := le_zero_of_subharmonic_of_nonpos_off hcons hlf hA hf0 hsub a
   dsimp [f] at hf
   linarith
 
