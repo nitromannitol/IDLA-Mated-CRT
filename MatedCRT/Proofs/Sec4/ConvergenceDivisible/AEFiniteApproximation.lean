@@ -84,4 +84,37 @@ theorem MatedCRTEnv.IsValid.aemeasurable_discreteLeastSupersolution_of_finite
   filter_upwards [hBae] with ω hω
   simp [V', W', r', φ', hω]
 
+/-- The finite-graph hypotheses need only hold almost surely; their event need
+not itself be measurable. -/
+theorem MatedCRTEnv.IsValid.aemeasurable_discreteLeastSupersolution_of_ae_finite
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
+    (ε : ℝ) (V W : Ω → Set ℤ) (hV : Measurable V) (hW : Measurable W)
+    (r φ : Ω → ℤ → ℝ) (hr : ∀ b, Measurable fun ω => r ω b)
+    (hφ : ∀ b, Measurable fun ω => φ ω b) (a : ℤ)
+    (hgood : ∀ᵐ ω ∂S.P, V ω ⊆ W ω ∧ (∀ b, 0 ≤ r ω b) ∧
+      (∀ b, φ ω b ≤ 0) ∧ (V ω).Finite ∧ (W ω).Finite ∧
+      (∀ b ∈ V ω, {c | S.mult ε ω b c ≠ 0}.Finite) ∧
+      (∀ b ∈ V ω, 0 < r ω b)) :
+    AEMeasurable (fun ω => discreteLeastSupersolution (S.mult ε ω) (V ω) (W ω)
+      (r ω) (φ ω) a) S.P := by
+  let G : Set Ω := {ω | V ω ⊆ W ω ∧ (∀ b, 0 ≤ r ω b) ∧
+    (∀ b, φ ω b ≤ 0) ∧ (V ω).Finite ∧ (W ω).Finite ∧
+    (∀ b ∈ V ω, {c | S.mult ε ω b c ≠ 0}.Finite) ∧
+    (∀ b ∈ V ω, 0 < r ω b)}
+  have hG : ∀ᵐ ω ∂S.P, ω ∈ G := hgood
+  obtain ⟨N, hGN, hNm, hN0⟩ := exists_measurable_superset_of_null (ae_iff.mp hG)
+  have hB : ∀ᵐ ω ∂S.P, ω ∈ Nᶜ := by
+    apply ae_iff.mpr
+    simpa using hN0
+  apply hS.aemeasurable_discreteLeastSupersolution_of_finite ε V W hV hW r φ hr hφ a
+    Nᶜ hNm.compl hB
+  all_goals
+    intro ω hω
+    have hg : ω ∈ G := by
+      by_contra hn
+      exact hω (hGN hn)
+    first | exact hg.1 | exact hg.2.1 | exact hg.2.2.1 | exact hg.2.2.2.1 |
+      exact hg.2.2.2.2.1 | exact hg.2.2.2.2.2.1 | exact hg.2.2.2.2.2.2
+
 end MatedCRT
