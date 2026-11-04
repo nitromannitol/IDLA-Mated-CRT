@@ -27,7 +27,7 @@ theorem intermediate_annulus_survival_of_good_event
       cellVertices ε η (ball w (r / 4)) ⊆ cellVertices ε η (ball 0 ρ) \ Θ →
       ((cellVertices ε η (ball w (c * (r / 4))) ∩ Λ).ncard : ℝ) ≤ C * O)
     (hmin : 10 * ε ^ ω₀ ≤ (c / 8) * r) (hmax : (c / 8) * r ≤ dd)
-    (hgood : ∀ u : ℝ, 10 * ε ^ ω₀ ≤ u → u ≤ dd → ∀ T : Set ℤ,
+    (hgood : ∀ u : ℝ, u = (c / 8) * r → 10 * ε ^ ω₀ ≤ u → u ≤ dd → ∀ T : Set ℤ,
       closure (fillCells ε η T) ⊆ ball 0 (ρ / 2) → ball 0 s₀ ⊆ fillCells ε η T →
       ∀ A ⊆ cellVertices ε η (thickening u (fillCells ε η T)) \ T,
         (∀ z : ℂ, ((A ∩ cellVertices ε η (ball z u)).ncard : ℝ) < s₁ * u ^ β / ε) →
@@ -59,7 +59,7 @@ theorem intermediate_annulus_survival_of_good_event
     closure_fill_intermediate_subset_ball hη hΘ hI hclosure
   have hballI : ball 0 s₀ ⊆ fillCells ε η I :=
     hball.trans (fillCells_subset_fill_intermediate (by linarith : 0 < r / 4))
-  exact hgood ((c / 8) * r) hmin hmax I hclose hballI (B ∩ Λ) inter_subset_left hcount
+  exact hgood ((c / 8) * r) rfl hmin hmax I hclose hballI (B ∩ Λ) inter_subset_left hcount
 
 /-- The intermediate annulus is admissible for the stopped-odometer
 estimate whenever the thickening and cell-diameter errors fit in the ambient

@@ -75,7 +75,7 @@ theorem iterated_shell_contracts_of_mass_and_survival_events
   have hcontract := shell_boundary_contracts_of_mass_and_survival_events
     hε ht (hr k hk) hc hc' hs₂ hDr hη hsymm hlf hsucc hadj hfin hlap (hconn k hk)
     hzero' hK hC hβ hs₁ hcoeff (hrad k hk hactive hprev) hfill hball' hambient hclosure
-    hmargin hmin hmax hmassMin hsize hmass hodo hgood
+    hmargin hmin hmax hmassMin hsize hmass hodo (fun u _ => hgood u)
   rw [hstep k hk]
   simpa only [mul_comm] using hcontract
 

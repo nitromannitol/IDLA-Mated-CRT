@@ -129,7 +129,7 @@ theorem shell_boundary_contracts_of_good_event
       (⨆ a : vBoundary m U, stoppedOdometer m ε η ρ t a) *
         (srwLaw m b {x | vExitTime U x <
           vHitTime (U \ matedDiscreteCluster m ε η ρ t) x}).toReal)
-    (hgood : ∀ u : ℝ, 10 * ε ^ ω₀ ≤ u → u ≤ dd → ∀ T : Set ℤ,
+    (hgood : ∀ u : ℝ, u = (c / 8) * r → 10 * ε ^ ω₀ ≤ u → u ≤ dd → ∀ T : Set ℤ,
       closure (fillCells ε η T) ⊆ ball 0 (ρ / 2) → ball 0 s₀ ⊆ fillCells ε η T →
       ∀ A ⊆ cellVertices ε η (thickening u (fillCells ε η T)) \ T,
         (∀ z : ℂ, ((A ∩ cellVertices ε η (ball z u)).ncard : ℝ) < s₁ * u ^ β / ε) →
