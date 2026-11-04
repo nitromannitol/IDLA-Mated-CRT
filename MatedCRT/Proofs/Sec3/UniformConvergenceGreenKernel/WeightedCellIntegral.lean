@@ -40,4 +40,23 @@ theorem integral_degreeWeightedMeasure_mul_rescale {μ : Measure ℂ} {η : ℝ 
   rw [integral_smul_measure, setIntegral_mul_rescale_cell hη hp hε]
   simp
 
+/-- The cell integral of a test differs from its value at the embedded vertex
+by at most the cell mass times the oscillation of the test on that cell. -/
+theorem abs_setIntegral_sub_vertexPoint_le {μ : Measure ℂ} {η : ℝ → ℂ}
+    (hη : IsAreaParametrized μ η) {ε : ℝ} (hε : 0 < ε) (a : ℤ)
+    (f : ℂ → ℝ) (δ : ℝ) (hf : IntegrableOn f (cell ε η a) μ)
+    (hosc : ∀ x ∈ cell ε η a, |f x - f (vertexPoint ε η a)| ≤ δ) :
+    |(∫ x in cell ε η a, f x ∂μ) - ε * f (vertexPoint ε η a)| ≤ δ * ε := by
+  have hfinite : μ (cell ε η a) < ∞ := by
+    rw [measure_cell_of_area_parametrized hη hε]
+    exact ENNReal.ofReal_lt_top
+  have hc : IntegrableOn (fun _ => f (vertexPoint ε η a)) (cell ε η a) μ :=
+    integrableOn_const hfinite.ne
+  have hb := norm_setIntegral_le_of_norm_le_const_ae' hfinite
+    (f := fun x => f x - f (vertexPoint ε η a)) (C := δ)
+    (Filter.Eventually.of_forall (fun x hx => by simpa [Real.norm_eq_abs] using hosc x hx))
+  rw [integral_sub hf hc] at hb
+  simpa [Real.norm_eq_abs, measureReal_def, measure_cell_of_area_parametrized hη hε,
+    ENNReal.toReal_ofReal hε.le, mul_comm] using hb
+
 end MatedCRT.GreenEnvironment
