@@ -175,4 +175,64 @@ theorem stoppedOdometer_eq_of_stopped_cluster_interior {ε ρ t : ℝ} {η : ℝ
   refine ⟨ballInterior_subset_cellVertices_ball haV, ?_⟩
   simpa [matedLeastSupersolution_eq, matedDeg, hw] using ha.2
 
+/-- The support of the stopped odometer is contained in the stopped cluster. -/
+theorem stoppedOdometer_support_subset_cluster {ε ρ t : ℝ} {η : ℝ → ℂ}
+    (hS : IsMatedObstacleSetting m ε η ρ t)
+    (hW : vClosure m (ballInterior ε η ρ) ⊆ cellVertices ε η (Metric.closedBall 0 ρ)) :
+    Function.support (stoppedOdometer m ε η ρ t) ⊆ matedDiscreteCluster m ε η ρ t := by
+  classical
+  have hS' : IsObstacleSetting m (ballInterior ε η ρ) 0
+      (fun a => (mdeg m a : ℝ)⁻¹) (matedObstacle m ε η ρ t)
+      ((mdeg m 0 : ℝ)⁻¹ * (t / ε)) := by
+    simpa [IsMatedObstacleSetting, matedDeg, mul_comm] using hS
+  have hφ := matedObstacle_eq_zero_off_vClosure (m := m) (ε := ε) (η := η) (ρ := ρ) (t := t)
+  intro a ha
+  by_cases haC : a ∈ vClosure m (ballInterior ε η ρ)
+  · have haW := hW haC
+    have hw := dls_eq_of_mem_vClosure hS' hW hφ haC
+    have hle := hS'.obstacle_le_w a haC
+    have hne : discreteLeastSupersolution m (ballInterior ε η ρ)
+        (vClosure m (ballInterior ε η ρ)) (fun a => (mdeg m a : ℝ)⁻¹)
+          (matedObstacle m ε η ρ t) a ≠ matedObstacle m ε η ρ t a := by
+      intro heq
+      apply ha
+      simp [stoppedOdometer, haW, matedLeastSupersolution_eq, matedDeg, hw, heq]
+    have hpos : matedObstacle m ε η ρ t a < discreteLeastSupersolution m
+        (ballInterior ε η ρ) (vClosure m (ballInterior ε η ρ))
+          (fun a => (mdeg m a : ℝ)⁻¹) (matedObstacle m ε η ρ t) a := lt_of_le_of_ne hle (Ne.symm hne)
+    have haV : a ∈ ballInterior ε η ρ := hS'.cluster_subset ⟨haC, hpos⟩
+    refine ⟨ballInterior_subset_cellVertices_ball haV, ?_⟩
+    simpa [matedLeastSupersolution_eq, matedDeg, hw] using hpos
+  · by_cases haW : a ∈ cellVertices ε η (Metric.closedBall 0 ρ)
+    · have hw := dls_eq_zero_of_not_mem_vClosure hS' hφ haW haC
+      exfalso
+      apply ha
+      simp [stoppedOdometer, haW, matedLeastSupersolution_eq, matedDeg, hw, hφ a haW haC]
+    · exact False.elim (ha (by simp [stoppedOdometer, haW]))
+
+/-- If the stopped cluster stays inside the graph interior, the global sandpile cluster is
+contained in the stopped cluster and its neighbours, together with the origin. -/
+theorem global_cluster_subset_stopped_closure {ε ρ t : ℝ} {η : ℝ → ℂ}
+    (hS : IsMatedObstacleSetting m ε η ρ t)
+    (hW : vClosure m (ballInterior ε η ρ) ⊆ cellVertices ε η (Metric.closedBall 0 ρ))
+    (hint : matedDiscreteCluster m ε η ρ t ⊆ vInterior m (ballInterior ε η ρ)) :
+    sandpileCluster m (t / ε) ⊆ insert 0 (vClosure m (matedDiscreteCluster m ε η ρ t)) := by
+  have hS' : IsObstacleSetting m (ballInterior ε η ρ) 0
+      (fun a => (mdeg m a : ℝ)⁻¹) (matedObstacle m ε η ρ t)
+      ((mdeg m 0 : ℝ)⁻¹ * (t / ε)) := by
+    simpa [IsMatedObstacleSetting, matedDeg, mul_comm] using hS
+  have heq := stoppedOdometer_eq_of_stopped_cluster_interior hS hW hint
+  have hsub := stoppedOdometer_support_subset_cluster hS hW
+  intro a ha
+  have ha' : a ∈ Function.support (sandpileFinal m (t / ε)) := ne_of_gt ha
+  have hk := final_support_subset hS'.hlf hS'.symm ha'
+  rw [← heq] at hk
+  rcases hk with h0 | hk
+  · exact Or.inl h0
+  · rcases hk with haS | ⟨haS, b, hb, hab⟩
+    · exact Or.inr (Or.inl (hsub haS))
+    · by_cases haΛ : a ∈ matedDiscreteCluster m ε η ρ t
+      · exact Or.inr (Or.inl haΛ)
+      · exact Or.inr (Or.inr ⟨haΛ, b, hsub hb, hab⟩)
+
 end MatedCRT.Sandpile
