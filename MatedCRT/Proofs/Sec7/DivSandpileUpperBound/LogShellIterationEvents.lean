@@ -1,5 +1,6 @@
 import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.ShellSequence
 import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.RadiusSlack
+import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.ShiftedRadius
 
 /-! Simultaneous shell contraction with the logarithmic survival loss. -/
 
@@ -14,7 +15,8 @@ theorem iterated_shell_contracts_of_mass_and_log_survival_events
     {η : ℝ → ℂ} (Θ : ℕ → Set ℤ) (r : ℕ → ℝ) (n : ℕ)
     (hε : 0 < ε) (hε1 : ε ≤ 1) (hω : ω₀ ≤ βₘ)
     (ht : 0 < t) (hc : 0 < c) (hc' : c ≤ 1)
-    (hs₂ : s₂ ≤ 1) (hη : Continuous η) (hD : 0 ≤ D) (hR₀ : 0 ≤ R₀) (hR : R ≤ ρ)
+    (hs₂0 : 0 ≤ s₂) (hs₂ : s₂ ≤ 1)
+    (hη : Continuous η) (hD : 0 ≤ D) (hR₀ : 0 ≤ R₀) (hR : R ≤ ρ)
     (hr : ∀ k < n, 0 < r k) (hsymm : ∀ a b, m a b = m b a)
     (hlf : ∀ a, {b | m a b ≠ 0}.Finite) (hsucc : ∀ k : ℤ, m k (k + 1) ≠ 0)
     (hadj : ∀ a b, m a b ≠ 0 → (cell ε η a ∩ cell ε η b).Nonempty)
@@ -29,11 +31,11 @@ theorem iterated_shell_contracts_of_mass_and_log_survival_events
     (hslack : δ + R₀ < R)
     (hK : 0 ≤ K) (hC : 0 ≤ C) (hβ : 0 < β) (hs₁ : 0 < s₁)
     (hcoeff : C < s₁ * (c / 8) ^ β * K)
-    (hrad : ∀ k < n, B < (⨆ b : vBoundary m (Θ k), stoppedOdometer m ε η ρ t b) →
-      (∀ j < k, (⨆ b : vBoundary m (Θ (j + 1)), stoppedOdometer m ε η ρ t b) ≤
-        (1 - s₂ / (1 + |Real.log ((c / 8) * r j)|) ^ 2) *
-          (⨆ b : vBoundary m (Θ j), stoppedOdometer m ε η ρ t b)) →
-      ((⨆ b : vBoundary m (Θ k), stoppedOdometer m ε η ρ t b) * ε * K) ^ (1 / β) ≤ r k)
+    (hfirst : ((⨆ b : vBoundary m (Θ 0), stoppedOdometer m ε η ρ t b) * ε * K) ^
+      (1 / β) ≤ r 0)
+    (hshift : ∀ k < n,
+      ((⨆ b : vBoundary m (Θ k), stoppedOdometer m ε η ρ t b) * ε * K) ^ (1 / β) ≤
+        r (k + 1))
     (hmargins : ∀ k < n, D ≤ r k / 2 ∧ r k + R ≤ ρ ∧
       R + r k / 4 + D < ρ / 2 ∧
       R + (((c / 8) * r k + D) + r k / 4) + D + r k / 4 ≤ ρ ∧
@@ -80,9 +82,25 @@ theorem iterated_shell_contracts_of_mass_and_log_survival_events
     nlinarith
   have hrate : s₂ / (1 + |Real.log ((c / 8) * r k)|) ^ 2 ≤ 1 :=
     (div_le_one₀ (by linarith)).2 (hs₂.trans hden)
+  let O : ℕ → ℝ := fun j => ⨆ b : vBoundary m (Θ j), stoppedOdometer m ε η ρ t b
+  have hO : ∀ j ≤ k, 0 ≤ O j := by
+    intro j _
+    exact Real.iSup_nonneg fun b => stoppedOdometer_nonneg hε ht b
+  have hprev' : ∀ j < k, O (j + 1) ≤ (1 : ℝ) * O j := by
+    intro j hj
+    have hp : 0 ≤ s₂ / (1 + |Real.log ((c / 8) * r j)|) ^ 2 :=
+      div_nonneg hs₂0 (sq_nonneg _)
+    have hmul := mul_nonneg hp (hO j (by omega))
+    have h := hprev j hj
+    dsimp only [O] at h ⊢
+    nlinarith
+  have hrad : (O k * ε * K) ^ (1 / β) ≤ r k :=
+    shifted_shell_radii_control_current_maxima O r ε K (1 / β) 1 k
+      hO hε.le hK (by positivity) (by norm_num) hfirst
+      (fun j hj => hshift j (by omega)) hprev' k le_rfl
   have hcontract := shell_boundary_contracts_of_mass_and_survival_events
     hε ht (hr k hk) hc hc' hrate hDr hη hsymm hlf hsucc hadj hfin hlap (hconn k hk)
-    hzero' hK hC hβ hs₁ hcoeff (hrad k hk hactive hprev) hfill hball' hambient hclosure
+    hzero' hK hC hβ hs₁ hcoeff hrad hfill hball' hambient hclosure
     hmargin hmin hmax hmassMin hsize hmass hodo (by
       intro u hu
       subst u
