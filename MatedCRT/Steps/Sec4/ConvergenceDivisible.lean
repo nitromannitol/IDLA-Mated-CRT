@@ -1,5 +1,7 @@
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.Subsequence
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.Measure
+import MatedCRT.Proofs.Sec4.ConvergenceDivisible.ObstacleComparison
+import MatedCRT.Proofs.Sec4.ConvergenceDivisible.ExitTime
 
 /-!
 # Theorem 4.1: subsequence reduction
@@ -27,6 +29,61 @@ def ObstacleLimitUniquenessStep (𝒮 : SpaceFillingSLEModel) : Prop :=
     HasLaplacian w (ENNReal.ofReal (S.c₀ / 6) • S.μ ω) 0
       {x ∈ ball (0 : ℂ) ρ | x = 0 ∨ -t * (S.c₀ / 6) * greenFunction (ball 0 ρ) 0 x < w x} →
     EqOn w (fun x => S.c₀ / 6 * leastSupersolution (S.μ ω) ρ 0 t x) (closedBall 0 ρ)
+
+/-- Positivity of the scaling constant and continuity of the continuum least supersolution
+before the cluster exit time. -/
+def ObstacleLimitRegularityStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
+  ∀ᵐ ω ∂S.P, 0 < S.c₀ / 6 ∧ ∀ t : ℝ, 0 < t → t < clusterExitTime (Λ ω) ρ →
+    ContinuousOn (leastSupersolution (S.μ ω) ρ 0 t) (closedBall 0 ρ)
+
+/-- Positivity of the random-walk scaling constant in a valid mated-CRT environment. -/
+def MatedCRTScalingConstantPositiveStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+    0 < S.c₀ / 6
+
+/-- Harmonic-ball monotonicity and the obstacle characterization provide continuity before
+the exit time; positivity of the scaling constant supplies the other regularity condition. -/
+theorem obstacleLimitRegularity_of_steps (𝒮 : SpaceFillingSLEModel)
+    (hpos : MatedCRTScalingConstantPositiveStep 𝒮) : ObstacleLimitRegularityStep 𝒮 := by
+  intro γ hγ hγ' ρ hρ hρ' Ω _ S hS Λ hΛ
+  filter_upwards [hΛ] with ω hΛω
+  exact ⟨hpos γ hγ hγ' Ω S hS, fun t ht hT =>
+    coneFamily_leastSupersolution_continuous hΛω hρ ht hT⟩
+
+/-- The reverse obstacle comparison, obtained in the paper from the continuum maximum principle
+after establishing the admissible-supersolution bound. -/
+def ObstacleLimitMaximumPrincipleStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
+  ∀ᵐ ω ∂S.P, ∀ t : ℝ, 0 < t → t < clusterExitTime (Λ ω) ρ → ∀ w : ℂ → ℝ,
+    ContinuousOn w (closedBall 0 ρ) →
+    (∀ x ∈ closedBall (0 : ℂ) ρ, w x ≤ 0 ∧
+      (x ≠ 0 → -t * (S.c₀ / 6) * greenFunction (ball 0 ρ) 0 x ≤ w x)) →
+    LaplacianGE w 0 (ball 0 ρ) →
+    HasLaplacian w (ENNReal.ofReal (S.c₀ / 6) • S.μ ω) 0
+      {x ∈ ball (0 : ℂ) ρ | x = 0 ∨ -t * (S.c₀ / 6) * greenFunction (ball 0 ρ) 0 x < w x} →
+    (∀ x ∈ closedBall (0 : ℂ) ρ, S.c₀ / 6 * leastSupersolution (S.μ ω) ρ 0 t x ≤ w x) →
+    ∀ x ∈ closedBall (0 : ℂ) ρ, w x ≤ S.c₀ / 6 * leastSupersolution (S.μ ω) ρ 0 t x
+
+/-- The admissible-supersolution comparison and the maximum-principle comparison identify every
+possible limit with the scaled least supersolution. -/
+theorem obstacleLimitUniqueness_of_steps (𝒮 : SpaceFillingSLEModel)
+    (hreg : ObstacleLimitRegularityStep 𝒮) (hmax : ObstacleLimitMaximumPrincipleStep 𝒮) :
+    ObstacleLimitUniquenessStep 𝒮 := by
+  intro γ hγ hγ' ρ hρ hρ' Ω _ S hS Λ hΛ
+  filter_upwards [hreg γ hγ hγ' ρ hρ hρ' Ω S hS Λ hΛ,
+    hmax γ hγ hγ' ρ hρ hρ' Ω S hS Λ hΛ] with ω hr hm
+  intro t ht hT w hw hbound hge hle heq
+  have habove := scaled_leastSupersolution_le_on_closedBall hρ hr.1 hw
+    (hr.2 t ht hT) hle (fun x hx hx0 => (hbound x hx).2 hx0)
+  have hbelow := hm t ht hT w hw hbound hge heq habove
+  intro x hx
+  exact le_antisymm (hbelow x hx) (habove x hx)
 
 /-- The bounds in Lemma 4.8 force the limit to vanish on the boundary of the ball. -/
 theorem obstacleLimit_eq_zero_on_sphere {ρ t c : ℝ} (hρ : 0 < ρ) {w : ℂ → ℝ}
