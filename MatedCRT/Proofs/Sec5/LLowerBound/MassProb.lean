@@ -65,4 +65,30 @@ theorem MatedCRTEnv.IsValid.tendsto_measure_small_ball_mass {Ω : Type} [Measura
     _ ≤ e / 2 + e / 2 := add_le_add hT hN
     _ = e := ENNReal.add_halves e
 
+/-- A positive power of the cell area is bounded by any positive multiple of
+the fixed-radius ball mass, uniformly over a bounded region, with probability
+tending to one. -/
+theorem MatedCRTEnv.IsValid.probTendsToOne_ball_mass_rpow {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
+    (ρ d α q : ℝ) (hd : 0 < d) (hα : 0 < α) (hq : 0 < q) :
+    ProbTendsToOne S.P fun ε => {ω | ∀ z ∈ ball (0 : ℂ) ρ,
+      ε ^ α ≤ q * (S.μ ω (ball z d)).toReal} := by
+  unfold ProbTendsToOne
+  rw [ENNReal.tendsto_nhds_zero]
+  intro e he
+  obtain ⟨N, hN⟩ := (ENNReal.tendsto_nhds_zero.1
+    (hS.tendsto_measure_small_ball_mass ρ d hd) e he).exists
+  have hδ : 0 < q * (1 / ((N : ℝ) + 1)) := by positivity
+  filter_upwards [(tendsto_rpow_nhdsGT_zero hα).eventually (Iio_mem_nhds hδ)] with ε hε
+  calc
+    _ ≤ S.P {ω | ∃ z ∈ ball (0 : ℂ) ρ,
+        (S.μ ω (ball z d)).toReal < 1 / ((N : ℝ) + 1)} := by
+      apply measure_mono
+      intro ω hω
+      simp only [mem_compl_iff, mem_ofPred_eq, not_forall, not_le] at hω
+      obtain ⟨z, hz, hbad⟩ := hω
+      refine ⟨z, hz, ?_⟩
+      nlinarith
+    _ ≤ e := hN
+
 end MatedCRT
