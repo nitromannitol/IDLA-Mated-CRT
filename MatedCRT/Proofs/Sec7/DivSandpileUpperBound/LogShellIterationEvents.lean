@@ -36,7 +36,10 @@ theorem iterated_shell_contracts_of_mass_and_log_survival_events
     (hshift : ∀ k < n,
       ((⨆ b : vBoundary m (Θ k), stoppedOdometer m ε η ρ t b) * ε * K) ^ (1 / β) ≤
         r (k + 1))
-    (hmargins : ∀ k < n, D ≤ r k / 2 ∧ r k + R ≤ ρ ∧
+    (hmargins : ∀ k < n,
+      (∀ j < k, (⨆ b : vBoundary m (Θ (j + 1)), stoppedOdometer m ε η ρ t b) ≤
+        (⨆ b : vBoundary m (Θ j), stoppedOdometer m ε η ρ t b)) →
+      D ≤ r k / 2 ∧ r k + R ≤ ρ ∧
       R + r k / 4 + D < ρ / 2 ∧
       R + (((c / 8) * r k + D) + r k / 4) + D + r k / 4 ≤ ρ ∧
       10 * ε ^ ω₀ ≤ (c / 8) * r k ∧ (c / 8) * r k ≤ dd)
@@ -73,7 +76,7 @@ theorem iterated_shell_contracts_of_mass_and_log_survival_events
     (fun j hj => hr j (by omega)) hadj hinit hzero hball
     (fun j hj => hstep j (by omega)) (by linarith) hsizeR
   obtain ⟨hfill, _, hzero', hball'⟩ := hgeom k le_rfl
-  obtain ⟨hDr, hambient, hclosure, hmargin, hmin, hmax⟩ := hmargins k hk
+  obtain ⟨hDr, hambient, hclosure, hmargin, hmin, hmax⟩ := hmargins k hk hprev
   have hmassMin : ε ^ βₘ ≤ r k / 4 :=
     shell_mass_test_above_scale hε hε1 hω hc' (hr k hk).le hmin
   have hden : 1 ≤ (1 + |Real.log ((c / 8) * r k)|) ^ 2 := by
