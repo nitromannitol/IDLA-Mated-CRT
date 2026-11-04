@@ -11,6 +11,7 @@ and its complement, using the triangle inequality on the boundary layer.
 namespace MatedCRT
 
 open MeasureTheory Filter Topology Set Metric
+open scoped ENNReal
 
 /-- Local convergence and simultaneous boundary control imply convergence
 on the closed ball. -/
@@ -19,28 +20,37 @@ theorem uniformOn_closedBall_of_interior_boundary {Ω : Type} [MeasurableSpace �
     (z : ℂ) (r : ℝ)
     (hinner : ∀ r' : ℝ, 0 < r' → r' < r →
       TendstoUniformlyOnInProbability P u v (closedBall z r'))
-    (hboundary : ∀ δ : ℝ, 0 < δ → ∃ r' : ℝ, 0 < r' ∧ r' < r ∧
-      ProbTendsToOne P (fun ε => {ω | ∀ x ∈ closedBall z r \ closedBall z r',
-        |u ε ω x| ≤ δ ∧ |v ω x| ≤ δ})) :
+    (hboundary : ∀ δ : ℝ, 0 < δ → ∀ e : ℝ≥0∞, 0 < e → ∃ r' : ℝ, 0 < r' ∧ r' < r ∧
+      ∀ᶠ ε in 𝓝[>] (0 : ℝ), P {ω | ∃ x ∈ closedBall z r \ closedBall z r',
+        δ < |u ε ω x| ∨ δ < |v ω x|} ≤ e) :
     TendstoUniformlyOnInProbability P u v (closedBall z r) := by
   classical
   intro δ hδ
-  obtain ⟨r', hr'0, hr'r, hboundary'⟩ := hboundary (δ / 2) (by linarith)
-  have hinner' : ProbTendsToOne P (fun ε => {ω | ∀ x ∈ closedBall z r',
-      |u ε ω x - v ω x| ≤ δ}) := by
-    simpa only [ProbTendsToOne, compl_ofPred, not_forall, not_imp, not_le, exists_prop] using
-      hinner r' hr'0 hr'r δ hδ
-  have hgood : ProbTendsToOne P (fun ε => {ω | ∀ x ∈ closedBall z r,
-      |u ε ω x - v ω x| ≤ δ}) := by
-    apply (hinner'.inter hboundary').mono_pos
-    intro ε hε ω hω x hx
-    by_cases hx' : x ∈ closedBall z r'
-    · exact hω.1 x hx'
-    · have h := hω.2 x ⟨hx, hx'⟩
-      calc
-        |u ε ω x - v ω x| ≤ |u ε ω x| + |v ω x| := abs_sub _ _
-        _ ≤ δ := by linarith [h.1, h.2]
-  simpa only [ProbTendsToOne, compl_ofPred, not_forall, not_imp, not_le, exists_prop] using hgood
+  rw [ENNReal.tendsto_nhds_zero]
+  intro e he
+  have he2 : 0 < e / 2 := ENNReal.half_pos he.ne'
+  obtain ⟨r', hr'0, hr'r, hboundary'⟩ := hboundary (δ / 2) (by linarith) (e / 2) he2
+  have hinner' := ENNReal.tendsto_nhds_zero.1 (hinner r' hr'0 hr'r δ hδ) (e / 2) he2
+  filter_upwards [hinner', hboundary'] with ε hi hb
+  calc
+    P {ω | ∃ x ∈ closedBall z r, δ < |u ε ω x - v ω x|} ≤
+        P ({ω | ∃ x ∈ closedBall z r', δ < |u ε ω x - v ω x|} ∪
+          {ω | ∃ x ∈ closedBall z r \ closedBall z r',
+            δ / 2 < |u ε ω x| ∨ δ / 2 < |v ω x|}) := by
+      apply measure_mono
+      intro ω hω
+      obtain ⟨x, hx, herr⟩ := hω
+      by_cases hx' : x ∈ closedBall z r'
+      · exact Or.inl ⟨x, hx', herr⟩
+      · right
+        refine ⟨x, ⟨hx, hx'⟩, ?_⟩
+        by_contra hn
+        push Not at hn
+        have htri := abs_sub (u ε ω x) (v ω x)
+        linarith [hn.1, hn.2]
+    _ ≤ _ := measure_union_le _ _
+    _ ≤ e / 2 + e / 2 := add_le_add hi hb
+    _ = e := ENNReal.add_halves e
 
 /-- Lemma 3.7, reduced to the three displayed potential, interior and
 boundary steps. -/

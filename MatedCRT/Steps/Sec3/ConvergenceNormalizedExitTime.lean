@@ -49,16 +49,18 @@ def NormalizedExitInteriorStep (𝒮 : SpaceFillingSLEModel) : Prop :=
       (normalizedExitGreenPotential S r z) (closedBall z r')
 
 /-- Boundary control for both the discrete exit time and the continuum
-potential. The inner radius may depend on the error tolerance. -/
+potential. For any error and failure-probability tolerances, a sufficiently
+thin deterministic boundary layer works for all sufficiently small scales. -/
 def NormalizedExitBoundaryStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ExpectedExitTimeExplicitBoundStmt 𝒮 → CellSizeEstimateStmt 𝒮 → BoundedExitTimeRVStmt →
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ (r : ℝ) (z : ℂ), 0 < r → ball z r ⊆ ball 0 ρ →
-  ∀ δ : ℝ, 0 < δ → ∃ r' : ℝ, 0 < r' ∧ r' < r ∧
-    ProbTendsToOne S.P (fun ε => {ω | ∀ x ∈ closedBall z r \ closedBall z r',
-      |rescale (S.mε ε) ε (S.η ω)
-        (normExitTime (S.mult ε ω) (interiorCellVertices ε (S.η ω) (ball z r))) x| ≤ δ ∧
-      |normalizedExitGreenPotential S r z ω x| ≤ δ})
+  ∀ δ : ℝ, 0 < δ → ∀ e : ℝ≥0∞, 0 < e → ∃ r' : ℝ, 0 < r' ∧ r' < r ∧
+    ∀ᶠ ε in 𝓝[>] (0 : ℝ),
+      S.P {ω | ∃ x ∈ closedBall z r \ closedBall z r',
+        δ < |rescale (S.mε ε) ε (S.η ω)
+          (normExitTime (S.mult ε ω) (interiorCellVertices ε (S.η ω) (ball z r))) x| ∨
+        δ < |normalizedExitGreenPotential S r z ω x|} ≤ e
 
 end MatedCRT
