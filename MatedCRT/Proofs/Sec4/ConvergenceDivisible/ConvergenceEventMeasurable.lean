@@ -1,5 +1,6 @@
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.RandomSetRegularization
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.CellSampling
+import MatedCRT.Proofs.Sec4.ConvergenceDivisible.ContinuousFieldMeasurable
 
 /-! # Reduction of the convergence event measurability -/
 
@@ -74,5 +75,59 @@ theorem MatedCRTEnv.IsValid.nullMeasurableSet_convergenceError_of_leastSupersolu
       (hv q hq) z
   · exact hf
   · exact hfae
+
+/-- Pointwise measurability of the continuum least supersolutions suffices for
+the convergence error event: continuity on the exit event supplies a jointly
+measurable version there. -/
+theorem MatedCRTEnv.IsValid.nullMeasurableSet_convergenceError_of_pointwise
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
+    (hγ : 0 < γ) (hγ' : γ < 2) {ρ t δ ε : ℝ}
+    (hρ : 0 < ρ) (ht : 0 < t) (hε : 0 < ε)
+    (Λ : Ω → ℝ → Set ℂ)
+    (hΛ : ∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω))
+    (hlf : ∀ᵐ ω ∂S.P, ∀ b, {c | S.mult ε ω b c ≠ 0}.Finite)
+    (hv : ∀ (q : ℚ), 0 < (q : ℝ) → ∀ (n : ℕ) (z : ℂ), AEMeasurable
+      (fun ω => leastSupersolution (S.μ ω) ((n : ℝ) + 1) 0 q z) S.P)
+    (hpoint : ∀ z : ℂ, AEMeasurable
+      (fun ω => leastSupersolution (S.μ ω) ρ 0 t z) S.P) :
+    NullMeasurableSet {ω | t < clusterExitTime (Λ ω) ρ ∧ ∃ x ∈ ball (0 : ℂ) ρ,
+      δ < |rescaledMatedLeastSupersolution S ρ t ε ω x -
+        S.c₀ / 6 * leastSupersolution (S.μ ω) ρ 0 t x|} S.P := by
+  have hloc : ∀ᵐ ω ∂S.P, IsLocallyFiniteMeasure (S.μ ω) := by
+    filter_upwards [hS.isLQGMeasure] with ω hω
+    exact hω.isLocallyFiniteMeasure
+  have hmem : ∀ (q : ℚ), 0 < (q : ℝ) → ∀ z : ℂ,
+      NullMeasurableSet {ω | z ∈ Λ ω q} S.P := by
+    intro q hq z
+    exact nullMeasurableSet_mem_coneFamily_of_leastSupersolutions S.P S.μ Λ q hq hΛ
+      (hv q hq) z
+  have hexit := nullMeasurableSet_lt_clusterExitTime_of_membership S.P S.μ Λ hΛ hloc hmem ρ t ht
+  obtain ⟨E, hEsub, hE, hEae⟩ := hexit.exists_measurable_subset_ae_eq
+  have hc : ∀ᵐ ω ∂S.P, ω ∈ E → ContinuousOn
+      (fun x => S.c₀ / 6 * leastSupersolution (S.μ ω) ρ 0 t x) (ball 0 ρ) := by
+    filter_upwards [hΛ] with ω hω hωE
+    have hT : t < clusterExitTime (Λ ω) ρ := hEsub hωE
+    exact continuousOn_const.mul
+      ((coneFamily_leastSupersolution_continuous hω hρ ht hT).mono ball_subset_closedBall)
+  obtain ⟨f, hf, hfae⟩ := exists_jointlyMeasurable_on_event S.P (ball (0 : ℂ) ρ)
+    isOpen_ball.measurableSet 0 (mem_ball_self hρ) E hE
+    (fun ω x => S.c₀ / 6 * leastSupersolution (S.μ ω) ρ 0 t x)
+    (fun x => aemeasurable_const.mul (hpoint x)) hc
+  have hfc : ∀ᵐ ω ∂S.P, ω ∈ E → ContinuousOn (fun x => f (ω, x)) (ball 0 ρ) := by
+    filter_upwards [hc, hfae] with ω hω hfω hωE
+    exact (hω hωE).congr (fun x hx => hfω hωE x hx)
+  have hm := hS.nullMeasurableSet_matedLeast_deviation_on_event hγ hγ' hε ρ t ht hlf
+    isOpen_ball isBounded_ball f hf E hE hfc δ
+  apply hm.congr
+  filter_upwards [hEae, hfae] with ω he hfω
+  apply propext
+  have he' : ω ∈ E ↔ t < clusterExitTime (Λ ω) ρ := iff_of_eq he
+  constructor
+  · rintro ⟨hEω, x, hx, hd⟩
+    exact ⟨he'.mp hEω, x, hx, by simpa [hfω hEω x hx] using hd⟩
+  · rintro ⟨hT, x, hx, hd⟩
+    have hEω := he'.mpr hT
+    exact ⟨hEω, x, hx, by simpa [hfω hEω x hx] using hd⟩
 
 end MatedCRT
