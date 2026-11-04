@@ -5,6 +5,7 @@ import MatedCRT.Proofs.Sec6.ConstantOrderLowerBound.Model
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBound.Walk
 import MatedCRT.Steps.Infra.MatingOfTrees
 import MatedCRT.Proofs.Infra.Setting
+import MatedCRT.Proofs.Measurability.GoodScale
 
 /-!
 # Lemma 6.8, route (b) of E-A10: `constantOrderLowerBoundDiv_of_steps` (proof of lines 2493-2621)
@@ -14,8 +15,10 @@ import MatedCRT.Proofs.Infra.Setting
   point `p` of the cell of `a` on `∂(Θ̄ + B_{r/2})`, the grid point `z ∈ (δ/100) ℤ²` within `δ/100` of `p`, the good
   radius `R = 𝐫_z ∈ [δ, √δ]` of Lemma 6.4 — and the strong Markov property at the first visit to
   `V^ε(∂B_{(4/3)R}(z))` (`prob_stay_le_of_crossing`), then Steps 2-4 at that vertex (`stay_le_at_frontier_vertex`).
-* `constantOrderLowerBoundDiv_of_steps`: the Borel-Cantelli step of line 2505 (`exists_measurable_threshold`, with
-  `GoodScaleEventMeasurableStep` for the `σ(h)`-measurability of `𝛅`), the events of Lemmas 2.8, 2.9, 2.16, 2.18 at `ε`,
+* `constantOrderLowerBoundDiv_of_aeSteps`: the Borel-Cantelli step of line 2505 (`exists_measurable_threshold`, with
+  the almost-sure `GoodScaleEventMeasurableAEStep` for the `σ(h)`-measurability of `𝛅`: the `σ(h)`-measurable
+  approximations are contained in the good-scale events outside one null set), the events of Lemmas 2.8, 2.9, 2.16,
+  2.18 at `ε`,
   the finiteness of `V^ε(B_ρ)` and the exit of the walk (worker c5's `cellVerticesBallFiniteStep`, `walkExitsStep`),
   and the deterministic smallness of `ε` (line 2506: "`ε < 𝛑`").
 Constants: `𝐜₀ = e^{-3C₂/2}/12` (eq:choice-of-constant-annulus, `C₂` of Lemma 2.16), `s₁ = (𝐜₀/256)^{β⁻}/4`,
@@ -191,15 +194,28 @@ theorem rpow_lam {c K a β ε : ℝ} (hc : 0 ≤ c) (hK : 0 ≤ K) (hε : 0 < ε
 
 end ConstantOrderDiv
 
+/-- A `σ(h)`-measurable inner approximation of `E` is an almost-sure one. -/
+theorem MatedCRTEnv.isFieldInnerMeasurableAE_of_isFieldInnerMeasurable {Ω : Type} [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) {E : Set Ω} (h : IsFieldInnerMeasurable S E) : IsFieldInnerMeasurableAE S E := by
+  obtain ⟨F, hF, hFE, hP⟩ := h
+  exact ⟨F, hF, measure_mono_null (fun ω hω => absurd (hFE hω.1) hω.2) measure_empty, hP⟩
+
+/-- `GoodScaleEventMeasurableStep` implies its almost-sure form `GoodScaleEventMeasurableAEStep`. -/
+theorem goodScaleEventMeasurableAEStep_of_step {𝒮 : SpaceFillingSLEModel} (h : GoodScaleEventMeasurableStep 𝒮) :
+    GoodScaleEventMeasurableAEStep 𝒮 := fun γ hγ hγ2 Ω _ S hS ρ c₀ C βp βm δ =>
+  ⟨S.isFieldInnerMeasurableAE_of_isFieldInnerMeasurable (h γ hγ hγ2 Ω S hS ρ c₀ C βp βm δ).1,
+    S.isFieldInnerMeasurableAE_of_isFieldInnerMeasurable (h γ hγ hγ2 Ω S hS ρ c₀ C βp βm δ).2⟩
+
 open ConstantOrderDiv in
 set_option maxHeartbeats 400000 in
 /-- **Lemma 6.8, route (b) of E-A10** (lemma:constant-order-lower-bound-div, line 2455), from Lemmas 2.7, 2.8, 2.9,
-2.16, 2.18, 2.19, 6.4, the measurability of the good-scale events and the intersection of adjacent cells. -/
-theorem constantOrderLowerBoundDiv_of_steps (𝒮 : SpaceFillingSLEModel)
+2.16, 2.18, 2.19, 6.4, the almost-sure `σ(h)`-measurability of the good-scale events (line 2505) and the intersection
+of adjacent cells. -/
+theorem constantOrderLowerBoundDiv_of_aeSteps (𝒮 : SpaceFillingSLEModel)
     (h216 : GreenKernelLowerBoundStmt 𝒮) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
     (h29 : CountingMeasureConvergenceStmt 𝒮) (h64 : GoodAnnulusPrevalenceStmt)
     (h218 : ExitTimeUpperBoundStmt 𝒮) (h219 : ExpectedExitTimeExplicitBoundStmt 𝒮)
-    (hmeas : GoodScaleEventMeasurableStep 𝒮) (hcell : AdjacentCellsMeetAeStep 𝒮) :
+    (hmeas : GoodScaleEventMeasurableAEStep 𝒮) (hcell : AdjacentCellsMeetAeStep 𝒮) :
     ConstantOrderLowerBoundDivLogStmt 𝒮 := by
   intro γ hγ hγ2 ρ hρ hρ1 βm hβm
   obtain ⟨ω₂, hω₂, h216a⟩ := h216 γ hγ hγ2
@@ -255,15 +271,24 @@ theorem constantOrderLowerBoundDiv_of_steps (𝒮 : SpaceFillingSLEModel)
   have hcov := h64a Ω S.P S.hC S.hcirc S.μ hcone
   have hvolp := h27 γ hγ hγ2 _ βm hβp hβp2 hβm Ω S.P S.hC S.hcirc S.μ hcone
   have hFc' : ∀ n : ℕ, ∃ F : Set Ω, MeasurableSet[S.fieldSigma] F ∧
-      F ⊆ {ω | GoodAnnulusCover (S.μ ω) ρ c₀ CE ((1 / 2 : ℝ) ^ n)} ∧
+      S.P (F \ {ω | GoodAnnulusCover (S.μ ω) ρ c₀ CE ((1 / 2 : ℝ) ^ n)}) = 0 ∧
       S.P Fᶜ ≤ S.P {ω | GoodAnnulusCover (S.μ ω) ρ c₀ CE ((1 / 2 : ℝ) ^ n)}ᶜ := fun n =>
     (hmeas γ hγ hγ2 Ω S hS ρ c₀ CE ((2 - γ) ^ 2 / 4) βm ((1 / 2 : ℝ) ^ n)).1
   have hFv' : ∀ n : ℕ, ∃ F : Set Ω, MeasurableSet[S.fieldSigma] F ∧
-      F ⊆ {ω | VolumeGrowthAt (S.μ ω) ((2 - γ) ^ 2 / 4) βm ((1 / 2 : ℝ) ^ n)} ∧
+      S.P (F \ {ω | VolumeGrowthAt (S.μ ω) ((2 - γ) ^ 2 / 4) βm ((1 / 2 : ℝ) ^ n)}) = 0 ∧
       S.P Fᶜ ≤ S.P {ω | VolumeGrowthAt (S.μ ω) ((2 - γ) ^ 2 / 4) βm ((1 / 2 : ℝ) ^ n)}ᶜ := fun n =>
     (hmeas γ hγ hγ2 Ω S hS ρ c₀ CE ((2 - γ) ^ 2 / 4) βm ((1 / 2 : ℝ) ^ n)).2
   choose Fc hFc using hFc'
   choose Fv hFv using hFv'
+  -- almost surely, every `Fc n` (resp. `Fv n`) is contained in the event it approximates
+  have hFE : ∀ᵐ ω ∂S.P, ∀ n : ℕ, (ω ∈ Fc n → GoodAnnulusCover (S.μ ω) ρ c₀ CE ((1 / 2 : ℝ) ^ n)) ∧
+      (ω ∈ Fv n → VolumeGrowthAt (S.μ ω) ((2 - γ) ^ 2 / 4) βm ((1 / 2 : ℝ) ^ n)) := by
+    refine ae_all_iff.2 fun n => ?_
+    have hc : ∀ᵐ ω ∂S.P, ω ∈ Fc n → GoodAnnulusCover (S.μ ω) ρ c₀ CE ((1 / 2 : ℝ) ^ n) :=
+      ae_iff.2 (measure_mono_null (fun ω hω => not_imp.1 hω) (hFc n).2.1)
+    have hv : ∀ᵐ ω ∂S.P, ω ∈ Fv n → VolumeGrowthAt (S.μ ω) ((2 - γ) ^ 2 / 4) βm ((1 / 2 : ℝ) ^ n) :=
+      ae_iff.2 (measure_mono_null (fun ω hω => not_imp.1 hω) (hFv n).2.1)
+    exact hc.and hv
   have hsum : ∑' n, S.P (Fc n ∩ Fv n)ᶜ ≠ ⊤ := by
     refine ne_top_of_le_ne_top (ENNReal.add_ne_top.2 ⟨tsum_dyadic_ne_top hcov, tsum_dyadic_ne_top hvolp⟩) ?_
     rw [← ENNReal.tsum_add]
@@ -280,7 +305,11 @@ theorem constantOrderLowerBoundDiv_of_steps (𝒮 : SpaceFillingSLEModel)
   have hGη : ∀ᵐ ω ∂S.P, ω ∈ {ω | Continuous (S.η ω) ∧ ∀ ε : ℝ, 0 < ε → ∀ j k : ℤ, S.mult ε ω j k ≠ 0 →
       (cell ε (S.η ω) j ∩ cell ε (S.η ω) k).Nonempty} :=
     (hS.isAreaParametrized.and (hcell γ hγ hγ2 Ω S hS)).mono fun ω hω => ⟨hω.1.1, hω.2⟩
-  have hall := (((((((probTendsToOne_of_ae (G := {ω | ∀ n, Nf ω ≤ n → ω ∈ Fc n ∩ Fv n}) hNae).inter
+  have hNE : ∀ᵐ ω ∂S.P, ω ∈ {ω | ∀ n, Nf ω ≤ n → GoodAnnulusCover (S.μ ω) ρ c₀ CE ((1 / 2 : ℝ) ^ n) ∧
+      VolumeGrowthAt (S.μ ω) ((2 - γ) ^ 2 / 4) βm ((1 / 2 : ℝ) ^ n)} := by
+    filter_upwards [hNae, hFE] with ω h1 h2 n hn
+    exact ⟨(h2 n).1 (h1 n hn).1, (h2 n).2 (h1 n hn).2⟩
+  have hall := (((((((probTendsToOne_of_ae hNE).inter
     (probTendsToOne_of_ae hGη)).inter (HarmonicBalls.PolyHighProb.probTendsToOne (h216b Ω S hS))).inter
     (HarmonicBalls.PolyHighProb.probTendsToOne (hLLb Ω S hS))).inter
     (HarmonicBalls.PolyHighProb.probTendsToOne (h29a ρ hρ hρ1 Ω S hS))).inter
@@ -333,7 +362,17 @@ theorem constantOrderLowerBoundDiv_of_steps (𝒮 : SpaceFillingSLEModel)
       have := hS5
       rw [hlamdef, rpow_lam hc₀pos.le (by norm_num) hε]
       linarith)
-    hS6 hadj hexitω hdiam hfinω h216ω hLLω h29ω
-    (fun n hn => ⟨(hFc n).2.1 (hN n hn).1, (hFv n).2.1 (hN n hn).2⟩)
+    hS6 hadj hexitω hdiam hfinω h216ω hLLω h29ω hN
+
+/-- **Lemma 6.8, route (b) of E-A10**, with the (non-almost-sure) `GoodScaleEventMeasurableStep`; a corollary of
+`constantOrderLowerBoundDiv_of_aeSteps` through `goodScaleEventMeasurableAEStep_of_step`. -/
+theorem constantOrderLowerBoundDiv_of_steps (𝒮 : SpaceFillingSLEModel)
+    (h216 : GreenKernelLowerBoundStmt 𝒮) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
+    (h29 : CountingMeasureConvergenceStmt 𝒮) (h64 : GoodAnnulusPrevalenceStmt)
+    (h218 : ExitTimeUpperBoundStmt 𝒮) (h219 : ExpectedExitTimeExplicitBoundStmt 𝒮)
+    (hmeas : GoodScaleEventMeasurableStep 𝒮) (hcell : AdjacentCellsMeetAeStep 𝒮) :
+    ConstantOrderLowerBoundDivLogStmt 𝒮 :=
+  constantOrderLowerBoundDiv_of_aeSteps 𝒮 h216 h27 h28 h29 h64 h218 h219
+    (goodScaleEventMeasurableAEStep_of_step hmeas) hcell
 
 end MatedCRT
