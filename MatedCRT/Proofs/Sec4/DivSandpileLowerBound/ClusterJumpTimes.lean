@@ -1,4 +1,4 @@
-import MatedCRT.Defs.Setting
+import MatedCRT.Proofs.Sec4.ConvergenceDivisible.ClusterExitMeasurable
 
 /-! # Jump times of increasing open clusters -/
 
@@ -132,5 +132,32 @@ theorem coneFamily_eq_regularized_earlier
       obtain ⟨s, hs, hx⟩ := hx
       exact hΛ.2.1.monotoneOn hs.1 ht hs.2.le hx
     _ = Λ t := hΛ.2.1.isRegularOpen t ht
+
+/-- Before exit, the cone ball is contained in the regularization of the
+union of the obstacle clusters at strictly earlier times. -/
+theorem coneFamily_subset_regularized_earlier_obstacle_clusters
+    {μ : MeasureTheory.Measure ℂ} [MeasureTheory.IsLocallyFiniteMeasure μ]
+    {Λ : ℝ → Set ℂ} (hΛ : IsConeHarmonicBallFamily μ Λ)
+    {ρ t : ℝ} (hρ : 0 < ρ) (ht : 0 < t) (hT : t < clusterExitTime Λ ρ) :
+    Λ t ⊆ interior (closure (⋃ s ∈ Ioo (0 : ℝ) t, HarmonicBalls.cluster μ ρ 0 s)) := by
+  obtain ⟨q, htq, hq⟩ := (lt_clusterExitTime_iff_exists_rat hΛ ht).mp hT
+  have hsub : ∀ s ∈ Ioo (0 : ℝ) t, Λ s ⊆ Metric.ball 0 (ρ / 3) := by
+    intro s hs
+    exact (hΛ.2.1.monotoneOn hs.1 (ht.trans htq) (le_of_lt (hs.2.trans htq))).trans hq
+  rw [coneFamily_eq_regularized_earlier hΛ ht]
+  apply interior_mono
+  apply closure_minimal ?_ isClosed_closure
+  intro x hx
+  simp only [mem_iUnion] at hx
+  obtain ⟨s, hs, hxs⟩ := hx
+  have hrepr := (hΛ.2.2 s (ρ / 3) hs.1 (by linarith) (hsub s hs) ρ (by linarith)).1
+  rw [hrepr] at hxs
+  have hxclose : x ∈ closure (HarmonicBalls.cluster μ ρ 0 s) := interior_subset hxs
+  have hset : HarmonicBalls.cluster μ ρ 0 s ⊆
+      ⋃ u ∈ Ioo (0 : ℝ) t, HarmonicBalls.cluster μ ρ 0 u := by
+    intro y hy
+    simp only [mem_iUnion]
+    exact ⟨s, hs, hy⟩
+  exact closure_mono hset hxclose
 
 end MatedCRT
