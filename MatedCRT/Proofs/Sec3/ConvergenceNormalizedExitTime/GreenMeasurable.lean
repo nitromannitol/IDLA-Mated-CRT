@@ -64,4 +64,25 @@ theorem greenFunction_ae_aestronglyMeasurableOn_ball
   exact ((aestronglyMeasurable_union_iff).2 ⟨hu, hs⟩).mono_measure
     (Measure.restrict_mono hcover le_rfl)
 
+/-- The scaled kernel is almost everywhere strongly measurable on the plane:
+it vanishes outside the domain. -/
+theorem greenFunction_ae_aestronglyMeasurable
+    (𝒮 : SpaceFillingSLEModel) (h33 : UniformConvergenceGreenKernelStmt 𝒮)
+    {γ ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hρ : 0 < ρ) (hρ1 : ρ < 1)
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
+    {r : ℝ} {z y : ℂ} (hr : 0 < r) (hball : ball z r ⊆ ball 0 ρ)
+    (hy : y ∈ ball z r) :
+    ∀ᵐ ω ∂S.P, AEStronglyMeasurable
+      (fun x => S.c₀ / 6 * greenFunction (ball z r) y x) (S.μ ω) := by
+  filter_upwards [greenFunction_ae_aestronglyMeasurableOn_ball 𝒮 h33 hγ hγ2 hρ hρ1
+    S hS hr hball hy] with ω hω
+  have hc : AEStronglyMeasurable (fun x => S.c₀ / 6 * greenFunction (ball z r) y x)
+      ((S.μ ω).restrict (ball z r)ᶜ) := by
+    apply AEStronglyMeasurable.congr (aestronglyMeasurable_const :
+      AEStronglyMeasurable (fun _ : ℂ => (0 : ℝ)) ((S.μ ω).restrict (ball z r)ᶜ))
+    filter_upwards [ae_restrict_mem measurableSet_ball.compl] with x hx
+    simp [greenFunction_of_notMem_right hx]
+  have h := (aestronglyMeasurable_union_iff).2 ⟨hω, hc⟩
+  simpa only [union_compl_self, Measure.restrict_univ] using h
+
 end MatedCRT
