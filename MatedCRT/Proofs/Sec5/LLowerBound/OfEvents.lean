@@ -92,4 +92,11 @@ theorem lLowerBoundSumStep_of_adjacentCellsMeet
     LLowerBoundSumStep 𝒮 :=
   lLowerBoundSumStep_of_local 𝒮 (lLowerBoundLocalStep_of_adjacentCellsMeet 𝒮 hcell)
 
+/-- Lemma 5.4 from its three cited estimates and the adjacency-of-cells step. -/
+theorem lLowerBound_of_adjacentCellsMeet (𝒮 : SpaceFillingSLEModel)
+    (h215 : GreenFunctionCrudeBoundStmt 𝒮) (h216 : GreenKernelLowerBoundStmt 𝒮)
+    (h29 : CountingMeasureConvergenceStmt 𝒮) (hcell : AdjacentCellsMeetAeStep 𝒮) :
+    LLowerBoundStmt 𝒮 :=
+  lLowerBound_of_local 𝒮 h215 h216 h29 (lLowerBoundLocalStep_of_adjacentCellsMeet 𝒮 hcell)
+
 end MatedCRT
