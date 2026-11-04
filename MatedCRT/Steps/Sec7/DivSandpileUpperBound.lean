@@ -6,7 +6,7 @@ import MatedCRT.Draft.Section7
 import MatedCRT.Steps.Infra.MatingOfTrees
 import MatedCRT.Proofs.Sandpile.Witness
 import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.Geometry
-import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.CrudeShell
+import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.Interior
 
 /-!
 # Proposition 7.1: reduction to stopped-shell localization
@@ -145,9 +145,8 @@ theorem divSandpileUpperBound_of_carved_steps (𝒮 : SpaceFillingSLEModel)
   divSandpileUpperBound_of_steps 𝒮 hcone hlower hvolume hmass hconv hgreen hcell hodo
     hcrude hadj (stoppedShellLocalization_of_steps 𝒮 hsetup hshell)
 
-/-- The unresolved shell construction: on the exit-time event it produces an
-intermediate set with a small boundary odometer and localized filled closure, and
-puts the stopped cluster in the graph interior. -/
+/-- The unresolved shell construction produces an intermediate set with a small
+boundary odometer and localized filled closure on the exit-time event. -/
 def IntermediateShellStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ConeHarmonicBallsStmt → ConstantOrderLowerBoundDivStmt 𝒮 → VolumeGrowthStmt →
   MassBoundOdometerStmt 𝒮 → ConvergenceDivisibleStmt 𝒮 →
@@ -161,8 +160,7 @@ def IntermediateShellStep (𝒮 : SpaceFillingSLEModel) : Prop :=
     TendsToOneOn S.P {ω | t < clusterExitTime (Λ ω) ρ} fun ε => {ω |
       let m := S.mult ε ω
       let η := S.η ω
-      matedDiscreteCluster m ε η ρ t ⊆ vInterior m (ballInterior ε η ρ) ∧
-        ∃ Θ : Set ℤ, (0 : ℤ) ∈ Θ ∧
+      ∃ Θ : Set ℤ, (0 : ℤ) ∈ Θ ∧
           (∀ c ∈ vBoundary m Θ, stoppedOdometer m ε η ρ t c ≤ ε ^ (-ω₀)) ∧
           fillCells ε η (vClosure m Θ) ⊆ outerNbhd (δ / 2) (Λ ω t)}
 
@@ -172,10 +170,12 @@ theorem stoppedShellConfinement_of_intermediateShell (𝒮 : SpaceFillingSLEMode
     (hshell : IntermediateShellStep 𝒮) : StoppedShellConfinementStep 𝒮 := by
   intro hcone hlower hvolume hmass hconv hgreen hcell hodo hcrude hadj
     γ hγ hγ' ρ hρ hρ' Ω _ S hS Λ hΛ δ t hδ hδρ ht
+  apply Sec7.stopped_interior_of_filled_localization Ω S Λ hΛ ρ t hρ ht ?_ δ hδ
+  intro d hd hdρ
   obtain ⟨ζ, ω₀, hζ, hζ1, hω, hωα, hstep⟩ :=
     hshell hcone hlower hvolume hmass hconv hgreen hcell hodo hadj
-      γ hγ hγ' ρ hρ hρ' Ω S hS Λ hΛ δ t hδ hδρ ht
-  exact Sec7.stopped_confinement_of_intermediate_shell 𝒮 hcell hcrude hadj
-    γ hγ hγ' ζ ρ ω₀ δ hζ hζ1 hρ hρ' hω hωα hδ Ω S hS Λ t ht _ hstep
+      γ hγ hγ' ρ hρ hρ' Ω S hS Λ hΛ d t hd hdρ ht
+  exact Sec7.stopped_filled_confinement_of_intermediate_shell 𝒮 hcell hcrude hadj
+    γ hγ hγ' ζ ρ ω₀ d hζ hζ1 hρ hρ' hω hωα hd Ω S hS Λ t ht _ hstep
 
 end MatedCRT

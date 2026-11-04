@@ -8,9 +8,8 @@ namespace MatedCRT.Sec7
 open MeasureTheory Set Metric _root_.HarmonicBalls Filter Topology
 
 /-- If the shell construction gives an intermediate vertex set with small boundary
-odometer and localized filled closure, the crude estimate finishes the localization.
-The shell event also supplies the graph-interior inclusion needed for comparison. -/
-theorem stopped_confinement_of_intermediate_shell
+odometer and localized filled closure, the crude estimate finishes the localization. -/
+theorem stopped_filled_confinement_of_intermediate_shell
     (𝒮 : SpaceFillingSLEModel) (hcell : CellSizeEstimateStmt 𝒮)
     (hcrude : CrudeUpperBoundStmt 𝒮) (hadj : AdjacentCellsMeetAeStep 𝒮)
     (γ : ℝ) (hγ : 0 < γ) (hγ2 : γ < 2) (ζ ρ ω₀ δ : ℝ)
@@ -21,14 +20,10 @@ theorem stopped_confinement_of_intermediate_shell
     (hshell : TendsToOneOn S.P F fun ε => {ω |
       let m := S.mult ε ω
       let η := S.η ω
-      let A := matedDiscreteCluster m ε η ρ t
-      A ⊆ vInterior m (ballInterior ε η ρ) ∧
-        ∃ Θ : Set ℤ, (0 : ℤ) ∈ Θ ∧
+      ∃ Θ : Set ℤ, (0 : ℤ) ∈ Θ ∧
           (∀ c ∈ vBoundary m Θ, stoppedOdometer m ε η ρ t c ≤ ε ^ (-ω₀)) ∧
           fillCells ε η (vClosure m Θ) ⊆ outerNbhd (δ / 2) (Λ ω t)}) :
     TendsToOneOn S.P F fun ε => {ω |
-      matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t ⊆
-        vInterior (S.mult ε ω) (ballInterior ε (S.η ω) ρ) ∧
       fillCells ε (S.η ω) (insert 0 (vClosure (S.mult ε ω)
         (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t))) ⊆ outerNbhd δ (Λ ω t)} := by
   have hgood := MatedCRT.HarmonicBalls.PolyHighProb.probTendsToOne
@@ -48,9 +43,7 @@ theorem stopped_confinement_of_intermediate_shell
         fillCells ε (S.η ω) (insert 0 (vClosure (S.mult ε ω)
           (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t))) ⊆
           cthickening (δ / 2) (fillCells ε (S.η ω) (vClosure (S.mult ε ω) Θ))}ᶜ ∪
-        (F ∩ {ω | matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t ⊆
-          vInterior (S.mult ε ω) (ballInterior ε (S.η ω) ρ) ∧
-          ∃ Θ : Set ℤ, (0 : ℤ) ∈ Θ ∧
+        (F ∩ {ω | ∃ Θ : Set ℤ, (0 : ℤ) ∈ Θ ∧
             (∀ c ∈ vBoundary (S.mult ε ω) Θ, stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t c ≤ ε ^ (-ω₀)) ∧
             fillCells ε (S.η ω) (vClosure (S.mult ε ω) Θ) ⊆ outerNbhd (δ / 2) (Λ ω t)}ᶜ)) := by
       apply measure_mono
@@ -63,9 +56,8 @@ theorem stopped_confinement_of_intermediate_shell
       · right
         refine ⟨hbad.1, ?_⟩
         intro hs
-        obtain ⟨hinterior, Θ, hzero, hbound, hloc⟩ := hs
+        obtain ⟨Θ, hzero, hbound, hloc⟩ := hs
         apply hbad.2
-        refine ⟨hinterior, ?_⟩
         exact (hg Θ hzero hbound).trans <|
           (cthickening_subset_of_subset (δ / 2) hloc).trans <| by
             change cthickening (δ / 2) (cthickening (δ / 2) (Λ ω t)) ⊆ cthickening δ (Λ ω t)
