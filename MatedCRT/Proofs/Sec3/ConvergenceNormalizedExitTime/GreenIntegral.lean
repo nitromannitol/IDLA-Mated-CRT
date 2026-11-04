@@ -1,13 +1,14 @@
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.AwayFromPole
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.MassTight
+import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.CellIntegrable
 
 /-!
 # Truncated Green integrals in probability
 
 Uniform Green-kernel convergence away from the pole implies convergence of
-its integrals over a fixed set, provided the discrete and continuum
-integrands are almost surely integrable. The area-parametrized curve supplies
-tightness of the mass; no Hölder estimate on an annulus is used.
+its integrals over a fixed set, provided the continuum integrand is almost
+surely integrable. The area-parametrized curve supplies tightness of the mass
+and discrete integrability; no Hölder estimate on an annulus is used.
 -/
 
 namespace MatedCRT
@@ -23,10 +24,7 @@ theorem greenIntegral_converges_away_from_pole
     {r : ℝ} {z y : ℂ} (hr : 0 < r) (hball : ball z r ⊆ ball 0 ρ) (hy : y ∈ ball z r)
     (D : Set ℂ) (hD : D ⊆ closedBall z r \ {y}) (hDρ : D ⊆ ball 0 ρ)
     (hdist : 0 < infDist y D)
-    (hint : ∀ ε, 0 < ε → ∀ᵐ ω ∂S.P,
-      IntegrableOn (fun x => rescale (S.mε ε) ε (S.η ω)
-        (fun a => ε⁻¹ * greenKernel (S.mult ε ω)
-          (interiorCellVertices ε (S.η ω) (ball z r)) (vertexOf ε (S.η ω) y) a) x) D (S.μ ω) ∧
+    (hint : ∀ᵐ ω ∂S.P,
       IntegrableOn (fun x => S.c₀ / 6 * greenFunction (ball z r) y x) D (S.μ ω)) :
     TendstoInProbability S.P
       (fun ε ω => ∫ x in D, rescale (S.mε ε) ε (S.η ω)
@@ -39,7 +37,12 @@ theorem greenIntegral_converges_away_from_pole
       (hS.tendsto_measure_large_ball_mass ρ) e he).exists
     refine ⟨2 * ((n : ℝ) + 1), by positivity, ?_⟩
     exact (measure_mono fun ω hω => lt_of_lt_of_le hω (measure_mono hDρ)).trans hn
-  · exact hint
+  · intro ε hε
+    filter_upwards [hS.ae_integrableOn_rescale_ball hε ρ (fun ω a =>
+      ε⁻¹ * greenKernel (S.mult ε ω)
+        (interiorCellVertices ε (S.η ω) (ball z r)) (vertexOf ε (S.η ω) y) a), hint]
+      with ω hd hc
+    exact ⟨hd.mono_set hDρ, hc⟩
   · intro δ hδ
     have h := h33 γ hγ hγ2 ρ hρ hρ1 Ω S hS r z y hr hball hy δ hδ D hD hdist
     simpa only [ProbTendsToOne, compl_ofPred, not_forall, not_imp, not_le, exists_prop] using h
