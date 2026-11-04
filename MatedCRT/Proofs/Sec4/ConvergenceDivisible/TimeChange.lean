@@ -50,6 +50,80 @@ theorem lbmExitTime_lt_top_of_exists_exit {F : ContinuousPath ℂ → ℝ≥0 �
     exact hr
   exact lt_of_le_of_lt hbound ENNReal.coe_lt_top
 
+/-- If a path stays in the domain through Brownian time `r`, its time-changed path
+cannot leave before the clock reaches its value at `r`. -/
+theorem clockValue_le_lbmExitTime_of_stays {F : ContinuousPath ℂ → ℝ≥0 → ℝ}
+    {b : ContinuousPath ℂ} {U : Set ℂ} (hF : IsTimeChangeClock (F b)) (r : ℝ≥0)
+    (hstays : ∀ s ≤ r, b s ∈ U) :
+    (Real.toNNReal (F b r) : ℝ≥0∞) ≤ lbmExitTime F U b := by
+  have hnonneg : 0 ≤ F b r := by
+    simpa [hF.map_zero] using hF.strictMono.monotone (show 0 ≤ r from bot_le)
+  unfold lbmExitTime pathExitTime
+  apply le_sInf
+  rintro _ ⟨t, rfl, ht⟩
+  rw [ENNReal.coe_le_coe]
+  by_contra h
+  have ht' : (t : ℝ) < F b r := by
+    have := lt_of_not_ge h
+    simpa [Real.coe_toNNReal _ hnonneg] using (show (t : ℝ) < Real.toNNReal (F b r) by exact_mod_cast this)
+  exact ht (hstays _ (clockInverse_le_of_lt ht'))
+
+/-- An exit by Brownian time `r` occurs by the corresponding clock time after the
+time change. -/
+theorem lbmExitTime_le_clockValue_of_exit {F : ContinuousPath ℂ → ℝ≥0 → ℝ}
+    {b : ContinuousPath ℂ} {U : Set ℂ} (hF : IsTimeChangeClock (F b)) (r : ℝ≥0)
+    (hexit : ∃ s ≤ r, b s ∉ U) :
+    lbmExitTime F U b ≤ (Real.toNNReal (F b r) : ℝ≥0∞) := by
+  obtain ⟨s, hsr, hs⟩ := hexit
+  calc
+    lbmExitTime F U b ≤ (Real.toNNReal (F b s) : ℝ≥0∞) := by
+      unfold lbmExitTime pathExitTime
+      apply sInf_le
+      refine ⟨Real.toNNReal (F b s), rfl, ?_⟩
+      change b (clockInverse (F b) (Real.toNNReal (F b s))) ∉ U
+      rw [clockInverse_clockValue hF.map_zero hF.strictMono s]
+      exact hs
+    _ ≤ (Real.toNNReal (F b r) : ℝ≥0∞) := by
+      exact_mod_cast Real.toNNReal_le_toNNReal (hF.strictMono.monotone hsr)
+
+/-- An early time-changed exit requires either an invalid clock, a small clock value,
+or a Brownian exit by the chosen deterministic time. -/
+theorem lbmExitTime_event_subset {F : ContinuousPath ℂ → ℝ≥0 → ℝ}
+    {U : Set ℂ} (r q : ℝ≥0) :
+    {b | lbmExitTime F U b ≤ (q : ℝ≥0∞)} ⊆
+      {b | ¬ IsTimeChangeClock (F b)} ∪
+        {b | Real.toNNReal (F b r) ≤ q} ∪
+        {b | ∃ s ≤ r, b s ∉ U} := by
+  intro b hb
+  by_cases hc : IsTimeChangeClock (F b)
+  · by_cases hs : ∀ s ≤ r, b s ∈ U
+    · left
+      right
+      exact ENNReal.coe_le_coe.mp ((clockValue_le_lbmExitTime_of_stays hc r hs).trans hb)
+    · right
+      push Not at hs
+      exact hs
+  · exact Or.inl (Or.inl hc)
+
+/-- A late time-changed exit requires either an invalid clock, a large clock value,
+or a Brownian path which has stayed in the domain through the chosen time. -/
+theorem lbmExitTime_late_event_subset {F : ContinuousPath ℂ → ℝ≥0 → ℝ}
+    {U : Set ℂ} (r q : ℝ≥0) :
+    {b | (q : ℝ≥0∞) < lbmExitTime F U b} ⊆
+      {b | ¬ IsTimeChangeClock (F b)} ∪
+        {b | q < Real.toNNReal (F b r)} ∪
+        {b | ∀ s ≤ r, b s ∈ U} := by
+  intro b hb
+  by_cases hc : IsTimeChangeClock (F b)
+  · by_cases hs : ∃ s ≤ r, b s ∉ U
+    · left
+      right
+      exact ENNReal.coe_lt_coe.mp (hb.trans_le (lbmExitTime_le_clockValue_of_exit hc r hs))
+    · right
+      push Not at hs
+      exact hs
+  · exact Or.inl (Or.inl hc)
+
 /-- Time changing a continuous path by a strictly increasing clock preserves positive
 exit time from any open set containing the initial point. -/
 theorem lbmExitTime_pos_of_mem {F : ContinuousPath ℂ → ℝ≥0 → ℝ}
