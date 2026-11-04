@@ -1,10 +1,11 @@
 import MatedCRT.Proofs.Sec3.DiscretePotentialTightness.Cells
+import MatedCRT.Defs.Setting
 
 /-! # The source vertex in the discrete Green kernel -/
 
 namespace MatedCRT
 
-open Set Filter Topology
+open Set Filter Topology MeasureTheory
 
 /-- If the curve has not visited the origin by time `-ε`, the least-index cell
 containing the origin is cell zero. This is a deterministic sufficient condition;
@@ -70,5 +71,63 @@ theorem vertexOf_zero_eq_zero_all_meshes_iff_no_earlier_visit {η : ℝ → ℂ}
     exact hno s (by simp)
   · intro h ε hε
     exact vertexOf_zero_eq_zero_of_no_earlier_visit hε hzero h
+
+/-- A proper curve rooted at the origin whose first-hit shift fixes the curve
+has no negative-time visit to the origin. -/
+theorem no_earlier_visit_of_firstHit_shift {c : C(ℝ, ℂ)}
+    (hp : Tendsto c (cocompact ℝ) (cocompact ℂ)) (hc0 : c 0 = 0)
+    (hshift : ∀ t, c t = c (MatedCRTHarmonic.MatedCRT.firstHit c 0 + t)) :
+    ∀ s < 0, c s ≠ 0 := by
+  let A : Set ℝ := {s | c s = 0}
+  have hcompact : IsCompact A :=
+    (isProperMap_iff_tendsto_cocompact.2 ⟨c.continuous, hp⟩).isCompact_preimage
+      (isCompact_singleton : IsCompact ({(0 : ℂ)} : Set ℂ))
+  have hbelow : BddBelow A := hcompact.isBounded.bddBelow
+  let τ : ℝ := MatedCRTHarmonic.MatedCRT.firstHit c 0
+  have hτ0 : τ ≤ 0 := csInf_le hbelow hc0
+  have hτ : c τ = 0 := by simpa [τ, hc0] using (hshift 0).symm
+  have h2τ : c (τ + τ) = 0 := by simpa [τ, hτ] using (hshift τ).symm
+  have hτ2τ : τ ≤ τ + τ := csInf_le hbelow h2τ
+  have hτeq : τ = 0 := by linarith
+  intro s hs hcs
+  have hs' : τ ≤ s := csInf_le hbelow hcs
+  linarith
+
+/-- The identity coordinate-change rule of the mating-of-trees coupling forces
+the area-parametrized curve to visit the origin first at time zero. -/
+theorem MatedCRTEnv.IsValid.ae_no_earlier_origin_visit
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) :
+    ∀ᵐ ω ∂S.P, ∀ s < 0, S.η ω s ≠ 0 := by
+  obtain ⟨X, X₀, hIG₀, B, B', B₀, B₀', U, ηL, η', η₀, hc, hbridge⟩ := hS.matingOfTrees
+  obtain ⟨Φ, _, _, hΦ, hcoord, _⟩ := hc.igMap
+  have hcoord' := hcoord 0 1 0 zero_lt_one
+  filter_upwards [hΦ, hcoord', hc.spaceFilling, hc.areaParam, hbridge] with ω hΦω hcoordω hsf harea hη
+  have hident : MatedCRTHarmonic.MatedCRT.igPullback γ 0 1 0
+      (fun ρ w => LQGMetric.circleAvg (hIG₀ ω) ρ w + U ω) =
+        (fun ρ w => LQGMetric.circleAvg (hIG₀ ω) ρ w + U ω) := by
+    funext ρ w
+    simp [MatedCRTHarmonic.MatedCRT.igPullback]
+  rw [hident, ← hΦω] at hcoordω
+  have hshift : ∀ t, ηL ω t = ηL ω (MatedCRTHarmonic.MatedCRT.firstHit (ηL ω) 0 + t) := by
+    intro t
+    have ht := congrArg (fun c : C(ℝ, ℂ) => c t) hcoordω
+    simpa [MatedCRTHarmonic.MatedCRT.affineReroot] using ht
+  have hnoret := no_earlier_visit_of_firstHit_shift hsf.2.1 hsf.2.2.1 hshift
+  obtain ⟨φ, hφ0, hφ⟩ := harea.1
+  intro s hs
+  have hs' : φ s < 0 := by simpa [hφ0] using φ.strictMono hs
+  rw [← congrFun hη.1 s, hφ]
+  exact hnoret (φ s) hs'
+
+/-- The source vertex in the discrete Green-function estimate is the origin
+vertex almost surely, simultaneously for all positive meshes. -/
+theorem MatedCRTEnv.IsValid.ae_vertexOf_zero_eq_zero
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) :
+    ∀ᵐ ω ∂S.P, ∀ ε : ℝ, 0 < ε → vertexOf ε (S.η ω) 0 = 0 := by
+  filter_upwards [hS.ae_no_earlier_origin_visit, hS.isAreaParametrized] with ω hno harea
+  intro ε hε
+  exact vertexOf_zero_eq_zero_of_no_earlier_visit hε harea.2.1 hno
 
 end MatedCRT
