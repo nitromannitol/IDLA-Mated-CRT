@@ -1,4 +1,5 @@
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.ExitTimeMeasurable
+import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.ExitLaplacianBound
 
 /-! Measurable uniform bounds for countable families. -/
 
@@ -64,5 +65,57 @@ theorem MatedCRTEnv.IsValid.exists_measurable_exit_time_bound
   filter_upwards [hCf, hue] with ω hω hu n a
   apply (le_div_iff₀ (hε ω n)).2
   simpa [f, hu n a, mul_comm] using hω n a
+
+/-- For a bounded domain, an eventual pathwise bound on its cells suffices:
+each earlier mesh has finitely many interior cells and the exit time vanishes
+outside them. -/
+theorem MatedCRTEnv.IsValid.exists_measurable_exit_time_bound_of_eventual
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
+    (ε : ℕ → ℝ) (I : Ω → ℕ → ℕ)
+    (hI : ∀ n, Measurable[S.envSigma] fun ω => I ω n)
+    (hε : ∀ ω n, 0 < ε (I ω n)) (D : Set ℂ) (hD : IsOpen D ∨ IsClosed D)
+    (hDb : Bornology.IsBounded D)
+    (hbound : ∀ᵐ ω ∂S.P, ∃ C : ℝ, ∀ᶠ n in atTop,
+      ∀ a ∈ cellVertices (ε (I ω n)) (S.η ω) D,
+        ε (I ω n) * |normExitTime (S.mult (ε (I ω n)) ω)
+          (interiorCellVertices (ε (I ω n)) (S.η ω) D) a| ≤ C) :
+    ∃ C : Ω → ℝ, Measurable[S.envSigma] C ∧ (∀ ω, 1 ≤ C ω) ∧
+      ∀ᵐ ω ∂S.P, ∀ n a,
+        |normExitTime (S.mult (ε (I ω n)) ω)
+          (interiorCellVertices (ε (I ω n)) (S.η ω) D) a| ≤ C ω / ε (I ω n) := by
+  apply hS.exists_measurable_exit_time_bound ε I hI hε D hD
+  filter_upwards [hbound, hS.isAreaParametrized, hS.ae_tendsto_cocompact] with ω ⟨C, htail⟩ hη hp
+  have hs : ∀ n, ∃ B : ℝ, ∀ a : ℤ,
+      ε (I ω n) * |normExitTime (S.mult (ε (I ω n)) ω)
+        (interiorCellVertices (ε (I ω n)) (S.η ω) D) a| ≤ B := by
+    intro n
+    let A := interiorCellVertices (ε (I ω n)) (S.η ω) D
+    let g : ℤ → ℝ := fun a => ε (I ω n) * |normExitTime (S.mult (ε (I ω n)) ω) A a|
+    have hA : A.Finite :=
+      (Tightness.cellVertices_finite hη.1 hp (hε ω n) hDb).subset (by
+        dsimp [A, interiorCellVertices]
+        exact Set.sdiff_subset)
+    obtain ⟨B, hB⟩ := ((hA.image g).union (Set.finite_singleton 0)).bddAbove
+    refine ⟨B, fun a => ?_⟩
+    change g a ≤ B
+    by_cases ha : a ∈ A
+    · exact hB (Set.mem_union_left _ ⟨a, ha, rfl⟩)
+    · have h0 : g a = 0 := by
+        simp [g, normExitTime_eq_zero_of_not_mem _ ha]
+      rw [h0]
+      exact hB (Set.mem_union_right _ (Set.mem_singleton 0))
+  obtain ⟨N, hN⟩ := eventually_atTop.1 htail
+  choose B hB using hs
+  obtain ⟨B₀, hB₀⟩ := ((Finset.finite_toSet (Finset.range N)).image B).bddAbove
+  refine ⟨max B₀ (max C 0), fun n a => ?_⟩
+  by_cases hn : n < N
+  · exact (hB n a).trans ((hB₀ ⟨n, Finset.mem_range.mpr hn, rfl⟩).trans (le_max_left _ _))
+  · by_cases ha : a ∈ interiorCellVertices (ε (I ω n)) (S.η ω) D
+    · have hac : a ∈ cellVertices (ε (I ω n)) (S.η ω) D := by
+        exact Set.sdiff_subset ha
+      exact (hN n (Nat.le_of_not_gt hn) a hac).trans (le_trans (le_max_left _ _) (le_max_right _ _))
+    · rw [normExitTime_eq_zero_of_not_mem _ ha, abs_zero, mul_zero]
+      exact le_trans (le_max_right _ _) (le_max_right _ _)
 
 end MatedCRT
