@@ -9,7 +9,8 @@ the dyadic scales `ε = 2⁻ᵏ` of the circle average approximations `ε^{γ²/
 The statement is split into one Prop per part:
 * I. `LQGMeasureRadonPart`: a.s. `μ_h` is locally finite (immediate from the definition) and non-atomic
   (`LQGMeasureNonAtomicPart`, cited);
-* II. `LQGMeasureLocalityPart`: `μ_h(U)` is a.s. a `σ(h|_U)`-measurable random variable;
+* II. `LQGMeasureLocalityPart`: `μ_h(U)` is a.s. a `σ(h|_U)`-measurable random variable; it follows from the
+  definition once circle averages are known to be local functionals of the field (`ConeCircleAverageLocalityStep`);
 * III. `LQGMeasureWeylScalingPart`: a.s. `e^{γ f} · μ_h = μ_{h + f}` for every continuous `f`;
 * IV. `LQGMeasureConformalCovariancePart`: a.s. coordinate change for every complex affine map. Its non-elementary
   content is the dilation case `LQGMeasureDilationCovariancePart`: the dyadic limit defining `μ_h` does not see
@@ -46,6 +47,19 @@ def LQGMeasureLocalityPart : Prop :=
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
   ∀ U : Set ℂ, IsOpen U → ∃ X : Ω → ℝ≥0∞, Measurable[fieldSigmaAlgebra 0 hC U] X ∧
     (fun ω => μ ω U) =ᵐ[P] X
+
+/-- **Circle averages are local functionals of the field** (the field ingredient of Fact 2.2 II). For the cone field,
+an open `U` and a circle `∂B_ε(x)` whose closed disk lies in `U`, the circle average `h_ε(x)` is a.s. equal to a
+`σ(h|_U)`-measurable random variable. It is the pairing of `h` with the uniform measure `ν_{ε,x}` on `∂B_ε(x)`,
+supported in `U`, hence the `L²` limit of the pairings with the test functions `ν_{ε,x} * ψ_δ` supported in `U`
+(mollifier `ψ_δ`, `δ → 0`): DS11 Section 3.1 for `h^ℂ`, and for the cone field through Definition 2.1 (the lateral
+part has the law of that of `h^ℂ`, jointly in pairings and circle averages; the radial part enters both continuously).
+The analogue for differences of circle averages modulo additive constant is `CircleAverageModConstStep`. -/
+def ConeCircleAverageLocalityStep : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ), IsProbabilityMeasure P → IsQuantumCone γ P hC hcirc →
+  ∀ U : Set ℂ, IsOpen U → ∀ (ε : ℝ) (x : ℂ), 0 < ε → closedBall x ε ⊆ U →
+    ∃ D : Ω → ℝ, Measurable[fieldSigmaAlgebra 0 hC U] D ∧ (fun ω => hcirc ω ε x) =ᵐ[P] D
 
 /-- **Fact 2.2 III** (Weyl scaling, line 481). A.s., for every continuous `f : ℂ → ℝ`, the measure `e^{γ f} dμ_h` is the
 LQG measure of `h + f` (the vague dyadic limit of the circle average approximations of `h + f`). -/
