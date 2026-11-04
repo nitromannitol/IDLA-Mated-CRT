@@ -64,7 +64,7 @@ theorem exists_dense_strict_discreteSupersolution
 an admissible function with a sufficiently large constant. -/
 theorem exists_strict_discreteSupersolution
     {α : Type*} (m : α → α → ℕ) (V W : Set α) (hW : W.Finite)
-    (hlf : ∀ b, {c | m b c ≠ 0}.Finite) (r φ : α → ℝ)
+    (r φ : α → ℝ)
     (hr : ∀ b ∈ V, 0 < r b) (v : α → ℝ)
     (hvV : ∀ b ∈ V, mLaplacian m v b ≤ r b)
     (hvW : ∀ b ∈ W, φ b ≤ v b) (a : α) (q : ℝ) (hvq : v a < q) :
@@ -94,12 +94,15 @@ theorem exists_strict_discreteSupersolution
   let v' : α → ℝ := fun b => (1 - δ) * v b + δ * K
   refine ⟨v', ?_, ?_, hδq⟩
   · intro b hb
-    have hconst : mLaplacian m (fun _ => K) b = 0 := by simp [mLaplacian]
     have hΔ : mLaplacian m v' b = (1 - δ) * mLaplacian m v b := by
-      dsimp [v']
-      rw [mLaplacian_add_of_locallyFinite hlf, mLaplacian_const_mul,
-        mLaplacian_const_mul, hconst]
-      ring
+      have heq : mLaplacian m v' b = mLaplacian m (fun c => (1 - δ) * v c) b := by
+        unfold mLaplacian
+        congr 1
+        apply finsum_congr
+        intro c
+        dsimp [v']
+        ring
+      rw [heq, mLaplacian_const_mul]
     rw [hΔ]
     have hmul := mul_nonneg (sub_nonneg.mpr hδle) (sub_nonneg.mpr (hvV b hb))
     have hpos := mul_pos hδpos (hr b hb)
@@ -151,14 +154,14 @@ theorem MatedCRTEnv.IsValid.measurable_discreteLeastSupersolution_of_finite
     (hVW : ∀ ω, V ω ⊆ W ω) (hr0 : ∀ ω b, 0 ≤ r ω b)
     (hφ0 : ∀ ω b, φ ω b ≤ 0)
     (hVfin : ∀ ω, (V ω).Finite) (hWfin : ∀ ω, (W ω).Finite)
-    (hlf : ∀ ω b, {c | S.mult ε ω b c ≠ 0}.Finite)
+    (hlf : ∀ ω b, b ∈ V ω → {c | S.mult ε ω b c ≠ 0}.Finite)
     (hrpos : ∀ ω b, b ∈ V ω → 0 < r ω b) :
     Measurable fun ω => discreteLeastSupersolution (S.mult ε ω) (V ω) (W ω)
       (r ω) (φ ω) a := by
   apply hS.measurable_discreteLeastSupersolution_of_strictify ε V W hV hW r φ hr hφ a
-    hVW hr0 hφ0 hVfin hWfin (fun ω b _ => hlf ω b)
+    hVW hr0 hφ0 hVfin hWfin hlf
   intro ω _ v hv q hvq
   exact exists_strict_discreteSupersolution (S.mult ε ω) (V ω) (W ω)
-    (hWfin ω) (hlf ω) (r ω) (φ ω) (hrpos ω) v hv.1 hv.2 a q hvq
+    (hWfin ω) (r ω) (φ ω) (hrpos ω) v hv.1 hv.2 a q hvq
 
 end MatedCRT
