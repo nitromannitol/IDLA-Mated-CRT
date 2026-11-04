@@ -1,5 +1,6 @@
 import MatedCRT.Draft.Section2
 import MatedCRT.Proofs.Infra.Setting
+import MatedCRT.Proofs.Sec4.ConvergenceDivisible.LeastMeasurableOfVolumeGrowth
 import HarmonicBalls.Steps.Sec2.VolumeGrowth
 import HarmonicBalls.Defs.Obstacle
 
@@ -54,5 +55,16 @@ theorem MatedCRTEnv.IsValid.ae_volumeGrowth_inside_unit
   filter_upwards [ae_volumeGrowth_of_poly_ballMass (a := A / 4) (b := B + 2)
     (by positivity) (by linarith) (by positivity) (by linarith) hpoly] with ω hω
   exact ⟨_, _, hω⟩
+
+/-- Lemma 2.7 implies pointwise measurability of the continuum least
+supersolution on each ball strictly inside the unit ball. -/
+theorem MatedCRTEnv.IsValid.aemeasurable_leastSupersolution_inside_unit
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} (hS : S.IsValid 𝒮 γ)
+    (h27 : VolumeGrowthStmt) {R t : ℝ} {z x : ℂ} (hR : 0 < R) (hR1 : R < 1)
+    (ht : 0 < t) (hz : z ∈ ball (0 : ℂ) R) (hx : x ∈ closedBall (0 : ℂ) R) :
+    AEMeasurable (fun ω => leastSupersolution (S.μ ω) R z t x) S.P :=
+  hS.aemeasurable_leastSupersolution_of_volumeGrowth R t z x hR ht hz hx
+    (hS.ae_volumeGrowth_inside_unit hγ hγ2 h27 hR1)
 
 end MatedCRT
