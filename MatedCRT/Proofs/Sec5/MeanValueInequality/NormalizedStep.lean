@@ -74,4 +74,13 @@ theorem meanValueNormalizedStep_of_surplus (𝒮 : SpaceFillingSLEModel)
   rw [greenKernel_symm_of_firstStep hsymm hlf hA hdeg hfirstA 0 a] at hcomp
   exact normalized_meanValue_of_surplus_bounds hε (hcpos ω) (hCpos ω) hcomp hv hq
 
+/-- Lemma 5.3 from the two quantitative surplus/exit-time bounds and the
+finite-graph data in `MeanValueSurplusStep`. -/
+theorem meanValueInequality_of_surplus (𝒮 : SpaceFillingSLEModel)
+    (h44 : DiscreteLaplacianBoundCorrectedStmt 𝒮) (h213 : MaximumPrincipleStmt 𝒮)
+    (h41 : ConvergenceDivisibleStmt 𝒮) (h33 : UniformConvergenceGreenKernelStmt 𝒮)
+    (h218 : ExitTimeUpperBoundStmt 𝒮) (hstep : MeanValueSurplusStep 𝒮) :
+    MeanValueInequalityStmt 𝒮 :=
+  meanValueInequality_of_steps 𝒮 h44 h213 h41 h33 h218 (meanValueNormalizedStep_of_surplus 𝒮 hstep)
+
 end MatedCRT
