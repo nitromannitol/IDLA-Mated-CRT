@@ -226,7 +226,7 @@ theorem cellVertices_ball_subset_closedBall : cellVertices ε η (ball 0 ρ) ⊆
   fun _ ⟨z, hz, hzb⟩ => ⟨z, hz, ball_subset_closedBall hzb⟩
 
 /-- `cl(V^ε(B_ρ) \ V^ε(∂B_ρ)) ⊆ V^ε(cl B_ρ)`, for a map `m` whose adjacent vertices have intersecting cells (for the
-map of Definition 1.1: `AdjacentCellsMeetStep`, MatedCRT/Steps/Infra/MatingOfTrees.lean). -/
+map of Definition 1.1: `AdjacentCellsMeetAeStep`, MatedCRT/Steps/Infra/MatingOfTrees.lean). -/
 theorem vClosure_ballInterior_subset (hη : Continuous η)
     (hcell : ∀ j k, m j k ≠ 0 → (cell ε η j ∩ cell ε η k).Nonempty) :
     vClosure m (ballInterior ε η ρ) ⊆ cellVertices ε η (closedBall 0 ρ) := by
@@ -553,7 +553,7 @@ def DiscreteConservationOfMassCorrectedStmt (𝒮 : SpaceFillingSLEModel) : Prop
 
 /-- **Lemma 4.3** (lemma:discrete-basic-properties, line 1679) from the steps. -/
 theorem discreteBasicProperties_of_steps {𝒮 : SpaceFillingSLEModel} (hset : MatedObstacleSettingStep 𝒮)
-    (hcons : ConsecutiveCellsAdjacentStep 𝒮) (hq : NormExitTimeLaplacianStep) (hcell : AdjacentCellsMeetStep 𝒮) :
+    (hcons : ConsecutiveCellsAdjacentStep 𝒮) (hq : NormExitTimeLaplacianStep) (hcell : AdjacentCellsMeetAeStep 𝒮) :
     DiscreteBasicPropertiesStmt 𝒮 := by
   intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS
   filter_upwards [hset γ hγ hγ2 ρ hρ hρ1 Ω S hS, hcons γ hγ hγ2 Ω S hS, hS.isAreaParametrized,
@@ -564,7 +564,7 @@ theorem discreteBasicProperties_of_steps {𝒮 : SpaceFillingSLEModel} (hset : M
 
 /-- **Lemma 4.4** (lemma:discrete-laplacian-bound, line 1697), corrected (E-c1-1), from the steps. -/
 theorem discreteLaplacianBoundCorrected_of_steps {𝒮 : SpaceFillingSLEModel} (hset : MatedObstacleSettingStep 𝒮)
-    (hcell : AdjacentCellsMeetStep 𝒮) : DiscreteLaplacianBoundCorrectedStmt 𝒮 := by
+    (hcell : AdjacentCellsMeetAeStep 𝒮) : DiscreteLaplacianBoundCorrectedStmt 𝒮 := by
   intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS
   filter_upwards [hset γ hγ hγ2 ρ hρ hρ1 Ω S hS, hS.isAreaParametrized, hcell γ hγ hγ2 Ω S hS] with ω hω hη hcω
   intro t ε ht hε
@@ -572,7 +572,7 @@ theorem discreteLaplacianBoundCorrected_of_steps {𝒮 : SpaceFillingSLEModel} (
 
 /-- **Lemma 4.5** (lemma:discrete-conservation-of-mass, line 1705), corrected (E-c1-1), from the steps. -/
 theorem discreteConservationOfMassCorrected_of_steps {𝒮 : SpaceFillingSLEModel}
-    (hset : MatedObstacleSettingStep 𝒮) (hcell : AdjacentCellsMeetStep 𝒮) :
+    (hset : MatedObstacleSettingStep 𝒮) (hcell : AdjacentCellsMeetAeStep 𝒮) :
     DiscreteConservationOfMassCorrectedStmt 𝒮 := by
   intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS
   filter_upwards [hset γ hγ hγ2 ρ hρ hρ1 Ω S hS, hS.isAreaParametrized, hcell γ hγ hγ2 Ω S hS] with ω hω hη hcω

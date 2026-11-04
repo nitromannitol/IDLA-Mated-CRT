@@ -107,7 +107,7 @@ theorem IsPreconnected.inter_frontier_nonempty_of_isOpen {α : Type*} [Topologic
 
 /-- A walk along edges of `𝒢^ε` from a vertex whose cell meets the open set `O` to a vertex whose cell does not meet
 `O` visits a vertex whose cell meets `∂O` (for a map `m` whose adjacent vertices have intersecting cells; for the map
-of Definition 1.1 this is `AdjacentCellsMeetStep`, MatedCRT/Steps/Infra/MatingOfTrees.lean). -/
+of Definition 1.1 this is `AdjacentCellsMeetAeStep`, MatedCRT/Steps/Infra/MatingOfTrees.lean). -/
 theorem exists_cell_meets_frontier {m : ℤ → ℤ → ℕ} {ε : ℝ} {η : ℝ → ℂ} (hε : 0 ≤ ε) (hη : Continuous η)
     (hcell : ∀ j k, m j k ≠ 0 → (cell ε η j ∩ cell ε η k).Nonempty) {O : Set ℂ}
     (hO : IsOpen O) {x : ℕ → ℤ} (hadj : ∀ n, x (n + 1) = x n ∨ m (x n) (x (n + 1)) ≠ 0)
@@ -274,7 +274,7 @@ open ConstantOrder in
 `𝛅 ∧ ρ/4` in place of the `𝛅` of Lemma 6.8. -/
 theorem constantOrderLowerBound_of_steps (𝒮 : SpaceFillingSLEModel) (h68 : ConstantOrderLowerBoundDivStmt 𝒮)
     (hW : SrwHitDecompositionStep) (hN : SrwAeAdjacentStep) (hF : CellVerticesBallFiniteStep 𝒮)
-    (hE : WalkExitsStep 𝒮) (hcell : AdjacentCellsMeetStep 𝒮) : ConstantOrderLowerBoundStmt 𝒮 := by
+    (hE : WalkExitsStep 𝒮) (hcell : AdjacentCellsMeetAeStep 𝒮) : ConstantOrderLowerBoundStmt 𝒮 := by
   intro γ hγ hγ2 ρ hρ hρ1 βm hβ
   obtain ⟨ω₀, hω₀, h⟩ := h68 γ hγ hγ2 ρ hρ hρ1 βm hβ
   refine ⟨ω₀, hω₀, fun s₀ hs₀ hs₀1 => ?_⟩

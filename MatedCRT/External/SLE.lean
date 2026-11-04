@@ -20,7 +20,7 @@ Dropped after the graph switch (L1): `SpaceFillingSLEPathInput` (a.s. `|η(t)| �
 now theorems (MatedCRT/Proofs/Infra/MatingOfTrees.lean): `MatedCRTEnv.IsValid.ae_tendsto_cocompact` from the
 mating-of-trees coupling of `MatedCRTEnv.IsValid` (fields `spaceFilling`, `areaParam`), and
 `MatedCRTEnv.mult_succ_ne_zero` from Definition 1.1 for the continuous pair `bm` (deterministic). Local finiteness of
-`𝒢^ε` follows from these and `AdjacentCellsMeetStep` (MatedCRT/Steps/Infra/MatingOfTrees.lean), a consequence of the
+`𝒢^ε` follows from these and `AdjacentCellsMeetAeStep` (MatedCRT/Steps/Infra/MatingOfTrees.lean), a consequence of the
 coupling (DMS14 Lemma 8.8, field `merge`), not an input.
 -/
 

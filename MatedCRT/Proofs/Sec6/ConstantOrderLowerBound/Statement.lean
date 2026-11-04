@@ -11,12 +11,12 @@ facts left implicit in the printed proof (the walk exits, `V^ε(B_ρ)` is finite
 
 namespace MatedCRT
 
-/-- **Lemma 6.7** from Lemma 6.8 and Lemmas 2.7, 2.8, 2.19, and `AdjacentCellsMeetStep` (adjacent vertices of the map
+/-- **Lemma 6.7** from Lemma 6.8 and Lemmas 2.7, 2.8, 2.19, and `AdjacentCellsMeetAeStep` (adjacent vertices of the map
 of Definition 1.1 have intersecting cells; a consequence of the mating-of-trees coupling, MatedCRT/Steps/Infra/
 MatingOfTrees.lean, needed since the graph switch (L1)). -/
 theorem constantOrderLowerBound (𝒮 : SpaceFillingSLEModel) (h68 : ConstantOrderLowerBoundDivStmt 𝒮)
     (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮) (h219 : ExpectedExitTimeExplicitBoundStmt 𝒮)
-    (hcell : AdjacentCellsMeetStep 𝒮) : ConstantOrderLowerBoundStmt 𝒮 :=
+    (hcell : AdjacentCellsMeetAeStep 𝒮) : ConstantOrderLowerBoundStmt 𝒮 :=
   constantOrderLowerBound_of_steps 𝒮 h68 srwHitDecompositionStep srwAeAdjacentStep
     (cellVerticesBallFiniteStep 𝒮 h27 h28) (walkExitsStep 𝒮 h27 h219) hcell
 
