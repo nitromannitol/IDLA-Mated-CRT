@@ -13,7 +13,7 @@ Without hypothesis on the map:
   vertex of positive degree of a locally finite map (`mLaplacian_stoppedOdometer`).
 -/
 
-namespace MatedCRT
+namespace MatedCRT.Sec7
 
 open MeasureTheory Set Metric
 open scoped ENNReal
@@ -36,14 +36,14 @@ theorem greenKernel_eq_zero_of_not_mem_right (m : ℤ → ℤ → ℕ) {A : Set 
     greenKernel m A a b = 0 := by
   simp [greenKernel, greenFn_eq_zero_of_not_mem_right m a hb]
 
-variable {ε : ℝ} {η : ℝ → ℂ} {ρ t : ℝ}
+variable {m : ℤ → ℤ → ℕ} {ε : ℝ} {η : ℝ → ℂ} {ρ t : ℝ}
 
 theorem ballInterior_subset_cellVertices_closedBall :
     ballInterior ε η ρ ⊆ cellVertices ε η (closedBall 0 ρ) := fun b hb =>
   cellVertices_mono ball_subset_closedBall
     (show b ∈ cellVertices ε η (ball 0 ρ) \ cellVertices ε η (frontier (ball 0 ρ)) from hb).1
 
-theorem matedObstacle_eq_zero_of_not_mem {a : ℤ} (ha : a ∉ ballInterior ε η ρ) : matedObstacle ε η ρ t a = 0 := by
+theorem matedObstacle_eq_zero_of_not_mem {a : ℤ} (ha : a ∉ ballInterior ε η ρ) : matedObstacle m ε η ρ t a = 0 := by
   simp [matedObstacle, greenKernel_eq_zero_of_not_mem_right _ _ ha]
 
 theorem mLaplacian_update_zero (m : ℤ → ℤ → ℕ) {a b : ℤ} (hba : b ≠ a) (v : ℝ) :
@@ -57,19 +57,19 @@ theorem mLaplacian_update_zero (m : ℤ → ℤ → ℕ) {a b : ℤ} (hba : b �
 
 /-- Off `V^ε(cl(B_ρ))`, `w̃^ε_t` is the junk infimum `0` of an unbounded below set. -/
 theorem matedLeastSupersolution_eq_zero_of_not_mem (hε : 0 < ε) (ht : 0 < t) {a : ℤ}
-    (ha : a ∉ cellVertices ε η (closedBall 0 ρ)) : matedLeastSupersolution ε η ρ t a = 0 := by
+    (ha : a ∉ cellVertices ε η (closedBall 0 ρ)) : matedLeastSupersolution m ε η ρ t a = 0 := by
   unfold matedLeastSupersolution discreteLeastSupersolution
   apply Real.sInf_of_not_bddBelow
   rintro ⟨β, hβ⟩
   have hK : 0 ≤ |β| + 1 := by positivity
   have hmem : -(|β| + 1) ∈ (fun u : ℤ → ℝ => u a) ''
-      {u | (∀ b ∈ ballInterior ε η ρ, mLaplacian (cellMult ε η) u b ≤ ((matedDeg ε η b : ℕ) : ℝ)⁻¹) ∧
-        ∀ b ∈ cellVertices ε η (closedBall 0 ρ), matedObstacle ε η ρ t b ≤ u b} := by
+      {u | (∀ b ∈ ballInterior ε η ρ, mLaplacian m u b ≤ ((matedDeg m b : ℕ) : ℝ)⁻¹) ∧
+        ∀ b ∈ cellVertices ε η (closedBall 0 ρ), matedObstacle m ε η ρ t b ≤ u b} := by
     refine ⟨Function.update (fun _ => 0) a (-(|β| + 1)), ⟨fun b hb => ?_, fun b hb => ?_⟩, by simp⟩
     · have hba : b ≠ a := fun h => ha (h ▸ ballInterior_subset_cellVertices_closedBall hb)
       rw [mLaplacian_update_zero _ hba]
-      have h2 : 0 ≤ ((mdeg (cellMult ε η) b : ℕ) : ℝ)⁻¹ := inv_nonneg.2 (Nat.cast_nonneg _)
-      have h3 : (cellMult ε η b a : ℝ) * -(|β| + 1) ≤ 0 :=
+      have h2 : 0 ≤ ((mdeg m b : ℕ) : ℝ)⁻¹ := inv_nonneg.2 (Nat.cast_nonneg _)
+      have h3 : (m b a : ℝ) * -(|β| + 1) ≤ 0 :=
         mul_nonpos_of_nonneg_of_nonpos (Nat.cast_nonneg _) (by linarith)
       exact (mul_nonpos_of_nonneg_of_nonpos h2 h3).trans (inv_nonneg.2 (Nat.cast_nonneg _))
     · have hba : b ≠ a := fun h => ha (h ▸ hb)
@@ -80,7 +80,7 @@ theorem matedLeastSupersolution_eq_zero_of_not_mem (hε : 0 < ε) (ht : 0 < t) {
 
 /-- `u^ε_t = w̃^ε_t - φ` on all of `ℤ`, `φ = -(t ε⁻¹) g^ε_{B_ρ}(0, ·)`. -/
 theorem stoppedOdometer_eq_sub (hε : 0 < ε) (ht : 0 < t) (a : ℤ) :
-    stoppedOdometer ε η ρ t a = matedLeastSupersolution ε η ρ t a - matedObstacle ε η ρ t a := by
+    stoppedOdometer m ε η ρ t a = matedLeastSupersolution m ε η ρ t a - matedObstacle m ε η ρ t a := by
   by_cases haW : a ∈ cellVertices ε η (closedBall 0 ρ)
   · simp only [stoppedOdometer, haW, ↓reduceIte]
   · have hV : a ∉ ballInterior ε η ρ := fun h => haW (ballInterior_subset_cellVertices_closedBall h)
@@ -88,15 +88,15 @@ theorem stoppedOdometer_eq_sub (hε : 0 < ε) (ht : 0 < t) (a : ℤ) :
       matedObstacle_eq_zero_of_not_mem hV, sub_zero]
 
 /-- `Δ^ε u^ε_t = Δ^ε w̃^ε_t + (t ε⁻¹) Δ^ε g^ε_{B_ρ}(0, ·)` (line 2962) on a locally finite map. -/
-theorem mLaplacian_stoppedOdometer (hε : 0 < ε) (ht : 0 < t) (hlf : IsLocallyFiniteMult (cellMult ε η)) (a : ℤ) :
-    mLaplacian (cellMult ε η) (stoppedOdometer ε η ρ t) a =
-      mLaplacian (cellMult ε η) (matedLeastSupersolution ε η ρ t) a +
-        t / ε * mLaplacian (cellMult ε η) (greenKernel (cellMult ε η) (ballInterior ε η ρ) 0) a := by
-  have hfun : stoppedOdometer ε η ρ t = fun b => matedLeastSupersolution ε η ρ t b - matedObstacle ε η ρ t b :=
+theorem mLaplacian_stoppedOdometer (hε : 0 < ε) (ht : 0 < t) (hlf : IsLocallyFiniteMult m) (a : ℤ) :
+    mLaplacian m (stoppedOdometer m ε η ρ t) a =
+      mLaplacian m (matedLeastSupersolution m ε η ρ t) a +
+        t / ε * mLaplacian m (greenKernel m (ballInterior ε η ρ) 0) a := by
+  have hfun : stoppedOdometer m ε η ρ t = fun b => matedLeastSupersolution m ε η ρ t b - matedObstacle m ε η ρ t b :=
     funext (stoppedOdometer_eq_sub hε ht)
-  have hφ : matedObstacle ε η ρ t = fun b => -(t / ε) * greenKernel (cellMult ε η) (ballInterior ε η ρ) 0 b := rfl
+  have hφ : matedObstacle m ε η ρ t = fun b => -(t / ε) * greenKernel m (ballInterior ε η ρ) 0 b := rfl
   rw [hfun, mLaplacian_eq_div hlf, lapSum_sub hlf, hφ, lapSum_const_mul hlf, mLaplacian_eq_div hlf,
     mLaplacian_eq_div hlf]
   ring
 
-end MatedCRT
+end MatedCRT.Sec7
