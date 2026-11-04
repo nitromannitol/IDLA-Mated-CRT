@@ -14,14 +14,16 @@ changes N1, `D` open (E-c1-4) and N3 listed in MatedCRT/Steps/Sec3/DiscretePoten
 * `DiscreteHolderContinuityCorrectedStep` (Lemma 3.2 in the corrected form of review-L32);
 * `AdjacentCellsMeetAeStep` (the cells of adjacent vertices intersect; DMS14 Lemma 8.8).
 
-`discretePotentialTightnessCorrected_of_inputs` discharges `AdjacentCellsMeetAeStep` with `adjacentCellsMeetAeStep`
-(MatedCRT/Proofs/MatingOfTrees/AdjacentCells.lean). Its remaining hypotheses are:
+`discretePotentialTightnessCorrected_of_boundedExitTime` discharges `AdjacentCellsMeetAeStep` with
+`adjacentCellsMeetAeStep` (MatedCRT/Proofs/MatingOfTrees/AdjacentCells.lean). Its remaining hypotheses are:
 
 * the External input `MepsScalingInput`;
 * the Draft statements of Lemmas 2.17 and 2.18;
 * the corrected Lemma 3.2.
 
-`discretePotentialTightnessCorrected_of_volumeGrowth` replaces Lemma 2.17 by Lemma 2.7 (`boundedExitTimeRV_of_steps`).
+The final form `discretePotentialTightnessCorrected_of_inputs`
+(MatedCRT/Proofs/Sec3/DiscretePotentialTightness/Final.lean) replaces Lemma 2.17 by Lemma 2.7
+(`boundedExitTimeRV_of_steps`).
 -/
 
 namespace MatedCRT
@@ -39,16 +41,9 @@ theorem discretePotentialTightness_of_inputs {𝒮 : SpaceFillingSLEModel} (hm :
 * `DiscreteHolderContinuityCorrectedStep` (Lemma 3.2, corrected; GMS19 Theorem 3.9).
 
 The local finiteness of the mated-CRT map comes from `adjacentCellsMeetAeStep`. -/
-theorem discretePotentialTightnessCorrected_of_inputs {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingInput 𝒮)
-    (h217 : BoundedExitTimeRVStmt) (h218 : ExitTimeUpperBoundStmt 𝒮)
+theorem discretePotentialTightnessCorrected_of_boundedExitTime {𝒮 : SpaceFillingSLEModel}
+    (hm : MepsScalingInput 𝒮) (h217 : BoundedExitTimeRVStmt) (h218 : ExitTimeUpperBoundStmt 𝒮)
     (hH : DiscreteHolderContinuityCorrectedStep 𝒮) : DiscretePotentialTightnessCorrectedStmt 𝒮 :=
   discretePotentialTightness_of_inputs hm h217 h218 hH (adjacentCellsMeetAeStep 𝒮)
-
-/-- **Lemma 3.1 (corrected)** with Lemma 2.17 derived from Lemma 2.7 (`VolumeGrowthStmt`, through
-`boundedExitTimeRV_of_steps`). The inputs are `MepsScalingInput`, Lemmas 2.7 and 2.18 and the corrected Lemma 3.2. -/
-theorem discretePotentialTightnessCorrected_of_volumeGrowth {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingInput 𝒮)
-    (h27 : VolumeGrowthStmt) (h218 : ExitTimeUpperBoundStmt 𝒮)
-    (hH : DiscreteHolderContinuityCorrectedStep 𝒮) : DiscretePotentialTightnessCorrectedStmt 𝒮 :=
-  discretePotentialTightnessCorrected_of_inputs hm (boundedExitTimeRV_of_steps h27) h218 hH
 
 end MatedCRT
