@@ -15,6 +15,8 @@ verdicts in the inbox entry of 13:55 UTC). Line numbers refer to the published s
   `m_eps^{-1} sum_x G^eps(a_y, x) f(eta(x)) -> m_0^{-1} int 2 G f dmu_h`; the printed `m_0` holds iff `m_0^2 = 2`, false
   for `gamma^2 <= 0.8` (annealed `E[tau_LBM] = 2^{gamma^2-1}/(2-gamma^2)^2`, so `m_0 <= 1.21`). Downstream (Prop 4.2,
   Sections 5, 7, Theorems 1.4, 1.6) uses the constant only qualitatively. Lean: `MatedCRTEnv.c₀` (Defs/Setting.lean).
+- Not yet applied in the corrected draft (ESCALATIONS E-m1-1, found by m1, 2026-11-04): the proof of Lemma 3.3 still
+  prints `m_0/6` at corrected l.1219 and l.1222 (identification of the limit); both should read `c_0/6`.
 
 ## [C2] Maximum principle for nonempty finite A (ESCALATIONS E-A4, CONFIRMED)
 - Where: Lemma 2.13 (lemma:maximum-principle, l.825).  Published: "For every connected subset A".  Corrected: "For every nonempty finite subset A".
