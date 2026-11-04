@@ -76,6 +76,25 @@ theorem admissible_balls_of_shell_separation
   refine ⟨w, hwa, Metric.mem_thickening_iff.mpr ⟨x, hxΘ, ?_⟩⟩
   simpa [dist_comm] using hx
 
+/-- Cells meeting an outer thickening stay inside the ambient margin when the
+previous filled shell, the thickening radius, and cell diameters fit there. -/
+theorem fillCells_subset_ball_of_thickened_shell
+    {ε ρ s R u D : ℝ} {η : ℝ → ℂ} {A Θ : Set ℤ}
+    (hη : Continuous η) (hΘ : fillCells ε η Θ ⊆ ball 0 R)
+    (hA : A ⊆ cellVertices ε η (thickening u (fillCells ε η Θ)))
+    (hdiam : ∀ a ∈ A, diam (cell ε η a) ≤ D)
+    (hmargin : R + u + D + s ≤ ρ) :
+    fillCells ε η A ⊆ ball 0 (ρ - s) := by
+  intro w hw
+  obtain ⟨a, ha, hwa⟩ := mem_iUnion₂.mp hw
+  obtain ⟨y, hya, hy⟩ := hA ha
+  obtain ⟨x, hxΘ, hyx⟩ := Metric.mem_thickening_iff.mp hy
+  have hx := hΘ hxΘ
+  have hwy : dist w y ≤ D :=
+    (dist_le_diam_of_mem (isCompact_Icc.image hη).isBounded hwa hya).trans (hdiam a ha)
+  rw [mem_ball] at hx ⊢
+  linarith [dist_triangle w y (0 : ℂ), dist_triangle y x (0 : ℂ)]
+
 /-- A mass bound for admissible balls yields the strict local-count
 condition after doubling the test radius. The geometric inclusion is needed
 only at points of occupied cells in `A`. -/
@@ -93,5 +112,27 @@ theorem local_count_lt_of_admissible_mass_bound
   intro w hw
   rw [hradius]
   exact hmass w (cellVertices_ball_subset_ambient_sdiff (hgeom w hw))
+
+/-- The occupied annulus obeys the strict local-count hypothesis when the
+preceding shell and its thickening fit within the ambient-domain margin.
+The test radius is half the radius of the mass-bound ball. -/
+theorem shell_local_count_lt_of_mass_bound
+    {ε ρ s R u D c M T : ℝ} {η : ℝ → ℂ} {A Λ Θ : Set ℤ}
+    (hη : Continuous η) (hΛ : Λ.Finite) (hAΛ : A ⊆ Λ)
+    (hM : 0 ≤ M) (hMT : M < T)
+    (hΘ : fillCells ε η Θ ⊆ ball 0 R)
+    (hinner : A ⊆ (cellVertices ε η (thickening s (fillCells ε η Θ)))ᶜ)
+    (houter : A ⊆ cellVertices ε η (thickening u (fillCells ε η Θ)))
+    (hdiam : ∀ a ∈ A, diam (cell ε η a) ≤ D)
+    (hmargin : R + u + D + s ≤ ρ)
+    (hmass : ∀ w : ℂ,
+      cellVertices ε η (ball w s) ⊆ cellVertices ε η (ball 0 ρ) \ Θ →
+      ((cellVertices ε η (ball w (c * s)) ∩ Λ).ncard : ℝ) ≤ M) :
+    ∀ z : ℂ, ((A ∩ cellVertices ε η (ball z (c * s / 2))).ncard : ℝ) < T := by
+  apply local_count_lt_of_admissible_mass_bound (ρ := ρ) (s := s) (c := c) (Θ := Θ)
+    hΛ hAΛ hM hMT (by ring)
+  · exact admissible_balls_of_shell_separation hinner
+      (fillCells_subset_ball_of_thickened_shell hη hΘ houter hdiam hmargin)
+  · exact hmass
 
 end MatedCRT.Sec7
