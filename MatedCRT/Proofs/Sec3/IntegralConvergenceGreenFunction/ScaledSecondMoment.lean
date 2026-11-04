@@ -112,4 +112,14 @@ theorem scaled_exitTime_tail_polyHighProb {𝒮 : SpaceFillingSLEModel}
   exact (scaled_exitTime_tail_le_secondMoment _ _ _ _ T hT).trans
     (hω D hD hDsub hμ a ha)
 
+/-- Enlarging the domain controls the thickened logarithmic potential by the
+largest-exit-time random variable. -/
+theorem thickened_logPotential_le_largestExitTimeRV (μ : Measure ℂ)
+    (D E : Set ℂ) (δ : ℝ) (hD : D ⊆ E) (hδ : thickening δ D ⊆ E) :
+    (⨆ z ∈ D, ∫⁻ w in thickening δ D,
+      ENNReal.ofReal (Real.log (1 / ‖z - w‖) + 1) ∂μ) ≤ largestExitTimeRV μ E := by
+  unfold largestExitTimeRV
+  refine iSup₂_le fun z hz => ?_
+  exact (lintegral_mono_set hδ).trans (le_iSup_of_le z (le_iSup_of_le (hD hz) le_rfl))
+
 end MatedCRT
