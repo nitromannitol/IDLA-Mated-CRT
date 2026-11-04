@@ -161,4 +161,12 @@ theorem obstacleLimitMaximumPrinciple (𝒮 : SpaceFillingSLEModel) :
   dsimp [f, v] at hf
   linarith
 
+/-- The regularity and maximum-principle comparisons identify every candidate
+limit with the scaled continuum least supersolution. -/
+theorem obstacleLimitUniqueness (𝒮 : SpaceFillingSLEModel) :
+    ObstacleLimitUniquenessStep 𝒮 :=
+  obstacleLimitUniqueness_of_steps 𝒮
+    (obstacleLimitRegularity_of_steps 𝒮 (matedCRTScalingConstantPositive 𝒮))
+    (obstacleLimitMaximumPrinciple 𝒮)
+
 end MatedCRT
