@@ -49,4 +49,28 @@ theorem log_initial_target_ratio_le_halving_horizon
     _ = ((p + b) / (ω * Real.log 2)) * (1 + |Real.log a|) * Real.log 2 := by
       field_simp
 
+/-- Polynomial initial and target scales admit a cubic-log shell horizon whose
+halving blocks reduce the initial maximum below the target. -/
+theorem exists_polynomial_scale_halving_horizon
+    (ε a x B p b ω s : ℝ) (hε : 0 < ε) (hε1 : ε ≤ 1)
+    (ha : 0 < a) (hω : 0 < ω) (haε : a ≤ ε ^ ω)
+    (hx : 0 < x) (hB : 0 < B) (hxupper : x ≤ ε ^ (-p))
+    (hBlower : ε ^ b ≤ B) (hpb : 0 ≤ p + b) (hs : 0 < s) :
+    ∃ M N : ℕ,
+      x * (1 / 2 : ℝ) ^ M ≤ B ∧
+      2 * (1 + |Real.log a|) ^ 2 < (N : ℝ) * s ∧
+      ((M * N : ℕ) : ℝ) ≤
+        ((p + b) / (ω * Real.log 2) + 2) * (2 / s + 2) *
+          (1 + |Real.log a|) ^ 3 := by
+  let C := (p + b) / (ω * Real.log 2)
+  have hC : 0 ≤ C := by
+    dsimp [C]
+    exact div_nonneg hpb (mul_nonneg hω.le (Real.log_nonneg (by norm_num)))
+  obtain ⟨M, N, hM, hN, hbound⟩ := exists_cubic_log_halving_horizon a s C hs hC
+  have hratio : Real.log (x / B) ≤ C * (1 + |Real.log a|) * Real.log 2 :=
+    log_initial_target_ratio_le_halving_horizon ε a x B p b ω hε hε1 ha hω
+      haε hx hB hxupper hBlower hpb
+  exact ⟨M, N, halving_blocks_reach_threshold x B (1 + |Real.log a|) C M hx hB
+    hratio hM.le, hN, hbound⟩
+
 end MatedCRT.Sec7
