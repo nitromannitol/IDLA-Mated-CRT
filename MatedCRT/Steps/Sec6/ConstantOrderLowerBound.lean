@@ -27,6 +27,39 @@ namespace MatedCRT
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric
 open scoped ENNReal
 
+/-- **Lemma 6.7, route (b) of E-A10** (lemma:constant-order-lower-bound, line 2410; ESCALATIONS "STATEMENT CHANGES
+(b)"). The Draft statement `ConstantOrderLowerBoundStmt` with the absorption probability `s₂` replaced by
+`s₂ / (1 + |log r|)²`: the proof (lines 2449-2461) passes the bound `1 - s₂ / (1 + |log r|)²` of Lemma 6.8 in its
+route (b) form (`ConstantOrderLowerBoundDivLogStmt`) through unchanged. -/
+def ConstantOrderLowerBoundLogStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∀ βm : ℝ, (2 + γ) ^ 2 / 2 < βm → ∃ ω₀ : ℝ, 0 < ω₀ ∧
+  ∀ s₀ : ℝ, 0 < s₀ → s₀ < 1 → ∃ s₁ s₂ : ℝ, 0 < s₁ ∧ s₁ < 1 ∧ 0 < s₂ ∧ s₂ < 1 ∧
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∃ dd : Ω → ℝ, Measurable[S.fieldSigma] dd ∧ (∀ ω, 0 < dd ω) ∧
+    ProbTendsToOne S.P fun ε => {ω | ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ dd ω → ∀ Θ : Set ℤ,
+      closure (fillCells ε (S.η ω) Θ) ⊆ ball 0 (ρ / 2) → ball 0 s₀ ⊆ fillCells ε (S.η ω) Θ →
+      ∀ a ∈ vClosure (S.mult ε ω) Θ, ∀ S' ⊆ cellVertices ε (S.η ω) (thickening r (fillCells ε (S.η ω) Θ)),
+        ((S' \ Θ).ncard : ℝ) < s₁ * r ^ (2 * βm) / ε →
+        ENNReal.ofReal (s₂ / (1 + |Real.log r|) ^ 2) ≤ srwLaw (S.mult ε ω) a {x | ∃ n : ℕ,
+          (n : ℕ∞) < vExitTime (cellVertices ε (S.η ω) (thickening r (fillCells ε (S.η ω) Θ))) x ∧
+          x n ∈ cellVertices ε (S.η ω) (thickening r (fillCells ε (S.η ω) Θ)) \ (S' ∪ Θ)}}
+
+/-- The drafted Lemma 6.7 implies its route (b) form (the probability only decreases). -/
+theorem ConstantOrderLowerBoundStmt.logLoss {𝒮 : SpaceFillingSLEModel} (h : ConstantOrderLowerBoundStmt 𝒮) :
+    ConstantOrderLowerBoundLogStmt 𝒮 := by
+  intro γ hγ hγ2 ρ hρ hρ1 βm hβm
+  obtain ⟨ω₀, hω₀, h⟩ := h γ hγ hγ2 ρ hρ hρ1 βm hβm
+  refine ⟨ω₀, hω₀, fun s₀ hs₀ hs₀1 => ?_⟩
+  obtain ⟨s₁, s₂, hs₁, hs₁1, hs₂, hs₂1, h⟩ := h s₀ hs₀ hs₀1
+  refine ⟨s₁, s₂, hs₁, hs₁1, hs₂, hs₂1, fun Ω _ S hS => ?_⟩
+  obtain ⟨dd, hdd, hddpos, hE⟩ := h Ω S hS
+  refine ⟨dd, hdd, hddpos, ?_⟩
+  refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hE (fun _ => zero_le)
+    (fun ε => measure_mono (compl_subset_compl.2 fun ω hω => ?_))
+  intro r hr1 hr2 Θ hΘ1 hΘ2 a ha S' hS' hcard
+  have hL : 1 ≤ (1 + |Real.log r|) ^ 2 := one_le_pow₀ (le_add_of_nonneg_right (abs_nonneg _))
+  exact (ENNReal.ofReal_le_ofReal (div_le_self hs₂.le hL)).trans (hω r hr1 hr2 Θ hΘ1 hΘ2 a ha S' hS' hcard)
+
 /-- Step (strong Markov property of simple random walk at the hitting time of `B`, any multigraph `m` on `ℤ`): if
 the walk started at each `b ∈ B` lies in the measurable path event `F` with probability at most `c`, then the walk
 started at `a` hits `B` and, from its hitting position on, lies in `F` with probability at most `c`. -/
