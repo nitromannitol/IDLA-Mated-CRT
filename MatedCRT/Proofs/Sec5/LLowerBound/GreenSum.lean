@@ -73,6 +73,19 @@ theorem greenSum_lower_of_count {m : ℤ → ℤ → ℕ} {D C A : Set ℤ} {a :
   rw [hpow']
   linarith
 
+/-- The logarithmic kernel estimate is at least `1/2` inside a sufficiently
+small ball. -/
+theorem half_le_greenKernel_of_log {C x g : ℝ} (hC : 0 < C)
+    (hx : Real.exp (3 / 2 * C) ≤ x) (hg : C⁻¹ * Real.log x - 1 ≤ g) :
+    (1 / 2 : ℝ) ≤ g := by
+  have hlog : 3 / 2 * C ≤ Real.log x := by
+    rw [← Real.log_exp (3 / 2 * C)]
+    exact Real.log_le_log (Real.exp_pos _) hx
+  have hscaled : 3 / 2 ≤ C⁻¹ * Real.log x := by
+    rw [le_inv_mul_iff₀ hC]
+    linarith
+  linarith
+
 /-- Lemma 2.9 with the constant test function gives a lower bound on the
 number of cells meeting `D`. The choice of representatives follows the
 counting argument in the Lemma 6.8 development. -/
