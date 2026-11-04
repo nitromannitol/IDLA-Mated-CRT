@@ -74,4 +74,24 @@ theorem MatedCRTEnv.IsValid.exists_measurable_matedObstacle
   filter_upwards [hVa] with ω hω
   simp only [matedObstacle, ballInterior, hω]
 
+/-- The rescaled discrete obstacle has a jointly measurable version. -/
+theorem MatedCRTEnv.IsValid.exists_measurable_rescaled_matedObstacle
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
+    {ε : ℝ} (hε : 0 < ε) (ρ t m : ℝ) :
+    ∃ f : Ω × ℂ → ℝ, Measurable f ∧ ∀ᵐ ω ∂S.P, ∀ x,
+      f (ω, x) = rescale m ε (S.η ω)
+        (matedObstacle (S.mult ε ω) ε (S.η ω) ρ t) x := by
+  classical
+  choose g hg hga using fun a => hS.exists_measurable_matedObstacle ε ρ t a
+  let u : Ω → ℤ → ℝ := fun ω a => g a ω
+  obtain ⟨f, hf, hfa⟩ := hS.exists_measurable_rescale hε m u hg
+  refine ⟨f, hf, ?_⟩
+  filter_upwards [hfa, ae_all_iff.mpr hga] with ω h1 h2
+  intro x
+  rw [h1 x]
+  congr 1
+  funext a
+  exact h2 a
+
 end MatedCRT
