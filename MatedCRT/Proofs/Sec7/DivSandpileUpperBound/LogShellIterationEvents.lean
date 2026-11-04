@@ -15,7 +15,7 @@ theorem iterated_shell_contracts_of_mass_and_log_survival_events
     {η : ℝ → ℂ} (Θ : ℕ → Set ℤ) (r : ℕ → ℝ) (n : ℕ)
     (hε : 0 < ε) (hε1 : ε ≤ 1) (hω : ω₀ ≤ βₘ)
     (ht : 0 < t) (hc : 0 < c) (hc' : c ≤ 1)
-    (hs₂0 : 0 ≤ s₂) (hs₂ : s₂ ≤ 1)
+    (_hs₂0 : 0 ≤ s₂) (hs₂ : s₂ ≤ 1)
     (hη : Continuous η) (hD : 0 ≤ D) (hR₀ : 0 ≤ R₀) (hR : R ≤ ρ)
     (hr : ∀ k < n, 0 < r k) (hsymm : ∀ a b, m a b = m b a)
     (hlf : ∀ a, {b | m a b ≠ 0}.Finite) (hsucc : ∀ k : ℤ, m k (k + 1) ≠ 0)
@@ -62,8 +62,7 @@ theorem iterated_shell_contracts_of_mass_and_log_survival_events
     ∀ k < n, B < (⨆ b : vBoundary m (Θ k), stoppedOdometer m ε η ρ t b) →
       (∑ j ∈ Finset.range k, r j) + ((k : ℝ) + 1) * (2 * D) ≤ δ →
       (∀ j < k, (⨆ b : vBoundary m (Θ (j + 1)), stoppedOdometer m ε η ρ t b) ≤
-        (1 - s₂ / (1 + |Real.log ((c / 8) * r j)|) ^ 2) *
-          (⨆ b : vBoundary m (Θ j), stoppedOdometer m ε η ρ t b)) →
+        (⨆ b : vBoundary m (Θ j), stoppedOdometer m ε η ρ t b)) →
       (⨆ b : vBoundary m (Θ (k + 1)), stoppedOdometer m ε η ρ t b) ≤
       (1 - s₂ / (1 + |Real.log ((c / 8) * r k)|) ^ 2) *
         (⨆ b : vBoundary m (Θ k), stoppedOdometer m ε η ρ t b) := by
@@ -88,12 +87,7 @@ theorem iterated_shell_contracts_of_mass_and_log_survival_events
     exact Real.iSup_nonneg fun b => stoppedOdometer_nonneg hε ht b
   have hprev' : ∀ j < k, O (j + 1) ≤ (1 : ℝ) * O j := by
     intro j hj
-    have hp : 0 ≤ s₂ / (1 + |Real.log ((c / 8) * r j)|) ^ 2 :=
-      div_nonneg hs₂0 (sq_nonneg _)
-    have hmul := mul_nonneg hp (hO j (by omega))
-    have h := hprev j hj
-    dsimp only [O] at h ⊢
-    nlinarith
+    simpa only [one_mul, O] using hprev j hj
   have hrad : (O k * ε * K) ^ (1 / β) ≤ r k :=
     shifted_shell_radii_control_current_maxima O r ε K (1 / β) 1 k
       hO hε.le hK (by positivity) (by norm_num) hfirst
