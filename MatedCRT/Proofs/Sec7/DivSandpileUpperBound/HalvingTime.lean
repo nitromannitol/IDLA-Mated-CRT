@@ -57,4 +57,34 @@ theorem exists_halving_before_of_log_loss
     have h := hstep k hk hOk
     nlinarith
 
+/-- A positive lower scale bounds the logarithmic loss for radii at most one. -/
+theorem log_loss_le_of_radius_lower_bound {a r : ℝ}
+    (ha : 0 < a) (har : a ≤ r) (hr : r ≤ 1) :
+    1 + |Real.log r| ≤ 1 + |Real.log a| := by
+  have hrpos : 0 < r := lt_of_lt_of_le ha har
+  have ha1 : a ≤ 1 := har.trans hr
+  have hlog := Real.log_le_log ha har
+  rw [abs_of_nonpos (Real.log_nonpos hrpos.le hr),
+    abs_of_nonpos (Real.log_nonpos ha.le ha1)]
+  linarith
+
+/-- A shell radius floor gives an explicit logarithmic halving-time bound,
+and the chosen index is the first time that the maximum has halved. -/
+theorem exists_first_halving_before_of_radius_floor
+    (O : ℕ → ℝ) (r : ℕ → ℝ) (s a : ℝ) (N : ℕ)
+    (hO : 0 < O 0) (hs : 0 < s) (ha : 0 < a)
+    (hN : 2 * (1 + |Real.log a|) ^ 2 < (N : ℝ) * s)
+    (hr : ∀ k < N, a ≤ r k ∧ r k ≤ 1)
+    (hstep : ∀ k < N, O 0 / 2 < O k →
+      O (k + 1) ≤ (1 - s / (1 + |Real.log (r k)|) ^ 2) * O k) :
+    ∃ τ ≤ N, O τ ≤ O 0 / 2 ∧ ∀ k < τ, O 0 / 2 < O k := by
+  have hex := exists_halving_before_of_log_loss O r s (1 + |Real.log a|) N
+    hO hs (by positivity) hN
+    (fun k hk => log_loss_le_of_radius_lower_bound ha (hr k hk).1 (hr k hk).2) hstep
+  let τ := Nat.find hex
+  refine ⟨τ, (Nat.find_spec hex).1, (Nat.find_spec hex).2, ?_⟩
+  intro k hk
+  have hkN : k ≤ N := (Nat.le_of_lt hk).trans (Nat.find_spec hex).1
+  exact lt_of_not_ge (fun hk' => Nat.find_min hex hk ⟨hkN, hk'⟩)
+
 end MatedCRT.Sec7
