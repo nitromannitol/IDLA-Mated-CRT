@@ -70,4 +70,20 @@ theorem ofReal_integral_green_mul_bump_le_largestExitTimeRV
         (HarmonicBalls.greenFunction_nonneg (isBounded_closedBall.subset hO) x w) (hφ0 w)
   · simp [integral_undef hint]
 
+/-- Finiteness of the largest-exit-time quantity supplies the local
+integrability of a measurable Green kernel at its pole. -/
+theorem green_integrableOn_small_ball_of_largestExitTimeRV
+    (μ : Measure ℂ) {O : Set ℂ} {x : ℂ} {δ : ℝ}
+    (hδ : 0 < δ) (hδ1 : δ ≤ 1) (hO : O ⊆ closedBall x 2) (hx : x ∈ O)
+    (hsm : AEStronglyMeasurable (HarmonicBalls.greenFunction O x) (μ.restrict (ball x δ)))
+    (hM : largestExitTimeRV μ (ball x δ) < ⊤) :
+    IntegrableOn (HarmonicBalls.greenFunction O x) (ball x δ) μ := by
+  have hnonneg : 0 ≤ᵐ[μ.restrict (ball x δ)] HarmonicBalls.greenFunction O x :=
+    ae_of_all _ (HarmonicBalls.greenFunction_nonneg (isBounded_closedBall.subset hO) x)
+  have hbound := lintegral_green_mul_bump_le_largestExitTimeRV μ (fun _ => 1)
+    hδ hδ1 hO hx (fun _ => le_rfl)
+  have hfinite : (∫⁻ w in ball x δ, ENNReal.ofReal (HarmonicBalls.greenFunction O x w) ∂μ) < ⊤ := by
+    simpa only [mul_one] using hbound.trans_lt hM
+  exact ⟨hsm, (hasFiniteIntegral_iff_ofReal hnonneg).2 hfinite⟩
+
 end MatedCRT
