@@ -1,4 +1,4 @@
-import MatedCRT.Proofs.Sec4.ConvergenceDivisible.ClusterExitMeasurable
+import MatedCRT.Proofs.Sec4.ConvergenceDivisible.RandomSetRegularization
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.CellSampling
 
 /-! # Reduction of the convergence event measurability -/
@@ -18,7 +18,8 @@ theorem MatedCRTEnv.IsValid.nullMeasurableSet_convergenceError_of_versions
     (Λ : Ω → ℝ → Set ℂ)
     (hΛ : ∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω))
     (hlf : ∀ᵐ ω ∂S.P, ∀ b, {c | S.mult ε ω b c ≠ 0}.Finite)
-    (hmem : ∀ (q : ℚ) (z : ℂ), NullMeasurableSet {ω | z ∈ Λ ω q} S.P)
+    (hmem : ∀ (q : ℚ), 0 < (q : ℝ) → ∀ (z : ℂ),
+      NullMeasurableSet {ω | z ∈ Λ ω q} S.P)
     (f : Ω × ℂ → ℝ) (hf : Measurable f)
     (hfae : ∀ᵐ ω ∂S.P, ∀ x ∈ ball (0 : ℂ) ρ,
       f (ω, x) = S.c₀ / 6 * leastSupersolution (S.μ ω) ρ 0 t x) :
@@ -48,5 +49,30 @@ theorem MatedCRTEnv.IsValid.nullMeasurableSet_convergenceError_of_versions
     exact ⟨he'.mp hEω, x, hx, by simpa [hfω x hx] using hd⟩
   · rintro ⟨hT, x, hx, hd⟩
     exact ⟨he'.mpr hT, x, hx, by simpa [hfω x hx] using hd⟩
+
+/-- Pointwise measurable continuum least supersolutions supply the harmonic-ball
+membership needed in the convergence event. -/
+theorem MatedCRTEnv.IsValid.nullMeasurableSet_convergenceError_of_leastSupersolutions
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
+    (hγ : 0 < γ) (hγ' : γ < 2) {ρ t δ ε : ℝ}
+    (hρ : 0 < ρ) (ht : 0 < t) (hε : 0 < ε)
+    (Λ : Ω → ℝ → Set ℂ)
+    (hΛ : ∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω))
+    (hlf : ∀ᵐ ω ∂S.P, ∀ b, {c | S.mult ε ω b c ≠ 0}.Finite)
+    (hv : ∀ (q : ℚ), 0 < (q : ℝ) → ∀ (n : ℕ) (z : ℂ), AEMeasurable
+      (fun ω => leastSupersolution (S.μ ω) ((n : ℝ) + 1) 0 q z) S.P)
+    (f : Ω × ℂ → ℝ) (hf : Measurable f)
+    (hfae : ∀ᵐ ω ∂S.P, ∀ x ∈ ball (0 : ℂ) ρ,
+      f (ω, x) = S.c₀ / 6 * leastSupersolution (S.μ ω) ρ 0 t x) :
+    NullMeasurableSet {ω | t < clusterExitTime (Λ ω) ρ ∧ ∃ x ∈ ball (0 : ℂ) ρ,
+      δ < |rescaledMatedLeastSupersolution S ρ t ε ω x -
+        S.c₀ / 6 * leastSupersolution (S.μ ω) ρ 0 t x|} S.P := by
+  apply hS.nullMeasurableSet_convergenceError_of_versions hγ hγ' hρ ht hε Λ hΛ hlf
+  · intro q hq z
+    exact nullMeasurableSet_mem_coneFamily_of_leastSupersolutions S.P S.μ Λ q hq hΛ
+      (hv q hq) z
+  · exact hf
+  · exact hfae
 
 end MatedCRT

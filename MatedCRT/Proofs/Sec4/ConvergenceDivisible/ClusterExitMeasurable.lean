@@ -62,20 +62,20 @@ theorem nullMeasurableSet_lt_clusterExitTime_of_membership
     (Λ : Ω → ℝ → Set ℂ)
     (hfam : ∀ᵐ ω ∂P, IsConeHarmonicBallFamily (μ ω) (Λ ω))
     (hloc : ∀ᵐ ω ∂P, IsLocallyFiniteMeasure (μ ω))
-    (hmem : ∀ (q : ℚ) (z : ℂ), NullMeasurableSet {ω | z ∈ Λ ω q} P)
+    (hmem : ∀ (q : ℚ), 0 < (q : ℝ) → ∀ (z : ℂ), NullMeasurableSet {ω | z ∈ Λ ω q} P)
     (ρ t : ℝ) (ht : 0 < t) :
     NullMeasurableSet {ω | t < clusterExitTime (Λ ω) ρ} P := by
   classical
   obtain ⟨C, hCcount, hCdense⟩ := TopologicalSpace.exists_countable_dense ℂ
   have : Countable C := hCcount.to_subtype
   let K : ℚ → Set Ω := fun q => {ω | ∀ z : C, (z : ℂ) ∈ Λ ω q → (z : ℂ) ∈ closedBall 0 (ρ / 3)}
-  have hK : ∀ q, NullMeasurableSet (K q) P := by
-    intro q
+  have hK : ∀ q : ℚ, 0 < (q : ℝ) → NullMeasurableSet (K q) P := by
+    intro q hq
     have hKz : ∀ z : C, NullMeasurableSet {ω | (z : ℂ) ∈ Λ ω q → (z : ℂ) ∈ closedBall 0 (ρ / 3)} P := by
       intro z
       by_cases hz : (z : ℂ) ∈ closedBall 0 (ρ / 3)
       · simp [hz]
-      · convert (hmem q z).compl using 1
+      · convert (hmem q hq z).compl using 1
         ext ω
         simp [hz]
     convert NullMeasurableSet.iInter hKz using 1
@@ -86,7 +86,7 @@ theorem nullMeasurableSet_lt_clusterExitTime_of_membership
     have hq : ∀ q : ℚ, NullMeasurableSet {ω | t < q ∧ ω ∈ K q} P := by
       intro q
       by_cases htq : t < q
-      · simpa [htq] using hK q
+      · simpa [htq] using hK q (ht.trans htq)
       · simp [htq]
     convert NullMeasurableSet.iUnion hq using 1
     ext ω
