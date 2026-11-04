@@ -29,4 +29,24 @@ theorem log_initial_target_ratio_le_of_polynomial_bounds
   apply (le_div_iff₀ hω).2
   nlinarith
 
+/-- The polynomial estimate supplies the exact logarithmic ratio hypothesis
+used to choose the number of shell-halving blocks. -/
+theorem log_initial_target_ratio_le_halving_horizon
+    (ε a x B p b ω : ℝ) (hε : 0 < ε) (hε1 : ε ≤ 1)
+    (ha : 0 < a) (hω : 0 < ω) (haε : a ≤ ε ^ ω)
+    (hx : 0 < x) (hB : 0 < B) (hxupper : x ≤ ε ^ (-p))
+    (hBlower : ε ^ b ≤ B) (hpb : 0 ≤ p + b) :
+    Real.log (x / B) ≤
+      ((p + b) / (ω * Real.log 2)) * (1 + |Real.log a|) * Real.log 2 := by
+  have hlog2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  have hc : 0 ≤ (p + b) / ω := div_nonneg hpb hω.le
+  calc
+    Real.log (x / B) ≤ ((p + b) / ω) * |Real.log a| :=
+      log_initial_target_ratio_le_of_polynomial_bounds ε a x B p b ω hε hε1 ha hω
+        haε hx hB hxupper hBlower hpb
+    _ ≤ ((p + b) / ω) * (1 + |Real.log a|) :=
+      mul_le_mul_of_nonneg_left (by linarith) hc
+    _ = ((p + b) / (ω * Real.log 2)) * (1 + |Real.log a|) * Real.log 2 := by
+      field_simp
+
 end MatedCRT.Sec7
