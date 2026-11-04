@@ -1,4 +1,5 @@
 import MatedCRT.Draft.Section5
+import MatedCRT.Proofs.IDLA.Counts
 
 /-!
 # Lemma 5.2: carving into steps (proof at lines 2132-2229; Lawler-Bramson-Griffeath, LBG92 Section 3)
@@ -36,30 +37,10 @@ namespace MatedCRT
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric
 open scoped ENNReal NNReal
 
-/-! ## Quenched objects -/
+/-! ## Steps
 
-/-- `P^z[τ_a < T_O]`: the probability that simple random walk on `m` started at `z` hits `a` before exiting `O`
-(eq:markov-chain-renewal, line 2176). -/
-noncomputable def hitBeforeExitProb (m : ℤ → ℤ → ℕ) (O : Set ℤ) (a z : ℤ) : ℝ :=
-  (srwLaw m z {x | vHitTime {a} x < vExitTime O x}).toReal
-
-open Classical in
-/-- `M`: the number of the first `n` walkers `xs 0, …, xs (n-1)` which hit `a` before exiting `O` (line 2165). -/
-noncomputable def visitCount (O : Set ℤ) (a : ℤ) (xs : ℕ → ℕ → ℤ) (n : ℕ) : ℕ :=
-  ((Finset.range n).filter fun i => vHitTime {a} (xs i) < vExitTime O (xs i)).card
-
-open Classical in
-/-- `L`: the number of the first `n` walkers which hit `a` before exiting `O`, but not before exiting the cluster
-`C i` left by the previous walkers (`σ^i ≤ τ^i_a < T^i`, line 2167). -/
-noncomputable def lateVisitCount (C : ℕ → Set ℤ) (O : Set ℤ) (a : ℤ) (xs : ℕ → ℕ → ℤ) (n : ℕ) : ℕ :=
-  ((Finset.range n).filter fun i =>
-    vExitTime (C i) (xs i) ≤ vHitTime {a} (xs i) ∧ vHitTime {a} (xs i) < vExitTime O (xs i)).card
-
-instance isProbabilityMeasure_walkerSequenceLaw (m : ℤ → ℤ → ℕ) (a : ℤ) :
-    IsProbabilityMeasure (walkerSequenceLaw m a) := by
-  unfold walkerSequenceLaw; infer_instance
-
-/-! ## Steps -/
+The quenched objects `hitBeforeExitProb`, `visitCount` (`M`) and `lateVisitCount` (`L`) are defined in
+MatedCRT/Proofs/IDLA/Counts.lean. -/
 
 /-- Step (eq:markov-chain-renewal, line 2176; LL10 Lemma 4.6.1, by the strong Markov property at `τ_a`):
 `G_O(z, a) = P^z[τ_a < T_O] G_O(a, a)`. -/

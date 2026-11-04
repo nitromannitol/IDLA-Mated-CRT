@@ -29,6 +29,21 @@ theorem pathShift_succ_pathCons (k : ℕ) (z : ℤ) (y : ℕ → ℤ) :
   funext n
   rfl
 
+/-- `m + k < T_O(x)` iff `m < T_O(θ_k x)`, when the path stays in `O` up to time `k`. -/
+theorem lt_vExitTime_add_iff {O : Set ℤ} {x : ℕ → ℤ} {k : ℕ} (hk : ∀ j ≤ k, x j ∈ O) (m : ℕ) :
+    ((m + k : ℕ) : ℕ∞) < vExitTime O x ↔ (m : ℕ∞) < vExitTime O (pathShift k x) := by
+  rw [natCast_lt_vExitTime_iff, natCast_lt_vExitTime_iff]
+  constructor
+  · intro h i hi
+    exact h (i + k) (by omega)
+  · intro h j hj
+    by_cases hjk : j ≤ k
+    · exact hk j hjk
+    · have h' := h (j - k) (by omega)
+      have hjk' : j - k + k = j := Nat.sub_add_cancel (by omega)
+      simp only [pathShift, hjk'] at h'
+      exact h'
+
 /-- Exit time of a path started inside `A`, through its tail. -/
 theorem vExitTime_pathCons {A : Set ℤ} {z : ℤ} (hz : z ∈ A) (y : ℕ → ℤ) :
     vExitTime A (pathCons z y) = vExitTime A y + 1 := by

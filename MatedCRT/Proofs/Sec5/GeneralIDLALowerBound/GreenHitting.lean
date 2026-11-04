@@ -20,21 +20,6 @@ theorem measurable_visitsBeforeExit (O : Set ℤ) (a : ℤ) : Measurable (visits
   refine Measurable.tsum fun n => Measurable.ite ?_ measurable_const measurable_const
   exact (measurableSet_natCast_lt_vExitTime O n).inter (measurableSet_coord n {a})
 
-/-- `m + k < T_O(x)` iff `m < T_O(θ_k x)`, when the path stays in `O` up to time `k`. -/
-theorem lt_vExitTime_add_iff {O : Set ℤ} {x : ℕ → ℤ} {k : ℕ} (hk : ∀ j ≤ k, x j ∈ O) (m : ℕ) :
-    ((m + k : ℕ) : ℕ∞) < vExitTime O x ↔ (m : ℕ∞) < vExitTime O (pathShift k x) := by
-  rw [natCast_lt_vExitTime_iff, natCast_lt_vExitTime_iff]
-  constructor
-  · intro h i hi
-    exact h (i + k) (by omega)
-  · intro h j hj
-    by_cases hjk : j ≤ k
-    · exact hk j hjk
-    · have h' := h (j - k) (by omega)
-      have hjk' : j - k + k = j := Nat.sub_add_cancel (by omega)
-      simp only [pathShift, hjk'] at h'
-      exact h'
-
 /-- Pathwise decomposition of the visits to `a` before exiting `O` at the hitting time of `D = {a} ∪ Oᶜ`. -/
 theorem visitsBeforeExit_eq_tsum_hit {O : Set ℤ} {a : ℤ} (ha : a ∈ O) (x : ℕ → ℤ) :
     visitsBeforeExit O a x = ∑' k : ℕ, {x : ℕ → ℤ | vHitTime ({a} ∪ Oᶜ) x = k}.indicator
