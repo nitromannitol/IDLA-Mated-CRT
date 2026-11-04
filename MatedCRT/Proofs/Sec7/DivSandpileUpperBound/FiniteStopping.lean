@@ -56,4 +56,39 @@ theorem exists_first_shell_threshold_before_horizon_with_log_bound
   rw [hk, Nat.cast_succ]
   linarith
 
+/-- A finite-horizon first crossing has controlled cumulative shell radii,
+including the radius floor and the cell-diameter errors. -/
+theorem exists_shell_threshold_before_horizon_with_shifted_budget
+    (O r : ℕ → ℝ) (q K α R D B δ : ℝ) (n : ℕ)
+    (hq : 0 < q) (hq1 : q < 1) (hK : 0 ≤ K) (hα : 0 < α)
+    (hR : 0 ≤ R) (hD : 0 ≤ D) (hB : 0 < B)
+    (hO : ∀ k ≤ n, 0 ≤ O k) (hinitial : B < O 0) (hbound : O 0 * q ^ n ≤ B)
+    (hstep : ∀ k < n, B < O k → O (k + 1) ≤ q * O k)
+    (hr : ∀ k < n, r (k + 1) ≤ max ((O k * K) ^ α) R)
+    (hbudget : let L := Real.log (O 0 / B) / (-Real.log q) + 1
+      r 0 + (O 0 * K) ^ α / (1 - q ^ α) + L * R + (L + 1) * (2 * D) ≤ δ) :
+    ∃ τ : ℕ, τ ≤ n ∧ O τ ≤ B ∧ (∀ k < τ, B < O k) ∧
+      (∑ k ∈ Finset.range τ, r k) + ((τ : ℝ) + 1) * (2 * D) ≤ δ := by
+  obtain ⟨τ, hτn, hτ, hbefore, hlog⟩ :=
+    exists_first_shell_threshold_before_horizon_with_log_bound O q B n hq hq1 hB
+      hinitial hbound hstep
+  have hτpos : 0 < τ := by
+    by_contra h
+    have : τ = 0 := Nat.eq_zero_of_not_pos h
+    rw [this] at hτ
+    exact (not_le_of_gt hinitial) hτ
+  obtain ⟨m, hm⟩ := Nat.exists_eq_succ_of_ne_zero (Nat.ne_of_gt hτpos)
+  have hsum := shell_radii_sum_from_odometer_contraction O r q K α R m
+    hq.le hq1 hK hα hR (fun k hk => hO k (by omega))
+    (fun k hk => hstep k (by omega) (hbefore k (by omega)))
+    (fun k hk => hr k (by omega))
+  have hmle : (m : ℝ) ≤ τ := by exact_mod_cast (show m ≤ τ by omega)
+  have hfloor := mul_le_mul_of_nonneg_right (hmle.trans hlog.le) hR
+  have hdiam := mul_le_mul_of_nonneg_right (add_le_add_right hlog.le 1)
+    (by linarith : 0 ≤ 2 * D)
+  refine ⟨τ, hτn, hτ, hbefore, ?_⟩
+  dsimp only at hbudget
+  rw [show m + 1 = τ by omega] at hsum
+  linarith
+
 end MatedCRT.Sec7
