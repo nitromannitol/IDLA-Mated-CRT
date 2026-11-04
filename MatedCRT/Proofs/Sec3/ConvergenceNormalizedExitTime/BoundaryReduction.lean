@@ -1,4 +1,4 @@
-import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.BoundaryProbability
+import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.PotentialBoundaryProbability
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.OfSteps
 
 /-! Reduction of the boundary estimate to the discrete exit time. -/
@@ -25,7 +25,7 @@ thinner boundary layer. -/
 theorem normalizedExit_boundary_of_discrete
     (𝒮 : SpaceFillingSLEModel) (h33 : UniformConvergenceGreenKernelStmt 𝒮)
     (h219 : ExpectedExitTimeExplicitBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
-    (h217 : BoundedExitTimeRVStmt) (hpot : NormalizedExitPotentialStep 𝒮)
+    (h217 : BoundedExitTimeRVStmt)
     (hdisc : DiscreteExitBoundaryStep 𝒮)
     {γ ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hρ : 0 < ρ) (hρ1 : ρ < 1)
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
@@ -40,8 +40,8 @@ theorem normalizedExit_boundary_of_discrete
   have he2 : 0 < e / 2 := ENNReal.half_pos he.ne'
   obtain ⟨r₁, hr₁0, hr₁r, h₁⟩ := hdisc h219 h28 h217 γ hγ hγ2 ρ hρ hρ1 Ω S hS
     r z hr hball δ hδ (e / 2) he2
-  obtain ⟨r₂, hr₂0, hr₂r, h₂⟩ := normalizedExitGreenPotential_boundary_small
-    𝒮 h33 h217 hpot hγ hγ2 hρ hρ1 S hS hr hball hδ he2
+  obtain ⟨r₂, hr₂0, hr₂r, h₂⟩ := normalizedExitGreenPotential_boundary_small_of_statements
+    𝒮 h33 h217 hγ hγ2 hρ hρ1 S hS hr hball hδ he2
   refine ⟨max r₁ r₂, lt_of_lt_of_le hr₁0 (le_max_left _ _), max_lt hr₁r hr₂r, ?_⟩
   filter_upwards [h₁] with ε hε
   calc
@@ -79,7 +79,7 @@ theorem convergenceNormalizedExitTime_of_discrete_boundary (𝒮 : SpaceFillingS
   apply uniformOn_closedBall_of_interior_boundary
   · exact hinterior h33 h29 h219 h35 h31 h28 h217 γ hγ hγ2 ρ hρ hρ1 Ω S hS r z hr hball
   · intro δ hδ e he
-    exact normalizedExit_boundary_of_discrete 𝒮 h33 h219 h28 h217 hpot hdisc
+    exact normalizedExit_boundary_of_discrete 𝒮 h33 h219 h28 h217 hdisc
       hγ hγ2 hρ hρ1 S hS hr hball hδ he
 
 end MatedCRT
