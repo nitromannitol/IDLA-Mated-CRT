@@ -193,4 +193,30 @@ theorem MatedCRTEnv.IsValid.idlaJointMeasure_le_of_graph_eq_off
     _ = S'.idlaJointMeasure ε' F + S.P B + S.P B := by rw [show S'.idlaJointMeasure ε' F' =
       S'.idlaJointMeasure ε' F from measure_toMeasurable F]
 
+/-- Bound a joint outer event using a measurable cover with controlled quenched probabilities. -/
+theorem MatedCRTEnv.IsValid.idlaJointMeasure_le_of_measurable_cover
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (ε : ℝ)
+    (E A : Set (Ω × (ℕ → ℕ → ℤ))) (B : Set Ω) (g : Ω → ℝ≥0∞)
+    (hEA : E ⊆ A) (hA : MeasurableSet A) (hg : Measurable g)
+    (h : ∀ ω, ω ∉ B → walkerSequenceLaw (S.mult ε ω) 0 (Prod.mk ω ⁻¹' A) ≤ g ω) :
+    S.idlaJointMeasure ε E ≤ (∫⁻ ω, g ω ∂S.P) + S.P B := by
+  let bad : Ω → ℝ≥0∞ := (toMeasurable S.P B).indicator 1
+  have hi : ∫⁻ ω, bad ω ∂S.P = S.P B := by
+    rw [show bad = (toMeasurable S.P B).indicator 1 from rfl,
+      lintegral_indicator_one (measurableSet_toMeasurable _ _), measure_toMeasurable]
+  have hbound (ω : Ω) : walkerSequenceLaw (S.mult ε ω) 0 (Prod.mk ω ⁻¹' A) ≤ g ω + bad ω := by
+    by_cases hω : ω ∈ B
+    · have hbad : bad ω = 1 := by simp [bad, subset_toMeasurable S.P B hω]
+      calc
+        walkerSequenceLaw (S.mult ε ω) 0 (Prod.mk ω ⁻¹' A) ≤ 1 := prob_le_one
+        _ ≤ g ω + bad ω := by rw [hbad]; exact le_add_self
+    · exact (h ω hω).trans le_self_add
+  calc
+    S.idlaJointMeasure ε E ≤ S.idlaJointMeasure ε A := measure_mono hEA
+    _ = ∫⁻ ω, walkerSequenceLaw (S.mult ε ω) 0 (Prod.mk ω ⁻¹' A) ∂S.P :=
+      hS.idlaJointMeasure_apply ε hA
+    _ ≤ ∫⁻ ω, g ω + bad ω ∂S.P := lintegral_mono hbound
+    _ = (∫⁻ ω, g ω ∂S.P) + S.P B := by rw [lintegral_add_left hg, hi]
+
 end MatedCRT
