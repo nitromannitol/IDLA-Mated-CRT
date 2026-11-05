@@ -65,6 +65,20 @@ theorem relaxed_five_two_implies_draft (𝒮 : SpaceFillingSLEModel)
     (h : GeneralIDLALowerBoundRelaxedStep 𝒮) : GeneralIDLALowerBoundStmt 𝒮 :=
   generalIDLALowerBound_of_relaxed 𝒮 h
 
+/-- A measurable almost-surely positive surplus has a strictly positive measurable version. -/
+theorem five_two_positive_surplus_version {Ω : Type} [MeasurableSpace Ω]
+    (μ : MeasureTheory.Measure Ω) (s : Ω → ℝ) (hs : Measurable s)
+    (hpos : ∀ᵐ ω ∂μ, 0 < s ω) :
+    ∃ t : Ω → ℝ, Measurable t ∧ (∀ ω, 0 < t ω) ∧ t =ᵐ[μ] s := by
+  classical
+  let t : Ω → ℝ := fun ω => if 0 < s ω then s ω else 1
+  refine ⟨t, ?_, ?_, ?_⟩
+  · exact Measurable.ite (measurableSet_lt measurable_const hs) hs measurable_const
+  · intro ω
+    by_cases h : 0 < s ω <;> simp [t, *]
+  · filter_upwards [hpos] with ω hω
+    simp [t, hω]
+
 /-- The available Lemma 3.1 reduction concludes its corrected form. -/
 theorem three_one_corrected_reduction {𝒮 : SpaceFillingSLEModel}
     (hm : MepsScalingInput 𝒮) (h217 : BoundedExitTimeRVStmt)
@@ -225,5 +239,6 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms five_four_draft_reduction
 #print axioms time_dependent_witness_not_uniform
 #print axioms relaxed_five_two_implies_draft
+#print axioms five_two_positive_surplus_version
 
 end MatedCRT.Audit.StatementsSec3Sec5M1

@@ -122,11 +122,13 @@ The source at corrected lines 1987–2002 fixes two environment-measurable conne
 | inclusion, origin membership and `IsVConnected` | SOURCE, provisional | required almost surely separately for every positive ε; source's quantification in ε and graph-domain convention require interpretation |
 | `K : ℝ → ℝ`, `∀ ε, 0 < K ε` | SOURCE plus potentially EXTRA | positivity for all real ε is stronger than needed for ε → 0⁺; Lean also makes K deterministic, whereas the source does not explicitly say so |
 | `q : ℝ`, `0 < q` | SOURCE | source says deterministic q > 0 |
-| `s : Ω → ℝ`, environment measurability and `∀ ω, 0 < s ω` | SOURCE, provisional | real-valued encodes finiteness; pointwise positivity is stronger than an a.s. reading but may admit a harmless modification if measurability is retained |
+| `s : Ω → ℝ`, environment measurability and `∀ ω, 0 < s ω` | SOURCE, provisional | real-valued encodes finiteness; pointwise positivity is stronger than an a.s. reading. The null-set modification below resolves the basic measurable-version issue, but the full transfer of the probability statement remains unchecked |
 | probability tending to one of both Green estimates | SOURCE, provisional | outer probability of failure via `ProbTendsToOne`; denominator and real `tsum` need valid finite-domain justification |
 | both unrestricted and stopped inclusions | SOURCE, provisional | annealed outer probability and the conditional walk law need closure audit |
 
 `GeneralIDLALowerBoundRelaxedStep` (`Steps/Sec5/IDLALowerBound.lean:40`) removes set measurability, connectedness, origin membership and positivity of `K` while preserving deterministic `K`, positive q and pointwise-positive measurable s. The checked `relaxed_five_two_implies_draft` in the audit Lean file applies the producer explicitly; it establishes a conditional implication only. `walkerSequenceLaw` is `Measure.infinitePi` of `srwLaw` (`Defs/RandomWalk.lean:153`), and `idlaProb` now evaluates the joint measure (`Defs/Setting.lean:216`). See the joint-law update below; the previous sectionwise outer-integral description is superseded by commit a12c8bf.
+
+The checked `five_two_positive_surplus_version` constructs a measurable, everywhere positive function equal almost everywhere to any measurable, almost-surely positive real function on a measure space. This is a local measure-theoretic fact; applying it to the Draft still requires tracking the environment sigma algebra and transferring the Green-estimate event and joint-law conclusions across the null set.
 
 The proof of Proposition 5.1 applies Lemma 5.2 with `O₂ = Λε_t` (corrected source:2033–2044), whereas its stopped assertion uses `Vε(Λ_t)` (source:1977–1981); see existing E-c1-5. The available 5.1 reduction assumes `IDLALowerBoundStoppedStep`, so it does not claim this proof gap closed.
 
