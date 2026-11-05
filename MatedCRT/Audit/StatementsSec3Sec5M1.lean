@@ -10,10 +10,25 @@ import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.OfInteriorBoundary
 import MatedCRT.Proofs.Sec3.DiscretePotentialTightness.Main
 import MatedCRT.Proofs.Sec5.LLowerBound.OfInputs
 import MatedCRT.Proofs.Sec5.MeanValueInequality.NormalizedStep
+import MatedCRT.Audit.Refutations
+import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.DyadicModulus
 
 /-! A logical check for the quantifier-order issue in Lemma 5.3.
 It does not assert that the actual Green-function estimate has this form. -/
 namespace MatedCRT.Audit.StatementsSec3Sec5M1
+
+/-- The counterexample applies to the exact Draft, conditional on the scaling input. -/
+theorem three_one_draft_refuted {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingInput 𝒮)
+    {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} (hS : S.IsValid 𝒮 γ) : ¬ DiscretePotentialTightnessStmt 𝒮 :=
+  MatedCRT.Audit.Refutations.not_discretePotentialTightnessStmt hm hγ hγ2 hS
+
+/-- The newer 3.7 reduction uses the almost-sure tightness step, not Draft 3.1. -/
+theorem three_seven_latest_reduction (𝒮 : SpaceFillingSLEModel)
+    (h33 : UniformConvergenceGreenKernelStmt 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
+    (h217 : BoundedExitTimeRVStmt) (h218 : ExitTimeUpperBoundStmt 𝒮)
+    (hAe : DiscretePotentialTightnessAeStep 𝒮) : ConvergenceNormalizedExitTimeStmt 𝒮 :=
+  convergenceNormalizedExitTime_of_statements 𝒮 h33 h35 h217 h218 hAe
 
 /-- A witness chosen separately for each positive time need not be uniform in time. -/
 theorem time_dependent_witness_not_uniform :
@@ -38,11 +53,11 @@ theorem three_one_corrected_reduction {𝒮 : SpaceFillingSLEModel}
     DiscretePotentialTightnessCorrectedStmt 𝒮 :=
   discretePotentialTightnessCorrected_of_boundedExitTime hm h217 h218 h32
 
-/-- The available Lemma 3.3 reduction consumes the Draft Lemma 3.1. -/
+/-- The Lemma 3.3 reduction uses the almost-sure corrected tightness step. -/
 theorem three_three_draft_reduction (𝒮 : SpaceFillingSLEModel)
     (h210 : DegreeMeasureConvergenceStmt 𝒮) (h34 : IntegralConvergenceGreenFunctionStmt 𝒮)
     (h214 : GreenKernelUpperBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
-    (h31 : DiscretePotentialTightnessStmt 𝒮) (h213 : MaximumPrincipleStmt 𝒮)
+    (h31 : DiscretePotentialTightnessAeStep 𝒮) (h213 : MaximumPrincipleStmt 𝒮)
     (hi : GreenKernelInteriorStep 𝒮) (hb : GreenKernelBoundaryStep 𝒮) :
     UniformConvergenceGreenKernelStmt 𝒮 :=
   uniformConvergenceGreenKernel_of_steps 𝒮 h210 h34 h214 h28 h31 h213 hi hb
@@ -142,6 +157,8 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
     exact (ENNReal.ofReal_le_iff_le_toReal hfin).1 hmass
 
 #print axioms cluster_exit_time_bounded
+#print axioms three_one_draft_refuted
+#print axioms three_seven_latest_reduction
 #print axioms five_four_green_quotient_semantics
 #print axioms three_four_sum_ext
 #print axioms three_five_draft_reduction
