@@ -15,6 +15,7 @@ import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.DyadicModulus
 import MatedCRT.Proofs.Sec5.IDLALowerBound.Final
 import MatedCRT.Proofs.IDLA.WalkerLawMeasurable
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.OccupationGreen
+import MatedCRT.Proofs.Sec3.UniformConvergenceGreenKernel.InteriorStep
 
 /-! A logical check for the quantifier-order issue in Lemma 5.3.
 It does not assert that the actual Green-function estimate has this form. -/
@@ -48,6 +49,20 @@ theorem three_seven_latest_reduction (𝒮 : SpaceFillingSLEModel)
     (h217 : BoundedExitTimeRVStmt) (h218 : ExitTimeUpperBoundStmt 𝒮)
     (hAe : DiscretePotentialTightnessAeStep 𝒮) : ConvergenceNormalizedExitTimeStmt 𝒮 :=
   convergenceNormalizedExitTime_of_statements 𝒮 h33 h35 h217 h218 hAe
+
+/-- The current final Lemma 3.3 reduction concludes the exact Draft under its five inputs. -/
+theorem three_three_final_reduction (𝒮 : SpaceFillingSLEModel)
+    (h210 : DegreeMeasureConvergenceStmt 𝒮) (h34 : IntegralConvergenceGreenFunctionStmt 𝒮)
+    (h214 : GreenKernelUpperBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
+    (hAe : DiscretePotentialTightnessAeStep 𝒮) : UniformConvergenceGreenKernelStmt 𝒮 :=
+  uniformConvergenceGreenKernel_final 𝒮 h210 h34 h214 h28 hAe
+
+/-- The omitted empty test set is vacuous even though its infimum distance is zero. -/
+theorem three_three_empty_test_set {Ω : Type} [MeasurableSpace Ω]
+    (μ : MeasureTheory.Measure Ω) (y : ℂ) (P : ℝ → Ω → ℂ → Prop) :
+    Metric.infDist y (∅ : Set ℂ) = 0 ∧
+      ProbTendsToOne μ (fun ε => {ω | ∀ x ∈ (∅ : Set ℂ), P ε ω x}) := by
+  simp [Metric.infDist_empty, ProbTendsToOne]
 
 /-- A witness chosen separately for each positive time need not be uniform in time. -/
 theorem time_dependent_witness_not_uniform :
@@ -300,6 +315,8 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms five_one_fixed_set_exits
 #print axioms three_one_draft_refuted
 #print axioms three_seven_latest_reduction
+#print axioms three_three_final_reduction
+#print axioms three_three_empty_test_set
 #print axioms five_four_green_quotient_semantics
 #print axioms three_four_sum_ext
 #print axioms three_four_measurable_extension

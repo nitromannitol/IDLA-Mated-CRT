@@ -187,6 +187,23 @@ For the discrete domain, the proof `ae_normExitTime_laplacian_le_one` (`Proofs/S
 For a finite killed set on a locally finite multigraph with consecutive edges, `mLaplacian_greenFn` proves finiteness of each visit-count expectation as an internal fact `hfin` (`Proofs/WalkPotential/GreenFirstStep.lean:210–224`) before deriving the Green equation. This establishes that the `toReal` convention in `greenFn` does not discard an infinite visit expectation under those graph assumptions, for every pair of vertices. Its proof uses a finite-domain nonnegative Poisson solution. The finite domain and positive-degree facts above therefore resolve the corresponding conventions on that almost-sure graph event, subject to the source status of the bundled inputs; they do not alone establish finite expected exit time as a separate exported proposition. The finite-mean hypothesis does imply almost-sure finite exit and visit integrability (`OccupationGreen.lean:119–155`), and the explicit-bound statement supplies finite mean only on its stated high-probability events (`Draft/Section2.lean:260–267`), not as an unrestricted assertion for every environment and mesh.
 
 
+## Lemma 3.3 binder and reduction trace (provisional)
+
+The corrected source statement is at lines 1110–1122; the exact Draft declaration is `UniformConvergenceGreenKernelStmt` (`Draft/Section3.lean:97–105`). No versioned source/declaration manifest is in force, so these bins do not constitute approval.
+
+| Lean input or local binder | Provisional bin | Comparison |
+| --- | --- | --- |
+| `𝒮`, `Ω`, `[MeasurableSpace Ω]`, `S` | TYPING | abstract model and measurable environment carriers |
+| `γ`, `0 < γ`, `γ < 2`, `ρ`, `0 < ρ`, `ρ < 1` | STANDING | quantum-cone parameters and fixed Section 3 ball |
+| `S.IsValid 𝒮 γ` | UNCLASSIFIED | bundled coupling and mathematical inputs; E-m1-5 |
+| `r`, `z`, `y`, `0 < r`, `ball z r ⊆ ball 0 ρ`, `y ∈ ball z r` | SOURCE | deterministic ball and pole |
+| `δ > 0`, `O ⊆ closedBall z r \ {y}`, `0 < infDist y O` | SOURCE, with empty-set caveat | the source says small positive δ and positive distance; quantification over every δ is equivalent for a monotone error bound, while Mathlib's real `infDist y ∅ = 0` excludes the empty set |
+| `ProbTendsToOne` of a pointwise `∀ x ∈ O` error bound | SOURCE, provisional | source displays a supremum bound with probability tending to one; the Lean predicate uses outer measure of failure |
+
+The checked `three_three_empty_test_set` proves the omitted empty-set bound is vacuous and has probability tending to one, including for an arbitrary measure; this does not settle the nonempty-set supremum or Green-function semantics. `rescale` is `mε⁻¹ * u (vertexOf ε η x)` (`Defs/Map.lean:200`), and `greenKernel` divides `greenFn` by the degree at the second argument (`Defs/RandomWalk.lean:95–100`). The latter uses real `toReal` and thus returns zero if the expected number of visits is infinite; finiteness and positive degree remain necessary to identify it with the source kernel. `vertexOf` also needs its cell-covering/least-index properties in the valid environment. [C1] Green normalization remains open as recorded above.
+
+The checked `three_three_final_reduction` applies `uniformConvergenceGreenKernel_final` (`Proofs/Sec3/UniformConvergenceGreenKernel/InteriorStep.lean:73`) to the exact Draft. It retains 2.10, 3.4, 2.14, 2.8 and `DiscretePotentialTightnessAeStep` as hypotheses; it does not prove them. This supersedes the older reduction listed in `REDUCTIONS.md` for the current dependency audit.
+
 ## Lemma 3.4 binder and reduction trace (provisional)
 
 The corrected statement is at source lines 1124–1133 and the Draft is `IntegralConvergenceGreenFunctionStmt` (`Draft/Section3.lean:113–123`).
