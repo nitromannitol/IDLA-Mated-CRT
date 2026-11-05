@@ -86,6 +86,16 @@ theorem MatedCRTEnv.IsValid.idlaJointLaw_apply
   let : IsMarkovKernel κ := ⟨fun ω => isProbabilityMeasure_walkerSequenceLaw _ _⟩
   exact Measure.compProd_apply hE
 
+/-- The joint measure of a measurable event is the integral of its quenched probabilities. -/
+theorem MatedCRTEnv.IsValid.idlaJointMeasure_apply
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (ε : ℝ)
+    {E : Set (Ω × (ℕ → ℕ → ℤ))} (hE : MeasurableSet E) :
+    S.idlaJointMeasure ε E =
+      ∫⁻ ω, walkerSequenceLaw (S.mult ε ω) 0 (Prod.mk ω ⁻¹' E) ∂S.P := by
+  rw [hS.idlaJointMeasure_eq ε]
+  exact hS.idlaJointLaw_apply ε hE
+
 /-- On measurable events the sectionwise convention agrees with the joint law. -/
 theorem MatedCRTEnv.IsValid.idlaProb_eq_jointLaw_of_measurable
     {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
@@ -117,5 +127,70 @@ theorem MatedCRTEnv.IsValid.idlaProb_le_jointMeasure
       hS.idlaProb_eq_jointLaw_of_measurable ε (measurableSet_toMeasurable _ _)
     _ = hS.idlaJointLaw ε E := measure_toMeasurable _
     _ = S.idlaJointMeasure ε E := by rw [hS.idlaJointMeasure_eq ε]
+
+/-- Under the joint law, the event that the environment belongs to `B` has probability `P B`, also for
+nonmeasurable `B` in the sense of an upper bound for outer measure. -/
+theorem MatedCRTEnv.IsValid.idlaJointMeasure_env_le
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (ε : ℝ) (B : Set Ω) :
+    S.idlaJointMeasure ε (B ×ˢ (univ : Set (ℕ → ℕ → ℤ))) ≤ S.P B := by
+  let : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
+  let κ : Kernel Ω (ℕ → ℕ → ℤ) := ⟨fun ω => walkerSequenceLaw (S.mult ε ω) 0,
+    hS.measurable_walkerSequenceLaw ε 0⟩
+  let : IsMarkovKernel κ := ⟨fun ω => isProbabilityMeasure_walkerSequenceLaw _ _⟩
+  calc
+    S.idlaJointMeasure ε (B ×ˢ (univ : Set (ℕ → ℕ → ℤ))) ≤
+        S.idlaJointMeasure ε (toMeasurable S.P B ×ˢ univ) :=
+      measure_mono (prod_mono (subset_toMeasurable _ _) Subset.rfl)
+    _ = S.P B := by
+      rw [hS.idlaJointMeasure_eq ε]
+      change (S.P ⊗ₘ κ) (toMeasurable S.P B ×ˢ univ) = S.P B
+      rw [Measure.compProd_apply_prod (measurableSet_toMeasurable _ _) MeasurableSet.univ]
+      simp [κ]
+
+/-- Transfer a joint event by containment outside a bad set of environments. -/
+theorem MatedCRTEnv.IsValid.idlaJointMeasure_le_add_env
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (ε : ℝ)
+    (E F : Set (Ω × (ℕ → ℕ → ℤ))) (B : Set Ω)
+    (h : ∀ ω, ω ∉ B → ∀ xs, (ω, xs) ∈ E → (ω, xs) ∈ F) :
+    S.idlaJointMeasure ε E ≤ S.idlaJointMeasure ε F + S.P B := by
+  calc
+    S.idlaJointMeasure ε E ≤ S.idlaJointMeasure ε (F ∪ B ×ˢ univ) := by
+      apply measure_mono
+      intro ⟨ω, xs⟩ hx
+      by_cases hω : ω ∈ B
+      · exact Or.inr ⟨hω, mem_univ xs⟩
+      · exact Or.inl (h ω hω xs hx)
+    _ ≤ S.idlaJointMeasure ε F + S.idlaJointMeasure ε (B ×ˢ univ) := measure_union_le _ _
+    _ ≤ S.idlaJointMeasure ε F + S.P B := add_le_add le_rfl (hS.idlaJointMeasure_env_le ε B)
+
+/-- Transfer joint outer probabilities between environments with identical graph laws off a bad set. -/
+theorem MatedCRTEnv.IsValid.idlaJointMeasure_le_of_graph_eq_off
+    {Ω : Type} [MeasurableSpace Ω] {S S' : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (hS' : S'.IsValid 𝒮 γ)
+    (ε ε' : ℝ) (E F : Set (Ω × (ℕ → ℕ → ℤ))) (B : Set Ω) (hP : S.P = S'.P)
+    (hgraph : ∀ ω, ω ∉ B → S.mult ε ω = S'.mult ε' ω)
+    (h : ∀ ω, ω ∉ B → ∀ xs, (ω, xs) ∈ E → (ω, xs) ∈ F) :
+    S.idlaJointMeasure ε E ≤ S'.idlaJointMeasure ε' F + S.P B + S.P B := by
+  let F' := toMeasurable (S'.idlaJointMeasure ε') F
+  have hF' : MeasurableSet F' := measurableSet_toMeasurable _ _
+  have hfirst : S.idlaJointMeasure ε E ≤ S.idlaJointMeasure ε F' + S.P B :=
+    hS.idlaJointMeasure_le_add_env ε E F' B (fun ω hω xs hx =>
+      subset_toMeasurable _ _ (h ω hω xs hx))
+  have hsecond : S.idlaProb ε F' ≤ S'.idlaProb ε' F' + S.P B := by
+    unfold MatedCRTEnv.idlaProb
+    rw [← hP]
+    refine Sec8.annealedOuterProb_le_of_forall_not_mem S.P _ _ (fun ω => prob_le_one) F' F' B ?_
+    intro ω hω
+    rw [hgraph ω hω]
+  rw [hS.idlaProb_eq_jointLaw_of_measurable ε hF',
+    hS'.idlaProb_eq_jointLaw_of_measurable ε' hF', ← hS.idlaJointMeasure_eq ε,
+    ← hS'.idlaJointMeasure_eq ε'] at hsecond
+  calc
+    S.idlaJointMeasure ε E ≤ S.idlaJointMeasure ε F' + S.P B := hfirst
+    _ ≤ (S'.idlaJointMeasure ε' F' + S.P B) + S.P B := add_le_add hsecond le_rfl
+    _ = S'.idlaJointMeasure ε' F + S.P B + S.P B := by rw [show S'.idlaJointMeasure ε' F' =
+      S'.idlaJointMeasure ε' F from measure_toMeasurable F]
 
 end MatedCRT
