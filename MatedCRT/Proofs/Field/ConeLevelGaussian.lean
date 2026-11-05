@@ -6,8 +6,8 @@ import MatedCRT.Proofs.Field.ConeGaussianClosure
 
 Let `V : ℝ → Ω → ℝ` be a process with values in a centred Gaussian linear space `M` and almost surely continuous
 paths, and let `Y = ∫ g(x) V_{s(x)} dν(x)` be one of its level integrals (`MatedCRT.Field.Level`), assumed to be
-almost surely absolutely convergent. Then (`levelIntegral_gaussian`) a version of `Y` lies in a larger centred
-Gaussian linear space `M' ⊇ M`, and covariances pass inside the integral:
+almost surely absolutely convergent. Then (`levelIntegral_versions`) a version of `Y` can be adjoined to `M` keeping
+a centred Gaussian linear space, and covariances pass inside the integral:
 `Cov(X, Y) = ∫ g(x) Cov(X, V_{s(x)}) dν(x)` for `X ∈ M`.
 
 The proof follows the Riemann sums of `ConeRadialSums.lean`: they are elements of `M`; their almost sure limits are
@@ -87,15 +87,19 @@ lemma levelRiemann_process_eq (ν : Measure α) (g s : α → ℝ) (n k : ℕ) (
   funext ω
   simp [levelRiemann, Finset.sum_apply, smul_eq_mul]
 
-/-- **Level integrals of a Gaussian process.** A version of the level integral `Y` of `V` lies in a centred
-Gaussian linear space `M' ⊇ M`, and `Cov(X, Y) = ∫ g(x) Cov(X, V_{s(x)}) dν(x)` for `X ∈ M`. -/
-theorem levelIntegral_gaussian [IsProbabilityMeasure P] {M : Submodule ℝ (Ω → ℝ)}
+/-- **Level integrals of a Gaussian process.** The level integral `Y₀ = ∫ g · V_s dν` of `V` has a measurable
+version `Y` which is the almost sure limit of measurable `T_k`, themselves almost sure limits of elements of `M` (so
+`Y` can be adjoined to `M` by `isCentredGaussianSpace_sup_span_range` twice), and, in any centred Gaussian linear space
+`M* ⊇ M` containing the `T_k` and `Y`, `Cov(X, Y) = ∫ g(x) Cov(X, V_{s(x)}) dν(x)` for `X ∈ M*`. -/
+theorem levelIntegral_versions [IsProbabilityMeasure P] {M : Submodule ℝ (Ω → ℝ)}
     (hM : IsCentredGaussianSpace P M) {V : ℝ → Ω → ℝ} (hV : ∀ u, V u ∈ M)
     (hcont : ∀ᵐ ω ∂P, Continuous fun u => V u ω) {ν : Measure α} {g s : α → ℝ} (hg : Integrable g ν)
     (hs : Measurable s) (hint : ∀ᵐ ω ∂P, Integrable (fun x => g x * V (s x) ω) ν) :
-    ∃ M' : Submodule ℝ (Ω → ℝ), M ≤ M' ∧ IsCentredGaussianSpace P M' ∧
-      ∃ Y ∈ M', (fun ω => levelIntegral ν g s fun u => V u ω) =ᵐ[P] Y ∧
-      ∀ X ∈ M, Continuous (fun u => cov[X, V u; P]) → Integrable (fun x => g x * cov[X, V (s x); P]) ν →
+    ∃ (T : ℕ → Ω → ℝ) (Y : Ω → ℝ), (∀ k, Measurable (T k)) ∧ (∀ k, IsAeLimitOf P M (T k)) ∧ Measurable Y ∧
+      (∀ᵐ ω ∂P, Tendsto (fun k => T k ω) atTop (𝓝 (Y ω))) ∧
+      (fun ω => levelIntegral ν g s fun u => V u ω) =ᵐ[P] Y ∧
+      ∀ M' : Submodule ℝ (Ω → ℝ), IsCentredGaussianSpace P M' → M ≤ M' → (∀ k, T k ∈ M') → Y ∈ M' →
+      ∀ X ∈ M', Continuous (fun u => cov[X, V u; P]) → Integrable (fun x => g x * cov[X, V (s x); P]) ν →
         cov[X, Y; P] = levelIntegral ν g s fun u => cov[X, V u; P] := by
   set R : ℕ → ℕ → Ω → ℝ := fun n k ω => levelRiemann ν g s n k fun u => V u ω with hRdef
   have hRmem : ∀ n k, R n k ∈ M := by
@@ -114,10 +118,6 @@ theorem levelIntegral_gaussian [IsProbabilityMeasure P] {M : Submodule ℝ (Ω �
     filter_upwards [hRT k, (hTae k).ae_eq_mk] with ω hω h
     rw [show T' k ω = T k ω from h.symm]
     exact hω
-  set M₁ : Submodule ℝ (Ω → ℝ) := M ⊔ Submodule.span ℝ (Set.range T') with hM₁def
-  have hM₁ : IsCentredGaussianSpace P M₁ :=
-    isCentredGaussianSpace_sup_span_range hM T' hT'm fun k => ⟨fun n => R n k, fun n => hRmem n k, hRT' k⟩
-  have hT'mem : ∀ k, T' k ∈ M₁ := fun k => Submodule.mem_sup_right (Submodule.subset_span ⟨k, rfl⟩)
   set Y₀ : Ω → ℝ := fun ω => levelIntegral ν g s fun u => V u ω with hY₀def
   have hTY : ∀ᵐ ω ∂P, Tendsto (fun k => T' k ω) atTop (𝓝 (Y₀ ω)) := by
     have hall : ∀ᵐ ω ∂P, ∀ k, T k ω = T' k ω := ae_all_iff.2 fun k => (hTae k).ae_eq_mk
@@ -129,28 +129,22 @@ theorem levelIntegral_gaussian [IsProbabilityMeasure P] {M : Submodule ℝ (Ω �
     filter_upwards [hTY, hYae.ae_eq_mk] with ω hω h
     rw [show Y ω = Y₀ ω from h.symm]
     exact hω
-  set M' : Submodule ℝ (Ω → ℝ) := M₁ ⊔ Submodule.span ℝ {Y} with hM'def
-  have hM' : IsCentredGaussianSpace P M' :=
-    isCentredGaussianSpace_sup_span hM₁ hYae.measurable_mk ⟨T', hT'mem, hTY'⟩
-  have hMM' : M ≤ M' := le_sup_left.trans le_sup_left
-  have hYmem : Y ∈ M' := Submodule.mem_sup_right (Submodule.mem_span_singleton_self Y)
-  refine ⟨M', hMM', hM', Y, hYmem, hYae.ae_eq_mk, fun X hX hc hci => ?_⟩
-  have hXM' : X ∈ M' := hMM' hX
+  refine ⟨T', Y, hT'm, fun k => ⟨fun n => R n k, fun n => hRmem n k, hRT' k⟩, hYae.measurable_mk, hTY',
+    hYae.ae_eq_mk, fun M' hM' hMM' hT'mem hYmem X hX hc hci => ?_⟩
   -- the covariance of `X` with a Riemann sum is the Riemann sum of the covariances
   have hcovR : ∀ n k, cov[X, R n k; P] = levelRiemann ν g s n k fun u => cov[X, V u; P] := by
     intro n k
     show cov[X, (fun ω => levelRiemann ν g s n k fun u => V u ω); P] = _
     rw [levelRiemann_process_eq, covariance_sum_right'
-      (fun j _ => (hM.memLp (M.smul_mem _ (hV _)))) (hM.memLp hX)]
+      (fun j _ => (hM'.memLp (hMM' (M.smul_mem _ (hV _))))) (hM'.memLp hX)]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [covariance_smul_right]
   have hcovT : ∀ k, cov[X, T' k; P] = levelTrunc ν g s k fun u => cov[X, V u; P] := by
     intro k
-    refine tendsto_nhds_unique (tendsto_covariance_of_tendsto_ae hM' hXM'
-      (fun n => hMM' (hRmem n k)) (le_sup_left (a := M₁) (hT'mem k)) (hRT' k)) ?_
+    refine tendsto_nhds_unique (tendsto_covariance_of_tendsto_ae hM' hX
+      (fun n => hMM' (hRmem n k)) (hT'mem k) (hRT' k)) ?_
     exact (tendsto_levelRiemann hs hg k hc).congr fun n => (hcovR n k).symm
-  refine tendsto_nhds_unique (tendsto_covariance_of_tendsto_ae hM' hXM'
-    (fun k => le_sup_left (a := M₁) (hT'mem k)) hYmem hTY') ?_
+  refine tendsto_nhds_unique (tendsto_covariance_of_tendsto_ae hM' hX hT'mem hYmem hTY') ?_
   exact (tendsto_levelTrunc hs hci).congr fun k => (hcovT k).symm
 
 end MatedCRT.Field.GaussClosure
