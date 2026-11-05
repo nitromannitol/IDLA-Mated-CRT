@@ -12,6 +12,7 @@ import MatedCRT.Proofs.Sec5.LLowerBound.OfInputs
 import MatedCRT.Proofs.Sec5.MeanValueInequality.NormalizedStep
 import MatedCRT.Audit.Refutations
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.DyadicModulus
+import MatedCRT.Proofs.Sec5.IDLALowerBound.Final
 
 /-! A logical check for the quantifier-order issue in Lemma 5.3.
 It does not assert that the actual Green-function estimate has this form. -/
@@ -84,6 +85,20 @@ theorem five_one_draft_reduction (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrow
     (h54 : LLowerBoundStmt 𝒮) (hi : DiscreteClusterInnerBoundStep 𝒮)
     (hs : IDLALowerBoundStoppedStep 𝒮) : IDLALowerBoundStmt 𝒮 :=
   iDLALowerBound_of_volumeGrowth_cellSize 𝒮 h27 h28 h53 h54 hi hs
+
+/-- The strict-gap reduction of Proposition 5.1 concludes the exact Draft conditionally. -/
+theorem five_one_strict_gap_reduction (𝒮 : SpaceFillingSLEModel)
+    (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮) (h29 : CountingMeasureConvergenceStmt 𝒮)
+    (h215 : GreenFunctionCrudeBoundStmt 𝒮) (h216 : GreenKernelLowerBoundStmt 𝒮)
+    (h218 : ExitTimeUpperBoundStmt 𝒮) (h41 : ConvergenceDivisibleStmt 𝒮)
+    (h23 : ConeHarmonicBallsStmt) (h24 : ConeHarmonicBallsUpToFixedTimeStmt)
+    (h33 : UniformConvergenceGreenKernelStmt 𝒮) (h217 : BoundedExitTimeRVStmt)
+    (h44 : DiscreteLaplacianBoundCorrectedStmt 𝒮) (hfam : ConeFamilyAEMeasurableStep)
+    (hμ : LQGMeasureFieldMeasurableStep 𝒮) (hlow : MeanValueSurplusLowerStep 𝒮)
+    (hgap : HarmonicBallStrictObstacleGapStep 𝒮) (hSM : StoppedMeanValueInequalityStep 𝒮)
+    (hSL : StoppedLLowerBoundStep 𝒮) : IDLALowerBoundStmt 𝒮 :=
+  iDLALowerBound_final_of_strictGap 𝒮 h27 h28 h29 h215 h216 h218 h41 h23 h24 h33 h217 h44
+    hfam hμ hlow hgap hSM hSL
 
 /-- Lemma 5.4 is reduced to three explicitly stated hypotheses. -/
 theorem five_four_draft_reduction (𝒮 : SpaceFillingSLEModel)
@@ -169,6 +184,7 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms three_six_draft_reduction
 #print axioms three_seven_draft_reduction
 #print axioms five_one_draft_reduction
+#print axioms five_one_strict_gap_reduction
 #print axioms five_four_draft_reduction
 #print axioms time_dependent_witness_not_uniform
 #print axioms relaxed_five_two_implies_draft

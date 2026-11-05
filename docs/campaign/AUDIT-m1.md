@@ -214,3 +214,27 @@ The source proof line 1138 says ε tends to infinity, then restricts to an event
 The current corrected source hash is `5e15864c8a423fc81b1a4b8d18a360b2deb5675c9fa5faa1b2c0f0e6e857b9c0` and current Section3 Draft hash is `4e1b1423ad5bf2d1d9691ff7638454ae1193331b67da031a40f40ad9abc50581`. These observations are not an approved freeze. [C6] is adopted per `ESCALATIONS.md` E-chk-1 and `AUDIT-L32-USES.md`. In the corrected step, `∀ χ C′, ... ∃ ξ′ C` is weaker than the Draft/source `∀ χ, ... ∃ ξ′, ... ∀ C′, ... ∃ C`; it also drops `ξ′ ≤ χ`. `discreteHolderContinuityCorrected_of_draft` checks the implication, but does not establish the reverse. The older `CORRECTED-FORMS.md` 3.2 entry refers to the prior Draft and must not be used as the current comparison. This is a syntactic scope analysis, not a counterexample to either current mathematical estimate.
 
 The 3.3 reduction changed in commit `763b7d7`: the checked `three_three_draft_reduction` now requires `DiscretePotentialTightnessAeStep`, not the false Draft 3.1. The final producer `uniformConvergenceGreenKernel_final` discharges its interior, boundary and maximum principle inputs, retaining the a.s. step and four numbered statements. `REDUCTIONS.md` F7 and its 3.3 line still describe the older producer.
+
+## Proposition 5.1: binder and semantic trace (provisional)
+
+The following rows enumerate the outer inputs of `IDLALowerBoundStmt` (`Draft/Section5.lean:27–38`). The bins for the environment and family are provisional: expanding a bundle into fields does not by itself validate those fields as standing assumptions. The SOURCE count refers to the five named parameter/inequality rows, not the family fields.
+
+| Binder or expanded input | Bin | Source or remaining check |
+| --- | --- | --- |
+| `𝒮` | TYPING | Abstract SLE model; the model's adequacy is E-A1. |
+| `γ`, `0 < γ`, `γ < 2` | STANDING | Section 1 fixes `γ ∈ (0,2)`. |
+| `ρ`, `0 < ρ`, `ρ < 1` | STANDING | Section 5 introduction, source:1967. |
+| `Ω`, `[MeasurableSpace Ω]`, `S` | TYPING | Carrier, measurable structure, and environment representation. |
+| `S.IsValid 𝒮 γ` | UNCLASSIFIED | Seven fields shown in the 5.3 inventory; mating-of-trees package has unresolved E-m1-5. |
+| `Λ` | TYPING | Representation of the source's family from Theorem 2.3. |
+| family a.s.: each `IsHarmonicBall` | STANDING, provisional | Theorem 2.3 calls each a harmonic ball; HB `Defs/HarmonicBall.lean:79` expands this to openness, origin, positive finite mass, and the harmonic mean-value property. |
+| family a.s.: mass `t`, null boundary, regular open | STANDING, provisional | HB `Draft/Section1.lean:58`, source:514. |
+| family a.s.: boundedness, connectedness, origin, monotonicity, Hausdorff continuity, intersection | STANDING, provisional | HB `Draft/Section1.lean:58`, source:515. |
+| family a.s.: obstacle identity, continuity, Laplacian and boundary zero | STANDING, provisional | `Defs/Setting.lean:231`, source:516–526; full characterization and uniqueness remain unaudited. |
+| `δ`, `t`, `0 < δ`, `δ < ρ`, `0 < t` | SOURCE | Proposition 5.1, source:1973. |
+
+At this nonrecursive level there are 5 SOURCE, 10 provisional STANDING, 5 TYPING and 1 UNCLASSIFIED input rows, counting grouped entries by the individual variables or inequalities in each row, but each grouped family condition as one row. No RULED or EXCESS input is yet verified; unclassified bundled inputs prevent a passing count. The proof does not introduce an explicit `Λ`-measurability premise; the conclusion uses outer probabilities. The source chooses its family through the unique a.s. theorem, whereas Lean universally quantifies over a family satisfying the a.s. predicate; whether all such representations have the required measurable and uniqueness properties remains open.
+
+The two clauses have precisely the same `δ,t` and event `t < clusterExitTime`; `innerNbhd` (`Defs/Notation.lean:29`) uses extended distance to the complement, corresponding to source:238–243 when that distance convention agrees. `fillCells` and `cellVertices` (`Defs/Map.lean:187–196`) match the displayed union and stopping set. `idlaProb` (`Defs/Setting.lean:194`) is an outer integral of the independent quenched walk law (`Defs/RandomWalk.lean:153`), so this is the S5 outer-probability reading, not yet an identification with an ordinary measurable joint law. `idlaStep` (`Defs/RandomWalk.lean:130`) leaves the state unchanged when a path never exits the occupied set; proving this fallback has zero probability for all finitely many walkers under the setting is still required for full source semantics. This is an unresolved obligation, not an asserted counterexample.
+
+The strict-gap final producer `iDLALowerBound_final_of_strictGap` (`Proofs/Sec5/IDLALowerBound/Final.lean:48`) returns the exact Draft, including both stopped and unrestricted clauses. The explicit application `five_one_strict_gap_reduction` in the audit module checks its complete listed hypotheses; in particular it still takes the stopped mean-value and quotient inputs, and the strict obstacle-gap and surplus inputs. It is a conditional reduction, not an unconditional proof or closure of E-c1-5.
