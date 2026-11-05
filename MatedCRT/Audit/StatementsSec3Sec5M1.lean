@@ -67,17 +67,32 @@ theorem relaxed_five_two_implies_draft (𝒮 : SpaceFillingSLEModel)
 
 /-- A measurable almost-surely positive surplus has a strictly positive measurable version. -/
 theorem five_two_positive_surplus_version {Ω : Type} [MeasurableSpace Ω]
-    (μ : MeasureTheory.Measure Ω) (s : Ω → ℝ) (hs : Measurable s)
+    (μ : MeasureTheory.Measure Ω) (𝓕 : MeasurableSpace Ω) (s : Ω → ℝ)
+    (hs : @Measurable Ω ℝ 𝓕 _ s)
     (hpos : ∀ᵐ ω ∂μ, 0 < s ω) :
-    ∃ t : Ω → ℝ, Measurable t ∧ (∀ ω, 0 < t ω) ∧ t =ᵐ[μ] s := by
+    ∃ t : Ω → ℝ, @Measurable Ω ℝ 𝓕 _ t ∧ (∀ ω, 0 < t ω) ∧ t =ᵐ[μ] s := by
   classical
   let t : Ω → ℝ := fun ω => if 0 < s ω then s ω else 1
   refine ⟨t, ?_, ?_, ?_⟩
-  · exact Measurable.ite (measurableSet_lt measurable_const hs) hs measurable_const
+  · let : MeasurableSpace Ω := 𝓕
+    exact Measurable.ite (measurableSet_lt measurable_const hs) hs measurable_const
   · intro ω
     by_cases h : 0 < s ω <;> simp [t, *]
   · filter_upwards [hpos] with ω hω
     simp [t, hω]
+
+/-- Null-set changes to events preserve convergence of their probabilities to one. -/
+theorem five_two_probTendsToOne_congr {Ω : Type} [MeasurableSpace Ω]
+    (μ : MeasureTheory.Measure Ω) (E F : ℝ → Set Ω)
+    (h : ∀ᵐ ω ∂μ, ∀ ε, ω ∈ E ε ↔ ω ∈ F ε) :
+    ProbTendsToOne μ E ↔ ProbTendsToOne μ F := by
+  have heq : ∀ ε, μ (E ε)ᶜ = μ (F ε)ᶜ := by
+    intro ε
+    apply MeasureTheory.measure_congr
+    filter_upwards [h] with ω hω
+    exact propext (not_congr (hω ε))
+  unfold ProbTendsToOne
+  simp_rw [heq]
 
 /-- The available Lemma 3.1 reduction concludes its corrected form. -/
 theorem three_one_corrected_reduction {𝒮 : SpaceFillingSLEModel}
@@ -240,5 +255,6 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms time_dependent_witness_not_uniform
 #print axioms relaxed_five_two_implies_draft
 #print axioms five_two_positive_surplus_version
+#print axioms five_two_probTendsToOne_congr
 
 end MatedCRT.Audit.StatementsSec3Sec5M1
