@@ -1,3 +1,5 @@
+import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.OccupationTail
+import MatedCRT.Proofs.Sec7.OdometerBoundMass.Laplacian
 import MatedCRT.Proofs.Measurability.EnvSigma
 import MatedCRT.Steps.Sec3.UniformConvergenceGreenKernel
 import MatedCRT.Steps.Sec3.DiscreteDirichletProblem
@@ -94,6 +96,21 @@ theorem five_three_draft_reduction (𝒮 : SpaceFillingSLEModel)
     (h218 : ExitTimeUpperBoundStmt 𝒮) (hs : MeanValueSurplusStep 𝒮) : MeanValueInequalityStmt 𝒮 :=
   meanValueInequality_of_surplus 𝒮 h44 h213 h41 h33 h218 hs
 
+/-- The discrete Green sum in Lemma 3.4 depends only on test-function values on the ball. -/
+theorem three_four_sum_ext (m : ℤ → ℤ → ℕ) {ε : ℝ} {η : ℝ → ℂ}
+    (hε : 0 < ε) (hη : Continuous η) (z : ℂ) (r : ℝ) (a : ℤ)
+    (f g : ℂ → ℝ) (hfg : ∀ x ∈ Metric.ball z r, f x = g x) :
+    (∑' x : cellVertices ε η (Metric.ball z r),
+      greenFn m (interiorCellVertices ε η (Metric.ball z r)) a x * f (vertexPoint ε η x)) =
+    (∑' x : cellVertices ε η (Metric.ball z r),
+      greenFn m (interiorCellVertices ε η (Metric.ball z r)) a x * g (vertexPoint ε η x)) := by
+  apply tsum_congr
+  intro x
+  by_cases hx : (x : ℤ) ∈ interiorCellVertices ε η (Metric.ball z r)
+  · rw [hfg _ (vertexPoint_mem_ball_of_mem_interior hε hη hx)]
+  · simp [Sec7.greenFn_eq_zero_of_not_mem_right m a hx]
+
+#print axioms three_four_sum_ext
 #print axioms three_five_draft_reduction
 #print axioms five_two_draft_reduction
 #print axioms five_three_draft_reduction
