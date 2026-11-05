@@ -107,5 +107,9 @@ theorem lqgMeasureFieldMeasurableStep (𝒮 : SpaceFillingSLEModel) : LQGMeasure
   · simp_rw [hνeq]
     exact h2.tendsto_integral f hf hfc
 
+/-- **Measurability of the good-scale events** (line 2505, almost-sure form), now without hypotheses. -/
+theorem goodScaleEventMeasurableAEStep (𝒮 : SpaceFillingSLEModel) : GoodScaleEventMeasurableAEStep 𝒮 :=
+  goodScaleEventMeasurableAEStep_of_lqgMeasure 𝒮 (lqgMeasureFieldMeasurableStep 𝒮)
+
 end LQGMeasureField
 end MatedCRT
