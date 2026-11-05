@@ -146,6 +146,22 @@ theorem five_three_draft_reduction (𝒮 : SpaceFillingSLEModel)
     (h218 : ExitTimeUpperBoundStmt 𝒮) (hs : MeanValueSurplusStep 𝒮) : MeanValueInequalityStmt 𝒮 :=
   meanValueInequality_of_surplus 𝒮 h44 h213 h41 h33 h218 hs
 
+/-- A pointwise measurable random function on a domain has a pointwise measurable extension. -/
+theorem three_four_measurable_extension {Ω : Type} [MeasurableSpace Ω]
+    (D : Set ℂ) (f : Ω → D → ℝ)
+    (hf : ∀ x : D, Measurable (fun ω => f ω x)) :
+    ∃ g : Ω → ℂ → ℝ, (∀ x, Measurable (fun ω => g ω x)) ∧
+      ∀ ω x (hx : x ∈ D), g ω x = f ω ⟨x, hx⟩ := by
+  classical
+  let g : Ω → ℂ → ℝ := fun ω x => if hx : x ∈ D then f ω ⟨x, hx⟩ else 0
+  refine ⟨g, ?_, ?_⟩
+  · intro x
+    by_cases hx : x ∈ D
+    · simpa [g, hx] using hf ⟨x, hx⟩
+    · simp [g, hx]
+  · intro ω x hx
+    simp [g, hx]
+
 /-- The discrete Green sum in Lemma 3.4 depends only on test-function values on the ball. -/
 theorem three_four_sum_ext (m : ℤ → ℤ → ℕ) {ε : ℝ} {η : ℝ → ℂ}
     (hε : 0 < ε) (hη : Continuous η) (z : ℂ) (r : ℝ) (a : ℤ)
@@ -196,6 +212,7 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms three_seven_latest_reduction
 #print axioms five_four_green_quotient_semantics
 #print axioms three_four_sum_ext
+#print axioms three_four_measurable_extension
 #print axioms three_five_draft_reduction
 #print axioms five_two_draft_reduction
 #print axioms five_three_draft_reduction
