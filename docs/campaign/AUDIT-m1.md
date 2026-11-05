@@ -79,3 +79,21 @@ The Lean evidence `relaxed_five_two_implies_draft` explicitly applies the actual
 `MatedCRT/Audit/StatementsSec3Sec5M1.lean` explicitly applies the respective producers in `three_one_corrected_reduction`, `three_three_draft_reduction`, `three_five_draft_reduction`, `three_six_draft_reduction`, `three_seven_draft_reduction`, `five_one_draft_reduction`, `five_two_draft_reduction`, `five_three_draft_reduction`, and `five_four_draft_reduction`. These check the displayed conditional conclusions and their supplied hypotheses; they do not prove the hypotheses or resolve source fidelity. No producer application for 3.2 or 3.4 is claimed here. All eleven `#print axioms` checks in the file report only `propext`, `Classical.choice`, and `Quot.sound`. This does not detect mathematical assumptions packaged in the environment, as E-m1-5 demonstrates.
 
 The checked theorem `three_four_sum_ext` uses pointwise equality on the ball and imposes no summability hypothesis: `tsum_congr` applies term by term, with zero Green function for all vertices outside the killed domain. It does not establish convergence or measurability in Lemma 3.4.
+
+
+## Lemma 5.4 binder and definition trace (provisional)
+
+The source fixes the γ-quantum-cone/SLE setting and ρ in Section 5 before saying “there exists a deterministic q > 0” (corrected source:1967, 2019–2026). The Lean definition `LLowerBoundStmt` (`Draft/Section5.lean:85`) places `∃ q` after γ, ρ but before the probability carrier, environment, and choice of harmonic-ball family. It therefore requires one q for every valid representation at fixed γ, ρ. Whether the paper's fixed-law formulation entails this is not settled by the word “deterministic.”
+
+| Lean input or local binder | Provisional bin | Evidence / open issue |
+| --- | --- | --- |
+| `𝒮` | TYPING | SLE-model parameter; equivalence of representations remains open |
+| `γ`, `0 < γ`, `γ < 2` | STANDING | Section 1 γ-LQG setting |
+| `ρ`, `0 < ρ`, `ρ < 1` | STANDING | fixed immediately before Proposition 5.1 |
+| `q`, `0 < q` | SOURCE | source chooses deterministic positive exponent; Lean choice is before environment and family |
+| `Ω`, `[MeasurableSpace Ω]`, `S` | TYPING | environment carrier and packaged structure |
+| `S.IsValid 𝒮 γ` | UNCLASSIFIED | expands to seven fields; `matingOfTrees` includes named literature inputs (E-m1-5) |
+| `Λ`, a.s. `IsConeHarmonicBallFamily (S.μ ω) (Λ ω)` | UNCLASSIFIED | source uses Theorem 2.3 family; expanded conditions and existence/uniqueness are not yet closed |
+| `δ`, `0 < δ`, `δ < ρ`, `t`, `0 < t` | SOURCE | quantified after q in both source and Lean |
+
+`clusterExitTime` is exactly the displayed supremum over positive times with `Λ_t ⊆ B_{ρ/3}` (`Defs/Setting.lean:244`, source:1596–1599), subject to real `sSup` semantics when that set is unbounded. `fillCells` is the indexed union in source:248 (`Defs/Map.lean:195`); `matedDiscreteCluster` unfolds to the obstacle cluster from source:1690 (`Defs/Sandpile.lean:87`). `TendsToOneOn` is outer `P({t < T} ∩ Eεᶜ) → 0` (`Defs/Notation.lean:39`). These are definition-body comparisons, not proofs of finiteness of the stopping time, measurability, the obstacle characterization, positivity of the Green denominator, or agreement of a real `tsum` with a finite sum. The last points remain part of semantic closure.
