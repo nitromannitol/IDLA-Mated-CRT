@@ -106,8 +106,8 @@ theorem innerNbhd_subset_fillCells_deep {ε δ ρ : ℝ} (hε : 0 ≤ ε) (hδ :
 theorem annealedOuterProb_le_add {Ω X : Type*} [MeasurableSpace Ω] [MeasurableSpace X] (P : Measure Ω)
     (κ : Ω → Measure X) [∀ ω, IsProbabilityMeasure (κ ω)] (E E₁ : Set (Ω × X)) (B : Set Ω)
     (h : ∀ ω, ω ∉ B → Prod.mk ω ⁻¹' E ⊆ Prod.mk ω ⁻¹' E₁) :
-    annealedOuterProb P κ E ≤ annealedOuterProb P κ E₁ + P B := by
-  unfold annealedOuterProb outerLIntegral
+    sectionwiseOuterProb P κ E ≤ sectionwiseOuterProb P κ E₁ + P B := by
+  unfold sectionwiseOuterProb outerLIntegral
   set g₂ : Ω → ℝ≥0∞ := (toMeasurable P B).indicator 1 with hg₂
   have hg₂m : Measurable g₂ := measurable_one.indicator (measurableSet_toMeasurable P B)
   have hg₂i : ∫⁻ ω, g₂ ω ∂P = P B := by

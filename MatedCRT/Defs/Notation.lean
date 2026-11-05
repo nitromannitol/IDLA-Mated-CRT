@@ -1,6 +1,7 @@
 import HarmonicBalls.Defs.Notation
 import HarmonicBalls.Defs.Brownian
 import Mathlib.Topology.MetricSpace.Holder
+import Mathlib.Probability.Kernel.Composition.MeasureCompProd
 
 /-!
 # Notation and conventions (Section 1.5, lines 370-391; eq:outer-inner-neighborhoods, lines 238-243)
@@ -45,6 +46,19 @@ when `f` is measurable, monotone and countably subadditive in `f`. (Mathlib's `�
 the *lower* integral, which is only superadditive.) -/
 noncomputable def outerLIntegral {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (f : Ω → ℝ≥0∞) : ℝ≥0∞ :=
   ⨅ (g : Ω → ℝ≥0∞) (_ : Measurable g) (_ : f ≤ g), ∫⁻ ω, g ω ∂P
+
+/-- The outer integral of the quenched probabilities of the sections of an event.
+This auxiliary quantity is useful for bounds proved separately in each environment. -/
+noncomputable def sectionwiseOuterProb {Ω X : Type*} [MeasurableSpace Ω] [MeasurableSpace X] (P : Measure Ω)
+    (κ : Ω → Measure X) (E : Set (Ω × X)) : ℝ≥0∞ :=
+  outerLIntegral P fun ω => κ ω (Prod.mk ω ⁻¹' E)
+
+/-- Outer measure under the joint law determined by the measurable conditional law.
+The zero measure totalizes the definition when the proposed conditional law is not measurable. -/
+noncomputable def jointOuterProb {Ω X : Type*} [MeasurableSpace Ω] [MeasurableSpace X] (P : Measure Ω)
+    (κ : Ω → Measure X) (E : Set (Ω × X)) : ℝ≥0∞ := by
+  classical
+  exact if h : Measurable κ then Measure.compProd P (⟨κ, h⟩ : ProbabilityTheory.Kernel Ω X) E else 0
 
 /-- The *annealed outer probability* of an event `E ⊆ Ω × X` of the environment `ω` (law `P`) and of a random
 object `x` whose conditional law given the environment is `κ ω` (the quenched law): the outer integral of the

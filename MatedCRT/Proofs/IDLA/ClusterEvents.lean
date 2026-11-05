@@ -113,7 +113,7 @@ theorem MatedCRTEnv.IsValid.idlaProb_eq_joint_stopped_containment
     (hS : S.IsValid 𝒮 γ) (ε : ℝ) (O U : Ω → Set ℤ)
     (hO : ∀ k, MeasurableSet {ω | k ∈ O ω})
     (hU : ∀ k, MeasurableSet {ω | k ∈ U ω}) (n : ℕ) :
-    S.idlaProb ε {p | ¬ O p.1 ⊆ stoppedIDLACluster (U p.1) p.2 n} =
+    S.idlaSectionProb ε {p | ¬ O p.1 ⊆ stoppedIDLACluster (U p.1) p.2 n} =
       S.idlaJointMeasure ε {p | ¬ O p.1 ⊆ stoppedIDLACluster (U p.1) p.2 n} := by
   rw [hS.idlaJointMeasure_eq ε]
   exact hS.idlaProb_eq_jointLaw_of_measurable ε
@@ -125,7 +125,7 @@ theorem MatedCRTEnv.IsValid.idlaProb_eq_joint_stopped_containment_of_nullMeasura
     (hS : S.IsValid 𝒮 γ) (ε : ℝ) (O U : Ω → Set ℤ)
     (hO : ∀ k, NullMeasurableSet {ω | k ∈ O ω} S.P)
     (hU : ∀ k, NullMeasurableSet {ω | k ∈ U ω} S.P) (n : ℕ) :
-    S.idlaProb ε {p | ¬ O p.1 ⊆ stoppedIDLACluster (U p.1) p.2 n} =
+    S.idlaSectionProb ε {p | ¬ O p.1 ⊆ stoppedIDLACluster (U p.1) p.2 n} =
       S.idlaJointMeasure ε {p | ¬ O p.1 ⊆ stoppedIDLACluster (U p.1) p.2 n} := by
   obtain ⟨O', hO', hOeq⟩ := exists_measurable_random_vertexSet_ae S.P O hO
   obtain ⟨U', hU', hUeq⟩ := exists_measurable_random_vertexSet_ae S.P U hU
@@ -146,7 +146,7 @@ theorem MatedCRTEnv.IsValid.idlaProb_eq_joint_stopped_containment_of_nullMeasura
       intro ω hω xs hx
       simpa [E, E', (hoff ω hω).1, (hoff ω hω).2] using hx)
     simpa [hB] using h
-  have h2 : S.idlaProb ε E' ≤ S.idlaProb ε E := by
+  have h2 : S.idlaSectionProb ε E' ≤ S.idlaSectionProb ε E := by
     have h := Sec8.annealedOuterProb_le_of_forall_not_mem S.P
       (fun ω => walkerSequenceLaw (S.mult ε ω) 0) (fun ω => walkerSequenceLaw (S.mult ε ω) 0)
       (fun _ => prob_le_one) E' E B (by
@@ -154,19 +154,19 @@ theorem MatedCRTEnv.IsValid.idlaProb_eq_joint_stopped_containment_of_nullMeasura
         have hs : Prod.mk ω ⁻¹' E' = Prod.mk ω ⁻¹' E := by
           simp [E, E', (hoff ω hω).1, (hoff ω hω).2]
         rw [hs])
-    simpa [MatedCRTEnv.idlaProb, hB] using h
+    simpa [MatedCRTEnv.idlaSectionProb, hB] using h
   apply le_antisymm (hS.idlaProb_le_jointMeasure ε E)
   calc
     S.idlaJointMeasure ε E ≤ S.idlaJointMeasure ε E' := h1
-    _ = S.idlaProb ε E' := (hS.idlaProb_eq_joint_stopped_containment ε O' U' hO' hU' n).symm
-    _ ≤ S.idlaProb ε E := h2
+    _ = S.idlaSectionProb ε E' := (hS.idlaProb_eq_joint_stopped_containment ε O' U' hO' hU' n).symm
+    _ ≤ S.idlaSectionProb ε E := h2
 
 /-- The sectionwise and joint probabilities also agree for the unstopped cluster. -/
 theorem MatedCRTEnv.IsValid.idlaProb_eq_joint_containment_of_nullMeasurable
     {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
     (hS : S.IsValid 𝒮 γ) (ε : ℝ) (O : Ω → Set ℤ)
     (hO : ∀ k, NullMeasurableSet {ω | k ∈ O ω} S.P) (n : ℕ) :
-    S.idlaProb ε {p | ¬ O p.1 ⊆ idlaCluster p.2 n} =
+    S.idlaSectionProb ε {p | ¬ O p.1 ⊆ idlaCluster p.2 n} =
       S.idlaJointMeasure ε {p | ¬ O p.1 ⊆ idlaCluster p.2 n} := by
   exact hS.idlaProb_eq_joint_stopped_containment_of_nullMeasurable ε O (fun _ => univ) hO
     (fun _ => MeasurableSet.univ.nullMeasurableSet) n

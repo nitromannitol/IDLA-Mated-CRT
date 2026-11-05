@@ -3,7 +3,7 @@ import MatedCRT.Defs.Setting
 /-!
 # Union bounds for the annealed outer probability
 
-The annealed outer probability `annealedOuterProb P κ E` (review-S (S5), MatedCRT/Defs/Notation.lean) is the outer
+The sectionwise outer probability `sectionwiseOuterProb P κ E` is the outer
 integral of the quenched probability `ω ↦ κ ω (E_ω)`. This file proves the two bounds used to combine the lower and
 upper bounds of Section 8 and to transfer events between two environments in the proof of Theorems 1.4 and 1.6:
 
@@ -24,8 +24,8 @@ variable {Ω X : Type*} [MeasurableSpace Ω] [MeasurableSpace X]
 /-- **Subadditivity of the annealed outer probability**: if `E ⊆ E₁ ∪ E₂` then `P*(E) ≤ P*(E₁) + P*(E₂)`. -/
 theorem annealedOuterProb_le_add_of_subset_union (P : Measure Ω) (κ : Ω → Measure X) {E E₁ E₂ : Set (Ω × X)}
     (hE : E ⊆ E₁ ∪ E₂) :
-    annealedOuterProb P κ E ≤ annealedOuterProb P κ E₁ + annealedOuterProb P κ E₂ := by
-  unfold annealedOuterProb outerLIntegral
+    sectionwiseOuterProb P κ E ≤ sectionwiseOuterProb P κ E₁ + sectionwiseOuterProb P κ E₂ := by
+  unfold sectionwiseOuterProb outerLIntegral
   rw [ENNReal.iInf_add]
   refine le_iInf fun g₁ => ?_
   rw [ENNReal.iInf_add]
@@ -54,8 +54,8 @@ measures, then `P*_κ(E) ≤ P*_{κ'}(E') + P(B)`. -/
 theorem annealedOuterProb_le_of_forall_not_mem (P : Measure Ω) (κ κ' : Ω → Measure X)
     (hκ : ∀ ω, κ ω univ ≤ 1) (E E' : Set (Ω × X)) (B : Set Ω)
     (h : ∀ ω, ω ∉ B → κ ω (Prod.mk ω ⁻¹' E) ≤ κ' ω (Prod.mk ω ⁻¹' E')) :
-    annealedOuterProb P κ E ≤ annealedOuterProb P κ' E' + P B := by
-  unfold annealedOuterProb outerLIntegral
+    sectionwiseOuterProb P κ E ≤ sectionwiseOuterProb P κ' E' + P B := by
+  unfold sectionwiseOuterProb outerLIntegral
   set g₂ : Ω → ℝ≥0∞ := (toMeasurable P B).indicator 1 with hg₂
   have hg₂m : Measurable g₂ := measurable_one.indicator (measurableSet_toMeasurable P B)
   have hg₂i : ∫⁻ ω, g₂ ω ∂P = P B := by
@@ -80,8 +80,8 @@ theorem annealedOuterProb_le_of_forall_not_mem (P : Measure Ω) (κ κ' : Ω →
 
 /-- The annealed outer probability is monotone in the event. -/
 theorem annealedOuterProb_mono (P : Measure Ω) (κ : Ω → Measure X) {E E' : Set (Ω × X)} (hE : E ⊆ E') :
-    annealedOuterProb P κ E ≤ annealedOuterProb P κ E' := by
-  unfold annealedOuterProb outerLIntegral
+    sectionwiseOuterProb P κ E ≤ sectionwiseOuterProb P κ E' := by
+  unfold sectionwiseOuterProb outerLIntegral
   refine le_iInf fun g => le_iInf fun hg => le_iInf fun hfg => iInf_le_of_le g (iInf_le_of_le hg
     (iInf_le_of_le (fun ω => (measure_mono (preimage_mono hE)).trans (hfg ω)) le_rfl))
 

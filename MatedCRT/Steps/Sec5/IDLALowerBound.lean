@@ -47,8 +47,8 @@ def GeneralIDLALowerBoundRelaxedStep (𝒮 : SpaceFillingSLEModel) : Prop :=
       (1 + s ω) * ∑' b : O₂ ε ω, greenFn (S.mult ε ω) (O₂ ε ω) b a ≤
         K ε * greenFn (S.mult ε ω) (O₂ ε ω) 0 a ∧
       ε ^ (-q) ≤ (∑' b : O₂ ε ω, greenFn (S.mult ε ω) (O₂ ε ω) b a) / greenFn (S.mult ε ω) (O₂ ε ω) a a}) →
-    Tendsto (fun ε => S.idlaProb ε {p | ¬ O₁ ε p.1 ⊆ idlaCluster p.2 ⌊K ε⌋₊}) (𝓝[>] 0) (𝓝 0) ∧
-    Tendsto (fun ε => S.idlaProb ε {p | ¬ O₁ ε p.1 ⊆ stoppedIDLACluster (O₂ ε p.1) p.2 ⌊K ε⌋₊})
+    Tendsto (fun ε => S.idlaSectionProb ε {p | ¬ O₁ ε p.1 ⊆ idlaCluster p.2 ⌊K ε⌋₊}) (𝓝[>] 0) (𝓝 0) ∧
+    Tendsto (fun ε => S.idlaSectionProb ε {p | ¬ O₁ ε p.1 ⊆ stoppedIDLACluster (O₂ ε p.1) p.2 ⌊K ε⌋₊})
       (𝓝[>] 0) (𝓝 0)
 
 /-- **The discrete-cluster form of Proposition 4.2** (what its proof shows, lines 1662-1680): for `δ ∈ (0, ρ)` and
@@ -123,7 +123,7 @@ theorem generalIDLALowerBoundRelaxed_of_steps (𝒮 : SpaceFillingSLEModel) (hG 
       (∀ δ₀ : ℝ, 0 < δ₀ → ∃ c : ℝ, 0 < c ∧ ∀ ε : ℝ, 0 < ε → 2 / δ₀ ≤ ε ^ (-q) → ∀ ω ∈ B ε,
         δ₀ ≤ s ω → ∀ a ∈ O₁ ε ω, walkerSequenceLaw (S.mult ε ω) 0 {xs | a ∉ clus ε ω xs} ≤
           ENNReal.ofReal (2 * Real.exp (-(c * ε ^ (-q))))) →
-      Tendsto (fun ε => S.idlaProb ε {p | ¬ O₁ ε p.1 ⊆ clus ε p.1 p.2}) (𝓝[>] 0) (𝓝 0) := by
+      Tendsto (fun ε => S.idlaSectionProb ε {p | ¬ O₁ ε p.1 ⊆ clus ε p.1 p.2}) (𝓝[>] 0) (𝓝 0) := by
     intro clus hsite
     refine tendsto_outerLIntegral_of_eventually_le S.P
       (fun ε ω => walkerSequenceLaw (S.mult ε ω) 0 {xs | ¬ O₁ ε ω ⊆ clus ε ω xs})
@@ -222,10 +222,10 @@ theorem iDLALowerBound_discrete_of_steps (𝒮 : SpaceFillingSLEModel) (h52 : Ge
     ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
     ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
     ∀ δ t : ℝ, 0 < δ → δ < ρ → 0 < t →
-      Tendsto (fun ε => S.idlaProb ε {p | t < clusterExitTime (Λ p.1) ρ ∧
+      Tendsto (fun ε => S.idlaSectionProb ε {p | t < clusterExitTime (Λ p.1) ρ ∧
           ¬ innerNbhd δ (Λ p.1 t) ⊆ fillCells ε (S.η p.1) (idlaCluster p.2 ⌊t / ε⌋₊)})
         (𝓝[>] 0) (𝓝 0) ∧
-      Tendsto (fun ε => S.idlaProb ε {p | t < clusterExitTime (Λ p.1) ρ ∧
+      Tendsto (fun ε => S.idlaSectionProb ε {p | t < clusterExitTime (Λ p.1) ρ ∧
           ¬ innerNbhd δ (Λ p.1 t) ⊆ fillCells ε (S.η p.1)
             (stoppedIDLACluster (matedDiscreteCluster (S.mult ε p.1) ε (S.η p.1) ρ t) p.2 ⌊t / ε⌋₊)})
         (𝓝[>] 0) (𝓝 0) := by
@@ -285,8 +285,8 @@ theorem iDLALowerBound_discrete_of_steps (𝒮 : SpaceFillingSLEModel) (h52 : Ge
     exact tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds h
       (Eventually.of_forall fun _ => zero_le) (Eventually.of_forall fun _ => measure_union_le _ _)
   have fin : ∀ clus : ℝ → Ω → (ℕ → ℕ → ℤ) → Set ℤ,
-      Tendsto (fun ε => S.idlaProb ε {p | ¬ O₁ ε p.1 ⊆ clus ε p.1 p.2}) (𝓝[>] 0) (𝓝 0) →
-      Tendsto (fun ε => S.idlaProb ε {p | t < clusterExitTime (Λ p.1) ρ ∧
+      Tendsto (fun ε => S.idlaSectionProb ε {p | ¬ O₁ ε p.1 ⊆ clus ε p.1 p.2}) (𝓝[>] 0) (𝓝 0) →
+      Tendsto (fun ε => S.idlaSectionProb ε {p | t < clusterExitTime (Λ p.1) ρ ∧
         ¬ innerNbhd δ (Λ p.1 t) ⊆ fillCells ε (S.η p.1) (clus ε p.1 p.2)}) (𝓝[>] 0) (𝓝 0) := by
     intro clus hcl
     have h := hcl.add hbad

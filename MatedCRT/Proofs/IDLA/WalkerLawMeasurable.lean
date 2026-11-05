@@ -101,14 +101,14 @@ theorem MatedCRTEnv.IsValid.idlaProb_eq_jointLaw_of_measurable
     {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
     {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (ε : ℝ)
     {E : Set (Ω × (ℕ → ℕ → ℤ))} (hE : MeasurableSet E) :
-    S.idlaProb ε E = hS.idlaJointLaw ε E := by
+    S.idlaSectionProb ε E = hS.idlaJointLaw ε E := by
   rw [hS.idlaJointLaw_apply ε hE]
   let κ : Kernel Ω (ℕ → ℕ → ℤ) := ⟨fun ω => walkerSequenceLaw (S.mult ε ω) 0,
     hS.measurable_walkerSequenceLaw ε 0⟩
   let : IsMarkovKernel κ := ⟨fun ω => isProbabilityMeasure_walkerSequenceLaw _ _⟩
   have hm : Measurable (fun ω => walkerSequenceLaw (S.mult ε ω) 0 (Prod.mk ω ⁻¹' E)) :=
     Kernel.measurable_kernel_prodMk_left (κ := κ) hE
-  unfold MatedCRTEnv.idlaProb annealedOuterProb outerLIntegral
+  unfold MatedCRTEnv.idlaSectionProb sectionwiseOuterProb outerLIntegral
   apply le_antisymm
   · exact iInf_le_of_le _ (iInf_le_of_le hm (iInf_le_of_le (le_refl _) le_rfl))
   · refine le_iInf fun g => le_iInf fun _ => le_iInf fun hg => ?_
@@ -118,10 +118,10 @@ theorem MatedCRTEnv.IsValid.idlaProb_eq_jointLaw_of_measurable
 theorem MatedCRTEnv.IsValid.idlaProb_le_jointMeasure
     {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
     {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (ε : ℝ)
-    (E : Set (Ω × (ℕ → ℕ → ℤ))) : S.idlaProb ε E ≤ S.idlaJointMeasure ε E := by
+    (E : Set (Ω × (ℕ → ℕ → ℤ))) : S.idlaSectionProb ε E ≤ S.idlaJointMeasure ε E := by
   let F := toMeasurable (hS.idlaJointLaw ε) E
   calc
-    S.idlaProb ε E ≤ S.idlaProb ε F :=
+    S.idlaSectionProb ε E ≤ S.idlaSectionProb ε F :=
       Sec8.annealedOuterProb_mono _ _ (subset_toMeasurable _ _)
     _ = hS.idlaJointLaw ε F :=
       hS.idlaProb_eq_jointLaw_of_measurable ε (measurableSet_toMeasurable _ _)
@@ -217,8 +217,8 @@ theorem MatedCRTEnv.IsValid.idlaJointMeasure_le_of_graph_eq_off
   have hfirst : S.idlaJointMeasure ε E ≤ S.idlaJointMeasure ε F' + S.P B :=
     hS.idlaJointMeasure_le_add_env ε E F' B (fun ω hω xs hx =>
       subset_toMeasurable _ _ (h ω hω xs hx))
-  have hsecond : S.idlaProb ε F' ≤ S'.idlaProb ε' F' + S.P B := by
-    unfold MatedCRTEnv.idlaProb
+  have hsecond : S.idlaSectionProb ε F' ≤ S'.idlaSectionProb ε' F' + S.P B := by
+    unfold MatedCRTEnv.idlaSectionProb
     rw [← hP]
     refine Sec8.annealedOuterProb_le_of_forall_not_mem S.P _ _ (fun ω => prob_le_one) F' F' B ?_
     intro ω hω

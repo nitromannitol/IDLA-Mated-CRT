@@ -197,6 +197,19 @@ noncomputable def MatedCRTEnv.idlaJointMeasure {Ω : Type} [MeasurableSpace Ω]
     S.P ⊗ₘ (⟨fun ω => walkerSequenceLaw (S.mult ε ω) 0, h⟩ : Kernel Ω (ℕ → ℕ → ℤ))
   else 0
 
+/-- The sectionwise outer probability used for quenched IDLA estimates. -/
+noncomputable def MatedCRTEnv.idlaSectionProb {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ε : ℝ)
+    (E : Set (Ω × (ℕ → ℕ → ℤ))) : ℝ≥0∞ :=
+  sectionwiseOuterProb S.P (fun ω => walkerSequenceLaw (S.mult ε ω) 0) E
+
+/-- The generic joint outer probability specializes to the IDLA joint measure. -/
+theorem MatedCRTEnv.jointOuterProb_eq_idlaJointMeasure {Ω : Type} [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) (ε : ℝ) (E : Set (Ω × (ℕ → ℕ → ℤ))) :
+    jointOuterProb S.P (fun ω => walkerSequenceLaw (S.mult ε ω) 0) E = S.idlaJointMeasure ε E := by
+  classical
+  simp only [jointOuterProb, MatedCRTEnv.idlaJointMeasure]
+  split <;> rfl
+
 /-- The *annealed outer probability* of an event `E ⊆ Ω × (ℕ → ℕ → ℤ)` of the environment and the IDLA walkers of the
 map with cell size `ε`, which given `(h, η)` are independent simple random walks on `𝒢^ε` started at the origin
 (`walkerSequenceLaw (S.mult ε ω) 0`): `annealedOuterProb` (MatedCRT/Defs/Notation.lean). -/

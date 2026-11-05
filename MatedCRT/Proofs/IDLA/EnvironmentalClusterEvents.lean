@@ -106,7 +106,7 @@ theorem MatedCRTEnv.IsValid.idlaProb_eq_joint_environmentCluster
     {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (ε : ℝ)
     (P : Ω → Set ℤ → Prop) (hP : ∀ A, A.Finite → NullMeasurableSet {ω | P ω A} S.P)
     (n : ℕ) :
-    S.idlaProb ε {p | P p.1 (idlaCluster p.2 n)} =
+    S.idlaSectionProb ε {p | P p.1 (idlaCluster p.2 n)} =
       S.idlaJointMeasure ε {p | P p.1 (idlaCluster p.2 n)} := by
   obtain ⟨E', hE', hEq⟩ := exists_measurable_idlaCluster_environment_ae S.P P hP n
   let E : Set (Ω × (ℕ → ℕ → ℤ)) := {p | P p.1 (idlaCluster p.2 n)}
@@ -120,7 +120,7 @@ theorem MatedCRTEnv.IsValid.idlaProb_eq_joint_environmentCluster
       intro ω hω xs hx
       exact (not_not.mp hω xs).mpr hx)
     simpa [hB] using h
-  have h2 : S.idlaProb ε E' ≤ S.idlaProb ε E := by
+  have h2 : S.idlaSectionProb ε E' ≤ S.idlaSectionProb ε E := by
     have h := Sec8.annealedOuterProb_le_of_forall_not_mem S.P
       (fun ω => walkerSequenceLaw (S.mult ε ω) 0) (fun ω => walkerSequenceLaw (S.mult ε ω) 0)
       (fun _ => prob_le_one) E' E B (by
@@ -129,11 +129,11 @@ theorem MatedCRTEnv.IsValid.idlaProb_eq_joint_environmentCluster
           ext xs
           exact not_not.mp hω xs
         rw [heq])
-    simpa [MatedCRTEnv.idlaProb, hB] using h
+    simpa [MatedCRTEnv.idlaSectionProb, hB] using h
   apply le_antisymm (hS.idlaProb_le_jointMeasure ε E)
   calc
     S.idlaJointMeasure ε E ≤ S.idlaJointMeasure ε E' := h1
-    _ = S.idlaProb ε E' := by rw [hS.idlaJointMeasure_eq ε, hS.idlaProb_eq_jointLaw_of_measurable ε hE']
-    _ ≤ S.idlaProb ε E := h2
+    _ = S.idlaSectionProb ε E' := by rw [hS.idlaJointMeasure_eq ε, hS.idlaProb_eq_jointLaw_of_measurable ε hE']
+    _ ≤ S.idlaSectionProb ε E := h2
 
 end MatedCRT

@@ -19,9 +19,9 @@ theorem MatedCRTEnv.IsValid.joint_generalIDLABounds_of_sectionwise
     (hS : S.IsValid 𝒮 γ) (O₁ O₂ : ℝ → Ω → Set ℤ) (K : ℝ → ℝ)
     (hO₁ : ∀ ε k, MeasurableSet[S.envSigma] {ω | k ∈ O₁ ε ω})
     (hO₂ : ∀ ε k, MeasurableSet[S.envSigma] {ω | k ∈ O₂ ε ω})
-    (hLower : Tendsto (fun ε => S.idlaProb ε {p | ¬ O₁ ε p.1 ⊆ idlaCluster p.2 ⌊K ε⌋₊})
+    (hLower : Tendsto (fun ε => S.idlaSectionProb ε {p | ¬ O₁ ε p.1 ⊆ idlaCluster p.2 ⌊K ε⌋₊})
       (𝓝[>] 0) (𝓝 0))
-    (hStopped : Tendsto (fun ε => S.idlaProb ε
+    (hStopped : Tendsto (fun ε => S.idlaSectionProb ε
       {p | ¬ O₁ ε p.1 ⊆ stoppedIDLACluster (O₂ ε p.1) p.2 ⌊K ε⌋₊}) (𝓝[>] 0) (𝓝 0)) :
     Tendsto (fun ε => S.idlaJointMeasure ε {p | ¬ O₁ ε p.1 ⊆ idlaCluster p.2 ⌊K ε⌋₊})
       (𝓝[>] 0) (𝓝 0) ∧
@@ -44,9 +44,9 @@ theorem MatedCRTEnv.IsValid.joint_generalIDLABounds_of_nullMeasurable
     (hS : S.IsValid 𝒮 γ) (O U : ℝ → Ω → Set ℤ) (K : ℝ → ℝ)
     (hO : ∀ ε k, NullMeasurableSet {ω | k ∈ O ε ω} S.P)
     (hU : ∀ ε k, NullMeasurableSet {ω | k ∈ U ε ω} S.P)
-    (hLower : Tendsto (fun ε => S.idlaProb ε {p | ¬ O ε p.1 ⊆ idlaCluster p.2 ⌊K ε⌋₊})
+    (hLower : Tendsto (fun ε => S.idlaSectionProb ε {p | ¬ O ε p.1 ⊆ idlaCluster p.2 ⌊K ε⌋₊})
       (𝓝[>] 0) (𝓝 0))
-    (hStopped : Tendsto (fun ε => S.idlaProb ε
+    (hStopped : Tendsto (fun ε => S.idlaSectionProb ε
       {p | ¬ O ε p.1 ⊆ stoppedIDLACluster (U ε p.1) p.2 ⌊K ε⌋₊}) (𝓝[>] 0) (𝓝 0)) :
     Tendsto (fun ε => S.idlaJointMeasure ε {p | ¬ O ε p.1 ⊆ idlaCluster p.2 ⌊K ε⌋₊})
       (𝓝[>] 0) (𝓝 0) ∧
@@ -68,9 +68,9 @@ theorem MatedCRTEnv.IsValid.joint_generalIDLABounds_of_nullMeasurable_envelope
     (hG : ∀ ε k, NullMeasurableSet {ω | k ∈ G ε ω} S.P)
     (hU : ∀ ε k, NullMeasurableSet {ω | k ∈ U ε ω} S.P)
     (hSel : Tendsto (fun ε => S.P {ω | ¬ O ε ω ⊆ G ε ω}) (𝓝[>] 0) (𝓝 0))
-    (hLower : Tendsto (fun ε => S.idlaProb ε {p | ¬ G ε p.1 ⊆ idlaCluster p.2 ⌊K ε⌋₊})
+    (hLower : Tendsto (fun ε => S.idlaSectionProb ε {p | ¬ G ε p.1 ⊆ idlaCluster p.2 ⌊K ε⌋₊})
       (𝓝[>] 0) (𝓝 0))
-    (hStopped : Tendsto (fun ε => S.idlaProb ε
+    (hStopped : Tendsto (fun ε => S.idlaSectionProb ε
       {p | ¬ G ε p.1 ⊆ stoppedIDLACluster (U ε p.1) p.2 ⌊K ε⌋₊}) (𝓝[>] 0) (𝓝 0)) :
     Tendsto (fun ε => S.idlaJointMeasure ε {p | ¬ O ε p.1 ⊆ idlaCluster p.2 ⌊K ε⌋₊})
       (𝓝[>] 0) (𝓝 0) ∧
@@ -101,9 +101,9 @@ theorem MatedCRTEnv.IsValid.joint_generalIDLABounds_of_measurable_envelope
     (hG : ∀ ε k, MeasurableSet[S.envSigma] {ω | k ∈ G ε ω})
     (hU : ∀ ε k, MeasurableSet[S.envSigma] {ω | k ∈ U ε ω})
     (hSel : Tendsto (fun ε => S.P {ω | ¬ O ε ω ⊆ G ε ω}) (𝓝[>] 0) (𝓝 0))
-    (hLower : Tendsto (fun ε => S.idlaProb ε {p | ¬ G ε p.1 ⊆ idlaCluster p.2 ⌊K ε⌋₊})
+    (hLower : Tendsto (fun ε => S.idlaSectionProb ε {p | ¬ G ε p.1 ⊆ idlaCluster p.2 ⌊K ε⌋₊})
       (𝓝[>] 0) (𝓝 0))
-    (hStopped : Tendsto (fun ε => S.idlaProb ε
+    (hStopped : Tendsto (fun ε => S.idlaSectionProb ε
       {p | ¬ G ε p.1 ⊆ stoppedIDLACluster (U ε p.1) p.2 ⌊K ε⌋₊}) (𝓝[>] 0) (𝓝 0)) :
     Tendsto (fun ε => S.idlaJointMeasure ε {p | ¬ O ε p.1 ⊆ idlaCluster p.2 ⌊K ε⌋₊})
       (𝓝[>] 0) (𝓝 0) ∧
