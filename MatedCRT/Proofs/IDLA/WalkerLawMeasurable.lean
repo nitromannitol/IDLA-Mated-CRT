@@ -76,4 +76,22 @@ theorem MatedCRTEnv.IsValid.idlaJointLaw_apply
   let : IsMarkovKernel κ := ⟨fun ω => isProbabilityMeasure_walkerSequenceLaw _ _⟩
   exact Measure.compProd_apply hE
 
+/-- On measurable events the sectionwise convention agrees with the joint law. -/
+theorem MatedCRTEnv.IsValid.idlaProb_eq_jointLaw_of_measurable
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (ε : ℝ)
+    {E : Set (Ω × (ℕ → ℕ → ℤ))} (hE : MeasurableSet E) :
+    S.idlaProb ε E = hS.idlaJointLaw ε E := by
+  rw [hS.idlaJointLaw_apply ε hE]
+  let κ : Kernel Ω (ℕ → ℕ → ℤ) := ⟨fun ω => walkerSequenceLaw (S.mult ε ω) 0,
+    hS.measurable_walkerSequenceLaw ε 0⟩
+  let : IsMarkovKernel κ := ⟨fun ω => isProbabilityMeasure_walkerSequenceLaw _ _⟩
+  have hm : Measurable (fun ω => walkerSequenceLaw (S.mult ε ω) 0 (Prod.mk ω ⁻¹' E)) :=
+    Kernel.measurable_kernel_prodMk_left (κ := κ) hE
+  unfold MatedCRTEnv.idlaProb annealedOuterProb outerLIntegral
+  apply le_antisymm
+  · exact iInf_le_of_le _ (iInf_le_of_le hm (iInf_le_of_le (le_refl _) le_rfl))
+  · refine le_iInf fun g => le_iInf fun _ => le_iInf fun hg => ?_
+    exact lintegral_mono hg
+
 end MatedCRT
