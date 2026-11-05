@@ -165,6 +165,45 @@ theorem MatedCRTEnv.IsValid.idlaJointMeasure_le_add_env
     _ ≤ S.idlaJointMeasure ε F + S.idlaJointMeasure ε (B ×ˢ univ) := measure_union_le _ _
     _ ≤ S.idlaJointMeasure ε F + S.P B := add_le_add le_rfl (hS.idlaJointMeasure_env_le ε B)
 
+/-- Compare joint outer probabilities when the graph and the events agree away from a bad
+set of environments.  A measurable envelope of the bad set makes the comparison valid even
+when the original events and the bad set are not measurable. -/
+theorem MatedCRTEnv.IsValid.idlaJointMeasure_le_of_graph_eq_off_sharp
+    {Ω : Type} [MeasurableSpace Ω] {S S' : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (hS' : S'.IsValid 𝒮 γ)
+    (ε ε' : ℝ) (E F : Set (Ω × (ℕ → ℕ → ℤ))) (B : Set Ω) (hP : S.P = S'.P)
+    (hgraph : ∀ ω, ω ∉ B → S.mult ε ω = S'.mult ε' ω)
+    (h : ∀ ω, ω ∉ B → ∀ xs, (ω, xs) ∈ E → (ω, xs) ∈ F) :
+    S.idlaJointMeasure ε E ≤ S'.idlaJointMeasure ε' F + S.P B := by
+  let B' := toMeasurable S.P B
+  let F' := toMeasurable (S'.idlaJointMeasure ε') F
+  let G := F' \ (B' ×ˢ (univ : Set (ℕ → ℕ → ℤ)))
+  have hG : MeasurableSet G := (measurableSet_toMeasurable _ _).diff
+    ((measurableSet_toMeasurable _ _).prod MeasurableSet.univ)
+  have hfirst : S.idlaJointMeasure ε E ≤ S.idlaJointMeasure ε G + S.P B' :=
+    hS.idlaJointMeasure_le_add_env ε E G B' (by
+      intro ω hω xs hx
+      have hωB : ω ∉ B := fun hb => hω (subset_toMeasurable _ _ hb)
+      exact ⟨subset_toMeasurable _ _ (h ω hωB xs hx), by simpa using hω⟩)
+  have heq : S.idlaJointMeasure ε G = S'.idlaJointMeasure ε' G := by
+    rw [hS.idlaJointMeasure_apply ε hG, hS'.idlaJointMeasure_apply ε' hG, ← hP]
+    apply lintegral_congr
+    intro ω
+    by_cases hω : ω ∈ B'
+    · have hempty : Prod.mk ω ⁻¹' G = ∅ := by
+        ext xs
+        simp [G, hω]
+      rw [hempty, measure_empty, measure_empty]
+    · rw [hgraph ω (fun hb => hω (subset_toMeasurable _ _ hb))]
+  calc
+    S.idlaJointMeasure ε E ≤ S.idlaJointMeasure ε G + S.P B' := hfirst
+    _ = S'.idlaJointMeasure ε' G + S.P B := by rw [heq, show S.P B' = S.P B from measure_toMeasurable B]
+    _ ≤ S'.idlaJointMeasure ε' F + S.P B := by
+      apply add_le_add ?_ le_rfl
+      calc
+        S'.idlaJointMeasure ε' G ≤ S'.idlaJointMeasure ε' F' := measure_mono sdiff_subset
+        _ = S'.idlaJointMeasure ε' F := measure_toMeasurable F
+
 /-- Transfer joint outer probabilities between environments with identical graph laws off a bad set. -/
 theorem MatedCRTEnv.IsValid.idlaJointMeasure_le_of_graph_eq_off
     {Ω : Type} [MeasurableSpace Ω] {S S' : MatedCRTEnv Ω}
