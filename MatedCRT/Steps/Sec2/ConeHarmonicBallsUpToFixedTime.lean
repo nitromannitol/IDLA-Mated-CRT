@@ -111,14 +111,14 @@ def ConeHarmonicBallStrictGrowthStep : Prop :=
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
     ∀ᵐ ω ∂P, ∀ (T : ℝ) (Λ : ℝ → Set ℂ), IsConeHarmonicBallFamilyOn (μ ω) Λ T → IsStrictlyGrowingOn Λ T
 
-/-- A family with the properties of Theorem 2.3 for all `t > 0` has them on every interval `(0, T)`, `T > 0`. -/
-theorem IsConeHarmonicBallFamily.isConeHarmonicBallFamilyOn {ν : Measure ℂ} {Λ : ℝ → Set ℂ}
-    (h : IsConeHarmonicBallFamily ν Λ) {T : ℝ} (hT : 0 < T) : IsConeHarmonicBallFamilyOn ν Λ T := by
-  obtain ⟨hball, hcond, hobs⟩ := h
+/-- The properties of Theorem 2.3 on `(0, T)`, `T > 0`, from the harmonic ball property and (a), (b) for all `t > 0`
+and the obstacle characterization (c) on `(0, T)`. -/
+theorem isConeHarmonicBallFamilyOn_of_conditions {ν : Measure ℂ} {Λ : ℝ → Set ℂ}
+    (hball : ∀ t : ℝ, 0 < t → IsHarmonicBall ν (Λ t) 0) (hcond : SatisfiesHarmonicBallConditions ν Λ 0) {T : ℝ}
+    (hobs : SatisfiesObstacleCharacterizationOn ν Λ T) (hT : 0 < T) : IsConeHarmonicBallFamilyOn ν Λ T := by
   refine ⟨fun t ht => hball t ht.1, ⟨fun t ht => hcond.measure_eq t ht.1, fun t ht => hcond.measure_frontier t ht.1,
     fun t ht => hcond.isRegularOpen t ht.1, fun t ht => hcond.isBounded t ht.1, fun t ht => hcond.isConnected t ht.1,
-    fun t ht => hcond.mem t ht.1, hcond.monotoneOn.mono Ioo_subset_Ioi_self, ?_, ?_⟩,
-    fun t r ht hr hsub ρ hρ => hobs t r ht.1 hr hsub ρ hρ⟩
+    fun t ht => hcond.mem t ht.1, hcond.monotoneOn.mono Ioo_subset_Ioi_self, ?_, ?_⟩, hobs⟩
   · intro t ht ε hε
     exact nhdsWithin_mono _ Ioo_subset_Ioi_self (hcond.hausdorffContinuousOn t ht.1 ε hε)
   · apply Subset.antisymm
@@ -136,20 +136,32 @@ theorem IsConeHarmonicBallFamily.isConeHarmonicBallFamilyOn {ν : Measure ℂ} {
       simp only [mem_iInter]
       exact fun t ht => hcond.mem t ht.1
 
-/-- **Stopping a family of Theorem 2.3 at `∂B_{1/2}`** (deterministic). If `{Λ_t}_{t > 0}` has the properties of
-Theorem 2.3 for a measure `ν` with `ν(B_{1/2}) < ∞` and `Λ_t ⊆ B_{1/2}` for some `t > 0`, then with
+/-- A family with the properties of Theorem 2.3 for all `t > 0` has them on every interval `(0, T)`, `T > 0`. -/
+theorem IsConeHarmonicBallFamily.isConeHarmonicBallFamilyOn {ν : Measure ℂ} {Λ : ℝ → Set ℂ}
+    (h : IsConeHarmonicBallFamily ν Λ) {T : ℝ} (hT : 0 < T) : IsConeHarmonicBallFamilyOn ν Λ T :=
+  isConeHarmonicBallFamilyOn_of_conditions h.1 h.2.1 (fun t r ht hr hsub ρ hρ => h.2.2 t r ht.1 hr hsub ρ hρ) hT
+
+/-- **Stopping a family at `∂B_{1/2}`** (deterministic), general form. If `{Λ_t}_{t > 0}` consists of harmonic balls
+for a measure `ν` with `ν(B_{1/2}) < ∞`, satisfies (a), (b) of Theorem 2.3, satisfies the obstacle characterization
+(c) at the times `t` with `Λ_t ⊆ B_{1/2}`, and `Λ_t ⊆ B_{1/2}` for some `t > 0`, then with
 `T = sup {t > 0 : Λ_t ⊆ B_{1/2}}` the family `{Λ_t}_{0 < t < T}` is a family of Lemma 2.4: `0 < T < ∞` (as
 `ν(Λ_t) = t`), and by Hausdorff continuity at `T` the family is not stopped before it reaches `∂B_{1/2}`. -/
-theorem hasConeHarmonicBallsUpToHalfBall_of_isConeHarmonicBallFamily {ν : Measure ℂ} {Λ : ℝ → Set ℂ}
-    (h : IsConeHarmonicBallFamily ν Λ) (hfin : ν (ball 0 (1 / 2)) ≠ ∞)
-    (hsmall : ∃ t : ℝ, 0 < t ∧ Λ t ⊆ ball 0 (1 / 2)) : HasConeHarmonicBallsUpToHalfBall ν := by
+theorem hasConeHarmonicBallsUpToHalfBall_of_conditions {ν : Measure ℂ} {Λ : ℝ → Set ℂ}
+    (hball : ∀ t : ℝ, 0 < t → IsHarmonicBall ν (Λ t) 0) (hcond : SatisfiesHarmonicBallConditions ν Λ 0)
+    (hobs : ∀ t r : ℝ, 0 < t → Λ t ⊆ ball 0 (1 / 2) → 0 < r → Λ t ⊆ ball 0 r → ∀ ρ : ℝ, r < ρ →
+      Λ t = interior (closure (cluster ν ρ 0 t)) ∧
+      ContinuousOn (leastSupersolution ν ρ 0 t) (closedBall 0 ρ) ∧
+      HasLaplacian (leastSupersolution ν ρ 0 t) (ν.restrict (Λ t)) 0 (ball 0 ρ) ∧
+      ∀ x ∈ sphere (0 : ℂ) ρ, leastSupersolution ν ρ 0 t x = 0)
+    (hfin : ν (ball 0 (1 / 2)) ≠ ∞) (hsmall : ∃ t : ℝ, 0 < t ∧ Λ t ⊆ ball 0 (1 / 2)) :
+    HasConeHarmonicBallsUpToHalfBall ν := by
   set A : Set ℝ := {t | 0 < t ∧ Λ t ⊆ ball 0 (1 / 2)} with hA
   obtain ⟨t₀, ht₀, hsub₀⟩ := hsmall
   have hne : t₀ ∈ A := ⟨ht₀, hsub₀⟩
   have hbdd : BddAbove A := by
     refine ⟨(ν (ball 0 (1 / 2))).toReal, fun t ht => ?_⟩
     have h1 : ENNReal.ofReal t ≤ ν (ball 0 (1 / 2)) := by
-      rw [← h.2.1.measure_eq t ht.1]
+      rw [← hcond.measure_eq t ht.1]
       exact measure_mono ht.2
     exact (ENNReal.ofReal_le_iff_le_toReal hfin).1 h1
   set T := sSup A with hTdef
@@ -157,8 +169,9 @@ theorem hasConeHarmonicBallsUpToHalfBall_of_isConeHarmonicBallFamily {ν : Measu
   have hsubT : ∀ t ∈ Ioo 0 T, Λ t ⊆ ball 0 (1 / 2) := by
     intro t ht
     obtain ⟨s, hs, hts⟩ := exists_lt_of_lt_csSup ⟨t₀, hne⟩ ht.2
-    exact (h.2.1.monotoneOn ht.1 hs.1 hts.le).trans hs.2
-  refine ⟨T, hT, Λ, h.isConeHarmonicBallFamilyOn hT, hsubT, fun r hr => ?_⟩
+    exact (hcond.monotoneOn ht.1 hs.1 hts.le).trans hs.2
+  refine ⟨T, hT, Λ, isConeHarmonicBallFamilyOn_of_conditions hball hcond
+    (fun t r ht hr hsub ρ hρ => hobs t r ht.1 (hsubT t ht) hr hsub ρ hρ) hT, hsubT, fun r hr => ?_⟩
   by_contra hcon
   have hall : ∀ t ∈ Ioo 0 T, Λ t ⊆ ball 0 r := by
     intro t ht
@@ -167,7 +180,7 @@ theorem hasConeHarmonicBallsUpToHalfBall_of_isConeHarmonicBallFamily {ν : Measu
   -- Hausdorff continuity at `T`
   set δ : ℝ := (1 / 2 - r) / 3 with hδ
   have hδ0 : 0 < δ := by rw [hδ]; linarith
-  have hcont := h.2.1.hausdorffContinuousOn T hT (ENNReal.ofReal δ) (ENNReal.ofReal_pos.2 hδ0)
+  have hcont := hcond.hausdorffContinuousOn T hT (ENNReal.ofReal δ) (ENNReal.ofReal_pos.2 hδ0)
   rw [nhdsWithin_eq_nhds.2 (Ioi_mem_nhds hT), Metric.eventually_nhds_iff] at hcont
   obtain ⟨η, hη, hη'⟩ := hcont
   set s₁ : ℝ := max (T - η / 2) (T / 2) with hs₁
@@ -201,6 +214,14 @@ theorem hasConeHarmonicBallsUpToHalfBall_of_isConeHarmonicBallFamily {ν : Measu
   have := le_csSup hbdd hs₂A
   rw [← hTdef] at this
   linarith
+
+/-- **Stopping a family of Theorem 2.3 at `∂B_{1/2}`** (deterministic): the case of a family with the properties of
+Theorem 2.3 for all `t > 0` (`hasConeHarmonicBallsUpToHalfBall_of_conditions`). -/
+theorem hasConeHarmonicBallsUpToHalfBall_of_isConeHarmonicBallFamily {ν : Measure ℂ} {Λ : ℝ → Set ℂ}
+    (h : IsConeHarmonicBallFamily ν Λ) (hfin : ν (ball 0 (1 / 2)) ≠ ∞)
+    (hsmall : ∃ t : ℝ, 0 < t ∧ Λ t ⊆ ball 0 (1 / 2)) : HasConeHarmonicBallsUpToHalfBall ν :=
+  hasConeHarmonicBallsUpToHalfBall_of_conditions h.1 h.2.1
+    (fun t r ht _ hr hsub ρ hρ => h.2.2 t r ht hr hsub ρ hρ) hfin hsmall
 
 /-- **Uniqueness of the stopping time, one inequality** (deterministic). If `Λ₁` and `Λ₂` stop at `∂B_{1/2}` at times
 `T₁` and `T₂`, agree on `(0, min T₁ T₂)`, and `Λ₂` is monotone and grows strictly on `(0, T₂)`, then `T₂ ≤ T₁`. -/
@@ -237,10 +258,31 @@ theorem IsStoppedAtHalfBall.eq_of_eqOn {Λ₁ Λ₂ : ℝ → Set ℂ} {T₁ T�
   rw [min_comm]
   exact heq.symm
 
-/-- **Existence in Lemma 2.4** from the steps: transfer of the event of Lemma 2.4 from `h^ℂ - γ log |·|` to the quantum
-cone through the equality in law of the restrictions to `B_1`. -/
-theorem ae_hasConeHarmonicBallsUpToHalfBall (h0 : WholePlaneLogLQGExistenceStep)
-    (h1 : WholePlaneConeHarmonicBallsStep) (h2 : WholePlaneHarmonicBallsSmallTimeStep) (h3 : ConeRestrictionStep)
+/-- **Lemma 2.4 for `h^ℂ - γ log |·|` (existence).** For the whole-plane GFF `h^ℂ` and the LQG measure `μ` of
+`h^ℂ - γ log |·|`, a.s. there is a family of Lemma 2.4 for `μ`. Proved from HB22 in
+`wholePlaneHalfBallFamilyStep_of_hb` (`MatedCRT/Proofs/Sec2/ConeHarmonicBallsUpToFixedTime/WholePlane.lean`), and
+from the two steps above in `wholePlaneHalfBallFamilyStep_of_steps`. -/
+def WholePlaneHalfBallFamilyStep : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsProbabilityMeasure P → IsWholePlaneGFF P hC hcirc →
+    IsLQGMeasureOfField P γ γ hcirc μ → ∀ᵐ ω ∂P, HasConeHarmonicBallsUpToHalfBall (μ ω)
+
+/-- `WholePlaneHalfBallFamilyStep` from the existence of a family of Theorem 2.3 for `h^ℂ - γ log |·|` and its small
+time behaviour (stopping at `∂B_{1/2}`). -/
+theorem wholePlaneHalfBallFamilyStep_of_steps (h1 : WholePlaneConeHarmonicBallsStep)
+    (h2 : WholePlaneHarmonicBallsSmallTimeStep) : WholePlaneHalfBallFamilyStep := by
+  intro γ hγ0 hγ2 Ω' _ P' hC' hcirc' μ' hP' hgff hlqg
+  filter_upwards [h1 γ hγ0 hγ2 Ω' P' hC' hcirc' μ' hP' hgff hlqg,
+    h2 γ hγ0 hγ2 Ω' P' hC' hcirc' μ' hP' hgff hlqg, hlqg] with ω hfam hsmall hlim
+  obtain ⟨Λ, hΛ⟩ := hfam
+  have := hlim.isLocallyFiniteMeasure
+  exact hasConeHarmonicBallsUpToHalfBall_of_isConeHarmonicBallFamily hΛ measure_ball_lt_top.ne
+    (hsmall Λ hΛ (1 / 2) (by norm_num))
+
+/-- **Existence in Lemma 2.4** from the whole-plane case: transfer of the event of Lemma 2.4 from `h^ℂ - γ log |·|` to
+the quantum cone through the equality in law of the restrictions to `B_1`. -/
+theorem ae_hasConeHarmonicBallsUpToHalfBall_of_wholePlane (h0 : WholePlaneLogLQGExistenceStep)
+    (hwp : WholePlaneHalfBallFamilyStep) (h3 : ConeRestrictionStep)
     (h4 : ConeHarmonicBallLocalityStep) {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {Ω : Type} [MeasurableSpace Ω]
     {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
     (hcone : IsConeField γ P hC hcirc μ) : ∀ᵐ ω ∂P, HasConeHarmonicBallsUpToHalfBall (μ ω) := by
@@ -248,13 +290,7 @@ theorem ae_hasConeHarmonicBallsUpToHalfBall (h0 : WholePlaneLogLQGExistenceStep)
   obtain ⟨Ω', _, P', hC', hcirc', μ', hP', hgff, hlqg⟩ := h0 γ hγ0 hγ2
   obtain ⟨S, hS, hcS, hgS⟩ := h4 γ hγ0 hγ2
   -- the event of Lemma 2.4 holds a.s. for `h^ℂ - γ log |·|`
-  have hE' : ∀ᵐ ω ∂P', HasConeHarmonicBallsUpToHalfBall (μ' ω) := by
-    filter_upwards [h1 γ hγ0 hγ2 Ω' P' hC' hcirc' μ' hP' hgff hlqg,
-      h2 γ hγ0 hγ2 Ω' P' hC' hcirc' μ' hP' hgff hlqg, hlqg] with ω hfam hsmall hlim
-    obtain ⟨Λ, hΛ⟩ := hfam
-    have := hlim.isLocallyFiniteMeasure
-    exact hasConeHarmonicBallsUpToHalfBall_of_isConeHarmonicBallFamily hΛ measure_ball_lt_top.ne
-      (hsmall Λ hΛ (1 / 2) (by norm_num))
+  have hE' : ∀ᵐ ω ∂P', HasConeHarmonicBallsUpToHalfBall (μ' ω) := hwp γ hγ0 hγ2 Ω' P' hC' hcirc' μ' hP' hgff hlqg
   have hgS' : ∀ᵐ ω ∂P', unitBallCircleProcess (fieldCircleAverage γ (hcirc' ω)) ∈ S := by
     filter_upwards [hE', hgS Ω' P' hC' hcirc' μ' hP' hgff hlqg] with ω hω hiff
     exact hiff.1 hω
@@ -274,13 +310,22 @@ theorem ae_hasConeHarmonicBallsUpToHalfBall (h0 : WholePlaneLogLQGExistenceStep)
   filter_upwards [hcS', hcS Ω P hC hcirc μ hcone] with ω hω hiff
   exact hiff.2 hω
 
-/-- **Lemma 2.4** from the steps. -/
-theorem coneHarmonicBallsUpToFixedTime_of_steps (h0 : WholePlaneLogLQGExistenceStep)
+/-- **Existence in Lemma 2.4** from the steps. -/
+theorem ae_hasConeHarmonicBallsUpToHalfBall (h0 : WholePlaneLogLQGExistenceStep)
     (h1 : WholePlaneConeHarmonicBallsStep) (h2 : WholePlaneHarmonicBallsSmallTimeStep) (h3 : ConeRestrictionStep)
+    (h4 : ConeHarmonicBallLocalityStep) {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {Ω : Type} [MeasurableSpace Ω]
+    {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    (hcone : IsConeField γ P hC hcirc μ) : ∀ᵐ ω ∂P, HasConeHarmonicBallsUpToHalfBall (μ ω) :=
+  ae_hasConeHarmonicBallsUpToHalfBall_of_wholePlane h0 (wholePlaneHalfBallFamilyStep_of_steps h1 h2) h3 h4 hγ0 hγ2
+    hcone
+
+/-- **Lemma 2.4** from the whole-plane case, the transfer steps and strict growth. -/
+theorem coneHarmonicBallsUpToFixedTime_of_wholePlane (h0 : WholePlaneLogLQGExistenceStep)
+    (hwp : WholePlaneHalfBallFamilyStep) (h3 : ConeRestrictionStep)
     (h4 : ConeHarmonicBallLocalityStep) (h5 : ConeHarmonicBallStrictGrowthStep) :
     ConeHarmonicBallsUpToFixedTimeStmt := by
   intro γ hγ0 hγ2 Ω _ P hC hcirc μ hcone
-  filter_upwards [ae_hasConeHarmonicBallsUpToHalfBall h0 h1 h2 h3 h4 hγ0 hγ2 hcone,
+  filter_upwards [ae_hasConeHarmonicBallsUpToHalfBall_of_wholePlane h0 hwp h3 h4 hγ0 hγ2 hcone,
     h5 γ hγ0 hγ2 Ω P hC hcirc μ hcone] with ω hex hgrow
   obtain ⟨T, hT, Λ, hΛ, hst⟩ := hex
   refine ⟨T, hT, Λ, hΛ, hst, fun T' Λ' hT' hΛ' hst' => ?_⟩
@@ -290,5 +335,12 @@ theorem coneHarmonicBallsUpToFixedTime_of_steps (h0 : WholePlaneLogLQGExistenceS
   subst hTT
   rw [min_self] at heq
   exact ⟨rfl, heq⟩
+
+/-- **Lemma 2.4** from the steps. -/
+theorem coneHarmonicBallsUpToFixedTime_of_steps (h0 : WholePlaneLogLQGExistenceStep)
+    (h1 : WholePlaneConeHarmonicBallsStep) (h2 : WholePlaneHarmonicBallsSmallTimeStep) (h3 : ConeRestrictionStep)
+    (h4 : ConeHarmonicBallLocalityStep) (h5 : ConeHarmonicBallStrictGrowthStep) :
+    ConeHarmonicBallsUpToFixedTimeStmt :=
+  coneHarmonicBallsUpToFixedTime_of_wholePlane h0 (wholePlaneHalfBallFamilyStep_of_steps h1 h2) h3 h4 h5
 
 end MatedCRT
