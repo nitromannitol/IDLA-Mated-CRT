@@ -1,5 +1,5 @@
 import MatedCRT.Proofs.IDLA.ClusterEvents
-import MatedCRT.Proofs.Measurability.EnvSigma
+import MatedCRT.Proofs.Measurability.EnvSigmaCore
 import MatedCRT.Proofs.Sec5.IDLALowerBound.Geometry
 
 /-! # Joint-law form of the general IDLA lower bound

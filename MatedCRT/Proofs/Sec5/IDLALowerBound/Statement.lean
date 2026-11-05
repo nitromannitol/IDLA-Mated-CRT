@@ -1,4 +1,4 @@
-import MatedCRT.Steps.Sec5.IDLALowerBound
+import MatedCRT.Proofs.IDLA.JointDiscreteLowerBound
 import MatedCRT.Proofs.Sec5.GeneralIDLALowerBound.Statement
 
 /-!

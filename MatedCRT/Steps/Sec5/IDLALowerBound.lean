@@ -179,9 +179,17 @@ theorem generalIDLALowerBoundRelaxed_of_steps (𝒮 : SpaceFillingSLEModel) (hG 
 /-- The relaxed form of Lemma 5.2 implies the stated one. -/
 theorem generalIDLALowerBound_of_relaxed (𝒮 : SpaceFillingSLEModel) (h : GeneralIDLALowerBoundRelaxedStep 𝒮) :
     GeneralIDLALowerBoundStmt 𝒮 := by
-  intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS O₁ O₂ K q s _ _ hO _ hq hs hspos hgood
-  exact h γ hγ hγ2 ρ hρ hρ1 Ω S hS O₁ O₂ K q s (fun ε hε => (hO ε hε).mono fun _ h => ⟨h.1, h.2.1⟩)
-    hq hs hspos hgood
+  intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS O₁ O₂ K q s hm₁ hm₂ hO _ hq hs hspos hgood
+  obtain ⟨hl, hs'⟩ := h γ hγ hγ2 ρ hρ hρ1 Ω S hS O₁ O₂ K q s
+    (fun ε hε => (hO ε hε).mono fun _ h => ⟨h.1, h.2.1⟩) hq hs hspos hgood
+  obtain ⟨hjl, hjs⟩ := hS.joint_generalIDLABounds_of_sectionwise O₁ O₂ K hm₁ hm₂ hl hs'
+  constructor
+  · refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hjl (fun _ => zero_le) ?_
+    intro ε
+    exact hS.idlaProb_le_jointMeasure ε _
+  · refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hjs (fun _ => zero_le) ?_
+    intro ε
+    exact hS.idlaProb_le_jointMeasure ε _
 
 /-! ## Assembly -/
 
@@ -323,14 +331,5 @@ theorem iDLALowerBound_discrete_of_steps (𝒮 : SpaceFillingSLEModel) (h52 : Ge
       _ ⊆ fillCells ε (S.η ω) (clus ε ω xs) := fillCells_mono' hsub
   exact ⟨fin (fun ε _ xs => idlaCluster xs ⌊t / ε⌋₊) hA,
     fin (fun ε ω xs => stoppedIDLACluster (L ε ω) xs ⌊t / ε⌋₊) hB⟩
-
-/-- **Proposition 5.1** from its steps: Lemma 5.2 (relaxed), Lemmas 5.3, 5.4, 2.8, the discrete-cluster form of
-Proposition 4.2, and the stopped part (`IDLALowerBoundStoppedStep`, not given by the printed proof). -/
-theorem iDLALowerBound_of_steps (𝒮 : SpaceFillingSLEModel) (h52 : GeneralIDLALowerBoundRelaxedStep 𝒮)
-    (h53 : MeanValueInequalityStmt 𝒮) (h54 : LLowerBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
-    (hI : DiscreteClusterInnerBoundStep 𝒮) (hstop : IDLALowerBoundStoppedStep 𝒮) : IDLALowerBoundStmt 𝒮 := by
-  intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS Λ hΛ δ t hδ hδρ ht
-  exact ⟨(iDLALowerBound_discrete_of_steps 𝒮 h52 h53 h54 h28 hI γ hγ hγ2 ρ hρ hρ1 Ω S hS Λ hΛ δ t hδ hδρ ht).1,
-    hstop γ hγ hγ2 ρ hρ hρ1 Ω S hS Λ hΛ δ t hδ hδρ ht⟩
 
 end MatedCRT

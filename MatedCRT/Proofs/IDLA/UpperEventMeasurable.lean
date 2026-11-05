@@ -160,10 +160,20 @@ theorem MatedCRTEnv.IsValid.nullMeasurableSet_upper_cluster_event
   · simpa [hU hx, hηω.1] using hy
   · simpa [hU hx, hηω.1] using hy
 
+/-- The sectionwise form of Proposition 6.1. -/
+def IDLAUpperBoundSectionwiseStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
+  ∀ δ t : ℝ, 0 < δ → δ < ρ → 0 < t →
+    Tendsto (fun ε => S.idlaSectionProb ε {p | t < clusterExitTime (Λ p.1) ρ ∧
+      ¬ fillCells ε (S.η p.1) (idlaCluster p.2 ⌊t / ε⌋₊) ⊆ outerNbhd δ (Λ p.1 t)})
+      (𝓝[>] 0) (𝓝 0)
+
 /-- Proposition 6.1 transfers from sectionwise probabilities to the joint outer law. -/
 theorem joint_iDLAUpperBound_of_sectionwise (𝒮 : SpaceFillingSLEModel)
     (hfam : ConeFamilyAEMeasurableStep) (h24 : ConeHarmonicBallsUpToFixedTimeStmt)
-    (hupper : IDLAUpperBoundStmt 𝒮) :
+    (hupper : IDLAUpperBoundSectionwiseStep 𝒮) :
     ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
     ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
     ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →

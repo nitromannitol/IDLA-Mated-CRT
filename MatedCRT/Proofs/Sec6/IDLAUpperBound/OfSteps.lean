@@ -5,6 +5,7 @@ import MatedCRT.Proofs.Sec6.IterativeBound.Walk
 import MatedCRT.Proofs.Sec5.LLowerBound.SmallCellsProb
 import MatedCRT.Proofs.IDLA.Walkers
 import MatedCRT.Proofs.IDLA.Counts
+import MatedCRT.Proofs.IDLA.UpperEventMeasurable
 
 /-!
 # Proposition 6.1 (prop:IDLA-upper-bound, line 2252): the proof from Lemma 6.10, Proposition 5.1 and a measurability step
@@ -180,8 +181,8 @@ theorem walkerSequenceLaw_bad_le (m : ℤ → ℤ → ℕ) (hsrw : IsSrwPathLaw 
 
 /-- **Proposition 6.1** (prop:IDLA-upper-bound, line 2252) from Lemma 6.10, Proposition 5.1 and the null
 measurability of the boundary layer events. -/
-theorem iDLAUpperBound_of_steps (𝒮 : SpaceFillingSLEModel) (h610 : IterativeBoundStmt 𝒮)
-    (h51 : IDLALowerBoundStmt 𝒮) (hm : BoundaryLayerMeasurableStep 𝒮) : IDLAUpperBoundStmt 𝒮 := by
+theorem iDLAUpperBoundSectionwise_of_steps (𝒮 : SpaceFillingSLEModel) (h610 : IterativeBoundStmt 𝒮)
+    (h51 : IDLALowerBoundStmt 𝒮) (hm : BoundaryLayerMeasurableStep 𝒮) : IDLAUpperBoundSectionwiseStep 𝒮 := by
   intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS Λ hΛ δ t hδ hδρ ht
   have hP : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
   obtain ⟨β, C, hβ, hC, h610'⟩ := h610 γ hγ hγ2 ρ hρ hρ1
@@ -223,7 +224,10 @@ theorem iDLAUpperBound_of_steps (𝒮 : SpaceFillingSLEModel) (h610 : IterativeB
     intro ω hω
     exact ⟨hω.1, hω.2.trans (measure_mono (boundaryLayer_mono (min_le_left _ _)))⟩
   -- eventually in `ε`
-  have hLB := (h51 γ hγ hγ2 ρ hρ hρ1 Ω S hS Λ hΛ δ₁ t hδ₁pos hδ₁ρ ht).2
+  have hLB : Tendsto (fun ε => S.idlaSectionProb ε {p | t < clusterExitTime (Λ p.1) ρ ∧
+      ¬ innerNbhd δ₁ (Λ p.1 t) ⊆ fillCells ε (S.η p.1)
+        (stoppedIDLACluster (cellVertices ε (S.η p.1) (Λ p.1 t)) p.2 ⌊t / ε⌋₊)})
+      (𝓝[>] 0) (𝓝 0) := (h51 γ hγ hγ2 ρ hρ hρ1 Ω S hS Λ hΛ δ₁ t hδ₁pos hδ₁ρ ht).2
   have hcellsP := hS.probTendsToOne_small_cells ρ d hd0
   filter_upwards [ENNReal.tendsto_nhds_zero.1 hLB e' he'pos, ENNReal.tendsto_nhds_zero.1 hlim e' he'pos,
     ENNReal.tendsto_nhds_zero.1 hcellsP e' he'pos, self_mem_nhdsWithin] with ε hεLB hε610 hεcells hε
@@ -285,11 +289,16 @@ theorem iDLAUpperBound_of_steps (𝒮 : SpaceFillingSLEModel) (h610 : IterativeB
       ¬ innerNbhd δ₁ (Λ p.1 t) ⊆ fillCells ε (S.η p.1)
         (stoppedIDLACluster (cellVertices ε (S.η p.1) (Λ p.1 t)) p.2 ⌊t / ε⌋₊)}))
     (iterativeBoundSup S ρ (δ / 4) C β dd ε) B (fun ω => prob_le_one) hpt
-  calc S.idlaProb ε {p | t < clusterExitTime (Λ p.1) ρ ∧
+  calc S.idlaSectionProb ε {p | t < clusterExitTime (Λ p.1) ρ ∧
         ¬ fillCells ε (S.η p.1) (idlaCluster p.2 ⌊t / ε⌋₊) ⊆ outerNbhd δ (Λ p.1 t)}
       ≤ e' + e' + (0 + e' + e' + e') := hbound.trans (add_le_add (add_le_add hεLB hε610) hBP)
     _ = e' * 5 := by ring
     _ = e := ENNReal.div_mul_cancel (by norm_num) (by norm_num)
+
+/-- The sectionwise estimate supplies the present formulation of Proposition 6.1. -/
+theorem iDLAUpperBound_of_steps (𝒮 : SpaceFillingSLEModel) (h610 : IterativeBoundStmt 𝒮)
+    (h51 : IDLALowerBoundStmt 𝒮) (hm : BoundaryLayerMeasurableStep 𝒮) : IDLAUpperBoundStmt 𝒮 :=
+  iDLAUpperBoundSectionwise_of_steps 𝒮 h610 h51 hm
 
 end IDLAUpperBound
 

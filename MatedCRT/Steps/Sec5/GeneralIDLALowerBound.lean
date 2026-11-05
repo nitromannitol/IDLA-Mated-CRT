@@ -1,5 +1,6 @@
 import MatedCRT.Draft.Section5
 import MatedCRT.Proofs.IDLA.Counts
+import MatedCRT.Proofs.IDLA.JointLowerBound
 
 /-!
 # Lemma 5.2: carving into steps (proof at lines 2132-2229; Lawler-Bramson-Griffeath, LBG92 Section 3)
@@ -242,11 +243,28 @@ theorem tendsto_card_mul_exp_bound {q c : ℝ} (hq : 0 < q) (hc : 0 < c) :
   rw [← Real.rpow_mul hε.le, show -q * (2 / q) = (-2 : ℝ) by field_simp]
   ring
 
+/-- Sectionwise form of Lemma 5.2, used to assemble the joint-law statement. -/
+def GeneralIDLALowerBoundSectionwiseStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ (O₁ O₂ : ℝ → Ω → Set ℤ) (K : ℝ → ℝ) (q : ℝ) (s : Ω → ℝ),
+    (∀ ε k, MeasurableSet[S.envSigma] {ω | k ∈ O₁ ε ω}) → (∀ ε k, MeasurableSet[S.envSigma] {ω | k ∈ O₂ ε ω}) →
+    (∀ ε, 0 < ε → ∀ᵐ ω ∂S.P, O₁ ε ω ⊆ O₂ ε ω ∧ O₂ ε ω ⊆ cellVertices ε (S.η ω) (ball 0 ρ) ∧ (0 : ℤ) ∈ O₁ ε ω ∧
+      IsVConnected (S.mult ε ω) (O₁ ε ω) ∧ IsVConnected (S.mult ε ω) (O₂ ε ω)) →
+    (∀ ε, 0 < K ε) → 0 < q → Measurable[S.envSigma] s → (∀ ω, 0 < s ω) →
+    ProbTendsToOne S.P (fun ε => {ω | ∀ a ∈ O₁ ε ω,
+      (1 + s ω) * ∑' b : O₂ ε ω, greenFn (S.mult ε ω) (O₂ ε ω) b a ≤
+        K ε * greenFn (S.mult ε ω) (O₂ ε ω) 0 a ∧
+      ε ^ (-q) ≤ (∑' b : O₂ ε ω, greenFn (S.mult ε ω) (O₂ ε ω) b a) / greenFn (S.mult ε ω) (O₂ ε ω) a a}) →
+    Tendsto (fun ε => S.idlaSectionProb ε {p | ¬ O₁ ε p.1 ⊆ idlaCluster p.2 ⌊K ε⌋₊}) (𝓝[>] 0) (𝓝 0) ∧
+    Tendsto (fun ε => S.idlaSectionProb ε {p | ¬ O₁ ε p.1 ⊆ stoppedIDLACluster (O₂ ε p.1) p.2 ⌊K ε⌋₊})
+      (𝓝[>] 0) (𝓝 0)
+
 /-- **Lemma 5.2** from its steps: the quenched one-site bound, the Green function identity, the count of the cells
 meeting `B_ρ`, and the measurability of the environment. -/
-theorem generalIDLALowerBound_of_steps (𝒮 : SpaceFillingSLEModel) (hG : GreenHittingStep)
+theorem generalIDLALowerBoundSectionwise_of_steps (𝒮 : SpaceFillingSLEModel) (hG : GreenHittingStep)
     (hQ : QuenchedSiteBoundStep) (hC : CellCountStep 𝒮) (hM : EnvSigmaMeasurableStep 𝒮) :
-    GeneralIDLALowerBoundStmt 𝒮 := by
+    GeneralIDLALowerBoundSectionwiseStep 𝒮 := by
   intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS O₁ O₂ K q s _ _ hO _ hq hs hspos hgood
   have := hS.isProbabilityMeasure
   have hsm : Measurable s := hs.mono (hM γ hγ hγ2 Ω S hS) le_rfl
@@ -282,7 +300,7 @@ theorem generalIDLALowerBound_of_steps (𝒮 : SpaceFillingSLEModel) (hG : Green
       (∀ δ₀ : ℝ, 0 < δ₀ → ∃ c : ℝ, 0 < c ∧ ∀ ε : ℝ, 0 < ε → 2 / δ₀ ≤ ε ^ (-q) → ∀ ω ∈ B ε,
         δ₀ ≤ s ω → ∀ a ∈ O₁ ε ω, walkerSequenceLaw (S.mult ε ω) 0 {xs | a ∉ clus ε ω xs} ≤
           ENNReal.ofReal (2 * Real.exp (-(c * ε ^ (-q))))) →
-      Tendsto (fun ε => S.idlaProb ε {p | ¬ O₁ ε p.1 ⊆ clus ε p.1 p.2}) (𝓝[>] 0) (𝓝 0) := by
+      Tendsto (fun ε => S.idlaSectionProb ε {p | ¬ O₁ ε p.1 ⊆ clus ε p.1 p.2}) (𝓝[>] 0) (𝓝 0) := by
     intro clus hsite
     refine tendsto_outerLIntegral_of_eventually_le S.P
       (fun ε ω => walkerSequenceLaw (S.mult ε ω) 0 {xs | ¬ O₁ ε ω ⊆ clus ε ω xs})
@@ -335,5 +353,21 @@ theorem generalIDLALowerBound_of_steps (𝒮 : SpaceFillingSLEModel) (hG : Green
   · intro δ₀ hδ₀
     obtain ⟨c, hc, h⟩ := hsite δ₀ hδ₀
     exact ⟨c, hc, fun ε hε hεq ω hωB hsω a ha => (h ε hε hεq ω hωB hsω a ha).2⟩
+
+/-- The sectionwise proof supplies the present statement of Lemma 5.2. -/
+theorem generalIDLALowerBound_of_steps (𝒮 : SpaceFillingSLEModel) (hG : GreenHittingStep)
+    (hQ : QuenchedSiteBoundStep) (hC : CellCountStep 𝒮) (hM : EnvSigmaMeasurableStep 𝒮) :
+    GeneralIDLALowerBoundStmt 𝒮 := by
+  intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS O₁ O₂ K q s hm₁ hm₂ hO hK hq hs hspos hgood
+  obtain ⟨hl, hs'⟩ := generalIDLALowerBoundSectionwise_of_steps 𝒮 hG hQ hC hM
+    γ hγ hγ2 ρ hρ hρ1 Ω S hS O₁ O₂ K q s hm₁ hm₂ hO hK hq hs hspos hgood
+  obtain ⟨hjl, hjs⟩ := hS.joint_generalIDLABounds_of_sectionwise O₁ O₂ K hm₁ hm₂ hl hs'
+  constructor
+  · refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hjl (fun _ => zero_le) ?_
+    intro ε
+    exact hS.idlaProb_le_jointMeasure ε _
+  · refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hjs (fun _ => zero_le) ?_
+    intro ε
+    exact hS.idlaProb_le_jointMeasure ε _
 
 end MatedCRT

@@ -1,4 +1,5 @@
 import MatedCRT.Proofs.Sec5.IDLALowerBound.Statement
+import MatedCRT.Proofs.Measurability.EnvSigmaCore
 
 /-!
 # The environment is a random variable up to null sets (ESCALATIONS E-c2-1)
@@ -20,41 +21,6 @@ open MeasureTheory ProbabilityTheory Filter Topology Set Metric HarmonicBalls
 open scoped ENNReal NNReal
 
 namespace MatedCRT
-
-/-- For a valid environment, `σ(h, η)` is contained in the `P`-completion of the σ-algebra of `Ω` (the σ-algebra of
-`P`-null-measurable sets): the pairings of the field are random variables (Definition 2.1), and each `η(s)` is almost
-surely equal to the value at `s` of the measurable curve of the mating-of-trees coupling. -/
-theorem MatedCRTEnv.IsValid.envSigma_le_nullMeasurableSpace {Ω : Type} [mΩ : MeasurableSpace Ω]
-    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) :
-    S.envSigma ≤ (NullMeasurableSpace.instMeasurableSpace : MeasurableSpace (NullMeasurableSpace Ω S.P)) := by
-  have hnull : mΩ ≤ (NullMeasurableSpace.instMeasurableSpace : MeasurableSpace (NullMeasurableSpace Ω S.P)) :=
-    fun A hA => MeasurableSet.nullMeasurableSet (μ := S.P) hA
-  refine sup_le ?_ (iSup_le fun t => ?_)
-  · simp only [MatedCRTEnv.fieldSigma, fieldSigmaAlgebra]
-    refine iSup₂_le fun φ hφ => ?_
-    have hm : Measurable fun ω => fieldPairing 0 (S.hC ω) φ := by
-      simpa [fieldPairing] using hS.isQuantumCone.measurable_pairing φ hφ
-    exact hm.comap_le.trans hnull
-  · obtain ⟨X, X₀, hIG₀, B, B', B₀, B₀', U, ηL, η', η₀, hC, hae⟩ := hS.matingOfTrees
-    have hη' : Measurable fun ω => η' ω t :=
-      (continuous_eval_const t).measurable.comp hC.measurable_curves.2.1
-    have hae' : (fun ω => η' ω t) =ᵐ[S.P] fun ω => S.η ω t :=
-      hae.mono fun ω h => congrFun h.1 t
-    have hnm : NullMeasurable (fun ω => S.η ω t) S.P := (hη'.aemeasurable.congr hae').nullMeasurable
-    exact Measurable.comap_le hnm
-
-/-- For a valid environment, every `σ(h, η)`-measurable set is `P`-null-measurable. -/
-theorem MatedCRTEnv.IsValid.nullMeasurableSet_of_envSigma {Ω : Type} [MeasurableSpace Ω]
-    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) {A : Set Ω}
-    (hA : MeasurableSet[S.envSigma] A) : NullMeasurableSet A S.P :=
-  hS.envSigma_le_nullMeasurableSpace A hA
-
-/-- For a valid environment, every `σ(h, η)`-measurable real function is almost everywhere measurable. -/
-theorem MatedCRTEnv.IsValid.aemeasurable_of_envSigma {Ω : Type} [MeasurableSpace Ω]
-    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) {s : Ω → ℝ}
-    (hs : Measurable[S.envSigma] s) : AEMeasurable s S.P := by
-  have hnm : NullMeasurable s S.P := hs.mono hS.envSigma_le_nullMeasurableSpace le_rfl
-  exact hnm.aemeasurable
 
 /-- `tendsto_outerLIntegral_of_eventually_le` for an almost everywhere measurable `𝔰 > 0`: if `f ε ≤ 1` and, for
 each `δ₀ > 0`, eventually `f ε ≤ β ε → 0` on `E ε ∩ {𝔰 ≥ δ₀}`, where `P[(E ε)ᶜ] → 0`, then `∫* f ε dP → 0`. -/
