@@ -134,7 +134,7 @@ assert_uses convergenceOfIDLA_conditional coneFamilyAEMeasurableStep_of_inputs
 
 /-- **Lemma 2.4**. -/
 example (H : MainHypotheses 𝒮) : ConeHarmonicBallsUpToFixedTimeStmt := H.coneHarmonicBallsUpToFixedTime
-assert_uses convergenceOfIDLA_conditional coneHarmonicBallsUpToFixedTime_of_steps
+assert_uses convergenceOfIDLA_conditional coneHarmonicBallsUpToFixedTime_final
 
 /-- **Lemma 2.5**. -/
 example (H : MainHypotheses 𝒮) : ConeScaleInvarianceUpToFixedTimeStmt := H.coneScaleInvarianceUpToFixedTime
@@ -174,7 +174,7 @@ assert_uses convergenceOfIDLA_conditional convergenceHarmonicFunctions_of_steps
 
 /-- **Lemma 3.7**. -/
 example (H : MainHypotheses 𝒮) : ConvergenceNormalizedExitTimeStmt 𝒮 := H.convergenceNormalizedExitTime
-assert_uses convergenceOfIDLA_conditional convergenceNormalizedExitTime_of_interior_discrete_boundary
+assert_uses convergenceOfIDLA_conditional convergenceNormalizedExitTime_of_statements
 
 /-! ## Section 4 -/
 
@@ -186,8 +186,8 @@ assert_uses convergenceOfIDLA_conditional convergenceDivisibleEventMeasurableSte
 
 /-- **Proposition 4.2**. -/
 example (H : MainHypotheses 𝒮) : DivSandpileLowerBoundStmt 𝒮 := H.divSandpileLowerBound
-assert_uses convergenceOfIDLA_conditional divSandpileLowerBound_of_steps
-assert_uses convergenceOfIDLA_conditional divSandpileOdometerComparison_of_cellsMeet
+assert_uses convergenceOfIDLA_conditional divSandpileLowerBound_final
+assert_uses_deep convergenceOfIDLA_conditional divSandpileOdometerComparison_of_cellsMeet
 
 /-- **Lemma 4.3**, proved. -/
 example : DiscreteBasicPropertiesStmt 𝒮 := discreteBasicProperties 𝒮
@@ -214,17 +214,18 @@ assert_uses convergenceOfIDLA_conditional odometerObstacleApproximationStep
 
 /-- **Proposition 5.1**. -/
 example (H : MainHypotheses 𝒮) : IDLALowerBoundStmt 𝒮 := H.iDLALowerBound
-assert_uses convergenceOfIDLA_conditional iDLALowerBound_of_volumeGrowth_cellSize
-assert_uses convergenceOfIDLA_conditional discreteClusterInnerBound_of_steps
+assert_uses convergenceOfIDLA_conditional iDLALowerBound_final_of_strictGap
+assert_uses_deep convergenceOfIDLA_conditional iDLALowerBound_of_volumeGrowth_cellSize
+assert_uses_deep convergenceOfIDLA_conditional LQGMeasureField.lqgMeasureFieldMeasurableStep
 
-/-- **Lemma 5.3**. -/
+/-- **Lemma 5.3** (used by 5.1 inside `iDLALowerBound_final_of_strictGap`). -/
 example (H : MainHypotheses 𝒮) : MeanValueInequalityStmt 𝒮 := H.meanValueInequality
-assert_uses convergenceOfIDLA_conditional meanValueInequality_of_surplus
-assert_uses convergenceOfIDLA_conditional meanValueSurplusStep_of_lower
+assert_uses MainHypotheses.meanValueInequality meanValueInequality_of_surplus
+assert_uses MainHypotheses.meanValueInequality meanValueSurplusStep_of_lower
 
-/-- **Lemma 5.4**. -/
+/-- **Lemma 5.4** (used by 5.1 inside `iDLALowerBound_final_of_strictGap`). -/
 example (H : MainHypotheses 𝒮) : LLowerBoundStmt 𝒮 := H.lLowerBound
-assert_uses convergenceOfIDLA_conditional lLowerBound_of_adjacentCellsMeet
+assert_uses MainHypotheses.lLowerBound lLowerBound_of_adjacentCellsMeet
 
 /-! ## Section 6 -/
 
@@ -265,7 +266,7 @@ assert_uses convergenceOfIDLA_conditional iterativeBound
 
 /-- **Proposition 7.1**. -/
 example (H : MainHypotheses 𝒮) : DivSandpileUpperBoundStmt 𝒮 := H.divSandpileUpperBound
-assert_uses convergenceOfIDLA_conditional divSandpileUpperBound_of_shellIteration
+assert_uses convergenceOfIDLA_conditional divSandpileUpperBound_of_meshScaling
 
 /-- **Lemma 7.2**, corrected form (E-c3-2). -/
 example (H : MainHypotheses 𝒮) : MassBoundOdometerAboveScaleStmt 𝒮 := H.massBoundOdometerAboveScale
@@ -294,5 +295,6 @@ assert_not_uses convergenceOfIDLA_conditional crudeUpperBound_of_draft
 assert_not_uses convergenceOfIDLA_conditional constantOrderLowerBoundDiv_of_steps
 assert_not_uses convergenceOfIDLA_conditional iterativeBound_of_inputs
 assert_not_uses convergenceOfIDLA_conditional chanceOfBeingAbsorbedLogLoss_of_div
+assert_not_uses convergenceOfIDLA_conditional convergenceNormalizedExitTime_of_interior_discrete_boundary
 
 end MatedCRT.Audit.Main
