@@ -47,6 +47,9 @@ import MatedCRT.Steps.Sec1.Convergence
 import MatedCRT.Steps.Sec2.ConeHarmonicBallsUpToFixedTime
 import MatedCRT.Proofs.Sec2.LQGMeasureProperties.Locality
 import MatedCRT.Audit.CorrectedForms
+import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.Final
+import MatedCRT.Proofs.Sec6.AnnulusHit.Main
+import MatedCRT.Proofs.Sec6.GoodAnnulusPrevalence.Main
 import MatedCRT.Proofs.Sec3.DiscretePotentialTightness.Main
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.ConeScalingPositivity
 import MatedCRT.Proofs.Sec4.DivSandpileLowerBound.OdometerComparisonProved
@@ -135,6 +138,16 @@ the environment at 19:50Z):
         (h3 : ConeHarmonicBallFunctionalStep) (h4 : ConeHarmonicBallFamilyOnScalingStep) :
         ConeScaleInvarianceStmt := by
       audit_apply coneScaleInvariance_of_steps
+
+c5's input-level forms (a0d10e4; MatedCRT/Proofs/Sec2/ConeScaleInvarianceUpToFixedTime/Main.lean:21, 30, 61 and
+MatedCRT/Proofs/Sec2/ConeScaleInvariance/Main.lean:14; `ConeHarmonicBallFamilyOnScalingStep` proved, `ConeLQGScaling
+Step` from Fact 2.2 and `ConeScaleRadiusPosStep`), equally blocked by F10, hypothesis lists read at 00:30Z:
+Lemma 2.5 `coneScaleInvarianceUpToFixedTime_of_inputs` (QuantumConeScalingInput, LQGMeasurePropertiesStmt,
+ConeScaleRadiusPosStep, ConeHarmonicBallStrictGrowthStep, ConeRescaledCircleAEMeasurableStep,
+ConeHalfBallFamilyFunctionalStep); Lemma 2.6 `coneScaleInvariance_of_inputs` (QuantumConeScalingInput,
+LQGMeasurePropertiesStmt, ConeScaleRadiusPosStep, ConeRescaledCircleAEMeasurableStep, ConeHarmonicBallFunctionalStep);
+Theorem 2.3 `coneHarmonicBalls_of_inputs` (the six steps of Lemma 2.4 and the inputs of Lemma 2.5; A's
+`ConeFamilyAEMeasurableStep` derived by `coneFamilyAEMeasurableStep_of_steps`).
 -/
 
 /-- **Fact 2.2** (cited) from its cited parts (DS11): non-atomicity and dilation covariance, and the locality step
@@ -328,17 +341,18 @@ example (𝒮 : SpaceFillingSLEModel) (h215 : GreenFunctionCrudeBoundStmt 𝒮) 
 /-- **Lemma 6.3**, proved (`AbelianIDLA.abelianIDLA`). -/
 example (𝒮 : SpaceFillingSLEModel) : AbelianIDLAStmt 𝒮 := AbelianIDLA.abelianIDLA 𝒮
 
-/-- **Lemma 6.4** from Lemmas 6.6 (proved), 6.5 and two field steps (`goodAnnulusPrevalence_of_fieldSteps`; IR-c4-5
+/-- **Lemma 6.4** from Lemma 6.5 and two field steps (`goodAnnulusPrevalence_of_annulusHit`; Lemma 6.6 proved, IR-c4-5
 from `ConeMeanZeroRestrictionStep` by `annulusIterateConeTransfer`, IR-c4-6 from `CircleAverageModConstStep` by
 `goodAnnulusEventLocality`). -/
-example (h66 : AnnulusIterateStmt) (h65 : AnnulusHitStmt) (hR : ConeMeanZeroRestrictionStep)
-    (hD : CircleAverageModConstStep) : GoodAnnulusPrevalenceStmt := by
-  audit_apply goodAnnulusPrevalence_of_fieldSteps
+example (h65 : AnnulusHitStmt) (hR : ConeMeanZeroRestrictionStep) (hD : CircleAverageModConstStep) :
+    GoodAnnulusPrevalenceStmt := by
+  audit_apply goodAnnulusPrevalence_of_annulusHit
 
-/-- **Lemma 6.5** from four whole-plane field steps (`annulusHit_of_steps`). -/
+/-- **Lemma 6.5** from four whole-plane field steps (`annulusHit_of_volumeTail`; the tightness step from the GMC
+volume tail by `wholePlaneGoodAnnulusTightness_of_volumeTail`). -/
 example (h1 : WholePlaneLQGExistenceStep) (h2 : ConeWholePlaneWeylComparisonStep)
-    (h3 : WholePlaneLQGCoordinateChangeStep) (h4 : WholePlaneGoodAnnulusTightnessStep) : AnnulusHitStmt := by
-  audit_apply annulusHit_of_steps
+    (h3 : WholePlaneLQGCoordinateChangeStep) (h4 : WholePlaneUpperVolumeTailStep) : AnnulusHitStmt := by
+  audit_apply annulusHit_of_volumeTail
 
 /-- **Lemma 6.6**, proved (`annulusIterate`, x4: `annulusIterate_of_leo` on Leonardo Bonanno's
 `LQGMetric.LM.lmLem3_1a`, with the law transfer `annulusGFFLawTransfer : AnnulusGFFLawTransferStep`). -/
@@ -352,15 +366,15 @@ example (𝒮 : SpaceFillingSLEModel) (h68 : ConstantOrderLowerBoundDivStmt 𝒮
   audit_apply constantOrderLowerBound
 
 /-- **Lemma 6.8**, E-A10 (b) form `ConstantOrderLowerBoundDivLogStmt` (`1 - s₂/(1+|log r|)²`), from Lemmas 2.16,
-2.7, 2.8, 2.9, 6.4, 2.18, 2.19 and `GoodScaleEventMeasurableStep` (`constantOrderLowerBoundDiv_of_steps`). The Draft
-`ConstantOrderLowerBoundDivStmt` has no reduction; Lemma 6.7 (Draft form), 6.9 (local rate) and Proposition 7.1
-consume it. -/
+2.7, 2.8, 2.9, 2.18, 6.4 and `LQGMeasureFieldMeasurableStep` (`constantOrderLowerBoundDiv_of_inputs`, 29311ac: the
+false-as-drafted `GoodScaleEventMeasurableStep` (E-c2-4) replaced by its a.s. form, proved from
+`LQGMeasureFieldMeasurableStep`). The Draft `ConstantOrderLowerBoundDivStmt` has no reduction; Lemma 6.7 (Draft
+form), 6.9 (local rate) and Proposition 7.1 consume it. -/
 example (𝒮 : SpaceFillingSLEModel) (h216 : GreenKernelLowerBoundStmt 𝒮) (h27 : VolumeGrowthStmt)
-    (h28 : CellSizeEstimateStmt 𝒮) (h29 : CountingMeasureConvergenceStmt 𝒮) (h64 : GoodAnnulusPrevalenceStmt)
-    (h218 : ExitTimeUpperBoundStmt 𝒮) (h219 : ExpectedExitTimeExplicitBoundStmt 𝒮)
-    (hmeas : GoodScaleEventMeasurableStep 𝒮) : ConstantOrderLowerBoundDivLogStmt 𝒮 := by
-  have hadj : AdjacentCellsMeetAeStep 𝒮 := adjacentCellsMeetAeStep 𝒮
-  audit_apply constantOrderLowerBoundDiv_of_steps
+    (h28 : CellSizeEstimateStmt 𝒮) (h29 : CountingMeasureConvergenceStmt 𝒮) (h218 : ExitTimeUpperBoundStmt 𝒮)
+    (h64 : GoodAnnulusPrevalenceStmt) (hμ : LQGMeasureFieldMeasurableStep 𝒮) :
+    ConstantOrderLowerBoundDivLogStmt 𝒮 := by
+  audit_apply constantOrderLowerBoundDiv_of_inputs
 
 /-- **Lemma 6.9**, local-rate form `ChanceOfBeingAbsorbedLocalRateStmt` (E-c5-1), from Lemma 6.7
 (`chanceOfBeingAbsorbedLocalRate`). The Draft `ChanceOfBeingAbsorbedStmt` implies it

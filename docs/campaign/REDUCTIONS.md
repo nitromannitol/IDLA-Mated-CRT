@@ -2,7 +2,7 @@
 
 Checked by `MatedCRT/Audit/Reductions.lean`: one `example` per line below restates the reduction with exactly these
 hypotheses, so a drift of a Draft statement, a reducing theorem or a step breaks the build. Paths are relative to
-`MatedCRT/`; line numbers point at the `theorem` line, from the 2026-11-04 20:05Z tree (read from the environment by
+`MatedCRT/`; line numbers point at the `theorem` line, from the 2026-11-05 00:40Z tree (read from the environment by
 untracked probes). Proved steps are discharged and not listed. Format: result Stmt: reducing theorem (file:line) |
 Draft: other numbered results used | External: literature inputs | Steps: open step Props (owner).
 
@@ -28,18 +28,21 @@ A.2-A.4: discreteBasicPropertiesGeneral, discreteLaplacianBoundGeneral, discrete
 2.2 LQGMeasurePropertiesStmt (cited): LQGMeasure.lqgMeasureProperties_of_steps (Proofs/Sec2/LQGMeasureProperties/
   Locality.lean:174; 102275a) | cited parts LQGMeasureNonAtomicPart, LQGMeasureDilationCovariancePart (Steps/Sec2/
   LQGMeasureProperties.lean:32, 86; NOT in External, F11) | Steps: ConeCircleAverageLocalityStep (:58)
-2.3 ConeHarmonicBallsStmt: coneHarmonicBalls_of_steps (Steps/Sec2/ConeHarmonicBalls.lean:64) | Draft: 2.4, 2.5 |
-  Steps: ConeFamilyAEMeasurableStep (A)
+2.3 ConeHarmonicBallsStmt: coneHarmonicBalls_of_inputs (Proofs/Sec2/ConeScaleInvarianceUpToFixedTime/Main.lean:61; c5,
+  a0d10e4; NOT checked, F10) | Draft: 2.2 | External: QuantumConeScalingInput | Steps: the six steps of 2.4,
+  ConeScaleRadiusPosStep, ConeRescaledCircleAEMeasurableStep, ConeHalfBallFamilyFunctionalStep (c5). Checked:
+  coneHarmonicBalls_of_steps (Steps/Sec2/ConeHarmonicBalls.lean:64) from 2.4, 2.5 and ConeFamilyAEMeasurableStep
+  (now derived, coneFamilyAEMeasurableStep_of_steps, Main.lean:30)
 2.4 ConeHarmonicBallsUpToFixedTimeStmt: coneHarmonicBallsUpToFixedTime_of_steps (Steps/Sec2/ConeHarmonicBallsUpTo
   FixedTime.lean:278) | Steps: WholePlaneLogLQGExistenceStep, WholePlaneConeHarmonicBallsStep, WholePlaneHarmonicBalls
   SmallTimeStep, ConeRestrictionStep, ConeHarmonicBallLocalityStep, ConeHarmonicBallStrictGrowthStep (c5)
-2.5 ConeScaleInvarianceUpToFixedTimeStmt (example disabled, F10): coneScaleInvarianceUpToFixedTime_of_steps (Steps/
-  Sec2/ConeScaleInvarianceUpToFixedTime.lean:260) | External: QuantumConeScalingInput | Steps: ConeHarmonicBallStrict
-  GrowthStep, ConeLQGScalingStep, ConeRescaledCircleAEMeasurableStep, ConeHalfBallFamilyFunctionalStep,
-  ConeHarmonicBallFamilyOnScalingStep (c5)
-2.6 ConeScaleInvarianceStmt (example disabled, F10): coneScaleInvariance_of_steps (Steps/Sec2/ConeScaleInvariance.lean
-  :104) | External: QuantumConeScalingInput | Steps: ConeLQGScalingStep, ConeRescaledCircleAEMeasurableStep,
-  ConeHarmonicBallFunctionalStep, ConeHarmonicBallFamilyOnScalingStep (c5)
+2.5 ConeScaleInvarianceUpToFixedTimeStmt (example disabled, F10): coneScaleInvarianceUpToFixedTime_of_inputs (Proofs/
+  Sec2/ConeScaleInvarianceUpToFixedTime/Main.lean:21) | Draft: 2.2 | External: QuantumConeScalingInput | Steps:
+  ConeScaleRadiusPosStep, ConeHarmonicBallStrictGrowthStep (E-c5-3), ConeRescaledCircleAEMeasurableStep,
+  ConeHalfBallFamilyFunctionalStep (c5)
+2.6 ConeScaleInvarianceStmt (example disabled, F10): coneScaleInvariance_of_inputs (Proofs/Sec2/ConeScaleInvariance/
+  Main.lean:14) | Draft: 2.2 | External: QuantumConeScalingInput | Steps: ConeScaleRadiusPosStep,
+  ConeRescaledCircleAEMeasurableStep, ConeHarmonicBallFunctionalStep (c5)
 2.17 BoundedExitTimeRVStmt: boundedExitTimeRV_of_steps (Steps/Sec2/BoundedExitTimeRV.lean:26) | Draft: 2.7 (cited)
 2.19 ExpectedExitTimeExplicitBoundStmt: expectedExitTimeExplicitBound_of_steps (Steps/Sec2/ExpectedExitTimeExplicit
   Bound.lean:44) after 2.17 | Draft: 2.7, 2.18 (both cited) | Steps: -
@@ -89,25 +92,25 @@ A.2-A.4: discreteBasicPropertiesGeneral, discreteLaplacianBoundGeneral, discrete
   cited) | Steps: -
 6.1 IDLAUpperBoundStmt: IDLAUpperBound.iDLAUpperBound_of_steps (Proofs/Sec6/IDLAUpperBound/OfSteps.lean:183) |
   Draft: 6.10, 5.1 | Steps: BoundaryLayerMeasurableStep (c2; E-c2-3)
-6.4 GoodAnnulusPrevalenceStmt: goodAnnulusPrevalence_of_fieldSteps (Proofs/Sec6/GoodAnnulusPrevalence/Locality.lean:242)
-  | Draft: 6.6 (proved), 6.5 | Steps: ConeMeanZeroRestrictionStep (Steps/Sec6/GoodAnnulusPrevalence.lean),
+6.4 GoodAnnulusPrevalenceStmt: goodAnnulusPrevalence_of_annulusHit (Proofs/Sec6/GoodAnnulusPrevalence/Main.lean) |
+  Draft: 6.5 (6.6 proved) | Steps: ConeMeanZeroRestrictionStep (Steps/Sec6/GoodAnnulusPrevalence.lean),
   CircleAverageModConstStep (:76) (c4)
-6.5 AnnulusHitStmt: annulusHit_of_steps (Steps/Sec6/AnnulusHit.lean:89) | Steps: WholePlaneLQGExistenceStep,
-  ConeWholePlaneWeylComparisonStep, WholePlaneLQGCoordinateChangeStep, WholePlaneGoodAnnulusTightnessStep (c4)
+6.5 AnnulusHitStmt: annulusHit_of_volumeTail (Proofs/Sec6/AnnulusHit/Main.lean:41) | Steps: WholePlaneLQGExistenceStep,
+  ConeWholePlaneWeylComparisonStep, WholePlaneLQGCoordinateChangeStep, WholePlaneUpperVolumeTailStep (c4; IR-c4-1..4)
 6.7 ConstantOrderLowerBoundStmt: constantOrderLowerBound (Proofs/Sec6/ConstantOrderLowerBound/Statement.lean:17) |
   Draft: 6.8 (Draft, F3), 2.7, 2.8, 2.19 | Steps: -
 6.7 (b) ConstantOrderLowerBoundLogStmt: constantOrderLowerBoundLog (Proofs/Sec6/ConstantOrderLowerBound/LogLoss.lean:60)
   | Draft: 6.8 (b), 2.7, 2.8, 2.19 | Steps: -
-6.8 (b) ConstantOrderLowerBoundDivLogStmt: constantOrderLowerBoundDiv_of_steps (Proofs/Sec6/ConstantOrderLowerBoundDiv/
-  OfSteps.lean:198) | Draft: 2.16, 2.7, 2.8, 2.9, 6.4, 2.18, 2.19 | Steps: GoodScaleEventMeasurableStep (c4; F13).
-  The Draft 6.8 has no reduction.
+6.8 (b) ConstantOrderLowerBoundDivLogStmt: constantOrderLowerBoundDiv_of_inputs (Proofs/Sec6/ConstantOrderLowerBoundDiv/
+  Final.lean:26; c4, 29311ac) | Draft: 2.16, 2.7, 2.8, 2.9, 2.18, 6.4 | Steps: LQGMeasureFieldMeasurableStep (c2;
+  Proofs/Measurability/GoodScale.lean:316). The Draft 6.8 has no reduction.
 6.9 local rate (E-c5-1) ChanceOfBeingAbsorbedLocalRateStmt: chanceOfBeingAbsorbedLocalRate (Proofs/Sec6/ChanceOfBeing
   Absorbed/Chernoff.lean:387) | Draft: 6.7 | Steps: -. The Draft 6.9 implies it but has no reduction.
 6.9 (b) ChanceOfBeingAbsorbedLogLossStmt: chanceOfBeingAbsorbedLogLoss_of_steps (Proofs/Sec6/ChanceOfBeingAbsorbed/
   LogLoss.lean:22) | Draft: 6.7 (b) | Steps: -
 6.10 IterativeBoundStmt: iterativeBound_of_div (Proofs/Sec6/IterativeBound/Statement.lean:48) through 6.7 (b), 6.9 (b)
-  | Draft: 6.8 (b), 2.7, 2.8, 2.19 | Steps: -. Expanded (iterativeBound_of_inputs, :56): 2.16, 2.7, 2.8, 2.9, 6.4,
-  2.18, 2.19 + GoodScaleEventMeasurableStep (c4)
+  | Draft: 6.8 (b), 2.7, 2.8, 2.19 | Steps: -. With 6.8 (b) expanded: 2.16, 2.7, 2.8, 2.9, 2.18, 2.19, 6.4 +
+  LQGMeasureFieldMeasurableStep (c2). (iterativeBound_of_inputs, :56, still takes the false GoodScaleEventMeasurableStep.)
 7.1 DivSandpileUpperBoundStmt (example disabled, F6): divSandpileUpperBound_of_carved_inputs (Steps/Sec7/DivSandpile
   UpperBound.lean:164) | Draft: 2.3, 6.8 (Draft, F3), 2.7, 7.2 (Draft, REFUTED E-c3-2, F1), 4.1, 3.3, 2.8, 7.3, 7.4 |
   Steps: StoppedObstacleSetupStep, StoppedShellConfinementStep (x2)
@@ -129,8 +132,8 @@ F2. The Draft 4.4 is false (E-c1-1; `CorrectedForms.not_discreteLaplacianBoundSt
   -> reroute to `DiscreteLaplacianBoundCorrectedStmt`. 7.2-7.4 are rerouted (CorrectedForms `_of_corrected`).
 F3. E-A10 (b): 6.8 is proved only in the log form; the chain 6.8 (b) -> 6.7 (b) -> 6.9 (b) -> 6.10 is closed. Still on
   the Draft 6.8: the Draft-form 6.7, the 6.9 local rate and 7.1 (x2).
-F5. Working tree: Proofs/Sec4/ObstacleSpecialization.lean (4.3-4.5) and Proofs/Sec6/ConstantOrderLowerBoundDiv/OfSteps.lean
-  (6.8 (b), 6.10) are modified and uncommitted; this audit was checked against the working tree (20:05Z).
+F5. Working tree: Proofs/Sec4/ObstacleSpecialization.lean (4.3-4.5) is modified and uncommitted; this audit was
+  checked against the working tree (2026-11-05 00:40Z).
 F6. OPEN: `MatedCRT.Sec7.vertexPoint_mem_cell` in Proofs/Sec7/DivSandpileUpperBound/CrudeCells.lean:11 (x2) and
   Proofs/Sec7/MassBoundOdometer/Count.lean:28 (c3): 7.1 cannot be imported with 7.2-7.4 (Theorem 1.6 needs both).
 F7. The Draft 3.1 (false for non-open D, E-c1-4) is consumed by 3.3 (m1), 3.7 (x1), 4.6 (x3); 3.5 uses the corrected
@@ -144,19 +147,23 @@ F11. NEW: Fact 2.2 is reduced to "parts" `LQGMeasureNonAtomicPart`, `LQGMeasureD
 F12. NEW: `MatedCRT.harmonicAt_comp_add_const` is declared in Proofs/Sec3/ConvergenceNormalizedExitTime/
   HarmonicTranslation.lean:12 (x1) and Proofs/Sec3/UniformConvergenceGreenKernel/HarmonicTranslation.lean:18 (m1): 3.3's
   proved boundary step and 3.7 cannot be imported together (3.7 needs 3.3). x1 or m1 renames (DUPLICATES.md).
-F13. 6.8 (b): `GoodScaleEventMeasurableAEStep` is proved from `LQGMeasureFieldMeasurableStep` (Proofs/Measurability/
-  GoodScale.lean:316, 345; d248b7c), but `constantOrderLowerBoundDiv_of_steps` still takes `GoodScaleEventMeasurableStep`.
-F9. Untracked work not in this ledger: Proofs/Sec2/ConeHarmonicBallsUpToFixedTime/, Proofs/Sec2/VolumeGrowthHalf/,
-  Proofs/Measurability/{ConeRescaledCircle, ConeScaleInputs}, Proofs/Sec4/ConvergenceDivisible/ExternalConeScale
-  Positivity, Proofs/Sec6/ConstantOrderLowerBoundDiv/Final.lean, Assembly/.
+F13. RESOLVED for 6.8 (b) (c4, 29311ac): `GoodScaleEventMeasurableStep` is false as drafted (E-c2-4); 6.8 (b) now
+  takes `LQGMeasureFieldMeasurableStep` instead. Still taking the false step: `iterativeBound_of_inputs`
+  (Proofs/Sec6/IterativeBound/Statement.lean:56, c5), `constantOrderLowerBoundDiv_of_steps` and Assembly/Main.lean:209.
+F14. NEW: Lemmas 2.4/2.5 (FROZEN) assert `T' = T`, which needs `ConeHarmonicBallStrictGrowthStep` (not in the paper):
+  ESCALATIONS E-c5-3 (filed by A from reports/c5.md).
+F9. Untracked work not in this ledger: Steps/Sec2/{CellSizeHalf, VolumeGrowthHalf} and Proofs/Sec2/{CellSizeHalf,
+  VolumeGrowthHalf}/ (cited halves from Leo), Proofs/Sec4/{SubsequentialConvergence, SubsequentialProperties}/ (x3),
+  Proofs/Sec2/ConeHarmonicBallsUpToFixedTime/, Proofs/Sec4/ConvergenceDivisible/ExternalConeScalePositivity, Assembly/.
 
-## Counts (2026-11-04 20:05Z)
+## Counts (2026-11-05 00:40Z)
 56 numbered results. Proved: 7 (2.13, 6.3, 6.6, A.1-A.4). Reduced (committed reduction; checked by an example except
-2.5, 2.6 (F10) and 7.1 (F6)): 38 (1.4, 1.6, 2.2 (cited), 2.3-2.6, 2.17, 2.19, 3.1 corrected, 3.3, 3.5-3.7, 4.1-4.3,
-4.4 corrected, 4.5 corrected, 4.6-4.8, 5.1-5.4, 6.1, 6.4, 6.5, 6.7, 6.8 (b), 6.9, 6.10, 7.1, 7.2 corrected, 7.3, 7.4,
-8.1). Of these, with no open step (Draft Stmts and External inputs only): 12 (2.17, 2.19, 4.7, 5.2, 5.4, 6.7, 6.9, 6.10,
-7.2 corrected, 7.3, 7.4, 8.1); 5.2 and 5.4 rest on cited results only; 3.1 corrected needs only the (L2)-pending
-corrected Lemma 3.2. Cited, hypotheses only: 10. No committed reduction: 1 (3.4).
-Remaining inputs: External MepsScalingInput (3.1c, 4.7), DegreeBoundInput (7.4), QuantumConeScalingInput (2.5, 2.6);
-HB cited GreenPotentialHolderStmt (3.5); cited parts outside External (2.2, F11); corrected cited 3.2 (L2).
-Distinct open step Props: 44 (A 1, c1 1, m1 8, m2 2, x1 3, x3 6, c2 2, c4 7, c5 11, x2 2, 2.2 split 1).
+2.5, 2.6 (F10), 2.3's best form (F10) and 7.1 (F6)): 38 (1.4, 1.6, 2.2 (cited), 2.3-2.6, 2.17, 2.19, 3.1 corrected,
+3.3, 3.5-3.7, 4.1-4.3, 4.4 corrected, 4.5 corrected, 4.6-4.8, 5.1-5.4, 6.1, 6.4, 6.5, 6.7, 6.8 (b), 6.9, 6.10, 7.1,
+7.2 corrected, 7.3, 7.4, 8.1). Of these, with no open step (Draft Stmts and External inputs only): 12 (2.17, 2.19,
+4.7, 5.2, 5.4, 6.7, 6.9, 6.10, 7.2 corrected, 7.3, 7.4, 8.1); 5.2 and 5.4 rest on cited results only; 3.1 corrected
+needs only the (L2)-pending corrected Lemma 3.2. Cited, hypotheses only: 10. No committed reduction: 1 (3.4).
+Remaining inputs: External MepsScalingInput (3.1c, 4.7), DegreeBoundInput (7.4), QuantumConeScalingInput (2.3, 2.5,
+2.6); HB cited GreenPotentialHolderStmt (3.5); cited parts outside External (2.2, F11); corrected cited 3.2 (L2).
+Distinct open step Props (best reductions): 42 (c1 1, m1 8, m2 2, x1 3, x3 6, c2 3, c4 6, c5 10, x2 2, 2.2 split 1;
+A 0: ConeFamilyAEMeasurableStep derived by c5).
