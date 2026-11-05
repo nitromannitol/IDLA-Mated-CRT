@@ -69,4 +69,43 @@ theorem coneFamily_exists_frontier_annulus
     apply (hsmall x ?_).2
     convert hx using 1; ring
 
+
+/-- A deterministic countable family of annuli and neighborhood radii covers
+the frontier localization at every sample before exit. -/
+theorem coneFamily_exists_countable_frontier_annulus
+    {μ : Measure ℂ} {Λ : ℝ → Set ℂ} {ρ t c q : ℝ}
+    (hfam : IsConeHarmonicBallFamily μ Λ) (hρ : 0 < ρ)
+    (ht : 0 < t) (hT : t < clusterExitTime Λ ρ) (hq : 0 < q) :
+    ∃ n : ℕ, let r : ℝ := ρ / ((n : ℝ) + 2)
+      cthickening r (frontier (Λ t)) ⊆ ball (0 : ℂ) ρ \ ball 0 r ∧
+      ∀ x ∈ cthickening r (frontier (Λ t)),
+        c * (leastSupersolution μ ρ 0 t x - (-t * greenFunction (ball 0 ρ) 0 x)) < q := by
+  obtain ⟨d, hd, O, hO1, _, hdist, hsub, hgap⟩ :=
+    coneFamily_exists_frontier_annulus (c := c) hfam hρ ht hT hq
+  have hmin : 0 < min (2 * d) (infDist (0 : ℂ) O) := lt_min (by positivity) hdist
+  obtain ⟨n, hn⟩ := exists_nat_one_div_lt (div_pos hmin hρ)
+  have hinv : 1 / ((n : ℝ) + 2) ≤ 1 / ((n : ℝ) + 1) := by
+    apply one_div_le_one_div_of_le (by positivity)
+    linarith
+  have hsmall : ρ / ((n : ℝ) + 2) < min (2 * d) (infDist (0 : ℂ) O) := by
+    have h := mul_lt_mul_of_pos_left (hinv.trans_lt hn) hρ
+    have heq : ρ * (min (2 * d) (infDist (0 : ℂ) O) / ρ) =
+        min (2 * d) (infDist (0 : ℂ) O) := by field_simp
+    rw [heq] at h
+    convert h using 1; ring
+  have hrad : ρ / ((n : ℝ) + 2) ≤ 2 * d := hsmall.le.trans (min_le_left _ _)
+  have hOdist : ρ / ((n : ℝ) + 2) < infDist (0 : ℂ) O :=
+    hsmall.trans_le (min_le_right _ _)
+  have hnb := (cthickening_mono hrad (frontier (Λ t))).trans hsub
+  refine ⟨n, ?_, ?_⟩
+  · intro x hx
+    have hxO := hnb hx
+    refine ⟨hO1 hxO, ?_⟩
+    intro hxball
+    have hxinf : infDist (0 : ℂ) O ≤ dist 0 x := infDist_le_dist_of_mem hxO
+    rw [mem_ball, dist_comm] at hxball
+    linarith
+  · intro x hx
+    exact hgap x ((cthickening_mono hrad (frontier (Λ t))) hx)
+
 end MatedCRT.Sec7
