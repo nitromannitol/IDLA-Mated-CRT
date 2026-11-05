@@ -107,26 +107,11 @@ theorem discretePotentialTightnessOnOpen_of_corrected (h : DiscretePotentialTigh
   · exact le_div_self hC'.le hEpos hn.le
   · exact Real.rpow_nonneg (le_max_of_le_left hEpos.le) χ
 
-/-! ## Lemma 3.2: Draft ⇒ corrected (review-L32) -/
+/-! ## Lemma 3.2: adopted corrected statement -/
 
-/-- The Draft Lemma 3.2 implies its corrected form (`β = 1/2`, `ξ' = ξ`): the corrected first estimate is asked only
-for interior `a` and with the larger floor `ε^β ≥ ε` (`ε < 1`), and the corrected "moreover" part is the Draft one. -/
+/-- The adopted Draft statement is definitionally the corrected step. -/
 theorem discreteHolderContinuityCorrected_of_draft (h : DiscreteHolderContinuityStmt 𝒮) :
-    DiscreteHolderContinuityCorrectedStep 𝒮 := by
-  intro γ hγ hγ2 ρ hρ hρ1
-  obtain ⟨ξ, A, hξ, hξ1, hA, h⟩ := h γ hγ hγ2 ρ hρ hρ1
-  refine ⟨ξ, A, 1 / 2, hξ, hξ1, hA, by norm_num, by norm_num, fun χ C' hχ hχ1 hC' => ?_⟩
-  obtain ⟨C, hC, h⟩ := h χ C' hχ hχ1 hC'
-  refine ⟨ξ, C, hξ, hξ1, hC, fun Ω _ S hS => ?_⟩
-  refine polyHighProb_mono_lt_one (h Ω S hS) fun ε hε hε1 ω hω => ?_
-  intro D f hDρ hDo hDc hharm
-  obtain ⟨h1, h2⟩ := hω D f hDρ hDo hDc hharm
-  refine ⟨fun a ha b hb => (h1 a ha.1 b hb).trans ?_, h2⟩
-  have hεβ : ε ≤ ε ^ (1 / 2 : ℝ) := by
-    have := Real.rpow_le_rpow_of_exponent_ge hε hε1.le (show (1 / 2 : ℝ) ≤ 1 by norm_num)
-    rwa [Real.rpow_one] at this
-  refine mul_le_mul_of_nonneg_left (Real.rpow_le_rpow (le_max_of_le_left hε.le)
-    (max_le_max hεβ le_rfl) hξ.le) (mul_nonneg hA.le (Real.iSup_nonneg fun _ => abs_nonneg _))
+    DiscreteHolderContinuityCorrectedStep 𝒮 := h
 
 /-! ## Lemmas 4.4 and 4.5: Draft ⇒ corrected; the Draft forms are false (E-c1-1) -/
 

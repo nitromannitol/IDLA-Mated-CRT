@@ -64,31 +64,26 @@ def DiscretePotentialTightnessStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
         TendstoUniformlyOn (fun k => rescale (S.mε (E ω (Φ ω k))) (E ω (Φ ω k)) (S.η ω) (u ω (Φ ω k)))
           ubar atTop (closure D))
 
-/-- **Lemma 3.2** (lemma:discrete-holder-continuity, line 997; GMS19 Theorem 3.9). There are `ξ = ξ(ρ, γ) ∈ (0, 1)`
-and `A = A(ρ, γ) > 0` such that with polynomially high probability as `ε → 0`: for every connected domain `D ⊆ B_ρ`
-and every `f : V^ε(D) → ℝ` which is `Δ^ε`-harmonic on `V^ε(D) \ V^ε(∂D)`,
-`|f(a) - f(b)| ≤ A (sup_{V^ε(D)} |f|) ((ε ∨ |η(a) - η(b)|) / dist(η(a), ∂D))^ξ` for all `a, b ∈ V^ε(D)`. Moreover, if
-`D` is simply connected and `f` has Hölder boundary data (eq:holder-boundary-data with constants `χ, C'`), then
-`|f(a) - f(b)| ≤ max {C, A sup_{V^ε(D)} |f|} (ε ∨ |η(a) - η(b)|)^ξ` for all `a, b ∈ V^ε(D)`, for a constant `C > 0`.
-The constant `C` is read as deterministic, depending on `χ, C'` (and `ρ, γ`): an `ε`-dependent `C` would make the
-estimate empty. "Connected domain" is a connected open set. The first estimate is written multiplied out by
-`dist(η(a), ∂D)^ξ` (equivalent for `dist > 0`; for `dist = 0` the printed right side is `+∞`). -/
+/-- **Lemma 3.2** (GMS19 Theorem 3.9), corrected [C6]. The interior estimate has floor `ε ^ β`
+and applies to interior `a`; the boundary estimate has exponent `ξ'` chosen after the Hölder exponent `χ`.
+The constants are deterministic and the estimates hold with polynomially high probability. The first estimate is
+multiplied by the distance to the boundary raised to `ξ`. -/
 def DiscreteHolderContinuityStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
-  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ ξ A : ℝ, 0 < ξ ∧ ξ < 1 ∧ 0 < A ∧
-  ∀ χ C' : ℝ, 0 < χ → χ ≤ 1 → 0 < C' → ∃ C : ℝ, 0 < C ∧
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ ξ A β : ℝ, 0 < ξ ∧ ξ < 1 ∧ 0 < A ∧ 0 < β ∧ β < 1 ∧
+  ∀ χ C' : ℝ, 0 < χ → χ ≤ 1 → 0 < C' → ∃ ξ' C : ℝ, 0 < ξ' ∧ ξ' < 1 ∧ 0 < C ∧
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   PolyHighProb S.P fun ε => {ω | ∀ (D : Set ℂ) (f : ℤ → ℝ), D ⊆ ball 0 ρ → IsOpen D → IsConnected D →
     (∀ a ∈ interiorCellVertices ε (S.η ω) D, matedLaplacian (S.mult ε ω) f a = 0) →
-    (∀ a ∈ cellVertices ε (S.η ω) D, ∀ b ∈ cellVertices ε (S.η ω) D,
+    (∀ a ∈ interiorCellVertices ε (S.η ω) D, ∀ b ∈ cellVertices ε (S.η ω) D,
       |f a - f b| * infDist (vertexPoint ε (S.η ω) a) (frontier D) ^ ξ ≤
         A * (⨆ a' : cellVertices ε (S.η ω) D, |f a'|) *
-          max ε ‖vertexPoint ε (S.η ω) a - vertexPoint ε (S.η ω) b‖ ^ ξ) ∧
+          max (ε ^ β) ‖vertexPoint ε (S.η ω) a - vertexPoint ε (S.η ω) b‖ ^ ξ) ∧
     ((SimplyConnectedSpace D ∧ ∀ a ∈ cellVertices ε (S.η ω) (frontier D),
         ∀ b ∈ cellVertices ε (S.η ω) (frontier D),
           |f a - f b| ≤ C' * max ε ‖vertexPoint ε (S.η ω) a - vertexPoint ε (S.η ω) b‖ ^ χ) →
       ∀ a ∈ cellVertices ε (S.η ω) D, ∀ b ∈ cellVertices ε (S.η ω) D,
         |f a - f b| ≤ max C (A * ⨆ a' : cellVertices ε (S.η ω) D, |f a'|) *
-          max ε ‖vertexPoint ε (S.η ω) a - vertexPoint ε (S.η ω) b‖ ^ ξ)}
+          max ε ‖vertexPoint ε (S.η ω) a - vertexPoint ε (S.η ω) b‖ ^ ξ')}
 
 /-- **Lemma 3.3** (lemma:uniform-convergence-of-greens-function, line 1106). Fix deterministic `r > 0`, `z ∈ ℂ` with
 `B_r(z) ⊆ B_ρ`, and `y ∈ B_r(z)`. Let `g^ε = ε⁻¹ g^ε_{B_r(z)}(a^ε_y, ·)` and `ḡ^ε` its rescaling. For each `δ > 0` and

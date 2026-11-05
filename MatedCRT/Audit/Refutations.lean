@@ -20,11 +20,8 @@ taken as an explicit hypothesis:
   vacuous. The data `u^ε(a) = m_ε 1{Re η(a) > 1/8}` satisfy `|u^ε| ≤ C ε⁻¹` by the scaling of `m_ε`. Their rescalings
   `ū^ε(x) = 1{Re η(a^ε_x) > 1/8}` converge uniformly on `O = D` along no subsequence to a continuous limit,
   because the cells shrink uniformly on `D` (continuity and transience of `η`).
-* **Lemma 3.2** (`DiscreteHolderContinuityStmt`, review-L32 F1: the "Moreover" bound for `χ < ξ`) from the cell size
-  estimate (Lemma 2.8, `CellSizeEstimateStmt`, BG20 Lemma 2.4): `not_discreteHolderContinuityStmt`. The domain is
-  `D = B_δ(0)` with `3δ = ε^{2/(2-γ)²+ζ}`. It contains no cell, so it has no interior vertex. The data are
-  `f = ε^χ 1_{0}` with `χ = ξ ζ / 2`, where `ζ = (2+γ)⁻²`. Then `f` has `χ`-Hölder boundary data with `C' = 1`, but
-  `|f(0) - f(1)| = ε^χ` exceeds `max(C, A sup|f|) (ε ∨ |η(0) - η(ε)|)^ξ ≤ max(C, A) ε^{2χ}` for small `ε`.
+* **Lemma 3.2 (printed form)** (review-L32 F1): its boundary exponent cannot be chosen independently of `χ`.
+  The adopted Draft statement is corrected [C6]; the counterexample concerns the earlier printed form.
 * **Lemma 7.2** (`MassBoundOdometerStmt`, ESCALATIONS E-c3-2: radii below the cell scale) from Lemma 2.8:
   `not_massBoundOdometerStmt`. Take `Θ = {0}` and the first grid time `t = jθ` at which `Λ^ε_t` has a vertex
   `x ≠ 0`. Such a time exists: `1 ∈ Λ^ε_t` for large `t`, by lower bounds over all admissible functions

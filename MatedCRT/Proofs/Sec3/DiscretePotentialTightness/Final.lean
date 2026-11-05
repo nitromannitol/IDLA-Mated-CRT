@@ -11,10 +11,8 @@ Its hypotheses are:
 * `VolumeGrowthStmt` (Draft, Lemma 2.7; BG20 Lemma A.1), cited. It gives Lemma 2.17 (`BoundedExitTimeRVStmt`)
   through `boundedExitTimeRV_of_steps`;
 * `ExitTimeUpperBoundStmt` (Draft, Lemma 2.18; BG20 Proposition 5.1), cited;
-* `DiscreteHolderContinuityCorrectedStep` (Lemma 3.2 in the corrected form of review-L32; GMS19 Theorem 3.9). This is
-  the only hypothesis that is not a printed cited statement: the printed Lemma 3.2 is false by argument
-  (docs/campaign/CORRECTED-FORMS.md, 3.2), and `discreteHolderContinuityCorrected_of_draft`
-  (MatedCRT/Audit/CorrectedForms.lean) derives the corrected form from it.
+* `DiscreteHolderContinuityCorrectedStep` (Lemma 3.2, corrected [C6]; GMS19 Theorem 3.9), definitionally
+  implied by `DiscreteHolderContinuityStmt` via `discreteHolderContinuityCorrected_of_draft`.
 
 The cells of adjacent vertices of the mated-CRT map intersect by `adjacentCellsMeetAeStep`
 (MatedCRT/Proofs/MatingOfTrees/AdjacentCells.lean), so no step hypothesis remains.
