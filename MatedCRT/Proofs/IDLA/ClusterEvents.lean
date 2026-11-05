@@ -119,6 +119,58 @@ theorem MatedCRTEnv.IsValid.idlaProb_eq_joint_stopped_containment
   exact hS.idlaProb_eq_jointLaw_of_measurable ε
     (measurableSet_not_subset_random_stoppedIDLACluster O U hO hU n)
 
+/-- The same equality holds for coordinatewise null-measurable random vertex sets. -/
+theorem MatedCRTEnv.IsValid.idlaProb_eq_joint_stopped_containment_of_nullMeasurable
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
+    (hS : S.IsValid 𝒮 γ) (ε : ℝ) (O U : Ω → Set ℤ)
+    (hO : ∀ k, NullMeasurableSet {ω | k ∈ O ω} S.P)
+    (hU : ∀ k, NullMeasurableSet {ω | k ∈ U ω} S.P) (n : ℕ) :
+    S.idlaProb ε {p | ¬ O p.1 ⊆ stoppedIDLACluster (U p.1) p.2 n} =
+      S.idlaJointMeasure ε {p | ¬ O p.1 ⊆ stoppedIDLACluster (U p.1) p.2 n} := by
+  obtain ⟨O', hO', hOeq⟩ := exists_measurable_random_vertexSet_ae S.P O hO
+  obtain ⟨U', hU', hUeq⟩ := exists_measurable_random_vertexSet_ae S.P U hU
+  let B : Set Ω := {ω | O' ω ≠ O ω ∨ U' ω ≠ U ω}
+  have hB : S.P B = 0 := by
+    have h : ∀ᵐ ω ∂S.P, ω ∉ B := by
+      filter_upwards [hOeq, hUeq] with ω ho hu
+      simp [B, ho, hu]
+    simpa using ae_iff.1 h
+  let E : Set (Ω × (ℕ → ℕ → ℤ)) :=
+    {p | ¬ O p.1 ⊆ stoppedIDLACluster (U p.1) p.2 n}
+  let E' : Set (Ω × (ℕ → ℕ → ℤ)) :=
+    {p | ¬ O' p.1 ⊆ stoppedIDLACluster (U' p.1) p.2 n}
+  have hoff (ω : Ω) (hω : ω ∉ B) : O' ω = O ω ∧ U' ω = U ω := by
+    simpa [B] using hω
+  have h1 : S.idlaJointMeasure ε E ≤ S.idlaJointMeasure ε E' := by
+    have h := hS.idlaJointMeasure_le_add_env ε E E' B (by
+      intro ω hω xs hx
+      simpa [E, E', (hoff ω hω).1, (hoff ω hω).2] using hx)
+    simpa [hB] using h
+  have h2 : S.idlaProb ε E' ≤ S.idlaProb ε E := by
+    have h := Sec8.annealedOuterProb_le_of_forall_not_mem S.P
+      (fun ω => walkerSequenceLaw (S.mult ε ω) 0) (fun ω => walkerSequenceLaw (S.mult ε ω) 0)
+      (fun _ => prob_le_one) E' E B (by
+        intro ω hω
+        have hs : Prod.mk ω ⁻¹' E' = Prod.mk ω ⁻¹' E := by
+          simp [E, E', (hoff ω hω).1, (hoff ω hω).2]
+        rw [hs])
+    simpa [MatedCRTEnv.idlaProb, hB] using h
+  apply le_antisymm (hS.idlaProb_le_jointMeasure ε E)
+  calc
+    S.idlaJointMeasure ε E ≤ S.idlaJointMeasure ε E' := h1
+    _ = S.idlaProb ε E' := (hS.idlaProb_eq_joint_stopped_containment ε O' U' hO' hU' n).symm
+    _ ≤ S.idlaProb ε E := h2
+
+/-- The sectionwise and joint probabilities also agree for the unstopped cluster. -/
+theorem MatedCRTEnv.IsValid.idlaProb_eq_joint_containment_of_nullMeasurable
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
+    (hS : S.IsValid 𝒮 γ) (ε : ℝ) (O : Ω → Set ℤ)
+    (hO : ∀ k, NullMeasurableSet {ω | k ∈ O ω} S.P) (n : ℕ) :
+    S.idlaProb ε {p | ¬ O p.1 ⊆ idlaCluster p.2 n} =
+      S.idlaJointMeasure ε {p | ¬ O p.1 ⊆ idlaCluster p.2 n} := by
+  exact hS.idlaProb_eq_joint_stopped_containment_of_nullMeasurable ε O (fun _ => univ) hO
+    (fun _ => MeasurableSet.univ.nullMeasurableSet) n
+
 /-- A membership event for a stopped aggregate of finitely many walkers is measurable. -/
 theorem measurableSet_stoppedIDLACluster_mem (U : Set ℤ) (n : ℕ) (k : ℤ) :
     MeasurableSet {xs : ℕ → ℕ → ℤ | k ∈ stoppedIDLACluster U xs n} := by
