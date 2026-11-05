@@ -38,6 +38,39 @@ theorem MatedCRTEnv.IsValid.joint_generalIDLABounds_of_sectionwise
       (fun k => hS.nullMeasurableSet_of_envSigma (hO₁ ε k))
       (fun k => hS.nullMeasurableSet_of_envSigma (hO₂ ε k)) ⌊K ε⌋₊).symm
 
+/-- A measurable vertex-set envelope permits the general IDLA lower bound to be used for
+an arbitrary target vertex set, provided the target lies in the envelope with high probability.
+The target itself need not be measurable. -/
+theorem MatedCRTEnv.IsValid.joint_generalIDLABounds_of_measurable_envelope
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
+    (hS : S.IsValid 𝒮 γ) (O G U : ℝ → Ω → Set ℤ) (K : ℝ → ℝ)
+    (hG : ∀ ε k, MeasurableSet[S.envSigma] {ω | k ∈ G ε ω})
+    (hU : ∀ ε k, MeasurableSet[S.envSigma] {ω | k ∈ U ε ω})
+    (hSel : Tendsto (fun ε => S.P {ω | ¬ O ε ω ⊆ G ε ω}) (𝓝[>] 0) (𝓝 0))
+    (hLower : Tendsto (fun ε => S.idlaProb ε {p | ¬ G ε p.1 ⊆ idlaCluster p.2 ⌊K ε⌋₊})
+      (𝓝[>] 0) (𝓝 0))
+    (hStopped : Tendsto (fun ε => S.idlaProb ε
+      {p | ¬ G ε p.1 ⊆ stoppedIDLACluster (U ε p.1) p.2 ⌊K ε⌋₊}) (𝓝[>] 0) (𝓝 0)) :
+    Tendsto (fun ε => S.idlaJointMeasure ε {p | ¬ O ε p.1 ⊆ idlaCluster p.2 ⌊K ε⌋₊})
+      (𝓝[>] 0) (𝓝 0) ∧
+    Tendsto (fun ε => S.idlaJointMeasure ε
+      {p | ¬ O ε p.1 ⊆ stoppedIDLACluster (U ε p.1) p.2 ⌊K ε⌋₊}) (𝓝[>] 0) (𝓝 0) := by
+  obtain ⟨hLower', hStopped'⟩ := hS.joint_generalIDLABounds_of_sectionwise G U K hG hU hLower hStopped
+  have transfer (clus : ℝ → Ω → (ℕ → ℕ → ℤ) → Set ℤ)
+      (hclus : Tendsto (fun ε => S.idlaJointMeasure ε {p | ¬ G ε p.1 ⊆ clus ε p.1 p.2})
+        (𝓝[>] 0) (𝓝 0)) :
+      Tendsto (fun ε => S.idlaJointMeasure ε {p | ¬ O ε p.1 ⊆ clus ε p.1 p.2})
+        (𝓝[>] 0) (𝓝 0) := by
+    have h := hclus.add hSel
+    rw [zero_add] at h
+    refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds h (fun _ => zero_le) (fun ε => ?_)
+    refine hS.idlaJointMeasure_le_add_env ε _ _ _ ?_
+    intro ω hω xs hx
+    have hOG : O ε ω ⊆ G ε ω := by simpa using hω
+    exact fun hGC => hx (hOG.trans hGC)
+  exact ⟨transfer (fun ε _ xs => idlaCluster xs ⌊K ε⌋₊) hLower',
+    transfer (fun ε ω xs => stoppedIDLACluster (U ε ω) xs ⌊K ε⌋₊) hStopped'⟩
+
 /-- The geometric step of Proposition 5.1 transfers a joint-law vertex containment bound to a
 cell-union bound. The harmonic-ball family and the exceptional sets need not be measurable. -/
 theorem MatedCRTEnv.IsValid.joint_innerBound_of_deep_vertices
