@@ -998,18 +998,17 @@ By combining the previous two lemmas, we have the following bound on the expecte
 	
 	Lemma \ref{lemma:discrete-potential-tightness} will follow from the Arz\'ela-Ascoli theorem and the following
 	H\"{o}lder continuity of $\Delta^{{\eps}}$-harmonic functions on the mated-CRT map. 
+	% CORRECTION [C6]: the interior estimate needs the epsilon^beta floor and the boundary exponent must depend on chi.
 	\begin{lemma}[Theorem 3.9 in \cite{gwynne2019harmonic}] \label{lemma:discrete-holder-continuity}
-		There exists $\xi = \xi(\rho, \gamma) \in (0,1)$ and $A = A(\rho, \gamma) > 0$ 
-		such that the following holds with polynomially high probability as ${\eps} \to 0$. 
-		Let $D \subset B_{\rho}$ be a connected domain and let $f^{{\eps}}: {\VGeps}(D) \to \R$ be 
-		$\Delta^{{\eps}}$-harmonic on ${\VGeps}(D) \setminus {\VGeps}(\partial D)$. Then, 
-		\begin{equation} 
-		|f^{{\eps}}(a) - f^{{\eps}}(b)| \leq A \left( \sup_{a' \in {\VGeps}(D)} |f^{{\eps}}(a')| \right) \left( \frac{{\eps} \vee |\eta(a) - \eta(b)|}{\dist(\eta(a), \partial D)} \right)^\xi, \quad \forall a,b \in {\VGeps}(D).
-		\end{equation} 
-		Moreover, if $D$ is simply connected and if $f^{{\eps}}$ has H\"{o}lder continuous boundary data in the sense of \eqref{eq:holder-boundary-data}, then 
-		there exists a $C > 0$ such that
+		There exist $\xi=\xi(\rho,\gamma)\in(0,1)$, $\beta=\beta(\rho,\gamma)\in(0,1)$ and $A=A(\rho,\gamma)>0$ such that, with polynomially high probability as $\eps	o0$, the following holds. For every connected domain $D\subset B_\rho$ and every $f^\eps$ which is $\Delta^\eps$-harmonic on ${\VGeps}(D)\setminus {\VGeps}(\partial D)$,
+		\begin{equation}
+		|f^\eps(a)-f^\eps(b)|\le A\left(\sup_{a'\in {\VGeps}(D)}|f^\eps(a')|\right)\left(\frac{\eps^\beta\vee|\eta(a)-\eta(b)|}{\dist(\eta(a),\partial D)}\right)^\xi,\quad a\in {\VGeps}(D)\setminus {\VGeps}(\partial D),\quad b\in {\VGeps}(D).
+		\end{equation}
+		Moreover, for each $\chi\in(0,1]$ there exists $\xi'=\xi'(\rho,\gamma,\chi)\in(0,1)$ with $\xi'\le\chi$, and for each $C'>0$ there exists $C=C(\rho,\gamma,\chi,C')>0$, such that with polynomially high probability as $\eps	o0$ the following holds. If $D$ is simply connected and
+		\[|f^\eps(a)-f^\eps(b)|\le C'(\eps\vee|\eta(a)-\eta(b)|)^\chi,\quad a,b\in {\VGeps}(\partial D),\]
+		then
 		\begin{equation} \label{eq:boundary-estimate}
-		|f^{{\eps}}(a) - f^{{\eps}}(b)| \leq \max \left\{ C, A \left( \sup_{a' \in {\VGeps}(D)} |f^{{\eps}}(a')| \right) \right \}( {\eps} \vee |\eta(a) - \eta(b)|)^{\xi}, \quad \forall a,b \in {\VGeps}(D).
+		|f^\eps(a)-f^\eps(b)|\le\max\left\{C,A\left(\sup_{a'\in {\VGeps}(D)}|f^\eps(a')|\right)\right\}(\eps\vee|\eta(a)-\eta(b)|)^{\xi'},\quad a,b\in {\VGeps}(D).
 		\end{equation}
 	\end{lemma}
 	
