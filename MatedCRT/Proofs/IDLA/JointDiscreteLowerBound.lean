@@ -135,8 +135,6 @@ theorem iDLALowerBound_of_steps (𝒮 : SpaceFillingSLEModel) (h52 : GeneralIDLA
   intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS Λ hΛ δ t hδ hδρ ht
   have hj := (joint_iDLALowerBound_discrete_of_steps 𝒮 h52 h53 h54 h28 hI
     (adjacentCellsMeetAeStep 𝒮) γ hγ hγ2 ρ hρ hρ1 Ω S hS Λ hΛ δ t hδ hδρ ht).1
-  have hl := tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hj
-    (Eventually.of_forall fun _ => zero_le) (Eventually.of_forall fun ε => hS.idlaProb_le_jointMeasure ε _)
-  exact ⟨hl, hstop γ hγ hγ2 ρ hρ hρ1 Ω S hS Λ hΛ δ t hδ hδρ ht⟩
+  exact ⟨hj, hstop γ hγ hγ2 ρ hρ hρ1 Ω S hS Λ hΛ δ t hδ hδρ ht⟩
 
 end MatedCRT

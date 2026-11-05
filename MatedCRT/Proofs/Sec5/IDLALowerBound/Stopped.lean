@@ -14,8 +14,8 @@ domain `O₂^ε = V^ε(Λ_t)` instead of `Λ^ε_t`: these are Lemmas 5.3 and 5.4
 `O₁^ε = {a ∈ V^ε(Λ_t) : dist(η(a), ∂ V̄^ε(Λ_t)) > δ/4}`, `O₂^ε = V^ε(Λ_t)`, `K_ε = t ε⁻¹`, and the cell-size estimate
 (Lemma 2.8) passes from `O₁^ε` to `B⁻_δ(Λ_t)`; the covering `Λ_t ⊆ V̄^ε(Λ_t)` replaces Proposition 4.2.
 
-* `iDLALowerBoundStopped_of_steps : IDLALowerBoundStoppedStep 𝒮` from Lemma 5.2 (relaxed), Lemma 2.8 and the two
-  steps above.
+* `iDLALowerBoundStoppedSectionwise_of_steps` gives the sectionwise estimate from Lemma 5.2 (relaxed), Lemma 2.8
+  and the two steps above. The joint-law form is proved in `Proofs/IDLA/JointStoppedLowerBound.lean`.
 -/
 
 namespace MatedCRT
@@ -100,11 +100,23 @@ theorem subset_ball_div_three_of_lt_clusterExitTime {Λ : ℝ → Set ℂ} {ρ t
 end IDLALowerBound
 
 open IDLALowerBound in
+/-- The stopped lower bound in sectionwise outer probability. -/
+def IDLALowerBoundStoppedSectionwiseStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
+  ∀ δ t : ℝ, 0 < δ → δ < ρ → 0 < t →
+    Tendsto (fun ε => S.idlaSectionProb ε {p | t < clusterExitTime (Λ p.1) ρ ∧
+        ¬ innerNbhd δ (Λ p.1 t) ⊆
+          fillCells ε (S.η p.1) (stoppedIDLACluster (cellVertices ε (S.η p.1) (Λ p.1 t)) p.2 ⌊t / ε⌋₊)})
+      (𝓝[>] 0) (𝓝 0)
+
+open IDLALowerBound in
 /-- **The stopped part of Proposition 5.1** from Lemma 5.2 (relaxed), Lemma 2.8 and Lemmas 5.3, 5.4 on `V^ε(Λ_t)`
 (with `δ/4`): the argument of lines 2030-2048 with `O₂^ε = V^ε(Λ_t)`. -/
-theorem iDLALowerBoundStopped_of_steps (𝒮 : SpaceFillingSLEModel) (h52 : GeneralIDLALowerBoundRelaxedStep 𝒮)
+theorem iDLALowerBoundStoppedSectionwise_of_steps (𝒮 : SpaceFillingSLEModel) (h52 : GeneralIDLALowerBoundRelaxedStep 𝒮)
     (h53 : StoppedMeanValueInequalityStep 𝒮) (h54 : StoppedLLowerBoundStep 𝒮) (h28 : CellSizeEstimateStmt 𝒮) :
-    IDLALowerBoundStoppedStep 𝒮 := by
+    IDLALowerBoundStoppedSectionwiseStep 𝒮 := by
   intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS Λ hΛ δ t hδ hδρ ht
   have := hS.isProbabilityMeasure
   have hδ4 : 0 < δ / 4 := by positivity

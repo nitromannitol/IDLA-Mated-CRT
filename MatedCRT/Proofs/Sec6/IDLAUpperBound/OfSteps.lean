@@ -227,7 +227,11 @@ theorem iDLAUpperBoundSectionwise_of_steps (𝒮 : SpaceFillingSLEModel) (h610 :
   have hLB : Tendsto (fun ε => S.idlaSectionProb ε {p | t < clusterExitTime (Λ p.1) ρ ∧
       ¬ innerNbhd δ₁ (Λ p.1 t) ⊆ fillCells ε (S.η p.1)
         (stoppedIDLACluster (cellVertices ε (S.η p.1) (Λ p.1 t)) p.2 ⌊t / ε⌋₊)})
-      (𝓝[>] 0) (𝓝 0) := (h51 γ hγ hγ2 ρ hρ hρ1 Ω S hS Λ hΛ δ₁ t hδ₁pos hδ₁ρ ht).2
+      (𝓝[>] 0) (𝓝 0) := by
+    refine tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds
+      (h51 γ hγ hγ2 ρ hρ hρ1 Ω S hS Λ hΛ δ₁ t hδ₁pos hδ₁ρ ht).2
+      (Eventually.of_forall fun _ => zero_le) (Eventually.of_forall fun ε => ?_)
+    exact hS.idlaProb_le_jointMeasure ε _
   have hcellsP := hS.probTendsToOne_small_cells ρ d hd0
   filter_upwards [ENNReal.tendsto_nhds_zero.1 hLB e' he'pos, ENNReal.tendsto_nhds_zero.1 hlim e' he'pos,
     ENNReal.tendsto_nhds_zero.1 hcellsP e' he'pos, self_mem_nhdsWithin] with ε hεLB hε610 hεcells hε
@@ -295,10 +299,11 @@ theorem iDLAUpperBoundSectionwise_of_steps (𝒮 : SpaceFillingSLEModel) (h610 :
     _ = e' * 5 := by ring
     _ = e := ENNReal.div_mul_cancel (by norm_num) (by norm_num)
 
-/-- The sectionwise estimate supplies the present formulation of Proposition 6.1. -/
+/-- The sectionwise estimate transfers to the joint law using cone-family measurability. -/
 theorem iDLAUpperBound_of_steps (𝒮 : SpaceFillingSLEModel) (h610 : IterativeBoundStmt 𝒮)
-    (h51 : IDLALowerBoundStmt 𝒮) (hm : BoundaryLayerMeasurableStep 𝒮) : IDLAUpperBoundStmt 𝒮 :=
-  iDLAUpperBoundSectionwise_of_steps 𝒮 h610 h51 hm
+    (h51 : IDLALowerBoundStmt 𝒮) (hm : BoundaryLayerMeasurableStep 𝒮)
+    (hfam : ConeFamilyAEMeasurableStep) (h24 : ConeHarmonicBallsUpToFixedTimeStmt) : IDLAUpperBoundStmt 𝒮 :=
+  joint_iDLAUpperBound_of_sectionwise 𝒮 hfam h24 (iDLAUpperBoundSectionwise_of_steps 𝒮 h610 h51 hm)
 
 end IDLAUpperBound
 

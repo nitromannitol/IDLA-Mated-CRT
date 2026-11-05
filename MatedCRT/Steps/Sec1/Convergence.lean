@@ -4,6 +4,7 @@ import MatedCRT.Proofs.Sec1.Scaling
 import MatedCRT.Proofs.Sec8.Annealed
 import MatedCRT.Steps.Sec8.IDLAConstrainedConvergence
 import MatedCRT.Steps.Sec2.ConeScaleInvarianceUpToFixedTime
+import MatedCRT.Proofs.IDLA.WalkerLawMeasurable
 
 /-!
 # Theorems 1.4 and 1.6 from Proposition 8.1 by scale invariance (Section 8.1, lines 3284-3336)
@@ -27,7 +28,7 @@ environment `S'` on the same probability space whose curve, boundary-length pair
   `R_b δ' ≤ δ` for `S` (`Sec1.approximatesWithin_of_rescaled`).
 The random width `δ / R_b` of the printed proof is replaced by a deterministic `δ' = min(δ, 1/4) / M` with
 `P[R_b > M]` small (`R_b` is a random variable, `ConeScaleRadiusStep`). The annealed probabilities are compared with
-`Sec8.annealedOuterProb_le_of_forall_not_mem`.
+`MatedCRTEnv.IsValid.idlaJointMeasure_le_of_graph_eq_off_sharp`.
 
 ## Steps (hypotheses of `convergenceOfIDLA_of_steps`, `convergenceOfDivSandpile_of_steps`)
 
@@ -216,19 +217,17 @@ theorem convergenceOfIDLA_of_steps (𝒮 : SpaceFillingSLEModel) (h81 : IDLACons
   have hlim := h8.comp (Sec1.tendsto_div_const_nhdsGT hb)
   filter_upwards [ENNReal.tendsto_nhds_zero.1 hlim (e / 3) he3] with ε hgε
   refine le_trans ?_ ((add_le_add hgε hB).trans_eq ?_)
-  · show S.idlaProb ε _ ≤ S'.idlaProb (ε / b) _ + S.P B
-    unfold MatedCRTEnv.idlaProb
-    rw [hP]
-    refine Sec8.annealedOuterProb_le_of_forall_not_mem S.P _ _
-      (fun ω => Sec1.walkerSequenceLaw_univ_le_one (S.mult ε ω) 0) _ _ B fun ω hω => ?_
-    obtain ⟨hmult, hTω, happrox⟩ := hgood ω hω
-    simp only [hmult ε]
-    refine measure_mono fun xs hxs => And.intro hTω fun hA => hxs ?_
-    have hidx : t / b / (ε / b) = t / ε := by field_simp
-    have hA' : ApproximatesWithin δ' (Λ' ω (t / b))
-        (fillCells (ε / b) (S'.η ω) (idlaCluster xs ⌊t / b / (ε / b)⌋₊)) := hA
-    rw [hidx] at hA'
-    exact happrox ε _ hA'
+  · refine hS.idlaJointMeasure_le_of_graph_eq_off_sharp hS' ε (ε / b) _ _ B hP.symm ?_ ?_
+    · intro ω hω
+      exact (hgood ω hω).1 ε |>.symm
+    · intro ω hω xs hxs
+      obtain ⟨_, hTω, happrox⟩ := hgood ω hω
+      refine ⟨hTω, fun hA => hxs ?_⟩
+      have hidx : t / b / (ε / b) = t / ε := by field_simp
+      have hA' : ApproximatesWithin δ' (Λ' ω (t / b))
+          (fillCells (ε / b) (S'.η ω) (idlaCluster xs ⌊t / b / (ε / b)⌋₊)) := hA
+      rw [hidx] at hA'
+      exact happrox ε _ hA'
   · rw [← add_assoc, ENNReal.add_thirds]
 
 /-- **Theorem 1.6** (theorem:convergence-of-div-sandpile, line 283) from Proposition 8.1 by scale invariance

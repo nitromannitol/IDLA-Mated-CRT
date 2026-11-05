@@ -432,7 +432,8 @@ example (𝒮 : SpaceFillingSLEModel) (h68 : ConstantOrderLowerBoundDivLogStmt �
 /-- **Theorem 6.1** from Lemma 6.10, Proposition 5.1 and `BoundaryLayerMeasurableStep` (E-c2-3)
 (`IDLAUpperBound.iDLAUpperBound_of_steps`; Lemma 6.3 used in its proved form). -/
 example (𝒮 : SpaceFillingSLEModel) (h610 : IterativeBoundStmt 𝒮) (h51 : IDLALowerBoundStmt 𝒮)
-    (hm : BoundaryLayerMeasurableStep 𝒮) : IDLAUpperBoundStmt 𝒮 := by
+    (hm : BoundaryLayerMeasurableStep 𝒮) (hfam : ConeFamilyAEMeasurableStep)
+    (h24 : ConeHarmonicBallsUpToFixedTimeStmt) : IDLAUpperBoundStmt 𝒮 := by
   audit_apply IDLAUpperBound.iDLAUpperBound_of_steps
 
 /-! ## Section 7 -/

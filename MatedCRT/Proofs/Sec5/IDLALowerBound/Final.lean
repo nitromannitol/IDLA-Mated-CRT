@@ -1,4 +1,4 @@
-import MatedCRT.Proofs.Sec5.IDLALowerBound.Stopped
+import MatedCRT.Proofs.IDLA.JointStoppedLowerBound
 import MatedCRT.Proofs.Sec5.MeanValueInequality.SurplusSteps
 import MatedCRT.Proofs.Sec5.LLowerBound.OfInputs
 import MatedCRT.Proofs.Measurability.EnvSigma
@@ -12,7 +12,7 @@ import MatedCRT.Proofs.Sec4.DivSandpileLowerBound.Final
 * cited results: Lemmas 2.7, 2.8, 2.9, 2.15, 2.16, 2.18;
 * the Draft statements of the earlier results it uses, each reduced elsewhere: Theorem 4.1 (`ConvergenceDivisibleStmt`),
   Theorem 2.3, Lemma 3.3, Lemma 2.17, the corrected Lemma 4.4;
-* the open steps: `LQGMeasureFieldMeasurableStep`, `MeanValueSurplusLowerStep` (Lemma 5.3; E-c2-5),
+* the open steps: `ConeFamilyAEMeasurableStep`, `LQGMeasureFieldMeasurableStep`, `MeanValueSurplusLowerStep` (Lemma 5.3; E-c2-5),
   `ObstacleClusterInnerApproximationStep` (Proposition 4.2; E-x3-1), and the two steps of the stopped part,
   `StoppedMeanValueInequalityStep`, `StoppedLLowerBoundStep` (E-c1-5).
 Lemma 2.13 is proved (`maximumPrinciple_of_steps` with `adjacentCellsMeetAeStep`) and Lemma 5.2 (relaxed) is reduced to
@@ -33,7 +33,8 @@ theorem iDLALowerBound_final (𝒮 : SpaceFillingSLEModel)
     (h217 : BoundedExitTimeRVStmt) (h44 : DiscreteLaplacianBoundCorrectedStmt 𝒮)
     -- open steps
     (hμ : LQGMeasureFieldMeasurableStep 𝒮) (hlow : MeanValueSurplusLowerStep 𝒮)
-    (hI : ObstacleClusterInnerApproximationStep 𝒮)
+    (hI : ObstacleClusterInnerApproximationStep 𝒮) (hfam : ConeFamilyAEMeasurableStep)
+    (h24 : ConeHarmonicBallsUpToFixedTimeStmt)
     (hSM : StoppedMeanValueInequalityStep 𝒮) (hSL : StoppedLLowerBoundStep 𝒮) :
     IDLALowerBoundStmt 𝒮 := by
   have h213 : MaximumPrincipleStmt 𝒮 := maximumPrinciple_of_steps (adjacentCellsMeetAeStep 𝒮)
@@ -42,7 +43,8 @@ theorem iDLALowerBound_final (𝒮 : SpaceFillingSLEModel)
   have h54 : LLowerBoundStmt 𝒮 := lLowerBound_of_inputs 𝒮 h215 h216 h29
   have hD : DiscreteClusterInnerBoundStep 𝒮 := discreteClusterInnerBound_of_steps 𝒮 hI h41 h23 h213 h33 h28
   have hstop : IDLALowerBoundStoppedStep 𝒮 :=
-    iDLALowerBoundStopped_of_steps 𝒮 (generalIDLALowerBoundRelaxed_of_volumeGrowth_cellSize 𝒮 h27 h28) hSM hSL h28
+    joint_iDLALowerBoundStopped_of_steps 𝒮
+      (generalIDLALowerBoundRelaxed_of_volumeGrowth_cellSize 𝒮 h27 h28) hfam h24 hSM hSL h28
   exact iDLALowerBound_of_volumeGrowth_cellSize 𝒮 h27 h28 h53 h54 hD hstop
 
 /-- **Proposition 5.1** with the step of Proposition 4.2 replaced by the strict obstacle gap on the harmonic ball
@@ -60,6 +62,6 @@ theorem iDLALowerBound_final_of_strictGap (𝒮 : SpaceFillingSLEModel)
     (hSM : StoppedMeanValueInequalityStep 𝒮) (hSL : StoppedLLowerBoundStep 𝒮) :
     IDLALowerBoundStmt 𝒮 :=
   iDLALowerBound_final 𝒮 h27 h28 h29 h215 h216 h218 h41 h23 h33 h217 h44 hμ hlow
-    (obstacleClusterInnerApproximation_of_strictGap 𝒮 h27 hfam h24 hgap) hSM hSL
+    (obstacleClusterInnerApproximation_of_strictGap 𝒮 h27 hfam h24 hgap) hfam h24 hSM hSL
 
 end MatedCRT

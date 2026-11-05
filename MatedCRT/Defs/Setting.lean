@@ -215,7 +215,12 @@ map with cell size `ε`, which given `(h, η)` are independent simple random wal
 (`walkerSequenceLaw (S.mult ε ω) 0`): `annealedOuterProb` (MatedCRT/Defs/Notation.lean). -/
 noncomputable def MatedCRTEnv.idlaProb {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ε : ℝ)
     (E : Set (Ω × (ℕ → ℕ → ℤ))) : ℝ≥0∞ :=
-  annealedOuterProb S.P (fun ω => walkerSequenceLaw (S.mult ε ω) 0) E
+  S.idlaJointMeasure ε E
+
+theorem MatedCRTEnv.idlaProb_eq_annealedOuterProb {Ω : Type} [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) (ε : ℝ) (E : Set (Ω × (ℕ → ℕ → ℤ))) :
+    S.idlaProb ε E = annealedOuterProb S.P (fun ω => walkerSequenceLaw (S.mult ε ω) 0) E := by
+  exact (S.jointOuterProb_eq_idlaJointMeasure ε E).symm
 
 /-- The number of steps before the embedded walk `η(x n)` leaves `U`. -/
 noncomputable def embeddedExitTime (ε : ℝ) (η : ℝ → ℂ) (U : Set ℂ) (x : ℕ → ℤ) : ℕ∞ :=

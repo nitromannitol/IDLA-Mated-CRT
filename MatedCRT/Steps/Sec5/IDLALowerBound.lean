@@ -183,13 +183,7 @@ theorem generalIDLALowerBound_of_relaxed (𝒮 : SpaceFillingSLEModel) (h : Gene
   obtain ⟨hl, hs'⟩ := h γ hγ hγ2 ρ hρ hρ1 Ω S hS O₁ O₂ K q s
     (fun ε hε => (hO ε hε).mono fun _ h => ⟨h.1, h.2.1⟩) hq hs hspos hgood
   obtain ⟨hjl, hjs⟩ := hS.joint_generalIDLABounds_of_sectionwise O₁ O₂ K hm₁ hm₂ hl hs'
-  constructor
-  · refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hjl (fun _ => zero_le) ?_
-    intro ε
-    exact hS.idlaProb_le_jointMeasure ε _
-  · refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hjs (fun _ => zero_le) ?_
-    intro ε
-    exact hS.idlaProb_le_jointMeasure ε _
+  exact ⟨hjl, hjs⟩
 
 /-! ## Assembly -/
 

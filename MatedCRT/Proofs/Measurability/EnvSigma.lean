@@ -118,7 +118,7 @@ theorem generalIDLALowerBoundRelaxed_of_steps₀ (𝒮 : SpaceFillingSLEModel) (
       (∀ δ₀ : ℝ, 0 < δ₀ → ∃ c : ℝ, 0 < c ∧ ∀ ε : ℝ, 0 < ε → 2 / δ₀ ≤ ε ^ (-q) → ∀ ω ∈ B ε,
         δ₀ ≤ s ω → ∀ a ∈ O₁ ε ω, walkerSequenceLaw (S.mult ε ω) 0 {xs | a ∉ clus ε ω xs} ≤
           ENNReal.ofReal (2 * Real.exp (-(c * ε ^ (-q))))) →
-      Tendsto (fun ε => S.idlaProb ε {p | ¬ O₁ ε p.1 ⊆ clus ε p.1 p.2}) (𝓝[>] 0) (𝓝 0) := by
+      Tendsto (fun ε => S.idlaSectionProb ε {p | ¬ O₁ ε p.1 ⊆ clus ε p.1 p.2}) (𝓝[>] 0) (𝓝 0) := by
     intro clus hsite
     refine tendsto_outerLIntegral_of_eventually_le₀ S.P
       (fun ε ω => walkerSequenceLaw (S.mult ε ω) 0 {xs | ¬ O₁ ε ω ⊆ clus ε ω xs})

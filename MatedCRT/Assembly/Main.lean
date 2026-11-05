@@ -290,6 +290,7 @@ theorem iterativeBound (H : MainHypotheses 𝒮) : IterativeBoundStmt 𝒮 := by
 theorem iDLAUpperBound (H : MainHypotheses 𝒮) : IDLAUpperBoundStmt 𝒮 :=
   IDLAUpperBound.iDLAUpperBound_of_steps 𝒮 H.iterativeBound H.iDLALowerBound
     (boundaryLayerMeasurableStep_of_coneFamilyAEMeasurable 𝒮 H.coneFamilyAEMeasurable H.coneHarmonicBallsUpToFixedTime)
+    H.coneFamilyAEMeasurable H.coneHarmonicBallsUpToFixedTime
 
 /-! ## Section 7 -/
 

@@ -362,12 +362,6 @@ theorem generalIDLALowerBound_of_steps (𝒮 : SpaceFillingSLEModel) (hG : Green
   obtain ⟨hl, hs'⟩ := generalIDLALowerBoundSectionwise_of_steps 𝒮 hG hQ hC hM
     γ hγ hγ2 ρ hρ hρ1 Ω S hS O₁ O₂ K q s hm₁ hm₂ hO hK hq hs hspos hgood
   obtain ⟨hjl, hjs⟩ := hS.joint_generalIDLABounds_of_sectionwise O₁ O₂ K hm₁ hm₂ hl hs'
-  constructor
-  · refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hjl (fun _ => zero_le) ?_
-    intro ε
-    exact hS.idlaProb_le_jointMeasure ε _
-  · refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hjs (fun _ => zero_le) ?_
-    intro ε
-    exact hS.idlaProb_le_jointMeasure ε _
+  exact ⟨hjl, hjs⟩
 
 end MatedCRT
