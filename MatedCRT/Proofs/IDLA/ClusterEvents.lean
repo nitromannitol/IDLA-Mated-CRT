@@ -10,6 +10,22 @@ namespace MatedCRT
 
 open Set MeasureTheory ProbabilityTheory
 
+/-- A random vertex set with null-measurable coordinates has a jointly measurable modification. -/
+theorem exists_measurable_random_vertexSet_ae {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω)
+    (U : Ω → Set ℤ) (hU : ∀ k, NullMeasurableSet {ω | k ∈ U ω} P) :
+    ∃ V : Ω → Set ℤ, (∀ k, MeasurableSet {ω | k ∈ V ω}) ∧ ∀ᵐ ω ∂P, V ω = U ω := by
+  classical
+  choose A hsub hA hAe using fun k => (hU k).exists_measurable_subset_ae_eq
+  refine ⟨fun ω => {k | ω ∈ A k}, fun k => hA k, ?_⟩
+  have h : ∀ᵐ ω ∂P, ∀ k, ω ∈ A k ↔ k ∈ U ω := by
+    rw [ae_all_iff]
+    intro k
+    filter_upwards [hAe k] with ω hω
+    exact iff_of_eq hω
+  filter_upwards [h] with ω hω
+  ext k
+  exact hω k
+
 /-- Finite stopped IDLA runs are jointly measurable when membership in the stopping domain is
 measurable. The proof conditions successively on each walker's first exit and whether the exit
 site belongs to the stopping domain. -/
