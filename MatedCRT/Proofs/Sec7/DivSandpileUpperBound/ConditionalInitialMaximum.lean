@@ -67,4 +67,31 @@ theorem tendsToOneOn_floored_initial_log_budget
       (mul_nonneg (hε ε ω hω) hK)
   · exact tendsToOneOn_rescaled_maximum_with_mesh_floor P F O hK hb G hG hsmall
 
+
+/-- A qualitative mesh-normalized initial-odometer bound gives a polynomial
+upper bound for the floored initial maximum on the same event. -/
+theorem tendsToOneOn_floored_initial_maximum_le_inv
+    {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (F : Set Ω)
+    (O : ℝ → Ω → ℝ) {b : ℝ} (hb : b ≤ 1)
+    (hsmall : TendsToOneOn P F (fun ε => {ω | ε * O ε ω ≤ 1})) :
+    TendsToOneOn P F (fun ε => {ω | max (O ε ω) (ε ^ (-b)) ≤ ε⁻¹}) := by
+  unfold TendsToOneOn at hsmall ⊢
+  refine tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hsmall
+    (Eventually.of_forall fun _ => zero_le) ?_
+  filter_upwards [self_mem_nhdsWithin, (eventually_lt_nhds (show (0 : ℝ) < 1 by norm_num)).filter_mono nhdsWithin_le_nhds]
+    with ε hε hε1
+  apply measure_mono
+  rintro ω ⟨hF, hbad⟩
+  refine ⟨hF, ?_⟩
+  intro hO
+  apply hbad
+  change max (O ε ω) (ε ^ (-b)) ≤ ε⁻¹
+  apply max_le
+  · change ε * O ε ω ≤ 1 at hO
+    have h := (le_div_iff₀ hε).2 (show O ε ω * ε ≤ 1 by nlinarith)
+    simpa only [one_div] using h
+  · have hpow := Real.rpow_le_rpow_of_exponent_ge hε hε1.le
+      (show (-1 : ℝ) ≤ -b by linarith)
+    simpa only [Real.rpow_neg_one] using hpow
+
 end MatedCRT.Sec7
