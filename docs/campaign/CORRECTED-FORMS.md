@@ -16,10 +16,12 @@ argument only (escalation or review). **unproved**: no refutation known, and no 
 
 | Result | Draft Stmt | Corrected Prop | Relation | Draft status |
 | --- | --- | --- | --- | --- |
-| 3.1 | DiscretePotentialTightnessStmt | DiscretePotentialTightnessCorrectedStmt | neither; both ⇒ common part (Lean) | FALSE (argument, E-c1-4) |
+| 3.1 | DiscretePotentialTightnessStmt | DiscretePotentialTightnessCorrectedStmt | neither; both ⇒ common part (Lean) | **FALSE (Lean)** (E-c1-4; Audit/Refutations) |
+| 3.1 (a.s.) | (corrected 3.1, as used by 3.7) | DiscretePotentialTightnessAeStep | neither (Ae: a.s. hypotheses, interior conclusion) | open step (E-c2-6) |
 | 3.2 | DiscreteHolderContinuityStmt | DiscreteHolderContinuityCorrectedStep | D ⇒ C (Lean) | FALSE (argument, review-L32 F1) |
 | 4.4 | DiscreteLaplacianBoundStmt | DiscreteLaplacianBoundCorrectedStmt | D ⇒ C (Lean) | **FALSE (Lean)** |
 | 4.5 | DiscreteConservationOfMassStmt | DiscreteConservationOfMassCorrectedStmt | D ⇒ C (Lean) | **FALSE (Lean)** |
+| 5.1 (stopped part) | IDLALowerBoundStmt (2nd conjunct) | IDLALowerBoundStoppedStep ⇐ Stopped{MeanValueInequality,LLowerBound}Step | Step = consumed conjunct; steps = 5.3/5.4 on V^ε(Λ_t) | proof gap (E-c1-5); statement unchanged |
 | 5.2 | GeneralIDLALowerBoundStmt | GeneralIDLALowerBoundRelaxedStep | C ⇒ D (Lean, c2) | true: reduced through C |
 | 6.3 | AbelianIDLAStmt | AbelianIDLAAnyStartStep | C ⇒ D (Lean, c5); both proved | PROVED |
 | 6.7 | ConstantOrderLowerBoundStmt | ConstantOrderLowerBoundLogStmt | D ⇒ C (Lean, c5) | unproved |
@@ -27,11 +29,20 @@ argument only (escalation or review). **unproved**: no refutation known, and no 
 | 6.9 | ChanceOfBeingAbsorbedStmt | ...LocalRateStmt; ...LogLossStmt | D ⇒ LocalRate ⇒ LogLoss (Lean, c5) | unproved |
 | 7.2 | MassBoundOdometerStmt | MassBoundOdometerAboveScaleStmt | D ⇒ C (Lean) | FALSE (argument, E-c3-2) |
 | 7.4 | CrudeUpperBoundStmt (already the corrected Λ-form) | (printed form: not in Lean) | Draft = correction (S4) | Draft reduced; printed form FALSE (argument, E-c3-1) |
+| 7.1 | DivSandpileUpperBoundStmt (unchanged) | consumes corrected 7.2 and 6.8 (b) | rerouted (d17f14c) | Draft 7.1 reduced, no step |
 
 Counts: **C ⇒ D: 2** (5.2, 6.3). **D ⇒ C: 7** (3.2, 4.4, 4.5, 6.7, 6.8, 6.9, 7.2), so in these cases the
-correction weakens the result. **Neither: 1** (3.1). **False as drafted: 5.** Two are refuted in Lean (4.4, 4.5), and
-three by argument only (3.1, 3.2, 7.2). The printed 7.4 is also false, but its Draft is already the corrected form.
-**Merely unproved: 3** (6.7, 6.8, 6.9).
+correction weakens the result. **Neither: 2** (3.1, 3.1 a.s.). **False as drafted: 5.** Three are refuted in Lean
+(3.1, 4.4, 4.5), and two by argument only (3.2, 7.2; their Lean refutations are planned in Audit/Refutations.lean).
+The printed 7.4 is also false, but its Draft is already the corrected form. **Merely unproved: 3** (6.7, 6.8, 6.9).
+
+Re-sync c1, 2026-11-05 (HEAD 00649b2 + af9fe69): corrected 4.4 and 4.5 are now PROVED with no hypothesis
+(`discreteLaplacianBoundCorrected`, `discreteConservationOfMassCorrected`, Proofs/Sec4/ObstacleSpecialization/
+Final.lean:33, 38; E-c1-2 resolved), so every consumer rerouted to them (5.3, 5.1, 7.2-7.4) no longer carries 4.4.
+The consumers of the false Drafts are all rerouted in their final forms: 4.6 (`subsequentialConvergence_of_inputs`,
+corrected 3.2, no Draft 3.1/4.4), 4.8 (`subsequentialProperties_of_inputs`, no Draft 4.4), 3.7
+(`convergenceNormalizedExitTime_of_statements`, a.s. corrected 3.1), 7.1 (`divSandpileUpperBound_of_meshScaling`,
+corrected 7.2, 6.8 (b)). Checked in Audit/Reductions.lean, section `FinalForms`.
 
 ## Entries
 
@@ -126,13 +137,45 @@ Chernoff.lean:387). LogLoss is proved from 6.7 (b) (`chanceOfBeingAbsorbedLogLos
 counterexample for every realization and small `ε`: `s` below the cell scale, `Θ` the component of `0` off one cell.
 It is not in Lean. The corrected form is proved from 2.16, 2.8 (cited) and Draft 4.4 (`massBoundOdometerAboveScale_of
 _draft`, :158), and **here from the corrected 4.4** (`massBoundOdometerAboveScale_of_corrected`). The consumer 7.1
-(x2) still uses the false Draft 7.2 (REDUCTIONS F1).
+is rerouted to the corrected form (d17f14c, `divSandpileUpperBound_of_meshScaling`; REDUCTIONS F1 resolved).
 
 **7.4** Draft `CrudeUpperBoundStmt` (Draft/Section7.lean:67) is already the corrected form (review-S (S4), A):
 `a ∈ Λ^ε_t \ {0}`, with paths in `Λ^ε_t`. The printed form (paths in `D_ε(t ε⁻¹)` for the stopped odometer) is FALSE
 (argument, E-c3-1 (1)) and has a proof gap (E-c3-1 (2)). It is not stated in Lean. Proved from Draft 4.4
 (`crudeUpperBound_of_draft`, c3) and **here from the corrected 4.4** (`crudeUpperBound_of_corrected`, with
 `DegreeBoundInput`, GMS19 Lemma 2.6).
+
+**3.1, refutation in Lean (2026-11-05).** `Audit.Refutations.not_discretePotentialTightnessStmt`
+(Audit/Refutations.lean:320; worker A, committed by c1): `MepsScalingInput 𝒮 → S.IsValid 𝒮 γ → ¬
+DiscretePotentialTightnessStmt 𝒮` for every valid environment (axioms: propext, Classical.choice, Quot.sound). `D` is the
+closed segment `[0, 1/4]` (empty interior, so the Laplacian hypothesis is vacuous), `O = D`, data
+`u^ε(a) = m_ε 1{Re η(a) > 1/8}`; no subsequence of the rescalings converges uniformly on `D` to a continuous limit.
+Status of 3.1 is now **FALSE (Lean)**.
+
+**3.1 (a.s. form)** `DiscretePotentialTightnessAeStep` (Steps/Sec3/ConvergenceNormalizedExitTime.lean:59, c2).
+Escalation: E-c2-6. As the corrected 3.1 (open `D`, polynomially summable deterministic scales), but the bounds
+`|Δ^ε u^ε| ≤ C` (interior vertices) and `|u^ε| ≤ C ε⁻¹` are required only `∀ᵐ ω, ∀ᶠ n`, and the conclusion is the
+interior part (compact `O` with `cl O ⊆ D`). Relation: neither form implies the other in Lean (weaker hypotheses,
+weaker conclusion). The printed lemma is an a.s. statement, so this is its faithful interior form; the `∀ ω` form of
+the frozen statements cannot be applied to functions of `S.mult` (E-c2-6). Consumer: 3.7
+(`convergenceNormalizedExitTime_of_statements`, Proofs/Sec3/ConvergenceNormalizedExitTime/DyadicModulus.lean:159,
+980cf27). Status: open step (its proof should be the pathwise proof of the corrected 3.1; owner to be assigned).
+
+**5.1 (stopped part)** Draft `IDLALowerBoundStmt` (Draft/Section5.lean, unchanged). Escalation: E-c1-5. The printed
+proof (corrected.tex 2042) bounds walkers stopped upon exiting `Λ^ε_t`, while the statement (1981) and its use in 6.1
+(2862) stop them upon exiting `V^ε(Λ_t)`; `Λ^ε_t ⊄ V^ε(Λ_t)` in general. Carved: `IDLALowerBoundStoppedStep`
+(Steps/Sec5/IDLALowerBound.lean:68) = the consumed conjunct, derived (7fdfd3c, `iDLALowerBoundStopped_of_steps`,
+Proofs/Sec5/IDLALowerBound/Stopped.lean) from Lemma 5.2 (relaxed), 2.8 and `StoppedMeanValueInequalityStep`,
+`StoppedLLowerBoundStep` (Lemmas 5.3, 5.4 with `Λ^ε_t` replaced by `V^ε(Λ_t)`; Stopped.lean:33, 51). Relation: the
+steps are neither weaker nor stronger than 5.3/5.4 (different domain). Final form `iDLALowerBound_final_of_strictGap`
+(Proofs/Sec5/IDLALowerBound/Final.lean:48). Operator ruling pending (keep the steps, or restate the stopping set).
+
+**7.1 via 7.2 above scale** Draft `DivSandpileUpperBoundStmt` (Draft/Section7.lean, unchanged). The earlier reduction
+consumed the false Draft 7.2 and the Draft 6.8 (REDUCTIONS F1, F3). Final form (d17f14c)
+`divSandpileUpperBound_of_meshScaling` (Proofs/Sec7/DivSandpileUpperBound/ShellIterationOfMeshScaling.lean:43):
+`MepsScalingInput`, Theorems 2.3, 4.1, Lemmas 6.8 (b) `ConstantOrderLowerBoundDivLogStmt`, 2.7, corrected 7.2
+`MassBoundOdometerAboveScaleStmt`, 3.3, 2.8, 7.3, 7.4; no open step (`ShellIterationStep` proved from
+`MepsScalingInput`, `StoppedShellConfinementStep` no longer needed). No change to the statement of 7.1.
 
 **Not corrected forms:** 6.10 is proved as drafted from 6.8 (b); the E-c5-1 remark on `C` before `s₀` is met with
 `C = 1`. 4.6 (E-x3-2, quantifier order) has no corrected Prop yet; its reduction uses Draft 4.6 steps (x3). The x2

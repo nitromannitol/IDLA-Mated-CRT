@@ -78,6 +78,20 @@ unfolding `IsLocallyFiniteMult m := ∀ a, {b | m a b ≠ 0}.Finite` (Proofs/Inf
 Prop by definition, so mixing them costs nothing at use sites. CANONICAL for new proofs: `IsLocallyFiniteMult m`; the
 Defs field `IsObstacleSetting.locallyFinite` (Defs/Sandpile.lean) keeps the unfolded form.
 
+## D9. Name clashes that block imports ("environment already contains"; c1, 2026-11-05)
+- `MatedCRT.rescaledGreenKernel`: Steps/Sec3/UniformConvergenceGreenKernel.lean:16 (Lemma 3.3 reduction) and
+  Proofs/Sec4/SubsequentialProperties/ClusterContainment.lean:26 (Lemma 4.8 chain, imported by
+  Proofs/Sec4/ConvergenceDivisible/Final.lean). Blocks importing 3.3's reduction together with the final forms of 4.1,
+  4.2, 4.8, 5.1 (REDUCTIONS F15). CANONICAL: the Steps definition (3.3 is upstream); the Sec4 owner (m4) renames or
+  imports it, after checking that the two bodies agree.
+- `MatedCRT.harmonicAt_comp_add_const`: Proofs/Sec3/ConvergenceNormalizedExitTime/HarmonicTranslation.lean:12 and
+  Proofs/Sec3/UniformConvergenceGreenKernel/HarmonicTranslation.lean:18 (different binder names `z`/`a`). Blocks
+  3.3's proved boundary step together with 3.7 (REDUCTIONS F12). CANONICAL: move one to Proofs/Infra and import it.
+- Resolved: `MatedCRT.rescaledMeasure` (F10) now has one declaration (Steps/Sec2/ConeScaleInvarianceUpToFixedTime.lean:27);
+  `vertexPoint_mem_cell` (F6): the final form of 7.1 and Lemmas 7.2-7.4 import together in Audit/Reductions.lean.
+  (Declarations remain at Proofs/Sec7/MassBoundOdometer/Count.lean:28, Proofs/Sec6/ConstantOrderLowerBoundDiv/
+  Geometry.lean:106 and Proofs/Sec3/DiscretePotentialTightness/Cells.lean:77; unify at cleanup.)
+
 ## Related, not duplicates (checked)
 - `greenFn_eq_zero_of_not_mem` (Proofs/Infra/RandomWalk.lean:44, start outside `A`) vs
   `greenFn_eq_zero_of_not_mem_right` (Proofs/Sec7/OdometerBoundMass/Laplacian.lean:30, target outside `A`).
