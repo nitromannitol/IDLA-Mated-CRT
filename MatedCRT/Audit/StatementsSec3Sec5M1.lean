@@ -1,5 +1,6 @@
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.OccupationTail
 import MatedCRT.Proofs.Sec7.OdometerBoundMass.Laplacian
+import MatedCRT.Proofs.Sec4.ObstacleSpecialization.Escape
 import MatedCRT.Proofs.Measurability.EnvSigma
 import MatedCRT.Steps.Sec3.UniformConvergenceGreenKernel
 import MatedCRT.Steps.Sec3.DiscreteDirichletProblem
@@ -110,6 +111,19 @@ theorem three_four_sum_ext (m : ℤ → ℤ → ℕ) {ε : ℝ} {η : ℝ → �
   · rw [hfg _ (vertexPoint_mem_ball_of_mem_interior hε hη hx)]
   · simp [Sec7.greenFn_eq_zero_of_not_mem_right m a hx]
 
+/-- On the finite first-step event, the Green quotient in Lemma 5.4 has its finite-sum interpretation. -/
+theorem five_four_green_quotient_semantics {m : ℤ → ℤ → ℕ} {A : Set ℤ} {a : ℤ}
+    (hA : A.Finite) (ha : a ∈ A)
+    (hfirst : ∀ b, ∀ x ∈ A,
+      mLaplacian m (fun y => greenFn m A y b) x = -(if x = b then 1 else 0)) :
+    0 < greenFn m A a a ∧
+      (∑' b : A, greenFn m A b a) / greenFn m A a a =
+        (∑ b ∈ hA.toFinset, greenFn m A b a) / greenFn m A a a := by
+  refine ⟨greenFn_diag_pos_of_firstStep ha hfirst, ?_⟩
+  exact congrArg (fun x : ℝ => x / greenFn m A a a)
+    (tsum_subtype_eq_toFinset_sum hA (fun b => greenFn m A b a))
+
+#print axioms five_four_green_quotient_semantics
 #print axioms three_four_sum_ext
 #print axioms three_five_draft_reduction
 #print axioms five_two_draft_reduction
