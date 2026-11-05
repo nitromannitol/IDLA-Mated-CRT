@@ -1,5 +1,6 @@
 import MatedCRT.Assembly.Main
 import MatedCRT.Audit.CorrectedForms
+import MatedCRT.Audit.Refutations
 
 /-!
 # Audit: the conditional Theorems 1.4 and 1.6
@@ -11,7 +12,7 @@ import MatedCRT.Audit.CorrectedForms
   routed around, makes this file fail. `assert_uses_deep` follows every constant under `MatedCRT` instead.
 * `assert_no_refuted_field`: no field of `MainHypotheses` is a statement refuted in Lean, i.e. the head of the
   conclusion `¬ C …` of a theorem of a module under `MatedCRT.Audit` (at present MatedCRT/Audit/CorrectedForms.lean:
-  the Draft Lemmas 4.4 and 4.5, E-c1-1).
+  the Draft Lemmas 4.4 and 4.5, E-c1-1; MatedCRT/Audit/Refutations.lean: the Draft Lemma 3.1, E-c1-4).
 -/
 
 open Lean Elab Command
@@ -80,13 +81,16 @@ def refutedStatements (env : Environment) : Array Name := Id.run do
   return out
 
 /-- `assert_no_refuted_field`: fail if the type of a field of `MainHypotheses` is headed by a statement refuted in
-Lean under `MatedCRT.Audit` (or if the Draft Lemma 4.4, refuted in MatedCRT/Audit/CorrectedForms.lean, is not found
-among the refuted statements: a guard against a vacuous check). Logs the refuted statements and the field count. -/
+Lean under `MatedCRT.Audit` (or if the Draft Lemma 4.4, refuted in MatedCRT/Audit/CorrectedForms.lean, or the Draft
+Lemma 3.1, refuted in MatedCRT/Audit/Refutations.lean, is not found among the refuted statements: a guard against a
+vacuous check). Logs the refuted statements and the field count. -/
 elab "assert_no_refuted_field" : command => do
   let env ← getEnv
   let refuted := refutedStatements env
   unless refuted.contains ``MatedCRT.DiscreteLaplacianBoundStmt do
     throwError "the refutation of the Draft Lemma 4.4 is not found under MatedCRT.Audit: {refuted}"
+  unless refuted.contains ``MatedCRT.DiscretePotentialTightnessStmt do
+    throwError "the refutation of the Draft Lemma 3.1 is not found under MatedCRT.Audit: {refuted}"
   let fields := getStructureFields env ``MatedCRT.MainHypotheses
   let mut bad : Array Name := #[]
   for f in fields do
@@ -155,14 +159,16 @@ assert_uses convergenceOfIDLA_conditional expectedExitTimeExplicitBound_of_steps
 
 /-! ## Section 3 -/
 
-/-- **Lemma 3.1**, corrected form (the Draft form is group (d) of `MainHypotheses`). -/
+/-- **Lemma 3.1**, corrected form (the Draft form is refuted in Lean, `assert_no_refuted_field`). -/
 example (H : MainHypotheses 𝒮) : DiscretePotentialTightnessCorrectedStmt 𝒮 :=
   H.discretePotentialTightnessCorrected
 assert_uses convergenceOfIDLA_conditional discretePotentialTightnessCorrected_of_inputs
 
 /-- **Lemma 3.3**. -/
 example (H : MainHypotheses 𝒮) : UniformConvergenceGreenKernelStmt 𝒮 := H.uniformConvergenceGreenKernel
-assert_uses convergenceOfIDLA_conditional uniformConvergenceGreenKernel_of_steps
+assert_uses convergenceOfIDLA_conditional uniformConvergenceGreenKernel_final
+assert_uses_deep convergenceOfIDLA_conditional greenKernelInteriorStep
+assert_uses_deep convergenceOfIDLA_conditional greenKernelBoundaryStep
 
 /-- **Lemma 3.5**. -/
 example (H : MainHypotheses 𝒮) : DiscreteDirichletProblemStmt 𝒮 := H.discreteDirichletProblem
@@ -170,7 +176,8 @@ assert_uses convergenceOfIDLA_conditional discreteDirichletProblem_of_steps
 
 /-- **Lemma 3.6**. -/
 example (H : MainHypotheses 𝒮) : ConvergenceHarmonicFunctionsStmt 𝒮 := H.convergenceHarmonicFunctions
-assert_uses convergenceOfIDLA_conditional convergenceHarmonicFunctions_of_steps
+assert_uses convergenceOfIDLA_conditional convergenceHarmonicFunctions_of_inputs
+assert_uses_deep convergenceOfIDLA_conditional harmonicExitCellStep_of_inputs
 
 /-- **Lemma 3.7**. -/
 example (H : MainHypotheses 𝒮) : ConvergenceNormalizedExitTimeStmt 𝒮 := H.convergenceNormalizedExitTime
@@ -207,8 +214,8 @@ assert_uses convergenceOfIDLA_conditional equibounded_of_steps
 
 /-- **Lemma 4.8**. -/
 example (H : MainHypotheses 𝒮) : SubsequentialPropertiesStmt 𝒮 := H.subsequentialProperties
-assert_uses convergenceOfIDLA_conditional subsequentialProperties_of_corrected
-assert_uses convergenceOfIDLA_conditional odometerObstacleApproximationStep
+assert_uses convergenceOfIDLA_conditional subsequentialProperties_of_inputs
+assert_uses_deep convergenceOfIDLA_conditional odometerDistributionalLimitCorrectedStep_of_greenKernel
 
 /-! ## Section 5 -/
 
@@ -217,6 +224,8 @@ example (H : MainHypotheses 𝒮) : IDLALowerBoundStmt 𝒮 := H.iDLALowerBound
 assert_uses convergenceOfIDLA_conditional iDLALowerBound_final_of_strictGap
 assert_uses_deep convergenceOfIDLA_conditional iDLALowerBound_of_volumeGrowth_cellSize
 assert_uses_deep convergenceOfIDLA_conditional LQGMeasureField.lqgMeasureFieldMeasurableStep
+assert_uses convergenceOfIDLA_conditional stoppedMeanValueInequality_of_steps
+assert_uses convergenceOfIDLA_conditional stoppedLLowerBound_of_inputs
 
 /-- **Lemma 5.3** (used by 5.1 inside `iDLALowerBound_final_of_strictGap`). -/
 example (H : MainHypotheses 𝒮) : MeanValueInequalityStmt 𝒮 := H.meanValueInequality
@@ -297,5 +306,6 @@ assert_not_uses convergenceOfIDLA_conditional constantOrderLowerBoundDiv_of_step
 assert_not_uses convergenceOfIDLA_conditional iterativeBound_of_inputs
 assert_not_uses convergenceOfIDLA_conditional chanceOfBeingAbsorbedLogLoss_of_div
 assert_not_uses convergenceOfIDLA_conditional convergenceNormalizedExitTime_of_interior_discrete_boundary
+assert_not_uses convergenceOfIDLA_conditional subsequentialProperties_of_corrected
 
 end MatedCRT.Audit.Main

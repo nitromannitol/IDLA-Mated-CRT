@@ -24,6 +24,7 @@ import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.Final
 import MatedCRT.Proofs.Sec6.AnnulusHit.Main
 import MatedCRT.Proofs.Sec6.GoodAnnulusPrevalence.Main
 import MatedCRT.Steps.Sec7.DivSandpileUpperBound
+import MatedCRT.Proofs.Sec5.StoppedSurplusSteps
 
 /-!
 # The remaining hypotheses of Theorems 1.4 and 1.6
@@ -37,23 +38,24 @@ The fields are grouped:
 * (a) cited results of the paper (Draft statements of results the paper quotes from the literature), and the
   statements of [BG22] the paper cites, from the harmonic-balls formalization;
 * (b) literature inputs (`...Input`, MatedCRT/External);
-* (c) open named steps (`...Step`), with their owner (tasks of 2026-11-05 06:00Z);
-* (d) statements awaiting an operator ruling: a Draft reported false as drafted that a committed reduction still
-  consumes, a corrected cited statement whose admission is pending, and a corrected form of a frozen statement;
+* (c) open named steps (`...Step`), with their owner (tasks of 2026-11-05);
+* (d) statements awaiting an operator ruling: a corrected cited statement whose admission is pending, and a corrected
+  form of a frozen statement;
 * (e) paper-owned numbered results with no committed reduction yet.
 
-No field is a Draft statement refuted in Lean (MatedCRT/Audit/Main.lean checks this against MatedCRT/Audit/*).
+No field is a Draft statement refuted in Lean (MatedCRT/Audit/Main.lean checks this against MatedCRT/Audit/*, among
+them the Draft Lemmas 4.4, 4.5 (Audit/CorrectedForms.lean) and the Draft Lemma 3.1 (Audit/Refutations.lean)).
 This file is regenerated as steps close: a field disappears when its Prop is proved or reduced.
 -/
 
 namespace MatedCRT
 
 /-- The remaining hypotheses of the conditional proof of Theorems 1.4 and 1.6 for the space-filling SLE model `𝒮`.
-Field counts: (a) 12, (b) 3, (c) 26, (d) 3, (e) 1; total 45.
+Field counts: (a) 12, (b) 3, (c) 24, (d) 2, (e) 1; total 42.
 
-WARNING: group (d) holds the Draft Lemma 3.1 (`DiscretePotentialTightnessStmt`), reported false for non-open `D`
-(ESCALATIONS E-c1-4). If that report is right, this structure is unsatisfiable and the conditional theorems are vacuous
-until its last consumer, Lemma 3.3 (m1), is rerouted through a corrected form or the operator replaces the Draft. -/
+No field is a Draft known false: the Draft Lemma 3.1 (refuted in Lean, `not_discretePotentialTightnessStmt`, E-c1-4)
+is no longer consumed, since Lemma 3.3 goes through the almost-sure corrected 3.1 (`uniformConvergenceGreenKernel_final`,
+763b7d7). -/
 structure MainHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   -- (a) Cited results
   /-- **Fact 2.2** (cited, properties of the LQG measure, DS11). Used by 1.4, 1.6, 2.3 (through 2.5). -/
@@ -106,21 +108,19 @@ structure MainHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   coneHarmonicBallStrictGrowth : ConeHarmonicBallStrictGrowthStep
   /-- Lemma 2.5, Theorems 1.4, 1.6: the half-ball family is a functional of the field. Owner: c2. -/
   coneHalfBallFamilyFunctional : ConeHalfBallFamilyFunctionalStep
-  /-- Lemma 3.3: interior estimate. Owner: m1. -/
-  greenKernelInterior : GreenKernelInteriorStep 𝒮
-  /-- Lemma 3.3: boundary estimate. PROVED (`greenKernelBoundaryStep`, m1) but not importable together with Lemma 3.7
-  (F12: `MatedCRT.harmonicAt_comp_add_const` is declared by m1 and by x1). Owner: m1/x1 (rename). -/
-  greenKernelBoundary : GreenKernelBoundaryStep 𝒮
   /-- Lemma 3.5: identification of the limit. Owner: m1. -/
   dirichletLimit : DirichletLimitStep 𝒮
   /-- Lemma 3.5: interior estimate. Owner: m1. -/
   dirichletInterior : DirichletInteriorStep 𝒮
   /-- Lemma 3.5: boundary estimate. Owner: m1. -/
   dirichletBoundary : DirichletBoundaryStep 𝒮
-  /-- Lemma 3.6: exit of the Liouville Brownian path. Owner: m2. -/
-  harmonicPathExit : HarmonicPathExitStep 𝒮
-  /-- Lemma 3.6: the exit cell. Owner: m2. -/
-  harmonicExitCell : HarmonicExitCellStep 𝒮
+  /-- Lemma 3.6: planar Brownian motion makes an outward excursion right after its exit from a disk (strong Markov
+  property at the exit time and Blumenthal's 0-1 law, Mörters-Peres Thms 2.16, 2.7; not in MarkovProcess). Used by
+  `convergenceHarmonicFunctions_of_inputs` (ab6ed20). Owner: c2 / operator (input request: strong Markov, 0-1 law). -/
+  brownianOutwardExcursionAtExit : BrownianOutwardExcursionAtExitStep
+  /-- Lemma 3.6: measurability of bounded Lipschitz functionals of rescaled Liouville Brownian motion (joint
+  measurability of the LQG clock). Used by `convergenceHarmonicFunctions_of_inputs`. Owner: c2. -/
+  lbmPathFunctionalMeasurable : LBMPathFunctionalMeasurableStep 𝒮
   /-- Propositions 4.2 and 5.1: the least supersolution is strictly above the obstacle on the harmonic ball
   (eq:strictly-above-in-interior; E-x3-1, E-c2-5). Replaces `ObstacleClusterInnerApproximationStep`
   (`obstacleClusterInnerApproximation_of_strictGap`). Owner: x3. -/
@@ -131,15 +131,14 @@ structure MainHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   odometerBoundaryUpgradeCorrected : OdometerBoundaryUpgradeCorrectedStep 𝒮
   /-- Lemma 4.6: measurable selection of the subsequence (E-x3-2). Owner: x3. -/
   odometerMeasurableSelection : OdometerMeasurableSelectionStep 𝒮
-  /-- Lemma 4.8 (corrected route): distributional limit of the Laplacians. PROVED
-  (`odometerDistributionalLimitCorrectedStep_of_greenKernel`, x3, 7582c60) but not importable together with Lemma 3.3
-  (F15: `MatedCRT.rescaledGreenKernel` is declared in Steps/Sec3/UniformConvergenceGreenKernel.lean and in
-  Proofs/Sec4/SubsequentialProperties/ClusterContainment.lean). Owner: x3 (rename). -/
-  odometerDistributionalLimitCorrected : OdometerDistributionalLimitCorrectedStep 𝒮
-  /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5, not in the paper). Owner: unassigned. -/
-  stoppedMeanValueInequality : StoppedMeanValueInequalityStep 𝒮
-  /-- Proposition 5.1: Lemma 5.4 on `V^ε(Λ_t)` (E-c1-5, not in the paper). Owner: unassigned. -/
-  stoppedLLowerBound : StoppedLLowerBoundStep 𝒮
+  /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5, not in the paper), interior lower bound of the obstacle
+  surplus (`stoppedMeanValueInequality_of_steps`, 16ca787). Owner: c1. -/
+  stoppedSurplusInterior : StoppedSurplusInteriorStep 𝒮
+  /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5), exterior upper bound of the obstacle surplus. Owner: c1. -/
+  stoppedSurplusExterior : StoppedSurplusExteriorStep 𝒮
+  /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5), Green potential of the boundary layer `A \ Λ^ε_t`.
+  Owner: c1. -/
+  stoppedLayerPotential : StoppedLayerPotentialStep 𝒮
   /-- Lemma 5.3 (through `meanValueSurplusStep_of_lower`): the lower surplus estimate (E-x1-1). Owner: x1. -/
   meanValueSurplusLower : MeanValueSurplusLowerStep 𝒮
   /-- Lemma 6.4: restriction of the cone field to annuli has mean zero (IR-c4-5). Owner: c2. -/
@@ -153,18 +152,16 @@ structure MainHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   /-- Lemma 6.5: upper volume tail of the whole-plane LQG measure (IR-c4-4). Owner: c2. -/
   wholePlaneUpperVolumeTail : WholePlaneUpperVolumeTailStep
   -- (d) Awaiting an operator ruling
-  /-- **Lemma 3.1**, Draft form (E-c1-4: false for closed `D`, by a written argument; review-L32 N1, N3). Consumed
-  only by Lemma 3.3 (m1); Lemmas 3.5 and 4.6 use the corrected form, Lemma 3.7 the almost-sure corrected form. -/
-  discretePotentialTightness : DiscretePotentialTightnessStmt 𝒮
   /-- The corrected cited **Lemma 3.2** (GMS19 Theorem 3.9; review-L32 "minimal corrected statement", ruling (L2)
   pending; the Draft 3.2 is false by review-L32 F1). Used by the corrected Lemma 3.1. -/
   discreteHolderContinuityCorrected : DiscreteHolderContinuityCorrectedStep 𝒮
   /-- **Lemma 3.1**, corrected interior form with almost-sure hypotheses (E-c2-6: the `∀ ω` hypotheses of the frozen
-  3.1 cannot be met by a `σ(h, η)`-measurable `u^ε` against `S.mult`). Used by Lemma 3.7
-  (`convergenceNormalizedExitTime_of_statements`). -/
+  3.1 cannot be met by a `σ(h, η)`-measurable `u^ε` against `S.mult`). Used by Lemmas 3.3
+  (`uniformConvergenceGreenKernel_final`) and 3.7 (`convergenceNormalizedExitTime_of_statements`). -/
   discretePotentialTightnessAe : DiscretePotentialTightnessAeStep 𝒮
   -- (e) Paper-owned results with no committed reduction
-  /-- **Lemma 3.4** (convergence of integrals of the Green function). Owner: m2. Used by 3.3, 3.5. -/
+  /-- **Lemma 3.4** (convergence of integrals of the Green function). Owner: c2 (pieces committed: 25d726a,
+  66df860, a8566fc, e1f2928; no final reduction yet). Used by 3.3, 3.5 and the Section 5 stopped steps. -/
   integralConvergenceGreenFunction : IntegralConvergenceGreenFunctionStmt 𝒮
 
 end MatedCRT

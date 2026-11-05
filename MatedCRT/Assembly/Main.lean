@@ -48,6 +48,11 @@ import MatedCRT.Proofs.Sec4.DivSandpileLowerBound.Final
 import MatedCRT.Proofs.Sec5.IDLALowerBound.Final
 import MatedCRT.Proofs.Measurability.LQGMeasureField
 import MatedCRT.Proofs.Field.ConeCircleModConst
+import MatedCRT.Proofs.Sec3.UniformConvergenceGreenKernel.InteriorStep
+import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.ExitCell
+import MatedCRT.Proofs.Sec4.SubsequentialProperties.Final
+import MatedCRT.Proofs.Sec5.StoppedFinal
+import MatedCRT.Proofs.Sec5.StoppedLLowerBound
 
 /-!
 # Theorems 1.4 and 1.6, conditional on the remaining hypotheses
@@ -64,12 +69,16 @@ The main line: Theorems 1.4, 1.6 ← Proposition 8.1 (`iDLAConstrainedConvergenc
 discharged here: Lemmas 2.13, 4.3, 4.4 (corrected), 7.3 (from 4.4 corrected), 6.6 (inside 6.4),
 `adjacentCellsMeetAeStep`, `obstacleLimitUniqueness`, `odometerObstacleApproximationStep`,
 `coneScaleRadiusPosStep_of_input`, `Absorption.absorptionChernoffStep`, `LQGMeasureField.lqgMeasureFieldMeasurableStep`,
-`Field.ConeCircle.circleAverageModConstStep`.
+`Field.ConeCircle.circleAverageModConstStep`, the two steps of Lemma 3.3 (`uniformConvergenceGreenKernel_final`),
+`HarmonicPathExitStep` and `HarmonicExitCellStep` of Lemma 3.6 (`convergenceHarmonicFunctions_of_inputs`),
+`OdometerDistributionalLimitCorrectedStep` of Lemma 4.8 (`subsequentialProperties_of_inputs`),
+`StoppedLLowerBoundStep` (`stoppedLLowerBound_of_inputs`); `StoppedMeanValueInequalityStep` is reduced to three
+obstacle-surplus steps (`stoppedMeanValueInequality_of_steps`).
 
 Corrected forms used where the Draft is false or open: 3.1 corrected (by 3.5, 4.6), 3.1 almost-sure corrected (E-c2-6,
-by 3.7), 4.4 corrected (by 5.1, 5.3, 7.2-7.4), the E-A10 (b) log-loss forms of 6.7, 6.8, 6.9 (by 6.10, 7.1),
-7.2 corrected (above scale, by 7.1). The only Draft form reported false that is still consumed is the Draft 3.1
-(by 3.3): group (d) of `MainHypotheses`.
+by 3.3, 3.7), 4.4 corrected (by 5.1, 5.3, 7.2-7.4), the E-A10 (b) log-loss forms of 6.7, 6.8, 6.9 (by 6.10, 7.1),
+7.2 corrected (above scale, by 7.1). No Draft form reported false is consumed: the Draft 3.1, refuted in Lean
+(Audit/Refutations.lean), is not a field of `MainHypotheses` any more.
 
 This file is regenerated as steps close; keep it mechanical.
 -/
@@ -121,16 +130,17 @@ theorem discretePotentialTightnessCorrected (H : MainHypotheses 𝒮) : Discrete
   discretePotentialTightnessCorrected_of_inputs H.mepsScaling H.volumeGrowth H.exitTimeUpperBound
     H.discreteHolderContinuityCorrected
 
-/-- **Lemma 3.6** (`convergenceHarmonicFunctions_of_steps`). -/
+/-- **Lemma 3.6** (`convergenceHarmonicFunctions_of_inputs`, ab6ed20: Theorem 2.11, Lemma 2.8, `MepsScalingInput`
+and two steps). -/
 theorem convergenceHarmonicFunctions (H : MainHypotheses 𝒮) : ConvergenceHarmonicFunctionsStmt 𝒮 :=
-  convergenceHarmonicFunctions_of_steps 𝒮 H.randomWalkToLBM H.cellSizeEstimate H.harmonicPathExit
-    H.harmonicExitCell
+  convergenceHarmonicFunctions_of_inputs 𝒮 H.randomWalkToLBM H.cellSizeEstimate H.mepsScaling
+    H.brownianOutwardExcursionAtExit H.lbmPathFunctionalMeasurable
 
-/-- **Lemma 3.3** (`uniformConvergenceGreenKernel_of_steps`; consumes the Draft 3.1). -/
+/-- **Lemma 3.3** (`uniformConvergenceGreenKernel_final`, 763b7d7: through the almost-sure corrected Lemma 3.1, its
+interior and boundary steps proved; no Draft 3.1). -/
 theorem uniformConvergenceGreenKernel (H : MainHypotheses 𝒮) : UniformConvergenceGreenKernelStmt 𝒮 :=
-  uniformConvergenceGreenKernel_of_steps 𝒮 H.degreeMeasureConvergence H.integralConvergenceGreenFunction
-    H.greenKernelUpperBound H.cellSizeEstimate H.discretePotentialTightness (maximumPrinciple 𝒮)
-    H.greenKernelInterior H.greenKernelBoundary
+  uniformConvergenceGreenKernel_final 𝒮 H.degreeMeasureConvergence H.integralConvergenceGreenFunction
+    H.greenKernelUpperBound H.cellSizeEstimate H.discretePotentialTightnessAe
 
 /-- **Lemma 3.5** (`discreteDirichletProblem_of_steps`). -/
 theorem discreteDirichletProblem (H : MainHypotheses 𝒮) : DiscreteDirichletProblemStmt 𝒮 :=
@@ -156,11 +166,11 @@ theorem subsequentialConvergence (H : MainHypotheses 𝒮) : SubsequentialConver
     H.discreteDirichletProblem H.odometerLocalCompactnessCorrected H.odometerBoundaryUpgradeCorrected
     H.odometerMeasurableSelection
 
-/-- **Lemma 4.8** (`subsequentialProperties_of_corrected`, with `odometerObstacleApproximationStep` proved). -/
+/-- **Lemma 4.8** (`subsequentialProperties_of_inputs`, 7582c60: no step; `OdometerDistributionalLimitCorrectedStep`
+proved from Lemma 3.3). -/
 theorem subsequentialProperties (H : MainHypotheses 𝒮) : SubsequentialPropertiesStmt 𝒮 :=
-  subsequentialProperties_of_corrected 𝒮 H.uniformConvergenceGreenKernel H.discreteDirichletProblem
-    H.convergenceNormalizedExitTime (maximumPrinciple 𝒮) (odometerObstacleApproximationStep 𝒮)
-    H.odometerDistributionalLimitCorrected
+  subsequentialProperties_of_inputs 𝒮 H.uniformConvergenceGreenKernel H.discreteDirichletProblem
+    H.convergenceNormalizedExitTime (maximumPrinciple 𝒮)
 
 /-- Theorem 4.1: the convergence event is measurable
 (`convergenceDivisibleEventMeasurableStep_of_coneFamilyAEMeasurable`). -/
@@ -213,6 +223,16 @@ theorem discreteClusterInnerBound (H : MainHypotheses 𝒮) : DiscreteClusterInn
     H.volumeGrowth H.cellSizeEstimate H.uniformConvergenceGreenKernel H.coneFamilyAEMeasurable
     H.harmonicBallStrictObstacleGap
 
+/-- Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5; `stoppedMeanValueInequality_of_steps`, 16ca787: three obstacle-surplus steps). -/
+theorem stoppedMeanValueInequality (H : MainHypotheses 𝒮) : StoppedMeanValueInequalityStep 𝒮 :=
+  stoppedMeanValueInequality_of_steps 𝒮 H.convergenceDivisible H.uniformConvergenceGreenKernel H.exitTimeUpperBound
+    H.integralConvergenceGreenFunction H.boundedExitTimeRV H.stoppedSurplusInterior H.stoppedSurplusExterior
+    H.stoppedLayerPotential
+
+/-- Lemma 5.4 on `V^ε(Λ_t)` (E-c1-5; `stoppedLLowerBound_of_inputs`, a9952ca: from Lemmas 2.9, 2.15, 2.16). -/
+theorem stoppedLLowerBound (H : MainHypotheses 𝒮) : StoppedLLowerBoundStep 𝒮 :=
+  stoppedLLowerBound_of_inputs 𝒮 H.greenFunctionCrudeBound H.greenKernelLowerBound H.countingMeasureConvergence
+
 /-- **Proposition 5.1** (`iDLALowerBound_final_of_strictGap`, 7fdfd3c and fb05dfd: through Lemmas 5.2-5.4 and their
 forms on `V^ε(Λ_t)`, E-c1-5). -/
 theorem iDLALowerBound (H : MainHypotheses 𝒮) : IDLALowerBoundStmt 𝒮 :=
@@ -221,6 +241,7 @@ theorem iDLALowerBound (H : MainHypotheses 𝒮) : IDLALowerBoundStmt 𝒮 :=
     H.coneHarmonicBalls H.coneHarmonicBallsUpToFixedTime H.uniformConvergenceGreenKernel H.boundedExitTimeRV
     (discreteLaplacianBoundCorrected 𝒮) H.coneFamilyAEMeasurable (LQGMeasureField.lqgMeasureFieldMeasurableStep 𝒮)
     H.meanValueSurplusLower H.harmonicBallStrictObstacleGap H.stoppedMeanValueInequality H.stoppedLLowerBound
+
 
 /-! ## Section 6 -/
 
@@ -302,14 +323,14 @@ theorem iDLAConstrainedConvergence (H : MainHypotheses 𝒮) : IDLAConstrainedCo
 end MainHypotheses
 
 /-- **Theorem 1.4** (convergence of IDLA), conditional on `MainHypotheses 𝒮`: Proposition 8.1 and the scaling
-argument of Section 8.1 (`convergenceOfIDLA_of_coneSteps`). See the warning on `MainHypotheses` (group (d)). -/
+argument of Section 8.1 (`convergenceOfIDLA_of_coneSteps`). -/
 theorem convergenceOfIDLA_conditional (𝒮 : SpaceFillingSLEModel) (H : MainHypotheses 𝒮) :
     ConvergenceOfIDLAStmt 𝒮 :=
   convergenceOfIDLA_of_coneSteps 𝒮 H.iDLAConstrainedConvergence H.coneEnvironmentScaling H.quantumConeScaling
     H.lqgMeasureProperties H.coneHarmonicBallStrictGrowth H.coneHalfBallFamilyFunctional
 
 /-- **Theorem 1.6** (convergence of the divisible sandpile), conditional on `MainHypotheses 𝒮`
-(`convergenceOfDivSandpile_of_coneSteps`). See the warning on `MainHypotheses` (group (d)). -/
+(`convergenceOfDivSandpile_of_coneSteps`). -/
 theorem convergenceOfDivSandpile_conditional (𝒮 : SpaceFillingSLEModel) (H : MainHypotheses 𝒮) :
     ConvergenceOfDivSandpileStmt 𝒮 :=
   convergenceOfDivSandpile_of_coneSteps 𝒮 H.iDLAConstrainedConvergence H.coneEnvironmentScaling
