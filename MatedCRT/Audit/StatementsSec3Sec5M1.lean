@@ -1,6 +1,7 @@
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.OccupationTail
 import MatedCRT.Proofs.Sec7.OdometerBoundMass.Laplacian
 import MatedCRT.Proofs.Sec4.ObstacleSpecialization.Escape
+import MatedCRT.Proofs.Sec1.ScaledClusterExitTime
 import MatedCRT.Proofs.Measurability.EnvSigma
 import MatedCRT.Steps.Sec3.UniformConvergenceGreenKernel
 import MatedCRT.Steps.Sec3.DiscreteDirichletProblem
@@ -123,6 +124,24 @@ theorem five_four_green_quotient_semantics {m : ℤ → ℤ → ℕ} {A : Set �
   exact congrArg (fun x : ℝ => x / greenFn m A a a)
     (tsum_subtype_eq_toFinset_sum hA (fun b => greenFn m A b a))
 
+/-- Under finite local mass and a positive contained time, the cluster exit time is positive and finite. -/
+theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ → Set ℂ} {ρ : ℝ}
+    (hΛ : HarmonicBalls.SatisfiesHarmonicBallConditions μ Λ 0)
+    (hfin : μ (Metric.ball 0 (ρ / 3)) ≠ ⊤)
+    (hsmall : ∃ s, 0 < s ∧ Λ s ⊆ Metric.ball 0 (ρ / 3)) :
+    0 < clusterExitTime Λ ρ ∧
+      clusterExitTime Λ ρ ≤ (μ (Metric.ball 0 (ρ / 3))).toReal := by
+  refine ⟨(Sec1.clusterExitTime_spec hΛ hfin hsmall).2.1, ?_⟩
+  unfold clusterExitTime
+  apply csSup_le
+  · obtain ⟨s, hs, hsub⟩ := hsmall
+    exact ⟨s, hs, hsub⟩
+  · intro t ht
+    have hmass : μ (Λ t) ≤ μ (Metric.ball 0 (ρ / 3)) := MeasureTheory.measure_mono ht.2
+    rw [hΛ.measure_eq t ht.1] at hmass
+    exact (ENNReal.ofReal_le_iff_le_toReal hfin).1 hmass
+
+#print axioms cluster_exit_time_bounded
 #print axioms five_four_green_quotient_semantics
 #print axioms three_four_sum_ext
 #print axioms three_five_draft_reduction

@@ -100,3 +100,10 @@ The source fixes the γ-quantum-cone/SLE setting and ρ in Section 5 before sayi
 
 
 On the event used in the 5.4 reduction, `A = matedDiscreteCluster ...` is finite and the Green first-step equation holds on `A` (`LLowerBound/GreenEstimates.lean:20–35`). `LLowerBound/OfEvents.lean:51–76` obtains finiteness using the finite ambient ball interior and the inclusion `A ⊆ B`, and `OfEvents.lean:90–94` supplies this step from the cited estimates and the separately stated adjacency input. The first-step equation yields `0 < greenFn m A a a` for `a ∈ A` (`GreenMonotonicity.lean:21`); `ObstacleSpecialization/Escape.lean:214` converts the subtype `tsum` into the finite sum. `five_four_green_quotient_semantics` in the audit Lean file checks these two conclusions together. Thus the real-division and `tsum` conventions coincide with the intended quotient on that event, not necessarily for arbitrary environments outside it. This conditional check does not settle E-m1-5 or the full statement audit.
+
+
+## Cluster exit time: boundedness and dependency
+
+`cluster_exit_time_bounded` in the audit Lean file checks that `0 < clusterExitTime Λ ρ ≤ (μ (ball 0 (ρ / 3))).toReal`, assuming the harmonic-ball family conditions, finite mass of that ball, and some positive `s` with `Λ s ⊆ ball 0 (ρ / 3)`. Thus on these assumptions the real `sSup` agrees with a positive, bounded time-set supremum. This uses `Sec1.clusterExitTime_spec` (`Proofs/Sec1/ScaledClusterExitTime.lean:75`), whose proof obtains boundedness from the family mass identity and measure monotonicity.
+
+The same file obtains the small-time inclusion via `Sec1.exists_pos_subset_ball` (:37), requiring strict growth, and derives the almost-sure conditions in `scaledClusterExitTimeStep_of_steps` (:258–285) with the explicit `ConeHarmonicBallStrictGrowthStep` input and local finiteness of the LQG measure. This is a conditional dependency trace; the proof here does not establish strict growth or its literature status, nor assert an unconditional almost-sure stopping-time theorem.
