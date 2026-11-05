@@ -1,5 +1,6 @@
 import MatedCRT.Draft.Section2
 import MatedCRT.Draft.Section3
+import MatedCRT.Steps.Sec3.DiscretePotentialTightness
 
 /-!
 # Lemma 3.7: normalized expected exit time
@@ -47,6 +48,33 @@ def NormalizedExitInteriorStep (𝒮 : SpaceFillingSLEModel) : Prop :=
       (fun ε ω => rescale (S.mε ε) ε (S.η ω)
         (normExitTime (S.mult ε ω) (interiorCellVertices ε (S.η ω) (ball z r))))
       (normalizedExitGreenPotential S r z) (closedBall z r')
+
+/-- **Lemma 3.1 (corrected), interior part, with almost-sure hypotheses** (ESCALATIONS E-c2-6). As
+`DiscretePotentialTightnessCorrectedStmt`, but the bounds `|Δ^ε u^ε| ≤ C` on `V^ε(D) \ V^ε(∂D)` and
+`|u^ε| ≤ C ε⁻¹` on `V^ε(D)` are required almost surely, for all but finitely many `ε ∈ E`. The printed lemma is
+an almost-sure statement; the `∀ ω` form of the frozen statements cannot be applied to a function of the map
+`S.mult` (Lemmas 3.3, 3.5, 3.7, 4.6): `S.mult` is a function of `S.bm`, which is only almost surely equal to a
+`σ(h, η)`-measurable process (`MatedCRTEnv.IsValid.exists_envSigma_measurable_bm`), so a `σ(h, η)`-measurable
+`u^ε` satisfies the bounds for `S.mult` only almost surely. -/
+def DiscretePotentialTightnessAeStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ D : Set ℂ, D ⊆ ball 0 ρ → IsOpen D → IsConnected D →
+  ∀ e : ℕ → ℝ, IsPolySummableScales e →
+  ∀ (E : Ω → ℕ → ℝ) (u : Ω → ℕ → ℤ → ℝ) (C : Ω → ℝ),
+    (∀ n, Measurable[S.envSigma] fun ω => E ω n) → (∀ ω n, E ω n ∈ range e) →
+    (∀ ω, Tendsto (E ω) atTop (𝓝 0)) →
+    (∀ n a, Measurable[S.envSigma] fun ω => u ω n a) →
+    Measurable[S.envSigma] C → (∀ ω, 0 < C ω) →
+    (∀ᵐ ω ∂S.P, ∀ᶠ n in atTop,
+      (∀ a ∈ interiorCellVertices (E ω n) (S.η ω) D,
+        |matedLaplacian (S.mult (E ω n) ω) (u ω n) a| ≤ C ω) ∧
+      ∀ a ∈ cellVertices (E ω n) (S.η ω) D, |u ω n a| ≤ C ω / E ω n) →
+  ∃ Φ : Ω → ℕ → ℕ, (∀ k, Measurable[S.envSigma] fun ω => Φ ω k) ∧
+    ∀ᵐ ω ∂S.P, StrictMono (Φ ω) ∧ ∃ ubar : ℂ → ℝ, ContinuousOn ubar D ∧
+      ∀ O : Set ℂ, IsCompact O → closure O ⊆ D →
+        TendstoUniformlyOn (fun k => rescale (S.mε (E ω (Φ ω k))) (E ω (Φ ω k)) (S.η ω) (u ω (Φ ω k)))
+          ubar atTop O
 
 /-- Boundary control for both the discrete exit time and the continuum
 potential. For any error and failure-probability tolerances, a sufficiently
