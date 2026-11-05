@@ -17,7 +17,7 @@ theorem subset_graphInterior_of_fillClosure_subset_ball
     have hsub : cell ε η a ⊆ ball 0 ρ := by
       intro z hz
       exact hfill (mem_iUnion₂.mpr ⟨a, ha, hz⟩)
-    have hnonempty : (cell ε η a).Nonempty := ⟨vertexPoint ε η a, vertexPoint_mem_cell hε η a⟩
+    have hnonempty : (cell ε η a).Nonempty := ⟨vertexPoint ε η a, vertexPoint_mem_own_cell hε η a⟩
     obtain ⟨z, hz⟩ := hnonempty
     refine ⟨⟨z, hz, hsub hz⟩, ?_⟩
     rintro ⟨w, hw, hwfront⟩

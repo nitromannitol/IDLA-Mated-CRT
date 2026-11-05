@@ -8,7 +8,7 @@ namespace MatedCRT.Sec7
 open Set
 
 /-- The endpoint representing a vertex belongs to its cell. -/
-theorem vertexPoint_mem_cell {ε : ℝ} (hε : 0 ≤ ε) (η : ℝ → ℂ) (a : ℤ) :
+theorem vertexPoint_mem_own_cell {ε : ℝ} (hε : 0 ≤ ε) (η : ℝ → ℂ) (a : ℤ) :
     vertexPoint ε η a ∈ cell ε η a := by
   refine ⟨ε * a, ⟨?_, le_rfl⟩, rfl⟩
   apply mul_le_mul_of_nonneg_left _ hε
@@ -22,8 +22,8 @@ theorem vertexPoint_dist_le_of_cells_meet {ε D : ℝ} {η : ℝ → ℂ} {a b :
     (hb : ∀ x ∈ cell ε η b, ∀ y ∈ cell ε η b, dist x y ≤ D) :
     dist (vertexPoint ε η a) (vertexPoint ε η b) ≤ 2 * D := by
   obtain ⟨z, hza, hzb⟩ := hmeet
-  have h1 := ha _ (vertexPoint_mem_cell hε η a) z hza
-  have h2 := hb z hzb _ (vertexPoint_mem_cell hε η b)
+  have h1 := ha _ (vertexPoint_mem_own_cell hε η a) z hza
+  have h2 := hb z hzb _ (vertexPoint_mem_own_cell hε η b)
   linarith [dist_triangle (vertexPoint ε η a) z (vertexPoint ε η b)]
 
 /-- A cell on an increasing odometer path lies near a vertex on the graph boundary.
@@ -56,7 +56,7 @@ theorem increasing_path_cell_boundary_distance
   obtain ⟨c, hcb, hcp, hdistc⟩ := increasing_list_path_boundary_distance m Θ p a b
     (vertexPoint ε η) u d M (2 * D) hsymm hd (by positivity) hu0 hout hin hhead hlast hedge hinc hdist hbound
   refine ⟨c, hcb, hcp, ?_⟩
-  have hza := hdiam a ha z hz (vertexPoint ε η a) (vertexPoint_mem_cell hε η a)
+  have hza := hdiam a ha z hz (vertexPoint ε η a) (vertexPoint_mem_own_cell hε η a)
   linarith [dist_triangle z (vertexPoint ε η a) (vertexPoint ε η c)]
 
 /-- The support path hypothesis of Lemma 7.4 and a cell diameter bound place every
@@ -107,7 +107,7 @@ theorem fill_support_subset_cthickening
   · obtain ⟨c, hc, hdist⟩ := crude_support_cell_boundary_distance m A Θ ε D d M η u
       hsymm hε hD hd hη hzero hnonneg hpaths hmeet hdiam hbound a ha hΘ z hza
     apply Metric.mem_cthickening_of_dist_le z (vertexPoint ε η c) _ _
-    · exact mem_iUnion₂.mpr ⟨c, Or.inr hc, vertexPoint_mem_cell hε η c⟩
+    · exact mem_iUnion₂.mpr ⟨c, Or.inr hc, vertexPoint_mem_own_cell hε η c⟩
     · exact hdist
 
 /-- Filling the graph closure adds at most one cell diameter. -/

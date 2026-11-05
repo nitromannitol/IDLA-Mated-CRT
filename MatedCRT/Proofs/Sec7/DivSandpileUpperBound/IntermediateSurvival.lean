@@ -76,9 +76,9 @@ theorem intermediate_annulus_subset_ambient_sdiff_origin
       cellVertices ε η (thickening s (fillCells ε η Θ)) ⊆
       cellVertices ε η (ball 0 ρ) \ {0} := by
   have h0I : (0 : ℤ) ∈ cellVertices ε η (thickening s (fillCells ε η Θ)) := by
-    refine ⟨vertexPoint ε η 0, vertexPoint_mem_cell hε η 0, ?_⟩
+    refine ⟨vertexPoint ε η 0, vertexPoint_mem_own_cell hε η 0, ?_⟩
     exact self_subset_thickening hs _
-      (mem_iUnion₂.mpr ⟨0, h0, vertexPoint_mem_cell hε η 0⟩)
+      (mem_iUnion₂.mpr ⟨0, h0, vertexPoint_mem_own_cell hε η 0⟩)
   have hcontain : thickening v
       (fillCells ε η (cellVertices ε η (thickening s (fillCells ε η Θ)))) ⊆ ball 0 ρ := by
     refine (thickening_fill_intermediate_subset hη Subset.rfl hdiam).trans ?_

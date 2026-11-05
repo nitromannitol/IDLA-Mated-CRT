@@ -95,7 +95,7 @@ theorem graph_closure_subset_thickened_cell_vertices
     vClosure m Θ ⊆ cellVertices ε η (Metric.thickening r (fillCells ε η Θ)) := by
   intro a ha
   rcases ha with ha | ⟨_, b, hb, hba⟩
-  · have hz := vertexPoint_mem_cell hε η a
+  · have hz := vertexPoint_mem_own_cell hε η a
     exact ⟨vertexPoint ε η a, hz, Metric.self_subset_thickening hr _
       (mem_iUnion₂.mpr ⟨a, ha, hz⟩)⟩
   · obtain ⟨z, hzb, hza⟩ := hadj b a hba

@@ -3,6 +3,8 @@ import MatedCRT.Draft.Section3
 import MatedCRT.Draft.Section4
 import MatedCRT.Draft.Section6
 import MatedCRT.Draft.Section7
+import MatedCRT.Steps.Sec6.ConstantOrderLowerBoundDiv
+import MatedCRT.Steps.Sec7.MassBoundOdometer
 import MatedCRT.Steps.Infra.MatingOfTrees
 import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 import MatedCRT.Proofs.Sandpile.Witness
@@ -26,8 +28,8 @@ includes the obstacle setting, interior containment of the
 stopped cluster, and localization of its graph closure with the origin inserted. It remains
 to establish these assertions from the numbered estimates and the mating-of-trees step. -/
 def StoppedShellLocalizationStep (𝒮 : SpaceFillingSLEModel) : Prop :=
-  ConeHarmonicBallsStmt → ConstantOrderLowerBoundDivStmt 𝒮 → VolumeGrowthStmt →
-  MassBoundOdometerStmt 𝒮 → ConvergenceDivisibleStmt 𝒮 →
+  ConeHarmonicBallsStmt → ConstantOrderLowerBoundDivLogStmt 𝒮 → VolumeGrowthStmt →
+  MassBoundOdometerAboveScaleStmt 𝒮 → ConvergenceDivisibleStmt 𝒮 →
   UniformConvergenceGreenKernelStmt 𝒮 → CellSizeEstimateStmt 𝒮 →
   OdometerBoundMassStmt 𝒮 → CrudeUpperBoundStmt 𝒮 → AdjacentCellsMeetAeStep 𝒮 →
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
@@ -55,8 +57,8 @@ def StoppedObstacleSetupStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 /-- The stopped support stays in the graph interior, and its closure lies in the
 prescribed neighborhood. This is the shell iteration and the final crude bound. -/
 def StoppedShellConfinementStep (𝒮 : SpaceFillingSLEModel) : Prop :=
-  ConeHarmonicBallsStmt → ConstantOrderLowerBoundDivStmt 𝒮 → VolumeGrowthStmt →
-  MassBoundOdometerStmt 𝒮 → ConvergenceDivisibleStmt 𝒮 →
+  ConeHarmonicBallsStmt → ConstantOrderLowerBoundDivLogStmt 𝒮 → VolumeGrowthStmt →
+  MassBoundOdometerAboveScaleStmt 𝒮 → ConvergenceDivisibleStmt 𝒮 →
   UniformConvergenceGreenKernelStmt 𝒮 → CellSizeEstimateStmt 𝒮 →
   OdometerBoundMassStmt 𝒮 → CrudeUpperBoundStmt 𝒮 → AdjacentCellsMeetAeStep 𝒮 →
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
@@ -106,8 +108,8 @@ theorem stoppedShellLocalization_of_steps (𝒮 : SpaceFillingSLEModel)
 /-- Proposition 7.1 follows from stopped-shell localization and the numbered estimates
 used to establish that localization. -/
 theorem divSandpileUpperBound_of_steps (𝒮 : SpaceFillingSLEModel)
-    (hcone : ConeHarmonicBallsStmt) (hlower : ConstantOrderLowerBoundDivStmt 𝒮)
-    (hvolume : VolumeGrowthStmt) (hmass : MassBoundOdometerStmt 𝒮)
+    (hcone : ConeHarmonicBallsStmt) (hlower : ConstantOrderLowerBoundDivLogStmt 𝒮)
+    (hvolume : VolumeGrowthStmt) (hmass : MassBoundOdometerAboveScaleStmt 𝒮)
     (hconv : ConvergenceDivisibleStmt 𝒮) (hgreen : UniformConvergenceGreenKernelStmt 𝒮)
     (hcell : CellSizeEstimateStmt 𝒮) (hodo : OdometerBoundMassStmt 𝒮)
     (hcrude : CrudeUpperBoundStmt 𝒮) (hadj : AdjacentCellsMeetAeStep 𝒮)
@@ -137,8 +139,8 @@ theorem divSandpileUpperBound_of_steps (𝒮 : SpaceFillingSLEModel)
 
 /-- Proposition 7.1 from the obstacle setup and stopped-shell confinement steps. -/
 theorem divSandpileUpperBound_of_carved_steps (𝒮 : SpaceFillingSLEModel)
-    (hcone : ConeHarmonicBallsStmt) (hlower : ConstantOrderLowerBoundDivStmt 𝒮)
-    (hvolume : VolumeGrowthStmt) (hmass : MassBoundOdometerStmt 𝒮)
+    (hcone : ConeHarmonicBallsStmt) (hlower : ConstantOrderLowerBoundDivLogStmt 𝒮)
+    (hvolume : VolumeGrowthStmt) (hmass : MassBoundOdometerAboveScaleStmt 𝒮)
     (hconv : ConvergenceDivisibleStmt 𝒮) (hgreen : UniformConvergenceGreenKernelStmt 𝒮)
     (hcell : CellSizeEstimateStmt 𝒮) (hodo : OdometerBoundMassStmt 𝒮)
     (hcrude : CrudeUpperBoundStmt 𝒮) (hadj : AdjacentCellsMeetAeStep 𝒮)
@@ -150,8 +152,8 @@ theorem divSandpileUpperBound_of_carved_steps (𝒮 : SpaceFillingSLEModel)
 /-- Proposition 7.1 from stopped-shell localization and the numbered inputs,
 using the proved almost-sure contact of adjacent cells. -/
 theorem divSandpileUpperBound_of_inputs (𝒮 : SpaceFillingSLEModel)
-    (hcone : ConeHarmonicBallsStmt) (hlower : ConstantOrderLowerBoundDivStmt 𝒮)
-    (hvolume : VolumeGrowthStmt) (hmass : MassBoundOdometerStmt 𝒮)
+    (hcone : ConeHarmonicBallsStmt) (hlower : ConstantOrderLowerBoundDivLogStmt 𝒮)
+    (hvolume : VolumeGrowthStmt) (hmass : MassBoundOdometerAboveScaleStmt 𝒮)
     (hconv : ConvergenceDivisibleStmt 𝒮) (hgreen : UniformConvergenceGreenKernelStmt 𝒮)
     (hcell : CellSizeEstimateStmt 𝒮) (hodo : OdometerBoundMassStmt 𝒮)
     (hcrude : CrudeUpperBoundStmt 𝒮) (hloc : StoppedShellLocalizationStep 𝒮) :
@@ -162,8 +164,8 @@ theorem divSandpileUpperBound_of_inputs (𝒮 : SpaceFillingSLEModel)
 /-- Proposition 7.1 from the obstacle and shell steps, with adjacent-cell
 contact discharged by the mating-of-trees construction. -/
 theorem divSandpileUpperBound_of_carved_inputs (𝒮 : SpaceFillingSLEModel)
-    (hcone : ConeHarmonicBallsStmt) (hlower : ConstantOrderLowerBoundDivStmt 𝒮)
-    (hvolume : VolumeGrowthStmt) (hmass : MassBoundOdometerStmt 𝒮)
+    (hcone : ConeHarmonicBallsStmt) (hlower : ConstantOrderLowerBoundDivLogStmt 𝒮)
+    (hvolume : VolumeGrowthStmt) (hmass : MassBoundOdometerAboveScaleStmt 𝒮)
     (hconv : ConvergenceDivisibleStmt 𝒮) (hgreen : UniformConvergenceGreenKernelStmt 𝒮)
     (hcell : CellSizeEstimateStmt 𝒮) (hodo : OdometerBoundMassStmt 𝒮)
     (hcrude : CrudeUpperBoundStmt 𝒮)
@@ -175,8 +177,8 @@ theorem divSandpileUpperBound_of_carved_inputs (𝒮 : SpaceFillingSLEModel)
 /-- The unresolved shell construction produces an intermediate set with a small
 boundary odometer and localized filled closure on the exit-time event. -/
 def IntermediateShellStep (𝒮 : SpaceFillingSLEModel) : Prop :=
-  ConeHarmonicBallsStmt → ConstantOrderLowerBoundDivStmt 𝒮 → VolumeGrowthStmt →
-  MassBoundOdometerStmt 𝒮 → ConvergenceDivisibleStmt 𝒮 →
+  ConeHarmonicBallsStmt → ConstantOrderLowerBoundDivLogStmt 𝒮 → VolumeGrowthStmt →
+  MassBoundOdometerAboveScaleStmt 𝒮 → ConvergenceDivisibleStmt 𝒮 →
   UniformConvergenceGreenKernelStmt 𝒮 → CellSizeEstimateStmt 𝒮 →
   OdometerBoundMassStmt 𝒮 → AdjacentCellsMeetAeStep 𝒮 →
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
@@ -209,8 +211,8 @@ theorem stoppedShellConfinement_of_intermediateShell (𝒮 : SpaceFillingSLEMode
 boundary odometer and cumulative spatial growth. The certificate only asks for
 cell diameters up to the stopping index. -/
 def ShellIterationStep (𝒮 : SpaceFillingSLEModel) : Prop :=
-  ConeHarmonicBallsStmt → ConstantOrderLowerBoundDivStmt 𝒮 → VolumeGrowthStmt →
-  MassBoundOdometerStmt 𝒮 → ConvergenceDivisibleStmt 𝒮 →
+  ConeHarmonicBallsStmt → ConstantOrderLowerBoundDivLogStmt 𝒮 → VolumeGrowthStmt →
+  MassBoundOdometerAboveScaleStmt 𝒮 → ConvergenceDivisibleStmt 𝒮 →
   UniformConvergenceGreenKernelStmt 𝒮 → CellSizeEstimateStmt 𝒮 →
   OdometerBoundMassStmt 𝒮 → AdjacentCellsMeetAeStep 𝒮 →
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →

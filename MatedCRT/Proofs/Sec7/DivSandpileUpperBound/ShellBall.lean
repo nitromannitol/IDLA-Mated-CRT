@@ -72,8 +72,8 @@ theorem shell_closure_subset_ambient
     vClosure m Θ ⊆ cellVertices ε η (ball 0 ρ) := by
   intro b hb
   rcases hb with hb | ⟨_, a, ha, hab⟩
-  · refine ⟨vertexPoint ε η b, vertexPoint_mem_cell hε η b, ?_⟩
-    exact ball_subset_ball hR (hΘ (mem_iUnion₂.mpr ⟨b, hb, vertexPoint_mem_cell hε η b⟩))
+  · refine ⟨vertexPoint ε η b, vertexPoint_mem_own_cell hε η b, ?_⟩
+    exact ball_subset_ball hR (hΘ (mem_iUnion₂.mpr ⟨b, hb, vertexPoint_mem_own_cell hε η b⟩))
   · obtain ⟨z, hza, hzb⟩ := hadj a b hab
     exact ⟨z, hzb, ball_subset_ball hR (hΘ (mem_iUnion₂.mpr ⟨a, ha, hza⟩))⟩
 
@@ -204,8 +204,8 @@ theorem shell_geometric_inputs_of_ambient
   have hR : R ≤ ρ := by linarith
   have hΘsub : Θ ⊆ cellVertices ε η (ball 0 ρ) := by
     intro a ha
-    refine ⟨vertexPoint ε η a, vertexPoint_mem_cell hε η a, ?_⟩
-    exact ball_subset_ball hR (hΘ (mem_iUnion₂.mpr ⟨a, ha, vertexPoint_mem_cell hε η a⟩))
+    refine ⟨vertexPoint ε η a, vertexPoint_mem_own_cell hε η a, ?_⟩
+    exact ball_subset_ball hR (hΘ (mem_iUnion₂.mpr ⟨a, ha, vertexPoint_mem_own_cell hε η a⟩))
   have hclust : matedDiscreteCluster m ε η ρ t ⊆ cellVertices ε η (ball 0 ρ) := by
     intro a ha
     exact ha.1

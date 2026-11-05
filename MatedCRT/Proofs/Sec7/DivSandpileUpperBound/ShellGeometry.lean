@@ -66,7 +66,7 @@ theorem subset_cellVertices_thickening_fill_closure
     (hε : 0 ≤ ε) (hr : 0 < r) :
     A ⊆ cellVertices ε η (thickening r (fillCells ε η (vClosure m A))) := by
   intro a ha
-  have hz : vertexPoint ε η a ∈ cell ε η a := vertexPoint_mem_cell hε η a
+  have hz : vertexPoint ε η a ∈ cell ε η a := vertexPoint_mem_own_cell hε η a
   have hfill : vertexPoint ε η a ∈ fillCells ε η (vClosure m A) :=
     mem_iUnion₂.mpr ⟨a, Or.inl ha, hz⟩
   exact ⟨vertexPoint ε η a, hz, self_subset_thickening hr _ hfill⟩
@@ -159,7 +159,7 @@ theorem exists_localized_intermediate_shell
       | succ k ih =>
         rw [hstep k (by omega)]
         have hmem := ih (by omega)
-        have hz := vertexPoint_mem_cell hε η 0
+        have hz := vertexPoint_mem_own_cell hε η 0
         exact ⟨vertexPoint ε η 0, hz,
           self_subset_thickening (hr k (by omega)) _ (mem_iUnion₂.mpr ⟨0, hmem, hz⟩)⟩
     exact hzero'' n le_rfl

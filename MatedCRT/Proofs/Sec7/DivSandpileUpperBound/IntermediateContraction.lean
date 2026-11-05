@@ -21,8 +21,8 @@ theorem intermediate_inner_contains_zero
     apply self_subset_thickening (by linarith : 0 < v / 2) _
     apply fillCells_subset_fill_intermediate hs
     exact mem_iUnion₂.mpr ⟨0, h0, hz⟩
-  refine ⟨⟨vertexPoint ε η 0, vertexPoint_mem_cell hε η 0,
-    hinside (vertexPoint_mem_cell hε η 0)⟩, ?_⟩
+  refine ⟨⟨vertexPoint ε η 0, vertexPoint_mem_own_cell hε η 0,
+    hinside (vertexPoint_mem_own_cell hε η 0)⟩, ?_⟩
   rintro ⟨z, hzcell, hzfront⟩
   rw [isOpen_thickening.frontier_eq] at hzfront
   exact hzfront.2 (hinside hzcell)

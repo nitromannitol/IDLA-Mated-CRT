@@ -11,8 +11,8 @@ theorem subset_cellVertices_thickening_fill
     {ε r : ℝ} {η : ℝ → ℂ} {Θ : Set ℤ} (hε : 0 ≤ ε) (hr : 0 < r) :
     Θ ⊆ cellVertices ε η (thickening r (fillCells ε η Θ)) := by
   intro a ha
-  refine ⟨vertexPoint ε η a, vertexPoint_mem_cell hε η a, ?_⟩
-  exact self_subset_thickening hr _ (mem_iUnion₂.mpr ⟨a, ha, vertexPoint_mem_cell hε η a⟩)
+  refine ⟨vertexPoint ε η a, vertexPoint_mem_own_cell hε η a, ?_⟩
+  exact self_subset_thickening hr _ (mem_iUnion₂.mpr ⟨a, ha, vertexPoint_mem_own_cell hε η a⟩)
 
 /-- Each iterated shell contains the initial shell and hence its filled cells. -/
 theorem initial_fill_subset_iterated_shell
@@ -144,9 +144,9 @@ theorem shell_boundary_contracts_of_good_event
   have hambient : R + (((c / 8) * r) + D + r / 4) ≤ ρ := by
     have hDnonneg : 0 ≤ D := by
       have h0I : (0 : ℤ) ∈ I := by
-        refine ⟨vertexPoint ε η 0, vertexPoint_mem_cell hε.le η 0, ?_⟩
+        refine ⟨vertexPoint ε η 0, vertexPoint_mem_own_cell hε.le η 0, ?_⟩
         exact self_subset_thickening (by linarith : 0 < r / 4) _
-          (mem_iUnion₂.mpr ⟨0, h0, vertexPoint_mem_cell hε.le η 0⟩)
+          (mem_iUnion₂.mpr ⟨0, h0, vertexPoint_mem_own_cell hε.le η 0⟩)
       exact diam_nonneg.trans (hI 0 h0I)
     linarith
   have hprob := intermediate_annulus_survival_of_good_event hη hΛfin hO hε hK hC hr hβ hc hs₁
