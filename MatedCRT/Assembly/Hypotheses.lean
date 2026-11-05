@@ -49,7 +49,7 @@ This file is regenerated as steps close: a field disappears when its Prop is pro
 namespace MatedCRT
 
 /-- The remaining hypotheses of the conditional proof of Theorems 1.4 and 1.6 for the space-filling SLE model `𝒮`.
-Field counts: (a) 12, (b) 3, (c) 27, (d) 3, (e) 1; total 46.
+Field counts: (a) 12, (b) 3, (c) 26, (d) 3, (e) 1; total 45.
 
 WARNING: group (d) holds the Draft Lemma 3.1 (`DiscretePotentialTightnessStmt`), reported false for non-open `D`
 (ESCALATIONS E-c1-4). If that report is right, this structure is unsatisfiable and the conditional theorems are vacuous
@@ -144,8 +144,6 @@ structure MainHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   meanValueSurplusLower : MeanValueSurplusLowerStep 𝒮
   /-- Lemma 6.4: restriction of the cone field to annuli has mean zero (IR-c4-5). Owner: c2. -/
   coneMeanZeroRestriction : ConeMeanZeroRestrictionStep
-  /-- Lemma 6.4: circle averages modulo constants (locality of the good annulus events, IR-c4-6). Owner: c2. -/
-  circleAverageModConst : CircleAverageModConstStep
   /-- Lemma 6.5: existence of the whole-plane LQG objects (IR-c4-1). Owner: c2. -/
   wholePlaneLQGExistence : WholePlaneLQGExistenceStep
   /-- Lemma 6.5: Weyl comparison of the cone and whole-plane fields (IR-c4-2). Owner: c2. -/

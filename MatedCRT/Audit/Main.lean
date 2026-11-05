@@ -237,6 +237,7 @@ assert_uses convergenceOfIDLA_conditional boundaryLayerMeasurableStep_of_coneFam
 /-- **Lemma 6.4**. -/
 example (H : MainHypotheses 𝒮) : GoodAnnulusPrevalenceStmt := H.goodAnnulusPrevalence
 assert_uses convergenceOfIDLA_conditional goodAnnulusPrevalence_of_annulusHit
+assert_uses convergenceOfIDLA_conditional Field.ConeCircle.circleAverageModConstStep
 
 /-- **Lemma 6.5**. -/
 example (H : MainHypotheses 𝒮) : AnnulusHitStmt := H.annulusHit

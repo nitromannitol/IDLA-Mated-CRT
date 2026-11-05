@@ -47,6 +47,7 @@ import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.DyadicModulus
 import MatedCRT.Proofs.Sec4.DivSandpileLowerBound.Final
 import MatedCRT.Proofs.Sec5.IDLALowerBound.Final
 import MatedCRT.Proofs.Measurability.LQGMeasureField
+import MatedCRT.Proofs.Field.ConeCircleModConst
 
 /-!
 # Theorems 1.4 and 1.6, conditional on the remaining hypotheses
@@ -62,7 +63,8 @@ The main line: Theorems 1.4, 1.6 ← Proposition 8.1 (`iDLAConstrainedConvergenc
 6.1, 7.1, with the scaling argument of Section 8.1 (`convergenceOfIDLA_of_coneSteps`). Proved results and steps
 discharged here: Lemmas 2.13, 4.3, 4.4 (corrected), 7.3 (from 4.4 corrected), 6.6 (inside 6.4),
 `adjacentCellsMeetAeStep`, `obstacleLimitUniqueness`, `odometerObstacleApproximationStep`,
-`coneScaleRadiusPosStep_of_input`, `Absorption.absorptionChernoffStep`, `LQGMeasureField.lqgMeasureFieldMeasurableStep`.
+`coneScaleRadiusPosStep_of_input`, `Absorption.absorptionChernoffStep`, `LQGMeasureField.lqgMeasureFieldMeasurableStep`,
+`Field.ConeCircle.circleAverageModConstStep`.
 
 Corrected forms used where the Draft is false or open: 3.1 corrected (by 3.5, 4.6), 3.1 almost-sure corrected (E-c2-6,
 by 3.7), 4.4 corrected (by 5.1, 5.3, 7.2-7.4), the E-A10 (b) log-loss forms of 6.7, 6.8, 6.9 (by 6.10, 7.1),
@@ -229,7 +231,8 @@ theorem annulusHit (H : MainHypotheses 𝒮) : AnnulusHitStmt :=
 
 /-- **Lemma 6.4** (`goodAnnulusPrevalence_of_annulusHit`; Lemma 6.6 `annulusIterate` proved, used inside). -/
 theorem goodAnnulusPrevalence (H : MainHypotheses 𝒮) : GoodAnnulusPrevalenceStmt :=
-  goodAnnulusPrevalence_of_annulusHit H.annulusHit H.coneMeanZeroRestriction H.circleAverageModConst
+  goodAnnulusPrevalence_of_annulusHit H.annulusHit H.coneMeanZeroRestriction
+    Field.ConeCircle.circleAverageModConstStep
 
 /-- **Lemma 6.8**, E-A10 (b) form (`constantOrderLowerBoundDiv_of_inputs`). -/
 theorem constantOrderLowerBoundDivLog (H : MainHypotheses 𝒮) : ConstantOrderLowerBoundDivLogStmt 𝒮 :=
