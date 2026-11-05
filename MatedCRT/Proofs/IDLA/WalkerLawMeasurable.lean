@@ -1,6 +1,7 @@
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.WalkLawMeasurable
 import MatedCRT.Proofs.IDLA.Walkers
 import MatedCRT.Proofs.IDLA.Counts
+import MatedCRT.Proofs.Sec8.Annealed
 
 /-! # Measurability of the independent walker sequence
 
@@ -64,6 +65,15 @@ noncomputable def MatedCRTEnv.IsValid.idlaJointLaw
   S.P ⊗ₘ (⟨fun ω => walkerSequenceLaw (S.mult ε ω) 0,
     hS.measurable_walkerSequenceLaw ε 0⟩ : Kernel Ω (ℕ → ℕ → ℤ))
 
+/-- The totalized joint measure uses the conditional walker law in any valid environment. -/
+theorem MatedCRTEnv.IsValid.idlaJointMeasure_eq
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (ε : ℝ) :
+    S.idlaJointMeasure ε = hS.idlaJointLaw ε := by
+  classical
+  simp only [MatedCRTEnv.idlaJointMeasure, hS.measurable_walkerSequenceLaw ε 0, ↓reduceDIte,
+    MatedCRTEnv.IsValid.idlaJointLaw]
+
 /-- On measurable events the joint law integrates the quenched probabilities. -/
 theorem MatedCRTEnv.IsValid.idlaJointLaw_apply
     {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
@@ -93,5 +103,19 @@ theorem MatedCRTEnv.IsValid.idlaProb_eq_jointLaw_of_measurable
   · exact iInf_le_of_le _ (iInf_le_of_le hm (iInf_le_of_le (le_refl _) le_rfl))
   · refine le_iInf fun g => le_iInf fun _ => le_iInf fun hg => ?_
     exact lintegral_mono hg
+
+/-- The sectionwise outer integral is bounded by the joint outer measure, including for nonmeasurable events. -/
+theorem MatedCRTEnv.IsValid.idlaProb_le_jointMeasure
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (ε : ℝ)
+    (E : Set (Ω × (ℕ → ℕ → ℤ))) : S.idlaProb ε E ≤ S.idlaJointMeasure ε E := by
+  let F := toMeasurable (hS.idlaJointLaw ε) E
+  calc
+    S.idlaProb ε E ≤ S.idlaProb ε F :=
+      Sec8.annealedOuterProb_mono _ _ (subset_toMeasurable _ _)
+    _ = hS.idlaJointLaw ε F :=
+      hS.idlaProb_eq_jointLaw_of_measurable ε (measurableSet_toMeasurable _ _)
+    _ = hS.idlaJointLaw ε E := measure_toMeasurable _
+    _ = S.idlaJointMeasure ε E := by rw [hS.idlaJointMeasure_eq ε]
 
 end MatedCRT

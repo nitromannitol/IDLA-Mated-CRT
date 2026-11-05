@@ -19,9 +19,11 @@ Convergence of IDLA (Theorem 1.4) and of the divisible sandpile (Theorem 1.6) on
 * The vertex `a = εk` of `𝒢^ε` is the integer `k`; the origin is `0`; cells are `cell ε (S.η ω) k`.
 * IDLA walkers are, conditionally on `(h, η)`, independent simple random walks on `𝒢^ε` from the origin
   (`walkerSequenceLaw (S.mult ε ω) 0`). Annealed probabilities (Theorem 1.4, Propositions 5.1, 6.1, 8.1, Lemmas 5.2,
-  6.10) follow ONE convention (review-S (S5)): the outer measure of the event under the annealed (joint) law on the
-  product space `Ω × (ℕ → ℕ → ℤ)`, i.e. the outer integral of its conditional probability given `(h, η)`
-  (`annealedOuterProb`, `MatedCRTEnv.idlaProb`); it is countably subadditive. Events of the environment alone are
+  6.10) currently use the outer integral of the conditional probability given `(h, η)` (`annealedOuterProb`,
+  `MatedCRTEnv.idlaProb`); it is countably subadditive. Review-S (S5) instead calls for outer measure under the joint
+  law on `Ω × (ℕ → ℕ → ℤ)`. The two agree on measurable events; their equality on arbitrary events is not established,
+  so the S5 change
+  and its downstream proof repairs remain pending. Events of the environment alone are
   measured by the outer measure `P` of the complement for "with probability tending to `1`" (`ProbTendsToOne`) and by
   the inner measure `1 - P(Eᶜ)` for positive-probability lower bounds (Lemma 6.5).
 * Euclidean balls are `Metric.ball`; `B⁺_δ` and `B⁻_δ` are `outerNbhd δ` and `innerNbhd δ`.

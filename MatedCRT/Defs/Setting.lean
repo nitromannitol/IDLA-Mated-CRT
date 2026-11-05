@@ -188,6 +188,15 @@ noncomputable def MatedCRTEnv.m₀ {Ω : Type} [MeasurableSpace Ω] (S : MatedCR
 noncomputable def MatedCRTEnv.c₀ {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) : ℝ :=
   2 / S.m₀
 
+/-- The joint law of the environment and the independent IDLA walkers. For a valid environment the conditional
+walker law is measurable, so the first branch applies. The zero measure is only a totalization for invalid settings. -/
+noncomputable def MatedCRTEnv.idlaJointMeasure {Ω : Type} [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) (ε : ℝ) : Measure (Ω × (ℕ → ℕ → ℤ)) := by
+  classical
+  exact if h : Measurable (fun ω => walkerSequenceLaw (S.mult ε ω) 0) then
+    S.P ⊗ₘ (⟨fun ω => walkerSequenceLaw (S.mult ε ω) 0, h⟩ : Kernel Ω (ℕ → ℕ → ℤ))
+  else 0
+
 /-- The *annealed outer probability* of an event `E ⊆ Ω × (ℕ → ℕ → ℤ)` of the environment and the IDLA walkers of the
 map with cell size `ε`, which given `(h, η)` are independent simple random walks on `𝒢^ε` started at the origin
 (`walkerSequenceLaw (S.mult ε ω) 0`): `annealedOuterProb` (MatedCRT/Defs/Notation.lean). -/

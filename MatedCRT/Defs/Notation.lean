@@ -50,8 +50,8 @@ noncomputable def outerLIntegral {Ω : Type*} [MeasurableSpace Ω] (P : Measure 
 object `x` whose conditional law given the environment is `κ ω` (the quenched law): the outer integral of the
 quenched probability `ω ↦ κ ω (E_ω)` of the section `E_ω = {x | (ω, x) ∈ E}`.
 
-This is the convention for all annealed probabilities ("with probability tending to `1`" for the IDLA walkers): the
-outer measure of the event under the annealed (joint) law on the product space `Ω × X`. As a function of `E` it is an
+This is the current convention in the Draft statements, pending the review-S (S5) change to the outer measure under
+the joint law. As a function of `E` it is an
 outer measure on `Ω × X` (countably subadditive, so union bounds apply), and it is `∫⁻ κ ω (E_ω) dP` whenever the
 quenched probability is measurable. When `κ` is a measurable kernel, so that the joint law `P ⊗ κ` exists, it is
 `(P ⊗ κ)(E)` for every measurable `E`, and at most the outer measure `(P ⊗ κ)*(E)` for every `E`. The map `ω ↦ κ ω` is
