@@ -1,45 +1,46 @@
 import MatedCRT.Assembly.Hypotheses
-import MatedCRT.Steps.Sec1.Convergence
+import MatedCRT.Proofs.Sec1.Main
+import MatedCRT.Proofs.Sec1.ConeScaleRadius
 import MatedCRT.Steps.Sec8.IDLAConstrainedConvergence
-import MatedCRT.Steps.Sec2.ConeHarmonicBalls
+import MatedCRT.Proofs.Measurability.ConeScaleInputs
 import MatedCRT.Steps.Sec2.MaximumPrinciple
 import MatedCRT.Steps.Sec2.BoundedExitTimeRV
 import MatedCRT.Steps.Sec2.ExpectedExitTimeExplicitBound
 import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
-import MatedCRT.Steps.Sec3.DiscretePotentialTightness
+import MatedCRT.Proofs.Sec3.DiscretePotentialTightness.Final
 import MatedCRT.Steps.Sec3.ConvergenceHarmonicFunctions
 import MatedCRT.Steps.Sec3.UniformConvergenceGreenKernel
 import MatedCRT.Steps.Sec3.DiscreteDirichletProblem
-import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.OfSteps
-import MatedCRT.Proofs.Sec4.ObstacleSpecialization
-import MatedCRT.Proofs.Sec4.ObstacleSpecialization.GreenMarkov
+import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.OfInteriorBoundary
+import MatedCRT.Proofs.Sec4.ObstacleSpecialization.Final
 import MatedCRT.Proofs.Sec4.Equibounded
-import MatedCRT.Steps.Sec4.SubsequentialConvergence
-import MatedCRT.Steps.Sec4.SubsequentialProperties
+import MatedCRT.Proofs.Sec4.SubsequentialConvergence.Corrected
+import MatedCRT.Proofs.Sec4.SubsequentialProperties.Corrected
+import MatedCRT.Proofs.Sec4.SubsequentialProperties.ObstacleApproximation
 import MatedCRT.Steps.Sec4.ConvergenceDivisible
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.MaximumPrinciple
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.LocalExitReduction
+import MatedCRT.Proofs.Measurability.ConvergenceDivisibleEvent
 import MatedCRT.Steps.Sec4.DivSandpileLowerBound
 import MatedCRT.Proofs.Sec4.DivSandpileLowerBound.OdometerComparison
 import MatedCRT.Steps.Sec5.MeanValueInequality
 import MatedCRT.Steps.Sec5.IDLALowerBound
 import MatedCRT.Proofs.Sec5.LLowerBound.OfEvents
 import MatedCRT.Proofs.Sec5.MeanValueInequality.NormalizedStep
-import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.OfInteriorBoundary
+import MatedCRT.Proofs.Sec5.MeanValueInequality.SurplusSteps
 import MatedCRT.Proofs.Measurability.EnvSigma
-import MatedCRT.Steps.Sec6.AnnulusHit
-import MatedCRT.Steps.Sec6.GoodAnnulusPrevalence
-import MatedCRT.Proofs.Sec6.GoodAnnulusPrevalence.ConeTransfer
+import MatedCRT.Proofs.Sec6.AnnulusHit.Main
+import MatedCRT.Proofs.Sec6.GoodAnnulusPrevalence.Main
 import MatedCRT.Proofs.Field.LawTransferComplete
-import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.OfSteps
+import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.Final
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBound.LogLoss
 import MatedCRT.Proofs.Sec6.ChanceOfBeingAbsorbed.Chernoff
 import MatedCRT.Proofs.Sec6.ChanceOfBeingAbsorbed.LogLoss
 import MatedCRT.Proofs.Sec6.IterativeBound.Statement
 import MatedCRT.Proofs.Sec6.IDLAUpperBound.OfSteps
-import MatedCRT.Steps.Sec7.DivSandpileUpperBound
-import MatedCRT.Steps.Sec7.OdometerBoundMass
-import MatedCRT.Steps.Sec7.CrudeUpperBound
+import MatedCRT.Proofs.Measurability.BoundaryLayer
+import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.ComponentReduction
+import MatedCRT.Proofs.Sec7.OdometerBoundMass.Corrected
 
 /-!
 # Theorems 1.4 and 1.6, conditional on the remaining hypotheses
@@ -48,16 +49,18 @@ import MatedCRT.Steps.Sec7.CrudeUpperBound
 reductions of the numbered results of "Internal DLA on mated-CRT maps" (arXiv:2211.04891) into Theorems 1.4 and 1.6,
 under `MainHypotheses 𝒮` (MatedCRT/Assembly/Hypotheses.lean). Each numbered result on the way is one theorem
 `MainHypotheses.<result>` below, proved by its reduction applied to the earlier results, to fields of `MainHypotheses`
-and to proved steps; MatedCRT/Audit/Main.lean checks that every reduction is indeed used.
+and to proved steps; MatedCRT/Audit/Main.lean checks that every reduction is indeed used, and that no field of
+`MainHypotheses` is a Draft statement refuted in Lean.
 
 The main line: Theorems 1.4, 1.6 ← Proposition 8.1 (`iDLAConstrainedConvergence_of_steps`) ← Propositions 4.2, 5.1,
-6.1, 7.1. Proved inputs discharged here: `adjacentCellsMeetAeStep` (IR-A2), Lemma 6.6 (`annulusIterate`),
-`obstacleLimitUniqueness`, `greenKernelLaplacianStep`, `normExitTimeLaplacianStep`, `Absorption.absorptionChernoffStep`.
+6.1, 7.1, with the scaling argument of Section 8.1 (`convergenceOfIDLA_of_coneSteps`). Proved results and steps
+discharged here: Lemmas 2.13, 4.3, 4.4 (corrected), 7.3 (from 4.4 corrected), 6.6 (inside 6.4),
+`adjacentCellsMeetAeStep`, `obstacleLimitUniqueness`, `odometerObstacleApproximationStep`,
+`coneScaleRadiusPosStep_of_input`, `Absorption.absorptionChernoffStep`.
 
-Corrected forms used where the Draft is false or open: 4.4 corrected (by 5.3), 3.1 corrected (by 3.5), the E-A10 (b)
-log-loss forms of 6.7, 6.8, 6.9 (by 6.10). The Draft forms of 4.4, 3.1, 6.8, 7.2 still consumed by committed
-reductions are group (d) of `MainHypotheses`. Lemma 7.2 corrected (`MassBoundOdometerAboveScaleStmt`) is not used:
-Proposition 7.1 consumes the Draft 7.2, and its module cannot be imported with 7.1's (F6).
+Corrected forms used where the Draft is false or open: 3.1 corrected (by 3.5, 4.6), 4.4 corrected (by 5.3, 7.2-7.4),
+the E-A10 (b) log-loss forms of 6.7, 6.8, 6.9 (by 6.10, 7.1), 7.2 corrected (above scale, by 7.1). The only Draft
+form reported false that is still consumed is the Draft 3.1 (by 3.3, 3.7): group (d) of `MainHypotheses`.
 
 This file is regenerated as steps close; keep it mechanical.
 -/
@@ -69,6 +72,21 @@ namespace MainHypotheses
 variable {𝒮 : SpaceFillingSLEModel}
 
 /-! ## Section 2 -/
+
+/-- **Lemma 2.4** (`coneHarmonicBallsUpToFixedTime_of_steps`). -/
+theorem coneHarmonicBallsUpToFixedTime (H : MainHypotheses 𝒮) : ConeHarmonicBallsUpToFixedTimeStmt :=
+  coneHarmonicBallsUpToFixedTime_of_steps H.wholePlaneLogLQGExistence H.wholePlaneConeHarmonicBalls
+    H.wholePlaneHarmonicBallsSmallTime H.coneRestriction H.coneHarmonicBallLocality H.coneHarmonicBallStrictGrowth
+
+/-- **Lemma 2.5** (`coneScaleInvarianceUpToFixedTime_of_scaleRadiusPos`, with `coneScaleRadiusPosStep_of_input`). -/
+theorem coneScaleInvarianceUpToFixedTime (H : MainHypotheses 𝒮) : ConeScaleInvarianceUpToFixedTimeStmt :=
+  coneScaleInvarianceUpToFixedTime_of_scaleRadiusPos H.quantumConeScaling H.lqgMeasureProperties
+    (coneScaleRadiusPosStep_of_input H.quantumConeScaling) H.coneHarmonicBallStrictGrowth H.coneHalfBallFamilyFunctional
+
+/-- The families of Lemmas 2.4, 2.5 are random variables (`coneFamilyAEMeasurableStep_of_inputs`). -/
+theorem coneFamilyAEMeasurable (H : MainHypotheses 𝒮) : ConeFamilyAEMeasurableStep :=
+  coneFamilyAEMeasurableStep_of_inputs H.quantumConeScaling H.coneHarmonicBallStrictGrowth H.lqgMeasureProperties
+    (coneScaleRadiusPosStep_of_input H.quantumConeScaling) H.coneHalfBallFamilyFunctional
 
 /-- **Theorem 2.3** (`coneHarmonicBalls_of_steps`). -/
 theorem coneHarmonicBalls (H : MainHypotheses 𝒮) : ConeHarmonicBallsStmt :=
@@ -89,9 +107,10 @@ theorem expectedExitTimeExplicitBound (H : MainHypotheses 𝒮) : ExpectedExitTi
 
 /-! ## Section 3 -/
 
-/-- **Lemma 3.1**, corrected form (`discretePotentialTightness_of_steps`). -/
+/-- **Lemma 3.1**, corrected form (`discretePotentialTightnessCorrected_of_inputs`). -/
 theorem discretePotentialTightnessCorrected (H : MainHypotheses 𝒮) : DiscretePotentialTightnessCorrectedStmt 𝒮 :=
-  discretePotentialTightness_of_steps 𝒮 H.tightnessEquicontinuity H.tightnessSelection
+  discretePotentialTightnessCorrected_of_inputs H.mepsScaling H.volumeGrowth H.exitTimeUpperBound
+    H.discreteHolderContinuityCorrected
 
 /-- **Lemma 3.6** (`convergenceHarmonicFunctions_of_steps`). -/
 theorem convergenceHarmonicFunctions (H : MainHypotheses 𝒮) : ConvergenceHarmonicFunctionsStmt 𝒮 :=
@@ -125,30 +144,29 @@ theorem convergenceNormalizedExitTime (H : MainHypotheses 𝒮) : ConvergenceNor
 
 /-! ## Section 4 -/
 
-/-- **Lemma 4.3** (`discreteBasicProperties_of_inputs`). -/
-theorem discreteBasicProperties (H : MainHypotheses 𝒮) : DiscreteBasicPropertiesStmt 𝒮 :=
-  discreteBasicProperties_of_inputs greenKernelLaplacianStep normExitTimeLaplacianStep H.ballInteriorConnected
-    (adjacentCellsMeetAeStep 𝒮)
-
-/-- **Lemma 4.4**, corrected form (E-c1-1, `discreteLaplacianBoundCorrected_of_inputs`). -/
-theorem discreteLaplacianBoundCorrected (H : MainHypotheses 𝒮) : DiscreteLaplacianBoundCorrectedStmt 𝒮 :=
-  discreteLaplacianBoundCorrected_of_inputs greenKernelLaplacianStep H.ballInteriorConnected
-    (adjacentCellsMeetAeStep 𝒮)
-
-/-- **Lemma 4.7** (`equibounded_of_steps`). -/
+/-- **Lemma 4.7** (`equibounded_of_steps`, with Lemma 4.3 proved: `discreteBasicProperties`). -/
 theorem equibounded (H : MainHypotheses 𝒮) : EquiboundedStmt 𝒮 :=
-  equibounded_of_steps H.discreteBasicProperties H.boundedExitTimeRV H.exitTimeUpperBound H.mepsScaling
+  equibounded_of_steps (discreteBasicProperties 𝒮) H.boundedExitTimeRV H.exitTimeUpperBound H.mepsScaling
 
-/-- **Lemma 4.6** (`subsequentialConvergence_of_steps`; consumes the Draft 4.4 and the Draft 3.1). -/
+/-- **Lemma 4.6** (`subsequentialConvergence_of_corrected`: through the corrected Lemma 3.1, no Lemma 4.4). -/
 theorem subsequentialConvergence (H : MainHypotheses 𝒮) : SubsequentialConvergenceStmt 𝒮 :=
-  subsequentialConvergence_of_steps 𝒮 H.equibounded H.discreteLaplacianBound H.discretePotentialTightness
-    H.discreteDirichletProblem H.odometerLocalCompactness H.odometerBoundaryUpgrade H.odometerMeasurableSelection
+  subsequentialConvergence_of_corrected 𝒮 H.equibounded H.discretePotentialTightnessCorrected
+    H.discreteDirichletProblem H.odometerLocalCompactnessCorrected H.odometerBoundaryUpgradeCorrected
+    H.odometerMeasurableSelection
 
-/-- **Lemma 4.8** (`subsequentialProperties_of_steps`; consumes the Draft 4.4). -/
+/-- **Lemma 4.8** (`subsequentialProperties_of_corrected`, with `odometerObstacleApproximationStep` proved). -/
 theorem subsequentialProperties (H : MainHypotheses 𝒮) : SubsequentialPropertiesStmt 𝒮 :=
-  subsequentialProperties_of_steps 𝒮 H.uniformConvergenceGreenKernel H.discreteDirichletProblem
-    H.convergenceNormalizedExitTime H.subsequentialConvergence H.discreteBasicProperties H.discreteLaplacianBound
-    (maximumPrinciple 𝒮) H.odometerObstacleApproximation H.odometerDistributionalLimit
+  subsequentialProperties_of_corrected 𝒮 H.uniformConvergenceGreenKernel H.discreteDirichletProblem
+    H.convergenceNormalizedExitTime (maximumPrinciple 𝒮) (odometerObstacleApproximationStep 𝒮)
+    H.odometerDistributionalLimitCorrected
+
+/-- Theorem 4.1: the convergence event is measurable
+(`convergenceDivisibleEventMeasurableStep_of_coneFamilyAEMeasurable`). -/
+theorem convergenceDivisibleEventMeasurable (H : MainHypotheses 𝒮) : ConvergenceDivisibleEventMeasurableStep 𝒮 := by
+  have h27 := H.volumeGrowth
+  have hfam := H.coneFamilyAEMeasurable
+  have h24 := H.coneHarmonicBallsUpToFixedTime
+  apply convergenceDivisibleEventMeasurableStep_of_coneFamilyAEMeasurable <;> assumption
 
 /-- **Theorem 4.1** (`convergenceDivisible_of_steps`, with `obstacleLimitUniqueness`). -/
 theorem convergenceDivisible (H : MainHypotheses 𝒮) : ConvergenceDivisibleStmt 𝒮 :=
@@ -163,9 +181,13 @@ theorem divSandpileLowerBound (H : MainHypotheses 𝒮) : DivSandpileLowerBoundS
 
 /-! ## Section 5 -/
 
-/-- **Lemma 5.3** (`meanValueInequality_of_surplus`, on Lemma 4.4 corrected). -/
+/-- Lemma 5.3: the surplus step (`meanValueSurplusStep_of_lower`). -/
+theorem meanValueSurplus (H : MainHypotheses 𝒮) : MeanValueSurplusStep 𝒮 :=
+  meanValueSurplusStep_of_lower H.boundedExitTimeRV H.lqgMeasureFieldMeasurable H.meanValueSurplusLower
+
+/-- **Lemma 5.3** (`meanValueInequality_of_surplus`, on Lemma 4.4 corrected, proved). -/
 theorem meanValueInequality (H : MainHypotheses 𝒮) : MeanValueInequalityStmt 𝒮 := by
-  have h44 := H.discreteLaplacianBoundCorrected
+  have h44 := discreteLaplacianBoundCorrected 𝒮
   have h213 := maximumPrinciple 𝒮
   have h41 := H.convergenceDivisible
   have h33 := H.uniformConvergenceGreenKernel
@@ -186,37 +208,26 @@ theorem discreteClusterInnerBound (H : MainHypotheses 𝒮) : DiscreteClusterInn
   discreteClusterInnerBound_of_steps 𝒮 H.obstacleClusterInnerApproximation H.convergenceDivisible
     H.coneHarmonicBalls (maximumPrinciple 𝒮) H.uniformConvergenceGreenKernel H.cellSizeEstimate
 
-/-- **Proposition 5.1** (`iDLALowerBound_of_volumeGrowth_cellSize`, through Lemma 5.2; `σ(h, η)` is null-measurable,
-so no measurability step remains). -/
+/-- **Proposition 5.1** (`iDLALowerBound_of_volumeGrowth_cellSize`, through Lemma 5.2). -/
 theorem iDLALowerBound (H : MainHypotheses 𝒮) : IDLALowerBoundStmt 𝒮 :=
   iDLALowerBound_of_volumeGrowth_cellSize 𝒮 H.volumeGrowth H.cellSizeEstimate H.meanValueInequality
     H.lLowerBound H.discreteClusterInnerBound H.iDLALowerBoundStopped
 
 /-! ## Section 6 -/
 
-/-- **Lemma 6.5** (`annulusHit_of_steps`). -/
+/-- **Lemma 6.5** (`annulusHit_of_volumeTail`). -/
 theorem annulusHit (H : MainHypotheses 𝒮) : AnnulusHitStmt :=
-  annulusHit_of_steps H.wholePlaneLQGExistence H.coneWholePlaneWeylComparison H.wholePlaneLQGCoordinateChange
-    H.wholePlaneGoodAnnulusTightness
+  annulusHit_of_volumeTail H.wholePlaneLQGExistence H.coneWholePlaneWeylComparison H.wholePlaneLQGCoordinateChange
+    H.wholePlaneUpperVolumeTail
 
-/-- **Lemma 6.4** (`goodAnnulusPrevalence_of_steps`, with Lemma 6.6 `annulusIterate` proved and the cone transfer
-`annulusIterateConeTransfer`). -/
+/-- **Lemma 6.4** (`goodAnnulusPrevalence_of_annulusHit`; Lemma 6.6 `annulusIterate` proved, used inside). -/
 theorem goodAnnulusPrevalence (H : MainHypotheses 𝒮) : GoodAnnulusPrevalenceStmt :=
-  goodAnnulusPrevalence_of_steps annulusIterate H.annulusHit (annulusIterateConeTransfer H.coneMeanZeroRestriction)
-    H.goodAnnulusEventLocality
+  goodAnnulusPrevalence_of_annulusHit H.annulusHit H.coneMeanZeroRestriction H.circleAverageModConst
 
-/-- **Lemma 6.8**, E-A10 (b) form (`constantOrderLowerBoundDiv_of_steps`). -/
-theorem constantOrderLowerBoundDivLog (H : MainHypotheses 𝒮) : ConstantOrderLowerBoundDivLogStmt 𝒮 := by
-  have h216 := H.greenKernelLowerBound
-  have h27 := H.volumeGrowth
-  have h28 := H.cellSizeEstimate
-  have h29 := H.countingMeasureConvergence
-  have h64 := H.goodAnnulusPrevalence
-  have h218 := H.exitTimeUpperBound
-  have h219 := H.expectedExitTimeExplicitBound
-  have hmeas := H.goodScaleEventMeasurable
-  have hcell := adjacentCellsMeetAeStep 𝒮
-  apply constantOrderLowerBoundDiv_of_steps <;> assumption
+/-- **Lemma 6.8**, E-A10 (b) form (`constantOrderLowerBoundDiv_of_inputs`). -/
+theorem constantOrderLowerBoundDivLog (H : MainHypotheses 𝒮) : ConstantOrderLowerBoundDivLogStmt 𝒮 :=
+  constantOrderLowerBoundDiv_of_inputs 𝒮 H.greenKernelLowerBound H.volumeGrowth H.cellSizeEstimate
+    H.countingMeasureConvergence H.exitTimeUpperBound H.goodAnnulusPrevalence H.lqgMeasureFieldMeasurable
 
 /-- **Lemma 6.7**, E-A10 (b) form (`MatedCRT.constantOrderLowerBoundLog`). -/
 theorem constantOrderLowerBoundLog (H : MainHypotheses 𝒮) : ConstantOrderLowerBoundLogStmt 𝒮 := by
@@ -242,33 +253,32 @@ theorem iterativeBound (H : MainHypotheses 𝒮) : IterativeBoundStmt 𝒮 := by
     exact adjacentCellsMeetAeStep 𝒮
   apply _root_.MatedCRT.iterativeBound <;> assumption
 
-/-- **Proposition 6.1** (`IDLAUpperBound.iDLAUpperBound_of_steps`). -/
+/-- **Proposition 6.1** (`IDLAUpperBound.iDLAUpperBound_of_steps`, the boundary-layer measurability from
+`boundaryLayerMeasurableStep_of_coneFamilyAEMeasurable`). -/
 theorem iDLAUpperBound (H : MainHypotheses 𝒮) : IDLAUpperBoundStmt 𝒮 :=
-  IDLAUpperBound.iDLAUpperBound_of_steps 𝒮 H.iterativeBound H.iDLALowerBound H.boundaryLayerMeasurable
+  IDLAUpperBound.iDLAUpperBound_of_steps 𝒮 H.iterativeBound H.iDLALowerBound
+    (boundaryLayerMeasurableStep_of_coneFamilyAEMeasurable 𝒮 H.coneFamilyAEMeasurable H.coneHarmonicBallsUpToFixedTime)
 
 /-! ## Section 7 -/
 
-/-- **Lemma 7.3** (`odometerBoundMass_of_draft`; consumes the Draft 4.4). -/
-theorem odometerBoundMass (H : MainHypotheses 𝒮) : OdometerBoundMassStmt 𝒮 := by
-  have h44 := H.discreteLaplacianBound
-  have hcell := adjacentCellsMeetAeStep 𝒮
-  apply odometerBoundMass_of_draft <;> assumption
+/-- **Lemma 7.2**, corrected form (E-c3-2; `massBoundOdometerAboveScale_of_corrected`, on Lemma 4.4 corrected). -/
+theorem massBoundOdometerAboveScale (H : MainHypotheses 𝒮) : MassBoundOdometerAboveScaleStmt 𝒮 :=
+  massBoundOdometerAboveScale_of_corrected H.greenKernelLowerBound H.cellSizeEstimate
+    (discreteLaplacianBoundCorrected 𝒮)
 
-/-- **Lemma 7.4** (`crudeUpperBound_of_draft`; consumes the Draft 4.4). -/
-theorem crudeUpperBound (H : MainHypotheses 𝒮) : CrudeUpperBoundStmt 𝒮 := by
-  have h44 := H.discreteLaplacianBound
-  have hdeg := H.degreeBound
-  have hcell := adjacentCellsMeetAeStep 𝒮
-  apply crudeUpperBound_of_draft <;> assumption
+/-- **Lemma 7.3** (`odometerBoundMass_of_corrected`, on Lemma 4.4 corrected): proved. -/
+theorem odometerBoundMass (𝒮 : SpaceFillingSLEModel) : OdometerBoundMassStmt 𝒮 :=
+  odometerBoundMass_of_corrected (discreteLaplacianBoundCorrected 𝒮)
 
-/-- **Proposition 7.1** (`divSandpileUpperBound_of_carved_inputs`, the shell confinement from
-`stoppedShellConfinement_of_intermediateShell` and `intermediateShell_of_shellIteration`; consumes the Draft 6.8 and
-the Draft 7.2). -/
+/-- **Lemma 7.4** (`crudeUpperBound_of_corrected`, on Lemma 4.4 corrected). -/
+theorem crudeUpperBound (H : MainHypotheses 𝒮) : CrudeUpperBoundStmt 𝒮 :=
+  crudeUpperBound_of_corrected (discreteLaplacianBoundCorrected 𝒮) H.degreeBound
+
+/-- **Proposition 7.1** (`divSandpileUpperBound_of_shellIteration`; on Lemmas 6.8 (b) and 7.2 corrected). -/
 theorem divSandpileUpperBound (H : MainHypotheses 𝒮) : DivSandpileUpperBoundStmt 𝒮 :=
-  divSandpileUpperBound_of_carved_inputs 𝒮 H.coneHarmonicBalls H.constantOrderLowerBoundDiv H.volumeGrowth
-    H.massBoundOdometer H.convergenceDivisible H.uniformConvergenceGreenKernel H.cellSizeEstimate
-    H.odometerBoundMass H.crudeUpperBound H.stoppedObstacleSetup
-    (stoppedShellConfinement_of_intermediateShell 𝒮 (intermediateShell_of_shellIteration 𝒮 H.shellIteration))
+  divSandpileUpperBound_of_shellIteration 𝒮 H.coneHarmonicBalls H.constantOrderLowerBoundDivLog H.volumeGrowth
+    H.massBoundOdometerAboveScale H.convergenceDivisible H.uniformConvergenceGreenKernel H.cellSizeEstimate
+    (odometerBoundMass 𝒮) H.crudeUpperBound H.shellIteration
 
 /-! ## Section 8 -/
 
@@ -280,17 +290,17 @@ theorem iDLAConstrainedConvergence (H : MainHypotheses 𝒮) : IDLAConstrainedCo
 end MainHypotheses
 
 /-- **Theorem 1.4** (convergence of IDLA), conditional on `MainHypotheses 𝒮`: Proposition 8.1 and the scaling
-argument of Section 8.1 (`convergenceOfIDLA_of_steps`). See the warning on `MainHypotheses` (group (d)). -/
+argument of Section 8.1 (`convergenceOfIDLA_of_coneSteps`). See the warning on `MainHypotheses` (group (d)). -/
 theorem convergenceOfIDLA_conditional (𝒮 : SpaceFillingSLEModel) (H : MainHypotheses 𝒮) :
     ConvergenceOfIDLAStmt 𝒮 :=
-  convergenceOfIDLA_of_steps 𝒮 H.iDLAConstrainedConvergence H.coneEnvironmentScaling H.harmonicBallFamilyScaling
-    H.coneScaleRadius H.scaledClusterExitTime
+  convergenceOfIDLA_of_coneSteps 𝒮 H.iDLAConstrainedConvergence H.coneEnvironmentScaling H.quantumConeScaling
+    H.lqgMeasureProperties H.coneHarmonicBallStrictGrowth H.coneHalfBallFamilyFunctional
 
 /-- **Theorem 1.6** (convergence of the divisible sandpile), conditional on `MainHypotheses 𝒮`
-(`convergenceOfDivSandpile_of_steps`). See the warning on `MainHypotheses` (group (d)). -/
+(`convergenceOfDivSandpile_of_coneSteps`). See the warning on `MainHypotheses` (group (d)). -/
 theorem convergenceOfDivSandpile_conditional (𝒮 : SpaceFillingSLEModel) (H : MainHypotheses 𝒮) :
     ConvergenceOfDivSandpileStmt 𝒮 :=
-  convergenceOfDivSandpile_of_steps 𝒮 H.iDLAConstrainedConvergence H.coneEnvironmentScaling
-    H.harmonicBallFamilyScaling H.coneScaleRadius H.scaledClusterExitTime
+  convergenceOfDivSandpile_of_coneSteps 𝒮 H.iDLAConstrainedConvergence H.coneEnvironmentScaling
+    H.quantumConeScaling H.lqgMeasureProperties H.coneHarmonicBallStrictGrowth H.coneHalfBallFamilyFunctional
 
 end MatedCRT

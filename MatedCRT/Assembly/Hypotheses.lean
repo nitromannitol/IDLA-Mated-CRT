@@ -1,5 +1,7 @@
 import MatedCRT
-import MatedCRT.Steps.Sec1.Convergence
+import MatedCRT.Proofs.Sec1.Main
+import MatedCRT.Proofs.Measurability.ConeScaleInputs
+import MatedCRT.Steps.Sec2.ConeHarmonicBallsUpToFixedTime
 import MatedCRT.Steps.Sec2.ConeHarmonicBalls
 import MatedCRT.Steps.Sec3.DiscretePotentialTightness
 import MatedCRT.Steps.Sec3.UniformConvergenceGreenKernel
@@ -8,19 +10,16 @@ import MatedCRT.Steps.Sec3.ConvergenceHarmonicFunctions
 import MatedCRT.Steps.Sec3.ConvergenceNormalizedExitTime
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.OfInteriorBoundary
 import MatedCRT.Steps.Sec4.ConvergenceDivisible
-import MatedCRT.Proofs.Sec5.MeanValueInequality.NormalizedStep
 import MatedCRT.Steps.Sec4.DivSandpileLowerBound
-import MatedCRT.Steps.Sec4.ObstacleSpecialization
-import MatedCRT.Steps.Sec4.SubsequentialConvergence
-import MatedCRT.Steps.Sec4.SubsequentialProperties
-import MatedCRT.Steps.Sec5.GeneralIDLALowerBound
+import MatedCRT.Proofs.Sec4.SubsequentialConvergence.Corrected
+import MatedCRT.Proofs.Sec4.SubsequentialProperties.Corrected
 import MatedCRT.Steps.Sec5.IDLALowerBound
 import MatedCRT.Steps.Sec5.MeanValueInequality
-import MatedCRT.Proofs.Sec5.LLowerBound.GreenSum
+import MatedCRT.Proofs.Sec5.MeanValueInequality.SurplusSteps
 import MatedCRT.Steps.Sec6.IDLAUpperBound
-import MatedCRT.Steps.Sec6.ConstantOrderLowerBoundDiv
-import MatedCRT.Steps.Sec6.GoodAnnulusPrevalence
-import MatedCRT.Steps.Sec6.AnnulusHit
+import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.Final
+import MatedCRT.Proofs.Sec6.AnnulusHit.Main
+import MatedCRT.Proofs.Sec6.GoodAnnulusPrevalence.Main
 import MatedCRT.Steps.Sec7.DivSandpileUpperBound
 
 /-!
@@ -35,30 +34,33 @@ The fields are grouped:
 * (a) cited results of the paper (Draft statements of results the paper quotes from the literature), and the
   statement of [BG22] the paper cites from the harmonic-balls formalization;
 * (b) literature inputs (`...Input`, MatedCRT/External);
-* (c) open named steps (`...Step`, MatedCRT/Steps), with their owner from STATUS.md and tasks/*.md (2026-11-04);
-* (d) Draft statements awaiting an operator ruling: they are false or open as drafted, no reduction proves them, and a
-  committed reduction on the main line still consumes the Draft form;
+* (c) open named steps (`...Step`), with their owner from docs/campaign/REDUCTIONS.md (2026-11-05 00:40Z);
+* (d) statements awaiting an operator ruling: a Draft reported false as drafted that a committed reduction still
+  consumes, and a corrected cited statement whose admission is pending;
 * (e) paper-owned numbered results with no committed reduction yet.
 
+No field is a Draft statement refuted in Lean (MatedCRT/Audit/Main.lean checks this against MatedCRT/Audit/*).
 This file is regenerated as steps close: a field disappears when its Prop is proved or reduced.
 -/
 
 namespace MatedCRT
 
 /-- The remaining hypotheses of the conditional proof of Theorems 1.4 and 1.6 for the space-filling SLE model `𝒮`.
-Field counts: (a) 10, (b) 2, (c) 36, (d) 4, (e) 3.
+Field counts: (a) 11, (b) 3, (c) 32, (d) 2, (e) 1; total 49.
 
-WARNING: as long as group (d) holds the Draft forms of Lemmas 4.4 (E-c1-1), 3.1 (E-c1-4), 7.2 (E-c3-2, refuted) and
-6.8 (E-A10 (b)), which are reported false as drafted, this structure is expected to be unsatisfiable and the
-conditional theorems are vacuous. They become meaningful once the consumers (4.6, 4.8, 3.3, 3.7, 7.1, 7.3, 7.4) are
-rerouted through the corrected forms, or the operator replaces the Draft statements. -/
+WARNING: group (d) holds the Draft Lemma 3.1 (`DiscretePotentialTightnessStmt`), reported false for non-open `D`
+(ESCALATIONS E-c1-4, by a written argument only). If that argument is right, this structure is unsatisfiable and the
+conditional theorems are vacuous until its two consumers, Lemmas 3.3 (m1) and 3.7 (x1), are rerouted through
+`DiscretePotentialTightnessCorrectedStmt` or the operator replaces the Draft. -/
 structure MainHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   -- (a) Cited results
-  /-- **Lemma 2.7** (cited, volume growth of cells). Used by 2.17, 5.1, 6.7 (b), 6.8 (b), 7.1. -/
+  /-- **Fact 2.2** (cited, properties of the LQG measure, DS11). Used by 1.4, 1.6, 2.3 (through 2.5). -/
+  lqgMeasureProperties : LQGMeasurePropertiesStmt
+  /-- **Lemma 2.7** (cited, volume growth of cells). Used by 2.17, 3.1 (corrected), 4.1, 6.8 (b), 7.1. -/
   volumeGrowth : VolumeGrowthStmt
   /-- **Lemma 2.8** (cited, cell size estimate). -/
   cellSizeEstimate : CellSizeEstimateStmt 𝒮
-  /-- **Lemma 2.9** (cited, convergence of the counting measure). Used by 3.7, 5.4, 6.8. -/
+  /-- **Lemma 2.9** (cited, convergence of the counting measure). Used by 3.7, 5.4, 6.8 (b). -/
   countingMeasureConvergence : CountingMeasureConvergenceStmt 𝒮
   /-- **Lemma 2.10** (cited, convergence of the degree measure). Used by 3.3. -/
   degreeMeasureConvergence : DegreeMeasureConvergenceStmt 𝒮
@@ -68,38 +70,43 @@ structure MainHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   greenKernelUpperBound : GreenKernelUpperBoundStmt 𝒮
   /-- **Lemma 2.15** (cited, crude bound for the Green function). Used by 5.4. -/
   greenFunctionCrudeBound : GreenFunctionCrudeBoundStmt 𝒮
-  /-- **Lemma 2.16** (cited, lower bound for the Green kernel). Used by 5.4, 6.8. -/
+  /-- **Lemma 2.16** (cited, lower bound for the Green kernel). Used by 5.4, 6.8 (b), 7.2 (corrected). -/
   greenKernelLowerBound : GreenKernelLowerBoundStmt 𝒮
-  /-- **Lemma 2.18** (cited, exit time upper bound). Used by 2.19, 4.7, 5.3, 6.8. -/
+  /-- **Lemma 2.18** (cited, exit time upper bound). Used by 2.19, 3.1 (corrected), 4.7, 5.3, 6.8 (b). -/
   exitTimeUpperBound : ExitTimeUpperBoundStmt 𝒮
   /-- Hölder continuity of LQG Green potentials, the [BG22] statement cited in the proof of Lemma 3.5
   (`HarmonicBalls.GreenPotentialHolderStmt`, harmonic-balls Draft Section 2). -/
   greenPotentialHolder : _root_.HarmonicBalls.GreenPotentialHolderStmt.{0}
   -- (b) Literature inputs
-  /-- `MepsScalingInput` (External/SLE.lean): scaling of the expected exit time, used by Lemma 4.7. -/
+  /-- `MepsScalingInput` (External/SLE.lean): scaling of the expected exit time, used by 3.1 (corrected), 4.7. -/
   mepsScaling : MepsScalingInput 𝒮
   /-- `DegreeBoundInput` (External/SLE.lean): degree bound of the mated-CRT map, used by Lemma 7.4. -/
   degreeBound : DegreeBoundInput 𝒮
+  /-- `QuantumConeScalingInput` (External/QuantumCone.lean): scale invariance of the `γ`-quantum cone, used by 1.4,
+  1.6, 2.3 (through 2.5 and the measurability of its families). -/
+  quantumConeScaling : QuantumConeScalingInput
   -- (c) Open named steps
-  /-- Theorems 1.4, 1.6 from Proposition 8.1: the rescaled environment is valid (eq:scale-invariance-of-field-and-eta).
-  Owner: unassigned (carved by c3, Steps/Sec1/Convergence.lean). -/
+  /-- Theorems 1.4, 1.6: the rescaled environment is valid (eq:scale-invariance-of-field-and-eta, IR-c3-1). Owner: m1. -/
   coneEnvironmentScaling : ConeEnvironmentScalingStep 𝒮
-  /-- Theorems 1.4, 1.6: deterministic covariance of the harmonic-ball conditions under scaling. Owner: unassigned
-  (carved by c3). -/
-  harmonicBallFamilyScaling : HarmonicBallFamilyScalingStep
-  /-- Theorems 1.4, 1.6: the cone scale radius `R_b` is an a.s. positive random variable. Owner: unassigned (c3). -/
-  coneScaleRadius : ConeScaleRadiusStep
-  /-- Theorems 1.4, 1.6: eq:btb-converge-to-inf, `P[b T^b ≤ t] → 0`. Owner: unassigned (c3). -/
-  scaledClusterExitTime : ScaledClusterExitTimeStep
-  /-- Theorem 2.3: the families of Lemmas 2.4, 2.5 are random variables. Owner: A. -/
-  coneFamilyAEMeasurable : ConeFamilyAEMeasurableStep
-  /-- Lemma 3.1 (corrected form): asymptotic equicontinuity. Owner: c1. -/
-  tightnessEquicontinuity : TightnessEquicontinuityStep 𝒮
-  /-- Lemma 3.1 (corrected form): measurable selection of a convergent subsequence. Owner: c1. -/
-  tightnessSelection : TightnessSelectionStep 𝒮
+  /-- Lemma 2.4: existence of the whole-plane log-singular LQG objects. Owner: c5. -/
+  wholePlaneLogLQGExistence : WholePlaneLogLQGExistenceStep
+  /-- Lemma 2.4: harmonic balls of the whole-plane field. Owner: c5. -/
+  wholePlaneConeHarmonicBalls : WholePlaneConeHarmonicBallsStep
+  /-- Lemma 2.4: whole-plane harmonic balls at small times. Owner: c5. -/
+  wholePlaneHarmonicBallsSmallTime : WholePlaneHarmonicBallsSmallTimeStep
+  /-- Lemma 2.4: restriction to the cone. Owner: c5. -/
+  coneRestriction : ConeRestrictionStep
+  /-- Lemma 2.4: locality of the cone harmonic balls. Owner: c5. -/
+  coneHarmonicBallLocality : ConeHarmonicBallLocalityStep
+  /-- Lemmas 2.4, 2.5, Theorems 1.4, 1.6: strict growth of the cone harmonic balls (`T' = T`, E-c5-3, not in the
+  paper). Owner: c5. -/
+  coneHarmonicBallStrictGrowth : ConeHarmonicBallStrictGrowthStep
+  /-- Lemma 2.5, Theorems 1.4, 1.6: the half-ball family is a functional of the field. Owner: c5. -/
+  coneHalfBallFamilyFunctional : ConeHalfBallFamilyFunctionalStep
   /-- Lemma 3.3: interior estimate. Owner: m1. -/
   greenKernelInterior : GreenKernelInteriorStep 𝒮
-  /-- Lemma 3.3: boundary estimate. Owner: m1. -/
+  /-- Lemma 3.3: boundary estimate. PROVED (`greenKernelBoundaryStep`, m1) but not importable together with Lemma 3.7
+  (F12: `MatedCRT.harmonicAt_comp_add_const` is declared by m1 and by x1). Owner: m1/x1 (rename). -/
   greenKernelBoundary : GreenKernelBoundaryStep 𝒮
   /-- Lemma 3.5: identification of the limit. Owner: m1. -/
   dirichletLimit : DirichletLimitStep 𝒮
@@ -111,73 +118,51 @@ structure MainHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   harmonicPathExit : HarmonicPathExitStep 𝒮
   /-- Lemma 3.6: the exit cell. Owner: m2. -/
   harmonicExitCell : HarmonicExitCellStep 𝒮
-  /-- Lemma 3.7 (`convergenceNormalizedExitTime_of_interior_discrete_boundary`): interior estimate. Owner: x1. -/
+  /-- Lemma 3.7: interior estimate. Owner: x1. -/
   normalizedExitInterior : NormalizedExitInteriorStep 𝒮
   /-- Lemma 3.7: boundary estimate for the discrete exit time. Owner: x1. -/
   discreteExitBoundary : DiscreteExitBoundaryStep 𝒮
-  /-- Theorem 4.1: measurability of the convergence event (F8: reduced only to unnamed hypotheses). Owner: x3. -/
-  convergenceDivisibleEventMeasurable : ConvergenceDivisibleEventMeasurableStep 𝒮
   /-- Proposition 4.2 and Proposition 5.1 (discrete-cluster form of 4.2): inner approximation of the obstacle
-  cluster. Owner: x3. -/
+  cluster (E-x3-1). Owner: x3. -/
   obstacleClusterInnerApproximation : ObstacleClusterInnerApproximationStep 𝒮
-  /-- Lemmas 4.3, 4.4 (corrected): connectivity of the ball interior (E-c1-2). Owner: c1. -/
-  ballInteriorConnected : BallInteriorConnectedStep 𝒮
-  /-- Lemma 4.6: local compactness of the odometers. Owner: x3. -/
-  odometerLocalCompactness : OdometerLocalCompactnessStep 𝒮
-  /-- Lemma 4.6: boundary upgrade. Owner: x3. -/
-  odometerBoundaryUpgrade : OdometerBoundaryUpgradeStep 𝒮
-  /-- Lemma 4.6: measurable selection of the subsequence. Owner: x3. -/
+  /-- Lemma 4.6 (corrected route): local compactness of the odometers. Owner: x3. -/
+  odometerLocalCompactnessCorrected : OdometerLocalCompactnessCorrectedStep 𝒮
+  /-- Lemma 4.6 (corrected route): boundary upgrade. Owner: x3. -/
+  odometerBoundaryUpgradeCorrected : OdometerBoundaryUpgradeCorrectedStep 𝒮
+  /-- Lemma 4.6: measurable selection of the subsequence (E-x3-2). Owner: x3. -/
   odometerMeasurableSelection : OdometerMeasurableSelectionStep 𝒮
-  /-- Lemma 4.8: the limit solves the obstacle problem. Owner: x3. -/
-  odometerObstacleApproximation : OdometerObstacleApproximationStep 𝒮
-  /-- Lemma 4.8: distributional limit of the Laplacians. Owner: x3. -/
-  odometerDistributionalLimit : OdometerDistributionalLimitStep 𝒮
+  /-- Lemma 4.8 (corrected route): distributional limit of the Laplacians. Owner: x3. -/
+  odometerDistributionalLimitCorrected : OdometerDistributionalLimitCorrectedStep 𝒮
   /-- Proposition 5.1: the stopped form, not given by the printed proof. Owner: c2. -/
   iDLALowerBoundStopped : IDLALowerBoundStoppedStep 𝒮
-  /-- Lemma 5.3 (`meanValueInequality_of_surplus`): the surplus step (E-x1-1). Owner: x1. -/
-  meanValueSurplus : MeanValueSurplusStep 𝒮
-  /-- Proposition 6.1: measurability of the boundary layer event. Owner: c2. -/
-  boundaryLayerMeasurable : BoundaryLayerMeasurableStep 𝒮
-  /-- Lemma 6.8 (E-A10 (b) form): measurability of the good scale events. Owner: c4. -/
-  goodScaleEventMeasurable : GoodScaleEventMeasurableStep 𝒮
-  /-- Lemma 6.4 (through `annulusIterateConeTransfer`, IR-c4-5): restriction of the cone field to annuli has mean
-  zero. Owner: c4. -/
+  /-- Lemma 5.3 (through `meanValueSurplusStep_of_lower`): the lower surplus estimate (E-x1-1). Owner: x1. -/
+  meanValueSurplusLower : MeanValueSurplusLowerStep 𝒮
+  /-- Lemmas 5.3, 6.8 (b): the LQG measure is a measurable function of the field (replaces the false
+  `GoodScaleEventMeasurableStep`, E-c2-4). Owner: c2. -/
+  lqgMeasureFieldMeasurable : LQGMeasureFieldMeasurableStep 𝒮
+  /-- Lemma 6.4: restriction of the cone field to annuli has mean zero (IR-c4-5). Owner: c4. -/
   coneMeanZeroRestriction : ConeMeanZeroRestrictionStep
-  /-- Lemma 6.4: locality of the good annulus events (IR-c4-6). Owner: c4. -/
-  goodAnnulusEventLocality : GoodAnnulusEventLocalityStep
+  /-- Lemma 6.4: circle averages modulo constants (locality of the good annulus events, IR-c4-6). Owner: c4. -/
+  circleAverageModConst : CircleAverageModConstStep
   /-- Lemma 6.5: existence of the whole-plane LQG objects (IR-c4-1). Owner: c4. -/
   wholePlaneLQGExistence : WholePlaneLQGExistenceStep
   /-- Lemma 6.5: Weyl comparison of the cone and whole-plane fields (IR-c4-2). Owner: c4. -/
   coneWholePlaneWeylComparison : ConeWholePlaneWeylComparisonStep
   /-- Lemma 6.5: coordinate change (IR-c4-3). Owner: c4. -/
   wholePlaneLQGCoordinateChange : WholePlaneLQGCoordinateChangeStep
-  /-- Lemma 6.5: tightness of the good annulus events (IR-c4-4). Owner: c4. -/
-  wholePlaneGoodAnnulusTightness : WholePlaneGoodAnnulusTightnessStep
-  /-- Proposition 7.1: setup of the stopped obstacle problem. Owner: x2. -/
-  stoppedObstacleSetup : StoppedObstacleSetupStep 𝒮
-  /-- Proposition 7.1 (through `intermediateShell_of_shellIteration`, `stoppedShellConfinement_of_intermediateShell`):
-  the shell iteration. Owner: x2. -/
+  /-- Lemma 6.5: upper volume tail of the whole-plane LQG measure (IR-c4-4). Owner: c4. -/
+  wholePlaneUpperVolumeTail : WholePlaneUpperVolumeTailStep
+  /-- Proposition 7.1 (through `divSandpileUpperBound_of_shellIteration`): the shell iteration. Owner: x2. -/
   shellIteration : ShellIterationStep 𝒮
-  -- (d) Draft statements awaiting an operator ruling
-  /-- **Lemma 4.4**, Draft form (OPEN, E-c1-1: false for large `ε`). Consumed by 4.6, 4.8 (x3) and 7.3, 7.4 (through
-  `stoppedOdometerLaplacianStep_of_draft`); only the corrected form `DiscreteLaplacianBoundCorrectedStmt` is proved
-  (used here by 5.3). -/
-  discreteLaplacianBound : DiscreteLaplacianBoundStmt 𝒮
-  /-- **Lemma 3.1**, Draft form (E-c1-4: false for closed `D`; chk N1: the Hölder hypothesis must be `C' ε⁻¹`).
-  Consumed by 3.3, 3.7, 4.6; only `DiscretePotentialTightnessCorrectedStmt` is reduced (used here by 3.5). -/
+  -- (d) Awaiting an operator ruling
+  /-- **Lemma 3.1**, Draft form (E-c1-4: false for closed `D`, by a written argument; review-L32 N1, N3). Consumed by
+  Lemmas 3.3 (m1) and 3.7 (x1); Lemmas 3.5 and 4.6 use the corrected form, reduced here from 2.7, 2.18, `MepsScalingInput`
+  and the corrected Lemma 3.2. -/
   discretePotentialTightness : DiscretePotentialTightnessStmt 𝒮
-  /-- **Lemma 6.8**, Draft form without log loss (E-A10 (b): only the log-loss form `ConstantOrderLowerBoundDivLogStmt`
-  is reduced, used here by 6.7 (b)-6.10). Consumed by Proposition 7.1 (x2). -/
-  constantOrderLowerBoundDiv : ConstantOrderLowerBoundDivStmt 𝒮
-  /-- **Lemma 7.2**, Draft form (REFUTED, E-c3-2: false for `s` below the cell scale). Consumed by Proposition 7.1 (x2);
-  only `MassBoundOdometerAboveScaleStmt` (`s ≥ ε^β`) is reduced, and its module cannot be imported together with 7.1's
-  (F6, `MatedCRT.Sec7.vertexPoint_mem_cell`). With this field `MainHypotheses` is unsatisfiable until 7.1 is rerouted. -/
-  massBoundOdometer : MassBoundOdometerStmt 𝒮
+  /-- The corrected cited **Lemma 3.2** (GMS19 Theorem 3.9; review-L32 "minimal corrected statement", ruling (L2)
+  pending; the Draft 3.2 is false by review-L32 F1). Used by the corrected Lemma 3.1. -/
+  discreteHolderContinuityCorrected : DiscreteHolderContinuityCorrectedStep 𝒮
   -- (e) Paper-owned results with no committed reduction
-  /-- **Lemma 2.4** (harmonic balls of the cone up to a fixed time). Owner: A (Steps/Sec2 untracked). -/
-  coneHarmonicBallsUpToFixedTime : ConeHarmonicBallsUpToFixedTimeStmt
-  /-- **Lemma 2.5** (scale invariance up to a fixed time). Owner: A. -/
-  coneScaleInvarianceUpToFixedTime : ConeScaleInvarianceUpToFixedTimeStmt
   /-- **Lemma 3.4** (convergence of integrals of the Green function). Owner: m2. Used by 3.3, 3.5. -/
   integralConvergenceGreenFunction : IntegralConvergenceGreenFunctionStmt 𝒮
 
