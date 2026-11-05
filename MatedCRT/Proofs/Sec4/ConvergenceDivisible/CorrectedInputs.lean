@@ -1,6 +1,7 @@
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.ConeScalingPositivity
 import MatedCRT.Proofs.Sec4.SubsequentialConvergence.Corrected
 import MatedCRT.Proofs.Sec4.SubsequentialProperties.Corrected
+import MatedCRT.Proofs.Sec4.SubsequentialProperties.ObstacleApproximation
 
 /-!
 # Theorem 4.1 from corrected subsequential reductions
@@ -22,10 +23,10 @@ theorem convergenceDivisible_of_corrected_inputs (𝒮 : SpaceFillingSLEModel)
     (hlocal : OdometerLocalCompactnessCorrectedStep 𝒮)
     (hboundary : OdometerBoundaryUpgradeCorrectedStep 𝒮)
     (hselect : OdometerMeasurableSelectionStep 𝒮)
-    (hobs : OdometerObstacleApproximationStep 𝒮)
     (hlap : OdometerDistributionalLimitCorrectedStep 𝒮) : ConvergenceDivisibleStmt 𝒮 :=
   convergenceDivisible_of_scaling 𝒮
-    (subsequentialProperties_of_corrected 𝒮 h33 h35 h37 h213 hobs hlap)
+    (subsequentialProperties_of_corrected 𝒮 h33 h35 h37 h213
+      (odometerObstacleApproximationStep 𝒮) hlap)
     (subsequentialConvergence_of_corrected 𝒮 h47 h31 h35 hlocal hboundary hselect)
     h27 hscale
 
@@ -40,11 +41,10 @@ theorem convergenceDivisible_of_corrected_reductions (𝒮 : SpaceFillingSLEMode
     (hlocal : OdometerLocalCompactnessCorrectedStep 𝒮)
     (hboundary : OdometerBoundaryUpgradeCorrectedStep 𝒮)
     (hselect : OdometerMeasurableSelectionStep 𝒮)
-    (hobs : OdometerObstacleApproximationStep 𝒮)
     (hlap : OdometerDistributionalLimitCorrectedStep 𝒮) : ConvergenceDivisibleStmt 𝒮 :=
   convergenceDivisible_of_corrected_inputs 𝒮 h27 hscale
     (equibounded_of_inputs h27 h218 hm)
     (discretePotentialTightnessCorrected_of_inputs hm h27 h218 hH)
-    h33 h35 h37 h213 hlocal hboundary hselect hobs hlap
+    h33 h35 h37 h213 hlocal hboundary hselect hlap
 
 end MatedCRT

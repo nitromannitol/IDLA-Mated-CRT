@@ -12,7 +12,7 @@ open MeasureTheory Metric Set HarmonicBalls
 theorem rescaledMeasure_ball (μ : Measure ℂ) {s : ℝ} (hs : 0 < s)
     (b : ℝ) (z : ℂ) (r : ℝ) :
     rescaledMeasure μ s b (ball z r) =
-      (ENNReal.ofReal b)⁻¹ * μ (ball ((s : ℂ) * z) (s * r)) := by
+      ENNReal.ofReal b⁻¹ * μ (ball ((s : ℂ) * z) (s * r)) := by
   have hs' : (s : ℂ) ≠ 0 := by exact_mod_cast hs.ne'
   unfold rescaledMeasure
   rw [Measure.smul_apply, smul_eq_mul]
@@ -37,7 +37,8 @@ theorem volumeGrowth_of_rescaledMeasure
   · refine ⟨1, by norm_num, fun r hr hr1 z hz => ?_⟩
     have heq : ENNReal.ofReal b *
         rescaledMeasure μ s b (ball ((s : ℂ)⁻¹ * z) (s⁻¹ * r)) = μ (ball z r) := by
-      rw [rescaledMeasure_ball μ hs b, mul_inv_cancel_left₀ hs', mul_inv_cancel_left₀ hs.ne']
+      rw [rescaledMeasure_ball μ hs b, ENNReal.ofReal_inv_of_pos hb,
+        mul_inv_cancel_left₀ hs', mul_inv_cancel_left₀ hs.ne']
       rw [← ENNReal.ofReal_inv_of_pos hb, ← mul_assoc,
         ← ENNReal.ofReal_mul hb.le, mul_inv_cancel₀ hb.ne', ENNReal.ofReal_one, one_mul]
     exact ⟨le_of_eq heq, le_of_eq heq.symm⟩
