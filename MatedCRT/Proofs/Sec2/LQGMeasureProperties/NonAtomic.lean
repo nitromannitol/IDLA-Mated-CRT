@@ -10,15 +10,12 @@ growth estimate (Lemma 2.7, BG20 Lemma A.1): with polynomially high probability 
 `z ∈ B_{1-δ}`, so by Borel-Cantelli along `δ = 2⁻ᵏ` a.s. `μ_h({x}) ≤ μ_h(B_{2⁻ᵏ}(x)) → 0` for every `x ∈ B_1`
 (`ae_measure_singleton_eq_zero_of_volumeGrowth`).
 
-Two other routes do not give all points at once:
-* a fixed-point statement (`μ_h({x}) = 0` a.s. for each fixed `x`; for the whole-plane field this is Leonardo Bonanno's
-  `MatedCRTHarmonic.GMCFacts.ae_measure_singleton_eq_zero`, `LatticeProb/Bonanno/MatedCRTHarmonic/GMCFacts/NoAtom.lean`)
-  together with Fubini only gives `∫ P(μ_h({x}) > 0) dx = 0`, i.e. a.s. the set of atoms is Lebesgue-null, which holds
-  for every locally finite measure (its atoms are countable);
-* the cone field is not translation invariant and its dilations by a deterministic `s` do not preserve its law, so the
-  disk `B_1` of Lemma 2.7 cannot be moved to other points without transferring the volume growth event through the law
-  of the rescaled cone (`QuantumConeScalingInput`), which needs `μ_h` as a measurable function of the circle average
-  process.
+A fixed-point statement (`μ_h({x}) = 0` a.s. for each fixed `x`; for the whole-plane field this is Leonardo Bonanno's
+`MatedCRTHarmonic.GMCFacts.ae_measure_singleton_eq_zero`, `LatticeProb/Bonanno/MatedCRTHarmonic/GMCFacts/NoAtom.lean`)
+does not give all points at once: with Fubini it only gives `∫ P(μ_h({x}) > 0) dx = 0`, i.e. a.s. the set of atoms is
+Lebesgue-null, which holds for every locally finite measure (its atoms are countable). The cone field is not
+translation invariant and its deterministic dilations do not preserve its law; the unit disk is moved to the disks
+`B_{R_b}` by the scale invariance of the cone at the random radii `R_b` (`NonAtomicScaling.lean`).
 -/
 
 namespace MatedCRT.LQGMeasure
