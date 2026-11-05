@@ -191,6 +191,25 @@ theorem three_four_measurable_extension {Ω : Type} [MeasurableSpace Ω]
   · intro ω x hx
     simp [g, hx]
 
+/-- Interior cells of a proper domain have positive marked-point distance from its frontier. -/
+theorem three_two_interior_distance_pos {ε : ℝ} {η : ℝ → ℂ} {D : Set ℂ} {a : ℤ}
+    (hε : 0 ≤ ε) (hD : D ≠ Set.univ)
+    (ha : a ∈ interiorCellVertices ε η D) :
+    0 < Metric.infDist (vertexPoint ε η a) (frontier D) := by
+  have hnonempty : D.Nonempty := by
+    obtain ⟨x, _, hx⟩ := ha.1
+    exact ⟨x, hx⟩
+  have hfrontier : (frontier D).Nonempty := nonempty_frontier_iff.mpr ⟨hnonempty, hD⟩
+  apply (isClosed_frontier.notMem_iff_infDist_pos hfrontier).1
+  intro hmem
+  exact ha.2 ⟨vertexPoint ε η a, Sec7.vertexPoint_mem_cell hε a, hmem⟩
+
+/-- At positive boundary distance, the multiplied and quotient Hölder bounds agree. -/
+theorem three_two_holder_quotient_iff (L A u d ξ : ℝ) (hu : 0 ≤ u) (hd : 0 < d) :
+    L * d ^ ξ ≤ A * u ^ ξ ↔ L ≤ A * (u / d) ^ ξ := by
+  rw [Real.div_rpow hu (le_of_lt hd), ← mul_div_assoc,
+    le_div_iff₀ (Real.rpow_pos_of_pos hd ξ)]
+
 /-- The discrete Green sum in Lemma 3.4 depends only on test-function values on the ball. -/
 theorem three_four_sum_ext (m : ℤ → ℤ → ℕ) {ε : ℝ} {η : ℝ → ℂ}
     (hε : 0 < ε) (hη : Continuous η) (z : ℂ) (r : ℝ) (a : ℤ)
@@ -242,6 +261,8 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms five_four_green_quotient_semantics
 #print axioms three_four_sum_ext
 #print axioms three_four_measurable_extension
+#print axioms three_two_interior_distance_pos
+#print axioms three_two_holder_quotient_iff
 #print axioms three_five_draft_reduction
 #print axioms five_two_draft_reduction
 #print axioms five_three_draft_reduction
