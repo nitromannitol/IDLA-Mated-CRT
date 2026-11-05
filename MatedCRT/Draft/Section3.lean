@@ -70,7 +70,8 @@ The constants are deterministic and the estimates hold with polynomially high pr
 multiplied by the distance to the boundary raised to `ξ`. -/
 def DiscreteHolderContinuityStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ ξ A β : ℝ, 0 < ξ ∧ ξ < 1 ∧ 0 < A ∧ 0 < β ∧ β < 1 ∧
-  ∀ χ C' : ℝ, 0 < χ → χ ≤ 1 → 0 < C' → ∃ ξ' C : ℝ, 0 < ξ' ∧ ξ' < 1 ∧ 0 < C ∧
+  ∀ χ : ℝ, 0 < χ → χ ≤ 1 → ∃ ξ' : ℝ, 0 < ξ' ∧ ξ' < 1 ∧ ξ' ≤ χ ∧
+  ∀ C' : ℝ, 0 < C' → ∃ C : ℝ, 0 < C ∧
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   PolyHighProb S.P fun ε => {ω | ∀ (D : Set ℂ) (f : ℤ → ℝ), D ⊆ ball 0 ρ → IsOpen D → IsConnected D →
     (∀ a ∈ interiorCellVertices ε (S.η ω) D, matedLaplacian (S.mult ε ω) f a = 0) →

@@ -14,4 +14,4 @@
 | Lemma 4.8, barrier via 3.5 | BREAKS through N1 for its nonconstant boundary data φδ + δ; the scaled-data repair applies. |
 | Lemma 4.8 via 3.5 | BREAKS through N1: polynomial nonconstant φ requires the scaled-data repair to 3.1 and hence the 3.5 proof. |
 
-N1 needs its own correction to Lemma 3.1, beyond the authorized [C6] correction. See `review-L32.md`, N1–N3. The requested Lean formulation from that review quantifies `∃ ξ′` after both χ and C′, and does not explicitly require ξ′ ≤ χ; the paper states ξ′ chosen after χ and before C′, with ξ′ ≤ χ. Thus the Lean formulation is weaker in its quantifier order and does not literally encode that paper requirement. Resolving this fidelity difference needs an explicit decision on the requested Lean form or a proof strengthening it.
+N1 needs its own correction to Lemma 3.1, beyond the authorized [C6] correction. See `review-L32.md`, N1–N3. The Draft now chooses ξ′ after χ and before C′, with ξ′ ≤ χ, as in the corrected paper. The existing proof step retains the weaker quantifier order; `discreteHolderContinuityCorrected_of_draft` supplies it from the Draft.

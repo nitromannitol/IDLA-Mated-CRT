@@ -109,9 +109,16 @@ theorem discretePotentialTightnessOnOpen_of_corrected (h : DiscretePotentialTigh
 
 /-! ## Lemma 3.2: adopted corrected statement -/
 
-/-- The adopted Draft statement is definitionally the corrected step. -/
+/-- The adopted Draft statement implies the corrected step, whose exponent may also depend on `C'`. -/
 theorem discreteHolderContinuityCorrected_of_draft (h : DiscreteHolderContinuityStmt 𝒮) :
-    DiscreteHolderContinuityCorrectedStep 𝒮 := h
+    DiscreteHolderContinuityCorrectedStep 𝒮 := by
+  intro γ hγ hγ2 ρ hρ hρ1
+  obtain ⟨ξ, A, β, hξ, hξ1, hA, hβ, hβ1, h⟩ := h γ hγ hγ2 ρ hρ hρ1
+  refine ⟨ξ, A, β, hξ, hξ1, hA, hβ, hβ1, ?_⟩
+  intro χ C' hχ hχ1 hC'
+  obtain ⟨ξ', hξ', hξ'1, _, h⟩ := h χ hχ hχ1
+  obtain ⟨C, hC, h⟩ := h C' hC'
+  exact ⟨ξ', C, hξ', hξ'1, hC, h⟩
 
 /-! ## Lemmas 4.4 and 4.5: Draft ⇒ corrected; the Draft forms are false (E-c1-1) -/
 

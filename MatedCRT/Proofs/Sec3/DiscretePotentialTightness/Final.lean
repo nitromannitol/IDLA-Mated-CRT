@@ -11,7 +11,7 @@ Its hypotheses are:
 * `VolumeGrowthStmt` (Draft, Lemma 2.7; BG20 Lemma A.1), cited. It gives Lemma 2.17 (`BoundedExitTimeRVStmt`)
   through `boundedExitTimeRV_of_steps`;
 * `ExitTimeUpperBoundStmt` (Draft, Lemma 2.18; BG20 Proposition 5.1), cited;
-* `DiscreteHolderContinuityCorrectedStep` (Lemma 3.2, corrected [C6]; GMS19 Theorem 3.9), definitionally
+* `DiscreteHolderContinuityCorrectedStep` (Lemma 3.2, corrected [C6]; GMS19 Theorem 3.9),
   implied by `DiscreteHolderContinuityStmt` via `discreteHolderContinuityCorrected_of_draft`.
 
 The cells of adjacent vertices of the mated-CRT map intersect by `adjacentCellsMeetAeStep`
