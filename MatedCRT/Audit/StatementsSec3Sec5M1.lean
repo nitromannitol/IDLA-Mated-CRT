@@ -210,6 +210,48 @@ theorem three_two_holder_quotient_iff (L A u d ξ : ℝ) (hu : 0 ≤ u) (hd : 0 
   rw [Real.div_rpow hu (le_of_lt hd), ← mul_div_assoc,
     le_div_iff₀ (Real.rpow_pos_of_pos hd ξ)]
 
+/-- A boundary cell can have its marked point outside the closed ball at every positive mesh. -/
+theorem three_five_boundary_cell_marked_point (ε : ℝ) (hε : 0 < ε) :
+    let η : ℝ → ℂ := fun t => ((1 + t : ℝ) : ℂ)
+    (1 : ℤ) ∈ cellVertices ε η (Metric.sphere 0 1) ∧
+      vertexPoint ε η 1 ∉ Metric.closedBall 0 1 := by
+  dsimp only
+  constructor
+  · refine ⟨(1 : ℂ), ?_, ?_⟩
+    · refine ⟨0, ?_, ?_⟩
+      · simp [hε.le]
+      · norm_num
+    · norm_num [Metric.mem_sphere, dist_zero_right]
+  · simp only [vertexPoint, Int.cast_one, mul_one, Metric.mem_closedBall, dist_zero_right,
+      Complex.norm_real, Real.norm_eq_abs]
+    rw [abs_of_pos (by linarith : 0 < 1 + ε)]
+    linarith
+
+/-- Closed-ball Hölder data alone do not determine the value at that marked point. -/
+theorem three_five_boundary_extensions_differ (ε : ℝ) (hε : 0 < ε) :
+    let η : ℝ → ℂ := fun t => ((1 + t : ℝ) : ℂ)
+    ∃ f g : ℂ → ℝ,
+      IsHolderContinuousOn f (Metric.closedBall 0 1) ∧
+      IsHolderContinuousOn g (Metric.closedBall 0 1) ∧
+      (∀ x ∈ Metric.closedBall 0 1, f x = g x) ∧
+      f (vertexPoint ε η 1) ≠ g (vertexPoint ε η 1) := by
+  classical
+  dsimp only
+  refine ⟨fun _ => 0, fun x => if x ∈ Metric.closedBall 0 1 then 0 else 1, ?_, ?_, ?_, ?_⟩
+  · refine ⟨0, 1, by norm_num, le_rfl, ?_⟩
+    intro x hx y hy
+    simp
+  · refine ⟨0, 1, by norm_num, le_rfl, ?_⟩
+    intro x hx y hy
+    simp [hx, hy]
+  · intro x hx
+    simp [hx]
+  · have h := (three_five_boundary_cell_marked_point ε hε).2
+    change (0 : ℝ) ≠ (if vertexPoint ε (fun t => ((1 + t : ℝ) : ℂ)) 1 ∈
+      Metric.closedBall 0 1 then 0 else 1)
+    rw [ite_eq_right h]
+    norm_num
+
 /-- The discrete Green sum in Lemma 3.4 depends only on test-function values on the ball. -/
 theorem three_four_sum_ext (m : ℤ → ℤ → ℕ) {ε : ℝ} {η : ℝ → ℂ}
     (hε : 0 < ε) (hη : Continuous η) (z : ℂ) (r : ℝ) (a : ℤ)
@@ -263,6 +305,8 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms three_four_measurable_extension
 #print axioms three_two_interior_distance_pos
 #print axioms three_two_holder_quotient_iff
+#print axioms three_five_boundary_cell_marked_point
+#print axioms three_five_boundary_extensions_differ
 #print axioms three_five_draft_reduction
 #print axioms five_two_draft_reduction
 #print axioms five_three_draft_reduction
