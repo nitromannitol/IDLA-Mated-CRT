@@ -1,6 +1,11 @@
 import MatedCRT.Proofs.Sec3.UniformConvergenceGreenKernel.ContinuumBoundary
+import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.HarmonicTranslation
 
-/-! # Translation of harmonic functions -/
+/-! # Translation of harmonic functions
+
+`harmonicAt_comp_add_const` (translation of harmonic functions) is imported from
+`Proofs/Sec3/ConvergenceNormalizedExitTime/HarmonicTranslation` (Lemma 3.7), so that Lemmas 3.3
+and 3.7 import together (F12). -/
 
 open Filter InnerProductSpace
 open scoped Topology Laplacian
@@ -13,14 +18,6 @@ theorem laplacian_comp_add_const (f : ℂ → ℝ) (a x : ℂ) :
   rw [laplacian_eq_iteratedFDeriv_stdOrthonormalBasis,
     laplacian_eq_iteratedFDeriv_stdOrthonormalBasis]
   simp only [iteratedFDeriv_comp_add_right]
-
-/-- A translate of a function harmonic near `x + a` is harmonic near `x`. -/
-theorem harmonicAt_comp_add_const {f : ℂ → ℝ} {a x : ℂ}
-    (hf : HarmonicAt f (x + a)) : HarmonicAt (fun z => f (z + a)) x := by
-  have hc : ContDiffAt ℝ 2 (fun z : ℂ => z + a) x := by fun_prop
-  refine ⟨hf.1.comp x hc, ?_⟩
-  filter_upwards [((continuousAt_id.add_const a).tendsto.eventually hf.2)] with y hy
-  simpa only [laplacian_comp_add_const, Pi.zero_apply, id_eq] using hy
 
 /-- Translating a harmonic minorant preserves the minorant relation. -/
 theorem isHarmonicMinorant_comp_add_const {O : Set ℂ} {u : ℂ → EReal} {h : ℂ → ℝ}

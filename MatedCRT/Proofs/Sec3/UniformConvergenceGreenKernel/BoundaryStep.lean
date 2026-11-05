@@ -55,11 +55,11 @@ theorem greenKernelBoundaryStep (𝒮 : SpaceFillingSLEModel) : GreenKernelBound
   have hcv := hinterior h210 h34 h214 h28 h31 γ hγ hγ2 ρ hρ hρ1 Ω S hS
     r z y hr hball hy (q + d) hq0 hqr K hKsub (q - d - dist y z) hKdist hKaway (δ / 4) hδ4
   have hcvprob : ProbTendsToOne S.P fun ε =>
-      {ω | ∀ x ∈ K, |rescaledGreenKernel S r z y ε ω x -
+      {ω | ∀ x ∈ K, |rescaledBallGreenKernel S r z y ε ω x -
         S.c₀ / 6 * greenFunction (ball z r) y x| ≤ δ / 4} := by
     unfold ProbTendsToOne
     change Tendsto (fun ε => S.P {ω | ¬ ∀ x ∈ K,
-      |rescaledGreenKernel S r z y ε ω x - S.c₀ / 6 * greenFunction (ball z r) y x| ≤ δ / 4})
+      |rescaledBallGreenKernel S r z y ε ω x - S.c₀ / 6 * greenFunction (ball z r) y x| ≤ δ / 4})
       (𝓝[>] (0 : ℝ)) (𝓝 0)
     simpa only [not_forall, not_imp, not_le, exists_prop] using hcv
   let G : Set Ω := {ω | IsAreaParametrized (S.μ ω) (S.η ω) ∧
@@ -82,7 +82,7 @@ theorem greenKernelBoundaryStep (𝒮 : SpaceFillingSLEModel) : GreenKernelBound
     intro b hb x hx w hw
     exact (dist_le_diam_of_mem (isCompact_Icc.image hη.1).isBounded hx hw).trans (hdiam b hb)
   have hKbound : ∀ x : ℂ, q - d ≤ dist x z → dist x z < q + d →
-      |rescaledGreenKernel S r z y ε ω x| ≤ δ / 2 := by
+      |rescaledBallGreenKernel S r z y ε ω x| ≤ δ / 2 := by
     intro x hlo hhi
     have hx : x ∈ K := ⟨le_of_lt hhi, by change ¬ dist x z < q - d; linarith⟩
     have hdiff := abs_le.mp (hcvω x hx)
@@ -91,9 +91,9 @@ theorem greenKernelBoundaryStep (𝒮 : SpaceFillingSLEModel) : GreenKernelBound
     constructor <;> linarith
   let c : ℝ := (S.mε ε)⁻¹ * ε⁻¹
   let A := interiorCellVertices ε (S.η ω) (ball z r)
-  have hscale (x : ℂ) : rescaledGreenKernel S r z y ε ω x =
+  have hscale (x : ℂ) : rescaledBallGreenKernel S r z y ε ω x =
       c * greenKernel (S.mult ε ω) A (vertexOf ε (S.η ω) y) (vertexOf ε (S.η ω) x) := by
-    simp [rescaledGreenKernel, rescale, c, A, mul_assoc]
+    simp [rescaledBallGreenKernel, rescale, c, A, mul_assoc]
   have hpos : ∀ x : ℂ, q + d ≤ dist x z →
       c * greenKernel (S.mult ε ω) A (vertexOf ε (S.η ω) y) (vertexOf ε (S.η ω) x) ≤ δ / 2 := by
     apply scaled_greenKernel_vertexOf_le_of_small_cells hη hp hε (S.mult_symm ε ω)
@@ -114,7 +114,7 @@ theorem greenKernelBoundaryStep (𝒮 : SpaceFillingSLEModel) : GreenKernelBound
   have hxgreen : |S.c₀ / 6 * greenFunction (ball z r) y x| < δ / 4 := by
     apply hgreen x
     exact ⟨(hO hx.1).1, by change ¬ dist x z ≤ r₀; linarith⟩
-  have hkernel : |rescaledGreenKernel S r z y ε ω x| ≤ δ / 2 := by
+  have hkernel : |rescaledBallGreenKernel S r z y ε ω x| ≤ δ / 2 := by
     rw [hscale]
     apply abs_le.mpr
     constructor
@@ -123,15 +123,15 @@ theorem greenKernelBoundaryStep (𝒮 : SpaceFillingSLEModel) : GreenKernelBound
       linarith
     · exact hpos x hxout
   calc
-    |rescaledGreenKernel S r z y ε ω x - S.c₀ / 6 * greenFunction (ball z r) y x| ≤
-        |rescaledGreenKernel S r z y ε ω x| + |S.c₀ / 6 * greenFunction (ball z r) y x| := abs_sub _ _
+    |rescaledBallGreenKernel S r z y ε ω x - S.c₀ / 6 * greenFunction (ball z r) y x| ≤
+        |rescaledBallGreenKernel S r z y ε ω x| + |S.c₀ / 6 * greenFunction (ball z r) y x| := abs_sub _ _
     _ ≤ δ := by linarith
 
 /-- Lemma 3.3 follows from its interior identification step. -/
 theorem uniformConvergenceGreenKernel_of_interiorStep (𝒮 : SpaceFillingSLEModel)
     (h210 : DegreeMeasureConvergenceStmt 𝒮) (h34 : IntegralConvergenceGreenFunctionStmt 𝒮)
     (h214 : GreenKernelUpperBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
-    (h31 : DiscretePotentialTightnessStmt 𝒮) (h213 : MaximumPrincipleStmt 𝒮)
+    (h31 : DiscretePotentialTightnessCorrectedStmt 𝒮) (h213 : MaximumPrincipleStmt 𝒮)
     (hinterior : GreenKernelInteriorStep 𝒮) : UniformConvergenceGreenKernelStmt 𝒮 :=
   uniformConvergenceGreenKernel_of_steps 𝒮 h210 h34 h214 h28 h31 h213 hinterior
     (greenKernelBoundaryStep 𝒮)

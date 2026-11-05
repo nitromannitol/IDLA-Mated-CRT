@@ -1,4 +1,5 @@
 import MatedCRT.Proofs.Sec3.UniformConvergenceGreenKernel.SequenceClipping
+import MatedCRT.Steps.Sec3.DiscretePotentialTightness
 
 /-! # Local compactness from eventually harmonic data -/
 
@@ -6,15 +7,16 @@ namespace MatedCRT.GreenEnvironment
 
 open Set Filter MeasureTheory Topology Metric
 
-/-- The tightness theorem applies to data whose harmonicity and size estimates
-hold eventually almost surely, provided the graph and cell sets are measurable
-with respect to the field-and-curve sigma-algebra. -/
+/-- The corrected tightness theorem (Lemma 3.1, corrected) applies to data whose harmonicity and
+size estimates hold eventually almost surely, along polynomially summable deterministic scales,
+provided the graph and cell sets are measurable with respect to the field-and-curve
+sigma-algebra. -/
 theorem compactness_of_eventual_estimates (𝒮 : SpaceFillingSLEModel)
-    (h31 : DiscretePotentialTightnessStmt 𝒮) {γ ρ : ℝ}
+    (h31 : DiscretePotentialTightnessCorrectedStmt 𝒮) {γ ρ : ℝ}
     (hγ : 0 < γ) (hγ2 : γ < 2) (hρ : 0 < ρ) (hρ1 : ρ < 1)
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
-    (D : Set ℂ) (hD : D ⊆ ball 0 ρ) (hDc : IsConnected D)
-    (ε : ℕ → ℝ) (hε : ∀ n, 0 < ε n) (hεlim : Tendsto ε atTop (𝓝 0))
+    (D : Set ℂ) (hD : D ⊆ ball 0 ρ) (hDo : IsOpen D) (hDc : IsConnected D)
+    (ε : ℕ → ℝ) (hεs : IsPolySummableScales ε) (hεlim : Tendsto ε atTop (𝓝 0))
     (u : Ω → ℕ → ℤ → ℝ) (hu : ∀ n a, Measurable[S.envSigma] fun ω => u ω n a)
     (K : ℝ) (hK : 0 < K)
     (hM : ∀ n j k, Measurable[S.envSigma] fun ω => S.mult (ε n) ω j k)
@@ -30,6 +32,7 @@ theorem compactness_of_eventual_estimates (𝒮 : SpaceFillingSLEModel)
           TendstoUniformlyOn (fun k => rescale (S.mε (ε (Φ ω k))) (ε (Φ ω k))
             (S.η ω) (u ω (Φ ω k))) ubar atTop O := by
   classical
+  have hε : ∀ n, 0 < ε n := hεs.1
   have hclip : ∀ n, ∃ v : Ω → ℤ → ℝ,
       (∀ a, Measurable[S.envSigma] fun ω => v ω a) ∧
       (∀ ω a, a ∈ interiorCellVertices (ε n) (S.η ω) D →
@@ -49,9 +52,9 @@ theorem compactness_of_eventual_estimates (𝒮 : SpaceFillingSLEModel)
       (fun ω => u ω n) (hu n) K (ε n) hK.le (hε n)
   choose v hvm hvl hvb hve using hclip
   let U : Ω → ℕ → ℤ → ℝ := fun ω n => v n ω
-  obtain ⟨Φ, hΦm, hΦ⟩ := h31 γ hγ hγ2 ρ hρ hρ1 Ω S hS D hD hDc
+  obtain ⟨Φ, hΦm, hΦ⟩ := h31 γ hγ hγ2 ρ hρ hρ1 Ω S hS D hD hDo hDc ε hεs
     (fun _ n => ε n) U (fun _ => K) (fun _ => measurable_const)
-    (fun _ n => hε n) (fun _ => hεlim) hvm measurable_const (fun _ => hK)
+    (fun _ n => ⟨n, rfl⟩) (fun _ => hεlim) hvm measurable_const (fun _ => hK)
     (fun ω n a ha => by rw [hvl n ω a ha, abs_zero]; exact hK.le)
     (fun ω n a ha => hvb n ω a ha)
   refine ⟨Φ, hΦm, ?_⟩
