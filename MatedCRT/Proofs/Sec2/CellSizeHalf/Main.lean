@@ -1,5 +1,6 @@
 import MatedCRT.Steps.Sec2.CellSizeHalf
 import MatedCRT.Proofs.Sec2.CellSizeHalf.CellModel
+import MatedCRT.Proofs.Sec2.VolumeGrowthHalf.Domination
 import MatedCRT.Proofs.Infra.Setting
 import LatticeProb.Bonanno.MatedCRTHarmonic.GMSLemma27.Lemma27
 import LatticeProb.Bonanno.MatedCRTHarmonic.GMCFacts.LowerTail
@@ -51,5 +52,11 @@ theorem cellSizeUpperStmt_of_coneAreaDominates (hdom : ConeAreaDominatesWholePla
   refine compl_subset_compl.mpr fun ω hω k hk => ?_
   have h1 : diam (cell ε (S.η ω) k) ≤ ε ^ q₀ := hω _ _ (le_of_eq (by ring)) hk
   exact h1.trans (Real.rpow_le_rpow_of_exponent_ge hε0 hε1.le (le_max_left _ _))
+
+/-- **Lemma 2.8, upper half**, from the coupling of the quantum cone with a whole-plane GFF on `B_1`
+(`ConeWholePlaneCouplingStep`; the comparison of the LQG measures on `B_1` is proved). -/
+theorem cellSizeUpperStmt_of_coupling (h : ConeWholePlaneCouplingStep) (𝒮 : SpaceFillingSLEModel) :
+    CellSizeUpperStmt 𝒮 :=
+  cellSizeUpperStmt_of_coneAreaDominates (coneAreaDominatesWholePlaneGFFStep_of_coupling h) 𝒮
 
 end MatedCRT

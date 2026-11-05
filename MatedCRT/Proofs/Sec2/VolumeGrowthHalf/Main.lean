@@ -1,5 +1,6 @@
 import MatedCRT.Steps.Sec2.VolumeGrowthHalf
 import MatedCRT.Proofs.Sec2.VolumeGrowthHalf.WholePlane
+import MatedCRT.Proofs.Sec2.VolumeGrowthHalf.Domination
 import LatticeProb.Bonanno.MatedCRTHarmonic.GMCFacts.LowerTail
 
 /-!
@@ -51,5 +52,11 @@ theorem volumeGrowthLowerStmt_of_coneAreaDominates (hdom : ConeAreaDominatesWhol
   refine ⟨z, hz, ?_⟩
   rw [hβ]
   exact hlt.le
+
+/-- **Lemma 2.7, lower half**, from the coupling of the quantum cone with a whole-plane GFF on `B_1`
+(`ConeWholePlaneCouplingStep`); the comparison `μ_{h̃ - γ log |·|} ≥ μ_{h̃}` on `B_1` is proved
+(`coneAreaDominatesWholePlaneGFFStep_of_coupling`). -/
+theorem volumeGrowthLowerStmt_of_coupling (h : ConeWholePlaneCouplingStep) : VolumeGrowthLowerStmt :=
+  volumeGrowthLowerStmt_of_coneAreaDominates (coneAreaDominatesWholePlaneGFFStep_of_coupling h)
 
 end MatedCRT

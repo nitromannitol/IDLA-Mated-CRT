@@ -120,4 +120,24 @@ def ConeAreaDominatesWholePlaneGFFStep : Prop :=
     MatedCRTHarmonic.GMSLemma27.IsLQGAreaOf γ H μ' P ∧
     ∀ᵐ ω ∂P, ∀ A : Set ℂ, MeasurableSet A → A ⊆ ball (0 : ℂ) 1 → μ' ω A ≤ μ ω A
 
+/-- **Step (the quantum cone on `B_1` is `h̃ - γ log |·|` for a whole-plane GFF `h̃` on the same sample space).**
+For the circle average embedding `h` of the `γ`-quantum cone there are, on the same sample space, the circle average
+process `H ε z ω = h̃_ε(z)` of a whole-plane GFF `h̃` normalized by `h̃_1(0) = 0` (Bonanno's
+`LQGDimension.IsGFFCircleAverage`) and its `γ`-LQG measure `μ̃` (Bonanno's `MatedCRTHarmonic.GMSLemma27.IsLQGAreaOf`),
+such that a.s. the circle averages of `h` over every circle `∂B_r(z)` with `cl B_r(z) ⊆ B_1` are those of
+`h̃ - γ log |·|`: `h_r(z) = h̃_r(z) - γ · (average of log |·| over ∂B_r(z))` (`HarmonicBalls.fieldCircleAverage`).
+
+Sources: eq:gff (line 444; Definition 2.1, DMS14 Definition 4.10): `h|_{B_1}` agrees in law with
+`(h^ℂ - γ log |·|)|_{B_1}`; realized on the sample space of `h` by replacing the radial part of `h` outside `B_1`
+(independent of `h|_{B_1}` and of the lateral part, with a non-atomic law) by an independent Brownian motion that it
+generates; DS11 Proposition 1.1 for the existence of `μ̃`. The comparison `μ̃ ≤ μ_h` on `B_1`
+(`ConeAreaDominatesWholePlaneGFFStep`) is then proved (`coneAreaDominatesWholePlaneGFFStep_of_coupling`). -/
+def ConeWholePlaneCouplingStep : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
+  ∃ (H : ℝ → ℂ → Ω → ℝ) (μ' : Ω → Measure ℂ), LQGDimension.IsGFFCircleAverage H P ∧
+    MatedCRTHarmonic.GMSLemma27.IsLQGAreaOf γ H μ' P ∧
+    ∀ᵐ ω ∂P, ∀ (r : ℝ) (z : ℂ), 0 < r → closedBall z r ⊆ ball (0 : ℂ) 1 →
+      hcirc ω r z = fieldCircleAverage γ (fun s w => H s w ω) r z
+
 end MatedCRT
