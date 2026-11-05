@@ -13,10 +13,28 @@ import MatedCRT.Proofs.Sec5.MeanValueInequality.NormalizedStep
 import MatedCRT.Audit.Refutations
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.DyadicModulus
 import MatedCRT.Proofs.Sec5.IDLALowerBound.Final
+import MatedCRT.Proofs.IDLA.WalkerLawMeasurable
+import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.OccupationGreen
 
 /-! A logical check for the quantifier-order issue in Lemma 5.3.
 It does not assert that the actual Green-function estimate has this form. -/
 namespace MatedCRT.Audit.StatementsSec3Sec5M1
+
+/-- In a valid environment, the IDLA probability uses the joint law of the walker sequence. -/
+theorem five_one_idla_joint_law {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (ε : ℝ)
+    (E : Set (Ω × (ℕ → ℕ → ℤ))) : S.idlaProb ε E = hS.idlaJointLaw ε E := by
+  exact congrArg (fun μ => μ E) (hS.idlaJointMeasure_eq ε)
+
+/-- A fixed occupied set with finite expected exit time avoids the IDLA nonexit fallback almost surely. -/
+theorem five_one_fixed_set_exits (m : ℤ → ℤ → ℕ) (A : Set ℤ) (a : ℤ)
+    (hmean : expectedExitTime m A a ≠ ⊤) :
+    ∀ᵐ x ∂srwLaw m a, ∃ b, firstExitSite A x = some b := by
+  classical
+  filter_upwards [ae_vExitTime_ne_top_of_expectedExitTime_ne_top m A a hmean] with x hx
+  by_cases h : ∃ n, x n ∉ A
+  · exact ⟨x (Nat.find h), by simp [firstExitSite, h]⟩
+  · exact False.elim (hx (by simp [vExitTime, h]))
 
 /-- The counterexample applies to the exact Draft, conditional on the scaling input. -/
 theorem three_one_draft_refuted {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingInput 𝒮)
@@ -172,6 +190,8 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
     exact (ENNReal.ofReal_le_iff_le_toReal hfin).1 hmass
 
 #print axioms cluster_exit_time_bounded
+#print axioms five_one_idla_joint_law
+#print axioms five_one_fixed_set_exits
 #print axioms three_one_draft_refuted
 #print axioms three_seven_latest_reduction
 #print axioms five_four_green_quotient_semantics
