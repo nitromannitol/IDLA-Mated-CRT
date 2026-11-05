@@ -10,8 +10,8 @@ correction or reading is identified separately from operator-approved source cor
 
 | Result | Preliminary finding and exact evidence | Reduction status |
 | --- | --- | --- |
-| 3.1 | **MISMATCH**, documented: source 976–999 allows connected sets; Draft/Section3.lean:42 adds pointwise environment measurability of `u` (S6). Corrected form Steps/Sec3/DiscretePotentialTightness.lean:102 adds open `D` and deterministic polynomially summable scales and changes boundary data to `C'/ε` times the Hölder modulus. Its interior part is weaker but its boundary implication is stronger. The source and Draft both use the corrected absolute bound [C3]. A non-open counterexample is argued at Steps/Sec3/DiscretePotentialTightness.lean:13–18, not verified here in Lean. | Only corrected form reduced; both imply a common restriction in Audit/CorrectedForms.lean:88, 100. The reduction is not a proof of the Draft. 3.3 and 3.7 still consume the Draft (REDUCTIONS F7). |
-| 3.2 | **MISMATCH**, documented: source 1001–1017 and Draft/Section3.lean:76 use one exponent `ξ` independent of boundary exponent `χ`; corrected step at Steps/Sec3/DiscretePotentialTightness.lean:71 chooses `ξ'` after `χ`, restricts the first estimate to interior `a` and changes the floor from `ε` to `ε^β`. The draft's multiplication by boundary distance also requires care at zero distance. | Draft implies corrected step, checked in Audit/CorrectedForms.lean:125; reverse implication and proof of either not established. Literature ruling pending. |
+| 3.1 | **MISMATCH**, documented: source 976–999 allows connected sets; Draft/Section3.lean:42 adds pointwise environment measurability of `u` (S6). Corrected form Steps/Sec3/DiscretePotentialTightness.lean:102 adds open `D` and deterministic polynomially summable scales and changes boundary data to `C'/ε` times the Hölder modulus. Its interior part is weaker but its boundary implication is stronger. The source and Draft both use the corrected absolute bound [C3]. A non-open counterexample is argued at Steps/Sec3/DiscretePotentialTightness.lean:13–18, not verified here in Lean. | Only corrected form reduced; both imply a common restriction in Audit/CorrectedForms.lean:83, 93. The reduction is not a proof of the Draft. 3.3 and 3.7 still consume the Draft (REDUCTIONS F7). |
+| 3.2 | **MISMATCH**, documented: source 1001–1017 and Draft/Section3.lean:76 use one exponent `ξ` independent of boundary exponent `χ`; corrected step at Steps/Sec3/DiscretePotentialTightness.lean:71 chooses `ξ'` after `χ`, restricts the first estimate to interior `a` and changes the floor from `ε` to `ε^β`. The draft's multiplication by boundary distance also requires care at zero distance. | Draft implies corrected step, checked in Audit/CorrectedForms.lean:114; reverse implication and proof of either not established. Literature ruling pending. |
 | 3.3 | **INCOMPLETE**: source 1110–1122 and Draft/Section3.lean:97 have the same probability mode and `[C1]` coefficient `c₀/6`. `S.c₀ = 2/S.m₀` (Defs/Setting.lean:190). Source calls its Green function Brownian occupation Green, whereas the Lean symbol is normalized by `ΔG = -δ`; the factor-of-two convention must be checked together with [C1], not inferred from matching symbols. | Reduction `uniformConvergenceGreenKernel_of_steps` concludes Draft but assumes Draft 3.1 and open steps (REDUCTIONS 3.3). Existing [C1] proof slip E-m1-1 remains documented. |
 | 3.4 | **INCOMPLETE**: source 1124–1133 and Draft/Section3.lean:113 use convergence in probability, `mε⁻¹`, `c₀`, and deterministic `z,r,y`; Lean quantifies over random pointwise measurable `f` with pathwise bounded/Hölder restrictions. Source `f` is defined on the ball but evaluates `f(η(x))` for cells meeting it; boundary values and killing must be audited. Green normalizations remain open as for 3.3. | REDUCTIONS records no committed reduction. |
 | 3.5 | **MISMATCH**, documented: source 1240–1260 assumes `φ` Hölder on the closed ball, while Draft/Section3.lean:136 requires it on a larger closed ball (S2), potentially excluding source data. `[C1]` uses `c₀`. Lean quantifies over all discrete solutions satisfying the equations a.s. for each ε; the choice/uniqueness and signed Laplacian semantics require audit. | `discreteDirichletProblem_of_steps` concludes Draft and uses corrected 3.1 plus open steps; it does not establish the source statement without addressing S2. |
@@ -30,3 +30,45 @@ Remaining for a passing audit: reconstruct every binder into SOURCE/STANDING/TYP
 with counts, pin exact source and declaration identities, recursively audit `IsValid`, Green,
 rescaling, probabilities, stopping, harmonic-ball and Laplacian definitions, and verify every
 reduction by exact term-level applications and axiom checks. No FAITHFUL verdict is assigned here.
+
+## Source identity and Green normalization
+
+SHA-256 at this review: corrected source `d42d5867a83da66f530c4407bf9e5bc423f04e5b9e2c5ba5567932c09ca106`; Draft Section3 `4541957faaba0cbe632cb7b6b8ee4f680258a38e97f339b7922d77487ad51649`; Draft Section5 `30554ab9e72ac1322f94320c9270695191cb5c9404b9e4023277fcdd2f84edf1`. These are observations, not an operator-approved freeze.
+
+The corrected paper explicitly fixes `ΔG = -δ` and Brownian occupation density `2G` at line 720. The reused definition `HarmonicBalls/Defs/Green.lean:41,70` has Newton kernel `-(2π)⁻¹ log |x-y|` and the same normalization. Thus Lean's `c₀ = 2/m₀` agrees with the corrected source convention in the expressions 3.3–3.5 and 3.7. This is a coefficient comparison, not an independent proof of the Brownian occupation identity or the full Green characterization. The paper's phrase “Green's function for standard Brownian motion” at 1119 must be read with line 720; its occupation density is `2G`. E-m1-3 reports remaining `m₀` references in the proofs of 3.5 and 3.7. E-m1-4 records an independent sign discrepancy and a wrong center in the 3.7 proof.
+
+## Binder inventory for 5.3 (provisional, fail-closed)
+
+Counts below use one row per named variable or logical premise, excluding internal binders of a formula. Instance/environment classification is provisional: standing assumptions have not themselves been independently audited. The source order is δ then t, with a surplus annotated `s(δ)`; the Lean conclusion has `∃ s` after both. `TendsToOneOn` expands to outer `P(F ∩ Eεᶜ) → 0` (Defs/Notation.lean:39).
+
+| Lean binder/input | Bin | Source or reason |
+| --- | --- | --- |
+| `𝒮` | TYPING | abstract SLE model, Section 1 conventions |
+| `γ` | STANDING | γ-LQG, Section 1 |
+| `0 < γ` | STANDING | γ in (0,2), Section 1 |
+| `γ < 2` | STANDING | same |
+| `ρ` | STANDING | fixed in Section 5, line 1967 |
+| `0 < ρ` | STANDING | line 1967 |
+| `ρ < 1` | STANDING | line 1967 |
+| `Ω` | TYPING | probability-space carrier |
+| `[MeasurableSpace Ω]` | TYPING | measurable-space carrier |
+| `S` | TYPING | packaged field/curve/measure/walk environment |
+| `S.IsValid 𝒮 γ` | STANDING, provisional | expands into the seven rows below; not independently validated |
+| `isProbabilityMeasure` | STANDING, provisional | probability law of environment |
+| `isQuantumCone` | STANDING, provisional | Section 2 quantum cone |
+| `isLQGMeasure` | STANDING, provisional | field's LQG measure |
+| `isSLE` | STANDING, provisional | independent space-filling SLE |
+| `isAreaParametrized` | STANDING, provisional | area parameterization |
+| `isLQGClock` | STANDING, provisional | LBM clock; stronger simultaneous conditions not yet audited |
+| `matingOfTrees` | STANDING, provisional | map coupling; complete bundle and extra properties not yet audited |
+| `Λ` | TYPING | represents the source harmonic-ball family |
+| a.s. `IsConeHarmonicBallFamily` | STANDING, provisional | Theorem 2.3 family; expanded characterization and existence/uniqueness not audited |
+| `δ` | SOURCE | line 2009 |
+| `t` | SOURCE | line 2009 |
+| `0 < δ` | SOURCE | line 2009 |
+| `δ < ρ` | SOURCE | line 2009 |
+| `0 < t` | SOURCE | line 2009 |
+
+Counting only leaf rows (not `IsValid` parent): SOURCE 5, STANDING 14, TYPING 5, RULED 0, EXCESS 0; all 14 standing classifications are provisional. [C4] changes the body of the conclusion, not an input binder. This inventory does not pass the five-bin audit: recursive expansion of the environment and harmonic-ball predicates is unfinished, and quantifier-order issue E-m1-2 remains.
+
+The Lean evidence `relaxed_five_two_implies_draft` explicitly applies the actual relaxed 5.2 producer to the Draft; it does not establish either proposition unconditionally. `#print axioms` for both this implication and the abstract quantifier example reports only `propext`, `Classical.choice`, and `Quot.sound`.
