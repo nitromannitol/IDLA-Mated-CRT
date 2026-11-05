@@ -60,7 +60,7 @@ theorem mLaplacian_neg_add_nonneg {m : ℤ → ℤ → ℕ} (hlf : ∀ a, {b | m
 /-- **Lemma 4.8, item 3 (upper bound), pathwise**: along a sequence on which the discrete Dirichlet problems with hat
 data converge at the centres of the rational discs and `q̄^{ε_k}_{B_ρ} → q̄` uniformly on `cl(B_ρ)`, where
 `Δq̄ = -(c₀/6) μ_h` weakly on `B_ρ` (Lemma 3.7), every uniform limit `w` of the rescaled odometers satisfies
-`∫ w Δf ≤ ∫ f d((c₀/6) μ_h)` for test functions `f ≥ 0` on `B_ρ`. -/
+`∫ w Δf ≤ ∫ f d((c₀/6) μ_h)` for test functions `f ≥ 0` on `B_ρ`; first conjunct: `Δ(w + q̄) ≤ 0` weakly on `B_ρ`. -/
 theorem odometer_integral_mul_laplacian_le {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ω : Ω)
     {ρ : ℝ} (hρ : 0 < ρ)
     (harea : IsAreaParametrized (S.μ ω) (S.η ω)) (hp : Tendsto (S.η ω) (cocompact ℝ) (cocompact ℂ))
@@ -83,6 +83,7 @@ theorem odometer_integral_mul_laplacian_le {Ω : Type} [MeasurableSpace Ω] (S :
     {w : ℂ → ℝ} (hwc : ContinuousOn w (closedBall 0 ρ))
     (hconv : TendstoUniformlyOn (fun k => rescaledMatedLeastSupersolution S ρ t (εk k) ω) w atTop
       (closedBall 0 ρ)) :
+    LaplacianLE (w + qbar) 0 (ball 0 ρ) ∧
     ∀ f : ℂ → ℝ, IsTestFunction (ball 0 ρ) f → 0 ≤ f →
       Integrable f (ENNReal.ofReal (S.c₀ / 6) • S.μ ω) →
       ∫ x, w x * Δ f x ≤ ∫ x, f x ∂(ENNReal.ofReal (S.c₀ / 6) • S.μ ω) := by
@@ -110,6 +111,7 @@ theorem odometer_integral_mul_laplacian_le {Ω : Type} [MeasurableSpace Ω] (S :
   rw [neg_neg] at hsup
   have hle := laplacianLEOfSuperharmonicStep_holds _ (w + qbar) isOpen_ball
     ((hwc.add hqc).mono ball_subset_closedBall) hsup
+  refine ⟨hle, ?_⟩
   intro f hf hf0 _
   have h1 := hle.2 f hf hf0 integrable_zero_measure
   obtain ⟨-, -, h2⟩ := hqlap.2 f hf
