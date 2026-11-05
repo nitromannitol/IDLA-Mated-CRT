@@ -131,7 +131,7 @@ theorem greenKernelBoundaryStep (𝒮 : SpaceFillingSLEModel) : GreenKernelBound
 theorem uniformConvergenceGreenKernel_of_interiorStep (𝒮 : SpaceFillingSLEModel)
     (h210 : DegreeMeasureConvergenceStmt 𝒮) (h34 : IntegralConvergenceGreenFunctionStmt 𝒮)
     (h214 : GreenKernelUpperBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
-    (h31 : DiscretePotentialTightnessCorrectedStmt 𝒮) (h213 : MaximumPrincipleStmt 𝒮)
+    (h31 : DiscretePotentialTightnessAeStep 𝒮) (h213 : MaximumPrincipleStmt 𝒮)
     (hinterior : GreenKernelInteriorStep 𝒮) : UniformConvergenceGreenKernelStmt 𝒮 :=
   uniformConvergenceGreenKernel_of_steps 𝒮 h210 h34 h214 h28 h31 h213 hinterior
     (greenKernelBoundaryStep 𝒮)

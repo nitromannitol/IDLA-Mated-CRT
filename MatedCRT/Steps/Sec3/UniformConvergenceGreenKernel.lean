@@ -1,14 +1,16 @@
 import MatedCRT.Draft.Section2
 import MatedCRT.Draft.Section3
-import MatedCRT.Steps.Sec3.DiscretePotentialTightness
+import MatedCRT.Steps.Sec3.ConvergenceNormalizedExitTime
 
 /-!
 # Lemma 3.3: convergence of the Green kernel
 
 The two steps isolate identification of the interior limit and the maximum-principle
 boundary argument, respectively. The limit uses the corrected constant `c₀ / 6`.
-Both steps take the corrected Lemma 3.1 (`DiscretePotentialTightnessCorrectedStmt`): the Draft
-Lemma 3.1 is false (E-c1-4). The rescaled kernel is named `rescaledBallGreenKernel` (F15: the name
+Both steps take the corrected Lemma 3.1 in its almost-sure form (`DiscretePotentialTightnessAeStep`,
+as Lemma 3.7 does): the Draft Lemma 3.1 is false (E-c1-4), and the `∀ ω` hypotheses of the corrected
+statement cannot be met by a `σ(h, η)`-measurable version of the Green kernel against the actual
+`S.mult` and cell sets, which are `σ(h, η)`-measurable only up to null sets (E-c2-6). The rescaled kernel is named `rescaledBallGreenKernel` (F15: the name
 `rescaledGreenKernel` is used by Lemma 4.8 for the kernel of `B_ρ` with pole `0`).
 -/
 
@@ -27,7 +29,7 @@ noncomputable def rescaledBallGreenKernel {Ω : Type} [MeasurableSpace Ω]
 limit uniformly away from the pole (paper, lines 1181–1212). -/
 def GreenKernelInteriorStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   DegreeMeasureConvergenceStmt 𝒮 → IntegralConvergenceGreenFunctionStmt 𝒮 →
-  GreenKernelUpperBoundStmt 𝒮 → CellSizeEstimateStmt 𝒮 → DiscretePotentialTightnessCorrectedStmt 𝒮 →
+  GreenKernelUpperBoundStmt 𝒮 → CellSizeEstimateStmt 𝒮 → DiscretePotentialTightnessAeStep 𝒮 →
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ (r : ℝ) (z y : ℂ), 0 < r → ball z r ⊆ ball 0 ρ → y ∈ ball z r →
@@ -40,7 +42,7 @@ def GreenKernelInteriorStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 layer away from the pole (paper, lines 1213–1229). -/
 def GreenKernelBoundaryStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   DegreeMeasureConvergenceStmt 𝒮 → IntegralConvergenceGreenFunctionStmt 𝒮 →
-  GreenKernelUpperBoundStmt 𝒮 → CellSizeEstimateStmt 𝒮 → DiscretePotentialTightnessCorrectedStmt 𝒮 →
+  GreenKernelUpperBoundStmt 𝒮 → CellSizeEstimateStmt 𝒮 → DiscretePotentialTightnessAeStep 𝒮 →
   GreenKernelInteriorStep 𝒮 → MaximumPrincipleStmt 𝒮 →
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
@@ -54,7 +56,7 @@ def GreenKernelBoundaryStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 theorem uniformConvergenceGreenKernel_of_steps (𝒮 : SpaceFillingSLEModel)
     (h210 : DegreeMeasureConvergenceStmt 𝒮) (h34 : IntegralConvergenceGreenFunctionStmt 𝒮)
     (h214 : GreenKernelUpperBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
-    (h31 : DiscretePotentialTightnessCorrectedStmt 𝒮) (h213 : MaximumPrincipleStmt 𝒮)
+    (h31 : DiscretePotentialTightnessAeStep 𝒮) (h213 : MaximumPrincipleStmt 𝒮)
     (hinterior : GreenKernelInteriorStep 𝒮) (hboundary : GreenKernelBoundaryStep 𝒮) :
     UniformConvergenceGreenKernelStmt 𝒮 := by
   intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS r z y hr hball hy δ hδ O hO hdist
