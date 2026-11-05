@@ -10,6 +10,16 @@ follows (`lqgMeasureProperties_of_citedInputs`) from
 * the locality of circle averages (`ConeCircleAverageLocalityStep`, a property of the field: DS11 Section 3.1),
 * conformal covariance for the non-dyadic dilations (`LQGMeasureNonDyadicDilationPart`, cited: DS11 Proposition 2.1,
   SW16).
+
+Why the non-dyadic dilations stay cited: `HarmonicBalls.IsLQGLimit` only asks for vague convergence along
+`dyadicScale k = 2⁻ᵏ`, and `IsLQGMeasure` is this limit a.s.; nothing in the definition controls the approximations at
+the scales `s 2⁻ᵏ`, `s ∈ (1, 2)`. Pathwise the densities `ε^{γ²/2} e^{γ h_ε(z)}` are not comparable between `2⁻ᵏ` and
+`s 2⁻ᵏ` uniformly in `z` (`h_{e^{-t}}(z)` moves like a Brownian motion in `t`), and the law of the cone field is not
+invariant under a deterministic dilation. The convergence along `s 2⁻ᵏ` to the same limit is a Gaussian multiplicative
+chaos estimate (an `L¹` or, for `γ < √2`, an `L²` bound on the difference of the approximations at `ε` and `s ε`, from
+the covariance of the circle averages: DS11 Proposition 2.1 for a fixed `s`), and all `s` at once is SW16.
+Non-atomicity in the unit disk follows from the cited Lemma 2.7 (`ae_measure_singleton_eq_zero_of_volumeGrowth`,
+`NonAtomic.lean`).
 -/
 
 namespace MatedCRT.LQGMeasure
