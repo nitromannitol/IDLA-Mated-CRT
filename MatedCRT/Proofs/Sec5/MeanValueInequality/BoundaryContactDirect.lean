@@ -1,6 +1,7 @@
 import MatedCRT.Proofs.Sec5.MeanValueInequality.BoundaryContact
+import MatedCRT.Proofs.Sec5.MeanValueInequality.ObstacleComparison
 import MatedCRT.Proofs.Sec7.OdometerBoundMass.StoppedOdometer
-import MatedCRT.Proofs.Sec5.MeanValueInequality.NormalizedStep
+import MatedCRT.Steps.Sec5.MeanValueInequality
 
 /-!
 # Contact outside the cluster without a connectivity hypothesis
@@ -12,6 +13,16 @@ boundary contact needed for the mean-value comparison on an arbitrary graph.
 namespace MatedCRT
 
 open Set Metric
+
+/-- Finite-graph hypotheses for the obstacle comparison, together with the
+two quantitative bounds on a prescribed set of interior vertices. -/
+def MeanValueSurplusData (m : ℤ → ℤ → ℕ) (A B I : Set ℤ) (w : ℤ → ℝ)
+    (K ε c C : ℝ) : Prop :=
+  FiniteReversibleGreenData m A ∧
+  (∀ a, m a (a + 1) ≠ 0) ∧ B.Finite ∧ A ⊆ B ∧ (0 : ℤ) ∈ A ∧
+  (∀ b, ∀ a ∈ B, mLaplacian m (fun x => greenFn m B x b) a = -(if a = b then 1 else 0)) ∧
+  (∀ a ∈ A, mLaplacian m w a = (mdeg m a : ℝ)⁻¹) ∧
+  (∀ a ∈ I, c / ε ≤ w a + K * greenKernel m B 0 a ∧ normExitTime m A a ≤ C / ε)
 
 /-- At every vertex outside the discrete cluster the least supersolution
 equals its obstacle. -/

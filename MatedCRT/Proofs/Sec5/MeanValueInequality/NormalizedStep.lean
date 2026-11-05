@@ -1,30 +1,21 @@
-import MatedCRT.Steps.Sec5.MeanValueInequality
-import MatedCRT.Proofs.Sec5.MeanValueInequality.ObstacleComparison
-import MatedCRT.Proofs.Sec5.MeanValueInequality.BoundaryContact
+import MatedCRT.Proofs.Sec5.MeanValueInequality.BoundaryContactDirect
 
 /-!
 # Reduction of the normalized mean-value step
 
 The remaining event contains the finite obstacle data and the two bounds used
-in the paper: a lower bound on the obstacle surplus and an upper bound on the
-normalized exit time.  The finite-graph comparison and margin are proved in
-`ObstacleComparison.lean`.
+in the paper (corrected.tex 2128-2140): a lower bound on the obstacle surplus
+`v^ε_t = w̃^ε_t + (t ε⁻¹) g^ε_{B_ρ}(0, ·)` and an upper bound on the normalized
+exit time. The finite-graph comparison and margin are proved in
+`ObstacleComparison.lean`; the contact `v^ε_t = 0` off `Λ^ε_t` is proved in
+`BoundaryContactDirect.lean` without any connectivity hypothesis (E-c1-2), so
+the event below carries no obstacle-setting field.
 -/
 
 namespace MatedCRT
 
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric HarmonicBalls
 open scoped ENNReal NNReal
-
-/-- Finite-graph hypotheses for the obstacle comparison, together with the
-two quantitative bounds on a prescribed set of interior vertices. -/
-def MeanValueSurplusData (m : ℤ → ℤ → ℕ) (A B I : Set ℤ) (w : ℤ → ℝ)
-    (K ε c C : ℝ) : Prop :=
-  FiniteReversibleGreenData m A ∧
-  (∀ a, m a (a + 1) ≠ 0) ∧ B.Finite ∧ A ⊆ B ∧ (0 : ℤ) ∈ A ∧
-  (∀ b, ∀ a ∈ B, mLaplacian m (fun x => greenFn m B x b) a = -(if a = b then 1 else 0)) ∧
-  (∀ a ∈ A, mLaplacian m w a = (mdeg m a : ℝ)⁻¹) ∧
-  (∀ a ∈ I, c / ε ≤ w a + K * greenKernel m B 0 a ∧ normExitTime m A a ≤ C / ε)
 
 /-- Remaining event estimate for Lemma 5.3: the surplus has a positive
 uniform lower bound and the normalized exit time has a finite upper bound,
@@ -39,15 +30,13 @@ def MeanValueSurplusStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∃ c C : Ω → ℝ, Measurable[S.envSigma] c ∧ Measurable[S.envSigma] C ∧
     (∀ ω, 0 < c ω) ∧ (∀ ω, 0 < C ω) ∧
     TendsToOneOn S.P {ω | t < clusterExitTime (Λ ω) ρ} fun ε => {ω |
-      let m := S.mult ε ω
-      let A := matedDiscreteCluster m ε (S.η ω) ρ t
-      let B := ballInterior ε (S.η ω) ρ
-      let I := {a ∈ A | δ < infDist (vertexPoint ε (S.η ω) a) (frontier (fillCells ε (S.η ω) A))}
-      IsMatedObstacleSetting m ε (S.η ω) ρ t ∧
-      vClosure m B ⊆ cellVertices ε (S.η ω) (closedBall 0 ρ) ∧
-      MeanValueSurplusData m A B I (matedLeastSupersolution m ε (S.η ω) ρ t) (t / ε) ε (c ω) (C ω)}
+      MeanValueSurplusData (S.mult ε ω) (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t)
+        (ballInterior ε (S.η ω) ρ)
+        {a ∈ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t |
+          δ < infDist (vertexPoint ε (S.η ω) a)
+            (frontier (fillCells ε (S.η ω) (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t)))}
+        (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t) (t / ε) ε (c ω) (C ω)}
 
-set_option maxHeartbeats 400000 in
 /-- The finite maximum-principle argument reduces the normalized inequality to
 the surplus and exit-time bounds. -/
 theorem meanValueNormalizedStep_of_surplus (𝒮 : SpaceFillingSLEModel)
@@ -65,20 +54,9 @@ theorem meanValueNormalizedStep_of_surplus (𝒮 : SpaceFillingSLEModel)
   refine ⟨hω.1, ?_⟩
   intro hgood
   apply hω.2
-  dsimp only at hgood
-  obtain ⟨hsetting, hW, hdata, hcons, hB, hAB, h0, hfirstB, hw, hbounds⟩ := hgood
-  refine ⟨hdata, ?_⟩
-  intro a ha hdist
-  obtain ⟨hsymm, hlf, hA, hdeg, hfirstA⟩ := hdata
-  obtain ⟨hv, hq⟩ := hbounds a ⟨ha, hdist⟩
-  have hboundary : ∀ x ∉ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t,
-      matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t x +
-        (t / ε) * greenKernel (S.mult ε ω) (ballInterior ε (S.η ω) ρ) 0 x ≤ 0 :=
-    fun _ hx => (mated_surplus_zero_off_cluster hsetting hW hx).le
-  have hcomp := obstacle_surplus_le_green_sub_exit hsymm hlf hcons hA hB hAB h0 hfirstA hfirstB
-    (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t) (t / ε) hw hboundary a
-  rw [greenKernel_symm_of_firstStep hsymm hlf hA hdeg hfirstA 0 a] at hcomp
-  exact normalized_meanValue_of_surplus_bounds hε (hcpos ω) (hCpos ω) hcomp hv hq
+  obtain ⟨hdata, -⟩ := id hgood
+  exact ⟨hdata, fun a ha hdist =>
+    normalized_meanValue_of_surplus_direct (Set.mem_Ioi.1 hε) ht (hcpos ω) (hCpos ω) hgood ha hdist⟩
 
 /-- Lemma 5.3 from the two quantitative surplus/exit-time bounds and the
 finite-graph data in `MeanValueSurplusStep`. -/
