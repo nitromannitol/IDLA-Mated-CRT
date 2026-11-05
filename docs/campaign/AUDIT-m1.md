@@ -129,3 +129,25 @@ The source at corrected lines 1987–2002 fixes two environment-measurable conne
 `GeneralIDLALowerBoundRelaxedStep` (`Steps/Sec5/IDLALowerBound.lean:40`) removes set measurability, connectedness, origin membership and positivity of `K` while preserving deterministic `K`, positive q and pointwise-positive measurable s. The checked `relaxed_five_two_implies_draft` in the audit Lean file applies the producer explicitly; it establishes a conditional implication only. `walkerSequenceLaw` is `Measure.infinitePi` of `srwLaw` (`Defs/RandomWalk.lean:153`), and `idlaProb` applies `annealedOuterProb` to that family of quenched laws (`Defs/Setting.lean:194`). These are body checks, not yet a proof that the annealed construction agrees with the ordinary joint law for all relevant events.
 
 The proof of Proposition 5.1 applies Lemma 5.2 with `O₂ = Λε_t` (corrected source:2033–2044), whereas its stopped assertion uses `Vε(Λ_t)` (source:1977–1981); see existing E-c1-5. The available 5.1 reduction assumes `IDLALowerBoundStoppedStep`, so it does not claim this proof gap closed.
+
+
+## Lemmas 3.5 and 3.6 binder and definition traces (provisional)
+
+The corrected source states Lemma 3.5 at lines 1240–1258 and Lemma 3.6 at lines 1262–1274. Their common outer parameters are compared below; the bins remain provisional until the bundled environment has been recursively audited.
+
+| Lean input or local binder | Provisional bin | Comparison |
+| --- | --- | --- |
+| `𝒮`, `Ω`, `[MeasurableSpace Ω]`, `S` | TYPING | model and measurable environment carriers; representation semantics remain open |
+| `γ`, `0 < γ`, `γ < 2`, `ρ`, `0 < ρ`, `ρ < 1` | STANDING | paper's quantum-cone setting and fixed radius |
+| `S.IsValid 𝒮 γ` | UNCLASSIFIED | packaged coupling and mathematical inputs; see E-m1-5 |
+| `r`, `z`, `0 < r`, `ball z r ⊆ ball 0 ρ` | SOURCE | deterministic choices in both statements |
+| 3.5 `ψ : ℂ → ℝ`, bounded and Hölder on `ball z r` | SOURCE, provisional | source gives ψ only on the ball; Lean uses a global representative |
+| 3.5 `φ : ℂ → ℝ`, Hölder on `closedBall z (r+s)` for some `s > 0` | EXCESS relative to printed domain | source only specifies the closed ball; draft documents review-S (S2) because boundary-cell marked points can lie outside it |
+| 3.5 `F`, discrete equations | SOURCE, provisional | equations hold almost surely separately for each positive ε; the source names the solution without spelling out this event scope |
+| 3.5 `fbar` and its properties | SOURCE, provisional | one random function has the continuum identity, boundary value and Hölder property almost surely; uniform convergence is in probability |
+| 3.6 `ψ : ℂ → ℝ`, Hölder on `closedBall z (r+s)` for some `s > 0` | EXCESS relative to printed domain | source states Hölder continuity only on the closed ball; the draft documents the analogous exit-cell issue (S2) |
+| 3.6 `y ∈ ball z r` | SOURCE, provisional | Lean quantifies y outside the convergence-in-probability assertion, giving convergence for each deterministic y; it does not assert a single simultaneous almost-sure event |
+
+In 3.5 (`Draft/Section3.lean:136–152`), `HasLaplacian` uses the positive and negative parts of `c₀ * ψ` as densities. Its definition requires local integrability, integrability of every test function against both measures, and the distributional equality (`HarmonicBalls/Defs/Laplacian.lean:67–75`). Agreement with the signed measure in source line 1254 requires the corresponding integrability and signed-density argument; this has not been established by unfolding alone. The convergence predicate uses outer probabilities, and no explicit measurability premise for `fbar` appears in the displayed statement. The checked `three_five_draft_reduction` concludes the exact Draft conditionally. Its producer (`Steps/Sec3/DiscreteDirichletProblem.lean:98–106`) additionally requires `HarmonicBalls.GreenPotentialHolderStmt`, six earlier paper statements, and the three separately stated limit, interior, and boundary steps; no unconditional proof or literature-status closure is claimed.
+
+In 3.6 (`Draft/Section3.lean:161–171`), the walk exit position is evaluated at `(vExitTime A x).toNat`, which defaults to time zero on non-exit (`Defs/RandomWalk.lean:115–117`). The continuum exit position likewise uses `(pathExitTime U f).untopD 0` (`Defs/Setting.lean:221–224`); the rescaled path uses `m₀.toNNReal` (:208–211). Identifying these integrals with the source's exit positions requires the relevant almost-sure finiteness and time-change facts. The checked `three_six_draft_reduction` applies the producer conditionally on walk convergence, the cell-size estimate, and the two exit-comparison steps; it does not discharge those facts or settle S2.
