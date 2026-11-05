@@ -17,10 +17,13 @@ import MatedCRT.Proofs.IDLA.WalkerLawMeasurable
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.OccupationGreen
 import MatedCRT.Proofs.Sec3.UniformConvergenceGreenKernel.InteriorStep
 import MatedCRT.Proofs.WalkPotential.GreenFirstStep
+import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.Visit
 
 /-! A logical check for the quantifier-order issue in Lemma 5.3.
 It does not assert that the actual Green-function estimate has this form. -/
 namespace MatedCRT.Audit.StatementsSec3Sec5M1
+
+open scoped ENNReal
 
 /-- In a valid environment, the IDLA probability uses the joint law of the walker sequence. -/
 theorem five_one_idla_joint_law {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
@@ -80,6 +83,46 @@ theorem three_three_green_visit_integral_ne_top {m : ℤ → ℤ → ℕ} {A : S
   refine ne_top_of_le_ne_top ENNReal.ofReal_ne_top (?_ : _ ≤ ENNReal.ofReal (v a))
   rw [WalkPotential.lintegral_visitsBeforeExit_eq_iSup]
   exact iSup_le fun n => hup n a
+
+/-- The number of visits to a domain before exit is its exit time. -/
+theorem visitCount_self_eq_exitTime (A : Set ℤ) (x : ℕ → ℤ) :
+    ConstantOrderDiv.visitCount A A x = (vExitTime A x : ℝ≥0∞) := by
+  classical
+  unfold ConstantOrderDiv.visitCount
+  have heq : ∀ n : ℕ, ((n : ℕ∞) < vExitTime A x ∧ x n ∈ A) ↔
+      (n : ℕ∞) < vExitTime A x := fun _ => ⟨And.left, fun h => ⟨h, mem_of_lt_vExitTime h⟩⟩
+  simp_rw [heq]
+  cases hτ : vExitTime A x with
+  | top => simp [ENNReal.tsum_one]
+  | coe k =>
+    simp only [Nat.cast_lt]
+    rw [tsum_eq_sum (s := Finset.range k)]
+    · rw [Finset.sum_congr rfl fun n hn => ite_eq_left (Finset.mem_range.mp hn)]
+      simp
+    · intro n hn
+      exact ite_eq_right (fun h => hn (Finset.mem_range.mpr h))
+
+/-- On finite locally finite domains with consecutive edges, the expected exit time is finite. -/
+theorem finite_expectedExitTime {m : ℤ → ℤ → ℕ} {A : Set ℤ}
+    (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0)
+    (hA : A.Finite) (a : ℤ) : expectedExitTime m A a ≠ ⊤ := by
+  classical
+  let _ : Fintype A := hA.fintype
+  have heq : expectedExitTime m A a = ∑' b : A,
+      ∫⁻ x, visitsBeforeExit A b x ∂srwLaw m a := by
+    unfold expectedExitTime
+    rw [← MeasureTheory.lintegral_tsum (fun b : A => (ConstantOrderDiv.measurable_visitsBeforeExit A b).aemeasurable)]
+    exact MeasureTheory.lintegral_congr fun x => by
+      rw [ConstantOrderDiv.tsum_visitsBeforeExit, visitCount_self_eq_exitTime]
+  rw [heq, tsum_fintype]
+  exact ENNReal.sum_ne_top.mpr fun b _ => three_three_green_visit_integral_ne_top hlf hcons hA a b
+
+/-- A walker exits any finite occupied set almost surely under the graph assumptions. -/
+theorem five_one_finite_set_exits {m : ℤ → ℤ → ℕ} {A : Set ℤ}
+    (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0)
+    (hA : A.Finite) (a : ℤ) :
+    ∀ᵐ x ∂srwLaw m a, ∃ b, firstExitSite A x = some b :=
+  five_one_fixed_set_exits m A a (finite_expectedExitTime hlf hcons hA a)
 
 /-- A witness chosen separately for each positive time need not be uniform in time. -/
 theorem time_dependent_witness_not_uniform :
@@ -335,6 +378,8 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms three_three_final_reduction
 #print axioms three_three_empty_test_set
 #print axioms three_three_green_visit_integral_ne_top
+#print axioms finite_expectedExitTime
+#print axioms five_one_finite_set_exits
 #print axioms five_four_green_quotient_semantics
 #print axioms three_four_sum_ext
 #print axioms three_four_measurable_extension
