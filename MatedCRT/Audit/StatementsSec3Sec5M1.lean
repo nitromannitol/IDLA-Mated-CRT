@@ -16,6 +16,7 @@ import MatedCRT.Proofs.Sec5.IDLALowerBound.Final
 import MatedCRT.Proofs.IDLA.WalkerLawMeasurable
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.OccupationGreen
 import MatedCRT.Proofs.Sec3.UniformConvergenceGreenKernel.InteriorStep
+import MatedCRT.Proofs.WalkPotential.GreenFirstStep
 
 /-! A logical check for the quantifier-order issue in Lemma 5.3.
 It does not assert that the actual Green-function estimate has this form. -/
@@ -63,6 +64,22 @@ theorem three_three_empty_test_set {Ω : Type} [MeasurableSpace Ω]
     Metric.infDist y (∅ : Set ℂ) = 0 ∧
       ProbTendsToOne μ (fun ε => {ω | ∀ x ∈ (∅ : Set ℂ), P ε ω x}) := by
   simp [Metric.infDist_empty, ProbTendsToOne]
+
+/-- Finite locally finite domains with consecutive edges have finite expected visit counts. -/
+theorem three_three_green_visit_integral_ne_top {m : ℤ → ℤ → ℕ} {A : Set ℤ}
+    (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0)
+    (hA : A.Finite) (a b : ℤ) :
+    (∫⁻ x, visitsBeforeExit A b x ∂srwLaw m a) ≠ ⊤ := by
+  obtain ⟨v, -, hvΔ, hv0⟩ := exists_nonneg_laplacian_eq hcons hlf hA
+    (fun c => -(if c = b then (1 : ℝ) else 0)) fun c _ => by split_ifs <;> norm_num
+  have hdeg : ∀ c, mdeg m c ≠ 0 := fun c => mdeg_ne_zero_of_ne_zero hlf (hcons c)
+  have hv : ∀ c ∈ A, v c = (if c = b then 1 else 0) +
+      ((mdeg m c : ℝ))⁻¹ * ∑ d ∈ nbrs hlf c, (m c d : ℝ) * v d :=
+    fun c hc => (WalkPotential.mLaplacian_eq_neg_iff hlf (hdeg c) v _).1 (hvΔ c hc)
+  have hup := WalkPotential.lintegral_visitsUpTo_le hlf hcons b hv0 hv
+  refine ne_top_of_le_ne_top ENNReal.ofReal_ne_top (?_ : _ ≤ ENNReal.ofReal (v a))
+  rw [WalkPotential.lintegral_visitsBeforeExit_eq_iSup]
+  exact iSup_le fun n => hup n a
 
 /-- A witness chosen separately for each positive time need not be uniform in time. -/
 theorem time_dependent_witness_not_uniform :
@@ -317,6 +334,7 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms three_seven_latest_reduction
 #print axioms three_three_final_reduction
 #print axioms three_three_empty_test_set
+#print axioms three_three_green_visit_integral_ne_top
 #print axioms five_four_green_quotient_semantics
 #print axioms three_four_sum_ext
 #print axioms three_four_measurable_extension
