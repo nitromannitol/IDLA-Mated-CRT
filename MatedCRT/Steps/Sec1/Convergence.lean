@@ -3,6 +3,7 @@ import MatedCRT.Draft.Section8
 import MatedCRT.Proofs.Sec1.Scaling
 import MatedCRT.Proofs.Sec8.Annealed
 import MatedCRT.Steps.Sec8.IDLAConstrainedConvergence
+import MatedCRT.Steps.Sec2.ConeScaleInvarianceUpToFixedTime
 
 /-!
 # Theorems 1.4 and 1.6 from Proposition 8.1 by scale invariance (Section 8.1, lines 3284-3336)
@@ -39,6 +40,9 @@ The random width `δ / R_b` of the printed proof is replaced by a deterministic 
 * `ConeScaleRadiusStep`: `R_b` (eq:cone-scale-radius) is an a.e.-measurable, a.s. positive random variable.
 * `ScaledClusterExitTimeStep`: eq:btb-converge-to-inf, `P[b T^b ≤ t] → 0` as `b → ∞`.
 
+The rescaled measure `rescaledMeasure μ R b = b⁻¹ μ(R ·)` is the one of Lemma 2.5
+(Steps/Sec2/ConeScaleInvarianceUpToFixedTime.lean), so that its scaling lemmas apply here (finding F10).
+
 Lemma 2.6 (`ConeScaleInvarianceStmt`) is NOT a hypothesis: in its Lean form it is an equality of image measures
 `P.map (circleProcess h, globalFamilyProcess Λ)`, and `Measure.map` of a map which is not a.e.-measurable is a junk
 value which does not depend on the map, so the equality says nothing about non-measurable families.
@@ -52,11 +56,6 @@ namespace MatedCRT
 
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric HarmonicBalls
 open scoped ENNReal NNReal
-
-/-- The rescaled measure `A ↦ b⁻¹ μ(R A)`: the `γ`-LQG measure of `h(R ·) + Q log R - γ⁻¹ log b` when `μ = μ_h`
-(Fact 2.2, coordinate change and Weyl scaling; line 578). -/
-noncomputable def rescaledMeasure (μ : Measure ℂ) (R b : ℝ) : Measure ℂ :=
-  (ENNReal.ofReal b)⁻¹ • μ.map fun x => (R : ℂ)⁻¹ * x
 
 /-- **The rescaled environment is valid** (eq:scale-invariance-of-field-and-eta, lines 3286-3293): for `b > 0` there
 is a valid environment on the same probability space whose curve is `η^b = R_b⁻¹ η(b ·)`, whose boundary-length pair
