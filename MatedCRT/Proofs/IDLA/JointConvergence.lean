@@ -12,6 +12,29 @@ namespace MatedCRT
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric HarmonicBalls
 open scoped ENNReal NNReal
 
+/-- The IDLA part of Proposition 8.1 follows from the two joint-law bounds by a union bound. -/
+theorem jointConstrainedConvergence_of_bounds {Ω : Type} [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) (Λ : Ω → ℝ → Set ℂ) (ρ δ t : ℝ)
+    (hLower : Tendsto (fun ε => S.idlaJointMeasure ε
+      {p | t < clusterExitTime (Λ p.1) ρ ∧
+        ¬ innerNbhd δ (Λ p.1 t) ⊆ fillCells ε (S.η p.1) (idlaCluster p.2 ⌊t / ε⌋₊)})
+      (𝓝[>] 0) (𝓝 0))
+    (hUpper : Tendsto (fun ε => S.idlaJointMeasure ε
+      {p | t < clusterExitTime (Λ p.1) ρ ∧
+        ¬ fillCells ε (S.η p.1) (idlaCluster p.2 ⌊t / ε⌋₊) ⊆ outerNbhd δ (Λ p.1 t)})
+      (𝓝[>] 0) (𝓝 0)) :
+    Tendsto (fun ε => S.idlaJointMeasure ε
+      {p | t < clusterExitTime (Λ p.1) ρ ∧
+        ¬ ApproximatesWithin δ (Λ p.1 t)
+          (fillCells ε (S.η p.1) (idlaCluster p.2 ⌊t / ε⌋₊))}) (𝓝[>] 0) (𝓝 0) := by
+  refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds
+    (by simpa using hLower.add hUpper) (fun _ => zero_le) (fun ε => ?_)
+  refine (measure_mono ?_).trans (measure_union_le _ _)
+  rintro ⟨ω, xs⟩ ⟨hT, hn⟩
+  by_cases h1 : innerNbhd δ (Λ ω t) ⊆ fillCells ε (S.η ω) (idlaCluster xs ⌊t / ε⌋₊)
+  · exact Or.inr ⟨hT, fun h2 => hn ⟨h1, h2⟩⟩
+  · exact Or.inl ⟨hT, h1⟩
+
 /-- Joint-law form of Proposition 8.1 implies the joint-law form of Theorem 1.4. -/
 theorem jointConvergenceOfIDLA_of_constrained (𝒮 : SpaceFillingSLEModel)
     (h81 : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
