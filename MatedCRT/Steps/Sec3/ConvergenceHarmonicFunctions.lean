@@ -12,13 +12,56 @@ globally continuous, and the boundary data are only controlled near the ball.
 namespace MatedCRT
 
 open MeasureTheory Filter Topology Set Metric HarmonicBalls
-open scoped ENNReal
+open scoped ENNReal NNReal
 
-/-- The expectation of boundary data at the first exit of the interpolated walk. -/
+/-- The radial retraction `x ↦ z + (r / max(r, |x - z|)) (x - z)` of `ℂ` onto `cl(B_r(z))`.
+Boundary data `ψ` are only given near `cl(B_r(z))`; composing with the retraction gives a
+continuous function on `ℂ` with the same values on `cl(B_r(z))`. -/
+noncomputable def ballRetraction (z : ℂ) (r : ℝ) (x : ℂ) : ℂ :=
+  z + ((r / max r (dist x z) : ℝ) : ℂ) * (x - z)
+
+/-- The expectation of boundary data at the first exit of the interpolated walk
+(the data being read through `ballRetraction`, which changes nothing when the walk
+starts in `B_r(z)`, since the interpolated path is continuous). -/
 noncomputable def interpolatedExitExpectation {Ω : Type} [MeasurableSpace Ω]
     (S : MatedCRTEnv Ω) (r : ℝ) (z y : ℂ) (ψ : ℂ → ℝ) (ε : ℝ) (ω : Ω) : ℝ :=
-  ∫ x, ψ (pathExitPosition (ball z r) (interpolatedWalk ε (S.η ω) (S.mε ε) x))
+  ∫ x, ψ (ballRetraction z r
+      (pathExitPosition (ball z r) (interpolatedWalk ε (S.η ω) (S.mε ε) x)))
     ∂srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y)
+
+/-- Regular exit of planar Brownian motion from a disk: immediately after the exit
+time, the Brownian path makes an outward radial excursion. Source: the strong Markov
+property of Brownian motion at the exit time and Blumenthal's 0-1 law (Mörters--Peres,
+*Brownian Motion*, Theorem 2.16 and Theorem 2.7; equivalently, regularity of the
+points of a circle for the Dirichlet problem via the Poincaré cone condition).
+Neither the strong Markov property nor the 0-1 law is available in `MarkovProcess`. -/
+def BrownianOutwardExcursionAtExitStep : Prop :=
+  ∀ (y z : ℂ) (r : ℝ), y ∈ ball z r → ∀ᵐ b ∂planarBrownianMotion y,
+    ∃ᶠ t in 𝓝[>] (MarkovProcess.ContinuousPath.exitTime (ball z r) b).toNNReal,
+      0 < inner ℝ (b (MarkovProcess.ContinuousPath.exitTime (ball z r) b).toNNReal - z)
+        (b t - b (MarkovProcess.ContinuousPath.exitTime (ball z r) b).toNNReal)
+
+/-- Measurability of bounded Lipschitz functionals of rescaled Liouville Brownian
+motion: in the Brownian path for almost every environment, and of their
+conditional expectations in the environment (joint measurability of the LQG clock). -/
+def LBMPathFunctionalMeasurableStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ → ∀ y : ℂ,
+  ∀ F : (ℝ≥0 → ℂ) → ℝ, IsBoundedLipschitzPathFunctional F →
+    (∀ᵐ ω ∂S.P, AEStronglyMeasurable (fun b => F (rescaledLBMPath (S.clock ω) S.m₀ b))
+      (planarBrownianMotion y)) ∧
+    AEMeasurable (fun ω => ∫ b, F (rescaledLBMPath (S.clock ω) S.m₀ b)
+      ∂planarBrownianMotion y) S.P
+
+/-- Measurability, for the simple random walk law, of bounded Lipschitz functionals
+and of continuous functions of the exit position of the interpolated walk. -/
+def InterpolatedWalkMeasurableStep : Prop :=
+  ∀ (ε mε : ℝ) (η : ℝ → ℂ) (m : ℤ → ℤ → ℕ) (a : ℤ),
+    (∀ F : (ℝ≥0 → ℂ) → ℝ, IsBoundedLipschitzPathFunctional F →
+      AEStronglyMeasurable (fun x => F (interpolatedWalk ε η mε x)) (srwLaw m a)) ∧
+    ∀ U : Set ℂ, IsOpen U → ∀ φ : ℂ → ℝ, Continuous φ →
+      AEStronglyMeasurable (fun x => φ (pathExitPosition U (interpolatedWalk ε η mε x)))
+        (srwLaw m a)
 
 /-- The continuous-mapping step in (3.17): the exit-position functional is
 continuous at the limiting paths almost surely, and its expectation can be
