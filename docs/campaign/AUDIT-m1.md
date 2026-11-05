@@ -181,3 +181,24 @@ For admissible γ and a valid environment, `MatedCRTEnv.IsValid.ae_normalizedLBM
 For the discrete domain, the proof `ae_normExitTime_laplacian_le_one` (`Proofs/Sec3/ConvergenceNormalizedExitTime/ExitLaplacianBound.lean:24–42`) obtains, on one almost-sure event, finiteness of the killed-domain vertex set for every positive mesh and bounded domain, from continuity and properness of the curve. On that event local finiteness and the deterministic consecutive-edge property give positive degree for every vertex; `KernelIntegralSubsequence.lean:38–51` exhibits this degree argument explicitly. The local-finiteness producer uses `adjacentCellsMeetAeStep`; its proof consumes the `matingOfTrees` bundle, including `boundaryLawBM` and `merge` (`Proofs/MatingOfTrees/AdjacentCells.lean:17–22`), so E-m1-5 remains material.
 
 For a finite killed set on a locally finite multigraph with consecutive edges, `mLaplacian_greenFn` proves finiteness of each visit-count expectation as an internal fact `hfin` (`Proofs/WalkPotential/GreenFirstStep.lean:210–224`) before deriving the Green equation. This establishes that the `toReal` convention in `greenFn` does not discard an infinite visit expectation under those graph assumptions, for every pair of vertices. Its proof uses a finite-domain nonnegative Poisson solution. The finite domain and positive-degree facts above therefore resolve the corresponding conventions on that almost-sure graph event, subject to the source status of the bundled inputs; they do not alone establish finite expected exit time as a separate exported proposition. The finite-mean hypothesis does imply almost-sure finite exit and visit integrability (`OccupationGreen.lean:119–155`), and the explicit-bound statement supplies finite mean only on its stated high-probability events (`Draft/Section2.lean:260–267`), not as an unrestricted assertion for every environment and mesh.
+
+
+## Lemma 3.4 binder and reduction trace (provisional)
+
+The corrected statement is at source lines 1124–1133 and the Draft is `IntegralConvergenceGreenFunctionStmt` (`Draft/Section3.lean:113–123`).
+
+| Lean input or local binder | Provisional bin | Comparison |
+| --- | --- | --- |
+| `𝒮`, `Ω`, `[MeasurableSpace Ω]`, `S` | TYPING | model and measurable environment carriers; representation semantics remain open |
+| `γ`, `0 < γ`, `γ < 2`, `ρ`, `0 < ρ`, `ρ < 1` | STANDING | paper's quantum-cone setting and fixed radius |
+| `S.IsValid 𝒮 γ` | UNCLASSIFIED | packaged coupling and mathematical inputs; E-m1-5 |
+| `r`, `z`, `y`, `0 < r`, `ball z r ⊆ ball 0 ρ`, `y ∈ ball z r` | SOURCE | fixed deterministic parameters |
+| `f : Ω → ℂ → ℝ`, pointwise `envSigma`-measurability | SOURCE, provisional | source calls f environment-measurable; equivalence of this pointwise formulation with the intended random-function measurability is not established |
+| pointwise-in-ω boundedness and Hölder continuity on the ball | SOURCE, provisional | source says bounded and Hölder; pathwise conditions are stronger than an a.s. reading, though modification on a null set might be possible with the required measurability |
+| conclusion `TendstoInProbability` | SOURCE, provisional | `Defs/Notation.lean:64–67` uses the outer measure of strict-error events; no measurability is required in the predicate itself |
+
+The source test function is defined on the open ball, but the displayed discrete sum evaluates marked points of all cells meeting it. The checked theorem `three_four_sum_ext` (`Audit/StatementsSec3Sec5M1.lean:102–113`) proves equality of sums for global representatives agreeing on the ball, assuming positive mesh and a continuous curve. This does not prove that all source random functions admit global representatives with Lean's pointwise measurability, nor integrability of the continuum Green product. The Green convention and finite visit expectation are treated above.
+
+No producer of the full Draft is listed in `REDUCTIONS.md`. The partial theorem `integralConvergenceGreenFunction_of_fixed_and_ae_continuum` (`Proofs/Sec3/IntegralConvergenceGreenFunction/ContinuumTailAssembly.lean:31–54`) proves the exact fixed-parameter convergence after assuming fixed-time occupation convergence, measurability and almost-sure continuum occupation convergence, besides `BoundedExitTimeRVStmt`, `ExitTimeUpperBoundStmt 𝒮` and the explicit literature input `MepsScalingInput 𝒮` (`External/SLE.lean:61–66`). It does not prove those inputs or the universal Draft proposition on its own.
+
+The source proof line 1138 says ε tends to infinity, then restricts to an event on which high-probability estimates hold for all sufficiently small ε. The direction conflicts with the statement's ε → 0, and probability tending to one alone does not imply eventual validity on one common event across all small ε. See E-m1-6; a subsequence or an additional uniform estimate may repair the argument, but is not asserted here.
