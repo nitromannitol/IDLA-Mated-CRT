@@ -51,4 +51,32 @@ theorem exists_distinct_stopped_horizons_of_prematureContact
     hS (hf.restrict_time hS (le_of_lt (hSV.trans hVr))) (hstop S hqS (le_of_lt (hSV.trans hVr)))
   exact (ne_of_lt hSV) heqSV
 
+/-- On an open increasing decoded path that represents every stopped family
+and is locally valid at the tested times, premature contact is equivalent
+to failure of horizon uniqueness. -/
+theorem halfBallPrematureContact_iff_not_unique_of_local_validity
+    {μ : Measure ℂ} {C : Ioi (0 : ℝ) → Set ℂ}
+    (ho : ∀ t, IsOpen (C t)) (hm : Monotone C)
+    (hvalid : ∀ r : PositiveRational,
+      (∀ n : ℕ, denseSeq ℂ n ∈ C ⟨r, r.property⟩ →
+        denseSeq ℂ n ∈ closedBall (0 : ℂ) (1 / 2)) →
+      ∃ Λ : ℝ → Set ℂ, IsConeHarmonicBallFamilyOn μ Λ r ∧
+        ∀ t (ht : t ∈ Ioo 0 (r : ℝ)), C ⟨t, ht.1⟩ = Λ t)
+    (hrep : ∀ (T : ℝ) (Λ : ℝ → Set ℂ), 0 < T →
+      IsConeHarmonicBallFamilyOn μ Λ T → IsStoppedAtHalfBall Λ T →
+      ∀ t (ht : t ∈ Ioo 0 T), C ⟨t, ht.1⟩ = Λ t) :
+    halfBallPrematureContact C ↔ μ ∉ halfBallHorizonUniqueMeasures := by
+  constructor
+  · exact exists_distinct_stopped_horizons_of_prematureContact ho hm hvalid
+  · intro hbad
+    by_contra hnon
+    apply hbad
+    intro T S Λ Γ hT hΛ hsΛ hS hΓ hsΓ
+    rcases lt_trichotomy S T with hST | hST | hST
+    · exact False.elim (hnon (halfBallPrematureContact_of_distinct_horizons
+        hT hΛ hsΛ hS hΓ hsΓ hST ho (hrep T Λ hT hΛ hsΛ)))
+    · exact hST
+    · exact False.elim (hnon (halfBallPrematureContact_of_distinct_horizons
+        hS hΓ hsΓ hT hΛ hsΛ hST ho (hrep S Γ hS hΓ hsΓ)))
+
 end MatedCRT
