@@ -46,6 +46,26 @@ phase-2 cited input, not to an independent proof of each field here.
 Earlier references to E-m1-5 as unresolved predate this ruling; the ruling
 does not settle unrelated carrier, normalization, or quantifier questions.
 
+### Standing-assumption trace: LQG clock
+
+`MatedCRTEnv.IsValid.isLQGClock` (`Defs/Setting.lean:153–156`) requires
+one environment event of probability one on which, for **every** starting
+point `z`, the same path-functional clock satisfies `IsLQGClock` and is a
+time-change clock for almost every Brownian path started at `z`. The paper's
+construction (`paper/idla_mated_crt-corrected.tex:706–715`) specifies the
+clock for Brownian motion started at `z`, but does not explicitly state this
+environment-event quantifier order. The reused clock predicate
+(`HarmonicBalls/Defs/LBM.lean:89`) requires uniform-on-compact convergence
+in quenched Brownian probability along dyadic circle-average scales.
+
+The documentation at `HarmonicBalls/Defs/LBM.lean:18–29` distinguishes a
+fixed-start result for circle averages from an all-starts result for a
+massive GFF with a different cutoff. That documentation alone does not prove
+the all-starts assertion for the exact quantum-cone circle-average clock in
+`IsValid`, nor does the quantifier difference itself prove it false. This
+specific existence or transfer check remains part of the standing-setting
+audit for the unresolved verdicts; it is separate from the E-m1-5 ruling.
+
 ### E-m1-8: valid-locus characterization
 
 `MatedCRTEnv.IsValid.measurable_walkerSequenceLaw` and
