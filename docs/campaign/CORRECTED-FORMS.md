@@ -248,3 +248,5 @@ the eventually almost-sure hypotheses and the separate identification gaps in
 consume the prepared 3.1 successor; `discreteDirichletProblem_of_prepared_steps` assembles
 3.5 with the existing continuum step. Both prepared steps remain open and retain the
 independent barrier issue recorded in `AUDIT-C11-C12-USES.md`.
+
+**C11, Lemma 3.7 route.** `NormalizedExitInteriorPreparedStep` is an open interior-convergence obligation using the prepared Lemma 3.1 input. `convergenceNormalizedExitTime_of_prepared_steps` assembles it with the existing boundary estimates; the independent G1/G2 issues remain open.
