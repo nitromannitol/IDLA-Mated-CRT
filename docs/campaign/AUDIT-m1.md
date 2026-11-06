@@ -114,6 +114,21 @@ reduction by exact term-level applications and axiom checks. No FAITHFUL verdict
 
 ## Source identity and Green normalization
 
+The normalization has a separate unresolved source-notation issue.
+`paper/idla_mated_crt-corrected.tex:714–719` writes `m₀` as the median
+of the exit time of `B^z` from the ball centered at zero, immediately after
+quantifying `z ∈ ℂ`, without specifying a fixed starting point for that
+median. Read as an assertion that the same value works for every `z`, it
+cannot be correct: for `‖z‖ > 1/2`, continuity of the LBM path gives exit
+time zero, while `MatedCRTEnv.m₀` uses Brownian motion started at zero
+(`Defs/Setting.lean:177–182`), and its positivity under `IsValid` and
+`0 < γ < 2` follows
+from `matedCRTScalingConstantPositive` (`ExitCDF.lean:205`) and `c₀ = 2/m₀`.
+The discrete median `mε` is explicitly started at zero (source:726–731),
+which supports zero as the intended reading, but this audit does not treat
+that inference as an operator-approved correction. The constant in 3.3,
+3.4, and 3.7 depends on resolving this source notation.
+
 The previously open disc Green identification now has a checked off-diagonal
 formula at every centre: `three_three_greenFunction_ball_explicit`
 (`MatedCRT/Audit/StatementsSec3Sec5M1.lean:37`) rewrites the Green function
