@@ -146,6 +146,24 @@ theorem three_three_vertexOf_is_least {Ω : Type} [MeasurableSpace Ω]
   have hle : vertexOf ε (S.η ω) x ≤ k := csInf_le hfinite.bddBelow hk
   exact mul_le_mul_of_nonneg_left (by exact_mod_cast hle) hε.le
 
+/-- The test-function hypotheses imply joint measurability on the ball. -/
+theorem three_four_joint_measurable_on_ball {Ω : Type} (m : MeasurableSpace Ω)
+    (z : ℂ) (r : ℝ) (f : Ω → ℂ → ℝ)
+    (hfmeas : ∀ x ∈ Metric.ball z r, @Measurable Ω ℝ m _ (fun ω => f ω x))
+    (hfholder : ∀ ω, IsHolderContinuousOn (f ω) (Metric.ball z r)) :
+    @Measurable (Ω × Metric.ball z r) ℝ (m.prod inferInstance) _
+      (fun p => f p.1 p.2) := by
+  let _ : MeasurableSpace Ω := m
+  have h : Measurable (fun p : Metric.ball z r × Ω => f p.2 p.1) := by
+    apply MeasureTheory.measurable_uncurry_of_continuous_of_measurable
+      (u := fun (x : Metric.ball z r) ω => f ω x)
+    · intro ω
+      obtain ⟨C, χ, hχ, _, hholder⟩ := hfholder ω
+      exact continuousOn_iff_continuous_domRestrict.mp (hholder.continuousOn hχ)
+    · intro x
+      exact hfmeas x x.property
+  exact h.comp measurable_swap
+
 /-- In a valid environment, the IDLA probability uses the joint law of the walker sequence. -/
 theorem five_one_idla_joint_law {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
     {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (ε : ℝ)
@@ -625,6 +643,7 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms three_three_pole_not_mem_of_infDist_pos
 #print axioms three_three_small_tolerances_suffice
 #print axioms three_three_vertexOf_is_least
+#print axioms three_four_joint_measurable_on_ball
 #print axioms three_two_interior_distance_pos
 #print axioms three_two_holder_quotient_iff
 #print axioms three_five_boundary_cell_marked_point

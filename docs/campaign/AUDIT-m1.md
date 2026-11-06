@@ -431,3 +431,20 @@ lower bound for `dist y x` over `x ∈ O`. The previously checked
 checks that positive infimum distance also excludes the pole, so that part of
 the displayed set-difference premise is redundant under the distance premise.
 These deterministic checks do not prove the Green-function convergence.
+
+
+## Lemma 3.4: joint test-function measurability
+
+`three_four_joint_measurable_on_ball` proves that the Draft's pointwise
+environment measurability, together with its pathwise Hölder condition,
+implies joint measurability of `(ω, x) ↦ f ω x` on the product of the
+environment sigma-algebra and the Borel sigma-algebra of the ball. The result
+uses Mathlib's `MeasureTheory.measurable_uncurry_of_continuous_of_measurable`
+after restricting the spatial argument to the ball. It does not require the
+probability measure or boundedness.
+
+This checks joint measurability for the Draft hypotheses; it does not decide
+whether the paper's phrase “σ(h, η)-measurable function” means measurability
+into a particular function space, nor whether that reading is equivalent to
+its evaluation-wise formulation. It also does not establish the integrability
+or the convergence assertion.
