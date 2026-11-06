@@ -103,3 +103,20 @@ At corrected.tex:2008–2009 replace `𝔰 = 𝔰(δ)` by `𝔰 = 𝔰(δ,t)`; l
 In symbols the scope supplied by the sentence is ∀δ ∀t ∃𝔰 P(δ,t,𝔰). It does not yield ∀δ ∃𝔰 ∀t P(δ,t,𝔰): for the elementary predicate 0 < 𝔰 < t, the former holds for all t > 0 while the latter fails. Thus the displayed notation `𝔰(δ)` should not be used as evidence of a uniform-in-t result; if the authors intend such uniformity, it is a distinct stronger claim requiring a separate proof. The replacement preserves independence of ε, which the subsequent application needs.
 
 This is a scope clarification, not a proof of the positive-surplus estimate: that estimate has the separate strict-obstacle and geometric issues recorded under E-c2-5.
+
+## E-c5-1 — MINIMAL-CORRECTION to the local-rate deduction
+
+In Lemma 6.9 (corrected.tex:2641–2643), move the choice of s₃ > 0 after “for each s₀ ∈ (0,1)”, alongside s₄ and s₅. This is the order supplied by Lemma 6.7: its success probability p = s₂ may depend on s₀. The displayed negative-binomial tail at 2672 and the following display have their inequality directions reversed: they bound the probability of taking *at least* the indicated number of trials, not at most that number. The replacement below avoids rounding and these tail displays.
+
+Condition on an environment where Lemma 6.7 holds, and let p = s₂(s₀), L = s₁r^{2β⁻}/ε. For k ≤ L, after any history of the first i < k walkers the number already absorbed is at most i < L, so Lemma 6.7 gives conditional probability at least p that the next walker adds a site. Let Nᵢ be the number of added sites after i walkers. Then
+
+    E[2^(−Nᵢ₊₁) | history] ≤ (1 − p/2) 2^(−Nᵢ),
+    E[2^(−Nₖ)] ≤ (1 − p/2)^k.
+
+Markov's inequality and log 2 ≤ 1 imply
+
+    P[Nₖ ≤ pk/4] ≤ 2^(pk/4) (1 − p/2)^k ≤ exp(−pk/4).
+
+This also covers k = 0. Thus the local-rate conclusion holds with s₃ = s₄ = p/4 and s₅ = s₁, using the same ω and random radius as Lemma 6.7. The derivation is formalized in `chanceOfBeingAbsorbedLocalRate_of_steps` (Steps/Sec6/ChanceOfBeingAbsorbed.lean:79) and `AbsorptionChernoffStep` in Proofs/Sec6/ChanceOfBeingAbsorbed/Chernoff.lean.
+
+The sole downstream application is Lemma 6.10, which fixes s₀ before choosing its parameters (corrected.tex:2710–2715), so the local order suffices for that application; its other estimates require independent checking. This proof is conditional on the printed scale-independent Lemma 6.7. E-A10 separately questions that input: if only p(r) = p/(1+|log r|)² is available, the same calculation gives the rate p(r)/4 rather than the displayed scale-independent conclusion. The change of quantifier order alone does not resolve E-A10.
