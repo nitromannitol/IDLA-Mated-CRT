@@ -15,6 +15,8 @@ import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.DyadicModulus
 import MatedCRT.Proofs.Sec5.IDLALowerBound.Final
 import MatedCRT.Proofs.IDLA.WalkerLawMeasurable
 import MatedCRT.Proofs.IDLA.Monotone
+import MatedCRT.Proofs.Infra.LocallyFinite
+import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.OccupationGreen
 import MatedCRT.Proofs.Sec3.UniformConvergenceGreenKernel.InteriorStep
 import MatedCRT.Proofs.WalkPotential.GreenFirstStep
@@ -173,6 +175,49 @@ theorem five_one_current_aggregates_exit {m : ℤ → ℤ → ℕ}
       (foldl_idlaStep_card Set.univ (List.ofFn fun i : Fin n => xs i) (∅, []) Set.finite_empty).1
   · exact hx n (stoppedIDLACluster Θ xs n)
       (foldl_idlaStep_card Θ (List.ofFn fun i : Fin n => xs i) (∅, []) Set.finite_empty).1
+
+/-- The event that all walkers leave all finite sets is measurable. -/
+theorem five_one_measurable_all_walkers_exit :
+    MeasurableSet {xs : ℕ → ℕ → ℤ | ∀ i : ℕ, ∀ A : Finset ℤ,
+      ∃ b, firstExitSite (A : Set ℤ) (xs i) = some b} := by
+  simp only [Set.ofPred_forall, Set.ofPred_exists]
+  exact MeasurableSet.iInter fun i => MeasurableSet.iInter fun A =>
+    MeasurableSet.iUnion fun b =>
+      (Absorption.measurableSet_firstExitSite_eq (A : Set ℤ) (some b)).preimage (measurable_pi_apply i)
+
+/-- Under the joint law, every walker exits every finite set almost surely. -/
+theorem five_one_joint_all_walkers_exit {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ ε : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (hε : 0 < ε) (hS : S.IsValid 𝒮 γ) :
+    ∀ᵐ p ∂hS.idlaJointLaw ε, ∀ i : ℕ, ∀ A : Set ℤ,
+      A.Finite → ∃ b, firstExitSite A (p.2 i) = some b := by
+  have hlf := hS.ae_isLocallyFiniteMult hγ0 hγ2 (adjacentCellsMeetAeStep 𝒮)
+  have h : ∀ᵐ p ∂hS.idlaJointLaw ε, ∀ i : ℕ, ∀ A : Finset ℤ,
+      ∃ b, firstExitSite (A : Set ℤ) (p.2 i) = some b := by
+    unfold MatedCRTEnv.IsValid.idlaJointLaw
+    apply MeasureTheory.Measure.ae_compProd_of_ae_ae
+      (five_one_measurable_all_walkers_exit.preimage measurable_snd)
+    filter_upwards [hlf] with ω hω
+    filter_upwards [five_one_all_walkers_exit_finite_sets (hω ε hε)
+      (S.mult_succ_ne_zero hε.le ω) 0] with xs hxs i A
+    exact hxs i A A.finite_toSet
+  filter_upwards [h] with p hp i A hA
+  simpa only [Set.Finite.coe_toFinset] using hp i hA.toFinset
+
+/-- The current unrestricted and environment-stopped aggregates are exited under the joint law. -/
+theorem five_one_joint_current_aggregates_exit {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ ε : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (hε : 0 < ε) (hS : S.IsValid 𝒮 γ)
+    (Θ : Ω → Set ℤ) :
+    ∀ᵐ p ∂hS.idlaJointLaw ε, ∀ n : ℕ,
+      (∃ b, firstExitSite (idlaCluster p.2 n) (p.2 n) = some b) ∧
+      (∃ b, firstExitSite (stoppedIDLACluster (Θ p.1) p.2 n) (p.2 n) = some b) := by
+  filter_upwards [five_one_joint_all_walkers_exit hγ0 hγ2 hε hS] with p hp n
+  constructor
+  · exact hp n (idlaCluster p.2 n)
+      (foldl_idlaStep_card Set.univ (List.ofFn fun i : Fin n => p.2 i) (∅, []) Set.finite_empty).1
+  · exact hp n (stoppedIDLACluster (Θ p.1) p.2 n)
+      (foldl_idlaStep_card (Θ p.1) (List.ofFn fun i : Fin n => p.2 i) (∅, []) Set.finite_empty).1
 
 /-- A witness chosen separately for each positive time need not be uniform in time. -/
 theorem time_dependent_witness_not_uniform :
@@ -421,6 +466,7 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
     exact (ENNReal.ofReal_le_iff_le_toReal hfin).1 hmass
 
 #print axioms cluster_exit_time_bounded
+#print axioms five_one_joint_current_aggregates_exit
 #print axioms five_one_idla_joint_law
 #print axioms five_one_fixed_set_exits
 #print axioms three_one_draft_refuted
