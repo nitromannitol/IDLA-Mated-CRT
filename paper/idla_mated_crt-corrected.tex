@@ -990,8 +990,9 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		
 		Moreover, if $D$ is simply connected, $u^{{\eps}}$ is discrete harmonic in ${\VGeps}(D) \setminus {\VGeps}(\partial D)$, and if $u^{{\eps}}$ has H\"{o}lder continuous boundary data, in the sense that there exists $\chi \in (0,1]$ and
 		$C' > 0$ so that 
+		% CORRECTION [C10]: printed C'; the boundary data in Lemma 3.5 are of order eps^{-1}.
 		\begin{equation} \label{eq:holder-boundary-data}
-		|u^{{\eps}}(a) - u^{{\eps}}(b)| \leq C'( {\eps} \vee |\eta(a) - \eta(b)|)^{\chi}, \quad \forall a,b \in {\VGeps}(\partial D), \quad \forall {\eps}  \in (0,1)
+		|u^{{\eps}}(a) - u^{{\eps}}(b)| \leq C' {\eps}^{-1}( {\eps} \vee |\eta(a) - \eta(b)|)^{\chi}, \quad \forall a,b \in {\VGeps}(\partial D), \quad \forall {\eps}  \in (0,1)
 		\end{equation}
 		then the convergence occurs uniformly in $\cl(D)$. 
 	\end{lemma}
@@ -1554,7 +1555,8 @@ By combining the previous two lemmas, we have the following bound on the expecte
 	\end{equation}
 	(The two $\deg^{{\eps}}$ factors in the above expression are needed to ensure the above expression matches the prior description of toppling.)
 	
-	By definition, we see that the divisible sandpile cluster satisfies
+	% CORRECTION [C9]: the printed identity had no eps < t restriction; for t <= eps no vertex topples.
+	For $\eps < t$, the divisible sandpile cluster satisfies
 	\begin{equation} \label{eq:cluster-definition}
 	D_{{\eps}}(t {\eps}^{-1})  = \{ x \in {\VGeps} : s^{{\eps}}_{t} > 0 \}
 	= \cl( \{ x \in {\VGeps} : v_t^{{\eps}} > 0 \}). 
@@ -1700,21 +1702,25 @@ By combining the previous two lemmas, we have the following bound on the expecte
 	\begin{equation} \label{eq:discrete-cluster}
 	\Lambdateps = \{ a \in {\VGeps}(B_{\rho}) :  \wteps(a) > - (t {\eps}^{-1}) \gr{{\eps}}{B_{\rho}}(0, a)\}.
 	\end{equation}
-	Observe that by \eqref{eq:cluster-definition} for $t \in (0,\TT)$, 
+	% CORRECTION [C9]: the printed identity had no eps < t restriction. Equality with the stopped cluster also requires consistency.
+	For $t \in (0,\TT)$ and $\eps < t$, if the stopped and unstopped odometers agree, then by \eqref{eq:cluster-definition},
 	\begin{equation} \label{eq:cluster-and-lambdat}
 	D_{{\eps}}(t {\eps}^{-1})  = \cl(\Lambdateps). 
 	\end{equation}
 	\begin{lemma} \label{lemma:discrete-laplacian-bound}
 		For all $t > 0$ and ${\eps} > 0$, we have that $\Delta^{{\eps}} \wteps = (\deg^{{\eps}})^{-1}$ on $\Lambdateps$
 		and $0 \leq \Delta^{{\eps}} \wteps \leq (\deg^{{\eps}})^{-1}$ on ${\VGeps}(B_{\rho}) \setminus {\VGeps}(\partial B_{\rho})$. 
-		Moreover,  $\Lambdateps$ is connected and if $ t {\eps}^{-1}  > 1$,  then $0 \in \Lambdateps$.
+		Moreover,  $\Lambdateps$ is connected.
+		% CORRECTION [C7]: printed for all eps > 0; the source must belong to the killed domain.
+		If $0 \in {\VGeps}(B_{\rho}) \setminus {\VGeps}(\partial B_{\rho})$ and $t {\eps}^{-1} > 1$, then $0 \in \Lambdateps$.
 	\end{lemma}
 	
 	
 	We conclude with a discrete conservation of mass lemma. 
 	\begin{lemma} \label{lemma:discrete-conservation-of-mass}
 		For all $t > 0$ and ${\eps} > 0$, we have that $|\Lambdateps| \leq   t {\eps}^{-1} $. Moreover, 
-		if $\Lambdateps \subset \inte({\VGeps}(B_{\rho}) \setminus {\VGeps}(\partial B_{\rho}))$, 
+		% CORRECTION [C7]: printed without the source-in-domain condition; otherwise the killed source and mass sum can vanish.
+		if $0 \in {\VGeps}(B_{\rho}) \setminus {\VGeps}(\partial B_{\rho})$ and $\Lambdateps \subset \inte({\VGeps}(B_{\rho}) \setminus {\VGeps}(\partial B_{\rho}))$,
 		then  
 		\[
 		\sum_{a \in {\VGeps}(B_{\rho}) \setminus {\VGeps}(\partial B_{\rho})} \Delta^{{\eps}} \wteps(a) \deg^{{\eps}}(a) =  t {\eps}^{-1} .
@@ -2943,7 +2949,8 @@ By combining the previous two lemmas, we have the following bound on the expecte
 	\[
 	\frac{v^{{\eps}}_t}{\deg^{{\eps}}}  = \min \{ w:{\VGeps} \to [0,\infty) : \deg^{{\eps}} \times \Delta^{{\eps}} w + t {\eps}^{-1} \delta_0 \leq 1 \},
 	\] 
-	and that 
+	% CORRECTION [C9]: the printed identity had no eps < t restriction. The stopped and unstopped odometers must also agree.
+	and that, when $\eps < t$ and the stopped and unstopped odometers agree,
 	\begin{equation} \label{eq:cluster-contained-in}
 	\begin{aligned}
 	\Lambdateps &= \{a \in \VGeps: v^{{\eps}}_t > 0 \} \\
@@ -2987,10 +2994,11 @@ By combining the previous two lemmas, we have the following bound on the expecte
 	\end{aligned}
 	\end{equation}
 	We use this to show the following. 
+	% CORRECTION [C8]: printed all s > 0; the estimate fails below the cell scale.
 	\begin{lemma} \label{lemma:mass-bound-odometer}
-		There exists deterministic constants $C = C(\rho, \gamma) > 0$, $\boldsymbol{c}_0 = \boldsymbol{c}_0(\rho, \gamma) \in (0, 1)$ such that with polynomially high probability as ${\eps} \to 0$, the following holds. For all $t > 0$, 
+		There exist deterministic constants $\beta = \beta(\rho,\gamma)>0$, $C = C(\rho, \gamma) > 0$, $\boldsymbol{c}_0 = \boldsymbol{c}_0(\rho, \gamma) \in (0, 1)$ such that with polynomially high probability as ${\eps} \to 0$, the following holds. For all $t > 0$,
 		all connected sets $\Theta \subset {\VGeps}(B_{\rho})$ containing the origin, 
-		and all $s > 0$, $z \in \C$ such that ${\VGeps}(B_{s}(z)) \subset {\VGeps}(B_{\rho}) \setminus \Theta$, 
+		and all $s \geq \eps^{\beta}$, $z \in \C$ such that ${\VGeps}(B_{s}(z)) \subset {\VGeps}(B_{\rho}) \setminus \Theta$,
 		\[
 		\left| {\VGeps}(B_{\boldsymbol{c}_0 s}(z)) \cap \Lambdateps \right| \leq C \times \sup_{\partial \Theta} u_t^{{\eps}}.
 		\]
@@ -3128,7 +3136,8 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		\sup_{{\VGeps}(\partial \Lambda_t)} u_t^{{\eps}} < \delta_0 {\eps}^{-1},
 		\end{equation}
 		except on an event of probability tending to 0 as ${\eps} \to 0$.
-		Fix $\omega_0 \in (0,\omega)$ which we will choose in \eqref{eq:choice-of-omega0-div} below. Set 
+		% CORRECTION [C8]: the printed proof did not impose the lower scale required by Lemma 7.2.
+		Decrease $\omega$ if necessary so that $\omega < \beta$, where $\beta$ is from Lemma \ref{lemma:mass-bound-odometer}. Fix $\omega_0 \in (0,\omega)$ which we will choose in \eqref{eq:choice-of-omega0-div} below. Set
 		$\Theta_0 = {\VGeps}(\Lambda_t)$, $r_0 = \delta_0$, $O_0 = \max_{\partial \Theta_0} u^{{\eps}}_t$
 		and for $k \geq 1$, inductively define 
 		\begin{equation} \label{eq:div-sandpile-cluster-iteration}
@@ -3164,7 +3173,7 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		O_k \leq (1-s_2) O_{k-1},
 		\end{equation}
 		except on an event of probability tending to 0 as ${\eps} \to 0$.
-		By Lemma \ref{lemma:mass-bound-odometer}, for all $z \in \C$ and $s > 0$ such that $B_{s}(z) \subset B_{\rho} \setminus \overline{\Theta_{k-1}}$:
+		By Lemma \ref{lemma:mass-bound-odometer}, for all $z \in \C$ and $s \geq \eps^{\beta}$ such that $B_{s}(z) \subset B_{\rho} \setminus \overline{\Theta_{k-1}}$:
 		\begin{equation} \label{eq:mass-bound-in-proof}
 		\left| {\VGeps}(B_{\boldsymbol c_0 s}(z)) \cap \Lambdateps \right| \leq C \times \sup_{\partial \Theta_{k-1}} u_{t}^{{\eps}},
 		\end{equation}

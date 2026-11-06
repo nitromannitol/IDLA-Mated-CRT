@@ -43,6 +43,18 @@ verdicts in the inbox entry of 13:55 UTC). Line numbers refer to the published s
   step valid. Provisional: Step 4 of Lemma 6.8 (l.2600) bounds the event through Lemma 2.18 (absolute `log(1/|z-w|)`);
   route (a) scale-invariant Lemma 2.18 vs (b) `r`-dependent `s_2` is open (E-A10). Lemmas 6.4-6.10 are not frozen.
 
+## [C7] Source in the killed domain (E-c1-1)
+The origin clause of Lemma 4.4 and the mass identity of Lemma 4.5 require `0 ∈ V^ε(Bρ) \ V^ε(∂Bρ)`. Continuity of η at 0 gives this for all sufficiently small ε. The old all-ε clauses fail when the source cell meets ∂Bρ. See AUDIT-C7-C10-USES.md.
+
+## [C8] Lemma 7.2 above cell scale (E-c3-2)
+Replace all `s > 0` by `s ≥ ε^β` for a deterministic β > 0, and restrict its application in Proposition 7.1 accordingly. Below cell scale the printed statement is false. See AUDIT-C7-C10-USES.md.
+
+## [C9] Cluster identity (E-x2-2)
+The identity with the closure of the positive odometer needs ε < t: for ε ≥ t there is no toppling and the cluster is `{0}`. The two stopped-cluster displays also require the separate consistency of stopped and unstopped odometers. Its earlier application in Proposition 5.1 is not established by ε < t; see AUDIT-C7-C10-USES.md.
+
+## [C10] Scaled boundary data (N1)
+In (3.1) replace `C'` by `C' ε⁻¹`; εu satisfies the hypothesis of Lemma 3.2. This addresses the data used in Lemma 3.5. The separate N3 random-subsequence issue is untouched. See AUDIT-C7-C10-USES.md.
+
 ## Readings (not corrections of the paper; line numbers of the corrected draft)
 
 ### (R1) The origin vertex `0` and `a^eps_0` (ESCALATIONS E-x3-3, worker A, 2026-11-04)
