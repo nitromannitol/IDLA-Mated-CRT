@@ -93,6 +93,28 @@ theorem three_three_pointwise_bound_iff_supremum {α : Type} (O : Set α)
   · rintro ⟨hb, hs⟩ x hx
     exact (le_ciSup hb ⟨x, hx⟩).trans hs
 
+/-- Positive infimum distance is a uniform positive separation on a nonempty test set. -/
+theorem three_three_infDist_pos_iff_separated (y : ℂ) (O : Set ℂ) :
+    0 < Metric.infDist y O ↔
+      O.Nonempty ∧ ∃ r : ℝ, 0 < r ∧ ∀ x ∈ O, r ≤ dist y x := by
+  constructor
+  · intro h
+    have hne : O.Nonempty := by
+      by_contra hempty
+      have : O = ∅ := Set.not_nonempty_iff_eq_empty.mp hempty
+      simp [this, Metric.infDist_empty] at h
+    exact ⟨hne, Metric.infDist y O, h, fun x hx => Metric.infDist_le_dist_of_mem hx⟩
+  · rintro ⟨hne, r, hr, hsep⟩
+    exact hr.trans_le ((Metric.le_infDist hne).2 (fun x hx => hsep x hx))
+
+/-- A set at positive distance from the pole does not contain the pole. -/
+theorem three_three_pole_not_mem_of_infDist_pos (y : ℂ) (O : Set ℂ)
+    (h : 0 < Metric.infDist y O) : y ∉ O := by
+  intro hy
+  have hle : Metric.infDist y O ≤ dist y y := Metric.infDist_le_dist_of_mem hy
+  simp only [dist_self] at hle
+  exact (not_le_of_gt h) hle
+
 /-- Probability convergence for all sufficiently small tolerances extends to every tolerance. -/
 theorem three_three_small_tolerances_suffice {Ω : Type} [MeasurableSpace Ω]
     (P : MeasureTheory.Measure Ω) (O : Set ℂ) (u : ℝ → Ω → ℂ → ℝ)
@@ -599,6 +621,8 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms three_two_nonempty_domain_cell_vertices
 #print axioms three_two_vertex_supremum_is_maximum
 #print axioms three_three_pointwise_bound_iff_supremum
+#print axioms three_three_infDist_pos_iff_separated
+#print axioms three_three_pole_not_mem_of_infDist_pos
 #print axioms three_three_small_tolerances_suffice
 #print axioms three_three_vertexOf_is_least
 #print axioms three_two_interior_distance_pos

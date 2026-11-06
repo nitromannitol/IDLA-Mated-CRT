@@ -417,3 +417,17 @@ than that of any other containing cell. The proof uses curve continuity,
 properness and surjectivity and finiteness of cells meeting a singleton. This
 checks the least-choice interpretation on the valid locus; it neither audits
 the validity bundle's source characterization nor the off-locus infimum.
+
+
+## Lemma 3.3: positive distance from the pole
+
+The source requires `O` to lie at positive distance from `y`
+(source:1113); the Draft uses `0 < infDist y O`
+(Draft/Section3.lean:101). `three_three_infDist_pos_iff_separated` proves
+that this is exactly nonemptiness of `O` plus a uniform strictly positive
+lower bound for `dist y x` over `x ∈ O`. The previously checked
+`three_three_empty_test_set` covers the empty-set case, which the real
+`infDist` convention excludes. `three_three_pole_not_mem_of_infDist_pos`
+checks that positive infimum distance also excludes the pole, so that part of
+the displayed set-difference premise is redundant under the distance premise.
+These deterministic checks do not prove the Green-function convergence.
