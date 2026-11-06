@@ -209,7 +209,19 @@ regularity of every uniform limit, and measurable selection on that thinning.
 `OdometerPreparedCompactnessStep` and `OdometerPreparedSelectionStep` in
 `Steps/Sec4/SubsequentialConvergencePrepared.lean` name the two remaining obligations;
 `subsequentialConvergencePrepared_of_steps` assembles them. The compactness step currently
-uses the earlier polynomial-scale form of 3.1; C11 synchronization remains open.
+now consumes `DiscretePotentialTightnessPreparedStmt`, the C10/C11 successor of 3.1.
 `convergenceDivisible_of_prepared` in `Proofs/Sec4/ConvergenceDivisible/Prepared.lean`
 reroutes Theorem 4.1 through the successor, its existing uniqueness and event-measurability
 inputs, and Lemma 4.8. Other historical consumers still use the old 4.6 statement.
+
+
+**C10/C11 prepared Lemma 3.1 (2026-11-06).** `DiscretePotentialTightnessPreparedStmt`
+in `Draft/Section3Prepared.lean` places an arbitrary deterministic input sequence before a
+deterministic thinning and a common almost-sure event, then quantifies over countable domain
+families and measurable data. `PreparedHolderBoundary` has the paper's `C′ / ε` factor at
+every scale. `PreparedTightnessPathwiseStep` and `PreparedTightnessSelectionStep` in
+`Steps/Sec3/DiscretePotentialTightnessPrepared.lean` are separate open proof obligations;
+`discretePotentialTightnessPrepared_of_steps` assembles them. The selection step is a sufficient
+general selection principle and is not claimed proved. The prior polynomial-scale form remains
+for historical reductions and is not equivalent to this successor. The prepared 4.6 compactness
+step now takes the new successor.

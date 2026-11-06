@@ -1,4 +1,5 @@
 import MatedCRT.Draft.Section4Prepared
+import MatedCRT.Draft.Section3Prepared
 import MatedCRT.Proofs.Sec4.SubsequentialConvergence.Corrected
 
 /-! Prepared-sequence obligations for Lemma 4.6, corrected paper lines 1903–1910
@@ -12,7 +13,7 @@ open MeasureTheory Filter Topology Set Metric HarmonicBalls
 on one event, using the estimates cited in the proof of Lemma 4.6. -/
 def OdometerPreparedCompactnessStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   EquiboundedStmt 𝒮 → DiscreteLaplacianBoundCorrectedStmt 𝒮 →
-  DiscretePotentialTightnessCorrectedStmt 𝒮 → DiscreteDirichletProblemStmt 𝒮 →
+  DiscretePotentialTightnessPreparedStmt 𝒮 → DiscreteDirichletProblemStmt 𝒮 →
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ t : ℝ, 0 < t → ∀ e : ℕ → ℝ, (∀ n, 0 < e n) → Tendsto e atTop (𝓝 0) →
@@ -34,7 +35,7 @@ def OdometerPreparedSelectionStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 /-- The two prepared-sequence obligations imply the corrected Lemma 4.6. -/
 theorem subsequentialConvergencePrepared_of_steps (𝒮 : SpaceFillingSLEModel)
     (h47 : EquiboundedStmt 𝒮) (h44 : DiscreteLaplacianBoundCorrectedStmt 𝒮)
-    (h31 : DiscretePotentialTightnessCorrectedStmt 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
+    (h31 : DiscretePotentialTightnessPreparedStmt 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
     (hc : OdometerPreparedCompactnessStep 𝒮) (hs : OdometerPreparedSelectionStep 𝒮) :
     SubsequentialConvergencePreparedStmt 𝒮 := by
   intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS t ht e he he0
