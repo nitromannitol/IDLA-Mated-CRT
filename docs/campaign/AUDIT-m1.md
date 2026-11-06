@@ -613,5 +613,14 @@ function agrees with the original at every spatial point on `G`. Thus, when
 `G` additionally has probability one, the all-environments requirements can
 be met by an almost-surely equal version. The theorem does not assert that
 every almost-sure good event admits a full-probability environment-measurable
-subset, or separately prove invariance of the convergence statement under
-this modification.
+subset.
+
+The checked `tendstoInProbability_congr_ae` shows that convergence in
+probability is invariant under almost-everywhere changes to the limit and,
+separately at each scale, to the approximating variables; it does not require
+one common full-measure event for all scales. Applied to the full-probability
+`G` above, equality of the two test functions on `G` gives equality there of
+the discrete sums and continuum integrals, so the convergence assertion is
+unchanged. This is an inference from the checked congruence lemma and the
+pointwise equality, not a proof of the 3.4 convergence. The congruence lemma
+has only `propext`, `Classical.choice`, and `Quot.sound` as axioms.

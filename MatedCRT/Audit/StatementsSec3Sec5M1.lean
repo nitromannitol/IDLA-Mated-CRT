@@ -266,6 +266,19 @@ theorem three_four_good_event_modification {Ω : Type} [MeasurableSpace Ω]
     funext x
     simp [g, hω]
 
+/-- Almost-everywhere changes preserve convergence in probability. -/
+theorem tendstoInProbability_congr_ae {Ω : Type} [MeasurableSpace Ω]
+    (μ : MeasureTheory.Measure Ω) (X X' : ℝ → Ω → ℝ) (Y Y' : Ω → ℝ)
+    (hX : ∀ ε, ∀ᵐ ω ∂μ, X ε ω = X' ε ω) (hY : ∀ᵐ ω ∂μ, Y ω = Y' ω) :
+    TendstoInProbability μ X Y ↔ TendstoInProbability μ X' Y' := by
+  have heq : ∀ δ ε, μ {ω | δ < |X ε ω - Y ω|} = μ {ω | δ < |X' ε ω - Y' ω|} := by
+    intro δ ε
+    apply MeasureTheory.measure_congr
+    filter_upwards [hX ε, hY] with ω hx hy
+    simp only [hx, hy]
+  unfold TendstoInProbability
+  simp_rw [heq]
+
 /-- In a valid environment, the IDLA probability uses the joint law of the walker sequence. -/
 theorem five_one_idla_joint_law {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
     {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (ε : ℝ)
