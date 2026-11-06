@@ -200,7 +200,7 @@ The corrected source statement is at lines 1110–1122; the exact Draft declarat
 | `δ > 0`, `O ⊆ closedBall z r \ {y}`, `0 < infDist y O` | SOURCE, with empty-set caveat | the source says small positive δ and positive distance; quantification over every δ is equivalent for a monotone error bound, while Mathlib's real `infDist y ∅ = 0` excludes the empty set |
 | `ProbTendsToOne` of a pointwise `∀ x ∈ O` error bound | SOURCE, provisional | source displays a supremum bound with probability tending to one; the Lean predicate uses outer measure of failure |
 
-The checked `three_three_empty_test_set` proves the omitted empty-set bound is vacuous and has probability tending to one, including for an arbitrary measure; this does not settle the nonempty-set supremum or continuum Green-function semantics. `rescale` is `mε⁻¹ * u (vertexOf ε η x)` (`Defs/Map.lean:200`), and `greenKernel` divides `greenFn` by the degree at the second argument (`Defs/RandomWalk.lean:95–100`). The preceding finite-visit and positive-degree checks address the totalized real operations on the stated graph event. `vertexOf` still needs its cell-covering/least-index properties in the valid environment. [C1] Green normalization remains open as recorded above.
+The checked `three_three_empty_test_set` proves the omitted empty-set bound is vacuous and has probability tending to one, including for an arbitrary measure; this does not settle the nonempty-set supremum or continuum Green-function semantics. `rescale` is `mε⁻¹ * u (vertexOf ε η x)` (`Defs/Map.lean:200`), and `greenKernel` divides `greenFn` by the degree at the second argument (`Defs/RandomWalk.lean:95–100`). The preceding finite-visit and positive-degree checks address the totalized real operations on the stated graph event. `three_three_vertexOf_is_least` checks its cell-covering and least-scaled-index properties almost surely in a valid environment, simultaneously for every point and positive mesh; its off-valid-locus totalization remains unaudited. [C1] Green normalization remains open as recorded above.
 
 The checked `three_three_final_reduction` applies `uniformConvergenceGreenKernel_final` (`Proofs/Sec3/UniformConvergenceGreenKernel/InteriorStep.lean:73`) to the exact Draft. It retains 2.10, 3.4, 2.14, 2.8 and `DiscretePotentialTightnessAeStep` as hypotheses; it does not prove them. This supersedes the older reduction listed in `REDUCTIONS.md` for the current dependency audit.
 
@@ -404,3 +404,16 @@ characterize pointwise bounds without a boundedness premise. The previously
 checked empty-set result handles the omitted empty test set. These are
 order/probability-convention checks; they do not establish Green-function
 normalization, source measurability, or the estimate itself.
+
+
+## Lemma 3.3: least cell containing a point
+
+The paper defines `a_x^ε` as the smallest element of `εℤ` whose cell
+contains `x` (source:635–638); `vertexOf` takes the integer infimum of those
+cell indices (Defs/Map.lean:182). `three_three_vertexOf_is_least` verifies on
+one almost-sure event under `S.IsValid` that, for every `ε > 0` and every
+point, the chosen cell contains the point and its scaled index is no larger
+than that of any other containing cell. The proof uses curve continuity,
+properness and surjectivity and finiteness of cells meeting a singleton. This
+checks the least-choice interpretation on the valid locus; it neither audits
+the validity bundle's source characterization nor the off-locus infimum.

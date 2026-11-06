@@ -106,6 +106,24 @@ theorem three_three_small_tolerances_suffice {Ω : Type} [MeasurableSpace Ω]
   intro ε ω hω x hx
   exact (hω x hx).trans (min_le_left _ _)
 
+/-- The chosen vertex is the least cell vertex containing the point, at every positive mesh. -/
+theorem three_three_vertexOf_is_least {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
+    (hS : S.IsValid 𝒮 γ) :
+    ∀ᵐ ω ∂S.P, ∀ ε : ℝ, 0 < ε → ∀ x : ℂ,
+      x ∈ cell ε (S.η ω) (vertexOf ε (S.η ω) x) ∧
+      ∀ k : ℤ, x ∈ cell ε (S.η ω) k →
+        ε * (vertexOf ε (S.η ω) x : ℝ) ≤ ε * (k : ℝ) := by
+  filter_upwards [hS.isAreaParametrized, hS.ae_tendsto_cocompact] with ω hη hp
+  intro ε hε x
+  refine ⟨Tightness.mem_cell_vertexOf hη.1 hp hη.2.2.1 hε x, ?_⟩
+  have hfinite : {k : ℤ | x ∈ cell ε (S.η ω) k}.Finite :=
+    (Tightness.cellVertices_finite hη.1 hp hε (Bornology.isBounded_singleton (x := x))).subset
+      (fun _ hk => ⟨x, hk, rfl⟩)
+  intro k hk
+  have hle : vertexOf ε (S.η ω) x ≤ k := csInf_le hfinite.bddBelow hk
+  exact mul_le_mul_of_nonneg_left (by exact_mod_cast hle) hε.le
+
 /-- In a valid environment, the IDLA probability uses the joint law of the walker sequence. -/
 theorem five_one_idla_joint_law {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
     {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (ε : ℝ)
@@ -582,6 +600,7 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms three_two_vertex_supremum_is_maximum
 #print axioms three_three_pointwise_bound_iff_supremum
 #print axioms three_three_small_tolerances_suffice
+#print axioms three_three_vertexOf_is_least
 #print axioms three_two_interior_distance_pos
 #print axioms three_two_holder_quotient_iff
 #print axioms three_five_boundary_cell_marked_point
