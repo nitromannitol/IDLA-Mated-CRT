@@ -182,7 +182,7 @@ The further input needed at 2043 is B⁻_{δ/2}(Λ_t) ⊆ fill(Λᵋ_t), with pr
 The resulting conclusion is the ordinary lower bound and the version stopped at Λᵋ_t; see `joint_iDLALowerBound_discrete_of_steps` (Proofs/IDLA/JointDiscreteLowerBound.lean:14). This checks the geometric use in Proposition 5.1 and the unstopped lower bound used in the main theorem. It does **not** establish the proposition's distinct claim for stopping at Vᵋ(Λ_t), which Proposition 6.1 uses; that remains E-c1-5 and cannot be obtained merely by the displayed correction. The inner estimate is likewise conditional on the independently assigned strict-obstacle input.
 ## E-x2-1 — MINIMAL-CORRECTION to the shell proof, conditional on corrected numbered inputs
 
-This is a partial finding, not a verdict on Proposition 7.1 or on the complete shell iteration. Write `q = 1 - s₂ ∈ (0,1)` and `p = 1/(2β⁻) > 0`. Suppose the stated contraction `O_j ≤ q O_{j-1}` has been established for `1 ≤ j < τ₁`, and `0 ≤ ε O₀ < δ₀`. For `1 ≤ k < τ₁`, the definition of `τ₁` makes the maximum in the definition of `r_k` attain its first term, and hence
+The following geometric-radius calculation was the first partial finding; the complete conditional verdict is recorded below. Write `q = 1 - s₂ ∈ (0,1)` and `p = 1/(2β⁻) > 0`. Suppose the stated contraction `O_j ≤ q O_{j-1}` has been established for `1 ≤ j < τ₁`, and `0 ≤ ε O₀ < δ₀`. For `1 ≤ k < τ₁`, the definition of `τ₁` makes the maximum in the definition of `r_k` attain its first term, and hence
 
 `r_k = (ε s₆ O_{k-1})^p ≤ (δ₀ s₆)^p q^{(k-1)p}`.
 
