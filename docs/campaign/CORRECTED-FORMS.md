@@ -242,3 +242,9 @@ replace the old 3.1 antecedent with `DiscretePotentialTightnessPreparedStmt`;
 steps are open obligations, not consequences proved here; in particular they must handle
 the eventually almost-sure hypotheses and the separate identification gaps in
 `AUDIT-C11-C12-USES.md`.
+
+**C10/C11, Lemma 3.5 route (2026-11-06).** `DirichletInteriorPreparedStep` and
+`DirichletBoundaryPreparedStep` in `Steps/Sec3/DiscreteDirichletProblemPrepared.lean`
+consume the prepared 3.1 successor; `discreteDirichletProblem_of_prepared_steps` assembles
+3.5 with the existing continuum step. Both prepared steps remain open and retain the
+independent barrier issue recorded in `AUDIT-C11-C12-USES.md`.
