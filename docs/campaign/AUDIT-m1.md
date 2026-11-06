@@ -14,7 +14,7 @@ freeze is not in force and the missing semantic checks are not presumed true.
 | 3.4 | INCOMPLETE | Off-ball extension and disc Green formula are addressed; Green-product integrability follows conditionally from volume growth. Random-function and remaining standing semantics need closure. |
 | 3.5 | MISMATCH | Draft requires Hölder data on a larger closed ball than the source (S2). |
 | 3.6 | MISMATCH | Draft requires Hölder data on a larger closed ball than the source (S2). |
-| 3.7 | INCOMPLETE | Distributional sign and finite-domain exit conventions are addressed below; uniqueness and full solution identification remain open. |
+| 3.7 | INCOMPLETE | Distributional sign, finite-domain exit conventions and conditional Dirichlet uniqueness are addressed below; standing and probability semantics remain open. |
 | 5.1 | INCOMPLETE | Family uniqueness and the nonexit fallback are addressed; exit and stopping-set events are conditionally null measurable. Full lower-bound event and walk semantics remain open. The stopped-cluster proof gap E-c1-5 is separate from statement fidelity. |
 | 5.2 | INCOMPLETE | Draft makes `K` deterministic; the source's intended quantifier needs interpretation. |
 | 5.3 | MISMATCH | Draft allows `s` to depend on `t`, unlike source `s(δ)`; see E-m1-2. |
@@ -247,6 +247,19 @@ The corrected source at lines 1399–1412 fixes deterministic `z` and `r`, asks 
 The paper's normalized exit time is the sum of `G(a,b)/deg(b)` over the killed-domain vertices (source:773–775). Lean implements that sum as a subtype `tsum` (`Defs/RandomWalk.lean:98–100,111–113`), where the Green function is the real value of an extended nonnegative visit expectation (:88–96). The real-valued conventions return zero on an infinite expectation, and real division returns zero at degree zero; identifying the expression with the source requires the valid-environment finiteness and positive-degree conditions. On finite killed domains, `sum_visitsBeforeExit_mul_eq_occupation` (`Proofs/Sec3/IntegralConvergenceGreenFunction/OccupationGreen.lean:53–59`) relates weighted visits to the path occupation sum when exit is finite; `integrable_visitsBeforeExit_of_expectedExitTime_ne_top` (:119) supplies visit integrability from finite mean exit. These conditional lemmas do not by themselves prove all required environment assumptions.
 
 The negative measure in the displayed `HasLaplacian` is `ENNReal.ofReal (S.c₀ / 6) • S.μ ω`. `MatedCRTEnv.c₀_nonneg` (`Proofs/Sec3/ConvergenceNormalizedExitTime/PotentialBoundary.lean:11`) proves this scalar is nonnegative, so `ofReal` does not truncate a negative coefficient; strict positivity of the median is separately derived as described below. The producer of `NormalizedExitPotentialStep` (`PotentialIdentification.lean:12–19,29–37,73–79`) conditionally derives continuity, the distributional identity, and the zero boundary condition for the Green potential from `BoundedExitTimeRVStmt` and `S.IsValid`. This is a checked producer trace, not a proof that its inputs are source-free or that the full 3.7 statement is unconditional.
+
+The solution-uniqueness question is resolved within the Draft's continuous
+distributional solution class: `eqOn_closedBall_of_hasLaplacian_eq`
+(`MatedCRT/Proofs/Sec3/ConvergenceNormalizedExitTime/DirichletUniqueness.lean:45`)
+proves that two continuous functions on the closed disc with the same
+`HasLaplacian` data and equal boundary values agree on the closed disc.
+Combining it with `normalizedExitPotentialStep_of_boundedExitTime`
+(`MatedCRT/Proofs/Sec3/ConvergenceNormalizedExitTime/PotentialIdentification.lean:12`)
+identifies any such Draft limit a.s. with `normalizedExitGreenPotential`
+on the closed disc, provided the explicit `BoundedExitTimeRVStmt` input
+holds. Both theorems have only `propext`, `Classical.choice`, and `Quot.sound`
+as axioms. This is an inference by applying the two existing theorems, not a
+claim that the required input or the 3.7 convergence has been proved here.
 
 The exact Draft reduction (`OfInteriorBoundary.lean:10–18`; checked as `three_seven_draft_reduction`) still assumes the Draft 3.1, six other paper propositions, `NormalizedExitInteriorStep`, and `DiscreteExitBoundaryStep`. The separate almost-sure corrected tightness formulation records the issue applying pointwise bounds to environment-measurable functions (`Steps/Sec3/ConvergenceNormalizedExitTime.lean:52–58`, E-c2-6); it is not substituted into this displayed producer. Existing E-m1-3 and E-m1-4 record the independent coefficient, sign, and center discrepancies in the source proof.
 
