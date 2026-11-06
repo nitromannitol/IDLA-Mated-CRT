@@ -25,12 +25,56 @@ import MatedCRT.Steps.Sec2.VolumeGrowthHalf
 import MatedCRT.Steps.Sec6.ChanceOfBeingAbsorbed
 import HarmonicBalls.Steps.Sec11.PinchGreenMeasurable
 import HarmonicBalls.Proofs.Potential.GreenBall
+import HarmonicBalls.Proofs.Sec6.GreenIntegrability
+import MatedCRT.Proofs.Sec2.ConeFamilyMeasurable.ConeVolumeGrowth
 
 /-! A logical check for the quantifier-order issue in Lemma 5.3.
 It does not assert that the actual Green-function estimate has this form. -/
 namespace MatedCRT.Audit.StatementsSec3Sec5M1
 
 open scoped ENNReal
+
+/-- Volume growth makes the Green potential integrand of Lemma 3.4 integrable. -/
+theorem three_four_green_integrable_of_volumeGrowth
+    {μ : MeasureTheory.Measure ℂ} [MeasureTheory.IsLocallyFiniteMeasure μ]
+    {ρ r βminus βplus : ℝ} {z y : ℂ} (hρ : 0 < ρ)
+    (hV : HarmonicBalls.VolumeGrowth μ ρ βminus βplus)
+    (hball : Metric.ball z r ⊆ Metric.ball (0 : ℂ) ρ)
+    (hy : y ∈ Metric.ball z r) {f : ℂ → ℝ}
+    (hf : ContinuousOn f (Metric.ball z r))
+    (hbound : ∃ M : ℝ, ∀ x ∈ Metric.ball z r, |f x| ≤ M) :
+    MeasureTheory.IntegrableOn
+      (fun x => HarmonicBalls.greenFunction (Metric.ball z r) y x * f x)
+      (Metric.ball z r) μ := by
+  obtain ⟨M, hM⟩ := hbound
+  have hgreen := HarmonicBalls.Section6.integrable_greenFunction_of_volumeGrowth
+    hρ Metric.isOpen_ball hball hV (Metric.ball_subset_closedBall (hball hy))
+  have hgreen' : MeasureTheory.IntegrableOn
+      (HarmonicBalls.greenFunction (Metric.ball z r) y) (Metric.ball z r) μ :=
+    hgreen.mono_measure MeasureTheory.Measure.restrict_le_self
+  apply hgreen'.mul_bdd (hf.aestronglyMeasurable Metric.isOpen_ball.measurableSet)
+  filter_upwards [MeasureTheory.ae_restrict_mem Metric.isOpen_ball.measurableSet] with x hx
+  simpa only [Real.norm_eq_abs] using hM x hx
+
+/-- The Green integrand in Lemma 3.4 is almost surely integrable under volume growth. -/
+theorem three_four_green_ae_integrable_of_volumeGrowth
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ ρ r : ℝ} {z y : ℂ}
+    (hS : S.IsValid 𝒮 γ) (hγ : 0 < γ) (hγ2 : γ < 2)
+    (hρ : 0 < ρ) (hρ1 : ρ < 1) (h27 : VolumeGrowthStmt)
+    (hball : Metric.ball z r ⊆ Metric.ball (0 : ℂ) ρ)
+    (hy : y ∈ Metric.ball z r) (f : Ω → ℂ → ℝ)
+    (hbound : ∀ ω, ∃ M : ℝ, ∀ x ∈ Metric.ball z r, |f ω x| ≤ M)
+    (hholder : ∀ ω, IsHolderContinuousOn (f ω) (Metric.ball z r)) :
+    ∀ᵐ ω ∂S.P, MeasureTheory.IntegrableOn
+      (fun x => HarmonicBalls.greenFunction (Metric.ball z r) y x * f ω x)
+      (Metric.ball z r) (S.μ ω) := by
+  filter_upwards [hS.isConeField.ae_volumeGrowth_inside_unit hγ hγ2 h27 hρ1] with ω hω
+  let : MeasureTheory.IsLocallyFiniteMeasure (S.μ ω) := hω.1
+  obtain ⟨βminus, βplus, hV⟩ := hω.2
+  obtain ⟨C, χ, hχ, _, hc⟩ := hholder ω
+  exact three_four_green_integrable_of_volumeGrowth hρ hV hball hy
+    (hc.continuousOn hχ) (hbound ω)
 
 /-- The Green function in any disc has the translated explicit disc formula
 away from the pole. -/

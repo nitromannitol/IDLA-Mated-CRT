@@ -11,7 +11,7 @@ freeze is not in force and the missing semantic checks are not presumed true.
 | 3.1 | WRONG | Conditional Lean refutation `Audit/Refutations.lean:317`, under its explicit scaling and valid-environment hypotheses; closed-segment source interpretation remains a question. |
 | 3.2 | DIVERGES-DOCUMENTED | The approved [C6] boundary form allows the exponent to depend on `C'`; Draft requires it beforehand and also requires `ξ' ≤ χ` (see below). The checked-in source at 1008 still states the stronger quantifier order. |
 | 3.3 | INCOMPLETE | The off-pole Green function has the explicit translated-disc formula; standing-assumption and complete probability-semantics checks remain open. |
-| 3.4 | INCOMPLETE | Off-ball extension and the disc Green formula are addressed; volume growth supplies conditional Green-kernel integrability, while product and random-function semantics need closure. |
+| 3.4 | INCOMPLETE | Off-ball extension and disc Green formula are addressed; Green-product integrability follows conditionally from volume growth. Random-function and remaining standing semantics need closure. |
 | 3.5 | MISMATCH | Draft requires Hölder data on a larger closed ball than the source (S2). |
 | 3.6 | MISMATCH | Draft requires Hölder data on a larger closed ball than the source (S2). |
 | 3.7 | INCOMPLETE | Distributional sign and finite-domain exit conventions are addressed below; uniqueness and full solution identification remain open. |
@@ -302,10 +302,13 @@ derives a.s. local finiteness and `VolumeGrowth (μ ω) ρ βminus βplus` from
 (`HarmonicBalls/Proofs/Sec6/GreenIntegrability.lean:47`) then makes
 `greenFunction (ball z r) y` integrable under `μ ω`, for `0 < ρ`,
 `ball z r ⊆ ball 0 ρ` and `y ∈ ball z r`. Both declarations have only
-`propext`, `Classical.choice`, and `Quot.sound` as axioms. Mathematically,
-boundedness and pathwise continuity of `f` on the ball give the bounded
-measurable multiplier needed for its Green product; the exact Lean bridge
-for the Draft's random `f` has not been checked here. `VolumeGrowthStmt` is
+`propext`, `Classical.choice`, and `Quot.sound` as axioms.
+`three_four_green_integrable_of_volumeGrowth` and
+`three_four_green_ae_integrable_of_volumeGrowth`
+(`MatedCRT/Audit/StatementsSec3Sec5M1.lean:38,60`) now check the bounded
+continuous multiplier and the almost-sure random Hölder-function bridge,
+respectively. The latter has only the standard axioms, and the audit module
+passes `lc` and `lb`. `VolumeGrowthStmt` is
 an explicit numbered-result hypothesis of this route, not a consequence
 asserted from `S.IsValid` alone. Separately,
 `greenFunction_ae_integrableOn_ball`
