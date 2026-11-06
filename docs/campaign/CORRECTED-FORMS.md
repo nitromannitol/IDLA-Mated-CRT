@@ -182,3 +182,10 @@ consumed the false Draft 7.2 and the Draft 6.8 (REDUCTIONS F1, F3). Final form (
 findings E-x2-2 (`D(M) = {0} ∪ cl{v > 0}`) concern a printed identity, not a Draft Stmt.
 
 **Paper corrections C7–C10 (2026-11-06).** See `AUDIT-C7-C10-USES.md`: C7 requires the source in the killed domain for the two affected clauses; C8 restricts Lemma 7.2 to `s ≥ ε^β`; C9 restricts the global cluster identity to `ε < t`, with stopped/unstopped consistency additionally required for the two stopped-cluster displays; C10 changes the boundary modulus in Lemma 3.1 to `C' ε⁻¹`. These changes do not resolve the separate consistency use in Proposition 5.1 or N3.
+
+
+**C7 Draft synchronization (2026-11-06).** The existing proved successors
+`DiscreteLaplacianBoundCorrectedStmt` and `DiscreteConservationOfMassCorrectedStmt` now reside in
+`Draft/Section4.lean`; their definitions and their downstream names are unchanged. The source-cell
+hypothesis appears only in the respective origin and mass-identity clauses, exactly as in corrected
+paper lines 1881–1893. The old Draft declarations remain as refuted historical forms.

@@ -156,4 +156,31 @@ def SubsequentialPropertiesStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
       HasLaplacian w (ENNReal.ofReal (S.c₀ / 6) • S.μ ω) 0
         {x ∈ ball (0 : ℂ) ρ | x = 0 ∨ -t * (S.c₀ / 6) * greenFunction (ball 0 ρ) 0 x < w x}
 
+/-! ## Corrected statements of Lemmas 4.4 and 4.5 (ESCALATIONS E-c1-1) -/
+
+/-- **Lemma 4.4**, corrected: the claim `0 ∈ Λ^ε_t` needs `0 ∈ V^ε(B_ρ) \ V^ε(∂B_ρ)` (the origin of Appendix A). -/
+def DiscreteLaplacianBoundCorrectedStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ᵐ ω ∂S.P, ∀ t ε : ℝ, 0 < t → 0 < ε →
+    (∀ a ∈ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t,
+      matedLaplacian (S.mult ε ω) (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t) a = ((matedDeg (S.mult ε ω) a : ℕ) : ℝ)⁻¹) ∧
+    (∀ a ∈ ballInterior ε (S.η ω) ρ,
+      0 ≤ matedLaplacian (S.mult ε ω) (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t) a ∧
+      matedLaplacian (S.mult ε ω) (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t) a ≤ ((matedDeg (S.mult ε ω) a : ℕ) : ℝ)⁻¹) ∧
+    IsVPreconnected (S.mult ε ω) (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t) ∧
+    (1 < t / ε → (0 : ℤ) ∈ ballInterior ε (S.η ω) ρ → (0 : ℤ) ∈ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t)
+
+/-- **Lemma 4.5**, corrected: the mass identity needs `0 ∈ V^ε(B_ρ) \ V^ε(∂B_ρ)`. -/
+def DiscreteConservationOfMassCorrectedStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ᵐ ω ∂S.P, ∀ t ε : ℝ, 0 < t → 0 < ε →
+    (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t).Finite ∧
+    ((matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t).ncard : ℝ) ≤ t / ε ∧
+    ((0 : ℤ) ∈ ballInterior ε (S.η ω) ρ →
+      matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t ⊆ vInterior (S.mult ε ω) (ballInterior ε (S.η ω) ρ) →
+      ∑' a : ballInterior ε (S.η ω) ρ,
+        matedLaplacian (S.mult ε ω) (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t) a * (matedDeg (S.mult ε ω) a : ℝ) = t / ε)
+
 end MatedCRT
