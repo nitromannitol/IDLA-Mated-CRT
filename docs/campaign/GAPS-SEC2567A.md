@@ -27,3 +27,13 @@ At corrected.tex:2117–2124 replace the assertion that the ambient Green functi
 Proof: the obstacle is φ = −(t/ε)ḡBρ(·,0), and the least supersolution w̃ satisfies w̃ ≥ φ. On vertices of the obstacle domain outside Λεt, the definition of Λεt excludes strict inequality, so w̃ = φ. On its exterior boundary both terms vanish under the obstacle boundary conditions, and outside the closure both are zero. Therefore v = w̃ − φ vanishes at every vertex outside the cluster, including ∂Λεt. The killed Green function and exit-time function defining ṽ vanish outside Λεt, so v − ṽ has zero boundary values. The displayed calculation in 2110–2116 gives Δ(v − ṽ) = 0 in the cluster. The finite-graph maximum principle applied to both signs gives v = ṽ there, hence the weaker comparison used at 2124. This contact calculation is checked in `mated_surplus_zero_off_cluster` (Proofs/Sec5/MeanValueInequality/BoundaryContact.lean:45).
 
 Downstream, the comparison is used in the immediately following surplus estimate and nowhere else as a separate result. The correction supplies that comparison but does not prove the subsequent uniform positive surplus at 2128–2134, which is the independent E-c2-5/E-x3-1 issue.
+
+## E-c2-2 — FINE-AS-PRINTED, with the omitted counting argument
+
+At corrected.tex:2168–2171 the random constant C may be chosen as μh(BR), for fixed ρ < R < 1. By Lemma 2.8 (:669–675), with polynomially high probability every ε-cell meeting Bρ has diameter less than R−ρ and is therefore contained in BR. The area parametrization gives mass ε to each cell and zero μh-mass to the intersection of two distinct cells. Hence for every finite subset F of Vε(Bρ),
+
+    ε |F| = μh(⋃a∈F Hεa) ≤ μh(BR).
+
+Local finiteness of μh makes μh(BR) finite almost surely. The same inequality for all finite F proves the vertex set finite and yields |Vε(Bρ)| ≤ μh(BR)/ε. The finite-subset inequality, including the zero-overlap argument, is formalized in `cellVerticesBallFiniteStep` (Proofs/Sec6/ConstantOrderLowerBound/Model.lean:112); local finiteness is also obtainable from the cited volume growth bound by covering a fixed compact ball with finitely many smaller balls.
+
+For the only downstream use, the union bound in the proof of Lemma 5.2, this random coefficient is sufficient: on the good event, C ε⁻¹ exp(−c ε⁻q) tends to zero for every finite C and positive c, q, even if c and C are random and independent of ε. Add the probability of the complementary cell-size event and use convergence in probability. This supplies the count; it does not address the other hypotheses of Lemma 5.2.
