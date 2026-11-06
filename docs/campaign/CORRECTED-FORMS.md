@@ -225,3 +225,10 @@ every scale. `PreparedTightnessPathwiseStep` and `PreparedTightnessSelectionStep
 general selection principle and is not claimed proved. The prior polynomial-scale form remains
 for historical reductions and is not equivalent to this successor. The prepared 4.6 compactness
 step now takes the new successor.
+
+**C12 measurable-exit route (2026-11-06).**
+`convergenceDivisible_of_prepared_measurable_exit` in
+`Proofs/Sec4/ConvergenceDivisible/PreparedEventMeasurability.lean` derives Theorem 4.1 from
+the prepared 4.6, 4.8, obstacle uniqueness, adjacent-cell intersection, and null measurability
+of the exit event. The continuum version and error-event measurability in this route use only
+the fixed-time prepared convergence; the older all-times statements remain historical forms.
