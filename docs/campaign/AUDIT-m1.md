@@ -406,6 +406,22 @@ No producer of the full Draft is listed in `REDUCTIONS.md`. The partial theorem 
 
 The source proof line 1138 says ε tends to infinity, then restricts to an event on which high-probability estimates hold for all sufficiently small ε. The direction conflicts with the statement's ε → 0, and probability tending to one alone does not imply eventual validity on one common event across all small ε. See E-m1-6; a subsequence or an additional uniform estimate may repair the argument, but is not asserted here.
 
+There is a further literal proof error at corrected source:1162–1164: the
+first inequality is strict, but the allowed choice `f = 0` makes both sides
+zero on any path with finite exit time. Replacing `<` by `≤` resolves that
+particular issue, not the separate limit interchange. A uniform bound on
+first moments, as stated at source:1166–1170, does not by itself give
+uniformly vanishing expected tails: for example, `Xₙ = n` with probability
+`1/n` and zero otherwise has `E[Xₙ] = 1` but
+`supₙ E[Xₙ 1_{Xₙ > T}] = 1` for every finite `T`. The cited Lemma 2.18
+(source:919–932) also contains higher-moment bounds, which may supply the
+needed tail estimate with the appropriate high-probability and normalization
+control; the first-moment argument alone does not. The existing Lean lemma
+`scaled_exitTime_tail_le_secondMoment` in
+`MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/ExitTimeTail.lean`
+checks the second-moment tail inequality. This observation concerns the
+printed proof, not a counterexample to Lemma 3.4.
+
 ## Updated 3.1 refutation and 3.7 final reduction
 
 `three_one_draft_refuted` applies `Audit.Refutations.not_discretePotentialTightnessStmt` to the exact Draft, with `MepsScalingInput`, a valid environment and `0 < γ < 2`. The cited proof uses a closed segment, whose interior is empty, and a discontinuous step profile; the theorem refutes the Draft conditional on those assumptions. This warrants **WRONG** for that Lean statement under its standing setting, not an unconditional claim of existence of the setting. The corresponding source allows connected sets (source:976–999), but independently transferring the counterexample to every source convention remains to be checked.
