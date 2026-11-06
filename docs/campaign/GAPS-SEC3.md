@@ -1,0 +1,9 @@
+# Section 3 gap triage
+
+## N1 — scaled boundary data
+
+**Verdict: MINIMAL-CORRECTION, conditional on a valid good-scale subsequence (N3).** In Lemma 3.1, line 995, replace `C'` by `C' ε⁻¹` in (3.1). No other hypothesis or conclusion changes. This is a weakening of the hypothesis and includes the printed case for ε < 1. It is needed at lines 1311–1312 and 1357–1359: the harmonic term has boundary data mε φ, and mε ≤ C ε⁻¹ by lines 728–733; a nonconstant φ does not have a uniform unscaled boundary modulus.
+
+Proof of the changed boundary step on any sequence of scales on which Lemma 3.2 and the cell-size bound eventually hold: set vε = εuε. Then vε is harmonic, |vε| ≤ C, and its boundary modulus is bounded by C'(ε ∨ |η(a)−η(b)|)^χ. Lemma 3.2 gives |vε(a)−vε(b)| ≤ K(ε ∨ |η(a)−η(b)|)^ξ′, with K = max{C(ρ,γ,χ,C'), AC}, independent of ε. Because ε mε is bounded below, the same estimate up to a constant holds for mε⁻¹uε. Cell diameters tending to zero transfer it to the extensions on the closure, giving asymptotic equicontinuity. Uniform boundedness and a finite-net diagonal argument yield a uniformly convergent subsequence with continuous limit. The interior argument is unchanged. If C or C' is random, take a countable intersection over integer bounds. This proof does not by itself establish the existence of good scales on a prescribed environment-dependent sequence; see N3.
+
+Downstream: in Lemma 3.5 the harmonic part has the required bound with C' = (sup εmε)[φ]χ, and its nonharmonic part uses only the unchanged interior clause and the boundary barrier. Lemma 4.8 uses Lemma 3.5 with Hölder boundary data, including φδ+δ and polynomial data, so the same bound applies. The other uses retain the printed hypotheses or use only interior compactness. These checks address N1 only and do not cure independent gaps.
