@@ -201,3 +201,15 @@ frozen `MassBoundOdometerStmt` remains as a historical form.
 `Sandpile.cluster_eq_closure_of_consistency` adds the explicit equality of stopped and global
 positive odometer sets for `eq:cluster-and-lambdat`. This does not establish consistency at the
 Proposition 5.1 use; that separate gap is recorded in `AUDIT-C7-C10-USES.md`.
+
+**C12 prepared Lemma 4.6 (2026-11-06).** `SubsequentialConvergencePreparedStmt` in
+`Draft/Section4Prepared.lean` fixes the time and deterministic input sequence before choosing
+the deterministic thinning and its almost-sure event. It asserts relative compactness, Hölder
+regularity of every uniform limit, and measurable selection on that thinning.
+`OdometerPreparedCompactnessStep` and `OdometerPreparedSelectionStep` in
+`Steps/Sec4/SubsequentialConvergencePrepared.lean` name the two remaining obligations;
+`subsequentialConvergencePrepared_of_steps` assembles them. The compactness step currently
+uses the earlier polynomial-scale form of 3.1; C11 synchronization remains open.
+`convergenceDivisible_of_prepared` in `Proofs/Sec4/ConvergenceDivisible/Prepared.lean`
+reroutes Theorem 4.1 through the successor, its existing uniqueness and event-measurability
+inputs, and Lemma 4.8. Other historical consumers still use the old 4.6 statement.
