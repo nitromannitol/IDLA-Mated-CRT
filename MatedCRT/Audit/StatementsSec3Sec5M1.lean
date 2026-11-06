@@ -30,6 +30,19 @@ namespace MatedCRT.Audit.StatementsSec3Sec5M1
 
 open scoped ENNReal
 
+/-- A positive-mesh particle count has an everywhere positive extension without
+changing its values at positive mesh sizes. -/
+theorem five_two_positive_mesh_extension (K : ℝ → ℝ)
+    (hK : ∀ ε, 0 < ε → 0 < K ε) :
+    ∃ K' : ℝ → ℝ, (∀ ε, 0 < K' ε) ∧ ∀ ε, 0 < ε → K' ε = K ε := by
+  refine ⟨fun ε => if 0 < ε then K ε else 1, ?_, ?_⟩
+  · intro ε
+    by_cases hε : 0 < ε
+    · simpa only [hε, ↓reduceIte] using hK ε hε
+    · simp only [hε, ↓reduceIte, zero_lt_one]
+  · intro ε hε
+    simp only [hε, ↓reduceIte]
+
 /-- Two polynomially high probability events can be combined into one, and recovered from it. -/
 theorem three_two_poly_high_prob_conjunction {Ω : Type} [MeasurableSpace Ω]
     (P : MeasureTheory.Measure Ω) (E F : ℝ → Set Ω) :
@@ -692,5 +705,6 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms relaxed_five_two_implies_draft
 #print axioms five_two_positive_surplus_version
 #print axioms five_two_probTendsToOne_congr
+#print axioms five_two_positive_mesh_extension
 
 end MatedCRT.Audit.StatementsSec3Sec5M1

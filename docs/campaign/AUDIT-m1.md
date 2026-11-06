@@ -10,15 +10,21 @@ freeze is not in force and the missing semantic checks are not presumed true.
 | --- | --- | --- |
 | 3.1 | WRONG | Conditional Lean refutation `Audit/Refutations.lean:317`, under its explicit scaling and valid-environment hypotheses; closed-segment source interpretation remains a question. |
 | 3.2 | DIVERGES-DOCUMENTED | The approved [C6] boundary form allows the exponent to depend on `C'`; Draft requires it beforehand and also requires `ξ' ≤ χ` (see below). The checked-in source at 1008 still states the stronger quantifier order. |
-| 3.3 | INCOMPLETE | Brownian occupation versus Laplacian Green normalization remains unchecked; see the Green trace below. |
-| 3.4 | INCOMPLETE | Off-ball extension is resolved under the stated conditions, but Green normalization and probabilistic semantics remain open. |
+| 3.3 | INCOMPLETE | [C1] matches the stated Laplacian normalization; independent full Green-function characterization remains open. |
+| 3.4 | INCOMPLETE | Off-ball extension and the [C1] coefficient convention are addressed; full Green characterization and random-function semantics remain open. |
 | 3.5 | MISMATCH | Draft requires Hölder data on a larger closed ball than the source (S2). |
 | 3.6 | MISMATCH | Draft requires Hölder data on a larger closed ball than the source (S2). |
-| 3.7 | INCOMPLETE | `HasLaplacian` and normalized exit-time semantic closure remain open. |
+| 3.7 | INCOMPLETE | Distributional sign and finite-domain exit conventions are addressed below; uniqueness and full solution identification remain open. |
 | 5.1 | INCOMPLETE | The ball-family and cluster/walk semantics remain unaudited; stopped-cluster proof gap E-c1-5 is separate from statement fidelity. |
 | 5.2 | INCOMPLETE | Draft makes `K` deterministic; the source's intended quantifier needs interpretation. |
 | 5.3 | MISMATCH | Draft allows `s` to depend on `t`, unlike source `s(δ)`; see E-m1-2. |
-| 5.4 | INCOMPLETE | Uniformity over environments and real division/`tsum` semantics remain unchecked. |
+| 5.4 | INCOMPLETE | Uniformity over representations remains open; the quotient conventions are justified on the finite first-step event below. |
+
+For 5.2, the additional literal requirement `∀ ε : ℝ, 0 < K ε` need not
+restrict positive-mesh data: `five_two_positive_mesh_extension` constructs
+an everywhere-positive `K'` agreeing with any positive-mesh `K` at every
+positive ε. This elementary extension does not resolve the independent
+question whether the source allows a random `K` or complete the verdict.
 
 Counts: 0 FAITHFUL, 1 DIVERGES-DOCUMENTED, 3 MISMATCH, 1 conditional WRONG,
 6 INCOMPLETE. In particular, the operator's approval of the [C6] dependence
@@ -249,7 +255,7 @@ The corrected source statement is at lines 1110–1122; the exact Draft declarat
 | `δ > 0`, `O ⊆ closedBall z r \ {y}`, `0 < infDist y O` | SOURCE, with empty-set caveat | the source says small positive δ and positive distance; quantification over every δ is equivalent for a monotone error bound, while Mathlib's real `infDist y ∅ = 0` excludes the empty set |
 | `ProbTendsToOne` of a pointwise `∀ x ∈ O` error bound | SOURCE, provisional | source displays a supremum bound with probability tending to one; the Lean predicate uses outer measure of failure |
 
-The checked `three_three_empty_test_set` proves the omitted empty-set bound is vacuous and has probability tending to one, including for an arbitrary measure; this does not settle the nonempty-set supremum or continuum Green-function semantics. `rescale` is `mε⁻¹ * u (vertexOf ε η x)` (`Defs/Map.lean:200`), and `greenKernel` divides `greenFn` by the degree at the second argument (`Defs/RandomWalk.lean:95–100`). The preceding finite-visit and positive-degree checks address the totalized real operations on the stated graph event. `three_three_vertexOf_is_least` checks its cell-covering and least-scaled-index properties almost surely in a valid environment, simultaneously for every point and positive mesh; its off-valid-locus totalization remains unaudited. [C1] Green normalization remains open as recorded above.
+The checked `three_three_empty_test_set` proves the omitted empty-set bound is vacuous and has probability tending to one, including for an arbitrary measure; this does not settle the nonempty-set supremum or continuum Green-function semantics. `rescale` is `mε⁻¹ * u (vertexOf ε η x)` (`Defs/Map.lean:200`), and `greenKernel` divides `greenFn` by the degree at the second argument (`Defs/RandomWalk.lean:95–100`). The preceding finite-visit and positive-degree checks address the totalized real operations on the stated graph event. `three_three_vertexOf_is_least` checks its cell-covering and least-scaled-index properties almost surely in a valid environment, simultaneously for every point and positive mesh; its off-valid-locus totalization remains unaudited. The [C1] coefficient convention matches as explained above; a full Green characterization remains open.
 
 The checked `three_three_final_reduction` applies `uniformConvergenceGreenKernel_final` (`Proofs/Sec3/UniformConvergenceGreenKernel/InteriorStep.lean:73`) to the exact Draft. It retains 2.10, 3.4, 2.14, 2.8 and `DiscretePotentialTightnessAeStep` as hypotheses; it does not prove them. This supersedes the older reduction listed in `REDUCTIONS.md` for the current dependency audit.
 
