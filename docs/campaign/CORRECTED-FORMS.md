@@ -250,3 +250,5 @@ consume the prepared 3.1 successor; `discreteDirichletProblem_of_prepared_steps`
 independent barrier issue recorded in `AUDIT-C11-C12-USES.md`.
 
 **C11, Lemma 3.7 route.** `NormalizedExitInteriorPreparedStep` is an open interior-convergence obligation using the prepared Lemma 3.1 input. `convergenceNormalizedExitTime_of_prepared_steps` assembles it with the existing boundary estimates; the independent G1/G2 issues remain open.
+
+**C12, Lemmas 4.7 and 4.8.** `EquiboundedStmt` (Draft/Section4.lean:127) already places the deterministic sequence and thinning before the almost-sure event, as corrected at paper lines 1915–1923. `SubsequentialPropertiesPreparedStmt` (Draft/Section4PropertiesPrepared.lean) gives the fixed-time, prepared-sequence 4.8 statement with relative compactness and every-limit properties. `subsequentialPropertiesPrepared_of_steps` assembles it from 4.6 and the open `OdometerPropertiesPreparedIdentificationStep`; the independent comparison gap G3 remains. `convergenceDivisible_of_prepared_properties_measurable_exit` routes Theorem 4.1 through this corrected 4.8 and explicit uniqueness, adjacent-cell and exit-event measurability inputs.
