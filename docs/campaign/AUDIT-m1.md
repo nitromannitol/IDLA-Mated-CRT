@@ -318,6 +318,15 @@ The corrected source at lines 1399–1412 fixes deterministic `z` and `r`, asks 
 
 The paper's normalized exit time is the sum of `G(a,b)/deg(b)` over the killed-domain vertices (source:773–775). Lean implements that sum as a subtype `tsum` (`Defs/RandomWalk.lean:98–100,111–113`), where the Green function is the real value of an extended nonnegative visit expectation (:88–96). The real-valued conventions return zero on an infinite expectation, and real division returns zero at degree zero; identifying the expression with the source requires the valid-environment finiteness and positive-degree conditions. On finite killed domains, `sum_visitsBeforeExit_mul_eq_occupation` (`Proofs/Sec3/IntegralConvergenceGreenFunction/OccupationGreen.lean:53–59`) relates weighted visits to the path occupation sum when exit is finite; `integrable_visitsBeforeExit_of_expectedExitTime_ne_top` (:119) supplies visit integrability from finite mean exit. These conditional lemmas do not by themselves prove all required environment assumptions.
 
+The proof of 3.7 also needs a notation repair at corrected source:1468–1472.
+It defines `g^ε` as a function of graph vertices, but then writes uniform
+convergence of `g^ε` on a planar set. Lemma 3.3 (source:1111–1116) states
+the convergence for the rescaled planar function `overline{g}^ε` instead;
+the integral at source:1478 already uses that rescaled function. In addition
+to the previously recorded `m₀/6` versus `[C1]` coefficient, the displayed
+limit at source:1470 therefore needs the overline. This is a proof-level
+notation discrepancy and does not itself decide the 3.7 verdict.
+
 The negative measure in the displayed `HasLaplacian` is `ENNReal.ofReal (S.c₀ / 6) • S.μ ω`. `MatedCRTEnv.c₀_nonneg` (`Proofs/Sec3/ConvergenceNormalizedExitTime/PotentialBoundary.lean:11`) proves this scalar is nonnegative, so `ofReal` does not truncate a negative coefficient; strict positivity of the median is separately derived as described below. The producer of `NormalizedExitPotentialStep` (`PotentialIdentification.lean:12–19,29–37,73–79`) conditionally derives continuity, the distributional identity, and the zero boundary condition for the Green potential from `BoundedExitTimeRVStmt` and `S.IsValid`. This is a checked producer trace, not a proof that its inputs are source-free or that the full 3.7 statement is unconditional.
 
 The solution-uniqueness question is resolved within the Draft's continuous
