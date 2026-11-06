@@ -368,6 +368,14 @@ The source proof line 1138 says ε tends to infinity, then restricts to an event
 
 ## Lemma 3.2 after [C6]
 
+The checked-in corrected TeX has a separate transcription defect at lines
+1003 and 1007: in each probability-limit expression the bytes after `\eps`
+are a literal tab followed by `o0`, rather than the TeX command `\to 0`.
+Consequently those expressions do not typeset the intended arrow. The
+intended limit is clear from the surrounding probability convention and the
+Draft's `PolyHighProb`; this typographical finding is independent of the
+approved exponent-dependence ruling and does not change the verdict.
+
 The current corrected source hash is `5e15864c8a423fc81b1a4b8d18a360b2deb5675c9fa5faa1b2c0f0e6e857b9c0` and current Section3 Draft hash is `4e1b1423ad5bf2d1d9691ff7638454ae1193331b67da031a40f40ad9abc50581`. These observations are not an approved freeze. [C6] is adopted per `ESCALATIONS.md` E-chk-1 and `AUDIT-L32-USES.md`. In the corrected step, `∀ χ C′, ... ∃ ξ′ C` is weaker than the Draft/source `∀ χ, ... ∃ ξ′, ... ∀ C′, ... ∃ C`; it also drops `ξ′ ≤ χ`. `discreteHolderContinuityCorrected_of_draft` checks the implication, but does not establish the reverse. The older `CORRECTED-FORMS.md` 3.2 entry refers to the prior Draft and must not be used as the current comparison. This is a syntactic scope analysis, not a counterexample to either current mathematical estimate.
 
 `three_two_interior_distance_pos` checks that the marked point of an interior cell has positive distance to the frontier of a proper domain, for nonnegative mesh. An interior cell makes the domain nonempty; connectedness of the complex plane makes the frontier nonempty; and the marked point belongs to the cell, which does not meet the frontier. Domains contained in the bounded ball of the statement are proper. `three_two_holder_quotient_iff` checks the algebraic equivalence of the Draft's multiplied inequality and the source quotient when the numerator is nonnegative and the distance is positive. This check concerns the denominator, not the other semantic obligations of the lemma.
