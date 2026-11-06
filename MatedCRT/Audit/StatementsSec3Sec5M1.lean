@@ -98,6 +98,23 @@ theorem five_one_joint_families_agree {Ω : Type} [MeasurableSpace Ω]
     jointLaw_ae_environment hS ε hΛ'] with x hx hx'
   exact ⟨five_four_clusterExitTime_eq hx hx' ρ, ((hx.eqOn hx') ht).symm⟩
 
+/-- The joint probability of an event depending on the exit time and the
+time-`t` harmonic ball is independent of the valid family representative. -/
+theorem five_one_family_event_probability_congr {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
+    (hS : S.IsValid 𝒮 γ) (Λ Λ' : Ω → ℝ → Set ℂ)
+    (hΛ : ∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω))
+    (hΛ' : ∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ' ω))
+    (ε ρ t : ℝ) (ht : 0 < t)
+    (B : (Ω × (ℕ → ℕ → ℤ)) → Set ℂ → Prop) :
+    S.idlaProb ε {x | t < clusterExitTime (Λ x.1) ρ ∧ B x (Λ x.1 t)} =
+      S.idlaProb ε {x | t < clusterExitTime (Λ' x.1) ρ ∧ B x (Λ' x.1 t)} := by
+  unfold MatedCRTEnv.idlaProb
+  rw [hS.idlaJointMeasure_eq ε]
+  apply MeasureTheory.measure_congr
+  filter_upwards [five_one_joint_families_agree hS Λ Λ' hΛ hΛ' ε ρ t ht] with x hx
+  simp only [hx.1, hx.2]
+
 /-- Volume growth makes the Green potential integrand of Lemma 3.4 integrable. -/
 theorem three_four_green_integrable_of_volumeGrowth
     {μ : MeasureTheory.Measure ℂ} [MeasureTheory.IsLocallyFiniteMeasure μ]

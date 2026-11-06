@@ -478,7 +478,12 @@ not by itself show that a selected family or its failure event is measurable.
 `jointLaw_ae_environment` and `five_one_joint_families_agree` in
 `MatedCRT/Audit/StatementsSec3Sec5M1.lean` lift these conclusions to the
 joint environment–walker law, without a measurability assumption on the
-family. The full lower-bound event remains to be audited.
+family. `five_one_family_event_probability_congr` further proves equality of
+the joint outer probabilities for every event depending on the exit time and
+the ball at a fixed positive `t`, without requiring event measurability. This
+includes the forms of both 5.1 failure events, so replacing the family does
+not change their probabilities at any mesh. The remaining semantics of those
+events still require audit.
 The prior paragraph's nonexit concern is also discharged on the valid locus
 by `five_one_joint_current_aggregates_exit` in the joint-law trace below.
 
