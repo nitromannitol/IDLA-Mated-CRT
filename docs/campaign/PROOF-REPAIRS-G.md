@@ -78,3 +78,34 @@ and use its mass. Thus the comparison yields the required uniform absolute
 bound on every extracted q̄^{*,δ+}. Together with G1 and monotone convergence
 as δ ↓ 0, this identifies the total limit at every rational pole; continuity
 and density identify it everywhere. The statement remains unchanged.
+
+## G3 — Lemma 4.8, Steps 2–3: REPAIRED
+
+Let u_ε = w_t^ε/m_ε and u its uniform cluster limit, and work on the
+countably prepared event. On each rational ball D compactly contained in
+B_ρ, choose a rational polynomial p with ‖p−u‖_{D̄}<δ/4, with δ positive
+and rational. Take the discrete harmonic comparison with boundary data
+m_ε(p+δ), rather than m_ε p+δ. Uniform convergence of u_ε to u and shrinking
+boundary cells imply u_ε ≤ p+δ on the discrete boundary for small ε. The
+discrete maximum principle and Lemma 3.5 give u ≤ H_D(p+δ), where H_D denotes
+ordinary harmonic extension. Letting δ ↓ 0 gives u ≤ H_D(u|∂D). These rational
+balls suffice for subharmonicity: approximate an arbitrary compactly contained
+ball in center and radius and use continuity and continuity of circular means.
+
+For the reverse comparison, use m_ε(p−δ): if a discrete function v_ε is
+superharmonic on D and its normalized interpolation converges uniformly to v,
+the minimum principle yields v ≥ H_D(p−δ), hence v ≥ H_D(v|∂D). The same
+proof gives harmonicity when v_ε is harmonic. Rational polynomials and rational
+constant shifts form a countable prepared family, so choosing p after seeing v
+is legitimate. It is equally valid to approximate the normalized sum
+(w_t^ε+q_D^ε)/m_ε by p when applying this argument in Step 3.
+
+The inequality Δ^ε(w_t^ε+q_D^ε) ≤ 0 then yields Δu ≤ (c₀/6)μ_h by
+Lemma 3.7. For equality on the open set {u > −t(c₀/6)G_{B_ρ}(0,·)}, take
+rational balls with closures contained in that set and away from 0. Uniform
+convergence of the Green function and odometer gives a strictly positive
+margin on each closed ball, so the discrete equality holds there eventually.
+Both comparisons make u+q_D harmonic there. Such balls cover the noncontact
+set away from 0; equality extends across 0 because both sides are locally
+finite measures and μ_h({0}) = 0, while Δu is nonnegative by Step 2 and is
+bounded above by (c₀/6)μ_h. No statement change is needed for this step.
