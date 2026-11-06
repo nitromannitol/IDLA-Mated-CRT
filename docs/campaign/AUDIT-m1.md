@@ -15,7 +15,7 @@ freeze is not in force and the missing semantic checks are not presumed true.
 | 3.5 | MISMATCH | Draft requires Hölder data on a larger closed ball than the source (S2). |
 | 3.6 | MISMATCH | Draft requires Hölder data on a larger closed ball than the source (S2). |
 | 3.7 | INCOMPLETE | Distributional sign and finite-domain exit conventions are addressed below; uniqueness and full solution identification remain open. |
-| 5.1 | INCOMPLETE | Family uniqueness and the nonexit fallback are addressed below; random-family measurability and full cluster/walk semantics remain open. The stopped-cluster proof gap E-c1-5 is separate from statement fidelity. |
+| 5.1 | INCOMPLETE | Family uniqueness and the nonexit fallback are addressed; exit and stopping-set events are conditionally null measurable. Full lower-bound event and walk semantics remain open. The stopped-cluster proof gap E-c1-5 is separate from statement fidelity. |
 | 5.2 | INCOMPLETE | Draft makes `K` deterministic; the source's intended quantifier needs interpretation. |
 | 5.3 | MISMATCH | Draft allows `s` to depend on `t`, unlike source `s(δ)`; see E-m1-2. |
 | 5.4 | INCOMPLETE | Uniformity over representations remains open; the quotient conventions are justified on the finite first-step event below. |
@@ -344,6 +344,25 @@ positive times. This removes the representation-uniqueness concern, but does
 not by itself show that a selected family or its failure event is measurable.
 The prior paragraph's nonexit concern is also discharged on the valid locus
 by `five_one_joint_current_aggregates_exit` in the joint-law trace below.
+
+Measurability is partly available, with explicit hypotheses rather than as
+an unconditional consequence of the Draft binder: under `S.IsValid 𝒮 γ`,
+`ConeFamilyAEMeasurableStep`, `ConeHarmonicBallsUpToFixedTimeStmt`, the
+usual bounds on `γ, ρ`, `t > 0`, and an a.s. valid family,
+`MatedCRTEnv.IsValid.nullMeasurableSet_lt_clusterExitTime`
+(`MatedCRT/Proofs/Measurability/BoundaryLayer.lean:402`) proves that
+`{ω | t < clusterExitTime (Λ ω) ρ}` is null measurable under `S.P`.
+With the same inputs and `0 ≤ ε`,
+`MatedCRTEnv.IsValid.nullMeasurableSet_cellVertices_coneFamily`
+(`MatedCRT/Proofs/IDLA/RandomOpenCell.lean:53`) proves null measurability
+of the intersection of this event with each individual membership event
+`k ∈ cellVertices ε (S.η ω) (Λ ω t)`. Both theorems have only the standard
+axioms `propext`, `Classical.choice`, and `Quot.sound`. These results do not
+establish null measurability of either full joint lower-bound failure event;
+nor do they discharge their explicit cited inputs. The family measurability
+step has a conditional producer `coneFamilyAEMeasurableStep_of_numbered_results`
+(`MatedCRT/Proofs/Sec2/ConeFamilyMeasurable/RadialContainment.lean:304`)
+from 2.4, 2.5, 2.7, quantum-cone scaling and LQG measure properties.
 
 The strict-gap final producer `iDLALowerBound_final_of_strictGap` (`Proofs/Sec5/IDLALowerBound/Final.lean:48`) returns the exact Draft, including both stopped and unrestricted clauses. The explicit application `five_one_strict_gap_reduction` in the audit module checks its complete listed hypotheses; in particular it still takes the stopped mean-value and quotient inputs, and the strict obstacle-gap and surplus inputs. It is a conditional reduction, not an unconditional proof or closure of E-c1-5.
 
