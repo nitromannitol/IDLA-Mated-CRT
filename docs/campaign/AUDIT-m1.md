@@ -210,6 +210,14 @@ The checked theorem `three_four_sum_ext` uses pointwise equality on the ball and
 
 The source fixes the γ-quantum-cone/SLE setting and ρ in Section 5 before saying “there exists a deterministic q > 0” (corrected source:1967, 2019–2026). The Lean definition `LLowerBoundStmt` (`Draft/Section5.lean:85`) places `∃ q` after γ, ρ but before the probability carrier, environment, and choice of harmonic-ball family. It therefore requires one q for every valid representation at fixed γ, ρ. Whether the paper's fixed-law formulation entails this is not settled by the word “deterministic.”
 
+The family part of this scope distinction is harmless for a fixed environment:
+`five_four_clusterExitTime_eq` and `five_four_family_probability_congr` in
+`MatedCRT/Audit/StatementsSec3Sec5M1.lean` use family uniqueness to show that
+the stopping time, and hence the 5.4 probability assertion, are unchanged by
+replacing an almost-surely valid family by another. The second theorem has
+only `propext`, `Classical.choice`, and `Quot.sound` as axioms. This does not
+compare different probability spaces or different environment laws.
+
 | Lean input or local binder | Provisional bin | Evidence / open issue |
 | --- | --- | --- |
 | `𝒮` | TYPING | SLE-model parameter; equivalence of representations remains open |

@@ -27,12 +27,47 @@ import HarmonicBalls.Steps.Sec11.PinchGreenMeasurable
 import HarmonicBalls.Proofs.Potential.GreenBall
 import HarmonicBalls.Proofs.Sec6.GreenIntegrability
 import MatedCRT.Proofs.Sec2.ConeFamilyMeasurable.ConeVolumeGrowth
+import MatedCRT.Proofs.Sec2.ConeFamily
 
 /-! A logical check for the quantifier-order issue in Lemma 5.3.
 It does not assert that the actual Green-function estimate has this form. -/
 namespace MatedCRT.Audit.StatementsSec3Sec5M1
 
 open scoped ENNReal
+
+/-- The stopping time is unchanged by replacing a harmonic-ball family by
+another family for the same measure. -/
+theorem five_four_clusterExitTime_eq {μ : MeasureTheory.Measure ℂ}
+    {Λ Λ' : ℝ → Set ℂ} (hΛ : IsConeHarmonicBallFamily μ Λ)
+    (hΛ' : IsConeHarmonicBallFamily μ Λ') (ρ : ℝ) :
+    clusterExitTime Λ ρ = clusterExitTime Λ' ρ := by
+  unfold clusterExitTime
+  congr 1
+  ext t
+  constructor <;> rintro ⟨ht, hs⟩
+  · exact ⟨ht, by simpa only [(hΛ.eqOn hΛ') ht] using hs⟩
+  · exact ⟨ht, by simpa only [(hΛ.eqOn hΛ') ht] using hs⟩
+
+/-- For a fixed environment, the probability assertion in Lemma 5.4 is
+independent of the almost-surely valid family used to define its stopping time. -/
+theorem five_four_family_probability_congr {Ω : Type} [MeasurableSpace Ω]
+    (P : MeasureTheory.Measure Ω) (μ : Ω → MeasureTheory.Measure ℂ)
+    (Λ Λ' : Ω → ℝ → Set ℂ)
+    (hΛ : ∀ᵐ ω ∂P, IsConeHarmonicBallFamily (μ ω) (Λ ω))
+    (hΛ' : ∀ᵐ ω ∂P, IsConeHarmonicBallFamily (μ ω) (Λ' ω))
+    (ρ t : ℝ) (E : ℝ → Set Ω) :
+    TendsToOneOn P {ω | t < clusterExitTime (Λ ω) ρ} E ↔
+      TendsToOneOn P {ω | t < clusterExitTime (Λ' ω) ρ} E := by
+  have heq : ∀ ε, P ({ω | t < clusterExitTime (Λ ω) ρ} ∩ (E ε)ᶜ) =
+      P ({ω | t < clusterExitTime (Λ' ω) ρ} ∩ (E ε)ᶜ) := by
+    intro ε
+    apply MeasureTheory.measure_congr
+    filter_upwards [hΛ, hΛ'] with ω hω hω'
+    simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, five_four_clusterExitTime_eq hω hω' ρ]
+  unfold TendsToOneOn
+  simp_rw [heq]
+
+#print axioms five_four_family_probability_congr
 
 /-- Volume growth makes the Green potential integrand of Lemma 3.4 integrable. -/
 theorem three_four_green_integrable_of_volumeGrowth
