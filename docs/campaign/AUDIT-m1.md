@@ -269,3 +269,53 @@ The strict-gap final producer `iDLALowerBound_final_of_strictGap` (`Proofs/Sec5/
 The public definitions `idlaJointMeasure` and generic `jointOuterProb` (`Defs/Notation.lean:57`) return the zero measure when the kernel is nonmeasurable. That off-valid-locus fallback fails the definition audit's public-carrier/default-branch criterion (E-m1-8); `idlaJointMeasure_eq` proves the fallback is not taken under `S.IsValid`, but does not make the exported total definition source-characterized on its entire carrier. This is a definition-surface finding, not a counterexample to 5.1 under its stated validity premise. The `IsValid` coupling fields used to establish measurability still require their own source audit (E-m1-5).
 
 `five_one_fixed_set_exits` now checks the fixed-set part of the nonexit issue: if `expectedExitTime m A a ≠ ⊤`, then a walk under `srwLaw m a` has a first exit site almost surely. It applies `ae_vExitTime_ne_top_of_expectedExitTime_ne_top` (`OccupationGreen.lean:135`) to the definition of `firstExitSite`. `five_one_finite_set_exits` now discharges the finite-mean premise for every fixed finite set on a locally finite multigraph with consecutive edges, using `finite_expectedExitTime`. `five_one_all_finite_sets_exit` strengthens this to simultaneous exit from every finite set for one walk, using countability of finite subsets of ℤ. `five_one_all_walkers_exit_finite_sets` uses the finite-dimensional marginals of `walkerSequenceLaw` to obtain the property simultaneously for all walkers. Finally, `five_one_current_aggregates_exit` applies it to both the unrestricted and stopped current aggregates at every release, using `foldl_idlaStep_card` for finiteness. These quenched results hold for each fixed graph satisfying local finiteness and consecutive-edge assumptions. `five_one_measurable_all_walkers_exit` establishes measurability using countability; `five_one_joint_all_walkers_exit` transfers the result to the joint law for each positive mesh in a valid environment, using `ae_isLocallyFiniteMult` (with the proved `adjacentCellsMeetAeStep`) and `mult_succ_ne_zero`. `five_one_joint_current_aggregates_exit` then covers all releases of both the unrestricted aggregate and the aggregate stopped in an arbitrary environment-dependent set. This rules out the nonexit fallback almost surely in these IDLA processes; it does not establish the remaining source fidelity or the lower-bound proposition.
+
+## Lemma 3.1 binder inventory and corrected-form scope
+
+The following inventory is for the exact Draft `DiscretePotentialTightnessStmt`
+(`Draft/Section3.lean:42`), compared with corrected source:977–999. Classification
+of standing bundles remains provisional until `IsValid` is independently audited.
+Each table row is one counted item, with grouped parameters/premises explicitly
+identified as such; this is not a substitute for recursively auditing the bundles.
+
+| Draft binder or premise | Bin | Source or finding |
+| --- | --- | --- |
+| `𝒮` | TYPING | Abstract representation of the SLE model; semantic adequacy remains open. |
+| `γ` with `0 < γ`, `γ < 2` | STANDING | Paper's standing parameter regime. |
+| `ρ` with `0 < ρ`, `ρ < 1` | STANDING | Section 3 setting, source:957. |
+| `Ω`, measurable-space instance, `S` | TYPING | Representation of the probability environment. |
+| `S.IsValid 𝒮 γ` | UNCLASSIFIED | Its seven fields include the mating-of-trees bundle; see E-m1-5. |
+| `D`, `D ⊆ ball 0 ρ`, `IsConnected D` | SOURCE | source:977–978 says connected set; no openness premise. |
+| `E`, its environment measurability, positivity, and pointwise convergence to zero | SOURCE, provisional | source:978; positivity and pointwise rather than a.s. requirements are explicit choices of versions, not automatically licensed by the source. |
+| `u : Ω → ℕ → ℤ → ℝ` | TYPING | Total representatives of functions on random vertex sets; restriction to those vertices requires semantic verification. |
+| pointwise environment measurability of every `u n a` | EXCESS relative to literal source | Source:979 only calls the scale sequence measurable; review-S (S6) adds this input for measurable choice, without a source correction. |
+| `C`, environment measurability, positivity | SOURCE, provisional | source:986; Lean asks positivity at every ω, so an a.s.-version argument is still required if this is interpreted only a.s. |
+| uniform absolute Laplacian and function bounds | RULED, provisional | source:981–985, [C3]; Lean requires them for every ω and n. The source's random-environment convention does not explicitly make the `∀ ω` scope clear. |
+
+At this grouped outer level: SOURCE 2, STANDING 2, TYPING 3, RULED 1,
+EXCESS 1, UNCLASSIFIED 1. These counts do not classify the internal fields
+or the conclusion's quantified variables. The conclusion places a measurable
+index map `Φ` outside the a.s. event; on that event it requires strict
+monotonicity, a continuous limit, compact uniform convergence and, for the
+same subsequence, the boundary upgrade. Its compact test is `IsCompact O` and
+`closure O ⊆ D`. For non-open `D`, this admits `O = D` for a compact closed
+segment, which is used in the conditional Lean refutation. The source's
+notation `O ⋐ D` has an interior-containment convention ambiguity on non-open
+sets; the Lean refutation therefore establishes the Draft error and does not
+by itself settle every interpretation of the source.
+
+The corrected `DiscretePotentialTightnessCorrectedStmt` adds `IsOpen D` and
+`IsPolySummableScales e`; the latter expands to positive `e j` and summability
+of `e j ^ p` for every `p > 0` (Steps/Sec3/DiscretePotentialTightness.lean:90).
+It also restricts every random mesh to `range e` and replaces the boundary
+modulus constant `C'` by `C'/ε`. These changes affect different directions of
+the implication, so the checked common restriction is not a proof of the
+Draft. The a.s. interior-only `DiscretePotentialTightnessAeStep` has different
+hypothesis and conclusion scope again; its use in 3.3 and 3.7 is conditional.
+
+For 3.2, `three_two_constant_dependent_exponent_not_uniform` checks an abstract
+positive-real predicate for which `∀ C > 0, ∃ ξ > 0` holds but `∃ ξ > 0,
+∀ C > 0` fails. It demonstrates that the corresponding exchange of quantifiers
+needs mathematical justification. It is not a counterexample to either
+Hölder statement, and the example does not establish non-implication between
+the actual two propositions.

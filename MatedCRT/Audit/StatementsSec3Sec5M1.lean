@@ -219,6 +219,25 @@ theorem five_one_joint_current_aggregates_exit {Ω : Type} [MeasurableSpace Ω]
   · exact hp n (stoppedIDLACluster (Θ p.1) p.2 n)
       (foldl_idlaStep_card (Θ p.1) (List.ofFn fun i : Fin n => p.2 i) (∅, []) Set.finite_empty).1
 
+/-- Abstractly, an exponent chosen after a positive constant need not be uniform in that constant.
+This is a quantifier counterexample, not a counterexample to the Hölder estimate. -/
+theorem three_two_constant_dependent_exponent_not_uniform :
+    (∀ C : ℝ, 0 < C → ∃ ξ : ℝ, 0 < ξ ∧ ξ * C ≤ 1) ∧
+      ¬ (∃ ξ : ℝ, 0 < ξ ∧ ∀ C : ℝ, 0 < C → ξ * C ≤ 1) := by
+  constructor
+  · intro C hC
+    refine ⟨(2 * C)⁻¹, inv_pos.mpr (by positivity), ?_⟩
+    have hc : C ≠ 0 := ne_of_gt hC
+    have heq : (2 * C)⁻¹ * C = (1 / 2 : ℝ) := by field_simp
+    rw [heq]
+    norm_num
+  · rintro ⟨ξ, hξ, h⟩
+    have hc : 0 < 2 / ξ := by positivity
+    have heq : ξ * (2 / ξ) = (2 : ℝ) := by field_simp
+    have hh := h (2 / ξ) hc
+    rw [heq] at hh
+    norm_num at hh
+
 /-- A witness chosen separately for each positive time need not be uniform in time. -/
 theorem time_dependent_witness_not_uniform :
     (∀ t : ℝ, 0 < t → ∃ s : ℝ, 0 < s ∧ s < t) ∧
