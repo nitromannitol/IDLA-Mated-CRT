@@ -39,7 +39,10 @@ are `isProbabilityMeasure`, `gff`, `gff₀`, `bm_B`, `bm_B'`, `bm_B₀`,
 `measurable_curves`, `igMap`, `spaceFilling`, `areaParam`, `areaParam₀`,
 `segmentsContainBalls`, `coverage`, `cellMoments`, `boundaryLawBM`,
 `boundaryLength`, `merge`, `onlyMerge`, and `visitBound`; see
-`LatticeProb/Bonanno/MatedCRTHarmonic/Frozen/IsMatingOfTreesCoupling.lean:61`.
+`.lake/packages/lattice-probability/LatticeProb/Bonanno/MatedCRTHarmonic/Frozen/IsMatingOfTreesCoupling.lean:61`.
+These are all 24 fields of the bundle, including its basic law and independence
+fields as well as its geometric inputs; the ruling applies to the bundle as
+phase-2 cited input, not to an independent proof of each field here.
 Earlier references to E-m1-5 as unresolved predate this ruling; the ruling
 does not settle unrelated carrier, normalization, or quantifier questions.
 
