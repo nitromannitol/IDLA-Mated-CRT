@@ -11,7 +11,7 @@ correction or reading is identified separately from operator-approved source cor
 | Result | Preliminary finding and exact evidence | Reduction status |
 | --- | --- | --- |
 | 3.1 | **WRONG** (conditional Lean refutation), with a documented source mismatch: source 976–999 allows connected sets; Draft/Section3.lean:42 adds pointwise environment measurability of `u` (S6). Corrected form Steps/Sec3/DiscretePotentialTightness.lean:102 adds open `D` and deterministic polynomially summable scales and changes boundary data to `C'/ε` times the Hölder modulus. Its interior part is weaker but its boundary implication is stronger. The source and Draft both use the corrected absolute bound [C3]. The Draft is **WRONG** under the explicit scaling input and a valid environment: `Audit.Refutations.not_discretePotentialTightnessStmt` proves its negation using a closed segment (E-c1-4). | Only corrected form reduced; both imply a common restriction in Audit/CorrectedForms.lean:83, 93. The reduction is not a proof of the Draft. The current 3.3 and 3.7 reductions use the a.s. tightness step rather than this Draft (the older REDUCTIONS F7 entry is stale). |
-| 3.2 | **DIVERGES-DOCUMENTED**: correction [C6] now gives the interior floor `ε^β`, restricts `a` to the interior, and chooses `ξ′` after `χ` and before `C′` (source 1001–1017; Draft/Section3.lean:76). The Draft reflects this order and adds `ξ′ ≤ χ`. The positive-distance and quotient checks below address the multiplied-distance form. | `DiscreteHolderContinuityCorrectedStep` (:71) allows `ξ′` to depend on `C′` and omits `ξ′ ≤ χ`, hence is weaker. Draft implies the step (`Audit/CorrectedForms.lean:114`), with no reverse implication established. Both are cited hypotheses, not proofs. The 3.2 entry in CORRECTED-FORMS.md predates C6 and describes the superseded Draft. |
+| 3.2 | **DIVERGES-DOCUMENTED**: correction [C6] now gives the interior floor `ε^β`, restricts `a` to the interior, and chooses `ξ′` after `χ` and before `C′` (source 1001–1017; Draft/Section3.lean:76). The Draft reflects this order and the requirement `ξ′ ≤ χ`. The positive-distance and quotient checks below address the multiplied-distance form. | `DiscreteHolderContinuityCorrectedStep` (:71) allows `ξ′` to depend on `C′` and omits `ξ′ ≤ χ`, hence is weaker. Draft implies the step (`Audit/CorrectedForms.lean:114`), with no reverse implication established. Both are cited hypotheses, not proofs. The 3.2 entry in CORRECTED-FORMS.md predates C6 and describes the superseded Draft. |
 | 3.3 | **INCOMPLETE**: source 1110–1122 and Draft/Section3.lean:97 have the same probability mode and `[C1]` coefficient `c₀/6`. `S.c₀ = 2/S.m₀` (Defs/Setting.lean:190). Source calls its Green function Brownian occupation Green, whereas the Lean symbol is normalized by `ΔG = -δ`; the factor-of-two convention must be checked together with [C1], not inferred from matching symbols. | Reduction `uniformConvergenceGreenKernel_of_steps` concludes Draft assuming the a.s. tightness step and interior/boundary steps; `uniformConvergenceGreenKernel_final` discharges the latter two and maximum principle, retaining 2.10, 3.4, 2.14, 2.8 and the a.s. tightness step (InteriorStep.lean:73, commit 763b7d7). Existing [C1] proof slip E-m1-1 remains documented. |
 | 3.4 | **INCOMPLETE**: source 1124–1133 and Draft/Section3.lean:113 use convergence in probability, `mε⁻¹`, `c₀`, and deterministic `z,r,y`; Lean quantifies over random pointwise measurable `f` with pathwise bounded/Hölder restrictions. Source `f` is defined on the ball but evaluates `f(η(x))` for cells meeting it. For positive ε and continuous η, `three_four_sum_ext` in the audit Lean file proves that the discrete sum depends only on values of `f` on the ball: interior-cell marked points lie in the ball, and the killed Green function vanishes outside the interior. This resolves the off-ball extension question for the sum, conditional on those hypotheses; remaining probabilistic and Green semantics still require audit. Green normalizations remain open as for 3.3. | REDUCTIONS records no committed reduction. |
 | 3.5 | **MISMATCH**, documented: source 1240–1260 assumes `φ` Hölder on the closed ball, while Draft/Section3.lean:136 requires it on a larger closed ball (S2), potentially excluding source data. `[C1]` uses `c₀`. Lean quantifies over all discrete solutions satisfying the equations a.s. for each ε; the choice/uniqueness and signed Laplacian semantics require audit. | `discreteDirichletProblem_of_steps` concludes Draft and uses corrected 3.1 plus open steps; it does not establish the source statement without addressing S2. |
@@ -319,3 +319,41 @@ positive-real predicate for which `∀ C > 0, ∃ ξ > 0` holds but `∃ ξ > 0,
 needs mathematical justification. It is not a counterexample to either
 Hölder statement, and the example does not establish non-implication between
 the actual two propositions.
+
+
+## Grouped binder inventory for Lemma 3.2
+
+This is a preliminary outer-binder inventory, not a freeze or a recursive
+audit of `IsValid`. Each row counts one group. Source: corrected paper
+1001–1017; Draft/Section3.lean:76.
+
+| Draft binder or premise | Bin | Source or finding |
+| --- | --- | --- |
+| `𝒮` | TYPING | Abstract SLE model; semantic adequacy remains open. |
+| `γ`, `0 < γ`, `γ < 2` | STANDING | Standing parameter regime. |
+| `ρ`, `0 < ρ`, `ρ < 1` | STANDING | Section 3 setting, source:957. |
+| `ξ`, `A`, `β` and their positivity/range constraints | SOURCE | Existential conclusion witnesses, depending on `ρ` and `γ`. |
+| `χ`, `0 < χ`, `χ ≤ 1` | SOURCE | Boundary Hölder exponent. |
+| `ξ′`, its range and `ξ′ ≤ χ` | SOURCE | Existential witness chosen after `χ` and before `C′`. |
+| `C′`, `0 < C′` | SOURCE | Boundary Hölder constant. |
+| `C`, `0 < C` | SOURCE | Existential witness chosen after `C′`. |
+| `Ω`, measurable-space instance, `S` | TYPING | Probability environment representation. |
+| `S.IsValid 𝒮 γ` | UNCLASSIFIED | Its seven fields include mating-of-trees assumptions; see E-m1-5. |
+| `D`, containment in the ball, openness, connectedness | SOURCE | The paper specifies a connected domain; the usual domain convention includes openness. |
+| `f` and discrete harmonicity on interior vertices | SOURCE, provisional | Total representative on `ℤ`, with harmonicity restricted to interior cell vertices; the cell definitions require semantic verification. |
+| Simple connectedness and boundary Hölder estimate | SOURCE, provisional | Conditional inputs to the boundary estimate; the precise boundary-cell interpretation remains to be checked. |
+
+Grouped counts: SOURCE 8, STANDING 2, TYPING 2, UNCLASSIFIED 1. These
+counts do not classify the validity bundle's fields or the quantified vertices
+inside either estimate. The constants are chosen before the environment in
+Lean; this uniformity across all valid representations also depends on the
+unresolved adequacy of `IsValid`.
+
+After fixing the witnesses and parameters, the source states the interior and
+boundary estimates on separate polynomially high probability events. The
+Draft requests their conjunction on one event.
+`three_two_poly_high_prob_conjunction` checks that the two formulations of
+polynomial high probability are equivalent for arbitrary event families,
+without assuming event measurability. This observation does not address the
+different witness order in `DiscreteHolderContinuityCorrectedStep`, or the
+remaining correspondence of the events' mathematical content.

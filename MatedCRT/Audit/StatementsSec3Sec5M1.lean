@@ -21,12 +21,25 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.OccupationGreen
 import MatedCRT.Proofs.Sec3.UniformConvergenceGreenKernel.InteriorStep
 import MatedCRT.Proofs.WalkPotential.GreenFirstStep
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.Visit
+import MatedCRT.Steps.Sec2.VolumeGrowthHalf
 
 /-! A logical check for the quantifier-order issue in Lemma 5.3.
 It does not assert that the actual Green-function estimate has this form. -/
 namespace MatedCRT.Audit.StatementsSec3Sec5M1
 
 open scoped ENNReal
+
+/-- Two polynomially high probability events can be combined into one, and recovered from it. -/
+theorem three_two_poly_high_prob_conjunction {Ω : Type} [MeasurableSpace Ω]
+    (P : MeasureTheory.Measure Ω) (E F : ℝ → Set Ω) :
+    (HarmonicBalls.PolyHighProb P E ∧ HarmonicBalls.PolyHighProb P F) ↔
+      HarmonicBalls.PolyHighProb P (fun ε => E ε ∩ F ε) := by
+  constructor
+  · rintro ⟨hE, hF⟩
+    exact polyHighProb_of_inter hE hF (fun _ => Set.Subset.rfl)
+  · intro h
+    exact ⟨polyHighProb_mono_of_subset h (fun _ => Set.inter_subset_left),
+      polyHighProb_mono_of_subset h (fun _ => Set.inter_subset_right)⟩
 
 /-- In a valid environment, the IDLA probability uses the joint law of the walker sequence. -/
 theorem five_one_idla_joint_law {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
@@ -498,6 +511,7 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms five_four_green_quotient_semantics
 #print axioms three_four_sum_ext
 #print axioms three_four_measurable_extension
+#print axioms three_two_poly_high_prob_conjunction
 #print axioms three_two_interior_distance_pos
 #print axioms three_two_holder_quotient_iff
 #print axioms three_five_boundary_cell_marked_point
