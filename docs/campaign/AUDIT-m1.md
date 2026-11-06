@@ -54,6 +54,9 @@ identify the joint measure with the kernel composition. The new
 generic joint outer probability with the same measure on every set, not just
 measurable sets. Thus the zero fallback is unreachable whenever `S.IsValid`;
 the unrestricted total definitions still retain their off-valid-locus fallback.
+For measurable events, `MatedCRTEnv.IsValid.jointOuterProb_eq_lintegral` in
+the same file also identifies the outer probability directly with the integral
+of the conditional walker probabilities of the event's sections.
 
 Snapshot: HEAD `00649b287c08f1fb139d2bca9097fccc141a8d61`, 2026-11-05.
 Source: `paper/idla_mated_crt-corrected.tex`; source line numbers below are in that file.
