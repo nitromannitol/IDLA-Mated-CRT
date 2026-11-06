@@ -73,4 +73,14 @@ def CrudeUpperBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
     p.IsChain fun c d => stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t c + (Real.log ε⁻¹)⁻¹ ^ 2 ≤
       stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t d}
 
+/-- **Lemma 7.2, corrected** (E-c3-2): the conclusion for the radii `s ≥ ε^β`, for some `β = β(ρ, γ) > 0`. -/
+def MassBoundOdometerAboveScaleStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ C c₀ β : ℝ, 0 < C ∧ 0 < c₀ ∧ c₀ < 1 ∧ 0 < β ∧
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  PolyHighProb S.P fun ε => {ω | ∀ t : ℝ, 0 < t → ∀ Θ : Set ℤ, Θ ⊆ cellVertices ε (S.η ω) (ball 0 ρ) →
+    IsVConnected (S.mult ε ω) Θ → (0 : ℤ) ∈ Θ → ∀ (s : ℝ) (z : ℂ), 0 < s → ε ^ β ≤ s →
+      cellVertices ε (S.η ω) (ball z s) ⊆ cellVertices ε (S.η ω) (ball 0 ρ) \ Θ →
+      ((cellVertices ε (S.η ω) (ball z (c₀ * s)) ∩ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t).ncard : ℝ) ≤
+        C * ⨆ b : vBoundary (S.mult ε ω) Θ, stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t b}
+
 end MatedCRT

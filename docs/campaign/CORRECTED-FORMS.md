@@ -189,3 +189,8 @@ findings E-x2-2 (`D(M) = {0} ∪ cl{v > 0}`) concern a printed identity, not a D
 `Draft/Section4.lean`; their definitions and their downstream names are unchanged. The source-cell
 hypothesis appears only in the respective origin and mass-identity clauses, exactly as in corrected
 paper lines 1881–1893. The old Draft declarations remain as refuted historical forms.
+
+**C8 Draft synchronization (2026-11-06).** `MassBoundOdometerAboveScaleStmt` is now in
+`Draft/Section7.lean` with the same name and definition, including `s ≥ ε^β` (corrected paper
+Lemma 7.2). Its existing proof and the Proposition 7.1 reduction already use this form. The
+frozen `MassBoundOdometerStmt` remains as a historical form.
