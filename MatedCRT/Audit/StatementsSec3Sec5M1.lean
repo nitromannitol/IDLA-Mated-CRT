@@ -41,6 +41,30 @@ theorem three_two_poly_high_prob_conjunction {Ω : Type} [MeasurableSpace Ω]
     exact ⟨polyHighProb_mono_of_subset h (fun _ => Set.inter_subset_left),
       polyHighProb_mono_of_subset h (fun _ => Set.inter_subset_right)⟩
 
+/-- In a valid environment, bounded domains meet only finitely many positive-mesh cells. -/
+theorem three_two_bounded_domain_cell_vertices_finite {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
+    (hS : S.IsValid 𝒮 γ) (ρ : ℝ) :
+    ∀ᵐ ω ∂S.P, ∀ ε : ℝ, 0 < ε → ∀ D : Set ℂ, D ⊆ Metric.ball 0 ρ →
+      (cellVertices ε (S.η ω) D).Finite := by
+  filter_upwards [hS.isAreaParametrized, hS.ae_tendsto_cocompact] with ω hη hp
+  intro ε hε D hD
+  refine (cellVertices_finite_of_isCompact hη.1 hp hε
+    (isCompact_closedBall 0 ρ)).subset ?_
+  rintro a ⟨z, hz, hzD⟩
+  exact ⟨z, hz, Metric.ball_subset_closedBall (hD hzD)⟩
+
+/-- A nonempty domain meets a positive-mesh cell in a valid environment. -/
+theorem three_two_nonempty_domain_cell_vertices {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
+    (hS : S.IsValid 𝒮 γ) :
+    ∀ᵐ ω ∂S.P, ∀ ε : ℝ, 0 < ε → ∀ D : Set ℂ, D.Nonempty →
+      (cellVertices ε (S.η ω) D).Nonempty := by
+  filter_upwards [hS.isAreaParametrized, hS.ae_tendsto_cocompact] with ω hη hp
+  intro ε hε D ⟨z, hz⟩
+  exact ⟨vertexOf ε (S.η ω) z, z,
+    Tightness.mem_cell_vertexOf hη.1 hp hη.2.2.1 hε z, hz⟩
+
 /-- In a valid environment, the IDLA probability uses the joint law of the walker sequence. -/
 theorem five_one_idla_joint_law {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
     {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (ε : ℝ)
@@ -512,6 +536,8 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms three_four_sum_ext
 #print axioms three_four_measurable_extension
 #print axioms three_two_poly_high_prob_conjunction
+#print axioms three_two_bounded_domain_cell_vertices_finite
+#print axioms three_two_nonempty_domain_cell_vertices
 #print axioms three_two_interior_distance_pos
 #print axioms three_two_holder_quotient_iff
 #print axioms three_five_boundary_cell_marked_point

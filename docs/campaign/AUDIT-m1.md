@@ -357,3 +357,23 @@ polynomial high probability are equivalent for arbitrary event families,
 without assuming event measurability. This observation does not address the
 different witness order in `DiscreteHolderContinuityCorrectedStep`, or the
 remaining correspondence of the events' mathematical content.
+
+
+## Lemma 3.2: vertex-set supremum
+
+The source's supremum is over vertices whose cells meet `D` (source:1008),
+and the Draft uses a real indexed supremum over the subtype `cellVertices`
+(Draft/Section3.lean:84). Since real indexed suprema are total, their intended
+finite nonempty interpretation needs justification.
+
+The checked `three_two_bounded_domain_cell_vertices_finite` proves that, on
+one almost-sure event under `S.IsValid`, every positive mesh and every domain
+contained in the ball has finitely many cell vertices. It uses continuity and
+properness of the space-filling curve and compactness of the closed ball.
+`three_two_nonempty_domain_cell_vertices` proves on an almost-sure event that
+every nonempty domain has a cell vertex at every positive mesh, using
+surjectivity and `Tightness.mem_cell_vertexOf`. The Draft's `IsConnected D`
+includes nonemptiness. Taking the intersection of these events gives the
+finite nonempty index set needed for the usual supremum interpretation.
+These checks use the validity bundle and do not independently audit its source
+characterization or prove the Hölder estimate.
