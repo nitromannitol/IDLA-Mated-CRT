@@ -37,3 +37,11 @@ At corrected.tex:2168–2171 the random constant C may be chosen as μh(BR), for
 Local finiteness of μh makes μh(BR) finite almost surely. The same inequality for all finite F proves the vertex set finite and yields |Vε(Bρ)| ≤ μh(BR)/ε. The finite-subset inequality, including the zero-overlap argument, is formalized in `cellVerticesBallFiniteStep` (Proofs/Sec6/ConstantOrderLowerBound/Model.lean:112); local finiteness is also obtainable from the cited volume growth bound by covering a fixed compact ball with finitely many smaller balls.
 
 For the only downstream use, the union bound in the proof of Lemma 5.2, this random coefficient is sufficient: on the good event, C ε⁻¹ exp(−c ε⁻q) tends to zero for every finite C and positive c, q, even if c and C are random and independent of ε. Add the probability of the complementary cell-size event and use convergence in probability. This supplies the count; it does not address the other hypotheses of Lemma 5.2.
+
+## E-c2-4 — FALSE as a Lean step
+
+`GoodScaleEventMeasurableStep` (Steps/Sec6/ConstantOrderLowerBoundDiv.lean:68) requires a pointwise σ(h)-measurable inner set F ⊆ E with P(Fᶜ) ≤ P*(Eᶜ), for the volume-growth event E. Form a product of a valid model with an independent uniform U on [0,1], retaining the original field and curve, and replace μ by zero on the null slice {U = 1/2}. The validity assumptions are unchanged because the replacement is on a measurable null set.
+
+Choose 0 < δ < 1 and positive exponents. On the null slice E fails at z = 0, since its positive lower bound for μ(Bδ(0)) fails. Every σ(h)-measurable set on the product is a union of complete U-fibres. Any such set contained in E must therefore be empty, since each fibre meets the bad slice. But the original E has probability tending to one as δ ↓ 0 by Lemma 2.7; select δ with P*(Eᶜ) < 1. Then F = ∅ has P(Fᶜ) = 1, contradicting the required inequality. Thus the proposed pointwise inner approximation is false even though the change to μ is almost surely invisible.
+
+The weaker condition P(F \ E) = 0 suffices for the countable Borel–Cantelli application, provided the needed field-measurable modification of μ exists. That modification is a separate remaining hypothesis; the counterexample does not refute the paper's probabilistic estimate.
