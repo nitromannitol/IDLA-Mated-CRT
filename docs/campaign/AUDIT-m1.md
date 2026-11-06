@@ -1,5 +1,54 @@
 # Sections 3 and 5: independent statement audit, work in progress
 
+## Current verdict ledger, 2026-11-06
+
+This is a fail-closed ledger, not a seal: `INCOMPLETE` is retained where the
+record does not support any of the four requested definitive verdicts. The
+freeze is not in force and the missing semantic checks are not presumed true.
+
+| Result | Verdict | Decisive evidence or unresolved check |
+| --- | --- | --- |
+| 3.1 | WRONG | Conditional Lean refutation `Audit/Refutations.lean:317`, under its explicit scaling and valid-environment hypotheses; closed-segment source interpretation remains a question. |
+| 3.2 | DIVERGES-DOCUMENTED | The approved [C6] boundary form allows the exponent to depend on `C'`; Draft requires it beforehand and also requires `ξ' ≤ χ` (see below). The checked-in source at 1008 still states the stronger quantifier order. |
+| 3.3 | INCOMPLETE | Brownian occupation versus Laplacian Green normalization remains unchecked; see the Green trace below. |
+| 3.4 | INCOMPLETE | Off-ball extension is resolved under the stated conditions, but Green normalization and probabilistic semantics remain open. |
+| 3.5 | MISMATCH | Draft requires Hölder data on a larger closed ball than the source (S2). |
+| 3.6 | MISMATCH | Draft requires Hölder data on a larger closed ball than the source (S2). |
+| 3.7 | INCOMPLETE | `HasLaplacian` and normalized exit-time semantic closure remain open. |
+| 5.1 | INCOMPLETE | The ball-family and cluster/walk semantics remain unaudited; stopped-cluster proof gap E-c1-5 is separate from statement fidelity. |
+| 5.2 | INCOMPLETE | Draft makes `K` deterministic; the source's intended quantifier needs interpretation. |
+| 5.3 | MISMATCH | Draft allows `s` to depend on `t`, unlike source `s(δ)`; see E-m1-2. |
+| 5.4 | INCOMPLETE | Uniformity over environments and real division/`tsum` semantics remain unchecked. |
+
+Counts: 0 FAITHFUL, 1 DIVERGES-DOCUMENTED, 3 MISMATCH, 1 conditional WRONG,
+6 INCOMPLETE. In particular, the operator's approval of the [C6] dependence
+does not itself rewrite the stronger statement in the checked-in TeX or Draft.
+
+### Operator ruling: E-m1-5
+
+On 2026-11-06 the operator accepted the literature facts in
+`IsMatingOfTreesCoupling` as frozen phase-2 cited input. Its individual fields
+are `isProbabilityMeasure`, `gff`, `gff₀`, `bm_B`, `bm_B'`, `bm_B₀`,
+`bm_B₀'`, `indep_cone`, `indep_cone₀`, `igField`, `indep_curve`,
+`measurable_curves`, `igMap`, `spaceFilling`, `areaParam`, `areaParam₀`,
+`segmentsContainBalls`, `coverage`, `cellMoments`, `boundaryLawBM`,
+`boundaryLength`, `merge`, `onlyMerge`, and `visitBound`; see
+`LatticeProb/Bonanno/MatedCRTHarmonic/Frozen/IsMatingOfTreesCoupling.lean:61`.
+Earlier references to E-m1-5 as unresolved predate this ruling; the ruling
+does not settle unrelated carrier, normalization, or quantifier questions.
+
+### E-m1-8: valid-locus characterization
+
+`MatedCRTEnv.IsValid.measurable_walkerSequenceLaw` and
+`MatedCRTEnv.IsValid.idlaJointMeasure_eq` in
+`MatedCRT/Proofs/IDLA/WalkerLawMeasurable.lean:38` establish measurability and
+identify the joint measure with the kernel composition. The new
+`MatedCRTEnv.IsValid.jointOuterProb_eq_idlaJointLaw` in
+`MatedCRT/Proofs/Defs/JointMeasureCharacterization.lean:11` identifies the
+generic joint outer probability with the same measure on every set, not just
+measurable sets. Thus the zero fallback is unreachable whenever `S.IsValid`;
+the unrestricted total definitions still retain their off-valid-locus fallback.
+
 Snapshot: HEAD `00649b287c08f1fb139d2bca9097fccc141a8d61`, 2026-11-05.
 Source: `paper/idla_mated_crt-corrected.tex`; source line numbers below are in that file.
 The freeze list explicitly says it is not in force; no versioned declaration manifest or pinned
