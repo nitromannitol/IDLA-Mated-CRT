@@ -27,4 +27,14 @@ theorem cluster_eq_closure_of_consistency {m : ℤ → ℤ → ℕ} {M : ℝ} {�
   rw [← hconsistency]
   exact cluster_eq_closure_of_one_lt hlf hsymm hloop hdeg hne hM
 
+/-- Equation `eq:cluster-definition` at the paper's mass `t / ε`, for `ε < t`
+(corrected paper lines 1719–1724). -/
+theorem cluster_eq_closure_of_mesh_lt_time {m : ℤ → ℤ → ℕ} {ε t : ℝ}
+    (hlf : IsLocallyFiniteMult m) (hsymm : ∀ a b, m a b = m b a)
+    (hloop : ∀ a, m a a = 0) (hdeg : ∀ a, 0 < mdeg m a)
+    (hne : (admissible m (t / ε)).Nonempty) (hε : 0 < ε) (hεt : ε < t) :
+    sandpileCluster m (t / ε) = vClosure m (Function.support (sandpileNormOdometer m (t / ε))) := by
+  apply cluster_eq_closure_of_one_lt hlf hsymm hloop hdeg hne
+  exact (one_lt_div hε).2 hεt
+
 end MatedCRT.Sandpile

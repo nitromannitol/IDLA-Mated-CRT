@@ -198,6 +198,7 @@ frozen `MassBoundOdometerStmt` remains as a historical form.
 **C9 cluster identities (2026-11-06).** `Sandpile.cluster_eq_closure_of_one_lt` in
 `Proofs/Sandpile/ClusterIdentityCorrected.lean` proves corrected equation
 `eq:cluster-definition` for initial mass `M > 1`, under the deterministic sandpile hypotheses.
+`Sandpile.cluster_eq_closure_of_mesh_lt_time` specializes it to `M = t / ε` with `0 < ε < t`.
 `Sandpile.cluster_eq_closure_of_consistency` adds the explicit equality of stopped and global
 positive odometer sets for `eq:cluster-and-lambdat`. This does not establish consistency at the
 Proposition 5.1 use; that separate gap is recorded in `AUDIT-C7-C10-USES.md`.
