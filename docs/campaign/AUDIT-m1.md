@@ -195,13 +195,25 @@ The source at corrected lines 1987–2002 fixes two environment-measurable conne
 | inclusion, origin membership and `IsVConnected` | SOURCE, provisional | required almost surely separately for every positive ε; source's quantification in ε and graph-domain convention require interpretation |
 | `K : ℝ → ℝ`, `∀ ε, 0 < K ε` | SOURCE plus potentially EXTRA | positivity for all real ε is stronger than needed for ε → 0⁺; Lean also makes K deterministic, whereas the source does not explicitly say so |
 | `q : ℝ`, `0 < q` | SOURCE | source says deterministic q > 0 |
-| `s : Ω → ℝ`, environment measurability and `∀ ω, 0 < s ω` | SOURCE, provisional | real-valued encodes finiteness; pointwise positivity is stronger than an a.s. reading. The null-set modification below resolves the basic measurable-version issue, but the full transfer of the probability statement remains unchecked |
+| `s : Ω → ℝ`, environment measurability and `∀ ω, 0 < s ω` | SOURCE, provisional | real-valued encodes finiteness; pointwise positivity is stronger than an a.s. reading. The null-set modification and probability transfer are checked below. |
 | probability tending to one of both Green estimates | SOURCE, provisional | outer probability of failure via `ProbTendsToOne`; denominator and real `tsum` need valid finite-domain justification |
 | both unrestricted and stopped inclusions | SOURCE, provisional | annealed outer probability and the conditional walk law need closure audit |
 
 `GeneralIDLALowerBoundRelaxedStep` (`Steps/Sec5/IDLALowerBound.lean:40`) removes set measurability, connectedness, origin membership and positivity of `K` while preserving deterministic `K`, positive q and pointwise-positive measurable s. The checked `relaxed_five_two_implies_draft` in the audit Lean file applies the producer explicitly; it establishes a conditional implication only. `walkerSequenceLaw` is `Measure.infinitePi` of `srwLaw` (`Defs/RandomWalk.lean:153`), and `idlaProb` now evaluates the joint measure (`Defs/Setting.lean:216`). See the joint-law update below; the previous sectionwise outer-integral description is superseded by commit a12c8bf.
 
 The checked `five_two_positive_surplus_version` constructs an everywhere positive function equal almost everywhere to any almost-surely positive real function, while preserving measurability with respect to an arbitrary specified sigma algebra, which can be `S.envSigma`. The separate checked `five_two_probTendsToOne_congr` shows that uniformly almost-sure changes to the events preserve the Draft's outer-probability convergence. Together these supply the null-set modification and the event-convergence transfer for the Green-estimate hypothesis. This does not discharge the hypotheses of the Draft or establish source fidelity for the full statement.
+
+The proof's conditional calculation at source:2177–2201 is evidence about,
+but does not settle, the scope of `Kε`: it treats the number of summands as
+fixed after conditioning on `h,η`, which is compatible both with deterministic
+`Kε` and with an environment-measurable `Kε`. The application at source:2034
+uses deterministic `t ε⁻¹`; it does not exclude the latter reading in the
+lemma itself. Independently, source:1998 uses `⌊Kε⌋` walkers and source:2177
+sums over integer indices `i ≤ Kε`, but source:2201 equates the conditional
+expectation to `Kε` times the hitting probability rather than `⌊Kε⌋` times
+that probability. Without an integer assumption this equality is not exact;
+this is a proof-level floor discrepancy, not by itself a counterexample to
+the lemma or a resolution of the `Kε` scope.
 
 The proof of Proposition 5.1 applies Lemma 5.2 with `O₂ = Λε_t` (corrected source:2033–2044), whereas its stopped assertion uses `Vε(Λ_t)` (source:1977–1981); see existing E-c1-5. The available 5.1 reduction assumes `IDLALowerBoundStoppedStep`, so it does not claim this proof gap closed.
 
@@ -475,7 +487,7 @@ audit of `IsValid`. Each row counts one group. Source: corrected paper
 | `ρ`, `0 < ρ`, `ρ < 1` | STANDING | Section 3 setting, source:957. |
 | `ξ`, `A`, `β` and their positivity/range constraints | SOURCE | Existential conclusion witnesses, depending on `ρ` and `γ`. |
 | `χ`, `0 < χ`, `χ ≤ 1` | SOURCE | Boundary Hölder exponent. |
-| `ξ′`, its range and `ξ′ ≤ χ` | SOURCE | Existential witness chosen after `χ` and before `C′`. |
+| `ξ′`, its range and `ξ′ ≤ χ` | EXCESS relative to approved [C6] | Draft chooses the witness after `χ` and before `C′` and imposes `ξ′ ≤ χ`; the operator-approved [C6] permits dependence on `C′`. |
 | `C′`, `0 < C′` | SOURCE | Boundary Hölder constant. |
 | `C`, `0 < C` | SOURCE | Existential witness chosen after `C′`. |
 | `Ω`, measurable-space instance, `S` | TYPING | Probability environment representation. |
@@ -484,7 +496,7 @@ audit of `IsValid`. Each row counts one group. Source: corrected paper
 | `f` and discrete harmonicity on interior vertices | SOURCE, provisional | Total representative on `ℤ`, with harmonicity restricted to interior cell vertices; the cell definitions require semantic verification. |
 | Simple connectedness and boundary Hölder estimate | SOURCE, provisional | Conditional inputs to the boundary estimate; the precise boundary-cell interpretation remains to be checked. |
 
-Grouped counts: SOURCE 8, STANDING 2, TYPING 2, UNCLASSIFIED 1. These
+Grouped counts: SOURCE 7, STANDING 2, TYPING 2, EXCESS 1, UNCLASSIFIED 1. These
 counts do not classify the validity bundle's fields or the quantified vertices
 inside either estimate. The constants are chosen before the environment in
 Lean; this uniformity across all valid representations also depends on the
@@ -496,7 +508,7 @@ Draft requests their conjunction on one event.
 `three_two_poly_high_prob_conjunction` checks that the two formulations of
 polynomial high probability are equivalent for arbitrary event families,
 without assuming event measurability. This observation does not address the
-different witness order in `DiscreteHolderContinuityCorrectedStep`, or the
+different witness order relative to the approved [C6] form, or the
 remaining correspondence of the events' mathematical content.
 
 
