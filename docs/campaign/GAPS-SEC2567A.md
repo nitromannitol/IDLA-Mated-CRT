@@ -95,3 +95,11 @@ For this fixed mesh, t ↦ uεt(a) is nondecreasing and continuous: the least-ac
 contradicting the lemma. The choice of t, s and Θ is allowed to depend on the realization because the statement places them inside the single high-probability event. The construction applies on the high-probability small-cell events, so the asserted probability cannot tend to one.
 
 A candidate correction is to impose s ≥ ε^β for a sufficiently small deterministic β > 0, as in `MassBoundOdometerAboveScaleStmt` (Steps/Sec7/MassBoundOdometer.lean:48). The paper's Green and cell-size estimates then apply at the ball scale; its use in Proposition 7.1 can choose its exponent ω smaller than β. The above counterexample by itself does not prove the corrected estimate; the latter is separately proved from the named geometric and Green steps in `massBoundOdometerAboveScale_of_steps` (:64).
+
+## E-m1-2 — MINIMAL-CORRECTION to clarify the quantified dependence
+
+At corrected.tex:2008–2009 replace `𝔰 = 𝔰(δ)` by `𝔰 = 𝔰(δ,t)`; likewise include t among the arguments displayed at 2096 and 2130. The operative sentence fixes δ and t before asserting existence of 𝔰, and Proposition 5.1, the only application at 2029–2033, also fixes δ and t separately (see its statement at 1975–1980). This makes the dependence consistent with the actual quantifier order of Draft/Section5.lean:67 and with that application.
+
+In symbols the scope supplied by the sentence is ∀δ ∀t ∃𝔰 P(δ,t,𝔰). It does not yield ∀δ ∃𝔰 ∀t P(δ,t,𝔰): for the elementary predicate 0 < 𝔰 < t, the former holds for all t > 0 while the latter fails. Thus the displayed notation `𝔰(δ)` should not be used as evidence of a uniform-in-t result; if the authors intend such uniformity, it is a distinct stronger claim requiring a separate proof. The replacement preserves independence of ε, which the subsequent application needs.
+
+This is a scope clarification, not a proof of the positive-surplus estimate: that estimate has the separate strict-obstacle and geometric issues recorded under E-c2-5.
