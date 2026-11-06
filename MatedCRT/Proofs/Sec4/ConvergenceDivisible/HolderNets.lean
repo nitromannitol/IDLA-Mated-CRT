@@ -9,7 +9,7 @@ of the Hölder classes in the measurable selection of `OdometerMeasurableSelecti
 
 namespace MatedCRT
 
-open Set Metric
+open Set Metric Filter Topology
 
 theorem holder_finite_net {K : Set ℂ} (hK : IsCompact K) {m α : ℝ} (hα : 0 < α) {δ : ℝ} (hδ : 0 < δ) :
     ∃ F : Finset (ℂ → ℝ), ∀ h : ℂ → ℝ, (∀ x ∈ K, |h x| ≤ m) →
@@ -119,5 +119,54 @@ theorem holder_finite_net_in_class {K : Set ℂ} (hK : IsCompact K) {m α : ℝ}
     have h3 := abs_sub_le (h x) (c₀ x) (rep c₀ x)
     rw [abs_sub_comm (c₀ x)] at h3
     linarith
+
+
+/-- The Hölder class on `K` is closed under pointwise limits on `K`. -/
+theorem holderClassOn_of_tendsto {K : Set ℂ} {m α : ℝ} {h : ℕ → ℂ → ℝ} {w : ℂ → ℝ}
+    (hh : ∀ k, HolderClassOn K m α (h k)) (hw : ∀ x ∈ K, Tendsto (fun k => h k x) atTop (𝓝 (w x))) :
+    HolderClassOn K m α w := by
+  refine ⟨fun x hx => ?_, fun x hx y hy => ?_⟩
+  · exact le_of_tendsto (hw x hx).abs (Eventually.of_forall fun k => (hh k).1 x hx)
+  · exact le_of_tendsto ((hw x hx).sub (hw y hy)).abs
+      (Eventually.of_forall fun k => (hh k).2 x hx y hy)
+
+/-- A function in the Hölder class on `K` is continuous on `K`. -/
+theorem holderClassOn_continuousOn {K : Set ℂ} {m α : ℝ} (hα : 0 < α) {h : ℂ → ℝ}
+    (hh : HolderClassOn K m α h) : ContinuousOn h K := by
+  intro x hx
+  rw [Metric.continuousWithinAt_iff]
+  intro ε hε
+  obtain ⟨δ, hδpos, hδ⟩ : ∃ δ : ℝ, 0 < δ ∧ δ ^ α = ε / (2 * (|m| + 1)) :=
+    ⟨(ε / (2 * (|m| + 1))) ^ α⁻¹, by positivity, Real.rpow_inv_rpow (by positivity) hα.ne'⟩
+  refine ⟨δ, hδpos, fun {y} hy hyx => ?_⟩
+  rw [Real.dist_eq]
+  have h1 := hh.2 y hy x hx
+  have hd : dist y x ^ α ≤ δ ^ α := Real.rpow_le_rpow dist_nonneg (le_of_lt (by simpa [dist_comm] using hyx)) hα.le
+  have h2 : m * dist y x ^ α ≤ |m| * dist y x ^ α :=
+    mul_le_mul_of_nonneg_right (le_abs_self m) (by positivity)
+  have h3 : |m| * dist y x ^ α ≤ |m| * δ ^ α := mul_le_mul_of_nonneg_left hd (abs_nonneg m)
+  rw [hδ] at h3
+  have h4 : |m| * (ε / (2 * (|m| + 1))) < ε := by
+    rw [mul_div_assoc', div_lt_iff₀ (by positivity)]
+    nlinarith [abs_nonneg m]
+  linarith
+
+/-- The Hölder class on a compact set has a countable dense subset of centres in the class. -/
+theorem exists_countable_holder_dense {K : Set ℂ} (hK : IsCompact K) {m α : ℝ} (hα : 0 < α) :
+    ∃ D : Set (ℂ → ℝ), D.Countable ∧ (∀ c ∈ D, HolderClassOn K m α c) ∧
+      ∀ h : ℂ → ℝ, HolderClassOn K m α h → ∀ ε : ℝ, 0 < ε → ∃ c ∈ D, ∀ x ∈ K, |h x - c x| < ε := by
+  classical
+  have hnet : ∀ j : ℕ, ∃ F : Finset (ℂ → ℝ), (∀ c ∈ F, HolderClassOn K m α c) ∧
+      ∀ h : ℂ → ℝ, HolderClassOn K m α h → ∃ c ∈ F, ∀ x ∈ K, |h x - c x| < 1 / ((j : ℝ) + 1) :=
+    fun j => holder_finite_net_in_class hK hα (by positivity)
+  choose F hF using hnet
+  refine ⟨⋃ j, (F j : Set (ℂ → ℝ)), Set.countable_iUnion fun j => (F j).countable_toSet, ?_, ?_⟩
+  · intro c hc
+    obtain ⟨j, hj⟩ := Set.mem_iUnion.mp hc
+    exact (hF j).1 c hj
+  · intro h hh ε hε
+    obtain ⟨j, hj⟩ := exists_nat_one_div_lt hε
+    obtain ⟨c, hc, hd⟩ := (hF j).2 h hh
+    exact ⟨c, Set.mem_iUnion.mpr ⟨j, hc⟩, fun x hx => lt_trans (hd x hx) hj⟩
 
 end MatedCRT
