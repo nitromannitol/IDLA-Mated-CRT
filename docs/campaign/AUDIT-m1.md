@@ -384,3 +384,23 @@ function, the Draft's indexed supremum of absolute values equals an attained
 value which bounds all the other values. Together with the two a.s. cell-set
 checks above, this validates the finite-supremum convention on their common
 event; it does not establish the source characterization of the validity bundle.
+
+
+## Lemma 3.3: tolerance and supremum conventions
+
+The source requires the error estimate for each sufficiently small positive
+`δ` (source:1113); the Draft quantifies over every positive `δ`
+(Draft/Section3.lean:101). `three_three_small_tolerances_suffice` proves this
+extension for arbitrary error functions and test sets, assuming one positive
+upper threshold for the small tolerances. It uses monotonicity of the event and
+the existing `ProbTendsToOne.mono'`; no event measurability is assumed.
+
+For a nonempty test set, `three_three_pointwise_bound_iff_supremum` proves
+that the Draft's pointwise upper bound is equivalent to boundedness above of
+the error range together with the corresponding real indexed supremum bound.
+The pointwise bound itself supplies boundedness. This qualification matters:
+Lean's real supremum is total, so a bare supremum inequality alone does not
+characterize pointwise bounds without a boundedness premise. The previously
+checked empty-set result handles the omitted empty test set. These are
+order/probability-convention checks; they do not establish Green-function
+normalization, source measurability, or the estimate itself.

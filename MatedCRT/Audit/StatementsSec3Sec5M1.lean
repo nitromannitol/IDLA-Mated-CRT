@@ -22,6 +22,7 @@ import MatedCRT.Proofs.Sec3.UniformConvergenceGreenKernel.InteriorStep
 import MatedCRT.Proofs.WalkPotential.GreenFirstStep
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.Visit
 import MatedCRT.Steps.Sec2.VolumeGrowthHalf
+import MatedCRT.Steps.Sec6.ChanceOfBeingAbsorbed
 
 /-! A logical check for the quantifier-order issue in Lemma 5.3.
 It does not assert that the actual Green-function estimate has this form. -/
@@ -77,6 +78,33 @@ theorem three_two_vertex_supremum_is_maximum {V : Set ℤ} (hV : V.Finite)
   refine ⟨a, ha.symm, fun b => ?_⟩
   rw [ha]
   exact le_ciSup (Set.finite_range (fun b : V => |f b|)).bddAbove b
+
+/-- A pointwise bound is equivalent to a bounded real supremum bound on a nonempty set. -/
+theorem three_three_pointwise_bound_iff_supremum {α : Type} (O : Set α)
+    (hne : O.Nonempty) (u : α → ℝ) (δ : ℝ) :
+    (∀ x ∈ O, u x ≤ δ) ↔
+      BddAbove (Set.range fun x : O => u x) ∧ (⨆ x : O, u x) ≤ δ := by
+  let _ : Nonempty O := ⟨⟨hne.choose, hne.choose_spec⟩⟩
+  constructor
+  · intro h
+    refine ⟨⟨δ, ?_⟩, ciSup_le fun x => h x x.property⟩
+    rintro _ ⟨x, rfl⟩
+    exact h x x.property
+  · rintro ⟨hb, hs⟩ x hx
+    exact (le_ciSup hb ⟨x, hx⟩).trans hs
+
+/-- Probability convergence for all sufficiently small tolerances extends to every tolerance. -/
+theorem three_three_small_tolerances_suffice {Ω : Type} [MeasurableSpace Ω]
+    (P : MeasureTheory.Measure Ω) (O : Set ℂ) (u : ℝ → Ω → ℂ → ℝ)
+    (δ₀ : ℝ) (hδ₀ : 0 < δ₀)
+    (h : ∀ δ : ℝ, 0 < δ → δ < δ₀ →
+      ProbTendsToOne P (fun ε => {ω | ∀ x ∈ O, u ε ω x ≤ δ})) :
+    ∀ δ : ℝ, 0 < δ → ProbTendsToOne P (fun ε => {ω | ∀ x ∈ O, u ε ω x ≤ δ}) := by
+  intro δ hδ
+  have hsmall : 0 < min δ (δ₀ / 2) := lt_min hδ (half_pos hδ₀)
+  apply (h _ hsmall ((min_le_right _ _).trans_lt (half_lt_self hδ₀))).mono'
+  intro ε ω hω x hx
+  exact (hω x hx).trans (min_le_left _ _)
 
 /-- In a valid environment, the IDLA probability uses the joint law of the walker sequence. -/
 theorem five_one_idla_joint_law {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
@@ -552,6 +580,8 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms three_two_bounded_domain_cell_vertices_finite
 #print axioms three_two_nonempty_domain_cell_vertices
 #print axioms three_two_vertex_supremum_is_maximum
+#print axioms three_three_pointwise_bound_iff_supremum
+#print axioms three_three_small_tolerances_suffice
 #print axioms three_two_interior_distance_pos
 #print axioms three_two_holder_quotient_iff
 #print axioms three_five_boundary_cell_marked_point
