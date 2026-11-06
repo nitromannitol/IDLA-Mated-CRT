@@ -69,6 +69,35 @@ theorem five_four_family_probability_congr {Ω : Type} [MeasurableSpace Ω]
 
 #print axioms five_four_family_probability_congr
 
+/-- Almost-sure properties of the environment lift to the joint IDLA law. -/
+theorem jointLaw_ae_environment {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
+    (hS : S.IsValid 𝒮 γ) (ε : ℝ) {p : Ω → Prop}
+    (hp : ∀ᵐ ω ∂S.P, p ω) :
+    ∀ᵐ x ∂hS.idlaJointLaw ε, p x.1 := by
+  let : MeasureTheory.IsProbabilityMeasure S.P := hS.isProbabilityMeasure
+  let κ : ProbabilityTheory.Kernel Ω (ℕ → ℕ → ℤ) :=
+    ⟨fun ω => walkerSequenceLaw (S.mult ε ω) 0, hS.measurable_walkerSequenceLaw ε 0⟩
+  let : ProbabilityTheory.IsMarkovKernel κ :=
+    ⟨fun ω => isProbabilityMeasure_walkerSequenceLaw _ _⟩
+  apply MeasureTheory.ae_of_ae_map measurable_fst.aemeasurable
+  change ∀ᵐ ω ∂(MeasureTheory.Measure.compProd S.P κ).fst, p ω
+  simpa only [MeasureTheory.Measure.fst_compProd] using hp
+
+/-- Valid choices of harmonic balls agree under the joint environment–walker law. -/
+theorem five_one_joint_families_agree {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
+    (hS : S.IsValid 𝒮 γ) (Λ Λ' : Ω → ℝ → Set ℂ)
+    (hΛ : ∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω))
+    (hΛ' : ∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ' ω))
+    (ε ρ t : ℝ) (ht : 0 < t) :
+    ∀ᵐ x ∂hS.idlaJointLaw ε,
+      clusterExitTime (Λ x.1) ρ = clusterExitTime (Λ' x.1) ρ ∧
+      Λ x.1 t = Λ' x.1 t := by
+  filter_upwards [jointLaw_ae_environment hS ε hΛ,
+    jointLaw_ae_environment hS ε hΛ'] with x hx hx'
+  exact ⟨five_four_clusterExitTime_eq hx hx' ρ, ((hx.eqOn hx') ht).symm⟩
+
 /-- Volume growth makes the Green potential integrand of Lemma 3.4 integrable. -/
 theorem three_four_green_integrable_of_volumeGrowth
     {μ : MeasureTheory.Measure ℂ} [MeasureTheory.IsLocallyFiniteMeasure μ]

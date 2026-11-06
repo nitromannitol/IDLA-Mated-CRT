@@ -459,6 +459,10 @@ positive times on the intersection of their full-measure events; their
 `clusterExitTime` values agree there as well, since its supremum only uses
 positive times. This removes the representation-uniqueness concern, but does
 not by itself show that a selected family or its failure event is measurable.
+`jointLaw_ae_environment` and `five_one_joint_families_agree` in
+`MatedCRT/Audit/StatementsSec3Sec5M1.lean` lift these conclusions to the
+joint environment–walker law, without a measurability assumption on the
+family. The full lower-bound event remains to be audited.
 The prior paragraph's nonexit concern is also discharged on the valid locus
 by `five_one_joint_current_aggregates_exit` in the joint-law trace below.
 
