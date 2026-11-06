@@ -233,3 +233,12 @@ step now takes the new successor.
 the prepared 4.6, 4.8, obstacle uniqueness, adjacent-cell intersection, and null measurability
 of the exit event. The continuum version and error-event measurability in this route use only
 the fixed-time prepared convergence; the older all-times statements remain historical forms.
+
+
+**C11, Lemma 3.3 route (2026-11-06).** `GreenKernelInteriorPreparedStep` and
+`GreenKernelBoundaryPreparedStep` in `Steps/Sec3/UniformConvergenceGreenKernelPrepared.lean`
+replace the old 3.1 antecedent with `DiscretePotentialTightnessPreparedStmt`;
+`uniformConvergenceGreenKernel_of_prepared_steps` assembles Lemma 3.3. These two prepared
+steps are open obligations, not consequences proved here; in particular they must handle
+the eventually almost-sure hypotheses and the separate identification gaps in
+`AUDIT-C11-C12-USES.md`.
