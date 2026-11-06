@@ -973,29 +973,43 @@ By combining the previous two lemmas, we have the following bound on the expecte
 	In this subsection we prove a general tightness result concerning bounded functions with bounded Laplacian. 
 	
 	
-	\begin{lemma} \label{lemma:discrete-potential-tightness}
-		For every connected set $D \subset B_{\rho}$
-		and $\sigma(h,\eta)$-measurable sequence  $\mathcal{E} \ni {\eps} \to 0$,
-		if a sequence of functions $u^{{\eps}}: {\VGeps}(D) \to \R $ indexed by ${\eps} \in \mathcal E$ satisfies
-		\[
-		\begin{aligned}
-		|\Delta^{{\eps}} u^{{\eps}}| \leq C &\quad \mbox{on ${\VGeps}(D) \setminus {\VGeps}(\partial D)$} \\
-		% CORRECTION [C3]: printed one-sided "u^{eps} \leq C eps^{-1}" (false: u^eps = -eps^{-2}); the proof (l.1016, 1040) and all uses have |u^eps|.
-		|u^{{\eps}}| \leq C {\eps}^{-1} &\quad \mbox{on ${\VGeps}(D)$}
-		\end{aligned}
-		\]
-		uniformly over ${\eps} \in \mathcal{E}$ for some $\sigma(h,\eta)$-measurable $C > 0$, then the following is true. 
-		Almost surely, there exists a $\sigma(h,\eta)$-measurable subsequence $\mathcal{E}_0 \subset \mathcal{E}$ and a function $\overline{u} \in C(D)$ such that for every compact subset $O \Subset D$, 
-		we have that  $\overline{u}^{{\eps}} \to \overline{u}$ uniformly in $O$ as $\mathcal{E}_0 \ni {\eps} \to 0$. 
-		
-		Moreover, if $D$ is simply connected, $u^{{\eps}}$ is discrete harmonic in ${\VGeps}(D) \setminus {\VGeps}(\partial D)$, and if $u^{{\eps}}$ has H\"{o}lder continuous boundary data, in the sense that there exists $\chi \in (0,1]$ and
-		$C' > 0$ so that 
-		% CORRECTION [C10]: printed C'; the boundary data in Lemma 3.5 are of order eps^{-1}.
-		\begin{equation} \label{eq:holder-boundary-data}
-		|u^{{\eps}}(a) - u^{{\eps}}(b)| \leq C' {\eps}^{-1}( {\eps} \vee |\eta(a) - \eta(b)|)^{\chi}, \quad \forall a,b \in {\VGeps}(\partial D), \quad \forall {\eps}  \in (0,1)
-		\end{equation}
-		then the convergence occurs uniformly in $\cl(D)$. 
-	\end{lemma}
+% CORRECTION [C11]: printed a random input sequence before a high-probability extraction; prepare deterministic scales first.
+% CORRECTION [C10]: printed C'; the boundary data in Lemma 3.5 are of order eps^{-1}.
+\begin{lemma} \label{lemma:discrete-potential-tightness}
+For each deterministic sequence $\mathcal S\ni\eps\to0$, there is a
+ deterministic subsequence $\mathcal S_*\subset\mathcal S$ such that
+ the following holds almost surely. For every connected domain
+ $D\subset B_\rho$, every $\sigma(h,\eta)$-measurable sequence
+ $\mathcal E\subset\mathcal S_*$ tending to zero, and every
+ $\sigma(h,\eta)$-measurable family
+ $u^\eps:{\VGeps}(D)\to\mathbb R$, $\eps\in\mathcal E$, suppose that
+ for some finite $\sigma(h,\eta)$-measurable $C>0$,
+% CORRECTION [C3]: printed one-sided "u^{eps} \leq C eps^{-1}" (false: u^eps = -eps^{-2}); the proof (l.1016, 1040) and all uses have |u^eps|.
+\[
+ |\Delta^\eps u^\eps|\le C
+ \quad\hbox{on }{\VGeps}(D)\setminus{\VGeps}(\partial D),
+ \qquad
+ |u^\eps|\le C\eps^{-1}\quad\hbox{on }{\VGeps}(D),
+ \quad\eps\in\mathcal E.
+\]
+Then there is a $\sigma(h,\eta)$-measurable subsequence
+ $\mathcal E_0\subset\mathcal E$ and $\overline u\in C(D)$ such that
+ $\overline u^\eps\to\overline u$ uniformly on every compact
+ $O\Subset D$ as $\mathcal E_0\ni\eps\to0$.
+
+Moreover, if $D$ is simply connected, $u^\eps$ is discrete harmonic
+ in ${\VGeps}(D)\setminus{\VGeps}(\partial D)$, and there exist
+ $\chi\in(0,1]$ and a finite $C'>0$ such that
+\begin{equation} \label{eq:holder-boundary-data}
+ |u^\eps(a)-u^\eps(b)|\le
+ C'\eps^{-1}(\eps\vee|\eta(a)-\eta(b)|)^\chi,
+ \quad a,b\in{\VGeps}(\partial D),\quad\eps\in\mathcal E,
+\end{equation}
+then the convergence occurs uniformly in $\cl(D)$.
+The subsequence can be chosen simultaneously for any countable
+ collection of such function families and domains indexed by the same
+ $\mathcal E$.
+\end{lemma}
 	
 	Lemma \ref{lemma:discrete-potential-tightness} will follow from the Arz\'ela-Ascoli theorem and the following
 	H\"{o}lder continuity of $\Delta^{{\eps}}$-harmonic functions on the mated-CRT map. 
@@ -1014,77 +1028,155 @@ By combining the previous two lemmas, we have the following bound on the expecte
 	\end{lemma}
 	
 	
-	\begin{proof}[Proof of Lemma \ref{lemma:discrete-potential-tightness}] 
-		The conclusions of Lemmas \ref{lemma:cell-size-estimate}, \ref{lemma:expected-exit-time-explicit-bound}, and \ref{lemma:discrete-holder-continuity}  
-		hold with probability approaching one as $\mathcal{E} \ni {\eps} \to 0$. In particular, by the Borel-Cantelli lemma, almost surely, there exists a deterministic subsequence $\mathcal{E}_1 \subset \mathcal{E}$ such that the conclusions of all of these lemmas hold for all sufficiently small ${\eps} \in \mathcal{E}_1$. We henceforth restrict to such an event. 
-		
-		We first prove interior convergence: let $O \Subset D \subset B_{\rho}$ be given. By the Arz\'ela-Ascoli theorem, and the boundedness assumption on $\overline{u}^{{\eps}}$, it suffices to prove the following estimate:
-		almost surely, for each small $k > 0$, there exists possibly random choices of $\delta = \delta(k) > 0$ and ${\eps}_1 = {\eps}_1(k, \delta) \in \mathcal{E}_1$ so that for all ${\eps} \in (0, {\eps}_1) \cap \mathcal{E}_1$, 
-		\begin{equation} \label{eq:equicontinuity}
-		|x-y| \leq \delta \implies |\overline{u}^{{\eps}}(x) - \overline{u}^{{\eps}}(y)| \leq k, \quad \forall x,y \in O.
-		\end{equation} 
-		
-		
-		We now prove \eqref{eq:equicontinuity}. Let $k > 0$ be given, fix $\delta > 0$ to be determined below, in a manner depending on $k$. By Lemma \ref{lemma:cell-size-estimate}, 	
-		\begin{equation} \label{eq:cell-size-estimate}
-		\sup_{a \in {\VGeps}(B_{\rho})} \diam(\Heps{a}) \leq \delta^2, \quad \forall {\eps} \in \mathcal{E}_1 \cap (0, {\eps}_1)
-		\end{equation}
-		where ${\eps}_1$ depends on $\delta$ through Lemma \ref{lemma:cell-size-estimate}.  
-		
-		As $O \Subset D$, there exists $\delta_1 > 0$ so that $O + B_{\delta_1} \Subset D$.	
-		Suppose $\delta \in (0,  \min(\delta_1^{2}, \delta_1)/100 )$ and let $x \in O$ be given.  Let $\underline{\delta} = \delta^{1/2} + \delta$ and
-		$f^{{\eps}}:{\VGeps}(\cl(B_{\underline{\delta}}(x))) \to \R$ be the harmonic extension of $u^{{\eps}}$,
-		\[
-		\begin{cases}
-		\Delta^{{\eps}} f^{{\eps}} = 0 \quad \mbox{on ${\VGeps}(B_{\underline{\delta}}(x)) \setminus {\VGeps}(\partial B_{\underline{\delta}}(x))$} \\
-		f^{{\eps}} = u^{{\eps}} \quad \mbox{on ${\VGeps}(\partial B_{\underline{\delta}}(x))$} .
-		\end{cases}
-		\]
-		By the maximum principle (Lemma \ref{lemma:maximum-principle}) and our uniform boundedness assumption on $u^{{\eps}}$, 
-		\begin{equation} \label{eq:harmonic-extension-bounded}
-		\sup_{a' \in {\VGeps}(\cl(B_{\delta}(x)))} |f^{{\eps}}(a')| \leq \sup_{a' \in {\VGeps}(\cl(B_{\delta}(x)))} |u^{{\eps}}(a')| \leq  C {\eps}^{-1}  , \quad \forall {\eps} \in (0, {\eps}_1) \cap \mathcal{E}.
-		\end{equation}
-		
-		
-		By the assumption $|\Delta^{{\eps}} u^{{\eps}}| \leq C$ and \eqref{eq:discrete-exit-laplacian}, the functions $(u^{{\eps}} - f^{{\eps}}) \pm C \times \Qeps{B_{\underline{\delta}}(x)}$ are super (resp. sub) harmonic on ${\VGeps}(B_{\underline{\delta}}(x)) \setminus {\VGeps}(\partial B_{\underline{\delta}}(x))$ and identically equal to 0 on ${\VGeps}(\partial B_{\underline{\delta}}(x))$ for each ${\eps}$. Therefore, by the maximum principle,  
-		\[
-		|u^{{\eps}}-f^{{\eps}}| \leq  C \times \Qeps{B_{\underline{\delta}}(x)}  \quad \mbox{on ${\VGeps}(\cl(B_{\underline{\delta}}(x)))$}
-		\]
-		for all ${\eps} \in (0, {\eps}_1) \cap \mathcal{E}_1$.
-		Thus,  we have, for such ${\eps}$, by the triangle inequality, 
-		\begin{equation} \label{eq:harmonic-decomposition}
-		\sup_{a,b \in {\VGeps}(B_{\delta}(x))} |u^{{\eps}}(a) - u^{{\eps}}(b)|  \leq \sup_{a,b \in {\VGeps}(B_{\delta}(x))} |f^{{\eps}}(a) - f^{{\eps}}(b)| + 2 C \times \sup_{a\in  {\VGeps}(B_{\delta}(x))} \Qeps{B_{\underline{\delta}}(x)}(a) .
-		\end{equation}
-		By Lemma  \ref{lemma:expected-exit-time-explicit-bound}, we may take ${\eps}_1$ smaller, depending only on $\delta$, so that
-		\begin{equation} \label{eq:second-term-bound}
-		2 C \times \sup_{a\in  {\VGeps}(B_{\delta}(x))} \Qeps{B_{\underline{\delta}}(x)}(a)   \leq {\eps}^{-1} \delta^q, \quad \forall {\eps} \in (0, {\eps}_1) \cap \mathcal{E}_1
-		\end{equation}
-		for a deterministic $q  = q(\gamma) > 0$. 
-		
-		It remains to bound the first term in \eqref{eq:harmonic-decomposition}: with $A = A(\rho, \gamma) > 0$ and $\xi \in (0,1)$ as in Lemma \ref{lemma:discrete-holder-continuity},
-		\begin{align*}
-		&\sup_{a,b \in {\VGeps}(B_{\delta}(x))} |f^{{\eps}}(a) - f^{{\eps}}(b)| \\
-		&\leq  A \left( \sup_{a' \in {\VGeps}(B_{\delta}(x))} |f^{{\eps}}(a')| \right) \sup_{a,b \in {\VGeps}(B_{\delta}(x))} \left( \frac{{\eps} \vee |\eta(a) - \eta(b)|}{\dist(\eta(a), \partial B_{\underline{\delta}}(x))} \right)^\xi \quad \mbox{(Lemma \ref{lemma:discrete-holder-continuity})} \\
-		&\leq A C {\eps}^{-1} \sup_{a,b \in {\VGeps}(B_{\delta}(x))} \left( \frac{{\eps} \vee |\eta(a) - \eta(b)|}{\dist(\eta(a), \partial B_{\underline{\delta}}(x))} \right)^\xi \quad \mbox{(by \eqref{eq:harmonic-extension-bounded})}  \\
-		&\leq A C {\eps}^{-1} \left( \frac{\delta + \delta^2}{\delta^{1/2} - \delta^2} \right)^\xi \quad \mbox{(by \eqref{eq:cell-size-estimate} and since $\underline\delta = \delta^{1/2} + \delta$)}  \\
-		&\leq {\eps}^{-1} k/2 \quad \mbox{(for small $\delta = \delta(k, \xi)$)},  \stepcounter{equation}\tag{\theequation}\label{eq:first-term-bound}
-		\end{align*}
-		for all ${\eps} \in (0, {\eps}_1) \cap \mathcal{E}_1$. 
-		
-		By plugging \eqref{eq:second-term-bound} and \eqref{eq:first-term-bound} into~\eqref{eq:harmonic-decomposition}, we get that for sufficiently small $\delta = \delta(k, \xi)$,
-		\[
-		\sup_{y \in {\VGeps}(B_{\delta}(x))} |u^{{\eps}}(y) - u^{{\eps}}(x)|  \leq {\eps}^{-1} k, \quad \forall {\eps} \in (0, {\eps}_1) \cap \mathcal{E}_1.
-		\]
-		By combining this inequality with \eqref{eq:cell-size-estimate} and the definition~\eqref{eq:discrete-scaling} of $\overline{u}^{{\eps}}$, we have \eqref{eq:equicontinuity}. 
-		
-		
-		
-		We now assume the conditions of the moreover clause. Since we have assumed $u^{{\eps}}$ is harmonic, we can apply \eqref{eq:boundary-estimate} of Lemma \ref{lemma:discrete-holder-continuity} to get the analogue of \eqref{eq:equicontinuity} up to the boundary: for each $k > 0$, there exists $\delta = \delta(k,C',\chi) > 0$ such that for each small enough ${\eps} \in \mathcal E_1$,
-		\begin{equation} \label{eq:up-to-boundaryequicontinuity}
-		|x-y| \leq \delta \implies |\overline{u}^{{\eps}}(x) - \overline{u}^{{\eps}}(y)| \leq k, \quad \forall x,y \in {\VGeps}(D).
-		\end{equation} 
-		And so, we may conclude using the Arz\'ela-Ascoli theorem. 
-	\end{proof}
+% CORRECTION [C11]: deterministic thinning, spatial-radius control, and
+% hereditary pathwise compactness replace the random-scale Borel--Cantelli step.
+\begin{proof}[Proof of Lemma \ref{lemma:discrete-potential-tightness}]
+Fix $\rho<\rho_1<\rho_2<1$ and a deterministic sequence $\mathcal S$.
+For deterministic $\eps$, use the events in Lemmas
+\ref{lemma:cell-size-estimate}, \ref{lemma:exit-time-upper-bound}, and
+\ref{lemma:discrete-holder-continuity}, with ambient radius $\rho_1$.
+For the boundary estimates include every rational $\chi\in(0,1]$ and
+positive integer bound for the boundary H\"older constant. Enumerate
+these events as $A^j_\eps$, $j\ge1$. Each has probability tending to one.
+Choose a decreasing deterministic sequence $\eps_n\in\mathcal S$ such that
+\[
+ \P\left[\bigcup_{j\le n}(A^j_{\eps_n})^c\right]\le2^{-n},
+ \qquad \mathcal S_*:=\{\eps_n:n\ge1\}.
+\]
+By Borel--Cantelli, almost surely each of these estimates holds for all
+sufficiently small $\eps\in\mathcal S_*$. The estimates are uniform over
+their allowed domains and functions. In particular, they are inherited
+by every subsequent random subsequence of $\mathcal S_*$.
+
+We record carefully the small-ball exit bound needed below. Fix
+$0<b<(2-\gamma)^2/2$, $a>(2+\gamma)^2/2$, and $q\in(0,b)$.
+Lemma~\ref{lemma:volume-growth}, Borel--Cantelli at spatial radii $2^{-k}$,
+and monotonicity of ball mass imply that, almost surely, for some finite
+random $K$ and positive random $r_0$,
+\[
+ K^{-1}r^a\le\mu_h(B_r(z))\le Kr^b,
+ \qquad z\in B_{\rho_2},\quad 0<r<r_0.
+\]
+Shrink $r_0$ so that the balls below lie in the relevant ambient disks.
+Decomposing $B_{2r}(z)$ into annuli about $v\in B_r(z)$ of radii
+$3r2^{-j}$ gives
+\[
+ \sup_{v\in B_r(z)}\int_{B_{2r}(z)}
+ \left(\log\frac1{|v-w|}+1\right)d\mu_h(w)
+ \le K_1 r^b(1+|\log r|)\le K_2r^q.
+\]
+Indeed the $j$th term is bounded by a constant times
+$(3r2^{-j})^b(1+|\log(3r)|+j)$, a summable series. If $\alpha$ is the
+exponent in Lemma~\ref{lemma:exit-time-upper-bound}, then for each such
+$r$, for all sufficiently small $\eps\in\mathcal S_*$,
+$\eps^\alpha\le K^{-1}r^a$ and $\eps^\alpha\le r$.
+The mass condition in that lemma is satisfied simultaneously for all
+$B_r(z)$, $z\in B_\rho$, and its integration neighborhood is contained
+in $B_{2r}(z)$. Consequently, its first-moment bound implies
+\begin{equation}\label{eq:N3-small-ball-exit}
+ \sup_{z\in B_\rho}\sup_{v\in{\VGeps}(B_r(z))}
+ \eps\Qeps{B_r(z)}(v)\le K_3r^q,
+ \quad\hbox{for all sufficiently small }\eps\in\mathcal S_*.
+\end{equation}
+The threshold may depend on $r,h,\eta$. Thus no interchange of the two
+limits in Lemma~\ref{lemma:expected-exit-time-explicit-bound} is needed.
+
+Work on this probability-one event and fix admissible $D,\mathcal E,u^\eps$.
+By~\eqref{eq:meps-scaling}, $\overline u^\eps$ is uniformly bounded on
+the tail of $\mathcal E$. Let $O\Subset D$ and $|x-y|\le\delta$ with
+$x,y\in O$. Put $R=\sqrt\delta$ and take $\delta$ small enough that
+$B_R(x)\Subset D$ for every $x\in O$.
+Let $d_\eps$ be the maximum diameter of the cells meeting $B_{\rho_1}$.
+For each fixed small $\delta$, eventually $d_\eps\le\delta$ and
+$\eps^\beta\le\delta$, where $\beta$ is from
+Lemma~\ref{lemma:discrete-holder-continuity}. The representatives of
+$x,y$ are then at distance at most $3\delta$ from one another and at
+distance at least $R/2$ from $\partial B_R(x)$.
+Let $f^\eps$ be the discrete harmonic extension of the boundary values
+of $u^\eps$ in $B_R(x)$. The maximum principle and
+$\Delta^\eps\Qeps{B_R(x)}=-1$ give
+\[
+ \|f^\eps\|_\infty\le C\eps^{-1},\qquad
+ |u^\eps-f^\eps|\le C\Qeps{B_R(x)}.
+\]
+For the second inequality, $(u^\eps-f^\eps)-C\Qeps{B_R(x)}$ is
+subharmonic and $(u^\eps-f^\eps)+C\Qeps{B_R(x)}$ is superharmonic,
+with zero boundary values. Applying the interior harmonic estimate,
+\eqref{eq:N3-small-ball-exit}, and~\eqref{eq:meps-scaling} now yields
+\begin{equation}\label{eq:equicontinuity}
+ |\overline u^\eps(x)-\overline u^\eps(y)|
+ \le K_4C\big(\delta^{\xi/2}+\delta^{q/2}\big),
+ \quad x,y\in O,\quad |x-y|\le\delta,
+\end{equation}
+for all sufficiently small $\eps\in\mathcal E$, for each fixed small
+$\delta$. Here $K_4$ is finite and independent of $\delta,x,y,\eps$.
+
+The interpolated functions are piecewise constant, so we use the
+asymptotic version of the Arz\'ela--Ascoli argument. Enumerate a countable
+dense subset of $D$ and extract convergence of the bounded values at
+these points by a diagonal argument. The choices can be made measurably:
+at each point take the liminf along the current subsequence and choose
+successively the least later index whose value is within $1/k$ of this
+liminf. Each such set of indices is infinite. The diagonal indices are
+measurable. For a compact $O\Subset D$, apply~\eqref{eq:equicontinuity}
+on a slightly larger compact neighborhood and use a finite net from
+the dense set. The extracted functions are uniformly Cauchy on $O$;
+their limits are continuous and agree on overlapping compacts.
+A compact exhaustion proves the first conclusion. The construction
+applies to every subsequence of $\mathcal S_*$ on the same event.
+
+For the moreover clause apply the boundary estimate of
+Lemma~\ref{lemma:discrete-holder-continuity} to
+$v^\eps=m_\eps^{-1}u^\eps$ on the vertices. Its sup norm and boundary
+H\"older constant are uniformly bounded on the tail. The countable
+boundary events suffice: decrease the exponent to a positive rational
+one and increase the constant to an integer if necessary. Hence for
+some finite $K_5$ and some $\xi'>0$,
+\[
+ |\overline u^\eps(x)-\overline u^\eps(y)|
+ \le K_5\big(\eps\vee(|x-y|+2d_\eps)\big)^{\xi'},
+ \qquad x,y\in\cl(D).
+\]
+The same finite-net argument on $\cl(D)$ gives uniform convergence
+there. It also applies when the boundary H\"older condition is imposed
+directly on $m_\eps^{-1}u^\eps$, as for the harmonic part in
+Lemma~\ref{lemma:discrete-dirichlet-problem}.
+For later use, on the same event the compactness also holds up to the
+boundary of a ball for zero-boundary functions satisfying the two bounds
+in the lemma, even without harmonicity. Here is the boundary comparison.
+For $D$ a ball, $p\in\partial D$, and small $R>0$, let $U=D\cap B_R(p)$.
+On the boundary of this simply connected lens prescribe
+$g(b)=\min\{1,2|\eta(b)-p|/R\}$, and let $H^\eps$ be its harmonic
+extension. If $d_\eps<R/2$, then $g=1$ on the artificial boundary cells
+and $u^\eps=0$ on the remaining boundary cells. The maximum principle
+and monotonicity of killed exit times give
+\[
+ |u^\eps|\le C\eps^{-1}H^\eps+C\Qeps{U}
+ \le C\eps^{-1}H^\eps+C\Qeps{B_R(p)}.
+\]
+The boundary estimate applied to $RH^\eps$ has constants independent of
+$p,R\le1$, since its boundary Lipschitz constant is at most $2$ and its
+sup norm is at most $R$. At a boundary cell containing $p$,
+$H^\eps\le2d_\eps/R$. Thus, for $|x-p|\le s<R/2$, for some $\theta>0$,
+\[
+ |\overline u^\eps(x)|\le KC\left[
+ 2d_\eps/R+R^{-1}(\eps\vee(s+2d_\eps))^\theta+R^q\right].
+\]
+The exit estimate above also holds for centers in $\cl(B_\rho)$, using
+the ambient buffer. Taking the limsup for fixed $s,R$ and then choosing
+$R=s^{\theta/(q+1)}$, with $\theta\le1$, bounds the limsup uniformly in
+a boundary strip of width $s$ by $KC s^{\theta q/(q+1)}$.
+Together with interior equicontinuity, this proves the asserted
+zero-boundary compactness on the closed ball. Every limit is H\"older:
+for points a distance $\delta$ apart use the interior estimate if their
+boundary distances exceed $2\sqrt\delta$, and otherwise use the boundary
+bound for both points. This comparison is inherited by every subsequence.
+
+Finally, for countably many families indexed by the same $\mathcal E$,
+enumerate all pairs consisting of a family and a dense-set evaluation,
+and use the same measurable diagonal extraction. This proves the last
+assertion.
+\end{proof}
 	
 	
 	
@@ -1092,6 +1184,19 @@ By combining the previous two lemmas, we have the following bound on the expecte
 	
 	
 	
+% CORRECTION [C11]: quantifier convention for the subsequent proofs.
+In subsequent subsequence arguments we start with an arbitrary
+ deterministic sequence of mesh sizes and, before making any random
+ extraction, pass to a deterministic subsequence $\mathcal S_*$
+ supplied by Lemma~\ref{lemma:discrete-potential-tightness}.
+Any countable collection of additional convergences in probability
+ used to identify limits is made almost sure on a further deterministic
+ subsequence, and any countable collection of fixed-scale events whose
+ probabilities tend to one is made eventual there. All subsequent
+ random extractions take place inside this prepared sequence.
+When every possible limit is identified, relative compactness implies
+ convergence along the whole prepared deterministic sequence; the
+ subsequence criterion then gives convergence in probability.
 	\subsection{Uniform convergence of the Green's kernel} \label{subsec:green-kernel}
 	For $z \in \C$, let 
 	\[
@@ -1134,8 +1239,19 @@ By combining the previous two lemmas, we have the following bound on the expecte
 	\begin{proof}
 		This follows from convergence of random walk on ${\Geps}$ to LBM and the fact that the discrete and continuum Green's functions can be represented in terms of these objects. 
 		
-		The conclusions of Lemmas \ref{lemma:expected-exit-time-explicit-bound} and \ref{lemma:cell-size-estimate}
-		hold with probability approaching one as ${\eps} \to \infty$. Restrict to the event that these occur for all small enough ${\eps}$. 
+        % CORRECTION [C11]: all mesh limits here are along a deterministic thinning.
+        Start with an arbitrary deterministic sequence of mesh sizes. Pass to a
+        deterministic subsequence on which the cell-size estimates, the
+        domain-uniform exit-time moment estimate in
+        Lemma~\ref{lemma:exit-time-upper-bound}, and the quenched convergence
+        in Theorem~\ref{theorem:rw-to-lbm} hold almost surely (eventually for
+        the estimates). All mesh limits in this proof are along this
+        subsequence. The $N=2$ moment bound and $m_\eps\asymp\eps^{-1}$
+        give a finite random $K$ such that
+        $\E[(\tau^\eps/m_\eps-T)_+\mid h,\eta]\le K/T$
+        uniformly on its tail, where $\tau^\eps$ is the killed exit time
+        from the fixed ball. This justifies the occupation-tail limit below.
+        The subsequence criterion then gives convergence in probability.
 		
 		Let the deterministic parameters $y \in B_r(z) \subset B_{\rho}$ and $f: B_r(z) \to \C$ a bounded and H\"{o}lder continuous function which is $\sigma(h, \eta)$-measurable be given. Consider the bounded, continuous 
 		functional on the space of continuous curves $w:   [0,\infty)  \to B_{\rho}$, 
@@ -1184,14 +1300,20 @@ By combining the previous two lemmas, we have the following bound on the expecte
 	We now use the integral convergence of the Green's function (Lemma~\ref{lemma:integral-convergence-of-greens-function}) together with Lemma \ref{lemma:mu_h_degree-convergence} and tightness to show uniform convergence of the Green's kernel away from its pole. 
 	
 	\begin{proof}[Proof of Lemma \ref{lemma:uniform-convergence-of-greens-function}]
-		Let a sequence of ${\eps}$s tending to zero be given. Fix $y \in B_r(z) \subset B_{\rho}$ and let $O \Subset B_{r}(z) \setminus \{y\}$ be open.
+		% CORRECTION [C11]: prescribe a deterministic input sequence.
+        Let a deterministic sequence of ${\eps}$s tending to zero be given. Fix $y \in B_r(z) \subset B_{\rho}$ and let $O \Subset B_{r}(z) \setminus \{y\}$ be open.
 		Denote by  $\mathcal{P}(B_r(z))$ the set of polynomials with rational coefficients in $B_r(z)$. 
 		
 		There exists a deterministic subsequence $\mathcal{E}$ along which a.s.\ the convergence in Lemma  \ref{lemma:mu_h_degree-convergence}
 		occurs and the convergence in Lemma \ref{lemma:integral-convergence-of-greens-function}  
 		occurs for each $f \in \mathcal{P}(B_r(z))$.
 		We may further assume, by the Borel-Cantelli lemma, that along this subsequence the conclusions of Lemma \ref{lemma:bounded-greens-function}
-		and Lemma \ref{lemma:cell-size-estimate} hold.  Restrict to the subsequence $\mathcal{E}$ and the event of the preceding two sentences. 
+		and Lemma \ref{lemma:cell-size-estimate} hold.  Restrict to the subsequence $\mathcal{E}$ and the event of the preceding two sentences.
+        % CORRECTION [C11]: this preparation precedes every random extraction.
+        Further thin $\mathcal E$ deterministically as in
+        Lemma~\ref{lemma:discrete-potential-tightness}. Its compactness
+        conclusions now hold on a single event for every further subsequence.
+        Use a countable compact exhaustion away from the pole.
 		
 		
 		
@@ -1232,7 +1354,13 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		\sup_{b \in {\VGeps}(\partial B_{r_1}(z))} \gr{{\eps}}{B_{\rho}}(a^{{\eps}}_y , b)
 		< s/2,
 		\]
-		for all ${\eps}$ sufficiently small. This implies convergence up to the boundary, $\partial B_r(z)$. 
+		for all ${\eps}$ sufficiently small. This implies convergence up to the boundary, $\partial B_r(z)$.
+        % CORRECTION [C11]: uniqueness concerns all cluster limits.
+        The identification applies to every subsequential limit on the
+        prepared event. Relative compactness and this uniqueness imply
+        convergence along the whole prepared deterministic sequence.
+        Since the original deterministic sequence was arbitrary, this
+        proves convergence in probability.
 	\end{proof}
 	
 	\subsection{Convergence of the Dirichlet problem}
@@ -1343,6 +1471,16 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		respectively. 
 		\medskip
 		
+        % CORRECTION [C11]: prepare the barrier before the random extraction.
+        Further thin $\mathcal E_1$ deterministically as in
+        Lemma~\ref{lemma:discrete-potential-tightness}. By
+        Lemma~\ref{lemma:integral-convergence-of-greens-function} with test
+        function $1$, also arrange pointwise convergence at every rational
+        point of $m_\eps^{-1}\Qeps{B_r(z)}$ on the same sequence.
+        Include $f_1^\eps,f_2^\eps,\Qeps{B_r(z)}$ in the simultaneous
+        compactness extraction below. For the harmonic part, apply the
+        boundary estimate to $m_\eps^{-1}f_1^\eps$.
+
 		{\it Step 2: Local uniform convergence.} \\ 
 		We now show local uniform convergence in $B_r(z)$. By the maximum principle (Lemma \ref{lemma:maximum-principle}), $f_1^{{\eps}} \leq {\meps} \sup_{x \in B_r(z)} |\phi(x)|$.
 		Moreover, as 
@@ -1381,6 +1519,12 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		\]
 		By, for example, \cite[Proposition 2.5]{bou2022harmonic}, $\overline{\mathfrak{Q}}_{B_r(z)}$ is H\"{o}lder continuous in $\cl(B_r(z))$.
 		Since $f^{{\eps}}_2 \pm M_{\psi} \times \Qeps{B_r(z)}$ is super (resp.\ sub) harmonic in ${\VGeps}(B_{r}(z)) \setminus {\VGeps}(\partial B_{r}(z))$ and is $0$ on ${\VGeps}(\partial B_{r}(z))$, we deduce convergence up to the boundary using the maximum principle exactly as in the proof of  Lemma \ref{lemma:uniform-convergence-of-greens-function}.
+        % CORRECTION [C11]: the prepared sequence, rather than one chosen
+        % random refinement, converges after all limits have been identified.
+        Each possible limit has the rational-point values from Step 1.
+        Relative compactness, the boundary control, and uniqueness therefore
+        give convergence on the prepared deterministic sequence and hence
+        convergence in probability.
 	\end{proof}
 	
 	
@@ -1415,11 +1559,19 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		\medskip
 		
 		{\it Step 1: Identify a subsequence.} \\
-		Let a sequence of ${\eps}$s tending to $0$ be given and fix a deterministic subsequence $\mathcal{E}$ along which the convergence result in Lemma \ref{lemma:uniform-convergence-of-greens-function}
+		% CORRECTION [C11]: prescribe a deterministic input sequence.
+        Let a deterministic sequence of ${\eps}$s tending to $0$ be given and fix a deterministic subsequence $\mathcal{E}$ along which the convergence result in Lemma \ref{lemma:uniform-convergence-of-greens-function}
 		occurs in $\cl(B_r(z))$ and Lemmas \ref{lemma:mu_h-convergence} and \ref{lemma:expected-exit-time-explicit-bound} occur almost surely. 
 		Also suppose that along this subsequence the convergence in Lemma \ref{lemma:discrete-dirichlet-problem} occurs for 
 		$\phi \equiv 0$ and for $\psi$ within a countable family of bump functions $\mathcal F(B_r(z))$ with the following property.
 		For each rational $\delta' >0$ and rational $x' \in B_r(z)$ such that $B_{\delta'}(x') \subset B_r(z)$, there is a function in $\mathcal F(B_r(z))$ which takes values in $[0,1]$, is 1 on $B_{\delta'}(x')$, and is 0 on $B_r(z) \setminus B_{2 \delta'}(x')$.	
+        % CORRECTION [C11]: prepare all countable identifying inputs first.
+        Take $\mathcal E$ inside the deterministic subsequence supplied by
+        Lemma~\ref{lemma:discrete-potential-tightness}. Require the Green
+        convergence above simultaneously for rational poles in $B_r(z)$
+        and a countable exhaustion away from each pole. All subsequent
+        extractions, including those for the rationally indexed truncated
+        exit-time functions, inherit this single probability-one event.
 		
 		
 		By Lemma \ref{lemma:expected-exit-time-explicit-bound}
@@ -1457,7 +1609,8 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		\mathfrak q^{{\eps}, \delta^+}_{B_r(z)}  = 0 \quad \mbox{otherwise}.
 		\end{cases}
 		\end{equation}
-		Apply the same argument as in the last paragraph of Step 1 to a countable set of rationals $\delta' > 0$ and $x' \in \Q^2$
+		% CORRECTION [C11]: use inherited pathwise estimates on the random input.
+        Apply the countable-family assertion of Lemma~\ref{lemma:discrete-potential-tightness} on the prepared event to the rational pairs $\delta' > 0$ and $x' \in \Q^2$
 		to see that there is a random subsequence  of $\mathcal{E}_0$ (independent of $\delta$ and $x$)  along which $\olqeps{B_r(z)}$, $\overline{\mathfrak q}^{{\eps}, \delta^-}_{B_r(z)}$, $\overline{\mathfrak q}^{{\eps}, \delta^+}_{B_r(z)}$ converge uniformly in $\overline{B}_r(z)$ to continuous functions $\overline{\mathfrak q}^{*}_{B_r(z)}$, $\overline{\mathfrak q}^{*, \delta^-}_{B_r(z)}$, $\overline{\mathfrak q}^{*, \delta^+}_{B_r(z)}$ (with the limit possibly depending on the subsequence).
 		
 		Fix such a subsequence $\mathcal{E}_1 \subset \mathcal{E}_0$ and limits $\overline{\mathfrak q}^{*}_{B_r(z)}$, $\overline{\mathfrak q}^{*, \delta^-}_{B_r(z)}$, $\overline{\mathfrak q}^{*, \delta^+}_{B_r(z)}$ and observe that
@@ -1536,7 +1689,15 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		\[
 		\overline{f}_{\delta} \leq \delta^q  \quad \mbox{for all $\delta$ sufficiently small},
 		\]
-		which by \eqref{eq:bound-q-by-f}, implies \eqref{eq:asymptotic-small}, completing the proof. 		
+        which by \eqref{eq:bound-q-by-f}, implies \eqref{eq:asymptotic-small}.
+        % CORRECTION [C11]: refine an arbitrary cluster subsequence when
+        % introducing auxiliary limits, so the total limit is unchanged.
+        Starting from any convergent subsequence of $\olqeps{B_r(z)}$ on
+        the prepared event, the further diagonal extraction above preserves
+        its limit and identifies it by the same argument. Thus all limits
+        coincide. Relative compactness and the boundary control give
+        convergence on the prepared deterministic sequence, and the
+        subsequence criterion completes the proof.
 	\end{proof}
 	
 	
@@ -1647,6 +1808,12 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		\end{equation}
 		
 		Let $g^{{\eps}}(\cdot) := {\eps}^{-1} \gr{{\eps}}{B_\rho}(0 , \cdot)$ and define $\overline{g}^{\eps}$ as in~\eqref{eq:discrete-scaling}.
+        % CORRECTION [C11]: the inner spatial radius may depend on the environment.
+        Prepare the convergence from
+        Lemma~\ref{lemma:uniform-convergence-of-greens-function}
+        simultaneously on the annuli with positive rational inner radii.
+        It then applies to the annulus selected above without a random
+        choice of mesh size.
 		By Theorem \ref{theorem:convergence-divisible}, there exists a deterministic subsequence, $\mathcal{E}$, along which a.s.\
 		$\olwteps$  converges uniformly in $B_{\rho}$ to $\frac{m_0}{6} \overline w_t^{B_\rho}$. 
 		Further, by Lemma \ref{lemma:uniform-convergence-of-greens-function} we may arrange so that, a.s.\ along $\mathcal{E}$,
@@ -1734,16 +1901,23 @@ By combining the previous two lemmas, we have the following bound on the expecte
 	\subsection{Convergence of the odometer along subsequences}
 	In this subsection we prove tightness of the re-scaled odometer function $\overline \wteps$ defined in~\eqref{eq:discrete-least-supersolution} and \eqref{eq:discrete-scaling}. In subsequent subsections we show that, for $t \in (0, \TT)$, each subsequential limit is given uniquely by \eqref{eq:least-super-solution}. 
 	\begin{lemma} \label{lemma:subsequential-convergence}
-		Almost surely, for each $t > 0$ and each deterministic sequence of ${\eps}$s converging to 0, 
-		there exists a $\sigma(h,\eta)$-measurable subsequence 
-		and a H\"{o}lder continuous function $\overline{w}^*_t \in C(\cl(B_\rho))$ such that $\olwteps \to \overline{w}^*_t$
-		uniformly in $\cl(B_{\rho})$. 
+        % CORRECTION [C12]: printed a.s. before all deterministic sequences; Borel--Cantelli requires a sequence-dependent deterministic thinning.
+        For each fixed $t>0$ and each deterministic sequence of $\eps$'s
+        converging to zero, there is a deterministic subsequence along
+        which, almost surely, the rescaled functions are relatively compact
+        for uniform convergence on $\cl(B_\rho)$, every limit is H\"{o}lder
+        continuous, and a $\sigma(h,\eta)$-measurable convergent subsequence
+        can be selected.
 	\end{lemma}
 	
 	We will prove Lemma \ref{lemma:subsequential-convergence} by combining Lemma \ref{lemma:discrete-potential-tightness}, the results of the previous subsection,
 	and the following lemma.  
 	\begin{lemma} \label{lemma:equibounded}
-		A.s., for each  deterministic sequence of ${\eps}$s converging to 0, there exists a deterministic subsequence $\mathcal{E}$ and a random constant $C$ so that for each $t > 0$, 
+        % CORRECTION [C12]: printed a.s. before the deterministic sequence; the thinning must be chosen first.
+        For each deterministic sequence of $\eps$'s converging to zero,
+        there exists a deterministic subsequence $\mathcal E$ such that,
+        almost surely, there is a finite random constant $C$ for which,
+        for every $t>0$,
 		\[
 		\sup_{x \in B_{\rho}} |\olwteps(x)| \leq C, \quad \forall {\eps} \in \mathcal{E}.
 		\]
@@ -1765,6 +1939,11 @@ By combining the previous two lemmas, we have the following bound on the expecte
 	\end{proof}
 	We now use the tightness lemma,  Lemma \ref{lemma:discrete-potential-tightness}, to prove subsequential convergence. 
 	\begin{proof}[Proof of Lemma \ref{lemma:subsequential-convergence}] 	
+        % CORRECTION [C11]: all t and all later extractions use the same event.
+        Begin with the prescribed deterministic sequence and prepare it
+        using Lemma~\ref{lemma:discrete-potential-tightness}. The bounds below
+        and the boundary control hold on this event for every $t>0$ and
+        are inherited by every further subsequence.
 		By Lemma \ref{lemma:equibounded} and Lemma \ref{lemma:discrete-laplacian-bound}, for each $t>0$, the assumptions of Lemma \ref{lemma:discrete-potential-tightness}
 		are satisfied along a deterministic subsequence for the functions $\wteps$. Hence, $\olwteps$ converges a.s.\ locally uniformly in $B_{\rho}$ along a random subsequence. To see that the convergence occurs uniformly in $\cl(B_{\rho})$, we use the standard barrier argument given in Step 3 of the proof of Lemma \ref{lemma:discrete-dirichlet-problem}. To implement the barrier argument we use that $0 \leq \Delta^{{\eps}} w^{{\eps}}_t \leq 1$. 
 	\end{proof}
@@ -1775,8 +1954,12 @@ By combining the previous two lemmas, we have the following bound on the expecte
 	We will use this in the next subsection to uniquely identify the limit. 
 	
 	\begin{lemma} \label{lemma:subsequential-properties}
-		A.s., for each deterministic sequence of ${\eps} \to 0$, 
-		there exists a deterministic subsequence so that a subsequential limit $\overline{w}^*_t$ of $\overline \wteps$ along this subsequence (as given by Lemma \ref{lemma:subsequential-convergence}) satisfies the following:
+        % CORRECTION [C11]: every limit on one prepared deterministic sequence.
+        Fix $t>0$. For each deterministic sequence of $\eps$'s converging
+        to zero, there exists a deterministic subsequence along which,
+        almost surely, $\overline\wteps$ is relatively compact in the
+        uniform topology on $\cl(B_\rho)$, and every subsequential limit
+        $\overline w_t^*$ satisfies the following:
 		\begin{enumerate}
 			% CORRECTION [C1]: printed \frac{m_0}{6} (three times in items 1 and 3).
 			\item $0 \geq \overline{w}^*_t \geq -t \frac{c_0}{6} G_{B_{\rho}}(0, \cdot)$ on $\cl(B_{\rho})$;
@@ -1788,6 +1971,10 @@ By combining the previous two lemmas, we have the following bound on the expecte
 	
 	
 	\begin{proof}
+        % CORRECTION [C11]: prepare before selecting an arbitrary cluster limit.
+        Start with the given deterministic sequence, prepare it as above,
+        and use the hereditary compactness in
+        Lemma~\ref{lemma:subsequential-convergence}.
 		By Lemma \ref{lemma:uniform-convergence-of-greens-function}, we may take a deterministic subsequence along which, 
 		the convergence of 	$\overline g^{\eps}$ from that lemma, with $y = 0$ and $B_r(z) = B_{\rho}$, occurs almost surely. 
 		Take another subsequence
@@ -1795,7 +1982,12 @@ By combining the previous two lemmas, we have the following bound on the expecte
 		occurs a.s.\ for all $z \in \Q^2$ and rational $r > 0$,  $\psi \equiv 0$, and 
 		all $\phi \in \mathcal{F}(B_r(z))$, the set of polynomials with rational coefficients
 		restricted to $\cl(B_r(z))$. Further suppose that along this subsequence the convergence in Lemma \ref{lemma:convergence-of-the-normalized-exit-time} holds for all 
-		$z \in \Q^2$ and rational $r > 0$.  By Lemma \ref{lemma:subsequential-convergence}, there is a random subsequence $\mathcal E$ of the preceding subsequence such that $\lim_{\mathcal{E} \ni {\eps} \to 0} \olwteps \to \overline{w}^*_t$.  
+        $z\in\Q^2$ and rational $r>0$.
+        % CORRECTION [C11]: the following proof concerns every possible limit.
+        Let $\overline w_t^*$ be any uniform subsequential limit on the
+        prepared event, and let $\mathcal E$ be a subsequence realizing it.
+        The prepared convergences hold along $\mathcal E$, so the following
+        comparisons apply to this arbitrary limit.
 		\medskip
 		
 		{\it Step 1: Proof of (1).} \\
@@ -1964,7 +2156,14 @@ By combining the previous two lemmas, we have the following bound on the expecte
 	\begin{equation} \label{eq:admissible-subsolution}
 	\frac{m_0}{6} \overline{w}^{B_\rho}_t \geq \overline{w}^*_t
 	\end{equation}
-	which, together with \eqref{eq:admissible-supersolution} shows that $\overline{w}^*_t = \overline{w}^{B_\rho}_t$. \qed
+    which, together with \eqref{eq:admissible-supersolution} shows that $\overline{w}^*_t = \overline{w}^{B_\rho}_t$.
+    % CORRECTION [C11]: conclude on the deterministic sequence, then in probability.
+    The identification applies to every limit on the deterministic
+    sequence prepared in Lemma~\ref{lemma:subsequential-properties}.
+    Relative compactness therefore implies convergence along that entire
+    sequence on $\{t<\TT\}$. Since the starting deterministic sequence
+    was arbitrary, the subsequence criterion gives the convergence in
+    probability asserted in the theorem. \qed
 	
 	
 	\section{IDLA lower bound} \label{sec:idla-lower-bound}

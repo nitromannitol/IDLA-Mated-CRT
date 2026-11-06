@@ -55,6 +55,12 @@ The identity with the closure of the positive odometer needs ε < t: for ε ≥ 
 ## [C10] Scaled boundary data (N1)
 In (3.1) replace `C'` by `C' ε⁻¹`; εu satisfies the hypothesis of Lemma 3.2. This addresses the data used in Lemma 3.5. The separate N3 random-subsequence issue is untouched. See AUDIT-C7-C10-USES.md.
 
+## [C11] Deterministic preparation for Lemma 3.1 (N3)
+The printed random input sequence precedes a high-probability extraction. First thin each deterministic sequence deterministically, then allow measurable random subsubsequences and countable families on the inherited event. The proof and affected subsequence arguments are updated; C10's ε⁻¹ boundary factor is retained. See AUDIT-C11-C12-USES.md for every use and independent G1–G4 gaps.
+
+## [C12] Fixed-sequence quantifiers in Lemmas 4.6–4.7 (E-x3-2)
+Put the deterministic sequence, and in Lemma 4.6 fixed t, before a deterministic thinning and the almost-sure conclusion. Lemma 4.6 states relative compactness on the closed ball, Hölder limits and measurable selection. See AUDIT-C11-C12-USES.md; downstream identification is conditional on independent repairs.
+
 ## Readings (not corrections of the paper; line numbers of the corrected draft)
 
 ### (R1) The origin vertex `0` and `a^eps_0` (ESCALATIONS E-x3-3, worker A, 2026-11-04)
