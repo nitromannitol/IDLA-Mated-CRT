@@ -130,8 +130,15 @@ replacements; all referenced statement constants already have these values.
    r+o(1), giving the same convergence. Boundary-cell discrepancies and the
    linear interpolation cost vanish for fixed T. Thus the quenched invariance
    principle and bounded convergence give the killed finite-time limit in
-   probability, also for bounded environment-measurable Hölder f by the
-   stated joint/quenched formulation.
+   probability. For environment-measurable Hölder f, first localize its
+   supremum and modulus of continuity, then approximate it uniformly on the
+   compact ball by one of finitely many deterministic continuous functions.
+   Apply the deterministic-functional convergence to each approximation and
+   send the uniform error to zero. This gives the environment-dependent claim.
+   The discrete exit and interpolated exit locations need not be pointwise
+   close at rate ε^q: their times lie between exits from radii r−o(1) and
+   r+o(1), so path convergence and regular crossing make their locations close
+   in probability. This supplies the same exit-window argument for Lemma 3.6.
 
    The N3 prepared exit-time moment estimate gives, on events of probability
    tending to one, E[(τ_ε/m_ε)² | h,η] ≤ C with finite random C. Consequently
