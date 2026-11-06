@@ -18,7 +18,7 @@ freeze is not in force and the missing semantic checks are not presumed true.
 | 5.1 | INCOMPLETE | Family uniqueness and the nonexit fallback are addressed; exit and stopping-set events are conditionally null measurable. Full lower-bound event and walk semantics remain open. The stopped-cluster proof gap E-c1-5 is separate from statement fidelity. |
 | 5.2 | INCOMPLETE | Draft makes `K` deterministic; the source's intended quantifier needs interpretation. |
 | 5.3 | MISMATCH | Draft allows `s` to depend on `t`, unlike source `s(δ)`; see E-m1-2. |
-| 5.4 | INCOMPLETE | Uniformity over representations remains open; the quotient conventions are justified on the finite first-step event below. |
+| 5.4 | MISMATCH | Source chooses `q` in its fixed probability setting (source:1964–1967, 2019–2026); Draft/Section5.lean:85–88 chooses it before every environment and family. Equivalence under change of representation remains open. |
 
 For 5.2, the additional literal requirement `∀ ε : ℝ, 0 < K ε` need not
 restrict positive-mesh data: `five_two_positive_mesh_extension` constructs
@@ -26,8 +26,8 @@ an everywhere-positive `K'` agreeing with any positive-mesh `K` at every
 positive ε. This elementary extension does not resolve the independent
 question whether the source allows a random `K` or complete the verdict.
 
-Counts: 0 FAITHFUL, 1 DIVERGES-DOCUMENTED, 3 MISMATCH, 1 conditional WRONG,
-6 INCOMPLETE. In particular, the operator's approval of the [C6] dependence
+Counts: 0 FAITHFUL, 1 DIVERGES-DOCUMENTED, 4 MISMATCH, 1 conditional WRONG,
+5 INCOMPLETE. In particular, the operator's approval of the [C6] dependence
 does not itself rewrite the stronger statement in the checked-in TeX or Draft.
 
 ### Operator ruling: E-m1-5
@@ -78,7 +78,7 @@ correction or reading is identified separately from operator-approved source cor
 | 5.1 | **INCOMPLETE**: source 1971–1982 and Draft/Section5.lean:27 have both unrestricted and stopped clusters, failure on `{t<T}`, and the source stopping set `Vε(Λ_t)`. The outer annealed probability is a documented interpretation (S5), not a literal source correction; `IsConeHarmonicBallFamily`, the cluster and walk laws need closure audit. | `iDLALowerBound_of_volumeGrowth_cellSize` concludes Draft with open stopped-cluster and inner-approximation steps; no unconditional proof. The printed proof stops at the discrete obstacle cluster, while the proposition stops at `Vε(Λ_t)`; the latter remains `IDLALowerBoundStoppedStep` (E-c1-5). |
 | 5.2 | **INCOMPLETE**: source 1987–2002 and Draft/Section5.lean:47 include inclusion, origin, measurable connected domains, two Green estimates, and the stopped claim. Draft fixes `K : ℝ → ℝ` deterministic; source does not explicitly say deterministic, so this is a potentially narrower reading requiring a ruling. | Relaxed Step at Steps/Sec5/IDLALowerBound.lean:40 removes several hypotheses and implies Draft (`generalIDLALowerBound_of_relaxed`, :180); reduction from 2.7 and 2.8 is recorded in REDUCTIONS. This is conditional on those inputs. |
 | 5.3 | **MISMATCH**: source 2008–2015 explicitly writes `𝔰 = 𝔰(δ)`, while Draft/Section5.lean:67 quantifies `∀ δ t, ... ∃ s`, allowing `s` to depend on `t`. The source wording may be a notational omission; ruling requested in E-m1-2. [C4] is represented by `frontier (fillCells ...)`. | `meanValueInequality_of_surplus` concludes the Draft and assumes an open surplus step and other inputs; it does not establish uniformity of `s` in `t`. |
-| 5.4 | **INCOMPLETE**: source 2019–2026 chooses deterministic `q` before `δ,t`; Draft/Section5.lean:85 also chooses `q` before environment, `Λ`, `δ,t`, potentially imposing greater uniformity over representations than the source specifies. [C4] uses the cell union. Quotient and `tsum` conventions are justified on the finite first-step event below, not on arbitrary environments. | `lLowerBound_of_inputs` concludes Draft using cited 2.15, 2.16, 2.9; conditional only. |
+| 5.4 | **MISMATCH** in quantifier scope: source 2019–2026 chooses deterministic `q` before `δ,t` within its fixed probability setting; Draft/Section5.lean:85 also chooses `q` before environment and `Λ`. The stronger representation-uniform formulation could be equivalent if representation invariance is established; that equivalence remains open. [C4] uses the cell union. Quotient and `tsum` conventions are justified on the finite first-step event below, not on arbitrary environments. | `lLowerBound_of_inputs` concludes Draft using cited 2.15, 2.16, 2.9; conditional only. |
 
 A checked logical witness for the 5.3 quantifier distinction is in
 `MatedCRT/Audit/StatementsSec3Sec5M1.lean` (`time_dependent_witness_not_uniform`): it is an
