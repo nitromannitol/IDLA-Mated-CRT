@@ -377,3 +377,10 @@ includes nonemptiness. Taking the intersection of these events gives the
 finite nonempty index set needed for the usual supremum interpretation.
 These checks use the validity bundle and do not independently audit its source
 characterization or prove the Hölder estimate.
+
+The checked `three_two_vertex_supremum_is_maximum` supplies the remaining
+order-theoretic step: for any finite nonempty vertex set and any real-valued
+function, the Draft's indexed supremum of absolute values equals an attained
+value which bounds all the other values. Together with the two a.s. cell-set
+checks above, this validates the finite-supremum convention on their common
+event; it does not establish the source characterization of the validity bundle.

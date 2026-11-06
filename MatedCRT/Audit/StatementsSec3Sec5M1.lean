@@ -65,6 +65,19 @@ theorem three_two_nonempty_domain_cell_vertices {Ω : Type} [MeasurableSpace Ω]
   exact ⟨vertexOf ε (S.η ω) z, z,
     Tightness.mem_cell_vertexOf hη.1 hp hη.2.2.1 hε z, hz⟩
 
+/-- The indexed real supremum over finitely many vertices is their attained maximum. -/
+theorem three_two_vertex_supremum_is_maximum {V : Set ℤ} (hV : V.Finite)
+    (hne : V.Nonempty) (f : ℤ → ℝ) :
+    ∃ a : V, (⨆ b : V, |f b|) = |f a| ∧ ∀ b : V, |f b| ≤ |f a| := by
+  classical
+  let _ : Fintype V := hV.fintype
+  let _ : Nonempty V := ⟨⟨hne.choose, hne.choose_spec⟩⟩
+  obtain ⟨a, ha⟩ := Finite.ciSup_mem (fun b : V => |f b|)
+  change |f a| = ⨆ b : V, |f b| at ha
+  refine ⟨a, ha.symm, fun b => ?_⟩
+  rw [ha]
+  exact le_ciSup (Set.finite_range (fun b : V => |f b|)).bddAbove b
+
 /-- In a valid environment, the IDLA probability uses the joint law of the walker sequence. -/
 theorem five_one_idla_joint_law {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
     {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (ε : ℝ)
@@ -538,6 +551,7 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms three_two_poly_high_prob_conjunction
 #print axioms three_two_bounded_domain_cell_vertices_finite
 #print axioms three_two_nonempty_domain_cell_vertices
+#print axioms three_two_vertex_supremum_is_maximum
 #print axioms three_two_interior_distance_pos
 #print axioms three_two_holder_quotient_iff
 #print axioms three_five_boundary_cell_marked_point
