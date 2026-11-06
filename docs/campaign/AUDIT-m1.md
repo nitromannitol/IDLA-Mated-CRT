@@ -110,6 +110,17 @@ SHA-256 at the earlier review (superseded after C6): corrected source `d42d5867a
 
 The corrected paper explicitly fixes `ΔG = -δ` and Brownian occupation density `2G` at line 720. The reused definition `HarmonicBalls/Defs/Green.lean:41,70` has Newton kernel `-(2π)⁻¹ log |x-y|` and the same normalization. Thus Lean's `c₀ = 2/m₀` agrees with the corrected source convention in the expressions 3.3–3.5 and 3.7. This is a coefficient comparison, not an independent proof of the Brownian occupation identity or the full Green characterization. The paper's phrase “Green's function for standard Brownian motion” at 1119 must be read with line 720; its occupation density is `2G`. E-m1-3 reports remaining `m₀` references in the proofs of 3.5 and 3.7. E-m1-4 records an independent sign discrepancy and a wrong center in the 3.7 proof.
 
+The distributional identity for the actual translated disc does not require
+a new translation argument: `HarmonicBalls.hasLaplacian_general_green`
+(`HarmonicBalls/Proofs/Sec5/GeneralDomainObstacleMass.lean:29`) proves
+`HasLaplacian (greenFunction U y) 0 (Measure.dirac y) U` for open `U` inside
+`ball 0 ρ`, positive `ρ`, and `y ∈ U`. The 3.3 and 3.4 hypotheses instantiate
+it directly with `U = ball z r`. Its `HasLaplacian` conclusion includes local
+Lebesgue integrability and the distributional equation `ΔG = -δ_y`;
+`#print axioms` reports only `propext`, `Classical.choice`, and `Quot.sound`.
+This settles that particular translated-disc check, not the occupation
+identity, boundary characterization, or full standing/probability audit.
+
 ## Binder inventory for 5.3 (provisional, fail-closed)
 
 Counts below use one row per named variable or logical premise, excluding internal binders of a formula. Instance/environment classification is provisional: standing assumptions have not themselves been independently audited. The source order is δ then t, with a surplus annotated `s(δ)`; the Lean conclusion has `∃ s` after both. `TendsToOneOn` expands to outer `P(F ∩ Eεᶜ) → 0` (Defs/Notation.lean:39).
