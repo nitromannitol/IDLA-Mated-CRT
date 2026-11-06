@@ -109,3 +109,69 @@ Both comparisons make u+q_D harmonic there. Such balls cover the noncontact
 set away from 0; equality extends across 0 because both sides are locally
 finite measures and μ_h({0}) = 0, while Δu is nonnegative by Step 2 and is
 bounded above by (c₀/6)μ_h. No statement change is needed for this step.
+
+## G4 — Continuum equations, normalization, and killing: REPAIRED
+
+Set k=c₀/6 throughout, with ΔG_D(x,·)=−δ_x. Make the following proof
+replacements; all referenced statement constants already have these values.
+
+1. **Lemma 3.4 and the exit functional (lines 1101–1182).** Let I_ε be the
+   interior vertex set V^ε(D) \ V^ε(∂D), and let τ_ε be the first exit from
+   I_ε. Kill the walk at τ_ε, rather than retaining its terminal value in an
+   infinite occupation integral. For fixed T the discrete occupation is
+   m_ε⁻¹ Σ_{0≤j<τ_ε, j/m_ε<T} f(η(X_j)); extend f bounded continuously to
+   the ambient ball for evaluating interpolated paths. The limiting functional
+   is ∫_0^{T∧τ_D} f(X_s) ds. A continuous path's exit time from a disk is
+   continuous under local uniform convergence when it exits in finite time
+   and visits the exterior immediately after exit. The LBM path has this
+   property: its strictly increasing continuous clock preserves the usual
+   Brownian immediate crossing of a smooth circle. Vanishing cell diameters
+   sandwich the discrete exit between exits from disks of radii r−o(1) and
+   r+o(1), giving the same convergence. Boundary-cell discrepancies and the
+   linear interpolation cost vanish for fixed T. Thus the quenched invariance
+   principle and bounded convergence give the killed finite-time limit in
+   probability, also for bounded environment-measurable Hölder f by the
+   stated joint/quenched formulation.
+
+   The N3 prepared exit-time moment estimate gives, on events of probability
+   tending to one, E[(τ_ε/m_ε)² | h,η] ≤ C with finite random C. Consequently
+   the conditional expected absolute tail after T is at most ‖f‖∞ C/T.
+   Localizing C and sending T to infinity proves convergence of the full
+   killed occupation. Its limit is c₀∫_D G_D(y,x)f(x)dμ_h(x), by the
+   Liouville clock and the Brownian occupation kernel 2G_D. This also repairs
+   the corresponding exit-location argument in Lemma 3.6, using the same
+   path crossing and cell diameter sandwich. Do not integrate a stopped path
+   after its exit.
+
+2. **Lemmas 3.3 and 3.5 (lines 1219–1222 and 1339–1383).** Replace every
+   m₀/6 in the proof of Lemma 3.3 by k. In Lemma 3.5 the zero-boundary
+   forcing limit is −c₀∫_D G_D(v,y)ψ(y)dμ_h(y), satisfying Δf=c₀ψμ_h.
+   The normalized expected-exit barrier Q̄_ε=Q_ε/m_ε converges to
+   Q(v)=c₀∫_D G_D(v,y)dμ_h(y), satisfying ΔQ=−c₀μ_h and zero boundary
+   values, not ΔQ=−1. This follows from the corrected killed occupation
+   limit for ψ=1 and the N3 compactness. Alternatively, the N3 direct
+   zero-boundary comparison already supplies the boundary compactness needed
+   here. Apply the maximum principle to |f₂^ε| ≤ ‖ψ‖∞Q_ε, with all
+   quantities normalized before passing to limits. Replace m₀ by c₀ in the
+   forcing equation. Lemma 3.7 uses the barred interpolation and k as in G1–G2.
+
+3. **Theorem 4.1 (lines 1924–1967).** Replace m₀/6 by k, 6/m₀ by 1/k,
+   and retain t in every obstacle −tkG. A direct comparison also avoids the
+   paper's unjustified passage from a noncontact set to its regularization.
+   Let u be any cluster limit, w=w_t^{B_ρ}, and set v=u−kw. Lemma 4.8
+   makes u/k admissible for the obstacle problem, so v≥0; both vanish on
+   ∂B_ρ. Let O={v>0}. Since w≥−tG, O lies in the noncontact set of u;
+   Lemma 4.8 gives Δu=kμ_h on O, while Δw≤μ_h by admissibility. Thus
+   Δv≥0 distributionally on O. A continuous subharmonic function on each
+   component of O, zero on its relative boundary and at ∂B_ρ, cannot have
+   a positive maximum: for any a>0 the compact set {v≥a} lies in B_ρ, and
+   the maximum principle on {v>a} gives a contradiction. Hence v=0.
+   This proves u=kw, including the factor, without requiring μ_h-nullness
+   of the difference between an open noncontact set and its regularization.
+   The N3 all-cluster-limits criterion gives convergence on the prepared
+   deterministic sequence, hence convergence in probability by the usual
+   subsequence criterion.
+
+These corrections do not change the numbered statements. They use the
+N3-patched compactness and its moment preparation, in addition to the stated
+literature inputs; they do not resolve independent gaps elsewhere.
