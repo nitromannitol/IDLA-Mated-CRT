@@ -448,3 +448,17 @@ whether the paper's phrase “σ(h, η)-measurable function” means measurabili
 into a particular function space, nor whether that reading is equivalent to
 its evaluation-wise formulation. It also does not establish the integrability
 or the convergence assertion.
+
+
+## Lemma 3.4: pathwise test-function versions
+
+`three_four_good_event_modification` proves that if the boundedness and
+Hölder properties hold on an environment-measurable event `G`, then replacing
+the test function by zero off `G` preserves pointwise environment
+measurability and yields both properties for every environment. The modified
+function agrees with the original at every spatial point on `G`. Thus, when
+`G` additionally has probability one, the all-environments requirements can
+be met by an almost-surely equal version. The theorem does not assert that
+every almost-sure good event admits a full-probability environment-measurable
+subset, or separately prove invariance of the convergence statement under
+this modification.

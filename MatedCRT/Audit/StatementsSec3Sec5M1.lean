@@ -164,6 +164,35 @@ theorem three_four_joint_measurable_on_ball {Ω : Type} (m : MeasurableSpace Ω)
       exact hfmeas x x.property
   exact h.comp measurable_swap
 
+/-- On an environment-measurable good event, a test function can be extended by zero. -/
+theorem three_four_good_event_modification {Ω : Type} [MeasurableSpace Ω]
+    (G : Set Ω) (hG : MeasurableSet G) (D : Set ℂ) (f : Ω → ℂ → ℝ)
+    (hfmeas : ∀ x, Measurable fun ω => f ω x)
+    (hbound : ∀ ω ∈ G, ∃ M : ℝ, ∀ x ∈ D, |f ω x| ≤ M)
+    (hholder : ∀ ω ∈ G, IsHolderContinuousOn (f ω) D) :
+    ∃ g : Ω → ℂ → ℝ, (∀ x, Measurable fun ω => g ω x) ∧
+      (∀ ω, ∃ M : ℝ, ∀ x ∈ D, |g ω x| ≤ M) ∧
+      (∀ ω, IsHolderContinuousOn (g ω) D) ∧
+      (∀ ω ∈ G, g ω = f ω) := by
+  classical
+  let g : Ω → ℂ → ℝ := fun ω x => if ω ∈ G then f ω x else 0
+  refine ⟨g, ?_, ?_, ?_, ?_⟩
+  · intro x
+    exact (hfmeas x).piecewise hG measurable_const
+  · intro ω
+    by_cases hω : ω ∈ G
+    · simpa [g, hω] using hbound ω hω
+    · exact ⟨0, fun x _ => by simp [g, hω]⟩
+  · intro ω
+    by_cases hω : ω ∈ G
+    · simpa [g, hω] using hholder ω hω
+    · simpa [g, hω] using
+        (show IsHolderContinuousOn (fun _ : ℂ => (0 : ℝ)) D from
+          ⟨0, 1, one_pos, le_rfl, (LipschitzWith.const (0 : ℝ)).holderWith.holderOnWith _⟩)
+  · intro ω hω
+    funext x
+    simp [g, hω]
+
 /-- In a valid environment, the IDLA probability uses the joint law of the walker sequence. -/
 theorem five_one_idla_joint_law {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
     {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (ε : ℝ)
@@ -644,6 +673,7 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms three_three_small_tolerances_suffice
 #print axioms three_three_vertexOf_is_least
 #print axioms three_four_joint_measurable_on_ball
+#print axioms three_four_good_event_modification
 #print axioms three_two_interior_distance_pos
 #print axioms three_two_holder_quotient_iff
 #print axioms three_five_boundary_cell_marked_point
