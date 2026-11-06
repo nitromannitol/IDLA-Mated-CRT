@@ -194,3 +194,10 @@ paper lines 1881–1893. The old Draft declarations remain as refuted historical
 `Draft/Section7.lean` with the same name and definition, including `s ≥ ε^β` (corrected paper
 Lemma 7.2). Its existing proof and the Proposition 7.1 reduction already use this form. The
 frozen `MassBoundOdometerStmt` remains as a historical form.
+
+**C9 cluster identities (2026-11-06).** `Sandpile.cluster_eq_closure_of_one_lt` in
+`Proofs/Sandpile/ClusterIdentityCorrected.lean` proves corrected equation
+`eq:cluster-definition` for initial mass `M > 1`, under the deterministic sandpile hypotheses.
+`Sandpile.cluster_eq_closure_of_consistency` adds the explicit equality of stopped and global
+positive odometer sets for `eq:cluster-and-lambdat`. This does not establish consistency at the
+Proposition 5.1 use; that separate gap is recorded in `AUDIT-C7-C10-USES.md`.
