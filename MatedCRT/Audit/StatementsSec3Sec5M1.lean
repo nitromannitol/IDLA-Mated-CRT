@@ -14,6 +14,7 @@ import MatedCRT.Audit.Refutations
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.DyadicModulus
 import MatedCRT.Proofs.Sec5.IDLALowerBound.Final
 import MatedCRT.Proofs.IDLA.WalkerLawMeasurable
+import MatedCRT.Proofs.IDLA.Monotone
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.OccupationGreen
 import MatedCRT.Proofs.Sec3.UniformConvergenceGreenKernel.InteriorStep
 import MatedCRT.Proofs.WalkPotential.GreenFirstStep
@@ -123,6 +124,55 @@ theorem five_one_finite_set_exits {m : ℤ → ℤ → ℕ} {A : Set ℤ}
     (hA : A.Finite) (a : ℤ) :
     ∀ᵐ x ∂srwLaw m a, ∃ b, firstExitSite A x = some b :=
   five_one_fixed_set_exits m A a (finite_expectedExitTime hlf hcons hA a)
+
+/-- A walk exits every finite set simultaneously, almost surely. -/
+theorem five_one_all_finite_sets_exit {m : ℤ → ℤ → ℕ}
+    (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) (a : ℤ) :
+    ∀ᵐ x ∂srwLaw m a, ∀ A : Set ℤ, A.Finite → ∃ b, firstExitSite A x = some b := by
+  classical
+  have h : ∀ᵐ x ∂srwLaw m a, ∀ A : Finset ℤ,
+      ∃ b, firstExitSite (A : Set ℤ) x = some b := by
+    apply MeasureTheory.ae_all_iff.mpr
+    intro A
+    exact five_one_finite_set_exits hlf hcons A.finite_toSet a
+  filter_upwards [h] with x hx A hA
+  simpa only [Set.Finite.coe_toFinset] using hx hA.toFinset
+
+/-- Every walker in the sequence exits every finite set, almost surely. -/
+theorem five_one_all_walkers_exit_finite_sets {m : ℤ → ℤ → ℕ}
+    (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) (a : ℤ) :
+    ∀ᵐ xs ∂walkerSequenceLaw m a, ∀ i : ℕ, ∀ A : Set ℤ,
+      A.Finite → ∃ b, firstExitSite A (xs i) = some b := by
+  apply MeasureTheory.ae_all_iff.mpr
+  intro i
+  let j : Fin (i + 1) := ⟨i, Nat.lt_succ_self i⟩
+  have hp : ∀ᵐ ys ∂walkersLaw m (fun _ : Fin (i + 1) => a),
+      ∀ A : Set ℤ, A.Finite → ∃ b, firstExitSite A (ys j) = some b := by
+    have hmap : (walkersLaw m (fun _ : Fin (i + 1) => a)).map
+        (fun ys : Fin (i + 1) → ℕ → ℤ => ys j) = srwLaw m a :=
+      (MeasureTheory.measurePreserving_eval (fun _ : Fin (i + 1) => srwLaw m a) j).map_eq
+    have he : ∀ᵐ x ∂(walkersLaw m (fun _ : Fin (i + 1) => a)).map
+        (fun ys : Fin (i + 1) → ℕ → ℤ => ys j),
+        ∀ A : Set ℤ, A.Finite → ∃ b, firstExitSite A x = some b := by
+      rw [hmap]
+      exact five_one_all_finite_sets_exit hlf hcons a
+    exact MeasureTheory.ae_of_ae_map (measurable_pi_apply j).aemeasurable he
+  rw [← walkerSequenceLaw_map_fin m a (i + 1)] at hp
+  exact MeasureTheory.ae_of_ae_map (measurable_restrictFin (i + 1)).aemeasurable hp
+
+/-- For every release, the current stopped and unrestricted aggregates are exited almost surely. -/
+theorem five_one_current_aggregates_exit {m : ℤ → ℤ → ℕ}
+    (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) (a : ℤ)
+    (Θ : Set ℤ) :
+    ∀ᵐ xs ∂walkerSequenceLaw m a, ∀ n : ℕ,
+      (∃ b, firstExitSite (idlaCluster xs n) (xs n) = some b) ∧
+      (∃ b, firstExitSite (stoppedIDLACluster Θ xs n) (xs n) = some b) := by
+  filter_upwards [five_one_all_walkers_exit_finite_sets hlf hcons a] with xs hx n
+  constructor
+  · exact hx n (idlaCluster xs n)
+      (foldl_idlaStep_card Set.univ (List.ofFn fun i : Fin n => xs i) (∅, []) Set.finite_empty).1
+  · exact hx n (stoppedIDLACluster Θ xs n)
+      (foldl_idlaStep_card Θ (List.ofFn fun i : Fin n => xs i) (∅, []) Set.finite_empty).1
 
 /-- A witness chosen separately for each positive time need not be uniform in time. -/
 theorem time_dependent_witness_not_uniform :
