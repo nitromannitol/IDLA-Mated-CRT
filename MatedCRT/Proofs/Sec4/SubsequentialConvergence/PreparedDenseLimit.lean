@@ -1,4 +1,5 @@
 import MatedCRT.Draft.Section4Prepared
+import MatedCRT.Proofs.Sec4.SubsequentialConvergence.PreparedEvaluations
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.Subsequence
 
 /-! Dense evaluations determine the uniform limit of a relatively compact sequence. -/
@@ -52,5 +53,29 @@ theorem OdometerPreparedCompactness.uniform_limit_of_dense
   obtain ⟨w, hw, hconv⟩ := tendstoUniformlyOn_of_dense_subsequential_compactness x hx hdense
     (fun ψ hψ => hcompact.1 (Φ ∘ ψ) (hΦ.comp hψ)) hp
   exact ⟨w, hw, hcompact.2 Φ hΦ w hconv, hconv⟩
+
+/-- Measurable selection from prepared compactness and eventual boundedness at
+a countable dense set. -/
+theorem MatedCRTEnv.IsValid.exists_envSigma_uniform_odometer_subsequence
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
+    (hγ : 0 < γ) (hγ' : γ < 2) (e : ℕ → ℝ) (he : ∀ n, 0 < e n)
+    (ρ t : ℝ) (ht : 0 < t) (x : ℕ → ℂ)
+    (hx : ∀ i, x i ∈ closedBall (0 : ℂ) ρ)
+    (hdense : closedBall (0 : ℂ) ρ ⊆ closure (range x))
+    (hlf : ∀ n, ∀ᵐ ω ∂S.P, ∀ b, {c | S.mult (e n) ω b c ≠ 0}.Finite)
+    (hc : ∀ᵐ ω ∂S.P, OdometerPreparedCompactness S ρ t e ω)
+    (hb : ∀ᵐ ω ∂S.P, ∀ i, ∃ M : ℝ, ∀ᶠ n in atTop,
+      |rescaledMatedLeastSupersolution S ρ t (e n) ω (x i)| ≤ M) :
+    ∃ Φ : Ω → ℕ → ℕ, (∀ k, Measurable[S.envSigma] fun ω => Φ ω k) ∧
+      ∀ᵐ ω ∂S.P, StrictMono (Φ ω) ∧ ∃ w : ℂ → ℝ,
+        ContinuousOn w (closedBall 0 ρ) ∧ IsHolderContinuousOn w (closedBall 0 ρ) ∧
+        TendstoUniformlyOn (fun n => rescaledMatedLeastSupersolution S ρ t (e (Φ ω n)) ω)
+          w atTop (closedBall 0 ρ) := by
+  obtain ⟨Φ, hΦm, hΦ⟩ := hS.exists_envSigma_diagonal_rescaledOdometer hγ hγ' e he ρ t ht x hlf
+  refine ⟨Φ, hΦm, ?_⟩
+  filter_upwards [hΦ, hc, hb] with ω hΦω hcω hbω
+  exact ⟨hΦω.1, hcω.uniform_limit_of_dense (Φ ω) hΦω.1 x hx hdense
+    (fun i => hΦω.2 i (hbω i))⟩
 
 end MatedCRT
