@@ -11,7 +11,7 @@ freeze is not in force and the missing semantic checks are not presumed true.
 | 3.1 | WRONG | Conditional Lean refutation `Audit/Refutations.lean:317`, under its explicit scaling and valid-environment hypotheses; closed-segment source interpretation remains a question. |
 | 3.2 | DIVERGES-DOCUMENTED | The approved [C6] boundary form allows the exponent to depend on `C'`; Draft requires it beforehand and also requires `ξ' ≤ χ` (see below). The checked-in source at 1008 still states the stronger quantifier order. |
 | 3.3 | INCOMPLETE | The off-pole Green function has the explicit translated-disc formula; standing-assumption and complete probability-semantics checks remain open. |
-| 3.4 | INCOMPLETE | Off-ball extension and the disc Green formula are addressed; diagonal integrability and random-function semantics remain open. |
+| 3.4 | INCOMPLETE | Off-ball extension and the disc Green formula are addressed; volume growth supplies conditional Green-kernel integrability, while product and random-function semantics need closure. |
 | 3.5 | MISMATCH | Draft requires Hölder data on a larger closed ball than the source (S2). |
 | 3.6 | MISMATCH | Draft requires Hölder data on a larger closed ball than the source (S2). |
 | 3.7 | INCOMPLETE | Distributional sign and finite-domain exit conventions are addressed below; uniqueness and full solution identification remain open. |
@@ -292,6 +292,27 @@ The corrected statement is at source lines 1124–1133 and the Draft is `Integra
 | conclusion `TendstoInProbability` | SOURCE, provisional | `Defs/Notation.lean:64–67` uses the outer measure of strict-error events; no measurability is required in the predicate itself |
 
 The source test function is defined on the open ball, but the displayed discrete sum evaluates marked points of all cells meeting it. `three_four_measurable_extension` proves that a random function on any domain whose individual evaluations are measurable has a global representative with the same pointwise measurability and the same values on the domain. Thus its restrictions retain the original boundedness and Hölder properties. `three_four_sum_ext` proves equality of discrete sums for global representatives agreeing on the ball, assuming positive mesh and a continuous curve. These results do not establish that the source's random-function measurability implies measurability of every evaluation, or integrability of the continuum Green product. The Green convention and finite visit expectation are treated above.
+
+For the diagonal, there is a conditional route which does not assume 3.3.
+`IsConeField.ae_volumeGrowth_inside_unit`
+(`MatedCRT/Proofs/Sec2/ConeFamilyMeasurable/ConeVolumeGrowth.lean:12`)
+derives a.s. local finiteness and `VolumeGrowth (μ ω) ρ βminus βplus` from
+`VolumeGrowthStmt`, the cone-field assumptions and `ρ < 1`.
+`HarmonicBalls.Section6.integrable_greenFunction_of_volumeGrowth`
+(`HarmonicBalls/Proofs/Sec6/GreenIntegrability.lean:47`) then makes
+`greenFunction (ball z r) y` integrable under `μ ω`, for `0 < ρ`,
+`ball z r ⊆ ball 0 ρ` and `y ∈ ball z r`. Both declarations have only
+`propext`, `Classical.choice`, and `Quot.sound` as axioms. Mathematically,
+boundedness and pathwise continuity of `f` on the ball give the bounded
+measurable multiplier needed for its Green product; the exact Lean bridge
+for the Draft's random `f` has not been checked here. `VolumeGrowthStmt` is
+an explicit numbered-result hypothesis of this route, not a consequence
+asserted from `S.IsValid` alone. Separately,
+`greenFunction_ae_integrableOn_ball`
+(`MatedCRT/Proofs/Sec3/ConvergenceNormalizedExitTime/GreenIntegrable.lean:35`)
+proves integrability of `(c₀/6) * greenFunction` on the whole ball using
+3.3 and 2.17; relying on 3.3 to establish its own precursor 3.4 would be
+circular, so this latter result is not used as an independent 3.4 input.
 
 No producer of the full Draft is listed in `REDUCTIONS.md`. The partial theorem `integralConvergenceGreenFunction_of_fixed_and_ae_continuum` (`Proofs/Sec3/IntegralConvergenceGreenFunction/ContinuumTailAssembly.lean:31–54`) proves the exact fixed-parameter convergence after assuming fixed-time occupation convergence, measurability and almost-sure continuum occupation convergence, besides `BoundedExitTimeRVStmt`, `ExitTimeUpperBoundStmt 𝒮` and the explicit literature input `MepsScalingInput 𝒮` (`External/SLE.lean:61–66`). It does not prove those inputs or the universal Draft proposition on its own.
 
