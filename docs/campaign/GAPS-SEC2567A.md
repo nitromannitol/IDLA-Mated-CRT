@@ -188,5 +188,15 @@ This is a partial finding, not a verdict on Proposition 7.1 or on the complete s
 
 Consequently `∑_{k=0}^{τ₁-1} r_k ≤ δ₀ + (δ₀ s₆)^p/(1-q^p)`. This also treats `r₀ = δ₀` separately. The exponent `k` in corrected.tex:3214 does not follow from the displayed assumptions: for example choose `ε O₀ = δ₀(1+q)/2` and a radius floor smaller than `(ε s₆ O₀)^p`; then at `k=1`, `r₁ > (δ₀ q s₆)^p`. This is a counterexample to the numerical inference, not a counterexample to the probabilistic proposition.
 
-The resulting sum tends to zero with `δ₀`, which is the only role of this estimate in the final enlargement, provided the contraction and the remaining error terms are independently justified. The shell inclusion, covering and strict sparsity issues in the escalation remain; the operator's E-A10 resolution also makes the contraction rate radius-dependent. Thus this calculation does not establish the printed iteration or a complete correction of Proposition 7.1. In particular, the radius-dependent summability and all downstream uses still require proof.
+The resulting sum tends to zero with `δ₀`, which is the only role of this estimate in the final enlargement, provided the contraction and the remaining error terms are independently justified.
+
+The radius-dependent rate in the E-A10 resolution also admits a summable bound, conditional on actually proving the corresponding shell contraction. Precisely, suppose `0 < r₁ ≤ a < 1`, `p > 0`, and before the floor is reached the iteration satisfies
+
+`r_{k+1} ≤ r_k (1 - c/(1+log(1/r_k))²)^p`,
+
+where `0 < c < 1` is independent of k and ε. Then `∑ r_k ≤ C a (1+log(1/a))²`, with C depending only on c and p. To prove this, set `c' = c min(p,1)`; Bernoulli's inequality gives `(1-x)^p ≤ 1-min(p,1)x` for `0 ≤ x ≤ 1`. Partition the radii into dyadic bands `(2^(-n-1)a, 2^(-n)a]`. In band n, the fractional decrease is at least `c'/(1+log(2^(n+1)/a))²`. Since `1-x ≤ exp(-x)`, the number of entries in that band is at most `1 + ceil(log(2)(1+log(2^(n+1)/a))²/c')`. Multiplying by the band's upper radius and summing over n gives the bound, since `∑₂⁻ⁿ(1+n+log(1/a))² ≤ C'(1+log(1/a))²`. A fixed constant multiplying the shell radius inside the logarithm is absorbed by changing c.
+
+For the floor stage, suppose additionally the same odometer contraction holds at the fixed floor `f = C₀ ε^ω₀`, `O₀ ≤ δ₀/ε`, and the stage ends when `O_k ≤ ε⁻ω₀`. Then its length is `O((1+log(1/f))² log(1/ε)) = O(log(1/ε)³)`, and its total radii are `O(ε^ω₀ log(1/ε)³)`. This follows by iterating `1-x ≤ exp(-x)` and comparing the initial and terminal odometer thresholds. With `a = (δ₀s₆)^p`, the pre-floor contribution tends to zero as δ₀ decreases, and the floor contribution tends to zero as ε decreases. This supplies the summability calculation, including the logarithmic loss, for Step 4 only under those explicitly assumed contractions.
+
+The shell inclusion, covering and strict sparsity issues in the escalation remain. In particular, this calculation does not prove the radius-dependent shell contraction, the printed iteration, or a complete correction of Proposition 7.1; its downstream application remains conditional on those missing estimates.
 
