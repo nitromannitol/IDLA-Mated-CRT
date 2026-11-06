@@ -15,7 +15,7 @@ freeze is not in force and the missing semantic checks are not presumed true.
 | 3.5 | MISMATCH | Draft requires Hölder data on a larger closed ball than the source (S2). |
 | 3.6 | MISMATCH | Draft requires Hölder data on a larger closed ball than the source (S2). |
 | 3.7 | INCOMPLETE | Distributional sign and finite-domain exit conventions are addressed below; uniqueness and full solution identification remain open. |
-| 5.1 | INCOMPLETE | The ball-family and cluster/walk semantics remain unaudited; stopped-cluster proof gap E-c1-5 is separate from statement fidelity. |
+| 5.1 | INCOMPLETE | Family uniqueness and the nonexit fallback are addressed below; random-family measurability and full cluster/walk semantics remain open. The stopped-cluster proof gap E-c1-5 is separate from statement fidelity. |
 | 5.2 | INCOMPLETE | Draft makes `K` deterministic; the source's intended quantifier needs interpretation. |
 | 5.3 | MISMATCH | Draft allows `s` to depend on `t`, unlike source `s(δ)`; see E-m1-2. |
 | 5.4 | INCOMPLETE | Uniformity over representations remains open; the quotient conventions are justified on the finite first-step event below. |
@@ -321,7 +321,7 @@ The following rows enumerate the outer inputs of `IDLALowerBoundStmt` (`Draft/Se
 | `γ`, `0 < γ`, `γ < 2` | STANDING | Section 1 fixes `γ ∈ (0,2)`. |
 | `ρ`, `0 < ρ`, `ρ < 1` | STANDING | Section 5 introduction, source:1967. |
 | `Ω`, `[MeasurableSpace Ω]`, `S` | TYPING | Carrier, measurable structure, and environment representation. |
-| `S.IsValid 𝒮 γ` | UNCLASSIFIED | Seven fields shown in the 5.3 inventory; mating-of-trees package has unresolved E-m1-5. |
+| `S.IsValid 𝒮 γ` | UNCLASSIFIED | Seven fields shown in the 5.3 inventory; E-m1-5 is accepted by operator ruling above, while the remaining standing-setting audit is open. |
 | `Λ` | TYPING | Representation of the source's family from Theorem 2.3. |
 | family a.s.: each `IsHarmonicBall` | STANDING, provisional | Theorem 2.3 calls each a harmonic ball; HB `Defs/HarmonicBall.lean:79` expands this to openness, origin, positive finite mass, and the harmonic mean-value property. |
 | family a.s.: mass `t`, null boundary, regular open | STANDING, provisional | HB `Draft/Section1.lean:58`, source:514. |
@@ -332,6 +332,18 @@ The following rows enumerate the outer inputs of `IDLALowerBoundStmt` (`Draft/Se
 At this nonrecursive level there are 5 SOURCE, 10 provisional STANDING, 5 TYPING and 1 UNCLASSIFIED input rows, counting grouped entries by the individual variables or inequalities in each row, but each grouped family condition as one row. No RULED or EXCESS input is yet verified; unclassified bundled inputs prevent a passing count. The proof does not introduce an explicit `Λ`-measurability premise; the conclusion uses outer probabilities. The source chooses its family through the unique a.s. theorem, whereas Lean universally quantifies over a family satisfying the a.s. predicate; whether all such representations have the required measurable and uniqueness properties remains open.
 
 The two clauses have precisely the same `δ,t` and event `t < clusterExitTime`; `innerNbhd` (`Defs/Notation.lean:29`) uses extended distance to the complement, corresponding to source:238–243 when that distance convention agrees. `fillCells` and `cellVertices` (`Defs/Map.lean:187–196`) match the displayed union and stopping set. `idlaProb` (`Defs/Setting.lean:216`) now evaluates the joint measure built from the independent quenched walk law; see the joint-law update below for the valid-setting characterization and the totalization issue. `idlaStep` (`Defs/RandomWalk.lean:130`) leaves the state unchanged when a path never exits the occupied set; proving this fallback has zero probability for all finitely many walkers under the setting is still required for full source semantics. This is an unresolved obligation, not an asserted counterexample.
+
+Further family-uniqueness check: `IsConeHarmonicBallFamily.eqOn`
+(`MatedCRT/Proofs/Sec2/ConeFamily.lean:34`) proves deterministically that
+any two families satisfying the Draft predicate for the same measure agree
+at every positive time. Its only axioms are `propext`, `Classical.choice`,
+and `Quot.sound`. Hence two a.s. valid random representations agree at all
+positive times on the intersection of their full-measure events; their
+`clusterExitTime` values agree there as well, since its supremum only uses
+positive times. This removes the representation-uniqueness concern, but does
+not by itself show that a selected family or its failure event is measurable.
+The prior paragraph's nonexit concern is also discharged on the valid locus
+by `five_one_joint_current_aggregates_exit` in the joint-law trace below.
 
 The strict-gap final producer `iDLALowerBound_final_of_strictGap` (`Proofs/Sec5/IDLALowerBound/Final.lean:48`) returns the exact Draft, including both stopped and unrestricted clauses. The explicit application `five_one_strict_gap_reduction` in the audit module checks its complete listed hypotheses; in particular it still takes the stopped mean-value and quotient inputs, and the strict obstacle-gap and surplus inputs. It is a conditional reduction, not an unconditional proof or closure of E-c1-5.
 
