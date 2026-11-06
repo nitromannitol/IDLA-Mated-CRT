@@ -10,8 +10,8 @@ freeze is not in force and the missing semantic checks are not presumed true.
 | --- | --- | --- |
 | 3.1 | WRONG | Conditional Lean refutation `Audit/Refutations.lean:317`, under its explicit scaling and valid-environment hypotheses; closed-segment source interpretation remains a question. |
 | 3.2 | DIVERGES-DOCUMENTED | The approved [C6] boundary form allows the exponent to depend on `C'`; Draft requires it beforehand and also requires `ξ' ≤ χ` (see below). The checked-in source at 1008 still states the stronger quantifier order. |
-| 3.3 | INCOMPLETE | [C1] matches the stated Laplacian normalization; independent full Green-function characterization remains open. |
-| 3.4 | INCOMPLETE | Off-ball extension and the [C1] coefficient convention are addressed; full Green characterization and random-function semantics remain open. |
+| 3.3 | INCOMPLETE | The off-pole Green function has the explicit translated-disc formula; standing-assumption and complete probability-semantics checks remain open. |
+| 3.4 | INCOMPLETE | Off-ball extension and the disc Green formula are addressed; diagonal integrability and random-function semantics remain open. |
 | 3.5 | MISMATCH | Draft requires Hölder data on a larger closed ball than the source (S2). |
 | 3.6 | MISMATCH | Draft requires Hölder data on a larger closed ball than the source (S2). |
 | 3.7 | INCOMPLETE | Distributional sign and finite-domain exit conventions are addressed below; uniqueness and full solution identification remain open. |
@@ -87,6 +87,24 @@ rescaling, probabilities, stopping, harmonic-ball and Laplacian definitions, and
 reduction by exact term-level applications and axiom checks. No FAITHFUL verdict is assigned here. The Draft 3.1 refutation is a conditional Lean theorem; it does not independently settle whether valid environments and its scaling input exist.
 
 ## Source identity and Green normalization
+
+The previously open disc Green identification now has a checked off-diagonal
+formula at every centre: `three_three_greenFunction_ball_explicit`
+(`MatedCRT/Audit/StatementsSec3Sec5M1.lean:37`) rewrites the Green function
+in `ball z r` as `greenBall r (x-z) (y-z)` for distinct interior points.
+It applies `HarmonicBalls.greenFunction_ball_translate`
+(`HarmonicBalls/Steps/Sec11/PinchGreenMeasurable.lean:12`) and
+`HarmonicBalls.greenFunction_ball`
+(`HarmonicBalls/Proofs/Potential/GreenBall.lean:278`). Its axiom check lists
+only `propext`, `Classical.choice`, and `Quot.sound`. Separately,
+`HarmonicBalls.greenFunctionBall`
+(`HarmonicBalls/Steps/Sec2/GreenFunctionBall.lean:156`) establishes the
+distributional `ΔG = -δ`, positivity, zero boundary, and smoothness
+characterization for discs centered at zero; translation transfers the
+function formula, but this audit does not assert a checked translated
+distributional identity. The 3.4 integral includes the pole, where the
+real-valued definition uses zero; excluding an effect on the integral and
+showing integrability require the measure hypotheses, not this formula alone.
 
 SHA-256 at the earlier review (superseded after C6): corrected source `d42d5867a83da66f530c4407bf9e5bc423f04e5b9e2c5ba5567932c09ca106`; Draft Section3 `4541957faaba0cbe632cb7b6b8ee4f680258a38e97f339b7922d77487ad51649`; Draft Section5 `30554ab9e72ac1322f94320c9270695191cb5c9404b9e4023277fcdd2f84edf1`. These are observations, not an operator-approved freeze.
 

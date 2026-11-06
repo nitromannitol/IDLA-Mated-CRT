@@ -23,12 +23,28 @@ import MatedCRT.Proofs.WalkPotential.GreenFirstStep
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.Visit
 import MatedCRT.Steps.Sec2.VolumeGrowthHalf
 import MatedCRT.Steps.Sec6.ChanceOfBeingAbsorbed
+import HarmonicBalls.Steps.Sec11.PinchGreenMeasurable
+import HarmonicBalls.Proofs.Potential.GreenBall
 
 /-! A logical check for the quantifier-order issue in Lemma 5.3.
 It does not assert that the actual Green-function estimate has this form. -/
 namespace MatedCRT.Audit.StatementsSec3Sec5M1
 
 open scoped ENNReal
+
+/-- The Green function in any disc has the translated explicit disc formula
+away from the pole. -/
+theorem three_three_greenFunction_ball_explicit {z x y : ℂ} {r : ℝ}
+    (hx : x ∈ Metric.ball z r) (hy : y ∈ Metric.ball z r) (hxy : x ≠ y) :
+    HarmonicBalls.greenFunction (Metric.ball z r) x y =
+      HarmonicBalls.greenBall r (x - z) (y - z) := by
+  rw [HarmonicBalls.greenFunction_ball_translate]
+  apply HarmonicBalls.greenFunction_ball
+  · simpa only [Metric.mem_ball, dist_eq_norm, sub_zero] using hx
+  · simpa only [Metric.mem_ball, dist_eq_norm, sub_zero] using hy
+  · intro h
+    apply hxy
+    linear_combination h
 
 /-- A positive-mesh particle count has an everywhere positive extension without
 changing its values at positive mesh sizes. -/
@@ -706,5 +722,6 @@ theorem cluster_exit_time_bounded {μ : MeasureTheory.Measure ℂ} {Λ : ℝ →
 #print axioms five_two_positive_surplus_version
 #print axioms five_two_probTendsToOne_congr
 #print axioms five_two_positive_mesh_extension
+#print axioms three_three_greenFunction_ball_explicit
 
 end MatedCRT.Audit.StatementsSec3Sec5M1
