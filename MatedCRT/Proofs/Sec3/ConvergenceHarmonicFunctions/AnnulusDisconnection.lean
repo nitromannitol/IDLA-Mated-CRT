@@ -1,5 +1,6 @@
 import MatedCRT.Defs.WalkDisconnection
 import Mathlib.Combinatorics.SimpleGraph.Walk.Maps
+import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.AtAnnulus
 
 /-! # Walk traces and annulus disconnection -/
 
@@ -72,5 +73,27 @@ theorem measure_simultaneous_disconnection_le_visit_outside
         μ {x | walkDisconnectsBeforeHit m A y x} :=
       MeasureTheory.measure_mono (fun _ hx => hx y hy)
     _ ≤ _ := measure_disconnection_le_visit_outside ha w hw μ
+
+/-- A uniform lower bound for annulus disconnection gives a one-stage
+survival probability at most `1 - p`. The connecting graph walk is the
+output of the planar separation construction. -/
+theorem srwLaw_stay_le_of_annulus_disconnection
+    {m : ℤ → ℤ → ℕ} {A I U : Set ℤ} {y a v : ℤ} {p : ℝ}
+    (hy : y ∈ I) (ha : a ∈ A) (w : (adjGraph m).Walk y a)
+    (hw : ∀ u ∈ w.support, u ∉ U) (hp : 0 ≤ p)
+    (hdisc : ENNReal.ofReal p ≤ srwLaw m v
+      {x | ∀ y ∈ I, walkDisconnectsBeforeHit m A y x}) :
+    srwLaw m v {x | ∀ n : ℕ, (n : ℕ∞) < vHitTime A x → x n ∈ U} ≤
+      ENNReal.ofReal (1 - p) := by
+  have hvisit : ENNReal.ofReal p ≤ srwLaw m v
+      {x | ∃ n : ℕ, (n : ℕ∞) < vExitTime Aᶜ x ∧ x n ∈ Aᶜ \ U} := by
+    refine (hdisc.trans (measure_simultaneous_disconnection_le_visit_outside hy ha w hw
+      (srwLaw m v))).trans ?_
+    apply MeasureTheory.measure_mono
+    rintro x ⟨n, hn, hout⟩
+    have hn' : (n : ℕ∞) < vExitTime Aᶜ x := hn
+    exact ⟨n, hn', (ConstantOrderDiv.lt_vExitTime_iff'.1 hn') n le_rfl, hout⟩
+  exact ConstantOrderDiv.prob_stay_le (W := Aᶜ) (U := Aᶜ) (A := U)
+    (Subset.rfl) hp hvisit
 
 end MatedCRT
