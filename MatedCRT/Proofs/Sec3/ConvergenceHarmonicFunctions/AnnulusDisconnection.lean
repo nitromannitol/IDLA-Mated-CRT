@@ -131,4 +131,22 @@ theorem lintegral_hitTime_continuation_le
       · rw [indicator_of_notMem hx, indicator_of_notMem hx, zero_mul]
     _ = _ := lintegral_mul_const c hg
 
+/-- Summing the continuation bound over all finite hitting times yields the
+restart estimate used in an annulus iteration. -/
+theorem tsum_lintegral_hitTime_continuation_le
+    (m : ℤ → ℤ → ℕ) (D : Set ℤ) (h : ℤ → ℝ≥0∞)
+    {F : (ℕ → ℤ) → ℝ≥0∞} (hF : Measurable F) (z : ℤ) (c : ℝ≥0∞)
+    (hbound : ∀ b, h b ≠ 0 → (∫⁻ x, F x ∂srwLaw m b) ≤ c) :
+    (∑' k : ℕ, ∫⁻ x, {x | vHitTime D x = k}.indicator
+      (fun x => h (x k) * F (pathShift k x)) x ∂srwLaw m z) ≤
+    (∑' k : ℕ, ∫⁻ x, {x | vHitTime D x = k}.indicator
+      (fun x => h (x k)) x ∂srwLaw m z) * c := by
+  calc
+    (∑' k : ℕ, ∫⁻ x, {x | vHitTime D x = k}.indicator
+        (fun x => h (x k) * F (pathShift k x)) x ∂srwLaw m z) ≤
+      ∑' k : ℕ, (∫⁻ x, {x | vHitTime D x = k}.indicator
+        (fun x => h (x k)) x ∂srwLaw m z) * c :=
+      ENNReal.tsum_le_tsum (fun k => lintegral_hitTime_continuation_le m D h hF k z c hbound)
+    _ = _ := ENNReal.tsum_mul_right
+
 end MatedCRT
