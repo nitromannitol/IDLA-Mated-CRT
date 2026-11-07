@@ -89,4 +89,40 @@ theorem IsLQGClock.ae_killed_clock_eq_of_ae_tendsto
   exact IsLQGClock.ae_killed_clock_eq_of_tendstoInMeasure hclock D t
     (tendstoInMeasure_of_tendsto_ae hmeas hG)
 
+/-- Stopping at an extended nonnegative time preserves clock continuity. -/
+theorem continuous_stopped_clock {f : ℝ≥0 → ℝ} (hf : Continuous f) (τ : ℝ≥0∞) :
+    Continuous (fun t : ℝ≥0 => f (min (t : ℝ≥0∞) τ).toNNReal) := by
+  by_cases hτ : τ = ⊤
+  · simpa [hτ] using hf
+  · have heq : τ = (τ.toNNReal : ℝ≥0∞) := (ENNReal.coe_toNNReal hτ).symm
+    rw [heq]
+    simp only [← ENNReal.coe_min, ENNReal.toNNReal_coe]
+    exact hf.comp (continuous_id.min continuous_const)
+
+/-- Continuous killed clock versions that arise as almost-sure dyadic limits
+agree with the stopped global clock simultaneously at every time. -/
+theorem IsLQGClock.ae_killed_clock_eq_all_of_ae_tendsto
+    {Q : Kernel ℂ (ContinuousPath ℂ)} {γ : ℝ} {hε : ℝ → ℂ → ℝ}
+    {x : ℂ} [IsFiniteMeasure (Q x)] {F : ContinuousPath ℂ → ℝ≥0 → ℝ}
+    (hclock : IsLQGClock Q γ hε x F) (D : Set ℂ)
+    {G : ContinuousPath ℂ → ℝ≥0 → ℝ}
+    (hmeas : ∀ n t, AEStronglyMeasurable
+      (fun b => killedGMCClockApprox D γ hε (dyadicScale n) b t) (Q x))
+    (hG : ∀ t, ∀ᵐ b ∂Q x, Tendsto
+      (fun n => killedGMCClockApprox D γ hε (dyadicScale n) b t) atTop (𝓝 (G b t)))
+    (hcont : ∀ᵐ b ∂Q x, Continuous (G b) ∧ Continuous (F b)) :
+    ∀ᵐ b ∂Q x, ∀ t, G b t =
+      F b (min (t : ℝ≥0∞) (ContinuousPath.exitTime D b)).toNNReal := by
+  obtain ⟨s, hs, hdense⟩ := TopologicalSpace.exists_countable_dense ℝ≥0
+  have heq : ∀ᵐ b ∂Q x, ∀ t ∈ s, G b t =
+      F b (min (t : ℝ≥0∞) (ContinuousPath.exitTime D b)).toNNReal := by
+    apply (ae_ball_iff hs).2
+    intro t _
+    exact IsLQGClock.ae_killed_clock_eq_of_ae_tendsto hclock D t
+      (fun n => hmeas n t) (hG t)
+  filter_upwards [heq, hcont] with b hb hc
+  have := hc.1.ext_on hdense (continuous_stopped_clock hc.2 _) hb
+  intro t
+  exact congrFun this t
+
 end MatedCRT
