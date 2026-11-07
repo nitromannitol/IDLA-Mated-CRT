@@ -157,4 +157,69 @@ theorem ae_sphereCellHits_ordered
   rw [hsmall hsmallfin, hlarge hx]
   exact ⟨hsmallfin, hx, hle⟩
 
+/-- A finite sequence of nested disk boundaries has finite, ordered first-hit
+times when the largest disk is exited in finite time. The indices are in
+reverse chronological order. -/
+theorem ae_nestedSphereCellHit_data
+    {m : ℤ → ℤ → ℕ} {ε : ℝ} {η : ℝ → ℂ} {z : ℂ} {a : ℤ}
+    (hη : Continuous η) (r : ℕ → ℝ) (hr : Antitone r) (n : ℕ)
+    (hpos : ∀ i ≤ n, 0 < r i)
+    (ha : a ∈ interiorCellVertices ε η (Metric.ball z (r n)))
+    (hnb : ∀ i ≤ n, ∀ a ∈ interiorCellVertices ε η (Metric.ball z (r i)), ∀ b,
+      m a b ≠ 0 → b ∈ interiorCellVertices ε η (Metric.ball z (r i)) ∪
+        cellVertices ε η (Metric.sphere z (r i)))
+    (hfin : ∀ᵐ x ∂srwLaw m a,
+      vExitTime (interiorCellVertices ε η (Metric.ball z (r 0))) x ≠ ⊤) :
+    ∀ᵐ x ∂srwLaw m a,
+      (∀ i ≤ n, vHitTime (cellVertices ε η (Metric.sphere z (r i))) x ≠ ⊤) ∧
+      (∀ i j, i ≤ j → j ≤ n →
+        vHitTime (cellVertices ε η (Metric.sphere z (r j))) x ≤
+          vHitTime (cellVertices ε η (Metric.sphere z (r i))) x) := by
+  have heq : ∀ᵐ x ∂srwLaw m a, ∀ i ≤ n,
+      vExitTime (interiorCellVertices ε η (Metric.ball z (r i))) x ≠ ⊤ →
+      vHitTime (cellVertices ε η (Metric.sphere z (r i))) x =
+        vExitTime (interiorCellVertices ε η (Metric.ball z (r i))) x := by
+    rw [ae_all_iff]
+    intro i
+    by_cases hi : i ≤ n
+    · have hsub := interiorCellVertices_ball_mono (ε := ε) hη z (hr hi)
+      filter_upwards [ae_sphereCellHit_eq_diskInteriorExit (hpos i hi) (hsub ha) (hnb i hi)]
+        with x hx _ hxf
+      exact hx hxf
+    · exact Filter.Eventually.of_forall (fun _ h => (hi h).elim)
+  filter_upwards [hfin, heq] with x hxf hx
+  have hfinite : ∀ i ≤ n, vExitTime (interiorCellVertices ε η (Metric.ball z (r i))) x ≠ ⊤ := by
+    intro i hi
+    have hsub := interiorCellVertices_ball_mono (ε := ε) hη z (hr (Nat.zero_le i))
+    exact ne_top_of_le_ne_top hxf (vExitTime_mono_domain hsub x)
+  constructor
+  · intro i hi
+    rw [hx i hi (hfinite i hi)]
+    exact hfinite i hi
+  · intro i j hij hj
+    have hi : i ≤ n := hij.trans hj
+    rw [hx i hi (hfinite i hi), hx j hj (hfinite j hj)]
+    exact vExitTime_mono_domain (interiorCellVertices_ball_mono (ε := ε) hη z (hr hij)) x
+
+/-- Ordered disk hits turn the survival and restart conditions into the
+finite-stage crossing event, almost surely for the random walk. -/
+theorem ae_crossings_of_nested_disk_hits
+    {m : ℤ → ℤ → ℕ} {ε : ℝ} {η : ℝ → ℂ} {z : ℂ} {a : ℤ}
+    (hη : Continuous η) (r : ℕ → ℝ) (hr : Antitone r) (n : ℕ)
+    (U B : ℕ → Set ℤ) (hpos : ∀ i ≤ n, 0 < r i)
+    (ha : a ∈ interiorCellVertices ε η (Metric.ball z (r n)))
+    (hnb : ∀ i ≤ n, ∀ a ∈ interiorCellVertices ε η (Metric.ball z (r i)), ∀ b,
+      m a b ≠ 0 → b ∈ interiorCellVertices ε η (Metric.ball z (r i)) ∪
+        cellVertices ε η (Metric.sphere z (r i)))
+    (hfin : ∀ᵐ x ∂srwLaw m a,
+      vExitTime (interiorCellVertices ε η (Metric.ball z (r 0))) x ≠ ⊤)
+    (hBA : ∀ i ≤ n, B i ⊆ cellVertices ε η (Metric.sphere z (r i))) :
+    ∀ᵐ x ∂srwLaw m a,
+      (∀ i ≤ n, x (vHitTime (cellVertices ε η (Metric.sphere z (r i))) x).toNat ∈ B i) →
+      (∀ i ≤ n, ∀ j : ℕ, (j : ℕ∞) <
+        vHitTime (cellVertices ε η (Metric.sphere z (r i))) x → x j ∈ U i) →
+      x ∈ annulusCrossingEvent (fun i => cellVertices ε η (Metric.sphere z (r i))) U B (n + 1) := by
+  filter_upwards [ae_nestedSphereCellHit_data hη r hr n hpos ha hnb hfin] with x hx hend hstay
+  exact mem_annulusCrossingEvent_of_ordered_firstHits _ U B x n hx.1 hx.2 hBA hend hstay
+
 end MatedCRT
