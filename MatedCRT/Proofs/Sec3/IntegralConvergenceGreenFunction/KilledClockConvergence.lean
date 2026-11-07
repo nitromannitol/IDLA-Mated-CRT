@@ -37,7 +37,7 @@ theorem killedGMCClockApprox_eq_of_eqOn (D : Set ℂ) (γ : ℝ)
 
 /-- The circle-average clock is jointly measurable in the path and time
 when the circle-average field is measurable. -/
-theorem measurable_lqgClockApprox (γ : ℝ) (hε : ℝ → ℂ → ℝ) (ε : ℝ)
+theorem measurable_lqgClockApprox_path_time (γ : ℝ) (hε : ℝ → ℂ → ℝ) (ε : ℝ)
     (hfield : Measurable (hε ε)) :
     Measurable (fun p : ContinuousPath ℂ × ℝ≥0 => lqgClockApprox γ hε ε p.1 p.2) := by
   let A : Set ((ContinuousPath ℂ × ℝ≥0) × ℝ) :=
@@ -85,7 +85,7 @@ theorem measurable_killedGMCClockApprox_of_field {D : Set ℂ} (hD : IsOpen D)
     (γ : ℝ) (hε : ℝ → ℂ → ℝ) (ε : ℝ) (t : ℝ≥0)
     (hfield : Measurable (hε ε)) :
     Measurable (fun b => killedGMCClockApprox D γ hε ε b t) :=
-  measurable_killedGMCClockApprox hD γ hε ε t (measurable_lqgClockApprox γ hε ε hfield)
+  measurable_killedGMCClockApprox hD γ hε ε t (measurable_lqgClockApprox_path_time γ hε ε hfield)
 
 /-- Only the field on the domain needs to be continuous for the stopped
 clock to be measurable; its values outside the domain are irrelevant. -/
