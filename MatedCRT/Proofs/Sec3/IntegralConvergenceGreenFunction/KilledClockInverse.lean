@@ -56,6 +56,25 @@ theorem killedClockInverse_eq_clockInverse_before_exit {F : ℝ≥0 → ℝ}
   rw [← ENNReal.coe_toNNReal (ne_of_lt hτ), ENNReal.coe_le_coe]
   exact hinv.le
 
+/-- The path constructed from the killed inverse coincides before exit with
+the Liouville Brownian path defined using the unrestricted inverse. -/
+theorem killedClockInverse_brownian_path_eq_lbm
+    {F : ContinuousPath ℂ → ℝ≥0 → ℝ} {b : ContinuousPath ℂ} {D : Set ℂ}
+    (hD : IsOpen D) (hF : IsTimeChangeClock (F b)) (h0 : b 0 ∈ D)
+    (hfin : ContinuousPath.exitTime D b < ⊤) {t : ℝ≥0}
+    (ht : (t : ℝ≥0∞) < lbmExitTime F D b) :
+    b ((killedClockInverse (F b) (ContinuousPath.exitTime D b) t).toNNReal) =
+      liouvilleBrownianPath F b t := by
+  have hnonneg : 0 ≤ F b (ContinuousPath.exitTime D b).toNNReal := by
+    simpa [hF.map_zero] using
+      hF.strictMono.monotone (show 0 ≤ (ContinuousPath.exitTime D b).toNNReal from bot_le)
+  have ht' : (t : ℝ) < F b (ContinuousPath.exitTime D b).toNNReal := by
+    rw [lbmExitTime_eq_clockValue hD hF h0 hfin, ENNReal.coe_lt_coe] at ht
+    have h := NNReal.coe_lt_coe.mpr ht
+    simpa only [Real.coe_toNNReal _ hnonneg] using h
+  rw [killedClockInverse_eq_clockInverse_before_exit hF hfin ht']
+  rfl
+
 /-- Before Brownian exit the killed approximating clock has the same stopped
 inverse as the unrestricted circle-average clock. -/
 theorem killedGMCClockApprox_inverse_eq (D : Set ℂ) (γ : ℝ)
