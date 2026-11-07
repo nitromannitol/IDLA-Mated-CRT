@@ -151,18 +151,20 @@ theorem tsum_lintegral_hitTime_continuation_le
 
 /-- A continuation selected at a finite hitting time retains any uniform
 bound valid at the selected restart vertices. -/
-theorem tsum_lintegral_hitTime_indicator_continuation_le
+theorem tsum_lintegral_hitTime_indicator_continuation_le_mul
     (m : ℤ → ℤ → ℕ) (D B : Set ℤ)
     {F : (ℕ → ℤ) → ℝ≥0∞} (hF : Measurable F) (z : ℤ) (c : ℝ≥0∞)
     (hbound : ∀ b ∈ B, (∫⁻ x, F x ∂srwLaw m b) ≤ c) :
     (∑' k : ℕ, ∫⁻ x, {x | vHitTime D x = k}.indicator
-      (fun x => B.indicator 1 (x k) * F (pathShift k x)) x ∂srwLaw m z) ≤ c := by
+      (fun x => B.indicator 1 (x k) * F (pathShift k x)) x ∂srwLaw m z) ≤
+      srwLaw m z (⋃ k : ℕ, {x | vHitTime D x = k ∧ x k ∈ B}) * c := by
   classical
   have hmeas : ∀ k : ℕ, MeasurableSet {x : ℕ → ℤ | vHitTime D x = k ∧ x k ∈ B} :=
     fun k => (measurableSet_vHitTime_eq D k).inter
       ((Set.to_countable B).measurableSet.preimage (measurable_pi_apply k))
   have hsum : (∑' k : ℕ, ∫⁻ x, {x | vHitTime D x = k}.indicator
-      (fun x => B.indicator 1 (x k)) x ∂srwLaw m z) ≤ 1 := by
+      (fun x => B.indicator 1 (x k)) x ∂srwLaw m z) =
+      srwLaw m z (⋃ k : ℕ, {x | vHitTime D x = k ∧ x k ∈ B}) := by
     calc
       _ = ∑' k : ℕ, srwLaw m z {x | vHitTime D x = k ∧ x k ∈ B} := by
         apply tsum_congr
@@ -180,14 +182,25 @@ theorem tsum_lintegral_hitTime_indicator_continuation_le
         exact Set.disjoint_left.2 fun x hi hj => hij (by
           have h := hi.1.symm.trans hj.1
           exact_mod_cast h)
-      _ ≤ 1 := by
-        calc
-          _ ≤ srwLaw m z Set.univ := measure_mono (Set.subset_univ _)
-          _ = 1 := measure_univ
   have hc := tsum_lintegral_hitTime_continuation_le m D (B.indicator 1) hF z c
     (fun b hb => hbound b (by simpa [Set.indicator] using hb))
-  exact hc.trans (by calc
-    _ ≤ 1 * c := by gcongr
-    _ = c := one_mul c)
+  simpa only [hsum] using hc
+
+/-- Dropping the hitting-event factor gives a uniform continuation bound. -/
+theorem tsum_lintegral_hitTime_indicator_continuation_le
+    (m : ℤ → ℤ → ℕ) (D B : Set ℤ)
+    {F : (ℕ → ℤ) → ℝ≥0∞} (hF : Measurable F) (z : ℤ) (c : ℝ≥0∞)
+    (hbound : ∀ b ∈ B, (∫⁻ x, F x ∂srwLaw m b) ≤ c) :
+    (∑' k : ℕ, ∫⁻ x, {x | vHitTime D x = k}.indicator
+      (fun x => B.indicator 1 (x k) * F (pathShift k x)) x ∂srwLaw m z) ≤ c := by
+  calc
+    _ ≤ srwLaw m z (⋃ k : ℕ, {x | vHitTime D x = k ∧ x k ∈ B}) * c :=
+      tsum_lintegral_hitTime_indicator_continuation_le_mul m D B hF z c hbound
+    _ ≤ 1 * c := by
+      gcongr
+      calc
+        _ ≤ srwLaw m z Set.univ := measure_mono (Set.subset_univ _)
+        _ = 1 := measure_univ
+    _ = c := one_mul c
 
 end MatedCRT
