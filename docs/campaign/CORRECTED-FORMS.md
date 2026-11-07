@@ -248,6 +248,17 @@ reduces the remaining vertex-moduli obligation to
 common event (corrected paper lines 1129–1140). The reduction uses deterministic
 polynomially summable thinning and only standard Lean axioms.
 
+`preparedBoundaryVertexModuliStep_of_holder` in
+`Proofs/Sec3/DiscretePotentialTightness/PreparedBoundaryProof.lean` proves the
+remaining common-event boundary modulus from corrected Lemma 3.2, using a
+countable collection of boundary exponents and constants.
+`discretePotentialTightnessPrepared_of_inputs` consequently proves the full
+prepared Lemma 3.1 from `MepsScalingInput`, `BoundedExitTimeRVStmt`,
+`ExitTimeUpperBoundStmt`, and `DiscreteHolderContinuityCorrectedStep`; its
+axioms are `propext`, `Classical.choice`, and `Quot.sound`. The prior labels
+of the prepared pathwise and vertex-moduli steps as open are superseded in this
+route; the general selection principle is not asserted separately.
+
 **C12 measurable-exit route (2026-11-06).**
 `convergenceDivisible_of_prepared_measurable_exit` in
 `Proofs/Sec4/ConvergenceDivisible/PreparedEventMeasurability.lean` derives Theorem 4.1 from
