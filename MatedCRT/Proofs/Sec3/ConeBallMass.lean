@@ -1,5 +1,6 @@
 import MatedCRT.Proposed.BerestyckiGwynne
 import MatedCRT.Draft.Section2
+import MatedCRT.Proofs.Sec4.ConvergenceDivisible.VolumeGrowthInsideUnit
 
 /-! # The cited cone ball-mass estimate implies Lemma 2.7 -/
 
@@ -42,5 +43,33 @@ theorem volumeGrowthStmt_of_berestyckiGwynne
   constructor
   · exact (ENNReal.ofReal_le_ofReal (Real.rpow_le_rpow_of_exponent_ge hδ hδone (by linarith))).trans hlower
   · exact hupper.trans (ENNReal.ofReal_le_ofReal (Real.rpow_le_rpow_of_exponent_ge hδ hδone (by linarith)))
+
+/-- The almost sure uniform upper mass bound used to control the logarithmic
+singularity of the cone clock, for any exponent strictly below the sharp
+threshold. The dyadic Borel--Cantelli and interpolation argument is supplied
+by `ae_volumeGrowth_of_poly_ballMass`. -/
+theorem IsConeField.ae_uniform_cone_ball_mass
+    {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    (hcone : IsConeField γ P hC hcirc μ) (hBG : BerestyckiGwynneConeBallMassStmt)
+    {R b : ℝ} (hR : R < 1) (hb : 0 < b) (hbSharp : b < (2 - γ) ^ 2 / 2) :
+    ∀ᵐ ω ∂P, ∃ r₀ > 0, ∀ r, 0 < r → r < r₀ → ∀ z ∈ ball (0 : ℂ) R,
+      μ ω (ball z r) ≤ ENNReal.ofReal (r ^ b) := by
+  let A : ℝ := (2 - γ) ^ 2 / 2
+  let B : ℝ := (2 + γ) ^ 2 / 2
+  have hB : 0 < B := by dsimp [B]; positivity
+  have hbound := volumeGrowthStmt_of_berestyckiGwynne hBG γ hγ hγ2
+    ((b + A) / 2) (B + 1) (by dsimp [A] at *; linarith)
+    (by dsimp [A] at *; linarith) (by dsimp [B]; linarith)
+    Ω P hC hcirc μ hcone
+  have hpoly : PolyHighProb P (ballMassBoundEvent μ R ((b + A) / 2) (B + 1)) := by
+    refine hbound.mono_of_small (sub_pos.2 hR) ?_
+    intro δ hδ hδR ω hω z hz
+    exact hω z (ball_subset_ball (by linarith) hz)
+  filter_upwards [ae_volumeGrowth_of_poly_ballMass (a := b) (b := B + 2)
+    hb (by dsimp [A] at *; linarith) (by linarith) (by linarith) hpoly] with ω hvol
+  obtain ⟨_, _, r₀, hr₀, hmass⟩ := hvol
+  exact ⟨r₀, hr₀, fun r hr hr₀ z hz => (hmass r hr hr₀ z hz).2⟩
 
 end MatedCRT
