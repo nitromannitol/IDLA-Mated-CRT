@@ -51,4 +51,30 @@ theorem closedBall_cellRadius_polyHighProb_of_cellSize (𝒮 : SpaceFillingSLEMo
   cellRadius_polyHighProb_of_cellSize 𝒮 h28 hγ hγ2 hζ hζ1 (hρ.trans hρρ') hρ'1 S hS
     (closedBall_subset_larger_ball hr hρ hρρ' hball)
 
+/-- A deterministic positive exponent gives a vanishing radius for all cells
+meeting the closed disk, with polynomially high probability. -/
+theorem exists_vanishing_closedBall_cellRadius (𝒮 : SpaceFillingSLEModel)
+    (h28 : CellSizeEstimateStmt 𝒮) {γ ρ r : ℝ} {z : ℂ}
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hρ : 0 < ρ) (hρ1 : ρ < 1)
+    (hr : 0 < r) (hball : ball z r ⊆ ball 0 ρ)
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ) :
+    ∃ a : ℝ, 0 < a ∧
+      Tendsto (fun ε : ℝ => ε ^ a) (𝓝[>] (0 : ℝ)) (𝓝 0) ∧
+      PolyHighProb S.P (fun ε => {ω | ∀ v ∈ cellVertices ε (S.η ω) (closedBall z r),
+        ∀ p ∈ cell ε (S.η ω) v,
+          dist (vertexPoint ε (S.η ω) v) p ≤ ε ^ a}) := by
+  let a : ℝ := 1 / (2 + γ) ^ 2
+  have hden : 1 < (2 + γ) ^ 2 := by nlinarith [sq_nonneg γ]
+  have ha : 0 < a := by dsimp [a]; positivity
+  have ha1 : a < 1 := by dsimp [a]; exact (div_lt_one (by positivity)).2 hden
+  have heq : 2 / (2 + γ) ^ 2 - a = a := by dsimp [a]; ring
+  refine ⟨a, ha, ?_, ?_⟩
+  · have hc : Continuous (fun ε : ℝ => ε ^ a) :=
+      continuous_id.rpow_const (fun _ => Or.inr ha.le)
+    simpa [Real.zero_rpow ha.ne'] using (hc.tendsto 0).mono_left nhdsWithin_le_nhds
+  · have h := closedBall_cellRadius_polyHighProb_of_cellSize 𝒮 h28
+      hγ hγ2 ha ha1 hρ (show ρ < (ρ + 1) / 2 by linarith)
+      (show (ρ + 1) / 2 < 1 by linarith) hr hball S hS
+    simpa only [heq] using h
+
 end MatedCRT
