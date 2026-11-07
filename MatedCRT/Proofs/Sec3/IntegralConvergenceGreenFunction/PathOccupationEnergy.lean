@@ -284,4 +284,23 @@ theorem ae_hasFiniteDimensionalEnergy_of_countable_cofinal
   · exact hω (d - δ) ha (sub_lt_self d hδ)
   · exact rieszEnergy_lt_top_of_ae_bounded (μ ω) (le_of_not_ge ha) hR
 
+/-- A continuous path on a finite interval has occupation measure concentrated
+on a set of bounded diameter. -/
+theorem pathOccupationMeasure_ae_bounded {E : Type*} [MetricSpace E]
+    [MeasurableSpace E] [BorelSpace E] {b : ℝ → E} (hb : Continuous b) (T : ℝ) :
+    ∃ R : ℝ, ∀ᵐ x ∂(pathOccupationMeasure b T),
+      ∀ᵐ y ∂(pathOccupationMeasure b T), dist x y ≤ R := by
+  let K := b '' Icc (0 : ℝ) T
+  have hK : IsCompact K := isCompact_Icc.image hb
+  obtain ⟨R, hR⟩ := Metric.isBounded_iff.mp hK.isBounded
+  have hae : ∀ᵐ x ∂(pathOccupationMeasure b T), x ∈ K := by
+    unfold pathOccupationMeasure
+    apply (ae_map_iff hb.measurable.aemeasurable hK.measurableSet).2
+    filter_upwards [ae_restrict_mem measurableSet_Icc] with t ht
+    exact ⟨t, ht, rfl⟩
+  refine ⟨R, ?_⟩
+  filter_upwards [hae] with x hx
+  filter_upwards [hae] with y hy
+  exact hR hx hy
+
 end MatedCRT
