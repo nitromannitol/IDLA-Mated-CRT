@@ -95,7 +95,10 @@ In the proof of Lemma 4.8, replace `m_eps phi^delta(eta(b)) + delta` by `m_eps (
 
 ## Not corrections of the paper (Lean statement fidelity, review-S.md, inbox 14:05 UTC)
 (S1)-(S7) change the Lean statements only; each is documented in the docstring of the statement it affects:
-(S1) Lemmas 2.5, 2.6: field through its circle average process; (S2) Lemmas 3.5, 3.6: `phi`, `psi` Hölder on a
-neighbourhood of `cl(B_r(z))`; (S3) Lemma 4.8 item 1 off the pole; (S4) Lemma 7.4 for the stopped odometer on its own
+(S1) Lemmas 2.5, 2.6: field through its circle average process; (S2) the frozen Lemmas 3.5, 3.6 use `phi`, `psi` Hölder on a
+neighbourhood of `cl(B_r(z))`. The corrected Lemma 3.6 successor instead uses continuous data on the closed disc and
+nearest-point projection of exit-cell representatives, with uniform convergence and the Hölder same-walk rate as in
+`LEMMA36-REPLACEMENT.md`; the frozen statement is not that successor. Lemma 3.5 also needs the projection convention;
+(S3) Lemma 4.8 item 1 off the pole; (S4) Lemma 7.4 for the stopped odometer on its own
 cluster; (S5) one annealed-probability convention (outer integral / outer measure); (S6) Lemma 3.1: `u^eps` are
 `sigma(h, eta)`-measurable; (S7) MatedCRT/External (SLE-model inputs, quantum cone scaling).
