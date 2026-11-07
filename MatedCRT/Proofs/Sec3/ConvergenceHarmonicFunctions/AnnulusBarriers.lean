@@ -312,4 +312,57 @@ theorem ae_crossings_of_nested_disk_survival
   have hifin := ne_top_of_le_ne_top hxf (vExitTime_mono_domain hsub x)
   exact ⟨apply_vHitTime_mem_of_ne_top (hdata.1 i hi), hball i hi hifin⟩
 
+/-- A cell meeting a smaller disk also meets a larger concentric disk. -/
+theorem cellVertices_ball_mono {ε : ℝ} {η : ℝ → ℂ} {z : ℂ} {r R : ℝ}
+    (h : r ≤ R) : cellVertices ε η (Metric.ball z r) ⊆
+      cellVertices ε η (Metric.ball z R) := by
+  intro v hv
+  obtain ⟨w, hw, hwr⟩ := hv
+  exact ⟨w, hw, Metric.ball_subset_ball h hwr⟩
+
+/-- Concentric scales with ratio at most one half place restart vertices
+inside the next annulus starting set. -/
+theorem nested_disk_restart_subset {ε : ℝ} {η : ℝ → ℂ} {z : ℂ}
+    (r : ℕ → ℝ) (n : ℕ) (h : ∀ i < n, r (i + 1) ≤ r i / 2) :
+    ∀ i < n, cellVertices ε η (Metric.sphere z (r (i + 1))) ∩
+      cellVertices ε η (Metric.ball z (r (i + 1))) ⊆
+        cellVertices ε η (Metric.ball z (r i / 2)) := by
+  intro i hi v hv
+  exact cellVertices_ball_mono (h i hi) hv.2
+
+/-- Disconnection in each of finitely many nested annuli bounds the
+probability that the walk survives to all of their boundary hits. -/
+theorem measure_nested_disk_survival_le_of_disconnection
+    {m : ℤ → ℤ → ℕ} {ε : ℝ} {η : ℝ → ℂ} {z : ℂ} {a : ℤ}
+    (hη : Continuous η) (r : ℕ → ℝ) (hr : Antitone r) (n : ℕ)
+    (I U S : ℕ → Set ℤ) (p : ℝ) (hp : 0 ≤ p)
+    (hpos : ∀ i ≤ n, 0 < r i)
+    (ha : a ∈ interiorCellVertices ε η (Metric.ball z (r n)))
+    (haS : a ∈ S n)
+    (hadj : ∀ v w, m v w ≠ 0 → (cell ε η v ∩ cell ε η w).Nonempty)
+    (hnb : ∀ i ≤ n, ∀ a ∈ interiorCellVertices ε η (Metric.ball z (r i)), ∀ b,
+      m a b ≠ 0 → b ∈ interiorCellVertices ε η (Metric.ball z (r i)) ∪
+        cellVertices ε η (Metric.sphere z (r i)))
+    (hfin : ∀ᵐ x ∂srwLaw m a,
+      vExitTime (interiorCellVertices ε η (Metric.ball z (r 0))) x ≠ ⊤)
+    (hnext : ∀ i < n, cellVertices ε η (Metric.sphere z (r (i + 1))) ∩
+      cellVertices ε η (Metric.ball z (r (i + 1))) ⊆ S i)
+    (hgeom : ∀ i ≤ n, ∃ y b, y ∈ I i ∧
+      b ∈ cellVertices ε η (Metric.sphere z (r i)) ∧
+      ∃ w : (adjGraph m).Walk y b, ∀ u ∈ w.support, u ∉ U i)
+    (hdisc : ∀ i ≤ n, ∀ v, v ∈ S i → ENNReal.ofReal p ≤ srwLaw m v
+      {x | ∀ y ∈ I i, walkDisconnectsBeforeHit m
+        (cellVertices ε η (Metric.sphere z (r i))) y x}) :
+    srwLaw m a {x | ∀ i ≤ n, ∀ j : ℕ, (j : ℕ∞) <
+      vHitTime (cellVertices ε η (Metric.sphere z (r i))) x → x j ∈ U i} ≤
+        ENNReal.ofReal (1 - p) ^ (n + 1) := by
+  calc
+    _ ≤ srwLaw m a (annulusCrossingEvent
+        (fun i => cellVertices ε η (Metric.sphere z (r i))) U
+        (fun i => cellVertices ε η (Metric.sphere z (r i)) ∩
+          cellVertices ε η (Metric.ball z (r i))) (n + 1)) :=
+      measure_mono_ae (ae_crossings_of_nested_disk_survival hη r hr n U hpos ha hadj hnb hfin)
+    _ ≤ _ := measure_annulusCrossingEvent_le_of_disconnection_finite m _ I U _ S p hp n
+      hnext (fun _ _ => Set.inter_subset_left) hgeom hdisc a haS
+
 end MatedCRT
