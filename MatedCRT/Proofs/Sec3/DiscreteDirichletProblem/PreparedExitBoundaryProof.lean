@@ -79,6 +79,36 @@ theorem preparedExitTimeBoundaryDecayStep_of_green_and_estimates
       R hR hRlim _ (fun j n => F j (e (ψ (φ n))) ω) (fun j => g j ω)
       hzero hh hd hφω
 
+/-- Corrected Dirichlet convergence with the prepared exit-time boundary
+decay discharged by the Green-function and exit-time estimates. -/
+theorem discreteDirichletProblemCorrected_of_green_and_prepared
+    (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrowthStmt) (hm : MepsScalingInput 𝒮)
+    (h218 : ExitTimeUpperBoundStmt 𝒮) (hH : DiscreteHolderContinuityCorrectedStep 𝒮)
+    (h28 : CellSizeEstimateStmt 𝒮) (hfinite : FiniteDomainDirichletRepresentation)
+    (hP : ProjectedDirichletPointwiseStep 𝒮) (h34 : IntegralConvergenceGreenFunctionStmt 𝒮)
+    (h33 : UniformConvergenceGreenKernelStmt 𝒮) (h31 : DiscretePotentialTightnessPreparedStmt 𝒮) :
+    DiscreteDirichletProblemCorrectedStmt 𝒮 :=
+  discreteDirichletProblemCorrected_of_prepared_exitTime_decay 𝒮 h27 hm h218 hH h28 hfinite hP
+    (preparedExitTimeBoundaryDecayStep_of_green_and_estimates 𝒮 h34 h33
+      (boundedExitTimeRV_of_steps h27) h218 hm h31)
+
+/-- Divisible-sandpile convergence with prepared exit-time boundary decay
+discharged by the Green-function and exit-time estimates. -/
+theorem convergenceDivisible_of_green_and_prepared_exit_boundary
+    (𝒮 : SpaceFillingSLEModel) (hm : MepsScalingInput 𝒮)
+    (h210 : DegreeMeasureConvergenceStmt 𝒮) (h34 : IntegralConvergenceGreenFunctionStmt 𝒮)
+    (h214 : GreenKernelUpperBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
+    (h218 : ExitTimeUpperBoundStmt 𝒮) (hH : DiscreteHolderContinuityCorrectedStep 𝒮)
+    (h27 : VolumeGrowthStmt) (hcone : ConeEnvironmentScalingStep 𝒮)
+    (hfinite : FiniteDomainDirichletRepresentation) (hP : ProjectedDirichletPointwiseStep 𝒮)
+    (h33 : UniformConvergenceGreenKernelStmt 𝒮) (h31 : DiscretePotentialTightnessPreparedStmt 𝒮) :
+    ConvergenceDivisibleStmt 𝒮 :=
+  convergenceDivisible_of_prepared_exitTime_decay_coneScaling 𝒮 hm h210 h34 h214 h28 h218 hH
+    h27 hcone hfinite hP (preparedExitTimeBoundaryDecayStep_of_green_and_estimates 𝒮 h34 h33
+      (boundedExitTimeRV_of_steps h27) h218 hm h31)
+
 end MatedCRT
 
 #print axioms MatedCRT.preparedExitTimeBoundaryDecayStep_of_green_and_estimates
+#print axioms MatedCRT.discreteDirichletProblemCorrected_of_green_and_prepared
+#print axioms MatedCRT.convergenceDivisible_of_green_and_prepared_exit_boundary
