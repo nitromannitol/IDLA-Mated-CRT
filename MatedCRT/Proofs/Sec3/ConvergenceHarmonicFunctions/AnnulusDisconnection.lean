@@ -1,12 +1,15 @@
 import MatedCRT.Defs.WalkDisconnection
 import Mathlib.Combinatorics.SimpleGraph.Walk.Maps
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.AtAnnulus
+import MatedCRT.Proofs.IDLA.StrongMarkov
 
 /-! # Walk traces and annulus disconnection -/
 
 namespace MatedCRT
 
 open Set
+open MeasureTheory
+open scoped ENNReal
 
 /-- A disconnecting vertex set intersects every graph walk from the separated
 vertex to the target set. -/
@@ -95,5 +98,37 @@ theorem srwLaw_stay_le_of_annulus_disconnection
     exact ⟨n, hn', (ConstantOrderDiv.lt_vExitTime_iff'.1 hn') n le_rfl, hout⟩
   exact ConstantOrderDiv.prob_stay_le (W := Aᶜ) (U := Aᶜ) (A := U)
     (Subset.rfl) hp hvisit
+
+/-- A uniform continuation bound can be applied at a finite hitting time.
+The weight selects the admissible restart vertices. -/
+theorem lintegral_hitTime_continuation_le
+    (m : ℤ → ℤ → ℕ) (D : Set ℤ) (h : ℤ → ℝ≥0∞)
+    {F : (ℕ → ℤ) → ℝ≥0∞} (hF : Measurable F) (k : ℕ) (z : ℤ) (c : ℝ≥0∞)
+    (hbound : ∀ b, h b ≠ 0 → (∫⁻ x, F x ∂srwLaw m b) ≤ c) :
+    (∫⁻ x, {x | vHitTime D x = k}.indicator
+      (fun x => h (x k) * F (pathShift k x)) x ∂srwLaw m z) ≤
+    (∫⁻ x, {x | vHitTime D x = k}.indicator (fun x => h (x k)) x
+      ∂srwLaw m z) * c := by
+  rw [lintegral_hitTime_eq m D h hF k z]
+  have hg : Measurable ({x : ℕ → ℤ | vHitTime D x = k}.indicator
+      (fun x => h (x k))) :=
+    ((measurable_of_countable h).comp (measurable_pi_apply k)).indicator
+      (measurableSet_vHitTime_eq D k)
+  calc
+    (∫⁻ x, {x | vHitTime D x = k}.indicator
+        (fun x => h (x k) * ∫⁻ y, F y ∂srwLaw m (x k)) x ∂srwLaw m z) ≤
+      ∫⁻ x, ({x | vHitTime D x = k}.indicator (fun x => h (x k)) x) * c
+        ∂srwLaw m z := by
+      apply lintegral_mono
+      intro x
+      dsimp only
+      by_cases hx : x ∈ {x | vHitTime D x = k}
+      · rw [indicator_of_mem hx, indicator_of_mem hx]
+        by_cases hh : h (x k) = 0
+        · simp [hh]
+        · gcongr
+          exact hbound (x k) hh
+      · rw [indicator_of_notMem hx, indicator_of_notMem hx, zero_mul]
+    _ = _ := lintegral_mul_const c hg
 
 end MatedCRT
