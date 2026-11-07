@@ -43,4 +43,22 @@ theorem planarBrownianMotion_expected_increment_energy (z : ℂ) (s t : ℝ≥0)
   intro b
   simp [rieszEnergyKernel, dist_eq_norm]
 
+/-- The expected increment energy is symmetric in its two time arguments. -/
+theorem planarBrownianMotion_expected_increment_energy_any_order (z : ℂ)
+    (s t : ℝ≥0) (a : ℝ) :
+    (∫⁻ b, rieszEnergyKernel a (b t) (b s) ∂(planarBrownianMotion z)) =
+      ∫⁻ w, rieszEnergyKernel a w 0 ∂(planarGaussian 0 (max s t - min s t)) := by
+  by_cases hst : s ≤ t
+  · simpa [max_eq_right hst, min_eq_left hst] using
+      planarBrownianMotion_expected_increment_energy z s t hst a
+  · have hts : t ≤ s := le_of_not_ge hst
+    have heq : (∫⁻ b, rieszEnergyKernel a (b t) (b s) ∂(planarBrownianMotion z)) =
+        ∫⁻ b, rieszEnergyKernel a (b s) (b t) ∂(planarBrownianMotion z) := by
+      apply lintegral_congr
+      intro b
+      simp only [rieszEnergyKernel, dist_comm]
+    rw [heq]
+    simpa [max_eq_left hts, min_eq_right hts] using
+      planarBrownianMotion_expected_increment_energy z t s hts a
+
 end MatedCRT
