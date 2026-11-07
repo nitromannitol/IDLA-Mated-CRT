@@ -238,6 +238,16 @@ derives the former pathwise step from these moduli and `MepsScalingInput`;
 statement, including measurable selection. The latter uses only the standard
 Lean axioms `propext`, `Classical.choice`, and `Quot.sound`.
 
+`ae_prepared_interior_vertex_modulus` in
+`Proofs/Sec3/DiscretePotentialTightness/PreparedInteriorEvent.lean` establishes
+the interior modulus on one event for all domains and all mesh sequences in a
+polynomially summable range, from Lemmas 2.17, 2.18 and corrected 3.2.
+`preparedTightnessVertexModuliStep_of_boundary` in `PreparedBoundaryEvent.lean`
+reduces the remaining vertex-moduli obligation to
+`PreparedBoundaryVertexModuliStep`, the conditional boundary modulus on a
+common event (corrected paper lines 1129–1140). The reduction uses deterministic
+polynomially summable thinning and only standard Lean axioms.
+
 **C12 measurable-exit route (2026-11-06).**
 `convergenceDivisible_of_prepared_measurable_exit` in
 `Proofs/Sec4/ConvergenceDivisible/PreparedEventMeasurability.lean` derives Theorem 4.1 from
