@@ -8,6 +8,51 @@ namespace MatedCRT
 open MeasureTheory Set HarmonicBalls MarkovProcess
 open scoped NNReal
 
+/-- A circle-average clock with continuous field is continuous. -/
+theorem lqgClockApprox_continuous
+    (γ ε : ℝ) (hε : ℝ → ℂ → ℝ) (b : ContinuousPath ℂ)
+    (hfield : Continuous (hε ε)) : Continuous (lqgClockApprox γ hε ε b) := by
+  let a : ℝ → ℝ := fun t => ε ^ (γ ^ 2 / 2) * Real.exp (γ * hε ε (b t.toNNReal))
+  have ha : Continuous a := by
+    dsimp [a]
+    fun_prop
+  exact (intervalIntegral.differentiable_integral_of_continuous ha).continuous.comp
+    continuous_subtype_val
+
+/-- A circle-average clock at positive scale is strictly increasing, even
+when its lifetime is finite. -/
+theorem lqgClockApprox_strictMono
+    (γ ε : ℝ) (hε : ℝ → ℂ → ℝ) (b : ContinuousPath ℂ)
+    (hεpos : 0 < ε) (hfield : Continuous (hε ε)) :
+    StrictMono (lqgClockApprox γ hε ε b) := by
+  let a : ℝ → ℝ := fun t => ε ^ (γ ^ 2 / 2) * Real.exp (γ * hε ε (b t.toNNReal))
+  have ha : Continuous a := by
+    dsimp [a]
+    fun_prop
+  have hapos : ∀ t, 0 < a t := by
+    intro t
+    exact mul_pos (Real.rpow_pos_of_pos hεpos _) (Real.exp_pos _)
+  intro s t hst
+  have hst' : (s : ℝ) < t := by exact_mod_cast hst
+  have hp : 0 < ∫ x in (s : ℝ)..(t : ℝ), a x :=
+    intervalIntegral.integral_pos hst' ha.continuousOn
+      (fun x _ => (hapos x).le) ⟨s, ⟨le_rfl, hst'.le⟩, hapos s⟩
+  have hadd := intervalIntegral.integral_add_adjacent_intervals
+    (ha.intervalIntegrable (μ := volume) 0 s) (ha.intervalIntegrable (μ := volume) s t)
+  change (∫ x in (0 : ℝ)..(s : ℝ), a x) < ∫ x in (0 : ℝ)..(t : ℝ), a x
+  linarith
+
+/-- For a positive-scale circle-average clock, divergence at infinity is
+the remaining condition for an infinite-lifetime time change. -/
+theorem isTimeChangeClock_lqgClockApprox_of_tendsto
+    (γ ε : ℝ) (hε : ℝ → ℂ → ℝ) (b : ContinuousPath ℂ)
+    (hεpos : 0 < ε) (hfield : Continuous (hε ε))
+    (hinf : Filter.Tendsto (lqgClockApprox γ hε ε b) Filter.atTop Filter.atTop) :
+    IsTimeChangeClock (lqgClockApprox γ hε ε b) := by
+  refine ⟨?_, lqgClockApprox_continuous γ ε hε b hfield,
+    lqgClockApprox_strictMono γ ε hε b hεpos hfield, hinf⟩
+  simp [lqgClockApprox]
+
 /-- If a circle-average approximation is a time-change clock, its pathwise
 occupation integral is the Brownian occupation weighted by the clock
 density. This statement applies on each realization for which the indicated
