@@ -1,4 +1,5 @@
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.AnnulusRadialSeparation
+import Mathlib.Topology.Compactness.LocallyFinite
 
 /-! # Face chains along connected sets -/
 
@@ -106,5 +107,36 @@ theorem radial_segment_reachable_avoiding_disk
         ⟨vertex j, hsafe j⟩ := Subtype.ext heq
     rw [heq']
   · exact SimpleGraph.Adj.reachable hadj
+
+/-- A locally finite closed face cover of a compact connected set yields a
+graph walk, provided faces meeting on the set have reachable labels. -/
+theorem IsPreconnected.reachable_of_locallyFinite_closed_face_cover
+    {X ι V : Type*} [TopologicalSpace X]
+    {K : Set X} (hK : IsPreconnected K) (hcompact : IsCompact K)
+    (face : ι → Set X) (hlocallyFinite : LocallyFinite face)
+    (hclosed : ∀ i, IsClosed (face i)) (hcover : K ⊆ ⋃ i, face i)
+    (G : SimpleGraph V) (vertex : ι → V)
+    (hlink : ∀ i j, (K ∩ face i ∩ face j).Nonempty →
+      G.Reachable (vertex i) (vertex j))
+    {first last : ι} (hfirst : (K ∩ face first).Nonempty)
+    (hlast : (K ∩ face last).Nonempty) :
+    G.Reachable (vertex first) (vertex last) := by
+  let indices : Set ι := {i | (face i ∩ K).Nonempty}
+  have hfinite : indices.Finite := hlocallyFinite.finite_nonempty_inter_compact hcompact
+  let : Finite indices := hfinite.to_subtype
+  have hfirst' : first ∈ indices := by
+    obtain ⟨point, hpK, hpface⟩ := hfirst
+    exact ⟨point, hpface, hpK⟩
+  have hlast' : last ∈ indices := by
+    obtain ⟨point, hpK, hpface⟩ := hlast
+    exact ⟨point, hpface, hpK⟩
+  have hcover' : K ⊆ ⋃ i : indices, face i := by
+    intro point hpK
+    obtain ⟨i, hpface⟩ := mem_iUnion.mp (hcover hpK)
+    exact mem_iUnion.mpr ⟨⟨i, ⟨point, hpface, hpK⟩⟩, hpface⟩
+  exact IsPreconnected.reachable_of_finite_closed_face_cover hK
+    (fun i : indices => face i) (fun i => hclosed i) hcover' G
+    (fun i => vertex i) (fun i j hij => hlink i j hij)
+    (first := ⟨first, hfirst'⟩) (last := ⟨last, hlast'⟩) hfirst hlast
 
 end MatedCRT
