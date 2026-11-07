@@ -104,4 +104,22 @@ theorem boundedArctan_uniformContinuous : UniformContinuous boundedArctan := by
     exact_mod_cast hreal
   exact hlip.uniformContinuous.subtype_mk _
 
+/-- Arctangent encoding gives measurable uniform selection from measurable
+    encoded pairwise distances, without continuity of the limits. -/
+theorem exists_measurable_subsequence_uniform_of_arctan_distances
+    {Ω α : Type*} [MeasurableSpace Ω]
+    (K : ℕ → Set α) (F : Ω → ℕ → ℕ → α → ℝ)
+    (hdm : ∀ j n m, Measurable fun ω => dist
+      (uniformSetEncode (K j) boundedArctan (F ω j n))
+      (uniformSetEncode (K j) boundedArctan (F ω j m)))
+    (P : Ω → ℕ → Prop)
+    (hc : ∀ ω j, P ω j → ∀ ψ : ℕ → ℕ, StrictMono ψ →
+      ∃ θ : ℕ → ℕ, StrictMono θ ∧ ∃ w : α → ℝ,
+        TendstoUniformlyOn (fun n => F ω j (ψ (θ n))) w atTop (K j)) :
+    ∃ Φ : Ω → ℕ → ℕ, (∀ k, Measurable fun ω => Φ ω k) ∧
+      ∀ ω, StrictMono (Φ ω) ∧ ∀ j, P ω j → ∃ w : α → ℝ,
+        TendstoUniformlyOn (fun n => F ω j (Φ ω n)) w atTop (K j) :=
+  exists_measurable_subsequence_uniform_of_encoded_distances boundedArctan
+    boundedArctan_uniformContinuous boundedArctan_injective K F hdm P hc
+
 end MatedCRT
