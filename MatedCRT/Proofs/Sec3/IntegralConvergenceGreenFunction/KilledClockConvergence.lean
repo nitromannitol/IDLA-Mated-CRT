@@ -42,4 +42,35 @@ theorem IsLQGClock.killed_uniform_in_probability
   simpa only [killedGMCClockApprox] using
     IsLQGClock.stopped_uniform_in_probability hclock (ContinuousPath.exitTime D) T hη
 
+/-- At a deterministic time, the stopped approximations converge in measure
+to the stopped global clock. -/
+theorem IsLQGClock.killed_tendstoInMeasure
+    {Q : Kernel ℂ (ContinuousPath ℂ)} {γ : ℝ} {hε : ℝ → ℂ → ℝ}
+    {x : ℂ} {F : ContinuousPath ℂ → ℝ≥0 → ℝ}
+    (hclock : IsLQGClock Q γ hε x F) (D : Set ℂ) (t : ℝ≥0) :
+    TendstoInMeasure (Q x) (fun n b => killedGMCClockApprox D γ hε (dyadicScale n) b t)
+      atTop (fun b => F b (min (t : ℝ≥0∞) (ContinuousPath.exitTime D b)).toNNReal) := by
+  apply tendstoInMeasure_iff_norm.mpr
+  intro η hη
+  have hlim := IsLQGClock.killed_uniform_in_probability hclock D t hη
+  refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hlim
+    (fun _ => bot_le) ?_
+  intro n
+  apply measure_mono
+  intro b hb
+  simp only [mem_ofPred_eq] at hb
+  exact ⟨t, le_rfl, by simpa only [Real.norm_eq_abs] using hb⟩
+
+/-- Any other limit in measure of the killed approximations agrees almost
+surely, at the specified time, with the restriction of the global clock. -/
+theorem IsLQGClock.ae_killed_clock_eq_of_tendstoInMeasure
+    {Q : Kernel ℂ (ContinuousPath ℂ)} {γ : ℝ} {hε : ℝ → ℂ → ℝ}
+    {x : ℂ} {F : ContinuousPath ℂ → ℝ≥0 → ℝ}
+    (hclock : IsLQGClock Q γ hε x F) (D : Set ℂ) (t : ℝ≥0)
+    {G : ContinuousPath ℂ → ℝ}
+    (hG : TendstoInMeasure (Q x)
+      (fun n b => killedGMCClockApprox D γ hε (dyadicScale n) b t) atTop G) :
+    ∀ᵐ b ∂Q x, G b = F b (min (t : ℝ≥0∞) (ContinuousPath.exitTime D b)).toNNReal := by
+  exact tendstoInMeasure_ae_unique hG (IsLQGClock.killed_tendstoInMeasure hclock D t)
+
 end MatedCRT
