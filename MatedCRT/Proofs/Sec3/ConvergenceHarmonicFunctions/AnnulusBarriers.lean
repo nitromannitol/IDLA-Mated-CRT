@@ -261,4 +261,55 @@ theorem ae_sphereCellHit_mem_ball
       · obtain ⟨q, hqold, hqnew⟩ := hadj (x j) (x (j + 1)) he
         exact ⟨q, hqnew, Sec7.cell_subset_ball_of_mem_interiorCellVertices hη hin hqold⟩
 
+/-- At a finite hit time the path is in the hit set. -/
+theorem apply_vHitTime_mem_of_ne_top {B : Set ℤ} {x : ℕ → ℤ}
+    (hfin : vHitTime B x ≠ ⊤) : x (vHitTime B x).toNat ∈ B := by
+  have hk : vHitTime B x = ((vHitTime B x).toNat : ℕ∞) :=
+    (ENat.natCast_toNat hfin).symm
+  simpa only [vHitTime, mem_compl_iff, not_not] using apply_vExitTime_not_mem hk
+
+/-- Survival until the successive circle hits implies the annulus crossing
+event. The restart set is the intersection of the circle-cell and
+open-disk-cell sets, so its membership follows from cell adjacency. -/
+theorem ae_crossings_of_nested_disk_survival
+    {m : ℤ → ℤ → ℕ} {ε : ℝ} {η : ℝ → ℂ} {z : ℂ} {a : ℤ}
+    (hη : Continuous η) (r : ℕ → ℝ) (hr : Antitone r) (n : ℕ)
+    (U : ℕ → Set ℤ) (hpos : ∀ i ≤ n, 0 < r i)
+    (ha : a ∈ interiorCellVertices ε η (Metric.ball z (r n)))
+    (hadj : ∀ v w, m v w ≠ 0 → (cell ε η v ∩ cell ε η w).Nonempty)
+    (hnb : ∀ i ≤ n, ∀ a ∈ interiorCellVertices ε η (Metric.ball z (r i)), ∀ b,
+      m a b ≠ 0 → b ∈ interiorCellVertices ε η (Metric.ball z (r i)) ∪
+        cellVertices ε η (Metric.sphere z (r i)))
+    (hfin : ∀ᵐ x ∂srwLaw m a,
+      vExitTime (interiorCellVertices ε η (Metric.ball z (r 0))) x ≠ ⊤) :
+    ∀ᵐ x ∂srwLaw m a,
+      (∀ i ≤ n, ∀ j : ℕ, (j : ℕ∞) <
+        vHitTime (cellVertices ε η (Metric.sphere z (r i))) x → x j ∈ U i) →
+      x ∈ annulusCrossingEvent (fun i => cellVertices ε η (Metric.sphere z (r i))) U
+        (fun i => cellVertices ε η (Metric.sphere z (r i)) ∩
+          cellVertices ε η (Metric.ball z (r i))) (n + 1) := by
+  let B : ℕ → Set ℤ := fun i => cellVertices ε η (Metric.sphere z (r i)) ∩
+    cellVertices ε η (Metric.ball z (r i))
+  have hballs : ∀ᵐ x ∂srwLaw m a, ∀ i ≤ n,
+      vExitTime (interiorCellVertices ε η (Metric.ball z (r i))) x ≠ ⊤ →
+      x (vHitTime (cellVertices ε η (Metric.sphere z (r i))) x).toNat ∈
+        cellVertices ε η (Metric.ball z (r i)) := by
+    rw [ae_all_iff]
+    intro i
+    by_cases hi : i ≤ n
+    · have hsub := interiorCellVertices_ball_mono (ε := ε) hη z (hr hi)
+      filter_upwards [ae_sphereCellHit_mem_ball hη (hpos i hi) (hsub ha) hadj (hnb i hi)]
+        with x hx _ hxf
+      exact hx hxf
+    · exact Filter.Eventually.of_forall (fun _ h => (hi h).elim)
+  have hcross := ae_crossings_of_nested_disk_hits hη r hr n U B hpos ha hnb hfin
+    (fun i _ => Set.inter_subset_left)
+  filter_upwards [hfin, hballs, hcross, ae_nestedSphereCellHit_data hη r hr n hpos ha hnb hfin]
+    with x hxf hball hx hdata hstay
+  apply hx ?_ hstay
+  intro i hi
+  have hsub := interiorCellVertices_ball_mono (ε := ε) hη z (hr (Nat.zero_le i))
+  have hifin := ne_top_of_le_ne_top hxf (vExitTime_mono_domain hsub x)
+  exact ⟨apply_vHitTime_mem_of_ne_top (hdata.1 i hi), hball i hi hifin⟩
+
 end MatedCRT
