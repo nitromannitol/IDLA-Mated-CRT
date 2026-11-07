@@ -58,4 +58,19 @@ theorem measure_disconnection_le_visit_outside
   obtain ⟨n, hn, hnw⟩ := walkDisconnectsBeforeHit_intersects_walk hx ha w
   exact ⟨n, hn, hw (x n) hnw⟩
 
+/-- The simultaneous annulus-disconnection event controls the probability
+of leaving a region before hitting the outer target, whenever there is a
+connecting graph walk outside the region. -/
+theorem measure_simultaneous_disconnection_le_visit_outside
+    {m : ℤ → ℤ → ℕ} {A I U : Set ℤ} {y a : ℤ}
+    (hy : y ∈ I) (ha : a ∈ A) (w : (adjGraph m).Walk y a)
+    (hw : ∀ v ∈ w.support, v ∉ U) (μ : MeasureTheory.Measure (ℕ → ℤ)) :
+    μ {x | ∀ y ∈ I, walkDisconnectsBeforeHit m A y x} ≤
+      μ {x | ∃ n : ℕ, (n : ℕ∞) < vHitTime A x ∧ x n ∉ U} := by
+  calc
+    μ {x | ∀ y ∈ I, walkDisconnectsBeforeHit m A y x} ≤
+        μ {x | walkDisconnectsBeforeHit m A y x} :=
+      MeasureTheory.measure_mono (fun _ hx => hx y hy)
+    _ ≤ _ := measure_disconnection_le_visit_outside ha w hw μ
+
 end MatedCRT
