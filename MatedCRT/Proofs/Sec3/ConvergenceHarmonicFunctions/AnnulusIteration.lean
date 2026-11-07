@@ -153,4 +153,76 @@ theorem measure_annulusCrossingEvent_le_of_disconnection
   exact (measure_mono (hit_target_before_exit_subset_stay (A j) (U j) (B j) (hBA j))).trans
     (srwLaw_stay_le_of_annulus_disconnection hy ha w hw hp (hdisc j b hb))
 
+/-- A finite sequence of ordered first-hit times witnesses the corresponding
+crossing event. Indices decrease as time advances. -/
+theorem pathShift_mem_annulusCrossingEvent_of_hit_schedule
+    (A U B : ℕ → Set ℤ) (x : ℕ → ℤ) (t : ℕ → ℕ)
+    (ht : Antitone t) (n : ℕ)
+    (hstage : ∀ i < n,
+      vHitTime (A i ∪ (U i)ᶜ) (pathShift (t (i + 1)) x) = (t i - t (i + 1) : ℕ) ∧
+        x (t i) ∈ B i) :
+    pathShift (t n) x ∈ annulusCrossingEvent A U B n := by
+  induction n with
+  | zero => simp [annulusCrossingEvent]
+  | succ n ih =>
+    have hle : t (n + 1) ≤ t n := ht (Nat.le_succ n)
+    have hn := hstage n (Nat.lt_succ_self n)
+    simp only [annulusCrossingEvent, Set.mem_iUnion, mem_ofPred_eq]
+    refine ⟨t n - t (n + 1), hn.1, ?_, ?_⟩
+    · simpa [pathShift, Nat.sub_add_cancel hle] using hn.2
+    · have hshift : pathShift (t n - t (n + 1)) (pathShift (t (n + 1)) x) =
+          pathShift (t n) x := by
+        funext j
+        simp only [pathShift]
+        congr 1
+        omega
+      rw [hshift]
+      exact ih (fun i hi => hstage i (Nat.lt_succ_of_lt hi))
+
+/-- A first-hit schedule beginning at time zero forces all staged crossings. -/
+theorem mem_annulusCrossingEvent_of_hit_schedule
+    (A U B : ℕ → Set ℤ) (x : ℕ → ℤ) (t : ℕ → ℕ)
+    (ht : Antitone t) (n : ℕ) (hzero : t n = 0)
+    (hstage : ∀ i < n,
+      vHitTime (A i ∪ (U i)ᶜ) (pathShift (t (i + 1)) x) = (t i - t (i + 1) : ℕ) ∧
+        x (t i) ∈ B i) : x ∈ annulusCrossingEvent A U B n := by
+  simpa [hzero] using pathShift_mem_annulusCrossingEvent_of_hit_schedule A U B x t ht n hstage
+
+/-- If a path avoids a set on a finite interval and enters it at the end,
+then its shifted first-hit time is the length of that interval. -/
+theorem vHitTime_pathShift_eq_of_segment
+    (D : Set ℤ) (x : ℕ → ℤ) {s t : ℕ} (hst : s ≤ t)
+    (hbefore : ∀ j, s ≤ j → j < t → x j ∉ D) (hend : x t ∈ D) :
+    vHitTime D (pathShift s x) = (t - s : ℕ) := by
+  unfold vHitTime
+  rw [vExitTime_eq_natCast_iff]
+  constructor
+  · intro h
+    have hmem := (natCast_lt_vExitTime_iff.1 h) (t - s) le_rfl
+    simp only [pathShift, Nat.sub_add_cancel hst, mem_compl_iff] at hmem
+    exact hmem hend
+  · intro j hj
+    change x (j + s) ∉ D
+    exact hbefore (j + s) (by omega) (by omega)
+
+/-- Interval-wise avoidance and target membership provide the first-hit
+schedule needed by the iterated crossing event. -/
+theorem mem_annulusCrossingEvent_of_segments
+    (A U B : ℕ → Set ℤ) (x : ℕ → ℤ) (t : ℕ → ℕ)
+    (ht : Antitone t) (n : ℕ) (hzero : t n = 0)
+    (hBA : ∀ i < n, B i ⊆ A i)
+    (hend : ∀ i < n, x (t i) ∈ B i)
+    (hbefore : ∀ i < n, ∀ j, t (i + 1) ≤ j → j < t i →
+      x j ∉ A i ∧ x j ∈ U i) :
+    x ∈ annulusCrossingEvent A U B n := by
+  apply mem_annulusCrossingEvent_of_hit_schedule A U B x t ht n hzero
+  intro i hi
+  refine ⟨vHitTime_pathShift_eq_of_segment (A i ∪ (U i)ᶜ) x (ht (Nat.le_succ i)) ?_ ?_,
+    hend i hi⟩
+  · intro j hstart hstop
+    have h := hbefore i hi j hstart hstop
+    simp only [mem_union, mem_compl_iff, not_or, not_not]
+    exact h
+  · exact Or.inl (hBA i hi (hend i hi))
+
 end MatedCRT
