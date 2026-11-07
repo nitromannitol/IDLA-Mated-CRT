@@ -6,6 +6,22 @@ namespace MatedCRT
 
 open scoped ENNReal
 
+/-- At excursion distances at least four times the cutoff, one can choose
+the largest dyadic annulus whose outer boundary lies within half the
+excursion distance. -/
+theorem exists_dyadic_annulus_stage {cutoff distance : ℝ}
+    (hcutoff : 0 < cutoff) (hdistance : 4 * cutoff ≤ distance) :
+    ∃ n : ℕ, 4 * cutoff * (2 : ℝ) ^ n ≤ distance ∧
+      distance < 4 * cutoff * (2 : ℝ) ^ (n + 1) := by
+  have hdenom : 0 < 4 * cutoff := by positivity
+  have hratio : 1 ≤ distance / (4 * cutoff) := (one_le_div hdenom).2 hdistance
+  obtain ⟨n, hn, hnnext⟩ := exists_nat_pow_near hratio (show (1 : ℝ) < 2 by norm_num)
+  refine ⟨n, ?_, ?_⟩
+  · have h := (le_div_iff₀ hdenom).1 hn
+    nlinarith
+  · have h := (div_lt_iff₀ hdenom).1 hnnext
+    nlinarith
+
 /-- A strictly subunit survival probability is a positive real power of the
 dyadic scale ratio. -/
 theorem exists_dyadic_survival_exponent {q : ℝ} (hq : 0 < q) (hq1 : q < 1) :
@@ -70,5 +86,23 @@ theorem dyadic_crossing_probability_le_power_ratio {q : ℝ} (hq : 0 < q) (hq1 :
     _ = ENNReal.ofReal (q ^ n) := (ENNReal.ofReal_pow hq.le n).symm
     _ ≤ ENNReal.ofReal ((factor * cutoff / distance) ^ ν) :=
       ENNReal.ofReal_le_ofReal (hbound n cutoff distance factor hcut hdist hfactor hscale)
+
+/-- The largest admissible annulus has a polynomial survival bound, with an
+exponent chosen independently of the cutoff and excursion distance. -/
+theorem exists_annulus_stage_with_power_bound {q : ℝ} (hq : 0 < q) (hq1 : q < 1) :
+    ∃ ν : ℝ, 0 < ν ∧ ∀ cutoff distance : ℝ, 0 < cutoff → 4 * cutoff ≤ distance →
+      ∃ n : ℕ, 4 * cutoff * (2 : ℝ) ^ n ≤ distance ∧
+        distance < 4 * cutoff * (2 : ℝ) ^ (n + 1) ∧
+        ∀ probability : ℝ≥0∞, probability ≤ ENNReal.ofReal q ^ (n + 1) →
+          probability ≤ ENNReal.ofReal ((4 * cutoff / distance) ^ ν) := by
+  obtain ⟨ν, hν, hbound⟩ := dyadic_crossing_probability_le_power_ratio hq hq1
+  refine ⟨ν, hν, ?_⟩
+  intro cutoff distance hcut hdist
+  obtain ⟨n, hn, hnnext⟩ := exists_dyadic_annulus_stage hcut hdist
+  refine ⟨n, hn, hnnext, ?_⟩
+  intro probability hprob
+  have hdistpos : 0 < distance := lt_of_lt_of_le (by positivity) hdist
+  exact hbound (n + 1) probability cutoff distance 4 hcut.le hdistpos (by norm_num)
+    hnnext.le hprob
 
 end MatedCRT
