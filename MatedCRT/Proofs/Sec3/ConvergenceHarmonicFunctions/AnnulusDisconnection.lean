@@ -45,4 +45,17 @@ theorem not_walkDisconnectsBeforeHit_of_avoiding_region
   obtain ⟨n, hn, hnw⟩ := walkDisconnectsBeforeHit_intersects_walk h ha w
   exact hw (x n) hnw (hx n hn)
 
+/-- Once a separating graph walk outside `U` has been constructed, the
+annulus-disconnection event forces a visit outside `U` before the outer hit. -/
+theorem measure_disconnection_le_visit_outside
+    {m : ℤ → ℤ → ℕ} {A U : Set ℤ} {y a : ℤ}
+    (ha : a ∈ A) (w : (adjGraph m).Walk y a)
+    (hw : ∀ v ∈ w.support, v ∉ U) (μ : MeasureTheory.Measure (ℕ → ℤ)) :
+    μ {x | walkDisconnectsBeforeHit m A y x} ≤
+      μ {x | ∃ n : ℕ, (n : ℕ∞) < vHitTime A x ∧ x n ∉ U} := by
+  apply MeasureTheory.measure_mono
+  intro x hx
+  obtain ⟨n, hn, hnw⟩ := walkDisconnectsBeforeHit_intersects_walk hx ha w
+  exact ⟨n, hn, hw (x n) hnw⟩
+
 end MatedCRT
