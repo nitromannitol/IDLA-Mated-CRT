@@ -1,5 +1,6 @@
 import MatedCRT.Draft.Section3HarmonicCorrected
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.ContinuousPathExit
+import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.ExitCell
 
 /-! # Projected exit-cell comparison for corrected Lemma 3.6 -/
 
@@ -19,6 +20,29 @@ def CorrectedProjectedExitCellStep (𝒮 : SpaceFillingSLEModel) : Prop :=
     TendstoInProbability S.P
       (fun ε ω => projectedDiscreteHarmonicExtension S r z ψ ε ω y -
         interpolatedExitExpectation S r z y ψ ε ω) (fun _ => 0)
+
+/-- The existing exit-cell comparison applies to projected data whenever the
+retracted boundary function is Hölder on a neighbourhood of the disk. -/
+theorem correctedProjectedExit_of_holder_retraction (𝒮 : SpaceFillingSLEModel)
+    (h211 : RandomWalkToLBMStmt 𝒮) (hmeps : MepsScalingInput 𝒮)
+    (hexc : BrownianOutwardExcursionAtExitStep) (hX : LBMPathFunctionalMeasurableStep 𝒮)
+    (h28 : CellSizeEstimateStmt 𝒮)
+    {γ ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hρ : 0 < ρ) (hρ1 : ρ < 1)
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
+    {r : ℝ} {z y : ℂ} (hr : 0 < r) (hball : ball z r ⊆ ball 0 ρ)
+    {ψ : ℂ → ℝ}
+    (hψ : ∃ s : ℝ, 0 < s ∧
+      IsHolderContinuousOn (fun x => ψ (ballRetraction z r x)) (closedBall z (r + s)))
+    (hy : y ∈ ball z r) :
+    TendstoInProbability S.P
+      (fun ε ω => projectedDiscreteHarmonicExtension S r z ψ ε ω y -
+        interpolatedExitExpectation S r z y ψ ε ω) (fun _ => 0) := by
+  have h := harmonicExitCellStep_of_inputs 𝒮 h211 hmeps hexc hX h28
+    γ hγ hγ2 ρ hρ hρ1 Ω S hS r z hr hball
+    (fun x => ψ (ballRetraction z r x)) hψ y hy
+  have hidem : ∀ x, ballRetraction z r (ballRetraction z r x) = ballRetraction z r x :=
+    fun x => ballRetraction_of_mem z hr (ballRetraction_mem z hr x)
+  simpa only [projectedDiscreteHarmonicExtension, interpolatedExitExpectation, hidem] using h
 
 /-- Convergence in probability transfers across a vanishing difference. -/
 theorem tendstoInProbability_of_sub_zero {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
