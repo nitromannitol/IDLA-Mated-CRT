@@ -69,4 +69,26 @@ theorem mesoscopic_cutoff_eventually_le_smaller_power {a b p : ℝ}
   exact mesoscopic_cutoff_le_smaller_power hε
     (le_of_lt (lt_of_lt_of_le hεδ (min_le_right δ 1))) hsmall
 
+/-- The power-law excursion estimate at scale `ε ^ p / 2` has the mesh
+exponent appearing in the quantitative same-walk comparison. -/
+theorem mesoscopic_cutoff_ratio_rpow_le {ε a b p ν : ℝ}
+    (hε : 0 < ε) (hε1 : ε ≤ 1) (hν : 0 ≤ ν) :
+    ((100 * ε ^ a + ε ^ b) / (ε ^ p / 2)) ^ ν ≤
+      (202 : ℝ) ^ ν * ε ^ ((min a b - p) * ν) := by
+  have hbound := (mesoscopic_cutoff_bounds (a := a) (b := b) hε hε1).2.2.2
+  have hp : 0 < ε ^ p := Real.rpow_pos_of_pos hε _
+  have hcut : 0 ≤ 100 * ε ^ a + ε ^ b := by positivity
+  have hratio : (100 * ε ^ a + ε ^ b) / (ε ^ p / 2) ≤
+      202 * ε ^ (min a b - p) := by
+    rw [Real.rpow_sub hε]
+    apply (div_le_iff₀ (by linarith : 0 < ε ^ p / 2)).2
+    field_simp
+    linarith
+  calc
+    ((100 * ε ^ a + ε ^ b) / (ε ^ p / 2)) ^ ν ≤
+        (202 * ε ^ (min a b - p)) ^ ν :=
+      Real.rpow_le_rpow (div_nonneg hcut (by positivity)) hratio hν
+    _ = (202 : ℝ) ^ ν * ε ^ ((min a b - p) * ν) := by
+      rw [Real.mul_rpow (by norm_num) (Real.rpow_nonneg hε.le _), Real.rpow_mul hε.le]
+
 end MatedCRT
