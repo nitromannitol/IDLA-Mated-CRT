@@ -9,7 +9,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Integral
 namespace MatedCRT
 
 open MeasureTheory ProbabilityTheory MarkovProcess HarmonicBalls
-open scoped NNReal
+open scoped NNReal ENNReal
 
 /-- An increment of standard planar Brownian motion has the centered planar
 Gaussian law with covariance equal to the elapsed time. -/
@@ -123,5 +123,77 @@ theorem integrableOn_planar_norm_rpow (a R : ℝ) (ha : a < 2) :
   · filter_upwards with w
     simp [Real.norm_eq_abs, abs_of_nonneg (Real.rpow_nonneg (norm_nonneg w) _)]
   · exact hm.aestronglyMeasurable
+
+/-- A nondegenerate Gaussian measure is bounded by a constant multiple of
+Lebesgue measure, with the constant given by its density at the mean. -/
+theorem gaussianReal_le_peak_smul_volume (m : ℝ) (v : ℝ≥0) (hv : v ≠ 0) :
+    gaussianReal m v ≤ ENNReal.ofReal ((Real.sqrt (2 * Real.pi * v))⁻¹) • volume := by
+  rw [gaussianReal_of_var_ne_zero m hv, ← withDensity_const]
+  apply withDensity_mono
+  filter_upwards with x
+  rw [gaussianPDF_def, gaussianPDFReal_def]
+  apply ENNReal.ofReal_le_ofReal
+  have he : Real.exp (-(x - m) ^ 2 / (2 * (v : ℝ))) ≤ 1 := by
+    apply Real.exp_le_one_iff.mpr
+    exact div_nonpos_of_nonpos_of_nonneg (neg_nonpos.mpr (sq_nonneg _)) (by positivity)
+  calc
+    (Real.sqrt (2 * Real.pi * v))⁻¹ * Real.exp (-(x - m) ^ 2 / (2 * (v : ℝ))) ≤
+        (Real.sqrt (2 * Real.pi * v))⁻¹ * 1 :=
+      mul_le_mul_of_nonneg_left he (inv_nonneg.mpr (Real.sqrt_nonneg _))
+    _ = _ := mul_one _
+
+/-- A nondegenerate planar Gaussian is bounded by a finite multiple of
+planar Lebesgue measure. -/
+theorem planarGaussian_le_peak_smul_volume (z : ℂ) (v : ℝ≥0) (hv : v ≠ 0) :
+    planarGaussian z v ≤
+      (ENNReal.ofReal ((Real.sqrt (2 * Real.pi * v))⁻¹) ^ 2) • volume := by
+  let c : ℝ≥0∞ := ENNReal.ofReal ((Real.sqrt (2 * Real.pi * v))⁻¹)
+  have hprod : (gaussianReal z.re v).prod (gaussianReal z.im v) ≤
+      (c • (volume : Measure ℝ)).prod (c • (volume : Measure ℝ)) := by
+    exact Measure.prod_mono (gaussianReal_le_peak_smul_volume z.re v hv)
+      (gaussianReal_le_peak_smul_volume z.im v hv)
+  have hm := Measure.map_mono hprod Complex.measurableEquivRealProd.symm.measurable
+  rw [Measure.prod_smul_left, Measure.prod_smul_right, smul_smul,
+    Measure.map_smul _ Complex.measurableEquivRealProd.symm.measurable.aemeasurable] at hm
+  have hvol : ((volume : Measure ℝ).prod volume).map Complex.measurableEquivRealProd.symm =
+      (volume : Measure ℂ) := Complex.volume_preserving_equiv_real_prod.symm.map_eq
+  rw [hvol] at hm
+  simpa [planarGaussian, c, pow_two] using hm
+
+
+/-- The standard planar Gaussian has finite Riesz energy of order below two. -/
+theorem stdPlanarGaussian_riesz_moment_lt_top (a : ℝ) (ha : 0 < a) (ha2 : a < 2) :
+    (∫⁻ w, rieszEnergyKernel a w 0 ∂stdPlanarGaussian) < ⊤ := by
+  let B : Set ℂ := Metric.ball 0 1
+  let K : ℂ → ℝ≥0∞ := fun w => rieszEnergyKernel a w 0
+  have hlocal : (∫⁻ w in B, K w ∂volume) < ⊤ := by
+    have h := (integrableOn_planar_norm_rpow a 1 ha2).lintegral_lt_top
+    apply lt_of_le_of_lt _ h
+    apply le_of_eq
+    apply lintegral_congr_ae
+    filter_upwards [ae_restrict_of_ae (volume.ae_ne (0 : ℂ))] with w hw
+    simp [K, rieszEnergyKernel, dist_eq_norm, hw]
+  have hlocal' : (∫⁻ w in B, K w ∂stdPlanarGaussian) < ⊤ := by
+    have hbound := planarGaussian_le_peak_smul_volume 0 1 (by norm_num)
+    have hle : (∫⁻ w in B, K w ∂stdPlanarGaussian) ≤
+        ∫⁻ w in B, K w ∂((ENNReal.ofReal ((Real.sqrt (2 * Real.pi * (1 : ℝ≥0)))⁻¹) ^ 2) • volume) := by
+      apply lintegral_mono' _ le_rfl
+      exact Measure.restrict_mono (Set.Subset.rfl) hbound
+    apply lt_of_le_of_lt hle
+    rw [Measure.restrict_smul, lintegral_smul_measure]
+    exact ENNReal.mul_lt_top (by finiteness) hlocal
+  have hout : (∫⁻ w in Bᶜ, K w ∂stdPlanarGaussian) < ⊤ := by
+    have hle : (∫⁻ w in Bᶜ, K w ∂stdPlanarGaussian) ≤
+        ∫⁻ _ in Bᶜ, (1 : ℝ≥0∞) ∂stdPlanarGaussian := by
+      apply lintegral_mono_ae
+      filter_upwards [ae_restrict_mem (Metric.isOpen_ball.measurableSet.compl)] with w hw
+      have hn : 1 ≤ ‖w‖ := by simpa [B, Metric.mem_ball, dist_eq_norm] using hw
+      have hw0 : w ≠ 0 := by intro he; simp [he] at hn; norm_num at hn
+      simp only [K, rieszEnergyKernel, dist_eq_norm, sub_zero, norm_eq_zero, hw0,
+        false_and, ite_false]
+      exact (ENNReal.ofReal_le_ofReal (Real.rpow_le_one_of_one_le_of_nonpos hn (neg_nonpos.mpr ha.le))).trans (by simp)
+    exact lt_of_le_of_lt hle (by simp)
+  rw [← lintegral_add_compl K (Metric.isOpen_ball.measurableSet)]
+  exact ENNReal.add_lt_top.mpr ⟨hlocal', hout⟩
 
 end MatedCRT
