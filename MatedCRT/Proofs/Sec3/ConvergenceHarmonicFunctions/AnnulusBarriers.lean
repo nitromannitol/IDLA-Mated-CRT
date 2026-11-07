@@ -1,6 +1,7 @@
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.AnnulusIteration
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBound.Walk
 import Mathlib.Analysis.Normed.Module.RCLike.Real
+import MatedCRT.Proofs.Sec7.MassBoundOdometer.Count
 
 /-! # Nested exit regions and first hits of their boundaries -/
 
@@ -102,5 +103,58 @@ theorem ae_sphereCellHit_eq_diskInteriorExit
       vHitTime (cellVertices ε η (Metric.sphere z r)) x =
         vExitTime (interiorCellVertices ε η (Metric.ball z r)) x :=
   ae_vHitTime_eq_vExitTime_of_neighbours ha (disjoint_interiorCellVertices_sphere ε η z hr) hnb
+
+/-- Interior-cell sets of concentric disks are nested for a continuous
+space-filling curve. -/
+theorem interiorCellVertices_ball_mono
+    {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (z : ℂ)
+    {r R : ℝ} (hrR : r ≤ R) :
+    interiorCellVertices ε η (Metric.ball z r) ⊆
+      interiorCellVertices ε η (Metric.ball z R) := by
+  intro a ha
+  have hcell := Sec7.cell_subset_ball_of_mem_interiorCellVertices hη ha
+  constructor
+  · obtain ⟨w, hwc, hwb⟩ := ha.1
+    exact ⟨w, hwc, Metric.ball_subset_ball hrR hwb⟩
+  · intro hb
+    have hR : R ≠ 0 := by
+      obtain ⟨w, hwc, hwb⟩ := ha.1
+      have := Metric.mem_ball.1 hwb
+      have : 0 < R := lt_of_le_of_lt (dist_nonneg) (lt_of_lt_of_le this hrR)
+      exact ne_of_gt this
+    rw [frontier_ball z hR] at hb
+    obtain ⟨w, hwc, hws⟩ := hb
+    have hdist : dist w z < r := Metric.mem_ball.1 (hcell hwc)
+    have heq : dist w z = R := Metric.mem_sphere.1 hws
+    linarith
+
+/-- Starting in the smaller disk, a walk hits the smaller circle before the
+larger one whenever the larger-disk exit is finite and neighbouring cells
+satisfy the disk boundary condition. -/
+theorem ae_sphereCellHits_ordered
+    {m : ℤ → ℤ → ℕ} {ε r R : ℝ} {η : ℝ → ℂ} {z : ℂ} {a : ℤ}
+    (hη : Continuous η) (hr : 0 < r) (hrR : r ≤ R)
+    (ha : a ∈ interiorCellVertices ε η (Metric.ball z r))
+    (hnb : ∀ ρ ∈ ({r, R} : Set ℝ),
+      ∀ a ∈ interiorCellVertices ε η (Metric.ball z ρ), ∀ b,
+        m a b ≠ 0 → b ∈ interiorCellVertices ε η (Metric.ball z ρ) ∪
+          cellVertices ε η (Metric.sphere z ρ))
+    (hfin : ∀ᵐ x ∂srwLaw m a,
+      vExitTime (interiorCellVertices ε η (Metric.ball z R)) x ≠ ⊤) :
+    ∀ᵐ x ∂srwLaw m a,
+      vHitTime (cellVertices ε η (Metric.sphere z r)) x ≠ ⊤ ∧
+      vHitTime (cellVertices ε η (Metric.sphere z R)) x ≠ ⊤ ∧
+      vHitTime (cellVertices ε η (Metric.sphere z r)) x ≤
+        vHitTime (cellVertices ε η (Metric.sphere z R)) x := by
+  have hsub := interiorCellVertices_ball_mono (ε := ε) hη z hrR
+  have hR : 0 < R := lt_of_lt_of_le hr hrR
+  filter_upwards [hfin,
+    ae_sphereCellHit_eq_diskInteriorExit hr ha (hnb r (by simp)),
+    ae_sphereCellHit_eq_diskInteriorExit hR (hsub ha) (hnb R (by simp))] with x hx hsmall hlarge
+  have hle := vExitTime_mono_domain hsub x
+  have hsmallfin : vExitTime (interiorCellVertices ε η (Metric.ball z r)) x ≠ ⊤ :=
+    ne_top_of_le_ne_top hx hle
+  rw [hsmall hsmallfin, hlarge hx]
+  exact ⟨hsmallfin, hx, hle⟩
 
 end MatedCRT
