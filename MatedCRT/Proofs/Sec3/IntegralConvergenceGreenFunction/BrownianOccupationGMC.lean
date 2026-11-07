@@ -34,6 +34,10 @@ theorem planarBrownianMotion_ae_occupation_gmc
           (fun ε ω => gmcApprox P (σ.comap Subtype.val) γ
             (fun (ω' : Ω) (x : D) => H ε ω' x.1) ω) μ ∧
         ∀ S : Set D, MeasurableSet S →
+          Integrable (fun ω => (μ ω).real S) P ∧
+          (∀ᶠ ε in 𝓝[>] (0 : ℝ), Integrable
+            (fun ω => (gmcApprox P (σ.comap Subtype.val) γ
+              (fun (ω' : Ω) (x : D) => H ε ω' x.1) ω).real S) P) ∧
           Tendsto (fun ε => ∫ ω, |(gmcApprox P (σ.comap Subtype.val) γ
             (fun (ω' : Ω) (x : D) => H ε ω' x.1) ω).real S - (μ ω).real S| ∂P)
             (𝓝[>] (0 : ℝ)) (𝓝 0) := by
@@ -48,6 +52,6 @@ theorem planarBrownianMotion_ae_occupation_gmc
   obtain ⟨H, hH, hweak, hmass⟩ := hμ θ hθ
   refine ⟨μ, H, hH, hweak, ?_⟩
   intro S hS
-  exact (hmass S hS).2.2.2
+  exact ⟨(hmass S hS).1, (hmass S hS).2.1, (hmass S hS).2.2.2⟩
 
 end MatedCRT
