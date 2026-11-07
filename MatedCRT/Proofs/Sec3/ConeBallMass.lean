@@ -1,6 +1,8 @@
 import MatedCRT.Proposed.BerestyckiGwynne
 import MatedCRT.Draft.Section2
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.VolumeGrowthInsideUnit
+import MatedCRT.Proofs.Sec2.ConeFamilyMeasurable.ConeVolumeGrowth
+import HarmonicBalls.Proofs.Sec6.GreenPotentialBound
 
 /-! # The cited cone ball-mass estimate implies Lemma 2.7 -/
 
@@ -71,5 +73,21 @@ theorem IsConeField.ae_uniform_cone_ball_mass
     hb (by dsimp [A] at *; linarith) (by linarith) (by linarith) hpoly] with ω hvol
   obtain ⟨_, _, r₀, hr₀, hmass⟩ := hvol
   exact ⟨r₀, hr₀, fun r hr hr₀ z hz => (hmass r hr hr₀ z hz).2⟩
+
+/-- Cone ball-mass estimates give a uniformly bounded Green potential on
+each open subdomain of a buffered disk. This includes a pole at the origin. -/
+theorem IsConeField.ae_greenPotential_bddAbove
+    {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    (hcone : IsConeField γ P hC hcirc μ) (hBG : BerestyckiGwynneConeBallMassStmt)
+    {R : ℝ} (hR : 0 < R) (hR1 : R < 1) {D : Set ℂ}
+    (hD : IsOpen D) (hDR : D ⊆ ball (0 : ℂ) R) :
+    ∀ᵐ ω ∂P, ∃ M : ℝ, ∀ y, greenPotential D (μ ω) y ≤ M := by
+  filter_upwards [hcone.ae_volumeGrowth_inside_unit hγ hγ2
+    (volumeGrowthStmt_of_berestyckiGwynne hBG) hR1] with ω hω
+  have : IsLocallyFiniteMeasure (μ ω) := hω.1
+  obtain ⟨βminus, βplus, hvol⟩ := hω.2
+  exact Section6.greenPotential_bddAbove_of_volumeGrowth hR hD hDR hvol
 
 end MatedCRT
