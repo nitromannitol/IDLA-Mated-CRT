@@ -1,5 +1,8 @@
 import MatedCRT.Proposed.Berestycki2015
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.KilledClockBridge
+import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.LocalKilledInverseConvergence
+import MatedCRT.Proofs.LBM.BrownianExitBall
+import MarkovProcess.Path.Exhaustion
 import HarmonicBalls.Proofs.Sec8.OpenBallDensity
 
 /-! # Quenched identification of Dirichlet clock time changes -/
@@ -73,24 +76,18 @@ theorem IsLQGClock.ae_killed_clock_eq_all_of_ae_tendsto_tail
   intro t
   exact congrFun h t
 
-/-- A continuous dyadic stopped-clock limit with convergent time-changed paths
-agrees with the global LQG clock time change before exit. These convergence
-assumptions are not supplied by the staged diffusion theorem. -/
+/-- A continuous dyadic stopped-clock limit determines the global LQG time
+change before exit. The stopped-clock convergence assumption is not supplied
+by the staged diffusion theorem. -/
 theorem berestycki_dirichlet_time_change_eq_lbm
     {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (D U : Set ℂ) (h : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (x : ℂ) (γ : ℝ) (F G : Ω → ContinuousPath ℂ → ℝ≥0 → ℝ)
     (hsource : ∀ᵐ q ∂(P.prod (planarBrownianMotion x)),
-        let τ := ContinuousPath.exitTime U q.2
-        let T := τ.toNNReal
         let K : ℕ → ℝ≥0 → ℝ := fun n =>
           killedGMCClockApprox U γ (hcirc q.1) (dyadicScale n) q.2
-        τ < ⊤ ∧
         (∀ t : ℝ≥0, Tendsto (fun n => K n t) atTop (𝓝 (G q.1 q.2 t))) ∧
-        Continuous (G q.1 q.2) ∧
-        (∀ t : ℝ≥0, (t : ℝ) < G q.1 q.2 T →
-          Tendsto (fun n => q.2 ((killedClockInverse (K n) τ t).toNNReal))
-            atTop (𝓝 (q.2 ((killedClockInverse (G q.1 q.2) τ t).toNNReal)))))
+        Continuous (G q.1 q.2))
     (hD : IsOpen D)
     (hU : IsOpen U) (hbounded : Bornology.IsBounded U) (hclosure : closure U ⊆ D)
     (hx : x ∈ U) (hgff : IsDirichletGFF P D h hcirc)
@@ -103,53 +100,59 @@ theorem berestycki_dirichlet_time_change_eq_lbm
             (ContinuousPath.exitTime U b) t).toNNReal)) atTop
             (𝓝 (liouvilleBrownianPath (F ω) b t)) := by
   have hmeas := hgff.ae_measurable_killedGMCClockApprox_tail hD hU hbounded hclosure γ x
-  filter_upwards [Measure.ae_ae_of_ae_prod hsource, hglobal, hmeas] with ω hsrc hg hm
+  have hfield := hgff.ae_continuousOn_dyadic_tail hD hbounded hclosure
+  filter_upwards [Measure.ae_ae_of_ae_prod hsource, hglobal, hmeas, hfield]
+    with ω hsrc hg hm hf
   obtain ⟨N, hm⟩ := hm
+  obtain ⟨Nfield, hf⟩ := hf
   have hconv : ∀ t, ∀ᵐ b ∂planarBrownianMotion x, Tendsto
       (fun n => killedGMCClockApprox U γ (hcirc ω) (dyadicScale n) b t)
         atTop (𝓝 (G ω b t)) := by
     intro t
     filter_upwards [hsrc] with b hb
-    exact hb.2.1 t
+    exact hb.1 t
   have hcont : ∀ᵐ b ∂planarBrownianMotion x, Continuous (G ω b) ∧ Continuous (F ω b) := by
     filter_upwards [hsrc, hg.2] with b hb hf
-    exact ⟨hb.2.2.1, hf.continuous⟩
+    exact ⟨hb.2, hf.continuous⟩
   have hfin : ∀ᵐ b ∂planarBrownianMotion x, ContinuousPath.exitTime U b < ⊤ := by
-    filter_upwards [hsrc] with b hb
-    exact hb.1
+    obtain ⟨R, hR⟩ := hbounded.subset_ball x
+    filter_upwards [ae_planarBrownianMotion_exit_any_ball_lt_top x x R] with b hb
+    exact (ContinuousPath.exitTime_mono hR b).trans_lt hb
   have heq := IsLQGClock.ae_killed_clock_eq_all_of_ae_tendsto_tail hg.1 U N hm hconv hcont
   have hreg : ∀ᵐ b ∂planarBrownianMotion x, IsTimeChangeClock (F ω b) ∧ b 0 ∈ U := by
     filter_upwards [hg.2, ae_planarBrownianMotion_eval_zero x] with b hb hstart
     exact ⟨hb, hstart ▸ hx⟩
-  filter_upwards [hsrc, heq, hreg] with b hb he hr
+  filter_upwards [hsrc, heq, hreg, hfin] with b hb he hr hτfin
   intro t ht
   have hval : G ω b (ContinuousPath.exitTime U b).toNNReal =
       F ω b (ContinuousPath.exitTime U b).toNNReal := by
     have hτ : ((ContinuousPath.exitTime U b).toNNReal : ℝ≥0∞) =
-        ContinuousPath.exitTime U b := ENNReal.coe_toNNReal (ne_of_lt hb.1)
+        ContinuousPath.exitTime U b := ENNReal.coe_toNNReal (ne_of_lt hτfin)
     simpa [hτ] using he (ContinuousPath.exitTime U b).toNNReal
   have hnonneg : 0 ≤ F ω b (ContinuousPath.exitTime U b).toNNReal := by
     simpa [hr.1.map_zero] using hr.1.strictMono.monotone
       (show 0 ≤ (ContinuousPath.exitTime U b).toNNReal from bot_le)
   have ht' : (t : ℝ) < G ω b (ContinuousPath.exitTime U b).toNNReal := by
-    rw [lbmExitTime_eq_clockValue hU hr.1 hr.2 hb.1, ENNReal.coe_lt_coe] at ht
+    rw [lbmExitTime_eq_clockValue hU hr.1 hr.2 hτfin, ENNReal.coe_lt_coe] at ht
     have h := NNReal.coe_lt_coe.mpr ht
     simpa only [hval, Real.coe_toNNReal _ hnonneg] using h
-  have hinv : killedClockInverse (G ω b) (ContinuousPath.exitTime U b) t =
-      killedClockInverse (F ω b) (ContinuousPath.exitTime U b) t := by
-    have hτ : ((ContinuousPath.exitTime U b).toNNReal : ℝ≥0∞) =
-        ContinuousPath.exitTime U b := ENNReal.coe_toNNReal (ne_of_lt hb.1)
-    rw [← hτ]
-    apply killedClockInverse_eq_of_agree_before
+  have hlocal : ∀ s ≤ (ContinuousPath.exitTime U b).toNNReal,
+      Tendsto (fun n => killedGMCClockApprox U γ (hcirc ω) (dyadicScale n) b s)
+        atTop (𝓝 (F ω b s)) := by
     intro s hs
+    have hτ : ((ContinuousPath.exitTime U b).toNNReal : ℝ≥0∞) =
+        ContinuousPath.exitTime U b := ENNReal.coe_toNNReal (ne_of_lt hτfin)
     have hs' : (s : ℝ≥0∞) ≤ ContinuousPath.exitTime U b := by
       rw [← hτ, ENNReal.coe_le_coe]
       exact hs
-    simpa [min_eq_left hs'] using he s
-  have hp : b ((killedClockInverse (G ω b) (ContinuousPath.exitTime U b) t).toNNReal) =
-      liouvilleBrownianPath (F ω) b t := by
-    rw [hinv]
-    exact killedClockInverse_brownian_path_eq_lbm hU hr.1 hr.2 hb.1 ht
-  simpa only [hp] using hb.2.2.2 t ht'
+    simpa [he s, min_eq_left hs'] using hb.1 s
+  have hp' : b ((killedClockInverse (F ω b) (ContinuousPath.exitTime U b) t).toNNReal) =
+      liouvilleBrownianPath (F ω) b t :=
+    killedClockInverse_brownian_path_eq_lbm hU hr.1 hr.2 hτfin ht
+  have ht'' : (t : ℝ) < F ω b (ContinuousPath.exitTime U b).toNNReal := hval ▸ ht'
+  simpa only [hp'] using tendsto_killedGMCClockApprox_path_of_continuousOn
+    hr.1 hτfin Nfield hf hlocal ht''
 
 end MatedCRT
+
+#print axioms MatedCRT.berestycki_dirichlet_time_change_eq_lbm
