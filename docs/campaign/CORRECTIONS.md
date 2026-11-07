@@ -15,8 +15,16 @@ verdicts in the inbox entry of 13:55 UTC). Line numbers refer to the published s
   `m_eps^{-1} sum_x G^eps(a_y, x) f(eta(x)) -> m_0^{-1} int 2 G f dmu_h`; the printed `m_0` holds iff `m_0^2 = 2`, false
   for `gamma^2 <= 0.8` (annealed `E[tau_LBM] = 2^{gamma^2-1}/(2-gamma^2)^2`, so `m_0 <= 1.21`). Downstream (Prop 4.2,
   Sections 5, 7, Theorems 1.4, 1.6) uses the constant only qualitatively. Lean: `MatedCRTEnv.c₀` (Defs/Setting.lean).
-- Not yet applied in the corrected draft (ESCALATIONS E-m1-1, found by m1, 2026-11-04): the proof of Lemma 3.3 still
-  prints `m_0/6` at corrected l.1219 and l.1222 (identification of the limit); both should read `c_0/6`.
+- Remaining proof-level uses are corrected in [C17].
+
+## [C15] Median start in eq:mo (proof-consistent typo repair)
+- The single deterministic `m_0` is the annealed median of the unscaled LBM exit time from `B_{1/2}` started at `0`, not at a free `z`. This agrees with the discrete median in eq:meps.
+
+## [C16] Killed occupation proof in Lemma 3.4 (proof repair)
+- Replace the unstopped functional and unjustified interchange by a buffered killed-path argument, convergence of exit times, a second-moment tail estimate, and the audited clock occupation identity. The identity has coefficient `2` for the unscaled clock and `c_0 = 2/m_0` for the paper's process, consistently with [C1]. The complete audited proof and exact citations are in `docs/campaign/OCCUPATION-PROOF.md`; deterministic thinning follows [C11].
+
+## [C17] Remaining proof coefficients (proof repair consistent with [C1])
+- Propagate `c_0` for `m_0` and `6/c_0` for `6/m_0` in the proofs of Lemmas 3.3, 3.5, 3.7 and the Section 4 consequences, without changing the time-rescaling definition or the median.
 
 ## [C2] Maximum principle for nonempty finite A (ESCALATIONS E-A4, CONFIRMED)
 - Where: Lemma 2.13 (lemma:maximum-principle, l.825).  Published: "For every connected subset A".  Corrected: "For every nonempty finite subset A".

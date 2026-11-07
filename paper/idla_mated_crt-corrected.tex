@@ -715,8 +715,9 @@ In this paper we consider LBM rescaled by its (annealed) median exit time from a
 X^z_t = B^z_{\phi^{-1}(t m_0)}, \quad \forall z \in \C,
 \end{equation}
 where 
+% CORRECTION [C15]: the median is for the start 0, not a free z.
 \begin{equation} \label{eq:mo} 
-m_0 = \mbox{median}(\inf\{t > 0 : |B^z_{\phi^{-1}(t)}| \geq 1/2\}).
+m_0 = \mbox{median}(\inf\{t > 0 : |B^0_{\phi^{-1}(t)}| \geq 1/2\}).
 \end{equation}
 % CORRECTION [C1]: new definition; the limits of Lemmas 3.3-3.5, 3.7, Theorem 4.1 and Lemma 4.8 carry c_0 = 2/m_0 (printed: m_0).
 We also set $c_0 := 2/m_0$. Here and below the continuum Green's function $G$ is normalized by $\Delta G = -\delta$, so that the occupation density of standard Brownian motion killed upon exiting a domain is $2G$.
@@ -1239,62 +1240,83 @@ When every possible limit is identified, relative compactness implies
 	\begin{proof}
 		This follows from convergence of random walk on ${\Geps}$ to LBM and the fact that the discrete and continuum Green's functions can be represented in terms of these objects. 
 		
-        % CORRECTION [C11]: all mesh limits here are along a deterministic thinning.
-        Start with an arbitrary deterministic sequence of mesh sizes. Pass to a
-        deterministic subsequence on which the cell-size estimates, the
-        domain-uniform exit-time moment estimate in
-        Lemma~\ref{lemma:exit-time-upper-bound}, and the quenched convergence
-        in Theorem~\ref{theorem:rw-to-lbm} hold almost surely (eventually for
-        the estimates). All mesh limits in this proof are along this
-        subsequence. The $N=2$ moment bound and $m_\eps\asymp\eps^{-1}$
-        give a finite random $K$ such that
-        $\E[(\tau^\eps/m_\eps-T)_+\mid h,\eta]\le K/T$
-        uniformly on its tail, where $\tau^\eps$ is the killed exit time
-        from the fixed ball. This justifies the occupation-tail limit below.
-        The subsequence criterion then gives convergence in probability.
-		
-		Let the deterministic parameters $y \in B_r(z) \subset B_{\rho}$ and $f: B_r(z) \to \C$ a bounded and H\"{o}lder continuous function which is $\sigma(h, \eta)$-measurable be given. Consider the bounded, continuous 
-		functional on the space of continuous curves $w:   [0,\infty)  \to B_{\rho}$, 
-		\[
-		\phi^{f}_T(w) := \int_0^T  f(w_t)  dt, \quad \forall T > 0 .
-		\]   
-		By boundedness and 
-		Theorem \ref{theorem:rw-to-lbm}, 
-		\begin{equation} \label{eq:rw-to-lbm}
-		\lim_{{\eps} \to 0} \E[ \phi^{f}_T(\hat{X}^{y, {\eps}}) | h , \eta] = \E\left[ \int_0^T f(X^y_t) dt | h, \eta\right], \quad \forall T > 0 ,
-		\end{equation}
-		where the convergence is in probability.
-		
-		The term on the left in \eqref{eq:rw-to-lbm} can be used to control its discrete counterpart.
-		Indeed, as $f$ is H\"{o}lder continuous and bounded and the cell size of the mated-CRT map is controlled by Lemma \ref{lemma:cell-size-estimate}, for all ${\eps}$ small depending only on $h, \eta$, 
-		\[
-		{\meps}^{-1} \sum_{t=0}^{\lceil T {\meps} \rceil} f(\eta(X^{y, {\eps}}_t))  - C {\eps}^{q} \leq \phi^{f}_T(\hat{X}^{y, {\eps}}) \leq {\meps}^{-1} \sum_{t=0}^{\lceil T {\meps} \rceil} f(\eta(X^{y, {\eps}}_t))  + C {\eps}^{q}
-		\]
-		for all $T > 0$, where $C = C(f) > 0$, $q = q(\gamma, f) > 0$, and $a^{{\eps}}_y$ is as in \eqref{eq:plane-to-embedding}.  Thus, by \eqref{eq:rw-to-lbm},
-		\begin{equation} \label{eq:green-trunc-weak-convergence}
-		\lim_{{\eps} \to 0} {\meps}^{-1}\E\left[ \sum_{t=0}^{\lceil T {\meps} \rceil } f(\eta(X^{y, {\eps}}_t))  | h , \eta\right] =  \E\left[ \int_0^T f(X^y_t) dt | h, \eta\right], \quad \forall T > 0,
-		\end{equation}
-		in probability as ${\eps} \to 0$. By Lemmas \ref{lemma:bounded-exit-time}, \ref{lemma:exit-time-upper-bound}  and the boundedness of $f$, with $\taueps{B_r(z)}{a^{{\eps}}_y}$ the first exit time as in~\eqref{eq:exit-time},
-		\[
-		|{\meps}^{-1}\ \sum_{t=0}^{\lceil T {\meps} \rceil } f(\eta(X^{y, {\eps}}_t)) |
-		< {\meps}^{-1} \sup_{x \in B_r(z)} |f(x)| \taueps{B_r(z)}{a^{{\eps}}_y} 
-		< \infty, \quad \forall T  >0, \quad \forall {\eps} \in (0,1),
-		\]
-		and ${\meps}^{-1} \E[\taueps{B_r(z)}{a^{{\eps}}_y}  | h, \eta]$ 
-		is a.s.\ bounded uniformly in ${\eps}$. 
-		%% justification for the next sentence:
-		%% set a_{T, {\eps}} = {\meps}^{-1}\ \sum_{t=0}^{\lceil T {\meps} \rceil } f(\eta(X^{y, {\eps}}_t)
-		%% the previous sentence together with standard manipulations show that |E[a_{T, {\eps}}] - E[a_{\infty, {\eps}}]| converges to 0 as T -> infinity uniformly in eps
-		%% hence by the Moore-Osgood Theorem, we may interchange the two limits 
-		Therefore, as \eqref{eq:green-trunc-weak-convergence} holds for each $T > 0$, we may take $T \to \infty$ and interchange the limits to see that
-		\begin{align*}
-		{\meps}^{-1} \sum_{b \in {\VGeps}(B_r(z))} \Gr{{\eps}}{B_r(z)}(a^{{\eps}}_y, b) f(\eta(b))  
-		&= {\meps}^{-1}\E\left[ \sum_{t=0}^{\infty } f(\eta(X^{y, {\eps}}_t))  | h , \eta\right]  \\
-		&\overset{{\eps} \to 0}{\rightarrow}  \E\left[ \int_0^\infty f(X^y_t) dt | h, \eta\right] \\
-		% CORRECTION [C1]: printed m_0 \times; E \int_0^{\tau} f(X_t) dt = m_0^{-1} E \int_0^{\tau_{LBM}} f(LBM_s) ds = m_0^{-1} \int 2G f d\mu_h.
-		&= c_0 \times \int_{B_r(z)} G_{B_r(z)} (y, x) f(x) d \mu_h(x),
-		\end{align*}
-		completing the proof.
+        % CORRECTION [C16]: killed-domain and occupation proof repair, consistent with [C1], [C11].
+        Write $D=B_r(z)$ and $\mathcal F=\sigma(h,\eta)$. Let
+        $I_\eps=\mathcal{VG}^\eps(D)\setminus\mathcal{VG}^\eps(\partial D)$
+        and $K_\eps$ be the first exit time of the discrete walk from $I_\eps$.
+        A connected cell which meets $D$ and avoids $\partial D$ lies in $D$.
+        Extend the bounded H\"older function $f$ from $D$ to $\cl D$ and then
+        to the plane by nearest-point projection onto $\cl D$; call the result
+        $\widetilde f$. Work with full walks and $X$ in a buffered disk
+        $B_{\rho_1}$, $\rho<\rho_1<1$.
+
+        Starting with an arbitrary deterministic mesh sequence, pass to a
+        deterministic subsequence on which the quenched path convergence, the
+        cell-diameter estimates, and the exit-time moment estimate hold almost
+        surely, eventually for the estimates. The mass condition in the latter
+        holds eventually since $\mu_h(D)>0$ a.s. The volume-growth estimate
+        bounds its buffered logarithmic potential uniformly, and the second
+        moment estimate and $m_\eps\asymp\eps^{-1}$ give a finite random $M$
+        such that $\E[(K_\eps/m_\eps)^2\mid\mathcal F]\leq M$ on the tail.
+        The exit time from all cells meeting $D$ dominates $K_\eps$, so the
+        cited moment estimate applies in the required direction.
+
+        Fix an environment in this event. Under a Skorokhod coupling, the
+        interpolated walks $W_\eps$ converge locally uniformly to $X$. If
+        $\tau$ is the first exit time of $X$ from $D$, then
+        $K_\eps/m_\eps\to\tau$. Indeed, every compact pre-exit path segment
+        is a positive distance from $D^c$, giving the lower bound. For the
+        upper bound, Brownian motion visits the strict exterior of $\cl D$
+        arbitrarily soon after exit by the strong Markov property and the
+        outward normal projection. The continuous strictly increasing clock
+        in the buffered disk transfers this property to $X$. An interpolated
+        segment exiting the convex disk has an endpoint outside it, which
+        gives the upper bound up to one mesh time.
+
+        Hence, for fixed $T$, bounded convergence and the H\"older estimate
+        give convergence of the quenched expectations of
+        \[
+        \frac1{m_\eps}\sum_{0\leq k<K_\eps,\ k<m_\eps T}
+          f(\eta(X^{y,\eps}_k))
+        \quad\longrightarrow\quad
+        \int_0^{T\wedge\tau}f(X^y_t)\,dt.
+        \]
+        More precisely, if $d_\eps$ bounds the diameters of cells meeting the
+        buffered disk and $H,\theta$ are H\"older constants, the interpolation
+        error is at most $TH(2d_\eps)^\theta+2\|f\|_\infty/m_\eps$.
+        The discrete occupation tail is bounded by $\|f\|_\infty M/T$;
+        the continuum tail tends to zero because $\E[\tau\mid\mathcal F]<\infty$.
+
+        We recall the occupation identity, including the start $y=0$. On
+        $B_1$ write $h=g-\gamma\log|\cdot|$, with $g$ the normalized
+        whole-plane GFF. For the clock of $g$, the Brownian multiplicative
+        chaos construction and the Brownian Green kernel identify its quenched
+        occupation measure as $2G_D(y,x)\mu_g(dx)$. Weighting the clock by
+        $|x|^{-\gamma^2}$ gives $\mu_h$ away from $0$. A cutoff at $0$ can be
+        removed even for $y=0$: for some $p\in(0,1)$ and $\kappa>0$, the
+        logarithmically weighted $p$-moment of the regularized inserted mass
+        of $B_a(0)$ is at most $Ca^\kappa(1+\log(1/a))^p$, uniformly in the
+        regularization. This follows from radial Gaussian scaling, dyadic
+        annuli and the regularization core. It gives convergence of the
+        removed clock in probability without an annealed first-moment
+        assumption. The resulting clock is continuous, strictly increasing
+        before exit and has finite quenched mean lifetime; the measure
+        identity holds simultaneously for bounded Borel $f$. Full details and
+        exact citations are in \texttt{docs/campaign/OCCUPATION-PROOF.md}.
+        Thus the unscaled process $Y$ satisfies
+        \[
+          \E\!\left[\int_0^{\tau_D^Y} f(Y_t)\,dt\,\middle|\,\mathcal F\right]
+          =2\int_D G_D(y,x)f(x)\,d\mu_h(x).
+        \]
+        Since $X_t=Y_{m_0t}$, its occupation integral is $1/m_0$ times
+        this expression. Letting first $\eps\to0$ and then $T\to\infty$ gives
+        \[
+        \frac1{m_\eps}\sum_{b\in I_\eps}\Gr{{\eps}}{D}(a_y^{{\eps}},b)f(\eta(b))
+        \longrightarrow c_0\int_D G_D(y,x)f(x)\,d\mu_h(x).
+        \]
+        The other killed Green terms vanish. This also applies to
+        $\mathcal F$-measurable $f$ after fixing the environment. The
+        deterministic subsequence criterion gives convergence in probability.
 	\end{proof}
 	
 	We now use the integral convergence of the Green's function (Lemma~\ref{lemma:integral-convergence-of-greens-function}) together with Lemma \ref{lemma:mu_h_degree-convergence} and tightness to show uniform convergence of the Green's kernel away from its pole. 
@@ -1338,10 +1360,12 @@ When every possible limit is identified, relative compactness implies
 		\end{aligned}
 		\]
 		Combining the previous two indented equations together with Lemma \ref{lemma:integral-convergence-of-greens-function} 
-		shows that $\overline{g}^*(x) = \frac{m_0}{6} \times G_{B_{r}(z)}(y, x)$. Hence, \eqref{eq:green-uniform} holds when $O\Subset B_r(z) \setminus \{y\}$.
+		% CORRECTION [C17]: propagate [C1] in the proof.
+		shows that $\overline{g}^*(x) = \frac{c_0}{6} \times G_{B_{r}(z)}(y, x)$. Hence, \eqref{eq:green-uniform} holds when $O\Subset B_r(z) \setminus \{y\}$.
 		
 		After identifying the limit, we now argue that the convergence occurs up to $\partial B_r(z)$. By a diagonal argument, we may arrange so that 
-		$\overline g^{\eps}$ converges uniformly to $ \frac{m_0}{6} \times G_{B_{r}(z)}(y, x)$ along $\mathcal{E}$ on each compact subset of $B_r(z) \setminus \{y\}$. 
+		% CORRECTION [C17]: propagate [C1] in the proof.
+		$\overline g^{\eps}$ converges uniformly to $ \frac{c_0}{6} \times G_{B_{r}(z)}(y, x)$ along $\mathcal{E}$ on each compact subset of $B_r(z) \setminus \{y\}$.
 		Let $s > 0$ be given and let $r_1 \in (0, r)$ be such that $y$ lies at positive distance from $\cl(\A_{r_1, r}(z))$ and
 		\[
 		\sup_{x \in \cl(\A_{r_1, r}(z))} G_{B_{r}(z)}(y, x) < s/4
@@ -1521,7 +1545,8 @@ are recorded in \texttt{docs/campaign/LEMMA36-REPLACEMENT.md}.
 		and
 		\[
 		\begin{cases}
-		\Delta \overline{f}_2 = m_0 \mu_h \times \psi \quad\mbox{on $B_r(z)$} \\
+		% CORRECTION [C17]: propagate [C1] in the proof.
+		\Delta \overline{f}_2 = c_0 \mu_h \times \psi \quad\mbox{on $B_r(z)$} \\
 		\overline{f}_2  = 0 \quad \mbox{on $\partial B_r(z)$}
 		\end{cases}
 		\]
@@ -1678,7 +1703,8 @@ are recorded in \texttt{docs/campaign/LEMMA36-REPLACEMENT.md}.
 		
 		Let $g^{{\eps}}(\cdot) := {\eps}^{-1} \gr{{\eps}}{B_r(z)}(a^{{\eps}}_x , \cdot)$ so that by Lemma \ref{lemma:uniform-convergence-of-greens-function}, 
 		\[
-		g^{{\eps}}(\cdot) \to (m_0/6) G_{B_r(z)}(x,\cdot)
+		% CORRECTION [C17]: propagate [C1] in the proof.
+		g^{{\eps}}(\cdot) \to (c_0/6) G_{B_r(z)}(x,\cdot)
 		\]
 		uniformly in $\cl(B_r(z)) \setminus B_{\delta}(x)$ 
 		as $\mathcal{E}_1 \ni {\eps} \to 0$.  As $g^{{\eps}}$ is zero on $\partial B_r(z)$, 
@@ -1687,7 +1713,8 @@ are recorded in \texttt{docs/campaign/LEMMA36-REPLACEMENT.md}.
 		\[
 		\begin{aligned}
 		\int_{B_{r}(z) \setminus B_{\delta}(x)} \overline{g}^{{\eps}}(y) d \mu_h(y)
-		&\to \frac{m_0}{6} \int_{B_{r}(z) \setminus B_{\delta}(x)} G_{B_r(z)}(x, y) d \mu_h(y).
+		% CORRECTION [C17]: propagate [C1] in the proof.
+		&\to \frac{c_0}{6} \int_{B_{r}(z) \setminus B_{\delta}(x)} G_{B_r(z)}(x, y) d \mu_h(y).
 		\end{aligned}
 		\]
 		as	$\mathcal{E}_1 \ni {\eps}  \to 0$.
@@ -1696,7 +1723,8 @@ are recorded in \texttt{docs/campaign/LEMMA36-REPLACEMENT.md}.
 		we see that the left-hand-side of the above converges to the same limit as $\overline{\mathfrak q}^{{\eps}, \delta^-}_{B_r(z)}(x)$. 
 		This implies 
 		\begin{equation} \label{eq:asymptotic-away}
-		\overline{\mathfrak q}^{*, \delta^-}_{B_r(z)}(x) = \frac{m_0}{6} \int_{B_{r}(z) \setminus B_{\delta}(x)} G_{B_r(z)}(x, y) d \mu_h(y).
+		% CORRECTION [C17]: propagate [C1] in the proof.
+		\overline{\mathfrak q}^{*, \delta^-}_{B_r(z)}(x) = \frac{c_0}{6} \int_{B_{r}(z) \setminus B_{\delta}(x)} G_{B_r(z)}(x, y) d \mu_h(y).
 		\end{equation}
 		\medskip
 		
@@ -1707,7 +1735,8 @@ are recorded in \texttt{docs/campaign/LEMMA36-REPLACEMENT.md}.
 		\end{equation}
 		Indeed, \eqref{eq:asymptotic-away}, \eqref{eq:asymptotic-small}, and \eqref{eq:asymptotic-equal} together imply that
 		\[
-		\overline{\mathfrak q}^{*}_{B_r(z)}(x) = \frac{m_0}{6} \int_{B_{r}(z)} G_{B_r(z)}(x, y) d \mu_h(y).
+		% CORRECTION [C17]: propagate [C1] in the proof.
+		\overline{\mathfrak q}^{*}_{B_r(z)}(x) = \frac{c_0}{6} \int_{B_{r}(z)} G_{B_r(z)}(x, y) d \mu_h(y).
 		\]
 		Since $\Delta G_{B_r(z)}(x, \cdot) = -\delta_x(\cdot)$ 
 		in $B_r(z)$, the integral above 
@@ -1731,15 +1760,19 @@ are recorded in \texttt{docs/campaign/LEMMA36-REPLACEMENT.md}.
 		By Lemma \ref{lemma:discrete-dirichlet-problem}, $\overline{f}^{{\eps}}_{\delta}$ converges uniformly in $B_r(z)$ to $\overline{f}_{\delta}$ where
 		\[
 		\begin{cases}
-		\Delta \overline{f}_{\delta} = m_0 \phi_{\delta} \times \mu_h \quad \mbox{on $B_r(z)$} \\
+		% CORRECTION [C17]: propagate [C1] in the proof.
+		\Delta \overline{f}_{\delta} = c_0 \phi_{\delta} \times \mu_h \quad \mbox{on $B_r(z)$} \\
 		\overline{f}_{\delta} = 0  \quad \mbox{on $\partial B_r(z)$}.
 		\end{cases}
 		\]
 		We can represent
 		\begin{align*}
-		\overline{f}_{\delta}(\cdot) &= m_0 \int_{B_r(z)}  \phi_{\delta}(y) G_{B_r(z)}(\cdot, y) d \mu_h(y) \\
-		&\leq m_0 \int_{B_{2 \delta}(z)}  G_{B_1}(\cdot, y) d \mu_h(y) \\
-		&\leq m_0 \times \Mrho{B_{2 \delta}(z)}.
+		% CORRECTION [C17]: propagate [C1] in the proof.
+		\overline{f}_{\delta}(\cdot) &= c_0 \int_{B_r(z)}  \phi_{\delta}(y) G_{B_r(z)}(\cdot, y) d \mu_h(y) \\
+		% CORRECTION [C17]: propagate [C1] in the proof.
+		&\leq c_0 \int_{B_{2 \delta}(z)}  G_{B_1}(\cdot, y) d \mu_h(y) \\
+		% CORRECTION [C17]: propagate [C1] in the proof.
+		&\leq c_0 \times \Mrho{B_{2 \delta}(z)}.
 		\end{align*}
 		Hence, by the second half of Lemma \ref{lemma:bounded-exit-time} 
 		there exists $q = q(\gamma) > 0$ such that
@@ -1872,9 +1905,11 @@ are recorded in \texttt{docs/campaign/LEMMA36-REPLACEMENT.md}.
         It then applies to the annulus selected above without a random
         choice of mesh size.
 		By Theorem \ref{theorem:convergence-divisible}, there exists a deterministic subsequence, $\mathcal{E}$, along which a.s.\
-		$\olwteps$  converges uniformly in $B_{\rho}$ to $\frac{m_0}{6} \overline w_t^{B_\rho}$. 
+		% CORRECTION [C17]: propagate [C1] in the proof.
+		$\olwteps$  converges uniformly in $B_{\rho}$ to $\frac{c_0}{6} \overline w_t^{B_\rho}$.
 		Further, by Lemma \ref{lemma:uniform-convergence-of-greens-function} we may arrange so that, a.s.\ along $\mathcal{E}$,
-		$\overline{g}^{{\eps}}$ converges uniformly in $\A_{r, \rho}$ to $\frac{m_0}{6} \times G_{B_\rho}(0 , \cdot)$.  By~\eqref{eq:recall-cluster-def} and the continuity of the two functions involved, there exists $s > 0$ so that
+		% CORRECTION [C17]: propagate [C1] in the proof.
+		$\overline{g}^{{\eps}}$ converges uniformly in $\A_{r, \rho}$ to $\frac{c_0}{6} \times G_{B_\rho}(0 , \cdot)$.  By~\eqref{eq:recall-cluster-def} and the continuity of the two functions involved, there exists $s > 0$ so that
 		\begin{equation} \label{eq:strictly-above-in-interior}
 		\begin{aligned}
 		\overline w_t^{B_\rho}(x) &> - t G_{B_\rho}(0, x) + s  \\
@@ -2052,7 +2087,8 @@ are recorded in \texttt{docs/campaign/LEMMA36-REPLACEMENT.md}.
 		\begin{equation}
 		0 \geq \wteps \geq -(t {\eps}^{-1}) \gr{{\eps}}{B_{\rho}}(0, \cdot) \quad \mbox{on ${\VGeps}(\cl(B_{\rho}))$} , \quad \forall {\eps}>0.
 		\end{equation}
-		This inequality persists in the limit by the uniform convergence of $\wteps$ and the convergence of the rescaled version of ${\eps}^{-1} \gr{\eps}{B_{\rho}}$ to $\frac{m_0}{6} G_{B_{\rho}}$, for $\mathcal{E} \ni {\eps} \to 0$ as given by Lemma \ref{lemma:uniform-convergence-of-greens-function}. 
+		% CORRECTION [C17]: propagate [C1] in the proof.
+		This inequality persists in the limit by the uniform convergence of $\wteps$ and the convergence of the rescaled version of ${\eps}^{-1} \gr{\eps}{B_{\rho}}$ to $\frac{c_0}{6} G_{B_{\rho}}$, for $\mathcal{E} \ni {\eps} \to 0$ as given by Lemma \ref{lemma:uniform-convergence-of-greens-function}.
 		\medskip
 		
 		{\it Step 2: Proof of (2).}  \\
@@ -2114,11 +2150,13 @@ are recorded in \texttt{docs/campaign/LEMMA36-REPLACEMENT.md}.
 		{\it Step 3: Proof of (3).} \\ 
 		We will show that
 		\begin{equation} \label{eq:limit-admissible}
-		\Delta \overline{w}^*_t \leq \frac{m_0}{6} \mu_h  \quad \mbox{on $B_{\rho}$},
+		% CORRECTION [C17]: propagate [C1] in the proof.
+		\Delta \overline{w}^*_t \leq \frac{c_0}{6} \mu_h  \quad \mbox{on $B_{\rho}$},
 		\end{equation}
 		and then 
 		\begin{equation} \label{eq:limit-equal}
-		\Delta \overline{w}^*_t = \frac{m_0}{6} \mu_h  \quad \mbox{on $\{\overline{w}^*_t > -t \frac{m_0}{6} G_{B_{\rho}}\}$},
+		% CORRECTION [C17]: propagate [C1] in the proof.
+		\Delta \overline{w}^*_t = \frac{c_0}{6} \mu_h  \quad \mbox{on $\{\overline{w}^*_t > -t \frac{c_0}{6} G_{B_{\rho}}\}$},
 		\end{equation}
 		appealing to the argument of Step 2. 
 		
@@ -2153,7 +2191,8 @@ are recorded in \texttt{docs/campaign/LEMMA36-REPLACEMENT.md}.
 		
 		We now show \eqref{eq:limit-equal}. Fix rational $r > 0$ and $z \in \Q^2$ so that 
 		\[
-		B_r(z) \subset \{x \in B_{\rho}: \overline{w}^*_t(x) > -t \frac{m_0}{6} G_{B_{\rho}}(x)\}.
+		% CORRECTION [C17]: propagate [C1] in the proof.
+		B_r(z) \subset \{x \in B_{\rho}: \overline{w}^*_t(x) > -t \frac{c_0}{6} G_{B_{\rho}}(x)\}.
 		\]
 		By the continuity and uniform convergence of the two functions involved, for all ${\eps} \in \mathcal{E}$ sufficiently small, we have that 
 		\begin{equation} \label{discrete-cluster-contained}
@@ -2178,11 +2217,13 @@ are recorded in \texttt{docs/campaign/LEMMA36-REPLACEMENT.md}.
 	\[
 	\Lambda_t = \inte\left( \cl \left( \{x \in B_\rho : \overline{w}^{B_\rho}_t > - G_{B_{\rho}}(0, \cdot) \} \right) \right), \quad \forall t \in (0, \TT).
 	\]
-	By (1) and (3) of Lemma \ref{lemma:subsequential-properties} we have that each possible subsequential limit $\frac{6}{m_0} \overline{w}^*_t$ as in Lemma \ref{lemma:subsequential-convergence} is admissible in  
+		% CORRECTION [C17]: propagate [C1] in the proof.
+	By (1) and (3) of Lemma \ref{lemma:subsequential-properties} we have that each possible subsequential limit $\frac{6}{c_0} \overline{w}^*_t$ as in Lemma \ref{lemma:subsequential-convergence} is admissible in
 	\eqref{eq:least-super-solution} 
 	and hence
 	\begin{equation} \label{eq:admissible-supersolution}
-	\frac{m_0}{6} \overline{w}^{B_\rho}_t \leq \overline{w}^*_t, \quad \forall t \in (0, \TT).
+		% CORRECTION [C17]: propagate [C1] in the proof.
+	\frac{c_0}{6} \overline{w}^{B_\rho}_t \leq \overline{w}^*_t, \quad \forall t \in (0, \TT).
 	\end{equation}
 	For the other direction, we note that by part (c) of Theorem~\ref{theorem:harmonic-balls}, we have, for each $t \in (0,\TT)$, 
 	\[
@@ -2190,32 +2231,39 @@ are recorded in \texttt{docs/campaign/LEMMA36-REPLACEMENT.md}.
 	\]
 	and by (3) of Lemma~\ref{lemma:subsequential-properties}
 	\[
-	\Delta \overline{w}^*_t = \frac{m_0}{6} \mu_h \quad \mbox{on}  \quad \{x \in B_{\rho} : \overline{w}^*_t(x) > -t \frac{m_0}{6} G_{B_{\rho}}(0, x)\}
+		% CORRECTION [C17]: propagate [C1] in the proof.
+	\Delta \overline{w}^*_t = \frac{c_0}{6} \mu_h \quad \mbox{on}  \quad \{x \in B_{\rho} : \overline{w}^*_t(x) > -t \frac{c_0}{6} G_{B_{\rho}}(0, x)\}
 	\]
 	and by~\eqref{eq:admissible-supersolution}, 
 	\[
-	\Lambda_t \subset   \inte \left( \cl \left( \{x \in B_\rho : \overline{w}^*_t > - \frac{m_0}{6} G_{B_{\rho}}(0, \cdot) \} \right) \right), \quad \forall t \in (0, \TT).
+		% CORRECTION [C17]: propagate [C1] in the proof.
+	\Lambda_t \subset   \inte \left( \cl \left( \{x \in B_\rho : \overline{w}^*_t > - \frac{c_0}{6} G_{B_{\rho}}(0, \cdot) \} \right) \right), \quad \forall t \in (0, \TT).
 	\]
 	Consequently, by the above three displays we have for each $t \in (0,\TT)$, (in the weak sense)
 	\[
-	\Delta(\overline{w}^*_t - \frac{m_0}{6} \overline{w}_t^{B_{\rho}}) = 0 \qquad \mbox{on $\Lambda_t$} 
+		% CORRECTION [C17]: propagate [C1] in the proof.
+	\Delta(\overline{w}^*_t - \frac{c_0}{6} \overline{w}_t^{B_{\rho}}) = 0 \qquad \mbox{on $\Lambda_t$}
 	\]
 	and 
 	\[
-	\Delta(\overline{w}^*_t - \frac{m_0}{6} \overline{w}_t^{B_{\rho}}) = \Delta \overline{w}^*_t \geq 0 \qquad \mbox{on $B_{\rho} \setminus \Lambda_t$}  \, 
+		% CORRECTION [C17]: propagate [C1] in the proof.
+	\Delta(\overline{w}^*_t - \frac{c_0}{6} \overline{w}_t^{B_{\rho}}) = \Delta \overline{w}^*_t \geq 0 \qquad \mbox{on $B_{\rho} \setminus \Lambda_t$}  \,
 	\]
 	with the last inequality coming from (2) of Lemma~\ref{lemma:subsequential-properties}.
 	
 	Therefore, for each $t \in (0,\TT)$,
 	\[
 	\begin{cases}
-	\Delta(\overline{w}^*_t - \frac{m_0}{6} \overline{w}^{B_\rho}_t) \geq 0 \quad \mbox{on $B_\rho$} \\
-	\overline{w}^*_t - \frac{m_0}{6} \overline{w}^{B_\rho}_t = 0 \quad \mbox{on $\partial B_\rho$} 
+		% CORRECTION [C17]: propagate [C1] in the proof.
+	\Delta(\overline{w}^*_t - \frac{c_0}{6} \overline{w}^{B_\rho}_t) \geq 0 \quad \mbox{on $B_\rho$} \\
+		% CORRECTION [C17]: propagate [C1] in the proof.
+	\overline{w}^*_t - \frac{c_0}{6} \overline{w}^{B_\rho}_t = 0 \quad \mbox{on $\partial B_\rho$}
 	\end{cases}
 	\]
 	and hence by the maximum principle in the continuum, 
 	\begin{equation} \label{eq:admissible-subsolution}
-	\frac{m_0}{6} \overline{w}^{B_\rho}_t \geq \overline{w}^*_t
+		% CORRECTION [C17]: propagate [C1] in the proof.
+	\frac{c_0}{6} \overline{w}^{B_\rho}_t \geq \overline{w}^*_t
 	\end{equation}
     which, together with \eqref{eq:admissible-supersolution} shows that $\overline{w}^*_t = \overline{w}^{B_\rho}_t$.
     % CORRECTION [C11]: conclude on the deterministic sequence, then in probability.
