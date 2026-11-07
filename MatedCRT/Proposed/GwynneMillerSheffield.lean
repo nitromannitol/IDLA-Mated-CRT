@@ -34,3 +34,29 @@ def GMSAnnulusDisconnectionStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
       ENNReal.ofReal (C * ε ^ α)
 
 end MatedCRT
+
+namespace MatedCRT
+
+open MeasureTheory Set
+
+/-- Gwynne, Miller and Sheffield, *Harmonic functions on mated-CRT maps*,
+arXiv:1807.07511v3, Lemma 3.10, equation (3.34), p. 31 (itself attributed
+to GMS18, Lemma 3.12). This is the restriction to locally finite multigraphs
+whose vertex set is `ℤ`, matching the walk used in this repository. Assume
+that the graph is connected and the walk from every vertex almost surely hits
+`A` in finite time. For `x, y ∉ A`, the total variation distance of the two
+first-hit laws is bounded by the probability that the walk from `x` fails to
+disconnect `y` from `A` before hitting `A`. The pointwise set inequality is
+equivalent to the total variation bound for probability laws on `ℤ`. -/
+def GMSFirstHitComparisonStmt : Prop :=
+  ∀ m : ℤ → ℤ → ℕ,
+    (∀ a b, m a b = m b a) → (∀ a, m a a = 0) →
+    (∀ a, {b | m a b ≠ 0}.Finite) →
+    (adjGraph m).Connected →
+    ∀ A : Set ℤ, (∀ a, ∀ᵐ w ∂srwLaw m a, vHitTime A w < ⊤) →
+    ∀ x y : ℤ, x ∉ A → y ∉ A → ∀ B : Set ℤ,
+      |(srwLaw m x {w | vExitPosition Aᶜ w ∈ B}).toReal -
+        (srwLaw m y {w | vExitPosition Aᶜ w ∈ B}).toReal| ≤
+      (srwLaw m x {w | ¬ walkDisconnectsBeforeHit m A y w}).toReal
+
+end MatedCRT
