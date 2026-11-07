@@ -196,4 +196,34 @@ theorem stdPlanarGaussian_riesz_moment_lt_top (a : ℝ) (ha : 0 < a) (ha2 : a < 
   rw [← lintegral_add_compl K (Metric.isOpen_ball.measurableSet)]
   exact ENNReal.add_lt_top.mpr ⟨hlocal', hout⟩
 
+
+/-- Distinct-time planar Brownian increments have finite expected Riesz
+energy for every order strictly between zero and two. -/
+theorem planarBrownianMotion_expected_increment_energy_lt_top (z : ℂ)
+    (s t : ℝ≥0) (hst : s ≠ t) (a : ℝ) (ha : 0 < a) (ha2 : a < 2) :
+    (∫⁻ b, rieszEnergyKernel a (b t) (b s) ∂(planarBrownianMotion z)) < ⊤ := by
+  rw [planarBrownianMotion_expected_increment_energy_any_order z s t a]
+  have ht : 0 < max s t - min s t := by
+    apply tsub_pos_iff_lt.mpr
+    exact min_lt_max.mpr hst
+  rw [planarGaussian_rieszEnergy_scale a ha _ ht]
+  exact ENNReal.mul_lt_top (by finiteness) (stdPlanarGaussian_riesz_moment_lt_top a ha ha2)
+
+/-- A one-dimensional Riesz power of order below one is locally integrable. -/
+theorem integrableOn_real_norm_rpow (a R : ℝ) (ha : a < 1) :
+    IntegrableOn (fun w : ℝ => ‖w‖ ^ (-a)) (Metric.ball 0 R) volume := by
+  have hm : Measurable (fun w : ℝ => ‖w‖ ^ (-a)) := by
+    simp_rw [Real.rpow_def_of_nonneg (norm_nonneg _)]
+    have hz : MeasurableSet {w : ℝ | ‖w‖ = 0} :=
+      (measurableSet_singleton (0 : ℝ)).preimage (by fun_prop)
+    apply Measurable.ite hz
+    · split_ifs <;> fun_prop
+    · fun_prop
+  apply integrableOn_ball_of_norm_le_rpow (μ := volume) (C := 1) (α := a)
+    (by norm_num : 1 ≤ Module.finrank ℝ ℝ)
+  · simpa using ha
+  · filter_upwards with w
+    simp only [Real.norm_eq_abs, one_mul, abs_of_nonneg (Real.rpow_nonneg (abs_nonneg w) _), le_refl]
+  · exact hm.aestronglyMeasurable
+
 end MatedCRT
