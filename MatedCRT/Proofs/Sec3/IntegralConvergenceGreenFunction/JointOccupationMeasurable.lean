@@ -5,8 +5,8 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.OccupationDensity
 
 namespace MatedCRT
 
-open MeasureTheory HarmonicBalls MarkovProcess Set
-open scoped NNReal
+open MeasureTheory HarmonicBalls MarkovProcess Set Filter Topology
+open scoped NNReal ENNReal
 
 /-- A jointly measurable circle field gives a jointly measurable regularized
 weighted occupation integral in the field and Brownian path variables. -/
@@ -55,5 +55,34 @@ theorem measurable_gmcApprox_occupation
   intro t ht
   ring
 
+/-- If a sequence of jointly measurable regularized clocks converges
+pointwise to a continuous strictly increasing clock almost surely, the
+resulting time-changed occupation integral is jointly measurable almost
+everywhere. -/
+theorem aestronglyMeasurable_clock_occupation_of_approx
+    {Ω : Type*} [MeasurableSpace Ω] (Q : Measure (Ω × ContinuousPath ℂ))
+    (γ : ℝ) (ε : ℕ → ℝ) (H : Ω → ℝ → ℂ → ℝ)
+    (hεpos : ∀ n, 0 < ε n)
+    (hH : ∀ n, Measurable (fun p : Ω × ℂ => H p.1 (ε n) p.2))
+    (hcont : ∀ n ω, Continuous (H ω (ε n)))
+    (G : (Ω × ContinuousPath ℂ) → ℝ≥0 → ℝ)
+    (hG : ∀ᵐ p ∂Q, G p 0 = 0 ∧ Continuous (G p) ∧ StrictMono (G p) ∧
+      ∀ t, Tendsto (fun n => lqgClockApprox γ (H p.1) (ε n) p.2 t)
+        atTop (𝓝 (G p t)))
+    (T : ℝ≥0) (f : ℂ → ℝ) (hf : Continuous f) (C : ℝ)
+    (hbound : ∀ z, ‖f z‖ ≤ C) :
+    AEStronglyMeasurable (fun p : Ω × ContinuousPath ℂ =>
+      ∫ s in (0 : ℝ)..G p T, f (p.2 (clockInverse (G p) s.toNNReal))) Q := by
+  apply aestronglyMeasurable_of_tendsto_ae atTop
+    (f := fun n p => ∫ t in (0 : ℝ)..(T : ℝ), f (p.2 t.toNNReal) *
+      (ε n ^ (γ ^ 2 / 2) * Real.exp (γ * H p.1 (ε n) (p.2 t.toNNReal))))
+  · intro n
+    exact (measurable_lqgClockApprox_weighted_occupation γ (ε n)
+      (fun ω => H ω (ε n)) (hH n) T f hf.measurable).aestronglyMeasurable
+  · filter_upwards [hG] with p hp
+    exact tendsto_lqgClockApprox_weighted_occupation γ ε (H p.1) p.2 hεpos
+      (fun n => hcont n p.1) (G p) hp.1 hp.2.1 hp.2.2.1 hp.2.2.2 T f hf C hbound
+
 end MatedCRT
+
 
