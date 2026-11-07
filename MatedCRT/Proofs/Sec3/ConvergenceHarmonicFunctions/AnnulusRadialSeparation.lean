@@ -59,4 +59,31 @@ theorem exists_outward_annulus_segment_avoiding_disk
     have htlo : inner ≤ t := ht.1
     linarith
 
+/-- An outward radial segment is compact and preconnected. -/
+theorem outward_radial_segment_compact_preconnected (x e : ℂ) (inner outer : ℝ) :
+    IsCompact ((fun t : ℝ => x + t • e) '' Icc inner outer) ∧
+      IsPreconnected ((fun t : ℝ => x + t • e) '' Icc inner outer) := by
+  have hcontinuous : Continuous (fun t : ℝ => x + t • e) :=
+    continuous_const.add (continuous_id.smul continuous_const)
+  exact ⟨isCompact_Icc.image hcontinuous, isPreconnected_Icc.image _ hcontinuous.continuousOn⟩
+
+/-- A cell near a segment remains disjoint from a disk when the segment's
+clearance exceeds the sum of the proximity and cell-diameter bounds. -/
+theorem cell_not_mem_cellVertices_ball_of_near_clear_segment
+    {ε : ℝ} {η : ℝ → ℂ} {a : ℤ} {z x e : ℂ}
+    {radius inner outer margin buffer diameter : ℝ}
+    (hclear : ∀ t ∈ Icc inner outer, ∀ y ∈ ball z radius,
+      margin < dist (x + t • e) y)
+    (hnear : ∃ t ∈ Icc inner outer, ∃ q ∈ cell ε η a,
+      dist (x + t • e) q ≤ buffer)
+    (hdiam : ∀ u ∈ cell ε η a, ∀ v ∈ cell ε η a, dist u v ≤ diameter)
+    (hmargin : buffer + diameter ≤ margin) :
+    a ∉ cellVertices ε η (ball z radius) := by
+  rintro ⟨y, hycell, hyball⟩
+  obtain ⟨t, ht, q, hq, hdist⟩ := hnear
+  have hsep := hclear t ht y hyball
+  have htriangle := dist_triangle (x + t • e) q y
+  have hcell := hdiam q hq y hycell
+  linarith
+
 end MatedCRT
