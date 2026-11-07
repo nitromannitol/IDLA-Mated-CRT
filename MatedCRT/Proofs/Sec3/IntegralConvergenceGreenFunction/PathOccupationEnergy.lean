@@ -52,6 +52,25 @@ theorem pathOccupationMeasure_kernel_energy {E : Type*} [MeasurableSpace E]
   intro s
   exact lintegral_map (hk.comp (measurable_const.prodMk measurable_id)) hb
 
+/-- The Riesz energy kernel is measurable, including its diagonal value. -/
+theorem measurable_rieszEnergyKernel {E : Type*} [MetricSpace E] [MeasurableSpace E]
+    [BorelSpace E] [SecondCountableTopology E] (a : ℝ) :
+    Measurable (fun p : E × E => rieszEnergyKernel a p.1 p.2) := by
+  have hd : Measurable (fun p : E × E => dist p.1 p.2) := by fun_prop
+  have hz : MeasurableSet {p : E × E | dist p.1 p.2 = 0} :=
+    (measurableSet_singleton (0 : ℝ)).preimage hd
+  have hp : Measurable (fun p : E × E => dist p.1 p.2 ^ (-a)) := by
+    simp_rw [Real.rpow_def_of_nonneg dist_nonneg]
+    apply Measurable.ite hz
+    · split_ifs <;> fun_prop
+    · fun_prop
+  unfold rieszEnergyKernel
+  by_cases ha : 0 < a
+  · simp only [ha, and_true]
+    exact Measurable.ite hz measurable_const hp.ennreal_ofReal
+  · simp only [ha, and_false, ↓reduceIte]
+    exact hp.ennreal_ofReal
+
 /-- Finite time-integrated Riesz energy along a path yields a finite-dimensional
 energy bound for its occupation measure. -/
 theorem pathOccupationMeasure_finiteDimensionalEnergy {E : Type*}
@@ -66,5 +85,68 @@ theorem pathOccupationMeasure_finiteDimensionalEnergy {E : Type*}
   intro δ hδ
   rw [pathOccupationMeasure_kernel_energy hb T (hkernel δ hδ)]
   exact henergy δ hδ
+
+/-- On a second-countable metric space, the time-integrated Riesz-energy
+bound alone implies finite-dimensional energy of the occupation measure. -/
+theorem pathOccupationMeasure_finiteDimensionalEnergy_of_increment_energy {E : Type*}
+    [MetricSpace E] [MeasurableSpace E] [BorelSpace E] [SecondCountableTopology E]
+    {b : ℝ → E} (hb : Measurable b) (T d : ℝ)
+    (henergy : ∀ δ : ℝ, 0 < δ →
+      (∫⁻ s in Icc (0 : ℝ) T, ∫⁻ t in Icc (0 : ℝ) T,
+        rieszEnergyKernel (d - δ) (b s) (b t)) < ⊤) :
+    HasFiniteDimensionalEnergy (pathOccupationMeasure b T) d :=
+  pathOccupationMeasure_finiteDimensionalEnergy hb T d
+    (fun δ _ => measurable_rieszEnergyKernel (d - δ)) henergy
+
+/-- A finite expected increment energy implies finite pathwise energy almost
+surely, by Tonelli's theorem. -/
+theorem ae_finite_increment_energy_of_expectation
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [SFinite P]
+    (F : Ω → ℝ → ℝ → ℝ≥0∞) (T : ℝ)
+    (hF : Measurable (fun p : Ω × ℝ × ℝ => F p.1 p.2.1 p.2.2))
+    (hfinite : (∫⁻ s in Icc (0 : ℝ) T, ∫⁻ t in Icc (0 : ℝ) T,
+      ∫⁻ ω, F ω s t ∂P) < ⊤) :
+    ∀ᵐ ω ∂P, (∫⁻ s in Icc (0 : ℝ) T, ∫⁻ t in Icc (0 : ℝ) T,
+      F ω s t) < ⊤ := by
+  let ν := volume.restrict (Icc (0 : ℝ) T)
+  have h₁ : Measurable (fun p : (Ω × ℝ) × ℝ => F p.1.1 p.1.2 p.2) := by
+    exact hF.comp (show Measurable (fun p : (Ω × ℝ) × ℝ => (p.1.1, p.1.2, p.2)) by fun_prop)
+  have h₂ : Measurable (fun p : Ω × ℝ => ∫⁻ t, F p.1 p.2 t ∂ν) :=
+    h₁.lintegral_prod_right'
+  have h₃ : Measurable (fun ω => ∫⁻ s, ∫⁻ t, F ω s t ∂ν ∂ν) :=
+    h₂.lintegral_prod_right'
+  apply ae_lt_top h₃
+  have heq : (∫⁻ ω, ∫⁻ s, ∫⁻ t, F ω s t ∂ν ∂ν ∂P) =
+      ∫⁻ s, ∫⁻ t, ∫⁻ ω, F ω s t ∂P ∂ν ∂ν := by
+    rw [lintegral_lintegral_swap h₂.aemeasurable]
+    apply lintegral_congr
+    intro s
+    apply lintegral_lintegral_swap
+    exact (hF.comp (show Measurable (fun p : Ω × ℝ => (p.1, s, p.2)) by fun_prop)).aemeasurable
+  rw [heq]
+  exact hfinite.ne
+
+/-- A finite time integral of expected Riesz increments gives almost-sure
+finite energy for the occupation measure at the same exponent. -/
+theorem ae_pathOccupationMeasure_riesz_energy_lt_top
+    {Ω E : Type*} [MeasurableSpace Ω] (P : Measure Ω) [SFinite P]
+    [MetricSpace E] [MeasurableSpace E] [BorelSpace E] [SecondCountableTopology E]
+    (b : Ω → ℝ → E) (hb : Measurable (fun p : Ω × ℝ => b p.1 p.2))
+    (T a : ℝ)
+    (hfinite : (∫⁻ s in Icc (0 : ℝ) T, ∫⁻ t in Icc (0 : ℝ) T,
+      ∫⁻ ω, rieszEnergyKernel a (b ω s) (b ω t) ∂P) < ⊤) :
+    ∀ᵐ ω ∂P, (∫⁻ x, ∫⁻ y, rieszEnergyKernel a x y
+      ∂(pathOccupationMeasure (b ω) T) ∂(pathOccupationMeasure (b ω) T)) < ⊤ := by
+  have hm : Measurable (fun p : Ω × ℝ × ℝ =>
+      rieszEnergyKernel a (b p.1 p.2.1) (b p.1 p.2.2)) := by
+    change Measurable ((fun p : E × E => rieszEnergyKernel a p.1 p.2) ∘
+      (fun p : Ω × ℝ × ℝ => (b p.1 p.2.1, b p.1 p.2.2)))
+    apply (measurable_rieszEnergyKernel a).comp
+    exact (hb.comp (show Measurable (fun p : Ω × ℝ × ℝ => (p.1, p.2.1)) by fun_prop)).prodMk
+      (hb.comp (show Measurable (fun p : Ω × ℝ × ℝ => (p.1, p.2.2)) by fun_prop))
+  filter_upwards [ae_finite_increment_energy_of_expectation P _ T hm hfinite] with ω hω
+  have hbω : Measurable (b ω) := hb.comp (show Measurable (fun t : ℝ => (ω, t)) by fun_prop)
+  rw [pathOccupationMeasure_kernel_energy hbω T (measurable_rieszEnergyKernel a)]
+  exact hω
 
 end MatedCRT
