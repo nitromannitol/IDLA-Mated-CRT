@@ -1,6 +1,6 @@
 import MatedCRT.Proofs.Sandpile.Connectivity
 
-/-! The cluster identity, corrected paper equation `eq:cluster-definition`, line 1721. -/
+/-! The cluster identity, corrected paper equation `eq:cluster-definition`, line 1812. -/
 
 namespace MatedCRT.Sandpile
 
@@ -16,7 +16,7 @@ theorem cluster_eq_closure_of_one_lt {m : ℤ → ℤ → ℕ} {M : ℝ}
   rw [cluster_eq_insert_closure hlf hsymm hloop hdeg hne (by linarith : 0 < M)]
   exact Set.insert_eq_of_mem (Or.inl (origin_mem_odometer_support hlf hne (hdeg 0) hM))
 
-/-- Equation `eq:cluster-and-lambdat` (paper line 1874), conditional on
+/-- Equation `eq:cluster-and-lambdat` (paper line 1966), conditional on
 agreement of the stopped and global positive odometer sets. -/
 theorem cluster_eq_closure_of_consistency {m : ℤ → ℤ → ℕ} {M : ℝ} {Λ : Set ℤ}
     (hlf : IsLocallyFiniteMult m) (hsymm : ∀ a b, m a b = m b a)
@@ -28,7 +28,7 @@ theorem cluster_eq_closure_of_consistency {m : ℤ → ℤ → ℕ} {M : ℝ} {�
   exact cluster_eq_closure_of_one_lt hlf hsymm hloop hdeg hne hM
 
 /-- Equation `eq:cluster-definition` at the paper's mass `t / ε`, for `ε < t`
-(corrected paper lines 1719–1724). -/
+(corrected paper lines 1809–1815). -/
 theorem cluster_eq_closure_of_mesh_lt_time {m : ℤ → ℤ → ℕ} {ε t : ℝ}
     (hlf : IsLocallyFiniteMult m) (hsymm : ∀ a b, m a b = m b a)
     (hloop : ∀ a, m a a = 0) (hdeg : ∀ a, 0 < mdeg m a)

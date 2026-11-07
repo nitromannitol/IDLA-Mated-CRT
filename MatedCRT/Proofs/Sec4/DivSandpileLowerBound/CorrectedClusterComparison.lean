@@ -23,7 +23,7 @@ theorem matedDiscreteCluster_subset_globalOdometerSupport
   exact ne_of_gt hp
 
 /-- Corrected equation `eq:cluster-and-lambdat`, one-sided without the
-    additional stopped/global consistency hypothesis (paper lines 1870–1874). -/
+    additional stopped/global consistency hypothesis (paper lines 1964–1968). -/
 theorem matedDiscreteCluster_closure_subset_sandpileCluster
     {m : ℤ → ℤ → ℕ} {ε ρ t : ℝ} {η : ℝ → ℂ}
     (hlf : IsLocallyFiniteMult m) (hsymm : ∀ a b, m a b = m b a)
