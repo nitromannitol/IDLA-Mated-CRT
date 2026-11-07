@@ -61,4 +61,48 @@ theorem planarBrownianMotion_expected_increment_energy_any_order (z : ℂ)
     simpa [max_eq_left hts, min_eq_right hts] using
       planarBrownianMotion_expected_increment_energy z t s hts a
 
+/-- A positive spatial dilation scales the Riesz kernel by the inverse
+power of the dilation factor. -/
+theorem rieszEnergyKernel_complex_positive_scale (a r : ℝ) (ha : 0 < a)
+    (hr : 0 < r) (w : ℂ) :
+    rieszEnergyKernel a ((r : ℂ) * w) 0 =
+      ENNReal.ofReal (r ^ (-a)) * rieszEnergyKernel a w 0 := by
+  by_cases hw : w = 0
+  · subst w
+    have hp : ENNReal.ofReal (r ^ (-a)) ≠ 0 :=
+      ne_of_gt (ENNReal.ofReal_pos.mpr (Real.rpow_pos_of_pos hr _))
+    simp [rieszEnergyKernel, ha, hp]
+  · have hz : (r : ℂ) * w ≠ 0 := mul_ne_zero (Complex.ofReal_ne_zero.mpr hr.ne') hw
+    simp only [rieszEnergyKernel, dist_eq_norm, sub_zero, norm_eq_zero, hw, hz,
+      false_and, ↓reduceIte]
+    rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hr,
+      Real.mul_rpow hr.le (norm_nonneg w), ENNReal.ofReal_mul (Real.rpow_nonneg hr.le _)]
+
+/-- Positive-time planar Gaussian Riesz moments scale by the inverse power
+of the square root of the variance. -/
+theorem planarGaussian_rieszEnergy_scale (a : ℝ) (ha : 0 < a)
+    (t : ℝ≥0) (ht : 0 < t) :
+    (∫⁻ w, rieszEnergyKernel a w 0 ∂(planarGaussian 0 t)) =
+      ENNReal.ofReal ((Real.sqrt t) ^ (-a)) *
+        ∫⁻ w, rieszEnergyKernel a w 0 ∂stdPlanarGaussian := by
+  have hk : Measurable (fun w : ℂ => rieszEnergyKernel a w 0) :=
+    (measurable_rieszEnergyKernel a).comp (measurable_id.prodMk measurable_const)
+  have hs : 0 < Real.sqrt t := Real.sqrt_pos.mpr (by exact_mod_cast ht)
+  rw [planarGaussian_eq_map_add_sqrt_mul 0 t, lintegral_map hk (by fun_prop)]
+  simp_rw [zero_add, rieszEnergyKernel_complex_positive_scale a _ ha hs]
+  exact lintegral_const_mul _ hk
+
+/-- At distinct ordered times, expected Brownian increment energy has the
+power-law factor `(t-s)^(-a/2)`. -/
+theorem planarBrownianMotion_expected_increment_energy_scale (z : ℂ)
+    (s t : ℝ≥0) (hst : s < t) (a : ℝ) (ha : 0 < a) :
+    (∫⁻ b, rieszEnergyKernel a (b t) (b s) ∂(planarBrownianMotion z)) =
+      ENNReal.ofReal (((t - s : ℝ≥0) : ℝ) ^ (-a / 2)) *
+        ∫⁻ w, rieszEnergyKernel a w 0 ∂stdPlanarGaussian := by
+  rw [planarBrownianMotion_expected_increment_energy z s t hst.le a,
+    planarGaussian_rieszEnergy_scale a ha (t - s) (tsub_pos_iff_lt.mpr hst),
+    Real.sqrt_eq_rpow, ← Real.rpow_mul (NNReal.coe_nonneg _)]
+  congr 2
+  ring
+
 end MatedCRT
