@@ -303,4 +303,52 @@ theorem pathOccupationMeasure_ae_bounded {E : Type*} [MetricSpace E]
   filter_upwards [hae] with y hy
   exact hR hx hy
 
+/-- For continuous paths, countably many expected increment energy estimates
+on integer intervals imply finite-dimensional occupation energy simultaneously
+at every finite, possibly path-dependent horizon. -/
+theorem ae_pathOccupationMeasure_finiteDimensionalEnergy_of_expected_increments
+    {Ω E : Type*} [MeasurableSpace Ω] (P : Measure Ω) [SFinite P]
+    [MetricSpace E] [MeasurableSpace E] [BorelSpace E] [SecondCountableTopology E]
+    (b : Ω → ℝ → E) (hb : Measurable (fun p : Ω × ℝ => b p.1 p.2))
+    (hcontinuous : ∀ᵐ ω ∂P, Continuous (b ω)) (d : ℝ) (q : ℕ → ℝ)
+    (hcofinal : ∀ a : ℝ, 0 ≤ a → a < d → ∃ n, a ≤ q n)
+    (hfinite : ∀ n k : ℕ,
+      (∫⁻ s in Icc (0 : ℝ) (n : ℝ), ∫⁻ t in Icc (0 : ℝ) (n : ℝ),
+        ∫⁻ ω, rieszEnergyKernel (q k) (b ω s) (b ω t) ∂P) < ⊤) :
+    ∀ᵐ ω ∂P, ∀ T : ℝ,
+      HasFiniteDimensionalEnergy (pathOccupationMeasure (b ω) T) d := by
+  apply ae_pathOccupationMeasure_finiteDimensionalEnergy_all_horizons P b
+    (hcontinuous.mono fun _ h => h.measurable) d
+  intro n
+  apply ae_hasFiniteDimensionalEnergy_of_countable_cofinal P
+    (fun ω => pathOccupationMeasure (b ω) n) d q hcofinal
+  · intro k
+    exact ae_pathOccupationMeasure_riesz_energy_lt_top P b hb n (q k) (hfinite n k)
+  · filter_upwards [hcontinuous] with ω hω
+    exact pathOccupationMeasure_ae_bounded hω n
+
+/-- The exponents `2 - 1/(k+1)` are cofinal below two. -/
+theorem two_sub_reciprocal_cofinal (a : ℝ) (ha : a < 2) :
+    ∃ k : ℕ, a ≤ 2 - 1 / ((k : ℝ) + 1) := by
+  obtain ⟨k, hk⟩ := exists_nat_one_div_lt (sub_pos.mpr ha)
+  exact ⟨k, by linarith⟩
+
+/-- The countable exponents approaching two suffice for the finite-dimensional
+energy condition of each finite-time occupation measure. -/
+theorem ae_pathOccupationMeasure_two_energy_of_expected_increments
+    {Ω E : Type*} [MeasurableSpace Ω] (P : Measure Ω) [SFinite P]
+    [MetricSpace E] [MeasurableSpace E] [BorelSpace E] [SecondCountableTopology E]
+    (b : Ω → ℝ → E) (hb : Measurable (fun p : Ω × ℝ => b p.1 p.2))
+    (hcontinuous : ∀ᵐ ω ∂P, Continuous (b ω))
+    (hfinite : ∀ n k : ℕ,
+      (∫⁻ s in Icc (0 : ℝ) (n : ℝ), ∫⁻ t in Icc (0 : ℝ) (n : ℝ),
+        ∫⁻ ω, rieszEnergyKernel (2 - 1 / ((k : ℝ) + 1)) (b ω s) (b ω t) ∂P) < ⊤) :
+    ∀ᵐ ω ∂P, ∀ T : ℝ,
+      HasFiniteDimensionalEnergy (pathOccupationMeasure (b ω) T) 2 := by
+  apply ae_pathOccupationMeasure_finiteDimensionalEnergy_of_expected_increments
+    P b hb hcontinuous 2 (fun k => 2 - 1 / ((k : ℝ) + 1))
+  · intro a _ ha
+    exact two_sub_reciprocal_cofinal a ha
+  · exact hfinite
+
 end MatedCRT
