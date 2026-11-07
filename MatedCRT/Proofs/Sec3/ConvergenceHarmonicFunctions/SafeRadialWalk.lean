@@ -81,4 +81,66 @@ theorem MatedCRTEnv.IsValid.ae_radial_walk_of_cell_size
   obtain ⟨q, hqK, hqcell⟩ := hi
   exact hsize i ⟨q, hqcell, hK hqK⟩
 
+/-- Small cells provide a separating walk between the quarter-radius and
+outer circles, provided the outward ray clears the disk to be avoided. -/
+theorem MatedCRTEnv.IsValid.ae_annulus_separating_walk_of_cell_size
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) :
+    ∀ᵐ ω ∂S.P, ∀ (ε : ℝ), 0 < ε → ∀ (z x : ℂ)
+      (r radius margin bound ρ : ℝ), 0 < r →
+      radius - dist z x + margin < r / 4 → bound ≤ margin →
+      Metric.ball z (2 * r) ⊆ Metric.ball 0 ρ →
+      (∀ i, (cell ε (S.η ω) i ∩ Metric.ball 0 ρ).Nonempty →
+        Metric.diam (cell ε (S.η ω) i) ≤ bound) →
+      ∃ y b, y ∈ cellVertices ε (S.η ω) (Metric.sphere z (r / 4)) ∧
+        b ∈ cellVertices ε (S.η ω) (Metric.sphere z r) ∧
+        ∃ w : (adjGraph (S.mult ε ω)).Walk y b,
+          ∀ v ∈ w.support, v ∉ cellVertices ε (S.η ω) (Metric.ball x radius) := by
+  filter_upwards [hS.ae_radial_walk_of_cell_size, hS.isAreaParametrized] with ω hwalk harea
+  intro ε hε z x r radius margin bound ρ hr hclear hbound hball hsize
+  obtain ⟨e, he, hfirst, hlast, hray, hsep⟩ :=
+    exists_outward_annulus_segment_avoiding_disk x z radius
+      (radius - dist z x) margin (r / 4) r le_rfl hclear (by positivity) (by linarith)
+  obtain ⟨s, hs⟩ := harea.2.2.1 (z + (r / 4) • e)
+  obtain ⟨t, ht⟩ := harea.2.2.1 (z + r • e)
+  let y : ℤ := ⌈s / ε⌉
+  let b : ℤ := ⌈t / ε⌉
+  have hy : z + (r / 4) • e ∈ cell ε (S.η ω) y := by
+    rw [← hs]
+    exact Tightness.mem_cell_ceil hε s
+  have hb : z + r • e ∈ cell ε (S.η ω) b := by
+    rw [← ht]
+    exact Tightness.mem_cell_ceil hε t
+  have hseg : ((fun t : ℝ => z + t • e) '' Icc (r / 4) r) ⊆ Metric.ball 0 ρ := by
+    rintro q ⟨u, hu, rfl⟩
+    apply hball
+    apply Metric.mem_ball.mpr
+    have h := hray u hu
+    linarith [hu.2]
+  refine ⟨y, b, ⟨_, hy, hfirst⟩, ⟨_, hb, hlast⟩, ?_⟩
+  apply hwalk ε hε x z e radius (r / 4) r margin bound ρ hseg hsize hsep hbound y b
+  · exact ⟨_, ⟨r / 4, ⟨le_rfl, by linarith⟩, rfl⟩, hy⟩
+  · exact ⟨_, ⟨r, ⟨by linarith, le_rfl⟩, rfl⟩, hb⟩
+
+/-- The separating-walk hypothesis for a family of nested annuli follows
+simultaneously from the cell-size event and their geometric clearance. -/
+theorem MatedCRTEnv.IsValid.ae_nested_annulus_separating_walks_of_cell_size
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) :
+    ∀ᵐ ω ∂S.P, ∀ (ε : ℝ), 0 < ε → ∀ (z x : ℂ)
+      (r radius : ℕ → ℝ) (n : ℕ) (margin bound ρ : ℝ),
+      bound ≤ margin →
+      (∀ i ≤ n, 0 < r i ∧ radius i - dist z x + margin < r i / 4 ∧
+        Metric.ball z (2 * r i) ⊆ Metric.ball 0 ρ) →
+      (∀ i, (cell ε (S.η ω) i ∩ Metric.ball 0 ρ).Nonempty →
+        Metric.diam (cell ε (S.η ω) i) ≤ bound) →
+      ∀ i ≤ n, ∃ y b, y ∈ cellVertices ε (S.η ω) (Metric.sphere z (r i / 4)) ∧
+        b ∈ cellVertices ε (S.η ω) (Metric.sphere z (r i)) ∧
+        ∃ w : (adjGraph (S.mult ε ω)).Walk y b,
+          ∀ v ∈ w.support, v ∉ cellVertices ε (S.η ω) (Metric.ball x (radius i)) := by
+  filter_upwards [hS.ae_annulus_separating_walk_of_cell_size] with ω hwalk
+  intro ε hε z x r radius n margin bound ρ hbound hgeometry hsize i hi
+  obtain ⟨hr, hclear, hball⟩ := hgeometry i hi
+  exact hwalk ε hε z x (r i) (radius i) margin bound ρ hr hclear hbound hball hsize
+
 end MatedCRT
