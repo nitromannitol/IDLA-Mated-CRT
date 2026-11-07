@@ -36,6 +36,17 @@ theorem abs_projectedExitVertexValue_le (m : ℤ → ℤ → ℕ) (ε : ℝ) (η
     (fun x => by simpa using hψ _ (ballRetraction_mem z hr _))
   simpa [projectedExitVertexValue] using h
 
+/-- On a nonempty vertex set, the supremum in the discrete regularity estimate
+is bounded by the boundary-data bound. -/
+theorem iSup_abs_projectedExitVertexValue_le (m : ℤ → ℤ → ℕ) (ε : ℝ)
+    (η : ℝ → ℂ) {r : ℝ} (hr : 0 < r) (z : ℂ) (ψ : ℂ → ℝ) {K : ℝ}
+    (hψ : ∀ x ∈ closedBall z r, |ψ x| ≤ K)
+    (hne : (cellVertices ε η (ball z r)).Nonempty) :
+    (⨆ a : cellVertices ε η (ball z r),
+      |projectedExitVertexValue m ε η r z ψ a|) ≤ K := by
+  let : Nonempty (cellVertices ε η (ball z r)) := hne.to_subtype
+  exact ciSup_le (fun a => abs_projectedExitVertexValue_le m ε η hr z ψ hψ a)
+
 /-- The projected exit expectation is discrete harmonic whenever the walk
 exits the interior vertex set almost surely. -/
 theorem matedLaplacian_projectedExitVertexValue (m : ℤ → ℤ → ℕ)
