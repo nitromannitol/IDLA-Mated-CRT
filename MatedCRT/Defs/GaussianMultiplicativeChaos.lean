@@ -42,4 +42,17 @@ theorem gmcApprox_zero {Ω E : Type*} [MeasurableSpace Ω] [MeasurableSpace E]
     gmcApprox P σ 0 hε ω = σ := by
   simp [gmcApprox]
 
+/-- The logarithmic singularity `|log(1 / |x-y|)|`, with infinite value
+at `x = y`, as used in Berestycki (1.4). -/
+noncomputable def logSingularity {E : Type*} [PseudoMetricSpace E] (x y : E) : ℝ≥0∞ :=
+  if dist x y = 0 then ⊤ else ENNReal.ofReal |Real.log (dist x y)⁻¹|
+
+/-- A regularizing probability measure as in Berestycki (1.4). The closed
+unit ball convention includes the uniform measure on the unit sphere,
+which the source explicitly admits. -/
+def IsGMCRegularizer (k : ℕ) (θ : Measure (EuclideanSpace ℝ (Fin k))) : Prop :=
+  IsProbabilityMeasure θ ∧ θ.support ⊆ Metric.closedBall 0 1 ∧
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ x ∈ Metric.ball 0 5,
+      (∫⁻ y, logSingularity x y ∂θ) ≤ ENNReal.ofReal C
+
 end MatedCRT
