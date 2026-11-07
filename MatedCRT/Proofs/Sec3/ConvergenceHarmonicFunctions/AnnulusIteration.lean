@@ -134,4 +134,23 @@ theorem measure_annulusCrossingEvent_le_pow
     ← annulusCrossings_eq_indicator]
   exact lintegral_annulusCrossings_le_pow m A U B S q hnext hstage n v hv
 
+/-- Simultaneous disconnection estimates give a geometric bound on the
+probability of completing the specified annulus crossings. The graph walks
+in `hgeom` are the deterministic separation paths. -/
+theorem measure_annulusCrossingEvent_le_of_disconnection
+    (m : ℤ → ℤ → ℕ) (A I U B S : ℕ → Set ℤ) (p : ℝ) (hp : 0 ≤ p)
+    (hnext : ∀ n, B (n + 1) ⊆ S n) (hBA : ∀ n, B n ⊆ A n)
+    (hgeom : ∀ n, ∃ y a, y ∈ I n ∧ a ∈ A n ∧
+      ∃ w : (adjGraph m).Walk y a, ∀ u ∈ w.support, u ∉ U n)
+    (hdisc : ∀ n v, v ∈ S n → ENNReal.ofReal p ≤ srwLaw m v
+      {x | ∀ y ∈ I n, walkDisconnectsBeforeHit m (A n) y x})
+    (n : ℕ) (v : ℤ) (hv : v ∈ S n) :
+    srwLaw m v (annulusCrossingEvent A U B (n + 1)) ≤
+      ENNReal.ofReal (1 - p) ^ (n + 1) := by
+  apply measure_annulusCrossingEvent_le_pow m A U B S _ hnext _ n v hv
+  intro j b hb
+  obtain ⟨y, a, hy, ha, w, hw⟩ := hgeom j
+  exact (measure_mono (hit_target_before_exit_subset_stay (A j) (U j) (B j) (hBA j))).trans
+    (srwLaw_stay_le_of_annulus_disconnection hy ha w hw hp (hdisc j b hb))
+
 end MatedCRT
