@@ -73,9 +73,9 @@ theorem IsLQGClock.ae_killed_clock_eq_all_of_ae_tendsto_tail
   intro t
   exact congrFun h t
 
-/-- If the localized stopped-clock package holds, its path agrees with the
-global LQG clock time change before exit. The package is an explicit hypothesis;
-it is not supplied by the staged diffusion theorem. -/
+/-- A continuous dyadic stopped-clock limit with convergent time-changed paths
+agrees with the global LQG clock time change before exit. These convergence
+assumptions are not supplied by the staged diffusion theorem. -/
 theorem berestycki_dirichlet_time_change_eq_lbm
     {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (D U : Set ℂ) (h : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
@@ -87,16 +87,10 @@ theorem berestycki_dirichlet_time_change_eq_lbm
           killedGMCClockApprox U γ (hcirc q.1) (dyadicScale n) q.2
         τ < ⊤ ∧
         (∀ t : ℝ≥0, Tendsto (fun n => K n t) atTop (𝓝 (G q.1 q.2 t))) ∧
-        Continuous (G q.1 q.2) ∧ G q.1 q.2 0 = 0 ∧
-        StrictMonoOn (G q.1 q.2) (Set.Iic T) ∧
-        (∀ t : ℝ≥0, T ≤ t → G q.1 q.2 t = G q.1 q.2 T) ∧
+        Continuous (G q.1 q.2) ∧
         (∀ t : ℝ≥0, (t : ℝ) < G q.1 q.2 T →
           Tendsto (fun n => q.2 ((killedClockInverse (K n) τ t).toNNReal))
-            atTop (𝓝 (q.2 ((killedClockInverse (G q.1 q.2) τ t).toNNReal)))) ∧
-        ContinuousOn (fun t : ℝ≥0 => q.2 ((killedClockInverse (G q.1 q.2) τ t).toNNReal))
-          {t | (t : ℝ) < G q.1 q.2 T} ∧
-        StrictMonoOn (fun t : ℝ≥0 => killedClockInverse (G q.1 q.2) τ t)
-          {t | (t : ℝ) < G q.1 q.2 T})
+            atTop (𝓝 (q.2 ((killedClockInverse (G q.1 q.2) τ t).toNNReal)))))
     (hD : IsOpen D)
     (hU : IsOpen U) (hbounded : Bornology.IsBounded U) (hclosure : closure U ⊆ D)
     (hx : x ∈ U) (hgff : IsDirichletGFF P D h hcirc)
@@ -156,6 +150,6 @@ theorem berestycki_dirichlet_time_change_eq_lbm
       liouvilleBrownianPath (F ω) b t := by
     rw [hinv]
     exact killedClockInverse_brownian_path_eq_lbm hU hr.1 hr.2 hb.1 ht
-  simpa only [hp] using hb.2.2.2.2.2.2.1 t ht'
+  simpa only [hp] using hb.2.2.2 t ht'
 
 end MatedCRT
