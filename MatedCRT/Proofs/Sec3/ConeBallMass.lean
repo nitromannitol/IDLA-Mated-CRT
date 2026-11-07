@@ -3,6 +3,7 @@ import MatedCRT.Draft.Section2
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.VolumeGrowthInsideUnit
 import MatedCRT.Proofs.Sec2.ConeFamilyMeasurable.ConeVolumeGrowth
 import HarmonicBalls.Proofs.Sec6.GreenPotentialBound
+import HarmonicBalls.Proofs.SecA.ObstacleNonCoincidenceHarmonic
 
 /-! # The cited cone ball-mass estimate implies Lemma 2.7 -/
 
@@ -89,5 +90,43 @@ theorem IsConeField.ae_greenPotential_bddAbove
   have : IsLocallyFiniteMeasure (μ ω) := hω.1
   obtain ⟨βminus, βplus, hvol⟩ := hω.2
   exact Section6.greenPotential_bddAbove_of_volumeGrowth hR hD hDR hvol
+
+/-- On one full-probability event, the cone measure has no atoms in the
+buffered disk and the killed Green kernel is integrable for every starting
+point in its closure. This covers the logarithmic singularity at the origin. -/
+theorem IsConeField.ae_greenKernel_integrable
+    {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    (hcone : IsConeField γ P hC hcirc μ) (hBG : BerestyckiGwynneConeBallMassStmt)
+    {R : ℝ} (hR : 0 < R) (hR1 : R < 1) {D : Set ℂ}
+    (hD : IsOpen D) (hDR : D ⊆ ball (0 : ℂ) R) :
+    ∀ᵐ ω ∂P, (∀ y ∈ ball (0 : ℂ) R, μ ω {y} = 0) ∧
+      ∀ y ∈ closedBall (0 : ℂ) R, Integrable (greenFunction D y) (μ ω) := by
+  filter_upwards [hcone.ae_volumeGrowth_inside_unit hγ hγ2
+    (volumeGrowthStmt_of_berestyckiGwynne hBG) hR1] with ω hω
+  have : IsLocallyFiniteMeasure (μ ω) := hω.1
+  obtain ⟨βminus, βplus, hvol⟩ := hω.2
+  exact ⟨fun _ hy => hvol.measure_singleton hy,
+    fun _ hy => Section6.integrable_greenFunction_of_volumeGrowth hR hD hDR hvol hy⟩
+
+/-- The Green integral in the occupation identity is finite for bounded
+measurable test functions, simultaneously for all poles in the buffered disk. -/
+theorem IsConeField.ae_greenKernel_mul_integrableOn
+    {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    (hcone : IsConeField γ P hC hcirc μ) (hBG : BerestyckiGwynneConeBallMassStmt)
+    {R : ℝ} (hR : 0 < R) (hR1 : R < 1) {D : Set ℂ}
+    (hD : IsOpen D) (hDR : D ⊆ ball (0 : ℂ) R) :
+    ∀ᵐ ω ∂P, ∀ y ∈ closedBall (0 : ℂ) R, ∀ f : ℂ → ℝ,
+      AEStronglyMeasurable f ((μ ω).restrict D) →
+      (∃ M : ℝ, ∀ x ∈ D, |f x| ≤ M) →
+      IntegrableOn (fun x => greenFunction D y x * f x) D (μ ω) := by
+  filter_upwards [hcone.ae_greenKernel_integrable hγ hγ2 hBG hR hR1 hD hDR] with ω hω
+  intro y hy f hf ⟨M, hM⟩
+  apply (hω.2 y hy).integrableOn.mul_bdd hf
+  filter_upwards [ae_restrict_mem hD.measurableSet] with x hx
+  simpa only [Real.norm_eq_abs] using hM x hx
 
 end MatedCRT
