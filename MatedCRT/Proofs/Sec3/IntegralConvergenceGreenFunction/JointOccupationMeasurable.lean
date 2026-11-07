@@ -83,6 +83,37 @@ theorem aestronglyMeasurable_clock_occupation_of_approx
     exact tendsto_lqgClockApprox_weighted_occupation γ ε (H p.1) p.2 hεpos
       (fun n => hcont n p.1) (G p) hp.1 hp.2.1 hp.2.2.1 hp.2.2.2 T f hf C hbound
 
+/-- For a fixed path, a limit in measure of the regularized occupation
+integrals agrees almost surely with the time-changed occupation integral
+whenever the clocks converge almost surely. -/
+theorem ae_eq_clock_occupation_of_tendstoInMeasure
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
+    (γ : ℝ) (ε : ℕ → ℝ) (H : Ω → ℝ → ℂ → ℝ) (b : ContinuousPath ℂ)
+    (hεpos : ∀ n, 0 < ε n)
+    (hH : ∀ n, Measurable (fun p : Ω × ℂ => H p.1 (ε n) p.2))
+    (hcont : ∀ n ω, Continuous (H ω (ε n)))
+    (G : Ω → ℝ≥0 → ℝ)
+    (hG : ∀ᵐ ω ∂P, G ω 0 = 0 ∧ Continuous (G ω) ∧ StrictMono (G ω) ∧
+      ∀ t, Tendsto (fun n => lqgClockApprox γ (H ω) (ε n) b t)
+        atTop (𝓝 (G ω t)))
+    (T : ℝ≥0) (f : ℂ → ℝ) (hf : Continuous f) (C : ℝ)
+    (hbound : ∀ z, ‖f z‖ ≤ C) (Y : Ω → ℝ)
+    (hY : TendstoInMeasure P (fun n ω => ∫ t in (0 : ℝ)..(T : ℝ),
+      f (b t.toNNReal) *
+        (ε n ^ (γ ^ 2 / 2) * Real.exp (γ * H ω (ε n) (b t.toNNReal)))) atTop Y) :
+    Y =ᵐ[P] (fun ω => ∫ s in (0 : ℝ)..G ω T,
+      f (b (clockInverse (G ω) s.toNNReal))) := by
+  apply tendstoInMeasure_ae_unique hY
+  apply tendstoInMeasure_of_tendsto_ae
+  · intro n
+    exact ((measurable_lqgClockApprox_weighted_occupation γ (ε n)
+      (fun ω => H ω (ε n)) (hH n) T f hf.measurable).comp
+        (measurable_id.prodMk measurable_const)).aestronglyMeasurable
+  · filter_upwards [hG] with ω hω
+    exact tendsto_lqgClockApprox_weighted_occupation γ ε (H ω) b hεpos
+      (fun n => hcont n ω) (G ω) hω.1 hω.2.1 hω.2.2.1 hω.2.2.2 T f hf C hbound
+
 end MatedCRT
+
 
 
