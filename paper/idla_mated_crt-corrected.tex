@@ -1365,6 +1365,8 @@ When every possible limit is identified, relative compactness implies
 	
 	\subsection{Convergence of the Dirichlet problem}
 	We follow a similar strategy as in the previous subsection to prove the following. 
+	For a disk $D$, write $\pi_D$ for nearest-point projection onto $\cl(D)$.
+% CORRECTION [C13]: printed phi(eta(b)); evaluate phi(pi_D(eta(b))) since boundary-cell representatives can lie outside cl(D).
 	\begin{lemma} \label{lemma:discrete-dirichlet-problem}
 		Fix a deterministic choice of $z\in\C$ and $r>0$ such that $B_r(z) \subset B_{\rho}$, a bounded, deterministic H\"{o}lder-continuous function $\psi: B_{r}(z) \to \R$, and a deterministic
 		H\"{o}lder continuous function $\phi: \cl(B_r(z)) \to \R$. 
@@ -1372,7 +1374,7 @@ When every possible limit is identified, relative compactness implies
 		\[
 		\begin{cases}
 		\Delta^{{\eps}} f^{{\eps}}(a) = \psi(\eta(a)) \quad\mbox{for $a \in {\VGeps}(B_r(z)) \setminus {\VGeps}(\partial B_r(z))$} \\
-		f^{{\eps}}(b) = {\meps} \times  \phi(\eta(b)) \quad \mbox{for $b \in {\VGeps}(\partial B_r(z))$}
+		f^{{\eps}}(b) = {\meps} \times  \phi(\pi_{B_r(z)}(\eta(b))) \quad \mbox{for $b \in {\VGeps}(\partial B_r(z))$}
 		\end{cases}
 		\]
 		converges in probability in the uniform topology on $\cl(B_r(z))$ to the solution of the continuum Dirichlet problem, 
@@ -1387,45 +1389,100 @@ When every possible limit is identified, relative compactness implies
 	\end{lemma}
 	We first prove a pointwise convergence result concerning harmonic functions. 
 	
-	\begin{lemma} \label{lemma:convergence-of-harmonic-functions}
-		For each deterministic choice of $z\in\C$, $r>0$ such that $B_r(z) \subset B_{\rho}$ and each deterministic H\"{o}lder continuous function $\psi: \cl(B_{r}(z)) \to \R$
-		the following occurs. For $y \in \C$, recall that $\taueps{B_r(z)}{a_y^{{\eps}}}$
-		is the first time simple random walk started at $a_y^{{\eps}} \in {\VGeps}$ exits ${\VGeps}(B_r(z)) \setminus {\VGeps}(\partial B_r(z))$. For $y \in B_{r}(z)$, let
-		\[
-		\tau_{B_r(z)}^{y} = \min \{t \geq 0 : X^{y}_t \not \in B_r(z) \}
-		\]
-		denote the first time LBM started at $y$ exits $B_r(z)$. 
-		Then, 
-		\[
-		\lim_{{\eps} \to 0}  \E \left[ \psi \left( \eta \left( X^{a^{{\eps}}_y,{\eps}}_{\taueps{B_r(z)}{a_y^{{\eps}}}} \right) \right)  | h, \eta \right]  = \E \left[ \psi \left( X^y_{\tau_{B_r(z)}^{y}} \right) | h, \eta \right], \quad \forall y \in B_{r}(z),
-		\]
-		where the convergence is in probability as ${\eps} \to 0$. 
-	\end{lemma}
-	\begin{proof}
-		The proof is nearly identical to that of Lemma \ref{lemma:integral-convergence-of-greens-function}, but for completeness we sketch the proof. 
-		
-		Let the parameters $y \in B_{r}(z)$ and $\psi: \cl(B_{r}) \to \R$, a H\"{o}lder continuous function, be given. 
-		Consider the bounded
-		functional on the space of continuous curves $w: C([0,\infty)) \to \cl(B_{r}(z))$ defined by
-		\[
-		\phi^{\psi}(w) := \psi(w(\tau)),
-		\]  
-		where $\tau$ is the first time $w(t) \not \in B_r(z)$.
-		Recall from the beginning of Section \ref{subsec:green-kernel} that $\hat X^{y,{\eps}}$ is the piece-wise linear interpolation 
-		of random walk started at $a^{{\eps}}_y$ on ${\VGeps}$ stopped upon exiting ${\VGeps}(B_\rho) \setminus {\VGeps}(\partial B_{\rho})$. 	
-		By Theorem \ref{theorem:rw-to-lbm}, 
-		\begin{equation} \label{eq:rw-to-lbm-harmonic}
-		\lim_{{\eps} \to 0} \E \left[ \phi^{\psi}(\hat{X}^{y, {\eps}}) | h , \eta \right] = \E \left[ \psi(X^y_{\tau^{y}}) | h, \eta \right],
-		\end{equation}
-		in probability as ${\eps} \to 0$. 
-		We conclude by observing that the term on the left-hand-side  of \eqref{eq:rw-to-lbm-harmonic} is asymptotically close to its discrete counterpart.
-		Indeed, as $\psi$ is H\"{o}lder continuous on $\cl(B_{r}(z))$ and the cell-size of the mated-CRT map can be controlled by Lemma \ref{lemma:cell-size-estimate},
-		\[
-		|\phi^{\psi}(\hat{X}^{y, {\eps}}) -  \psi(\eta(X^{y}_{\tau^{{\eps}, y}}))| \leq C \times {\eps}^{q},
-		\]
-		in probability as ${\eps} \to 0$, for some $C = C(\psi) > 0$ and $q = q(\gamma, \psi) > 0$.
-	\end{proof}
-	
+% CORRECTION [C13]: printed Hölder psi on cl(D) evaluated at eta(exit vertex), without projection, and only pointwise convergence; corrected to psi in C(cl(D)), projection onto cl(D), uniform convergence, and the same-walk comparison below. Boundary representatives can lie outside cl(D), and path exit is not everywhere continuous.
+\begin{lemma} \label{lemma:convergence-of-harmonic-functions}
+Fix deterministic $D=B_r(z)\subset B_\rho$ and $\psi\in C(\cl(D))$.
+Let $\pi_D:\C\to\cl(D)$ be nearest-point projection and put
+$\bar\psi=\psi\circ\pi_D$. Let $X^\eps$ be unrestricted simple random walk
+started at $a_y^\eps$, and let $\sigma_D^\eps$ be its first exit from
+${\VGeps}(D)\setminus{\VGeps}(\partial D)$. Then, for each $y\in D$,
+\[
+ \E[\bar\psi(\eta(X^\eps_{\sigma_D^\eps}))\mid h,\eta]
+ \longrightarrow \E[\psi(X^y_{\tau_D^y})\mid h,\eta]=u(y)
+\]
+in probability. Here $u$ is the deterministic classical harmonic extension
+of $\psi|_{\partial D}$, and the cellwise discrete harmonic extensions
+converge to $u$ uniformly on $\cl(D)$ in probability.
+
+Moreover, if $\psi$ is $\chi$-H\"older, $0<\chi\le1$, with constant $H$,
+let $W^\eps$ be the linearly interpolated embedding of the same unrestricted
+walk and $Z^\eps$ its first Euclidean exit point from $D$. For each fixed
+$y\in D$, there are $b=b(\gamma)>0$ and $\kappa,\nu>0$ such that, with
+$q=b\chi/2$ and all sufficiently small $\eps$,
+\[
+ \P\!\left[\left|\psi(Z^\eps)-\bar\psi(\eta(X^\eps_{\sigma_D^\eps}))\right|
+ >(1+H)\eps^q\right]\le C(\eps^\kappa+\eps^{\nu b/2}).
+\]
+On the negligible event that the interpolation starts outside $D$ or never
+exits, define the first term to be zero. The comparison uses the same walk
+for both stopping locations.
+\end{lemma}
+\begin{proof}
+Choose $\rho<\rho_1<1$ and $a=(2+\gamma)^{-2}$. By the cell-size estimate
+and the simultaneous annulus-disconnection estimate of
+\cite[Lemma 3.11, (3.35)]{gms-harmonic}, there is an environment event
+$E_\eps$ of probability at least $1-C\eps^\kappa$ on which all relevant
+cell diameters are at most $d=\eps^a$ and each admissible annulus of radius
+at least $\eps^{b_{\rm ann}}$ is disconnected by the walk with conditional
+probability at least $p>0$ before it crosses the annulus. Set
+$b=\min\{a,b_{\rm ann}\}$, $\ell=100d+\eps^{b_{\rm ann}}$ and
+$\nu=-\log(1-p)/\log 2$.
+
+At the first boundary-cell visit the representative is within $d$ of
+$\partial D$. Before this visit the interpolated path stays in the convex
+disk $D$. If it has not yet exited, compare the subsequent walk with its
+first visit to a boundary cell of $B_{r+3d}(z)$, by which time it has exited
+$D$. In each dyadic annulus centered at the first boundary representative,
+a successful disconnection forces a visit to that outer boundary: otherwise
+the cells visited inside the disk cannot separate a radial path outside it.
+The strong Markov property therefore gives, for a deterministic small $s_0$,
+\[
+ \P[|Z^\eps-\eta(X^\eps_{\sigma_D^\eps})|>Cs\mid h,\eta]
+ \le \min\{1,C(\ell/s)^\nu\},\qquad 0<s\le s_0,
+\]
+uniformly over interior starting vertices on $E_\eps$. The annulus radii
+are at least $\ell$, so no estimate below the mesoscopic cutoff is used.
+Projection is nonexpansive and fixes $Z^\eps$; taking
+$s$ a constant multiple of $\eps^{b/2}$ proves the displayed comparison.
+Integrating this tail shows that its conditional mean error tends to zero
+in probability.
+
+The unrestricted embedded walk converges in conditional law, in probability,
+to rescaled LBM by \cite[Theorem 1.2]{berestycki2020random}. The exit-location
+functional is continuous at paths which exit in finite time and cross the
+boundary immediately after exit. Brownian motion has both properties for a
+disk, by the strong Markov property and the reflection principle; LBM has
+the same trace under a continuous strictly increasing time change. Applying
+the almost-everywhere continuous mapping theorem to a deterministic
+subsequence with almost sure conditional-law convergence, then using the
+comparison above and the arbitrary-subsequence criterion, proves pointwise
+convergence for H\"older data. The LBM exit law is the Brownian exit law, so
+$u$ is the Poisson extension of the boundary values.
+
+For uniform convergence, the same annulus iteration and the hitting-law
+coupling estimate \cite[Lemma 3.10]{gms-harmonic} give, on each compact
+$K\Subset D$ at distance $\delta$ from the boundary, the modulus
+\[
+ |f^\eps(v)-f^\eps(w)|\le C\|\psi\|_\infty
+ \left(\frac{\ell\vee|\eta(v)-\eta(w)|}{\delta}\right)^\nu,
+\]
+where $f^\eps(v)=\E_v[\bar\psi(\eta(X^\eps_{\sigma_D^\eps}))\mid h,\eta]$.
+For a representative $x$ at distance $u$ from $\partial D$, the radial
+argument similarly bounds the chance of an exit displacement greater than
+$Cs$ by $C((\ell+u)/s)^\nu$. Consequently, if $x_\partial$ is a nearest
+boundary point and $\omega_\psi$ is the modulus of continuity of $\psi$,
+\[
+ |f^\eps(v)-\psi(x_\partial)|\le
+ \omega_\psi(Cs+u)+C\|\psi\|_\infty((\ell+u)/s)^\nu.
+\]
+Taking $s=\sqrt{\ell+u}$ controls the boundary strip. A deterministic
+diagonal subsequence with convergence at a countable dense set and eventual
+$E_\eps$, followed by finite nets and this boundary estimate, yields uniform
+convergence. Finally, approximate arbitrary continuous $\psi$ uniformly by
+Lipschitz functions and use the sup-norm contraction of both harmonic
+extensions. Full details, including the finite-graph coupling construction,
+are recorded in \texttt{docs/campaign/LEMMA36-REPLACEMENT.md}.
+\end{proof}
 	
 	
 	This pointwise convergence is used together with tightness and integral convergence of the Green's function to prove uniform convergence of solutions 
@@ -1436,7 +1493,7 @@ When every possible limit is identified, relative compactness implies
 		\[
 		\begin{cases}
 		\Delta^{{\eps}} f_1^{{\eps}}(a) = 0 \quad\mbox{for $a \in {\VGeps}(B_r(z)) \setminus {\VGeps}(\partial B_r(z))$} \\
-		f_1^{{\eps}}(b) = {\meps} \phi(\eta(b)) \quad \mbox{for $b \in {\VGeps}(\partial B_r(z))$}
+		f_1^{{\eps}}(b) = {\meps} \phi(\pi_{B_r(z)}(\eta(b))) \quad \mbox{for $b \in {\VGeps}(\partial B_r(z))$}
 		\end{cases}
 		\]
 		and
@@ -2004,7 +2061,8 @@ When every possible limit is identified, relative compactness implies
 		\[
 		\begin{cases}
 		\Delta^{{\eps}} f^{{\eps}}_{\delta}(a) = 0 \quad\mbox{for $a \in {\VGeps}(B_r(z)) \setminus {\VGeps}(\partial B_r(z))$} \\
-		f^{{\eps}}_{\delta}(b)  = m_{{\eps}} \phi^{\delta}(\eta(b)) + \delta \quad \mbox{for $b  \in {\VGeps}(\partial B_r(z))$}
+		% CORRECTION [C14]: printed m_eps phi^delta(eta(b)) + delta; corrected to m_eps (phi^delta(eta(b)) + delta), since the boundary value is normalized by m_eps.
+		f^{{\eps}}_{\delta}(b)  = m_{{\eps}} (\phi^{\delta}(\eta(b)) + \delta) \quad \mbox{for $b  \in {\VGeps}(\partial B_r(z))$}
 		\end{cases}
 		\]
 		where $\phi^{\delta} \in \mathcal{F}(B_r(z))$ is a rational polynomial satisfying 
@@ -2028,6 +2086,9 @@ When every possible limit is identified, relative compactness implies
 		f^{{\eps}}_{\delta}(a) \geq \wteps(a), \quad \forall a \in {\VGeps}(B_r(z)), \quad \forall \mbox{ small ${\eps} \in \mathcal{E}$}.
 		\end{equation}
 		
+		The polynomial boundary data in this comparison differ from their projected
+		values by $o(m_\eps)$ uniformly, by the cell-size estimate; the discrete
+		maximum principle therefore permits the use of Lemma \ref{lemma:discrete-dirichlet-problem}.
 		By Lemma \ref{lemma:discrete-dirichlet-problem}, we have that $\overline f^{{\eps}}_{\delta}$ converges uniformly in 
 		$\cl(B_r(z))$ to a harmonic function $\overline f^{*}_{\delta}: \cl(B_r(z)) \to \R$ which satisfies
 		\begin{equation} \label{eq:harmonic-function-same-bdry-values}

@@ -1,0 +1,723 @@
+# Lemma 3.6: Full Approved Replacement
+
+Author-approved 2026-11-06. The following is the complete audited proof, preserved verbatim as a standalone LaTeX document. See `AUDIT-L36-USES.md` for application to the corrected draft.
+
+```latex
+\documentclass[12pt]{amsart}
+\usepackage{amsmath,amssymb,amsfonts,fullpage,enumitem,hyperref}
+\newtheorem{lemma}{Lemma}
+\newtheorem{prop}[lemma]{Proposition}
+\newtheorem{theorem}[lemma]{Theorem}
+\newtheorem{remark}[lemma]{Remark}
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\N}{\mathbb N}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Pp}{\mathbb P}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\diam}{\operatorname{diam}}
+\newcommand{\V}{\mathcal V\mathcal G^\eps}
+\newcommand{\F}{\mathcal F}
+\title{Harmonic convergence and the stopping-location comparison\\A replacement for Lemma 3.6}
+\author{Proof audit and replacement}
+\date{November 6, 2026}
+\begin{document}
+\maketitle
+
+\section{Definitions and defects in the printed formulation}
+Throughout, the reference is the supplied corrected copy of
+\emph{Internal DLA on mated-CRT maps}, including corrections
+\textup{[C1]--[C12]}. Fix $\gamma\in(0,2)$, $\rho<1$, and a
+deterministic disk $D=B_r(z)\subset B_\rho(0)$.
+Take $h$ to be the circle-average embedding of a
+$\gamma$-quantum cone, and decorate it by an independent
+whole-plane space-filling $\mathrm{SLE}_{16/\gamma^2}$,
+subsequently parameterized by $\mu_h$-area and denoted by
+$\eta$. Use the associated mated-CRT cell-adjacency graph,
+with edge multiplicities counted in simple random walk.
+Let $\F=\sigma(h,\eta)$ and let
+$H^\eps_a=\eta([a-\eps,a])$ be the cell of $a\in\eps\mathbb Z$.
+Adjacent cells intersect. The cells are connected and locally finite.
+Set
+\[
+ I^\eps_D=\V(D)\setminus\V(\partial D),\qquad
+ \sigma^\eps_D=\inf\{j\ge0:X^\eps_j\notin I^\eps_D\},
+\]
+where $X^\eps$ is one \emph{unrestricted} simple random walk started
+at $a_y^\eps=\min\{a\in\eps\mathbb Z:y\in H^\eps_a\}$,
+and $\V(A)=\{a:H^\eps_a\cap A\ne\varnothing\}$.
+Use this same walk for every stopping operation below.
+Write $Y^\eps_j=\eta(X^\eps_j)$ and let $W^\eps$ be its linearly
+interpolated embedding, with any positive deterministic time
+rescaling, for instance $m_\eps$ from the paper.
+Define
+\[
+ T_D(W)=\inf\{t\ge0:W(t)\notin D\},\qquad
+ Z^\eps=W^\eps(T_D(W^\eps)).
+\]
+For a path that starts outside $D$ we project its initial point onto
+$\overline D$; this harmless convention is irrelevant eventually for
+each fixed $y\in D$.
+
+There are three distinct issues in the printed proof.
+\begin{enumerate}[label=(\roman*)]
+\item A boundary cell need not have its representative $\eta(a)$ in
+$\overline D$. Therefore $\psi(\eta(X^\eps_{\sigma^\eps_D}))$ is
+not defined if $\psi$ is specified only on $\overline D$.
+\item The exit functional is not an everywhere-defined continuous
+functional on the printed path space. A constant path in $D$ never
+exits. Uniform convergence of paths need not preserve exit locations
+at a path that touches the boundary and returns without crossing.
+Moreover the interpolated paths in the proof live in the outer
+domain, not necessarily in $\overline D$.
+\item The walk denoted $\widehat X^{y,\eps}$ there is stopped on
+boundary \emph{cells} of $B_\rho$. In particular, for $D=B_\rho$
+it can be frozen at a representative inside $D$, so its Euclidean
+exit time can be infinite. Small cell size alone also does not
+control the excursion after first visiting a boundary cell.
+\end{enumerate}
+The last display additionally mixes the notation for LBM and the
+discrete walk. It must use $X^{y,\eps}$ in both discrete expressions.
+
+For an explicit discontinuity example, take $D=B_1(0)$ and a
+real-valued continuous path which runs from $0$ to $1$ in time
+$1$, returns to $0$ in the next unit of time, and then runs
+at unit speed toward $-\infty$. Its first exit is at $1$.
+Multiplying this path by $1-1/n$, $n\ge2$, gives paths converging
+locally uniformly to it whose first exit is at $-1$.
+For $\psi(w)=\operatorname{Re}w$ the exit functional therefore
+does not converge. This is why its limiting-law continuity
+set must be checked.
+
+The minimal boundary-value convention is
+\[
+ \bar\psi=\psi\circ\pi_D,\qquad
+ \pi_D:\C\longrightarrow\overline D
+\]
+the nearest-point projection onto the closed disk.
+It is $1$-Lipschitz, so a $\chi$-H\"older constant of $\psi$ is also
+one for $\bar\psi$. The minimal path convention for the proof is to
+use the unrestricted interpolation $W^\eps$. A precise convention
+which also works for the printed outer-stopped interpolation is
+given in Section~\ref{sec:outer}.
+
+\begin{theorem}[Corrected Lemma 3.6]\label{thm:A}
+For every deterministic $\psi\in C(\overline D)$ and $y\in D$,
+\begin{equation}\label{eq:A-main}
+ \E[\bar\psi(Y^\eps_{\sigma^\eps_D})\mid\F]
+ \ \longrightarrow\
+ \E[\psi(X^y_{\tau_D})\mid\F]
+ =:u(y)
+ \quad\hbox{in probability}.
+\end{equation}
+Here $X^y$ is the rescaled LBM in the paper. The function $u$ is
+the deterministic classical harmonic extension of
+$\psi|_{\partial D}$. In fact the cellwise discrete harmonic
+extensions converge uniformly on $\overline D$, in probability.
+For H\"older $\psi$ the same-walk comparison in
+Theorem~\ref{thm:rate} below gives a polynomial rate.
+\end{theorem}
+
+\section{Precisely stated inputs}
+All page numbers refer to the linked arXiv versions, not journal
+pagination.
+\begin{enumerate}[label=(\alph*)]
+\item Berestycki--Gwynne, arXiv:2003.10320v2,
+Theorem 1.2, p.~10: the conditional law of the unrestricted
+interpolated embedded walk, with the paper's median time
+normalization, converges in probability in the local uniform path
+topology to rescaled LBM. The theorem is uniform over starting
+points in a fixed compact set.
+\item The same paper, Lemma 2.4, p.~17: for each fixed
+$\rho_1<1$ and $0<a<2/(2+\gamma)^2$, with probability
+$1-O(\eps^\kappa)$, for some $\kappa>0$, every cell meeting
+$B_{\rho_1}$ has diameter at most $\eps^a$.
+\item Gwynne--Miller--Sheffield, arXiv:1807.07511v3,
+Lemma 3.11, (3.35), p.~31: there are
+$\alpha_{\rm ann}=\alpha_{\rm ann}(\gamma)>0$,
+$b_{\rm ann}=b_{\rm ann}(\gamma)>0$, and
+$p=p(\rho_1,\gamma)>0$ such that, with probability
+$1-O(\eps^{\alpha_{\rm ann}})$, simultaneously for every
+$c\in B_{\rho_1}$ and
+$R\ge\eps^{b_{\rm ann}}$ with $B_{2R}(c)\subset B_{\rho_1}$,
+one has
+\[
+ \inf_{v\in\V(B_R(c))}
+ \Pp_v[\mathcal D_R(c)\mid\F]\ge p.
+\]
+Here $\mathcal D_R(c)$ is the event that $X^\eps$ disconnects
+$\V(\partial B_{R/2}(c))$ from $\V(\partial B_{2R}(c))$
+before hitting the latter set.
+Disconnection here means separation in the planar graph by
+the vertices visited by the walk. We decrease $p$ to be at
+most $1/2$ when convenient.
+\item The same paper, Lemma 3.10, (3.34), p.~31:
+for random walk on a graph which almost surely hits a set $A$,
+the total variation distance between its first-hit distributions
+on $A$, started from $v$ and $w$, is at most
+\[
+ 1-\Pp_v[X\text{ disconnects }w\text{ from }A
+                      \text{ before hitting }A].
+\]
+We apply this on a finite graph, with extra edges between
+stopping vertices if needed to make it connected. The
+construction below checks the connectedness and almost-sure
+hitting hypotheses explicitly.
+\end{enumerate}
+The argument below uses these annulus and coupling inputs directly;
+it does not require an explicit boundary H\"older exponent.
+In particular it avoids a mesh-scale absorption issue in
+the proof of Theorem 3.9 of Gwynne--Miller--Sheffield,
+p.~32, (3.37): uniformly in a boundary distance $u$,
+a factor $((\eps^{b_{\rm ann}}\vee s)/u)^c$ cannot in general
+be bounded by $C((\eps\vee s)/u)^{c'}$ merely by decreasing
+$c'$. For example, if $0<b_{\rm ann}<1$, $u=\eps^{b_{\rm ann}}$
+and $s\le\eps$, the first factor is $1$ and the second tends
+to $0$. We therefore retain the mesoscopic cutoff and do not
+extract numerical comparison exponents from (3.33).
+This is consistent with the weaker, approved formulation
+\textup{[C6]}.
+
+\section{The quantitative boundary-excursion estimate}
+Fix $\rho<\rho_1<1$ and any
+$0<a<2/(2+\gamma)^2$, and set
+\begin{equation}\label{eq:exponents}
+ \begin{gathered}
+ b=\min\{a,b_{\rm ann}\}>0,\qquad d=\eps^a,\qquad
+ \ell=100d+\eps^{b_{\rm ann}},\\
+ \eps^b\le\ell\le101\eps^b,\qquad
+ \nu=\frac{-\log(1-p)}{\log2}>0.
+ \end{gathered}
+\end{equation}
+Choosing $a$ as a function of $\gamma$ makes $b=b(\gamma)$,
+whereas $\nu$ can depend on $\rho_1$.
+Let $E_\eps\in\F$ be the intersection of the cell-size event
+in (b) with the simultaneous annulus event in (c). Then
+\[
+ \Pp(E_\eps^c)\le C\eps^\kappa
+\]
+for some $\kappa>0$. Notice that $\ell\ge\eps^{b_{\rm ann}}$
+and $d<\ell/100$. All annuli used below have radii at least
+$\ell$; no estimate is applied below its permitted cutoff.
+Only this fixed separation between the cell size and
+the first annulus radius is needed.
+
+We first make explicit the planar observation needed with (c).
+Let $O$ be a disk, $x\in O$, $B_{3R}(x)\subset B_{\rho_1}$,
+and suppose
+\[
+ R/2>\dist(x,\partial O)+20d.
+\]
+A walk all of whose visited cells are contained in $O$ cannot
+disconnect $\V(\partial B_{R/2}(x))$ from
+$\V(\partial B_{2R}(x))$.
+Indeed take the outward radial segment about the center of
+$O$ from $u\in\partial B_{R/2}(x)$ to
+$w\in\partial B_{2R}(x)$. Its distance from $O$ is greater
+than $20d$. Choose cells containing $u,w$; their vertices
+belong to the respective circle vertex sets.
+Use the usual planar cell-adjacency drawing, with vertices
+in their cells and edges in arbitrarily small neighborhoods
+of the unions of incident cells. Choose perturbations of
+size less than $d/10$ to accommodate pinch points.
+Join the two chosen embedded vertices to $u,w$, respectively,
+and insert the radial segment between these short joins.
+The resulting curve stays at distance greater than $18d$
+from $O$.
+
+Here is why following faces along this curve is legitimate
+even when cells have nontrivial topology. In the buffered
+region, every point is within $2d$ of an embedded vertex,
+since some cell contains the point. Consequently a face
+meeting the curve has boundary within $2d$ of it; otherwise
+that nearby vertex would lie in the interior of the face.
+An edge there belongs to neighborhoods of its incident cells.
+These cells, and the third incident cell of the triangular
+face, all meet the ambient cell-size region. Each has
+diameter at most $d$. They intersect pairwise, so their
+union has diameter at most $3d$; the face boundary, and
+hence the bounded face itself, have diameter less than $4d$.
+The latter assertion follows because a bounded face is
+contained in the convex hull of its boundary.
+
+Local finiteness now gives a finite chain of closed faces
+along the curve, consecutive faces sharing an edge or a
+vertex. Their boundary vertices give a graph path between
+the two chosen vertices. Every cell on this path is within
+$6d$ of the curve and is therefore disjoint from $O$.
+Thus the path avoids every visited vertex, contradicting
+graph disconnection. This also checks the endpoint
+membership in the two prescribed circle vertex sets.
+Equivalently this is the planar separation
+observation in the proof of GMS Theorem 3.9, p.~32, immediately
+before (3.38); the buffer here makes its application insensitive
+to cell representatives. This auxiliary planar drawing is
+used only for graph separation; $W^\eps$ remains the
+straight-line interpolation specified at the start.
+
+\begin{lemma}[Excursion after a boundary-cell hit]\label{lem:excursion}
+On $E_\eps$, for all sufficiently small $\eps$, uniformly
+over walks started in $I_D^\eps$,
+\begin{equation}\label{eq:spatial-tail}
+ \Pp\bigl[|Z^\eps-Y^\eps_{\sigma_D^\eps}|>C s\mid\F\bigr]
+ \le \min\{1,C(\ell/s)^\nu\},\qquad 0<s\le s_0,
+\end{equation}
+where $s_0>0$ is deterministic. The same estimate bounds the
+maximal displacement from $Y^\eps_{\sigma_D^\eps}$ after that
+visit and before Euclidean exit, if exit has not already
+occurred on the entering edge.
+\end{lemma}
+\begin{proof}
+An interior cell is contained in $D$, by connectedness.
+The first noninterior cell reached from $I_D^\eps$ meets
+$\partial D$: it intersects its preceding interior cell and
+cannot be wholly outside $D$. Its representative is therefore
+within $d$ of $\partial D$.
+Before the edge entering it, all interpolated segments lie in
+the convex disk $D$. If Euclidean exit occurs on the entering
+edge, its distance from the endpoint is at most $2d$, since
+adjacent cell representatives have distance at most $2d$.
+
+Otherwise let $v=X^\eps_{\sigma_D^\eps}$,
+$x=\eta(v)\in D$, and put $O=B_{r+3d}(z)$.
+The cell of $v$ is contained in $O$, and
+$\dist(x,\partial O)\le4d$.
+A first visit to $\V(\partial O)$ has representative at
+distance at least $r+2d$ from $z$.
+Consequently the interpolation has exited $D$ by that visit.
+It is enough to control the walk's excursion before hitting
+$\V(\partial O)$.
+
+Let $R_j=2^j\ell$, and retain indices with $2R_j\le s_0$,
+where $s_0<(\rho_1-\rho)/2$ is small enough that even
+$B_{3R_j}(x)\subset B_{\rho_1}$. At the initial stage
+the walk is at $v$.
+At each subsequent stage restart it at its first hit of
+$\V(\partial B_{2R_{j-1}}(x))$, unless it has already hit
+$\V(\partial O)$. The restart cell meets the open disk
+$B_{R_j}(x)$ even though $2R_{j-1}=R_j$:
+it intersects the preceding cell, which is contained
+in $B_{R_j}(x)$ since this is the first boundary-cell hit.
+Its representative need not lie in that open disk, but
+input (c) requires exactly membership in $\V(B_{R_j}(x))$.
+Also the restart cell cannot already meet
+$\partial B_{2R_j}(x)$, since its diameter is at most
+$d<R_j/100$. Thus consecutive dyadic radii give legitimate
+successive stopping times.
+For small $\eps$ the planar observation applies at every
+stage, because $R_j/2\ge\ell/2>50d$ whereas
+$\dist(x,\partial O)+20d\le24d$.
+Thus the disconnection event in input (c) forces a visit
+to $\V(\partial O)$ before reaching
+$\V(\partial B_{2R_j}(x))$.
+The conditional chance of surviving to that outer circle
+without visiting $\V(\partial O)$ is at most $1-p$.
+
+The strong Markov property, applied successively to these
+stopping times, now gives a survival probability at most
+$(1-p)^{j+1}$ through stage $j$. The annuli overlap; no
+independence is being used. The uniform conditional bound
+$1-p$ at each restart is the only input to the product.
+Before the first boundary-cell hit for $B_{2R_j}(x)$,
+all representatives lie in $B_{2R_j}(x)$; the representative
+of the hit cell lies in $B_{2R_j+d}(x)$. Convexity gives the
+same bound for interpolated segments.
+For a displacement scale $s\ge4\ell$, choose the largest $j$
+with $2R_j\le s/2$. Since $R_j=2^j\ell$,
+\[
+ (1-p)^{j+1}\le C(\ell/s)^\nu.
+\]
+A displacement greater than a fixed multiple of $s$ before
+Euclidean exit requires survival through this stage.
+The cases $s<4\ell$ follow by enlarging the constant and using
+the bound $1$. Conditional on the environment the annulus
+event is uniform over all centers, radii, and starting
+vertices, so it remains applicable to the random $x$.
+Finally apply the strong Markov property at $\sigma_D^\eps$.
+\end{proof}
+
+\begin{theorem}[Quantitative comparison]\label{thm:rate}
+Suppose $\psi$ is $\chi$-H\"older on $\overline D$, with
+$0<\chi\le1$ and H\"older constant $H$.
+Fix $y\in D$ and start the walk at $a_y^\eps$.
+Define $\Phi^\psi(W)=\psi(W(T_D(W)))$ on paths which start
+inside $D$ and exit in finite time, and set it equal to $0$
+on all remaining paths. For every
+\[
+                         0<q<b\chi
+\]
+one may take $C_\psi=1+H$ so that, for small $\eps$,
+\begin{equation}\label{eq:rate}
+ \Pp\!\left[
+ |\Phi^\psi(W^\eps)-\bar\psi(Y^\eps_{\sigma_D^\eps})|
+       >C_\psi\eps^q\right]
+ \le C\bigl(\eps^\kappa+\eps^{\nu(b-q/\chi)}\bigr).
+\end{equation}
+On $E_\eps$ the corresponding conditional probability is at
+most $C\eps^{\nu(b-q/\chi)}$, uniformly over interior starting
+vertices. Moreover, on $E_\eps$,
+\begin{equation}\label{eq:mean-rate}
+ \E[|\Phi^\psi(W^\eps)-\bar\psi(Y^\eps_{\sigma_D^\eps})|
+       \mid\F]\le
+ \begin{cases}
+ C H\eps^{b\chi},&0<\chi<\nu,\\
+ C H\eps^{b\nu}(1+|\log\eps|),&\chi=\nu,\\
+ C H\eps^{b\nu},&\nu<\chi\le1 .
+ \end{cases}
+\end{equation}
+In particular, choosing $a=(2+\gamma)^{-2}$ permits
+\[
+ q=\frac{\chi}{2}\min\{(2+\gamma)^{-2},b_{\rm ann}(\gamma)\},
+\]
+with exactly the dependence requested in the printed comparison.
+More generally, by choosing $a$ close enough to its upper
+endpoint, every
+\begin{equation}\label{eq:full-q-range}
+ 0<q<\chi\min\{2/(2+\gamma)^2,b_{\rm ann}(\gamma)\}
+\end{equation}
+is allowed.
+\end{theorem}
+\begin{proof}
+For fixed $y\in D$, its starting cell is interior on $E_\eps$
+for all small $\eps$.
+The unrestricted walk exits the finite cell domain associated
+with $B_{r+3d}(z)$ almost surely, so its interpolation exits $D$.
+Projection is nonexpansive and fixes its exit point
+$Z^\eps\in\partial D$. Hence
+\[
+ |\psi(Z^\eps)-\bar\psi(Y^\eps_{\sigma_D^\eps})|
+ \le H|Z^\eps-Y^\eps_{\sigma_D^\eps}|^\chi.
+\]
+Use Lemma~\ref{lem:excursion} with $Cs=\eps^{q/\chi}$,
+which is larger than a fixed multiple of $\ell$ for small
+$\eps$, and add $\Pp(E_\eps^c)$.
+For the mean, write $R=|Z^\eps-Y^\eps_{\sigma_D^\eps}|
+\le2r+d$. By monotonicity the tail bound extends, with a
+different constant, to $s\le2r+d$.
+Split
+\[
+ \E[R^\chi\mid\F]
+ =\chi\int_0^{2r+d}s^{\chi-1}\Pp[R>s\mid\F]\,ds
+\]
+at a constant multiple of $\ell$.
+The remaining integral is bounded by
+$C\ell^\nu\int_\ell^{2r+d}s^{\chi-\nu-1}\,ds$.
+Its three elementary cases give \eqref{eq:mean-rate}.
+\end{proof}
+The ambient radius enters $\nu$, the probability exponent
+$\kappa$, and multiplicative constants, but not the choice
+$q=b(\gamma)\chi/2$ or $C_\psi=1+H$.
+This is a rate comparing two stopping rules for the same walk.
+It supplies neither a convergence rate to Brownian harmonic
+measure nor an optimal numerical exponent.
+
+\section{Continuity at the limiting paths and proof of the lemma}
+\begin{lemma}[Exit-map continuity]\label{lem:exit-continuity}
+Let $w$ start in $D$, let $\tau=T_D(w)<\infty$, and suppose that
+for each $\delta>0$ some $t\in(\tau,\tau+\delta)$ has
+$w(t)\notin\overline D$. At such a path the exit time and exit
+location maps are continuous for local uniform convergence.
+\end{lemma}
+\begin{proof}
+For each $s<\tau$, the compact set $w([0,s])$ lies at positive
+distance from $D^c$, so all sufficiently close paths have exit
+time greater than $s$. Choose $t\in(\tau,\tau+\delta)$ at positive
+distance from $\overline D$; sufficiently close paths exit by $t$.
+Thus their exit times converge to $\tau$. Uniform continuity of
+$w$ on a compact time interval containing those times then proves
+convergence of the exit locations.
+\end{proof}
+
+For Brownian motion the exit time from a disk is finite almost
+surely. At its exit point $p$, projection of the subsequent Brownian
+increments onto the outward unit normal is a one-dimensional
+Brownian motion. The probability that this projection stays
+nonpositive on any interval $(0,\delta)$ is zero (for example,
+the reflection principle gives the distribution of its maximum).
+The strong Markov property and a countable intersection over
+rational $\delta>0$ imply the crossing hypothesis of
+Lemma~\ref{lem:exit-continuity}. LBM is the same Brownian trace
+under a continuous strictly increasing clock, finite up to exit
+from bounded disks, so it has the same property.
+These assertions hold for almost every environment under its
+conditional LBM law, by disintegration. Time rescaling by $m_0$
+does not change the exit location.
+
+For the path-law argument choose the median clock $m_\eps$
+specified in input (a). All stopping locations and values
+under consideration are unchanged by positive deterministic
+time rescaling, so this choice does not restrict the result.
+Now start with an arbitrary deterministic sequence
+$\eps_j\to0$. By input (a), extract a deterministic subsequence
+along which the conditional path laws converge almost surely.
+For each environment in this event the bounded exit functional
+is continuous almost everywhere under the limiting law.
+The bounded almost-everywhere-continuous version of the
+portmanteau theorem therefore gives
+\[
+ \E[\Phi^\psi(W^\eps)\mid\F]
+ \longrightarrow\E[\psi(X^y_{\tau_D})\mid\F]
+ \quad\hbox{almost surely along that subsequence}.
+\]
+Here one may see the portmanteau implication directly by replacing a
+bounded function by its upper and lower $\delta$-oscillation
+envelopes: the envelopes converge to the function at continuity
+points, and the upper and lower weak-convergence inequalities,
+followed by bounded convergence, squeeze their integrals.
+No assertion that the exit functional is continuous everywhere
+has been used.
+
+For H\"older $\psi$, \eqref{eq:mean-rate} and
+$\Pp(E_\eps^c)\to0$ show that replacing
+$\Phi^\psi(W^\eps)$ by $\bar\psi(Y^\eps_{\sigma_D^\eps})$
+changes its conditional expectation by a quantity tending to
+zero in probability. The arbitrary-subsequence criterion now
+proves \eqref{eq:A-main}. Equivalently, choose a further
+deterministic subsequence with summable exceptional probabilities.
+
+The LBM exit distribution is the Brownian exit distribution.
+The latter has density
+\[
+ u(y)=\int_0^{2\pi}
+ \psi(z+re^{it})\,
+ \frac{r^2-|y-z|^2}{|re^{it}-(y-z)|^2}\,\frac{dt}{2\pi}.
+\]
+The Poisson kernel is harmonic in $y$, integrates to $1$, and
+concentrates at the boundary point as $y$ tends to that point.
+This proves harmonicity, continuity up to the boundary, and the
+assertion that $u$ is deterministic.
+
+We prove the uniform assertion directly, also keeping the
+cutoff in the compactness argument.
+Write $f^\eps(v)=\E_v[\bar\psi(Y_{\sigma_D^\eps})\mid\F]$,
+so $\|f^\eps\|_\infty\le\|\psi\|_\infty$.
+Here is the finite graph to which input (d) is applied.
+Keep $I_D^\eps$ and the stopping vertices
+$A=\V(\partial D)$, together with all original edges incident
+to $I_D^\eps$. Every neighbor of an interior vertex belongs
+to $I_D^\eps\cup A$, by connectedness of its cell.
+Every component containing an interior vertex reaches $A$:
+otherwise it would be a finite component of the connected
+infinite mated-CRT graph.
+Add edges between vertices of $A$ to connect the remaining
+components if necessary. This finite graph is connected,
+and its walk hits $A$ almost surely from every vertex.
+The walk before that hit, its hitting distribution, and
+the event of disconnecting a vertex from $A$ are unchanged
+by the added edges. Thus all hypotheses of input (d) hold.
+Fix a compact $K\Subset D$ and let
+$\delta=\dist(K,\partial D)>0$.
+For representatives $x=\eta(v)$ and $x'=\eta(w)$ near $K$,
+start the annulus iteration at
+\[
+ R_0=8(\ell\vee|x-x'|)
+\]
+and use radii $2^jR_0$ until $2\cdot2^jR_0\le\delta/4$.
+If $R_0$ is already larger than this bound the following
+estimate is trivial after enlarging its constant.
+Otherwise the cell of $w$ lies inside the innermost circle,
+and every cell of $\partial D$ lies beyond the outermost
+circle, for small $\eps$. A disconnection at any stage
+therefore separates $w$ from the stopping set
+$\V(\partial D)$. The walk cannot hit that stopping set
+before hitting the stage's outer circle.
+The Markov iteration in Lemma~\ref{lem:excursion}, now counting
+failure of all disconnection attempts, bounds its probability
+by $C(R_0/\delta)^\nu$.
+Input (d) and the expectation formula consequently give
+\begin{equation}\label{eq:interior-modulus}
+ |f^\eps(v)-f^\eps(w)|
+ \le C\|\psi\|_\infty
+       \left(\frac{\ell\vee|x-x'|}{\delta}\right)^\nu.
+\end{equation}
+All constants here are uniform in the vertices of the
+chosen compact set.
+
+For boundary control, take an interior representative $x$
+at distance $u$ from $\partial D$ and start the same iteration
+at $R_0=8(\ell+u)$, now stopping on $\V(\partial D)$ itself.
+For $u$ small this gives
+\[
+ \Pp_x[|Y_{\sigma_D^\eps}-x|>Cs\mid\F]
+ \le \min\{1,C((\ell+u)/s)^\nu\},\qquad 0<s\le s_0.
+\]
+The proof is identical to Lemma~\ref{lem:excursion}:
+the radial complement of $D$ forces a boundary hit on each
+successful disconnection, and $R_0/2>u+20d$.
+Let $p$ be the nearest point of $\partial D$ to $x$.
+With
+$\omega_\psi(t)=\sup\{|\psi(v)-\psi(w)|:
+v,w\in\overline D,\ |v-w|\le t\}$,
+nonexpansiveness of projection implies
+\begin{equation}\label{eq:boundary-modulus}
+ |f^\eps(v)-\psi(p)|
+ \le \omega_\psi(Cs+u)
+       +C\|\psi\|_\infty((\ell+u)/s)^\nu .
+\end{equation}
+Choose $s=\sqrt{\ell+u}$ for small $\ell+u$.
+The right side tends to zero uniformly as $\ell+u\to0$.
+For a starting boundary cell the prescribed value differs
+from the value at a boundary point in the cell by at most
+$\omega_\psi(d)$, so the same limiting assertion holds.
+This includes cells touching the boundary only from outside.
+
+Now prepare, from any deterministic sequence of $\eps$'s,
+a deterministic subsequence on which convergence holds at a
+countable dense set of points in $D$ and $E_\eps$ holds
+eventually almost surely. Diagonal selection with summable
+error probabilities does this.
+On a compact subset of $D$, \eqref{eq:interior-modulus} and
+$|\eta(a_y^\eps)-y|\le d$ give asymptotic equicontinuity of
+the cellwise extensions. A finite net from the dense set
+therefore upgrades their pointwise convergence to uniform
+convergence on that compact subset.
+Estimate \eqref{eq:boundary-modulus} controls the remaining
+boundary strip, uniformly in $\eps$, and the limiting
+Poisson extension is uniformly continuous on $\overline D$.
+First shrink the strip and then let $\eps\to0$.
+This proves almost-sure uniform convergence along the
+prepared subsequence, hence uniform convergence in probability
+by the arbitrary-subsequence criterion.
+
+Finally approximate a continuous datum uniformly on
+$\overline D$ by deterministic Lipschitz functions. Projection
+preserves the uniform approximation, and both discrete and
+continuum harmonic extension are contractions in the sup norm,
+by their expectation formulas. The uniform conclusion and
+\eqref{eq:A-main} follow for continuous $\psi$ as well.
+This proves Theorem~\ref{thm:A}.
+
+\section{The actual outer-stopped interpolation}\label{sec:outer}
+Here is a precise repair if one wants to retain
+$\widehat X^{y,\eps}$ from the printed proof. For an eventually
+constant path $w$ which starts in $D$, set
+\[
+ \Phi^\psi_{\rm stop}(w)=
+ \begin{cases}
+ \psi(w(T_D(w))),&T_D(w)<\infty,\\
+ \bar\psi(w(\infty)),&T_D(w)=\infty.
+ \end{cases}
+\]
+Use the projected initial value when the path starts outside $D$.
+With this convention \eqref{eq:rate} and \eqref{eq:mean-rate}
+hold with $\Phi^\psi_{\rm stop}(\widehat X^{y,\eps})$ in place
+of $\Phi^\psi(W^\eps)$. Indeed $\sigma_D^\eps\le
+\sigma_{B_\rho}^\eps$. If the outer-stopped path has not exited
+$D$, its final point occurs during the excursion before the
+unrestricted path's first exit. The maximal-excursion assertion
+of Lemma~\ref{lem:excursion} bounds its displacement from
+$Y^\eps_{\sigma_D^\eps}$ by the same argument.
+Projection can only decrease the relevant distance.
+
+If $\overline D\subset B_\rho$, the outer-stopped path does exit
+$D$ on the cell-size event for small $\eps$, and this convention
+agrees with the printed functional. Without such a separation,
+one must supply a convention or use the unrestricted walk.
+For the proof of harmonic convergence, the unrestricted walk
+avoids any need to apply a continuity theorem to this extended
+outer-stopped functional.
+
+For any two fixed H\"older extensions of the same $\psi$, their
+values at a boundary-cell representative differ by $O(d^\chi)$:
+compare each to a point of $\partial D$ in that cell.
+Thus the limiting lemma is independent of the chosen extension.
+The defects above are defects of definition and proof; after
+these repairs the polynomial comparison itself is valid.
+
+\section{Audit of every use}
+Line numbers in this section refer to the supplied corrected source.
+A literal search for \texttt{lemma:convergence-of-harmonic-functions}
+finds its definition at line 1390 and just one invocation, at
+line 1453 in the proof of the Dirichlet lemma.
+\begin{enumerate}[label=(\arabic*)]
+\item \textbf{Dirichlet lemma, lines 1434--1528.}
+Its harmonic part satisfies, exactly,
+\[
+ m_\eps^{-1}f_1^\eps(a_y^\eps)
+ =\E[\bar\phi(Y^\eps_{\sigma_D^\eps})\mid\F].
+\]
+Theorem~\ref{thm:A} gives the required convergence at every fixed
+rational point. A deterministic diagonal subsequence gives the
+almost-sure simultaneous statement for all rational points.
+The uniform conclusion proved above directly supplies its
+harmonic-part compactness and boundary convergence.
+The boundary datum in that lemma must also be extended to a
+neighborhood (or evaluated after $\pi_D$). No convergence rate
+is used anywhere in this invocation.
+
+The inhomogeneous part uses the separate occupation-convergence
+lemma. Its correct limit is
+$-c_0\int_D G_D(\cdot,w)\psi(w)\mu_h(dw)$,
+where $c_0=2/m_0$ as in approved correction \textup{[C1]}.
+The displayed residual $m_0$ in Step 1 must be read as $c_0$.
+Likewise the limit of $m_\eps^{-1}\mathfrak Q_D^\eps$ has
+Laplacian $-c_0\mu_h$, not the displayed $-1$ in Step 3.
+The needed zero-boundary control is already supplied by the
+lens comparison in the corrected tightness proof, lines
+1144--1172; one cannot justify it by a harmonic maximum
+principle for the superharmonic exit-time function alone.
+These corrections do not require a stronger version of Lemma 3.6.
+
+\item \textbf{Normalized-exit-time argument, lines 1565 and 1674.}
+These use the Dirichlet lemma only with zero boundary data and
+a countable family of deterministic smooth sources.
+The harmonic part is identically zero. Deterministic diagonal
+preparation as in \textup{[C11]} suffices. There is no demand
+for uncountably simultaneous applications or a rate.
+
+\item \textbf{Odometer compactness, line 1948.}
+This cites the Dirichlet proof's zero-boundary barrier.
+Use the corrected tightness proof's lens barrier just identified.
+It is a bounded-Laplacian estimate, not an extra consequence of
+pointwise harmonic convergence.
+
+\item \textbf{Subsequential properties, lines 1981 and 2031.}
+The prepared family consists of rational balls and rational
+polynomial boundary data, hence is countable. A polynomial
+chosen after observing the limiting odometer is permissible
+because convergence has already been prepared for every member
+of that countable family. Polynomials have canonical extensions
+outside the disk. There is, however, an additional scaling typo:
+the boundary condition at about line 2010 must be
+\[
+ f_\delta^\eps(b)=m_\eps\bigl(\phi^\delta(\eta(b))+\delta\bigr),
+\]
+not $m_\eps\phi^\delta(\eta(b))+\delta$.
+The latter has limit $\phi^\delta$ and cannot imply the displayed
+limit $\phi^\delta+\delta$ or the claimed domination.
+With the corrected boundary value, uniform convergence of the
+odometer and $\|\phi^\delta-\bar w_t^*\|_{\overline D}<\delta/4$
+give boundary domination for small $\eps$; the small overshoot
+outside $D$ is handled by continuity on its collar.
+The discrete maximum principle and Theorem~\ref{thm:A} then
+give the asserted harmonic comparison. It is enough to take
+rational $\delta\downarrow0$, keeping the family countable.
+\end{enumerate}
+The introduction and the explanatory sentence preceding the
+normalized-exit-time lemma only announce or discuss the
+Dirichlet result. There are no other invocations of Lemma 3.6,
+and no downstream invocation uses its printed quantitative
+comparison. This audit certifies the uses of harmonic convergence;
+it is not a blanket verification of unrelated Green-kernel or
+obstacle calculations elsewhere in the paper.
+
+\begin{thebibliography}{9}
+\bibitem{BG}
+N.~Berestycki and E.~Gwynne,
+\emph{Random walks on mated-CRT planar maps and Liouville Brownian motion},
+\href{https://arxiv.org/pdf/2003.10320v2}{arXiv:2003.10320v2}.
+The exact inputs are Theorem 1.2, p.~10, and Lemma 2.4, p.~17,
+as stated above.
+\bibitem{GMS}
+E.~Gwynne, J.~Miller, and S.~Sheffield,
+\emph{Harmonic functions on mated-CRT maps},
+\href{https://arxiv.org/pdf/1807.07511v3}{arXiv:1807.07511v3}.
+The quantitative input is Lemma 3.11, (3.35), p.~31.
+The planar observation is in the proof of Theorem 3.9,
+p.~32, immediately before (3.38).
+The qualitative compactness argument also uses
+Lemma 3.10, (3.34), p.~31.
+\end{thebibliography}
+\end{document}
+```

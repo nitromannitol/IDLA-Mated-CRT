@@ -61,6 +61,12 @@ The printed random input sequence precedes a high-probability extraction. First 
 ## [C12] Fixed-sequence quantifiers in Lemmas 4.6–4.7 (E-x3-2)
 Put the deterministic sequence, and in Lemma 4.6 fixed t, before a deterministic thinning and the almost-sure conclusion. Lemma 4.6 states relative compactness on the closed ball, Hölder limits and measurable selection. See AUDIT-C11-C12-USES.md; downstream identification is conditional on independent repairs.
 
+## [C13] Harmonic convergence and boundary representatives (author-approved 2026-11-06)
+Lemma 3.6: replace the printed Hölder datum evaluated at the exit-cell representative by continuous datum on the closed disk, evaluated after nearest-point projection. Add uniform convergence and the polynomial same-walk comparison, with the corrected unrestricted-walk proof. Apply the projection convention to Lemma 3.5 boundary data as well. Boundary-cell representatives can lie outside the disk and the exit functional is not everywhere continuous. See `LEMMA36-REPLACEMENT.md` and `AUDIT-L36-USES.md`.
+
+## [C14] Normalized comparison boundary offset (author-approved 2026-11-06)
+In the proof of Lemma 4.8, replace `m_eps phi^delta(eta(b)) + delta` by `m_eps (phi^delta(eta(b)) + delta)`. Only the latter gives the stated limiting boundary value and the intended domination. This implements G3 of `PROOF-REPAIRS-G.md` in the paper.
+
 ## Readings (not corrections of the paper; line numbers of the corrected draft)
 
 ### (R1) The origin vertex `0` and `a^eps_0` (ESCALATIONS E-x3-3, worker A, 2026-11-04)
