@@ -70,7 +70,8 @@ def CorrectedHarmonicSameWalkRateStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∀ a : ℝ, 0 < a → a < 2 / (2 + γ) ^ (2 : ℕ) →
   ∃ ν κ : ℝ, 0 < ν ∧ 0 < κ ∧
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
-  ∃ E : ℝ → Set Ω, ∃ CE εE : ℝ, 0 ≤ CE ∧ 0 < εE ∧
+  ∃ E : ℝ → Set Ω, (∀ ε, MeasurableSet[S.envSigma] (E ε)) ∧
+  ∃ CE εE : ℝ, 0 ≤ CE ∧ 0 < εE ∧
     (∀ ε : ℝ, 0 < ε → ε < εE → S.P (E ε)ᶜ ≤ ENNReal.ofReal (CE * ε ^ κ)) ∧
     ∀ (r : ℝ) (z : ℂ), 0 < r → ball z r ⊆ ball 0 ρ →
     ∀ (ψ : ℂ → ℝ) (H χ : ℝ≥0), 0 < χ → χ ≤ 1 →
