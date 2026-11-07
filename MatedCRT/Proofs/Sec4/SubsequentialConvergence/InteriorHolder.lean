@@ -58,4 +58,40 @@ theorem holderOn_of_eventual_small_distance_and_oscillation
   · intro x hx y hy
     exact le_of_tendsto ((hconv x hx).dist (hconv y hy)) (hbound x hx y hy)
 
+/-- The two-power modulus in the proof of Lemma 3.1 yields an interior Hölder
+estimate for every pointwise limit, with exponent the smaller power. The
+eventual index in the modulus may depend on the chosen scale and points. -/
+theorem holderOn_of_eventual_two_power_modulus
+    {F : ℕ → ℂ → ℝ} {f : ℂ → ℝ} {K : Set ℂ} {C M a b δ₀ : ℝ≥0}
+    (ha : 0 < a) (hb : 0 < b) (ha1 : a ≤ 1)
+    (hδ : 0 < δ₀) (hδ1 : δ₀ ≤ 1)
+    (hconv : ∀ x ∈ K, Tendsto (fun n => F n x) atTop (𝓝 (f x)))
+    (hmod : ∀ δ : ℝ, 0 < δ → δ < δ₀ → ∀ x ∈ K, ∀ y ∈ K,
+      dist x y ≤ δ → ∀ᶠ n in atTop,
+        dist (F n x) (F n y) ≤ C * (δ ^ (a : ℝ) + δ ^ (b : ℝ)))
+    (hbound : ∀ x ∈ K, ∀ y ∈ K, ∀ᶠ n in atTop,
+      dist (F n x) (F n y) ≤ M) :
+    IsHolderContinuousOn f K := by
+  apply holderOn_of_eventual_small_distance_and_oscillation
+    (C := 2 * C) (χ := min a b) (δ := δ₀)
+    (lt_min ha hb) ((min_le_left _ _).trans ha1) hδ hconv
+  · intro x hx y hy hxy
+    by_cases hzero : dist x y = 0
+    · have hxy' : x = y := dist_eq_zero.mp hzero
+      subst y
+      filter_upwards [] with n
+      simp only [dist_self]
+      positivity
+    · have hd : 0 < dist x y := lt_of_le_of_ne dist_nonneg (Ne.symm hzero)
+      have hd1 : dist x y ≤ 1 := le_trans hxy.le (by exact_mod_cast hδ1)
+      have h₁ : dist x y ^ (a : ℝ) ≤ dist x y ^ ((min a b : ℝ≥0) : ℝ) :=
+        Real.rpow_le_rpow_of_exponent_ge hd hd1 (by exact_mod_cast min_le_left a b)
+      have h₂ : dist x y ^ (b : ℝ) ≤ dist x y ^ ((min a b : ℝ≥0) : ℝ) :=
+        Real.rpow_le_rpow_of_exponent_ge hd hd1 (by exact_mod_cast min_le_right a b)
+      filter_upwards [hmod (dist x y) hd hxy x hx y hy le_rfl] with n hn
+      have hC : 0 ≤ (C : ℝ) := NNReal.coe_nonneg C
+      simp only [NNReal.coe_mul, NNReal.coe_ofNat]
+      nlinarith
+  · exact hbound
+
 end MatedCRT
