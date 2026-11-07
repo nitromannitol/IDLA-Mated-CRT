@@ -1,4 +1,5 @@
 import MatedCRT.Defs.KilledGMCClock
+import MatedCRT.Defs.DirichletGFF
 import MarkovProcess.Path.ExitTimeShift
 
 /-! # Localization of convergence of Liouville clocks -/
@@ -7,6 +8,32 @@ namespace MatedCRT
 
 open HarmonicBalls MarkovProcess MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped ENNReal NNReal
+
+/-- A stopped clock only uses the circle-average field inside the domain:
+the exit time itself is a Lebesgue-null endpoint. -/
+theorem killedGMCClockApprox_eq_of_eqOn (D : Set ℂ) (γ : ℝ)
+    (hε gε : ℝ → ℂ → ℝ) (ε : ℝ) (b : ContinuousPath ℂ) (t : ℝ≥0)
+    (hfield : Set.EqOn (hε ε) (gε ε) D) :
+    killedGMCClockApprox D γ hε ε b t = killedGMCClockApprox D γ gε ε b t := by
+  let T : ℝ≥0 := (min (t : ℝ≥0∞) (ContinuousPath.exitTime D b)).toNNReal
+  have hT : (T : ℝ≥0∞) ≤ ContinuousPath.exitTime D b := by
+    dsimp [T]
+    rw [ENNReal.coe_toNNReal (ne_top_of_le_ne_top ENNReal.coe_ne_top (min_le_left _ _))]
+    exact min_le_right _ _
+  change (∫ s in (0 : ℝ)..(T : ℝ),
+      ε ^ (γ ^ 2 / 2) * Real.exp (γ * hε ε (b s.toNNReal))) =
+    ∫ s in (0 : ℝ)..(T : ℝ),
+      ε ^ (γ ^ 2 / 2) * Real.exp (γ * gε ε (b s.toNNReal))
+  apply intervalIntegral.integral_congr_Ioo_of_le T.2
+  intro s hs
+  have hsT : s.toNNReal < T := by
+    apply NNReal.coe_lt_coe.mp
+    simpa [Real.toNNReal_of_nonneg (le_of_lt hs.1)] using hs.2
+  have hsτ : (s.toNNReal : ℝ≥0∞) < ContinuousPath.exitTime D b :=
+    (ENNReal.coe_lt_coe.mpr hsT).trans_le hT
+  change ε ^ (γ ^ 2 / 2) * Real.exp (γ * hε ε (b s.toNNReal)) =
+    ε ^ (γ ^ 2 / 2) * Real.exp (γ * gε ε (b s.toNNReal))
+  rw [hfield (ContinuousPath.mem_of_lt_exitTime D b s.toNNReal hsτ)]
 
 /-- The circle-average clock is jointly measurable in the path and time
 when the circle-average field is measurable. -/
@@ -59,6 +86,38 @@ theorem measurable_killedGMCClockApprox_of_field {D : Set ℂ} (hD : IsOpen D)
     (hfield : Measurable (hε ε)) :
     Measurable (fun b => killedGMCClockApprox D γ hε ε b t) :=
   measurable_killedGMCClockApprox hD γ hε ε t (measurable_lqgClockApprox γ hε ε hfield)
+
+/-- Only the field on the domain needs to be continuous for the stopped
+clock to be measurable; its values outside the domain are irrelevant. -/
+theorem measurable_killedGMCClockApprox_of_continuousOn {D : Set ℂ} (hD : IsOpen D)
+    (γ : ℝ) (hε : ℝ → ℂ → ℝ) (ε : ℝ) (t : ℝ≥0)
+    (hfield : ContinuousOn (hε ε) D) :
+    Measurable (fun b => killedGMCClockApprox D γ hε ε b t) := by
+  have hr : Measurable (fun z : D => hε ε z) :=
+    (continuousOn_iff_continuous_domRestrict.mp hfield).measurable
+  obtain ⟨g, hg, hgeq⟩ := MeasurableEmbedding.exists_measurable_extend
+    (MeasurableEmbedding.subtype_coe hD.measurableSet) hr (fun _ => ⟨0⟩)
+  have heq : Set.EqOn (hε ε) g D := by
+    intro z hz
+    exact (congrFun hgeq ⟨z, hz⟩).symm
+  have hk := measurable_killedGMCClockApprox_of_field hD γ (fun _ => g) ε t hg
+  convert hk using 1
+  funext b
+  exact killedGMCClockApprox_eq_of_eqOn D γ hε (fun _ => g) ε b t heq
+
+/-- The Dirichlet GFF circle-average continuity gives measurability of each
+localized clock at scales whose averaging disks stay inside the field domain. -/
+theorem IsDirichletGFF.ae_measurable_killedGMCClockApprox
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {D U : Set ℂ}
+    {h : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hGFF : IsDirichletGFF P D h hcirc) (hU : IsOpen U)
+    (γ ε : ℝ) (hε : 0 < ε)
+    (hdisks : ∀ z ∈ U, Metric.closedBall z ε ⊆ D) (t : ℝ≥0) :
+    ∀ᵐ ω ∂P, Measurable (fun b => killedGMCClockApprox U γ (hcirc ω) ε b t) := by
+  filter_upwards [hGFF.continuous_circle] with ω hcont
+  apply measurable_killedGMCClockApprox_of_continuousOn hU γ (hcirc ω) ε t
+  exact hcont.comp (continuous_const.prodMk continuous_id).continuousOn
+    (fun z hz => ⟨hε, hdisks z hz⟩)
 
 /-- Stopping preserves the uniform-on-compacts convergence in probability
 in `IsLQGClock`. The stopping time may depend on the whole path, and may be
