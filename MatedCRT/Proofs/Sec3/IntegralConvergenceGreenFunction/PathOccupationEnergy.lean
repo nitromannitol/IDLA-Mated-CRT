@@ -188,4 +188,100 @@ theorem ae_pathOccupationMeasure_finiteDimensionalEnergy_all_horizons
   obtain ⟨n, hn⟩ := exists_nat_ge T
   exact pathOccupationMeasure_finiteDimensionalEnergy_of_le hbω hn (hω n)
 
+/-- On all metric spaces, a nonnegative lower-order Riesz kernel is bounded
+by one plus a higher-order kernel. -/
+theorem rieszEnergyKernel_le_one_add {E : Type*} [PseudoMetricSpace E]
+    {a b : ℝ} (ha : 0 ≤ a) (hab : a ≤ b) (x y : E) :
+    rieszEnergyKernel a x y ≤ 1 + rieszEnergyKernel b x y := by
+  unfold rieszEnergyKernel
+  by_cases hz : dist x y = 0
+  · by_cases hapos : 0 < a
+    · have hbpos : 0 < b := lt_of_lt_of_le hapos hab
+      simp [hz, hapos, hbpos]
+    · simp only [hz, hapos, and_false, ↓reduceIte]
+      have ha0 : a = 0 := le_antisymm (le_of_not_gt hapos) ha
+      simp [ha0]
+  · have hp : 0 < dist x y := lt_of_le_of_ne dist_nonneg (Ne.symm hz)
+    simp only [hz, false_and, ↓reduceIte]
+    by_cases hd : dist x y ≤ 1
+    · have h := Real.rpow_le_rpow_of_exponent_ge hp hd (neg_le_neg hab)
+      exact (ENNReal.ofReal_le_ofReal h).trans (le_add_self)
+    · have h := Real.rpow_le_one_of_one_le_of_nonpos (le_of_not_ge hd) (neg_nonpos.mpr ha)
+      exact (ENNReal.ofReal_le_ofReal h).trans (by simp)
+
+/-- For a finite measure, finite Riesz energy at a positive exponent implies
+finite energy at every smaller nonnegative exponent. -/
+theorem rieszEnergy_lt_top_of_le {E : Type*} [MetricSpace E]
+    [MeasurableSpace E] [BorelSpace E] [SecondCountableTopology E]
+    (μ : Measure E) [IsFiniteMeasure μ] {a b : ℝ} (ha : 0 ≤ a) (hab : a ≤ b)
+    (hb : (∫⁻ x, ∫⁻ y, rieszEnergyKernel b x y ∂μ ∂μ) < ⊤) :
+    (∫⁻ x, ∫⁻ y, rieszEnergyKernel a x y ∂μ ∂μ) < ⊤ := by
+  have hbound : (∫⁻ x, ∫⁻ y, rieszEnergyKernel a x y ∂μ ∂μ) ≤
+      ∫⁻ x, ∫⁻ y, (1 + rieszEnergyKernel b x y) ∂μ ∂μ := by
+    exact lintegral_mono fun x => lintegral_mono fun y =>
+      rieszEnergyKernel_le_one_add ha hab x y
+  apply lt_of_le_of_lt hbound
+  simp_rw [lintegral_add_left measurable_const]
+  apply ENNReal.add_lt_top.mpr
+  constructor
+  · exact lintegral_const_lt_top (ne_of_lt (lintegral_const_lt_top (by simp)))
+  · exact hb
+
+/-- A countable cofinal family of nonnegative exponents gives finite energy
+at every nonnegative exponent below the limiting dimension on one event. -/
+theorem ae_rieszEnergy_lt_top_of_countable_cofinal
+    {Ω E : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    [MetricSpace E] [MeasurableSpace E] [BorelSpace E] [SecondCountableTopology E]
+    (μ : Ω → Measure E) [∀ ω, IsFiniteMeasure (μ ω)] (d : ℝ) (q : ℕ → ℝ)
+    (hcofinal : ∀ a : ℝ, 0 ≤ a → a < d → ∃ n, a ≤ q n)
+    (henergy : ∀ n, ∀ᵐ ω ∂P,
+      (∫⁻ x, ∫⁻ y, rieszEnergyKernel (q n) x y ∂(μ ω) ∂(μ ω)) < ⊤) :
+    ∀ᵐ ω ∂P, ∀ a : ℝ, 0 ≤ a → a < d →
+      (∫⁻ x, ∫⁻ y, rieszEnergyKernel a x y ∂(μ ω) ∂(μ ω)) < ⊤ := by
+  filter_upwards [ae_all_iff.mpr henergy] with ω hω a ha had
+  obtain ⟨n, hn⟩ := hcofinal a ha had
+  exact rieszEnergy_lt_top_of_le (μ ω) ha hn (hω n)
+
+/-- At a nonpositive exponent, the Riesz kernel is bounded on a set of
+bounded diameter. -/
+theorem rieszEnergyKernel_le_of_dist_le {E : Type*} [PseudoMetricSpace E]
+    {a R : ℝ} (ha : a ≤ 0) {x y : E} (hR : dist x y ≤ R) :
+    rieszEnergyKernel a x y ≤ ENNReal.ofReal (R ^ (-a)) := by
+  simp only [rieszEnergyKernel, not_lt_of_ge ha, and_false, ↓reduceIte]
+  exact ENNReal.ofReal_le_ofReal
+    (Real.rpow_le_rpow dist_nonneg hR (neg_nonneg.mpr ha))
+
+/-- A finite measure whose pairs have bounded distance almost everywhere has
+finite Riesz energy at every nonpositive exponent. -/
+theorem rieszEnergy_lt_top_of_ae_bounded {E : Type*} [PseudoMetricSpace E]
+    [MeasurableSpace E] (μ : Measure E) [IsFiniteMeasure μ] {a R : ℝ}
+    (ha : a ≤ 0) (hR : ∀ᵐ x ∂μ, ∀ᵐ y ∂μ, dist x y ≤ R) :
+    (∫⁻ x, ∫⁻ y, rieszEnergyKernel a x y ∂μ ∂μ) < ⊤ := by
+  have hbound : (∫⁻ x, ∫⁻ y, rieszEnergyKernel a x y ∂μ ∂μ) ≤
+      ∫⁻ _x, ∫⁻ _y, ENNReal.ofReal (R ^ (-a)) ∂μ ∂μ := by
+    apply lintegral_mono_ae
+    filter_upwards [hR] with x hx
+    apply lintegral_mono_ae
+    filter_upwards [hx] with y hy
+    exact rieszEnergyKernel_le_of_dist_le ha hy
+  apply lt_of_le_of_lt hbound
+  exact lintegral_const_lt_top (ne_of_lt (lintegral_const_lt_top ENNReal.ofReal_ne_top))
+
+/-- Countably many cofinal energy estimates and almost-sure bounded diameter
+establish the full finite-dimensional energy condition. -/
+theorem ae_hasFiniteDimensionalEnergy_of_countable_cofinal
+    {Ω E : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    [MetricSpace E] [MeasurableSpace E] [BorelSpace E] [SecondCountableTopology E]
+    (μ : Ω → Measure E) [∀ ω, IsFiniteMeasure (μ ω)] (d : ℝ) (q : ℕ → ℝ)
+    (hcofinal : ∀ a : ℝ, 0 ≤ a → a < d → ∃ n, a ≤ q n)
+    (henergy : ∀ n, ∀ᵐ ω ∂P,
+      (∫⁻ x, ∫⁻ y, rieszEnergyKernel (q n) x y ∂(μ ω) ∂(μ ω)) < ⊤)
+    (hbounded : ∀ᵐ ω ∂P, ∃ R : ℝ, ∀ᵐ x ∂(μ ω), ∀ᵐ y ∂(μ ω), dist x y ≤ R) :
+    ∀ᵐ ω ∂P, HasFiniteDimensionalEnergy (μ ω) d := by
+  filter_upwards [ae_rieszEnergy_lt_top_of_countable_cofinal P μ d q hcofinal henergy,
+    hbounded] with ω hω ⟨R, hR⟩ δ hδ
+  by_cases ha : 0 ≤ d - δ
+  · exact hω (d - δ) ha (sub_lt_self d hδ)
+  · exact rieszEnergy_lt_top_of_ae_bounded (μ ω) (le_of_not_ge ha) hR
+
 end MatedCRT
