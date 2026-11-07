@@ -143,4 +143,33 @@ theorem MatedCRTEnv.IsValid.ae_nested_annulus_separating_walks_of_cell_size
   obtain ⟨hr, hclear, hball⟩ := hgeometry i hi
   exact hwalk ε hε z x (r i) (radius i) margin bound ρ hr hclear hbound hball hsize
 
+/-- Separating walks avoid the cells of the boundary circle of a disk when
+the radial construction clears a slightly larger disk. This is the form
+needed when the walk is stopped on first hitting boundary cells. -/
+theorem MatedCRTEnv.IsValid.ae_nested_annulus_walks_avoiding_boundary_cells
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) :
+    ∀ᵐ ω ∂S.P, ∀ (ε : ℝ), 0 < ε → ∀ (z x : ℂ)
+      (r radius : ℕ → ℝ) (n : ℕ) (buffer margin bound ρ : ℝ),
+      0 < buffer → bound ≤ margin →
+      (∀ i ≤ n, 0 < r i ∧ radius i + buffer - dist z x + margin < r i / 4 ∧
+        Metric.ball z (2 * r i) ⊆ Metric.ball 0 ρ) →
+      (∀ i, (cell ε (S.η ω) i ∩ Metric.ball 0 ρ).Nonempty →
+        Metric.diam (cell ε (S.η ω) i) ≤ bound) →
+      ∀ i ≤ n, ∃ y b, y ∈ cellVertices ε (S.η ω) (Metric.sphere z (r i / 4)) ∧
+        b ∈ cellVertices ε (S.η ω) (Metric.sphere z (r i)) ∧
+        ∃ w : (adjGraph (S.mult ε ω)).Walk y b,
+          ∀ v ∈ w.support, v ∉ cellVertices ε (S.η ω) (Metric.sphere x (radius i)) := by
+  filter_upwards [hS.ae_nested_annulus_separating_walks_of_cell_size] with ω hwalk
+  intro ε hε z x r radius n buffer margin bound ρ hbuffer hbound hgeometry hsize i hi
+  obtain ⟨y, b, hy, hb, w, hw⟩ := hwalk ε hε z x r
+    (fun i => radius i + buffer) n margin bound ρ hbound hgeometry hsize i hi
+  refine ⟨y, b, hy, hb, w, ?_⟩
+  intro v hv hmem
+  apply hw v hv
+  obtain ⟨q, hq, hqsphere⟩ := hmem
+  refine ⟨q, hq, Metric.mem_ball.mpr ?_⟩
+  have hdist := Metric.mem_sphere.mp hqsphere
+  linarith
+
 end MatedCRT
