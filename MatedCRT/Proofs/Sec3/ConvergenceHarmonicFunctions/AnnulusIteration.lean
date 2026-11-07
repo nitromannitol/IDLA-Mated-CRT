@@ -17,6 +17,58 @@ noncomputable def annulusCrossings (A U B : ℕ → Set ℤ) : ℕ → (ℕ → 
         (fun x => (B n).indicator 1 (x k) *
           annulusCrossings A U B n (pathShift k x)) x
 
+/-- The event that the walk completes each of the specified finite stages. -/
+def annulusCrossingEvent (A U B : ℕ → Set ℤ) : ℕ → Set (ℕ → ℤ)
+  | 0 => Set.univ
+  | n + 1 => ⋃ k : ℕ, {x | vHitTime (A n ∪ (U n)ᶜ) x = k ∧ x k ∈ B n ∧
+      pathShift k x ∈ annulusCrossingEvent A U B n}
+
+/-- The integral formulation agrees pointwise with the crossing event. -/
+theorem annulusCrossings_eq_indicator (A U B : ℕ → Set ℤ) (n : ℕ) :
+    annulusCrossings A U B n = (annulusCrossingEvent A U B n).indicator 1 := by
+  classical
+  induction n with
+  | zero => funext x; simp [annulusCrossings, annulusCrossingEvent]
+  | succ n ih =>
+    funext x
+    simp only [annulusCrossings, annulusCrossingEvent]
+    by_cases hx : ∃ k : ℕ, vHitTime (A n ∪ (U n)ᶜ) x = k ∧ x k ∈ B n ∧
+        pathShift k x ∈ annulusCrossingEvent A U B n
+    · obtain ⟨k, hk, hb, hc⟩ := hx
+      rw [tsum_eq_single k]
+      · simp [hk, hb, ih, hc, Set.indicator]
+      · intro j hj
+        have hne : vHitTime (A n ∪ (U n)ᶜ) x ≠ j := by
+          intro hj'
+          apply hj
+          have he := hj'.symm.trans hk
+          exact_mod_cast he
+        simp [hne, Set.indicator]
+    · have hnot : x ∉ ⋃ k : ℕ, {x | vHitTime (A n ∪ (U n)ᶜ) x = k ∧ x k ∈ B n ∧
+          pathShift k x ∈ annulusCrossingEvent A U B n} := by
+        simpa only [Set.mem_iUnion, mem_ofPred_eq] using hx
+      rw [Set.indicator_of_notMem hnot]
+      apply ENNReal.tsum_eq_zero.2
+      intro k
+      by_cases hk : vHitTime (A n ∪ (U n)ᶜ) x = k
+      · by_cases hb : x k ∈ B n
+        · have hc : pathShift k x ∉ annulusCrossingEvent A U B n :=
+            fun hc => hx ⟨k, hk, hb, hc⟩
+          simp [hk, hb, ih, hc, Set.indicator]
+        · simp [hk, hb, Set.indicator]
+      · simp [hk, Set.indicator]
+
+/-- Crossing events are measurable. -/
+theorem measurableSet_annulusCrossingEvent (A U B : ℕ → Set ℤ) (n : ℕ) :
+    MeasurableSet (annulusCrossingEvent A U B n) := by
+  induction n with
+  | zero => exact MeasurableSet.univ
+  | succ n ih =>
+    simp only [annulusCrossingEvent]
+    exact MeasurableSet.iUnion fun k => (measurableSet_vHitTime_eq _ k).inter
+      (((Set.to_countable (B n)).measurableSet.preimage (measurable_pi_apply k)).inter
+        (ih.preimage (measurable_pathShift k)))
+
 /-- The finite-stage crossing indicator is measurable in the walk. -/
 theorem measurable_annulusCrossings (A U B : ℕ → Set ℤ) (n : ℕ) :
     Measurable (annulusCrossings A U B n) := by
@@ -69,5 +121,17 @@ theorem lintegral_annulusCrossings_le_pow
           (fun b hb => ih b (hnext n hb))
       _ ≤ q * q ^ (n + 1) := by gcongr; exact hstage (n + 1) v hv
       _ = q ^ (n + 1 + 1) := by simp only [pow_succ]; ac_rfl
+
+/-- The finite-stage crossing event has geometrically decaying probability. -/
+theorem measure_annulusCrossingEvent_le_pow
+    (m : ℤ → ℤ → ℕ) (A U B S : ℕ → Set ℤ) (q : ℝ≥0∞)
+    (hnext : ∀ n, B (n + 1) ⊆ S n)
+    (hstage : ∀ n v, v ∈ S n →
+      srwLaw m v (⋃ k : ℕ, {x | vHitTime (A n ∪ (U n)ᶜ) x = k ∧ x k ∈ B n}) ≤ q)
+    (n : ℕ) (v : ℤ) (hv : v ∈ S n) :
+    srwLaw m v (annulusCrossingEvent A U B (n + 1)) ≤ q ^ (n + 1) := by
+  rw [← lintegral_indicator_one (measurableSet_annulusCrossingEvent A U B (n + 1)),
+    ← annulusCrossings_eq_indicator]
+  exact lintegral_annulusCrossings_le_pow m A U B S q hnext hstage n v hv
 
 end MatedCRT
