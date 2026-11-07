@@ -119,4 +119,22 @@ theorem MatedCRTEnv.IsValid.exists_envSigma_uniform_rescale_randomMesh_on_events
 
 
 
+/-- A uniform limit on a larger set agrees on the domain with a local limit,
+    so it may serve as the local limit with boundary convergence. -/
+theorem local_limit_of_uniform_superset
+    (F : ℕ → ℂ → ℝ) (D K : Set ℂ) (hDK : D ⊆ K)
+    (v w : ℂ → ℝ) (hv : ContinuousOn v D)
+    (hlocal : ∀ O, IsCompact O → O ⊆ D → TendstoUniformlyOn F v atTop O)
+    (hconv : TendstoUniformlyOn F w atTop K) :
+    ContinuousOn w D ∧
+      ∀ O, IsCompact O → O ⊆ D → TendstoUniformlyOn F w atTop O := by
+  have heq : EqOn v w D := by
+    intro x hx
+    have hl := (hlocal {x} isCompact_singleton (singleton_subset_iff.mpr hx)).tendsto_at (mem_singleton x)
+    have hr := hconv.tendsto_at (hDK hx)
+    exact tendsto_nhds_unique hl hr
+  refine ⟨hv.congr (fun x hx => (heq hx).symm), ?_⟩
+  intro O hO hOD
+  exact (hlocal O hO hOD).congr_right (heq.mono hOD)
+
 end MatedCRT
