@@ -203,4 +203,45 @@ theorem tsum_lintegral_hitTime_indicator_continuation_le
         _ = 1 := measure_univ
     _ = c := one_mul c
 
+/-- A walk which reaches `A` inside `U` before leaving `U` stays in `U`
+until its first hit of `A`. -/
+theorem hit_target_before_exit_subset_stay (A U B : Set ℤ) (hBA : B ⊆ A) :
+    (⋃ k : ℕ, {x | vHitTime (A ∪ Uᶜ) x = k ∧ x k ∈ B}) ⊆
+      {x | ∀ n : ℕ, (n : ℕ∞) < vHitTime A x → x n ∈ U} := by
+  intro x hx n hn
+  obtain ⟨k, hk, hB⟩ := Set.mem_iUnion.1 hx
+  have hnk : n < k := by
+    by_contra h
+    have hk_le_n : k ≤ n := Nat.le_of_not_gt h
+    have hnotA : x k ∈ Aᶜ := (ConstantOrderDiv.lt_vExitTime_iff'.1 hn) k hk_le_n
+    exact hnotA (hBA hB)
+  have hnD : (n : ℕ∞) < vHitTime (A ∪ Uᶜ) x := by
+    rw [hk]
+    exact_mod_cast hnk
+  have hnotD : x n ∈ (A ∪ Uᶜ)ᶜ :=
+    (ConstantOrderDiv.lt_vExitTime_iff'.1 hnD) n le_rfl
+  by_contra hnu
+  exact hnotD (Or.inr hnu)
+
+/-- The disconnection estimate bounds both reaching the next restart set and
+continuing after that hit. -/
+theorem annulus_hit_continuation_le
+    {m : ℤ → ℤ → ℕ} {A I U B : Set ℤ} {y a v : ℤ} {p : ℝ}
+    (hBA : B ⊆ A) (hy : y ∈ I) (ha : a ∈ A)
+    (w : (adjGraph m).Walk y a) (hw : ∀ u ∈ w.support, u ∉ U) (hp : 0 ≤ p)
+    (hdisc : ENNReal.ofReal p ≤ srwLaw m v
+      {x | ∀ y ∈ I, walkDisconnectsBeforeHit m A y x})
+    {F : (ℕ → ℤ) → ℝ≥0∞} (hF : Measurable F) (c : ℝ≥0∞)
+    (hbound : ∀ b ∈ B, (∫⁻ x, F x ∂srwLaw m b) ≤ c) :
+    (∑' k : ℕ, ∫⁻ x, {x | vHitTime (A ∪ Uᶜ) x = k}.indicator
+      (fun x => B.indicator 1 (x k) * F (pathShift k x)) x ∂srwLaw m v) ≤
+      ENNReal.ofReal (1 - p) * c := by
+  calc
+    _ ≤ srwLaw m v (⋃ k : ℕ, {x | vHitTime (A ∪ Uᶜ) x = k ∧ x k ∈ B}) * c :=
+      tsum_lintegral_hitTime_indicator_continuation_le_mul m _ B hF v c hbound
+    _ ≤ ENNReal.ofReal (1 - p) * c := by
+      gcongr
+      exact (measure_mono (hit_target_before_exit_subset_stay A U B hBA)).trans
+        (srwLaw_stay_le_of_annulus_disconnection hy ha w hw hp hdisc)
+
 end MatedCRT
