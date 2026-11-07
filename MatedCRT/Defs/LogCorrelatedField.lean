@@ -72,4 +72,19 @@ noncomputable def logFieldRegularization {Ω : Type*} (k : ℕ)
     θ.isFiniteMeasure_map (fun y => x + ε • y)
   exact h ((gmcRegularizerAt k θ x ε).restrict D).toSignedMeasure ω
 
+/-- A spatially measurable version of the regularized generalized field.
+For each fixed positive scale and point it agrees almost surely with the
+field pairing, while for each fixed scale almost every sample is a Borel
+function of the spatial variable. This records the version chosen after
+equation (1.5) in Berestycki, arXiv:1506.09113v2, p. 3. -/
+def IsLogFieldRegularizationVersion {Ω : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) (k : ℕ) (D : Set (EuclideanSpace ℝ (Fin k)))
+    (h : SignedMeasure (EuclideanSpace ℝ (Fin k)) → Ω → ℝ)
+    (θ : Measure (EuclideanSpace ℝ (Fin k))) [IsFiniteMeasure θ]
+    (H : ℝ → Ω → EuclideanSpace ℝ (Fin k) → ℝ) : Prop :=
+  (∀ ε : ℝ, 0 < ε → ∀ x ∈ D, ∀ᵐ ω ∂P,
+    H ε ω x = logFieldRegularization k D h θ ε ω x) ∧
+  (∀ ε : ℝ, 0 < ε → ∀ᵐ ω ∂P,
+    Measurable (fun x : D => H ε ω x.1))
+
 end MatedCRT
