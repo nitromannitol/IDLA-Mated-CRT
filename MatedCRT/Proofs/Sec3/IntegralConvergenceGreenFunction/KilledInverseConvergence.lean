@@ -1,5 +1,6 @@
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.KilledClockInverse
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ClockInverseConvergence
+import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ApproxClockOccupation
 
 /-! # Convergence of killed clock inverses -/
 
@@ -81,8 +82,41 @@ theorem tendsto_path_killedClockInverse_of_local_pointwise
     exact stoppedClockExtension_eq hs
   simpa only [heq, heq'] using h
 
+/-- Dyadic circle-average clocks yield convergent killed time-changed paths
+when their stopped clocks converge to a regular global clock. -/
+theorem tendsto_killedGMCClockApprox_path_of_pointwise
+    {D : Set ℂ} {γ : ℝ} {hε : ℝ → ℂ → ℝ} {b : ContinuousPath ℂ}
+    {G : ℝ≥0 → ℝ} (hG : IsTimeChangeClock G)
+    (hfin : ContinuousPath.exitTime D b < ⊤)
+    (hfield : ∀ n, Continuous (hε (dyadicScale n)))
+    (hconv : ∀ s ≤ (ContinuousPath.exitTime D b).toNNReal,
+      Tendsto (fun n => killedGMCClockApprox D γ hε (dyadicScale n) b s)
+        atTop (𝓝 (G s)))
+    {t : ℝ≥0} (ht : (t : ℝ) < G (ContinuousPath.exitTime D b).toNNReal) :
+    Tendsto (fun n => b ((killedClockInverse
+      (killedGMCClockApprox D γ hε (dyadicScale n) b)
+        (ContinuousPath.exitTime D b) t).toNNReal)) atTop
+      (𝓝 (b ((killedClockInverse G (ContinuousPath.exitTime D b) t).toNNReal))) := by
+  let T := (ContinuousPath.exitTime D b).toNNReal
+  have hτ : (T : ℝ≥0∞) = ContinuousPath.exitTime D b := ENNReal.coe_toNNReal (ne_of_lt hfin)
+  have hlocal : ∀ s ≤ T, Tendsto (fun n => lqgClockApprox γ hε (dyadicScale n) b s)
+      atTop (𝓝 (G s)) := by
+    intro s hs
+    have hs' : (s : ℝ≥0∞) ≤ ContinuousPath.exitTime D b := by
+      rw [← hτ, ENNReal.coe_le_coe]
+      exact hs
+    simpa only [killedGMCClockApprox_eq_before_exit D γ hε _ b s hs'] using hconv s hs
+  have h := tendsto_path_killedClockInverse_of_local_pointwise
+    (fun n => by simp [lqgClockApprox])
+    (fun n => lqgClockApprox_continuous γ (dyadicScale n) hε b (hfield n))
+    (fun n => lqgClockApprox_strictMono γ (dyadicScale n) hε b (dyadicScale_pos n) (hfield n))
+    hG T hlocal b ht
+  rw [hτ] at h
+  simpa only [killedGMCClockApprox_inverse_eq D γ hε _ b hfin] using h
+
 end MatedCRT
 
 #print axioms MatedCRT.tendsto_killedClockInverse_of_pointwise
 #print axioms MatedCRT.tendsto_path_killedClockInverse_of_pointwise
 #print axioms MatedCRT.tendsto_path_killedClockInverse_of_local_pointwise
+#print axioms MatedCRT.tendsto_killedGMCClockApprox_path_of_pointwise
