@@ -96,4 +96,37 @@ theorem Tightness.holderOn_rescale_limit_of_vertex_modulus
   simpa [NNReal.coe_mul, NNReal.coe_ofNat, mul_add, mul_assoc, mul_left_comm,
     mul_comm] using hd
 
+/-- A uniform bound on vertex values gives an eventual oscillation bound
+for the rescaled functions on the same set. -/
+theorem Tightness.rescale_eventually_oscillation_le
+    {K : Set ℂ} {η : ℝ → ℂ} {ε mε : ℕ → ℝ} {u : ℕ → ℤ → ℝ}
+    {Cm C : ℝ≥0} (hη : Continuous η)
+    (hp : Tendsto η (cocompact ℝ) (cocompact ℂ))
+    (hsurj : Function.Surjective η) (hε : ∀ n, 0 < ε n)
+    (hm : ∀ᶠ n in atTop, 0 ≤ (mε n)⁻¹ ∧ (mε n)⁻¹ ≤ (Cm : ℝ) * ε n)
+    (hbd : ∀ n, ∀ v ∈ cellVertices (ε n) η K, |u n v| ≤ (C : ℝ) / ε n) :
+    ∀ x ∈ K, ∀ y ∈ K, ∀ᶠ n in atTop,
+      dist (rescale (mε n) (ε n) η (u n) x)
+        (rescale (mε n) (ε n) η (u n) y) ≤ (2 * Cm * C : ℝ≥0) := by
+  intro x hx y hy
+  filter_upwards [hm] with n hn
+  have hxv : vertexOf (ε n) η x ∈ cellVertices (ε n) η K :=
+    ⟨x, mem_cell_vertexOf hη hp hsurj (hε n) x, hx⟩
+  have hyv : vertexOf (ε n) η y ∈ cellVertices (ε n) η K :=
+    ⟨y, mem_cell_vertexOf hη hp hsurj (hε n) y, hy⟩
+  have hv := hbd n _ hxv
+  have hw := hbd n _ hyv
+  rw [Real.dist_eq]
+  change |(mε n)⁻¹ * u n (vertexOf (ε n) η x) -
+    (mε n)⁻¹ * u n (vertexOf (ε n) η y)| ≤ _
+  rw [← mul_sub, abs_mul, abs_of_nonneg hn.1]
+  calc
+    (mε n)⁻¹ * |u n (vertexOf (ε n) η x) - u n (vertexOf (ε n) η y)|
+        ≤ ((Cm : ℝ) * ε n) * (2 * ((C : ℝ) / ε n)) := by
+          apply mul_le_mul hn.2 ?_ (abs_nonneg _) (mul_nonneg (NNReal.coe_nonneg _) (hε n).le)
+          linarith [abs_sub (u n (vertexOf (ε n) η x)) (u n (vertexOf (ε n) η y))]
+    _ = (2 * Cm * C : ℝ≥0) := by
+      push_cast
+      field_simp [ne_of_gt (hε n)]
+
 end MatedCRT
