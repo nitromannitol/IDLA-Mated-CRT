@@ -20,7 +20,11 @@ covariance extends continuously to its closure. The finite reference
 measure has dimension at least `d` in the energy sense, the regularizers
 satisfy (1.4), and `0 < γ < √(2d)`. The limit is common to all regularizers;
 for every Borel set its mass converges in probability and in `L¹`, and the
-measures converge weakly in probability on the domain. -/
+measures converge weakly in probability on the domain. The regularizer is
+supported in the closed unit ball, consistent with the source's explicit
+unit-circle example. The spatially Borel version chosen after (1.5) is
+existentially selected for each regularizer; no joint measurability or
+simultaneous almost-sure convergence over regularizers is asserted. -/
 def BerestyckiGMCConvergenceStmt : Prop :=
   ∀ (k : ℕ) (Ω : Type*) [MeasurableSpace Ω] (P : Measure Ω)
     [IsProbabilityMeasure P]

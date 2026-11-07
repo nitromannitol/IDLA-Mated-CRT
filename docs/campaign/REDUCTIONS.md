@@ -1,5 +1,11 @@
 # REDUCTIONS: the current reduction of each numbered result
 
+GMS annulus input audit (2026-11-07): `GMSAnnulusDisconnectionStmt` admits
+the estimate for every `S.IsValid 𝒮 γ` environment. It is the published
+Lemma 3.11 for the canonical joint quantum-cone / space-filling-SLE /
+boundary-length coupling of GMS §§1.2 and 1.4. Establishing that `IsValid`
+identifies that joint law is a phase-2 obligation.
+
 Checked by `MatedCRT/Audit/Reductions.lean`. Its section `FinalForms` holds one `example` per result. Each example
 restates the best committed reduction with exactly the hypotheses listed below. A drift of a Draft statement, of a
 reducing theorem or of a step breaks the build. The examples above that section check earlier reductions which still

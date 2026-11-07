@@ -16,7 +16,10 @@ Liouville Brownian motion*, arXiv:2003.10320v2, Lemma A.1, equation (A.1),
 p. 66.
 For a circle-average embedded `γ`-quantum cone and its LQG measure, the
 two mass estimates hold simultaneously at every center in `B_{1-δ}(0)`,
-with polynomially high probability as `δ` tends to zero. -/
+with polynomially high probability as `δ` tends to zero. Definition 2.2 on
+p. 15 has an unspecified drift parameter in its displayed formula; the
+standard cone used here has inward drift `+γ`, as in the following paragraph
+and the proof of Lemma A.1. -/
 def BerestyckiGwynneConeBallMassStmt : Prop :=
   ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
     (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)

@@ -73,17 +73,33 @@ theorem IsLQGClock.ae_killed_clock_eq_all_of_ae_tendsto_tail
   intro t
   exact congrFun h t
 
-/-- A localized Dirichlet-field dyadic construction, when its circle averages
-also define the global LQG clock, converges to the latter's Liouville path
-before exit for almost every field and Brownian path. -/
+/-- If the localized stopped-clock package holds, its path agrees with the
+global LQG clock time change before exit. The package is an explicit hypothesis;
+it is not supplied by the staged diffusion theorem. -/
 theorem berestycki_dirichlet_time_change_eq_lbm
-    (hber : BerestyckiLiouvilleDiffusionStmt.{u})
     {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (D U : Set ℂ) (h : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
-    (x : ℂ) (γ : ℝ) (F : Ω → ContinuousPath ℂ → ℝ≥0 → ℝ)
-    (hD : IsOpen D) (hproper : D ≠ univ) (hsimply : SimplyConnectedSpace D)
+    (x : ℂ) (γ : ℝ) (F G : Ω → ContinuousPath ℂ → ℝ≥0 → ℝ)
+    (hsource : ∀ᵐ q ∂(P.prod (planarBrownianMotion x)),
+        let τ := ContinuousPath.exitTime U q.2
+        let T := τ.toNNReal
+        let K : ℕ → ℝ≥0 → ℝ := fun n =>
+          killedGMCClockApprox U γ (hcirc q.1) (dyadicScale n) q.2
+        τ < ⊤ ∧
+        (∀ t : ℝ≥0, Tendsto (fun n => K n t) atTop (𝓝 (G q.1 q.2 t))) ∧
+        Continuous (G q.1 q.2) ∧ G q.1 q.2 0 = 0 ∧
+        StrictMonoOn (G q.1 q.2) (Set.Iic T) ∧
+        (∀ t : ℝ≥0, T ≤ t → G q.1 q.2 t = G q.1 q.2 T) ∧
+        (∀ t : ℝ≥0, (t : ℝ) < G q.1 q.2 T →
+          Tendsto (fun n => q.2 ((killedClockInverse (K n) τ t).toNNReal))
+            atTop (𝓝 (q.2 ((killedClockInverse (G q.1 q.2) τ t).toNNReal)))) ∧
+        ContinuousOn (fun t : ℝ≥0 => q.2 ((killedClockInverse (G q.1 q.2) τ t).toNNReal))
+          {t | (t : ℝ) < G q.1 q.2 T} ∧
+        StrictMonoOn (fun t : ℝ≥0 => killedClockInverse (G q.1 q.2) τ t)
+          {t | (t : ℝ) < G q.1 q.2 T})
+    (hD : IsOpen D)
     (hU : IsOpen U) (hbounded : Bornology.IsBounded U) (hclosure : closure U ⊆ D)
-    (hx : x ∈ U) (hgff : IsDirichletGFF P D h hcirc) (hγ : 0 ≤ γ) (hγ2 : γ < 2)
+    (hx : x ∈ U) (hgff : IsDirichletGFF P D h hcirc)
     (hglobal : ∀ᵐ ω ∂P, IsLQGClock planarBrownianMotion γ (hcirc ω) x (F ω) ∧
       ∀ᵐ b ∂planarBrownianMotion x, IsTimeChangeClock (F ω b)) :
     ∀ᵐ ω ∂P, ∀ᵐ b ∂planarBrownianMotion x,
@@ -92,8 +108,6 @@ theorem berestycki_dirichlet_time_change_eq_lbm
             (killedGMCClockApprox U γ (hcirc ω) (dyadicScale n) b)
             (ContinuousPath.exitTime U b) t).toNNReal)) atTop
             (𝓝 (liouvilleBrownianPath (F ω) b t)) := by
-  obtain ⟨G, hsource⟩ := hber Ω P D U h hcirc x γ hD hproper hsimply hU
-    hbounded hclosure hx hgff hγ hγ2
   have hmeas := hgff.ae_measurable_killedGMCClockApprox_tail hD hU hbounded hclosure γ x
   filter_upwards [Measure.ae_ae_of_ae_prod hsource, hglobal, hmeas] with ω hsrc hg hm
   obtain ⟨N, hm⟩ := hm

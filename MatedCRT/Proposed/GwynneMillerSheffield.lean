@@ -18,7 +18,11 @@ The estimate holds simultaneously for `z ∈ B_ρ(0)` and
 `ε^β ≤ r ≤ ρ` with `B_{2r}(z) ⊆ B_ρ(0)`, except with probability
 `O(ε^α)`; `α, β` depend only on `γ`, and the positive lower bound on
 `γ, ρ`. The probability of a possibly nonmeasurable exceptional set is
-understood as outer measure. -/
+understood as outer measure. This proposition admits the estimate for every
+environment satisfying `S.IsValid 𝒮 γ`. It is the published lemma for the
+canonical joint quantum cone, space-filling SLE and boundary-length coupling
+of Sections 1.2 and 1.4; proving that `IsValid` identifies that joint law is
+a separate phase-2 obligation. -/
 def GMSAnnulusDisconnectionStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ α β : ℝ, 0 < α ∧ 0 < β ∧
   ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ p : ℝ, 0 < p ∧
