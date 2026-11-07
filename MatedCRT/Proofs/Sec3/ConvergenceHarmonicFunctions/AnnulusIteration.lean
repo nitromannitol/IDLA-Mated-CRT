@@ -122,6 +122,47 @@ theorem lintegral_annulusCrossings_le_pow
       _ ≤ q * q ^ (n + 1) := by gcongr; exact hstage (n + 1) v hv
       _ = q ^ (n + 1 + 1) := by simp only [pow_succ]; ac_rfl
 
+/-- If each annulus crossing has probability at most `q`, the probability
+of crossing all stages is at most the corresponding power of `q`. -/
+theorem lintegral_annulusCrossings_le_pow_finite
+    (m : ℤ → ℤ → ℕ) (A U B S : ℕ → Set ℤ) (q : ℝ≥0∞)
+    :
+    ∀ n, (∀ i < n, B (i + 1) ⊆ S i) →
+    (∀ i ≤ n, ∀ v, v ∈ S i →
+      srwLaw m v (⋃ k : ℕ, {x | vHitTime (A i ∪ (U i)ᶜ) x = k ∧ x k ∈ B i}) ≤ q) →
+    ∀ v, v ∈ S n →
+      (∫⁻ x, annulusCrossings A U B (n + 1) x ∂srwLaw m v) ≤ q ^ (n + 1) := by
+  intro n
+  induction n with
+  | zero =>
+    intro hnext hstage v hv
+    simp only [annulusCrossings]
+    rw [lintegral_tsum fun k => by
+      exact ((((measurable_of_countable ((B 0).indicator (1 : ℤ → ℝ≥0∞))).comp
+        (measurable_pi_apply k)).mul (measurable_const.comp (measurable_pathShift k))).indicator
+        (measurableSet_vHitTime_eq _ k)).aemeasurable]
+    calc
+      _ ≤ srwLaw m v (⋃ k : ℕ, {x | vHitTime (A 0 ∪ (U 0)ᶜ) x = k ∧ x k ∈ B 0}) * 1 :=
+        tsum_lintegral_hitTime_indicator_continuation_le_mul m _ (B 0) measurable_const v 1
+          (fun b hb => by simp)
+      _ ≤ q := by simpa using hstage 0 (by omega) v hv
+      _ = q ^ (0 + 1) := by simp
+  | succ n ih =>
+    intro hnext hstage v hv
+    simp only [annulusCrossings]
+    rw [lintegral_tsum fun k => by
+      exact ((((measurable_of_countable ((B (n + 1)).indicator (1 : ℤ → ℝ≥0∞))).comp
+        (measurable_pi_apply k)).mul ((measurable_annulusCrossings A U B (n + 1)).comp
+          (measurable_pathShift k))).indicator (measurableSet_vHitTime_eq _ k)).aemeasurable]
+    calc
+      _ ≤ srwLaw m v (⋃ k : ℕ, {x | vHitTime (A (n + 1) ∪ (U (n + 1))ᶜ) x = k ∧
+            x k ∈ B (n + 1)}) * q ^ (n + 1) :=
+        tsum_lintegral_hitTime_indicator_continuation_le_mul m _ (B (n + 1))
+          (measurable_annulusCrossings A U B (n + 1)) v (q ^ (n + 1))
+          (fun b hb => ih (fun i hi => hnext i (by omega)) (fun i hi => hstage i (by omega)) b (hnext n (by omega) hb))
+      _ ≤ q * q ^ (n + 1) := by gcongr; exact hstage (n + 1) (by omega) v hv
+      _ = q ^ (n + 1 + 1) := by simp only [pow_succ]; ac_rfl
+
 /-- The finite-stage crossing event has geometrically decaying probability. -/
 theorem measure_annulusCrossingEvent_le_pow
     (m : ℤ → ℤ → ℕ) (A U B S : ℕ → Set ℤ) (q : ℝ≥0∞)
@@ -152,6 +193,26 @@ theorem measure_annulusCrossingEvent_le_of_disconnection
   obtain ⟨y, a, hy, ha, w, hw⟩ := hgeom j
   exact (measure_mono (hit_target_before_exit_subset_stay (A j) (U j) (B j) (hBA j))).trans
     (srwLaw_stay_le_of_annulus_disconnection hy ha w hw hp (hdisc j b hb))
+
+/-- Finite disconnection estimates suffice for a finite sequence of crossings. -/
+theorem measure_annulusCrossingEvent_le_of_disconnection_finite
+    (m : ℤ → ℤ → ℕ) (A I U B S : ℕ → Set ℤ) (p : ℝ) (hp : 0 ≤ p)
+    (n : ℕ) (hnext : ∀ i < n, B (i + 1) ⊆ S i)
+    (hBA : ∀ i ≤ n, B i ⊆ A i)
+    (hgeom : ∀ i ≤ n, ∃ y a, y ∈ I i ∧ a ∈ A i ∧
+      ∃ w : (adjGraph m).Walk y a, ∀ u ∈ w.support, u ∉ U i)
+    (hdisc : ∀ i ≤ n, ∀ v, v ∈ S i → ENNReal.ofReal p ≤ srwLaw m v
+      {x | ∀ y ∈ I i, walkDisconnectsBeforeHit m (A i) y x})
+    (v : ℤ) (hv : v ∈ S n) :
+    srwLaw m v (annulusCrossingEvent A U B (n + 1)) ≤
+      ENNReal.ofReal (1 - p) ^ (n + 1) := by
+  rw [← lintegral_indicator_one (measurableSet_annulusCrossingEvent A U B (n + 1)),
+    ← annulusCrossings_eq_indicator]
+  apply lintegral_annulusCrossings_le_pow_finite m A U B S _ n hnext _ v hv
+  intro i hi b hb
+  obtain ⟨y, a, hy, ha, w, hw⟩ := hgeom i hi
+  exact (measure_mono (hit_target_before_exit_subset_stay (A i) (U i) (B i) (hBA i hi))).trans
+    (srwLaw_stay_le_of_annulus_disconnection hy ha w hw hp (hdisc i hi b hb))
 
 /-- A finite sequence of ordered first-hit times witnesses the corresponding
 crossing event. Indices decrease as time advances. -/
