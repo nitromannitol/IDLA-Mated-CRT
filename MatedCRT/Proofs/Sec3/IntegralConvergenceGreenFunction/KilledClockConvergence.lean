@@ -1,4 +1,5 @@
 import MatedCRT.Defs.KilledGMCClock
+import MarkovProcess.Path.ExitTimeShift
 
 /-! # Localization of convergence of Liouville clocks -/
 
@@ -6,6 +7,58 @@ namespace MatedCRT
 
 open HarmonicBalls MarkovProcess MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped ENNReal NNReal
+
+/-- The circle-average clock is jointly measurable in the path and time
+when the circle-average field is measurable. -/
+theorem measurable_lqgClockApprox (γ : ℝ) (hε : ℝ → ℂ → ℝ) (ε : ℝ)
+    (hfield : Measurable (hε ε)) :
+    Measurable (fun p : ContinuousPath ℂ × ℝ≥0 => lqgClockApprox γ hε ε p.1 p.2) := by
+  let A : Set ((ContinuousPath ℂ × ℝ≥0) × ℝ) :=
+    {q | 0 < q.2 ∧ q.2 ≤ (q.1.2 : ℝ)}
+  have hA : MeasurableSet A :=
+    (measurableSet_lt measurable_const measurable_snd).inter
+      (measurableSet_le measurable_snd (NNReal.continuous_coe.measurable.comp (measurable_snd.comp measurable_fst)))
+  have heval : Measurable (fun q : (ContinuousPath ℂ × ℝ≥0) × ℝ =>
+      q.1.1 q.2.toNNReal) := by
+    exact (ContinuousEval.continuous_eval (F := ContinuousPath ℂ)).measurable.comp
+      ((measurable_fst.comp measurable_fst).prodMk
+        (continuous_real_toNNReal.measurable.comp measurable_snd))
+  have hf : Measurable (fun q : (ContinuousPath ℂ × ℝ≥0) × ℝ =>
+      ε ^ (γ ^ 2 / 2) * Real.exp (γ * hε ε (q.1.1 q.2.toNNReal))) := by
+    exact measurable_const.mul ((measurable_const.mul (hfield.comp heval)).exp)
+  have hint := (hf.indicator hA).stronglyMeasurable.integral_prod_right' (ν := volume)
+  convert hint.measurable using 1
+  funext p
+  change (∫ s in (0 : ℝ)..(p.2 : ℝ),
+    ε ^ (γ ^ 2 / 2) * Real.exp (γ * hε ε (p.1 s.toNNReal))) = _
+  rw [intervalIntegral.integral_of_le (show (0 : ℝ) ≤ (p.2 : ℝ) from p.2.2),
+    ← integral_indicator measurableSet_Ioc]
+  apply integral_congr_ae
+  filter_upwards [] with s
+  have hpair : (p, s) ∈ A ↔ s ∈ Set.Ioc (0 : ℝ) (p.2 : ℝ) := Iff.rfl
+  simp only [Set.indicator, hpair]
+
+/-- A jointly measurable circle-average clock remains measurable when stopped
+at the exit time of an open set. -/
+theorem measurable_killedGMCClockApprox {D : Set ℂ} (hD : IsOpen D)
+    (γ : ℝ) (hε : ℝ → ℂ → ℝ) (ε : ℝ) (t : ℝ≥0)
+    (hclock : Measurable (fun p : ContinuousPath ℂ × ℝ≥0 =>
+      lqgClockApprox γ hε ε p.1 p.2)) :
+    Measurable (fun b => killedGMCClockApprox D γ hε ε b t) := by
+  have hexit : Measurable (ContinuousPath.exitTime D : ContinuousPath ℂ → ℝ≥0∞) :=
+    ContinuousPath.measurable_exitTime D hD
+  have htime : Measurable (fun b : ContinuousPath ℂ =>
+      (min (t : ℝ≥0∞) (ContinuousPath.exitTime D b)).toNNReal) :=
+    ENNReal.measurable_toNNReal.comp (measurable_const.min hexit)
+  exact hclock.comp (measurable_id.prodMk htime)
+
+/-- Measurability of the field at a scale implies measurability of the
+corresponding clock stopped at the exit of an open set. -/
+theorem measurable_killedGMCClockApprox_of_field {D : Set ℂ} (hD : IsOpen D)
+    (γ : ℝ) (hε : ℝ → ℂ → ℝ) (ε : ℝ) (t : ℝ≥0)
+    (hfield : Measurable (hε ε)) :
+    Measurable (fun b => killedGMCClockApprox D γ hε ε b t) :=
+  measurable_killedGMCClockApprox hD γ hε ε t (measurable_lqgClockApprox γ hε ε hfield)
 
 /-- Stopping preserves the uniform-on-compacts convergence in probability
 in `IsLQGClock`. The stopping time may depend on the whole path, and may be
