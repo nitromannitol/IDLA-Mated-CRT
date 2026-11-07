@@ -269,4 +269,73 @@ theorem time_difference_riesz_integral_lt_top (a T : ℝ) (ha : a < 1) :
   filter_upwards [ae_restrict_mem measurableSet_Icc] with s hs
   exact hbound s hs
 
+
+/-- The two-time expected Riesz kernel depends on the absolute time difference. -/
+theorem planarBrownianMotion_expected_increment_energy_abs (z : ℂ)
+    (s t : ℝ≥0) (hst : s ≠ t) (a : ℝ) (ha : 0 < a) :
+    (∫⁻ b, rieszEnergyKernel a (b t) (b s) ∂(planarBrownianMotion z)) =
+      ENNReal.ofReal (‖(t : ℝ) - (s : ℝ)‖ ^ (-a / 2)) *
+        ∫⁻ w, rieszEnergyKernel a w 0 ∂stdPlanarGaussian := by
+  rw [planarBrownianMotion_expected_increment_energy_any_order z s t a]
+  have ht : 0 < max s t - min s t := tsub_pos_iff_lt.mpr (min_lt_max.mpr hst)
+  rw [planarGaussian_rieszEnergy_scale a ha _ ht, Real.sqrt_eq_rpow,
+    ← Real.rpow_mul (NNReal.coe_nonneg _)]
+  have hd : ((max s t - min s t : ℝ≥0) : ℝ) = ‖(t : ℝ) - (s : ℝ)‖ := by
+    rw [NNReal.coe_sub (min_le_max : min s t ≤ max s t), NNReal.coe_max, NNReal.coe_min,
+      max_sub_min_eq_abs, Real.norm_eq_abs, abs_sub_comm]
+  rw [hd]
+  congr 2
+  ring
+
+
+/-- The expected Riesz energy of planar Brownian increments is integrable
+on every finite time square for orders below two. -/
+theorem planarBrownianMotion_time_integrated_expected_energy_lt_top
+    (z : ℂ) (T a : ℝ) (ha : 0 < a) (ha2 : a < 2) :
+    (∫⁻ s in Set.Icc (0 : ℝ) T, ∫⁻ t in Set.Icc (0 : ℝ) T,
+      ∫⁻ b, rieszEnergyKernel a (b t.toNNReal) (b s.toNNReal)
+        ∂(planarBrownianMotion z)) < ⊤ := by
+  let c := ∫⁻ w, rieszEnergyKernel a w 0 ∂stdPlanarGaussian
+  let f : ℝ × ℝ → ℝ≥0∞ := fun p => ENNReal.ofReal (‖p.2 - p.1‖ ^ (-(a / 2)))
+  have hf : Measurable f := by
+    have hm : Measurable (fun w : ℝ => ‖w‖ ^ (-(a / 2))) := by
+      simp_rw [Real.rpow_def_of_nonneg (norm_nonneg _)]
+      have hz : MeasurableSet {w : ℝ | ‖w‖ = 0} :=
+        (measurableSet_singleton (0 : ℝ)).preimage (by fun_prop)
+      apply Measurable.ite hz
+      · split_ifs <;> fun_prop
+      · fun_prop
+    exact (hm.comp (measurable_snd.sub measurable_fst)).ennreal_ofReal
+  have hpoint : ∀ᵐ s ∂(volume.restrict (Set.Icc (0 : ℝ) T)),
+      (∫⁻ t in Set.Icc (0 : ℝ) T,
+        ∫⁻ b, rieszEnergyKernel a (b t.toNNReal) (b s.toNNReal)
+          ∂(planarBrownianMotion z)) =
+      ∫⁻ t in Set.Icc (0 : ℝ) T, f (s,t) * c := by
+    filter_upwards [ae_restrict_mem measurableSet_Icc] with s hs
+    apply lintegral_congr_ae
+    filter_upwards [ae_restrict_mem measurableSet_Icc,
+      ae_restrict_of_ae (volume.ae_ne s)] with t ht hts
+    have hne : s.toNNReal ≠ t.toNNReal := by
+      intro he
+      have hc := congrArg (fun x : ℝ≥0 => (x : ℝ)) he
+      rw [Real.coe_toNNReal s hs.1, Real.coe_toNNReal t ht.1] at hc
+      exact hts hc.symm
+    rw [planarBrownianMotion_expected_increment_energy_abs z s.toNNReal t.toNNReal hne a ha,
+      Real.coe_toNNReal s hs.1, Real.coe_toNNReal t ht.1]
+    congr 3; ring
+  have heq : (∫⁻ s in Set.Icc (0 : ℝ) T, ∫⁻ t in Set.Icc (0 : ℝ) T,
+      ∫⁻ b, rieszEnergyKernel a (b t.toNNReal) (b s.toNNReal)
+        ∂(planarBrownianMotion z)) =
+      (∫⁻ s in Set.Icc (0 : ℝ) T, ∫⁻ t in Set.Icc (0 : ℝ) T, f (s,t)) * c := by
+    rw [lintegral_congr_ae hpoint]
+    calc
+      _ = ∫⁻ s in Set.Icc (0 : ℝ) T, (∫⁻ t in Set.Icc (0 : ℝ) T, f (s,t)) * c := by
+        apply lintegral_congr
+        intro s
+        exact lintegral_mul_const c (hf.comp (measurable_const.prodMk measurable_id))
+      _ = _ := lintegral_mul_const c hf.lintegral_prod_right'
+  rw [heq]
+  exact ENNReal.mul_lt_top (time_difference_riesz_integral_lt_top (a / 2) T (by linarith))
+    (stdPlanarGaussian_riesz_moment_lt_top a ha ha2)
+
 end MatedCRT
