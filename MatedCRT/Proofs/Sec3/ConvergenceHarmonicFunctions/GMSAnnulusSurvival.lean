@@ -8,6 +8,49 @@ namespace MatedCRT
 open MeasureTheory Set Metric
 open scoped ENNReal
 
+/-- The GMS estimate may be used with a strictly subunit disconnection
+probability, without changing its mesh exponents or exceptional-event bound. -/
+theorem GMSAnnulusDisconnectionStmt.with_subunit_probability
+    {𝒮 : SpaceFillingSLEModel} (hGMS : GMSAnnulusDisconnectionStmt 𝒮)
+    (γ : ℝ) (hγ : 0 < γ) (hγ2 : γ < 2) :
+    ∃ α β : ℝ, 0 < α ∧ 0 < β ∧
+    ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ p : ℝ, 0 < p ∧ p < 1 ∧
+    ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+    ∃ C ε₀ : ℝ, 0 ≤ C ∧ 0 < ε₀ ∧ ∀ ε : ℝ, 0 < ε → ε < ε₀ → ε < 1 →
+      S.P {ω | ¬ ∀ z ∈ ball (0 : ℂ) ρ, ∀ r : ℝ,
+        ε ^ β ≤ r → r ≤ ρ → ball z (2 * r) ⊆ ball 0 ρ →
+        ∀ x ∈ cellVertices ε (S.η ω) (ball z r),
+          ENNReal.ofReal p ≤ srwLaw (S.mult ε ω) x
+            {w | ∀ y ∈ cellVertices ε (S.η ω) (sphere z (r / 2)),
+              walkDisconnectsBeforeHit (S.mult ε ω)
+                (cellVertices ε (S.η ω) (sphere z (2 * r))) y w}} ≤
+        ENNReal.ofReal (C * ε ^ α) := by
+  obtain ⟨α, β, hα, hβ, hρ⟩ := hGMS γ hγ hγ2
+  refine ⟨α, β, hα, hβ, ?_⟩
+  intro ρ hρ0 hρ1
+  obtain ⟨p, hp, henv⟩ := hρ ρ hρ0 hρ1
+  refine ⟨min p (1 / 2), lt_min hp (by norm_num), ?_, ?_⟩
+  · exact lt_of_le_of_lt (min_le_right _ _) (by norm_num)
+  · intro Ω _ S hS
+    obtain ⟨C, ε₀, hC, hε₀, hbound⟩ := henv Ω S hS
+    refine ⟨C, ε₀, hC, hε₀, ?_⟩
+    intro ε hε hεsmall hε1
+    calc
+      _ ≤ S.P {ω | ¬ ∀ z ∈ ball (0 : ℂ) ρ, ∀ r : ℝ,
+          ε ^ β ≤ r → r ≤ ρ → ball z (2 * r) ⊆ ball 0 ρ →
+          ∀ x ∈ cellVertices ε (S.η ω) (ball z r),
+            ENNReal.ofReal p ≤ srwLaw (S.mult ε ω) x
+              {w | ∀ y ∈ cellVertices ε (S.η ω) (sphere z (r / 2)),
+                walkDisconnectsBeforeHit (S.mult ε ω)
+                  (cellVertices ε (S.η ω) (sphere z (2 * r))) y w}} := by
+        apply measure_mono
+        intro ω hbad hgood
+        apply hbad
+        intro z hz r hl hu hball x hx
+        exact (ENNReal.ofReal_le_ofReal (min_le_left p (1 / 2))).trans
+          (hgood z hz r hl hu hball x hx)
+      _ ≤ _ := hbound ε hε hεsmall hε1
+
 /-- On a good environment for the GMS annulus estimate, the probability of
 surviving through nested disk boundaries has polynomial decay. The planar
 separating walks and admissibility of the radii are kept explicit. -/
