@@ -64,6 +64,42 @@ theorem mem_mesh_interval_ceil {ε : ℝ} (hε : 0 < ε) (t : ℝ) :
   · have := (div_le_iff₀ hε).1 (Int.le_ceil (t / ε))
     nlinarith
 
+/-- A time in a closed mesh interval has either its own cell label or the
+preceding label as its ceiling label. -/
+theorem ceil_eq_or_pred_of_mem_mesh_interval {ε : ℝ} (hε : 0 < ε)
+    {t : ℝ} {k : ℤ} (ht : t ∈ Icc (ε * k - ε) (ε * k)) :
+    (⌈t / ε⌉ : ℤ) = k ∨ ⌈t / ε⌉ + 1 = k := by
+  have hu : (⌈t / ε⌉ : ℤ) ≤ k := by
+    apply Int.ceil_le.mpr
+    apply (div_le_iff₀ hε).2
+    nlinarith [ht.2]
+  have hl : k ≤ (⌈t / ε⌉ : ℤ) + 1 := by
+    have ht' : (k : ℝ) - 1 ≤ t / ε := by
+      apply (le_div_iff₀ hε).2
+      nlinarith [ht.1]
+    have hc := Int.le_ceil (t / ε)
+    have : (k : ℝ) ≤ (⌈t / ε⌉ : ℤ) + 1 := by linarith
+    exact_mod_cast this
+  omega
+
+/-- A cell is equal or adjacent to the ceiling label of each time in its
+closed mesh interval, including a time on the left endpoint. -/
+theorem cell_eq_or_adj_ceil_of_mem {ε : ℝ} (hε : 0 < ε)
+    {L R : ℝ → ℝ} (hL : Continuous L) {t : ℝ} {k : ℤ}
+    (ht : t ∈ Icc (ε * k - ε) (ε * k)) :
+    k = ⌈t / ε⌉ ∨ (adjGraph (bmEdgeCount ε L R)).Adj k ⌈t / ε⌉ := by
+  rcases ceil_eq_or_pred_of_mem_mesh_interval hε ht with heq | heq
+  · exact Or.inl heq.symm
+  · right
+    have hadj : (adjGraph (bmEdgeCount ε L R)).Adj ⌈t / ε⌉ k := by
+      change (SimpleGraph.fromRel (fun a b => bmEdgeCount ε L R a b ≠ 0)).Adj _ _
+      rw [SimpleGraph.fromRel_adj]
+      refine ⟨?_, Or.inl ?_⟩
+      · omega
+      · rw [← heq]
+        exact bmEdgeCount_succ_ne_zero hε.le hL R _
+    exact hadj.symm
+
 /-- Directly identified times have equal or adjacent mesh labels. -/
 theorem ceil_eq_or_adj_of_directRel {ε : ℝ} (hε : 0 < ε)
     {L R : ℝ → ℝ} (hL : Continuous L) (hR : Continuous R) {s t : ℝ}
@@ -120,5 +156,35 @@ theorem reachable_ceil_of_directRel_eqvGen {ε : ℝ} (hε : 0 < ε)
   | trans a b c hab hbc ih₁ ih₂ =>
     have hb : η b = q := (curve_eq_of_directRel_eqvGen hmerge hab).symm.trans hs
     exact (ih₁ hs hb).trans (ih₂ hb ht)
+
+/-- Cells containing equivalent times are connected in a set that contains
+the cells and all ceiling labels in their common curve fibre. -/
+theorem reachable_cells_of_directRel_eqvGen {ε : ℝ} (hε : 0 < ε)
+    {L R : ℝ → ℝ} (hL : Continuous L) (hR : Continuous R) {η : ℝ → ℂ}
+    (hmerge : ∀ s t, (MatedCRTHarmonic.MatedCRT.DirectRel L s t ∨
+      MatedCRTHarmonic.MatedCRT.DirectRel R s t) → η s = η t)
+    (q : ℂ) (U : Set ℤ) (hsafe : ∀ t, η t = q → (⌈t / ε⌉ : ℤ) ∈ U)
+    {s t : ℝ} {j k : ℤ} (hj : j ∈ U) (hk : k ∈ U)
+    (hsj : s ∈ Icc (ε * j - ε) (ε * j))
+    (htk : t ∈ Icc (ε * k - ε) (ε * k))
+    (h : Relation.EqvGen (fun a b =>
+      MatedCRTHarmonic.MatedCRT.DirectRel L a b ∨
+      MatedCRTHarmonic.MatedCRT.DirectRel R a b) s t)
+    (hs : η s = q) (ht : η t = q) :
+    ((adjGraph (bmEdgeCount ε L R)).induce U).Reachable ⟨j, hj⟩ ⟨k, hk⟩ := by
+  have hleft : ((adjGraph (bmEdgeCount ε L R)).induce U).Reachable
+      ⟨j, hj⟩ ⟨⌈s / ε⌉, hsafe s hs⟩ := by
+    rcases cell_eq_or_adj_ceil_of_mem hε hL hsj with heq | hadj
+    · have heq' : (⟨j, hj⟩ : U) = ⟨⌈s / ε⌉, hsafe s hs⟩ := Subtype.ext heq
+      rw [heq']
+    · exact SimpleGraph.Adj.reachable hadj
+  have hright : ((adjGraph (bmEdgeCount ε L R)).induce U).Reachable
+      ⟨k, hk⟩ ⟨⌈t / ε⌉, hsafe t ht⟩ := by
+    rcases cell_eq_or_adj_ceil_of_mem hε hL htk with heq | hadj
+    · have heq' : (⟨k, hk⟩ : U) = ⟨⌈t / ε⌉, hsafe t ht⟩ := Subtype.ext heq
+      rw [heq']
+    · exact SimpleGraph.Adj.reachable hadj
+  exact (hleft.trans (reachable_ceil_of_directRel_eqvGen hε hL hR hmerge
+    q U hsafe h hs ht)).trans hright.symm
 
 end MatedCRT
