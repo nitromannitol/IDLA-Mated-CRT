@@ -149,4 +149,43 @@ theorem ae_pathOccupationMeasure_riesz_energy_lt_top
   rw [pathOccupationMeasure_kernel_energy hbω T (measurable_rieszEnergyKernel a)]
   exact hω
 
+/-- Finite-dimensional Riesz energy passes to a smaller measure. -/
+theorem HasFiniteDimensionalEnergy.of_le {E : Type*} [PseudoMetricSpace E]
+    [MeasurableSpace E] {μ ν : Measure E} {d : ℝ} (hμν : μ ≤ ν)
+    (hν : HasFiniteDimensionalEnergy ν d) : HasFiniteDimensionalEnergy μ d := by
+  intro δ hδ
+  exact lt_of_le_of_lt (lintegral_mono' hμν (fun x =>
+    lintegral_mono' hμν (fun _ => le_rfl))) (hν δ hδ)
+
+/-- Occupation before an earlier time is dominated by occupation before a
+later time. This also applies to a finite stopping time path by path. -/
+theorem pathOccupationMeasure_mono {E : Type*} [MeasurableSpace E]
+    {b : ℝ → E} (hb : Measurable b) {S T : ℝ} (hST : S ≤ T) :
+    pathOccupationMeasure b S ≤ pathOccupationMeasure b T := by
+  apply Measure.map_mono _ hb
+  exact Measure.restrict_mono_set volume (Icc_subset_Icc_right hST)
+
+/-- Finite-dimensional energy on a deterministic interval transfers to every
+earlier stopping time. -/
+theorem pathOccupationMeasure_finiteDimensionalEnergy_of_le {E : Type*}
+    [PseudoMetricSpace E] [MeasurableSpace E] {b : ℝ → E}
+    (hb : Measurable b) {S T d : ℝ} (hST : S ≤ T)
+    (henergy : HasFiniteDimensionalEnergy (pathOccupationMeasure b T) d) :
+    HasFiniteDimensionalEnergy (pathOccupationMeasure b S) d :=
+  henergy.of_le (pathOccupationMeasure_mono hb hST)
+
+/-- Finite energy at every integer horizon gives finite energy at every
+finite path-dependent horizon, on a single almost-sure event. -/
+theorem ae_pathOccupationMeasure_finiteDimensionalEnergy_all_horizons
+    {Ω E : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    [PseudoMetricSpace E] [MeasurableSpace E] (b : Ω → ℝ → E)
+    (hb : ∀ᵐ ω ∂P, Measurable (b ω)) (d : ℝ)
+    (henergy : ∀ n : ℕ, ∀ᵐ ω ∂P,
+      HasFiniteDimensionalEnergy (pathOccupationMeasure (b ω) n) d) :
+    ∀ᵐ ω ∂P, ∀ T : ℝ,
+      HasFiniteDimensionalEnergy (pathOccupationMeasure (b ω) T) d := by
+  filter_upwards [hb, ae_all_iff.mpr henergy] with ω hbω hω T
+  obtain ⟨n, hn⟩ := exists_nat_ge T
+  exact pathOccupationMeasure_finiteDimensionalEnergy_of_le hbω hn (hω n)
+
 end MatedCRT
