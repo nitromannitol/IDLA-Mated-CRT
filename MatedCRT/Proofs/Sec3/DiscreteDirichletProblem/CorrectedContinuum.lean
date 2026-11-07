@@ -3,6 +3,7 @@ import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.RetractionEstimate
 import MatedCRT.Draft.Section3DirichletCorrected
 import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.FiniteDomainComplete
 import MatedCRT.Steps.Sec2.ExpectedExitTimeExplicitBound
+import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.InteriorSteps
 
 /-! Continuum Dirichlet data on a closed disk, corrected paper lines 1394–1412. -/
 
@@ -120,6 +121,21 @@ def ProjectedDirichletPointwiseStep (𝒮 : SpaceFillingSLEModel) : Prop :=
     (fun ε ω => rescale (S.mε ε) ε (S.η ω) (F ε ω) y)
     (fun ω => dirichletLimit S r z ψ (fun x => φ (ballRetraction z r x)) ω y)
 
+/-- The pointwise step for boundary data on a neighbourhood implies the
+projected pointwise step: radial retraction supplies the required extension. -/
+theorem projectedDirichletPointwiseStep_of_pointwise
+    (𝒮 : SpaceFillingSLEModel) (hP : DirichletPointwiseStep 𝒮)
+    (h36 : ConvergenceHarmonicFunctionsStmt 𝒮) (h34 : IntegralConvergenceGreenFunctionStmt 𝒮)
+    (h219 : ExpectedExitTimeExplicitBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮) :
+    ProjectedDirichletPointwiseStep 𝒮 := by
+  intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS r z hr hball ψ φ F hdata y hy
+  obtain ⟨hψb, hψh, hφ, hF⟩ := hdata
+  have hφ' : ∃ s : ℝ, 0 < s ∧
+      IsHolderContinuousOn (fun x => φ (ballRetraction z r x)) (closedBall z (r + s)) :=
+    ⟨1, by norm_num, holder_ballRetraction hr (by linarith) z hφ⟩
+  exact hP h36 h34 h219 h28 γ hγ hγ2 ρ hρ hρ1 Ω S hS r z hr hball
+    ψ (fun x => φ (ballRetraction z r x)) hψb hψh hφ' F hF y hy
+
 /-- Volume growth gives a probability modulus for the projected continuum
 candidate, independently of the discrete harmonic convergence statement. -/
 theorem projectedDirichletLimit_modulus_of_volumeGrowth
@@ -235,6 +251,7 @@ theorem discreteDirichletProblemCorrected_of_pointwise_and_estimates
 
 end MatedCRT
 
+#print axioms MatedCRT.projectedDirichletPointwiseStep_of_pointwise
 #print axioms MatedCRT.dirichletLimit_projected_ae_properties
 #print axioms MatedCRT.discreteDirichletProblemCorrected_of_projected_steps
 #print axioms MatedCRT.discreteDirichletProblemCorrected_of_pointwise_and_estimates
