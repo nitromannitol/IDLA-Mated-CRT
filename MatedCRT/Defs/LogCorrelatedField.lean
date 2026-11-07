@@ -61,4 +61,15 @@ structure IsLogCorrelatedField {Ω E : Type*} [MeasurableSpace Ω] [MetricSpace 
     IsLogFieldObservable D g (a • ρ) →
     ∀ᵐ ω ∂P, h (a • ρ) ω = a * h ρ ω
 
+/-- The convolution regularization of the generalized field by a translated,
+scaled probability measure, with the field extended by zero outside `D`. -/
+noncomputable def logFieldRegularization {Ω : Type*} (k : ℕ)
+    (D : Set (EuclideanSpace ℝ (Fin k)))
+    (h : SignedMeasure (EuclideanSpace ℝ (Fin k)) → Ω → ℝ)
+    (θ : Measure (EuclideanSpace ℝ (Fin k))) [IsFiniteMeasure θ]
+    (ε : ℝ) (ω : Ω) (x : EuclideanSpace ℝ (Fin k)) : ℝ := by
+  letI : IsFiniteMeasure (gmcRegularizerAt k θ x ε) :=
+    θ.isFiniteMeasure_map (fun y => x + ε • y)
+  exact h ((gmcRegularizerAt k θ x ε).restrict D).toSignedMeasure ω
+
 end MatedCRT
