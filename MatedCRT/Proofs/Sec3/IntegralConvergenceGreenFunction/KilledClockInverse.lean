@@ -37,6 +37,25 @@ theorem killedClockInverse_eq_min_clockInverse {F : ℝ≥0 → ℝ} {τ : ℝ�
   unfold killedClockInverse clockInverse
   exact congrArg (min τ) (ENNReal.coe_sInf h).symm
 
+/-- Before its terminal clock time, a killed global time-change clock has
+exactly the same inverse as the unrestricted clock. -/
+theorem killedClockInverse_eq_clockInverse_before_exit {F : ℝ≥0 → ℝ}
+    {τ : ℝ≥0∞} {t : ℝ≥0} (hF : IsTimeChangeClock F) (hτ : τ < ⊤)
+    (ht : (t : ℝ) < F τ.toNNReal) :
+    killedClockInverse F τ t = (clockInverse F t : ℝ≥0∞) := by
+  have hFnonneg : 0 ≤ F τ.toNNReal := by
+    simpa [hF.map_zero] using hF.strictMono.monotone (show 0 ≤ τ.toNNReal from bot_le)
+  have hq : t < Real.toNNReal (F τ.toNNReal) := by
+    apply NNReal.coe_lt_coe.mp
+    simpa only [Real.coe_toNNReal _ hFnonneg] using ht
+  have hinv : clockInverse F t < τ.toNNReal := by
+    rw [← clockInverse_clockValue hF.map_zero hF.strictMono τ.toNNReal]
+    exact IsTimeChangeClock.strictMono_clockInverse hF hq
+  rw [killedClockInverse_eq_min_clockInverse ⟨τ.toNNReal, ht⟩]
+  apply min_eq_right
+  rw [← ENNReal.coe_toNNReal (ne_of_lt hτ), ENNReal.coe_le_coe]
+  exact hinv.le
+
 /-- Before Brownian exit the killed approximating clock has the same stopped
 inverse as the unrestricted circle-average clock. -/
 theorem killedGMCClockApprox_inverse_eq (D : Set ℂ) (γ : ℝ)
