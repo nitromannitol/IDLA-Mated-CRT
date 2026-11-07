@@ -225,4 +225,37 @@ theorem mem_annulusCrossingEvent_of_segments
     exact h
   · exact Or.inl (hBA i hi (hend i hi))
 
+/-- Ordered finite first hits, together with survival in each region until
+its target is reached, force the staged crossing event. -/
+theorem mem_annulusCrossingEvent_of_ordered_firstHits
+    (A U B : ℕ → Set ℤ) (x : ℕ → ℤ) (n : ℕ)
+    (hfinite : ∀ i ≤ n, vHitTime (A i) x ≠ ⊤)
+    (horder : ∀ i j, i ≤ j → j ≤ n → vHitTime (A j) x ≤ vHitTime (A i) x)
+    (hBA : ∀ i ≤ n, B i ⊆ A i)
+    (hend : ∀ i ≤ n, x (vHitTime (A i) x).toNat ∈ B i)
+    (hstay : ∀ i ≤ n, ∀ j : ℕ, (j : ℕ∞) < vHitTime (A i) x → x j ∈ U i) :
+    x ∈ annulusCrossingEvent A U B (n + 1) := by
+  let t : ℕ → ℕ := fun i => if i ≤ n then (vHitTime (A i) x).toNat else 0
+  have ht : Antitone t := by
+    intro i j hij
+    by_cases hj : j ≤ n
+    · have hi : i ≤ n := hij.trans hj
+      simp only [t, ite_eq_left hi, ite_eq_left hj]
+      exact ENat.toNat_le_toNat (horder i j hij hj) (hfinite i hi)
+    · simp [t, hj]
+  have hz : t (n + 1) = 0 := by simp [t]
+  apply mem_annulusCrossingEvent_of_segments A U B x t ht (n + 1) hz
+  · intro i hi
+    exact hBA i (by omega)
+  · intro i hi
+    have hi' : i ≤ n := by omega
+    simpa [t, hi'] using hend i hi'
+  · intro i hi j _ hstop
+    have hi' : i ≤ n := by omega
+    have hstop' : j < (vHitTime (A i) x).toNat := by simpa [t, hi'] using hstop
+    have hj : (j : ℕ∞) < vHitTime (A i) x := by
+      rw [← ENat.natCast_toNat (hfinite i hi')]
+      exact_mod_cast hstop'
+    exact ⟨(ConstantOrderDiv.lt_vExitTime_iff'.1 hj) j le_rfl, hstay i hi' j hj⟩
+
 end MatedCRT
