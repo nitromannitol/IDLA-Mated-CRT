@@ -74,4 +74,35 @@ theorem exists_measurable_subsequence_of_metric_compactness
     obtain ⟨l, hl⟩ := (hΦ ω).2 c hb
     exact ⟨l, by simpa [y, c] using hl⟩
 
+/-- Each member may have a separate pathwise compactness condition. -/
+theorem exists_measurable_subsequence_of_conditional_metric_compactness
+    {Ω X : Type*} [MeasurableSpace Ω] [MetricSpace X]
+    (F : Ω → ℕ → ℕ → X)
+    (hdm : ∀ j n m, Measurable fun ω => dist (F ω j n) (F ω j m))
+    (P : Ω → ℕ → Prop)
+    (hc : ∀ ω j, P ω j → ∀ ψ, StrictMono ψ →
+      ∃ θ : ℕ → ℕ, StrictMono θ ∧ ∃ w : X,
+        Tendsto (fun n => F ω j (ψ (θ n))) atTop (𝓝 w)) :
+    ∃ Φ : Ω → ℕ → ℕ, (∀ k, Measurable fun ω => Φ ω k) ∧
+      ∀ ω, StrictMono (Φ ω) ∧ (∀ j, P ω j → ∃ w : X,
+        Tendsto (fun n => F ω j (Φ ω n)) atTop (𝓝 w)) := by
+  let y : Ω → ℕ → ℕ → ℝ := fun ω n c => dist (F ω c.unpair.1 n) (F ω c.unpair.1 c.unpair.2)
+  obtain ⟨Φ, hΦm, hΦ⟩ := Tightness.exists_measurable_diagonal_subseq y
+    (fun n c => hdm c.unpair.1 n c.unpair.2)
+  refine ⟨Φ, hΦm, fun ω => ⟨(hΦ ω).1, ?_⟩⟩
+  intro j hP
+  apply tendsto_of_subsequential_compactness_and_distances
+  · intro ψ hψ
+    exact hc ω j hP (Φ ω ∘ ψ) ((hΦ ω).1.comp hψ)
+  · intro m
+    let c := Nat.pair j (Φ ω m)
+    have hb : ∃ M : ℝ, ∀ᶠ n in atTop, |y ω n c| ≤ M := by
+      apply eventually_bounded_of_subsequential_compactness
+      intro ψ hψ
+      obtain ⟨θ, hθ, w, hw⟩ := hc ω j hP ψ hψ
+      refine ⟨θ, hθ, dist w (F ω j (Φ ω m)), ?_⟩
+      simpa [y, c] using hw.dist (tendsto_const_nhds : Tendsto (fun _ : ℕ => F ω j (Φ ω m)) atTop _)
+    obtain ⟨l, hl⟩ := (hΦ ω).2 c hb
+    exact ⟨l, by simpa [y, c] using hl⟩
+
 end MatedCRT
