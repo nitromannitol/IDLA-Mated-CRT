@@ -34,4 +34,16 @@ inverse at the exit time once the total clock mass has been exhausted. -/
 noncomputable def killedClockInverse (F : ℝ≥0 → ℝ) (τ : ℝ≥0∞) (t : ℝ≥0) : ℝ≥0∞ :=
   min τ (⨅ (s : ℝ≥0) (_ : (t : ℝ) < F s), (s : ℝ≥0∞))
 
+/-- The inverse clock cannot run the path beyond its killing time. -/
+theorem killedClockInverse_le_exit (F : ℝ≥0 → ℝ) (τ : ℝ≥0∞) (t : ℝ≥0) :
+    killedClockInverse F τ t ≤ τ := by
+  exact min_le_left _ _
+
+/-- Any time at which the clock exceeds `t` bounds its right-continuous
+inverse from above. -/
+theorem killedClockInverse_le_of_lt (F : ℝ≥0 → ℝ) (τ : ℝ≥0∞)
+    (t s : ℝ≥0) (h : (t : ℝ) < F s) :
+    killedClockInverse F τ t ≤ (s : ℝ≥0∞) := by
+  exact (min_le_right _ _).trans (iInf_le_of_le s (iInf_le _ h))
+
 end MatedCRT
