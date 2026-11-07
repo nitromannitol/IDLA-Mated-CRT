@@ -338,4 +338,35 @@ theorem planarBrownianMotion_time_integrated_expected_energy_lt_top
   exact ENNReal.mul_lt_top (time_difference_riesz_integral_lt_top (a / 2) T (by linarith))
     (stdPlanarGaussian_riesz_moment_lt_top a ha ha2)
 
+
+/-- Almost surely, every finite-time planar Brownian occupation measure has
+finite-dimensional energy of dimension two. -/
+theorem planarBrownianMotion_ae_finiteDimensionalEnergy (z : ℂ) :
+    ∀ᵐ b ∂(planarBrownianMotion z), ∀ T : ℝ,
+      HasFiniteDimensionalEnergy (pathOccupationMeasure (fun t => b t.toNNReal) T) 2 := by
+  apply ae_pathOccupationMeasure_two_energy_of_expected_increments
+    (planarBrownianMotion z) (fun b t => b t.toNNReal)
+  · fun_prop
+  · filter_upwards with b
+    fun_prop
+  · intro n k
+    have hp : 0 < 2 - 1 / ((k : ℝ) + 1) := by
+      have hk : (1 : ℝ) ≤ (k : ℝ) + 1 := by
+        have hk0 : (0 : ℝ) ≤ k := Nat.cast_nonneg k
+        linarith
+      have hd : 1 / ((k : ℝ) + 1) ≤ 1 := (div_le_one₀ (by positivity)).mpr hk
+      linarith
+    have hlt : 2 - 1 / ((k : ℝ) + 1) < 2 := by
+      have hd : 0 < 1 / ((k : ℝ) + 1) := by positivity
+      linarith
+    apply lt_of_le_of_lt _ (planarBrownianMotion_time_integrated_expected_energy_lt_top
+      z n _ hp hlt)
+    apply lintegral_mono
+    intro s
+    apply lintegral_mono
+    intro t
+    apply lintegral_mono
+    intro b
+    simp only [rieszEnergyKernel, dist_comm, le_refl]
+
 end MatedCRT
