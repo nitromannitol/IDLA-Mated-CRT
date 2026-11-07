@@ -129,4 +129,20 @@ theorem IsConeField.ae_greenKernel_mul_integrableOn
   filter_upwards [ae_restrict_mem hD.measurableSet] with x hx
   simpa only [Real.norm_eq_abs] using hM x hx
 
+/-- For the test functions in `LBMGreenOccupationStep`, the Green integral
+is an actual finite integral, including when the starting point is zero. -/
+theorem MatedCRTEnv.IsValid.ae_greenOccupation_integrableOn
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} (hS : S.IsValid 𝒮 γ)
+    (hBG : BerestyckiGwynneConeBallMassStmt) {ρ r : ℝ} (hρ : 0 < ρ) (hρ1 : ρ < 1)
+    {z y : ℂ} (hD : ball z r ⊆ ball 0 ρ) (hy : y ∈ ball z r) :
+    ∀ᵐ ω ∂S.P, ∀ f : ℂ → ℝ, (∃ M : ℝ, ∀ x ∈ ball z r, |f x| ≤ M) →
+      IsHolderContinuousOn f (ball z r) →
+      IntegrableOn (fun x => greenFunction (ball z r) y x * f x) (ball z r) (S.μ ω) := by
+  filter_upwards [hS.isConeField.ae_greenKernel_mul_integrableOn hγ hγ2 hBG
+    hρ hρ1 isOpen_ball hD] with ω hω
+  intro f hbound ⟨C, χ, hχ, _, hholder⟩
+  exact hω y (ball_subset_closedBall (hD hy)) f
+    ((hholder.continuousOn hχ).aestronglyMeasurable measurableSet_ball) hbound
+
 end MatedCRT
