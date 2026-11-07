@@ -2,6 +2,7 @@ import MarkovProcess.Examples.BrownianMotion
 import HarmonicBalls.Defs.Brownian
 import HarmonicBalls.Proofs.Brownian.PlanarHeatSemigroup
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.PathOccupationEnergy
+import Mathlib.Analysis.SpecialFunctions.Pow.Integral
 
 /-! # Gaussian increments of planar Brownian motion -/
 
@@ -104,5 +105,23 @@ theorem planarBrownianMotion_expected_increment_energy_scale (z : ℂ)
     Real.sqrt_eq_rpow, ← Real.rpow_mul (NNReal.coe_nonneg _)]
   congr 2
   ring
+
+/-- The singular Riesz power is integrable on a bounded planar ball below
+the planar dimension. -/
+theorem integrableOn_planar_norm_rpow (a R : ℝ) (ha : a < 2) :
+    IntegrableOn (fun w : ℂ => ‖w‖ ^ (-a)) (Metric.ball 0 R) volume := by
+  have hm : Measurable (fun w : ℂ => ‖w‖ ^ (-a)) := by
+    simp_rw [Real.rpow_def_of_nonneg (norm_nonneg _)]
+    have hz : MeasurableSet {w : ℂ | ‖w‖ = 0} :=
+      (measurableSet_singleton (0 : ℝ)).preimage (by fun_prop)
+    apply Measurable.ite hz
+    · split_ifs <;> fun_prop
+    · fun_prop
+  apply integrableOn_ball_of_norm_le_rpow (μ := volume) (C := 1) (α := a)
+    (by norm_num : 1 ≤ Module.finrank ℝ ℂ)
+  · simpa using ha
+  · filter_upwards with w
+    simp [Real.norm_eq_abs, abs_of_nonneg (Real.rpow_nonneg (norm_nonneg w) _)]
+  · exact hm.aestronglyMeasurable
 
 end MatedCRT
