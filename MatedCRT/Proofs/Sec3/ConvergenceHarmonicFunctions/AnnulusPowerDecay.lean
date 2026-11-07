@@ -4,6 +4,8 @@ import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.MesoscopicCutoff
 
 namespace MatedCRT
 
+open scoped ENNReal
+
 /-- A strictly subunit survival probability is a positive real power of the
 dyadic scale ratio. -/
 theorem exists_dyadic_survival_exponent {q : ℝ} (hq : 0 < q) (hq1 : q < 1) :
@@ -51,5 +53,22 @@ theorem dyadic_survival_le_power_ratio {q : ℝ} (hq : 0 < q) (hq1 : q < 1) :
           ((1 / 2 : ℝ) ^ n * (2 : ℝ) ^ n) * (factor * cutoff) by ring, hcancel, one_mul]
   rw [hpow n]
   exact Real.rpow_le_rpow hhalf hratio hν.le
+
+/-- The same estimate for the extended nonnegative probabilities used by
+the random-walk crossing iteration. -/
+theorem dyadic_crossing_probability_le_power_ratio {q : ℝ} (hq : 0 < q) (hq1 : q < 1) :
+    ∃ ν : ℝ, 0 < ν ∧ ∀ (n : ℕ) (probability : ℝ≥0∞) (cutoff distance factor : ℝ),
+      0 ≤ cutoff → 0 < distance → 0 ≤ factor →
+      distance ≤ factor * cutoff * (2 : ℝ) ^ n →
+      probability ≤ ENNReal.ofReal q ^ n →
+      probability ≤ ENNReal.ofReal ((factor * cutoff / distance) ^ ν) := by
+  obtain ⟨ν, hν, hbound⟩ := dyadic_survival_le_power_ratio hq hq1
+  refine ⟨ν, hν, ?_⟩
+  intro n probability cutoff distance factor hcut hdist hfactor hscale hprob
+  calc
+    probability ≤ ENNReal.ofReal q ^ n := hprob
+    _ = ENNReal.ofReal (q ^ n) := (ENNReal.ofReal_pow hq.le n).symm
+    _ ≤ ENNReal.ofReal ((factor * cutoff / distance) ^ ν) :=
+      ENNReal.ofReal_le_ofReal (hbound n cutoff distance factor hcut hdist hfactor hscale)
 
 end MatedCRT
