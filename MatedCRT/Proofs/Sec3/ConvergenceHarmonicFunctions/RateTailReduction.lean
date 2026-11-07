@@ -71,4 +71,44 @@ theorem srwLaw_ae_interpolatedWalk_exit_ball_lt_top
   unfold pathExitTime
   exact lt_of_le_of_lt (sInf_le ⟨_, rfl, hout⟩) ENNReal.coe_lt_top
 
+/-- The polynomial discrepancy threshold in the corrected lemma reduces to
+the excursion scale `ε^(q/χ)/2`, with no dependence on the Hölder constant
+in the excursion event. -/
+theorem srwLaw_sameWalkExitDiscrepancy_rpow_tail_le
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    {r : ℝ} (hr : 0 < r) (z : ℂ) (ψ : ℂ → ℝ) {H χ : ℝ≥0}
+    (hχ : 0 < χ) (hψ : HolderOnWith H χ ψ (closedBall z r))
+    {ε : ℝ} (hε : 0 < ε) (ω : Ω) (v : ℤ)
+    (hη : Continuous (S.η ω))
+    (hv : v ∈ interiorCellVertices ε (S.η ω) (ball z r))
+    (hfin : ∀ᵐ x ∂srwLaw (S.mult ε ω) v,
+      pathExitTime (ball z r) (interpolatedWalk ε (S.η ω) (S.mε ε) x) < ⊤)
+    (q : ℝ) :
+    (srwLaw (S.mult ε ω) v)
+      {x | (1 + (H : ℝ)) * ε ^ q < sameWalkExitDiscrepancy S r z ψ ε ω x} ≤
+    (srwLaw (S.mult ε ω) v)
+      {x | ε ^ (q / (χ : ℝ)) / 2 < dist (pathExitPosition (ball z r)
+          (interpolatedWalk ε (S.η ω) (S.mε ε) x))
+        (vertexPoint ε (S.η ω)
+          (vExitPosition (interiorCellVertices ε (S.η ω) (ball z r)) x))} := by
+  let s : ℝ := ε ^ (q / (χ : ℝ)) / 2
+  have hχ' : (χ : ℝ) ≠ 0 := ne_of_gt (by exact_mod_cast hχ)
+  have hs : (2 * s) ^ (χ : ℝ) = ε ^ q := by
+    dsimp [s]
+    rw [show 2 * (ε ^ (q / (χ : ℝ)) / 2) = ε ^ (q / (χ : ℝ)) by ring,
+      ← Real.rpow_mul hε.le]
+    congr 1
+    exact div_mul_cancel₀ q hχ'
+  have hthresh : (H : ℝ) * (2 * s) ^ (χ : ℝ) ≤ (1 + (H : ℝ)) * ε ^ q := by
+    rw [hs]
+    have he := Real.rpow_nonneg hε.le q
+    nlinarith
+  calc
+    (srwLaw (S.mult ε ω) v)
+        {x | (1 + (H : ℝ)) * ε ^ q < sameWalkExitDiscrepancy S r z ψ ε ω x} ≤
+      (srwLaw (S.mult ε ω) v)
+        {x | (H : ℝ) * (2 * s) ^ (χ : ℝ) < sameWalkExitDiscrepancy S r z ψ ε ω x} :=
+          measure_mono (fun _ hx => hthresh.trans_lt hx)
+    _ ≤ _ := srwLaw_sameWalkExitDiscrepancy_tail_le S hr z ψ hψ hε.le ω v hη hv hfin s
+
 end MatedCRT
