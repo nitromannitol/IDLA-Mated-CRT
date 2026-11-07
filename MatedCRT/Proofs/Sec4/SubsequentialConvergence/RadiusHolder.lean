@@ -65,4 +65,35 @@ theorem holderOn_of_eventual_radius_modulus
     nlinarith [mul_nonneg hc₁ hdb, mul_nonneg hc₂ hda]
   · exact hbound
 
+/-- A two-power estimate on cell vertices yields Hölder continuity of a
+pointwise limit of the rescaled functions on a bounded set. -/
+theorem Tightness.holderOn_rescale_limit_of_vertex_modulus
+    {K : Set ℂ} {η : ℝ → ℂ} {ε mε : ℕ → ℝ} {u : ℕ → ℤ → ℝ}
+    {f : ℂ → ℝ} {Cm A C C₁ M a b : ℝ≥0} {R₀ : ℝ}
+    (hK : Bornology.IsBounded K)
+    (hη : Continuous η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ))
+    (hsurj : Function.Surjective η) (hε : ∀ n, 0 < ε n)
+    (hε0 : Tendsto ε atTop (𝓝 0))
+    (hm : ∀ᶠ n in atTop, 0 ≤ (mε n)⁻¹ ∧ (mε n)⁻¹ ≤ (Cm : ℝ) * ε n)
+    (ha : 0 < a) (hb : 0 < b) (ha1 : a ≤ 1) (hR₀ : 0 < R₀)
+    (hV : ∀ R : ℝ, 0 < R → R < R₀ → ∀ᶠ n in atTop,
+      ∀ v ∈ cellVertices (ε n) η K, ∀ w ∈ cellVertices (ε n) η K,
+      ‖vertexPoint (ε n) η v - vertexPoint (ε n) η w‖ ≤ (R / 2) * (R / 2) →
+      ε n * |u n v - u n w| ≤ (A : ℝ) * C * (R / 2) ^ (2 * (a : ℝ)) +
+        2 * C * C₁ * R ^ (2 * (b : ℝ)))
+    (hconv : ∀ x ∈ K, Tendsto (fun n => rescale (mε n) (ε n) η (u n) x)
+      atTop (𝓝 (f x)))
+    (hbound : ∀ x ∈ K, ∀ y ∈ K, ∀ᶠ n in atTop,
+      dist (rescale (mε n) (ε n) η (u n) x)
+        (rescale (mε n) (ε n) η (u n) y) ≤ M) : IsHolderContinuousOn f K := by
+  apply holderOn_of_eventual_radius_modulus (C₁ := Cm * A * C)
+    (C₂ := 2 * Cm * C * C₁) ha hb ha1 hR₀ hconv ?_ hbound
+  intro R hR hRlt
+  filter_upwards [Tightness.rescale_two_power_modulus hK hη hp hsurj hε hε0
+    (NNReal.coe_nonneg Cm) hm hV R hR hRlt] with n hn x hx y hy hxy
+  have hd := hn x hx y hy (by simpa [dist_eq_norm] using hxy)
+  rw [Real.dist_eq]
+  simpa [NNReal.coe_mul, NNReal.coe_ofNat, mul_add, mul_assoc, mul_left_comm,
+    mul_comm] using hd
+
 end MatedCRT
