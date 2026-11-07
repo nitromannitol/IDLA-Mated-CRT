@@ -55,4 +55,10 @@ def IsGMCRegularizer (k : ℕ) (θ : Measure (EuclideanSpace ℝ (Fin k))) : Pro
     ∃ C : ℝ, 0 ≤ C ∧ ∀ x ∈ Metric.ball 0 5,
       (∫⁻ y, logSingularity x y ∂θ) ≤ ENNReal.ofReal C
 
+/-- The regularizer scaled by `ε` and translated to `x`, denoted
+`θ_{x,ε}` in Berestycki (1.5). -/
+noncomputable def gmcRegularizerAt (k : ℕ) (θ : Measure (EuclideanSpace ℝ (Fin k)))
+    (x : EuclideanSpace ℝ (Fin k)) (ε : ℝ) : Measure (EuclideanSpace ℝ (Fin k)) :=
+  θ.map (fun y => x + ε • y)
+
 end MatedCRT
