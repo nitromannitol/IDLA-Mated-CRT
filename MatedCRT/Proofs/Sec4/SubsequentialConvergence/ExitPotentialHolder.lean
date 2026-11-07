@@ -1,5 +1,7 @@
 import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.WeightedPotentialMeasurable
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.PotentialBoundary
+import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.PotentialIdentification
+import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.DirichletUniqueness
 
 /-! Hölder regularity of the continuum exit-time barrier. -/
 
@@ -50,5 +52,34 @@ theorem normalizedExitGreenPotential_ae_boundary_holder_of_volumeGrowth
   have hb := hh.dist_le hx (sphere_subset_closedBall hy)
   rw [Real.dist_eq, normalizedExitGreenPotential_eq_zero_on_sphere S hy ω, sub_zero] at hb
   exact hb
+
+/-- The limit in Lemma 3.7 is Hölder continuous on the closed disc: it is
+identified with the normalized Green potential by Dirichlet uniqueness. -/
+theorem normalizedExitTime_limit_holder_of_volumeGrowth
+    (𝒮 : SpaceFillingSLEModel) (h37 : ConvergenceNormalizedExitTimeStmt 𝒮)
+    (h217 : BoundedExitTimeRVStmt) (h27 : VolumeGrowthStmt)
+    {γ ρ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hρ : 0 < ρ) (hρ1 : ρ < 1)
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
+    {r : ℝ} {z : ℂ} (hr : 0 < r) (hball : ball z r ⊆ ball 0 ρ) :
+    ∃ qbar : Ω → ℂ → ℝ,
+      (∀ᵐ ω ∂S.P, IsHolderContinuousOn (qbar ω) (closedBall z r) ∧
+        EqOn (qbar ω) (normalizedExitGreenPotential S r z ω) (closedBall z r)) ∧
+      TendstoUniformlyOnInProbability S.P
+        (fun ε ω => rescale (S.mε ε) ε (S.η ω)
+          (normExitTime (S.mult ε ω) (interiorCellVertices ε (S.η ω) (ball z r))))
+        qbar (closedBall z r) := by
+  obtain ⟨qbar, hq, hconv⟩ := h37 γ hγ hγ2 ρ hρ hρ1 Ω S hS r z hr hball
+  refine ⟨qbar, ?_, hconv⟩
+  filter_upwards [hq, normalizedExitPotentialStep_of_boundedExitTime 𝒮 h217
+    γ hγ hγ2 ρ hρ hρ1 Ω S hS r z hr hball,
+    normalizedExitGreenPotential_ae_holder_of_volumeGrowth 𝒮 h27 hγ hγ2 hρ1 S hS hr hball]
+    with ω hqω hpω hh
+  have heq := eqOn_closedBall_of_hasLaplacian_eq hqω.1 hpω.1 hqω.2.1 hpω.2.1
+    (fun x hx => (hqω.2.2 x hx).trans (hpω.2.2 x hx).symm)
+  refine ⟨?_, heq⟩
+  obtain ⟨C, χ, hχ, hχ1, hh⟩ := hh
+  refine ⟨C, χ, hχ, hχ1, holderOnWith_of_dist_le ?_⟩
+  intro x hx y hy
+  simpa only [heq hx, heq hy] using hh.dist_le hx hy
 
 end MatedCRT
