@@ -227,6 +227,17 @@ general selection principle and is not claimed proved. The prior polynomial-scal
 for historical reductions and is not equivalent to this successor. The prepared 4.6 compactness
 step now takes the new successor.
 
+**C11 common-event vertex moduli (2026-11-07).**
+`PreparedTightnessVertexModuliStep` in
+`Proofs/Sec3/DiscretePotentialTightness/PreparedVertexModuli.lean` is the open
+obligation for the interior and conditional boundary vertex estimates after one
+deterministic thinning and on one event, uniformly for all admissible families
+(corrected paper lines 1031–1135). `preparedTightnessPathwiseStep_of_vertexModuli`
+derives the former pathwise step from these moduli and `MepsScalingInput`;
+`discretePotentialTightnessPrepared_of_vertexModuli` derives the full prepared
+statement, including measurable selection. The latter uses only the standard
+Lean axioms `propext`, `Classical.choice`, and `Quot.sound`.
+
 **C12 measurable-exit route (2026-11-06).**
 `convergenceDivisible_of_prepared_measurable_exit` in
 `Proofs/Sec4/ConvergenceDivisible/PreparedEventMeasurability.lean` derives Theorem 4.1 from
