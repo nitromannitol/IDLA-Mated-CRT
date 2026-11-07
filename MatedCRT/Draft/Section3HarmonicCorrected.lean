@@ -67,8 +67,8 @@ regimes and the annealed and quenched tail bounds are from
 `LEMMA36-REPLACEMENT.md`, lines 340–379. -/
 def CorrectedHarmonicSameWalkRateStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ bAnn : ℝ, 0 < bAnn ∧
-  ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∀ a : ℝ, 0 < a → a < 2 / (2 + γ) ^ (2 : ℕ) →
-  ∃ ν κ : ℝ, 0 < ν ∧ 0 < κ ∧
+  ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ ν : ℝ, 0 < ν ∧
+  ∀ a : ℝ, 0 < a → a < 2 / (2 + γ) ^ (2 : ℕ) → ∃ κ : ℝ, 0 < κ ∧
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∃ E : ℝ → Set Ω, (∀ ε, MeasurableSet[S.envSigma] (E ε)) ∧
   ∃ CE εE : ℝ, 0 ≤ CE ∧ 0 < εE ∧
