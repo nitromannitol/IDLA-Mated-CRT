@@ -222,4 +222,43 @@ theorem ae_crossings_of_nested_disk_hits
   filter_upwards [ae_nestedSphereCellHit_data hη r hr n hpos ha hnb hfin] with x hx hend hstay
   exact mem_annulusCrossingEvent_of_ordered_firstHits _ U B x n hx.1 hx.2 hBA hend hstay
 
+/-- The first cell hit on a circle also meets the open disk when the walk
+starts in the disk interior and graph neighbours have intersecting cells. -/
+theorem ae_sphereCellHit_mem_ball
+    {m : ℤ → ℤ → ℕ} {ε r : ℝ} {η : ℝ → ℂ} {z : ℂ} {a : ℤ}
+    (hη : Continuous η) (hr : 0 < r)
+    (ha : a ∈ interiorCellVertices ε η (Metric.ball z r))
+    (hadj : ∀ v w, m v w ≠ 0 → (cell ε η v ∩ cell ε η w).Nonempty)
+    (hnb : ∀ a ∈ interiorCellVertices ε η (Metric.ball z r), ∀ b,
+      m a b ≠ 0 → b ∈ interiorCellVertices ε η (Metric.ball z r) ∪
+        cellVertices ε η (Metric.sphere z r)) :
+    ∀ᵐ x ∂srwLaw m a,
+      vExitTime (interiorCellVertices ε η (Metric.ball z r)) x ≠ ⊤ →
+      x (vHitTime (cellVertices ε η (Metric.sphere z r)) x).toNat ∈
+        cellVertices ε η (Metric.ball z r) := by
+  have hsteps : ∀ᵐ x ∂srwLaw m a, ∀ j,
+      x (j + 1) = x j ∨ m (x j) (x (j + 1)) ≠ 0 := by
+    rw [ae_all_iff]
+    intro j
+    filter_upwards [measure_eq_zero_iff_ae_notMem.1 (WalkSteps.srwLaw_nonadjacent_null m j a)]
+      with x hx
+    exact Classical.not_not.1 hx
+  filter_upwards [srwLaw_ae_start m a, hsteps,
+    ae_sphereCellHit_eq_diskInteriorExit hr ha hnb] with x hstart hsteps heq hfin
+  rw [heq hfin]
+  induction hk : vExitTime (interiorCellVertices ε η (Metric.ball z r)) x using ENat.recTopCoe with
+  | top => exact absurd hk hfin
+  | coe k =>
+    rw [ENat.toNat_natCast]
+    have hout : x k ∉ interiorCellVertices ε η (Metric.ball z r) := apply_vExitTime_not_mem hk
+    cases k with
+    | zero => exact absurd (hstart ▸ ha) hout
+    | succ j =>
+      have hin : x j ∈ interiorCellVertices ε η (Metric.ball z r) :=
+        mem_of_lt_vExitTime (by rw [hk]; exact_mod_cast Nat.lt_succ_self j)
+      rcases hsteps j with he | he
+      · exact absurd (he ▸ hin) hout
+      · obtain ⟨q, hqold, hqnew⟩ := hadj (x j) (x (j + 1)) he
+        exact ⟨q, hqnew, Sec7.cell_subset_ball_of_mem_interiorCellVertices hη hin hqold⟩
+
 end MatedCRT
