@@ -2,6 +2,7 @@ import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.RateDiscrepancy
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.CellWindow
 import MatedCRT.Proofs.Infra.RandomWalk
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.ProjectedGeometry
+import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.MesoscopicCutoff
 
 /-! # Reduction of the quenched exit-value tail to the excursion tail -/
 
@@ -110,5 +111,36 @@ theorem srwLaw_sameWalkExitDiscrepancy_rpow_tail_le
         {x | (H : ℝ) * (2 * s) ^ (χ : ℝ) < sameWalkExitDiscrepancy S r z ψ ε ω x} :=
           measure_mono (fun _ hx => hthresh.trans_lt hx)
     _ ≤ _ := srwLaw_sameWalkExitDiscrepancy_tail_le S hr z ψ hψ hε.le ω v hη hv hfin s
+
+/-- An excursion tail at the comparison scale gives the quenched same-walk
+tail with the mesh exponent from the replacement proof. -/
+theorem srwLaw_sameWalkExitDiscrepancy_le_of_excursion_tail
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    {r : ℝ} (hr : 0 < r) (z : ℂ) (ψ : ℂ → ℝ) {H χ : ℝ≥0}
+    (hχ : 0 < χ) (hψ : HolderOnWith H χ ψ (closedBall z r))
+    {ε : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1) (ω : Ω) (v : ℤ)
+    (hη : Continuous (S.η ω))
+    (hv : v ∈ interiorCellVertices ε (S.η ω) (ball z r))
+    (hfin : ∀ᵐ x ∂srwLaw (S.mult ε ω) v,
+      pathExitTime (ball z r) (interpolatedWalk ε (S.η ω) (S.mε ε) x) < ⊤)
+    (q a b ν C : ℝ) (hν : 0 ≤ ν) (hC : 0 ≤ C)
+    (hexc : (srwLaw (S.mult ε ω) v)
+      {x | ε ^ (q / (χ : ℝ)) / 2 < dist (pathExitPosition (ball z r)
+          (interpolatedWalk ε (S.η ω) (S.mε ε) x))
+        (vertexPoint ε (S.η ω)
+          (vExitPosition (interiorCellVertices ε (S.η ω) (ball z r)) x))} ≤
+      ENNReal.ofReal (C * ((100 * ε ^ a + ε ^ b) / (ε ^ (q / (χ : ℝ)) / 2)) ^ ν)) :
+    (srwLaw (S.mult ε ω) v)
+      {x | (1 + (H : ℝ)) * ε ^ q < sameWalkExitDiscrepancy S r z ψ ε ω x} ≤
+      ENNReal.ofReal ((C * (202 : ℝ) ^ ν) *
+        ε ^ ((min a b - q / (χ : ℝ)) * ν)) := by
+  refine (srwLaw_sameWalkExitDiscrepancy_rpow_tail_le S hr z ψ hχ hψ hε ω v hη hv hfin q).trans
+    (hexc.trans ?_)
+  apply ENNReal.ofReal_le_ofReal
+  calc
+    C * ((100 * ε ^ a + ε ^ b) / (ε ^ (q / (χ : ℝ)) / 2)) ^ ν ≤
+        C * ((202 : ℝ) ^ ν * ε ^ ((min a b - q / (χ : ℝ)) * ν)) :=
+      mul_le_mul_of_nonneg_left (mesoscopic_cutoff_ratio_rpow_le hε hε1 hν) hC
+    _ = _ := by ring
 
 end MatedCRT
