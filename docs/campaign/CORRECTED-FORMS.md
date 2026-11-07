@@ -1,5 +1,7 @@
 # CORRECTED-FORMS: corrected and relaxed statements proved in place of Draft statements
 
+**C11/C12, prepared exit-time convergence and downstream reductions.** `normalizedExitInteriorPreparedStep` and `convergenceNormalizedExitTime_of_prepared_estimates` in `Proofs/Sec3/ConvergenceNormalizedExitTime/PreparedCompactness.lean` prove the prepared interior step and Lemma 3.7 conditional on `MepsScalingInput`, `UniformConvergenceGreenKernelStmt`, `DiscreteDirichletProblemStmt`, `BoundedExitTimeRVStmt`, `ExitTimeUpperBoundStmt`, and `DiscreteHolderContinuityCorrectedStep`. `PreparedModulusProbability.lean` establishes the deterministic-subsequence probability criterion needed for the corrected quantifier order. `subsequentialConvergencePrepared_of_green_and_estimates` and `subsequentialPropertiesPrepared_of_green_and_estimates` in `Proofs/Sec4/SubsequentialProperties/PreparedInputs.lean` eliminate the separate Lemma 3.7 hypothesis in the prepared 4.6 and 4.8 reductions; the latter retains `OdometerPropertiesPreparedIdentificationStep`. Both use the frozen `DiscreteDirichletProblemStmt`, whose projected-boundary discrepancy is recorded in the 3.5 entry. lc/lb pass; standard axioms only (b335276).
+
 Worker A, 2026-11-04 (tree at de71d03). For each numbered result that a worker proved or reduced in a corrected or
 relaxed form instead of its Draft statement, this file gives: the Draft Stmt, the corrected Prop (file:line, author),
 the escalation, the exact logical relation, and whether the Draft is false as drafted. Every implication marked
