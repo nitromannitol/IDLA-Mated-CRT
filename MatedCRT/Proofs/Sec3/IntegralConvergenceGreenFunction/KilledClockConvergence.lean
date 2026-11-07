@@ -237,4 +237,33 @@ theorem IsLQGClock.ae_killed_clock_eq_all_of_ae_tendsto
   intro t
   exact congrFun this t
 
+/-- A continuous dyadic killed-clock construction transfers its strict
+increase to the global clock on the entire interval before finite exit. -/
+theorem IsLQGClock.ae_strictMonoOn_before_exit_of_dyadic_limit
+    {Q : Kernel ℂ (ContinuousPath ℂ)} {γ : ℝ} {hε : ℝ → ℂ → ℝ}
+    {x : ℂ} [IsFiniteMeasure (Q x)] {F : ContinuousPath ℂ → ℝ≥0 → ℝ}
+    (hclock : IsLQGClock Q γ hε x F) (D : Set ℂ)
+    {G : ContinuousPath ℂ → ℝ≥0 → ℝ}
+    (hmeas : ∀ n t, AEStronglyMeasurable
+      (fun b => killedGMCClockApprox D γ hε (dyadicScale n) b t) (Q x))
+    (hG : ∀ t, ∀ᵐ b ∂Q x, Tendsto
+      (fun n => killedGMCClockApprox D γ hε (dyadicScale n) b t) atTop (𝓝 (G b t)))
+    (hcont : ∀ᵐ b ∂Q x, Continuous (G b) ∧ Continuous (F b))
+    (hregular : ∀ᵐ b ∂Q x, ContinuousPath.exitTime D b < ⊤ ∧
+      StrictMonoOn (G b) (Set.Iic (ContinuousPath.exitTime D b).toNNReal)) :
+    ∀ᵐ b ∂Q x, StrictMonoOn (F b) (Set.Iic (ContinuousPath.exitTime D b).toNNReal) := by
+  filter_upwards [IsLQGClock.ae_killed_clock_eq_all_of_ae_tendsto hclock D hmeas hG hcont,
+    hregular] with b heq hb
+  intro s hs t ht hst
+  have heq' : ∀ u ≤ (ContinuousPath.exitTime D b).toNNReal, G b u = F b u := by
+    intro u hu
+    have hτ : ((ContinuousPath.exitTime D b).toNNReal : ℝ≥0∞) =
+        ContinuousPath.exitTime D b := ENNReal.coe_toNNReal (ne_of_lt hb.1)
+    have hu' : (u : ℝ≥0∞) ≤ ContinuousPath.exitTime D b := by
+      rw [← hτ, ENNReal.coe_le_coe]
+      exact hu
+    simpa [min_eq_left hu'] using heq u
+  rw [← heq' s hs, ← heq' t ht]
+  exact hb.2 hs ht hst
+
 end MatedCRT
