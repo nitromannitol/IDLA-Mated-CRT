@@ -73,4 +73,20 @@ theorem IsLQGClock.ae_killed_clock_eq_of_tendstoInMeasure
     ∀ᵐ b ∂Q x, G b = F b (min (t : ℝ≥0∞) (ContinuousPath.exitTime D b)).toNNReal := by
   exact tendstoInMeasure_ae_unique hG (IsLQGClock.killed_tendstoInMeasure hclock D t)
 
+/-- An almost-sure dyadic construction of a killed clock agrees, at each
+fixed time, with the stopped global clock whenever the approximations are
+almost everywhere measurable. -/
+theorem IsLQGClock.ae_killed_clock_eq_of_ae_tendsto
+    {Q : Kernel ℂ (ContinuousPath ℂ)} {γ : ℝ} {hε : ℝ → ℂ → ℝ}
+    {x : ℂ} [IsFiniteMeasure (Q x)] {F : ContinuousPath ℂ → ℝ≥0 → ℝ}
+    (hclock : IsLQGClock Q γ hε x F) (D : Set ℂ) (t : ℝ≥0)
+    {G : ContinuousPath ℂ → ℝ}
+    (hmeas : ∀ n, AEStronglyMeasurable
+      (fun b => killedGMCClockApprox D γ hε (dyadicScale n) b t) (Q x))
+    (hG : ∀ᵐ b ∂Q x, Tendsto
+      (fun n => killedGMCClockApprox D γ hε (dyadicScale n) b t) atTop (𝓝 (G b))) :
+    ∀ᵐ b ∂Q x, G b = F b (min (t : ℝ≥0∞) (ContinuousPath.exitTime D b)).toNNReal := by
+  exact IsLQGClock.ae_killed_clock_eq_of_tendstoInMeasure hclock D t
+    (tendstoInMeasure_of_tendsto_ae hmeas hG)
+
 end MatedCRT
