@@ -4,7 +4,7 @@ import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.LocalizedModulus
 
 namespace MatedCRT
 
-open Set MeasureTheory
+open Set MeasureTheory Filter
 open scoped ENNReal
 
 /-- If two functions agree on a good event, the oscillation event of one is
@@ -44,5 +44,28 @@ theorem MatedCRTEnv.IsValid.ae_rescale_eqOn_of_cellVertices_on_event
   have ha : vertexOf ε (S.η ω) x ∈ cellVertices ε (S.η ω) D :=
     ⟨x, hcell, hKD hx⟩
   simp only [rescale, heq he _ ha]
+
+/-- If the good events eventually occur almost surely, rescaled functions
+whose vertex data agree there eventually agree on the compact region. -/
+theorem MatedCRTEnv.IsValid.ae_eventually_rescale_eqOn_of_cellVertices_on_events
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
+    (ε : ℕ → ℝ) (hε : ∀ n, 0 < ε n) (E : ℕ → Set Ω)
+    (D K : Set ℂ) (hKD : K ⊆ D) (F G : Ω → ℕ → ℤ → ℝ)
+    (hEq : ∀ n, ∀ᵐ ω ∂S.P, ω ∈ E n →
+      ∀ a ∈ cellVertices (ε n) (S.η ω) D, F ω n a = G ω n a)
+    (hgood : ∀ᵐ ω ∂S.P, ∀ᶠ n in atTop, ω ∈ E n) :
+    ∀ᵐ ω ∂S.P, ∀ᶠ n in atTop,
+      EqOn (rescale (S.mε (ε n)) (ε n) (S.η ω) (F ω n))
+        (rescale (S.mε (ε n)) (ε n) (S.η ω) (G ω n)) K := by
+  have hall : ∀ᵐ ω ∂S.P, ∀ n, ω ∈ E n →
+      EqOn (rescale (S.mε (ε n)) (ε n) (S.η ω) (F ω n))
+        (rescale (S.mε (ε n)) (ε n) (S.η ω) (G ω n)) K := by
+    apply ae_all_iff.mpr
+    intro n
+    exact hS.ae_rescale_eqOn_of_cellVertices_on_event (ε n) (hε n) (E n) D K hKD
+      (fun ω => F ω n) (fun ω => G ω n) (hEq n)
+  filter_upwards [hall, hgood] with ω hω hgoodω
+  exact hgoodω.mono fun n hn => hω n hn
 
 end MatedCRT
