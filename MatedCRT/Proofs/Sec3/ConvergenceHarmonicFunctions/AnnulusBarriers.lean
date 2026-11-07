@@ -106,7 +106,7 @@ theorem ae_sphereCellHit_eq_diskInteriorExit
 
 /-- Interior-cell sets of concentric disks are nested for a continuous
 space-filling curve. -/
-theorem interiorCellVertices_ball_mono
+theorem interiorCellVertices_concentric_ball_mono
     {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (z : ℂ)
     {r R : ℝ} (hrR : r ≤ R) :
     interiorCellVertices ε η (Metric.ball z r) ⊆
@@ -146,7 +146,7 @@ theorem ae_sphereCellHits_ordered
       vHitTime (cellVertices ε η (Metric.sphere z R)) x ≠ ⊤ ∧
       vHitTime (cellVertices ε η (Metric.sphere z r)) x ≤
         vHitTime (cellVertices ε η (Metric.sphere z R)) x := by
-  have hsub := interiorCellVertices_ball_mono (ε := ε) hη z hrR
+  have hsub := interiorCellVertices_concentric_ball_mono (ε := ε) hη z hrR
   have hR : 0 < R := lt_of_lt_of_le hr hrR
   filter_upwards [hfin,
     ae_sphereCellHit_eq_diskInteriorExit hr ha (hnb r (by simp)),
@@ -182,7 +182,7 @@ theorem ae_nestedSphereCellHit_data
     rw [ae_all_iff]
     intro i
     by_cases hi : i ≤ n
-    · have hsub := interiorCellVertices_ball_mono (ε := ε) hη z (hr hi)
+    · have hsub := interiorCellVertices_concentric_ball_mono (ε := ε) hη z (hr hi)
       filter_upwards [ae_sphereCellHit_eq_diskInteriorExit (hpos i hi) (hsub ha) (hnb i hi)]
         with x hx _ hxf
       exact hx hxf
@@ -190,7 +190,7 @@ theorem ae_nestedSphereCellHit_data
   filter_upwards [hfin, heq] with x hxf hx
   have hfinite : ∀ i ≤ n, vExitTime (interiorCellVertices ε η (Metric.ball z (r i))) x ≠ ⊤ := by
     intro i hi
-    have hsub := interiorCellVertices_ball_mono (ε := ε) hη z (hr (Nat.zero_le i))
+    have hsub := interiorCellVertices_concentric_ball_mono (ε := ε) hη z (hr (Nat.zero_le i))
     exact ne_top_of_le_ne_top hxf (vExitTime_mono_domain hsub x)
   constructor
   · intro i hi
@@ -199,7 +199,7 @@ theorem ae_nestedSphereCellHit_data
   · intro i j hij hj
     have hi : i ≤ n := hij.trans hj
     rw [hx i hi (hfinite i hi), hx j hj (hfinite j hj)]
-    exact vExitTime_mono_domain (interiorCellVertices_ball_mono (ε := ε) hη z (hr hij)) x
+    exact vExitTime_mono_domain (interiorCellVertices_concentric_ball_mono (ε := ε) hη z (hr hij)) x
 
 /-- Ordered disk hits turn the survival and restart conditions into the
 finite-stage crossing event, almost surely for the random walk. -/
@@ -297,7 +297,7 @@ theorem ae_crossings_of_nested_disk_survival
     rw [ae_all_iff]
     intro i
     by_cases hi : i ≤ n
-    · have hsub := interiorCellVertices_ball_mono (ε := ε) hη z (hr hi)
+    · have hsub := interiorCellVertices_concentric_ball_mono (ε := ε) hη z (hr hi)
       filter_upwards [ae_sphereCellHit_mem_ball hη (hpos i hi) (hsub ha) hadj (hnb i hi)]
         with x hx _ hxf
       exact hx hxf
@@ -308,7 +308,7 @@ theorem ae_crossings_of_nested_disk_survival
     with x hxf hball hx hdata hstay
   apply hx ?_ hstay
   intro i hi
-  have hsub := interiorCellVertices_ball_mono (ε := ε) hη z (hr (Nat.zero_le i))
+  have hsub := interiorCellVertices_concentric_ball_mono (ε := ε) hη z (hr (Nat.zero_le i))
   have hifin := ne_top_of_le_ne_top hxf (vExitTime_mono_domain hsub x)
   exact ⟨apply_vHitTime_mem_of_ne_top (hdata.1 i hi), hball i hi hifin⟩
 

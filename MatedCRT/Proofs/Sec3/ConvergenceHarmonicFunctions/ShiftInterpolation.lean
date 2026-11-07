@@ -1,5 +1,5 @@
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.RestartSphereOrder
-import MatedCRT.Defs.Setting
+import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.ExcursionInterpolation
 
 /-! # Interpolation after restarting a walk -/
 
@@ -26,6 +26,20 @@ theorem interpolatedWalk_pathShift
   congr 2
   all_goals push_cast; ring
 
+/-- A bound on the representatives visited after a restart controls the
+interpolated path throughout the corresponding rescaled time interval. -/
+theorem interpolatedWalk_mem_closedBall_after_shift
+    {ε mε : ℝ} (hm : 0 < mε) {η : ℝ → ℂ} {z : ℂ} {R : ℝ}
+    {x : ℕ → ℤ} (k N : ℕ)
+    (hin : ∀ n ≤ N, vertexPoint ε η (x (n + k)) ∈ Metric.closedBall z R)
+    {t : ℝ≥0} (ht : mε * (t : ℝ) ≤ (N : ℝ)) :
+    interpolatedWalk ε η mε x (t + ((k : ℝ) / mε).toNNReal) ∈
+      Metric.closedBall z R := by
+  rw [← interpolatedWalk_pathShift hm]
+  apply interpolatedWalk_mem_closedBall_of_le hm ?_ ht
+  simpa only [pathShift] using hin
+
 end MatedCRT
 
 #print axioms MatedCRT.interpolatedWalk_pathShift
+#print axioms MatedCRT.interpolatedWalk_mem_closedBall_after_shift
