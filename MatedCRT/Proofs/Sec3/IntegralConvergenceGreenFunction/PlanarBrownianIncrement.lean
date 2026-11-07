@@ -226,4 +226,47 @@ theorem integrableOn_real_norm_rpow (a R : ℝ) (ha : a < 1) :
     simp only [Real.norm_eq_abs, one_mul, abs_of_nonneg (Real.rpow_nonneg (abs_nonneg w) _), le_refl]
   · exact hm.aestronglyMeasurable
 
+
+/-- The one-dimensional time-difference singularity is integrable over a
+finite time square for orders below one. -/
+theorem time_difference_riesz_integral_lt_top (a T : ℝ) (ha : a < 1) :
+    (∫⁻ s in Set.Icc (0 : ℝ) T, ∫⁻ t in Set.Icc (0 : ℝ) T,
+      ENNReal.ofReal (‖t - s‖ ^ (-a))) < ⊤ := by
+  let R := |T| + 1
+  let f : ℝ → ℝ≥0∞ := fun x => ENNReal.ofReal (‖x‖ ^ (-a))
+  have hf : Measurable f := by
+    have hm : Measurable (fun w : ℝ => ‖w‖ ^ (-a)) := by
+      simp_rw [Real.rpow_def_of_nonneg (norm_nonneg _)]
+      have hz : MeasurableSet {w : ℝ | ‖w‖ = 0} :=
+        (measurableSet_singleton (0 : ℝ)).preimage (by fun_prop)
+      apply Measurable.ite hz
+      · split_ifs <;> fun_prop
+      · fun_prop
+    exact hm.ennreal_ofReal
+  have hfin : (∫⁻ x in Metric.ball (0 : ℝ) R, f x) < ⊤ :=
+    (integrableOn_real_norm_rpow a R ha).lintegral_lt_top
+  have hbound : ∀ s ∈ Set.Icc (0 : ℝ) T,
+      (∫⁻ t in Set.Icc (0 : ℝ) T, f (t - s)) ≤
+        ∫⁻ x in Metric.ball (0 : ℝ) R, f x := by
+    intro s hs
+    have hsub : Set.Icc (0 : ℝ) T ⊆ (fun t : ℝ => t + -s) ⁻¹' Metric.ball 0 R := by
+      intro t ht
+      simp only [Set.mem_preimage, Metric.mem_ball, Real.dist_eq, sub_zero, R]
+      rw [abs_lt]
+      constructor <;> linarith [le_abs_self T, hs.1, hs.2, ht.1, ht.2]
+    calc
+      (∫⁻ t in Set.Icc (0 : ℝ) T, f (t - s)) ≤
+          ∫⁻ t in (fun t : ℝ => t + -s) ⁻¹' Metric.ball 0 R, f (t + -s) := by
+        simp only [sub_eq_add_neg]
+        exact lintegral_mono_set hsub
+      _ = ∫⁻ x in Metric.ball (0 : ℝ) R, f x :=
+        (measurePreserving_add_right volume (-s)).setLIntegral_comp_preimage
+          Metric.isOpen_ball.measurableSet hf
+  apply lt_of_le_of_lt _ (show (∫⁻ _ in Set.Icc (0 : ℝ) T,
+    ∫⁻ x in Metric.ball (0 : ℝ) R, f x) < ⊤ by
+      simpa using ENNReal.mul_lt_top hfin (show ENNReal.ofReal T < ⊤ by finiteness))
+  apply lintegral_mono_ae
+  filter_upwards [ae_restrict_mem measurableSet_Icc] with s hs
+  exact hbound s hs
+
 end MatedCRT
