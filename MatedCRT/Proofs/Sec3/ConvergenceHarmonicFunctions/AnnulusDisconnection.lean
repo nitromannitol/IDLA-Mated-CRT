@@ -149,4 +149,45 @@ theorem tsum_lintegral_hitTime_continuation_le
       ENNReal.tsum_le_tsum (fun k => lintegral_hitTime_continuation_le m D h hF k z c hbound)
     _ = _ := ENNReal.tsum_mul_right
 
+/-- A continuation selected at a finite hitting time retains any uniform
+bound valid at the selected restart vertices. -/
+theorem tsum_lintegral_hitTime_indicator_continuation_le
+    (m : ℤ → ℤ → ℕ) (D B : Set ℤ)
+    {F : (ℕ → ℤ) → ℝ≥0∞} (hF : Measurable F) (z : ℤ) (c : ℝ≥0∞)
+    (hbound : ∀ b ∈ B, (∫⁻ x, F x ∂srwLaw m b) ≤ c) :
+    (∑' k : ℕ, ∫⁻ x, {x | vHitTime D x = k}.indicator
+      (fun x => B.indicator 1 (x k) * F (pathShift k x)) x ∂srwLaw m z) ≤ c := by
+  classical
+  have hmeas : ∀ k : ℕ, MeasurableSet {x : ℕ → ℤ | vHitTime D x = k ∧ x k ∈ B} :=
+    fun k => (measurableSet_vHitTime_eq D k).inter
+      ((Set.to_countable B).measurableSet.preimage (measurable_pi_apply k))
+  have hsum : (∑' k : ℕ, ∫⁻ x, {x | vHitTime D x = k}.indicator
+      (fun x => B.indicator 1 (x k)) x ∂srwLaw m z) ≤ 1 := by
+    calc
+      _ = ∑' k : ℕ, srwLaw m z {x | vHitTime D x = k ∧ x k ∈ B} := by
+        apply tsum_congr
+        intro k
+        have heq : (fun x : ℕ → ℤ => {x | vHitTime D x = k}.indicator
+            (fun x => B.indicator (1 : ℤ → ℝ≥0∞) (x k)) x) =
+            {x : ℕ → ℤ | vHitTime D x = k ∧ x k ∈ B}.indicator 1 := by
+          funext x
+          by_cases h₁ : vHitTime D x = k <;> by_cases h₂ : x k ∈ B <;>
+            simp [h₁, h₂, Set.indicator]
+        rw [heq, lintegral_indicator_one (hmeas k)]
+      _ = srwLaw m z (⋃ k : ℕ, {x | vHitTime D x = k ∧ x k ∈ B}) := by
+        rw [measure_iUnion ?_ hmeas]
+        intro i j hij
+        exact Set.disjoint_left.2 fun x hi hj => hij (by
+          have h := hi.1.symm.trans hj.1
+          exact_mod_cast h)
+      _ ≤ 1 := by
+        calc
+          _ ≤ srwLaw m z Set.univ := measure_mono (Set.subset_univ _)
+          _ = 1 := measure_univ
+  have hc := tsum_lintegral_hitTime_continuation_le m D (B.indicator 1) hF z c
+    (fun b hb => hbound b (by simpa [Set.indicator] using hb))
+  exact hc.trans (by calc
+    _ ≤ 1 * c := by gcongr
+    _ = c := one_mul c)
+
 end MatedCRT
