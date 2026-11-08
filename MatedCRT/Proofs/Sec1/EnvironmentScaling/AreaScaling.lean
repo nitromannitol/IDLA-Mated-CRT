@@ -2,6 +2,7 @@ import MatedCRT.Defs.Setting
 import MatedCRT.Steps.Sec2.ConeScaleInvarianceUpToFixedTime
 import HarmonicBalls.Proofs.Sec9.LQGSpatialDilation
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
+import Mathlib.Topology.TietzeExtension
 
 /-!
 # Area measure at a random radius
@@ -496,5 +497,71 @@ theorem tendsto_lqgApprox_addCircleAverage_allScale {γ : ℝ} {h : ℝ → ℂ 
   apply hlim'.congr'
   filter_upwards [hre] with n hn
   simp only [Function.comp_apply, hn]
+
+
+/-- Local Weyl scaling for perturbations continuous on the domain. The test
+function is supported in the domain, so the weighted integral only uses the
+values of the perturbation there. -/
+theorem tendsto_lqgApprox_addCircleAverage_allScale_local {γ : ℝ} {h : ℝ → ℂ → ℝ}
+    {D : Set ℂ} (hD : IsOpen D) {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ)
+    (hc : ∀ r : ℝ, 0 < r → Continuous (h r))
+    (hall : ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f → tsupport f ⊆ D →
+      Tendsto (fun r : ℝ => ∫ z, f z ∂(lqgApprox γ h r))
+        (𝓝[>] 0) (𝓝 (∫ z, f z ∂μ)))
+    (v : ℂ → ℝ) (hv : ContinuousOn v D)
+    (f : ℂ → ℝ) (hf : Continuous f) (hfc : HasCompactSupport f) (hfD : tsupport f ⊆ D) :
+    Tendsto (fun r : ℝ => ∫ z, f z ∂(lqgApprox γ (addCircleAverage h v) r))
+      (𝓝[>] 0) (𝓝 (∫ z, f z * Real.exp (γ * v z) ∂μ)) := by
+  obtain ⟨δ, hδ, hδD⟩ := hfc.exists_cthickening_subset_open hD hfD
+  let K : Set ℂ := tsupport f
+  let S : Set ℂ := Metric.cthickening δ K
+  let vS : C(S, ℝ) := ⟨fun z => v z, (hv.mono hδD).domRestrict⟩
+  obtain ⟨V, hV⟩ := vS.exists_restrict_eq Metric.isClosed_cthickening
+  have hVeq : ∀ z ∈ S, V z = v z := by
+    intro z hz
+    exact congrArg (fun g : C(S, ℝ) => g ⟨z, hz⟩) hV
+  have hVK : ∀ z ∈ K, V z = v z := fun z hz =>
+    hVeq z (Metric.self_subset_cthickening K hz)
+  have hlim := tendsto_lqgApprox_addCircleAverage_allScale hD hμ hc hall V V.continuous f hf hfc hfD
+  rw [Section6.integral_withDensity_exp μ γ V f V.continuous] at hlim
+  have htarget : (∫ z, f z * Real.exp (γ * V z) ∂μ) =
+      ∫ z, f z * Real.exp (γ * v z) ∂μ := by
+    apply integral_congr_ae
+    filter_upwards [] with z
+    by_cases hz : z ∈ K
+    · rw [hVK z hz]
+    · have hz0 : f z = 0 := image_eq_zero_of_notMem_tsupport hz
+      simp only [hz0, zero_mul]
+  rw [htarget] at hlim
+  apply hlim.congr'
+  filter_upwards [(nhdsWithin_le_nhds : 𝓝[>] (0 : ℝ) ≤ 𝓝 0) (Iio_mem_nhds hδ),
+    self_mem_nhdsWithin] with r hr hpos
+  have havg : ∀ z ∈ K, Real.circleAverage v z r = Real.circleAverage V z r := by
+    intro z hz
+    apply Real.circleAverage_congr_sphere
+    intro w hw
+    apply (hVeq w ?_).symm
+    apply Metric.mem_cthickening_of_dist_le w z δ K hz
+    rw [Metric.mem_sphere] at hw
+    rw [hw, abs_of_pos hpos]
+    exact hr.le
+  have hmeasure : (lqgApprox γ (addCircleAverage h v) r).restrict K =
+      (lqgApprox γ (addCircleAverage h V) r).restrict K := by
+    simp only [lqgApprox]
+    rw [restrict_withDensity (show MeasurableSet K from hfc.isClosed.measurableSet),
+      restrict_withDensity (show MeasurableSet K from hfc.isClosed.measurableSet)]
+    apply withDensity_congr_ae
+    filter_upwards [ae_restrict_mem hfc.isClosed.measurableSet] with z hz
+    simp only [addCircleAverage, havg z hz]
+  calc
+    (∫ z, f z ∂(lqgApprox γ (addCircleAverage h V) r)) =
+        ∫ z in K, f z ∂(lqgApprox γ (addCircleAverage h V) r) := by
+      symm
+      exact setIntegral_eq_integral_of_forall_compl_eq_zero
+        (fun z hz => image_eq_zero_of_notMem_tsupport hz)
+    _ = ∫ z in K, f z ∂(lqgApprox γ (addCircleAverage h v) r) := by rw [hmeasure]
+    _ = ∫ z, f z ∂(lqgApprox γ (addCircleAverage h v) r) :=
+      setIntegral_eq_integral_of_forall_compl_eq_zero
+        (fun z hz => image_eq_zero_of_notMem_tsupport hz)
 
 end MatedCRT.Sec1
