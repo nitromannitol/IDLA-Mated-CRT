@@ -18,14 +18,24 @@ Proved here (no tail bound and no moment bound is assumed):
   `E[D^p] ≤ C₀^p + p M C₀^{p-q}/(q-p) + p K C₀^{p-N}/(N-p)`. This needs `AEMeasurable D P`
   (the WPN-51 residual), used only for the Tonelli identity;
 * `outer_pow_lt_top_of_split`: the same finiteness for the outer expectation `E*[D^p]`, with no measurability
-  (through `tail_moment_outer` of the staged file);
-* `lintegral_pow_lt_top_of_split`: the combined finiteness from the named premises below;
+  (through `tail_moment_outer`, in this file);
+* `lintegral_pow_lt_top_of_split`: the combined finiteness from the named premises below (`hD` is not needed for this
+  conclusion, see the next item);
+* `lintegral_le_outerLIntegral`, `lintegral_pow_lt_top_of_outer`, `canonical_innerDegree_lintegral_lt_top_of_outer`: the
+  plain lower integral is bounded by the outer integral with no measurability, so a finite outer expectation gives
+  `∫⁻ D^p < ∞` without `AEMeasurable D P`;
 * `exceptional_of_eq46`, `uniform_of_mass_beta`, `cover_of_printed`: the consumers of the printed GMS inputs
   (Lemma 4.3 (4.6) read at the level `C^ζ`, the mass-β moment of GMS p. 33, the coordinate change (4.3) and the
   inner-degree bound (4.20));
 * `canonical_premises`, `canonical_innerDegree_lintegral_lt_top`, `canonical_innerDegree_outer_lt_top`: the canonical
   zero-cone model. Continuity of `η` comes from `IsAreaParametrized`; the layer-cake form has the single premise
   `AEMeasurable (deg_in ∘ η) P` (WPN-51), the outer form has none.
+
+Moved here from `MatedCRT/Proposed/StoppedPoleCanonicalMoments2026.lean`, with names and namespace
+`MatedCRT.StoppedCanonicalMoments` unchanged: `outer_markov`, `dyadic_identity`, `dyadic_tail_series_lt_top`,
+`tail_moment_outer`, `gmsB0_subset_ball`, `image_mul_ball_one`, `pointwise_tail_bound`, `markov_power_bound`,
+`tail_level_bound`. `gms_innerDegree_moment` is now the corollary of `canonical_innerDegree_outer_lt_top` (end of this
+file), so the moment is proved once.
 
 Named premises, hypothesis shapes and not literature Props: `CoverOnEvent`, `UniformMassMoment`,
 `ExceptionalInversePoly`. The printed inputs are the Props of `StoppedPoleCanonicalMoments2026.lean`
@@ -39,6 +49,370 @@ open MeasureTheory Set Filter Topology HarmonicBalls
 open scoped ENNReal
 
 noncomputable section
+/-! ## Internal consequences moved from `MatedCRT/Proposed/StoppedPoleCanonicalMoments2026.lean` (r3:2674-2753)
+
+The Chebyshev, dyadic-tail and moment proofs staged in the Proposed file (commit 9ec52ac) are moved here with their
+statements and names unchanged, into the namespace `MatedCRT.StoppedCanonicalMoments`. The Proposed file keeps the
+statements and does not import this file; this file imports it. The inner-degree moment `gms_innerDegree_moment` is
+restated at the end of this file as a corollary of `MatedCRT.StoppedInnerDegreeMoments.canonical_innerDegree_outer_lt_top`,
+so that the moment is proved once. -/
+namespace MatedCRT.StoppedCanonicalMoments
+
+open MeasureTheory ProbabilityTheory Filter Topology Set HarmonicBalls MarkovProcess
+open scoped ENNReal NNReal
+open MatedCRT
+
+/-- Markov's inequality for the outer integral: `c^β · P[c < Y] ≤ E*[Y^β]` for `β > 0`. -/
+theorem outer_markov {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (Y : Ω → ℝ≥0∞) {β : ℝ} (hβ : 0 < β)
+    (c : ℝ≥0∞) :
+    c ^ β * P {ω | c < Y ω} ≤ MatedCRT.outerLIntegral P (fun ω => Y ω ^ β) := by
+  unfold MatedCRT.outerLIntegral
+  refine le_iInf fun G => le_iInf fun hG => le_iInf fun hYG => ?_
+  have hsub : {ω | c < Y ω} ⊆ {ω | c ^ β ≤ G ω} := fun ω hω =>
+    le_trans (ENNReal.rpow_le_rpow hω.le hβ.le) (hYG ω)
+  calc c ^ β * P {ω | c < Y ω} ≤ c ^ β * P {ω | c ^ β ≤ G ω} := by
+        gcongr
+    _ ≤ ∫⁻ ω, G ω ∂P := mul_meas_ge_le_lintegral hG (c ^ β)
+
+/-- The dyadic identity `(C₀ 2^{j+1})^p · M (C₀ 2^j)^{-q} = 2^p C₀^{p-q} M (2^{p-q})^j`. -/
+theorem dyadic_identity (p q M C₀ : ℝ) (hC₀ : 0 < C₀) (j : ℕ) :
+    (C₀ * 2 ^ (j + 1)) ^ p * (M * (C₀ * 2 ^ j) ^ (-q)) =
+      (2 ^ p * C₀ ^ (p - q) * M) * ((2 : ℝ) ^ (p - q)) ^ j := by
+  have hx : 0 < C₀ * 2 ^ j := by positivity
+  have hsplit : (C₀ * 2 ^ j) ^ (p - q) = C₀ ^ (p - q) * ((2 : ℝ) ^ (p - q)) ^ j := by
+    rw [Real.mul_rpow hC₀.le (by positivity), ← Real.rpow_natCast (2 : ℝ) j,
+      ← Real.rpow_mul (by norm_num : (0 : ℝ) ≤ 2), ← Real.rpow_natCast ((2 : ℝ) ^ (p - q)) j,
+      ← Real.rpow_mul (by norm_num : (0 : ℝ) ≤ 2)]
+    ring_nf
+  have hpow : (C₀ * 2 ^ j) ^ p * (C₀ * 2 ^ j) ^ (-q) = (C₀ * 2 ^ j) ^ (p - q) := by
+    rw [← Real.rpow_add hx]
+    ring_nf
+  have h2 : C₀ * 2 ^ (j + 1) = (C₀ * 2 ^ j) * 2 := by ring
+  rw [h2, Real.mul_rpow hx.le (by norm_num : (0 : ℝ) ≤ 2)]
+  calc (C₀ * 2 ^ j) ^ p * 2 ^ p * (M * (C₀ * 2 ^ j) ^ (-q))
+      = 2 ^ p * M * ((C₀ * 2 ^ j) ^ p * (C₀ * 2 ^ j) ^ (-q)) := by ring
+    _ = 2 ^ p * M * (C₀ ^ (p - q) * ((2 : ℝ) ^ (p - q)) ^ j) := by rw [hpow, hsplit]
+    _ = (2 ^ p * C₀ ^ (p - q) * M) * ((2 : ℝ) ^ (p - q)) ^ j := by ring
+
+/-- The dyadic series `∑_j 2^{(j+1)p}·(M (C₀2^j)^{-q} + K (C₀2^j)^{-N})` is finite when `p < q` and `p < N`. -/
+theorem dyadic_tail_series_lt_top {p q N C₀ M K : ℝ} (hpq : p < q) (hpN : p < N) (hC₀ : 0 < C₀)
+    (hM : 0 ≤ M) (hK : 0 ≤ K) :
+    ∑' j : ℕ, ENNReal.ofReal ((C₀ * 2 ^ (j + 1)) ^ p) *
+      (ENNReal.ofReal (M * (C₀ * 2 ^ j) ^ (-q)) + ENNReal.ofReal (K * (C₀ * 2 ^ j) ^ (-N))) < ⊤ := by
+  have hr1 : (0 : ℝ) ≤ (2 : ℝ) ^ (p - q) := by positivity
+  have hr1' : (2 : ℝ) ^ (p - q) < 1 := Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (by linarith)
+  have hr2 : (0 : ℝ) ≤ (2 : ℝ) ^ (p - N) := by positivity
+  have hr2' : (2 : ℝ) ^ (p - N) < 1 := Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (by linarith)
+  have hterm : ∀ j : ℕ, ENNReal.ofReal ((C₀ * 2 ^ (j + 1)) ^ p) *
+      (ENNReal.ofReal (M * (C₀ * 2 ^ j) ^ (-q)) + ENNReal.ofReal (K * (C₀ * 2 ^ j) ^ (-N))) =
+      ENNReal.ofReal ((2 ^ p * C₀ ^ (p - q) * M) * ((2 : ℝ) ^ (p - q)) ^ j) +
+        ENNReal.ofReal ((2 ^ p * C₀ ^ (p - N) * K) * ((2 : ℝ) ^ (p - N)) ^ j) := by
+    intro j
+    have hx1 : 0 ≤ (C₀ * 2 ^ (j + 1)) ^ p := by positivity
+    have hx2 : 0 ≤ M * (C₀ * 2 ^ j) ^ (-q) := by positivity
+    have hx3 : 0 ≤ K * (C₀ * 2 ^ j) ^ (-N) := by positivity
+    have e1 := dyadic_identity p q M C₀ hC₀ j
+    have e2 := dyadic_identity p N K C₀ hC₀ j
+    have n1 : 0 ≤ (2 ^ p * C₀ ^ (p - q) * M) * ((2 : ℝ) ^ (p - q)) ^ j := by positivity
+    have n2 : 0 ≤ (2 ^ p * C₀ ^ (p - N) * K) * ((2 : ℝ) ^ (p - N)) ^ j := by positivity
+    rw [← ENNReal.ofReal_add hx2 hx3, ← ENNReal.ofReal_mul hx1,
+      ← ENNReal.ofReal_add n1 n2]
+    congr 1
+    rw [mul_add, e1, e2]
+  simp only [hterm]
+  rw [ENNReal.tsum_add]
+  have s1 : Summable (fun j : ℕ => (2 ^ p * C₀ ^ (p - q) * M) * ((2 : ℝ) ^ (p - q)) ^ j) :=
+    (summable_geometric_of_lt_one hr1 hr1').mul_left _
+  have s2 : Summable (fun j : ℕ => (2 ^ p * C₀ ^ (p - N) * K) * ((2 : ℝ) ^ (p - N)) ^ j) :=
+    (summable_geometric_of_lt_one hr2 hr2').mul_left _
+  have p1 : ∀ j : ℕ, 0 ≤ (2 ^ p * C₀ ^ (p - q) * M) * ((2 : ℝ) ^ (p - q)) ^ j := fun j => by
+    have : 0 ≤ M := hM
+    positivity
+  have p2 : ∀ j : ℕ, 0 ≤ (2 ^ p * C₀ ^ (p - N) * K) * ((2 : ℝ) ^ (p - N)) ^ j := fun j => by
+    positivity
+  rw [← ENNReal.ofReal_tsum_of_nonneg p1 s1, ← ENNReal.ofReal_tsum_of_nonneg p2 s2]
+  exact ENNReal.add_lt_top.2 ⟨ENNReal.ofReal_lt_top, ENNReal.ofReal_lt_top⟩
+
+/-- Tail-to-moment lemma (r3:2674-2753, the Chebyshev and tail-integration step). If `P[X > C] ≤ M C^{-q} + K C^{-N}`
+for all `C ≥ C₀`, with `p < q` and `p < N`, then the outer `p`-th moment of `X` is finite. The majorant uses measurable
+supersets of the dyadic level sets `{X > C₀ 2^k}`, so no measurability of `X` is assumed. -/
+theorem tail_moment_outer {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (X : Ω → ℝ≥0∞) {p q N C₀ M K : ℝ} (hp : 0 < p) (hpq : p < q) (hpN : p < N) (hC₀ : 0 < C₀)
+    (hM : 0 ≤ M) (hK : 0 ≤ K)
+    (htail : ∀ C : ℝ, C₀ ≤ C → P {ω | ENNReal.ofReal C < X ω} ≤
+      ENNReal.ofReal (M * C ^ (-q)) + ENNReal.ofReal (K * C ^ (-N))) :
+    MatedCRT.outerLIntegral P (fun ω => X ω ^ p) < ⊤ := by
+  classical
+  have hge : ∀ k : ℕ, C₀ ≤ C₀ * 2 ^ k := fun k =>
+    le_mul_of_one_le_right hC₀.le (one_le_pow₀ (by norm_num))
+  have hsup : ∀ k : ℕ, ∃ B : Set Ω, MeasurableSet B ∧
+      {ω | ENNReal.ofReal (C₀ * 2 ^ k) < X ω} ⊆ B ∧
+      P B = P {ω | ENNReal.ofReal (C₀ * 2 ^ k) < X ω} := fun k =>
+    ⟨_, measurableSet_toMeasurable _ _, subset_toMeasurable _ _, measure_toMeasurable _⟩
+  choose A hAm hAsub hAeq using hsup
+  have hAb : ∀ k : ℕ, P (A k) ≤ ENNReal.ofReal (M * (C₀ * 2 ^ k) ^ (-q)) +
+      ENNReal.ofReal (K * (C₀ * 2 ^ k) ^ (-N)) := fun k => by
+    rw [hAeq k]
+    exact htail _ (hge k)
+  have hbd_tend : Filter.Tendsto (fun k : ℕ => ENNReal.ofReal (M * (C₀ * 2 ^ k) ^ (-q)) +
+      ENNReal.ofReal (K * (C₀ * 2 ^ k) ^ (-N))) Filter.atTop (nhds 0) := by
+    have hL : Filter.Tendsto (fun k : ℕ => C₀ * 2 ^ k) Filter.atTop Filter.atTop :=
+      (tendsto_pow_atTop_atTop_of_one_lt one_lt_two).const_mul_atTop hC₀
+    have h1 : Filter.Tendsto (fun k : ℕ => M * (C₀ * 2 ^ k) ^ (-q)) Filter.atTop (nhds 0) := by
+      have := ((tendsto_rpow_neg_atTop (show 0 < q by linarith)).comp hL).const_mul M
+      simpa using this
+    have h2 : Filter.Tendsto (fun k : ℕ => K * (C₀ * 2 ^ k) ^ (-N)) Filter.atTop (nhds 0) := by
+      have := ((tendsto_rpow_neg_atTop (show 0 < N by linarith)).comp hL).const_mul K
+      simpa using this
+    simpa using (ENNReal.tendsto_ofReal h1).add (ENNReal.tendsto_ofReal h2)
+  have hTop : P {ω | X ω = ⊤} = 0 := by
+    refine le_antisymm ?_ zero_le
+    refine ge_of_tendsto' hbd_tend fun k => ?_
+    refine le_trans (measure_mono ?_) (hAb k)
+    intro ω hω
+    have hω' : ENNReal.ofReal (C₀ * 2 ^ k) < X ω := by
+      rw [show X ω = ⊤ from hω]
+      exact ENNReal.ofReal_lt_top
+    exact hAsub k hω'
+  obtain ⟨Z, hZm, hZsub, hZeq⟩ : ∃ Z : Set Ω, MeasurableSet Z ∧ {ω | X ω = ⊤} ⊆ Z ∧
+      P Z = P {ω | X ω = ⊤} :=
+    ⟨_, measurableSet_toMeasurable _ _, subset_toMeasurable _ _, measure_toMeasurable _⟩
+  have hZ0 : P Z = 0 := by rw [hZeq, hTop]
+  have hterm_m : ∀ j : ℕ, Measurable ((A j).indicator
+      (fun _ => ENNReal.ofReal ((C₀ * 2 ^ (j + 1)) ^ p))) := fun j =>
+    measurable_const.indicator (hAm j)
+  obtain ⟨H, hHdef⟩ : ∃ H : Ω → ℝ≥0∞, ∀ ω, H ω = ENNReal.ofReal (C₀ ^ p) +
+      (∑' j : ℕ, (A j).indicator (fun _ => ENNReal.ofReal ((C₀ * 2 ^ (j + 1)) ^ p)) ω) +
+      Z.indicator (fun _ => (⊤ : ℝ≥0∞)) ω := ⟨_, fun ω => rfl⟩
+  have hHm : Measurable H := by
+    have hfun : H = fun ω => (ENNReal.ofReal (C₀ ^ p) +
+        ∑' j : ℕ, (A j).indicator (fun _ => ENNReal.ofReal ((C₀ * 2 ^ (j + 1)) ^ p)) ω) +
+        Z.indicator (fun _ => (⊤ : ℝ≥0∞)) ω := funext hHdef
+    rw [hfun]
+    exact (measurable_const.add (Measurable.tsum fun j => hterm_m j)).add
+      (measurable_const.indicator hZm)
+  have hcore : ∀ ω, ω ∉ Z → X ω ^ p ≤ ENNReal.ofReal (C₀ ^ p) +
+      ∑' j : ℕ, (A j).indicator (fun _ => ENNReal.ofReal ((C₀ * 2 ^ (j + 1)) ^ p)) ω := by
+    intro ω hZω
+    have hXω : X ω ≠ ⊤ := fun h => hZω (hZsub (show ω ∈ {ω | X ω = ⊤} from h))
+    by_cases hc : X ω ≤ ENNReal.ofReal C₀
+    · calc X ω ^ p ≤ (ENNReal.ofReal C₀) ^ p := ENNReal.rpow_le_rpow hc hp.le
+        _ = ENNReal.ofReal (C₀ ^ p) := ENNReal.ofReal_rpow_of_nonneg hC₀.le hp.le
+        _ ≤ _ := le_self_add
+    · rw [not_le] at hc
+      have hex : ∃ j : ℕ, X ω ≤ ENNReal.ofReal (C₀ * 2 ^ (j + 1)) := by
+        obtain ⟨n, hn⟩ := (((tendsto_pow_atTop_atTop_of_one_lt one_lt_two).const_mul_atTop hC₀).eventually_gt_atTop
+          ((X ω).toReal)).exists
+        refine ⟨n, ?_⟩
+        rw [← ENNReal.ofReal_toReal hXω]
+        refine ENNReal.ofReal_le_ofReal ?_
+        have h2 : C₀ * 2 ^ n ≤ C₀ * 2 ^ (n + 1) := by
+          apply mul_le_mul_of_nonneg_left _ hC₀.le
+          exact pow_le_pow_right₀ (by norm_num) (by omega)
+        linarith
+      have hk := Nat.find_spec hex
+      have hlt : ENNReal.ofReal (C₀ * 2 ^ Nat.find hex) < X ω := by
+        rcases Nat.eq_zero_or_pos (Nat.find hex) with h0 | hpos
+        · rw [h0]
+          simpa using hc
+        · obtain ⟨j, hj⟩ : ∃ j, Nat.find hex = j + 1 := ⟨Nat.find hex - 1, by omega⟩
+          have hmin : ¬ X ω ≤ ENNReal.ofReal (C₀ * 2 ^ (j + 1)) := Nat.find_min hex (by omega)
+          rw [hj]
+          exact not_le.mp hmin
+      have hωA : ω ∈ A (Nat.find hex) := hAsub _ hlt
+      calc X ω ^ p ≤ (ENNReal.ofReal (C₀ * 2 ^ (Nat.find hex + 1))) ^ p :=
+            ENNReal.rpow_le_rpow hk hp.le
+        _ = ENNReal.ofReal ((C₀ * 2 ^ (Nat.find hex + 1)) ^ p) :=
+            ENNReal.ofReal_rpow_of_nonneg (by positivity) hp.le
+        _ = (A (Nat.find hex)).indicator
+              (fun _ => ENNReal.ofReal ((C₀ * 2 ^ (Nat.find hex + 1)) ^ p)) ω :=
+            (Set.indicator_of_mem hωA (fun _ => ENNReal.ofReal ((C₀ * 2 ^ (Nat.find hex + 1)) ^ p))).symm
+        _ ≤ ∑' j : ℕ, (A j).indicator (fun _ => ENNReal.ofReal ((C₀ * 2 ^ (j + 1)) ^ p)) ω :=
+            ENNReal.le_tsum (f := fun j => (A j).indicator (fun _ => ENNReal.ofReal ((C₀ * 2 ^ (j + 1)) ^ p)) ω) (Nat.find hex)
+        _ ≤ _ := le_add_self
+  have hpt : ∀ ω, X ω ^ p ≤ H ω := by
+    intro ω
+    by_cases hZω : ω ∈ Z
+    · rw [hHdef ω, Set.indicator_of_mem hZω, add_top]
+      exact le_top
+    · rw [hHdef ω]
+      exact le_trans (hcore ω hZω) le_self_add
+  have hout : MatedCRT.outerLIntegral P (fun ω => X ω ^ p) ≤ ∫⁻ ω, H ω ∂P := by
+    unfold MatedCRT.outerLIntegral
+    exact iInf_le_of_le H (iInf_le_of_le hHm (iInf_le_of_le (fun ω => hpt ω) le_rfl))
+  have hint : ∫⁻ ω, H ω ∂P = ENNReal.ofReal (C₀ ^ p) +
+      ∑' j : ℕ, ENNReal.ofReal ((C₀ * 2 ^ (j + 1)) ^ p) * P (A j) := by
+    have hfun : H = fun ω => (ENNReal.ofReal (C₀ ^ p) +
+        ∑' j : ℕ, (A j).indicator (fun _ => ENNReal.ofReal ((C₀ * 2 ^ (j + 1)) ^ p)) ω) +
+        Z.indicator (fun _ => (⊤ : ℝ≥0∞)) ω := funext fun ω => by rw [hHdef ω, add_assoc]
+    rw [hfun, lintegral_add_right _ (measurable_const.indicator hZm),
+      lintegral_add_left measurable_const, lintegral_const, measure_univ, mul_one,
+      lintegral_tsum fun j => (hterm_m j).aemeasurable, lintegral_indicator_const hZm, hZ0,
+      mul_zero, add_zero]
+    congr 1
+    refine tsum_congr fun j => ?_
+    rw [lintegral_indicator_const (hAm j)]
+  have hfin : ENNReal.ofReal (C₀ ^ p) + ∑' j : ℕ, ENNReal.ofReal ((C₀ * 2 ^ (j + 1)) ^ p) * P (A j) < ⊤ := by
+    refine ENNReal.add_lt_top.2 ⟨ENNReal.ofReal_lt_top, lt_of_le_of_lt (ENNReal.tsum_le_tsum fun j => ?_)
+      (dyadic_tail_series_lt_top hpq hpN hC₀ hM hK)⟩
+    gcongr
+    exact hAb j
+  calc MatedCRT.outerLIntegral P (fun ω => X ω ^ p) ≤ ∫⁻ ω, H ω ∂P := hout
+    _ = ENNReal.ofReal (C₀ ^ p) + ∑' j : ℕ, ENNReal.ofReal ((C₀ * 2 ^ (j + 1)) ^ p) * P (A j) := hint
+    _ < ⊤ := hfin
+
+/-! ## Consequences of the published inputs: the inner-degree moment (r3:2674-2753) -/
+
+/-- Geometry of the good event: if `η([-1,1]) ⊂ B_{R/8}(0)` and `η` is continuous, then `R > 0` and the closed ball
+`B̄₀` of (4.19) lies in the open ball `B_R(0)`. A point `x₀` of maximal norm on the compact `η([-1,1])` gives
+`diam η([-1,1]) ≤ 2 ‖x₀‖ < R/4`. -/
+theorem gmsB0_subset_ball {η : ℝ → ℂ} (hη : Continuous η) {R : ℝ}
+    (hE : η '' Set.Icc (-1) 1 ⊆ Metric.ball 0 (R / 8)) :
+    0 < R ∧ gmsB0 η ⊆ Metric.ball 0 R := by
+  have hK : IsCompact (η '' Set.Icc (-1) 1) := isCompact_Icc.image hη
+  have hne : (η '' Set.Icc (-1) 1).Nonempty := ⟨η 0, 0, ⟨by norm_num, by norm_num⟩, rfl⟩
+  obtain ⟨x₀, hx₀K, hmax⟩ := hK.exists_isMaxOn hne continuous_norm.continuousOn
+  have hx₀ : ‖x₀‖ < R / 8 := by
+    have h := hE hx₀K
+    rwa [Metric.mem_ball, dist_zero_right] at h
+  have hdiam : Metric.diam (η '' Set.Icc (-1) 1) ≤ 2 * ‖x₀‖ := by
+    refine Metric.diam_le_of_forall_dist_le (by positivity) fun x hx y hy => ?_
+    have hx' : ‖x‖ ≤ ‖x₀‖ := isMaxOn_iff.mp hmax x hx
+    have hy' : ‖y‖ ≤ ‖x₀‖ := isMaxOn_iff.mp hmax y hy
+    rw [dist_eq_norm]
+    linarith [norm_sub_le x y]
+  have hR : 0 < R := by
+    have := norm_nonneg x₀
+    linarith
+  refine ⟨hR, fun z hz => ?_⟩
+  unfold gmsB0 at hz
+  have hz' : dist z 0 ≤ 4 * Metric.diam (η '' Set.Icc (-1) 1) := Metric.mem_closedBall.mp hz
+  rw [dist_zero_right] at hz'
+  rw [Metric.mem_ball, dist_zero_right]
+  linarith
+
+/-- The image of the unit ball under multiplication by a positive real `R` is the ball of radius `R`. -/
+theorem image_mul_ball_one {R : ℝ} (hR : 0 < R) :
+    (fun z : ℂ => (R : ℂ) * z) '' Metric.ball 0 1 = Metric.ball 0 R := by
+  have hR0 : (R : ℂ) ≠ 0 := by exact_mod_cast hR.ne'
+  ext z
+  constructor
+  · rintro ⟨w, hw, rfl⟩
+    rw [Metric.mem_ball, dist_zero_right] at hw
+    rw [Metric.mem_ball, dist_zero_right, norm_mul, Complex.norm_real, Real.norm_of_nonneg hR.le]
+    exact mul_lt_of_lt_one_right hR hw
+  · intro hz
+    rw [Metric.mem_ball, dist_zero_right] at hz
+    refine ⟨z / R, ?_, ?_⟩
+    · rw [Metric.mem_ball, dist_zero_right, norm_div, Complex.norm_real, Real.norm_of_nonneg hR.le,
+        div_lt_iff₀ hR]
+      linarith
+    · field_simp
+
+/-- Pointwise inclusion of the level event on the good set: if `x > C` and `x ≤ μ_h(B̄₀)` with `η([-1,1]) ⊂ B_{R/8}(0)`,
+then `C^{1-ζ} < C^{-ζ} μ_{h^b}(𝔻)` for `b` with `R = R_b` (the mass identity `μ_{h^b}(𝔻) = μ_h(B_R(0))` of (2.3)). -/
+theorem pointwise_tail_bound {η : ℝ → ℂ} (hη : Continuous η) {R C ζ : ℝ} (hC1 : 1 < C) (_hζ0 : 0 < ζ)
+    {μω : Measure ℂ} {Zω : ℝ≥0∞} (hZ : Zω = μω ((fun z : ℂ => (R : ℂ) * z) '' Metric.ball 0 1))
+    {x : ℝ≥0∞} (hx : ENNReal.ofReal C < x) (hxle : x ≤ μω (gmsB0 η))
+    (hE : η '' Set.Icc (-1) 1 ⊆ Metric.ball 0 (R / 8)) :
+    ENNReal.ofReal (C ^ (1 - ζ)) < ENNReal.ofReal (C ^ (-ζ)) * Zω := by
+  obtain ⟨hR, hsub⟩ := gmsB0_subset_ball hη hE
+  have h1 : μω (gmsB0 η) ≤ μω (Metric.ball 0 R) := measure_mono hsub
+  rw [← image_mul_ball_one hR] at h1
+  have hmass : x ≤ Zω := by
+    rw [hZ]
+    exact hxle.trans h1
+  have hlt : ENNReal.ofReal C < Zω := lt_of_lt_of_le hx hmass
+  have hC0 : 0 < C := by linarith
+  have hpos : 0 < ENNReal.ofReal (C ^ (-ζ)) := ENNReal.ofReal_pos.mpr (Real.rpow_pos_of_pos hC0 _)
+  have hfin : ENNReal.ofReal (C ^ (-ζ)) ≠ ⊤ := ENNReal.ofReal_ne_top
+  have hsplit : ENNReal.ofReal (C ^ (1 - ζ)) = ENNReal.ofReal (C ^ (-ζ)) * ENNReal.ofReal C := by
+    rw [← ENNReal.ofReal_mul (Real.rpow_nonneg hC0.le _)]
+    congr 1
+    rw [show (1 - ζ) = -ζ + 1 by ring, Real.rpow_add hC0, Real.rpow_one]
+  rw [hsplit, mul_comm (ENNReal.ofReal (C ^ (-ζ))) (ENNReal.ofReal C), mul_comm (ENNReal.ofReal (C ^ (-ζ))) Zω]
+  exact ENNReal.mul_lt_mul_left hpos.ne' hfin hlt
+
+/-- The Markov step for the normalized masses: if `E*[Y^β] ≤ M < ∞`, then `P[t < Y] ≤ M · t^{-β}` (outer
+probability, `t > 0`). This is the Chebyshev inequality of r3:2674-2753. -/
+theorem markov_power_bound {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (Y : Ω → ℝ≥0∞) {β t : ℝ} (hβ : 0 < β)
+    (ht : 0 < t) {M : ℝ≥0∞} (hMfin : M < ⊤) (hbd : MatedCRT.outerLIntegral P (fun ω => Y ω ^ β) ≤ M) :
+    P {ω | ENNReal.ofReal t < Y ω} ≤ ENNReal.ofReal (M.toReal * t ^ (-β)) := by
+  have hmk := outer_markov P Y hβ (ENNReal.ofReal t)
+  rw [ENNReal.ofReal_rpow_of_nonneg ht.le hβ.le] at hmk
+  have hprod : ENNReal.ofReal (t ^ (-β)) * ENNReal.ofReal (t ^ β) = 1 := by
+    rw [← ENNReal.ofReal_mul (Real.rpow_nonneg ht.le _), ← Real.rpow_add ht, neg_add_cancel,
+      Real.rpow_zero, ENNReal.ofReal_one]
+  have hM' : ENNReal.ofReal M.toReal = M := ENNReal.ofReal_toReal hMfin.ne
+  calc P {ω | ENNReal.ofReal t < Y ω}
+      = ENNReal.ofReal (t ^ (-β)) * ENNReal.ofReal (t ^ β) * P {ω | ENNReal.ofReal t < Y ω} := by
+        rw [hprod, one_mul]
+    _ = ENNReal.ofReal (t ^ (-β)) * (ENNReal.ofReal (t ^ β) * P {ω | ENNReal.ofReal t < Y ω}) := by
+        rw [mul_assoc]
+    _ ≤ ENNReal.ofReal (t ^ (-β)) * M := by
+        gcongr
+        exact hmk.trans hbd
+    _ = ENNReal.ofReal (t ^ (-β)) * ENNReal.ofReal M.toReal := by rw [hM']
+    _ = ENNReal.ofReal (M.toReal * t ^ (-β)) := by
+        rw [ENNReal.ofReal_mul ENNReal.toReal_nonneg, mul_comm]
+
+/-- The tail bound at one level `C > 1`, from the almost-sure inputs: the inner-degree bound (4.20), continuity of `η`
+and the coordinate change (2.3) at `b = C^ζ`. Off the null set, `deg_in > C` forces `η([-1,1])` out of `B_{R/8}(0)`
+or the mass `C^{-ζ} μ_{h^b}(𝔻)` above `C^{1-ζ}`.
+
+Assumptions, exactly as used: `hX` (the inner-degree bound (4.20), almost surely), `hcont` (continuity of `η`, almost
+surely) and `hcoord`, the transport identity at the single level `b = C^ζ` and the single ball `𝔻`: almost surely
+`μbC ω 𝔻 = μ_h(R 𝔻)` with `R = coneScaleRadius γ (hcirc ω) (C^ζ)`. The measure-valued family `μbC` is an arbitrary
+random measure satisfying `hcoord`; it is not assumed to be the LQG measure of `h^b`. No measurability of `X` or of
+`deg_in` is assumed. -/
+theorem tail_level_bound {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) {γ ζ C : ℝ} (hC1 : 1 < C) (hζ0 : 0 < ζ)
+    {X : Ω → ℝ≥0∞} {η : Ω → ℝ → ℂ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ} {μbC : Ω → Measure ℂ}
+    (hX : ∀ᵐ ω ∂P, X ω ≤ μ ω (gmsB0 (η ω))) (hcont : ∀ᵐ ω ∂P, Continuous (η ω))
+    (hcoord : ∀ᵐ ω ∂P, μbC ω (Metric.ball 0 1) =
+      μ ω ((fun z : ℂ => ((coneScaleRadius γ (hcirc ω) (C ^ ζ) : ℝ) : ℂ) * z) '' Metric.ball 0 1)) :
+    P {ω | ENNReal.ofReal C < X ω} ≤
+      P {ω | ¬ (η ω '' Set.Icc (-1) 1 ⊆ Metric.ball 0 (coneScaleRadius γ (hcirc ω) (C ^ ζ) / 8))} +
+      P {ω | ENNReal.ofReal (C ^ (1 - ζ)) < ENNReal.ofReal (C ^ (-ζ)) * μbC ω (Metric.ball 0 1)} := by
+  have hgood : ∀ᵐ ω ∂P, (X ω ≤ μ ω (gmsB0 (η ω)) ∧ Continuous (η ω)) ∧
+      μbC ω (Metric.ball 0 1) = μ ω ((fun z : ℂ => ((coneScaleRadius γ (hcirc ω) (C ^ ζ) : ℝ) : ℂ) * z) '' Metric.ball 0 1) :=
+    (hX.and hcont).and hcoord
+  have hN0 : P {ω | ¬ ((X ω ≤ μ ω (gmsB0 (η ω)) ∧ Continuous (η ω)) ∧
+      μbC ω (Metric.ball 0 1) = μ ω ((fun z : ℂ => ((coneScaleRadius γ (hcirc ω) (C ^ ζ) : ℝ) : ℂ) * z) '' Metric.ball 0 1))} = 0 :=
+    ae_iff.mp hgood
+  have hsub : {ω | ENNReal.ofReal C < X ω} ⊆
+      {ω | ¬ (η ω '' Set.Icc (-1) 1 ⊆ Metric.ball 0 (coneScaleRadius γ (hcirc ω) (C ^ ζ) / 8))} ∪
+      ({ω | ¬ ((X ω ≤ μ ω (gmsB0 (η ω)) ∧ Continuous (η ω)) ∧
+          μbC ω (Metric.ball 0 1) = μ ω ((fun z : ℂ => ((coneScaleRadius γ (hcirc ω) (C ^ ζ) : ℝ) : ℂ) * z) '' Metric.ball 0 1))} ∪
+        {ω | ENNReal.ofReal (C ^ (1 - ζ)) < ENNReal.ofReal (C ^ (-ζ)) * μbC ω (Metric.ball 0 1)}) := by
+    intro ω hω
+    by_cases hE : η ω '' Set.Icc (-1) 1 ⊆ Metric.ball 0 (coneScaleRadius γ (hcirc ω) (C ^ ζ) / 8)
+    · by_cases hg : (X ω ≤ μ ω (gmsB0 (η ω)) ∧ Continuous (η ω)) ∧
+          μbC ω (Metric.ball 0 1) = μ ω ((fun z : ℂ => ((coneScaleRadius γ (hcirc ω) (C ^ ζ) : ℝ) : ℂ) * z) '' Metric.ball 0 1)
+      · exact Or.inr (Or.inr (pointwise_tail_bound hg.1.2 hC1 hζ0 hg.2 hω hg.1.1 hE))
+      · exact Or.inr (Or.inl hg)
+    · exact Or.inl hE
+  calc P {ω | ENNReal.ofReal C < X ω}
+      ≤ P ({ω | ¬ (η ω '' Set.Icc (-1) 1 ⊆ Metric.ball 0 (coneScaleRadius γ (hcirc ω) (C ^ ζ) / 8))} ∪
+          ({ω | ¬ ((X ω ≤ μ ω (gmsB0 (η ω)) ∧ Continuous (η ω)) ∧
+          μbC ω (Metric.ball 0 1) = μ ω ((fun z : ℂ => ((coneScaleRadius γ (hcirc ω) (C ^ ζ) : ℝ) : ℂ) * z) '' Metric.ball 0 1))} ∪
+        {ω | ENNReal.ofReal (C ^ (1 - ζ)) < ENNReal.ofReal (C ^ (-ζ)) * μbC ω (Metric.ball 0 1)})) :=
+        measure_mono hsub
+    _ ≤ P {ω | ¬ (η ω '' Set.Icc (-1) 1 ⊆ Metric.ball 0 (coneScaleRadius γ (hcirc ω) (C ^ ζ) / 8))} +
+          P ({ω | ¬ ((X ω ≤ μ ω (gmsB0 (η ω)) ∧ Continuous (η ω)) ∧
+          μbC ω (Metric.ball 0 1) = μ ω ((fun z : ℂ => ((coneScaleRadius γ (hcirc ω) (C ^ ζ) : ℝ) : ℂ) * z) '' Metric.ball 0 1))} ∪
+        {ω | ENNReal.ofReal (C ^ (1 - ζ)) < ENNReal.ofReal (C ^ (-ζ)) * μbC ω (Metric.ball 0 1)}) :=
+        measure_union_le _ _
+    _ ≤ P {ω | ¬ (η ω '' Set.Icc (-1) 1 ⊆ Metric.ball 0 (coneScaleRadius γ (hcirc ω) (C ^ ζ) / 8))} +
+          (P {ω | ¬ ((X ω ≤ μ ω (gmsB0 (η ω)) ∧ Continuous (η ω)) ∧
+          μbC ω (Metric.ball 0 1) = μ ω ((fun z : ℂ => ((coneScaleRadius γ (hcirc ω) (C ^ ζ) : ℝ) : ℂ) * z) '' Metric.ball 0 1))} +
+        P {ω | ENNReal.ofReal (C ^ (1 - ζ)) < ENNReal.ofReal (C ^ (-ζ)) * μbC ω (Metric.ball 0 1)}) :=
+        add_le_add le_rfl (measure_union_le _ _)
+    _ = P {ω | ¬ (η ω '' Set.Icc (-1) 1 ⊆ Metric.ball 0 (coneScaleRadius γ (hcirc ω) (C ^ ζ) / 8))} +
+          P {ω | ENNReal.ofReal (C ^ (1 - ζ)) < ENNReal.ofReal (C ^ (-ζ)) * μbC ω (Metric.ball 0 1)} := by
+        rw [hN0, zero_add]
+
+end MatedCRT.StoppedCanonicalMoments
+
 
 namespace MatedCRT.StoppedInnerDegreeMoments
 
@@ -319,7 +693,8 @@ theorem tail_bound_of_premises {P : Measure Ω} {D : Ω → ℝ≥0∞} {Y : ℝ
 /-- **Tail-to-moment, layer-cake form** (r3:2741-2753, with the premises named). From the covering on the events
 `E_C`, the uniform β-moment `M`, and the inverse-polynomial exceptional bound `K C^{-N}`, with the exponent ranges
 `1 ≤ p`, `p < β`, `ζ < 1 - p/β` and `p < N`, the `p`-th moment of `D` is finite. The only measurability premise is
-`hD : AEMeasurable D P` (the WPN-51 residual). No independence of `E_C` and `Y_C` is used. -/
+`hD : AEMeasurable D P` (the WPN-51 residual), used only through `lintegral_pow_le_of_tail`; the conclusion does not need
+it (see `lintegral_pow_lt_top_of_outer`). No independence of `E_C` and `Y_C` is used. -/
 theorem lintegral_pow_lt_top_of_split {P : Measure Ω} [IsProbabilityMeasure P] {D : Ω → ℝ≥0∞}
     (hD : AEMeasurable D P) {Y : ℝ → Ω → ℝ≥0∞} {E : ℝ → Set Ω} {β ζ M K N C₁ p : ℝ}
     (hp1 : 1 ≤ p) (hpβ : p < β) (hζ1 : ζ < 1 - p / β) (hpN : p < N)
@@ -348,6 +723,28 @@ theorem outer_pow_lt_top_of_split {P : Measure Ω} [IsProbabilityMeasure P] {D :
   have hC₀ : 0 < max C₁ 1 + 1 := by linarith [le_max_right C₁ 1]
   exact tail_moment_outer P D (by linarith) hq hpN hC₀ hmom.1 hK
     (tail_bound_of_premises hβ0 hcov hmom hexc)
+
+/-- **Outer expectation bounds the plain lower integral** (no measurability). For every `f : Ω → ℝ≥0∞`,
+`∫⁻ f ∂P ≤ E*[f]`: each measurable majorant `g ≥ f` has `∫⁻ f ≤ ∫⁻ g` (`lintegral_mono`), and `E*[f]` is the infimum
+of these integrals (`MatedCRT.outerLIntegral`, Defs/Notation.lean). So a finite outer expectation gives a finite plain
+integral. This supplies neither measurability of `f` nor the layer-cake identity. -/
+theorem lintegral_le_outerLIntegral {P : Measure Ω} (f : Ω → ℝ≥0∞) :
+    ∫⁻ ω, f ω ∂P ≤ MatedCRT.outerLIntegral P f := by
+  unfold MatedCRT.outerLIntegral
+  exact le_iInf fun g => le_iInf fun _ => le_iInf fun hfg => lintegral_mono hfg
+
+/-- **Tail-to-moment, finiteness without measurability** (r3:2741-2753). The premises of
+`lintegral_pow_lt_top_of_split` without `hD : AEMeasurable D P`: `∫⁻ D^p ∂P < ∞` follows from
+`outer_pow_lt_top_of_split` and `lintegral_le_outerLIntegral`. The WPN-51 premise `hD` is needed for the layer-cake
+bound `lintegral_pow_le_of_tail` and for the Tonelli identity, not for this conclusion. -/
+theorem lintegral_pow_lt_top_of_outer {P : Measure Ω} [IsProbabilityMeasure P] {D : Ω → ℝ≥0∞}
+    {Y : ℝ → Ω → ℝ≥0∞} {E : ℝ → Set Ω} {β ζ M K N C₁ p : ℝ}
+    (hp1 : 1 ≤ p) (hpβ : p < β) (hζ1 : ζ < 1 - p / β) (hpN : p < N)
+    (hcov : CoverOnEvent P D Y E ζ) (hmom : UniformMassMoment P Y β M) (hK : 0 ≤ K)
+    (hexc : ∀ C : ℝ, C₁ ≤ C → P (E C)ᶜ ≤ ENNReal.ofReal (K * C ^ (-N))) :
+    ∫⁻ ω, D ω ^ p ∂P < ⊤ :=
+  (lintegral_le_outerLIntegral (fun ω => D ω ^ p)).trans_lt
+    (outer_pow_lt_top_of_split hp1 hpβ hζ1 hpN hcov hmom hK hexc)
 
 /-- **Lemma 4.3 (4.6) at the level `C^ζ`** (r3:2708-2716). An inverse-polynomial bound for the events `A c` at every
 level `c` gives `ExceptionalInversePoly` for `E C := A (C^ζ)`: with `c = C^ζ` and the exponent `N/ζ`, one has
@@ -462,8 +859,9 @@ theorem canonical_premises {𝒮 : SpaceFillingSLEModel}
 
 /-- **Canonical inner-degree moment, layer-cake form** (r3:2741-2753 with the printed inputs). Under the printed GMS
 inputs and the exponent ranges `1 ≤ p < β < 4/γ²`, `0 < ζ < 1 - p/β`, `p < N`, the `p`-th moment of the canonical inner
-degree is finite, given one named premise: the measurability `AEMeasurable (deg_in ∘ η) P` (the WPN-51 residual),
-used only for the Tonelli identity. -/
+degree is finite, given one named premise: the measurability `AEMeasurable (deg_in ∘ η) P` (the WPN-51 residual).
+The premise enters only through the layer-cake bound `lintegral_pow_le_of_tail`; the conclusion does not need it
+(see `canonical_innerDegree_lintegral_lt_top_of_outer`). -/
 theorem canonical_innerDegree_lintegral_lt_top {𝒮 : SpaceFillingSLEModel}
     (hLem : GMSLemma43Eq46Stmt 𝒮) (hBeta : GMSMassBetaMomentStmt 𝒮)
     (hCoord : GMSCoordinateChangeStmt 𝒮) (hInner : GMSInnerDegreeBoundStmt 𝒮)
@@ -503,6 +901,64 @@ theorem canonical_innerDegree_outer_lt_top {𝒮 : SpaceFillingSLEModel}
     canonical_premises hLem hBeta hCoord hInner hγ0 hγ2 hM μb hμb hp1 hpβ hβ2 hζ0 hζ1 hpN
   exact outer_pow_lt_top_of_split hp1 hpβ hζ1 hpN hcov hmom hK hexc
 
+/-- **Canonical inner-degree moment, plain finiteness without measurability** (r3:2741-2753). The conclusion of
+`canonical_innerDegree_lintegral_lt_top` without its premise `AEMeasurable (deg_in ∘ η) P` (WPN-51), through
+`lintegral_le_outerLIntegral` and `canonical_innerDegree_outer_lt_top`. -/
+theorem canonical_innerDegree_lintegral_lt_top_of_outer {𝒮 : SpaceFillingSLEModel}
+    (hLem : GMSLemma43Eq46Stmt 𝒮) (hBeta : GMSMassBetaMomentStmt 𝒮)
+    (hCoord : GMSCoordinateChangeStmt 𝒮) (hInner : GMSInnerDegreeBoundStmt 𝒮)
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ} {η : Ω → ℝ → ℂ}
+    (hM : IsCanonicalZeroConeModel 𝒮 γ P hC hcirc μ η)
+    (μb : ℝ → Ω → Measure ℂ)
+    (hμb : ∀ b : ℝ, 0 < b → IsLQGMeasure P γ
+      (fun ω => gmsRescaledCircle γ (hcirc ω) (coneScaleRadius γ (hcirc ω) b)) (μb b))
+    {β ζ N p : ℝ} (hp1 : 1 ≤ p) (hpβ : p < β) (hβ2 : β < 4 / γ ^ 2) (hζ0 : 0 < ζ)
+    (hζ1 : ζ < 1 - p / β) (hpN : p < N) :
+    ∫⁻ ω, (gmsInnerDegree (η ω)).toENNReal ^ p ∂P < ⊤ :=
+  (lintegral_le_outerLIntegral (fun ω => (gmsInnerDegree (η ω)).toENNReal ^ p)).trans_lt
+    (canonical_innerDegree_outer_lt_top hLem hBeta hCoord hInner hγ0 hγ2 hM μb hμb hp1 hpβ hβ2 hζ0 hζ1 hpN)
+
 end Canonical
 
 end MatedCRT.StoppedInnerDegreeMoments
+
+namespace MatedCRT.StoppedCanonicalMoments
+
+open MatedCRT
+
+/-- **Inner-degree moment from the published inputs** (r3:2674-2753). For the canonical zero-cone model, given the
+staged Lemma 4.3 (4.6), the beta-moment paragraph, the coordinate change (2.3) and the inner-degree bound (4.20), the
+outer `p`-th moment of `deg_in(H₀)` is finite for `1 ≤ p < 4/γ²`. The printed (4.22) range `[1, 4/γ)^2` is not used;
+the conclusion is the range the written proof derives.
+
+Assumptions, exactly as used: `hLem`, `hBeta`, `hCoord` and `hInner` are the staged printed Props (cited, not proved);
+`hM` is the canonical zero-cone predicate; `hμb` supplies the rescaled-measure family `μb`: for every `b > 0`, `μb b` is
+the `γ`-LQG measure of the rescaled circle averages `gmsRescaledCircle γ (hcirc ω) (coneScaleRadius γ (hcirc ω) b)`,
+and it is the family on which `hBeta` and `hCoord` are stated. The conclusion is an outer moment; measurability of
+`deg_in(H₀)` is neither assumed nor proved. -/
+theorem gms_innerDegree_moment {𝒮 : SpaceFillingSLEModel}
+    (hLem : GMSLemma43Eq46Stmt 𝒮) (hBeta : GMSMassBetaMomentStmt 𝒮)
+    (hCoord : GMSCoordinateChangeStmt 𝒮) (hInner : GMSInnerDegreeBoundStmt 𝒮)
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ} {η : Ω → ℝ → ℂ}
+    (hM : IsCanonicalZeroConeModel 𝒮 γ P hC hcirc μ η)
+    (μb : ℝ → Ω → Measure ℂ)
+    (hμb : ∀ b : ℝ, 0 < b → IsLQGMeasure P γ
+      (fun ω => gmsRescaledCircle γ (hcirc ω) (coneScaleRadius γ (hcirc ω) b)) (μb b))
+    {p : ℝ} (hp1 : 1 ≤ p) (hp2 : p < 4 / γ ^ 2) :
+    MatedCRT.outerLIntegral P (fun ω => (gmsInnerDegree (η ω)).toENNReal ^ p) < ⊤ := by
+  -- Corollary of `canonical_innerDegree_outer_lt_top`: the exponents are `β = (p + 4/γ²)/2`, `ζ = (1 - p/β)/2`
+  -- and `N = p + 1`; `p < β < 4/γ²` and `0 < ζ < 1 - p/β` follow from `1 ≤ p < 4/γ²`.
+  obtain ⟨β, hβdef⟩ : ∃ β : ℝ, β = (p + 4 / γ ^ 2) / 2 := ⟨_, rfl⟩
+  have hpβ : p < β := by rw [hβdef]; linarith
+  have hβ2 : β < 4 / γ ^ 2 := by rw [hβdef]; linarith
+  have hβ0 : 0 < β := by linarith
+  have hpb : p / β < 1 := (div_lt_one hβ0).mpr hpβ
+  obtain ⟨ζ, hζdef⟩ : ∃ ζ : ℝ, ζ = (1 - p / β) / 2 := ⟨_, rfl⟩
+  have hζ0 : 0 < ζ := by rw [hζdef]; linarith
+  have hζ1 : ζ < 1 - p / β := by rw [hζdef]; linarith
+  exact MatedCRT.StoppedInnerDegreeMoments.canonical_innerDegree_outer_lt_top hLem hBeta hCoord hInner hγ0 hγ2 hM
+    μb hμb hp1 hpβ hβ2 hζ0 hζ1 (show p < p + 1 by linarith)
+
+end MatedCRT.StoppedCanonicalMoments
