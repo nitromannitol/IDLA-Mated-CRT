@@ -8,6 +8,7 @@ import MatedCRT.Steps.Sec2.BoundedExitTimeRV
 import MatedCRT.Steps.Sec2.ExpectedExitTimeExplicitBound
 import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 import MatedCRT.Proofs.Sec3.DiscretePotentialTightness.Final
+import MatedCRT.Proofs.Sec3.DiscretePotentialTightness.AlmostSureInterior
 import MatedCRT.Steps.Sec3.ConvergenceHarmonicFunctions
 import MatedCRT.Steps.Sec3.UniformConvergenceGreenKernel
 import MatedCRT.Steps.Sec3.DiscreteDirichletProblem
@@ -130,6 +131,12 @@ theorem expectedExitTimeExplicitBound (H : MainHypotheses 𝒮) : ExpectedExitTi
 /-- **Lemma 3.1**, corrected form (`discretePotentialTightnessCorrected_of_inputs`). -/
 theorem discretePotentialTightnessCorrected (H : MainHypotheses 𝒮) : DiscretePotentialTightnessCorrectedStmt 𝒮 :=
   discretePotentialTightnessCorrected_of_inputs H.mepsScaling H.volumeGrowth H.exitTimeUpperBound
+    H.discreteHolderContinuityCorrected
+
+/-- **Lemma 3.1**, almost-sure interior form (E-c2-6), from the normalization, Lemmas 2.17 and 2.18,
+and corrected Lemma 3.2. -/
+theorem discretePotentialTightnessAe (H : MainHypotheses 𝒮) : DiscretePotentialTightnessAeStep 𝒮 :=
+  discretePotentialTightnessAeStep_of_inputs H.mepsScaling H.boundedExitTimeRV H.exitTimeUpperBound
     H.discreteHolderContinuityCorrected
 
 /-- **Lemma 3.6** (`convergenceHarmonicFunctions_of_inputs`, ab6ed20: Theorem 2.11, Lemma 2.8, `MepsScalingInput`

@@ -63,6 +63,7 @@ import MatedCRT.Proofs.Sec2.VolumeGrowthHalf.Main
 import MatedCRT.Proofs.Sec2.CellSizeHalf.Main
 import MatedCRT.Proofs.Measurability.LQGMeasureField
 import MatedCRT.Proofs.Sec3.DiscretePotentialTightness.Final
+import MatedCRT.Proofs.Sec3.DiscretePotentialTightness.AlmostSureInterior
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.DyadicModulus
 import MatedCRT.Proofs.Sec4.ObstacleSpecialization.Final
 import MatedCRT.Proofs.Sec4.SubsequentialConvergence.Corrected
@@ -569,11 +570,17 @@ example (𝒮 : SpaceFillingSLEModel) (hc : ConeWholePlaneCouplingStep) : CellSi
   audit_apply cellSizeUpperStmt_of_coupling
 
 /-- **Lemma 3.1**, corrected form (E-c1-4), final: Lemmas 2.7, 2.18, `MepsScalingInput` and the corrected cited
-Lemma 3.2 (E-chk-1, (L2) ruling pending) (`discretePotentialTightnessCorrected_of_inputs`). -/
+Lemma 3.2 (E-chk-1, correction approved 2026-11-05) (`discretePotentialTightnessCorrected_of_inputs`). -/
 example (𝒮 : SpaceFillingSLEModel) (hm : MepsScalingInput 𝒮) (h27 : VolumeGrowthStmt)
     (h218 : ExitTimeUpperBoundStmt 𝒮) (h32 : DiscreteHolderContinuityCorrectedStep 𝒮) :
     DiscretePotentialTightnessCorrectedStmt 𝒮 := by
   audit_apply discretePotentialTightnessCorrected_of_inputs
+
+/-- The almost-sure interior form of Lemma 3.1 follows from the same inputs. -/
+example (𝒮 : SpaceFillingSLEModel) (hm : MepsScalingInput 𝒮) (h27 : VolumeGrowthStmt)
+    (h218 : ExitTimeUpperBoundStmt 𝒮) (h32 : DiscreteHolderContinuityCorrectedStep 𝒮) :
+    DiscretePotentialTightnessAeStep 𝒮 :=
+  discretePotentialTightnessAeStep_of_inputs hm (boundedExitTimeRV_of_steps h27) h218 h32
 
 /-- **Lemma 3.7**, final form (980cf27): Lemmas 3.3, 3.5, 2.17, 2.18 and the a.s. interior form of the corrected 3.1
 (`DiscretePotentialTightnessAeStep`, E-c2-6) (`convergenceNormalizedExitTime_of_statements`). -/

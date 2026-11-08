@@ -44,8 +44,7 @@ The fields are grouped:
 * (b) literature inputs (`...Input`, MatedCRT/External);
 * (c) open named steps (`...Step`), with their owner (task files of 2026-11-07; "no current owner" when no task file
   names the step);
-* (d) statements awaiting an operator ruling: a corrected cited statement whose admission is pending, and a corrected
-  form of a frozen statement;
+* (d) the corrected cited Lemma 3.2, retained as an explicit input;
 * (e) paper-owned numbered results whose committed reduction still needs open steps that are not fields.
 
 No field is a Draft statement refuted in Lean (MatedCRT/Audit/Main.lean checks this against MatedCRT/Audit/*, among
@@ -56,7 +55,7 @@ This file is regenerated as steps close: a field disappears when its Prop is pro
 namespace MatedCRT
 
 /-- The remaining hypotheses of the conditional proof of Theorems 1.4 and 1.6 for the space-filling SLE model `𝒮`.
-Field counts (regenerated 2026-11-07): (a) 12, (b) 3, (c) 23, (d) 2, (e) 1; total 41.
+Field counts: (a) 12, (b) 3, (c) 25, (d) 1, (e) 1; total 42.
 
 No field is a Draft known false: the Draft Lemma 3.1 (refuted in Lean, `not_discretePotentialTightnessStmt`, E-c1-4)
 is no longer consumed, since Lemma 3.3 goes through the almost-sure corrected 3.1 (`uniformConvergenceGreenKernel_final`,
@@ -167,15 +166,10 @@ structure MainHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   wholePlaneLQGCoordinateChange : WholePlaneLQGCoordinateChangeStep
   /-- Lemma 6.5: upper volume tail of the whole-plane LQG measure (IR-c4-4). Owner: z1. -/
   wholePlaneUpperVolumeTail : WholePlaneUpperVolumeTailStep
-  -- (d) Awaiting an operator ruling
-  /-- The corrected cited **Lemma 3.2** (GMS19 Theorem 3.9; review-L32 "minimal corrected statement", ruling (L2)
-  pending; the Draft 3.2 is false by review-L32 F1). Used by the corrected Lemma 3.1. Owner: m1 (from Leo, per
-  REDUCTIONS.md). -/
+  -- (d) Corrected cited statement
+  /-- The corrected cited **Lemma 3.2** (GMS19 Theorem 3.9; review-L32, correction approved 2026-11-05).
+  Used by both corrected forms of Lemma 3.1. -/
   discreteHolderContinuityCorrected : DiscreteHolderContinuityCorrectedStep 𝒮
-  /-- **Lemma 3.1**, corrected interior form with almost-sure hypotheses (E-c2-6: the `∀ ω` hypotheses of the frozen
-  3.1 cannot be met by a `σ(h, η)`-measurable `u^ε` against `S.mult`). Used by Lemmas 3.3
-  (`uniformConvergenceGreenKernel_final`) and 3.7 (`convergenceNormalizedExitTime_of_statements`). Owner: m2. -/
-  discretePotentialTightnessAe : DiscretePotentialTightnessAeStep 𝒮
   -- (e) Paper-owned results whose committed reduction still needs open steps
   /-- **Lemma 3.4** (convergence of integrals of the Green function). Owner: m2 (task sec3-lbm-steps; pieces committed:
   25d726a, 66df860, a8566fc, e1f2928). Reduced by `integralConvergenceGreenFunction_of_steps` to the open LBM steps

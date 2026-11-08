@@ -97,6 +97,8 @@ elab "assert_no_refuted_field" : command => do
     let some ci := env.find? (``MatedCRT.MainHypotheses ++ f) | throwError "no projection {f}"
     let some c := ci.type.getForallBody.getAppFn.constName? | continue
     if refuted.contains c then bad := bad.push f
+    if c == ``MatedCRT.DiscretePotentialTightnessAeStep then
+      throwError "almost-sure tightness must be derived, not a MainHypotheses field: {f}"
   unless bad.isEmpty do
     throwError "fields of MainHypotheses whose statement is refuted in Lean: {bad}"
   logInfo m!"MainHypotheses has {fields.size} fields; none is refuted in Lean. Refuted under MatedCRT.Audit: {refuted}"
@@ -105,6 +107,7 @@ end MatedCRT.Audit.Main
 
 #print axioms MatedCRT.convergenceOfIDLA_conditional
 #print axioms MatedCRT.convergenceOfDivSandpile_conditional
+#print axioms MatedCRT.MainHypotheses.discretePotentialTightnessAe
 
 assert_no_refuted_field
 
@@ -163,6 +166,11 @@ assert_uses convergenceOfIDLA_conditional expectedExitTimeExplicitBound_of_steps
 example (H : MainHypotheses 𝒮) : DiscretePotentialTightnessCorrectedStmt 𝒮 :=
   H.discretePotentialTightnessCorrected
 assert_uses convergenceOfIDLA_conditional discretePotentialTightnessCorrected_of_inputs
+
+/-- The almost-sure interior form of Lemma 3.1 is derived from the remaining inputs. -/
+example (H : MainHypotheses 𝒮) : DiscretePotentialTightnessAeStep 𝒮 := H.discretePotentialTightnessAe
+assert_uses convergenceOfIDLA_conditional discretePotentialTightnessAeStep_of_inputs
+assert_uses convergenceOfDivSandpile_conditional discretePotentialTightnessAeStep_of_inputs
 
 /-- **Lemma 3.3**. -/
 example (H : MainHypotheses 𝒮) : UniformConvergenceGreenKernelStmt 𝒮 := H.uniformConvergenceGreenKernel
