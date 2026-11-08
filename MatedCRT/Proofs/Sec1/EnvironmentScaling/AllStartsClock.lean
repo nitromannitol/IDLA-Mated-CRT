@@ -937,6 +937,95 @@ theorem borelSubsequenceSelectionStep_nselFun (γ : ℝ) : BorelSubsequenceSelec
     (fun a z => strictMono_nat_of_lt_succ fun k => nselSeq_lt_succ γ k (a, z)),
     fun a z hC k hk n m hn hm => nselSeq_tail γ a z hC k hk n m hn hm⟩
 
+/-- **Rational reduction of `𝒯_*`** (env-steps.tex:413-416): for a continuous `f`, `f` is an `IsTimeChangeClock` iff
+`f 0 = 0`, `f` is strictly increasing on the nonnegative rationals, and `f` is unbounded on the naturals. -/
+theorem isTimeChangeClock_iff_rat {f : ℝ≥0 → ℝ} (hf : Continuous f) :
+    IsTimeChangeClock f ↔ f 0 = 0 ∧
+      (∀ q r : ℚ, 0 ≤ q → q < r → f (q : ℝ).toNNReal < f (r : ℝ).toNNReal) ∧
+      ∀ M : ℕ, ∃ N : ℕ, (M : ℝ) < f (N : ℝ≥0) := by
+  constructor
+  · intro h
+    refine ⟨h.map_zero, fun q r hq hqr => ?_, fun M => ?_⟩
+    · have hq' : (0 : ℝ) ≤ (q : ℝ) := by exact_mod_cast hq
+      have hqr' : (q : ℝ) < (r : ℝ) := by exact_mod_cast hqr
+      exact h.strictMono ((Real.toNNReal_lt_toNNReal_iff (by linarith)).mpr hqr')
+    · obtain ⟨N, hN⟩ := ((h.tendsto_atTop.comp tendsto_natCast_atTop_atTop).eventually_gt_atTop (M : ℝ)).exists
+      exact ⟨N, hN⟩
+  · rintro ⟨h0, hrat, hunb⟩
+    have hsm : StrictMono f := by
+      intro x y hxy
+      have hxy' : (x : ℝ) < (y : ℝ) := by exact_mod_cast hxy
+      obtain ⟨a, hxa, hay⟩ := exists_rat_btwn hxy'
+      obtain ⟨b, hab, hby⟩ := exists_rat_btwn hay
+      have ha0 : (0 : ℝ) ≤ (a : ℝ) := le_trans (NNReal.coe_nonneg x) hxa.le
+      have ha0' : (0 : ℚ) ≤ a := by exact_mod_cast ha0
+      have hb0 : (0 : ℝ) ≤ (b : ℝ) := le_trans ha0 hab.le
+      have hb0' : (0 : ℚ) ≤ b := by exact_mod_cast hb0
+      have hab' : a < b := by exact_mod_cast hab
+      -- `f x ≤ f a`: otherwise, continuity at `x` forces `f a < f r` for rationals `r` close to `x`, contradicting `f r < f a`.
+      have hxa_le : f x ≤ f (a : ℝ).toNNReal := by
+        by_contra hlt
+        rw [not_le] at hlt
+        have hev : ∀ᶠ t in 𝓝 x, f (a : ℝ).toNNReal < f t :=
+          hf.continuousAt.eventually (lt_mem_nhds hlt)
+        obtain ⟨ε, hε, hball⟩ := Metric.eventually_nhds_iff.mp hev
+        obtain ⟨r, hxr, hra⟩ := exists_rat_btwn
+          (lt_min hxa (show (x : ℝ) < (x : ℝ) + ε by linarith))
+        have hr1 : (r : ℝ) < a := lt_of_lt_of_le hra (min_le_left _ _)
+        have hr2 : (r : ℝ) < (x : ℝ) + ε := lt_of_lt_of_le hra (min_le_right _ _)
+        have hr0 : (0 : ℝ) ≤ (r : ℝ) := le_trans (NNReal.coe_nonneg x) hxr.le
+        have hr0' : (0 : ℚ) ≤ r := by exact_mod_cast hr0
+        have hdist : dist (r : ℝ).toNNReal x < ε := by
+          rw [NNReal.dist_eq, Real.coe_toNNReal _ hr0, abs_lt]
+          constructor <;> linarith
+        have h1 := hball hdist
+        have h2 := hrat r a hr0' (by exact_mod_cast hr1)
+        exact lt_asymm h1 h2
+      -- `f b ≤ f y`: symmetric, using continuity at `y`.
+      have hby_le : f (b : ℝ).toNNReal ≤ f y := by
+        by_contra hlt
+        rw [not_le] at hlt
+        have hev : ∀ᶠ t in 𝓝 y, f t < f (b : ℝ).toNNReal :=
+          hf.continuousAt.eventually (gt_mem_nhds hlt)
+        obtain ⟨ε, hε, hball⟩ := Metric.eventually_nhds_iff.mp hev
+        obtain ⟨r, hbr, hry⟩ := exists_rat_btwn
+          (show max (b : ℝ) ((y : ℝ) - ε) < (y : ℝ) from max_lt hby (by linarith))
+        have hr1 : (b : ℝ) < r := lt_of_le_of_lt (le_max_left _ _) hbr
+        have hr2 : (y : ℝ) - ε < r := lt_of_le_of_lt (le_max_right _ _) hbr
+        have hr0 : (0 : ℝ) ≤ (b : ℝ) := hb0
+        have hr0' : (0 : ℚ) ≤ b := hb0'
+        have hdist : dist (r : ℝ).toNNReal y < ε := by
+          rw [NNReal.dist_eq, Real.coe_toNNReal _ (le_trans hr0 hr1.le), abs_lt]
+          constructor <;> linarith
+        have h1 := hball hdist
+        have h2 := hrat b r hr0' (by exact_mod_cast hr1)
+        exact lt_asymm h2 h1
+      have hab_lt : f (a : ℝ).toNNReal < f (b : ℝ).toNNReal := hrat a b ha0' hab'
+      exact lt_of_le_of_lt hxa_le (lt_of_lt_of_le hab_lt hby_le)
+    refine ⟨h0, hf, hsm, Monotone.tendsto_atTop_atTop hsm.monotone fun b => ?_⟩
+    obtain ⟨N, hN⟩ := hunb ⌈b⌉₊
+    exact ⟨(N : ℝ≥0), le_trans (Nat.le_ceil b) hN.le⟩
+
+/-- The Cauchy-in-probability relation is Borel in `(a, z)` (the countable form of eq:cauchy). -/
+theorem measurableSet_cauchyInProbability (γ : ℝ) :
+    MeasurableSet {p : CircleFns × ℂ | CauchyInProbability γ p.1 p.2} := by
+  have hset : {p : CircleFns × ℂ | CauchyInProbability γ p.1 p.2} = ⋂ k : ℕ,
+      {p : CircleFns × ℂ | 1 ≤ k → ∃ N : ℕ, tailBelow γ k N p.1 p.2} := by
+    ext p
+    rw [Set.mem_iInter]
+    exact Iff.rfl
+  rw [hset]
+  refine MeasurableSet.iInter fun k => ?_
+  have hex : MeasurableSet {p : CircleFns × ℂ | ∃ N : ℕ, tailBelow γ k N p.1 p.2} := by
+    have hU : {p : CircleFns × ℂ | ∃ N : ℕ, tailBelow γ k N p.1 p.2}
+        = ⋃ N : ℕ, {p : CircleFns × ℂ | tailBelow γ k N p.1 p.2} := by
+      ext p
+      rw [Set.mem_iUnion]
+      exact Iff.rfl
+    rw [hU]
+    exact MeasurableSet.iUnion fun N => measurableSet_tailBelow γ k N
+  exact allStarts_measurableSet_imp hex
+
 end Measurability
 
 /-- `𝒢` is universally measurable (env-steps.tex:380-446: complement = projection of a Borel subset of `H × ℂ`,
