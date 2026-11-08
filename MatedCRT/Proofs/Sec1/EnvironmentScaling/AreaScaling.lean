@@ -6,11 +6,11 @@ import HarmonicBalls.Proofs.Sec9.LQGSpatialDilation
 # Area measure at a random radius
 
 Deterministic parts of `env-steps.tex`, Lemma `area-scale`, lines 693–747.
-The radius-change limit below is an explicit hypothesis, not a consequence of
-dyadic convergence. This global radius-change limit is stronger than the
-off-origin convergence used in the written proof: that proof instead extends
-the equality of the two limiting measures across the origin. The result here
-therefore does not discharge that proof's remaining convergence step.
+The all-scale convergence away from zero is an explicit hypothesis, not a
+consequence of dyadic convergence. Under this hypothesis, the regularized
+change of variables and nonatomicity identify the rescaled area measure even
+at a sample-dependent radius. A separate earlier bridge assumes the stronger
+global radius-change limit; neither bridge proves the all-scale hypothesis.
 -/
 
 open MeasureTheory Filter Set
@@ -130,5 +130,188 @@ theorem isLQGLimit_eq_of_off_origin {γ : ℝ} {h : ℝ → ℂ → ℝ}
   apply restrict_eq_of_integral_eq_of_tsupport_subset isClosed_singleton.isOpen_compl
   intro f hf hfc hs
   exact tendsto_nhds_unique (hν.tendsto_integral f hf hfc) (hoff f hf hfc hs)
+
+/-- The planar Jacobian in a spatial dilation of one circle-average
+approximation, at any positive regularization scale. -/
+theorem integral_lqgApprox_spatial_dilation {γ r R : ℝ}
+    (hr : 0 < r) (hR : 0 < R) {h : ℝ → ℂ → ℝ}
+    (hc : Continuous (h r)) (f : ℂ → ℝ) :
+    (∫ z, f z ∂(lqgApprox γ (fun t z => h t (R • z)) r)) =
+      R⁻¹ ^ 2 * ∫ z, f (R⁻¹ • z) ∂(lqgApprox γ h r) := by
+  let w : ℂ → ℝ := fun z => r ^ (γ ^ 2 / 2) * Real.exp (γ * h r z)
+  have hw : Continuous w := continuous_const.mul (Real.continuous_exp.comp
+    (continuous_const.mul hc))
+  have hw0 : ∀ z, 0 ≤ w z := fun z => mul_nonneg
+    (Real.rpow_nonneg hr.le _) (Real.exp_nonneg _)
+  change (∫ z, f z ∂(volume.withDensity fun z => ENNReal.ofReal (w (R • z)))) =
+    R⁻¹ ^ 2 * ∫ z, f (R⁻¹ • z) ∂(volume.withDensity fun z => ENNReal.ofReal (w z))
+  rw [Section6.integral_withDensity_nonnegative volume (fun z => w (R • z)) f
+      (hw.comp (continuous_const_smul R)) (fun z => hw0 (R • z)),
+    Section6.integral_withDensity_nonnegative volume w (fun z => f (R⁻¹ • z)) hw hw0]
+  have hcomp : (fun x : ℂ => f (R⁻¹ • (R • x)) * w (R • x)) =
+      (fun x => f x * w (R • x)) := by
+    funext x
+    simp [hR.ne']
+  have hs := Measure.integral_comp_smul volume (fun z : ℂ => f (R⁻¹ • z) * w z) R
+  rw [hcomp] at hs
+  rw [Complex.finrank_real_complex, abs_of_pos (inv_pos.mpr (pow_pos hR _)), ← inv_pow,
+    smul_eq_mul] at hs
+  exact hs
+
+/-- The pointwise normalization in the regularized coordinate change.
+The spatial Jacobian is handled separately by
+`integral_lqgApprox_spatial_dilation`. -/
+theorem lqgApprox_rescaled_normalization {γ R b ε : ℝ}
+    (hγ : γ ≠ 0) (hR : 0 < R) (hb : 0 < b) (hε : 0 < ε)
+    (h : ℝ → ℂ → ℝ) :
+    lqgApprox γ (rescaledCircle γ h R b) ε =
+      ENNReal.ofReal (R ^ 2 * b⁻¹) •
+        lqgApprox γ (fun t z => h t (R • z)) (R * ε) := by
+  have heq : γ * (lqgQ γ * Real.log R - γ⁻¹ * Real.log b) =
+      (γ ^ 2 / 2) * Real.log R + (Real.log R + Real.log R) - Real.log b := by
+    dsimp [lqgQ]
+    field_simp
+    ring
+  have he : Real.exp (γ * (lqgQ γ * Real.log R - γ⁻¹ * Real.log b)) =
+      R ^ (γ ^ 2 / 2) * (R ^ 2 * b⁻¹) := by
+    rw [heq, Real.exp_sub, Real.exp_add, Real.exp_add, Real.exp_log hR,
+      Real.exp_log hb, Real.rpow_def_of_pos hR]
+    ring
+  simp only [lqgApprox]
+  rw [← withDensity_smul' _ _ ENNReal.ofReal_ne_top]
+  congr 1
+  funext z
+  simp only [Pi.smul_apply, smul_eq_mul]
+  rw [← ENNReal.ofReal_mul (mul_nonneg (sq_nonneg R) (inv_nonneg.2 hb.le))]
+  congr 1
+  simp only [rescaledCircle, Complex.real_smul]
+  rw [show h (R * ε) ((R : ℂ) * z) + lqgQ γ * Real.log R - γ⁻¹ * Real.log b =
+    h (R * ε) ((R : ℂ) * z) + (lqgQ γ * Real.log R - γ⁻¹ * Real.log b) by ring,
+    mul_add, Real.exp_add, he, Real.mul_rpow hR.le hε.le]
+  ring
+
+/-- The regularized area scaling identity, tested against an arbitrary
+function. This is equation `approxscale` in `env-steps.tex`, lines 733–739. -/
+theorem integral_lqgApprox_rescaled {γ R b ε : ℝ}
+    (hγ : γ ≠ 0) (hR : 0 < R) (hb : 0 < b) (hε : 0 < ε)
+    {h : ℝ → ℂ → ℝ} (hc : Continuous (h (R * ε))) (f : ℂ → ℝ) :
+    (∫ z, f z ∂(lqgApprox γ (rescaledCircle γ h R b) ε)) =
+      b⁻¹ * ∫ z, f (R⁻¹ • z) ∂(lqgApprox γ h (R * ε)) := by
+  rw [lqgApprox_rescaled_normalization hγ hR hb hε, integral_smul_measure,
+    ENNReal.toReal_ofReal (mul_nonneg (sq_nonneg R) (inv_nonneg.2 hb.le)), smul_eq_mul,
+    integral_lqgApprox_spatial_dilation (mul_pos hR hε) hR hc]
+  have hfactor : (R ^ 2 * b⁻¹) * R⁻¹ ^ 2 = b⁻¹ := by
+    have : R ^ 2 * R⁻¹ ^ 2 = 1 := by
+      rw [← mul_pow, mul_inv_cancel₀ hR.ne', one_pow]
+    calc
+      (R ^ 2 * b⁻¹) * R⁻¹ ^ 2 = (R ^ 2 * R⁻¹ ^ 2) * b⁻¹ := by ring
+      _ = b⁻¹ := by rw [this, one_mul]
+  rw [← mul_assoc, hfactor]
+
+/-- All-scale convergence away from the origin transports to the dyadic
+approximations of the field at any prescribed positive radius. The hypothesis
+is pathwise and may be used simultaneously for a sample-dependent radius. -/
+theorem tendsto_rescaled_off_origin {γ R b : ℝ} (hγ : γ ≠ 0)
+    (hR : 0 < R) (hb : 0 < b) {h : ℝ → ℂ → ℝ} {μ : Measure ℂ}
+    (hc : ∀ n, Continuous (h (R * dyadicScale n)))
+    (hall : ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+      tsupport f ⊆ ({0} : Set ℂ)ᶜ →
+      Tendsto (fun ε : ℝ => ∫ z, f z ∂(lqgApprox γ h ε))
+        (𝓝[>] 0) (𝓝 (∫ z, f z ∂μ))) :
+    ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+      tsupport f ⊆ ({0} : Set ℂ)ᶜ →
+      Tendsto (fun n : ℕ => ∫ z, f z ∂(lqgApprox γ (rescaledCircle γ h R b) (dyadicScale n)))
+        atTop (𝓝 (∫ z, f z ∂(rescaledMeasure μ R b))) := by
+  intro f hf hfc hf0
+  let e : ℂ ≃ₜ ℂ := Homeomorph.smulOfNeZero R⁻¹ (inv_ne_zero hR.ne')
+  let ψ : ℂ → ℝ := fun z => f (R⁻¹ • z)
+  have hψ : Continuous ψ := hf.comp (continuous_const_smul _)
+  have hψc : HasCompactSupport ψ := hfc.comp_homeomorph e
+  have hψ0 : tsupport ψ ⊆ ({0} : Set ℂ)ᶜ := by
+    change tsupport (f ∘ e) ⊆ ({0} : Set ℂ)ᶜ
+    rw [tsupport_comp_eq_preimage]
+    intro z hz
+    have hz' := hf0 hz
+    intro hz0
+    have : z = 0 := by simpa only [mem_singleton_iff] using hz0
+    subst z
+    exact hz' (by simp [e])
+  have hseq : Tendsto (fun n : ℕ => R * dyadicScale n) atTop (𝓝[>] (0 : ℝ)) := by
+    apply tendsto_nhdsWithin_iff.mpr
+    constructor
+    · simpa only [mul_zero] using
+        (tendsto_const_nhds.mul (tendsto_dyadicScale_nhdsGT.mono_right nhdsWithin_le_nhds))
+    · exact Filter.Eventually.of_forall (fun n => mul_pos hR (dyadicScale_pos n))
+  have hlim := ((hall ψ hψ hψc hψ0).comp hseq).const_mul b⁻¹
+  have htarget : (∫ z, f z ∂(rescaledMeasure μ R b)) = b⁻¹ * ∫ z, ψ z ∂μ := by
+    rw [rescaledMeasure, integral_smul_measure, ENNReal.toReal_ofReal (inv_nonneg.2 hb.le),
+      smul_eq_mul, integral_map (by fun_prop) hf.aestronglyMeasurable]
+    simp only [ψ, Complex.real_smul, Complex.ofReal_inv]
+  rw [htarget]
+  convert hlim using 1
+  funext n
+  exact integral_lqgApprox_rescaled hγ hR hb (dyadicScale_pos n) (hc n) f
+
+/-- The normalized spatial push-forward is locally finite and has no atom at
+the origin when the original locally finite measure has no atom there. -/
+theorem rescaledMeasure_local_and_origin_null {μ : Measure ℂ} {R b : ℝ}
+    (hR : 0 < R) (hμ : IsLocallyFiniteMeasure μ) (hμ0 : μ {0} = 0) :
+    IsLocallyFiniteMeasure (rescaledMeasure μ R b) ∧ rescaledMeasure μ R b {0} = 0 := by
+  let e : ℂ ≃ₜ ℂ := Homeomorph.smulOfNeZero R⁻¹ (inv_ne_zero hR.ne')
+  have : IsLocallyFiniteMeasure μ := hμ
+  have : IsFiniteMeasureOnCompacts (μ.map e) := Measure.IsFiniteMeasureOnCompacts.map μ e
+  have : IsFiniteMeasureOnCompacts (ENNReal.ofReal b⁻¹ • μ.map e) :=
+    IsFiniteMeasureOnCompacts.smul _ ENNReal.ofReal_ne_top
+  have he : (fun z : ℂ => (R : ℂ)⁻¹ * z) = e := by
+    funext z
+    simp only [e, Homeomorph.smulOfNeZero_apply, Complex.real_smul, Complex.ofReal_inv]
+  constructor
+  · rw [rescaledMeasure, he]
+    infer_instance
+  · rw [rescaledMeasure, Measure.smul_apply, Measure.map_apply
+      (by fun_prop : Measurable (fun x : ℂ => (R : ℂ)⁻¹ * x)) (measurableSet_singleton 0)]
+    have hs : (fun x : ℂ => (R : ℂ)⁻¹ * x) ⁻¹' ({0} : Set ℂ) = {0} := by
+      ext x
+      simp only [mem_preimage, mem_singleton_iff]
+      rw [mul_eq_zero]
+      have hne : (R : ℂ)⁻¹ ≠ 0 := inv_ne_zero (by exact_mod_cast hR.ne')
+      simp only [hne, false_or]
+    rw [hs, hμ0, smul_eq_mul, mul_zero]
+
+/-- Identification of the rescaled area measure from all-scale convergence
+away from zero, without a global all-scale convergence assumption. -/
+theorem rescaled_measure_eq_of_allScale_off_origin {γ R b : ℝ}
+    (hγ : γ ≠ 0) (hR : 0 < R) (hb : 0 < b)
+    {h : ℝ → ℂ → ℝ} {μ ν : Measure ℂ}
+    (hμ : IsLocallyFiniteMeasure μ) (hμ0 : μ {0} = 0)
+    (hν : IsLQGLimit γ (rescaledCircle γ h R b) ν) (hν0 : ν {0} = 0)
+    (hc : ∀ n, Continuous (h (R * dyadicScale n)))
+    (hall : ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+      tsupport f ⊆ ({0} : Set ℂ)ᶜ →
+      Tendsto (fun ε : ℝ => ∫ z, f z ∂(lqgApprox γ h ε))
+        (𝓝[>] 0) (𝓝 (∫ z, f z ∂μ))) :
+    ν = rescaledMeasure μ R b := by
+  obtain ⟨hloc, hzero⟩ := rescaledMeasure_local_and_origin_null hR hμ hμ0
+  exact isLQGLimit_eq_of_off_origin hν hloc hν0 hzero
+    (tendsto_rescaled_off_origin hγ hR hb hc hall)
+
+/-- The off-origin scaling argument also applies to a sample-dependent radius:
+the all-scale convergence event is chosen before evaluating the radius. -/
+theorem ae_rescaled_measure_eq_of_allScale_off_origin
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {γ b : ℝ}
+    (hγ : γ ≠ 0) (hb : 0 < b) {h : Ω → ℝ → ℂ → ℝ}
+    {μ ν : Ω → Measure ℂ} (R : Ω → ℝ)
+    (hgood : ∀ᵐ ω ∂P, 0 < R ω ∧ IsLocallyFiniteMeasure (μ ω) ∧ μ ω {0} = 0 ∧
+      (∀ n, Continuous (h ω (R ω * dyadicScale n))) ∧
+      ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+        tsupport f ⊆ ({0} : Set ℂ)ᶜ →
+        Tendsto (fun ε : ℝ => ∫ z, f z ∂(lqgApprox γ (h ω) ε))
+          (𝓝[>] 0) (𝓝 (∫ z, f z ∂(μ ω))))
+    (hν : IsLQGMeasure P γ (fun ω => rescaledCircle γ (h ω) (R ω) b) ν)
+    (hν0 : ∀ᵐ ω ∂P, ν ω {0} = 0) :
+    ∀ᵐ ω ∂P, ν ω = rescaledMeasure (μ ω) (R ω) b := by
+  filter_upwards [hgood, hν, hν0] with ω hg hv hv0
+  exact rescaled_measure_eq_of_allScale_off_origin hγ hg.1 hb hg.2.1 hg.2.2.1
+    hv hv0 hg.2.2.2.1 hg.2.2.2.2
 
 end MatedCRT.Sec1
