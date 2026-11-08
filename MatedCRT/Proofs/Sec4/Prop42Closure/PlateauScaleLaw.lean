@@ -1,19 +1,21 @@
 import MatedCRT.Proofs.Sec4.Prop42Closure.PlateauScaling
 
-/-! # Conditional closure of `PlateauScaleInvarianceStep` (closure of Proposition 4.2, z5)
+/-! # Scaling inputs and deterministic scaling for `PlateauScaleInvarianceStep` (Proposition 4.2, z5)
 
-Task `z5-plateau-scale-law-from-cited-family-scaling`. Written argument: `notes/prop42-proof/prop42-proof.tex`, lemma
-`l:plateau` (draft lines 230-268): the scaling of draft lines 245-256 and the probability identity of draft line 265.
+Task `z5-plateau-scale-law-from-cited-family-scaling`; the consumer is task `z5-plateau-canonical-law-assembly`.
+Written argument: `notes/prop42-proof/prop42-proof.tex`, lemma `l:plateau` (draft lines 230-268): the scaling of draft
+lines 245-256 and the probability identity of draft line 265.
 
 With `c = e^{γ c_a}` as in the paper:
 * `scaledMeasure μ a c = c⁻¹ · μ(a ·)` is the LQG measure `μ_{h_a}` of the scaled field (draft line 252);
 * `scaledFamily Λ a c t = a⁻¹ Λ(c t)` is the scaled family `Λ^{h_a}_t` (draft line 254).
 
-The file proves `PlateauScaleInvarianceStep` (`HalfBallPlateau.lean:51`) from three named inputs, each stated in full
-with its source: `InsertionLQGScalingLawStep` (K), `ScaledRegularizedFamilyStep` (H) and `GlobalPlateauMeasurableStep` (B).
-Proved here from the definitions and `PlateauScaling.lean`: the time change and radius identity
-`R_{Λ_a}(t) = a⁻¹ R_Λ(c t)`; the determinacy of a centre-0 regularized family by its measure; the coordinate identity
-`μ'' = scaledMeasure μ a c`; and the law transfer of the plateau probabilities.
+The file states the two inputs `InsertionLQGScalingLawStep` (K) and `ScaledRegularizedFamilyStep` (H), each in full with its
+source, and proves from the definitions and `PlateauScaling.lean`: the time change and radius identity
+`R_{Λ_a}(t) = a⁻¹ R_Λ(c t)`; the determinacy of a centre-0 regularized family by its measure; and the coordinate identity
+`μ'' = scaledMeasure μ a c`. The conditional closure `PlateauScaleInvarianceStep` is `plateauScaleInvarianceStep_of_canonical`
+in `PlateauCanonicalLaw.lean`. It uses the canonical measurable plateau event, so no measurability of the plateau predicate on
+all measures is assumed.
 
 `HarmonicBalls.UniquenessHarmonicBallsStmt` (HB Proposition 5.6) is not carried. The family in
 `PlateauScaleInvarianceStep` is already a regularized cluster family at `0`, and the third conjunct of
@@ -88,43 +90,10 @@ theorem scaledMeasure_eq_of_map {μ ν : Measure ℂ} {a c : ℝ} (hc : 0 < c)
   unfold scaledMeasure
   rw [h, smul_smul, ENNReal.inv_mul_cancel (ENNReal.ofReal_pos.2 hc).ne' ENNReal.ofReal_ne_top, one_smul]
 
-/-! ## Law transfer (proved from input B) -/
+/-! ## The named inputs
 
-/-- The measures `m` on `ℂ` whose centre-0 regularized family has plateau value `r`. -/
-def plateauMeasureSet (r : ℝ) : Set (Measure ℂ) :=
-  {m | ∃ Λ : ℝ → Set ℂ, IsRegularizedClusterFamily m Λ 0 ∧ r ∈ plateauValues Λ}
-
-/-- Almost surely, the plateau event of a regularized family is the preimage of `plateauMeasureSet r` under its
-measure: the family is determined by the measure (`eqOn_of_isRegularizedClusterFamily_zero`). -/
-theorem plateau_event_eq_preimage {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {μ : Ω → Measure ℂ}
-    {Λ : Ω → ℝ → Set ℂ} (hreg : ∀ᵐ ω ∂P, IsRegularizedClusterFamily (μ ω) (Λ ω) 0) (r : ℝ) :
-    {ω | r ∈ plateauValues (Λ ω)} =ᵐ[P] μ ⁻¹' plateauMeasureSet r := by
-  filter_upwards [hreg] with ω hω
-  apply propext
-  constructor
-  · intro h
-    exact ⟨Λ ω, hω, h⟩
-  · rintro ⟨Λ', hΛ', hr⟩
-    have heq : plateauValues Λ' = plateauValues (Λ ω) :=
-      plateauValues_congr (eqOn_of_isRegularizedClusterFamily_zero hΛ' hω)
-    show r ∈ plateauValues (Λ ω)
-    rw [← heq]
-    exact hr
-
-/-- **Law transfer of the plateau probabilities.** If `μ'' =_d μ` as random measures and the plateau predicate is measurable
-on measures (input B), then the plateau probabilities of the two regularized families agree. -/
-theorem plateau_prob_eq_of_identDistrib {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
-    {μ μ' : Ω → Measure ℂ} {Λ Λ' : Ω → ℝ → Set ℂ} {r : ℝ}
-    (hS : MeasurableSet (plateauMeasureSet r)) (hid : IdentDistrib μ' μ P P)
-    (hreg : ∀ᵐ ω ∂P, IsRegularizedClusterFamily (μ ω) (Λ ω) 0)
-    (hreg' : ∀ᵐ ω ∂P, IsRegularizedClusterFamily (μ' ω) (Λ' ω) 0) :
-    P {ω | r ∈ plateauValues (Λ ω)} = P {ω | r ∈ plateauValues (Λ' ω)} := by
-  rw [measure_congr (plateau_event_eq_preimage hreg r), measure_congr (plateau_event_eq_preimage hreg' r)]
-  exact (hid.measure_mem_eq hS).symm
-
-/-! ## The three named inputs
-
-Each input is a `Prop` in full, with its source. They are hypotheses of the conditional theorem below, never axioms. -/
+Each input is a `Prop` in full, with its source. They are hypotheses of the conditional theorem of
+`PlateauCanonicalLaw.lean`, never axioms. -/
 
 /-- **Input K: the insertion-`α` LQG coordinate change, non-dyadic, in law.** Let `h = h^ℂ - α log|·|` be the field of a
 whole-plane GFF with insertion `α` (`IsWholePlaneGFF`, `IsLQGMeasureOfField`), and `a > 0`. There is a scaled whole-plane
@@ -155,43 +124,5 @@ Harmonic-Balls-LQG corrected TeX lines 905-938), and the scaling of `IsSubharmon
 def ScaledRegularizedFamilyStep : Prop :=
   ∀ (μ : Measure ℂ) (Λ : ℝ → Set ℂ) (a c : ℝ), 0 < a → 0 < c →
     IsRegularizedClusterFamily μ Λ 0 → IsRegularizedClusterFamily (scaledMeasure μ a c) (scaledFamily Λ a c) 0
-
-/-- **Input B: global-family bridge (measurability of the plateau predicate on measures).** For each `r`, the set of
-measures whose centre-0 regularized family has plateau value `r` is measurable for the σ-algebra of `Measure ℂ`.
-Written argument: draft lines 259-263 (the radii `R_h(q)` at rational times are measurable; `PlateauRadii.lean:76` proves
-the field-level form, given `HarmonicBallLocalSetStmt`). This is stated on measures, which is stronger than the field-level
-statement of the paper, because the law transfer goes through `μ`. -/
-def GlobalPlateauMeasurableStep : Prop :=
-  ∀ r : ℝ, MeasurableSet (plateauMeasureSet r)
-
-/-! ## The conditional theorem -/
-
-/-- **`PlateauScaleInvarianceStep`, conditional on inputs K, H and B.** For `a, r > 0`, the probability that `r` is a
-plateau value equals the probability that `a r` is one (draft line 265, `p(r) = p(ar)`). The proof: input K gives the
-scaled measure `μ'' = scaledMeasure μ a c` with `μ'' =_d μ`; input H makes the dilated family regularized for `μ''`; input
-B and the law transfer give `P[r ∈ P(Λ)] = P[r ∈ P(Λ_a)]`; and the pathwise identity `r ∈ P(Λ_a) ↔ a r ∈ P(Λ)` (time change,
-`mem_plateauValues_scaledFamily_iff`) gives `P[r ∈ P(Λ_a)] = P[a r ∈ P(Λ)]`. -/
-theorem plateauScaleInvarianceStep_of_residuals (hK : InsertionLQGScalingLawStep)
-    (hH : ScaledRegularizedFamilyStep) (hB : GlobalPlateauMeasurableStep) : PlateauScaleInvarianceStep := by
-  intro γ α hγ hγ2 hα Ω _ P hC hcirc μ Λ hP hWP hLQG hreg a r ha hr
-  obtain ⟨hC'', hcirc'', μ'', c, -, -, hcoord, hid⟩ := hK γ α hγ hγ2 hα Ω P hC hcirc μ hP hWP hLQG a ha
-  have hμ : ∀ᵐ ω ∂P, μ'' ω = scaledMeasure (μ ω) a (c ω) := by
-    filter_upwards [hcoord] with ω hω
-    exact (scaledMeasure_eq_of_map hω.1 hω.2).symm
-  have hreg' : ∀ᵐ ω ∂P, IsRegularizedClusterFamily (μ'' ω) (scaledFamily (Λ ω) a (c ω)) 0 := by
-    filter_upwards [hreg, hμ, hcoord] with ω h1 h2 h3
-    rw [h2]
-    exact hH (μ ω) (Λ ω) a (c ω) ha h3.1 h1
-  have hmono : ∀ᵐ ω ∂P, MonotoneOn (fun t => familyRadius (Λ ω t)) (Ioi 0) := by
-    filter_upwards [hreg] with ω h1
-    exact familyRadius_monotoneOn_of_regularized h1
-  have hpath : {ω | r ∈ plateauValues (scaledFamily (Λ ω) a (c ω))} =ᵐ[P]
-      {ω | a * r ∈ plateauValues (Λ ω)} := by
-    filter_upwards [hcoord, hmono] with ω h3 h4
-    exact propext (mem_plateauValues_scaledFamily_iff ha h3.1 h4 r)
-  calc P {ω | r ∈ plateauValues (Λ ω)}
-      = P {ω | r ∈ plateauValues (scaledFamily (Λ ω) a (c ω))} :=
-        plateau_prob_eq_of_identDistrib (hB r) hid hreg hreg'
-    _ = P {ω | a * r ∈ plateauValues (Λ ω)} := measure_congr hpath
 
 end MatedCRT
