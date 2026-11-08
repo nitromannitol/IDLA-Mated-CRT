@@ -24,10 +24,10 @@ These are written proofs, not new Lean closure or approved literature axioms.
 | WPN-36-pointwise-event | AVAILABLE REPAIR, original pointwise Step false, lines252-438; replace its inclusion by a.e. implication at each mesh and choose admissible parameters from the actual estimates | m5 e197e53 repaired Step/consumers checked; conditional envelope assembly checked; Borel state/walk construction remains |
 | WPN-36-pointwise-rates | WRITTEN-PROOF-NEEDED, lines440-649: G1 missing Brownian minimum uniqueness/strict adjacency and G2 early interpolation exit case | no proof task; keep named Step |
 | WPN-42-locality | AVAILABLE, exact declaration correct, lines651-794 | z5 48b2c75 exact internal Step implementation checked, one map before both models; no Prop4.2 closure |
-| WPN-51-origin | AVAILABLE, exact declaration correct, lines796-1009 | z5 successor, obstacle code and completion measurability |
+| WPN-51-origin | AVAILABLE, exact declaration correct, lines796-1009 | ebc8497 conditional obstacle-code reduction checked; CodeSectionStmt and two faithful Preston inputs remain |
 | WPN-51-pole | WRITTEN-PROOF-NEEDED, lines1011-1507 excluded from successful audit | no proof task; keep named Step |
 | WPN-51-geometry | AVAILABLE, exact declaration correct, lines1509-1658 | z1 stopped geometry, regular-open compact core first |
-| WPN-51-margin | AVAILABLE REPAIR, raw exact measurability false, lines1660-1858; use an envSigma-measurable version agreeing a.s. on the stopping event | z1 successor; repair cinf/cpos/Good consumer as authorized |
+| WPN-51-margin | AVAILABLE REPAIR, raw exact measurability false, lines1660-1858; use an envSigma-measurable version agreeing a.s. on the stopping event | 33b60f5/4c3f60e repaired version and cinf/cpos/Good consumer checked; StoppedMarginCodeStep remains |
 | WPN-51-layer | WRITTEN-PROOF-NEEDED, lines1860 onward inherit G1 | no proof task; keep named Step |
 
 The operator explicitly authorizes the two internal Step restatements and
@@ -430,3 +430,40 @@ Strict lc, three exported axiom probes and the hole scan pass; only standard
 axioms occur. This is a checked internal Step implementation, not a
 numbered-theorem closure or independent frozen-statement source audit.
 Origin is next and an IG uniform-shift successor is staged with refill.
+
+
+## Checked margin/origin coding update (2026-11-08 17:47 UTC)
+
+Commits33b60f5/4c3f60e implement the authorized envSigma-measurable margin version, agreement almost surely on `{t < T}`, and the cinf/cpos/Good consumer repair. The Borel erosion minimum and its exact identity with the raw margin are proved on nonempty compact sets times continuous functions. `stoppedInteriorMeasurable_of_code` retains the following exact residual, copied from StoppedInterior.lean:193-205 in namespace MatedCRT.StoppedInterior. This is **WRITTEN-PROOF-AVAILABLE / LEAN-PENDING**, steps2:1747-1805, not a new written-proof request.
+
+```lean
+def StoppedMarginCodeStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
+  ∀ δ s t : ℝ, 0 < δ → 0 < s → 0 < t →
+    ∃ (K : Ω → TopologicalSpace.NonemptyCompacts ℂ) (f : Ω → C(↥(marginDomain s (ρ / 2)), ℝ)),
+      @Measurable Ω (TopologicalSpace.NonemptyCompacts ℂ × C(↥(marginDomain s (ρ / 2)), ℝ)) S.envSigma (borel _)
+        (fun ω => (K ω, f ω)) ∧
+      ∀ᵐ ω ∂S.P, t < clusterExitTime (Λ ω) ρ →
+        (K ω : Set ℂ) = closure (Λ ω t) ∧
+        ∀ x : ↥(marginDomain s (ρ / 2)), f ω x =
+          HarmonicBalls.leastSupersolution (S.μ ω) ρ 0 t x.1 +
+            t * HarmonicBalls.greenFunction (ball 0 ρ) 0 x.1
+```
+
+ebc8497 proves the circle-process Borel version, rational cluster inclusion code, universal-measurability pullback and conditional `ConeOriginNullMeasurableStep` reduction. It retains `PrestonAnalyticUniversallyMeasurableStmt` and this exact obstacle-code residual, copied from ConeOriginNullMeasurableProof.lean:464-470 in namespace MatedCRT.ConeOriginNull. The construction is written in steps2:838-955 and remains implementation work, not an unconditional Step proof.
+
+```lean
+def CodeSectionStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+    ∀ c : Ω → PosCircleFns, Measurable c →
+    (∀ᵐ ω ∂S.P, ∀ p : PosCircleIndex, c ω p = S.hcirc ω (p.1 : ℝ) p.2) →
+    ∀ R : ℝ, 0 < R → ∀ t : ℝ, 0 < t →
+      ∃ 𝒜 : Set (PosCircleFns × BallFns R), MeasurableSet 𝒜 ∧
+        ∀ᵐ ω ∂S.P, ∀ w : BallFns R, (c ω, w) ∈ 𝒜 ↔ w ∈ superTraces (S.μ ω) R t
+```
+
+f4d04bc/3c0dcdf correct Proposed type B to countable generation, exact sigma-algebra comap equality and Borel range, with Preston Section2 p5, introduction p3/Section6 p35 and Theorem6.1(1) p35. The internal Polish analytic universal-measurability transfer is checked from the two explicit printed inputs, Cantor Theorem7.1 and Theorem6.1(1). The weak-definition defect is repaired; literature remains staged in Proposed pending operator source promotion. No External change or new WPN.
+
+Receipts: fleet lead/checks/20261108-1740, eleven pinned source checks including both Assembly source consumers and four axiom probes, twelve standard-axiom exports; 74-source hole scan clean. Source checks do not claim an Assembly olean rebuild. z1 has margin continuous-decoder work queued, then the Borel geometry obstruction; z5 has IG uniform shift queued, then locality consumer integration. Numbered results remain open.

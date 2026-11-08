@@ -464,3 +464,12 @@ Final receipts cover13 committed sources,6 axiom probes,54 axiom outputs
 (52 distinct declarations), and a clean68-source hole/axiom scan. The
 Preston source-staging hold remains. z5 has origin next and a distinct
 IG-uniform-shift successor/refill; active queues remain supplied.
+
+
+## Lead source/implementation check 2026-11-08 17:47 UTC
+
+Eleven committed source snapshots and four axiom probes pass strict lc; twelve exports use only propext, Classical.choice and Quot.sound; 74-source hole scan is clean. Margin version/consumer repair and the conditional origin obstacle-code reduction are checked; the random compact/function code and Borel supersolution relation remain named, written implementation obligations. No numbered closure.
+
+The Preston type-B exact-measurability defect is corrected in f4d04bc/3c0dcdf. PrestonPolishTransfer derives the general Polish universal-measurability interface from explicit, faithfully scoped Cantor Theorem7.1 and complete-separable Theorem6.1(1) hypotheses. This replaces the old transfer implementation hold; Proposed literature inputs still await operator promotion. It does not discharge all-start selection, the canonical conditioning law, field/clock/mating Steps or common-circle WPN.
+
+All four active next queues and bounded successors are supplied; current DONE briefs are preserved and nineteen paused-task hashes unchanged. m1/m5 quota exits remain respected; existing99%-guard/96%-ruling reconciliation is unresolved, with no restart or control edits. No new12-round event or new mathematical WPN.
