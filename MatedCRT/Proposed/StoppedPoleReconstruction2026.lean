@@ -145,4 +145,42 @@ def FiniteExpectation {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (H : Ω 
   ∫⁻ ω, ENNReal.ofReal (diam (sel (H ω)) ^ 2 / (volume (sel (H ω))).toReal * piWeight (H ω) (sel (H ω))) ∂P < ∞ ∧
   ∫⁻ ω, ENNReal.ofReal (diam (sel (H ω)) ^ 2 / (volume (sel (H ω))).toReal * piStar (H ω) (sel (H ω))) ∂P < ∞
 
+/-- The hypotheses of GMS Theorem 1.16 (p. 15), except the finite expectation (1.5), which is stated for each choice
+`sel` of the cell containing `0` in `GMSHarmonicCentreStmt`: `H` is a measurable random cell configuration, ergodic
+modulo scaling (conditions 1-4 reduced to the mass-transport characterisation), and a.s. connected along every axis
+segment (condition 3). -/
+def GMSTheorem116Hyp {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (H : Ω → CellData) : Prop :=
+  IsProbabilityMeasure P ∧ Measurable H ∧ ErgodicModScaling P H ∧
+    ∀ᵐ ω ∂P, ∀ L : Set ℂ, IsAxisSegment L → LineConnected (H ω) L
+
+/-- Discrete harmonicity on the cells of `K` for the conductances `𝔠` (GMS Theorem 1.16, p. 15): at every cell `H`,
+`∑_{H' ∼ H} 𝔠(H, H') (φ(H') - φ(H)) = 0`, equivalently `φ(H) = ∑_{H'∼H} 𝔠(H,H') φ(H') / π(H)`. -/
+def IsDiscreteHarmonic (K : CellData) (φ : Set ℂ → ℂ) : Prop :=
+  ∀ H ∈ K.cells, ∑ᶠ (H' : Set ℂ) (_ : K.adj H H'), K.cond H H' * (φ H' - φ H) = 0
+
+/-- `φ₀(H) := ∫_H z dz` exactly as printed on GMS p. 15 (below (1.17)), without any normalisation. This is a
+suspected defect: the words "Euclidean center" indicate `(1/Area(H)) ∫_H z dz`; see `phi0Centroid`. -/
+noncomputable def phi0Literal (H : Set ℂ) : ℂ :=
+  ∫ z in H, z
+
+/-- The Euclidean centre `(1/Area(H)) ∫_H z dz` (the reading that the words "Euclidean center" on GMS p. 15 indicate).
+Staged as an alternative; the choice is for the operator. -/
+noncomputable def phi0Centroid (H : Set ℂ) : ℂ :=
+  ((volume H).toReal)⁻¹ • ∫ z in H, z
+
+/-- The harmonic-centre limit (1.17) of GMS Theorem 1.16 (p. 15), parametrised by the choice `φ₀` of the centre of a
+cell (`phi0Literal` or `phi0Centroid`): for every measurable random cell configuration `H` satisfying the hypotheses
+of Theorem 1.16 with the finite expectation (1.5) for the cell choice `sel`, there is a random function `Φ` on the cells
+that is discrete harmonic almost surely, with `(1/r) max_{H' ∈ 𝓗(B_r(0))} |Φ(H') - φ₀(H')| → 0` almost surely.
+The maximum over the finite set `𝓗(B_r(0))` is written as the uniform bound `≤ δ r` for all `δ > 0` and all large `r`.
+This is one conclusion of Theorem 1.16; the recurrence and the Brownian limit are not staged here. -/
+def GMSHarmonicCentreStmt (φ₀ : Set ℂ → ℂ) : Prop :=
+  ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (H : Ω → CellData) (sel : CellData → Set ℂ),
+    (∀ K : CellData, IsCellConfiguration K → 0 ∈ sel K ∧ sel K ∈ K.cells) →
+    GMSTheorem116Hyp P H → FiniteExpectation P H sel →
+    ∃ Φ : Ω → Set ℂ → ℂ,
+      (∀ᵐ ω ∂P, IsDiscreteHarmonic (H ω) (Φ ω)) ∧
+      ∀ᵐ ω ∂P, ∀ δ : ℝ, 0 < δ → ∀ᶠ r : ℝ in atTop,
+        ∀ H' ∈ cellsMeeting (H ω) (ball 0 r), ‖Φ ω H' - φ₀ H'‖ ≤ δ * r
+
 end MatedCRT.StoppedPoleReconstruction
