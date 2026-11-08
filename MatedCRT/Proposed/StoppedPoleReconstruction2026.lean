@@ -10,9 +10,12 @@ arXiv:1807.07515v3 (retained printed text; printed page numbers below). Locators
 * Definition 1.15 (cell configuration), p. 14; (1.14)-(1.16) and the metric (1.15), p. 15;
 * Theorem 1.16, p. 15, hypotheses 1-3 (condition 3 = connectedness along lines).
 
-This file stages the carriers and the hypotheses of Theorem 1.16 only. Its conclusion (the quenched continuous-time
-walk, the planar Brownian limit with covariance `Σ`, recurrence and the harmonic limit (1.17)), and Theorem 3.10, are not
-staged here; they need the walk and Brownian-law carriers listed in `reports/z5.md`.
+Staged here (Proposed, not promoted): GMS Theorem 1.16 (p. 15) in full, `GMSTheorem116Stmt` (planar Brownian limit with
+covariance `Cov`, recurrence, harmonic-centre limit (1.17)), with its carriers (Definition 1.2 condition 4, Definition 1.3,
+Definition 1.15, (1.5), (1.14)-(1.16), `IsQuenchedWalkLaw`, `IsPlanarBMLaw`); and GMS Theorem 3.10 (p. 43),
+`GMSTheorem310Stmt`, with the local curve metric (1.7)-(1.8) and the Prokhorov distance.
+Not staged: GMS Corollary 3.11 (p. 44, the Jordan-domain result), whose printed statement is suspected false (defect 5);
+GHMS Theorem 1.1 and the DMS Chapter 8-9 results, which are carrier obstructions (recorded below).
 
 Printed-source notes, recorded and not silently corrected:
 * Definition 1.15, item 1: "the intersection of any two elements of `H` has zero Lebesgue measure" is read as
@@ -20,6 +23,14 @@ Printed-source notes, recorded and not silently corrected:
 * Page 15, below (1.17): `φ₀(H) := ∫_H z dz` is printed without the factor `1/Area(H)`; the words "Euclidean center"
   indicate the average. Not encoded here; see the report.
 * `B_r(0)` is taken to be the open Euclidean ball (`Metric.ball`); the paper does not state the convention on p. 15.
+* Corollary 3.11 (p. 44): the printed conclusion is `ε f^ε(ε^{-1}·) → f` uniformly, with boundary data `f^ε(H) = f(z)` for
+  `z ∈ H ∩ D̄`. The maximum principle gives `|f^ε| ≤ sup|f|`, so the factor `ε` forces the limit `0` unless `f ≡ 0`; the
+  boundary data also mixes scales (`H` is an unscaled cell of `𝓗(ε^{-1}∂D)`). Not staged. Proposed minimal correction
+  (operator decision): `f^ε(ε^{-1}·) → f` uniformly on `D̄` with `f^ε(H) = f(εz)` for some `z ∈ H ∩ ε^{-1}D̄`.
+* Carrier obstructions (exact declarations and missing carriers are in `reports/z5.md`): GHMS 1510.04687v2 Theorem 1.1 needs
+  the unnormalised boundary-length pair of `η̃` relative to the cone, which Lean does not define; DMS 1409.7055v4 Theorems
+  1.9, 1.11, 8.18, 9.1, 9.4, Corollary 9.3 and Lemmas 8.8, 8.13, 8.14 need curves, the quotient `C/~` and merge relations,
+  which Lean does not define.
 -/
 
 namespace MatedCRT.StoppedPoleReconstruction
