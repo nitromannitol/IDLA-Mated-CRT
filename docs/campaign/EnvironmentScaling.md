@@ -95,3 +95,56 @@ bd548bc proves angular logarithmic integrability on circles through zero, using 
 bbdeb71/c936c23 MeasurableAngularIntegrals.lean:143/203/227 proves fixed-circle integral/average AEMeasurability from measurable positive-radius coordinates and a.s. continuity. Circles through zero are included by radial truncation and removal of null angular exceptions. This is measurability of the totalized integral, not a finiteness claim. Separate exports at244/293/318 establish integrability on such circles under the logarithmic majorant, radial sublinearity or the stated Mathlib Brownian hypotheses. Eight main exports pass strict lc and standard-axiom checks.
 
 Audited env-steps:128-135,248-251 supplies the written approximation route; the implementation uses measurable truncations rather than annular Riemann sums. The actual lateralEval specialization and simultaneous countable-coordinate pullback are queued. q1 currently implements the written entrance-kernel bridge env:217-242, preserving m1 credit. DMS14Remark44PostLastZeroLaw, lateral_law (Defs/QuantumCone.lean:96-98), canonical representation and represented-circle recovery are not discharged. The conditioned-law proof is written implementation work, not a new WPN.
+
+
+## Lead23:33 entrance kernels checked; WRITTEN-PROOF-NEEDED WPN-53
+
+20dc27f CanonicalEntranceKernels.lean supplies the explicit kernels, survival ODE uniqueness (conditional on the stated derivatives and boundary limits), entrance pointwise limit, chain nonnegativity/measurability and the conditional setwise finite-dimensional limit. Thirteen lead axiom probes pass with only standard axioms. The entrance calculation reuses m1's e7050b2; credit is preserved. Neither ODE uniqueness nor a kernel formula identifies the actual killed/conditioned process by itself.
+
+**WRITTEN-PROOF-NEEDED WPN-53: residual entrance-law justification on this route.** Audited fleet env-steps.tex:220-232 writes the density, survival ODE and entrance formula. At234-237 it passes to the assumed weak limit and identifies its laws. It does not supply the chain-law disintegration argument, the uniform integrable bound used by the new DCT proof, the normalizing integral calculations, or the weak-limit/post-last-zero identification. These remain explicit; the older general description of the entire bridge as written implementation was too broad. In particular the stronger setwise convergence route is an implementation choice, not a necessary premise of every possible conditioned-law proof. No further prover round or worker invention is assigned under operator18:55.
+
+Exact existing types, namespace `MatedCRT.Sec1`, CanonicalEntranceKernels.lean:299-304 and309-312:
+
+```lean
+def ConditionedDriftFDDPremise {Ω : Type*} [MeasurableSpace Ω] (d : ℝ)
+    (X : ℝ → Ω → ℝ) (P : ℝ → Measure Ω) : Prop :=
+  ∀ x : ℝ, 0 < x → ∀ (n : ℕ) (τ : Fin n → ℝ), StrictMono τ → (∀ i, 0 < τ i) →
+    ∀ A : Set (Fin n → ℝ), MeasurableSet A →
+      P x {ω | (fun i => X (τ i) ω) ∈ A} =
+        ∫⁻ y in A ∩ positiveOrthant n, ENNReal.ofReal (conditionedChainDensity d n 0 x τ y)
+
+def ConditionedDriftChainDomination (d : ℝ) (n : ℕ) (τ : Fin n → ℝ) : Prop :=
+  ∃ bound : (Fin n → ℝ) → ℝ, Integrable bound (volume.restrict (positiveOrthant n)) ∧
+    ∀ᶠ x in 𝓝[>] (0 : ℝ), ∀ y ∈ positiveOrthant n,
+      |conditionedChainDensity d n 0 x τ y| ≤ bound y
+```
+
+Consumer `tendsto_fdd_setwise_entrance`:321-328 explicitly takes both Props and only yields convergence of real-valued finite-dimensional event probabilities. It is not a proof of path weak convergence, normalization or post-last-zero identification.
+
+The report's remaining conservation/entrance-normalization steps are not consumed by that theorem; their exact proposed Step types, in the same namespace with MeasureTheory/Set notation, are:
+
+```lean
+def ConditionedDriftConservationStep : Prop :=
+  ∀ d t x : ℝ, 0 < d → 0 < t → 0 < x →
+    (∫ y in Set.Ioi (0 : ℝ), conditionedDriftDensity d t x y) = 1
+
+def EntranceDriftNormalizationStep : Prop :=
+  ∀ d t : ℝ, 0 < d → 0 < t →
+    (∫ y in Set.Ioi (0 : ℝ), entranceDriftDensity d t y) = 1
+```
+
+The final held identification has the existing exact type below (namespace `MatedCRT.Proposed`, Proposed/DuplantierMillerSheffieldCone2014.lean:116). This is a conditional source-admission/bridge record; the cached DMS Remark4.4 supplies the post-last-zero construction, not literally the repository's delta-weak-limit predicate. Do not promote the combined attribution as a verbatim cited result.
+
+```lean
+def DMS14Remark44PostLastZeroLaw : Prop :=
+  ∀ (γ : ℝ), 0 < γ → γ < 2 →
+    ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+      (B : ℝ≥0 → Ω → ℝ) (F : Ω → MarkovProcess.ContinuousPath ℝ),
+      IsBrownianReal B P → Measurable F →
+      (∀ᵐ ω ∂P, ∀ t : ℝ≥0,
+        F ω t = dmsPostLastZeroPath (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) (fun s => B s ω) t) →
+      MatedCRT.IsBMConditionedPositive (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) (P.map F)
+
+```
+
+Consumers CanonicalConeIdentification.lean:1029/1048 and CanonicalBrownianPathAssembly remain conditional. Actual lateral-coordinate measurability/law work is independent and current/queued. The canonical field, represented-circle, clock and mating conclusions remain open.
