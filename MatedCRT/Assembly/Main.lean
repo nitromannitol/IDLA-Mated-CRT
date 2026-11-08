@@ -231,7 +231,8 @@ theorem discreteClusterInnerBound (H : MainHypotheses 𝒮) : DiscreteClusterInn
 /-- Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5; `stoppedMeanValueInequality_of_steps`, 16ca787: three obstacle-surplus steps). -/
 theorem stoppedMeanValueInequality (H : MainHypotheses 𝒮) : StoppedMeanValueInequalityStep 𝒮 :=
   stoppedMeanValueInequality_of_steps 𝒮 H.convergenceDivisible H.uniformConvergenceGreenKernel H.exitTimeUpperBound
-    H.integralConvergenceGreenFunction H.boundedExitTimeRV H.stoppedSurplusInterior H.stoppedSurplusExterior
+    H.integralConvergenceGreenFunction H.boundedExitTimeRV H.stoppedSurplusInterior
+    (stoppedSurplusExterior_of_nullMeasurableOrigin 𝒮 H.mepsScaling H.coneOriginNullMeasurable)
     H.stoppedLayerPotential
 
 /-- Lemma 5.4 on `V^ε(Λ_t)` (E-c1-5; `stoppedLLowerBound_of_inputs`, a9952ca: from Lemmas 2.9, 2.15, 2.16). -/

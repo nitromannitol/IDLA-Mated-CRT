@@ -364,4 +364,63 @@ theorem stoppedSurplusExterior_of_origin (𝒮 : SpaceFillingSLEModel) (hmeps : 
 
 end StoppedExterior
 
+/-! ### Origin measurability and the exterior step (ESCALATIONS E-c1-5 (b)) -/
+
+/-- **Origin measurability (named input, E-c1-5 (b)).** For `t > 0` and `s > 0` the inclusion event
+`{ω | ¬ B_s(0) ⊆ Λ_t(ω)}` is null-measurable for `S.P`. Almost surely `Λ_t` is open and contains the pole `0`
+(`IsHarmonicBall`), so these events decrease to a null set as `s ↓ 0`, and continuity from above needs their
+measurability. The paper does not state it, and `ConeFamilyAEMeasurableStep` (`Steps/Sec2/ConeHarmonicBalls.lean`)
+gives only almost-everywhere measurability of the family process. Consumed by `origin_of_nullMeasurable`. -/
+def ConeOriginNullMeasurableStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
+  ∀ t : ℝ, 0 < t → ∀ s : ℝ, 0 < s → NullMeasurableSet {ω | ¬ ball (0 : ℂ) s ⊆ Λ ω t} S.P
+
+/-- The origin neighbourhood `hpole` of `StoppedExterior.stoppedSurplusExterior_of_origin`, proved from
+`ConeOriginNullMeasurableStep`: the events `E_n = {¬ B_{1/(n+1)}(0) ⊆ Λ_t}` decrease to a null set (almost surely
+`Λ_t` is open and contains `0`), so `P(E_n) → 0` by continuity from above, and
+`{t < T} ∩ {¬ B_s(0) ⊆ Λ_t} ⊆ E_n` for `s = 1/(n+1)`. -/
+theorem origin_of_nullMeasurable (𝒮 : SpaceFillingSLEModel) (hmeas : ConeOriginNullMeasurableStep 𝒮) :
+    ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+    ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+    ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
+    ∀ t : ℝ, 0 < t → ∀ η : ℝ≥0∞, 0 < η → ∃ s : ℝ, 0 < s ∧
+      S.P ({ω | t < clusterExitTime (Λ ω) ρ} ∩ {ω | ¬ ball (0 : ℂ) s ⊆ Λ ω t}) ≤ η := by
+  intro γ hγ hγ2 _ _ _ Ω _ S hS Λ hΛ t ht η hη
+  have := hS.isProbabilityMeasure
+  let E : ℕ → Set Ω := fun n => {ω | ¬ ball (0 : ℂ) (1 / ((n : ℝ) + 1)) ⊆ Λ ω t}
+  have hE : ∀ n : ℕ, NullMeasurableSet (E n) S.P := fun n =>
+    hmeas γ hγ hγ2 Ω S hS Λ hΛ t ht (1 / ((n : ℝ) + 1)) (by positivity)
+  have hanti : Antitone E := by
+    intro n m hnm ω hω
+    show ¬ ball (0 : ℂ) (1 / ((n : ℝ) + 1)) ⊆ Λ ω t
+    intro h
+    apply (show ¬ ball (0 : ℂ) (1 / ((m : ℝ) + 1)) ⊆ Λ ω t from hω)
+    have hnm' : (n : ℝ) ≤ m := by exact_mod_cast hnm
+    exact (Metric.ball_subset_ball (one_div_le_one_div_of_le (by positivity) (by linarith))).trans h
+  have hae : ∀ᵐ ω ∂S.P, ∃ s : ℝ, 0 < s ∧ ball (0 : ℂ) s ⊆ Λ ω t := by
+    filter_upwards [hΛ] with ω hω
+    obtain ⟨hHB, -, -⟩ := hω
+    obtain ⟨hopen, h0, -⟩ := hHB t ht
+    obtain ⟨s, hs, hsub⟩ := Metric.isOpen_iff.1 hopen 0 h0
+    exact ⟨s, hs, hsub⟩
+  have hnull : S.P (⋂ n, E n) = 0 := by
+    refine measure_mono_null (fun ω hω => ?_) (ae_iff.1 hae)
+    show ¬ ∃ s : ℝ, 0 < s ∧ ball (0 : ℂ) s ⊆ Λ ω t
+    rintro ⟨s, hs, hsub⟩
+    obtain ⟨n, hn⟩ := exists_nat_one_div_lt hs
+    have hωn : ¬ ball (0 : ℂ) (1 / ((n : ℝ) + 1)) ⊆ Λ ω t := mem_iInter.1 hω n
+    exact hωn ((Metric.ball_subset_ball hn.le).trans hsub)
+  have hlim := tendsto_measure_iInter_atTop (fun n => hE n) hanti ⟨0, measure_ne_top _ _⟩
+  have hlt : S.P (⋂ n, E n) < η := by rw [hnull]; exact hη
+  obtain ⟨n, hn⟩ := ((tendsto_order.1 hlim).2 η hlt).exists
+  exact ⟨1 / ((n : ℝ) + 1), by positivity, (measure_mono Set.inter_subset_right).trans hn.le⟩
+
+/-- **`StoppedSurplusExteriorStep` from the origin measurability input** (E-c1-5 (b)). The remaining explicit
+hypothesis is the External input `MepsScalingInput` (eq:meps-scaling). -/
+theorem stoppedSurplusExterior_of_nullMeasurableOrigin (𝒮 : SpaceFillingSLEModel) (hmeps : MepsScalingInput 𝒮)
+    (hmeas : ConeOriginNullMeasurableStep 𝒮) : StoppedSurplusExteriorStep 𝒮 :=
+  StoppedExterior.stoppedSurplusExterior_of_origin 𝒮 hmeps (origin_of_nullMeasurable 𝒮 hmeas)
+
 end MatedCRT

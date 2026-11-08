@@ -25,6 +25,7 @@ import MatedCRT.Proofs.Sec6.AnnulusHit.Main
 import MatedCRT.Proofs.Sec6.GoodAnnulusPrevalence.Main
 import MatedCRT.Steps.Sec7.DivSandpileUpperBound
 import MatedCRT.Proofs.Sec5.StoppedSurplusSteps
+import MatedCRT.Proofs.Sec5.StoppedExterior
 
 /-!
 # The remaining hypotheses of Theorems 1.4 and 1.6
@@ -140,9 +141,10 @@ structure MainHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5, not in the paper), interior lower bound of the obstacle
   surplus (`stoppedMeanValueInequality_of_steps`, 16ca787). Owner: z1 (z1.next). -/
   stoppedSurplusInterior : StoppedSurplusInteriorStep 𝒮
-  /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5), exterior upper bound of the obstacle surplus. Owner: z1
-  (z1.next). -/
-  stoppedSurplusExterior : StoppedSurplusExteriorStep 𝒮
+  /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5), exterior upper bound of the obstacle surplus. The field
+  `StoppedSurplusExteriorStep` is no longer assumed: it is supplied by `stoppedSurplusExterior_of_nullMeasurableOrigin`
+  from `mepsScaling` and this origin measurability input (z1, 2026-11-08; ESCALATIONS E-c1-5 (b)). -/
+  coneOriginNullMeasurable : ConeOriginNullMeasurableStep 𝒮
   /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5), Green potential of the boundary layer `A \ Λ^ε_t`.
   No current owner. -/
   stoppedLayerPotential : StoppedLayerPotentialStep 𝒮
