@@ -21,10 +21,10 @@ open _root_.HarmonicBalls
 /-- Uniform convergence on compacts of strictly increasing clocks to a time-change clock implies uniform convergence
 on compacts of the right-continuous clock inverses. -/
 theorem clockInverse_tendsto_uniform {ι : Type*} {l : Filter ι} {F : ι → ℝ≥0 → ℝ} {G : ℝ≥0 → ℝ}
-    (hG : IsTimeChangeClock G) (hF : ∀ i, StrictMono (F i))
-    (hunb : ∀ i, ∀ u : ℝ≥0, ∃ s : ℝ≥0, (u : ℝ) < F i s)
+    (hG : IsTimeChangeClock G) (hF : ∀ i, StrictMono (F i)) (U : ℝ≥0)
+    (hunb : ∀ᶠ i in l, ∀ u : ℝ≥0, u ≤ U → ∃ s : ℝ≥0, (u : ℝ) < F i s)
     (hconv : ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η → ∀ᶠ i in l, ∀ t ≤ T, |F i t - G t| < η)
-    (U : ℝ≥0) (η : ℝ) (hη : 0 < η) :
+    (η : ℝ) (hη : 0 < η) :
     ∀ᶠ i in l, ∀ u ≤ U, |((clockInverse (F i) u : ℝ≥0) : ℝ) - ((clockInverse G u : ℝ≥0) : ℝ)| < η := by
   set S : ℝ≥0 := clockInverse G U with hSdef
   set e : ℝ≥0 := Real.toNNReal (min (η / 2) 1) with hedef
@@ -48,7 +48,7 @@ theorem clockInverse_tendsto_uniform {ι : Type*} {l : Filter ι} {F : ι → �
     rw [hδdef]
     linarith
   have hcl := hconv (S + e) δ hδpos
-  filter_upwards [hcl] with i hi u hu
+  filter_upwards [hcl, hunb] with i hi hunbi u hu
   -- the level `u` is attained by `G` at `r₀ = clockInverse G u`
   obtain ⟨r₀, hr₀⟩ := IsTimeChangeClock.surjective_toNNReal hG u
   have hGr₀ : G r₀ = (u : ℝ) := by
@@ -78,7 +78,7 @@ theorem clockInverse_tendsto_uniform {ι : Type*} {l : Filter ι} {F : ι → �
   -- lower bound: `r₀ - e ≤ clockInverse (F i) u`
   have hlow : r₀ - e ≤ clockInverse (F i) u := by
     by_cases her : e ≤ r₀
-    · obtain ⟨s, hs⟩ := hunb i u
+    · obtain ⟨s, hs⟩ := hunbi u hu
       apply le_csInf ⟨s, hs⟩
       intro s' hs'
       by_contra hlt
