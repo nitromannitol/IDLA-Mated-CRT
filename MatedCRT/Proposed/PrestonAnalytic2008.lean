@@ -39,4 +39,21 @@ def PrestonAnalyticUniversallyMeasurableStmt : Prop :=
   ∀ (X : Type) [TopologicalSpace X] [PolishSpace X] [MeasurableSpace X] [BorelSpace X] (S : Set X),
     AnalyticSet S → ∀ μ : Measure X, IsFiniteMeasure μ → NullMeasurableSet S μ
 
+/-- A type `B` space in the sense of Preston, as restated in the printed Theorem 6.1 (printed p. 35, PDF p. 36): a
+countably generated measurable space `(X, E)` is type `B` if there is an exactly measurable `f : (X, E) → (M, 𝓑)` with
+`f(X) ∈ 𝓑`, where `M = {0,1}^ℕ` (`ℕ → Bool`) and `𝓑` is its Borel σ-algebra (the product σ-algebra). Reading to be
+source-checked: "exactly measurable" is taken as Mathlib `Measurable`; Preston's Section 4 definition was not re-read. -/
+def IsTypeBSpace (X : Type) [MeasurableSpace X] : Prop :=
+  ∃ f : X → (ℕ → Bool), Measurable f ∧ MeasurableSet (Set.range f)
+
+/-- Preston, Theorem 6.1(1) (printed p. 35, PDF p. 36), in its printed scope: "Let X be a complete separable metric space
+and B_X be the σ-algebra of Borel subsets of X. Then (X, B_X) is a type B space." Part (2) of the printed theorem and the
+transfer of Theorem 7.1 from `M` to a general Polish space are NOT part of this statement: the printed Theorem 6.1(1) gives
+an exactly measurable map to `M` with Borel range, not an injection, so `PrestonAnalyticUniversallyMeasurableStmt` still
+needs a separate, source-backed transfer step. -/
+def PrestonTheorem61Stmt : Prop :=
+  ∀ (X : Type) [MetricSpace X] [CompleteSpace X] [TopologicalSpace.SeparableSpace X] [MeasurableSpace X]
+    [BorelSpace X],
+    IsTypeBSpace X
+
 end MatedCRT
