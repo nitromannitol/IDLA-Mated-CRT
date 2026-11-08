@@ -71,3 +71,10 @@ Lemma4.9 and Definition4.10 p79 supply the radial/lateral orthogonal decompositi
 
 
 Late checked component679ffd9: `RadialLocalIntegrability.lean` proves the planar logarithmic majorant integrable on closed disks, local integrability by domination, and the radial sublinear specialization. Its a.s. wrapper explicitly assumes continuity and sublinear growth; it does not establish either Brownian premise or the whole-plane GFF radial representation. Angular restriction integrability and measurable radial integrals remain separate written components. All six exports pass lead strict lc/standard-axiom checking. q1 now implements real-time Brownian sublinearity; measurable radial integrals is queued, with the angular logarithm component preserved after it.
+
+
+## Lead22:00 checked Brownian sublinear component and dependency compatibility
+
+b2ab34b `BrownianSublinear.lean` proves the Borel-Cantelli/deterministic interpolation route to the real-time sublinear limit, conditional only on `MatedCRT.Sec1.GaussianBandStep B P` (file:43-46). This supplies the hsub premise of CanonicalConeIdentification:981 once the maximal bound is instantiated. Six main exports pass strict lead lc/standard-axiom checks. This is not an unconditional Brownian theorem or canonical cone closure.
+
+The source-written maximal estimate already exists at lattice-probability pin3912597, BrownianMax:247. Its import is blocked by BrownianTail:120, where mgf_gaussianReal receives `.map_eq` instead of the current HasLaw argument. The lead confirmed both signatures. A project-local, provenance-preserving compatibility port of the existing Tail/Max proofs is queued for q1 after the radial/measurable/angular tasks; external checkouts and .lake remain untouched. This is an implementation blocker, not an unwritten mathematical step. DMS44 attribution, the canonical law realization, radial representation and represented-circle recovery remain explicit.

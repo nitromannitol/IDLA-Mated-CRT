@@ -62,3 +62,12 @@ WPN-51 is still unproved: the actual hMeas occurs at `StoppedPoleInnerDegreeMome
 
 
 Late checked837d894: `StoppedRationalMembership.lean` implements shifted rational-ball coding, null-measurability, measurable versions and a common a.s. rational-membership event. Its eventual cluster identity follows from the supplied harmonic-ball family; open/bounded/nonempty facts are derived rather than added. `exists_ratVersions_ae_codeCompact`:206 produces the E/hE/hae needed by the compact code under explicit Preston input, measurable circle map, Borel sections and their a.s. supersolution identity. These section producers remain open. Seven main exports pass lead strict lc/standard-axiom checks; this does not establish full geometry or margin closure. z1 has moved to conditional punctured all-scales, with the source-written measurable dyadic decoder queued.
+
+
+## Lead22:00 checked extraction, lower-integral finiteness and canonical scope
+
+4e34fba removes both rejected arbitrary-IsValid BG aliases and introduces the explicit IsCanonicalSLEDecoratedCone carrier and BGLemma33CanonicalStmt/BGTheorem41CanonicalStmt. The alias defect is repaired; these staged inputs remain unpromoted, with the actual comparison realization and joint canonical-law bridge still open (worker R1-R6). C1 normalization is retained; no frozen statement changes.
+
+a7593ac moves internal outer Markov/dyadic/moment and geometric proofs out of Proposed into Proofs/Sec5/StoppedPoleInnerDegreeMoments.lean, preserving their namespace. The canonical moment theorem is a corollary of the generic chain under the same four GMS Props and supplied rescaled-measure family. New lintegral_le_outerLIntegral:731 and canonical_innerDegree_lintegral_lt_top_of_outer:907 prove plain lower-integral finiteness without degree measurability. They do not establish a random variable or the layer-cake identity. WPN-51 remains open at the quantitative layer-cake consumer:520; compatibility wrappers retain hMeas at699/874. The staged Eq46 statement's all-real-N range exceeds the printed N>0 range; the chain uses only positive N, and a bounded source-fidelity/consumer repair is preserved after the smooth-test and section tasks.
+
+z5 now constructs the countable smooth tests; the next task supplies the actual Borel supersolution section identity using the countable mass identities and the preceding Laplacian bridge. Preston and any remaining concrete producers stay explicit. No stopped-pole/margin or numbered closure is claimed.

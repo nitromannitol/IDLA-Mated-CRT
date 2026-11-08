@@ -696,3 +696,29 @@ BG SOURCE HOLD: `BGLemma33Stmt` and `BGTheorem41Stmt` at Proposed/StoppedPoleCan
 ### WPN-51 consumer correction, lead21:28
 
 WRITTEN-PROOF-NEEDED remains: the exact `CanonicalInnerDegreeMeasurabilityStep` above has no written coding proof. The landed conditional consumer is now `Proofs/Sec5/StoppedPoleInnerDegreeMoments.lean:476` (hMeas); the worker report's filename omitted `Pole`. Its use in the layer-cake proof is at145, with wrappers323/467. Neither the new outer-moment theorem489 nor a plain lower-lintegral finiteness corollary requires it: the lower lintegral is bounded by every measurable majorant and hence by the outer integral. Retain the Step for actual measurability/Tonelli identities and future random-variable consumers. No terminal-policy exception or new prover request is made.
+
+
+## Lead22:00 updated consumers and WPN-52 ambient zero-boundary finiteness
+
+WPN-51 remains WRITTEN-PROOF-NEEDED. After a7593ac the actual layer-cake use is StoppedPoleInnerDegreeMoments.lean:520, wrappers699/874. Plain lower-integral finiteness now has an implemented no-measurability route:731/740/907. Previous :145/:323/:476/:489 locators are historical.
+
+b95d6fb proves conditional punctured disk/all-scale convergence, using LocalDirichletHarmonicDecompositionStep:663 and ZeroBoundaryLimitLocallyFiniteStep:679. The former has audited written proof steps3:609-621; its implementation remains. The stronger ambient-finiteness Step below is not written in steps3:603-625 and stays unproved under the terminal policy. **WRITTEN-PROOF-NEEDED WPN-52 (ambient zero-boundary finiteness as declared; potentially bypassable)**; exact type at InsertionCoordinate.lean:679-690:
+
+```lean
+def ZeroBoundaryLimitLocallyFiniteStep : Prop :=
+  ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P] (γ α : ℝ),
+    0 < γ → γ < 2 → α < lqgQ γ →
+    ∀ (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ),
+    IsWholePlaneGFF P hC hcirc → IsLQGMeasureOfField P γ α hcirc μ →
+    ∀ (c : ℂ) (ρ : ℝ), 0 < ρ → Metric.closedBall c ρ ⊆ ({0}ᶜ : Set ℂ) →
+    ∀ (h0 : Ω → (ℂ → ℝ) → ℝ) (hcirc0 : Ω → ℝ → ℂ → ℝ) (H : Ω → ℂ → ℝ),
+      IsDirichletGFF P (Metric.ball c ρ) h0 hcirc0 →
+      (∀ᵐ ω ∂P, IsHarmonicOnDisk (Metric.ball c ρ) (H ω) ∧
+        ∀ r z, 0 < r → Metric.closedBall z r ⊆ Metric.ball c ρ → hcirc ω r z = hcirc0 ω r z + H ω z) →
+      ∀ᵐ ω ∂P, IsLocallyFiniteMeasure (((μ ω).restrict (Metric.ball c ρ)).withDensity
+        fun z => ENNReal.ofReal (Real.exp (-(γ * insertionRemainder α (H ω) z))))
+```
+
+Consumer: punctured_disk_allScales:755 (and punctured_allScales_of_steps:906). Boundary issue: this asks local finiteness on all of C for a measure supported in an open disk, hence finite mass near its boundary; continuity of the harmonic remainder only inside the disk does not supply that bound. No worker is assigned to prove this stronger Step and no further prover round is requested.
+
+Primary Sheffield-Wang arXiv:1605.06171v2 pp2-3, Theorem1.1, states weak convergence in D. The staged compact-test consequence unnecessarily demands ambient IsLocallyFiniteMeasure of the supplied limit, whereas domain-local finiteness suffices. z1's queued source-scope/consumer repair replaces that demand with finiteness on compact subsets of D, using the written compact-supported multiplier argument and existing measure bounds; it must preserve the stronger Step as unproved and report exact remaining types. This bypass is not a proof of WPN-52. See E-SW-AMBIENT-FINITENESS and IR-SW-DOMAIN-COMPACT-CONSEQUENCE. Current decoder task is unchanged; affine work is archived/preserved afterwards.
