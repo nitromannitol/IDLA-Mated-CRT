@@ -34,6 +34,19 @@ definition, used only as an explicit hypothesis. The operator source-checks the 
   repository carriers cannot express (see the block "Not staged" at the end). A Prop without that coupling is false in general.
 * `DS11Prop11ZeroBoundaryMeasure` is the printed Prop. 1.1, with its printed normalization, on the repository carrier
   `MatedCRT.IsDirichletGFF`.
+* Sheffield–Wang, arXiv:1605.06171v2 (scope identified from the PDF text; not staged here). Setup, p. 2: `D` a bounded simply
+  connected domain. Thm 1.1, p. 3: all-scale a.s. weak convergence of `e^{h̄_ε(z)} dz`, `h̄_ε = γ h_ε + (γ²/2) log ε` (1.3, p. 2).
+  Thm 1.4, p. 3: for `γ ∈ [0,2)`, almost surely, for all conformal `φ : D̃ → D` with `D̃` any planar domain (`Λ`, (1.5)), the
+  measures `μ_{h̃_φ}` for `h̃_φ = h∘φ + Q log|φ′|` (1.6) are well-defined and `μ_h(A) = μ_{h̃_φ}(φ⁻¹(A))` for Borel `A ⊂ D`,
+  simultaneously for all `φ` (1.7). Its measures are defined by the mollifier correspondence (1.2), (1.4) (pp. 2-3), not by the
+  circle averages of DS11 Prop. 1.1. SW Prop. 2.3, p. 5: `h∘φ`, defined by `(h∘φ, ρ̃) := (h, |(φ⁻¹)′|² ρ̃∘φ⁻¹)`, is a
+  zero-boundary GFF on `D̃`. SW Remark 3.3, p. 11: `(h∘φ) ∗ f_ε(z) = ⟨h, |(φ⁻¹)′|² f_ε(z − φ⁻¹(·))⟩`, a test-function pairing.
+  SW p. 2: DS11 used the uniform measure on the unit circle as the mollifier `f`.
+* NORMALIZATION FLAG N1 (unresolved). SW (1.2), p. 2, displays the exponent `γ h∗f_ε(z) − (γ²/2) E|h∗f_ε(z)|²`. With
+  `E h_ε(z)² = −log ε + log C(z;D)` (SW (2.3), p. 5; DS11 p. 5) this is `ε^{γ²/2} C(z;D)^{−γ²/2} e^{γ h_ε(z)}`, which differs by
+  `C(z;D)^{−γ²/2}` from DS11 Prop. 1.1 and SW (1.3), `ε^{γ²/2} e^{γ h_ε(z)}`. DS11 Prop. 1.2 eq. (1), p. 5, carries the
+  compensating `+(γ²/2) log C(z;D)`. The page image of SW (1.2) must be checked before any mollifier-based staging. The
+  circle-average normalization used here is DS11 Prop. 1.1.
 
 ## Scope notes (printed scope, not extended here)
 
@@ -125,10 +138,17 @@ Prop. 2.1 is a faithful Prop only with the following repository objects. None ex
   - (iv) for a conformal bijection `ψ : D̃ → D` and `closedBall z r ⊆ D̃`, almost surely
     `hcircT ω r z = hν ω (Measure.map ψ ((‖deriv ψ ·‖ ^ 2) • σ_{z,r})) + Q * Real.circleAverage (fun w => Real.log ‖deriv ψ w‖) z r`.
   A version without (iv) is false in general: take `hcircT` independent of `h`.
+  SW Prop. 2.3 (p. 5) prints the pathwise test-function pullback, and SW Remark 3.3 (p. 11) writes the pulled-back mollified
+  field as a test-function pairing. A mollifier-based definition of `μ_h̃` would therefore need only test-function pairings,
+  once the normalization flag N1 is settled. Item (iv) is not printed for circle averages.
 * (B2) Conformal invariance of the covariance: `∀ x y ∈ D̃, greenFunction D̃ x y = greenFunction D (ψ x) (ψ y)`. It is needed so
   that `h ∘ ψ` is an `IsDirichletGFF P D̃`, and so that `DS11Prop11ZeroBoundaryMeasure` applies to `μ_h̃`. DS11 p. 13 uses the
-  same invariance ("conformal invariance of (·,·)∇"). No such lemma is in `HarmonicBalls/Defs/Green.lean`.
-* (S1) Prop. 1.1 for an unbounded simply connected `D̃` (SCOPE-D). It is not printed.
+  same invariance ("conformal invariance of (·,·)∇"). SW Prop. 2.3 (p. 5) prints the law: `h∘φ` is a zero-boundary GFF on
+  `D̃` for a conformal `φ : D̃ → D` with `D̃` a planar domain. The covariance identity is not printed in that form. No such lemma
+  is in `HarmonicBalls/Defs/Green.lean`.
+* (S1) Prop. 1.1 for an unbounded simply connected `D̃` (SCOPE-D). DS11 does not print it. SW Thm 1.4 (p. 3) asserts that the
+  measures `μ_{h̃_φ}` are well-defined for every planar `D̃` in `Λ`, but with SW's mollifier correspondence, not DS11's circle
+  averages. Closing S1 for the DS11 measure depends on the normalization flag N1: an operator decision.
 -/
 
 end MatedCRT.Proposed
