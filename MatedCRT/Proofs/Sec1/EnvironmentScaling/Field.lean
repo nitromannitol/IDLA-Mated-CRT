@@ -1097,6 +1097,63 @@ def RescaledConeRepresentedLawStep (𝒮 : SpaceFillingSLEModel) : Prop :=
             distributionCircleVersion (H' ω) r z = c ω r z) ∧
           S.P.map H' = S.P.map H
 
+/-- Circle recovery for the explicitly rescaled distribution. This is a
+proof obligation for cone fields at a random scale. -/
+def RescaledConeDistributionCircleStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ → ∀ b : ℝ, 0 < b →
+    ∀ (H : Ω → LQGMetric.DistC) (R : Ω → ℝ), Measurable H → Measurable R →
+      (∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ) →
+      (∀ᵐ ω ∂S.P, R ω = coneScaleRadius γ (S.hcirc ω) b) →
+      ∀ᵐ ω ∂S.P, ∀ r : ℝ, 0 < r → ∀ z : ℂ,
+        distributionCircleVersion (rescaledDistribution γ b (H ω) (R ω)) r z =
+          rescaledCircle γ (S.hcirc ω) (R ω) b r z
+
+/-- Distribution-valued scale invariance for the explicitly constructed
+rescaled cone. This is a proof obligation, not a stated literature input. -/
+def RescaledConeDistributionLawStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ → ∀ b : ℝ, 0 < b →
+    ∀ (H : Ω → LQGMetric.DistC) (R : Ω → ℝ), Measurable H → Measurable R →
+      (∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ) →
+      (∀ᵐ ω ∂S.P, R ω = coneScaleRadius γ (S.hcirc ω) b) →
+      S.P.map (fun ω => rescaledDistribution γ b (H ω) (R ω)) = S.P.map H
+
+/-- The explicit rescaled distribution supplies the representation in the
+field step, leaving its distributional law and circle recovery. -/
+theorem rescaledConeRepresentedLawStep_of_distribution
+    (𝒮 : SpaceFillingSLEModel) (hscale : QuantumConeScalingInput)
+    (hcircles : RescaledConeDistributionCircleStep 𝒮)
+    (hlaw : RescaledConeDistributionLawStep 𝒮) :
+    RescaledConeRepresentedLawStep 𝒮 := by
+  intro γ hγ hγ2 Ω _ S hS b hb hC' c hpair hcirc H hHm hrep
+  let : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
+  obtain ⟨R, hRm, hR⟩ := exists_fieldMeasurable_coneScaleRadius hscale hγ hγ2 hS hb
+  have hle : S.fieldSigma ≤ (inferInstance : MeasurableSpace Ω) := by
+    simp only [MatedCRTEnv.fieldSigma, fieldSigmaAlgebra]
+    refine iSup₂_le fun φ hφ => ?_
+    have hm : Measurable fun ω => fieldPairing 0 (S.hC ω) φ := by
+      simpa [fieldPairing] using hS.isQuantumCone.measurable_pairing φ hφ
+    exact hm.comap_le
+  have hRmeas : Measurable R := hRm.mono hle le_rfl
+  have hpos := ae_coneScaleRadius_pos hscale hγ hγ2 hS.isQuantumCone hb
+  have hne : ∀ᵐ ω ∂S.P, R ω ≠ 0 := by
+    filter_upwards [hR, hpos] with ω hRω hposω
+    exact hRω ▸ hposω.ne'
+  have hp : ∀ᵐ ω ∂S.P, ∀ φ, IsTestFunction univ φ →
+      hC' ω φ = rescaledPairing γ (S.hC ω) (R ω) b φ := by
+    filter_upwards [hpair, hR] with ω hpω hRω
+    intro φ hφ
+    rw [hRω]
+    exact hpω φ hφ
+  obtain ⟨hH', hrep'⟩ := ae_rescaledDistribution_represents hHm hRmeas hrep hp hne
+  refine ⟨fun ω => rescaledDistribution γ b (H ω) (R ω), hH', hrep', ?_,
+    hlaw γ hγ hγ2 Ω S hS b hb H R hHm hRmeas hrep hR⟩
+  filter_upwards [hcircles γ hγ hγ2 Ω S hS b hb H R hHm hRmeas hrep hR,
+    hcirc, hR] with ω hcω hcircω hRω r hr z
+  rw [hcircω, ← hRω]
+  exact hcω r hr z
+
 /-- Distribution scaling and circle recovery imply scaling of all admissible
 observables. -/
 theorem rescaledConeObservableLawStep_of_represented_law
