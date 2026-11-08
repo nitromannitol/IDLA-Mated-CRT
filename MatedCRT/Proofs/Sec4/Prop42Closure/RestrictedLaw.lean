@@ -216,4 +216,89 @@ theorem identDistrib_restrict_of_finiteDim {Ω Ω' : Type*} [MeasurableSpace Ω]
       simp
   exact ⟨hX, hX', hmain⟩
 
+/-! ### A countable trace π-system for an open set
+
+The finite intersections of the countable base of a second countable space form a countable π-system of open sets
+containing `univ` and generating the Borel σ-algebra. Its traces on an open set `S` give the family `𝒬` required by
+`identDistrib_restrict_of_finiteDim`. -/
+
+/-- The finite intersections of the countable base `TopologicalSpace.countableBasis E`. -/
+def basisPiSystem (E : Type*) [TopologicalSpace E] [SecondCountableTopology E] : Set (Set E) :=
+  {s | ∃ T : Set (Set E), T.Finite ∧ T ⊆ TopologicalSpace.countableBasis E ∧ s = ⋂₀ T}
+
+theorem inter_mem_basisPiSystem (E : Type*) [TopologicalSpace E] [SecondCountableTopology E] {s t : Set E}
+    (hs : s ∈ basisPiSystem E) (ht : t ∈ basisPiSystem E) : s ∩ t ∈ basisPiSystem E := by
+  obtain ⟨T₁, hT₁, hB₁, rfl⟩ := hs
+  obtain ⟨T₂, hT₂, hB₂, rfl⟩ := ht
+  exact ⟨T₁ ∪ T₂, hT₁.union hT₂, Set.union_subset hB₁ hB₂, (Set.sInter_union T₁ T₂).symm⟩
+
+theorem isPiSystem_basisPiSystem (E : Type*) [TopologicalSpace E] [SecondCountableTopology E] :
+    IsPiSystem (basisPiSystem E) :=
+  fun _ hs _ ht _ => inter_mem_basisPiSystem E hs ht
+
+theorem countable_basisPiSystem (E : Type*) [TopologicalSpace E] [SecondCountableTopology E] :
+    (basisPiSystem E).Countable := by
+  refine Set.Countable.mono ?_ ((Set.countable_ofPred_finite_subset
+    (TopologicalSpace.countable_countableBasis E)).image (fun T : Set (Set E) => ⋂₀ T))
+  rintro s ⟨T, hT, hB, rfl⟩
+  exact ⟨T, ⟨hT, hB⟩, rfl⟩
+
+theorem univ_mem_basisPiSystem (E : Type*) [TopologicalSpace E] [SecondCountableTopology E] :
+    (Set.univ : Set E) ∈ basisPiSystem E :=
+  ⟨∅, Set.finite_empty, Set.empty_subset _, Set.sInter_empty.symm⟩
+
+theorem isOpen_of_mem_basisPiSystem (E : Type*) [TopologicalSpace E] [SecondCountableTopology E] {s : Set E}
+    (hs : s ∈ basisPiSystem E) : IsOpen s := by
+  obtain ⟨T, hT, hB, rfl⟩ := hs
+  exact hT.isOpen_sInter fun t ht => TopologicalSpace.isOpen_of_mem_countableBasis (hB ht)
+
+theorem borel_le_generateFrom_basisPiSystem (E : Type*) [TopologicalSpace E] [SecondCountableTopology E] :
+    borel E ≤ MeasurableSpace.generateFrom (basisPiSystem E) := by
+  rw [(TopologicalSpace.isBasis_countableBasis E).borel_eq_generateFrom]
+  refine MeasurableSpace.generateFrom_le fun t ht => MeasurableSpace.measurableSet_generateFrom ?_
+  exact ⟨{t}, Set.finite_singleton t, Set.singleton_subset_iff.2 ht, (Set.sInter_singleton t).symm⟩
+
+/-- **Trace π-system of an open set.** For an open `S ⊆ E` there is a countable π-system `𝒬` of measurable subsets of
+`S`, containing `S`, whose traces generate the measurable subsets of `S`; this is the hypothesis family of
+`identDistrib_restrict_of_finiteDim`. -/
+theorem exists_traceSystem (E : Type*) [TopologicalSpace E] [SecondCountableTopology E] [MeasurableSpace E]
+    [BorelSpace E] {S : Set E} (hS : IsOpen S) :
+    ∃ 𝒬 : Set (Set E), 𝒬.Countable ∧ IsPiSystem 𝒬 ∧ (∀ Q ∈ 𝒬, MeasurableSet Q ∧ Q ⊆ S) ∧ S ∈ 𝒬 ∧
+      ∀ A : Set E, MeasurableSet A → MeasurableSet[MeasurableSpace.generateFrom 𝒬] (A ∩ S) := by
+  refine ⟨(fun Q => Q ∩ S) '' basisPiSystem E, (countable_basisPiSystem E).image _, ?_, ?_, ?_, ?_⟩
+  · rintro _ ⟨Q₁, hQ₁, rfl⟩ _ ⟨Q₂, hQ₂, rfl⟩ _
+    refine ⟨Q₁ ∩ Q₂, inter_mem_basisPiSystem E hQ₁ hQ₂, ?_⟩
+    ext x
+    simp only [Set.mem_inter_iff]
+    tauto
+  · rintro _ ⟨Q, hQ, rfl⟩
+    exact ⟨((isOpen_of_mem_basisPiSystem E hQ).measurableSet).inter hS.measurableSet, Set.inter_subset_right⟩
+  · exact ⟨Set.univ, univ_mem_basisPiSystem E, Set.univ_inter S⟩
+  · intro A hA
+    have hb : MeasurableSet[borel E] A := by
+      rw [← BorelSpace.measurable_eq]
+      exact hA
+    have hA' : MeasurableSet[MeasurableSpace.generateFrom (basisPiSystem E)] A :=
+      borel_le_generateFrom_basisPiSystem E A hb
+    have hSm : MeasurableSet[MeasurableSpace.generateFrom ((fun Q => Q ∩ S) '' basisPiSystem E)] S :=
+      MeasurableSpace.measurableSet_generateFrom ⟨Set.univ, univ_mem_basisPiSystem E, Set.univ_inter S⟩
+    refine MeasurableSpace.induction_on_inter (m := MeasurableSpace.generateFrom (basisPiSystem E))
+      (s := basisPiSystem E)
+      (C := fun B _ => MeasurableSet[MeasurableSpace.generateFrom ((fun Q => Q ∩ S) '' basisPiSystem E)] (B ∩ S))
+      rfl (isPiSystem_basisPiSystem E) ?_ ?_ ?_ ?_ A hA'
+    · rw [Set.empty_inter]
+      exact @MeasurableSet.empty E (MeasurableSpace.generateFrom ((fun Q => Q ∩ S) '' basisPiSystem E))
+    · intro t ht
+      exact MeasurableSpace.measurableSet_generateFrom ⟨t, ht, rfl⟩
+    · intro B' _ hB'
+      have hset : B'ᶜ ∩ S = S \ (B' ∩ S) := by
+        ext x
+        simp only [Set.mem_inter_iff, Set.mem_compl_iff, Set.mem_sdiff]
+        tauto
+      rw [hset]
+      exact hSm.diff hB'
+    · intro f _ _ hC
+      rw [Set.iUnion_inter]
+      exact MeasurableSet.iUnion hC
+
 end MatedCRT.RestrictedLaw
