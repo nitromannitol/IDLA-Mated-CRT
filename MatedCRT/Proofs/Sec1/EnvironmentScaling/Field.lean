@@ -728,6 +728,37 @@ theorem measurable_distributionCircleVersion :
   exact hg.comp ((measurable_fst.prodMk (measurable_snd.comp measurable_snd)).prodMk
     (Int.measurable_ceil.comp ((measurable_fst.comp measurable_snd).mul_const _)))
 
+/-- A continuous circle process is determined by its dyadic-radius, grid-center
+circle averages. The statement is deterministic and applies to any distribution. -/
+theorem distributionCircleVersion_eq_of_grid
+    (H : LQGMetric.DistC) (c : ℝ → ℂ → ℝ)
+    (hc : ContinuousOn (fun p : ℝ × ℂ => c p.1 p.2) (Ioi 0 ×ˢ univ))
+    (hg : ∀ n m : ℕ, ∀ k a b : ℤ, 0 < k →
+      LQGMetric.circleAvg H ((k : ℝ) / 2 ^ n) (FieldCircle.gridPt m a b) =
+        c ((k : ℝ) / 2 ^ n) (FieldCircle.gridPt m a b)) :
+    ∀ r : ℝ, 0 < r → ∀ z : ℂ, distributionCircleVersion H r z = c r z := by
+  have hdyad : ∀ n : ℕ, ∀ k : ℤ, 0 < k → ∀ z : ℂ,
+      distributionCircleAtDyadic n k H z = c ((k : ℝ) / 2 ^ n) z := by
+    intro n k hk z
+    have hcont : Continuous fun w => c ((k : ℝ) / 2 ^ n) w := by
+      rw [← continuousOn_univ]
+      exact hc.comp (continuous_const.prodMk continuous_id).continuousOn
+        fun w _ => ⟨mem_Ioi.2 (div_pos (Int.cast_pos.mpr hk) (by positivity)), mem_univ _⟩
+    exact FieldCircle.gridVersion_eq hcont (fun m a b => hg n m k a b hk) z
+  intro r hr z
+  have hpos : ∀ n : ℕ, 0 < ⌈r * 2 ^ n⌉ := fun n => Int.ceil_pos.2 (by positivity)
+  have hcont : ContinuousOn (fun s : ℝ => c s z) (Ioi 0) :=
+    hc.comp (continuous_id.prodMk continuous_const).continuousOn fun s hs => ⟨hs, mem_univ _⟩
+  have ht : Tendsto (fun n : ℕ => if 0 < ⌈r * 2 ^ n⌉ then
+      distributionCircleAtDyadic n ⌈r * 2 ^ n⌉ H z else 0) atTop (𝓝 (c r z)) := by
+    have ht' := (hcont.continuousAt (Ioi_mem_nhds hr)).tendsto.comp
+      (CirclePairing.tendsto_dyadicCeil r)
+    apply ht'.congr
+    intro n
+    simp only [hpos n, ↓reduceIte, CirclePairing.dyadicCeil, Function.comp_apply]
+    exact (hdyad n _ (hpos n) z).symm
+  exact ht.limsup_eq
+
 /-- On one event, the distributional version recovers every positive-radius
 circle at every center. -/
 theorem ae_distributionCircleVersion_eq
@@ -1108,6 +1139,37 @@ def RescaledConeDistributionCircleStep (𝒮 : SpaceFillingSLEModel) : Prop :=
       ∀ᵐ ω ∂S.P, ∀ r : ℝ, 0 < r → ∀ z : ℂ,
         distributionCircleVersion (rescaledDistribution γ b (H ω) (R ω)) r z =
           rescaledCircle γ (S.hcirc ω) (R ω) b r z
+
+/-- The fixed grid-circle boundary for the randomly rescaled distribution.
+The exceptional set is common to the countable dyadic-radius and grid-center
+indices. -/
+def RescaledConeDistributionCircleGridStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ → ∀ b : ℝ, 0 < b →
+    ∀ (H : Ω → LQGMetric.DistC) (R : Ω → ℝ), Measurable H → Measurable R →
+      (∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ) →
+      (∀ᵐ ω ∂S.P, R ω = coneScaleRadius γ (S.hcirc ω) b) →
+      ∀ᵐ ω ∂S.P, ∀ n m : ℕ, ∀ k a d : ℤ, 0 < k →
+        LQGMetric.circleAvg (rescaledDistribution γ b (H ω) (R ω))
+          ((k : ℝ) / 2 ^ n) (FieldCircle.gridPt m a d) =
+        rescaledCircle γ (S.hcirc ω) (R ω) b ((k : ℝ) / 2 ^ n)
+          (FieldCircle.gridPt m a d)
+
+/-- Countable grid-circle recovery and continuity give all rescaled circles
+on one event. -/
+theorem rescaledConeDistributionCircleStep_of_grid
+    (𝒮 : SpaceFillingSLEModel) (hscale : QuantumConeScalingInput)
+    (hgrid : RescaledConeDistributionCircleGridStep 𝒮) :
+    RescaledConeDistributionCircleStep 𝒮 := by
+  intro γ hγ hγ2 Ω _ S hS b hb H R hHm hRm hrep hR
+  let : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
+  have hpos := ae_coneScaleRadius_pos hscale hγ hγ2 hS.isQuantumCone hb
+  have hcont := ae_continuousOn_rescaledCircle hS.isQuantumCone hpos
+  filter_upwards [hgrid γ hγ hγ2 Ω S hS b hb H R hHm hRm hrep hR, hcont, hR]
+    with ω hg hc hRω
+  apply distributionCircleVersion_eq_of_grid _ _ ?_ hg
+  rw [hRω]
+  exact hc
 
 /-- Distribution-valued scale invariance for the explicitly constructed
 rescaled cone. This is a proof obligation, not a stated literature input. -/
