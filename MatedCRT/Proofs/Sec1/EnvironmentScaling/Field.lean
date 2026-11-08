@@ -1,4 +1,5 @@
 import MatedCRT.Proofs.Sec1.EnvironmentScaling.DistributionCode
+import LatticeProb.Bonanno.LQGMetric.Field.MeasurableAvg
 
 /-!
 # Rescaled field pairings
@@ -208,6 +209,153 @@ theorem exists_fieldMeasurable_distribution_with_radial
   split
   · exact hcircle _
   · rfl
+
+/-- At each circle avoiding the origin, Bonanno's distributional circle
+average agrees almost surely with the cone circle observable. This is an
+agreement at a fixed circle; no simultaneous continuity of `circleAvg` is
+claimed. -/
+theorem ae_distribution_circleAvg_eq
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
+    {H : Ω → LQGMetric.DistC}
+    (hH : ∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ)
+    {r : ℝ} (hr : 0 < r) {z : ℂ} (hz : ‖z‖ ≠ r) :
+    ∀ᵐ ω ∂S.P, LQGMetric.circleAvg (H ω) r z = S.hcirc ω r z := by
+  filter_upwards [hH, CirclePairing.ae_tendsto_circBump_of_isQuantumCone
+    hS.isQuantumCone hr hz] with ω hω ht
+  have ht' : Tendsto (fun n => Real.circleAverage
+      (fun x => H ω (LQGMetric.bumpTest n x)) z r) atTop (𝓝 (S.hcirc ω r z)) := by
+    apply ht.congr
+    intro n
+    rw [LQGMetric.CircleAvg.circleAverage_pairing]
+    exact hω _
+  exact ht'.limUnder_eq
+
+/-- A grid center has irrational norm: in particular it avoids every dyadic
+radius, not only reciprocal powers of two. -/
+theorem norm_gridPt_ne_dyadic (m n : ℕ) (a b k : ℤ) :
+    ‖FieldCircle.gridPt m a b‖ ≠ (k : ℝ) / 2 ^ n := by
+  intro h
+  have hn : (0 : ℝ) < 2 ^ n := by positivity
+  have h2 : ‖FieldCircle.gridPt m a b‖ ^ 2 * ((2 : ℝ) ^ n) ^ 2 = (k : ℝ) ^ 2 := by
+    rw [h, div_pow]
+    field_simp
+  rw [Complex.sq_norm, Complex.normSq_apply] at h2
+  simp only [FieldCircle.gridPt] at h2
+  have hR : (((3 * a + 1) ^ 2 + (3 * b + 1) ^ 2) * ((2 : ℤ) ^ n) ^ 2 : ℤ) =
+      ((9 * k ^ 2 * ((2 : ℤ) ^ m) ^ 2 : ℤ) : ℝ) := by
+    push_cast
+    field_simp at h2
+    linear_combination h2
+  have hZ : ((3 * a + 1) ^ 2 + (3 * b + 1) ^ 2) * ((2 : ℤ) ^ n) ^ 2 =
+      9 * k ^ 2 * ((2 : ℤ) ^ m) ^ 2 := by
+    exact_mod_cast hR
+  have h3 := congrArg (fun x : ℤ => (x : ZMod 3)) hZ
+  push_cast at h3
+  have e3 : (3 : ZMod 3) = 0 := rfl
+  have e9 : (9 : ZMod 3) = 0 := rfl
+  have e4 : ((2 : ZMod 3) ^ n) ^ 2 = 1 := by
+    rw [← pow_mul, mul_comm n 2, pow_mul]
+    have : (2 : ZMod 3) ^ 2 = 1 := rfl
+    rw [this, one_pow]
+  rw [e3, e9, e4] at h3
+  simp only [zero_mul, zero_add, one_pow, mul_one] at h3
+  exact absurd h3 (by decide)
+
+/-- The spatial interpolation at an arbitrary dyadic radius. -/
+def distributionCircleAtDyadic (n : ℕ) (k : ℤ) (H : LQGMetric.DistC) (z : ℂ) : ℝ :=
+  FieldCircle.gridVersion (fun w d => LQGMetric.circleAvg d ((k : ℝ) / 2 ^ n) w) H z
+
+theorem measurable_distributionCircleAtDyadic (n : ℕ) (k : ℤ) :
+    Measurable (Function.uncurry (distributionCircleAtDyadic n k)) := by
+  let X : ℂ → LQGMetric.DistC → ℝ := fun w d => LQGMetric.circleAvg d ((k : ℝ) / 2 ^ n) w
+  have hm : ∀ w, Measurable (X w) := fun w => LQGMetric.measurable_circleAvg_left _ w
+  change Measurable (Function.uncurry (FieldCircle.gridVersion X))
+  exact FieldCircle.measurable_gridVersion X hm
+
+theorem ae_distributionCircleAtDyadic_eq
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
+    {H : Ω → LQGMetric.DistC}
+    (hH : ∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ) :
+    ∀ᵐ ω ∂S.P, ∀ n : ℕ, ∀ k : ℤ, 0 < k → ∀ z : ℂ,
+      distributionCircleAtDyadic n k (H ω) z = S.hcirc ω ((k : ℝ) / 2 ^ n) z := by
+  have hgrid : ∀ᵐ ω ∂S.P, ∀ n m : ℕ, ∀ k a b : ℤ, 0 < k →
+      LQGMetric.circleAvg (H ω) ((k : ℝ) / 2 ^ n) (FieldCircle.gridPt m a b) =
+        S.hcirc ω ((k : ℝ) / 2 ^ n) (FieldCircle.gridPt m a b) := by
+    simp only [ae_all_iff]
+    intro n m k a b hk
+    apply ae_distribution_circleAvg_eq hS hH
+      (div_pos (Int.cast_pos.mpr hk) (by positivity))
+    exact norm_gridPt_ne_dyadic m n a b k
+  filter_upwards [hgrid, hS.isQuantumCone.ae_continuousOn_circle] with ω hg hc n k hk z
+  have hcont : Continuous fun w => S.hcirc ω ((k : ℝ) / 2 ^ n) w := by
+    rw [← continuousOn_univ]
+    exact hc.comp (continuous_const.prodMk continuous_id).continuousOn
+      fun w _ => ⟨mem_Ioi.2 (div_pos (Int.cast_pos.mpr hk) (by positivity)), mem_univ _⟩
+  exact FieldCircle.gridVersion_eq hcont (fun m a b => hg n m k a b hk) z
+
+/-- A distributional version of the positive-radius circle process. -/
+def distributionCircleVersion (H : LQGMetric.DistC) (r : ℝ) (z : ℂ) : ℝ :=
+  limsup (fun n : ℕ => if 0 < ⌈r * 2 ^ n⌉ then
+    distributionCircleAtDyadic n ⌈r * 2 ^ n⌉ H z else 0) atTop
+
+/-- The full circle version is jointly Borel measurable. -/
+theorem measurable_distributionCircleVersion :
+    Measurable fun p : LQGMetric.DistC × ℝ × ℂ => distributionCircleVersion p.1 p.2.1 p.2.2 := by
+  apply Measurable.limsup
+  intro n
+  have hg : Measurable fun p : (LQGMetric.DistC × ℂ) × ℤ =>
+      if 0 < p.2 then distributionCircleAtDyadic n p.2 p.1.1 p.1.2 else 0 := by
+    apply measurable_from_prod_countable_left
+    intro k
+    by_cases hk : 0 < k
+    · change Measurable fun p : LQGMetric.DistC × ℂ =>
+        if 0 < k then distributionCircleAtDyadic n k p.1 p.2 else 0
+      simp only [hk, ↓reduceIte]
+      change Measurable (Function.uncurry (distributionCircleAtDyadic n k))
+      exact measurable_distributionCircleAtDyadic n k
+    · simpa only [hk, ↓reduceIte] using (measurable_const : Measurable fun _ : LQGMetric.DistC × ℂ => (0 : ℝ))
+  exact hg.comp ((measurable_fst.prodMk (measurable_snd.comp measurable_snd)).prodMk
+    (Int.measurable_ceil.comp ((measurable_fst.comp measurable_snd).mul_const _)))
+
+/-- On one event, the distributional version recovers every positive-radius
+circle at every center. -/
+theorem ae_distributionCircleVersion_eq
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
+    {H : Ω → LQGMetric.DistC}
+    (hH : ∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ) :
+    ∀ᵐ ω ∂S.P, ∀ r : ℝ, 0 < r → ∀ z : ℂ,
+      distributionCircleVersion (H ω) r z = S.hcirc ω r z := by
+  filter_upwards [ae_distributionCircleAtDyadic_eq hS hH,
+    hS.isQuantumCone.ae_continuousOn_circle] with ω hω hc r hr z
+  have hpos : ∀ n : ℕ, 0 < ⌈r * 2 ^ n⌉ := fun n => Int.ceil_pos.2 (by positivity)
+  have hcont : ContinuousOn (fun s : ℝ => S.hcirc ω s z) (Ioi 0) :=
+    hc.comp (continuous_id.prodMk continuous_const).continuousOn fun s hs => ⟨hs, mem_univ _⟩
+  have ht : Tendsto (fun n : ℕ => if 0 < ⌈r * 2 ^ n⌉ then
+      distributionCircleAtDyadic n ⌈r * 2 ^ n⌉ (H ω) z else 0) atTop (𝓝 (S.hcirc ω r z)) := by
+    have ht' := (hcont.continuousAt (Ioi_mem_nhds hr)).tendsto.comp
+      (CirclePairing.tendsto_dyadicCeil r)
+    apply ht'.congr
+    intro n
+    simp only [hpos n, ↓reduceIte, CirclePairing.dyadicCeil, Function.comp_apply]
+    exact (hω n _ (hpos n) z).symm
+  exact ht.limsup_eq
+
+/-- The countably decoded distribution is field-measurable and recovers both
+the test pairings and the entire positive-radius circle process on one event. -/
+theorem exists_fieldMeasurable_distribution_with_circles
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) :
+    ∃ H : Ω → LQGMetric.DistC, Measurable[S.fieldSigma] H ∧
+      ∀ᵐ ω ∂S.P, (∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ) ∧
+        ∀ r : ℝ, 0 < r → ∀ z : ℂ,
+          distributionCircleVersion (H ω) r z = S.hcirc ω r z := by
+  obtain ⟨H, hHm, hH⟩ := exists_fieldMeasurable_coneDistribution hS
+  refine ⟨H, hHm, ?_⟩
+  filter_upwards [hH, ae_distributionCircleVersion_eq hS hH] with ω hpair hcircle
+  exact ⟨hpair, hcircle⟩
 
 /-- Pair a distribution at a variable scale, with zero on non-tests. -/
 def rescaledDistributionPairing (γ b : ℝ) (H : LQGMetric.DistC) (r : ℝ)
