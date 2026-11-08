@@ -2,13 +2,19 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.RestrictedLaw
 import MatedCRT.Proofs.Sec4.Prop42Closure.LQGMeasureFunctional
 import MatedCRT.Proofs.Sec4.Prop42Closure.WholePlaneLQGMeasurable
 import MatedCRT.Proofs.Sec4.Prop42Closure.ConeWholePlaneSteps
+import MatedCRT.Proofs.Sec4.Prop42Closure.LQGMeasureLocalityProof
 
 /-! # Derivation of the restricted LQG law `ConeWholePlaneRestrictedLQGLawStep` (gap G1 of Proposition 4.2)
 
 Inputs: `ConeWholePlaneFieldLawStep` (fact (2) for the fields, IDLA eq. (2.4), `ConeWholePlaneSteps.lean`), the locality
-input (A) `LQGMeasureLocalityFunctionalStep` (`LQGMeasureFunctional.lean`), and the a.e. measurability of the LQG measures
-(cone: `IsConeField.aemeasurable_lqgMeasure`; whole-plane: (B), `aemeasurable_wholePlaneLQGMeasure`). Measure passage:
-`identDistrib_restrict_of_finiteDim` (`RestrictedLaw.lean`).
+input (A) `LQGMeasureLocalityFunctionalStep` (`LQGMeasureFunctional.lean`; proved, see the next paragraph), and the a.e.
+measurability of the LQG measures (cone: `IsConeField.aemeasurable_lqgMeasure`; whole-plane: (B),
+`aemeasurable_wholePlaneLQGMeasure`). Measure passage: `identDistrib_restrict_of_finiteDim` (`RestrictedLaw.lean`).
+
+Input (A) is no longer an open input: `LQGMeasureLocalityFunctionalStep_proof` (`LQGMeasureLocalityProof.lean`, steps2:651-794,
+commit 48b2c75) proves it with no hypothesis. The reduced-input consumer `coneWholePlaneRestrictedLQGLawStep_of_fieldLaw`
+(end of this file) supplies it internally; `coneWholePlaneRestrictedLQGLawStep_of_inputs` keeps (A) as an explicit
+hypothesis, for compatibility.
 
 Argument. Let `S = B_1` and let `𝒬` be the countable π-system of open subsets of `S` from `exists_traceSystem`. For each
 `Q ∈ 𝒬`, (A) gives a measurable `Λ_Q` with `μ(Q) = Λ_Q(h|_{B_1})` a.s. for the cone field and for the whole-plane field.
@@ -122,5 +128,13 @@ theorem coneWholePlaneRestrictedLQGLawStep_of_inputs (hFL : ConeWholePlaneFieldL
   -- (7) measure passage from the masses on `𝒬` to the restricted laws
   exact identDistrib_restrict_of_finiteDim (𝒬 := 𝒬) (S := ball (0 : ℂ) 1) hpi
     (fun Q hQ' => ⟨(hQ Q hQ').1.measurableSet, (hQ Q hQ').2⟩) hSQ hgen hXm hXm' hXS hX'S hXfin hX'fin hfd
+
+/-- **`ConeWholePlaneRestrictedLQGLawStep`, reduced inputs.** The restricted-law consumer with the locality input (A)
+supplied internally by the proof `LQGMeasureLocalityFunctionalStep_proof` (steps2:651-794, commit 48b2c75). Its only
+remaining input is fact (2) for the fields, `ConeWholePlaneFieldLawStep`; the conclusion is that of
+`coneWholePlaneRestrictedLQGLawStep_of_inputs`, which it specializes at the proved locality Step. -/
+theorem coneWholePlaneRestrictedLQGLawStep_of_fieldLaw (hFL : ConeWholePlaneFieldLawStep) :
+    ConeWholePlaneRestrictedLQGLawStep :=
+  coneWholePlaneRestrictedLQGLawStep_of_inputs hFL LQGMeasureLocalityFunctionalStep_proof
 
 end MatedCRT

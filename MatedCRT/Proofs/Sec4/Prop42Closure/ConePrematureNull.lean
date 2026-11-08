@@ -5,6 +5,7 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.PlateauRadii
 import MatedCRT.Proofs.Sec4.Prop42Closure.RestrictionLocality
 import MatedCRT.Proofs.Sec4.Prop42Closure.ConeVolumeGrowth
 import MatedCRT.Proofs.Sec4.Prop42Closure.ConeWholePlaneRestrictedLaw
+import MatedCRT.Proofs.Sec4.Prop42Closure.LQGMeasureLocalityProof
 
 /-! # The premature-contact event is null for the cone (closure of Proposition 4.2, z5)
 
@@ -20,9 +21,14 @@ Let `E` be the measurable set of measures with premature half-ball contact of th
   and the plateau probabilities vanish (`plateau_measure_zero_of_ae_radii_family`, fact (1), radii a.e. measurable).
 
 Named inputs: `VolumeGrowthStmt` (IDLA Lemma 2.7), `WholePlaneVolumeGrowthAeStep` (B1, whole plane),
-`WholePlaneLQGModelStep` (B2), `ConeWholePlaneFieldLawStep` (fact (2) for the fields) and `LQGMeasureLocalityFunctionalStep`
-(input (A), locality of the LQG measure; they give fact (2) for the restricted LQG measures, gap G1, through
-`coneWholePlaneRestrictedLQGLawStep_of_inputs`),
+`WholePlaneLQGModelStep` (B2) and `ConeWholePlaneFieldLawStep` (fact (2) for the fields). The locality input (A),
+`LQGMeasureLocalityFunctionalStep`, is proved: `LQGMeasureLocalityFunctionalStep_proof` (`LQGMeasureLocalityProof.lean`,
+steps2:651-794). The reduced-input consumers `conePrematureContactNullStep_of_fieldLaw` and
+`coneHalfBallClosureInsideStep_of_fieldLaw` (end of this file) supply it internally; fact (2) for the restricted LQG measures
+(gap G1) comes through `coneWholePlaneRestrictedLQGLawStep_of_inputs`, whose reduced form is
+`coneWholePlaneRestrictedLQGLawStep_of_fieldLaw` (`ConeWholePlaneRestrictedLaw.lean`). The `_of_inputs` versions keep (A)
+as a hypothesis, for compatibility.
+
 `PlateauScaleInvarianceStep` (fact (1)), `HarmonicBallLocalSetStmt`, `ExistenceHarmonicBallsStmt` and
 `ClusterStrongCompatibilityStmt` (Harmonic-Balls Thm 5.5 and Lemma 5.8; two components of `HarmonicBallsDraftInputs`). -/
 
@@ -188,5 +194,26 @@ theorem coneHalfBallClosureInsideStep_of_inputs (hloc : HarmonicBallLocalSetStmt
     ConeHalfBallClosureInsideStep :=
   coneHalfBallClosureInsideStep_of_prematureContactNull
     (conePrematureContactNullStep_of_inputs hloc hEx hSC hfact1 hVG hVGw hB2 hFL hLoc)
+
+/-- **`ConePrematureContactNullStep`, reduced inputs.** The locality input (A) is supplied internally by the proof
+`LQGMeasureLocalityFunctionalStep_proof` (`LQGMeasureLocalityProof.lean`, steps2:651-794). The remaining named inputs are
+those of `conePrematureContactNullStep_of_inputs` other than (A): `hloc`, `hEx`, `hSC`, `hfact1`, `hVG`, `hVGw`, `hB2`
+and `hFL`. Same conclusion. -/
+theorem conePrematureContactNullStep_of_fieldLaw (hloc : HarmonicBallLocalSetStmt.{0})
+    (hEx : ExistenceHarmonicBallsStmt.{0}) (hSC : ClusterStrongCompatibilityStmt.{0})
+    (hfact1 : PlateauScaleInvarianceStep) (hVG : VolumeGrowthStmt) (hVGw : WholePlaneVolumeGrowthAeStep)
+    (hB2 : WholePlaneLQGModelStep) (hFL : ConeWholePlaneFieldLawStep) :
+    ConePrematureContactNullStep :=
+  conePrematureContactNullStep_of_inputs hloc hEx hSC hfact1 hVG hVGw hB2 hFL LQGMeasureLocalityFunctionalStep_proof
+
+/-- **`ConeHalfBallClosureInsideStep`, reduced inputs.** The closure step of `coneHalfBallClosureInsideStep_of_inputs`
+with the locality input (A) supplied internally by `LQGMeasureLocalityFunctionalStep_proof`; the named inputs other than
+(A) are kept, and the deterministic closure argument is `coneHalfBallClosureInsideStep_of_prematureContactNull`. -/
+theorem coneHalfBallClosureInsideStep_of_fieldLaw (hloc : HarmonicBallLocalSetStmt.{0})
+    (hEx : ExistenceHarmonicBallsStmt.{0}) (hSC : ClusterStrongCompatibilityStmt.{0})
+    (hfact1 : PlateauScaleInvarianceStep) (hVG : VolumeGrowthStmt) (hVGw : WholePlaneVolumeGrowthAeStep)
+    (hB2 : WholePlaneLQGModelStep) (hFL : ConeWholePlaneFieldLawStep) :
+    ConeHalfBallClosureInsideStep :=
+  coneHalfBallClosureInsideStep_of_inputs hloc hEx hSC hfact1 hVG hVGw hB2 hFL LQGMeasureLocalityFunctionalStep_proof
 
 end MatedCRT

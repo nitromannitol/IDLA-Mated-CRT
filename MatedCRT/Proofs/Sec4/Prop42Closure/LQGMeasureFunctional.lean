@@ -1,12 +1,17 @@
 import MatedCRT.Proofs.Sec4.Prop42Closure.ConeWholePlaneSteps
 
-/-! # Locality of the LQG measure as a functional of the restricted field: the open input (A) of gap G1
+/-! # Locality of the LQG measure as a functional of the restricted field: the input (A) of gap G1 (now proved)
 
 Operator ruling (2026-11-08, `tasks/z5.md`, item (A)): the locality input of the restricted-law derivation is a named
-Step Prop with exactly the type of `LQGMeasureLocalityFunctionalStep` below. It is an open input. It is not a staged
-literature statement: it is not in `MatedCRT/External` or `MatedCRT/Proposed`, and it is not weakened anywhere. It is
-used only as an explicit hypothesis, by `coneWholePlaneRestrictedLQGLawStep_of_inputs`
-(`ConeWholePlaneRestrictedLaw.lean`), and through it by the chain at `ConePrematureNull.lean`.
+Step Prop with exactly the type of `LQGMeasureLocalityFunctionalStep` below. It was an open input. It is now proved, with
+no literature hypothesis, by `LQGMeasureLocalityFunctionalStep_proof` (`LQGMeasureLocalityProof.lean`; steps2:651-794,
+audited CORRECT as declared, `notes/wpn-steps2/AUDIT-steps2.md` target 4; commit 48b2c75). It is not a staged literature
+statement: it is not in `MatedCRT/External` or `MatedCRT/Proposed`, and it is not weakened anywhere. The reduced-input
+consumer `coneWholePlaneRestrictedLQGLawStep_of_fieldLaw` (`ConeWholePlaneRestrictedLaw.lean`) and the reduced-input
+consumers `conePrematureContactNullStep_of_fieldLaw` and `coneHalfBallClosureInsideStep_of_fieldLaw` (`ConePrematureNull.lean`)
+supply the proof internally. The `_of_inputs` versions (`coneWholePlaneRestrictedLQGLawStep_of_inputs`,
+`conePrematureContactNullStep_of_inputs`, `coneHalfBallClosureInsideStep_of_inputs`) keep the Step as an explicit
+hypothesis, for compatibility.
 
 **Sources.** IDLA paper (`paper/idla_mated_crt-corrected.tex`), Fact (LQG measure) II, "Locality" (lines 478-480): for
 every deterministic open `U ⊂ ℂ`, `μ_h(U)` is given by a measurable function of `h|_U`. Line 492 of the same paper says
@@ -29,9 +34,9 @@ namespace MatedCRT
 open MeasureTheory Metric HarmonicBalls
 open scoped ENNReal
 
-/-- **(A) Locality of the γ-LQG measure as a functional of the restricted field** (open input; paper Fact (LQG measure)
-II, lines 478-480; see the module docstring for the sources and for how it differs from Harmonic-Balls
-`LQGMeasureLocality`).
+/-- **(A) Locality of the γ-LQG measure as a functional of the restricted field** (proved: `LQGMeasureLocalityFunctionalStep_proof`,
+`LQGMeasureLocalityProof.lean`; paper Fact (LQG measure) II, lines 478-480; see the module docstring for the sources and for
+how it differs from Harmonic-Balls `LQGMeasureLocality`).
 
 For every `γ ∈ (0, 2)` and every open `U ⊆ B_1`, there is one measurable functional `Λ` of the restricted field
 `h|_{B_1}` (pairings on `TestB1`, circle averages on `CircleB1`) such that `μ(U) = Λ(h|_{B_1})` almost surely, at the
