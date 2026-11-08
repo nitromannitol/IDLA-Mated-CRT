@@ -787,4 +787,69 @@ theorem tendsto_lqgApprox_of_local_circle_decomposition {γ : ℝ}
   filter_upwards [heq] with r hr
   exact (integral_lqgApprox_eq_of_eqOn_tsupport γ r H (addCircleAverage h v) f hfc hr).symm
 
+
+/-- A compact subset of an open domain has all sufficiently small closed
+circles contained in the domain. -/
+theorem eventually_closedBall_subset_of_isCompact_subset_isOpen {K D : Set ℂ}
+    (hK : IsCompact K) (hD : IsOpen D) (hKD : K ⊆ D) :
+    ∀ᶠ r : ℝ in 𝓝[>] 0, ∀ z ∈ K, Metric.closedBall z r ⊆ D := by
+  obtain ⟨δ, hδ, hδD⟩ := hK.exists_cthickening_subset_open hD hKD
+  filter_upwards [(nhdsWithin_le_nhds : 𝓝[>] (0 : ℝ) ≤ 𝓝 0) (Iio_mem_nhds hδ)] with r hr
+  intro z hz w hw
+  apply hδD
+  exact Metric.mem_cthickening_of_dist_le w z δ K hz ((Metric.mem_closedBall.mp hw).trans hr.le)
+
+/-- An identity of circle averages on all admissible circles gives the local
+all-scale limit for every test supported in the domain. -/
+theorem tendsto_lqgApprox_of_admissible_circle_decomposition {γ : ℝ}
+    {h H : ℝ → ℂ → ℝ} {D : Set ℂ} (hD : IsOpen D)
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ)
+    (hc : ContinuousOn (fun p : ℝ × ℂ => h p.1 p.2)
+      {p | 0 < p.1 ∧ Metric.closedBall p.2 p.1 ⊆ D})
+    (hall : ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f → tsupport f ⊆ D →
+      Tendsto (fun r : ℝ => ∫ z, f z ∂(lqgApprox γ h r))
+        (𝓝[>] 0) (𝓝 (∫ z, f z ∂μ)))
+    (v : ℂ → ℝ) (hv : ContinuousOn v D)
+    (hdecomp : ∀ (r : ℝ) (z : ℂ), 0 < r → Metric.closedBall z r ⊆ D →
+      H r z = addCircleAverage h v r z)
+    (f : ℂ → ℝ) (hf : Continuous f) (hfc : HasCompactSupport f) (hfD : tsupport f ⊆ D) :
+    Tendsto (fun r : ℝ => ∫ z, f z ∂(lqgApprox γ H r))
+      (𝓝[>] 0) (𝓝 (∫ z, f z * Real.exp (γ * v z) ∂μ)) := by
+  apply tendsto_lqgApprox_of_local_circle_decomposition hD hμ hc hall v hv f hf hfc hfD
+  filter_upwards [eventually_closedBall_subset_of_isCompact_subset_isOpen hfc hD hfD,
+    self_mem_nhdsWithin] with r hr hrpos z hz
+  exact hdecomp r z hrpos (hr z hz)
+
+/-- Countable local decompositions and all-scale limits for their base fields
+imply the random-radius area identity, on the original probability space. -/
+theorem MatedCRTEnv.IsValid.ae_rescaled_measure_eq_of_countable_circle_decompositions
+    {Ω ι : Type} [MeasurableSpace Ω] [Countable ι]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ b : ℝ} (hS : S.IsValid 𝒮 γ)
+    (hγ : γ ≠ 0) (hb : 0 < b) (R : Ω → ℝ) {ν : Ω → Measure ℂ}
+    {η' : Ω → ℝ → ℂ}
+    (hR : ∀ᵐ ω ∂S.P, 0 < R ω)
+    (hν : IsLQGMeasure S.P γ (fun ω => rescaledCircle γ (S.hcirc ω) (R ω) b) ν)
+    (hη' : ∀ᵐ ω ∂S.P, IsAreaParametrized (ν ω) (η' ω))
+    (U : ι → Set ℂ) (hU : ∀ i, IsOpen (U i)) (hcover : ({0} : Set ℂ)ᶜ ⊆ ⋃ i, U i)
+    (hdecomp : ∀ i, ∀ᵐ ω ∂S.P,
+      ∃ (h : ℝ → ℂ → ℝ) (v : ℂ → ℝ) (m : Measure ℂ),
+        IsLocallyFiniteMeasure m ∧
+        ContinuousOn (fun p : ℝ × ℂ => h p.1 p.2)
+          {p | 0 < p.1 ∧ Metric.closedBall p.2 p.1 ⊆ U i} ∧
+        (∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f → tsupport f ⊆ U i →
+          Tendsto (fun r : ℝ => ∫ z, f z ∂(lqgApprox γ h r))
+            (𝓝[>] 0) (𝓝 (∫ z, f z ∂m))) ∧
+        ContinuousOn v (U i) ∧
+        (∀ (r : ℝ) (z : ℂ), 0 < r → Metric.closedBall z r ⊆ U i →
+          S.hcirc ω r z = addCircleAverage h v r z)) :
+    ∀ᵐ ω ∂S.P, ν ω = rescaledMeasure (S.μ ω) (R ω) b := by
+  apply MatedCRTEnv.IsValid.ae_rescaled_measure_eq_of_countable_local_limits
+    hS hγ hb R hR hν hη' U hU hcover
+  intro i
+  filter_upwards [hdecomp i] with ω hω
+  obtain ⟨h, v, m, hm, hc, hall, hv, heq⟩ := hω
+  intro f hf hfc hfU
+  exact ⟨∫ z, f z * Real.exp (γ * v z) ∂m,
+    tendsto_lqgApprox_of_admissible_circle_decomposition (hU i) hm hc hall v hv heq f hf hfc hfU⟩
+
 end MatedCRT.Sec1
