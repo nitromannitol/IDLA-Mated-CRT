@@ -785,6 +785,57 @@ theorem measurable_distributionCircleCode : Measurable distributionCircleCode :=
   intro p
   exact measurable_distributionCircleVersion_fixed p.1 p.2
 
+/-- Admissible pairings and recovered positive-radius circles of a distribution. -/
+def distributionObservables (H : LQGMetric.DistC) : GFFObservable.Admissible → ℝ
+  | ⟨.pairing φ, hφ⟩ => H ⟨φ, hφ.1, hφ.2.1, hφ.2.2⟩
+  | ⟨.circle r z, _⟩ => distributionCircleVersion H r z
+
+/-- The distribution-to-observable map is Borel for the cylinder sigma algebra. -/
+theorem measurable_distributionObservables : Measurable distributionObservables := by
+  apply measurable_pi_iff.mpr
+  rintro ⟨o, ho⟩
+  cases o with
+  | pairing φ => exact LQGMetric.measurable_evalDist ⟨φ, ho.1, ho.2.1, ho.2.2⟩
+  | circle r z => exact measurable_distributionCircleVersion_fixed r z
+
+/-- Simultaneous distribution and circle representation gives the full
+admissible observable process on one event. -/
+theorem ae_distributionObservables_eq
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {H : Ω → LQGMetric.DistC} {hC : Ω → (ℂ → ℝ) → ℝ}
+    {a : Ω → ℝ → ℂ → ℝ}
+    (hrep : ∀ᵐ ω ∂P, ∀ φ : LQGMetric.TestC, hC ω φ = H ω φ)
+    (hcirc : ∀ᵐ ω ∂P, ∀ r : ℝ, 0 < r → ∀ z : ℂ,
+      distributionCircleVersion (H ω) r z = a ω r z) :
+    (distributionObservables ∘ H) =ᵐ[P] wholePlaneObservableProc hC a := by
+  filter_upwards [hrep, hcirc] with ω hrepω hcircω
+  funext ⟨o, ho⟩
+  cases o with
+  | pairing φ => exact (hrepω ⟨φ, ho.1, ho.2.1, ho.2.2⟩).symm
+  | circle r z => exact hcircω r ho z
+
+/-- Equal represented distribution laws and recovered circles determine the
+full admissible observable law, including all test-function pairings. -/
+theorem map_observables_eq_of_distribution_law
+    {Ω Ω' : Type} [MeasurableSpace Ω] [MeasurableSpace Ω']
+    {P : Measure Ω} {P' : Measure Ω'}
+    {H : Ω → LQGMetric.DistC} {H' : Ω' → LQGMetric.DistC}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hC' : Ω' → (ℂ → ℝ) → ℝ}
+    {a : Ω → ℝ → ℂ → ℝ} {a' : Ω' → ℝ → ℂ → ℝ}
+    (hH : Measurable H) (hH' : Measurable H')
+    (hrep : ∀ᵐ ω ∂P, ∀ φ : LQGMetric.TestC, hC ω φ = H ω φ)
+    (hrep' : ∀ᵐ ω ∂P', ∀ φ : LQGMetric.TestC, hC' ω φ = H' ω φ)
+    (hcirc : ∀ᵐ ω ∂P, ∀ r : ℝ, 0 < r → ∀ z : ℂ,
+      distributionCircleVersion (H ω) r z = a ω r z)
+    (hcirc' : ∀ᵐ ω ∂P', ∀ r : ℝ, 0 < r → ∀ z : ℂ,
+      distributionCircleVersion (H' ω) r z = a' ω r z)
+    (hlaw : P.map H = P'.map H') :
+    P.map (wholePlaneObservableProc hC a) = P'.map (wholePlaneObservableProc hC' a') := by
+  rw [← Measure.map_congr (ae_distributionObservables_eq hrep hcirc),
+    ← Measure.map_congr (ae_distributionObservables_eq hrep' hcirc'),
+    ← Measure.map_map measurable_distributionObservables hH,
+    ← Measure.map_map measurable_distributionObservables hH', hlaw]
+
 /-- Equal distribution laws determine the joint laws of the distribution and
 its recovered positive-radius circle process. -/
 theorem map_distribution_circleCode_eq_of_map_eq
@@ -964,6 +1015,44 @@ def RescaledConeObservableLawStep (𝒮 : SpaceFillingSLEModel) : Prop :=
         hC' ω φ = rescaledPairing γ (S.hC ω) (coneScaleRadius γ (S.hcirc ω) b) b φ) →
       (∀ᵐ ω ∂S.P, c ω = rescaledCircle γ (S.hcirc ω) (coneScaleRadius γ (S.hcirc ω) b) b) →
       S.P.map (wholePlaneObservableProc hC' c) = S.P.map (wholePlaneObservableProc S.hC S.hcirc)
+
+/-- The remaining distribution-valued scaling and circle identification.
+This is an internal proof obligation, not a stated literature input: the
+rescaled representative must have the original distribution law, and its
+recovered positive-radius circles must be the supplied rescaled circles. -/
+def RescaledConeRepresentedLawStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ → ∀ b : ℝ, 0 < b →
+    ∀ (hC' : Ω → (ℂ → ℝ) → ℝ) (c : Ω → ℝ → ℂ → ℝ),
+      (∀ᵐ ω ∂S.P, ∀ φ, IsTestFunction univ φ →
+        hC' ω φ = rescaledPairing γ (S.hC ω) (coneScaleRadius γ (S.hcirc ω) b) b φ) →
+      (∀ᵐ ω ∂S.P, c ω = rescaledCircle γ (S.hcirc ω) (coneScaleRadius γ (S.hcirc ω) b) b) →
+      ∀ H : Ω → LQGMetric.DistC, Measurable H →
+        (∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ) →
+        ∃ H' : Ω → LQGMetric.DistC, Measurable H' ∧
+          (∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, hC' ω φ = H' ω φ) ∧
+          (∀ᵐ ω ∂S.P, ∀ r : ℝ, 0 < r → ∀ z : ℂ,
+            distributionCircleVersion (H' ω) r z = c ω r z) ∧
+          S.P.map H' = S.P.map H
+
+/-- Distribution scaling and circle recovery imply scaling of all admissible
+observables. -/
+theorem rescaledConeObservableLawStep_of_represented_law
+    (𝒮 : SpaceFillingSLEModel) (hstep : RescaledConeRepresentedLawStep 𝒮) :
+    RescaledConeObservableLawStep 𝒮 := by
+  intro γ hγ hγ2 Ω _ S hS b hb hC' c hpair hcirc
+  obtain ⟨H, hHm, hrep⟩ := exists_fieldMeasurable_coneDistribution hS
+  have hle : S.fieldSigma ≤ (inferInstance : MeasurableSpace Ω) := by
+    simp only [MatedCRTEnv.fieldSigma, fieldSigmaAlgebra]
+    refine iSup₂_le fun φ hφ => ?_
+    have hm : Measurable fun ω => fieldPairing 0 (S.hC ω) φ := by
+      simpa [fieldPairing] using hS.isQuantumCone.measurable_pairing φ hφ
+    exact hm.comap_le
+  have hH : Measurable H := hHm.mono hle le_rfl
+  obtain ⟨H', hH', hrep', hcirc', hlaw⟩ :=
+    hstep γ hγ hγ2 Ω S hS b hb hC' c hpair hcirc H hH hrep
+  exact map_observables_eq_of_distribution_law hH' hH hrep' hrep hcirc'
+    (ae_distributionCircleVersion_eq hS hrep) hlaw
 
 /-- The rescaled field step follows from circle scaling and the remaining
 law identification for admissible observables. -/
