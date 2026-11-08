@@ -240,6 +240,62 @@ def ReferenceConeLogLevelSetStep (𝒮 : SpaceFillingSLEModel) : Prop :=
         (fun t => B t ω) (fun t => B' t ω) s = γ⁻¹ * Real.log b}
       L.Nonempty ∧ BddAbove L
 
+/-- A positive cone scale radius forces the corresponding logarithmic level
+set to be nonempty and bounded above. -/
+theorem referenceConeLogLevelSet_of_radius_pos
+    (γ b : ℝ) (a : ℝ → ℂ → ℝ) (B B' : ℝ≥0 → ℝ)
+    (hcircle : ∀ s : ℝ, a (Real.exp s) 0 =
+      MatedCRTHarmonic.MatedCRT.coneRadial γ γ B B' (-s))
+    (hpos : 0 < coneScaleRadius γ a b) :
+    let L := {s : ℝ | MatedCRTHarmonic.MatedCRT.coneLogRadial γ γ B B' s =
+      γ⁻¹ * Real.log b}
+    L.Nonempty ∧ BddAbove L := by
+  let A : Set ℝ := {r | 0 < r ∧ a r 0 + lqgQ γ * Real.log r = γ⁻¹ * Real.log b}
+  have hp : 0 < sSup A := hpos
+  have hne : A.Nonempty := by
+    by_contra h
+    rw [Set.not_nonempty_iff_eq_empty.mp h, Real.sSup_empty] at hp
+    exact lt_irrefl _ hp
+  have hbdd : BddAbove A := by
+    by_contra h
+    rw [Real.sSup_of_not_bddAbove h] at hp
+    exact lt_irrefl _ hp
+  have hmem : ∀ s : ℝ, Real.exp s ∈ A ↔
+      MatedCRTHarmonic.MatedCRT.coneLogRadial γ γ B B' s = γ⁻¹ * Real.log b := by
+    intro s
+    change (0 < Real.exp s ∧ a (Real.exp s) 0 + lqgQ γ * Real.log (Real.exp s) =
+      γ⁻¹ * Real.log b) ↔ _
+    rw [Real.log_exp, hcircle s]
+    simp only [Real.exp_pos, true_and, MatedCRTHarmonic.MatedCRT.coneLogRadial]
+    rfl
+  constructor
+  · obtain ⟨r, hr⟩ := hne
+    refine ⟨Real.log r, ?_⟩
+    apply (hmem _).mp
+    simpa only [Real.exp_log hr.1] using hr
+  · obtain ⟨M, hM⟩ := hbdd
+    refine ⟨Real.log M, ?_⟩
+    intro s hs
+    have hsM : Real.exp s ≤ M := hM ((hmem s).mpr hs)
+    simpa only [Real.log_exp] using Real.log_le_log (Real.exp_pos s) hsM
+
+/-- Radius positivity from the existing cone scaling input supplies the
+reference logarithmic level bounds once the circles have been identified. -/
+theorem referenceConeLogLevelSetStep_of_radial
+    (𝒮 : SpaceFillingSLEModel) (hscale : QuantumConeScalingInput)
+    (hcircle : ReferenceConeRadialCircleStep 𝒮) : ReferenceConeLogLevelSetStep 𝒮 := by
+  intro γ hγ hγ2 Ω _ S hS b hb X B B' hX hB hB' hi hi' href
+  let : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
+  have hc := hcircle γ Ω S hS X B B' hX hB hB' hi hi' href
+  have hrecovered := ae_distributionCircleVersion_eq hS href
+  have hpos := ae_coneScaleRadius_pos hscale hγ hγ2 hS.isQuantumCone hb
+  filter_upwards [hc, hrecovered, hpos] with ω hcω hrecoveredω hposω
+  apply referenceConeLogLevelSet_of_radius_pos γ b (S.hcirc ω)
+    (fun t => B t ω) (fun t => B' t ω) ?_ hposω
+  intro s
+  rw [← hrecoveredω (Real.exp s) (Real.exp_pos s) 0]
+  exact referenceConeRadial_eq_of_pair γ _ _ _ hcω s
+
 /-- The simultaneous radial-circle identity and the logarithmic level-set
 bounds give reference-radius recovery. -/
 theorem referenceConeEmbeddingRadiusStep_of_radial_and_levels
@@ -312,5 +368,14 @@ theorem canonicalConeDistributionRadiusLawStep_of_reference_radial
     CanonicalConeDistributionRadiusLawStep 𝒮 :=
   canonicalConeDistributionRadiusLawStep_of_reference_radius 𝒮 hscale
     (referenceConeEmbeddingRadiusStep_of_radial_and_levels 𝒮 hscale hcircle hlevels)
+
+/-- The radial-circle identity suffices for the canonical joint law, given
+the existing cone scaling input. -/
+theorem canonicalConeDistributionRadiusLawStep_of_reference_circle
+    (𝒮 : SpaceFillingSLEModel) (hscale : QuantumConeScalingInput)
+    (hcircle : ReferenceConeRadialCircleStep 𝒮) :
+    CanonicalConeDistributionRadiusLawStep 𝒮 :=
+  canonicalConeDistributionRadiusLawStep_of_reference_radial 𝒮 hscale hcircle
+    (referenceConeLogLevelSetStep_of_radial 𝒮 hscale hcircle)
 
 end MatedCRT.Sec1
