@@ -17,6 +17,59 @@ open HarmonicBalls
 
 namespace MatedCRT.Sec1
 
+/-- The weak-limit convention for conditioned Brownian motion determines at
+most one law on continuous paths. -/
+theorem isBMConditionedPositive_unique {c : ℝ}
+    {μ ν : Measure (MarkovProcess.ContinuousPath ℝ)}
+    (hμ : IsBMConditionedPositive c μ) (hν : IsBMConditionedPositive c ν) : μ = ν := by
+  let : IsProbabilityMeasure μ := hμ.1
+  let : IsProbabilityMeasure ν := hν.1
+  apply MeasureTheory.ext_of_forall_integral_eq_of_IsFiniteMeasure
+  intro f
+  exact tendsto_nhds_unique (hμ.2 f) (hν.2 f)
+
+/-- The radial law in the cone predicate is independent of the choice of
+witness for the conditioned Brownian law. -/
+theorem IsQuantumCone.radial_law_eq
+    {Ω Ω' : Type} [MeasurableSpace Ω] [MeasurableSpace Ω']
+    {γ : ℝ} {P : Measure Ω} {P' : Measure Ω'}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hC' : Ω' → (ℂ → ℝ) → ℝ}
+    {a : Ω → ℝ → ℂ → ℝ} {a' : Ω' → ℝ → ℂ → ℝ}
+    (h : IsQuantumCone γ P hC a) (h' : IsQuantumCone γ P' hC' a') :
+    P.map (fun ω => radialProcess (a ω)) = P'.map (fun ω => radialProcess (a' ω)) := by
+  obtain ⟨μ, hμ, hμlaw⟩ := h.radial_law
+  obtain ⟨ν, hν, hνlaw⟩ := h'.radial_law
+  rw [hμlaw, hνlaw, isBMConditionedPositive_unique hμ hν]
+
+/-- The radial process of a cone is measurable in the product sigma algebra. -/
+theorem IsQuantumCone.measurable_radialProcess
+    {Ω : Type} [MeasurableSpace Ω] {γ : ℝ} {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {a : Ω → ℝ → ℂ → ℝ}
+    (h : IsQuantumCone γ P hC a) : Measurable (fun ω => radialProcess (a ω)) := by
+  exact (measurable_pi_iff.2 fun t => h.measurable_circle _ _ (Real.exp_pos _)).prodMk
+    (measurable_pi_iff.2 fun t => h.measurable_circle _ _ (Real.exp_pos _))
+
+/-- If the lateral laws agree, the independent radial and lateral processes
+of two cones with the same parameter have the same joint law. -/
+theorem IsQuantumCone.joint_radial_lateral_law_eq
+    {Ω Ω' : Type} [MeasurableSpace Ω] [MeasurableSpace Ω']
+    {γ : ℝ} {P : Measure Ω} {P' : Measure Ω'}
+    [IsProbabilityMeasure P] [IsProbabilityMeasure P']
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hC' : Ω' → (ℂ → ℝ) → ℝ}
+    {a : Ω → ℝ → ℂ → ℝ} {a' : Ω' → ℝ → ℂ → ℝ}
+    (h : IsQuantumCone γ P hC a) (h' : IsQuantumCone γ P' hC' a')
+    (hlat : P.map (fun ω => lateralProcess (hC ω) (a ω)) =
+      P'.map (fun ω => lateralProcess (hC' ω) (a' ω))) :
+    P.map (fun ω => (radialProcess (a ω), lateralProcess (hC ω) (a ω))) =
+      P'.map (fun ω => (radialProcess (a' ω), lateralProcess (hC' ω) (a' ω))) := by
+  have hl := CirclePairing.aemeasurable_lateralProcess h.measurable_pairing
+    h.measurable_circle h.ae_continuousOn_circle
+  have hl' := CirclePairing.aemeasurable_lateralProcess h'.measurable_pairing
+    h'.measurable_circle h'.ae_continuousOn_circle
+  rw [h.indep.map_prod_eq_prod_map_map (IsQuantumCone.measurable_radialProcess h).aemeasurable hl,
+    h'.indep.map_prod_eq_prod_map_map (IsQuantumCone.measurable_radialProcess h').aemeasurable hl',
+    IsQuantumCone.radial_law_eq h h', hlat]
+
 /-- Joint measurability of evaluation at a variable dilation, on the imported
 plane distribution and test-function carriers (env-steps.tex:309–314). -/
 def VariableDilationPairingStep : Prop :=
