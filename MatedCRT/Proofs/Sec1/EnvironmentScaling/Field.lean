@@ -928,6 +928,68 @@ def rescaledDistributionPairing (γ b : ℝ) (H : LQGMetric.DistC) (r : ℝ)
       (lqgQ γ * Real.log r - γ⁻¹ * Real.log b) * ∫ x, φ x
     else 0
 
+/-- The distribution obtained by dilation and the quantum-cone additive shift. -/
+def rescaledDistribution (γ b : ℝ) (H : LQGMetric.DistC) (r : ℝ) : LQGMetric.DistC :=
+  LQGMetric.addConst (LQGMetric.affineComp r 0 H)
+    (lqgQ γ * Real.log r - γ⁻¹ * Real.log b)
+
+/-- The rescaled distribution has the expected pairings with all test functions. -/
+theorem rescaledDistribution_apply (γ b : ℝ) (H : LQGMetric.DistC) (r : ℝ)
+    (φ : LQGMetric.TestC) :
+    rescaledDistribution γ b H r φ = rescaledDistributionPairing γ b H r φ := by
+  have hφ : IsTestFunction univ (φ : ℂ → ℝ) := ⟨φ.contDiff, φ.hasCompactSupport, subset_univ _⟩
+  simp only [rescaledDistribution, LQGMetric.GFFInv.addConst_apply,
+    LQGMetric.GFFInv.affineComp_apply, rescaledDistributionPairing, dite_eq_left hφ]
+  have heq : (⟨(φ : ℂ → ℝ), hφ.1, hφ.2.1, hφ.2.2⟩ : LQGMetric.TestC) = φ := by
+    ext x
+    rfl
+  rw [heq, inv_pow]
+  ring
+
+/-- The distribution-valued dilation is jointly measurable, including at
+zero scale where the library's affine pullback is defined. -/
+theorem measurable_rescaledDistribution (γ b : ℝ) :
+    Measurable fun p : LQGMetric.DistC × ℝ => rescaledDistribution γ b p.1 p.2 := by
+  apply LQGMetric.measurable_distOn_iff.mpr
+  intro φ
+  simp only [rescaledDistribution, LQGMetric.GFFInv.addConst_apply,
+    LQGMetric.GFFInv.affineComp_apply]
+  exact ((measurable_snd.pow_const 2).inv.mul (variableDilationPairingStep φ)).add
+    (measurable_const.mul ((measurable_const.mul measurable_snd.log).sub measurable_const))
+
+/-- A measurable distribution and a measurable radius have a measurable
+rescaled distribution, with all rescaled test pairings on the same event. -/
+theorem ae_rescaledDistribution_represents
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC hC' : Ω → (ℂ → ℝ) → ℝ} {H : Ω → LQGMetric.DistC}
+    {R : Ω → ℝ} {γ b : ℝ} (hH : Measurable H) (hR : Measurable R)
+    (hrep : ∀ᵐ ω ∂P, ∀ φ : LQGMetric.TestC, hC ω φ = H ω φ)
+    (hpair : ∀ᵐ ω ∂P, ∀ φ, IsTestFunction univ φ →
+      hC' ω φ = rescaledPairing γ (hC ω) (R ω) b φ)
+    (hne : ∀ᵐ ω ∂P, R ω ≠ 0) :
+    Measurable (fun ω => rescaledDistribution γ b (H ω) (R ω)) ∧
+      ∀ᵐ ω ∂P, ∀ φ : LQGMetric.TestC,
+        hC' ω φ = rescaledDistribution γ b (H ω) (R ω) φ := by
+  constructor
+  · change Measurable ((fun p : LQGMetric.DistC × ℝ =>
+      rescaledDistribution γ b p.1 p.2) ∘ (fun ω => (H ω, R ω)))
+    exact (measurable_rescaledDistribution γ b).comp (hH.prodMk hR)
+  · filter_upwards [hrep, hpair, hne] with ω hrepω hpairω hneω
+    intro φ
+    have hφ : IsTestFunction univ (φ : ℂ → ℝ) := ⟨φ.contDiff, φ.hasCompactSupport, subset_univ _⟩
+    have hpull : (fun x => φ (((R ω)⁻¹ : ℂ) * x)) =
+        ⇑(LQGMetric.testAffinePull (R ω) 0 φ) := by
+      funext x
+      rw [LQGMetric.testAffinePull_apply _ _ hneω]
+      simp [div_eq_mul_inv, mul_comm]
+    rw [hpairω φ hφ, rescaledDistribution_apply]
+    simp only [rescaledPairing, rescaledDistributionPairing, dite_eq_left hφ]
+    rw [hpull, hrepω (LQGMetric.testAffinePull (R ω) 0 φ)]
+    have heq : (⟨(φ : ℂ → ℝ), hφ.1, hφ.2.1, hφ.2.2⟩ : LQGMetric.TestC) = φ := by
+      ext x
+      rfl
+    rw [heq]
+
 /-- The explicit distribution version produces all required pairing and
 field-sigma conclusions, given the joint dilation measurability boundary and
 an exactly field-measurable version of the positive scale radius. -/
