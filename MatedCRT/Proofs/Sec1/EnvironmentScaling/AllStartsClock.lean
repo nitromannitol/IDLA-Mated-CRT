@@ -1426,4 +1426,68 @@ theorem rescaledConeClockStep_of_canonical [PolishSpace CircleFns]
   rw [posCircleExt_eq_circleFnsCoord (allStarts_dyadicScale_pos k) z']
   exact hωab _
 
+/-! ### Measurable versions of a.s. continuous circle processes (lem:canonical, env-steps.tex:210-216)
+
+A circle-average process with measurable positive-radius coordinates whose paths are almost surely continuous on `E`
+has a measurable `CircleFns`-valued version. For a valid environment both hypotheses are fields of the quantum cone
+(`IsQuantumCone.measurable_circle`, `IsQuantumCone.ae_continuousOn_circle`), so the first conjunct of
+`CanonicalCircleVersionStep` is proved here, with no further input. -/
+
+/-- A function continuous on `(0,∞) × ℂ` is continuous on the positive-circle index type `PosCircle`. -/
+lemma posCircle_continuous_of_continuousOn {f : ℝ × ℂ → ℝ} (hf : ContinuousOn f (Set.Ioi 0 ×ˢ Set.univ)) :
+    Continuous fun p : PosCircle => f (p.1.1, p.2) := by
+  refine hf.comp_continuous ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd) ?_
+  intro p
+  exact ⟨p.1.2, Set.mem_univ _⟩
+
+/-- A process with measurable coordinates on `E` and almost surely continuous paths has a measurable `CircleFns`-valued
+version, equal to it almost surely on all of `E` simultaneously (the null set is modified to the zero function). -/
+theorem exists_measurable_circleFns_version {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {f : Ω → PosCircle → ℝ} (hmeas : ∀ p : PosCircle, Measurable fun ω => f ω p)
+    (hcont : ∀ᵐ ω ∂P, Continuous (f ω)) :
+    ∃ a0 : Ω → CircleFns, Measurable a0 ∧ ∀ᵐ ω ∂P, ∀ p : PosCircle, a0 ω p = f ω p := by
+  classical
+  obtain ⟨N, hsub, hNmeas, hN0⟩ := exists_measurable_superset_of_null (ae_iff.1 hcont)
+  have hgc : ∀ ω, Continuous (fun p : PosCircle => if ω ∈ N then (0 : ℝ) else f ω p) := by
+    intro ω
+    by_cases hω : ω ∈ N
+    · simp only [hω]
+      exact continuous_const
+    · simp only [hω]
+      by_contra hnc
+      exact hω (hsub hnc)
+  let a0 : Ω → CircleFns := fun ω => ⟨fun p => if ω ∈ N then (0 : ℝ) else f ω p, hgc ω⟩
+  have hev : ∀ p : PosCircle, Measurable fun ω => a0 ω p := by
+    intro p
+    simp only [a0, ContinuousMap.coe_mk]
+    exact Measurable.ite hNmeas measurable_const (hmeas p)
+  refine ⟨a0, ContinuousMap.measurable_iff_eval.2 hev, ?_⟩
+  have hN : ∀ᵐ ω ∂P, ω ∉ N := by
+    rw [ae_iff]
+    simpa using hN0
+  filter_upwards [hN] with ω hω p
+  simp [a0, hω]
+
+/-- **The canonical measurable version for every valid environment** (first conjunct of `CanonicalCircleVersionStep`),
+from the measurable circle coordinates and the almost-sure continuity on `E` of the quantum cone (lem:canonical,
+env-steps.tex:210-216). -/
+theorem canonicalCircleVersionStep_of_isValid (𝒮 : SpaceFillingSLEModel) : CanonicalCircleVersionStep 𝒮 := by
+  intro γ _ _ Ω _ S hS
+  have hmeas : ∀ p : PosCircle, Measurable fun ω => S.hcirc ω p.1.1 p.2 := fun p =>
+    hS.isQuantumCone.measurable_circle p.1.1 p.2 p.1.2
+  have hcont : ∀ᵐ ω ∂S.P, Continuous fun p : PosCircle => S.hcirc ω p.1.1 p.2 := by
+    filter_upwards [hS.isQuantumCone.ae_continuousOn_circle] with ω hω
+    exact posCircle_continuous_of_continuousOn hω
+  obtain ⟨a0, ha0m, ha0⟩ :=
+    exists_measurable_circleFns_version (f := fun ω p => S.hcirc ω p.1.1 p.2) hmeas hcont
+  exact ⟨a0, ha0m, ha0⟩
+
+/-- **The rescaled all-starts clock step**, now with the canonical version proved for every valid environment. The
+remaining inputs are the rescaled measurable version `RescaledCircleVersionStep`, the Polish structure of `CircleFns`,
+the staged Preston input and `QuantumConeScalingInput` (prop:clock, env-steps.tex:449-475). -/
+theorem rescaledConeClockStep_of_rescaledVersion [PolishSpace CircleFns]
+    (hPreston : PrestonAnalyticUniversallyMeasurableStmt) (hscale : QuantumConeScalingInput)
+    {𝒮 : SpaceFillingSLEModel} (hres : RescaledCircleVersionStep 𝒮) : RescaledConeClockStep 𝒮 :=
+  rescaledConeClockStep_of_canonical hPreston hscale (canonicalCircleVersionStep_of_isValid 𝒮) hres
+
 end MatedCRT.AllStarts
