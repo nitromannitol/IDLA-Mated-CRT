@@ -314,4 +314,70 @@ theorem ae_rescaled_measure_eq_of_allScale_off_origin
   exact rescaled_measure_eq_of_allScale_off_origin hγ hg.1 hb hg.2.1 hg.2.2.1
     hv hv0 hg.2.2.2.1 hg.2.2.2.2
 
+/-- An all-scale limit on tests away from zero has the same test integrals as
+an existing dyadic LQG limit. The two measures need not be known equal on the
+whole plane. -/
+theorem tendsto_off_origin_to_lqgLimit {γ : ℝ} {h : ℝ → ℂ → ℝ} {μ ν : Measure ℂ}
+    (hμ : IsLQGLimit γ h μ)
+    (hall : ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+      tsupport f ⊆ ({0} : Set ℂ)ᶜ →
+      Tendsto (fun ε : ℝ => ∫ z, f z ∂(lqgApprox γ h ε))
+        (𝓝[>] 0) (𝓝 (∫ z, f z ∂ν))) :
+    ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+      tsupport f ⊆ ({0} : Set ℂ)ᶜ →
+      Tendsto (fun ε : ℝ => ∫ z, f z ∂(lqgApprox γ h ε))
+        (𝓝[>] 0) (𝓝 (∫ z, f z ∂μ)) := by
+  intro f hf hfc hf0
+  have heq : (∫ z, f z ∂μ) = ∫ z, f z ∂ν :=
+    tendsto_nhds_unique (hμ.tendsto_integral f hf hfc)
+      ((hall f hf hfc hf0).comp tendsto_dyadicScale_nhdsGT)
+  rw [heq]
+  exact hall f hf hfc hf0
+
+/-- Joint continuity of circle averages gives spatial continuity simultaneously
+at every positive radius. -/
+theorem continuous_circle_of_continuousOn {h : ℝ → ℂ → ℝ}
+    (hc : ContinuousOn (fun p : ℝ × ℂ => h p.1 p.2) (Ioi 0 ×ˢ univ))
+    {r : ℝ} (hr : 0 < r) : Continuous (h r) := by
+  apply continuous_iff_continuousAt.mpr
+  intro z
+  have hp : ContinuousAt (fun p : ℝ × ℂ => h p.1 p.2) (r, z) :=
+    (isOpen_Ioi.prod isOpen_univ).continuousOn_iff.mp hc ⟨hr, mem_univ _⟩
+  exact hp.comp ((continuous_const.prodMk continuous_id).continuousAt)
+
+/-- In a valid environment the original LQG measure is locally finite and
+nonatomic, and all positive-radius circle averages are continuous, on a single
+event independent of the choice of radius. -/
+theorem MatedCRTEnv.IsValid.ae_area_and_circle_regular {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) :
+    ∀ᵐ ω ∂S.P, IsLocallyFiniteMeasure (S.μ ω) ∧ S.μ ω {0} = 0 ∧
+      ∀ r : ℝ, 0 < r → Continuous (S.hcirc ω r) := by
+  filter_upwards [hS.isLQGMeasure, hS.isAreaParametrized,
+    hS.isQuantumCone.ae_continuousOn_circle] with ω hμ hη hc
+  have hnull : NullSingletonClass (S.μ ω) := IsAreaParametrized.nullSingletonClass hη
+  exact ⟨hμ.isLocallyFiniteMeasure, hnull.1 0, fun r hr => continuous_circle_of_continuousOn hc hr⟩
+
+/-- In a valid environment an independently constructed all-scale limit away
+from zero suffices for area scaling. The second area-parametrized curve supplies
+nonatomicity of the separately constructed rescaled LQG measure. -/
+theorem MatedCRTEnv.IsValid.ae_rescaled_measure_eq_of_off_origin_limit
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ b : ℝ} (hS : S.IsValid 𝒮 γ)
+    (hγ : γ ≠ 0) (hb : 0 < b) (R : Ω → ℝ) {ν m : Ω → Measure ℂ}
+    {η' : Ω → ℝ → ℂ}
+    (hR : ∀ᵐ ω ∂S.P, 0 < R ω)
+    (hν : IsLQGMeasure S.P γ (fun ω => rescaledCircle γ (S.hcirc ω) (R ω) b) ν)
+    (hη' : ∀ᵐ ω ∂S.P, IsAreaParametrized (ν ω) (η' ω))
+    (hall : ∀ᵐ ω ∂S.P, ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+      tsupport f ⊆ ({0} : Set ℂ)ᶜ →
+      Tendsto (fun ε : ℝ => ∫ z, f z ∂(lqgApprox γ (S.hcirc ω) ε))
+        (𝓝[>] 0) (𝓝 (∫ z, f z ∂(m ω)))) :
+    ∀ᵐ ω ∂S.P, ν ω = rescaledMeasure (S.μ ω) (R ω) b := by
+  filter_upwards [MatedCRTEnv.IsValid.ae_area_and_circle_regular hS, hS.isLQGMeasure, hR, hν, hη', hall] with
+    ω hreg hμ hRω hνω hηω hallω
+  have hnull : NullSingletonClass (ν ω) := IsAreaParametrized.nullSingletonClass hηω
+  exact rescaled_measure_eq_of_allScale_off_origin hγ hRω hb hreg.1 hreg.2.1
+    hνω (hnull.1 0) (fun n => hreg.2.2 _ (mul_pos hRω (dyadicScale_pos n)))
+    (tendsto_off_origin_to_lqgLimit hμ hallω)
+
 end MatedCRT.Sec1
