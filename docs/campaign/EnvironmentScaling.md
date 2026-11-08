@@ -81,3 +81,10 @@ The source-written maximal estimate already exists at lattice-probability pin391
 
 
 Late checked1aaf67f: MeasurableRadialIntegrals.lean proves annular Riemann-sum convergence/AEMeasurability and ball truncation by the logarithmic majorant. Six main exports pass strict lead checks. Ball radial-path corollary retains continuity and sublinear growth; no unconditional Gaussian maximal bound, angular restriction or canonical-law closure.
+
+
+## Lead22:32 Brownian API repair and angular component checked
+
+236349c/b7356ec port the already written Brownian tail/maximal proofs into project-local compatibility modules. The HasLaw argument and deprecated Set membership names are adapted to the pin; dependencies remain untouched. GaussianBandProof now proves GaussianBandStep and real-time sublinearity for Mathlib IsBrownianReal with a probability law and measurable coordinates. 4450a2e composes this with the measurable continuous post-last-zero constructor, removing the supplied hsub/GaussianBandStep premise for those Brownian inputs. Its law corollaries retain DMS14Remark44PostLastZeroLaw explicitly: the held weak-limit identification is not discharged or promoted.
+
+bd548bc proves angular logarithmic integrability on circles through zero, using a pointwise angular bound and its null exceptional angles. Planar local integrability alone would not imply this. q1's queued fixed-circle measurability component uses env-steps:248-251 and the existing radial approximations. The represented-circle grid remains reserved for m1; full quantum-cone scaling, stopped clock and joint transport remain open. Strict source checks and main-export axiom checks pass; no numbered closure.
