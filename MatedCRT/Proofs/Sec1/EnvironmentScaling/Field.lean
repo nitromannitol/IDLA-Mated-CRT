@@ -357,6 +357,90 @@ theorem exists_fieldMeasurable_distribution_with_circles
   filter_upwards [hH, ae_distributionCircleVersion_eq hS hH] with ω hpair hcircle
   exact ⟨hpair, hcircle⟩
 
+/-- The positive-radius circle process recovered from a distribution, indexed
+by positive radii and centers. -/
+def distributionCircleCode (H : LQGMetric.DistC) : (Ioi (0 : ℝ) × ℂ) → ℝ :=
+  fun p => distributionCircleVersion H p.1 p.2
+
+/-- A fixed positive-radius circle evaluation is Borel. -/
+theorem measurable_distributionCircleVersion_fixed (r : ℝ) (z : ℂ) :
+    Measurable (fun H : LQGMetric.DistC => distributionCircleVersion H r z) := by
+  have hp : Measurable (fun H : LQGMetric.DistC => (H, (r, z))) :=
+    measurable_id.prodMk measurable_const
+  have hm := measurable_distributionCircleVersion.comp hp
+  simpa only [Function.comp_def] using hm
+
+/-- The circle code is measurable for the cylinder sigma algebra. -/
+theorem measurable_distributionCircleCode : Measurable distributionCircleCode := by
+  refine (measurable_pi_iff (g := distributionCircleCode)).2 ?_
+  intro p
+  exact measurable_distributionCircleVersion_fixed p.1 p.2
+
+/-- Equal distribution laws determine the joint laws of the distribution and
+its recovered positive-radius circle process. -/
+theorem map_distribution_circleCode_eq_of_map_eq
+    {Ω Ω' : Type} [MeasurableSpace Ω] [MeasurableSpace Ω']
+    {P : Measure Ω} {P' : Measure Ω'} {H : Ω → LQGMetric.DistC}
+    {H' : Ω' → LQGMetric.DistC} (hH : Measurable H) (hH' : Measurable H')
+    (hlaw : P.map H = P'.map H') :
+    P.map (fun ω => (H ω, distributionCircleCode (H ω))) =
+      P'.map (fun ω => (H' ω, distributionCircleCode (H' ω))) := by
+  have hm : Measurable (fun h : LQGMetric.DistC => (h, distributionCircleCode h)) :=
+    measurable_id.prodMk measurable_distributionCircleCode
+  change P.map ((fun h : LQGMetric.DistC => (h, distributionCircleCode h)) ∘ H) =
+    P'.map ((fun h : LQGMetric.DistC => (h, distributionCircleCode h)) ∘ H')
+  rw [← Measure.map_map hm hH, ← Measure.map_map hm hH', hlaw]
+
+/-- A represented field has the same joint law as any distribution with the
+same law, paired with that distribution's recovered circle code. -/
+theorem map_distribution_circles_eq_code_of_map_eq
+    {Ω Ω' : Type} [MeasurableSpace Ω] [MeasurableSpace Ω']
+    {S : MatedCRTEnv Ω} {P' : Measure Ω'}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
+    {H : Ω → LQGMetric.DistC} {H' : Ω' → LQGMetric.DistC}
+    (hH : Measurable H) (hH' : Measurable H')
+    (hrep : ∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ)
+    (hlaw : S.P.map H = P'.map H') :
+    S.P.map (fun ω => (H ω, fun p : Ioi (0 : ℝ) × ℂ => S.hcirc ω p.1 p.2)) =
+      P'.map (fun ω => (H' ω, distributionCircleCode (H' ω))) := by
+  have hleft : (fun ω => (H ω, distributionCircleCode (H ω))) =ᵐ[S.P]
+      fun ω => (H ω, fun p : Ioi (0 : ℝ) × ℂ => S.hcirc ω p.1 p.2) := by
+    filter_upwards [ae_distributionCircleVersion_eq hS hrep] with ω hω
+    congr 1
+    funext p
+    exact hω p.1 p.1.property p.2
+  rw [← Measure.map_congr hleft]
+  exact map_distribution_circleCode_eq_of_map_eq hH hH' hlaw
+
+/-- For valid environments, equality of represented distribution laws gives
+equality of their joint distribution and positive-radius circle laws. -/
+theorem map_distribution_circles_eq_of_map_eq
+    {Ω Ω' : Type} [MeasurableSpace Ω] [MeasurableSpace Ω']
+    {S : MatedCRTEnv Ω} {S' : MatedCRTEnv Ω'}
+    {𝒮 𝒮' : SpaceFillingSLEModel} {γ γ' : ℝ}
+    (hS : S.IsValid 𝒮 γ) (hS' : S'.IsValid 𝒮' γ')
+    {H : Ω → LQGMetric.DistC} {H' : Ω' → LQGMetric.DistC}
+    (hH : Measurable H) (hH' : Measurable H')
+    (hrep : ∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ)
+    (hrep' : ∀ᵐ ω ∂S'.P, ∀ φ : LQGMetric.TestC, S'.hC ω φ = H' ω φ)
+    (hlaw : S.P.map H = S'.P.map H') :
+    S.P.map (fun ω => (H ω, fun p : Ioi (0 : ℝ) × ℂ => S.hcirc ω p.1 p.2)) =
+      S'.P.map (fun ω => (H' ω, fun p : Ioi (0 : ℝ) × ℂ => S'.hcirc ω p.1 p.2)) := by
+  have hleft : (fun ω => (H ω, distributionCircleCode (H ω))) =ᵐ[S.P]
+      fun ω => (H ω, fun p : Ioi (0 : ℝ) × ℂ => S.hcirc ω p.1 p.2) := by
+    filter_upwards [ae_distributionCircleVersion_eq hS hrep] with ω hω
+    congr 1
+    funext p
+    exact hω p.1 p.1.property p.2
+  have hright : (fun ω => (H' ω, distributionCircleCode (H' ω))) =ᵐ[S'.P]
+      fun ω => (H' ω, fun p : Ioi (0 : ℝ) × ℂ => S'.hcirc ω p.1 p.2) := by
+    filter_upwards [ae_distributionCircleVersion_eq hS' hrep'] with ω hω
+    congr 1
+    funext p
+    exact hω p.1 p.1.property p.2
+  rw [← Measure.map_congr hleft, ← Measure.map_congr hright]
+  exact map_distribution_circleCode_eq_of_map_eq hH hH' hlaw
+
 /-- Pair a distribution at a variable scale, with zero on non-tests. -/
 def rescaledDistributionPairing (γ b : ℝ) (H : LQGMetric.DistC) (r : ℝ)
     (φ : ℂ → ℝ) : ℝ := by
