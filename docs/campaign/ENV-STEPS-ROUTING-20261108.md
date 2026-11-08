@@ -107,6 +107,7 @@ are proved from the audited argument. The assigned Proposed files are disjoint.
 | --- | --- |
 | Preston, arXiv:0809.3066v1, Theorem 6.1, printed p35/PDF36 | m1: `MatedCRT/Proposed/PrestonCoding2008.lean` |
 | Preston, Theorem 7.1, printed p39/PDF40 | z1: `MatedCRT/Proposed/PrestonAnalytic2008.lean` |
+| GRV, arXiv:1301.2876v4, Theorem 2.7 pp10-11 (retain its massive-field and regularization scope) | z1: `MatedCRT/Proposed/GarbanRhodesVargas2013.lean`; staged for source checking, not used as a cone-clock substitute |
 | Preston, Theorem 12.1, printed p61/PDF62 | m5: `MatedCRT/Proposed/PrestonConditional2008.lean` |
 | DMS, arXiv:1409.7055v4, Remark 4.4 pp74-75, Lemma 4.9/Definition 4.10 p79, Proposition 4.13(i) p80/proof81 | m1: `MatedCRT/Proposed/DuplantierMillerSheffieldCone2014.lean` |
 | Sheffield-Wang, arXiv:1605.06171v2, Theorem 1.1 p3 | m5 successor: `MatedCRT/Proposed/SheffieldWang2016.lean` |
