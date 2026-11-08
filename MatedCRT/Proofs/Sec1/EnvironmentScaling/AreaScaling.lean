@@ -3,6 +3,7 @@ import MatedCRT.Proofs.Sec1.ConeScaleRadius
 import MatedCRT.Steps.Sec2.ConeScaleInvarianceUpToFixedTime
 import HarmonicBalls.Proofs.Sec9.LQGSpatialDilation
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
+import HarmonicBalls.Proofs.Sec11.ClosureScales.LQGProfileMeasureAE
 import MatedCRT.Proofs.Sec4.DivSandpileLowerBound.StrictGapCompactZero
 import Mathlib.Analysis.Convex.Contractible
 import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
@@ -1026,5 +1027,136 @@ theorem MatedCRTEnv.IsValid.ae_cone_rescaled_measure_eq_of_countable_local_limit
   exact MatedCRTEnv.IsValid.ae_rescaled_measure_eq_of_countable_local_limits_of_null
     hS hγ.ne' hb (fun ω => coneScaleRadius γ (S.hcirc ω) b)
     (ae_coneScaleRadius_pos hscale hγ hγ2 hS.isQuantumCone hb) hν hν0 U hU hcover hloc
+
+
+/-- A circle-average process with measurable coordinates and almost surely
+continuous paths has a measurable canonical profile on positive radii. -/
+theorem exists_measurable_canonicalProfile_of_circle
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hmeas : ∀ r z, 0 < r → Measurable fun ω => hcirc ω r z)
+    (hcont : ∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2)
+      circleIndexSet) :
+    ∃ c : Ω → CanonicalProfile, Measurable c ∧
+      ∀ᵐ ω ∂P, ∀ p ∈ circleIndexSet, (c ω).1 p = hcirc ω p.1 p.2 := by
+  classical
+  obtain ⟨N, hsub, hNmeas, hN0⟩ := exists_measurable_superset_of_null (ae_iff.1 hcont)
+  let g : Ω → ℝ × ℂ → ℝ := fun ω p => if ω ∈ N then 0 else positiveRadiusPart (hcirc ω) p
+  have hg : Measurable g := by
+    refine Measurable.of_eval fun p => ?_
+    by_cases hp : 0 < p.1
+    · have hm : Measurable fun ω => hcirc ω p.1 p.2 := hmeas p.1 p.2 hp
+      have hfun : (fun ω => g ω p) = fun ω => if ω ∈ N then 0 else hcirc ω p.1 p.2 := by
+        funext ω
+        simp only [g, positiveRadiusPart, hp, ↓reduceIte]
+      rw [hfun]
+      exact Measurable.ite hNmeas measurable_const hm
+    · have hfun : (fun ω => g ω p) = fun _ => (0 : ℝ) := by
+        funext ω
+        simp only [g, positiveRadiusPart, hp, ↓reduceIte, ite_self]
+      rw [hfun]
+      exact measurable_const
+  have hcontω : ∀ ω, ContinuousOn (g ω) circleIndexSet := by
+    intro ω
+    by_cases hω : ω ∈ N
+    · simp only [g, hω, ↓reduceIte]
+      exact continuousOn_const
+    · have hc : ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2) circleIndexSet := by
+        by_contra hbad
+        exact hω (hsub hbad)
+      refine hc.congr fun p hp => ?_
+      simp only [g, hω, ↓reduceIte]
+      exact positiveRadiusPart_eq_of_mem hp
+  refine ⟨fun ω => ⟨g ω, hcontω ω⟩, ?_, ?_⟩
+  · exact Measurable.subtype_mk (p := fun f : ℝ × ℂ → ℝ => ContinuousOn f circleIndexSet) hg
+  · have hae : ∀ᵐ ω ∂P, ω ∉ N := by
+      refine ae_iff.2 ?_
+      simpa using hN0
+    filter_upwards [hae] with ω hω
+    intro p hp
+    show g ω p = hcirc ω p.1 p.2
+    simp only [g, hω, ↓reduceIte]
+    exact positiveRadiusPart_eq_of_mem hp
+
+/-- The LQG measure of a valid cone environment is almost surely the value of
+one Borel map of a measurable continuous circle-average profile. -/
+theorem MatedCRTEnv.IsValid.exists_measurable_circle_profile_measure
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) :
+    ∃ c : Ω → CanonicalProfile, Measurable c ∧
+      (∀ᵐ ω ∂S.P, ∀ p ∈ circleIndexSet, (c ω).1 p = S.hcirc ω p.1 p.2) ∧
+      Measurable (profileMeasure γ 0) ∧
+      ∀ᵐ ω ∂S.P, S.μ ω = profileMeasure γ 0 (c ω) := by
+  obtain ⟨c, hc, hcJ⟩ := exists_measurable_canonicalProfile_of_circle
+    hS.isQuantumCone.measurable_circle hS.isQuantumCone.ae_continuousOn_circle
+  have heq : (fun ω => fieldCircleAverage 0 (S.hcirc ω)) = S.hcirc := by
+    funext ω r z
+    simp [fieldCircleAverage]
+  have hμ : IsLQGMeasureOfField S.P γ 0 S.hcirc S.μ := by
+    rw [IsLQGMeasureOfField, heq]
+    exact hS.isLQGMeasure
+  exact ⟨c, hc, hcJ, measurable_profileMeasure γ 0, profileMeasure_ae_eq hμ hcJ⟩
+
+
+/-- On a good circle-average profile, the canonical measure is its dyadic
+LQG limit. -/
+theorem isLQGLimit_profileMeasure_of_good {γ : ℝ} {c : CanonicalProfile}
+    (hc : c ∈ goodProfiles γ 0) : IsLQGLimit γ (profileField c) (profileMeasure γ 0 c) := by
+  have heq : (fun r z => fieldCircleAverage 0 (profileField c) r z) = profileField c := by
+    funext r z
+    simp [fieldCircleAverage]
+  rw [← heq]
+  refine ⟨inferInstance, fun ψ hψ hcs => ?_⟩
+  have hT := exists_profileLimit_tendsto hc
+    (⟨⟨ψ, hψ⟩, hcs⟩ : CompactlySupportedContinuousMap ℂ ℝ)
+  have hint : ∫ z, ψ z ∂(profileMeasure γ 0 c) =
+      profileLimit γ 0 c (⟨⟨ψ, hψ⟩, hcs⟩ : CompactlySupportedContinuousMap ℂ ℝ) :=
+    integral_profileMeasure γ 0 c ⟨⟨ψ, hψ⟩, hcs⟩
+  rw [hint]
+  change Tendsto (fun n : ℕ => ∫ z, ψ z ∂(profileApprox γ 0 n c)) atTop
+    (𝓝 (profileLimit γ 0 c (⟨⟨ψ, hψ⟩, hcs⟩ : CompactlySupportedContinuousMap ℂ ℝ))) at hT
+  simpa only [← profileApprox_eq_lqgApprox] using hT
+
+/-- Equality of canonical profile laws transports both the dyadic LQG limit
+and zero mass at the origin, with the new measure built on the same space. -/
+theorem MatedCRTEnv.IsValid.profileMeasure_of_equal_profile_law
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
+    {c c' : Ω → CanonicalProfile} {h' : Ω → ℝ → ℂ → ℝ}
+    (hc : Measurable c) (hc' : Measurable c')
+    (hcJ : ∀ᵐ ω ∂S.P, ∀ p ∈ circleIndexSet, (c ω).1 p = S.hcirc ω p.1 p.2)
+    (hcJ' : ∀ᵐ ω ∂S.P, ∀ p ∈ circleIndexSet, (c' ω).1 p = h' ω p.1 p.2)
+    (hlaw : S.P.map c' = S.P.map c) :
+    IsLQGMeasure S.P γ h' (fun ω => profileMeasure γ 0 (c' ω)) ∧
+      (∀ᵐ ω ∂S.P, profileMeasure γ 0 (c' ω) {0} = 0) := by
+  have hμ : IsLQGMeasureOfField S.P γ 0 S.hcirc S.μ := by
+    have heq : (fun ω => fieldCircleAverage 0 (S.hcirc ω)) = S.hcirc := by
+      funext ω r z
+      simp [fieldCircleAverage]
+    rw [IsLQGMeasureOfField, heq]
+    exact hS.isLQGMeasure
+  have hgood : ∀ᵐ ω ∂S.P, c ω ∈ goodProfiles γ 0 := by
+    filter_upwards [hμ, hcJ] with ω hL hω
+    exact good_of_isLQGLimit hL hω
+  have hgood' : ∀ᵐ ω ∂S.P, c' ω ∈ goodProfiles γ 0 := by
+    apply (MeasureTheory.ae_map_iff hc'.aemeasurable (measurableSet_goodProfiles γ 0)).1
+    rw [hlaw]
+    exact (MeasureTheory.ae_map_iff hc.aemeasurable (measurableSet_goodProfiles γ 0)).2 hgood
+  have hμeq := profileMeasure_ae_eq hμ hcJ
+  have hzero : ∀ᵐ ω ∂S.P, profileMeasure γ 0 (c ω) {0} = 0 := by
+    filter_upwards [hμeq, hS.isAreaParametrized] with ω heq hη
+    rw [← heq]
+    exact (IsAreaParametrized.nullSingletonClass hη).1 0
+  have hzeroSet : MeasurableSet {d : CanonicalProfile | profileMeasure γ 0 d {0} = 0} :=
+    measurableSet_eq_fun ((Measure.measurable_coe (measurableSet_singleton 0)).comp
+      (measurable_profileMeasure γ 0)) measurable_const
+  have hzero' : ∀ᵐ ω ∂S.P, profileMeasure γ 0 (c' ω) {0} = 0 := by
+    apply (MeasureTheory.ae_map_iff hc'.aemeasurable hzeroSet).1
+    rw [hlaw]
+    exact (MeasureTheory.ae_map_iff hc.aemeasurable hzeroSet).2 hzero
+  refine ⟨?_, hzero'⟩
+  filter_upwards [hgood', hcJ'] with ω hgoodω hJ
+  apply isLQGLimit_of_radius_eq _ (isLQGLimit_profileMeasure_of_good hgoodω)
+  intro k z
+  exact hJ (dyadicScale k, z) ⟨dyadicScale_pos k, mem_univ z⟩
 
 end MatedCRT.Sec1
