@@ -981,4 +981,21 @@ theorem insertion_no_atom_zero_ae_unconditional {Ω : Type} [MeasurableSpace Ω]
   rw [h2]
   exact h1
 
+/-! ## The Borel carrier: approximations and decoder values are Radon measures -/
+
+/-- The approximating map `u ↦ ν_k(u)` is Borel into the measures on `ℂ` (steps3:501-528, "the map sending `u` to the
+dyadic density is Borel into the positive Radon measures"). -/
+theorem measurable_dyadicApprox (γ α : ℝ) (k : ℕ) :
+    Measurable (fun u : ContCircle => dyadicApprox γ α u k) :=
+  Measure.measurable_of_measurable_coe _ fun _ hB => measurable_dyadicApprox_ball γ α k hB
+
+/-- The decoder takes values in the locally finite (Radon) measures, for every continuous process. -/
+theorem isLocallyFiniteMeasure_dyadicDecoder (γ α : ℝ) (u : ContCircle) :
+    IsLocallyFiniteMeasure (dyadicDecoder γ α u) := by
+  by_cases hu : u ∈ DyadicConvSet γ α
+  · rw [dyadicDecoder_of_mem hu]
+    infer_instance
+  · rw [dyadicDecoder_of_notMem hu]
+    infer_instance
+
 end MatedCRT
