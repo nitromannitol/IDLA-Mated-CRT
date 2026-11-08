@@ -61,3 +61,38 @@ For any deterministic εn→0 choose a deterministic subsequence along which con
 Proof: write wε for the continuous interpolation and N for discrete exit. On the cell-diameter event, wε(N/mε) is within δ of ∂D; before N all walk vertices have cells contained in D, and convexity places every earlier interpolating segment inside D. Therefore τ_{r−δ}(wε)≤N/mε≤τ_r(wε)+1/mε (the harmless one-step slack accommodates endpoint conventions). Along any sequence of meshes, thin to a subsequence with a.s. weak convergence of quenched path laws, vanishing δ and mε⁻¹, and the good-cell event. For almost every limiting LBM path, τ_D is finite and the path visits the exterior immediately after exit: planar Brownian strong Markov and the one-dimensional immediate-crossing property give this, and a continuous strictly increasing unbounded clock preserves it. Deterministically, if w_n→w locally uniformly at such a path, both τ_{r−δ_n}(w_n) and τ_r(w_n) converge to τ_D(w); consequently w_n(N_n/m_n)→w(τ_D) as well. The continuous-mapping/portmanteau theorem applied to the sandwich gives the same conclusion in conditional probability, and bounded uniform continuity of ψ∘R turns it into the asserted o_P(1) comparison. The two exit positions converge to the same point, so their difference tends to zero. Boundedness passes this to conditional expectations; the arbitrary-subsequence criterion gives convergence in probability. For a disk tangent to the outer stopping circle, the limiting exit still precedes outer stopping almost surely: the only common boundary point has zero Brownian exit probability, and time change preserves the exit position.
 
 Per-use check: the only explicit application of Lemma 3.6 is the discrete Dirichlet decomposition at corrected line 1453, which needs convergence in probability of conditional boundary expectations, not a rate; the radial extension has the same boundary values and its discrete exit values differ from any fixed continuous extension by o_P(1). The corresponding occupation comparison in Lemma 3.4 has a separate stopped-integral/window correction in `PROOF-REPAIRS-G.md`, G4; this verdict does not claim its printed estimate is valid. Lean already proves the probabilistic comparison as `harmonicExitCellStep_of_inputs` in `Proofs/Sec3/ConvergenceHarmonicFunctions/ExitCell.lean`, subject to its explicit inputs; the paper argument does not discharge those Lean inputs.
+
+## Stopped-clock localization and the same-walk event (m1, 2026-11-08)
+
+`DirichletStoppedClockConvergenceStep` (`Steps/Sec3/DirichletStoppedClock.lean`)
+is the exact all-time a.s. dyadic stopped-clock assumption used by
+`berestycki_dirichlet_time_change_eq_lbm`. It is a proof step for the
+occupation argument of Lemma 3.4 (corrected source lines 1168–1172), not a
+staged literature input. No written proof or cited result asserting this exact
+statement has been supplied; path convergence alone does not assert it.
+
+The corrected paper defines polynomially high probability at lines 387–388:
+“there exists $p>0$” with failure probability $O(r^p)$. Lemma 2.8 at
+lines 669–674 fixes $\zeta,\rho$ and asserts that the cell estimate holds
+“with polynomially high probability”; it cites BG20 Lemma 2.4 and contains no
+proof. It does not quantify over representations of the probability space or
+explicitly state an exponent's dependence on them. Thus it supplies no explicit
+representation-uniform quantifier; this is not an assertion of dependence on a
+particular probability space. `UniformCellSizeUpperStep` records the exact
+uniform upper bound needed by this route. `CellSizeEstimateStmt` quantifies its
+exponent after the environment, whereas the frozen same-walk rate quantifies
+its exponent before the environment.
+
+`PointwiseCellAnnulusEnvelopeStep` (`Steps/Sec3/PointwiseAnnulusEnvelope.lean`)
+records the needed environment-measurable pointwise cell/annulus event and
+its complement bound. The existing GMS estimate is in outer probability and
+the measurable cell event agrees only a.e. at each mesh; neither provides
+this pointwise envelope. Even assuming the envelope, the current mean and tail
+rates are only a.e. on it. A separate pointwise upgrade is required to reach
+the frozen `CorrectedHarmonicSameWalkRateStmt`.
+The exact remaining pointwise tail-and-mean type for a chosen event and
+exponents is `PointwiseSameWalkRatesStep` in
+`Steps/Sec3/PointwiseSameWalkRates.lean`; it is not supplied by the a.e.
+mean and tail results. The required joint choice of exponents, event and both
+annealed/pointwise bounds is `UniformSameWalkAssemblyStep` in
+`Proofs/Sec3/ConvergenceHarmonicFunctions/SameWalkAssembly.lean`.

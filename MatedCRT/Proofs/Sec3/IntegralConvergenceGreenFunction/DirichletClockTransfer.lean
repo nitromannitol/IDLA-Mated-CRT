@@ -1,4 +1,4 @@
-import MatedCRT.Proposed.Berestycki2015
+import MatedCRT.Steps.Sec3.DirichletStoppedClock
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.KilledClockBridge
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.LocalKilledInverseConvergence
 import MatedCRT.Proofs.LBM.BrownianExitBall
@@ -83,11 +83,7 @@ theorem berestycki_dirichlet_time_change_eq_lbm
     {Ω : Type u} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (D U : Set ℂ) (h : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
     (x : ℂ) (γ : ℝ) (F G : Ω → ContinuousPath ℂ → ℝ≥0 → ℝ)
-    (hsource : ∀ᵐ q ∂(P.prod (planarBrownianMotion x)),
-        let K : ℕ → ℝ≥0 → ℝ := fun n =>
-          killedGMCClockApprox U γ (hcirc q.1) (dyadicScale n) q.2
-        (∀ t : ℝ≥0, Tendsto (fun n => K n t) atTop (𝓝 (G q.1 q.2 t))) ∧
-        Continuous (G q.1 q.2))
+    (hsource : DirichletStoppedClockConvergenceStep P U γ hcirc x G)
     (hD : IsOpen D)
     (hU : IsOpen U) (hbounded : Bornology.IsBounded U) (hclosure : closure U ⊆ D)
     (hx : x ∈ U) (hgff : IsDirichletGFF P D h hcirc)

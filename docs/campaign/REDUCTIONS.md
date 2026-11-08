@@ -203,3 +203,34 @@ Open steps on the route to Theorems 1.4/1.6:
 - Section 5: MeanValueSurplusLowerStep, StoppedMeanValueInequalityStep, StoppedLLowerBoundStep.
 - Section 6 (c4): the five open field steps (CircleAverageModConstStep proved, f4f87aa).
 - Section 2 (Leo's halves of 2.7/2.8): ConeWholePlaneCouplingStep.
+
+## Section 3 same-walk and stopped-clock continuation (m1, 2026-11-08)
+
+The assumption of `berestycki_dirichlet_time_change_eq_lbm` is now named
+`DirichletStoppedClockConvergenceStep`; it is definitionally the previous
+assumption, with no new proof or claim of a cited source. The occupation
+consumer still requires `LBMGreenOccupationStep`; this clock step alone does
+not imply its Revuz identity.
+
+`UniformCellSizeUpperStep` isolates the representation-uniform exponent not
+supplied by the quantifier order of `CellSizeEstimateStmt`.
+`uniform_envSigma_cellSize_of_step` transfers it to measurable cell-size
+versions, with agreement almost everywhere at each mesh.
+`PointwiseCellAnnulusEnvelopeStep` records the stronger pointwise geometric
+measurable-event obligation. The frozen same-walk rate additionally needs
+pointwise tail and mean inequalities and compatible uniform exponents; the
+existing joint rates remain a.e. and the corrected Lemma 3.6 consumer still
+explicitly takes `CorrectedHarmonicSameWalkRateStmt` as a hypothesis. The
+qualitative `harmonicExitCellStep_of_inputs` uses its independent exit-path
+route and is not a consumer of the same-walk rate.
+`mean_on_pointwise_cellAnnulus_envelope` and
+`tail_on_pointwise_cellAnnulus_envelope` derive the respective a.e. rates on
+an environment-measurable event, conditional on the pointwise envelope. Their
+separate rate exponents are not yet reconciled with each other or with the
+frozen theorem's uniform quantifiers.
+The additional reduction `correctedHarmonicSameWalkRate_of_assembly` combines
+`AnnealedSameWalkRateStep` and `PointwiseSameWalkRatesStep` with a common event,
+constants chosen by maxima, and the exact uniform quantifier order, packaged
+as `UniformSameWalkAssemblyStep`. The assembly is an open step, not a proof of
+uniformity or of the pointwise upgrade. `correctedLemma36_of_modulus_assembly`
+repoints the corrected Lemma 3.6 consumer to this explicit assembly step.
