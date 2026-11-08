@@ -144,7 +144,7 @@ theorem ae_fieldCircleAverage_continuous {Ω : Type} [MeasurableSpace Ω] {P : M
 /-! ## Vague limits: congruence and uniqueness -/
 
 /-- Approximation families that agree at positive radii have the same dyadic limits. -/
-theorem isLQGLimit_congr_pos {γ : ℝ} {h₁ h₂ : ℝ → ℂ → ℝ} {m : Measure ℂ}
+private theorem isLQGLimit_congr_pos {γ : ℝ} {h₁ h₂ : ℝ → ℂ → ℝ} {m : Measure ℂ}
     (heq : ∀ ε : ℝ, 0 < ε → ∀ z : ℂ, h₁ ε z = h₂ ε z) (h : IsLQGLimit γ h₁ m) :
     IsLQGLimit γ h₂ m := by
   refine ⟨h.isLocallyFiniteMeasure, fun f hf hfc => ?_⟩
