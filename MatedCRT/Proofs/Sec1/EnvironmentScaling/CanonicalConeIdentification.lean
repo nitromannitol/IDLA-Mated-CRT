@@ -129,4 +129,188 @@ theorem exists_reference_cone_postLastZero_radial_law
   have heq := hcircle γ Ω S hS X B B' hX hB hB' hi hi' href
   rw [← Measure.map_congr heq, hlaw]
 
+/-- Equality of the radial pairs identifies every logarithmic circle with the
+reference radial formula, including the shared time zero. -/
+theorem referenceConeRadial_eq_of_pair (γ : ℝ) (a : ℝ → ℂ → ℝ)
+    (B B' : ℝ≥0 → ℝ)
+    (hp : radialProcess a = referenceConeRadialPair γ B B') :
+    ∀ s : ℝ, a (Real.exp s) 0 =
+      MatedCRTHarmonic.MatedCRT.coneRadial γ γ B B' (-s) := by
+  intro s
+  by_cases hs : 0 < s
+  · let t : ℝ≥0 := ⟨s, hs.le⟩
+    have ht : 0 < t := hs
+    have h := congrFun (congrArg Prod.snd hp) t
+    change a (Real.exp s) 0 = (referenceConeRadialPair γ B B').2 t at h
+    rw [referenceConeRadialPair_outer γ B B' t ht] at h
+    exact h
+  · by_cases hz : s = 0
+    · subst s
+      have h := congrFun (congrArg Prod.fst hp) 0
+      rw [referenceConeRadialPair_inner] at h
+      simpa [radialProcess] using h
+    · have hs' : 0 < -s := neg_pos.mpr (lt_of_le_of_ne (le_of_not_gt hs) hz)
+      let t : ℝ≥0 := ⟨-s, hs'.le⟩
+      have h := congrFun (congrArg Prod.fst hp) t
+      rw [referenceConeRadialPair_inner] at h
+      change a (Real.exp (-(-s))) 0 =
+        MatedCRTHarmonic.MatedCRT.coneRadial γ γ B B' (-s) at h
+      simpa only [neg_neg] using h
+
+/-- Changing from logarithmic radius to radius preserves the largest level,
+provided the logarithmic level set is nonempty and bounded above. -/
+theorem exp_sSup_level_eq_sSup_positive_level (f : ℝ → ℝ) (c : ℝ)
+    (hne : {s : ℝ | f s = c}.Nonempty) (hbounded : BddAbove {s : ℝ | f s = c}) :
+    Real.exp (sSup {s : ℝ | f s = c}) =
+      sSup {r : ℝ | 0 < r ∧ f (Real.log r) = c} := by
+  have himage : Real.exp '' {s : ℝ | f s = c} =
+      {r : ℝ | 0 < r ∧ f (Real.log r) = c} := by
+    ext r
+    constructor
+    · rintro ⟨s, hs, rfl⟩
+      change f s = c at hs
+      exact ⟨Real.exp_pos s, by simpa only [Real.log_exp] using hs⟩
+    · rintro ⟨hr, hf⟩
+      exact ⟨Real.log r, hf, Real.exp_log hr⟩
+  rw [Monotone.map_csSup_of_continuousAt Real.continuous_exp.continuousAt
+    Real.exp_monotone hne hbounded, himage]
+
+/-- If the circles agree with the reference radial process and its logarithmic
+level set is nonempty and bounded, the two embedding-radius formulas agree. -/
+theorem referenceConeEmbeddingRadius_eq_coneScaleRadius
+    (γ b : ℝ) (a : ℝ → ℂ → ℝ) (B B' : ℝ≥0 → ℝ)
+    (hcircle : ∀ s : ℝ, a (Real.exp s) 0 =
+      MatedCRTHarmonic.MatedCRT.coneRadial γ γ B B' (-s))
+    (hne : {s : ℝ | MatedCRTHarmonic.MatedCRT.coneLogRadial γ γ B B' s =
+      γ⁻¹ * Real.log b}.Nonempty)
+    (hbounded : BddAbove {s : ℝ | MatedCRTHarmonic.MatedCRT.coneLogRadial γ γ B B' s =
+      γ⁻¹ * Real.log b}) :
+    Proposed.dmsConeEmbeddingRadius γ γ (-Real.log b) B B' = coneScaleRadius γ a b := by
+  rw [Proposed.dmsConeEmbeddingRadius_neg_log]
+  unfold MatedCRTHarmonic.MatedCRT.coneScale coneScaleRadius
+  rw [exp_sSup_level_eq_sSup_positive_level _ _ hne hbounded]
+  congr 1
+  ext r
+  constructor <;> rintro ⟨hr, hlevel⟩ <;> refine ⟨hr, ?_⟩
+  · have hc := hcircle (Real.log r)
+    rw [Real.exp_log hr] at hc
+    unfold MatedCRTHarmonic.MatedCRT.coneLogRadial at hlevel
+    change a r 0 + MatedCRTHarmonic.MatedCRT.lqgQ γ * Real.log r = γ⁻¹ * Real.log b
+    rw [hc]
+    exact hlevel
+  · have hc := hcircle (Real.log r)
+    rw [Real.exp_log hr] at hc
+    unfold MatedCRTHarmonic.MatedCRT.coneLogRadial
+    change a r 0 + MatedCRTHarmonic.MatedCRT.lqgQ γ * Real.log r = γ⁻¹ * Real.log b at hlevel
+    rw [← hc]
+    exact hlevel
+
+/-- Recovery of the explicit reference embedding radius from the represented
+field.  This is the remaining internal radius calculation, not a field-law
+or scaling-law assumption. -/
+def ReferenceConeEmbeddingRadiusStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ (γ : ℝ), 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ → ∀ (b : ℝ), 0 < b →
+    ∀ (X : Ω → LQGMetric.DistC) (B B' : ℝ≥0 → Ω → ℝ),
+    LQGMetric.IsWholePlaneGFF X S.P → IsBrownianReal B S.P → IsBrownianReal B' S.P →
+    IndepFun X (fun ω => ((fun t => B t ω), (fun t => B' t ω))) S.P →
+    IndepFun (fun ω t => B t ω) (fun ω t => B' t ω) S.P →
+    (∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ =
+      MatedCRTHarmonic.MatedCRT.coneField (X ω)
+        (MatedCRTHarmonic.MatedCRT.coneRadial γ γ (fun t => B t ω) (fun t => B' t ω)) φ) →
+    ∀ᵐ ω ∂S.P, Proposed.dmsConeEmbeddingRadius γ γ (-Real.log b)
+      (fun t => B t ω) (fun t => B' t ω) =
+      distributionEmbeddingRadius γ b (MatedCRTHarmonic.MatedCRT.coneField (X ω)
+        (MatedCRTHarmonic.MatedCRT.coneRadial γ γ (fun t => B t ω) (fun t => B' t ω)))
+
+/-- Nonemptiness and upper boundedness of each reference logarithmic level
+set, the path-growth assertion used in env-steps.tex:280–286. -/
+def ReferenceConeLogLevelSetStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ (γ : ℝ), 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ → ∀ (b : ℝ), 0 < b →
+    ∀ (X : Ω → LQGMetric.DistC) (B B' : ℝ≥0 → Ω → ℝ),
+    LQGMetric.IsWholePlaneGFF X S.P → IsBrownianReal B S.P → IsBrownianReal B' S.P →
+    IndepFun X (fun ω => ((fun t => B t ω), (fun t => B' t ω))) S.P →
+    IndepFun (fun ω t => B t ω) (fun ω t => B' t ω) S.P →
+    (∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ =
+      MatedCRTHarmonic.MatedCRT.coneField (X ω)
+        (MatedCRTHarmonic.MatedCRT.coneRadial γ γ (fun t => B t ω) (fun t => B' t ω)) φ) →
+    ∀ᵐ ω ∂S.P,
+      let L : Set ℝ := {s | MatedCRTHarmonic.MatedCRT.coneLogRadial γ γ
+        (fun t => B t ω) (fun t => B' t ω) s = γ⁻¹ * Real.log b}
+      L.Nonempty ∧ BddAbove L
+
+/-- The simultaneous radial-circle identity and the logarithmic level-set
+bounds give reference-radius recovery. -/
+theorem referenceConeEmbeddingRadiusStep_of_radial_and_levels
+    (𝒮 : SpaceFillingSLEModel) (hscale : QuantumConeScalingInput)
+    (hcircle : ReferenceConeRadialCircleStep 𝒮)
+    (hlevels : ReferenceConeLogLevelSetStep 𝒮) : ReferenceConeEmbeddingRadiusStep 𝒮 := by
+  intro γ hγ hγ2 Ω _ S hS b hb X B B' hX hB hB' hi hi' href
+  have hc := hcircle γ Ω S hS X B B' hX hB hB' hi hi' href
+  have hl := hlevels γ hγ hγ2 Ω S hS b hb X B B' hX hB hB' hi hi' href
+  have hr := ae_distributionEmbeddingRadius_eq hscale hγ hγ2 hb hS href
+  have hrecovered := ae_distributionCircleVersion_eq hS href
+  filter_upwards [hc, hl, hr, hrecovered] with ω hcω hlω hrω hrecoveredω
+  rw [hrω]
+  have heq : coneScaleRadius γ
+      (distributionCircleVersion (MatedCRTHarmonic.MatedCRT.coneField (X ω)
+        (MatedCRTHarmonic.MatedCRT.coneRadial γ γ (fun t => B t ω) (fun t => B' t ω)))) b =
+      coneScaleRadius γ (S.hcirc ω) b := by
+    unfold coneScaleRadius
+    congr 1
+    ext r
+    by_cases hr : 0 < r
+    · simp only [Set.mem_ofPred_eq, hr, true_and, hrecoveredω r hr 0]
+    · simp only [Set.mem_ofPred_eq, hr, false_and]
+  rw [← heq]
+  exact referenceConeEmbeddingRadius_eq_coneScaleRadius γ b
+    (distributionCircleVersion (MatedCRTHarmonic.MatedCRT.coneField (X ω)
+      (MatedCRTHarmonic.MatedCRT.coneRadial γ γ (fun t => B t ω) (fun t => B' t ω))))
+    (fun t => B t ω) (fun t => B' t ω)
+    (referenceConeRadial_eq_of_pair γ _ _ _ hcω) hlω.1 hlω.2
+
+/-- The mating-of-trees witness and reference-radius recovery give the
+canonical joint law.  The reference field is only almost-everywhere measurable;
+the common representation event suffices to compare the joint maps. -/
+theorem canonicalConeDistributionRadiusLawStep_of_reference_radius
+    (𝒮 : SpaceFillingSLEModel) (hscale : QuantumConeScalingInput)
+    (hradius : ReferenceConeEmbeddingRadiusStep 𝒮) :
+    CanonicalConeDistributionRadiusLawStep 𝒮 := by
+  intro γ hγ hγ2 Ω mΩ S hS b hb H R hHm _ hrep hR
+  obtain ⟨X, B, B', ν, hX, hB, hB', hi, hi', hν, href, hHref, hlaw, hradial⟩ :=
+    exists_reference_cone_field_and_recovered_radial_law hS hHm hrep
+  let H' : Ω → LQGMetric.DistC := fun ω =>
+    MatedCRTHarmonic.MatedCRT.coneField (X ω)
+      (MatedCRTHarmonic.MatedCRT.coneRadial γ γ (fun t => B t ω) (fun t => B' t ω))
+  let R' : Ω → ℝ := fun ω => Proposed.dmsConeEmbeddingRadius γ γ (-Real.log b)
+    (fun t => B t ω) (fun t => B' t ω)
+  have hR' : ∀ᵐ ω ∂S.P, R' ω = distributionEmbeddingRadius γ b (H' ω) :=
+    hradius γ hγ hγ2 Ω S hS b hb X B B' hX hB hB' hi hi' href
+  have hH : H =ᵐ[S.P] H' := by
+    filter_upwards [hrep, href] with ω hω hω'
+    ext φ
+    exact (hω φ).symm.trans (hω' φ)
+  have hrH := ae_distributionEmbeddingRadius_eq hscale hγ hγ2 hb hS href
+  have hjoint : (fun ω => (H ω, R ω)) =ᵐ[S.P] (fun ω => (H' ω, R' ω)) := by
+    filter_upwards [hH, hR, hR', hrH] with ω hfield hRω hRω' hrω
+    exact Prod.ext hfield (hRω.trans (hrω.symm.trans hRω'.symm))
+  have hRrev : (fun ω => distributionEmbeddingRadius γ b (H' ω)) =ᵐ[S.P] R' := by
+    filter_upwards [hR'] with ω hω
+    exact hω.symm
+  have hRmeas : AEMeasurable R' S.P :=
+    ((measurable_distributionEmbeddingRadius γ b).comp_aemeasurable hHref).congr hRrev
+  exact ⟨Ω, mΩ, S.P, X, B, B', hS.isProbabilityMeasure, hX, hB, hB', hi, hi',
+    hHref.prodMk hRmeas, Measure.map_congr hjoint⟩
+
+/-- The canonical joint law follows from the reference radial-circle identity
+and the nonempty, bounded logarithmic level sets. -/
+theorem canonicalConeDistributionRadiusLawStep_of_reference_radial
+    (𝒮 : SpaceFillingSLEModel) (hscale : QuantumConeScalingInput)
+    (hcircle : ReferenceConeRadialCircleStep 𝒮)
+    (hlevels : ReferenceConeLogLevelSetStep 𝒮) :
+    CanonicalConeDistributionRadiusLawStep 𝒮 :=
+  canonicalConeDistributionRadiusLawStep_of_reference_radius 𝒮 hscale
+    (referenceConeEmbeddingRadiusStep_of_radial_and_levels 𝒮 hscale hcircle hlevels)
+
 end MatedCRT.Sec1
