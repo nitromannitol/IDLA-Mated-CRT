@@ -1,4 +1,5 @@
 import MatedCRT.Defs.Setting
+import MatedCRT.Proofs.Sec1.ConeScaleRadius
 import MatedCRT.Steps.Sec2.ConeScaleInvarianceUpToFixedTime
 import HarmonicBalls.Proofs.Sec9.LQGSpatialDilation
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
@@ -931,5 +932,99 @@ theorem MatedCRTEnv.IsValid.ae_rescaled_measure_eq_of_punctured_disk_decompositi
     hS hγ hb R hR hν hη'
     puncturedPlaneDisk (fun i => (puncturedPlaneDisk_properties i).1)
     puncturedPlaneDisk_cover hdecomp
+
+
+/-- A null atom at zero is sufficient for the rescaled measure identification.
+The all-scale convergence event is chosen independently of the radius. -/
+theorem MatedCRTEnv.IsValid.ae_rescaled_measure_eq_of_countable_local_limits_of_null
+    {Ω ι : Type} [MeasurableSpace Ω] [Countable ι]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ b : ℝ} (hS : S.IsValid 𝒮 γ)
+    (hγ : γ ≠ 0) (hb : 0 < b) (R : Ω → ℝ) {ν : Ω → Measure ℂ}
+    (hR : ∀ᵐ ω ∂S.P, 0 < R ω)
+    (hν : IsLQGMeasure S.P γ (fun ω => rescaledCircle γ (S.hcirc ω) (R ω) b) ν)
+    (hν0 : ∀ᵐ ω ∂S.P, ν ω {0} = 0)
+    (U : ι → Set ℂ) (hU : ∀ i, IsOpen (U i)) (hcover : ({0} : Set ℂ)ᶜ ⊆ ⋃ i, U i)
+    (hloc : ∀ i, ∀ᵐ ω ∂S.P, ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+      tsupport f ⊆ U i → ∃ l : ℝ,
+        Tendsto (fun ε : ℝ => ∫ z, f z ∂(lqgApprox γ (S.hcirc ω) ε)) (𝓝[>] 0) (𝓝 l)) :
+    ∀ᵐ ω ∂S.P, ν ω = rescaledMeasure (S.μ ω) (R ω) b := by
+  have hreg := MatedCRTEnv.IsValid.ae_area_and_circle_regular hS
+  have hlocal : ∀ i, ∀ᵐ ω ∂S.P, ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+      tsupport f ⊆ U i →
+      Tendsto (fun ε : ℝ => ∫ z, f z ∂(lqgApprox γ (S.hcirc ω) ε))
+        (𝓝[>] 0) (𝓝 (∫ z, f z ∂(S.μ ω))) := by
+    intro i
+    filter_upwards [hS.isLQGMeasure, hloc i] with ω hμω hlocω
+    intro f hf hfc hfU
+    obtain ⟨l, hl⟩ := hlocω f hf hfc hfU
+    have heq : l = ∫ z, f z ∂(S.μ ω) :=
+      tendsto_nhds_unique (hl.comp tendsto_dyadicScale_nhdsGT) (hμω.tendsto_integral f hf hfc)
+    simpa only [heq] using hl
+  have hμ : ∀ᵐ ω ∂S.P, IsLocallyFiniteMeasure (S.μ ω) := hreg.mono fun _ h => h.1
+  have happrox : ∀ᵐ ω ∂S.P, ∀ᶠ ε : ℝ in 𝓝[>] 0,
+      IsLocallyFiniteMeasure (lqgApprox γ (S.hcirc ω) ε) := by
+    filter_upwards [hreg] with ω hω
+    filter_upwards [self_mem_nhdsWithin] with ε hε
+    exact isLocallyFiniteMeasure_lqgApprox_of_continuous γ (S.hcirc ω) ε (hω.2.2 ε hε)
+  have hall := ae_tendsto_integral_of_countable_open_cover S.P U hU hcover
+    (fun ω ε => lqgApprox γ (S.hcirc ω) ε) S.μ hμ happrox hlocal
+  filter_upwards [hreg, hR, hν, hν0, hall] with ω hregω hRω hνω hν0ω hallω
+  exact rescaled_measure_eq_of_allScale_off_origin hγ hRω hb hregω.1 hregω.2.1
+    hνω hν0ω (fun n => hregω.2.2 _ (mul_pos hRω (dyadicScale_pos n))) hallω
+
+/-- Local circle decompositions on the canonical disks identify the rescaled
+measure as soon as its atom at the marked point is known to vanish. -/
+theorem MatedCRTEnv.IsValid.ae_rescaled_measure_eq_of_punctured_disk_decompositions_of_null
+    {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ b : ℝ} (hS : S.IsValid 𝒮 γ)
+    (hγ : γ ≠ 0) (hb : 0 < b) (R : Ω → ℝ) {ν : Ω → Measure ℂ}
+    (hR : ∀ᵐ ω ∂S.P, 0 < R ω)
+    (hν : IsLQGMeasure S.P γ (fun ω => rescaledCircle γ (S.hcirc ω) (R ω) b) ν)
+    (hν0 : ∀ᵐ ω ∂S.P, ν ω {0} = 0)
+    (hdecomp : ∀ i : PuncturedPlaneDiskIndex, ∀ᵐ ω ∂S.P,
+      ∃ (h : ℝ → ℂ → ℝ) (v : ℂ → ℝ) (m : Measure ℂ),
+        IsLocallyFiniteMeasure m ∧
+        ContinuousOn (fun p : ℝ × ℂ => h p.1 p.2)
+          {p | 0 < p.1 ∧ Metric.closedBall p.2 p.1 ⊆ puncturedPlaneDisk i} ∧
+        (∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+          tsupport f ⊆ puncturedPlaneDisk i →
+          Tendsto (fun r : ℝ => ∫ z, f z ∂(lqgApprox γ h r))
+            (𝓝[>] 0) (𝓝 (∫ z, f z ∂m))) ∧
+        ContinuousOn v (puncturedPlaneDisk i) ∧
+        (∀ (r : ℝ) (z : ℂ), 0 < r →
+          Metric.closedBall z r ⊆ puncturedPlaneDisk i →
+          S.hcirc ω r z = addCircleAverage h v r z)) :
+    ∀ᵐ ω ∂S.P, ν ω = rescaledMeasure (S.μ ω) (R ω) b := by
+  apply MatedCRTEnv.IsValid.ae_rescaled_measure_eq_of_countable_local_limits_of_null
+    hS hγ hb R hR hν hν0 puncturedPlaneDisk
+    (fun i => (puncturedPlaneDisk_properties i).1) puncturedPlaneDisk_cover
+  intro i
+  filter_upwards [hdecomp i] with ω hω
+  obtain ⟨h, v, m, hm, hc, hall, hv, heq⟩ := hω
+  intro f hf hfc hfU
+  exact ⟨∫ z, f z * Real.exp (γ * v z) ∂m,
+    tendsto_lqgApprox_of_admissible_circle_decomposition
+      (puncturedPlaneDisk_properties i).1 hm hc hall v hv heq f hf hfc hfU⟩
+
+
+/-- The cone scale radius is positive almost surely under the quantum-cone
+scaling input, so it can be used in the countable-cover area identity. -/
+theorem MatedCRTEnv.IsValid.ae_cone_rescaled_measure_eq_of_countable_local_limits_of_null
+    {Ω ι : Type} [MeasurableSpace Ω] [Countable ι]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ b : ℝ} (hS : S.IsValid 𝒮 γ)
+    (hscale : QuantumConeScalingInput) (hγ : 0 < γ) (hγ2 : γ < 2) (hb : 0 < b)
+    {ν : Ω → Measure ℂ}
+    (hν : IsLQGMeasure S.P γ (fun ω => rescaledCircle γ (S.hcirc ω)
+      (coneScaleRadius γ (S.hcirc ω) b) b) ν)
+    (hν0 : ∀ᵐ ω ∂S.P, ν ω {0} = 0)
+    (U : ι → Set ℂ) (hU : ∀ i, IsOpen (U i)) (hcover : ({0} : Set ℂ)ᶜ ⊆ ⋃ i, U i)
+    (hloc : ∀ i, ∀ᵐ ω ∂S.P, ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+      tsupport f ⊆ U i → ∃ l : ℝ,
+        Tendsto (fun ε : ℝ => ∫ z, f z ∂(lqgApprox γ (S.hcirc ω) ε)) (𝓝[>] 0) (𝓝 l)) :
+    ∀ᵐ ω ∂S.P, ν ω = rescaledMeasure (S.μ ω) (coneScaleRadius γ (S.hcirc ω) b) b := by
+  let : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
+  exact MatedCRTEnv.IsValid.ae_rescaled_measure_eq_of_countable_local_limits_of_null
+    hS hγ.ne' hb (fun ω => coneScaleRadius γ (S.hcirc ω) b)
+    (ae_coneScaleRadius_pos hscale hγ hγ2 hS.isQuantumCone hb) hν hν0 U hU hcover hloc
 
 end MatedCRT.Sec1
