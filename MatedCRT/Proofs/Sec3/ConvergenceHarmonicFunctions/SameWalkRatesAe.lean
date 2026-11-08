@@ -1,5 +1,6 @@
 import MatedCRT.Steps.Sec3.PointwiseSameWalkRates
 import MatedCRT.Steps.Sec3.PowerTailIntegral
+import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.RateDiscrepancy
 
 /-! # Almost-everywhere same-walk rates (internal successors of the pointwise statements)
 
@@ -405,7 +406,103 @@ theorem lintegral_discrepancy_le_regime_gt {Ω : Type*} [MeasurableSpace Ω] (μ
     _ = ENNReal.ofReal (H * 2 ^ χ * ((1 + K * χ / (χ - ν)) * R ^ (χ - ν) * ℓ ^ ν)) := by
         rw [ENNReal.ofReal_mul (mul_nonneg hH.le (Real.rpow_nonneg (by norm_num) _))]
 
+
+/-- On a finite exit from the disc, the discrepancy is at most `H (2r)^χ`: both stopping locations lie in the closed
+disc, so they are at distance at most `2r`, and the Hölder bound applies (steps2-r3 lines 723-726). Deterministic. -/
+theorem sameWalkExitDiscrepancy_le_of_finite_exit
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    {r : ℝ} (hr : 0 < r) (z : ℂ) (ψ : ℂ → ℝ) {H χ : ℝ≥0}
+    (hψ : HolderOnWith H χ ψ (closedBall z r))
+    (ε : ℝ) (ω : Ω) (x : ℕ → ℤ)
+    (hstart : interpolatedWalk ε (S.η ω) (S.mε ε) x 0 ∈ ball z r)
+    (hfin : pathExitTime (ball z r) (interpolatedWalk ε (S.η ω) (S.mε ε) x) < ⊤) :
+    sameWalkExitDiscrepancy S r z ψ ε ω x ≤ (H : ℝ) * (2 * r) ^ (χ : ℝ) := by
+  have hp : pathExitPosition (ball z r) (interpolatedWalk ε (S.η ω) (S.mε ε) x) ∈ closedBall z r := by
+    apply sphere_subset_closedBall
+    apply frontier_ball_subset_sphere
+    exact pathExitPosition_mem_frontier_of_continuous isOpen_ball
+      (continuous_interpolatedWalk ε (S.mε ε) (S.η ω) x) hstart hfin
+  have hq : ballRetraction z r (vertexPoint ε (S.η ω)
+      (vExitPosition (interiorCellVertices ε (S.η ω) (ball z r)) x)) ∈ closedBall z r :=
+    ballRetraction_mem z hr _
+  have hd : dist (pathExitPosition (ball z r) (interpolatedWalk ε (S.η ω) (S.mε ε) x))
+      (ballRetraction z r (vertexPoint ε (S.η ω)
+        (vExitPosition (interiorCellVertices ε (S.η ω) (ball z r)) x))) ≤ 2 * r := by
+    have h1 := mem_closedBall.mp hp
+    have h2 := mem_closedBall.mp hq
+    calc dist (pathExitPosition (ball z r) (interpolatedWalk ε (S.η ω) (S.mε ε) x))
+          (ballRetraction z r (vertexPoint ε (S.η ω)
+            (vExitPosition (interiorCellVertices ε (S.η ω) (ball z r)) x)))
+        ≤ dist (pathExitPosition (ball z r) (interpolatedWalk ε (S.η ω) (S.mε ε) x)) z
+          + dist z (ballRetraction z r (vertexPoint ε (S.η ω)
+            (vExitPosition (interiorCellVertices ε (S.η ω) (ball z r)) x))) :=
+          dist_triangle _ _ _
+      _ ≤ r + r := by rw [dist_comm z]; exact add_le_add h1 h2
+      _ = 2 * r := by ring
+  have hbound := hψ.dist_le_of_le hp hq hd
+  simpa only [sameWalkExitDiscrepancy, finiteDiscExitValue, hstart, hfin, and_self,
+    ↓reduceIte, Real.dist_eq] using hbound
+
+/-- Almost surely along the walk: finite exit gives the pointwise discrepancy bound `H (2r)^χ`. -/
+theorem ae_sameWalkExitDiscrepancy_le_of_finite_exit
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) {μ : Measure (ℕ → ℤ)}
+    {r : ℝ} (hr : 0 < r) (z : ℂ) (ψ : ℂ → ℝ) {H χ : ℝ≥0}
+    (hψ : HolderOnWith H χ ψ (closedBall z r)) (ε : ℝ) (ω : Ω)
+    (hstart : ∀ᵐ x ∂μ, interpolatedWalk ε (S.η ω) (S.mε ε) x 0 ∈ ball z r)
+    (hfin : ∀ᵐ x ∂μ, pathExitTime (ball z r) (interpolatedWalk ε (S.η ω) (S.mε ε) x) < ⊤) :
+    ∀ᵐ x ∂μ, sameWalkExitDiscrepancy S r z ψ ε ω x ≤ (H : ℝ) * (2 * r) ^ (χ : ℝ) :=
+  (hstart.and hfin).mono fun x hx =>
+    sameWalkExitDiscrepancy_le_of_finite_exit S hr z ψ hψ ε ω x hx.1 hx.2
+
+/-- The mean of a nonnegative Hölder discrepancy: `E D ≤ H 2^χ` times the three regimes of eq:mean-three, from the
+almost-sure bound `D ≤ H (2R)^χ` and the scaled tail. Real-valued form of the lintegral regime lemmas. -/
+theorem integral_discrepancy_le_regime {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (D : Ω → ℝ) (hD0 : ∀ ω, 0 ≤ D ω) (hDm : AEStronglyMeasurable D μ) {H χ R ℓ K ν : ℝ}
+    (hH : 0 ≤ H) (hχ : 0 < χ) (hK : 0 ≤ K) (hℓ : 0 < ℓ) (hℓR : ℓ ≤ R)
+    (hDR : ∀ᵐ ω ∂μ, D ω ≤ H * (2 * R) ^ χ)
+    (htail : ∀ t : ℝ, ℓ < t → t < R → μ {ω | H * (2 * t) ^ χ < D ω} ≤ ENNReal.ofReal (K * (ℓ / t) ^ ν)) :
+    ∫ ω, D ω ∂μ ≤ H * 2 ^ χ * (if χ < ν then (1 + K * χ / (ν - χ)) * ℓ ^ χ
+      else if χ = ν then (1 + K * ν * (1 + |Real.log R|)) * ℓ ^ ν * (1 + |Real.log ℓ|)
+      else (1 + K * χ / (χ - ν)) * R ^ (χ - ν) * ℓ ^ ν) := by
+  rcases hH.eq_or_lt with hH0 | hHpos
+  · have hz : ∀ᵐ ω ∂μ, D ω = 0 := by
+      filter_upwards [hDR] with ω hω
+      rw [← hH0, zero_mul] at hω
+      exact le_antisymm hω (hD0 ω)
+    have hint : ∫ ω, D ω ∂μ = 0 := by
+      rw [integral_congr_ae (g := fun _ => (0 : ℝ)) hz, integral_zero]
+    rw [hint, ← hH0]
+    simp
+  · have hR0 : 0 ≤ R := hℓ.le.trans hℓR
+    have h2nn : (0 : ℝ) ≤ 2 ^ χ := Real.rpow_nonneg (by norm_num) _
+    have hnonneg : 0 ≤ H * 2 ^ χ * (if χ < ν then (1 + K * χ / (ν - χ)) * ℓ ^ χ
+        else if χ = ν then (1 + K * ν * (1 + |Real.log R|)) * ℓ ^ ν * (1 + |Real.log ℓ|)
+        else (1 + K * χ / (χ - ν)) * R ^ (χ - ν) * ℓ ^ ν) := by
+      refine mul_nonneg (mul_nonneg hH h2nn) ?_
+      split_ifs with h1 h2
+      · have hνχ : 0 ≤ K * χ / (ν - χ) := div_nonneg (mul_nonneg hK hχ.le) (sub_nonneg.2 h1.le)
+        exact mul_nonneg (add_nonneg zero_le_one hνχ) (Real.rpow_nonneg hℓ.le _)
+      · have hν0 : 0 ≤ ν := by rw [← h2]; exact hχ.le
+        exact mul_nonneg (mul_nonneg (add_nonneg zero_le_one
+          (mul_nonneg (mul_nonneg hK hν0) (add_nonneg zero_le_one (abs_nonneg _)))) (Real.rpow_nonneg hℓ.le _))
+          (add_nonneg zero_le_one (abs_nonneg _))
+      · have hχν : 0 ≤ K * χ / (χ - ν) := div_nonneg (mul_nonneg hK hχ.le) (sub_nonneg.2 (not_lt.mp h1))
+        exact mul_nonneg (mul_nonneg (add_nonneg zero_le_one hχν) (Real.rpow_nonneg hR0 _))
+          (Real.rpow_nonneg hℓ.le _)
+    rw [integral_eq_lintegral_of_nonneg_ae (Filter.Eventually.of_forall hD0) hDm]
+    refine ENNReal.toReal_le_of_le_ofReal hnonneg ?_
+    have hDm' : AEMeasurable D μ := hDm.aemeasurable
+    split_ifs with h1 h2
+    · exact lintegral_discrepancy_le_regime_lt μ D hD0 hDm' hHpos hχ hK hℓ hℓR hDR htail h1
+    · exact lintegral_discrepancy_le_regime_eq μ D hD0 hDm' hHpos hχ hK hℓ hℓR hDR htail h2
+    · exact lintegral_discrepancy_le_regime_gt μ D hD0 hDm' hHpos hχ hK hℓ hℓR hDR htail
+        (lt_of_le_of_ne (not_lt.mp h1) (Ne.symm h2))
+
 end MatedCRT
+
+#print axioms MatedCRT.sameWalkExitDiscrepancy_le_of_finite_exit
+#print axioms MatedCRT.ae_sameWalkExitDiscrepancy_le_of_finite_exit
+#print axioms MatedCRT.integral_discrepancy_le_regime
 
 #print axioms MatedCRT.lintegral_discrepancy_le_regime_lt
 #print axioms MatedCRT.lintegral_discrepancy_le_regime_eq
