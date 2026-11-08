@@ -216,6 +216,141 @@ theorem referenceConeConditionedPath_law
   rw [← Measure.map_map hf (IsQuantumCone.measurable_radialProcess hS.isQuantumCone), hlaw]
   exact map_quantumConeRadialLaw_outer_centered γ ν
 
+/-- A measure on continuous paths is determined by its coordinate-path law.
+The coordinate product has its product sigma algebra; no measurable range
+assertion for the inclusion of continuous paths is needed. -/
+theorem continuousPath_measure_ext_of_coordinate_law
+    {μ ν : Measure (MarkovProcess.ContinuousPath ℝ)}
+    (h : μ.map (fun w (t : ℝ≥0) => w t) = ν.map (fun w (t : ℝ≥0) => w t)) :
+    μ = ν := by
+  let e : MarkovProcess.ContinuousPath ℝ → (ℝ≥0 → ℝ) := fun w t => w t
+  have he : Measurable e := Measurable.of_eval fun t =>
+    MarkovProcess.ContinuousPath.measurable_coordinateProcess t
+  have hcomap : (inferInstance : MeasurableSpace (MarkovProcess.ContinuousPath ℝ)) ≤
+      (inferInstance : MeasurableSpace (ℝ≥0 → ℝ)).comap e := by
+    change (ContinuousMap.measurableSpace : MeasurableSpace C(ℝ≥0, ℝ)) ≤ _
+    rw [ContinuousMap.measurableSpace_eq_iSup_comap_eval]
+    refine iSup_le fun t => ?_
+    apply measurable_iff_comap_le.mp
+    exact (measurable_pi_apply t).comp (comap_measurable e)
+  apply Measure.ext
+  intro A hA
+  obtain ⟨C, hC, hpre⟩ := MeasurableSpace.measurableSet_comap.mp (hcomap A hA)
+  have hCeq := congrArg (fun m : Measure (ℝ≥0 → ℝ) => m C) h
+  rw [Measure.map_apply he hC, Measure.map_apply he hC, hpre] at hCeq
+  exact hCeq
+
+/-- A measurable coordinate process with almost surely continuous paths has
+a measurable continuous-path version. -/
+theorem exists_measurable_continuousPath_version
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} (Z : Ω → (ℝ≥0 → ℝ))
+    (hZ : Measurable Z) (hc : ∀ᵐ ω ∂P, Continuous (Z ω)) :
+    ∃ Y : Ω → MarkovProcess.ContinuousPath ℝ,
+      Measurable Y ∧ ∀ᵐ ω ∂P, (fun t => Y ω t) = Z ω := by
+  classical
+  have hnull : P {ω | ¬ Continuous (Z ω)} = 0 := ae_iff.mp hc
+  obtain ⟨N, hsub, hN, hNzero⟩ := exists_measurable_superset_of_null hnull
+  let Y : Ω → MarkovProcess.ContinuousPath ℝ := fun ω =>
+    if hω : ω ∈ N then 0 else ⟨Z ω, by
+      by_contra h
+      exact hω (hsub h)⟩
+  have hm : Measurable Y := ContinuousMap.measurable_iff_eval.mpr fun t => by
+    have heq : (fun ω => Y ω t) = fun ω => if ω ∈ N then 0 else Z ω t := by
+      funext ω
+      by_cases hω : ω ∈ N <;> simp [Y, hω]
+    rw [heq]
+    exact measurable_const.ite hN ((measurable_pi_apply t).comp hZ)
+  refine ⟨Y, hm, ?_⟩
+  have hgood : ∀ᵐ ω ∂P, ω ∉ N := ae_iff.mpr (by simpa using hNzero)
+  filter_upwards [hgood] with ω hω
+  simp [Y, hω]
+
+/-- The post-last-zero path is continuous whenever the underlying Brownian
+path is continuous. -/
+theorem continuous_referenceConeConditionedPath (γ : ℝ) (B' : ℝ≥0 → ℝ)
+    (hB' : Continuous B') : Continuous (referenceConeConditionedPath γ B') := by
+  unfold referenceConeConditionedPath
+  dsimp only
+  fun_prop
+
+/-- A measurable continuous-path version of the post-last-zero process has
+the weak-limit law itself, provided the reference circles are identified. -/
+theorem referenceConeConditionedContinuousPath_law
+    {Ω : Type} [MeasurableSpace Ω] {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
+    {S : MatedCRTEnv Ω} (hS : S.IsValid 𝒮 γ)
+    (hcircle : ReferenceConeRadialCircleStep 𝒮)
+    (X : Ω → LQGMetric.DistC) (B B' : ℝ≥0 → Ω → ℝ)
+    (hX : LQGMetric.IsWholePlaneGFF X S.P) (hB : IsBrownianReal B S.P)
+    (hB' : IsBrownianReal B' S.P)
+    (hi : IndepFun X (fun ω => ((fun t => B t ω), (fun t => B' t ω))) S.P)
+    (hi' : IndepFun (fun ω t => B t ω) (fun ω t => B' t ω) S.P)
+    (href : ∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ =
+      MatedCRTHarmonic.MatedCRT.coneField (X ω)
+        (MatedCRTHarmonic.MatedCRT.coneRadial γ γ (fun t => B t ω) (fun t => B' t ω)) φ)
+    (Y : Ω → MarkovProcess.ContinuousPath ℝ) (hY : AEMeasurable Y S.P)
+    (hYeq : ∀ᵐ ω ∂S.P, (fun t => Y ω t) =
+      referenceConeConditionedPath γ (fun t => B' t ω)) :
+    IsBMConditionedPositive (lqgQ γ - γ) (S.P.map Y) := by
+  obtain ⟨ν, hν, hlaw⟩ :=
+    referenceConeConditionedPath_law hS hcircle X B B' hX hB hB' hi hi' href
+  have he : Measurable (fun w : MarkovProcess.ContinuousPath ℝ => fun t : ℝ≥0 => w t) :=
+    Measurable.of_eval fun t => MarkovProcess.ContinuousPath.measurable_coordinateProcess t
+  have hmap : (S.P.map Y).map (fun w (t : ℝ≥0) => w t) =
+      ν.map (fun w (t : ℝ≥0) => w t) := by
+    rw [AEMeasurable.map_map_of_aemeasurable he.aemeasurable hY]
+    exact (Measure.map_congr hYeq).trans hlaw
+  have h := continuousPath_measure_ext_of_coordinate_law hmap
+  rw [h]
+  exact hν
+
+/-- The represented post-last-zero process admits a measurable continuous
+version with the weak-limit conditioned law, once the circles are identified. -/
+theorem exists_referenceConeConditionedContinuousPath
+    {Ω : Type} [MeasurableSpace Ω] {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
+    {S : MatedCRTEnv Ω} (hS : S.IsValid 𝒮 γ)
+    (hcircle : ReferenceConeRadialCircleStep 𝒮)
+    (X : Ω → LQGMetric.DistC) (B B' : ℝ≥0 → Ω → ℝ)
+    (hX : LQGMetric.IsWholePlaneGFF X S.P) (hB : IsBrownianReal B S.P)
+    (hB' : IsBrownianReal B' S.P)
+    (hi : IndepFun X (fun ω => ((fun t => B t ω), (fun t => B' t ω))) S.P)
+    (hi' : IndepFun (fun ω t => B t ω) (fun ω t => B' t ω) S.P)
+    (href : ∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ =
+      MatedCRTHarmonic.MatedCRT.coneField (X ω)
+        (MatedCRTHarmonic.MatedCRT.coneRadial γ γ (fun t => B t ω) (fun t => B' t ω)) φ) :
+    ∃ Y : Ω → MarkovProcess.ContinuousPath ℝ,
+      Measurable Y ∧
+      (∀ᵐ ω ∂S.P, (fun t => Y ω t) = referenceConeConditionedPath γ (fun t => B' t ω)) ∧
+      IsBMConditionedPositive (lqgQ γ - γ) (S.P.map Y) := by
+  let Z : Ω → (ℝ≥0 → ℝ) := fun ω t => S.hcirc ω (Real.exp t) 0 + γ * t
+  have hZ : Measurable Z := Measurable.of_eval fun t =>
+    (hS.isQuantumCone.measurable_circle _ _ (Real.exp_pos _)).add measurable_const
+  have hc := hcircle γ Ω S hS X B B' hX hB hB' hi hi' href
+  have hrec := ae_distributionCircleVersion_eq hS href
+  have heq : ∀ᵐ ω ∂S.P, Z ω = referenceConeConditionedPath γ (fun t => B' t ω) := by
+    filter_upwards [hc, hrec] with ω hcω hrecω
+    have he : radialProcess (S.hcirc ω) =
+        referenceConeRadialPair γ (fun t => B t ω) (fun t => B' t ω) := by
+      rw [← hcω]
+      apply Prod.ext <;> funext t <;> exact (hrecω _ (Real.exp_pos _) 0).symm
+    have ht := congrArg Prod.snd he
+    change (fun t : ℝ≥0 => S.hcirc ω (Real.exp t) 0) = _ at ht
+    change (fun t : ℝ≥0 => S.hcirc ω (Real.exp t) 0 + γ * t) = _
+    funext t
+    rw [congrFun ht t]
+    exact congrFun (referenceConeRadialPair_outer_centered γ _ _) t
+  have hcont : ∀ᵐ ω ∂S.P, Continuous (Z ω) := by
+    filter_upwards [heq, hB'.cont] with ω heqω hcω
+    rw [heqω]
+    exact continuous_referenceConeConditionedPath γ _ hcω
+  obtain ⟨Y, hY, hYZ⟩ := exists_measurable_continuousPath_version Z hZ hcont
+  have hYeq : ∀ᵐ ω ∂S.P, (fun t => Y ω t) =
+      referenceConeConditionedPath γ (fun t => B' t ω) := by
+    filter_upwards [hYZ, heq] with ω hYZω heqω
+    exact hYZω.trans heqω
+  exact ⟨Y, hY, hYeq,
+    referenceConeConditionedContinuousPath_law hS hcircle X B B' hX hB hB' hi hi' href
+      Y hY.aemeasurable hYeq⟩
+
 /-- Equality of the radial pairs identifies every logarithmic circle with the
 reference radial formula, including the shared time zero. -/
 theorem referenceConeRadial_eq_of_pair (γ : ℝ) (a : ℝ → ℂ → ℝ)
