@@ -1,6 +1,6 @@
 # Written-proof requests at lead takeover (2026-11-08 08:23 UTC)
 
-Status: historical exact-type requests with per-target updates below. All nine original requests now have **WRITTEN-PROOF-AVAILABLE** after the operator16:25,18:25 and18:45 rulings, including three authorized repairs. The three newer scaling requests remain **WRITTEN-PROOF-NEEDED** and were sent to the prover at18:42; no worker is assigned their proofs. Lean implementation status is separate below. These are exact open proof obligations carried as named Step Props under the operator's standing rule. They are not proved results or approved literature inputs. The operator routes them to a separate prover and independent audit; active workers continue with explicit hypotheses. No statement or definition is changed by this ledger.
+Status: historical exact-type requests with dated updates below. All nine original requests have audited written outcomes (operator16:25/18:25/18:45); all three newer scaling requests now also have audited written outcomes (operator19:35, steps3 sha d34cf930). False originals retain their exact historical types and require the authorized repairs. Lean implementation remains pending. No further prover round will occur: any genuinely unwritten step remains a named Step with exact type, location, consumer and reason. Literature inputs remain explicit and source promotion is separate.
 
 The historical code blocks copy the entire original `def` command, including binders, from the indicated source; operator-authorized repairs and current interfaces are recorded in the dated updates. Names are fully qualified in headings; code uses the original namespace and open declarations of its source file. The declarations are pinned to the takeover commits (z1: 15e8866/f69cf7b; z5: d63273a; m1: 2afd11a), except the pre-existing S3 interface. Compile checks are recorded under `/home/nitro/paper-fleets/mcrt/lead/checks/20261108-takeover`.
 
@@ -273,6 +273,8 @@ The deterministic earlier-rational-time compact cover and the stopped-to-global 
 
 ## WPN-42-scaled-representatives: `MatedCRT.ScaledBoundedRepresentativesStep`
 
+**WRITTEN-PROOF-AVAILABLE REPAIR / LEAN-PENDING (operator19:35).** steps3 Section1:33-403 refutes the original and proves the bounded-Lambda replacement, sufficient for both consumers; queued m5. Historical request follows.
+
 **WRITTEN-PROOF-NEEDED** (lead 2026-11-08 15:29 UTC; z5 report, commit dee04d9).
 This new request is additional to the nine sent to the prover at14:20. Its truth
 for arbitrary measures has not been established. Do not assign its proof to an
@@ -317,6 +319,8 @@ are not closed. The Step is not a literature input eligible for External promoti
 
 ## WPN-42-insertion-coordinate-extension: `MatedCRT.Proposed.DS11CoordinateRuleFixedAffine`
 
+**WRITTEN-PROOF-AVAILABLE / LEAN-PENDING (operator19:35).** steps3 Section2:405-712 proves the exact insertion extension; queued z1 internal component and relocation out of Proposed. Historical request follows.
+
 **WRITTEN-PROOF-NEEDED** (lead2026-11-08 15:33 UTC, z5 9e51e0c). This is an
 open repository extension, despite its current Proposed location and name, not
 a faithful printed DS11 hypothesis. Additional to the nine sent at14:20.
@@ -351,6 +355,8 @@ or a faithful source that actually covers this exact type before promoting it.
 Do not combine this gap with the independent scaled-representative gap.
 
 ## WPN-ENV-dilated-circle-common-event: `ConeDilationCircleApproximationStep`
+
+**WRITTEN-PROOF-AVAILABLE REPRESENTED REPAIR / LEAN-PENDING (operator19:35).** steps3 Section3:714-1057 refutes the raw Step and proves RescaledConeDistributionCircleGridStep exactly; queued m1. Historical request follows.
 
 **WRITTEN-PROOF-NEEDED** (lead2026-11-08, m1 7df13f4). Exact sufficient
 internal common-event interface in FieldCircleScaling.lean:45, namespace
@@ -630,3 +636,12 @@ Late checked bd29395: sameWalkExitDiscrepancy_le_of_finite_exit and its a.s. ver
 
 
 Late bounded cutoff da545b8/adb651f (lead19:25): the source-pole finite-domain comparison, capacity inequality and real-infimum admissible-family bound in StoppedPoleFiniteComparison.lean pass strict source checking with17 standard-axiom exports. The assumptions retain finite domain, symmetry, local finiteness, consecutive adjacency, boundary inequality and D inside A; the infimum's nonemptiness and lower bound are proved. This implements r3:1192-1257, including the source vertex, but does not discharge StoppedSurplusPoleStep, measurable positive c, reconstruction or its outer-probability limit. The new measure_discrepancy_tail_enlarge supplies the numerical large-scale tail extension with its displayed hypotheses; it does not supply the uniform annulus producer. Final receipts lead/checks/20261108-1913:17 strict lc calls,13 pinned source versions across10 files,37 distinct standard-axiom exports,86 hole-clean source hashes. New commits after this bounded cutoff await the next round. No numbered closure.
+
+
+## Final audited returns and checked components (lead19:46 round)
+
+Operator19:35 released the final three written-proof requests: fleet `notes/wpn-steps3/steps3.tex`, sha256 `d34cf930706e195c09ec2eb14c8999a6a1d64cc6b69938b6e227d2ddf9619d9d`, independent `AUDIT-steps3.md` VERDICT CORRECT for all three outcomes. This is written proof availability, not Lean closure. No further prover rounds will occur under operator18:55. The original representative and raw-circle Steps are false; only the specified bounded/represented repairs may be implemented. The insertion extension is internal mathematics, never a literature hypothesis presented as DS11.
+
+The bounded repair adds `Bornology.IsBounded Λ` before `IsSubharmonicBall μ Λ 0` in the exact historical type. The only direct mathematical application at ScaledRegularizedFamily.lean:228-231 receives boundedness from the regularized-family field `h1.isBounded (c*t) (mul_pos hc ht)`; both PlateauScalingAssembly consumers retain their conclusions. No frozen or companion file is edited by the lead.
+
+944485f BrownianMinimum.lean:190,291 proves separated-interval minima are a.s. unequal for arbitrary two-sided intervals, using a nondegenerate Gaussian gap independent of the joint countable left/right increment family. Strict source and axiom checks pass. The uniqueness paragraph at the end of r3:534-599 is not implemented in that slice; it remains written implementation work, not a new WPN. 7e08a81 SameWalkRatesAe now supplies adjacent-cells intersection a.s. for all positive meshes; G3 is discharged in its conditional rate bound. Uniform environment-independent cell/rate exponents, actual finite exit and rate/event producers remain open. Proposed cell-configuration staging 23094a3 elaborates but has no source-promotion approval.

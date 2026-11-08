@@ -52,3 +52,6 @@ Lead19:13 checked 7e85827/ad84342: actual three-regime lintegral estimates for d
 
 
 Late checked bd29395: sameWalkExitDiscrepancy_le_of_finite_exit and its a.s. version supply the exact bound from start-in-disk and finite-interpolated-exit hypotheses. integral_discrepancy_le_regime supplies real-valued three-regime means, including H=0, from measurability, the a.s. bound and scaled tails. Those hypotheses remain; the actual finite-exit producer and full uniform event/rate assembly are not discharged. This refines the earlier G4 implementation boundary rather than introducing new WPN. Three new embedded axiom prints use only standard axioms. Final receipts:11 pinned source versions across9 files,4 additional axiom probes,19 distinct checked exports,85-source hole scan clean.
+
+
+Lead19:46 round: 7e08a81 now proves ae_adjacent_cells_meet and ae_sameWalkExitDiscrepancy_le_of_gms_adjacent; strict snapshot elaboration and standard-axiom output checked. Thus the conditional quantitative rate bound no longer has an unproved hadj premise. Uniform pre-environment kappa/nu, actual finite-exit and event/rate producers remain written implementation obligations. 944485f separated-interval Brownian minimum is checked; it does not implement the unique-minimizer paragraph or close the rate. Frozen pointwise/a.e. successor boundary is unchanged.
