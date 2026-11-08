@@ -407,4 +407,42 @@ def GMSTheorem310Stmt : Prop :=
         prokhorovDist (fun B => Q (z / (ε : ℂ)) (H ω) {y | scaledCurve (H ω) ψ ε y ∈ B})
           (fun B => bmFromSet μ z B)) (𝓝[>] 0) (𝓝 0)
 
+/-! ### Recorded carrier obstructions: printed declarations and the missing Lean carriers (not staged)
+
+**GHMS, arXiv:1510.04687v2, Theorem 1.1 (p. 5), setting (pp. 4-5).** Let `γ ∈ (0,2)`, `κ₀ = 16/γ²`, `γ = 4/√κ₀`, let `η` be a
+whole-plane space-filling SLE_κ₀ from `∞` to `∞` (Miller-Sheffield, Sections 1.2.3 and 4.3) and `C = (ℂ, h, 0, ∞)` a
+`γ`-quantum cone independent of `η`. Let `μ_h`, `ν_h` be the quantum area and boundary measures induced by `h`, `η̃` the
+parametrisation of `η` by `μ_h`-mass, and `Z_t = (L_t, R_t)` the net change of the `ν_h`-lengths of the left and right boundaries
+of `η̃((−∞, t])` relative to time 0. Then `Z` is a two-sided Brownian motion with some correlation (DMS14 Theorem 1.13), and `Z`
+a.s. determines `(η, C)` modulo rotation and scaling (DMS14 Theorem 1.14). Theorem 1.1: for `γ ∈ (0,2)` the correlation of `Z`
+is `−cos(4π/κ₀)`. The second assertion (quantum wedge, chordal SLE_κ₀ from 0 to ∞, correlation `−cos(4π/κ₀)`) is also printed.
+Missing carriers (exact types): `nuH : (ℂ → ℝ) → Set ℂ → ℝ≥0∞` (the `ν_h`-length of a boundary arc); `leftBoundaryOf,
+rightBoundaryOf : (ℝ → ℂ) → ℝ → Set ℂ` (the boundaries of `η̃((−∞, t])`); and the unnormalised pair
+`Zpair : ℝ → (ℂ → ℝ) → (ℝ → ℂ) → ℝ → ℝ × ℝ`. The repository's `MatedCRTEnv.bm` is normalised (`IsCorrelatedBM2` fixes
+`Var = |t|`), so GHMS's variance constant is not carried by any Lean object here.
+
+**DMS, arXiv:1409.7055v4 (Duplantier-Miller-Sheffield), printed statements used by r3 Section 6.**
+* Theorem 1.9 (pp. 26-27; text at line 1301 of the extraction): in the setting of a `γ`-quantum cone `C = (ℂ, h, 0, ∞)` with an
+  independent whole-plane space-filling SLE_κ₀ `η′` from `∞` to `∞`, reparametrised by `γ`-LQG area, the boundary-length pair
+  `(L, R)` is a two-sided correlated Brownian motion. The displayed covariance is not transcribed in this round.
+* Theorem 1.11 (p. 29; line 1424): in the setting of Theorem 1.9, `(L, R)` a.s. determines both `η′` and `h`, up to a rigid
+  rotation of `ℂ` about the origin.
+* Lemma 8.8 (p. 143; line 8042): in the context of Section 8.1 (the topological mating `C/∼` of the trees `L`, `R`, with the
+  space-filling path `ζ : ℝ → C/∼`, where `ζ(t)` is the class of the vertical segment at horizontal coordinate `t`; lines
+  8016-8041), a.s. there is a unique map `Φ : C/∼ → ℂ` with `Φ(ζ(t)) = η′(t)` for all `t`; equivalently `ζ(s) = ζ(t)` implies
+  `η′(s) = η′(t)`.
+* Lemma 8.13 (pp. 146-148; line 8230): a.s. every multiple point of `η′` is a merge point (hit exactly three times) or a
+  `k`-flow point for some `k ≥ 1` (hit exactly `k + 1` times).
+* Lemma 8.14 (p. 148; lines 8294-8300): for each point `z` hit at multiple times, the times in `η′⁻¹({z})` are all equivalent
+  under the smallest equivalence relation `≡` with `s ≡ t` if (1) `L_s = L_t` and each `r ∈ (s, t)` has `L_r > L_s`, or (2) as
+  printed, `R_s = L_t` and each `r ∈ (s, t)` has `R_r > R_s`. SOURCE DEFECT, condition 2: the printed equation `R_s = L_t`
+  contradicts the proof at line 8296-8297, which uses equal values of the same coordinate; the intended equation appears to be
+  `R_s = R_t`. Not staged; the r3 draft also does not use this condition as a theorem.
+* Theorems 8.18, 9.1, 9.4 and Corollary 9.3 (pp. 149-152) are cited in r3 (lines 1832-1840) to explain why Theorem 1.11 is not
+  invoked directly; they are not inputs of the r3 proof path and are not staged.
+Missing carriers: the quotient `C/∼` and the map `ζ` (DMS Section 8.1, pp. 142-143), the merge and flow-point notions of
+Lemmas 8.12-8.13, and the equivalence `≡` on `ℝ` of Lemma 8.14 with the map `Φ` of Lemma 8.8.
+
+-/
+
 end MatedCRT.StoppedPoleReconstruction
