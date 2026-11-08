@@ -37,7 +37,7 @@ Proved here.
 
 Residuals (exact Props, not proved here; steps2 885-909 and 911-926):
 * `CountableC2DenseStmt R φs`: the countable family is `C²`-dense among nonnegative tests in `ball 0 R`.
-* `LaplacianLESectionStmt μ hR φs`: for a locally finite `μ` and a `C²`-dense nonnegative family, the countable mass
+* `LaplacianLESectionStmt μ hR φs`: for a measure `μ` with `μ (ball 0 R) < ∞` and a `C²`-dense nonnegative family, the countable mass
   inequalities hold for a trace `w` iff `LaplacianLE w̃ μ (ball 0 R)` (the final LaplacianLE section identification).
 -/
 
@@ -296,8 +296,8 @@ theorem mem_superTraces_iff {μ : Measure ℂ} {R t : ℝ} (hR : 0 < R) (w : Bal
 
 /-- **Residual A: countable `C²` approximation (steps2 885-909).** Every nonnegative test `φ` supported in `ball 0 R`
 is approximated, together with its Laplacian, uniformly by members of the family `φs`. This is the density of the
-countable family in the `C²` topology on nonnegative tests; it is the only input needed to pass from the countable
-inequalities to all tests. -/
+countable family in the `C²` topology on nonnegative tests; it is the input that passes from the countable
+inequalities to all tests, given `μ (ball 0 R) < ∞` (residual B). -/
 def CountableC2DenseStmt (R : ℝ) (φs : ℕ → ℂ → ℝ) : Prop :=
   ∀ φ : ℂ → ℝ, IsTestFunction (ball 0 R) φ → (∀ z, 0 ≤ φ z) → ∀ ε : ℝ, 0 < ε →
     ∃ j : ℕ, (∀ z, |φs j z - φ z| ≤ ε) ∧
