@@ -100,9 +100,9 @@ structure MainHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   quantumConeScaling : QuantumConeScalingInput
   -- (c) Open named steps
   /-- Theorems 1.4, 1.6: the rescaled environment is valid (eq:scale-invariance-of-field-and-eta, IR-c3-1). Reduced
-  (`coneEnvironmentScalingStep_of_inputs`, c1, 0d13527) to External SLE inputs and the requested, not yet admitted,
-  `RescaledEnvironmentInput` (IR-c1-1). Owner: m5 (task cone-environment-scaling); the admission of
-  `RescaledEnvironmentInput` is for the operator. -/
+  (`coneEnvironmentScalingStep_of_inputs`, 4e02fde) to the External SLE and quantum cone scaling inputs,
+  Fact 2.2, and the steps `RescaledConeFieldStep`, `RescaledConeClockStep`, and
+  `RescaledMatingOfTreesStep`. -/
   coneEnvironmentScaling : ConeEnvironmentScalingStep 𝒮
   /-- Lemma 2.4: existence of the whole-plane log-singular LQG objects. Owner: c5 (sec2-finalize). -/
   wholePlaneLogLQGExistence : WholePlaneLogLQGExistenceStep

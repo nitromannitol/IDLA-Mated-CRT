@@ -496,14 +496,15 @@ Lemmas 2.13, 4.3, corrected 4.4, corrected 4.5 (`discreteBasicProperties`, `disc
 section FinalForms
 
 /-- **Theorem 1.4**, final form: Propositions 4.2, 5.1, 6.1, 7.1 and Fact 2.2, the literature inputs
-`QuantumConeScalingInput` and the three SLE inputs, the requested `RescaledEnvironmentInput` (IR-c1-1, not yet in
-MatedCRT/External) and the Section 2 steps `ConeHarmonicBallStrictGrowthStep` (E-c5-3),
+`QuantumConeScalingInput`, the three SLE inputs, the steps `RescaledConeFieldStep`, `RescaledConeClockStep`,
+`RescaledMatingOfTreesStep`, and the Section 2 steps `ConeHarmonicBallStrictGrowthStep` (E-c5-3),
 `ConeHalfBallFamilyFunctionalStep` (`convergenceOfIDLA_of_bounds_coneSteps` with
 `coneEnvironmentScalingStep_of_inputs`). -/
 example (𝒮 : SpaceFillingSLEModel) (h42 : DivSandpileLowerBoundStmt 𝒮) (h51 : IDLALowerBoundStmt 𝒮)
     (h61 : IDLAUpperBoundStmt 𝒮) (h71 : DivSandpileUpperBoundStmt 𝒮) (h22 : LQGMeasurePropertiesStmt)
     (hscale : QuantumConeScalingInput) (hsi : SLEScaleInvarianceInput 𝒮) (hrp : SLEReparametrizationInput 𝒮)
-    (him : SLEIndepMonoInput 𝒮) (hres : RescaledEnvironmentInput 𝒮) (hgrow : ConeHarmonicBallStrictGrowthStep)
+    (him : SLEIndepMonoInput 𝒮) (hfield : RescaledConeFieldStep 𝒮) (hclock : RescaledConeClockStep 𝒮)
+    (hmating : RescaledMatingOfTreesStep 𝒮) (hgrow : ConeHarmonicBallStrictGrowthStep)
     (hfun : ConeHalfBallFamilyFunctionalStep) : ConvergenceOfIDLAStmt 𝒮 := by
   have henv : ConeEnvironmentScalingStep 𝒮 := by audit_apply coneEnvironmentScalingStep_of_inputs
   audit_apply convergenceOfIDLA_of_bounds_coneSteps
@@ -512,7 +513,8 @@ example (𝒮 : SpaceFillingSLEModel) (h42 : DivSandpileLowerBoundStmt 𝒮) (h5
 example (𝒮 : SpaceFillingSLEModel) (h42 : DivSandpileLowerBoundStmt 𝒮) (h51 : IDLALowerBoundStmt 𝒮)
     (h61 : IDLAUpperBoundStmt 𝒮) (h71 : DivSandpileUpperBoundStmt 𝒮) (h22 : LQGMeasurePropertiesStmt)
     (hscale : QuantumConeScalingInput) (hsi : SLEScaleInvarianceInput 𝒮) (hrp : SLEReparametrizationInput 𝒮)
-    (him : SLEIndepMonoInput 𝒮) (hres : RescaledEnvironmentInput 𝒮) (hgrow : ConeHarmonicBallStrictGrowthStep)
+    (him : SLEIndepMonoInput 𝒮) (hfield : RescaledConeFieldStep 𝒮) (hclock : RescaledConeClockStep 𝒮)
+    (hmating : RescaledMatingOfTreesStep 𝒮) (hgrow : ConeHarmonicBallStrictGrowthStep)
     (hfun : ConeHalfBallFamilyFunctionalStep) : ConvergenceOfDivSandpileStmt 𝒮 := by
   have henv : ConeEnvironmentScalingStep 𝒮 := by audit_apply coneEnvironmentScalingStep_of_inputs
   audit_apply convergenceOfDivSandpile_of_bounds_coneSteps
