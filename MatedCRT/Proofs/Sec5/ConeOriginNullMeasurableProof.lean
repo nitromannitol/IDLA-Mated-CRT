@@ -454,6 +454,117 @@ theorem nullMeasurableSet_inclusionCodeSet {Ω : Type} [MeasurableSpace Ω] (P :
     NullMeasurableSet.biInter (Set.to_countable _) fun k _ =>
       NullMeasurableSet.biUnion ((gaussRat_countable.mono inter_subset_left)) fun p _ => h p
 
+/-! ### M. The mass code: the limit functional `J_φ` is Borel and equals `∫ φ dμ` (steps2 838-866) -/
+
+theorem dyadicScale_pos' (k : ℕ) : 0 < dyadicScale k := by
+  unfold dyadicScale
+  positivity
+
+/-- The circle-process index `(2^{-k}, z)` at the dyadic scale `2^{-k}`. -/
+noncomputable def dyadicIdx (k : ℕ) (z : ℂ) : PosCircleIndex :=
+  (⟨dyadicScale k, dyadicScale_pos' k⟩, z)
+
+theorem continuous_dyadicIdx (k : ℕ) : Continuous (dyadicIdx k) :=
+  continuous_const.prodMk continuous_id
+
+/-- The dyadic approximation `∫ φ(z) 2^{-kγ²/2} exp(γ f(2^{-k}, z)) dz` read from a circle process `f`
+(eq:measure-lim with `f` in place of the circle averages). -/
+noncomputable def massApprox (γ : ℝ) (φ : ℂ → ℝ) (k : ℕ) (f : PosCircleFns) : ℝ :=
+  ∫ z, φ z * (dyadicScale k ^ (γ ^ 2 / 2) * Real.exp (γ * f (dyadicIdx k z)))
+
+/-- Each dyadic approximation is a Borel function of the circle process (Fubini on a jointly continuous integrand). -/
+theorem massApprox_measurable (γ : ℝ) (φ : ℂ → ℝ) (hφ : Continuous φ) (k : ℕ) :
+    Measurable (massApprox γ φ k) := by
+  have hev : Continuous (fun p : PosCircleFns × ℂ => p.1 (dyadicIdx k p.2)) :=
+    continuous_eval.comp (continuous_fst.prodMk ((continuous_dyadicIdx k).comp continuous_snd))
+  have hcont : Continuous (fun p : PosCircleFns × ℂ =>
+      φ p.2 * (dyadicScale k ^ (γ ^ 2 / 2) * Real.exp (γ * p.1 (dyadicIdx k p.2)))) :=
+    (hφ.comp continuous_snd).mul
+      (continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hev)))
+  exact (hcont.stronglyMeasurable.integral_prod_right).measurable
+
+/-- The dyadic approximation of the LQG measure, read off the circle process, is the integral against `lqgApprox`. -/
+theorem integral_lqgApprox_eq_massApprox (γ : ℝ) {hcirc : ℝ → ℂ → ℝ} {φ : ℂ → ℝ}
+    (k : ℕ) {f : PosCircleFns} (hf : ∀ (ε : ℝ) (hε : 0 < ε) (z : ℂ), f (⟨ε, hε⟩, z) = hcirc ε z) :
+    ∫ z, φ z ∂(lqgApprox γ hcirc (dyadicScale k)) = massApprox γ φ k f := by
+  have hfun : ∀ z : ℂ, f (dyadicIdx k z) = hcirc (dyadicScale k) z := fun z =>
+    hf (dyadicScale k) (dyadicScale_pos' k) z
+  have hfc : Continuous (fun z => f (dyadicIdx k z)) := f.continuous.comp (continuous_dyadicIdx k)
+  have hmeas : Measurable (fun z => ENNReal.ofReal
+      (dyadicScale k ^ (γ ^ 2 / 2) * Real.exp (γ * f (dyadicIdx k z)))) :=
+    ENNReal.measurable_ofReal.comp
+      ((continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hfc))).measurable)
+  unfold lqgApprox
+  have hdens : (fun z => ENNReal.ofReal (dyadicScale k ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc (dyadicScale k) z))) =
+      fun z => ENNReal.ofReal (dyadicScale k ^ (γ ^ 2 / 2) * Real.exp (γ * f (dyadicIdx k z))) := by
+    funext z
+    rw [hfun z]
+  rw [hdens, integral_withDensity_eq_integral_toReal_smul hmeas (Filter.Eventually.of_forall fun z =>
+    ENNReal.ofReal_lt_top)]
+  unfold massApprox
+  congr 1
+  funext z
+  rw [smul_eq_mul, ENNReal.toReal_ofReal (mul_nonneg (Real.rpow_nonneg (dyadicScale_pos' k).le _)
+    (Real.exp_pos _).le)]
+  ring
+
+/-- Dyadic convergence of the approximations to `∫ φ dm` for a circle process agreeing with `hcirc` at positive
+radii (`IsLQGLimit`, vague convergence along the dyadic scales). -/
+theorem tendsto_massApprox_of_isLQGLimit {γ : ℝ} {hcirc : ℝ → ℂ → ℝ} {m : Measure ℂ}
+    (hlim : IsLQGLimit γ hcirc m) {φ : ℂ → ℝ} (hφ : Continuous φ) (hφs : HasCompactSupport φ)
+    {f : PosCircleFns} (hf : ∀ (ε : ℝ) (hε : 0 < ε) (z : ℂ), f (⟨ε, hε⟩, z) = hcirc ε z) :
+    Tendsto (fun k => massApprox γ φ k f) atTop (𝓝 (∫ z, φ z ∂m)) :=
+  (hlim.tendsto_integral φ hφ hφs).congr fun k => integral_lqgApprox_eq_massApprox γ k hf
+
+open Classical in
+/-- The limit functional `J_φ` of steps2 838-866: the limit of the dyadic approximations when it exists, and `0`
+otherwise. -/
+noncomputable def massLimit (γ : ℝ) (φ : ℂ → ℝ) (f : PosCircleFns) : ℝ :=
+  if h : ∃ L, Tendsto (fun k => massApprox γ φ k f) atTop (𝓝 L) then h.choose else 0
+
+theorem massLimit_eq_of_tendsto {γ : ℝ} {φ : ℂ → ℝ} {f : PosCircleFns} {L : ℝ}
+    (h : Tendsto (fun k => massApprox γ φ k f) atTop (𝓝 L)) : massLimit γ φ f = L := by
+  have hex : ∃ L', Tendsto (fun k => massApprox γ φ k f) atTop (𝓝 L') := ⟨L, h⟩
+  have hval : massLimit γ φ f = hex.choose := by
+    unfold massLimit
+    split_ifs
+    simp_all
+  rw [hval]
+  exact tendsto_nhds_unique hex.choose_spec h
+
+/-- **The limit functional is Borel** (steps2 838-866, `J_φ` Borel): the set where the dyadic approximations converge is
+Borel, and on it the limit is a pointwise limit of Borel functions. -/
+theorem measurable_massLimit (γ : ℝ) (φ : ℂ → ℝ) (hφ : Continuous φ) : Measurable (massLimit γ φ) := by
+  have hS : MeasurableSet {f : PosCircleFns | ∃ L, Tendsto (fun k => massApprox γ φ k f) atTop (𝓝 L)} :=
+    measurableSet_exists_tendsto fun k => massApprox_measurable γ φ hφ k
+  refine measurable_of_tendsto_metrizable (f := fun k =>
+      {f : PosCircleFns | ∃ L, Tendsto (fun k' => massApprox γ φ k' f) atTop (𝓝 L)}.indicator
+        (massApprox γ φ k)) (fun k => (massApprox_measurable γ φ hφ k).indicator hS) ?_
+  rw [tendsto_pi_nhds]
+  intro f
+  by_cases hf : ∃ L, Tendsto (fun k => massApprox γ φ k f) atTop (𝓝 L)
+  · obtain ⟨L, hL⟩ := hf
+    have hmem : f ∈ {f : PosCircleFns | ∃ L, Tendsto (fun k => massApprox γ φ k f) atTop (𝓝 L)} := ⟨L, hL⟩
+    simp only [Set.indicator_of_mem hmem]
+    rw [massLimit_eq_of_tendsto hL]
+    exact hL
+  · have hnot : f ∉ {f : PosCircleFns | ∃ L, Tendsto (fun k => massApprox γ φ k f) atTop (𝓝 L)} := hf
+    have e : massLimit γ φ f = 0 := by
+      unfold massLimit
+      split_ifs
+      simp_all
+    simp only [Set.indicator_of_notMem hnot]
+    rw [e]
+    exact tendsto_const_nhds
+
+/-- **Mass code (steps2 838-866).** For a circle process `f` agreeing with `hcirc` at positive radii and an LQG limit
+`m` of `hcirc`, `J_φ(f) = ∫ φ dm` for every continuous compactly supported `φ`. -/
+theorem massLimit_eq_integral (γ : ℝ) {hcirc : ℝ → ℂ → ℝ} {m : Measure ℂ} (hlim : IsLQGLimit γ hcirc m)
+    {φ : ℂ → ℝ} (hφ : Continuous φ) (hφs : HasCompactSupport φ) {f : PosCircleFns}
+    (hf : ∀ (ε : ℝ) (hε : 0 < ε) (z : ℂ), f (⟨ε, hε⟩, z) = hcirc ε z) :
+    massLimit γ φ f = ∫ z, φ z ∂m :=
+  massLimit_eq_of_tendsto (tendsto_massApprox_of_isLQGLimit hlim hφ hφs hf)
+
 /-! ### F. Completion measurability of the origin inclusion event (steps2 992-1009) -/
 
 /-- **Residual input: the Borel obstacle code (steps2 838-955).** For a Borel version `c` of the circle process and
