@@ -30,4 +30,27 @@ def BerestyckiGwynneConeBallMassStmt : Prop :=
         ENNReal.ofReal (δ ^ (((2 + γ) ^ (2 : ℕ)) / 2 + ζ)) ≤ μ ω (ball z δ) ∧
         μ ω (ball z δ) ≤ ENNReal.ofReal (δ ^ (((2 - γ) ^ (2 : ℕ)) / 2 - ζ))})
 
+/-- Berestycki and Gwynne, arXiv:2003.10320v2, Lemma 2.4, (2.8),
+p. 17: the two-sided cell-diameter estimate for the canonical circle-average
+embedded quantum cone and its independent space-filling SLE, parameterized
+by quantum area. `P` and `η` here denote that fixed canonical realization;
+this proposition does not assert the estimate for arbitrary model laws or a
+representation-uniform exponent. -/
+def BerestyckiGwynneCellDiameterStmt {Ω : Type} [MeasurableSpace Ω]
+    (P : Measure Ω) (η : Ω → ℝ → ℂ) (γ : ℝ) : Prop :=
+  0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ ζ : ℝ, 0 < ζ → ζ < 1 →
+    PolyHighProb P (fun ε => {ω | ∀ i : ℤ,
+      (cell ε (η ω) i ∩ ball 0 ρ).Nonempty →
+        ε ^ (2 / (2 - γ) ^ 2 + ζ) ≤ diam (cell ε (η ω) i) ∧
+        diam (cell ε (η ω) i) ≤ ε ^ (2 / (2 + γ) ^ 2 - ζ)})
+
+/-- Berestycki and Gwynne, arXiv:2003.10320v2, Remark 1.3, (1.8),
+p. 10, for the annealed median of the canonical whole-plane model. The
+argument `m` denotes that fixed canonical median scale, rather than an
+arbitrary raw environment law. -/
+def BerestyckiGwynneMedianScaleStmt (γ : ℝ) (m : ℝ → ℝ) : Prop :=
+  0 < γ → γ < 2 → ∃ C : ℝ, 1 < C ∧ ∃ δ : ℝ, 0 < δ ∧
+    ∀ ε : ℝ, 0 < ε → ε < δ → C⁻¹ * ε⁻¹ ≤ m ε ∧ m ε ≤ C * ε⁻¹
+
 end MatedCRT

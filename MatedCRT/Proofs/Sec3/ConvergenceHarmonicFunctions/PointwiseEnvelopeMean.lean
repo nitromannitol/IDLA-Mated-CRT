@@ -50,10 +50,10 @@ theorem MatedCRTEnv.IsValid.mean_on_pointwise_cellAnnulus_envelope
     nhdsWithin_le_nhds (Iio_mem_nhds hδm)] with ε hεU hε hεδ hεδm
   have hmpos : 0 < S.mε ε :=
     (mul_pos (inv_pos.mpr hMpos) (inv_pos.mpr hε)).trans_le (hms ε hε hεδm).1
-  filter_upwards [hmean, hloc, hS.isAreaParametrized, hS.ae_tendsto_cocompact, hadj] with
-    ω hmean hloc hη hproper hadj
+  filter_upwards [hmean, hloc, hS.isAreaParametrized, hS.ae_tendsto_cocompact, hadj,
+    (hE ε hε hεδ).2] with ω hmean hloc hη hproper hadj hgeom
   intro hω z ψ H v hball hψ hv
-  have hgeom := (hE ε hε hεδ).2 ω hω
+  have hgeom := hgeom hω
   exact hmean ε hεU z ψ H v hball hψ (hloc ε hε) (S.mult_succ_ne_zero hε.le ω)
     hmpos hη.1 hproper hv (hadj ε hε) hgeom.1 hgeom.2
 
