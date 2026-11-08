@@ -26,6 +26,7 @@ import MatedCRT.Proofs.Sec6.GoodAnnulusPrevalence.Main
 import MatedCRT.Steps.Sec7.DivSandpileUpperBound
 import MatedCRT.Proofs.Sec5.StoppedSurplusSteps
 import MatedCRT.Proofs.Sec5.StoppedExterior
+import MatedCRT.Proofs.Sec5.StoppedInterior
 
 /-!
 # The remaining hypotheses of Theorems 1.4 and 1.6
@@ -138,9 +139,14 @@ structure MainHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   odometerBoundaryUpgradeCorrected : OdometerBoundaryUpgradeCorrectedStep 𝒮
   /-- Lemma 4.6: measurable selection of the subsequence (E-x3-2). No current owner (as above). -/
   odometerMeasurableSelection : OdometerMeasurableSelectionStep 𝒮
-  /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5, not in the paper), interior lower bound of the obstacle
-  surplus (`stoppedMeanValueInequality_of_steps`, 16ca787). Owner: z1 (z1.next). -/
-  stoppedSurplusInterior : StoppedSurplusInteriorStep 𝒮
+  /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5), interior lower bound of the obstacle surplus. Not a field
+  any more: `StoppedSurplusInteriorStep` is supplied by `stoppedSurplusInterior_of_gap` from the strict obstacle gap
+  `harmonicBallStrictObstacleGap`, `mepsScaling` and the three named inputs below (z1, 2026-11-08; E-c1-5 (c)-(e)). -/
+  stoppedSurplusPole : StoppedInterior.StoppedSurplusPoleStep 𝒮
+  /-- Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5 (d)): the discrete-to-continuum geometry of the `δ`-interior. -/
+  stoppedInteriorGeometry : StoppedInterior.StoppedInteriorGeometryStep 𝒮
+  /-- Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5 (e)): measurability of the continuum margin on the random compact set. -/
+  stoppedInteriorMeasurable : StoppedInterior.StoppedInteriorMeasurableStep 𝒮
   /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5), exterior upper bound of the obstacle surplus. The field
   `StoppedSurplusExteriorStep` is no longer assumed: it is supplied by `stoppedSurplusExterior_of_nullMeasurableOrigin`
   from `mepsScaling` and this origin measurability input (z1, 2026-11-08; ESCALATIONS E-c1-5 (b)). -/
