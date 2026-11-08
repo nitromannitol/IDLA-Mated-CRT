@@ -2,6 +2,9 @@ import MatedCRT.Defs.Setting
 import MatedCRT.Steps.Sec2.ConeScaleInvarianceUpToFixedTime
 import HarmonicBalls.Proofs.Sec9.LQGSpatialDilation
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
+import MatedCRT.Proofs.Sec4.DivSandpileLowerBound.StrictGapCompactZero
+import Mathlib.Analysis.Convex.Contractible
+import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
 import Mathlib.Topology.TietzeExtension
 import Mathlib.Topology.PartitionOfUnity
 
@@ -851,5 +854,82 @@ theorem MatedCRTEnv.IsValid.ae_rescaled_measure_eq_of_countable_circle_decomposi
   intro f hf hfc hfU
   exact ⟨∫ z, f z * Real.exp (γ * v z) ∂m,
     tendsto_lqgApprox_of_admissible_circle_decomposition (hU i) hm hc hall v hv heq f hf hfc hfU⟩
+
+
+/-- Indices of a countable disk cover of the punctured plane, with room around
+    each closed disk inside the punctured plane. -/
+def PuncturedPlaneDiskIndex :=
+  {p : ℕ × ℕ // Metric.ball (TopologicalSpace.denseSeq ℂ p.1)
+    (2 * (1 / ((p.2 : ℝ) + 1))) ⊆ ({0} : Set ℂ)ᶜ}
+
+instance : Countable PuncturedPlaneDiskIndex := by
+  unfold PuncturedPlaneDiskIndex
+  infer_instance
+
+/-- The disk associated with a punctured-plane cover index. -/
+noncomputable def puncturedPlaneDisk (p : PuncturedPlaneDiskIndex) : Set ℂ :=
+  Metric.ball (TopologicalSpace.denseSeq ℂ p.1.1) (1 / ((p.1.2 : ℝ) + 1))
+
+/-- Each disk in the cover is bounded, simply connected, and has its closed
+    disk away from the marked point. -/
+theorem puncturedPlaneDisk_properties (p : PuncturedPlaneDiskIndex) :
+    IsOpen (puncturedPlaneDisk p) ∧
+    Bornology.IsBounded (puncturedPlaneDisk p) ∧
+    SimplyConnectedSpace (puncturedPlaneDisk p) ∧
+    Metric.closedBall (TopologicalSpace.denseSeq ℂ p.1.1)
+      (1 / ((p.1.2 : ℝ) + 1)) ⊆ ({0} : Set ℂ)ᶜ := by
+  have hr : (0 : ℝ) < 1 / ((p.1.2 : ℝ) + 1) := by positivity
+  have hsc : SimplyConnectedSpace (puncturedPlaneDisk p) := by
+    let _ : ContractibleSpace (puncturedPlaneDisk p) :=
+      (convex_ball _ _).contractibleSpace ⟨_, Metric.mem_ball_self hr⟩
+    exact SimplyConnectedSpace.ofContractible _
+  refine ⟨Metric.isOpen_ball, Metric.isBounded_ball, hsc, ?_⟩
+  exact (Metric.closedBall_subset_ball (by linarith)).trans p.2
+
+/-- The disks form a countable cover of the punctured plane. -/
+theorem puncturedPlaneDisk_cover :
+    ({0} : Set ℂ)ᶜ ⊆ ⋃ p : PuncturedPlaneDiskIndex, puncturedPlaneDisk p := by
+  intro z hz
+  obtain ⟨p, hp, hsub⟩ := MatedCRT.exists_denseSeq_doubled_ball_subset
+    (({0} : Set ℂ)ᶜ) isOpen_compl_singleton z hz
+  exact Set.mem_iUnion.mpr ⟨⟨p, hsub⟩, hp⟩
+
+
+/-- Every disk in the cover is a proper subset of the plane. -/
+theorem puncturedPlaneDisk_ne_univ (p : PuncturedPlaneDiskIndex) :
+    puncturedPlaneDisk p ≠ Set.univ := by
+  intro heq
+  have hz : (0 : ℂ) ∈ puncturedPlaneDisk p := by rw [heq]; trivial
+  have hsub := (Metric.ball_subset_closedBall.trans (puncturedPlaneDisk_properties p).2.2.2)
+  exact (hsub hz) rfl
+
+/-- Local circle decompositions on the canonical disks suffice for the
+    random-radius area identity. -/
+theorem MatedCRTEnv.IsValid.ae_rescaled_measure_eq_of_punctured_disk_decompositions
+    {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ b : ℝ} (hS : S.IsValid 𝒮 γ)
+    (hγ : γ ≠ 0) (hb : 0 < b) (R : Ω → ℝ) {ν : Ω → Measure ℂ}
+    {η' : Ω → ℝ → ℂ}
+    (hR : ∀ᵐ ω ∂S.P, 0 < R ω)
+    (hν : IsLQGMeasure S.P γ (fun ω => rescaledCircle γ (S.hcirc ω) (R ω) b) ν)
+    (hη' : ∀ᵐ ω ∂S.P, IsAreaParametrized (ν ω) (η' ω))
+    (hdecomp : ∀ i : PuncturedPlaneDiskIndex, ∀ᵐ ω ∂S.P,
+      ∃ (h : ℝ → ℂ → ℝ) (v : ℂ → ℝ) (m : Measure ℂ),
+        IsLocallyFiniteMeasure m ∧
+        ContinuousOn (fun p : ℝ × ℂ => h p.1 p.2)
+          {p | 0 < p.1 ∧ Metric.closedBall p.2 p.1 ⊆ puncturedPlaneDisk i} ∧
+        (∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+          tsupport f ⊆ puncturedPlaneDisk i →
+          Tendsto (fun r : ℝ => ∫ z, f z ∂(lqgApprox γ h r))
+            (𝓝[>] 0) (𝓝 (∫ z, f z ∂m))) ∧
+        ContinuousOn v (puncturedPlaneDisk i) ∧
+        (∀ (r : ℝ) (z : ℂ), 0 < r →
+          Metric.closedBall z r ⊆ puncturedPlaneDisk i →
+          S.hcirc ω r z = addCircleAverage h v r z)) :
+    ∀ᵐ ω ∂S.P, ν ω = rescaledMeasure (S.μ ω) (R ω) b :=
+  MatedCRTEnv.IsValid.ae_rescaled_measure_eq_of_countable_circle_decompositions
+    hS hγ hb R hR hν hη'
+    puncturedPlaneDisk (fun i => (puncturedPlaneDisk_properties i).1)
+    puncturedPlaneDisk_cover hdecomp
 
 end MatedCRT.Sec1
