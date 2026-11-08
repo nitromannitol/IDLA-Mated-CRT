@@ -670,4 +670,121 @@ theorem MatedCRTEnv.IsValid.ae_rescaled_measure_eq_of_countable_local_limits
     (fun ω ε => lqgApprox γ (S.hcirc ω) ε) S.μ hμ happrox hlocal
   exact MatedCRTEnv.IsValid.ae_rescaled_measure_eq_of_off_origin_limit hS hγ hb R hR hν hη' hall
 
+
+/-- Circle-average approximations with the same values on the support of a test
+have the same test integral. -/
+theorem integral_lqgApprox_eq_of_eqOn_tsupport (γ r : ℝ) (h₁ h₂ : ℝ → ℂ → ℝ)
+    (f : ℂ → ℝ) (hfc : HasCompactSupport f) (heq : EqOn (h₁ r) (h₂ r) (tsupport f)) :
+    (∫ z, f z ∂(lqgApprox γ h₁ r)) = ∫ z, f z ∂(lqgApprox γ h₂ r) := by
+  have hm : (lqgApprox γ h₁ r).restrict (tsupport f) =
+      (lqgApprox γ h₂ r).restrict (tsupport f) := by
+    simp only [lqgApprox]
+    rw [restrict_withDensity hfc.isClosed.measurableSet, restrict_withDensity hfc.isClosed.measurableSet]
+    apply withDensity_congr_ae
+    filter_upwards [ae_restrict_mem hfc.isClosed.measurableSet] with z hz
+    rw [heq hz]
+  calc
+    (∫ z, f z ∂(lqgApprox γ h₁ r)) = ∫ z in tsupport f, f z ∂(lqgApprox γ h₁ r) := by
+      symm
+      exact setIntegral_eq_integral_of_forall_compl_eq_zero
+        (fun z hz => image_eq_zero_of_notMem_tsupport hz)
+    _ = ∫ z in tsupport f, f z ∂(lqgApprox γ h₂ r) := by rw [hm]
+    _ = ∫ z, f z ∂(lqgApprox γ h₂ r) :=
+      setIntegral_eq_integral_of_forall_compl_eq_zero
+        (fun z hz => image_eq_zero_of_notMem_tsupport hz)
+
+/-- Local Weyl scaling needs circle-average continuity only on compact subsets
+of the domain and only eventually as the regularization radius tends to zero. -/
+theorem tendsto_lqgApprox_addCircleAverage_allScale_local_profiles {γ : ℝ} {h : ℝ → ℂ → ℝ}
+    {D : Set ℂ} (hD : IsOpen D) {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ)
+    (hc : ∀ K : Set ℂ, IsCompact K → K ⊆ D →
+      ∀ᶠ r : ℝ in 𝓝[>] 0, ContinuousOn (h r) K)
+    (hall : ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f → tsupport f ⊆ D →
+      Tendsto (fun r : ℝ => ∫ z, f z ∂(lqgApprox γ h r))
+        (𝓝[>] 0) (𝓝 (∫ z, f z ∂μ)))
+    (v : ℂ → ℝ) (hv : ContinuousOn v D)
+    (f : ℂ → ℝ) (hf : Continuous f) (hfc : HasCompactSupport f) (hfD : tsupport f ⊆ D) :
+    Tendsto (fun r : ℝ => ∫ z, f z ∂(lqgApprox γ (addCircleAverage h v) r))
+      (𝓝[>] 0) (𝓝 (∫ z, f z * Real.exp (γ * v z) ∂μ)) := by
+  classical
+  obtain ⟨δ, hδ, hδD⟩ := hfc.exists_cthickening_subset_open hD hfD
+  let K : Set ℂ := tsupport f
+  let S : Set ℂ := Metric.cthickening δ K
+  let W : Set ℂ := Metric.thickening δ K
+  have hSW : W ⊆ S := Metric.thickening_subset_cthickening δ K
+  have hWS : W ⊆ D := hSW.trans hδD
+  have hKW : K ⊆ W := Metric.self_subset_thickening hδ K
+  have hext (r : ℝ) (hr : ContinuousOn (h r) S) :
+      ∃ H : C(ℂ, ℝ), ∀ z ∈ S, H z = h r z := by
+    let hs : C(S, ℝ) := ⟨fun z => h r z, hr.domRestrict⟩
+    obtain ⟨H, hH⟩ := hs.exists_restrict_eq Metric.isClosed_cthickening
+    exact ⟨H, fun z hz => congrArg (fun g : C(S, ℝ) => g ⟨z, hz⟩) hH⟩
+  let H : ℝ → C(ℂ, ℝ) := fun r =>
+    if hr : ContinuousOn (h r) S then Classical.choose (hext r hr) else 0
+  have hHeq (r : ℝ) (hr : ContinuousOn (h r) S) : ∀ z ∈ S, H r z = h r z := by
+    simpa only [H, dite_eq_left hr] using Classical.choose_spec (hext r hr)
+  let H' : ℝ → ℂ → ℝ := fun r => H r
+  have hHc : ∀ r : ℝ, 0 < r → Continuous (H' r) := fun r _ => (H r).continuous
+  have hce : ∀ᶠ r : ℝ in 𝓝[>] 0, ContinuousOn (h r) S := hc S hfc.cthickening hδD
+  have hHall : ∀ φ : ℂ → ℝ, Continuous φ → HasCompactSupport φ → tsupport φ ⊆ W →
+      Tendsto (fun r : ℝ => ∫ z, φ z ∂(lqgApprox γ H' r))
+        (𝓝[>] 0) (𝓝 (∫ z, φ z ∂μ)) := by
+    intro φ hφ hφc hφW
+    apply (hall φ hφ hφc (hφW.trans hWS)).congr'
+    filter_upwards [hce] with r hr
+    apply integral_lqgApprox_eq_of_eqOn_tsupport γ r h H' φ hφc
+    intro z hz
+    exact (hHeq r hr z (hSW (hφW hz))).symm
+  have hlim := tendsto_lqgApprox_addCircleAverage_allScale_local Metric.isOpen_thickening
+    hμ hHc hHall v (hv.mono hWS) f hf hfc hKW
+  apply hlim.congr'
+  filter_upwards [hce] with r hr
+  apply integral_lqgApprox_eq_of_eqOn_tsupport γ r (addCircleAverage H' v) (addCircleAverage h v) f hfc
+  intro z hz
+  simp only [addCircleAverage, H', hHeq r hr z (hSW (hKW hz))]
+
+
+/-- Joint continuity on admissible circles supplies the eventual local spatial
+continuity required for compactly supported tests in an open domain. -/
+theorem eventually_continuousOn_compact_of_admissible_circles {D : Set ℂ}
+    (hD : IsOpen D) {h : ℝ → ℂ → ℝ}
+    (hc : ContinuousOn (fun p : ℝ × ℂ => h p.1 p.2)
+      {p | 0 < p.1 ∧ Metric.closedBall p.2 p.1 ⊆ D})
+    (K : Set ℂ) (hK : IsCompact K) (hKD : K ⊆ D) :
+    ∀ᶠ r : ℝ in 𝓝[>] 0, ContinuousOn (h r) K := by
+  obtain ⟨δ, hδ, hδD⟩ := hK.exists_cthickening_subset_open hD hKD
+  filter_upwards [(nhdsWithin_le_nhds : 𝓝[>] (0 : ℝ) ≤ 𝓝 0) (Iio_mem_nhds hδ),
+    self_mem_nhdsWithin] with r hr hrpos
+  apply hc.comp (continuous_const.prodMk continuous_id).continuousOn
+  intro z hz
+  refine ⟨hrpos, ?_⟩
+  intro w hw
+  apply hδD
+  apply Metric.mem_cthickening_of_dist_le w z δ K hz
+  exact (Metric.mem_closedBall.mp hw).trans hr.le
+
+
+/-- A local circle-average decomposition transfers all-scale convergence to the
+sum, using only admissible-circle continuity of the zero-boundary part. -/
+theorem tendsto_lqgApprox_of_local_circle_decomposition {γ : ℝ}
+    {h H : ℝ → ℂ → ℝ} {D : Set ℂ} (hD : IsOpen D)
+    {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ)
+    (hc : ContinuousOn (fun p : ℝ × ℂ => h p.1 p.2)
+      {p | 0 < p.1 ∧ Metric.closedBall p.2 p.1 ⊆ D})
+    (hall : ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f → tsupport f ⊆ D →
+      Tendsto (fun r : ℝ => ∫ z, f z ∂(lqgApprox γ h r))
+        (𝓝[>] 0) (𝓝 (∫ z, f z ∂μ)))
+    (v : ℂ → ℝ) (hv : ContinuousOn v D)
+    (f : ℂ → ℝ) (hf : Continuous f) (hfc : HasCompactSupport f) (hfD : tsupport f ⊆ D)
+    (heq : ∀ᶠ r : ℝ in 𝓝[>] 0,
+      EqOn (H r) (addCircleAverage h v r) (tsupport f)) :
+    Tendsto (fun r : ℝ => ∫ z, f z ∂(lqgApprox γ H r))
+      (𝓝[>] 0) (𝓝 (∫ z, f z * Real.exp (γ * v z) ∂μ)) := by
+  have hc' := eventually_continuousOn_compact_of_admissible_circles hD hc
+  have hlim := tendsto_lqgApprox_addCircleAverage_allScale_local_profiles hD hμ hc' hall
+    v hv f hf hfc hfD
+  apply hlim.congr'
+  filter_upwards [heq] with r hr
+  exact (integral_lqgApprox_eq_of_eqOn_tsupport γ r H (addCircleAverage h v) f hfc hr).symm
+
 end MatedCRT.Sec1
