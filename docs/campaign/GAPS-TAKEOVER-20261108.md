@@ -120,6 +120,22 @@ def LQGMeasureLocalityFunctionalStep : Prop :=
 
 ## WPN-34-clock: `MatedCRT.DirichletStoppedClockConvergenceStep`
 
+**UPDATE 2026-11-08 09:45 UTC: WRITTEN-PROOF-AVAILABLE / REPAIRED CONSTRUCTOR LEAN-PENDING.**
+Operator-supplied `notes/env-steps/env-steps.tex` is independently audited
+CORRECT. Proposition false (1071-1095) refutes discharging the predicate for
+arbitrary supplied `G` (`G = 1` fails at time zero); the conditional consumer
+itself is not refuted. Proposition correctstopped (1106-1252) constructs a
+jointly measurable continuous-path-valued `G` for `0 ≤ γ < 2`, bounded simply
+connected field domain and the remaining consumer hypotheses. It supplies the
+exact existing source predicate and identifies `G` with stopped `F` in the
+stated iterated-a.e. order. The exact elaboration-checked constructor type and
+routing to z2 are in [the routing note](ENV-STEPS-ROUTING-20261108.md).
+The original predicate below remains unchanged; its arbitrary-parameter
+universal discharge is not a valid replacement goal. Occupation and the cone
+start-at-zero Green lemma remain separate.
+
+Historical request as originally recorded:
+
 **WRITTEN-PROOF-NEEDED.** Previously flagged by the operator. This is the former hsource in DirichletClockTransfer.lean:86-90, now named at commit 2afd11a. Corrected paper occupation discussion 1168-1172 does not state this exact all-time a.s. convergence and continuity. See GAPS-SEC3.md and the audited occupation proof for related supported bridges; do not equate path convergence with this statement.
 
 Exact declaration: `MatedCRT/Steps/Sec3/DirichletStoppedClock.lean:15`.

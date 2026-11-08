@@ -6,7 +6,22 @@ proof steps, not literature axioms. Their complete Lean types are their named
 `Prop` declarations in that file. Paper line references below refer to
 `paper/idla_mated_crt-corrected.tex`.
 
-## NOT IN SOURCES: needs a written proof
+## Update: audited written proofs available (2026-11-08 09:45 UTC)
+
+**WRITTEN-PROOF-AVAILABLE / LEAN-PENDING.** The operator supplied and
+independently audited all three arguments below. See
+[exact proof routing and source locators](ENV-STEPS-ROUTING-20261108.md).
+The pinned proof is fleet `notes/env-steps/env-steps.tex`: field 299-335,
+clock 449-487, mating 942-981, with supporting lemmas listed in that note.
+m1 owns the field proof, z1 the all-start clock proof, and m5 the same-space
+mating infrastructure. These Steps remain hypotheses until their Lean proofs
+are checked. The stopped-clock gap has a separate existential repair; arbitrary
+supplied `G` is not justified. No frozen declarations were changed.
+
+## Historical requests (written-proof need superseded by the update)
+
+The descriptions and earlier source observations below record the original
+requests. The new pinned DMS source is arXiv:1409.7055v4, as audited.
 
 1. `MatedCRT.RescaledConeFieldStep : SpaceFillingSLEModel → Prop`: for a valid
    environment and an a.s. equal measurable circle version, construct measurable
