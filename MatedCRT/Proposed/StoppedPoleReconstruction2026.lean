@@ -10,12 +10,13 @@ arXiv:1807.07515v3 (retained printed text; printed page numbers below). Locators
 * Definition 1.15 (cell configuration), p. 14; (1.14)-(1.16) and the metric (1.15), p. 15;
 * Theorem 1.16, p. 15, hypotheses 1-3 (condition 3 = connectedness along lines).
 
-Staged here (Proposed, not promoted): GMS Theorem 1.16 (p. 15) in full, `GMSTheorem116Stmt` (planar Brownian limit with
-covariance `Cov`, recurrence, harmonic-centre limit (1.17)), with its carriers (Definition 1.2 condition 4, Definition 1.3,
-Definition 1.15, (1.5), (1.14)-(1.16), `IsQuenchedWalkLaw`, `IsPlanarBMLaw`); and GMS Theorem 3.10 (p. 43),
-`GMSTheorem310Stmt`, with the local curve metric (1.7)-(1.8) and the Prokhorov distance.
-Not staged: GMS Corollary 3.11 (p. 44, the Jordan-domain result), whose printed statement is suspected false (defect 5);
-GHMS Theorem 1.1 and the DMS Chapter 8-9 results, which are carrier obstructions (recorded below).
+Staged here (Proposed, not promoted): GMS Theorem 1.16 (p. 15) as three independent Props, `GMSTheorem116BrownianStmt`
+(planar Brownian limit; outer quenched expectations against bounded locally uniformly continuous functionals),
+`GMSTheorem116RecurrenceStmt`, and `GMSHarmonicCentreStmt φ₀` (1.17); `GMSTheorem116Stmt φ₀` is their conjunction, with the
+named readings `GMSTheorem116StmLiteral` and `GMSTheorem116StmCentroid`. Law existence is retained separately
+(`GMSQuenchedLawExistenceStmt`, `PlanarBMLawExistenceStmt`). GMS Theorem 3.10 (p. 43) is `GMSTheorem310Stmt`, with the local
+curve metric (1.7)-(1.8) and the Prokhorov distance. Not staged: GMS Corollary 3.11 (p. 44, the Jordan-domain result;
+suspected false, defect 5); GHMS Theorem 1.1 and the DMS Chapter 8-9 results, which are carrier obstructions (recorded below).
 
 Printed-source notes, recorded and not silently corrected:
 * Definition 1.15, item 1: "the intersection of any two elements of `H` has zero Lebesgue measure" is read as
@@ -197,9 +198,10 @@ def GMSHarmonicCentreStmt (φ₀ : Set ℂ → ℂ) : Prop :=
 /-! ### The quenched walk, the time change and the planar Brownian limit (GMS Theorem 1.16, p. 15)
 
 Carrier decisions, recorded for the operator:
-* (D1) The printed walk `X̂` is piecewise constant and is kept as printed. Its local uniform convergence is expressed
-  through test functionals that are cylinder-measurable, bounded and continuous for the local uniform distance
-  `locUnifDist` (`IsLocUnifTest`). No interpolation is applied.
+* (D1) The printed walk `X̂` is piecewise constant and is kept as printed, on the all-functions path space `ℝ≥0 → ℂ`.
+  Its local uniform convergence is formalised by outer integrals (Hoffmann-Jørgensen) of bounded, locally uniformly
+  continuous `ℝ≥0∞`-valued functionals (`IsLocUnifTest`), with no measurability required of the test functionals. No
+  interpolation is applied. This outer-integral convention is the recorded reading; the printed text states none.
 * (D2) The centre `φ₀` is a parameter (`phi0Literal` or `phi0Centroid`).
 * (D3) The walk starts at `sel K`, a cell containing `0`; the printed theorem does not name the starting cell.
 The quenched law is any family of probability measures on jump paths that satisfies the Markov finite-dimensional
@@ -249,15 +251,17 @@ noncomputable def locUnifDist (f g : ℝ≥0 → ℂ) : ℝ≥0∞ :=
   ∑' n : ℕ, (2⁻¹ : ℝ≥0∞) ^ (n + 1) *
     min 1 (⨆ t : ℝ≥0, ⨆ (_ : (t : ℝ) ≤ (n : ℝ)), ENNReal.ofReal ‖f t - g t‖)
 
-/-- Continuity of a path functional for the local uniform topology. -/
-def IsLocUnifContinuous (F : (ℝ≥0 → ℂ) → ℝ) : Prop :=
-  ∀ f : ℝ≥0 → ℂ, ∀ η : ℝ, 0 < η → ∃ δ : ℝ≥0∞, 0 < δ ∧
-    ∀ g : ℝ≥0 → ℂ, locUnifDist f g < δ → |F f - F g| < η
+/-- Outer integral (Hoffmann-Jørgensen) of `g` with respect to `μ`: the infimum of `∫ G dμ` over measurable majorants
+`G ≥ g`. For measurable `g` it is the Lebesgue integral; no measurability of the test functionals is required. -/
+noncomputable def outerLIntegral {α : Type*} [MeasurableSpace α] (μ : Measure α) (g : α → ℝ≥0∞) : ℝ≥0∞ :=
+  ⨅ (G : α → ℝ≥0∞) (_ : Measurable G) (_ : g ≤ G), ∫⁻ a, G a ∂μ
 
-/-- Admissible test functionals for local uniform convergence of path laws: cylinder-measurable, bounded, and locally
-uniformly continuous. -/
-def IsLocUnifTest (F : (ℝ≥0 → ℂ) → ℝ) : Prop :=
-  Measurable F ∧ (∃ M : ℝ, ∀ f, |F f| ≤ M) ∧ IsLocUnifContinuous F
+/-- Admissible test functionals for local uniform convergence of path laws: bounded, `ℝ≥0∞`-valued, and continuous for the
+local uniform distance `locUnifDist`. No measurability is required; the outer integrals above are used. -/
+def IsLocUnifTest (F : (ℝ≥0 → ℂ) → ℝ≥0∞) : Prop :=
+  (∃ M : ℝ≥0∞, M < ⊤ ∧ ∀ f : ℝ≥0 → ℂ, F f ≤ M) ∧
+    ∀ f : ℝ≥0 → ℂ, ∀ η : ℝ≥0∞, 0 < η → ∃ δ : ℝ≥0∞, 0 < δ ∧
+      ∀ g : ℝ≥0 → ℂ, locUnifDist f g < δ → edist (F f) (F g) < η
 
 /-- The planar Brownian law with covariance `Cov`, started at `0` (GMS Theorem 1.16, p. 15), given by its
 finite-dimensional distributions: for finite families of times `t_k ≥ 0` and vectors `u_k ∈ ℝ²`,
@@ -269,28 +273,61 @@ def IsPlanarBMLaw (Cov : Matrix (Fin 2) (Fin 2) ℝ) (μ : Measure (ℝ≥0 → 
         Complex.exp (((-(1 / 2 : ℝ)) * ∑ k, ∑ l, min (t k : ℝ) (t l : ℝ) *
           ∑ a, ∑ b, u k a * Cov a b * u l b : ℝ) : ℂ)
 
-/-- GMS Theorem 1.16 (p. 15), all three printed conclusions, for the walk `X` on `H` started at `sel H` with quenched law
-`Q H` and the cell choice `φ`, with the centre `φ₀` of (1.17):
-(i) there is a deterministic `Cov` with `det Cov ≠ 0` such that, almost surely, the quenched laws of `t ↦ ε X̂_{t/ε²}`
-converge as `ε → 0` to every planar Brownian law with covariance `Cov` (tested by `IsLocUnifTest` functionals);
-(ii) almost surely the jump chain returns to `sel H` infinitely often (recurrence);
-(iii) there is a random discrete harmonic `Φ` with the limit (1.17) almost surely.
-Hypotheses are those of `GMSTheorem116Hyp` and the finite expectation (1.5) for the cell choice `sel`.
-Existence of the quenched laws `Q` and of the Brownian laws is not asserted here. -/
-def GMSTheorem116Stmt (φ₀ : Set ℂ → ℂ) : Prop :=
+/-- GMS Theorem 1.16 (p. 15), conclusion (i): planar Brownian limit of the rescaled walk, quenched given `H`.
+Hypotheses: `GMSTheorem116Hyp` and the finite expectation (1.5) for the start selection `sel`; `Q` is any family of
+quenched laws satisfying the Markov identities from `sel H` (`IsQuenchedWalkLaw`), and `φ` any choice of a point of each cell.
+Conclusion: there is a deterministic `Cov` with `det Cov ≠ 0` such that, almost surely, for every planar Brownian law `μ`
+with covariance `Cov` from `0` and every `IsLocUnifTest` functional `F`, the outer quenched expectations of
+`F(ε X̂_{·/ε²})` converge to the outer expectation `∫ F dμ` as `ε → 0⁺`. Scope: `sel` ranges over start selections with
+`0 ∈ sel K` (the printed theorem names no start cell); the printed piecewise-constant walk is kept. -/
+def GMSTheorem116BrownianStmt : Prop :=
   ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (H : Ω → CellData) (sel : CellData → Set ℂ)
     (φ : CellData → Set ℂ → ℂ) (Q : CellData → Measure (ℕ → Set ℂ)),
     (∀ K : CellData, IsCellConfiguration K → ∀ h ∈ K.cells, φ K h ∈ h) →
     (∀ K : CellData, IsCellConfiguration K → 0 ∈ sel K ∧ sel K ∈ K.cells) →
     GMSTheorem116Hyp P H → (∀ᵐ ω ∂P, IsQuenchedWalkLaw (H ω) sel (Q (H ω))) →
     FiniteExpectation P H sel →
-    (∃ Cov : Matrix (Fin 2) (Fin 2) ℝ, Cov.det ≠ 0 ∧ ∀ μ : Measure (ℝ≥0 → ℂ), IsPlanarBMLaw Cov μ →
-      ∀ᵐ ω ∂P, ∀ F : (ℝ≥0 → ℂ) → ℝ, IsLocUnifTest F →
-        Tendsto (fun ε : ℝ => ∫ y, F (scaledWalk (H ω) φ ε y) ∂(Q (H ω))) (𝓝[>] 0) (𝓝 (∫ f, F f ∂μ))) ∧
-    (∀ᵐ ω ∂P, Q (H ω) {y | ∃ᶠ n in atTop, y n = sel (H ω)} = 1) ∧
-    (∃ Φ : Ω → Set ℂ → ℂ, (∀ᵐ ω ∂P, IsDiscreteHarmonic (H ω) (Φ ω)) ∧
-      ∀ᵐ ω ∂P, ∀ δ : ℝ, 0 < δ → ∀ᶠ r : ℝ in atTop,
-        ∀ H' ∈ cellsMeeting (H ω) (ball 0 r), ‖Φ ω H' - φ₀ H'‖ ≤ δ * r)
+    ∃ Cov : Matrix (Fin 2) (Fin 2) ℝ, Cov.det ≠ 0 ∧ ∀ μ : Measure (ℝ≥0 → ℂ), IsPlanarBMLaw Cov μ →
+      ∀ᵐ ω ∂P, ∀ F : (ℝ≥0 → ℂ) → ℝ≥0∞, IsLocUnifTest F →
+        Tendsto (fun ε : ℝ => outerLIntegral (Q (H ω)) (fun y => F (scaledWalk (H ω) φ ε y)))
+          (𝓝[>] 0) (𝓝 (outerLIntegral μ F))
+
+/-- GMS Theorem 1.16 (p. 15), conclusion (ii): the simple random walk on `H` is a.s. recurrent, i.e. under the quenched
+law the jump chain started at `sel H` returns to `sel H` infinitely often, almost surely. Same hypotheses as (i). -/
+def GMSTheorem116RecurrenceStmt : Prop :=
+  ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (H : Ω → CellData) (sel : CellData → Set ℂ)
+    (Q : CellData → Measure (ℕ → Set ℂ)),
+    (∀ K : CellData, IsCellConfiguration K → 0 ∈ sel K ∧ sel K ∈ K.cells) →
+    GMSTheorem116Hyp P H → (∀ᵐ ω ∂P, IsQuenchedWalkLaw (H ω) sel (Q (H ω))) →
+    FiniteExpectation P H sel →
+    ∀ᵐ ω ∂P, Q (H ω) {y | ∃ᶠ n in atTop, y n = sel (H ω)} = 1
+
+/-- GMS Theorem 1.16 (p. 15), all three printed conclusions for the centre `φ₀` of (1.17): (i) `GMSTheorem116BrownianStmt`,
+(ii) `GMSTheorem116RecurrenceStmt`, (iii) `GMSHarmonicCentreStmt φ₀`. The centre is a parameter; `phi0Literal` and
+`phi0Centroid` are distinct readings, neither operator-promoted. -/
+def GMSTheorem116Stmt (φ₀ : Set ℂ → ℂ) : Prop :=
+  GMSTheorem116BrownianStmt ∧ GMSTheorem116RecurrenceStmt ∧ GMSHarmonicCentreStmt φ₀
+
+/-- Named reading of the centre with the literal printed `∫_H z dz` (suspected defect, see the module header). -/
+def GMSTheorem116StmLiteral : Prop :=
+  GMSTheorem116Stmt phi0Literal
+
+/-- Named reading of the centre with the centroid `(1/Area(H)) ∫_H z dz`. -/
+def GMSTheorem116StmCentroid : Prop :=
+  GMSTheorem116Stmt phi0Centroid
+
+/-- Existence of quenched laws of the jump chain (Ionescu-Tulcea) for configurations whose cells all have positive total
+conductance, from any cell. Retained separately: NOT a hypothesis of the statements above. -/
+def GMSQuenchedLawExistenceStmt : Prop :=
+  ∀ K : CellData, IsCellConfiguration K → (∀ H ∈ K.cells, 0 < piWeight K H) →
+    ∀ s ∈ K.cells, ∃ Q : Measure (ℕ → Set ℂ), IsQuenchedWalkLaw K (fun _ => s) Q
+
+/-- Existence of planar Brownian laws from `0` for a real symmetric positive semidefinite covariance (Kolmogorov).
+Retained separately: NOT a hypothesis of the statements above. -/
+def PlanarBMLawExistenceStmt : Prop :=
+  ∀ Cov : Matrix (Fin 2) (Fin 2) ℝ, (∀ a b, Cov a b = Cov b a) →
+    (∀ u : Fin 2 → ℝ, 0 ≤ ∑ a, ∑ b, u a * Cov a b * u b) →
+      ∃ μ : Measure (ℝ≥0 → ℂ), IsPlanarBMLaw Cov μ
 
 /-! ### Curves modulo time parametrisation and the uniform starting-point theorem (GMS Theorem 3.10, p. 43)
 
@@ -361,8 +398,9 @@ def GMSTheorem310Stmt : Prop :=
     GMSTheorem116Hyp P H → FiniteExpectation P H (startCell 0) →
     (∀ w : ℂ, ∀ᵐ ω ∂P, IsQuenchedWalkLaw (H ω) (startCell w) (Q w (H ω))) →
     Cov.det ≠ 0 →
-    (∀ μ' : Measure (ℝ≥0 → ℂ), IsPlanarBMLaw Cov μ' → ∀ᵐ ω ∂P, ∀ F : (ℝ≥0 → ℂ) → ℝ, IsLocUnifTest F →
-      Tendsto (fun ε : ℝ => ∫ y, F (scaledWalk (H ω) ψ ε y) ∂(Q 0 (H ω))) (𝓝[>] 0) (𝓝 (∫ f, F f ∂μ'))) →
+    (∀ μ' : Measure (ℝ≥0 → ℂ), IsPlanarBMLaw Cov μ' → ∀ᵐ ω ∂P, ∀ F : (ℝ≥0 → ℂ) → ℝ≥0∞, IsLocUnifTest F →
+      Tendsto (fun ε : ℝ => outerLIntegral (Q 0 (H ω)) (fun y => F (scaledWalk (H ω) ψ ε y)))
+        (𝓝[>] 0) (𝓝 (outerLIntegral μ' F))) →
     ∀ μ : Measure (ℝ≥0 → ℂ), IsPlanarBMLaw Cov μ →
     ∀ A : Set ℂ, IsCompact A → ∀ᵐ ω ∂P,
       Tendsto (fun ε : ℝ => ⨆ (z : ℂ) (_ : z ∈ A),
