@@ -238,3 +238,46 @@ The nine remaining WPN requests (WPN-36 x3, WPN-42-locality, WPN-51 x5) were
 sent by the operator to a separate prover at14:20. All remain named hypotheses
 pending individually returned independent audits; none is assigned to an
 active worker here. Existing environment written proofs remain available.
+
+## Checked continuation, 2026-11-08 14:59 UTC
+
+Receipt: fleet `lead/checks/20261108-1454/`. Six committed source snapshots
+at `7dee16e` pass strict `lc`; four axiom probes covering ten exports pass,
+with only `propext`, `Classical.choice` and `Quot.sound`. The 46-source
+committed scan has no proof holes or axiom declarations (two comment matches).
+Snapshots avoid racing the working m1/m5/z1 files. No numbered result closes.
+
+- m1 `1b2117e`, `c4ffea4`, `7dee16e`: circle-code law transport, uniqueness
+  of the conditioned radial law, equality of whole-plane/cone lateral laws,
+  and uniqueness of the joint radial/lateral law for two existing cones.
+  This does not establish the rescaled field's cone predicate. The conditioned
+  weak-limit/post-last-zero identification, distribution-valued canonical
+  cone law and faithful distributional DMS scaling inputs remain open.
+- m5 `fbed444`, `466f8a6`: the area-scaling bridge now has the valid-environment
+  consumer; all-scale vague convergence on an open domain transfers under a
+  globally continuous, possibly dependent, added function. Extending the
+  disk-local remainder on compact tests, disk GFF decomposition, countable
+  off-zero localization and the staged Sheffield-Wang source input remain.
+- z1 `4ea90e5`: `allStartsSet_eq_selected` and
+  `allStartsCharacterization_of_tail` prove both characterization directions
+  from `SubsequenceTailProperty`. The Borel measurable subsequence and selected
+  relation, actual circle-space structure/version, law equality and clock
+  assembly remain. The reported compact-open/evaluation sigma-algebra issue
+  is covered by Mathlib `ContinuousMap.measurableSpace_eq_iSup_comap_eval`
+  (BorelSpace/ContinuousMap.lean:149) and `measurable_iff_eval` (155); check their
+  instance hypotheses in the queued circle-process task. No new written-proof
+  or operator decision is required just to use these existing declarations.
+- z5 `5767434`: `plateauScaleInvarianceStep_of_canonical` now consumes exactly
+  the existing HB all-scales volume input, insertion scaling-law Step K and
+  deterministic regularized-family Step H. The stronger all-measure plateau
+  measurability predicate and its former consumer were removed from the owned
+  helper module after checking users. H is the current bounded worker task;
+  insertion-law work and the subsequent exact consumer are queued.
+
+K and H remain repository proof obligations from the audited scaling paragraph,
+not faithful single literature theorems for automatic External promotion.
+Any cited DS coordinate theorem needed for K must first be staged in its full
+printed scope, with the arXiv/published numbering reconciled. The existing
+non-dyadic gap IR-c4-3 and all residual inputs remain explicit. No new input
+or escalation is asserted by these conditional checks. The four active queues
+are ready; paused m6/z2 briefs are unchanged, with no new round-limit event.
