@@ -1,5 +1,6 @@
 import HarmonicBalls.Defs.LQG
 import MatedCRT.Defs.DirichletGFF
+import MatedCRT.Proofs.Sec4.Prop42Closure.InsertionCoordinate
 
 /-!
 # Staged cited inputs: Duplantier-Sheffield 2011 (arXiv:0808.1560v2), zero-boundary GFF measure and coordinate rule
@@ -90,7 +91,9 @@ def DS11Prop11ZeroBoundaryMeasure : Prop :=
     ∀ h₀ : ℂ → ℝ, ContinuousOn h₀ D →
       ∃ μ₀ : Ω → Measure ℂ, ∀ᵐ ω ∂P, DS11IsLQGLimitInside D γ (addCircleAverage (hcirc ω) h₀) (μ₀ ω)
 
-/-- **OPEN INTERNAL EXTENSION `WPN-42-insertion-coordinate-extension` (not a DS11 citation).**
+/-- **Backwards-compatible alias of the exact internal Step `MatedCRT.InsertionCoordinateExtensionStep`**
+(`MatedCRT/Proofs/Sec4/Prop42Closure/InsertionCoordinate.lean`, the former declaration of this file). It is the open internal
+extension `WPN-42-insertion-coordinate-extension` (not a DS11 citation); its statement is unchanged and it is not proved.
 
 For `γ ∈ (0,2)` and `α < Q`, every whole-plane GFF `h^ℂ` (`hC`, `hcirc`) on a probability space whose insertion-`α` LQG measure
 is `μ` (`IsLQGMeasureOfField`), and every complex affine map `φ(z) = a z + b` with `a ≠ 0`: almost surely the circle averages
@@ -106,14 +109,7 @@ Why this is an extension and not a citation (exact scope of DS11 Prop. 2.1, p. 1
   affine whole-plane case is outside its printed scope (FIELD above).
 
 The theorem `insertionLQGScalingLawStep_of_coordinateRule` is conditional on this Prop. It is not promoted to `External`. -/
-def InsertionCoordinateExtensionStep : Prop :=
-  ∀ (γ α : ℝ), 0 < γ → γ < 2 → α < lqgQ γ →
-  ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
-    (μ : Ω → Measure ℂ), IsProbabilityMeasure P → IsWholePlaneGFF P hC hcirc →
-    IsLQGMeasureOfField P γ α hcirc μ →
-  ∀ a : ℂ, a ≠ 0 → ∀ b : ℂ, ∀ᵐ ω ∂P,
-    IsLQGLimit γ (fun ε z => fieldCircleAverage α (hcirc ω) (‖a‖ * ε) (a * z + b) + lqgQ γ * Real.log ‖a‖)
-      ((μ ω).map fun x => (x - b) / a)
+abbrev InsertionCoordinateExtensionStep : Prop := MatedCRT.InsertionCoordinateExtensionStep
 
 /-- Legacy name of `InsertionCoordinateExtensionStep` (the former declaration of commit 9e51e0c), kept only so that existing
 consumers compile. It is NOT the DS11 Prop. 2.1 statement and must not be cited as DS11. -/
