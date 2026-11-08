@@ -163,19 +163,23 @@ def StoppedInteriorGeometryStep (𝒮 : SpaceFillingSLEModel) : Prop :=
           (frontier (fillCells ε (S.η ω) (cellVertices ε (S.η ω) (Λ ω t)))) →
         ∀ x ∈ cell ε (S.η ω) a, δ / 2 ≤ infDist x (Λ ω t)ᶜ ∧ dist x (vertexPoint ε (S.η ω) a) < r}
 
-/-- **Measurability of the continuum margin (named input, E-c1-5 (e)).** For `δ, s > 0`, the infimum over the random
-compact set `K(ω) = {x ∈ Λ_t(ω) : s ≤ |x|, δ ≤ dist(x, Λ_t(ω)ᶜ)}` of the continuum surplus
-`w̄_t + t G_{B_ρ}(0, ·)` is `σ(h,η)`-measurable (an infimum over the empty set is `0`; the step is used only through
-`tendsToOneOn_of_levels`-level bound, where the set is nonempty). Measurability of this random compact-set infimum is not in the
-paper or the repo. -/
+/-- **Measurability of the continuum margin, repaired form (named input, E-c1-5 (e); steps2 sec. 5, lines 1660-1858).**
+For `δ, s, t > 0` let `M(ω)` be the infimum over the random compact set
+`K(ω) = {x ∈ Λ_t(ω) : s ≤ |x|, δ ≤ dist(x, Λ_t(ω)ᶜ)}` of the continuum surplus `w̄_t + t G_{B_ρ}(0, ·)`; the infimum
+over the empty set is `0`, as is an unbounded-below real infimum. The raw function `M` is not `σ(h,η)`-measurable on the
+whole sample space in general (steps2 1660-1703: a null-copy extension refutes it), so this step asserts only the repaired
+statement: there is an `S.envSigma`-measurable `Mhat` with `Mhat = M` almost surely on `{t < T}`, `T = clusterExitTime Λ ρ`.
+Nothing is prescribed on the exceptional outcomes. -/
 def StoppedInteriorMeasurableStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
   ∀ δ s t : ℝ, 0 < δ → 0 < s → 0 < t →
-    Measurable[S.envSigma] fun ω => ⨅ x : {x : ℂ | x ∈ Λ ω t ∧ s ≤ ‖x‖ ∧ δ ≤ infDist x (Λ ω t)ᶜ},
-      (HarmonicBalls.leastSupersolution (S.μ ω) ρ 0 t (x : ℂ) +
-        t * HarmonicBalls.greenFunction (ball 0 ρ) 0 (x : ℂ))
+    ∃ Mhat : Ω → ℝ, Measurable[S.envSigma] Mhat ∧
+      ∀ᵐ ω ∂S.P, t < clusterExitTime (Λ ω) ρ →
+        Mhat ω = ⨅ x : {x : ℂ | x ∈ Λ ω t ∧ s ≤ ‖x‖ ∧ δ ≤ infDist x (Λ ω t)ᶜ},
+          (HarmonicBalls.leastSupersolution (S.μ ω) ρ 0 t (x : ℂ) +
+            t * HarmonicBalls.greenFunction (ball 0 ρ) 0 (x : ℂ))
 
 /-- Union bound for six sets (left-nested unions). -/
 theorem measure_union_six {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (s₁ s₂ s₃ s₄ s₅ s₆ : Set Ω) :
@@ -275,15 +279,17 @@ theorem stoppedSurplusInterior_of_gap (𝒮 : SpaceFillingSLEModel) (hgap : Harm
   have hGeoE := hgeo γ hγ hγ2 ρ hρ hρ1 Ω S hS Λ hΛ δ t (s / 2) hδ ht (half_pos hs)
   have hsA0 : 0 < min (s / 2) (ρ / 2) := lt_min (half_pos hs) (half_pos hρ)
   have hsAle : min (s / 2) (ρ / 2) ≤ s / 2 := min_le_left _ _
-  have hMeasE := hmeas γ hγ hγ2 ρ hρ hρ1 Ω S hS Λ hΛ (δ / 2) (min (s / 2) (ρ / 2)) t (half_pos hδ) hsA0 ht
+  obtain ⟨Mhat, hMhatMeas, hMhatAe⟩ := hmeas γ hγ hγ2 ρ hρ hρ1 Ω S hS Λ hΛ (δ / 2) (min (s / 2) (ρ / 2)) t
+    (half_pos hδ) hsA0 ht
   have hgapE := hgap γ hγ hγ2 ρ hρ hρ1 Ω S hS Λ hΛ t ht
   set sA : ℝ := min (s / 2) (ρ / 2) with hsA
+  -- the raw margin `cinf` is used only through its a.s. agreement with the measurable version `Mhat` on `{t < T}`
   set cinf : Ω → ℝ := fun ω => ⨅ x : {x : ℂ | x ∈ Λ ω t ∧ sA ≤ ‖x‖ ∧ δ / 2 ≤ infDist x (Λ ω t)ᶜ},
     (HarmonicBalls.leastSupersolution (S.μ ω) ρ 0 t (x : ℂ) +
       t * HarmonicBalls.greenFunction (ball 0 ρ) 0 (x : ℂ)) with hcinf
-  set cpos : Ω → ℝ := fun ω => if 0 < cinf ω then cinf ω else 1 with hcposdef
+  set cpos : Ω → ℝ := fun ω => if 0 < Mhat ω then Mhat ω else 1 with hcposdef
   have hcpos_meas : Measurable[S.envSigma] cpos :=
-    Measurable.ite (measurableSet_lt measurable_const hMeasE) hMeasE measurable_const
+    Measurable.ite (measurableSet_lt measurable_const hMhatMeas) hMhatMeas measurable_const
   have hcpos_pos : ∀ ω, 0 < cpos ω := fun ω => by
     simp only [hcposdef]
     split_ifs with h
@@ -298,12 +304,14 @@ theorem stoppedSurplusInterior_of_gap (𝒮 : SpaceFillingSLEModel) (hgap : Harm
     lt_min (hcppos ω) (div_pos (mul_pos hc0 (hcpos_pos ω)) (by linarith))
   have hgood : ∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω) ∧ IsAreaParametrized (S.μ ω) (S.η ω) ∧
       (∀ ε : ℝ, 0 < ε → vertexOf ε (S.η ω) 0 = 0) ∧ Tendsto (S.η ω) (cocompact ℝ) (cocompact ℂ) ∧
-      (t < clusterExitTime (Λ ω) ρ → Λ ω t ⊆ HarmonicBalls.cluster (S.μ ω) ρ 0 t) :=
+      (t < clusterExitTime (Λ ω) ρ → Λ ω t ⊆ HarmonicBalls.cluster (S.μ ω) ρ 0 t) ∧
+      (t < clusterExitTime (Λ ω) ρ → Mhat ω = cinf ω) :=
     hΛ.and (hS.isAreaParametrized.and ((MatedCRTEnv.IsValid.ae_vertexOf_zero_eq_zero hS).and
-      ((MatedCRTEnv.IsValid.ae_tendsto_cocompact hS).and hgapE)))
+      ((MatedCRTEnv.IsValid.ae_tendsto_cocompact hS).and (hgapE.and hMhatAe))))
   set Good : Set Ω := {ω | IsConeHarmonicBallFamily (S.μ ω) (Λ ω) ∧ IsAreaParametrized (S.μ ω) (S.η ω) ∧
     (∀ ε : ℝ, 0 < ε → vertexOf ε (S.η ω) 0 = 0) ∧ Tendsto (S.η ω) (cocompact ℝ) (cocompact ℂ) ∧
-    (t < clusterExitTime (Λ ω) ρ → Λ ω t ⊆ HarmonicBalls.cluster (S.μ ω) ρ 0 t)} with hGooddef
+    (t < clusterExitTime (Λ ω) ρ → Λ ω t ⊆ HarmonicBalls.cluster (S.μ ω) ρ 0 t) ∧
+    (t < clusterExitTime (Λ ω) ρ → Mhat ω = cinf ω)} with hGooddef
   have hGoodnull : S.P Goodᶜ = 0 := ae_iff.1 hgood
   set Pole : ℝ → Set Ω := fun ε => {ω | ∀ a ∈ cellVertices ε (S.η ω) (Λ ω t),
       δ < infDist (vertexPoint ε (S.η ω) a)
@@ -374,7 +382,7 @@ theorem stoppedSurplusInterior_of_gap (𝒮 : SpaceFillingSLEModel) (hgap : Harm
     · filter_upwards [Ioo_mem_nhdsGT hε₀] with ε hε
       intro ω hω h1 h2 hκω
       obtain ⟨⟨⟨hF, hPole⟩, hGe⟩, hGω⟩ := hω
-      obtain ⟨hΛω, hηω, hv0ω, hcocω, hclω⟩ := hGω
+      obtain ⟨hΛω, hηω, hv0ω, hcocω, hclω, hMω⟩ := hGω
       have hT : t < clusterExitTime (Λ ω) ρ := hF
       have hε0 : 0 < ε := hε.1
       have hmεb' := hmεb ε hε.1 hε.2
@@ -431,8 +439,9 @@ theorem stoppedSurplusInterior_of_gap (𝒮 : SpaceFillingSLEModel) (hgap : Harm
             t * HarmonicBalls.greenFunction (ball 0 ρ) 0 x :=
           ciInf_le ⟨c1, by rintro _ ⟨y, rfl⟩; exact hbdd y⟩ (⟨x, hxΛ, hxsA, hdx⟩ :
             {x : ℂ | x ∈ Λ ω t ∧ sA ≤ ‖x‖ ∧ δ / 2 ≤ infDist x (Λ ω t)ᶜ})
+        have hMhatEq : Mhat ω = cinf ω := hMω hT
         have hpos' : 0 < cinf ω := lt_of_lt_of_le hc1pos hcinf_ge
-        have hcpos_eq : cpos ω = cinf ω := by simp [hcposdef, hpos']
+        have hcpos_eq : cpos ω = cinf ω := by simp [hcposdef, hMhatEq, hpos']
         have hκc : κ < cinf ω := by
           rw [← hcpos_eq]
           exact hκω
