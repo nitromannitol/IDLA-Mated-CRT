@@ -147,13 +147,14 @@ noncomputable def gmsRescaledCircle (γ : ℝ) (hcirc : ℝ → ℂ → ℝ) (R 
   fun r z => hcirc (R * r) ((R : ℂ) * z) + lqgQ γ * Real.log R
 
 /-- **Lemma 4.3, (4.6)**, GMS arXiv:1705.11161v5 p. 30: `P[η([-1,1]) ⊂ B_{R_C/8}(0)] = 1 - o_C^∞(C)` as `C → ∞`,
-i.e. for every `N` there are `K, C₀` with `P[η([-1,1]) ⊄ B_{R_C/8}(0)] ≤ K C^{-N}` for `C ≥ C₀`. The radii are the
-cone scale radii `R_C = coneScaleRadius γ h C` of (2.4). Lemma 4.3's other display (4.5) is not staged. -/
+i.e. for every `N > 0` there are `K, C₀` with `P[η([-1,1]) ⊄ B_{R_C/8}(0)] ≤ K C^{-N}` for `C ≥ C₀`. The range `N > 0`
+is the printed one (steps2-r3.tex:2701, "for every $N>0$"); no `N ≤ 0` case is asserted. The radii are the cone scale
+radii `R_C = coneScaleRadius γ h C` of (2.4). Lemma 4.3's other display (4.5) is not staged. -/
 def GMSLemma43Eq46Stmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (η : Ω → ℝ → ℂ),
     IsCanonicalZeroConeModel 𝒮 γ P hC hcirc μ η →
-    ∀ N : ℝ, ∃ K C₀ : ℝ, 1 < C₀ ∧ ∀ C : ℝ, C₀ ≤ C →
+    ∀ N : ℝ, 0 < N → ∃ K C₀ : ℝ, 1 < C₀ ∧ ∀ C : ℝ, C₀ ≤ C →
       P {ω | ¬ (η ω '' Set.Icc (-1) 1 ⊆ Metric.ball 0 (coneScaleRadius γ (hcirc ω) C / 8))} ≤
         ENNReal.ofReal (K * C ^ (-N))
 

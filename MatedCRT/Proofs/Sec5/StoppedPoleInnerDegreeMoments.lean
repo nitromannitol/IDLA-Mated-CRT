@@ -750,10 +750,10 @@ theorem lintegral_pow_lt_top_of_outer {P : Measure Ω} [IsProbabilityMeasure P] 
 level `c` gives `ExceptionalInversePoly` for `E C := A (C^ζ)`: with `c = C^ζ` and the exponent `N/ζ`, one has
 `(C^ζ)^{-N/ζ} = C^{-N}`. The hypothesis `0 < ζ` is used only here. -/
 theorem exceptional_of_eq46 {P : Measure Ω} {A : ℝ → Set Ω} {ζ : ℝ} (hζ0 : 0 < ζ)
-    (h46 : ∀ N : ℝ, ∃ K C₀ : ℝ, 1 < C₀ ∧ ∀ c : ℝ, C₀ ≤ c → P (A c)ᶜ ≤ ENNReal.ofReal (K * c ^ (-N))) :
+    (h46 : ∀ N : ℝ, 0 < N → ∃ K C₀ : ℝ, 1 < C₀ ∧ ∀ c : ℝ, C₀ ≤ c → P (A c)ᶜ ≤ ENNReal.ofReal (K * c ^ (-N))) :
     ExceptionalInversePoly P (fun C => A (C ^ ζ)) := by
-  intro N _hN
-  obtain ⟨K, C₀, hC₀, hbd⟩ := h46 (N / ζ)
+  intro N hN
+  obtain ⟨K, C₀, hC₀, hbd⟩ := h46 (N / ζ) (div_pos hN hζ0)
   have hC₀0 : 0 ≤ C₀ := by linarith
   have hζne : ζ ≠ 0 := hζ0.ne'
   refine ⟨max K 0, C₀ ^ (1 / ζ), le_max_right _ _, fun C hC => ?_⟩
@@ -814,7 +814,8 @@ section Canonical
 inputs give, for the exceptional events `E_C = {η([-1,1]) ⊂ B_{R_{C^ζ}/8}(0)}` and the normalized masses
 `Y_C = C^{-ζ} μ_{h^{C^ζ}}(𝔻)`: the covering `D ≤ C^ζ · Y_C` on `E_C` (from the printed (4.20), the coordinate change
 and `gmsB0_subset_ball`), the uniform β-moment `M` (GMS p. 33), and the exceptional bound `K C^{-N}` (Lemma 4.3 (4.6)
-read at the level `C^ζ`). The almost sure continuity of `η` is part of `IsAreaParametrized` (`Defs/Setting.lean:125`). -/
+read at the level `C^ζ`, for the printed range `N > 0`; here `N > p ≥ 1`, so `0 < N` is derived from `hp1` and `hpN`).
+The almost sure continuity of `η` is part of `IsAreaParametrized` (`Defs/Setting.lean:125`). -/
 theorem canonical_premises {𝒮 : SpaceFillingSLEModel}
     (hLem : GMSLemma43Eq46Stmt 𝒮) (hBeta : GMSMassBetaMomentStmt 𝒮)
     (hCoord : GMSCoordinateChangeStmt 𝒮) (hInner : GMSInnerDegreeBoundStmt 𝒮)
@@ -842,10 +843,10 @@ theorem canonical_premises {𝒮 : SpaceFillingSLEModel}
     hBeta γ hγ0 hγ2 Ω P hC hcirc μ η hM μb hμb ζ hζ0 hζ1' β hβ0 hβ2
   obtain ⟨M', hmom⟩ := uniform_of_mass_beta
     (Y := fun C ω => ENNReal.ofReal (C ^ (-ζ)) * μb (C ^ ζ) ω (Metric.ball 0 1)) ⟨M, hMt, hmomM⟩
-  have h46 : ∀ N : ℝ, ∃ K C₀ : ℝ, 1 < C₀ ∧ ∀ c : ℝ, C₀ ≤ c →
+  have h46 : ∀ N : ℝ, 0 < N → ∃ K C₀ : ℝ, 1 < C₀ ∧ ∀ c : ℝ, C₀ ≤ c →
       P ((fun c : ℝ => {ω | η ω '' Set.Icc (-1) 1 ⊆ Metric.ball 0 (coneScaleRadius γ (hcirc ω) c / 8)}) c)ᶜ ≤
         ENNReal.ofReal (K * c ^ (-N)) :=
-    fun N => hLem γ hγ0 hγ2 Ω P hC hcirc μ η hM N
+    fun N hN => hLem γ hγ0 hγ2 Ω P hC hcirc μ η hM N hN
   obtain ⟨K, C₁, hK, hexcK⟩ := exceptional_of_eq46 hζ0 h46 N (by linarith)
   have hcov : CoverOnEvent P (fun ω => (gmsInnerDegree (η ω)).toENNReal)
       (fun C ω => ENNReal.ofReal (C ^ (-ζ)) * μb (C ^ ζ) ω (Metric.ball 0 1))
