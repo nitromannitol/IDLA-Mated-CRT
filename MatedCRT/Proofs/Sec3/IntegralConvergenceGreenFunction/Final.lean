@@ -65,8 +65,9 @@ def LBMTruncatedOccupationMeasurableStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ n : ℕ, AEMeasurable (truncatedLBMOccupation S (ball z r) y f n) S.P
 
 /-- **Measurability of the Green integral** in the environment: the hypothesis `hUm` of
-`integralConvergenceGreenFunction_of_fixed_and_ae_continuum`. OPEN: joint measurability of
-`(ω, x) ↦ f ω x` (measurable in `ω`, Hölder in `x`) against the random measure `S.μ ω`. -/
+`integralConvergenceGreenFunction_of_fixed_and_ae_continuum`. PROVED: `lbmGreenIntegralMeasurableStep_holds`
+(`GreenIntegralMeasurable.lean`), by Carathéodory joint measurability of `(ω, x) ↦ f ω x` on the ball and a
+finite normalized kernel built from `μ_h`; the step is kept here as the statement used by the assemblies. -/
 def LBMGreenIntegralMeasurableStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
