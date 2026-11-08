@@ -33,6 +33,11 @@ Proved for the constructed subsequence `nselFun` (Mathlib compact-open Borel str
 * `borelAllStartsRelationStep_nselFun`: `BorelAllStartsRelationStep γ (nselFun γ)` (env-steps.tex:413-421: `Q` is Borel,
   via the good sets, the pointwise limsup, the rational reduction `isTimeChangeClock_iff_rat`, and the kernel section lemma).
 
+Rescaled measurable version `a_b` (env-steps.tex:463-465), proved for every valid environment from
+`QuantumConeScalingInput` (`rescaledCircleVersionStep_of_isValid`: positivity and measurability of the cone scale radius).
+With it, `rescaledConeClockStep_of_inputs` reduces `RescaledConeClockStep` to `[PolishSpace CircleFns]`, the staged Preston
+input and `QuantumConeScalingInput`.
+
 Still hypotheses (binder form, outside the constructed subsequence): `[MeasurableSpace CircleFns] [BorelSpace CircleFns]`
 and `[PolishSpace CircleFns]` in `allStartsSet_isUniversallyMeasurable` / `ae_allStarts_of_map_eq` (Polish structure: owned by
 the circle-process-space task).
@@ -1489,5 +1494,104 @@ theorem rescaledConeClockStep_of_rescaledVersion [PolishSpace CircleFns]
     (hPreston : PrestonAnalyticUniversallyMeasurableStmt) (hscale : QuantumConeScalingInput)
     {𝒮 : SpaceFillingSLEModel} (hres : RescaledCircleVersionStep 𝒮) : RescaledConeClockStep 𝒮 :=
   rescaledConeClockStep_of_canonical hPreston hscale (canonicalCircleVersionStep_of_isValid 𝒮) hres
+
+/-! ### The rescaled measurable version `a_b` (env-steps.tex:463-465)
+
+The rescaled positive-circle process `(r, z) ↦ a₀(R r, R z) + Q log R - γ⁻¹ log b` is built from a measurable version
+`a₀` of the canonical process (`canonicalCircleVersionStep_of_isValid`) and a measurable, everywhere positive radius `R`
+equal almost surely to the cone scale radius `R_b`. Measurability in `ω` uses the joint continuity of evaluation on
+`CircleFns × PosCircle` (`PosCircle` is locally compact). Positivity and measurability of `R_b` come from
+`QuantumConeScalingInput` (`MatedCRT.Sec1.ae_coneScaleRadius_pos`, `MatedCRT.Sec1.aemeasurable_coneScaleRadius`). -/
+
+/-- The scaling `(r, z) ↦ (ρ r, ρ z)` of the positive-circle index by a positive radius `ρ`. -/
+noncomputable def rescaleCirclePt (ρ : ℝ) (hρ : 0 < ρ) (p : PosCircle) : PosCircle :=
+  (⟨ρ * p.1.1, Set.mem_Ioi.2 (mul_pos hρ (Set.mem_Ioi.1 p.1.2))⟩, (ρ : ℂ) * p.2)
+
+theorem continuous_rescaleCirclePt (ρ : ℝ) (hρ : 0 < ρ) : Continuous (rescaleCirclePt ρ hρ) := by
+  unfold rescaleCirclePt
+  refine Continuous.prodMk ?_ ?_
+  · exact Continuous.subtype_mk (continuous_const.mul (continuous_subtype_val.comp continuous_fst))
+      (fun p => Set.mem_Ioi.2 (mul_pos hρ (Set.mem_Ioi.1 p.1.2)))
+  · exact continuous_const.mul continuous_snd
+
+theorem measurable_rescaleCirclePt {Ω : Type*} [MeasurableSpace Ω] {R : Ω → ℝ} (hRm : Measurable R)
+    (hR : ∀ ω, 0 < R ω) (p : PosCircle) :
+    Measurable fun ω => rescaleCirclePt (R ω) (hR ω) p := by
+  unfold rescaleCirclePt
+  refine Measurable.prodMk ?_ ?_
+  · exact Measurable.subtype_mk (hRm.mul_const p.1.1)
+  · exact (Complex.measurable_ofReal.comp hRm).mul_const p.2
+
+/-- Evaluation `(f, q) ↦ f q` on `CircleFns × PosCircle` is continuous, hence measurable. -/
+theorem measurable_eval_circleFns : Measurable fun q : CircleFns × PosCircle => q.1 q.2 :=
+  continuous_eval.measurable
+
+theorem measurable_eval_comp {Ω : Type*} [MeasurableSpace Ω] {f : Ω → CircleFns} {q : Ω → PosCircle}
+    (hf : Measurable f) (hq : Measurable q) : Measurable fun ω => f ω (q ω) :=
+  measurable_eval_circleFns.comp (hf.prodMk hq)
+
+/-- The rescaled positive-circle process `(r, z) ↦ a₀(ρ r, ρ z) + Q log ρ - γ⁻¹ log b` (env-steps.tex:463-465). -/
+noncomputable def rescaledVersion (γ b : ℝ) (a0 : CircleFns) (ρ : ℝ) (hρ : 0 < ρ) : CircleFns :=
+  ⟨fun p => a0 (rescaleCirclePt ρ hρ p) + lqgQ γ * Real.log ρ - γ⁻¹ * Real.log b,
+    ((a0.continuous.comp (continuous_rescaleCirclePt ρ hρ)).add continuous_const).sub continuous_const⟩
+
+theorem measurable_rescaledVersion_eval {Ω : Type*} [MeasurableSpace Ω] {a0 : Ω → CircleFns} {R : Ω → ℝ}
+    (ha0 : Measurable a0) (hRm : Measurable R) (hR : ∀ ω, 0 < R ω) (γ b : ℝ) (p : PosCircle) :
+    Measurable fun ω => rescaledVersion γ b (a0 ω) (R ω) (hR ω) p := by
+  have h1 : Measurable fun ω => a0 ω (rescaleCirclePt (R ω) (hR ω) p) :=
+    measurable_eval_comp ha0 (measurable_rescaleCirclePt hRm hR p)
+  have h2 : Measurable fun ω => lqgQ γ * Real.log (R ω) :=
+    (Real.measurable_log.comp hRm).const_mul (lqgQ γ)
+  exact (h1.add h2).sub_const (γ⁻¹ * Real.log b)
+
+/-- A measurable, everywhere positive radius `Rp` equal almost surely to `R`, built from a measurable version `R0` of
+`R` (almost surely equal) and the almost-sure positivity `0 < R`. -/
+theorem exists_measurable_pos_version {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {R R0 : Ω → ℝ}
+    (hR0 : Measurable R0) (hR : R =ᵐ[P] R0) (hpos : ∀ᵐ ω ∂P, 0 < R ω) :
+    ∃ Rp : Ω → ℝ, Measurable Rp ∧ (∀ ω, 0 < Rp ω) ∧ ∀ᵐ ω ∂P, Rp ω = R ω := by
+  refine ⟨fun ω => if 0 < R0 ω then R0 ω else 1, ?_, ?_, ?_⟩
+  · exact Measurable.ite (measurableSet_lt measurable_const hR0) hR0 measurable_const
+  · intro ω
+    by_cases h : 0 < R0 ω
+    · simp [h]
+    · simp [h]
+  · filter_upwards [hR, hpos] with ω h1 h2
+    show (if 0 < R0 ω then R0 ω else 1) = R ω
+    rw [← h1]
+    simp [h2]
+
+/-- **The rescaled measurable version `a_b` for every valid environment** (env-steps.tex:463-465). The input
+`QuantumConeScalingInput` gives the almost-sure positivity of the cone scale radius `R_b`. -/
+theorem rescaledCircleVersionStep_of_isValid (hscale : QuantumConeScalingInput) (𝒮 : SpaceFillingSLEModel) :
+    RescaledCircleVersionStep 𝒮 := by
+  intro γ hγ0 hγ2 Ω _ S hS b hb c hc
+  have : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
+  obtain ⟨a0, ha0m, ha0⟩ := canonicalCircleVersionStep_of_isValid 𝒮 γ hγ0 hγ2 Ω S hS
+  have hpos : ∀ᵐ ω ∂S.P, 0 < coneScaleRadius γ (S.hcirc ω) b :=
+    MatedCRT.Sec1.ae_coneScaleRadius_pos hscale hγ0 hγ2 hS.isQuantumCone hb
+  have hae : AEMeasurable (fun ω => coneScaleRadius γ (S.hcirc ω) b) S.P :=
+    MatedCRT.Sec1.aemeasurable_coneScaleRadius hS.isQuantumCone hpos
+  obtain ⟨R0, hR0m, hR0⟩ := hae
+  obtain ⟨Rp, hRpm, hRp0, hRp⟩ := exists_measurable_pos_version hR0m hR0 hpos
+  have hRp' : ∀ᵐ ω ∂S.P, Rp ω = coneScaleRadius γ (S.hcirc ω) b := hRp
+  refine ⟨fun ω => rescaledVersion γ b (a0 ω) (Rp ω) (hRp0 ω), ?_, ?_⟩
+  · exact ContinuousMap.measurable_iff_eval.2
+      (fun p => measurable_rescaledVersion_eval ha0m hRpm hRp0 γ b p)
+  · filter_upwards [ha0, hc, hRp'] with ω hω0 hωc hωR p
+    have hpt : a0 ω (rescaleCirclePt (Rp ω) (hRp0 ω) p) =
+        S.hcirc ω (Rp ω * p.1.1) ((Rp ω : ℂ) * p.2) :=
+      hω0 (rescaleCirclePt (Rp ω) (hRp0 ω) p)
+    show a0 ω (rescaleCirclePt (Rp ω) (hRp0 ω) p) + lqgQ γ * Real.log (Rp ω) - γ⁻¹ * Real.log b =
+      c ω p.1.1 p.2
+    rw [hpt, hωc, hωR]
+    rfl
+
+/-- **The rescaled all-starts clock step, with the rescaled measurable version proved.** `RescaledConeClockStep` now
+needs only the Polish structure of `CircleFns`, the staged Preston input and `QuantumConeScalingInput`
+(prop:clock, env-steps.tex:449-475). -/
+theorem rescaledConeClockStep_of_inputs [PolishSpace CircleFns]
+    (hPreston : PrestonAnalyticUniversallyMeasurableStmt) (hscale : QuantumConeScalingInput)
+    (𝒮 : SpaceFillingSLEModel) : RescaledConeClockStep 𝒮 :=
+  rescaledConeClockStep_of_rescaledVersion hPreston hscale (rescaledCircleVersionStep_of_isValid hscale 𝒮)
 
 end MatedCRT.AllStarts
