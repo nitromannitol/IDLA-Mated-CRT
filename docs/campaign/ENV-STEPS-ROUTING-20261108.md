@@ -133,3 +133,55 @@ start-at-zero Green lemma, independent strict growth, or unrelated gaps.
 If an exact Lean-level bridge needs mathematics absent from these written
 arguments, record its full type with the limiting source lines here or in the
 appropriate GAPS file and in PROGRESS as WRITTEN-PROOF-NEEDED. Do not invent it.
+
+## Checked implementation progress, 2026-11-08 12:46 UTC
+
+Lead receipts: fleet `lead/checks/20261108-1241/`; eleven source files plus two
+axiom probes pass strict `lc`. The three remote DONE files also pass fresh
+checks. A scan of 40 relevant existing sources finds no proof holes or axiom
+declarations (the sole raw match is a Proposed file's explanatory comment).
+The ten inspected new theorem exports use only `propext`, `Classical.choice`
+and `Quot.sound`. These are conditional implementation checks, not a closure
+or independent source-fidelity verdict.
+
+- m1: countable distribution reconstruction (`641da0b`), measurable variable
+  dilation (`b58b586`), and recovery of centered positive circles (`31cb45f`)
+  are implemented. `Field.lean` passes with full-circle recovery
+  (`d1d1dd6`) as well. The rescaled pairing theorem still takes the existing
+  `QuantumConeScalingInput`; canonical cone identification and the actual
+  radial/lateral independence and lateral-law conjuncts of
+  `RescaledConeFieldStep` remain open. Its queued slice assembles the exact
+  field Step only after those law obligations are supplied by proved bridges
+  and faithful distributional DMS input.
+- m5: `exists_same_space_lift` (`2a46f41`) proves the generic same-space kernel
+  realization given a measurable independent uniform variable, a prescribed
+  projection law and standard Borel source/target carriers. It does not yet
+  construct that variable from the cone. `ae_rescaled_measure_eq_of_allScale_off_origin`
+  (`c032d3e`) proves random-radius area scaling given one all-positive-scale
+  off-origin convergence event, continuous circles at the required scales,
+  the rescaled dyadic LQG measure and zero mass at zero for both measures.
+  The queued continuous-addition/countable-localization slice addresses the
+  all-scale premise using the written disk-decomposition argument at715-730.
+  Full mating law and 24-field transport remain open.
+- m6: `harmonicBallStrictObstacleGapStep_of_restrictedLaw_and_pairingLaws`
+  (`7001c44`) consumes whole-plane existence, restricted LQG law equality,
+  mutual absolute continuity of actual smooth-shifted local pairing laws,
+  and the listed HB/volume-growth statements. Coordinate-law transport is
+  proved (`51c2725`), with its representation premise explicit. A subsequent
+  whole-plane Dirichlet-coordinate representation (`bef75f3`) also passes
+  lead lc and the axiom probe. The full faithful IG IV Proposition2.9 statement and its passage
+  to those coordinates remain obligations; these are not silently replaced by
+  the stronger pairing-law input. Independent strict growth is still open.
+
+`Proposed/SheffieldWang2016.lean` now contains the candidate compact-test
+consequence `SheffieldWangCircleAverageAllScaleStmt`, with arXiv1605.06171v2
+Theorem1.1 p3 and domain/field p2 locators. The operator's source review is
+requested in fleet INPUT-REQUESTS; this is not an External promotion.
+The Preston statements need no new staging where Mathlib already supplies the
+required coding, conditional-distribution and kernel-realization theorems.
+
+The clock and repaired stopped-clock queues remain prepared for z1/z2;
+remote promotion acknowledgement is still pending (IR-LEAD-REMOTE-QUEUE-ACK).
+All six active workers have next tasks. m1/m5 have new distinct queued slices
+and exclusive-create successor refill; no working or DONE current brief was
+changed. m6 remains in its checked r2, with no new round-limit event.
