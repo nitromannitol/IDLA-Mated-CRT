@@ -186,4 +186,14 @@ def GMSCoordinateChangeStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
     ∀ b : ℝ, 0 < b → ∀ᵐ ω ∂P, ∀ Y : Set ℂ, MeasurableSet Y →
       μb b ω Y = μ ω ((fun z : ℂ => ((coneScaleRadius γ (hcirc ω) b : ℝ) : ℂ) * z) '' Y)
 
+/-- **Definition 4.5, (4.20)**, GMS arXiv:1705.11161v5 p. 32: `deg_in(H₀) ≤ μ_h(B̄₀)`, almost surely, for the canonical
+zero-cone model. The printed text gives no argument ("We note that"); it uses that the `N` unit-mass segments
+`η([a_j, b_j])` have pairwise `μ_h`-null overlaps, which is not written in the paper. Staged as printed; that
+justification is an open point in the fleet report. -/
+def GMSInnerDegreeBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (η : Ω → ℝ → ℂ),
+    IsCanonicalZeroConeModel 𝒮 γ P hC hcirc μ η →
+    ∀ᵐ ω ∂P, (gmsInnerDegree (η ω)).toENNReal ≤ μ ω (gmsB0 (η ω))
+
 end MatedCRT.StoppedCanonicalMoments
