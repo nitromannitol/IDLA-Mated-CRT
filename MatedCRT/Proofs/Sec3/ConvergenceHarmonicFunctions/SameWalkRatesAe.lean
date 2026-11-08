@@ -291,7 +291,125 @@ theorem lintegral_rpow_le_regime_gt {Ω : Type*} [MeasurableSpace Ω] (μ : Meas
   refine ENNReal.ofReal_le_ofReal ?_
   linarith [hsub, h2, h3, hle2]
 
+
+theorem scaled_discrepancy_facts {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (D : Ω → ℝ) (hD0 : ∀ ω, 0 ≤ D ω) (hDm : AEMeasurable D μ) {H χ R ℓ K ν : ℝ}
+    (hH : 0 < H) (hχ : 0 < χ) (hR : 0 ≤ R) (hℓ0 : 0 ≤ ℓ) (hDR : ∀ᵐ ω ∂μ, D ω ≤ H * (2 * R) ^ χ)
+    (htail : ∀ t : ℝ, ℓ < t → t < R → μ {ω | H * (2 * t) ^ χ < D ω} ≤ ENNReal.ofReal (K * (ℓ / t) ^ ν)) :
+    AEMeasurable (fun ω => (D ω / H) ^ (1 / χ) / 2) μ ∧
+    (∀ ω, 0 ≤ (D ω / H) ^ (1 / χ) / 2) ∧
+    (∀ᵐ ω ∂μ, (D ω / H) ^ (1 / χ) / 2 ≤ R) ∧
+    (∀ t : ℝ, ℓ < t → t < R → μ {ω | t < (D ω / H) ^ (1 / χ) / 2} ≤ ENNReal.ofReal (K * (ℓ / t) ^ ν)) ∧
+    (∫⁻ ω, ENNReal.ofReal (D ω) ∂μ =
+      ENNReal.ofReal (H * 2 ^ χ) * ∫⁻ ω, ENNReal.ofReal (((D ω / H) ^ (1 / χ) / 2) ^ χ) ∂μ) := by
+  have hH0 : H ≠ 0 := hH.ne'
+  have h2χ : (2 : ℝ) ^ χ ≠ 0 := (Real.rpow_pos_of_pos (by norm_num) _).ne'
+  have hDH : ∀ ω, 0 ≤ D ω / H := fun ω => div_nonneg (hD0 ω) hH.le
+  have hkey : ∀ ω, ((D ω / H) ^ (1 / χ) / 2) ^ χ = (D ω / H) / 2 ^ χ := by
+    intro ω
+    rw [Real.div_rpow (Real.rpow_nonneg (hDH ω) _) (by norm_num), one_div,
+      Real.rpow_inv_rpow (hDH ω) hχ.ne']
+  have hDeq : ∀ ω, D ω = H * 2 ^ χ * ((D ω / H) ^ (1 / χ) / 2) ^ χ := by
+    intro ω
+    rw [hkey ω]
+    field_simp
+  have hX0 : ∀ ω, 0 ≤ (D ω / H) ^ (1 / χ) / 2 := fun ω =>
+    div_nonneg (Real.rpow_nonneg (hDH ω) _) (by norm_num)
+  refine ⟨((hDm.div_const H).pow_const (1 / χ)).div_const 2, hX0, ?_, ?_, ?_⟩
+  · filter_upwards [hDR] with ω hω
+    have h1 : D ω / H ≤ (2 * R) ^ χ := by
+      rw [div_le_iff₀ hH, mul_comm ((2 * R) ^ χ) H]
+      exact hω
+    have h2 : (D ω / H) ^ (1 / χ) ≤ ((2 * R) ^ χ) ^ (1 / χ) :=
+      Real.rpow_le_rpow (hDH ω) h1 (one_div_pos.2 hχ).le
+    have h3 : ((2 * R) ^ χ) ^ (1 / χ) = 2 * R := by
+      rw [one_div, Real.rpow_rpow_inv (by linarith : (0 : ℝ) ≤ 2 * R) hχ.ne']
+    linarith
+  · intro t ht hRt
+    have ht0 : 0 ≤ 2 * t := by linarith [ht]
+    have hset : {ω | t < (D ω / H) ^ (1 / χ) / 2} = {ω | H * (2 * t) ^ χ < D ω} := by
+      ext ω
+      show t < (D ω / H) ^ (1 / χ) / 2 ↔ H * (2 * t) ^ χ < D ω
+      have ha : t < (D ω / H) ^ (1 / χ) / 2 ↔ 2 * t < (D ω / H) ^ (1 / χ) := by
+        constructor <;> intro h <;> linarith
+      have hb : 2 * t < (D ω / H) ^ (1 / χ) ↔ (2 * t) ^ χ < D ω / H := by
+        rw [one_div]
+        exact Real.lt_rpow_inv_iff_of_pos ht0 (hDH ω) hχ
+      have hc : (2 * t) ^ χ < D ω / H ↔ H * (2 * t) ^ χ < D ω := by
+        rw [lt_div_iff₀ hH, mul_comm]
+      exact ha.trans (hb.trans hc)
+    rw [hset]
+    exact htail t ht hRt
+  · rw [← lintegral_const_mul' (ENNReal.ofReal (H * 2 ^ χ))
+        (fun ω => ENNReal.ofReal (((D ω / H) ^ (1 / χ) / 2) ^ χ)) ENNReal.ofReal_ne_top]
+    refine lintegral_congr fun ω => ?_
+    rw [← ENNReal.ofReal_mul (mul_nonneg hH.le (Real.rpow_nonneg (by norm_num) _))]
+    congr 1
+    exact hDeq ω
+
+theorem lintegral_discrepancy_le_regime_lt {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+    [IsProbabilityMeasure μ] (D : Ω → ℝ) (hD0 : ∀ ω, 0 ≤ D ω) (hDm : AEMeasurable D μ) {H χ R ℓ K ν : ℝ}
+    (hH : 0 < H) (hχ : 0 < χ) (hK : 0 ≤ K) (hℓ : 0 < ℓ) (hℓR : ℓ ≤ R)
+    (hDR : ∀ᵐ ω ∂μ, D ω ≤ H * (2 * R) ^ χ)
+    (htail : ∀ t : ℝ, ℓ < t → t < R → μ {ω | H * (2 * t) ^ χ < D ω} ≤ ENNReal.ofReal (K * (ℓ / t) ^ ν))
+    (hlt : χ < ν) :
+    ∫⁻ ω, ENNReal.ofReal (D ω) ∂μ ≤ ENNReal.ofReal (H * 2 ^ χ * ((1 + K * χ / (ν - χ)) * ℓ ^ χ)) := by
+  obtain ⟨hm, hnn, hbd, htl, heq⟩ :=
+    scaled_discrepancy_facts μ D hD0 hDm hH hχ (hℓ.le.trans hℓR) hℓ.le hDR htail
+  rw [heq]
+  have hreg := lintegral_rpow_le_regime_lt μ (fun ω => (D ω / H) ^ (1 / χ) / 2) hm
+    (Filter.Eventually.of_forall hnn) hbd hχ hK hℓ hℓR htl hlt
+  calc ENNReal.ofReal (H * 2 ^ χ) * ∫⁻ ω, ENNReal.ofReal (((D ω / H) ^ (1 / χ) / 2) ^ χ) ∂μ
+      ≤ ENNReal.ofReal (H * 2 ^ χ) * ENNReal.ofReal ((1 + K * χ / (ν - χ)) * ℓ ^ χ) :=
+        mul_le_mul_of_nonneg_left hreg zero_le
+    _ = ENNReal.ofReal (H * 2 ^ χ * ((1 + K * χ / (ν - χ)) * ℓ ^ χ)) := by
+        rw [ENNReal.ofReal_mul (mul_nonneg hH.le (Real.rpow_nonneg (by norm_num) _))]
+
+theorem lintegral_discrepancy_le_regime_eq {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+    [IsProbabilityMeasure μ] (D : Ω → ℝ) (hD0 : ∀ ω, 0 ≤ D ω) (hDm : AEMeasurable D μ) {H χ R ℓ K ν : ℝ}
+    (hH : 0 < H) (hχ : 0 < χ) (hK : 0 ≤ K) (hℓ : 0 < ℓ) (hℓR : ℓ ≤ R)
+    (hDR : ∀ᵐ ω ∂μ, D ω ≤ H * (2 * R) ^ χ)
+    (htail : ∀ t : ℝ, ℓ < t → t < R → μ {ω | H * (2 * t) ^ χ < D ω} ≤ ENNReal.ofReal (K * (ℓ / t) ^ ν))
+    (hχν : χ = ν) :
+    ∫⁻ ω, ENNReal.ofReal (D ω) ∂μ ≤
+      ENNReal.ofReal (H * 2 ^ χ * ((1 + K * ν * (1 + |Real.log R|)) * ℓ ^ ν * (1 + |Real.log ℓ|))) := by
+  obtain ⟨hm, hnn, hbd, htl, heq⟩ :=
+    scaled_discrepancy_facts μ D hD0 hDm hH hχ (hℓ.le.trans hℓR) hℓ.le hDR htail
+  rw [heq]
+  have hreg := lintegral_rpow_le_regime_eq μ (fun ω => (D ω / H) ^ (1 / χ) / 2) hm
+    (Filter.Eventually.of_forall hnn) hbd hχ hK hℓ hℓR htl hχν
+  calc ENNReal.ofReal (H * 2 ^ χ) * ∫⁻ ω, ENNReal.ofReal (((D ω / H) ^ (1 / χ) / 2) ^ χ) ∂μ
+      ≤ ENNReal.ofReal (H * 2 ^ χ) *
+          ENNReal.ofReal ((1 + K * ν * (1 + |Real.log R|)) * ℓ ^ ν * (1 + |Real.log ℓ|)) :=
+        mul_le_mul_of_nonneg_left hreg zero_le
+    _ = ENNReal.ofReal (H * 2 ^ χ *
+          ((1 + K * ν * (1 + |Real.log R|)) * ℓ ^ ν * (1 + |Real.log ℓ|))) := by
+        rw [ENNReal.ofReal_mul (mul_nonneg hH.le (Real.rpow_nonneg (by norm_num) _))]
+
+theorem lintegral_discrepancy_le_regime_gt {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+    [IsProbabilityMeasure μ] (D : Ω → ℝ) (hD0 : ∀ ω, 0 ≤ D ω) (hDm : AEMeasurable D μ) {H χ R ℓ K ν : ℝ}
+    (hH : 0 < H) (hχ : 0 < χ) (hK : 0 ≤ K) (hℓ : 0 < ℓ) (hℓR : ℓ ≤ R)
+    (hDR : ∀ᵐ ω ∂μ, D ω ≤ H * (2 * R) ^ χ)
+    (htail : ∀ t : ℝ, ℓ < t → t < R → μ {ω | H * (2 * t) ^ χ < D ω} ≤ ENNReal.ofReal (K * (ℓ / t) ^ ν))
+    (hgt : ν < χ) :
+    ∫⁻ ω, ENNReal.ofReal (D ω) ∂μ ≤
+      ENNReal.ofReal (H * 2 ^ χ * ((1 + K * χ / (χ - ν)) * R ^ (χ - ν) * ℓ ^ ν)) := by
+  obtain ⟨hm, hnn, hbd, htl, heq⟩ :=
+    scaled_discrepancy_facts μ D hD0 hDm hH hχ (hℓ.le.trans hℓR) hℓ.le hDR htail
+  rw [heq]
+  have hreg := lintegral_rpow_le_regime_gt μ (fun ω => (D ω / H) ^ (1 / χ) / 2) hm
+    (Filter.Eventually.of_forall hnn) hbd hχ hK hℓ hℓR htl hgt
+  calc ENNReal.ofReal (H * 2 ^ χ) * ∫⁻ ω, ENNReal.ofReal (((D ω / H) ^ (1 / χ) / 2) ^ χ) ∂μ
+      ≤ ENNReal.ofReal (H * 2 ^ χ) * ENNReal.ofReal ((1 + K * χ / (χ - ν)) * R ^ (χ - ν) * ℓ ^ ν) :=
+        mul_le_mul_of_nonneg_left hreg zero_le
+    _ = ENNReal.ofReal (H * 2 ^ χ * ((1 + K * χ / (χ - ν)) * R ^ (χ - ν) * ℓ ^ ν)) := by
+        rw [ENNReal.ofReal_mul (mul_nonneg hH.le (Real.rpow_nonneg (by norm_num) _))]
+
 end MatedCRT
+
+#print axioms MatedCRT.lintegral_discrepancy_le_regime_lt
+#print axioms MatedCRT.lintegral_discrepancy_le_regime_eq
+#print axioms MatedCRT.lintegral_discrepancy_le_regime_gt
 
 #print axioms MatedCRT.pointwiseSameWalkRatesAe_of_pointwise
 #print axioms MatedCRT.lintegral_rpow_le_regime_lt
