@@ -22,3 +22,4 @@ import MatedCRT.Proofs.SecA.DiscreteObstacle
 import MatedCRT.Proofs.SecA.DiscreteDivergence
 import MatedCRT.Proofs.SecA.Statements
 import MatedCRT.Proofs.Infra.RandomWalk
+import MatedCRT.Proofs.Sec4.Prop42Closure.HalfBallClosure
