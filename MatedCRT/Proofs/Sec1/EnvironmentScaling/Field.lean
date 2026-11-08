@@ -301,6 +301,75 @@ theorem IsQuantumCone.observable_law_eq
     ← AEMeasurable.map_map_of_aemeasurable measurable_radialLateralObservables.aemeasurable hm',
     IsQuantumCone.joint_radial_lateral_law_unique h h']
 
+/-- Read the two radial paths from admissible observables. -/
+private def observableRadial (v : GFFObservable.Admissible → ℝ) : RadialData :=
+  (fun t => v ⟨.circle (Real.exp (-(t : ℝ))) 0, Real.exp_pos _⟩,
+   fun t => v ⟨.circle (Real.exp (t : ℝ)) 0, Real.exp_pos _⟩)
+
+private theorem measurable_observableRadial : Measurable observableRadial := by
+  exact (measurable_pi_iff.mpr fun _ => measurable_pi_apply _).prodMk
+    (measurable_pi_iff.mpr fun _ => measurable_pi_apply _)
+
+private def observableRadialLateral (v : GFFObservable.Admissible → ℝ) :
+    RadialData × (GFFObservable.Admissible → ℝ) :=
+  (observableRadial v, observableLateral v)
+
+private theorem measurable_observableRadialLateral : Measurable observableRadialLateral :=
+  measurable_observableRadial.prodMk measurable_observableLateral
+
+/-- Equality of admissible observable laws transfers the cone predicate,
+provided that the new observables have the required measurable continuous
+circle version. -/
+theorem IsQuantumCone.of_observable_law_eq
+    {Ω Ω' : Type} [MeasurableSpace Ω] [MeasurableSpace Ω']
+    {γ : ℝ} {P : Measure Ω} {P' : Measure Ω'}
+    [IsProbabilityMeasure P] [IsProbabilityMeasure P']
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hC' : Ω' → (ℂ → ℝ) → ℝ}
+    {a : Ω → ℝ → ℂ → ℝ} {a' : Ω' → ℝ → ℂ → ℝ}
+    (h : IsQuantumCone γ P hC a)
+    (hp : ∀ φ, IsTestFunction univ φ → Measurable fun ω => hC' ω φ)
+    (hc : ∀ r z, 0 < r → Measurable fun ω => a' ω r z)
+    (hcont : ∀ᵐ ω ∂P', ContinuousOn (fun p : ℝ × ℂ => a' ω p.1 p.2) (Ioi 0 ×ˢ univ))
+    (hlaw : P.map (wholePlaneObservableProc hC a) = P'.map (wholePlaneObservableProc hC' a')) :
+    IsQuantumCone γ P' hC' a' := by
+  have hobsm : Measurable (wholePlaneObservableProc hC a) := by
+    apply measurable_pi_iff.mpr
+    rintro ⟨o, ho⟩
+    cases o with
+    | pairing φ => exact h.measurable_pairing φ ho
+    | circle r z => exact h.measurable_circle r z ho
+  have hobs'm : Measurable (wholePlaneObservableProc hC' a') := by
+    apply measurable_pi_iff.mpr
+    rintro ⟨o, ho⟩
+    cases o with
+    | pairing φ => exact hp φ ho
+    | circle r z => exact hc r z ho
+  have ho : ProbabilityTheory.IdentDistrib (wholePlaneObservableProc hC a)
+      (wholePlaneObservableProc hC' a') P P' := ⟨hobsm.aemeasurable, hobs'm.aemeasurable, hlaw⟩
+  have hj := ho.comp measurable_observableRadialLateral
+  have he : (observableRadialLateral ∘ wholePlaneObservableProc hC a) =ᵐ[P]
+      (fun ω => (radialProcess (a ω), lateralProcess (hC ω) (a ω))) := by
+    filter_upwards [h.ae_continuousOn_circle] with ω hω
+    apply Prod.ext
+    · rfl
+    · exact (observableLateral_apply hC a ω).trans
+        (CirclePairing.lateralVersion_eq (CirclePairing.continuousOn_radial hω))
+  have he' : (observableRadialLateral ∘ wholePlaneObservableProc hC' a') =ᵐ[P']
+      (fun ω => (radialProcess (a' ω), lateralProcess (hC' ω) (a' ω))) := by
+    filter_upwards [hcont] with ω hω
+    apply Prod.ext
+    · rfl
+    · exact (observableLateral_apply hC' a' ω).trans
+        (CirclePairing.lateralVersion_eq (CirclePairing.continuousOn_radial hω))
+  have hjoint := ((ProbabilityTheory.IdentDistrib.of_ae_eq hj.aemeasurable_fst he).symm.trans hj).trans
+    (ProbabilityTheory.IdentDistrib.of_ae_eq hj.aemeasurable_snd he')
+  refine ⟨hp, hc, hcont, ?_, ?_, ?_⟩
+  · obtain ⟨ν, hν, hνlaw⟩ := h.radial_law
+    exact ⟨ν, hν, ((hjoint.comp measurable_fst).map_eq).symm.trans hνlaw⟩
+  · exact ProbabilityTheory.indepFun_of_identDistrib_pair h.indep hjoint
+  · obtain ⟨Ξ, mΞ, Q, gC, g, hQ, hG, hGlaw⟩ := h.lateral_law
+    exact ⟨Ξ, mΞ, Q, gC, g, hQ, hG, ((hjoint.comp measurable_snd).map_eq).symm.trans hGlaw⟩
+
 /-- Decode the countable test-function coordinates of an observable family. -/
 private def observableDistribution (v : GFFObservable.Admissible → ℝ) : LQGMetric.DistC :=
   planeDistributionCode.decode fun n =>
@@ -883,6 +952,35 @@ theorem exists_rescaled_pairing
   apply exists_rescaled_pairing_of_variableDilation variableDilationPairingStep hS R hRm
   filter_upwards [hR, hpos] with ω hRω hposω
   exact ⟨hRω, hRω ▸ hposω.ne'⟩
+
+/-- The distributional cone-scaling boundary, stated on all admissible
+observables. This is the remaining law identification in env-steps.tex:299–335;
+it is not supplied by the circle-only `QuantumConeScalingInput`. -/
+def RescaledConeObservableLawStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ → ∀ b : ℝ, 0 < b →
+    ∀ (hC' : Ω → (ℂ → ℝ) → ℝ) (c : Ω → ℝ → ℂ → ℝ),
+      (∀ᵐ ω ∂S.P, ∀ φ, IsTestFunction univ φ →
+        hC' ω φ = rescaledPairing γ (S.hC ω) (coneScaleRadius γ (S.hcirc ω) b) b φ) →
+      (∀ᵐ ω ∂S.P, c ω = rescaledCircle γ (S.hcirc ω) (coneScaleRadius γ (S.hcirc ω) b) b) →
+      S.P.map (wholePlaneObservableProc hC' c) = S.P.map (wholePlaneObservableProc S.hC S.hcirc)
+
+/-- The rescaled field step follows from circle scaling and the remaining
+law identification for admissible observables. -/
+theorem rescaledConeFieldStep_of_observable_law (𝒮 : SpaceFillingSLEModel)
+    (hscale : QuantumConeScalingInput) (hlaw : RescaledConeObservableLawStep 𝒮) :
+    RescaledConeFieldStep 𝒮 := by
+  intro γ hγ hγ2 Ω _ S hS b hb c hcm hcraw
+  let : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
+  obtain ⟨hC', hpair, _, hpm, hsigma⟩ := exists_rescaled_pairing hscale hγ hγ2 hS hb
+  have hpos := ae_coneScaleRadius_pos hscale hγ hγ2 hS.isQuantumCone hb
+  have hcont : ∀ᵐ ω ∂S.P, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Ioi 0 ×ˢ univ) := by
+    filter_upwards [hcraw, ae_continuousOn_rescaledCircle hS.isQuantumCone hpos] with ω he hc
+    rw [he]
+    exact hc
+  have hcone := IsQuantumCone.of_observable_law_eq hS.isQuantumCone hpm hcm hcont
+    (hlaw γ hγ hγ2 Ω S hS b hb hC' c hpair hcraw).symm
+  exact ⟨hC', hpair, hpm, hcone.indep, hcone.lateral_law, hsigma c⟩
 
 end MatedCRT.Sec1
 
