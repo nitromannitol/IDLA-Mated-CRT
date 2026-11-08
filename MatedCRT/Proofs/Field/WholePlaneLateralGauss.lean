@@ -65,6 +65,16 @@ structure IsRadialLevelData {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (
   cont : ∀ᵐ ω ∂P, Continuous fun u => W u ω
   cov : ∀ u v, 0 ≤ u → 0 ≤ v → covariance (W u) (W v) P = min u v
 
+/-- The level-integral formula for the covariance of `X` (in `M`) with the circle average `Y` of the radial process:
+`Cov(X, Y) = ∫ (2π)⁻¹ Cov(X, W_{-log|c(θ)|}) dθ` (the output of `levelIntegral_versions`). -/
+def LevelFormula {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (W : ℝ → Ω → ℝ) (M : Submodule ℝ (Ω → ℝ)) (Y : Ω → ℝ) (r : ℝ) (z : ℂ) :
+    Prop :=
+  ∀ X ∈ M, Continuous (fun u => covariance X (W u) P) →
+    Integrable (fun x => (2 * π)⁻¹ * covariance X (W (-Real.log ‖circleMap z r x‖)) P)
+      (volume.restrict (Ioc (0 : ℝ) (2 * π))) →
+    covariance X Y P = levelIntegral (volume.restrict (Ioc (0 : ℝ) (2 * π))) (fun _ => (2 * π)⁻¹)
+      (fun θ => -Real.log ‖circleMap z r θ‖) (fun u => covariance X (W u) P)
+
 section Rep
 
 variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
@@ -171,6 +181,9 @@ theorem radial_avg_cov_pair (hW : IsRadialLevelData P W M₀) (hM₀ : IsCentred
       (∀ᵐ ω ∂P, Real.circleAverage (fun x => W (-Real.log ‖x‖) ω) z r = Y ω) ∧
       (∀ᵐ ω ∂P, Real.circleAverage (fun x => W (-Real.log ‖x‖) ω) z' r' = Y' ω) ∧
       ∃ M : Submodule ℝ (Ω → ℝ), IsCentredGaussianSpace P M ∧ M₀ ≤ M ∧ Y ∈ M ∧ Y' ∈ M ∧
+        (∀ v : ℝ, covariance (W v) Y P = Real.circleAverage (fun x => min (max v 0) (-Real.log ‖x‖)) z r) ∧
+        (∀ v : ℝ, covariance (W v) Y' P = Real.circleAverage (fun y => min (max v 0) (-Real.log ‖y‖)) z' r') ∧
+        LevelFormula P W M Y r z ∧ LevelFormula P W M Y' r' z' ∧
         covariance Y Y' P = Real.circleAverage
           (fun x => Real.circleAverage (fun y => min (-Real.log ‖x‖) (-Real.log ‖y‖)) z' r') z r := by
   obtain ⟨hr, hzr, hz1⟩ := hreg
@@ -247,7 +260,25 @@ theorem radial_avg_cov_pair (hW : IsRadialLevelData P W M₀) (hM₀ : IsCentred
     refine Real.circleAverage_congr_sphere (fun x hx => ?_)
     simp only [hfun]
     rw [max_eq_left (neg_log_nonneg_of_mem_sphere hreg hx)]
-  refine ⟨Y, Y', hYm, hYm', havg, havg', M, hM4, hMle, hYmem, hY'mem, ?_⟩
+  have hFY : ∀ v : ℝ, covariance (W v) Y P =
+      Real.circleAverage (fun x => min (max v 0) (-Real.log ‖x‖)) z r := by
+    intro v
+    have key := hform M hM4 hMle hTmem hYmem (W v) (hMle (hW.mem v))
+      (by
+        simp only [cov_radial_level hW]
+        exact continuous_const.min (continuous_id.max continuous_const))
+      (by
+        simp only [cov_radial_level hW]
+        have hc : Continuous fun x : ℝ => min (max v 0) (max (-Real.log ‖circleMap z r x‖) 0) :=
+          continuous_const.min ((continuous_neg_log_circleMap hr z hzr).max continuous_const)
+        exact ((hc.continuousOn.integrableOn_compact isCompact_Icc).mono_set Ioc_subset_Icc_self).const_mul _)
+    rw [key, ← circleAverage_neg_log_eq_levelIntegral (fun u => covariance (W v) (W u) P) hr z hzr]
+    refine Real.circleAverage_congr_sphere (fun x hx => ?_)
+    simp only [cov_radial_level hW]
+    rw [max_eq_left (neg_log_nonneg_of_mem_sphere hreg hx)]
+  refine ⟨Y, Y', hYm, hYm', havg, havg', M, hM4, hMle, hYmem, hY'mem, hFY, hF',
+    fun X hX hc hi => hform M hM4 hMle hTmem hYmem X hX hc hi,
+    fun X hX hc hi => hform' M hM4 hMle hTmem' hY'mem X hX hc hi, ?_⟩
   rw [covariance_comm _ _]
   exact hcovY
 
