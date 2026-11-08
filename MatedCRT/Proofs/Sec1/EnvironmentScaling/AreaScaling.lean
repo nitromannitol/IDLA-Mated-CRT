@@ -3,6 +3,7 @@ import MatedCRT.Steps.Sec2.ConeScaleInvarianceUpToFixedTime
 import HarmonicBalls.Proofs.Sec9.LQGSpatialDilation
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
 import Mathlib.Topology.TietzeExtension
+import Mathlib.Topology.PartitionOfUnity
 
 /-!
 # Area measure at a random radius
@@ -563,5 +564,110 @@ theorem tendsto_lqgApprox_addCircleAverage_allScale_local {γ : ℝ} {h : ℝ �
     _ = ∫ z, f z ∂(lqgApprox γ (addCircleAverage h v) r) :=
       setIntegral_eq_integral_of_forall_compl_eq_zero
         (fun z hz => image_eq_zero_of_notMem_tsupport hz)
+
+
+/-- Vague convergence on an open cover glues to convergence for every compactly
+supported test whose support is covered. This applies to countable disk covers,
+but the deterministic gluing itself does not require countability. -/
+theorem tendsto_integral_of_open_cover {ι α : Type*} {F : Filter α}
+    (U : ι → Set ℂ) (hU : ∀ i, IsOpen (U i))
+    (ν : α → Measure ℂ) (μ : Measure ℂ) (hμ : IsLocallyFiniteMeasure μ)
+    (hν : ∀ᶠ a in F, IsLocallyFiniteMeasure (ν a))
+    (hloc : ∀ (i : ι) (f : ℂ → ℝ), Continuous f → HasCompactSupport f → tsupport f ⊆ U i →
+      Tendsto (fun a => ∫ z, f z ∂(ν a)) F (𝓝 (∫ z, f z ∂μ)))
+    (f : ℂ → ℝ) (hf : Continuous f) (hfc : HasCompactSupport f)
+    (hcover : tsupport f ⊆ ⋃ i, U i) :
+    Tendsto (fun a => ∫ z, f z ∂(ν a)) F (𝓝 (∫ z, f z ∂μ)) := by
+  classical
+  obtain ⟨I, hI⟩ := hfc.elim_finite_subcover U hU hcover
+  let e : Fin (Fintype.card {i // i ∈ I}) ≃ {i // i ∈ I} := (Fintype.equivFin _).symm
+  let V : Fin (Fintype.card {i // i ∈ I}) → Set ℂ := fun j => U (e j).1
+  have hV : tsupport f ⊆ ⋃ j, V j := by
+    intro z hz
+    obtain ⟨i, hi, hzU⟩ := mem_iUnion₂.mp (hI hz)
+    exact mem_iUnion.mpr ⟨e.symm ⟨i, hi⟩, by simpa [V] using hzU⟩
+  obtain ⟨φ, hφsub, hφone, _, _⟩ :=
+    exists_continuous_sum_one_of_isOpen_isCompact (fun j => hU (e j).1) hfc hV
+  let g : Fin (Fintype.card {i // i ∈ I}) → ℂ → ℝ := fun j z => f z * φ j z
+  have hgc (j) : Continuous (g j) := hf.mul (φ j).continuous
+  have hgs (j) : HasCompactSupport (g j) := hfc.mul_right
+  have hgl (j) : tsupport (g j) ⊆ U (e j).1 := tsupport_mul_subset_right.trans (hφsub j)
+  have hsum (z : ℂ) : (∑ j, g j z) = f z := by
+    simp only [g, ← Finset.mul_sum]
+    by_cases hz : z ∈ tsupport f
+    · have h := hφone hz
+      simp only [Finset.sum_apply, Pi.one_apply] at h
+      rw [h, mul_one]
+    · rw [image_eq_zero_of_notMem_tsupport hz, zero_mul]
+  have hint (ρ : Measure ℂ) (hρ : IsLocallyFiniteMeasure ρ) :
+      (∫ z, f z ∂ρ) = ∑ j, ∫ z, g j z ∂ρ := by
+    let : IsLocallyFiniteMeasure ρ := hρ
+    calc
+      (∫ z, f z ∂ρ) = ∫ z, ∑ j, g j z ∂ρ := by simp only [hsum]
+      _ = ∑ j, ∫ z, g j z ∂ρ :=
+        integral_finsetSum _ (fun j _ => (hgc j).integrable_of_hasCompactSupport (hgs j))
+  have hlim := tendsto_finsetSum Finset.univ (fun j _ => hloc (e j).1 (g j) (hgc j) (hgs j) (hgl j))
+  rw [← hint μ hμ] at hlim
+  apply hlim.congr'
+  filter_upwards [hν] with a ha
+  exact (hint (ν a) ha).symm
+
+
+/-- Countably many almost-sure local convergence events give one event on which
+convergence holds for all compactly supported tests in the covered domain. -/
+theorem ae_tendsto_integral_of_countable_open_cover {Ω ι α : Type*}
+    [MeasurableSpace Ω] [Countable ι] (P : Measure Ω) {F : Filter α}
+    (U : ι → Set ℂ) (hU : ∀ i, IsOpen (U i)) {D : Set ℂ} (hcover : D ⊆ ⋃ i, U i)
+    (ν : Ω → α → Measure ℂ) (μ : Ω → Measure ℂ)
+    (hμ : ∀ᵐ ω ∂P, IsLocallyFiniteMeasure (μ ω))
+    (hν : ∀ᵐ ω ∂P, ∀ᶠ a in F, IsLocallyFiniteMeasure (ν ω a))
+    (hloc : ∀ i, ∀ᵐ ω ∂P, ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+      tsupport f ⊆ U i → Tendsto (fun a => ∫ z, f z ∂(ν ω a)) F (𝓝 (∫ z, f z ∂(μ ω)))) :
+    ∀ᵐ ω ∂P, ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f → tsupport f ⊆ D →
+      Tendsto (fun a => ∫ z, f z ∂(ν ω a)) F (𝓝 (∫ z, f z ∂(μ ω))) := by
+  filter_upwards [hμ, hν, ae_all_iff.mpr hloc] with ω hμω hνω hlocω
+  intro f hf hfc hfD
+  exact tendsto_integral_of_open_cover U hU (ν ω) (μ ω) hμω hνω hlocω f hf hfc
+    (hfD.trans hcover)
+
+
+/-- A valid environment has the random-radius area-scaling identity if each
+member of a countable open cover of the punctured plane has an all-scale limit.
+The local limits may initially differ: their test integrals are identified
+with the environment's dyadic LQG limit by uniqueness of limits. -/
+theorem MatedCRTEnv.IsValid.ae_rescaled_measure_eq_of_countable_local_limits
+    {Ω ι : Type} [MeasurableSpace Ω] [Countable ι]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ b : ℝ} (hS : S.IsValid 𝒮 γ)
+    (hγ : γ ≠ 0) (hb : 0 < b) (R : Ω → ℝ) {ν : Ω → Measure ℂ}
+    {η' : Ω → ℝ → ℂ}
+    (hR : ∀ᵐ ω ∂S.P, 0 < R ω)
+    (hν : IsLQGMeasure S.P γ (fun ω => rescaledCircle γ (S.hcirc ω) (R ω) b) ν)
+    (hη' : ∀ᵐ ω ∂S.P, IsAreaParametrized (ν ω) (η' ω))
+    (U : ι → Set ℂ) (hU : ∀ i, IsOpen (U i)) (hcover : ({0} : Set ℂ)ᶜ ⊆ ⋃ i, U i)
+    (hloc : ∀ i, ∀ᵐ ω ∂S.P, ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+      tsupport f ⊆ U i → ∃ l : ℝ,
+        Tendsto (fun ε : ℝ => ∫ z, f z ∂(lqgApprox γ (S.hcirc ω) ε)) (𝓝[>] 0) (𝓝 l)) :
+    ∀ᵐ ω ∂S.P, ν ω = rescaledMeasure (S.μ ω) (R ω) b := by
+  have hreg := MatedCRTEnv.IsValid.ae_area_and_circle_regular hS
+  have hlocal : ∀ i, ∀ᵐ ω ∂S.P, ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+      tsupport f ⊆ U i →
+      Tendsto (fun ε : ℝ => ∫ z, f z ∂(lqgApprox γ (S.hcirc ω) ε))
+        (𝓝[>] 0) (𝓝 (∫ z, f z ∂(S.μ ω))) := by
+    intro i
+    filter_upwards [hS.isLQGMeasure, hloc i] with ω hμω hlocω
+    intro f hf hfc hfU
+    obtain ⟨l, hl⟩ := hlocω f hf hfc hfU
+    have heq : l = ∫ z, f z ∂(S.μ ω) :=
+      tendsto_nhds_unique (hl.comp tendsto_dyadicScale_nhdsGT) (hμω.tendsto_integral f hf hfc)
+    simpa only [heq] using hl
+  have hμ : ∀ᵐ ω ∂S.P, IsLocallyFiniteMeasure (S.μ ω) := hreg.mono fun _ h => h.1
+  have happrox : ∀ᵐ ω ∂S.P, ∀ᶠ ε : ℝ in 𝓝[>] 0,
+      IsLocallyFiniteMeasure (lqgApprox γ (S.hcirc ω) ε) := by
+    filter_upwards [hreg] with ω hω
+    filter_upwards [self_mem_nhdsWithin] with ε hε
+    exact isLocallyFiniteMeasure_lqgApprox_of_continuous γ (S.hcirc ω) ε (hω.2.2 ε hε)
+  have hall := ae_tendsto_integral_of_countable_open_cover S.P U hU hcover
+    (fun ω ε => lqgApprox γ (S.hcirc ω) ε) S.μ hμ happrox hlocal
+  exact MatedCRTEnv.IsValid.ae_rescaled_measure_eq_of_off_origin_limit hS hγ hb R hR hν hη' hall
 
 end MatedCRT.Sec1
