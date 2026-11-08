@@ -5,8 +5,8 @@ import MatedCRT.Steps.Sec2.ConeHarmonicBallsUpToFixedTime
 
 Written argument: `notes/prop42-proof/prop42-proof.tex`, lemma `l:plateau` (draft lines 230-268). This file
 
-* states the two facts the draft uses at lines 245-256 and 275-289 as named Step Props:
-  `PlateauScaleInvarianceStep` (fact (1)) and `ConeWholePlaneLocalLawStep` (fact (2));
+* states fact (1), used at draft lines 245-256, as the named Step Prop `PlateauScaleInvarianceStep` (fact (2) is
+  `ConeWholePlaneFieldLawStep` in `ConeWholePlaneSteps.lean`);
 * proves that the plateau values are countable (draft lines 237-243), and the Tonelli step of draft lines 264-268:
   `plateau_measure_zero` gives `P[r ∈ P] = 0` for every `r > 0`, from fact (1) and a measurability premise for the
   radii at rational times (draft lines 259-263), which is stated as an explicit hypothesis.
@@ -55,24 +55,6 @@ def PlateauScaleInvarianceStep : Prop :=
     IsLQGMeasureOfField P γ α hcirc μ → (∀ᵐ ω ∂P, IsRegularizedClusterFamily (μ ω) (Λ ω) 0) →
     ∀ a r : ℝ, 0 < a → 0 < r →
       P {ω | r ∈ plateauValues (Λ ω)} = P {ω | a * r ∈ plateauValues (Λ ω)}
-
-/-- **Fact (2): local equality in law of the cone and the whole-plane field.**
-
-Written argument: draft lines 275-289 ("Equality of local cone and `h^γ` laws excludes the same event for the cone").
-Source: [IDLA] eq. (2.4) (`eq:gff`, paper line 443, Section 2): `h|_{B_1} =_d (h^ℂ - γ log|·|)|_{B_1}`, where `h` is the
-quantum cone (`IsConeField`) and `h^ℂ - γ log|·|` is the whole-plane field with insertion `γ`
-(`IsWholePlaneGFF`, `IsLQGMeasureOfField P' γ γ`). It is stated here for the LQG measures restricted to `B_1`, the
-data on which the paper's law equality is stated. The draft applies it to the `B_{3/4}`-clusters at lines 275-289;
-these are determined by the measure on `B_{3/4} ⊆ B_1`. -/
-def ConeWholePlaneLocalLawStep : Prop :=
-  ∀ γ : ℝ, 0 < γ → γ < 2 →
-  ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
-    (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
-  ∀ (Ω' : Type) [MeasurableSpace Ω'] (P' : Measure Ω') (hC' : Ω' → (ℂ → ℝ) → ℝ)
-    (hcirc' : Ω' → ℝ → ℂ → ℝ) (μ' : Ω' → Measure ℂ),
-    IsProbabilityMeasure P' → IsWholePlaneGFF P' hC' hcirc' → IsLQGMeasureOfField P' γ γ hcirc' μ' →
-    IdentDistrib (fun ω => (μ ω).restrict (ball (0 : ℂ) 1))
-      (fun ω' => (μ' ω').restrict (ball (0 : ℂ) 1)) P P'
 
 /-- The pairs `(ω, r)` with `r` a plateau value of `Λ ω`. -/
 def plateauPairs {Ω : Type} (Λ : Ω → ℝ → Set ℂ) : Set (Ω × ℝ) :=
