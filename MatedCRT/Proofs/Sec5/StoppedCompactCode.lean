@@ -86,8 +86,9 @@ theorem measurableSet_selectedRats_nonempty {E : ℂ → Set Ω}
     MeasurableSet {ω | (selectedRats E ω).Nonempty} := by
   simpa only [inter_univ] using measurableSet_selectedRats_hit hE univ
 
-/-- Boundedness of the selected rationals is a countable Borel test: the complement of
-`⋃ n, ⋂ z ∈ gaussRat ∩ {‖z‖ > n}, (E z)ᶜ` (steps2-r3:3166-3168). -/
+/-- Boundedness of the selected rationals is a countable Borel test: the bounded outcomes are exactly
+`⋃ n, ⋂ z ∈ gaussRat ∩ {‖z‖ > n}, (E z)ᶜ`, i.e. no selected rational lies outside some ball
+(steps2-r3:3166-3168). -/
 theorem measurableSet_selectedRats_bounded {E : ℂ → Set Ω}
     (hE : ∀ z ∈ gaussRat, MeasurableSet (E z)) :
     MeasurableSet {ω | Bornology.IsBounded (selectedRats E ω)} := by
@@ -171,7 +172,8 @@ def HausdorffPair (r : ℝ≥0∞) (p : ℚ × ℚ) : Prop :=
   (0 : ℝ) < (p.1 : ℝ) ∧ (p.1 : ℝ) < (p.2 : ℝ) ∧ ENNReal.ofReal (p.2 : ℝ) < r
 
 /-- Deterministic characterization of the Hausdorff-ball event through rational parameters and a
-finite net `D p ⊆ L` of the compact target `L` (Armitage-Gardiner style open-hit description). -/
+finite net `D p ⊆ L` of the compact target `L`: an open-hit description in the sense of the Matheron
+hit σ-algebra of random closed sets. -/
 theorem hausdorffEDist_lt_iff_codeNet {K L : Set ℂ} {r : ℝ≥0∞} (D : ℚ × ℚ → Set ℂ)
     (hDL : ∀ p, D p ⊆ L)
     (hDcov : ∀ p : ℚ × ℚ, 0 < (p.2 : ℝ) - (p.1 : ℝ) →
