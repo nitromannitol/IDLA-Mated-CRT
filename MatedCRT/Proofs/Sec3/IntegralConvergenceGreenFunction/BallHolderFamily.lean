@@ -9,7 +9,7 @@ depending on the environment, must be approximated uniformly on `B(z, r)` by one
 bounded continuous functions on `ℂ`. The sequence is built from the countable approximation families
 `exists_countable_holderWith_approx_ball`, indexed by the integer Hölder constant `n` and the exponent `1/(k+1)`:
 on a bounded ball every Hölder exponent `χ` can be lowered to some `1/(k+1) ≤ χ` (Mathlib's `HolderOnWith.of_le`),
-and every real constant raised to an integer. The members are transported to `ℂ` by `extendBall`.
+and every real constant raised to an integer. The members are transported to `ℂ` by `extendClosedBall`.
 
 Terminology: Hölder regularity on a bounded set; quantitative Hölder approximation (Armstrong–Kuusi–Mourrat).
 -/
@@ -25,6 +25,10 @@ noncomputable def holderIndexExp (k : ℕ) : ℝ≥0 := 1 / ((k : ℝ≥0) + 1)
 lemma holderIndexExp_pos (k : ℕ) : 0 < holderIndexExp k := by
   unfold holderIndexExp
   positivity
+
+lemma holderIndexExp_le_one (k : ℕ) : holderIndexExp k ≤ 1 := by
+  unfold holderIndexExp
+  exact (div_le_one (by positivity)).2 (le_add_of_nonneg_left zero_le)
 
 /-- Every positive Hölder exponent dominates some `1/(k+1)`. -/
 lemma exists_holderIndexExp_le {χ : ℝ≥0} (hχ : 0 < χ) : ∃ k : ℕ, holderIndexExp k ≤ χ := by
@@ -64,7 +68,7 @@ each Hölder on the ball `B(z, r)`, such that every function that is Hölder on 
 exponent) is uniformly within `δ` of a member of the sequence on the ball. -/
 theorem exists_holder_family_ball (z : ℂ) {r : ℝ} (hr : 0 < r) {δ : ℝ} (hδ : 0 < δ) :
     ∃ G : ℕ → ℂ → ℝ, (∀ j, Continuous (G j) ∧ (∃ M : ℝ, ∀ x, |G j x| ≤ M) ∧
-        ∃ (C χ : ℝ≥0), 0 < χ ∧ HolderOnWith C χ (G j) (ball z r)) ∧
+        ∃ (C χ : ℝ≥0), 0 < χ ∧ χ ≤ 1 ∧ HolderOnWith C χ (G j) (ball z r)) ∧
       ∀ f : ℂ → ℝ, (∃ (C χ : ℝ≥0), 0 < χ ∧ HolderOnWith C χ f (ball z r)) →
         ∃ j, ∀ x ∈ ball z r, |f x - G j x| < δ := by
   choose D hDc hDH hDapp using fun p : ℕ × ℕ =>
@@ -82,14 +86,15 @@ theorem exists_holder_family_ball (z : ℂ) {r : ℝ} (hr : 0 < r) {δ : ℝ} (h
     obtain ⟨G, hG⟩ := hne (0, 0)
     exact ⟨G, mem_iUnion.2 ⟨(0, 0), hG⟩⟩
   obtain ⟨g, hg⟩ := hUc.exists_eq_range hUne
-  refine ⟨fun j => extendBall z r hr (g j), fun j => ?_, fun f hf => ?_⟩
+  refine ⟨fun j => extendClosedBall z r hr (g j), fun j => ?_, fun f hf => ?_⟩
   · have hmem : g j ∈ U := by
       rw [hg]
       exact mem_range_self j
     obtain ⟨p, hp⟩ := mem_iUnion.1 hmem
     have hH := hDH p (g j) hp
-    exact ⟨continuous_extendBall hr (g j), exists_bound_extendBall hr (g j),
-      (p.1 : ℝ≥0), holderIndexExp p.2, holderIndexExp_pos p.2, holderOnWith_extendBall hr (g j) hH⟩
+    exact ⟨continuous_extendClosedBall hr (g j), exists_bound_extendClosedBall hr (g j),
+      (p.1 : ℝ≥0), holderIndexExp p.2, holderIndexExp_pos p.2, holderIndexExp_le_one p.2,
+      holderOnWith_extendClosedBall hr (g j) hH⟩
   · obtain ⟨C0, χ0, hχ0, hf0⟩ := hf
     obtain ⟨k, hk⟩ := exists_holderIndexExp_le hχ0
     have hw := HolderOnWith.of_le (fun x hx y hy => edist_le_two_r_of_mem_ball hr hx hy) hf0 hk
@@ -99,8 +104,8 @@ theorem exists_holder_family_ball (z : ℂ) {r : ℝ} (hr : 0 < r) {δ : ℝ} (h
     rw [hg] at hGU
     obtain ⟨j, hj⟩ := hGU
     refine ⟨j, fun x hx => ?_⟩
-    show |f x - extendBall z r hr (g j) x| < δ
-    rw [extendBall_of_mem hr (g j) (ball_subset_closedBall hx), hj]
+    show |f x - extendClosedBall z r hr (g j) x| < δ
+    rw [extendClosedBall_of_mem hr (g j) (ball_subset_closedBall hx), hj]
     exact hGapp x hx
 
 end MatedCRT
