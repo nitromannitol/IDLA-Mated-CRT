@@ -498,7 +498,42 @@ theorem integral_discrepancy_le_regime {Ω : Type*} [MeasurableSpace Ω] (μ : M
     · exact lintegral_discrepancy_le_regime_gt μ D hD0 hDm' hHpos hχ hK hℓ hℓR hDR htail
         (lt_of_le_of_ne (not_lt.mp h1) (Ne.symm h2))
 
+
+/-- Enlargement of a scaled tail (steps2-r3 eq:distance-tail, the case `s > s0`): the event `{H (2t)^χ < D}` decreases in
+`t`, so a tail bound at `s0` gives the bound at every `t ∈ [s0, R]` with the constant multiplied by `(R/s0)^ν`. -/
+theorem measure_discrepancy_tail_enlarge {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) (D : Ω → ℝ)
+    {H χ ℓ K ν s0 R : ℝ} (hH : 0 ≤ H) (hχ : 0 < χ) (hK : 0 ≤ K) (hℓ : 0 ≤ ℓ) (hs0 : ℓ < s0)
+    (hν : 0 ≤ ν) (htail0 : μ {ω | H * (2 * s0) ^ χ < D ω} ≤ ENNReal.ofReal (K * (ℓ / s0) ^ ν))
+    (t : ℝ) (ht0 : s0 ≤ t) (htR : t ≤ R) :
+    μ {ω | H * (2 * t) ^ χ < D ω} ≤ ENNReal.ofReal (K * (R / s0) ^ ν * (ℓ / t) ^ ν) := by
+  have hs0pos : 0 < s0 := lt_of_le_of_lt hℓ hs0
+  have htpos : 0 < t := lt_of_lt_of_le hs0pos ht0
+  have hsub : {ω | H * (2 * t) ^ χ < D ω} ⊆ {ω | H * (2 * s0) ^ χ < D ω} := by
+    intro ω hω
+    have hmono : (2 * s0) ^ χ ≤ (2 * t) ^ χ :=
+      Real.rpow_le_rpow (by linarith) (by linarith) hχ.le
+    have : H * (2 * s0) ^ χ ≤ H * (2 * t) ^ χ := mul_le_mul_of_nonneg_left hmono hH
+    exact lt_of_le_of_lt this hω
+  have hpow : (ℓ / s0) ^ ν = (ℓ / t) ^ ν * (t / s0) ^ ν := by
+    rw [← Real.mul_rpow (div_nonneg hℓ htpos.le) (div_nonneg htpos.le hs0pos.le)]
+    congr 1
+    field_simp
+  have hratio : (t / s0) ^ ν ≤ (R / s0) ^ ν :=
+    Real.rpow_le_rpow (div_nonneg htpos.le hs0pos.le) (div_le_div_of_nonneg_right htR hs0pos.le) hν
+  have hbound : K * (ℓ / s0) ^ ν ≤ K * (R / s0) ^ ν * (ℓ / t) ^ ν := by
+    rw [hpow]
+    have hlt : 0 ≤ (ℓ / t) ^ ν := Real.rpow_nonneg (div_nonneg hℓ htpos.le) _
+    calc K * ((ℓ / t) ^ ν * (t / s0) ^ ν) = K * (t / s0) ^ ν * (ℓ / t) ^ ν := by ring
+      _ ≤ K * (R / s0) ^ ν * (ℓ / t) ^ ν := by
+          apply mul_le_mul_of_nonneg_right _ hlt
+          exact mul_le_mul_of_nonneg_left hratio hK
+  calc μ {ω | H * (2 * t) ^ χ < D ω} ≤ μ {ω | H * (2 * s0) ^ χ < D ω} := measure_mono hsub
+    _ ≤ ENNReal.ofReal (K * (ℓ / s0) ^ ν) := htail0
+    _ ≤ ENNReal.ofReal (K * (R / s0) ^ ν * (ℓ / t) ^ ν) := ENNReal.ofReal_le_ofReal hbound
+
 end MatedCRT
+
+#print axioms MatedCRT.measure_discrepancy_tail_enlarge
 
 #print axioms MatedCRT.sameWalkExitDiscrepancy_le_of_finite_exit
 #print axioms MatedCRT.ae_sameWalkExitDiscrepancy_le_of_finite_exit
