@@ -2,7 +2,7 @@
 
 Status: historical exact-type requests with per-target updates below. Six now have **WRITTEN-PROOF-AVAILABLE / LEAN-PENDING** after the operator16:25 ruling; three original targets and three newer scaling requests remain **WRITTEN-PROOF-NEEDED**. These are exact open proof obligations carried as named Step Props under the operator's standing rule. They are not proved results or approved literature inputs. The operator routes them to a separate prover and independent audit; active workers continue with explicit hypotheses. No statement or definition is changed by this ledger.
 
-The code blocks copy the entire current `def` command, including binders, from the indicated source. Names are fully qualified in headings; code uses the original namespace and open declarations of its source file. The declarations are pinned to the takeover commits (z1: 15e8866/f69cf7b; z5: d63273a; m1: 2afd11a), except the pre-existing S3 interface. Compile checks are recorded under `/home/nitro/paper-fleets/mcrt/lead/checks/20261108-takeover`.
+The historical code blocks copy the entire original `def` command, including binders, from the indicated source; operator-authorized repairs and current interfaces are recorded in the dated updates. Names are fully qualified in headings; code uses the original namespace and open declarations of its source file. The declarations are pinned to the takeover commits (z1: 15e8866/f69cf7b; z5: d63273a; m1: 2afd11a), except the pre-existing S3 interface. Compile checks are recorded under `/home/nitro/paper-fleets/mcrt/lead/checks/20261108-takeover`.
 
 The three rescaled-environment requests remain in [EnvironmentScaling.md](EnvironmentScaling.md). The operator supplied independently audited written proofs at09:45; see [ENV-STEPS-ROUTING-20261108.md](ENV-STEPS-ROUTING-20261108.md) for their WRITTEN-PROOF-AVAILABLE / LEAN-PENDING status and the repaired stopped-clock quantifiers. [GAPS-SEC3.md](GAPS-SEC3.md) and fleet `ESCALATIONS.md` retain the prior evidence. The requested `docs/campaign/STATUS.md` is absent; the existing fleet `STATUS.md` and [REDUCTIONS.md](REDUCTIONS.md) remain the status/reduction ledgers.
 
@@ -20,8 +20,8 @@ These are written proofs, not new Lean closure or approved literature axioms.
 
 | Request | Written status and exact source section | Lean routing |
 | --- | --- | --- |
-| WPN-36-uniform-cell | AVAILABLE, exact declaration correct, lines33-250 | m5 uniform-cell, first geometric/quantitative component |
-| WPN-36-pointwise-event | AVAILABLE REPAIR, original pointwise Step false, lines252-438; replace its inclusion by a.e. implication at each mesh and choose admissible parameters from the actual estimates | m5 successor, repaired Step and existing a.e. tail/mean consumers |
+| WPN-36-uniform-cell | AVAILABLE, exact declaration correct, lines33-250 | m5 deterministic cell/area and outer-union-bound component checked at edbd4f0; uniform quantitative law remains |
+| WPN-36-pointwise-event | AVAILABLE REPAIR, original pointwise Step false, lines252-438; replace its inclusion by a.e. implication at each mesh and choose admissible parameters from the actual estimates | m5 e197e53 repaired Step/consumers checked; conditional envelope assembly checked; Borel state/walk construction remains |
 | WPN-36-pointwise-rates | WRITTEN-PROOF-NEEDED, lines440-649: G1 missing Brownian minimum uniqueness/strict adjacency and G2 early interpolation exit case | no proof task; keep named Step |
 | WPN-42-locality | AVAILABLE, exact declaration correct, lines651-794 | z5 local-measure functional; same map for both models |
 | WPN-51-origin | AVAILABLE, exact declaration correct, lines796-1009 | z5 successor, obstacle code and completion measurability |
@@ -383,3 +383,39 @@ The separate prover and independent audit should check its exact hypotheses
 and strength; alternatively supply an audited proof of the existing exact grid
 Step at Field.lean:1146. No assertion of falsity or necessity of this stronger
 interface is made. Keep it named until the operator returns an audited proof.
+
+
+## Checked implementation update, 2026-11-08 17:17 UTC
+
+At pinned e197e53, the authorized PointwiseCellAnnulusEnvelopeStep a.e.
+repair and both tail/mean consumers pass strict lc, together with
+AnnulusEnvelopeProof's state-law sandwich, intersection tail, parameter
+selection and conditional assembly. This does not yet construct the full
+envelope. The exact remaining interface (namespace MatedCRT, MeasureTheory
+and Set open) from AnnulusEnvelopeProof.lean:74 is:
+
+```lean
+def AnnulusGoodMeasurableVersionStep {Ω : Type} [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) (ρ β p : ℝ) : Prop :=
+  ∀ ε : ℝ, ∃ E : Set Ω, MeasurableSet[S.envSigma] E ∧
+    ∀ᵐ ω ∂S.P, (ω ∈ E ↔ ω ∈ AnnulusGoodEvent S ρ β p ε)
+```
+
+This is **WRITTEN-PROOF-AVAILABLE / IMPLEMENTATION-PENDING**, steps2:395-426:
+countable state coding, jointly Borel walk event/kernel and coanalytic/Preston
+transfer. m5's fresh walk-event task and state-decoder successor are queued.
+UniformCellSizeProof edbd4f0 supplies deterministic ball-mass-to-cell geometry,
+area reparametrization and an outer-measure union bound. Representation-uniform
+exponents and probability inputs remain; UniformCellSizeUpperStep is unproved.
+The newly staged BG20 Lemma2.4 and Remark1.3 inputs retain canonical scope,
+not arbitrary raw-model or representation-uniform laws.
+
+z1 af34670 supplies regular-open compact-core, small-cell geometry, decreasing
+obstructions and a conditional outer-probability passage; the full stopped
+geometry Step still needs its measurable compact code, actual family clauses
+and cell-size probability. These are written implementation work, not new
+WPN. The margin repair task has promoted and its Preston transfer successor
+is queued. The latter first corrects the omitted exact-measurability condition
+in the Proposed Preston staging; compilation is not source approval. See
+fleet ESCALATIONS E-PRESTON-EXACT-MEASURABILITY-STAGING. Original rates, pole,
+layer and the three newer scaling WPN are unchanged. No numbered closure.

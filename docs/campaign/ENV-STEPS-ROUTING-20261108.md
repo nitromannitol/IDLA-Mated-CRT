@@ -415,3 +415,40 @@ locality and origin. Three missing printed-form source-staging slices are
 assigned in disjoint Proposed files. All4 next queues exist with a bounded
 six-hour lead-owned refill (queues/20261108-1633/refill-all.py). No new
 12-round event and no paused-worker task/control edits.
+
+
+## Lead round 2026-11-08 17:17 UTC
+
+Twelve committed source snapshots and five additional axiom probes pass
+strict lc (receipts fleet lead/checks/20261108-1705). The checked exports
+use only propext, Classical.choice and Quot.sound; a67-source hole/axiom
+scan is clean. This is implementation verification, not source-fidelity
+approval of the new Preston candidate and not numbered-result closure.
+
+ClockLimitBorel 4f3dab5 proves the measurable clock-limit path map without
+extra hypotheses. The Polish Preston transfer is still separate. IGCurveScaling
+b9b97b5 proves deterministic no-period, integer-period and positive-scale
+identities; the positive-scale law remains open. env-steps:794-804 explicitly
+writes modulo-uniform independence and removal of the dependent integer;
+z5's R2/R3 are implementation remaining. Its future uniform-shift slice
+handles that probability component, leaving the normalized GFF carrier bridge
+R1 explicit. No new written-proof request is inferred.
+
+CanonicalConeIdentification 0d4049f/e7050b2's positive-drift/sublinearity,
+last-zero positivity and analytic Gaussian entrance limit pass. They do not
+prove Brownian sublinearity, killed-transition/survival laws or the independent
+weak-limit/post-last-zero conditioning identification. The continuous-path
+and distribution-radius transfers still retain ReferenceConeRadialCircleStep
+and QuantumConeScalingInput. Field/clock/mating Steps remain open.
+
+The audited annulus repair and stopped-geometry components are checked in
+GAPS-TAKEOVER-20261108.md. z1's weak Proposed type-B predicate omits exact
+measurability and is held from use/promotion; a queued source correction
+precedes its transfer proof. No new operator ruling is required for that
+routine correction, and the worker's claimed interpretation is not an inbox
+ruling. z1 now works on the authorized stopped-margin version; z5 remains
+on local-measure coding with origin next. All4 next queues exist, with
+distinct following briefs and bounded lead-owned refill guards. No new
+12-round event, no paused/control edits. m1/m5 quota-exited; the logged99%
+guard differs from the operator96% stop, recorded for reconciliation without
+restarting them. No new mathematical WPN and no numbered closure.
