@@ -23,6 +23,43 @@ def VariableDilationPairingStep : Prop :=
   ∀ φ : LQGMetric.TestC,
     Measurable fun p : LQGMetric.DistC × ℝ => p.1 (LQGMetric.testAffinePull p.2 0 φ)
 
+/-- The remaining topology step can be reduced to continuity of the
+nonzero dilation orbit of each fixed test function. -/
+def ContinuousDilationTestStep : Prop :=
+  ∀ φ : LQGMetric.TestC,
+    Continuous fun r : {r : ℝ // r ≠ 0} => LQGMetric.testAffinePull r 0 φ
+
+/-- Joint measurability follows from continuity of the test orbit and the
+cylinder measurability of fixed test pairings.  At zero the pullback is zero. -/
+theorem variableDilationPairingStep_of_continuous
+    (hcont : ContinuousDilationTestStep) : VariableDilationPairingStep := by
+  classical
+  intro φ
+  let ρ : ℝ → {r : ℝ // r ≠ 0} := fun r =>
+    if hr : r = 0 then ⟨1, one_ne_zero⟩ else ⟨r, hr⟩
+  have hρ : Measurable ρ := by
+    apply Measurable.subtype_mk
+    have hm : Measurable fun r : ℝ => if r = 0 then (1 : ℝ) else r :=
+      Measurable.ite (measurableSet_singleton 0) measurable_const measurable_id
+    convert hm using 1
+    funext r
+    change (ρ r : ℝ) = (if r = 0 then 1 else r)
+    by_cases hr : r = 0 <;> simp [ρ, hr]
+  have hjoint : Measurable fun p : {r : ℝ // r ≠ 0} × LQGMetric.DistC =>
+      p.2 (LQGMetric.testAffinePull p.1 0 φ) :=
+    measurable_uncurry_of_continuous_of_measurable
+      (fun d => (map_continuous d).comp (hcont φ))
+      (fun r => LQGMetric.measurable_distOn_apply _)
+  have hm : Measurable fun p : LQGMetric.DistC × ℝ =>
+      if p.2 = 0 then (0 : ℝ) else p.1 (LQGMetric.testAffinePull (ρ p.2) 0 φ) :=
+    Measurable.ite (measurableSet_eq_fun measurable_snd measurable_const) measurable_const
+      (hjoint.comp ((hρ.comp measurable_snd).prodMk measurable_fst))
+  convert hm using 1
+  funext p
+  by_cases hp : p.2 = 0
+  · simp [hp, LQGMetric.testAffinePull]
+  · simp [hp, ρ]
+
 /-- Pair a distribution at a variable scale, with zero on non-tests. -/
 def rescaledDistributionPairing (γ b : ℝ) (H : LQGMetric.DistC) (r : ℝ)
     (φ : ℂ → ℝ) : ℝ := by
