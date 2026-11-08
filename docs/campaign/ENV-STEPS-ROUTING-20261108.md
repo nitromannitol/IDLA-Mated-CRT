@@ -282,7 +282,7 @@ non-dyadic gap IR-c4-3 and all residual inputs remain explicit. No new input
 or escalation is asserted by these conditional checks. The four active queues
 are ready; paused m6/z2 briefs are unchanged, with no new round-limit event.
 
-## Lead check 2026-11-08 15:37 UTC
+## Lead check 2026-11-08 15:33 UTC
 
 Seven committed snapshots pass strict lc: AreaScaling, Field, AllStartsClock,
 ScaledRegularizedFamily and PlateauCanonicalLaw at936f3b8; InsertionScalingLaw
