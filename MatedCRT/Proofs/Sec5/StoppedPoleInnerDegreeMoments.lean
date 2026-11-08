@@ -483,8 +483,9 @@ theorem canonical_innerDegree_lintegral_lt_top {𝒮 : SpaceFillingSLEModel}
   exact lintegral_pow_lt_top_of_split hMeas hp1 hpβ hζ1 hpN hcov hmom hK hexc
 
 /-- **Canonical inner-degree moment, outer-expectation form** (no measurability): under the same printed inputs and
-exponent ranges, `E*[deg_in^p] < ∞` (the claim of GMS (4.14)/(4.23) type, for the canonical model), through
-`outer_pow_lt_top_of_split`. -/
+exponent ranges, `E*[deg_in^p] < ∞`, through `outer_pow_lt_top_of_split`. This is the inner-degree moment that
+r3:2741-2753 derives (it is not a printed (4.14) or (4.23)); it is the claim of `gms_innerDegree_moment` in the staged
+file, obtained here through the generic component. -/
 theorem canonical_innerDegree_outer_lt_top {𝒮 : SpaceFillingSLEModel}
     (hLem : GMSLemma43Eq46Stmt 𝒮) (hBeta : GMSMassBetaMomentStmt 𝒮)
     (hCoord : GMSCoordinateChangeStmt 𝒮) (hInner : GMSInnerDegreeBoundStmt 𝒮)
