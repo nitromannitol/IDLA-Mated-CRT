@@ -320,3 +320,44 @@ checked-progress r2 continuation prepared only if its current twelve-round
 slice exhausts while IN_PROGRESS. Existing root-owned queue refill helpers keep
 successors ready. Later d05b5a2 (DMS Proposed) and8fc52a5 (circle law transfer)
 are explicitly outside these checked-progress claims and await the next round.
+
+## Lead check 2026-11-08 16:04 UTC
+
+Seven committed source snapshots pass strict lc: six pinned at e137fd1
+(AreaScaling, AllStartsClock, Proposed/DuplantierMillerSheffieldCone2014,
+FieldAssembly, FieldVersionTransport, PlateauScalingAssembly), plus the later
+AreaScaling at162c7e3. Seven axiom probes check21 exports, all using only
+propext, Classical.choice and Quot.sound. The53-source scan has explanatory
+comment matches only; the later Area source has no matches. One initial Area
+probe used an incomplete qualified name; the corrected fully qualified probe
+passes. Receipts: fleet lead/checks/20261108-1555.
+
+m1's canonical distribution-radius law transfer and complete a.s. version
+transport are checked; random-scale grid circles and the canonical observable
+versus explicit distribution-valued cone identification remain. DMS distributional
+scaling is now staged and source-review requested, not approved or proved. The
+new m1 circle-grid task and following conditioned-reference slice preserve those
+boundaries. m5 constructs the rescaled dyadic measure on the original space and
+a universal measurable field-pairing-code-to-area-measure map. The countable
+off-origin all-positive-scale convergence event, Gaussian Dirichlet decomposition
+and faithful Sheffield-Wang input remain; future curve-recovery work replaces
+the now-completed measure-recovery queue.
+
+z1 now proves the canonical measurable continuous-circle version and the
+coordinate-to-CircleFns law transfer. Its clock consumer still requires a
+rescaled measurable version, actual Polish structure, faithful Preston input
+and QuantumConeScalingInput. Existing measurable radius/version constructions
+and Mathlib compact-convergence instances provide concrete implementation
+pointers; no new unsupported proof request is inferred merely from the absent
+implementation. z5's plateau and auxiliary half-ball closure consumers are
+checked with hI2 and the two unresolved scaling hypotheses explicit. The current
+Prop4.2 final consumer directly requires HarmonicBallStrictObstacleGapStep and
+does not use ConeHalfBallClosureInsideStep; the audit queue records that exact
+wiring without a new frozen-statement request.
+
+The existing nine WPN await independent audits; the two scaling WPN from the
+previous round stay named. No new WPN and no numbered closure this round.
+m5's twelve-round slice continued as -r2 only after checked substantive progress,
+with the prior brief archived. m1's DONE brief was preserved and the runner
+promoted its fresh circle-grid task; all four active next queues are ready.
+Paused m6/z2 current and next hashes match the prior receipt.
