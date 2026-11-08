@@ -1,6 +1,7 @@
 import MatedCRT.Defs.Setting
 import MatedCRT.Steps.Sec2.ConeScaleInvarianceUpToFixedTime
 import HarmonicBalls.Proofs.Sec9.LQGSpatialDilation
+import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
 
 /-!
 # Area measure at a random radius
@@ -9,7 +10,9 @@ Deterministic parts of `env-steps.tex`, Lemma `area-scale`, lines 693–747.
 The all-scale convergence away from zero is an explicit hypothesis, not a
 consequence of dyadic convergence. Under this hypothesis, the regularized
 change of variables and nonatomicity identify the rescaled area measure even
-at a sample-dependent radius. A separate earlier bridge assumes the stronger
+at a sample-dependent radius. The Weyl scaling proof uses infrastructure of
+Leonardo Bonanno through the LatticeProb.Bonanno dependency of the Harmonic
+Balls Weyl-scaling module. A separate earlier bridge assumes the stronger
 global radius-change limit; neither bridge proves the all-scale hypothesis.
 -/
 
@@ -379,5 +382,119 @@ theorem MatedCRTEnv.IsValid.ae_rescaled_measure_eq_of_off_origin_limit
   exact rescaled_measure_eq_of_allScale_off_origin hγ hRω hb hreg.1 hreg.2.1
     hνω (hnull.1 0) (fun n => hreg.2.2 _ (mul_pos hRω (dyadicScale_pos n)))
     (tendsto_off_origin_to_lqgLimit hμ hallω)
+
+/-- All-scale vague convergence is stable under adding a continuous function.
+This deterministic form holds simultaneously for arbitrary continuous functions,
+including functions depending on the same sample as the original field. -/
+theorem tendsto_lqgApprox_addCircleAverage_allScale {γ : ℝ} {h : ℝ → ℂ → ℝ}
+    {D : Set ℂ} (hD : IsOpen D) {μ : Measure ℂ} (hμ : IsLocallyFiniteMeasure μ)
+    (hc : ∀ r : ℝ, 0 < r → Continuous (h r))
+    (hall : ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f → tsupport f ⊆ D →
+      Tendsto (fun r : ℝ => ∫ z, f z ∂(lqgApprox γ h r))
+        (𝓝[>] 0) (𝓝 (∫ z, f z ∂μ)))
+    (v : ℂ → ℝ) (hv : Continuous v) :
+    ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f → tsupport f ⊆ D →
+      Tendsto (fun r : ℝ => ∫ z, f z ∂(lqgApprox γ (addCircleAverage h v) r))
+        (𝓝[>] 0)
+        (𝓝 (∫ z, f z ∂(μ.withDensity fun z => ENNReal.ofReal (Real.exp (γ * v z))))) := by
+  intro f hf hfc hfD
+  obtain ⟨χ, hχ1, hχc, hχD, hχ01⟩ :=
+    exists_continuousMap_one_of_isCompact_subset_isOpen hfc hD hfD
+  have hχ : Continuous (χ : ℂ → ℝ) := χ.continuous
+  have hχ0 : ∀ z, 0 ≤ χ z := fun z => (hχ01 z).1
+  have hIntegrate (ρ : Measure ℂ) (φ : ℂ → ℝ) :
+      (∫ z, φ z ∂(ρ.withDensity fun z => ENNReal.ofReal (χ z))) = ∫ z, φ z * χ z ∂ρ := by
+    have hm : Measurable (fun z => ENNReal.ofReal (χ z)) := ENNReal.measurable_ofReal.comp hχ.measurable
+    rw [integral_withDensity_eq_integral_toReal_smul hm (by filter_upwards [] with z; simp) φ]
+    congr 1
+    funext z
+    simp [hχ0 z, mul_comm]
+  apply Filter.tendsto_iff_seq_tendsto.mpr
+  intro u hu
+  have hupos : ∀ᶠ n in atTop, 0 < u n := hu.eventually self_mem_nhdsWithin
+  let r : ℕ → ℝ := fun n => if 0 < u n then u n else 1
+  have hre : ∀ᶠ n in atTop, r n = u n := by
+    filter_upwards [hupos] with n hn
+    simp [r, hn]
+  have hr : Tendsto r atTop (𝓝[>] (0 : ℝ)) := hu.congr' (hre.mono fun _ hn => hn.symm)
+  have hrpos (n : ℕ) : 0 < r n := by
+    dsimp [r]
+    split <;> positivity
+  let ν : ℕ → Measure ℂ := fun n => lqgApprox γ h (r n)
+  let : IsLocallyFiniteMeasure μ := hμ
+  let : ∀ n, IsLocallyFiniteMeasure (ν n) := fun n =>
+    isLocallyFiniteMeasure_lqgApprox_of_continuous γ h (r n) (hc (r n) (hrpos n))
+  let νχ : ℕ → Measure ℂ := fun n => (ν n).withDensity (fun z => ENNReal.ofReal (χ z))
+  let μχ : Measure ℂ := μ.withDensity (fun z => ENNReal.ofReal (χ z))
+  let : IsLocallyFiniteMeasure μχ := IsLocallyFiniteMeasure.withDensity_ofReal hχ
+  let : ∀ n, IsLocallyFiniteMeasure (νχ n) := fun n =>
+    IsLocallyFiniteMeasure.withDensity_ofReal hχ
+  let K : Set ℂ := tsupport f
+  let g : ℕ → ℂ → ℝ := fun n z => f z * Real.exp (γ * Real.circleAverage v z (r n))
+  let g₀ : ℂ → ℝ := fun z => f z * Real.exp (γ * v z)
+  have hvague : ∀ φ : ℂ → ℝ, Continuous φ → HasCompactSupport φ →
+      Tendsto (fun n => ∫ x, φ x ∂(νχ n)) atTop (𝓝 (∫ x, φ x ∂μχ)) := by
+    intro φ hφ hφc
+    have hsupport : tsupport (fun x => φ x * χ x) ⊆ D :=
+      tsupport_mul_subset_right.trans hχD
+    have hv := (hall (fun x => φ x * χ x) (hφ.mul hχ) hφc.mul_right hsupport).comp hr
+    change Tendsto (fun n => ∫ x, φ x * χ x ∂(ν n)) atTop (𝓝 (∫ x, φ x * χ x ∂μ)) at hv
+    simpa only [νχ, μχ, hIntegrate] using hv
+  have hg : ∀ n, Integrable (g n) (νχ n) := by
+    intro n
+    have hav : Continuous (fun z => Real.circleAverage v z (r n)) :=
+      (Section6.continuous_circleAverage_radius_center hv).comp (continuous_const.prodMk continuous_id)
+    have hgc : Continuous (g n) := hf.mul (Real.continuous_exp.comp (continuous_const.mul hav))
+    exact hgc.integrable_of_hasCompactSupport hfc.mul_right
+  have huni : TendstoUniformlyOn g g₀ atTop K := by
+    let U : Set ℝ := Icc (-1) 1
+    have hU : U ∈ 𝓝 (0 : ℝ) := Icc_mem_nhds (by norm_num) (by norm_num)
+    have hcont : Continuous (fun p : ℝ × ℂ => f p.2 * Real.exp (γ * Real.circleAverage v p.2 p.1)) :=
+      (hf.comp continuous_snd).mul (Real.continuous_exp.comp
+        (continuous_const.mul (Section6.continuous_circleAverage_radius_center hv)))
+    have huc : UniformContinuousOn
+        (fun p : ℝ × ℂ => f p.2 * Real.exp (γ * Real.circleAverage v p.2 p.1)) (U ×ˢ K) :=
+      (isCompact_Icc.prod hfc).uniformContinuousOn_of_continuous hcont.continuousOn
+    have ht := huc.tendstoUniformlyOn
+      (F := fun q z => f z * Real.exp (γ * Real.circleAverage v z q)) (mem_of_mem_nhds hU)
+    have ht' : TendstoUniformlyOn (fun q z => f z * Real.exp (γ * Real.circleAverage v z q))
+        g₀ (𝓝 0) K := by
+      simpa only [nhdsWithin_eq_nhds.mpr hU, Real.circleAverage_zero, g₀] using ht
+    rw [Metric.tendstoUniformlyOn_iff] at ht' ⊢
+    intro ε hε
+    exact (hr.mono_right nhdsWithin_le_nhds).eventually (ht' ε hε)
+  have hoff : ∀ n z, z ∉ K → g n z = g₀ z := by
+    intro n z hz
+    have hz' : f z = 0 := image_eq_zero_of_notMem_tsupport hz
+    simp [g, g₀, hz']
+  have hlim := Section6.tendsto_integral_of_uniformOn_compact νχ μχ hvague hfc
+    (hf.mul (Real.continuous_exp.comp (continuous_const.mul hv))) hfc.mul_right hg huni hoff
+  have hχmul (w : ℂ → ℝ) : (fun z => f z * w z * χ z) = fun z => f z * w z := by
+    funext z
+    by_cases hz : z ∈ K
+    · simp [hχ1 hz]
+    · have : f z = 0 := image_eq_zero_of_notMem_tsupport hz
+      simp [this]
+  have hχg (n : ℕ) : (∫ z, g n z ∂(νχ n)) = ∫ z, g n z ∂(ν n) := by
+    change (∫ z, g n z ∂((ν n).withDensity fun z => ENNReal.ofReal (χ z))) = _
+    rw [hIntegrate]
+    simp only [g, hχmul]
+  have hχg₀ : (∫ z, g₀ z ∂μχ) = ∫ z, g₀ z ∂μ := by
+    change (∫ z, g₀ z ∂(μ.withDensity fun z => ENNReal.ofReal (χ z))) = _
+    rw [hIntegrate]
+    simp only [g₀, hχmul]
+  change Tendsto (fun n => ∫ z, g n z ∂(νχ n)) atTop (𝓝 (∫ z, g₀ z ∂μχ)) at hlim
+  simp_rw [hχg, hχg₀] at hlim
+  have heq (n : ℕ) : (∫ z, f z ∂(lqgApprox γ (addCircleAverage h v) (r n))) =
+      ∫ z, g n z ∂(ν n) := by
+    rw [Section6.lqgApprox_addCircleAverage γ (r n) (hrpos n).le h (hc (r n) (hrpos n)) v hv]
+    exact Section6.integral_withDensity_exp (ν n) γ (fun z => Real.circleAverage v z (r n)) f
+      ((Section6.continuous_circleAverage_radius_center hv).comp (continuous_const.prodMk continuous_id))
+  rw [Section6.integral_withDensity_exp μ γ v f hv]
+  have hlim' : Tendsto (fun n => ∫ z, f z ∂(lqgApprox γ (addCircleAverage h v) (r n)))
+      atTop (𝓝 (∫ z, g₀ z ∂μ)) := by simpa only [heq, g₀, Pi.mul_apply, Function.comp_apply] using hlim
+  apply hlim'.congr'
+  filter_upwards [hre] with n hn
+  simp only [Function.comp_apply, hn]
 
 end MatedCRT.Sec1
