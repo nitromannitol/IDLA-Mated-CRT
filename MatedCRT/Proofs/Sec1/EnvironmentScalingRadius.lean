@@ -100,4 +100,17 @@ theorem exists_fieldMeasurable_coneScaleRadius
     exact this.trans_lt hqa
   exact le_antisymm hupper hlower'
 
+
+/-- Every positive-radius rescaled circle average is almost everywhere
+measurable. Exceptional values need not be measurable before choosing a version. -/
+theorem aemeasurable_rescaledCircle
+    (hscale : QuantumConeScalingInput) {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
+    {Ω : Type} [MeasurableSpace Ω] {𝒮 : SpaceFillingSLEModel} {S : MatedCRTEnv Ω}
+    (hS : S.IsValid 𝒮 γ) {b r : ℝ} (hb : 0 < b) (hr : 0 < r) (z : ℂ) :
+    AEMeasurable (fun ω => rescaledCircle γ (S.hcirc ω)
+      (coneScaleRadius γ (S.hcirc ω) b) b r z) S.P := by
+  have : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
+  have h := aemeasurable_circleProcess_rescaledCircle hscale hγ hγ2 hS.isQuantumCone hb
+  exact (measurable_pi_apply (⟨r, hr⟩, z)).comp_aemeasurable h
+
 end MatedCRT.Sec1
