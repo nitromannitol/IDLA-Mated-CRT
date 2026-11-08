@@ -700,6 +700,245 @@ theorem allStartsCharacterization_of_tail (γ : ℝ) (nsel : CircleFns → ℂ �
     (htail : SubsequenceTailProperty γ nsel) : AllStartsCharacterizationStep γ nsel :=
   allStartsSet_eq_selected γ nsel htail
 
+/-! ### Measurability of the selection (lem:allstarts proof, env-steps.tex:380-421)
+
+`CircleFns = C(Set.Ioi 0 × ℂ, ℝ)` and `ContinuousPath ℂ = C(ℝ≥0, ℂ)` carry Mathlib's compact-open Borel structure
+(`ContinuousMap.measurableSpace`, `BorelSpace`), and both are second countable (`ContinuousMap.instSecondCountableTopology`:
+the domains are locally compact and second countable). Hence continuous maps on their product are measurable. The
+selection below is the recursive choice of env-steps.tex:404-411, made total by a fallback index. -/
+
+section Measurability
+
+open Set Topology MeasureTheory Filter ProbabilityTheory
+
+lemma allStarts_dyadicScale_pos (n : ℕ) : 0 < dyadicScale n := by
+  unfold dyadicScale
+  positivity
+
+/-- The clock approximation as an integral of the positive-circle evaluation at the dyadic radius. -/
+lemma clockApprox_eq_integral (γ : ℝ) (a : CircleFns) (n : ℕ) (w : ContinuousPath ℂ) (t : ℝ≥0) :
+    clockApprox γ a n w t = ∫ s in (0 : ℝ)..(t : ℝ),
+      dyadicScale n ^ (γ ^ 2 / 2) *
+        Real.exp (γ * a (⟨dyadicScale n, allStarts_dyadicScale_pos n⟩, w s.toNNReal)) := by
+  unfold clockApprox lqgClockApprox
+  simp [posCircleExt, allStarts_dyadicScale_pos n]
+
+/-- The open half-line `(0, ∞)` is locally compact, so the positive-circle domain `E = (0,∞) × ℂ` is too
+(needed for the joint evaluation `ContinuousEval` on `C(E, ℝ)`). -/
+instance Ioi_zero_locallyCompactSpace : LocallyCompactSpace (Set.Ioi (0 : ℝ)) :=
+  isOpen_Ioi.locallyCompactSpace
+
+/-- The clock approximation is jointly continuous in `(a, w, t)` (env-steps.tex:395-397). -/
+theorem continuous_clockApprox_joint (γ : ℝ) (n : ℕ) :
+    Continuous fun x : CircleFns × ContinuousPath ℂ × ℝ≥0 => clockApprox γ x.1 n x.2.1 x.2.2 := by
+  set p0 : Set.Ioi (0 : ℝ) := ⟨dyadicScale n, allStarts_dyadicScale_pos n⟩ with hp0
+  have hw : Continuous fun q : (CircleFns × ContinuousPath ℂ × ℝ≥0) × ℝ => q.1.2.1 q.2.toNNReal :=
+    continuous_eval.comp
+      ((continuous_fst.comp (continuous_snd.comp continuous_fst)).prodMk
+        (continuous_real_toNNReal.comp continuous_snd))
+  have ha : Continuous fun q : (CircleFns × ContinuousPath ℂ × ℝ≥0) × ℝ =>
+      q.1.1 (p0, q.1.2.1 q.2.toNNReal) :=
+    continuous_eval.comp ((continuous_fst.comp continuous_fst).prodMk (continuous_const.prodMk hw))
+  have hf : Continuous fun q : (CircleFns × ContinuousPath ℂ × ℝ≥0) × ℝ =>
+      dyadicScale n ^ (γ ^ 2 / 2) * Real.exp (γ * q.1.1 (p0, q.1.2.1 q.2.toNNReal)) :=
+    continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul ha))
+  have hs : Continuous fun x : CircleFns × ContinuousPath ℂ × ℝ≥0 => (x.2.2 : ℝ) :=
+    NNReal.continuous_coe.comp (continuous_snd.comp continuous_snd)
+  have hint := intervalIntegral.continuous_parametric_intervalIntegral_of_continuous (a₀ := 0)
+    (μ := MeasureTheory.volume)
+    (f := fun (x : CircleFns × ContinuousPath ℂ × ℝ≥0) (s : ℝ) =>
+      dyadicScale n ^ (γ ^ 2 / 2) * Real.exp (γ * x.1 (p0, x.2.1 s.toNNReal))) hf hs
+  have heq : (fun x : CircleFns × ContinuousPath ℂ × ℝ≥0 => clockApprox γ x.1 n x.2.1 x.2.2) =
+      fun x => ∫ s in (0 : ℝ)..(x.2.2 : ℝ),
+        dyadicScale n ^ (γ ^ 2 / 2) * Real.exp (γ * x.1 (p0, x.2.1 s.toNNReal)) := by
+    funext x
+    exact clockApprox_eq_integral γ x.1 n x.2.1 x.2.2
+  rw [heq]
+  exact hint
+
+/-- A supremum over a set equals the supremum over its image, for nonnegative functions (real `⨆` vs `sSup`). -/
+lemma iSup_mem_eq_sSup_image {h : ℝ≥0 → ℝ} {K : Set ℝ≥0} (hne : K.Nonempty) (hbdd : BddAbove (h '' K))
+    (hnn : ∀ t, 0 ≤ h t) : (⨆ t ∈ K, h t) = sSup (h '' K) := by
+  obtain ⟨t0, ht0⟩ := hne
+  have hsup0 : 0 ≤ sSup (h '' K) := le_trans (hnn t0) (le_csSup hbdd ⟨t0, ht0, rfl⟩)
+  have hle : ∀ t, (⨆ (_ : t ∈ K), h t) ≤ sSup (h '' K) := by
+    intro t
+    by_cases ht : t ∈ K
+    · rw [ciSup_pos ht]
+      exact le_csSup hbdd ⟨t, ht, rfl⟩
+    · rw [ciSup_neg ht, Real.sSup_empty]
+      exact hsup0
+  apply le_antisymm
+  · exact ciSup_le hle
+  · refine csSup_le (Set.Nonempty.image h ⟨t0, ht0⟩) ?_
+    rintro y ⟨t, ht, rfl⟩
+    have hbdd' : BddAbove (Set.range fun t' : ℝ≥0 => ⨆ (_ : t' ∈ K), h t') :=
+      ⟨sSup (h '' K), by rintro _ ⟨t', rfl⟩; exact hle t'⟩
+    exact le_ciSup_of_le hbdd' t (ciSup_pos (f := fun _ : t ∈ K => h t) ht).ge
+
+/-- Continuity of `x ↦ ⨆ t ∈ K, h x t` for a jointly continuous nonnegative family and a compact `K`. -/
+lemma continuous_iSup_mem_of_isCompact {X : Type*} [TopologicalSpace X] {h : X → ℝ≥0 → ℝ}
+    (hc : Continuous fun q : X × ℝ≥0 => h q.1 q.2) {K : Set ℝ≥0} (hK : IsCompact K) (hne : K.Nonempty)
+    (hnn : ∀ x t, 0 ≤ h x t) : Continuous fun x => ⨆ t ∈ K, h x t := by
+  have hcx : ∀ x, Continuous (h x) := fun x => hc.comp (continuous_const.prodMk continuous_id)
+  have heq : (fun x => ⨆ t ∈ K, h x t) = fun x => sSup (h x '' K) := by
+    funext x
+    exact iSup_mem_eq_sSup_image hne ((hK.image (hcx x)).bddAbove) (hnn x)
+  rw [heq]
+  exact hK.continuous_sSup hc
+
+/-- Each summand of `pathDist` between two clock approximations is continuous in `(a, w)`. -/
+theorem continuous_pathDist_summand (γ : ℝ) (n m j : ℕ) :
+    Continuous fun x : CircleFns × ContinuousPath ℂ =>
+      (1 / 2 : ℝ) ^ (j + 1) * min 1 (⨆ t ∈ Icc (0 : ℝ≥0) ((j + 1 : ℕ) : ℝ≥0),
+        |clockApprox γ x.1 n x.2 t - clockApprox γ x.1 m x.2 t|) := by
+  have hq : Continuous fun q : (CircleFns × ContinuousPath ℂ) × ℝ≥0 => (q.1.1, q.1.2, q.2) :=
+    (continuous_fst.comp continuous_fst).prodMk
+      ((continuous_snd.comp continuous_fst).prodMk continuous_snd)
+  have hjoint : Continuous fun q : (CircleFns × ContinuousPath ℂ) × ℝ≥0 =>
+      |clockApprox γ q.1.1 n q.1.2 q.2 - clockApprox γ q.1.1 m q.1.2 q.2| :=
+    (((continuous_clockApprox_joint γ n).comp hq).sub ((continuous_clockApprox_joint γ m).comp hq)).abs
+  have hK : IsCompact (Icc (0 : ℝ≥0) ((j + 1 : ℕ) : ℝ≥0)) := isCompact_Icc
+  have hne : (Icc (0 : ℝ≥0) ((j + 1 : ℕ) : ℝ≥0)).Nonempty := Set.nonempty_Icc.mpr (by positivity)
+  have hsup := continuous_iSup_mem_of_isCompact
+    (h := fun (x : CircleFns × ContinuousPath ℂ) (t : ℝ≥0) =>
+      |clockApprox γ x.1 n x.2 t - clockApprox γ x.1 m x.2 t|) hjoint hK hne (fun x t => abs_nonneg _)
+  exact continuous_const.mul (continuous_const.min hsup)
+
+/-- `pathDist` between two clock approximations is continuous in `(a, w)` (env-steps.tex:398-400). -/
+theorem continuous_pathDist_clockApprox (γ : ℝ) (n m : ℕ) :
+    Continuous fun x : CircleFns × ContinuousPath ℂ =>
+      pathDist (clockApprox γ x.1 n x.2) (clockApprox γ x.1 m x.2) := by
+  unfold pathDist
+  refine continuous_tsum (fun j => continuous_pathDist_summand γ n m j) summable_half_pow_succ ?_
+  intro j x
+  rw [Real.norm_of_nonneg (pathDist_summand_nonneg _ _ j)]
+  exact pathDist_summand_le_half_pow _ _ j
+
+/-- `(a, z) ↦ W_z {w | (a, w) ∈ U}` is measurable for measurable `U` (kernel section lemma). -/
+theorem measurable_planarBM_section {U : Set (CircleFns × ContinuousPath ℂ)} (hU : MeasurableSet U) :
+    Measurable fun p : CircleFns × ℂ => planarBrownianMotion p.2 {w | (p.1, w) ∈ U} := by
+  let κ : Kernel (CircleFns × ℂ) (ContinuousPath ℂ) := planarBrownianMotion.comap Prod.snd measurable_snd
+  have ht : MeasurableSet {q : (CircleFns × ℂ) × ContinuousPath ℂ | (q.1.1, q.2) ∈ U} :=
+    hU.preimage ((measurable_fst.comp measurable_fst).prodMk measurable_snd)
+  exact Kernel.measurable_kernel_prodMk_left (κ := κ) ht
+
+/-- The level-`k` tail bound from index `N` (the form of eq:cauchy, env-steps.tex:398-402). -/
+def tailBelow (γ : ℝ) (k N : ℕ) (a : CircleFns) (z : ℂ) : Prop :=
+  ∀ n m : ℕ, N ≤ n → N ≤ m →
+    planarBrownianMotion z {w | (1 / 2 : ℝ) ^ k < pathDist (clockApprox γ a n w) (clockApprox γ a m w)}
+      < ENNReal.ofReal ((1 / 2 : ℝ) ^ k)
+
+lemma allStarts_measurableSet_imp {α : Type*} [MeasurableSpace α] {c : Prop} {S : Set α}
+    (hS : MeasurableSet S) : MeasurableSet {p : α | c → p ∈ S} := by
+  by_cases hc : c
+  · simpa [hc] using hS
+  · simp [hc]
+
+/-- The tail bound is measurable in the starting data `(a, z)`. -/
+theorem measurableSet_tailBelow (γ : ℝ) (k N : ℕ) :
+    MeasurableSet {p : CircleFns × ℂ | tailBelow γ k N p.1 p.2} := by
+  have hset : {p : CircleFns × ℂ | tailBelow γ k N p.1 p.2} = ⋂ n : ℕ, ⋂ m : ℕ,
+      {p : CircleFns × ℂ | (N ≤ n ∧ N ≤ m) →
+        planarBrownianMotion p.2
+            {w | (1 / 2 : ℝ) ^ k < pathDist (clockApprox γ p.1 n w) (clockApprox γ p.1 m w)}
+          < ENNReal.ofReal ((1 / 2 : ℝ) ^ k)} := by
+    ext p
+    simp only [tailBelow, Set.mem_ofPred_eq, mem_iInter, and_imp]
+  rw [hset]
+  refine MeasurableSet.iInter fun n => MeasurableSet.iInter fun m => ?_
+  have hU : MeasurableSet {x : CircleFns × ContinuousPath ℂ |
+      (1 / 2 : ℝ) ^ k < pathDist (clockApprox γ x.1 n x.2) (clockApprox γ x.1 m x.2)} :=
+    measurableSet_lt measurable_const (continuous_pathDist_clockApprox γ n m).measurable
+  exact allStarts_measurableSet_imp (measurableSet_lt (measurable_planarBM_section hU) measurable_const)
+
+/-- The predicate selecting the `(k+1)`-th index: an index `N ≥ prev + 1` at which the level-`(k+1)` tail bound holds,
+or, when there is none, the fallback `prev + 1`. -/
+def selPred (γ : ℝ) (k : ℕ) (prev : CircleFns × ℂ → ℕ) (p : CircleFns × ℂ) (N : ℕ) : Prop :=
+  (prev p + 1 ≤ N ∧ tailBelow γ (k + 1) N p.1 p.2) ∨
+    ((¬ ∃ N' : ℕ, prev p + 1 ≤ N' ∧ tailBelow γ (k + 1) N' p.1 p.2) ∧ N = prev p + 1)
+
+theorem exists_selPred (γ : ℝ) (k : ℕ) (prev : CircleFns × ℂ → ℕ) (p : CircleFns × ℂ) :
+    ∃ N, selPred γ k prev p N := by
+  by_cases h : ∃ N' : ℕ, prev p + 1 ≤ N' ∧ tailBelow γ (k + 1) N' p.1 p.2
+  · obtain ⟨N', hN'⟩ := h
+    exact ⟨N', Or.inl hN'⟩
+  · exact ⟨prev p + 1, Or.inr ⟨h, rfl⟩⟩
+
+theorem measurableSet_selPred (γ : ℝ) (k : ℕ) {prev : CircleFns × ℂ → ℕ} (hprev : Measurable prev) (N : ℕ) :
+    MeasurableSet {p : CircleFns × ℂ | selPred γ k prev p N} := by
+  have hA : MeasurableSet {p : CircleFns × ℂ | prev p + 1 ≤ N} :=
+    measurableSet_le (hprev.add_const 1) measurable_const
+  have hB : MeasurableSet {p : CircleFns × ℂ | ∃ N' : ℕ, prev p + 1 ≤ N' ∧ tailBelow γ (k + 1) N' p.1 p.2} := by
+    have hU : {p : CircleFns × ℂ | ∃ N' : ℕ, prev p + 1 ≤ N' ∧ tailBelow γ (k + 1) N' p.1 p.2}
+        = ⋃ N' : ℕ, ({p : CircleFns × ℂ | prev p + 1 ≤ N'} ∩
+            {p : CircleFns × ℂ | tailBelow γ (k + 1) N' p.1 p.2}) := by
+      ext p
+      simp only [Set.mem_ofPred_eq, mem_iUnion, mem_inter_iff]
+    rw [hU]
+    exact MeasurableSet.iUnion fun N' =>
+      (measurableSet_le (hprev.add_const 1) measurable_const).inter (measurableSet_tailBelow γ (k + 1) N')
+  have hC : MeasurableSet {p : CircleFns × ℂ | N = prev p + 1} :=
+    measurableSet_eq_fun measurable_const (hprev.add_const 1)
+  exact (hA.inter (measurableSet_tailBelow γ (k + 1) N)).union (hB.compl.inter hC)
+
+/-- One selection step: the least index `N` with `selPred` (exists by `exists_selPred`). -/
+noncomputable def nselStep (γ : ℝ) (k : ℕ) (prev : CircleFns × ℂ → ℕ) (p : CircleFns × ℂ) : ℕ := by
+  classical
+  exact Nat.find (exists_selPred γ k prev p)
+
+theorem measurable_nselStep (γ : ℝ) (k : ℕ) {prev : CircleFns × ℂ → ℕ} (hprev : Measurable prev) :
+    Measurable (nselStep γ k prev) := by
+  classical
+  exact measurable_find (exists_selPred γ k prev) (measurableSet_selPred γ k hprev)
+
+/-- The subsequence choice `k ↦ n_k(a,z)` of lem:allstarts (env-steps.tex:404-411), by recursion on `k`. -/
+noncomputable def nselSeq (γ : ℝ) : ℕ → CircleFns × ℂ → ℕ
+  | 0 => fun _ => 0
+  | k + 1 => nselStep γ k (nselSeq γ k)
+
+theorem measurable_nselSeq (γ : ℝ) (k : ℕ) : Measurable (nselSeq γ k) := by
+  induction k with
+  | zero => exact measurable_const
+  | succ k ih => exact measurable_nselStep γ k ih
+
+theorem nselSeq_lt_succ (γ : ℝ) (k : ℕ) (p : CircleFns × ℂ) : nselSeq γ k p < nselSeq γ (k + 1) p := by
+  classical
+  show nselSeq γ k p < nselStep γ k (nselSeq γ k) p
+  have hspec := Nat.find_spec (exists_selPred γ k (nselSeq γ k) p)
+  unfold nselStep
+  rcases hspec with ⟨h1, _⟩ | ⟨_, h2⟩
+  · omega
+  · omega
+
+theorem nselSeq_tail (γ : ℝ) (a : CircleFns) (z : ℂ) (hC : CauchyInProbability γ a z) (k : ℕ) (hk : 1 ≤ k) :
+    ∀ n m : ℕ, nselSeq γ k (a, z) ≤ n → nselSeq γ k (a, z) ≤ m →
+      planarBrownianMotion z {w | (1 / 2 : ℝ) ^ k < pathDist (clockApprox γ a n w) (clockApprox γ a m w)}
+        < ENNReal.ofReal ((1 / 2 : ℝ) ^ k) := by
+  classical
+  obtain ⟨j, rfl⟩ : ∃ j, k = j + 1 := ⟨k - 1, by omega⟩
+  obtain ⟨N0, hN0⟩ := hC (j + 1) (by omega)
+  have hex : ∃ N' : ℕ, nselSeq γ j (a, z) + 1 ≤ N' ∧ tailBelow γ (j + 1) N' a z :=
+    ⟨max (nselSeq γ j (a, z) + 1) N0, le_max_left _ _, fun n' m' h1 h2 =>
+      hN0 n' m' ((le_max_right _ _).trans h1) ((le_max_right _ _).trans h2)⟩
+  have hspec := Nat.find_spec (exists_selPred γ j (nselSeq γ j) (a, z))
+  intro n m hn hm
+  rcases hspec with ⟨_, ht⟩ | ⟨hnot, _⟩
+  · exact ht n m hn hm
+  · exact absurd hex hnot
+
+/-- The subsequence choice as a function of the starting data `(a, z)` and of the index `k`. -/
+noncomputable def nselFun (γ : ℝ) (a : CircleFns) (z : ℂ) (k : ℕ) : ℕ := nselSeq γ k (a, z)
+
+/-- **The selection Step `BorelSubsequenceSelectionStep` holds** for the constructed subsequence `nselFun`
+(lem:allstarts proof, env-steps.tex:404-411): Borel in `(a, z)`, strictly increasing in `k`, with the tail bound. -/
+theorem borelSubsequenceSelectionStep_nselFun (γ : ℝ) : BorelSubsequenceSelectionStep γ (nselFun γ) :=
+  ⟨fun k => measurable_nselSeq γ k,
+    (fun a z => strictMono_nat_of_lt_succ fun k => nselSeq_lt_succ γ k (a, z)),
+    fun a z hC k hk n m hn hm => nselSeq_tail γ a z hC k hk n m hn hm⟩
+
+end Measurability
+
 /-- `𝒢` is universally measurable (env-steps.tex:380-446: complement = projection of a Borel subset of `H × ℂ`,
 hence analytic; analytic sets are universally measurable, staged as `PrestonAnalyticUniversallyMeasurableStmt`).
 Hypotheses: the characterization Step, the Borel Step, Polish `C(E,ℝ)`, and the Preston input. -/
