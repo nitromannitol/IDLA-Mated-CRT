@@ -26,10 +26,15 @@ Proved here (no Step hypothesis):
 * `ae_allStarts_of_map_eq` and `allStartsSet_isUniversallyMeasurable` (hypotheses: staged Preston input, Borel step).
   `ae_allStarts_of_map_eq`: `a₀ ∈ 𝒢` almost surely and equality in law give `aᵦ ∈ 𝒢` almost surely.
 
-Named Steps, NOT proved here (outstanding; Prop hypotheses, never axioms):
-* `BorelSubsequenceSelectionStep`, clause 1 only: Borel measurability of `(a,z) ↦ n_k(a,z)` (lem:allstarts proof,
-  env-steps.tex:380-446). Clauses 2-3 are `SubsequenceTailProperty`, which is proved to suffice.
-* `BorelAllStartsRelationStep`: Borel measurability of `Q` on `C(E,ℝ) × ℂ` (needs joint measurability of `J`).
+Proved for the constructed subsequence `nselFun` (Mathlib compact-open Borel structure, no binder):
+* `borelSubsequenceSelectionStep_nselFun`: `BorelSubsequenceSelectionStep γ (nselFun γ)` (lem:allstarts proof,
+  env-steps.tex:380-446: Borel recursive choice of `n_k(a,z)`, strictly increasing, with the tail bound).
+* `borelAllStartsRelationStep_nselFun`: `BorelAllStartsRelationStep γ (nselFun γ)` (env-steps.tex:413-421: `Q` is Borel,
+  via the good sets, the pointwise limsup, the rational reduction `isTimeChangeClock_iff_rat`, and the kernel section lemma).
+
+Still hypotheses (binder form, outside the constructed subsequence): `[MeasurableSpace CircleFns] [BorelSpace CircleFns]`
+and `[PolishSpace CircleFns]` in `allStartsSet_isUniversallyMeasurable` / `ae_allStarts_of_map_eq` (Polish structure: owned by
+the circle-process-space task).
 -/
 
 open MatedCRT.EnvClock
@@ -1025,6 +1030,199 @@ theorem measurableSet_cauchyInProbability (γ : ℝ) :
     rw [hU]
     exact MeasurableSet.iUnion fun N => measurableSet_tailBelow γ k N
   exact allStarts_measurableSet_imp hex
+
+/-! #### The Borel relation `Q` of the selected subsequence (`BorelAllStartsRelationStep`, env-steps.tex:413-421)
+
+For `x = ((a, z), w)` the selected approximations `A_{n_k(a,z)}(a, w)` are Borel in `x` (countable index `n_k(a,z)`,
+continuity in `(a, w)`); the pointwise limit `L_t(x) = limsup_k A_{n_k(a,z)}(a,w)(t)` is Borel, and it is the
+locally uniform limit on the good set `G = ⋃_K G_K`. On `G` the limit is continuous, so `IsTimeChangeClock` is the
+countable rational condition `timeCondRat` (`isTimeChangeClock_iff_rat`). -/
+
+/-- The rational form of `IsTimeChangeClock` (env-steps.tex:413-416): `L 0 = 0`, strict increase on the nonnegative
+rationals, and unboundedness on the naturals. -/
+def timeCondRat (L : ℝ≥0 → ℝ) : Prop :=
+  L 0 = 0 ∧ (∀ q r : ℚ, 0 ≤ q → q < r → L (q : ℝ).toNNReal < L (r : ℝ).toNNReal) ∧
+    ∀ M : ℕ, ∃ N : ℕ, (M : ℝ) < L (N : ℝ≥0)
+
+lemma measurableSet_imp_imp {X : Type*} [MeasurableSpace X] {c d : Prop} {s : Set X} (hs : MeasurableSet s) :
+    MeasurableSet {x : X | c → d → x ∈ s} :=
+  allStarts_measurableSet_imp (allStarts_measurableSet_imp hs)
+
+/-- Measurability of the selected approximations at a fixed time, as functions of `((a,z),w)`. -/
+theorem measurable_selApprox (γ : ℝ) (k : ℕ) (t : ℝ≥0) :
+    Measurable fun x : (CircleFns × ℂ) × ContinuousPath ℂ =>
+      clockApprox γ x.1.1 (nselFun γ x.1.1 x.1.2 k) x.2 t := by
+  have hH : Measurable fun q : ((CircleFns × ℂ) × ContinuousPath ℂ) × ℕ =>
+      clockApprox γ q.1.1.1 q.2 q.1.2 t := by
+    refine measurable_from_prod_countable_left fun n => ?_
+    have hc : Continuous fun x : (CircleFns × ℂ) × ContinuousPath ℂ => clockApprox γ x.1.1 n x.2 t :=
+      (continuous_clockApprox_joint γ n).comp
+        ((continuous_fst.comp continuous_fst).prodMk (continuous_snd.prodMk continuous_const))
+    exact hc.measurable
+  have hn : Measurable fun x : (CircleFns × ℂ) × ContinuousPath ℂ => nselFun γ x.1.1 x.1.2 k :=
+    (measurable_nselSeq γ k).comp measurable_fst
+  exact hH.comp (measurable_id.prodMk hn)
+
+/-- The pointwise limsup of the selected approximations is measurable (`Measurable.limsup`). -/
+theorem measurable_selLimit (γ : ℝ) (t : ℝ≥0) :
+    Measurable fun x : (CircleFns × ℂ) × ContinuousPath ℂ =>
+      limsup (fun k => clockApprox γ x.1.1 (nselFun γ x.1.1 x.1.2 k) x.2 t) atTop :=
+  Measurable.limsup fun k => measurable_selApprox γ k t
+
+/-- The selected `pathDist`-steps `d_𝒯(A_{n_m(a,z)}, A_{n_{m+1}(a,z)})` are measurable in `((a,z),w)`. -/
+theorem measurable_selPathDist (γ : ℝ) (m : ℕ) :
+    Measurable fun x : (CircleFns × ℂ) × ContinuousPath ℂ =>
+      pathDist (clockApprox γ x.1.1 (nselFun γ x.1.1 x.1.2 m) x.2)
+        (clockApprox γ x.1.1 (nselFun γ x.1.1 x.1.2 (m + 1)) x.2) := by
+  have hH : Measurable fun q : ((CircleFns × ℂ) × ContinuousPath ℂ) × (ℕ × ℕ) =>
+      pathDist (clockApprox γ q.1.1.1 q.2.1 q.1.2) (clockApprox γ q.1.1.1 q.2.2 q.1.2) := by
+    refine measurable_from_prod_countable_left fun nn => ?_
+    have hgx : Continuous fun x : (CircleFns × ℂ) × ContinuousPath ℂ => (x.1.1, x.2) :=
+      (continuous_fst.comp continuous_fst).prodMk continuous_snd
+    have hc := (continuous_pathDist_clockApprox γ nn.1 nn.2).comp hgx
+    exact hc.measurable
+  have hn : Measurable fun x : (CircleFns × ℂ) × ContinuousPath ℂ =>
+      (nselFun γ x.1.1 x.1.2 m, nselFun γ x.1.1 x.1.2 (m + 1)) :=
+    ((measurable_nselSeq γ m).comp measurable_fst).prodMk
+      ((measurable_nselSeq γ (m + 1)).comp measurable_fst)
+  have hcomp := hH.comp (measurable_id.prodMk hn)
+  exact hcomp
+
+/-- The union of the good sets `G_K` is a Borel subset of `((a,z),w)` (countable intersections of `pathDist`-bounds). -/
+theorem measurableSet_goodUnion (γ : ℝ) :
+    MeasurableSet {x : (CircleFns × ℂ) × ContinuousPath ℂ |
+      ∃ K : ℕ, x.2 ∈ goodSet γ (nselFun γ) x.1.1 x.1.2 K} := by
+  have hset : {x : (CircleFns × ℂ) × ContinuousPath ℂ | ∃ K : ℕ, x.2 ∈ goodSet γ (nselFun γ) x.1.1 x.1.2 K} =
+      ⋃ K : ℕ, ⋂ m : ℕ, ⋂ (_ : K + 1 ≤ m),
+        {x : (CircleFns × ℂ) × ContinuousPath ℂ | pathDist (clockApprox γ x.1.1 (nselFun γ x.1.1 x.1.2 m) x.2)
+          (clockApprox γ x.1.1 (nselFun γ x.1.1 x.1.2 (m + 1)) x.2) ≤ (1 / 2 : ℝ) ^ m} := by
+    ext x
+    constructor
+    · rintro ⟨K, hK⟩
+      exact mem_iUnion.mpr ⟨K, mem_iInter.mpr fun m => mem_iInter.mpr fun hm => hK m hm⟩
+    · intro hx
+      obtain ⟨K, hK⟩ := mem_iUnion.mp hx
+      exact ⟨K, fun m hm => mem_iInter.mp (mem_iInter.mp hK m) hm⟩
+  rw [hset]
+  refine MeasurableSet.iUnion fun K => MeasurableSet.iInter fun m => MeasurableSet.iInter fun hm => ?_
+  exact measurableSet_le (measurable_selPathDist γ m) measurable_const
+
+/-- The rational time-change condition is Borel in `((a,z),w)` (countable conditions on the measurable limsup values). -/
+theorem measurableSet_timeCondRat (γ : ℝ) :
+    MeasurableSet {x : (CircleFns × ℂ) × ContinuousPath ℂ | timeCondRat
+      (fun t => limsup (fun k => clockApprox γ x.1.1 (nselFun γ x.1.1 x.1.2 k) x.2 t) atTop)} := by
+  have h0 : MeasurableSet {x : (CircleFns × ℂ) × ContinuousPath ℂ |
+      limsup (fun k => clockApprox γ x.1.1 (nselFun γ x.1.1 x.1.2 k) x.2 (0 : ℝ≥0)) atTop = 0} :=
+    measurableSet_eq_fun (measurable_selLimit γ 0) measurable_const
+  have hrat : MeasurableSet {x : (CircleFns × ℂ) × ContinuousPath ℂ |
+      ∀ q r : ℚ, 0 ≤ q → q < r →
+        limsup (fun k => clockApprox γ x.1.1 (nselFun γ x.1.1 x.1.2 k) x.2 (q : ℝ).toNNReal) atTop <
+        limsup (fun k => clockApprox γ x.1.1 (nselFun γ x.1.1 x.1.2 k) x.2 (r : ℝ).toNNReal) atTop} := by
+    rw [Set.ofPred_forall]
+    refine MeasurableSet.iInter fun q => ?_
+    rw [Set.ofPred_forall]
+    refine MeasurableSet.iInter fun r => ?_
+    exact measurableSet_imp_imp (measurableSet_lt (measurable_selLimit γ (q : ℝ).toNNReal)
+      (measurable_selLimit γ (r : ℝ).toNNReal))
+  have hunb : MeasurableSet {x : (CircleFns × ℂ) × ContinuousPath ℂ |
+      ∀ M : ℕ, ∃ N : ℕ, (M : ℝ) <
+        limsup (fun k => clockApprox γ x.1.1 (nselFun γ x.1.1 x.1.2 k) x.2 (N : ℝ≥0)) atTop} := by
+    rw [Set.ofPred_forall]
+    refine MeasurableSet.iInter fun M => ?_
+    rw [Set.ofPred_exists]
+    exact MeasurableSet.iUnion fun N =>
+      measurableSet_lt measurable_const (measurable_selLimit γ (N : ℝ≥0))
+  exact h0.inter (hrat.inter hunb)
+
+/-- On the good set the clock limit is continuous, and `IsTimeChangeClock` of the limit is the rational condition on
+its selected limsup values (`isTimeChangeClock_iff_rat`). -/
+theorem isTimeChangeClock_iff_timeCondRat {γ : ℝ} {a : CircleFns} {z : ℂ} {w : ContinuousPath ℂ} {K : ℕ}
+    (hw : w ∈ goodSet γ (nselFun γ) a z K) :
+    IsTimeChangeClock (clockLimit γ (nselFun γ) a z w) ↔
+      timeCondRat (fun t => limsup (fun k => clockApprox γ a (nselFun γ a z k) w t) atTop) := by
+  have hconv := clockLimit_tendsto_of_goodSet hw
+  have hcont : Continuous (clockLimit γ (nselFun γ) a z w) :=
+    hconv.continuous (Eventually.of_forall fun k => continuous_clockApprox γ a (nselFun γ a z k) w).frequently
+  have hlim : ∀ t : ℝ≥0, limsup (fun k => clockApprox γ a (nselFun γ a z k) w t) atTop =
+      clockLimit γ (nselFun γ) a z w t :=
+    fun t => (tendsto_at_of_tendstoLocallyUniformly hconv t).limsup_eq
+  rw [isTimeChangeClock_iff_rat hcont]
+  simp only [timeCondRat, hlim]
+
+/-- The exceptional set of the Borel relation: starting data and paths in some good set whose clock limit is not a
+time-change clock (env-steps.tex:413-421). -/
+def selBadSet (γ : ℝ) : Set ((CircleFns × ℂ) × ContinuousPath ℂ) :=
+  {x | (∃ K : ℕ, x.2 ∈ goodSet γ (nselFun γ) x.1.1 x.1.2 K) ∧
+    ¬ timeCondRat (fun t => limsup (fun k => clockApprox γ x.1.1 (nselFun γ x.1.1 x.1.2 k) x.2 t) atTop)}
+
+theorem measurableSet_selBadSet (γ : ℝ) : MeasurableSet (selBadSet γ) :=
+  (measurableSet_goodUnion γ).inter (measurableSet_timeCondRat γ).compl
+
+/-- Measurability of the sections `w ↦ ((p, w)) ∈ S` in the starting data `p = (a,z)` (kernel section lemma). -/
+theorem measurable_planarBM_section_pair {S : Set ((CircleFns × ℂ) × ContinuousPath ℂ)} (hS : MeasurableSet S) :
+    Measurable fun p : CircleFns × ℂ => planarBrownianMotion p.2 {w | (p, w) ∈ S} := by
+  let κ : Kernel (CircleFns × ℂ) (ContinuousPath ℂ) := planarBrownianMotion.comap Prod.snd measurable_snd
+  exact Kernel.measurable_kernel_prodMk_left (κ := κ) hS
+
+/-- For a Cauchy starting pair, almost every clock limit is a time-change clock iff the exceptional set has measure zero
+(the outer-measure argument: the good sets have full measure, env-steps.tex:438-446). -/
+theorem ae_timeClock_iff_measure_selBad {γ : ℝ} (htail : SubsequenceTailProperty γ (nselFun γ))
+    {a : CircleFns} {z : ℂ} (hC : CauchyInProbability γ a z) :
+    (∀ᵐ w ∂planarBrownianMotion z, clockLimit γ (nselFun γ) a z w ∈ timeClockSet) ↔
+      planarBrownianMotion z {w | ((a, z), w) ∈ selBadSet γ} = 0 := by
+  have hG : planarBrownianMotion z (⋃ K : ℕ, goodSet γ (nselFun γ) a z K)ᶜ = 0 :=
+    measure_iUnion_goodSet_compl htail hC
+  have hN : {w : ContinuousPath ℂ | ¬ clockLimit γ (nselFun γ) a z w ∈ timeClockSet} ⊆
+      (⋃ K : ℕ, goodSet γ (nselFun γ) a z K)ᶜ ∪ {w : ContinuousPath ℂ | ((a, z), w) ∈ selBadSet γ} := by
+    intro w hw
+    have hw' : ¬ clockLimit γ (nselFun γ) a z w ∈ timeClockSet := hw
+    by_cases hgw : w ∈ ⋃ K : ℕ, goodSet γ (nselFun γ) a z K
+    · right
+      obtain ⟨K, hK⟩ := mem_iUnion.mp hgw
+      refine ⟨⟨K, hK⟩, ?_⟩
+      intro hT
+      exact hw' ((isTimeChangeClock_iff_timeCondRat hK).mpr hT)
+    · exact Or.inl hgw
+  have hS : {w : ContinuousPath ℂ | ((a, z), w) ∈ selBadSet γ} ⊆
+      {w : ContinuousPath ℂ | ¬ clockLimit γ (nselFun γ) a z w ∈ timeClockSet} := by
+    intro w hw
+    obtain ⟨⟨K, hK⟩, hnot⟩ := hw
+    have hnot' : ¬ timeCondRat (fun t => limsup (fun k => clockApprox γ a (nselFun γ a z k) w t) atTop) := hnot
+    show ¬ clockLimit γ (nselFun γ) a z w ∈ timeClockSet
+    intro hT
+    exact hnot' ((isTimeChangeClock_iff_timeCondRat hK).mp hT)
+  rw [ae_iff]
+  constructor
+  · intro h
+    exact measure_mono_null hS h
+  · intro h
+    exact measure_mono_null hN (measure_union_null hG h)
+
+/-- The selected relation `Q(a,z)` is Borel: for Cauchy starting pairs it is the vanishing of the exceptional set. -/
+theorem selected_iff_measure_selBad {γ : ℝ} (htail : SubsequenceTailProperty γ (nselFun γ))
+    (p : CircleFns × ℂ) :
+    SelectedAllStartsRelation γ (nselFun γ) p.1 p.2 ↔
+      CauchyInProbability γ p.1 p.2 ∧ planarBrownianMotion p.2 {w | (p, w) ∈ selBadSet γ} = 0 := by
+  obtain ⟨a, z⟩ := p
+  constructor
+  · rintro ⟨hC, hT⟩
+    exact ⟨hC, (ae_timeClock_iff_measure_selBad htail hC).mp hT⟩
+  · rintro ⟨hC, hμ⟩
+    exact ⟨hC, (ae_timeClock_iff_measure_selBad htail hC).mpr hμ⟩
+
+/-- **The Borel relation Step `BorelAllStartsRelationStep` holds for the constructed subsequence `nselFun`**
+(env-steps.tex:413-421: `Q` is a Borel relation). -/
+theorem borelAllStartsRelationStep_nselFun (γ : ℝ) : BorelAllStartsRelationStep γ (nselFun γ) := by
+  have hmeasure : Measurable fun p : CircleFns × ℂ =>
+      planarBrownianMotion p.2 {w | (p, w) ∈ selBadSet γ} :=
+    measurable_planarBM_section_pair (measurableSet_selBadSet γ)
+  have hset : {p : CircleFns × ℂ | SelectedAllStartsRelation γ (nselFun γ) p.1 p.2} =
+      {p : CircleFns × ℂ | CauchyInProbability γ p.1 p.2} ∩
+        {p : CircleFns × ℂ | planarBrownianMotion p.2 {w | (p, w) ∈ selBadSet γ} = 0} :=
+    Set.ext fun p => selected_iff_measure_selBad (borelSubsequenceSelectionStep_nselFun γ).2 p
+  unfold BorelAllStartsRelationStep
+  rw [hset]
+  exact (measurableSet_cauchyInProbability γ).inter (measurableSet_eq_fun hmeasure measurable_const)
 
 end Measurability
 
