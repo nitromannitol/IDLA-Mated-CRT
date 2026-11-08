@@ -18,6 +18,8 @@ Locators used here:
 * Section 4.2, pp. 31: (4.12) `DA(H₀)`; Proposition 4.4, (4.14);
 * Section 4.3, pp. 32-33: (4.19) the closed ball `B̄₀`; Definition 4.5 (inner degree (4.20), outer degree); (4.21);
   Proposition 4.6, (4.23); the uniform normalized-mass beta-moment paragraph immediately before (4.25), p. 33.
+* BG arXiv:2211.04891v2 (Bou-Rabee and Gwynne): Lemma 3.3, pp. 23-24, and Theorem 4.1, p. 32, in canonical scope
+  (below); the SLE/LQG embedding paragraph (corrected tex lines 189-195) and the Lemma 8.8 identification (lines 207-209).
 
 Not staged, with reasons (see the fleet report):
 * (4.5) of Lemma 4.3: not consumed by the moment route.
@@ -25,14 +27,20 @@ Not staged, with reasons (see the fleet report):
   moment from the beta-moment paragraph and (4.6) (r3:2674-2753), never from (4.22).
 * (4.25): its printed last bound carries the positive exponent `β(1-ζ)`; it is not imported.
 
-Conventions. Moments of random quantities are outer expectations `MatedCRT.outerLIntegral` (Defs/Notation.lean):
-they equal `∫⁻` when the integrand is measurable and need no measurability of the degree or mass functionals, which
-the paper does not verify. The canonical zero-cone law is carried by `IsCanonicalZeroConeModel`, a predicate on the
-joint law of `(h, η)`, not a hypothesis on an abstract environment. The α-cone predicate `IsAlphaQuantumCone` is
-the `IsQuantumCone` of `MatedCRT/Defs/QuantumCone.lean` with the drift parameter `α` in place of `γ`.
+Outer-expectation account (source fidelity). The printed moments of the degree and mass functionals are read as
+outer expectations `MatedCRT.outerLIntegral` (Defs/Notation.lean). For a measurable integrand this is the printed
+Lebesgue integral (`outerLIntegral_eq_lintegral_of_measurable`, below), so the two readings agree whenever the printed
+quantity is measurable. The paper does not verify measurability of `deg_in`, `deg_out`, `DA` or of the normalized masses
+`C^{-ζ} μ_{h^{C^ζ}}(𝔻)`; no statement here assumes or proves it, and the outer forms need none. The printed (4.22) and
+(4.25) are not imported (see above); the moment route is r3:2674-2753.
 
-The `…Stmt` declarations are published inputs (explicit hypotheses, not proved here). The internal lemmas at the end
-are proved consequences of those inputs (r3:2674-2753); they are not literature inputs and should move to
+Canonical laws. `IsCanonicalZeroConeModel` (GMS, zero cone) and `IsCanonicalSLEDecoratedCone` (BG, `γ`-cone) are
+predicates on the joint law of the environment, not hypotheses on an abstract environment. The α-cone predicate
+`IsAlphaQuantumCone` is the `IsQuantumCone` of `MatedCRT/Defs/QuantumCone.lean` with the drift parameter `α` in place of
+`γ`.
+
+The `…Stmt` declarations are published inputs (explicit hypotheses, not proved here). The internal lemmas at the end are
+proved consequences of those inputs (r3:2674-2753); they are not literature inputs and should move to
 `MatedCRT/Proofs/` on promotion.
 -/
 
@@ -168,7 +176,9 @@ def GMSProposition46OuterStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
 /-- **Uniform normalized-mass beta-moment paragraph**, GMS p. 33, immediately before (4.25) (proof of Proposition
 4.6): for fixed `ζ ∈ (0, 1)` and `β ∈ (0, 4/γ²)`, the normalized masses `Y_C := C^{-ζ} μ_{h^{C^ζ}}(𝔻)` satisfy
 `sup_{C > 1} E[Y_C^β] < ∞` ("finite, C-independent moments of all orders β ∈ (0, 4/γ²)", citing Rhodes-Vargas RV14
-Theorem 2.11), with outer expectations. The family `μb b` is the γ-LQG area measure of `h^b` for each `b > 0`. -/
+Theorem 2.11), with outer expectations. The family `μb b` is the γ-LQG area measure of `h^b` for each `b > 0`: the
+statement quantifies over every family with this property. Outer reading: equal to the printed `E[·]` when the
+integrand is measurable; measurability of the normalized masses is not verified in the source. -/
 def GMSMassBetaMomentStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (η : Ω → ℝ → ℂ),
@@ -182,9 +192,10 @@ def GMSMassBetaMomentStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
           (fun ω => (ENNReal.ofReal (C ^ (-ζ)) * μb (C ^ ζ) ω (Metric.ball 0 1)) ^ β) ≤ M
 
 /-- **Definition 4.5, (4.20)**, GMS arXiv:1705.11161v5 p. 32: `deg_in(H₀) ≤ μ_h(B̄₀)`, almost surely, for the canonical
-zero-cone model. The printed text gives no argument ("We note that"); it uses that the `N` unit-mass segments
-`η([a_j, b_j])` have pairwise `μ_h`-null overlaps, which is not written in the paper. Staged as printed; that
-justification is an open point in the fleet report. -/
+zero-cone model. The printed text gives its justification in one sentence ("We note that"): the unit-mass segments
+`η([a_j, b_j])` have pairwise `μ_h`-null overlaps. The key input, that distinct segments of the curve have `μ_h`-null
+intersection, is the area-null-overlap argument written for mesh cells at steps2-r3.tex 1789-1812. The bound is cited
+as printed; its background proof is not re-opened here. -/
 def GMSInnerDegreeBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (η : Ω → ℝ → ℂ),
@@ -204,36 +215,103 @@ def GMSCoordinateChangeStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
     ∀ b : ℝ, 0 < b → ∀ᵐ ω ∂P, ∀ Y : Set ℂ, MeasurableSet Y →
       μb b ω Y = μ ω ((fun z : ℂ => ((coneScaleRadius γ (hcirc ω) b : ℝ) : ℂ) * z) '' Y)
 
-/-! ## Canonical BG inputs: arXiv:2211.04891v2 Lemma 3.3 and Theorem 4.1 (printed form)
+/-! ## Canonical BG inputs: arXiv:2211.04891v2 Lemma 3.3 (pp. 23-24) and Theorem 4.1 (p. 32)
 
-Both are numbered results of the paper, staged here as explicit published inputs for the steps2-r3 route, which cites
-"the printed canonical Theorem 4.1, p. 32, and Lemma 3.3, pp. 23-24" (steps2-r3.tex 2996-2998, 3019-3028). The formal
-content is the Draft statement for the paper's environment `MatedCRTEnv.IsValid` (`MatedCRT/Defs/Setting.lean`, whose
-docstring identifies it as the environment of the paper for `γ` and `𝒮`). The only other quantifier is over cone
-harmonic ball families `Λ`, which `IsConeHarmonicBallFamily` determines from `μ` through condition (c)
-(`MatedCRT/Defs/Setting.lean:257-267`). The constant is `c₀/6` with `c₀ = 2/m₀` in place of the printed `m₀/6`
-(CORRECTION [C1], ESCALATIONS E-A3, confirmed). Not staged here: the identification of r3's canonical comparison
-realization (steps2-r3.tex 1912-1945: a measurable function of the Brownian boundary pair with the canonical DMS14/GHMS
-law) with a valid environment. That is a separate canonical-law identification obligation. -/
+Scope. The printed Lemma 3.3 and Theorem 4.1 concern the paper's standing environment: `h` a `γ`-quantum cone, `η` a
+whole-plane space-filling SLE_{16/γ²} independent of `h` and parametrized by `μ_h`-area (corrected tex lines 189-195),
+and the mated-CRT map of the boundary-length pair (Definition 1.1), identified with the SLE/LQG cell description by
+DMS14 Lemma 8.8 (corrected tex lines 207-209). The canonical inputs below are these printed statements for the canonical
+law of that environment, carried by `IsCanonicalSLEDecoratedCone`. They do not abbreviate the Draft statements
+`UniformConvergenceGreenKernelStmt` and `ConvergenceDivisibleStmt`: those quantify over every `MatedCRTEnv.IsValid`
+environment, whose coupling clause is existential (an abstract mating-of-trees coupling with an abstract
+imaginary-geometry map `igMap`). They are not statements about the canonical law and are not used here.
 
-/-- **BG Lemma 3.3** (arXiv:2211.04891v2, pp. 23-24; printed (3.12)): for a deterministic `r > 0`, `z` with `B_r(z) ⊂ B_ρ`,
-`y ∈ B_r(z)`, each `δ > 0` and `O ⊂ cl(B_r(z)) \ {y}` at positive distance from `y`, with probability tending to `1`
-the rescaled Green function `ḡ^ε` of the paper's environment satisfies `sup_{x ∈ O} |ḡ^ε(x) - (c₀/6) G_{B_r(z)}(y, x)| ≤ δ`.
-Formal statement: `MatedCRT.UniformConvergenceGreenKernelStmt` (`MatedCRT/Draft/Section3.lean:93`). -/
-abbrev BGLemma33Stmt (𝒮 : SpaceFillingSLEModel) : Prop :=
-  MatedCRT.UniformConvergenceGreenKernelStmt 𝒮
+Missing carrier (not staged). The canonical comparison realization of steps2-r3 (r3:1912-1945) is a measurable function
+of the Brownian pair (DMS14 Theorem 1.9, pp. 26-27, and Theorem 1.11, p. 29; GHMS Theorem 1.1, p. 5, for `γ < √2`). The
+canonical inputs apply to it only once `IsCanonicalSLEDecoratedCone 𝒮 γ` holds for that realization, which is not
+established here. Exact missing type: a measurable reconstruction `Φ : Path2 → (ℝ → ℂ → ℝ) × C(ℝ, ℂ)` of the circle
+averages and the curve from the pair, with `IsCanonicalSLEDecoratedCone 𝒮 γ` for the environment assembled from the pair and
+`Φ` (clock and pairing included); no such carrier exists in `MatedCRT/External` or `MatedCRT/Defs`. -/
 
-/-- **BG Theorem 4.1** (arXiv:2211.04891v2, p. 32): for `t > 0`, on the event `{t < T_1}` the rescaled least supersolution
-`w̄^ε_t` converges uniformly on `B_ρ` to `(c₀/6) w̄^{B_ρ}_t` in probability, where `w̄^{B_ρ}_t` is the least supersolution of
-Theorem 2.3 for the cone harmonic ball family `Λ`. Formal statement: `MatedCRT.ConvergenceDivisibleStmt`
-(`MatedCRT/Draft/Section4.lean:39`; its event uses `clusterExitTime`, `MatedCRT/Defs/Setting.lean:271`). -/
-abbrev BGTheorem41Stmt (𝒮 : SpaceFillingSLEModel) : Prop :=
-  MatedCRT.ConvergenceDivisibleStmt 𝒮
+/-- **Canonical SLE-decorated `γ`-quantum cone with its Brownian boundary pair** (carrier of the canonical BG inputs;
+corrected tex lines 189-195 and 207-209; DMS14 Definition 4.10 and Lemma 8.8). Under `P`, the environment `S` has the law
+of the paper's standing environment:
+* `S.hC`, `S.hcirc` is the circle average embedding of the `γ`-quantum cone (`IsQuantumCone`), `S.μ` is its `γ`-LQG
+  measure (`IsLQGMeasure`), and `S.clock` is the LQG clock of planar Brownian motion (`IsLQGClock`);
+* `S.η` is a whole-plane space-filling SLE_{16/γ²} independent of `σ(h)` (`𝒮.IsSLE` for the true model `𝒮`, as in
+  `MatedCRT/External/SLE.lean`), with `η(0) = 0` and `μ_h(η([a,b])) = b - a` (`IsAreaParametrized`);
+* `S.bm` is the boundary-length pair of Definition 1.1: a two-sided two-dimensional Brownian motion with correlation
+  `-cos(πγ²/4)` (`IsCorrelatedBM2`), and for each `ε > 0` the Brownian multigraph `S.mult ε` equals the SLE/LQG cell
+  multiplicity `cellMult ε (S.η ω)` almost surely (DMS14 Lemma 8.8; the identification stated at corrected tex 207-209).
+The clauses are those of `MatedCRTEnv.IsValid` for the standing law, except that the existential mating-of-trees
+coupling clause is replaced by the boundary-pair law and the cell identity. No conclusion about the discrete Green
+function, the least supersolution or the odometer is included. -/
+structure IsCanonicalSLEDecoratedCone (𝒮 : SpaceFillingSLEModel) (γ : ℝ) {Ω : Type} [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) : Prop where
+  /-- `P` is a probability measure. -/
+  isProbabilityMeasure : IsProbabilityMeasure S.P
+  /-- `h` is the circle average embedding of the `γ`-quantum cone (Definition 2.1; DMS14 Definition 4.10). -/
+  isQuantumCone : IsQuantumCone γ S.P S.hC S.hcirc
+  /-- `μ = μ_h` is the `γ`-LQG measure of `h` (corrected tex eq:measure-lim). -/
+  isLQGMeasure : IsLQGMeasure S.P γ S.hcirc S.μ
+  /-- `clock` is the LQG clock of planar Brownian motion for `h`, as in `MatedCRTEnv.IsValid`. -/
+  isLQGClock : ∀ᵐ ω ∂S.P, ∀ z : ℂ, IsLQGClock planarBrownianMotion γ (S.hcirc ω) z (S.clock ω) ∧
+    ∀ᵐ b ∂planarBrownianMotion z, IsTimeChangeClock (S.clock ω b)
+  /-- `η` (modulo parametrization) is a whole-plane space-filling SLE_{16/γ²} independent of `h` (corrected tex 189-193). -/
+  isSLE : 𝒮.IsSLE S.P S.fieldSigma (16 / γ ^ 2) S.η
+  /-- `η(0) = 0` and `μ_h(η([a,b])) = b - a`, almost surely (corrected tex 192). -/
+  isAreaParametrized : ∀ᵐ ω ∂S.P, IsAreaParametrized (S.μ ω) (S.η ω)
+  /-- The boundary-length pair `bm` of Definition 1.1 is a two-sided correlated Brownian motion. -/
+  isBrownianBoundaryPair : MatedCRTHarmonic.MatedCRT.IsCorrelatedBM2 γ (S.P.map S.bm)
+  /-- The Brownian mated-CRT multigraph is the SLE/LQG cell multigraph, almost surely, for each cell size
+  (DMS14 Lemma 8.8; corrected tex 207-209; INPUT-REQUESTS IR-A2). -/
+  isCellIdentity : ∀ ε : ℝ, 0 < ε → ∀ᵐ ω ∂S.P, S.mult ε ω = cellMult ε (S.η ω)
+
+/-- **BG Lemma 3.3, canonical scope** (arXiv:2211.04891v2, Lemma 3.3, pp. 23-24; corrected tex
+`lemma:uniform-convergence-of-greens-function`, line 1216; printed (3.12)). For the canonical law
+`IsCanonicalSLEDecoratedCone`: for deterministic `r > 0` and `z` with `B_r(z) ⊆ B_ρ`, `y ∈ B_r(z)`, each `δ > 0` and each
+`O ⊆ cl(B_r(z)) \ {y}` at positive distance from `y`, with probability tending to `1` as `ε → 0`, the rescaled Green
+function `ḡ^ε` satisfies `sup_{x ∈ O} |ḡ^ε(x) - (c₀/6) G_{B_r(z)}(y, x)| ≤ δ`. CORRECTION [C1]: `c₀ = 2/m₀`
+(`MatedCRTEnv.c₀`) in place of the printed `m₀`. `G_{B_r(z)}` is the Green function of standard Brownian motion killed on
+exiting `B_r(z)` (`greenFunction`). Cited input; not proved here. -/
+def BGLemma33CanonicalStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), IsCanonicalSLEDecoratedCone 𝒮 γ S →
+  ∀ (r : ℝ) (z y : ℂ), 0 < r → Metric.ball z r ⊆ Metric.ball 0 ρ → y ∈ Metric.ball z r →
+  ∀ δ : ℝ, 0 < δ → ∀ O : Set ℂ, O ⊆ Metric.closedBall z r \ {y} → 0 < Metric.infDist y O →
+    ProbTendsToOne S.P fun ε => {ω | ∀ x ∈ O,
+      |rescale (S.mε ε) ε (S.η ω)
+          (fun a => ε⁻¹ * greenKernel (S.mult ε ω) (interiorCellVertices ε (S.η ω) (Metric.ball z r))
+            (vertexOf ε (S.η ω) y) a) x -
+        S.c₀ / 6 * greenFunction (Metric.ball z r) y x| ≤ δ}
+
+/-- **BG Theorem 4.1, canonical scope** (arXiv:2211.04891v2, Theorem 4.1, p. 32; corrected tex
+`theorem:convergence-divisible`, line 1855). For the canonical law `IsCanonicalSLEDecoratedCone`: for each `t > 0` and
+`δ > 0`, on the event `{t < T}` (`clusterExitTime` of the cone harmonic ball family `Λ`), the rescaled least supersolution
+`w̄^ε_t` of the discrete problem satisfies `P[t < T, sup_{B_ρ} |w̄^ε_t - (c₀/6) w̄^{B_ρ}_t| > δ] → 0`. CORRECTION [C1]:
+`c₀ = 2/m₀` (`MatedCRTEnv.c₀`) in place of the printed `m₀`. Cited input; not proved here. -/
+def BGTheorem41CanonicalStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), IsCanonicalSLEDecoratedCone 𝒮 γ S →
+  ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
+  ∀ t : ℝ, 0 < t → ∀ δ : ℝ, 0 < δ →
+    Tendsto (fun ε => S.P {ω | t < clusterExitTime (Λ ω) ρ ∧ ∃ x ∈ Metric.ball (0 : ℂ) ρ,
+        δ < |rescaledMatedLeastSupersolution S ρ t ε ω x - S.c₀ / 6 * leastSupersolution (S.μ ω) ρ 0 t x|})
+      (𝓝[>] 0) (𝓝 0)
 
 /-! ## Internal proved consequences (not published inputs)
 
 The lemmas below are proved from the Props above, following the written Chebyshev and tail-integration argument of
 r3:2674-2753. They should move to `MatedCRT/Proofs/` on promotion. -/
+
+/-- Source-fidelity account of the outer moments: for a measurable integrand the outer integral `outerLIntegral` is the
+printed Lebesgue integral. Proof: `g = f` is an admissible majorant, and every measurable majorant `g ≥ f` has
+`∫⁻ f ≤ ∫⁻ g`. -/
+theorem outerLIntegral_eq_lintegral_of_measurable {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) {f : Ω → ℝ≥0∞}
+    (hf : Measurable f) : MatedCRT.outerLIntegral P f = ∫⁻ ω, f ω ∂P := by
+  unfold MatedCRT.outerLIntegral
+  refine le_antisymm ?_ (le_iInf fun g => le_iInf fun _ => le_iInf fun hfg => lintegral_mono hfg)
+  exact (iInf_le _ f).trans ((iInf_le _ hf).trans (iInf_le (fun _ : f ≤ f => ∫⁻ ω, f ω ∂P) le_rfl))
 
 /-- Markov's inequality for the outer integral: `c^β · P[c < Y] ≤ E*[Y^β]` for `β > 0`. -/
 theorem outer_markov {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (Y : Ω → ℝ≥0∞) {β : ℝ} (hβ : 0 < β)
@@ -531,7 +609,13 @@ theorem markov_power_bound {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (Y
 
 /-- The tail bound at one level `C > 1`, from the almost-sure inputs: the inner-degree bound (4.20), continuity of `η`
 and the coordinate change (2.3) at `b = C^ζ`. Off the null set, `deg_in > C` forces `η([-1,1])` out of `B_{R/8}(0)`
-or the mass `C^{-ζ} μ_{h^b}(𝔻)` above `C^{1-ζ}`. -/
+or the mass `C^{-ζ} μ_{h^b}(𝔻)` above `C^{1-ζ}`.
+
+Assumptions, exactly as used: `hX` (the inner-degree bound (4.20), almost surely), `hcont` (continuity of `η`, almost
+surely) and `hcoord`, the transport identity at the single level `b = C^ζ` and the single ball `𝔻`: almost surely
+`μbC ω 𝔻 = μ_h(R 𝔻)` with `R = coneScaleRadius γ (hcirc ω) (C^ζ)`. The measure-valued family `μbC` is an arbitrary
+random measure satisfying `hcoord`; it is not assumed to be the LQG measure of `h^b`. No measurability of `X` or of
+`deg_in` is assumed. -/
 theorem tail_level_bound {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) {γ ζ C : ℝ} (hC1 : 1 < C) (hζ0 : 0 < ζ)
     {X : Ω → ℝ≥0∞} {η : Ω → ℝ → ℂ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ} {μbC : Ω → Measure ℂ}
     (hX : ∀ᵐ ω ∂P, X ω ≤ μ ω (gmsB0 (η ω))) (hcont : ∀ᵐ ω ∂P, Continuous (η ω))
@@ -581,7 +665,13 @@ theorem tail_level_bound {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) {γ 
 /-- **Inner-degree moment from the published inputs** (r3:2674-2753). For the canonical zero-cone model, given the
 staged Lemma 4.3 (4.6), the beta-moment paragraph, the coordinate change (2.3) and the inner-degree bound (4.20), the
 outer `p`-th moment of `deg_in(H₀)` is finite for `1 ≤ p < 4/γ²`. The printed (4.22) range `[1, 4/γ)^2` is not used;
-the conclusion is the range the written proof derives. -/
+the conclusion is the range the written proof derives.
+
+Assumptions, exactly as used: `hLem`, `hBeta`, `hCoord` and `hInner` are the staged printed Props (cited, not proved);
+`hM` is the canonical zero-cone predicate; `hμb` supplies the rescaled-measure family `μb`: for every `b > 0`, `μb b` is
+the `γ`-LQG measure of the rescaled circle averages `gmsRescaledCircle γ (hcirc ω) (coneScaleRadius γ (hcirc ω) b)`,
+and it is the family on which `hBeta` and `hCoord` are stated. The conclusion is an outer moment; measurability of
+`deg_in(H₀)` is neither assumed nor proved. -/
 theorem gms_innerDegree_moment {𝒮 : SpaceFillingSLEModel}
     (hLem : GMSLemma43Eq46Stmt 𝒮) (hBeta : GMSMassBetaMomentStmt 𝒮)
     (hCoord : GMSCoordinateChangeStmt 𝒮) (hInner : GMSInnerDegreeBoundStmt 𝒮)
