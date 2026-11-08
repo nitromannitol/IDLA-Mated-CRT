@@ -173,6 +173,7 @@ assert_uses_deep convergenceOfIDLA_conditional greenKernelBoundaryStep
 /-- **Lemma 3.5**. -/
 example (H : MainHypotheses 𝒮) : DiscreteDirichletProblemStmt 𝒮 := H.discreteDirichletProblem
 assert_uses convergenceOfIDLA_conditional discreteDirichletProblem_of_steps
+assert_uses convergenceOfIDLA_conditional dirichletLimitStep_of_volumeGrowth
 
 /-- **Lemma 3.6**. -/
 example (H : MainHypotheses 𝒮) : ConvergenceHarmonicFunctionsStmt 𝒮 := H.convergenceHarmonicFunctions
@@ -193,7 +194,7 @@ assert_uses convergenceOfIDLA_conditional convergenceDivisibleEventMeasurableSte
 
 /-- **Proposition 4.2**. -/
 example (H : MainHypotheses 𝒮) : DivSandpileLowerBoundStmt 𝒮 := H.divSandpileLowerBound
-assert_uses convergenceOfIDLA_conditional divSandpileLowerBound_final
+assert_uses convergenceOfIDLA_conditional divSandpileLowerBound_prop42
 assert_uses_deep convergenceOfIDLA_conditional divSandpileOdometerComparison_of_cellsMeet
 
 /-- **Lemma 4.3**, proved. -/
@@ -222,6 +223,7 @@ assert_uses_deep convergenceOfIDLA_conditional odometerDistributionalLimitCorrec
 /-- **Proposition 5.1**. -/
 example (H : MainHypotheses 𝒮) : IDLALowerBoundStmt 𝒮 := H.iDLALowerBound
 assert_uses convergenceOfIDLA_conditional iDLALowerBound_final_of_strictGap
+assert_uses_deep convergenceOfIDLA_conditional discreteClusterInnerBound_prop42
 assert_uses_deep convergenceOfIDLA_conditional iDLALowerBound_of_volumeGrowth_cellSize
 assert_uses_deep convergenceOfIDLA_conditional LQGMeasureField.lqgMeasureFieldMeasurableStep
 assert_uses convergenceOfIDLA_conditional stoppedMeanValueInequality_of_steps

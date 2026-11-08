@@ -53,6 +53,8 @@ import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.ExitCell
 import MatedCRT.Proofs.Sec4.SubsequentialProperties.Final
 import MatedCRT.Proofs.Sec5.StoppedFinal
 import MatedCRT.Proofs.Sec5.StoppedLLowerBound
+import MatedCRT.Proofs.Sec4.Prop42Closure.Assembly
+import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.Limit
 
 /-!
 # Theorems 1.4 and 1.6, conditional on the remaining hypotheses
@@ -142,11 +144,13 @@ theorem uniformConvergenceGreenKernel (H : MainHypotheses 𝒮) : UniformConverg
   uniformConvergenceGreenKernel_final 𝒮 H.degreeMeasureConvergence H.integralConvergenceGreenFunction
     H.greenKernelUpperBound H.cellSizeEstimate H.discretePotentialTightnessAe
 
-/-- **Lemma 3.5** (`discreteDirichletProblem_of_steps`). -/
+/-- **Lemma 3.5** (`discreteDirichletProblem_of_steps`; `DirichletLimitStep` from `volumeGrowth` by
+`dirichletLimitStep_of_volumeGrowth`, Proofs/Sec3/DiscreteDirichletProblem/Limit.lean). -/
 theorem discreteDirichletProblem (H : MainHypotheses 𝒮) : DiscreteDirichletProblemStmt 𝒮 :=
   discreteDirichletProblem_of_steps 𝒮 H.greenPotentialHolder H.convergenceHarmonicFunctions
     H.integralConvergenceGreenFunction H.discretePotentialTightnessCorrected (maximumPrinciple 𝒮)
-    H.expectedExitTimeExplicitBound H.cellSizeEstimate H.dirichletLimit H.dirichletInterior H.dirichletBoundary
+    H.expectedExitTimeExplicitBound H.cellSizeEstimate (dirichletLimitStep_of_volumeGrowth 𝒮 H.volumeGrowth)
+    H.dirichletInterior H.dirichletBoundary
 
 /-- **Lemma 3.7** (`convergenceNormalizedExitTime_of_statements`, x1, 980cf27: through the almost-sure corrected
 Lemma 3.1, E-c2-6; no Draft 3.1). -/
@@ -185,10 +189,10 @@ theorem convergenceDivisible (H : MainHypotheses 𝒮) : ConvergenceDivisibleStm
   convergenceDivisible_of_steps 𝒮 H.subsequentialProperties H.subsequentialConvergence
     (obstacleLimitUniqueness 𝒮) H.convergenceDivisibleEventMeasurable
 
-/-- **Proposition 4.2** (`divSandpileLowerBound_final`, x3, fb05dfd: the inner approximation from the strict obstacle
-gap). -/
+/-- **Proposition 4.2** (`divSandpileLowerBound_prop42`, Proofs/Sec4/Prop42Closure/Assembly.lean, the printed form of
+`divSandpileLowerBound_final`, x3, fb05dfd: the inner approximation from the strict obstacle gap). -/
 theorem divSandpileLowerBound (H : MainHypotheses 𝒮) : DivSandpileLowerBoundStmt 𝒮 :=
-  divSandpileLowerBound_final 𝒮 H.convergenceDivisible H.coneHarmonicBalls H.coneHarmonicBallsUpToFixedTime
+  divSandpileLowerBound_prop42 𝒮 H.convergenceDivisible H.coneHarmonicBalls H.coneHarmonicBallsUpToFixedTime
     H.volumeGrowth H.cellSizeEstimate H.uniformConvergenceGreenKernel H.coneFamilyAEMeasurable
     H.harmonicBallStrictObstacleGap
 
@@ -217,9 +221,10 @@ theorem lLowerBound (H : MainHypotheses 𝒮) : LLowerBoundStmt 𝒮 := by
   have hcell := adjacentCellsMeetAeStep 𝒮
   apply lLowerBound_of_adjacentCellsMeet <;> assumption
 
-/-- The discrete-cluster form of Proposition 4.2 used by Proposition 5.1 (`discreteClusterInnerBound_final`). -/
+/-- The discrete-cluster form of Proposition 4.2 used by Proposition 5.1 (`discreteClusterInnerBound_prop42`,
+Proofs/Sec4/Prop42Closure/Assembly.lean). -/
 theorem discreteClusterInnerBound (H : MainHypotheses 𝒮) : DiscreteClusterInnerBoundStep 𝒮 :=
-  discreteClusterInnerBound_final 𝒮 H.convergenceDivisible H.coneHarmonicBalls H.coneHarmonicBallsUpToFixedTime
+  discreteClusterInnerBound_prop42 𝒮 H.convergenceDivisible H.coneHarmonicBalls H.coneHarmonicBallsUpToFixedTime
     H.volumeGrowth H.cellSizeEstimate H.uniformConvergenceGreenKernel H.coneFamilyAEMeasurable
     H.harmonicBallStrictObstacleGap
 
