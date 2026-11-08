@@ -1,4 +1,5 @@
 import MatedCRT.Proofs.Sec1.EnvironmentScaling.FieldAssembly
+import MatedCRT.Proposed.DuplantierMillerSheffieldCone2014
 import Mathlib.Analysis.Calculus.Deriv.Slope
 
 /-!
@@ -772,5 +773,272 @@ theorem canonicalConeDistributionRadiusLawStep_of_reference_circle
     CanonicalConeDistributionRadiusLawStep 𝒮 :=
   canonicalConeDistributionRadiusLawStep_of_reference_radial 𝒮 hscale hcircle
     (referenceConeLogLevelSetStep_of_radial 𝒮 hscale hcircle)
+
+/-! ### Standalone post-last-zero path: rational-level description of the last zero -/
+
+/-- A continuous path tending to `+∞` has a zero at or after any point where it is `≤ 0`
+(intermediate value theorem). -/
+theorem exists_zero_ge_of_nonpos {c : ℝ → ℝ} (hc : Continuous c)
+    (htend : Tendsto c atTop atTop) {u : ℝ} (hu : c u ≤ 0) :
+    ∃ v, u ≤ v ∧ c v = 0 := by
+  obtain ⟨T, hT⟩ := eventually_atTop.1 (htend.eventually_ge_atTop 1)
+  have hx : 0 ≤ c (max u T) := by linarith [hT (max u T) (le_max_right u T)]
+  obtain ⟨v, hv, hcv⟩ := intermediate_value_Icc (le_max_left u T) hc.continuousOn ⟨hu, hx⟩
+  exact ⟨v, hv.1, hcv⟩
+
+/-- For a path tending to `+∞`, a nonpositive value at some `u ≥ q` is equivalent to: for every
+`k`, a rational `a > q` with value below `1/(k+1)`. -/
+theorem exists_nonpos_iff_rat {c : ℝ → ℝ} (hc : Continuous c)
+    (htend : Tendsto c atTop atTop) (q : ℝ) :
+    (∃ u, q ≤ u ∧ c u ≤ 0) ↔
+      ∀ k : ℕ, ∃ a : ℚ, q < (a : ℝ) ∧ c (a : ℝ) < 1 / ((k : ℝ) + 1) := by
+  constructor
+  · rintro ⟨u, hqu, hu⟩ k
+    have hlt : c u < 1 / ((k : ℝ) + 1) := lt_of_le_of_lt hu (by positivity)
+    have hev : ∀ᶠ x in 𝓝 u, c x < 1 / ((k : ℝ) + 1) :=
+      hc.continuousAt.eventually_lt continuousAt_const hlt
+    obtain ⟨v, hv, hsub⟩ := mem_nhdsGT_iff_exists_Ioo_subset.1
+      (nhdsWithin_le_nhds hev)
+    obtain ⟨a, ha1, ha2⟩ := exists_rat_btwn (Set.mem_Ioi.1 hv)
+    exact ⟨a, lt_of_le_of_lt hqu ha1, hsub ⟨ha1, ha2⟩⟩
+  · intro H
+    obtain ⟨T, hT⟩ := eventually_atTop.1 (htend.eventually_ge_atTop 1)
+    have hqM : q ≤ max T q := le_max_right T q
+    obtain ⟨u, hu, hmin⟩ := (isCompact_Icc : IsCompact (Set.Icc q (max T q))).exists_isMinOn
+      ⟨q, ⟨le_refl q, hqM⟩⟩ hc.continuousOn
+    refine ⟨u, hu.1, ?_⟩
+    by_contra hpos
+    obtain ⟨k, hk⟩ := exists_nat_one_div_lt (not_le.mp hpos)
+    obtain ⟨a, ha1, ha2⟩ := H k
+    have ha_le : (a : ℝ) ≤ max T q := by
+      by_contra hcon
+      have hcon' : max T q < (a : ℝ) := not_le.mp hcon
+      have h1 : 1 ≤ c (a : ℝ) := hT (a : ℝ) (le_trans (le_max_left T q) (le_of_lt hcon'))
+      have hk1 : 1 / ((k : ℝ) + 1) ≤ 1 := by
+        rw [div_le_one (by positivity)]
+        linarith [(Nat.cast_nonneg k : (0 : ℝ) ≤ k)]
+      linarith
+    have hle : c u ≤ c (a : ℝ) := isMinOn_iff.1 hmin (a : ℝ) ⟨le_of_lt ha1, ha_le⟩
+    linarith
+
+open scoped Classical in
+/-- For a path tending to `+∞`, the last zero `lastZeroR c` is the supremum of the rational levels
+`q ≥ 0` at which `c` is nonpositive somewhere at or after `q`; the supremum over an empty family is
+`0`, matching Lean's convention in `lastZeroR`. -/
+theorem lastZeroR_eq_iSup_rat {c : ℝ → ℝ} (hc : Continuous c)
+    (htend : Tendsto c atTop atTop) :
+    (⨆ q : ℚ, if (0 : ℝ) ≤ (q : ℝ) ∧ ∃ u, (q : ℝ) ≤ u ∧ c u ≤ 0 then (q : ℝ) else 0) =
+      MatedCRTHarmonic.MatedCRT.lastZeroR c := by
+  unfold MatedCRTHarmonic.MatedCRT.lastZeroR
+  obtain ⟨R, hR⟩ := eventually_atTop.1 (htend.eventually_gt_atTop 0)
+  have hZbdd : BddAbove {s : ℝ | 0 ≤ s ∧ c s = 0} := by
+    refine ⟨R, fun s hs => ?_⟩
+    by_contra h
+    have h1 : 0 < c s := hR s (le_of_lt (not_le.mp h))
+    linarith [hs.2]
+  have hZcl : IsClosed {s : ℝ | 0 ≤ s ∧ c s = 0} :=
+    (isClosed_Ici : IsClosed (Set.Ici (0 : ℝ))).inter (isClosed_eq hc continuous_const)
+  by_cases hZne : ({s : ℝ | 0 ≤ s ∧ c s = 0} : Set ℝ).Nonempty
+  · have hs : sSup {s : ℝ | 0 ≤ s ∧ c s = 0} ∈ {s : ℝ | 0 ≤ s ∧ c s = 0} :=
+      hZcl.csSup_mem hZne hZbdd
+    have hsnn : 0 ≤ sSup {s : ℝ | 0 ≤ s ∧ c s = 0} := hs.1
+    have hsz : c (sSup {s : ℝ | 0 ≤ s ∧ c s = 0}) = 0 := hs.2
+    have hA : ∀ q : ℚ, (0 : ℝ) ≤ (q : ℝ) →
+        ((∃ u, (q : ℝ) ≤ u ∧ c u ≤ 0) ↔ (q : ℝ) ≤ sSup {s : ℝ | 0 ≤ s ∧ c s = 0}) := by
+      intro q hq
+      constructor
+      · rintro ⟨u, hqu, hu⟩
+        obtain ⟨v, huv, hv⟩ := exists_zero_ge_of_nonpos hc htend hu
+        have hvZ : v ∈ {s : ℝ | 0 ≤ s ∧ c s = 0} := ⟨le_trans hq (le_trans hqu huv), hv⟩
+        exact le_trans (le_trans hqu huv) (le_csSup hZbdd hvZ)
+      · intro hqs
+        exact ⟨sSup {s : ℝ | 0 ≤ s ∧ c s = 0}, hqs, le_of_eq hsz⟩
+    have hterm_le : ∀ q : ℚ, (if (0 : ℝ) ≤ (q : ℝ) ∧ ∃ u, (q : ℝ) ≤ u ∧ c u ≤ 0
+        then (q : ℝ) else 0) ≤ sSup {s : ℝ | 0 ≤ s ∧ c s = 0} := by
+      intro q
+      split_ifs with h
+      · exact (hA q h.1).1 h.2
+      · exact hsnn
+    have hterm_nonneg : ∀ q : ℚ, (0 : ℝ) ≤ (if (0 : ℝ) ≤ (q : ℝ) ∧ ∃ u, (q : ℝ) ≤ u ∧ c u ≤ 0
+        then (q : ℝ) else 0) := by
+      intro q
+      split_ifs with h
+      · exact h.1
+      · exact le_rfl
+    have hbdd : BddAbove (Set.range fun q : ℚ => (if (0 : ℝ) ≤ (q : ℝ) ∧
+        ∃ u, (q : ℝ) ≤ u ∧ c u ≤ 0 then (q : ℝ) else 0)) :=
+      ⟨sSup {s : ℝ | 0 ≤ s ∧ c s = 0}, by rintro _ ⟨q, rfl⟩; exact hterm_le q⟩
+    apply le_antisymm
+    · exact ciSup_le hterm_le
+    · by_contra hlt
+      have hlt' : (⨆ q : ℚ, if (0 : ℝ) ≤ (q : ℝ) ∧ ∃ u, (q : ℝ) ≤ u ∧ c u ≤ 0
+          then (q : ℝ) else 0) < sSup {s : ℝ | 0 ≤ s ∧ c s = 0} := not_le.mp hlt
+      have hM0 : (0 : ℝ) ≤ ⨆ q : ℚ, (if (0 : ℝ) ≤ (q : ℝ) ∧ ∃ u, (q : ℝ) ≤ u ∧ c u ≤ 0
+          then (q : ℝ) else 0) := le_trans (hterm_nonneg 0) (le_ciSup hbdd 0)
+      obtain ⟨q, hq1, hq2⟩ := exists_rat_btwn hlt'
+      have hq0 : (0 : ℝ) ≤ (q : ℝ) := le_trans hM0 (le_of_lt hq1)
+      have hqterm : (if (0 : ℝ) ≤ (q : ℝ) ∧ ∃ u, (q : ℝ) ≤ u ∧ c u ≤ 0
+          then (q : ℝ) else 0) = (q : ℝ) := by
+        split_ifs with h
+        · rfl
+        · exact absurd ⟨hq0, (hA q hq0).2 (le_of_lt hq2)⟩ h
+      have hle : (if (0 : ℝ) ≤ (q : ℝ) ∧ ∃ u, (q : ℝ) ≤ u ∧ c u ≤ 0
+          then (q : ℝ) else 0) ≤ ⨆ q : ℚ, (if (0 : ℝ) ≤ (q : ℝ) ∧ ∃ u, (q : ℝ) ≤ u ∧ c u ≤ 0
+          then (q : ℝ) else 0) := le_ciSup hbdd q
+      linarith
+  · have hZempty : ({s : ℝ | 0 ≤ s ∧ c s = 0} : Set ℝ) = ∅ :=
+      Set.not_nonempty_iff_eq_empty.mp hZne
+    have hzero : ∀ q : ℚ, (if (0 : ℝ) ≤ (q : ℝ) ∧ ∃ u, (q : ℝ) ≤ u ∧ c u ≤ 0
+        then (q : ℝ) else 0) = 0 := by
+      intro q
+      split_ifs with h
+      · obtain ⟨hq0, u, hqu, hu⟩ := h
+        obtain ⟨v, huv, hv⟩ := exists_zero_ge_of_nonpos hc htend hu
+        have hvZ : v ∈ ({s : ℝ | 0 ≤ s ∧ c s = 0} : Set ℝ) :=
+          ⟨le_trans hq0 (le_trans hqu huv), hv⟩
+        rw [hZempty] at hvZ
+        simp at hvZ
+      · rfl
+    simp only [hzero, ciSup_const, hZempty, Real.sSup_empty]
+
+/-! ### Measurable post-last-zero level on path space -/
+
+/-- The drifted coordinate `u ↦ w(u⁺) + d u` of a path, the path `c` of
+`referenceConeConditionedPath` with `d = lqgQ γ - γ`. -/
+def driftedCoord (d : ℝ) (w : MarkovProcess.ContinuousPath ℝ) (u : ℝ) : ℝ :=
+  w u.toNNReal + d * u
+
+theorem driftedCoord_continuous (d : ℝ) (w : MarkovProcess.ContinuousPath ℝ) :
+    Continuous (driftedCoord d w) :=
+  ((w.continuous).comp continuous_real_toNNReal).add (continuous_const.mul continuous_id)
+
+/-- Coordinate events of rational witnesses above a real level `q`: for every `k`, some rational
+`a > q` has drifted value below `1/(k+1)`. A countable intersection of countable unions of
+coordinate events. -/
+def driftedBelowRat (d q : ℝ) : Set (MarkovProcess.ContinuousPath ℝ) :=
+  ⋂ k : ℕ, ⋃ (a : ℚ) (_ : q < (a : ℝ)), {w | driftedCoord d w (a : ℝ) < 1 / ((k : ℝ) + 1)}
+
+theorem measurableSet_driftedBelowRat (d q : ℝ) : MeasurableSet (driftedBelowRat d q) := by
+  unfold driftedBelowRat
+  refine MeasurableSet.iInter fun k => MeasurableSet.iUnion fun a => ?_
+  refine MeasurableSet.iUnion fun _ => ?_
+  exact measurableSet_lt
+    ((MarkovProcess.ContinuousPath.measurable_coordinateProcess _).add_const _) measurable_const
+
+/-- The rational level set: a rational level `q ≥ 0` with a witness in `driftedBelowRat`. -/
+def ratLevelSet (d q : ℝ) : Set (MarkovProcess.ContinuousPath ℝ) :=
+  {w | 0 ≤ q ∧ w ∈ driftedBelowRat d q}
+
+theorem measurableSet_ratLevelSet (d q : ℝ) : MeasurableSet (ratLevelSet d q) := by
+  by_cases h : (0 : ℝ) ≤ q
+  · have hset : ratLevelSet d q = driftedBelowRat d q := by
+      ext w
+      simp [ratLevelSet, h]
+    rw [hset]
+    exact measurableSet_driftedBelowRat d q
+  · have hset : ratLevelSet d q = ∅ := by
+      ext w
+      simp [ratLevelSet, h]
+    rw [hset]
+    exact MeasurableSet.empty
+
+/-- The post-last-zero level of a path: a countable supremum of coordinate-measurable rational
+levels. On drifting paths it is the last zero `lastZeroR` (see `postLastZeroLevel_eq_lastZeroR`). -/
+def postLastZeroLevel (d : ℝ) (w : MarkovProcess.ContinuousPath ℝ) : ℝ :=
+  ⨆ q : ℚ, (ratLevelSet d (q : ℝ)).indicator (fun _ => (q : ℝ)) w
+
+theorem measurable_postLastZeroLevel (d : ℝ) : Measurable (postLastZeroLevel d) := by
+  unfold postLastZeroLevel
+  exact Measurable.iSup fun q =>
+    measurable_const.indicator (measurableSet_ratLevelSet d (q : ℝ))
+
+theorem mem_driftedBelowRat_iff {d q : ℝ} {w : MarkovProcess.ContinuousPath ℝ}
+    (htend : Tendsto (driftedCoord d w) atTop atTop) :
+    w ∈ driftedBelowRat d q ↔ ∃ u, q ≤ u ∧ driftedCoord d w u ≤ 0 := by
+  rw [exists_nonpos_iff_rat (driftedCoord_continuous d w) htend q]
+  simp only [driftedBelowRat, Set.mem_iInter, Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop]
+
+open scoped Classical in
+/-- On a path whose drifted coordinate tends to `+∞`, the countable-supremum level is the last zero
+`lastZeroR` of the drifted path. -/
+theorem postLastZeroLevel_eq_lastZeroR {d : ℝ} (w : MarkovProcess.ContinuousPath ℝ)
+    (htend : Tendsto (driftedCoord d w) atTop atTop) :
+    postLastZeroLevel d w = MatedCRTHarmonic.MatedCRT.lastZeroR (driftedCoord d w) := by
+  rw [← lastZeroR_eq_iSup_rat (driftedCoord_continuous d w) htend]
+  unfold postLastZeroLevel
+  refine iSup_congr fun q => ?_
+  simp only [Set.indicator_apply, ratLevelSet, Set.mem_ofPred_eq, mem_driftedBelowRat_iff htend]
+
+/-- A standalone Brownian motion with almost surely sublinear growth has a measurable
+continuous-path version of the explicit post-last-zero reference process:
+`F ω t = referenceConeConditionedPath γ (B · ω) t` almost surely. Only this identity is proved;
+the identification of the law of `F` with the conditioned Brownian law `IsBMConditionedPositive`
+is a separate premise (DMS Remark 4.4, staged in `MatedCRT/Proposed`). -/
+theorem exists_measurable_referenceConeConditionedPath
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {γ : ℝ} (hd : 0 < MatedCRTHarmonic.MatedCRT.lqgQ γ - γ)
+    (B : ℝ≥0 → Ω → ℝ) (hBm : ∀ t, Measurable (B t))
+    (hcont : ∀ᵐ ω ∂P, Continuous fun t => B t ω)
+    (hsub : ∀ᵐ ω ∂P, Tendsto (fun t : ℝ => B t.toNNReal ω / t) atTop (𝓝 0)) :
+    ∃ F : Ω → MarkovProcess.ContinuousPath ℝ, Measurable F ∧
+      ∀ᵐ ω ∂P, ∀ t : ℝ≥0, F ω t = referenceConeConditionedPath γ (fun s => B s ω) t := by
+  set d := MatedCRTHarmonic.MatedCRT.lqgQ γ - γ with hdd
+  have hZB : Measurable (fun ω (t : ℝ≥0) => B t ω) := measurable_pi_iff.mpr fun t => hBm t
+  obtain ⟨Y, hY, hYB⟩ := exists_measurable_continuousPath_version (fun ω t => B t ω) hZB hcont
+  let L : Ω → ℝ := fun ω => postLastZeroLevel d (Y ω)
+  have hLm : Measurable L := (measurable_postLastZeroLevel d).comp hY
+  let Z : Ω → (ℝ≥0 → ℝ) := fun ω t => Y ω ((L ω + (t : ℝ)).toNNReal) + d * L ω
+  have hZ : Measurable Z := by
+    refine measurable_pi_iff.mpr fun t => ?_
+    have hT : Measurable fun w : MarkovProcess.ContinuousPath ℝ =>
+        (postLastZeroLevel d w + (t : ℝ)).toNNReal :=
+      ((measurable_postLastZeroLevel d).add_const _).real_toNNReal
+    have hev : Measurable fun ω => Y ω ((L ω + (t : ℝ)).toNNReal) :=
+      (MarkovProcess.ContinuousPath.measurable_eval_of_measurable _ hT).comp hY
+    exact hev.add (hLm.const_mul d)
+  have hZc : ∀ ω, Continuous (Z ω) := fun ω => by
+    have hcomp : Continuous fun t : ℝ≥0 => (L ω + (t : ℝ)).toNNReal :=
+      continuous_real_toNNReal.comp (continuous_const.add NNReal.continuous_coe)
+    exact (((Y ω).continuous).comp hcomp).add continuous_const
+  obtain ⟨F, hF, hFZ⟩ := exists_measurable_continuousPath_version Z hZ (ae_of_all P hZc)
+  refine ⟨F, hF, ?_⟩
+  filter_upwards [hFZ, hYB, hsub] with ω hFω hYω hsubω
+  have hpt : ∀ x : ℝ≥0, Y ω x = B x ω := fun x => congrFun hYω x
+  have hfun : driftedCoord d (Y ω) = fun u : ℝ => B u.toNNReal ω + d * u := by
+    funext u
+    simp only [driftedCoord, hpt]
+  have htendY : Tendsto (driftedCoord d (Y ω)) atTop atTop := by
+    rw [hfun]
+    exact tendsto_add_pos_drift_of_sublinear (fun t => B t.toNNReal ω) d hd hsubω
+  have hLω : L ω = MatedCRTHarmonic.MatedCRT.lastZeroR (fun u : ℝ => B u.toNNReal ω + d * u) := by
+    show postLastZeroLevel d (Y ω) = _
+    rw [postLastZeroLevel_eq_lastZeroR (Y ω) htendY, hfun]
+  intro t
+  have hF_t : F ω t = Y ω ((L ω + (t : ℝ)).toNNReal) + d * L ω := congrFun hFω t
+  rw [hF_t]
+  simp only [referenceConeConditionedPath, ← hdd, hpt]
+  rw [hLω]
+  ring
+
+/-- Conditional identification of the standalone post-last-zero reference process. Given the
+staged, cited DMS Remark 4.4 input `hR` (`MatedCRT.Proposed.DMS14Remark44PostLastZeroLaw`), a
+Brownian motion with measurable coordinates (`hBm`) and almost surely sublinear growth (`hsub`,
+a named premise, not derived here) has a measurable continuous-path version of the explicit
+reference process whose law is the weak-limit conditioned law. The law identity is the premise
+`hR`; the path identity is proved. -/
+theorem exists_referenceConeConditionedPath_law_of_remark44
+    (hR : MatedCRT.Proposed.DMS14Remark44PostLastZeroLaw)
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    (B : ℝ≥0 → Ω → ℝ) (hB : IsBrownianReal B P) (hBm : ∀ t, Measurable (B t))
+    (hsub : ∀ᵐ ω ∂P, Tendsto (fun t : ℝ => B t.toNNReal ω / t) atTop (𝓝 0)) :
+    ∃ F : Ω → MarkovProcess.ContinuousPath ℝ, Measurable F ∧
+      (∀ᵐ ω ∂P, ∀ t : ℝ≥0, F ω t = referenceConeConditionedPath γ (fun s => B s ω) t) ∧
+      IsBMConditionedPositive (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) (P.map F) := by
+  have hd : 0 < MatedCRTHarmonic.MatedCRT.lqgQ γ - γ :=
+    MatedCRT.Proposed.lqgQ_sub_pos_of_lt_two hγ0 hγ2
+  obtain ⟨F, hF, hFid⟩ :=
+    exists_measurable_referenceConeConditionedPath hd B hBm hB.cont hsub
+  exact ⟨F, hF, hFid, hR γ hγ0 hγ2 Ω P B F hB hF hFid⟩
 
 end MatedCRT.Sec1

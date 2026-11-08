@@ -4,6 +4,8 @@ import LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.MatedCRTConeScale
 import LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.MatedCRTConeRescaleField
 import LatticeProb.Bonanno.LQGMetric.Statement.GFF
 import MarkovProcess.Examples.BrownianMotion
+import MatedCRT.Defs.QuantumCone
+import LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.MatedCRTLastZeroR
 
 /-!
 # Staged cone scaling input
@@ -22,8 +24,8 @@ embedding radius, expressed in logarithmic radial coordinates.
 This staging does not assert that the weak-limit conditioning convention in
 `MatedCRT.IsBMConditionedPositive` agrees with the post-last-zero construction,
 or that the observable cone predicate represents this distribution-valued
-cone. Those identifications remain separate proof obligations. Lemma 4.9 and
-Remark 4.4 themselves are not separately formalized here.
+cone. Those identifications remain separate proof obligations. Remark 4.4 is staged below as the explicit cited Prop
+`DMS14Remark44PostLastZeroLaw`, not proved. Lemma 4.9 is not formalized here.
 -/
 
 set_option autoImplicit false
@@ -80,5 +82,44 @@ def DMS14ConeScaling : Prop :=
       dmsConeEmbeddingRadius γ α C (fun t => B t ω) (fun t => B' t ω)
     P.map (fun ω => LQGMetric.addConst (LQGMetric.affineComp (R ω) 0 (H ω))
       (MatedCRTHarmonic.MatedCRT.lqgQ γ * Real.log (R ω) + C / γ)) = P.map H
+
+/-- The explicit post-last-zero construction of DMS Remark 4.4 (pp. 74–75): the drifted path
+`c u = b(u⁺) + d u` is taken after its last zero `ℓ`, and the drift is subtracted again. This is
+`MatedCRT.Sec1.referenceConeConditionedPath` (CanonicalConeIdentification.lean), restated here to
+avoid an import cycle (FieldAssembly imports this file). -/
+def dmsPostLastZeroPath (d : ℝ) (b : ℝ≥0 → ℝ) : ℝ≥0 → ℝ :=
+  let c : ℝ → ℝ := fun u => b u.toNNReal + d * u
+  let ℓ := MatedCRTHarmonic.MatedCRT.lastZeroR c
+  fun t => c (ℓ + t) - d * t
+
+/-- The drift `lqgQ γ - γ = 2/γ - γ/2` of the conditioned Brownian motion is positive for
+`0 < γ < 2`. -/
+theorem lqgQ_sub_pos_of_lt_two {γ : ℝ} (h0 : 0 < γ) (h2 : γ < 2) :
+    0 < MatedCRTHarmonic.MatedCRT.lqgQ γ - γ := by
+  unfold MatedCRTHarmonic.MatedCRT.lqgQ
+  have key : 2 / γ + γ / 2 - γ = (4 - γ ^ 2) / (2 * γ) := by
+    field_simp
+    ring
+  rw [key]
+  apply div_pos
+  · nlinarith
+  · positivity
+
+/-- **Staged cited input, not proved.** DMS Remark 4.4, pp. 74–75 (arXiv:1409.7055v4): for a
+standard Brownian motion `B` on a probability space and drift `d = lqgQ γ - γ` (`0 < γ < 2`, so
+`d > 0`), every measurable continuous-path version `F` of the post-last-zero process
+`dmsPostLastZeroPath d (B · ω)` has the weak-limit conditioned law `IsBMConditionedPositive d` of
+Definition 2.1 of the paper. Operator to verify this against the DMS text before use.
+Caution: env-steps.tex:217–242 cites this remark for the conditioned-law identification and does
+not prove it; m1 (reports/m1.md) read Remark 4.4 as a description of the post-last-zero
+construction only. -/
+def DMS14Remark44PostLastZeroLaw : Prop :=
+  ∀ (γ : ℝ), 0 < γ → γ < 2 →
+    ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+      (B : ℝ≥0 → Ω → ℝ) (F : Ω → MarkovProcess.ContinuousPath ℝ),
+      IsBrownianReal B P → Measurable F →
+      (∀ᵐ ω ∂P, ∀ t : ℝ≥0,
+        F ω t = dmsPostLastZeroPath (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) (fun s => B s ω) t) →
+      MatedCRT.IsBMConditionedPositive (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) (P.map F)
 
 end MatedCRT.Proposed
