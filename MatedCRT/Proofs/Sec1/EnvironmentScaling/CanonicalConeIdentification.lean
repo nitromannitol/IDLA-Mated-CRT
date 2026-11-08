@@ -152,6 +152,52 @@ theorem exists_reference_cone_field_and_recovered_radial_law
     hc.indep_cone.2, hν, href, hHm.aemeasurable.congr heq, Measure.map_congr heq, ?_⟩
   rw [Measure.map_congr hradial, hνlaw]
 
+/-- Adding a positive linear drift to a sublinear path makes it tend to
+positive infinity. -/
+theorem tendsto_add_pos_drift_of_sublinear (f : ℝ → ℝ) (d : ℝ) (hd : 0 < d)
+    (hf : Tendsto (fun t => f t / t) atTop (𝓝 0)) :
+    Tendsto (fun t => f t + d * t) atTop atTop := by
+  have hsmall : ∀ᶠ t : ℝ in atTop, -(d / 2) < f t / t :=
+    hf.eventually (lt_mem_nhds (by linarith))
+  have hlower : (fun t : ℝ => (d / 2) * t) ≤ᶠ[atTop] fun t => f t + d * t := by
+    filter_upwards [hsmall, eventually_ge_atTop (1 : ℝ)] with t ht ht1
+    have htpos : 0 < t := by linarith
+    have hbound := (lt_div_iff₀ htpos).mp ht
+    nlinarith
+  exact tendsto_atTop_mono' atTop hlower
+    ((tendsto_const_mul_atTop_of_pos (by linarith : 0 < d / 2)).2 tendsto_id)
+
+/-- A continuous path starting at zero and tending to positive infinity
+attains zero at its last zero and is strictly positive thereafter. -/
+theorem lastZeroR_eq_zero_and_pos {c : ℝ → ℝ} (hc : Continuous c) (hc0 : c 0 = 0)
+    (htend : Tendsto c atTop atTop) :
+    let ℓ := MatedCRTHarmonic.MatedCRT.lastZeroR c
+    0 ≤ ℓ ∧ c ℓ = 0 ∧ ∀ t, ℓ < t → 0 < c t := by
+  obtain ⟨R, hR⟩ := eventually_atTop.1 (htend.eventually_gt_atTop 0)
+  let Z : Set ℝ := {s | 0 ≤ s ∧ c s = 0}
+  have hZne : Z.Nonempty := ⟨0, le_rfl, hc0⟩
+  have hZclosed : IsClosed Z := isClosed_Ici.inter (isClosed_eq hc continuous_const)
+  have hZbdd : BddAbove Z := by
+    refine ⟨R, ?_⟩
+    intro s hs
+    by_contra h
+    have := hR s (le_of_lt (lt_of_not_ge h))
+    exact (ne_of_gt this) hs.2
+  have hlast : sSup Z ∈ Z := hZclosed.csSup_mem hZne hZbdd
+  refine ⟨hlast.1, hlast.2, ?_⟩
+  intro t ht
+  change sSup Z < t at ht
+  by_contra hneg
+  let u := max t R + 1
+  have htu : t ≤ u := by dsimp [u]; linarith [le_max_left t R]
+  have hRu : R ≤ u := by dsimp [u]; linarith [le_max_right t R]
+  have hcu : 0 < c u := hR u hRu
+  obtain ⟨v, hv, hcv⟩ := intermediate_value_Icc htu hc.continuousOn
+    ⟨le_of_not_gt hneg, le_of_lt hcu⟩
+  have hvZ : v ∈ Z := ⟨le_trans hlast.1 (le_trans (le_of_lt ht) hv.1), hcv⟩
+  have hvle : v ≤ sSup Z := le_csSup hZbdd hvZ
+  linarith [hv.1]
+
 /-- The two radial branches of the reference cone.  The outer branch is
 obtained from the drifted Brownian path after its last zero. -/
 def referenceConeRadialPair (γ : ℝ) (b b' : ℝ≥0 → ℝ) :
@@ -225,6 +271,44 @@ def referenceConeConditionedPath (γ : ℝ) (B' : ℝ≥0 → ℝ) : ℝ≥0 →
   let c : ℝ → ℝ := fun u => B' u.toNNReal + d * u
   let ℓ := MatedCRTHarmonic.MatedCRT.lastZeroR c
   fun t => c (ℓ + t) - d * t
+
+/-- If the drifted reference path tends to positive infinity, its
+post-last-zero segment starts at zero and is strictly positive at every
+positive time.  The drift is subtracted in `referenceConeConditionedPath`. -/
+theorem referenceConeConditionedPath_start_and_pos (γ : ℝ) (b : ℝ≥0 → ℝ)
+    (hb : Continuous b) (hb0 : b 0 = 0)
+    (htend : Tendsto (fun u : ℝ => b u.toNNReal +
+      (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) * u) atTop atTop) :
+    referenceConeConditionedPath γ b 0 = 0 ∧
+      ∀ t : ℝ≥0, 0 < t → 0 < referenceConeConditionedPath γ b t +
+        (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) * t := by
+  let c : ℝ → ℝ := fun u => b u.toNNReal +
+    (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) * u
+  have hc : Continuous c := (hb.comp continuous_real_toNNReal).add (by fun_prop)
+  have hc0 : c 0 = 0 := by simp [c, hb0]
+  have hlast := lastZeroR_eq_zero_and_pos hc hc0 htend
+  constructor
+  · simpa [referenceConeConditionedPath, c] using hlast.2.1
+  · intro t ht
+    have ht' : 0 < (t : ℝ) := by exact_mod_cast ht
+    have hp := hlast.2.2 (MatedCRTHarmonic.MatedCRT.lastZeroR c + t) (by linarith)
+    simpa [referenceConeConditionedPath, c] using hp
+
+/-- Under the same pathwise hypotheses, the outer radial branch agrees with
+the reference cone's radial function also at time zero. -/
+theorem referenceConeRadialPair_outer_all (γ : ℝ) (b b' : ℝ≥0 → ℝ)
+    (hb0 : b 0 = 0) (hb' : Continuous b') (hb'0 : b' 0 = 0)
+    (htend : Tendsto (fun u : ℝ => b' u.toNNReal +
+      (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) * u) atTop atTop)
+    (t : ℝ≥0) :
+    (referenceConeRadialPair γ b b').2 t =
+      MatedCRTHarmonic.MatedCRT.coneRadial γ γ b b' (-(t : ℝ)) := by
+  have ht0 : 0 ≤ t := bot_le
+  obtain rfl | ht := eq_or_lt_of_le ht0
+  · have hstart := (referenceConeConditionedPath_start_and_pos γ b' hb' hb'0 htend).1
+    simpa [referenceConeRadialPair, referenceConeConditionedPath,
+      MatedCRTHarmonic.MatedCRT.coneRadial, hb0] using hstart
+  · exact referenceConeRadialPair_outer γ b b' t ht
 
 /-- Removing the outer radial drift gives the drift-corrected path after the
 last zero. This identity also covers time zero. -/
