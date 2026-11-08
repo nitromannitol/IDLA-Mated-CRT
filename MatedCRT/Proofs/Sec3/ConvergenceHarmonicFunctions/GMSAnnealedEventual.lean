@@ -89,6 +89,48 @@ theorem MatedCRTEnv.IsValid.annealed_eventually_sameWalkExitDiscrepancy_of_gms
     (D * ε ^ κ) hε0 hε1.le hr hχ (by positivity) hψ hscale
     (hmargin z r hr hball) hB hgood
 
+
+/-- The fixed-environment annealed estimate in the common-constant form used
+by the corrected harmonic comparison. -/
+theorem MatedCRTEnv.IsValid.annealed_eventually_sameWalkExitDiscrepancy_rate_of_gms
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ ρ ρ' a : ℝ} (hS : S.IsValid 𝒮 γ)
+    (hcell : CellSizeEstimateStmt 𝒮) (hgms : GMSAnnulusDisconnectionStmt 𝒮)
+    (hm : MepsScalingInput 𝒮) (hγ : 0 < γ) (hγ2 : γ < 2)
+    (hρ : 0 < ρ) (hρρ' : ρ < ρ') (hρ'1 : ρ' < 1)
+    (ha : 0 < a) (ha' : a < 2 / (2 + γ) ^ 2) :
+    ∃ β κ C ν : ℝ, 0 < β ∧ 0 < κ ∧ 0 ≤ C ∧ 0 < ν ∧
+      ∀ (r : ℝ) (z y : ℂ), 0 < r → ball z r ⊆ ball 0 ρ → y ∈ ball z r →
+      ∀ (ψ : ℂ → ℝ) (H χ : ℝ≥0), 0 < χ → HolderOnWith H χ ψ (closedBall z r) →
+      ∀ q : ℝ, 0 < q → q / (χ : ℝ) < min a β →
+      ∀ᶠ ε : ℝ in 𝓝[>] 0,
+        sectionwiseOuterProb S.P (fun ω => srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y))
+          {p | (1 + (H : ℝ)) * ε ^ q < sameWalkExitDiscrepancy S r z ψ ε p.1 p.2} ≤
+        ENNReal.ofReal (C * (ε ^ κ + ε ^ (ν * (min a β - q / (χ : ℝ))))) := by
+  obtain ⟨β, κ, D, ν, hβ, hκ, hD, hν, hbound⟩ :=
+    hS.annealed_eventually_sameWalkExitDiscrepancy_of_gms hcell hgms hm hγ hγ2
+      hρ hρρ' hρ'1 ha ha'
+  let K := (2 : ℝ) ^ ν * (202 : ℝ) ^ ν
+  let C := max D K
+  refine ⟨β, κ, C, ν, hβ, hκ, hD.trans (le_max_left _ _), hν, ?_⟩
+  intro r z y hr hball hy ψ H χ hχ hψ q hq hqbound
+  filter_upwards [hbound r z y hr hball hy ψ H χ hχ hψ q hq hqbound,
+    self_mem_nhdsWithin] with ε hεbound hε
+  apply hεbound.trans
+  apply ENNReal.ofReal_le_ofReal
+  have hε0 : 0 ≤ ε := le_of_lt hε
+  have h1 : D * ε ^ κ ≤ C * ε ^ κ :=
+    mul_le_mul_of_nonneg_right (le_max_left _ _) (Real.rpow_nonneg hε0 _)
+  have h2 : K * ε ^ ((min a β - q / (χ : ℝ)) * ν) ≤
+      C * ε ^ ((min a β - q / (χ : ℝ)) * ν) :=
+    mul_le_mul_of_nonneg_right (le_max_right _ _) (Real.rpow_nonneg hε0 _)
+  calc
+    D * ε ^ κ + K * ε ^ ((min a β - q / (χ : ℝ)) * ν) ≤
+        C * ε ^ κ + C * ε ^ ((min a β - q / (χ : ℝ)) * ν) := add_le_add h1 h2
+    _ = C * (ε ^ κ + ε ^ (ν * (min a β - q / (χ : ℝ)))) := by rw [mul_comm (min a β - q / (χ : ℝ)) ν]; ring
+
 end MatedCRT
 
 #print axioms MatedCRT.MatedCRTEnv.IsValid.annealed_eventually_sameWalkExitDiscrepancy_of_gms
+
+#print axioms MatedCRT.MatedCRTEnv.IsValid.annealed_eventually_sameWalkExitDiscrepancy_rate_of_gms
