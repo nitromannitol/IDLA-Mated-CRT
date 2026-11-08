@@ -675,7 +675,13 @@ Theorem 1.1 to the zero-boundary field on `D = B(c, ρ)`, whose limit is `exp(-�
 statement `SheffieldWangCircleAverageAllScaleStmt` (Proposed/SheffieldWang2016.lean) requires `IsLocallyFiniteMeasure`
 of its supplied limit on all of `ℂ`, i.e. `∫_D exp(-γ (H - α log|·|)) dμ < ∞`, the total mass of the zero-boundary
 Gaussian multiplicative chaos. The written paragraph does not state this finiteness. It is carried here as a named
-hypothesis and is not a published result. -/
+hypothesis and is not a published result.
+
+Superseded for the interior chain: `punctured_disk_allScales_interior` and `punctured_allScales_of_steps_interior` do not
+take this residual. The finiteness they need is only on compact subsets of `D` and is derived from the locally finite
+insertion measure (`ae_zeroBoundaryLimit_compact_lt_top`), with the compact-interior staged statement
+`SheffieldWangCircleAverageAllScaleInteriorStmt`. This declaration is kept for `punctured_disk_allScales` and
+`punctured_allScales_of_steps`, which keep the global form. -/
 def ZeroBoundaryLimitLocallyFiniteStep : Prop :=
   ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P] (γ α : ℝ),
     0 < γ → γ < 2 → α < lqgQ γ →
@@ -932,6 +938,274 @@ theorem punctured_allScales_of_steps {Ω : Type} [MeasurableSpace Ω] {P : Measu
       (hFin Ω P γ α hγ hγ2 hαQ hC hcirc μ hWP hμ (ratCenter p.1) (ratRadius p.1) p.2.1
         (ratDisk_closedBall_subset p) (h0 p) (hcirc0 p) (H p) (hDir p) (hdec p))
       hμ' hcont
+  have hall_ae := ae_all_iff.2 hper
+  filter_upwards [hall_ae, hμ', hcont] with ω hω hμω hcontω
+  intro f hf hfc hfsupp
+  have hK : IsCompact (tsupport f) := hfc.isCompact
+  have hcover : tsupport f ⊆ ⋃ p : RatDiskIdx, Metric.ball (ratCenter p.1) (ratRadius p.1) := by
+    intro z hz
+    obtain ⟨p, hp⟩ := exists_ratDisk_mem (fun h => hfsupp hz h)
+    exact Set.mem_iUnion.2 ⟨p, hp⟩
+  obtain ⟨t, ht⟩ := hK.elim_finite_subcover
+    (fun p : RatDiskIdx => Metric.ball (ratCenter p.1) (ratRadius p.1)) (fun p => Metric.isOpen_ball) hcover
+  let idx : Fin t.card → RatDiskIdx := fun i => (t.equivFin.symm i : RatDiskIdx)
+  obtain ⟨χ, hχsub, hχsum, -, hχcpt⟩ := exists_continuous_sum_one_of_isOpen_isCompact
+    (s := fun i : Fin t.card => Metric.ball (ratCenter (idx i).1) (ratRadius (idx i).1))
+    (fun i => Metric.isOpen_ball) hK (by
+      intro z hz
+      obtain ⟨p, hpt, hzp⟩ := Set.mem_iUnion₂.mp (ht hz)
+      refine Set.mem_iUnion.2 ⟨t.equivFin ⟨p, hpt⟩, ?_⟩
+      simpa [idx] using hzp)
+  let φ : Fin t.card → ℂ → ℝ := fun i z => f z * χ i z
+  have hφc : ∀ i, Continuous (φ i) := fun i => hf.mul (χ i).continuous
+  have hφs : ∀ i, HasCompactSupport (φ i) := fun i => hfc.mul_right
+  have hφsub : ∀ i, tsupport (φ i) ⊆ Metric.ball (ratCenter (idx i).1) (ratRadius (idx i).1) :=
+    fun i => (tsupport_mul_subset_right).trans (hχsub i)
+  have hfsum : ∀ z, f z = ∑ i, φ i z := by
+    intro z
+    by_cases hz : z ∈ tsupport f
+    · have h1 : ∑ i, χ i z = 1 := by
+        have := hχsum hz
+        simpa [ContinuousMap.sum_apply] using this
+      calc f z = f z * ∑ i, χ i z := by rw [h1, mul_one]
+        _ = ∑ i, φ i z := by rw [Finset.mul_sum]
+    · simp [φ, image_eq_zero_of_notMem_tsupport hz]
+  have hlimμ : ∫ z, f z ∂(μ ω) = ∑ i, ∫ z, φ i z ∂(μ ω) := by
+    have : IsLocallyFiniteMeasure (μ ω) := hμω.isLocallyFiniteMeasure
+    have : IsFiniteMeasureOnCompacts (μ ω) := isFiniteMeasureOnCompacts_of_isLocallyFiniteMeasure
+    exact integral_finset_compactSupport φ hφc hφs f hfsum
+  have hsumT : Tendsto (fun ε : ℝ => ∑ i, ∫ z, φ i z ∂(lqgApprox γ (fieldCircleAverage α (hcirc ω)) ε))
+      (𝓝[>] 0) (𝓝 (∑ i, ∫ z, φ i z ∂(μ ω))) :=
+    tendsto_finsetSum _ (fun i _ => hω (idx i) (φ i) (hφc i) (hφs i) (hφsub i))
+  rw [hlimμ]
+  refine Tendsto.congr' ?_ hsumT
+  filter_upwards [self_mem_nhdsWithin] with ε hε
+  exact (integral_lqgApprox_finset (γ := γ) hε (hcontω ε hε) φ hφc hφs f hfsum).symm
+
+/-! ## Compact-interior form of the zero-boundary limit (steps3:603-625)
+
+The zero-boundary limit `ν = (μ|_D).withDensity (exp(-γ · remainder))` on `D = B(c, ρ)` is finite on compact subsets
+of `D`: the density is continuous on `D`, hence bounded on each compact subset, and `μ` is locally finite. It is not
+claimed to be finite on all of `ℂ`, so `ZeroBoundaryLimitLocallyFiniteStep` is not used by the interior consumers
+below, and no total mass of `ν` on `D` is asserted. -/
+
+/-- Finiteness on compact subsets of `D` for a density `ofReal ∘ φ` with `φ` continuous on `D` (deterministic). On a
+compact `K ⊆ D` the density is bounded by `ofReal M`, `M = sup_K |φ|`, so `(μ|_D).withDensity (ofReal ∘ φ)` charges
+`K` with at most `ofReal M * μ K`. No finiteness near `∂D` is claimed. -/
+theorem withDensity_restrict_compact_lt_top {D K : Set ℂ} {μ : Measure ℂ} {φ : ℂ → ℝ}
+    (hK : IsCompact K) (hKD : K ⊆ D) (hφ : ContinuousOn φ D) (hμK : μ K < ⊤) :
+    ((μ.restrict D).withDensity fun z => ENNReal.ofReal (φ z)) K < ⊤ := by
+  obtain ⟨M, hM⟩ := hK.exists_bound_of_continuousOn (hφ.mono hKD)
+  have hbound : ∀ x ∈ K, ENNReal.ofReal (φ x) ≤ ENNReal.ofReal M := fun x hx => by
+    have h := hM x hx
+    rw [Real.norm_eq_abs] at h
+    exact ENNReal.ofReal_le_ofReal ((le_abs_self _).trans h)
+  rw [withDensity_apply _ hK.isClosed.measurableSet]
+  calc ∫⁻ z in K, ENNReal.ofReal (φ z) ∂(μ.restrict D)
+      ≤ ∫⁻ _ in K, ENNReal.ofReal M ∂(μ.restrict D) :=
+        setLIntegral_mono' hK.isClosed.measurableSet hbound
+    _ = ENNReal.ofReal M * μ K := by
+        rw [setLIntegral_const, Measure.restrict_apply hK.isClosed.measurableSet,
+          Set.inter_eq_left.2 hKD]
+    _ < ⊤ := ENNReal.mul_lt_top ENNReal.ofReal_lt_top hμK
+
+/-- Almost surely, the zero-boundary limit `(μ|_D).withDensity (exp(-γ · remainder))` is finite on every compact
+subset of `D`. Source: the insertion measure is locally finite (`IsLQGLimit.isLocallyFiniteMeasure`) and the harmonic
+remainder `H` is continuous on `D`. -/
+theorem ae_zeroBoundaryLimit_compact_lt_top {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {γ α : ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ} {D : Set ℂ} (hD0 : D ⊆ ({0}ᶜ : Set ℂ))
+    {H : Ω → ℂ → ℝ} (hμ : ∀ᵐ ω ∂P, IsLQGLimit γ (fieldCircleAverage α (hcirc ω)) (μ ω))
+    (hH : ∀ᵐ ω ∂P, ContinuousOn (H ω) D) :
+    ∀ᵐ ω ∂P, ∀ K : Set ℂ, IsCompact K → K ⊆ D →
+      ((μ ω).restrict D).withDensity
+        (fun z => ENNReal.ofReal (Real.exp (-(γ * insertionRemainder α (H ω) z)))) K < ⊤ := by
+  filter_upwards [hμ, hH] with ω hμω hHω
+  have : IsLocallyFiniteMeasure (μ ω) := hμω.isLocallyFiniteMeasure
+  have : IsFiniteMeasureOnCompacts (μ ω) := isFiniteMeasureOnCompacts_of_isLocallyFiniteMeasure
+  intro K hK hKD
+  have hc : ContinuousOn (fun z => Real.exp (-(γ * insertionRemainder α (H ω) z))) D := by
+    simpa only [neg_mul] using continuousOn_exp_mul_insertionRemainder (t := -γ) hHω hD0
+  exact withDensity_restrict_compact_lt_top hK hKD hc hK.measure_lt_top
+
+/-- Dyadic compact-test limit of the zero-boundary limit `ν` on `D = B(c, ρ)` (steps3:603-625, the written
+multiplication argument): almost surely, `∫ f d(lqgApprox γ hcirc0 (dyadicScale n)) → ∫ f dν` for every continuous
+compactly supported `f` with support in `D`. It uses the insertion limit, the admissible-circle identity and the
+harmonicity of `H`; no finiteness beyond that of the insertion measure is assumed. -/
+theorem ae_zeroBoundary_dyadic_compactTest {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {γ α : ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ} {c : ℂ} {ρ : ℝ}
+    (hD : IsOpen (Metric.ball c ρ)) (hD0 : Metric.ball c ρ ⊆ ({0}ᶜ : Set ℂ))
+    {h0 : Ω → (ℂ → ℝ) → ℝ} {hcirc0 : Ω → ℝ → ℂ → ℝ} {H : Ω → ℂ → ℝ}
+    (hDir : IsDirichletGFF P (Metric.ball c ρ) h0 hcirc0)
+    (hzero : ∀ ω r z, ¬ Metric.closedBall z r ⊆ Metric.ball c ρ → hcirc0 ω r z = 0)
+    (hdec : ∀ᵐ ω ∂P, IsHarmonicOnDisk (Metric.ball c ρ) (H ω) ∧
+      ∀ r z, 0 < r → Metric.closedBall z r ⊆ Metric.ball c ρ → hcirc ω r z = hcirc0 ω r z + H ω z)
+    (hμ : ∀ᵐ ω ∂P, IsLQGLimit γ (fieldCircleAverage α (hcirc ω)) (μ ω))
+    (hcont : ∀ᵐ ω ∂P, ∀ ε : ℝ, 0 < ε → Continuous (fieldCircleAverage α (hcirc ω) ε)) :
+    ∀ᵐ ω ∂P, ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f → tsupport f ⊆ Metric.ball c ρ →
+      Tendsto (fun n : ℕ => ∫ z, f z ∂(lqgApprox γ (hcirc0 ω) (dyadicScale n))) atTop
+        (𝓝 (∫ z, f z ∂(((μ ω).restrict (Metric.ball c ρ)).withDensity
+          fun z => ENNReal.ofReal (Real.exp (-(γ * insertionRemainder α (H ω) z)))))) := by
+  filter_upwards [hdec, hμ, hcont, hDir.continuous_circle] with ω hdecω hμω hcontω hcontD0
+  intro f hf hfc hfD
+  have hHc := hdecω.1.1
+  have hfsupp : ∀ z, z ∉ Metric.ball c ρ → f z = 0 := fun z hz =>
+    image_eq_zero_of_notMem_tsupport (fun h => hz (hfD h))
+  have hexpc : ContinuousOn (fun z => Real.exp (-(γ * insertionRemainder α (H ω) z))) (Metric.ball c ρ) := by
+    simpa only [neg_mul] using continuousOn_exp_mul_insertionRemainder (t := -γ) hHc hD0
+  let F : ℂ → ℝ := fun z => f z * Real.exp (-(γ * insertionRemainder α (H ω) z))
+  have hFc : Continuous F := continuous_mul_of_tsupport_subset hD hf hfD hexpc
+  have hFs : HasCompactSupport F := hfc.mul_right
+  obtain ⟨δ, hδ, hball⟩ := exists_closedBall_subset_of_compact hD hfc.isCompact hfD
+  have hdyadic : Tendsto (fun n : ℕ => dyadicScale n) atTop (𝓝 0) :=
+    tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num) (by norm_num)
+  have hev : ∀ᶠ n : ℕ in atTop, dyadicScale n < δ := (tendsto_order.1 hdyadic).2 δ hδ
+  have hlim := hμω.tendsto_integral F hFc hFs
+  rw [integral_withDensity_restrict_insertion hD (μ ω) hHc hD0 f hfsupp]
+  refine Tendsto.congr' ?_ hlim
+  filter_upwards [hev] with n hn
+  have hεpos : 0 < dyadicScale n := by unfold dyadicScale; positivity
+  have hK : ∀ z ∈ tsupport F, Metric.closedBall z (dyadicScale n) ⊆ Metric.ball c ρ :=
+    fun z hz => hball z (tsupport_mul_subset_left hz) _ hεpos.le hn
+  have hid := integral_insertion_eq_zeroBoundary (γ := γ) hD0 hεpos ((hcontω _ hεpos).measurable)
+    (measurable_zeroBoundary_circle hD hεpos (fun r z => hzero ω r z) hcontD0)
+    (fun z hz => hdecω.2 _ z hεpos hz) F hK
+  rw [hid]
+  congr 1
+  funext z
+  show f z * Real.exp (-(γ * insertionRemainder α (H ω) z)) * Real.exp (γ * insertionRemainder α (H ω) z) = f z
+  rw [mul_assoc, exp_neg_mul_exp_self, mul_one]
+
+/-- Transfer of the zero-boundary convergence to the insertion field on `D = B(c, ρ)` (steps3:603-625, the written
+argument): on the event of the zero-boundary convergence, the insertion approximation of `f` equals the zero-boundary
+approximation of `f · exp(γ · remainder)` along admissible circles, and the continuous positive factor
+`exp(±γ · remainder)` preserves convergence for test functions supported in `D`. -/
+theorem ae_insertion_conv_of_zeroBoundary {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {γ α : ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ} {c : ℂ} {ρ : ℝ}
+    (hD : IsOpen (Metric.ball c ρ)) (hD0 : Metric.ball c ρ ⊆ ({0}ᶜ : Set ℂ))
+    {h0 : Ω → (ℂ → ℝ) → ℝ} {hcirc0 : Ω → ℝ → ℂ → ℝ} {H : Ω → ℂ → ℝ}
+    (hDir : IsDirichletGFF P (Metric.ball c ρ) h0 hcirc0)
+    (hzero : ∀ ω r z, ¬ Metric.closedBall z r ⊆ Metric.ball c ρ → hcirc0 ω r z = 0)
+    (hdec : ∀ᵐ ω ∂P, IsHarmonicOnDisk (Metric.ball c ρ) (H ω) ∧
+      ∀ r z, 0 < r → Metric.closedBall z r ⊆ Metric.ball c ρ → hcirc ω r z = hcirc0 ω r z + H ω z)
+    (hμ : ∀ᵐ ω ∂P, IsLQGLimit γ (fieldCircleAverage α (hcirc ω)) (μ ω))
+    (hcont : ∀ᵐ ω ∂P, ∀ ε : ℝ, 0 < ε → Continuous (fieldCircleAverage α (hcirc ω) ε))
+    (hSWall : ∀ᵐ ω ∂P, ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f → tsupport f ⊆ Metric.ball c ρ →
+      Tendsto (fun ε : ℝ => ∫ z, f z ∂(lqgApprox γ (hcirc0 ω) ε)) (𝓝[>] 0)
+        (𝓝 (∫ z, f z ∂(((μ ω).restrict (Metric.ball c ρ)).withDensity
+          fun z => ENNReal.ofReal (Real.exp (-(γ * insertionRemainder α (H ω) z))))))) :
+    ∀ᵐ ω ∂P, ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f → tsupport f ⊆ Metric.ball c ρ →
+      Tendsto (fun ε : ℝ => ∫ z, f z ∂(lqgApprox γ (fieldCircleAverage α (hcirc ω)) ε)) (𝓝[>] 0)
+        (𝓝 (∫ z, f z ∂(μ ω))) := by
+  filter_upwards [hSWall, hdec, hμ, hcont, hDir.continuous_circle] with ω hSWω hdecω hμω hcontω hcontD0
+  intro f hf hfc hfD
+  have hHc := hdecω.1.1
+  have hfsupp : ∀ z, z ∉ Metric.ball c ρ → f z = 0 := fun z hz =>
+    image_eq_zero_of_notMem_tsupport (fun h => hz (hfD h))
+  have hexpc : ContinuousOn (fun z => Real.exp (γ * insertionRemainder α (H ω) z)) (Metric.ball c ρ) :=
+    continuousOn_exp_mul_insertionRemainder (t := γ) hHc hD0
+  let g : ℂ → ℝ := fun z => f z * Real.exp (γ * insertionRemainder α (H ω) z)
+  have hgc : Continuous g := continuous_mul_of_tsupport_subset hD hf hfD hexpc
+  have hgs : HasCompactSupport g := hfc.mul_right
+  have hgD : tsupport g ⊆ Metric.ball c ρ := (tsupport_mul_subset_left).trans hfD
+  have hlim := hSWω g hgc hgs hgD
+  have hgμ : ∫ z, g z ∂(((μ ω).restrict (Metric.ball c ρ)).withDensity
+      fun z => ENNReal.ofReal (Real.exp (-(γ * insertionRemainder α (H ω) z))))
+      = ∫ z, f z ∂(μ ω) := by
+    rw [integral_withDensity_restrict_insertion hD (μ ω) hHc hD0 g (fun z hz => by
+      show f z * Real.exp (γ * insertionRemainder α (H ω) z) = 0
+      rw [hfsupp z hz, zero_mul])]
+    congr 1
+    funext z
+    show f z * Real.exp (γ * insertionRemainder α (H ω) z) * Real.exp (-(γ * insertionRemainder α (H ω) z))
+      = f z
+    linear_combination (f z) * exp_neg_mul_exp_self (γ * insertionRemainder α (H ω) z)
+  obtain ⟨δf, hδf, hballf⟩ := exists_closedBall_subset_of_compact hD hfc.isCompact hfD
+  have heq : (fun ε : ℝ => ∫ z, f z ∂(lqgApprox γ (fieldCircleAverage α (hcirc ω)) ε)) =ᶠ[𝓝[>] 0]
+      (fun ε : ℝ => ∫ z, g z ∂(lqgApprox γ (hcirc0 ω) ε)) := by
+    filter_upwards [self_mem_nhdsWithin,
+      mem_nhdsWithin_of_mem_nhds (Ioo_mem_nhds (neg_lt_zero.2 hδf) hδf)] with ε hε1 hε2
+    have hεpos : 0 < ε := hε1
+    exact integral_insertion_eq_zeroBoundary hD0 hεpos ((hcontω ε hεpos).measurable)
+      (measurable_zeroBoundary_circle hD hεpos (fun r z => hzero ω r z) hcontD0)
+      (fun z hz => hdecω.2 ε z hεpos hz) f (fun z hz => hballf z hz ε hεpos.le hε2.2)
+  rw [← hgμ]
+  exact Tendsto.congr' heq.symm hlim
+
+/-- **Punctured all-scale convergence on one disk, compact-interior form (steps3:603-625).** Assuming the
+compact-interior Sheffield--Wang statement `SheffieldWangCircleAverageAllScaleInteriorStmt` (staged in Proposed/,
+read-only here), the zero-boundary decomposition of the insertion field on `D = B(c, ρ)` as data, and the insertion
+limit `μ`, the insertion approximations converge along all scales on every test function supported in `D`. The
+finiteness of the zero-boundary limit is derived on compact subsets of `D` (`ae_zeroBoundaryLimit_compact_lt_top`);
+`ZeroBoundaryLimitLocallyFiniteStep` is not used, and no finiteness on `ℂ` or total mass on `D` is assumed. -/
+theorem punctured_disk_allScales_interior {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {γ α : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hSWI : SheffieldWangCircleAverageAllScaleInteriorStmt.{0})
+    {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ} {c : ℂ} {ρ : ℝ} (hρ : 0 < ρ)
+    (hcl : Metric.closedBall c ρ ⊆ ({0}ᶜ : Set ℂ))
+    {h0 : Ω → (ℂ → ℝ) → ℝ} {hcirc0 : Ω → ℝ → ℂ → ℝ} {H : Ω → ℂ → ℝ}
+    (hDir : IsDirichletGFF P (Metric.ball c ρ) h0 hcirc0)
+    (hzero : ∀ ω r z, ¬ Metric.closedBall z r ⊆ Metric.ball c ρ → hcirc0 ω r z = 0)
+    (hdec : ∀ᵐ ω ∂P, IsHarmonicOnDisk (Metric.ball c ρ) (H ω) ∧
+      ∀ r z, 0 < r → Metric.closedBall z r ⊆ Metric.ball c ρ → hcirc ω r z = hcirc0 ω r z + H ω z)
+    (hμ : ∀ᵐ ω ∂P, IsLQGLimit γ (fieldCircleAverage α (hcirc ω)) (μ ω))
+    (hcont : ∀ᵐ ω ∂P, ∀ ε : ℝ, 0 < ε → Continuous (fieldCircleAverage α (hcirc ω) ε)) :
+    ∀ᵐ ω ∂P, ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f → tsupport f ⊆ Metric.ball c ρ →
+      Tendsto (fun ε : ℝ => ∫ z, f z ∂(lqgApprox γ (fieldCircleAverage α (hcirc ω)) ε)) (𝓝[>] 0)
+        (𝓝 (∫ z, f z ∂(μ ω))) := by
+  have hD : IsOpen (Metric.ball c ρ) := Metric.isOpen_ball
+  have hD0 : Metric.ball c ρ ⊆ ({0}ᶜ : Set ℂ) := Metric.ball_subset_closedBall.trans hcl
+  have hDne : Metric.ball c ρ ≠ univ := fun h =>
+    NormedSpace.unbounded_univ ℝ ℂ (by rw [← h]; exact Metric.isBounded_ball)
+  have : ContractibleSpace (Metric.ball c ρ) :=
+    (convex_ball c ρ).contractibleSpace ⟨c, Metric.mem_ball_self hρ⟩
+  have : SimplyConnectedSpace (Metric.ball c ρ) := SimplyConnectedSpace.ofContractible _
+  have hSWhyp : ∀ᵐ ω ∂P, (∀ K : Set ℂ, IsCompact K → K ⊆ Metric.ball c ρ →
+      ((μ ω).restrict (Metric.ball c ρ)).withDensity
+        (fun z => ENNReal.ofReal (Real.exp (-(γ * insertionRemainder α (H ω) z)))) K < ⊤) ∧
+      ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f → tsupport f ⊆ Metric.ball c ρ →
+        Tendsto (fun n : ℕ => ∫ z, f z ∂(lqgApprox γ (hcirc0 ω) (dyadicScale n))) atTop
+          (𝓝 (∫ z, f z ∂(((μ ω).restrict (Metric.ball c ρ)).withDensity
+            fun z => ENNReal.ofReal (Real.exp (-(γ * insertionRemainder α (H ω) z)))))) := by
+    filter_upwards [ae_zeroBoundaryLimit_compact_lt_top hD0 hμ (hdec.mono fun ω hω => hω.1.1),
+      ae_zeroBoundary_dyadic_compactTest hD hD0 hDir hzero hdec hμ hcont] with ω hfinω hdyω
+    exact ⟨hfinω, hdyω⟩
+  have hSWall := hSWI Ω P (Metric.ball c ρ) h0 hcirc0
+    (fun ω => ((μ ω).restrict (Metric.ball c ρ)).withDensity
+      fun z => ENNReal.ofReal (Real.exp (-(γ * insertionRemainder α (H ω) z))))
+    γ hD hDne inferInstance Metric.isBounded_ball hDir hγ.le hγ2 hzero hSWhyp
+  exact ae_insertion_conv_of_zeroBoundary hD hD0 hDir hzero hdec hμ hcont hSWall
+
+/-- **Punctured all-scale convergence, compact-interior form (steps3:603-625).** Given the compact-interior
+Sheffield--Wang statement `SheffieldWangCircleAverageAllScaleInteriorStmt` (read-only) and the local Dirichlet/harmonic
+decomposition `LocalDirichletHarmonicDecompositionStep` (producer residual, carried explicitly), almost surely the
+insertion approximations converge along all scales on every continuous compactly supported test function on `ℂ \ {0}`,
+with limit the insertion measure `μ`. This replaces `punctured_allScales_of_steps` in the chain: it takes no
+`ZeroBoundaryLimitLocallyFiniteStep`. -/
+theorem punctured_allScales_of_steps_interior {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    [IsProbabilityMeasure P] {γ α : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hWP : IsWholePlaneGFF P hC hcirc)
+    {μ : Ω → Measure ℂ} (hμ : IsLQGMeasureOfField P γ α hcirc μ)
+    (hSWI : SheffieldWangCircleAverageAllScaleInteriorStmt.{0})
+    (hDec : LocalDirichletHarmonicDecompositionStep) :
+    ∀ᵐ ω ∂P, ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f → tsupport f ⊆ ({0}ᶜ : Set ℂ) →
+      Tendsto (fun ε : ℝ => ∫ z, f z ∂(lqgApprox γ (fieldCircleAverage α (hcirc ω)) ε)) (𝓝[>] 0)
+        (𝓝 (∫ z, f z ∂(μ ω))) := by
+  have hμ' : ∀ᵐ ω ∂P, IsLQGLimit γ (fieldCircleAverage α (hcirc ω)) (μ ω) := hμ
+  have hcont : ∀ᵐ ω ∂P, ∀ ε : ℝ, 0 < ε → Continuous (fieldCircleAverage α (hcirc ω) ε) :=
+    ae_fieldCircleAverage_continuous hWP α
+  have hall : ∀ p : RatDiskIdx, ∃ (h0 : Ω → (ℂ → ℝ) → ℝ) (hcirc0 : Ω → ℝ → ℂ → ℝ) (H : Ω → ℂ → ℝ),
+      IsDirichletGFF P (Metric.ball (ratCenter p.1) (ratRadius p.1)) h0 hcirc0 ∧
+      (∀ ω r z, ¬ Metric.closedBall z r ⊆ Metric.ball (ratCenter p.1) (ratRadius p.1) → hcirc0 ω r z = 0) ∧
+      ∀ᵐ ω ∂P, IsHarmonicOnDisk (Metric.ball (ratCenter p.1) (ratRadius p.1)) (H ω) ∧
+        ∀ r z, 0 < r → Metric.closedBall z r ⊆ Metric.ball (ratCenter p.1) (ratRadius p.1) →
+          hcirc ω r z = hcirc0 ω r z + H ω z :=
+    fun p => hDec Ω P hC hcirc hWP (ratCenter p.1) (ratRadius p.1) p.2.1 (ratDisk_closedBall_subset p)
+  choose h0 hcirc0 H hDir hzero hdec using hall
+  have hper : ∀ p : RatDiskIdx, ∀ᵐ ω ∂P, ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+      tsupport f ⊆ Metric.ball (ratCenter p.1) (ratRadius p.1) →
+      Tendsto (fun ε : ℝ => ∫ z, f z ∂(lqgApprox γ (fieldCircleAverage α (hcirc ω)) ε)) (𝓝[>] 0)
+        (𝓝 (∫ z, f z ∂(μ ω))) := fun p =>
+    punctured_disk_allScales_interior hγ hγ2 hSWI p.2.1 (ratDisk_closedBall_subset p) (hDir p) (hzero p)
+      (hdec p) hμ' hcont
   have hall_ae := ae_all_iff.2 hper
   filter_upwards [hall_ae, hμ', hcont] with ω hω hμω hcontω
   intro f hf hfc hfsupp
