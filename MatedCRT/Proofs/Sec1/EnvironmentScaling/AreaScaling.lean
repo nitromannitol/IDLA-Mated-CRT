@@ -1,5 +1,6 @@
 import MatedCRT.Defs.Setting
 import MatedCRT.Proofs.Sec1.ConeScaleRadius
+import MatedCRT.Proofs.Sec1.EnvironmentScaling
 import MatedCRT.Steps.Sec2.ConeScaleInvarianceUpToFixedTime
 import HarmonicBalls.Proofs.Sec9.LQGSpatialDilation
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
@@ -1037,6 +1038,7 @@ theorem exists_measurable_canonicalProfile_of_circle
     (hcont : ∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2)
       circleIndexSet) :
     ∃ c : Ω → CanonicalProfile, Measurable c ∧
+      (∀ ω p, p ∉ circleIndexSet → (c ω).1 p = 0) ∧
       ∀ᵐ ω ∂P, ∀ p ∈ circleIndexSet, (c ω).1 p = hcirc ω p.1 p.2 := by
   classical
   obtain ⟨N, hsub, hNmeas, hN0⟩ := exists_measurable_superset_of_null (ae_iff.1 hcont)
@@ -1066,8 +1068,13 @@ theorem exists_measurable_canonicalProfile_of_circle
       refine hc.congr fun p hp => ?_
       simp only [g, hω, ↓reduceIte]
       exact positiveRadiusPart_eq_of_mem hp
-  refine ⟨fun ω => ⟨g ω, hcontω ω⟩, ?_, ?_⟩
+  refine ⟨fun ω => ⟨g ω, hcontω ω⟩, ?_, ?_, ?_⟩
   · exact Measurable.subtype_mk (p := fun f : ℝ × ℂ → ℝ => ContinuousOn f circleIndexSet) hg
+  · intro ω p hp
+    have hp0 : ¬ 0 < p.1 := by
+      intro hpos
+      exact hp ⟨hpos, mem_univ _⟩
+    simp [g, positiveRadiusPart, hp0]
   · have hae : ∀ᵐ ω ∂P, ω ∉ N := by
       refine ae_iff.2 ?_
       simpa using hN0
@@ -1086,7 +1093,7 @@ theorem MatedCRTEnv.IsValid.exists_measurable_circle_profile_measure
       (∀ᵐ ω ∂S.P, ∀ p ∈ circleIndexSet, (c ω).1 p = S.hcirc ω p.1 p.2) ∧
       Measurable (profileMeasure γ 0) ∧
       ∀ᵐ ω ∂S.P, S.μ ω = profileMeasure γ 0 (c ω) := by
-  obtain ⟨c, hc, hcJ⟩ := exists_measurable_canonicalProfile_of_circle
+  obtain ⟨c, hc, _, hcJ⟩ := exists_measurable_canonicalProfile_of_circle
     hS.isQuantumCone.measurable_circle hS.isQuantumCone.ae_continuousOn_circle
   have heq : (fun ω => fieldCircleAverage 0 (S.hcirc ω)) = S.hcirc := by
     funext ω r z
@@ -1158,5 +1165,120 @@ theorem MatedCRTEnv.IsValid.profileMeasure_of_equal_profile_law
   apply isLQGLimit_of_radius_eq _ (isLQGLimit_profileMeasure_of_good hgoodω)
   intro k z
   exact hJ (dyadicScale k, z) ⟨dyadicScale_pos k, mem_univ z⟩
+
+/-- Extend a positive-radius circle process by zero outside its natural index set. -/
+noncomputable def extendCircleProcess (u : Ioi (0 : ℝ) × ℂ → ℝ) : ℝ × ℂ → ℝ :=
+  fun p => if hp : 0 < p.1 then u (⟨p.1, hp⟩, p.2) else 0
+
+/-- Extension by zero is measurable for the product σ-algebras. -/
+theorem measurable_extendCircleProcess : Measurable extendCircleProcess := by
+  classical
+  refine Measurable.of_eval fun p => ?_
+  by_cases hp : 0 < p.1
+  · simpa [extendCircleProcess, hp] using
+      (measurable_pi_apply ((⟨p.1, hp⟩ : Ioi (0 : ℝ)), p.2) :
+        Measurable fun u : Ioi (0 : ℝ) × ℂ → ℝ => u (⟨p.1, hp⟩, p.2))
+  · simp [extendCircleProcess, hp]
+
+/-- The law of a zero-extended continuous profile is determined by its
+positive-radius circle process, even when the process is only a.e. measurable. -/
+theorem canonicalProfile_law_of_circleProcess_law
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {c c' : Ω → CanonicalProfile} {h h' : Ω → ℝ → ℂ → ℝ}
+    (hc : Measurable c) (hc' : Measurable c')
+    (hc0 : ∀ ω p, p ∉ circleIndexSet → (c ω).1 p = 0)
+    (hc0' : ∀ ω p, p ∉ circleIndexSet → (c' ω).1 p = 0)
+    (hcJ : ∀ᵐ ω ∂P, ∀ p ∈ circleIndexSet, (c ω).1 p = h ω p.1 p.2)
+    (hcJ' : ∀ᵐ ω ∂P, ∀ p ∈ circleIndexSet, (c' ω).1 p = h' ω p.1 p.2)
+    (hm : AEMeasurable (fun ω => circleProcess (h ω)) P)
+    (hm' : AEMeasurable (fun ω => circleProcess (h' ω)) P)
+    (hlaw : P.map (fun ω => circleProcess (h' ω)) =
+      P.map (fun ω => circleProcess (h ω))) : P.map c' = P.map c := by
+  classical
+  have heq : ∀ᵐ ω ∂P, (c ω).1 = extendCircleProcess (circleProcess (h ω)) := by
+    filter_upwards [hcJ] with ω hω
+    funext p
+    by_cases hp : 0 < p.1
+    · simpa [extendCircleProcess, circleProcess, hp] using hω p ⟨hp, mem_univ _⟩
+    · have hpJ : p ∉ circleIndexSet := fun hmem => hp hmem.1
+      simpa [extendCircleProcess, hp] using hc0 ω p hpJ
+  have heq' : ∀ᵐ ω ∂P, (c' ω).1 = extendCircleProcess (circleProcess (h' ω)) := by
+    filter_upwards [hcJ'] with ω hω
+    funext p
+    by_cases hp : 0 < p.1
+    · simpa [extendCircleProcess, circleProcess, hp] using hω p ⟨hp, mem_univ _⟩
+    · have hpJ : p ∉ circleIndexSet := fun hmem => hp hmem.1
+      simpa [extendCircleProcess, hp] using hc0' ω p hpJ
+  have hfull : P.map (fun ω => (c' ω).1) = P.map (fun ω => (c ω).1) := by
+    rw [Measure.map_congr heq', Measure.map_congr heq]
+    change P.map (extendCircleProcess ∘ (fun ω => circleProcess (h' ω))) =
+      P.map (extendCircleProcess ∘ (fun ω => circleProcess (h ω)))
+    rw [← AEMeasurable.map_map_of_aemeasurable measurable_extendCircleProcess.aemeasurable hm',
+      ← AEMeasurable.map_map_of_aemeasurable measurable_extendCircleProcess.aemeasurable hm, hlaw]
+  ext s hs
+  obtain ⟨t, ht, hts⟩ := MeasurableSpace.measurableSet_comap.mp hs
+  rw [← hts, Measure.map_apply hc' (measurable_subtype_coe ht),
+    Measure.map_apply hc (measurable_subtype_coe ht)]
+  have ht' := congrArg (fun μ : Measure (ℝ × ℂ → ℝ) => μ t) hfull
+  change (P.map (Subtype.val ∘ c')) t = (P.map (Subtype.val ∘ c)) t at ht'
+  rwa [Measure.map_apply (measurable_subtype_coe.comp hc') ht,
+    Measure.map_apply (measurable_subtype_coe.comp hc) ht] at ht'
+
+/-- Cone scaling constructs the dyadic LQG measure of the rescaled circles on
+    the original probability space, with no atom at the origin. -/
+theorem MatedCRTEnv.IsValid.exists_rescaled_circle_profile_measure
+    (hscale : QuantumConeScalingInput) {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
+    (hS : S.IsValid 𝒮 γ) (hγ : 0 < γ) (hγ2 : γ < 2)
+    {b : ℝ} (hb : 0 < b) :
+    ∃ c : Ω → CanonicalProfile, Measurable c ∧
+      (∀ᵐ ω ∂S.P, ∀ p ∈ circleIndexSet, (c ω).1 p =
+        rescaledCircle γ (S.hcirc ω) (coneScaleRadius γ (S.hcirc ω) b) b p.1 p.2) ∧
+      IsLQGMeasure S.P γ
+        (fun ω => rescaledCircle γ (S.hcirc ω) (coneScaleRadius γ (S.hcirc ω) b) b)
+        (fun ω => profileMeasure γ 0 (c ω)) ∧
+      (∀ᵐ ω ∂S.P, profileMeasure γ 0 (c ω) {0} = 0) := by
+  have : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
+  obtain ⟨d, hd, hdae⟩ := exists_rescaledCircle_version hscale hγ hγ2 hS hb
+  have hpos := ae_coneScaleRadius_pos hscale hγ hγ2 hS.isQuantumCone hb
+  have hcont := ae_continuousOn_rescaledCircle hS.isQuantumCone hpos
+  have hdcont : ∀ᵐ ω ∂S.P,
+      ContinuousOn (fun p : ℝ × ℂ => d ω p.1 p.2) circleIndexSet := by
+    filter_upwards [hdae, hcont] with ω hω hcontω
+    simpa only [hω, circleIndexSet] using hcontω
+  obtain ⟨c', hc', hc0', hcJ'd⟩ := exists_measurable_canonicalProfile_of_circle hd hdcont
+  have hcJ' : ∀ᵐ ω ∂S.P, ∀ p ∈ circleIndexSet, (c' ω).1 p =
+      rescaledCircle γ (S.hcirc ω) (coneScaleRadius γ (S.hcirc ω) b) b p.1 p.2 := by
+    filter_upwards [hcJ'd, hdae] with ω hω hdω
+    simpa only [hdω] using hω
+  obtain ⟨c, hc, hc0, hcJ⟩ := exists_measurable_canonicalProfile_of_circle
+    hS.isQuantumCone.measurable_circle hS.isQuantumCone.ae_continuousOn_circle
+  have hprocess := measurable_circleProcess_of_isQuantumCone hS.isQuantumCone
+  have hprocess' := aemeasurable_circleProcess_rescaledCircle hscale hγ hγ2 hS.isQuantumCone hb
+  have hlaw := canonicalProfile_law_of_circleProcess_law hc hc' hc0 hc0' hcJ hcJ'
+    hprocess.aemeasurable hprocess'
+    (hscale γ hγ hγ2 Ω S.P S.hC S.hcirc inferInstance hS.isQuantumCone b hb)
+  obtain ⟨hμ, hzero⟩ := MatedCRTEnv.IsValid.profileMeasure_of_equal_profile_law hS hc hc' hcJ hcJ' hlaw
+  exact ⟨c', hc', hcJ', hμ, hzero⟩
+
+/-- On an all-scale off-origin convergence event, cone scaling identifies the
+rescaled area measure as the dyadic LQG measure of the rescaled circles. -/
+theorem MatedCRTEnv.IsValid.isLQGMeasure_cone_rescaled_of_local_limits
+    (hscale : QuantumConeScalingInput) {Ω ι : Type} [MeasurableSpace Ω] [Countable ι]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ b : ℝ}
+    (hS : S.IsValid 𝒮 γ) (hγ : 0 < γ) (hγ2 : γ < 2) (hb : 0 < b)
+    (U : ι → Set ℂ) (hU : ∀ i, IsOpen (U i)) (hcover : ({0} : Set ℂ)ᶜ ⊆ ⋃ i, U i)
+    (hloc : ∀ i, ∀ᵐ ω ∂S.P, ∀ f : ℂ → ℝ, Continuous f → HasCompactSupport f →
+      tsupport f ⊆ U i → ∃ l : ℝ,
+        Tendsto (fun ε : ℝ => ∫ z, f z ∂(lqgApprox γ (S.hcirc ω) ε)) (𝓝[>] 0) (𝓝 l)) :
+    IsLQGMeasure S.P γ
+      (fun ω => rescaledCircle γ (S.hcirc ω) (coneScaleRadius γ (S.hcirc ω) b) b)
+      (fun ω => rescaledMeasure (S.μ ω) (coneScaleRadius γ (S.hcirc ω) b) b) := by
+  obtain ⟨c, _, _, hμ, hzero⟩ :=
+    MatedCRTEnv.IsValid.exists_rescaled_circle_profile_measure hscale hS hγ hγ2 hb
+  have heq := MatedCRTEnv.IsValid.ae_cone_rescaled_measure_eq_of_countable_local_limits_of_null
+    hS hscale hγ hγ2 hb hμ hzero U hU hcover hloc
+  filter_upwards [hμ, heq] with ω hμω heqω
+  simpa only [← heqω] using hμω
 
 end MatedCRT.Sec1
