@@ -60,8 +60,8 @@ It is a **specification awaiting proof**, not a literature assertion or a new
 production assumption. Its command elaborates with the repository's strict
 `lc` settings (receipt `fleet/lead/checks/20261108-1002/`). `Gc` supplies the
 existing predicate; the source's stronger locally uniform conclusion may be
-proved as a separate theorem. The actual constructors/bridges belong to z2's
-new files. No global measurability assumption on `F` has been added.
+proved as a separate theorem. The actual constructors/bridges are reserved for z2's
+new files; z2 is currently paused by the operator. No global measurability assumption on `F` has been added.
 
 ```lean
 def AuditedDirichletStoppedClockExistenceStep : Prop :=
@@ -122,9 +122,9 @@ continuous-addition and random-radius consequences require the written bridges.
 Preston 12.1 supplies conditional distributions, not an unsupported assertion
 that an arbitrary sample space admits any prescribed resampling.
 
-m6 retains the checked `m6-prop42-strict-gap-with-cameron-martin-r2` task;
-z5 retains its fresh plateau law follow-up under faithful HB uniqueness and
-scaling inputs. The old m1 occupation, m5 assembly, z1 stopped/global inclusion,
+m6 retains the checked `m6-prop42-strict-gap-with-cameron-martin-r2` task,
+parked by the latest operator budget ruling. z5 continues the plateau law
+argument under explicit scaling and volume-growth inputs. The old m1 occupation, m5 assembly, z1 stopped/global inclusion,
 and z2 truncated fixed-time briefs are archived in fleet
 `lead/archive/20261108-1002/`, with their prior successors preserved. They remain
 pending work. The new audit does not settle occupation estimates, the cone
@@ -180,8 +180,61 @@ requested in fleet INPUT-REQUESTS; this is not an External promotion.
 The Preston statements need no new staging where Mathlib already supplies the
 required coding, conditional-distribution and kernel-realization theorems.
 
-The clock and repaired stopped-clock queues remain prepared for z1/z2;
-remote promotion acknowledgement is still pending (IR-LEAD-REMOTE-QUEUE-ACK).
-All six active workers have next tasks. m1/m5 have new distinct queued slices
-and exclusive-create successor refill; no working or DONE current brief was
-changed. m6 remains in its checked r2, with no new round-limit event.
+## Current routing and checked progress, 2026-11-08 14:33 UTC
+
+The newest inbox ruling (labelled 14:40 UTC) limits the active fleet to
+**m1, m5, z1 and z5**. m6 and z2 are paused; their briefs are preserved.
+m1/m5 remain on the environment proof and obey the operator's 96% quota stop.
+The lead stopped its own pending z2 refill watcher; no worker control was
+changed. All four active workers have next tasks and distinct staged successors.
+No new 12-round event was found; m6's checked r2 is preserved while paused.
+
+Five new source files pass fresh strict `lc` (receipt
+`fleet/lead/checks/20261108-1425/`). All 40 previous source hashes are unchanged;
+the 45-file hole/axiom scan has only three explanatory comment matches.
+Twelve inspected theorem exports use only `propext`, `Classical.choice` and
+`Quot.sound`. These are conditional implementation checks, with no new
+numbered-result closure.
+
+- z1 `aef42b6`: Borel-null-sandwich law transfer works without completeness of
+  the sample space. The all-start clock interface proves universal
+  measurability and law transfer **conditional on** the explicit Borel
+  subsequence-selection, Borel relation and characterization Steps, the
+  actual Borel/Polish circle-function structure, and the staged Preston
+  analytic-set input. The common field event still quantifies over every
+  Brownian start. Selection, measurable circle-process construction, law
+  identification and final rescaled-clock transport remain Lean-pending
+  parts of the written argument at380-487. z1 has the law-transfer task,
+  with circle-process structure and Borel clock-limit work queued.
+- z5 `488dcb0` and `b1f152d`: deterministic radius/plateau scaling identities and a conditional
+  plateau-scale reduction are implemented, together with canonical measurable
+  radius and plateau events from bounded-disk raw-cluster codes. The latter
+  gives a.e. event identification and plateau probability transfer under
+  identical measure laws. It does not prove the stronger predicate on all
+  measures measurable. The queued assembly uses the canonical event instead.
+  Remaining source-backed inputs are `InsertionLQGScalingLawStep`,
+  `ScaledRegularizedFamilyStep`, and the existing explicit HB
+  `HarmonicBalls.LQGVolumeGrowthAllScalesStmt`.
+
+The all-integer-disk volume-growth premise in z5's report is already supplied
+conditionally by HB `Steps/Sec3/Basic.lean:71`,
+`ae_isLocallyFiniteMeasure_volumeGrowth`, from
+`HarmonicBalls.LQGVolumeGrowthAllScalesStmt` (`Draft/Section2.lean:122`).
+Apply this helper to both whole-plane GFF/LQG pairs furnished by the scaling-law
+Step. This corrects the report's request for a new all-radius External input:
+the existing HB statement is an explicitly unproved consequence, as its
+source docstring says, and remains a named hypothesis. No new literature
+approval or proof of it is asserted.
+
+`Proposed/PrestonAnalytic2008.lean` is staged, with exact Prop
+`MatedCRT.PrestonAnalyticUniversallyMeasurableStmt`. Its Section7 ambient-source
+check remains assigned to z1 before an External promotion request. GRV's
+massive-field/independent-scale carriers and normalization still need faithful
+source preparation; no cone-clock substitution or unprepared carrier request
+is made. Fresh z1/z5 reports and observed task promotion resolve their earlier
+pickup question. z2's pickup request is superseded by its paused status.
+
+The nine remaining WPN requests (WPN-36 x3, WPN-42-locality, WPN-51 x5) were
+sent by the operator to a separate prover at14:20. All remain named hypotheses
+pending individually returned independent audits; none is assigned to an
+active worker here. Existing environment written proofs remain available.
