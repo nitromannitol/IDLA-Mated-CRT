@@ -12,7 +12,7 @@ Staged for independent source audit; the operator source-checks this file before
   `A`, the analytic subsets of `M`, and `B`, the Borel subsets of `M`. Section 7 takes finite measures on `B`, and `B*` is the
   intersection of the completions of those measures. Theorem 7.1 is stated for `M` only.
 * `PrestonTheorem61Stmt` is the printed Theorem 6.1(1) (printed p. 35, PDF p. 36) for a complete separable metric space with its
-  Borel σ-algebra, with Preston's notion of type `B` (introduction, printed pp. 3–4; Section 6, printed p. 35). Exact
+  Borel σ-algebra, with Preston's notion of type `B` (introduction, printed p. 3; Section 6, printed p. 35). Exact
   measurability is Section 2 (printed p. 5): `f : (X, E) → (Y, F)` is exactly measurable if `f⁻¹(F) = E`, stated here as
   `MeasurableSpace.comap f F = E`. Part (2) of the printed theorem is not staged.
 * `PrestonAnalyticUniversallyMeasurableStmt` is the Polish version consumed by `AllStartsClock.lean`. Preston does not print it
@@ -44,7 +44,7 @@ def PrestonAnalyticUniversallyMeasurableStmt : Prop :=
   ∀ (X : Type) [TopologicalSpace X] [PolishSpace X] [MeasurableSpace X] [BorelSpace X] (S : Set X),
     AnalyticSet S → ∀ μ : Measure X, IsFiniteMeasure μ → NullMeasurableSet S μ
 
-/-- A type `B` space in the sense of Preston (introduction, printed pp. 3–4; Section 6, printed p. 35): a countably generated
+/-- A type `B` space in the sense of Preston (introduction, printed p. 3; Section 6, printed p. 35): a countably generated
 measurable space `(X, E)` is type `B` if there is an exactly measurable `f : (X, E) → (M, 𝓑)` with `f(X) ∈ 𝓑`, where
 `M = {0,1}^ℕ` is `ℕ → Bool`, and `𝓑` is its Borel σ-algebra, which is the product σ-algebra `MeasurableSpace.pi`
 (`Pi.borelSpace`). Countably generated means `E = σ(C)` for a countable `C`. Exact measurability means `f⁻¹(𝓑) = E`
