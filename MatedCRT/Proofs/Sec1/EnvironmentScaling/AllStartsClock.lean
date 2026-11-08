@@ -1,6 +1,7 @@
 import MatedCRT.Defs.KilledGMCClock
 import MatedCRT.Proposed.PrestonAnalytic2008
 import MatedCRT.Proofs.Sec1.EnvironmentScaling.Clock
+import MatedCRT.Proofs.Sec1.EnvironmentScaling
 
 /-!
 # All-starts clock set `𝒢` (lem:allstarts, env-steps.tex:380-446): definitions, Steps, transfer
@@ -1338,5 +1339,84 @@ theorem map_eq_of_ae_coord {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {X
   rw [Measure.map_congr hXU, Measure.map_congr hYV, hUV]
 
 end LawTransfer
+
+/-! ### The rescaled all-starts clock step (prop:clock, env-steps.tex:449-475)
+
+Given a valid environment `S` and `b > 0`, the proof of prop:clock is: the measurable version `a_0` of the positive
+circle process of `S` lies in `𝒢` almost surely (validity clock and dyadic congruence); the measurable version `a_b` of
+the rescaled process `c` has the law of `a_0` (`QuantumConeScalingInput`, with the almost-sure coordinate identities);
+the Borel null sandwich of `𝒢` transfers membership to `a_b`; the clock of `a_b` is a clock of `c` (dyadic congruence).
+The measurable versions are the canonical versions of lem:canonical (env-steps.tex:210-216), which prop:clock invokes
+(env-steps.tex:453-465). -/
+
+/-- The canonical measurable versions of the positive-circle processes (lem:canonical, env-steps.tex:210-216, as invoked in
+the proof of prop:clock, env-steps.tex:453-465): for a valid environment the positive-circle process has a measurable
+`CircleFns`-valued version, and so does every almost-sure rescaling of it. -/
+def CanonicalCircleVersionStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+    (∃ a0 : Ω → CircleFns, Measurable a0 ∧
+        ∀ᵐ ω ∂S.P, ∀ p : PosCircle, circleFnsCoord (a0 ω) p = circleProcess (S.hcirc ω) p) ∧
+    ∀ b : ℝ, 0 < b → ∀ c : Ω → ℝ → ℂ → ℝ,
+      (∀ᵐ ω ∂S.P, c ω = rescaledCircle γ (S.hcirc ω) (coneScaleRadius γ (S.hcirc ω) b) b) →
+      ∃ ab : Ω → CircleFns, Measurable ab ∧
+        ∀ᵐ ω ∂S.P, ∀ p : PosCircle, circleFnsCoord (ab ω) p = circleProcess (c ω) p
+
+/-- The zero-extended positive-radius evaluation is the coordinate of the continuous circle function. -/
+lemma posCircleExt_eq_circleFnsCoord {a : CircleFns} {r : ℝ} (hr : 0 < r) (z : ℂ) :
+    posCircleExt a r z = circleFnsCoord a (⟨r, hr⟩, z) := by
+  simp [posCircleExt, hr, circleFnsCoord]
+
+/-- **The rescaled all-starts clock step**, conditional on the canonical versions (`CanonicalCircleVersionStep`), the
+law-scaling input `QuantumConeScalingInput` and the Polish structure of `CircleFns` (prop:clock, env-steps.tex:449-475). -/
+theorem rescaledConeClockStep_of_canonical [PolishSpace CircleFns]
+    (hPreston : PrestonAnalyticUniversallyMeasurableStmt) (hscale : QuantumConeScalingInput)
+    {𝒮 : SpaceFillingSLEModel} (hcan : CanonicalCircleVersionStep 𝒮) : RescaledConeClockStep 𝒮 := by
+  intro γ hγ0 hγ2 Ω _ S hS b hb c hc
+  obtain ⟨⟨a0, ha0m, ha0⟩, hcanb⟩ := hcan γ hγ0 hγ2 Ω S hS
+  obtain ⟨ab, habm, hab⟩ := hcanb b hb c hc
+  have : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
+  -- (1) the original positive-circle version lies in `𝒢` almost surely
+  have hall0 : ∀ᵐ ω ∂S.P, a0 ω ∈ allStartsSet γ := by
+    filter_upwards [hS.isLQGClock, ha0] with ω hω hω0
+    refine show AdmitsAllStartClock γ (a0 ω) from ⟨S.clock ω, fun z => ⟨?_, (hω z).2⟩⟩
+    refine (isLQGClock_congr_dyadic ?_).mpr (hω z).1
+    intro k z'
+    rw [posCircleExt_eq_circleFnsCoord (allStarts_dyadicScale_pos k) z']
+    exact hω0 _
+  -- (2) the same law: QuantumConeScalingInput and the almost-sure coordinate identities
+  have hlaw : S.P.map a0 = S.P.map ab := by
+    have hUV : S.P.map (fun ω => circleProcess (S.hcirc ω)) =
+        S.P.map (fun ω => circleProcess (rescaledCircle γ (S.hcirc ω) (coneScaleRadius γ (S.hcirc ω) b) b)) :=
+      (hscale γ hγ0 hγ2 Ω S.P S.hC S.hcirc hS.isProbabilityMeasure hS.isQuantumCone b hb).symm
+    refine map_eq_of_ae_coord ha0m habm ?_ ?_ hUV
+    · filter_upwards [ha0] with ω hω
+      funext p
+      exact hω p
+    · filter_upwards [hab, hc] with ω hω hcω
+      funext p
+      rw [hω p, hcω]
+  -- (3) transfer of membership in `𝒢` (Borel null sandwich of the universally measurable `𝒢`)
+  have hallb : ∀ᵐ ω ∂S.P, ab ω ∈ allStartsSet γ :=
+    ae_allStarts_of_map_eq hPreston γ (nselFun γ)
+      (allStartsCharacterization_of_tail γ (nselFun γ) (borelSubsequenceSelectionStep_nselFun γ).2)
+      (borelAllStartsRelationStep_nselFun γ) ha0m habm hlaw hall0
+  -- (4) the clock: a choice of an admitting clock for `ab ω`, transported to `c ω` by dyadic congruence
+  have hex : ∀ ω, ∃ F : ContinuousPath ℂ → ℝ≥0 → ℝ, ab ω ∈ allStartsSet γ → ∀ z : ℂ,
+      IsLQGClock planarBrownianMotion γ (posCircleExt (ab ω)) z F ∧
+        ∀ᵐ B ∂planarBrownianMotion z, IsTimeChangeClock (F B) := by
+    intro ω
+    by_cases h : ab ω ∈ allStartsSet γ
+    · obtain ⟨F, hF⟩ := h
+      exact ⟨F, fun _ => hF⟩
+    · exact ⟨fun _ _ => 0, fun h' => absurd h' h⟩
+  choose clock' hclock using hex
+  refine ⟨clock', ?_⟩
+  filter_upwards [hallb, hab] with ω hωb hωab
+  intro z
+  obtain ⟨hL, hT⟩ := hclock ω hωb z
+  refine ⟨(isLQGClock_congr_dyadic ?_).mp hL, hT⟩
+  intro k z'
+  rw [posCircleExt_eq_circleFnsCoord (allStarts_dyadicScale_pos k) z']
+  exact hωab _
 
 end MatedCRT.AllStarts
