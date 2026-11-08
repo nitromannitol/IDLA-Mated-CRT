@@ -319,3 +319,37 @@ are assigned to z5's queued source-scope slice; the unwritten extension itself
 is not assigned for invention. Request an independently audited written proof
 or a faithful source that actually covers this exact type before promoting it.
 Do not combine this gap with the independent scaled-representative gap.
+
+## WPN-ENV-dilated-circle-common-event: `ConeDilationCircleApproximationStep`
+
+**WRITTEN-PROOF-NEEDED** (lead2026-11-08, m1 7df13f4). Exact sufficient
+internal common-event interface in FieldCircleScaling.lean:45, namespace
+MatedCRT.Sec1, with MeasureTheory/Filter/Set and LQGMetric.CircleAvg open:
+
+```lean
+def ConeDilationCircleApproximationStep : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω]
+    (P : Measure Ω) [IsProbabilityMeasure P]
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
+      IsQuantumCone γ P hC hcirc →
+      ∀ᵐ ω ∂P, ∀ R : ℝ, 0 < R → ∀ n m : ℕ, ∀ k a d : ℤ, 0 < k →
+        Tendsto (fun j => hC ω (affTest R 0
+          (circBump j (FieldCircle.gridPt m a d) ((k : ℝ) / 2 ^ n)))) atTop
+          (𝓝 (hcirc ω (R * ((k : ℝ) / 2 ^ n)) (R * FieldCircle.gridPt m a d)))
+```
+
+Written boundary: audited fleet env-steps.tex:325-330 asserts identification
+of the rescaled distribution's continuous circles with the scaled supplied
+circles; it does not write this uniform affine-mollifier approximation passage
+at the current Lean definitions. ConePairing.lean:286 and Bonanno
+CircleAvgAffine.lean:196 supply fixed-parameter results whose exceptional sets
+may depend on radius/center/scale; they do not directly supply the event above.
+The deterministic pairing identity, constant-shift recovery and conditional
+consumer are proved by m1. Do not ask a worker to invent this passage.
+
+This all-positive-scale interface is sufficient for the actual random-scale
+RescaledConeDistributionCircleGridStep, and may be stronger than necessary.
+The separate prover and independent audit should check its exact hypotheses
+and strength; alternatively supply an audited proof of the existing exact grid
+Step at Field.lean:1146. No assertion of falsity or necessity of this stronger
+interface is made. Keep it named until the operator returns an audited proof.

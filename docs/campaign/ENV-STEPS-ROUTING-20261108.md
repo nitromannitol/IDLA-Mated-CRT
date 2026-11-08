@@ -361,3 +361,23 @@ m5's twelve-round slice continued as -r2 only after checked substantive progress
 with the prior brief archived. m1's DONE brief was preserved and the runner
 promoted its fresh circle-grid task; all four active next queues are ready.
 Paused m6/z2 current and next hashes match the prior receipt.
+
+Late-round addendum (2026-11-08 16:11 UTC): m1 7df13f4's deterministic dilation recovery
+and conditional grid consumer pass lc/standard axioms. The unproved common
+all-positive-scale approximation event is now WPN-ENV-dilated-circle-common-event,
+with exact type and source boundary in GAPS-TAKEOVER-20261108.md; it is a
+sufficient possibly stronger interface, not a new cited result. m1 moved to
+the conditioned-reference component, with an independent-uniform component
+queued. z5 fd9ff12's source-scope correction and insertion consumer pass lc;
+the internal extension is correctly relabelled, but the new printed-DS11
+candidate still needs carrier/normalization review (global local finiteness
+versus inside-D convergence), and its proposed measure pullback needs checking.
+No B1/B2/S1 interface is ready for operator approval. z5 has a residual audit
+and a separate written igMap curve-scaling component queued.
+
+Final checked total:10 source snapshots,8 axiom probes,24 exports with only
+standard axioms. AreaScaling80cc4ad's clean source scan is recorded, but its
+late lc/axiom rechecks hit missing companion build objects on successive
+attempts; the earlier162c7e3 proof remains verified and no unverified
+strengthening is credited. The m5 runner promoted its all-scale successor and
+refilled the curve-area-recovery queue. No numbered closure.
