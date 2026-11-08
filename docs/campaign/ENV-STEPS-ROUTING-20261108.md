@@ -281,3 +281,42 @@ printed scope, with the arXiv/published numbering reconciled. The existing
 non-dyadic gap IR-c4-3 and all residual inputs remain explicit. No new input
 or escalation is asserted by these conditional checks. The four active queues
 are ready; paused m6/z2 briefs are unchanged, with no new round-limit event.
+
+## Lead check 2026-11-08 15:37 UTC
+
+Seven committed snapshots pass strict lc: AreaScaling, Field, AllStartsClock,
+ScaledRegularizedFamily and PlateauCanonicalLaw at936f3b8; InsertionScalingLaw
+and Proposed/DuplantierSheffieldCoordinate2011 at9e51e0c. Five axiom probes check
+13 exports using only propext, Classical.choice and Quot.sound. The Area probe
+first met a transient missing companion .olean; its retry passed without any
+companion source edits. All49 tracked source hashes in the receipt were scanned;
+only comment matches occur. Receipt: fleet lead/checks/20261108-1521.
+
+m1 now has represented cone distribution-law uniqueness, a measurable explicit
+rescaled distribution, grid-circle recovery, and a conditional field consumer.
+Random-scale grid circles, distribution scaling/canonical identification and
+faithful DMS interfaces remain. m5 now has admissible local circle-profile Weyl
+transfer, countable off-zero disk cover/gluing and area consumers requiring only
+a null atom at zero. Disk Dirichlet decomposition, all-scale source input and
+same-space rescaled measure recovery remain. z1 proves measurable subsequence
+selection and the selected Borel all-start relation (R1/R2); circle-process
+versions, actual Polish infrastructure and final clock assembly remain at the
+checked revision. Universal measurability still assumes the faithful Preston
+input; the all-start characterization uses SubsequenceTailProperty.
+
+z5's deterministic family-scaling work is conditional on the newly exposed
+WPN-42-scaled-representatives. The insertion scaling consumer is conditional on
+WPN-42-insertion-coordinate-extension: its Proposed DS11 declaration is stronger
+than the inspected printed theorem. Both exact types and source boundaries are
+recorded in GAPS-TAKEOVER-20261108.md and fleet ESCALATIONS.md. These are two new
+WRITTEN-PROOF-NEEDED requests in addition to the nine awaiting independent audits;
+neither is an approved literature input. z5 is queued to prepare the actual
+printed DS theorem, without inventing the extension. No numbered closure.
+
+All four active workers have fresh successors; paused m6/z2 briefs are unchanged.
+m1 completed round12 with a BLOCKED report, and its runner promoted the assembly
+successor; the lead continuation guard preserved that completed brief. m5 has a
+checked-progress r2 continuation prepared only if its current twelve-round
+slice exhausts while IN_PROGRESS. Existing root-owned queue refill helpers keep
+successors ready. Later d05b5a2 (DMS Proposed) and8fc52a5 (circle law transfer)
+are explicitly outside these checked-progress claims and await the next round.

@@ -240,3 +240,82 @@ def UniformSameWalkAssemblyStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 `TruncatedDetFixedTimeStep` is implementation debt with a written route in [PROOF-REPAIRS-G.md](PROOF-REPAIRS-G.md), G4, item 1. It is **not** a new request for a written proof. z2 is assigned the deterministic killed-occupation/path-continuity substep, with BrownianOutwardExcursionAtExitStep still explicit until y2 resumes. The audited IR-m2-1 occupation proof is in fleet `audits/occ-astra`; its coefficient for the unscaled clock is 2.
 
 The deterministic earlier-rational-time compact cover and the stopped-to-global obstacle comparison are written in [GAPS-SEC2567A.md](GAPS-SEC2567A.md), E-c1-5; z1 is assigned only these conditional consequences. Strict growth is not proved by this route. The plateau-scaling argument is written in fleet `notes/prop42-proof/prop42-proof.tex:230-268`; z5 is assigned its deterministic part, then its law-transfer bridge with cited inputs explicit. m6 retains the current strict-obstacle-gap task.
+
+## WPN-42-scaled-representatives: `MatedCRT.ScaledBoundedRepresentativesStep`
+
+**WRITTEN-PROOF-NEEDED** (lead 2026-11-08 15:29 UTC; z5 report, commit dee04d9).
+This new request is additional to the nine sent to the prover at14:20. Its truth
+for arbitrary measures has not been established. Do not assign its proof to an
+active Lean worker or silently restrict its quantifiers.
+
+Exact declaration: `MatedCRT/Proofs/Sec4/Prop42Closure/ScaledRegularizedFamily.lean:43`,
+namespace `MatedCRT`, with `open MeasureTheory HarmonicBalls`:
+
+```lean
+def ScaledBoundedRepresentativesStep : Prop :=
+  ∀ (μ : Measure ℂ) (Λ : Set ℂ) (a c : ℝ), 0 < a → 0 < c → IsSubharmonicBall μ Λ 0 →
+    HasBoundedSubharmonicRepresentatives (scaledMeasure μ a c) ((fun x : ℂ => (a : ℂ) * x) ⁻¹' Λ) 0
+```
+
+The referenced predicate is defined in the read-only companion at
+`HarmonicBalls/Audit/GreenSubharmonicTestClass.lean:48`:
+
+```lean
+def HasBoundedSubharmonicRepresentatives (μ : Measure ℂ) (Λ : Set ℂ) (z : ℂ) : Prop :=
+  ∀ f ∈ subharmonicBallTestClass Λ z, ∃ g ∈ boundedSubharmonicBallTestClass Λ z,
+    f z = g z ∧ f =ᵐ[μ.restrict Λ] g
+```
+
+Evidence: audited fleet `notes/prop42-proof/prop42-proof.tex:252-256` says to
+scale the mean-value property, mass and family conditions. The current frozen
+test class (`HarmonicBalls/Draft/Section4.lean:65`) permits unbounded witness
+domains. Available `HarmonicBalls.Section6.greenFunction_dilation` requires a
+bounded domain (`Proofs/Sec6/GreenDilation.lean:164`); the companion audit
+explicitly leaves bounded representatives open at1-6. HB Lemma5.7's cluster
+identity (corrected source905-938) does not supply this test-class replacement.
+`Proofs/Potential/BoundedSubharmonicRepresentatives.lean:140,160,246` supplies a
+pointwise criterion and conditional special cases, not the stated assertion.
+This is a missing written bridge at the current definitions; no counterexample
+to the paper theorem is asserted. An audited proof or operator-approved statement
+repair is needed before the full all-measure Step can be discharged.
+
+Lead checked committed snapshots at936f3b8 with strict lc and a clean hole scan.
+z5 proves mass/conditions, regularized-cluster dilation and bounded-test transfer;
+`scaledRegularizedFamilyStep_of_representatives` still assumes this Step. Hence
+`ScaledRegularizedFamilyStep`, the plateau-scaling conclusion and Proposition4.2
+are not closed. The Step is not a literature input eligible for External promotion.
+
+## WPN-42-insertion-coordinate-extension: `MatedCRT.Proposed.DS11CoordinateRuleFixedAffine`
+
+**WRITTEN-PROOF-NEEDED** (lead2026-11-08 15:33 UTC, z5 9e51e0c). This is an
+open repository extension, despite its current Proposed location and name, not
+a faithful printed DS11 hypothesis. Additional to the nine sent at14:20.
+The exact current declaration is copied below (namespace `MatedCRT.Proposed`,
+`open MeasureTheory HarmonicBalls`):
+
+```lean
+def DS11CoordinateRuleFixedAffine : Prop :=
+  ∀ (γ α : ℝ), 0 < γ → γ < 2 → α < lqgQ γ →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ), IsProbabilityMeasure P → IsWholePlaneGFF P hC hcirc →
+    IsLQGMeasureOfField P γ α hcirc μ →
+  ∀ a : ℂ, a ≠ 0 → ∀ b : ℂ, ∀ᵐ ω ∂P,
+    IsLQGLimit γ (fun ε z => fieldCircleAverage α (hcirc ω) (‖a‖ * ε) (a * z + b) + lqgQ γ * Real.log ‖a‖)
+      ((μ ω).map fun x => (x - b) / a)
+```
+
+Source boundary: DS arXiv0808.1560v2 Proposition2.1 p13 treats a GFF on a domain;
+Prop1.1 p4 constructs the zero-boundary measure along powers of two and extends
+to deterministic continuous additions. Neither quoted statement directly gives
+the whole-plane insertion at its singular point or the required arbitrary
+non-dyadic dilation. The paper's fact:lqg-measure IV and audited prop42 proof245-256
+invoke a general coordinate rule without supplying these extensions. Existing
+IR-c4-3 already records the non-dyadic issue. Sheffield-Wang Thm1.4's exact scope
+must be checked before it is used; cone localization remains m5's separate task.
+
+`insertionLQGScalingLawStep_of_coordinateRule` proves K only conditional on this
+entire extension. The source-ready bounded-domain theorem and any carrier bridge
+are assigned to z5's queued source-scope slice; the unwritten extension itself
+is not assigned for invention. Request an independently audited written proof
+or a faithful source that actually covers this exact type before promoting it.
+Do not combine this gap with the independent scaled-representative gap.
