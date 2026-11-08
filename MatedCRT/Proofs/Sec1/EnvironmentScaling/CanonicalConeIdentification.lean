@@ -1,4 +1,5 @@
 import MatedCRT.Proofs.Sec1.EnvironmentScaling.FieldAssembly
+import Mathlib.Analysis.Calculus.Deriv.Slope
 
 /-!
 # Radial law of the represented cone
@@ -14,10 +15,98 @@ assumed here.  Compare env-steps.tex:217–250.
 noncomputable section
 
 open MeasureTheory ProbabilityTheory Filter
-open scoped NNReal
+open scoped NNReal Topology
 open HarmonicBalls
 
 namespace MatedCRT.Sec1
+
+/-- A quotient of functions vanishing at the origin has the quotient of
+their nonzero first derivatives as its right-hand limit. -/
+theorem tendsto_div_of_hasDerivAt_zero {f g : ℝ → ℝ} {a b : ℝ}
+    (hf : HasDerivAt f a 0) (hg : HasDerivAt g b 0)
+    (hf0 : f 0 = 0) (hg0 : g 0 = 0) (hb : b ≠ 0) :
+    Tendsto (fun x => f x / g x) (𝓝[>] 0) (𝓝 (a / b)) := by
+  have hf' := hf.tendsto_slope_zero_right
+  have hg' := hg.tendsto_slope_zero_right
+  simp only [zero_add, hf0, hg0, sub_zero, smul_eq_mul] at hf' hg'
+  have h := hf'.div hg' hb
+  apply h.congr'
+  filter_upwards [self_mem_nhdsWithin] with x hx
+  have hx' : x ≠ 0 := ne_of_gt hx
+  dsimp
+  field_simp
+
+/-- The analytic entrance-density limit for the killed drifted Brownian
+transition formula.  The hypothesis on `g` is the derivative identity for
+the centered Gaussian density of variance `t`. -/
+theorem tendsto_conditioned_entrance_density
+    (g : ℝ → ℝ) (d t y : ℝ) (hd : d ≠ 0) (ht : t ≠ 0)
+    (hg : HasDerivAt g (-(y / t) * g y) y) :
+    Tendsto (fun x =>
+      (Real.exp (d * (y - x) - d ^ 2 * t / 2) * (g (y - x) - g (y + x))) *
+        (1 - Real.exp (-2 * d * y)) / (1 - Real.exp (-2 * d * x)))
+      (𝓝[>] 0)
+      (𝓝 ((y / (d * t)) * g y * Real.exp (d * y - d ^ 2 * t / 2) *
+        (1 - Real.exp (-2 * d * y)))) := by
+  have hminus : HasDerivAt (fun x => g (y - x)) (y / t * g y) 0 := by
+    have hg' : HasDerivAt g (-(y / t) * g y) (y - 0) := by simpa using hg
+    convert hg'.comp 0 ((hasDerivAt_const 0 y).sub (hasDerivAt_id 0)) using 1
+    all_goals first | rfl | simp
+  have hplus : HasDerivAt (fun x => g (y + x)) (-(y / t) * g y) 0 := by
+    have hg' : HasDerivAt g (-(y / t) * g y) (y + 0) := by simpa using hg
+    convert hg'.comp 0 ((hasDerivAt_const 0 y).add (hasDerivAt_id 0)) using 1
+    all_goals first | rfl | simp
+  have hnum : HasDerivAt (fun x => g (y - x) - g (y + x))
+      (2 * (y / t * g y)) 0 := by
+    convert hminus.sub hplus using 1; ring
+  have hden : HasDerivAt (fun x => 1 - Real.exp (-2 * d * x)) (2 * d) 0 := by
+    convert (hasDerivAt_const 0 (1 : ℝ)).sub
+      (((hasDerivAt_const 0 (-2 * d)).mul (hasDerivAt_id 0)).exp) using 1 <;>
+      simp [← Pi.sub_def]
+  have hq := tendsto_div_of_hasDerivAt_zero hnum hden (by simp) (by simp) (by
+    exact mul_ne_zero (by norm_num) hd)
+  have he : Tendsto (fun x : ℝ => Real.exp (d * (y - x) - d ^ 2 * t / 2))
+      (𝓝[>] 0) (𝓝 (Real.exp (d * y - d ^ 2 * t / 2))) := by
+    have hc : Continuous (fun x : ℝ => Real.exp (d * (y - x) - d ^ 2 * t / 2)) := by
+      fun_prop
+    simpa using (hc.continuousAt.tendsto.mono_left nhdsWithin_le_nhds :
+      Tendsto _ (𝓝[>] (0 : ℝ)) _)
+  have h := (he.mul hq).mul_const (1 - Real.exp (-2 * d * y))
+  convert h using 1
+  · ext x
+    ring
+  · congr 1
+    field_simp
+
+/-- Mathlib's centered Gaussian density has the logarithmic derivative
+needed for the entrance-law calculation. -/
+theorem hasDerivAt_gaussianPDFReal_zero (t : ℝ≥0) (ht : t ≠ 0) (y : ℝ) :
+    HasDerivAt (gaussianPDFReal 0 t) (-(y / (t : ℝ)) * gaussianPDFReal 0 t y) y := by
+  have ht' : (t : ℝ) ≠ 0 := by exact_mod_cast ht
+  have h := ((((hasDerivAt_id y).pow 2).neg.div_const (2 * (t : ℝ))).exp).const_mul
+    (Real.sqrt (2 * Real.pi * t))⁻¹
+  convert h using 1
+  · ext x
+    simp [gaussianPDFReal]
+  · simp only [gaussianPDFReal, sub_zero, Pi.neg_apply, Pi.pow_apply, id_eq]
+    field_simp
+    ring
+
+/-- The entrance density in the canonical-cone calculation is the
+right-hand limit of the displayed conditioned transition density.  This is
+an analytic limit; it does not assert that either expression is a law. -/
+theorem tendsto_gaussian_conditioned_entrance_density
+    (d y : ℝ) (t : ℝ≥0) (hd : d ≠ 0) (ht : t ≠ 0) :
+    Tendsto (fun x =>
+      (Real.exp (d * (y - x) - d ^ 2 * (t : ℝ) / 2) *
+        (gaussianPDFReal 0 t (y - x) - gaussianPDFReal 0 t (y + x))) *
+        (1 - Real.exp (-2 * d * y)) / (1 - Real.exp (-2 * d * x)))
+      (𝓝[>] 0)
+      (𝓝 ((y / (d * (t : ℝ))) * gaussianPDFReal 0 t y *
+        Real.exp (d * y - d ^ 2 * (t : ℝ) / 2) * (1 - Real.exp (-2 * d * y)))) :=
+  tendsto_conditioned_entrance_density (gaussianPDFReal 0 t) d t y hd
+    (by exact_mod_cast ht) (hasDerivAt_gaussianPDFReal_zero t ht y)
+
 
 /-- The explicit cone representative from the mating-of-trees witness has
 both the field law and the weak-limit radial law of the valid environment.
