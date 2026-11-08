@@ -493,3 +493,137 @@ c5305cb proves the exact internal per-mesh a.e. rate successors and conditional 
 Receipts `lead/checks/20261108-1841`: nine pinned source-version checks and five axiom probes/18 exports pass, with only propext, Classical.choice and Quot.sound;84-source hole/axiom scan clean and19 paused-task hashes unchanged. Literature remains explicit and Proposed pending operator promotion. All four active next queues and bounded successors are supplied, with displaced compact/test briefs archived. m1/m5 quota stops remain respected. Operator18:45 confirms the three newer scaling WPN were sent to the prover at18:42 (mcrt c5305cb, hb d95497e); keep those hypotheses named and assign no worker to prove them.
 
 Late ce894f6 is also checked: `startCellInteriorAe_of_cellSize` uses the actual IsValid area-parametrization and a.s. proper-curve facts, and `correctedHarmonicSameWalkRateAe_of_cellTarget` intersects events with polynomial exponent min(kappa,kappaCell). The exact uniform-cell residual is `CellSizeTargetAeStmt` at SameWalkAssemblyAe.lean:266; its exponent is fixed before the environment, whereas the existing `PolyHighProb` Draft allows an environment-dependent exponent. This is the already audited quantitative producer in r3 Section1:36-254, not missing written mathematics or a reason to stop the independent Brownian-minimum slice. Final receipts cover9 source-version checks,5 axiom probes/18 standard-axiom exports and84 hole-clean sources.
+
+
+## Lead19:13: terminal written-proof policy and checked residual inventory
+
+Operator18:55 ends future prover rounds after the three currently running requests. Formalize all audited written arguments already available. A genuinely WRITTEN-PROOF-NEEDED step with no audited return remains a named hypothesis, with exact type, file:line, consumer and reason here and in PROGRESS; do not ask workers to invent it. The three requests sent18:42 remain named pending independent audit. No new unwritten step was identified this round.
+
+7e85827/ad84342 implement the three-regime layer-cake bounds for a distance variable and a Hölder discrepancy, with the factor H. They retain measurability, a.s. boundedness, scaled-tail and exponent hypotheses; the H>0 reduction does not discharge the H=0 branch of the full rate producer. 9bee835 proves stoppedLayerPotentialStep_of_layerSteps from four named residuals and MepsScalingInput. Strict checks and exported-axiom probes pass, but neither full rate nor layer producer is closed.
+
+The four layer types below are **WRITTEN-PROOF-AVAILABLE / LEAN-PENDING**, not new WPN. Consumer: stoppedLayerPotentialStep_of_layerSteps at StoppedLayerPotentialReduction.lean:372, then StoppedLayerPotentialStep and stopped surplus/lower-bound reductions. Source is steps2-r3.tex, sha256 88dfb1f9fb138cd038abe98d41650d7ef09834998833ebe13e3717a149582fae, audited CORRECT. Core/cutoffs:3544-3661; logarithmic potential:3663-3690; Harnack:3710-3773; fixed-center/outer passage:3763-3819. Source correspondence of each producer's exact quantifiers still requires checking when it is implemented; successful conditional assembly is not that check. In particular retain the displayed everywhere-on-F versus a.e. distinctions and repair internally if the source requires versions rather than asserting a stronger producer.
+
+Exact named residual `MatedCRT/Proofs/Sec5/StoppedLayerPotentialReduction.lean:173` (namespace MatedCRT):
+
+```lean
+def LayerCutoffCoreStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  DiscreteLaplacianBoundCorrectedStmt 𝒮 → MaximumPrincipleStmt 𝒮 →
+  ConvergenceDivisibleStmt 𝒮 → UniformConvergenceGreenKernelStmt 𝒮 → ExitTimeUpperBoundStmt 𝒮 →
+  IntegralConvergenceGreenFunctionStmt 𝒮 →
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
+  ∀ t : ℝ, 0 < t →
+  ∃ f : ℕ → Ω → ℂ → ℝ,
+    (∀ n ω x, 0 ≤ f n ω x ∧ f n ω x ≤ 1) ∧
+    (∀ n x, Measurable[S.envSigma] fun ω => f n ω x) ∧
+    (∀ n ω, IsHolderContinuousOn (f n ω) (ball 0 ρ)) ∧
+    (∀ ω ∈ {ω | t < clusterExitTime (Λ ω) ρ},
+      ∀ᵐ x ∂(S.μ ω), Tendsto (fun n => f n ω x) atTop (𝓝 0)) ∧
+    ∀ η : ℝ≥0∞, 0 < η → ∃ N : ℕ, ∀ n ≥ N, ∀ᶠ ε in 𝓝[>] (0 : ℝ),
+      S.P ({ω | t < clusterExitTime (Λ ω) ρ} ∩
+        {ω | ∃ b ∈ cellVertices ε (S.η ω) (Λ ω t) \ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t,
+          f n ω (vertexPoint ε (S.η ω) b) < 1 / 4}) < η
+```
+
+Exact named residual `MatedCRT/Proofs/Sec5/StoppedLayerPotentialReduction.lean:200` (namespace MatedCRT):
+
+```lean
+def LayerFiniteCenterHarnackStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  DiscreteLaplacianBoundCorrectedStmt 𝒮 → MaximumPrincipleStmt 𝒮 →
+  ConvergenceDivisibleStmt 𝒮 → UniformConvergenceGreenKernelStmt 𝒮 → ExitTimeUpperBoundStmt 𝒮 →
+  IntegralConvergenceGreenFunctionStmt 𝒮 →
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
+  ∀ t : ℝ, 0 < t → ∀ r : ℝ, 0 < r → r < ρ / 6 →
+  ∃ (Y : Finset ℂ) (p : ℝ) (G : ℝ → Set Ω), 0 < p ∧ p ≤ 1 / 2 ∧ (∀ y ∈ Y, y ∈ ball (0 : ℂ) (ρ / 2)) ∧
+    (∀ z ∈ closedBall (0 : ℂ) (2 * ρ / 5), ∃ y ∈ Y, dist z y < r / 4) ∧
+    TendsToOneOn S.P {ω | t < clusterExitTime (Λ ω) ρ} G ∧
+      ∀ᶠ ε in 𝓝[>] (0 : ℝ), ∀ ω ∈ {ω | t < clusterExitTime (Λ ω) ρ} ∩ G ε,
+        ∀ a ∈ cellVertices ε (S.η ω) (Λ ω t), ∃ y ∈ Y, dist (vertexPoint ε (S.η ω) a) y < r / 4 ∧
+          a ∈ cellVertices ε (S.η ω) (ball y (3 * r)) ∧
+          ∀ g : Ω → ℂ → ℝ, (∀ ω x, 0 ≤ g ω x ∧ g ω x ≤ 1) →
+            ENNReal.ofReal (layerPotential S ρ ε g ω a) ≤
+              ENNReal.ofReal ε *
+                  expectedExitTime (S.mult ε ω) (interiorCellVertices ε (S.η ω) (ball y (3 * r))) a +
+                ENNReal.ofReal p⁻¹ * ENNReal.ofReal (layerPotential S ρ ε g ω (vertexOf ε (S.η ω) y))
+```
+
+Exact named residual `MatedCRT/Proofs/Sec5/StoppedLayerPotentialReduction.lean:225` (namespace MatedCRT):
+
+```lean
+def LayerExitMassSmallStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  DiscreteLaplacianBoundCorrectedStmt 𝒮 → MaximumPrincipleStmt 𝒮 →
+  ConvergenceDivisibleStmt 𝒮 → UniformConvergenceGreenKernelStmt 𝒮 → ExitTimeUpperBoundStmt 𝒮 →
+  IntegralConvergenceGreenFunctionStmt 𝒮 →
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
+  ∀ t : ℝ, 0 < t → ∀ K : ℝ≥0∞, K ≠ ⊤ → ∀ c : ℝ≥0∞, 0 < c → ∀ η : ℝ≥0∞, 0 < η → ∀ s : ℝ, 0 < s →
+  ∃ r : ℝ, 0 < r ∧ r < s ∧
+    S.P ({ω | t < clusterExitTime (Λ ω) ρ} ∩
+      {ω | c < K * ⨆ z ∈ ball (0 : ℂ) ρ, largestExitTimeRV (S.μ ω) (ball z (4 * r))}) < η
+```
+
+Exact named residual `MatedCRT/Proofs/Sec5/StoppedLayerPotentialReduction.lean:243` (namespace MatedCRT):
+
+```lean
+def LayerFixedCenterStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  MepsScalingInput 𝒮 →
+  DiscreteLaplacianBoundCorrectedStmt 𝒮 → MaximumPrincipleStmt 𝒮 →
+  ConvergenceDivisibleStmt 𝒮 → UniformConvergenceGreenKernelStmt 𝒮 → ExitTimeUpperBoundStmt 𝒮 →
+  IntegralConvergenceGreenFunctionStmt 𝒮 →
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
+  ∀ t : ℝ, 0 < t →
+  ∀ f : ℕ → Ω → ℂ → ℝ, (∀ n ω x, 0 ≤ f n ω x ∧ f n ω x ≤ 1) →
+    (∀ n x, Measurable[S.envSigma] fun ω => f n ω x) →
+    (∀ n ω, IsHolderContinuousOn (f n ω) (ball 0 ρ)) →
+    (∀ ω ∈ {ω | t < clusterExitTime (Λ ω) ρ},
+      ∀ᵐ x ∂(S.μ ω), Tendsto (fun n => f n ω x) atTop (𝓝 0)) →
+  ∀ Y : Finset ℂ, (∀ y ∈ Y, y ∈ ball (0 : ℂ) ρ) →
+  ∀ K : ℝ≥0∞, K ≠ ⊤ → ∀ c : ℝ≥0∞, 0 < c → ∀ η : ℝ≥0∞, 0 < η →
+  ∃ N : ℕ, ∀ n ≥ N, ∀ᶠ ε in 𝓝[>] (0 : ℝ),
+    S.P ({ω | t < clusterExitTime (Λ ω) ρ} ∩
+      {ω | c < K * ∑ y ∈ Y, ENNReal.ofReal (layerPotential S ρ ε (f n) ω (vertexOf ε (S.η ω) y))}) < η
+
+
+/-! ### Part 4: assembly into `StoppedLayerPotentialStep` -/
+```
+
+Rate report G1/G2: uniform exponents are not supplied by a per-environment existential. Their exact existing types follow; consumer correctedHarmonicSameWalkRateAe_of_ae_geom / correctedHarmonicSameWalkRateAe_of_cellTarget. G1's producer is written in r3 Section1:36-254; G2's deterministic nu from the annulus probability is written at r3:692-714. Both are implementation obligations, not new WPN or approved frozen changes. Keep the constants fixed in the displayed order.
+
+`MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/SameWalkAssemblyAe.lean:266` (namespace MatedCRT):
+
+```lean
+def CellSizeTargetAeStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∀ a : ℝ, 0 < a → a < 2 / (2 + γ) ^ (2 : ℕ) →
+  ∃ κ : ℝ, 0 < κ ∧ ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∃ A : ℝ → Set Ω, (∀ ε, MeasurableSet[S.envSigma] (A ε)) ∧
+    (∃ C δ : ℝ, 0 ≤ C ∧ 0 < δ ∧ ∀ ε : ℝ, 0 < ε → ε < δ →
+      S.P (A ε)ᶜ ≤ ENNReal.ofReal (C * ε ^ κ)) ∧
+    ∀ ε : ℝ, 0 < ε → ∀ᵐ ω ∂S.P, (ω ∈ A ε ↔
+      ∀ i : ℤ, (cell ε (S.η ω) i ∩ ball 0 ρ).Nonempty → diam (cell ε (S.η ω) i) ≤ ε ^ a)
+```
+
+`MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/SameWalkAssemblyAe.lean:278` (namespace MatedCRT):
+
+```lean
+def UniformSameWalkAeCoreStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ β : ℝ, 0 < β ∧
+  ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ ν : ℝ, 0 < ν ∧
+  ∀ a : ℝ, 0 < a → a < 2 / (2 + γ) ^ (2 : ℕ) → ∃ κ : ℝ, 0 < κ ∧
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∃ E : ℝ → Set Ω, (∀ ε, MeasurableSet[S.envSigma] (E ε)) ∧
+    (∃ C δ : ℝ, 0 ≤ C ∧ 0 < δ ∧ ∀ ε : ℝ, 0 < ε → ε < δ →
+      S.P (E ε)ᶜ ≤ ENNReal.ofReal (C * ε ^ κ)) ∧ PointwiseSameWalkRatesAeStep S E ρ a β ν
+```
+
+G3 correction: the cells-meet premise is already implemented by adjacentCellsMeetAeStep in Proofs/MatingOfTrees/AdjacentCells.lean:17 and freshly passes strict lc and a standard-axiom probe. Its specialization or ae_isRegularMatedMap.cells_meet should supply the GMS premise. This does not itself assert the stronger separated-interval lemma. G4 a.s. finite exit and the exact discrepancy bound remain source-written work at r3:657-722; ae_vExitTime_ne_top_of_expectedExitTime_ne_top in OccupationGreen.lean:135 retains its finite-expectation premise. G5 and the layer literature inputs remain explicit Proposed hypotheses pending source promotion, including the separate GMS canonical-to-arbitrary-valid-model bridge. No External or frozen declaration changed.
+
+Receipts: fleet lead/checks/20261108-1913. Ten pinned source versions (nine distinct files), four axiom probes/sixteen standard-axiom exports; no numbered closure.
+
+
+Late checked bd29395: sameWalkExitDiscrepancy_le_of_finite_exit and its a.s. version supply the exact bound from start-in-disk and finite-interpolated-exit hypotheses. integral_discrepancy_le_regime supplies real-valued three-regime means, including H=0, from measurability, the a.s. bound and scaled tails. Those hypotheses remain; the actual finite-exit producer and full uniform event/rate assembly are not discharged. This refines the earlier G4 implementation boundary rather than introducing new WPN. Three new embedded axiom prints use only standard axioms. Final receipts:11 pinned source versions across9 files,4 additional axiom probes,19 distinct checked exports,85-source hole scan clean.
