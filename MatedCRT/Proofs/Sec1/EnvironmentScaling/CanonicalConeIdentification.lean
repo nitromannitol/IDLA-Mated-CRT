@@ -1041,4 +1041,23 @@ theorem exists_referenceConeConditionedPath_law_of_remark44
     exists_measurable_referenceConeConditionedPath hd B hBm hB.cont hsub
   exact ⟨F, hF, hFid, hR γ hγ0 hγ2 Ω P B F hB hF hFid⟩
 
+/-- Every weak-limit conditioned law `ν` of drift `lqgQ γ - γ` equals the law of the explicit
+post-last-zero process, given the staged Remark 4.4 input. The weak-limit conditioned process
+(`IsBMConditionedPositive`) and the explicit reference process therefore agree in law; the
+uniqueness of the weak limit is `isBMConditionedPositive_unique` (Field.lean). -/
+theorem exists_referenceConeConditionedPath_map_eq_of_remark44
+    (hR : MatedCRT.Proposed.DMS14Remark44PostLastZeroLaw)
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    (B : ℝ≥0 → Ω → ℝ) (hB : IsBrownianReal B P) (hBm : ∀ t, Measurable (B t))
+    (hsub : ∀ᵐ ω ∂P, Tendsto (fun t : ℝ => B t.toNNReal ω / t) atTop (𝓝 0))
+    {ν : Measure (MarkovProcess.ContinuousPath ℝ)}
+    (hν : IsBMConditionedPositive (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) ν) :
+    ∃ F : Ω → MarkovProcess.ContinuousPath ℝ, Measurable F ∧
+      (∀ᵐ ω ∂P, ∀ t : ℝ≥0, F ω t = referenceConeConditionedPath γ (fun s => B s ω) t) ∧
+      P.map F = ν := by
+  obtain ⟨F, hF, hFid, hlaw⟩ :=
+    exists_referenceConeConditionedPath_law_of_remark44 hR hγ0 hγ2 B hB hBm hsub
+  exact ⟨F, hF, hFid, isBMConditionedPositive_unique hlaw hν⟩
+
 end MatedCRT.Sec1
