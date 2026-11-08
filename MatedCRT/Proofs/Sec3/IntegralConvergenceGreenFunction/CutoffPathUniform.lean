@@ -8,9 +8,9 @@ import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.PathEnvelope
 
 Deterministic core of `LBMPathFunctionalMeasurableStep` (paper argument, `docs/campaign/GAPS-SEC3.md`, item 4). Let `G` be a
 time change clock and `F n` strictly increasing approximate clocks converging to `G` uniformly on compact time intervals.
-The cutoff approximate inverses `cutInv (F n) n` then time-change a continuous path `b` into paths that converge to
-`b ∘ clockInverse G` in the local uniform distance `localUniformDist`, which metrizes local uniform convergence (Theorem 2.11
-of the paper). The cutoff `n` is eventually irrelevant on each compact time interval.
+The cutoff approximate inverses `cutInv (F n) (c n)`, for any cutoff sequence `c` tending to infinity, time-change a
+continuous path `b` into paths that converge to `b ∘ clockInverse G` in the local uniform distance `localUniformDist`, which
+metrizes local uniform convergence (Theorem 2.11 of the paper). The cutoff is eventually irrelevant on each compact interval.
 -/
 
 namespace MatedCRT
@@ -82,15 +82,39 @@ theorem tendsto_localUniformDist_of_forall_le {ι : Type*} {l : Filter ι} (f : 
   rw [Real.dist_eq, sub_zero, abs_of_nonneg hnn]
   linarith
 
+/-- **Uniform convergence of cutoff inverses for an arbitrary cutoff sequence.** If the cutoffs `c n` eventually exceed every
+bounded time, then `cutInv (F n) (c n)` converges uniformly on compact levels to `clockInverse G`. -/
+theorem cutInv_tendsto_uniform_of_cutoff {F : ℕ → ℝ≥0 → ℝ} {G : ℝ≥0 → ℝ} (hG : IsTimeChangeClock G)
+    (hF : ∀ n, StrictMono (F n)) (c : ℕ → ℝ≥0) (hc : ∀ T : ℝ≥0, ∀ᶠ n in atTop, T ≤ c n)
+    (hconv : ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η → ∀ᶠ n in atTop, ∀ t ≤ T, |F n t - G t| < η)
+    (U : ℝ≥0) (η : ℝ) (hη : 0 < η) :
+    ∀ᶠ n : ℕ in atTop, ∀ u ≤ U,
+      |((cutInv (F n) (c n) u : ℝ≥0) : ℝ) - ((clockInverse G u : ℝ≥0) : ℝ)| < η := by
+  -- a level `s₀` where the limit clock exceeds `U + 1`
+  obtain ⟨s₀, hs₀⟩ := (hG.tendsto_atTop.eventually_gt_atTop ((U : ℝ) + 1)).exists
+  -- eventually the clocks exceed `U` at their own cutoff
+  have hbig : ∀ᶠ n : ℕ in atTop, (U : ℝ) < F n (c n) := by
+    filter_upwards [hconv s₀ 1 one_pos, hc s₀] with n hn hsn
+    have h1 := abs_lt.1 (hn s₀ le_rfl)
+    have h2 : F n s₀ ≤ F n (c n) := (hF n).monotone hsn
+    linarith [h1.1]
+  have hunb : ∀ᶠ n : ℕ in atTop, ∀ u : ℝ≥0, u ≤ U → ∃ s : ℝ≥0, (u : ℝ) < F n s := by
+    filter_upwards [hbig] with n hn u hu
+    exact ⟨c n, lt_of_le_of_lt (by exact_mod_cast hu) hn⟩
+  filter_upwards [clockInverse_tendsto_uniform hG hF U hunb hconv η hη, hbig] with n hn hb u hu
+  have hu' : (u : ℝ) < F n (c n) := lt_of_le_of_lt (by exact_mod_cast hu) hb
+  rw [cutInv_eq_clockInverse (hF n) hu']
+  exact hn u hu
+
 /-- **Cutoff approximate paths converge in the local uniform distance.** If the approximate clocks `F n` are strictly
-increasing and converge to a time change clock `G` uniformly on compact time intervals, then for every continuous path `b`
-and every time scale `m`, the paths `t ↦ b (cutInv (F n) n (m t))` converge to `t ↦ b (clockInverse G (m t))` in the local
-uniform distance. -/
+increasing and converge to a time change clock `G` uniformly on compact time intervals, and the cutoffs `c n` tend to
+infinity, then for every continuous path `b` and every time scale `m`, the paths `t ↦ b (cutInv (F n) (c n) (m t))`
+converge to `t ↦ b (clockInverse G (m t))` in the local uniform distance. -/
 theorem cutoffPath_tendsto_localUniformDist {G : ℝ≥0 → ℝ} (hG : IsTimeChangeClock G)
-    {F : ℕ → ℝ≥0 → ℝ} (hF : ∀ n, StrictMono (F n))
+    {F : ℕ → ℝ≥0 → ℝ} (hF : ∀ n, StrictMono (F n)) (c : ℕ → ℝ≥0) (hc : ∀ T : ℝ≥0, ∀ᶠ n in atTop, T ≤ c n)
     (hconv : ∀ T : ℝ≥0, ∀ η : ℝ, 0 < η → ∀ᶠ n in atTop, ∀ t ≤ T, |F n t - G t| < η)
     (b : ContinuousPath ℂ) (m : ℝ≥0) :
-    Tendsto (fun n : ℕ => localUniformDist (fun t => b (cutInv (F n) (n : ℝ≥0) (m * t)))
+    Tendsto (fun n : ℕ => localUniformDist (fun t => b (cutInv (F n) (c n) (m * t)))
       (fun t => b (clockInverse G (m * t)))) atTop (𝓝 0) := by
   refine tendsto_localUniformDist_of_forall_le _ _ fun K η hη => ?_
   set U : ℝ≥0 := m * (K : ℝ≥0) with hU
@@ -99,21 +123,21 @@ theorem cutoffPath_tendsto_localUniformDist {G : ℝ≥0 → ℝ} (hG : IsTimeCh
     isCompact_Icc.uniformContinuousOn_of_continuous b.continuous.continuousOn
   obtain ⟨δ, hδpos, hδ⟩ := Metric.uniformContinuousOn_iff.1 hunif η hη
   have hmin : 0 < min δ 1 := lt_min hδpos one_pos
-  filter_upwards [cutInv_tendsto_uniform hG hF hconv U (min δ 1) hmin] with n hn t ht
+  filter_upwards [cutInv_tendsto_uniform_of_cutoff hG hF c hc hconv U (min δ 1) hmin] with n hn t ht
   have hu : m * t ≤ U := mul_le_mul_of_nonneg_left ht (by positivity)
   have hyS : clockInverse G (m * t) ≤ S := (IsTimeChangeClock.strictMono_clockInverse hG).monotone hu
-  have hi : |((cutInv (F n) (n : ℝ≥0) (m * t) : ℝ≥0) : ℝ) - ((clockInverse G (m * t) : ℝ≥0) : ℝ)| <
+  have hi : |((cutInv (F n) (c n) (m * t) : ℝ≥0) : ℝ) - ((clockInverse G (m * t) : ℝ≥0) : ℝ)| <
       min δ 1 :=
     hn (m * t) hu
-  have hdist : dist (cutInv (F n) (n : ℝ≥0) (m * t)) (clockInverse G (m * t)) < δ := by
+  have hdist : dist (cutInv (F n) (c n) (m * t)) (clockInverse G (m * t)) < δ := by
     rw [NNReal.dist_eq]
     exact lt_of_lt_of_le hi (min_le_left _ _)
   have hyR : ((clockInverse G (m * t) : ℝ≥0) : ℝ) ≤ (S : ℝ) := NNReal.coe_le_coe.2 hyS
-  have hxle : ((cutInv (F n) (n : ℝ≥0) (m * t) : ℝ≥0) : ℝ) ≤ ((S + 1 : ℝ≥0) : ℝ) := by
+  have hxle : ((cutInv (F n) (c n) (m * t) : ℝ≥0) : ℝ) ≤ ((S + 1 : ℝ≥0) : ℝ) := by
     have h1 := (abs_lt.1 hi).2
     push_cast
     linarith [min_le_right δ 1]
-  have hmemx : cutInv (F n) (n : ℝ≥0) (m * t) ∈ Icc (0 : ℝ≥0) (S + 1) :=
+  have hmemx : cutInv (F n) (c n) (m * t) ∈ Icc (0 : ℝ≥0) (S + 1) :=
     ⟨by simp, NNReal.coe_le_coe.1 hxle⟩
   have hmemy : clockInverse G (m * t) ∈ Icc (0 : ℝ≥0) (S + 1) :=
     ⟨by simp, le_trans hyS le_self_add⟩
