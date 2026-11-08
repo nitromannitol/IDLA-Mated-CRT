@@ -1,12 +1,14 @@
 import MatedCRT.Proofs.Sec1.EnvironmentScaling.DistributionCode
 import LatticeProb.Bonanno.LQGMetric.Field.MeasurableAvg
+import HarmonicBalls.Proofs.Sec8.WholePlaneObservableLaw
 
 /-!
 # Rescaled field pairings
 
 The coding and simultaneous representation from env-steps.tex:176–207 give
 an exactly field-measurable distribution.  Lines 309–314 require joint
-measurability of its evaluation at a dilated test; this is proved below.  This file does not assert cone law or independence.
+measurability of its evaluation at a dilated test; this is proved below.  The observable-law bridge uses Leonardo Bonanno’s LatticeProb field results via
+`HarmonicBalls.Proofs.Sec8.WholePlaneObservableLaw`.
 -/
 
 noncomputable section
@@ -69,6 +71,109 @@ theorem IsQuantumCone.joint_radial_lateral_law_eq
   rw [h.indep.map_prod_eq_prod_map_map (IsQuantumCone.measurable_radialProcess h).aemeasurable hl,
     h'.indep.map_prod_eq_prod_map_map (IsQuantumCone.measurable_radialProcess h').aemeasurable hl',
     IsQuantumCone.radial_law_eq h h', hlat]
+
+/-- Decode admissible pairings from the product of observable coordinates. -/
+private def observablePairing (v : GFFObservable.Admissible → ℝ) (φ : ℂ → ℝ) : ℝ := by
+  classical
+  exact if h : IsTestFunction univ φ then v ⟨.pairing φ, h⟩ else 0
+
+/-- Decode positive-radius circle averages from observable coordinates. -/
+private def observableCircle (v : GFFObservable.Admissible → ℝ) (r : ℝ) (z : ℂ) : ℝ :=
+  if h : 0 < r then v ⟨.circle r z, h⟩ else 0
+
+/-- Universal measurable lateral projection of the whole-plane observables. -/
+private def observableLateral (v : GFFObservable.Admissible → ℝ) : GFFObservable.Admissible → ℝ :=
+  fun o => CirclePairing.lateralVersionEval observablePairing observableCircle v o.1
+
+private theorem measurable_observableLateral : Measurable observableLateral := by
+  apply CirclePairing.measurable_lateralVersion
+  · intro φ hφ
+    change Measurable (fun v : GFFObservable.Admissible → ℝ => observablePairing v φ)
+    simp only [observablePairing, dite_eq_left hφ]
+    exact measurable_pi_apply _
+  · intro r z hr
+    change Measurable (fun v : GFFObservable.Admissible → ℝ => observableCircle v r z)
+    simp only [observableCircle, dite_eq_left hr]
+    exact measurable_pi_apply _
+
+private theorem observableLateral_apply {Ω : Type} [MeasurableSpace Ω]
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (ω : Ω) :
+    observableLateral (wholePlaneObservableProc hC hcirc ω) =
+      (fun o : GFFObservable.Admissible => CirclePairing.lateralVersionEval hC hcirc ω o.1) := by
+  have hrad : ∀ s, CirclePairing.radialVersion observableCircle
+      (wholePlaneObservableProc hC hcirc ω) s = CirclePairing.radialVersion hcirc ω s := by
+    intro s
+    unfold CirclePairing.radialVersion
+    congr 1
+    funext n
+    by_cases hn : 0 < ⌈s * 2 ^ n⌉
+    · have hp : 0 < CirclePairing.dyadicCeil n s :=
+        div_pos (Int.cast_pos.2 hn) (by positivity)
+      simp [CirclePairing.radialApprox, hn, observableCircle, hp, wholePlaneObservableProc,
+        GFFObservable.eval]
+    · simp [CirclePairing.radialApprox, hn]
+  funext ⟨o, ho⟩
+  cases o with
+  | pairing φ =>
+    have hφ : IsTestFunction univ φ := ho
+    simp only [observableLateral, CirclePairing.lateralVersionEval, observablePairing, hφ,
+      ↓reduceDIte, wholePlaneObservableProc, GFFObservable.eval, hrad]
+  | circle r z =>
+    have hr : 0 < r := ho
+    simp only [observableLateral, CirclePairing.lateralVersionEval, observableCircle, hr,
+      ↓reduceDIte, wholePlaneObservableProc, GFFObservable.eval, hrad]
+
+/-- The lateral projection of the whole-plane GFF has a law determined by its
+observable covariance specification, independently of the probability space. -/
+theorem IsWholePlaneGFF.lateral_law_eq
+    {Ω Ω' : Type} [MeasurableSpace Ω] [MeasurableSpace Ω']
+    {P : Measure Ω} {P' : Measure Ω'}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hC' : Ω' → (ℂ → ℝ) → ℝ}
+    {a : Ω → ℝ → ℂ → ℝ} {a' : Ω' → ℝ → ℂ → ℝ}
+    (h : IsWholePlaneGFF P hC a) (h' : IsWholePlaneGFF P' hC' a') :
+    P.map (fun ω => lateralProcess (hC ω) (a ω)) =
+      P'.map (fun ω => lateralProcess (hC' ω) (a' ω)) := by
+  have hrep : (observableLateral ∘ wholePlaneObservableProc hC a) =ᵐ[P]
+      (fun ω => lateralProcess (hC ω) (a ω)) := by
+    filter_upwards [h.ae_continuousOn_circle] with ω hω
+    exact (observableLateral_apply hC a ω).trans
+      (CirclePairing.lateralVersion_eq (CirclePairing.continuousOn_radial hω))
+  have hrep' : (observableLateral ∘ wholePlaneObservableProc hC' a') =ᵐ[P']
+      (fun ω => lateralProcess (hC' ω) (a' ω)) := by
+    filter_upwards [h'.ae_continuousOn_circle] with ω hω
+    exact (observableLateral_apply hC' a' ω).trans
+      (CirclePairing.lateralVersion_eq (CirclePairing.continuousOn_radial hω))
+  rw [← Measure.map_congr hrep, ← Measure.map_congr hrep',
+    ← Measure.map_map measurable_observableLateral h.measurable_wholePlaneObservableProc,
+    ← Measure.map_map measurable_observableLateral h'.measurable_wholePlaneObservableProc,
+    h.map_wholePlaneObservableProc_eq h']
+
+/-- The cone predicate determines the law of its lateral process. -/
+theorem IsQuantumCone.lateral_law_eq
+    {Ω Ω' : Type} [MeasurableSpace Ω] [MeasurableSpace Ω']
+    {γ : ℝ} {P : Measure Ω} {P' : Measure Ω'}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hC' : Ω' → (ℂ → ℝ) → ℝ}
+    {a : Ω → ℝ → ℂ → ℝ} {a' : Ω' → ℝ → ℂ → ℝ}
+    (h : IsQuantumCone γ P hC a) (h' : IsQuantumCone γ P' hC' a') :
+    P.map (fun ω => lateralProcess (hC ω) (a ω)) =
+      P'.map (fun ω => lateralProcess (hC' ω) (a' ω)) := by
+  obtain ⟨Ω₁, m₁, P₁, c₁, a₁, _, g₁, l₁⟩ := h.lateral_law
+  obtain ⟨Ω₂, m₂, P₂, c₂, a₂, _, g₂, l₂⟩ := h'.lateral_law
+  let _ := m₁
+  let _ := m₂
+  exact l₁.trans ((IsWholePlaneGFF.lateral_law_eq g₁ g₂).trans l₂.symm)
+
+/-- Two cones with the same parameter have the same joint radial and lateral law. -/
+theorem IsQuantumCone.joint_radial_lateral_law_unique
+    {Ω Ω' : Type} [MeasurableSpace Ω] [MeasurableSpace Ω']
+    {γ : ℝ} {P : Measure Ω} {P' : Measure Ω'}
+    [IsProbabilityMeasure P] [IsProbabilityMeasure P']
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hC' : Ω' → (ℂ → ℝ) → ℝ}
+    {a : Ω → ℝ → ℂ → ℝ} {a' : Ω' → ℝ → ℂ → ℝ}
+    (h : IsQuantumCone γ P hC a) (h' : IsQuantumCone γ P' hC' a') :
+    P.map (fun ω => (radialProcess (a ω), lateralProcess (hC ω) (a ω))) =
+      P'.map (fun ω => (radialProcess (a' ω), lateralProcess (hC' ω) (a' ω))) :=
+  IsQuantumCone.joint_radial_lateral_law_eq h h' (IsQuantumCone.lateral_law_eq h h')
 
 /-- Joint measurability of evaluation at a variable dilation, on the imported
 plane distribution and test-function carriers (env-steps.tex:309–314). -/
