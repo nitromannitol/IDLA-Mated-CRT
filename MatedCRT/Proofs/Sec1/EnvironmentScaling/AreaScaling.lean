@@ -1,6 +1,7 @@
 import MatedCRT.Defs.Setting
 import MatedCRT.Proofs.Sec1.ConeScaleRadius
 import MatedCRT.Proofs.Sec1.EnvironmentScaling
+import MatedCRT.Proofs.Measurability.LQGMeasureField
 import MatedCRT.Steps.Sec2.ConeScaleInvarianceUpToFixedTime
 import HarmonicBalls.Proofs.Sec9.LQGSpatialDilation
 import HarmonicBalls.Proofs.Sec6.LQGWeylScaling
@@ -1280,5 +1281,94 @@ theorem MatedCRTEnv.IsValid.isLQGMeasure_cone_rescaled_of_local_limits
     hS hscale hγ hγ2 hb hμ hzero U hU hcover hloc
   filter_upwards [hμ, heq] with ω hμω heqω
   simpa only [← heqω] using hμω
+
+/-- A distribution is coded by its values on compactly supported smooth tests. -/
+abbrev FieldPairingCode := {φ : ℂ → ℝ // IsTestFunction univ φ} → ℝ
+
+/-- The measurable field code of an environment. -/
+def fieldPairingCode {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    (ω : Ω) : FieldPairingCode := fun φ => S.hC ω φ.1
+
+theorem MatedCRTEnv.IsValid.measurable_fieldPairingCode {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) :
+    Measurable (fieldPairingCode S) :=
+  measurable_pi_iff.2 fun φ => hS.isQuantumCone.measurable_pairing φ.1 φ.2
+
+/-- The dyadic circle approximation computed directly from a field code. -/
+noncomputable def fieldCodeDyadicCircle (n : ℕ) : FieldPairingCode → ℂ → ℝ :=
+  FieldCircle.gridVersion fun w F =>
+    limsup (fun k => F ⟨LQGMetric.CircleAvg.circBump k w ((2 : ℝ)⁻¹ ^ n),
+      CirclePairing.isTestFunction_circBump k w ((2 : ℝ)⁻¹ ^ n)⟩) atTop
+
+theorem measurable_fieldCodeDyadicCircle (n : ℕ) :
+    Measurable (Function.uncurry (fieldCodeDyadicCircle n)) := by
+  apply FieldCircle.measurable_gridVersion
+  intro w
+  exact Measurable.limsup fun k => measurable_pi_apply _
+
+theorem fieldCodeDyadicCircle_fieldPairingCode {Ω : Type} [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) (n : ℕ) (ω : Ω) :
+    fieldCodeDyadicCircle n (fieldPairingCode S ω) = FieldCircle.dyadicCircleVersion S n ω := by
+  rfl
+
+/-- There is a Borel map from distributional test pairings to measures which
+recovers the area measure of every valid environment at the fixed parameter. -/
+theorem exists_measurable_fieldCode_lqgMeasure (γ : ℝ) :
+    ∃ M : FieldPairingCode → Measure ℂ, Measurable M ∧
+      ∀ {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+        {𝒮 : SpaceFillingSLEModel}, S.IsValid 𝒮 γ →
+        ∀ᵐ ω ∂S.P, M (fieldPairingCode S ω) = S.μ ω := by
+  let density : ℕ → FieldPairingCode → ℂ → ℝ := fun n F z =>
+    dyadicScale n ^ (γ ^ 2 / 2) * Real.exp (γ * fieldCodeDyadicCircle n F z)
+  have hdensity (n : ℕ) : Measurable (Function.uncurry (density n)) :=
+    measurable_const.mul (Real.measurable_exp.comp
+      (measurable_const.mul (measurable_fieldCodeDyadicCircle n)))
+  have hdensity_nonneg (n : ℕ) (F : FieldPairingCode) (z : ℂ) : 0 ≤ density n F z :=
+    mul_nonneg (Real.rpow_nonneg (by unfold dyadicScale; positivity) _) (Real.exp_pos _).le
+  let ν : ℕ → FieldPairingCode → Measure ℂ := fun n F =>
+    (volume : Measure ℂ).withDensity fun z => ENNReal.ofReal (density n F z)
+  have hν (n : ℕ) : Measurable (ν n) :=
+    LQGMeasureField.measurable_withDensity_ofReal (hdensity n)
+  have hint (n : ℕ) (f : ℂ → ℝ) (hf : Continuous f) (_ : HasCompactSupport f) :
+      Measurable fun F => ∫ z, f z ∂(ν n F) :=
+    LQGMeasureField.measurable_integral_withDensity_ofReal (hdensity n)
+      (hdensity_nonneg n) hf.measurable
+  obtain ⟨M, hM, hlim⟩ := VagueWholePlane.exists_measurable_vagueLimit ν hν hint
+  refine ⟨M, hM, ?_⟩
+  intro Ω _ S 𝒮 hS
+  filter_upwards [FieldCircle.ae_dyadicCircleVersion_eq hS, hS.isLQGMeasure,
+    hS.isQuantumCone.ae_continuousOn_circle] with ω hcircle hL hcont
+  have hνeq (n : ℕ) : ν n (fieldPairingCode S ω) =
+      lqgApprox γ (S.hcirc ω) (dyadicScale n) := by
+    simp only [ν, density, fieldCodeDyadicCircle_fieldPairingCode, hcircle]
+    rfl
+  refine hlim (fieldPairingCode S ω) (S.μ ω) (fun K hK => Eventually.of_forall fun n => ?_)
+    ⟨?_, fun K hK _ => ?_, fun f hf hfc _ => ?_⟩
+  · rw [hνeq]
+    have hc : Continuous fun z => S.hcirc ω (dyadicScale n) z := by
+      rw [← continuousOn_univ]
+      exact hcont.comp (continuous_const.prodMk continuous_id).continuousOn
+        fun z _ => ⟨dyadicScale_pos n, mem_univ z⟩
+    exact LQGMeasureField.withDensity_ofReal_lt_top
+      (continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul hc))) hK
+  · rw [compl_univ, measure_empty]
+  · have := hL.isLocallyFiniteMeasure
+    exact hK.measure_lt_top
+  · simp_rw [hνeq]
+    exact hL.tendsto_integral f hf hfc
+
+/-- Valid environments with the same field pairings almost surely have the
+same area measure almost surely, without enlarging the probability space. -/
+theorem MatedCRTEnv.IsValid.ae_measure_eq_of_ae_fieldPairingCode_eq
+    {Ω : Type} [MeasurableSpace Ω] {S T : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
+    (hT : T.IsValid 𝒮 γ) (hP : T.P = S.P)
+    (hfield : ∀ᵐ ω ∂S.P, fieldPairingCode S ω = fieldPairingCode T ω) :
+    ∀ᵐ ω ∂S.P, S.μ ω = T.μ ω := by
+  obtain ⟨M, _, hM⟩ := exists_measurable_fieldCode_lqgMeasure γ
+  have hMT := hM hT
+  rw [hP] at hMT
+  filter_upwards [hM hS, hMT, hfield] with ω hSω hTω hω
+  rw [← hSω, ← hTω, hω]
 
 end MatedCRT.Sec1
