@@ -258,12 +258,12 @@ theorem borel_le_generateFrom_basisPiSystem (E : Type*) [TopologicalSpace E] [Se
   refine MeasurableSpace.generateFrom_le fun t ht => MeasurableSpace.measurableSet_generateFrom ?_
   exact ⟨{t}, Set.finite_singleton t, Set.singleton_subset_iff.2 ht, (Set.sInter_singleton t).symm⟩
 
-/-- **Trace π-system of an open set.** For an open `S ⊆ E` there is a countable π-system `𝒬` of measurable subsets of
-`S`, containing `S`, whose traces generate the measurable subsets of `S`; this is the hypothesis family of
-`identDistrib_restrict_of_finiteDim`. -/
+/-- **Trace π-system of an open set.** For an open `S ⊆ E` there is a countable π-system `𝒬` of open subsets of `S`,
+containing `S`, whose traces generate the measurable subsets of `S`; this is the hypothesis family of
+`identDistrib_restrict_of_finiteDim`. The members are open, which the locality input (A) requires. -/
 theorem exists_traceSystem (E : Type*) [TopologicalSpace E] [SecondCountableTopology E] [MeasurableSpace E]
     [BorelSpace E] {S : Set E} (hS : IsOpen S) :
-    ∃ 𝒬 : Set (Set E), 𝒬.Countable ∧ IsPiSystem 𝒬 ∧ (∀ Q ∈ 𝒬, MeasurableSet Q ∧ Q ⊆ S) ∧ S ∈ 𝒬 ∧
+    ∃ 𝒬 : Set (Set E), 𝒬.Countable ∧ IsPiSystem 𝒬 ∧ (∀ Q ∈ 𝒬, IsOpen Q ∧ Q ⊆ S) ∧ S ∈ 𝒬 ∧
       ∀ A : Set E, MeasurableSet A → MeasurableSet[MeasurableSpace.generateFrom 𝒬] (A ∩ S) := by
   refine ⟨(fun Q => Q ∩ S) '' basisPiSystem E, (countable_basisPiSystem E).image _, ?_, ?_, ?_, ?_⟩
   · rintro _ ⟨Q₁, hQ₁, rfl⟩ _ ⟨Q₂, hQ₂, rfl⟩ _
@@ -272,7 +272,7 @@ theorem exists_traceSystem (E : Type*) [TopologicalSpace E] [SecondCountableTopo
     simp only [Set.mem_inter_iff]
     tauto
   · rintro _ ⟨Q, hQ, rfl⟩
-    exact ⟨((isOpen_of_mem_basisPiSystem E hQ).measurableSet).inter hS.measurableSet, Set.inter_subset_right⟩
+    exact ⟨(isOpen_of_mem_basisPiSystem E hQ).inter hS, Set.inter_subset_right⟩
   · exact ⟨Set.univ, univ_mem_basisPiSystem E, Set.univ_inter S⟩
   · intro A hA
     have hb : MeasurableSet[borel E] A := by

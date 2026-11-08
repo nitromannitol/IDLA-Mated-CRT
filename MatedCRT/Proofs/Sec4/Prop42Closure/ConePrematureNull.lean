@@ -4,6 +4,7 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.PlateauAE
 import MatedCRT.Proofs.Sec4.Prop42Closure.PlateauRadii
 import MatedCRT.Proofs.Sec4.Prop42Closure.RestrictionLocality
 import MatedCRT.Proofs.Sec4.Prop42Closure.ConeVolumeGrowth
+import MatedCRT.Proofs.Sec4.Prop42Closure.ConeWholePlaneRestrictedLaw
 
 /-! # The premature-contact event is null for the cone (closure of Proposition 4.2, z5)
 
@@ -19,7 +20,9 @@ Let `E` be the measurable set of measures with premature half-ball contact of th
   and the plateau probabilities vanish (`plateau_measure_zero_of_ae_radii_family`, fact (1), radii a.e. measurable).
 
 Named inputs: `VolumeGrowthStmt` (IDLA Lemma 2.7), `WholePlaneVolumeGrowthAeStep` (B1, whole plane),
-`WholePlaneLQGModelStep` (B2), `ConeWholePlaneRestrictedLQGLawStep` (fact (2) for restricted LQG measures, gap G1),
+`WholePlaneLQGModelStep` (B2), `ConeWholePlaneFieldLawStep` (fact (2) for the fields) and `LQGMeasureLocalityFunctionalStep`
+(input (A), locality of the LQG measure; they give fact (2) for the restricted LQG measures, gap G1, through
+`coneWholePlaneRestrictedLQGLawStep_of_inputs`),
 `PlateauScaleInvarianceStep` (fact (1)), `HarmonicBallLocalSetStmt`, `ExistenceHarmonicBallsStmt` and
 `ClusterStrongCompatibilityStmt` (Harmonic-Balls Thm 5.5 and Lemma 5.8; two components of `HarmonicBallsDraftInputs`). -/
 
@@ -127,7 +130,8 @@ theorem wholePlane_premature_null (hloc : HarmonicBallLocalSetStmt.{0}) (hEx : E
 theorem conePrematureContactNullStep_of_inputs (hloc : HarmonicBallLocalSetStmt.{0})
     (hEx : ExistenceHarmonicBallsStmt.{0}) (hSC : ClusterStrongCompatibilityStmt.{0})
     (hfact1 : PlateauScaleInvarianceStep) (hVG : VolumeGrowthStmt) (hVGw : WholePlaneVolumeGrowthAeStep)
-    (hB2 : WholePlaneLQGModelStep) (hG1 : ConeWholePlaneRestrictedLQGLawStep) :
+    (hB2 : WholePlaneLQGModelStep) (hFL : ConeWholePlaneFieldLawStep)
+    (hLoc : LQGMeasureLocalityFunctionalStep) :
     ConePrematureContactNullStep := by
   intro γ hγ hγ2 Ω _ P hC hcirc μ hcone
   obtain ⟨E, hE, hEprop⟩ := exists_measurable_halfBallPrematureContact
@@ -149,7 +153,8 @@ theorem conePrematureContactNullStep_of_inputs (hloc : HarmonicBallLocalSetStmt.
   obtain ⟨Ω', _, P', hC', hcirc', μ', hP', hGFF', hLQG'⟩ := hB2 γ hγ hγ2
   have hCeq : P {ω | (μ ω).restrict (ball (0 : ℂ) 1) ∈ E} =
       P' {ω' | (μ' ω').restrict (ball (0 : ℂ) 1) ∈ E} :=
-    (hG1 γ hγ hγ2 Ω P hC hcirc μ hcone Ω' P' hC' hcirc' μ' hP' hGFF' hLQG').measure_mem_eq hE
+    (coneWholePlaneRestrictedLQGLawStep_of_inputs hFL hLoc γ hγ hγ2 Ω P hC hcirc μ hcone Ω' P' hC' hcirc' μ' hP'
+      hGFF' hLQG').measure_mem_eq hE
   -- (D) the whole-plane event is null
   have hDz : P' {ω' | (μ' ω').restrict (ball (0 : ℂ) 1) ∈ E} = 0 := by
     have heq' : ∀ᵐ ω ∂P', ((μ' ω).restrict (ball (0 : ℂ) 1) ∈ E ↔
@@ -178,9 +183,10 @@ closure argument `coneHalfBallClosureInsideStep_of_prematureContactNull` (`HalfB
 theorem coneHalfBallClosureInsideStep_of_inputs (hloc : HarmonicBallLocalSetStmt.{0})
     (hEx : ExistenceHarmonicBallsStmt.{0}) (hSC : ClusterStrongCompatibilityStmt.{0})
     (hfact1 : PlateauScaleInvarianceStep) (hVG : VolumeGrowthStmt) (hVGw : WholePlaneVolumeGrowthAeStep)
-    (hB2 : WholePlaneLQGModelStep) (hG1 : ConeWholePlaneRestrictedLQGLawStep) :
+    (hB2 : WholePlaneLQGModelStep) (hFL : ConeWholePlaneFieldLawStep)
+    (hLoc : LQGMeasureLocalityFunctionalStep) :
     ConeHalfBallClosureInsideStep :=
   coneHalfBallClosureInsideStep_of_prematureContactNull
-    (conePrematureContactNullStep_of_inputs hloc hEx hSC hfact1 hVG hVGw hB2 hG1)
+    (conePrematureContactNullStep_of_inputs hloc hEx hSC hfact1 hVG hVGw hB2 hFL hLoc)
 
 end MatedCRT

@@ -72,8 +72,9 @@ def ConeWholePlaneFieldLawStep : Prop :=
     IdentDistrib (coneFieldOnB1 hC hcirc) (wholePlaneFieldOnB1 γ hC' hcirc') P P'
 
 /-- **Fact (2), for the restricted LQG measures** (the form used by the transfer of the premature-contact event).
-NOT DERIVED in this repository: `ConeWholePlaneFieldLawStep` yields it only once `μ|_{B_1}` is a measurable function of
-the restricted circle averages (gap G1, `reports/z5.md`). Used only as an explicit hypothesis. -/
+Derived (gap G1) in `ConeWholePlaneRestrictedLaw.lean` as `coneWholePlaneRestrictedLQGLawStep_of_inputs`, from
+`ConeWholePlaneFieldLawStep` and the locality input (A) `LQGMeasureLocalityFunctionalStep` (`LQGMeasureFunctional.lean`).
+The a.e. measurability of the whole-plane LQG measure needed there is proved in `WholePlaneLQGMeasurable.lean`. -/
 def ConeWholePlaneRestrictedLQGLawStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
