@@ -452,3 +452,15 @@ distinct following briefs and bounded lead-owned refill guards. No new
 12-round event, no paused/control edits. m1/m5 quota-exited; the logged99%
 guard differs from the operator96% stop, recorded for reconciliation without
 restarting them. No new mathematical WPN and no numbered closure.
+
+
+Late locality return17:18: 48b2c75's new LQGMeasureLocalityProof passes strict
+lc and the corrected axiom probe (the first probe used the wrong final
+declaration namespace, a harness-only failure). It proves the existing
+internal LQGMeasureLocalityFunctionalStep with a single restricted-circle
+functional chosen before both models. No extra locality hypothesis or
+numbered closure is claimed; the Prop4.2 strict gap remains independent.
+Final receipts cover13 committed sources,6 axiom probes,54 axiom outputs
+(52 distinct declarations), and a clean68-source hole/axiom scan. The
+Preston source-staging hold remains. z5 has origin next and a distinct
+IG-uniform-shift successor/refill; active queues remain supplied.

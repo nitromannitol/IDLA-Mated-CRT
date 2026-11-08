@@ -1,6 +1,6 @@
 # Written-proof requests at lead takeover (2026-11-08 08:23 UTC)
 
-Status: historical exact-type requests with per-target updates below. Six now have **WRITTEN-PROOF-AVAILABLE / LEAN-PENDING** after the operator16:25 ruling; three original targets and three newer scaling requests remain **WRITTEN-PROOF-NEEDED**. These are exact open proof obligations carried as named Step Props under the operator's standing rule. They are not proved results or approved literature inputs. The operator routes them to a separate prover and independent audit; active workers continue with explicit hypotheses. No statement or definition is changed by this ledger.
+Status: historical exact-type requests with per-target updates below. Six have **WRITTEN-PROOF-AVAILABLE** after the operator16:25 ruling, with their Lean implementation status updated per target below; three original targets and three newer scaling requests remain **WRITTEN-PROOF-NEEDED**. These are exact open proof obligations carried as named Step Props under the operator's standing rule. They are not proved results or approved literature inputs. The operator routes them to a separate prover and independent audit; active workers continue with explicit hypotheses. No statement or definition is changed by this ledger.
 
 The historical code blocks copy the entire original `def` command, including binders, from the indicated source; operator-authorized repairs and current interfaces are recorded in the dated updates. Names are fully qualified in headings; code uses the original namespace and open declarations of its source file. The declarations are pinned to the takeover commits (z1: 15e8866/f69cf7b; z5: d63273a; m1: 2afd11a), except the pre-existing S3 interface. Compile checks are recorded under `/home/nitro/paper-fleets/mcrt/lead/checks/20261108-takeover`.
 
@@ -23,7 +23,7 @@ These are written proofs, not new Lean closure or approved literature axioms.
 | WPN-36-uniform-cell | AVAILABLE, exact declaration correct, lines33-250 | m5 deterministic cell/area and outer-union-bound component checked at edbd4f0; uniform quantitative law remains |
 | WPN-36-pointwise-event | AVAILABLE REPAIR, original pointwise Step false, lines252-438; replace its inclusion by a.e. implication at each mesh and choose admissible parameters from the actual estimates | m5 e197e53 repaired Step/consumers checked; conditional envelope assembly checked; Borel state/walk construction remains |
 | WPN-36-pointwise-rates | WRITTEN-PROOF-NEEDED, lines440-649: G1 missing Brownian minimum uniqueness/strict adjacency and G2 early interpolation exit case | no proof task; keep named Step |
-| WPN-42-locality | AVAILABLE, exact declaration correct, lines651-794 | z5 local-measure functional; same map for both models |
+| WPN-42-locality | AVAILABLE, exact declaration correct, lines651-794 | z5 48b2c75 exact internal Step implementation checked, one map before both models; no Prop4.2 closure |
 | WPN-51-origin | AVAILABLE, exact declaration correct, lines796-1009 | z5 successor, obstacle code and completion measurability |
 | WPN-51-pole | WRITTEN-PROOF-NEEDED, lines1011-1507 excluded from successful audit | no proof task; keep named Step |
 | WPN-51-geometry | AVAILABLE, exact declaration correct, lines1509-1658 | z1 stopped geometry, regular-open compact core first |
@@ -419,3 +419,14 @@ is queued. The latter first corrects the omitted exact-measurability condition
 in the Proposed Preston staging; compilation is not source approval. See
 fleet ESCALATIONS E-PRESTON-EXACT-MEASURABILITY-STAGING. Original rates, pole,
 layer and the three newer scaling WPN are unchanged. No numbered closure.
+
+
+Late checked return17:18: z5 48b2c75 implements the exact existing
+LQGMeasureLocalityFunctionalStep in LQGMeasureLocalityProof.lean:637. The
+restricted-circle functional is selected before either environment; its
+deterministic cutoff/approximation limit equals the measure of U for both
+models, using their existing dyadic-limit/continuous-circle predicates.
+Strict lc, three exported axiom probes and the hole scan pass; only standard
+axioms occur. This is a checked internal Step implementation, not a
+numbered-theorem closure or independent frozen-statement source audit.
+Origin is next and an IG uniform-shift successor is staged with refill.
