@@ -1,5 +1,7 @@
 import Mathlib
 import MatedCRT.Defs.Setting
+import MatedCRT.Draft.Section3
+import MatedCRT.Draft.Section4
 
 /-!
 # Canonical published moment inputs of steps2-r3 (GMS arXiv:1705.11161v5, Section 4)
@@ -201,6 +203,32 @@ def GMSCoordinateChangeStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
         (fun ω => gmsRescaledCircle γ (hcirc ω) (coneScaleRadius γ (hcirc ω) b)) (μb b)) →
     ∀ b : ℝ, 0 < b → ∀ᵐ ω ∂P, ∀ Y : Set ℂ, MeasurableSet Y →
       μb b ω Y = μ ω ((fun z : ℂ => ((coneScaleRadius γ (hcirc ω) b : ℝ) : ℂ) * z) '' Y)
+
+/-! ## Canonical BG inputs: arXiv:2211.04891v2 Lemma 3.3 and Theorem 4.1 (printed form)
+
+Both are numbered results of the paper, staged here as explicit published inputs for the steps2-r3 route, which cites
+"the printed canonical Theorem 4.1, p. 32, and Lemma 3.3, pp. 23-24" (steps2-r3.tex 2996-2998, 3019-3028). The formal
+content is the Draft statement for the paper's environment `MatedCRTEnv.IsValid` (`MatedCRT/Defs/Setting.lean`, whose
+docstring identifies it as the environment of the paper for `γ` and `𝒮`). The only other quantifier is over cone
+harmonic ball families `Λ`, which `IsConeHarmonicBallFamily` determines from `μ` through condition (c)
+(`MatedCRT/Defs/Setting.lean:257-267`). The constant is `c₀/6` with `c₀ = 2/m₀` in place of the printed `m₀/6`
+(CORRECTION [C1], ESCALATIONS E-A3, confirmed). Not staged here: the identification of r3's canonical comparison
+realization (steps2-r3.tex 1912-1945: a measurable function of the Brownian boundary pair with the canonical DMS14/GHMS
+law) with a valid environment. That is a separate canonical-law identification obligation. -/
+
+/-- **BG Lemma 3.3** (arXiv:2211.04891v2, pp. 23-24; printed (3.12)): for a deterministic `r > 0`, `z` with `B_r(z) ⊂ B_ρ`,
+`y ∈ B_r(z)`, each `δ > 0` and `O ⊂ cl(B_r(z)) \ {y}` at positive distance from `y`, with probability tending to `1`
+the rescaled Green function `ḡ^ε` of the paper's environment satisfies `sup_{x ∈ O} |ḡ^ε(x) - (c₀/6) G_{B_r(z)}(y, x)| ≤ δ`.
+Formal statement: `MatedCRT.UniformConvergenceGreenKernelStmt` (`MatedCRT/Draft/Section3.lean:93`). -/
+abbrev BGLemma33Stmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  MatedCRT.UniformConvergenceGreenKernelStmt 𝒮
+
+/-- **BG Theorem 4.1** (arXiv:2211.04891v2, p. 32): for `t > 0`, on the event `{t < T_1}` the rescaled least supersolution
+`w̄^ε_t` converges uniformly on `B_ρ` to `(c₀/6) w̄^{B_ρ}_t` in probability, where `w̄^{B_ρ}_t` is the least supersolution of
+Theorem 2.3 for the cone harmonic ball family `Λ`. Formal statement: `MatedCRT.ConvergenceDivisibleStmt`
+(`MatedCRT/Draft/Section4.lean:39`; its event uses `clusterExitTime`, `MatedCRT/Defs/Setting.lean:271`). -/
+abbrev BGTheorem41Stmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  MatedCRT.ConvergenceDivisibleStmt 𝒮
 
 /-! ## Internal proved consequences (not published inputs)
 
@@ -644,5 +672,15 @@ theorem gms_innerDegree_moment {𝒮 : SpaceFillingSLEModel}
       _ ≤ ENNReal.ofReal (max K 0 * C ^ (-Nt)) + ENNReal.ofReal (Mb.toReal * C ^ (-q)) := add_le_add hE hTm
       _ = ENNReal.ofReal (Mb.toReal * C ^ (-q)) + ENNReal.ofReal (max K 0 * C ^ (-Nt)) := add_comm _ _
   exact tail_moment_outer P (fun ω => (gmsInnerDegree (η ω)).toENNReal) hp0 hpq hpNt hC₀pos hMr0 hK0 htail
+
+/-- Consistency of the α-cone carrier: at `α = γ`, `IsAlphaQuantumCone` is the γ-quantum cone `IsQuantumCone` of
+`MatedCRT/Defs/QuantumCone.lean`. The radial laws agree by unfolding, and the other five fields coincide. -/
+theorem isAlphaQuantumCone_gamma_iff {Ω : Type*} [MeasurableSpace Ω] (γ : ℝ) (P : Measure Ω)
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) :
+    IsAlphaQuantumCone γ γ P hC hcirc ↔ IsQuantumCone γ P hC hcirc :=
+  ⟨fun h => ⟨h.measurable_pairing, h.measurable_circle, h.ae_continuousOn_circle, h.radial_law, h.indep,
+      h.lateral_law⟩,
+    fun h => ⟨h.measurable_pairing, h.measurable_circle, h.ae_continuousOn_circle, h.radial_law, h.indep,
+      h.lateral_law⟩⟩
 
 end MatedCRT.StoppedCanonicalMoments
