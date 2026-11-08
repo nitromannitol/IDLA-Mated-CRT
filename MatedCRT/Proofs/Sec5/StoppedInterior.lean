@@ -1,6 +1,7 @@
 import MatedCRT.Proofs.Sec5.StoppedExterior
 import MatedCRT.Proofs.Sec4.DivSandpileLowerBound.Final
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.HarmonicPathExit
+import MatedCRT.Proofs.Sec5.StoppedInteriorMarginProof
 
 /-!
 # The interior lower bound of the stopped surplus: deterministic core (E-c1-5, `StoppedSurplusInteriorStep`)
@@ -180,6 +181,55 @@ def StoppedInteriorMeasurableStep (𝒮 : SpaceFillingSLEModel) : Prop :=
         Mhat ω = ⨅ x : {x : ℂ | x ∈ Λ ω t ∧ s ≤ ‖x‖ ∧ δ ≤ infDist x (Λ ω t)ᶜ},
           (HarmonicBalls.leastSupersolution (S.μ ω) ρ 0 t (x : ℂ) +
             t * HarmonicBalls.greenFunction (ball 0 ρ) 0 (x : ℂ))
+
+open StoppedInteriorMargin
+
+/-- **Residual random-code construction (named input; steps2 sec. 5, lines 1747-1805).** For `δ, s, t > 0` there are a
+random nonempty compact `K` and a random continuous function `f` on the margin domain `A = closedBall 0 (ρ/2) ∩ {s ≤ |x|}`,
+jointly `S.envSigma`-measurable, such that almost surely on `{t < T}`, `K = closure Λ_t` and
+`f = w̄_t + t G_{B_ρ}(0, ·)` on `A`. The compact set is the field-measurable random compact set of the Borel-version
+construction (steps2 1772-1782), and `f` is the Borel decoder of the surplus on `A` (steps2 1784-1805). Neither is
+formalized in the repository yet; this is the residual of `StoppedInteriorMeasurableStep`. -/
+def StoppedMarginCodeStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
+  ∀ δ s t : ℝ, 0 < δ → 0 < s → 0 < t →
+    ∃ (K : Ω → TopologicalSpace.NonemptyCompacts ℂ) (f : Ω → C(↥(marginDomain s (ρ / 2)), ℝ)),
+      @Measurable Ω (TopologicalSpace.NonemptyCompacts ℂ × C(↥(marginDomain s (ρ / 2)), ℝ)) S.envSigma (borel _)
+        (fun ω => (K ω, f ω)) ∧
+      ∀ᵐ ω ∂S.P, t < clusterExitTime (Λ ω) ρ →
+        (K ω : Set ℂ) = closure (Λ ω t) ∧
+        ∀ x : ↥(marginDomain s (ρ / 2)), f ω x =
+          HarmonicBalls.leastSupersolution (S.μ ω) ρ 0 t x.1 +
+            t * HarmonicBalls.greenFunction (ball 0 ρ) 0 x.1
+
+/-- **The repaired measurability step from the residual random-code construction.** The erosion minimum `m(K, f)` of the
+residual code is `S.envSigma`-measurable (`measurable_erodedMin_comp`), and on `{t < T}` it equals the raw continuum
+margin almost surely (`erodedMin_eq_raw`, with the regular-open identity and `Λ_t ⊆ B_{ρ/3}`). -/
+theorem stoppedInteriorMeasurable_of_code (𝒮 : SpaceFillingSLEModel) (hcode : StoppedMarginCodeStep 𝒮) :
+    StoppedInteriorMeasurableStep 𝒮 := by
+  intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS Λ hΛ δ s t hδ hs ht
+  obtain ⟨K, f, hKf, hae⟩ := hcode γ hγ hγ2 ρ hρ hρ1 Ω S hS Λ hΛ δ s t hδ hs ht
+  refine ⟨fun ω => erodedMin (marginDomain s (ρ / 2)) δ (K ω) (f ω), ?_, ?_⟩
+  · exact @measurable_erodedMin_comp (marginDomain s (ρ / 2)) Ω S.envSigma
+      (isCompact_marginDomain s (ρ / 2)) δ K f hKf
+  · filter_upwards [hΛ, hae] with ω hΛω hωae hT
+    obtain ⟨hK, hf⟩ := hωae hT
+    have hsub : Λ ω t ⊆ ball 0 (ρ / 3) :=
+      IDLALowerBound.subset_ball_div_three_of_lt_clusterExitTime hΛω.2.1.monotoneOn ht hT
+    have hEq := (hΛω.2.2 t (ρ / 3) ht (by linarith) hsub ρ (by linarith)).1
+    have hreg : interior (closure (Λ ω t)) = Λ ω t := interior_closure_eq_self_of_eq hEq
+    have hne : (Λ ω t)ᶜ.Nonempty := by
+      refine ⟨(ρ : ℂ), fun h => ?_⟩
+      have h1 := hsub h
+      rw [mem_ball_zero_iff, Complex.norm_real, Real.norm_of_nonneg hρ.le] at h1
+      linarith
+    have hsubR : Λ ω t ⊆ closedBall 0 (ρ / 2) :=
+      hsub.trans (ball_subset_closedBall.trans (closedBall_subset_closedBall (by linarith)))
+    exact erodedMin_eq_raw
+      (fun z => HarmonicBalls.leastSupersolution (S.μ ω) ρ 0 t z + t * HarmonicBalls.greenFunction (ball 0 ρ) 0 z)
+      (K ω) (f ω) hδ hreg hne hsubR hK hf
 
 /-- Union bound for six sets (left-nested unions). -/
 theorem measure_union_six {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (s₁ s₂ s₃ s₄ s₅ s₆ : Set Ω) :

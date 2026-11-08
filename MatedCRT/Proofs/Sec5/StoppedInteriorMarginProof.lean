@@ -241,4 +241,60 @@ theorem closedBall_subset_closure_iff {Λ : Set ℂ} (hreg : interior (closure �
     calc closedBall x δ = closure (ball x δ) := (closure_ball x hδ.ne').symm
       _ ⊆ closure Λ := closure_mono hball
 
+/-- The margin domain `A = {x : s ≤ |x| ≤ R}`, as used with `R = ρ/2` (steps2 lines 1790-1806). -/
+def marginDomain (s R : ℝ) : Set ℂ := closedBall 0 R ∩ {x : ℂ | s ≤ ‖x‖}
+
+theorem isCompact_marginDomain (s R : ℝ) : IsCompact (marginDomain s R) :=
+  (isCompact_closedBall 0 R).inter_right (isClosed_le continuous_const continuous_norm)
+
+/-- If `U = interior (closure C)` then `U` is regular open (steps2 lines 1825-1837: `Λ_t` is regular open as the interior
+of the closure of the cluster set, by the obstacle characterization). -/
+theorem interior_closure_eq_self_of_eq {U C : Set ℂ} (h : U = interior (closure C)) :
+    interior (closure U) = U := by
+  refine Subset.antisymm ?_ (interior_maximal subset_closure ?_)
+  · calc interior (closure U) ⊆ interior (closure C) := by
+          apply interior_mono
+          apply closure_minimal _ isClosed_closure
+          rw [h]
+          exact interior_subset
+      _ = U := h.symm
+  · rw [h]
+    exact isOpen_interior
+
+/-- **Deterministic identity of the erosion minimum with the continuum margin** (steps2 lines 1807-1858). If `K` is the
+closure of a regular open set `Λ` with nonempty complement, `Λ ⊆ closedBall 0 R`, and `f` equals `g` on the margin
+domain, then `m(K, f)` is the raw continuum margin `inf_{x ∈ Λ, s ≤ |x|, δ ≤ dist(x, Λᶜ)} g x` (with the real
+convention `inf ∅ = 0`). -/
+theorem erodedMin_eq_raw {s R δ : ℝ} {Λ : Set ℂ} (g : ℂ → ℝ) (K : NonemptyCompacts ℂ)
+    (f : C(↥(marginDomain s R), ℝ)) (hδ : 0 < δ) (hreg : interior (closure Λ) = Λ) (hne : Λᶜ.Nonempty)
+    (hsub : Λ ⊆ closedBall 0 R) (hK : (K : Set ℂ) = closure Λ) (hf : ∀ x : ↥(marginDomain s R), f x = g x.1) :
+    erodedMin (marginDomain s R) δ K f = ⨅ y : {x : ℂ | x ∈ Λ ∧ s ≤ ‖x‖ ∧ δ ≤ infDist x Λᶜ}, g y.1 := by
+  have key : ∀ x ∈ marginDomain s R,
+      closedBall x δ ⊆ (K : Set ℂ) ↔ (x ∈ Λ ∧ s ≤ ‖x‖ ∧ δ ≤ infDist x Λᶜ) := by
+    intro x hx
+    have hxs : s ≤ ‖x‖ := (Set.mem_inter_iff _ _ _).1 hx |>.2
+    rw [hK]
+    constructor
+    · intro h
+      have hd : δ ≤ infDist x Λᶜ := (closedBall_subset_closure_iff hreg hne hδ x).1 h
+      have hxΛ : x ∈ Λ := by
+        by_contra hn
+        have h0 : infDist x Λᶜ = 0 := infDist_zero_of_mem (mem_compl hn)
+        linarith
+      exact ⟨hxΛ, hxs, hd⟩
+    · rintro ⟨-, -, hd⟩
+      exact (closedBall_subset_closure_iff hreg hne hδ x).2 hd
+  have hrange : Set.range (fun x : erosionIndex (marginDomain s R) δ K => f x.1) =
+      Set.range (fun y : {x : ℂ | x ∈ Λ ∧ s ≤ ‖x‖ ∧ δ ≤ infDist x Λᶜ} => g y.1) := by
+    ext r
+    constructor
+    · rintro ⟨⟨x, hx⟩, rfl⟩
+      have hkey := (key x.1 x.2).1 hx
+      exact ⟨⟨x.1, hkey⟩, (hf x).symm⟩
+    · rintro ⟨⟨y, hy⟩, rfl⟩
+      have hyA : y ∈ marginDomain s R := Set.mem_inter (hsub hy.1) hy.2.1
+      exact ⟨⟨⟨y, hyA⟩, (key y hyA).2 hy⟩, hf ⟨y, hyA⟩⟩
+  unfold erodedMin iInf
+  rw [hrange]
+
 end MatedCRT.StoppedInteriorMargin
