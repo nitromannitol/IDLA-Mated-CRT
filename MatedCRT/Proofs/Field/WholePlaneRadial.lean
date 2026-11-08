@@ -56,5 +56,30 @@ theorem wholePlaneGFFCov_origin_circles {a b : ℝ} (ha : 0 < a) (ha1 : a ≤ 1)
     rw [h2, max_eq_left hab]
     ring
 
+/-- The radial process `t ↦ h_{e^{-t}}(0)` of a whole-plane GFF is a Gaussian process indexed by `t ≥ 0`. -/
+theorem isGaussianProcess_radial {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hh : IsWholePlaneGFF P hC hcirc) :
+    ProbabilityTheory.IsGaussianProcess (fun t : NNReal => fun ω => hcirc ω (Real.exp (-(t : ℝ))) 0) P :=
+  hh.isGaussianProcess.comp_right (fun t : NNReal =>
+    (⟨GFFObservable.circle (Real.exp (-(t : ℝ))) 0, Real.exp_pos _⟩ : GFFObservable.Admissible))
+
+/-- The covariance of the radial process is `min(s, t)`: `Cov(h_{e^{-s}}(0), h_{e^{-t}}(0)) = min(s, t)`. -/
+theorem cov_radial {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hh : IsWholePlaneGFF P hC hcirc) (s t : NNReal) :
+    ProbabilityTheory.covariance (fun ω => hcirc ω (Real.exp (-(s : ℝ))) 0)
+      (fun ω => hcirc ω (Real.exp (-(t : ℝ))) 0) P = min (s : ℝ) (t : ℝ) := by
+  have hs1 : Real.exp (-(s : ℝ)) ≤ 1 := Real.exp_le_one_iff.2 (by linarith [s.2])
+  have ht1 : Real.exp (-(t : ℝ)) ≤ 1 := Real.exp_le_one_iff.2 (by linarith [t.2])
+  have h := hh.covariance_eq (GFFObservable.circle (Real.exp (-(s : ℝ))) 0)
+    (GFFObservable.circle (Real.exp (-(t : ℝ))) 0) (Real.exp_pos _) (Real.exp_pos _)
+  rw [wholePlaneGFFCov_origin_circles (Real.exp_pos _) hs1 (Real.exp_pos _) ht1] at h
+  refine h.trans ?_
+  rcases le_total (s : ℝ) (t : ℝ) with hst | hst
+  · rw [max_eq_left (Real.exp_le_exp.2 (by linarith)), Real.log_exp, min_eq_left hst]
+    ring
+  · rw [max_eq_right (Real.exp_le_exp.2 (by linarith)), Real.log_exp, min_eq_right hst]
+    ring
+
 end MatedCRT.Field
+
 
