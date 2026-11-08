@@ -175,6 +175,188 @@ theorem IsQuantumCone.joint_radial_lateral_law_unique
       P'.map (fun ω => (radialProcess (a' ω), lateralProcess (hC' ω) (a' ω))) :=
   IsQuantumCone.joint_radial_lateral_law_eq h h' (IsQuantumCone.lateral_law_eq h h')
 
+/-- The two radial paths used in the cone definition. -/
+private abbrev RadialData := (NNReal → ℝ) × (NNReal → ℝ)
+
+/-- Recover centered radial circle values from the two logarithmic paths. -/
+private def radialCircle (v : RadialData) (r : ℝ) (_z : ℂ) : ℝ :=
+  if 1 ≤ r then v.2 (Real.toNNReal (Real.log r))
+  else v.1 (Real.toNNReal (-Real.log r))
+
+private theorem measurable_radialCircle (r : ℝ) (z : ℂ) :
+    Measurable (fun v : RadialData => radialCircle v r z) := by
+  by_cases hr : 1 ≤ r
+  · simp only [radialCircle, hr, ↓reduceIte]
+    exact (measurable_pi_apply _).comp measurable_snd
+  · simp only [radialCircle, hr, ↓reduceIte]
+    exact (measurable_pi_apply _).comp measurable_fst
+
+private theorem radialCircle_radialProcess (a : ℝ → ℂ → ℝ) {r : ℝ} (hr : 0 < r) (z : ℂ) :
+    radialCircle (radialProcess a) r z = a r 0 := by
+  by_cases h : 1 ≤ r
+  · have hl := Real.log_nonneg h
+    simp only [radialCircle, h, ↓reduceIte, radialProcess, Real.coe_toNNReal _ hl,
+      Real.exp_log hr]
+  · have hl : Real.log r ≤ 0 := Real.log_nonpos hr.le (le_of_not_ge h)
+    simp only [radialCircle, h, ↓reduceIte, radialProcess, Real.coe_toNNReal _ (neg_nonneg.mpr hl),
+      neg_neg, Real.exp_log hr]
+
+private theorem radialVersion_radialProcess (a : ℝ → ℂ → ℝ) (s : ℝ) :
+    CirclePairing.radialVersion radialCircle (radialProcess a) s =
+      CirclePairing.radialVersion (fun _ : Unit => a) () s := by
+  unfold CirclePairing.radialVersion
+  congr 1
+  funext n
+  by_cases hn : 0 < ⌈s * 2 ^ n⌉
+  · have hp : 0 < CirclePairing.dyadicCeil n s :=
+      div_pos (Int.cast_pos.2 hn) (by positivity)
+    simp [CirclePairing.radialApprox, hn, radialCircle_radialProcess a hp]
+  · simp [CirclePairing.radialApprox, hn]
+
+/-- Reconstruct admissible observables by adding the radial contribution to
+lateral observables, using the measurable dyadic radial version. -/
+private def radialLateralObservables (v : RadialData × (GFFObservable.Admissible → ℝ)) :
+    GFFObservable.Admissible → ℝ := fun o =>
+  match o.1 with
+  | .pairing φ => v.2 o + ∫ x, φ x * CirclePairing.radialVersion radialCircle v.1 ‖x‖
+  | .circle r z => v.2 o + Real.circleAverage
+      (fun x => CirclePairing.radialVersion radialCircle v.1 ‖x‖) z r
+
+private theorem measurable_radialLateralObservables : Measurable radialLateralObservables := by
+  have hr := CirclePairing.measurable_radialVersion
+    (fun r z _ => measurable_radialCircle r z)
+  apply measurable_pi_iff.mpr
+  rintro ⟨o, ho⟩
+  cases o with
+  | pairing φ =>
+    have hf : StronglyMeasurable fun p : (RadialData × (GFFObservable.Admissible → ℝ)) × ℂ =>
+        φ p.2 * CirclePairing.radialVersion radialCircle p.1.1 ‖p.2‖ :=
+      ((ho.1.continuous.measurable.comp measurable_snd).mul
+        (hr.comp ((measurable_fst.comp measurable_fst).prodMk measurable_snd.norm))).stronglyMeasurable
+    exact ((measurable_pi_apply _).comp measurable_snd).add
+      (hf.integral_prod_right' (ν := volume)).measurable
+  | circle r z =>
+    have e : (fun v : RadialData × (GFFObservable.Admissible → ℝ) =>
+        Real.circleAverage (fun x => CirclePairing.radialVersion radialCircle v.1 ‖x‖) z r) =
+        fun v => (2 * Real.pi)⁻¹ * ∫ θ in Ioc 0 (2 * Real.pi),
+          CirclePairing.radialVersion radialCircle v.1 ‖circleMap z r θ‖ := funext fun _ => by
+      rw [Real.circleAverage_def, intervalIntegral.integral_of_le (by positivity), smul_eq_mul]
+    have hf : StronglyMeasurable fun p : (RadialData × (GFFObservable.Admissible → ℝ)) × ℝ =>
+        CirclePairing.radialVersion radialCircle p.1.1 ‖circleMap z r p.2‖ :=
+      (hr.comp ((measurable_fst.comp measurable_fst).prodMk
+        ((continuous_circleMap z r).measurable.comp measurable_snd).norm)).stronglyMeasurable
+    have hc : Measurable (fun v : RadialData × (GFFObservable.Admissible → ℝ) =>
+        Real.circleAverage (fun x => CirclePairing.radialVersion radialCircle v.1 ‖x‖) z r) := by
+      rw [e]
+      exact (hf.integral_prod_right' (ν := volume.restrict (Ioc 0 (2 * Real.pi)))).measurable.const_mul _
+    exact ((measurable_pi_apply _).comp measurable_snd).add hc
+
+private theorem radialLateralObservables_apply (hC : (ℂ → ℝ) → ℝ) (a : ℝ → ℂ → ℝ)
+    (ha : ContinuousOn (fun s => a s 0) (Ioi 0)) :
+    radialLateralObservables (radialProcess a, lateralProcess hC a) =
+      wholePlaneObservableProc (fun _ : Unit => hC) (fun _ : Unit => a) () := by
+  have hrad : ∀ s, CirclePairing.radialVersion radialCircle (radialProcess a) s =
+      CirclePairing.radialVersion (fun _ : Unit => a) () s := radialVersion_radialProcess a
+  have hlat := CirclePairing.lateralVersion_eq (hC := fun _ : Unit => hC) (hcirc := fun _ : Unit => a) (ω := ()) ha
+  funext ⟨o, ho⟩
+  have heval := congrFun hlat ⟨o, ho⟩
+  cases o with
+  | pairing φ =>
+    simp only [CirclePairing.lateralVersionEval, lateralProcess, lateralEval] at heval
+    simp only [radialLateralObservables, lateralProcess, lateralEval, wholePlaneObservableProc,
+      GFFObservable.eval, hrad]
+    linarith
+  | circle r z =>
+    simp only [CirclePairing.lateralVersionEval, lateralProcess, lateralEval] at heval
+    simp only [radialLateralObservables, lateralProcess, lateralEval, wholePlaneObservableProc,
+      GFFObservable.eval, hrad]
+    linarith
+
+/-- The radial and lateral law determines the law of all admissible cone
+pairings and positive-radius circle averages. -/
+theorem IsQuantumCone.observable_law_eq
+    {Ω Ω' : Type} [MeasurableSpace Ω] [MeasurableSpace Ω']
+    {γ : ℝ} {P : Measure Ω} {P' : Measure Ω'}
+    [IsProbabilityMeasure P] [IsProbabilityMeasure P']
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hC' : Ω' → (ℂ → ℝ) → ℝ}
+    {a : Ω → ℝ → ℂ → ℝ} {a' : Ω' → ℝ → ℂ → ℝ}
+    (h : IsQuantumCone γ P hC a) (h' : IsQuantumCone γ P' hC' a') :
+    P.map (wholePlaneObservableProc hC a) = P'.map (wholePlaneObservableProc hC' a') := by
+  have hrep : (fun ω => radialLateralObservables (radialProcess (a ω), lateralProcess (hC ω) (a ω))) =ᵐ[P]
+      wholePlaneObservableProc hC a := by
+    filter_upwards [h.ae_continuousOn_circle] with ω hω
+    exact radialLateralObservables_apply (hC ω) (a ω) (CirclePairing.continuousOn_radial hω)
+  have hrep' : (fun ω => radialLateralObservables (radialProcess (a' ω), lateralProcess (hC' ω) (a' ω))) =ᵐ[P']
+      wholePlaneObservableProc hC' a' := by
+    filter_upwards [h'.ae_continuousOn_circle] with ω hω
+    exact radialLateralObservables_apply (hC' ω) (a' ω) (CirclePairing.continuousOn_radial hω)
+  have hm := (IsQuantumCone.measurable_radialProcess h).aemeasurable.prodMk
+    (CirclePairing.aemeasurable_lateralProcess h.measurable_pairing h.measurable_circle h.ae_continuousOn_circle)
+  have hm' := (IsQuantumCone.measurable_radialProcess h').aemeasurable.prodMk
+    (CirclePairing.aemeasurable_lateralProcess h'.measurable_pairing h'.measurable_circle h'.ae_continuousOn_circle)
+  rw [← Measure.map_congr hrep, ← Measure.map_congr hrep']
+  change P.map (radialLateralObservables ∘ (fun ω => (radialProcess (a ω), lateralProcess (hC ω) (a ω)))) =
+    P'.map (radialLateralObservables ∘ (fun ω => (radialProcess (a' ω), lateralProcess (hC' ω) (a' ω))))
+  rw [← AEMeasurable.map_map_of_aemeasurable measurable_radialLateralObservables.aemeasurable hm,
+    ← AEMeasurable.map_map_of_aemeasurable measurable_radialLateralObservables.aemeasurable hm',
+    IsQuantumCone.joint_radial_lateral_law_unique h h']
+
+/-- Decode the countable test-function coordinates of an observable family. -/
+private def observableDistribution (v : GFFObservable.Admissible → ℝ) : LQGMetric.DistC :=
+  planeDistributionCode.decode fun n =>
+    v ⟨.pairing (planeDistributionCode.test n),
+      ⟨(planeDistributionCode.test n).contDiff,
+       (planeDistributionCode.test n).hasCompactSupport,
+       (planeDistributionCode.test n).tsupport_subset⟩⟩
+
+private theorem measurable_observableDistribution : Measurable observableDistribution := by
+  apply planeDistributionCode.measurable_decode.comp
+  apply measurable_pi_iff.mpr
+  intro n
+  exact measurable_pi_apply _
+
+/-- Observable coordinates of a cone are measurable in the product sigma-algebra. -/
+theorem IsQuantumCone.measurable_observables
+    {Ω : Type} [MeasurableSpace Ω] {γ : ℝ} {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {a : Ω → ℝ → ℂ → ℝ}
+    (h : IsQuantumCone γ P hC a) : Measurable (wholePlaneObservableProc hC a) := by
+  apply measurable_pi_iff.mpr
+  rintro ⟨o, ho⟩
+  cases o with
+  | pairing φ => exact h.measurable_pairing φ ho
+  | circle r z => exact h.measurable_circle r z ho
+
+/-- The cone predicate determines the law of any simultaneously represented
+plane distribution, independently of the probability space and of the
+choice of representing distribution. -/
+theorem IsQuantumCone.distribution_law_eq
+    {Ω Ω' : Type} [MeasurableSpace Ω] [MeasurableSpace Ω']
+    {γ : ℝ} {P : Measure Ω} {P' : Measure Ω'}
+    [IsProbabilityMeasure P] [IsProbabilityMeasure P']
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hC' : Ω' → (ℂ → ℝ) → ℝ}
+    {a : Ω → ℝ → ℂ → ℝ} {a' : Ω' → ℝ → ℂ → ℝ}
+    (h : IsQuantumCone γ P hC a) (h' : IsQuantumCone γ P' hC' a')
+    {H : Ω → LQGMetric.DistC} {H' : Ω' → LQGMetric.DistC}
+    (hrep : ∀ᵐ ω ∂P, ∀ φ : LQGMetric.TestC, hC ω φ = H ω φ)
+    (hrep' : ∀ᵐ ω ∂P', ∀ φ : LQGMetric.TestC, hC' ω φ = H' ω φ) :
+    P.map H = P'.map H' := by
+  have heq : (observableDistribution ∘ wholePlaneObservableProc hC a) =ᵐ[P] H := by
+    filter_upwards [hrep] with ω hω
+    change planeDistributionCode.decode (fun n => hC ω (planeDistributionCode.test n)) = H ω
+    have hc : (fun n => hC ω (planeDistributionCode.test n)) =
+        (fun n => H ω (planeDistributionCode.test n)) := funext fun n => hω _
+    rw [hc, planeDistributionCode.decode_encode]
+  have heq' : (observableDistribution ∘ wholePlaneObservableProc hC' a') =ᵐ[P'] H' := by
+    filter_upwards [hrep'] with ω hω
+    change planeDistributionCode.decode (fun n => hC' ω (planeDistributionCode.test n)) = H' ω
+    have hc : (fun n => hC' ω (planeDistributionCode.test n)) =
+        (fun n => H' ω (planeDistributionCode.test n)) := funext fun n => hω _
+    rw [hc, planeDistributionCode.decode_encode]
+  rw [← Measure.map_congr heq, ← Measure.map_congr heq',
+    ← Measure.map_map measurable_observableDistribution (IsQuantumCone.measurable_observables h),
+    ← Measure.map_map measurable_observableDistribution (IsQuantumCone.measurable_observables h'),
+    IsQuantumCone.observable_law_eq h h']
+
 /-- Joint measurability of evaluation at a variable dilation, on the imported
 plane distribution and test-function carriers (env-steps.tex:309–314). -/
 def VariableDilationPairingStep : Prop :=
@@ -598,6 +780,24 @@ theorem map_distribution_circles_eq_of_map_eq
     exact hω p.1 p.1.property p.2
   rw [← Measure.map_congr hleft, ← Measure.map_congr hright]
   exact map_distribution_circleCode_eq_of_map_eq hH hH' hlaw
+
+/-- For valid environments at the same parameter, simultaneously represented
+fields have the same joint distribution and positive-radius circle law. -/
+theorem map_distribution_circles_eq_of_cones
+    {Ω Ω' : Type} [MeasurableSpace Ω] [MeasurableSpace Ω']
+    {S : MatedCRTEnv Ω} {S' : MatedCRTEnv Ω'}
+    {𝒮 𝒮' : SpaceFillingSLEModel} {γ : ℝ}
+    (hS : S.IsValid 𝒮 γ) (hS' : S'.IsValid 𝒮' γ)
+    {H : Ω → LQGMetric.DistC} {H' : Ω' → LQGMetric.DistC}
+    (hH : Measurable H) (hH' : Measurable H')
+    (hrep : ∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ)
+    (hrep' : ∀ᵐ ω ∂S'.P, ∀ φ : LQGMetric.TestC, S'.hC ω φ = H' ω φ) :
+    S.P.map (fun ω => (H ω, fun p : Ioi (0 : ℝ) × ℂ => S.hcirc ω p.1 p.2)) =
+      S'.P.map (fun ω => (H' ω, fun p : Ioi (0 : ℝ) × ℂ => S'.hcirc ω p.1 p.2)) := by
+  let : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
+  let : IsProbabilityMeasure S'.P := hS'.isProbabilityMeasure
+  exact map_distribution_circles_eq_of_map_eq hS hS' hH hH' hrep hrep'
+    (IsQuantumCone.distribution_law_eq hS.isQuantumCone hS'.isQuantumCone hrep hrep')
 
 /-- Pair a distribution at a variable scale, with zero on non-tests. -/
 def rescaledDistributionPairing (γ b : ℝ) (H : LQGMetric.DistC) (r : ℝ)
