@@ -381,3 +381,37 @@ late lc/axiom rechecks hit missing companion build objects on successive
 attempts; the earlier162c7e3 proof remains verified and no unverified
 strengthening is credited. The m5 runner promoted its all-scale successor and
 refilled the curve-area-recovery queue. No numbered closure.
+
+
+## Lead round 2026-11-08 16:44 UTC
+
+New operator16:25 audited return: see the six per-target written-proof/repair
+routes in [GAPS-TAKEOVER-20261108.md](GAPS-TAKEOVER-20261108.md).
+Uniform-cell, locality, origin and stopped geometry are correct as declared;
+pointwise envelope and raw margin are false and have authorized repairs.
+Rates, pole and layer stay WRITTEN-PROOF-NEEDED; the two newer scaling gaps
+and common-event dilated-circle gap are unchanged. No numbered closure.
+
+At pinned aef2b81, seven source snapshots pass strict lc. Five added axiom
+probes plus the plateau audit check28 exported results with standard axioms
+only;57-source raw scan and comment/string-stripped code scan have no code
+holes or added axioms. Receipts: fleet lead/checks/20261108-1633.
+The previous Area dependency-object hold is resolved on the current checked
+descendant, including the cone-only decoder. CurveAreaRecovery proves rooted
+inverse area-clock uniqueness and measurable inversion, conditional on the
+stated segment-mass measurability; varying-curve segment masses and joint
+recovery remain. CanonicalConeIdentification builds continuous-path laws
+conditional on ReferenceConeRadialCircleStep; it does not independently prove
+the weak-limit/post-last-zero identification. CircleProcessSpace supplies
+Polish/Borel infrastructure, and AllStartsClock supplies the rescaled circle
+version; the general-Polish Preston transfer remains separate from its printed
+Cantor-space theorem. These components do not discharge all environment Steps.
+
+m1 current canonical bridge and independent-uniform next remain; its following
+radial-Gaussian component is staged. m5 promoted uniform-cell and has a.e.
+envelope repair next. z1 keeps its current clock task, then stopped geometry
+and measurable margin repair. z5 keeps its current IG curve component, then
+locality and origin. Three missing printed-form source-staging slices are
+assigned in disjoint Proposed files. All4 next queues exist with a bounded
+six-hour lead-owned refill (queues/20261108-1633/refill-all.py). No new
+12-round event and no paused-worker task/control edits.

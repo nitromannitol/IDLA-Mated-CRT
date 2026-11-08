@@ -1,6 +1,6 @@
 # Written-proof requests at lead takeover (2026-11-08 08:23 UTC)
 
-Status: **WRITTEN-PROOF-NEEDED** for each request below. These are exact open proof obligations carried as named Step Props under the operator's standing rule. They are not proved results or approved literature inputs. The operator routes them to a separate prover and independent audit; active workers continue with explicit hypotheses. No statement or definition is changed by this ledger.
+Status: historical exact-type requests with per-target updates below. Six now have **WRITTEN-PROOF-AVAILABLE / LEAN-PENDING** after the operator16:25 ruling; three original targets and three newer scaling requests remain **WRITTEN-PROOF-NEEDED**. These are exact open proof obligations carried as named Step Props under the operator's standing rule. They are not proved results or approved literature inputs. The operator routes them to a separate prover and independent audit; active workers continue with explicit hypotheses. No statement or definition is changed by this ledger.
 
 The code blocks copy the entire current `def` command, including binders, from the indicated source. Names are fully qualified in headings; code uses the original namespace and open declarations of its source file. The declarations are pinned to the takeover commits (z1: 15e8866/f69cf7b; z5: d63273a; m1: 2afd11a), except the pre-existing S3 interface. Compile checks are recorded under `/home/nitro/paper-fleets/mcrt/lead/checks/20261108-takeover`.
 
@@ -8,9 +8,39 @@ The three rescaled-environment requests remain in [EnvironmentScaling.md](Enviro
 
 Operator update read 2026-11-08 14:24 UTC (inbox entry labelled 14:40): the nine remaining requests WPN-36 x3, WPN-42-locality and WPN-51 x5 were sent to a separate prover at14:20, one target at a time. They remain **WRITTEN-PROOF-NEEDED**, carried as named Step hypotheses until each independently audited proof returns. Active workers are not assigned their proofs. m6 and z2 are now paused; historical ownership references below do not authorize new work for them.
 
+
+## Independently audited return, operator 2026-11-08 16:25
+
+Pinned source: fleet `notes/wpn-steps2/steps2.tex`, sha256
+`8ec75074beeb628d998a25dcc2a7a86b2a0b59a832899f7c78dd42a9ede27793`;
+independent audit `notes/wpn-steps2/AUDIT-steps2.md`. Overall verdict GAPS
+is per-target: four exact declarations are correct, two false declarations
+have sufficient audited repairs, and rates/pole/layer remain unreturned.
+These are written proofs, not new Lean closure or approved literature axioms.
+
+| Request | Written status and exact source section | Lean routing |
+| --- | --- | --- |
+| WPN-36-uniform-cell | AVAILABLE, exact declaration correct, lines33-250 | m5 uniform-cell, first geometric/quantitative component |
+| WPN-36-pointwise-event | AVAILABLE REPAIR, original pointwise Step false, lines252-438; replace its inclusion by a.e. implication at each mesh and choose admissible parameters from the actual estimates | m5 successor, repaired Step and existing a.e. tail/mean consumers |
+| WPN-36-pointwise-rates | WRITTEN-PROOF-NEEDED, lines440-649: G1 missing Brownian minimum uniqueness/strict adjacency and G2 early interpolation exit case | no proof task; keep named Step |
+| WPN-42-locality | AVAILABLE, exact declaration correct, lines651-794 | z5 local-measure functional; same map for both models |
+| WPN-51-origin | AVAILABLE, exact declaration correct, lines796-1009 | z5 successor, obstacle code and completion measurability |
+| WPN-51-pole | WRITTEN-PROOF-NEEDED, lines1011-1507 excluded from successful audit | no proof task; keep named Step |
+| WPN-51-geometry | AVAILABLE, exact declaration correct, lines1509-1658 | z1 stopped geometry, regular-open compact core first |
+| WPN-51-margin | AVAILABLE REPAIR, raw exact measurability false, lines1660-1858; use an envSigma-measurable version agreeing a.s. on the stopping event | z1 successor; repair cinf/cpos/Good consumer as authorized |
+| WPN-51-layer | WRITTEN-PROOF-NEEDED, lines1860 onward inherit G1 | no proof task; keep named Step |
+
+The operator explicitly authorizes the two internal Step restatements and
+consumer adjustments. Frozen Draft statements remain untouched. The code
+blocks below preserve the historical declarations whose problems were sent
+for written proofs; the two false forms are not proof tasks or justified
+hypotheses for an unconditional conclusion. Remaining newer requests
+WPN-42-scaled-representatives, WPN-42-insertion-coordinate-extension and
+WPN-ENV-dilated-circle-common-event are unchanged.
+
 ## WPN-51-origin: `MatedCRT.ConeOriginNullMeasurableStep`
 
-**WRITTEN-PROOF-NEEDED.** Section 5 stopped lower bound, E-c1-5(b). The continuity-from-above consequence is proved; the exact null-measurability interface has no supplied written proof. Worker z1 report, 15e8866.
+**WRITTEN-PROOF-AVAILABLE / LEAN-PENDING (16:25).** Exact declaration audited CORRECT, steps2:796-1009; routed to z5. Historical request: Section 5 stopped lower bound, E-c1-5(b). The continuity-from-above consequence is proved; the exact null-measurability interface has no supplied written proof. Worker z1 report, 15e8866.
 
 Exact declaration: `MatedCRT/Proofs/Sec5/StoppedExterior.lean:374`.
 
@@ -46,7 +76,7 @@ def StoppedSurplusPoleStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 
 ## WPN-51-geometry: `MatedCRT.StoppedInterior.StoppedInteriorGeometryStep`
 
-**WRITTEN-PROOF-NEEDED.** Section 5 stopped lower bound, E-c1-5(d). The exact discrete-interior to continuum-interior assertion has no supplied written proof; the heuristic in the Lean docstring is not a completed argument. Worker z1 report, f69cf7b.
+**WRITTEN-PROOF-AVAILABLE / LEAN-PENDING (16:25).** Exact declaration audited CORRECT, steps2:1509-1658; routed to z1. Historical request: Section 5 stopped lower bound, E-c1-5(d). The exact discrete-interior to continuum-interior assertion has no supplied written proof; the heuristic in the Lean docstring is not a completed argument. Worker z1 report, f69cf7b.
 
 Exact declaration: `MatedCRT/Proofs/Sec5/StoppedInterior.lean:155`.
 
@@ -65,7 +95,7 @@ def StoppedInteriorGeometryStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 
 ## WPN-51-margin: `MatedCRT.StoppedInterior.StoppedInteriorMeasurableStep`
 
-**WRITTEN-PROOF-NEEDED.** Section 5 stopped lower bound, E-c1-5(e). Measurability in envSigma of this random compact-set infimum remains open. Worker z1 report, f69cf7b.
+**WRITTEN-PROOF-AVAILABLE REPAIR / LEAN-PENDING (16:25).** Original raw declaration false; measurable-version repair audited, steps2:1660-1858; operator-authorized consumer repair routed to z1. Historical request: Section 5 stopped lower bound, E-c1-5(e). Measurability in envSigma of this random compact-set infimum remains open. Worker z1 report, f69cf7b.
 
 Exact declaration: `MatedCRT/Proofs/Sec5/StoppedInterior.lean:171`.
 
@@ -103,7 +133,7 @@ def StoppedLayerPotentialStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 
 ## WPN-42-locality: `MatedCRT.LQGMeasureLocalityFunctionalStep`
 
-**WRITTEN-PROOF-NEEDED.** Proposition 4.2 restricted-law transfer, input (A), operator ruling 2026-11-08 06:45. The IDLA Fact 2.2(ii) at corrected TeX 478-480 motivates locality. A single measurable functional serving both models is stronger than separate existence of field-measurable versions. No written derivation of this exact interface is supplied. Retain as a named Step, never as an admitted literature statement.
+**WRITTEN-PROOF-AVAILABLE / LEAN-PENDING (16:25).** Exact declaration audited CORRECT, steps2:651-794; routed to z5. Historical request: Proposition 4.2 restricted-law transfer, input (A), operator ruling 2026-11-08 06:45. The IDLA Fact 2.2(ii) at corrected TeX 478-480 motivates locality. A single measurable functional serving both models is stronger than separate existence of field-measurable versions. No written derivation of this exact interface is supplied. Retain as a named Step, never as an admitted literature statement.
 
 Exact declaration: `MatedCRT/Proofs/Sec4/Prop42Closure/LQGMeasureFunctional.lean:42`.
 
@@ -155,7 +185,7 @@ def DirichletStoppedClockConvergenceStep {Ω : Type*} [MeasurableSpace Ω]
 
 ## WPN-36-uniform-cell: `MatedCRT.UniformCellSizeUpperStep`
 
-**WRITTEN-PROOF-NEEDED.** Lemma 2.8, corrected TeX 669-674, cites BG20 Lemma 2.4; polynomial probability is defined at 387-388. The paper does not explicitly quantify over representations or state exponent dependence on them. This request is the exact representation-uniform exponent bridge, not a claim that the source asserts representation dependence. Worker m1 r3, 2afd11a.
+**WRITTEN-PROOF-AVAILABLE / LEAN-PENDING (16:25).** Exact declaration audited CORRECT, steps2:33-250; routed to m5. Historical request: Lemma 2.8, corrected TeX 669-674, cites BG20 Lemma 2.4; polynomial probability is defined at 387-388. The paper does not explicitly quantify over representations or state exponent dependence on them. This request is the exact representation-uniform exponent bridge, not a claim that the source asserts representation dependence. Worker m1 r3, 2afd11a.
 
 Exact declaration: `MatedCRT/Steps/Sec3/UniformCellSize.lean:14`.
 
@@ -172,7 +202,7 @@ def UniformCellSizeUpperStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 
 ## WPN-36-pointwise-event: `MatedCRT.PointwiseCellAnnulusEnvelopeStep`
 
-**WRITTEN-PROOF-NEEDED.** Corrected same-walk rate: a pointwise envSigma-measurable geometric envelope with a polynomial exceptional bound. An outer-probability bound and versions agreeing a.e. at each mesh do not by themselves give this interface. Worker m1 r3, 2afd11a.
+**WRITTEN-PROOF-AVAILABLE REPAIR / LEAN-PENDING (16:25).** Original pointwise declaration false; per-mesh a.e. repair audited, steps2:252-438; authorized Step/consumer repair routed to m5. Historical request: Corrected same-walk rate: a pointwise envSigma-measurable geometric envelope with a polynomial exceptional bound. An outer-probability bound and versions agreeing a.e. at each mesh do not by themselves give this interface. Worker m1 r3, 2afd11a.
 
 Exact declaration: `MatedCRT/Steps/Sec3/PointwiseAnnulusEnvelope.lean:16`.
 
