@@ -24,9 +24,9 @@ Results. Open-hit events of the code are countable unions of the events `E z`
 (`measurableSet_selectedRats_hit`, `measurableSet_codeClosure_hit`); admissibility is a countable
 Borel test (`measurableSet_codeAdmissible`); the Hausdorff-ball events of the code are measurable
 (`measurableSet_hausdorffEDist_lt`, through finite nets of the compact target); hence `codeCompact E` is
-Borel (`measurable_codeCompact`). Recovery: `codeCompact_eq_closure_of_membership` and its almost-sure form
-`ae_codeCompact_eq_closure` give `closure Λ` when the events agree with rational membership in a bounded,
-nonempty, open `Λ`.
+Borel (`measurable_codeCompact`). Recovery: `codeCompact_eq_closure_of_membership` (pointwise, for a fixed bounded nonempty open `Λ`) and
+its almost-sure form `ae_codeCompact_eq_closure` (random `Λ ω`, as for `Λ_t`) give `closure Λ` when the
+events agree with rational membership.
 
 Not proved here: the measurable versions of the membership events. The paper obtains them from the origin
 code of Section 5 (`eq:clusterpointcode`, steps2-r3:3150-3157). They enter only as the hypotheses `hE`
@@ -386,13 +386,17 @@ theorem codeCompact_eq_closure_of_membership {E : ℂ → Set Ω} {Λ : Set ℂ}
   rw [hsel]
   exact le_antisymm (closure_mono inter_subset_right) (closure_minimal hΛsub isClosed_closure)
 
-/-- Almost-sure recovery of `closure Λ` under the almost-sure agreement of the countably many
-membership events (steps2-r3:3158-3161). -/
-theorem ae_codeCompact_eq_closure {μ : Measure Ω} {E : ℂ → Set Ω} {Λ : Set ℂ} (hΛo : IsOpen Λ)
-    (hΛb : Bornology.IsBounded Λ) (hΛne : Λ.Nonempty)
-    (hae : ∀ᵐ ω ∂μ, ∀ z ∈ gaussRat, ω ∈ E z ↔ z ∈ Λ) :
-    ∀ᵐ ω ∂μ, ((codeCompact E ω : NonemptyCompacts ℂ) : Set ℂ) = closure Λ :=
-  hae.mono fun _ hω => codeCompact_eq_closure_of_membership hΛo hΛb hΛne hω
+/-- Almost-sure recovery of `closure (Λ ω)` for a random set `Λ : Ω → Set ℂ`, as for the random
+`Λ_t` of the paper. Almost surely `Λ ω` is open, bounded and nonempty (in the family assumptions:
+`Λ_t = int closure Λ_t`, boundedness, `0 ∈ Λ_t`; steps2-r3:936-943), and the countably many membership
+events agree with rational membership (steps2-r3:3158-3161). Then the code is `closure (Λ ω)` a.s. -/
+theorem ae_codeCompact_eq_closure {μ : Measure Ω} {E : ℂ → Set Ω} {Λ : Ω → Set ℂ}
+    (hΛo : ∀ᵐ ω ∂μ, IsOpen (Λ ω)) (hΛb : ∀ᵐ ω ∂μ, Bornology.IsBounded (Λ ω))
+    (hΛne : ∀ᵐ ω ∂μ, (Λ ω).Nonempty)
+    (hae : ∀ᵐ ω ∂μ, ∀ z ∈ gaussRat, ω ∈ E z ↔ z ∈ Λ ω) :
+    ∀ᵐ ω ∂μ, ((codeCompact E ω : NonemptyCompacts ℂ) : Set ℂ) = closure (Λ ω) := by
+  filter_upwards [hΛo, hΛb, hΛne, hae] with ω h1 h2 h3 h4
+  exact codeCompact_eq_closure_of_membership h1 h2 h3 h4
 
 end StoppedCompactCode
 end MatedCRT
