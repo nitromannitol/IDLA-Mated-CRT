@@ -1,6 +1,8 @@
 import MatedCRT.Steps.Sec3.PointwiseSameWalkRates
 import MatedCRT.Steps.Sec3.PowerTailIntegral
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.RateDiscrepancy
+import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
+import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.GMSUniformRate
 
 /-! # Almost-everywhere same-walk rates (internal successors of the pointwise statements)
 
@@ -531,7 +533,54 @@ theorem measure_discrepancy_tail_enlarge {Ω : Type*} [MeasurableSpace Ω] (μ :
     _ ≤ ENNReal.ofReal (K * (ℓ / s0) ^ ν) := htail0
     _ ≤ ENNReal.ofReal (K * (R / s0) ^ ν * (ℓ / t) ^ ν) := ENNReal.ofReal_le_ofReal hbound
 
+
+/-- The adjacency input of the GMS chain holds almost surely for all positive meshes at once. This is the
+specialization of `adjacentCellsMeetAeStep` (Proofs/MatingOfTrees/AdjacentCells.lean:17) to a valid environment. -/
+theorem ae_adjacent_cells_meet {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hS : S.IsValid 𝒮 γ) :
+    ∀ᵐ ω ∂S.P, ∀ ε : ℝ, 0 < ε → ∀ j k : ℤ, S.mult ε ω j k ≠ 0 →
+      (cell ε (S.η ω) j ∩ cell ε (S.η ω) k).Nonempty :=
+  adjacentCellsMeetAeStep 𝒮 γ hγ hγ2 Ω S hS
+
+/-- The GMS uniform a.e. tail with its adjacency hypothesis discharged by `ae_adjacent_cells_meet`. -/
+theorem MatedCRTEnv.IsValid.ae_sameWalkExitDiscrepancy_le_of_gms_adjacent
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ p : ℝ} (hS : S.IsValid 𝒮 γ)
+    (hγ : 0 < γ) (hγ2 : γ < 2) (hp : 0 < p) (hp1 : p < 1) :
+    ∃ ν : ℝ, 0 < ν ∧ ∀ᵐ ω ∂S.P, ∀ (ε a b ρ q : ℝ) (z : ℂ)
+      (r : ℝ) (ψ : ℂ → ℝ) (H χ : ℝ≥0) (v : ℤ),
+      0 < ε → ε ≤ 1 → 0 < r → 0 < χ →
+      HolderOnWith H χ ψ (closedBall z r) →
+      4 * (100 * ε ^ a + ε ^ b) ≤ ε ^ (q / (χ : ℝ)) / 2 →
+      IsLocallyFiniteMult (S.mult ε ω) →
+      (∀ k : ℤ, S.mult ε ω k (k + 1) ≠ 0) → 0 < S.mε ε →
+      Continuous (S.η ω) → Tendsto (S.η ω) (cocompact ℝ) (cocompact ℂ) →
+      v ∈ interiorCellVertices ε (S.η ω) (ball z r) →
+      r + 3 * ε ^ a + dist z 0 + ε ^ a +
+        2 * (ε ^ (q / (χ : ℝ)) / 2) < ρ →
+      (∀ i, (cell ε (S.η ω) i ∩ ball 0 ρ).Nonempty →
+        diam (cell ε (S.η ω) i) ≤ ε ^ a) →
+      (∀ z ∈ ball (0 : ℂ) ρ, ∀ s : ℝ, ε ^ b ≤ s → s ≤ ρ →
+        ball z (2 * s) ⊆ ball 0 ρ → ∀ j ∈ cellVertices ε (S.η ω) (ball z s),
+        ENNReal.ofReal p ≤ srwLaw (S.mult ε ω) j
+          {path | ∀ y ∈ cellVertices ε (S.η ω) (sphere z (s / 2)),
+            walkDisconnectsBeforeHit (S.mult ε ω)
+              (cellVertices ε (S.η ω) (sphere z (2 * s))) y path}) →
+      srwLaw (S.mult ε ω) v
+        {path | (1 + (H : ℝ)) * ε ^ q < sameWalkExitDiscrepancy S r z ψ ε ω path} ≤
+        ENNReal.ofReal (((2 : ℝ) ^ ν * (202 : ℝ) ^ ν) *
+          ε ^ ((min a b - q / (χ : ℝ)) * ν)) := by
+  obtain ⟨ν, hν, hbound⟩ := hS.ae_sameWalkExitDiscrepancy_le_of_uniform_gms hγ hγ2 hp hp1
+  refine ⟨ν, hν, ?_⟩
+  filter_upwards [hbound, ae_adjacent_cells_meet hγ hγ2 hS] with ω hω hadjω
+  intro ε a b ρ q z r ψ H χ v hε hε1 hr hχ hψ hscale hlf hcons hm hη hproper hv hmargin hsize hgood
+  exact hω ε a b ρ q z r ψ H χ v hε hε1 hr hχ hψ hscale hlf hcons hm hη hproper hv
+    (hadjω ε hε) hmargin hsize hgood
+
 end MatedCRT
+
+#print axioms MatedCRT.ae_adjacent_cells_meet
+#print axioms MatedCRT.MatedCRTEnv.IsValid.ae_sameWalkExitDiscrepancy_le_of_gms_adjacent
 
 #print axioms MatedCRT.measure_discrepancy_tail_enlarge
 
