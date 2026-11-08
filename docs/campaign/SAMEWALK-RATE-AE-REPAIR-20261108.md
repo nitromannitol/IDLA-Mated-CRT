@@ -41,3 +41,8 @@ Only the name distinguishes this candidate and only the environment quantifier c
 Tracked in fleet ESCALATIONS.md E-SAMEWALK-RATE-AE-FROZEN-DELTA and INPUT-REQUESTS.md IR-SAMEWALK-RATE-AE-FROZEN-SUCCESSOR.
 
 The full candidate type passes strict lc as fleet lead/checks/20261108-1810/SameWalkRateAeCandidate.lean. This checks elaboration only; it does not approve or implement a frozen statement replacement.
+
+
+Lead verification18:41: c5305cb implements the internal a.e. successors in SameWalkRatesAe.lean and SameWalkAssemblyAe.lean, with actual assembly and annealed outer-probability transfer from `StartCellInteriorAe`. Both pinned source checks and four exported axiom checks pass. This supplies no proof of the old pointwise frozen export. The rate producer remains open. Under the operator18:45 ruling, the authoritative proof is now steps2-r3:443-766, byte-identical to r2 for this section. No extra operator ruling is needed to choose the existential E as the source's cell-size/annulus envelope; its start-cell geometric producer remains ordinary written implementation work.
+
+Late ce894f6 source and four further axiom exports also pass. Start-cell interior geometry is now derived from the actual cell-size event and IsValid; event intersection and the min-exponent bound give the repaired conclusion from the named uniform cell target and rate core. `CellSizeTargetAeStmt` remains the exact quantitative producer to implement from audited r3 Section1; the existing weaker PolyHighProb Draft alone does not supply its uniform exponent. No new operator decision is needed for independent written proof work.
