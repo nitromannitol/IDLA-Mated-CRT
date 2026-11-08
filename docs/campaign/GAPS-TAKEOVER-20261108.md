@@ -1,6 +1,6 @@
 # Written-proof requests at lead takeover (2026-11-08 08:23 UTC)
 
-Status: historical exact-type requests with per-target updates below. Six have **WRITTEN-PROOF-AVAILABLE** after the operator16:25 ruling, with their Lean implementation status updated per target below; three original targets and three newer scaling requests remain **WRITTEN-PROOF-NEEDED**. These are exact open proof obligations carried as named Step Props under the operator's standing rule. They are not proved results or approved literature inputs. The operator routes them to a separate prover and independent audit; active workers continue with explicit hypotheses. No statement or definition is changed by this ledger.
+Status: historical exact-type requests with per-target updates below. Eight original requests now have **WRITTEN-PROOF-AVAILABLE** after the operator16:25 and18:25 rulings, including three authorized repairs; the original pole target and three newer scaling requests remain **WRITTEN-PROOF-NEEDED**. Lean implementation status is separate below. These are exact open proof obligations carried as named Step Props under the operator's standing rule. They are not proved results or approved literature inputs. The operator routes them to a separate prover and independent audit; active workers continue with explicit hypotheses. No statement or definition is changed by this ledger.
 
 The historical code blocks copy the entire original `def` command, including binders, from the indicated source; operator-authorized repairs and current interfaces are recorded in the dated updates. Names are fully qualified in headings; code uses the original namespace and open declarations of its source file. The declarations are pinned to the takeover commits (z1: 15e8866/f69cf7b; z5: d63273a; m1: 2afd11a), except the pre-existing S3 interface. Compile checks are recorded under `/home/nitro/paper-fleets/mcrt/lead/checks/20261108-takeover`.
 
@@ -22,13 +22,13 @@ These are written proofs, not new Lean closure or approved literature axioms.
 | --- | --- | --- |
 | WPN-36-uniform-cell | AVAILABLE, exact declaration correct, lines33-250 | m5 deterministic cell/area and outer-union-bound component checked at edbd4f0; uniform quantitative law remains |
 | WPN-36-pointwise-event | AVAILABLE REPAIR, original pointwise Step false, lines252-438; replace its inclusion by a.e. implication at each mesh and choose admissible parameters from the actual estimates | m5 e197e53 repaired Step/consumers checked; conditional envelope assembly checked; Borel state/walk construction remains |
-| WPN-36-pointwise-rates | WRITTEN-PROOF-NEEDED, lines440-649: G1 missing Brownian minimum uniqueness/strict adjacency and G2 early interpolation exit case | no proof task; keep named Step |
+| WPN-36-pointwise-rates | AVAILABLE REPAIR, operator18:25; steps2-r2:443-766 closes G1/G2, a.e. quenched implication per mesh with chosen annulus exponent | z1 a.e. successor/outer-probability transfer queued; frozen Draft delta escalated, original false pointwise form is not a proof goal |
 | WPN-42-locality | AVAILABLE, exact declaration correct, lines651-794 | z5 48b2c75 exact internal Step implementation checked, one map before both models; no Prop4.2 closure |
 | WPN-51-origin | AVAILABLE, exact declaration correct, lines796-1009 | ebc8497 conditional obstacle-code reduction checked; CodeSectionStmt and two faithful Preston inputs remain |
 | WPN-51-pole | WRITTEN-PROOF-NEEDED, lines1011-1507 excluded from successful audit | no proof task; keep named Step |
 | WPN-51-geometry | AVAILABLE, exact declaration correct, lines1509-1658 | z1 stopped geometry, regular-open compact core first |
 | WPN-51-margin | AVAILABLE REPAIR, raw exact measurability false, lines1660-1858; use an envSigma-measurable version agreeing a.s. on the stopping event | 33b60f5/4c3f60e repaired version and cinf/cpos/Good consumer checked; StoppedMarginCodeStep remains |
-| WPN-51-layer | WRITTEN-PROOF-NEEDED, lines1860 onward inherit G1 | no proof task; keep named Step |
+| WPN-51-layer | AVAILABLE, operator18:25; steps2-r2:3368-3744, exact six-antecedent target, independent of pole | z5 finite-potential domination and r/n/mesh outer-probability reduction queued; implementation remains |
 
 The operator explicitly authorizes the two internal Step restatements and
 consumer adjustments. Frozen Draft statements remain untouched. The code
@@ -112,7 +112,7 @@ def StoppedInteriorMeasurableStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 
 ## WPN-51-layer: `MatedCRT.StoppedLayerPotentialStep`
 
-**WRITTEN-PROOF-NEEDED.** Section 5 stopped lower bound, E-c1-5, S3. Lemma 3.4 is pointwise in the base vertex; this uniform layer-potential estimate and the random test-function measurability are not supplied by it. The exact type below, including its finite sum and kernel convention, is the request. Worker z1 report.
+**WRITTEN-PROOF-AVAILABLE / LEAN-PENDING (operator18:25).** steps2-r2:3368-3744 and its independent re-audit target9 are CORRECT; exact declaration retained. Historical request: Section 5 stopped lower bound, E-c1-5, S3. Lemma 3.4 is pointwise in the base vertex; this uniform layer-potential estimate and the random test-function measurability are not supplied by it. The exact type below, including its finite sum and kernel convention, is the request. Worker z1 report.
 
 Exact declaration: `MatedCRT/Proofs/Sec5/StoppedSurplusSteps.lean:68`.
 
@@ -225,7 +225,7 @@ def PointwiseCellAnnulusEnvelopeStep {Ω : Type} [MeasurableSpace Ω]
 
 ## WPN-36-pointwise-rates: `MatedCRT.PointwiseSameWalkRatesStep`
 
-**WRITTEN-PROOF-NEEDED.** Corrected same-walk rate: the existing mean and tail estimates hold a.e. on the chosen event. They do not establish these estimates for every member of that event, simultaneously in the displayed parameters. Worker m1 r3, 2afd11a.
+**WRITTEN-PROOF-AVAILABLE REPAIR / LEAN-PENDING (operator18:25).** steps2-r2:443-766 and its independent re-audit target3 are CORRECT. The original pointwise type below is false; use the per-mesh a.e. successor with the chosen geometric event/exponents. See [the exact proposed delta](SAMEWALK-RATE-AE-REPAIR-20261108.md); frozen Draft remains unchanged. Historical request: Corrected same-walk rate: the existing mean and tail estimates hold a.e. on the chosen event. They do not establish these estimates for every member of that event, simultaneously in the displayed parameters. Worker m1 r3, 2afd11a.
 
 Exact declaration: `MatedCRT/Steps/Sec3/PointwiseSameWalkRates.lean:13`.
 
@@ -469,3 +469,14 @@ f4d04bc/3c0dcdf correct Proposed type B to countable generation, exact sigma-alg
 Receipts: fleet lead/checks/20261108-1740, eleven pinned source checks including both Assembly source consumers and four axiom probes, twelve standard-axiom exports; 74-source hole scan clean. Source checks do not claim an Assembly olean rebuild. z1 has margin continuous-decoder work queued, then the Borel geometry obstruction; z5 has IG uniform shift queued, then locality consumer integration. Numbered results remain open.
 
 Late b834645 mass-code return: the Borel massLimit functional and its exact IsLQGLimit integral identity also pass strict source/axiom checks. This removes the scalar mass-limit measurability component, while the countable smooth test family, Borel supersolution relation and section identity remain in CodeSectionStmt. Final round receipts cover12 source snapshots,5 axiom probes/15 standard-axiom exports and74 hole-clean source hashes. No unconditional origin Step or numbered closure.
+
+
+## Checked implementations and second audited release (lead round18:10)
+
+33bdd99 proves the Borel dense-value decoder into the actual compact-domain continuous-function carrier, its recovery and a.e. recovery, including nonempty/empty margin-domain branches. This supplies the extension component of steps2:1784-1805; the Borel versions of actual surplus evaluations and random compact K still remain in StoppedMarginCodeStep. e02c3cd proves translation-mod-period invariance of uniform measure and joint independence with the entire other datum, plus its measurable functions. The normalized-GFF carrier/curve-law transfer remains in the mating proof. e8620f7 supplies the proved locality functional to the restricted-law, premature-contact-null and half-ball-closure consumers; their field/HB inputs remain explicit. No Prop4.2 or other numbered closure.
+
+Pinned e8620f7 receipts in fleet lead/checks/20261108-1810:9 committed source checks,4 axiom probes/12 exports using only propext, Classical.choice and Quot.sound;79-source code-hole/axiom scan clean and19 paused-task hashes unchanged. This is implementation checking, not a new frozen-statement source approval.
+
+The new inbox entry labelled18:25 releases targets3 and9 from notes/wpn-steps2/steps2-r2.tex, sha256 f52fd76aafd942d26dce5515140993cd0c55f392d965a9d9476d39aa2182a734, with AUDIT-steps2-r2.md targets3/9 CORRECT. Use r2:443-766 for the rate repair and r2:3368-3744 for the layer proof (the entry's3346 locator precedes its section header). Sections1,2,4,5,7,8 retain the earlier proof unchanged. The pole proof remains GAPS and is not assigned; newer scaling WPN remain. The release resolves the prior missing Brownian-minimum/strict-adjacency and early-exit written arguments; implementing them is now source-backed work, not a new WPN.
+
+z1 has an a.e. rate-successor/assembly/outer-probability task queued after its current geometry task. Since the frozen corrected export remains pointwise in Draft/Section3HarmonicCorrected.lean:85, the worker stages exact repaired internal successors and preserves Draft; see E-SAMEWALK-RATE-AE-FROZEN-DELTA and the linked exact-type note. z5 has the layer-potential comparison and finite-center probability reduction queued after its current supersolution Borel matrix. Displaced compact-code and countable-test briefs are archived as bounded successors, not discarded. m1/m5 remain quota-stopped with their existing fresh queues supplied.

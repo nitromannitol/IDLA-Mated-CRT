@@ -475,3 +475,12 @@ The Preston type-B exact-measurability defect is corrected in f4d04bc/3c0dcdf. P
 All four active next queues and bounded successors are supplied; current DONE briefs are preserved and nineteen paused-task hashes unchanged. m1/m5 quota exits remain respected; existing99%-guard/96%-ruling reconciliation is unresolved, with no restart or control edits. No new12-round event or new mathematical WPN.
 
 Late b834645 mass-code return: the Borel massLimit functional and its exact IsLQGLimit integral identity also pass strict source/axiom checks. This removes the scalar mass-limit measurability component, while the countable smooth test family, Borel supersolution relation and section identity remain in CodeSectionStmt. Final round receipts cover12 source snapshots,5 axiom probes/15 standard-axiom exports and74 hole-clean source hashes. No unconditional origin Step or numbered closure.
+
+
+## Lead verification and routing, round2026-11-08 18:10
+
+e02c3cd supplies IGUniformShift's uniform translation-mod-period law and independence from the entire jointly independent other datum, then from each measurable function of it (env-steps:794-804). Three exported probability lemmas pass fresh strict lc/axiom checks. This removes the abstract modulo-uniform probability component; normalized whole-plane GFF affine-carrier identification and its actual curve-law transport remain. It does not discharge RescaledMatingOfTreesStep, the canonical conditioning bridge, field/clock Steps or the common-circle WPN.
+
+33bdd99's continuous surplus decoder and e8620f7's locality consumer integrations also pass. The latter supplies the already proved locality functional internally, while all field/HB law hypotheses remain. Nine committed source snapshots and four axiom probes pass;12 exports have standard axioms only;79-source scan clean. Receipts lead/checks/20261108-1810.
+
+Operator inbox entry18:25 newly releases the same-walk a.e. rate repair and exact six-antecedent stopped layer potential, with CORRECT re-audit in steps2-r2 (sha f52fd76aafd942d26dce5515140993cd0c55f392d965a9d9476d39aa2182a734). z1/z5 fresh queues route bounded source-backed slices; pole is still held. The frozen corrected rate export needs the exact per-mesh a.e. delta recorded in SAMEWALK-RATE-AE-REPAIR-20261108.md; workers stage internal successors under the no-Draft rule. Earlier displaced compact/test briefs are preserved as following tasks. All four queues remain supplied; quota stops and paused tasks respected. No new mathematical WPN or numbered closure.
