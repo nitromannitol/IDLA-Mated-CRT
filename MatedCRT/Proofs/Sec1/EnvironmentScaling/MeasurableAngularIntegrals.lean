@@ -1,5 +1,4 @@
 import MatedCRT.Proofs.Sec1.EnvironmentScaling.AngularLogIntegrability
-import MatedCRT.Proofs.Sec1.EnvironmentScaling.MeasurableRadialIntegrals
 import MatedCRT.Proofs.Sec1.EnvironmentScaling.GaussianBandProof
 import Mathlib.MeasureTheory.Integral.Prod
 
