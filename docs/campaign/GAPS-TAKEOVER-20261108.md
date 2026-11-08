@@ -645,3 +645,34 @@ Operator19:35 released the final three written-proof requests: fleet `notes/wpn-
 The bounded repair adds `Bornology.IsBounded Λ` before `IsSubharmonicBall μ Λ 0` in the exact historical type. The only direct mathematical application at ScaledRegularizedFamily.lean:228-231 receives boundedness from the regularized-family field `h1.isBounded (c*t) (mul_pos hc ht)`; both PlateauScalingAssembly consumers retain their conclusions. No frozen or companion file is edited by the lead.
 
 944485f BrownianMinimum.lean:190,291 proves separated-interval minima are a.s. unequal for arbitrary two-sided intervals, using a nondegenerate Gaussian gap independent of the joint countable left/right increment family. Strict source and axiom checks pass. The uniqueness paragraph at the end of r3:534-599 is not implemented in that slice; it remains written implementation work, not a new WPN. 7e08a81 SameWalkRatesAe now supplies adjacent-cells intersection a.s. for all positive meshes; G3 is discharged in its conditional rate bound. Uniform environment-independent cell/rate exponents, actual finite exit and rate/event producers remain open. Proposed cell-configuration staging 23094a3 elaborates but has no source-promotion approval.
+
+
+## Checked compact code and canonical moment boundary (lead20:19 round)
+
+Pinned6c2f4a4 includes z1's1d739b1/9345a37/c03d939 compact-code slice. Strict lc and four explicit axiom prints pass for `StoppedCompactCode.measurable_codeCompact` (:354), `codeCompact_eq_closure_of_membership` (:368), `ae_codeCompact_eq_closure` (:395) and the Hausdorff-hit event (:261). The compact-valued map is Borel for the Hausdorff/Vietoris topology; recovery assumes simultaneous rational membership versions and a.s. open/bounded/nonempty Lambda. These exact premises remain. r3:3146-3169 writes their countable indicator construction; it follows the internal insertion and analytic-margin tasks. The actual CodeSectionStmt remains an independent written implementation obligation. No geometry, margin or numbered result closes here.
+
+Standing m5 DONE's six Step/tail/mean/assembly/audit/source files pass fresh strict lc. Current97eac20/504a196 GMS reconstruction staging and55c3bfd/6c2f4a4 canonical-moment staging also elaborate; this is not source approval. GMS1.16 now separates Brownian limit, recurrence and harmonic-center Props and uses outer integrals of bounded continuous tests without cylinder measurability. Law existence and the nonseparable-path outer-expectation reading remain explicit boundaries. GHMS/DMS missing carriers remain open; no theorem-shaped substitute for them is accepted.
+
+### WRITTEN-PROOF-NEEDED WPN-51-canonical-inner-degree-measurability
+
+Exact prospective Step below, elaborated in fleet `lead/checks/20261108-2019/CanonicalDegreeStepType.lean`. It is a named residual specification, not a landed theorem or new axiom. Declaration/carrier anchors: `MatedCRT/Proposed/StoppedPoleCanonicalMoments2026.lean:74` (canonical model), :113 (inner degree), :193 (printed degree bound). The new internal tail module is reserved for z5; the tail-to-moment consumer at r3:2733-2753 requires this measurability for Tonelli/layer cake. The eventual consumer is the canonical inner-degree moment producer in r3 Section6, then `StoppedInterior.StoppedSurplusPoleStep` at StoppedInterior.lean:136. No implemented tail-to-moment consumer currently discharges this premise.
+
+```lean
+namespace MatedCRT.StoppedCanonicalMoments
+/-- Prospective named residual; no proof is claimed. -/
+def CanonicalInnerDegreeMeasurabilityStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 →
+    ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+      (μ : Ω → Measure ℂ) (η : Ω → ℝ → ℂ),
+      IsCanonicalZeroConeModel 𝒮 γ P hC hcirc μ η →
+        AEMeasurable (fun ω => (gmsInnerDegree (η ω)).toENNReal) P
+end MatedCRT.StoppedCanonicalMoments
+
+```
+
+Reason open: `gmsInnerDegree` is an uncountable-interval supremum; r3:2690-2753 uses D as a random variable but does not write its measurable/analytic coding proof. z5's source review has not located that proof in GMS1705.11161v5 Definition4.5 pp32-33. The new specification keeps the staged model's source/representation bridge explicit; no automatic extension to arbitrary abstract IsValid models is claimed. Under operator18:55 there is no further prover request. Keep this Step named indefinitely unless an already-written applicable proof is located. The queued Chebyshev component proceeds with exact measurability premises; no worker may invent the missing producer.
+
+The printed inequality(4.20) itself remains a faithful explicit cited Prop, `GMSInnerDegreeBoundStmt`; its background justification is not an additional prerequisite for this conditional work. r3:1789-1812 already writes a finite-consecutive-mesh null-overlap argument from area parametrization. That written component and the cited bound are distinct from this degree-coding residual. Do not label the printed cited inequality a new WPN. All previous twelve requests have audited written outcomes; this new source-boundary Step has none.
+
+Round receipts: ten strict source/probe calls across nine pinned files,18 distinct standard-axiom exports; additional exact prospective Step type checked separately. Ninety-source code-hole scan clean;23 paused task/control hashes preserved. All4 next plus guarded following briefs ready; m1/m5 quota stops respected. No new12-round event, frozen edit, promotion or numbered closure.
