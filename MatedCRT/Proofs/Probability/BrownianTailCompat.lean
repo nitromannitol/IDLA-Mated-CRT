@@ -3,7 +3,7 @@ Compatibility port of the Gaussian tail of pre-Brownian motion at a single time.
 
 Source: lattice-probability, https://github.com/nitromannitol/Lattice-Probability.git, at commit
 3912597a70dcc6c9b73042abd884a26989341c8d (the pin in lake-manifest.json), file
-LatticeProb/Prob/BrownianTail.lean, lines 1-143 (declaration LatticeProb.measure_ge_le_exp, lines 31-143).
+LatticeProb/Prob/BrownianTail.lean, lines 1-143 (declaration LatticeProb.measure_ge_le_exp with its docstring, lines 30-139).
 License: Apache License 2.0 (LICENSE of that repository); the source is Copyright 2026 Ahmed Bou-Rabee.
 
 Changes to the source text, and nothing else:
