@@ -127,6 +127,88 @@ theorem variableDilationPairingStep_of_continuous
 theorem variableDilationPairingStep : VariableDilationPairingStep :=
   variableDilationPairingStep_of_continuous continuousDilationTestStep
 
+/-- A version of the circle averages centered at zero, recovered from
+field pairings on a countable dyadic set of positive radii. -/
+def fieldRadialVersion {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) : Ω → ℝ → ℝ :=
+  CirclePairing.radialVersion (fun ω r _ => FieldCircle.circleField S r 0 ω)
+
+/-- The radial version is jointly measurable for the exact field sigma-algebra. -/
+theorem measurable_fieldRadialVersion {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) :
+    Measurable[S.fieldSigma.prod (borel ℝ)] (Function.uncurry (fieldRadialVersion S)) := by
+  have hm : ∀ r : ℝ, Measurable[S.fieldSigma] (FieldCircle.circleField S r 0) :=
+    fun r => FieldCircle.measurable_circleField S r 0
+  let m := S.fieldSigma
+  let : MeasurableSpace Ω := m
+  exact CirclePairing.measurable_radialVersion (fun r _ _ => hm r)
+
+/-- One event suffices for recovering all positive-radius centered circles,
+using continuity in the radius (env-steps.tex:259–278). -/
+theorem ae_fieldRadialVersion_eq {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) :
+    ∀ᵐ ω ∂S.P, ∀ r : ℝ, 0 < r → fieldRadialVersion S ω r = S.hcirc ω r 0 := by
+  have hdyad : ∀ᵐ ω ∂S.P, ∀ n : ℕ, ∀ k : ℤ, 0 < k →
+      FieldCircle.circleField S ((k : ℝ) / 2 ^ n) 0 ω = S.hcirc ω ((k : ℝ) / 2 ^ n) 0 := by
+    simp only [ae_all_iff]
+    intro n k hk
+    have hp : (0 : ℝ) < (k : ℝ) / 2 ^ n := div_pos (Int.cast_pos.mpr hk) (by positivity)
+    exact FieldCircle.ae_circleField_eq hS hp (by simpa only [norm_zero] using hp.ne'.symm)
+  filter_upwards [hdyad, hS.isQuantumCone.ae_continuousOn_circle] with ω hω hc
+  intro r hr
+  have heq : fieldRadialVersion S ω r = CirclePairing.radialVersion S.hcirc ω r := by
+    unfold fieldRadialVersion CirclePairing.radialVersion
+    congr 1
+    funext n
+    unfold CirclePairing.radialApprox CirclePairing.dyadicCeil
+    by_cases hk : 0 < ⌈r * 2 ^ n⌉
+    · simp only [hk, ↓reduceIte]
+      exact hω n _ hk
+    · simp only [hk, ↓reduceIte]
+  rw [heq]
+  exact CirclePairing.radialVersion_eq (CirclePairing.continuousOn_radial hc) hr
+
+/-- Centered circle averages recovered as a Borel function of a distribution.
+Outside the cone-law event the limsup convention supplies a total function. -/
+def distributionRadialVersion (H : LQGMetric.DistC) (r : ℝ) : ℝ :=
+  CirclePairing.radialVersion
+    (fun d s _ => limsup (fun n => d (LQGMetric.CircleAvg.circBump n 0 s)) atTop) H r
+
+/-- The distribution-to-centered-circle map is jointly Borel measurable. -/
+theorem measurable_distributionRadialVersion :
+    Measurable (Function.uncurry distributionRadialVersion) := by
+  apply CirclePairing.measurable_radialVersion
+  intro r z hr
+  exact Measurable.limsup fun n => LQGMetric.measurable_distOn_apply _
+
+/-- The field-measurable distribution from the countable code recovers all
+positive centered circles on one common event. -/
+theorem exists_fieldMeasurable_distribution_with_radial
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) :
+    ∃ H : Ω → LQGMetric.DistC, Measurable[S.fieldSigma] H ∧
+      (∀ᵐ ω ∂S.P, (∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ) ∧
+        ∀ r : ℝ, 0 < r → distributionRadialVersion (H ω) r = S.hcirc ω r 0) := by
+  obtain ⟨H, hHm, hH⟩ := exists_fieldMeasurable_coneDistribution hS
+  refine ⟨H, hHm, ?_⟩
+  filter_upwards [hH, ae_fieldRadialVersion_eq hS] with ω hω hr
+  refine ⟨hω, ?_⟩
+  have hcircle : ∀ s : ℝ,
+      (limsup (fun k => H ω (LQGMetric.CircleAvg.circBump k 0 s)) atTop) =
+        FieldCircle.circleField S s 0 ω := by
+    intro s
+    unfold FieldCircle.circleField
+    apply congrArg (fun f : ℕ → ℝ => limsup f atTop)
+    funext k
+    exact (hω _).symm
+  intro r hrpos
+  rw [← hr r hrpos]
+  unfold distributionRadialVersion fieldRadialVersion CirclePairing.radialVersion
+  apply congrArg (fun f : ℕ → ℝ => limsup f atTop)
+  funext n
+  unfold CirclePairing.radialApprox
+  split
+  · exact hcircle _
+  · rfl
+
 /-- Pair a distribution at a variable scale, with zero on non-tests. -/
 def rescaledDistributionPairing (γ b : ℝ) (H : LQGMetric.DistC) (r : ℝ)
     (φ : ℂ → ℝ) : ℝ := by
