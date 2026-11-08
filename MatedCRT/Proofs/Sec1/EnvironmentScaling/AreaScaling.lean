@@ -1311,13 +1311,33 @@ theorem fieldCodeDyadicCircle_fieldPairingCode {Ω : Type} [MeasurableSpace Ω]
     fieldCodeDyadicCircle n (fieldPairingCode S ω) = FieldCircle.dyadicCircleVersion S n ω := by
   rfl
 
-/-- There is a Borel map from distributional test pairings to measures which
-recovers the area measure of every valid environment at the fixed parameter. -/
-theorem exists_measurable_fieldCode_lqgMeasure (γ : ℝ) :
+/-- Dyadic circles of a quantum cone are recovered simultaneously from its
+distributional test pairings, without requiring any curve or area measure. -/
+theorem ae_dyadicCircleVersion_eq_of_isQuantumCone {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} {γ : ℝ} (hcone : IsQuantumCone γ S.P S.hC S.hcirc) :
+    ∀ᵐ ω ∂S.P, ∀ n : ℕ, ∀ z : ℂ,
+      FieldCircle.dyadicCircleVersion S n ω z = S.hcirc ω ((2 : ℝ)⁻¹ ^ n) z := by
+  have hgrid : ∀ᵐ ω ∂S.P, ∀ n m : ℕ, ∀ a b : ℤ,
+      FieldCircle.circleField S ((2 : ℝ)⁻¹ ^ n) (FieldCircle.gridPt m a b) ω =
+        S.hcirc ω ((2 : ℝ)⁻¹ ^ n) (FieldCircle.gridPt m a b) := by
+    simp only [ae_all_iff]
+    intro n m a b
+    exact (CirclePairing.ae_tendsto_circBump_of_isQuantumCone hcone (by positivity)
+      (FieldCircle.norm_gridPt_ne m n a b)).mono fun _ h => h.limsup_eq
+  filter_upwards [hgrid, hcone.ae_continuousOn_circle] with ω hgridω hcont n z
+  have hc : Continuous fun w => S.hcirc ω ((2 : ℝ)⁻¹ ^ n) w := by
+    rw [← continuousOn_univ]
+    exact hcont.comp (continuous_const.prodMk continuous_id).continuousOn
+      fun w _ => ⟨mem_Ioi.2 (by positivity), mem_univ w⟩
+  exact FieldCircle.gridVersion_eq hc (fun m a b => hgridω n m a b) z
+
+/-- There is a Borel map from test pairings to the LQG measure of any
+quantum cone, independently of the curve or its area parametrization. -/
+theorem exists_measurable_fieldCode_lqgMeasure_of_isQuantumCone (γ : ℝ) :
     ∃ M : FieldPairingCode → Measure ℂ, Measurable M ∧
-      ∀ {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
-        {𝒮 : SpaceFillingSLEModel}, S.IsValid 𝒮 γ →
-        ∀ᵐ ω ∂S.P, M (fieldPairingCode S ω) = S.μ ω := by
+      ∀ {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} {μ : Ω → Measure ℂ},
+        IsQuantumCone γ S.P S.hC S.hcirc → IsLQGMeasure S.P γ S.hcirc μ →
+        ∀ᵐ ω ∂S.P, M (fieldPairingCode S ω) = μ ω := by
   let density : ℕ → FieldPairingCode → ℂ → ℝ := fun n F z =>
     dyadicScale n ^ (γ ^ 2 / 2) * Real.exp (γ * fieldCodeDyadicCircle n F z)
   have hdensity (n : ℕ) : Measurable (Function.uncurry (density n)) :=
@@ -1335,14 +1355,14 @@ theorem exists_measurable_fieldCode_lqgMeasure (γ : ℝ) :
       (hdensity_nonneg n) hf.measurable
   obtain ⟨M, hM, hlim⟩ := VagueWholePlane.exists_measurable_vagueLimit ν hν hint
   refine ⟨M, hM, ?_⟩
-  intro Ω _ S 𝒮 hS
-  filter_upwards [FieldCircle.ae_dyadicCircleVersion_eq hS, hS.isLQGMeasure,
-    hS.isQuantumCone.ae_continuousOn_circle] with ω hcircle hL hcont
+  intro Ω _ S μ hcone hμ
+  filter_upwards [ae_dyadicCircleVersion_eq_of_isQuantumCone hcone, hμ,
+    hcone.ae_continuousOn_circle] with ω hcircle hL hcont
   have hνeq (n : ℕ) : ν n (fieldPairingCode S ω) =
       lqgApprox γ (S.hcirc ω) (dyadicScale n) := by
     simp only [ν, density, fieldCodeDyadicCircle_fieldPairingCode, hcircle]
     rfl
-  refine hlim (fieldPairingCode S ω) (S.μ ω) (fun K hK => Eventually.of_forall fun n => ?_)
+  refine hlim (fieldPairingCode S ω) (μ ω) (fun K hK => Eventually.of_forall fun n => ?_)
     ⟨?_, fun K hK _ => ?_, fun f hf hfc _ => ?_⟩
   · rw [hνeq]
     have hc : Continuous fun z => S.hcirc ω (dyadicScale n) z := by
@@ -1356,6 +1376,53 @@ theorem exists_measurable_fieldCode_lqgMeasure (γ : ℝ) :
     exact hK.measure_lt_top
   · simp_rw [hνeq]
     exact hL.tendsto_integral f hf hfc
+
+/-- A valid environment's area measure is recovered by the universal Borel
+map from its distributional test pairings. -/
+theorem exists_measurable_fieldCode_lqgMeasure (γ : ℝ) :
+    ∃ M : FieldPairingCode → Measure ℂ, Measurable M ∧
+      ∀ {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+        {𝒮 : SpaceFillingSLEModel}, S.IsValid 𝒮 γ →
+        ∀ᵐ ω ∂S.P, M (fieldPairingCode S ω) = S.μ ω := by
+  obtain ⟨M, hM, hrec⟩ := exists_measurable_fieldCode_lqgMeasure_of_isQuantumCone γ
+  exact ⟨M, hM, fun hS => hrec hS.isQuantumCone hS.isLQGMeasure⟩
+
+/-- If the rescaled pairings and a measurable circle version form a quantum
+cone, the universal field decoder gives its LQG measure on the original space.
+The resulting measure has no atom at zero, independently of the still-open
+all-scale comparison with the geometrically rescaled original measure. -/
+theorem MatedCRTEnv.IsValid.exists_rescaled_fieldCode_lqgMeasure
+    (hscale : QuantumConeScalingInput) {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ b : ℝ}
+    (hS : S.IsValid 𝒮 γ) (hγ : 0 < γ) (hγ2 : γ < 2) (hb : 0 < b) :
+    ∃ M : FieldPairingCode → Measure ℂ, Measurable M ∧
+      ∀ (hC' : Ω → (ℂ → ℝ) → ℝ) (c : Ω → ℝ → ℂ → ℝ),
+        IsQuantumCone γ S.P hC' c →
+        (∀ᵐ ω ∂S.P, c ω =
+          rescaledCircle γ (S.hcirc ω) (coneScaleRadius γ (S.hcirc ω) b) b) →
+        Measurable (fun ω => M (fun φ => hC' ω φ.1)) ∧
+        IsLQGMeasure S.P γ c (fun ω => M (fun φ => hC' ω φ.1)) ∧
+        (∀ᵐ ω ∂S.P, M (fun φ => hC' ω φ.1) {0} = 0) := by
+  obtain ⟨M, hM, hrec⟩ := exists_measurable_fieldCode_lqgMeasure_of_isQuantumCone γ
+  obtain ⟨profile, _, _, hprofile, hzero⟩ :=
+    MatedCRTEnv.IsValid.exists_rescaled_circle_profile_measure hscale hS hγ hγ2 hb
+  refine ⟨M, hM, ?_⟩
+  intro hC' c hcone hce
+  let ν : Ω → Measure ℂ := fun ω => profileMeasure γ 0 (profile ω)
+  have hν : IsLQGMeasure S.P γ c ν := by
+    filter_upwards [hprofile, hce] with ω hprofileω hceω
+    simpa only [hceω] using hprofileω
+  let T := S.rescaleWithCircle γ b hC' (fun _ _ _ => 0) c
+  have heq : ∀ᵐ ω ∂S.P, M (fun φ => hC' ω φ.1) = ν ω :=
+    hrec (S := T) hcone hν
+  have hcode : Measurable (fun ω : Ω => fun φ : {φ : ℂ → ℝ // IsTestFunction univ φ} =>
+      hC' ω φ.1) :=
+    measurable_pi_iff.2 fun φ => hcone.measurable_pairing φ.1 φ.2
+  refine ⟨hM.comp hcode, ?_, ?_⟩
+  · filter_upwards [heq, hν] with ω heqω hνω
+    simpa only [heqω] using hνω
+  · filter_upwards [heq, hzero] with ω heqω hzeroω
+    simpa only [heqω] using hzeroω
 
 /-- Valid environments with the same field pairings almost surely have the
 same area measure almost surely, without enlarging the probability space. -/
