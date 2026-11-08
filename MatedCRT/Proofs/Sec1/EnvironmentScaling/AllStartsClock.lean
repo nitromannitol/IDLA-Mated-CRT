@@ -1346,16 +1346,21 @@ Given a valid environment `S` and `b > 0`, the proof of prop:clock is: the measu
 circle process of `S` lies in `𝒢` almost surely (validity clock and dyadic congruence); the measurable version `a_b` of
 the rescaled process `c` has the law of `a_0` (`QuantumConeScalingInput`, with the almost-sure coordinate identities);
 the Borel null sandwich of `𝒢` transfers membership to `a_b`; the clock of `a_b` is a clock of `c` (dyadic congruence).
-The measurable versions are the canonical versions of lem:canonical (env-steps.tex:210-216), which prop:clock invokes
-(env-steps.tex:453-465). -/
+The two measurable versions are the Steps `CanonicalCircleVersionStep` (lem:canonical, env-steps.tex:210-216, invoked
+for `a_0` at env-steps.tex:453-456) and `RescaledCircleVersionStep` (the measurable positive-circle version `a_b` of `a^b`,
+env-steps.tex:463-465). -/
 
-/-- The canonical measurable versions of the positive-circle processes (lem:canonical, env-steps.tex:210-216, as invoked in
-the proof of prop:clock, env-steps.tex:453-465): for a valid environment the positive-circle process has a measurable
-`CircleFns`-valued version, and so does every almost-sure rescaling of it. -/
+/-- Canonical measurable version of the positive-circle process (lem:canonical, env-steps.tex:210-216): for a valid
+environment, the positive-circle process has a measurable `CircleFns`-valued version. -/
 def CanonicalCircleVersionStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
-    (∃ a0 : Ω → CircleFns, Measurable a0 ∧
-        ∀ᵐ ω ∂S.P, ∀ p : PosCircle, circleFnsCoord (a0 ω) p = circleProcess (S.hcirc ω) p) ∧
+    ∃ a0 : Ω → CircleFns, Measurable a0 ∧
+      ∀ᵐ ω ∂S.P, ∀ p : PosCircle, circleFnsCoord (a0 ω) p = circleProcess (S.hcirc ω) p
+
+/-- Measurable positive-circle version of the rescaled process `a^b` (env-steps.tex:463-465, "the measurable
+positive-circle version a_b of a^b"): every almost-sure rescaling `c` of the circle process has a measurable version. -/
+def RescaledCircleVersionStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
     ∀ b : ℝ, 0 < b → ∀ c : Ω → ℝ → ℂ → ℝ,
       (∀ᵐ ω ∂S.P, c ω = rescaledCircle γ (S.hcirc ω) (coneScaleRadius γ (S.hcirc ω) b) b) →
       ∃ ab : Ω → CircleFns, Measurable ab ∧
@@ -1366,14 +1371,16 @@ lemma posCircleExt_eq_circleFnsCoord {a : CircleFns} {r : ℝ} (hr : 0 < r) (z :
     posCircleExt a r z = circleFnsCoord a (⟨r, hr⟩, z) := by
   simp [posCircleExt, hr, circleFnsCoord]
 
-/-- **The rescaled all-starts clock step**, conditional on the canonical versions (`CanonicalCircleVersionStep`), the
-law-scaling input `QuantumConeScalingInput` and the Polish structure of `CircleFns` (prop:clock, env-steps.tex:449-475). -/
+/-- **The rescaled all-starts clock step**, conditional on the two measurable versions (`CanonicalCircleVersionStep`,
+`RescaledCircleVersionStep`), the law-scaling input `QuantumConeScalingInput`, the staged Preston input and the Polish
+structure of `CircleFns` (prop:clock, env-steps.tex:449-475). -/
 theorem rescaledConeClockStep_of_canonical [PolishSpace CircleFns]
     (hPreston : PrestonAnalyticUniversallyMeasurableStmt) (hscale : QuantumConeScalingInput)
-    {𝒮 : SpaceFillingSLEModel} (hcan : CanonicalCircleVersionStep 𝒮) : RescaledConeClockStep 𝒮 := by
+    {𝒮 : SpaceFillingSLEModel} (hcan : CanonicalCircleVersionStep 𝒮)
+    (hres : RescaledCircleVersionStep 𝒮) : RescaledConeClockStep 𝒮 := by
   intro γ hγ0 hγ2 Ω _ S hS b hb c hc
-  obtain ⟨⟨a0, ha0m, ha0⟩, hcanb⟩ := hcan γ hγ0 hγ2 Ω S hS
-  obtain ⟨ab, habm, hab⟩ := hcanb b hb c hc
+  obtain ⟨a0, ha0m, ha0⟩ := hcan γ hγ0 hγ2 Ω S hS
+  obtain ⟨ab, habm, hab⟩ := hres γ hγ0 hγ2 Ω S hS b hb c hc
   have : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
   -- (1) the original positive-circle version lies in `𝒢` almost surely
   have hall0 : ∀ᵐ ω ∂S.P, a0 ω ∈ allStartsSet γ := by
