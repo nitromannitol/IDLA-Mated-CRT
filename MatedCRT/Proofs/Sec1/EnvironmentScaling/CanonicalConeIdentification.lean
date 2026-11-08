@@ -129,6 +129,93 @@ theorem exists_reference_cone_postLastZero_radial_law
   have heq := hcircle γ Ω S hS X B B' hX hB hB' hi hi' href
   rw [← Measure.map_congr heq, hlaw]
 
+/-- The drift-corrected post-last-zero path associated with the outer
+branch of the reference cone. -/
+def referenceConeConditionedPath (γ : ℝ) (B' : ℝ≥0 → ℝ) : ℝ≥0 → ℝ :=
+  let d := MatedCRTHarmonic.MatedCRT.lqgQ γ - γ
+  let c : ℝ → ℝ := fun u => B' u.toNNReal + d * u
+  let ℓ := MatedCRTHarmonic.MatedCRT.lastZeroR c
+  fun t => c (ℓ + t) - d * t
+
+/-- Removing the outer radial drift gives the drift-corrected path after the
+last zero. This identity also covers time zero. -/
+theorem referenceConeRadialPair_outer_centered (γ : ℝ) (B B' : ℝ≥0 → ℝ) :
+    (fun t : ℝ≥0 => (referenceConeRadialPair γ B B').2 t + γ * t) =
+      referenceConeConditionedPath γ B' := by
+  funext t
+  simp only [referenceConeRadialPair, referenceConeConditionedPath]
+  ring
+
+/-- Centering the outer coordinate of the cone radial law recovers the
+conditioned Brownian law as a law on coordinate paths. -/
+theorem map_quantumConeRadialLaw_outer_centered (γ : ℝ)
+    (ν : Measure (MarkovProcess.ContinuousPath ℝ)) [IsProbabilityMeasure ν] :
+    (quantumConeRadialLaw γ ν).map
+      (fun p (t : ℝ≥0) => p.2 t + γ * t) =
+      ν.map (fun w (t : ℝ≥0) => w t) := by
+  let f : (ℝ≥0 → ℝ) → (ℝ≥0 → ℝ) := fun x t => x t + γ * t
+  let g : MarkovProcess.ContinuousPath ℝ → (ℝ≥0 → ℝ) := fun w t => w t - γ * t
+  have hf : Measurable f := Measurable.of_eval fun t => (measurable_pi_apply t).add measurable_const
+  have hg : Measurable g := Measurable.of_eval fun t =>
+    (MarkovProcess.ContinuousPath.measurable_coordinateProcess (alpha := ℝ) t).sub measurable_const
+  have hm : Measurable (fun w : MarkovProcess.ContinuousPath ℝ =>
+      fun t : ℝ≥0 => w t + γ * t) := Measurable.of_eval fun t =>
+    (MarkovProcess.ContinuousPath.measurable_coordinateProcess (alpha := ℝ) t).add measurable_const
+  change (quantumConeRadialLaw γ ν).map (f ∘ Prod.snd) = _
+  rw [← Measure.map_map hf measurable_snd]
+  unfold quantumConeRadialLaw
+  rw [Measure.map_snd_prod, Measure.map_apply hm MeasurableSet.univ]
+  simp only [Set.preimage_univ, measure_univ, one_smul]
+  change (ν.map g).map f = _
+  rw [Measure.map_map hf hg]
+  congr 1
+  funext w t
+  simp only [Function.comp_apply, f, g]
+  ring
+
+/-- Given the simultaneous circle identity, the post-last-zero path from
+any represented reference cone has the weak-limit conditioned law supplied
+by the valid environment. The equality is on coordinate paths. -/
+theorem referenceConeConditionedPath_law
+    {Ω : Type} [MeasurableSpace Ω] {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
+    {S : MatedCRTEnv Ω} (hS : S.IsValid 𝒮 γ)
+    (hcircle : ReferenceConeRadialCircleStep 𝒮)
+    (X : Ω → LQGMetric.DistC) (B B' : ℝ≥0 → Ω → ℝ)
+    (hX : LQGMetric.IsWholePlaneGFF X S.P) (hB : IsBrownianReal B S.P)
+    (hB' : IsBrownianReal B' S.P)
+    (hi : IndepFun X (fun ω => ((fun t => B t ω), (fun t => B' t ω))) S.P)
+    (hi' : IndepFun (fun ω t => B t ω) (fun ω t => B' t ω) S.P)
+    (href : ∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ =
+      MatedCRTHarmonic.MatedCRT.coneField (X ω)
+        (MatedCRTHarmonic.MatedCRT.coneRadial γ γ (fun t => B t ω) (fun t => B' t ω)) φ) :
+    ∃ ν : Measure (MarkovProcess.ContinuousPath ℝ),
+      IsBMConditionedPositive (lqgQ γ - γ) ν ∧
+      S.P.map (fun ω => referenceConeConditionedPath γ (fun t => B' t ω)) =
+        ν.map (fun w (t : ℝ≥0) => w t) := by
+  obtain ⟨ν, hν, hlaw⟩ := hS.isQuantumCone.radial_law
+  refine ⟨ν, hν, ?_⟩
+  let : IsProbabilityMeasure ν := hν.1
+  have hc := hcircle γ Ω S hS X B B' hX hB hB' hi hi' href
+  have hrec := ae_distributionCircleVersion_eq hS href
+  have heq : (fun ω => referenceConeRadialPair γ (fun t => B t ω) (fun t => B' t ω)) =ᵐ[S.P]
+      (fun ω => radialProcess (S.hcirc ω)) := by
+    filter_upwards [hc, hrec] with ω hcω hrω
+    rw [← hcω]
+    apply Prod.ext <;> funext t <;> exact hrω _ (Real.exp_pos _) 0
+  let f : ((ℝ≥0 → ℝ) × (ℝ≥0 → ℝ)) → (ℝ≥0 → ℝ) :=
+    fun p t => p.2 t + γ * t
+  have hf : Measurable f := Measurable.of_eval fun t =>
+    ((measurable_pi_apply t).comp measurable_snd).add measurable_const
+  have hmaps : (fun ω => referenceConeConditionedPath γ (fun t => B' t ω)) =ᵐ[S.P]
+      (fun ω => f (radialProcess (S.hcirc ω))) := by
+    filter_upwards [heq] with ω hω
+    rw [← hω]
+    exact (referenceConeRadialPair_outer_centered γ _ _).symm
+  rw [Measure.map_congr hmaps]
+  change S.P.map (f ∘ fun ω => radialProcess (S.hcirc ω)) = _
+  rw [← Measure.map_map hf (IsQuantumCone.measurable_radialProcess hS.isQuantumCone), hlaw]
+  exact map_quantumConeRadialLaw_outer_centered γ ν
+
 /-- Equality of the radial pairs identifies every logarithmic circle with the
 reference radial formula, including the shared time zero. -/
 theorem referenceConeRadial_eq_of_pair (γ : ℝ) (a : ℝ → ℂ → ℝ)
