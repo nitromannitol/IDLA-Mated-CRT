@@ -3,7 +3,7 @@ import MatedCRT.Proofs.Sec2.ConeFamilyMeasurable.StoppedClosure
 /-! # FIRST PASS S2c: closure before the stopping time
 
 `ConeHalfBallClosureInsideStep` (`Proofs/Sec2/ConeFamilyMeasurable/StoppedClosure.lean:18`) is reduced to the almost-sure
-absence of two rational touching times, `ConeNoTwoTouchStep` (NEW, open). The deterministic core,
+absence of two rational touching times, `ConeNoTwoTouchStep` (NEW; proved as `firstPass_noTwoTouch` in `FirstPass/S2d.lean`). The deterministic core,
 `closure_inside_of_noTwoTouch`, follows the written argument `notes/prop42-proof/prop42-proof.tex:291-304`
 (audited CORRECT, `notes/prop42-proof/AUDIT.md`). No strict growth of harmonic balls is assumed. -/
 
@@ -16,12 +16,12 @@ open MeasureTheory Filter Set Metric HarmonicBalls
 attained on the compact closure. -/
 def TouchesHalfCircle (A : Set ℂ) : Prop := ∃ x ∈ closure A, ‖x‖ = 1 / 2
 
-/-- **NEW (open), FIRST PASS S2c.** Almost surely, for every stopped cone family `{Λ_t}_{0<t<T}` (with the properties of
+/-- **NEW, FIRST PASS S2c; proved as `firstPass_noTwoTouch` (`FirstPass/S2d.lean`).** Almost surely, for every stopped cone family `{Λ_t}_{0<t<T}` (with the properties of
 Lemma 2.4) and all rationals `0 < q₁ < q₂ < T`, the sets `Λ_{q₁}` and `Λ_{q₂}` do not both touch `∂B_{1/2}`.
 Written argument: `notes/prop42-proof/prop42-proof.tex:230-272` (no prescribed plateau radius, Tonelli and scaling),
-`:275-289` (excluded event on `B_{3/4}`, [HB] Lemma 5.8 and the obstacle characterization). Lean route: the
-plateau-null lemma `plateau_measure_zero` (`Proofs/Sec4/Prop42Closure/HalfBallPlateau.lean:117`), which needs the
-measurability of rational radii and the plateau scaling `PlateauScaleInvarianceStep` (open, see reports/q1.md). -/
+`:275-289` (excluded event on `B_{3/4}`, [HB] Lemma 5.8 and the obstacle characterization). Lean route:
+`ConePrematureContactNullStep` (`Proofs/Sec4/Prop42Closure/HalfBallClosure.lean`) through
+`coneNoTwoTouchStep_of_prematureContactNull` (`FirstPass/S2d.lean`). -/
 def ConeNoTwoTouchStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
