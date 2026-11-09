@@ -70,4 +70,18 @@ theorem green_ratio_target_draft {μ : Measure ℂ} {m : ℤ → ℤ → ℕ} {�
   green_ratio_target_of_crude hap hη hp hr hε hρ hc6 hd hC h4c hεC hsymm hlf hcons hball hdiam
     (fun k => vertexPoint_mem_cell_of_pos hε k) (hGlow_of_draft_body hbody ha hε0 hfar) hmr hmrε hcrude
 
+/-- **hdiam from the Draft cell-size estimate** (Lemma 2.8, `CellSizeEstimateStmt`, upper conjunct): if every cell meeting
+`B_ρ` has diameter at most `D`, then every cell meeting `B_{r/2}(z)` has diameter at most `D` (cells are bounded, being
+images of compact intervals), provided `B_{r/2}(z) ⊆ B_ρ`. -/
+theorem hdiam_of_cell_size {ε ρ D r : ℝ} {η : ℝ → ℂ} {z : ℂ} (hη : Continuous η) (hsub : ball z (r / 2) ⊆ ball 0 ρ)
+    (hcs : ∀ k : ℤ, (cell ε η k ∩ ball 0 ρ).Nonempty → diam (cell ε η k) ≤ D) :
+    ∀ k : ℤ, (cell ε η k ∩ ball z (r / 2)).Nonempty →
+      ∀ x ∈ cell ε η k, ∀ y ∈ cell ε η k, dist x y ≤ D := by
+  intro k hk x hx y hy
+  have hmeet : (cell ε η k ∩ ball 0 ρ).Nonempty := by
+    obtain ⟨w, hw, hwz⟩ := hk
+    exact ⟨w, hw, hsub hwz⟩
+  have hbdd : Bornology.IsBounded (cell ε η k) := (isCompact_Icc.image hη).isBounded
+  exact (dist_le_diam_of_mem hbdd hx hy).trans (hcs k hmeet)
+
 end MatedCRT.S5c
