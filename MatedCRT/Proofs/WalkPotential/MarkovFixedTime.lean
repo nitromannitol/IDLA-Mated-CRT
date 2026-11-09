@@ -23,8 +23,16 @@ open scoped ENNReal
 /-- The history `(x_0, …, x_n)` of a path. -/
 def pathHist (n : ℕ) (x : ℕ → ℤ) : Fin (n + 1) → ℤ := fun i => x i
 
-/-- The path shifted by `n`: `(x_n, x_{n+1}, …)`. -/
+namespace WalkPotential
+
+/-- The path shifted by `n`: `(x_n, x_{n+1}, …)`. Declared in the sub-namespace `MatedCRT.WalkPotential` (renamed from
+`MatedCRT.pathShift` to avoid the clash with `MatedCRT.pathShift` of `Proofs/IDLA/StrongMarkov.lean`; the two definitions
+agree, both equal `fun k => x (n + k)`). -/
 def pathShift (n : ℕ) (x : ℕ → ℤ) : ℕ → ℤ := fun k => x (n + k)
+
+end WalkPotential
+
+open WalkPotential
 
 theorem measurable_pathHist (n : ℕ) : Measurable (pathHist n) :=
   measurable_pi_iff.2 fun _ => measurable_pi_apply _

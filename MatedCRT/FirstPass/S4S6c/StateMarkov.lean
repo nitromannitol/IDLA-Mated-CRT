@@ -16,6 +16,8 @@ open Function
 
 namespace MatedCRT
 
+open WalkPotential
+
 /-- The history fibre `{f ∈ F : f (last) = y}`: histories in `F` whose last state is `y`. -/
 def stateFiber {n : ℕ} (F : Set (Fin (n + 1) → ℤ)) (y : ℤ) : Set (Fin (n + 1) → ℤ) :=
   {f | f ∈ F ∧ f (Fin.last n) = y}

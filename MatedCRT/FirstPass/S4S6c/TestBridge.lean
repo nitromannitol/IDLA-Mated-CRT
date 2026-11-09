@@ -18,6 +18,8 @@ open scoped ENNReal
 
 namespace MatedCRT
 
+open WalkPotential
+
 /-- **Set-form conditional bound at a fixed time.** If `P^y(E) ≤ c` for every state `y ∈ Y`, and `S` is a measurable event
 determined by the history up to time `n` with `x_n ∈ Y` on `S`, then `P^a(S ∩ {x_{n+·} ∈ E}) ≤ c P^a(S)`. -/
 theorem srwLaw_test_bound (m : ℤ → ℤ → ℕ) (a : ℤ) (n : ℕ) {E : Set (ℕ → ℤ)} (hE : MeasurableSet E)

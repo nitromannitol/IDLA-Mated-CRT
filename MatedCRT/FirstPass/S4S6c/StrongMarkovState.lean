@@ -18,6 +18,8 @@ open Function
 
 namespace MatedCRT
 
+open WalkPotential
+
 /-- The future event at a fixed time, with state-dependent set, is measurable. -/
 theorem measurableSet_future_at_state (k : ℕ) {G : ℤ → Set (ℕ → ℤ)} (hG : ∀ y, MeasurableSet (G y)) :
     MeasurableSet {x : ℕ → ℤ | pathShift k x ∈ G (x k)} := by
