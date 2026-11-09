@@ -29,15 +29,15 @@ theorem core_subset_fillCells_eventually {μ : Measure ℂ} {ρ t s κ b : ℝ} 
     (hEs : ∀ᶠ k in atTop, ∀ x ∈ K,
       |rescale (mε k) (ε k) (η k) (matedLeastSupersolution (m k) (ε k) (η k) ρ s) x -
         κ * leastSupersolution μ ρ 0 s x| ≤ e k)
-    (hmemcell : ∀ k, ∀ x ∈ K, x ∈ cell (ε k) (η k) (vertexOf (ε k) (η k) x)) :
+    (hmemcell : ∀ᶠ k in atTop, ∀ x ∈ K, x ∈ cell (ε k) (η k) (vertexOf (ε k) (η k) x)) :
     ∀ᶠ k in atTop, K ⊆ fillCells (ε k) (η k) (matedDiscreteCluster (m k) (ε k) (η k) ρ t) := by
   have hc0 : (0 : ℝ) < 1 + t / s := add_pos_of_pos_of_nonneg one_pos (div_nonneg ht.le hs.le)
   have hX : (0 : ℝ) < κ * b / 2 / (1 + t / s) := div_pos (div_pos (mul_pos hκ hb) two_pos) hc0
   have he' : ∀ᶠ k in atTop, e k * (1 + t / s) ≤ κ * b / 2 := by
     filter_upwards [he.eventually (gt_mem_nhds hX)] with k hk
     exact ((lt_div_iff₀ hc0).1 hk).le
-  filter_upwards [hmε, hε, hEt, hEs, he'] with k hm hε' hEt' hEs' he''
+  filter_upwards [hmε, hε, hEt, hEs, he', hmemcell] with k hm hε' hEt' hEs' he'' hmc
   intro x hx
-  exact mem_fillCells_of_floor (μ := μ) hm hε' ht hs hκ hb hK he'' hfloor hEt' hEs' (hmemcell k) hx
+  exact mem_fillCells_of_floor (μ := μ) hm hε' ht hs hκ hb hK he'' hfloor hEt' hEs' hmc hx
 
 end MatedCRT.S5c
