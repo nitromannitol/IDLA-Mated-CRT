@@ -116,14 +116,15 @@ predicate is `IsBMConditionedPositive`, `MatedCRT/Defs/QuantumCone.lean`).
 Let `W = brownianMotion 0`, let `d` be a real drift (the positive-real drift `Q - γ` of DMS Remark 4.4, with `0 < d`), and let
 `F : ContinuousPath ℝ → ContinuousPath ℝ` be measurable with the two printed clauses for `W` and `d` as explicit premises:
 `hreal` (`W`-almost surely `F ω 0 = 0` and `F ω t > 0` at every real `t > 0`) and `hlaw` (for every `δ > 0`, the `W`-law of the
-path shifted after its first hit `τ_δ` of `δ` is the conditioned drifted Brownian law `W[· | stayAboveEvent d δ]`).
+path shifted after its first hit `τ_δ` of `δ` is `ProbabilityTheory.cond (driftedBrownianFrom d δ) {y | ∀ t, y t ≠ 0}`,
+the normalized restriction of Brownian motion with drift `d` started at `δ` to the event that it never vanishes).
 
 Then the undrifted post-last-zero path `G = F - d·` satisfies `IsBMConditionedPositive d (W.map G)`: `W.map G` is a
 probability measure, and `∫ f dW[· | stayAboveEvent d δ] → ∫ f d(W.map G)` as `δ ↓ 0` along the full filter `𝓝[>] 0`, for every
 bounded continuous `f` on `ContinuousPath ℝ`.
 
-Proof. For `δ > 0`, the conditional-law identity `W.map (shifted path) = W[· | stayAboveEvent d δ]` follows from `hlaw` and
-`map_cond_driftedBrownianFrom`. For each sequence `δ_n ↓ 0`, the shifted paths converge pathwise in the compact-open topology
+Proof. For `δ > 0`, the redrifted shifted path `affinePath (-δ) (-d)` of `F` after `τ_δ` has `W`-law `W[· | stayAboveEvent d δ]`,
+by `hlaw` and `map_cond_driftedBrownianFrom`. For each sequence `δ_n ↓ 0`, the shifted paths converge pathwise in the compact-open topology
 (`tendsto_affinePath_shift_firstLevelHit_compactOpen`), so `f` of them converges `W`-almost surely, and dominated convergence
 with bound `‖f‖` applies. The sequential criterion `tendsto_iff_seq_tendsto` then gives the full limit.
 
