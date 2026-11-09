@@ -22,7 +22,7 @@ open MeasureTheory
 (`rescaledMeasure (S.μ ω) (R_b ω) b`) is a random measure with the same law as `μ`.
 Source: Duplantier–Miller–Sheffield (2014, *Mating of trees*, arXiv:1409.7055v4), Proposition 4.13(i) (quantum cone
 scaling), together with the canonical GMC covariance of the LQG measure (the law of `μ_{h^b}` for `h^b = h(R_b ·) +
-Q log R_b - γ⁻¹ log b`). Locator: DMS14 Proposition 4.13(i), arXiv:1409.7055v4 page of the proposition pending.
+Q log R_b - γ⁻¹ log b`). Locator: DMS Proposition 4.13(i) (arXiv:1409.7055v4) + DS Proposition 2.1 (Duplantier–Sheffield, arXiv:0808.1560v2), per notes/fp-gaps/CHATGPT-frozen-locators.md.
 Used by: firstPass_4_1_coneLaw (MatedCRT/FirstPass/S4S6c.lean). -/
 def FrozenConeScalingLaw (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →

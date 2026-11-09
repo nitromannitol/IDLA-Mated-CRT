@@ -13,7 +13,7 @@ processes beyond the cited statement itself.
 namespace MatedCRT
 
 /-- FIRST-PASS FROZEN. Lemma 3.2 (lemma:discrete-holder-continuity, paper line 1018), corrected form, cited from
-\cite{gwynne2019harmonic} Theorem 3.9 (bibliographic locator to be confirmed; the paper's citation is "Theorem 3.9").
+\cite{gwynne2019harmonic} Theorem 3.9 (locator: GMS Theorem 3.9, (3.30)–(3.33), arXiv:1807.07511v3, per notes/fp-gaps/CHATGPT-frozen-locators.md; the paper's citation is "Theorem 3.9").
 The printed Draft `DiscreteHolderContinuityStmt` is FALSE (review-L32 F1, docs/campaign/CORRECTED-FORMS.md, entry 3.2);
 this is the corrected statement `DiscreteHolderContinuityCorrectedStep` of Steps/Sec3/DiscretePotentialTightness.lean:71.
 Used by: firstPass_3_1_corrected. -/
