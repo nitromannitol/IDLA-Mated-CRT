@@ -50,7 +50,7 @@ theorem firstPassMain_1_4 (𝒮 : SpaceFillingSLEModel)
     (h214 : GreenKernelUpperBoundStmt 𝒮) (h216 : GreenKernelLowerBoundStmt 𝒮)
     (h218 : ExitTimeUpperBoundStmt 𝒮)
     (hH : FrozenDiscreteHolderContinuityCorrected 𝒮) (hEnv : FrozenConeEnvironmentScaling 𝒮)
-    (h0 : FPWholePlaneLQGExistence) (h1 : FPConeWholePlaneWeylComparison)
+    (h0 : FPWholePlaneLQGExistence)
     (h2 : FPWholePlaneLQGCoordinateChange) (hV : FPWholePlaneUpperVolumeTail) (hR : FPConeMeanZeroRestriction)
     (h24 : ConeHarmonicBallsUpToFixedTimeStmt) (h25 : ConeScaleInvarianceUpToFixedTimeStmt)
     (h211 : RandomWalkToLBMStmt 𝒮) (hrevuz : FrozenLBMGreenOccupation 𝒮)
@@ -65,7 +65,7 @@ theorem firstPassMain_1_4 (𝒮 : SpaceFillingSLEModel)
   have hconv : ConvergenceDivisibleStmt 𝒮 := firstPass_4_1 hm h210 h34 h214 h28 h35 h218 h27 hH hEnv
   have hgreen : UniformConvergenceGreenKernelStmt 𝒮 := firstPass_3_3 h210 h34 h214 h28 h27 h218 hm hH
   have h71 : DivSandpileUpperBoundStmt 𝒮 :=
-    firstPass_7_1 𝒮 hm hcone hdeg h216 h27 h28 h29 h218 hconv hgreen h0 h1 h2 hV hR
+    firstPass_7_1 𝒮 hm hcone hdeg h216 h27 h28 h29 h218 hconv hgreen h0 h2 hV hR
   exact convergenceOfIDLA_of_steps 𝒮 (firstPass_8_1 h42 h51 h61 h71) hEnv harmonicBallFamilyScalingStep
     (coneScaleRadiusStep_of_input hscale) hT
 
@@ -78,7 +78,7 @@ theorem firstPassMain_1_6 (𝒮 : SpaceFillingSLEModel)
     (h214 : GreenKernelUpperBoundStmt 𝒮) (h216 : GreenKernelLowerBoundStmt 𝒮)
     (h218 : ExitTimeUpperBoundStmt 𝒮)
     (hH : FrozenDiscreteHolderContinuityCorrected 𝒮) (hEnv : FrozenConeEnvironmentScaling 𝒮)
-    (h0 : FPWholePlaneLQGExistence) (h1 : FPConeWholePlaneWeylComparison)
+    (h0 : FPWholePlaneLQGExistence)
     (h2 : FPWholePlaneLQGCoordinateChange) (hV : FPWholePlaneUpperVolumeTail) (hR : FPConeMeanZeroRestriction)
     (h24 : ConeHarmonicBallsUpToFixedTimeStmt) (h25 : ConeScaleInvarianceUpToFixedTimeStmt)
     (h211 : RandomWalkToLBMStmt 𝒮) (hrevuz : FrozenLBMGreenOccupation 𝒮)
@@ -93,7 +93,7 @@ theorem firstPassMain_1_6 (𝒮 : SpaceFillingSLEModel)
   have hconv : ConvergenceDivisibleStmt 𝒮 := firstPass_4_1 hm h210 h34 h214 h28 h35 h218 h27 hH hEnv
   have hgreen : UniformConvergenceGreenKernelStmt 𝒮 := firstPass_3_3 h210 h34 h214 h28 h27 h218 hm hH
   have h71 : DivSandpileUpperBoundStmt 𝒮 :=
-    firstPass_7_1 𝒮 hm hcone hdeg h216 h27 h28 h29 h218 hconv hgreen h0 h1 h2 hV hR
+    firstPass_7_1 𝒮 hm hcone hdeg h216 h27 h28 h29 h218 hconv hgreen h0 h2 hV hR
   exact convergenceOfDivSandpile_of_steps 𝒮 (firstPass_8_1 h42 h51 h61 h71) hEnv harmonicBallFamilyScalingStep
     (coneScaleRadiusStep_of_input hscale) hT
 
