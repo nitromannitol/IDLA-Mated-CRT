@@ -408,6 +408,44 @@ theorem normalized_isWholePlaneGFF_of_rotation {Ω : Type} [MeasurableSpace Ω] 
   rw [heq]
   exact MatedCRT.Field.isWholePlaneGFF_affine hRot hR 0
 
+/-- The translation `z ↦ z - p` of the plane as a measurable equivalence. -/
+def transEquiv (p : ℂ) : ℂ ≃ᵐ ℂ where
+  toFun z := z - p
+  invFun z := z + p
+  left_inv z := by simp
+  right_inv z := by simp
+  measurable_toFun := (continuous_id.sub continuous_const).measurable
+  measurable_invFun := (continuous_id.add continuous_const).measurable
+
+theorem transEquiv_symm_apply (p z : ℂ) : (transEquiv p).symm z = z + p := rfl
+
+theorem transEquiv_map_volume (p : ℂ) : Measure.map (transEquiv p) volume = volume :=
+  (measurePreserving_sub_right volume p).map_eq
+
+/-- **Translated approximation identity** (steps3:673-675). For `a ≠ 0`, `b ∈ ℂ` and `r > 0`, the approximating measure of
+the affine circle array `affineCircleArray α Q a b h` (steps3 eq:affine-circle-array, with `Q = lqgQ γ`) is
+`C_a (z ↦ z - b/a)_* M^a_r`, where `M^a_r = lqgApprox γ (fieldCircleAverage α (normalizedCircleProc a h)) r`. -/
+theorem lqgApprox_affineArray_eq {γ α : ℝ} {a b : ℂ} (ha : a ≠ 0) (h : ℝ → ℂ → ℝ) {r : ℝ}
+    (hr : 0 < r) :
+    lqgApprox γ (affineCircleArray α (lqgQ γ) a b h) r
+      = ENNReal.ofReal (affineFactor γ α a h) •
+          Measure.map (fun z : ℂ => z - b / a)
+            (lqgApprox γ (fieldCircleAverage α (normalizedCircleProc a h)) r) := by
+  have hfun : (fun z : ℂ => z - b / a) = ⇑(transEquiv (b / a)) := rfl
+  rw [hfun]
+  unfold lqgApprox
+  rw [map_withDensity_measurableEquiv, transEquiv_map_volume, smul_withDensity_fun _ ENNReal.ofReal_ne_top]
+  congr 1
+  funext z
+  simp only [transEquiv_symm_apply]
+  rw [← ENNReal.ofReal_mul (affineFactor_pos γ α a h).le]
+  congr 1
+  have hexp := affineCircleArray_eq_normalized (α := α) (Q := lqgQ γ) (b := b) ha h hr z
+  rw [hexp]
+  unfold affineFactor
+  simp only [mul_add, Real.exp_add]
+  ring
+
 end
 
 end MatedCRT
