@@ -80,25 +80,23 @@ theorem integrable_mul_laplacian_of_contOn {R : ℝ} {w : ℂ → ℝ} (hw : Con
 supersolution for the obstacle `-t G_{B_R}(0,·)` with zero boundary values, and suppose `Δw = μ|_A` in `B_R` for the
 contact set `A = certCluster R t w` (condition C4). Then `w` lies below every supersolution `v` with the same obstacle.
 The proof applies the minimum principle `FrozenSuperharmonicMinimumPrinciple` to `v - w` on the open set `A`. -/
-theorem certificate_le_supersolution (hmin : FrozenSuperharmonicMinimumPrinciple) (hpole : FrozenGreenDiscPole)
-    {μ : Measure ℂ} {R t : ℝ} (hR : 0 < R) (ht : 0 < t) (hμ : μ (closedBall (0 : ℂ) R) < ⊤)
+theorem certificate_le_supersolution (hmin : FrozenSuperharmonicMinimumPrinciple)
+    {μ : Measure ℂ} {R t : ℝ} (hμ : μ (closedBall (0 : ℂ) R) < ⊤)
     {w : ℂ → ℝ} (hw : w ∈ supersolutions μ R 0 t) (hbd : ∀ x ∈ sphere (0 : ℂ) R, w x = 0)
-    (hC4 : HasLaplacian w (μ.restrict (certCluster R t w)) 0 (ball (0 : ℂ) R)) :
+    {A : Set ℂ} (hAopen : IsOpen A) (h0A : (0 : ℂ) ∈ A) (hAball : A ⊆ ball (0 : ℂ) R)
+    (hcov : ∀ y ∈ ball (0 : ℂ) R, y ∉ A → w y ≤ -t * greenFunction (ball 0 R) 0 y)
+    (hC4 : HasLaplacian w (μ.restrict A) 0 (ball (0 : ℂ) R)) :
     ∀ v ∈ supersolutions μ R 0 t, ∀ x ∈ closedBall (0 : ℂ) R, w x ≤ v x := by
   intro v hv x hx
   obtain ⟨hvc, hvL, hvob⟩ := hv
   obtain ⟨hwc, -, -⟩ := hw
-  set A := certCluster R t w with hAdef
-  have hAopen : IsOpen A := isOpen_certCluster hpole hR ht hwc
-  have h0A : (0 : ℂ) ∈ A := ⟨mem_ball_self hR, Or.inl rfl⟩
-  have hAball : A ⊆ ball (0 : ℂ) R := fun y hy => hy.1
   have hAcl : closure A ⊆ closedBall (0 : ℂ) R :=
     closure_minimal (hAball.trans ball_subset_closedBall) isClosed_closedBall
   -- off the contact set, `w` lies below the obstacle (on the sphere both sides vanish)
   have hoff : ∀ y ∈ closedBall (0 : ℂ) R, y ∉ A → w y ≤ -t * greenFunction (ball 0 R) 0 y := by
     intro y hy hyA
     by_cases hyb : y ∈ ball (0 : ℂ) R
-    · exact not_lt.mp (fun h => hyA ⟨hyb, Or.inr h⟩)
+    · exact hcov y hyb hyA
     · have hd : dist y 0 = R :=
         le_antisymm (mem_closedBall.mp hy) (not_lt.mp (fun h => hyb (mem_ball.mpr h)))
       have hys : y ∈ sphere (0 : ℂ) R := mem_sphere.mpr hd
@@ -144,5 +142,17 @@ theorem certificate_le_supersolution (hmin : FrozenSuperharmonicMinimumPrinciple
   · linarith [hfA x hxA]
   · have hxne : x ≠ 0 := fun h => hxA (by rw [h]; exact h0A)
     linarith [hoff x hx hxA, hvob x hx hxne]
+
+/-- The comparison lemma with the contact set `certCluster R t w` (the HB `cluster` with the candidate `w`): the open
+set and the covering hypothesis are supplied by `isOpen_certCluster` and the definition of the contact set. -/
+theorem certificate_le_supersolution_of_cluster (hmin : FrozenSuperharmonicMinimumPrinciple)
+    (hpole : FrozenGreenDiscPole) {μ : Measure ℂ} {R t : ℝ} (hR : 0 < R) (ht : 0 < t)
+    (hμ : μ (closedBall (0 : ℂ) R) < ⊤) {w : ℂ → ℝ} (hw : w ∈ supersolutions μ R 0 t)
+    (hbd : ∀ x ∈ sphere (0 : ℂ) R, w x = 0)
+    (hC4 : HasLaplacian w (μ.restrict (certCluster R t w)) 0 (ball (0 : ℂ) R)) :
+    ∀ v ∈ supersolutions μ R 0 t, ∀ x ∈ closedBall (0 : ℂ) R, w x ≤ v x :=
+  certificate_le_supersolution hmin hμ hw hbd (isOpen_certCluster hpole hR ht hw.1)
+    ⟨mem_ball_self hR, Or.inl rfl⟩ (fun _ hy => hy.1)
+    (fun _ hy hyA => not_lt.mp (fun h => hyA ⟨hy, Or.inr h⟩)) hC4
 
 end MatedCRT
