@@ -9,9 +9,12 @@ supremum and infimum of `IsGoodAnnulusEvent` replaced by suprema and infima over
 * `CoverMinorant.good_of_dense`: the dense cover at radius `c₀` implies the printed cover at radius `c₀`.
 * `CoverMinorant.dense_of_good`: the printed cover at radius `c₀ / 2` (the `GoodAnnulusPrevalenceStmt` event) implies the dense
   cover at radius `c₀`. So the dense cover is a minorant with the polynomial failure bound of the Draft event.
-* Measurability: the random measure hypothesis `hκ` (`ω ↦ ∫⁻ f dμ_ω` is measurable for measurable `f ≥ 0`; an EXTERNAL
-  candidate, see the report) gives measurability of ball masses and log potentials; countable suprema and infima and the
-  grid index `(m, k) ∈ ℤ²` give measurability of `denseCoverSet`.
+* Measurability: the random measure hypothesis `hκ` (`ω ↦ ∫⁻ f dμ_ω` is measurable for measurable `f ≥ 0`) gives
+  measurability of ball masses and log potentials; countable suprema and infima and the grid index `(m, k) ∈ ℤ²` give
+  measurability of `denseCoverSet`. WARNING: `hκ` is stated EVERYWHERE, which is NOT a freezable form: `IsLQGMeasure` holds
+  only almost surely (Harmonic-Balls-LQG HarmonicBalls/Defs/LQG.lean:63-65), so `S.μ` can be altered on a null set. The
+  freezable form is a.e.: for each measurable `f ≥ 0` a fieldSigma-measurable `g` with `g = ∫⁻ f dμ_ω` a.s.; the minorant
+  then needs null-set bookkeeping over the countable families used. OPEN; this file is conditional on the everywhere form.
 * `goodAnnulusCover_dyadic_of_dense`: the dyadic good-radius conclusion (eq (9)) from `hκ`, the countability of `D`, and the
   Draft polynomial bound at radius `c₀ / 2`.
 -/
