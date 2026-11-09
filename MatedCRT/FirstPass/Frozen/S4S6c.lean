@@ -45,4 +45,13 @@ def FrozenLQGMeasureFieldMeasurable (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
     ∃ g : Ω → Measure ℂ, Measurable[S.fieldSigma] g ∧ ∀ᵐ ω ∂S.P, S.μ ω = g ω
 
+/-- FIRST-PASS FROZEN. Properness of the space-filling curve, almost surely. For every valid environment `S` with
+cone parameter `γ`, almost surely `η(t) → ∞` as `|t| → ∞`: `Tendsto (S.η ω) (cocompact ℝ) (cocompact ℂ)`, so that a
+bounded set of the plane is met by `η` only on a bounded interval of parameters (whole-plane space-filling SLE from
+`∞` to `∞`). Source: standard; locator pending (a truth check follows, operator note 2026-11-09 22:25 UTC). Used by: none yet; reserved for the Good event of firstPass_6_8 (LEMMA68 C2, cellVertices
+finiteness). -/
+def FrozenProperEta (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+    ∀ᵐ ω ∂S.P, Filter.Tendsto (S.η ω) (Filter.cocompact ℝ) (Filter.cocompact ℂ)
+
 end MatedCRT
