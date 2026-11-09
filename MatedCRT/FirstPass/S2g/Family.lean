@@ -29,11 +29,17 @@ def CertReal (ν : Measure ℂ) (t : ℝ) (w : ℂ → ℝ) : Prop :=
     (∃ x ∈ closure (certCluster (3 / 4) t w), ‖x‖ = 1 / 2) ∧
     HasLaplacian w (ν.restrict (interior (closure (certCluster (3 / 4) t w)))) 0 (ball 0 (3 / 4))
 
+/-- A certificate which is also a supersolution on `B_{3/4}` (HB eq:super-solutions, line 583): `w ∈ S_{B_{3/4};0}(t)`.
+The membership gives the Laplacian inequality `Δw ≤ ν` on all of `B_{3/4}`, which `CertReal` does not carry; it is what
+makes the contact set of `w` the HB cluster (Lemma 3.1 of HB: the least supersolution lies in `S`). -/
+def CertSuper (ν : Measure ℂ) (t : ℝ) (w : ℂ → ℝ) : Prop :=
+  CertReal ν t w ∧ w ∈ supersolutions ν (3 / 4) 0 t
+
 /-- The bad event of the good set: two rational times `0 < p < q` each carry a certificate for `ν` (a plateau pair of
 raw radii, CHATGPT-cone-good-set.md (37)). -/
 def HasRatPlateauCert (ν : Measure ℂ) : Prop :=
-  ∃ p q : ℚ, 0 < (p : ℝ) ∧ (p : ℝ) < (q : ℝ) ∧ (∃ w : ℂ → ℝ, CertReal ν (p : ℝ) w) ∧
-    ∃ w : ℂ → ℝ, CertReal ν (q : ℝ) w
+  ∃ p q : ℚ, 0 < (p : ℝ) ∧ (p : ℝ) < (q : ℝ) ∧ (∃ w : ℂ → ℝ, CertSuper ν (p : ℝ) w) ∧
+    ∃ w : ℂ → ℝ, CertSuper ν (q : ℝ) w
 
 /-- The zero function is a supersolution on `B_{3/4}` for `t ≥ 0`, since the disc Green function is nonnegative
 (`greenFunction_nonneg`). -/
@@ -61,10 +67,11 @@ theorem leastSupersolution_obstacle (μ : Measure ℂ) {t : ℝ} (ht : 0 ≤ t) 
 
 /-- A point of the closure of the family at a time `s ∈ (0, T)` which lies outside `B_{1/2}` gives the certificate
 `leastSupersolution ν (3/4) 0 s` at time `s` (CHATGPT-cone-good-set.md Section 4.2, (29)-(33) for one time). -/
-theorem certReal_least_of_mem_closure (hpole : FrozenGreenDiscPole) {ν : Measure ℂ} {Λ : ℝ → Set ℂ} {T : ℝ}
+theorem certSuper_least_of_mem_closure (hpole : FrozenGreenDiscPole) {ν : Measure ℂ} {Λ : ℝ → Set ℂ} {T : ℝ}
     (hfam : IsConeHarmonicBallFamilyOn ν Λ T) (hst : IsStoppedAtHalfBall Λ T) {s : ℝ} (hs : s ∈ Ioo 0 T)
-    {x : ℂ} (hxs : x ∈ closure (Λ s)) (hxb : x ∉ ball (0 : ℂ) (1 / 2)) :
-    CertReal ν s (leastSupersolution ν (3 / 4) 0 s) := by
+    {x : ℂ} (hxs : x ∈ closure (Λ s)) (hxb : x ∉ ball (0 : ℂ) (1 / 2))
+    (hS : leastSupersolution ν (3 / 4) 0 s ∈ supersolutions ν (3 / 4) 0 s) :
+    CertSuper ν s (leastSupersolution ν (3 / 4) 0 s) := by
   have hs0 : (0 : ℝ) < s := hs.1
   obtain ⟨hΛp, hcont, hlap, hbd⟩ :=
     hfam.2.2 s (1 / 2) hs (by norm_num) (hst.1 s hs) (3 / 4) (by norm_num)
@@ -92,8 +99,8 @@ theorem certReal_least_of_mem_closure (hpole : FrozenGreenDiscPole) {ν : Measur
     have h2 : ‖x‖ ≤ 1 / 2 := by
       simpa [mem_closedBall, dist_zero_right] using hclosed_ball hxp
     linarith
-  refine ⟨hcont, fun y hy hy0 => leastSupersolution_obstacle ν hs0.le hy hy0, hbd, hclosed_ball,
-    ⟨x, hxp, hxnorm⟩, ?_⟩
+  refine ⟨⟨hcont, fun y hy hy0 => leastSupersolution_obstacle ν hs0.le hy hy0, hbd, hclosed_ball,
+    ⟨x, hxp, hxnorm⟩, ?_⟩, hS⟩
   rw [hΛeq]
   exact hlap
 
@@ -101,6 +108,7 @@ theorem certReal_least_of_mem_closure (hpole : FrozenGreenDiscPole) {ν : Measur
 `t < p < q < T` carry certificates, since `Λ_t ⊆ Λ_p ⊆ Λ_q` and the closure point stays on the circle `|x| = 1/2`. -/
 theorem closure_ball_of_not_hasRatPlateauCert (hpole : FrozenGreenDiscPole) {ν : Measure ℂ} {Λ : ℝ → Set ℂ}
     {T : ℝ} (hfam : IsConeHarmonicBallFamilyOn ν Λ T) (hst : IsStoppedAtHalfBall Λ T)
+    (hS : ∀ s ∈ Ioo 0 T, leastSupersolution ν (3 / 4) 0 s ∈ supersolutions ν (3 / 4) 0 s)
     (hno : ¬ HasRatPlateauCert ν) {t : ℝ} (ht : t ∈ Ioo 0 T) : closure (Λ t) ⊆ ball (0 : ℂ) (1 / 2) := by
   by_contra hnot
   obtain ⟨x, hxcl, hxball⟩ := not_subset.mp hnot
@@ -113,13 +121,19 @@ theorem closure_ball_of_not_hasRatPlateauCert (hpole : FrozenGreenDiscPole) {ν 
   have hxq : x ∈ closure (Λ (q : ℝ)) :=
     closure_mono (hfam.2.1.monotoneOn ht hq (lt_trans htp hpq).le) hxcl
   apply hno
-  exact ⟨p, q, hp.1, hpq, ⟨_, certReal_least_of_mem_closure hpole hfam hst hp hxp hxball⟩,
-    ⟨_, certReal_least_of_mem_closure hpole hfam hst hq hxq hxball⟩⟩
+  exact ⟨p, q, hp.1, hpq, ⟨_, certSuper_least_of_mem_closure hpole hfam hst hp hxp hxball (hS _ hp)⟩,
+    ⟨_, certSuper_least_of_mem_closure hpole hfam hst hq hxq hxball (hS _ hq)⟩⟩
 
-/-- The probabilistic core of the good set: the measures carrying a rational plateau pair of certificates are covered
-by a measurable set `N` of `Measure ℂ` whose preimage under `μ` is `P`-null. -/
+/-- The least supersolution on `B_{3/4}` lies in `S_{B_{3/4};0}(s)` at every positive time (HB Lemma 3.1,
+`LeastSupersolutionMemStmt`, which holds almost surely for the LQG measure; not true for every measure). -/
+def LeastSuperOK (ν : Measure ℂ) : Prop :=
+  ∀ s : ℝ, 0 < s → leastSupersolution ν (3 / 4) 0 s ∈ supersolutions ν (3 / 4) 0 s
+
+/-- The probabilistic core of the good set: the measures carrying a rational plateau pair of certificates, or failing
+`LeastSuperOK`, are covered by a measurable set `N` of `Measure ℂ` whose preimage under `μ` is `P`-null. -/
 def BadMeasureNullHull {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (μ : Ω → Measure ℂ) : Prop :=
-  ∃ N : Set (Measure ℂ), MeasurableSet N ∧ {ν | HasRatPlateauCert ν} ⊆ N ∧ P (μ ⁻¹' N) = 0
+  ∃ N : Set (Measure ℂ), MeasurableSet N ∧ {ν | HasRatPlateauCert ν ∨ ¬ LeastSuperOK ν} ⊆ N ∧
+    P (μ ⁻¹' N) = 0
 
 /-- The reduction of `ConeClosureGoodMeasureLawStep` to the bad null hull for every cone field. OPEN (NEW): the zero
 cone law, CHATGPT-cone-good-set.md Sections 1-3 (coding, Borel relation, analytic projection), 5 (plateau radii,
@@ -136,8 +150,11 @@ theorem coneGoodMeasureLaw_of_badNullHull (hpole : FrozenGreenDiscPole) {Ω : Ty
         ∀ t ∈ Ioo 0 T, closure (Λ t) ⊆ ball (0 : ℂ) (1 / 2)) ∧
       ∀ᵐ ω ∂P, μ ω ∈ G := by
   obtain ⟨N, hNm, hsub, hnull⟩ := hN
+  have hgood : ∀ ν ∈ Nᶜ, ¬ HasRatPlateauCert ν ∧ LeastSuperOK ν := fun ν hν =>
+    ⟨fun h => hν (hsub (Or.inl h)), not_not.mp (fun h => hν (hsub (Or.inr h)))⟩
   refine ⟨Nᶜ, hNm.compl, fun ν hν T Λ hfam hst t ht =>
-    closure_ball_of_not_hasRatPlateauCert hpole hfam hst (fun h => hν (hsub h)) ht, ?_⟩
+    closure_ball_of_not_hasRatPlateauCert hpole hfam hst (fun s hs => (hgood ν hν).2 s hs.1)
+      (hgood ν hν).1 ht, ?_⟩
   have hset : {ω | ¬ μ ω ∈ Nᶜ} = μ ⁻¹' N := by
     ext ω
     simp
