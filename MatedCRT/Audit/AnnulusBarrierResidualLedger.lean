@@ -43,8 +43,10 @@ Sources: `notes/wpn-steps2/steps2-r3.tex`, lines 359-429 (measurable version of 
 4. Scale quantifiers: (a) the annulus event is one event over all `z ∈ ball 0 ρ` and all `r ∈ [ε ^ β, ρ]`, as in
    item 2; its printed uniformity is to be confirmed against Lemma 3.11 (predecessor residual R3). (b) That
    uncountable intersection over real `(z, s)` must be measurable: this is the coanalytic step of item 3. No union over
-   scales is taken. (c) The stage bottom `max (ε ^ β) (20 * ε ^ a)` satisfies the two inequalities of the `lower` and
-   `separation` fields for margin `ε ^ a` (`ladder_bottom_separation`), so no separation premise is needed.
+   scales is taken. (c) The stage bottom `max ℓ (20 * ε ^ a)`, with the written margin `ℓ = 100 * ε ^ a + ε ^ β`
+   (`ladderMargin`, steps2-r3:656), satisfies the two inequalities of the `lower` and `separation` fields for the cell
+   margin `d = ε ^ a` (`ladder_bottom_separation`), so no separation premise is needed. The bottom lies in the range
+   `s ≥ ℓ` of the written annulus iteration.
 5. Not a residual: `p < 1`. The envelope uses `min p₀ (1 / 2)` (`cellAnnulus_parameters_of_estimates`).
 
 ## Not claimed
@@ -140,12 +142,29 @@ theorem annulus_barrier_ladder_failure_of_ledger (𝒮 : SpaceFillingSLEModel) {
   obtain ⟨hPE, hae⟩ := hE ε hε hεδ
   exact (ladder_survival_fails_le_compl (ρ := ρ) (β := β) (p := p) hS hp.le hε hae hd L).trans hPE
 
-/-- The bottom stage `max (ε ^ β) (20 * ε ^ a)` satisfies the two inequalities of the `lower` and `separation` fields of
-`AnnulusLadder` for the margin `d = ε ^ a`, so the scale choice needs no premise. -/
+/-- The written margin of the distance tail, `ℓ = 100 * ε ^ a + ε ^ β` with cell margin `d = ε ^ a`
+(steps2-r3:656, eq:distance-tail). -/
+noncomputable def ladderMargin (ε a β : ℝ) : ℝ := 100 * ε ^ a + ε ^ β
+
+/-- The written bound `ℓ ≤ 101 * ε ^ b` with `b = min a β`, for `0 < ε < 1` (steps2-r3:727). -/
+theorem ladderMargin_le_101_pow_min {ε a β : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1) :
+    ladderMargin ε a β ≤ 101 * ε ^ min a β := by
+  have ha : ε ^ a ≤ ε ^ min a β := Real.rpow_le_rpow_of_exponent_ge hε0 hε1.le (min_le_left a β)
+  have hb : ε ^ β ≤ ε ^ min a β := Real.rpow_le_rpow_of_exponent_ge hε0 hε1.le (min_le_right a β)
+  unfold ladderMargin
+  linarith
+
+/-- The bottom stage `max (ladderMargin ε a β) (20 * ε ^ a)` satisfies the `lower` and `separation` fields of
+`AnnulusLadder` for the cell margin `d = ε ^ a`, so the scale choice needs no premise. The bottom lies in the written
+range `s ≥ ℓ`. -/
 theorem ladder_bottom_separation {ε a β : ℝ} (hε : 0 < ε) :
-    ε ^ β ≤ max (ε ^ β) (20 * ε ^ a) ∧ 5 * ε ^ a < max (ε ^ β) (20 * ε ^ a) / 2 := by
+    ε ^ β ≤ max (ladderMargin ε a β) (20 * ε ^ a) ∧
+      5 * ε ^ a < max (ladderMargin ε a β) (20 * ε ^ a) / 2 := by
   have hpos : 0 < ε ^ a := Real.rpow_pos_of_pos hε a
-  have h20 : 20 * ε ^ a ≤ max (ε ^ β) (20 * ε ^ a) := le_max_right _ _
-  exact ⟨le_max_left _ _, by linarith⟩
+  have hβ : 0 < ε ^ β := Real.rpow_pos_of_pos hε β
+  have hℓ : ladderMargin ε a β ≤ max (ladderMargin ε a β) (20 * ε ^ a) := le_max_left _ _
+  have hℓβ : ε ^ β ≤ ladderMargin ε a β := by unfold ladderMargin; linarith
+  have hℓ10 : 10 * ε ^ a < ladderMargin ε a β := by unfold ladderMargin; linarith
+  exact ⟨hℓβ.trans hℓ, by linarith⟩
 
 end MatedCRT
