@@ -866,3 +866,50 @@ New precise implementation/source boundary from reports/z1.md:17-23: besides the
 Immediate checked consumers: `isDirichletGFF_of_projection`:79 takes the projected circle covariance and continuous-version clauses; `localDirichletCoordinatewiseStep_of_projectionRealization`:153 consumes the full named realization Step (ignoring the extra faithfulness clause); `insertionLQGScalingLawStep_of_projectionRealization`:174 and `check_insertionLQGScalingLawStep_of_coordinatewise`:185 reach the insertion scaling Step with the faithful, explicit SW interior literature premise. Downstream `InsertionScalingLawAssembly.lean`:50,62 and `InsertionCoordinateExtensionProof.lean`:286 serve corrected paper/idla_mated_crt-corrected.tex:1633-1657. Dependency cone remains Proposition4.2,5.1,6.1,8.1,Theorems1.4,1.6 (six results); this is one possible internal producer route, not a claim every alternative proof must use the abstract projection interface.
 
 Published source leads, not admitted hypotheses: Berestycki arXiv:1301.3356 Section1.2, printedp949, fixes the Green covariance normalization; DMS arXiv:1409.7055v4 Chapters4,8-9 and the audited steps2-r3 Section6 / steps3:603-625 may support a source-faithful decomposition. SW arXiv:1605.06171v2 Theorem1.1, printedpp2-3, remains an explicit compact-interior convergence input, not a proof of this projection construction. Preserve projection modulo constants followed by unit-circle normalization and its random harmonic constant; no independence of normalized pieces is required. Operator written-prover/independent-audit routing requested for the actual weak target, with these exact residual clauses as evidence, after the already dispatched seven targets.
+
+
+## Lead 2026-11-09 04:32 UTC — WPN-55 pathwise annihilation subtarget and Weyl source hold
+
+**WRITTEN-PROOF-NEEDED: WPN-55/R1.** Checked commit `4a90aa8`, `MatedCRT/Proofs/Sec4/Prop42Closure/InsertionHarmonicRemainder.lean`:112-116 exposes the exact pathwise annihilation premise below. Supporting definitions and the separate unverified Weyl/mean-value premise are copied verbatim from that checked source (namespace `MatedCRT`; `open MeasureTheory Filter Topology Set HarmonicBalls`, `open scoped ContDiff`).
+
+```lean
+def planarLaplacianC (φ : ℂ → ℝ) (z : ℂ) : ℝ :=
+  iteratedFDeriv ℝ 2 φ z ![(1 : ℂ), 1] + iteratedFDeriv ℝ 2 φ z ![Complex.I, Complex.I]
+
+def IsSmoothTestFunctionIn (D : Set ℂ) (φ : ℂ → ℝ) : Prop :=
+  ContDiff ℝ ∞ φ ∧ HasCompactSupport φ ∧ tsupport φ ⊆ D
+
+def LaplacianAnnihilatesOn (D : Set ℂ) (u : ℂ → ℝ) : Prop :=
+  ∀ φ : ℂ → ℝ, IsSmoothTestFunctionIn D φ → ∫ z, u z * planarLaplacianC φ z = 0
+
+def WeylLemmaContinuousStmt : Prop :=
+  ∀ (D : Set ℂ) (u : ℂ → ℝ), IsOpen D → ContinuousOn u D → LaplacianAnnihilatesOn D u → IsHarmonicOnDisk D u
+
+def boundaryRadius (c : ℂ) (ρ : ℝ) (z : ℂ) : ℝ := (ρ - dist z c) / 2
+
+def representedDifference (c : ℂ) (ρ : ℝ) (f g : ℝ → ℂ → ℝ) : ℂ → ℝ :=
+  fun z => f (boundaryRadius c ρ z) z - g (boundaryRadius c ρ z) z
+
+def projCircleFun {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] {Ω : Type}
+    (K : Set ℂ → Submodule ℝ E) [∀ D : Set ℂ, (K D).HasOrthogonalProjection]
+    (repO : GFFObservable → E) (X : E → Ω → ℝ) (D : Set ℂ) (o : Ω) : ℝ → ℂ → ℝ :=
+  fun r z => X ((K D).starProjection (repO (.circle r z))) o
+
+def representedRemainder {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] {Ω : Type}
+    (K : Set ℂ → Submodule ℝ E) [∀ D : Set ℂ, (K D).HasOrthogonalProjection]
+    (repO : GFFObservable → E) (X : E → Ω → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (c : ℂ) (ρ : ℝ) (o : Ω) : ℂ → ℝ :=
+  representedDifference c ρ (hcirc o) (projCircleFun K repO X (Metric.ball c ρ) o)
+
+def RemainderAnnihilationStep {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] {Ω : Type}
+    [MeasurableSpace Ω] (P : Measure Ω) (K : Set ℂ → Submodule ℝ E) [∀ D : Set ℂ, (K D).HasOrthogonalProjection]
+    (repO : GFFObservable → E) (X : E → Ω → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (c : ℂ) (ρ : ℝ) : Prop :=
+  ∀ᵐ o ∂P, LaplacianAnnihilatesOn (Metric.ball c ρ) (representedRemainder K repO X hcirc c ρ o)
+```
+
+R1 is a conditional interface for the **actual same-space Dirichlet/GFF realization**, not an unconditional theorem about arbitrary supplied `E, K, repO, X, hcirc`. Arbitrary carriers need not annihilate anything. The operator target remains the weakest actual `LocalDirichletCoordinatewiseStep` displayed above, with the construction/identification assumptions made valid inside its proof or bypassed by a faithfully printed decomposition theorem. The source steps3:603-625 (especially607-609), and steps2-r3 Section6, assert annihilation/harmonicity but do not write the actual carrier identification and annihilation argument. In particular `∀ᵐ o, ∀ φ, ...` is a simultaneous test event; per-test almost-sure statements alone do not supply it. Request this actual pathwise argument and independent audit under WPN-55, without asking a worker to invent it.
+
+The new checked component does not supply R1, the projected-circle continuous version (`hRcont`), or the circle identity (`hident`). The identity is already an explicit premise for an existing remainder `H`; the radius construction selects a continuous represented difference conditional on those premises. Its agreement with `H` is per point almost surely, and the recovered circle identity is per admissible circle almost surely. Harmonicity of a represented remainder on a common event requires R1 and the separate Weyl premise. Adding a random constant preserves harmonicity, but this does not construct the unit-circle normalization or establish independence of normalized pieces.
+
+**R2 source hold, not an admitted literature theorem.** `WeylLemmaContinuousStmt` at:59-61 bundles a distributional Weyl assertion with the repository's continuity/circle-mean-value characterization. The worker's Weyl1940 Lemma2 p415 locator was taken from Wikipedia and its Armitage–Gardiner theorem number is unverified. The primary DOI `10.1215/S0012-7094-40-00725-6` identifies a source lead, but this round's primary Project Euclid full-page/download attempts did not expose printed theorem text. Neither locator nor the exact bundled statement is verified. Carry this as an explicit unverified named Step; do not attribute both conclusions to one checked lemma or admit/promote it into External. A bounded source/status correction is queued. Acceptance of the **conditional Lean component** does not require moving the premise into External; source admission remains a separate operator responsibility. A precisely located printed Weyl result and a written mean-value bridge, or an alternative actual decomposition, would resolve this hold.
+
+Immediate consumers are `isHarmonicOnDisk_of_laplacian_annihilation`:167 and `harmonicRemainder_of_annihilation`:203; the intended insertion consumer is clause(g) of `DirichletProjectionRealization` and ultimately `LocalDirichletCoordinatewiseStep`. Corrected paper:1633-1657 and the six-result insertion cone4.2,5.1,6.1,8.1,1.4,1.6 remain as in the previous WPN-55 supplement. This is evidence for that existing target, not a new unconditional abstract target or a numbered closure. WPN-53 stays explicit pending the dispatched independent prover/audit return.
