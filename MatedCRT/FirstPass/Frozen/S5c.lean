@@ -1,24 +1,22 @@
-import HarmonicBalls.Steps.SecA.Basic
+import MatedCRT.Defs.Setting
 
 /-!
-# FIRST PASS frozen inputs for Lemma 5.3 (G-5-3 Section 1)
+# FIRST PASS frozen inputs of Lemma 5.3 (q3): the first-hit property of the space-filling SLE
 
-EXTERNAL classical potential theory only; no statement about this paper's clusters, odometers or harmonic balls.
+Frozen by the operator ruling of 2026-11-09 20:12 UTC (item (b)): freeze the first-hit property as an EXTERNAL SLE input.
+It is a property of the whole-plane space-filling SLE, not of this paper's clusters or harmonic balls.
 -/
 
 namespace MatedCRT
 
-open _root_.HarmonicBalls
-
-/-- FIRST-PASS FROZEN. Classical potential theory: a continuous function `w` on an open set `U` with nonpositive
-distributional Laplacian (`LaplacianLE w 0 U`) is superharmonic in the mean-value sense (`IsSuperharmonicOn U w`):
-its circle averages on closed disks inside `U` do not exceed its value at the centre (Armitage-Gardiner, Ch. 3,
-superharmonic functions; Weyl-type regularity of distributional superharmonic functions). Locator: Harvey–Lawson,
-*The equivalence of viscosity and distributional subsolutions for convex subequations—a strong Bellman principle*,
-arXiv:1301.4914v1, Theorem 9.3(B) with (9.2), applied to `-w` (a distributional subsolution is subharmonic in the
-sub-mean-value sense); locator from notes/fp-gaps/CHATGPT-frozen-locators.md:44 (table row `FPSuperharmonicOfLaplacianLE`).
-Used by: firstPass_5_3 (MatedCRT/FirstPass/S5c/Superharmonic.lean). -/
-def FPSuperharmonicOfLaplacianLE : Prop :=
-  ∀ (U : Set ℂ) (w : ℂ → ℝ), IsOpen U → ContinuousOn w U → LaplacianLE w 0 U → IsSuperharmonicOn U w
+/-- **FIRST-PASS FROZEN.** First-hit property of the whole-plane space-filling SLE (operator ruling 2026-11-09 20:12 UTC, item
+(b); the ChatGPT check of this Prop is running, notes/fp-gaps/CHATGPT-q3-questions.md). For `0 < γ < 2` and a valid mated-CRT
+environment `S`, almost surely, for every `x ∈ ℂ` the set of times `s` at which the curve `η` visits `x` is bounded below. This
+makes the smallest vertex `a^ε_x = sInf {a | x ∈ H^ε_a}` of paper line 637 well defined (Defs/Map.lean `vertexOf`).
+Source: standard; locator pending. Used by: firstPass_5_3 via `mem_cell_vertexOf_of_first_hit` (FirstPass/S5c/CellFirstHit.lean),
+which gives the hypothesis `hmemcell` of `core_subset_fillCells_eventually` (FirstPass/S5c/CoverEventually.lean). -/
+def FPFirstHitVisits (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+    ∀ᵐ ω ∂S.P, ∀ x : ℂ, BddBelow {s : ℝ | S.η ω s = x}
 
 end MatedCRT
