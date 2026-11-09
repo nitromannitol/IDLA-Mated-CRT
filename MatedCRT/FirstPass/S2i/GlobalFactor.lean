@@ -267,4 +267,42 @@ theorem measurable_globalCode (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange
     exact hdec
   exact Measurable.of_eval fun q => measurableSet_setOfPred.1 (hset q)
 
+
+/-- **The glued identity (deterministic; Section 9, G5).** A global cone family `Λ` for `μ` has the process of the glued
+canonical families: if at each scale `n` the decoded canonical process of the code `x` is the space-time process of a
+cone family `Γ n` for the rescaled measure, stopped at `T n` with `T n = (F (scodeG n x)).1`, and the scales cover, then
+`globalFamilyProcess Λ = globalCode x`. -/
+theorem globalFamilyProcess_eq_globalCode (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (S : Set (ℕ → ℝ))
+    (F : (ℕ → ℝ) → ℝ × (ℕ → ℕ → Bool)) (x : ℕ → ℝ) {μ : Measure ℂ} {Λ : ℝ → Set ℂ}
+    (hΛ : IsConeHarmonicBallFamily μ Λ) (R T : ℕ → ℝ) (Γ : ℕ → ℝ → Set ℂ)
+    (hR : ∀ n : ℕ, 0 < R n) (hRx : ∀ n : ℕ, radiusOn γ hD S ((n : ℝ) + 1) x = R n)
+    (hfam : ∀ n : ℕ, IsConeHarmonicBallFamilyOn (rescaledMeasure μ (R n) ((n : ℝ) + 1)) (Γ n) (T n))
+    (hst : ∀ n : ℕ, IsStoppedAtHalfBall (Γ n) (T n))
+    (hT : ∀ n : ℕ, (F (scodeG γ hD S n x)).1 = T n)
+    (hdec : ∀ n : ℕ, decodeFamily (F (scodeG γ hD S n x)) = familyProcess (Γ n) (T n))
+    (hcov : ∀ M : ℕ, ∃ n : ℕ, (M : ℝ) < ((n : ℝ) + 1) * T n) :
+    globalFamilyProcess Λ = globalCode γ hD S F x := by
+  have hfam' : ∀ n : ℕ, IsConeHarmonicBallFamilyOn μ (rescaledFamily (Γ n) (R n)⁻¹ ((n : ℝ) + 1)⁻¹)
+      (((n : ℝ) + 1) * T n) := fun n =>
+    (rescaledFamily_transfer_fp (hR n) (by positivity) (hfam n) (hst n)).1
+  rw [globalFamilyProcess_eq_of_scales hΛ hfam' hcov]
+  funext q
+  apply propext
+  constructor
+  · rintro ⟨hq, n, h1, h2⟩
+    have hb : (0 : ℝ) < (n : ℝ) + 1 := by positivity
+    refine ⟨hq, n, ?_, ?_⟩
+    · rw [hT n]
+      exact h1
+    · rw [hdec n, hRx n]
+      refine ⟨⟨mul_pos (inv_pos.2 hb) hq, (inv_mul_lt_iff₀ hb).2 h1⟩, ?_⟩
+      exact h2
+  · rintro ⟨hq, n, h1, h2⟩
+    refine ⟨hq, n, ?_, ?_⟩
+    · rw [hT n] at h1
+      exact h1
+    · rw [hdec n, hRx n] at h2
+      obtain ⟨_, h⟩ := h2
+      exact h
+
 end MatedCRT
