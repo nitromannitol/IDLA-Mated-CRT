@@ -29,7 +29,9 @@ balls of `ν` (Theorem 2.3 properties), the global family process of `Λ` is `Φ
 Source: HB22 = [bou2022harmonic], Proposition 1.3 (locality of harmonic balls), cited at the paper's line 542 (proof of
 Lemma 2.4) and used in the proof of Lemma 2.6; locator pending. Same statement as the Step
 `ConeHarmonicBallFunctionalStep` (Steps/Sec2/ConeScaleInvariance.lean:27).
-Used by: firstPass_2_6. -/
+RETIRED (NOT-EXTERNAL, truth check 2026-11-09): the all-time locality of harmonic balls with a measurable functional `Φ`
+asserts more than any printed HB22 result, so it is not an admissible hypothesis. Kept, not deleted. Former use:
+firstPass_2_6 (no longer FirstPass-admissible; to be re-proved from the HB Draft statements and ConeFamilyAEMeasurableStep). -/
 def FrozenConeHarmonicBallFunctional : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ Φ : (Set.Ioi (0 : ℝ) × ℂ → ℝ) → ℝ × ℂ → Prop,
     (∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)

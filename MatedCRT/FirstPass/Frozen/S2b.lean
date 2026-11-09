@@ -47,7 +47,10 @@ Source: HB22 Proposition 1.3 (locality), as the first conjunct of the Step `Cone
 removed (`ConeHarmonicBallStrictGrowthStep` is not assumed; the paper does not assert it), and (ii) the functional `Φ` with
 `familyProcess Λ T = Φ (circleProcess c)` is omitted (it needs uniqueness of the stopping time, not used by the existence
 and fixed-domain uniqueness of firstPass_2_5_corrected). Standard HB22 input; locator pending.
-Used by: firstPass_2_5_corrected. -/
+RETIRED (NOT-EXTERNAL, truth check 2026-11-09): the functional `G` with the equivalence to the existence of a stopped
+family asserts more than any printed HB22 result, so it is not an admissible hypothesis. Kept for the record, not deleted.
+Its former consumer firstPass_2_5_corrected is no longer FirstPass-admissible until the measurability is proved
+(ConeFamilyAEMeasurableStep, FirstPass/S2c.lean task). Former use: firstPass_2_5_corrected. -/
 def FrozenConeHalfBallFamilyMeasurable : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ G : Set (Set.Ioi (0 : ℝ) × ℂ → ℝ),
     (∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
