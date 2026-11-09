@@ -187,4 +187,58 @@ theorem firstPass_2_5_corrected (hscale : QuantumConeScalingInput) (h22 : LQGMea
   coneScaleInvarianceUpToFixedTimeCorrected_of_inputs hscale h22 hG h11 h55 h56 h31 h32 h33 h34 h35 h52 h53 h58 h0 h3
     h4
 
+/-! ### Closure route: uniqueness of the stopping time (the replacement for strict growth)
+
+The Draft clause `T' = T ∧ EqOn` of Draft 2.4 is recovered from the closure input `cl Λ_t ⊆ B_{1/2}` for `t < T`
+(`ConeHalfBallClosureInsideStep`, `Proofs/Sec2/ConeFamilyMeasurable/StoppedClosure.lean:18`, audited written proof
+`notes/prop42-proof/prop42-proof.tex:263-302`, NOT yet proved in Lean). The two lemmas below are deterministic. -/
+
+/-- **Closure route, one inequality.** If `Λ` is stopped at `∂B_{1/2}` at `T`, and `Λ'` is monotone on `(0, T')`, agrees with
+`Λ` on `(0, min T T')` and has `cl Λ'_s ⊆ B_{1/2}` for `s ∈ (0, T')`, then `T' ≤ T`. Proof: if `T < T'`, the radii of
+`Λ_u`, `u < T`, have supremum `1/2` (stopping), they lie in `Λ'_s` for `s = (T + T')/2`, and `cl Λ'_s` is compact with
+radius `< 1/2`: contradiction. -/
+theorem stopped_le_of_closureInside {Λ Λ' : ℝ → Set ℂ} {T T' : ℝ} (hT : 0 < T)
+    (h : IsStoppedAtHalfBall Λ T) (hmono : MonotoneOn Λ' (Ioo 0 T'))
+    (heq : EqOn Λ Λ' (Ioo 0 (min T T'))) (hcl : ∀ s ∈ Ioo 0 T', closure (Λ' s) ⊆ ball (0 : ℂ) (1 / 2)) :
+    T' ≤ T := by
+  by_contra hlt
+  rw [not_le] at hlt
+  set s : ℝ := (T + T') / 2 with hs_def
+  have hTs : T < s := by rw [hs_def]; linarith
+  have hs : s ∈ Ioo 0 T' := ⟨by linarith, by rw [hs_def]; linarith⟩
+  have key : ∀ r : ℝ, r < 1 / 2 → ∃ x ∈ Λ' s, r ≤ ‖x‖ := by
+    intro r hr
+    obtain ⟨u, hu, hnot⟩ := h.2 r hr
+    have hu' : u ∈ Ioo 0 T' := ⟨hu.1, hu.2.trans hlt⟩
+    have hΛu : Λ u = Λ' u := heq ⟨hu.1, lt_min hu.2 (hu.2.trans hlt)⟩
+    have hsub : Λ u ⊆ Λ' s := by
+      rw [hΛu]
+      exact hmono hu' hs (le_of_lt (hu.2.trans hTs))
+    rw [Set.not_subset] at hnot
+    obtain ⟨x, hxu, hxr⟩ := hnot
+    refine ⟨x, hsub hxu, ?_⟩
+    rw [mem_ball_zero_iff, not_lt] at hxr
+    exact hxr
+  have hK : IsCompact (closure (Λ' s)) :=
+    Metric.isCompact_of_isClosed_isBounded isClosed_closure (Metric.isBounded_ball.subset (hcl s hs))
+  obtain ⟨x1, hx1, -⟩ := key 0 (by norm_num)
+  obtain ⟨x0, hx0, hmax⟩ := hK.exists_isMaxOn ⟨x1, subset_closure hx1⟩ continuous_norm.continuousOn
+  have hx0' : ‖x0‖ < 1 / 2 := mem_ball_zero_iff.1 (hcl s hs hx0)
+  obtain ⟨x, hx, hxr⟩ := key ((‖x0‖ + 1 / 2) / 2) (by linarith)
+  have h1 : ‖x‖ ≤ ‖x0‖ := isMaxOn_iff.1 hmax x (subset_closure hx)
+  linarith
+
+/-- **Closure route, uniqueness.** Two families stopped at `∂B_{1/2}` (at `T` and `T'`, both with closures inside `B_{1/2}`
+and monotone) agree on the common interval and have the same stopping time: `T = T'`. This is the clause `T' = T` of Draft
+Lemma 2.4 (`ConeHarmonicBallsUpToFixedTimeStmt`), obtained without strict growth. -/
+theorem stopped_unique_of_closureInside {Λ Λ' : ℝ → Set ℂ} {T T' : ℝ} (hT : 0 < T) (hT' : 0 < T')
+    (h : IsStoppedAtHalfBall Λ T) (h' : IsStoppedAtHalfBall Λ' T')
+    (hmono : MonotoneOn Λ (Ioo 0 T)) (hmono' : MonotoneOn Λ' (Ioo 0 T'))
+    (heq : EqOn Λ' Λ (Ioo 0 (min T T')))
+    (hcl : ∀ s ∈ Ioo 0 T, closure (Λ s) ⊆ ball (0 : ℂ) (1 / 2))
+    (hcl' : ∀ s ∈ Ioo 0 T', closure (Λ' s) ⊆ ball (0 : ℂ) (1 / 2)) : T = T' := by
+  have h1 : T' ≤ T := stopped_le_of_closureInside hT h hmono' heq.symm hcl'
+  have h2 : T ≤ T' := stopped_le_of_closureInside hT' h' hmono (by rw [min_comm]; exact heq) hcl
+  exact le_antisymm h2 h1
+
 end MatedCRT
