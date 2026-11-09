@@ -133,13 +133,23 @@ theorem nullHull_of_code_law {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (
   rw [← Measure.map_apply hμ (measurableSet_toMeasurable _ _), measure_toMeasurable]
   exact hB
 
-/-- **OPEN (NEW; z1, fp-S2h).** The certificate code set: an analytic set `B` of moment codes such that, for every
-measure of finite mass on `B̄_{3/4}`, having a rational plateau pair of certificates is equivalent to the moment code lying
-in `B`. Written argument: notes/fp-gaps/CHATGPT-cone-good-set.md Sections 1-3 (countable Borel tests, restricted moments
-of §2.2, the Borel relation Cert(m,t,w) of §3, analytic projection). Not proved. -/
+/-- A measure on `ℂ` is locally finite when it has finite mass on every closed disc `B̄_n` (the LQG measure of the cone
+field lies in this class almost surely, `IsLQGLimit.isLocallyFiniteMeasure`). -/
+def LocFinMeasure (ν : Measure ℂ) : Prop := ∀ n : ℕ, ν (closedBall (0 : ℂ) n) < ⊤
+
+/-- Admissible test family of the certificate code: each `φs k` is continuous with compact support in `B(0,1)`. -/
+def CertTestFamily (φs : ℕ → ℂ → ℝ) : Prop :=
+  ∀ k, Continuous (φs k) ∧ HasCompactSupport (φs k) ∧ tsupport (φs k) ⊆ Metric.ball 0 1
+
+/-- **OPEN (NEW; z1, fp-S2h).** The certificate code set for the family `φs`: an analytic set `B` of moment codes such
+that, for every locally finite measure `ν`, having a rational plateau pair of certificates is equivalent to the moment code
+`localCode φs ν` lying in `B`. Repaired in round 6 (the earlier form quantified over all `ν` of finite mass on `B̄_{3/4}`
+with an arbitrary `φs`, which fails for `φs = 0`; the family must also carry the cutoff coordinates of CHATGPT (12), and
+the iff needs local finiteness). The family is chosen in `CertCodeNullStep`. Written argument:
+notes/fp-gaps/CHATGPT-cone-good-set.md Sections 1-3 (countable tests, restricted moments (12), the Borel relation of
+Section 3, analytic projection). Not proved. -/
 def CertCodeExactStep (φs : ℕ → ℂ → ℝ) (B : Set (ℕ → ℝ)) : Prop :=
-  AnalyticSet B ∧ ∀ ν : Measure ℂ, ν (closedBall (0 : ℂ) (3 / 4)) < ⊤ →
-    (HasRatPlateauCert ν ↔ localCode φs ν ∈ B)
+  AnalyticSet B ∧ ∀ ν : Measure ℂ, LocFinMeasure ν → (HasRatPlateauCert ν ↔ localCode φs ν ∈ B)
 
 /-- **OPEN (NEW; z1, fp-S2h).** The log-GFF zero law for the code set: for every whole-plane log field `h^ℂ − γ log|·|`
 (`IsWholePlaneGFF`, `IsLQGMeasureOfField P γ γ`), the code law of its LQG measure gives the code set `B` mass zero.
@@ -153,15 +163,19 @@ def LogCertCodeNullStep (φs : ℕ → ℂ → ℝ) (B : Set (ℕ → ℝ)) : Pr
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsProbabilityMeasure P → IsWholePlaneGFF P hC hcirc →
     IsLQGMeasureOfField P γ γ hcirc μ → (P.map fun ω => localCode φs (μ ω)) B = 0
 
+/-- **OPEN (NEW; z1, fp-S2h): the certificate code step.** Some admissible test family `φs` and some set `B` satisfy the
+exact code relation `CertCodeExactStep φs B` (analytic `B`, iff for locally finite measures) and the log-GFF zero law
+`LogCertCodeNullStep φs B`. This is the single open input of the certificate null hull. Not proved. -/
+def CertCodeNullStep : Prop :=
+  ∃ (φs : ℕ → ℂ → ℝ) (B : Set (ℕ → ℝ)), CertTestFamily φs ∧ CertCodeExactStep φs B ∧ LogCertCodeNullStep φs B
+
 /-- **Cone certificate null hull from its steps (fp-S2h).** The certificate part of the bad set has a measurable null
-hull for every cone field, given the frozen local-law equality, the frozen measurability of test integrals, the
-exact code set `CertCodeExactStep` (NEW) and the log-GFF zero law `LogCertCodeNullStep` (NEW). The infinite-mass
-part is handled by the Radon property of `IsLQGMeasure` (`IsLQGLimit.isLocallyFiniteMeasure`). -/
+hull for every cone field, given the frozen local-law equality, the frozen measurability of test integrals and the
+certificate code step `CertCodeNullStep` (NEW). The infinite-mass part is handled by the Radon property of `IsLQGMeasure`
+(`IsLQGLimit.isLocallyFiniteMeasure`), which makes almost every LQG measure locally finite. -/
 theorem coneCertificateNullHull_of_steps (hlaw : FrozenConeLogLocalCodeLaw)
-    (hmeasF : FrozenLQGTestIntegralMeasurable) (φs : ℕ → ℂ → ℝ)
-    (hφs : ∀ k, Continuous (φs k) ∧ HasCompactSupport (φs k) ∧ tsupport (φs k) ⊆ Metric.ball 0 1)
-    (B : Set (ℕ → ℝ)) (hB : CertCodeExactStep φs B)
-    (hlog : LogCertCodeNullStep φs B) : ConeCertificateNullHullStep := by
+    (hmeasF : FrozenLQGTestIntegralMeasurable) (hcode : CertCodeNullStep) : ConeCertificateNullHullStep := by
+  obtain ⟨φs, B, hφs, hB, hlog⟩ := hcode
   have hfm : Measurable (localCode φs) := measurable_localCode fun k => (hφs k).1
   intro γ hγ hγ2 Ω _ P hC hcirc μ hcone
   obtain ⟨Ω', _, P', hC', hcirc', μ', hP', hgff, hlgm, heq⟩ := hlaw γ hγ hγ2 Ω P hC hcirc μ hcone
@@ -175,21 +189,28 @@ theorem coneCertificateNullHull_of_steps (hlaw : FrozenConeLogLocalCodeLaw)
   have hμm : Measurable fun ω => localCode φs (μ ω) :=
     Measurable.of_eval fun k => hmeasF γ hγ hγ2 Ω P hC hcirc μ hcone (φs k) (hφs k).1 (hφs k).2.1
   obtain ⟨N₁, hN₁m, hN₁, hN₁0⟩ := nullHull_of_code_law P μ (localCode φs) hfm hμm
-    {ν | HasRatPlateauCert ν ∧ ν (closedBall (0 : ℂ) (3 / 4)) < ⊤} B
+    {ν | HasRatPlateauCert ν ∧ LocFinMeasure ν} B
     (fun ν hν => (hB.2 ν hν.2).1 hν.1) hconeB
   have hL : ∀ᵐ ω ∂P, IsLQGLimit γ (hcirc ω) (μ ω) := hcone.2.2
-  have hfin : ∀ᵐ ω ∂P, μ ω (closedBall (0 : ℂ) (3 / 4)) < ⊤ := by
+  have hfin : ∀ᵐ ω ∂P, LocFinMeasure (μ ω) := by
     filter_upwards [hL] with ω hω
     have := hω.isLocallyFiniteMeasure
-    exact (isCompact_closedBall (0 : ℂ) (3 / 4)).measure_lt_top
-  have hN₂m : MeasurableSet {ν : Measure ℂ | ¬ ν (closedBall (0 : ℂ) (3 / 4)) < ⊤} :=
-    (measurableSet_lt (Measure.measurable_coe measurableSet_closedBall) measurable_const).compl
-  have hN₂0 : P (μ ⁻¹' {ν : Measure ℂ | ¬ ν (closedBall (0 : ℂ) (3 / 4)) < ⊤}) = 0 :=
+    intro n
+    exact (isCompact_closedBall (0 : ℂ) n).measure_lt_top
+  have hN₂m : MeasurableSet {ν : Measure ℂ | ¬ LocFinMeasure ν} := by
+    have hset : {ν : Measure ℂ | ¬ LocFinMeasure ν} =
+        ⋃ n : ℕ, {ν : Measure ℂ | ¬ ν (closedBall (0 : ℂ) n) < ⊤} := by
+      ext ν
+      simp [LocFinMeasure]
+    rw [hset]
+    exact MeasurableSet.iUnion fun n =>
+      (measurableSet_lt (Measure.measurable_coe measurableSet_closedBall) measurable_const).compl
+  have hN₂0 : P (μ ⁻¹' {ν : Measure ℂ | ¬ LocFinMeasure ν}) = 0 :=
     ae_iff.1 hfin
   obtain ⟨N, hNm, hNs, hN0⟩ := nullHull_union P μ ⟨N₁, hN₁m, hN₁, hN₁0⟩
     ⟨_, hN₂m, subset_rfl, hN₂0⟩
   refine ⟨N, hNm, fun ν hν => ?_, hN0⟩
-  by_cases hK : ν (closedBall (0 : ℂ) (3 / 4)) < ⊤
+  by_cases hK : LocFinMeasure ν
   · exact hNs (Or.inl ⟨hν, hK⟩)
   · exact hNs (Or.inr hK)
 
