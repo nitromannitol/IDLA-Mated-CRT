@@ -60,4 +60,30 @@ theorem exists_canonical_factor {Ω : Type} [MeasurableSpace Ω] [StandardBorelS
     filter_upwards [hae] with ω hω
     exact (hBy _ _ hω).1
 
+/-- **Borel full-law subset of an analytic image.** If `κ` is measurable on a standard Borel probability space and `E`
+is a measurable set of full measure, there is a Borel set `B ⊆ κ '' E` with `κ ω ∈ B` almost surely (the analytic image
+is null-measurable for the law of `κ`, `HarmonicBalls.AnalyticSet.nullMeasurableSet_of_finite`). -/
+theorem exists_borel_full_image {Ω : Type} [MeasurableSpace Ω] [StandardBorelSpace Ω]
+    (P : Measure Ω) [IsProbabilityMeasure P]
+    (κ : Ω → ℕ → ℝ) (hκ : Measurable κ) (E : Set Ω) (hE : MeasurableSet E) (hfull : P Eᶜ = 0) :
+    ∃ B : Set (ℕ → ℝ), MeasurableSet B ∧ B ⊆ κ '' E ∧ ∀ᵐ ω ∂P, κ ω ∈ B := by
+  have hA := MeasurableSet.analyticSet_image hE hκ
+  have hnull : NullMeasurableSet (κ '' E) (P.map κ) :=
+    HarmonicBalls.AnalyticSet.nullMeasurableSet_of_finite (P.map κ) hA
+  have hS0c : (P.map κ) (κ '' E)ᶜ = 0 := by
+    rw [Measure.map_apply₀ hκ.aemeasurable hnull.compl]
+    refine measure_mono_null ?_ hfull
+    intro ω hω hE'
+    exact hω ⟨ω, hE', rfl⟩
+  obtain ⟨B, hBS, hBm, hBae⟩ := hnull.exists_measurable_subset_ae_eq
+  refine ⟨B, hBm, hBS, ?_⟩
+  have hc : (P.map κ) Bᶜ = 0 := by
+    rw [measure_congr hBae.compl]
+    exact hS0c
+  have h0 : P (κ ⁻¹' Bᶜ) = 0 := by
+    rw [← Measure.map_apply hκ hBm.compl]
+    exact hc
+  rw [ae_iff]
+  exact h0
+
 end MatedCRT
