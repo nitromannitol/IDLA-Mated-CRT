@@ -1,6 +1,6 @@
 import MatedCRT.Defs.Setting
 import MatedCRT.FirstPass.S1c.Cluster
-import MatedCRT.FirstPass.Frozen.S5c
+import MatedCRT.FirstPass.Frozen.S2g
 
 /-!
 # FIRST PASS, Lemma 5.3 (three-inputs section 3, A5/A1 prerequisite): openness of the stopped cluster
@@ -8,12 +8,13 @@ import MatedCRT.FirstPass.Frozen.S5c
 The obstacle cluster `cluster μ ρ 0 t = {x ∈ B_ρ | x = 0 ∨ -t G_{B_ρ}(0,x) < v(x)}` (Harmonic-Balls-LQG
 Defs/Obstacle.lean:69) is open whenever the least supersolution `v` is continuous on the closed disc and the disc Green
 function is continuous off the pole and blows up at the pole (Armitage-Gardiner). `isOpen_cluster_diff_pole`
-(FirstPass/S1c/Cluster.lean) gives openness off the pole; here the pole is handled by `FPGreenBallPoleLimit`.
+(FirstPass/S1c/Cluster.lean) gives openness off the pole; here the pole is handled by the pole limit of `FrozenGreenDiscPole`
+(Frozen/S2g.lean; operator 22:43 UTC: this replaces the duplicate pair `FPGreenBallContinuousOffPole`, `FPGreenBallPoleLimit`).
 
 For a cone harmonic-ball family the continuity of `v` on `B̄_ρ` is part of `SatisfiesObstacleCharacterization`, and
 it holds at radius `ρ` as soon as `Λ_t ⊆ B_r` for some `r < ρ`. For `t < clusterExitTime Λ ρ` (sup of
 `{s > 0 | Λ_s ⊆ B_{ρ/3}}`) such an `r = ρ/3` exists, by monotonicity of `Λ` (`SatisfiesHarmonicBallConditions.monotoneOn`).
-Hence the cluster is open on the stopped event, almost surely. No new frozen input beyond the two disc Green facts.
+Hence the cluster is open on the stopped event, almost surely. No new frozen input beyond `FrozenGreenDiscPole`.
 -/
 
 open HarmonicBalls MeasureTheory Filter Topology Set Metric
@@ -47,22 +48,21 @@ theorem isOpen_cluster_of_pole (μ : Measure ℂ) {ρ u : ℝ} (hρ : 0 < ρ) (h
     exact hnhd
   · exact Filter.mem_of_superset (hdiff.mem_nhds ⟨hx, h0⟩) sdiff_subset
 
-/-- Openness of the cluster for a cone harmonic-ball family, from `Λ_t ⊆ B_r` with `r < ρ`, given the two disc Green
-facts (`FPGreenBallContinuousOffPole`, `FPGreenBallPoleLimit`). -/
-theorem isOpen_cluster_of_family (hG0 : MatedCRT.FPGreenBallContinuousOffPole)
-    (hp : MatedCRT.FPGreenBallPoleLimit) {μ : Measure ℂ} {Λ : ℝ → Set ℂ}
+/-- Openness of the cluster for a cone harmonic-ball family, from `Λ_t ⊆ B_r` with `r < ρ`, given the disc Green
+facts of `FrozenGreenDiscPole`. -/
+theorem isOpen_cluster_of_family (hG : MatedCRT.FrozenGreenDiscPole) {μ : Measure ℂ} {Λ : ℝ → Set ℂ}
     (hfam : IsConeHarmonicBallFamily μ Λ) {ρ t r : ℝ} (ht : 0 < t) (hr : 0 < r) (hΛ : Λ t ⊆ ball 0 r)
     (hrρ : r < ρ) : IsOpen (cluster μ ρ 0 t) := by
   have hρ : 0 < ρ := lt_trans hr hrρ
   obtain ⟨_, _, hobs⟩ := hfam
   obtain ⟨_, hv, _, _⟩ := hobs t r ht hr hΛ ρ hrρ
-  have hG : ContinuousOn (greenFunction (ball 0 ρ) 0) (ball 0 ρ \ {0}) := hG0 ρ hρ
-  exact isOpen_cluster_of_pole μ hρ ht hv hG (hp ρ hρ)
+  have hG' := hG ρ hρ
+  exact isOpen_cluster_of_pole μ hρ ht hv
+    (hG'.1.mono (Set.sdiff_subset_sdiff_left Metric.ball_subset_closedBall)) hG'.2
 
 /-- On the stopped event `{t < clusterExitTime Λ ρ}` the cluster `cluster μ ρ 0 t` is open (monotonicity of `Λ`
 gives `Λ_t ⊆ Λ_s ⊆ B_{ρ/3}` for some `s > t` with `Λ_s ⊆ B_{ρ/3}`). -/
-theorem isOpen_cluster_of_stopped (hG0 : MatedCRT.FPGreenBallContinuousOffPole)
-    (hp : MatedCRT.FPGreenBallPoleLimit) {μ : Measure ℂ} {Λ : ℝ → Set ℂ}
+theorem isOpen_cluster_of_stopped (hG : MatedCRT.FrozenGreenDiscPole) {μ : Measure ℂ} {Λ : ℝ → Set ℂ}
     (hfam : IsConeHarmonicBallFamily μ Λ) {ρ t : ℝ} (hρ : 0 < ρ) (ht : 0 < t)
     (hT : t < clusterExitTime Λ ρ) : IsOpen (cluster μ ρ 0 t) := by
   have hne : {s : ℝ | 0 < s ∧ Λ s ⊆ ball 0 (ρ / 3)}.Nonempty := by
@@ -74,15 +74,15 @@ theorem isOpen_cluster_of_stopped (hG0 : MatedCRT.FPGreenBallContinuousOffPole)
   obtain ⟨s, ⟨hs, hsB⟩, hts⟩ := exists_lt_of_lt_csSup hne hT
   have hmono : Λ t ≤ Λ s := hfam.2.1.monotoneOn ht hs hts.le
   have hsub : Λ t ⊆ ball 0 (ρ / 3) := fun x hx => hsB (hmono hx)
-  exact isOpen_cluster_of_family hG0 hp hfam ht (by linarith) hsub (by linarith)
+  exact isOpen_cluster_of_family hG hfam ht (by linarith) hsub (by linarith)
 
 /-- Almost surely, the stopped cluster is open: for a random cone harmonic-ball family, `ω ↦ cluster (μ ω) ρ 0 t` is
 open on `{t < clusterExitTime (Λ ω) ρ}`. -/
 theorem ae_isOpen_cluster_of_stopped {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
-    (hG0 : MatedCRT.FPGreenBallContinuousOffPole) (hp : MatedCRT.FPGreenBallPoleLimit)
+    (hG : MatedCRT.FrozenGreenDiscPole)
     (μ : Ω → Measure ℂ) (Λ : Ω → ℝ → Set ℂ) (hfam : ∀ᵐ ω ∂P, IsConeHarmonicBallFamily (μ ω) (Λ ω))
     {ρ t : ℝ} (hρ : 0 < ρ) (ht : 0 < t) :
     ∀ᵐ ω ∂P, t < clusterExitTime (Λ ω) ρ → IsOpen (cluster (μ ω) ρ 0 t) :=
-  hfam.mono fun _ hω hT => isOpen_cluster_of_stopped hG0 hp hω hρ ht hT
+  hfam.mono fun _ hω hT => isOpen_cluster_of_stopped hG hω hρ ht hT
 
 end MatedCRT
