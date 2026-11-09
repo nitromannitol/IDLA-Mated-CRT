@@ -1,6 +1,7 @@
 import MatedCRT.FirstPass.S2g.Family
 import MatedCRT.FirstPass.Frozen.S1c
 import MatedCRT.FirstPass.Frozen.S2h
+import MatedCRT.FirstPass.S2h.LeastSuper
 import Mathlib.MeasureTheory.Constructions.Polish.Basic
 
 /-!
@@ -183,5 +184,34 @@ theorem coneCertificateNullHull_of_steps (hlaw : FrozenConeLogLocalCodeLaw)
   by_cases hK : ν (closedBall (0 : ℂ) (3 / 4)) < ⊤
   · exact hNs (Or.inl ⟨hν, hK⟩)
   · exact hNs (Or.inr hK)
+
+/-! ## The least-supersolution null hull (fp-S2h, round 3): proved from the volume-growth input -/
+
+/-- **Proved (fp-S2h, z1).** The least-supersolution part of the bad set has a measurable null hull, namely the
+complement of `lsoClass γ` (the measures with finite mass on `B̄_{7/8}` and countably many two-sided dyadic bounds).
+Inputs: `VolumeGrowthStmt` (Draft, Lemma 2.7) for the cone measure, and the frozen deterministic input
+`LeastSupersolutionMemOfVolumeGrowthStmt` (HB Appendix A, Lemma A.1). Written argument:
+notes/fp-gaps/CHATGPT-cone-leastsuper-null-hull.md, Sections 2-7. Lemmas: FirstPass/S2h/LeastSuper.lean. -/
+theorem coneLeastSuperNullHull_proved (hV : VolumeGrowthStmt) (hL : LeastSupersolutionMemOfVolumeGrowthStmt) :
+    ConeLeastSuperNullHullStep := by
+  intro γ hγ hγ2 Ω _ P hC hcirc μ hcone
+  refine ⟨(lsoClass γ)ᶜ, (measurableSet_lsoClass γ).compl, ?_, ?_⟩
+  · intro ν hν hmem
+    exact hν (lsoClass_leastSuperOK hL hγ2 hmem)
+  · exact ae_iff.1 (ae_mem_lsoClass hV hγ hγ2 Ω P hC hcirc μ hcone)
+
+/-- **Reduction (fp-S2h, z1).** `ConeBadNullHullStep` (FirstPass/S2g/Family.lean) from the certificate part, taken as
+the explicit open hypothesis `hc` (`ConeCertificateNullHullStep`, NEW, still open), and the proved
+least-supersolution part. -/
+theorem coneBadNullHull_proved (hc : ConeCertificateNullHullStep) (hV : VolumeGrowthStmt)
+    (hL : LeastSupersolutionMemOfVolumeGrowthStmt) : ConeBadNullHullStep :=
+  coneBadNullHull_of_parts hc (coneLeastSuperNullHull_proved hV hL)
+
+/-- **Reduction (fp-S2h, z1).** `ConeClosureGoodMeasureLawStep` (FirstPass/S2f.lean) from the same inputs as
+`coneBadNullHull_proved`, with the frozen pole input `FrozenGreenDiscPole` (FirstPass/Frozen/S2g.lean). -/
+theorem coneClosureGoodMeasureLaw_proved (hpole : FrozenGreenDiscPole) (hc : ConeCertificateNullHullStep)
+    (hV : VolumeGrowthStmt) (hL : LeastSupersolutionMemOfVolumeGrowthStmt) :
+    ConeClosureGoodMeasureLawStep :=
+  coneClosureGoodMeasureLawStep_of_parts hpole hc (coneLeastSuperNullHull_proved hV hL)
 
 end MatedCRT

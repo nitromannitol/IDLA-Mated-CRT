@@ -1,4 +1,5 @@
 import MatedCRT.Defs.Setting
+import HarmonicBalls.Defs.Obstacle
 
 /-!
 # First-pass frozen external inputs of the cone certificate null hull (fp-S2h, z1)
@@ -32,5 +33,20 @@ def FrozenConeLogLocalCodeLaw : Prop :=
       IsProbabilityMeasure P' ∧ IsWholePlaneGFF P' hC' hcirc' ∧ IsLQGMeasureOfField P' γ γ hcirc' μ' ∧
       ∀ φs : ℕ → ℂ → ℝ, (∀ k, Continuous (φs k) ∧ HasCompactSupport (φs k) ∧ tsupport (φs k) ⊆ Metric.ball 0 1) →
         P.map (fun ω k => ∫ x, φs k x ∂(μ ω)) = P'.map (fun ω k => ∫ x, φs k x ∂(μ' ω))
+
+/-- FIRST-PASS FROZEN. Deterministic least-supersolution membership under two-sided power growth on `B_{3/4}`
+(pole `0`, time `t > 0`): if `ν` is a locally finite measure on `ℂ` with `VolumeGrowth ν (3/4) β⁻ β⁺` (the volume
+growth condition (A.1) with radius `3/4`), then the least supersolution `leastSupersolution ν (3/4) 0 t` belongs to
+`supersolutions ν (3/4) 0 t` for every `t > 0`. Sources: Bou-Rabee and Gwynne, "Harmonic balls in Liouville quantum
+gravity", arXiv:2208.11795v3, Appendix A: condition (A.1) (printed p. 65), Lemma A.1 (pp. 66-67) for a general disk
+radius (the statement recorded at the beginning of Appendix A.5, p. 70), and the substitution `v = ṽ - q_{B_R}` after
+(A.7) (p. 66). This is a deterministic statement about `Measure ℂ`, not an almost-sure one. Lean counterpart in the
+harmonic-balls-lqg repository: `ObstacleLeastSuperharmonicMajorantGeneral` (Steps/SecA) with the substitution
+`ObstacleCompatibilityShiftStep`, combined in `leastSupersolution_mem_of_general` (Steps/Sec3/LeastSupersolutionMem).
+The printed Draft `ObstacleLeastSuperharmonicMajorantStmt` is the radius-`1` case only. Used by:
+`lsoClass_leastSuperOK` and `coneLeastSuperNullHull_proved` (FirstPass/S2h/LeastSuper.lean). -/
+def LeastSupersolutionMemOfVolumeGrowthStmt : Prop :=
+  ∀ ν : Measure ℂ, IsLocallyFiniteMeasure ν → ∀ βminus βplus : ℝ, VolumeGrowth ν (3 / 4) βminus βplus →
+    ∀ t : ℝ, 0 < t → leastSupersolution ν (3 / 4) 0 t ∈ supersolutions ν (3 / 4) 0 t
 
 end MatedCRT
