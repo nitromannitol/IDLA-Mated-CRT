@@ -321,4 +321,28 @@ theorem canonical_postLastZeroLaw_of_printedWiener (hprint : DMS14Remark44Printe
     (fun ω => affinePath 0 (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) (G ω)) hF hreal hlaw
   simpa only [affinePath_zero_inv] using key
 
+/-! ### Conditional assembly of the numbered target from the transfer residual -/
+
+/-- **Conditional assembly, not a closure.** The numbered target `DMS14Remark44PostLastZeroLaw` follows from the
+single residual `DMS14Remark44TransferResidual` (the printed clauses on an arbitrary probability space). The proof
+redrifts the measurable version `F` to `F + d·`, applies the residual, and then the coupling
+`isBMConditionedPositive_of_remark44`; the target itself is not used as a premise. -/
+theorem dms14Remark44PostLastZeroLaw_of_transferResidual (hT : DMS14Remark44TransferResidual) :
+    DMS14Remark44PostLastZeroLaw := by
+  intro γ hγ0 hγ2 Ω _ P _ B F hB hF hid
+  have hd : 0 < MatedCRTHarmonic.MatedCRT.lqgQ γ - γ :=
+    MatedCRT.Proposed.lqgQ_sub_pos_of_lt_two hγ0 hγ2
+  have hF' : Measurable (fun ω => affinePath 0 (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) (F ω)) :=
+    (measurable_affinePath 0 (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ)).comp hF
+  have hidF : ∀ᵐ ω ∂P, ∀ t : ℝ≥0,
+      affinePath 0 (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) (F ω) t =
+        dmsDriftedPostLastZeroPath (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) (fun s => B s ω) t := by
+    filter_upwards [hid] with ω hω t
+    simp only [affinePath, ContinuousMap.coe_mk, dmsDriftedPostLastZeroPath_eq_add, hω t, zero_add]
+  obtain ⟨hreal, hlaw⟩ := hT γ hγ0 hγ2 Ω P B
+    (fun ω => affinePath 0 (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) (F ω)) hB hF' hidF
+  have key := isBMConditionedPositive_of_remark44 P hd
+    (fun ω => affinePath 0 (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) (F ω)) hF' hreal hlaw
+  simpa only [affinePath_zero_inv] using key
+
 end MatedCRT.Sec1

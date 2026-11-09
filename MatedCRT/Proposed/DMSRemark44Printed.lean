@@ -98,4 +98,21 @@ def DMS14Remark44PrintedWiener : Prop :=
     DMS14Remark44PositiveRealization (MarkovProcess.brownianMotion 0) F ∧
       DMS14Remark44PositiveLevelLaw (MarkovProcess.brownianMotion 0) (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) F
 
+/-- **Residual transfer type, not printed and not proved here.** The clauses of `DMS14Remark44PrintedWiener` for an
+arbitrary probability space `(Ω, P)` carrying a Brownian motion `B` (`ProbabilityTheory.IsBrownianReal`, whose
+coordinates are only almost-everywhere measurable) and a measurable version `F` of the drifted post-last-zero path.
+Passing from the Wiener-space clauses to this form is the arbitrary-space transfer of steps4-r2.tex Section 2
+(lines 443–460: measurable rational-time versions, continuous extension, law identification); it is not formalized.
+The numbered target `DMS14Remark44PostLastZeroLaw` follows from this Prop by
+`MatedCRT.Sec1.dms14Remark44PostLastZeroLaw_of_transferResidual`, a conditional assembly, not a closure. -/
+def DMS14Remark44TransferResidual : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (B : ℝ≥0 → Ω → ℝ) (F : Ω → MarkovProcess.ContinuousPath ℝ),
+    IsBrownianReal B P → Measurable F →
+    (∀ᵐ ω ∂P, ∀ t : ℝ≥0,
+      F ω t = dmsDriftedPostLastZeroPath (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) (fun s => B s ω) t) →
+    DMS14Remark44PositiveRealization P F ∧
+      DMS14Remark44PositiveLevelLaw P (MatedCRTHarmonic.MatedCRT.lqgQ γ - γ) F
+
 end MatedCRT.Proposed
