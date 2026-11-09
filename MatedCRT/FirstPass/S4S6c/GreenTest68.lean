@@ -197,6 +197,72 @@ theorem ofReal_half : ENNReal.ofReal (1 / 2) = (1 / 2 : ℝ≥0∞) := by
   rw [ENNReal.ofReal_div_of_pos (by norm_num)]
   simp
 
+/-- Cells of diameter at most `c₀R` that meet `B_{R/4}(x)` and a ball `B_s(x)` with `s + c₀R < R/4` lie in the interior
+window `I(B_{R/4}(x))`: the cell of a vertex of `V(B_s(x))` lies within `s + c₀R < R/4` of `x`, so it misses the sphere
+`∂B_{R/4}(x)` (the cell-to-window inclusion of LEMMA68 C4, B11). -/
+theorem cellVertices_sub_interior {η : ℝ → ℂ} (hη : Continuous η) {ε R c0 s : ℝ} {x : ℂ}
+    (hR : 0 < R) (hc0 : 0 ≤ c0) (hsc : s + c0 * R < R / 4)
+    (hdiam : ∀ k : ℤ, (cell ε η k ∩ ball x (R / 4)).Nonempty → diam (cell ε η k) ≤ c0 * R) :
+    cellVertices ε η (ball x s) ⊆ interiorCellVertices ε η (ball x (R / 4)) := by
+  intro v hv
+  have hv' : (cell ε η v ∩ ball x s).Nonempty := hv
+  have hs : s ≤ R / 4 := by linarith [mul_nonneg hc0 hR.le]
+  have hv2 : (cell ε η v ∩ ball x (R / 4)).Nonempty :=
+    hv'.mono (inter_subset_inter_right _ (ball_subset_ball hs))
+  have hd := hdiam v hv2
+  refine ⟨hv2, ?_⟩
+  intro hfr
+  have hfr' : (cell ε η v ∩ frontier (ball x (R / 4))).Nonempty := hfr
+  obtain ⟨w, hw1, hw2⟩ := hfr'
+  rw [frontier_ball x (by positivity : R / 4 ≠ 0)] at hw2
+  have hlt := cell_dist_lt hη hd hv' hw1
+  have hsph : dist w x = R / 4 := mem_sphere.mp hw2
+  linarith
+
+/-- **Per-test bound of Lemma 6.8 with the Green lower bound derived (LEMMA68 C15-C16, B4, B11-B13).** Let `x = η(y)`
+be the start of a test window, `B_{c₀R}(x)` the target ball, `W y = I(B_{R/4}(x))` the window. Given the ball-mass
+bound, the sparsity of `A`, the cell-diameter bound and the Draft Lemma 2.16 conjunct at every target, the walk from `y`
+stays in `A` until it exits `W y` with probability at most `1 - q₀ (1 + log(1/r))⁻²`. The second moment `hmom` (B5) stays
+an explicit hypothesis. -/
+theorem stayIn_le_printed_green {μ : Measure ℂ} {η : ℝ → ℂ} {m : ℤ → ℤ → ℕ} {W : ℤ → Set ℤ} {A : Set ℤ}
+    {y : ℤ} {ε R r mr s1 β C0 C1 L Sr c0 C : ℝ} {Aset : Finset ℤ}
+    (hap : IsAreaParametrized μ η) (hε : 0 < ε) (hR : 0 < R) (hmr : 0 < mr) (hC : 0 < C)
+    (hc0 : 0 < c0) (hc0' : c0 < 1 / 8) (hc0C : c0 ≤ Real.exp (-(2 * C)) / 16) (hεc : ε ≤ 16 * c0)
+    (hmu : ENNReal.ofReal mr ≤ μ (ball (vertexPoint ε η y) (c0 * R)))
+    (hfinD : (cellVertices ε η (ball (vertexPoint ε η y) (c0 * R))).Finite)
+    (hfinr : (cellVertices ε η (ball (vertexPoint ε η y) r)).Finite)
+    (hRr : ball (vertexPoint ε η y) (c0 * R) ⊆ ball (vertexPoint ε η y) r)
+    (hWdef : W y = interiorCellVertices ε η (ball (vertexPoint ε η y) (R / 4)))
+    (hAs : ∀ k, k ∈ Aset ↔ k ∈ A ∩ cellVertices ε η (ball (vertexPoint ε η y) (c0 * R)))
+    (hsp : ((A ∩ cellVertices ε η (ball (vertexPoint ε η y) r)).ncard : ℝ) < s1 * r ^ (2 * β) / ε)
+    (hs : s1 * r ^ (2 * β) ≤ mr / 4)
+    (hdiam : ∀ k : ℤ, (cell ε η k ∩ ball (vertexPoint ε η y) (R / 4)).Nonempty → diam (cell ε η k) ≤ c0 * R)
+    (hGreenAt : ∀ b ∈ cellVertices ε η (ball (vertexPoint ε η y) (c0 * R)),
+      greenKernel m (interiorCellVertices ε η (ball (vertexPoint ε η y) (R / 8))) y b ≤
+          greenFn m (interiorCellVertices ε η (ball (vertexPoint ε η y) (R / 8))) y b ∧
+        C⁻¹ * Real.log (if vertexPoint ε η y = vertexPoint ε η b then ε⁻¹
+            else min ((R / 8) / ‖vertexPoint ε η y - vertexPoint ε η b‖) ε⁻¹) - 1
+          ≤ greenKernel m (interiorCellVertices ε η (ball (vertexPoint ε η y) (R / 8))) y b)
+    (hC0 : 0 < C0) (hC1 : 0 < C1) (hL : 0 < L) (hr : 0 < r) (hr1 : r ≤ 1) (hS0 : 0 ≤ Sr)
+    (hSm : Sr ≤ C1 * L * mr)
+    (hmom : ∫⁻ x, (ENat.toENNReal (vExitTime (W y) x)) ^ 2 ∂(srwLaw m y) ≤
+      ENNReal.ofReal (2 * (C0 * (1 + Real.log (1 / r))) ^ 2 * ε⁻¹ ^ 2 * Sr ^ 2)) :
+    srwLaw m y (TestBound68.stayIn W A y) ≤
+      ENNReal.ofReal (1 - (1 / (32 * C0 ^ 2 * C1 ^ 2 * L ^ 2)) / (1 + Real.log (1 / r)) ^ 2) := by
+  have hsc : c0 * R + c0 * R < R / 4 := by nlinarith
+  have hWy : cellVertices ε η (ball (vertexPoint ε η y) (c0 * R)) ⊆ W y := by
+    rw [hWdef]
+    exact cellVertices_sub_interior hap.1 hR hc0.le hsc hdiam
+  have hG : ∀ b ∈ hfinD.toFinset \ Aset,
+      (1 / 2 : ℝ≥0∞) ≤ ∑' n : ℕ, srwLaw m y {x | (n : ℕ∞) < vExitTime (W y) x ∧ x n = b} := by
+    intro b hb
+    have hbD : b ∈ cellVertices ε η (ball (vertexPoint ε η y) (c0 * R)) :=
+      (Set.Finite.mem_toFinset hfinD).mp (Finset.mem_sdiff.mp hb).1
+    rw [hWdef, ← ofReal_half]
+    exact hG_of_green hap.1 hε hR hC hc0 hc0' hc0C hεc hdiam hbD (hGreenAt b hbD)
+  exact PrintedTest68.stayIn_le_printed hap hε hmr hmu hfinD hfinr hRr hWy hAs hsp hs hC0 hC1 hL hr hr1 hS0 hSm
+    hG hmom
+
 end GreenTest68
 end MatedCRT
 
@@ -207,3 +273,5 @@ end MatedCRT
 #print axioms MatedCRT.GreenTest68.interiorCellVertices_mono_of_radius
 #print axioms MatedCRT.GreenTest68.hG_of_green
 #print axioms MatedCRT.GreenTest68.ofReal_half
+#print axioms MatedCRT.GreenTest68.cellVertices_sub_interior
+#print axioms MatedCRT.GreenTest68.stayIn_le_printed_green
