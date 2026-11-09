@@ -123,4 +123,50 @@ theorem firstPass_6_9_faithful (𝒮 : SpaceFillingSLEModel) (hU : UniformConsta
     (cellVertices ε (S.η ω) (thickening r (fillCells ε (S.η ω) Θ))) s₂ (s₁ * r ^ (2 * chosenBetaMinus γ) / ε)
     hs₂0 hs₂1 (fun a' ha' S' hS' hlt => hω' a' ha' S' hS' hlt) k a hk ha
 
+/-- **Uniform form of Lemma 6.8** (NOT printed). LEMMA68.md proves Lemma 6.8 with the uniform choices `s₁ = 1/4`,
+`s₂ = 1/2` ("Lemma 6.8 holds with s₁ = 1/4, s₂ = 1/2"), and reads "exits through A" as "the walk belongs to A at every
+time strictly before its exit from the indicated vertex set" (LEMMA68.md verdict). The body is that of
+`FaithfulConstantOrderLowerBoundDivStmt`; `s₁, s₂` are chosen after `ρ` and before `s₀`.
+
+This is the exact missing clause of `firstPass_6_8_faithful`. `UniformConstantOrderLowerBoundStmt` (the 6.7 body) does
+not imply it: the 6.8 event assumes only local smallness of `A` (for every ball of radius `r`), starts in
+`∂(Θ̄ + B_{r/2})`, and the walk is stopped on entering `Θ`, while the 6.7 event assumes global smallness of `S'`,
+starts in `cl(Θ)`, and exits `U` only. -/
+def UniformConstantOrderLowerBoundDivStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ ω₀ : ℝ, 0 < ω₀ ∧ ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∃ s₁ s₂ : ℝ, 0 < s₁ ∧ s₁ < 1 ∧ 0 < s₂ ∧ s₂ < 1 ∧
+  ∀ s₀ : ℝ, 0 < s₀ → s₀ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∃ dd : Ω → ℝ, Measurable[S.fieldSigma] dd ∧ (∀ ω, 0 < dd ω) ∧
+    ProbTendsToOne S.P fun ε => {ω | ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ dd ω → ∀ Θ : Set ℤ,
+      closure (fillCells ε (S.η ω) Θ) ⊆ ball 0 (ρ / 2) → ball 0 s₀ ⊆ fillCells ε (S.η ω) Θ →
+      ∀ A ⊆ cellVertices ε (S.η ω) (thickening r (fillCells ε (S.η ω) Θ)) \ Θ,
+        (∀ z : ℂ, ((A ∩ cellVertices ε (S.η ω) (ball z r)).ncard : ℝ) < s₁ * r ^ (2 * chosenBetaMinus γ) / ε) →
+        ∀ a ∈ cellVertices ε (S.η ω) (frontier (thickening (r / 2) (fillCells ε (S.η ω) Θ))),
+          srwLaw (S.mult ε ω) a {x | ∀ n : ℕ,
+            (n : ℕ∞) < vExitTime (cellVertices ε (S.η ω) (thickening r (fillCells ε (S.η ω) Θ)) \ Θ) x →
+            x n ∈ A} ≤ ENNReal.ofReal (1 - s₂)}
+
+/-- **Lemma 6.7, faithful header, from the uniform input** (`firstPass_6_7_faithful`). The uniform statement has the
+same body and the same quantifier order, with `s₁, s₂` chosen before `s₀`; the constants serve every `s₀`, so the
+faithful header follows. Proof: exchange of the quantifiers `∃ s₁ s₂` and `∀ s₀`. -/
+theorem firstPass_6_7_faithful (𝒮 : SpaceFillingSLEModel) (hU : UniformConstantOrderLowerBoundStmt 𝒮) :
+    FaithfulConstantOrderLowerBoundStmt 𝒮 := by
+  intro γ hγ0 hγ2
+  obtain ⟨ω₀, hω₀, hU'⟩ := hU γ hγ0 hγ2
+  refine ⟨ω₀, hω₀, fun ρ hρ0 hρ1 => ?_⟩
+  obtain ⟨s₁, s₂, hs₁0, hs₁1, hs₂0, hs₂1, hbody⟩ := hU' ρ hρ0 hρ1
+  exact fun s₀ hs₀0 hs₀1 => ⟨s₁, s₂, hs₁0, hs₁1, hs₂0, hs₂1, hbody s₀ hs₀0 hs₀1⟩
+
+/-- **Lemma 6.8, faithful header, from the uniform Lemma 6.8** (`firstPass_6_8_faithful`). Conditional on
+`UniformConstantOrderLowerBoundDivStmt` (the exact missing clause, owner q2, written in LEMMA68.md); NOT derivable from
+`UniformConstantOrderLowerBoundStmt`, see the docstring of `UniformConstantOrderLowerBoundDivStmt`. -/
+theorem firstPass_6_8_faithful (𝒮 : SpaceFillingSLEModel) (hUD : UniformConstantOrderLowerBoundDivStmt 𝒮) :
+    FaithfulConstantOrderLowerBoundDivStmt 𝒮 := by
+  intro γ hγ0 hγ2
+  obtain ⟨ω₀, hω₀, hU'⟩ := hUD γ hγ0 hγ2
+  refine ⟨ω₀, hω₀, fun ρ hρ0 hρ1 => ?_⟩
+  obtain ⟨s₁, s₂, hs₁0, hs₁1, hs₂0, hs₂1, hbody⟩ := hU' ρ hρ0 hρ1
+  exact fun s₀ hs₀0 hs₀1 => ⟨s₁, s₂, hs₁0, hs₁1, hs₂0, hs₂1, hbody s₀ hs₀0 hs₀1⟩
+
 end MatedCRT
