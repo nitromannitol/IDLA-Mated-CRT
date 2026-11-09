@@ -66,7 +66,8 @@ integral `ω ↦ ∫ φ dμ_ω` almost surely measurable, the event `{c < v(u)(p
 theorem nullMeasurableSet_lt_leastSupersolution_rat {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
     [IsProbabilityMeasure P] (hF1 : FrozenUniversalMeasurabilityOfAnalytic) {μ : Ω → Measure ℂ} {R u : ℝ} (hR : 0 ≤ R)
     (hu : 0 < u) (hμ : ∀ᵐ ω ∂P, μ ω (closedBall (0 : ℂ) R) < ⊤)
-    (hmeas : ∀ φ : ℂ → ℝ, Continuous φ → HasCompactSupport φ → AEMeasurable (fun ω => ∫ x, φ x ∂(μ ω)) P)
+    (hmeas : ∀ φ : ℂ → ℝ, Continuous φ → tsupport φ ⊆ closedBall (0 : ℂ) R →
+      AEMeasurable (fun ω => ∫ x, φ x ∂(μ ω)) P)
     (φs : ℕ → ℂ → ℝ) (hφs : ∀ k, φs k ∈ nonnegTest R)
     (hdense : ∀ φ ∈ nonnegTest R, ∀ ε : ℝ, 0 < ε → ∃ k, ∀ x ∈ closedBall (0 : ℂ) R,
         |φ x - φs k x| < ε ∧ |Laplacian.laplacian φ x - Laplacian.laplacian (φs k) x| < ε)
@@ -77,7 +78,7 @@ theorem nullMeasurableSet_lt_leastSupersolution_rat {Ω : Type} [MeasurableSpace
   let Y : Ω → (ℕ → ℝ) := fun ω k => ∫ x, φs k x ∂(μ ω)
   have hY : AEMeasurable Y P :=
     aemeasurable_pi_iff.2 fun k => hmeas (φs k)
-      (contDiff_two_of_isTestFunction (hφs k).1).continuous (hφs k).1.2.1
+      (contDiff_two_of_isTestFunction (hφs k).1).continuous ((hφs k).1.2.2.trans ball_subset_closedBall)
   set g : Ω → (ℕ → ℝ) := hY.mk Y with hgdef
   have hg : Measurable g := hY.measurable_mk
   have hYg : Y =ᵐ[P] g := hY.ae_eq_mk
@@ -134,7 +135,8 @@ Lusin theorem (`FrozenUniversalMeasurabilityOfAnalytic`) and the AE-form test-in
 theorem aemeasurable_leastSupersolution_of_moments {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
     [IsProbabilityMeasure P] (hF1 : FrozenUniversalMeasurabilityOfAnalytic) {μ : Ω → Measure ℂ} {R u : ℝ} (hR : 0 ≤ R)
     (hu : 0 < u) (hμ : ∀ᵐ ω ∂P, μ ω (closedBall (0 : ℂ) R) < ⊤)
-    (hmeas : ∀ φ : ℂ → ℝ, Continuous φ → HasCompactSupport φ → AEMeasurable (fun ω => ∫ x, φ x ∂(μ ω)) P)
+    (hmeas : ∀ φ : ℂ → ℝ, Continuous φ → tsupport φ ⊆ closedBall (0 : ℂ) R →
+      AEMeasurable (fun ω => ∫ x, φ x ∂(μ ω)) P)
     (φs : ℕ → ℂ → ℝ) (hφs : ∀ k, φs k ∈ nonnegTest R)
     (hdense : ∀ φ ∈ nonnegTest R, ∀ ε : ℝ, 0 < ε → ∃ k, ∀ x ∈ closedBall (0 : ℂ) R,
         |φ x - φs k x| < ε ∧ |Laplacian.laplacian φ x - Laplacian.laplacian (φs k) x| < ε)
