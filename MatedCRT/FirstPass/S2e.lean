@@ -1,6 +1,7 @@
 import MatedCRT.FirstPass.S2d
 import MatedCRT.Proofs.Sec2.ConeFamilyMeasurable.StoppingTime
 import MatedCRT.Proofs.Sec2.ConeFamilyMeasurable.ClusterDecoder
+import MatedCRT.Proofs.Sec2.ConeFamilyMeasurable.Assembly
 
 /-! # FIRST PASS S2e: measurability of the stopped cone family without strict growth
 
@@ -133,5 +134,118 @@ theorem aemeasurable_coneHalfBallPair_closureInside
     intro p
     exact hcone.2.1.measurable_circle p.1 p.2 p.1.property
   exact hc.aemeasurable.prodMk hΛ
+
+/-- **OPEN (NEW, not proved, not frozen; q1).** Closure containment for the rescaled cone families: the statement
+`ConeHalfBallClosureInsideStep` for the rescaled measures `b⁻¹ μ_h(R_b ·)`, which by `ConeLQGScalingStep` and
+`QuantumConeScalingInput` have the cone law. Its only use is the named hypothesis `hclR` of
+`firstPass_coneFamilyAEMeasurableStep_of_rescaledClosure`. Written argument: `notes/fp-gaps/G-S2-measurable.md` Section 5
+(law transfer of the good event). The rescaled `IsConeField` needed to instantiate `ConeHalfBallClosureInsideStep`
+directly is not available: `IsQuantumCone` needs a rescaled pairing functional `hC'`, which the repository does not define. -/
+def ConeRescaledHalfBallClosureInsideStep : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ → ∀ b : ℝ, 0 < b →
+    ∀ᵐ ω ∂P, ∀ (T : ℝ) (Γ : ℝ → Set ℂ),
+      IsConeHarmonicBallFamilyOn (rescaledMeasure (μ ω) (coneScaleRadius γ (hcirc ω) b) b) Γ T →
+      IsStoppedAtHalfBall Γ T → ∀ t ∈ Ioo 0 T, closure (Γ t) ⊆ ball (0 : ℂ) (1 / 2)
+
+/-- Strict-growth-free form of `aemeasurable_halfBallFamily_of_volumeGrowth` (`RescaledFamily.lean`). -/
+theorem aemeasurable_halfBallFamily_of_volumeGrowth_closureInside
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {μ : Ω → Measure ℂ}
+    {T : Ω → ℝ} {Λ : Ω → ℝ → Set ℂ}
+    (hμ : AEMeasurable μ P)
+    (hgood : ∀ᵐ ω ∂P, IsLocallyFiniteMeasure (μ ω) ∧
+      ∃ βminus βplus, VolumeGrowth (μ ω) (3 / 4) βminus βplus)
+    (hf : ∀ᵐ ω ∂P, 0 < T ω ∧ IsConeHarmonicBallFamilyOn (μ ω) (Λ ω) (T ω) ∧
+      IsStoppedAtHalfBall (Λ ω) (T ω) ∧ (∀ t ∈ Ioo 0 (T ω), closure (Λ ω t) ⊆ ball (0 : ℂ) (1 / 2))) :
+    AEMeasurable (fun ω => familyProcess (Λ ω) (T ω)) P := by
+  let C : Ω → Ioi (0 : ℝ) → Set ℂ := fun ω t =>
+    interior (closure (cluster (μ ω) (3 / 4) 0 t))
+  let curry : ((Ioi (0 : ℝ) × ℂ) → Prop) → Ioi (0 : ℝ) → Set ℂ :=
+    fun F t x => F (t, x)
+  have hcurry : Measurable curry := by
+    apply Measurable.of_eval
+    intro t
+    apply Measurable.of_eval
+    intro x
+    exact measurable_pi_apply (t, x)
+  have hcluster := aemeasurable_regularizedClusterFamily_of_volumeGrowth (by norm_num) hμ hgood
+  have hCm : AEMeasurable C P := hcurry.comp_aemeasurable hcluster
+  have hT : AEMeasurable T P := by
+    apply aemeasurable_stoppingTime_of_open_family_closureInside hCm
+    filter_upwards [hf, hgood] with ω hω hv
+    refine ⟨hω.1, (fun _ => isOpen_interior), ?_, ?_, hω.2.2.1, hω.2.2.2⟩
+    · intro s t hst
+      apply interior_mono (closure_mono ?_)
+      obtain ⟨hμω, βm, βp, hV⟩ := hv
+      exact cluster_subset_of_general obstacleMonotoneGeneral_holds
+        obstacleCompatibilityShiftStep_holds hμω (by norm_num) hV
+        (mem_ball_self (by norm_num)) s.property hst
+    · intro t ht
+      exact (hω.2.1.eq_threeQuarterDisk_cluster hω.2.2.1 ht).symm
+  exact aemeasurable_familyProcess_of_positiveTime_cluster hT hcluster
+    (hf.mono fun _ h => ⟨h.2.1, h.2.2.1⟩)
+
+/-- Strict-growth-free form of `aemeasurable_rescaledHalfBallPair_of_volumeGrowth`: the rescaled pair is a.e.
+measurable, with the closure containment of the rescaled families (`hclR`) in place of strict growth. -/
+theorem aemeasurable_rescaledHalfBallPair_of_closureInside
+    {γ : ℝ}
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    {b : ℝ} (hb : 0 < b) {T : Ω → ℝ} {Λ : Ω → ℝ → Set ℂ}
+    (hR : ∀ᵐ ω ∂P, 0 < coneScaleRadius γ (hcirc ω) b)
+    (hμ : AEMeasurable (fun ω => rescaledMeasure (μ ω) (coneScaleRadius γ (hcirc ω) b) b) P)
+    (hgood : ∀ᵐ ω ∂P,
+      IsLocallyFiniteMeasure (rescaledMeasure (μ ω) (coneScaleRadius γ (hcirc ω) b) b) ∧
+      ∃ βminus βplus, VolumeGrowth
+        (rescaledMeasure (μ ω) (coneScaleRadius γ (hcirc ω) b) b) (3 / 4) βminus βplus)
+    (hcirc' : AEMeasurable (fun ω => circleProcess
+      (rescaledCircle γ (hcirc ω) (coneScaleRadius γ (hcirc ω) b) b)) P)
+    (hclR : ∀ᵐ ω ∂P, ∀ (T : ℝ) (Γ : ℝ → Set ℂ),
+      IsConeHarmonicBallFamilyOn (rescaledMeasure (μ ω) (coneScaleRadius γ (hcirc ω) b) b) Γ T →
+      IsStoppedAtHalfBall Γ T → ∀ t ∈ Ioo 0 T, closure (Γ t) ⊆ ball (0 : ℂ) (1 / 2))
+    (hf : ∀ᵐ ω ∂P, 0 < T ω ∧ IsConeHarmonicBallFamilyOn (μ ω) (Λ ω) (b * T ω) ∧
+      IsStoppedAtHalfBall (rescaledFamily (Λ ω) (coneScaleRadius γ (hcirc ω) b) b) (T ω)) :
+    AEMeasurable (fun ω => (circleProcess
+      (rescaledCircle γ (hcirc ω) (coneScaleRadius γ (hcirc ω) b) b),
+      familyProcess (rescaledFamily (Λ ω) (coneScaleRadius γ (hcirc ω) b) b) (T ω))) P := by
+  apply hcirc'.prodMk
+  apply aemeasurable_halfBallFamily_of_volumeGrowth_closureInside hμ hgood
+  filter_upwards [hf, hR, hclR] with ω hω hRω hcl
+  have hH := coneHarmonicBallFamilyOnScalingStep (μ ω) (Λ ω) _ b (T ω) hRω hb hω.2.1
+  exact ⟨hω.1, hH, hω.2.2, hcl (T ω) _ hH hω.2.2⟩
+
+/-- **Conditional reduction (q1).** `ConeFamilyAEMeasurableStep` (Theorem 2.3 measurability) follows from the
+volume-growth input `VolumeGrowthStmt`, cone scaling (`QuantumConeScalingInput`, `ConeLQGScalingStep`), the
+volume growth of the rescaled measures (`hvgood`, as in `coneFamilyAEMeasurableStep_of_rescaledVolumeGrowth`), the
+unscaled closure containment `ConeHalfBallClosureInsideStep` (`firstPass_closureInside`, `FirstPass/S2d.lean`) and the
+OPEN rescaled closure containment `ConeRescaledHalfBallClosureInsideStep`. Strict growth
+(`ConeHarmonicBallStrictGrowthStep`) is not used. -/
+theorem firstPass_coneFamilyAEMeasurableStep_of_rescaledClosure
+    (h27 : VolumeGrowthStmt) (hscale : QuantumConeScalingInput) (hlqg : ConeLQGScalingStep)
+    (hvgood : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω]
+      (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+      (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ → ∀ b : ℝ, 0 < b →
+      ∀ᵐ ω ∂P, ∃ βminus βplus, VolumeGrowth
+        (rescaledMeasure (μ ω) (coneScaleRadius γ (hcirc ω) b) b) (3 / 4) βminus βplus)
+    (hcl : ConeHalfBallClosureInsideStep) (hclR : ConeRescaledHalfBallClosureInsideStep) :
+    ConeFamilyAEMeasurableStep := by
+  intro γ hγ hγ2 Ω _ P hC hcirc μ hcone
+  let : IsProbabilityMeasure P := hcone.1
+  refine ⟨fun T Λ hf => aemeasurable_coneHalfBallPair_closureInside hγ hγ2 hcone h27
+    (hcl γ hγ hγ2 Ω P hC hcirc μ hcone) hf, ?_⟩
+  intro b hb T Λ hf
+  have hR : ∀ᵐ ω ∂P, 0 < coneScaleRadius γ (hcirc ω) b :=
+    (hlqg γ hγ hγ2 Ω P hC hcirc μ hcone b hb).mono fun _ h => h.1
+  have hgood : ∀ᵐ ω ∂P,
+      IsLocallyFiniteMeasure (rescaledMeasure (μ ω) (coneScaleRadius γ (hcirc ω) b) b) ∧
+      ∃ βminus βplus, VolumeGrowth
+        (rescaledMeasure (μ ω) (coneScaleRadius γ (hcirc ω) b) b) (3 / 4) βminus βplus := by
+    filter_upwards [hlqg γ hγ hγ2 Ω P hC hcirc μ hcone b hb,
+      hvgood γ hγ hγ2 Ω P hC hcirc μ hcone b hb] with ω hl hv
+    exact ⟨hl.2.isLocallyFiniteMeasure, hv⟩
+  exact aemeasurable_rescaledHalfBallPair_of_closureInside hb hR
+    (hcone.aemeasurable_rescaledMeasure b hR) hgood
+    (Sec1.aemeasurable_circleProcess_rescaledCircle hscale hγ hγ2 hcone.2.1 hb)
+    (hclR γ hγ hγ2 Ω P hC hcirc μ hcone b hb) hf
 
 end MatedCRT
