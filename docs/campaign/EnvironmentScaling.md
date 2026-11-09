@@ -148,3 +148,10 @@ def DMS14Remark44PostLastZeroLaw : Prop :=
 ```
 
 Consumers CanonicalConeIdentification.lean:1029/1048 and CanonicalBrownianPathAssembly remain conditional. Actual lateral-coordinate measurability/law work is independent and current/queued. The canonical field, represented-circle, clock and mating conclusions remain open.
+
+
+## Lead2026-11-09 lateral circles: measurable arrays versus laws
+
+0c49c79 LateralCircleMeasurability.lean passes strict source and main-export axiom checks. It identifies lateral circle coordinates with the angular-integral formula, supplies their a.e. measurability including circles through zero, and constructs measurable countable lateral arrays with simultaneous a.s. recovery and pullback. The through-zero integrability exports retain the explicit RadialLogMajorant premise (:40); map_lateralArray_eq_of_lateral_law retains the actual law identity, and lateralArray_law_of_isQuantumCone consumes IsQuantumCone.lateral_law. Measurability does not establish that law.
+
+The report's R1/R2 are written implementation remaining, not new WRITTEN-PROOF-NEEDED requests: audited env-steps:243-255 explicitly gives Brownian Gaussian/reflection bounds plus Borel--Cantelli, the resulting logarithmic radial envelope, bounded-annulus continuity and logarithmic angular integrability. BrownianSublinear/RadialLocalIntegrability supply checked conditional and deterministic components. The actual cone radial-law/path transfer and pairing-integrability specialization remain to implement; none is silently discharged here. Canonical lateral-law assembly is current, observable assembly queued. WPN-53 entrance-chain identification/domination/normalization and the held DMS weak-limit bridge remain unproved as recorded above.
