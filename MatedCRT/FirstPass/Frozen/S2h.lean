@@ -23,7 +23,8 @@ and KPZ" (Invent. Math. 2011, arXiv:0808.1560), the quantum cone (Definition 2.1
 and its restriction to `B_1`; the local equality is the restriction identity used in IDLA eq. (2.4) (arXiv:2211.04891);
 GMC locality (the LQG measure on `B_1` is a measurable function of the circle averages on `B_1`, DS 2011 Section 3 /
 Kahane 1985). Companion of the frozen `FrozenConeRestriction` (circle averages on `B_1`, `Steps/Sec2`). Locator:
-DS 2011 and arXiv:2211.04891 eq. (2.4), exact numbering pending; truth check requested by operator. Used by:
+IDLA arXiv:2211.04891, Definition 2.1 (p. 11), (2.4), (2.8) and Fact 2.2(II) (p. 12); DS 2011. Truth check TRUE
+(ChatGPT, 23:22 UTC). Used by:
 coneCertificateNullHull_of_steps (FirstPass/S2h.lean). -/
 def FrozenConeLogLocalCodeLaw : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
@@ -40,7 +41,8 @@ growth condition (A.1) with radius `3/4`), then the least supersolution `leastSu
 `supersolutions ν (3/4) 0 t` for every `t > 0`. Sources: Bou-Rabee and Gwynne, "Harmonic balls in Liouville quantum
 gravity", arXiv:2208.11795v3, Appendix A: condition (A.1) (printed p. 65), Lemma A.1 (pp. 66-67) for a general disk
 radius (the statement recorded at the beginning of Appendix A.5, p. 70), and the substitution `v = ṽ - q_{B_R}` after
-(A.7) (p. 66). This is a deterministic statement about `Measure ℂ`, not an almost-sure one. Lean counterpart in the
+(A.7) (p. 66); Appendix A.5 (p. 70). Truth check TRUE (ChatGPT, 23:22 UTC). This is a deterministic statement about
+`Measure ℂ`, not an almost-sure one. Lean counterpart in the
 harmonic-balls-lqg repository: `ObstacleLeastSuperharmonicMajorantGeneral` (Steps/SecA) with the substitution
 `ObstacleCompatibilityShiftStep`, combined in `leastSupersolution_mem_of_general` (Steps/Sec3/LeastSupersolutionMem).
 The printed Draft `ObstacleLeastSuperharmonicMajorantStmt` is the radius-`1` case only. Used by:
