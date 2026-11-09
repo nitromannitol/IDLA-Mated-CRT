@@ -7,6 +7,7 @@ import MatedCRT.Steps.Sec2.MaximumPrinciple
 import MatedCRT.Steps.Sec2.BoundedExitTimeRV
 import MatedCRT.Steps.Sec2.ExpectedExitTimeExplicitBound
 import MatedCRT.Proofs.SecA.DiscreteDivergence
+import MatedCRT.Proofs.SecA.Statements
 import MatedCRT.FirstPass.Frozen.S1S2S8SA
 
 /-!
@@ -22,6 +23,21 @@ namespace MatedCRT
 /-- **Lemma A.1** (lemma:discrete-divergence-theorem, line 3347), first pass. Proved in `Proofs/SecA/DiscreteDivergence`. -/
 theorem firstPass_A_1 : DiscreteDivergenceTheoremStmt :=
   discreteDivergenceTheorem
+
+/-- **Lemma A.2** (lemma:discrete-basic-properties-general, line 3413), first pass. No inputs: proved in
+`Proofs/SecA/Statements` (`discreteBasicPropertiesGeneral`). -/
+theorem firstPass_A_2 : DiscreteBasicPropertiesGeneralStmt :=
+  discreteBasicPropertiesGeneral
+
+/-- **Lemma A.3** (lemma:discrete-laplacian-bound-general, line 3448), first pass. No inputs: proved in
+`Proofs/SecA/Statements` (`discreteLaplacianBoundGeneral`). -/
+theorem firstPass_A_3 : DiscreteLaplacianBoundGeneralStmt :=
+  discreteLaplacianBoundGeneral
+
+/-- **Lemma A.4** (lemma:discrete-conservation-of-mass-general, line 3528), first pass. No inputs: proved in
+`Proofs/SecA/Statements` (`discreteConservationOfMassGeneral`). -/
+theorem firstPass_A_4 : DiscreteConservationOfMassGeneralStmt :=
+  discreteConservationOfMassGeneral
 
 /-- **Lemma 2.13** (lemma:maximum-principle, line 825, as corrected [C2]: nonempty finite `A`), first pass. Uses the
 frozen mating-of-trees input `FrozenAdjacentCellsMeetAe` for the local finiteness of `𝒢^ε`. -/
