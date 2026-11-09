@@ -59,6 +59,51 @@ theorem measurableSet_decodeFamily_coord (p : ℝ × ℂ) :
 theorem measurable_decodeFamily : Measurable decodeFamily :=
   Measurable.of_eval fun p => measurableSet_setOfPred.1 (measurableSet_decodeFamily_coord p)
 
+/-- The bit `y.2 i k` as an event of the pair (code, point). -/
+theorem measurableSet_bit_uncurry (i k : ℕ) :
+    MeasurableSet {q : (ℝ × (ℕ → ℕ → Bool)) × (ℝ × ℂ) | q.1.2 i k = true} :=
+  (measurableSet_bit i k).preimage measurable_fst
+
+/-- The closure test `CodeCl y t z` as an event of the triple (code, time, point), jointly. -/
+theorem measurableSet_codeCl_uncurry :
+    MeasurableSet {q : (ℝ × (ℕ → ℕ → Bool)) × ℝ × ℂ | CodeCl q.1 q.2.1 q.2.2} := by
+  have h : {q : (ℝ × (ℕ → ℕ → Bool)) × ℝ × ℂ | CodeCl q.1 q.2.1 q.2.2} =
+      ⋂ n : ℕ, ⋃ k : ℕ, ({q | dist (centre k) q.2.2 < 1 / ((n : ℝ) + 1)} ∩
+        ⋃ i : ℕ, ({q | (posTime i : ℝ) < q.2.1} ∩ {q | q.1.2 i k = true})) := by
+    ext q
+    simp only [CodeCl, mem_ofPred_eq, mem_iInter, mem_iUnion, mem_inter_iff]
+  rw [h]
+  refine MeasurableSet.iInter fun n => MeasurableSet.iUnion fun k => ?_
+  refine MeasurableSet.inter ?_ (MeasurableSet.iUnion fun i => MeasurableSet.inter ?_ (measurableSet_bit_uncurry i k))
+  · exact measurableSet_lt (by fun_prop) measurable_const
+  · exact measurableSet_lt measurable_const (by fun_prop)
+
+/-- **The decoder is jointly measurable in the code and the space-time point**: the set of `(y, (t, z))` with
+`decodeFamily y (t, z)` is measurable. Used for the measurability of the glued global family (FirstPass S2i). -/
+theorem measurableSet_decodeFamily_uncurry :
+    MeasurableSet {q : (ℝ × (ℕ → ℕ → Bool)) × (ℝ × ℂ) | decodeFamily q.1 q.2} := by
+  have h : {q : (ℝ × (ℕ → ℕ → Bool)) × (ℝ × ℂ) | decodeFamily q.1 q.2} =
+      {q | 0 < q.2.1} ∩ ({q | q.2.1 < q.1.1} ∩
+        ⋃ m : ℕ, ⋂ k : ℕ, ({q | ¬ dist (centre k) q.2.2 < 1 / ((m : ℝ) + 1)} ∪
+          {q | CodeCl q.1 q.2.1 (centre k)})) := by
+    ext q
+    simp only [decodeFamily, mem_ofPred_eq, mem_inter_iff, mem_iUnion, mem_iInter, mem_union, imp_iff_not_or]
+  rw [h]
+  refine MeasurableSet.inter ?_ (MeasurableSet.inter ?_ ?_)
+  · exact measurableSet_lt measurable_const (by fun_prop)
+  · exact measurableSet_lt (by fun_prop) (by fun_prop)
+  · refine MeasurableSet.iUnion fun m => MeasurableSet.iInter fun k => MeasurableSet.union ?_ ?_
+    · have hd : Measurable fun q : (ℝ × (ℕ → ℕ → Bool)) × (ℝ × ℂ) => dist (centre k) q.2.2 := by
+        fun_prop
+      exact (measurableSet_lt hd measurable_const).compl
+    · exact measurableSet_codeCl_uncurry.preimage
+        (measurable_fst.prodMk ((measurable_fst.comp measurable_snd).prodMk measurable_const))
+
+/-- The decoder as a jointly measurable map of (code, point). -/
+theorem measurable_decodeFamily_uncurry :
+    Measurable fun q : (ℝ × (ℕ → ℕ → Bool)) × (ℝ × ℂ) => decodeFamily q.1 q.2 :=
+  measurableSet_setOfPred.1 measurableSet_decodeFamily_uncurry
+
 /-- The process code is jointly measurable in the horizon and the process. -/
 theorem measurable_processCode :
     Measurable fun q : ℝ × (ℝ × ℂ → Prop) => processCode q.1 q.2 := by
