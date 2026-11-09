@@ -4,6 +4,7 @@ import MatedCRT.FirstPass.Frozen.S3S4
 import MatedCRT.FirstPass.Frozen.S5S6S7
 import MatedCRT.FirstPass.S1S2S8SA
 import MatedCRT.FirstPass.S3S4
+import MatedCRT.FirstPass.S3S4b
 import MatedCRT.FirstPass.S5S6S7
 import MatedCRT.Steps.Sec1.Convergence
 import MatedCRT.Proofs.Sec1.HarmonicBallScaling
@@ -18,7 +19,7 @@ numbered results with the committed first-pass theorems, recursively:
 
 * Proposition 8.1 (`firstPass_8_1`) needs Propositions 4.2, 5.1, 6.1 (open) and Proposition 7.1, which is
   `firstPass_7_1`; that needs Theorem 2.3 (`firstPass_2_3`, open Lemmas 2.4 and 2.5), Theorem 4.1 (`firstPass_4_1`,
-  open Lemmas 3.4 and 3.5) and Lemma 3.3 (`firstPass_3_3`).
+  open Lemma 3.5; Lemma 3.4 is `firstPass_3_4`) and Lemma 3.3 (`firstPass_3_3`).
 * The scaling of the quantum cone (`coneScaleRadiusStep_of_input`), the scaling of the harmonic-ball families
   (`harmonicBallFamilyScalingStep`, proved) and the environment scaling are the remaining inputs.
 
@@ -37,7 +38,9 @@ Hypotheses, grouped as in docs/campaign/FIRST-PASS-INPUTS.md:
   `h27`, `h28`, `h29`, `h210`, `h214`, `h216`, `h218` (cited Lemmas 2.7-2.18), `hH` (Lemma 3.2 corrected, GMS19),
   `hEnv` (environment scaling, DMS14 and mating of trees; frozen as `FrozenConeEnvironmentScaling`), `h0`-`hR` (the
   frozen whole-plane and cone inputs of FirstPass/Frozen/S5S6S7).
-* Open Draft statements: `h24` (Lemma 2.4), `h25` (Lemma 2.5), `h34` (Lemma 3.4), `h35` (Lemma 3.5), `h42`
+* Lemma 3.4 is discharged by `firstPass_3_4` from `h211` (Lemma 2.11, cited), `hrevuz`, `hdet`, `hexc` (frozen).
+* Open Draft statements: `h24` (Lemma 2.4), `h25` (Lemma 2.5), `h35` (Lemma 3.5; the consumer `firstPass_4_1` takes the
+  Draft form, `firstPass_3_5_corrected` proves the corrected [C13] form, so `h35` is not discharged), `h42`
   (Proposition 4.2), `h51` (Proposition 5.1), `h61` (Proposition 6.1).
 * Open NEW step: `hT` (eq:btb-converge-to-inf, line 3330). -/
 theorem firstPassMain_1_4 (𝒮 : SpaceFillingSLEModel)
@@ -50,10 +53,14 @@ theorem firstPassMain_1_4 (𝒮 : SpaceFillingSLEModel)
     (h0 : FPWholePlaneLQGExistence) (h1 : FPConeWholePlaneWeylComparison)
     (h2 : FPWholePlaneLQGCoordinateChange) (hV : FPWholePlaneUpperVolumeTail) (hR : FPConeMeanZeroRestriction)
     (h24 : ConeHarmonicBallsUpToFixedTimeStmt) (h25 : ConeScaleInvarianceUpToFixedTimeStmt)
-    (h34 : IntegralConvergenceGreenFunctionStmt 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
+    (h211 : RandomWalkToLBMStmt 𝒮) (hrevuz : FrozenLBMGreenOccupation 𝒮)
+    (hdet : FrozenTruncatedDetFixedTime 𝒮) (hexc : FrozenBrownianOutwardExcursionAtExit)
+    (h35 : DiscreteDirichletProblemStmt 𝒮)
     (h42 : DivSandpileLowerBoundStmt 𝒮) (h51 : IDLALowerBoundStmt 𝒮) (h61 : IDLAUpperBoundStmt 𝒮)
     (hT : ScaledClusterExitTimeStep) :
     ConvergenceOfIDLAStmt 𝒮 := by
+  have h34 : IntegralConvergenceGreenFunctionStmt 𝒮 :=
+    firstPass_3_4 h27 h218 hm h211 h28 hrevuz hdet hexc
   have hcone : ConeHarmonicBallsStmt := firstPass_2_3 h24 h25 h27 hscale h22
   have hconv : ConvergenceDivisibleStmt 𝒮 := firstPass_4_1 hm h210 h34 h214 h28 h35 h218 h27 hH hEnv
   have hgreen : UniformConvergenceGreenKernelStmt 𝒮 := firstPass_3_3 h210 h34 h214 h28 h27 h218 hm hH
@@ -74,10 +81,14 @@ theorem firstPassMain_1_6 (𝒮 : SpaceFillingSLEModel)
     (h0 : FPWholePlaneLQGExistence) (h1 : FPConeWholePlaneWeylComparison)
     (h2 : FPWholePlaneLQGCoordinateChange) (hV : FPWholePlaneUpperVolumeTail) (hR : FPConeMeanZeroRestriction)
     (h24 : ConeHarmonicBallsUpToFixedTimeStmt) (h25 : ConeScaleInvarianceUpToFixedTimeStmt)
-    (h34 : IntegralConvergenceGreenFunctionStmt 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
+    (h211 : RandomWalkToLBMStmt 𝒮) (hrevuz : FrozenLBMGreenOccupation 𝒮)
+    (hdet : FrozenTruncatedDetFixedTime 𝒮) (hexc : FrozenBrownianOutwardExcursionAtExit)
+    (h35 : DiscreteDirichletProblemStmt 𝒮)
     (h42 : DivSandpileLowerBoundStmt 𝒮) (h51 : IDLALowerBoundStmt 𝒮) (h61 : IDLAUpperBoundStmt 𝒮)
     (hT : ScaledClusterExitTimeStep) :
     ConvergenceOfDivSandpileStmt 𝒮 := by
+  have h34 : IntegralConvergenceGreenFunctionStmt 𝒮 :=
+    firstPass_3_4 h27 h218 hm h211 h28 hrevuz hdet hexc
   have hcone : ConeHarmonicBallsStmt := firstPass_2_3 h24 h25 h27 hscale h22
   have hconv : ConvergenceDivisibleStmt 𝒮 := firstPass_4_1 hm h210 h34 h214 h28 h35 h218 h27 hH hEnv
   have hgreen : UniformConvergenceGreenKernelStmt 𝒮 := firstPass_3_3 h210 h34 h214 h28 h27 h218 hm hH
