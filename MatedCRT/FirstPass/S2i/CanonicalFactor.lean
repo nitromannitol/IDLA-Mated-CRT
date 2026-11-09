@@ -58,13 +58,31 @@ def ConeRefGood {Ω : Type} (γ : ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ 
     IsLQGLimit γ (hcirc ω) (μ ω) ∧
     ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2) (Ioi 0 ×ˢ univ)
 
-/-- **`ConeCanonicalFactorStep` (FirstPass S2i, z2).** From the canonical Lemma 2.4 (`firstPass_2_4_canonical_of_steps`),
-the closure step `ConeHalfBallClosureInsideStep`, the volume growth statement, and the two frozen cone externals. -/
-theorem coneCanonicalFactor_proved (hcan : ConeCanonicalHalfBallStep)
+/-- The clauses of `ConeCanonicalFactorStep` for given witnesses `ΨT`, `Ψ`, `G` (the body of the step). -/
+abbrev CanonicalFactorClauses (γ : ℝ) (ΨT : (Ioi (0 : ℝ) × ℂ → ℝ) → ℝ)
+    (Ψ : (Ioi (0 : ℝ) × ℂ → ℝ) → ℝ × ℂ → Prop) (G : Set (Ioi (0 : ℝ) × ℂ → ℝ)) : Prop :=
+  (∀ c : ℝ → ℂ → ℝ, circleProcess c ∈ G → ContinuousOn (fun p : ℝ × ℂ => c p.1 p.2) (Ioi 0 ×ˢ univ) →
+      ∀ ν : Measure ℂ, IsLQGLimit γ c ν →
+        halfBallTime ν = ΨT (circleProcess c) ∧
+        (∃ Λ : ℝ → Set ℂ, IsConeHarmonicBallFamilyOn ν Λ (halfBallTime ν) ∧ IsStoppedAtHalfBall Λ (halfBallTime ν)) ∧
+        0 < halfBallTime ν ∧
+        ∀ (T : ℝ) (Λ : ℝ → Set ℂ), 0 < T → IsConeHarmonicBallFamilyOn ν Λ T → IsStoppedAtHalfBall Λ T →
+          familyProcess Λ T = Ψ (circleProcess c)) ∧
+    ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+      (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
+      AEMeasurable ΨT (P.map fun ω => circleProcess (hcirc ω)) ∧
+      AEMeasurable Ψ (P.map fun ω => circleProcess (hcirc ω)) ∧ ∀ᵐ ω ∂P, circleProcess (hcirc ω) ∈ G
+
+/-- **Code form of the canonical factor (FirstPass S2i, z2).** The witnesses of `ConeCanonicalFactorStep` can be taken
+of the form `ΨT p = (F (circleCode D p)).1`, `Ψ p = decodeFamily (F (circleCode D p))`, `G = circleCode D ⁻¹' B` with
+`F` measurable (the joint code of the Borel factor). Used by the global family step. -/
+theorem coneCanonicalFactor_code (hcan : ConeCanonicalHalfBallStep)
     (hcl : ConeHalfBallClosureInsideStep) (h27 : VolumeGrowthStmt)
-    (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep) :
-    ConeCanonicalFactorStep := by
-  intro γ hγ0 hγ2
+    (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep) (γ : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) :
+    ∃ (D : ℕ → CirclePt) (B : Set (ℕ → ℝ)) (F : (ℕ → ℝ) → ℝ × (ℕ → ℕ → Bool)),
+      DenseRange D ∧ MeasurableSet B ∧ Measurable F ∧
+      CanonicalFactorClauses γ (fun p => (F (circleCode D p)).1)
+        (fun p => decodeFamily (F (circleCode D p))) ((circleCode D) ⁻¹' B) := by
   obtain ⟨Ω, instΩ, hSB, P, hC, hcirc, μ, hcone⟩ := hE2 γ hγ0 hγ2
   have : IsProbabilityMeasure P := hcone.1
   obtain ⟨D, hD⟩ := exists_dense_circlePt
@@ -106,8 +124,7 @@ theorem coneCanonicalFactor_proved (hcan : ConeCanonicalHalfBallStep)
     exact Prod.ext hcode (processCode_eq_of_circleCode_eq hD hK hK' hL hL' huniq.1 huniq'.1 hcode)
   obtain ⟨B, F, hB, hF, hBw, hBae⟩ := exists_canonical_factor P Jm hJm tᶜ hE0 hfull hgraph
   have hGm : MeasurableSet ((circleCode D) ⁻¹' B) := measurable_circleCode D hB
-  refine ⟨fun p => (F (circleCode D p)).1, fun p => decodeFamily (F (circleCode D p)),
-    (circleCode D) ⁻¹' B, hGm, ?_, ?_⟩
+  refine ⟨D, B, F, hD, hB, hF, ?_, ?_⟩
   · intro c hcG hcc ν hν
     obtain ⟨ω, hωE0, hJω⟩ := hBw (circleCode D (circleProcess c)) hcG
     obtain ⟨⟨hclω, ⟨hT0, huniq, hstop⟩, hLω, hKω⟩, hJe⟩ := hgoodE0 ω hωE0
@@ -156,5 +173,16 @@ theorem coneCanonicalFactor_proved (hcan : ConeCanonicalHalfBallStep)
     have hlaw := hE1 γ hγ0 hγ2 Ω P hC hcirc μ hcone Ω' P' hC' hcirc' μ' hcone'
     rw [hlaw] at h1
     exact (ae_map_iff hQ'c hGm).1 h1
+
+/-- **`ConeCanonicalFactorStep` (FirstPass S2i, z2).** From the canonical Lemma 2.4 (`firstPass_2_4_canonical_of_steps`),
+the closure step `ConeHalfBallClosureInsideStep`, the volume growth statement, and the two frozen cone externals. -/
+theorem coneCanonicalFactor_proved (hcan : ConeCanonicalHalfBallStep)
+    (hcl : ConeHalfBallClosureInsideStep) (h27 : VolumeGrowthStmt)
+    (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep) :
+    ConeCanonicalFactorStep := by
+  intro γ hγ0 hγ2
+  obtain ⟨D, B, F, -, hB, -, hcls⟩ := coneCanonicalFactor_code hcan hcl h27 hE1 hE2 γ hγ0 hγ2
+  exact ⟨fun p => (F (circleCode D p)).1, fun p => decodeFamily (F (circleCode D p)),
+    (circleCode D) ⁻¹' B, measurable_circleCode D hB, hcls⟩
 
 end MatedCRT
