@@ -2,6 +2,7 @@ import MatedCRT.FirstPass.S2g.Family
 import MatedCRT.FirstPass.Frozen.S1c
 import MatedCRT.FirstPass.Frozen.S2h
 import MatedCRT.FirstPass.S2h.LeastSuper
+import MatedCRT.FirstPass.S2h.MeasurableIntegral
 import Mathlib.MeasureTheory.Constructions.Polish.Basic
 
 /-!
@@ -113,6 +114,12 @@ theorem coneClosureGoodMeasureLawStep_of_parts (hpole : FrozenGreenDiscPole) (hc
 /-- Moment code of a measure on the test family `φs`: `k ↦ ∫ φs k dν`. -/
 noncomputable def localCode (φs : ℕ → ℂ → ℝ) (ν : Measure ℂ) : ℕ → ℝ := fun k => ∫ x, φs k x ∂ν
 
+/-- The moment code is Giry-measurable for continuous test functions (fp-S2h; the measurability of `ν ↦ ∫ φ dν`
+is `measurable_integral_measure_real`, FirstPass/S2h/MeasurableIntegral.lean). -/
+theorem measurable_localCode {φs : ℕ → ℂ → ℝ} (hcont : ∀ k, Continuous (φs k)) :
+    Measurable (localCode φs) :=
+  Measurable.of_eval fun k => measurable_integral_measure_real (hcont k).measurable
+
 /-- Code bridge against a law (fp-S2h): if the code law of `μ` gives the code set `B` null mass, and the certificate
 measures with finite mass have codes in `B`, then the certificate measures have a measurable null hull. No measurability
 of `B` is needed: `toMeasurable` gives the measurable superset with the same outer mass. -/
@@ -153,8 +160,9 @@ part is handled by the Radon property of `IsLQGMeasure` (`IsLQGLimit.isLocallyFi
 theorem coneCertificateNullHull_of_steps (hlaw : FrozenConeLogLocalCodeLaw)
     (hmeasF : FrozenLQGTestIntegralMeasurable) (φs : ℕ → ℂ → ℝ)
     (hφs : ∀ k, Continuous (φs k) ∧ HasCompactSupport (φs k) ∧ tsupport (φs k) ⊆ Metric.ball 0 1)
-    (hfm : Measurable (localCode φs)) (B : Set (ℕ → ℝ)) (hB : CertCodeExactStep φs B)
+    (B : Set (ℕ → ℝ)) (hB : CertCodeExactStep φs B)
     (hlog : LogCertCodeNullStep φs B) : ConeCertificateNullHullStep := by
+  have hfm : Measurable (localCode φs) := measurable_localCode fun k => (hφs k).1
   intro γ hγ hγ2 Ω _ P hC hcirc μ hcone
   obtain ⟨Ω', _, P', hC', hcirc', μ', hP', hgff, hlgm, heq⟩ := hlaw γ hγ hγ2 Ω P hC hcirc μ hcone
   have hcodeLaw : P.map (fun ω => localCode φs (μ ω)) = P'.map (fun ω => localCode φs (μ' ω)) :=
