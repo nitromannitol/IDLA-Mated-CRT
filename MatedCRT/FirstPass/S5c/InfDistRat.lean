@@ -43,4 +43,25 @@ theorem nullMeasurableSet_infDist_gt_rat {Ω : Type*} [MeasurableSpace Ω] (P : 
       (closedBall_subset_iff_lt_infDist hopen hne' _ _).2 hr2
     exact mem_iUnion.2 ⟨⟨r, hr1⟩, hsub⟩
 
+/-- **Closure of the open floor set lies in `L`** (B1, deterministic): for `s > 0` and `Lᶜ` nonempty, the closure of
+`S_s = {x ∈ B_ρ | s < infDist x Lᶜ}` lies in `L`, and it is compact. -/
+theorem closure_floor_set_subset {L : Set ℂ} (ρ s : ℝ) (hs : 0 < s) :
+    closure {x : ℂ | x ∈ ball (0 : ℂ) ρ ∧ s < infDist x Lᶜ} ⊆ L := by
+  have hcl : closure {x : ℂ | x ∈ ball (0 : ℂ) ρ ∧ s < infDist x Lᶜ} ⊆
+      {x : ℂ | s ≤ infDist x Lᶜ} :=
+    closure_minimal (fun _ hx => le_of_lt hx.2)
+      (isClosed_le continuous_const (continuous_infDist_pt Lᶜ))
+  intro x hx
+  by_contra hxL
+  have h0 : infDist x Lᶜ = 0 := infDist_zero_of_mem hxL
+  have h1 : s ≤ infDist x Lᶜ := hcl hx
+  rw [h0] at h1
+  linarith
+
+/-- **The closed floor set is compact** (B1, deterministic). -/
+theorem isCompact_closure_floor_set {L : Set ℂ} (ρ s : ℝ) :
+    IsCompact (closure {x : ℂ | x ∈ ball (0 : ℂ) ρ ∧ s < infDist x Lᶜ}) :=
+  (isCompact_closedBall (0 : ℂ) ρ).of_isClosed_subset isClosed_closure
+    (closure_minimal (fun _ hx => ball_subset_closedBall hx.1) isClosed_closedBall)
+
 end MatedCRT.S5c
