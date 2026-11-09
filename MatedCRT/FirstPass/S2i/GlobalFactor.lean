@@ -192,4 +192,79 @@ theorem measurable_extDecode {D : ℕ → CirclePt} (hD : DenseRange D) :
   rw [hfun]
   exact key
 
+
+/-- The rescaled code at scale `n + 1` of the decoded profile of the code `x` (the code of the cone rescaling of the
+profile, `rescaledCircle γ c (R_{b_n}) b_n`, evaluated at the dense points `D k`). -/
+noncomputable def scodeG (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (S : Set (ℕ → ℝ)) (n : ℕ)
+    (x : ℕ → ℝ) : ℕ → ℝ :=
+  fun k => rescaledCircle γ (extCircle (fun q => profileDec hD x q)) (radiusOn γ hD S ((n : ℝ) + 1) x)
+    ((n : ℝ) + 1) (D k).1 (D k).2
+
+theorem measurable_scodeG (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (S : Set (ℕ → ℝ)) (b : ℝ)
+    (hS : MeasurableSet S) (hcont : ∀ x ∈ S, ContinuousOn (profAlong γ hD x) (Ioi 0)) (k : ℕ) :
+    Measurable fun x : ℕ → ℝ => rescaledCircle γ (extCircle (fun q => profileDec hD x q))
+      (radiusOn γ hD S b x) b (D k).1 (D k).2 := by
+  have hR : Measurable (radiusOn γ hD S b) := measurable_radiusOn γ hD b S hS hcont
+  have hmul : Measurable fun x : ℕ → ℝ => radiusOn γ hD S b x * (D k).1 := hR.mul_const _
+  have hmulC : Measurable fun x : ℕ → ℝ => ((radiusOn γ hD S b x : ℝ) : ℂ) * (D k).2 :=
+    (Complex.measurable_ofReal.comp hR).mul_const _
+  have hpt : Measurable fun x : ℕ → ℝ => (radiusOn γ hD S b x * (D k).1, ((radiusOn γ hD S b x : ℝ) : ℂ) * (D k).2) :=
+    hmul.prodMk hmulC
+  have hw : Measurable fun x : ℕ → ℝ => ((x, (radiusOn γ hD S b x * (D k).1,
+      ((radiusOn γ hD S b x : ℝ) : ℂ) * (D k).2)) : (ℕ → ℝ) × ℝ × ℂ) :=
+    measurable_id.prodMk hpt
+  have h1 : Measurable fun x : ℕ → ℝ => extCircle (fun q => profileDec hD x q)
+      (radiusOn γ hD S b x * (D k).1) (((radiusOn γ hD S b x : ℝ) : ℂ) * (D k).2) := by
+    have h := (measurable_extDecode hD).comp hw
+    exact h
+  have hlog : Measurable fun x : ℕ → ℝ => lqgQ γ * Real.log (radiusOn γ hD S b x) :=
+    (Real.measurable_log.comp hR).const_mul _
+  have h2 : Measurable fun x : ℕ → ℝ => extCircle (fun q => profileDec hD x q)
+      (radiusOn γ hD S b x * (D k).1) (((radiusOn γ hD S b x : ℝ) : ℂ) * (D k).2) +
+      lqgQ γ * Real.log (radiusOn γ hD S b x) := h1.add hlog
+  have h3 := h2.sub (measurable_const (a := γ⁻¹ * Real.log b))
+  unfold rescaledCircle
+  exact h3
+
+
+/-- The glued global family of the code `x` (Section 9, G3): `(t, z) ↦ 0 < t ∧ ∃ n, t < b_n T_n(x) ∧ z ∈ Λ^{(n)}_t`,
+where `Λ^{(n)}_t` is the rescaling `R_n⁻¹ Γ^{(n)}_{t / b_n}` of the decoded canonical family at scale `n`, with the
+decoder `F` of the canonical factor. The decoded process `decodeFamily (F (scodeG n x))` is the canonical process of the
+rescaled profile. -/
+noncomputable def globalCode (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (S : Set (ℕ → ℝ))
+    (F : (ℕ → ℝ) → ℝ × (ℕ → ℕ → Bool)) (x : ℕ → ℝ) : ℝ × ℂ → Prop :=
+  fun q => 0 < q.1 ∧ ∃ n : ℕ, q.1 < ((n : ℝ) + 1) * (F (scodeG γ hD S n x)).1 ∧
+    decodeFamily (F (scodeG γ hD S n x)) (((n : ℝ) + 1)⁻¹ * q.1,
+      (((radiusOn γ hD S ((n : ℝ) + 1) x)⁻¹ : ℝ) : ℂ) * q.2)
+
+theorem measurable_globalCode (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (S : Set (ℕ → ℝ))
+    (F : (ℕ → ℝ) → ℝ × (ℕ → ℕ → Bool)) (hF : Measurable F) (hS : MeasurableSet S)
+    (hcont : ∀ x ∈ S, ContinuousOn (profAlong γ hD x) (Ioi 0)) :
+    Measurable (globalCode γ hD S F) := by
+  have hR : ∀ n : ℕ, Measurable (radiusOn γ hD S ((n : ℝ) + 1)) :=
+    fun n => measurable_radiusOn γ hD ((n : ℝ) + 1) S hS hcont
+  have hsc : ∀ n : ℕ, Measurable (scodeG γ hD S n) := fun n =>
+    measurable_pi_iff.2 fun k => measurable_scodeG γ hD S ((n : ℝ) + 1) hS hcont k
+  have hΨ : ∀ n : ℕ, Measurable fun x : ℕ → ℝ => (F (scodeG γ hD S n x)).1 := fun n =>
+    measurable_fst.comp (hF.comp (hsc n))
+  have hRinv : ∀ n : ℕ, Measurable fun x : ℕ → ℝ => (((radiusOn γ hD S ((n : ℝ) + 1) x)⁻¹ : ℝ) : ℂ) :=
+    fun n => Complex.measurable_ofReal.comp (hR n).inv
+  have hset : ∀ q : ℝ × ℂ, MeasurableSet {x : ℕ → ℝ | globalCode γ hD S F x q} := by
+    intro q
+    have e : {x : ℕ → ℝ | globalCode γ hD S F x q} =
+        {_x : ℕ → ℝ | 0 < q.1} ∩ ⋃ n : ℕ, ({x : ℕ → ℝ | q.1 < ((n : ℝ) + 1) * (F (scodeG γ hD S n x)).1} ∩
+          {x : ℕ → ℝ | decodeFamily (F (scodeG γ hD S n x)) (((n : ℝ) + 1)⁻¹ * q.1,
+            (((radiusOn γ hD S ((n : ℝ) + 1) x)⁻¹ : ℝ) : ℂ) * q.2)}) := by
+      ext x
+      simp only [globalCode, mem_ofPred_eq, mem_inter_iff, mem_iUnion]
+    rw [e]
+    refine (MeasurableSet.const _).inter (MeasurableSet.iUnion fun n => ?_)
+    refine (measurableSet_lt measurable_const ((hΨ n).const_mul ((n : ℝ) + 1))).inter ?_
+    have hmap : Measurable fun x : ℕ → ℝ => ((F (scodeG γ hD S n x)), (((n : ℝ) + 1)⁻¹ * q.1,
+        (((radiusOn γ hD S ((n : ℝ) + 1) x)⁻¹ : ℝ) : ℂ) * q.2)) :=
+      (hF.comp (hsc n)).prodMk (measurable_const.prodMk ((hRinv n).mul_const _))
+    have hdec := measurableSet_decodeFamily_uncurry.preimage hmap
+    exact hdec
+  exact Measurable.of_eval fun q => measurableSet_setOfPred.1 (hset q)
+
 end MatedCRT
