@@ -127,4 +127,69 @@ theorem measurableSet_inter_radius_gt (γ : ℝ) {D : ℕ → CirclePt} (hD : De
   rw [heq]
   exact hS.inter hP
 
+
+open Classical in
+/-- The decoded scale radius, set to `0` off the Borel set `S` of codes. -/
+noncomputable def radiusOn (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (S : Set (ℕ → ℝ)) (b : ℝ)
+    (x : ℕ → ℝ) : ℝ :=
+  if x ∈ S then coneScaleRadius γ (extCircle (fun q => profileDec hD x q)) b else 0
+
+theorem measurable_radiusOn (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (b : ℝ) (S : Set (ℕ → ℝ))
+    (hS : MeasurableSet S) (hcont : ∀ x ∈ S, ContinuousOn (profAlong γ hD x) (Ioi 0)) :
+    Measurable (radiusOn γ hD S b) := by
+  refine measurable_of_Ioi fun s => ?_
+  have hA := measurableSet_inter_radius_gt γ hD b s S hS hcont
+  have hB : MeasurableSet (Sᶜ ∩ {_x : ℕ → ℝ | s < 0}) := hS.compl.inter (MeasurableSet.const _)
+  have hpre : radiusOn γ hD S b ⁻¹' Ioi s =
+      (S ∩ {x : ℕ → ℝ | s < coneScaleRadius γ (extCircle (fun q => profileDec hD x q)) b}) ∪
+        (Sᶜ ∩ {_x : ℕ → ℝ | s < 0}) := by
+    ext x
+    by_cases hx : x ∈ S
+    · simp [radiusOn, hx]
+    · simp [radiusOn, hx]
+  rw [hpre]
+  exact hA.union hB
+
+/-- A total positive version of a real: `exp (log r)`, equal to `r` for `r > 0` (no case split). -/
+noncomputable def posVal (r : ℝ) : ℝ := Real.exp (Real.log r)
+
+theorem posVal_pos (r : ℝ) : 0 < posVal r := Real.exp_pos _
+
+theorem posVal_of_pos {r : ℝ} (hr : 0 < r) : posVal r = r := Real.exp_log hr
+
+theorem measurable_posVal : Measurable posVal :=
+  Real.measurable_exp.comp Real.measurable_log
+
+/-- The total point map `(r, z) ↦ (r, z)` on the carrier (`r` replaced by `posVal r`). -/
+noncomputable def ptOf (r : ℝ) (z : ℂ) : CirclePt := (⟨posVal r, posVal_pos r⟩, z)
+
+theorem measurable_ptOf : Measurable fun p : ℝ × ℂ => ptOf p.1 p.2 :=
+  (Measurable.subtype_mk (measurable_posVal.comp measurable_fst)).prodMk measurable_snd
+
+theorem ptOf_of_pos {r : ℝ} (hr : 0 < r) (z : ℂ) : ptOf r z = (⟨r, hr⟩, z) := by
+  simp only [ptOf, posVal_of_pos hr]
+
+/-- The decoded extended profile is jointly measurable in the code and the radius-angle point. -/
+theorem measurable_extDecode {D : ℕ → CirclePt} (hD : DenseRange D) :
+    Measurable (fun w : (ℕ → ℝ) × ℝ × ℂ => extCircle (fun q => profileDec hD w.1 q) w.2.1 w.2.2) := by
+  have hsnd : Measurable fun w : (ℕ → ℝ) × ℝ × ℂ => ptOf w.2.1 w.2.2 :=
+    Measurable.comp (g := fun p : ℝ × ℂ => ptOf p.1 p.2) measurable_ptOf (measurable_snd (α := ℕ → ℝ))
+  have hpair : Measurable fun w : (ℕ → ℝ) × ℝ × ℂ => ((w.1, ptOf w.2.1 w.2.2) : (ℕ → ℝ) × CirclePt) :=
+    measurable_fst.prodMk hsnd
+  have h1 : Measurable fun w : (ℕ → ℝ) × ℝ × ℂ => profileDec hD w.1 (ptOf w.2.1 w.2.2) := by
+    have h := (measurable_profileDec hD).comp hpair
+    exact h
+  have key : Measurable fun w : (ℕ → ℝ) × ℝ × ℂ =>
+      if 0 < w.2.1 then profileDec hD w.1 (ptOf w.2.1 w.2.2) else 0 := by
+    refine Measurable.ite ?_ h1 measurable_const
+    exact measurableSet_lt measurable_const (measurable_fst.comp measurable_snd)
+  have hfun : (fun w : (ℕ → ℝ) × ℝ × ℂ => extCircle (fun q => profileDec hD w.1 q) w.2.1 w.2.2) =
+      fun w => if 0 < w.2.1 then profileDec hD w.1 (ptOf w.2.1 w.2.2) else 0 := by
+    funext w
+    by_cases h : 0 < w.2.1
+    · simp [extCircle, ptOf_of_pos, h]
+    · simp [extCircle, h]
+  rw [hfun]
+  exact key
+
 end MatedCRT
