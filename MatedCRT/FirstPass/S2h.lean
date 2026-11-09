@@ -181,7 +181,7 @@ theorem coneCertificateNullHull_of_steps (hlaw : FrozenConeLogLocalCodeLaw)
   intro γ hγ hγ2 Ω _ P hC hcirc μ hcone
   obtain ⟨Ω', _, P', hC', hcirc', μ', hP', hgff, hlgm, heq⟩ := hlaw γ hγ hγ2 Ω P hC hcirc μ hcone
   have hcodeLaw : P.map (fun ω => localCode φs (μ ω)) = P'.map (fun ω => localCode φs (μ' ω)) :=
-    heq φs hφs
+    heq φs (fun k => ⟨(hφs k).1, (hφs k).2.1, (hφs k).2.2.1⟩)
   have hlogB : (P'.map fun ω => localCode φs (μ' ω)) B = 0 :=
     hlog γ hγ hγ2 Ω' P' hC' hcirc' μ' hP' hgff hlgm
   have hconeB : (P.map fun ω => localCode φs (μ ω)) B = 0 := by
