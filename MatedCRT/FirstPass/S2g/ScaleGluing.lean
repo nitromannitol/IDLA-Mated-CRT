@@ -100,4 +100,38 @@ theorem ae_forall_exists_scale_gt {Ω : Type*} [MeasurableSpace Ω] {P : Measure
   ext ω
   simp only [mem_ofPred_eq, not_exists, not_lt]
 
+/-- **Scale gluing of a global cone family (deterministic; G-S2-2-5-2-6 eq. (10)).** Let `Λ` be a global cone family for
+`μ` and let `Λs n` be cone families for `μ` on `(0, L n)`, where the scales cover every natural number
+(`∀ M, ∃ n, M < L n`). Then the global family process of `Λ` is the glued process
+`(t, x) ↦ 0 < t ∧ ∃ n, t < L n ∧ x ∈ Λs n t`. Fixed-time uniqueness (`eqOn_of_isConeHarmonicBallFamily`) identifies `Λ_t`
+with `Λs n t` at every `t < L n`, and the covering of scales gives a scale `L n > t` for every positive time `t`. -/
+theorem globalFamilyProcess_eq_of_scales {μ : Measure ℂ} {Λ : ℝ → Set ℂ} (hΛ : IsConeHarmonicBallFamily μ Λ)
+    {L : ℕ → ℝ} {Λs : ℕ → ℝ → Set ℂ} (hfam : ∀ n, IsConeHarmonicBallFamilyOn μ (Λs n) (L n))
+    (hcov : ∀ M : ℕ, ∃ n, (M : ℝ) < L n) :
+    globalFamilyProcess Λ = fun p => 0 < p.1 ∧ ∃ n, p.1 < L n ∧ p.2 ∈ Λs n p.1 := by
+  have heq := fun n => eqOn_of_isConeHarmonicBallFamily hΛ (hfam n)
+  have key : ∀ p : ℝ × ℂ, 0 < p.1 → (p.2 ∈ Λ p.1 ↔ ∃ n, p.1 < L n ∧ p.2 ∈ Λs n p.1) := by
+    intro p hp
+    constructor
+    · intro hx
+      obtain ⟨n, hn⟩ := hcov ⌈p.1⌉₊
+      have ht : p.1 < L n := lt_of_le_of_lt (Nat.le_ceil p.1) hn
+      have hmem : p.1 ∈ Ioo 0 (L n) := ⟨hp, ht⟩
+      refine ⟨n, ht, ?_⟩
+      rw [heq n hmem]
+      exact hx
+    · rintro ⟨n, ht, hx⟩
+      have hmem : p.1 ∈ Ioo 0 (L n) := ⟨hp, ht⟩
+      rw [← heq n hmem]
+      exact hx
+  funext p
+  show globalFamilyProcess Λ p = (0 < p.1 ∧ ∃ n, p.1 < L n ∧ p.2 ∈ Λs n p.1)
+  apply propext
+  constructor
+  · intro h
+    have h' : 0 < p.1 ∧ p.2 ∈ Λ p.1 := h
+    exact ⟨h'.1, (key p h'.1).1 h'.2⟩
+  · rintro ⟨h1, h2⟩
+    exact ⟨h1, (key p h1).2 h2⟩
+
 end MatedCRT
