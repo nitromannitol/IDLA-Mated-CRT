@@ -8,6 +8,9 @@ import MatedCRT.Steps.Sec2.BoundedExitTimeRV
 import MatedCRT.Steps.Sec2.ExpectedExitTimeExplicitBound
 import MatedCRT.Proofs.SecA.DiscreteDivergence
 import MatedCRT.Proofs.SecA.Statements
+import MatedCRT.Proofs.Sec2.ConeFamilyMeasurable.RadialContainment
+import MatedCRT.Proofs.Measurability.ConeScaleInputs
+import MatedCRT.External.QuantumCone
 import MatedCRT.FirstPass.Frozen.S1S2S8SA
 
 /-!
@@ -63,5 +66,22 @@ theorem firstPass_8_1 {𝒮 : SpaceFillingSLEModel} (h42 : DivSandpileLowerBound
     (h51 : IDLALowerBoundStmt 𝒮) (h61 : IDLAUpperBoundStmt 𝒮) (h71 : DivSandpileUpperBoundStmt 𝒮) :
     IDLAConstrainedConvergenceStmt 𝒮 :=
   iDLAConstrainedConvergence_of_steps 𝒮 h42 h51 h61 h71
+
+/-- **Theorem 2.3** (thm:cone-harmonic-balls, line 520), first pass. Hypotheses: Lemma 2.4 and Lemma 2.5 (Draft
+statements, used by the printed proof), Lemma 2.7 (`VolumeGrowthStmt`, cited), Lemma 2.2 (`LQGMeasurePropertiesStmt`,
+cited) and the quantum-cone scaling input (`QuantumConeScalingInput`, External). Proof:
+`coneHarmonicBalls_of_numbered_results`. Note: the Draft of Lemma 2.4 used as `h24` contains the clause `T' = T`,
+which is not printed (see the report). -/
+theorem firstPass_2_3 (h24 : ConeHarmonicBallsUpToFixedTimeStmt) (h25 : ConeScaleInvarianceUpToFixedTimeStmt)
+    (h27 : VolumeGrowthStmt) (hscale : QuantumConeScalingInput) (h22 : LQGMeasurePropertiesStmt) :
+    ConeHarmonicBallsStmt :=
+  coneHarmonicBalls_of_numbered_results h24 h25 h27 hscale h22
+
+/-- **Lemma 2.6** (lemma:scale-invariance, line 562), first pass. Hypotheses: the quantum-cone scaling input
+(External), Lemma 2.2 (cited) and the locality of harmonic balls on the field (`FrozenConeHarmonicBallFunctional`,
+HB22 Proposition 1.3). Proof: `coneScaleInvariance_of_scaleRadiusPos`. -/
+theorem firstPass_2_6 (hscale : QuantumConeScalingInput) (h22 : LQGMeasurePropertiesStmt)
+    (hfun : FrozenConeHarmonicBallFunctional) : ConeScaleInvarianceStmt :=
+  coneScaleInvariance_of_scaleRadiusPos hscale h22 (coneScaleRadiusPosStep_of_input hscale) hfun
 
 end MatedCRT
