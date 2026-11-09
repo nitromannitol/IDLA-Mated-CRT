@@ -19,6 +19,8 @@ open scoped ENNReal
 
 namespace MatedCRT
 
+open WalkPotential
+
 /-- **Amplification from successive tests** (LEMMA68 eqs (30)-(32)): with the per-test bound `1 - c/(1+|log r|)²` (eq (30)),
 for all small `r` and all `N ≥ κ r^{-ζ}`, the probability that the first `N` successive tests are all passed is at most `1/2`. -/
 theorem srwLaw_successive_tests_le_half {c κ ζ : ℝ} (hc : 0 < c) (hκ : 0 < κ) (hζ : 0 < ζ)

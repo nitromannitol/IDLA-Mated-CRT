@@ -15,6 +15,8 @@ open MeasureTheory Set
 
 namespace MatedCRT
 
+open WalkPotential
+
 namespace NextExitTime
 
 /-- The next exit time after `T`, from the region `W (x T)` of the state at `T`. -/

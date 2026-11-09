@@ -17,6 +17,8 @@ open scoped ENNReal
 
 namespace MatedCRT
 
+open WalkPotential
+
 namespace SuccessiveExitStop
 
 /-- One test of the successive exit-time tests: the walk stays in `A` at all times strictly before its exit from

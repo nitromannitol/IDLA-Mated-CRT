@@ -16,6 +16,8 @@ open MeasureTheory Set Function
 open scoped ENNReal
 
 namespace MatedCRT
+
+open WalkPotential
 namespace WindowStop68
 
 /-- A walk lies in `V` at every time strictly before its exit time from `V` (`MatedCRT.lt_vExitTime_iff`). -/

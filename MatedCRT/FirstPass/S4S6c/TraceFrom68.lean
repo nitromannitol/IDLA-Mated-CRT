@@ -21,6 +21,8 @@ open scoped ENNReal
 
 namespace MatedCRT
 
+open WalkPotential
+
 namespace TraceFrom68
 
 /-- The trace event: the walk visits `B` at a time before its exit from `V` (LEMMA68 6.7 event). -/

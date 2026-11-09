@@ -24,6 +24,8 @@ open MatedCRT.SuccessiveExitStop MatedCRT.AmplCutoff
 
 namespace MatedCRT
 
+open WalkPotential
+
 namespace TailBound68
 
 /-- `x / 2 ≤ ⌊x⌋` for `x ≥ 2` (LEMMA68 D1, `⌊x⌋ ≥ x/2`). -/

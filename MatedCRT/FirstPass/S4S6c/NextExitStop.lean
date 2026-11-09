@@ -18,6 +18,8 @@ open MeasureTheory Set
 
 namespace MatedCRT
 
+open WalkPotential
+
 namespace NextExitStop
 
 /-- An event determined by the history up to time `k` is `pathHist k`-measurable. -/

@@ -17,6 +17,8 @@ open MeasureTheory Set Function
 open scoped ENNReal
 
 namespace MatedCRT
+
+open WalkPotential
 namespace TailWindow68
 
 open MatedCRT.SuccessiveExitStop MatedCRT.AmplCutoff

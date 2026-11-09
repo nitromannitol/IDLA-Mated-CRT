@@ -15,6 +15,8 @@ open scoped ENNReal
 
 namespace MatedCRT
 
+open WalkPotential
+
 /-- **One-test bound at a random time.** -/
 theorem srwLaw_test_bound_random_time (m : ℤ → ℤ → ℕ) (a : ℤ) (τ : (ℕ → ℤ) → ℕ∞)
     (G : ℤ → Set (ℕ → ℤ)) (hG : ∀ y, MeasurableSet (G y)) {S : Set (ℕ → ℤ)}

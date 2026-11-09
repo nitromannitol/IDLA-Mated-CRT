@@ -20,6 +20,8 @@ open MeasureTheory Set Function
 open scoped ENNReal
 
 namespace MatedCRT
+
+open WalkPotential
 namespace UniformLayer68
 
 open MatedCRT.SuccessiveExitStop MatedCRT.WindowStop68

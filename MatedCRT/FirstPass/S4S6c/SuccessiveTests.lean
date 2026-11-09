@@ -15,6 +15,8 @@ open scoped ENNReal
 
 namespace MatedCRT
 
+open WalkPotential
+
 /-- **The first `N` successive random tests are all passed with probability at most `c^N`** (LEMMA68 N3c). -/
 theorem srwLaw_successive_tests_le_pow (m : ℤ → ℤ → ℕ) (a : ℤ) (τ : ℕ → (ℕ → ℤ) → ℕ∞)
     (G : ℕ → ℤ → Set (ℕ → ℤ)) (hG : ∀ N y, MeasurableSet (G N y))
