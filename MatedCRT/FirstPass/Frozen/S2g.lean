@@ -33,4 +33,12 @@ def FrozenGreenDiscPole : Prop :=
   ∀ R : ℝ, 0 < R → ContinuousOn (greenFunction (ball 0 R) 0) (closedBall 0 R \ {0}) ∧
     Tendsto (greenFunction (ball 0 R) 0) (𝓝[≠] 0) atTop
 
+/-- FIRST-PASS FROZEN. Centre formula of the disc Green function (EXTERNAL: classical potential theory). For `R > 0` and
+`0 < ‖x‖ < R`, `G_{B_R}(0, x) = (2π)⁻¹ log (R / ‖x‖)` with the normalization `ΔG = -δ` (the explicit Green function of
+`B_R` at its centre). Source: HB `greenBall` (HarmonicBalls/Defs/Green.lean:79) at `x = 0`, Armitage and Gardiner,
+*Classical Potential Theory*, §4.1; standard; locator pending. Used by: `allDisksCandidate` (FirstPass/S2g/AllDisks.lean). -/
+def FrozenGreenBallCentre : Prop :=
+  ∀ R : ℝ, 0 < R → ∀ x : ℂ, 0 < ‖x‖ → ‖x‖ < R →
+    greenFunction (ball (0 : ℂ) R) 0 x = (2 * Real.pi)⁻¹ * Real.log (R / ‖x‖)
+
 end MatedCRT
