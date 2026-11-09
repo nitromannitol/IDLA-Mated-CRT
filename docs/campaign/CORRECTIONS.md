@@ -75,6 +75,9 @@ Lemma 3.6: replace the printed Hölder datum evaluated at the exit-cell represen
 ## [C14] Normalized comparison boundary offset (author-approved 2026-11-06)
 In the proof of Lemma 4.8, replace `m_eps phi^delta(eta(b)) + delta` by `m_eps (phi^delta(eta(b)) + delta)`. Only the latter gives the stated limiting boundary value and the intended domination. This implements G3 of `PROOF-REPAIRS-G.md` in the paper.
 
+## [C18] Lemma 6.4 constant dependency (author-approved 2026-11-10)
+Replace "a constant C depending only on gamma" by "depending only on gamma and c_0". The proof gives C(gamma, c_0); a good annulus forces C >= (1 - log 2)/(16 c_0^2) (packing), and c_0 = c_0(rho, gamma) is the standing choice, so C(gamma) is unjustified (false if inf_rho c_0 = 0). All later uses fix rho. See fleet notes fp-gaps/CHATGPT-s6-constants.md and CHATGPT-6-4-referee.md.
+
 ## Readings (not corrections of the paper; line numbers of the corrected draft)
 
 ### (R1) The origin vertex `0` and `a^eps_0` (ESCALATIONS E-x3-3, worker A, 2026-11-04)

@@ -2646,7 +2646,10 @@ are recorded in \texttt{docs/campaign/LEMMA36-REPLACEMENT.md}.
 	\end{equation}
 	An annulus $\A_{r, 2 r}(z)$ for which $E_r(z)$ holds it said to be {\it good}. In this subsection we prove that there are many good annuli in $B_{\rho}$. 
 	\begin{lemma} \label{lemma:good-prevalance}
-		There exists a constant $C$ depending only on $\gamma$ such that the following holds with polynomially high 
+		% CORRECTION [C18] (author-approved 2026-11-10) Printed: a constant C depending only on gamma. The proof (Lemma 6.5's quantile of the
+		% annulus ratio) gives C = C(gamma, c_0), and a good annulus forces C >= (1 - log 2)/(16 c_0^2) by packing, while c_0 = c_0(rho, gamma)
+		% is fixed in eq:choice-of-constant-annulus; every later use keeps rho fixed, so the dependence on c_0 is harmless.
+		There exists a constant $C$ depending only on $\gamma$ and $\boldsymbol{c_0}$ such that the following holds with polynomially high 
 		probability as $\delta \to 0$.
 		For each $z \in ( B_{\rho - 3\sqrt{\delta}} \setminus B_{10 \sqrt{\delta}} ) \cap \frac{\delta}{100} \Z^2$ there is at least one radius $r \in [\delta,\delta^{1/2}] \cap \{7^{-n}\}_{n \in \N}$ for which $E_r(z)$ occurs, 
 		where $E_r(z) = E_r(z;C)$ is as in \eqref{eq:good-annulus-event}. 
