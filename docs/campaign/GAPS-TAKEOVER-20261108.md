@@ -774,3 +774,44 @@ Lead receipts lead/checks/20261109-0133:12 strict lc passes,36 distinct standard
 
 Operator00:55 withdraws the18:55 terminal-prover policy. `MATH-OPEN-20261109.md` (514206d) is the committed exact-type/consumer/source inventory for resumed written-prover and independent-audit requests. WPN-53 is the mandatory conditioning bridge on the internal environment route; its stronger setwise subsidiary route is distinguished from necessary endpoint mathematics. WPN-51/52 bypasses and optional unconsumed WPN-54 are not new necessary premises. Audited weaker closure, strict gap, insertion, bounded representatives and represented-grid repairs remain Lean work. No source admission or numbered closure.
 8587b02 InsertionLocalCircleRecovery.lean supplies countable dense recovery of the simultaneous circle identity and the equivalent coordinatewise residual at114. Actual Gaussian projection/existence/harmonicity remains written implementation. ccbbd7a/d117aff supply strict-excursion and fixed-mesh contact witnesses. The old all-mesh adjacency proof uses the separate global distinct-local-minima event (BrownianLocalMin:199), not an uncountable intersection of the new fixed-mesh events. Its exact producer trace is recorded in fleet ESCALATIONS.md. d117aff history is preserved despite its truncated commit message.
+
+
+## Supplement 2026-11-09: WRITTEN-PROOF-NEEDED WPN-55 — actual Dirichlet projection / Green realization
+
+New evidence after the inventory dispatched at operator03:00: z1 commit4d1e831 proves an **abstract conditional covariance component**, not a concrete Gaussian Dirichlet projection or the local decomposition producer. The producer is still needed on the insertion route to Proposition4.2, then5.1,6.1,8.1,1.4,1.6 (six results in that dependency cone). This supplement was not included in the seven-target dispatch from514206d; operator routing/audit is requested separately. No claim that an independently audited final conclusion has been refuted is made.
+
+The weakest actual consumer remains the following already declared coordinatewise Step, `MatedCRT/Proofs/Sec4/Prop42Closure/InsertionLocalCircleRecovery.lean:114-123`:
+
+```lean
+def LocalDirichletCoordinatewiseStep : Prop :=
+  ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
+    ∀ (c : ℂ) (ρ : ℝ), 0 < ρ → Metric.closedBall c ρ ⊆ ({0}ᶜ : Set ℂ) →
+    ∃ (h0 : Ω → (ℂ → ℝ) → ℝ) (hcirc0 : Ω → ℝ → ℂ → ℝ) (H : Ω → ℂ → ℝ),
+      IsDirichletGFF P (Metric.ball c ρ) h0 hcirc0 ∧
+      (∀ ω r z, ¬ Metric.closedBall z r ⊆ Metric.ball c ρ → hcirc0 ω r z = 0) ∧
+      (∀ᵐ ω ∂P, IsHarmonicOnDisk (Metric.ball c ρ) (H ω)) ∧
+      ∀ r z, 0 < r → Metric.closedBall z r ⊆ Metric.ball c ρ →
+        ∀ᵐ ω ∂P, hcirc ω r z = hcirc0 ω r z + H ω z
+```
+
+Consumers: `localDirichletHarmonicDecompositionStep_iff_coordinatewise` in that file:128 supplies `LocalDirichletHarmonicDecompositionStep`; `InsertionCoordinateExtensionProof.lean:286` and `InsertionScalingLawAssembly.lean:50,62` consume it with the explicitly staged SW compact-interior input. Paper: corrected `paper/idla_mated_crt-corrected.tex:1633-1657`. Audited steps3:603-615 states the Gaussian projection/covariance/harmonic decomposition argument; the current implementation has not identified its actual energy-space/test representatives with the frozen Green kernel.
+
+The newly retained deterministic sub-premises, with **all binders**, are (`InsertionDirichletProjection.lean:92` and:99; namespace `MatedCRT`):
+
+```lean
+def DirichletRieszIdentity {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] (D : Set ℂ)
+    (ev : E → ℂ → ℝ) (rep : (ℂ → ℝ) → E) (K : Submodule ℝ E) : Prop :=
+  ∀ φ : ℂ → ℝ, IsTestFunction D φ → ∀ f ∈ K, inner ℝ (rep φ) f = 2 * Real.pi * ∫ x, φ x * ev f x
+
+def DirichletProjectionGreenRealization {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] (D : Set ℂ)
+    (ev : E → ℂ → ℝ) (rep : (ℂ → ℝ) → E) (K : Submodule ℝ E) [K.HasOrthogonalProjection] : Prop :=
+  ∀ ψ : ℂ → ℝ, IsTestFunction D ψ → ∀ᵐ x ∂(volume : Measure ℂ), x ∈ D →
+    ev (K.starProjection (rep ψ)) x = ∫ y, HarmonicBalls.greenFunction D x y * ψ y
+```
+
+Immediate conditional consumer: `dirichletPairing_projection_gaussian_covariance`, same file:109. Its isonormal process and subspace are abstract. **Neither displayed Prop is a theorem for arbitrary `E, ev, rep, K`.** Any written proof must choose/construct the actual energy space, evaluation/representatives and Dirichlet subspace (and prove their identifications), or bypass these helpers by proving the actual coordinatewise Step from a faithfully printed Markov/decomposition result. Do not send the universally quantified arbitrary-carrier Props as unconditional targets. In particular the unit-circle normalization must be handled by projecting modulo constants first, with its random constant in the harmonic remainder; no independence of normalized pieces is needed.
+
+Source boundary reported by z1: steps3:605-608 asserts covariance from orthogonality, without writing the Green-operator/Riesz identifications for these Lean carriers. `Defs/DirichletGFF.lean:7-12` cites Berestycki, *Diffusion in planar Liouville quantum gravity*, arXiv:1301.3356, Section1.2, printedp949, for normalization/covariance; no admitted Prop or located written proof currently supplies the two actual-carrier identifications. Source search/audit may identify an applicable printed theorem; stage that exact theorem explicitly with its locator, rather than inventing an extra literature assertion. Also available are DMS arXiv:1409.7055v4 Chapters4,8-9 in their printed forms and the audited steps2-r3 Section6 / steps3:603-625. These are source leads, not newly admitted hypotheses.
+
+WRITTEN-PROOF-NEEDED scope: the concrete analytic identification/realization omitted at this carrier boundary. The full coordinatewise decomposition remains an audited intended result and all already written parts (Gaussian projection algebra, countable-to-continuous circle recovery and conditional scaling assembly) remain LEAN-PENDING. E1 same-space isonormal realization, E2 linear field version, E3 circle observables, E4 harmonicity and E5 coordinate identities are listed in reports/z1.md; no unchecked stronger universal realization claim is adopted here. Workers retain named premises and continue written components; no assignment to invent G1/G2.
