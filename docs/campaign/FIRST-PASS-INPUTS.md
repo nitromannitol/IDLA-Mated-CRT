@@ -91,7 +91,7 @@ statements (`h22`, `h27`-`h218`, `h211`) are hypotheses as cited results, not PR
 
 | Hypothesis | Step | file:line | Status |
 |---|---|---|---|
-| `hT` | `ScaledClusterExitTimeStep` (eq:btb-converge-to-inf) | `MatedCRT/Steps/Sec1/Convergence.lean:92`; paper `subsec:proof-of-idla`, corrected tex lines 3615-3660 | OPEN (Sol xhigh gap pass, out/G-hT.md), see the gaps below |
+| `hT` | `ScaledClusterExitTimeStep` (eq:btb-converge-to-inf) | `MatedCRT/Steps/Sec1/Convergence.lean:92`; paper `subsec:proof-of-idla`, corrected tex lines 3615-3660 | REDUCED (wave 4, q4): proof route G-hT; Lemmas A, B and the assembly are PROVED (`MatedCRT/FirstPass/S1c.lean`); conditional on the OPEN NEW `FixedTimeRadiusStep` (Lemma 1) and frozen `FrozenConeRadialDivergence`, see "hT route" below |
 
 The printed argument: `T^b` has the law of `𝒯` (scale invariance; the paper cites Lemma 2.6), and `𝒯` is strictly
 positive, so `b T^b → ∞` in probability. Its existing Lean reduction `scaledClusterExitTimeStep_of_steps`
@@ -116,3 +116,25 @@ When a firstPass theorem lands whose conclusion is the Draft statement of a matc
 composition: replace that hypothesis by its theorem. Done in wave 3: `h34` (`firstPass_3_4`). Still open:
 `h24`, `h25` (q1; blocked, see above), `h35` (q2; consumer form), `h42`, `h51`, `h61` (not yet assigned to a firstPass
 theorem in the committed files). `hT` needs a NEW proof or a decision by the operator.
+
+## hT route (wave 4, q4, 2026-11-09)
+
+The printed equality-in-law argument is replaced by the G-hT route (`notes/fp-gaps/G-hT.md`, Sol xhigh; independent
+audit `fp-gaps-audit-1109` running, not yet read). File `MatedCRT/FirstPass/S1c.lean`:
+- `clusterExitTime_rescaled_gt` (Lemma A, deterministic): `Λ_{2t} ⊆ B_{Rρ/3}` implies `t < b · clusterExitTime(R⁻¹Λ_{b·}) ρ`. PROVED.
+- `coneScaleRadius_lowerTail` (Lemma B): `P[R_b ≤ A] → 0` as `b → ∞`. PROVED from the crossing lemma
+  `le_of_sSup_le_crossing` and the frozen input below.
+- `scaledClusterExitTimeStep_of_radius (hdiv : FrozenConeRadialDivergence) (hR : FixedTimeRadiusStep) : ScaledClusterExitTimeStep`.
+  PROVED, conditional on `hR` and `hdiv`. Axioms: propext, Classical.choice, Quot.sound only (`MatedCRT/FirstPass/S1c/Axioms.lean`).
+- Frozen EXTERNAL (`MatedCRT/FirstPass/Frozen/S1c.lean`): `FrozenConeRadialDivergence`, the a.s. divergence
+  `x.2 s + Q s → ∞` for the quantum cone radial law of the conditioned Brownian motion (drift `Q - γ > 0`). Locator pending.
+- OPEN NEW: `FixedTimeRadiusStep` (`MatedCRT/FirstPass/S1c.lean`, Lemma 1 of G-hT): for each `u > 0` a measurable
+  `M : Ω → ℝ` with `Λ_u ⊆ B̄_{M}` almost surely. NOT formalized. Its written argument needs (i) null-measurability of
+  analytic sets for Borel probability laws on Polish spaces (Mathlib has `MeasurableSet.analyticSet_image` and
+  `AnalyticSet.measurableSet_of_compl`, not this); (ii) a Borel decoder from the circle-average field to the LQG
+  measure (vague dyadic limit), which is not in Mathlib; (iii) Lean-level Borel-ness of the supersolution relation
+  and the obstacle identity (5)-(6), which can be proved from `SatisfiesObstacleCharacterization`.
+
+Consequence: `hT` is NOT discharged. `firstPassMain_1_4` and `firstPassMain_1_6` keep `hT` as their hypothesis (no
+weakening). The composition's other open items are unchanged (`h24`, `h25`, `h35`, `h42`, `h51`, `h61`). Once
+`FixedTimeRadiusStep` and `FrozenConeRadialDivergence` are accepted, `hT := scaledClusterExitTimeStep_of_radius hdiv hR`.
