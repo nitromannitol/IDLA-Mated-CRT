@@ -1,5 +1,8 @@
 import MatedCRT.Proofs.Sec3.DiscretePotentialTightness.Final
 import MatedCRT.Proofs.Sec4.ObstacleSpecialization.Final
+import MatedCRT.Proofs.Sec4.SubsequentialProperties.Final
+import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
+import MatedCRT.Steps.Sec2.MaximumPrinciple
 import MatedCRT.FirstPass.Frozen.S3S4
 
 /-!
@@ -40,6 +43,15 @@ theorem firstPass_4_7 {𝒮 : SpaceFillingSLEModel} (h27 : VolumeGrowthStmt) (h2
     (hm : MepsScalingInput 𝒮) : EquiboundedStmt 𝒮 :=
   equibounded_of_inputs h27 h218 hm
 
+/-- **Lemma 4.8** (lemma:subsequential-properties). Hypotheses: the Draft statements of Lemmas 3.3, 3.5 and 3.7, which
+are numbered results of this first pass (their first-pass theorems are the same statements, as hypotheses here).
+Lemma 2.13 (`MaximumPrincipleStmt`, corrected [C2]) is discharged by `maximumPrinciple_of_steps` with
+`adjacentCellsMeetAeStep`. -/
+theorem firstPass_4_8 {𝒮 : SpaceFillingSLEModel} (h33 : UniformConvergenceGreenKernelStmt 𝒮)
+    (h35 : DiscreteDirichletProblemStmt 𝒮) (h37 : ConvergenceNormalizedExitTimeStmt 𝒮) :
+    SubsequentialPropertiesStmt 𝒮 :=
+  subsequentialProperties_of_inputs 𝒮 h33 h35 h37 (maximumPrinciple_of_steps (adjacentCellsMeetAeStep 𝒮))
+
 end MatedCRT
 
 /-! ## Audit -/
@@ -49,3 +61,4 @@ end MatedCRT
 #print axioms MatedCRT.firstPass_4_4_corrected
 #print axioms MatedCRT.firstPass_4_5_corrected
 #print axioms MatedCRT.firstPass_4_7
+#print axioms MatedCRT.firstPass_4_8
