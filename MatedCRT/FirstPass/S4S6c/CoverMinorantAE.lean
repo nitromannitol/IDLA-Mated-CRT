@@ -112,6 +112,30 @@ theorem goodAnnulusCover_dyadic_of_frozen {𝒮 : SpaceFillingSLEModel}
   have : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
   exact goodAnnulusCover_dyadic_of_ae S.μ (hfr γ hγ hγ2 Ω S hS) hD hDc hc₀ hpoly
 
+/-- **Lemma 2, eq (9), first-pass form on a valid environment.** The Draft prevalence statement `GoodAnnulusPrevalenceStmt`
+(Draft/Section6.lean:60) at radius `c₀ / 2` gives the constant `C` and the polynomial bound for a cone field; a valid environment
+is a cone field (`IsValid` supplies the probability, quantum-cone and LQG-measure conjuncts of `IsConeField`); the frozen
+a.e. measurability `FrozenLQGMeasureFieldMeasurable` then gives the dyadic good-radius cover with a `σ(h)`-measurable cutoff. -/
+theorem goodAnnulusCover_dyadic_firstPass {𝒮 : SpaceFillingSLEModel}
+    (hprev : GoodAnnulusPrevalenceStmt) (hfr : FrozenLQGMeasureFieldMeasurable 𝒮)
+    {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) {ρ : ℝ} (hρ : 0 < ρ) (hρ1 : ρ < 1)
+    {c₀ : ℝ} (hc₀ : 0 < c₀) (hc₀' : c₀ < 2 / 5)
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
+    {D : Set ℂ} (hD : Dense D) (hDc : D.Countable) :
+    ∃ C : ℝ, 0 < C ∧ ∃ tStar : Ω → ℝ, Measurable[S.fieldSigma] tStar ∧ ∀ᵐ ω ∂S.P, 0 < tStar ω ∧
+      ∀ n : ℕ, (1 / 2 : ℝ) ^ n < tStar ω → ∀ z : ℂ,
+        z ∈ Metric.ball (0 : ℂ) (ρ - 3 * Real.sqrt ((1 / 2 : ℝ) ^ n)) \
+          Metric.ball (0 : ℂ) (10 * Real.sqrt ((1 / 2 : ℝ) ^ n)) →
+        (∃ m k : ℤ, z = ((((1 / 2 : ℝ) ^ n) / 100 : ℝ) : ℂ) * (m + k * Complex.I)) →
+        ∃ r : ℝ, (1 / 2 : ℝ) ^ n ≤ r ∧ r ≤ Real.sqrt ((1 / 2 : ℝ) ^ n) ∧ (∃ k : ℕ, r = (7 : ℝ)⁻¹ ^ k) ∧
+          IsGoodAnnulusEvent (S.μ ω) c₀ C r z := by
+  obtain ⟨C, hC0, hpolyAll⟩ := GoodRadiusCover.cover_polyHighProb_of_prevalence hprev hγ hγ2 hρ hρ1
+    (half_pos hc₀) (by linarith)
+  have hcone : IsConeField γ S.P S.hC S.hcirc S.μ :=
+    ⟨hS.isProbabilityMeasure, hS.isQuantumCone, hS.isLQGMeasure⟩
+  exact ⟨C, hC0, goodAnnulusCover_dyadic_of_frozen hfr hγ hγ2 S hS hD hDc hc₀
+    (hpolyAll Ω S.P S.hC S.hcirc S.μ hcone)⟩
+
 #print axioms MatedCRT.CoverMinorantAE.goodAnnulusCover_dyadic_of_ae
 #print axioms MatedCRT.CoverMinorantAE.goodAnnulusCover_dyadic_of_frozen
 
