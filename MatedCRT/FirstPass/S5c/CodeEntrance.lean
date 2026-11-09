@@ -15,12 +15,32 @@ namespace MatedCRT.S5c
 open MeasureTheory Filter Set Metric Topology HarmonicBalls
 
 /-- The regularity of a family of harmonic balls used by the entrance argument: open, increasing, regular open, and
-Hausdorff continuous on `(0, ∞)` (Theorem 2.3(a)-(b), SatisfiesHarmonicBallConditions). -/
+left approximation: every point of `F t` is a limit of points of `F s`, `s ↑ t` (the consequence of Hausdorff
+continuity on `(0, ∞)`, Theorem 2.3(b), `leftApprox_of_hausdorff`; this form is stable under the scaling
+`x ↦ R x`, which the Hausdorff distance is not stated for). -/
 structure GoodFamily (F : ℝ → Set ℂ) : Prop where
   isOpen : ∀ t : ℝ, 0 < t → IsOpen (F t)
   monotoneOn : MonotoneOn F (Ioi 0)
   isRegularOpen : ∀ t : ℝ, 0 < t → IsRegularOpen (F t)
-  hausdorff : HausdorffContinuousOn F (Ioi 0)
+  leftApprox : ∀ t : ℝ, 0 < t → ∀ x ∈ F t, ∀ ε : ℝ, 0 < ε → ∀ᶠ s in 𝓝[<] t, ∃ y ∈ F s, dist x y < ε
+
+/-- Hausdorff continuity on `(0, ∞)` gives the left approximation of `GoodFamily.leftApprox`. -/
+theorem leftApprox_of_hausdorff {F : ℝ → Set ℂ} (hH : HausdorffContinuousOn F (Ioi 0)) :
+    ∀ t : ℝ, 0 < t → ∀ x ∈ F t, ∀ ε : ℝ, 0 < ε → ∀ᶠ s in 𝓝[<] t, ∃ y ∈ F s, dist x y < ε := by
+  intro t ht x hx ε hε
+  have hev : ∀ᶠ s in 𝓝 t, s ∈ Ioi (0 : ℝ) → hausdorffEDist (F s) (F t) < ENNReal.ofReal ε :=
+    eventually_nhdsWithin_iff.1 (hH t ht _ (ENNReal.ofReal_pos.2 hε))
+  have hlt : ∀ᶠ s in 𝓝[<] t, s ∈ Ioi (0 : ℝ) → hausdorffEDist (F s) (F t) < ENNReal.ofReal ε :=
+    Filter.Eventually.filter_mono nhdsWithin_le_nhds hev
+  have hpos : ∀ᶠ s in 𝓝[<] t, 0 < s := Filter.Eventually.filter_mono nhdsWithin_le_nhds (lt_mem_nhds ht)
+  refine (hlt.and hpos).mono fun s hs => ?_
+  have hd : hausdorffEDist (F s) (F t) < ENNReal.ofReal ε := hs.1 hs.2
+  have hinf : infEDist x (F s) < ENNReal.ofReal ε := by
+    calc infEDist x (F s) ≤ hausdorffEDist (F t) (F s) := infEDist_le_hausdorffEDist_of_mem hx
+      _ = hausdorffEDist (F s) (F t) := hausdorffEDist_comm
+      _ < ENNReal.ofReal ε := hd
+  obtain ⟨y, hy, hxy⟩ := infEDist_lt_iff.1 hinf
+  exact ⟨y, hy, edist_lt_ofReal.1 hxy⟩
 
 /-- The rational times: `ratTime` enumerates `ℚ` (LawCode). Every rational occurs. -/
 theorem ratTime_surj (q : ℚ) : ∃ i : ℕ, ratTime i = (q : ℝ) :=
@@ -56,28 +76,17 @@ theorem mem_closure_ratUnion {F : ℝ → Set ℂ} (hF : GoodFamily F) {t : ℝ}
     (hx : x ∈ F t) : x ∈ closure (ratUnion F t) := by
   rw [Metric.mem_closure_iff]
   intro ε hε
-  have hev : ∀ᶠ s in 𝓝 t, s ∈ Ioi (0 : ℝ) → hausdorffEDist (F s) (F t) < ENNReal.ofReal ε :=
-    eventually_nhdsWithin_iff.1 (hF.hausdorff t ht _ (ENNReal.ofReal_pos.2 hε))
-  have hlt : ∀ᶠ s in 𝓝[<] t, s ∈ Ioi (0 : ℝ) → hausdorffEDist (F s) (F t) < ENNReal.ofReal ε :=
-    Filter.Eventually.filter_mono nhdsWithin_le_nhds hev
+  have hlt := hF.leftApprox t ht x hx ε hε
   have hpos : ∀ᶠ s in 𝓝[<] t, 0 < s := Filter.Eventually.filter_mono nhdsWithin_le_nhds (lt_mem_nhds ht)
-  have hQ := hlt.and hpos
-  obtain ⟨l, hl, hsub⟩ := mem_nhdsLT_iff_exists_Ioo_subset.1 hQ
+  obtain ⟨l, hl, hsub⟩ := mem_nhdsLT_iff_exists_Ioo_subset.1 (hlt.and hpos)
   have hlt0 : max l 0 < t := max_lt (show l < t from hl) ht
   obtain ⟨q, hq1, hq2⟩ := exists_rat_btwn hlt0
   obtain ⟨i, hi⟩ := ratTime_surj q
   have hτ0 : 0 < ratTime i := by rw [hi]; exact lt_of_le_of_lt (le_max_right _ _) hq1
   have hτl : l < ratTime i := by rw [hi]; exact lt_of_le_of_lt (le_max_left _ _) hq1
   have hτt : ratTime i < t := by rw [hi]; exact hq2
-  have hclose : hausdorffEDist (F (ratTime i)) (F t) < ENNReal.ofReal ε :=
-    (hsub ⟨hτl, hτt⟩).1 (show (0 : ℝ) < ratTime i from hτ0)
-  have hinf : infEDist x (F (ratTime i)) < ENNReal.ofReal ε := by
-    calc infEDist x (F (ratTime i)) ≤ hausdorffEDist (F t) (F (ratTime i)) :=
-          infEDist_le_hausdorffEDist_of_mem hx
-      _ = hausdorffEDist (F (ratTime i)) (F t) := hausdorffEDist_comm
-      _ < ENNReal.ofReal ε := hclose
-  obtain ⟨y, hy, hxy⟩ := infEDist_lt_iff.1 hinf
-  exact ⟨y, mem_ratUnion.2 ⟨i, ⟨hτ0, hτt⟩, hy⟩, edist_lt_ofReal.1 hxy⟩
+  obtain ⟨y, hy, hxy⟩ := (hsub ⟨hτl, hτt⟩).1
+  exact ⟨y, mem_ratUnion.2 ⟨i, ⟨hτ0, hτt⟩, hy⟩, hxy⟩
 
 /-- **Deterministic identity (three-inputs A4)**: `F t = int cl V_t` for every `t > 0`. -/
 theorem eq_interior_closure_ratUnion {F : ℝ → Set ℂ} (hF : GoodFamily F) {t : ℝ} (ht : 0 < t) :
