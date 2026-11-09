@@ -34,4 +34,15 @@ def FrozenConeScalingLaw (𝒮 : SpaceFillingSLEModel) : Prop :=
       Measure.map (fun ω => rescaledMeasure (S.μ ω) (coneScaleRadius γ (S.hcirc ω) b) b) S.P =
         Measure.map S.μ S.P
 
+/-- FIRST-PASS FROZEN. Measurability of the LQG measure in the field, almost surely. For every valid environment `S` with
+cone parameter `γ`, the LQG measure `S.μ` agrees almost surely with a `σ(h)`-measurable random measure `g`
+(`Measurable[S.fieldSigma] g`). This is the almost-everywhere form: the everywhere form is not freezable, since
+`IsLQGMeasure` (Harmonic-Balls-LQG HarmonicBalls/Defs/LQG.lean:63-65) holds almost surely only. Source: Duplantier–Sheffield
+(2011, arXiv:0808.1560v2), Proposition 1.1 (the LQG measure is the almost sure limit of the regularised measures `μ_ε`, each
+a measurable function of the field), with the locality of the regularisations; locator pending (standard, per
+notes/fp-gaps/CHATGPT-frozen-locators.md). Used by: goodAnnulusCover_dyadic_of_frozen (MatedCRT/FirstPass/S4S6c/CoverMinorantAE.lean). -/
+def FrozenLQGMeasureFieldMeasurable (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+    ∃ g : Ω → Measure ℂ, Measurable[S.fieldSigma] g ∧ ∀ᵐ ω ∂S.P, S.μ ω = g ω
+
 end MatedCRT
