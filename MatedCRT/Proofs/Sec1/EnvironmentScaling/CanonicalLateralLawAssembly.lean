@@ -4,6 +4,8 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling.LateralCircleMeasurability
 /-!
 # Canonical lateral law: coordinate identification, whole-plane and cone laws, radial independence
 
+This bridge uses Leonardo Bonanno's `LatticeProb.Bonanno.LQGMetric.Field.MeasurableAvg` through the imported environment `Field` module and its observable-law infrastructure.
+
 Sources: env-steps.tex:128-143 (the lateral observables `ℓ(φ)`, `ℓ(r,z)`; the meaning of `IsWholePlaneGFF`) and
 env-steps.tex:240-257 (radial integrability and finiteness of the lateral integrals, circles through zero, determination
 by countably many radial evaluations, the Gaussian covariance determining the lateral law, and independence in the cone

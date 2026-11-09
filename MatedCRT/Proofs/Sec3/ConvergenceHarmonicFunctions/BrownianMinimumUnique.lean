@@ -3,6 +3,8 @@ import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.BrownianMinimum
 /-!
 # Unique minimizing times of a correlated Brownian coordinate
 
+Uses Leonardo Bonanno's Brownian infrastructure through the project-local `BrownianLocalMin` port (source `MatedCRTHarmonic.MatedCRT.BrownianG0`, commit `31e7483`) and `BrownianMinimum`; the port headers retain their source credits.
+
 Source: `notes/wpn-steps2/steps2-r3.tex`, Section 3, Lemma `lem:bm-minimum-unique`
 (r3:534-599), the uniqueness argument at r3:585-599. The separated-interval theorem
 `ae_separated_minima_ne` of `BrownianMinimum.lean` (commit 944485f) is used unchanged.

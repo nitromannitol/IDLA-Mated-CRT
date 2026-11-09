@@ -155,3 +155,22 @@ Consumers CanonicalConeIdentification.lean:1029/1048 and CanonicalBrownianPathAs
 0c49c79 LateralCircleMeasurability.lean passes strict source and main-export axiom checks. It identifies lateral circle coordinates with the angular-integral formula, supplies their a.e. measurability including circles through zero, and constructs measurable countable lateral arrays with simultaneous a.s. recovery and pullback. The through-zero integrability exports retain the explicit RadialLogMajorant premise (:40); map_lateralArray_eq_of_lateral_law retains the actual law identity, and lateralArray_law_of_isQuantumCone consumes IsQuantumCone.lateral_law. Measurability does not establish that law.
 
 The report's R1/R2 are written implementation remaining, not new WRITTEN-PROOF-NEEDED requests: audited env-steps:243-255 explicitly gives Brownian Gaussian/reflection bounds plus Borel--Cantelli, the resulting logarithmic radial envelope, bounded-annulus continuity and logarithmic angular integrability. BrownianSublinear/RadialLocalIntegrability supply checked conditional and deterministic components. The actual cone radial-law/path transfer and pairing-integrability specialization remain to implement; none is silently discharged here. Canonical lateral-law assembly is current, observable assembly queued. WPN-53 entrance-chain identification/domination/normalization and the held DMS weak-limit bridge remain unproved as recorded above.
+
+
+## Lead2026-11-09 01:12 canonical lateral joint law; WPN-54 continuity boundary
+
+Checked a8b5d10/adf8373 CanonicalLateralLawAssembly.lean:47-189 identifies the actual countable lateral array and its canonical whole-plane/cone law, passes radial independence to that array and proves its joint law with the cone radial process. The nine exports have only standard axioms. The joint-law theorem at168 retains IsProbabilityMeasure P, the supplied IsQuantumCone radial_law/lateral_law/indep clauses, and a whole-plane witness; it does not derive those clauses or establish a canonical field representation. The array can contain any countable family of admissible tests and circles. Full-observable assembly is current; written radial-log-majorant and pairing-integrability specialization is queued.
+
+WRITTEN-PROOF-NEEDED WPN-54: q1 report B1 and module docstring:26-30 identify a stronger continuous lateral-circle path target. Under the existing cone hypotheses its exact proposed producer type, namespace MatedCRT.Sec1, is:
+
+```lean
+def LateralCircleContinuityFromConeStep : Prop :=
+  ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (γ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
+    IsQuantumCone γ P hC hcirc →
+    ∀ᵐ ω ∂P, ContinuousOn
+      (fun p : ℝ × ℂ => lateralCircleCoord hcirc p.1 p.2 ω)
+      (Ioi 0 ×ˢ univ)
+```
+
+The proposition is type-checked in fleet lead/checks/20261109-0101/WPN54Type.lean; no proof is supplied. Source boundary: audited env-steps.tex:243-255 proves the radial logarithmic bound, local/angle integrability and countable determination, but does not write the needed uniform-continuity argument across circles through zero. Finiteness of individual angular integrals does not prove this continuity. Consumer: none in the checked countable-array/joint-law results; this is an optional stronger path-version target, not a new premise of those results or of current observable assembly. If a later consumer requires it, carry this named Step explicitly. Operator18:55 forbids a further prover round; no worker is assigned to invent this argument. WPN-51/52/53 and held literature admission remain open; no numbered closure.
