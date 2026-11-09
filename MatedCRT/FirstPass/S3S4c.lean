@@ -111,7 +111,32 @@ theorem truncatedDetFixedTimeStep_of_quenched {𝒮 : SpaceFillingSLEModel}
 /-- **Lemma 3.4** (lemma:integral-convergence-of-greens-function), corrected [C1, C16], on the quenched route:
 `IntegralConvergenceGreenFunctionStmt 𝒮`. Hypotheses: Lemma 2.7 (`VolumeGrowthStmt`), Lemma 2.18 (`ExitTimeUpperBoundStmt`),
 `MepsScalingInput` (External), and the two FIRST-PASS FROZEN quenched inputs `FrozenLBMGreenOccupationRescaled` and
-`FrozenTruncatedQuenchedLawsFixedTime`. -/
+`FrozenTruncatedQuenchedLawsFixedTime`.
+
+Route: the quenched proof of `notes/fp-gaps/CHATGPT-3-4-quenched-proof.md` (operator note 2026-11-09 20:02 UTC), steps 1-10,
+each realised by a declaration already proved in `MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/`:
+* step 1 (parameters, normalisation `c₀ = 2/m₀`, `MepsScalingInput` = eq:meps-scaling, the lower bound of (2.20)): `MatedCRTEnv.c₀`
+  (Defs/Setting.lean:188), `MepsScalingInput` (External/SLE.lean:63);
+* steps 2-3 (extension of the random test function, countable approximation, fixed-time convergence for env-measurable `f`):
+  `truncatedOccupationFixedTimeStep_of_det` (FixedTimeReduction.lean:163), fed by `truncatedDetFixedTimeStep_of_quenched` (this file);
+* step 4 (`P[μ(D) < ε^α] → 0`, finite measurable potential): `MatedCRTEnv.IsValid.exists_ball_mass_lower_bound`
+  (AreaParametrizedMass.lean:34, small-mass probability bound), `boundedExitTimeRV_of_steps` (Steps/Sec2/BoundedExitTimeRV.lean:26);
+* step 5 (quenched uniform integrability from Lemma 2.18 with N = 2): `scaled_secondMoment_bounded_in_probability`
+  (PotentialTightness.lean:65);
+* step 6 (Green sum = expected occupation, Fubini under integrable visit counts): `sum_greenFn_mul_eq_integral_occupation`
+  (OccupationGreen.lean:96);
+* steps 7 and 10 (removal of the discrete cutoff; assembly in probability): `discrete_green_occupation_tail_in_probability`
+  (DiscreteTailProbability.lean:126), `integralConvergenceGreenFunction_of_fixed_and_ae_continuum` (ContinuumTailAssembly.lean:31);
+* step 8 (removal of the continuum cutoff, dominated convergence in `b`): `truncatedLBMOccupation_tendsto_of_integrable_exit`
+  (ContinuumOccupation.lean:100);
+* step 9 (identification of the limit with the Green integral): the identity clause of `FrozenLBMGreenOccupationRescaled`.
+
+Section 11 obligations of that note, checked against the definitions: 11.1 `c₀ = 2/m₀` is definitional; the lower scaling is
+`MepsScalingInput`. 11.2 `IsHolderContinuousOn` is global (Defs/Notation.lean:103); `fieldSigma ≤` ambient is
+`MatedCRTEnv.fieldSigma_le` (Proofs/Sec6/IterativeBound/FieldSigma.lean:16). 11.3 and 11.4 (path and walk measurability) are
+discharged inside the proved helpers (e.g. WalkExitMeasurable.lean:209, :221); no extra hypothesis. 11.5 `greenFn` is the
+expected-visit integral (Defs/RandomWalk.lean:95), which is the note's formula; the moments are ENNReal lintegrals
+(`exitTimeMoment`, RandomWalk.lean:108), so no `toReal` encoding is involved. -/
 theorem firstPass_3_4 {𝒮 : SpaceFillingSLEModel} (h27 : VolumeGrowthStmt) (h18 : ExitTimeUpperBoundStmt 𝒮)
     (hscale : MepsScalingInput 𝒮) (hrevuz : FrozenLBMGreenOccupationRescaled 𝒮)
     (hdet : FrozenTruncatedQuenchedLawsFixedTime 𝒮) :
