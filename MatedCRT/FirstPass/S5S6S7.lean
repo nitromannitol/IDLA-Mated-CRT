@@ -18,6 +18,7 @@ import MatedCRT.Steps.Sec2.ExpectedExitTimeExplicitBound
 import MatedCRT.Steps.Sec2.BoundedExitTimeRV
 import MatedCRT.Proofs.Field.ConeCircleModConst
 import MatedCRT.Proofs.Measurability.LQGMeasureField
+import MatedCRT.Proofs.Sec6.AnnulusHit.FieldWeylComparison
 import MatedCRT.FirstPass.Frozen.S5S6S7
 
 /-!
@@ -42,19 +43,21 @@ theorem firstPass_5_4 (𝒮 : SpaceFillingSLEModel) (h215 : GreenFunctionCrudeBo
     (h216 : GreenKernelLowerBoundStmt 𝒮) (h29 : CountingMeasureConvergenceStmt 𝒮) : LLowerBoundStmt 𝒮 :=
   lLowerBound_of_inputs 𝒮 h215 h216 h29
 
-/-- **Lemma 6.5** (`firstPass_6_5`, lemma:annulus-hit). Uses the four EXTERNAL field inputs `FP...`
-(WholePlaneLQGExistence, ConeWholePlaneWeylComparison, WholePlaneLQGCoordinateChange, WholePlaneUpperVolumeTail);
-the tightness step is proved inside `annulusHit_final`. -/
-theorem firstPass_6_5 (h0 : FPWholePlaneLQGExistence) (h1 : FPConeWholePlaneWeylComparison)
-    (h2 : FPWholePlaneLQGCoordinateChange) (hV : FPWholePlaneUpperVolumeTail) : AnnulusHitStmt :=
-  annulusHit_final h0 h1 h2 hV
+/-- **Lemma 6.5** (`firstPass_6_5`, lemma:annulus-hit). Uses the three EXTERNAL field inputs `FP...`
+(WholePlaneLQGExistence, WholePlaneLQGCoordinateChange, WholePlaneUpperVolumeTail) and the PROVED Weyl comparison
+`AnnulusHitField.coneWholePlaneWeylComparison` (replaces the retired `FPConeWholePlaneWeylComparison`); the tightness
+step is proved inside `annulusHit_final`. -/
+theorem firstPass_6_5 (h0 : FPWholePlaneLQGExistence) (h2 : FPWholePlaneLQGCoordinateChange)
+    (hV : FPWholePlaneUpperVolumeTail) : AnnulusHitStmt :=
+  annulusHit_final h0 AnnulusHitField.coneWholePlaneWeylComparison h2 hV
 
-/-- **Lemma 6.4** (`firstPass_6_4`, lemma:good-prevalance). Uses the four inputs of Lemma 6.5, the EXTERNAL
-`FPConeMeanZeroRestriction`, and the proved `circleAverageModConstStep`. -/
-theorem firstPass_6_4 (h0 : FPWholePlaneLQGExistence) (h1 : FPConeWholePlaneWeylComparison)
-    (h2 : FPWholePlaneLQGCoordinateChange) (hV : FPWholePlaneUpperVolumeTail)
-    (hR : FPConeMeanZeroRestriction) : GoodAnnulusPrevalenceStmt :=
-  goodAnnulusPrevalence_final h0 h1 h2 hV hR Field.ConeCircle.circleAverageModConstStep
+/-- **Lemma 6.4** (`firstPass_6_4`, lemma:good-prevalance). Uses the inputs of Lemma 6.5 (the Weyl comparison is
+proved, `AnnulusHitField.coneWholePlaneWeylComparison`), the EXTERNAL `FPConeMeanZeroRestriction`, and the proved
+`circleAverageModConstStep`. -/
+theorem firstPass_6_4 (h0 : FPWholePlaneLQGExistence) (h2 : FPWholePlaneLQGCoordinateChange)
+    (hV : FPWholePlaneUpperVolumeTail) (hR : FPConeMeanZeroRestriction) : GoodAnnulusPrevalenceStmt :=
+  goodAnnulusPrevalence_final h0 AnnulusHitField.coneWholePlaneWeylComparison h2 hV hR
+    Field.ConeCircle.circleAverageModConstStep
 
 /-- **Lemma 6.7** (`firstPass_6_7`, lemma:constant-order-lower-bound), CONDITIONAL on the Draft Lemma 6.8 (`h68`), which
 the printed proof uses (Lemma 6.8 is OPEN, see the report; E-A10). The exit-time input 2.19 is derived from 2.7 and 2.18,
@@ -66,16 +69,16 @@ theorem firstPass_6_7 (𝒮 : SpaceFillingSLEModel) (h68 : ConstantOrderLowerBou
     (adjacentCellsMeetAeStep 𝒮)
 
 /-- **Lemma 6.10** (`firstPass_6_10`, lemma:iterative-bound). Uses the cited Lemmas 2.16, 2.7, 2.8, 2.9, 2.18, the
-EXTERNAL field inputs of Lemma 6.4, and the proved `circleAverageModConstStep` and `lqgMeasureFieldMeasurableStep`.
+EXTERNAL field inputs of Lemma 6.4 (the Weyl comparison is proved, `AnnulusHitField.coneWholePlaneWeylComparison`),
+and the proved `circleAverageModConstStep` and `lqgMeasureFieldMeasurableStep`.
 The printed proof uses the log form of Lemma 6.8 (route (b), `ConstantOrderLowerBoundDivLogStmt`), which is proved
 inside `iterativeBound_final` from the same inputs. -/
 theorem firstPass_6_10 (𝒮 : SpaceFillingSLEModel) (h216 : GreenKernelLowerBoundStmt 𝒮) (h27 : VolumeGrowthStmt)
     (h28 : CellSizeEstimateStmt 𝒮) (h29 : CountingMeasureConvergenceStmt 𝒮) (h218 : ExitTimeUpperBoundStmt 𝒮)
-    (h0 : FPWholePlaneLQGExistence) (h1 : FPConeWholePlaneWeylComparison)
-    (h2 : FPWholePlaneLQGCoordinateChange) (hV : FPWholePlaneUpperVolumeTail)
-    (hR : FPConeMeanZeroRestriction) : IterativeBoundStmt 𝒮 :=
-  iterativeBound_final 𝒮 h216 h27 h28 h29 h218 h0 h1 h2 hV hR Field.ConeCircle.circleAverageModConstStep
-    (LQGMeasureField.lqgMeasureFieldMeasurableStep 𝒮)
+    (h0 : FPWholePlaneLQGExistence) (h2 : FPWholePlaneLQGCoordinateChange)
+    (hV : FPWholePlaneUpperVolumeTail) (hR : FPConeMeanZeroRestriction) : IterativeBoundStmt 𝒮 :=
+  iterativeBound_final 𝒮 h216 h27 h28 h29 h218 h0 AnnulusHitField.coneWholePlaneWeylComparison h2 hV hR
+    Field.ConeCircle.circleAverageModConstStep (LQGMeasureField.lqgMeasureFieldMeasurableStep 𝒮)
 
 /-- **Lemma 7.2, corrected form** (`firstPass_7_2_corrected`, [C8]: the bound holds for `s ≥ ε^β` only). Uses the
 proved corrected Lemma 4.4 (`discreteLaplacianBoundCorrected`) and the cited Lemmas 2.16, 2.8. -/
@@ -89,17 +92,17 @@ theorem firstPass_7_3 (𝒮 : SpaceFillingSLEModel) : OdometerBoundMassStmt 𝒮
 
 /-- **Proposition 7.1** (`firstPass_7_1`, prop:div-sandpile-upper-bound). Uses the EXTERNAL `MepsScalingInput`
 (eq:meps-scaling) and `DegreeBoundInput` (for Lemma 7.4), the Draft `ConeHarmonicBallsStmt` (2.3), `VolumeGrowthStmt`
-(2.7), 2.8, 2.9, 2.16, 2.18, 3.3, 4.1, and the EXTERNAL field inputs of Lemma 6.4. The log form of Lemma 6.8 is
+(2.7), 2.8, 2.9, 2.16, 2.18, 3.3, 4.1, and the EXTERNAL field inputs of Lemma 6.4 (the Weyl comparison is proved,
+`AnnulusHitField.coneWholePlaneWeylComparison`). The log form of Lemma 6.8 is
 proved inside (`constantOrderLowerBoundDivLog_final`), and 7.2 (corrected), 7.3 are proved. -/
 theorem firstPass_7_1 (𝒮 : SpaceFillingSLEModel) (hscale : MepsScalingInput 𝒮) (hcone : ConeHarmonicBallsStmt)
     (hdeg : DegreeBoundInput 𝒮) (h216 : GreenKernelLowerBoundStmt 𝒮) (h27 : VolumeGrowthStmt)
     (h28 : CellSizeEstimateStmt 𝒮) (h29 : CountingMeasureConvergenceStmt 𝒮) (h218 : ExitTimeUpperBoundStmt 𝒮)
     (hconv : ConvergenceDivisibleStmt 𝒮) (hgreen : UniformConvergenceGreenKernelStmt 𝒮)
-    (h0 : FPWholePlaneLQGExistence) (h1 : FPConeWholePlaneWeylComparison)
-    (h2 : FPWholePlaneLQGCoordinateChange) (hV : FPWholePlaneUpperVolumeTail)
-    (hR : FPConeMeanZeroRestriction) : DivSandpileUpperBoundStmt 𝒮 :=
+    (h0 : FPWholePlaneLQGExistence) (h2 : FPWholePlaneLQGCoordinateChange)
+    (hV : FPWholePlaneUpperVolumeTail) (hR : FPConeMeanZeroRestriction) : DivSandpileUpperBoundStmt 𝒮 :=
   divSandpileUpperBound_of_meshScaling 𝒮 hscale hcone
-    (constantOrderLowerBoundDivLog_final 𝒮 h216 h27 h28 h29 h218 h0 h1 h2 hV hR
+    (constantOrderLowerBoundDivLog_final 𝒮 h216 h27 h28 h29 h218 h0 AnnulusHitField.coneWholePlaneWeylComparison h2 hV hR
       Field.ConeCircle.circleAverageModConstStep (LQGMeasureField.lqgMeasureFieldMeasurableStep 𝒮))
     h27 (firstPass_7_2_corrected 𝒮 h216 h28) hconv hgreen h28 (firstPass_7_3 𝒮)
     (crudeUpperBound_of_corrected (discreteLaplacianBoundCorrected 𝒮) hdeg)
