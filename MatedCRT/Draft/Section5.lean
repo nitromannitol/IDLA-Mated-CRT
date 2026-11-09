@@ -10,10 +10,10 @@ The IDLA lower bound. Conventions: see `MatedCRT/Draft/Section1.lean` and `Mated
 events is: the annealed outer probability (`MatedCRTEnv.idlaProb`, review-S (S5)) of
 `{(ω, xs) | ω ∈ F, the event fails for xs}` tends to `0`.
 
-CORRECTION [C4] (ESCALATIONS E-A8, review-C): the condition `dist(η(a), ∂η(Λ^ε_t)) > δ` (lines 1999, 2009) is the
-distance to the boundary of `Λ̄^ε_t`, the union of the cells of `Λ^ε_t` (`fillCells`, a closed set,
-eq:vertex-scaling): for the finite point set `{η(a) : a ∈ Λ^ε_t}` the condition never holds and the lemmas are
-vacuous, while the proof of Proposition 5.1 (line 2024) needs the cell union.
+CORRECTION [C4] (ESCALATIONS E-A8, review-C): the printed condition `dist(η(a), ∂η(Λ^ε_t)) > δ` (Lemma 5.3 at printed
+line 1999, Lemma 5.4 at line 2009, the set `O_1` of Proposition 5.1 at line 2018) takes the boundary of the finite point
+set `η(Λ^ε_t)`, so it never holds. The corrected condition is the distance to the boundary of the cell union `Λ̄^ε_t`
+(`fillCells`, a closed set, eq:vertex-scaling), which the proof of Proposition 5.1 needs.
 -/
 
 namespace MatedCRT
