@@ -29,18 +29,21 @@ def FPPairingLawIG4 : Prop :=
 
 /-- FIRST-PASS FROZEN. A whole-plane GFF with its `γ`-LQG measure exists, for every `γ ∈ (0,2)`
 (`WholePlaneLQGModelStep`, Proofs/Sec4/Prop42Closure/ConeWholePlaneSteps.lean:57). Source: Duplantier-Sheffield 2011,
-Proposition 1.1; Berestycki 2017; standard; locator pending. Used by: firstPass_strictObstacleGap. -/
+Proposition 1.1; Berestycki 2017. Locator: Duplantier–Miller–Sheffield, arXiv:1409.7055v4, §4.1.4, with Duplantier–Sheffield,
+arXiv:0808.1560v2, Proposition 1.1 (locator table CHATGPT-frozen-locators.md:36). Used by: firstPass_strictObstacleGap. -/
 def FPWholePlaneLQGModel : Prop := WholePlaneLQGModelStep
 
 /-- FIRST-PASS FROZEN. Field-level law identity on `B_1` between the quantum cone and a whole-plane GFF with the
 log singularity (`ConeWholePlaneFieldLawStep`, ConeWholePlaneSteps.lean:66). Source: paper eq:gff (line 443, eq. (2.4));
-Duplantier-Sheffield 2011; standard; locator pending. Used by: firstPass_strictObstacleGap. -/
+Duplantier-Sheffield 2011. Locator: Duplantier–Miller–Sheffield, arXiv:1409.7055v4, paragraph following Definition 4.10
+(locator table CHATGPT-frozen-locators.md:37). Used by: firstPass_strictObstacleGap. -/
 def FPConeWholePlaneFieldLaw : Prop := ConeWholePlaneFieldLawStep
 
 /-- FIRST-PASS FROZEN. Locality of the `γ`-LQG measure: for each open `U ⊆ B_1`, the mass `μ(U)` is a measurable
 functional of the restricted field, the same functional for the cone field and for the whole-plane field
 (`LQGMeasureLocalityFunctionalStep`, Proofs/Sec4/Prop42Closure/LQGMeasureFunctional.lean:47). Source: Duplantier-Sheffield
-2011 (LQG measure as a limit of circle-average approximations); standard; locator pending.
+2011 (LQG measure as a limit of circle-average approximations). Locator: Duplantier–Sheffield, arXiv:0808.1560v2,
+Proposition 1.1 with local approximations (locator table CHATGPT-frozen-locators.md:38).
 Used by: firstPass_strictObstacleGap. -/
 def FPLQGMeasureLocality : Prop := LQGMeasureLocalityFunctionalStep
 
