@@ -23,7 +23,7 @@ theorem surplus_floor_on_compact {μ : Measure ℂ} {ρ t : ℝ} (hρ : 0 < ρ) 
     (hsup : FPSuperharmonicOfLaplacianLE) {Λ : ℝ → Set ℂ}
     (hopen : ∀ s : ℝ, 0 < s → IsOpen (cluster μ ρ 0 s))
     (hLap : ∀ s : ℝ, 0 < s → ∃ μp : Measure ℂ, HasLaplacian (leastSupersolution μ ρ 0 s) μp 0 (ball 0 ρ))
-    (hcont : ∀ s : ℝ, 0 < s → ContinuousOn (leastSupersolution μ ρ 0 s) (ball 0 ρ))
+    (hcont : ∀ s : ℝ, 0 < s → s ≤ t → ContinuousOn (leastSupersolution μ ρ 0 s) (ball 0 ρ))
     (hΛ : ∀ s : ℝ, 0 < s → s ≤ t → Λ s = interior (closure (cluster μ ρ 0 s)))
     (hmonoΛ : ∀ s u : ℝ, 0 < s → s ≤ u → Λ s ⊆ Λ u)
     (hint : ∀ x ∈ ball (0 : ℂ) ρ, x ≠ 0 → ∃ s₀ : ℝ, 0 < s₀ ∧ x ∉ Λ s₀)
@@ -41,11 +41,14 @@ theorem surplus_floor_on_compact {μ : Measure ℂ} {ρ t : ℝ} (hρ : 0 < ρ) 
   have hspos : ∀ n, 0 < s n := fun n => by
     simp only [hs_def]
     positivity
+  have hsle : ∀ n : ℕ, s n ≤ t := fun n => by
+    simp only [hs_def]
+    exact mul_le_of_le_one_right ht.le (pow_le_one₀ (by norm_num) (by norm_num))
   set A : ℕ → ℂ → ℝ := fun n x => leastSupersolution μ ρ 0 t x +
     t * (-(leastSupersolution μ ρ 0 (s n) x) / s n) with hA_def
   -- continuity of `A n` on the open disk
   have hAc : ∀ n, ContinuousOn (A n) (ball (0 : ℂ) ρ) := fun n =>
-    (hcont t ht).add (continuousOn_const.mul ((hcont (s n) (hspos n)).neg.div_const (s n)))
+    (hcont t ht le_rfl).add (continuousOn_const.mul ((hcont (s n) (hspos n) (hsle n)).neg.div_const (s n)))
   -- mass scaling: `w_{s(k+1)} / s(k+1) ≤ w_{s k} / s k`
   have hscale : ∀ x ∈ ball (0 : ℂ) ρ, ∀ k : ℕ,
       leastSupersolution μ ρ 0 (s (k + 1)) x / s (k + 1) ≤ leastSupersolution μ ρ 0 (s k) x / s k := by
@@ -87,9 +90,9 @@ theorem surplus_floor_on_compact {μ : Measure ℂ} {ρ t : ℝ} (hρ : 0 < ρ) 
         intro n
         obtain ⟨μp, hμp⟩ := hLap (s n) (hspos n)
         exact isSuperharmonicOn_neg_mul_of_hasLaplacian hsup isOpen_ball (inv_pos.2 (hspos n))
-          (hcont (s n) (hspos n)) hμp
+          (hcont (s n) (hspos n) (hsle n)) hμp
       have hRc : ∀ n, ContinuousOn (R n) (ball (0 : ℂ) ρ) := fun n =>
-        (continuousOn_const.mul (hcont (s n) (hspos n))).neg
+        (continuousOn_const.mul (hcont (s n) (hspos n) (hsle n))).neg
       have hRmono : ∀ y ∈ ball (0 : ℂ) ρ, Monotone fun n => R n y := by
         intro y hy
         refine monotone_nat_of_le_succ (fun k => ?_)
