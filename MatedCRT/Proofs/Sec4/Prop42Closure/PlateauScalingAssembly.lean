@@ -16,7 +16,8 @@ hypotheses, each a `Prop` in full:
   all real scales (`WPN-42-insertion-coordinate-extension`, `docs/campaign/GAPS-TAKEOVER-20261108.md`). The field law and
   the Borel recovery of the insertion measure are proved in `InsertionScalingLaw.lean`; the coordinate rule is not.
 * `hrep : ScaledBoundedRepresentativesStep`: input H, bounded subharmonic representatives of the dilated measure, for every
-  measure (`WPN-42-scaled-representatives`, `ScaledRegularizedFamily.lean:43`). The deterministic scaling of the regularized
+  measure and every bounded `Λ` (the repaired Step, steps3:319; `WPN-42-scaled-representatives`,
+  `ScaledRegularizedFamily.lean:43`). The deterministic scaling of the regularized
   family is proved from it (`scaledRegularizedFamilyStep_of_representatives`).
 
 `coneHalfBallClosureInsideStep_assembled` feeds this statement to the half-ball/plateau reduction

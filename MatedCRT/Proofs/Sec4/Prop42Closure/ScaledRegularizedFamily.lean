@@ -22,7 +22,7 @@ Proved here from existing MatedCRT and HB dilation lemmas:
   subharmonic test class (`HarmonicBalls.greenFunction_dilation`, `HarmonicBalls.greenPotential_dilation`).
 
 Not proved here: the bounded-domain representatives of the dilated subharmonic balls, carried as the named Step
-`ScaledBoundedRepresentativesStep`. See its docstring for the boundary. -/
+`ScaledBoundedRepresentativesStep` for bounded `Λ` (the repair of steps3:319). See its docstring for the boundary. -/
 
 namespace MatedCRT
 
@@ -30,18 +30,22 @@ open MeasureTheory Filter Set Metric HarmonicBalls InnerProductSpace
 open scoped Pointwise ENNReal
 
 /-- **Named input (an explicit hypothesis, not an axiom): bounded-domain representatives of the dilated subharmonic
-balls.** For `a, c > 0` and a subharmonic ball `Λ` centred at `0` for `μ`, every test function of the scaled
+balls.** For `a, c > 0` and a bounded subharmonic ball `Λ` centred at `0` for `μ`, every test function of the scaled
 subharmonic test class `subharmonicBallTestClass ((a·)⁻¹ Λ) 0` agrees, at the centre and `μ_a`-a.e. on `(a·)⁻¹ Λ`,
 with a test function of the bounded-domain class `boundedSubharmonicBallTestClass ((a·)⁻¹ Λ) 0`.
 This is `HasBoundedSubharmonicRepresentatives` (HB `Audit/GreenSubharmonicTestClass.lean:48`) for the scaled data.
-Boundary: the unscaled witnesses `O` of `subharmonicBallTestClass` need not be bounded, and HB's Audit states the
-representative assertion as an open potential-theoretic claim (`GreenSubharmonicTestClass.lean:1-6`). HB's
+The boundedness of `Λ` is the repair of steps3 (`notes/wpn-steps3/steps3.tex:319`, Proposition
+`prop:bounded-scaled-representatives`). Without it the Step is false: for `μ = δ₀`, `Λ = ℂ`, `a = c = 1`, the zero test
+function has no bounded-domain representative (steps3:117-137). No ambient hypothesis on `μ` is added. The repaired
+statement is proved in steps3 from the bounded Jensen lemma (steps3:230-317), which is not formalized here, so the Step
+remains a named input. Boundary: the unscaled witnesses `O` of `subharmonicBallTestClass` need not be bounded, and HB's
+Audit states the representative assertion as an open potential-theoretic claim (`GreenSubharmonicTestClass.lean:1-6`). HB's
 `Proofs/Potential/BoundedSubharmonicRepresentatives.lean` reduces it to the μ-free pointwise criterion
 `forall_hasBoundedSubharmonicRepresentatives_iff_pointwise` (line 140) and proves transfer under absolute continuity
 (line 160); none of these covers the dilated measure. The written argument (prop42-proof.tex:252-256) scales the
 mean-value property but does not treat unbounded witnesses. -/
 def ScaledBoundedRepresentativesStep : Prop :=
-  ∀ (μ : Measure ℂ) (Λ : Set ℂ) (a c : ℝ), 0 < a → 0 < c → IsSubharmonicBall μ Λ 0 →
+  ∀ (μ : Measure ℂ) (Λ : Set ℂ) (a c : ℝ), 0 < a → 0 < c → IsSubharmonicBall μ Λ 0 → Bornology.IsBounded Λ →
     HasBoundedSubharmonicRepresentatives (scaledMeasure μ a c) ((fun x : ℂ => (a : ℂ) * x) ⁻¹' Λ) 0
 
 /-! ## Bridges between the Prop 4.2 and the MatedCRT dilation notation -/
@@ -216,7 +220,8 @@ theorem isSubharmonicBall_rescaledMeasure {μ : Measure ℂ} {S : Set ℂ} {R b 
 
 /-- **`ScaledRegularizedFamilyStep` from the named bounded-representative input.** Every conjunct of
 `IsRegularizedClusterFamily` is transferred: the harmonic-ball conditions and the regularized-cluster identity are
-proved; the subharmonic-ball conjunct uses `ScaledBoundedRepresentativesStep` (see its docstring). -/
+proved; the subharmonic-ball conjunct uses `ScaledBoundedRepresentativesStep` at the set `Λ (c * t)`, whose boundedness is
+supplied by the first conjunct `h1.isBounded` (see its docstring). -/
 theorem scaledRegularizedFamilyStep_of_representatives (hrep : ScaledBoundedRepresentativesStep) :
     ScaledRegularizedFamilyStep := by
   intro μ Λ a c ha hc hreg
@@ -226,7 +231,7 @@ theorem scaledRegularizedFamilyStep_of_representatives (hrep : ScaledBoundedRepr
   rw [scaledMeasure_eq_rescaledMeasure μ hc, scaledFamily_eq_rescaledFamily Λ ha c]
   refine ⟨satisfiesHarmonicBallConditions_rescaledMeasure h1 ha hc, fun t ht => ?_, fun t ht s hs hcl r hr => ?_⟩
   · have hΛ : IsSubharmonicBall μ (Λ (c * t)) 0 := h2 (c * t) (mul_pos hc ht)
-    have hrep' := hrep μ (Λ (c * t)) a c ha hc hΛ
+    have hrep' := hrep μ (Λ (c * t)) a c ha hc hΛ (h1.isBounded (c * t) (mul_pos hc ht))
     rw [scaledMeasure_eq_rescaledMeasure μ hc] at hrep'
     exact isSubharmonicBall_rescaledMeasure ha hc hΛ hrep'
   · have hr0 : 0 < r := lt_of_lt_of_le hs hr

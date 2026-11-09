@@ -15,7 +15,9 @@ Nothing here closes a numbered result, proves a named Step, or adds a literature
   `WPN-42-insertion-coordinate-extension`, `docs/campaign/GAPS-TAKEOVER-20261108.md:288`. An OPEN INTERNAL EXTENSION of
   DS11 Prop. 2.1 (p. 13): the printed rule has no whole-plane field and no non-dyadic scales `|a| ∉ 2^ℤ`.
 * Scaling gap H, `MatedCRT.ScaledBoundedRepresentativesStep`: `WPN-42-scaled-representatives`, GAPS:244. Its quantifier is
-  over all `μ : Measure ℂ` (with `IsSubharmonicBall μ Λ 0`), wider than the LQG measures the consumer applies it to.
+  over all `μ : Measure ℂ` and all `Λ` with `IsSubharmonicBall μ Λ 0` and `Bornology.IsBounded Λ` (the repaired form,
+  steps3:319; the unbounded form is false, steps3:117-137). It is wider than the LQG measures the consumer applies it to;
+  no ambient hypothesis on `μ` is added.
 * The nine WPN of the 14:40 operator entry: WPN-36-uniform-cell (`UniformCellSizeUpperStep`), WPN-36-pointwise-event
   (`PointwiseCellAnnulusEnvelopeStep`), WPN-36-pointwise-rates (`PointwiseSameWalkRatesStep`), WPN-42-locality
   (`LQGMeasureLocalityFunctionalStep`), WPN-51-origin (`ConeOriginNullMeasurableStep`), WPN-51-pole
