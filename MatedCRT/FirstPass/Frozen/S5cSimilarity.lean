@@ -15,7 +15,10 @@ open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal NNReal
 
 /-- The scaled area measure `μ_{h^{(b)}}(A) = b⁻¹ μ_h(R_b A)`, in the Lean form of `rescaledMeasure`
-(Steps/Sec2/ConeScaleInvarianceUpToFixedTime.lean:27): the pushforward of `μ` by `x ↦ R⁻¹ x`, times `b⁻¹`. -/
+(Steps/Sec2/ConeScaleInvarianceUpToFixedTime.lean:27): the pushforward of `μ` by `x ↦ R⁻¹ x`, times `b⁻¹`.
+The image-set formula `μ.map (x ↦ R⁻¹ x) (A) = μ(R • A)` holds only for `R ≠ 0` (for `R = 0` the Lean inverse `0⁻¹ = 0`
+collapses the map, so the identity with `μ_h(R_b A)` fails); the source's `R_b` is a.s. positive, a point to be kept
+explicit in the input (operator truth check 20:04 UTC, notes/fp-gaps/CHATGPT-frozen-truth-2005.md). -/
 noncomputable def FPScaledMeasure (μ : Measure ℂ) (R b : ℝ) : Measure ℂ :=
   ENNReal.ofReal b⁻¹ • μ.map fun x => (R : ℂ)⁻¹ * x
 
