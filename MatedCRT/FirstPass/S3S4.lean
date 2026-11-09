@@ -3,6 +3,11 @@ import MatedCRT.Proofs.Sec4.ObstacleSpecialization.Final
 import MatedCRT.Proofs.Sec4.SubsequentialProperties.Final
 import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 import MatedCRT.Steps.Sec2.MaximumPrinciple
+import MatedCRT.Steps.Sec2.BoundedExitTimeRV
+import MatedCRT.Proofs.Sec3.UniformConvergenceGreenKernel.InteriorStep
+import MatedCRT.Proofs.Sec3.UniformConvergenceGreenKernel.BoundaryStep
+import MatedCRT.Proofs.Sec3.DiscretePotentialTightness.AlmostSureInterior
+import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.DyadicModulus
 import MatedCRT.FirstPass.Frozen.S3S4
 
 /-!
@@ -43,6 +48,29 @@ theorem firstPass_4_7 {𝒮 : SpaceFillingSLEModel} (h27 : VolumeGrowthStmt) (h2
     (hm : MepsScalingInput 𝒮) : EquiboundedStmt 𝒮 :=
   equibounded_of_inputs h27 h218 hm
 
+/-- **Lemma 3.3** (lemma:uniform-convergence-of-greens-function), uniform convergence of the rescaled discrete Green kernel
+away from the pole. Hypotheses: Draft Lemmas 2.10 (`DegreeMeasureConvergenceStmt`), 3.4 (`IntegralConvergenceGreenFunctionStmt`),
+2.14 (`GreenKernelUpperBoundStmt`), 2.8 (`CellSizeEstimateStmt`); Lemma 2.7 and 2.18 and `MepsScalingInput` (External) and the
+frozen corrected Lemma 3.2 feed the a.s. form of Lemma 3.1 (`discretePotentialTightnessAeStep_of_inputs`, proved). The interior and
+boundary steps are proved (`greenKernelInteriorStep`, `greenKernelBoundaryStep`) and used in `uniformConvergenceGreenKernel_final`. -/
+theorem firstPass_3_3 {𝒮 : SpaceFillingSLEModel} (h210 : DegreeMeasureConvergenceStmt 𝒮)
+    (h34 : IntegralConvergenceGreenFunctionStmt 𝒮) (h214 : GreenKernelUpperBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
+    (h27 : VolumeGrowthStmt) (h218 : ExitTimeUpperBoundStmt 𝒮) (hm : MepsScalingInput 𝒮)
+    (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) : UniformConvergenceGreenKernelStmt 𝒮 :=
+  uniformConvergenceGreenKernel_final 𝒮 h210 h34 h214 h28
+    (discretePotentialTightnessAeStep_of_inputs hm (boundedExitTimeRV_of_steps h27) h218 h32)
+
+/-- **Lemma 3.7** (lemma:convergence-of-the-normalized-exit-time). Hypotheses: Draft Lemmas 3.3 and 3.5 (numbered results,
+passed as hypotheses), Lemma 2.7 (`VolumeGrowthStmt`), Lemma 2.18 (`ExitTimeUpperBoundStmt`), `MepsScalingInput` (External)
+and the frozen corrected Lemma 3.2. The a.s. interior potential tightness `DiscretePotentialTightnessAeStep` is proved from
+these inputs by `discretePotentialTightnessAeStep_of_inputs`. -/
+theorem firstPass_3_7 {𝒮 : SpaceFillingSLEModel} (h27 : VolumeGrowthStmt) (h218 : ExitTimeUpperBoundStmt 𝒮)
+    (hm : MepsScalingInput 𝒮) (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮)
+    (h33 : UniformConvergenceGreenKernelStmt 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮) :
+    ConvergenceNormalizedExitTimeStmt 𝒮 :=
+  convergenceNormalizedExitTime_of_statements 𝒮 h33 h35 (boundedExitTimeRV_of_steps h27) h218
+    (discretePotentialTightnessAeStep_of_inputs hm (boundedExitTimeRV_of_steps h27) h218 h32)
+
 /-- **Lemma 4.8** (lemma:subsequential-properties). Hypotheses: the Draft statements of Lemmas 3.3, 3.5 and 3.7, which
 are numbered results of this first pass (their first-pass theorems are the same statements, as hypotheses here).
 Lemma 2.13 (`MaximumPrincipleStmt`, corrected [C2]) is discharged by `maximumPrinciple_of_steps` with
@@ -62,3 +90,5 @@ end MatedCRT
 #print axioms MatedCRT.firstPass_4_5_corrected
 #print axioms MatedCRT.firstPass_4_7
 #print axioms MatedCRT.firstPass_4_8
+#print axioms MatedCRT.firstPass_3_3
+#print axioms MatedCRT.firstPass_3_7
