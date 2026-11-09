@@ -1,6 +1,7 @@
 import MatedCRT.FirstPass.S5c.GreenTarget
 import MatedCRT.Proofs.Sec4.SubsequentialProperties.Subharmonic
 import MatedCRT.Proofs.Infra.LocallyFinite
+import MatedCRT.Proofs.Infra.MatingOfTrees
 
 /-!
 # FIRST PASS, GAP 2 Step (a): the upper bound (19) of `CHATGPT-q3-questions` §1.4, pathwise
@@ -26,6 +27,12 @@ theorem greenFn_diag_le_of_finite_subset {m : ℤ → ℤ → ℕ} {A B : Set �
   greenFn_mono_of_firstStep hlf hcons hA hAB
     (fun b => WalkPotential.mLaplacian_greenFn hlf hcons hA b)
     (fun b => WalkPotential.mLaplacian_greenFn hlf hcons hB b) a a
+
+/-- The two multiplicity hypotheses of target (4) hold for every environment and every `ω`: the symmetry of the edge
+multiplicity and the adjacency of consecutive vertices (committed `MatedCRTEnv.mult_symm`, `MatedCRTEnv.mult_succ_ne_zero`). -/
+theorem mult_symm_and_succ_ne_zero {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) {ε : ℝ} (hε : 0 < ε) (ω : Ω) :
+    (∀ x y, S.mult ε ω x y = S.mult ε ω y x) ∧ (∀ x, S.mult ε ω x (x + 1) ≠ 0) :=
+  ⟨fun x y => S.mult_symm ε ω x y, fun x => S.mult_succ_ne_zero hε.le ω x⟩
 
 /-- The cell vertices of a ball are finite, for a proper parametrization `η` (the cells of a compact set are finitely
 many). -/
