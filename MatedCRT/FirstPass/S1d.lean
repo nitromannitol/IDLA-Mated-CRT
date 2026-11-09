@@ -21,8 +21,9 @@ rest on retired inputs. Changes:
 * Theorem 2.3 (`ConeHarmonicBallsStmt`) is a hypothesis (Draft; operator decision fp-S1d2 (2)). The corrected canonical
   Lemmas 2.4 and 2.5 (`ConeHarmonicBallsUpToFixedTimeCanonicalStmt`, `ConeScaleInvarianceUpToFixedTimeCanonicalStmt`,
   FirstPass/S2g.lean) and `LQGMeasurePropertiesStmt` are hypotheses too (decision (3)), so that the composition does not
-  wait on the open `ConeCanonicalFactorStep` of q1. Since 2.3 is taken directly, `_h22`, `_h24c`, `_h25c` are not consumed
-  (underscored to pass the unused-variable linter; delete them if the operator prefers).
+  wait on the open `ConeCanonicalFactorStep` of q1. Since 2.3 is taken directly, the hypotheses for `LQGMeasurePropertiesStmt`,
+  `ConeHarmonicBallsUpToFixedTimeCanonicalStmt` and `ConeScaleInvarianceUpToFixedTimeCanonicalStmt` were unused and are removed
+  (fewer hypotheses; fp-S6d-6-9-faithful, q4).
 * Lemma 3.4 is `MatedCRT.S3S4c.firstPass_3_4` (quenched route; the sample-path inputs are retired).
 * Lemma 4.1 is `firstPass_4_1_coneLaw` (FirstPass/S4S6c.lean) with `FrozenConeScalingLaw`.
 * The environment scaling enters as the frozen EXTERNAL `ConeEnvironmentScalingUnderSLE 𝒮` (Frozen/S1d.lean), with the
@@ -37,7 +38,7 @@ theorem firstPass_1_4 (𝒮 : SpaceFillingSLEModel)
     (hscale : QuantumConeScalingInput) (hsc : SLEScaleInvarianceInput 𝒮) (hrp : SLEReparametrizationInput 𝒮)
     (hind : SLEIndepMonoInput 𝒮) (hEnvS : ConeEnvironmentScalingUnderSLE 𝒮)
     (hm : MepsScalingInput 𝒮) (hdeg : DegreeBoundInput 𝒮)
-    (_h22 : LQGMeasurePropertiesStmt) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
+    (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
     (h29 : CountingMeasureConvergenceStmt 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)
     (h214 : GreenKernelUpperBoundStmt 𝒮) (h216 : GreenKernelLowerBoundStmt 𝒮)
     (h218 : ExitTimeUpperBoundStmt 𝒮) (hH : FrozenDiscreteHolderContinuityCorrected 𝒮)
@@ -47,7 +48,6 @@ theorem firstPass_1_4 (𝒮 : SpaceFillingSLEModel)
     (h35 : DiscreteDirichletProblemStmt 𝒮)
     (h42 : DivSandpileLowerBoundStmt 𝒮) (h51 : IDLALowerBoundStmt 𝒮) (h61 : IDLAUpperBoundStmt 𝒮)
     (h23 : ConeHarmonicBallsStmt)
-    (_h24c : ConeHarmonicBallsUpToFixedTimeCanonicalStmt) (_h25c : ConeScaleInvarianceUpToFixedTimeCanonicalStmt)
     (hdiv : FrozenConeRadialDivergence) (hF1 : FrozenUniversalMeasurabilityOfAnalytic)
     (hF2 : FrozenLQGTestIntegralMeasurable) (hF3 : FrozenDiskGreenNonnegCont) :
     ConvergenceOfIDLAStmt 𝒮 := by
@@ -68,7 +68,7 @@ theorem firstPass_1_6 (𝒮 : SpaceFillingSLEModel)
     (hscale : QuantumConeScalingInput) (hsc : SLEScaleInvarianceInput 𝒮) (hrp : SLEReparametrizationInput 𝒮)
     (hind : SLEIndepMonoInput 𝒮) (hEnvS : ConeEnvironmentScalingUnderSLE 𝒮)
     (hm : MepsScalingInput 𝒮) (hdeg : DegreeBoundInput 𝒮)
-    (_h22 : LQGMeasurePropertiesStmt) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
+    (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
     (h29 : CountingMeasureConvergenceStmt 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)
     (h214 : GreenKernelUpperBoundStmt 𝒮) (h216 : GreenKernelLowerBoundStmt 𝒮)
     (h218 : ExitTimeUpperBoundStmt 𝒮) (hH : FrozenDiscreteHolderContinuityCorrected 𝒮)
@@ -78,7 +78,6 @@ theorem firstPass_1_6 (𝒮 : SpaceFillingSLEModel)
     (h35 : DiscreteDirichletProblemStmt 𝒮)
     (h42 : DivSandpileLowerBoundStmt 𝒮) (h51 : IDLALowerBoundStmt 𝒮) (h61 : IDLAUpperBoundStmt 𝒮)
     (h23 : ConeHarmonicBallsStmt)
-    (_h24c : ConeHarmonicBallsUpToFixedTimeCanonicalStmt) (_h25c : ConeScaleInvarianceUpToFixedTimeCanonicalStmt)
     (hdiv : FrozenConeRadialDivergence) (hF1 : FrozenUniversalMeasurabilityOfAnalytic)
     (hF2 : FrozenLQGTestIntegralMeasurable) (hF3 : FrozenDiskGreenNonnegCont) :
     ConvergenceOfDivSandpileStmt 𝒮 := by
