@@ -305,4 +305,58 @@ theorem globalFamilyProcess_eq_globalCode (γ : ℝ) {D : ℕ → CirclePt} (hD 
       obtain ⟨_, h⟩ := h2
       exact h
 
+
+/-- The code of a continuous profile is the code of its scale-`b` rescaling, on the continuous set (the identity used
+for the rescaled codes of Section 9, G1). -/
+theorem scodeG_eq_circleCode (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (S : Set (ℕ → ℝ))
+    (c : ℝ → ℂ → ℝ) (hc : Continuous (circleProcess c)) (n : ℕ)
+    (hS : circleCode D (circleProcess c) ∈ S) (hR : 0 < coneScaleRadius γ c ((n : ℝ) + 1)) :
+    scodeG γ hD S n (circleCode D (circleProcess c)) =
+      circleCode D (circleProcess (rescaledCircle γ c (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1))) := by
+  have hprof : (fun q : CirclePt => profileDec hD (circleCode D (circleProcess c)) q) = circleProcess c := by
+    funext q
+    exact profileDec_circleCode hD hc q
+  have hrad : radiusOn γ hD S ((n : ℝ) + 1) (circleCode D (circleProcess c)) =
+      coneScaleRadius γ c ((n : ℝ) + 1) := by
+    unfold radiusOn
+    simp only [hS, ↓reduceIte]
+    rw [hprof, coneScaleRadius_extCircle_circleProcess]
+  funext k
+  show rescaledCircle γ (extCircle (fun q => profileDec hD (circleCode D (circleProcess c)) q))
+      (radiusOn γ hD S ((n : ℝ) + 1) (circleCode D (circleProcess c))) ((n : ℝ) + 1) (D k).1 (D k).2 =
+      circleProcess (rescaledCircle γ c (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1)) (D k)
+  rw [hrad, hprof]
+  exact congrFun (circleProcess_rescaledCircle_extCircle γ c hR) (D k)
+
+
+/-- The rescaled profile of a continuous code: the log-profile along the real line is continuous on `(0, ∞)`. -/
+theorem profAlong_continuousOn_code (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (c : ℝ → ℂ → ℝ)
+    (hcc : ContinuousOn (fun p : ℝ × ℂ => c p.1 p.2) (Ioi 0 ×ˢ univ)) :
+    ContinuousOn (profAlong γ hD (circleCode D (circleProcess c))) (Ioi 0) := by
+  have hprof : (fun q : CirclePt => profileDec hD (circleCode D (circleProcess c)) q) = circleProcess c := by
+    funext q
+    exact profileDec_circleCode hD (continuous_circleProcess_of_continuousOn hcc) q
+  have hmaps : MapsTo (fun r : ℝ => (r, (0 : ℂ))) (Ioi 0) (Ioi 0 ×ˢ univ) :=
+    fun r hr => ⟨hr, mem_univ _⟩
+  have hc0 : ContinuousOn (fun r : ℝ => c r 0) (Ioi 0) :=
+    hcc.comp (continuousOn_id.prodMk continuousOn_const) hmaps
+  have hlog : ContinuousOn (fun r : ℝ => Real.log r) (Ioi 0) :=
+    Real.continuousOn_log.mono (fun r (hr : 0 < r) => ne_of_gt hr)
+  have h1 : ContinuousOn (fun r : ℝ => c r 0 + lqgQ γ * Real.log r) (Ioi 0) :=
+    hc0.add (hlog.const_smul (lqgQ γ))
+  refine h1.congr ?_
+  intro r hr
+  have hr' : 0 < r := hr
+  have hq := congrFun hprof (⟨⟨r, hr'⟩, (0 : ℂ)⟩ : CirclePt)
+  show extCircle (fun q => profileDec hD (circleCode D (circleProcess c)) q) r 0 +
+      lqgQ γ * Real.log r = c r 0 + lqgQ γ * Real.log r
+  simp [extCircle, hr', hq, circleProcess]
+
+/-- The circle average process of a cone field is measurable in the sample (product σ-algebra on the carrier). -/
+theorem measurable_circleProcess_of_quantumCone {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hQC : IsQuantumCone γ P hC hcirc) :
+    Measurable fun ω => circleProcess (hcirc ω) := by
+  refine measurable_pi_iff.2 fun q => ?_
+  exact hQC.measurable_circle (q.1 : ℝ) q.2 q.1.2
+
 end MatedCRT
