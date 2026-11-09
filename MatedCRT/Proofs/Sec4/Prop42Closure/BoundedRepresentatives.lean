@@ -1,5 +1,9 @@
 import MatedCRT.Proofs.Sec4.Prop42Closure.ScaledRegularizedFamily
 import HarmonicBalls.Proofs.Potential.BoundedSubharmonicRepresentatives
+import HarmonicBalls.Proofs.Potential.BoundedJensenPotentialIntegrability
+import HarmonicBalls.Proofs.Potential.BoundedJensenSmoothTests
+import HarmonicBalls.Proofs.Potential.BoundedDomainGreenMeasurability
+import HarmonicBalls.Proofs.Potential.GreenPotentialExceptionalSet
 
 /-! # Bounded representatives of the dilated subharmonic balls (Proposition 4.2, z5)
 
@@ -16,12 +20,11 @@ Proved here:
   `μ_a(a⁻¹ Λ) = c⁻¹ μ(Λ) ∈ (0, ∞)` and the boundedness and openness of `a⁻¹ Λ` are proved here.
 
 * `bounded_jensen_representatives_of_localization_and_fatou`: the representative lemma `BoundedJensenRepresentativesStep`
-  (steps3:230-233) from two named internal Steps, `JensenGreenLocalizationStmt` (steps3:180-225, Riesz localization of the
-  real Green potentials; Saff Theorem 2.4 staged in `Proposed/Saff2010.lean`) and `JensenFatouFinitenessStmt`
-  (steps3:247-262, smoothing and Fatou). The witness transport, the finiteness and the smooth tests are Harmonic-Balls
-  lemmas (`Proofs/Potential/BoundedSubharmonicRepresentatives.lean`, `BoundedJensenPotentialIntegrability.lean`,
-  `BoundedJensenSmoothTests.lean`). The bounded-domain localization `V` is used because the Harmonic-Balls classical
-  kernel `greenKernelExtended` is only established for bounded domains. -/
+  (steps3:230-233) from `JensenGreenLocalizationStmt` (steps3:180-225, Riesz localization of the real Green potentials;
+  Saff Theorem 2.4 staged in `Proposed/Saff2010.lean`) and `JensenFatouFinitenessStmt`. The latter is the theorem
+  `jensenFatouFinitenessStmt_of_smoothing`, from the named smoothing input `JensenSmoothingStmt` (steps3:247-262) and
+  Harmonic-Balls lemmas (smooth tests, Fatou, finiteness). The witness transport and the bounded-domain localization `V`
+  are Harmonic-Balls lemmas too; `greenKernelExtended` is established for bounded domains only. -/
 
 namespace MatedCRT
 
@@ -148,5 +151,76 @@ theorem scaledBoundedRepresentativesStep_of_jensen (hJ : BoundedJensenRepresenta
 theorem scaledBoundedRepresentativesStep_of_localization_and_fatou (hLoc : JensenGreenLocalizationStmt)
     (hFat : JensenFatouFinitenessStmt) : ScaledBoundedRepresentativesStep :=
   scaledBoundedRepresentativesStep_of_jensen (bounded_jensen_representatives_of_localization_and_fatou hLoc hFat)
+
+/-- **Named internal Step: superharmonic smoothing of the classical Green potential (steps3:247-262).** Let `V` be bounded
+open, `S ∋ z` bounded open with `closure S ⊆ V`, and `ν` a finite measure carried by a compact `K ⊆ V`, with `ν {z} = 0`
+and `G_V(z, ·) ∈ L¹(ν)`. There are smooth compactly supported `F n` with `0 ≤ Δ (F n)` on `S` (so that `-F n` is
+superharmonic there), `F n ≤ c` on `S`, `F n z` convergent, and the classical potential `x ↦ ∫⁻ G_V(x, ·) dν` is bounded by
+`liminf (-F n x + c)` on `S`. Written proof: steps3:247-262, the radial convolution of the superharmonic potential (pointwise
+convergence from the circle-mean inequality and lower semicontinuity) with a cut-off `χ`. -/
+def JensenSmoothingStmt : Prop :=
+  ∀ (V S : Set ℂ) (z : ℂ) (ν : Measure ℂ) (K : Set ℂ),
+    IsOpen V → Bornology.IsBounded V → IsOpen S → Bornology.IsBounded S → z ∈ S → closure S ⊆ V →
+    IsCompact K → K ⊆ V → IsFiniteMeasure ν → ν Kᶜ = 0 → ν {z} = 0 → Integrable (greenFunction V z) ν →
+    ∃ (F : ℕ → ℂ → ℝ) (c L : ℝ),
+      (∀ n, ContDiff ℝ (⊤ : ℕ∞) (F n)) ∧ (∀ n, HasCompactSupport (F n)) ∧
+      (∀ n, ∀ x ∈ S, 0 ≤ Laplacian.laplacian (F n) x) ∧
+      (∀ n, ∀ x ∈ S, F n x ≤ c) ∧
+      Tendsto (fun n => F n z) atTop (nhds L) ∧
+      (∀ x ∈ S, (∫⁻ y, greenKernelExtended V x y ∂ν) ≤
+        liminf (fun n => ENNReal.ofReal (-F n x + c)) atTop)
+
+/-- **The Jensen-Fatou finiteness, from the smoothing input.** The smooth functions `F n` lie in `T_b(S, z)`
+(`mem_boundedSubharmonicBallTestClass_of_smooth_compactSupport`). The sub-mean inequality gives
+`∫_S (-F n) dm ≤ m(S) (-F n z)`. Fatou's lemma (`jensen_fatou_of_common_lower_bound`) gives finiteness `m`-a.e. on `S`, and
+finiteness of the classical potential gives `ν {x} = 0` and integrability (`greenPotential_eq_toReal_of_classical_lt_top`). -/
+theorem jensenFatouFinitenessStmt_of_smoothing (hSm : JensenSmoothingStmt) : JensenFatouFinitenessStmt := by
+  intro V S z m ν K hV hVb hS hSb hz hSV hK hKV hνfin hνK hνz hi hmS hJ
+  have : IsFiniteMeasure ν := hνfin
+  obtain ⟨F, c, L, hFs, hFc, hFlap, hFle, hFlim, hliminf⟩ :=
+    hSm V S z ν K hV hVb hS hSb hz hSV hK hKV hνfin hνK hνz hi
+  have hSmeas : MeasurableSet S := hS.measurableSet
+  have hcont : ∀ n, Continuous (F n) := fun n => (hFs n).continuous
+  have hmem : ∀ n, F n ∈ boundedSubharmonicBallTestClass S z := fun n =>
+    HarmonicBalls.mem_boundedSubharmonicBallTestClass_of_smooth_compactSupport S z hS hSb hz (F n)
+      (hFs n) (hFc n) (hFlap n)
+  have hsub : ∀ n, ∫ x in S, -F n x ∂m ≤ m.real S * -F n z := by
+    intro n
+    have h := (hJ (F n) (hmem n)).2
+    calc ∫ x in S, -F n x ∂m = -∫ x in S, F n x ∂m := by rw [integral_neg]
+      _ ≤ -(F n z * m.real S) := neg_le_neg h
+      _ = m.real S * -F n z := by ring
+  have hint : ∀ n, IntegrableOn (fun x => -F n x) S m := by
+    intro n
+    obtain ⟨C, hC⟩ := hSb.isCompact_closure.exists_bound_of_continuousOn (hcont n).continuousOn
+    refine Measure.integrableOn_of_bounded (M := C) (ne_top_of_lt hmS) (hcont n).neg.aestronglyMeasurable ?_
+    filter_upwards [ae_restrict_mem hSmeas] with x hx
+    rw [norm_neg]
+    exact hC x (subset_closure hx)
+  have hlb : ∀ n, ∀ x ∈ S, -c ≤ -F n x := fun n x hx => by
+    have := hFle n x hx
+    linarith
+  have hmeasK : Measurable (fun x => ∫⁻ y, greenKernelExtended V x y ∂ν) := by
+    have hk : Measurable (fun p : ℂ × ℂ => greenKernelExtended V p.1 p.2) := by
+      unfold greenKernelExtended
+      exact Measurable.ite (isClosed_eq continuous_snd continuous_fst).measurableSet measurable_const
+        (ENNReal.measurable_ofReal.comp (measurable_greenFunction_uncurry hV))
+    exact hk.lintegral_prod_right'
+  have hfat := HarmonicBalls.BoundedJensenFatou.jensen_fatou_of_common_lower_bound (μ := m)
+    (u := fun n x => -F n x) hSmeas (ne_top_of_lt hmS) hz hmeasK.aemeasurable
+    (fun n => (hcont n).neg.measurable) hint hlb hsub hFlim.neg hliminf
+  filter_upwards [hfat.2.1] with x hx
+  obtain ⟨hatom, hintV, -⟩ := HarmonicBalls.BoundedJensenFatou.greenPotential_eq_toReal_of_classical_lt_top hV hVb hx
+  exact ⟨hatom, hintV⟩
+
+/-- **The representative lemma `BoundedJensenRepresentativesStep`, from the localization and smoothing inputs.** -/
+theorem bounded_jensen_representatives_of_localization_and_smoothing (hLoc : JensenGreenLocalizationStmt)
+    (hSm : JensenSmoothingStmt) : BoundedJensenRepresentativesStep :=
+  bounded_jensen_representatives_of_localization_and_fatou hLoc (jensenFatouFinitenessStmt_of_smoothing hSm)
+
+/-- **The repaired `ScaledBoundedRepresentativesStep`, from the localization and smoothing inputs.** -/
+theorem scaledBoundedRepresentativesStep_of_localization_and_smoothing (hLoc : JensenGreenLocalizationStmt)
+    (hSm : JensenSmoothingStmt) : ScaledBoundedRepresentativesStep :=
+  scaledBoundedRepresentativesStep_of_jensen (bounded_jensen_representatives_of_localization_and_smoothing hLoc hSm)
 
 end MatedCRT
