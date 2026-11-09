@@ -142,3 +142,5 @@ theorem goodAnnulusCover_dyadic_firstPass {𝒮 : SpaceFillingSLEModel}
 end CoverMinorantAE
 
 end MatedCRT
+
+#print axioms MatedCRT.CoverMinorantAE.goodAnnulusCover_dyadic_firstPass
