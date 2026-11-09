@@ -24,7 +24,7 @@ Source: the standard long-time behaviour of Brownian motion with positive drift 
 of Duplantier–Miller–Sheffield (2014, *Mating of trees*, arXiv:1409.7055v4), Definition of the quantum cone
 (the conditioned process `B̂` of the radial part); the identification of the weak limit `ν` of `IsBMConditionedPositive`
 with the h-transform is part of this standard fact. Locator: standard; locator pending.
-Used by: firstPassS1c_coneScaleRadius_lowerTail (MatedCRT/FirstPass/S1c.lean). -/
+Used by: coneScaleRadius_lowerTail (MatedCRT/FirstPass/S1c.lean). -/
 def FrozenConeRadialDivergence : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ν : Measure (ContinuousPath ℝ), IsBMConditionedPositive (lqgQ γ - γ) ν →
     ∀ᵐ x ∂(quantumConeRadialLaw γ ν),
@@ -35,7 +35,8 @@ def FrozenConeRadialDivergence : Prop :=
 `ν`-measurable for the completion). Source: Lusin (1917); Kechris, *Classical Descriptive Set Theory* (1995), Theorem
 21.10 (analytic sets are universally measurable). General measure theory, not specific to this paper.
 Locator: standard; locator pending.
-Used by: firstPassS1c_containmentNullMeasurable (MatedCRT/FirstPass/S1c/Measurability.lean). -/
+Used by: firstPass_1_4, firstPass_1_6 (FirstPass/S1c/Composition.lean) via fixedTimeRadiusStep_of_frozen (FirstPass/S1c.lean),
+through nullMeasurableSet_threshold (FirstPass/S1c/Measurability.lean) and fixedTimeRadiusBody_of_frozen (FirstPass/S1c/Containment.lean). -/
 def FrozenUniversalMeasurabilityOfAnalytic : Prop :=
   ∀ (X : Type) [TopologicalSpace X] [PolishSpace X] [MeasurableSpace X] [BorelSpace X] (ν : Measure X),
     IsFiniteMeasure ν → ∀ A : Set X, AnalyticSet A → NullMeasurableSet A ν
@@ -45,7 +46,8 @@ def FrozenUniversalMeasurabilityOfAnalytic : Prop :=
 `ω ↦ ∫ φ dμ_ω` is measurable. This is the field-level measurability of the dyadic approximations of the LQG measure
 (Duplantier–Sheffield 2011, Prop. 1.1, as cited in `HarmonicBalls.Defs.LQG`), and the operator's wave-4 ruling
 (measurability of `ω ↦ μ_h(S)`), which determines it on dyadic squares. Locator: standard; locator pending.
-Used by: firstPassS1c_containmentNullMeasurable (MatedCRT/FirstPass/S1c/Measurability.lean). -/
+Used by: firstPass_1_4, firstPass_1_6 (FirstPass/S1c/Composition.lean) via fixedTimeRadiusStep_of_frozen (FirstPass/S1c.lean),
+through nullMeasurableSet_threshold (FirstPass/S1c/Measurability.lean) and fixedTimeRadiusBody_of_frozen (FirstPass/S1c/Containment.lean). -/
 def FrozenLQGTestIntegralMeasurable : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
@@ -55,7 +57,8 @@ def FrozenLQGTestIntegralMeasurable : Prop :=
 `G_{B_R}(0,·) = greenFunction (ball 0 R) 0` is nonnegative and continuous on `B_R ∖ {0}`; explicitly
 `G_{B_R}(0,x) = (2π)^{-1} log (R / |x|)` (Armitage–Gardiner, *Classical Potential Theory* (2001), §4.4). This is the
 Green function of the disc, not specific to this paper. Locator: standard; locator pending.
-Used by: firstPassS1c_threshold (MatedCRT/FirstPass/S1c/Threshold.lean). -/
+Used by: firstPass_1_4, firstPass_1_6 (FirstPass/S1c/Composition.lean) via fixedTimeRadiusStep_of_frozen (FirstPass/S1c.lean),
+through threshold_iff_moments (FirstPass/S1c/Threshold.lean). -/
 def FrozenDiskGreenNonnegCont : Prop :=
   ∀ R : ℝ, 0 < R → (∀ x ∈ Metric.ball (0 : ℂ) R, x ≠ 0 → 0 ≤ greenFunction (Metric.ball (0 : ℂ) R) 0 x) ∧
     ContinuousOn (greenFunction (Metric.ball (0 : ℂ) R) 0) (Metric.ball (0 : ℂ) R \ {0})
