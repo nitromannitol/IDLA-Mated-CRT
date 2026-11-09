@@ -2,7 +2,7 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling.Field
 import MatedCRT.Proofs.Sec1.EnvironmentScaling.LateralCircleMeasurability
 
 /-!
-# Canonical lateral circle law: coordinate identification, whole-plane and cone laws, radial independence
+# Canonical lateral law: coordinate identification, whole-plane and cone laws, radial independence
 
 Sources: env-steps.tex:128-143 (the lateral observables `ℓ(φ)`, `ℓ(r,z)`; the meaning of `IsWholePlaneGFF`) and
 env-steps.tex:240-257 (radial integrability and finiteness of the lateral integrals, circles through zero, determination
@@ -11,23 +11,23 @@ predicate). Definitions: `Defs/QuantumCone.lean` (`IsQuantumCone`, `radialProces
 `lateralProcess`). Field inputs: `IsWholePlaneGFF.lateral_law_eq` (Field.lean:128) and `IsQuantumCone.lateral_law_eq`
 (Field.lean:152). Measurability of the countable array: `LateralCircleMeasurability.lean`.
 
-For a countable family of circles `cc n = (r_n, z_n)` with `r_n > 0`:
-
-* `ae_circleArray_eq_normalized`: coordinate identification. Almost surely, for all `n` at once, the countable array
-  `lateralArray` equals the actual lateral circle coordinate
+* `ae_circleArray_eq_normalized`, `ae_actualCircleCoords_eq_lateralArray`: coordinate identification. Almost surely, for all
+  `n` at once, the countable array along circles `cc n = (r_n, z_n)` with `r_n > 0` is the actual lateral circle coordinate
   `h_{r_n}(z_n) - (2π)⁻¹ ∫_{[0,2π]} h_{|z_n + r_n e^{iθ}|}(0) dθ` (env-steps.tex:128-135).
 * `ae_circleArray_integrableOn`: for circles through `0` the angular integral is almost surely a Lebesgue integral, under
   the explicit premise `RadialLogMajorant` (env-steps.tex:248-251; not derived here).
 * `map_actualCircleCoords_eq_of_isWholePlaneGFF`, `map_lateralArray_eq_of_isWholePlaneGFF`,
-  `map_lateralArray_eq_of_isQuantumCone`: the law of the actual circle coordinates, and of the measurable countable array,
-  does not depend on the representing field. The Gaussian covariance enters only through `lateral_law_eq`.
+  `map_lateralArray_eq_of_isQuantumCone`: for any countable family `c` of admissible observables (pairings and circles), the
+  law of the measurable lateral array does not depend on the representing field; the actual circle coordinates have a
+  canonical law too. The Gaussian covariance enters only through `lateral_law_eq`.
 * `indepFun_radial_lateralArray_of_isQuantumCone`, `map_radial_lateralArray_of_isQuantumCone`: the radial process and the
-  lateral circle array of a cone are independent (the `indep` clause, taken as given), and their joint law is the product
-  of the radial law `quantumConeRadialLaw γ ν` and the canonical law of the whole-plane lateral circle array.
+  lateral array of a cone are independent (the `indep` clause, taken as given), and their joint law is the product of the
+  radial law `quantumConeRadialLaw γ ν` and the canonical law of the whole-plane lateral array.
 
 Not claimed here: continuity of `ℓ` in `(r, z)` (a continuous-path version); the derivation of `RadialLogMajorant`
-(sublinear radial growth, entrance-chain domination); the derivation of the cone's `lateral_law` clause from the
-covariance. These stay explicit hypotheses.
+(sublinear radial growth, entrance-chain domination); the Riemann-sum argument of env-steps.tex:249-250 (the countable
+determination is that of `CirclePairing.radialVersion`, ConePairing.lean); the derivation of the cone's `lateral_law`
+clause from the covariance. These stay explicit hypotheses or are left unformalized.
 -/
 
 open MeasureTheory ProbabilityTheory Set Filter Topology Complex
@@ -82,9 +82,10 @@ theorem ae_circleArray_integrableOn {P : Measure Ω} {hcirc : Ω → ℝ → ℂ
     exact fun _ => hω
   · exact ae_of_all _ fun ω hn => absurd hn h
 
-/-- **The countable lateral array of two representations has one law (explicit law identity).** Given the identity of the
-laws of the lateral processes (the `lateral_law` identity, here a hypothesis), the measurable countable arrays along `c`
-have the same law: the array is a.s. the lateral process at the coordinates `c n`. -/
+/-- **The countable lateral array has one law for two representations (explicit law identity).** Given the identity of the
+laws of the lateral processes (the `lateral_law` identity, here a hypothesis), the measurable countable arrays along any
+countable family `c` of admissible observables have the same law: the array is a.s. the lateral process at the coordinates
+`c n`. -/
 theorem map_lateralArray_eq_of_lateral_law_measurable {Ω' : Type*} [MeasurableSpace Ω'] {P : Measure Ω}
     {P' : Measure Ω'} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {hC' : Ω' → (ℂ → ℝ) → ℝ}
     {hcirc' : Ω' → ℝ → ℂ → ℝ}
@@ -119,60 +120,59 @@ theorem map_actualCircleCoords_eq_of_isWholePlaneGFF {Ω₁ Ω₂ : Type} [Measu
     h₁.ae_continuousOn_circle h₂.measurable_pairing h₂.measurable_circle h₂.ae_continuousOn_circle
     (MatedCRT.Sec1.IsWholePlaneGFF.lateral_law_eq h₁ h₂) (circleAdmissible cc hcc)
 
-/-- **Canonical law of the countable lateral circle array of a whole-plane GFF.** Two whole-plane GFF representations give
-the same law for the measurable countable array along `cc`. -/
+/-- **Canonical law of the countable lateral array of a whole-plane GFF.** Two whole-plane GFF representations give the same
+law for the measurable countable array along any countable family `c` of admissible observables (pairings and circles). -/
 theorem map_lateralArray_eq_of_isWholePlaneGFF {Ω₁ Ω₂ : Type} [MeasurableSpace Ω₁] [MeasurableSpace Ω₂]
     {P₁ : Measure Ω₁} {P₂ : Measure Ω₂} {hC₁ : Ω₁ → (ℂ → ℝ) → ℝ} {hcirc₁ : Ω₁ → ℝ → ℂ → ℝ}
     {hC₂ : Ω₂ → (ℂ → ℝ) → ℝ} {hcirc₂ : Ω₂ → ℝ → ℂ → ℝ}
     (h₁ : IsWholePlaneGFF P₁ hC₁ hcirc₁) (h₂ : IsWholePlaneGFF P₂ hC₂ hcirc₂)
-    (cc : ℕ → ℝ × ℂ) (hcc : ∀ n, 0 < (cc n).1) :
-    P₁.map (lateralArray hC₁ hcirc₁ (circleAdmissible cc hcc)) =
-      P₂.map (lateralArray hC₂ hcirc₂ (circleAdmissible cc hcc)) :=
+    (c : ℕ → GFFObservable.Admissible) :
+    P₁.map (lateralArray hC₁ hcirc₁ c) = P₂.map (lateralArray hC₂ hcirc₂ c) :=
   map_lateralArray_eq_of_lateral_law_measurable h₁.measurable_pairing h₁.measurable_circle
     h₁.ae_continuousOn_circle h₂.measurable_pairing h₂.measurable_circle h₂.ae_continuousOn_circle
-    (MatedCRT.Sec1.IsWholePlaneGFF.lateral_law_eq h₁ h₂) (circleAdmissible cc hcc)
+    (MatedCRT.Sec1.IsWholePlaneGFF.lateral_law_eq h₁ h₂) c
 
-/-- **Canonical law of the countable lateral circle array of a γ-quantum cone.** Two quantum cones with the same `γ` give the
-same law for the countable lateral array along `cc` (`IsQuantumCone.lateral_law_eq`, Field.lean:152). -/
+/-- **Canonical law of the countable lateral array of a γ-quantum cone.** Two quantum cones with the same `γ` give the same
+law for the countable lateral array along any countable family `c` of admissible observables
+(`IsQuantumCone.lateral_law_eq`, Field.lean:152). -/
 theorem map_lateralArray_eq_of_isQuantumCone {γ : ℝ} {Ω₁ Ω₂ : Type} [MeasurableSpace Ω₁] [MeasurableSpace Ω₂]
     {P₁ : Measure Ω₁} {P₂ : Measure Ω₂} {hC₁ : Ω₁ → (ℂ → ℝ) → ℝ} {hcirc₁ : Ω₁ → ℝ → ℂ → ℝ}
     {hC₂ : Ω₂ → (ℂ → ℝ) → ℝ} {hcirc₂ : Ω₂ → ℝ → ℂ → ℝ}
     (h₁ : IsQuantumCone γ P₁ hC₁ hcirc₁) (h₂ : IsQuantumCone γ P₂ hC₂ hcirc₂)
-    (cc : ℕ → ℝ × ℂ) (hcc : ∀ n, 0 < (cc n).1) :
-    P₁.map (lateralArray hC₁ hcirc₁ (circleAdmissible cc hcc)) =
-      P₂.map (lateralArray hC₂ hcirc₂ (circleAdmissible cc hcc)) :=
+    (c : ℕ → GFFObservable.Admissible) :
+    P₁.map (lateralArray hC₁ hcirc₁ c) = P₂.map (lateralArray hC₂ hcirc₂ c) :=
   map_lateralArray_eq_of_lateral_law_measurable h₁.measurable_pairing h₁.measurable_circle
     h₁.ae_continuousOn_circle h₂.measurable_pairing h₂.measurable_circle h₂.ae_continuousOn_circle
-    (MatedCRT.Sec1.IsQuantumCone.lateral_law_eq h₁ h₂) (circleAdmissible cc hcc)
+    (MatedCRT.Sec1.IsQuantumCone.lateral_law_eq h₁ h₂) c
 
 /-- **Radial/lateral independence passes to the countable array.** The `indep` clause of `IsQuantumCone` (independence in
-the cone predicate, env-steps.tex:255-256) gives the independence of the radial process and the lateral circle array: the
-array is a.s. a measurable function of the lateral process (`ae_lateralArray_eq`). -/
+the cone predicate, env-steps.tex:255-256) gives the independence of the radial process and the countable lateral array:
+the array is a.s. a measurable function of the lateral process (`ae_lateralArray_eq`). -/
 theorem indepFun_radial_lateralArray_of_isQuantumCone {γ : ℝ} {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
-    {hcirc : Ω → ℝ → ℂ → ℝ} (hQ : IsQuantumCone γ P hC hcirc) (cc : ℕ → ℝ × ℂ) (hcc : ∀ n, 0 < (cc n).1) :
-    IndepFun (fun ω => radialProcess (hcirc ω)) (lateralArray hC hcirc (circleAdmissible cc hcc)) P := by
-  have hψ : Measurable fun f : GFFObservable.Admissible → ℝ => fun n : ℕ => f (circleAdmissible cc hcc n) :=
-    Measurable.of_eval fun n => measurable_pi_apply (circleAdmissible cc hcc n)
+    {hcirc : Ω → ℝ → ℂ → ℝ} (hQ : IsQuantumCone γ P hC hcirc) (c : ℕ → GFFObservable.Admissible) :
+    IndepFun (fun ω => radialProcess (hcirc ω)) (lateralArray hC hcirc c) P := by
+  have hψ : Measurable fun f : GFFObservable.Admissible → ℝ => fun n : ℕ => f (c n) :=
+    Measurable.of_eval fun n => measurable_pi_apply (c n)
   have h0 : IndepFun (fun ω => radialProcess (hcirc ω))
-      (fun ω n => MatedCRT.lateralProcess (hC ω) (hcirc ω) (circleAdmissible cc hcc n)) P :=
+      (fun ω n => MatedCRT.lateralProcess (hC ω) (hcirc ω) (c n)) P :=
     hQ.indep.comp measurable_id hψ
   exact h0.congr EventuallyEq.rfl
-    ((ae_lateralArray_eq (hC := hC) hQ.ae_continuousOn_circle (circleAdmissible cc hcc)).mono
-      fun ω hω => hω.symm)
+    ((ae_lateralArray_eq (hC := hC) hQ.ae_continuousOn_circle c).mono fun ω hω => hω.symm)
 
-/-- **Joint law of the radial process and the lateral circle array of a γ-quantum cone.** By independence
+/-- **Joint law of the radial process and the countable lateral array of a γ-quantum cone.** By independence
 (`indepFun_radial_lateralArray_of_isQuantumCone`), the joint law is the product of the marginals: the radial law
 `quantumConeRadialLaw γ ν` (the `radial_law` clause, with the conditioned Brownian motion `ν`), and the law of the countable
-lateral array, which is the canonical law of the whole-plane lateral circle array (the `lateral_law` clause,
-env-steps.tex:255-257). The `lateral_law` clause is used as given; it is not derived from the covariance here. -/
+lateral array along `c`, which is the canonical law of the whole-plane lateral array (the `lateral_law` clause,
+env-steps.tex:255-257). The `lateral_law` clause is used as given; it is not derived from the covariance here. With `c` a
+family of circles (`circleAdmissible cc hcc`) this is the joint law of the radial process and the actual circle coordinates. -/
 theorem map_radial_lateralArray_of_isQuantumCone {γ : ℝ} {P : Measure Ω} [IsProbabilityMeasure P]
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hQ : IsQuantumCone γ P hC hcirc)
-    (cc : ℕ → ℝ × ℂ) (hcc : ∀ n, 0 < (cc n).1) :
+    (c : ℕ → GFFObservable.Admissible) :
     ∃ ν, IsBMConditionedPositive (lqgQ γ - γ) ν ∧
       ∃ (Ω' : Type) (_ : MeasurableSpace Ω') (P' : Measure Ω') (hC' : Ω' → (ℂ → ℝ) → ℝ)
         (hcirc' : Ω' → ℝ → ℂ → ℝ), IsProbabilityMeasure P' ∧ IsWholePlaneGFF P' hC' hcirc' ∧
-        P.map (fun ω => (radialProcess (hcirc ω), lateralArray hC hcirc (circleAdmissible cc hcc) ω)) =
-          (quantumConeRadialLaw γ ν).prod (P'.map (lateralArray hC' hcirc' (circleAdmissible cc hcc))) := by
+        P.map (fun ω => (radialProcess (hcirc ω), lateralArray hC hcirc c ω)) =
+          (quantumConeRadialLaw γ ν).prod (P'.map (lateralArray hC' hcirc' c)) := by
   obtain ⟨ν, hν, hrad⟩ := hQ.radial_law
   obtain ⟨Ω', inst, P', hC', hcirc', hP', hW, hlaw⟩ := hQ.lateral_law
   refine ⟨ν, hν, Ω', inst, P', hC', hcirc', hP', hW, ?_⟩
@@ -181,12 +181,11 @@ theorem map_radial_lateralArray_of_isQuantumCone {γ : ℝ} {P : Measure Ω} [Is
     exact Measurable.prodMk
       (measurable_pi_iff.2 fun t => hQ.measurable_circle (Real.exp (-(t : ℝ))) 0 (Real.exp_pos _))
       (measurable_pi_iff.2 fun s => hQ.measurable_circle (Real.exp (s : ℝ)) 0 (Real.exp_pos _))
-  have hlatM : Measurable (lateralArray hC hcirc (circleAdmissible cc hcc)) :=
-    measurable_lateralArray hQ.measurable_pairing hQ.measurable_circle (circleAdmissible cc hcc)
+  have hlatM : Measurable (lateralArray hC hcirc c) :=
+    measurable_lateralArray hQ.measurable_pairing hQ.measurable_circle c
   have hjoint := (indepFun_iff_map_prod_eq_prod_map_map hradM.aemeasurable hlatM.aemeasurable).1
-    (indepFun_radial_lateralArray_of_isQuantumCone hQ cc hcc)
+    (indepFun_radial_lateralArray_of_isQuantumCone hQ c)
   rw [hjoint, hrad, map_lateralArray_eq_of_lateral_law_measurable hQ.measurable_pairing hQ.measurable_circle
-    hQ.ae_continuousOn_circle hW.measurable_pairing hW.measurable_circle hW.ae_continuousOn_circle hlaw
-    (circleAdmissible cc hcc)]
+    hQ.ae_continuousOn_circle hW.measurable_pairing hW.measurable_circle hW.ae_continuousOn_circle hlaw c]
 
 end MatedCRT.Sec1
