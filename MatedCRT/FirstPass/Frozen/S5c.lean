@@ -19,4 +19,21 @@ def FPFirstHitVisits (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
     ∀ᵐ ω ∂S.P, ∀ x : ℂ, BddBelow {s : ℝ | S.η ω s = x}
 
+/-- **FIRST-PASS FROZEN.** Continuity of the disc Green function off its pole: for every `R > 0`, `G_{B_R}(0, ·)` is
+continuous on `B_R \ {0}` (it is smooth there, with zero boundary values). Source: Harmonic-Balls-LQG Draft/Section2.lean
+`GreenFunctionBallStmt`, Proposition 2.3 as cited by the paper; Armitage-Gardiner, Classical Potential Theory, §4.1.
+Standard; locator pending. Used by: firstPass_5_3 via `isOpen_cluster_of_pole` (FirstPass/S5c/ClusterOpen.lean). -/
+def FPGreenBallContinuousOffPole : Prop :=
+  ∀ R : ℝ, 0 < R →
+    ContinuousOn (HarmonicBalls.greenFunction (Metric.ball (0 : ℂ) R) 0) (Metric.ball (0 : ℂ) R \ {0})
+
+/-- **FIRST-PASS FROZEN.** Pole blow-up of the disc Green function: for every `R > 0`, `G_{B_R}(0, x) → +∞` as `x → 0`
+with `x ≠ 0` (explicitly `G_{B_R}(0, x) = (2π)⁻¹ log (R / |x|)`). Source: Armitage-Gardiner, Classical Potential Theory,
+§4.1 (the explicit Green function of a disc; Harmonic-Balls-LQG Defs/Green.lean `greenBall`). Standard; locator pending.
+Used by: firstPass_5_3 via `isOpen_cluster_of_pole` (FirstPass/S5c/ClusterOpen.lean). -/
+def FPGreenBallPoleLimit : Prop :=
+  ∀ R : ℝ, 0 < R →
+    Filter.Tendsto (fun x : ℂ => HarmonicBalls.greenFunction (Metric.ball (0 : ℂ) R) 0 x)
+      (nhdsWithin (0 : ℂ) {0}ᶜ) Filter.atTop
+
 end MatedCRT
