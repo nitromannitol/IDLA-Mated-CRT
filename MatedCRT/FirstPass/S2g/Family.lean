@@ -5,11 +5,11 @@ import MatedCRT.FirstPass.S2g.GoodSet
 
 Deterministic part of `ConeClosureGoodMeasureLawStep` (`FirstPass/S2f.lean`). Written argument:
 `notes/fp-gaps/CHATGPT-cone-good-set.md` Section 3 (conditions C1-C4 of a certificate) and Section 4.2 (a family
-counterexample produces a certificate). In the real-variable form used here, a certificate needs no countable coding;
-the coding and the zero cone law (Sections 1-3, 5-6) are the open probabilistic step `ConeBadNullHullStep`.
+counterexample produces a certificate pair). In the real-variable form used here, a certificate needs no countable
+coding; the coding and the zero cone law (Sections 1-3, 5-6) are the open probabilistic step `ConeBadNullHullStep`.
 
-Only one certificate, at a rational time `p` with `t < p < T`, is extracted from a closure failure at time `t`: each
-member of the pair `(w_p, w_q)` of Section 4.2 already satisfies C1-C4, so the second one is not used here.
+A closure failure at time `t` forces the raw radius to equal `1/2` at every time in `(t, T)` (monotonicity), so the
+family gives a plateau pair of rational times `p < q` in `(t, T)`, each carrying a certificate (CHATGPT 4.2, (30)-(33)).
 -/
 
 namespace MatedCRT
@@ -29,11 +29,13 @@ def CertReal (ν : Measure ℂ) (t : ℝ) (w : ℂ → ℝ) : Prop :=
     (∃ x ∈ closure (certCluster (3 / 4) t w), ‖x‖ = 1 / 2) ∧
     HasLaplacian w (ν.restrict (interior (closure (certCluster (3 / 4) t w)))) 0 (ball 0 (3 / 4))
 
-/-- The bad event of the good set: some rational time `p > 0` carries a certificate for `ν`. -/
-def HasRatCert (ν : Measure ℂ) : Prop :=
-  ∃ p : ℚ, 0 < (p : ℝ) ∧ ∃ w : ℂ → ℝ, CertReal ν (p : ℝ) w
+/-- The bad event of the good set: two rational times `0 < p < q` each carry a certificate for `ν` (a plateau pair of
+raw radii, CHATGPT-cone-good-set.md (37)). -/
+def HasRatPlateauCert (ν : Measure ℂ) : Prop :=
+  ∃ p q : ℚ, 0 < (p : ℝ) ∧ (p : ℝ) < (q : ℝ) ∧ (∃ w : ℂ → ℝ, CertReal ν (p : ℝ) w) ∧
+    ∃ w : ℂ → ℝ, CertReal ν (q : ℝ) w
 
-/-- The zero function is a supersolution on `B_r` for `t ≥ 0`, since the disc Green function is nonnegative
+/-- The zero function is a supersolution on `B_{3/4}` for `t ≥ 0`, since the disc Green function is nonnegative
 (`greenFunction_nonneg`). -/
 theorem zero_mem_supersolutions_ball (μ : Measure ℂ) {t : ℝ} (ht : 0 ≤ t) :
     (fun _ : ℂ => (0 : ℝ)) ∈ supersolutions μ (3 / 4) 0 t := by
@@ -57,59 +59,71 @@ theorem leastSupersolution_obstacle (μ : Measure ℂ) {t : ℝ} (ht : 0 ≤ t) 
   · rintro b ⟨w, hw, rfl⟩
     exact hw.2.2 x hx hx0
 
-/-- A family of harmonic balls on `ν` stopped at the half-ball time is contained in `B_{1/2}` up to its closure at
-every `t ∈ (0, T)`, unless `ν` carries a rational certificate (CHATGPT-cone-good-set.md Section 4.2, one certificate
-`w_p = leastSupersolution ν (3/4) 0 p` at a rational `p ∈ (t, T)`). -/
-theorem closure_ball_of_not_hasRatCert (hpole : FrozenGreenDiscPole) {ν : Measure ℂ} {Λ : ℝ → Set ℂ} {T : ℝ}
-    (hfam : IsConeHarmonicBallFamilyOn ν Λ T) (hst : IsStoppedAtHalfBall Λ T) (hno : ¬ HasRatCert ν)
-    {t : ℝ} (ht : t ∈ Ioo 0 T) : closure (Λ t) ⊆ ball (0 : ℂ) (1 / 2) := by
-  by_contra hnot
-  obtain ⟨x, hxcl, hxball⟩ := not_subset.mp hnot
-  obtain ⟨p, htp, hpT⟩ := exists_rat_btwn ht.2
-  have hp0 : (0 : ℝ) < (p : ℝ) := lt_trans ht.1 htp
-  have hp : (p : ℝ) ∈ Ioo 0 T := ⟨hp0, hpT⟩
-  apply hno
-  refine ⟨p, hp0, leastSupersolution ν (3 / 4) 0 (p : ℝ), ?_⟩
+/-- A point of the closure of the family at a time `s ∈ (0, T)` which lies outside `B_{1/2}` gives the certificate
+`leastSupersolution ν (3/4) 0 s` at time `s` (CHATGPT-cone-good-set.md Section 4.2, (29)-(33) for one time). -/
+theorem certReal_least_of_mem_closure (hpole : FrozenGreenDiscPole) {ν : Measure ℂ} {Λ : ℝ → Set ℂ} {T : ℝ}
+    (hfam : IsConeHarmonicBallFamilyOn ν Λ T) (hst : IsStoppedAtHalfBall Λ T) {s : ℝ} (hs : s ∈ Ioo 0 T)
+    {x : ℂ} (hxs : x ∈ closure (Λ s)) (hxb : x ∉ ball (0 : ℂ) (1 / 2)) :
+    CertReal ν s (leastSupersolution ν (3 / 4) 0 s) := by
+  have hs0 : (0 : ℝ) < s := hs.1
   obtain ⟨hΛp, hcont, hlap, hbd⟩ :=
-    hfam.2.2 (p : ℝ) (1 / 2) hp (by norm_num) (hst.1 (p : ℝ) hp) (3 / 4) (by norm_num)
-  set w := leastSupersolution ν (3 / 4) 0 (p : ℝ) with hwdef
-  have hcl : certCluster (3 / 4) (p : ℝ) w = cluster ν (3 / 4) 0 (p : ℝ) := rfl
-  have hC : IsOpen (certCluster (3 / 4) (p : ℝ) w) :=
-    isOpen_certCluster hpole (by norm_num) hp0 hcont
-  have hint : certCluster (3 / 4) (p : ℝ) w ⊆ interior (closure (certCluster (3 / 4) (p : ℝ) w)) :=
+    hfam.2.2 s (1 / 2) hs (by norm_num) (hst.1 s hs) (3 / 4) (by norm_num)
+  set w := leastSupersolution ν (3 / 4) 0 s with hwdef
+  have hcl : certCluster (3 / 4) s w = cluster ν (3 / 4) 0 s := rfl
+  have hC : IsOpen (certCluster (3 / 4) s w) :=
+    isOpen_certCluster hpole (by norm_num) hs0 hcont
+  have hint : certCluster (3 / 4) s w ⊆ interior (closure (certCluster (3 / 4) s w)) :=
     interior_maximal subset_closure hC
-  have hΛeq : interior (closure (certCluster (3 / 4) (p : ℝ) w)) = Λ (p : ℝ) := by
+  have hΛeq : interior (closure (certCluster (3 / 4) s w)) = Λ s := by
     rw [hΛp, hcl]
-  have hclΛ : closure (Λ (p : ℝ)) = closure (certCluster (3 / 4) (p : ℝ) w) := by
+  have hclΛ : closure (Λ s) = closure (certCluster (3 / 4) s w) := by
     apply le_antisymm
     · exact closure_minimal (by rw [← hΛeq]; exact interior_subset) isClosed_closure
     · exact closure_mono (by rw [← hΛeq]; exact hint)
-  have hclosed_ball : closure (certCluster (3 / 4) (p : ℝ) w) ⊆ closedBall (0 : ℂ) (1 / 2) := by
+  have hclosed_ball : closure (certCluster (3 / 4) s w) ⊆ closedBall (0 : ℂ) (1 / 2) := by
     rw [← hclΛ]
-    exact (closure_mono (hst.1 (p : ℝ) hp)).trans closure_ball_subset_closedBall
-  have hmono : Λ t ⊆ Λ (p : ℝ) := hfam.2.1.monotoneOn ht hp htp.le
-  have hxp : x ∈ closure (certCluster (3 / 4) (p : ℝ) w) := by
+    exact (closure_mono (hst.1 s hs)).trans closure_ball_subset_closedBall
+  have hxp : x ∈ closure (certCluster (3 / 4) s w) := by
     rw [← hclΛ]
-    exact closure_mono hmono hxcl
+    exact hxs
   have hxnorm : ‖x‖ = 1 / 2 := by
     have h1 : 1 / 2 ≤ ‖x‖ := by
-      simpa [mem_ball, dist_zero_right, not_lt] using hxball
+      simpa [mem_ball, dist_zero_right, not_lt] using hxb
     have h2 : ‖x‖ ≤ 1 / 2 := by
       simpa [mem_closedBall, dist_zero_right] using hclosed_ball hxp
     linarith
-  refine ⟨hcont, fun y hy hy0 => leastSupersolution_obstacle ν hp0.le hy hy0, hbd, hclosed_ball,
+  refine ⟨hcont, fun y hy hy0 => leastSupersolution_obstacle ν hs0.le hy hy0, hbd, hclosed_ball,
     ⟨x, hxp, hxnorm⟩, ?_⟩
   rw [hΛeq]
   exact hlap
 
-/-- The probabilistic core of the good set: the measures carrying a rational certificate are covered by a measurable
-set `N` of `Measure ℂ` whose preimage under `μ` is `P`-null. -/
+/-- A family counterexample gives a plateau pair: if the closure of `Λ_t` leaves `B_{1/2}`, then two rational times
+`t < p < q < T` carry certificates, since `Λ_t ⊆ Λ_p ⊆ Λ_q` and the closure point stays on the circle `|x| = 1/2`. -/
+theorem closure_ball_of_not_hasRatPlateauCert (hpole : FrozenGreenDiscPole) {ν : Measure ℂ} {Λ : ℝ → Set ℂ}
+    {T : ℝ} (hfam : IsConeHarmonicBallFamilyOn ν Λ T) (hst : IsStoppedAtHalfBall Λ T)
+    (hno : ¬ HasRatPlateauCert ν) {t : ℝ} (ht : t ∈ Ioo 0 T) : closure (Λ t) ⊆ ball (0 : ℂ) (1 / 2) := by
+  by_contra hnot
+  obtain ⟨x, hxcl, hxball⟩ := not_subset.mp hnot
+  obtain ⟨p, htp, hpT⟩ := exists_rat_btwn ht.2
+  obtain ⟨q, hpq, hqT⟩ := exists_rat_btwn hpT
+  have hp : (p : ℝ) ∈ Ioo 0 T := ⟨lt_trans ht.1 htp, hpT⟩
+  have hq : (q : ℝ) ∈ Ioo 0 T := ⟨lt_trans hp.1 hpq, hqT⟩
+  have hxp : x ∈ closure (Λ (p : ℝ)) :=
+    closure_mono (hfam.2.1.monotoneOn ht hp htp.le) hxcl
+  have hxq : x ∈ closure (Λ (q : ℝ)) :=
+    closure_mono (hfam.2.1.monotoneOn ht hq (lt_trans htp hpq).le) hxcl
+  apply hno
+  exact ⟨p, q, hp.1, hpq, ⟨_, certReal_least_of_mem_closure hpole hfam hst hp hxp hxball⟩,
+    ⟨_, certReal_least_of_mem_closure hpole hfam hst hq hxq hxball⟩⟩
+
+/-- The probabilistic core of the good set: the measures carrying a rational plateau pair of certificates are covered
+by a measurable set `N` of `Measure ℂ` whose preimage under `μ` is `P`-null. -/
 def BadMeasureNullHull {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (μ : Ω → Measure ℂ) : Prop :=
-  ∃ N : Set (Measure ℂ), MeasurableSet N ∧ {ν | HasRatCert ν} ⊆ N ∧ P (μ ⁻¹' N) = 0
+  ∃ N : Set (Measure ℂ), MeasurableSet N ∧ {ν | HasRatPlateauCert ν} ⊆ N ∧ P (μ ⁻¹' N) = 0
 
 /-- The reduction of `ConeClosureGoodMeasureLawStep` to the bad null hull for every cone field. OPEN (NEW): the zero
-cone law, CHATGPT-cone-good-set.md Sections 1-3 (coding, Borel relation, analytic projection), 5 (Tonelli, scaling,
-zero law) and 6 (null hull). -/
+cone law, CHATGPT-cone-good-set.md Sections 1-3 (coding, Borel relation, analytic projection), 5 (plateau radii,
+Tonelli, scaling, zero law) and 6 (null hull). -/
 def ConeBadNullHullStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ → BadMeasureNullHull P μ
@@ -123,7 +137,7 @@ theorem coneGoodMeasureLaw_of_badNullHull (hpole : FrozenGreenDiscPole) {Ω : Ty
       ∀ᵐ ω ∂P, μ ω ∈ G := by
   obtain ⟨N, hNm, hsub, hnull⟩ := hN
   refine ⟨Nᶜ, hNm.compl, fun ν hν T Λ hfam hst t ht =>
-    closure_ball_of_not_hasRatCert hpole hfam hst (fun h => hν (hsub h)) ht, ?_⟩
+    closure_ball_of_not_hasRatPlateauCert hpole hfam hst (fun h => hν (hsub h)) ht, ?_⟩
   have hset : {ω | ¬ μ ω ∈ Nᶜ} = μ ⁻¹' N := by
     ext ω
     simp
