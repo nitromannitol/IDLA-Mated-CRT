@@ -137,9 +137,10 @@ theorem nullHull_of_code_law {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (
 field lies in this class almost surely, `IsLQGLimit.isLocallyFiniteMeasure`). -/
 def LocFinMeasure (ν : Measure ℂ) : Prop := ∀ n : ℕ, ν (closedBall (0 : ℂ) n) < ⊤
 
-/-- Admissible test family of the certificate code: each `φs k` is continuous with compact support in `B(0,1)`. -/
+/-- Admissible test family of the certificate code: each `φs k` is continuous and nonnegative (the restricted moments of
+CHATGPT (12) are suprema of nonnegative moments; signed tests are recovered by linearity), with compact support in `B(0,1)`. -/
 def CertTestFamily (φs : ℕ → ℂ → ℝ) : Prop :=
-  ∀ k, Continuous (φs k) ∧ HasCompactSupport (φs k) ∧ tsupport (φs k) ⊆ Metric.ball 0 1
+  ∀ k, Continuous (φs k) ∧ HasCompactSupport (φs k) ∧ tsupport (φs k) ⊆ Metric.ball 0 1 ∧ ∀ x, 0 ≤ φs k x
 
 /-- **OPEN (NEW; z1, fp-S2h).** The certificate code set for the family `φs`: an analytic set `B` of moment codes such
 that, for every locally finite measure `ν`, having a rational plateau pair of certificates is equivalent to the moment code
