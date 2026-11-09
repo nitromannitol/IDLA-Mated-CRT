@@ -79,9 +79,39 @@ theorem cover_polyHighProb_of_prevalence (hprev : GoodAnnulusPrevalenceStmt) {γ
   obtain ⟨C, hC0, h⟩ := hprev γ hγ hγ2 ρ hρ hρ1 c₀ hc₀ hc₀'
   exact ⟨C, hC0, h⟩
 
+/-- **Lemma 2, eq (9), minorant form** (LEMMA68 Lemma 2 item 2, closing paragraph). The dyadic good-radius conclusion needs
+only field-measurable events `F n ⊆ cover_n` whose complements are summable in probability: the existence of such a
+minorant is the OPEN NEW step (LEMMA68.md 620-636; see the report). `goodAnnulusCover_dyadic` is the case `F n = cover_n`. -/
+theorem goodAnnulusCover_dyadic_of_minorant {Ω : Type*} {m' : MeasurableSpace Ω} [MeasurableSpace Ω]
+    {P : Measure Ω} [IsProbabilityMeasure P] (μ : Ω → Measure ℂ) {ρ c₀ C : ℝ}
+    (hF : ∃ F : ℕ → Set Ω, (∀ n : ℕ, MeasurableSet[m'] (F n)) ∧
+      (∀ n : ℕ, F n ⊆ GoodAnnulusCoverEvent μ ρ c₀ C ((1 / 2 : ℝ) ^ n)) ∧ ∑' n : ℕ, P (F n)ᶜ ≠ ∞) :
+    ∃ tStar : Ω → ℝ, Measurable[m'] tStar ∧ ∀ᵐ ω ∂P, 0 < tStar ω ∧
+      ∀ n : ℕ, (1 / 2 : ℝ) ^ n < tStar ω → ∀ z : ℂ,
+        z ∈ Metric.ball (0 : ℂ) (ρ - 3 * Real.sqrt ((1 / 2 : ℝ) ^ n)) \
+          Metric.ball (0 : ℂ) (10 * Real.sqrt ((1 / 2 : ℝ) ^ n)) →
+        (∃ m k : ℤ, z = ((((1 / 2 : ℝ) ^ n) / 100 : ℝ) : ℂ) * (m + k * Complex.I)) →
+        ∃ r : ℝ, (1 / 2 : ℝ) ^ n ≤ r ∧ r ≤ Real.sqrt ((1 / 2 : ℝ) ^ n) ∧ (∃ k : ℕ, r = (7 : ℝ)⁻¹ ^ k) ∧
+          IsGoodAnnulusEvent (μ ω) c₀ C r z := by
+  obtain ⟨F, hFm, hFsub, hFsum⟩ := hF
+  obtain ⟨N, hNm, hN⟩ := ConstantOrderDiv.exists_measurable_threshold P hFm hFsum
+  refine ⟨fun ω => (1 / 2 : ℝ) ^ N ω,
+    (measurable_from_nat (f := fun n : ℕ => (1 / 2 : ℝ) ^ n)).comp hNm, ?_⟩
+  filter_upwards [hN] with ω hω
+  refine ⟨by positivity, fun n hn z hz hzl => ?_⟩
+  have hmem : ω ∈ F n := by
+    apply hω n
+    by_contra h
+    have hlt : n < N ω := not_le.1 h
+    have hle : (1 / 2 : ℝ) ^ N ω ≤ (1 / 2 : ℝ) ^ n :=
+      pow_le_pow_of_le_one (by norm_num) (by norm_num) hlt.le
+    linarith
+  exact hFsub n hmem z hz hzl
+
 end GoodRadiusCover
 
 end MatedCRT
 
 #print axioms MatedCRT.GoodRadiusCover.goodAnnulusCover_dyadic
 #print axioms MatedCRT.GoodRadiusCover.cover_polyHighProb_of_prevalence
+#print axioms MatedCRT.GoodRadiusCover.goodAnnulusCover_dyadic_of_minorant
