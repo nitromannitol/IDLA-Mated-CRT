@@ -28,7 +28,10 @@ paper's objects. Used by: firstPass_3_6. -/
 def FrozenBrownianOutwardExcursionAtExit : Prop :=
   BrownianOutwardExcursionAtExitStep
 
-/-- FIRST-PASS FROZEN. Scaling of the quantum cone environment and of the mating-of-trees coupling: for `b > 0` there is a
+/-- RETIRED (FALSE, truth check 2026-11-09; notes/fp-gaps/TRUTH-CHECK-2.md:50). Validity would need closure of an
+unrestricted SLE predicate under rescaling. Not used by the repaired `firstPass_4_1_coneLaw` (FirstPass/S4S6c.lean),
+which uses `FrozenConeScalingLaw` (Frozen/S4S6c.lean) instead. Kept for the record; do not delete.
+FIRST-PASS FROZEN. Scaling of the quantum cone environment and of the mating-of-trees coupling: for `b > 0` there is a
 valid environment `S'` on the same probability space with `η^b = R_b⁻¹ η(b ·)`, `bm^b = b^{-1/2} bm(b ·)` and
 `μ^b = b⁻¹ μ_h(R_b ·)`, where `R_b` is the cone scale radius. Source: Duplantier–Miller–Sheffield (2014, *Mating of trees*;
 the arXiv identifier is as cited in MatedCRT/External/QuantumCone.lean), Proposition 4.13(i) (quantum cone scaling, DMS14 eq:quantum-cone-scaling) together with
