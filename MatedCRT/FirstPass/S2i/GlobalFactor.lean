@@ -1,6 +1,8 @@
 import MatedCRT.FirstPass.S2i.CanonicalFactor
 import MatedCRT.FirstPass.S2g.ScaleGluing
 import MatedCRT.FirstPass.S2g.ScaleInvariance
+import MatedCRT.FirstPass.S2i.ContinuousDecoder
+import MatedCRT.Proofs.Measurability.ConeRescaledCircle
 
 /-! # The global family factor (FirstPass S2i, z2): `ConeGlobalFamilyFactorStep`
 
@@ -60,5 +62,69 @@ theorem scaleProc_circleProcess (γ : ℝ) (n : ℕ) (c : ℝ → ℂ → ℝ)
   unfold scaleProc scaleRad
   rw [coneScaleRadius_extCircle_circleProcess]
   exact circleProcess_rescaledCircle_extCircle γ c hR
+
+
+/-- The decoded log-profile along the real line at zero angle: `r ↦ c_x(r, 0) + Q log r` for the grid decoder `c_x`. -/
+noncomputable def profAlong (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (x : ℕ → ℝ) (r : ℝ) : ℝ :=
+  extCircle (fun q => profileDec hD x q) r 0 + lqgQ γ * Real.log r
+
+theorem measurable_profAlong_rat (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (q : ℚ) (hq : 0 < (q : ℝ)) :
+    Measurable fun x : ℕ → ℝ => profAlong γ hD x (q : ℝ) := by
+  have hfun : (fun x : ℕ → ℝ => profAlong γ hD x (q : ℝ)) =
+      fun x : ℕ → ℝ => profileDec hD x (⟨(q : ℝ), hq⟩, (0 : ℂ)) + lqgQ γ * Real.log q := by
+    funext x
+    simp only [profAlong, extCircle, hq, dite_true]
+  have hm : Measurable fun x : ℕ → ℝ => ((x, (⟨(q : ℝ), hq⟩, (0 : ℂ))) : (ℕ → ℝ) × CirclePt) :=
+    measurable_id.prodMk measurable_const
+  rw [hfun]
+  exact ((measurable_profileDec hD).comp hm).add measurable_const
+
+/-- On a Borel set of codes of continuous profiles, the set where the scale radius exceeds `s` is Borel
+(Mathlib-free level-set characterization, `lt_sSup_level_iff`). -/
+theorem measurableSet_inter_radius_gt (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (b s : ℝ)
+    (S : Set (ℕ → ℝ)) (hS : MeasurableSet S)
+    (hcont : ∀ x ∈ S, ContinuousOn (profAlong γ hD x) (Ioi 0)) :
+    MeasurableSet (S ∩ {x : ℕ → ℝ | s < coneScaleRadius γ (extCircle (fun q => profileDec hD x q)) b}) := by
+  have hF : ∀ q : ℚ, 0 < (q : ℝ) → Measurable fun x : ℕ → ℝ => profAlong γ hD x (q : ℝ) :=
+    fun q hq => measurable_profAlong_rat γ hD q hq
+  have h1 := measurableSet_levelBoundedTest hF (γ⁻¹ * Real.log b)
+  have h2 := measurableSet_existsLevelAbove hF (γ⁻¹ * Real.log b) s
+  have h3 := measurableSet_existsLevelAbove hF (γ⁻¹ * Real.log b) 0
+  have hP : MeasurableSet {x : ℕ → ℝ | (levelBoundedTest (profAlong γ hD x) (γ⁻¹ * Real.log b) ∧
+      existsLevelAbove (profAlong γ hD x) (γ⁻¹ * Real.log b) s) ∨
+      (s < 0 ∧ ¬(levelBoundedTest (profAlong γ hD x) (γ⁻¹ * Real.log b) ∧
+        existsLevelAbove (profAlong γ hD x) (γ⁻¹ * Real.log b) 0))} := by
+    exact (h1.inter h2).union ((MeasurableSet.const _).inter (h1.inter h3).compl)
+  have heq : S ∩ {x : ℕ → ℝ | s < coneScaleRadius γ (extCircle (fun q => profileDec hD x q)) b} =
+      S ∩ {x : ℕ → ℝ | (levelBoundedTest (profAlong γ hD x) (γ⁻¹ * Real.log b) ∧
+      existsLevelAbove (profAlong γ hD x) (γ⁻¹ * Real.log b) s) ∨
+      (s < 0 ∧ ¬(levelBoundedTest (profAlong γ hD x) (γ⁻¹ * Real.log b) ∧
+        existsLevelAbove (profAlong γ hD x) (γ⁻¹ * Real.log b) 0))} := by
+    ext x
+    constructor
+    · rintro ⟨hxS, hx⟩
+      refine ⟨hxS, ?_⟩
+      have hx' : s < coneScaleRadius γ (extCircle (fun q => profileDec hD x q)) b := hx
+      have hr : coneScaleRadius γ (extCircle (fun q => profileDec hD x q)) b =
+          sSup {r : ℝ | 0 < r ∧ profAlong γ hD x r = γ⁻¹ * Real.log b} := by
+        unfold coneScaleRadius profAlong
+        rfl
+      rw [hr] at hx'
+      exact (lt_sSup_level_iff (hcont x hxS) s).1 hx'
+    · rintro ⟨hxS, hx⟩
+      refine ⟨hxS, ?_⟩
+      have hr : coneScaleRadius γ (extCircle (fun q => profileDec hD x q)) b =
+          sSup {r : ℝ | 0 < r ∧ profAlong γ hD x r = γ⁻¹ * Real.log b} := by
+        unfold coneScaleRadius profAlong
+        rfl
+      show s < coneScaleRadius γ (extCircle (fun q => profileDec hD x q)) b
+      have hr : coneScaleRadius γ (extCircle (fun q => profileDec hD x q)) b =
+          sSup {r : ℝ | 0 < r ∧ profAlong γ hD x r = γ⁻¹ * Real.log b} := by
+        unfold coneScaleRadius profAlong
+        rfl
+      rw [hr]
+      exact (lt_sSup_level_iff (hcont x hxS) s).2 hx
+  rw [heq]
+  exact hS.inter hP
 
 end MatedCRT
