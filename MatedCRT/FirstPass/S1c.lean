@@ -1,5 +1,6 @@
 import MatedCRT.Steps.Sec1.Convergence
 import MatedCRT.FirstPass.Frozen.S1c
+import MatedCRT.FirstPass.S1c.Containment
 
 /-!
 # First pass: `ScaledClusterExitTimeStep` (eq:btb-converge-to-inf, line 3330) by the route of fleet note G-hT (q4)
@@ -333,5 +334,21 @@ theorem scaledClusterExitTimeStep_of_radius (hdiv : FrozenConeRadialDivergence) 
         hbd b hb n hn2
     _ ≤ ε / 2 + ε / 2 := add_le_add hn1 hRb
     _ = ε := ENNReal.add_halves ε
+
+
+/-- FIRST-PASS (fleet note G-hT, Lemma 1): `FixedTimeRadiusStep` from the three frozen external inputs
+`FrozenUniversalMeasurabilityOfAnalytic` (Lusin), `FrozenLQGTestIntegralMeasurable` (field-level measurability of the
+LQG measure) and `FrozenDiskGreenNonnegCont` (disc Green function). Proof: `fixedTimeRadiusBody_of_frozen`
+(FirstPass/S1c/Containment.lean). -/
+theorem fixedTimeRadiusStep_of_frozen (hF1 : FrozenUniversalMeasurabilityOfAnalytic)
+    (hF2 : FrozenLQGTestIntegralMeasurable) (hF3 : FrozenDiskGreenNonnegCont) : FixedTimeRadiusStep :=
+  fixedTimeRadiusBody_of_frozen hF1 hF2 hF3
+
+/-- FIRST-PASS: `ScaledClusterExitTimeStep` (hT, eq:btb-converge-to-inf) from the frozen inputs: the cone radial
+divergence (`FrozenConeRadialDivergence`, staged) and the three frozen inputs of Lemma 1. -/
+theorem scaledClusterExitTimeStep_fp (hdiv : FrozenConeRadialDivergence)
+    (hF1 : FrozenUniversalMeasurabilityOfAnalytic) (hF2 : FrozenLQGTestIntegralMeasurable)
+    (hF3 : FrozenDiskGreenNonnegCont) : ScaledClusterExitTimeStep :=
+  scaledClusterExitTimeStep_of_radius hdiv (fixedTimeRadiusStep_of_frozen hF1 hF2 hF3)
 
 end MatedCRT
