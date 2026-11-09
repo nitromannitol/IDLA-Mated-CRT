@@ -17,13 +17,14 @@ the isonormal process `X`):
 * `ae_continuousOn_representedRemainder`: almost surely the represented remainder is continuous on `D`.
 * `harmonicRemainder_of_annihilation`: if the represented remainder annihilates planar Laplacians of tests supported in
   `D` (`RemainderAnnihilationStep`, unwritten: steps3:607-609), then it is almost surely harmonic on `D`, by the
-  literature input `WeylLemmaContinuousStmt`.
+  unverified named Step `WeylLemmaContinuousStmt` (source status in its docstring).
 * `isHarmonicOnDisk_add_const`, `ae_isHarmonicOnDisk_add_const`: harmonicity survives adding a random constant, so the
   unit-circle random-constant normalization (steps3:609-611) preserves it. No independence of normalized pieces is used.
 
-Named premises, not proved here: `RemainderAnnihilationStep` and `WeylLemmaContinuousStmt` (docstrings give the exact
-types and sources), the a.s. continuity of the field and of the projected circle averages (predecessor realization
-fields), and the circle identity for some remainder `H`. Nothing here closes Proposition 4.2.
+Named premises, not proved here: `RemainderAnnihilationStep` (unwritten) and `WeylLemmaContinuousStmt`, an unverified
+named Step retained as an explicit hypothesis (docstrings give the exact types and source status), the a.s. continuity of
+the field and of the projected circle averages (predecessor realization fields), and the circle identity for some
+remainder `H`. Nothing here closes Proposition 4.2.
 -/
 
 open MeasureTheory Filter Topology Set HarmonicBalls
@@ -48,14 +49,27 @@ the genuine one. -/
 def LaplacianAnnihilatesOn (D : Set ℂ) (u : ℂ → ℝ) : Prop :=
   ∀ φ : ℂ → ℝ, IsSmoothTestFunctionIn D φ → ∫ z, u z * planarLaplacianC φ z = 0
 
-/-- **Literature input: Weyl's lemma in continuous form, with the mean-value characterization.** A function continuous on
-an open set `D` that annihilates planar Laplacians of test functions supported in `D` is harmonic on `D` in the sense of
-`IsHarmonicOnDisk` (continuity and the circle mean-value property on every closed ball contained in `D`).
-Source: H. Weyl, "The method of orthogonal projection in potential theory", Duke Math. J. 7 (1940), Lemma 2, p. 415
-(locator as cited by the Wikipedia article "Weyl's lemma (Laplace equation)"; the printed page is not yet checked by an
-operator). The mean-value half is the classical characterization of harmonic functions, Armitage–Gardiner,
-*Classical Potential Theory* (theorem number not verified). This Prop is NOT in `MatedCRT/External`: this slice may not
-edit External, so the operator must relocate it there before the component is accepted. -/
+/-- **Unverified named Step: Weyl's lemma in continuous form, with the mean-value characterization.** For an open set `D`,
+a function `u` continuous on `D` that annihilates planar Laplacians of test functions supported in `D` is harmonic on `D`
+in the sense of `IsHarmonicOnDisk` (continuity and the circle mean-value property on every closed ball contained in `D`).
+This Prop is retained as an explicit hypothesis (`hWeyl`) of the conditional components that use it. It is not proved in
+this repository, and it is not promoted to a literature result.
+
+Source status (unverified; R2 source hold of `docs/campaign/MATH-OPEN-20261109.md`):
+* Weyl1940 locator: H. Weyl, "The method of orthogonal projection in potential theory", Duke Math. J. 7 (1940), Lemma 2,
+  p. 415, as cited by the Wikipedia article "Weyl's lemma (Laplace equation)". The printed text has not been checked.
+  The campaign doc records Project Euclid full-page and download attempts that did not expose it; a bibliographic search
+  confirmed only the journal record (volume 7, pp. 411–444). The lemma number and the page are unverified. The DOI recorded
+  in the campaign doc, `10.1215/S0012-7094-40-00725-6`, is a source lead only.
+* Armitage–Gardiner attribution (*Classical Potential Theory*): no theorem number is given; the attribution is unverified.
+* The conclusion bundles two facts, which are not established as one cited lemma: (i) Weyl's lemma proper, that a function
+  annihilating planar Laplacians of test functions supported in `D` is (almost everywhere) a harmonic function on `D`;
+  (ii) the mean-value characterization of harmonic functions that `IsHarmonicOnDisk` packages into the conclusion
+  (`InsertionCoordinate.lean`, `IsHarmonicOnDisk`), namely the circle mean-value property on closed balls in `D`.
+  This file writes neither a bridge from (i) to (ii) nor a printed locator for that bridge.
+
+Accepting the conditional components that use this Prop does not require moving it into `MatedCRT/External`; source
+admission is a separate operator decision. -/
 def WeylLemmaContinuousStmt : Prop :=
   ∀ (D : Set ℂ) (u : ℂ → ℝ), IsOpen D → ContinuousOn u D → LaplacianAnnihilatesOn D u → IsHarmonicOnDisk D u
 
@@ -163,8 +177,8 @@ lemma ae_continuousOn_representedRemainder {E : Type*} [NormedAddCommGroup E] [I
     (h1.mono fun p hp => ⟨hp.1, Set.mem_univ _⟩).sub h2
   exact continuousOn_representedDifference c ρ _ hG
 
-/-- Harmonicity on `D` from the literature input: a continuous function annihilating Laplacians of tests in `D` is
-harmonic on `D` (`WeylLemmaContinuousStmt`, applied to the open set `D`). -/
+/-- Harmonicity on `D` from the unverified named Step `WeylLemmaContinuousStmt`: a continuous function annihilating
+Laplacians of tests in `D` is harmonic on `D` (applied to the open set `D`; source status in its docstring). -/
 lemma isHarmonicOnDisk_of_laplacian_annihilation (hWeyl : WeylLemmaContinuousStmt) {c : ℂ} {ρ : ℝ} {u : ℂ → ℝ}
     (hu : ContinuousOn u (Metric.ball c ρ)) (hann : LaplacianAnnihilatesOn (Metric.ball c ρ) u) :
     IsHarmonicOnDisk (Metric.ball c ρ) u :=
@@ -197,9 +211,9 @@ lemma ae_isHarmonicOnDisk_add_const {Ω : Type} [MeasurableSpace Ω] {P : Measur
 
 /-- **Harmonic remainder component of clause (g) of `DirichletProjectionRealization`.** Given the realization carriers, the
 a.s. continuity of the field on circles and of the projected circle averages, the circle identity for a remainder `H` on
-every admissible circle, the annihilation `RemainderAnnihilationStep`, and the literature input `WeylLemmaContinuousStmt`:
-the represented remainder is a.s. harmonic on `ball c ρ`, satisfies the circle identity on every admissible circle, and
-agrees a.s. with `H` at each point of `ball c ρ`. -/
+every admissible circle, the annihilation `RemainderAnnihilationStep`, and the unverified named Step
+`WeylLemmaContinuousStmt`: the represented remainder is a.s. harmonic on `ball c ρ`, satisfies the circle identity on
+every admissible circle, and agrees a.s. with `H` at each point of `ball c ρ`. -/
 theorem harmonicRemainder_of_annihilation {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] {Ω : Type}
     [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (hGFF : IsWholePlaneGFF P hC hcirc)
