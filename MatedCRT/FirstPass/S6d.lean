@@ -69,8 +69,9 @@ def FaithfulConstantOrderLowerBoundDivStmt (𝒮 : SpaceFillingSLEModel) : Prop 
             x n ∈ A} ≤ ENNReal.ofReal (1 - s₂)}
 
 /-- **Lemma 6.9, faithful header** (`lemma:chance-of-being-absorbed`, corrected tex line 2959). Quantifier order: `ω₀`
-depends only on `γ` and is chosen before `ρ`; then the rate `s₃` (universal, deterministic) is chosen after `ρ` and
-before `s₀`; `s₄, s₅` are chosen after `s₀`. `β⁻ = chosenBetaMinus γ`. Body: the Draft `ChanceOfBeingAbsorbedStmt`. -/
+depends only on `γ` and is chosen before `ρ`; then the rate `s₃` (deterministic; allowed to depend on `γ`, `ρ`) is chosen
+after `ρ` and before `s₀`; `s₄, s₅` are chosen after `s₀`. `β⁻ = chosenBetaMinus γ`. Body: the Draft
+`ChanceOfBeingAbsorbedStmt`. The constant `chosenC0` (above) is unused: no statement or proof in this file refers to it. -/
 def FaithfulChanceOfBeingAbsorbedStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ ω₀ : ℝ, 0 < ω₀ ∧ ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∃ s₃ : ℝ, 0 < s₃ ∧ ∀ s₀ : ℝ, 0 < s₀ → s₀ < 1 → ∃ s₄ s₅ : ℝ, 0 < s₄ ∧ s₄ < 1 ∧ 0 < s₅ ∧ s₅ < 1 ∧
