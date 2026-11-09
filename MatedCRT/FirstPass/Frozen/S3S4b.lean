@@ -21,7 +21,7 @@ starting point, and for each bounded Hölder `f` on `B_r(z)` the LBM occupation 
 `2 ∫_{B_r(z)} G_{B_r(z)}(y, x) f(x) dμ_h(x)`. This is `LBMGreenOccupationStep`
 (MatedCRT/Steps/Sec3/IntegralConvergenceGreenFunction.lean:30). Source: Garban–Rhodes–Vargas, *Liouville Brownian motion*,
 Theorem 2.7(1), pp. 10–11 (the citation in the paper's proof of Lemma 3.4); random-walk-to-LBM background BG20 arXiv:2003.10320
-(operator ruling; locator to be confirmed). The constant `2` is that of the existing Step, not re-audited here.
+(locator: GRV Theorem 2.7(1), §2.4, arXiv:1301.2876v4; partial, restatement pending, per notes/fp-gaps/CHATGPT-frozen-locators.md). The constant `2` is that of the existing Step, not re-audited here.
 Used by: firstPass_3_4. -/
 def FrozenLBMGreenOccupation (𝒮 : SpaceFillingSLEModel) : Prop :=
   LBMGreenOccupationStep 𝒮
@@ -31,7 +31,7 @@ bounded, continuous, Hölder test function `g` on `B_r(z)` and `T > 0`, the disc
 `(m_ε)⁻¹ ∑_{n < ⌊T m_ε⌋} g(η(X_n)) 1{n < τ^ε}` converges in probability to `∫_{(0, T ∧ τ_B]} g(B^LBM_t) dt`, for the actual
 walk `X` and the actual LBM clock of a valid environment. This is `TruncatedDetFixedTimeStep`
 (MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/FixedTimeReduction.lean:48), reused unchanged. Source: BG20
-arXiv:2003.10320 (random-walk-to-LBM convergence; operator ruling 2026-11-09 17:00 UTC; locator to be confirmed), with the LBM
+arXiv:2003.10320 (random-walk-to-LBM convergence; operator ruling 2026-11-09 17:00 UTC; locator: BG Theorem 1.2, arXiv:2003.10320v2; partial, restatement pending, per notes/fp-gaps/CHATGPT-frozen-locators.md), with the LBM
 time change of Garban–Rhodes–Vargas. Used by: firstPass_3_4. -/
 def FrozenTruncatedDetFixedTime (𝒮 : SpaceFillingSLEModel) : Prop :=
   TruncatedDetFixedTimeStep 𝒮
