@@ -1,3 +1,4 @@
+import MatedCRT.Proofs.Sec1.EnvironmentScaling.BrownianContinuousVersion
 import MatedCRT.Proofs.Sec1.EnvironmentScaling.PostLastZeroShiftedLaw
 import MatedCRT.Proposed.DMSRemark44Printed
 import MatedCRT.Proofs.Sec1.EnvironmentScaling.RadialLogMajorantProof
@@ -17,12 +18,13 @@ Committed here, unconditional:
   compares finite-dimensional laws (`IsPreBrownianReal.hasLaw`, the projective family) through
   `MeasureTheory.IsProjectiveLimit.unique`, using `brownianMotion_zero_isBrownianReal`.
 
-Not committed here: the arbitrary-space transfer `DMS14Remark44TransferResidual` (steps4-final Section 2,
-lines 443-473) and the numbered target from it. The transfer needs a continuous version of an `IsBrownianReal`
-process with measurable coordinates, which is `LatticeProb.IsBrownianReal.exists_continuous_indistinguishable`
-(LatticeProb/Prob/BrownianPathCoords.lean:28). The lattice-probability modules it imports do not build at the
-pinned Mathlib (FiniteMarginal.lean:29 and GaussianLaw.lean:57 fail on `measurable_pi_lambda` arguments), so the
-transfer is not closed here.
+Committed with the continuous version R-CV (`contVersion_holds`, file BrownianContinuousVersion.lean): the
+arbitrary-space transfer `DMS14Remark44TransferResidual` (steps4-final Section 2, lines 443-473), proved from the printed
+Wiener clauses `DMS14Remark44PrintedWiener` (`dms14Remark44TransferResidual_of_printedWiener`), and the numbered target
+`DMS14Remark44PostLastZeroLaw` (`dms14Remark44PostLastZeroLaw_of_printedWiener`). The printed premise
+`DMS14Remark44PrintedWiener` is the only remaining hypothesis. The lattice-probability lemma
+`LatticeProb.IsBrownianReal.exists_continuous_indistinguishable` (LatticeProb/Prob/BrownianPathCoords.lean:28) is
+not used.
 -/
 
 set_option autoImplicit false
@@ -292,5 +294,73 @@ lemma map_pathMap_eq_brownianMotion {Ω : Type} [MeasurableSpace Ω] {P : Measur
   apply eq_of_map_coordMap
   rw [Measure.map_map measurable_coordMap hΨm]
   exact IsProjectiveLimit.unique hDlim hWlim
+
+open MatedCRT.Proposed
+
+/-- **Arbitrary-space transfer (DMS Remark 4.4), from the printed Wiener clauses.** The printed clauses on the
+canonical Wiener space `W = brownianMotion 0` (`DMS14Remark44PrintedWiener`) give the clauses for every
+probability space carrying a Brownian motion `B` and a measurable version `F` of the drifted post-last-zero
+path. The proof: the continuous version `D` of `B` (`contVersion_holds`, BrownianContinuousVersion.lean) has path
+map `Ψ` with `P.map Ψ = W` (`map_pathMap_eq_brownianMotion`); `F = dmsPathMap d ∘ Ψ` almost surely, and the printed
+clauses for the Borel map `dmsPathMap d` transfer along `Ψ` (`ae_of_ae_map`, `Measure.map_map`). -/
+theorem dms14Remark44TransferResidual_of_printedWiener (hprint : DMS14Remark44PrintedWiener) :
+    DMS14Remark44TransferResidual := by
+  intro γ hγ0 hγ2 Ω _ P _ B F hB _hF hid
+  set d : ℝ := MatedCRTHarmonic.MatedCRT.lqgQ γ - γ with hd_def
+  obtain ⟨D, hDm, hDB, hDae, hDc⟩ := contVersion_holds Ω P B hB
+  set Ψ : Ω → MarkovProcess.ContinuousPath ℝ := fun ω => ⟨fun t => D t ω, hDc ω⟩ with hΨdef
+  have hΨm : Measurable Ψ := ContinuousMap.measurable_iff_eval.2 fun t => hDm t
+  have hlawΨ : P.map Ψ = MarkovProcess.brownianMotion 0 :=
+    map_pathMap_eq_brownianMotion hDB hDm hDc
+  have hTm : Measurable (dmsPathMap d) := measurable_dmsPathMap d
+  obtain ⟨hTreal, hTlaw⟩ := hprint γ hγ0 hγ2 (dmsPathMap d) hTm
+    (Filter.Eventually.of_forall fun _ _ => rfl)
+  have hFT : ∀ᵐ ω ∂P, F ω = dmsPathMap d (Ψ ω) := by
+    filter_upwards [hid, hDae] with ω hω hDω
+    have hfun : (fun s => B s ω) = (fun s => D s ω) := funext fun s => hDω s
+    ext t
+    rw [hω t, hfun]
+    rfl
+  have hreal : DMS14Remark44PositiveRealization P F := by
+    have hgood : ∀ᵐ ω ∂P, dmsPathMap d (Ψ ω) 0 = 0 ∧ ∀ t : ℝ≥0, 0 < t → 0 < dmsPathMap d (Ψ ω) t :=
+      ae_of_ae_map hΨm.aemeasurable
+        (p := fun y : MarkovProcess.ContinuousPath ℝ => dmsPathMap d y 0 = 0 ∧
+          ∀ t : ℝ≥0, 0 < t → 0 < dmsPathMap d y t)
+        (by rw [hlawΨ]; exact hTreal)
+    unfold DMS14Remark44PositiveRealization
+    filter_upwards [hgood, hFT] with ω hω hFω
+    rw [hFω]
+    exact hω
+  have hlevel : DMS14Remark44PositiveLevelLaw P d F := by
+    unfold DMS14Remark44PositiveLevelLaw
+    intro δ hδ
+    have hΦm : Measurable (fun p : MarkovProcess.ContinuousPath ℝ =>
+        MarkovProcess.ContinuousPath.shift (dmsFirstLevelHit δ (dmsPathMap d p)) (dmsPathMap d p)) :=
+      measurable_shift_dmsFirstLevelHit δ hTm
+    have hae : (fun ω => MarkovProcess.ContinuousPath.shift (dmsFirstLevelHit δ (F ω)) (F ω)) =ᵐ[P]
+        (fun ω => MarkovProcess.ContinuousPath.shift (dmsFirstLevelHit δ (dmsPathMap d (Ψ ω)))
+          (dmsPathMap d (Ψ ω))) := by
+      filter_upwards [hFT] with ω hω
+      rw [hω]
+    calc P.map (fun ω => MarkovProcess.ContinuousPath.shift (dmsFirstLevelHit δ (F ω)) (F ω))
+        = P.map (fun ω => MarkovProcess.ContinuousPath.shift (dmsFirstLevelHit δ (dmsPathMap d (Ψ ω)))
+            (dmsPathMap d (Ψ ω))) := Measure.map_congr hae
+      _ = (P.map Ψ).map (fun p : MarkovProcess.ContinuousPath ℝ =>
+            MarkovProcess.ContinuousPath.shift (dmsFirstLevelHit δ (dmsPathMap d p)) (dmsPathMap d p)) :=
+          (Measure.map_map hΦm hΨm).symm
+      _ = (MarkovProcess.brownianMotion 0).map (fun p : MarkovProcess.ContinuousPath ℝ =>
+            MarkovProcess.ContinuousPath.shift (dmsFirstLevelHit δ (dmsPathMap d p)) (dmsPathMap d p)) := by
+          rw [hlawΨ]
+      _ = ProbabilityTheory.cond (driftedBrownianFrom d δ) {y | ∀ t : ℝ≥0, y t ≠ 0} := hTlaw δ hδ
+  exact ⟨hreal, hlevel⟩
+
+/-- **Printed premise to the numbered target.** The numbered target `DMS14Remark44PostLastZeroLaw` follows from
+the printed Wiener-space clauses `DMS14Remark44PrintedWiener` alone: the arbitrary-space transfer
+`dms14Remark44TransferResidual_of_printedWiener` and the conditional assembly
+`dms14Remark44PostLastZeroLaw_of_transferResidual`. -/
+theorem dms14Remark44PostLastZeroLaw_of_printedWiener (hprint : DMS14Remark44PrintedWiener) :
+    DMS14Remark44PostLastZeroLaw :=
+  dms14Remark44PostLastZeroLaw_of_transferResidual
+    (dms14Remark44TransferResidual_of_printedWiener hprint)
 
 end MatedCRT.Sec1
