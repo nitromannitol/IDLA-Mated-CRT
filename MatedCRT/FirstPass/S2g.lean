@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.S2e
 import MatedCRT.Proofs.Sec2.ConeFamily
+import MatedCRT.FirstPass.S2g.HalfBallFamily
 
 /-! # First pass, wave 7: Lemmas 2.4 and 2.5 in their canonical form (q1, fp-S2g)
 
@@ -107,5 +108,17 @@ theorem firstPass_2_4_canonical_of_steps (hcan : ConeCanonicalHalfBallStep)
   refine ⟨hT, x, hJ, ?_⟩
   filter_upwards [hx] with ω hω
   exact ⟨hω.1, uniqueConeFamilyOn_of_family hω.2.1, hω.2.2⟩
+
+/-- **Reduction of `ConeCanonicalHalfBallStep` to the pathwise inputs (q1, fp-S2g).** If for every cone field the cone measures
+almost surely satisfy `ConePathwiseHalfBallInputs` (NEW open pathwise statement, `FirstPass/S2g/HalfBallFamily.lean`), then
+the pathwise canonical stopped family exists. The frozen potential-theory inputs are explicit hypotheses. -/
+theorem coneCanonicalHalfBallStep_of_pathwise (hmin : FrozenSuperharmonicMinimumPrinciple)
+    (hcentre : FrozenGreenBallCentre) (hGB : HarmonicBalls.GreenFunctionBallStmt) (hpole : FrozenGreenDiscPole)
+    (hpw : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
+      (hC' : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC' hcirc μ →
+      ∀ᵐ ω ∂P, ConePathwiseHalfBallInputs (μ ω)) :
+    ConeCanonicalHalfBallStep := by
+  intro γ hγ0 hγ2 Ω _ P hC' hcirc μ hcone
+  exact ae_canonical_family_of_pathwise P μ hmin hcentre hGB hpole (hpw γ hγ0 hγ2 Ω P hC' hcirc μ hcone)
 
 end MatedCRT
