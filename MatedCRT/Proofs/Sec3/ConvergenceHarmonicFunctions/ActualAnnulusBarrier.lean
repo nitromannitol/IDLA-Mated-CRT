@@ -1,6 +1,7 @@
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.SafeCellChain
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.AnnulusRadialSeparation
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.AnnulusDisconnection
+import MatedCRT.Proposed.GwynneMillerSheffield
 
 /-! # Actual annulus barrier: safe radial connection and one-stage disconnection
 
@@ -16,6 +17,8 @@ successful-annulus probability is kept as an explicit hypothesis `hdisc`: that i
 supplied by `GMSAnnulusDisconnectionStmt` (Gwynne-Miller-Sheffield, arXiv:1807.07511v3,
 Lemma 3.11, (3.35), p. 31; source `notes/wpn-steps2/steps2-r3.tex` lines 692-703). The
 geometric clearance and the inner and outer annulus labels stay visible in the statements.
+`MatedCRTEnv.IsValid.stay_prob_of_GMSAnnulusDisconnectionStmt` keeps `GMSAnnulusDisconnectionStmt`
+as an explicit hypothesis and states the probability form of the failure event, bounded by `C ε ^ α`.
 
 Credit: the identification relation `MatedCRTHarmonic.MatedCRT.DirectRel` is Leonardo
 Bonanno's imported module (`LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.MatedCRTDirectRel`),
@@ -128,5 +131,44 @@ theorem MatedCRTEnv.IsValid.ae_annulus_stay_le_of_disconnection
   obtain ⟨w, hw⟩ := hwalk ε hε z V e (r + 3 * d) (s / 2) (2 * s) d d hclear hcellK le_rfl
     ⌈t₀ / ε⌉ ⌈t₁ / ε⌉ hj hk
   exact srwLaw_stay_le_of_annulus_disconnection hy ha w hw hp hdisc
+
+/-- The one-stage annulus stay event at mesh `ε` in the environment at `ω`, under the GMS scale
+constraints: for every disk `ball z (r)` with clearance and local cell-diameter bound, and every
+annulus centred at `V ∈ ball 0 ρ` with `ε ^ β ≤ s ≤ ρ` and `ball V (2 s) ⊆ ball 0 ρ`, every start
+`v` in the inner annulus cells has stay probability at most `1 - p` before the outer annulus. -/
+def AnnulusStayGood {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ε ρ β p : ℝ) (ω : Ω) :
+    Prop :=
+  ∀ (z V : ℂ) (r s d : ℝ) (v : ℤ), V ∈ ball (0 : ℂ) ρ → ε ^ β ≤ s → s ≤ ρ →
+    ball V (2 * s) ⊆ ball (0 : ℂ) ρ → v ∈ cellVertices ε (S.η ω) (ball V s) →
+    0 ≤ d → r - d ≤ dist V z → 5 * d < s / 2 →
+    (∀ i : ℤ, ((closedBall V (2 * s) \ ball z (r + 3 * d)) ∩ cell ε (S.η ω) i).Nonempty →
+      ∀ q₁ ∈ cell ε (S.η ω) i, ∀ q₂ ∈ cell ε (S.η ω) i, dist q₁ q₂ ≤ d) →
+    srwLaw (S.mult ε ω) v
+      {x | ∀ n : ℕ, (n : ℕ∞) < vHitTime (cellVertices ε (S.η ω) (sphere V (2 * s))) x →
+        x n ∈ cellVertices ε (S.η ω) (ball z (r + 3 * d))} ≤
+      ENNReal.ofReal (1 - p)
+
+/-- Probability form of the one-stage barrier, with `GMSAnnulusDisconnectionStmt` kept as the
+explicit hypothesis `hgms`. The exponents `α, β`, the success probability `p` and the constant `C`
+are those of the GMS estimate (arXiv:1807.07511v3, Lemma 3.11, (3.35), p. 31): the probability that
+the one-stage stay bound fails for some annulus is at most `C ε ^ α`. No multi-stage or uniform
+tail exponent is claimed here. -/
+theorem MatedCRTEnv.IsValid.stay_prob_of_GMSAnnulusDisconnectionStmt
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
+    (hgms : GMSAnnulusDisconnectionStmt 𝒮) (hγ0 : 0 < γ) (hγ2 : γ < 2) :
+    ∃ α β : ℝ, 0 < α ∧ 0 < β ∧ ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ p : ℝ, 0 < p ∧
+      ∃ C ε₀ : ℝ, 0 ≤ C ∧ 0 < ε₀ ∧ ∀ ε : ℝ, 0 < ε → ε < ε₀ → ε < 1 →
+        S.P {ω | ¬ AnnulusStayGood S ε ρ β p ω} ≤ ENNReal.ofReal (C * ε ^ α) := by
+  obtain ⟨α, β, hα, hβ, hρ⟩ := hgms γ hγ0 hγ2
+  refine ⟨α, β, hα, hβ, fun ρ hρ0 hρ1 => ?_⟩
+  obtain ⟨p, hp, hbound⟩ := hρ ρ hρ0 hρ1
+  obtain ⟨C, ε₀, hC, hε₀, hgood⟩ := hbound Ω S hS
+  refine ⟨p, hp, C, ε₀, hC, hε₀, fun ε hε hεε₀ hε1 => ?_⟩
+  refine le_trans (measure_mono_ae ?_) (hgood ε hε hεε₀ hε1)
+  filter_upwards [hS.ae_annulus_stay_le_of_disconnection] with ω hω hnot hG
+  apply hnot
+  intro z V r s d v hV hs1 hs2 hsub hv hd hnear hscale hcell
+  exact hω ε hε z V r s d p v hd hp.le hnear hscale hcell (hG V hV s hs1 hs2 hsub v hv)
 
 end MatedCRT
