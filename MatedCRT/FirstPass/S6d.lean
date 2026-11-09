@@ -86,7 +86,7 @@ def FaithfulChanceOfBeingAbsorbedStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
 `s₁ = 1/4`, `s₂ = 1/2`). Here `s₁, s₂` are chosen after `ρ` and before `s₀`; the body is that of
 `FaithfulConstantOrderLowerBoundStmt`. A rate `s₃` uniform in `s₀` needs this form: the walker absorption bound
 `s₂(s₀)` of the printed 6.7/6.8 only gives the rate `s₂(s₀)/4` (`AbsorptionChernoffStep`). Input of
-`firstPass_6_9_corrected`. -/
+`firstPass_6_9_faithful`. -/
 def UniformConstantOrderLowerBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ ω₀ : ℝ, 0 < ω₀ ∧ ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∃ s₁ s₂ : ℝ, 0 < s₁ ∧ s₁ < 1 ∧ 0 < s₂ ∧ s₂ < 1 ∧
@@ -101,11 +101,11 @@ def UniformConstantOrderLowerBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
           (n : ℕ∞) < vExitTime (cellVertices ε (S.η ω) (thickening r (fillCells ε (S.η ω) Θ))) x ∧
           x n ∈ cellVertices ε (S.η ω) (thickening r (fillCells ε (S.η ω) Θ)) \ (S' ∪ Θ)}}
 
-/-- **Lemma 6.9, faithful header, from the uniform Lemma 6.7/6.8 input** (`firstPass_6_9_corrected`). Reduction: with
+/-- **Lemma 6.9, faithful header, from the uniform Lemma 6.7/6.8 input** (`firstPass_6_9_faithful`). Reduction: with
 `ω₀, s₁, s₂` from `hU` (`ω₀` before `ρ`, `s₁, s₂` before `s₀`), the rate is `s₃ = s₂/4` and `s₄ = s₂/4`, `s₅ = s₁`;
 `AbsorptionChernoffStep` (proved, Proofs/Sec6/ChanceOfBeingAbsorbed/Chernoff.lean) turns the walker-absorption bound
 of the Lemma 6.7 event into the tail bound, pointwise on that event, and `ProbTendsToOne.mono'` transfers it. -/
-theorem firstPass_6_9_corrected (𝒮 : SpaceFillingSLEModel) (hU : UniformConstantOrderLowerBoundStmt 𝒮) :
+theorem firstPass_6_9_faithful (𝒮 : SpaceFillingSLEModel) (hU : UniformConstantOrderLowerBoundStmt 𝒮) :
     FaithfulChanceOfBeingAbsorbedStmt 𝒮 := by
   intro γ hγ0 hγ2
   obtain ⟨ω₀, hω₀, hU'⟩ := hU γ hγ0 hγ2
