@@ -30,4 +30,34 @@ def FrozenConeRadialDivergence : Prop :=
     ∀ᵐ x ∂(quantumConeRadialLaw γ ν),
       Tendsto (fun s : ℝ≥0 => x.2 s + lqgQ γ * (s : ℝ)) atTop atTop
 
+/-- FIRST-PASS FROZEN. Universal measurability of analytic sets (Lusin). For every Polish space `X` with its Borel
+σ-algebra and every finite Borel measure `ν` on `X`, each analytic subset of `X` is `ν`-null-measurable (it is
+`ν`-measurable for the completion). Source: Lusin (1917); Kechris, *Classical Descriptive Set Theory* (1995), Theorem
+21.10 (analytic sets are universally measurable). General measure theory, not specific to this paper.
+Locator: standard; locator pending.
+Used by: firstPassS1c_containmentNullMeasurable (MatedCRT/FirstPass/S1c/Measurability.lean). -/
+def FrozenUniversalMeasurabilityOfAnalytic : Prop :=
+  ∀ (X : Type) [TopologicalSpace X] [PolishSpace X] [MeasurableSpace X] [BorelSpace X] (ν : Measure X),
+    IsFiniteMeasure ν → ∀ A : Set X, AnalyticSet A → NullMeasurableSet A ν
+
+/-- FIRST-PASS FROZEN. Field-level measurability of the LQG measure against test functions. For `0 < γ < 2`, every
+γ-quantum cone field `(P, hC, hcirc, μ)` (`IsConeField`) and every continuous compactly supported `φ : ℂ → ℝ`, the map
+`ω ↦ ∫ φ dμ_ω` is measurable. This is the field-level measurability of the dyadic approximations of the LQG measure
+(Duplantier–Sheffield 2011, Prop. 1.1, as cited in `HarmonicBalls.Defs.LQG`), and the operator's wave-4 ruling
+(measurability of `ω ↦ μ_h(S)`), which determines it on dyadic squares. Locator: standard; locator pending.
+Used by: firstPassS1c_containmentNullMeasurable (MatedCRT/FirstPass/S1c/Measurability.lean). -/
+def FrozenLQGTestIntegralMeasurable : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
+    ∀ φ : ℂ → ℝ, Continuous φ → HasCompactSupport φ → Measurable fun ω => ∫ x, φ x ∂(μ ω)
+
+/-- FIRST-PASS FROZEN. Disc Green function with pole at the centre. For every radius `R > 0`, the Green function
+`G_{B_R}(0,·) = greenFunction (ball 0 R) 0` is nonnegative and continuous on `B_R ∖ {0}`; explicitly
+`G_{B_R}(0,x) = (2π)^{-1} log (R / |x|)` (Armitage–Gardiner, *Classical Potential Theory* (2001), §4.4). This is the
+Green function of the disc, not specific to this paper. Locator: standard; locator pending.
+Used by: firstPassS1c_threshold (MatedCRT/FirstPass/S1c/Threshold.lean). -/
+def FrozenDiskGreenNonnegCont : Prop :=
+  ∀ R : ℝ, 0 < R → (∀ x ∈ Metric.ball (0 : ℂ) R, x ≠ 0 → 0 ≤ greenFunction (Metric.ball (0 : ℂ) R) 0 x) ∧
+    ContinuousOn (greenFunction (Metric.ball (0 : ℂ) R) 0) (Metric.ball (0 : ℂ) R \ {0})
+
 end MatedCRT
