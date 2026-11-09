@@ -8,6 +8,9 @@ import MatedCRT.Proofs.Sec3.UniformConvergenceGreenKernel.InteriorStep
 import MatedCRT.Proofs.Sec3.UniformConvergenceGreenKernel.BoundaryStep
 import MatedCRT.Proofs.Sec3.DiscretePotentialTightness.AlmostSureInterior
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.DyadicModulus
+import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.Final
+import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.ExitCell
+import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.PathFunctionalStep
 import MatedCRT.FirstPass.Frozen.S3S4
 
 /-!
@@ -71,6 +74,18 @@ theorem firstPass_3_7 {𝒮 : SpaceFillingSLEModel} (h27 : VolumeGrowthStmt) (h2
   convergenceNormalizedExitTime_of_statements 𝒮 h33 h35 (boundedExitTimeRV_of_steps h27) h218
     (discretePotentialTightnessAeStep_of_inputs hm (boundedExitTimeRV_of_steps h27) h218 h32)
 
+/-- **Lemma 3.6** (lemma:convergence-of-harmonic-functions), in its printed (pointwise, Hölder datum on a neighbourhood of the
+closed disk) form `ConvergenceHarmonicFunctionsStmt`. Hypotheses: Draft Lemma 2.11 (`RandomWalkToLBMStmt`, cited), Lemma 2.8
+(`CellSizeEstimateStmt`, cited), `MepsScalingInput` (External) and the frozen regular-exit input of planar Brownian motion. The path
+step uses the proved measurability `interpolatedWalkMeasurableStep` (inside `harmonicPathExitStep_of_inputs`) and the proved
+`lbmPathFunctionalMeasurableStep_holds`; the exit-cell comparison is `harmonicExitCellStep_of_inputs`. The corrected Lemma 3.6 of
+[C13] (uniform convergence and same-walk comparison) is NOT this theorem; see the report. -/
+theorem firstPass_3_6 {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkToLBMStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
+    (hm : MepsScalingInput 𝒮) (hexc : FrozenBrownianOutwardExcursionAtExit) :
+    ConvergenceHarmonicFunctionsStmt 𝒮 :=
+  convergenceHarmonicFunctions_of_steps 𝒮 h211 h28 (harmonicPathExitStep_of_inputs 𝒮 hexc (lbmPathFunctionalMeasurableStep_holds 𝒮))
+    (harmonicExitCellStep_of_inputs 𝒮 h211 hm hexc (lbmPathFunctionalMeasurableStep_holds 𝒮))
+
 /-- **Lemma 4.8** (lemma:subsequential-properties). Hypotheses: the Draft statements of Lemmas 3.3, 3.5 and 3.7, which
 are numbered results of this first pass (their first-pass theorems are the same statements, as hypotheses here).
 Lemma 2.13 (`MaximumPrincipleStmt`, corrected [C2]) is discharged by `maximumPrinciple_of_steps` with
@@ -92,3 +107,4 @@ end MatedCRT
 #print axioms MatedCRT.firstPass_4_8
 #print axioms MatedCRT.firstPass_3_3
 #print axioms MatedCRT.firstPass_3_7
+#print axioms MatedCRT.firstPass_3_6

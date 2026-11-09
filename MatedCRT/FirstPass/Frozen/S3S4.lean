@@ -1,4 +1,5 @@
 import MatedCRT.Steps.Sec3.DiscretePotentialTightness
+import MatedCRT.Steps.Sec3.ConvergenceHarmonicFunctions
 
 /-!
 # First pass: frozen external inputs of Sections 3 and 4 (q2, task fp-S3S4)
@@ -17,5 +18,13 @@ this is the corrected statement `DiscreteHolderContinuityCorrectedStep` of Steps
 Used by: firstPass_3_1_corrected. -/
 def FrozenDiscreteHolderContinuityCorrected (𝒮 : SpaceFillingSLEModel) : Prop :=
   DiscreteHolderContinuityCorrectedStep 𝒮
+
+/-- FIRST-PASS FROZEN. Regular exit of planar Brownian motion from a disk: almost surely, immediately after the first
+exit time from `ball z r` the path makes an outward radial excursion (`0 < ⟪b(τ) - z, b(t) - b(τ)⟫` for arbitrarily small
+`t > τ`). Source: Mörters–Peres, *Brownian Motion* (Cambridge 2010), Theorem 2.7 and Theorem 2.16 (strong Markov property at
+the exit time and Blumenthal's 0-1 law; standard). The statement is about planar Brownian motion only, not about this
+paper's objects. Used by: firstPass_3_6. -/
+def FrozenBrownianOutwardExcursionAtExit : Prop :=
+  BrownianOutwardExcursionAtExitStep
 
 end MatedCRT
