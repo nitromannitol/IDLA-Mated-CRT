@@ -99,7 +99,8 @@ the pole `0` in `L t` for `t > 0`, some `L s ⊆ B_{1/2}` with `s > 0`, and boun
 theorem stopped_halfBall_of_closureRadius {L : ℝ → Set ℂ}
     (hopen : ∀ t, IsOpen (L t)) (hsub : ∀ t, L t ⊆ ball 0 (3 / 4))
     (hmono : MonotoneOn L (Ioi 0))
-    (hcont : ContinuousOn (fun t => closureRadius (L t)) (Ioi 0))
+    (hcont : ∃ U : ℝ, sSup {t : ℝ | 0 < t ∧ L t ⊆ ball 0 (1 / 2)} < U ∧
+      ContinuousOn (fun t => closureRadius (L t)) (Ioo 0 U))
     (hpole : ∀ t, 0 < t → (0 : ℂ) ∈ L t)
     (hne : ∃ s : ℝ, 0 < s ∧ L s ⊆ ball 0 (1 / 2))
     (hbdd : BddAbove {t : ℝ | 0 < t ∧ L t ⊆ ball 0 (1 / 2)}) :
@@ -119,7 +120,11 @@ theorem stopped_halfBall_of_closureRadius {L : ℝ → Set ℂ}
   have hbddR : BddAbove {t : ℝ | 0 < t ∧ closureRadius (L t) ≤ 1 / 2} := by
     rw [← hSR]
     exact hbdd
-  have hsup := sup_level_radius_eq (R := fun t => closureRadius (L t)) hcont hsR hbddR
+  have hcont' : ∃ U : ℝ, sSup {t : ℝ | 0 < t ∧ closureRadius (L t) ≤ 1 / 2} < U ∧
+      ContinuousOn (fun t => closureRadius (L t)) (Ioo 0 U) := by
+    obtain ⟨U, hU, hc⟩ := hcont
+    exact ⟨U, by rw [← hSR]; exact hU, hc⟩
+  have hsup := sup_level_radius_eq (R := fun t => closureRadius (L t)) hcont' hsR hbddR
   rw [hSR]
   have hTpos : 0 < sSup {t : ℝ | 0 < t ∧ closureRadius (L t) ≤ 1 / 2} := hsup.1
   have hSne : {t : ℝ | 0 < t ∧ closureRadius (L t) ≤ 1 / 2}.Nonempty := ⟨s0, hs0, (hRS s0 hs0).mp hLs0⟩

@@ -16,7 +16,8 @@ open Set Filter Topology
 
 /-- The level-set supremum of a continuous radius (CHATGPT-q1-open-steps.md H4-H5). With `S = {t > 0 | R t ≤ a}` nonempty
 and bounded above, `T = sSup S` is positive, `R T = a`, and for every `r < a` some `t ∈ (0, T)` satisfies `r < R t`. -/
-theorem sup_level_radius_eq {R : ℝ → ℝ} (hR : ContinuousOn R (Ioi 0)) {a : ℝ}
+theorem sup_level_radius_eq {R : ℝ → ℝ} {a : ℝ}
+    (hR : ∃ U : ℝ, sSup {t : ℝ | 0 < t ∧ R t ≤ a} < U ∧ ContinuousOn R (Ioo 0 U))
     (hne : ∃ s : ℝ, 0 < s ∧ R s ≤ a) (hbdd : BddAbove {t : ℝ | 0 < t ∧ R t ≤ a}) :
     0 < sSup {t : ℝ | 0 < t ∧ R t ≤ a} ∧ R (sSup {t : ℝ | 0 < t ∧ R t ≤ a}) = a ∧
       ∀ r < a, ∃ t ∈ Ioo 0 (sSup {t : ℝ | 0 < t ∧ R t ≤ a}), r < R t := by
@@ -26,7 +27,8 @@ theorem sup_level_radius_eq {R : ℝ → ℝ} (hR : ContinuousOn R (Ioi 0)) {a :
   have hSne : S.Nonempty := ⟨s0, hs0, hRs0⟩
   have hTS : ∀ t ∈ S, t ≤ T := fun t ht => le_csSup hbdd ht
   have hTpos : 0 < T := lt_of_lt_of_le hs0 (hTS s0 ⟨hs0, hRs0⟩)
-  have hcont : ContinuousAt R T := hR.continuousAt (Ioi_mem_nhds hTpos)
+  obtain ⟨U, hTU, hRU⟩ := hR
+  have hcont : ContinuousAt R T := hRU.continuousAt (Ioo_mem_nhds hTpos hTU)
   -- `R T ≤ a`: otherwise `R > a` near `T`, but `S` has points arbitrarily close to `T` from below.
   have hle : R T ≤ a := by
     by_contra h

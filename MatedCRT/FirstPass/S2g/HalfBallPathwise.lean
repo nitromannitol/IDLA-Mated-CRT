@@ -48,7 +48,8 @@ family `t ↦ regularizedCluster μ (3/4) 0 t` has the harmonic-ball properties 
 theorem canonical_witness_of_pathwise {μ : Measure ℂ}
     (hcopen : ∀ t, 0 < t → IsOpen (cluster μ (3 / 4) 0 t))
     (hmono : MonotoneOn (fun t => regularizedCluster μ (3 / 4) 0 t) (Ioi 0))
-    (hcont : ContinuousOn (fun t => closureRadius (regularizedCluster μ (3 / 4) 0 t)) (Ioi 0))
+    (hcont : ∃ U : ℝ, sSup {t : ℝ | 0 < t ∧ regularizedCluster μ (3 / 4) 0 t ⊆ ball 0 (1 / 2)} < U ∧
+      ContinuousOn (fun t => closureRadius (regularizedCluster μ (3 / 4) 0 t)) (Ioo 0 U))
     (hne : ∃ s : ℝ, 0 < s ∧ regularizedCluster μ (3 / 4) 0 s ⊆ ball 0 (1 / 2))
     (hbdd : BddAbove {t : ℝ | 0 < t ∧ regularizedCluster μ (3 / 4) 0 t ⊆ ball 0 (1 / 2)})
     (hfam : IsConeHarmonicBallFamilyOn μ (regularizedCluster μ (3 / 4) 0)
