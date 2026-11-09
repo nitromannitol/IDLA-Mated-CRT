@@ -4,40 +4,53 @@ import Mathlib
 # Lemma 1 of the Lemma 6.8 argument: pointwise circle average of the corrected kernel (q2, task fp-S4S6c)
 
 Source: `notes/fp-gaps/LEMMA68.md`, "Lemma 1 (what the corrected good event controls)", lines 91-143, the first display of
-the proof: averaging `v ↦ log(R/|u-v|) + 1` over the circle `v = z + (3R/2) e^{iθ}` gives at least
-`κ₀ = 1 - log 2 > 0` for every `u` with `|u - z| ≤ 2R`. Here `u` off the circle `|u - z| = 3R/2` is treated; the
-single exceptional case `|u - z| = 3R/2` (where the kernel has its integrable singularity at one point of the circle) is
-NOT yet covered, and is recorded in the round report.
+the proof: averaging `v ↦ log(R/|u-v|) + 1` over the circle `v = z + (3R/2) e^{iθ}` gives at least `κ₀ = 1 - log 2 > 0`
+for every `u` with `|u - z| ≤ 2R`, including `u` on that circle. The single point `v = u` of the circle, where the kernel
+is singular, is a null set of the parameter `θ` (the parametrization is injective on a period), so it does not affect the
+circle average (`circleAverage_congr_of_ne`).
 
-Mathlib input: `circleAverage_log_norm_sub_const_eq_log_radius_add_posLog`
-(Mathlib/Analysis/SpecialFunctions/Integrals/PosLogEqCircleAverage.lean:205).
+Mathlib inputs: `circleAverage_log_norm_sub_const_eq_log_radius_add_posLog`
+(Mathlib/Analysis/SpecialFunctions/Integrals/PosLogEqCircleAverage.lean:205), `injOn_circleMap_of_abs_sub_le`
+(Mathlib/Analysis/SpecialFunctions/Complex/CircleMap.lean:168).
 -/
 
 open MeasureTheory Real
 
 namespace MatedCRT
 
-/-- **Pointwise circle average of the corrected kernel.** For `u` in the closed annulus `|u - z| ≤ 2R`, off the circle
-`|u - z| = 3R/2`, the circle average of `v ↦ log(R/|u-v|) + 1` over `∂B_{3R/2}(z)` is at least `1 - log 2`. -/
-theorem circleAverage_kernel_ge_one_sub_log_two {z u : ℂ} {R : ℝ} (hR : 0 < R) (hu : ‖u - z‖ ≤ 2 * R)
-    (hne : ‖u - z‖ ≠ 3 * R / 2) :
+/-- A circle average does not see the value of the integrand at one point `u` of the circle. -/
+theorem circleAverage_congr_of_ne {f g : ℂ → ℝ} {z u : ℂ} {t : ℝ} (ht : t ≠ 0)
+    (h : ∀ v : ℂ, v ≠ u → f v = g v) :
+    circleAverage f z t = circleAverage g z t := by
+  simp only [circleAverage_def]
+  congr 1
+  apply intervalIntegral.integral_congr_ae
+  have hnull : volume {θ : ℝ | θ ∈ Set.uIoc 0 (2 * π) ∧ circleMap z t θ = u} = 0 := by
+    apply Set.Subsingleton.measure_zero _ volume
+    intro a ha b hb
+    exact injOn_circleMap_of_abs_sub_le ht (by rw [zero_sub, abs_neg, abs_of_pos (by positivity)])
+      ha.1 hb.1 (ha.2.trans hb.2.symm)
+  rw [ae_iff]
+  refine measure_mono_null ?_ hnull
+  intro θ hθ
+  simp only [Set.mem_ofPred_eq, not_imp] at hθ
+  exact ⟨hθ.1, by by_contra hc; exact hθ.2 (h _ hc)⟩
+
+/-- **Pointwise circle average of the corrected kernel.** For `u` in the closed annulus `|u - z| ≤ 2R`, the circle average
+of `v ↦ log(R/|u-v|) + 1` over `∂B_{3R/2}(z)` is at least `1 - log 2`. -/
+theorem circleAverage_kernel_ge_one_sub_log_two {z u : ℂ} {R : ℝ} (hR : 0 < R) (hu : ‖u - z‖ ≤ 2 * R) :
     1 - Real.log 2 ≤ circleAverage (fun v : ℂ => Real.log (R / ‖u - v‖) + 1) z (3 * R / 2) := by
   have ht : (0 : ℝ) < 3 * R / 2 := by positivity
-  have hEq : Set.EqOn (fun v : ℂ => Real.log (R / ‖u - v‖) + 1)
-      (fun v : ℂ => (Real.log R + 1) - Real.log ‖v - u‖) (Metric.sphere z |3 * R / 2|) := by
+  have hEq : ∀ v : ℂ, v ≠ u →
+      Real.log (R / ‖u - v‖) + 1 = (Real.log R + 1) - Real.log ‖v - u‖ := by
     intro v hv
-    rw [Metric.mem_sphere, dist_eq_norm, abs_of_pos ht] at hv
-    have hvu : ‖v - u‖ ≠ 0 := by
-      intro h0
-      apply hne
-      have hv' : v = u := sub_eq_zero.mp (norm_eq_zero.mp h0)
-      rw [← hv']
-      exact hv
-    have huv : ‖u - v‖ ≠ 0 := by rwa [norm_sub_rev]
-    show Real.log (R / ‖u - v‖) + 1 = (Real.log R + 1) - Real.log ‖v - u‖
+    have huv : ‖u - v‖ ≠ 0 := by
+      rw [norm_ne_zero_iff, sub_ne_zero]
+      exact hv.symm
     rw [Real.log_div hR.ne' huv, norm_sub_rev]
     ring
-  rw [circleAverage_congr_sphere hEq]
+  rw [circleAverage_congr_of_ne (f := fun v : ℂ => Real.log (R / ‖u - v‖) + 1)
+    (g := fun v : ℂ => (Real.log R + 1) - Real.log ‖v - u‖) ht.ne' hEq]
   have hsub : (fun v : ℂ => (Real.log R + 1) - Real.log ‖v - u‖) =
       (fun _ : ℂ => Real.log R + 1) - (fun v : ℂ => Real.log ‖v - u‖) := rfl
   rw [hsub, circleAverage_sub (circleIntegrable_const _ _ _) (circleIntegrable_log_norm_sub_const _),
