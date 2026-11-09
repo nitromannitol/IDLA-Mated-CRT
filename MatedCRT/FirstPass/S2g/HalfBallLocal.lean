@@ -118,4 +118,77 @@ theorem radiusThreeQuartersData_iff_of_restrict_eq {μ ν : Measure ℂ} {t : �
     RadiusThreeQuartersData μ t ↔ RadiusThreeQuartersData ν t :=
   ⟨radiusThreeQuartersData_of_restrict_eq h, radiusThreeQuartersData_of_restrict_eq h.symm⟩
 
+/-- Two measures agreeing on an open set `U` give the same mass to every subset of `U`. -/
+theorem measure_apply_eq_of_restrict_eq {U S : Set ℂ} {μ ν : Measure ℂ} (hU : MeasurableSet U)
+    (h : μ.restrict U = ν.restrict U) (hS : S ⊆ U) : μ S = ν S := by
+  have key : ∀ ρ : Measure ℂ, ρ.restrict U S = ρ S := fun ρ => by
+    rw [Measure.restrict_apply' hU, inter_eq_left.mpr hS]
+  rw [← key μ, ← key ν, h]
+
+/-- A set whose closure lies in `B_{1/2}` has closure in `B_{3/4}` (closed ball of radius `1/2` inside the open ball of
+radius `3/4`). -/
+theorem closure_subset_ball_three_quarters_of_subset_half {S : Set ℂ} (hS : S ⊆ ball (0 : ℂ) (1 / 2)) :
+    closure S ⊆ ball (0 : ℂ) (3 / 4) := by
+  have h1 : closure S ⊆ closedBall (0 : ℂ) (1 / 2) :=
+    closure_minimal (hS.trans ball_subset_closedBall) isClosed_closedBall
+  exact h1.trans (closedBall_subset_ball (by norm_num))
+
+/-- Harmonic balls for `μ` and `ν` coincide when `μ` and `ν` agree on `B_{3/4}` and the set `Λ` has closure in `B_{3/4}`
+(Armitage-Gardiner: the mean value property of `f` at the centre only sees the measure on `Λ`). -/
+theorem isHarmonicBall_iff_of_restrict_eq {μ ν : Measure ℂ} {Λ : Set ℂ} {z : ℂ}
+    (h : μ.restrict (ball (0 : ℂ) (3 / 4)) = ν.restrict (ball (0 : ℂ) (3 / 4)))
+    (hΛ : closure Λ ⊆ ball (0 : ℂ) (3 / 4)) : IsHarmonicBall μ Λ z ↔ IsHarmonicBall ν Λ z := by
+  have hsub : Λ ⊆ ball (0 : ℂ) (3 / 4) := subset_closure.trans hΛ
+  have hμΛ : μ Λ = ν Λ := measure_apply_eq_of_restrict_eq measurableSet_ball h hsub
+  have hres : μ.restrict Λ = ν.restrict Λ := by
+    rw [← Measure.restrict_restrict_of_subset (μ := μ) hsub, h, Measure.restrict_restrict_of_subset hsub]
+  have hreal : μ.real Λ = ν.real Λ := by
+    simp only [Measure.real, hμΛ]
+  have hMVP : ∀ f : ℂ → ℝ, HasMeanValueProperty μ Λ z f ↔ HasMeanValueProperty ν Λ z f := by
+    intro f
+    unfold HasMeanValueProperty IntegrableOn
+    rw [hres, hreal]
+  unfold IsHarmonicBall
+  simp only [hμΛ, hMVP]
+
+/-- The conditions of `SatisfiesHarmonicBallConditionsOn` depend on `μ` only through `μ.restrict (B_{3/4})`, when every
+`Λ t`, `t ∈ (0,T)`, has closure in `B_{3/4}` (the masses of `Λ t` and of its frontier see only `B_{3/4}`). -/
+theorem satisfiesHarmonicBallConditionsOn_of_restrict_eq {μ ν : Measure ℂ} {Λ : ℝ → Set ℂ} {z : ℂ} {T : ℝ}
+    (h : μ.restrict (ball (0 : ℂ) (3 / 4)) = ν.restrict (ball (0 : ℂ) (3 / 4)))
+    (hΛ : ∀ t ∈ Ioo 0 T, closure (Λ t) ⊆ ball (0 : ℂ) (3 / 4))
+    (hd : SatisfiesHarmonicBallConditionsOn μ Λ z T) : SatisfiesHarmonicBallConditionsOn ν Λ z T where
+  measure_eq t ht := by
+    rw [← measure_apply_eq_of_restrict_eq measurableSet_ball h (subset_closure.trans (hΛ t ht))]
+    exact hd.measure_eq t ht
+  measure_frontier t ht := by
+    rw [← measure_apply_eq_of_restrict_eq measurableSet_ball h (frontier_subset_closure.trans (hΛ t ht))]
+    exact hd.measure_frontier t ht
+  isRegularOpen := hd.isRegularOpen
+  isBounded := hd.isBounded
+  isConnected := hd.isConnected
+  mem := hd.mem
+  monotoneOn := hd.monotoneOn
+  hausdorffContinuousOn := hd.hausdorffContinuousOn
+  iInter_eq := hd.iInter_eq
+
+/-- **Transfer of the pathwise half-ball inputs (deterministic, q1).** `ConePathwiseHalfBallInputs` depends on the measure
+only through its restriction to `B_{3/4}` and its local finiteness. If `μ` has the inputs and `ν` is locally finite and
+agrees with `μ` on `B_{3/4}`, then `ν` has them, with the same canonical time. The regularized cluster family at radius
+`3/4` is unchanged (`regularizedCluster_fun_congr_three_quarters`), its harmonic-ball and obstacle clauses on `(0, T)`
+transfer by the two locality lemmas above, since `Λ_t` lies in `B_{1/2}` for `t < T` (`regularizedCluster_subset_half_of_lt_sSup`). -/
+theorem pathwiseInputs_of_restrict_eq {μ ν : Measure ℂ}
+    (h : μ.restrict (ball (0 : ℂ) (3 / 4)) = ν.restrict (ball (0 : ℂ) (3 / 4)))
+    (hν : IsLocallyFiniteMeasure ν) (hμ : ConePathwiseHalfBallInputs μ) : ConePathwiseHalfBallInputs ν := by
+  obtain ⟨_, hdat, hmono, hH, hne, hbdd, hHB, hSat⟩ := hμ
+  have hfun := regularizedCluster_fun_congr_three_quarters h
+  have hcl : ∀ t ∈ Ioo 0 (sSup {t : ℝ | 0 < t ∧ regularizedCluster μ (3 / 4) 0 t ⊆ ball (0 : ℂ) (1 / 2)}),
+      closure (regularizedCluster μ (3 / 4) 0 t) ⊆ ball (0 : ℂ) (3 / 4) :=
+    fun t ht => closure_subset_ball_three_quarters_of_subset_half (regularizedCluster_subset_half_of_lt_sSup hmono hne ht)
+  unfold ConePathwiseHalfBallInputs
+  rw [← hfun]
+  refine ⟨hν, fun t ht => radiusThreeQuartersData_of_restrict_eq h (hdat t ht), hmono, hH, hne, hbdd, ?_, ?_⟩
+  · intro t ht
+    exact (isHarmonicBall_iff_of_restrict_eq h (hcl t ht)).mp (hHB t ht)
+  · exact satisfiesHarmonicBallConditionsOn_of_restrict_eq h hcl hSat
+
 end MatedCRT
