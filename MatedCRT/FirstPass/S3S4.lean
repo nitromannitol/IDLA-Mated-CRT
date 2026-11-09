@@ -11,6 +11,8 @@ import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.DyadicModulus
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.Final
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.ExitCell
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.PathFunctionalStep
+import MatedCRT.Proofs.Sec4.SubsequentialProperties.PreparedInputs
+import MatedCRT.Proofs.Sec4.ConvergenceDivisible.PreparedConeScaling
 import MatedCRT.FirstPass.Frozen.S3S4
 
 /-!
@@ -86,6 +88,31 @@ theorem firstPass_3_6 {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkToLBMStmt 
   convergenceHarmonicFunctions_of_steps 𝒮 h211 h28 (harmonicPathExitStep_of_inputs 𝒮 hexc (lbmPathFunctionalMeasurableStep_holds 𝒮))
     (harmonicExitCellStep_of_inputs 𝒮 h211 hm hexc (lbmPathFunctionalMeasurableStep_holds 𝒮))
 
+/-- **Lemma 4.6** (lemma:subsequential-convergence), corrected fixed-sequence form [C12]: `SubsequentialConvergencePreparedStmt`
+(Draft/Section4Prepared.lean; the fixed time and deterministic sequence precede the deterministic thinning and its almost sure
+event). The printed quantifier order is not established (docs/campaign/GAPS-SEC2567A.md, E-x3-2); the printed Draft
+`SubsequentialConvergenceStmt` is not proved here. Hypotheses: Lemma 2.7, Lemma 2.18, Draft Lemmas 3.5 and 3.7 (numbered results,
+as hypotheses), `MepsScalingInput` (External) and the frozen corrected Lemma 3.2. Lemma 4.7 and Lemma 4.4 (corrected) are
+`firstPass_4_7` and `firstPass_4_4_corrected`; Lemma 2.17 is `boundedExitTimeRV_of_steps`. Proof: the prepared estimates
+`subsequentialConvergencePrepared_of_estimates`, which has no further step hypothesis. -/
+theorem firstPass_4_6_corrected {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingInput 𝒮) (h27 : VolumeGrowthStmt)
+    (h218 : ExitTimeUpperBoundStmt 𝒮) (hH : FrozenDiscreteHolderContinuityCorrected 𝒮)
+    (h35 : DiscreteDirichletProblemStmt 𝒮) (h37 : ConvergenceNormalizedExitTimeStmt 𝒮) :
+    SubsequentialConvergencePreparedStmt 𝒮 :=
+  subsequentialConvergencePrepared_of_estimates 𝒮 hm (firstPass_4_7 h27 h218 hm) (firstPass_4_4_corrected 𝒮) h35 h218 hH
+    h37 (boundedExitTimeRV_of_steps h27) h27
+
+/-- **Theorem 4.1** (theorem:convergence-divisible), Draft form `ConvergenceDivisibleStmt`, through the prepared discrete
+estimates (corrected fixed-time proof, C11/C12). Hypotheses: Draft Lemmas 2.10, 3.4, 2.14, 2.8, 3.5 and 2.18, 2.7 (numbered
+results, the first three cited); `MepsScalingInput` (External); the frozen corrected Lemma 3.2 and the frozen
+`ConeEnvironmentScalingStep`. -/
+theorem firstPass_4_1 {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingInput 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)
+    (h34 : IntegralConvergenceGreenFunctionStmt 𝒮) (h214 : GreenKernelUpperBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
+    (h35 : DiscreteDirichletProblemStmt 𝒮) (h218 : ExitTimeUpperBoundStmt 𝒮) (h27 : VolumeGrowthStmt)
+    (hH : FrozenDiscreteHolderContinuityCorrected 𝒮) (hcone : FrozenConeEnvironmentScaling 𝒮) :
+    ConvergenceDivisibleStmt 𝒮 :=
+  convergenceDivisible_of_prepared_discrete_coneScaling 𝒮 hm h210 h34 h214 h28 h35 h218 hH h27 hcone
+
 /-- **Lemma 4.8** (lemma:subsequential-properties). Hypotheses: the Draft statements of Lemmas 3.3, 3.5 and 3.7, which
 are numbered results of this first pass (their first-pass theorems are the same statements, as hypotheses here).
 Lemma 2.13 (`MaximumPrincipleStmt`, corrected [C2]) is discharged by `maximumPrinciple_of_steps` with
@@ -108,3 +135,5 @@ end MatedCRT
 #print axioms MatedCRT.firstPass_3_3
 #print axioms MatedCRT.firstPass_3_7
 #print axioms MatedCRT.firstPass_3_6
+#print axioms MatedCRT.firstPass_4_6_corrected
+#print axioms MatedCRT.firstPass_4_1

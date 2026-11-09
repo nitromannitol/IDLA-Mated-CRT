@@ -1,5 +1,6 @@
 import MatedCRT.Steps.Sec3.DiscretePotentialTightness
 import MatedCRT.Steps.Sec3.ConvergenceHarmonicFunctions
+import MatedCRT.Steps.Sec1.Convergence
 
 /-!
 # First pass: frozen external inputs of Sections 3 and 4 (q2, task fp-S3S4)
@@ -26,5 +27,15 @@ the exit time and Blumenthal's 0-1 law; standard). The statement is about planar
 paper's objects. Used by: firstPass_3_6. -/
 def FrozenBrownianOutwardExcursionAtExit : Prop :=
   BrownianOutwardExcursionAtExitStep
+
+/-- FIRST-PASS FROZEN. Scaling of the quantum cone environment and of the mating-of-trees coupling: for `b > 0` there is a
+valid environment `S'` on the same probability space with `η^b = R_b⁻¹ η(b ·)`, `bm^b = b^{-1/2} bm(b ·)` and
+`μ^b = b⁻¹ μ_h(R_b ·)`, where `R_b` is the cone scale radius. Source: Duplantier–Miller–Sheffield (2014, *Mating of trees*;
+the arXiv identifier is as cited in MatedCRT/External/QuantumCone.lean), Proposition 4.13(i) (quantum cone scaling, DMS14 eq:quantum-cone-scaling) together with
+the Brownian scaling of the mating-of-trees pair; the statement is `ConeEnvironmentScalingStep` (Steps/Sec1/Convergence.lean).
+It concerns the quantum cone environment only, not clusters, odometers, harmonic balls or IDLA processes. Locator: standard;
+judgment call, flagged in the report. Used by: firstPass_4_1. -/
+def FrozenConeEnvironmentScaling (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ConeEnvironmentScalingStep 𝒮
 
 end MatedCRT
