@@ -13,7 +13,7 @@ to the Draft statements of Harmonic Balls (arXiv:2208.11795): `ClusterOpenLaplac
 Terminology: Armitage-Gardiner (obstacle problem, least superharmonic majorant), Duplantier-Sheffield (LQG measure).
 
 Proved here, deterministic or Draft-level:
-* `hasLaplacian_congr_restrict`: `HasLaplacian` depends only on the restriction to the open set `U`;
+* `hasLaplacian_congr_restrict_ball`: `HasLaplacian` depends only on the restriction to the open set `U`;
 * `restrict_regularized_eq`, `hasLaplacian_regularized_of_raw`: the Laplacian clause of `RadiusThreeQuartersData` with the
   regularized cluster `interior (closure Λ)` from the raw cluster `Λ`, under the radius-3/4 boundary-nullness;
 * `radiusThreeQuartersData_of_raw`, `leastSupersolution_eq_zero_of_sphere`: the radius-3/4 data at one time;
@@ -31,7 +31,7 @@ namespace MatedCRT
 
 /-- `HasLaplacian` depends only on the restriction of the positive measure to the open set `U`: test functions of
 `U` vanish off `U`, so their integrals against `μ₁` and `μ₂` agree once `μ₁` and `μ₂` agree on `U`. -/
-theorem hasLaplacian_congr_restrict {w : ℂ → ℝ} {μ₁ μ₂ μneg : Measure ℂ} {U : Set ℂ}
+theorem hasLaplacian_congr_restrict_ball {w : ℂ → ℝ} {μ₁ μ₂ μneg : Measure ℂ} {U : Set ℂ}
     (h : μ₁.restrict U = μ₂.restrict U) (hw : HasLaplacian w μ₁ μneg U) :
     HasLaplacian w μ₂ μneg U := by
   obtain ⟨hloc, hφ⟩ := hw
@@ -94,7 +94,7 @@ theorem hasLaplacian_regularized_of_raw {μ ν : Measure ℂ} {Λ U : Set ℂ} {
     (hU : MeasurableSet U) (hnull : μ.restrict U (frontier Λ) = 0) (hν : ν.restrict U ≤ μ.restrict U)
     (hw : HasLaplacian w (μ.restrict Λ + ν.restrict (frontier Λ)) 0 U) :
     HasLaplacian w (μ.restrict (interior (closure Λ))) 0 U :=
-  hasLaplacian_congr_restrict (restrict_regularized_eq hΛ hU hnull hν).symm hw
+  hasLaplacian_congr_restrict_ball (restrict_regularized_eq hΛ hU hnull hν).symm hw
 
 /-- The least supersolution vanishes on the sphere `∂B_{3/4}` when the odometer does: the Green function of the ball is
 `0` off the ball (`greenFunction`, junk value), so `odometer = leastSupersolution` there. -/
