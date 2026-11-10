@@ -1,6 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.HcGreen68
 import MatedCRT.FirstPass.S4S6c.PrintedGreen68
 import MatedCRT.FirstPass.S4S6c.AnnulusGeometry68
+import MatedCRT.FirstPass.S4S6c.OpenAnnulus68
 
 /-!
 # The local test `hloc` of the per-configuration Lemma 6.8, from the event inputs (q2, task fp-S4S6c-envscaling-6-7-6-8)
@@ -60,16 +61,16 @@ theorem ennreal_scale_aux {X L : ℝ} (hX : 0 ≤ X) (hL : 0 < L) (T : ℝ≥0�
 /-- The sup-kernel bound of the good annulus, in the form `S_true ≤ ofReal(κ mr (1 + log(1/R)))`. -/
 theorem sup_le_kappa {μ : Measure ℂ} [SFinite μ] {x z : ℂ} {R Cg mr δ : ℝ}
     (hR0 : 0 < R) (hR1 : R ≤ 1) (hδ : δ ≤ 1 / 2) (hCg : 0 < Cg) (hmr : 0 ≤ mr)
-    (hμA : μ (closedAnnulus z R) ≠ ⊤)
-    (hDA : ball x (R / 4) ⊆ closedAnnulus z R) (hEA : thickening δ (ball x (R / 4)) ⊆ closedAnnulus z R)
+    (hμA : μ (openAnnulus z R) ≠ ⊤)
+    (hDA : ball x (R / 4) ⊆ openAnnulus z R) (hEA : thickening δ (ball x (R / 4)) ⊆ openAnnulus z R)
     (hint : ∀ v ∈ ball x (R / 4),
-      IntegrableOn (fun u : ℂ => Real.log (R / ‖u - v‖) + 1) (closedAnnulus z R) μ)
-    (hF : ∀ w ∈ closedAnnulus z R, ∫ u in closedAnnulus z R, (Real.log (R / ‖u - w‖) + 1) ∂μ ≤ Cg * mr) :
+      IntegrableOn (fun u : ℂ => Real.log (R / ‖u - v‖) + 1) (openAnnulus z R) μ)
+    (hF : ∀ w ∈ openAnnulus z R, ∫ u in openAnnulus z R, (Real.log (R / ‖u - w‖) + 1) ∂μ ≤ Cg * mr) :
     (⨆ v ∈ ball x (R / 4), ∫⁻ u in thickening δ (ball x (R / 4)),
         ENNReal.ofReal (Real.log (1 / ‖v - u‖) + 1) ∂μ) ≤
       ENNReal.ofReal (kappaAnn Cg * mr * (1 + Real.log (1 / R))) := by
-  have h := draft_sup_le_of_annulus μ hR0 hR1 hδ (isClosed_closedAnnulus z R).measurableSet
-    (closedAnnulus_subset_closedBall z R) hμA (sphere_subset_closedAnnulus hR0) hDA hEA hCg.le hmr hint hF
+  have h := draft_sup_le_of_annulus μ hR0 hR1 hδ (isOpen_openAnnulus z R).measurableSet
+    (openAnnulus_subset_closedBall z R) hμA (sphere_subset_openAnnulus hR0) hDA hEA hCg.le hmr hint hF
   have he : Cg * mr * (1 + (Real.log 4 - 1)) * (1 + Real.log (1 / R)) / (1 - Real.log 2)
       = kappaAnn Cg * mr * (1 + Real.log (1 / R)) := by
     unfold kappaAnn; ring
@@ -101,12 +102,12 @@ theorem hloc_point {μ : Measure ℂ} [SFinite μ] {η : ℝ → ℂ} {m : ℤ �
         (⨆ v ∈ ball (vertexPoint ε η b) (R / 4), ∫⁻ u in thickening δ (ball (vertexPoint ε η b) (R / 4)),
           ENNReal.ofReal (Real.log (1 / ‖v - u‖) + 1) ∂μ) ^ (2 : ℕ))
     (z : ℂ)
-    (hμA : μ (closedAnnulus z R) ≠ ⊤)
-    (hDA : ball (vertexPoint ε η b) (R / 4) ⊆ closedAnnulus z R)
-    (hEA : thickening δ (ball (vertexPoint ε η b) (R / 4)) ⊆ closedAnnulus z R)
+    (hμA : μ (openAnnulus z R) ≠ ⊤)
+    (hDA : ball (vertexPoint ε η b) (R / 4) ⊆ openAnnulus z R)
+    (hEA : thickening δ (ball (vertexPoint ε η b) (R / 4)) ⊆ openAnnulus z R)
     (hint : ∀ v ∈ ball (vertexPoint ε η b) (R / 4),
-      IntegrableOn (fun u : ℂ => Real.log (R / ‖u - v‖) + 1) (closedAnnulus z R) μ)
-    (hF : ∀ w ∈ closedAnnulus z R, ∫ u in closedAnnulus z R, (Real.log (R / ‖u - w‖) + 1) ∂μ ≤ Cg * mr)
+      IntegrableOn (fun u : ℂ => Real.log (R / ‖u - v‖) + 1) (openAnnulus z R) μ)
+    (hF : ∀ w ∈ openAnnulus z R, ∫ u in openAnnulus z R, (Real.log (R / ‖u - w‖) + 1) ∂μ ≤ Cg * mr)
     (hLR : 1 + Real.log (1 / R) ≤ KL * (1 + Real.log (1 / r))) :
     srwLaw m b (TestBound68.stayIn (fun b' => innerVertices (cell ε η) (ball (vertexPoint ε η b') (R / 4))) A b) ≤
       ENNReal.ofReal (1 - (1 / (32 * (C_E * KL) ^ 2 * (kappaAnn Cg) ^ 2 * 1 ^ 2)) / (1 + Real.log (1 / r)) ^ 2) := by
