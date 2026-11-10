@@ -53,19 +53,19 @@ lemma perState_cellVertices_ball_finite {ε : ℝ} {η : ℝ → ℂ} (hη : Con
 /-- **The per-state local test bound at a middle vertex.** For the test vertex `v` of the state with centre `z`, local
 radius `R` and sparsity radius `r`, the walk from `v` stays in `A` until it exits the window `I(B_{R/4}(v))` with
 probability at most `1 - q₀/(1 + log(1/R))²`, `q₀ = 1/(288 C_d² K²)`, `K = C_g(1+(log 4 - 1))/(1-log 2)`. -/
-theorem perState_local_bound {μ : Measure ℂ} [SFinite μ] [IsFiniteMeasureOnCompacts μ] {η : ℝ → ℂ}
-    {m : ℤ → ℤ → ℕ} {A : Set ℤ} {ε c0 C Cd Cg s1 β r R δ : ℝ} {z : ℂ} {v : ℤ}
+theorem perState_local_bound_of_count {μ : Measure ℂ} [SFinite μ] [IsFiniteMeasureOnCompacts μ] {η : ℝ → ℂ}
+    {m : ℤ → ℤ → ℕ} {A : Set ℤ} {ε c0 C Cd Cg β R δ : ℝ} {z : ℂ} {v : ℤ}
     (hap : IsAreaParametrized μ η) (hη : Continuous η)
     (hprop : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε)
-    (hs1 : 0 < s1) (hs1small : 44 * s1 ≤ c0 ^ β) (hβ : 1 ≤ β)
-    (hr : 0 < r) (hr2 : r ^ 2 ≤ R)
     (hR : 0 < R) (hR1 : R ≤ 1)
     (hC : 0 < C) (hCd : 0 < Cd) (hCg : 0 < Cg) (hc0 : 0 < c0) (hc0' : c0 < 1 / 8)
     (hc0C : c0 ≤ Real.exp (-(2 * C)) / 16) (hεc : ε ≤ 16 * c0)
     (hδ : δ ≤ R / 100)
     (hmeet : (cell ε η v ∩ sphere z (4 * R / 3)).Nonempty)
+    -- the local count of A-vertices in V(B_{c0 R}(v)) (hA_local_of_sparse, or the ball-inclusion count of S6r)
+    (hloc : ((A ∩ cellVertices ε η (ball (vertexPoint ε η v) (c0 * R))).ncard : ℝ)
+      ≤ (μ (ball (vertexPoint ε η v) (c0 * R))).toReal / (4 * ε))
     -- chat 183 inputs (named)
-    (hsp : ∀ w : ℂ, ((A ∩ cellVertices ε η (ball w r)).ncard : ℝ) < s1 * r ^ (2 * β) / ε)
     (hvol : (c0 * R) ^ β ≤ (μ (ball (vertexPoint ε η v) (c0 * R))).toReal)
     (hdy : diam (cell ε η v) ≤ R / 100)
     (hdiam : ∀ k : ℤ, (cell ε η k ∩ ball (vertexPoint ε η v) (R / 4)).Nonempty → diam (cell ε η k) ≤ c0 * R)
@@ -112,11 +112,6 @@ theorem perState_local_bound {μ : Measure ℂ} [SFinite μ] [IsFiniteMeasureOnC
     hfinD.subset Set.inter_subset_right
   have hAs : ∀ k, k ∈ hfinI.toFinset ↔ k ∈ A ∩ cellVertices ε η (ball (vertexPoint ε η v) (c0 * R)) :=
     fun k => hfinI.mem_toFinset
-  -- the local count `hAloc` (hA_local_of_sparse)
-  have hfin : ∀ w : ℂ, (cellVertices ε η (ball w r)).Finite :=
-    fun w => perState_cellVertices_ball_finite hη hprop hε w r
-  have hloc := hA_local_of_sparse (μ := μ) (x := vertexPoint ε η v) hε hr hR hR1 hc0 hc0'.le hs1.le hβ hr2
-    hs1small hfin hsp hvol
   have hcard : (hfinI.toFinset.card : ℝ) ≤ ε⁻¹ * ((μ (ball (vertexPoint ε η v) (c0 * R))).toReal / 4) := by
     have h1 : ((A ∩ cellVertices ε η (ball (vertexPoint ε η v) (c0 * R))).ncard : ℝ)
         = (hfinI.toFinset.card : ℝ) := by
@@ -217,6 +212,43 @@ theorem perState_local_bound {μ : Measure ℂ} [SFinite μ] [IsFiniteMeasureOnC
     ring
   rw [hq] at hres
   exact hres
+
+/-- **Per-state local test bound** (the printed test with the local denominator `(1 + log(1/R))²`). The local count
+`hloc` of `A`-vertices in `V(B_{c₀R}(v))` is `hA_local_of_sparse` (covering of `B_{c₀R}` by balls of radius `r`; needs
+`r² ≤ R`); the bound is `perState_local_bound_of_count`. Kept unchanged in statement (the p-schedule route). -/
+theorem perState_local_bound {μ : Measure ℂ} [SFinite μ] [IsFiniteMeasureOnCompacts μ] {η : ℝ → ℂ}
+    {m : ℤ → ℤ → ℕ} {A : Set ℤ} {ε c0 C Cd Cg s1 β r R δ : ℝ} {z : ℂ} {v : ℤ}
+    (hap : IsAreaParametrized μ η) (hη : Continuous η)
+    (hprop : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε)
+    (hs1 : 0 < s1) (hs1small : 44 * s1 ≤ c0 ^ β) (hβ : 1 ≤ β)
+    (hr : 0 < r) (hr2 : r ^ 2 ≤ R)
+    (hR : 0 < R) (hR1 : R ≤ 1)
+    (hC : 0 < C) (hCd : 0 < Cd) (hCg : 0 < Cg) (hc0 : 0 < c0) (hc0' : c0 < 1 / 8)
+    (hc0C : c0 ≤ Real.exp (-(2 * C)) / 16) (hεc : ε ≤ 16 * c0)
+    (hδ : δ ≤ R / 100)
+    (hmeet : (cell ε η v ∩ sphere z (4 * R / 3)).Nonempty)
+    (hsp : ∀ w : ℂ, ((A ∩ cellVertices ε η (ball w r)).ncard : ℝ) < s1 * r ^ (2 * β) / ε)
+    (hvol : (c0 * R) ^ β ≤ (μ (ball (vertexPoint ε η v) (c0 * R))).toReal)
+    (hdy : diam (cell ε η v) ≤ R / 100)
+    (hdiam : ∀ k : ℤ, (cell ε η k ∩ ball (vertexPoint ε η v) (R / 4)).Nonempty → diam (cell ε η k) ≤ c0 * R)
+    (hGreenLow : ∀ b ∈ cellVertices ε η (ball (vertexPoint ε η v) (c0 * R)),
+      C⁻¹ * Real.log (if vertexPoint ε η v = vertexPoint ε η b then ε⁻¹
+            else min ((R / 8) / ‖vertexPoint ε η v - vertexPoint ε η b‖) ε⁻¹) - 1
+          ≤ greenKernel m (interiorCellVertices ε η (ball (vertexPoint ε η v) (R / 8))) v b)
+    (hexit : exitTimeMoment m (interiorCellVertices ε η (ball (vertexPoint ε η v) (R / 4))) v 2 ≤
+      ENNReal.ofReal (((2 : ℕ).factorial : ℝ) * Cd ^ (2 : ℕ) * ε ^ (-((2 : ℕ) : ℝ))) *
+        (⨆ w ∈ ball (vertexPoint ε η v) (R / 4),
+          ∫⁻ u in thickening δ (ball (vertexPoint ε η v) (R / 4)),
+            ENNReal.ofReal (Real.log (1 / ‖w - u‖) + 1) ∂μ) ^ (2 : ℕ))
+    (hann : IsGoodAnnulusEvent μ c0 Cg R z) :
+    srwLaw m v (TestBound68.stayIn
+      (fun u => interiorCellVertices ε η (ball (vertexPoint ε η u) (R / 4))) A v) ≤
+      ENNReal.ofReal (1 - (1 / (288 * Cd ^ 2 * (Cg * (1 + (Real.log 4 - 1)) / (1 - Real.log 2)) ^ 2)) /
+        (1 + Real.log (1 / R)) ^ 2) :=
+  perState_local_bound_of_count hap hη hprop hε hR hR1 hC hCd hCg hc0 hc0' hc0C hεc hδ hmeet
+    (hA_local_of_sparse (μ := μ) (x := vertexPoint ε η v) hε hr hR hR1 hc0 hc0'.le hs1.le hβ hr2
+      hs1small (fun w => perState_cellVertices_ball_finite hη hprop hε w r) hsp hvol)
+    hvol hdy hdiam hGreenLow hexit hann
 
 end S6j
 end MatedCRT
