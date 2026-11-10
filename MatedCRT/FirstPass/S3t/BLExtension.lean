@@ -43,6 +43,8 @@ theorem quenched_integral_tendsto_of_bl_of_ae_continuous
     (μ : ℝ → Ω → Measure α) (hμ : ∀ ε ω, IsFiniteMeasure (μ ε ω))
     (W : ℝ → Ω → α → ℝ≥0 → ℂ)
     (ν : Measure β) [IsFiniteMeasure ν] (X : Ω → β → ℝ≥0 → ℂ)
+    (𝒞 : Set (ℝ≥0 → ℂ)) (h𝒞 : 𝒞.Nonempty)
+    (hW𝒞 : ∀ ε ω, ∀ᵐ a ∂(μ ε ω), W ε ω a ∈ 𝒞) (hX𝒞 : ∀ᵐ ω ∂P, ∀ᵐ b ∂ν, X ω b ∈ 𝒞)
     (hBL : ∀ F : (ℝ≥0 → ℂ) → ℝ, IsBoundedLipschitzPathFunctional F →
       MatedCRT.TendstoInProbability P (fun ε ω => ∫ a, F (W ε ω a) ∂(μ ε ω))
         (fun ω => ∫ b, F (X ω b) ∂ν))
@@ -54,32 +56,32 @@ theorem quenched_integral_tendsto_of_bl_of_ae_continuous
       AEMeasurable (fun ω => ∫ b, F (X ω b) ∂ν) P)
     (H : (ℝ≥0 → ℂ) → ℝ) (hHbd : ∃ L : ℝ, ∀ w, |H w| ≤ L)
     (hHW : ∀ ε ω, AEStronglyMeasurable (fun a => H (W ε ω a)) (μ ε ω))
-    (hHcont : ∀ᵐ ω ∂P, ∀ᵐ b ∂ν, MatedCRT.PathFunctionalContinuousAt H (X ω b)) :
+    (hHcont : ∀ᵐ ω ∂P, ∀ᵐ b ∂ν, MatedCRT.PathFunctionalContinuousWithinAt 𝒞 H (X ω b)) :
     MatedCRT.TendstoInProbability P (fun ε ω => ∫ a, H (W ε ω a) ∂(μ ε ω))
       (fun ω => ∫ b, H (X ω b) ∂ν) := by
   obtain ⟨c, hc, hcH⟩ : ∃ c : ℝ, 0 < c ∧ ∀ w, |H w| ≤ c := by
     obtain ⟨L, hL⟩ := hHbd
     exact ⟨max L 1, lt_of_lt_of_le one_pos (le_max_right _ _), fun w => (hL w).trans (le_max_left _ _)⟩
-  have hG : ∀ w ∈ (univ : Set (ℝ≥0 → ℂ)), |c⁻¹ * H w| ≤ 1 := by
+  have hG : ∀ w ∈ 𝒞, |c⁻¹ * H w| ≤ 1 := by
     intro w _
     rw [abs_mul, abs_inv, abs_of_pos hc]
     calc c⁻¹ * |H w| ≤ c⁻¹ * c := mul_le_mul_of_nonneg_left (hcH w) (inv_nonneg.2 hc.le)
       _ = 1 := inv_mul_cancel₀ hc.ne'
-  have hcontG : ∀ᵐ ω ∂P, ∀ᵐ b ∂ν, X ω b ∈ (univ : Set (ℝ≥0 → ℂ)) ∧
-      MatedCRT.PathFunctionalContinuousWithinAt univ (fun v => c⁻¹ * H v) (X ω b) := by
-    filter_upwards [hHcont] with ω hω
-    filter_upwards [hω] with b hb
-    refine ⟨mem_univ _, ?_⟩
+  have hcontG : ∀ᵐ ω ∂P, ∀ᵐ b ∂ν, X ω b ∈ 𝒞 ∧
+      MatedCRT.PathFunctionalContinuousWithinAt 𝒞 (fun v => c⁻¹ * H v) (X ω b) := by
+    filter_upwards [hHcont, hX𝒞] with ω hω hXω
+    filter_upwards [hω, hXω] with b hb hXb
+    refine ⟨hXb, ?_⟩
     intro η hη
     obtain ⟨ρ, hρ, hρH⟩ := hb (c * η) (mul_pos hc hη)
-    refine ⟨ρ, hρ, fun v _ hv => ?_⟩
-    have h1 := hρH v hv
+    refine ⟨ρ, hρ, fun v hv_mem hv => ?_⟩
+    have h1 := hρH v hv_mem hv
     rw [← mul_sub, abs_mul, abs_of_pos (inv_pos.2 hc)]
     calc c⁻¹ * |H v - H (X ω b)| ≤ c⁻¹ * (c * η) := mul_le_mul_of_nonneg_left h1 (inv_nonneg.2 hc.le)
       _ = η := inv_mul_cancel_left₀ hc.ne' η
   have key := MatedCRT.tendstoInProbability_of_ae_continuousWithin_pathFunctional P μ (fun ε ω => hμ ε ω) W
-    (fun _ => ν) (fun _ => inferInstance) X (fun F hF => hBL F hF) univ Set.univ_nonempty
-    (fun w => c⁻¹ * H w) hG (fun ε ω => ae_of_all _ fun x => mem_univ _)
+    (fun _ => ν) (fun _ => inferInstance) X (fun F hF => hBL F hF) 𝒞 h𝒞
+    (fun w => c⁻¹ * H w) hG hW𝒞
     (fun ε ω => (hHW ε ω).const_mul c⁻¹) (fun F hF ε ω => hFW F hF ε ω) (fun F hF => hFX F hF)
     (fun F hF => hFXω F hF) hcontG
   have hscaled := tendstoInProbability_const_mul hc key
