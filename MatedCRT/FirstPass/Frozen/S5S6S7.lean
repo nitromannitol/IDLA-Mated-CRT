@@ -33,13 +33,13 @@ def FPWholePlaneLQGCoordinateChange : Prop := WholePlaneLQGCoordinateChangeStep
 /-- FIRST-PASS FROZEN. Uniform upper volume bound for the whole-plane LQG measure, `μ(B_s(z)) ≤ s^β` for all `z ∈ B_3`,
 with probability `1 - O(s^q)`. Source: Rhodes-Vargas 2014, Theorem 2.6; Baverez-Gwynne/BG20 arXiv:2003.10320, eq. (A.2);
 IR-c4-4; standard; locator pending.
-Truth check UNCLEAR (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md §7): the body of WholePlaneUpperVolumeTailStep is absent from the checked source, hiding the exponent range, constants and normalization.
+Truth check TRUE (ChatGPT, batch follow-up turn 2, notes/fp-gaps/CHATGPT-idla-frozen-batch.md, "Follow-up (turn 2)" table, row WholePlaneUpperVolumeTailStep; supersedes the turn-1 UNCLEAR of 02:54 UTC, §7): the GFF normalization is fixed, and the constants are existential after the model.
 Used by: firstPass_6_4, firstPass_6_5, firstPass_6_10, firstPass_6_9_b_corrected, firstPass_7_1. -/
 def FPWholePlaneUpperVolumeTail : Prop := WholePlaneUpperVolumeTailStep
 
 /-- FIRST-PASS FROZEN. Restriction of eq:gff to mean-zero pairings on circles (the input of IR-c4-5 in the cone-field
 transfer of Lemma 6.6). Source: paper eq:gff, line 444; IR-c4-5; standard; locator pending.
-Truth check UNCLEAR (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md §3): the body of ConeMeanZeroRestrictionStep is absent from the checked source; the support restrictions cannot be checked.
+Truth check TRUE (ChatGPT, batch follow-up turn 2, notes/fp-gaps/CHATGPT-idla-frozen-batch.md, "Follow-up (turn 2)" table, row ConeMeanZeroRestrictionStep; supersedes the turn-1 UNCLEAR of 02:54 UTC, §3): the admissible local test subtype is explicit.
 Used by: firstPass_6_4, firstPass_6_10, firstPass_6_9_b_corrected, firstPass_7_1. -/
 def FPConeMeanZeroRestriction : Prop := ConeMeanZeroRestrictionStep
 
