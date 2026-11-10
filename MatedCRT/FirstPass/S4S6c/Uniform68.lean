@@ -56,8 +56,6 @@ theorem config_exit_lower_bound
     (hctr : ∀ v, dist (ctr v) (vertexPoint ε η v) ≤ g)
     (hsm0 : ∀ v, (cell ε η v ∩ ball (0 : ℂ) ρ).Nonempty → ∀ u ∈ closure (cell ε η v),
       ∀ u' ∈ closure (cell ε η v), dist u u' ≤ d)
-    (hsmC : ∀ y v, (closure (cell ε η v) ∩ closedBall (ctr y) (2 * rad y)).Nonempty →
-      ∀ x ∈ closure (cell ε η v), ∀ y' ∈ closure (cell ε η v), dist x y' ≤ d)
     (hρ : ∀ y, d < rad y / 4) (hgeo : ∀ y, 4 * rad y / 3 + d + rad y / 4 + d < 2 * rad y)
     (hlt : ∀ y, g + d < 4 * rad y / 3)
     (hrad0 : ∀ v ∈ BandInduction68.band (vertexPoint ε η) (fillCells ε η Θ) r d, 0 ≤ rad v)
@@ -114,7 +112,7 @@ theorem config_exit_lower_bound
   exact TraceBand68.trace_band (H := cell ε η) (m := m) (F := fillCells ε η Θ) (Θ := Θ) (S' := S') (a := a)
     (r := r) (ρ := ρ) (s := s) (d := d) (g := g) (N := N) (P := vertexPoint ε η) (ctr := ctr) (rad := rad)
     (q0 := q0) (ζ := ζ) hr hd (fun v => hbdd v) hdiamA (fun v => hconn v) (fun v => hne v) hadj' hF ha hexit'
-    hFne hFball hPmem hctr hsm0 hsmC hρ hgeo hlt hrad0 hrad hd0 hg hs hsr hdr hgd hrρ hNs hq0 hq0' hζ hζ' hr1 hrA hN
+    hFne hFball hPmem hctr hsm0 hρ hgeo hlt hrad0 hrad hd0 hg hs hsr hdr hgd hrρ hNs hq0 hq0' hζ hζ' hr1 hrA hN
     Good hGood hGoodPath hfinBS hloc τ S hτ0 hτsucc hτtop hS0 hSsucc
 
 end Uniform68

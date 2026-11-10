@@ -54,6 +54,54 @@ theorem testWt_eq {H : ℤ → Set ℂ} {P ctr : ℤ → ℂ} {rad : ℤ → ℝ
     StartBand68.start_mem_band_inter hd hstart hv hPv hsm hctr hR0 hlt
   simp only [testWt, HcPrinted68.bandWt_of_mem hmem]
 
+/-- **Centre and radius of a band vertex lie in `ball 0 ρ`.** For `y` in the band `BandInduction68.band`, the start
+`P y` is within `r` of `F ⊆ ball 0 (ρ/2)` (Metric.infDist_lt_iff), `dist (ctr y) (P y) ≤ g`, `rad y ≤ s`, and
+`g < s ≤ r/1000`, `r ≤ ρ/100`; hence `closedBall (ctr y) (2 * rad y) ⊆ ball 0 ρ`. -/
+theorem closedBall_sub_of_band {P ctr : ℤ → ℂ} {rad : ℤ → ℝ} {F : Set ℂ} {r d g s ρ : ℝ} {y : ℤ}
+    (hr : 0 < r) (hd0 : 0 ≤ d) (hdr : d ≤ r / 1000) (hsr : s ≤ r / 1000) (hgd : g + d < s)
+    (hrρ : r ≤ ρ / 100) (hFne : F.Nonempty) (hFball : F ⊆ ball (0 : ℂ) (ρ / 2))
+    (hctr : ∀ v, dist (ctr v) (P v) ≤ g) (hrad : ∀ v ∈ BandInduction68.band P F r d, rad v ≤ s)
+    (hy : y ∈ BandInduction68.band P F r d) :
+    closedBall (ctr y) (2 * rad y) ⊆ ball (0 : ℂ) ρ := by
+  have hy' : |Metric.infDist (P y) F - r / 2| ≤ 3 * r / 100 + 2 * d := hy
+  have hinf : Metric.infDist (P y) F < r := by
+    have := (abs_le.1 hy').2
+    linarith
+  obtain ⟨f, hfF, hPf⟩ := (Metric.infDist_lt_iff hFne).1 hinf
+  have hf : ‖f‖ < ρ / 2 := mem_ball_zero_iff.1 (hFball hfF)
+  have hPy : ‖P y‖ < ρ / 2 + r := by
+    have h1 := norm_sub_norm_le (P y) f
+    rw [← dist_eq_norm] at h1
+    linarith
+  have hcP : ‖ctr y‖ - ‖P y‖ ≤ ‖ctr y - P y‖ := norm_sub_norm_le (ctr y) (P y)
+  have hcg : ‖ctr y - P y‖ ≤ g := by
+    rw [← dist_eq_norm]
+    exact hctr y
+  have hrady : rad y ≤ s := hrad y hy
+  intro z hz
+  have hz' : dist z (ctr y) ≤ 2 * rad y := hz
+  rw [dist_eq_norm] at hz'
+  have hzn : ‖z‖ - ‖ctr y‖ ≤ ‖z - ctr y‖ := norm_sub_norm_le z (ctr y)
+  rw [mem_ball_zero_iff]
+  linarith
+
+/-- **Diameter bound on the band** (the centre-restricted form of the cell-size input `hsmC`). For `y` in the band,
+every cell meeting `closedBall (ctr y) (2 * rad y)` meets `ball 0 ρ` (`closedBall_sub_of_band`), so the cell-size
+hypothesis `hsm0` gives its diameter bound `d`. -/
+theorem cell_sm_of_band {H : ℤ → Set ℂ} {P ctr : ℤ → ℂ} {rad : ℤ → ℝ} {F : Set ℂ} {r d g s ρ : ℝ} {y : ℤ}
+    (hr : 0 < r) (hd0 : 0 ≤ d) (hdr : d ≤ r / 1000) (hsr : s ≤ r / 1000) (hgd : g + d < s)
+    (hrρ : r ≤ ρ / 100) (hFne : F.Nonempty) (hFball : F ⊆ ball (0 : ℂ) (ρ / 2))
+    (hctr : ∀ v, dist (ctr v) (P v) ≤ g) (hrad : ∀ v ∈ BandInduction68.band P F r d, rad v ≤ s)
+    (hsm0 : ∀ v, (H v ∩ ball (0 : ℂ) ρ).Nonempty → ∀ u ∈ closure (H v), ∀ u' ∈ closure (H v), dist u u' ≤ d)
+    (hy : y ∈ BandInduction68.band P F r d) (v : ℤ)
+    (hv : (closure (H v) ∩ closedBall (ctr y) (2 * rad y)).Nonempty) :
+    ∀ x ∈ closure (H v), ∀ y' ∈ closure (H v), dist x y' ≤ d := by
+  obtain ⟨z, hzc, hzb⟩ := hv
+  have hzB : z ∈ ball (0 : ℂ) ρ :=
+    closedBall_sub_of_band hr hd0 hdr hsr hgd hrρ hFne hFball hctr hrad hy hzb
+  obtain ⟨w, hwB, hwH⟩ := _root_.mem_closure_iff.1 hzc (ball (0 : ℂ) ρ) isOpen_ball hzB
+  exact hsm0 v ⟨w, hwH, hwB⟩
+
 /-- **Trace bound on the test band** (the printed one-test bound `hc` and the window inputs of
 `ConfigBound68.trace_half`, derived from the band geometry). Under the cluster geometry of `trace_half`, the
 radius and step bounds of `BandInduction68.band_induction`, the Good-path property `hGoodPath` and the local
@@ -74,8 +122,6 @@ theorem trace_band
     (hFne : F.Nonempty) (hFball : F ⊆ ball (0 : ℂ) (ρ / 2))
     (hPmem : ∀ v, P v ∈ H v) (hctr : ∀ v, dist (ctr v) (P v) ≤ g)
     (hsm0 : ∀ v, (H v ∩ ball (0 : ℂ) ρ).Nonempty → ∀ u ∈ closure (H v), ∀ u' ∈ closure (H v), dist u u' ≤ d)
-    (hsmC : ∀ y v, (closure (H v) ∩ closedBall (ctr y) (2 * rad y)).Nonempty →
-      ∀ x ∈ closure (H v), ∀ y' ∈ closure (H v), dist x y' ≤ d)
     (hρ : ∀ y, d < rad y / 4) (hgeo : ∀ y, 4 * rad y / 3 + d + rad y / 4 + d < 2 * rad y)
     (hlt : ∀ y, g + d < 4 * rad y / 3)
     (hrad0 : ∀ v ∈ BandInduction68.band P F r d, 0 ≤ rad v)
@@ -112,6 +158,10 @@ theorem trace_band
     ENNReal.ofReal (1 / 2) ≤ srwLaw m a
       {x | ∃ n : ℕ, (n : ℕ∞) < vExitTime {v | (H v ∩ Metric.thickening r F).Nonempty} x ∧
         x n ∈ {v | (H v ∩ Metric.thickening r F).Nonempty} \ (S' ∪ Θ)} := by
+  -- the diameter bound at every band centre (`closedBall_sub_of_band`, `cell_sm_of_band`)
+  have hsmB : ∀ y ∈ BandInduction68.band P F r d, ∀ v, (closure (H v) ∩ closedBall (ctr y) (2 * rad y)).Nonempty →
+      ∀ x ∈ closure (H v), ∀ y' ∈ closure (H v), dist x y' ≤ d :=
+    fun y hy v hv => cell_sm_of_band hr hd0 hdr hsr hgd hrρ hFne hFball hctr hrad hsm0 hy v hv
   -- the path property: finite test times and test positions in the test band
   have hpath : ∀ x ∈ Good, (∀ j < N, τ j x ≠ ⊤) ∧
       (∀ j < N, ∀ k : ℕ, τ j x = (k : ℕ∞) → x k ∈ testBand H P ctr rad F r d) := by
@@ -119,11 +169,13 @@ theorem trace_band
     obtain ⟨hstart, hlegal, hfinW⟩ := hGoodPath x hx
     have hWt : ∀ v, dist (P v) (P (x 0)) ≤ 3 * r / 100 →
         testWt H P ctr rad F r d v = innerVertices H (ball (ctr v) (2 * rad v)) :=
-      fun v hv => testWt_eq hd0 hstart hv (hPmem v) (hsmC v) (hctr v) (by linarith [hρ v]) (hlt v)
+      fun v hv => testWt_eq hd0 hstart hv (hPmem v) (hsmB v (BandInduction68.mem_band_of_dist hd0 hstart hv))
+        (hctr v) (by linarith [hρ v]) (hlt v)
     have hfinW' : ∀ i : ℕ, dist (P (x i)) (P (x 0)) ≤ 3 * r / 100 →
         vExitTime (testWt H P ctr rad F r d (x i)) (WalkPotential.pathShift i x) ≠ ⊤ := by
       intro i hi
-      rw [testWt_eq hd0 hstart hi (hPmem (x i)) (hsmC (x i)) (hctr (x i)) (by linarith [hρ (x i)]) (hlt (x i))]
+      rw [testWt_eq hd0 hstart hi (hPmem (x i)) (hsmB (x i) (BandInduction68.mem_band_of_dist hd0 hstart hi))
+        (hctr (x i)) (by linarith [hρ (x i)]) (hlt (x i))]
       exact hfinW i hi
     have key := BandInduction68.band_induction (b := x 0) (x := x) (τ := τ) hconn hadj hPmem hsm0 hFne hFball
       hctr hWt hrad0 hrad hr hrρ hs hsr hd0 hdr hg hgd hNs hstart hτ0 hτsucc rfl hlegal hfinW'
@@ -137,7 +189,8 @@ theorem trace_band
       have hdist' : dist (P (x k)) (P (x 0)) ≤ 3 * r / 100 := by
         rw [← hik]
         exact le_trans hdist (BandInduction68.js_bound hs (by omega) hNs)
-      exact StartBand68.start_mem_band_inter hd0 hstart hdist' (hPmem (x k)) (hsmC (x k)) (hctr (x k))
+      exact StartBand68.start_mem_band_inter hd0 hstart hdist' (hPmem (x k))
+        (hsmB (x k) (BandInduction68.mem_band_of_dist hd0 hstart hdist')) (hctr (x k))
         (by linarith [hρ (x k)]) (hlt (x k))
   -- the one-test bound on the test band
   have hc : ∀ y ∈ testBand H P ctr rad F r d,
@@ -145,13 +198,13 @@ theorem trace_band
         (testAof H P ctr rad F r d (S' \ Θ)) y) ≤ ENNReal.ofReal (1 - q0 / (1 + Real.log (1 / r)) ^ 2) := by
     intro y hy
     have hy' : y ∈ BandInduction68.band P F r d ∧ y ∈ HcPrinted68.bandSet H ctr rad := hy
-    have h := HcPrinted68.hc_band_var (A := S' \ Θ)
-      (c := ENNReal.ofReal (1 - q0 / (1 + Real.log (1 / r)) ^ 2)) ctr rad hconn hne hd0 hsmC hadj hPmem hgeo hρ
-      hfinBS hloc y hy'.2
+    -- the local one-test bound at the band centre `y` (`HcAssembly68.hc_of_local`, with `hsmB y`)
+    have h := HcAssembly68.hc_of_local (A := S' \ Θ)
+      (c := ENNReal.ofReal (1 - q0 / (1 + Real.log (1 / r)) ^ 2)) hconn hne hd0 (hsmB y hy'.1) hadj hPmem
+      (hgeo y) (hρ y) hy'.2 (hfinBS y hy'.2) (hloc y hy'.2)
     simp only [SuccessiveExitStop.stayInRegionOf, testWt, testAof, HcPrinted68.bandWt_of_mem hy,
       HcPrinted68.bandAof_of_mem hy]
-    simpa only [SuccessiveExitStop.stayInRegionOf, HcPrinted68.bandWt_of_mem hy'.2,
-      HcPrinted68.bandAof_of_mem hy'.2] using h
+    exact h
   have hAY : ∀ y ∉ testBand H P ctr rad F r d, testAof H P ctr rad F r d (S' \ Θ) y = ∅ :=
     fun y hy => HcPrinted68.bandAof_of_not_mem hy
   have hWY : ∀ y ∉ testBand H P ctr rad F r d, testWt H P ctr rad F r d y = univ :=
