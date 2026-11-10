@@ -1,4 +1,6 @@
 import MatedCRT.Defs.Setting
+import MatedCRT.FirstPass.S5k.Assembly
+import MatedCRT.FirstPass.Frozen.S4S6c
 
 /-!
 # First pass: measurable version of the continuum floor obstacle (task fp-S5k-5-1-floor-obstacle-version, worker z10)
@@ -38,5 +40,56 @@ def StoppedFloorObstacleVersion (𝒮 : SpaceFillingSLEModel) : Prop :=
       (∀ᵐ ω ∂S.P, t < clusterExitTime (Λ ω) ρ →
         ∀ x ∈ closedBall (0 : ℂ) ρ,
           What ω x = _root_.HarmonicBalls.leastSupersolution (S.μ ω) ρ 0 t x)
+
+open MeasureTheory Metric Set Filter Topology HarmonicBalls in
+/-- **Measurable version of the continuum floor obstacle** (task fp-S5k-5-1-floor-obstacle-version; Part I, Step 4.2 and
+equation (7) of `notes/fp-gaps/CHATGPT-z5-floor.md`). The measurable version `Ŵ` is the Lusin-Souslin decoder of the
+Borel graph of (6) (`Graph/Main.lean`) applied to the zero-replaced restriction of `μ` to `B̄_ρ`
+(`Assembly.lean`); it equals the continuum least supersolution `W_t` on `B̄_ρ` for almost every `ω` on
+`{t < clusterExitTime (Λ ω) ρ}`. The hypotheses are the frozen external inputs: the measurability of the LQG measure
+(`hμae`), the standard Borel structure of the finite measures on a closed disk (`hSB`), the supersolution membership of
+the least supersolution (`hsup`, HB Lemma 3.1), and the disc Green function (`hG`). -/
+theorem stoppedFloorObstacleVersion_proved (𝒮 : SpaceFillingSLEModel)
+    (hμae : FrozenLQGMeasureFieldMeasurable 𝒮) (hSB : FrozenFiniteMeasureDiskStandardBorel)
+    (hsup : FrozenLeastSupersolutionMemCone 𝒮) (hG : FrozenGreenDiscPole) :
+    StoppedFloorObstacleVersion 𝒮 := by
+  intro γ hγ0 hγ2 ρ hρ0 hρ1 Ω _ S hS Λ hΛ t ht
+  obtain ⟨g, hgm, hgae⟩ := hμae γ hγ0 hγ2 Ω S hS
+  obtain ⟨F, hFm, hF1, hF0⟩ := exists_decoder_disk (ρ := ρ) (t := t) hSB hG hρ0 ht
+  have hloc : ∀ᵐ ω ∂S.P, IsLocallyFiniteMeasure (S.μ ω) :=
+    hS.isLQGMeasure.mono fun ω h => h.isLocallyFiniteMeasure
+  have hsupω := hsup γ hγ0 hγ2 Ω S hS
+  refine ⟨fun ω x => extDisk ρ (F (diskMeasOf ρ (g ω))) x, ?_, ?_, ?_, ?_⟩
+  · intro x
+    exact (measurable_extDisk_eval x).comp (hFm.comp ((measurable_diskMeasOf ρ).comp hgm))
+  · intro ω
+    exact continuousOn_extDisk _
+  · intro ω x hx
+    show extDisk ρ (F (diskMeasOf ρ (g ω))) x = 0
+    by_cases hex : ∃ f : DiskFun ρ,
+        IsObstacleSolutionOn ρ t ((diskMeasOf ρ (g ω) : FinMeasDisk ρ) : Measure ℂ) (extDisk ρ f)
+    · exact (hF1 _ hex).zero_on_sphere x hx
+    · rw [hF0 _ hex, extDisk_apply_of_mem _ (sphere_subset_closedBall hx)]
+      rfl
+  · filter_upwards [hgae, hΛ, hloc, hsupω] with ω hωg hωΛ hωloc hωsup
+    intro hexit x hx
+    show extDisk ρ (F (diskMeasOf ρ (g ω))) x = leastSupersolution (S.μ ω) ρ 0 t x
+    have hsupW := hωsup ρ hρ0 hρ1 t ht
+    have hId := isObstacleSolutionOn_leastSupersolution hG hωΛ hρ0 ht hsupW hexit
+    have hmeas : ((diskMeasOf ρ (g ω) : FinMeasDisk ρ) : Measure ℂ) =
+        (S.μ ω).restrict (closedBall (0 : ℂ) ρ) := by
+      rw [← hωg]
+      exact restrictOrZero_eq_restrict hωloc
+    have hId' : IsObstacleSolutionOn ρ t ((diskMeasOf ρ (g ω) : FinMeasDisk ρ) : Measure ℂ)
+        (leastSupersolution (S.μ ω) ρ 0 t) := by
+      rw [hmeas]
+      exact hId
+    let fW : DiskFun ρ := ⟨(closedBall (0 : ℂ) ρ).domRestrict (leastSupersolution (S.μ ω) ρ 0 t),
+      continuousOn_iff_continuous_domRestrict.1 hId'.continuousOn⟩
+    have hcong : IsObstacleSolutionOn ρ t ((diskMeasOf ρ (g ω) : FinMeasDisk ρ) : Measure ℂ) (extDisk ρ fW) :=
+      hId'.congr_closedBall hG hρ0 ht (fun y hy => by rw [extDisk_apply_of_mem _ hy]; rfl)
+    have hex : ∃ f : DiskFun ρ,
+        IsObstacleSolutionOn ρ t ((diskMeasOf ρ (g ω) : FinMeasDisk ρ) : Measure ℂ) (extDisk ρ f) := ⟨fW, hcong⟩
+    exact (hF1 _ hex).eqOn_closedBall hId' hx
 
 end MatedCRT
