@@ -20,6 +20,7 @@ sense (`LaplacianLE f 0 U`, HarmonicBalls.Defs.Laplacian). If `f ≥ 0` on the f
 Source: standard; locator pending (Armitage and Gardiner, *Classical Potential Theory*, Springer 2001: a continuous
 distributionally superharmonic function is superharmonic, by mollification, and the usual minimum principle applies;
 no boundary smoothness or connectedness is needed).
+Truth check TRUE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md, table row): Doob (1984) Ch. II §5 p. 20, Minimum Theorem (c), with mollification and the smooth criterion in Ch. II §8 p. 23.
 Used by: `certificate_le_supersolution` (FirstPass/S2g/GoodSet.lean). -/
 def FrozenSuperharmonicMinimumPrinciple : Prop :=
   ∀ (U : Set ℂ) (f : ℂ → ℝ), IsOpen U → Bornology.IsBounded U → ContinuousOn f (closure U) →
@@ -30,6 +31,7 @@ def FrozenSuperharmonicMinimumPrinciple : Prop :=
 kernel `-(2π)⁻¹ log ‖x‖` dominates and the harmonic correction is locally bounded (explicitly `G = (2π)⁻¹ log (R/‖x‖)`).
 Source: standard; locator pending (Armitage and Gardiner, *Classical Potential Theory*, Green function of a ball).
 HB `continuousOn_greenFunction_ball_of_stmt` gives the continuity part conditionally on `GreenFunctionBallStmt`.
+Truth check TRUE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md, table row): Doob (1984) Ch. II §1 p. 14 equation (1.1), divided by 2π; HB arXiv:2208.11795v3 p. 10 Proposition 2.3.
 Used by: `isOpen_certCluster` (FirstPass/S2g/GoodSet.lean). -/
 def FrozenGreenDiscPole : Prop :=
   ∀ R : ℝ, 0 < R → ContinuousOn (greenFunction (ball 0 R) 0) (closedBall 0 R \ {0}) ∧
@@ -38,7 +40,8 @@ def FrozenGreenDiscPole : Prop :=
 /-- FIRST-PASS FROZEN. Centre formula of the disc Green function (EXTERNAL: classical potential theory). For `R > 0` and
 `0 < ‖x‖ < R`, `G_{B_R}(0, x) = (2π)⁻¹ log (R / ‖x‖)` with the normalization `ΔG = -δ` (the explicit Green function of
 `B_R` at its centre). Source: HB `greenBall` (HarmonicBalls/Defs/Green.lean:79) at `x = 0`, Armitage and Gardiner,
-*Classical Potential Theory*, §4.1; standard; locator pending. Used by: `allDisksCandidate` (FirstPass/S2g/AllDisks.lean). -/
+*Classical Potential Theory*, §4.1; standard; locator pending. Truth check TRUE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md, table row): Doob (1984) Ch. II §1 p. 14 equation (1.1), with normalization divided by 2π; HB arXiv:2208.11795v3 p. 10 Proposition 2.3 states ΔG = −δ.
+Used by: `allDisksCandidate` (FirstPass/S2g/AllDisks.lean). -/
 def FrozenGreenBallCentre : Prop :=
   ∀ R : ℝ, 0 < R → ∀ x : ℂ, 0 < ‖x‖ → ‖x‖ < R →
     greenFunction (ball (0 : ℂ) R) 0 x = (2 * Real.pi)⁻¹ * Real.log (R / ‖x‖)
