@@ -2,6 +2,7 @@ import MatedCRT.FirstPass.S2g
 import MatedCRT.FirstPass.S2g.HalfBallGate
 import MatedCRT.FirstPass.S2k
 import MatedCRT.FirstPass.Frozen.S4S5b
+import MatedCRT.FirstPass.S2m
 
 /-! # Corrected Lemma 2.4, canonical stopped family: assembly (fp-S2g, q1, round 42)
 
@@ -26,16 +27,18 @@ namespace MatedCRT
 /-- **`ConeHalfBallClosureInsideStep` from the route-B inputs (q1, fp-S2g).** The whole-plane volume growth (B1) and the
 plateau scale invariance (fact (1)) are proved inside `coneHalfBallClosureInsideStep_fp` from `hI2` and the frozen coordinate
 rule `hK`. The remaining inputs are `hloc`, `hEx`, `hSC`, the volume growth `hVG` (`VolumeGrowthStmt`), and the two NEW
-steps `hB2` (`WholePlaneLQGModelStep`) and `hFL` (`ConeWholePlaneFieldLawStep`, reused as `FPConeWholePlaneFieldLaw`, `Frozen/S4S5b.lean:40`, which is the same
+steps `hE` (the frozen whole-plane existence input `FrozenLQGMeasureExistenceInsertion`, discharging `WholePlaneLQGModelStep`
+through `firstPass_wholePlaneLQGModel_of_existence`, `FirstPass/S2m.lean`) and `hFL` (`ConeWholePlaneFieldLawStep`, reused as `FPConeWholePlaneFieldLaw`, `Frozen/S4S5b.lean:40`, which is the same
 Prop). -/
 theorem coneHalfBallClosureInsideStep_corrected
     (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
     (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
     (hloc : HarmonicBallLocalSetStmt.{0}) (hEx : ExistenceHarmonicBallsStmt.{0})
     (hSC : ClusterStrongCompatibilityStmt.{0}) (hVG : VolumeGrowthStmt)
-    (hB2 : WholePlaneLQGModelStep) (hFL : FPConeWholePlaneFieldLaw) :
+    (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion) (hFL : FPConeWholePlaneFieldLaw) :
     ConeHalfBallClosureInsideStep :=
-  coneHalfBallClosureInsideStep_fp hI2 hK hloc hEx hSC hVG hB2 hFL
+  coneHalfBallClosureInsideStep_fp hI2 hK hloc hEx hSC hVG
+    (MatedCRT.FirstPass.S2m.firstPass_wholePlaneLQGModel_of_existence hE) hFL
 
 /-- **Corrected Lemma 2.4 (canonical stopped family, q1, fp-S2g).** The conditional assembly. -/
 theorem firstPass_2_4_corrected
@@ -52,12 +55,12 @@ theorem firstPass_2_4_corrected
     (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
     (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
     (hloc : HarmonicBallLocalSetStmt.{0}) (hSC : ClusterStrongCompatibilityStmt.{0})
-    (hB2 : WholePlaneLQGModelStep) (hFL : FPConeWholePlaneFieldLaw)
+    (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion) (hFL : FPConeWholePlaneFieldLaw)
     (h27 : VolumeGrowthStmt) :
     ConeHarmonicBallsUpToFixedTimeCanonicalStmt :=
   firstPass_2_4_canonical_of_steps
     (coneCanonicalHalfBallStep_of_draft hU hmeasT hstd hmin hCentre hGB hpole hOpen hSup hCons hMono hCompat hBdry
       hExist hThm11 hProp56 hconf)
-    (coneHalfBallClosureInsideStep_corrected hI2 hK hloc hExist hSC h27 hB2 hFL) h27
+    (coneHalfBallClosureInsideStep_corrected hI2 hK hloc hExist hSC h27 hE hFL) h27
 
 end MatedCRT

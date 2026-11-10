@@ -86,8 +86,9 @@ def FrozenConeLogLocalCodeLawStd : Prop :=
 -- The whole-plane field law (fact (2) for the fields, `h|_{B_1} =_d (h^ℂ - γ log|·|)|_{B_1}`, Bou-Rabee and Gwynne,
 -- arXiv:2211.04891, eq. (2.4)) is REUSED, not copied: it is `FPConeWholePlaneFieldLaw` (`FirstPass/Frozen/S4S5b.lean:40`),
 -- which is `ConeWholePlaneFieldLawStep` (`Proofs/Sec4/Prop42Closure/ConeWholePlaneSteps.lean:66`). Carried-over PENDING
--- TRUTH CHECK: the universal quantifier over whole-plane GFFs on arbitrary `Ω'`, and the a.e. measurability of
--- `coneFieldOnB1` that `IdentDistrib` needs. Used by `firstPass_2_4_corrected`, `firstPass_6_1_corrected`,
+-- TRUTH CHECK: the universal quantifier over whole-plane GFFs on arbitrary `Ω'`. Measurability is not an issue: both
+-- fields are measurable (`IsQuantumCone.measurable_pairing`, `measurable_circle`, `Defs/QuantumCone.lean:84-86`, and
+-- `IsWholePlaneGFF.measurable_pairing`, `measurable_circle`, HarmonicBalls `Defs/GFF.lean:96, 98`). Used by `firstPass_2_4_corrected`, `firstPass_6_1_corrected`,
 -- `firstPass_2_5_corrected`, `firstPass_2_6_corrected` (`S2g/Corrected24.lean`, `S2g/Assembly2456.lean`).
 
 end MatedCRT
