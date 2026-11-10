@@ -78,3 +78,24 @@ theorem plateau_measure_ae_zero (P : Measure Ω) [IsFiniteMeasure P] (R : ℚ �
     (lintegral_eq_zero_iff (measurable_measure_prodMk_right hEm)).1 hzero
   filter_upwards [hpt] with r hr
   exact hr
+
+/-- **Quantifier order of (15).** If the plateau probability is scale invariant, `ℙ[r ∈ 𝒫] = ℙ[s r ∈ 𝒫]` for all
+`r, s > 0` (the Lean form of the consequence of (11) and (14) of the cycle note, the input that is still open), then
+`ℙ[r ∈ 𝒫] = 0` for every `r > 0`, not only almost every one. -/
+theorem plateau_measure_eq_zero_of_scaling (P : Measure Ω) [IsFiniteMeasure P] (R : ℚ → Ω → ℝ)
+    (hR : ∀ q, Measurable (R q))
+    (hscale : ∀ r s : ℝ, 0 < r → 0 < s →
+      P {ω | r ∈ plateauValues R ω} = P {ω | s * r ∈ plateauValues R ω}) :
+    ∀ r : ℝ, 0 < r → P {ω | r ∈ plateauValues R ω} = 0 := by
+  have hae := plateau_measure_ae_zero P R hR
+  have hne : (volume.restrict (Icc (1 : ℝ) 2)) ≠ 0 := by
+    rw [Ne, Measure.restrict_eq_zero, Real.volume_Icc]
+    norm_num
+  have : (ae (volume.restrict (Icc (1 : ℝ) 2))).NeBot := ae_neBot.2 hne
+  obtain ⟨t, ht0, ht1⟩ := (hae.and (ae_restrict_mem measurableSet_Icc)).exists
+  have htpos : 0 < t := lt_of_lt_of_le one_pos ht1.1
+  intro r hr
+  have h := hscale t (r / t) htpos (div_pos hr htpos)
+  rw [div_mul_cancel₀ r htpos.ne'] at h
+  rw [← h]
+  exact ht0
