@@ -1,4 +1,5 @@
 import MatedCRT.FirstPass.S4S6c.HoneInputsDirect
+import MatedCRT.FirstPass.S4S6c.HspRepair68
 import MatedCRT.FirstPass.S4S6c.ShellChainGlue68
 import MatedCRT.FirstPass.S4S6c.ShellChainCore68
 
@@ -8,7 +9,7 @@ import MatedCRT.FirstPass.S4S6c.ShellChainCore68
 * `ShellOneTestAt m a A η ε K τU r s d Rf n q`: the walk-centred one-test bound on the shells `k ≤ n`, i.e. the hypothesis
   `hone` of `exitQ_le_pow_shell_walk` (S4S6c/ShellWire68.lean:29). The test end of shell `k` is taken at the shell exit
   `T_k = shellExit k` with radius `Rf(z_k)` at the grid centre `z_k = shellCentre k` (`shellWalkParam`, ShellIdent68).
-* `shellOneTest_of_direct`: `ShellOneTestAt` from `hone_exitQ_walk_of_env_direct` (S4S6c/HoneInputsDirect.lean:83) at the
+* `shellOneTest_of_direct`: `ShellOneTestAt` from `hone_exitQ_walk_of_env_direct_repaired` (S4S6c/HspRepair68.lean:501) at the
   shell stopping times. The binders `hT` and `hR` of the direct hone are discharged for shells (`isStoppingTime_shellExit`,
   `measurable_shellRadius_stopped`). Every other binder is kept as a named hypothesis with the exact type obtained by the
   substitution `T k := shellExit k`, `R k := Rf(shellCentre k)`.
@@ -67,20 +68,24 @@ theorem shellOneTest_of_direct {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ
     -- NAMED (configuration, Elig check on the walk): the shell radius lies in `[r², 1]` on the prefix set
     (hRr : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η Kset r s d Rf k) τU,
       r ^ 2 ≤ Rf (shellCentre ε η Kset r s d k ω) ∧ Rf (shellCentre ε η Kset r s d k ω) ≤ 1)
-    -- NAMED (diameter of the cells meeting the test ball, Lemma 2.8 consequence)
-    (hdiam : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η Kset r s d Rf k) τU,
-      ∀ k' : ℤ, (cell ε η k' ∩ ball (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat))
-        (Rf (shellCentre ε η Kset r s d k ω) / 4)).Nonempty →
-        diam (cell ε η k') ≤ K.c0 * Rf (shellCentre ε η Kset r s d k ω))
-    -- NAMED (sparsity of the configuration A in the test balls)
+    -- NAMED (mass-relative sparsity of the configuration A in the test balls: `hsp` of
+    -- `hone_exitQ_walk_of_env_direct_repaired`, HspRepair68.lean:501; z9, committed 9eb2a41)
     (hsp : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η Kset r s d Rf k) τU,
-      ∀ w : ℂ, ((A ∩ cellVertices ε η (ball w (K.c0 * Rf (shellCentre ε η Kset r s d k ω)))).ncard : ℝ)
-        < K.s1 * (K.c0 * Rf (shellCentre ε η Kset r s d k ω)) ^ (2 * K.βm) / ε)
+      ∀ w : ℂ, ε * ((A ∩ cellVertices ε η (ball w (K.c0 * Rf (shellCentre ε η Kset r s d k ω)))).ncard : ℝ)
+        ≤ (1 / 16 : ℝ) * (μ (ball w (K.c0 * Rf (shellCentre ε η Kset r s d k ω)))).toReal)
     -- NAMED (scale range of the walk tests, and the volume lower bound of the good event)
     (rmin : ℝ)
     (hRmin : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η Kset r s d Rf k) τU,
       rmin ≤ K.c0 * Rf (shellCentre ε η Kset r s d k ω))
-    (hVol : ∀ δ : ℝ, rmin ≤ δ → δ ≤ 1 / 4 → ∀ z ∈ ball (0 : ℂ) (1 - δ), ENNReal.ofReal (δ ^ K.βm) ≤ μ (ball z δ))
+    -- NAMED (volume lower bounds at the random radii `c₀ R` and `R/4`: `hVolC`, `hVolY` of the repaired hone)
+    (hVolC : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η Kset r s d Rf k) τU,
+      ENNReal.ofReal ((K.c0 * Rf (shellCentre ε η Kset r s d k ω)) ^ K.βm)
+        ≤ μ (ball (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat))
+          (K.c0 * Rf (shellCentre ε η Kset r s d k ω))))
+    (hVolY : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η Kset r s d Rf k) τU,
+      ∀ y ∈ ball (0 : ℂ) (1 - Rf (shellCentre ε η Kset r s d k ω) / 4),
+        ENNReal.ofReal ((Rf (shellCentre ε η Kset r s d k ω) / 4) ^ K.βm)
+          ≤ μ (ball y (Rf (shellCentre ε η Kset r s d k ω) / 4)))
     -- NAMED (lower Green bound, second conjunct of `GreenKernelLowerBoundStmt`)
     (hGreen : ∀ a ∈ cellVertices ε η (ball 0 (ρc - ε ^ K.ω)), ∀ r : ℝ, ε ^ K.ω ≤ r →
       r ≤ infDist (vertexPoint ε η a) (sphere 0 ρc) →
@@ -99,8 +104,8 @@ theorem shellOneTest_of_direct {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ
       (∀ k ∈ cellVertices ε η D, w k ∈ cell ε η k ∩ closure D) →
       ε⁻¹ * ∫ _ in D, (1 : ℝ) ∂μ - ε ^ (-1 + α) ≤ ∑' _ : cellVertices ε η D, (1 : ℝ))
     (ζc : ℝ) (hζc0 : 0 < ζc) (hζc1 : ζc < 1)
-    -- NAMED (upper half of Lemma 2.8 at radius `ρc`)
-    (hCellGood : ∀ k' : ℤ, (cell ε η k' ∩ ball (0 : ℂ) ρc).Nonempty →
+    -- NAMED (upper half of Lemma 2.8 at radius `ρc + 3/8`, P2 of the repaired hone)
+    (hCellGood : ∀ k' : ℤ, (cell ε η k' ∩ ball (0 : ℂ) (ρc + 3 / 8)).Nonempty →
       diam (cell ε η k') ≤ ε ^ (2 / (2 + γ) ^ 2 - ζc))
     (hεcell : ε ^ (2 / (2 + γ) ^ 2 - ζc) ≤ rmin / 100)
     (hfinE : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η Kset r s d Rf k) τU,
@@ -141,10 +146,10 @@ theorem shellOneTest_of_direct {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ
         ≤ Dbl * (μ (ball (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat))
           (K.c0 * Rf (shellCentre ε η Kset r s d k ω)))).toReal) :
     ShellOneTestAt m a A η ε Kset τU r s d Rf n (q0 / (1 + Real.log (1 / r)) ^ 2) := by
-  exact hone_exitQ_walk_of_env_direct (T := fun k => shellExit ε η Kset r s d Rf k)
+  exact hone_exitQ_walk_of_env_direct_repaired (T := fun k => shellExit ε η Kset r s d Rf k)
     (R := fun k w => Rf (shellCentre ε η Kset r s d k w)) K ε η hη hprop hε hεc hμNull m a A hA n hr hr1 hq0c
     rfl hC hCw hCg (fun k => isStoppingTime_shellExit ε η Kset r s d Rf k)
-    (fun k => measurable_shellRadius_stopped ε η Kset r s d Rf k) hmom1 hmom2 hRr hdiam hsp rmin hRmin hVol hGreen
+    (fun k => measurable_shellRadius_stopped ε η Kset r s d Rf k) hmom1 hmom2 hRr hsp rmin hRmin hVolC hVolY hGreen
     hWalk hCountGood ζc hζc0 hζc1 hCellGood hεcell hfinE hsc hεα hεmass hb hx1 hmomS hgood hN hpos hdbl
 
 /-- **NAMED INPUT (Q2 form, routed to the operator): the almost-sure, uniform-in-r shell chain.** This is
