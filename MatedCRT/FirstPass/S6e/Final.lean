@@ -1,6 +1,7 @@
 import Mathlib
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBound.OfSteps
 import MatedCRT.FirstPass.S6e.Cutoff
+import MatedCRT.FirstPass.S6e.Admissible
 
 /-!
 # FIRST PASS: the final event of LEMMA68 (D2, bridge §2) (task fp-S6e-lemma68-D123 and fp-S6h, z9)
@@ -88,6 +89,79 @@ theorem probTendsToOne_uniform_half_guarded {Ω ι : Type*} [MeasurableSpace Ω]
         (div_le_one (pow_pos (by linarith) 2)).2 h1
       linarith
     exact ⟨⌈r ^ (-ζ) / 200⌉₊, Nat.le_ceil _, pow_nonneg hbase _⟩
+
+/-- `ENNReal.ofReal (1/2) = 1/2`, the value of the probability threshold `s₂` in the extended scale. -/
+lemma ofReal_half : ENNReal.ofReal (1 / 2) = 1 / 2 := by
+  rw [ENNReal.ofReal_div_of_pos (by norm_num)]
+  simp
+
+/-- (write-up (11), bridge §5) For a finite measure, a real bound `P.real s ≤ 1/2` gives the extended bound
+`P s ≤ 1/2`; finiteness is what makes `P s = ENNReal.ofReal (P.real s)`. -/
+lemma measure_le_half_of_real_le {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsFiniteMeasure P] {s : Set Ω}
+    (h : P.real s ≤ 1 / 2) : P s ≤ 1 / 2 := by
+  have hfin : P s ≠ ⊤ := measure_ne_top P s
+  calc P s = ENNReal.ofReal (P.real s) := (ENNReal.ofReal_toReal hfin).symm
+    _ ≤ ENNReal.ofReal (1 / 2) := ENNReal.ofReal_le_ofReal h
+    _ = 1 / 2 := ofReal_half
+
+/-- (bridge §5, `s₂ = 1/2`) The predicate `Phi` of `Lemma68Admissible` holds as soon as the real quenched exit
+probability `P.real (exitEvent (killed ε η Θ F0 x) A)` is at most `1/2` (write-up §6 Step 2, B1 exit event). -/
+theorem phi_of_real_le {ε : ℝ} {η : ℝ → ℂ} {Θ F0 A : Finset ℤ} {a : ℤ} {s1 βm x : ℝ} {P : Measure (ℕ → ℤ)}
+    [IsFiniteMeasure P]
+    (h : P.real (Lemma68Walk.exitEvent (Lemma68Admissible.killed ε η Θ F0 x) (↑A : Set ℤ)) ≤ 1 / 2) :
+    Lemma68Admissible.Phi ε η Θ F0 A a s1 βm P x :=
+  fun _ => measure_le_half_of_real_le h
+
+open Classical in
+/-- (exit time) If every position `x k`, `k ≤ n`, lies in `W`, then `n` is strictly before the exit time from `W`
+(`vExitTime W x` is the first time `x` leaves `W`, `Defs/RandomWalk.lean`). -/
+lemma lt_vExitTime_of_forall {W : Set ℤ} {x : ℕ → ℤ} {n : ℕ} (h : ∀ k ≤ n, x k ∈ W) :
+    (n : ENat) < vExitTime W x := by
+  unfold vExitTime
+  split_ifs with hex
+  · have hlt : n < Nat.find hex := by
+      by_contra hle
+      have hle' : Nat.find hex ≤ n := not_lt.1 hle
+      exact (Nat.find_spec hex) (h _ hle')
+    exact_mod_cast hlt
+  · exact ENat.natCast_lt_top n
+
+/-- (relation to `UniformConstantOrderLowerBoundStmt`, bridge §5: the complement step of the Lemma 6.8-to-6.7 reduction)
+If `U ⊆ W`, `U \ A ⊆ Z` and the exit event `exitEvent U A` has probability at most `1/2`, then with probability at least
+`1/2` the walk visits `Z` before it leaves `W`. Its complement is a visit to `U \ A` before the exit from `U`. -/
+theorem visit_half_of_exit_le {P : Measure (ℕ → ℤ)} [IsProbabilityMeasure P] {U A W Z : Set ℤ}
+    (hUW : U ⊆ W) (hZ : U \ A ⊆ Z) (h : P (Lemma68Walk.exitEvent U A) ≤ 1 / 2) :
+    ENNReal.ofReal (1 / 2) ≤ P {x | ∃ n : ℕ, (n : ENat) < vExitTime W x ∧ x n ∈ Z} := by
+  rw [ofReal_half]
+  have hsub : (Lemma68Walk.exitEvent U A)ᶜ ⊆ {x | ∃ n : ℕ, (n : ENat) < vExitTime W x ∧ x n ∈ Z} := by
+    intro x hx
+    have hx' : ∃ n : ℕ, (∀ k ≤ n, x k ∈ U) ∧ x n ∉ A := by
+      by_contra hc
+      exact hx fun n hn => not_not.1 fun h => hc ⟨n, hn, h⟩
+    obtain ⟨n, hn, hnA⟩ := hx'
+    exact ⟨n, lt_vExitTime_of_forall fun k hk => hUW (hn k hk), hZ ⟨hn n le_rfl, hnA⟩⟩
+  have hunion : (1 : ENNReal) ≤ P (Lemma68Walk.exitEvent U A) + P (Lemma68Walk.exitEvent U A)ᶜ := by
+    calc (1 : ENNReal) = P univ := measure_univ.symm
+      _ = P (Lemma68Walk.exitEvent U A ∪ (Lemma68Walk.exitEvent U A)ᶜ) := by rw [union_compl_self]
+      _ ≤ _ := measure_union_le _ _
+  have h1 : 1 - P (Lemma68Walk.exitEvent U A) ≤ P (Lemma68Walk.exitEvent U A)ᶜ :=
+    tsub_le_iff_right.2 (by rw [add_comm]; exact hunion)
+  have h2 : 1 - 1 / 2 ≤ 1 - P (Lemma68Walk.exitEvent U A) := tsub_le_tsub_left h 1
+  have h3 : (1 : ENNReal) - 1 / 2 = 1 / 2 := by
+    rw [one_div, ENNReal.one_sub_inv_two]
+  calc (1 / 2 : ENNReal) = 1 - 1 / 2 := h3.symm
+    _ ≤ P (Lemma68Walk.exitEvent U A)ᶜ := h2.trans h1
+    _ ≤ _ := measure_mono hsub
+
+/-- (relation to `UniformConstantOrderLowerBoundStmt`, bridge §5) With `U = W \ Θ` and `A = S' \ Θ`, the boundary-start
+exit bound gives the visit bound `ENNReal.ofReal (1/2) ≤ P(∃ n < τ_W, x n ∈ W \ (S' ∪ Θ))` of that statement. -/
+theorem visit_half_of_exit_le_target {P : Measure (ℕ → ℤ)} [IsProbabilityMeasure P] {W Θ S' : Set ℤ}
+    (h : P (Lemma68Walk.exitEvent (W \ Θ) (S' \ Θ)) ≤ 1 / 2) :
+    ENNReal.ofReal (1 / 2) ≤ P {x | ∃ n : ℕ, (n : ENat) < vExitTime W x ∧ x n ∈ W \ (S' ∪ Θ)} :=
+  visit_half_of_exit_le Set.sdiff_subset
+    (by
+      rintro x ⟨⟨hxW, hxΘ⟩, hxA⟩
+      exact ⟨hxW, fun hu => hu.elim (fun hS => hxA ⟨hS, hxΘ⟩) fun hT => hxΘ hT⟩) h
 
 end Lemma68Final
 
