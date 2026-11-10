@@ -1,6 +1,7 @@
 import MatedCRT.FirstPass.S2g.HalfBallFamily
 import HarmonicBalls.Draft.Section3
 import HarmonicBalls.Draft.Section5
+import MatedCRT.FirstPass.Frozen.S2g
 
 /-! # Source pathwise inputs from the Draft statements of Harmonic Balls (fp-S2g, q1)
 
@@ -163,5 +164,76 @@ theorem ae_pathwise_part_of_draft {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (hQ
       ((hS t (3 / 4) ht (by norm_num) 0 (mem_ball_self (by norm_num))).2.2) hsph hle hlap (hN t ht)
   · exact monotoneOn_regularizedCluster_of_monotone_cluster
       (fun t₁ t₂ h1 h12 => hM t₁ t₂ (3 / 4) h1 h12 (by norm_num) 0 (mem_ball_self (by norm_num)))
+
+/-- Almost surely, the mass clause: `μ(Λ_t) = t` whenever `closure Λ_t ⊆ B_{3/4}` (HB Lemma 3.4 at `r = 3/4`), from the
+Draft clause and the boundary-nullness `hnull` (the frontier lies in `B_{3/4}`, so the restricted measure is `μ`). -/
+theorem ae_mass_of_draft {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (hQ : γ < lqgQ γ)
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    {μ : Ω → Measure ℂ} (hW : IsWholePlaneGFF P hC hcirc) (hL : IsLQGMeasureOfField P γ γ hcirc μ)
+    (hCons : ClusterConservationOfMassStmt.{0}) (hnull : ∀ᵐ ω ∂P, RadiusThreeQuartersBoundaryNull (μ ω)) :
+    ∀ᵐ ω ∂P, ∀ t : ℝ, 0 < t → closure (cluster (μ ω) (3 / 4) 0 t) ⊆ ball (0 : ℂ) (3 / 4) →
+      μ ω (cluster (μ ω) (3 / 4) 0 t) = ENNReal.ofReal t := by
+  filter_upwards [hCons γ γ hγ0 hγ2 hQ Ω P hC hcirc μ hW hL, hnull] with ω hC' hN
+  intro t ht hcl
+  have hc := hC' (3 / 4) t (by norm_num) ht 0 (mem_ball_self (by norm_num))
+  have hF : frontier (cluster (μ ω) (3 / 4) 0 t) ⊆ ball (0 : ℂ) (3 / 4) := frontier_subset_closure.trans hcl
+  have h0 : μ ω (frontier (cluster (μ ω) (3 / 4) 0 t)) = 0 := by
+    have h1 := hN t ht
+    rw [Measure.restrict_apply' measurableSet_ball, inter_eq_left.mpr hF] at h1
+    exact h1
+  exact hc.2.2 hcl h0
+
+/-- Bounded stopping set (clause 6 of `ConePathwiseHalfBallInputs`): if `Λ̂_t ⊆ B_{1/2}` then `closure Λ_t ⊆ B_{3/4}` (the raw
+clusters are open, `Λ_t ⊆ Λ̂_t`), so `t = μ(Λ_t) ≤ μ(B_{3/4})` by the mass clause `hmass`. -/
+theorem bddAbove_of_mass {μ : Measure ℂ} [IsLocallyFiniteMeasure μ]
+    (hopen : ∀ t : ℝ, 0 < t → IsOpen (cluster μ (3 / 4) 0 t))
+    (hmass : ∀ t : ℝ, 0 < t → closure (cluster μ (3 / 4) 0 t) ⊆ ball (0 : ℂ) (3 / 4) →
+      μ (cluster μ (3 / 4) 0 t) = ENNReal.ofReal t) :
+    BddAbove {t : ℝ | 0 < t ∧ regularizedCluster μ (3 / 4) 0 t ⊆ ball (0 : ℂ) (1 / 2)} := by
+  refine ⟨(μ (ball (0 : ℂ) (3 / 4))).toReal, fun t ht => ?_⟩
+  obtain ⟨ht0, hsub⟩ := ht
+  have hcl : closure (cluster μ (3 / 4) 0 t) ⊆ ball (0 : ℂ) (3 / 4) := by
+    have h1 : closure (cluster μ (3 / 4) 0 t) ⊆ closure (regularizedCluster μ (3 / 4) 0 t) :=
+      closure_mono (interior_maximal subset_closure (hopen t ht0))
+    have h2 : closure (regularizedCluster μ (3 / 4) 0 t) ⊆ closedBall (0 : ℂ) (1 / 2) := by
+      rw [← closure_ball (0 : ℂ) (by norm_num : (1 / 2 : ℝ) ≠ 0)]
+      exact closure_mono hsub
+    exact h1.trans (h2.trans (closedBall_subset_ball (by norm_num)))
+  have hle : μ (cluster μ (3 / 4) 0 t) ≤ μ (ball (0 : ℂ) (3 / 4)) :=
+    measure_mono (fun x hx => hx.1)
+  rw [hmass t ht0 hcl] at hle
+  have hfin : μ (ball (0 : ℂ) (3 / 4)) ≠ ⊤ := measure_ball_lt_top.ne
+  have h3 := ENNReal.toReal_mono hfin hle
+  rwa [ENNReal.toReal_ofReal ht0.le] at h3
+
+/-- **Pathwise inputs of the whole-plane source (q1, fp-S2g; Draft reduction).** Almost surely `ConePathwiseHalfBallInputs`
+holds for `μ ω`, given: the Draft statements (clauses 1-3, 6); the frozen initial confinement `FrozenHBInitialConfinement`
+(clause 5); the radius-3/4 boundary-nullness `hnull` (NEW, not in the Draft); and three NEW hypotheses not in the Draft,
+namely the Hausdorff continuity `hcont` (clause 4, CHATGPT-q1-open-steps.md H5), the harmonic-ball property on `(0,T)`
+`hharm` (clause 7) and the conditions `hcond` (clause 8), which need the identification H3 of the regularized clusters. -/
+theorem ae_conePathwiseHalfBallInputs_of_draft {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (hQ : γ < lqgQ γ)
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P] {hC : Ω → (ℂ → ℝ) → ℝ}
+    {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ} (hW : IsWholePlaneGFF P hC hcirc)
+    (hL : IsLQGMeasureOfField P γ γ hcirc μ)
+    (hOpen : ClusterOpenLaplacianStmt.{0}) (hSup : LeastSupersolutionMemStmt.{0})
+    (hCons : ClusterConservationOfMassStmt.{0}) (hMono : ClusterMonotoneStmt.{0})
+    (hconf : FrozenHBInitialConfinement)
+    (hnull : ∀ᵐ ω ∂P, RadiusThreeQuartersBoundaryNull (μ ω))
+    (hcont : ∀ᵐ ω ∂P, ∃ ε : ℝ, 0 < ε ∧ HausdorffContinuousOn (regularizedCluster (μ ω) (3 / 4) 0)
+      (Ioo 0 (sSup {t : ℝ | 0 < t ∧ regularizedCluster (μ ω) (3 / 4) 0 t ⊆ ball (0 : ℂ) (1 / 2)} + ε)))
+    (hharm : ∀ᵐ ω ∂P, ∀ t ∈ Ioo 0 (sSup {t : ℝ | 0 < t ∧ regularizedCluster (μ ω) (3 / 4) 0 t ⊆ ball (0 : ℂ) (1 / 2)}),
+      IsHarmonicBall (μ ω) (regularizedCluster (μ ω) (3 / 4) 0 t) 0)
+    (hcond : ∀ᵐ ω ∂P, SatisfiesHarmonicBallConditionsOn (μ ω) (regularizedCluster (μ ω) (3 / 4) 0) 0
+      (sSup {t : ℝ | 0 < t ∧ regularizedCluster (μ ω) (3 / 4) 0 t ⊆ ball (0 : ℂ) (1 / 2)})) :
+    ∀ᵐ ω ∂P, ConePathwiseHalfBallInputs (μ ω) := by
+  have hconf' := hconf γ hγ0 hγ2 Ω P hC hcirc μ inferInstance hW hL
+  have hpart := ae_pathwise_part_of_draft hγ0 hγ2 hQ hW hL hOpen hSup hCons hMono hnull
+  have hmass := ae_mass_of_draft hγ0 hγ2 hQ hW hL hCons hnull
+  filter_upwards [hpart, hmass, hconf', hcont, hharm, hcond,
+    hOpen γ γ hγ0 hγ2 hQ Ω P hC hcirc μ hW hL] with ω hp hm hc hcn hh hcd hO
+  obtain ⟨hloc, hrad, hmon⟩ := hp
+  refine ⟨hloc, hrad, hmon, hcn, hc, ?_, hh, hcd⟩
+  have : IsLocallyFiniteMeasure (μ ω) := hloc
+  exact bddAbove_of_mass (fun t ht => (hO t (3 / 4) ht (by norm_num) 0 (mem_ball_self (by norm_num))).1) hm
 
 end MatedCRT
