@@ -1,4 +1,5 @@
 import MatedCRT.FirstPass.S4S6c.HVolCutoff68
+import MatedCRT.FirstPass.S4S6c.ShellWindowRf68
 
 /-!
 # FIRST PASS S4S6c, HVolCutoff239_68: measurable random volume cutoff and walk-a.e. volume inputs
@@ -17,6 +18,7 @@ import MatedCRT.FirstPass.S4S6c.HVolCutoff68
 namespace MatedCRT
 open MeasureTheory Set Filter Metric
 open scoped ENNReal Topology
+open _root_.HarmonicBalls (annulus)
 namespace Lemma68Cutoff239
 
 /-- **Measurable eventual dyadic scale (Borel–Cantelli with measurable hulls).** Let `E` satisfy the polynomially high
@@ -280,6 +282,44 @@ theorem pos_iInf_of_cutoff {μ : Measure ℂ} {β t c0 R : ℝ} {S : Set ℂ} (h
   lt_of_lt_of_le (ENNReal.ofReal_pos.mpr (Real.rpow_pos_of_pos (mul_pos hc0 hR) β))
     (le_iInf₂ fun w hw => (Lemma68Cutoff.volume_bounds_of_cutoff hc0 hc0' hR hcut hRt (hS w hw)).1)
 
+/-- **The annulus of an eligible shell centre lies in the cutoff domain (chat 246 Q3).** Let `z ∈ shortEligible ρ d a`,
+so `‖z‖ < ρ - 3 d^a`, and let `0 < R ≤ d^a` with `ρ < 1`. For `w ∈ 𝔸_{R,2R}(z) = B_{2R}(z) \ closedBall z R`:
+`‖w‖ ≤ ‖z‖ + dist w z < ρ - 3 d^a + 2R ≤ ρ - R < 1 - R/4`. -/
+theorem norm_lt_of_mem_annulus_eligible {ρ d a R : ℝ} {z w : ℂ} (hρ : ρ < 1) (hz : z ∈ Lemma68Window.shortEligible ρ d a)
+    (hR0 : 0 < R) (hRs : R ≤ d ^ a) (hw : w ∈ annulus z R (2 * R)) : ‖w‖ < 1 - R / 4 := by
+  have hzn : ‖z‖ < ρ - 3 * d ^ a := by
+    have hzb : z ∈ ball (0 : ℂ) (ρ - 3 * d ^ a) := hz.1.1
+    rwa [mem_ball_zero_iff] at hzb
+  have hwz : dist w z < 2 * R := mem_ball.mp hw.1
+  have htri : ‖w‖ - ‖z‖ ≤ ‖w - z‖ := norm_sub_norm_le w z
+  rw [← dist_eq_norm] at htri
+  linarith
+
+/-- **Positivity of the annulus infimum at an eligible centre (chat 246 Q3 step 3).** The corrected local form of
+`pos_iInf_annulus_ball`: no full support is used; the cutoff bound below `t` and `4R < t` (`R/4 < t`) suffice, because
+the whole annulus `𝔸_{R,2R}(z)` lies in `B_{1-R/4}` by `norm_lt_of_mem_annulus_eligible`. -/
+theorem pos_iInf_annulus_of_eligible {μ : Measure ℂ} {β t c0 ρ d a R : ℝ} {z : ℂ} (hc0 : 0 < c0) (hc0' : c0 ≤ 1 / 4)
+    (hρ : ρ < 1) (hz : z ∈ Lemma68Window.shortEligible ρ d a) (hR0 : 0 < R) (hRs : R ≤ d ^ a) (hRt : R / 4 < t)
+    (hcut : ∀ δ : ℝ, 0 < δ → δ < t → ∀ z' ∈ ball (0 : ℂ) (1 - δ), ENNReal.ofReal (δ ^ β) ≤ μ (ball z' δ)) :
+    0 < ⨅ w ∈ annulus z R (2 * R), μ (ball w (c0 * R)) :=
+  pos_iInf_of_cutoff hc0 hc0' hR0 hcut hRt (fun _ hw => norm_lt_of_mem_annulus_eligible hρ hz hR0 hRs hw)
+
+/-- **Almost-sure corrected `hpos` (chat 246 Q3 step 4), walk form.** For a walk law `ν`, a prefix event `pre`, shell
+centres `z x` and walk radii `R x`: if almost surely on `pre`, the centre is eligible (`z x ∈ shortEligible ρ d a`), the
+radius is positive, `R x ≤ d^a` and `4 R x < t`, and the cutoff bound holds below `t` for the field `μ`, then the annulus
+infimum at `z x` with radius `R x` is almost surely positive on `pre`. No full support and no centre-only `hVolC` is used.
+Consumer: `HoneGoodEventAe68.hpos_ae` must take `Z k x = shellCentre … k x` and the binders `hEl`, `hRs` (see report). -/
+theorem hpos_ae_of_eligible {Ω' : Type} [MeasurableSpace Ω'] {ν : Measure Ω'} {μ : Measure ℂ}
+    {ρ d a β c0 t : ℝ} (hc0 : 0 < c0) (hc0' : c0 ≤ 1 / 4) (hρ : ρ < 1)
+    (hcut : ∀ δ : ℝ, 0 < δ → δ < t → ∀ z' ∈ ball (0 : ℂ) (1 - δ), ENNReal.ofReal (δ ^ β) ≤ μ (ball z' δ))
+    {pre : Ω' → Prop} {R : Ω' → ℝ} {z : Ω' → ℂ}
+    (hEl : ∀ᵐ x ∂ν, pre x → z x ∈ Lemma68Window.shortEligible ρ d a)
+    (hR0 : ∀ᵐ x ∂ν, pre x → 0 < R x) (hRs : ∀ᵐ x ∂ν, pre x → R x ≤ d ^ a)
+    (hRt : ∀ᵐ x ∂ν, pre x → 4 * R x < t) :
+    ∀ᵐ x ∂ν, pre x → 0 < ⨅ w ∈ annulus (z x) (R x) (2 * R x), μ (ball w (c0 * R x)) := by
+  filter_upwards [hEl, hR0, hRs, hRt] with x h1 h2 h3 h4 hpre
+  exact pos_iInf_annulus_of_eligible hc0 hc0' hρ (h1 hpre) (h2 hpre) (h3 hpre) (by linarith [h4 hpre, h2 hpre]) hcut
+
 end Lemma68Cutoff239
 end MatedCRT
 
@@ -291,3 +331,6 @@ end MatedCRT
 #print axioms MatedCRT.Lemma68Cutoff239.hVolC_hVolY_ae_of_cutoff
 #print axioms MatedCRT.Lemma68Cutoff239.mass_pos_of_cutoff
 #print axioms MatedCRT.Lemma68Cutoff239.pos_iInf_of_cutoff
+#print axioms MatedCRT.Lemma68Cutoff239.norm_lt_of_mem_annulus_eligible
+#print axioms MatedCRT.Lemma68Cutoff239.pos_iInf_annulus_of_eligible
+#print axioms MatedCRT.Lemma68Cutoff239.hpos_ae_of_eligible
