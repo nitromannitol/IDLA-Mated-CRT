@@ -1,48 +1,39 @@
 import MatedCRT.FirstPass.S7x
-import MatedCRT.FirstPass.SLERef.BG20
+import MatedCRT.FirstPass.S7y.Final
 
 /-!
-# Counting-measure clause of Lemma 2.9 with `MeasurableSet D` (fp-S7y-h29-measurable)
+# Proposition 7.1 with the Borel form of the Lemma 2.9 hypothesis (fp-S7y-h29-measurable)
 
-Operator audit (`notes/fp-gaps/CHATGPT-idla-7-8-audit-PRO.md`, the `h29` row of the hypothesis table and "The two required
-interface repairs", item 2 of the minimal correction list): `CountingMeasureConvergenceStmt 𝒮`
-(MatedCRT/Draft/Section2.lean:143, BG20 Lemma A.4, FROZEN) quantifies over arbitrary `D ⊆ B_ρ`, while BG20 states the
-result for Borel `D`. The repair adds `MeasurableSet D` before `D ⊆ ball 0 ρ` and keeps the choice-point condition
-`w k ∈ cell ε η k ∩ closure D` unchanged.
+Operator audit (`notes/fp-gaps/CHATGPT-idla-7-8-audit-PRO.md`, the `h29` row and item 2 of the minimal correction list):
+`CountingMeasureConvergenceStmt 𝒮` (MatedCRT/Draft/Section2.lean:143, BG20 Lemma A.4, FROZEN) quantifies over arbitrary
+`D ⊆ B_ρ`, while BG20 states the result for Borel `D`. The Borel form `CountingMeasureConvergenceMeasurableStmt` is
+defined in `MatedCRT/FirstPass/S7y/Stmt.lean`, with `countingMeasureConvergenceMeasurable_of_stmt` (the Draft statement
+implies it).
 
-`CountingMeasureConvergenceMeasurableStmt` below is that repaired form. It is weaker than
-`CountingMeasureConvergenceStmt` (it quantifies over fewer `D`), so the Draft statement implies it.
+`firstPass_7_1_support_measurable` below is `firstPass_7_1_support` (MatedCRT/FirstPass/S7x.lean:105) with `h29` in the
+Borel form. Its only use of `h29` is the Lemma 6.8 chain through `constantOrderLowerBoundDivLog_final_meas`
+(`MatedCRT/FirstPass/S7y/Final.lean`), a measurable-binder copy of
+`constantOrderLowerBoundDivLog_final` (Proofs/Sec6/ConstantOrderLowerBoundDiv/Final.lean:68). The copies are plumbing:
+every instantiation of Lemma 2.9 in that chain is at an open ball, which is measurable.
 
 No Draft statement is edited, and no Prop is frozen.
 -/
 
 namespace MatedCRT
 
-open MeasureTheory Set Metric
-
-/-- **Lemma 2.9, Borel form** (lemma:mu_h-convergence, line 680; BG20 Lemma A.4; operator audit item 2). Same as
-`CountingMeasureConvergenceStmt` (MatedCRT/Draft/Section2.lean:143) with `MeasurableSet D` added before `D ⊆ B_ρ`. The
-choice-point condition is `w k ∈ cell ε η k ∩ closure D`, as in the Draft. -/
-def CountingMeasureConvergenceMeasurableStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
-  ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ α β : ℝ, 0 < α ∧ 0 < β ∧ ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
-  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
-  _root_.HarmonicBalls.PolyHighProb S.P fun ε => {ω | ∀ (D : Set ℂ) (f : ℂ → ℝ) (w : ℤ → ℂ),
-    MeasurableSet D → D ⊆ ball 0 ρ →
-    (∀ x ∈ thickening (ε ^ α) D, 0 ≤ f x ∧ |f x| ≤ ε ^ (-β)) →
-    (∀ x ∈ thickening (ε ^ α) D, ∀ y ∈ thickening (ε ^ α) D, |f x - f y| ≤ ε ^ (-β) * ‖x - y‖) →
-    (∀ k ∈ cellVertices ε (S.η ω) D, w k ∈ cell ε (S.η ω) k ∩ closure D) →
-    ε⁻¹ * ∫ x in D, f x ∂S.μ ω - ε ^ (-1 + α) ≤ ∑' k : cellVertices ε (S.η ω) D, f (w k) ∧
-    ∑' k : cellVertices ε (S.η ω) D, f (w k) ≤ ε⁻¹ * ∫ x in thickening (ε ^ α) D, f x ∂S.μ ω + ε ^ (-1 + α)}
-
-/-- The Draft counting-measure statement implies its Borel form: restrict the universal quantifier over `D` to
-measurable `D`; the rest of the event is unchanged. -/
-theorem countingMeasureConvergenceMeasurable_of_stmt {𝒮 : SpaceFillingSLEModel}
-    (h : CountingMeasureConvergenceStmt 𝒮) : CountingMeasureConvergenceMeasurableStmt 𝒮 := by
-  intro γ hγ0 hγ2
-  obtain ⟨α, β, hα, hβ, hρ⟩ := h γ hγ0 hγ2
-  refine ⟨α, β, hα, hβ, fun ρ hρ0 hρ1 Ω _ S hv => ?_⟩
-  refine polyHighProb_of_subset_event (hρ ρ hρ0 hρ1 Ω S hv) ?_
-  intro ε ω hω D f w _ hDb hf hL hw
-  exact hω D f w hDb hf hL hw
+/-- **Proposition 7.1** (`firstPass_7_1`) with Lemma 7.4 in the positive-support form `CrudeUpperBoundSupportStmt` and
+Lemma 2.9 in the Borel form `CountingMeasureConvergenceMeasurableStmt`, in place of `CountingMeasureConvergenceStmt`
+(`firstPass_7_1_support`, S7x.lean:105). Same other hypotheses and conclusion. -/
+theorem firstPass_7_1_support_measurable (𝒮 : SpaceFillingSLEModel) (hscale : MepsScalingInput 𝒮)
+    (hcone : ConeHarmonicBallsStmt) (hdeg : DegreeBoundInput 𝒮) (h216 : GreenKernelLowerBoundStmt 𝒮) (h27 : VolumeGrowthStmt)
+    (h28 : CellSizeEstimateStmt 𝒮) (h29 : CountingMeasureConvergenceMeasurableStmt 𝒮) (h218 : ExitTimeUpperBoundStmt 𝒮)
+    (hconv : ConvergenceDivisibleStmt 𝒮) (hgreen : UniformConvergenceGreenKernelStmt 𝒮)
+    (h0 : FPWholePlaneLQGExistence) (h2 : FPWholePlaneLQGCoordinateChange)
+    (hV : FPWholePlaneUpperVolumeTail) (hR : FPConeMeanZeroRestriction) : DivSandpileUpperBoundStmt 𝒮 :=
+  divSandpileUpperBound_of_meshScaling 𝒮 hscale hcone
+    (constantOrderLowerBoundDivLog_final_meas 𝒮 h216 h27 h28 h29 h218 h0 AnnulusHitField.coneWholePlaneWeylComparison h2
+      hV hR Field.ConeCircle.circleAverageModConstStep (LQGMeasureField.lqgMeasureFieldMeasurableStep 𝒮))
+    h27 (firstPass_7_2_corrected 𝒮 h216 h28) hconv hgreen h28 (firstPass_7_3 𝒮)
+    (crudeUpperBound_of_support 𝒮 (crudeUpperBoundSupport_of_corrected 𝒮 (discreteLaplacianBoundCorrected 𝒮) hdeg))
 
 end MatedCRT
