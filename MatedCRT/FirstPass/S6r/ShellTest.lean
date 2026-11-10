@@ -209,6 +209,33 @@ theorem exit_before_next_shell {ε : ℝ} {η : ℝ → ℂ} (hηc : Continuous 
       exact ⟨p, hp1, mem_ball.2 (by rw [hpz]; linarith)⟩
   exact hsep (x C1) hbad hC1
 
+/-- Step 7, strengthened ordering (referee repair, `CHATGPT-idla-6-8-shells-referee.md` item (iii)): whenever the
+next shell is reached, `C_j < T_j < L_j < C_{j+1}`, pathwise (not only on the bad event). `hxT` is `x T ∈ I(D')` for
+the local disk `D' = B_{R/4}(η(X_T))` (`ShellWiring.test_ball_of_exit`), `hD' : D' ⊆ B_{2R}(z)`; the strict `T < L`
+comes from `x T ∈ I(D')` and `x L ∉ I(D')`. Uses `hηc`, `hadj`. -/
+theorem test_finishes_before_next_shell {ε : ℝ} {η : ℝ → ℂ} (hηc : Continuous η) (x : ℕ → ℤ)
+    (hadj : ∀ n, (cell ε η (x n) ∩ cell ε η (x (n + 1))).Nonempty)
+    {z : ℂ} {R : ℝ} (hR : 0 < R) {Sn : Set ℂ}
+    (hsep : ∀ k : ℤ, (cell ε η k ∩ ball z (2 * R)).Nonempty → ¬ (cell ε η k ∩ Sn).Nonempty)
+    {Cj C1 T L : ℕ} (hCC : Cj ≤ C1) (hC1 : (cell ε η (x C1) ∩ Sn).Nonempty) (hCjT : Cj ≤ T)
+    (hCj : x Cj ∈ interiorCellVertices ε η (ball z (4 * R / 3)))
+    (hTmin : ∀ n, Cj ≤ n → n < T → x n ∈ interiorCellVertices ε η (ball z (4 * R / 3)))
+    (hT : x T ∉ interiorCellVertices ε η (ball z (4 * R / 3)))
+    (hTL : T ≤ L)
+    {D' : Set ℂ} (hD' : D' ⊆ ball z (2 * R)) (hxT : x T ∈ interiorCellVertices ε η D')
+    (hLmin : ∀ n, T ≤ n → n < L → x n ∈ interiorCellVertices ε η D')
+    (hL : x L ∉ interiorCellVertices ε η D') :
+    Cj < T ∧ T < L ∧ L < C1 := by
+  obtain ⟨hCjlt, hTC1⟩ := exit_before_next_shell hηc x hadj hR hsep hCC hC1 hCjT hCj hTmin hT
+  have hLC1 := local_test_before_next_shell hηc x hadj hsep hD' hTC1 hC1 hTL hxT hLmin hL
+  have hTL' : T < L := by
+    refine lt_of_le_of_ne hTL ?_
+    intro h'
+    have hxL : x T = x L := congrArg x h'
+    rw [← hxL] at hL
+    exact hL hxT
+  exact ⟨hCjlt, hTL', hLC1⟩
+
 /-- `(7.36)-(7.37)`: if the vertex point `b' = η(b)` lies within `R/4` of `B_{4R/3}`-sphere radius `h` and the cell
 of `b` has diameter `≤ h < R/4`, then `b ∈ I(B_{R/4}(b'))` and `B_{R/4}(b') ⊆ B_{2R}(z)`. -/
 theorem exit_cell_test_ball {ε : ℝ} {η : ℝ → ℂ} {b : ℤ} {h R : ℝ} {z : ℂ} (hε : 0 ≤ ε) (hR : 0 < R)
@@ -308,9 +335,10 @@ theorem first_moment_of_sparsity {cnt m ε s1 cv c0 β R r : ℝ} (hβ : 0 ≤ �
 /-! ## Step 9, S5 at the shell boundary: the geometric hypotheses of the one-test bound -/
 
 /-- The numerical window of a shell test: the radii `r² ≤ d ≤ R ≤ s ≤ r/4000` (7.42-7.45), the cell-size
-numerics `h < R/4` (from (7.0), `h ≤ d/100`), and the enlargement `0 ≤ e`, `h + e ≤ R/12` of (7.49). -/
+numerics `h < R/4` (from (7.0), `h ≤ d/100`), and the enlargement `0 ≤ e`, `h + e ≤ R/12` of (7.49). Referee repair (Step 9, `CHATGPT-idla-6-8-shells-referee.md`
+item (ii)): `h ≤ R/100` and `e ≤ R/100`, the latter being `ε^{α_e} ≤ R/100` for the enlargement `e = ε^{α_e}`. -/
 def S5Window (r d R s h e : ℝ) : Prop :=
-  r ^ 2 ≤ d ∧ d ≤ R ∧ R ≤ s ∧ s ≤ r / 4000 ∧ 0 < r ∧ 0 < R ∧ 0 ≤ e ∧ h + e ≤ R / 12 ∧ h < R / 4
+  r ^ 2 ≤ d ∧ d ≤ R ∧ R ≤ s ∧ s ≤ r / 4000 ∧ 0 < r ∧ 0 < R ∧ 0 ≤ e ∧ h + e ≤ R / 12 ∧ h < R / 4 ∧ h ≤ R / 100 ∧ e ≤ R / 100
 
 /-- Step 9 (`S5_geometry_at_shell_test`, l.601-707), pathwise. At the exit time `T_j` of the walk from `I(B_{4R/3}(z))`
 (step 6), with the exit vertex `b = X_{T_j}` and its vertex point `x' = η(b)`:
@@ -338,7 +366,7 @@ theorem S5_geometry_at_shell_test {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < ε) (
         ball (vertexPoint ε η (x T)) (R / 4) ⊆ ball z (2 * R)) ∧
       ((A ∩ cellVertices ε η (ball (vertexPoint ε η (x T)) (c0 * R))).ncard : ℝ) ≤
         (μ (ball (vertexPoint ε η (x T)) (c0 * R))).toReal / (4 * ε) ∧ r ^ 2 ≤ R ∧ R < r := by
-  obtain ⟨hd, hdR, hRs, hs4, hr, hR, he0, hhe, hhR⟩ := hW
+  obtain ⟨hd, hdR, hRs, hs4, hr, hR, he0, hhe, hhR, -⟩ := hW
   have hρ : (4 * R / 3 : ℝ) ≠ 0 := by
     have : (0 : ℝ) < 4 * R / 3 := by linarith
     exact this.ne'

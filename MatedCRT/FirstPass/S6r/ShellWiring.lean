@@ -101,7 +101,7 @@ lemma shell_step_order (hηc : Continuous η) (hε : 0 ≤ ε) (x : ℕ → ℤ)
     (hLmin : ∀ n, T ≤ n → n < L →
       x n ∈ interiorCellVertices ε η (ball (vertexPoint ε η (x T)) (R / 4)))
     (hL : x L ∉ interiorCellVertices ε η (ball (vertexPoint ε η (x T)) (R / 4))) :
-    C < T ∧ T < C1 ∧ L < C1 := by
+    C < T ∧ T < L ∧ L < C1 := by
   obtain ⟨y, hyS, hzy⟩ := hy
   have hyS' : |infDist y K - r / 2| = lam := hyS
   have hsep : ∀ k : ℤ, (cell ε η k ∩ ball z (2 * R)).Nonempty →
@@ -110,10 +110,9 @@ lemma shell_step_order (hηc : Continuous η) (hε : 0 ≤ ε) (x : ℕ → ℤ)
     have hpq : dist p q ≤ h := hmesh k ⟨q, hqc, hqb⟩ p hpc q hqc
     have hps' : |infDist p K - r / 2| = lam + 20 * s := hps
     exact cell_misses_next_shell hyS' hzy hRs hs hhs (mem_ball.1 hqb) hpq hps'
-  obtain ⟨hCTlt, hTC1⟩ := exit_before_next_shell hηc x hadj hR hsep hCC hC1 hCT hCin hmin hT
+  have hCTlt : C < T := lt_of_le_of_ne hCT (fun h' => hT (h' ▸ hCin))
   obtain ⟨hD, hDsub⟩ := test_ball_of_exit hηc hε x hadj hR hhR hmesh hCTlt hmin hT
-  have hLC1 := local_test_before_next_shell hηc x hadj hsep hDsub hTC1 hC1 hTL hD hLmin hL
-  exact ⟨hCTlt, hTC1, hLC1⟩
+  exact test_finishes_before_next_shell hηc x hadj hR hsep hCC hC1 hCT hCin hmin hT hTL hDsub hD hLmin hL
 
 /-- Step 8 at the last shell (notes (7.39)-(7.41)): every vertex `x m` with `C ≤ m ≤ L` lies in
 `U = V(K+B_r) \ Θ`. The level window `0 < f < r` near the centre comes from `level_near_centre` and
@@ -215,6 +214,7 @@ theorem shell_chain_pathwise {K : Set ℂ} {r s d h ε : ℝ} {η : ℝ → ℂ}
       x m ∈ interiorCellVertices ε η (ball (vertexPoint ε η (x (T k))) (R (zc k) / 4)))
     (hLex : ∀ k ≤ n, x (L k) ∉ interiorCellVertices ε η (ball (vertexPoint ε η (x (T k))) (R (zc k) / 4))) :
     (∀ k < n, (T k : ℕ∞) ≤ (T (k + 1) : ℕ∞) ∧ (L k : ℕ∞) ≤ (T (k + 1) : ℕ∞)) ∧
+      (∀ k < n, T k < L k ∧ L k < hitTime ε η K r s x (k + 1)) ∧
       (T n : ℕ∞) < (τ : ℕ∞) ∧ (L n : ℕ∞) ≤ (τ : ℕ∞) := by
   -- step 4 (z10): all shells are hit before τ, and the hitting times strictly increase
   have hhs : h ≤ s / 100 := le_trans hh hds
@@ -245,21 +245,21 @@ theorem shell_chain_pathwise {K : Set ℂ} {r s d h ε : ℝ} {η : ℝ → ℂ}
       interiorCellVertices ε η (ball (zc k) (4 * R (zc k) / 3)) := fun k hk =>
     mem_interior_of_cell_lt hε.le (by linarith [hRpos k hk]) (hsc k hk).2.1
   -- steps 6-9 at shells `k < n`, and the step-8 claim at the last shell
-  have hstep : ∀ k < n, T k < hitTime ε η K r s x (k + 1) ∧ L k < hitTime ε η K r s x (k + 1) ∧
+  have hstep : ∀ k < n, T k < L k ∧ L k < hitTime ε η K r s x (k + 1) ∧
       hitTime ε η K r s x (k + 1) < T (k + 1) := by
     intro k hk
     have hC1 : (cell ε η (x (hitTime ε η K r s x (k + 1))) ∩
         twoSidedShell K r (shellOffset s (k + 1) + 20 * s)).Nonempty := by
       rw [← shellOffset_succ]
       exact hhit_mem (k + 1) (by omega)
-    obtain ⟨-, hB, hC⟩ := shell_step_order hη hε.le x hadj
+    obtain ⟨-, hTLk, hC⟩ := shell_step_order hη hε.le x hadj
       (hR := hRpos k (by omega)) (hRs := (hsc k (by omega)).2.2.2) (hs := hs)
       (hhs := by linarith [hh, hds]) (hhR := by linarith [hh, hds, (hsc k (by omega)).2.2.1, hRpos k (by omega)])
       (hy := (hsc k (by omega)).1) (hmesh := hmesh k (by omega)) (hCC := (hC_mono k hk).le)
       (hC1 := hC1) (hCT := hCT k (by omega)) (hCin := hCinK k (by omega))
       (hmin := hTmin k (by omega)) (hT := hTex k (by omega)) (hTL := hTL k (by omega))
       (hLmin := hLmin k (by omega)) (hL := hLex k (by omega))
-    refine ⟨hB, hC, lt_of_le_of_ne (hCT (k + 1) (by omega)) (fun h' => hTex (k + 1) (by omega) ?_)⟩
+    refine ⟨hTLk, hC, lt_of_le_of_ne (hCT (k + 1) (by omega)) (fun h' => hTex (k + 1) (by omega) ?_)⟩
     rw [← h']
     exact hCinK (k + 1) (by omega)
   -- step 8 at the last shell: `x m ∈ U` on `[C_n, L_n]`, so `τ ∉ [C_n, L_n]` and `L_n < τ`
@@ -279,8 +279,8 @@ theorem shell_chain_pathwise {K : Set ℂ} {r s d h ε : ℝ} {η : ℝ → ℂ}
       (hTL := hTL n le_rfl) (hLmin := hLmin n le_rfl) (hL := hLex n le_rfl)
     rw [hset] at hτ
     exact hτ (hin τ (hC_lt n le_rfl).le (not_lt.1 hcon))
-  refine ⟨fun k hk => ⟨?_, ?_⟩, ?_, ?_⟩
-  · exact_mod_cast le_of_lt (lt_trans (hstep k hk).1 (hstep k hk).2.2)
+  refine ⟨fun k hk => ⟨?_, ?_⟩, fun k hk => ⟨(hstep k hk).1, (hstep k hk).2.1⟩, ?_, ?_⟩
+  · exact_mod_cast le_of_lt (lt_trans (hstep k hk).1 (lt_trans (hstep k hk).2.1 (hstep k hk).2.2))
   · exact_mod_cast le_of_lt (lt_trans (hstep k hk).2.1 (hstep k hk).2.2)
   · exact_mod_cast lt_of_le_of_lt (hTL n le_rfl) hLn
   · exact_mod_cast hLn.le
