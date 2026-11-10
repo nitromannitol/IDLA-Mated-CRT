@@ -24,6 +24,7 @@ Source: the standard long-time behaviour of Brownian motion with positive drift 
 of Duplantier–Miller–Sheffield (2014, *Mating of trees*, arXiv:1409.7055v4), Definition of the quantum cone
 (the conditioned process `B̂` of the radial part); the identification of the weak limit `ν` of `IsBMConditionedPositive`
 with the h-transform is part of this standard fact. Locator: standard; locator pending.
+Truth check FALSE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md §1): the almost-sure conclusion lives on an uncountable raw function space with the product sigma-algebra, where real-time divergence is not an almost-sure property. Counterexample: the complement has outer measure one.
 Used by: coneScaleRadius_lowerTail (MatedCRT/FirstPass/S1c.lean). -/
 def FrozenConeRadialDivergence : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ν : Measure (ContinuousPath ℝ), IsBMConditionedPositive (lqgQ γ - γ) ν →
@@ -35,6 +36,7 @@ def FrozenConeRadialDivergence : Prop :=
 `ν`-measurable for the completion). Source: Lusin (1917); Kechris, *Classical Descriptive Set Theory* (1995), Theorem
 21.10 (analytic sets are universally measurable). General measure theory, not specific to this paper.
 Locator: standard; locator pending.
+Truth check TRUE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md, table row): Kechris (1995) Theorem 21.10, p. 155.
 Used by: firstPass_1_4, firstPass_1_6 (FirstPass/S1c/Composition.lean) via fixedTimeRadiusStep_of_frozen (FirstPass/S1c.lean),
 through nullMeasurableSet_threshold (FirstPass/S1c/Measurability.lean) and fixedTimeRadiusBody_of_frozen (FirstPass/S1c/Containment.lean). -/
 def FrozenUniversalMeasurabilityOfAnalytic : Prop :=
@@ -48,6 +50,7 @@ only almost surely, HB `Defs/LQG.lean:63`; corrected after ChatGPT 00:53 UTC, no
 §8.2, with a counterexample to everywhere measurability). This is the field-level measurability of the dyadic approximations of the LQG measure
 (Duplantier–Sheffield 2011, Prop. 1.1, as cited in `HarmonicBalls.Defs.LQG`), and the operator's wave-4 ruling
 (measurability of `ω ↦ μ_h(S)`), which determines it on dyadic squares. Locator: standard; locator pending.
+Truth check TRUE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md, table row): DS arXiv:0808.1560v2 Proposition 1.1 (p. 5) and Proposition 3.1 (p. 17).
 Used by: firstPass_1_4, firstPass_1_6 (FirstPass/S1c/Composition.lean) via fixedTimeRadiusStep_of_frozen (FirstPass/S1c.lean),
 through nullMeasurableSet_threshold (FirstPass/S1c/Measurability.lean) and fixedTimeRadiusBody_of_frozen (FirstPass/S1c/Containment.lean). -/
 def FrozenLQGTestIntegralMeasurable : Prop :=
@@ -59,6 +62,7 @@ def FrozenLQGTestIntegralMeasurable : Prop :=
 `G_{B_R}(0,·) = greenFunction (ball 0 R) 0` is nonnegative and continuous on `B_R ∖ {0}`; explicitly
 `G_{B_R}(0,x) = (2π)^{-1} log (R / |x|)` (Armitage–Gardiner, *Classical Potential Theory* (2001), §4.4). This is the
 Green function of the disc, not specific to this paper. Locator: standard; locator pending.
+Truth check TRUE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md, table row): Doob (1984) Ch. II §1 p. 14 equation (1.1), divided by 2 pi.
 Used by: firstPass_1_4, firstPass_1_6 (FirstPass/S1c/Composition.lean) via fixedTimeRadiusStep_of_frozen (FirstPass/S1c.lean),
 through threshold_iff_moments (FirstPass/S1c/Threshold.lean). -/
 def FrozenDiskGreenNonnegCont : Prop :=
