@@ -1,6 +1,7 @@
 import MatedCRT.Defs.Setting
 import MatedCRT.FirstPass.S6r.GoodAnnulus
 import MatedCRT.FirstPass.S6r.Window
+import MatedCRT.FirstPass.S6p
 
 /-!
 # Prevalence bridge for the good-annulus event (Lemma 6.8 window; fp-S6r-prevalence-bridge)
@@ -350,22 +351,18 @@ def AnnulusNondegenerateAe {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (�
   ∀ᵐ ω ∂P, 0 < (⨅ w ∈ annulus z R (2 * R), μ ω (ball w (c₀ * R))) ∧ μ ω (ball z (3 * R)) ≠ ⊤ ∧
     ∀ v ∈ annulus z R (2 * R), μ ω {v} = 0
 
-/-- **(ii) Uniform prevalence of the scale-covariant event.** From the all-scales [C5] prevalence and a.s.
-non-degeneracy, `ScaleCovUniformPrevalenceStmt` holds at the constants `c₀ ↦ 3 c₀`, `C ↦ (1 + N log 4) C`. -/
-theorem scaleCovUniformPrevalenceStmt_of_c5 {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
-    (μ : Ω → Measure ℂ) {N : ℕ}
+/-- Transfer of a probability lower bound from the [C5] event to the scale-covariant event, at one annulus, under the
+a.s. non-degeneracy `AnnulusNondegenerateAe`. -/
+lemma scaleCov_prob_of_isGood {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (μ : Ω → Measure ℂ) {N : ℕ}
     (hN : ∀ (R : ℝ) (z : ℂ), 0 < R → ∃ t : Finset ℂ, t.card ≤ N ∧
       (∀ v ∈ t, v ∈ annulus z R (2 * R)) ∧ annulus z R (2 * R) ⊆ ⋃ v ∈ t, ball v R)
-    {c₀ C : ℝ} (hc₀ : 0 < c₀) (hc₀' : c₀ < 1 / 5)
-    (hC5 : C5AllScalesPrevalenceStmt P μ c₀ C)
-    (hnd : ∀ R : ℝ, 0 < R → ∀ z : ℂ, AnnulusNondegenerateAe P μ c₀ R z) :
-    ScaleCovUniformPrevalenceStmt P μ (3 * c₀) ((1 + N * Real.log 4) * C) := by
-  obtain ⟨p, hp, hA⟩ := hC5
-  refine ⟨p, hp, fun R hR z => ?_⟩
+    {c₀ C R : ℝ} {z : ℂ} {p : ℝ≥0∞} (hc₀ : 0 < c₀) (hc₀' : c₀ < 1 / 5) (hR : 0 < R)
+    (hp : p ≤ P {ω | IsGoodAnnulusEvent (μ ω) c₀ C R z}) (hnd : AnnulusNondegenerateAe P μ c₀ R z) :
+    p ≤ P {ω | ScaleCovGoodAnnulusEvent (3 * c₀) ((1 + N * Real.log 4) * C) R z (μ ω)} := by
   have hnull : P {ω | ¬ (0 < (⨅ w ∈ annulus z R (2 * R), μ ω (ball w (c₀ * R))) ∧
       μ ω (ball z (3 * R)) ≠ ⊤ ∧ ∀ v ∈ annulus z R (2 * R), μ ω {v} = 0)} = 0 :=
-    ae_iff.1 (hnd R hR z)
-  calc p ≤ P {ω | IsGoodAnnulusEvent (μ ω) c₀ C R z} := hA R hR z
+    ae_iff.1 hnd
+  calc p ≤ P {ω | IsGoodAnnulusEvent (μ ω) c₀ C R z} := hp
     _ ≤ P ({ω | ScaleCovGoodAnnulusEvent (3 * c₀) ((1 + N * Real.log 4) * C) R z (μ ω)} ∪
           {ω | ¬ (0 < (⨅ w ∈ annulus z R (2 * R), μ ω (ball w (c₀ * R))) ∧
             μ ω (ball z (3 * R)) ≠ ⊤ ∧ ∀ v ∈ annulus z R (2 * R), μ ω {v} = 0)}) := by
@@ -381,6 +378,68 @@ theorem scaleCovUniformPrevalenceStmt_of_c5 {Ω : Type*} [MeasurableSpace Ω] (P
         measure_union_le _ _
     _ = P {ω | ScaleCovGoodAnnulusEvent (3 * c₀) ((1 + N * Real.log 4) * C) R z (μ ω)} := by
         rw [hnull, add_zero]
+
+/-- **(ii) Uniform prevalence of the scale-covariant event (all scales; not derived).** From the all-scales [C5]
+prevalence and a.s. non-degeneracy, `ScaleCovUniformPrevalenceStmt` holds at `c₀ ↦ 3 c₀`, `C ↦ (1 + N log 4) C`.
+The hypothesis `hC5` is not available from the Lean inputs (see `C5AllScalesPrevalenceStmt`). -/
+theorem scaleCovUniformPrevalenceStmt_of_c5 {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    (μ : Ω → Measure ℂ) {N : ℕ}
+    (hN : ∀ (R : ℝ) (z : ℂ), 0 < R → ∃ t : Finset ℂ, t.card ≤ N ∧
+      (∀ v ∈ t, v ∈ annulus z R (2 * R)) ∧ annulus z R (2 * R) ⊆ ⋃ v ∈ t, ball v R)
+    {c₀ C : ℝ} (hc₀ : 0 < c₀) (hc₀' : c₀ < 1 / 5)
+    (hC5 : C5AllScalesPrevalenceStmt P μ c₀ C)
+    (hnd : ∀ R : ℝ, 0 < R → ∀ z : ℂ, AnnulusNondegenerateAe P μ c₀ R z) :
+    ScaleCovUniformPrevalenceStmt P μ (3 * c₀) ((1 + N * Real.log 4) * C) := by
+  obtain ⟨p, hp, hA⟩ := hC5
+  exact ⟨p, hp, fun R hR z => scaleCov_prob_of_isGood P μ hN hc₀ hc₀' hR (hA R hR z) (hnd R hR z)⟩
+
+/-- Complement form of a lower bound: `P Aᶜ ≤ 1 - p` gives `p ≤ P A` for a probability measure. -/
+lemma ofReal_le_measure_of_compl_le {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    {A : Set Ω} {p : ℝ} (hp : 0 < p) (hp1 : p ≤ 1) (h : P Aᶜ ≤ ENNReal.ofReal (1 - p)) :
+    ENNReal.ofReal p ≤ P A := by
+  have h1 : (1 : ℝ≥0∞) ≤ P A + P Aᶜ := by
+    rw [← measure_univ (μ := P), ← Set.union_compl_self A]
+    exact measure_union_le _ _
+  by_contra hlt
+  replace hlt := not_le.1 hlt
+  have hsum : ENNReal.ofReal p + ENNReal.ofReal (1 - p) = 1 := by
+    rw [← ENNReal.ofReal_add hp.le (by linarith)]
+    simp
+  have h2 : P A + ENNReal.ofReal (1 - p) < 1 := by
+    rw [← hsum]
+    exact ENNReal.add_lt_add_right ENNReal.ofReal_ne_top hlt
+  have h3 : (1 : ℝ≥0∞) ≤ P A + ENNReal.ofReal (1 - p) := le_trans h1 (add_le_add le_rfl h)
+  exact absurd h2 (not_lt.2 h3)
+
+/-- **(ii), restricted range (proved from the uniform Lemma 6.5 of S6p).** For cone fields, `AnnulusHitUniformStmt`
+(S6p.lean:44-ish, the uniform form of Lemma 6.5 with `C = C(p)`) gives `P[E_R(z; C)] ≥ p` for the annuli of the paper's
+range: `𝔸_{R/3,3R}(z) ⊆ B_ρ` with `ρ < 1` and `R/100 ≤ dist(0, 𝔸_{R/3,3R}(z))`. Together with (i) and the a.s.
+non-degeneracy, the scale-covariant event has probability at least `p` on that range, with constant
+`C' = (1 + N log 4) C(p)`. This is the range used by the paper's Lemma 6.4 (lattice points in `B_{ρ-3√δ} \ B_{10√δ}`,
+scales `R ∈ [δ, √δ]`), not the all-scales `ScaleCovUniformPrevalenceStmt`. -/
+theorem scaleCov_restricted_prevalence_of_annulusHit
+    (hA : MatedCRT.FirstPass64.AnnulusHitUniformStmt) {N : ℕ}
+    (hN : ∀ (R : ℝ) (z : ℂ), 0 < R → ∃ t : Finset ℂ, t.card ≤ N ∧
+      (∀ v ∈ t, v ∈ annulus z R (2 * R)) ∧ annulus z R (2 * R) ⊆ ⋃ v ∈ t, ball v R)
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {c₀ : ℝ} (hc₀ : 0 < c₀) (hc₀' : c₀ < 1 / 5)
+    {p : ℝ} (hp : 0 < p) (hp1 : p < 1) :
+    ∃ C' : ℝ, 0 < C' ∧ ∀ (ρ : ℝ), 0 < ρ → ρ < 1 →
+      ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+        (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
+      (∀ (R : ℝ), 0 < R → ∀ z : ℂ, AnnulusNondegenerateAe P μ c₀ R z) →
+      ∀ (R : ℝ) (z : ℂ), 0 < R → annulus z (R / 3) (3 * R) ⊆ ball 0 ρ →
+        R / 100 ≤ infDist 0 (annulus z (R / 3) (3 * R)) →
+        ENNReal.ofReal p ≤ P {ω | ScaleCovGoodAnnulusEvent (3 * c₀) C' R z (μ ω)} := by
+  obtain ⟨C, hC, hAC⟩ := hA γ hγ0 hγ2 c₀ hc₀ hc₀' p hp hp1
+  have hlog : (0 : ℝ) ≤ N * Real.log 4 :=
+    mul_nonneg (Nat.cast_nonneg _) (Real.log_nonneg (by norm_num))
+  refine ⟨(1 + N * Real.log 4) * C, mul_pos (by linarith) hC, ?_⟩
+  intro ρ hρ hρ1 Ω _ P hC' hcirc μ hcone hnd R z hR hsub hdist
+  have : IsProbabilityMeasure P := hcone.1
+  have hbad := hAC ρ hρ hρ1 Ω P hC' hcirc μ hcone R z hR hsub hdist
+  have hgood : ENNReal.ofReal p ≤ P {ω | IsGoodAnnulusEvent (μ ω) c₀ C R z} :=
+    ofReal_le_measure_of_compl_le P hp hp1.le hbad
+  exact scaleCov_prob_of_isGood P μ hN hc₀ hc₀' hR hgood (hnd R hR z)
 
 /-! ### 7. Short window (S2.2-S2.3): the deterministic part -/
 
