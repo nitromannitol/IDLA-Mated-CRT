@@ -50,6 +50,9 @@ def FrozenLQGMeasureFieldMeasurable (𝒮 : SpaceFillingSLEModel) : Prop :=
 `ExitAe68.ae_exit_ne_top_of_bounded` and `TraceInputs68.cellVertices_finite_of_tendsto`. Not used in any
 proof from now on; kept unchanged (never delete).
 
+RETIRED (proved from IsValid.matingOfTrees, operator 23:11 UTC; proof: `MatedCRT.MatedCRTEnv.IsValid.ae_tendsto_cocompact`,
+Proofs/Infra/MatingOfTrees.lean:77, used by TraceInputs68.lean). Not used in any proof from now on; kept unchanged (never delete).
+
 FIRST-PASS FROZEN (original). Properness of the space-filling curve, almost surely. For every valid environment `S` with
 cone parameter `γ`, almost surely `η(t) → ∞` as `|t| → ∞`: `Tendsto (S.η ω) (cocompact ℝ) (cocompact ℂ)`, so that a
 bounded set of the plane is met by `η` only on a bounded interval of parameters (whole-plane space-filling SLE from
