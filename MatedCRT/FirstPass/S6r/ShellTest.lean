@@ -40,7 +40,7 @@ lemma isPreconnected_cell (ε : ℝ) (η : ℝ → ℂ) (hηc : Continuous η) (
   isPreconnected_Icc.image η hηc.continuousOn
 
 /-- The vertex point `η(εk)` is a point of its own cell (the right endpoint of `Icc (ε(k-1)) (εk)`). -/
-lemma vertexPoint_mem_cell {ε : ℝ} (hε : 0 ≤ ε) (η : ℝ → ℂ) (k : ℤ) :
+lemma vertexPoint_mem_cell_nonneg {ε : ℝ} (hε : 0 ≤ ε) (η : ℝ → ℂ) (k : ℤ) :
     vertexPoint ε η k ∈ cell ε η k :=
   ⟨ε * (k : ℝ), ⟨mul_le_mul_of_nonneg_left (by linarith : (k : ℝ) - 1 ≤ (k : ℝ)) hε, le_rfl⟩, rfl⟩
 
@@ -96,7 +96,7 @@ theorem exit_vertex_radius {ε : ℝ} {η : ℝ → ℂ} (hε : 0 ≤ ε) {h : �
   obtain ⟨p, hp1, hp2⟩ := hb
   have hpE : (cell ε η b ∩ E).Nonempty := ⟨p, hp1, hE hp2⟩
   have hdiam : dist (vertexPoint ε η b) p ≤ h :=
-    hmesh b hpE (vertexPoint ε η b) (vertexPoint_mem_cell hε η b) p hp1
+    hmesh b hpE (vertexPoint ε η b) (vertexPoint_mem_cell_nonneg hε η b) p hp1
   have hpsph : dist p z = ρ := by
     rw [frontier_ball z hρ] at hp2
     exact mem_sphere.1 hp2
@@ -217,7 +217,7 @@ theorem exit_cell_test_ball {ε : ℝ} {η : ℝ → ℂ} {b : ℤ} {h R : ℝ} 
     b ∈ interiorCellVertices ε η (ball (vertexPoint ε η b) (R / 4)) ∧
       ball (vertexPoint ε η b) (R / 4) ⊆ ball z (2 * R) := by
   constructor
-  · refine mem_interiorCellVertices_iff.2 ⟨⟨vertexPoint ε η b, vertexPoint_mem_cell hε η b,
+  · refine mem_interiorCellVertices_iff.2 ⟨⟨vertexPoint ε η b, vertexPoint_mem_cell_nonneg hε η b,
       mem_ball_self (by linarith)⟩, ?_⟩
     rintro ⟨p, hp1, hp2⟩
     have hpd : dist p (vertexPoint ε η b) = R / 4 := by
@@ -348,7 +348,7 @@ theorem S5_geometry_at_shell_test {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < ε) (
   have hpE : (cell ε η (x T) ∩ E).Nonempty := ⟨p, hp1, hE hp2⟩
   have hdiam : ∀ q ∈ cell ε η (x T), dist q (vertexPoint ε η (x T)) ≤ h := fun q hq => by
     rw [dist_comm]
-    exact hmesh (x T) hpE (vertexPoint ε η (x T)) (vertexPoint_mem_cell hε.le η (x T)) q hq
+    exact hmesh (x T) hpE (vertexPoint ε η (x T)) (vertexPoint_mem_cell_nonneg hε.le η (x T)) q hq
   obtain ⟨hI, hball⟩ := exit_cell_test_ball hε.le hR hdiam hhR hrad
   have hsq := shell_radius_bounds hd hdR hRs hs4 hr
   have hcR : c0 * R ≤ r := le_trans (mul_le_of_le_one_left hR.le hc01) hsq.2.2.le
