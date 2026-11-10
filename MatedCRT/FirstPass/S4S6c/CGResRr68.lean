@@ -61,7 +61,19 @@ theorem resRr_pt {γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ} {Ω : Type} [M
     hρ1 hζ0 hζ1 hq0 hq0c hs₀ hε hr0 hrρ hrA i ω hmesh hcont
     (Lemma68Geometry.tendsto_cocompact_of_escapes hcurve) (fun j k hjk => hadjAll ε hε j k hjk) (hmult ε hε) hFA
 
+/-- **STEP B: the residual `ShellCGResRr` holds for every `𝒮` (z12, fp-S4S6c-cgres-rr).** Destructures the
+43 clauses of the current `ShellPtPremCG` (ShellCoreCG68.lean, after z5's commit b51e0dc) by position, takes the
+mesh membership from `countingMeshEventR` (`countingMeshEventR_meshR`, Guard68S10.lean) and applies `resRr_pt`.
+No hypothesis beyond the residual's own binders. -/
+theorem shellCGResRr_holds (𝒮 : SpaceFillingSLEModel) : ShellCGResRr 𝒮 := by
+  intro γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω _ S Ew ω i hpre hFA
+  obtain ⟨hγ0, hγ2, hω₀, -, -, -, -, hκ2, hCG, -, -, hζ0, hζ1, hρ0, hρ1, -, hq0, -, hq0c, -, hRρ, hRA, -,
+    hs₀, -, -, hε, hεe, hr10, hrR, -, hmeshC, -, hcurve, hmult, hcont, -, -, -, -, hadjAll, -, -⟩ := hpre
+  exact resRr_pt S ω i hγ0 hγ2 hω₀ hκ2 hCG hζ0 hζ1 hρ0 hρ1 hq0 hq0c hRρ hRA hs₀ hε hεe hr10 hrR
+    (Lemma68Guard10.countingMeshEventR_meshR hmeshC) hcurve hmult hcont hadjAll hFA
+
 end Lemma68CGResRr
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68CGResRr.resRr_pt
+#print axioms MatedCRT.Lemma68CGResRr.shellCGResRr_holds
