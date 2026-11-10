@@ -18,7 +18,7 @@ open MeasureTheory Filter Set Metric HarmonicBalls TopologicalSpace
 
 /-- The cluster of a ball is the cluster on the ball (`Λ_{B_r;z}(t)`, the two definitions of `clusterOn` and `cluster`
 agree for `r ≠ 0`: the supersolutions on `B_r` are the same, since `closure (ball 0 r) = closedBall 0 r`). -/
-theorem clusterOn_ball_eq_cluster (μ : Measure ℂ) {r : ℝ} (hr : r ≠ 0) (z : ℂ) (t : ℝ) :
+theorem clusterOn_ball_eq_cluster_of_ne (μ : Measure ℂ) {r : ℝ} (hr : r ≠ 0) (z : ℂ) (t : ℝ) :
     clusterOn μ (ball (0 : ℂ) r) z t = cluster μ r z t := by
   have hsup : supersolutionsOn μ (ball (0 : ℂ) r) z t = supersolutions μ r z t := by
     unfold supersolutionsOn supersolutions
@@ -85,10 +85,10 @@ theorem plateau_of_prematureContact {ν : Measure ℂ} {Λ : ℝ → Set ℂ}
   have hCr : closure (interior (closure (cluster ν (3 / 4) 0 rR))) ⊆ closedBall (0 : ℂ) (1 / 2) :=
     closure_subset_closedBall_of_halfBallTest isOpen_interior hbound'
   have hball_r : closure (clusterOn ν (ball (0 : ℂ) (3 / 4)) 0 rR) ⊆ ball (0 : ℂ) (3 / 4) := by
-    rw [clusterOn_ball_eq_cluster ν (r := 3 / 4) (by norm_num), ← closure_interior_closure_of_isOpen (hopen rR hr)]
+    rw [clusterOn_ball_eq_cluster_of_ne ν (r := 3 / 4) (by norm_num), ← closure_interior_closure_of_isOpen (hopen rR hr)]
     exact hCr.trans closedBall_half_subset_ball_three_quarter
   have hΛr : closure (Λ rR) = closure (interior (closure (cluster ν (3 / 4) 0 rR))) := by
-    rw [hcomp rR hr (Or.inr hball_r), clusterOn_ball_eq_cluster ν (r := 3 / 4) (by norm_num),
+    rw [hcomp rR hr (Or.inr hball_r), clusterOn_ball_eq_cluster_of_ne ν (r := 3 / 4) (by norm_num),
       closure_interior_closure_of_isOpen (hopen rR hr)]
   have hΛr_sub : closure (Λ rR) ⊆ closedBall (0 : ℂ) (1 / 2) := by
     rw [hΛr]
@@ -96,7 +96,7 @@ theorem plateau_of_prematureContact {ν : Measure ℂ} {Λ : ℝ → Set ℂ}
   have hΛq_sub : closure (Λ qR) ⊆ ball (0 : ℂ) (3 / 4) :=
     (closure_mono (hmono qR rR hq hqr.le)).trans (hΛr_sub.trans closedBall_half_subset_ball_three_quarter)
   have hΛq : closure (Λ qR) = closure (interior (closure (cluster ν (3 / 4) 0 qR))) := by
-    rw [hcomp qR hq (Or.inl hΛq_sub), clusterOn_ball_eq_cluster ν (r := 3 / 4) (by norm_num),
+    rw [hcomp qR hq (Or.inl hΛq_sub), clusterOn_ball_eq_cluster_of_ne ν (r := 3 / 4) (by norm_num),
       closure_interior_closure_of_isOpen (hopen qR hq)]
   -- upper bounds: every point of the family up to time `r` has norm at most `1/2`
   have hup_r : ∀ x ∈ Λ rR, ‖x‖ ≤ 1 / 2 := by
