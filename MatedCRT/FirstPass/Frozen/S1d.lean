@@ -32,6 +32,8 @@ arXiv:2003.10320, §1.2 footnote 2 and Lemma A.1.
 Truth check (operator 22:02 UTC): TRUE as the exact conditional Lean statement; the decisive clause is `boundaryLength`
 in `IsMatingOfTreesCoupling`. The note classifies it as a derived consequence of these standard facts and the existing
 coupling assumptions; it stays frozen as EXTERNAL by operator decision.
+Truth check TRUE as the stated conditional implication, keeping all three SLE closure premises (ChatGPT, 02:35 UTC;
+notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md §2).
 Used by: firstPass_1_4, firstPass_1_6 (MatedCRT/FirstPass/S1d.lean). -/
 def ConeEnvironmentScalingUnderSLE (𝒮 : SpaceFillingSLEModel) : Prop :=
   SLEScaleInvarianceInput 𝒮 → SLEReparametrizationInput 𝒮 → SLEIndepMonoInput 𝒮 → ConeEnvironmentScalingStep 𝒮
