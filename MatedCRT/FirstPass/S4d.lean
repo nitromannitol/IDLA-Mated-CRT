@@ -1,6 +1,7 @@
 import MatedCRT.FirstPass.S5c
 import MatedCRT.FirstPass.S4d.StrictGapReduction
 import MatedCRT.FirstPass.S4d.DeterministicComparison
+import MatedCRT.FirstPass.S4d.FixedTimeUnion
 
 /-!
 # FIRST PASS, Proposition 4.2 (prop:div-sandpile-lower-bound): assembly with the cone family (q4)
@@ -160,5 +161,31 @@ theorem firstPass_4_2_final {𝒮 : SpaceFillingSLEModel}
     DivSandpileLowerBoundStmt 𝒮 :=
   firstPass_4_2_of_frozen_strictGap hm h210 h34 h214 h28 h35 h218 h27 hH hcone h23 h24 h33 hG hpc hsmp hwmp hpole hnj
     (coneFamilyAEMeasurable_proved hcan hcl h27 hE1 hE2 hscale h22)
+
+
+/-- **Proposition 4.2 with the fixed-time union discharged (q4, fp-S4d-4-2-assembly).** The hypothesis `hnj` of
+`firstPass_4_2_final` is `strictGapFixedTimeUnion_of_steps` (S4d/FixedTimeUnion.lean), whose inputs are the cone scaling
+law `hScaleInv` (Lemma 2.6, `ConeScaleInvarianceStmt`), the explicit OPEN steps `hB2` (`ConeGlobalFamilyPairAEMeasurableStep`)
+and `hB2R` (`ConeRescaledPairAEMeasurableStep`), and the frozen positivity `hFCS : FrozenConeScalingLaw 𝒮`
+(Frozen/S4S6c.lean). The other hypotheses are those of `firstPass_4_2_final`, in the same order. -/
+theorem firstPass_4_2_of_scale_inputs {𝒮 : SpaceFillingSLEModel}
+    (hm : MepsScalingInput 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)
+    (h34 : IntegralConvergenceGreenFunctionStmt 𝒮) (h214 : GreenKernelUpperBoundStmt 𝒮)
+    (h28 : CellSizeEstimateStmt 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
+    (h218 : ExitTimeUpperBoundStmt 𝒮) (h27 : VolumeGrowthStmt)
+    (hH : FrozenDiscreteHolderContinuityCorrected 𝒮) (hcone : FrozenConeEnvironmentScaling 𝒮)
+    (h23 : ConeHarmonicBallsStmt) (h24 : ConeHarmonicBallsUpToFixedTimeStmt)
+    (h33 : UniformConvergenceGreenKernelStmt 𝒮)
+    (hG : _root_.HarmonicBalls.GreenFunctionBallStmt) (hpc : FrozenPunctureConnected)
+    (hsmp : FPStrongMinimumPrinciple) (hwmp : FrozenSuperharmonicMinimumPrinciple)
+    (hpole : FrozenGreenDiscPole)
+    (hScaleInv : ConeScaleInvarianceStmt) (hB2 : ConeGlobalFamilyPairAEMeasurableStep)
+    (hB2R : ConeRescaledPairAEMeasurableStep) (hFCS : FrozenConeScalingLaw 𝒮)
+    (hcan : ConeCanonicalHalfBallStep) (hcl : ConeHalfBallClosureInsideStep)
+    (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
+    (hscale : QuantumConeScalingInput) (h22 : LQGMeasurePropertiesStmt) :
+    DivSandpileLowerBoundStmt 𝒮 :=
+  firstPass_4_2_final hm h210 h34 h214 h28 h35 h218 h27 hH hcone h23 h24 h33 hG hpc hsmp hwmp hpole
+    (strictGapFixedTimeUnion_of_steps 𝒮 hScaleInv hB2 hB2R hFCS) hcan hcl hE1 hE2 hscale h22
 
 end MatedCRT
