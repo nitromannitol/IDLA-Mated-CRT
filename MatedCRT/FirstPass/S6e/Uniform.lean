@@ -200,3 +200,5 @@ theorem uniform_of_guard (𝒮 : SpaceFillingSLEModel) (hG : GuardProbStmt 𝒮)
 
 end Lemma68Uniform
 end MatedCRT
+
+#print axioms MatedCRT.Lemma68Uniform.uniform_of_guard
