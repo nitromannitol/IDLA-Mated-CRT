@@ -1,18 +1,18 @@
 import MatedCRT.Proofs.Sec4.Prop42Closure.PlateauScalingAssembly
+import MatedCRT.FirstPass.S2k.PlateauHBFree
+import MatedCRT.FirstPass.Frozen.S2k
 
 /-! # FIRST PASS S2k: the closure route of Proposition 4.2 (task fp-S2k-closure-inside)
 
-Route Z5 (operator ruling 00:29 UTC): written argument `notes/prop42-proof/prop42-proof.tex:230-304` (AUDIT CORRECT). The
-assembly is in `Proofs/Sec4/Prop42Closure/PlateauScalingAssembly.lean` and the reduction in `ConePrematureNull.lean`; this
-file states the three results in FirstPass form, with their inputs classified.
-
 * `wholePlaneVolumeGrowthAeStep_fp`: `WholePlaneVolumeGrowthAeStep` (B1, `ConeWholePlaneSteps.lean:47`) from the EXTERNAL
   Harmonic-Balls Draft `LQGVolumeGrowthAllScalesStmt` (I2, `HarmonicBalls/Draft/Section2.lean:122`). PROVED-FP.
-* `plateauScaleInvarianceStep_fp`: `PlateauScaleInvarianceStep` (fact (1), `HalfBallPlateau.lean:51`) from I2, from the NEW
-  input K `DS11CoordinateRuleFixedAffine` (`Proposed/DuplantierSheffieldCoordinate2011.lean:116`) and from the NEW input H
-  `ScaledBoundedRepresentativesStep` (`ScaledRegularizedFamily.lean:47`). OPEN.
-* `coneHalfBallClosureInsideStep_fp`: `ConeHalfBallClosureInsideStep` (`StoppedClosure.lean:18`) from the inputs of the two
-  results above and the EXTERNAL Draft/External inputs `hloc`, `hEx`, `hSC`, `hVG`, `hB2`, `hFL`. OPEN (K and H remain).
+* `plateauScaleInvarianceStep_fp`: `PlateauScaleInvarianceStep` (fact (1), `HalfBallPlateau.lean:51`) from I2 and the
+  frozen coordinate rule `FrozenInsertionCoordinateRule` (input K, `FirstPass/Frozen/S2k.lean`, PENDING TRUTH CHECK). The
+  bounded-representative input H is not used: `FirstPass/S2k/PlateauHBFree.lean` (cycle note section 4.1). PROVED-FP
+  conditional on K.
+* `coneHalfBallClosureInsideStep_fp`: `ConeHalfBallClosureInsideStep` (`StoppedClosure.lean:18`) from the fact (1) above
+  and the EXTERNAL Draft/External inputs `hloc`, `hEx`, `hSC`, `hVG`, `hB2`, `hFL` through the existing reduction
+  `coneHalfBallClosureInsideStep_of_fieldLaw` (`ConePrematureNull.lean`).
 
 The locality input of the half-ball reduction is supplied internally (`LQGMeasureLocalityFunctionalStep_proof`). -/
 
@@ -25,22 +25,23 @@ theorem wholePlaneVolumeGrowthAeStep_fp (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
     WholePlaneVolumeGrowthAeStep :=
   wholePlaneVolumeGrowthAeStep_of_allScales hI2
 
-/-- **Fact (1), plateau scale invariance (OPEN).** Conditional on the NEW inputs K (`DS11CoordinateRuleFixedAffine`, the
-LQG coordinate rule for fixed affine maps) and H (`ScaledBoundedRepresentativesStep`). -/
+/-- **Fact (1), plateau scale invariance (PROVED-FP, H-free).** Conditional on I2 and on the frozen coordinate rule
+`FrozenInsertionCoordinateRule` (input K, PENDING TRUTH CHECK). The bounded-representative input H is not used
+(`PlateauHBFree.lean`, cycle note section 4.1). -/
 theorem plateauScaleInvarianceStep_fp (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
-    (hDS : MatedCRT.Proposed.DS11CoordinateRuleFixedAffine) (hrep : ScaledBoundedRepresentativesStep) :
-    PlateauScaleInvarianceStep :=
-  plateauScaleInvarianceStep_assembled hI2 hDS hrep
+    (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule) : PlateauScaleInvarianceStep :=
+  MatedCRT.FirstPass.S2k.plateauScaleInvarianceStep_HBfree hI2 (insertionLQGScalingLawStep_of_coordinateRule hK)
 
-/-- **`ConeHalfBallClosureInsideStep` (OPEN).** Route Z5: the plateau fact (1) and B1 feed the half-ball reduction
-`coneHalfBallClosureInsideStep_of_fieldLaw`. -/
+/-- **`ConeHalfBallClosureInsideStep` (conditional on the Harmonic-Balls inputs).** The plateau fact (1) (H-free) and B1
+feed the half-ball reduction `coneHalfBallClosureInsideStep_of_fieldLaw`. Operator decision pending between this
+reduction and the cycle route section 4.2 (see `notes/z2.md`). -/
 theorem coneHalfBallClosureInsideStep_fp (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
-    (hDS : MatedCRT.Proposed.DS11CoordinateRuleFixedAffine) (hrep : ScaledBoundedRepresentativesStep)
+    (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
     (hloc : HarmonicBallLocalSetStmt.{0}) (hEx : ExistenceHarmonicBallsStmt.{0})
     (hSC : ClusterStrongCompatibilityStmt.{0}) (hVG : VolumeGrowthStmt)
     (hB2 : WholePlaneLQGModelStep) (hFL : ConeWholePlaneFieldLawStep) :
     ConeHalfBallClosureInsideStep :=
-  coneHalfBallClosureInsideStep_of_fieldLaw hloc hEx hSC (plateauScaleInvarianceStep_fp hI2 hDS hrep) hVG
+  coneHalfBallClosureInsideStep_of_fieldLaw hloc hEx hSC (plateauScaleInvarianceStep_fp hI2 hK) hVG
     (wholePlaneVolumeGrowthAeStep_fp hI2) hB2 hFL
 
 end MatedCRT
