@@ -12,6 +12,7 @@ import MatedCRT.FirstPass.S4S6c.HoneSetup239_68
 import MatedCRT.FirstPass.S4S6c.ShellOrderPw68
 import MatedCRT.FirstPass.S4S6c.ShellHdePw68
 import MatedCRT.FirstPass.S4S6c.WindowRfGlobal68
+import MatedCRT.FirstPass.S4S6c.WalkLoc68
 
 /-!
 # The one-test bound and the shell order at a fixed radius, almost surely (q1, fp-S4S6c-B1-assembly)
@@ -958,16 +959,16 @@ open Classical in
 and the walk exponent split (q4, fp-S4S6c-goodenv-local).** This is `shellOneTest_at_of_goodEnv'` for the canonical CG route
 (`ShellOneTestOrderAeCGStmt`, ShellHoneInst68.lean): the leaf constant is `K = shellKCG … CG` (`hK`), and the statement is
 kept at this `K` (`K.C = CG`, `K.c0 = c₀(CG)`, `K.s1 = shellS1CG γ CG`). Changes against `shellOneTest_at_of_goodEnv'`:
-* the univ mesh is replaced by the ball mesh `hmeshExit` at radius `ρ + dyadicD r / 100` (operator decision, 15:59 UTC; its
-  producer is `hmeshExit_of_cellSize`, MeshExitPw68.lean);
+* the univ mesh is replaced by the ball mesh `hmesh` at radius `rhoCell68 ρ = (1+ρ)/2` (operator decision, 16:52 UTC; its
+  producer is the cell clause of `meshEventR`, Guard68S10.lean);
 * the walk exponent is split: `hκ2 : 2 * K.ω < κ` with `κ = 2/(2+γ)^2 - ζ` replaces `hωκ`; the second conjunct of `hWalk` is
   `ε ^ κ ≤ R/8` (the consumer leaf is q1's `_split` variant); `hα` and `hεs` keep `K.ω`;
 * `hTdom` is replaced by the stopping-time finiteness `hstopFin` (q1, `shellOneTest_of_direct_ae_rcell_stopFin_rho`), and
   `hRbd` is discharged by `windowRfT_hRbd_global` (WindowRfGlobal68.lean);
 * `hx1`, `hmomS`, `hVolY` are taken at the radius `ρmom = rhoCell68 ρ = (1+ρ)/2` (the leaf's `ρmom`);
-* the cut `hcut : dyadicD r ^ shortExp ζ < rhoCell68 ρ - ρ` is the cut of `ShellOneTestOrderAeCGStmt`, and `hRcell` is dropped;
-* the walk bound `hb` and the pointwise shell order `hShell` are the localized producers `hbLoc`, `hShellLoc` applied to
-  `hmeshExit` (named until z12's WalkLoc68 and z1's pointwise localized order land);
+* the cut `hcutR : dyadicD r ^ shortExp ζ < rhoCell68 ρ - ρ` is the cut of `ShellOneTestOrderAeCGStmt`, and `hRcell` is dropped;
+* the walk bound `hb` is `hb_ae_of_walk_loc` (WalkLoc68, z12) on `hmesh`; the pointwise shell order `hShell` is the named
+  localized producer `hShellLoc` (z1's pointwise localized order has not landed);
 * `hfull` is kept: `pos_iInf_annulus_ball` (HoneGoodEvent68.lean:119) needs the positivity of every ball of the annulus, not
   only `μ (ball x (c₀ R))` as chat 239 l.512-540 states. -/
 theorem shellOneTest_at_of_goodEnv_loc {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
@@ -975,7 +976,7 @@ theorem shellOneTest_at_of_goodEnv_loc {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ 
     {ζ CG CE C α q0 s₀ ε r : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2)
     (hCG : 0 < CG)
     (_hq0 : 0 < q0) (hq0c : q0 ≤ (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE CG))
-    (hε : 0 < ε) (_hs₀ : 0 < s₀) (hr0 : 0 < r) (hrρ : r ≤ ρ / 4) (_hrz : r ≤ countThreshold ζ)
+    (hε : 0 < ε) (hs₀ : 0 < s₀) (hr0 : 0 < r) (hrρ : r ≤ ρ / 4) (hrz : r ≤ countThreshold ζ)
     (_hRA : r ≤ Lemma68Cutoff.rAmp q0 ζ)
     (ω₀ : ℝ) (hω0 : 0 < ω₀)
     (K : Constants68 γ ρ) (hK : K = shellKCG γ ρ ω₀ ζ CG hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1 hCG)
@@ -987,19 +988,10 @@ theorem shellOneTest_at_of_goodEnv_loc {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ 
     (hα : 2 * K.ω * K.βm < α)
     (hεs : ε ≤ ((100 * K.c0) ^ K.βm / 4) ^ (1 / (α - 2 * K.ω * K.βm)))
     (hrε : 10 * ε ^ K.ω ≤ r) (hε1 : ε ≤ 1)
-    -- the exit mesh: the cells meeting the ball of radius `ρ + dyadicD r / 100` have diameter `≤ dyadicD r / 100`
-    (hmeshExit : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) (ρ + dyadicD r / 100)))
-    -- named localized producers (z12 WalkLoc68: the walk bound; z1, z8: the pointwise shell order), at `hmeshExit`
-    (hbLoc : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) (ρ + dyadicD r / 100)) →
-      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
-        x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
-          x (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
-              (winRf S ρ ζ C r ω) k x).toNat ∈
-            cellVertices ε (S.η ω) (sphere (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
-              (dyadicD r ^ shortExp ζ) (dyadicD r) k x)
-              (4 * winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
-                (dyadicD r ^ shortExp ζ) (dyadicD r) k x) / 3)))
-    (hShellLoc : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) (ρ + dyadicD r / 100)) →
+    -- the exit mesh on the cell-size event of `meshEventR` (radius `rhoCell68 ρ = (1 + ρ)/2`, chat 252)
+    (hmesh : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) (Lemma68HoneCellGood.rhoCell68 ρ)))
+    -- named localized producer (z1 ShellOrderLoc68 pointwise form; z8 ShellPathLoc68), at `hmesh`
+    (hShellLoc : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) (Lemma68HoneCellGood.rhoCell68 ρ)) →
       Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
       Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r)
         (windowRfT S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) ω)
@@ -1099,7 +1091,7 @@ theorem shellOneTest_at_of_goodEnv_loc {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ 
         (shellCount r (dyadicD r ^ shortExp ζ) - 1) (q0 / (1 + Real.log (1 / r)) ^ 2) ∧
       Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf
         (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a := by
-  obtain ⟨-, hcurve, hmult, hcont, hμN, hμF, -, -, -⟩ := hreg
+  obtain ⟨-, hcurve, hmult, hcont, hμN, hμF, hdeg, hadj, -⟩ := hreg
   have hr1 : r ≤ 1 := by linarith
   have hd0 : 0 < dyadicD r := lt_of_lt_of_le (pow_pos hr0 2) (Lemma68ChainGlue.dyadicD_mem hr0 hr1).1
   have hd1 : dyadicD r ≤ 1 := by
@@ -1121,8 +1113,36 @@ theorem shellOneTest_at_of_goodEnv_loc {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ 
 
   have hTend := Lemma68Geometry.tendsto_cocompact_of_escapes hcurve
   have hmω := hmult ε hε
-  have hbω := hbLoc hmeshExit
-  have hShell := hShellLoc hmeshExit hadm
+  obtain ⟨hdr, hd2⟩ := Lemma68ChainGlue.dyadicD_mem hr0 hr1
+  have hds : dyadicD r ≤ dyadicD r ^ shortExp ζ := by
+    simpa using Real.rpow_le_rpow_of_exponent_ge hd0 hd1 ha1
+  have hs4 : dyadicD r ^ shortExp ζ ≤ r / 4000 := shell_size_le hζ0 hr0 hrz hd0 hd2
+  have hspos : 0 < dyadicD r ^ shortExp ζ := Real.rpow_pos_of_pos hd0 _
+  obtain ⟨-, hjs, hN800, -⟩ := shell_parameters hr0 hd0 hζ0.le rfl hdr hd2 hs4
+  have hN1 : 1 ≤ shellCount r (dyadicD r ^ shortExp ζ) := by
+    have h0 : (0 : ℝ) < (shellCount r (dyadicD r ^ shortExp ζ) : ℝ) :=
+      lt_of_lt_of_le (div_pos hr0 (mul_pos (by norm_num) hspos)) hN800
+    exact_mod_cast h0
+  have hNs : 20 * ((shellCount r (dyadicD r ^ shortExp ζ) - 1 + 1 : ℕ) : ℝ) * dyadicD r ^ shortExp ζ
+      ≤ r / 20 := by
+    rw [Nat.sub_add_cancel hN1]
+    exact (hjs 1 le_rfl hN1).2.2
+  have hRw : ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+      x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
+        dyadicD r ≤ winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+          (dyadicD r ^ shortExp ζ) (dyadicD r) k x) := fun k hk =>
+    (hEl hadm k hk).mono fun x hx hxm =>
+      (Lemma68WindowRf.windowRfT_bounds S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) hd0 hd1 ha1 ω (hx hxm)).1
+  -- the walk bound `hb` at `ω`: the localized copy of `hb_ae_of_walk` (WalkLoc68, z12), on the mesh `hmesh`;
+  -- its gap `dyadicD r / 100 ≤ rhoCell68 ρ - ρ` follows from `dyadicD r / 100 ≤ dyadicD r ^ shortExp ζ` and `hcutR`
+  have hbω := Lemma68WalkLoc.hb_ae_of_walk_loc (ρ := ρ) (ρmesh := Lemma68HoneCellGood.rhoCell68 ρ) (r := r)
+    (s := dyadicD r ^ shortExp ζ) (d := dyadicD r) (A := (↑i.A : Set ℤ))
+    (τU := vExitTime (killed ε (S.η ω) i.Θ i.F0 r)) (Rf := winRf S ρ ζ C r ω)
+    (Z := fun k x => shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x)
+    hcont hε (fillCells ε (S.η ω) ↑i.Θ) (S.mult ε ω) i.a (shellCount r (dyadicD r ^ shortExp ζ) - 1)
+    hdeg hadj (fun _ _ => rfl) hd0 ⟨0, hadm.1.2.2 (mem_ball_self hs₀)⟩ (subset_closure.trans hadm.1.2.1)
+    hr0 hrρ hspos.le hNs (by linarith [hds, hcutR, hd0]) hmesh (fun k hk => hRw k hk)
+  have hShell := hShellLoc hmesh hadm
   have hRf : ∀ z ∈ shortEligible ρ (dyadicD r) (shortExp ζ),
       winRf S ρ ζ C r ω z ≤ dyadicD r ^ shortExp ζ := fun z hz =>
     (Lemma68WindowRf.windowRfT_bounds S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) hd0 hd1 ha1 ω hz).2
