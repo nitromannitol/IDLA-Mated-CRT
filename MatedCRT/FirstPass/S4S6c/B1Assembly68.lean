@@ -952,9 +952,42 @@ theorem shellOneTest_at_of_goodEnv' {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2
 
 #print axioms MatedCRT.Lemma68B1Assembly.shellOneTest_at_of_goodEnv'
 
+/-- **Mesh bound on the visited set from the radius-`ρ` cell-size event (q4, fp-S4S6c-goodenv-loc).** The cells
+meeting `ball 0 ρ` (the visited set `F0 = cellVertices ε η (ball 0 ρ)` of `ConfigOK`) have diameter at most
+`dyadicD r / 100` on the cell-size event of `meshEvent`, which is at radius `ρ` (not `(1+ρ)/2`). Route:
+`hmesh_local_of_cellSize` at the radius `2ρ - 1`, for which `(1 + (2ρ-1))/2 = ρ`. The strict `2 ω₀ < κ` is the
+hypothesis of that lemma; goodEnv' has only `K.ω ≤ κ`. -/
+theorem cellDiamLe_F0_of_cellSize {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) {γ ζ ρ ω₀ ε : ℝ}
+    (hω₀ : 0 < ω₀) (hκ : 2 * ω₀ < 2 / (2 + γ) ^ 2 - ζ)
+    (hε : 0 < ε) (hε1 : ε ≤ 1) (hcut : ε ^ (2 / (2 + γ) ^ 2 - ζ) ≤ 1 / 100)
+    (ω : Ω) (hω : ω ∈ cellSizeEvent68 S γ ζ ρ ε)
+    (r : ℝ) (hr : 0 < r) (hrε : 10 * ε ^ ω₀ ≤ r) :
+    CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) ρ) := by
+  have e : (1 + (2 * ρ - 1)) / 2 = ρ := by ring
+  have h := Lemma68HoneSetup239.hmesh_local_of_cellSize (ρ := 2 * ρ - 1) S hω₀ hκ hε1 hcut hε le_rfl ω
+    (by rw [e]; exact hω) r hr hrε
+  rw [e] at h
+  exact h
+
+/-- **Walk exponent `κ = 2/(2+γ)² - ζ` at a shell centre (q4, fp-S4S6c-goodenv-loc, q2 item 2).** The walk second
+conjunct `ε ^ κ ≤ R / 8` follows from `10 ε^{ω₀} ≤ r` and `r² ≤ R` (the `hRr` lower bound) by
+`pow_le_div_eight_of_two_omega`, with the strict `2 ω₀ < κ`. κ enters this bound only; it is not used in `hα` or `hεs`. -/
+theorem rpow_kappa_le_div_eight {ε ω₀ κ r R : ℝ} (hε0 : 0 < ε) (hε1 : ε ≤ 1) (hκ : 2 * ω₀ < κ)
+    (hrε : 10 * ε ^ ω₀ ≤ r) (hR : r ^ 2 ≤ R) : ε ^ κ ≤ R / 8 := by
+  apply Lemma68ShellConstants.pow_le_div_eight_of_two_omega hε0 hε1 hκ
+  have e2 : ε ^ (2 * ω₀) = (ε ^ ω₀) ^ 2 := by
+    rw [show 2 * ω₀ = ω₀ * 2 by ring, Real.rpow_mul hε0.le, Real.rpow_two]
+  have h10 : 0 ≤ 10 * ε ^ ω₀ := mul_nonneg (by norm_num) (Real.rpow_nonneg hε0.le _)
+  have hsq : (10 * ε ^ ω₀) ^ 2 ≤ r ^ 2 := pow_le_pow_left₀ h10 hrε 2
+  calc 100 * ε ^ (2 * ω₀) = (10 * ε ^ ω₀) ^ 2 := by rw [e2]; ring
+    _ ≤ r ^ 2 := hsq
+    _ ≤ R := hR
+
 end Lemma68B1Assembly
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68B1Assembly.shellOneTest_ae_fixedR
 
 #print axioms MatedCRT.Lemma68B1Assembly.shellOneTest_ae_fixedR_ae
+#print axioms MatedCRT.Lemma68B1Assembly.cellDiamLe_F0_of_cellSize
+#print axioms MatedCRT.Lemma68B1Assembly.rpow_kappa_le_div_eight
