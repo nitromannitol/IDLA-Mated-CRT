@@ -212,17 +212,121 @@ theorem integrable_of_ae_bound {α : Type*} [MeasurableSpace α] {μ : Measure �
     {C : ℝ} (hf : AEStronglyMeasurable f μ) (hC : ∀ᵐ x ∂μ, ‖f x‖ ≤ C) : Integrable f μ :=
   Integrable.mono' (integrable_const C) hf hC
 
+/-- **Named input, to be replaced by the BL-envelope closure lemma of `BLExtension.lean`** (z2; answer 216, 46(a2)
+section 1, `lbm_scalar_measurable_of_bl_envelopes`). For every valid environment `S` and every starting point `y`: a
+bounded path functional `H` that is continuous within the continuous paths `𝒞 = {v | Continuous v}` at almost every
+rescaled LBM path has almost surely strongly measurable Brownian values `b ↦ H (rescaledLBMPath (S.clock ω) S.m₀ b)`,
+and an `AEMeasurable` Brownian integral in `ω`. Its proof: bounded-Lipschitz envelopes of `H` over `𝒞`, the
+bounded-Lipschitz measurability `lbmPathFunctionalMeasurableStep_holds`, and dominated convergence. -/
+def BLEnvelopeClosureInput (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ (γ : ℝ), 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+    ∀ (y : ℂ) (H : (ℝ≥0 → ℂ) → ℝ), (∃ L : ℝ, ∀ w, |H w| ≤ L) →
+    (∀ᵐ ω ∂S.P, ∀ᵐ b ∂planarBrownianMotion y,
+      MatedCRT.PathFunctionalContinuousWithinAt {v : ℝ≥0 → ℂ | Continuous v} H
+        (rescaledLBMPath (S.clock ω) S.m₀ b)) →
+    (∀ᵐ ω ∂S.P, AEStronglyMeasurable (fun b => H (rescaledLBMPath (S.clock ω) S.m₀ b))
+        (planarBrownianMotion y)) ∧
+      AEMeasurable (fun ω => ∫ b, H (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y) S.P
+
+/-- The difference of two path functionals continuous within `𝒞` at `w` is continuous within `𝒞` at `w`. -/
+theorem pathFunctionalContinuousWithinAt_sub {𝒞 : Set (ℝ≥0 → ℂ)} {F G : (ℝ≥0 → ℂ) → ℝ} {w : ℝ≥0 → ℂ}
+    (hF : MatedCRT.PathFunctionalContinuousWithinAt 𝒞 F w)
+    (hG : MatedCRT.PathFunctionalContinuousWithinAt 𝒞 G w) :
+    MatedCRT.PathFunctionalContinuousWithinAt 𝒞 (fun v => F v - G v) w := by
+  intro η hη
+  obtain ⟨ρ₁, hρ₁, h₁⟩ := hF (η / 2) (half_pos hη)
+  obtain ⟨ρ₂, hρ₂, h₂⟩ := hG (η / 2) (half_pos hη)
+  refine ⟨min ρ₁ ρ₂, lt_min hρ₁ hρ₂, fun v hv hd => ?_⟩
+  have e₁ := h₁ v hv (lt_of_lt_of_le hd (min_le_left _ _))
+  have e₂ := h₂ v hv (lt_of_lt_of_le hd (min_le_right _ _))
+  have key : (F v - G v) - (F w - G w) = (F v - F w) - (G v - G w) := by ring
+  rw [key]
+  calc |(F v - F w) - (G v - G w)| ≤ |F v - F w| + |G v - G w| := abs_sub _ _
+    _ ≤ η / 2 + η / 2 := add_le_add e₁ e₂
+    _ = η := by ring
+
+/-- The time in `[0, T]` spent in `D` is at most `T`: `|stoppedOccupation D T 1 w| ≤ T`. -/
+theorem abs_stoppedOccupation_one_le {D : Set ℂ} {T : ℝ} (hT : 0 ≤ T) (w : ℝ≥0 → ℂ) :
+    |stoppedOccupation D T (fun _ => 1) w| ≤ T := by
+  have h := abs_stoppedOccupation_le (D := D) (g := fun _ => (1 : ℝ)) (M := 1) (fun x => by simp) hT w
+  linarith
+
+/-- The shell functional is continuous within the continuous paths at a continuous path `w` that is regular for both
+the disk `B_r(z)` and its exhaustion member `B_{r-a/(n+1)}(z)` (the difference of two stopped occupations). -/
+theorem shellTime_continuousWithinAt {z : ℂ} {r a : ℝ} (T : ℝ) (hT : 0 ≤ T) (n : ℕ) {w : ℝ≥0 → ℂ}
+    (hw : Continuous w) (hreg : RegularExit (ball z r) w)
+    (hregn : RegularExit (ball z (r - a / ((n : ℝ) + 1))) w) :
+    MatedCRT.PathFunctionalContinuousWithinAt {v : ℝ≥0 → ℂ | Continuous v}
+      (fun v => shellTime (ballExhaustion z r a n) (ball z r) T v) w := by
+  have hfun : (fun v => shellTime (ballExhaustion z r a n) (ball z r) T v) =
+      fun v => stoppedOccupation (ball z r) T (fun _ => 1) v -
+        stoppedOccupation (ball z (r - a / ((n : ℝ) + 1))) T (fun _ => 1) v :=
+    funext fun v => shellTime_eq_sub _ _ T v
+  rw [hfun]
+  exact pathFunctionalContinuousWithinAt_sub
+    (continuousAt_stoppedOccupation_cont continuous_const hw hT hreg)
+    (continuousAt_stoppedOccupation_cont continuous_const hw hT hregn)
+
+/-- **Step 6, Brownian measurability (guarded `hmeas`).** For `y ∈ B_s(z)`, the Brownian stopped occupation of `B_s(z)`
+is almost surely strongly measurable as a function of the path. Derived from `BLEnvelopeClosureInput` and the regular
+exit `ae_regularExit_rescaledLBM` (which needs `y ∈ B_s(z)`). -/
+theorem stoppedOccupation_aestronglyMeasurable_of_closure {𝒮 : SpaceFillingSLEModel}
+    (hcl : BLEnvelopeClosureInput 𝒮) (hexit : BrownianOutwardExcursionAtExitStep) :
+    ∀ (γ : ℝ), 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      ∀ (y z : ℂ) (s T : ℝ), y ∈ ball z s → 0 ≤ T → ∀ᵐ ω ∂S.P, AEStronglyMeasurable
+        (fun b => stoppedOccupation (ball z s) T (fun _ => 1) (rescaledLBMPath (S.clock ω) S.m₀ b))
+        (planarBrownianMotion y) := by
+  intro γ hγ0 hγ2 Ω _ S hS y z s T hy hT
+  have hreg := ae_regularExit_rescaledLBM hS (hS.m₀_pos hγ0 hγ2) hy hexit
+  have hcont : ∀ᵐ ω ∂S.P, ∀ᵐ b ∂planarBrownianMotion y,
+      MatedCRT.PathFunctionalContinuousWithinAt {v : ℝ≥0 → ℂ | Continuous v}
+        (fun v => stoppedOccupation (ball z s) T (fun _ => 1) v) (rescaledLBMPath (S.clock ω) S.m₀ b) := by
+    filter_upwards [hreg, ae_continuous_rescaledLBMPath Ω S hS y] with ω hω hωp
+    filter_upwards [hω, hωp] with b hb hcb
+    exact continuousAt_stoppedOccupation_cont continuous_const hcb hT hb
+  exact (hcl γ hγ0 hγ2 Ω S hS y (fun v => stoppedOccupation (ball z s) T (fun _ => 1) v)
+    ⟨T, fun w => abs_stoppedOccupation_one_le hT w⟩ hcont).1
+
+/-- **Step 12, Brownian measurability (`hShellMeas`).** For `y ∈ B_r(z)` and `a = (r - dist y z)/2`, the Brownian
+shell integrals are `AEMeasurable` in `ω`. Derived from `BLEnvelopeClosureInput` and the two regular exits. -/
+theorem shellTime_aemeasurable_of_closure {𝒮 : SpaceFillingSLEModel}
+    (hcl : BLEnvelopeClosureInput 𝒮) (hexit : BrownianOutwardExcursionAtExitStep) :
+    ∀ (γ : ℝ), 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      ∀ (y z : ℂ) (r T : ℝ) (n : ℕ), y ∈ ball z r → 0 ≤ T → AEMeasurable
+        (fun ω => ∫ b, shellTime (ballExhaustion z r ((r - dist y z) / 2) n) (ball z r) T
+          (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y) S.P := by
+  intro γ hγ0 hγ2 Ω _ S hS y z r T n hy hT
+  have ha : 0 ≤ (r - dist y z) / 2 := (exhaustion_radius_pos hy).le
+  have hyn : y ∈ ballExhaustion z r ((r - dist y z) / 2) n := mem_ballExhaustion_of_mem hy n
+  have hreg1 := ae_regularExit_rescaledLBM hS (hS.m₀_pos hγ0 hγ2) hy hexit
+  have hreg2 := ae_regularExit_rescaledLBM hS (hS.m₀_pos hγ0 hγ2)
+    (r := r - (r - dist y z) / 2 / ((n : ℝ) + 1)) hyn hexit
+  have hcont : ∀ᵐ ω ∂S.P, ∀ᵐ b ∂planarBrownianMotion y,
+      MatedCRT.PathFunctionalContinuousWithinAt {v : ℝ≥0 → ℂ | Continuous v}
+        (fun v => shellTime (ballExhaustion z r ((r - dist y z) / 2) n) (ball z r) T v)
+        (rescaledLBMPath (S.clock ω) S.m₀ b) := by
+    filter_upwards [hreg1, hreg2, ae_continuous_rescaledLBMPath Ω S hS y] with ω h1 h2 hωp
+    filter_upwards [h1, h2, hωp] with b hb1 hb2 hcb
+    exact shellTime_continuousWithinAt T hT n hcb hb1 hb2
+  have hbd : ∃ L : ℝ, ∀ w, |shellTime (ballExhaustion z r ((r - dist y z) / 2) n) (ball z r) T w| ≤ L := by
+    refine ⟨T, fun w => ?_⟩
+    rw [abs_le]
+    exact ⟨by linarith [shellTime_nonneg (ballExhaustion_subset z r ha n) T w], shellTime_le hT w⟩
+  exact (hcl γ hγ0 hγ2 Ω S hS y (fun v => shellTime (ballExhaustion z r ((r - dist y z) / 2) n) (ball z r) T v)
+    hbd hcont).2
+
 /-- **Step 6, probabilistic.** For the exhaustion `D_n = B_{r - a/(n+1)}(z)` of `D = B_r(z)`, with `0 ≤ a` and
 `|y - z| < r - a` (for instance `a = (r - |y - z|)/2`): the shell functionals converge in probability under the discrete
 law (difference of two applications of Step 5, to `D` and `D_n`), and their continuum limits tend to `0` almost surely
 as `n → ∞` (dominated convergence with bound `T`, and the pathwise shell limit `shellTime_ballExhaustion_tendsto` along
 the a.s. continuous paths `rescaledLBMPath (S.clock ω) S.m₀ b`). Named inputs: `hexit` (the outward excursion, Step 4) and
-`hmeas` (measurability of the LBM exit functionals in the Brownian path; not provided by `IsValid`). -/
-theorem shell_tendsto_discrete {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkToLBMStmt 𝒮)
+`hmeas` (guarded by `y ∈ B_s(z)`: the Brownian stopped occupations are measurable; the unguarded form is not
+needed, and `shell_tendsto_discrete_of_closure` derives it from `BLEnvelopeClosureInput`). -/
+theorem shell_tendsto_discrete_guarded {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkToLBMStmt 𝒮)
     {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (hS : S.IsValid 𝒮 γ) {y z : ℂ} {r T : ℝ} {a : ℝ} (ha : 0 ≤ a) (hya : dist y z < r - a) (hT : 0 ≤ T)
     (hexit : BrownianOutwardExcursionAtExitStep)
-    (hmeas : ∀ s : ℝ, ∀ᵐ ω ∂S.P, AEStronglyMeasurable
+    (hmeas : ∀ s : ℝ, y ∈ ball z s → ∀ᵐ ω ∂S.P, AEStronglyMeasurable
       (fun b => stoppedOccupation (ball z s) T (fun _ => 1) (rescaledLBMPath (S.clock ω) S.m₀ b))
       (planarBrownianMotion y)) :
     (∀ n : ℕ, TendstoInProbability S.P
@@ -281,7 +385,8 @@ theorem shell_tendsto_discrete {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkT
       ∫ b, shellTime (ballExhaustion z r a n) (ball z r) T
           (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y := by
     intro n
-    filter_upwards [hmeas r, hmeas (r - a / ((n : ℝ) + 1))] with ω h1 h2
+    filter_upwards [hmeas r hy, hmeas (r - a / ((n : ℝ) + 1)) (mem_ballExhaustion_of_dist_lt z y r ha hya n)]
+      with ω h1 h2
     have i1 : Integrable (fun b => stoppedOccupation (ball z r) T (fun _ => 1)
         (rescaledLBMPath (S.clock ω) S.m₀ b)) (planarBrownianMotion y) :=
       integrable_of_ae_bound h1 (Eventually.of_forall fun b => hbd r _)
@@ -297,7 +402,8 @@ theorem shell_tendsto_discrete {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkT
       (fun b => shellTime (ballExhaustion z r a n) (ball z r) T
         (rescaledLBMPath (S.clock ω) S.m₀ b)) (planarBrownianMotion y) := by
     intro n
-    filter_upwards [hmeas r, hmeas (r - a / ((n : ℝ) + 1))] with ω h1 h2
+    filter_upwards [hmeas r hy, hmeas (r - a / ((n : ℝ) + 1)) (mem_ballExhaustion_of_dist_lt z y r ha hya n)]
+      with ω h1 h2
     exact (h1.sub h2).congr (Eventually.of_forall fun b => (shellTime_eq_sub _ _ T _).symm)
   refine ⟨fun n => ?_, ?_⟩
   · -- convergence in probability: Step 5 for `D` and for `D_n`, then the difference
@@ -335,4 +441,39 @@ theorem shell_tendsto_discrete {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkT
         constructor <;> linarith)
       (hcb.mono fun b hb => shellTime_ballExhaustion_tendsto ha T hb)
     simpa only [integral_zero] using hdct
+
+/-- Step 6 with the unguarded measurability input `hmeas` of the staged theorem (`S3t.lean`): a specialisation of
+`shell_tendsto_discrete_guarded`, kept so that the staged call site is unchanged. -/
+theorem shell_tendsto_discrete {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkToLBMStmt 𝒮)
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    (hS : S.IsValid 𝒮 γ) {y z : ℂ} {r T : ℝ} {a : ℝ} (ha : 0 ≤ a) (hya : dist y z < r - a) (hT : 0 ≤ T)
+    (hexit : BrownianOutwardExcursionAtExitStep)
+    (hmeas : ∀ s : ℝ, ∀ᵐ ω ∂S.P, AEStronglyMeasurable
+      (fun b => stoppedOccupation (ball z s) T (fun _ => 1) (rescaledLBMPath (S.clock ω) S.m₀ b))
+      (planarBrownianMotion y)) :
+    (∀ n : ℕ, TendstoInProbability S.P
+      (fun ε ω => ∫ q, shellTime (ballExhaustion z r a n) (ball z r) T
+          (interpolatedWalk ε (S.η ω) (S.mε ε) q) ∂srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y))
+      (fun ω => ∫ b, shellTime (ballExhaustion z r a n) (ball z r) T
+          (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y)) ∧
+    (∀ᵐ ω ∂S.P, Tendsto (fun n : ℕ => ∫ b, shellTime (ballExhaustion z r a n) (ball z r) T
+          (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y) atTop (𝓝 0)) :=
+  shell_tendsto_discrete_guarded h211 hγ0 hγ2 Ω S hS ha hya hT hexit (fun s _ => hmeas s)
+
+/-- Step 6 with the Brownian measurability derived from the named closure input `BLEnvelopeClosureInput`: the
+guarded `hmeas` is `stoppedOccupation_aestronglyMeasurable_of_closure`. -/
+theorem shell_tendsto_discrete_of_closure {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkToLBMStmt 𝒮)
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    (hS : S.IsValid 𝒮 γ) {y z : ℂ} {r T : ℝ} {a : ℝ} (ha : 0 ≤ a) (hya : dist y z < r - a) (hT : 0 ≤ T)
+    (hexit : BrownianOutwardExcursionAtExitStep) (hcl : BLEnvelopeClosureInput 𝒮) :
+    (∀ n : ℕ, TendstoInProbability S.P
+      (fun ε ω => ∫ q, shellTime (ballExhaustion z r a n) (ball z r) T
+          (interpolatedWalk ε (S.η ω) (S.mε ε) q) ∂srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y))
+      (fun ω => ∫ b, shellTime (ballExhaustion z r a n) (ball z r) T
+          (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y)) ∧
+    (∀ᵐ ω ∂S.P, Tendsto (fun n : ℕ => ∫ b, shellTime (ballExhaustion z r a n) (ball z r) T
+          (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y) atTop (𝓝 0)) :=
+  shell_tendsto_discrete_guarded h211 hγ0 hγ2 Ω S hS ha hya hT hexit
+    (fun s hs => stoppedOccupation_aestronglyMeasurable_of_closure hcl hexit γ hγ0 hγ2 Ω S hS y z s T hs hT)
+
 end MatedCRT.TruncatedLaws
