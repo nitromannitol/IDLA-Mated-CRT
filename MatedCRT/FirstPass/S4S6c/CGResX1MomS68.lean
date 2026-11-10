@@ -131,9 +131,64 @@ theorem resMomS_ballRho_pt {γ ω₀ ρ CG ζ α CE ε s₀ r C : ℝ} {Ω : Typ
   MatedCRT.HoneMomSPw68.hmomS_pointwise_s1_g (s1 := shellS1CG γ CG) (c0W := shellC0 CG) S
     (meshEventR_sub_meshEvent S (by linarith : ρ ≤ (1 + ρ) / 2) hmeshω) i hFA
 
+/-- **`ShellCGResX1` holds (q3, STEP B).** Destructures `ShellPtPremCG` (ShellCoreCG68.lean:287, with `β` and
+`countingMeshEventR`) and applies `resX1_pt`; the mesh event is `countingMeshEventR_meshR`. No hypothesis. -/
+theorem shellCGResX1_holds (𝒮 : SpaceFillingSLEModel) : ShellCGResX1 𝒮 := by
+  intro γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω _ S Ew ω i hpre hFA
+  obtain ⟨hγ0, hγ2, hω₀, -, -, -, -, hω2ζ, hCG, -, -, hζ0, hζ1, hρ0, hρ1, -, hq0, -, hq0B, -, hRρ, hRA, -,
+    hs₀, -, -, hε, hεe, hr10, hrR, -, hmeshC, hgap, hcurve, hmult, hcont, hμN, hμF, hdeg, hadj, hadjAll, -, -⟩ :=
+    hpre
+  exact resX1_pt S i hγ0 hγ2 hω₀ hω2ζ hζ0 hζ1 hρ0 hρ1 hCG hq0 hq0B hRρ hRA hrR hs₀ hε hεe hr10
+    (countingMeshEventR_meshR hmeshC) hgap hcurve hmult hcont hμN hμF hdeg hadj hadjAll hFA
+
+/-- **The exit-time membership at radius `rhoCell68 ρ` (q3, STEP B; NAMED PREMISE, not provable from `ShellPtPremCG`).**
+`ShellCGResMomS` needs the exit moments on `D ⊆ B(0, rhoCell68 ρ)`, i.e. `ω ∈ exitTimeEvent68 S α (rhoCell68 ρ) CE ε`
+(`hmomS_pointwise_rhoMom_s1_g`). `ShellPtPremCG` gives only `ω ∈ countingMeshEventR …`, whose exit component is at radius `ρ`
+(Guard68S10.lean:53-55), and `exitTimeEvent68 S α ρ CE ε` quantifies over `D ⊆ ball 0 ρ` only (UniformEvents.lean:48-50). -/
+def ShellCGExitRhoCell (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    (Ew : ℝ → Set Ω) (ω : Ω),
+    ShellPtPremCG 𝒮 γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r S Ew ω →
+    ω ∈ exitTimeEvent68 S α (Lemma68HoneCellGood.rhoCell68 ρ) CE ε
+
+/-- **`ShellCGResMomS` holds, given the named premise `ShellCGExitRhoCell` (q3, STEP B).** Conditional: the premise is not
+derivable from the clauses of `ShellPtPremCG`; the operator decides (see the module docstring). -/
+theorem shellCGResMomS_holds_of_exitRhoCell (𝒮 : SpaceFillingSLEModel) (hexit : ShellCGExitRhoCell 𝒮) :
+    ShellCGResMomS 𝒮 := by
+  intro γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω _ S Ew ω i hpre hFA
+  exact resMomS_pt S i (hexit γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω S Ew ω hpre) hFA
+
+/-- The residual `ShellCGResMomS` with the test sets in `ball 0 ρ` instead of `ball 0 (rhoCell68 ρ)` (q3, STEP B;
+auxiliary, NOT the current residual). It holds with no premise beyond `ShellPtPremCG`: the moments on `D ⊆ ball 0 ρ` come from
+`meshEventR` (`resMomS_ballRho_pt`). Recorded for the operator's decision on the radius of the residual and of
+`shellOneTest_at_of_goodEnv_loc_g`'s `hmomS` binder (B1Assembly68.lean:1296-1310). -/
+def ShellCGResMomSBallRho (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
+    ShellPtPremCG 𝒮 γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r S Ew ω →
+    Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+        x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
+          (windowRfT S.μ ρ (shortExp ζ) (shellC0 CG) C (dyadicD r) ω) k →
+          ∀ D : Set ℂ, MeasurableSet D → D ⊆ ball 0 ρ → ENNReal.ofReal (ε ^ α) ≤ S.μ ω D →
+          ∀ a ∈ cellVertices ε (S.η ω) D, ∀ N : ℕ,
+            exitTimeMoment (S.mult ε ω) (interiorCellVertices ε (S.η ω) D) a N ≤
+              ENNReal.ofReal (N.factorial * CE ^ N * ε ^ (-(N : ℝ))) *
+                (⨆ z' ∈ D, ∫⁻ x in Metric.thickening (ε ^ α) D,
+                  ENNReal.ofReal (Real.log (1 / ‖z' - x‖) + 1) ∂(S.μ ω)) ^ N
+
+theorem shellCGResMomSBallRho_holds (𝒮 : SpaceFillingSLEModel) : ShellCGResMomSBallRho 𝒮 := by
+  intro γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω _ S Ew ω i hpre hFA
+  obtain ⟨-, -, -, -, -, -, -, -, -, -, -, -, -, -, hρ1, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, hmeshC,
+    -, -, -, -, -, -, -, -, -, -, -⟩ := hpre
+  exact resMomS_ballRho_pt S hρ1 (countingMeshEventR_meshR hmeshC) i hFA
+
 end Lemma68CGResX1MomS
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68CGResX1MomS.resX1_pt
 #print axioms MatedCRT.Lemma68CGResX1MomS.resMomS_pt
 #print axioms MatedCRT.Lemma68CGResX1MomS.resMomS_ballRho_pt
+#print axioms MatedCRT.Lemma68CGResX1MomS.shellCGResX1_holds
+#print axioms MatedCRT.Lemma68CGResX1MomS.shellCGResMomS_holds_of_exitRhoCell
+#print axioms MatedCRT.Lemma68CGResX1MomS.shellCGResMomSBallRho_holds
