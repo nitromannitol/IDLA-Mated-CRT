@@ -17,9 +17,11 @@ cone fields (`IsConeField`, which encodes `IsQuantumCone` and the LQG measure) h
 process `circleProcess`, a random element of `(0, ∞) × ℂ → ℝ` with the product σ-algebra. The law of the radial process is
 determined by the conditioned Brownian motion `ν` of `IsQuantumCone.radial_law`, the lateral part is the whole-plane GFF
 (`IsQuantumCone.lateral_law`), and the circle averages are measurable functions of these two.
-Source: Duplantier-Miller-Sheffield, "Liouville quantum gravity as a mating of trees" (arXiv:1409.7055), quantum cone of
-Definition 4.1 and its uniqueness; the paper's cone is Definition 2.1 (paper/idla_mated_crt-corrected.tex, lines 427-439).
-Standard; locator pending.
+Source: Duplantier-Miller-Sheffield, "Liouville quantum gravity as a mating of trees" (arXiv:1409.7055v4),
+quantum cone of Definition 4.10 (p. 79) and its uniqueness, Lemma 4.9 (p. 79); conditioned Brownian motion,
+Remark 4.4 (pp. 74-75). The paper's cone is Definition 2.1 (paper/idla_mated_crt-corrected.tex, lines 427-439).
+Not a verbatim numbered theorem of DMS: the equality of process laws is a measure-theoretic reduction to the
+radial and lateral laws. Truth check TRUE (notes/fp-gaps/CHATGPT-idla-new-frozen-truth-2306.md, section 1).
 Used by: coneCanonicalFactor_proved (MatedCRT/FirstPass/S2i.lean). -/
 def ConeCircleLawUniqueStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 →
@@ -33,9 +35,11 @@ def ConeCircleLawUniqueStep : Prop :=
 Borel probability space carrying an `IsConeField` (the cone is a random field, realised on a Polish space of generalized
 functions and its circle averages). The standard Borel structure is used only to make the image of a measurable set of
 samples under the joint circle-and-family code analytic.
-Source: Duplantier-Miller-Sheffield, arXiv:1409.7055, existence of the quantum cone (Definition 4.1 and the construction
-of the field); the paper's cone is Definition 2.1 (paper/idla_mated_crt-corrected.tex, lines 427-439). Standard; locator
-pending.
+Source: Duplantier-Miller-Sheffield, arXiv:1409.7055v4, quantum cone of Definition 4.10 (p. 79) and the construction
+of the field; Duplantier-Sheffield, "Liouville quantum gravity and KPZ" (arXiv:0808.1560v2), Proposition 1.1 (p. 5) and
+Proposition 3.1 (p. 17). The paper's cone is Definition 2.1 (paper/idla_mated_crt-corrected.tex, lines 427-439). Not a
+verbatim numbered theorem: the standard Borel realization is an additional construction. Truth check TRUE
+(notes/fp-gaps/CHATGPT-idla-new-frozen-truth-2306.md, section 2).
 Used by: coneCanonicalFactor_proved (MatedCRT/FirstPass/S2i.lean). -/
 def ConeReferenceExistsStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 →
