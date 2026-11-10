@@ -17,6 +17,8 @@ metric space `X`, a Borel map `F` into a separable metric space `Y`, and every `
 with `P Kᶜ < ε` such that `F|K` is continuous. Source: Kechris, *Classical Descriptive Set Theory* (1995), Theorem 17.11
 (tightness of Borel measures on Polish spaces, p. 107) and Theorem 17.12 (Lusin's theorem, p. 108). Locator taken from
 `notes/fp-gaps/CHATGPT-closure-inside-cycle.md` section 2; the printed page is not verified by this file.
+Truth check TRUE (ChatGPT, 01:07 UTC; notes/fp-gaps/CHATGPT-idla-K-S2h-S2k-truth.md, verdict table: an instance of
+Kechris Theorem 17.12, compact-set conclusion included).
 Used by: firstPass_exists_borel_image_fullLaw (`S2k/BorelTransfer.lean`). -/
 def FrozenLusinCompactContinuity : Prop :=
   ∀ (X Y : Type) [MetricSpace X] [CompleteSpace X] [SecondCountableTopology X] [MeasurableSpace X] [BorelSpace X]
