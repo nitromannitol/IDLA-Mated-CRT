@@ -83,6 +83,39 @@ theorem shell_hmom_pair {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m)
     (R := fun k w => Rf (shellCentre ε η Kset r s d k w)) hlf hcons hη hp hε a
     (fun k => isStoppingTime_shellExit ε η Kset r s d Rf k) hR hTdom hRbd k
 
+/-- **Test-ball containment at the exit vertex (chat 239 section 4, step (2)).** The margin `hx1` at the
+deterministic radius `ρmom` (q1's binder, ShellHoneInst68 `hx1` at `ρmom`) gives
+`ball (vertexPoint ε η v) (R/4) ⊆ ball 0 ρmom`, where `v` is the exit vertex and `R = Rf (shellCentre k)`. -/
+theorem exitBall_sub_ballRho {ε : ℝ} {η : ℝ → ℂ} {Kset : Set ℂ} {Rf : ℂ → ℝ} {r s d ρmom : ℝ} (k : ℕ)
+    (ω : ℕ → ℤ)
+    (hx1 : ‖vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat)‖ <
+      ρmom - Rf (shellCentre ε η Kset r s d k ω) / 4) :
+    ball (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat))
+      (Rf (shellCentre ε η Kset r s d k ω) / 4) ⊆ ball (0 : ℂ) ρmom := by
+  apply testBall_sub_ballRho
+  linarith
+
+/-- **`hmomS` at the deterministic radius `ρmom`, in q1's binder form (`D ⊆ ball 0 ρmom`).** The pathwise clause
+`ExitMomentClause m μ η ε α C_exit ρmom` of the environment (the event of `exitMomentClause_rhoMom_polyHighProb`) gives,
+for every index `k ≤ n` and `P`-almost every walk `x` in `prefixSet` of the shell exit, the conclusion of the leaf
+binder `hmomS` (ShellHoneInst68.lean:127) with the test sets in `ball 0 ρmom` in place of `ball 0 1`. -/
+theorem hmomS_rhoMom {m : ℤ → ℤ → ℕ} {μ : Measure ℂ} {η : ℝ → ℂ} {ε α C_exit ρmom : ℝ}
+    (hclause : S3cBridge.ExitMomentClause m μ η ε α C_exit ρmom)
+    (A : Set ℤ) (n : ℕ) {τU : (ℕ → ℤ) → ℕ∞} (Kset : Set ℂ) (Rf : ℂ → ℝ) (r s d : ℝ) (a : ℤ) :
+    ∀ k ≤ n, ∀ᵐ x ∂srwLaw m a,
+      x ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η Kset r s d Rf k) τU →
+      ∀ D : Set ℂ, MeasurableSet D → D ⊆ ball 0 ρmom → ENNReal.ofReal (ε ^ α) ≤ μ D →
+      ∀ a' ∈ cellVertices ε η D, ∀ N : ℕ,
+        exitTimeMoment m (interiorCellVertices ε η D) a' N ≤
+          ENNReal.ofReal (N.factorial * C_exit ^ N * ε ^ (-(N : ℝ))) *
+            (⨆ z' ∈ D, ∫⁻ w in Metric.thickening (ε ^ α) D,
+              ENNReal.ofReal (Real.log (1 / ‖z' - w‖) + 1) ∂μ) ^ N := by
+  intro k _
+  exact Filter.Eventually.of_forall fun x hx =>
+    MatedCRT.HoneMomS68.hmomS_ballRho_of_clause
+      (fun k' => prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η Kset r s d Rf k') τU)
+      hclause k x hx
+
 end Shell
 
 end HoneMomS239
