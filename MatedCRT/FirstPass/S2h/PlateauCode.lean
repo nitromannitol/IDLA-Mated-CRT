@@ -227,4 +227,64 @@ theorem rawRadius_eq_iff_momentCodeN {ν : Measure ℂ} {N : ℕ} {u c : ℝ} (h
     have hs0 : 0 ≤ (s : ℝ) := le_trans hR hs1.le
     exact h2 (mem_iUnion.2 ⟨⟨s, hs0, hs2⟩, (hLe s hs0).2 hs1.le⟩)
 
+/-- The good class of the code-level characterisation (HB Lemma 3.1 in the form `LeastSupersolutionMemStmt`, `.2.1`):
+local finiteness of the closed integer discs and continuity of the least supersolutions at every positive integer
+radius and positive time. -/
+def CodeGood (ν : Measure ℂ) : Prop :=
+  (∀ N : ℕ, ν (closedBall (0 : ℂ) (N : ℝ)) < ⊤) ∧
+    ∀ (N : ℕ) (u : ℝ), 0 < N → 0 < u →
+      ContinuousOn (leastSupersolution ν (N : ℝ) 0 u) (closedBall (0 : ℂ) (N : ℝ))
+
+/-- Pathwise plateau characterisation on the good class: for `0 ≤ r`, `r` is a plateau radius of `ν` iff the joint moment
+code of `ν` lies in `plateauCode r`. -/
+theorem mem_plateauRadii_iff_momentCode {ν : Measure ℂ}
+    (hG : ∀ N : ℕ, 0 < N → ∀ x ∈ ball (0 : ℂ) (N : ℝ), x ≠ 0 → 0 ≤ greenFunction (ball (0 : ℂ) (N : ℝ)) 0 x)
+    (hGc : ∀ N : ℕ, 0 < N → ContinuousOn (greenFunction (ball (0 : ℂ) (N : ℝ)) 0) (ball (0 : ℂ) (N : ℝ) \ {0}))
+    (hν : CodeGood ν) {r : ℝ} (hr : 0 ≤ r) :
+    r ∈ plateauRadii ν ↔ momentCode ν ∈ plateauCode r := by
+  simp only [plateauRadii, plateauCode, plateauCodeAt, mem_ofPred_eq, mem_iUnion]
+  constructor
+  · rintro ⟨N, hN, p, q, hp, hpq, hrN, h1, h2⟩
+    have hq : (0 : ℝ) < (q : ℝ) := lt_trans hp hpq
+    refine ⟨N, p, q, ⟨hN, hp, hpq, hrN⟩, ?_, ?_⟩
+    · exact (rawRadius_eq_iff_momentCodeN hp hr (hν.1 N) (hG N hN) (hν.2 N p hN hp) (hGc N hN)).1 h1
+    · exact (rawRadius_eq_iff_momentCodeN hq hr (hν.1 N) (hG N hN) (hν.2 N q hN hq) (hGc N hN)).1 h2
+  · rintro ⟨N, p, q, ⟨hN, hp, hpq, hrN⟩, h1, h2⟩
+    have hq : (0 : ℝ) < (q : ℝ) := lt_trans hp hpq
+    refine ⟨N, hN, p, q, hp, hpq, hrN, ?_, ?_⟩
+    · exact (rawRadius_eq_iff_momentCodeN hp hr (hν.1 N) (hG N hN) (hν.2 N p hN hp) (hGc N hN)).2 h1
+    · exact (rawRadius_eq_iff_momentCodeN hq hr (hν.1 N) (hG N hN) (hν.2 N q hN hq) (hGc N hN)).2 h2
+
+/-- Transfer of the plateau event through equality in law (fp-S2h, z1, round 20): the plateau event of a random measure
+is almost surely the event that its joint moment code lies in the null-measurable set `plateauCode r`, so equality in
+law of the measure and of its dilation gives equal probabilities. Abstract form of `hscale`; the code relations `hA`,
+`hB` are supplied by `mem_plateauRadii_iff_momentCode` on the good class. -/
+theorem plateau_prob_eq_of_momentCode {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    (hF1 : FrozenUniversalMeasurabilityOfAnalytic) (μ S : Ω → Measure ℂ) (hμ : AEMeasurable μ P)
+    (hS : AEMeasurable S P) (hlaw : P.map S = P.map μ) (r : ℝ)
+    (hA : ∀ᵐ ω ∂P, r ∈ plateauRadii (μ ω) ↔ momentCode (μ ω) ∈ plateauCode r)
+    (hB : ∀ᵐ ω ∂P, r ∈ plateauRadii (S ω) ↔ momentCode (S ω) ∈ plateauCode r) :
+    P {ω | r ∈ plateauRadii (S ω)} = P {ω | r ∈ plateauRadii (μ ω)} := by
+  have hcodeM : Measurable momentCode := measurable_momentCode
+  have hlawC : P.map (fun ω => momentCode (S ω)) = P.map (fun ω => momentCode (μ ω)) := by
+    calc P.map (fun ω => momentCode (S ω)) = (P.map S).map momentCode :=
+          (AEMeasurable.map_map_of_aemeasurable hcodeM.aemeasurable hS).symm
+      _ = (P.map μ).map momentCode := by rw [hlaw]
+      _ = P.map (fun ω => momentCode (μ ω)) :=
+          AEMeasurable.map_map_of_aemeasurable hcodeM.aemeasurable hμ
+  have hfS : AEMeasurable (fun ω => momentCode (S ω)) P := hcodeM.comp_aemeasurable hS
+  have hfμ : AEMeasurable (fun ω => momentCode (μ ω)) P := hcodeM.comp_aemeasurable hμ
+  have hE : NullMeasurableSet (plateauCode r) (P.map fun ω => momentCode (μ ω)) :=
+    nullMeasurableSet_plateauCode hF1 r _
+  have hEs : NullMeasurableSet (plateauCode r) (P.map fun ω => momentCode (S ω)) := by
+    rw [hlawC]
+    exact hE
+  calc P {ω | r ∈ plateauRadii (S ω)} = P {ω | momentCode (S ω) ∈ plateauCode r} :=
+        measure_congr (Filter.eventuallyEqSet_iff.2 hB)
+    _ = (P.map fun ω => momentCode (S ω)) (plateauCode r) := (Measure.map_apply₀ hfS hEs).symm
+    _ = (P.map fun ω => momentCode (μ ω)) (plateauCode r) := by rw [hlawC]
+    _ = P {ω | momentCode (μ ω) ∈ plateauCode r} := Measure.map_apply₀ hfμ hE
+    _ = P {ω | r ∈ plateauRadii (μ ω)} :=
+        measure_congr (Filter.eventuallyEqSet_iff.2 (hA.mono fun ω h => h.symm))
+
 end MatedCRT
