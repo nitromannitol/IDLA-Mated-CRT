@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.S2g.Corrected24
 import MatedCRT.FirstPass.S2g.Draft24
+import MatedCRT.FirstPass.S4d.GlobalMeasurable
 
 /-!
 # FIRST PASS, Lemma 2.4 in provider form and its Draft consequence (q4, fp-S4d-4-2-assembly-c, operator note chat 174)
@@ -58,5 +59,15 @@ theorem coneHarmonicBallsUpToFixedTimeStmt_of_provider (hprov : ConeHarmonicBall
   rw [hTT, min_self] at heq
   rw [hTT]
   exact heq
+
+/-- **The existence part of the provider form (q4, fp-S4d-4-2-h24-gate-consumers).** The provider `ConeHarmonicBallsProviderFP4`
+gives the existence clause `ConeStoppedBaseExistsFP4` (FirstPass/S4d/GlobalMeasurable.lean) by forgetting its uniqueness
+clause. This is the conversion that the measurability steps `coneGlobalFamilyAEMeasurable_of_exists` use once the chain is
+retyped to the provider form. -/
+theorem coneStoppedBaseExists_of_provider (hprov : ConeHarmonicBallsProviderFP4) : ConeStoppedBaseExistsFP4 := by
+  intro γ hγ0 hγ2 Ω _ P hC hcirc μ hcone
+  filter_upwards [hprov γ hγ0 hγ2 Ω P hC hcirc μ hcone] with ω hω
+  obtain ⟨T, hT, Λ, hΛ, hst, _⟩ := hω
+  exact ⟨T, hT, Λ, hΛ, hst⟩
 
 end MatedCRT

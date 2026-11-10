@@ -143,14 +143,30 @@ theorem familyProcess_rescaled_zero_iff {μ : Measure ℂ} {Λ : ℝ → Set ℂ
     rw [mul_zero]
     exact hfam.2.1.mem (b * s) ⟨mul_pos hb hs, mul_lt_mul_of_pos_left h hb⟩
 
+/-- **Existence part of Lemma 2.4 (q4, fp-S4d-4-2-h24-gate-consumers).** For a.e. sample there are `T > 0` and a family
+`Λ` of cone harmonic balls on `(0, T)` stopped at `∂B_{1/2}` at `T`. This is the existence clause of the provider form
+`ConeHarmonicBallsProviderFP4` (FirstPass/S4d/Provider24.lean) and of the Draft `ConeHarmonicBallsUpToFixedTimeStmt`
+(Draft/Section2.lean:66); the uniqueness clauses (the Draft `T' = T`) are not used by the measurability steps. -/
+def ConeStoppedBaseExistsFP4 : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
+  ∀ᵐ ω ∂P, ∃ T : ℝ, 0 < T ∧ ∃ Λ : ℝ → Set ℂ, IsConeHarmonicBallFamilyOn (μ ω) Λ T ∧ IsStoppedAtHalfBall Λ T
+
+/-- The existence part of the Draft Lemma 2.4 (`ConeHarmonicBallsUpToFixedTimeStmt`), by forgetting the clause `T' = T`. -/
+theorem coneStoppedBaseExists_of_draft (h24 : ConeHarmonicBallsUpToFixedTimeStmt) : ConeStoppedBaseExistsFP4 := by
+  intro γ hγ hγ2 Ω _ P hC hcirc μ hF
+  filter_upwards [h24 γ hγ hγ2 Ω P hC hcirc μ hF] with ω hω
+  obtain ⟨T, hT, Λ', h1, h2, -⟩ := hω
+  exact ⟨T, hT, Λ', h1, h2⟩
+
 /-- **B2: the global family process is a.e. measurable** (`ConeGlobalFamilyAEMeasurableStep`, ChatGPT §4). From the
 stopped measurability theorem `ConeFamilyAEMeasurableStep` (conjunctions 1 and 2), Lemma 2.4 and Lemma 2.5, with the
 weights `b n = n + 1`. -/
-theorem coneGlobalFamilyAEMeasurable_of_stopped {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
+theorem coneGlobalFamilyAEMeasurable_of_exists {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
     {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
     (hF : IsConeField γ P hC hcirc μ)
-    (h24 : ConeHarmonicBallsUpToFixedTimeStmt) (h25 : ConeScaleInvarianceUpToFixedTimeStmt)
+    (hexist : ConeStoppedBaseExistsFP4) (h25 : ConeScaleInvarianceUpToFixedTimeStmt)
     (hfam : ConeFamilyAEMeasurableStep) (hpos : ConeScaleRadiusPosStep)
     (Λ : Ω → ℝ → Set ℂ) (hΛ : ∀ᵐ ω ∂P, IsConeHarmonicBallFamily (μ ω) (Λ ω)) :
     AEMeasurable (fun ω => (circleProcess (hcirc ω), globalFamilyProcess (Λ ω))) P := by
@@ -158,8 +174,8 @@ theorem coneGlobalFamilyAEMeasurable_of_stopped {γ : ℝ} (hγ : 0 < γ) (hγ2 
   -- the base stopped family (Lemma 2.4), chosen pointwise
   have hbase : ∀ᵐ ω ∂P, ∃ x : ℝ × (ℝ → Set ℂ), 0 < x.1 ∧ IsConeHarmonicBallFamilyOn (μ ω) x.2 x.1 ∧
       IsStoppedAtHalfBall x.2 x.1 := by
-    filter_upwards [h24 γ hγ hγ2 Ω P hC hcirc μ hF] with ω hω
-    obtain ⟨T, hT, Λ', h1, h2, -⟩ := hω
+    filter_upwards [hexist γ hγ hγ2 Ω P hC hcirc μ hF] with ω hω
+    obtain ⟨T, hT, Λ', h1, h2⟩ := hω
     exact ⟨(T, Λ'), hT, h1, h2⟩
   obtain ⟨T0, Λ0, hT0eq⟩ : ∃ (T0 : Ω → ℝ) (Λ0 : Ω → ℝ → Set ℂ), ∀ᵐ ω ∂P,
       0 < T0 ω ∧ IsConeHarmonicBallFamilyOn (μ ω) (Λ0 ω) (T0 ω) ∧ IsStoppedAtHalfBall (Λ0 ω) (T0 ω) := by
@@ -212,5 +228,17 @@ theorem coneGlobalFamilyAEMeasurable_of_stopped {γ : ℝ} (hγ : 0 < γ) (hγ2 
     (Fn := fun n ω => familyProcess (rescaledFamily (Λn n ω) (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1))
       ((n : ℝ) + 1)) (Tn n ω))
     hFae hRae hpr hhor
+
+/-- **B2 with the Draft Lemma 2.4 (`coneGlobalFamilyAEMeasurable_of_stopped`, signature unchanged for FixedTimeFinal,
+RescaledMeasurable and S2z.lean:71).** The Draft is used only through `coneStoppedBaseExists_of_draft`. -/
+theorem coneGlobalFamilyAEMeasurable_of_stopped {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ}
+    (hF : IsConeField γ P hC hcirc μ)
+    (h24 : ConeHarmonicBallsUpToFixedTimeStmt) (h25 : ConeScaleInvarianceUpToFixedTimeStmt)
+    (hfam : ConeFamilyAEMeasurableStep) (hpos : ConeScaleRadiusPosStep)
+    (Λ : Ω → ℝ → Set ℂ) (hΛ : ∀ᵐ ω ∂P, IsConeHarmonicBallFamily (μ ω) (Λ ω)) :
+    AEMeasurable (fun ω => (circleProcess (hcirc ω), globalFamilyProcess (Λ ω))) P :=
+  coneGlobalFamilyAEMeasurable_of_exists hγ hγ2 hF (coneStoppedBaseExists_of_draft h24) h25 hfam hpos Λ hΛ
 
 end MatedCRT
