@@ -11,6 +11,7 @@ import MatedCRT.FirstPass.S6r.Amplification
 import MatedCRT.FirstPass.S4S6c.Uniform68Final
 import MatedCRT.FirstPass.S4S6c.ShellConstOrder68
 import MatedCRT.FirstPass.S4S6c.HoneCellGood68
+import MatedCRT.FirstPass.S4S6c.HoneModelInputs68
 
 /-!
 # Lemma 6.8, redesigned guard (q2, S10): `GuardProbStmt` from the mesh events and the shell chain
@@ -889,6 +890,83 @@ theorem guardProbStmtCGR_of_chainCGR (𝒮 : SpaceFillingSLEModel) (hMesh : Mesh
     (fun ε ω r i => Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i)
     (Lemma68Config.exitQ S) hpt'
 
+/-- **The counting component of the CG mesh-radius event (q2, fp-S4S6c-goodevents-cgr).** The mesh event `meshEventR`
+intersected with the good counting event `countingGoodEvent` (Lemma 2.9, Berestycki-Gwynne; HoneModelInputs68.lean:48) at
+the exponents `α`, `β`. Its counting component is the membership taken by `hCountGood_pw` (B1EnvPw68.lean:65); its Green
+component is the lower-bound body of `greenLowEvent68` (`countingMeshEventR_green`). -/
+def countingMeshEventR {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (γ ω₀ ρ CG ζ α CE β : ℝ) (ε : ℝ) :
+    Set Ω :=
+  meshEventR S γ ω₀ ρ CG ζ α CE ε ∩ HoneModelInputs68.countingGoodEvent S α β ρ ε
+
+/-- The mesh component of `countingMeshEventR` (q2, fp-S4S6c-goodevents-cgr). -/
+lemma countingMeshEventR_meshR {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} {γ ω₀ ρ CG ζ α CE β ε : ℝ}
+    {ω : Ω} (h : ω ∈ countingMeshEventR S γ ω₀ ρ CG ζ α CE β ε) :
+    ω ∈ meshEventR S γ ω₀ ρ CG ζ α CE ε :=
+  h.1
+
+/-- The Green component of `countingMeshEventR` (q2, fp-S4S6c-goodevents-cgr): `ω ∈ greenLowEvent68 S ω₀ ρ CG ε`, the
+lower Green bound of Draft Lemma 2.16. Its body is the body of `hGreen_pw` (B1EnvPw68.lean:54) at `K.ω := ω₀`, `K.C := CG`,
+radius `ρ`; the conjunct `greenKernel ≤ greenFn` of `greenLowerGoodEvent` is not used by the one-test hone. -/
+lemma countingMeshEventR_green {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} {γ ω₀ ρ CG ζ α CE β ε : ℝ}
+    {ω : Ω} (h : ω ∈ countingMeshEventR S γ ω₀ ρ CG ζ α CE β ε) : ω ∈ greenLowEvent68 S ω₀ ρ CG ε :=
+  h.1.1.1
+
+/-- The counting component of `countingMeshEventR` (q2, fp-S4S6c-goodevents-cgr). -/
+lemma countingMeshEventR_counting {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} {γ ω₀ ρ CG ζ α CE β ε : ℝ}
+    {ω : Ω} (h : ω ∈ countingMeshEventR S γ ω₀ ρ CG ζ α CE β ε) :
+    ω ∈ HoneModelInputs68.countingGoodEvent S α β ρ ε :=
+  h.2
+
+/-- **Probability bound of `countingMeshEventR` (q2, fp-S4S6c-goodevents-cgr).** Given the Green, cell-size (at `(1 + ρ)/2`),
+exit-time and counting events with polynomially high probability, `countingMeshEventR` has `ProbTendsToOne` as `ε ↓ 0`. -/
+lemma probTendsToOne_countingMeshEventR {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {γ ω₀ ρ CG ζ α CE β : ℝ}
+    (hG : HarmonicBalls.PolyHighProb S.P (greenLowEvent68 S ω₀ ρ CG))
+    (hC : HarmonicBalls.PolyHighProb S.P (cellSizeEvent68 S γ ζ ((1 + ρ) / 2)))
+    (hE : HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE))
+    (hK : HarmonicBalls.PolyHighProb S.P (HoneModelInputs68.countingGoodEvent S α β ρ)) :
+    ProbTendsToOne S.P (fun ε => countingMeshEventR S γ ω₀ ρ CG ζ α CE β ε) :=
+  (probTendsToOne_meshEventR hG hC hE).inter (probTendsToOne_of_polyHighProb hK)
+
+/-- **Named input, not a Draft statement (q2, fp-S4S6c-goodevents-cgr; for operator decision).** The counting bound at
+the exit exponent. `CountingMeasureConvergenceStmt` (Draft/Section2.lean:143) gives `α`, `β` with the counting event for
+all radii, and `ExitTimeUpperBoundStmt` (Draft/Section2.lean:239) gives its own `α`; the one-test hone uses one `α` for the
+exit thickening and the counting thickening (`ε ^ α`). This Prop asks for one pair `(α, β)` with both. Paper: Lemma
+`lemma:mu_h-convergence` (line 681, "There exists α = α(γ)") and `lemma:exit-time-upper-bound` (line 921, "There exists
+deterministic α = α(γ)"); the proof at line 3820 takes `α` from the counting lemma. -/
+def CountingAtExitAlphaStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ α β : ℝ, 0 < α ∧ 0 < β ∧ ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ CE : ℝ, 0 < CE ∧
+    ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE) ∧
+      HarmonicBalls.PolyHighProb S.P (HoneModelInputs68.countingGoodEvent S α β ρ)
+
+/-- **`ShellChainCGRStmt` with the counting component (q2, fp-S4S6c-goodevents-cgr).** The body of `ShellChainCGRStmt`
+(cell-size hypothesis at `(1 + ρ)/2`), with the counting exponent `β > 0`, the counting hypothesis
+`PolyHighProb (countingGoodEvent S α β ρ)` at the chain exponent `α`, and the almost sure clause on `countingMeshEventR`. -/
+def ShellChainCGRCStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE β : ℝ,
+    0 < ω₀ → ω₀ < α → 0 < α → ω₀ < 2 / (2 + γ) ^ 2 - ζ → 2 * ω₀ * chosenBetaMinus γ < α →
+    2 * ω₀ < 2 / (2 + γ) ^ 2 - ζ → 0 < CG → 0 < CE → 0 < β →
+    0 < ζ → ζ < 1 / 2 → 0 < ρ → ρ < 1 →
+    ∃ q0 : ℝ, 0 < q0 ∧ q0 ≤ 1 ∧ ∀ R : ℝ, 0 < R → R ≤ ρ / 4 → R ≤ Lemma68Cutoff.rAmp q0 ζ →
+      (∀ r : ℝ, 0 < r → r ≤ R → (dyadicD r) ^ shortExp ζ < Lemma68HoneCellGood.rhoCell68 ρ - ρ) →
+    ∀ s₀ : ℝ, 0 < s₀ → s₀ < 1 →
+    ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      HarmonicBalls.PolyHighProb S.P (greenLowEvent68 S ω₀ ρ CG) →
+      HarmonicBalls.PolyHighProb S.P (cellSizeEvent68 S γ ζ ((1 + ρ) / 2)) →
+      HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE) →
+      HarmonicBalls.PolyHighProb S.P (HoneModelInputs68.countingGoodEvent S α β ρ) →
+      ∃ Ew : ℝ → Set Ω, (∀ δ : ℝ, MeasurableSet[S.fieldSigma] (Ew δ)) ∧
+        HarmonicBalls.PolyHighProb S.P Ew ∧
+        ∀ ε : ℝ, 0 < ε → ε ≤ shellEps0ZCG γ α ω₀ ζ CG → ∀ᵐ ω ∂S.P,
+          ω ∈ countingMeshEventR S γ ω₀ ρ CG ζ α CE β ε →
+          Lemma68Inputs.CurveEscapesBothEnds (S.η ω) →
+          (∀ ε' : ℝ, 0 < ε' → IsLocallyFiniteMult (S.mult ε' ω) ∧ ∀ k : ℤ, S.mult ε' ω k (k + 1) ≠ 0) →
+          ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ R → ω ∈ Ew (dyadicD r) →
+            ∀ i : Lemma68Config.Config68, Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
+              ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
+                Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
+
 end Lemma68Guard10
 
 /-- **Lemma 6.8, uniform constant-order lower bound (`UniformConstantOrderLowerBoundStmt`, FirstPass/S6d.lean:95)**,
@@ -931,6 +1009,8 @@ end MatedCRT
 
 #print axioms MatedCRT.Lemma68Guard10.meshEventR_cell
 #print axioms MatedCRT.Lemma68Guard10.probTendsToOne_meshEventR
+#print axioms MatedCRT.Lemma68Guard10.countingMeshEventR_green
+#print axioms MatedCRT.Lemma68Guard10.probTendsToOne_countingMeshEventR
 #print axioms MatedCRT.Lemma68Guard10.guardProbStmtCGR_of_chainCGR
 #print axioms MatedCRT.uniformConstantOrderLowerBoundCGR_of_chain
 
