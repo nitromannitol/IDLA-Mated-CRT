@@ -2,6 +2,7 @@ import Mathlib
 import MatedCRT.FirstPass.S6h.Core
 import MatedCRT.FirstPass.S6j
 import MatedCRT.FirstPass.S6j.FiniteExit
+import MatedCRT.FirstPass.S6j.PerState
 import MatedCRT.FirstPass.S6h.Successive
 import MatedCRT.FirstPass.S6e.RadiusSelect
 import MatedCRT.FirstPass.S6e.Cutoff
@@ -293,6 +294,52 @@ almost surely. A NEW step (C12), named input; z10 proves it in `S6m.lean`. -/
 def ConcreteC12 (m : ℤ → ℤ → ℕ) (a : ℤ) (ε : ℝ) (η : ℝ → ℂ) (p r : ℝ) (good : ℂ → ℕ → Prop) (U : Set ℤ) : Prop :=
   ∀ᵐ x ∂srwLaw m a, cfgExit ε η p r good (cfgCount p r) x < vExitTime U x
 
+/-- The per-state inputs of write-up C4 for the concrete schedule, in the form of `S6j.hpt_of_state` with the centres
+`Z = cfgCentre`, the radii `Rs = cfgStateRadius` and a good-state predicate `Good` (NEW inputs, named). `hloc`: the
+local printed test bound at the middle sphere of `B_R(z)`; `hdy`, `hdiam`: the cell geometry; `hS2`: the walk from
+`X_{T_j}` hits the middle sphere before leaving `I(B_{2R}(z))` (write-up z12 S2); `hgood`: the state `X_{T_j}` is good
+almost surely (the first-good radius selection). `Good` is existentially quantified in `configuration_le_pow_concrete`. -/
+structure StateTestInputs (m : ℤ → ℤ → ℕ) (a : ℤ) (ε : ℝ) (η : ℝ → ℂ) (p r : ℝ) (good : ℂ → ℕ → Prop) (A : Set ℤ)
+    (qStar c0 : ℝ) (Good : ℤ → Prop) : Prop where
+  hloc : ∀ y, Good y → ∀ v ∈ middleVertices ε η (cfgCentre ε η p r y) (cfgStateRadius ε η p r good y),
+    srwLaw m v (TestBound68.stayIn
+      (fun u => interiorCellVertices ε η (Metric.ball (vertexPoint ε η u) (cfgStateRadius ε η p r good y / 4))) A v)
+      ≤ ENNReal.ofReal (1 - min qStar 1 / (1 + Real.log (1 / cfgStateRadius ε η p r good y)) ^ 2)
+  hdy : ∀ y, Good y → ∀ v ∈ middleVertices ε η (cfgCentre ε η p r y) (cfgStateRadius ε η p r good y),
+    Metric.diam (cell ε η v) ≤ cfgStateRadius ε η p r good y / 100
+  hdiam : ∀ y, Good y → ∀ v ∈ middleVertices ε η (cfgCentre ε η p r y) (cfgStateRadius ε η p r good y), ∀ k : ℤ,
+    (cell ε η k ∩ Metric.ball (vertexPoint ε η v) (cfgStateRadius ε η p r good y / 4)).Nonempty →
+      Metric.diam (cell ε η k) ≤ c0 * cfgStateRadius ε η p r good y
+  hS2 : ∀ y, Good y → ∀ᵐ x ∂srwLaw m y,
+    vHitTime (middleVertices ε η (cfgCentre ε η p r y) (cfgStateRadius ε η p r good y)) x <
+      vExitTime (interiorCellVertices ε η (Metric.ball (cfgCentre ε η p r y) (2 * cfgStateRadius ε η p r good y))) x
+  hgood : ∀ j, ∀ᵐ x ∂srwLaw m a, cfgExit ε η p r good j x < ⊤ → Good (x (cfgExit ε η p r good j x).toNat)
+
+/-- The per-state outer bound of write-up C4 for the concrete schedule, from its per-state inputs `StateTestInputs`
+(`S6j.hpt_of_state` at `q0 = qStar`; `min qStar 1 = qStar` by `qStar ≤ 1`). The case `qStar = 0` is trivial. -/
+theorem outerTestBound_of_state (m : ℤ → ℤ → ℕ) (a : ℤ) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η) {p r : ℝ}
+    (hp : 0 < p) (hr0 : 0 < r) (hr1 : r < 1) (good : ℂ → ℕ → Prop) (A : Set ℤ) {qStar c0 : ℝ} (hε : 0 < ε)
+    (hc0 : c0 < 1 / 8) (hq0 : 0 ≤ qStar) (hq1 : qStar ≤ 1) (Good : ℤ → Prop)
+    (h : StateTestInputs m a ε η p r good A qStar c0 Good) :
+    OuterTestBound m a ε η p r good A qStar := by
+  rcases hq0.eq_or_lt with hz | hpos
+  · intro j
+    filter_upwards with x
+    intro _ _
+    subst hz
+    simp only [zero_div, sub_zero, ENNReal.ofReal_one]
+    exact prob_le_one
+  · have hmin : min qStar 1 = qStar := min_eq_left hq1
+    intro j
+    have key := S6j.hpt_of_state m a η hη A (cfgExit ε η p r good) (cfgCentre ε η p r)
+      (cfgStateRadius ε η p r good) Good hε hc0 hpos (fun y => (cfgRadius_bounds hp hr0 hr1 good _).1)
+      (fun y => (cfgRadius_bounds hp hr0 hr1 good _).2.1) h.hloc h.hdy h.hdiam h.hS2 h.hgood j
+    filter_upwards [key] with x hx
+    intro _ hT
+    have h2 := hx hT
+    rw [hmin] at h2
+    exact h2
+
 /-- **Concrete configuration schedule (Lemma 6.8, bridge note §3 Steps B-F).** `TestSchedule.Valid` holds for the concrete
 schedule `cfgSchedule` on `ν = srwLaw m a`, from the environment inputs `hproper` (η continuous and proper), `hlf`, `hcons`
 (local finiteness of the walk law), the per-state bound `hpt` (`OuterTestBound`, write-up C4) and the containment `hC12`
@@ -345,19 +392,21 @@ theorem cfgSchedule_valid (ε : ℝ) (η : ℝ → ℂ) {p r ζ qStar : ℝ} (go
 /-- **Lemma 6.8 for the concrete schedule (bridge note §3, assembled).** The configuration bound
 `configuration_le_pow` holds with the schedule `cfgSchedule ε (S.η ω) p r (good ε ω)`, on the good event `E ε ∩ G`, for
 every configuration with the guard `FullAdm`. Named inputs: `hEnv` (η continuous and proper), `hlf` (local finiteness and
-the consecutive-edge condition of the walk law `S.mult ε ω`), `hpt` (`OuterTestBound`, write-up C4), `hC12`
-(`ConcreteC12`, write-up C12), `hR1000` (the cutoff `R ≤ 1000^(-1/ζ)`, write-up D1), `hq1` (the C15 constant `qStar ≤ 1`). -/
+the consecutive-edge condition of the walk law `S.mult ε ω`), `hstate` (the per-state inputs `StateTestInputs` of C4,
+with a good-state predicate `Good`, for every admissible configuration), `hC12` (`ConcreteC12`, write-up C12), `hR1000`
+(the cutoff `R ≤ 1000^(-1/ζ)`, write-up D1; implied by `R ≤ r0Min` via `Cutoff.r0Min_le_zeta`), `hq1` (the C15 constant
+`qStar ≤ 1`), `c0 < 1/8` (the cell-geometry constant of C4). -/
 theorem configuration_le_pow_concrete {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ρ s₀ γ : ℝ)
-    (E : ℝ → Set Ω) (G : Set Ω) (α : ℝ → ℝ) (dd : Ω → ℝ) (R : ℝ) (ζ p qStar q0 : ℝ)
+    (E : ℝ → Set Ω) (G : Set Ω) (α : ℝ → ℝ) (dd : Ω → ℝ) (R : ℝ) (ζ p qStar q0 c0 : ℝ)
     (good : ℝ → Ω → ℂ → ℕ → Prop)
     (hq0 : q0 = qStar / 9) (hq : 0 ≤ qStar) (hq1 : qStar ≤ 1) (hq9 : qStar ≤ 9) (hp : p ≤ 3)
     (hpζ : p = 2 * ζ + 2) (hζ : 0 < ζ) (hα : ∀ ε, 0 < ε → 0 < α ε) (hdd : ∀ ω, dd ω ≤ R)
-    (hR : R ≤ Lemma68Cutoff.rAmp q0 ζ) (hR1000 : R ≤ (1000 : ℝ) ^ (-1 / ζ))
+    (hR : R ≤ Lemma68Cutoff.rAmp q0 ζ) (hR1000 : R ≤ (1000 : ℝ) ^ (-1 / ζ)) (hc0 : c0 < 1 / 8)
     (hEnv : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G,
       Continuous (S.η ω) ∧ Filter.Tendsto (S.η ω) (Filter.cocompact ℝ) (Filter.cocompact ℂ))
     (hlf : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, IsLocallyFiniteMult (S.mult ε ω) ∧ ∀ k : ℤ, S.mult ε ω k (k + 1) ≠ 0)
-    (hpt : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, ∀ r : ℝ, α ε ≤ r → r ≤ dd ω → ∀ i : Config68, FullAdm S ρ s₀ γ ε ω r i →
-      OuterTestBound (S.mult ε ω) i.a ε (S.η ω) p r (good ε ω) (↑i.A : Set ℤ) qStar)
+    (hstate : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, ∀ r : ℝ, α ε ≤ r → r ≤ dd ω → ∀ i : Config68, FullAdm S ρ s₀ γ ε ω r i →
+      ∃ Good : ℤ → Prop, StateTestInputs (S.mult ε ω) i.a ε (S.η ω) p r (good ε ω) (↑i.A : Set ℤ) qStar c0 Good)
     (hC12 : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, ∀ r : ℝ, α ε ≤ r → r ≤ dd ω → ∀ i : Config68, FullAdm S ρ s₀ γ ε ω r i →
       ConcreteC12 (S.mult ε ω) i.a ε (S.η ω) p r (good ε ω) (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r)) :
     ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, ∀ r : ℝ, α ε ≤ r → r ≤ dd ω → ∀ i : Config68, FullAdm S ρ s₀ γ ε ω r i →
@@ -383,8 +432,11 @@ theorem configuration_le_pow_concrete {Ω : Type} [MeasurableSpace Ω] (S : Mate
     linarith
   obtain ⟨hη, hproper⟩ := hEnv ε hε ω hω
   obtain ⟨hlf', hcons⟩ := hlf ε hε ω hω
+  obtain ⟨Good, hG⟩ := hstate ε hε ω hω r hαr hrd i hi
   exact cfgSchedule_valid ε (S.η ω) (good ε ω) (S.mult ε ω) i.a (↑i.A) _ hε hη hproper hp0 hr0 hr1 hpζ hcut
-    hlf' hcons hq hq1 (hpt ε hε ω hω r hαr hrd i hi) (hC12 ε hε ω hω r hαr hrd i hi)
+    hlf' hcons hq hq1
+    (outerTestBound_of_state (S.mult ε ω) i.a ε (S.η ω) hη hp0 hr0 hr1 (good ε ω) (↑i.A) hε hc0 hq hq1 Good hG)
+    (hC12 ε hε ω hω r hαr hrd i hi)
 
 end Lemma68Concrete
 end MatedCRT
