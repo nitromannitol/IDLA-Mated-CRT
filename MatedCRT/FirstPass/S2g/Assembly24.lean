@@ -13,8 +13,10 @@ namespace MatedCRT
 
 open MeasureTheory Filter Set
 
-/-- **Canonical stopped existence from the factorization (q1, fp-S2g).** Almost surely the canonical family of the cone
-measure exists, by clause (ii) of `ConeCanonicalFactorStep` at the circle process of `hcirc ω`. -/
+/-- **CYCLE: DO NOT USE (q1, fp-S2g).** This implication runs from `ConeCanonicalFactorStep` to `ConeCanonicalHalfBallStep`,
+but `ConeCanonicalFactorStep` is proved from `ConeCanonicalHalfBallStep` (`FirstPass/S2i/CanonicalFactor.lean:199`, z2).
+Using both is circular. Kept only as a reference implication; `ConeCanonicalHalfBallStep` must be proved directly
+(`coneCanonicalHalfBallStep_of_pathwise`, `FirstPass/S2g.lean`). -/
 theorem coneCanonicalHalfBallStep_of_factor (hfac : ConeCanonicalFactorStep) : ConeCanonicalHalfBallStep := by
   intro γ hγ0 hγ2 Ω _ P hC hcirc μ hcone
   obtain ⟨ΨT, Ψ, G, _, hchar, hfull⟩ := hfac γ hγ0 hγ2

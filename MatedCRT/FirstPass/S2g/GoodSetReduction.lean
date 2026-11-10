@@ -36,22 +36,12 @@ def SourceHalfBallPathwiseStep : Prop :=
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsProbabilityMeasure P → IsWholePlaneGFF P hC hcirc →
     IsLQGMeasureOfField P γ γ hcirc μ → ∀ᵐ ω ∂P, ConePathwiseHalfBallInputs (μ ω)
 
-/-- **CANDIDATE EXTERNAL (q1; NOT frozen; pending operator approval).** Moment law of a quantum cone against a whole-plane
-source on a standard Borel space. For `0 < γ < 2`, every γ-quantum cone field has, for every countable family of
-continuous compactly supported test functions in `B_1`, the same law of moment vectors `ω ↦ (∫ φ_k dμ_ω)_k` as a
-whole-plane source LQG measure on a standard Borel space with measurable measure map `μ'`
-(Duplantier-Sheffield 2011, Invent. Math., arXiv:0808.1560; the quantum cone restriction identity of Fact 2.2 in
-arXiv:2211.04891). The cone moment maps are AE measurable by `FrozenLQGTestIntegralMeasurable`; the equality is the law
-statement of `FrozenConeLogLocalCodeLaw`. -/
+/-- **Frozen as `FrozenConeLogLocalCodeLawStd` (q1; `Frozen/S2g.lean`, PENDING TRUTH CHECK).** Moment law of a quantum cone
+against a whole-plane source on a standard Borel space with a measurable measure map (Duplantier-Sheffield 2011,
+arXiv:0808.1560; the cone restriction identity of Fact 2.2 in arXiv:2211.04891). The name is kept for the consumers of
+this file; the Prop is exactly the frozen statement. -/
 def CandidateConeLogLocalCodeLawStd : Prop :=
-  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
-    (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
-    ∃ (Ω' : Type) (_ : MeasurableSpace Ω') (_ : StandardBorelSpace Ω') (P' : Measure Ω')
-      (hC' : Ω' → (ℂ → ℝ) → ℝ) (hcirc' : Ω' → ℝ → ℂ → ℝ) (μ' : Ω' → Measure ℂ),
-      IsProbabilityMeasure P' ∧ Measurable μ' ∧ IsWholePlaneGFF P' hC' hcirc' ∧
-      IsLQGMeasureOfField P' γ γ hcirc' μ' ∧
-      ∀ φs : ℕ → ℂ → ℝ, (∀ k, Continuous (φs k) ∧ HasCompactSupport (φs k) ∧ tsupport (φs k) ⊆ ball (0 : ℂ) 1) →
-        P.map (fun ω => momentVec φs (μ ω)) = P'.map (fun ω' => momentVec φs (μ' ω'))
+  FrozenConeLogLocalCodeLawStd
 
 /-- **CANDIDATE EXTERNAL (q1; NOT frozen; pending operator approval).** Countable determination of locally finite measures
 on `B_{3/4}` by test functions supported in `B_1`: finite Radon measures on the open set `B_1` are determined by their
