@@ -146,6 +146,77 @@ theorem stayIn_le_of_hit (m : ℤ → ℤ → ℕ) (y0 : ℤ) (W D : ℤ → Set
   rw [← testEvent_compl]
   exact compl_le_ofReal_of_le (measurableSet_testEvent W A y0) hq0 hq1 (hP.trans hsub)
 
+
+/-- The middle-sphere vertices: the cells meeting the sphere `∂B_{4R/3}(z)` (write-up Step C, the local test vertices). -/
+def middleVertices (ε : ℝ) (η : ℝ → ℂ) (z : ℂ) (R : ℝ) : Set ℤ :=
+  {v | (cell ε η v ∩ Metric.sphere z (4 * R / 3)).Nonempty}
+
+/-- For a middle vertex `v`, the window of its local test lies in the window `I(B_{2R}(z))` of the state
+(write-up C3; `R/4`-ball around the vertex, cells of diameter at most `c₀R`, `c₀ < 1/8`). -/
+lemma interiorCellVertices_vertex_ball_sub {η : ℝ → ℂ} (hη : Continuous η) {ε R c0 : ℝ} {z : ℂ} {v : ℤ}
+    (hε : 0 < ε) (hR : 0 < R) (hc0 : c0 < 1 / 8)
+    (hv : (cell ε η v ∩ Metric.sphere z (4 * R / 3)).Nonempty)
+    (hdy : Metric.diam (cell ε η v) ≤ R / 100)
+    (hdiam : ∀ k : ℤ, (cell ε η k ∩ Metric.ball (vertexPoint ε η v) (R / 4)).Nonempty →
+      Metric.diam (cell ε η k) ≤ c0 * R) :
+    interiorCellVertices ε η (Metric.ball (vertexPoint ε η v) (R / 4)) ⊆
+      interiorCellVertices ε η (Metric.ball z (2 * R)) := by
+  obtain ⟨p0, hp0c, hp0s⟩ := hv
+  have hp0 : dist p0 z = 4 * R / 3 := Metric.mem_sphere.1 hp0s
+  have hvc : vertexPoint ε η v ∈ cell ε η v := ⟨ε * v, ⟨by nlinarith, le_rfl⟩, rfl⟩
+  have hcpt : ∀ k : ℤ, IsCompact (cell ε η k) := fun k => isCompact_Icc.image hη
+  have hd1 : dist (vertexPoint ε η v) p0 ≤ R / 100 :=
+    (Metric.dist_le_diam_of_mem (hcpt v).isBounded hvc hp0c).trans hdy
+  have hvz : dist (vertexPoint ε η v) z ≤ 4 * R / 3 + R / 100 := by
+    have := dist_triangle (vertexPoint ε η v) p0 z
+    linarith
+  rintro k ⟨hk1, -⟩
+  have hk1' : (cell ε η k ∩ Metric.ball (vertexPoint ε η v) (R / 4)).Nonempty := hk1
+  obtain ⟨q, hqc, hqb⟩ := hk1'
+  rw [Metric.mem_ball] at hqb
+  refine ⟨⟨q, hqc, ?_⟩, ?_⟩
+  · rw [Metric.mem_ball]
+    have := dist_triangle q (vertexPoint ε η v) z
+    linarith
+  · intro hfr
+    obtain ⟨p, hpc, hpf⟩ := hfr
+    rw [frontier_ball z (by positivity : 2 * R ≠ 0), Metric.mem_sphere] at hpf
+    have hdq : Metric.diam (cell ε η k) ≤ c0 * R := hdiam k ⟨q, hqc, Metric.mem_ball.2 hqb⟩
+    have hpq : dist p q ≤ Metric.diam (cell ε η k) := Metric.dist_le_diam_of_mem (hcpt k).isBounded hpc hqc
+    have := dist_triangle p q z
+    have := dist_triangle q (vertexPoint ε η v) z
+    have hc : c0 * R < R / 8 := by nlinarith
+    linarith
+
+/-- **Per-state outer test bound (the concrete window).** For the state `y0` with centre `z` and radius `R`, the
+walk from `y0` leaves `A` before its exit from `I(B_{2R}(z))` with probability at least `min q0 1/(1+log(1/R))²`.
+Inputs: the local bound `hloc` at the middle-sphere vertices (printed_test_bound at the local window `I(B_{R/4}(v))`
+with scale `r := R`), the local diameter inputs `hdy`, `hdiam` (write-up B11, C3), and `hS2` (z12's S2). -/
+theorem perState_stayIn_le {η : ℝ → ℂ} (hη : Continuous η) {ε R c0 q0 : ℝ} {z : ℂ} (m : ℤ → ℤ → ℕ) (y0 : ℤ)
+    (A : Set ℤ) (hε : 0 < ε) (hR : 0 < R) (hR1 : R ≤ 1) (hc0 : c0 < 1 / 8) (hq0 : 0 < q0)
+    (hloc : ∀ v ∈ middleVertices ε η z R,
+      srwLaw m v (TestBound68.stayIn (fun u => interiorCellVertices ε η (Metric.ball (vertexPoint ε η u) (R / 4))) A v)
+        ≤ ENNReal.ofReal (1 - min q0 1 / (1 + Real.log (1 / R)) ^ 2))
+    (hdy : ∀ v ∈ middleVertices ε η z R, Metric.diam (cell ε η v) ≤ R / 100)
+    (hdiam : ∀ v ∈ middleVertices ε η z R, ∀ k : ℤ,
+      (cell ε η k ∩ Metric.ball (vertexPoint ε η v) (R / 4)).Nonempty → Metric.diam (cell ε η k) ≤ c0 * R)
+    (hS2 : ∀ᵐ x ∂srwLaw m y0,
+      vHitTime (middleVertices ε η z R) x < vExitTime (interiorCellVertices ε η (Metric.ball z (2 * R))) x) :
+    srwLaw m y0 (TestBound68.stayIn (fun _ => interiorCellVertices ε η (Metric.ball z (2 * R))) A y0) ≤
+      ENNReal.ofReal (1 - min q0 1 / (1 + Real.log (1 / R)) ^ 2) := by
+  have hlog : 0 ≤ Real.log (1 / R) := Real.log_nonneg (one_le_one_div hR hR1)
+  have hL : 1 ≤ (1 + Real.log (1 / R)) ^ 2 := by nlinarith
+  have hq0' : 0 ≤ min q0 1 / (1 + Real.log (1 / R)) ^ 2 := by
+    apply div_nonneg (le_min hq0.le zero_le_one) (sq_nonneg _)
+  have hq1' : min q0 1 / (1 + Real.log (1 / R)) ^ 2 ≤ 1 := by
+    rw [div_le_one (by positivity)]
+    exact (min_le_right _ _).trans hL
+  exact stayIn_le_of_hit m y0 (fun _ => interiorCellVertices ε η (Metric.ball z (2 * R)))
+    (fun v => interiorCellVertices ε η (Metric.ball (vertexPoint ε η v) (R / 4)))
+    (middleVertices ε η z R) A hq0' hq1'
+    (fun v hv => interiorCellVertices_vertex_ball_sub hη hε hR hc0 hv (hdy v hv) (hdiam v hv))
+    (fun v hv => hloc v hv) hS2
+
 end S6j
 
 end MatedCRT
