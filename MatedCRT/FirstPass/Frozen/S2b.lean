@@ -17,6 +17,7 @@ open MeasureTheory ProbabilityTheory Set HarmonicBalls
 LQG measure is the `γ`-LQG measure of `h^ℂ - γ log |·|`. Source: Sheffield 2007 (whole-plane GFF); Duplantier-Sheffield
 2011 Proposition 1.1 and Weyl scaling (the setting of HB22, line 531); standard; locator pending.
 Same statement as the Step `WholePlaneLogLQGExistenceStep` (Steps/Sec2/ConeHarmonicBallsUpToFixedTime.lean:50).
+Truth check UNCLEAR (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md §2): the body of WholePlaneLogLQGExistenceStep is absent from the checked source, so its carrier and insertion quantifiers cannot be checked.
 Used by: firstPass_2_4_corrected, firstPass_2_5_corrected. -/
 def FrozenWholePlaneLogLQGExistence : Prop := WholePlaneLogLQGExistenceStep
 
@@ -25,6 +26,7 @@ through their circle average processes over the circles in `B_1` (eq:gff, paper 
 immediate from the definitions). Source: standard GFF restriction fact, stated in the paper as immediate from
 Definition 2.1; locator pending. Same statement as the Step `ConeRestrictionStep`
 (Steps/Sec2/ConeHarmonicBallsUpToFixedTime.lean:79).
+Truth check UNCLEAR (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md §3): the body of ConeRestrictionStep is absent from the checked source, including which circles lie in B_1.
 Used by: firstPass_2_4_corrected, firstPass_2_5_corrected. -/
 def FrozenConeRestriction : Prop := ConeRestrictionStep
 
@@ -33,6 +35,7 @@ def FrozenConeRestriction : Prop := ConeRestrictionStep
 the circle average process to `B_1` lies in `S`. Source: HB22 = [bou2022harmonic], Proposition 1.3 (harmonic balls depend
 locally on the field), cited at the paper's line 542 (proof of Lemma 2.4); operator ruling 2026-11-09 17:00 (EXTERNAL,
 freeze). Same statement as the Step `ConeHarmonicBallLocalityStep` (Steps/Sec2/ConeHarmonicBallsUpToFixedTime.lean:94).
+Truth check UNCLEAR (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md §4): the alias is unexpanded, and the source does not print the bridge from the fixed-ball locality statement to the stopped-family event of this paper.
 Used by: firstPass_2_4_corrected, firstPass_2_5_corrected. -/
 def FrozenConeHarmonicBallLocality : Prop := ConeHarmonicBallLocalityStep
 
