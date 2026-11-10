@@ -17,8 +17,8 @@ open MeasureTheory ProbabilityTheory Set Metric _root_.HarmonicBalls
 smooth test-function shift of the whole-plane GFF: the Cameron-Martin shift used in the strict obstacle gap.
 Source: Miller-Sheffield, Imaginary Geometry IV, Proposition 2.9 (arXiv:1302.4738v2, p.49). The source-exact form (RN
 density, fields modulo r Z) has no concrete Lean carrier yet; this is the form stated in
-Truth check TRUE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md, table row): Miller-Sheffield arXiv:1302.4738v2 p. 49 Proposition 2.9, equation (2.8).
-`harmonicBallStrictObstacleGapStep_of_restrictedLaw_and_pairingLaws`. Used by: firstPass_strictObstacleGap. -/
+`harmonicBallStrictObstacleGapStep_of_restrictedLaw_and_pairingLaws`.
+Truth check TRUE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md, table row): Miller-Sheffield arXiv:1302.4738v2 p. 49 Proposition 2.9, equation (2.8). Used by: firstPass_strictObstacleGap. -/
 def FPPairingLawIG4 : Prop :=
   ∀ (Ω : Type) [MeasurableSpace Ω] (Q : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ),
