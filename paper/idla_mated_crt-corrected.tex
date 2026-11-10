@@ -1909,7 +1909,14 @@ are recorded in \texttt{docs/campaign/LEMMA36-REPLACEMENT.md}.
 		$\olwteps$  converges uniformly in $B_{\rho}$ to $\frac{c_0}{6} \overline w_t^{B_\rho}$.
 		Further, by Lemma \ref{lemma:uniform-convergence-of-greens-function} we may arrange so that, a.s.\ along $\mathcal{E}$,
 		% CORRECTION [C17]: propagate [C1] in the proof.
-		$\overline{g}^{{\eps}}$ converges uniformly in $\A_{r, \rho}$ to $\frac{c_0}{6} \times G_{B_\rho}(0 , \cdot)$.  By~\eqref{eq:recall-cluster-def} and the continuity of the two functions involved, there exists $s > 0$ so that
+% CORRECTION [C20] (author-approved 2026-11-10): the printed proof inferred the strict interior gap from continuity.
+% Use the scaling law to exclude fixed deterministic jump times, then apply
+% the obstacle equation and the strong minimum principle.
+$\overline{g}^{{\eps}}$ converges uniformly in $\A_{r, \rho}$ to $\frac{c_0}{6} \times G_{B_\rho}(0 , \cdot)$.
+
+Under the unconditioned law of the global family, set $p(u):=\P[\Lambda_u\ne\bigcup_{0<q<u}\Lambda_q]$ for $u>0$. By openness, monotonicity and compactness, this event is the union over closed disks $K$ with rational centers and positive rational radii of $\{K\subset\Lambda_u\}\cap\bigcap_{q\in\mathbb Q\cap(0,u)}\{K\not\subset\Lambda_q\}$. These events are measurable since $\Lambda_u=\inte\cl(\Lambda_u)$ and $\cl(\Lambda_u)$ is a random closed set. For each $K$ they are pairwise disjoint as $u$ varies, so $p(u)>0$ for at most countably many $u$. Spatial dilations commute with unions, and Lemma~\ref{lemma:scale-invariance} gives $p(u)=p(bu)$ for every $b,u>0$. Hence $\Lambda_t=\bigcup_{0<u<t}\Lambda_u$ almost surely for our fixed~$t$.
+
+On this probability-one event and on $\{t<\TT\}$, put $v_u=\overline w_u^{B_\rho}+uG_{B_\rho}(0,\cdot)$ on $B_\rho\setminus\{0\}$ for $0<u\leq t$. For $u<t$, Theorem~\ref{theorem:harmonic-balls}(c) and the obstacle constraint show that $v_t-v_u$ is harmonic on $\Lambda_u\setminus\{0\}$, is nonnegative on $\partial\Lambda_u$ since $v_u=0$ there, and tends to $+\infty$ at~$0$. The punctured domain is connected, so the minimum and strong minimum principles give $v_t-v_u>0$ there. Thus $v_t>0$ on $\Lambda_t\setminus\{0\}$. The set $\{x\in\Lambda_t:\dist(x,\partial\Lambda_t)\geq\delta/4\}$ is compact, so continuity away from~$0$ and divergence at~$0$ give $s>0$ such that
 		\begin{equation} \label{eq:strictly-above-in-interior}
 		\begin{aligned}
 		\overline w_t^{B_\rho}(x) &> - t G_{B_\rho}(0, x) + s  \\
@@ -2340,25 +2347,32 @@ are recorded in \texttt{docs/campaign/LEMMA36-REPLACEMENT.md}.
 	\end{lemma}
 	These lemmas imply Proposition \ref{prop:IDLA-lower-bound}. 
 	
-	\begin{proof}[Proof of Proposition \ref{prop:IDLA-lower-bound}, assuming Lemmas \ref{lemma:general-idla-lower-bound}, \ref{lemma:mean-value-ineq}, and \ref{lemma:L-lower-bound}]
-		We restrict to the event that $\{t < \TT\}$ for $t > 0$. 
-		By Lemmas \ref{lemma:mean-value-ineq} and  \ref{lemma:L-lower-bound} (with $\delta/4$ instead of $\delta$) we may apply Lemma \ref{lemma:general-idla-lower-bound} 
-		% CORRECTION [C4]: printed \partial \eta(\Lambdateps).
-		with the sets $O^{{\eps}}_1 = \{a \in \Lambdateps:\dist(\eta(a), \partial \overline{\Lambdateps}) > \delta/4 \}$ and $O_2^{{\eps}} = \Lambdateps$
-		and $K_{\eps} = t \eps^{-1}$ 
-		which shows, together 
-		with the cell-size estimates given by 
-		Lemma \ref{lemma:cell-size-estimate}
-		\[
-		\Bdeltamm{\delta/2}(\overline{\Lambdateps}) \subset \overline{A}_{{\eps}}(\lfloor t {\eps}^{-1} \rfloor),
-		\]
-		except on an event of probability going to zero as ${\eps} \to 0$,  with the bound holding even when walkers are stopped upon exiting $\Lambdateps$. 
-		By Proposition \ref{prop:div-sandpile-lower-bound} and \eqref{eq:cluster-and-lambdat}, (and the cell-size estimates again) we have
-		\[
-		\Bdeltamm{\delta/2}(\Lambda_t) \subset \overline{\Lambdateps},
-		\]
-		except on an event of probability going to zero as ${\eps} \to 0$. 
-	\end{proof}
+% CORRECTION [C21] (author-approved 2026-11-10): the printed application did not verify the target hypotheses,
+% coverage by the strict positivity set, or the stated stopping domain.
+% Apply the vertexwise argument inside the intersection with the continuum ball.
+\begin{proof}[Proof of Proposition~\ref{prop:IDLA-lower-bound}]
+Fix $t>0$ and $\delta\in(0,\rho)$, and work on $\{t<\TT\}$. Set $O_1^\eps={\VGeps}(\Bdeltam(\Lambda_t))$ and $I_\eps=\Lambdateps\cap{\VGeps}(\Lambda_t)$. We may assume that $O_1^\eps$ is nonempty. On ${\VGeps}(B_\rho)\setminus{\VGeps}(\partial B_\rho)$, define
+\begin{equation*}
+u^\eps=\wteps+(t\eps^{-1})\gr{{\eps}}{B_\rho}(0,\cdot)\,,
+\end{equation*}
+extend it by zero elsewhere, and set $M_\eps=\sup_{a\notin I_\eps}u^\eps(a)$.
+
+The strict-gap argument in Proposition~\ref{prop:div-sandpile-lower-bound}, Theorem~\ref{theorem:convergence-divisible}, Lemmas~\ref{lemma:uniform-convergence-of-greens-function} and~\ref{lemma:cell-size-estimate}, and~\eqref{eq:meps-scaling} give a positive random $c$ such that $u^\eps(a)\geq c\eps^{-1}$ for every cell meeting $\Bdeltamm{\delta/2}(\Lambda_t)$, except on an event whose probability on $\{t<\TT\}$ tends to zero. Indeed, quantum-area parametrization makes distinct-cell overlaps $\mu_h$-null, so each cell contains a point belonging to no other cell; evaluate the rescaled convergence there. Near~$0$, use the annular Green bound and minimum principle from the proof of Proposition~\ref{prop:div-sandpile-lower-bound}. The same convergence, prepared on rational annuli as in that proof, gives $\eps M_\eps\to0$ in probability on $\{t<\TT\}$, since only cells disjoint from $\Lambda_t$ contribute and the limiting surplus vanishes there. In particular, $O_1^\eps\subset I_\eps$ and $\inf_{O_1^\eps}u^\eps\geq c\eps^{-1}$. Lemmas~\ref{lemma:discrete-laplacian-bound} and~\ref{lemma:cell-size-estimate} also give $0\in I_\eps$ with probability tending to one on $\{t<\TT\}$.
+
+By Lemma~\ref{lemma:discrete-laplacian-bound} and the Green identities in Remark~\ref{remark:overload-notation-potential}, the function $(t\eps^{-1})\gr{{\eps}}{I_\eps}(\cdot,0)-\qeps{I_\eps}-u^\eps$ is harmonic on $I_\eps$ and has boundary values at least $-M_\eps$. Lemma~\ref{lemma:maximum-principle} therefore gives, for every $a\in I_\eps$,
+\begin{equation*}
+(t\eps^{-1})\gr{{\eps}}{I_\eps}(a,0)-\qeps{I_\eps}(a)\geq u^\eps(a)-M_\eps\,.
+\end{equation*}
+Since $\qeps{I_\eps}\leq C\eps^{-1}$ for a finite positive random $C$ by Lemmas~\ref{lemma:bounded-exit-time} and~\ref{lemma:exit-time-upper-bound}, reversibility gives~\eqref{eq:mean-value-ineq} with $O_2^\eps=I_\eps$, $K_\eps=t\eps^{-1}$ and $\mathfrak{s}=c/(2C)$, except on an event whose probability on $\{t<\TT\}$ tends to zero.
+
+For every $a\in O_1^\eps$, cell-size control and the preceding positivity give ${\VGeps}(B_{\delta/4}(\eta(a)))\subset I_\eps$. Lemma~\ref{lemma:greens-kernel-lower-bound}, applied in this ball, and domain monotonicity bound $\gr{{\eps}}{I_\eps}(a,b)$ below by~$1$ on a sufficiently small concentric ball of fixed radius. The full support of $\mu_h$ and a finite cover of the possible centers give a uniform positive random lower bound for the masses of these smaller balls. Since each cell has mass~$\eps$, $\qeps{I_\eps}(a)\geq c_1\eps^{-1}$ uniformly on $O_1^\eps$ for a positive random~$c_1$. Lemma~\ref{lemma:greens-function-log-bound} with $\zeta=1/2$ and reversibility then give
+\begin{equation*}
+\frac{\sum_{b\in I_\eps}\Gr{{\eps}}{I_\eps}(b,a)}{\Gr{{\eps}}{I_\eps}(a,a)}\geq c_1\eps^{-1/2}\geq\eps^{-1/4}
+\end{equation*}
+uniformly on $O_1^\eps$, with probability tending to one on $\{t<\TT\}$.
+
+Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_\eps}(a,0)=0$, contradicting the positive lower bound in the preceding maximum-principle comparison. Taking $O_2^\eps$ to be this component preserves both Green inequalities. The proof of Lemma~\ref{lemma:general-idla-lower-bound}, following~\cite[Section 3]{lawler1992internal}, applies vertexwise and requires neither connectivity nor origin membership of $O_1^\eps$. Rounding $K_\eps$ down decreases each particle hitting-count mean by at most one, which is absorbed by half the positive mean gap. Apply its conditional estimates on $\{t<\TT\}$, localize the positive random constants, and use $|O_1^\eps|\leq|\Lambdateps|\leq t\eps^{-1}$ from Lemma~\ref{lemma:discrete-conservation-of-mass} for the union bound. Thus the stopped aggregate fills $O_1^\eps$, whose cells cover $\Bdeltam(\Lambda_t)$. Since $O_2^\eps\subset{\VGeps}(\Lambda_t)$, monotonicity in the stopping domain proves both assertions.
+\end{proof}
 	
 	
 	We now prove Lemmas \ref{lemma:general-idla-lower-bound}, \ref{lemma:mean-value-ineq}, and \ref{lemma:L-lower-bound}.
