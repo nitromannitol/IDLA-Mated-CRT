@@ -106,6 +106,26 @@ theorem walkY_pt {γ ω₀ α ζ ρ CG CE C s₀ ε r ωG c0W : ℝ} {Ω : Type}
   obtain ⟨h1, h2, h3⟩ := hx hP
   exact ⟨cellVertices_mono_ball68 hsub h1, h2, h3⟩
 
+/-- **`hGreen` on the walk ball at `kω`, Green exponent `ωG` (`greenG_pt`; no `hGe`).** The body of the split-leaf
+binder `hGreen` (`B1GoodEnvSplit68.shellOneTest_at_of_goodEnv_loc_split`, the `hωG`-derived block), with `K.C = CG`
+and the walk ball `ball 0 (ρ - ε ^ kω)`, `kω = K.ω`. The event `greenLowEvent68 S ωG ρ CG ε` has domain
+`ball 0 (ρ - ε ^ ωG)` and range `ε ^ ωG ≤ r'`. From `kω ≤ ωG` and `0 < ε ≤ 1`, `ε ^ ωG ≤ ε ^ kω`, so
+`ball 0 (ρ - ε ^ kω) ⊆ ball 0 (ρ - ε ^ ωG)` and `cellVertices` is monotone in its set. -/
+theorem greenG_pt {ρ CG ε ωG kω : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ω : Ω)
+    (hkω : kω ≤ ωG) (hε0 : 0 < ε) (hε1 : ε ≤ 1)
+    (hG : ω ∈ MatedCRT.greenLowEvent68 S ωG ρ CG ε) :
+    ∀ a ∈ cellVertices ε (S.η ω) (ball 0 (ρ - ε ^ kω)), ∀ r' : ℝ, ε ^ ωG ≤ r' →
+      r' ≤ infDist (vertexPoint ε (S.η ω) a) (sphere 0 ρ) →
+      ∀ b ∈ cellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) a) (r' / 3)),
+        CG⁻¹ * Real.log (if vertexPoint ε (S.η ω) a = vertexPoint ε (S.η ω) b then ε⁻¹
+            else min (r' / ‖vertexPoint ε (S.η ω) a - vertexPoint ε (S.η ω) b‖) ε⁻¹) - 1
+          ≤ greenKernel (S.mult ε ω) (interiorCellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) a) r')) a b := by
+  have hle : ε ^ ωG ≤ ε ^ kω := Real.rpow_le_rpow_of_exponent_ge hε0 hε1 hkω
+  have hball : ball (0 : ℂ) (ρ - ε ^ kω) ⊆ ball (0 : ℂ) (ρ - ε ^ ωG) :=
+    Metric.ball_subset_ball (by linarith)
+  intro a ha r' hr' hrinf b hb
+  exact hG a (MatedCRT.cellVertices_mono_ball68 hball ha) r' hr' hrinf b hb
+
 end Lemma68CGResGreenY
 end MatedCRT
 
@@ -113,3 +133,4 @@ end MatedCRT
 #print axioms MatedCRT.Lemma68CGResGreenY.le_one_of_le_shellEpsG68
 #print axioms MatedCRT.Lemma68CGResGreenY.greenY_pt
 #print axioms MatedCRT.Lemma68CGResGreenY.walkY_pt
+#print axioms MatedCRT.Lemma68CGResGreenY.greenG_pt
