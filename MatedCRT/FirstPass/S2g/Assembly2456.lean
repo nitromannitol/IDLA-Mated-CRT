@@ -7,6 +7,7 @@ import MatedCRT.FirstPass.S2i.CanonicalFactor
 import MatedCRT.FirstPass.S2i.GlobalFactor
 import MatedCRT.FirstPass.Frozen.S4S5b
 import MatedCRT.FirstPass.S2m
+import MatedCRT.FirstPass.S2g.AELaw
 
 /-! # Corrected Lemmas 2.5, 2.6 and Proposition 6.1: assembly (fp-S2g, q1, round 42)
 
@@ -107,5 +108,34 @@ theorem firstPass_2_6_corrected
         hExist hThm11 hProp56 hconf)
       (coneHalfBallClosureInsideStep_corrected hI2 hK hloc hExist hSC h27 hE hFL) h27 hE1 hE2 hscale h22)
     hscale h22
+
+/-- **Corrected Lemma 2.6, measurable law (q1, fp-S2g-2-4-2-5-corrected).** The law of the global family with the a.e.
+measurability of both joint processes (`ConeScaleInvarianceAEStmt`, `FirstPass/S2g/AELaw.lean`), from the same inputs as
+`firstPass_2_6_corrected`. The factor step is the proved `coneGlobalFamilyFactor_proved`; no factor step is assumed. -/
+theorem firstPass_2_6_law_corrected
+    (hU : FrozenUniversalMeasurabilityOfAnalytic) (hmeasT : FrozenLQGTestIntegralMeasurable)
+    (hstd : FrozenConeLogLocalCodeLawStd)
+    (hmin : FrozenSuperharmonicMinimumPrinciple) (hCentre : FrozenGreenBallCentre)
+    (hGB : HarmonicBalls.GreenFunctionBallStmt) (hpole : FrozenGreenDiscPole)
+    (hOpen : ClusterOpenLaplacianStmt.{0}) (hSup : LeastSupersolutionMemStmt.{0})
+    (hCons : ClusterConservationOfMassStmt.{0}) (hMono : ClusterMonotoneStmt.{0})
+    (hCompat : ClusterCompatibilityStmt.{0}) (hBdry : ClusterBoundaryMeasureZeroStmt.{0})
+    (hExist : ExistenceHarmonicBallsStmt.{0}) (hThm11 : ExistenceUniquenessHarmonicBallsStmt.{0})
+    (hProp56 : UniquenessHarmonicBallsStmt.{0})
+    (hconf : FrozenHBInitialConfinement)
+    (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
+    (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
+    (hloc : HarmonicBallLocalSetStmt.{0}) (hSC : ClusterStrongCompatibilityStmt.{0})
+    (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion) (hFL : FPConeWholePlaneFieldLaw)
+    (h27 : VolumeGrowthStmt)
+    (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
+    (hscale : QuantumConeScalingInput) (h22 : LQGMeasurePropertiesStmt) :
+    ConeScaleInvarianceAEStmt :=
+  coneScaleInvarianceAE_of_globalFamilyFactor
+    (coneGlobalFamilyFactor_proved
+      (coneCanonicalHalfBallStep_of_draft hU hmeasT hstd hmin hCentre hGB hpole hOpen hSup hCons hMono hCompat hBdry
+        hExist hThm11 hProp56 hconf)
+      (coneHalfBallClosureInsideStep_corrected hI2 hK hloc hExist hSC h27 hE hFL) h27 hE1 hE2 hscale h22)
+    hscale h22 (coneScaleRadiusPosStep_of_input hscale)
 
 end MatedCRT
