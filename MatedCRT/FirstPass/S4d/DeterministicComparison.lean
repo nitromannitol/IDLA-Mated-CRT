@@ -16,7 +16,7 @@ Argument (notes/fp-gaps/CHATGPT-4-2-strict-gap-proof.md, Section 2), with `w_u` 
 Green function `G_{B_ρ}(0,·)`, `W = Λ_s \ {0}`, and `f = v_t - v_s = (w_t - w_s) + (t - s) G`, `v_u = w_u + u G`:
 * `v_u ≥ 0` off the pole (`leastSupersolution_ge_obstacle`, from the infimum over supersolutions);
 * `v_s ≤ 0` off `Λ_s` (`odometer_nonpos_of_not_mem`, from `Λ_s = int cl C_s`);
-* `Δf ≤ 0` in `W` (`laplacianLE_sub_of_hasLaplacian` and HB `LaplacianLE.add_const_mul_of_hasLaplacian_zero`);
+* `Δf ≤ 0` in `W` (`laplacianLE_sub_of_hasLaplacian_comparison` and HB `LaplacianLE.add_const_mul_of_hasLaplacian_zero`);
 * `f → +∞` at the pole; `f ≥ 0` on `W` by the minimum principle on `Λ_s \ B̄_a`; `f > 0` on `W` by the strong minimum
   principle on the connected set `W` (puncture connectedness);
 * hence `v_t = v_s + f > 0` on `W`, so `Λ_s ⊆ 𝒞_t`.
@@ -71,7 +71,7 @@ theorem odometer_nonpos_of_not_mem {μ : Measure ℂ} {ρ u : ℝ} {Λ : Set ℂ
 /-- Distributional comparison of the odometer difference (ChatGPT Section 2.2, eq. (12)): if `W ⊆ Λ_s ⊆ Λ_t` and
 `Δw_u = μ|Λ_u` in `U ⊇ W`, then `Δ(w_t - w_s) ≤ 0` in `W`, because `∫ φ dμ|Λ_t = ∫ φ dμ|Λ_s` for every test function
 `φ` supported in `W`. -/
-theorem laplacianLE_sub_of_hasLaplacian {μ : Measure ℂ} {U W Λs Λt : Set ℂ} {wt ws : ℂ → ℝ}
+theorem laplacianLE_sub_of_hasLaplacian_comparison {μ : Measure ℂ} {U W Λs Λt : Set ℂ} {wt ws : ℂ → ℝ}
     (hW : W ⊆ Λs) (hst : Λs ⊆ Λt) (hWU : W ⊆ U)
     (hwt : HasLaplacian wt (μ.restrict Λt) 0 U) (hws : HasLaplacian ws (μ.restrict Λs) 0 U) :
     LaplacianLE (fun x => wt x - ws x) 0 W := by
@@ -143,7 +143,7 @@ theorem strictGapDeterministicComparison_of_frozen
       + (t - s) * greenFunction (ball 0 ρ) 0 x with hfdef
   have hLE : LaplacianLE f 0 W :=
     LaplacianLE.add_const_mul_of_hasLaplacian_zero
-      (laplacianLE_sub_of_hasLaplacian hWsub hsub hWball hlap_t hlap_s)
+      (laplacianLE_sub_of_hasLaplacian_comparison hWsub hsub hWball hlap_t hlap_s)
       (hasLaplacian_zero_of_pole_notMem hGlap hWball h0W) (t - s)
   have hfc : ContinuousOn f (closedBall 0 ρ \ {0}) :=
     ((hwc_t.mono sdiff_subset).sub (hwc_s.mono sdiff_subset)).add (continuousOn_const.mul hGc)
