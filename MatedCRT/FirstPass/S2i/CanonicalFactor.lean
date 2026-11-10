@@ -14,7 +14,7 @@ containment of stopped families, with two EXTERNAL inputs (`FirstPass/Frozen/S2i
 law (`ConeCircleLawUniqueStep`) and a standard Borel reference cone exists (`ConeReferenceExistsStep`).
 
 Route (notes/fp-gaps/CHATGPT-q1-open-steps.md Section 7, F1-F6): on a reference cone, the joint code
-`J ω = (circleCode D (circleProcess (hcirc ω)), processCode (halfBallTime (μ ω)) (familyProcess (Λ ω) (halfBallTime (μ ω))))`
+`J ω = (circleCode D (circleProcess (hcirc ω)), processCodeTimed (halfBallTime (μ ω)) (familyProcess (Λ ω) (halfBallTime (μ ω))))`
 is measurable up to a null set; its values on a measurable full set form a graph over the circle code
 (`processCode_eq_of_circleCode_eq`: equal circle codes give equal LQG measures, canonical times and processes); the Borel
 factor `exists_canonical_factor` gives `B, F`; the witnesses are `G = circleCode D ⁻¹' B`, `ΨT p = (F (circleCode D p)).1`,
@@ -35,8 +35,8 @@ theorem processCode_eq_of_circleCode_eq {γ : ℝ} {D : ℕ → CirclePt} (hD : 
     (hf : IsConeHarmonicBallFamilyOn μ Λ (halfBallTime μ))
     (hf' : IsConeHarmonicBallFamilyOn μ' Λ' (halfBallTime μ'))
     (hcode : circleCode D (circleProcess hc) = circleCode D (circleProcess hc')) :
-    processCode (halfBallTime μ) (familyProcess Λ (halfBallTime μ)) =
-      processCode (halfBallTime μ') (familyProcess Λ' (halfBallTime μ')) := by
+    processCodeTimed (halfBallTime μ) (familyProcess Λ (halfBallTime μ)) =
+      processCodeTimed (halfBallTime μ') (familyProcess Λ' (halfBallTime μ')) := by
   have hcirc_eq : circleProcess hc = circleProcess hc' :=
     eq_of_circleCode_eq hD (continuous_circleProcess_of_continuousOn hc_cont)
       (continuous_circleProcess_of_continuousOn hc'_cont) hcode
@@ -94,16 +94,16 @@ theorem coneCanonicalFactor_code_of (hcan : ConeCanonicalHalfBallStep)
   have hcl' := (hcl γ hγ0 hγ2 Ω P hC hcirc μ hcone)
   have hQc : AEMeasurable (fun ω => circleProcess (hcirc ω)) P := hQ.fst
   have hJraw : AEMeasurable (fun ω => ((circleCode D (circleProcess (hcirc ω))),
-      processCode (halfBallTime (μ ω)) (familyProcess (Λf ω) (halfBallTime (μ ω))))) P := by
+      processCodeTimed (halfBallTime (μ ω)) (familyProcess (Λf ω) (halfBallTime (μ ω))))) P := by
     refine AEMeasurable.prodMk ((measurable_circleCode D).comp_aemeasurable hQc) ?_
-    exact measurable_processCode.comp_aemeasurable (hTm.prodMk hQ.snd)
+    exact measurable_processCodeTimed.comp_aemeasurable (hTm.prodMk hQ.snd)
   obtain ⟨Jm, hJm, hJmae⟩ : ∃ Jm : Ω → (ℕ → ℝ) × (ℝ × (ℕ → ℕ → Bool)), Measurable Jm ∧
       (fun ω => ((circleCode D (circleProcess (hcirc ω))),
-        processCode (halfBallTime (μ ω)) (familyProcess (Λf ω) (halfBallTime (μ ω))))) =ᵐ[P] Jm :=
+        processCodeTimed (halfBallTime (μ ω)) (familyProcess (Λf ω) (halfBallTime (μ ω))))) =ᵐ[P] Jm :=
     ⟨hJraw.mk _, hJraw.measurable_mk, hJraw.ae_eq_mk⟩
   have hgood : ∀ᵐ ω ∂P, ConeRefGood γ hcirc μ Λf ω ∧
       Jm ω = ((circleCode D (circleProcess (hcirc ω))),
-        processCode (halfBallTime (μ ω)) (familyProcess (Λf ω) (halfBallTime (μ ω)))) ∧ extra ω := by
+        processCodeTimed (halfBallTime (μ ω)) (familyProcess (Λf ω) (halfBallTime (μ ω)))) ∧ extra ω := by
     have hL : ∀ᵐ ω ∂P, IsLQGLimit γ (hcirc ω) (μ ω) := hcone.2.2
     have hK : ∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2) (Ioi 0 ×ˢ univ) :=
       hcone.2.1.ae_continuousOn_circle
@@ -114,7 +114,7 @@ theorem coneCanonicalFactor_code_of (hcan : ConeCanonicalHalfBallStep)
   have hfull : P tᶜᶜ = 0 := by rw [compl_compl]; exact ht0
   have hgoodE0 : ∀ ω ∈ tᶜ, ConeRefGood γ hcirc μ Λf ω ∧
       Jm ω = ((circleCode D (circleProcess (hcirc ω))),
-        processCode (halfBallTime (μ ω)) (familyProcess (Λf ω) (halfBallTime (μ ω)))) ∧ extra ω := by
+        processCodeTimed (halfBallTime (μ ω)) (familyProcess (Λf ω) (halfBallTime (μ ω)))) ∧ extra ω := by
     intro ω hω
     by_contra hn
     exact hω (hNt hn)
@@ -134,7 +134,7 @@ theorem coneCanonicalFactor_code_of (hcan : ConeCanonicalHalfBallStep)
     have hpair := hJe.symm.trans hJω
     have hcode : circleCode D (circleProcess (hcirc ω)) = circleCode D (circleProcess c) :=
       congrArg Prod.fst hpair
-    have hY : processCode (halfBallTime (μ ω)) (familyProcess (Λf ω) (halfBallTime (μ ω))) =
+    have hY : processCodeTimed (halfBallTime (μ ω)) (familyProcess (Λf ω) (halfBallTime (μ ω))) =
         F (circleCode D (circleProcess c)) := congrArg Prod.snd hpair
     have hcpeq : circleProcess c = circleProcess (hcirc ω) :=
       eq_of_circleCode_eq hD (continuous_circleProcess_of_continuousOn hcc)

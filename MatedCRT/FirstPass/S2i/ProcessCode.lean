@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S2i.FamilyCode
 /-! # Measurable decoder and process code (FirstPass S2i, z2)
 
 The space-time process of a family stopped at `T` is coded by its bits at the dense pairs `(posTime i, centre k)`
-(`processCode`). This file proves that the decoder `decodeFamily` is jointly measurable in the code, that the process code
+(`processCodeTimed`). This file proves that the decoder `decodeFamily` is jointly measurable in the code, that the process code
 is a measurable function of the pair (horizon, process), and that the code of a stopped family is its process code
 (`codeFamily_eq_processCode`). It also proves the deterministic congruence of LQG limits under equality of the circle
 averages at positive radii (Duplantier-Sheffield, Berestycki-Powell). Used by the canonical factor
@@ -16,8 +16,8 @@ open MeasureTheory Filter Topology Set Metric HarmonicBalls
 open Classical in
 /-- The process code at horizon `T`: the bits of the space-time process `p` at the dense pairs
 `(posTime i, centre k)`, with the horizon `T` attached. For a family stopped at `T`,
-`processCode T (familyProcess Λ T) = codeFamily T Λ` (`codeFamily_eq_processCode`). -/
-noncomputable def processCode (T : ℝ) (p : ℝ × ℂ → Prop) : ℝ × (ℕ → ℕ → Bool) :=
+`processCodeTimed T (familyProcess Λ T) = codeFamily T Λ` (`codeFamily_eq_processCode`). -/
+noncomputable def processCodeTimed (T : ℝ) (p : ℝ × ℂ → Prop) : ℝ × (ℕ → ℕ → Bool) :=
   (T, fun i k => decide (p ((posTime i : ℝ), centre k)))
 
 /-- The bit `y.2 i k` is a measurable event of the code. -/
@@ -105,8 +105,8 @@ theorem measurable_decodeFamily_uncurry :
   measurableSet_setOfPred.1 measurableSet_decodeFamily_uncurry
 
 /-- The process code is jointly measurable in the horizon and the process. -/
-theorem measurable_processCode :
-    Measurable fun q : ℝ × (ℝ × ℂ → Prop) => processCode q.1 q.2 := by
+theorem measurable_processCodeTimed :
+    Measurable fun q : ℝ × (ℝ × ℂ → Prop) => processCodeTimed q.1 q.2 := by
   refine Measurable.prodMk measurable_fst ?_
   refine Measurable.of_eval fun i => Measurable.of_eval fun k => ?_
   have hp : Measurable fun q : ℝ × (ℝ × ℂ → Prop) => q.2 ((posTime i : ℝ), centre k) :=
@@ -118,8 +118,8 @@ theorem measurable_processCode :
 /-- The code of a family stopped at `T` is the process code of its space-time process (the dense pairs with
 `posTime i > 0` are exactly the pairs with `posTime i ∈ (0, T)` once `posTime i < T`). -/
 theorem codeFamily_eq_processCode (T : ℝ) (Λ : ℝ → Set ℂ) :
-    codeFamily T Λ = processCode T (familyProcess Λ T) := by
-  unfold codeFamily processCode
+    codeFamily T Λ = processCodeTimed T (familyProcess Λ T) := by
+  unfold codeFamily processCodeTimed
   congr 1
   funext i k
   apply decide_eq_decide.2

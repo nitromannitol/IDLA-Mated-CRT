@@ -231,7 +231,7 @@ theorem measurable_scodeG (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) 
 where `Λ^{(n)}_t` is the rescaling `R_n⁻¹ Γ^{(n)}_{t / b_n}` of the decoded canonical family at scale `n`, with the
 decoder `F` of the canonical factor. The decoded process `decodeFamily (F (scodeG n x))` is the canonical process of the
 rescaled profile. -/
-noncomputable def globalCode (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (S : Set (ℕ → ℝ))
+noncomputable def globalCodeFactor (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (S : Set (ℕ → ℝ))
     (F : (ℕ → ℝ) → ℝ × (ℕ → ℕ → Bool)) (x : ℕ → ℝ) : ℝ × ℂ → Prop :=
   fun q => 0 < q.1 ∧ ∃ n : ℕ, q.1 < ((n : ℝ) + 1) * (F (scodeG γ hD S n x)).1 ∧
     decodeFamily (F (scodeG γ hD S n x)) (((n : ℝ) + 1)⁻¹ * q.1,
@@ -240,7 +240,7 @@ noncomputable def globalCode (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange 
 theorem measurable_globalCode (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (S : Set (ℕ → ℝ))
     (F : (ℕ → ℝ) → ℝ × (ℕ → ℕ → Bool)) (hF : Measurable F) (hS : MeasurableSet S)
     (hcont : ∀ x ∈ S, ContinuousOn (profAlong γ hD x) (Ioi 0)) :
-    Measurable (globalCode γ hD S F) := by
+    Measurable (globalCodeFactor γ hD S F) := by
   have hR : ∀ n : ℕ, Measurable (radiusOn γ hD S ((n : ℝ) + 1)) :=
     fun n => measurable_radiusOn γ hD ((n : ℝ) + 1) S hS hcont
   have hsc : ∀ n : ℕ, Measurable (scodeG γ hD S n) := fun n =>
@@ -249,14 +249,14 @@ theorem measurable_globalCode (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange
     measurable_fst.comp (hF.comp (hsc n))
   have hRinv : ∀ n : ℕ, Measurable fun x : ℕ → ℝ => (((radiusOn γ hD S ((n : ℝ) + 1) x)⁻¹ : ℝ) : ℂ) :=
     fun n => Complex.measurable_ofReal.comp (hR n).inv
-  have hset : ∀ q : ℝ × ℂ, MeasurableSet {x : ℕ → ℝ | globalCode γ hD S F x q} := by
+  have hset : ∀ q : ℝ × ℂ, MeasurableSet {x : ℕ → ℝ | globalCodeFactor γ hD S F x q} := by
     intro q
-    have e : {x : ℕ → ℝ | globalCode γ hD S F x q} =
+    have e : {x : ℕ → ℝ | globalCodeFactor γ hD S F x q} =
         {_x : ℕ → ℝ | 0 < q.1} ∩ ⋃ n : ℕ, ({x : ℕ → ℝ | q.1 < ((n : ℝ) + 1) * (F (scodeG γ hD S n x)).1} ∩
           {x : ℕ → ℝ | decodeFamily (F (scodeG γ hD S n x)) (((n : ℝ) + 1)⁻¹ * q.1,
             (((radiusOn γ hD S ((n : ℝ) + 1) x)⁻¹ : ℝ) : ℂ) * q.2)}) := by
       ext x
-      simp only [globalCode, mem_ofPred_eq, mem_inter_iff, mem_iUnion]
+      simp only [globalCodeFactor, mem_ofPred_eq, mem_inter_iff, mem_iUnion]
     rw [e]
     refine (MeasurableSet.const _).inter (MeasurableSet.iUnion fun n => ?_)
     refine (measurableSet_lt measurable_const ((hΨ n).const_mul ((n : ℝ) + 1))).inter ?_
@@ -271,7 +271,7 @@ theorem measurable_globalCode (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange
 /-- **The glued identity (deterministic; Section 9, G5).** A global cone family `Λ` for `μ` has the process of the glued
 canonical families: if at each scale `n` the decoded canonical process of the code `x` is the space-time process of a
 cone family `Γ n` for the rescaled measure, stopped at `T n` with `T n = (F (scodeG n x)).1`, and the scales cover, then
-`globalFamilyProcess Λ = globalCode x`. -/
+`globalFamilyProcess Λ = globalCodeFactor x`. -/
 theorem globalFamilyProcess_eq_globalCode (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (S : Set (ℕ → ℝ))
     (F : (ℕ → ℝ) → ℝ × (ℕ → ℕ → Bool)) (x : ℕ → ℝ) {μ : Measure ℂ} {Λ : ℝ → Set ℂ}
     (hΛ : IsConeHarmonicBallFamily μ Λ) (R T : ℕ → ℝ) (Γ : ℕ → ℝ → Set ℂ)
@@ -281,7 +281,7 @@ theorem globalFamilyProcess_eq_globalCode (γ : ℝ) {D : ℕ → CirclePt} (hD 
     (hT : ∀ n : ℕ, (F (scodeG γ hD S n x)).1 = T n)
     (hdec : ∀ n : ℕ, decodeFamily (F (scodeG γ hD S n x)) = familyProcess (Γ n) (T n))
     (hcov : ∀ M : ℕ, ∃ n : ℕ, (M : ℝ) < ((n : ℝ) + 1) * T n) :
-    globalFamilyProcess Λ = globalCode γ hD S F x := by
+    globalFamilyProcess Λ = globalCodeFactor γ hD S F x := by
   have hfam' : ∀ n : ℕ, IsConeHarmonicBallFamilyOn μ (rescaledFamily (Γ n) (R n)⁻¹ ((n : ℝ) + 1)⁻¹)
       (((n : ℝ) + 1) * T n) := fun n =>
     (rescaledFamily_transfer_fp (hR n) (by positivity) (hfam n) (hst n)).1
@@ -543,7 +543,7 @@ theorem coneGlobalFamilyFactor_proved (hcan : ConeCanonicalHalfBallStep)
     global_reference_good γ hγ0 hγ2 hD hscale P hC hcirc μ hcone B hB F hF hcls hextra
   have hBssm : MeasurableSet (globalBss γ hD B Bs F) :=
     measurableSet_globalBss γ hD B Bs F hF hB hBs hcontS
-  refine ⟨fun p => globalCode γ hD Bs F (circleCode D p), (circleCode D) ⁻¹' globalBss γ hD B Bs F,
+  refine ⟨fun p => globalCodeFactor γ hD Bs F (circleCode D p), (circleCode D) ⁻¹' globalBss γ hD B Bs F,
     measurable_circleCode D hBssm, ?_, ?_⟩
   · intro c hcG hcc ν hν Λ' hΛ'
     have hcpc : Continuous (circleProcess c) := continuous_circleProcess_of_continuousOn hcc
@@ -615,7 +615,7 @@ theorem coneGlobalFamilyFactor_proved (hcan : ConeCanonicalHalfBallStep)
       intro M
       obtain ⟨n, hn⟩ := Set.mem_iUnion.mp (Set.mem_iInter.mp hxC M)
       exact ⟨n, by rw [← hT n]; exact hn⟩
-    show globalFamilyProcess Λ' = globalCode γ hD Bs F (circleCode D (circleProcess c))
+    show globalFamilyProcess Λ' = globalCodeFactor γ hD Bs F (circleCode D (circleProcess c))
     exact globalFamilyProcess_eq_globalCode γ hD Bs F (circleCode D (circleProcess c)) hΛ'
       (fun n => coneScaleRadius γ c ((n : ℝ) + 1)) (fun n => halfBallTime
         (rescaledMeasure (μ ω) (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1)))
