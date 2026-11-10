@@ -2860,15 +2860,16 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		with $a$ replaced by $b \in {\VGeps}(\partial B_{{(4/3)} \mathbf{r}_{z}}({z}))$ for ${z} \in \mathbf{Z}$. We in fact prove the following stronger statement: 
 		a simple random walk $X^{b, {\eps}}_t$ started at such $b$ hits
 		\[
-		\mathfrak{E} := {\VGeps}(B_{\mathbf{r}_{z/4}}(\eta(b))) \setminus A
+% CORRECTION [C22] (editorial, referee check chat 185): printed \mathbf{r}_{z/4} read as \mathbf{r}_{z}/4 (four places in this proof); a missing parenthesis in Step 3 and the $ placement in Step 4 fixed.
+		\mathfrak{E} := {\VGeps}(B_{\mathbf{r}_{z}/4}(\eta(b))) \setminus A
 		\]
-		before exiting ${\VGeps}(B_{\mathbf{r}_{z/4}}(\eta(b)))$ with conditional probability given $(h,\eta)$ bounded from below by a constant.
+		before exiting ${\VGeps}(B_{\mathbf{r}_{z}/4}(\eta(b)))$ with conditional probability given $(h,\eta)$ bounded from below by a constant.
 		See Figure \ref{fig:path-decomposition}.  
 		\medskip
 		
 		{\it Step 2: Random walk in a good annulus.} \\
 		Let $\xi_{\mathbf{r}_{z}}$ 
-		be the first time that $X^{b, {\eps}}_t$ hits ${\VGeps}(\partial B_{\mathbf{r}_{z/4}}(\eta(b)))$ and let 
+		be the first time that $X^{b, {\eps}}_t$ hits ${\VGeps}(\partial B_{\mathbf{r}_{z}/4}(\eta(b)))$ and let 
 		\begin{equation} \label{eq:visit-count}
 		V = \sum_{t=0}^{\xi_{\mathbf{r}_{z}}} 1 \{ X^{b, {\eps}}_t \in \mathfrak{E}\}  = \left( \text{number of visits of $\mathfrak{E}$ by $X^{b, {\eps}}$ before time $\xi_{\mathbf{r}_{z}}$} \right) .
 		\end{equation}
@@ -2897,7 +2898,7 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		&\geq \sum_{b' \in {\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) \cap \mathfrak{E}} \Gr{{\eps}}{B_{\mathbf{r}_{z}/4}(\eta(b))}(b, b') \quad \mbox{(where $\boldsymbol{c_0}$
 			is as in \eqref{eq:choice-of-constant-annulus})} \\
 % CORRECTION [C22] (2026-11-10, under the author's standing approval of IDLA corrections; text from ChatGPT chat 176): printed: Step 3 bounded |A cap V(B_{c_0 r_z}(eta(b)))| by the sparsity bound of a single radius-r ball, giving s_1 r^{2 beta^-}; this needs c_0 r_z <= r, which the radius selection does not give. Corrected: cover B_{c_0 r_z}(eta(b)) by at most (1+2c_0 r_z/r)^2 radius-r balls, giving 10 s_1 r_z^{beta^-} eps^{-1} (r^2 <= delta <= r_z, beta^- > 1), and take s_1 < c/10.
-		&\geq \left( \inf_{b' \in {\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))} \Gr{{\eps}}{B_{\mathbf{r}_{z}/4}(\eta(b))}(b, b') \right) (|{\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))| - |A \cap {\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))| ) .
+		&\geq \left( \inf_{b' \in {\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))} \Gr{{\eps}}{B_{\mathbf{r}_{z}/4}(\eta(b))}(b, b') \right) (|{\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))| - |A \cap {\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))| ) .
 		\end{align*}
 		To bound the last term, cover $B_{\boldsymbol{c_0}\mathbf{r}_{z}}(\eta(b))$ by at most
 		\[
@@ -2974,9 +2975,9 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		\begin{align*}
 		&\E[ V^2 | h ,\eta] \\
 		&\leq \E[ \xi_{\mathbf{r}_{z}}^2 | h ,\eta] \\
-		&\leq C {\eps}^{-2} \left(\sup_{v \in B_{\mathbf{r}_{z/4}}(\eta(b))} \int_{B_{\mathbf{r}_{z/4}+{\eps}^{\alpha}}(\eta(b))} \left( \log \frac{1}{|u-v|} + 1  \right) d \mu_h(u) \right)^2  \quad \mbox{(by Lemma \ref{lemma:exit-time-upper-bound})} \\
+		&\leq C {\eps}^{-2} \left(\sup_{v \in B_{\mathbf{r}_{z}/4}(\eta(b))} \int_{B_{\mathbf{r}_{z}/4+{\eps}^{\alpha}}(\eta(b))} \left( \log \frac{1}{|u-v|} + 1  \right) d \mu_h(u) \right)^2  \quad \mbox{(by Lemma \ref{lemma:exit-time-upper-bound})} \\
 		&\leq C {\eps}^{-2} \left(\sup_{v \in \A_{\mathbf{r}_{z}, 2\mathbf{r}_{z}}(z)} \int_{\A_{\mathbf{r}_{z},2 \mathbf{r}_{z}}(z)} \left( \log \frac{1}{|u-v|} + 1  \right) d \mu_h(u) \right)^2 \\
-		&\qquad \mbox{(since $r_{z} \geq \delta \geq 10 {\eps}^{\alpha}$ and $b \in {\VGeps}(\partial B_{(4/3) \mathbf{r}_z}(z)$)} .
+		&\qquad \mbox{(since $r_{z} \geq \delta \geq 10 {\eps}^{\alpha}$ and $b \in {\VGeps}(\partial B_{(4/3) \mathbf{r}_z}(z))$} .
 		\end{align*}
 		This shows \eqref{eq:upper-bound-on-V}. 	\end{proof}
 	\begin{figure}

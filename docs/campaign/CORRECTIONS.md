@@ -90,6 +90,7 @@ Independent referee check (notes/fp-gaps/CHATGPT-idla-C20-C21-referee.md): [C20]
 
 ## [C22] Lemma 6.8, Step 3: sparsity estimate at the radius r_z (applied 2026-11-10 under the author's standing approval)
 Printed: Step 3 bounded |A cap V^eps(B_{c_0 r_z}(eta(b)))| by the sparsity assumption for a single radius-r ball, producing s_1 r^{2 beta^-}; this needs c_0 r_z <= r, which the radius selection r, r_z in [delta, sqrt delta] does not give (counterexample in notes/fp-gaps/CHATGPT-idla-6-8-perstate.md section 4). Corrected: cover B_{c_0 r_z}(eta(b)) by at most (1 + 2 c_0 r_z / r)^2 radius-r balls, so the count is at most 10 s_1 r_z^{beta^-} eps^{-1} (since r^2 <= delta <= r_z and beta^- > 1), and take s_1 < c/10; the rest of Step 3 is unchanged. The statement of Lemma 6.8 is unchanged (s_1 depends only on (rho, gamma)). Text: notes/fp-gaps/CHATGPT-idla-6-8-hRr.md (ChatGPT chat 176).
+Independent referee check (notes/fp-gaps/CHATGPT-idla-C22-referee.md, chat 185): [C22] correct (the constant 10 uses c_0 < 1/5, eq:choice-of-constant-annulus; s_1 does not depend on s_0). Editorial in the same proof: \mathbf{r}_{z/4} read as \mathbf{r}_z/4, a missing parenthesis, $ placement in Step 4.
 
 ## Readings (not corrections of the paper; line numbers of the corrected draft)
 
