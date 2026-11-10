@@ -4,6 +4,7 @@ import MatedCRT.FirstPass.S3S4c
 import MatedCRT.FirstPass.S3f
 import MatedCRT.FirstPass.S3f.FiniteDomainRepresentation
 import MatedCRT.FirstPass.Closure.SLEPackage
+import MatedCRT.FirstPass.SLERef.Certified
 
 /-!
 # Closed results, Section 3 (task fp-Closure-counted-results, fp-S3f-3-7-corrected-and-closure, fp-Closure-round2; worker z1)
@@ -26,11 +27,9 @@ open MeasureTheory
 namespace MatedCRT
 
 /-- Lemma 3.1 (discrete potential tightness), corrected form, for a model with normalized law `ν`. -/
-theorem closed_3_1 {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode) (hνE : SLEReferenceExtendedInput ν)
-    (hνF : SLEFrozenReferenceInput ν) (hLaw : HasNormalizedSLELaw 𝒮 ν) (h27 : VolumeGrowthStmt) :
-    DiscretePotentialTightnessCorrectedStmt 𝒮 :=
-  firstPass_3_1_corrected (𝒮 := 𝒮) (slePkg_mepsScaling hνE hLaw) h27 (slePkg_exitTimeUpper hνE.1 hLaw)
-    (slePkg_holder hνF hLaw)
+theorem closed_3_1 {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode) (hC : CertifiedReferenceModel ν 𝒮)
+    (h27 : VolumeGrowthStmt) : DiscretePotentialTightnessCorrectedStmt 𝒮 :=
+  firstPass_3_1_corrected (𝒮 := 𝒮) hC.mepsScaling h27 hC.bg20Prop51 hC.frozenDiscreteHolderContinuityCorrected
 
 /-- Lemma 3.4 (integral convergence of the Green function), for a model with normalized law `ν`. -/
 theorem closed_3_4 {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode) (hνE : SLEReferenceExtendedInput ν)
