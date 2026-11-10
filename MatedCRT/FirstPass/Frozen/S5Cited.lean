@@ -35,9 +35,13 @@ Used by: `volumeGrowthStmt_of_berestyckiGwynne` (`MatedCRT/Proofs/Sec3/ConeBallM
 def FrozenBerestyckiGwynneConeBallMass : Prop :=
   BerestyckiGwynneConeBallMassStmt
 
-/-- **FIRST-PASS FROZEN (EXTERNAL, cited); PENDING TRUTH CHECK.** Lemma 2.15 of the IDLA paper
-(`lemma:greens-function-log-bound`, source line 857; arXiv:2211.04891), which is Berestycki–Gwynne, arXiv:2003.10320,
-Lemma 5.6. For each `ζ ∈ (0,1)`, with polynomially high probability as `ε → 0`,
+/-- **FIRST-PASS FROZEN; DERIVED CONSEQUENCE, not verbatim BG20.** Lemma 2.15 of the IDLA paper
+(`lemma:greens-function-log-bound`, source line 857; arXiv:2211.04891). The IDLA form kills the walk on the interior
+vertices `V^ε(B_ρ) \ V^ε(∂B_ρ)`. It is a derived consequence of `FrozenBG20GreenCrudeCanonical 𝒮`
+(`MatedCRT/FirstPass/Frozen/S5BG56.lean:29`, Berestycki–Gwynne, arXiv:2003.10320, Lemma 5.6, equation (5.20), which kills
+on all of `V^ε(B_ρ)`), by domain monotonicity through `MatedCRT.greenFunctionCrudeBound_of_canonical`
+(`MatedCRT/FirstPass/S5u.lean:61`). Truth: TRUE (operator 09:10; `notes/fp-gaps/CHATGPT-idla-new-frozen-GMS331-BG56.md`).
+For each `ζ ∈ (0,1)`, with polynomially high probability as `ε → 0`,
 `sup_{a,b ∈ V^ε(B_ρ)} G^ε_{B_ρ}(a,b) ≤ ε^{-ζ}`. Statement: `MatedCRT/Draft/Section2.lean:201`.
 Used by: `hG15` of `firstPass_5_1` (`MatedCRT/FirstPass/S5q.lean:114`) and of `closed_5_1`
 (`MatedCRT/FirstPass/Closure/Prop51.lean`). -/
