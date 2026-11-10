@@ -75,8 +75,10 @@ noncomputable def quenchedDiscreteOccupation {Ω : Type} [MeasurableSpace Ω] (S
     if ∀ j ≤ k, q j ∈ interiorCellVertices ε (S.η ω) D then g (vertexPoint ε (S.η ω) (q k)) else 0
 
 /-- FIRST-PASS FROZEN. Restated `LBMGreenOccupationStep` (quenched expected occupation, median-rescaled LBM, normalization
-`c₀ = 2 / m₀`). Source: Garban–Rhodes–Vargas, *Liouville Brownian motion*, arXiv:1301.2876v4, Theorem 2.7(1) (partial:
-the cone extension uses weighted clocks, see notes/fp-gaps/CHATGPT-3-4-restatements.md). Used by: firstPass_3_4 (to be
+`c₀ = 2 / m₀`). Source: Garban–Rhodes–Vargas, *Liouville Brownian motion*, arXiv:1301.2876v4: the Revuz (occupation) identity for LBM
+(locator of the exact clause pending). The cone restriction and the normalization `c₀ = 2 / m₀` follow from the LQG
+coordinate-change and deterministic rescaling lemmas; the Lean type is therefore not literally GRV Theorem 2.7(1)
+(see notes/fp-gaps/CHATGPT-3-4-restatements.md). Used by: firstPass_3_4 (to be
 re-checked against this form; the consumer still takes the RETIRED `FrozenLBMGreenOccupation`). -/
 def FrozenLBMGreenOccupationRescaled (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
