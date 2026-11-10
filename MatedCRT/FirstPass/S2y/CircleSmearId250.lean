@@ -150,4 +150,33 @@ lemma integral_sq_circle_le [IsProbabilityMeasure P] (h : IsWholePlaneGFF P hC h
     exact hx.le
   linarith [hLpt x hxz, hB]
 
+/-- **Joint measurability of the circle averages** (step 6 of z8's R3 route). For `ε > 0` there is a jointly measurable
+version `g` of `(ω, z) ↦ hcirc ω ε z`, continuous in `z` for every `ω`, equal to it almost surely: the event of continuity
+of the circle average process (`IsWholePlaneGFF.ae_continuousOn_circle`) is enlarged to a measurable null set `S`, and
+`g = 0` off the complement of `S`. -/
+lemma exists_measurable_circle [IsProbabilityMeasure P] (h : IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε) :
+    ∃ g : Ω → ℂ → ℝ, Measurable (fun p : Ω × ℂ => g p.1 p.2) ∧ (∀ ω, Continuous fun z => g ω z) ∧
+      ∀ᵐ ω ∂P, ∀ z, g ω z = hcirc ω ε z := by
+  obtain ⟨S, hsub, hSm, hS0⟩ := exists_measurable_superset_of_null (ae_iff.1 h.ae_continuousOn_circle)
+  have hcont_all : ∀ ω, Continuous fun z => Sᶜ.indicator (fun ω' => hcirc ω' ε z) ω := by
+    intro ω
+    by_cases hω : ω ∈ Sᶜ
+    · simp only [Set.indicator_of_mem hω]
+      have hc : ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2) (Ioi 0 ×ˢ univ) := by
+        by_contra hn
+        exact hω (hsub hn)
+      exact hc.comp_continuous (f := fun z : ℂ => ((ε, z) : ℝ × ℂ))
+        (continuous_const.prodMk continuous_id) (fun z => ⟨hε, mem_univ _⟩)
+    · simp only [Set.indicator_of_notMem hω]
+      exact continuous_const
+  refine ⟨fun ω z => Sᶜ.indicator (fun ω' => hcirc ω' ε z) ω, ?_, hcont_all, ?_⟩
+  · have hm : Measurable (Function.uncurry fun (z : ℂ) (ω : Ω) => Sᶜ.indicator (fun ω' => hcirc ω' ε z) ω) :=
+      measurable_uncurry_of_continuous_of_measurable (fun ω => hcont_all ω)
+        (fun z => (h.measurable_circle ε z hε).indicator hSm.compl)
+    exact hm.comp measurable_swap
+  · filter_upwards [measure_eq_zero_iff_ae_notMem.1 hS0] with ω hω
+    intro z
+    show Sᶜ.indicator (fun ω' => hcirc ω' ε z) ω = hcirc ω ε z
+    rw [Set.indicator_of_mem (show ω ∈ Sᶜ from hω)]
+
 end MatedCRT.LQGMeasure
