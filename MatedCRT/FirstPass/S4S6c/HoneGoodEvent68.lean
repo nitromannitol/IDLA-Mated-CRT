@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.S4S6c.ShellWindowRf68
 import MatedCRT.FirstPass.S4S6c.HoneInputsDirect
+import MatedCRT.FirstPass.S4S6c.ShellHde68
 
 /-!
 # Discharges of the good-event and scale binders of `shellOneTest_of_direct` (fp-S4S6c-hone-good-event, z10)
@@ -235,9 +236,11 @@ theorem hsc_of_volC_threshold (K : Constants68 γ ρc) {ε : ℝ} {η : ℝ → 
   hsc_of_volC K (hεc_of_threshold K hε hrε hα hεs) hRr hVolC
 
 /-- **The good-event discharge `hgood` on the shells `k ≤ n`.** The binder `hgood` of `shellOneTest_of_direct` ranges over
-all `k`; for a shell `k` the walk does not reach, the shell centre is the default junk value and need not be eligible.
-This is the variant on the shells `k ≤ n` (the range of `ShellOneTestAt`, ShellHoneInst68.lean:41), the minimal
-binder change proposed to the operator. -/
+all `k`. The development gives eligibility of the shell centres (`hEl`) only for `k ≤ n`
+(`shell_fin_of_path`, ShellHde68.lean:215; the scale hypothesis `hNs`). On the prefix set the shell exit is finite for
+every `k` (`T < τU` with `τU` in `ℕ∞` forces `T ≠ ⊤`), so the walk does reach each shell, but the Lean development does
+not show that its centre is eligible for `k > n`. This is the variant on the shells `k ≤ n`, the range of
+`ShellOneTestAt` (ShellHoneInst68.lean:41): the minimal binder change proposed to the operator. -/
 theorem hgood_of_selector_le (K : Constants68 γ ρc) {ε : ℝ} {η : ℝ → ℂ} {Kset : Set ℂ} {r s d a ρ C_good : ℝ}
     {Rf : ℂ → ℝ} {A : Set ℤ} {τU : (ℕ → ℤ) → ℕ∞} {μ : Measure ℂ} {Z : ℕ → (ℕ → ℤ) → ℂ} (n : ℕ)
     (hsel : ∀ z ∈ shortEligible ρ d a, IsGoodAnnulusEvent μ K.c0 C_good (Rf z) z)
@@ -250,9 +253,52 @@ theorem hgood_of_selector_le (K : Constants68 γ ρc) {ε : ℝ} {η : ℝ → �
   rw [hZ k ω]
   exact hsel _ (hEl k hk ω hω)
 
+/-- **Eligibility of the shell centres along one walk, on the shells `k ≤ n`.** From `shell_fin_of_path`
+(ShellHde68.lean:215) at `Kset = fillCells ε η Θ` and `s = d ^ a`: a walk whose consecutive cells meet, started on the
+frontier of the `r/2`-thickening of `fillCells ε η Θ`, with finite killed exit, has every shell centre `k ≤ n` in
+`shortEligible ρ d a`. The radius range `hRf` is the one of `windowRfT_bounds` (ShellWindowRf68.lean:65). -/
+theorem shellCentre_eligible_of_walk {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (hε : 0 < ε)
+    {Θ F0 : Finset ℤ} {ρ r d a s : ℝ} {Rf : ℂ → ℝ} {n : ℕ} (hr : 0 < r) (hrρ : r ≤ ρ / 4) (hd : 0 < d)
+    (hds : d ≤ d ^ a) (hs4 : d ^ a ≤ r / 4000) (hNs : 20 * ((n + 1 : ℕ) : ℝ) * d ^ a ≤ r / 20) (hs : s = d ^ a)
+    (hmesh : CellDiamLe ε η (d / 100) Set.univ)
+    (hF0 : (↑F0 : Set ℤ) = cellVertices ε η (Metric.ball (0 : ℂ) ρ))
+    (h0 : (0 : ℂ) ∈ fillCells ε η ↑Θ) (hKb : fillCells ε η ↑Θ ⊆ Metric.ball (0 : ℂ) (ρ / 2))
+    (hRf : ∀ z ∈ shortEligible ρ d a, d ≤ Rf z ∧ Rf z ≤ d ^ a)
+    {ω : ℕ → ℤ} (hadj : ∀ j : ℕ, (cell ε η (ω j) ∩ cell ε η (ω (j + 1))).Nonempty)
+    (hst : (cell ε η (ω 0) ∩ frontier (Metric.thickening (r / 2) (fillCells ε η ↑Θ))).Nonempty)
+    (hτ : vExitTime (Lemma68Admissible.killed ε η Θ F0 r) ω ≠ ⊤) :
+    ∀ k ≤ n, shellCentre ε η (fillCells ε η ↑Θ) r s d k ω ∈ shortEligible ρ d a := by
+  subst hs
+  exact fun k hk => (Lemma68ShellHde68.shell_fin_of_path hη hε hr hrρ hd hds hs4 hNs hmesh hF0 h0 hKb hRf
+    hadj hst hτ k hk).2
+
+/-- **`hEl` on the shells `k ≤ n` from the walk-level path inputs.** The binder `hEl` of `hgood_of_selector_le` follows from
+`shellCentre_eligible_of_walk` once every prefix path `ω` satisfies the walk inputs `hPath`: consecutive cells meet, the
+start cell meets the frontier of the `r/2`-thickening, and the killed exit is finite. Each of the three is an almost sure
+property of the simple random walk, not a pointwise property of the prefix set (see report): `hPath` is the named input. -/
+theorem hEl_le_of_walkPath {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (hε : 0 < ε)
+    {Θ F0 : Finset ℤ} {ρ r d a s : ℝ} {Rf : ℂ → ℝ} {A : Set ℤ} {τU : (ℕ → ℤ) → ℕ∞} {n : ℕ}
+    (hr : 0 < r) (hrρ : r ≤ ρ / 4) (hd : 0 < d)
+    (hds : d ≤ d ^ a) (hs4 : d ^ a ≤ r / 4000) (hNs : 20 * ((n + 1 : ℕ) : ℝ) * d ^ a ≤ r / 20) (hs : s = d ^ a)
+    (hmesh : CellDiamLe ε η (d / 100) Set.univ)
+    (hF0 : (↑F0 : Set ℤ) = cellVertices ε η (Metric.ball (0 : ℂ) ρ))
+    (h0 : (0 : ℂ) ∈ fillCells ε η ↑Θ) (hKb : fillCells ε η ↑Θ ⊆ Metric.ball (0 : ℂ) (ρ / 2))
+    (hRf : ∀ z ∈ shortEligible ρ d a, d ≤ Rf z ∧ Rf z ≤ d ^ a)
+    (hPath : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η (fillCells ε η ↑Θ) r s d Rf k) τU,
+      (∀ j : ℕ, (cell ε η (ω j) ∩ cell ε η (ω (j + 1))).Nonempty) ∧
+      (cell ε η (ω 0) ∩ frontier (Metric.thickening (r / 2) (fillCells ε η ↑Θ))).Nonempty ∧
+      vExitTime (Lemma68Admissible.killed ε η Θ F0 r) ω ≠ ⊤) :
+    ∀ k ≤ n, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η (fillCells ε η ↑Θ) r s d Rf k) τU,
+      shellCentre ε η (fillCells ε η ↑Θ) r s d k ω ∈ shortEligible ρ d a := by
+  intro k hk ω hω
+  obtain ⟨hadj, hst, hτ⟩ := hPath k ω hω
+  exact shellCentre_eligible_of_walk hη hε hr hrρ hd hds hs4 hNs hs hmesh hF0 h0 hKb hRf hadj hst hτ k hk
+
 end Lemma68HoneGoodEvent
 end MatedCRT
 
+#print axioms MatedCRT.Lemma68HoneGoodEvent.shellCentre_eligible_of_walk
+#print axioms MatedCRT.Lemma68HoneGoodEvent.hEl_le_of_walkPath
 #print axioms MatedCRT.Lemma68HoneGoodEvent.hεα_of_radius
 #print axioms MatedCRT.Lemma68HoneGoodEvent.rpow_le_of_threshold
 #print axioms MatedCRT.Lemma68HoneGoodEvent.hεc_of_threshold
