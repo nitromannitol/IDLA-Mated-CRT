@@ -232,6 +232,68 @@ theorem shellHde68_full_pw {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : Mate
   filter_upwards [h1, htest hadm] with x ha hb
   exact ⟨fun k hk => ⟨ha.1 k hk, hb k hk⟩, ha.2⟩
 
+/-- **The sparsity-parameter form of `shellHde_pw68` (fp-S4S6c-s1, z1).** The guard `FullAdmAt` is taken at the
+exponent `s1` in place of `sparsityS1 γ`; the proof is that of `shellHde_pw68`, which uses `s1` only through `FullAdmAt`. -/
+theorem shellHde_pw68_s1 {γ : ℝ} (s1 : ℝ) {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    {ε ρ s₀ ζ r : ℝ} (hε : 0 < ε) (hs₀ : 0 < s₀) (hζ : 0 < ζ) (hζ1 : ζ < 1 / 2) (hr : 0 < r)
+    (hrz : r ≤ countThreshold ζ) (hrρ : r ≤ ρ / 4) (i : Lemma68Config.Config68) {ω : Ω}
+    {Rf : ℂ → ℝ} {Elig : ℂ → Prop}
+    (hη : Continuous (S.η ω))
+    (hmap : ∀ j k : ℤ, S.mult ε ω j k ≠ 0 → (cell ε (S.η ω) j ∩ cell ε (S.η ω) k).Nonempty)
+    (hkill : ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a), vExitTime (killed ε (S.η ω) i.Θ i.F0 r) x ≠ ⊤)
+    (hR : ∀ w, Elig w → dyadicD r ≤ Rf w ∧ Rf w ≤ dyadicD r ^ shortExp ζ)
+    (hElig : ∀ w, w ∈ shortEligible ρ (dyadicD r) (shortExp ζ) → Elig w)
+    (hmesh : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) ρ))
+    (hstart : Lemma68Config.FullAdmAt (s1) S ρ s₀ γ ε ω r i →
+      (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty) :
+    Lemma68Config.FullAdmAt (s1) S ρ s₀ γ ε ω r i →
+      ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),
+        (∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
+          shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf k x ≠ ⊤) ∧
+        (∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
+          Elig (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x)) := by
+  -- deterministic parameter facts (as in shellHde_ae68)
+  have hr1 : r ≤ 1 := hrz.trans (countThreshold_le_one hζ)
+  have hd : 0 < dyadicD r := dyadicD_pos r
+  have hd1 : dyadicD r ≤ 1 := dyadicD_le_one r
+  have hd2 : dyadicD r < 2 * r ^ 2 := dyadicD_lt_two_mul_sq hr hr1
+  have ha1 : shortExp ζ ≤ 1 := by unfold shortExp; linarith
+  have hs4 : dyadicD r ^ shortExp ζ ≤ r / 4000 := shell_size_le hζ hr hrz hd hd2
+  have hds : dyadicD r ≤ dyadicD r ^ shortExp ζ := by
+    have h1 : dyadicD r ^ (1 : ℝ) ≤ dyadicD r ^ shortExp ζ :=
+      Real.rpow_le_rpow_of_exponent_ge hd hd1 ha1
+    rw [Real.rpow_one] at h1
+    exact h1
+  have h400 : 400 * dyadicD r ^ shortExp ζ ≤ r := by
+    have hs : 0 < dyadicD r ^ shortExp ζ := Real.rpow_pos_of_pos hd _
+    linarith
+  have hc1 : 1 ≤ shellCount r (dyadicD r ^ shortExp ζ) := by
+    apply Nat.le_floor
+    rw [Nat.cast_one, le_div_iff₀ (by linarith)]
+    linarith
+  have hfl : (shellCount r (dyadicD r ^ shortExp ζ) : ℝ) * (400 * dyadicD r ^ shortExp ζ) ≤ r := by
+    have h := Nat.floor_le (show 0 ≤ r / (400 * dyadicD r ^ shortExp ζ) by
+      have hs : 0 < dyadicD r ^ shortExp ζ := Real.rpow_pos_of_pos hd _
+      positivity)
+    exact (le_div_iff₀ (by linarith)).1 h
+  have hNs : 20 * ((shellCount r (dyadicD r ^ shortExp ζ) - 1 + 1 : ℕ) : ℝ) * dyadicD r ^ shortExp ζ
+      ≤ r / 20 := by
+    rw [Nat.sub_add_cancel hc1]
+    nlinarith [hfl]
+  intro hadm
+  have hstA := hstart hadm
+  unfold Lemma68Config.FullAdmAt Lemma68Config.ConfigOK at hadm
+  obtain ⟨⟨hF0eq, hcl, hball⟩, -⟩ := hadm
+  have h0K : (0 : ℂ) ∈ fillCells ε (S.η ω) ↑i.Θ := hball (Metric.mem_ball_self hs₀)
+  have hKb : fillCells ε (S.η ω) ↑i.Θ ⊆ Metric.ball (0 : ℂ) (ρ / 2) := fun y hy => hcl (subset_closure hy)
+  have hRS : ∀ w ∈ shortEligible ρ (dyadicD r) (shortExp ζ),
+      dyadicD r ≤ Rf w ∧ Rf w ≤ dyadicD r ^ shortExp ζ := fun w hw => hR w (hElig w hw)
+  filter_upwards [srwLaw_ae_start (S.mult ε ω) i.a,
+    Lemma68ShellPathAe.ae_cell_adjacent (S.mult ε ω) i.a hε hmap, hkill] with x hx0 hadj hτ
+  have hpath := shell_fin_of_path_loc (ε := ε) (R := Rf) (n := shellCount r (dyadicD r ^ shortExp ζ) - 1)
+    hη hε hr hrρ hd hds hs4 hNs hmesh hF0eq h0K hKb hRS hadj (by rw [hx0]; exact hstA) hτ
+  exact ⟨fun k hk => (hpath k hk).1, fun k hk => hElig _ (hpath k hk).2⟩
+
 end Lemma68ShellHdePw68
 end MatedCRT
 
@@ -239,3 +301,4 @@ end MatedCRT
 #print axioms MatedCRT.Lemma68ShellHdePw68.shell_fin_of_path_loc
 #print axioms MatedCRT.Lemma68ShellHdePw68.shellHde_pw68
 #print axioms MatedCRT.Lemma68ShellHdePw68.shellHde68_full_pw
+#print axioms MatedCRT.Lemma68ShellHdePw68.shellHde_pw68_s1
