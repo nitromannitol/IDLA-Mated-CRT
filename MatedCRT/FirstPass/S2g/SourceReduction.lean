@@ -19,11 +19,12 @@ Proved here, deterministic or Draft-level:
 * `radiusThreeQuartersData_of_raw`, `leastSupersolution_eq_zero_of_sphere`: the radius-3/4 data at one time;
 * `monotoneOn_regularizedCluster_of_monotone_cluster`: monotonicity of the regularized clusters;
 * `ae_pathwise_part_of_draft`: the locally finite, monotonicity and radius-3/4 clauses almost surely, from the Draft
-  statements, with `RadiusThreeQuartersBoundaryNull` as an explicit hypothesis.
+  statements, with the radius-3/4 frontier-nullness `HalfBallBoundaryNull` as an explicit hypothesis.
 
-NOT derived here (NEW, see the report): `RadiusThreeQuartersBoundaryNull` (radius 3/4 boundary-nullness of the raw clusters
-for every `t > 0`; the Draft `ClusterBoundaryMeasureZeroStmt` is radius 1 with closure in `B_1`), the Hausdorff continuity
-on `(0, T + ε)` (clause 4), the identification of the family on `(0, T)` (clauses 7-8), and the mass clause 6. -/
+Not hypotheses here: `ae_conePathwiseHalfBallInputs_of_draft` (below) proves `HalfBallBoundaryNull` from the radius-1 Draft
+statement `ClusterBoundaryMeasureZeroStmt` (`frontier_null_of_radius_one`), and all clauses of `ConePathwiseHalfBallInputs`
+(the Hausdorff continuity, clause 4; the family identification, clauses 7-8; the mass clause 6), so the earlier N1-N3 items
+are moot (operator 01:40 UTC). -/
 
 open MeasureTheory Set Filter Topology Metric HarmonicBalls
 
