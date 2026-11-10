@@ -1,6 +1,7 @@
 import Mathlib
 import MatedCRT.FirstPass.S6r.ShellPath
 import MatedCRT.Defs.RandomWalk
+import MatedCRT.Proofs.Infra.RandomWalk
 
 /-!
 # Lemma 6.8 shell inequalities, almost-sure form on the simple random walk (`ShellPathAe`)
@@ -29,7 +30,7 @@ theorem shell_ineqs_ae {ε : ℝ} {η : ℝ → ℂ} {Θ F0 : Finset ℤ} {r s d
     (hR : ∀ w, Elig w → d ≤ R w ∧ R w ≤ s) (hF0 : ∀ v : ℤ, dd ε η Θ v < r → v ∈ F0)
     (hmesh : CellDiamLe ε η h Set.univ) (hNs : 20 * ((n + 1 : ℕ) : ℝ) * s ≤ r / 20)
     (hstart : (cell ε η a ∩ frontier (Metric.thickening (r / 2) (fillCells ε η ↑Θ))).Nonempty)
-    (hae : ∀ᵐ x ∂(srwLaw mm a), (∀ j, x (j + 1) = x j + 1 ∨ x (j + 1) = x j - 1) ∧ x 0 = a ∧
+    (hae : ∀ᵐ x ∂(srwLaw mm a), (∀ j, x (j + 1) = x j + 1 ∨ x (j + 1) = x j - 1) ∧
       vExitTime (killed ε η Θ F0 r) x ≠ ⊤ ∧
       (∀ k ≤ n, shellExit ε η (fillCells ε η ↑Θ) r s d R k x ≠ ⊤ ∧
         testEnd ε η (fillCells ε η ↑Θ) r s d R k x ≠ ⊤) ∧
@@ -51,8 +52,8 @@ theorem shell_ineqs_ae {ε : ℝ} {η : ℝ → ℂ} {Θ F0 : Finset ℤ} {r s d
         testEnd ε η (fillCells ε η ↑Θ) r s d R j x ≤ shellExit ε η (fillCells ε η ↑Θ) r s d R (j + 1) x) ∧
       shellExit ε η (fillCells ε η ↑Θ) r s d R n x < vExitTime (killed ε η Θ F0 r) x ∧
       testEnd ε η (fillCells ε η ↑Θ) r s d R n x ≤ vExitTime (killed ε η Θ F0 r) x) :=
-    hae.mono fun x hx => by
-      obtain ⟨hnn, hx0, hτ, hfin, hzE⟩ := hx
+    ((srwLaw_ae_start mm a).and hae).mono fun x hx => by
+      obtain ⟨hx0, hnn, hτ, hfin, hzE⟩ := hx
       have hst : (cell ε η (x 0) ∩ frontier (Metric.thickening (r / 2) (fillCells ε η ↑Θ))).Nonempty := by
         rw [hx0]
         exact hstart
