@@ -1,6 +1,7 @@
 import MatedCRT.FirstPass.S3i.QuenchedBounds
 import MatedCRT.FirstPass.S3i.LensBEClosed
 import MatedCRT.FirstPass.S3i.LensStep
+import MatedCRT.FirstPass.S3i.ExitAlmostSure
 
 /-!
 # Plan Lemma 7 with the corrected exit input (fp-S3i-H7-corrected, worker z12; operator ruling chat 232)
@@ -229,10 +230,18 @@ theorem quenchedBoundsOnGoodStmt_of_exit
   intro Ω _ S ρ₀ ρ₁ b ν A r ε z y ω hε hb hν hA hr hρ hmpos hscale houter hgood
   exact quenchedBoundsOnGood_fp36_of_exit hexit hε hb hν hA hr hρ hmpos hscale houter hgood
 
+/-! ## The unconditional consumer: the exit input is the z10 theorem `srwLaw_vExitTime_lt_top_fp36` -/
+
+/-- **`QuenchedBoundsOnGoodStmt` with no binder.** The almost-sure exit input is `srwLaw_vExitTime_lt_top_fp36`
+(`S3i/ExitAlmostSure.lean`, z10, almost-sure exit from a finite exit set, Lemma 1 conjunct 1 as corrected). -/
+theorem quenchedBoundsOnGoodStmt_closed : QuenchedBoundsOnGoodStmt :=
+  quenchedBoundsOnGoodStmt_of_exit srwLaw_vExitTime_lt_top_fp36
+
 #print axioms MatedCRT.FirstPass36.quenchedStart_null_of_exit_fp36
 #print axioms MatedCRT.FirstPass36.farExit_pathwise_step_fp36
 #print axioms MatedCRT.FirstPass36.quenchedBoundsOnGood_fp36_of_exit
 #print axioms MatedCRT.FirstPass36.quenchedBoundsOnGoodStmt_of_exit
+#print axioms MatedCRT.FirstPass36.quenchedBoundsOnGoodStmt_closed
 
 end FirstPass36
 end MatedCRT
