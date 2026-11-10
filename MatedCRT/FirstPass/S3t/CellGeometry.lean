@@ -1,5 +1,7 @@
 import Mathlib
 import MatedCRT.Defs.Map
+import MatedCRT.FirstPass.S3t.VanishingMesh
+import MatedCRT.FirstPass.S5c.CellFirstHit
 
 /-!
 # Internal cell geometry for the truncated quenched laws (Steps 9a-9d, fp-S3t, owner z1)
@@ -133,5 +135,79 @@ lemma sub_le_dist_center_of_near_frontier {z p w : ℂ} {r d : ℝ} (hr : r ≠ 
   have h := dist_triangle w p z
   rw [dist_comm w p] at h
   linarith
+
+/-- A proper curve visits each point at bounded-below times (the preimage of a point is compact). This is
+`bddBelow_preimage_of_tendsto_cocompact` of `FirstPass/S3t.lean`, restated here because that file imports this one. -/
+theorem cellGeom_bddBelow_preimage {η : ℝ → ℂ} (hp : Tendsto η (cocompact ℝ) (cocompact ℂ)) (x : ℂ) :
+    BddBelow {s : ℝ | η s = x} := by
+  have h1 : ({x} : Set ℂ)ᶜ ∈ cocompact ℂ := isCompact_singleton.compl_mem_cocompact
+  obtain ⟨K, hK, hKs⟩ := mem_cocompact.1 (hp h1)
+  refine hK.bddBelow.mono fun s hs => ?_
+  by_contra hsK
+  exact (hKs hsK : η s ∉ ({x} : Set ℂ)) (Set.mem_singleton_iff.2 hs)
+
+/-- **Step 9c, deterministic form (truncated-laws Step 9c, Riemann-sum radius relation).** Let `η` be continuous,
+surjective and proper, `ε > 0`, and let the mesh bound hold on the cells meeting the inner ball `B_{(1+ρ)/2}(0)`
+(`MeshGood`). If `y ∈ B_r(z)`, `B_r(z) ⊆ B_ρ(0)`, `ρ < 1`, and `dist y z + ε^α < r`, then the vertex `a^ε_y` of `y` is an
+interior cell vertex of the disk `B_r(z)`, where `α > 0` is the mesh exponent. Terminology: interior cell vertices
+`V^ε(D) \ V^ε(∂D)` (Armitage-Gardiner, potential theory on `D = ball z r`). -/
+theorem vertexOf_mem_interiorCellVertices_of_mesh {η : ℝ → ℂ} {ε ρ α : ℝ} {z y : ℂ} {r : ℝ}
+    (hη : Continuous η) (hsurj : Function.Surjective η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ))
+    (hε : 0 < ε) (hball : ball z r ⊆ ball 0 ρ) (hρ1 : ρ < 1) (hy : y ∈ ball z r)
+    (hmesh : ∀ k : ℤ, (cell ε η k ∩ ball 0 ((1 + ρ) / 2)).Nonempty → diam (cell ε η k) ≤ ε ^ α)
+    (hmarg : dist y z + ε ^ α < r) :
+    vertexOf ε η y ∈ interiorCellVertices ε η (ball z r) := by
+  have hycell : y ∈ cell ε η (vertexOf ε η y) :=
+    MatedCRT.S5c.mem_cell_vertexOf_of_first_hit hε hsurj (cellGeom_bddBelow_preimage hp) y
+  have hdiam : diam (cell ε η (vertexOf ε η y)) ≤ ε ^ α := by
+    apply hmesh
+    refine ⟨y, hycell, ?_⟩
+    exact Metric.ball_subset_ball (by linarith : ρ ≤ (1 + ρ) / 2) (hball hy)
+  exact vertexOf_mem_interiorCellVertices hη hycell hdiam hmarg
+
+/-- **Step 9c, corrected good-event form** (`notes/fp-gaps/CHATGPT-216-idla-hdet-truncated-gaps-PRO.md`, section 2).
+For a fixed point `y` of the disk `ball z r`, eventually as `ε ↓ 0`, almost surely on the mesh-good event `MeshGood`
+together with the almost-sure properties of `η ω` used by the walk (continuous, surjective and proper; these are the
+first three conjuncts of `WalkEnvAe S ω`), the vertex `vertexOf ε (S.η ω) y` is an interior cell vertex of
+`ball z r`. The quantifiers are reversed: the mesh estimate holds in probability, so the conclusion is stated on the
+good event. The exponent `2/(2+γ)^2 - ζ` is positive by `hζγ`. -/
+theorem eventually_ae_vertexOf_mem_interiorCellVertices {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    {γ ζ ρ : ℝ} {z y : ℂ} {r : ℝ} (hζγ : ζ < 2 / (2 + γ) ^ 2) (hball : ball z r ⊆ ball 0 ρ) (hρ1 : ρ < 1)
+    (hy : y ∈ ball z r) :
+    ∀ᶠ ε in 𝓝[>] (0 : ℝ), ∀ᵐ ω ∂S.P,
+      (MeshGood S γ ζ ρ ε ω ∧
+          (Continuous (S.η ω) ∧ Function.Surjective (S.η ω) ∧
+            Tendsto (S.η ω) (cocompact ℝ) (cocompact ℂ))) →
+        vertexOf ε (S.η ω) y ∈ interiorCellVertices ε (S.η ω) (ball z r) := by
+  have hα : 0 < 2 / (2 + γ) ^ 2 - ζ := sub_pos.2 hζγ
+  have hyr : dist y z < r := Metric.mem_ball.1 hy
+  have htend : Tendsto (fun ε : ℝ => ε ^ (2 / (2 + γ) ^ 2 - ζ)) (𝓝[>] (0 : ℝ)) (𝓝 0) := by
+    have hc : ContinuousAt (fun ε : ℝ => ε ^ (2 / (2 + γ) ^ 2 - ζ)) 0 :=
+      Real.continuousAt_rpow_const 0 _ (Or.inr hα.le)
+    have h0 : (0 : ℝ) ^ (2 / (2 + γ) ^ 2 - ζ) = 0 := Real.zero_rpow hα.ne'
+    have h1 := hc.tendsto
+    rw [h0] at h1
+    exact h1.mono_left nhdsWithin_le_nhds
+  have hsmall : ∀ᶠ ε in 𝓝[>] (0 : ℝ), ε ^ (2 / (2 + γ) ^ 2 - ζ) < r - dist y z :=
+    htend.eventually_lt_const (by linarith)
+  filter_upwards [hsmall, eventually_mem_nhdsWithin] with ε hε hεpos
+  refine Eventually.of_forall fun ω => ?_
+  rintro ⟨hMG, hη, hsurj, hp⟩
+  exact vertexOf_mem_interiorCellVertices_of_mesh hη hsurj hp (Set.mem_Ioi.1 hεpos) hball hρ1 hy hMG
+    (by linarith)
+
+/-- **Step 9c, unconditioned form.** If the almost-sure walk properties hold, then eventually as `ε ↓ 0` the mesh-good
+event alone implies that the vertex of `y` is an interior cell vertex of `ball z r` (almost surely). This is the exact
+form of `notes/fp-gaps/CHATGPT-216-idla-hdet-truncated-gaps-PRO.md`, section 2, given the a.s. event `hWae`. -/
+theorem eventually_ae_vertexOf_mem_interiorCellVertices_of_ae {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    {γ ζ ρ : ℝ} {z y : ℂ} {r : ℝ} (hζγ : ζ < 2 / (2 + γ) ^ 2) (hball : ball z r ⊆ ball 0 ρ) (hρ1 : ρ < 1)
+    (hy : y ∈ ball z r)
+    (hWae : ∀ᵐ ω ∂S.P, Continuous (S.η ω) ∧ Function.Surjective (S.η ω) ∧
+      Tendsto (S.η ω) (cocompact ℝ) (cocompact ℂ)) :
+    ∀ᶠ ε in 𝓝[>] (0 : ℝ), ∀ᵐ ω ∂S.P,
+      MeshGood S γ ζ ρ ε ω → vertexOf ε (S.η ω) y ∈ interiorCellVertices ε (S.η ω) (ball z r) := by
+  filter_upwards [eventually_ae_vertexOf_mem_interiorCellVertices S hζγ hball hρ1 hy] with ε hε
+  filter_upwards [hε, hWae] with ω h1 h2 hMG
+  exact h1 ⟨hMG, h2⟩
 
 end MatedCRT.TruncatedLaws
