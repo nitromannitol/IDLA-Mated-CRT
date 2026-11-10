@@ -48,16 +48,20 @@ theorem cell_meets_ball_of_frontier {ε : ℝ} {η : ℝ → ℂ} {a : ℤ} {K :
     closure_minimal (hT.trans Metric.ball_subset_closedBall) Metric.isClosed_closedBall
   exact ⟨p, hpc, Metric.closedBall_subset_ball (by linarith) (hcl (frontier_subset_closure hpf))⟩
 
-/-- **`hx1_fixedOmega` with the ball mesh `CellDiamLe ε (η ω) (dyadicD r / 100) (ball 0 ρmesh)`.** Same conclusion
+/-- **`hx1_fixedOmega_loc_s1`: `hx1_fixedOmega_loc` with a general sparsity coefficient `s1` (variant, fp-S4S6c-s1-generic, q3).**
+The guard `FullAdmAt s1` replaces `FullAdmAt (sparsityS1 γ)`. The proof uses only `ConfigOK` (of `hadm.1`) and
+`hstart_of_fullAdmAt`, which are generic in `s1`; no hypothesis on `s1` is needed. The original `hx1_fixedOmega_loc` is
+the specialisation `s1 := sparsityS1 γ` with the same statement. Mesh: the ball form
+`CellDiamLe ε (η ω) (dyadicD r / 100) (ball 0 ρmesh)` of `hx1_fixedOmega`. Same conclusion
 and same hypotheses as `hx1_fixedOmega`, except that the global mesh `univ` is replaced by the ball `ball 0 ρmesh`
 and the mesh gap `dyadicD r / 100 ≤ ρmesh - ρ` is added (named `hgapMesh`, since `hgap : ρ ≤ ρmom` is kept). -/
-theorem hx1_fixedOmega_loc {γ ω₀ ρ CG ζ α CE C ε s₀ r ρmom ρmesh : ℝ} {Ω : Type} [MeasurableSpace Ω]
-    (S : MatedCRTEnv Ω) {ω : Ω} (hreg : RegularEnvAt68 S γ ω₀ ρ CG ζ α CE ε ω)
+theorem hx1_fixedOmega_loc_s1 {γ ω₀ ρ CG ζ α CE C ε s₀ r ρmom ρmesh : ℝ} {Ω : Type} [MeasurableSpace Ω]
+    (s1 : ℝ) (S : MatedCRTEnv Ω) {ω : Ω} (hreg : RegularEnvAt68 S γ ω₀ ρ CG ζ α CE ε ω)
     (hρ1 : ρ < 1) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2) (hε : 0 < ε) (hs₀ : 0 < s₀) (hr0 : 0 < r)
     (hrρ : r ≤ ρ / 4) (hrle : r ≤ countThreshold ζ) (hgap : ρ ≤ ρmom)
     (hgapMesh : dyadicD r / 100 ≤ ρmesh - ρ)
     (hmω : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) ρmesh)) (i : Lemma68Config.Config68) :
-    Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
+    Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
       ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
         x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
           ‖vertexPoint ε (S.η ω) (x (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ)
@@ -169,6 +173,23 @@ theorem hx1_fixedOmega_loc {γ ω₀ ρ CG ζ α CE C ε s₀ r ρmom ρmesh : �
       (winRf S ρ ζ C r ω) k x).toNat)
     hd hds hRz.2 hgap hz hmeshLoc hbx'
   exact mem_ball_zero_iff.mp hv
+
+/-- **`hx1_fixedOmega_loc` (the original statement, `FullAdmAt (sparsityS1 γ)`).** The proof is `hx1_fixedOmega_loc_s1`
+at `s1 := sparsityS1 γ`; the statement and the conclusion are those of the committed declaration (0b56690). -/
+theorem hx1_fixedOmega_loc {γ ω₀ ρ CG ζ α CE C ε s₀ r ρmom ρmesh : ℝ} {Ω : Type} [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) {ω : Ω} (hreg : RegularEnvAt68 S γ ω₀ ρ CG ζ α CE ε ω)
+    (hρ1 : ρ < 1) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2) (hε : 0 < ε) (hs₀ : 0 < s₀) (hr0 : 0 < r)
+    (hrρ : r ≤ ρ / 4) (hrle : r ≤ countThreshold ζ) (hgap : ρ ≤ ρmom)
+    (hgapMesh : dyadicD r / 100 ≤ ρmesh - ρ)
+    (hmω : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) ρmesh)) (i : Lemma68Config.Config68) :
+    Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+        x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
+          ‖vertexPoint ε (S.η ω) (x (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ)
+            (dyadicD r) (winRf S ρ ζ C r ω) k x).toNat)‖
+            < ρmom - winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+              (dyadicD r ^ shortExp ζ) (dyadicD r) k x) / 4 :=
+  hx1_fixedOmega_loc_s1 (Lemma68Config.sparsityS1 γ) S hreg hρ1 hζ0 hζ1 hε hs₀ hr0 hrρ hrle hgap hgapMesh hmω i
 
 end HoneX1Loc68
 end MatedCRT

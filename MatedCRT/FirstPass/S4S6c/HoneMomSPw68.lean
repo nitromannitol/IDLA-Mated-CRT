@@ -228,5 +228,46 @@ theorem hx1_fixedOmega {γ ω₀ ρ CG ζ α CE C ε s₀ r ρmom : ℝ} {Ω : T
     hd hds hRz.2 hgap hz hmeshLoc hbx'
   exact mem_ball_zero_iff.mp hv
 
+/-- **`hmomS_pointwise` with a general sparsity coefficient `s1` (variant, fp-S4S6c-s1-generic, q3).** The guard
+`FullAdmAt s1` replaces `FullAdmAt (sparsityS1 γ)`. The proof discards the guard (`intro _`), so no property of `s1`
+is used: no hypothesis `0 < s1` or `s1 < 1` is needed. The original `hmomS_pointwise` is unchanged. -/
+theorem hmomS_pointwise_s1 {γ ω₀ ρ CG ζ α CE ε C s₀ r : ℝ} (s1 : ℝ) {Ω : Type} [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) {ω : Ω} (hω : ω ∈ Lemma68Guard10.meshEvent S γ ω₀ ρ CG ζ α CE ε)
+    (i : Lemma68Config.Config68) :
+    Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+        x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
+          ∀ D : Set ℂ, MeasurableSet D → D ⊆ ball 0 ρ → ENNReal.ofReal (ε ^ α) ≤ S.μ ω D →
+            ∀ a ∈ cellVertices ε (S.η ω) D, ∀ N : ℕ,
+              exitTimeMoment (S.mult ε ω) (interiorCellVertices ε (S.η ω) D) a N ≤
+                ENNReal.ofReal (N.factorial * CE ^ N * ε ^ (-(N : ℝ))) *
+                  (⨆ z' ∈ D, ∫⁻ x in Metric.thickening (ε ^ α) D,
+                    ENNReal.ofReal (Real.log (1 / ‖z' - x‖) + 1) ∂(S.μ ω)) ^ N := by
+  intro _
+  have hexit : ω ∈ exitTimeEvent68 S α ρ CE ε := hω.2
+  have hcl : S3cBridge.ExitMomentClause (S.mult ε ω) (S.μ ω) (S.η ω) ε α CE ρ := hexit.1
+  intro k hk
+  exact HoneMomS239.Shell.hmomS_rhoMom hcl (i.A : Set ℤ) (shellCount r (dyadicD r ^ shortExp ζ) - 1)
+    (fillCells ε (S.η ω) (i.Θ : Set ℤ)) (winRf S ρ ζ C r ω) r (dyadicD r ^ shortExp ζ) (dyadicD r) i.a k hk
+
+/-- **`hmomS_pointwise_rhoMom` with a general sparsity coefficient `s1` (variant, fp-S4S6c-s1-generic, q3).** The guard
+`FullAdmAt s1` replaces `FullAdmAt (sparsityS1 γ)`. The proof discards the guard (`intro _`), so no property of `s1`
+is used: no hypothesis `0 < s1` or `s1 < 1` is needed. The original `hmomS_pointwise_rhoMom` is unchanged. -/
+theorem hmomS_pointwise_rhoMom_s1 {γ ρ s₀ α CE ε ρmom C ζ r : ℝ} (s1 : ℝ) {Ω : Type} [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) {ω : Ω} (hω : ω ∈ exitTimeEvent68 S α ρmom CE ε) (i : Lemma68Config.Config68) :
+    Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+        x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
+          ∀ D : Set ℂ, MeasurableSet D → D ⊆ ball 0 ρmom → ENNReal.ofReal (ε ^ α) ≤ S.μ ω D →
+            ∀ a ∈ cellVertices ε (S.η ω) D, ∀ N : ℕ,
+              exitTimeMoment (S.mult ε ω) (interiorCellVertices ε (S.η ω) D) a N ≤
+                ENNReal.ofReal (N.factorial * CE ^ N * ε ^ (-(N : ℝ))) *
+                  (⨆ z' ∈ D, ∫⁻ x in Metric.thickening (ε ^ α) D,
+                    ENNReal.ofReal (Real.log (1 / ‖z' - x‖) + 1) ∂(S.μ ω)) ^ N := by
+  intro _ k hk
+  have hcl : S3cBridge.ExitMomentClause (S.mult ε ω) (S.μ ω) (S.η ω) ε α CE ρmom := hω.1
+  exact HoneMomS239.Shell.hmomS_rhoMom hcl (i.A : Set ℤ) (shellCount r (dyadicD r ^ shortExp ζ) - 1)
+    (fillCells ε (S.η ω) (i.Θ : Set ℤ)) (winRf S ρ ζ C r ω) r (dyadicD r ^ shortExp ζ) (dyadicD r) i.a k hk
+
 end HoneMomSPw68
 end MatedCRT
