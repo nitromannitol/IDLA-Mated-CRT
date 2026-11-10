@@ -137,7 +137,7 @@ theorem iDLALowerBoundStopped_of_greenSteps (𝒮 : SpaceFillingSLEModel) (h52 :
       hZO.trans (stoppedIDLACluster_mono_domain hUA p.2 ⌊t / ε⌋₊)
     have hgeom := innerNbhd_subset_fillCells_cellVertices hε hsurj δ (Λ p.1 t)
     have hcov : innerNbhd δ (Λ p.1 t) ⊆ fillCells ε (S.η p.1) (stoppedTargetSet S Λ δ t ε p.1) :=
-      hgeom.trans (IDLALowerBound.fillCells_mono' fun a ha => Or.inl ha)
+      hgeom.trans (IDLALowerBound.fillCells_mono' fun _ ha => ha)
     exact hpnot (hcov.trans (IDLALowerBound.fillCells_mono' hZA))
   -- conclusion: the stopped event has probability at most the relaxed one plus the exceptional set
   have hfin := hB.add hX0

@@ -113,7 +113,7 @@ theorem stoppedFirstGreenStep_of_inputs (𝒮 : SpaceFillingSLEModel) (hin : Sto
   filter_upwards [eventually_mem_nhdsWithin] with ε hε0
   intro ω hωF hωN _ hωE
   obtain ⟨hmono, hPI⟩ := not_not.mp hωN
-  obtain ⟨hsymm, hlf, hcons, hB, hBfin, hcl, h0⟩ := hPI ε hε0
+  obtain ⟨hsymm, hlf, hcons, hB, hBfin, hcl, -⟩ := hPI ε hε0
   obtain ⟨h1, h2, h3⟩ := hωE
   have hε : (0 : ℝ) < ε := hε0
   have hT : t < clusterExitTime (Λ ω) ρ := hωF
@@ -121,11 +121,8 @@ theorem stoppedFirstGreenStep_of_inputs (𝒮 : SpaceFillingSLEModel) (hin : Sto
   -- the targets lie in the killing set: their cells meet `Λ_t`, and the floor makes them cluster vertices
   have hclMem : ∀ a ∈ stoppedTargetSet S Λ δ t ε ω, a ∈ stoppedKillSet S Λ ρ t ε ω := by
     intro a ha
-    have hΛa : a ∈ cellVertices ε (S.η ω) (Λ ω t) := by
-      rcases ha with ha | ha
-      · exact cellVertices_mono_set (fun y hy => hy.1) ha
-      · rw [Set.mem_singleton_iff] at ha
-        rw [ha]; exact h0
+    have hΛa : a ∈ cellVertices ε (S.η ω) (Λ ω t) :=
+      cellVertices_mono_set (fun _ hy => hy.1) (show a ∈ cellVertices ε (S.η ω) (innerNbhd δ (Λ ω t)) from ha)
     have hWa : a ∈ cellVertices ε (S.η ω) (ball 0 ρ) := cellVertices_mono_set hΛball hΛa
     have hpos : 0 < stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t a :=
       lt_of_lt_of_le (div_pos (hcpos ω) hε) (h1 a ha)

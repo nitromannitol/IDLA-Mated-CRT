@@ -38,7 +38,7 @@ open Green steps: the first one is `stoppedFirstGreenStep_of_steps` from `stoppe
 `hcell`, `hlap` ([C21]); the second is `hG2`; the cone-family inputs are `hfam`, `h24`. -/
 theorem firstPass_5_1_of_steps (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
     (hfam : ConeFamilyAEMeasurableStep)
-    (h24 : ConeHarmonicBallsUpToFixedTimeStmt) (hfc : StoppedFloorCeilingStep 𝒮)
+    (h24 : ConeHarmonicBallsUpToFixedTimeStmt) (hfl : StoppedFloorStep 𝒮) (hmax : StoppedMaxOutsideStep 𝒮)
     (h218 : ExitTimeUpperBoundStmt 𝒮) (h217 : BoundedExitTimeRVStmt) (hμ : LQGMeasureFieldMeasurableStep 𝒮)
     (hcell : AdjacentCellsMeetAeStep 𝒮) (hlap : DiscreteLaplacianBoundCorrectedStmt 𝒮)
     (hG2 : StoppedSecondGreenStep 𝒮) :
@@ -46,7 +46,7 @@ theorem firstPass_5_1_of_steps (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrowth
   S5d.iDLALowerBound_of_stoppedStep 𝒮
     (iDLALowerBoundStopped_of_greenSteps 𝒮 (generalIDLALowerBoundRelaxed_of_volumeGrowth_cellSize 𝒮 h27 h28)
       hfam h24
-      (stoppedFirstGreenStep_of_steps 𝒮 (stoppedFirstGreenInputsStep_of_floorCeiling 𝒮 hfc h218 h217 hμ hcell hlap)
+      (stoppedFirstGreenStep_of_steps 𝒮 (stoppedFirstGreenInputsStep_of_floorCeiling 𝒮 hfl hmax h218 h217 hμ hcell hlap)
         hcell hlap) hG2)
 
 end MatedCRT

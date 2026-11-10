@@ -7,7 +7,7 @@ import MatedCRT.FirstPass.S5d.StoppedMono
 
 Route of the direct repair of the stopped clause (referee notes/fp-gaps/CHATGPT-5-1-gaps-referee.md section 5):
 the walkers are killed on leaving the strict discrete cluster `Λ^ε_t` intersected with `V^ε(Λ_t)` (the killing set
-`I_ε`), and the relaxed Lemma 5.2 (`GeneralIDLALowerBoundRelaxedStep`) is applied with targets `Z_ε = V^ε(B⁻_δ(Λ_t)) ∪ {0}`.
+`I_ε`), and the relaxed Lemma 5.2 (`GeneralIDLALowerBoundRelaxedStep`) is applied with targets `Z_ε = V^ε(B⁻_δ(Λ_t))` (no origin, [C21]).
 The two Green inequalities that Lemma 5.2 needs on `Z_ε` are the two NEW probabilistic steps `StoppedFirstGreenStep`
 (first Green inequality (5.5) with `Z_ε ⊆ I_ε`) and `StoppedSecondGreenStep` (second Green inequality (5.7)). They are
 open: their written arguments are referee sections 5.1-5.3 (which use referee sections 1-3) and are not formalized here.
@@ -29,12 +29,12 @@ noncomputable def stoppedKillSet {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTE
   {a | t < clusterExitTime (Λ ω) ρ ∧ a ∈ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t ∧
     a ∈ cellVertices ε (S.η ω) (Λ ω t)}
 
-/-- The target set `Z^ε_t = V^ε(B⁻_δ(Λ_t)) ∪ {0}` of the stopped clause (referee section 5, `Z_ε = V^ε(K_δ) ∪ {0}`).
-Here `K_δ = B⁻_δ(Λ_t) = innerNbhd δ (Λ_t)` (Defs/Notation.lean:30), the reading under which the referee's distance
-statements in section 5 hold; the referee does not define `K_δ` explicitly. -/
+/-- The target set `Z^ε_t = O^ε_1 = V^ε(B⁻_δ(Λ_t))` of the stopped clause (corrected tex 2350-2392, [C21]: `O_1^ε = V^ε(B⁻_δ(Λ_t))`).
+Here `B⁻_δ(Λ_t) = innerNbhd δ (Λ_t)` (Defs/Notation.lean:30). The origin is NOT a target (round 15): the relaxed Lemma 5.2
+(`GeneralIDLALowerBoundRelaxedStep`) needs no origin in its target set, and the floor of [C21] is stated on `V^ε(B⁻_δ(Λ_t))` only. -/
 def stoppedTargetSet {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (Λ : Ω → ℝ → Set ℂ) (δ t ε : ℝ)
     (ω : Ω) : Set ℤ :=
-  cellVertices ε (S.η ω) (innerNbhd δ (Λ ω t)) ∪ {0}
+  cellVertices ε (S.η ω) (innerNbhd δ (Λ ω t))
 
 /-- The first Green event of the stopped clause at scale `ε` (the hypothesis of the first Green inequality of
 `GeneralIDLALowerBoundRelaxedStep` on the targets `Z^ε_t`): `Z^ε_t ⊆ I^ε_t` and `(1 + s) ∑_{b ∈ I} G_I(b,a) ≤ (t/ε) G_I(0,a)`
