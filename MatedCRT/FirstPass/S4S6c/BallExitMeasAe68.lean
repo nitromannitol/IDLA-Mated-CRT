@@ -115,8 +115,81 @@ theorem hmom_pair_ae {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m)
   simp only [ENat.toNat_natCast, hfun] at h2
   exact ⟨h1, h2⟩
 
+
+set_option linter.unusedVariables false in
+/-- **Finite-domain exit moments under a finite stopped-range localization (one index `k`; chat 246 Q1, item 4).**
+Same conclusion as `hmom_pair_ae`, with the pointwise-finite exit domination `hTdom` replaced by `hstopFin`: the stopped
+vertex `w (T k w).toNat` lies a.s. in a finite set `F`. The domination `T k w ≤ vExitTime D w` is false as typed for
+shell times (chat 246 Q1, item 1), so it is not assumed. Only `hRbd` (the a.s. radius bound) is used besides `hstopFin`.
+The cells of the test balls are finite on `F` (`MatedCRT.S5c.cellVertices_ball_finite`), so `G` is finite. -/
+theorem hmom_pair_stopFin_ae {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m)
+    (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0)
+    {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (hp : Filter.Tendsto η (Filter.cocompact ℝ) (Filter.cocompact ℂ))
+    (hε : 0 < ε) (a : ℤ)
+    {T : ℕ → (ℕ → ℤ) → ℕ∞} (hT : ∀ k, IsStoppingTime coordFiltration (T k))
+    {R : ℕ → (ℕ → ℤ) → ℝ} (hR : ∀ k, Measurable[(hT k).measurableSpace] (R k))
+    (k : ℕ)
+    (hstopFin : ∃ F : Set ℤ, F.Finite ∧ ∀ᵐ w ∂srwLaw m a, T k w < ⊤ → w (T k w).toNat ∈ F)
+    (hRbd : ∃ s : ℝ, ∀ᵐ w ∂srwLaw m a, T k w < ⊤ → R k w ≤ s) :
+    Integrable ({w : ℕ → ℤ | T k w < ⊤}.indicator (fun w =>
+        ((ballExitSigma ε η (walkParam ε η (R k) (T k) w) (postTimePath (fun n w => w n) (T k) w) : ℕ) : ℝ)))
+      (srwLaw m a) ∧
+    Integrable ({w : ℕ → ℤ | T k w < ⊤}.indicator (fun w =>
+        ((ballExitSigma ε η (walkParam ε η (R k) (T k) w) (postTimePath (fun n w => w n) (T k) w) : ℕ) : ℝ) ^ 2))
+      (srwLaw m a) := by
+  have hmeasBall : Measurable fun w : ℕ → ℤ =>
+      ballExitSigma ε η (walkParam ε η (R k) (T k) w) (postTimePath (fun n w => w n) (T k) w) :=
+    BallExitMeas68.measurable_ballExitSigma_walkParam ε η hη hε (hT k) (hR k)
+  obtain ⟨F, hF, hstop⟩ := hstopFin
+  obtain ⟨s, hs⟩ := hRbd
+  set G : Set ℤ := ⋃ v ∈ F,
+    cellVertices ε η (Metric.ball (vertexPoint ε η v) (s / 4)) with hGdef
+  have hGfin : G.Finite := hF.biUnion fun v _ => MatedCRT.S5c.cellVertices_ball_finite hη hp hε _ _
+  have hcont : ∀ᵐ w ∂srwLaw m a, T k w < ⊤ →
+      interiorCellVertices ε η (Metric.ball (vertexPoint ε η (w (T k w).toNat)) (R k w / 4)) ⊆ G := by
+    filter_upwards [hstop, hs] with w hw hsw hT'
+    intro y hy
+    have hc := hw hT'
+    have hmono : ∀ z, z ∈ cellVertices ε η (Metric.ball (vertexPoint ε η (w (T k w).toNat)) (R k w / 4)) →
+        z ∈ cellVertices ε η (Metric.ball (vertexPoint ε η (w (T k w).toNat)) (s / 4)) := by
+      intro z hz
+      exact hz.mono (Set.inter_subset_inter_right _
+        (Metric.ball_subset_ball (by linarith [hsw hT'])))
+    exact Set.mem_biUnion hc (hmono y hy.1)
+  obtain ⟨Nf, hfun⟩ : ∃ Nf : (ℕ → ℤ) → ℕ,
+      Nf = fun w => ballExitSigma ε η (walkParam ε η (R k) (T k) w) (postTimePath (fun n w => w n) (T k) w) :=
+    ⟨_, rfl⟩
+  have hZ : ∀ᵐ w ∂srwLaw m a, T k w < ⊤ →
+      ((Nf w : ℕ) : ℕ∞) ≤ vExitTime G (postTimePath (fun n w => w n) (T k) w) := by
+    filter_upwards [hcont] with w hw hT'
+    rw [hfun]
+    exact (ENat.natCast_toNat_le_self _).trans (vExitTime_mono_set (hw hT') _)
+  have hZm : Measurable fun w : ℕ → ℤ => (((Nf w : ℕ) : ℕ∞)).toNat := by
+    simp only [ENat.toNat_natCast, hfun]
+    exact hmeasBall
+  obtain ⟨N, hN⟩ := FiniteExitMoment68.exists_nat_bound_expectedExitTime hlf hcons hGfin
+  obtain ⟨L, hL0, hL⟩ := FiniteExitMoment68.exists_block_le_half hN
+  have hTw := isWalkRandomTime_of_isStoppingTime (hT k)
+  have h2 := integrable_postTime_pow (Z := fun w : ℕ → ℤ => ((Nf w : ℕ) : ℕ∞)) hTw hL0 hL hZm hZ 2
+    (by norm_num) (FiniteExitMoment68.tsum_block_sq_ne_top L)
+  have hfin1 : ∑' j : ℕ, (((j + 1) * L : ℕ) : ℝ≥0∞) ^ 1 * (1 / 2 : ℝ≥0∞) ^ j ≠ ⊤ :=
+    ne_top_of_le_ne_top (FiniteExitMoment68.tsum_block_sq_ne_top L)
+      (ENNReal.tsum_le_tsum fun j => mul_le_mul_of_nonneg_right
+        (by
+          rw [pow_one, pow_two]
+          exact le_mul_of_one_le_right (by exact zero_le)
+            (Nat.one_le_cast.2 (Nat.mul_pos (Nat.succ_pos j) hL0)))
+        (by exact zero_le))
+  have h1 := integrable_postTime_pow (Z := fun w : ℕ → ℤ => ((Nf w : ℕ) : ℕ∞)) hTw hL0 hL hZm hZ 1
+    (by norm_num) hfin1
+  simp only [ENat.toNat_natCast, hfun, pow_one] at h1
+  simp only [ENat.toNat_natCast, hfun] at h2
+  exact ⟨h1, h2⟩
+
+
 end BallExitMeasAe68
 end MatedCRT
 
 #print axioms MatedCRT.BallExitMeasAe68.ae_center_mem_ae
 #print axioms MatedCRT.BallExitMeasAe68.hmom_pair_ae
+#print axioms MatedCRT.BallExitMeasAe68.hmom_pair_stopFin_ae
