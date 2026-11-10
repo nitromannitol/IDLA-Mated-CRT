@@ -69,8 +69,72 @@ theorem srw_exit_eq_noEscape (m : ℤ → ℤ → ℕ) (a : ℤ) (U A : Set ℤ)
       (srwLaw m a).real (noEscapeSet (fun n (x : ℕ → ℤ) => x n) A (vExitTime U)) := by
   rw [exitEvent_eq_noEscapeSet]
 
-/-- Walk-level chain bound: `prefix_bad_bound` for the simple random walk law, with the exit event of
-`U` in place of the no-escape event. -/
+section Generic
+
+variable {Ω : Type*} [mΩ : MeasurableSpace Ω]
+
+omit mΩ in
+/-- Prefix events and test events, restricted form (the form the pathwise shell chain delivers): the
+shell-order hypotheses `hTT`, `hLT` are needed only where `T (j+1) < τ_U`, since `P_{j+1} ⊆ {T_{j+1} < τ_U}`. -/
+theorem prefixSet_succ_subset_of_lt {E : Type*} {X : ℕ → Ω → E} {A : Set E} {Tj Tj1 Lj : Ω → ℕ∞}
+    {τU : Ω → ℕ∞} (h1 : ∀ ω, Tj1 ω < τU ω → Tj ω ≤ Tj1 ω) (h2 : ∀ ω, Tj1 ω < τU ω → Lj ω ≤ Tj1 ω) :
+    prefixSet X A Tj1 τU ⊆ prefixSet X A Tj τU ∩ testFailSet X A Tj Lj := by
+  intro ω hω
+  simp only [prefixSet, testFailSet, Set.mem_inter_iff, Set.mem_ofPred_eq] at hω ⊢
+  obtain ⟨hlt, hpre⟩ := hω
+  refine ⟨⟨lt_of_le_of_lt (h1 ω hlt) hlt, fun n hn => hpre n (lt_of_lt_of_le hn (h1 ω hlt))⟩,
+    fun n _ hnL => hpre n (lt_of_lt_of_le hnL (h2 ω hlt))⟩
+
+/-- `prefix_bad_bound` in restricted form: `hcross`, `hend` are needed only on `{τ_U ≠ ⊤}`, and the null
+set `{τ_U = ⊤}` is discharged by `hnull`. The bound is the same `μ(B) ≤ (1 - q)^(n + 1)`. -/
+theorem prefix_bad_bound_of_lt {E : Type*} [MeasurableSpace E] {μ : Measure Ω} [IsProbabilityMeasure μ]
+    (𝓕 : Filtration ℕ mΩ) {X : ℕ → Ω → E} (hX : ∀ n, Measurable[𝓕 n] (X n)) {A : Set E}
+    (hA : MeasurableSet A) {T L : ℕ → Ω → ℕ∞} {τU : Ω → ℕ∞}
+    (hT : ∀ k, IsStoppingTime 𝓕 (T k)) (hL : ∀ k, IsStoppingTime 𝓕 (L k))
+    (hτ : IsStoppingTime 𝓕 τU) {q : ℝ} (hq1 : q ≤ 1) (n : ℕ)
+    (hone : ∀ k ≤ n, ∀ᵐ ω ∂μ, ω ∈ prefixSet X A (T k) τU →
+      μ[(testFailSet X A (T k) (L k)).indicator (fun _ => (1 : ℝ)) | (hT k).measurableSpace] ω
+        ≤ 1 - q)
+    (hTT : ∀ j < n, ∀ ω, T (j + 1) ω < τU ω → T j ω ≤ T (j + 1) ω)
+    (hLT : ∀ j < n, ∀ ω, T (j + 1) ω < τU ω → L j ω ≤ T (j + 1) ω)
+    (hcross : ∀ ω ∈ noEscapeSet X A τU, τU ω ≠ ⊤ → T n ω < τU ω)
+    (hend : ∀ ω ∈ noEscapeSet X A τU, τU ω ≠ ⊤ → L n ω ≤ τU ω)
+    (hnull : μ {ω | τU ω = ⊤} = 0) :
+    μ.real (noEscapeSet X A τU) ≤ (1 - q) ^ (n + 1) := by
+  have hsub : noEscapeSet X A τU ∩ {ω | τU ω ≠ ⊤} ⊆
+      prefixSet X A (T n) τU ∩ testFailSet X A (T n) (L n) := by
+    rintro ω ⟨hω, hfin⟩
+    have hT' : T n ω < τU ω := hcross ω hω hfin
+    have hL' : L n ω ≤ τU ω := hend ω hω hfin
+    have hB : ∀ m : ℕ, (m : ℕ∞) < τU ω → X m ω ∈ A := hω
+    exact ⟨⟨hT', fun m hm => hB m (lt_trans hm hT')⟩, fun m _ hmL => hB m (lt_of_lt_of_le hmL hL')⟩
+  have hchain : μ.real (noEscapeSet X A τU ∩ {ω | τU ω ≠ ⊤}) ≤ (1 - q) ^ (n + 1) :=
+    shell_chain_bound (P := fun k => prefixSet X A (T k) τU)
+      (F := fun k => testFailSet X A (T k) (L k))
+      (B := noEscapeSet X A τU ∩ {ω | τU ω ≠ ⊤})
+      (𝓖 := fun k => (hT k).measurableSpace) (fun k => (hT k).measurableSpace_le) hq1 n
+      (fun k _ => measurableSet_prefixSet 𝓕 hX hA (hT k) hτ)
+      (fun k _ => measurableSet_testFailSet 𝓕 hX hA (hT k) (hL k)) hone
+      (fun k hk => prefixSet_succ_subset_of_lt (fun ω h => hTT k hk ω h)
+        (fun ω h => hLT k hk ω h))
+      hsub
+  have hcov : noEscapeSet X A τU ⊆ (noEscapeSet X A τU ∩ {ω | τU ω ≠ ⊤}) ∪ {ω | τU ω = ⊤} := by
+    intro ω hω
+    by_cases h : τU ω = ⊤
+    · exact Or.inr h
+    · exact Or.inl ⟨hω, h⟩
+  have hnull' : μ.real {ω | τU ω = ⊤} = 0 := by
+    rw [measureReal_def, hnull, ENNReal.toReal_zero]
+  calc μ.real (noEscapeSet X A τU)
+      ≤ μ.real ((noEscapeSet X A τU ∩ {ω | τU ω ≠ ⊤}) ∪ {ω | τU ω = ⊤}) := measureReal_mono hcov
+    _ ≤ μ.real (noEscapeSet X A τU ∩ {ω | τU ω ≠ ⊤}) + μ.real {ω | τU ω = ⊤} :=
+        measureReal_union_le _ _
+    _ ≤ (1 - q) ^ (n + 1) := by rw [hnull', add_zero]; exact hchain
+
+end Generic
+
+/-- Walk-level chain bound: `prefix_bad_bound_of_lt` for the simple random walk law, with the exit event
+of `U` in place of the no-escape event. The null set `{vExitTime U = ⊤}` is the input `hnull`. -/
 theorem srw_exit_le_pow {m : ℤ → ℤ → ℕ} {a : ℤ} {U A : Set ℤ}
     {T L : ℕ → (ℕ → ℤ) → ℕ∞} (hT : ∀ k, IsStoppingTime coordFiltration (T k))
     (hL : ∀ k, IsStoppingTime coordFiltration (L k)) {q : ℝ} (hq1 : q ≤ 1) (n : ℕ)
@@ -78,14 +142,17 @@ theorem srw_exit_le_pow {m : ℤ → ℤ → ℕ} {a : ℤ} {U A : Set ℤ}
       x ∈ prefixSet (fun j (y : ℕ → ℤ) => y j) A (T k) (vExitTime U) →
         (srwLaw m a)[(testFailSet (fun j (y : ℕ → ℤ) => y j) A (T k) (L k)).indicator
           (fun _ => (1 : ℝ)) | (hT k).measurableSpace] x ≤ 1 - q)
-    (hTT : ∀ j < n, ∀ x, T j x ≤ T (j + 1) x) (hLT : ∀ j < n, ∀ x, L j x ≤ T (j + 1) x)
+    (hTT : ∀ j < n, ∀ x, T (j + 1) x < vExitTime U x → T j x ≤ T (j + 1) x)
+    (hLT : ∀ j < n, ∀ x, T (j + 1) x < vExitTime U x → L j x ≤ T (j + 1) x)
     (hcross : ∀ x ∈ noEscapeSet (fun j (y : ℕ → ℤ) => y j) A (vExitTime U),
-      T n x < vExitTime U x)
-    (hend : ∀ x ∈ noEscapeSet (fun j (y : ℕ → ℤ) => y j) A (vExitTime U), L n x ≤ vExitTime U x) :
+      vExitTime U x ≠ ⊤ → T n x < vExitTime U x)
+    (hend : ∀ x ∈ noEscapeSet (fun j (y : ℕ → ℤ) => y j) A (vExitTime U),
+      vExitTime U x ≠ ⊤ → L n x ≤ vExitTime U x)
+    (hnull : srwLaw m a {x | vExitTime U x = ⊤} = 0) :
     (srwLaw m a).real (Lemma68Walk.exitEvent U A) ≤ (1 - q) ^ (n + 1) := by
   rw [srw_exit_eq_noEscape]
-  exact prefix_bad_bound coordFiltration coord_measurable MeasurableSet.of_discrete hT hL
-    (isStoppingTime_vExitTime U) hq1 n hone hTT hLT hcross hend
+  exact prefix_bad_bound_of_lt coordFiltration coord_measurable MeasurableSet.of_discrete hT hL
+    (isStoppingTime_vExitTime U) hq1 n hone hTT hLT hcross hend hnull
 
 /-- The quenched exit probability `exitQ` of a Lemma 6.8 configuration satisfies the walk-level chain bound
 `(1 - q)^(n + 1)`; `U` is the killed set `killed ε η Θ F0 r` and `A = i.A` (S6h/Core.lean). -/
@@ -96,20 +163,27 @@ theorem exitQ_le_pow {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ε :
     (hone : ∀ k ≤ n, ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),
       x ∈ prefixSet (fun j (y : ℕ → ℤ) => y j) (↑i.A : Set ℤ) (T k)
           (vExitTime (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r)) →
-        (srwLaw (S.mult ε ω) i.a)[(testFailSet (fun j (y : ℕ → ℤ) => y j) (↑i.A : Set ℤ) (T k) (L k)).indicator
-          (fun _ => (1 : ℝ)) | (hT k).measurableSpace] x ≤ 1 - q)
-    (hTT : ∀ j < n, ∀ x, T j x ≤ T (j + 1) x) (hLT : ∀ j < n, ∀ x, L j x ≤ T (j + 1) x)
+        (srwLaw (S.mult ε ω) i.a)[(testFailSet (fun j (y : ℕ → ℤ) => y j) (↑i.A : Set ℤ) (T k)
+          (L k)).indicator (fun _ => (1 : ℝ)) | (hT k).measurableSpace] x ≤ 1 - q)
+    (hTT : ∀ j < n, ∀ x, T (j + 1) x < vExitTime (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r) x →
+      T j x ≤ T (j + 1) x)
+    (hLT : ∀ j < n, ∀ x, T (j + 1) x < vExitTime (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r) x →
+      L j x ≤ T (j + 1) x)
     (hcross : ∀ x ∈ noEscapeSet (fun j (y : ℕ → ℤ) => y j) (↑i.A : Set ℤ)
         (vExitTime (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r)),
-      T n x < vExitTime (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r) x)
+      vExitTime (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r) x ≠ ⊤ →
+        T n x < vExitTime (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r) x)
     (hend : ∀ x ∈ noEscapeSet (fun j (y : ℕ → ℤ) => y j) (↑i.A : Set ℤ)
         (vExitTime (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r)),
-      L n x ≤ vExitTime (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r) x) :
+      vExitTime (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r) x ≠ ⊤ →
+        L n x ≤ vExitTime (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r) x)
+    (hnull : srwLaw (S.mult ε ω) i.a
+        {x | vExitTime (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r) x = ⊤} = 0) :
     Lemma68Config.exitQ S ε ω r i ≤ (1 - q) ^ (n + 1) := by
   unfold Lemma68Config.exitQ
-  exact srw_exit_le_pow hT hL hq1 n hone hTT hLT hcross hend
+  exact srw_exit_le_pow hT hL hq1 n hone hTT hLT hcross hend hnull
 
-/-- The test-count prefactor: `q0 / (1 + log (1/r))^2 ≤ 1` for `0 < r ≤ 1` and `q0 ≤ 1`. -/
+/-- `q0 / (1 + log (1/r))^2 ≤ 1` for `0 ≤ q0 ≤ 1` and `0 < r ≤ 1`. -/
 theorem q_le_one {q0 r : ℝ} (hq0 : 0 ≤ q0) (hq1 : q0 ≤ 1) (hr : 0 < r) (hr1 : r ≤ 1) :
     q0 / (1 + Real.log (1 / r)) ^ 2 ≤ 1 := by
   have hL : 0 ≤ Real.log (1 / r) := Real.log_nonneg (one_le_one_div hr hr1)
