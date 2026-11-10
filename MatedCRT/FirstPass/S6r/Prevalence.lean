@@ -21,8 +21,9 @@ Sources: `notes/fp-gaps/CHATGPT-idla-6-4-6-5-fidelity.md` l.1-43 (the [C5] event
 * (ii) `scaleCovUniformPrevalenceStmt_of_c5`: `ScaleCovUniformPrevalenceStmt` from the all-scales uniform [C5]
   prevalence `C5AllScalesPrevalenceStmt` (named) and a.s. non-degeneracy `AnnulusNondegenerateAe` (named).
 * (iii) deterministic part of S2.3: a seven-adic `7^{-n} ∈ [d, d^a]` is a window candidate `winCand`, and the first
-  good candidate `winSelect` is good (`winSelect_good_of_seven_adic`). The probability bound is the named
-  `ShortWindowPrevalenceStmt`, not proved.
+  good candidate `winSelect` is good (`winSelect_good_of_seven_adic`). The probability bound (S2.3, the short-window
+  prevalence) is owned by z12 (`MatedCRT/FirstPass/S6r/ShortWindow.lean`, `ShortWindowGoodRadiusPrevalenceStmt`), not
+  duplicated here; the restricted (ii) above is the cone-field input of that chain.
 
 Terminology: LQG measure (Duplantier-Sheffield), good annuli (Berestycki-Powell, Armstrong-Kuusi-Mourrat),
 log kernels and their positive parts (Armitage-Gardiner).
@@ -484,16 +485,6 @@ lemma winSelect_good_of_seven_adic {d ζ : ℝ} (hd : 0 < d) (Good : ℝ → Pro
     ⟨k, hk, by rw [hck]; exact hg⟩
   rw [heq]
   exact hg'
-
-/-- **Named input, not proved (S2.3 of `notes/fp-gaps/CHATGPT-idla-6-8-redesign.md` l.165-214).** For every exponent
-`M` there are `K, d₀` such that, for `0 < d < d₀` and every eligible centre `z ∈ G d`, the probability that no
-seven-adic `7^{-n} ∈ [d, d^a]` is good is at most `K d^M`. The paper's Lemma 6.4 (`GoodAnnulusPrevalenceUniformStmt`,
-S6p.lean:73) gives only `PolyHighProb` (S6p.lean:78), whose exponent is some `p > 0`, not an arbitrary `M`. -/
-def ShortWindowPrevalenceStmt {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (μ : Ω → Measure ℂ)
-    (c₀ C a : ℝ) (G : ℝ → Set ℂ) : Prop :=
-  ∀ M : ℝ, ∃ K : ℝ, 0 < K ∧ ∃ d₀ : ℝ, 0 < d₀ ∧ ∀ d : ℝ, 0 < d → d < d₀ → ∀ z ∈ G d,
-    P {ω | ¬ ∃ n : ℤ, d ≤ (7 : ℝ) ^ (-n) ∧ (7 : ℝ) ^ (-n) ≤ d ^ a ∧
-      IsGoodAnnulusEvent (μ ω) c₀ C ((7 : ℝ) ^ (-n)) z} ≤ ENNReal.ofReal (K * d ^ M)
 
 end Lemma68Window
 
