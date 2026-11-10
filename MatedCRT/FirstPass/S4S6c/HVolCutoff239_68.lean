@@ -269,6 +269,17 @@ theorem mass_pos_of_cutoff {μ : Measure ℂ} {β t δ : ℝ} {z : ℂ}
     (hδ : 0 < δ) (hδt : δ < t) (hz : z ∈ ball (0 : ℂ) (1 - δ)) : 0 < μ (ball z δ) :=
   lt_of_lt_of_le (ENNReal.ofReal_pos.mpr (Real.rpow_pos_of_pos hδ β)) (hcut δ hδ hδt z hz)
 
+/-- **Positivity of an annulus infimum from the cutoff (no full support).** If every centre `w ∈ S` lies in
+`B_{1-R/4}` and `R/4 < t`, then `⨅ w ∈ S, μ (B_{c₀R}(w)) ≥ (c₀R)^β > 0` by `volume_bounds_of_cutoff`. The consumer
+`pos_iInf_annulus_ball` (HoneGoodEvent68.lean:119) instead needs positivity at the cover minimiser at radius `c₀R/2`;
+see the report: the containment `S ⊆ B_{1-R/4}` is not among that consumer's hypotheses. -/
+theorem pos_iInf_of_cutoff {μ : Measure ℂ} {β t c0 R : ℝ} {S : Set ℂ} (hc0 : 0 < c0) (hc0' : c0 ≤ 1 / 4) (hR : 0 < R)
+    (hcut : ∀ δ : ℝ, 0 < δ → δ < t → ∀ z ∈ ball (0 : ℂ) (1 - δ), ENNReal.ofReal (δ ^ β) ≤ μ (ball z δ))
+    (hRt : R / 4 < t) (hS : ∀ w ∈ S, ‖w‖ < 1 - R / 4) :
+    0 < ⨅ w ∈ S, μ (ball w (c0 * R)) :=
+  lt_of_lt_of_le (ENNReal.ofReal_pos.mpr (Real.rpow_pos_of_pos (mul_pos hc0 hR) β))
+    (le_iInf₂ fun w hw => (Lemma68Cutoff.volume_bounds_of_cutoff hc0 hc0' hR hcut hRt (hS w hw)).1)
+
 end Lemma68Cutoff239
 end MatedCRT
 
@@ -279,3 +290,4 @@ end MatedCRT
 #print axioms MatedCRT.Lemma68Cutoff239.measurable_radius_cap
 #print axioms MatedCRT.Lemma68Cutoff239.hVolC_hVolY_ae_of_cutoff
 #print axioms MatedCRT.Lemma68Cutoff239.mass_pos_of_cutoff
+#print axioms MatedCRT.Lemma68Cutoff239.pos_iInf_of_cutoff
