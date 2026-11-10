@@ -56,6 +56,26 @@ theorem isStoppingTime_vExitTime (U : Set ℤ) : IsStoppingTime coordFiltration 
   convert key using 1
   exact Set.ext hiff
 
+/-- A path functional whose sublevel sets `{τ ≤ n}` are determined by the prefix `(x 0, …, x n)` is a stopping time
+of `coordFiltration`: the prefix map is `coordFiltration n`-measurable and the prefix space is countable. This is the
+form in which the shell times `T k`, `L k` (hitting-type functionals of the path) enter `prefix_bad_bound_of_lt`. -/
+theorem isStoppingTime_of_prefix (τ : (ℕ → ℤ) → ℕ∞)
+    (h : ∀ n : ℕ, ∃ S : Set (Fin (n + 1) → ℤ),
+      {x : ℕ → ℤ | τ x ≤ (n : ℕ∞)} = {x : ℕ → ℤ | (fun k : Fin (n + 1) => x k) ∈ S}) :
+    IsStoppingTime coordFiltration τ := by
+  intro n
+  obtain ⟨S, hS⟩ := h n
+  have hpre : Measurable[coordFiltration n] (fun x : ℕ → ℤ => (fun k : Fin (n + 1) => x k)) := by
+    let _ : MeasurableSpace (ℕ → ℤ) := coordFiltration n
+    exact Measurable.of_eval fun (k : Fin (n + 1)) =>
+      (coord_measurable (k : ℕ)).mono (coordFiltration.mono (Nat.lt_succ_iff.mp k.isLt)) le_rfl
+  have key : MeasurableSet[coordFiltration n]
+      ((fun x : ℕ → ℤ => (fun k : Fin (n + 1) => x k)) ⁻¹' S) :=
+    hpre (Set.to_countable S).measurableSet
+  convert key using 1
+  ext x
+  exact Set.ext_iff.1 hS x
+
 /-- The walk exit event is the no-escape event of the coordinates killed at `vExitTime U`. -/
 theorem exitEvent_eq_noEscapeSet (U A : Set ℤ) :
     Lemma68Walk.exitEvent U A = noEscapeSet (fun n (x : ℕ → ℤ) => x n) A (vExitTime U) := by
