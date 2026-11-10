@@ -31,6 +31,7 @@ namespace Lemma68ShellHoneInst
 open Lemma68WalkBridge (coordFiltration)
 open MatedCRT.Lemma68ChainCore MatedCRT.Lemma68ShellChain MatedCRT.Lemma68Guard10 DyadicCutoff68
 open MatedCRT.Lemma68Window MatedCRT.Lemma68Omega MatedCRT.Lemma68GeometryId MatedCRT.Lemma68Admissible
+open MatedCRT.Lemma68ConstOrder
 open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68WalkBridge MatedCRT.Lemma68ChainAe
 open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 
@@ -68,11 +69,9 @@ theorem shellOneTest_of_direct {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ
     -- NAMED (configuration, Elig check on the walk): the shell radius lies in `[r², 1]` on the prefix set
     (hRr : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η Kset r s d Rf k) τU,
       r ^ 2 ≤ Rf (shellCentre ε η Kset r s d k ω) ∧ Rf (shellCentre ε η Kset r s d k ω) ≤ 1)
-    -- NAMED (mass-relative sparsity of the configuration A in the test balls: `hsp` of
-    -- `hone_exitQ_walk_of_env_direct_repaired`, HspRepair68.lean:501; z9, committed 9eb2a41)
-    (hsp : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η Kset r s d Rf k) τU,
-      ∀ w : ℂ, ε * ((A ∩ cellVertices ε η (ball w (K.c0 * Rf (shellCentre ε η Kset r s d k ω)))).ncard : ℝ)
-        ≤ (1 / 16 : ℝ) * (μ (ball w (K.c0 * Rf (shellCentre ε η Kset r s d k ω)))).toReal)
+    -- NAMED (sparsity of the configuration A at scale r, the clause `s₁ r^{2β}/ε` of the Lemma 6.8 event `E_ε`;
+    -- `hL68` of `hone_exitQ_walk_of_env_direct_repaired`, HspRepair68.lean:502 at HEAD)
+    (hL68 : ∀ z : ℂ, ((A ∩ cellVertices ε η (ball z r)).ncard : ℝ) < K.s1 * r ^ (2 * K.βm) / ε)
     -- NAMED (scale range of the walk tests, and the volume lower bound of the good event)
     (rmin : ℝ)
     (hRmin : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η Kset r s d Rf k) τU,
@@ -149,7 +148,7 @@ theorem shellOneTest_of_direct {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ
   exact hone_exitQ_walk_of_env_direct_repaired (T := fun k => shellExit ε η Kset r s d Rf k)
     (R := fun k w => Rf (shellCentre ε η Kset r s d k w)) K ε η hη hprop hε hεc hμNull m a A hA n hr hr1 hq0c
     rfl hC hCw hCg (fun k => isStoppingTime_shellExit ε η Kset r s d Rf k)
-    (fun k => measurable_shellRadius_stopped ε η Kset r s d Rf k) hmom1 hmom2 hRr hsp rmin hRmin hVolC hVolY hGreen
+    (fun k => measurable_shellRadius_stopped ε η Kset r s d Rf k) hmom1 hmom2 hRr hL68 rmin hRmin hVolC hVolY hGreen
     hWalk hCountGood ζc hζc0 hζc1 hCellGood hεcell hfinE hsc hεα hεmass hb hx1 hmomS hgood hN hpos hdbl
 
 /-- **NAMED INPUT (Q2 form, routed to the operator): the almost-sure, uniform-in-r shell chain.** This is
@@ -157,19 +156,20 @@ theorem shellOneTest_of_direct {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ
 `exitQ_core_step`: the one-test bound `ShellOneTestAt` and the shell order `ShellOrderAe`, for some radius configuration
 `Rf` at each good `(ω, r, i)`. The uniformity in `r` inside the almost-sure quantifier is the open point Q2. -/
 def ShellOneTestOrderAeStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
-  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE R q0 s₀ : ℝ,
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE : ℝ,
     0 < ω₀ → ω₀ < α → 0 < α → ω₀ < 2 / (2 + γ) ^ 2 - ζ → 0 < CG → 0 < CE →
-    0 < ζ → ζ < 1 / 2 → 0 < ρ → ρ < 1 → 0 < q0 → q0 ≤ 1 → 0 < R → R ≤ ρ / 4 →
-    R ≤ Lemma68Cutoff.rAmp q0 ζ → 0 < s₀ → s₀ < 1 →
-    ∃ c₀ : ℝ, 0 < c₀ ∧ c₀ < 1 / 5 ∧
-    ∀ C C' : ℝ, 0 < C → 0 < C' → WindowPrevAt γ (shortExp ζ) c₀ C C' →
+    0 < ζ → ζ < 1 / 2 → 0 < ρ → ρ < 1 →
+    ∀ C C' : ℝ, 0 < C → 0 < C' → WindowPrevAt γ (shortExp ζ) shellC068 C C' →
+    ∃ q0 : ℝ, 0 < q0 ∧ q0 ≤ (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE C) ∧
+    ∀ R : ℝ, 0 < R → R ≤ ρ / 4 → R ≤ Lemma68Cutoff.rAmp q0 ζ →
+    ∀ s₀ : ℝ, 0 < s₀ → s₀ < 1 →
     ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
       HarmonicBalls.PolyHighProb S.P (greenLowEvent68 S ω₀ ρ CG) →
       HarmonicBalls.PolyHighProb S.P (cellSizeEvent68 S γ ζ ρ) →
       HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE) →
     ∀ Ew : ℝ → Set Ω, (∀ δ : ℝ, MeasurableSet[S.fieldSigma] (Ew δ)) →
       HarmonicBalls.PolyHighProb S.P Ew →
-      (∀ δ : ℝ, ∀ᵐ ω ∂S.P, ω ∈ Ew δ → ω ∉ badWindowOf S.μ ρ (shortExp ζ) c₀ C δ) →
+      (∀ δ : ℝ, ∀ᵐ ω ∂S.P, ω ∈ Ew δ → ω ∉ badWindowOf S.μ ρ (shortExp ζ) shellC068 C δ) →
       ∀ ε : ℝ, 0 < ε → ∀ᵐ ω ∂S.P, ω ∈ meshEvent S γ ω₀ ρ CG ζ α CE ε →
         Lemma68Inputs.CurveEscapesBothEnds (S.η ω) →
         (∀ ε' : ℝ, 0 < ε' → IsLocallyFiniteMult (S.mult ε' ω) ∧ ∀ k : ℤ, S.mult ε' ω k (k + 1) ≠ 0) →
@@ -187,12 +187,18 @@ count-indexed exit bound `∃ N, c_N r^{-ζ} ≤ N ∧ exitQ ≤ (1 - q₀/(1+lo
 radius range `r ≤ R ≤ rAmp q₀ ζ` and `0 < r ≤ 1` from the core hypotheses. -/
 theorem shellChainCoreStmt_of_oneTestOrder {𝒮 : SpaceFillingSLEModel} (h : ShellOneTestOrderAeStmt 𝒮) :
     ShellChainCoreStmt 𝒮 := by
-  intro γ hγ0 hγ2 ω₀ α ζ ρ CG CE R q0 s₀ hω₀ hωα hα0 hωζ hCG hCE hζ0 hζ1 hρ0 hρ1 hq0 hq1 hR0 hRρ hRA hs₀ hs₁
-  obtain ⟨c₀, hc0, hc1, hcl⟩ :=
-    h γ hγ0 hγ2 ω₀ α ζ ρ CG CE R q0 s₀ hω₀ hωα hα0 hωζ hCG hCE hζ0 hζ1 hρ0 hρ1 hq0 hq1 hR0 hRρ hRA hs₀ hs₁
-  refine ⟨c₀, hc0, hc1, ?_⟩
-  intro C C' hC hC' hP Ω _ S hS hGp hCp hEp Ew hEwm hEwp hav ε hε
-  refine (hcl C C' hC hC' hP Ω S hS hGp hCp hEp Ew hEwm hEwp hav ε hε).mono ?_
+  intro γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hCG hCE hζ0 hζ1 hρ0 hρ1 C C' hC hC' hP
+  obtain ⟨q0, hq0, hq0c, hcl⟩ :=
+    h γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hCG hCE hζ0 hζ1 hρ0 hρ1 C C' hC hC' hP
+  have hq1 : q0 ≤ 1 := by
+    have hC1 := one_le_shellChone68 CE C
+    have hb : (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE C) ≤ 1 := by
+      rw [div_le_iff₀ (by linarith)]
+      nlinarith
+    linarith
+  refine ⟨q0, hq0, hq0c, ?_⟩
+  intro R hR0 hRρ hRA s₀ hs₀ hs₁ Ω _ S hS hGp hCp hEp Ew hEwm hEwp hav ε hε
+  refine (hcl R hR0 hRρ hRA s₀ hs₀ hs₁ Ω S hS hGp hCp hEp Ew hEwm hEwp hav ε hε).mono ?_
   intro ω hω hmesh hcurve hmult r hr1 hr2 hωE i hi
   obtain ⟨Rf, hone, hsh⟩ := hω hmesh hcurve hmult r hr1 hr2 hωE i hi
   have hr0 : 0 < r := lt_of_lt_of_le (by positivity) hr1
@@ -202,3 +208,6 @@ theorem shellChainCoreStmt_of_oneTestOrder {𝒮 : SpaceFillingSLEModel} (h : Sh
 
 end Lemma68ShellHoneInst
 end MatedCRT
+
+#print axioms MatedCRT.Lemma68ShellHoneInst.shellChainCoreStmt_of_oneTestOrder
+#print axioms MatedCRT.Lemma68ShellHoneInst.shellOneTest_of_direct

@@ -70,10 +70,11 @@ quenched exit probability is at most `(1 - q0/(1 + log(1/r))²)^N` for some shel
 `r` quantified inside it: a per-radius almost-sure clause cannot be combined over uncountably many `r`, while the
 pointwise-in-`ω` window clause is not obtained from the field-measurable window family (S4S6c/ShellChain68.lean). -/
 def ShellChainStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
-  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE R q0 s₀ : ℝ,
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE : ℝ,
     0 < ω₀ → ω₀ < α → 0 < α → ω₀ < 2 / (2 + γ) ^ 2 - ζ → 0 < CG → 0 < CE →
-    0 < ζ → ζ < 1 / 2 → 0 < ρ → ρ < 1 → 0 < q0 → q0 ≤ 1 → 0 < R → R ≤ ρ / 4 →
-    R ≤ Lemma68Cutoff.rAmp q0 ζ → 0 < s₀ → s₀ < 1 →
+    0 < ζ → ζ < 1 / 2 → 0 < ρ → ρ < 1 →
+    ∃ q0 : ℝ, 0 < q0 ∧ q0 ≤ 1 ∧ ∀ R : ℝ, 0 < R → R ≤ ρ / 4 → R ≤ Lemma68Cutoff.rAmp q0 ζ →
+    ∀ s₀ : ℝ, 0 < s₀ → s₀ < 1 →
     ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
       HarmonicBalls.PolyHighProb S.P (greenLowEvent68 S ω₀ ρ CG) →
       HarmonicBalls.PolyHighProb S.P (cellSizeEvent68 S γ ζ ρ) →
@@ -289,29 +290,29 @@ theorem guardProbStmt_of_chain (𝒮 : SpaceFillingSLEModel) (hMesh : MeshEvents
   obtain ⟨ζ, hζ0, hζ1, ω₀, α, hω₀, hωα, hα0, hωζ, hmesh⟩ := hMesh γ hγ0 hγ2
   refine ⟨ω₀, hω₀, fun ρ hρ0 hρ1 => ?_⟩
   obtain ⟨CG, hCG, CE, hCE, hPH⟩ := hmesh ρ hρ0 hρ1
-  have hq0 : (0 : ℝ) < 1 / 9 := by norm_num
-  have hq1 : (1 / 9 : ℝ) ≤ 1 := by norm_num
-  have hrA : 0 < Lemma68Cutoff.rAmp (1 / 9) ζ := Lemma68Cutoff.rAmp_pos hq0 hζ0
+  -- the admissible `q0` comes from the chain, after the constants (CHATGPT-234 Q1); no fixed `q0 = 1/9`
+  obtain ⟨q0, hq0, hq1, hchain⟩ :=
+    hChain γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hCG hCE hζ0 hζ1 hρ0 hρ1
+  have hrA : 0 < Lemma68Cutoff.rAmp q0 ζ := Lemma68Cutoff.rAmp_pos hq0 hζ0
   have hcN : 0 < countConst ζ := countConst_pos ζ
   obtain ⟨r_amp, hra0, hra1, hbd⟩ :=
-    constant_order_conclusion (c := countConst ζ * (1 / 9)) (ζ := ζ) (mul_pos hcN hq0) hζ0
-  have hR0 : 0 < min (ρ / 4) (min (Lemma68Cutoff.rAmp (1 / 9) ζ) r_amp) :=
+    constant_order_conclusion (c := countConst ζ * q0) (ζ := ζ) (mul_pos hcN hq0) hζ0
+  have hR0 : 0 < min (ρ / 4) (min (Lemma68Cutoff.rAmp q0 ζ) r_amp) :=
     lt_min (by linarith) (lt_min hrA hra0)
-  refine ⟨min (ρ / 4) (min (Lemma68Cutoff.rAmp (1 / 9) ζ) r_amp), ζ, 2, 1, 1 / 9, hR0,
+  refine ⟨min (ρ / 4) (min (Lemma68Cutoff.rAmp q0 ζ) r_amp), ζ, 2, 9 * q0, q0, hR0,
     min_le_left _ _, (min_le_right _ _).trans (min_le_left _ _), hζ0, hζ1, hq0, hq1,
-    by norm_num, by norm_num, by norm_num, by norm_num, ?_⟩
+    by ring, by linarith, by linarith, by norm_num, ?_⟩
   intro s₀ hs₀ hs₁ Ω _ S hS
-  set R : ℝ := min (ρ / 4) (min (Lemma68Cutoff.rAmp (1 / 9) ζ) r_amp) with hRdef
-  have hRA : R ≤ Lemma68Cutoff.rAmp (1 / 9) ζ := (min_le_right _ _).trans (min_le_left _ _)
+  set R : ℝ := min (ρ / 4) (min (Lemma68Cutoff.rAmp q0 ζ) r_amp) with hRdef
+  have hRA : R ≤ Lemma68Cutoff.rAmp q0 ζ := (min_le_right _ _).trans (min_le_left _ _)
   have hRρ : R ≤ ρ / 4 := min_le_left _ _
   have hRr' : R ≤ r_amp := (min_le_right _ _).trans (min_le_right _ _)
   have hR1 : R ≤ 1 := hRρ.trans (by linarith)
   have hRr : ∀ r : ℝ, 0 < r → r ≤ R →
-      Real.exp (-(countConst ζ * (1 / 9) * r ^ (-ζ) / (1 + Real.log (1 / r)) ^ 2)) ≤ 1 / 2 :=
+      Real.exp (-(countConst ζ * q0 * r ^ (-ζ) / (1 + Real.log (1 / r)) ^ 2)) ≤ 1 / 2 :=
     fun r hr hrle => hbd r hr (hrle.trans hRr')
   obtain ⟨hGp, hCp, hEp⟩ := hPH Ω S hS
-  obtain ⟨Ew, hEwm, hEwp, hpt⟩ := hChain γ hγ0 hγ2 ω₀ α ζ ρ CG CE R (1 / 9) s₀ hω₀ hωα hα0 hωζ hCG hCE
-    hζ0 hζ1 hρ0 hρ1 hq0 hq1 hR0 hRρ hRA hs₀ hs₁ Ω S hS hGp hCp hEp
+  obtain ⟨Ew, hEwm, hEwp, hpt⟩ := hchain R hR0 hRρ hRA s₀ hs₀ hs₁ Ω S hS hGp hCp hEp
   obtain ⟨dd0, hdd0m, hdd0pos, _, hdd0⟩ := window_cutoff (F := S.fieldSigma) S.P Ew hEwm hEwp
   have hE : ProbTendsToOne S.P (fun ε => meshEvent S γ ω₀ ρ CG ζ α CE ε) :=
     ((probTendsToOne_of_polyHighProb hGp).inter (probTendsToOne_of_polyHighProb hCp)).inter
@@ -325,7 +326,7 @@ theorem guardProbStmt_of_chain (𝒮 : SpaceFillingSLEModel) (hMesh : MeshEvents
       ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ min R (dd0 ω) → ∀ i : Lemma68Config.Config68,
         Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
           ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
-            Lemma68Config.exitQ S ε ω r i ≤ (1 - (1 / 9 : ℝ) / (1 + Real.log (1 / r)) ^ 2) ^ N := by
+            Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N := by
     intro ε hε
     filter_upwards [hpt ε hε] with ω hω
     rintro ⟨hωm, h1, h2, h3⟩ r hr hrd i hadm
@@ -336,7 +337,7 @@ theorem guardProbStmt_of_chain (𝒮 : SpaceFillingSLEModel) (hMesh : MeshEvents
     fun ω => min_le_left _ _, ?_⟩
   exact probTendsToOne_half_of_count (α := fun ε => 10 * ε ^ ω₀)
     (dd := fun ω => min R (dd0 ω)) (E := fun ε => meshEvent S γ ω₀ ρ CG ζ α CE ε)
-    (G := goodField S Ew dd0) (R := R) (cN := countConst ζ) (q0 := 1 / 9) (ζ := ζ) hE hG
+    (G := goodField S Ew dd0) (R := R) (cN := countConst ζ) (q0 := q0) (ζ := ζ) hE hG
     (fun ε hε => by positivity) (fun ω => min_le_left _ _) hR1 hcN hq0 hq1 hRr
     (fun ε ω r i => Lemma68Config.FullAdm S ρ s₀ γ ε ω r i) (Lemma68Config.exitQ S) hpt'
 
@@ -352,3 +353,6 @@ theorem uniformConstantOrderLowerBound_of_chain (𝒮 : SpaceFillingSLEModel)
     (Lemma68Guard10.guardProbStmt_of_chain 𝒮 (Lemma68Guard10.meshEventsStmt_of_draft 𝒮 hG hC hE) hChain)
 
 end MatedCRT
+
+#print axioms MatedCRT.Lemma68Guard10.guardProbStmt_of_chain
+#print axioms MatedCRT.uniformConstantOrderLowerBound_of_chain

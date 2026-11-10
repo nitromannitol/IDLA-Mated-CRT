@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.S4S6c.ShellChain68
 import MatedCRT.FirstPass.S4S6c.Guard68S10
+import MatedCRT.FirstPass.S4S6c.ShellConstOrder68
 
 /-!
 # The shell-chain core, the reduction of `ShellChainStmt` to it, and the reduction of `hU` (q2, fp-S4S6c-hU-chain)
@@ -28,6 +29,7 @@ namespace MatedCRT
 namespace Lemma68ChainCore
 
 open MatedCRT.Lemma68Window MatedCRT.Lemma68ShellChain MatedCRT.Lemma68Guard10
+open MatedCRT.Lemma68ConstOrder
 open DyadicCutoff68 Lemma68Window
 
 /-- The prevalence bound of `ShortWindowGoodRadiusPrevalenceStmt` at fixed window constants `(a, c₀, C, C')`:
@@ -77,19 +79,20 @@ For the parameters of `ShellChainStmt` there is `c₀ ∈ (0, 1/5)` such that fo
 (Lemma 6.8 shell chain: one-test bound `hone`, shell order `ShellOrderAe`, count `count_hypothesis`).
 The relations of `c₀, C` with `Constants68 γ ρ` are not stated in the sources and are not assumed. -/
 def ShellChainCoreStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
-  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE R q0 s₀ : ℝ,
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE : ℝ,
     0 < ω₀ → ω₀ < α → 0 < α → ω₀ < 2 / (2 + γ) ^ 2 - ζ → 0 < CG → 0 < CE →
-    0 < ζ → ζ < 1 / 2 → 0 < ρ → ρ < 1 → 0 < q0 → q0 ≤ 1 → 0 < R → R ≤ ρ / 4 →
-    R ≤ Lemma68Cutoff.rAmp q0 ζ → 0 < s₀ → s₀ < 1 →
-    ∃ c₀ : ℝ, 0 < c₀ ∧ c₀ < 1 / 5 ∧
-    ∀ C C' : ℝ, 0 < C → 0 < C' → WindowPrevAt γ (shortExp ζ) c₀ C C' →
+    0 < ζ → ζ < 1 / 2 → 0 < ρ → ρ < 1 →
+    ∀ C C' : ℝ, 0 < C → 0 < C' → WindowPrevAt γ (shortExp ζ) shellC068 C C' →
+    ∃ q0 : ℝ, 0 < q0 ∧ q0 ≤ (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE C) ∧
+    ∀ R : ℝ, 0 < R → R ≤ ρ / 4 → R ≤ Lemma68Cutoff.rAmp q0 ζ →
+    ∀ s₀ : ℝ, 0 < s₀ → s₀ < 1 →
     ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
       HarmonicBalls.PolyHighProb S.P (greenLowEvent68 S ω₀ ρ CG) →
       HarmonicBalls.PolyHighProb S.P (cellSizeEvent68 S γ ζ ρ) →
       HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE) →
     ∀ Ew : ℝ → Set Ω, (∀ δ : ℝ, MeasurableSet[S.fieldSigma] (Ew δ)) →
       HarmonicBalls.PolyHighProb S.P Ew →
-      (∀ δ : ℝ, ∀ᵐ ω ∂S.P, ω ∈ Ew δ → ω ∉ badWindowOf S.μ ρ (shortExp ζ) c₀ C δ) →
+      (∀ δ : ℝ, ∀ᵐ ω ∂S.P, ω ∈ Ew δ → ω ∉ badWindowOf S.μ ρ (shortExp ζ) shellC068 C δ) →
       ∀ ε : ℝ, 0 < ε → ∀ᵐ ω ∂S.P, ω ∈ meshEvent S γ ω₀ ρ CG ζ α CE ε →
         Lemma68Inputs.CurveEscapesBothEnds (S.η ω) →
         (∀ ε' : ℝ, 0 < ε' → IsLocallyFiniteMult (S.mult ε' ω) ∧ ∀ k : ℤ, S.mult ε' ω k (k + 1) ≠ 0) →
@@ -102,16 +105,28 @@ def ShellChainCoreStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
 with the prevalence constants `C, C'` of `hprev` at `(a = shortExp ζ, c₀)`, and the window clause by `hcore`. -/
 theorem shellChainStmt_of_core {𝒮 : SpaceFillingSLEModel} (hprev : ShortWindowGoodRadiusPrevalenceStmt)
     (hcore : ShellChainCoreStmt 𝒮) : ShellChainStmt 𝒮 := by
-  intro γ hγ0 hγ2 ω₀ α ζ ρ CG CE R q0 s₀ hω₀ hωα hα0 hωζ hCG hCE hζ0 hζ1 hρ0 hρ1 hq0 hq1 hR0 hRρ hRA hs₀ hs₁
-    Ω _ S hS hGp hCp hEp
-  obtain ⟨c₀, hc0, hc1, hcl⟩ :=
-    hcore γ hγ0 hγ2 ω₀ α ζ ρ CG CE R q0 s₀ hω₀ hωα hα0 hωζ hCG hCE hζ0 hζ1 hρ0 hρ1 hq0 hq1 hR0 hRρ hRA hs₀ hs₁
+  intro γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hCG hCE hζ0 hζ1 hρ0 hρ1
   have ha0 : 0 < shortExp ζ := by unfold shortExp; linarith
   have ha1 : shortExp ζ < 1 := by unfold shortExp; linarith
-  obtain ⟨C, C', hC0, hC'0, hP⟩ := hprev (shortExp ζ) ha0 ha1 γ hγ0 hγ2 c₀ hc0 hc1
-  have hP' : WindowPrevAt γ (shortExp ζ) c₀ C C' := hP
-  obtain ⟨Ew, hEwm, hEwp, hav⟩ := shortWindow_fieldFamily_at hγ0 hγ2 S hS (shortExp ζ) c₀ C C' ρ hρ0 hρ1 hP'
-  exact ⟨Ew, hEwm, hEwp, hcl C C' hC0 hC'0 hP' Ω S hS hGp hCp hEp Ew hEwm hEwp hav⟩
+  have hc0 : 0 < shellC068 := by unfold shellC068; positivity
+  have hc1 : shellC068 < 1 / 5 := by
+    unfold shellC068
+    have h := Real.exp_le_one_iff.2 (show (-2 : ℝ) ≤ 0 by norm_num)
+    linarith
+  obtain ⟨C, C', hC0, hC'0, hP⟩ := hprev (shortExp ζ) ha0 ha1 γ hγ0 hγ2 shellC068 hc0 hc1
+  have hP' : WindowPrevAt γ (shortExp ζ) shellC068 C C' := hP
+  obtain ⟨q0, hq0, hq0c, hcl⟩ :=
+    hcore γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hCG hCE hζ0 hζ1 hρ0 hρ1 C C' hC0 hC'0 hP'
+  have hq1 : q0 ≤ 1 := by
+    have hC1 := one_le_shellChone68 CE C
+    have hb : (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE C) ≤ 1 := by
+      rw [div_le_iff₀ (by linarith)]
+      nlinarith
+    linarith
+  refine ⟨q0, hq0, hq1, fun R hR0 hRρ hRA s₀ hs₀ hs₁ Ω _ S hS hGp hCp hEp => ?_⟩
+  obtain ⟨Ew, hEwm, hEwp, hav⟩ :=
+    shortWindow_fieldFamily_at hγ0 hγ2 S hS (shortExp ζ) shellC068 C C' ρ hρ0 hρ1 hP'
+  exact ⟨Ew, hEwm, hEwp, hcl R hR0 hRρ hRA s₀ hs₀ hs₁ Ω S hS hGp hCp hEp Ew hEwm hEwp hav⟩
 
 /-- **`UniformConstantOrderLowerBoundStmt` (hU) from the Draft inputs and the shell-chain core.** Same conclusion as
 `uniformConstantOrderLowerBound_of_chain` (Guard68S10), with the chain supplied by `shellChainStmt_of_core`. -/
@@ -122,3 +137,6 @@ theorem hU_of_core {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBoundStmt
 
 end Lemma68ChainCore
 end MatedCRT
+
+#print axioms MatedCRT.Lemma68ChainCore.shellChainStmt_of_core
+#print axioms MatedCRT.Lemma68ChainCore.hU_of_core
