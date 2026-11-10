@@ -204,6 +204,42 @@ theorem resSel_pt {γ ω₀ ζ ρ CG C s₀ ε r : ℝ} {Ω : Type} [MeasurableS
   exact hsel_fixedOmega_g (c0W := shellC0 CG) S (shellKCG γ ρ ω₀ ζ CG hγ0 hγ2 hρ0 hρ1 hω₀ hζ0 hζ1 hCG)
     rfl ω i hwin hCCG hFA
 
+/-- **Step B, `ShellCGResEl` (`shellCGResEl_holds`).** The residual holds for every `𝒮`: the clauses of the new
+`ShellPtPremCG` (b51e0dc) feed `resEl_pt`; the mesh membership is `countingMeshEventR_meshR`. -/
+theorem shellCGResEl_holds (𝒮 : SpaceFillingSLEModel) : ShellCGResEl 𝒮 := by
+  intro γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω _ S Ew ω i hpre hFA
+  obtain ⟨hγ0, hγ2, hω₀, _h4, _h5, _h6, _h7, hω2ζ, hCG, _h10, _h11, hζ0, hζ1, hρ0, hρ1, _h16, hq0, _h18, hq0c,
+    _h20, hRρ, hRA, _h23, hs₀, _h25, _h26, hε, hεe, hr10, hrR, _h31, hmeshω, hgap, hcurve, hmult, hηω, _h37, _h38,
+    _h39, hadj, _h41, _h42, _h43⟩ := hpre
+  exact resEl_pt S ω i hγ0 hγ2 hω₀ hω2ζ hCG hζ0 hζ1 hρ0 hρ1 hq0 hq0c hrR hRρ hRA hs₀ hε hεe hr10
+    (countingMeshEventR_meshR hmeshω) hgap hηω hcurve hmult hadj hFA
+
+/-- **Step B, `ShellCGResStopFin` (`shellCGResStopFin_holds`).** The residual holds for every `𝒮`, from `resStopFin_pt`. -/
+theorem shellCGResStopFin_holds (𝒮 : SpaceFillingSLEModel) : ShellCGResStopFin 𝒮 := by
+  intro γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω _ S Ew ω i hpre hFA
+  obtain ⟨_h1, _h2, _h3, _h4, _h5, _h6, _h7, _h8, _h9, _h10, _h11, _h12, _h13, _h14, _h15, _h16, _h17, _h18, _h19,
+    _h20, _h21, _h22, _h23, hs₀, _h25, _h26, hε, _h28, _h29, _h30, _h31, _h32, _h33, hcurve, hmult, _h36, _h37, _h38,
+    hdeg, _h40, _h41, _h42, _h43⟩ := hpre
+  exact resStopFin_pt S ω i hε hs₀ hcurve hmult hdeg hFA
+
+/-- **Step B, `ShellCGResSel` (`shellCGResSel_of_hCCG`).** The residual holds from `resSel_pt` given the named
+hypothesis `hCCG : C ≤ CG` under `ShellPtPremCG`. This ordering is NOT a clause of `ShellPtPremCG` and not a binder of
+`ShellOneTestPointwiseCGRStmt`; it is the premise `hCCG` of `hsel_fixedOmega_g` (HoneCellGoodSelPw68.lean:125). -/
+theorem shellCGResSel_of_hCCG (𝒮 : SpaceFillingSLEModel)
+    (hCCG : ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+      (Ew : ℝ → Set Ω) (ω : Ω) (_i : Lemma68Config.Config68),
+      ShellPtPremCG 𝒮 γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r S Ew ω → C ≤ CG) :
+    ShellCGResSel 𝒮 := by
+  intro γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω _ S Ew ω i hpre hFA
+  have hCC : C ≤ CG := hCCG γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω S Ew ω i hpre
+  obtain ⟨hγ0, hγ2, hω₀, _h4, _h5, _h6, _h7, _h8, hCG, _h10, _h11, hζ0, hζ1, hρ0, hρ1, _h16, _h17, _h18, _h19,
+    _h20, _h21, _h22, _h23, _h24, _h25, _h26, _h27, _h28, _h29, _h30, hEwr, _h32, _h33, _h34, _h35, _h36, _h37,
+    _h38, _h39, _h40, _h41, _h42, hwinAll⟩ := hpre
+  exact resSel_pt S Ew ω i hγ0 hγ2 hρ0 hρ1 hω₀ hζ0 hζ1 hCG hCC hEwr hwinAll hFA
+
+#print axioms MatedCRT.Lemma68CGResElSel.shellCGResEl_holds
+#print axioms MatedCRT.Lemma68CGResElSel.shellCGResStopFin_holds
+#print axioms MatedCRT.Lemma68CGResElSel.shellCGResSel_of_hCCG
 #print axioms MatedCRT.Lemma68CGResElSel.hEl_fixedOmega_ball
 #print axioms MatedCRT.Lemma68CGResElSel.resEl_pt
 #print axioms MatedCRT.Lemma68CGResElSel.resStopFin_pt
