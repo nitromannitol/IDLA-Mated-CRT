@@ -2,6 +2,7 @@ import MatedCRT.FirstPass.S3c.CommonSelection
 import MatedCRT.FirstPass.S3c.Thinning
 import MatedCRT.FirstPass.S3c.PointwiseSelection
 import MatedCRT.FirstPass.S3c.CountableFamilies
+import MatedCRT.FirstPass.S3c.ExitTimeCore
 import MatedCRT.FirstPass.Frozen.S3S4
 
 /-!
@@ -130,9 +131,28 @@ theorem firstPass_3_1_faithful {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingIn
     (adjacentCellsMeetAeStep 𝒮) γ hγ hγ2 ρ hρ hρ1 Ω S hS (fun k => σ₀ (φ k)) hpoly
   exact ⟨φ, hφ, Ω₀, hΩ₀, fun D hDρ hDo hDc E u C hEm hum hCm => hsel D hDρ hDo hDc E u C hEm hum hCm⟩
 
+/-- **Lemma 3.1, faithful form with the exit-time input of BG20 Proposition 5.1** (route A, fp-S3c-3-1-fidelity-fix).
+`ExitTimeUpperBoundStmt 𝒮` (Lemma 2.18, both clauses) is proved in `S3c/ExitTimeCore.lean` from the frozen
+`BG20Prop51Ref ν` and `VolumeGrowthStmt`. Consumers should use this name instead of passing `h218`. -/
+theorem firstPass_3_1_faithful_of_bg20 {𝒮 : SpaceFillingSLEModel} {ν : ℝ → Measure SLEPathCode}
+    (hν : SLEReferenceInput ν) (hBG : BG20Prop51Ref ν) (hLaw : HasNormalizedSLELaw 𝒮 ν)
+    (hm : MepsScalingInput 𝒮) (h27 : VolumeGrowthStmt) (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) :
+    DiscretePotentialTightnessPointwiseStmt 𝒮 :=
+  firstPass_3_1_faithful hm h27 (exitTimeUpperBoundStmt_of_bg20 hν hBG hLaw h27) h32
+
+/-- **Lemma 3.1 (countable-family form) with the exit-time input of BG20 Proposition 5.1** (route A). -/
+theorem firstPass_3_1_countable_of_bg20 {𝒮 : SpaceFillingSLEModel} {ν : ℝ → Measure SLEPathCode}
+    (hν : SLEReferenceInput ν) (hBG : BG20Prop51Ref ν) (hLaw : HasNormalizedSLELaw 𝒮 ν)
+    (hm : MepsScalingInput 𝒮) (h27 : VolumeGrowthStmt) (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) :
+    DiscretePotentialTightnessCountableStmt 𝒮 :=
+  firstPass_3_1_countable hm h27 (exitTimeUpperBoundStmt_of_bg20 hν hBG hLaw h27) h32
+
 end S3c
 
 end MatedCRT
 
 #print axioms MatedCRT.S3c.firstPass_3_1_corrected
 #print axioms MatedCRT.S3c.firstPass_3_1_faithful
+#print axioms MatedCRT.S3c.firstPass_3_1_faithful_of_bg20
+#print axioms MatedCRT.S3c.firstPass_3_1_countable_of_bg20
+#print axioms MatedCRT.exitTimeUpperBoundStmt_of_bg20
