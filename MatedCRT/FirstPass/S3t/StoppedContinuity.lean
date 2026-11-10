@@ -1,6 +1,7 @@
 import MatedCRT.FirstPass.S3t.LBMRegular
 import MatedCRT.Proofs.LBM.LocalUniformDistance
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.PathEnvelope
+import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.PathEnvelopeOn
 
 /-!
 # Truncated quenched laws, Step 3: continuity of the exit time and of the stopped occupation (fp-S3t, z2)
@@ -180,5 +181,145 @@ theorem continuousAt_pathExitTime_ball {z : ℂ} {r T : ℝ} {w : ℝ≥0 → �
   dsimp only
   rw [abs_le]
   constructor <;> linarith
+
+/-- The truncated exit time as a real number: `(min (ofReal T) (pathExitTime D u)).toReal`. -/
+noncomputable def truncTime (D : Set ℂ) (T : ℝ) (u : ℝ≥0 → ℂ) : ℝ :=
+  (min (ENNReal.ofReal T) (pathExitTime D u)).toReal
+
+/-- The stopped occupation as an interval integral over `(0, truncTime D T u]`. -/
+theorem stoppedOccupation_eq_intervalIntegral (D : Set ℂ) (T : ℝ) (g : ℂ → ℝ) (u : ℝ≥0 → ℂ) :
+    stoppedOccupation D T g u = ∫ t in (0 : ℝ)..truncTime D T u, g (u t.toNNReal) :=
+  (intervalIntegral.integral_of_le (ENNReal.toReal_nonneg : 0 ≤ truncTime D T u)).symm
+
+/-- **Step 3, continuity of the stopped occupation along continuous paths.** For a continuous bounded-by-`M` path
+functional `g` (continuous `g : ℂ → ℝ`) and a continuous path `w` that exits `ball z r` regularly, the stopped occupation
+`stoppedOccupation (ball z r) T g` is continuous at `w` for the local uniform distance, *restricted to continuous paths*.
+The restriction is necessary: for a non-measurable perturbation `v` of `w`, `g ∘ v` is not integrable, and the Bochner
+integral is `0`; see the notes. -/
+theorem continuousAt_stoppedOccupation_cont {z : ℂ} {r T : ℝ} {g : ℂ → ℝ} {w : ℝ≥0 → ℂ}
+    (hg : Continuous g) (hw : Continuous w) (hT : 0 ≤ T) (hreg : RegularExit (ball z r) w) :
+    MatedCRT.PathFunctionalContinuousWithinAt {v : ℝ≥0 → ℂ | Continuous v}
+      (stoppedOccupation (ball z r) T g) w := by
+  set T' : ℝ≥0 := T.toNNReal with hT'
+  set K : Set ℂ := w '' Icc (0 : ℝ≥0) T' with hKdef
+  have hK : IsCompact K := isCompact_Icc.image hw
+  obtain ⟨M, hM⟩ := hK.exists_bound_of_continuousOn hg.continuousOn
+  have hC : IsCompact (cthickening (1 : ℝ) K) := hK.cthickening
+  have huc := hC.uniformContinuousOn_of_continuous hg.continuousOn
+  have hAcont := continuousAt_pathExitTime_ball (z := z) (r := r) hw hT hreg
+  intro η hη
+  set ε₁ : ℝ := η / (2 * (T + 1)) with hε₁def
+  set ε₂ : ℝ := η / (2 * (|M| + 1)) with hε₂def
+  have hT1 : (T + 1 : ℝ) ≠ 0 := by linarith
+  have hM1 : (|M| + 1 : ℝ) ≠ 0 := by positivity
+  have hε₁pos : 0 < ε₁ := div_pos hη (by linarith)
+  have hε₂pos : 0 < ε₂ := div_pos hη (by positivity)
+  have hε₁T : ε₁ * (T + 1) = η / 2 := by rw [hε₁def]; field_simp
+  have hε₂M : ε₂ * (|M| + 1) = η / 2 := by rw [hε₂def]; field_simp
+  obtain ⟨δ, hδ, hgd⟩ := Metric.uniformContinuousOn_iff.1 huc ε₁ hε₁pos
+  obtain ⟨ρa, hρa, hA⟩ := hAcont ε₂ hε₂pos
+  set k : ℕ := ⌈T'⌉₊ with hk
+  have hρd : (0 : ℝ) < (2 : ℝ)⁻¹ ^ (k + 1) * min 1 δ :=
+    mul_pos (pow_pos (by norm_num) _) (lt_min one_pos hδ)
+  refine ⟨min ρa ((2 : ℝ)⁻¹ ^ (k + 1) * min 1 δ), lt_min hρa hρd, fun v hv_cont hv => ?_⟩
+  -- pointwise closeness on `[0, T']`
+  have hclose : ∀ t : ℝ≥0, t ≤ T' → dist (v t) (w t) < δ ∧ dist (v t) (w t) < 1 := by
+    intro t ht
+    have hk1 : t ≤ ((k + 1 : ℕ) : ℝ≥0) :=
+      ht.trans ((Nat.le_ceil T').trans (by exact_mod_cast Nat.le_succ _))
+    have hdist := weighted_min_dist_le_localUniformDist v w k hk1
+    have hlt : (2 : ℝ)⁻¹ ^ (k + 1) * min 1 (dist (v t) (w t)) <
+        (2 : ℝ)⁻¹ ^ (k + 1) * min 1 δ :=
+      lt_of_le_of_lt hdist (lt_of_lt_of_le hv (min_le_right _ _))
+    have hmin_lt : min 1 (dist (v t) (w t)) < min 1 δ :=
+      lt_of_mul_lt_mul_left hlt (pow_nonneg (by norm_num) _)
+    have hd1 : dist (v t) (w t) < 1 := by
+      rcases min_lt_iff.1 (lt_of_lt_of_le hmin_lt (min_le_left _ _)) with h | h
+      · exact absurd h (lt_irrefl _)
+      · exact h
+    refine ⟨?_, hd1⟩
+    by_contra hcon
+    have hcon' := not_lt.1 hcon
+    have : min 1 δ ≤ min 1 (dist (v t) (w t)) := min_le_min le_rfl hcon'
+    linarith
+  have hmemC : ∀ t : ℝ≥0, t ≤ T' → v t ∈ cthickening (1 : ℝ) K ∧ w t ∈ cthickening (1 : ℝ) K := by
+    intro t ht
+    have hwK : w t ∈ K := mem_image_of_mem w ⟨zero_le, ht⟩
+    exact ⟨Metric.mem_cthickening_of_dist_le (v t) (w t) 1 K hwK (hclose t ht).2.le,
+      Metric.mem_cthickening_of_dist_le (w t) (w t) 1 K hwK (by rw [dist_self]; norm_num)⟩
+  -- the truncated times lie in `[0, T]`
+  have hav_le : ∀ u : ℝ≥0 → ℂ, truncTime (ball z r) T u ≤ T := fun u => by
+    have := ENNReal.toReal_mono ENNReal.ofReal_ne_top
+      (min_le_left (ENNReal.ofReal T) (pathExitTime (ball z r) u))
+    unfold truncTime
+    rwa [ENNReal.toReal_ofReal hT] at this
+  have hav_nn : ∀ u : ℝ≥0 → ℂ, 0 ≤ truncTime (ball z r) T u := fun u => ENNReal.toReal_nonneg
+  have hcont_v : Continuous (fun t : ℝ => g (v t.toNNReal)) :=
+    hg.comp (hv_cont.comp continuous_real_toNNReal)
+  have hcont_w : Continuous (fun t : ℝ => g (w t.toNNReal)) :=
+    hg.comp (hw.comp continuous_real_toNNReal)
+  have hF : stoppedOccupation (ball z r) T g v - stoppedOccupation (ball z r) T g w =
+      (∫ t in (0 : ℝ)..truncTime (ball z r) T v, (g (v t.toNNReal) - g (w t.toNNReal))) +
+        ∫ t in truncTime (ball z r) T w..truncTime (ball z r) T v, g (w t.toNNReal) := by
+    rw [stoppedOccupation_eq_intervalIntegral, stoppedOccupation_eq_intervalIntegral,
+      intervalIntegral.integral_sub (hcont_v.intervalIntegrable 0 (truncTime (ball z r) T v))
+        (hcont_w.intervalIntegrable 0 (truncTime (ball z r) T v)),
+      ← intervalIntegral.integral_interval_sub_left (hcont_w.intervalIntegrable 0 (truncTime (ball z r) T v))
+        (hcont_w.intervalIntegrable 0 (truncTime (ball z r) T w))]
+    ring
+  -- first piece: the integrand difference is small on `(0, a_v]`
+  have hI1 : |∫ t in (0 : ℝ)..truncTime (ball z r) T v, (g (v t.toNNReal) - g (w t.toNNReal))| ≤
+      ε₁ * T := by
+    have hb := intervalIntegral.norm_integral_le_of_norm_le_const (a := 0)
+      (b := truncTime (ball z r) T v) (C := ε₁)
+      (f := fun t : ℝ => g (v t.toNNReal) - g (w t.toNNReal)) (fun x hx => by
+        rw [Set.uIoc_of_le (hav_nn v)] at hx
+        have hxT : x.toNNReal ≤ T' := Real.toNNReal_le_toNNReal (hx.2.trans (hav_le v))
+        have hd := hgd (v x.toNNReal) (hmemC x.toNNReal hxT).1 (w x.toNNReal) (hmemC x.toNNReal hxT).2
+          (hclose x.toNNReal hxT).1
+        rw [Real.dist_eq] at hd
+        rw [Real.norm_eq_abs]
+        exact hd.le)
+    rw [Real.norm_eq_abs, sub_zero, abs_of_nonneg (hav_nn v)] at hb
+    have hav0 := hav_nn v
+    calc |∫ t in (0 : ℝ)..truncTime (ball z r) T v, (g (v t.toNNReal) - g (w t.toNNReal))|
+        ≤ ε₁ * truncTime (ball z r) T v := hb
+      _ ≤ ε₁ * T := mul_le_mul_of_nonneg_left (hav_le v) hε₁pos.le
+  -- second piece: the change of endpoint, with `|g| ≤ M` on the path
+  have hI2 : |∫ t in truncTime (ball z r) T w..truncTime (ball z r) T v, g (w t.toNNReal)| ≤
+      |M| * |truncTime (ball z r) T v - truncTime (ball z r) T w| := by
+    have hb := intervalIntegral.norm_integral_le_of_norm_le_const (a := truncTime (ball z r) T w)
+      (b := truncTime (ball z r) T v) (C := |M|)
+      (f := fun t : ℝ => g (w t.toNNReal)) (fun x hx => by
+        have hxI := Set.uIoc_subset_uIcc hx
+        have hxIcc : x ∈ Icc (0 : ℝ) T :=
+          Set.uIcc_subset_Icc ⟨hav_nn w, hav_le w⟩ ⟨hav_nn v, hav_le v⟩ hxI
+        have hxT : x.toNNReal ≤ T' := Real.toNNReal_le_toNNReal hxIcc.2
+        have hwK : w x.toNNReal ∈ K := mem_image_of_mem w ⟨zero_le, hxT⟩
+        rw [Real.norm_eq_abs]
+        exact (hM _ hwK).trans (le_abs_self M))
+    rw [Real.norm_eq_abs] at hb
+    exact hb
+  -- closeness of the exit times, from `continuousAt_pathExitTime_ball`
+  have hAclose : |truncTime (ball z r) T v - truncTime (ball z r) T w| ≤ ε₂ :=
+    hA v (lt_of_lt_of_le hv (min_le_left _ _))
+  have hF' : |stoppedOccupation (ball z r) T g v - stoppedOccupation (ball z r) T g w| ≤
+      ε₁ * T + |M| * ε₂ := by
+    rw [hF]
+    calc _ ≤ |∫ t in (0 : ℝ)..truncTime (ball z r) T v, (g (v t.toNNReal) - g (w t.toNNReal))| +
+          |∫ t in truncTime (ball z r) T w..truncTime (ball z r) T v, g (w t.toNNReal)| := abs_add_le _ _
+      _ ≤ ε₁ * T + |M| * ε₂ := by
+        have : |M| * |truncTime (ball z r) T v - truncTime (ball z r) T w| ≤ |M| * ε₂ :=
+          mul_le_mul_of_nonneg_left hAclose (abs_nonneg M)
+        linarith
+  have hεT : ε₁ * T ≤ η / 2 := by
+    rw [← hε₁T]; exact mul_le_mul_of_nonneg_left (by linarith) hε₁pos.le
+  have hεM : |M| * ε₂ ≤ η / 2 := by
+    have h := mul_le_mul_of_nonneg_left (show |M| ≤ |M| + 1 by linarith) hε₂pos.le
+    linarith [mul_comm (|M|) ε₂, hε₂M]
+  linarith
+
+#print axioms continuousAt_pathExitTime_ball
+#print axioms continuousAt_stoppedOccupation_cont
 
 end MatedCRT.TruncatedLaws
