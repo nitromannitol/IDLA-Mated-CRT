@@ -437,6 +437,120 @@ theorem hdbl_of_exit_geom_237 {γ ρc ζc : ℝ} (K : Constants68 γ ρc) {ε : 
             (K.c0 * Rf (shellCentre ε η Kset r s d k ω)))).toReal := by
         rw [ENNReal.toReal_mul, ENNReal.toReal_ofReal hD0]
 
+/-- **The one-test doubling bound at one walk and one shell (fp-S4S6c-B1-assembly-ae).** The pointwise form of
+`hdbl_of_exit_geom_237` at the shell `k` and the walk `ω`, with the cell-control radius `ρ'` (`ρc ≤ ρ'`) in place of
+`ρc + 3/8`: the exit cell meets `B_{ρc - ε^ω}` (`hWalk`), hence `B_{ρ'}`. The hypotheses are the instances at `(k, ω)`
+of those of `hdbl_of_exit_geom_237`, so that they can be taken almost surely in the walk (`ae_all_iff`). -/
+theorem hdbl_of_exit_geom_path {γ ρc ζc : ℝ} (K : Constants68 γ ρc) {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η)
+    (hε : 0 < ε) {μ : Measure ℂ} [IsFiniteMeasureOnCompacts μ]
+    {Kset : Set ℂ} {Rf : ℂ → ℝ} {r s d : ℝ} {Z : ℕ → (ℕ → ℤ) → ℂ}
+    {C_good : ℝ} (hr : 0 < r) (k : ℕ) (ω : ℕ → ℤ) (ρ' : ℝ) (hρ' : ρc ≤ ρ')
+    (hRr_x : r ^ 2 ≤ Rf (shellCentre ε η Kset r s d k ω) ∧ Rf (shellCentre ε η Kset r s d k ω) ≤ 1)
+    (rmin : ℝ)
+    (hRmin_x : rmin ≤ K.c0 * Rf (shellCentre ε η Kset r s d k ω))
+    (hWalk_x : ω (shellExit ε η Kset r s d Rf k ω).toNat ∈ cellVertices ε η (ball 0 (ρc - ε ^ K.ω)) ∧
+      ε ^ K.ω ≤ Rf (shellCentre ε η Kset r s d k ω) / 8 ∧
+      Rf (shellCentre ε η Kset r s d k ω) / 8 ≤
+        infDist (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat)) (sphere 0 ρc))
+    (hCellGood : ∀ k' : ℤ, (cell ε η k' ∩ ball (0 : ℂ) ρ').Nonempty →
+      diam (cell ε η k') ≤ ε ^ (2 / (2 + γ) ^ 2 - ζc))
+    (hεcell : ε ^ (2 / (2 + γ) ^ 2 - ζc) ≤ rmin / 100)
+    (hgood_x : IsGoodAnnulusEvent μ K.c0 C_good (Rf (shellCentre ε η Kset r s d k ω)) (Z k ω))
+    (hb_x : ω (shellExit ε η Kset r s d Rf k ω).toNat ∈
+      cellVertices ε η (sphere (Z k ω) (4 * Rf (shellCentre ε η Kset r s d k ω) / 3))) :
+    (μ (ball (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat))
+        (3 * K.c0 * Rf (shellCentre ε η Kset r s d k ω)))).toReal
+      ≤ MatedCRT.Lemma68ConstOrder.shellDbl68 C_good *
+        (μ (ball (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat))
+          (K.c0 * Rf (shellCentre ε η Kset r s d k ω)))).toReal := by
+  have hR0 : 0 < Rf (shellCentre ε η Kset r s d k ω) :=
+    lt_of_lt_of_le (pow_pos hr 2) hRr_x.1
+  have hpow : 0 ≤ ε ^ K.ω := Real.rpow_nonneg hε.le _
+  have hWv : (cell ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat) ∩
+      ball (0 : ℂ) (ρc - ε ^ K.ω)).Nonempty := hWalk_x.1
+  have hmeet : (cell ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat) ∩
+      ball (0 : ℂ) ρ').Nonempty := by
+    obtain ⟨p, hp1, hp2⟩ := hWv
+    exact ⟨p, hp1, ball_subset_ball (by linarith) hp2⟩
+  have hdiam : diam (cell ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat)) ≤
+      K.c0 * Rf (shellCentre ε η Kset r s d k ω) / 100 := by
+    have h1 := hCellGood _ hmeet
+    have h2 := hRmin_x
+    linarith
+  obtain ⟨p, hpc, hps⟩ : (cell ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat) ∩
+      sphere (Z k ω) (4 * Rf (shellCentre ε η Kset r s d k ω) / 3)).Nonempty := hb_x
+  have hdist_p : dist p (Z k ω) = 4 * Rf (shellCentre ε η Kset r s d k ω) / 3 := mem_sphere.1 hps
+  have hx : vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat) ∈
+      cell ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat) :=
+    MatedCRT.Lemma68C12Geom.vertexPoint_mem_cell hε.le _
+  have hbdd : Bornology.IsBounded (cell ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat)) :=
+    (MatedCRT.Lemma68C12Geom.cell_isCompact hη _).isBounded
+  have hxp : dist (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat)) p ≤
+      K.c0 * Rf (shellCentre ε η Kset r s d k ω) / 100 :=
+    (dist_le_diam_of_mem hbdd hx hpc).trans hdiam
+  have habs : |dist (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat)) (Z k ω) -
+      4 * Rf (shellCentre ε η Kset r s d k ω) / 3| ≤
+      K.c0 * Rf (shellCentre ε η Kset r s d k ω) / 100 := by
+    have h := abs_dist_sub_le (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat)) p (Z k ω)
+    rw [hdist_p] at h
+    exact h.trans hxp
+  obtain ⟨hl, hu⟩ := abs_le.1 habs
+  have ht : K.c0 * Rf (shellCentre ε η Kset r s d k ω) ≤ Rf (shellCentre ε η Kset r s d k ω) / 24 := by
+    have := mul_le_mul_of_nonneg_right K.hc0' hR0.le
+    linarith
+  have ht0 : 0 ≤ K.c0 * Rf (shellCentre ε η Kset r s d k ω) := mul_nonneg K.hc0.le hR0.le
+  have hx_ann : vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat) ∈
+      annulus (Z k ω) (Rf (shellCentre ε η Kset r s d k ω)) (2 * Rf (shellCentre ε η Kset r s d k ω)) := by
+    show _ ∈ Metric.ball (Z k ω) (2 * Rf (shellCentre ε η Kset r s d k ω)) \
+      Metric.closedBall (Z k ω) (Rf (shellCentre ε η Kset r s d k ω))
+    refine ⟨?_, ?_⟩
+    · rw [mem_ball]
+      linarith
+    · intro h
+      rw [mem_closedBall] at h
+      linarith
+  have hsub : ball (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat))
+      (3 * K.c0 * Rf (shellCentre ε η Kset r s d k ω)) ⊆
+      annulus (Z k ω) (Rf (shellCentre ε η Kset r s d k ω)) (2 * Rf (shellCentre ε η Kset r s d k ω)) := by
+    intro w hw
+    rw [mem_ball] at hw
+    have h3 : 3 * K.c0 * Rf (shellCentre ε η Kset r s d k ω) =
+        3 * (K.c0 * Rf (shellCentre ε η Kset r s d k ω)) := by ring
+    have h1 := dist_triangle w (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat)) (Z k ω)
+    have h2 : dist (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat)) (Z k ω) ≤
+        dist w (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat)) + dist w (Z k ω) := by
+      have := dist_triangle (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat)) w (Z k ω)
+      rwa [dist_comm (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat)) w] at this
+    show w ∈ Metric.ball (Z k ω) (2 * Rf (shellCentre ε η Kset r s d k ω)) \
+      Metric.closedBall (Z k ω) (Rf (shellCentre ε η Kset r s d k ω))
+    refine ⟨?_, ?_⟩
+    · rw [mem_ball]
+      linarith
+    · intro h
+      rw [mem_closedBall] at h
+      linarith
+  have hD0 : 0 ≤ MatedCRT.Lemma68ConstOrder.shellDbl68 C_good := by
+    unfold MatedCRT.Lemma68ConstOrder.shellDbl68
+    exact le_trans zero_le_one (le_max_left _ _)
+  have hm := MatedCRT.Lemma68ShellDbl.measure_three_le_shellDbl68 K.hc0
+    (by linarith [K.hc0']) hR0 (hgood_x) hx_ann hsub
+  have hfin : μ (ball (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat))
+      (K.c0 * Rf (shellCentre ε η Kset r s d k ω))) ≠ ⊤ :=
+    (measure_ball_lt_top).ne
+  calc (μ (ball (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat))
+          (3 * K.c0 * Rf (shellCentre ε η Kset r s d k ω)))).toReal
+      ≤ (ENNReal.ofReal (MatedCRT.Lemma68ConstOrder.shellDbl68 C_good) *
+          μ (ball (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat))
+            (K.c0 * Rf (shellCentre ε η Kset r s d k ω)))).toReal :=
+        ENNReal.toReal_mono (ENNReal.mul_ne_top ENNReal.ofReal_ne_top hfin) hm
+    _ = MatedCRT.Lemma68ConstOrder.shellDbl68 C_good *
+          (μ (ball (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat))
+            (K.c0 * Rf (shellCentre ε η Kset r s d k ω)))).toReal := by
+        rw [ENNReal.toReal_mul, ENNReal.toReal_ofReal hD0]
+
+#print axioms MatedCRT.Lemma68HoneExitGeom.hdbl_of_exit_geom_path
+
+
 /-! ## Environment inputs of `hb`, discharged (fp-S4S6c-walk-env-adjacency)
 
 For a valid environment `S` and `ε > 0`, the edge multiplicity `m = S.mult ε ω` of the mated-CRT map satisfies, almost
