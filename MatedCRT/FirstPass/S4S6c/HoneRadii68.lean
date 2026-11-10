@@ -1,6 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.ShellHoneInst68
 import MatedCRT.FirstPass.S4S6c.ShellWindowRf68
 import MatedCRT.FirstPass.S4S6c.ShellChainGlue68
+import MatedCRT.FirstPass.S4S6c.ShellHde68
 
 /-!
 # Dischargers of the leaf binders of `shellOneTest_of_direct` (z12, fp-S4S6c-hone-radii)
@@ -24,6 +25,7 @@ namespace Lemma68HoneRadii
 
 open MatedCRT.Lemma68Window MatedCRT.Lemma68WindowRf MatedCRT.Lemma68ChainGlue MatedCRT.Lemma68ShellHoneInst
 open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent MatedCRT.Lemma68Omega
+open MatedCRT.Lemma68Admissible
 
 /-- Range of the total window radius on the eligible set, for every environment and every `ω`:
 `windowRfT_bounds` (ShellWindowRf68.lean:65) restated as the range hypothesis `hRf` of `hRr_of_centre`. -/
@@ -101,6 +103,62 @@ theorem hεcell_of_scale {γ ρc : ℝ} (K : Constants68 γ ρc) {ε r ζc : ℝ
     _ ≤ (r ^ 2 / 100) * K.c0 := mul_le_mul_of_nonneg_right hr2 hc0.le
     _ = K.c0 * r ^ 2 / 100 := by ring
 
+/-- **Pointwise walk-centre check, in the leaf's notation (from `shell_fin_of_path`, S4S6c/ShellHde68.lean:209).**
+For one walk `x` whose consecutive cells meet, started on the frontier of the `r/2`-thickening of `fillCells ε η Θ`,
+with finite killed exit `vExitTime (killed ε η Θ F0 r) x`, every shell index `k ≤ n` has its centre in
+`shortEligible ρ d a`. The leaf's `Kset` is `fillCells ε η Θ` and its `s` is `d ^ a`; the radius range `hRf` on
+`shortEligible` is the one of `hRr_of_centre`. Not in the leaf: `hmesh` (routed 55b), `hF0`, `h0`, `hKb`, `hst`, `hτ`. -/
+theorem shellCentre_mem_of_walk {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (hε : 0 < ε)
+    {Θ F0 : Finset ℤ} {ρ r d a : ℝ} {Rf : ℂ → ℝ} {n : ℕ} (hr : 0 < r) (hrρ : r ≤ ρ / 4) (hd : 0 < d)
+    (hds : d ≤ d ^ a) (hs4 : d ^ a ≤ r / 4000) (hNs : 20 * ((n + 1 : ℕ) : ℝ) * d ^ a ≤ r / 20)
+    (hmesh : CellDiamLe ε η (d / 100) Set.univ)
+    (hF0 : (↑F0 : Set ℤ) = cellVertices ε η (Metric.ball (0 : ℂ) ρ))
+    (h0 : (0 : ℂ) ∈ fillCells ε η ↑Θ) (hKb : fillCells ε η ↑Θ ⊆ Metric.ball (0 : ℂ) (ρ / 2))
+    (hRf : ∀ z ∈ shortEligible ρ d a, d ≤ Rf z ∧ Rf z ≤ d ^ a)
+    {x : ℕ → ℤ} (hadj : ∀ j : ℕ, (cell ε η (x j) ∩ cell ε η (x (j + 1))).Nonempty)
+    (hst : (cell ε η (x 0) ∩ frontier (Metric.thickening (r / 2) (fillCells ε η ↑Θ))).Nonempty)
+    (hτ : vExitTime (killed ε η Θ F0 r) x ≠ ⊤) :
+    ∀ k ≤ n, shellCentre ε η (fillCells ε η ↑Θ) r (d ^ a) d k x ∈ shortEligible ρ d a :=
+  fun k hk => (Lemma68ShellHde68.shell_fin_of_path hη hε hr hrρ hd hds hs4 hNs hmesh hF0 h0 hKb hRf hadj hst hτ k hk).2
+
+/-- **`hRr` along one walk (`k ≤ n`).** From `shellCentre_mem_of_walk` and the range `hRf`: the radius at the shell
+centre lies in `[r ^ 2, 1]`, using `r ^ 2 ≤ d` and `d ≤ 1`, `0 ≤ a`. This is the pointwise content of the binder
+`hRr` of `shellOneTest_of_direct`, for the walks that the leaf's `prefixSet` does not single out (see the report). -/
+theorem radius_bounds_of_walk {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (hε : 0 < ε)
+    {Θ F0 : Finset ℤ} {ρ r d a : ℝ} {Rf : ℂ → ℝ} {n : ℕ} (hr : 0 < r) (hrρ : r ≤ ρ / 4) (hd : 0 < d) (hd1 : d ≤ 1)
+    (ha0 : 0 ≤ a) (hdr : r ^ 2 ≤ d) (hds : d ≤ d ^ a) (hs4 : d ^ a ≤ r / 4000)
+    (hNs : 20 * ((n + 1 : ℕ) : ℝ) * d ^ a ≤ r / 20)
+    (hmesh : CellDiamLe ε η (d / 100) Set.univ)
+    (hF0 : (↑F0 : Set ℤ) = cellVertices ε η (Metric.ball (0 : ℂ) ρ))
+    (h0 : (0 : ℂ) ∈ fillCells ε η ↑Θ) (hKb : fillCells ε η ↑Θ ⊆ Metric.ball (0 : ℂ) (ρ / 2))
+    (hRf : ∀ z ∈ shortEligible ρ d a, d ≤ Rf z ∧ Rf z ≤ d ^ a)
+    {x : ℕ → ℤ} (hadj : ∀ j : ℕ, (cell ε η (x j) ∩ cell ε η (x (j + 1))).Nonempty)
+    (hst : (cell ε η (x 0) ∩ frontier (Metric.thickening (r / 2) (fillCells ε η ↑Θ))).Nonempty)
+    (hτ : vExitTime (killed ε η Θ F0 r) x ≠ ⊤) :
+    ∀ k ≤ n, r ^ 2 ≤ Rf (shellCentre ε η (fillCells ε η ↑Θ) r (d ^ a) d k x) ∧
+      Rf (shellCentre ε η (fillCells ε η ↑Θ) r (d ^ a) d k x) ≤ 1 := by
+  intro k hk
+  obtain ⟨h1, h2⟩ := hRf _ (shellCentre_mem_of_walk hη hε hr hrρ hd hds hs4 hNs hmesh hF0 h0 hKb hRf hadj hst hτ k hk)
+  exact ⟨hdr.trans h1, h2.trans (Real.rpow_le_one hd.le hd1 ha0)⟩
+
+/-- **Small-scale exponent bound (real analysis).** If `2 ω < κ` and `ε ≤ c₀ ^ (1 / (κ - 2 ω))`, then
+`ε ^ (κ - 2 ω) ≤ c₀`. Used to turn the ε-smallness of `hεsm` into an explicit hypothesis. -/
+theorem rpow_sub_le_of_small {ε κ ω c0 : ℝ} (hε : 0 < ε) (hc0 : 0 < c0) (hκ : 2 * ω < κ)
+    (hεsm : ε ≤ c0 ^ (1 / (κ - 2 * ω))) : ε ^ (κ - 2 * ω) ≤ c0 := by
+  have hd : 0 < κ - 2 * ω := by linarith
+  calc ε ^ (κ - 2 * ω) ≤ (c0 ^ (1 / (κ - 2 * ω))) ^ (κ - 2 * ω) :=
+        Real.rpow_le_rpow hε.le hεsm hd.le
+    _ = c0 := by rw [← Real.rpow_mul hc0.le, one_div_mul_cancel hd.ne', Real.rpow_one]
+
+/-- **`hεcell` of `shellOneTest_of_direct` at `rmin := K.c0 * r ^ 2`, with the explicit smallness.** The two
+conditions of `hεcell_of_scale` are reduced to: the exponent relation `2 K.ω < 2/(2+γ)² - ζc` and the explicit
+smallness `ε ≤ K.c0 ^ (1 / (2/(2+γ)² - ζc - 2 K.ω))`. The scale range `10 ε^K.ω ≤ r` stays an input. -/
+theorem hεcell_of_scale_small {γ ρc : ℝ} (K : Constants68 γ ρc) {ε r ζc : ℝ} (hε : 0 < ε)
+    (hrε : 10 * ε ^ K.ω ≤ r) (hκ : 2 * K.ω < 2 / (2 + γ) ^ 2 - ζc)
+    (hεsm : ε ≤ K.c0 ^ (1 / (2 / (2 + γ) ^ 2 - ζc - 2 * K.ω))) :
+    ε ^ (2 / (2 + γ) ^ 2 - ζc) ≤ K.c0 * r ^ 2 / 100 :=
+  hεcell_of_scale K hε hrε (rpow_sub_le_of_small hε K.hc0 hκ hεsm)
+
 end Lemma68HoneRadii
 end MatedCRT
 
@@ -109,3 +167,7 @@ end MatedCRT
 #print axioms MatedCRT.Lemma68HoneRadii.hRr_of_centre_dyadic
 #print axioms MatedCRT.Lemma68HoneRadii.hRmin_of_hRr
 #print axioms MatedCRT.Lemma68HoneRadii.hεcell_of_scale
+#print axioms MatedCRT.Lemma68HoneRadii.shellCentre_mem_of_walk
+#print axioms MatedCRT.Lemma68HoneRadii.radius_bounds_of_walk
+#print axioms MatedCRT.Lemma68HoneRadii.rpow_sub_le_of_small
+#print axioms MatedCRT.Lemma68HoneRadii.hεcell_of_scale_small
