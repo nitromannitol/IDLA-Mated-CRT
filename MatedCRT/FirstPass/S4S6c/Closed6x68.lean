@@ -20,6 +20,9 @@ Binder status (the same in the three theorems; a binder not used by a theorem is
 * `hμ`: quantum-cone LQG existence for every `γ ∈ (0,2)`: pending request 60b.
 * `h27 : VolumeGrowthStmt` (6.8 only, Draft Section 2): named input.
 * `hOne : ShellOneTestOrderAeStmt 𝒮` (B1, ShellHoneInst68.lean:158): named input, proof by q1 (B1Assembly68).
+* Eps route (`closed_6_7_hU_eps`, `closed_6_8_hU_eps`, `closed_6_9_hU_eps`, `closed_6_x_hU_eps`; q2, fp-S4S6c-eps-closures):
+  the same binders with `hOne : ShellOneTestOrderAeEpsStmt 𝒮` (ShellHoneInst68.lean:233: mesh threshold `ε ≤ shellEps0`,
+  exponent antecedents, radius cutoff). B1 in the old form gives it by `shellOneTestOrderAeEpsStmt_of_old` (ShellHoneInst68).
 
 Terminology: Armstrong-Kuusi-Mourrat (good annuli, shell order), Duplantier-Sheffield (quantum cone, LQG measure),
 Berestycki-Powell (LQG measure), Armitage-Gardiner (balls, Green functions).
@@ -90,9 +93,56 @@ theorem closed_6_x_hU_eps {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SL
     UniformConstantOrderLowerBoundStmt 𝒮 :=
   Lemma68ShellTop.hU_top_eps hC.greenKernelLowerBound hC.cellSizeEstimate hC.exitTimeUpperBound hLit hBM hCC hB1 hμ hOne
 
+/-- **Lemma 6.7 (faithful header), Eps route, closed from the top assembly.** As `closed_6_7_hU` (same binders
+`hC hLit hBM hCC hB1 hμ`), with `hOne` the Eps form `ShellOneTestOrderAeEpsStmt` (ShellHoneInst68.lean:233).
+Conclusion: `firstPass_6_7_faithful` (S6d.lean:160) applied to `hU_top_eps` (ShellTop68.lean). -/
+theorem closed_6_7_hU_eps {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
+    (hC : CertifiedReferenceModelCore ν 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
+      (hcone : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsProbabilityMeasure P → IsQuantumCone γ P hcone hcirc →
+      ∃ μ : Ω → Measure ℂ, IsLQGMeasure P γ hcirc μ)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeEpsStmt 𝒮) :
+    FaithfulConstantOrderLowerBoundStmt 𝒮 :=
+  firstPass_6_7_faithful 𝒮
+    (Lemma68ShellTop.hU_top_eps hC.greenKernelLowerBound hC.cellSizeEstimate hC.exitTimeUpperBound hLit hBM hCC hB1 hμ hOne)
+
+/-- **Lemma 6.8 (faithful header, localized form), Eps route, closed from the top assembly.** As `closed_6_8_hU`
+(same binders `hC hLit hBM hCC hB1 hμ h27`), with `hOne` the Eps form `ShellOneTestOrderAeEpsStmt`. Conclusion:
+`firstPass_6_8_faithful` (S6d.lean:195) applied to `hU_top_eps`, `h27` and the cell-size estimate `hC.cellSizeEstimate`. -/
+theorem closed_6_8_hU_eps {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
+    (hC : CertifiedReferenceModelCore ν 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
+      (hcone : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsProbabilityMeasure P → IsQuantumCone γ P hcone hcirc →
+      ∃ μ : Ω → Measure ℂ, IsLQGMeasure P γ hcirc μ)
+    (h27 : VolumeGrowthStmt)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeEpsStmt 𝒮) :
+    FaithfulConstantOrderLowerBoundDivStmt 𝒮 :=
+  firstPass_6_8_faithful 𝒮
+    (Lemma68ShellTop.hU_top_eps hC.greenKernelLowerBound hC.cellSizeEstimate hC.exitTimeUpperBound hLit hBM hCC hB1 hμ hOne)
+    h27 hC.cellSizeEstimate
+
+/-- **Lemma 6.9 (faithful header), Eps route, closed from the top assembly.** As `closed_6_9_hU` (same binders
+`hC hLit hBM hCC hB1 hμ`), with `hOne` the Eps form `ShellOneTestOrderAeEpsStmt`. Conclusion:
+`firstPass_6_9_faithful` (S6d.lean:114) applied to `hU_top_eps`. -/
+theorem closed_6_9_hU_eps {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
+    (hC : CertifiedReferenceModelCore ν 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
+      (hcone : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsProbabilityMeasure P → IsQuantumCone γ P hcone hcirc →
+      ∃ μ : Ω → Measure ℂ, IsLQGMeasure P γ hcirc μ)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeEpsStmt 𝒮) :
+    FaithfulChanceOfBeingAbsorbedStmt 𝒮 :=
+  firstPass_6_9_faithful 𝒮
+    (Lemma68ShellTop.hU_top_eps hC.greenKernelLowerBound hC.cellSizeEstimate hC.exitTimeUpperBound hLit hBM hCC hB1 hμ hOne)
+
 end MatedCRT
 
 #print axioms MatedCRT.closed_6_x_hU_eps
-#print axioms MatedCRT.closed_6_7_hU
-#print axioms MatedCRT.closed_6_8_hU
-#print axioms MatedCRT.closed_6_9_hU
+#print axioms MatedCRT.closed_6_7_hU_eps
+#print axioms MatedCRT.closed_6_8_hU_eps
+#print axioms MatedCRT.closed_6_9_hU_eps
