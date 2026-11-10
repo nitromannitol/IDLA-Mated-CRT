@@ -2,6 +2,8 @@ import Mathlib
 import MatedCRT.FirstPass.S6e.Admissible
 import MatedCRT.FirstPass.S6e.GeometryId
 import MatedCRT.FirstPass.S6e.Final
+import MatedCRT.Steps.Sec6.ConstantOrderLowerBound
+import MatedCRT.Proofs.Sec6.ConstantOrderLowerBound.OfSteps
 
 /-!
 # Lemma 6.8 bridge, section 5 (fp-S6e, z9): local sparsity gives the sparsity clause (15)
@@ -192,6 +194,100 @@ theorem div_bound_of_exitQ {η : ℝ → ℂ} (hη : Continuous η) {ε : ℝ} (
   have h12 : (1 : ℝ) - 1 / 2 = 1 / 2 := by norm_num
   rw [h12]
   exact measure_le_ofReal_of_real_le hquant
+
+
+/-- The closure of the half thickening lies in the thickening (`cl(Θ̄ + B_{r/2}) ⊆ Θ̄ + B_r`). -/
+theorem closure_thickening_half_subset {K : Set ℂ} {r : ℝ} (hr : 0 < r) :
+    closure (thickening (r / 2) K) ⊆ thickening r K := by
+  intro x hx
+  rw [Metric.mem_thickening_iff_infEDist_lt]
+  have hx' : Metric.infEDist x K ≤ ENNReal.ofReal (r / 2) :=
+    closure_minimal (t := {y : ℂ | Metric.infEDist y K ≤ ENNReal.ofReal (r / 2)})
+      (fun y hy => (Metric.mem_thickening_iff_infEDist_lt.1 hy).le)
+      (isClosed_le Metric.continuous_infEDist continuous_const) hx
+  exact lt_of_le_of_lt hx' ((ENNReal.ofReal_lt_ofReal_iff hr).2 (by linarith))
+
+/-- **Lemma 6.8 at a middle-boundary start, set form.** Given the quenched bound `Phi` at the frontier start `b`,
+the walk from `b` exits `W \ Θ` only through `A` with probability at most `1 - 1/2`. -/
+theorem div_bound_of_phi {η : ℝ → ℂ} (hη : Continuous η) {ε : ℝ} (hε : 0 < ε) {Θ F0 A : Finset ℤ}
+    {r βm : ℝ} {b : ℤ} (P : Measure (ℕ → ℤ)) (hK : (fillCells ε η (↑Θ : Set ℤ)).Nonempty) (hr : 0 < r)
+    (hβ : 0 < βm)
+    (hb : b ∈ cellVertices ε η (frontier (thickening (r / 2) (fillCells ε η (↑Θ : Set ℤ)))))
+    (hF : cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) ⊆ (↑F0 : Set ℤ))
+    (hA : (↑A : Set ℤ) ⊆ cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) \ (↑Θ : Set ℤ))
+    (hloc : ∀ z : ℂ, (((A : Set ℤ) ∩ cellVertices ε η (ball z r)).ncard : ℝ) < (1 / 4) * r ^ (2 * βm) / ε)
+    (hPhi : Lemma68Admissible.Phi ε η Θ F0 A b (1 / 4) βm P r) :
+    P {x : ℕ → ℤ | ∀ n : ℕ,
+        (n : ℕ∞) < vExitTime (cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) \ (↑Θ : Set ℤ)) x →
+          x n ∈ (↑A : Set ℤ)} ≤ ENNReal.ofReal (1 - 1 / 2) := by
+  have hadm := admissible_of_frontier hη hε hK hr hβ hb hF hA hloc
+  have h := hPhi hadm
+  rw [killed_eq_W hη hε hK hF] at h
+  have hset : {x : ℕ → ℤ | ∀ n : ℕ,
+        (n : ℕ∞) < vExitTime (cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) \ (↑Θ : Set ℤ)) x →
+          x n ∈ (↑A : Set ℤ)} =
+      Lemma68Walk.exitEvent (cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) \ (↑Θ : Set ℤ))
+        (↑A : Set ℤ) := by
+    ext x
+    simp only [Set.mem_ofPred_eq, Lemma68Walk.exitEvent, lt_vExitTime_iff']
+  have h12 : ENNReal.ofReal (1 - 1 / 2) = 1 / 2 := by
+    rw [show (1 : ℝ) - 1 / 2 = 1 / 2 by norm_num]
+    exact Lemma68Final.ofReal_half
+  rw [hset, h12]
+  exact h
+
+/-- **Relation (bridge §5, Lemma 6.8 to Lemma 6.7).** Instance of the Proofs-tree reduction `constantOrderLowerBound_core`
+with the sparsity constant `L = s₁ r^{2β}/ε`, `s₁ = 1/4`, `s₂ = 1/2`. The Steps `hW`, `hN` are the named step props;
+`hcell`, `hUfin`, `hexit` are the almost-sure inputs of the reduction; `hPhi` is the quenched boundary-start bound. -/
+theorem relation_of_phi {η : ℝ → ℂ} {m : ℤ → ℤ → ℕ} {ε βm r : ℝ}
+    (hW : MatedCRT.SrwHitDecompositionStep) (hN : MatedCRT.SrwAeAdjacentStep) (hε : 0 < ε) (hη : Continuous η)
+    (hcell : ∀ j k, m j k ≠ 0 → (cell ε η j ∩ cell ε η k).Nonempty)
+    {Θ S' : Finset ℤ} (hK : (fillCells ε η (↑Θ : Set ℤ)).Nonempty) (hr : 0 < r) (hβ : 0 < βm)
+    (hUfin : (cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ)))).Finite)
+    (hexit : ∀ b : ℤ, srwLaw m b
+      {x | vExitTime (interiorCellVertices ε η (thickening (r / 2) (fillCells ε η (↑Θ : Set ℤ)))) x = ⊤} = 0)
+    (hPhi : ∀ (A : Finset ℤ) (b : ℤ),
+      b ∈ cellVertices ε η (frontier (thickening (r / 2) (fillCells ε η (↑Θ : Set ℤ)))) →
+        Lemma68Admissible.Phi ε η Θ hUfin.toFinset A b (1 / 4) βm (srwLaw m b) r)
+    {a : ℤ} (ha : a ∈ vClosure m (↑Θ : Set ℤ))
+    (hS' : (↑S' : Set ℤ) ⊆ cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))))
+    (hcard : (((↑S' : Set ℤ) \ (↑Θ : Set ℤ)).ncard : ℝ) < (1 / 4) * r ^ (2 * βm) / ε) :
+    ENNReal.ofReal (1 / 2) ≤ srwLaw m a {x | ∃ n : ℕ,
+      (n : ℕ∞) < vExitTime (cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ)))) x ∧
+        x n ∈ cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) \ ((↑S' : Set ℤ) ∪ (↑Θ : Set ℤ))} := by
+  have hOU : cellVertices ε η (closure (thickening (r / 2) (fillCells ε η (↑Θ : Set ℤ))))
+      ⊆ cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) := by
+    intro k hk
+    obtain ⟨z, hzc, hzcl⟩ := hk
+    exact ⟨z, hzc, closure_thickening_half_subset hr hzcl⟩
+  have hΘO : fillCells ε η (↑Θ : Set ℤ) ⊆ thickening (r / 2) (fillCells ε η (↑Θ : Set ℤ)) :=
+    Metric.self_subset_thickening (by linarith) _
+  have hF' : cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) ⊆ (↑hUfin.toFinset : Set ℤ) := by
+    rw [Set.Finite.coe_toFinset]
+  have h68 : ∀ A : Set ℤ, A ⊆ cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) \ (↑Θ : Set ℤ) →
+      (∀ z : ℂ, ((A ∩ cellVertices ε η (ball z r)).ncard : ℝ) < (1 / 4) * r ^ (2 * βm) / ε) →
+      ∀ b ∈ cellVertices ε η (frontier (thickening (r / 2) (fillCells ε η (↑Θ : Set ℤ)))),
+        srwLaw m b {x | ∀ n : ℕ,
+          (n : ℕ∞) < vExitTime (cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) \ (↑Θ : Set ℤ)) x →
+            x n ∈ A} ≤ ENNReal.ofReal (1 - 1 / 2) := by
+    intro A hA hloc b hb
+    have hAfin : A.Finite := hUfin.subset (hA.trans sdiff_subset)
+    have hAeq : ((hAfin.toFinset : Finset ℤ) : Set ℤ) = A := hAfin.coe_toFinset
+    have hA' : ((hAfin.toFinset : Finset ℤ) : Set ℤ) ⊆
+        cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) \ (↑Θ : Set ℤ) := by
+      rw [hAeq]; exact hA
+    have hloc' : ∀ z : ℂ, ((((hAfin.toFinset : Finset ℤ) : Set ℤ) ∩ cellVertices ε η (ball z r)).ncard : ℝ) <
+        (1 / 4) * r ^ (2 * βm) / ε := by
+      rw [hAeq]; exact hloc
+    have key := div_bound_of_phi (Θ := Θ) (F0 := hUfin.toFinset) (A := hAfin.toFinset) (r := r) (βm := βm)
+      (b := b) hη hε (srwLaw m b) hK hr hβ hb hF' hA' hloc' (hPhi hAfin.toFinset b hb)
+    rw [hAeq] at key
+    exact key
+  exact MatedCRT.ConstantOrder.constantOrderLowerBound_core hW hN hε.le hη hcell
+    (Θ := (↑Θ : Set ℤ)) (S' := (↑S' : Set ℤ))
+    (U := cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ)))) (O := thickening (r / 2) (fillCells ε η (↑Θ : Set ℤ)))
+    (r := r) (L := (1 / 4) * r ^ (2 * βm) / ε) (s₂ := 1 / 2) (a := a)
+    isOpen_thickening hΘO hOU hUfin hexit h68 (by norm_num) (by norm_num) ha hS' hcard
 
 end Lemma68Relation
 
