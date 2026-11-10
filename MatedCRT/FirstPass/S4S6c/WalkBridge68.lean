@@ -4,6 +4,7 @@ import MatedCRT.FirstPass.S6e.Walk
 import MatedCRT.FirstPass.S6e.Relation
 import MatedCRT.FirstPass.S6h.Core
 import MatedCRT.FirstPass.S6r.Amplification
+import MatedCRT.FirstPass.S4S6c.ExitNull68
 
 /-!
 # Lemma 6.8, walk bridge (q2, S10 item (b))
@@ -154,6 +155,18 @@ theorem srw_exit_le_pow {m : ℤ → ℤ → ℕ} {a : ℤ} {U A : Set ℤ}
   exact prefix_bad_bound_of_lt coordFiltration coord_measurable MeasurableSet.of_discrete hT hL
     (isStoppingTime_vExitTime U) hq1 n hone hTT hLT hcross hend hnull
 
+/-- The killed set `killed ε η Θ F0 r` is finite: it is contained in the finite set `F0`. -/
+theorem killed_finite (ε : ℝ) (η : ℝ → ℂ) (Θ F0 : Finset ℤ) (r : ℝ) :
+    (Lemma68Admissible.killed ε η Θ F0 r).Finite :=
+  F0.finite_toSet.subset fun _ hv => hv.1
+
+/-- The null set `{τ_U = ⊤}` of the killed set vanishes for the simple random walk law, under local finiteness
+of the multiplicities and nonzero nearest-neighbour multiplicities (`ExitNull68.exit_null_of_finite`). -/
+theorem srw_killed_top_null {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m)
+    (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) (a : ℤ) (ε : ℝ) (η : ℝ → ℂ) (Θ F0 : Finset ℤ) (r : ℝ) :
+    srwLaw m a {x | vExitTime (Lemma68Admissible.killed ε η Θ F0 r) x = ⊤} = 0 :=
+  ExitNull68.exit_null_of_finite hlf hcons (killed_finite ε η Θ F0 r) a
+
 /-- The quenched exit probability `exitQ` of a Lemma 6.8 configuration satisfies the walk-level chain bound
 `(1 - q)^(n + 1)`; `U` is the killed set `killed ε η Θ F0 r` and `A = i.A` (S6h/Core.lean). -/
 theorem exitQ_le_pow {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ε : ℝ) (ω : Ω) (r : ℝ)
@@ -177,11 +190,11 @@ theorem exitQ_le_pow {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ε :
         (vExitTime (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r)),
       vExitTime (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r) x ≠ ⊤ →
         L n x ≤ vExitTime (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r) x)
-    (hnull : srwLaw (S.mult ε ω) i.a
-        {x | vExitTime (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r) x = ⊤} = 0) :
+    (hlf : IsLocallyFiniteMult (S.mult ε ω)) (hcons : ∀ k : ℤ, S.mult ε ω k (k + 1) ≠ 0) :
     Lemma68Config.exitQ S ε ω r i ≤ (1 - q) ^ (n + 1) := by
   unfold Lemma68Config.exitQ
-  exact srw_exit_le_pow hT hL hq1 n hone hTT hLT hcross hend hnull
+  exact srw_exit_le_pow hT hL hq1 n hone hTT hLT hcross hend
+    (srw_killed_top_null hlf hcons i.a ε (S.η ω) i.Θ i.F0 r)
 
 /-- `q0 / (1 + log (1/r))^2 ≤ 1` for `0 ≤ q0 ≤ 1` and `0 < r ≤ 1`. -/
 theorem q_le_one {q0 r : ℝ} (hq0 : 0 ≤ q0) (hq1 : q0 ≤ 1) (hr : 0 < r) (hr1 : r ≤ 1) :
