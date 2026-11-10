@@ -2,6 +2,7 @@ import MatedCRT.FirstPass.S5c
 import MatedCRT.FirstPass.S4d.StrictGapReduction
 import MatedCRT.FirstPass.S4d.DeterministicComparison
 import MatedCRT.FirstPass.S4d.FixedTimeUnion
+import MatedCRT.FirstPass.S4d.FixedTimeFinal
 
 /-!
 # FIRST PASS, Proposition 4.2 (prop:div-sandpile-lower-bound): assembly with the cone family (q4)
@@ -187,5 +188,34 @@ theorem firstPass_4_2_of_scale_inputs {𝒮 : SpaceFillingSLEModel}
     DivSandpileLowerBoundStmt 𝒮 :=
   firstPass_4_2_final hm h210 h34 h214 h28 h35 h218 h27 hH hcone h23 h24 h33 hG hpc hsmp hwmp hpole
     (strictGapFixedTimeUnion_of_steps 𝒮 hScaleInv hB2 hB2R hFCS) hcan hcl hE1 hE2 hscale h22
+
+
+/-- **Proposition 4.2 with the fixed-time union from the dependencies (q4, round 9).** This supersedes
+`firstPass_4_2_of_scale_inputs`: the explicit measurability steps `hB2`, `hB2R` and the positivity input `hFCS` are no
+longer hypotheses. They are proved (`coneGlobalFamilyAEMeasurable_of_stopped`, `coneRescaledGlobalFamilyAEMeasurable_of_stopped`,
+S4d/GlobalMeasurable.lean and S4d/RescaledMeasurable.lean), and the positivity of the cone scale radii comes from `hscale`
+(`coneScaleRadiusPosStep_of_input`). The paper inputs now are `h24` (Lemma 2.4), `h25` (Lemma 2.5, corrected.tex:548), and
+`hScaleInv` (Lemma 2.6, corrected.tex:597). The stopped measurability `hfam` is `coneFamilyAEMeasurable_proved`
+(open NEW steps `hcan`, `hcl` remain explicit). -/
+theorem firstPass_4_2_of_fixed_time_steps {𝒮 : SpaceFillingSLEModel}
+    (hm : MepsScalingInput 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)
+    (h34 : IntegralConvergenceGreenFunctionStmt 𝒮) (h214 : GreenKernelUpperBoundStmt 𝒮)
+    (h28 : CellSizeEstimateStmt 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
+    (h218 : ExitTimeUpperBoundStmt 𝒮) (h27 : VolumeGrowthStmt)
+    (hH : FrozenDiscreteHolderContinuityCorrected 𝒮) (hcone : FrozenConeEnvironmentScaling 𝒮)
+    (h23 : ConeHarmonicBallsStmt) (h24 : ConeHarmonicBallsUpToFixedTimeStmt)
+    (h25 : ConeScaleInvarianceUpToFixedTimeStmt) (h33 : UniformConvergenceGreenKernelStmt 𝒮)
+    (hG : _root_.HarmonicBalls.GreenFunctionBallStmt) (hpc : FrozenPunctureConnected)
+    (hsmp : FPStrongMinimumPrinciple) (hwmp : FrozenSuperharmonicMinimumPrinciple)
+    (hpole : FrozenGreenDiscPole)
+    (hScaleInv : ConeScaleInvarianceStmt)
+    (hcan : ConeCanonicalHalfBallStep) (hcl : ConeHalfBallClosureInsideStep)
+    (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
+    (hscale : QuantumConeScalingInput) (h22 : LQGMeasurePropertiesStmt) :
+    DivSandpileLowerBoundStmt 𝒮 :=
+  firstPass_4_2_final hm h210 h34 h214 h28 h35 h218 h27 hH hcone h23 h24 h33 hG hpc hsmp hwmp hpole
+    (strictGapFixedTimeUnionStep_of_steps 𝒮 h24 h25
+      (coneFamilyAEMeasurable_proved hcan hcl h27 hE1 hE2 hscale h22) hScaleInv hscale)
+    hcan hcl hE1 hE2 hscale h22
 
 end MatedCRT
