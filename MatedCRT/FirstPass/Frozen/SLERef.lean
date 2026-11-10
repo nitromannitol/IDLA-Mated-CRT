@@ -27,7 +27,10 @@ The intended witness is the rooted, Lebesgue-area parametrized whole-plane space
 κ = 16/γ² > 4 for γ ∈ (0, 2) and time zero at the visit to the origin, realized by the canonical cone/SLE environments. The transfer argument is: a measurable normalized representative of the coupled curve has code law
 `ν κ` (rational evaluation is a Borel isomorphism onto its image); its independence from the cone data is supplied by the
 coupling; the quantum-area clock is recovered from the field and the normalized curve; the embedded graph is recovered
-from the curve up to homeomorphism. The five cited statements then transfer uniformly from the reference environments.
+from the curve up to homeomorphism. The five cited statements then transfer uniformly from the reference environments: for a code map `X` with law `λ` and
+a subset `B` of the code space, `P_target^*(X_target⁻¹ B) ≤ λ^*(B) = P_reference^*(X_reference⁻¹ B)` (outer probabilities;
+design §5). This is why the reference lives on the standard Borel space `ℝ`; no standard Borel assumption is made on the
+target `Ω`.
 This is a literature input stated as a proposition. It is NOT a Lean construction of SLE, and it does not identify the
 law by any intrinsic characterization.
 
