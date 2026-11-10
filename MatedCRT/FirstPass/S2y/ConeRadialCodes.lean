@@ -3,6 +3,7 @@ import Mathlib.MeasureTheory.Integral.CircleAverage
 import Mathlib.MeasureTheory.Measure.Lebesgue.Complex
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Analysis.SpecificLimits.Normed
+import MarkovProcess.Examples.BrownianMotion
 
 /-!
 # Radial and sphere-average codes of a quantum cone (fp-S2y-cone-codes, chat 231 §§1-3)
@@ -608,6 +609,426 @@ theorem measurable_radialSphereCode (r : ℝ) (z : ℂ) : Measurable (radialSphe
   exact measurable_angleQuad_eval n (fun θ => (safeRadius m (circleMap z r θ), (0 : ℂ)))
     (fun θ => radialCutoff m ‖circleMap z r θ‖)
 
+
+open ProbabilityTheory HarmonicBalls MarkovProcess
+open scoped NNReal ENNReal
+
+/-! ### Correctness of the radial codes (chat 231, §3) -/
+
+/-- The rescaled circle-average process `c` has the radial law of the `γ`-quantum cone: its radial process
+`t ↦ c_{e^{-t}}(0)`, `s ↦ c_{e^s}(0)` has the law `quantumConeRadialLaw γ ν` for a conditioned Brownian motion `ν`
+(Definition 2.1; chat 231, §3). -/
+def HasConeRadialLaw (γ : ℝ) {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (c : Ω → ℝ → ℂ → ℝ) : Prop :=
+  ∃ ν : Measure (ContinuousPath ℝ), IsBMConditionedPositive (HarmonicBalls.lqgQ γ - γ) ν ∧
+    P.map (fun ω => radialProcess (c ω)) = quantumConeRadialLaw γ ν
+
+/-- The radial process is measurable when the circle averages are measurable at each positive radius. -/
+lemma measurable_radialProcess_circle {Ω : Type*} [MeasurableSpace Ω] {c : Ω → ℝ → ℂ → ℝ}
+    (hcm : ∀ r z, 0 < r → Measurable fun ω => c ω r z) :
+    Measurable fun ω => radialProcess (c ω) :=
+  Measurable.prodMk (Measurable.of_eval fun t => hcm (Real.exp (-(t : ℝ))) 0 (Real.exp_pos _))
+    (Measurable.of_eval fun s => hcm (Real.exp s) 0 (Real.exp_pos _))
+
+/-- **One-time marginal of the radial process.** For `t ≥ 0`, `∫ |c_{e^{-t}}(0)| dP` is the integral of `|B_t + γ t|`
+under the standard Brownian motion, because the radial law is `quantumConeRadialLaw`. -/
+lemma lintegral_ofReal_radial_eq {γ : ℝ} {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {c : Ω → ℝ → ℂ → ℝ}
+    (hcm : ∀ r z, 0 < r → Measurable fun ω => c ω r z) {ν : Measure (ContinuousPath ℝ)}
+    (hν : IsProbabilityMeasure ν) (hrad : P.map (fun ω => radialProcess (c ω)) = quantumConeRadialLaw γ ν)
+    (t : ℝ≥0) :
+    ∫⁻ ω, ENNReal.ofReal |c ω (Real.exp (-(t : ℝ))) 0| ∂P
+      = ∫⁻ w, ENNReal.ofReal |w t + γ * t| ∂(brownianMotion 0) := by
+  have hR := measurable_radialProcess_circle hcm
+  have hf : Measurable fun p : (ℝ≥0 → ℝ) × (ℝ≥0 → ℝ) => ENNReal.ofReal |p.1 t| :=
+    ENNReal.measurable_ofReal.comp ((measurable_pi_apply t).comp measurable_fst).abs
+  have hS : Measurable fun w : ContinuousPath ℝ => fun s : ℝ≥0 => w s + γ * s :=
+    Measurable.of_eval fun s => ((ContinuousMap.measurable_eval s).add_const _)
+  have hT : Measurable fun w : ContinuousPath ℝ => fun s : ℝ≥0 => w s - γ * s :=
+    Measurable.of_eval fun s => ((ContinuousMap.measurable_eval s).sub_const _)
+  have hg : Measurable fun q : (ℝ≥0 → ℝ) => ENNReal.ofReal |q t| :=
+    ENNReal.measurable_ofReal.comp (measurable_pi_apply t).abs
+  calc ∫⁻ ω, ENNReal.ofReal |c ω (Real.exp (-(t : ℝ))) 0| ∂P
+      = ∫⁻ ω, (fun p : (ℝ≥0 → ℝ) × (ℝ≥0 → ℝ) => ENNReal.ofReal |p.1 t|) (radialProcess (c ω)) ∂P := rfl
+    _ = ∫⁻ p, ENNReal.ofReal |p.1 t| ∂(P.map fun ω => radialProcess (c ω)) :=
+        (lintegral_map hf hR).symm
+    _ = ∫⁻ p, ENNReal.ofReal |p.1 t| ∂(quantumConeRadialLaw γ ν) := by rw [hrad]
+    _ = ∫⁻ w, ENNReal.ofReal |w t + γ * t| ∂(brownianMotion 0) := by
+        unfold quantumConeRadialLaw
+        have : IsProbabilityMeasure (ν.map fun w (s : ℝ≥0) => w s - γ * s) :=
+          (Measure.isProbabilityMeasure_map_iff hT.aemeasurable).2 hν
+        calc ∫⁻ p, ENNReal.ofReal |p.1 t| ∂(((brownianMotion 0).map fun w (s : ℝ≥0) => w s + γ * s).prod
+                (ν.map fun w (s : ℝ≥0) => w s - γ * s))
+            = ∫⁻ a, ENNReal.ofReal |a t| ∂((((brownianMotion 0).map fun w (s : ℝ≥0) => w s + γ * s).prod
+                (ν.map fun w (s : ℝ≥0) => w s - γ * s)).map Prod.fst) :=
+              (lintegral_map hg measurable_fst).symm
+          _ = ∫⁻ a, ENNReal.ofReal |a t| ∂(((ν.map fun w (s : ℝ≥0) => w s - γ * s) Set.univ) •
+                ((brownianMotion 0).map fun w (s : ℝ≥0) => w s + γ * s)) := by
+              rw [Measure.map_fst_prod]
+          _ = ∫⁻ a, ENNReal.ofReal |a t| ∂((brownianMotion 0).map fun w (s : ℝ≥0) => w s + γ * s) := by
+              rw [measure_univ, one_smul]
+          _ = ∫⁻ w, ENNReal.ofReal |w t + γ * t| ∂(brownianMotion 0) :=
+              lintegral_map hg hS
+
+/-- **Second moment of the Brownian marginal.** Under `brownianMotion 0` the coordinate `B_t` is `N(0, t)`
+(`IsBrownianReal.hasLaw_eval`), so `∫ B_t² = t`. -/
+lemma lintegral_ofReal_sq_brownian (t : ℝ≥0) :
+    ∫⁻ w, ENNReal.ofReal ((w t) ^ 2) ∂(brownianMotion 0) = ENNReal.ofReal t := by
+  have hL := (isBrownianReal_brownianMotion 0).hasLaw_eval t
+  have hm : Measurable fun w : ContinuousPath ℝ => w t - 0 := (ContinuousMap.measurable_eval t).sub_const _
+  have hmap : (brownianMotion 0).map (fun w : ContinuousPath ℝ => w t - 0) = gaussianReal 0 t := hL.map_eq
+  calc ∫⁻ w, ENNReal.ofReal ((w t) ^ 2) ∂(brownianMotion 0)
+      = ∫⁻ w, ENNReal.ofReal ((w t - 0) ^ 2) ∂(brownianMotion 0) := by simp only [sub_zero]
+    _ = ∫⁻ x, ENNReal.ofReal (x ^ 2) ∂(gaussianReal 0 t) := by
+        rw [← hmap, lintegral_map (by fun_prop) hm]
+    _ = ENNReal.ofReal (∫ x, x ^ 2 ∂(gaussianReal 0 t)) :=
+        (ofReal_integral_eq_lintegral_ofReal (memLp_id_gaussianReal 2 |>.integrable_sq)
+          (Eventually.of_forall fun x => sq_nonneg x)).symm
+    _ = ENNReal.ofReal t := by
+        congr 1
+        have hv := variance_id_gaussianReal (μ := 0) (v := t)
+        have hmean : ∫ x, id x ∂(gaussianReal 0 t) = 0 := integral_id_gaussianReal (μ := 0) (v := t)
+        have h2 := ProbabilityTheory.variance_eq_sub (memLp_id_gaussianReal 2 (μ := 0) (v := t))
+        rw [hv, hmean] at h2
+        simpa using h2.symm
+
+/-- **The one-time bound** `E|B_t + γ t| ≤ 1 + t + |γ| t` (chat 231, §3.1; `|x| ≤ 1 + x²` replaces Cauchy-Schwarz). -/
+lemma lintegral_ofReal_abs_add_le (γ : ℝ) (t : ℝ≥0) :
+    ∫⁻ w, ENNReal.ofReal |w t + γ * t| ∂(brownianMotion 0) ≤ ENNReal.ofReal (1 + t + |γ| * t) := by
+  have hpt : ∀ w : ContinuousPath ℝ, ENNReal.ofReal |w t + γ * t|
+      ≤ ENNReal.ofReal 1 + ENNReal.ofReal ((w t) ^ 2) + ENNReal.ofReal (|γ| * t) := by
+    intro w
+    rw [← ENNReal.ofReal_add (by norm_num) (sq_nonneg _),
+      ← ENNReal.ofReal_add (by positivity) (by positivity)]
+    apply ENNReal.ofReal_le_ofReal
+    have h1 : |w t + γ * t| ≤ |w t| + |γ * t| := abs_add_le _ _
+    have h2 : |w t| ≤ 1 + (w t) ^ 2 := by nlinarith [sq_abs (w t), sq_nonneg (|w t| - 1)]
+    have h3 : |γ * (t : ℝ)| = |γ| * t := by rw [abs_mul, abs_of_nonneg (NNReal.coe_nonneg t)]
+    rw [h3] at h1
+    linarith
+  have hmeas : Measurable fun w : ContinuousPath ℝ => ENNReal.ofReal ((w t) ^ 2) :=
+    ENNReal.measurable_ofReal.comp ((ContinuousMap.measurable_eval t).pow_const 2)
+  calc ∫⁻ w, ENNReal.ofReal |w t + γ * t| ∂(brownianMotion 0)
+      ≤ ∫⁻ w, (ENNReal.ofReal 1 + ENNReal.ofReal ((w t) ^ 2) + ENNReal.ofReal (|γ| * t)) ∂(brownianMotion 0) :=
+        lintegral_mono hpt
+    _ = ENNReal.ofReal 1 + ENNReal.ofReal t + ENNReal.ofReal (|γ| * t) := by
+        rw [lintegral_add_right _ measurable_const, lintegral_add_left measurable_const,
+          lintegral_ofReal_sq_brownian]
+        simp only [lintegral_const, measure_univ, mul_one]
+    _ = ENNReal.ofReal (1 + t + |γ| * t) := by
+        rw [← ENNReal.ofReal_add (by norm_num) (NNReal.coe_nonneg t),
+          ← ENNReal.ofReal_add (by positivity) (by positivity)]
+
+/-- **A measurable full-measure set of good samples.** Off a null set `c` is continuous on `(0,∞) × ℂ`; the good set `T`
+is measurable, has null complement, and `c` is continuous on `(0,∞) × ℂ` for every `ω ∈ T`. -/
+lemma exists_measurable_good_set {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {c : Ω → ℝ → ℂ → ℝ}
+    (hcont : ∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ)) :
+    ∃ T : Set Ω, MeasurableSet T ∧ P Tᶜ = 0 ∧
+      ∀ ω ∈ T, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ) := by
+  obtain ⟨t, hBt, hmt, hPt⟩ := exists_measurable_superset_of_null (ae_iff.1 hcont)
+  refine ⟨tᶜ, hmt.compl, by rw [compl_compl]; exact hPt, fun ω hω => ?_⟩
+  by_contra h
+  exact hω (hBt h)
+
+/-- **Joint measurability of the modified radial process.** For the good set `T`, the map `(t, ω) ↦
+1_T(ω) c_{e^{-t}}(0)(ω)` is measurable on `ℝ × Ω`: it is continuous in `t` for every `ω` and measurable in `ω` for every
+`t` (Carathéodory, `measurable_uncurry_of_continuous_of_measurable`). -/
+lemma measurable_uncurry_radial {Ω : Type*} [MeasurableSpace Ω] {c : Ω → ℝ → ℂ → ℝ} {T : Set Ω}
+    (hcm : ∀ r z, 0 < r → Measurable fun ω => c ω r z) (hT : MeasurableSet T)
+    (hgood : ∀ ω ∈ T, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ)) :
+    Measurable (Function.uncurry fun (t : ℝ) (ω : Ω) => T.indicator (fun ω => c ω (Real.exp (-t)) 0) ω) := by
+  refine measurable_uncurry_of_continuous_of_measurable (fun ω => ?_) (fun t => ?_)
+  · by_cases hω : ω ∈ T
+    · simp only [Set.indicator_of_mem hω]
+      have hc := hgood ω hω
+      exact hc.comp_continuous (f := fun t : ℝ => ((Real.exp (-t)), (0 : ℂ)))
+        (by fun_prop) (fun t => ⟨Real.exp_pos _, Set.mem_univ _⟩)
+    · simp only [Set.indicator_of_notMem hω]
+      exact continuous_const
+  · exact (hcm (Real.exp (-t)) 0 (Real.exp_pos _)).indicator hT
+
+/-- **Change of variables `y = e^{-t}` on `(0,1]`** (chat 231, §3.1; `lintegral_image_eq_lintegral_abs_deriv_mul`). -/
+lemma lintegral_Ioc_eq_radial (g : ℝ → ℝ) :
+    ∫⁻ y in Set.Ioc (0 : ℝ) 1, ENNReal.ofReal (y * |g y|) =
+      ∫⁻ t in Set.Ici (0 : ℝ), ENNReal.ofReal (Real.exp (-2 * t)) * ENNReal.ofReal |g (Real.exp (-t))| := by
+  have himg : (fun t : ℝ => Real.exp (-t)) '' Set.Ici 0 = Set.Ioc 0 1 := by
+    ext y
+    constructor
+    · rintro ⟨t, ht, rfl⟩
+      exact ⟨Real.exp_pos _, Real.exp_le_one_iff.2 (by simp only [Set.mem_Ici] at ht; linarith)⟩
+    · rintro ⟨hy0, hy1⟩
+      refine ⟨-Real.log y, ?_, ?_⟩
+      · simp only [Set.mem_Ici, neg_nonneg]
+        exact Real.log_nonpos hy0.le hy1
+      · simp only [neg_neg]
+        exact Real.exp_log hy0
+  have hderiv : ∀ x ∈ Set.Ici (0 : ℝ),
+      HasDerivWithinAt (fun t : ℝ => Real.exp (-t)) (-Real.exp (-x)) (Set.Ici 0) x := by
+    intro x _
+    have := ((hasDerivAt_id x).neg.exp).hasDerivWithinAt (s := Set.Ici 0)
+    simpa using this
+  have hinj : Set.InjOn (fun t : ℝ => Real.exp (-t)) (Set.Ici 0) := by
+    intro a _ b _ hab
+    have := Real.exp_injective hab
+    linarith
+  have key := lintegral_image_eq_lintegral_abs_deriv_mul measurableSet_Ici hderiv hinj
+    (fun y => ENNReal.ofReal (y * |g y|))
+  rw [himg] at key
+  rw [key]
+  refine setLIntegral_congr_fun measurableSet_Ici fun t _ => ?_
+  rw [← ENNReal.ofReal_mul (abs_nonneg _), ← ENNReal.ofReal_mul (Real.exp_pos _).le,
+    abs_neg, abs_of_pos (Real.exp_pos _)]
+  congr 1
+  rw [show -2 * t = -t + -t by ring, Real.exp_add]
+  ring
+
+/-- **One-time bound for the good modification.** For `t ≥ 0`, the `P`-integral of `|1_T c_{e^{-t}}(0)|` is at most
+`1 + t + |γ| t` (`lintegral_ofReal_radial_eq` and `lintegral_ofReal_abs_add_le`). -/
+lemma lintegral_radial_le {γ : ℝ} {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {c : Ω → ℝ → ℂ → ℝ}
+    (hcm : ∀ r z, 0 < r → Measurable fun ω => c ω r z) {ν : Measure (ContinuousPath ℝ)}
+    (hν : IsProbabilityMeasure ν) (hrad : P.map (fun ω => radialProcess (c ω)) = quantumConeRadialLaw γ ν)
+    {T : Set Ω} (hPT : P Tᶜ = 0) {t : ℝ} (ht : 0 ≤ t) :
+    ∫⁻ ω, ENNReal.ofReal |T.indicator (fun ω => c ω (Real.exp (-t)) 0) ω| ∂P
+      ≤ ENNReal.ofReal (1 + t + |γ| * t) := by
+  have hae : ∀ᵐ ω ∂P, ω ∈ T := by
+    rw [ae_iff]
+    exact hPT
+  have h1 : ∫⁻ ω, ENNReal.ofReal |T.indicator (fun ω => c ω (Real.exp (-t)) 0) ω| ∂P
+      = ∫⁻ ω, ENNReal.ofReal |c ω (Real.exp (-t)) 0| ∂P := by
+    refine lintegral_congr_ae ?_
+    filter_upwards [hae] with ω hω
+    rw [Set.indicator_of_mem hω]
+  have hs : ((t.toNNReal : ℝ≥0) : ℝ) = t := Real.coe_toNNReal t ht
+  have h2 := lintegral_ofReal_radial_eq hcm hν hrad t.toNNReal
+  rw [hs] at h2
+  rw [h1, h2]
+  have h3 := lintegral_ofReal_abs_add_le γ t.toNNReal
+  rw [hs] at h3
+  exact h3
+
+/-- **Almost sure finiteness of the radial integral** (Tonelli; chat 231, §3.1): almost surely
+`∫_{t ≥ 0} e^{-2t} |1_T c_{e^{-t}}(0)| dt < ∞`. -/
+lemma ae_lintegral_radial_lt_top {γ : ℝ} {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {c : Ω → ℝ → ℂ → ℝ}
+    (hcm : ∀ r z, 0 < r → Measurable fun ω => c ω r z) {ν : Measure (ContinuousPath ℝ)}
+    (hν : IsProbabilityMeasure ν) (hrad : P.map (fun ω => radialProcess (c ω)) = quantumConeRadialLaw γ ν)
+    [IsFiniteMeasure P] {T : Set Ω} (hT : MeasurableSet T) (hPT : P Tᶜ = 0)
+    (hgood : ∀ ω ∈ T, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ)) :
+    ∀ᵐ ω ∂P, ∫⁻ t in Set.Ici (0 : ℝ),
+      ENNReal.ofReal (Real.exp (-2 * t)) * ENNReal.ofReal |T.indicator (fun ω => c ω (Real.exp (-t)) 0) ω| < ⊤ := by
+  set u : ℝ → Ω → ℝ := fun t ω => T.indicator (fun ω => c ω (Real.exp (-t)) 0) ω with hu_def
+  have hmeas : Measurable (Function.uncurry u) := measurable_uncurry_radial hcm hT hgood
+  have hu : Measurable fun p : Ω × ℝ => u p.2 p.1 := by
+    have hpair : Measurable fun p : Ω × ℝ => ((p.2, p.1) : ℝ × Ω) := measurable_snd.prodMk measurable_fst
+    exact hmeas.comp hpair
+  have hF : Measurable fun p : Ω × ℝ =>
+      ENNReal.ofReal (Real.exp (-2 * p.2)) * ENNReal.ofReal |u p.2 p.1| := by
+    have h1 : Measurable fun p : Ω × ℝ => ENNReal.ofReal (Real.exp (-2 * p.2)) :=
+      ENNReal.measurable_ofReal.comp (Real.measurable_exp.comp (by fun_prop))
+    have h2 : Measurable fun p : Ω × ℝ => ENNReal.ofReal |u p.2 p.1| :=
+      ENNReal.measurable_ofReal.comp hu.abs
+    exact h1.mul h2
+  -- Tonelli: integrate in `ω` first
+  have hswap : ∫⁻ ω, (∫⁻ t in Set.Ici (0 : ℝ), ENNReal.ofReal (Real.exp (-2 * t)) * ENNReal.ofReal |u t ω|) ∂P
+      = ∫⁻ t in Set.Ici (0 : ℝ), ∫⁻ ω, ENNReal.ofReal (Real.exp (-2 * t)) * ENNReal.ofReal |u t ω| ∂P :=
+    lintegral_lintegral_swap hF.aemeasurable
+  have hbound : ∫⁻ t in Set.Ici (0 : ℝ), ∫⁻ ω, ENNReal.ofReal (Real.exp (-2 * t)) * ENNReal.ofReal |u t ω| ∂P
+      ≤ ∫⁻ t in Set.Ici (0 : ℝ), ENNReal.ofReal ((1 + |γ|) * Real.exp (-t)) := by
+    refine setLIntegral_mono' measurableSet_Ici fun t ht => ?_
+    have ht0 : (0 : ℝ) ≤ t := Set.mem_Ici.1 ht
+    have hpair : Measurable fun ω : Ω => ((t, ω) : ℝ × Ω) := measurable_const.prodMk measurable_id
+    have hm : Measurable fun ω => ENNReal.ofReal |u t ω| :=
+      ENNReal.measurable_ofReal.comp (hmeas.comp hpair).abs
+    rw [lintegral_const_mul _ hm]
+    have hle := lintegral_radial_le hcm hν hrad hPT ht0
+    have hpt : ENNReal.ofReal (Real.exp (-2 * t)) * ENNReal.ofReal (1 + t + |γ| * t)
+        ≤ ENNReal.ofReal ((1 + |γ|) * Real.exp (-t)) := by
+      rw [← ENNReal.ofReal_mul (Real.exp_pos _).le]
+      apply ENNReal.ofReal_le_ofReal
+      have he2 : t ≤ Real.exp t := by linarith [Real.add_one_le_exp t]
+      have hE : Real.exp (-2 * t) * Real.exp t = Real.exp (-t) := by
+        rw [← Real.exp_add]; congr 1; ring
+      have hpos := (Real.exp_pos (-2 * t)).le
+      have hA : Real.exp (-2 * t) * (1 + t) ≤ Real.exp (-t) := by
+        rw [← hE]; exact mul_le_mul_of_nonneg_left (by linarith [Real.add_one_le_exp t]) hpos
+      have hC : Real.exp (-2 * t) * t ≤ Real.exp (-t) := by
+        rw [← hE]; exact mul_le_mul_of_nonneg_left he2 hpos
+      calc Real.exp (-2 * t) * (1 + t + |γ| * t)
+          = Real.exp (-2 * t) * (1 + t) + |γ| * (Real.exp (-2 * t) * t) := by ring
+        _ ≤ Real.exp (-t) + |γ| * Real.exp (-t) :=
+            add_le_add hA (mul_le_mul_of_nonneg_left hC (abs_nonneg _))
+        _ = (1 + |γ|) * Real.exp (-t) := by ring
+    calc ENNReal.ofReal (Real.exp (-2 * t)) * ∫⁻ ω, ENNReal.ofReal |u t ω| ∂P
+        ≤ ENNReal.ofReal (Real.exp (-2 * t)) * ENNReal.ofReal (1 + t + |γ| * t) :=
+          mul_le_mul_of_nonneg_left hle (by positivity)
+      _ ≤ ENNReal.ofReal ((1 + |γ|) * Real.exp (-t)) := hpt
+  have hfin : ∫⁻ t in Set.Ici (0 : ℝ), ENNReal.ofReal ((1 + |γ|) * Real.exp (-t)) < ⊤ := by
+    have hint : IntegrableOn (fun t : ℝ => (1 + |γ|) * Real.exp (-t)) (Set.Ici 0) := by
+      rw [integrableOn_Ici_iff_integrableOn_Ioi]
+      have h1 : IntegrableOn (fun t : ℝ => Real.exp (-t)) (Set.Ioi 0) := by
+        simpa only [neg_mul, one_mul] using exp_neg_integrableOn_Ioi 0 (b := 1) one_pos
+      exact h1.const_mul (1 + |γ|)
+    exact hint.lintegral_lt_top
+  have hmeasω : Measurable fun ω => ∫⁻ t in Set.Ici (0 : ℝ),
+      ENNReal.ofReal (Real.exp (-2 * t)) * ENNReal.ofReal |u t ω| :=
+    hF.lintegral_prod_right'
+  have hI : ∫⁻ ω, (∫⁻ t in Set.Ici (0 : ℝ), ENNReal.ofReal (Real.exp (-2 * t)) * ENNReal.ofReal |u t ω|) ∂P < ⊤ := by
+    rw [hswap]
+    exact lt_of_le_of_lt hbound hfin
+  exact ae_lt_top hmeasω hI.ne
+
+/-! ### Dominated convergence for the radial pairing code -/
+
+/-- A continuous `g` on `(0,∞)` with `∫_{(0,1]} y |g y| dy < ∞` has `∫_{(0,R0]} y |g y| dy < ∞` for `R0 ≥ 1`. -/
+lemma integrableOn_Ioc_mul_abs {g : ℝ → ℝ} (hg : ContinuousOn g (Set.Ioi 0)) {R0 : ℝ} (hR0 : 1 ≤ R0)
+    (hfin : ∫⁻ y in Set.Ioc (0 : ℝ) 1, ENNReal.ofReal (y * |g y|) < ⊤) :
+    IntegrableOn (fun y => y * |g y|) (Set.Ioc 0 R0) := by
+  have hc : ContinuousOn (fun y => y * |g y|) (Set.Ioi 0) := continuousOn_id.mul hg.abs
+  rw [← Set.Ioc_union_Ioc_eq_Ioc zero_le_one hR0]
+  refine IntegrableOn.union ?_ ?_
+  · refine ⟨(hc.mono Set.Ioc_subset_Ioi_self).aestronglyMeasurable measurableSet_Ioc, ?_⟩
+    have h1 : ∫⁻ y in Set.Ioc (0 : ℝ) 1, ‖y * |g y|‖ₑ = ∫⁻ y in Set.Ioc (0 : ℝ) 1, ENNReal.ofReal (y * |g y|) :=
+      setLIntegral_congr_fun measurableSet_Ioc fun y hy => by
+        rw [Real.enorm_eq_ofReal (mul_nonneg hy.1.le (abs_nonneg _))]
+    exact h1.trans_lt hfin
+  · have hcI : ContinuousOn (fun y => y * |g y|) (Set.Icc 1 R0) :=
+      hc.mono fun y hy => Set.mem_Ioi.2 (lt_of_lt_of_le one_pos hy.1)
+    exact (hcI.integrableOn_compact isCompact_Icc).mono_set Set.Ioc_subset_Icc_self
+
+/-- The radial integral on `ℂ`: `x ↦ 1_{|x| ≤ R0} |g(|x|)|` is integrable when `∫_{(0,R0]} y |g y| dy < ∞` (polar
+coordinates, `integrable_fun_norm_addHaar`, `dim ℂ = 2`). -/
+lemma integrable_radial_indicator {g : ℝ → ℝ} {R0 : ℝ}
+    (hg : IntegrableOn (fun y => y * |g y|) (Set.Ioc 0 R0)) :
+    Integrable (fun x : ℂ => (Set.Iic R0).indicator (fun y => |g y|) ‖x‖) := by
+  have hdim : Module.finrank ℝ ℂ - 1 = 1 := by simp [Complex.finrank_real_complex]
+  refine (integrable_fun_norm_addHaar (μ := volume) (f := (Set.Iic R0).indicator (fun y => |g y|))).2 ?_
+  have h1 : IntegrableOn (fun y => (Set.Ioc 0 R0).indicator (fun y => y * |g y|) y) (Set.Ioi 0) :=
+    ((integrable_indicator_iff measurableSet_Ioc).2 hg).integrableOn
+  refine h1.congr_fun (fun y hy => ?_) measurableSet_Ioi
+  have hy0 : 0 < y := hy
+  by_cases h : y ≤ R0
+  · simp [Set.indicator, h, hy0]
+  · simp [Set.indicator, h]
+
+/-- **Pointwise domination of the radial term.** If `|φ| ≤ M`, `φ = 0` off `B(0,R0)`, the cutoff is in `[0,1]` and vanishes
+at radii `≤ δ_m`, then `|φ(x) χ_m(|x|) g(max(|x|, δ_m))| ≤ M 1_{|x| ≤ R0} |g(|x|)|`. -/
+lemma abs_radialTerm_le {φ : ℂ → ℝ} {M R0 : ℝ} {g : ℝ → ℝ} (hM0 : 0 ≤ M) (hM : ∀ x, |φ x| ≤ M)
+    (hφ0 : ∀ x : ℂ, R0 < ‖x‖ → φ x = 0) (m : ℕ) (x : ℂ) :
+    |φ x * radialCutoff m ‖x‖ * g (max ‖x‖ (radialEps m))| ≤ M * (Set.Iic R0).indicator (fun y => |g y|) ‖x‖ := by
+  have hind : 0 ≤ (Set.Iic R0).indicator (fun y => |g y|) ‖x‖ := Set.indicator_nonneg (fun _ _ => abs_nonneg _) _
+  by_cases hx : R0 < ‖x‖
+  · rw [hφ0 x hx]
+    simp only [zero_mul, abs_zero]
+    exact mul_nonneg hM0 hind
+  · rw [not_lt] at hx
+    have hI : (Set.Iic R0).indicator (fun y => |g y|) ‖x‖ = |g ‖x‖| := Set.indicator_of_mem (Set.mem_Iic.2 hx) _
+    rw [hI]
+    by_cases hδ : radialEps m ≤ ‖x‖
+    · rw [max_eq_left hδ, abs_mul, abs_mul]
+      have hc := radialCutoff_mem_Icc m ‖x‖
+      have hcabs : |radialCutoff m ‖x‖| ≤ 1 := by rw [abs_of_nonneg hc.1]; exact hc.2
+      calc |φ x| * |radialCutoff m ‖x‖| * |g ‖x‖| ≤ M * 1 * |g ‖x‖| := by
+            gcongr
+            · exact hM x
+        _ = M * |g ‖x‖| := by ring
+    · rw [not_le] at hδ
+      rw [radialCutoff_eq_zero_of_le hδ.le]
+      simp only [mul_zero, zero_mul, abs_zero]
+      exact mul_nonneg hM0 (abs_nonneg _)
+
+/-- The finite-measure property of `P`, from the radial law (the image of a probability measure). -/
+lemma isFiniteMeasure_of_radial_law {γ : ℝ} {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {c : Ω → ℝ → ℂ → ℝ} (hcm : ∀ r z, 0 < r → Measurable fun ω => c ω r z) {ν : Measure (ContinuousPath ℝ)}
+    (hν : IsProbabilityMeasure ν) (hrad : P.map (fun ω => radialProcess (c ω)) = quantumConeRadialLaw γ ν) :
+    IsFiniteMeasure P := by
+  have hQ : IsProbabilityMeasure (quantumConeRadialLaw γ ν) := by
+    unfold quantumConeRadialLaw
+    have hS : Measurable fun w : ContinuousPath ℝ => fun s : ℝ≥0 => w s + γ * s :=
+      Measurable.of_eval fun s => ((ContinuousMap.measurable_eval s).add_const _)
+    have hT : Measurable fun w : ContinuousPath ℝ => fun s : ℝ≥0 => w s - γ * s :=
+      Measurable.of_eval fun s => ((ContinuousMap.measurable_eval s).sub_const _)
+    have : IsProbabilityMeasure ((brownianMotion 0).map fun w (s : ℝ≥0) => w s + γ * s) :=
+      (Measure.isProbabilityMeasure_map_iff hS.aemeasurable).2 inferInstance
+    have : IsProbabilityMeasure (ν.map fun w (s : ℝ≥0) => w s - γ * s) :=
+      (Measure.isProbabilityMeasure_map_iff hT.aemeasurable).2 hν
+    infer_instance
+  have h : P.map (fun ω => radialProcess (c ω)) Set.univ = 1 := by
+    rw [hrad]
+    exact measure_univ
+  rw [Measure.map_apply (measurable_radialProcess_circle hcm) MeasurableSet.univ, Set.preimage_univ] at h
+  exact ⟨by rw [h]; exact ENNReal.one_lt_top⟩
+
+/-- **Radial pairing code is correct almost surely** (chat 231, §3.2). For the rescaled circle averages `c` with the radial
+law of the quantum cone, almost surely the radial pairing code of the circle process is the pairing `∫ φ(x) h_{|x|}(0) dx`.
+The inner `limsup` is the plane integral of a continuous compactly supported function (`planeQuad_tendsto_integral`); the
+outer `limsup` is a dominated limit as the cutoff radius `δ_m → 0`. -/
+theorem radialPairingCode_ae_eq {γ : ℝ} {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {c : Ω → ℝ → ℂ → ℝ}
+    (hcm : ∀ r z, 0 < r → Measurable fun ω => c ω r z)
+    (hcont : ∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ))
+    (hrad : HasConeRadialLaw γ P c) (φ : ℂ → ℝ) (hφ : IsTestFunction Set.univ φ) :
+    (fun ω => radialPairingCode φ (circleProcess (c ω))) =ᵐ[P] (fun ω => ∫ x, φ x * c ω ‖x‖ 0) := by
+  obtain ⟨ν, hν, hrad'⟩ := hrad
+  obtain ⟨T, hT, hPT, hgood⟩ := exists_measurable_good_set hcont
+  have : IsFiniteMeasure P := isFiniteMeasure_of_radial_law hcm hν.1 hrad'
+  have hfin := ae_lintegral_radial_lt_top hcm hν.1 hrad' hT hPT hgood
+  have hTc : ∀ᵐ ω ∂P, ω ∈ T := by
+    rw [ae_iff]
+    exact hPT
+  obtain ⟨C, hC⟩ := hφ.1.continuous.bounded_above_of_compact_support hφ.2.1
+  obtain ⟨r0, hr0⟩ := hφ.2.1.isCompact.isBounded.subset_closedBall (0 : ℂ)
+  set R0 : ℝ := max r0 1 with hR0def
+  have hR01 : 1 ≤ R0 := le_max_right _ _
+  set M : ℝ := max C 0 with hMdef
+  have hM0 : 0 ≤ M := le_max_right _ _
+  have hM : ∀ x, |φ x| ≤ M := fun x => by
+    rw [← Real.norm_eq_abs]
+    exact le_trans (hC x) (le_max_left _ _)
+  have hφ0 : ∀ x : ℂ, R0 < ‖x‖ → φ x = 0 := by
+    intro x hx
+    apply image_eq_zero_of_notMem_tsupport
+    intro hxt
+    have h := hr0 hxt
+    rw [mem_closedBall_zero_iff] at h
+    linarith [le_max_left r0 1]
+  filter_upwards [hfin, hTc] with ω hfinω hωT
+  have hcω := hgood ω hωT
+  have hgc : ContinuousOn (fun y : ℝ => c ω y 0) (Set.Ioi 0) :=
+    hcω.comp (continuousOn_id.prodMk continuousOn_const) (fun y hy => ⟨hy, Set.mem_univ _⟩)
+  have hfinY : ∫⁻ y in Set.Ioc (0 : ℝ) 1, ENNReal.ofReal (y * |c ω y 0|) < ⊤ := by
+    have key := lintegral_Ioc_eq_radial (fun y => c ω y 0)
+    rw [key]
+    simpa only [Set.indicator_of_mem hωT] using hfinω
+  have hgI : IntegrableOn (fun y => y * |c ω y 0|) (Set.Ioc 0 R0) :=
+    integrableOn_Ioc_mul_abs hgc hR01 hfinY
+  set F : ℕ → ℂ → ℝ := fun m x => φ x * radialCutoff m ‖x‖ * c ω (max ‖x‖ (radialEps m)) 0 with hFdef
+  set f : ℂ → ℝ := fun x => φ x * c ω ‖x‖ 0 with hfdef
+  have hcontF : ∀ m, Continuous (F m) := by
+    intro m
+    have hcm' : Continuous fun x : ℂ => c ω (max ‖x‖ (radialEps m)) 0 :=
+      hcω.comp_continuous (f := fun x : ℂ => (max ‖x‖ (radialEps m), (0 : ℂ))) (by fun_prop)
+        (fun x => ⟨lt_of_lt_of_le (radialEps_pos m) (le_max_right _ _), Set.mem_univ _⟩)
+    exact (hφ.1.continuous.mul ((continuous_radialCutoff m).comp continuous_norm)).mul hcm'
+  have hcsF : ∀ m, HasCompactSupport (F m) := by
+    intro m
+    exact (hφ.2.1.mul_right).mul_right
+  have hinner : ∀ m : ℕ, limsup (fun n : ℕ => planeQuad n
+      (fun x => φ x * radialCutoff m ‖x‖ * circleProcess (c ω) (safeRadius m x, 0))) atTop = ∫ x, F m x :=
+    fun m => (planeQuad_tendsto_integral (hcontF m) (hcsF m)).limsup_eq
+  have houter : Tendsto (fun m => ∫ x, F m x) atTop (𝓝 (∫ x, f x)) := by
+    refine tendsto_integral_of_dominated_convergence
+      (fun x => M * (Set.Iic R0).indicator (fun y => |c ω y 0|) ‖x‖)
+      (fun m => (hcontF m).aestronglyMeasurable) ((integrable_radial_indicator hgI).const_mul M)
+      (fun m => Eventually.of_forall fun x => ?_) ?_
+    · rw [Real.norm_eq_abs]
+      exact abs_radialTerm_le (g := fun y => c ω y 0) hM0 hM hφ0 m x
+    · filter_upwards [compl_mem_ae_iff.2 (measure_singleton (0 : ℂ))] with x hx
+      have hx0 : x ≠ 0 := hx
+      have hpos : 0 < ‖x‖ := norm_pos_iff.2 hx0
+      refine tendsto_const_nhds.congr' ?_
+      filter_upwards [radialCutoff_eventually_eq_one hpos,
+        radialEps_tendsto.eventually (gt_mem_nhds hpos)] with m hcut hδ
+      simp only [hFdef, hfdef, hcut, max_eq_left hδ.le, mul_one]
+  unfold radialPairingCode
+  simp only [hinner]
+  exact houter.limsup_eq
+
 end
 
 end MatedCRT
@@ -616,3 +1037,6 @@ end MatedCRT
 #print axioms MatedCRT.angleQuad_tendsto_circleAverage
 #print axioms MatedCRT.measurable_planeQuad_eval
 #print axioms MatedCRT.measurable_angleQuad_eval
+#print axioms MatedCRT.radialPairingCode_ae_eq
+#print axioms MatedCRT.measurable_radialPairingCode
+#print axioms MatedCRT.measurable_radialSphereCode
