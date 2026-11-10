@@ -209,6 +209,18 @@ theorem hc_of_local {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {A : Set ℤ
     _ ≤ c + 0 := by rw [htop0]; exact add_le_add hpart le_rfl
     _ = c := add_zero c
 
+/-- **Start cell inside the sphere window (LEMMA68 C3, `H_{X_{T_j}} ⊂ B_{g+d}(z_j) ⊂ B_{4R/3}(z_j)`).** If the cell of
+`y` has diameter at most `d` and contains a point `p` within `g` of the centre `c`, and `d + g < R'`, then `y` lies in the
+inner window `I(B_{R'}(c))`. Discharges the start hypothesis `hy` of `hc_of_local`. -/
+theorem start_mem_sphere_window {H : ℤ → Set ℂ} {d g R' : ℝ} {c p : ℂ} {y : ℤ}
+    (hne : (H y).Nonempty) (hsm : ∀ x ∈ closure (H y), ∀ x' ∈ closure (H y), dist x x' ≤ d)
+    (hp : p ∈ H y) (hpc : dist p c ≤ g) (hlt : d + g < R') :
+    y ∈ innerVertices H (ball c R') := by
+  refine ExitPath68.inner_of_near (ρ := d + g) hne (fun x hx => ?_) hlt
+  have h1 := hsm x (subset_closure hx) p (subset_closure hp)
+  have h2 := dist_triangle x p c
+  linarith
+
 end HcAssembly68
 
 end MatedCRT
