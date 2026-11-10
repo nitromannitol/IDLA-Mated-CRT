@@ -52,15 +52,20 @@ def LeastSupersolutionMemOfVolumeGrowthStmt : Prop :=
     ∀ t : ℝ, 0 < t → leastSupersolution ν (3 / 4) 0 t ∈ supersolutions ν (3 / 4) 0 t
 
 /-- FIRST-PASS FROZEN. Coordinate covariance of the LQG measure of a whole-plane log field under dilation (the GMC change
-of coordinates with the random normalization `A_s = exp(γ (Q_γ log s + h^ℂ_s(0)))`): for `0 < γ < 2`, `s > 0`, a whole-plane
+of coordinates with the random normalization `A_s = exp(γ (Q_γ log s + h_s(0)))`, where `h_s(0)` is the circle average of
+the inserted field `h = h^ℂ − γ log|·|` at radius `s` and `0`, i.e. `h_s(0) = h^ℂ_s(0) − γ log s`; equivalently
+`A_s = e^{γ h^ℂ_s(0)} s^{2 − γ²/2}`, which is the Lean expression below via `fieldCircleAverage`. Using the circle average
+of `h^ℂ` itself, without the `−γ log s`, would be wrong): for `0 < γ < 2`, `s > 0`, a whole-plane
 GFF `h^ℂ` (`IsWholePlaneGFF`) and its LQG measure `μ = μ_{h^ℂ − γ log|·|}` (`IsLQGMeasureOfField P γ γ hcirc μ`, with `μ`
 AE-measurable as a `Measure ℂ`-valued variable), the random measure `A_s^{-1} · μ(s ·)` has the same law as `μ`. In the
 form used: `μ_{h^s}(E) = A_s^{-1} μ_h(sE)` with `h^s = h(s·) − h_s(0)` and `h^s =d h` (CHATGPT-cone-good-set.md (40)-(41)).
 Sources: Duplantier and Sheffield, "Liouville quantum gravity and KPZ", Invent. Math. 185 (2011), arXiv:0808.1560, the
 coordinate change of the GMC measure (Section 3, locator pending); Bou-Rabee and Gwynne, "Harmonic balls in Liouville
 quantum gravity", arXiv:2208.11795v3, Lemma 5.7 (the normalization used in its Draft `ClusterScaleInvarianceStmt`,
-HarmonicBalls/Draft/Section5.lean:226; printed page pending). Standard; locator pending. Truth check pending (operator note
-2026-11-09 22:53 UTC (b)). Used by: none yet (planned for `HalfPlateauNullStep`, FirstPass/S2h/LogZero.lean). -/
+HarmonicBalls/Draft/Section5.lean:226; printed page pending). Standard; locator pending. Truth check TRUE as typed, normalization included (ChatGPT, 01:07 UTC,
+notes/fp-gaps/CHATGPT-idla-K-S2h-S2k-truth.md §2, §4); it is derivable from `FrozenInsertionCoordinateRule`
+(FirstPass/Frozen/S2k.lean) by the decoder argument of §2 and is to be retired when that derivation is written.
+Used by: none yet (planned for `HalfPlateauNullStep`, FirstPass/S2h/LogZero.lean). -/
 def FrozenWholePlaneLQGScaling : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsProbabilityMeasure P → IsWholePlaneGFF P hC hcirc →
