@@ -49,8 +49,8 @@ the boundary-exit expectation of its boundary values minus the Green potential `
 random-walk background, not a statement about this paper's clusters, and is `FiniteDomainDirichletRepresentation`
 (MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/FiniteDomainBridge.lean:13), reused unchanged. Source: Lawler–Limic, *Random
 Walk: A Modern Introduction* (Cambridge 2010), Corollary 6.2.4, cited in the paper's proof of Lemma 3.5 (corrected paper, line
-Truth check TRUE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md, table row): Lawler-Limic (2010) p. 125 Corollary 6.2.4, equations (6.8)-(6.9).
-1532–1535 region). Used by: firstPass_3_5_corrected. -/
+1532–1535 region).
+Truth check TRUE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md, table row): Lawler-Limic (2010) p. 125 Corollary 6.2.4, equations (6.8)-(6.9). Used by: firstPass_3_5_corrected. -/
 def FrozenFiniteDomainDirichletRepresentation : Prop :=
   FiniteDomainDirichletRepresentation
 
