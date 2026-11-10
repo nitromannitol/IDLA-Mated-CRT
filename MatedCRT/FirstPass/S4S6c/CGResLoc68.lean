@@ -96,7 +96,31 @@ theorem resLoc_pt {γ ω₀ ζ ρ CG CE C q0 R s₀ ε r : ℝ} {Ω : Type} [Mea
       exact ⟨fun k hk => ⟨hx.1 k hk, ht k hk⟩, hx.2⟩)
     hmesh hFA
 
+/-- The named input `htest` of `resLoc_pt`, quantified as in `ShellCGResLoc`: on the shell chain of `ShellPtPremCG`,
+the test ends are almost surely finite (the finite-test-domain route of `ShellTestPw68`, with the mesh bound localised to
+`ball 0 ρ`). This Prop is NOT proved here; it is the single missing input of the CG residual. -/
+def ShellCGTestEndLoc (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
+    Lemma68ShellCoreCG.ShellPtPremCG 𝒮 γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r S Ew ω →
+      Lemma68Config.FullAdmAt (Lemma68Guard10.shellS1CG γ CG) S ρ s₀ γ ε ω r i →
+        ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a), ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
+          testEnd ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
+            (Lemma68WindowRf.windowRfT S.μ ρ (shortExp ζ) (Lemma68ConstOrder.shellC0 CG) C (dyadicD r) ω) k x ≠ ⊤
+
+/-- The residual `ShellCGResLoc 𝒮` from its named test-end input `ShellCGTestEndLoc 𝒮`: destructure `ShellPtPremCG`
+(43 conjuncts, current form of `ShellCoreCG68.lean`) and apply `resLoc_pt`. -/
+theorem shellCGResLoc_of_test (𝒮 : SpaceFillingSLEModel) (hTest : ShellCGTestEndLoc 𝒮) :
+    Lemma68ShellCoreCG.ShellCGResLoc 𝒮 := by
+  intro γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω _ S Ew ω i hP hmesh hFA
+  have hT := hTest γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω S Ew ω i hP
+  obtain ⟨_, _, _, _, _, _, _, _, _, _, _, hζ0, hζ1, _, hρ1, _, hq0, hq0C, _, _, hRρ, hRA, _, hs0, _, _, hε, _,
+    hr10, hrR, _, _, hgap, _, hfin, hη, _, _, hdg, _, hcell, _, _⟩ := hP
+  exact resLoc_pt S ω i hε hs0 hζ0 hζ1 hq0 hq0C hρ1 hRA hRρ hr10 hrR hgap hη hfin hcell hdg
+    hT hmesh hFA
+
 end Lemma68CGResLoc
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68CGResLoc.resLoc_pt
+#print axioms MatedCRT.Lemma68CGResLoc.shellCGResLoc_of_test
