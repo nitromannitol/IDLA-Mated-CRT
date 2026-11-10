@@ -1,4 +1,5 @@
 import MatedCRT.FirstPass.S3i.BoundaryCell
+import MatedCRT.FirstPass.S3i.LensDefs
 
 /-!
 # Lens geometry and the local zero boundary (plan `CHATGPT-221-idla-3-6-QuenchedLensStep-plan-PRO`, §5, worker H5)
@@ -11,8 +12,8 @@ while no cell meeting `B_{s/16}(q)` on `∂U` is a far cell of the sphere `∂B_
 Uses Lemma 4 (`H4.boundaryVertexGeometry_fp36_of_ball`, `BoundaryCell.lean`). The lens hypothesis
 `ball z r ⊆ ball 0 ρ₁` of Lemma 4 is derived here from `houter` and `hρ`.
 
-The definitions `fp36LensDomain`, `fp36LensFarCells` are private copies in `MatedCRT.FirstPass36.H5`,
-until `MatedCRT/FirstPass/S3i/LensDefs.lean` (z1) is committed; merge by renaming.
+The definitions `fp36LensDomain`, `fp36LensFarCells`, `FP36GoodEnv` are imported from
+`MatedCRT/FirstPass/S3i/LensDefs.lean` (the plan's "Minimal internal definitions", committed by z1).
 -/
 
 namespace MatedCRT
@@ -21,14 +22,6 @@ namespace H5
 
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal NNReal
-
-/-- Private copy of the plan's `fp36LensDomain` (to be replaced by `LensDefs.lean`). -/
-def fp36LensDomain (z : ℂ) (r δ : ℝ) (P : ℂ) (s : ℝ) : Set ℂ :=
-  ball z (r + 4 * δ) ∩ ball P (s / 4)
-
-/-- Private copy of the plan's `fp36LensFarCells` (to be replaced by `LensDefs.lean`). -/
-def fp36LensFarCells (ε : ℝ) (η : ℝ → ℂ) (P : ℂ) (s : ℝ) : Set ℤ :=
-  cellVertices ε η (sphere P (s / 4))
 
 /-- The distance from `q` to the circle `∂B_r(z)` controls `||q - z| - r|` from below. -/
 lemma abs_dist_sub_le_infDist_sphere {z q : ℂ} {r : ℝ} (hr : 0 < r) :
@@ -83,7 +76,7 @@ lemma lensGeometry_fp36
     (hscale : 64 * ε ^ b ≤ ε ^ (b / 2))
     (houter :
       closure (ball z (r + 4 * ε ^ b)) ⊆ ball 0 ρ₀)
-    (hgood : H4.FP36GoodEnv S ρ₀ ρ₁ b ν A r z y ε ω)
+    (hgood : FP36GoodEnv S ρ₀ ρ₁ b ν A r z y ε ω)
     (hv : v ∈ vBoundary (S.mult ε ω)
       (interiorCellVertices ε (S.η ω) (ball z r))) :
     let δ := ε ^ b

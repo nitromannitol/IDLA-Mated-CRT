@@ -1,4 +1,4 @@
-import MatedCRT.FirstPass.S3i.Frozen
+import MatedCRT.FirstPass.S3i.LensDefs
 import MatedCRT.Steps.Sec3.ConvergenceHarmonicFunctions
 
 /-!
@@ -17,9 +17,8 @@ have diameter `≤ ε ^ b`) does not control the cells of `v` and of its interio
 The first conjunct `v ∈ cellVertices ε η (frontier (ball z r))` needs no lens hypothesis and is proved
 unconditionally as `boundaryVertex_mem_sphere_cells_fp36`.
 
-The definitions `FiniteExitData`, `FP36OneSidedBEAt`, `FP36GoodEnv` are copies of the plan's
-"Minimal internal definitions", kept in the private namespace `MatedCRT.FirstPass36.H4` until the defs
-file is committed; merge by renaming.
+The definitions `FiniteExitData`, `FP36OneSidedBEAt`, `FP36GoodEnv` are imported from
+`MatedCRT/FirstPass/S3i/LensDefs.lean` (the plan's "Minimal internal definitions", committed by z1).
 -/
 
 namespace MatedCRT
@@ -28,45 +27,6 @@ namespace H4
 
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal NNReal
-
-/-- Finite-state data for almost-sure exit and first-step harmonicity (copy of the plan's definition). -/
-def FiniteExitData (m : ℤ → ℤ → ℕ) (A : Set ℤ) : Prop :=
-  A.Finite ∧
-  (∀ a ∈ A, 0 < mdeg m a) ∧
-  ∀ a ∈ A, ∃ b ∈ vBoundary m A, ∃ p : List ℤ,
-    IsVPathIn m (vClosure m A) p a b
-
-/-- The pointwise BE property on one fixed environment (copy of the plan's definition). -/
-def FP36OneSidedBEAt
-    (m : ℤ → ℤ → ℕ) (ε : ℝ) (η : ℝ → ℂ)
-    (ρ ν A : ℝ) : Prop :=
-  ∀ (D : Set ℂ) (f : ℤ → ℝ),
-    D ⊆ ball 0 ρ → IsOpen D → IsConnected D →
-    SimplyConnectedSpace D →
-    (∀ x ∈ interiorCellVertices ε η D,
-      matedLaplacian m f x = 0) →
-    ∀ x ∈ cellVertices ε η D, ∀ t : ℝ, 0 < t →
-      f x ≤ boundarySupNear ε η D f x t
-        + A * discreteSupNorm ε η D f
-          * (t / infDist (vertexPoint ε η x) (frontier D)) ^ (-ν)
-
-/-- Everything needed at one environment and mesh (copy of the plan's definition). -/
-def FP36GoodEnv {Ω : Type} [MeasurableSpace Ω]
-    (S : MatedCRTEnv Ω) (ρ₀ ρ₁ b ν A r : ℝ)
-    (z y : ℂ) (ε : ℝ) (ω : Ω) : Prop :=
-  let η := S.η ω
-  let m := S.mult ε ω
-  IsAreaParametrized (S.μ ω) η ∧
-  (∀ j k : ℤ, m j k ≠ 0 →
-    (cell ε η j ∩ cell ε η k).Nonempty) ∧
-  (∀ k : ℤ, (cell ε η k ∩ ball 0 ρ₁).Nonempty →
-    diam (cell ε η k) ≤ ε ^ b) ∧
-  (∀ U : Set ℂ, closure U ⊆ ball 0 ρ₀ →
-    FiniteExitData m (cellVertices ε η U) ∧
-    FiniteExitData m (interiorCellVertices ε η U)) ∧
-  vertexOf ε η y ∈
-    interiorCellVertices ε η (ball z r) ∧
-  FP36OneSidedBEAt m ε η ρ₁ ν A
 
 /-- A cell is connected: the image of a compact interval under the continuous `η`. -/
 lemma cell_isConnected {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < ε) (hη : Continuous η) (k : ℤ) :
