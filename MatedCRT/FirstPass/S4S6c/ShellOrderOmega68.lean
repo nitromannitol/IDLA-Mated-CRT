@@ -34,12 +34,14 @@ theorem shellOrder_fullAdm_ae_omega {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (h�
     (hmesh : ∀ᵐ ω ∂S.P, CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ)
     (hstart : ∀ᵐ ω ∂S.P,
       (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty)
-    (hde : ∀ᵐ ω ∂S.P, ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),
-      (∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
-        shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) (Rf ω) k x ≠ ⊤ ∧
-        testEnd ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) (Rf ω) k x ≠ ⊤) ∧
-      (∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
-        Elig ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x))) :
+    -- guarded by `FullAdm` (the z11 deviation: the unguarded form is not provable, reports/z11.md l.25-32)
+    (hde : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+      ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),
+        (∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
+          shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) (Rf ω) k x ≠ ⊤ ∧
+          testEnd ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) (Rf ω) k x ≠ ⊤) ∧
+        (∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
+          Elig ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x))) :
     ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
       Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r) (Rf ω)
         (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a := by
@@ -72,6 +74,7 @@ theorem shellOrder_fullAdm_ae_omega {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (h�
     Lemma68ShellEnvAeInputs.hkill_of_valid hγ0 hγ2 S hS hε (Θ := i.Θ) (F0 := i.F0) (r := r) (a := i.a),
     hmesh, hstart, hR, hde] with ω hη hmap hkill hm hst hRω hdeω
   intro hadm
+  have hdeA := hdeω hadm
   unfold Lemma68Config.FullAdm Lemma68Config.ConfigOK at hadm
   obtain ⟨⟨hF0eq, hcl, hball⟩, -⟩ := hadm
   have hK : (fillCells ε (S.η ω) ↑i.Θ).Nonempty := ⟨0, hball (Metric.mem_ball_self hs₀)⟩
@@ -101,7 +104,7 @@ theorem shellOrder_fullAdm_ae_omega {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (h�
     rw [← hF0eq] at hmem
     exact Finset.mem_coe.1 hmem
   exact Lemma68ShellWire.shellOrderAe_of_path hη hε hr hs hs4 hd le_rfl hds hΘ hRω hF0 hm hNs hst (hmap ε hε)
-    (hkill.and hdeω)
+    (hkill.and hdeA)
 
 end Lemma68ShellOrderOmega
 end MatedCRT
