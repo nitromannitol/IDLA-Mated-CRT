@@ -1,3 +1,5 @@
+import MatedCRT.FirstPass.S4S6c.TestBound68
+import MatedCRT.Proofs.IDLA.Measurable
 import MatedCRT.FirstPass.S4S6c.StrongMarkovState
 
 /-!
@@ -224,6 +226,74 @@ theorem srwLaw_condExp_strong_markov (m : ℤ → ℤ → ℕ) (a : ℤ) (τ : (
   rw [setIntegral_indicator hB, setIntegral_const, smul_eq_mul, mul_one,
     setIntegral_atRandomTime_eq_tsum m a G τ hτ hs, tsum_congr hfib,
     ← ENNReal.tsum_toReal_eq hle, measureReal_def, hSM]
+
+/-- The test event `G_j` of C15 at the state `y`: the walk started at `y` leaves `A` at a time before its exit from the
+window `W y`. In the shifted frame at `T_j` this is `{∃ n, T_j ≤ n < T_{j+1}, X_n ∉ A}` (open-parts C15; bridge note Step C).
+Its complement is `TestBound68.stayIn W A y` (the walk stays in `A` until it exits `W y`). -/
+def testEvent (W : ℤ → Set ℤ) (A : Set ℤ) (y : ℤ) : Set (ℕ → ℤ) :=
+  {p | ∃ i : ℕ, (i : ℕ∞) < vExitTime (W y) p ∧ p i ∉ A}
+
+lemma testEvent_compl (W : ℤ → Set ℤ) (A : Set ℤ) (y : ℤ) :
+    (testEvent W A y)ᶜ = TestBound68.stayIn W A y := by
+  ext p
+  simp [testEvent, TestBound68.stayIn]
+
+lemma measurableSet_testEvent (W : ℤ → Set ℤ) (A : Set ℤ) (y : ℤ) : MeasurableSet (testEvent W A y) := by
+  have hEq : testEvent W A y = ⋃ i : ℕ, (⋂ j ∈ Set.Iic i, (fun p : ℕ → ℤ => p j) ⁻¹' W y) ∩
+      (fun p : ℕ → ℤ => p i) ⁻¹' Aᶜ := by
+    ext p
+    simp [testEvent, natCast_lt_vExitTime_iff]
+  rw [hEq]
+  refine MeasurableSet.iUnion fun i => MeasurableSet.inter ?_ ?_
+  · exact MeasurableSet.biInter (Set.finite_Iic i).countable fun j _ =>
+      (measurable_pi_apply j) MeasurableSet.of_discrete
+  · exact (measurable_pi_apply i) MeasurableSet.of_discrete
+
+/-- **The conditional step of LEMMA68 for the concrete test events (C15, fp-S6j step 2).** For the random times `τ j`
+(the stopping times `T_j` of C3) and the test events `G_j = walkTestEvent (τ j) (testEvent (W j) A)`, the conditional
+test probability given `F_{τ j}` is at least `qStar / (1 + log(1/R_j))²` on `H_j`, almost surely.
+
+Inputs:
+* `hpt` is the per-test bound `srwLaw_y (stayIn) ≤ 1 - q(R_j)` at the state `y = X_{τ j}`: the conclusion of
+  `printed_test_bound` (S4S6c/PerTest68.lean:82, the quenched B18/C15 bound) with the test radius `r := R j x`; its
+  geometric hypotheses hold for `x ∈ H j` by the configuration (z8, S6h.lean), and are not repeated here.
+* `hfin` is the almost sure finiteness of `T_j` on `H_j`. The written argument (open-parts C15, "almost surely finite
+  stopping time") states it but does not prove it; it is an input here (see the report).
+* `hR` are the radius bounds of C3, `hq0`, `hq1` the constant bounds (`qStar = 1/(288 C_d² K²)` of `printed_test_bound`). -/
+theorem hstep_concrete (m : ℤ → ℤ → ℕ) (a : ℤ) (τ : ℕ → (ℕ → ℤ) → ℕ∞) (hτ : ∀ j, IsWalkRandomTime (τ j))
+    (W : ℕ → ℤ → Set ℤ) (A : Set ℤ) (H : ℕ → Set (ℕ → ℤ)) (R : ℕ → (ℕ → ℤ) → ℝ) {qStar : ℝ}
+    (hq0 : 0 ≤ qStar) (hq1 : qStar ≤ 1)
+    (hR : ∀ j, ∀ᵐ x ∂srwLaw m a, x ∈ H j → 0 < R j x ∧ R j x ≤ 1)
+    (hfin : ∀ j, ∀ᵐ x ∂srwLaw m a, x ∈ H j → τ j x < ⊤)
+    (hpt : ∀ j, ∀ᵐ x ∂srwLaw m a, x ∈ H j → τ j x < ⊤ →
+      srwLaw m (x (τ j x).toNat) (TestBound68.stayIn (W j) A (x (τ j x).toNat)) ≤
+        ENNReal.ofReal (1 - qStar / (1 + Real.log (1 / R j x)) ^ 2)) (j : ℕ) :
+    ∀ᵐ x ∂srwLaw m a, x ∈ H j → qStar / (1 + Real.log (1 / R j x)) ^ 2 ≤
+      condExp (stoppedSigma (τ j) (hτ j)) (srwLaw m a)
+        ((walkTestEvent (τ j) (fun y => testEvent (W j) A y)).indicator (fun _ => (1 : ℝ))) x := by
+  have hcond := srwLaw_condExp_strong_markov m a (τ j) (hτ j) (fun y => testEvent (W j) A y)
+    (fun y => measurableSet_testEvent (W j) A y)
+  filter_upwards [hcond, hfin j, hpt j, hR j] with x hcx hfx hptx hRx
+  intro hxH
+  rw [hcx]
+  have hτx : τ j x ≠ ⊤ := (hfx hxH).ne
+  unfold atRandomTime
+  simp only [hτx, ↓reduceIte]
+  show qStar / (1 + Real.log (1 / R j x)) ^ 2 ≤ (srwLaw m (x (τ j x).toNat) (testEvent (W j) A (x (τ j x).toNat))).toReal
+  have hRpos := hRx hxH
+  have hlog : 0 ≤ Real.log (1 / R j x) := Real.log_nonneg (one_le_one_div hRpos.1 hRpos.2)
+  have hc1 : qStar / (1 + Real.log (1 / R j x)) ^ 2 ≤ 1 := by
+    have h1 : (1 : ℝ) ≤ (1 + Real.log (1 / R j x)) ^ 2 := by nlinarith
+    exact (div_le_self hq0 h1).trans hq1
+  have hreal : (srwLaw m (x (τ j x).toNat) (TestBound68.stayIn (W j) A (x (τ j x).toNat))).toReal ≤
+      1 - qStar / (1 + Real.log (1 / R j x)) ^ 2 :=
+    ENNReal.toReal_le_of_le_ofReal (by linarith) (hptx hxH (hfx hxH))
+  have hcompl : srwLaw m (x (τ j x).toNat) (TestBound68.stayIn (W j) A (x (τ j x).toNat)) =
+      1 - srwLaw m (x (τ j x).toNat) (testEvent (W j) A (x (τ j x).toNat)) := by
+    rw [← testEvent_compl, prob_compl_eq_one_sub (measurableSet_testEvent (W j) A (x (τ j x).toNat))]
+  have hle : srwLaw m (x (τ j x).toNat) (testEvent (W j) A (x (τ j x).toNat)) ≤ 1 := prob_le_one
+  rw [hcompl, ENNReal.toReal_sub_of_le hle ENNReal.one_ne_top, ENNReal.toReal_one] at hreal
+  linarith
 
 end S6j
 
