@@ -207,7 +207,7 @@ theorem lensAnnulusGood_anti_p {S : MatedCRTEnv Ω} {ρ p p' β ε : ℝ} (hpp :
   exact (ENNReal.ofReal_le_ofReal hpp).trans (hω z hz s hs1 hs2 hsub j hj)
 
 /-- **QuenchedLensStep from the boundary input (q4, item 3).** The good event is `LensGood S ρ₁ a p β` with
-`ρ₁ = (1+ρ)/2`; `a = 1/(2+γ)^2`-type cell exponent, `β` and the annulus base from `hgms` at `γ`, and `p ≤ 1/2` the GMS
+`ρ₁ = (1+ρ)/2`; a cell exponent `a < 2/(2+γ)^2`; `β` and `α` from `hgms` at `γ`; and `p ≤ 1/2` the GMS
 constant at `ρ₁` (replaced by `min p₀ (1/2)`, which only weakens the annulus event). On the good event the start is
 interior (`vertexOf_mem_interiorCellVertices_of_mesh`) and lies in `B_r(z)` (`vertexPoint_vertexOf_mem_ball`); the walk
 starts at its vertex (`srwLaw_ae_start`); the no-exit bound is `hExit` and the far-exit bound is `hExc`. `hBE` is not used
