@@ -79,16 +79,26 @@ theorem stoppedOccupation_tendsto_discrete {𝒮 : SpaceFillingSLEModel} (h211 :
       (fun ω => ∫ b, stoppedOccupation (ball z r) T g (rescaledLBMPath (S.clock ω) S.m₀ b)
         ∂planarBrownianMotion y) := by
   have : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
+  -- continuity within the whole path space `𝒞 = univ` is continuity
+  have hcontW : ∀ᵐ ω ∂S.P, ∀ᵐ b ∂planarBrownianMotion y,
+      PathFunctionalContinuousWithinAt Set.univ (stoppedOccupation (ball z r) T g)
+        (rescaledLBMPath (S.clock ω) S.m₀ b) :=
+    hcont.mono fun ω h => h.mono fun b hb η hη => by
+      obtain ⟨ρ, hρ, hh⟩ := hb η hη
+      exact ⟨ρ, hρ, fun v _ hv => hh v hv⟩
   exact quenched_integral_tendsto_of_bl_of_ae_continuous
     (fun ε ω => srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y)) (fun _ _ => inferInstance)
     (fun ε ω q => interpolatedWalk ε (S.η ω) (S.mε ε) q) (planarBrownianMotion y)
-    (fun ω b => rescaledLBMPath (S.clock ω) S.m₀ b)
+    (fun ω b => rescaledLBMPath (S.clock ω) S.m₀ b) Set.univ Set.univ_nonempty
+    (fun _ _ => Eventually.of_forall fun _ => Set.mem_univ _)
+    (Eventually.of_forall fun _ => Eventually.of_forall fun _ => Set.mem_univ _)
     (fun F hF => h211 γ hγ0 hγ2 Ω S hS {y} isCompact_singleton y (mem_singleton y) F hF)
     (fun F hF ε ω => (interpolatedWalkMeasurableStep ε (S.mε ε) (S.η ω) (S.mult ε ω)
       (vertexOf ε (S.η ω) y)).1 F hF)
     (fun F hF => ((lbmPathFunctionalMeasurableStep_holds 𝒮) γ hγ0 hγ2 Ω S hS y F hF).1)
     (fun F hF => ((lbmPathFunctionalMeasurableStep_holds 𝒮) γ hγ0 hγ2 Ω S hS y F hF).2)
     (stoppedOccupation (ball z r) T g) ⟨T * M, fun w => abs_stoppedOccupation_le (D := ball z r) hgb hT w⟩
-    (fun ε ω => aestronglyMeasurable_stoppedOccupation_interpolatedWalk ε (S.η ω) (S.mε ε) z r T hg) hcont
+    (fun ε ω => aestronglyMeasurable_stoppedOccupation_interpolatedWalk ε (S.η ω) (S.mε ε) z r T hg)
+    hcontW
 
 end MatedCRT.TruncatedLaws
