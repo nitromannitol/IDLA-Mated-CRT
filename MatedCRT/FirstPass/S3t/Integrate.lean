@@ -1,4 +1,6 @@
 import MatedCRT.FirstPass.S3t.Bounds
+import MatedCRT.FirstPass.S3t.BoundaryShells
+import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.WalkExitMeasurable
 
 /-!
 # Truncated quenched laws, Step 11: integrating the pathwise estimate (fp-S3t, z8)
@@ -103,5 +105,61 @@ theorem tendsto_deterministicError {T C χ α M : ℝ} {mInv : ℝ → ℝ} (hα
     exact h.comp h2
   have := (h1.const_mul (T * C)).add (hmInv.const_mul (4 * M))
   simpa only [mul_zero, add_zero] using this
+
+/-- Measurability in the walk variable of the stopped occupation of the interpolated walk, for the ball `ball z r`
+(Duplantier–Sheffield truncated occupation `∫_{(0, min (T, τ_D)]} g(W_t) dt` with `D = B_r(z)`). Fubini, as in
+`MatedCRT.aestronglyMeasurable_truncatedOccupation_interpolatedWalk`, with the `ENNReal` truncation of `stoppedOccupation`. -/
+theorem measurable_stoppedOccupation_interpolatedWalk (ε : ℝ) (η : ℝ → ℂ) (m : ℝ) (z : ℂ) (r T : ℝ)
+    {g : ℂ → ℝ} (hg : Continuous g) :
+    Measurable (fun x : ℕ → ℤ => stoppedOccupation (Metric.ball z r) T g (interpolatedWalk ε η m x)) := by
+  have hτ : Measurable (fun x : ℕ → ℤ => pathExitTime (Metric.ball z r) (interpolatedWalk ε η m x)) :=
+    MatedCRT.measurable_pathExitTime_interpolatedWalk ε η m z r
+  have ha : Measurable (fun x : ℕ → ℤ =>
+      (min (ENNReal.ofReal T) (pathExitTime (Metric.ball z r) (interpolatedWalk ε η m x))).toReal) :=
+    ENNReal.measurable_toReal.comp (measurable_const.min hτ)
+  have hu : Measurable (Function.uncurry fun (t : ℝ) (x : ℕ → ℤ) =>
+      g (interpolatedWalk ε η m x t.toNNReal)) :=
+    measurable_uncurry_of_continuous_of_measurable
+      (fun x => hg.comp ((MatedCRT.continuous_interpolatedWalk ε m η x).comp continuous_real_toNNReal))
+      (fun t => hg.measurable.comp (MatedCRT.measurable_interpolatedWalk_apply ε η m t.toNNReal))
+  set E : Set (ℝ × (ℕ → ℤ)) :=
+    {q | 0 < q.1} ∩ {q | q.1 ≤ (min (ENNReal.ofReal T)
+      (pathExitTime (Metric.ball z r) (interpolatedWalk ε η m q.2))).toReal} with hE
+  have hEm : MeasurableSet E :=
+    (measurableSet_lt measurable_const measurable_fst).inter
+      (measurableSet_le measurable_fst (ha.comp measurable_snd))
+  have hFm := hu.indicator hEm
+  have hsm : StronglyMeasurable (fun x : ℕ → ℤ => ∫ t : ℝ,
+      E.indicator (Function.uncurry fun (t : ℝ) (x : ℕ → ℤ) =>
+        g (interpolatedWalk ε η m x t.toNNReal)) (t, x)) :=
+    StronglyMeasurable.integral_prod_left' hFm.stronglyMeasurable
+  have heq : (fun x : ℕ → ℤ => stoppedOccupation (Metric.ball z r) T g (interpolatedWalk ε η m x)) =
+      fun x : ℕ → ℤ => ∫ t : ℝ,
+        E.indicator (Function.uncurry fun (t : ℝ) (x : ℕ → ℤ) =>
+          g (interpolatedWalk ε η m x t.toNNReal)) (t, x) := by
+    funext x
+    unfold stoppedOccupation
+    rw [← integral_indicator measurableSet_Ioc]
+    congr 1
+  rw [heq]
+  exact hsm.measurable
+
+/-- Measurability in the walk variable of the truncated shell functional `shellTime (D_n) (B_r(z)) T` of the
+interpolated walk, for the concentric exhaustion `D_n = ballExhaustion z r a n` (Step 6). Both exit times are exit times of
+balls, so `MatedCRT.measurable_pathExitTime_interpolatedWalk` applies to each. -/
+theorem measurable_shellTime_interpolatedWalk (ε : ℝ) (η : ℝ → ℂ) (m : ℝ) (z : ℂ) (r a T : ℝ) (n : ℕ) :
+    Measurable (fun x : ℕ → ℤ =>
+      shellTime (ballExhaustion z r a n) (Metric.ball z r) T (interpolatedWalk ε η m x)) := by
+  unfold shellTime ballExhaustion
+  have h1 : Measurable (fun x : ℕ → ℤ =>
+      (min (ENNReal.ofReal T) (pathExitTime (Metric.ball z r) (interpolatedWalk ε η m x))).toReal) :=
+    ENNReal.measurable_toReal.comp
+      (measurable_const.min (MatedCRT.measurable_pathExitTime_interpolatedWalk ε η m z r))
+  have h2 : Measurable (fun x : ℕ → ℤ =>
+      (min (ENNReal.ofReal T)
+        (pathExitTime (Metric.ball z (r - a / ((n : ℝ) + 1))) (interpolatedWalk ε η m x))).toReal) :=
+    ENNReal.measurable_toReal.comp
+      (measurable_const.min (MatedCRT.measurable_pathExitTime_interpolatedWalk ε η m z (r - a / ((n : ℝ) + 1))))
+  exact h1.sub h2
 
 end MatedCRT.TruncatedLaws
