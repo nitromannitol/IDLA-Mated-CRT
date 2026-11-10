@@ -1,4 +1,5 @@
 import MatedCRT.FirstPass.S5c
+import MatedCRT.FirstPass.S4d.StrictGapReduction
 
 /-!
 # FIRST PASS, Proposition 4.2 (prop:div-sandpile-lower-bound): assembly with the cone family (q4)
@@ -46,6 +47,25 @@ theorem firstPass_4_2_of_coneFamilyStep {𝒮 : SpaceFillingSLEModel}
     (hfam : ConeFamilyAEMeasurableStep) :
     DivSandpileLowerBoundStmt 𝒮 :=
   divSandpileLowerBound_final 𝒮 (firstPass_4_1 hm h210 h34 h214 h28 h35 h218 h27 hH hcone) h23 h24 h27 h28 h33 hfam hgap
+
+/-- **Proposition 4.2 (first pass), from the two strict-gap steps (q4, fp-S4d-4-2-assembly).** Same conclusion as
+`firstPass_4_2_of_coneFamilyStep`, with the open NEW input `hgap` replaced by its two named components
+(`FirstPass/S4d/StrictGapReduction.lean`, ChatGPT Section 5): `hdet` (deterministic comparison, Section 2) and `hnj`
+(fixed-time union, Sections 4-5). Hypotheses, in order: the cited inputs as in `firstPass_4_2_of_coneFamilyStep`;
+the open NEW inputs `hdet`, `hnj`; the cone family measurability `hfam`. -/
+theorem firstPass_4_2_of_strictGapSteps {𝒮 : SpaceFillingSLEModel}
+    (hm : MepsScalingInput 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)
+    (h34 : IntegralConvergenceGreenFunctionStmt 𝒮) (h214 : GreenKernelUpperBoundStmt 𝒮)
+    (h28 : CellSizeEstimateStmt 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
+    (h218 : ExitTimeUpperBoundStmt 𝒮) (h27 : VolumeGrowthStmt)
+    (hH : FrozenDiscreteHolderContinuityCorrected 𝒮) (hcone : FrozenConeEnvironmentScaling 𝒮)
+    (h23 : ConeHarmonicBallsStmt) (h24 : ConeHarmonicBallsUpToFixedTimeStmt)
+    (h33 : UniformConvergenceGreenKernelStmt 𝒮)
+    (hdet : StrictGapDeterministicComparisonStep) (hnj : StrictGapFixedTimeUnionStep 𝒮)
+    (hfam : ConeFamilyAEMeasurableStep) :
+    DivSandpileLowerBoundStmt 𝒮 :=
+  firstPass_4_2_of_coneFamilyStep hm h210 h34 h214 h28 h35 h218 h27 hH hcone h23 h24 h33
+    (harmonicBallStrictObstacleGapStep_of_steps 𝒮 hdet hnj) hfam
 
 /-- **Proposition 4.2 (first pass), assembled (q4, fp-S4d-4-2-assembly).** Same conclusion as
 `firstPass_4_2_of_coneFamilyStep`, with `hfam` discharged by `coneFamilyAEMeasurable_proved` (FirstPass/S2j.lean:28).
