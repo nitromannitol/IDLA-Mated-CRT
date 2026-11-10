@@ -14,6 +14,7 @@ import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.HarmonicPathExit
 import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 import MatedCRT.Proofs.Sec5.LLowerBound.SmallCellsProb
 import MatedCRT.Proofs.Sec5.MeanValueInequality.SurplusSteps
+import MatedCRT.Proofs.Sec1.ConeScaleRadius
 
 /-!
 # FIRST PASS, Lemma 5.3: `MeanValueSurplusLowerStep` (task fp-S5c-5-3-5-1)
@@ -60,7 +61,7 @@ def badFamily53 {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (Λ : Ω �
 `FrozenLQGMeasureFieldMeasurable`, `FrozenUniversalMeasurabilityOfAnalytic`, `FrozenDiskGreenNonnegCont`,
 `FrozenGreenDiscPole`, `FPStrongMinimumPrinciple`, `ConeScaleInvarianceCodedStmt`, `ConeScaleRadiusPosStep`
 (inputs of `marginExact_proved`), `FPFirstHitVisits` and `MepsScalingInput` passed as hypotheses. -/
-theorem firstPass_5_3 {𝒮 : SpaceFillingSLEModel}
+theorem firstPass_5_3_step {𝒮 : SpaceFillingSLEModel}
     (hF : FrozenLQGMeasureFieldMeasurable 𝒮) (hF1 : FrozenUniversalMeasurabilityOfAnalytic)
     (hF3 : FrozenDiskGreenNonnegCont) (hG : FrozenGreenDiscPole) (hmin : FPStrongMinimumPrinciple)
     (hLs : ConeScaleInvarianceCodedStmt) (hpos : ConeScaleRadiusPosStep)
@@ -215,5 +216,30 @@ theorem firstPass_5_3 {𝒮 : SpaceFillingSLEModel}
       ht hκ hCpos hδ (hb0pos ω) (fun j => hbjpos j ω) hLreg hLc hLball hμL hfull
       hfloor0 hfloorj hEt hEs he' hbdd hx hmε hεev hCmε (Eventually.of_forall hU) hUQ hUmass
       hmemcell hdiam
+
+/-- **Lemma 5.3, mean-value inequality (first pass, final form).** `MeanValueInequalityStmt 𝒮` (Draft `Section5`,
+lemma:mean-value-ineq). It is the reduction `meanValueInequality_of_lower` (SurplusSteps.lean) applied to the surplus
+lower bound `firstPass_5_3_step`, with
+* the step `ConeScaleRadiusPosStep` discharged from the quantum cone scaling input `QuantumConeScalingInput`
+  (DMS14 Proposition 4.13(i); `coneScaleRadiusPosStep_of_input`, Proofs/Sec1/ConeScaleRadius.lean:315);
+* the step `LQGMeasureFieldMeasurableStep` obtained from `FrozenLQGMeasureFieldMeasurable` by symmetry of the a.s. equality.
+The Draft inputs `DiscreteLaplacianBoundCorrectedStmt` (Lemma 4.4 corrected), `MaximumPrincipleStmt`,
+`ConvergenceDivisibleStmt`, `UniformConvergenceGreenKernelStmt`, `ExitTimeUpperBoundStmt` and `BoundedExitTimeRVStmt`
+(Lemma 2.17) are cited inputs of Lemma 5.3, passed as hypotheses. -/
+theorem firstPass_5_3_final {𝒮 : SpaceFillingSLEModel}
+    (hF : FrozenLQGMeasureFieldMeasurable 𝒮) (hF1 : FrozenUniversalMeasurabilityOfAnalytic)
+    (hF3 : FrozenDiskGreenNonnegCont) (hG : FrozenGreenDiscPole) (hmin : FPStrongMinimumPrinciple)
+    (hLs : ConeScaleInvarianceCodedStmt) (hscale : QuantumConeScalingInput)
+    (hfirst : FPFirstHitVisits 𝒮) (hM : MepsScalingInput 𝒮)
+    (h44 : DiscreteLaplacianBoundCorrectedStmt 𝒮) (h213 : MaximumPrincipleStmt 𝒮)
+    (h41 : ConvergenceDivisibleStmt 𝒮) (h33 : UniformConvergenceGreenKernelStmt 𝒮)
+    (h218 : ExitTimeUpperBoundStmt 𝒮) (h217 : BoundedExitTimeRVStmt) :
+    MeanValueInequalityStmt 𝒮 := by
+  have hμ : LQGMeasureFieldMeasurableStep 𝒮 := by
+    intro γ hγ hγ2 Ω _ S hS
+    obtain ⟨g, hg, hae⟩ := hF γ hγ hγ2 Ω S hS
+    exact ⟨g, hg, hae.mono fun ω hω => hω.symm⟩
+  exact meanValueInequality_of_lower 𝒮 h44 h213 h41 h33 h218 h217 hμ
+    (firstPass_5_3_step hF hF1 hF3 hG hmin hLs (coneScaleRadiusPosStep_of_input hscale) hfirst hM)
 
 end MatedCRT
