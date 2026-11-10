@@ -43,8 +43,20 @@ theorem resCountGood_pt {γ ω₀ α ζ ρ CG CE β ε s₀ r : ℝ} {Ω : Type}
   Lemma68B1EnvPwG.hCountGood_pw_g S ω i hβ hε0 (hεS.trans (shellEps0ZCG_le_one hCG))
     (countingMeshEventR_counting hωc) hFA
 
+/-- **STEP B: the counting residual holds (`shellCGResCountGood_holds`).** Destructures the premise `ShellPtPremCG`
+(ShellCoreCG68.lean:287: `0 < CG` at conjunct 9, `0 < β` at 11, `0 < ε` at 27, `ε ≤ shellEps0ZCG` at 28, the counting
+membership `ω ∈ countingMeshEventR … β ε` at 32) and applies `resCountGood_pt`. No hypothesis beyond the premise. -/
+theorem shellCGResCountGood_holds (𝒮 : SpaceFillingSLEModel) : Lemma68ShellCoreCG.ShellCGResCountGood 𝒮 := by
+  unfold Lemma68ShellCoreCG.ShellCGResCountGood
+  intro γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω _ S Ew ω i hP hFA
+  obtain ⟨-, -, -, -, -, -, -, -, hCG, -, hβ,
+    -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, hε0, hεS,
+    -, -, -, hωc, -⟩ := hP
+  exact resCountGood_pt S ω i hCG hβ.le hε0 hεS hωc hFA
+
 end Lemma68CGResCount
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68CGResCount.shellEps0ZCG_le_one
 #print axioms MatedCRT.Lemma68CGResCount.resCountGood_pt
+#print axioms MatedCRT.Lemma68CGResCount.shellCGResCountGood_holds
