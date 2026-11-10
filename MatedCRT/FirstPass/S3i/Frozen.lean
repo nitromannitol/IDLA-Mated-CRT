@@ -10,7 +10,8 @@ Lemma 2.16 or Lemma 2.18 (PRO §2.3): it needs annular disconnection and dyadic 
 
 PENDING TRUTH CHECK: the printed form (3.31) of GMS, its exact quantifiers (uniformity over simply connected domains,
 the constant `A` and exponent `ν`), and the convention for an empty local boundary set have not been checked against
-the arXiv version. The statement is stated for a space-filling model `𝒮` as a PARAMETER and is used only as a
+the arXiv version. Chat 202 (UNCLEAR as typed): the binder order was repaired so that the exponents and the constant are
+chosen per valid environment (after `S.IsValid 𝒮 γ`); the repaired form is PENDING TRUTH CHECK as well. The statement is stated for a space-filling model `𝒮` as a PARAMETER and is used only as a
 hypothesis (never a `∀ 𝒮` inside).
 -/
 
@@ -30,16 +31,19 @@ noncomputable def boundarySupNear (ε : ℝ) (η : ℝ → ℂ) (D : Set ℂ) (f
 noncomputable def discreteSupNorm (ε : ℝ) (η : ℝ → ℂ) (D : Set ℂ) (f : ℤ → ℝ) : ℝ :=
   ⨆ k ∈ cellVertices ε η D, |f k|
 
-/-- **(BE)**, the one-sided boundary continuity estimate of discrete harmonic functions, GMS Theorem 3.9 eq. (3.31).
-For `γ ∈ (0,2)` and `ρ ∈ (0,1)` there are exponents `κ, ν`, a constant `A` and `b > 0` such that, for every valid
-environment with polynomially high probability (`PolyHighProb`), every simply connected domain `D ⊆ B_ρ` and every
-discrete function `f` which is mated-harmonic on the interior cells of `D`, and every vertex `x ∈ V^ε(D)` and `t > 0`,
+/-- **(BE)**, the one-sided boundary continuity estimate of discrete harmonic functions, the upper half of GMS Theorem 3.9
+eq. (3.31) (derived from the two-sided statement). For `γ ∈ (0,2)` and `ρ ∈ (0,1)`, every valid environment `S`
+(`S.IsValid 𝒮 γ`), there are exponents `κ, ν`, a constant `A` and `b > 0` such that, with polynomially high probability
+(`PolyHighProb`), every simply connected domain `D ⊆ B_ρ` and every discrete function `f` which is mated-harmonic on the
+interior cells of `D`, and every vertex `x ∈ V^ε(D)` and `t > 0`,
 `f(x) ≤ max_{V^ε(∂D ∩ B_t(η x))} f + A ‖f‖_{∞, V^ε(D)} (t / dist(η x, ∂D))^{-ν}`.
-Frozen with `𝒮` as a parameter; used only as a hypothesis of the annealed clause. PENDING TRUTH CHECK (see above). -/
+Chat 202: UNCLEAR as previously typed; repaired binder order (the existential over `κ, ν, A, b` now sits after
+`S.IsValid 𝒮 γ`, per coupling, as in the other freezes), PENDING TRUTH CHECK of the repaired form.
+Frozen with `𝒮` as a parameter; used only as a hypothesis of the annealed clause. -/
 def FrozenOneSidedBoundaryContinuity (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
-  ∃ κ ν A b : ℝ, 0 < κ ∧ 0 < ν ∧ 0 < A ∧ 0 < b ∧
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∃ κ ν A b : ℝ, 0 < κ ∧ 0 < ν ∧ 0 < A ∧ 0 < b ∧
   PolyHighProb S.P fun ε => {ω | ∀ (D : Set ℂ) (f : ℤ → ℝ),
     D ⊆ ball 0 ρ → IsOpen D → IsConnected D → SimplyConnectedSpace D →
     (∀ x ∈ interiorCellVertices ε (S.η ω) D, matedLaplacian (S.mult ε ω) f x = 0) →
