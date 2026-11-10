@@ -38,6 +38,7 @@ in those places (see `Proposed/DuplantierSheffieldCoordinate2011.lean`, docstrin
 statement is not literally DS11 Proposition 2.1. It is a corollary of standard GFF/GMC facts: the dyadic limit has a measurable
 decoder, the insertion measure has no atom at `0`, convergence holds away from `0`, the limit is identified along each `R 2^{-n}`,
 and the affine change of variables applies (truth note §1, steps A–E).
+Truth check TRUE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md, table row): HB arXiv:2208.11795v3 p. 9 Fact 2.1(IV) equation (2.7); DS arXiv:0808.1560v2 p. 13 Proposition 2.1.
 Used by: firstPass_plateauScaleInvarianceStep (`S2k.lean`, through `insertionLQGScalingLawStep_of_coordinateRule`). -/
 def FrozenInsertionCoordinateRule : Prop :=
   ∀ (γ α : ℝ), 0 < γ → γ < 2 → α < lqgQ γ →
