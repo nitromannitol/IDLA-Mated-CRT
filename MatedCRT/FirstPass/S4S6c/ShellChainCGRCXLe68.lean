@@ -30,7 +30,8 @@ open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 /-- **The window constant with `C ≤ CG` (residual of request 80a, lead li).** For `γ`, `ζ`, `CG` in the ranges of the
 chain there are window constants `0 < C ≤ CG` and `C'` with `WindowPrevAt γ (shortExp ζ) (shellC0 CG) C C'`. This is
 `ShortWindowGoodRadiusPrevalenceStmt` (S6r/ShortWindow.lean:61) at `a = shortExp ζ`, `c₀ = shellC0 CG`, with the extra bound
-`C ≤ CG`, which the repository does not give (q3 trace, reports/q3.md). Open mathematics: NOT a frozen input. -/
+`C ≤ CG`, which the repository does not give (q3 trace, reports/q3.md). Open mathematics: NOT a frozen input.
+FALSE (Codex 19:56 Q4: CG = 1 forces C ≥ 4(1-log 2) > 1); route retired (lead li, 20:05 UTC). -/
 def WindowPrevLeCGStmt : Prop :=
   ∀ γ ζ CG : ℝ, 0 < γ → γ < 2 → 0 < shortExp ζ → shortExp ζ < 1 → 0 < CG →
     ∃ C C' : ℝ, 0 < C ∧ C ≤ CG ∧ 0 < C' ∧ WindowPrevAt γ (shortExp ζ) (shellC0 CG) C C'
