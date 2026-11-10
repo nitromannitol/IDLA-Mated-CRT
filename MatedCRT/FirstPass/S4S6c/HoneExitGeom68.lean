@@ -4,6 +4,8 @@ import MatedCRT.Proofs.Infra.RandomWalk
 import MatedCRT.FirstPass.S4S6c.ShellHoneInst68
 import MatedCRT.FirstPass.S4S6c.ShellDbl68
 import MatedCRT.FirstPass.S4S6c.ExitPath68
+import MatedCRT.FirstPass.S4S6c.TraceInputs68
+import MatedCRT.FirstPass.S4S6c.WindowMult68
 
 /-!
 # The exit geometry of the one-test hone (fp-S4S6c-hone-exit-geometry)
@@ -434,6 +436,64 @@ theorem hdbl_of_exit_geom_237 {γ ρc ζc : ℝ} (K : Constants68 γ ρc) {ε : 
           (μ (ball (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat))
             (K.c0 * Rf (shellCentre ε η Kset r s d k ω)))).toReal := by
         rw [ENNReal.toReal_mul, ENNReal.toReal_ofReal hD0]
+
+/-! ## Environment inputs of `hb`, discharged (fp-S4S6c-walk-env-adjacency)
+
+For a valid environment `S` and `ε > 0`, the edge multiplicity `m = S.mult ε ω` of the mated-CRT map satisfies, almost
+surely in `ω`, the deterministic hypotheses `hdeg` and `hadj` of `hb_ae_of_walk`. -/
+
+/-- **Degree of the mated-CRT map, almost surely (operator item 1).** For a valid environment `S` and `ε > 0`, almost
+surely in `ω`, every vertex `v` of the multigraph `S.mult ε ω` has `edgeMeasure m v univ ≠ 0` and `≠ ⊤`. Proof: local
+finiteness and consecutive adjacency (`Lemma68WindowMult.hmult_of_valid68`) give `edgeMeasure_univ`, which identifies
+the total mass with the degree `mdeg m v`; the degree is nonzero because of the neighbour `v + 1`
+(`mdeg_ne_zero_of_ne_zero`), and the degree is a natural number, so it is not `⊤`. -/
+theorem hdeg_of_valid {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
+    {ε : ℝ} (hε : 0 < ε) :
+    ∀ᵐ ω ∂S.P, ∀ v : ℤ, edgeMeasure (S.mult ε ω) v univ ≠ 0 ∧ edgeMeasure (S.mult ε ω) v univ ≠ ⊤ := by
+  filter_upwards [MatedCRT.Lemma68WindowMult.hmult_of_valid68 hγ0 hγ2 S hS hε] with ω hω
+  obtain ⟨hlf, hsucc⟩ := hω
+  intro v
+  rw [edgeMeasure_univ hlf v]
+  exact ⟨by exact_mod_cast mdeg_ne_zero_of_ne_zero hlf (hsucc v), ENNReal.natCast_ne_top _⟩
+
+/-- **Closed-cell adjacency of the mated-CRT map, almost surely (operator item 2).** For a valid environment `S` and
+`ε > 0`, almost surely in `ω`, every edge `S.mult ε ω u v ≠ 0` joins vertices whose closed cells meet. Proof: the open
+cells of adjacent vertices meet almost surely (`TraceInputs68.ae_adjacent`), and the closed-cell form is
+`TraceInputs68.closure_cells_meet_of_mult`. -/
+theorem hadj_of_valid {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
+    {ε : ℝ} (hε : 0 < ε) :
+    ∀ᵐ ω ∂S.P, ∀ u v : ℤ, S.mult ε ω u v ≠ 0 →
+      (closure (cell ε (S.η ω) u) ∩ closure (cell ε (S.η ω) v)).Nonempty := by
+  filter_upwards [TraceInputs68.ae_adjacent hγ0 hγ2 S hS] with ω hω
+  exact TraceInputs68.closure_cells_meet_of_mult (hω ε hε)
+
+/-- **`hb` almost surely for a valid environment (operator item 3).** `hb_ae_of_walk` at `m = S.mult ε ω` and
+`η = S.η ω`. The degree and adjacency hypotheses are discharged (`hdeg_of_valid`, `hadj_of_valid`), and so is the
+continuity of `η` (`TraceInputs68.ae_continuous_eta`). The identification `hZ` of the centre with `shellCentre` and the
+hit-cell interiority `hhit` (operator request 64e) stay named hypotheses, stated almost surely in `ω`. -/
+theorem hb_ae_valid {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
+    {ε : ℝ} (hε : 0 < ε) (Kset : Set ℂ) {Rf : ℂ → ℝ} {r s d : ℝ}
+    {A : Set ℤ} {τU : (ℕ → ℤ) → ℕ∞} {Z : ℕ → (ℕ → ℤ) → ℂ} (a : ℤ) (n : ℕ)
+    (hZ : ∀ᵐ ω ∂S.P, ∀ k x, Z k x = shellCentre ε (S.η ω) Kset r s d k x)
+    (hhit : ∀ᵐ ω ∂S.P, ∀ k, ∀ᵐ x ∂srwLaw (S.mult ε ω) a,
+      x ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε (S.η ω) Kset r s d Rf k) τU →
+      ∀ t : ℕ, shellHit ε (S.η ω) Kset r s k x = (t : ℕ∞) →
+        x t ∈ interiorCellVertices ε (S.η ω)
+          (ball (shellCentre ε (S.η ω) Kset r s d k x) (4 * Rf (shellCentre ε (S.η ω) Kset r s d k x) / 3))) :
+    ∀ᵐ ω ∂S.P, ∀ k ≤ n, ∀ᵐ x ∂srwLaw (S.mult ε ω) a,
+      x ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε (S.η ω) Kset r s d Rf k) τU →
+        x (shellExit ε (S.η ω) Kset r s d Rf k x).toNat ∈
+          cellVertices ε (S.η ω) (sphere (Z k x) (4 * Rf (shellCentre ε (S.η ω) Kset r s d k x) / 3)) := by
+  filter_upwards [TraceInputs68.ae_continuous_eta hS, hdeg_of_valid hγ0 hγ2 S hS hε,
+    hadj_of_valid hγ0 hγ2 S hS hε, hZ, hhit] with ω hη hdeg hadj hZω hhitω
+  exact hb_ae_of_walk hη Kset (S.mult ε ω) a n hdeg hadj hZω hhitω
+
+#print axioms MatedCRT.Lemma68HoneExitGeom.hdeg_of_valid
+#print axioms MatedCRT.Lemma68HoneExitGeom.hadj_of_valid
+#print axioms MatedCRT.Lemma68HoneExitGeom.hb_ae_valid
 
 #print axioms MatedCRT.Lemma68HoneExitGeom.cell_meets_sphere_of_exit
 #print axioms MatedCRT.Lemma68HoneExitGeom.hdbl_of_exit_geom
