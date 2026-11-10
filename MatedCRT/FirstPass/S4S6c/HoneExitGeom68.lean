@@ -590,40 +590,48 @@ hit-cell interiority `hhit` (operator request 64e) stay named hypotheses, stated
 depends on the environment through `η`, so it is a family `Z ω` and `hZ` is an almost sure identity. -/
 theorem hb_ae_valid {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
-    {ε : ℝ} (hε : 0 < ε) (Kset : Set ℂ) {Rf : ℂ → ℝ} {r s d : ℝ}
-    {A : Set ℤ} {τU : (ℕ → ℤ) → ℕ∞} {Z : Ω → ℕ → (ℕ → ℤ) → ℂ} (a : ℤ) (n : ℕ)
-    (hZ : ∀ᵐ ω ∂S.P, ∀ k x, Z ω k x = shellCentre ε (S.η ω) Kset r s d k x)
+    {ε : ℝ} (hε : 0 < ε) (Kset : Ω → Set ℂ) {Rf : Ω → ℂ → ℝ} {r s d : ℝ}
+    {A : Set ℤ} {τU : Ω → (ℕ → ℤ) → ℕ∞} {Z : Ω → ℕ → (ℕ → ℤ) → ℂ} (a : ℤ) (n : ℕ)
+    (hZ : ∀ᵐ ω ∂S.P, ∀ k x, Z ω k x = shellCentre ε (S.η ω) (Kset ω) r s d k x)
     (hhit : ∀ᵐ ω ∂S.P, ∀ k, ∀ᵐ x ∂srwLaw (S.mult ε ω) a,
-      x ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε (S.η ω) Kset r s d Rf k) τU →
-      ∀ t : ℕ, shellHit ε (S.η ω) Kset r s k x = (t : ℕ∞) →
+      x ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A
+          (shellExit ε (S.η ω) (Kset ω) r s d (Rf ω) k) (τU ω) →
+      ∀ t : ℕ, shellHit ε (S.η ω) (Kset ω) r s k x = (t : ℕ∞) →
         x t ∈ interiorCellVertices ε (S.η ω)
-          (ball (shellCentre ε (S.η ω) Kset r s d k x) (4 * Rf (shellCentre ε (S.η ω) Kset r s d k x) / 3))) :
+          (ball (shellCentre ε (S.η ω) (Kset ω) r s d k x)
+            (4 * Rf ω (shellCentre ε (S.η ω) (Kset ω) r s d k x) / 3))) :
     ∀ᵐ ω ∂S.P, ∀ k ≤ n, ∀ᵐ x ∂srwLaw (S.mult ε ω) a,
-      x ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε (S.η ω) Kset r s d Rf k) τU →
-        x (shellExit ε (S.η ω) Kset r s d Rf k x).toNat ∈
-          cellVertices ε (S.η ω) (sphere (Z ω k x) (4 * Rf (shellCentre ε (S.η ω) Kset r s d k x) / 3)) := by
+      x ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A
+          (shellExit ε (S.η ω) (Kset ω) r s d (Rf ω) k) (τU ω) →
+        x (shellExit ε (S.η ω) (Kset ω) r s d (Rf ω) k x).toNat ∈
+          cellVertices ε (S.η ω) (sphere (Z ω k x)
+            (4 * Rf ω (shellCentre ε (S.η ω) (Kset ω) r s d k x) / 3)) := by
   filter_upwards [TraceInputs68.ae_continuous_eta hS, hdeg_of_valid hγ0 hγ2 S hS hε,
     hadj_of_valid hγ0 hγ2 S hS hε, hZ, hhit] with ω hη hdeg hadj hZω hhitω
-  exact hb_ae_of_walk (Z := Z ω) hη Kset (S.mult ε ω) a n hdeg hadj hZω hhitω
+  exact hb_ae_of_walk (Z := Z ω) hη (Kset ω) (S.mult ε ω) a n hdeg hadj hZω hhitω
 
 /-- **`hb` almost surely with the centre `shellCentre` (operator item 3, `Z := shellCentre`).** The corollary of
-`hb_ae_valid` with `Z ω k x := shellCentre ε (S.η ω) Kset r s d k x`, so that `hZ` holds by reflexivity; the only
-named hypothesis left is the hit-cell interiority `hhit`. -/
+`hb_ae_valid` with `Z ω k x := shellCentre ε (S.η ω) (Kset ω) r s d k x`, so that `hZ` holds by reflexivity; the only
+named hypothesis left is the hit-cell interiority `hhit`. The environment-dependent data `Kset`, `Rf`, `τU` (the shell
+cells, the window radius, the killed exit time) are families over `Ω`, as they depend on `η = S.η ω`. -/
 theorem hb_ae_valid_centre {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
-    {ε : ℝ} (hε : 0 < ε) (Kset : Set ℂ) {Rf : ℂ → ℝ} {r s d : ℝ}
-    {A : Set ℤ} {τU : (ℕ → ℤ) → ℕ∞} (a : ℤ) (n : ℕ)
+    {ε : ℝ} (hε : 0 < ε) (Kset : Ω → Set ℂ) {Rf : Ω → ℂ → ℝ} {r s d : ℝ}
+    {A : Set ℤ} {τU : Ω → (ℕ → ℤ) → ℕ∞} (a : ℤ) (n : ℕ)
     (hhit : ∀ᵐ ω ∂S.P, ∀ k, ∀ᵐ x ∂srwLaw (S.mult ε ω) a,
-      x ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε (S.η ω) Kset r s d Rf k) τU →
-      ∀ t : ℕ, shellHit ε (S.η ω) Kset r s k x = (t : ℕ∞) →
+      x ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A
+          (shellExit ε (S.η ω) (Kset ω) r s d (Rf ω) k) (τU ω) →
+      ∀ t : ℕ, shellHit ε (S.η ω) (Kset ω) r s k x = (t : ℕ∞) →
         x t ∈ interiorCellVertices ε (S.η ω)
-          (ball (shellCentre ε (S.η ω) Kset r s d k x) (4 * Rf (shellCentre ε (S.η ω) Kset r s d k x) / 3))) :
+          (ball (shellCentre ε (S.η ω) (Kset ω) r s d k x)
+            (4 * Rf ω (shellCentre ε (S.η ω) (Kset ω) r s d k x) / 3))) :
     ∀ᵐ ω ∂S.P, ∀ k ≤ n, ∀ᵐ x ∂srwLaw (S.mult ε ω) a,
-      x ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε (S.η ω) Kset r s d Rf k) τU →
-        x (shellExit ε (S.η ω) Kset r s d Rf k x).toNat ∈
-          cellVertices ε (S.η ω) (sphere (shellCentre ε (S.η ω) Kset r s d k x)
-            (4 * Rf (shellCentre ε (S.η ω) Kset r s d k x) / 3)) :=
-  hb_ae_valid hγ0 hγ2 S hS hε Kset (Z := fun ω k x => shellCentre ε (S.η ω) Kset r s d k x) a n
+      x ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A
+          (shellExit ε (S.η ω) (Kset ω) r s d (Rf ω) k) (τU ω) →
+        x (shellExit ε (S.η ω) (Kset ω) r s d (Rf ω) k x).toNat ∈
+          cellVertices ε (S.η ω) (sphere (shellCentre ε (S.η ω) (Kset ω) r s d k x)
+            (4 * Rf ω (shellCentre ε (S.η ω) (Kset ω) r s d k x) / 3)) :=
+  hb_ae_valid hγ0 hγ2 S hS hε Kset (Z := fun ω k x => shellCentre ε (S.η ω) (Kset ω) r s d k x) a n
     (ae_of_all _ fun _ _ _ => rfl) hhit
 
 #print axioms MatedCRT.Lemma68HoneExitGeom.hdeg_of_valid
