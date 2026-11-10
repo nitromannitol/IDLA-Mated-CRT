@@ -1029,6 +1029,120 @@ theorem radialPairingCode_ae_eq {γ : ℝ} {Ω : Type*} [MeasurableSpace Ω] {P 
   simp only [hinner]
   exact houter.limsup_eq
 
+/-! ### The sphere-average code (chat 231, §3.2) -/
+
+/-- **The circle meets the origin in at most one angle on `(0, 2π]`.** Hence the set of angles with `circleMap z r θ = 0`
+is null for Lebesgue measure on `(0, 2π]` (the zero set of `circleMap` is discrete). -/
+lemma ae_circleMap_ne_zero {z : ℂ} {r : ℝ} (hr : 0 < r) :
+    ∀ᵐ θ ∂(volume.restrict (Set.Ioc (0 : ℝ) (2 * π))), circleMap z r θ ≠ 0 := by
+  have hsub : {θ : ℝ | θ ∈ Set.Ioc (0 : ℝ) (2 * π) ∧ circleMap z r θ = 0}.Subsingleton := by
+    rintro a ⟨⟨ha0, ha1⟩, ha⟩ b ⟨⟨hb0, hb1⟩, hb⟩
+    have hexp : Complex.exp (a * Complex.I) = Complex.exp (b * Complex.I) := by
+      have h1 : (r : ℂ) * Complex.exp (a * Complex.I) = (r : ℂ) * Complex.exp (b * Complex.I) := by
+        unfold circleMap at ha hb
+        linear_combination ha - hb
+      exact mul_left_cancel₀ (by exact_mod_cast hr.ne') h1
+    have hdiff : Complex.exp ((a - b : ℝ) * Complex.I) = 1 := by
+      rw [Complex.ofReal_sub, sub_mul, Complex.exp_sub, hexp, div_self (Complex.exp_ne_zero _)]
+    obtain ⟨n, hn⟩ := Complex.exp_eq_one_iff.1 hdiff
+    have hn' : (a - b : ℝ) = n * (2 * π) := by
+      have h2 : ((a - b : ℝ) : ℂ) = ((n * (2 * π) : ℝ) : ℂ) := by
+        have := hn
+        push_cast at this ⊢
+        apply mul_right_cancel₀ Complex.I_ne_zero
+        linear_combination this
+      exact_mod_cast h2
+    have hn1 : (n : ℝ) < 1 := by
+      have : (n : ℝ) * (2 * π) < 2 * π := by linarith
+      nlinarith [Real.pi_pos]
+    have hn2 : (-1 : ℝ) < n := by
+      have : (-(2 * π)) < (n : ℝ) * (2 * π) := by linarith
+      nlinarith [Real.pi_pos]
+    have hnz : n = 0 := by
+      have h1 : n < 1 := by exact_mod_cast hn1
+      have h2 : -1 < n := by exact_mod_cast hn2
+      omega
+    rw [hnz] at hn'
+    simp at hn'
+    linarith
+  have hcount : {θ : ℝ | θ ∈ Set.Ioc (0 : ℝ) (2 * π) ∧ circleMap z r θ = 0}.Countable := hsub.countable
+  rw [ae_restrict_iff' measurableSet_Ioc]
+  have hnull : volume {θ : ℝ | θ ∈ Set.Ioc (0 : ℝ) (2 * π) ∧ circleMap z r θ = 0} = 0 :=
+    hcount.measure_zero volume
+  filter_upwards [measure_eq_zero_iff_ae_notMem.1 hnull] with θ hθ hIoc hzero
+  exact hθ ⟨hIoc, hzero⟩
+
+/-- The cutoff term is dominated by the unscaled value: `|χ_m(|x|) g(max(|x|, δ_m))| ≤ |g(|x|)|`. -/
+lemma abs_radialCutoff_mul_le (m : ℕ) (x : ℂ) (g : ℝ → ℝ) :
+    |radialCutoff m ‖x‖ * g (max ‖x‖ (radialEps m))| ≤ |g ‖x‖| := by
+  by_cases hδ : radialEps m ≤ ‖x‖
+  · rw [max_eq_left hδ, abs_mul]
+    have hc := radialCutoff_mem_Icc m ‖x‖
+    have hcabs : |radialCutoff m ‖x‖| ≤ 1 := by
+      rw [abs_of_nonneg hc.1]
+      exact hc.2
+    calc |radialCutoff m ‖x‖| * |g ‖x‖| ≤ 1 * |g ‖x‖| := mul_le_mul_of_nonneg_right hcabs (abs_nonneg _)
+      _ = |g ‖x‖| := one_mul _
+  · rw [not_le] at hδ
+    rw [radialCutoff_eq_zero_of_le hδ.le, zero_mul, abs_zero]
+    exact abs_nonneg _
+
+/-- **Sphere-average code is correct almost surely** (chat 231, §3.2). The inner `limsup` is the circle average of the
+continuous cutoff function (`angleQuad_tendsto_circleAverage`); the outer limit is a dominated convergence of the circle
+integral, dominated by `|h_{|x|}(0)|` on the circle.
+
+NAMED INPUT `hcircInt` (not derived; see the report): the radial circle average is integrable along the circle
+`θ ↦ |h_{|z+re^{iθ}|}(0)|`, almost surely. Chat 231 §3.2 uses this domination without an argument. -/
+theorem radialSphereCode_ae_eq {γ : ℝ} {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {c : Ω → ℝ → ℂ → ℝ}
+    (_hcm : ∀ r z, 0 < r → Measurable fun ω => c ω r z)
+    (hcont : ∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ))
+    (_hrad : HasConeRadialLaw γ P c)
+    (hcircInt : ∀ r z, 0 < r → ∀ᵐ ω ∂P,
+      IntervalIntegrable (fun θ : ℝ => |c ω ‖circleMap z r θ‖ 0|) volume 0 (2 * π))
+    {r : ℝ} (hr : 0 < r) (z : ℂ) :
+    (fun ω => radialSphereCode r z (circleProcess (c ω))) =ᵐ[P]
+      (fun ω => Real.circleAverage (fun x => c ω ‖x‖ 0) z r) := by
+  filter_upwards [hcont, hcircInt r z hr] with ω hcω hint
+  set F : ℕ → ℂ → ℝ := fun m x => radialCutoff m ‖x‖ * c ω (max ‖x‖ (radialEps m)) 0 with hFdef
+  have hcontF : ∀ m, Continuous (F m) := by
+    intro m
+    have hc' : Continuous fun x : ℂ => c ω (max ‖x‖ (radialEps m)) 0 :=
+      hcω.comp_continuous (f := fun x : ℂ => (max ‖x‖ (radialEps m), (0 : ℂ))) (by fun_prop)
+        (fun x => ⟨lt_of_lt_of_le (radialEps_pos m) (le_max_right _ _), Set.mem_univ _⟩)
+    exact ((continuous_radialCutoff m).comp continuous_norm).mul hc'
+  have hinner : ∀ m : ℕ, limsup (fun n : ℕ => angleQuad n
+      (fun θ => radialCutoff m ‖circleMap z r θ‖ * circleProcess (c ω) (safeRadius m (circleMap z r θ), 0))) atTop
+      = Real.circleAverage (F m) z r := fun m =>
+    (angleQuad_tendsto_circleAverage (f := F m) (z := z) (r := r)
+      ((hcontF m).comp (continuous_circleMap z r))).limsup_eq
+  -- a.e. non-vanishing of the circle
+  have hae := (ae_restrict_iff' measurableSet_Ioc).1 (ae_circleMap_ne_zero (z := z) hr)
+  have houter : Tendsto (fun m : ℕ => Real.circleAverage (F m) z r) atTop
+      (𝓝 (Real.circleAverage (fun x => c ω ‖x‖ 0) z r)) := by
+    simp only [Real.circleAverage_def, smul_eq_mul]
+    refine Tendsto.const_mul _ ?_
+    refine intervalIntegral.tendsto_integral_filter_of_dominated_convergence
+      (fun θ => |c ω ‖circleMap z r θ‖ 0|) (Eventually.of_forall fun m => ?_)
+      (Eventually.of_forall fun m => Eventually.of_forall fun θ => ?_) hint ?_
+    · exact ((hcontF m).comp (continuous_circleMap z r)).aestronglyMeasurable
+    · intro _
+      rw [Real.norm_eq_abs]
+      exact abs_radialCutoff_mul_le m (circleMap z r θ) (fun y => c ω y 0)
+    · filter_upwards [hae] with θ hθ hIoc
+      have hIoc' : θ ∈ Set.Ioc (0 : ℝ) (2 * π) := by
+        rwa [Set.uIoc_of_le (by positivity)] at hIoc
+      have hne : circleMap z r θ ≠ 0 := hθ hIoc'
+      have hpos : 0 < ‖circleMap z r θ‖ := norm_pos_iff.2 hne
+      refine tendsto_const_nhds.congr' ?_
+      filter_upwards [radialCutoff_eventually_eq_one hpos,
+        radialEps_tendsto.eventually (gt_mem_nhds hpos)] with m hcut hδ
+      show c ω ‖circleMap z r θ‖ 0
+        = radialCutoff m ‖circleMap z r θ‖ * c ω (max ‖circleMap z r θ‖ (radialEps m)) 0
+      rw [hcut, max_eq_left hδ.le, one_mul]
+  simp only [radialSphereCode]
+  simp only [hinner]
+  exact houter.limsup_eq
+
 end
 
 end MatedCRT
@@ -1040,3 +1154,4 @@ end MatedCRT
 #print axioms MatedCRT.radialPairingCode_ae_eq
 #print axioms MatedCRT.measurable_radialPairingCode
 #print axioms MatedCRT.measurable_radialSphereCode
+#print axioms MatedCRT.radialSphereCode_ae_eq
