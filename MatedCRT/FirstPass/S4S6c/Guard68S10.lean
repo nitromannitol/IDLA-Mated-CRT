@@ -85,7 +85,7 @@ def ShellChainStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
           Lemma68Inputs.CurveEscapesBothEnds (S.η ω) →
           (∀ ε' : ℝ, 0 < ε' → IsLocallyFiniteMult (S.mult ε' ω) ∧ ∀ k : ℤ, S.mult ε' ω k (k + 1) ≠ 0) →
           ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ R → ω ∈ Ew (dyadicD r) →
-            ∀ i : Lemma68Config.Config68, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+            ∀ i : Lemma68Config.Config68, Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
               ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
                 Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
 
@@ -301,7 +301,8 @@ theorem guardProbStmt_of_chain (𝒮 : SpaceFillingSLEModel) (hMesh : MeshEvents
     lt_min (by linarith) (lt_min hrA hra0)
   refine ⟨min (ρ / 4) (min (Lemma68Cutoff.rAmp q0 ζ) r_amp), ζ, 2, 9 * q0, q0, hR0,
     min_le_left _ _, (min_le_right _ _).trans (min_le_left _ _), hζ0, hζ1, hq0, hq1,
-    by ring, by linarith, by linarith, by norm_num, ?_⟩
+    by ring, by linarith, by linarith, by norm_num,
+    Lemma68Config.sparsityS1 γ, Lemma68Config.sparsityS1_pos γ, Lemma68Config.sparsityS1_lt_one γ, ?_⟩
   intro s₀ hs₀ hs₁ Ω _ S hS
   set R : ℝ := min (ρ / 4) (min (Lemma68Cutoff.rAmp q0 ζ) r_amp) with hRdef
   have hRA : R ≤ Lemma68Cutoff.rAmp q0 ζ := (min_le_right _ _).trans (min_le_left _ _)
@@ -324,7 +325,7 @@ theorem guardProbStmt_of_chain (𝒮 : SpaceFillingSLEModel) (hMesh : MeshEvents
   have hG : S.P (goodField S Ew dd0)ᶜ = 0 := ae_iff.1 hGae
   have hpt' : ∀ ε : ℝ, 0 < ε → ∀ᵐ ω ∂S.P, ω ∈ meshEvent S γ ω₀ ρ CG ζ α CE ε ∩ goodField S Ew dd0 →
       ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ min R (dd0 ω) → ∀ i : Lemma68Config.Config68,
-        Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+        Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
           ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
             Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N := by
     intro ε hε
@@ -339,7 +340,7 @@ theorem guardProbStmt_of_chain (𝒮 : SpaceFillingSLEModel) (hMesh : MeshEvents
     (dd := fun ω => min R (dd0 ω)) (E := fun ε => meshEvent S γ ω₀ ρ CG ζ α CE ε)
     (G := goodField S Ew dd0) (R := R) (cN := countConst ζ) (q0 := q0) (ζ := ζ) hE hG
     (fun ε hε => by positivity) (fun ω => min_le_left _ _) hR1 hcN hq0 hq1 hRr
-    (fun ε ω r i => Lemma68Config.FullAdm S ρ s₀ γ ε ω r i) (Lemma68Config.exitQ S) hpt'
+    (fun ε ω r i => Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i) (Lemma68Config.exitQ S) hpt'
 
 end Lemma68Guard10
 

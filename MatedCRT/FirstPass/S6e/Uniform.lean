@@ -15,7 +15,7 @@ Assembly of `UniformConstantOrderLowerBoundStmt` (`FirstPass/S6d.lean`) from
 * `Lemma68Relation.relation_of_phi` (`S6e/Relation.lean`; the instance of `constantOrderLowerBound_core`), and
 * the guarded exit bound of `Lemma68Config.probTendsToOne_lemma68_guarded` (`FirstPass/S6h.lean`).
 
-Constants: `s₁ = 1/4`, `s₂ = 1/2` (independent of `s₀`), `dd` the guard's radius, `ω₀` and `(ζ, p, q⋆, q₀, R)` from the guard.
+Constants: `s₁` (a parameter, see `Lemma68Relation.S1CoveringSmall`; the guard still fixes `1/4`, see uniform_of_guard), `s₂ = 1/2` (independent of `s₀`), `dd` the guard's radius, `ω₀` and `(ζ, p, q⋆, q₀, R)` from the guard.
 
 Named inputs (Props below; none is proved here):
 * `GuardProbStmt 𝒮`: the guarded exit bound holds with probability tending to one (the output of z8's
@@ -70,12 +70,12 @@ lemma admissible_congr {ε : ℝ} {η : ℝ → ℂ} {Θ F0 F1 A : Finset ℤ} {
 /-- The `Phi`-bound at a finset `F1` with `V^ε(B_r(K)) ⊆ F1`, from the same bound at `F0`: the killed sets agree
 (`killed_eq_W`), so the admissibility hypotheses agree. -/
 lemma phi_of_bound {ε : ℝ} {η : ℝ → ℂ} (P : Measure (ℕ → ℤ)) [IsFiniteMeasure P] {Θ F0 F1 A : Finset ℤ}
-    {a : ℤ} {βm r : ℝ} (hη : Continuous η) (hε : 0 < ε)
+    {a : ℤ} {βm r s₁ : ℝ} (hη : Continuous η) (hε : 0 < ε)
     (hK : (fillCells ε η (↑Θ : Set ℤ)).Nonempty)
     (hF0 : cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) ⊆ ↑F0)
     (hF1 : cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) ⊆ ↑F1)
-    (hG : Admissible ε η Θ F0 A a (1 / 4) βm r → P.real (Lemma68Walk.exitEvent (killed ε η Θ F0 r) ↑A) ≤ 1 / 2) :
-    Phi ε η Θ F1 A a (1 / 4) βm P r := by
+    (hG : Admissible ε η Θ F0 A a s₁ βm r → P.real (Lemma68Walk.exitEvent (killed ε η Θ F0 r) ↑A) ≤ 1 / 2) :
+    Phi ε η Θ F1 A a s₁ βm P r := by
   unfold Phi
   intro hadm
   have hk : killed ε η Θ F0 r = killed ε η Θ F1 r := by
@@ -85,18 +85,18 @@ lemma phi_of_bound {ε : ℝ} {η : ℝ → ℂ} (P : Measure (ℕ → ℤ)) [Is
   exact hG ((admissible_congr hk).2 hadm)
 
 /-- The conclusion of Lemma 6.8 at one radius `r` for a finite `Θ`, `S'`, from the guard at `F0 = V^ε(B_ρ)`. -/
-lemma event_of_bound {η : ℝ → ℂ} {m : ℤ → ℤ → ℕ} {ε ρ s₀ β r : ℝ} {Θ S' : Finset ℤ} {a : ℤ}
+lemma event_of_bound {η : ℝ → ℂ} {m : ℤ → ℤ → ℕ} {ε ρ s₀ β r s₁ : ℝ} {Θ S' : Finset ℤ} {a : ℤ}
     (hε : 0 < ε) (hη : Continuous η) (hesc : Lemma68Inputs.CurveEscapesBothEnds η)
     (hcell : ∀ j k : ℤ, m j k ≠ 0 → (cell ε η j ∩ cell ε η k).Nonempty)
     (hexitNull : ∀ A : Set ℤ, A.Finite → ∀ y : ℤ, srwLaw m y {x | vExitTime A x = ⊤} = 0)
-    (hr0 : 0 < r) (hrρ : r ≤ ρ / 4) (hβ : 0 < β) (hs0 : 0 < s₀)
+    (hr0 : 0 < r) (hrρ : r ≤ ρ / 4) (hβ : 0 < β) (hs₁ : 0 < s₁) (hs0 : 0 < s₀)
     (hcl : closure (fillCells ε η (↑Θ : Set ℤ)) ⊆ ball 0 (ρ / 2))
     (hs : ball 0 s₀ ⊆ fillCells ε η (↑Θ : Set ℤ))
     (ha : a ∈ vClosure m (↑Θ : Set ℤ))
     (hS' : (↑S' : Set ℤ) ⊆ cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))))
-    (hcard : (((↑S' : Set ℤ) \ (↑Θ : Set ℤ)).ncard : ℝ) < (1 / 4) * r ^ (2 * β) / ε)
+    (hcard : (((↑S' : Set ℤ) \ (↑Θ : Set ℤ)).ncard : ℝ) < s₁ * r ^ (2 * β) / ε)
     (hG : ∀ (F0 A : Finset ℤ) (b : ℤ), (↑F0 : Set ℤ) = cellVertices ε η (ball 0 ρ) →
-      Admissible ε η Θ F0 A b (1 / 4) β r →
+      Admissible ε η Θ F0 A b s₁ β r →
         (srwLaw m b).real (Lemma68Walk.exitEvent (killed ε η Θ F0 r) ↑A) ≤ 1 / 2) :
     ENNReal.ofReal (1 / 2) ≤ srwLaw m a {x | ∃ n : ℕ,
       (n : ℕ∞) < vExitTime (cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ)))) x ∧
@@ -111,13 +111,13 @@ lemma event_of_bound {η : ℝ → ℂ} {m : ℤ → ℤ → ℕ} {ε ρ s₀ β
     hball.subset (Set.sdiff_subset.trans (cellVertices_mono' (thickening_fill_subset_ball hr2 hcl)))
   have hPhi : ∀ (A : Finset ℤ) (b : ℤ),
       b ∈ cellVertices ε η (frontier (thickening (r / 2) (fillCells ε η (↑Θ : Set ℤ)))) →
-        Phi ε η Θ hUfin.toFinset A b (1 / 4) β (srwLaw m b) r := by
+        Phi ε η Θ hUfin.toFinset A b s₁ β (srwLaw m b) r := by
     intro A b _
     exact phi_of_bound (srwLaw m b) hη hε hK (hFb.trans hball.coe_toFinset.symm.subset)
       hUfin.coe_toFinset.symm.subset
       (fun hadm => hG _ A b hball.coe_toFinset hadm)
   exact Lemma68Relation.relation_of_phi MatedCRT.srwHitDecompositionStep MatedCRT.srwAeAdjacentStep hε hη hcell hK
-    hr0 hβ hUfin (fun b => hexitNull _ hA b) hPhi ha hS' hcard
+    hr0 hβ hs₁ hUfin (fun b => hexitNull _ hA b) hPhi ha hS' hcard
 
 /-- Almost surely, the cell-meeting, continuity, escape and exit-finiteness inputs hold for all `ε > 0`. -/
 lemma probTendsToOne_of_ae {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {p : Ω → Prop}
@@ -133,11 +133,12 @@ def GuardProbStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ ω₀ : ℝ, 0 < ω₀ ∧ ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∃ R ζ p qStar q0 : ℝ, 0 < R ∧ R ≤ ρ / 4 ∧ R ≤ Lemma68Cutoff.rAmp q0 ζ ∧
     0 < ζ ∧ ζ < 1 / 2 ∧ 0 < q0 ∧ q0 ≤ 1 ∧ q0 = qStar / 9 ∧ 0 ≤ qStar ∧ qStar ≤ 9 ∧ p ≤ 3 ∧
+  ∃ s₁ : ℝ, 0 < s₁ ∧ s₁ < 1 ∧
   ∀ s₀ : ℝ, 0 < s₀ → s₀ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∃ dd : Ω → ℝ, Measurable[S.fieldSigma] dd ∧ (∀ ω, 0 < dd ω) ∧ (∀ ω, dd ω ≤ R) ∧
     ProbTendsToOne S.P fun ε => {ω | ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ dd ω → ∀ i : Config68,
-      guardedExit (fun ε ω r i => FullAdm S ρ s₀ γ ε ω r i) (exitQ S) ε ω r i ≤ 1 / 2}
+      guardedExit (fun ε ω r i => FullAdmAt s₁ S ρ s₀ γ ε ω r i) (exitQ S) ε ω r i ≤ 1 / 2}
 
 /-- Named input: almost surely `η` escapes both ends (the field `eta_escapes` of `Lemma68MeasurableInputs`). -/
 def EscapeAeStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -159,9 +160,10 @@ theorem uniform_of_guard (𝒮 : SpaceFillingSLEModel) (hG : GuardProbStmt 𝒮)
   intro γ hγ0 hγ2
   obtain ⟨ω₀, hω₀, hG'⟩ := hG γ hγ0 hγ2
   refine ⟨ω₀, hω₀, fun ρ hρ0 hρ1 => ?_⟩
-  obtain ⟨R, ζ, p, qStar, q0, hR0, hRρ, hRz, hζ0, hζ1, hq00, hq01, hq0d, hq0', hq9, hp, hG2⟩ :=
+  obtain ⟨R, ζ, p, qStar, q0, hR0, hRρ, hRz, hζ0, hζ1, hq00, hq01, hq0d, hq0', hq9, hp, s₁, hs₁0, hs₁1, hG2⟩ :=
     hG' ρ hρ0 hρ1
-  refine ⟨1 / 4, 1 / 2, by norm_num, by norm_num, by norm_num, by norm_num, fun s₀ hs₀0 hs₀1 Ω _ S hS => ?_⟩
+  -- the witness `s₁` is the sparsity coefficient of the guard (CHATGPT-237 §1: `s₁ ≤ K.s1`), `s₂ = 1/2`
+  refine ⟨s₁, 1 / 2, hs₁0, hs₁1, by norm_num, by norm_num, fun s₀ hs₀0 hs₀1 Ω _ S hS => ?_⟩
   obtain ⟨dd, hdm, hdpos, hddR, hP⟩ := hG2 s₀ hs₀0 hs₀1 Ω S hS
   refine ⟨dd, hdm, hdpos, ?_⟩
   have hAe : ∀ᵐ ω ∂S.P, Continuous (S.η ω) ∧ Lemma68Inputs.CurveEscapesBothEnds (S.η ω) ∧
@@ -186,11 +188,11 @@ theorem uniform_of_guard (𝒮 : SpaceFillingSLEModel) (hG : GuardProbStmt 𝒮)
       (cellVertices_mono' (thickening_fill_subset_ball hrρ hΘ1))
   obtain ⟨S'f, rfl⟩ := (hUfin.subset hS').exists_finset_coe
   refine event_of_bound (η := S.η ω) (m := S.mult ε ω) hε hcont hesc (hadj ε hε)
-    (fun A hA y => hNull _ hlf hcons A hA y) hr0 hrρ hβ
+    (fun A hA y => hNull _ hlf hcons A hA y) hr0 hrρ hβ hs₁0
     hs₀0 hΘ1 hΘ2 ha hS' hcard ?_
   intro F0 A b hF0 hadm
-  have hFA : FullAdm S ρ s₀ γ ε ω r ⟨F0, Θf, A, b⟩ := by
-    unfold FullAdm ConfigOK
+  have hFA : FullAdmAt s₁ S ρ s₀ γ ε ω r ⟨F0, Θf, A, b⟩ := by
+    unfold FullAdmAt ConfigOK
     exact ⟨⟨hF0, hΘ1, hΘ2⟩, hadm⟩
   have hgE := hgd r hr1 hr2 ⟨F0, Θf, A, b⟩
   simp only [Lemma68Final.guardedExit, hFA, ↓reduceIte] at hgE

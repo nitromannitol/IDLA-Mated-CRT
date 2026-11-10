@@ -41,8 +41,36 @@ def ConfigOK {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ρ s₀ ε :
     closure (fillCells ε (S.η ω) (↑i.Θ : Set ℤ)) ⊆ Metric.ball 0 (ρ / 2) ∧
     Metric.ball 0 s₀ ⊆ fillCells ε (S.η ω) (↑i.Θ : Set ℤ)
 
-/-- The full admissibility guard `FullAdm` at radius `r` (bridge note §2.1): `ConfigOK` and `Lemma68Admissible.Admissible`
-with the write-up constants `1/4` and `chosenBetaMinus γ`. -/
+/-- The sparsity coefficient of the shell-chain constants (ruling CHATGPT-237 §1, `s_guard = K.s1`): `K.s1 = c0^βm/44`
+with `c0 = exp(-2)/32` and `βm = (2+γ)²/2 + 1` (ShellConstants68.lean `shellK68`, `shellK68_s1`). It depends on `γ` only. -/
+noncomputable def sparsityS1 (γ : ℝ) : ℝ := (Real.exp (-2) / 32) ^ ((2 + γ) ^ 2 / 2 + 1) / 44
+
+theorem sparsityS1_pos (γ : ℝ) : 0 < sparsityS1 γ := by
+  unfold sparsityS1
+  positivity
+
+theorem sparsityS1_lt_one (γ : ℝ) : sparsityS1 γ < 1 := by
+  have hexp : Real.exp (-2) ≤ 1 := Real.exp_le_one_iff.mpr (by norm_num)
+  have hc : Real.exp (-2) / 32 ≤ 1 := by
+    rw [div_le_one (by norm_num : (0 : ℝ) < 32)]
+    linarith
+  have hp : (Real.exp (-2) / 32) ^ ((2 + γ) ^ 2 / 2 + 1) ≤ 1 :=
+    Real.rpow_le_one (by positivity) hc (by positivity)
+  unfold sparsityS1
+  rw [div_lt_one (by norm_num : (0 : ℝ) < 44)]
+  linarith
+
+/-- The full admissibility guard `FullAdmAt s₁` at radius `r` (ruling CHATGPT-237 §2, preferred repair): `ConfigOK` and
+`Lemma68Admissible.Admissible` with the sparsity coefficient `s₁` (the witness of `UniformConstantOrderLowerBoundStmt`)
+and `chosenBetaMinus γ`. The shell chain uses `s₁ = sparsityS1 γ`. -/
+def FullAdmAt (s₁ : ℝ) {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ρ s₀ γ ε : ℝ) (ω : Ω) (r : ℝ)
+    (i : Config68) : Prop :=
+  ConfigOK S ρ s₀ ε ω i ∧
+    Lemma68Admissible.Admissible ε (S.η ω) i.Θ i.F0 i.A i.a s₁ ((2 + γ) ^ 2 / 2 + 1) r
+
+/-- LEGACY guard (write-up coefficient `1/4` hardcoded). NOT used by the shell chain (`hU_top`): the chain uses
+`FullAdmAt (sparsityS1 γ)`. Kept only so that legacy modules (S6e/Guard, S6h, S6h/Schedule, S6m, ShellOrderFullAdm,
+ShellHde68, B1Assembly68) still compile; they should be rewired to `FullAdmAt` and this declaration retired. -/
 def FullAdm {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ρ s₀ γ ε : ℝ) (ω : Ω) (r : ℝ) (i : Config68) : Prop :=
   ConfigOK S ρ s₀ ε ω i ∧
     Lemma68Admissible.Admissible ε (S.η ω) i.Θ i.F0 i.A i.a (1 / 4) ((2 + γ) ^ 2 / 2 + 1) r

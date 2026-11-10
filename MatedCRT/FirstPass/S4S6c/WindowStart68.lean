@@ -58,10 +58,10 @@ start cell `H^ε_{i.a}` meets the frontier of `thickening (r/2) (fillCells ε η
 theorem hstart_fullAdm_ae {𝒮 : SpaceFillingSLEModel} {γ : ℝ} {Ω : Type} [MeasurableSpace Ω]
     (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ) {ρ s₀ ε r : ℝ} (hε : 0 < ε) (hs₀ : 0 < s₀) (hr : 0 < r)
     (i : Lemma68Config.Config68) :
-    ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty := by
   filter_upwards [TraceInputs68.ae_continuous_eta hS] with ω hη hadm
-  unfold Lemma68Config.FullAdm Lemma68Config.ConfigOK at hadm
+  unfold Lemma68Config.FullAdmAt Lemma68Config.ConfigOK at hadm
   obtain ⟨⟨-, -, hball⟩, hadm'⟩ := hadm
   obtain ⟨hlo, -, -⟩ := hadm'
   have hne : (fillCells ε (S.η ω) (↑i.Θ : Set ℤ)).Nonempty := ⟨0, hball (Metric.mem_ball_self hs₀)⟩
@@ -79,12 +79,12 @@ theorem shellOrderAe_window_noStart {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (h�
     {ε ρ s₀ ζ r c₀ C : ℝ} (hε : 0 < ε) (hs₀ : 0 < s₀) (hζ : 0 < ζ) (hζ1 : ζ < 1 / 2) (hr : 0 < r)
     (hrz : r ≤ countThreshold ζ) (hrρ : r ≤ ρ / 4) (i : Lemma68Config.Config68)
     (hmesh : ∀ᵐ ω ∂S.P, CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ)
-    (htest : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (htest : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),
         ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
           testEnd ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
             (windowRfT S.μ ρ (shortExp ζ) c₀ C (dyadicD r) ω) k x ≠ ⊤) :
-    ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r)
         (windowRfT S.μ ρ (shortExp ζ) c₀ C (dyadicD r) ω)
         (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a :=

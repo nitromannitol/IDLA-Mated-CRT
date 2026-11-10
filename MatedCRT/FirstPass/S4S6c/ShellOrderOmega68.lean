@@ -33,17 +33,17 @@ theorem shellOrder_fullAdm_ae_omega {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (h�
     (hR : ∀ᵐ ω ∂S.P, ∀ w, Elig ω w → dyadicD r ≤ Rf ω w ∧ Rf ω w ≤ dyadicD r ^ shortExp ζ)
     (hmesh : ∀ᵐ ω ∂S.P, CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ)
     -- guarded by `FullAdm` (the start cell meets the frontier only for a full admissible configuration, see reports/q4.md)
-    (hstart : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hstart : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty)
     -- guarded by `FullAdm` (the z11 deviation: the unguarded form is not provable, reports/z11.md l.25-32)
-    (hde : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hde : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),
         (∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
           shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) (Rf ω) k x ≠ ⊤ ∧
           testEnd ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) (Rf ω) k x ≠ ⊤) ∧
         (∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
           Elig ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x))) :
-    ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r) (Rf ω)
         (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a := by
   -- deterministic parameter facts (as in shellOrder_fullAdm_ae)
@@ -77,7 +77,7 @@ theorem shellOrder_fullAdm_ae_omega {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (h�
   intro hadm
   have hstA := hst hadm
   have hdeA := hdeω hadm
-  unfold Lemma68Config.FullAdm Lemma68Config.ConfigOK at hadm
+  unfold Lemma68Config.FullAdmAt Lemma68Config.ConfigOK at hadm
   obtain ⟨⟨hF0eq, hcl, hball⟩, -⟩ := hadm
   have hK : (fillCells ε (S.η ω) ↑i.Θ).Nonempty := ⟨0, hball (Metric.mem_ball_self hs₀)⟩
   have hΘ : i.Θ.Nonempty := by
