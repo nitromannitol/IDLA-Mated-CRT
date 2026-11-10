@@ -3,6 +3,9 @@ import MatedCRT.FirstPass.S6e.Final
 import MatedCRT.FirstPass.S6e.Universal
 import MatedCRT.FirstPass.S6e.C17Induction
 import MatedCRT.FirstPass.S6e.DdSources
+import MatedCRT.FirstPass.S6e.Walk
+import MatedCRT.FirstPass.S6e.Inputs
+import MatedCRT.FirstPass.S6e.Scales
 
 /-!
 # FIRST PASS: the deterministic cutoffs, the final event and the universal event of LEMMA68 section D
