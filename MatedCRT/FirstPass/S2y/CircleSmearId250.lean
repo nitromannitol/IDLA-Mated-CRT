@@ -78,4 +78,37 @@ lemma circleAverage_log_norm_sub_of_mem_sphere {z x : ℂ} {ε : ℝ} (hε : 0 <
   rw [MatedCRT.Field.circleAverage_log_norm_eq z x hε, hx, inv_mul_cancel₀ hε.ne']
   simp [Real.posLog]
 
+/-- **Circle average of the covariance at a point of the circle.** For `x` on `∂B_ε(z)`, the average over `y ∈ ∂B_ε(z)`
+of `wholePlaneCov x y` is `log max(|x|,1) + avg log max(|y|,1) - log ε` (the mean value property of `log|·-x|`,
+Duplantier-Sheffield 2011, Section 3.1). The diagonal `y = x` is a single point, hence codiscrete on the circle. -/
+lemma circleAverage_wholePlaneCov_of_mem_sphere {z x : ℂ} {ε : ℝ} (hε : 0 < ε) (hx : ‖z - x‖ = ε) :
+    Real.circleAverage (fun y => wholePlaneCov x y) z ε =
+      Real.log (max ‖x‖ 1) + Real.circleAverage (fun y => Real.log (max ‖y‖ 1)) z ε - Real.log ε := by
+  have hcongr : (fun y => wholePlaneCov x y) =ᶠ[codiscreteWithin (sphere z |ε|)]
+      (fun y => (Real.log (max ‖x‖ 1) + Real.log (max ‖y‖ 1)) - Real.log ‖y - x‖) := by
+    refine MatedCRT.CirclePairing.eventuallyEq_codiscreteWithin_of_ne _ x fun y hy => ?_
+    unfold wholePlaneCov
+    have hc : ‖x - y‖ ≠ 0 := norm_ne_zero_iff.mpr (sub_ne_zero.mpr hy.symm)
+    have hA : max ‖x‖ 1 ≠ 0 := (lt_of_lt_of_le one_pos (le_max_right _ _)).ne'
+    have hB : max ‖y‖ 1 ≠ 0 := (lt_of_lt_of_le one_pos (le_max_right _ _)).ne'
+    rw [Real.log_div (mul_ne_zero hA hB) hc, Real.log_mul hA hB, norm_sub_rev y x]
+  have hlogB : Continuous fun y : ℂ => Real.log (max ‖y‖ 1) :=
+    Continuous.log (by fun_prop) fun y => (lt_of_lt_of_le one_pos (le_max_right _ _)).ne'
+  have hI1 : CircleIntegrable (fun y : ℂ => Real.log (max ‖x‖ 1) + Real.log (max ‖y‖ 1)) z ε :=
+    ((continuous_const.add hlogB).continuousOn).circleIntegrable hε.le
+  have hI2 : CircleIntegrable (fun y : ℂ => Real.log ‖y - x‖) z ε :=
+    circleIntegrable_log_norm_sub_const (a := x) (c := z) ε
+  rw [Real.circleAverage_congr_codiscreteWithin hcongr hε.ne']
+  have hs : Real.circleAverage (fun y => (Real.log (max ‖x‖ 1) + Real.log (max ‖y‖ 1)) - Real.log ‖y - x‖) z ε =
+      Real.circleAverage (fun y => Real.log (max ‖x‖ 1) + Real.log (max ‖y‖ 1)) z ε -
+        Real.circleAverage (fun y => Real.log ‖y - x‖) z ε :=
+    Real.circleAverage_sub hI1 hI2
+  have hadd : Real.circleAverage (fun y => Real.log (max ‖x‖ 1) + Real.log (max ‖y‖ 1)) z ε =
+      Real.log (max ‖x‖ 1) + Real.circleAverage (fun y => Real.log (max ‖y‖ 1)) z ε := by
+    have := Real.circleAverage_add (circleIntegrable_const (Real.log (max ‖x‖ 1)) z ε)
+      (hlogB.continuousOn.circleIntegrable hε.le)
+    rw [Real.circleAverage_const] at this
+    exact this
+  rw [hs, hadd, circleAverage_log_norm_sub_of_mem_sphere hε hx]
+
 end MatedCRT.LQGMeasure
