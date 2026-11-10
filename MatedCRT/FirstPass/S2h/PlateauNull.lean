@@ -3,6 +3,7 @@ import MatedCRT.FirstPass.S1c.Cluster
 import MatedCRT.FirstPass.S2g.PlateauZero
 import MatedCRT.FirstPass.Frozen.S1c
 import HarmonicBalls.Draft.Section3
+import MatedCRT.FirstPass.S2h.PlateauRawZero
 
 /-!
 # Raw radii are almost everywhere measurable (fp-S2h, z1, round 16)
@@ -205,5 +206,23 @@ theorem aemeasurable_rawRadius_of_HB {Ω : Type} [MeasurableSpace Ω] {P : Measu
       exact (nullMeasurableSet_forall_ratComplex_not_mem_cluster hF1 hF3 hu N hq' hloc hmeas φs hφs hdense).congr
         hset.symm
   exact aemeasurable_of_nullMeasurableSet_le_rat hsub
+
+/-- **Zero law for the plateau radii of an LQG measure, conditional on the dilation law (fp-S2h, z1, round 16).**
+The raw radii are a.e. measurable (`aemeasurable_rawRadius_of_HB`), so `plateauRadii_zero_of_ae_raw` applies. The
+dilation invariance `hscale` (the law of the dilated measure, with its cluster identities) is an explicit hypothesis:
+it is the open NEW input of `HalfPlateauNullStep`. `hloc` (local finiteness) and `hmeas` (measurability of the
+test integrals of the LQG measure) are explicit hypotheses too. -/
+theorem plateauRadii_zero_of_HB {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {C : Ω → (ℂ → ℝ) → ℝ} {H : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ} {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
+    (hF1 : FrozenUniversalMeasurabilityOfAnalytic) (hF3 : FrozenDiskGreenNonnegCont)
+    (hHB : LeastSupersolutionMemStmt.{0}) (hgff : IsWholePlaneGFF P C H) (hlgm : IsLQGMeasureOfField P γ γ H μ)
+    (hloc : ∀ N : ℕ, ∀ᵐ ω ∂P, μ ω (closedBall (0 : ℂ) (N : ℝ)) < ⊤)
+    (hmeas : ∀ φ : ℂ → ℝ, Continuous φ → HasCompactSupport φ → AEMeasurable (fun ω => ∫ x, φ x ∂(μ ω)) P)
+    (hscale : ∀ s r : ℝ, 0 < s → 0 < r → P {ω | s * r ∈ plateauRadii (μ ω)} = P {ω | r ∈ plateauRadii (μ ω)}) :
+    ∀ r : ℝ, 0 < r → P {ω | r ∈ plateauRadii (μ ω)} = 0 := by
+  refine plateauRadii_zero_of_ae_raw P μ ?_ hscale
+  intro N p hN hp
+  obtain ⟨φs, hφs, hdense⟩ := exists_dense_nonnegTest_family (N : ℝ)
+  exact aemeasurable_rawRadius_of_HB hγ hγ2 hF1 hF3 hHB hgff hlgm hp hN (hloc N) hmeas φs hφs hdense
 
 end MatedCRT
