@@ -56,23 +56,23 @@ theorem hmult_ae_valid {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0 < γ) 
   exact ⟨hlf, hsucc⟩
 
 /-- **The almost-sure radius bound at the fixed radius `r` (setup of `shellOneTest_ae_fixedR`).**
-For `ω ∈ E` with `FullAdm`, and every `k ≤ n` with `n + 1 ≤ shellCount r (dyadicD r ^ shortExp ζ)`, almost surely
-along the walk `srwLaw (S.mult ε ω) i.a`, the radius at the shell centre lies in `[r ^ 2, 1]`. The conclusion is the
-shape of `radius_bounds_ae` (HoneRadii68.lean). Inputs: `hrle` (not in the setting of `shellOneTest_ae_fixedR`),
-`hmesh` and `hstart` (binders of that setting), and `hηc` (its `ae` continuity binder). -/
+For `ω ∈ E` with `FullAdm`, and every `k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1` (the index range of the
+`htest` binder of `shellOneTest_ae_fixedR`), almost surely along the walk `srwLaw (S.mult ε ω) i.a`, the radius at the
+shell centre lies in `[r ^ 2, 1]`. The conclusion is the shape of `radius_bounds_ae` (HoneRadii68.lean). Inputs:
+`hrle` (not in the setting of `shellOneTest_ae_fixedR`; it gives `shellCount ≥ 1` via `countBound_zeta`), `hmesh`
+and `hstart` (binders of that setting), and `hηc` (its `ae` continuity binder). -/
 theorem hRr_ae_setup {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
     {ζ C s₀ ε r : ℝ} (hρ1 : ρ < 1) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2)
     (hs₀ : 0 < s₀) (hε : 0 < ε) (hr0 : 0 < r) (hrρ : r ≤ ρ / 4)
     (hrle : r ≤ countThreshold ζ)
-    (E : Set Ω) (i : Lemma68Config.Config68) {n : ℕ}
-    (hn : n + 1 ≤ shellCount r (dyadicD r ^ shortExp ζ))
+    (E : Set Ω) (i : Lemma68Config.Config68)
     (hmesh : ∀ᵐ ω ∂S.P, CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ)
     (hstart : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
       (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty)
     (hηc : ∀ᵐ ω ∂S.P, Continuous (S.η ω)) :
     ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
-      ∀ k ≤ n, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
         r ^ 2 ≤ winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
             (dyadicD r ^ shortExp ζ) (dyadicD r) k x) ∧
           winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
@@ -88,15 +88,32 @@ theorem hRr_ae_setup {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0 : 0 < γ)
     have h := Real.rpow_le_rpow_of_exponent_ge hd hd1 ha1
     simpa using h
   have hs4 : dyadicD r ^ shortExp ζ ≤ r / 4000 := shell_size_le hζ0 hr0 hrle hd hd2
-  have hNs : 20 * ((n + 1 : ℕ) : ℝ) * dyadicD r ^ shortExp ζ ≤ r / 20 := by
-    unfold shellCount at hn
+  -- the shell count is at least 1: `countBound_zeta` with `r ≤ countThreshold ζ` gives `countConst ζ r^(-ζ) ≥ 1`
+  have hcb := countBound_zeta hζ0 hr0 hrle (dyadicD_pos r) hdr hd2
+  have hζr : r ^ ζ ≤ (2 : ℝ) ^ (-shortExp ζ) / 4000 := by
+    have h := Real.rpow_le_rpow hr0.le hrle hζ0.le
+    unfold countThreshold at h
+    rwa [← Real.rpow_mul (by positivity), one_div_mul_cancel hζ0.ne', Real.rpow_one] at h
+  have hrpos : 0 < r ^ ζ := Real.rpow_pos_of_pos hr0 ζ
+  have hkey : 1 ≤ countConst ζ * r ^ (-ζ) := by
+    unfold countConst
+    rw [Real.rpow_neg hr0.le, ← div_eq_mul_inv, one_le_div hrpos]
+    have hX : (0 : ℝ) < (2 : ℝ) ^ (-shortExp ζ) := by positivity
+    linarith
+  have hN1 : 1 ≤ shellCount r (dyadicD r ^ shortExp ζ) := by
+    have h := hkey.trans hcb
+    exact_mod_cast h
+  have hn : shellCount r (dyadicD r ^ shortExp ζ) - 1 + 1 = shellCount r (dyadicD r ^ shortExp ζ) :=
+    Nat.sub_add_cancel hN1
+  have hNs : 20 * (((shellCount r (dyadicD r ^ shortExp ζ) - 1) + 1 : ℕ) : ℝ) * dyadicD r ^ shortExp ζ
+      ≤ r / 20 := by
+    rw [hn]
+    have h1 : ((shellCount r (dyadicD r ^ shortExp ζ) : ℕ) : ℝ) ≤ r / (400 * dyadicD r ^ shortExp ζ) := by
+      unfold shellCount
+      exact Nat.floor_le (by positivity)
     have hpos : 0 < 400 * dyadicD r ^ shortExp ζ := by positivity
-    have h1 : ((n + 1 : ℕ) : ℝ) ≤ r / (400 * dyadicD r ^ shortExp ζ) :=
-      (Nat.cast_le.mpr hn).trans (Nat.floor_le (by positivity))
     have h2 := (le_div_iff₀ hpos).mp h1
-    calc 20 * ((n + 1 : ℕ) : ℝ) * dyadicD r ^ shortExp ζ
-        = (((n + 1 : ℕ) : ℝ) * (400 * dyadicD r ^ shortExp ζ)) / 20 := by ring
-      _ ≤ r / 20 := by gcongr
+    nlinarith [h2]
   filter_upwards [hmesh, hstart, hηc, hmult_ae_valid hγ0 hγ2 S hS hε,
     TraceInputs68.ae_adjacent hγ0 hγ2 S hS, hS.ae_tendsto_cocompact] with ω hmω hstω hηω hmultω hadjω htendω
   have hRf := windowRfT_rangeShortEligible S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) hd hd1 ha1 ω
