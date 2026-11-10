@@ -225,6 +225,74 @@ theorem shellK68_params (γ ρ ω₀ ζ : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (
     (Lemma68ShellConstants.shellK68 γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1).ω = ω₀ :=
   ⟨rfl, rfl, rfl, rfl⟩
 
+/-- **`ShellOneTestOrderAeStmt` with the Eps antecedents (q2, fp-S4S6c-eps-chain).** The body of `ShellOneTestOrderAeStmt`, plus
+`2 ω₀ β⁻ < α` and `2 ω₀ < 2/(2+γ)² - ζ` next to the `ω₀` hypotheses; `ε ≤ shellEps0 γ α ω₀` in the ε-clause; and the radius
+cutoff `∀ r, 0 < r → r ≤ R → (dyadicD r)^{shortExp ζ} < rhoCell68 ρ - ρ` next to `R ≤ rAmp q0 ζ` (the cutoff of q1's hRcell).
+The leaf binder `hωκ : K.ω ≤ 2/(2+γ)² - ζc` (HoneLeafAe68.lean:201) is `ω₀ ≤ 2/(2+γ)² - ζ` with `K.ω = ω₀`, `ζc = ζ`,
+which is the existing `ω₀ < 2/(2+γ)² - ζ`. -/
+def ShellOneTestOrderAeEpsStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE : ℝ,
+    0 < ω₀ → ω₀ < α → 0 < α → ω₀ < 2 / (2 + γ) ^ 2 - ζ → 2 * ω₀ * chosenBetaMinus γ < α →
+    2 * ω₀ < 2 / (2 + γ) ^ 2 - ζ → 0 < CG → 0 < CE →
+    0 < ζ → ζ < 1 / 2 → 0 < ρ → ρ < 1 →
+    ∀ C C' : ℝ, 0 < C → 0 < C' → WindowPrevAt γ (shortExp ζ) shellC068 C C' →
+    ∃ q0 : ℝ, 0 < q0 ∧ q0 ≤ (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE C) ∧
+    ∀ R : ℝ, 0 < R → R ≤ ρ / 4 → R ≤ Lemma68Cutoff.rAmp q0 ζ →
+      (∀ r : ℝ, 0 < r → r ≤ R → (dyadicD r) ^ shortExp ζ < Lemma68HoneCellGood.rhoCell68 ρ - ρ) →
+    ∀ s₀ : ℝ, 0 < s₀ → s₀ < 1 →
+    ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      HarmonicBalls.PolyHighProb S.P (greenLowEvent68 S ω₀ ρ CG) →
+      HarmonicBalls.PolyHighProb S.P (cellSizeEvent68 S γ ζ ρ) →
+      HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE) →
+    ∀ Ew : ℝ → Set Ω, (∀ δ : ℝ, MeasurableSet[S.fieldSigma] (Ew δ)) →
+      HarmonicBalls.PolyHighProb S.P Ew →
+      (∀ δ : ℝ, ∀ᵐ ω ∂S.P, ω ∈ Ew δ → ω ∉ badWindowOf S.μ ρ (shortExp ζ) shellC068 C δ) →
+      ∀ ε : ℝ, 0 < ε → ε ≤ shellEps0 γ α ω₀ → ∀ᵐ ω ∂S.P, ω ∈ meshEvent S γ ω₀ ρ CG ζ α CE ε →
+        Lemma68Inputs.CurveEscapesBothEnds (S.η ω) →
+        (∀ ε' : ℝ, 0 < ε' → IsLocallyFiniteMult (S.mult ε' ω) ∧ ∀ k : ℤ, S.mult ε' ω k (k + 1) ≠ 0) →
+        ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ R → ω ∈ Ew (dyadicD r) →
+          ∀ i : Lemma68Config.Config68, Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
+            ∃ Rf : ℂ → ℝ,
+              ShellOneTestAt (S.mult ε ω) i.a (↑i.A : Set ℤ) (S.η ω) ε (fillCells ε (S.η ω) ↑i.Θ)
+                (vExitTime (killed ε (S.η ω) i.Θ i.F0 r)) r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf
+                (shellCount r (dyadicD r ^ shortExp ζ) - 1) (q0 / (1 + Real.log (1 / r)) ^ 2) ∧
+              Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf
+                (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a
+
+/-- **Old implies Eps (q2, fp-S4S6c-eps-chain).** `ShellOneTestOrderAeStmt` specialises to `ShellOneTestOrderAeEpsStmt`: the
+Eps antecedents are ignored, and the ε-clause is used for `ε ≤ shellEps0`. -/
+theorem shellOneTestOrderAeEpsStmt_of_old {𝒮 : SpaceFillingSLEModel} (h : ShellOneTestOrderAeStmt 𝒮) :
+    ShellOneTestOrderAeEpsStmt 𝒮 := by
+  intro γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ _ _ hCG hCE hζ0 hζ1 hρ0 hρ1 C C' hC hC' hP
+  obtain ⟨q0, hq0, hq0c, hcl⟩ :=
+    h γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hCG hCE hζ0 hζ1 hρ0 hρ1 C C' hC hC' hP
+  refine ⟨q0, hq0, hq0c, ?_⟩
+  intro R hR0 hRρ hRA _ s₀ hs₀ hs₁ Ω _ S hS hGp hCp hEp Ew hEwm hEwp hav ε hε _
+  exact hcl R hR0 hRρ hRA s₀ hs₀ hs₁ Ω S hS hGp hCp hEp Ew hEwm hEwp hav ε hε
+
+/-- **`ShellChainCoreEpsStmt` from the Eps pointwise shell inputs (q2, fp-S4S6c-eps-chain).** Copy of
+`shellChainCoreStmt_of_oneTestOrder` through `exitQ_core_step`, with the Eps antecedents and the radius cutoff passed on. -/
+theorem shellChainCoreEpsStmt_of_oneTestOrderEps {𝒮 : SpaceFillingSLEModel} (h : ShellOneTestOrderAeEpsStmt 𝒮) :
+    ShellChainCoreEpsStmt 𝒮 := by
+  intro γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hexp1 hexp2 hCG hCE hζ0 hζ1 hρ0 hρ1 C C' hC hC' hP
+  obtain ⟨q0, hq0, hq0c, hcl⟩ :=
+    h γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hexp1 hexp2 hCG hCE hζ0 hζ1 hρ0 hρ1 C C' hC hC' hP
+  have hq1 : q0 ≤ 1 := by
+    have hC1 := one_le_shellChone68 CE C
+    have hb : (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE C) ≤ 1 := by
+      rw [div_le_iff₀ (by linarith)]
+      nlinarith
+    linarith
+  refine ⟨q0, hq0, hq0c, ?_⟩
+  intro R hR0 hRρ hRA hcut s₀ hs₀ hs₁ Ω _ S hS hGp hCp hEp Ew hEwm hEwp hav ε hε hle
+  refine (hcl R hR0 hRρ hRA hcut s₀ hs₀ hs₁ Ω S hS hGp hCp hEp Ew hEwm hEwp hav ε hε hle).mono ?_
+  intro ω hω hmesh hcurve hmult r hr1 hr2 hωE i hi
+  obtain ⟨Rf, hone, hsh⟩ := hω hmesh hcurve hmult r hr1 hr2 hωE i hi
+  have hr0 : 0 < r := lt_of_lt_of_le (by positivity) hr1
+  have hr1' : r ≤ 1 := by linarith
+  exact Lemma68ChainGlue.exitQ_core_step S ε ω ζ q0 r Rf i hζ0 hζ1 hq0 hq1 hr0 hr1' (hr2.trans hRA) hone hsh
+    (hmult ε hε).1 (hmult ε hε).2
+
 end Lemma68ShellHoneInst
 end MatedCRT
 
@@ -232,3 +300,5 @@ end MatedCRT
 #print axioms MatedCRT.Lemma68ShellHoneInst.shellOneTest_of_direct
 #print axioms MatedCRT.Lemma68ShellHoneInst.radius_le_countThreshold_of_oneTest
 #print axioms MatedCRT.Lemma68ShellHoneInst.shellK68_params
+#print axioms MatedCRT.Lemma68ShellHoneInst.shellOneTestOrderAeEpsStmt_of_old
+#print axioms MatedCRT.Lemma68ShellHoneInst.shellChainCoreEpsStmt_of_oneTestOrderEps
