@@ -400,6 +400,79 @@ lemma shellEps0Z_pow_le {γ α ω₀ ζ ε : ℝ} (hε : 0 < ε) (hd : 0 < 2 / (
     _ = Lemma68ConstOrder.shellC068 := by
       rw [← Real.rpow_mul hc.le, one_div_mul_cancel hd.ne', Real.rpow_one]
 
+/-! ### The Eps chain at the Green constant `CG` (q2, fp-S4S6c-cg-param, lead item 3: parameterize, do not restrict CG)
+
+`c₀(CG) = shellC0 CG = exp(-2CG)/32` (`Lemma68ConstOrder.shellC0`) replaces `shellC068` in the Eps chain, so that the leaf
+constant `K.C := CG` (`shellKCG`) satisfies `hc0C : c₀ ≤ exp(-2 K.C)/16`. The leaf threshold `16 c₀(CG) = exp(-2CG)/2`
+replaces `e⁻²/2`. The CG-free `shellEps0`, `shellEps0Z` are kept unchanged (ShellCorePw68 and B1Assembly68 use them). -/
+
+/-- **The mesh threshold at the Green constant `CG`.** `shellEps0CG γ α ω₀ CG = min (exp(-2CG)/2)
+(((100 c₀(CG))^{β⁻}/4)^{1/(α - 2ω₀β⁻)})`, `β⁻ = chosenBetaMinus γ`. -/
+noncomputable def shellEps0CG (γ α ω₀ CG : ℝ) : ℝ :=
+  min (Real.exp (-(2 * CG)) / 2)
+    (((100 * Lemma68ConstOrder.shellC0 CG) ^ chosenBetaMinus γ / 4) ^ (1 / (α - 2 * ω₀ * chosenBetaMinus γ)))
+
+/-- `shellEps0CG` is positive (for every `CG`). -/
+lemma shellEps0CG_pos (γ α ω₀ CG : ℝ) : 0 < shellEps0CG γ α ω₀ CG := by
+  unfold shellEps0CG Lemma68ConstOrder.shellC0
+  apply lt_min (by positivity)
+  apply Real.rpow_pos_of_pos
+  apply div_pos (Real.rpow_pos_of_pos (by positivity) _) (by norm_num)
+
+/-- **The mesh threshold with the cell entry at `CG`.** `shellEps0ZCG γ α ω₀ ζ CG = min (shellEps0CG γ α ω₀ CG)
+(c₀(CG)^{1/(A - 2ω₀)})`, `A = 2/(2+γ)² - ζ`. -/
+noncomputable def shellEps0ZCG (γ α ω₀ ζ CG : ℝ) : ℝ :=
+  min (shellEps0CG γ α ω₀ CG) ((Lemma68ConstOrder.shellC0 CG) ^ (1 / (2 / (2 + γ) ^ 2 - ζ - 2 * ω₀)))
+
+/-- `shellEps0ZCG` is positive. -/
+lemma shellEps0ZCG_pos (γ α ω₀ ζ CG : ℝ) : 0 < shellEps0ZCG γ α ω₀ ζ CG := by
+  unfold shellEps0ZCG
+  apply lt_min (shellEps0CG_pos γ α ω₀ CG)
+  apply Real.rpow_pos_of_pos
+  unfold Lemma68ConstOrder.shellC0
+  positivity
+
+/-- `shellEps0ZCG` is at most `shellEps0CG`. -/
+lemma shellEps0ZCG_le (γ α ω₀ ζ CG : ℝ) : shellEps0ZCG γ α ω₀ ζ CG ≤ shellEps0CG γ α ω₀ CG :=
+  min_le_left _ _
+
+/-- **The cell entry of the CG Eps threshold.** If `2ω₀ < A` and `0 < ε ≤ shellEps0ZCG γ α ω₀ ζ CG`, then
+`ε^{A - 2ω₀} ≤ c₀(CG)` (the leaf binder `hεcell` at `r = 10 ε^{ω₀}`). -/
+lemma shellEps0ZCG_pow_le {γ α ω₀ ζ CG ε : ℝ} (hε : 0 < ε) (hd : 0 < 2 / (2 + γ) ^ 2 - ζ - 2 * ω₀)
+    (hle : ε ≤ shellEps0ZCG γ α ω₀ ζ CG) :
+    ε ^ (2 / (2 + γ) ^ 2 - ζ - 2 * ω₀) ≤ Lemma68ConstOrder.shellC0 CG := by
+  have hc : 0 < Lemma68ConstOrder.shellC0 CG := by
+    unfold Lemma68ConstOrder.shellC0
+    positivity
+  have h1 : ε ≤ (Lemma68ConstOrder.shellC0 CG) ^ (1 / (2 / (2 + γ) ^ 2 - ζ - 2 * ω₀)) :=
+    le_trans hle (min_le_right _ _)
+  calc ε ^ (2 / (2 + γ) ^ 2 - ζ - 2 * ω₀)
+      ≤ ((Lemma68ConstOrder.shellC0 CG) ^ (1 / (2 / (2 + γ) ^ 2 - ζ - 2 * ω₀)))
+          ^ (2 / (2 + γ) ^ 2 - ζ - 2 * ω₀) := Real.rpow_le_rpow hε.le h1 hd.le
+    _ = Lemma68ConstOrder.shellC0 CG := by
+      rw [← Real.rpow_mul hc.le, one_div_mul_cancel hd.ne', Real.rpow_one]
+
+/-- **The sparsity constant at the Green constant `CG`.** `shellS1CG γ CG = c₀(CG)^{βm}/44` with
+`βm = (2+γ)²/2 + 1` (the `s1` of `shellKCG`, the coefficient of `FullAdmAt`). -/
+noncomputable def shellS1CG (γ CG : ℝ) : ℝ :=
+  (Lemma68ConstOrder.shellC0 CG) ^ ((2 + γ) ^ 2 / 2 + 1) / 44
+
+/-- `shellS1CG` is positive. -/
+lemma shellS1CG_pos (γ CG : ℝ) : 0 < shellS1CG γ CG := by
+  unfold shellS1CG Lemma68ConstOrder.shellC0
+  positivity
+
+/-- `shellS1CG` is below one for `CG > 0` (`c₀(CG) ≤ 1`). -/
+lemma shellS1CG_lt_one (γ CG : ℝ) (hCG : 0 < CG) : shellS1CG γ CG < 1 := by
+  have h0 : 0 < Lemma68ConstOrder.shellC0 CG := (Lemma68ConstOrder.shellC0_bounds CG hCG).1
+  have h1 : Lemma68ConstOrder.shellC0 CG ≤ 1 := by
+    have := (Lemma68ConstOrder.shellC0_bounds CG hCG).2
+    linarith
+  have h2 : (Lemma68ConstOrder.shellC0 CG) ^ ((2 + γ) ^ 2 / 2 + 1) ≤ 1 :=
+    Real.rpow_le_one h0.le h1 (by positivity)
+  unfold shellS1CG
+  linarith
+
 /-- **The deterministic radius cutoff of the Eps chain** (CHATGPT-237 l.335-348). For `0 < ρ < 1` and `ζ > 0` there is
 `Rc > 0` such that every `0 < R ≤ Rc` satisfies `∀ r, 0 < r → r ≤ R → (dyadicD r)^{shortExp ζ} < rhoCell68 ρ - ρ`.
 Proof: `rhoCell68 ρ - ρ = (1-ρ)/2 =: g`, `Rc := g/2`; then `dyadicD r < 2 r² ≤ 2 Rc² < g²` (`dyadicD_lt_two_mul_sq`),
@@ -511,6 +584,31 @@ theorem shellChainEpsStmt_of_shellChainStmt {𝒮 : SpaceFillingSLEModel} (h : S
   obtain ⟨Ew, hEwm, hEwp, hpt⟩ := hR R hR0 hRρ hRA s₀ hs₀ hs₁ Ω S hS hGp hCp hEp
   exact ⟨Ew, hEwm, hEwp, fun ε hε _ => hpt ε hε⟩
 
+/-- **`ShellChainEpsStmt` at the Green constant `CG` (q2, fp-S4S6c-cg-param).** The body of `ShellChainEpsStmt` with the
+threshold `shellEps0ZCG γ α ω₀ ζ CG` and the sparsity constant `shellS1CG γ CG` (both at the ball ratio `c₀(CG)`). The Green
+event `greenLowEvent68 S ω₀ ρ CG` is the event of the leaf constant `K.C = CG` (`shellKCG`). -/
+def ShellChainCGStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE : ℝ,
+    0 < ω₀ → ω₀ < α → 0 < α → ω₀ < 2 / (2 + γ) ^ 2 - ζ → 2 * ω₀ * chosenBetaMinus γ < α →
+    2 * ω₀ < 2 / (2 + γ) ^ 2 - ζ → 0 < CG → 0 < CE →
+    0 < ζ → ζ < 1 / 2 → 0 < ρ → ρ < 1 →
+    ∃ q0 : ℝ, 0 < q0 ∧ q0 ≤ 1 ∧ ∀ R : ℝ, 0 < R → R ≤ ρ / 4 → R ≤ Lemma68Cutoff.rAmp q0 ζ →
+      (∀ r : ℝ, 0 < r → r ≤ R → (dyadicD r) ^ shortExp ζ < Lemma68HoneCellGood.rhoCell68 ρ - ρ) →
+    ∀ s₀ : ℝ, 0 < s₀ → s₀ < 1 →
+    ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      HarmonicBalls.PolyHighProb S.P (greenLowEvent68 S ω₀ ρ CG) →
+      HarmonicBalls.PolyHighProb S.P (cellSizeEvent68 S γ ζ ρ) →
+      HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE) →
+      ∃ Ew : ℝ → Set Ω, (∀ δ : ℝ, MeasurableSet[S.fieldSigma] (Ew δ)) ∧
+        HarmonicBalls.PolyHighProb S.P Ew ∧
+        ∀ ε : ℝ, 0 < ε → ε ≤ shellEps0ZCG γ α ω₀ ζ CG → ∀ᵐ ω ∂S.P, ω ∈ meshEvent S γ ω₀ ρ CG ζ α CE ε →
+          Lemma68Inputs.CurveEscapesBothEnds (S.η ω) →
+          (∀ ε' : ℝ, 0 < ε' → IsLocallyFiniteMult (S.mult ε' ω) ∧ ∀ k : ℤ, S.mult ε' ω k (k + 1) ≠ 0) →
+          ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ R → ω ∈ Ew (dyadicD r) →
+            ∀ i : Lemma68Config.Config68, Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
+              ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
+                Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
+
 /-- **Transfer to a small-ε family.** If `E` has `ProbTendsToOne` and `F = E` for `0 < ε ≤ e₀` (`e₀ > 0`), then `F` has
 `ProbTendsToOne`: `ProbTendsToOne` is a limit along `𝓝[>] 0`, which only sees `ε ∈ (0, e₀)`. -/
 lemma probTendsToOne_congr_small {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {E F : ℝ → Set Ω} {e0 : ℝ}
@@ -595,6 +693,78 @@ theorem guardProbStmtEps_of_chainEps (𝒮 : SpaceFillingSLEModel) (hMesh : Mesh
     (fun ε ω r i => Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i)
     (Lemma68Config.exitQ S) hpt'
 
+/-- **`GuardProbStmt` from the CG Eps chain (q2, fp-S4S6c-cg-param).** As `guardProbStmtEps_of_chainEps`, with the chain
+`ShellChainCGStmt` at `c₀(CG)`; the witness `s₁ = shellS1CG γ CG` is chosen after `CG` (inside `∀ ρ`, as in the Eps copy). -/
+theorem guardProbStmtCG_of_chainCG (𝒮 : SpaceFillingSLEModel) (hMesh : MeshEventsEpsStmt 𝒮)
+    (hChain : ShellChainCGStmt 𝒮) : Lemma68Uniform.GuardProbStmt 𝒮 := by
+  intro γ hγ0 hγ2
+  obtain ⟨ζ, hζ0, hζ1, ω₀, α, hω₀, hωα, hα0, hωζ, hexp1, hexp2, hmesh⟩ := hMesh γ hγ0 hγ2
+  refine ⟨ω₀, hω₀, fun ρ hρ0 hρ1 => ?_⟩
+  obtain ⟨CG, hCG, CE, hCE, hPH⟩ := hmesh ρ hρ0 hρ1
+  obtain ⟨q0, hq0, hq1, hchain⟩ :=
+    hChain γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hexp1 hexp2 hCG hCE hζ0 hζ1 hρ0 hρ1
+  have hrA : 0 < Lemma68Cutoff.rAmp q0 ζ := Lemma68Cutoff.rAmp_pos hq0 hζ0
+  have hcN : 0 < countConst ζ := countConst_pos ζ
+  obtain ⟨r_amp, hra0, hra1, hbd⟩ :=
+    constant_order_conclusion (c := countConst ζ * q0) (ζ := ζ) (mul_pos hcN hq0) hζ0
+  obtain ⟨Rc, hRc0, hRc⟩ := exists_radius_cutoff_gap hρ0 hρ1 hζ0
+  have hR0 : 0 < min (ρ / 4) (min (Lemma68Cutoff.rAmp q0 ζ) (min r_amp Rc)) :=
+    lt_min (by linarith) (lt_min hrA (lt_min hra0 hRc0))
+  refine ⟨min (ρ / 4) (min (Lemma68Cutoff.rAmp q0 ζ) (min r_amp Rc)), ζ, 2, 9 * q0, q0, hR0,
+    min_le_left _ _, (min_le_right _ _).trans (min_le_left _ _), hζ0, hζ1, hq0, hq1,
+    by ring, by linarith, by linarith, by norm_num,
+    shellS1CG γ CG, shellS1CG_pos γ CG, shellS1CG_lt_one γ CG hCG, ?_⟩
+  intro s₀ hs₀ hs₁ Ω _ S hS
+  set R : ℝ := min (ρ / 4) (min (Lemma68Cutoff.rAmp q0 ζ) (min r_amp Rc)) with hRdef
+  have hRA : R ≤ Lemma68Cutoff.rAmp q0 ζ := (min_le_right _ _).trans (min_le_left _ _)
+  have hRρ : R ≤ ρ / 4 := min_le_left _ _
+  have hRr' : R ≤ r_amp := (min_le_right _ _).trans ((min_le_right _ _).trans (min_le_left _ _))
+  have hRRc : R ≤ Rc := (min_le_right _ _).trans ((min_le_right _ _).trans (min_le_right _ _))
+  have hR1 : R ≤ 1 := hRρ.trans (by linarith)
+  have hRr : ∀ r : ℝ, 0 < r → r ≤ R →
+      Real.exp (-(countConst ζ * q0 * r ^ (-ζ) / (1 + Real.log (1 / r)) ^ 2)) ≤ 1 / 2 :=
+    fun r hr hrle => hbd r hr (hrle.trans hRr')
+  obtain ⟨hGp, hCp, hEp⟩ := hPH Ω S hS
+  obtain ⟨Ew, hEwm, hEwp, hpt⟩ :=
+    hchain R hR0 hRρ hRA (hRc R hR0 hRRc) s₀ hs₀ hs₁ Ω S hS hGp hCp hEp
+  obtain ⟨dd0, hdd0m, hdd0pos, _, hdd0⟩ := window_cutoff (F := S.fieldSigma) S.P Ew hEwm hEwp
+  have hE : ProbTendsToOne S.P (fun ε => meshEvent S γ ω₀ ρ CG ζ α CE ε) :=
+    ((probTendsToOne_of_polyHighProb hGp).inter (probTendsToOne_of_polyHighProb hCp)).inter
+      (probTendsToOne_of_polyHighProb hEp)
+  have hGae : ∀ᵐ ω ∂S.P, ω ∈ goodField S Ew dd0 := by
+    filter_upwards [Lemma68Guard.ae_escapes_of_valid hS,
+      Lemma68Guard.ae_finiteExit_of_valid hγ0 hγ2 hS, hdd0] with ω h1 h2 h3
+    exact ⟨h1, h2, h3⟩
+  have hG : S.P (goodField S Ew dd0)ᶜ = 0 := ae_iff.1 hGae
+  have he0 : 0 < shellEps0ZCG γ α ω₀ ζ CG := shellEps0ZCG_pos γ α ω₀ ζ CG
+  set e0 : ℝ := shellEps0ZCG γ α ω₀ ζ CG with he0def
+  set E : ℝ → Set Ω := fun ε => if ε ≤ e0 then meshEvent S γ ω₀ ρ CG ζ α CE ε else ∅ with hEdef
+  have hEp' : ProbTendsToOne S.P E :=
+    probTendsToOne_congr_small he0 hE (fun ε _ hle => by simp [hEdef, hle])
+  have hpt' : ∀ ε : ℝ, 0 < ε → ∀ᵐ ω ∂S.P, ω ∈ E ε ∩ goodField S Ew dd0 →
+      ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ min R (dd0 ω) → ∀ i : Lemma68Config.Config68,
+        Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
+          ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
+            Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N := by
+    intro ε hε
+    by_cases hle : ε ≤ e0
+    · filter_upwards [hpt ε hε hle] with ω hω
+      rintro ⟨hωm, h1, h2, h3⟩ r hr hrd i hadm
+      have hr0 : 0 < r := lt_of_lt_of_le (by positivity) hr
+      have hωm' : ω ∈ meshEvent S γ ω₀ ρ CG ζ α CE ε := by simpa [hEdef, hle] using hωm
+      exact hω hωm' h1 h2 r hr (hrd.trans (min_le_left _ _))
+        (h3 r hr0 (hrd.trans (min_le_right _ _))) i hadm
+    · refine Filter.Eventually.of_forall fun ω hω => ?_
+      exact absurd hω.1 (by simp [hEdef, hle])
+  refine ⟨fun ω => min R (dd0 ω), measurable_const.min hdd0m, fun ω => lt_min hR0 (hdd0pos ω),
+    fun ω => min_le_left _ _, ?_⟩
+  exact probTendsToOne_half_of_count (α := fun ε => 10 * ε ^ ω₀)
+    (dd := fun ω => min R (dd0 ω)) (E := E)
+    (G := goodField S Ew dd0) (R := R) (cN := countConst ζ) (q0 := q0) (ζ := ζ) hEp' hG
+    (fun ε hε => by positivity) (fun ω => min_le_left _ _) hR1 hcN hq0 hq1 hRr
+    (fun ε ω r i => Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i)
+    (Lemma68Config.exitQ S) hpt'
+
 end Lemma68Guard10
 
 /-- **Lemma 6.8, uniform constant-order lower bound (`UniformConstantOrderLowerBoundStmt`, FirstPass/S6d.lean:95)**,
@@ -613,6 +783,15 @@ theorem uniformConstantOrderLowerBoundEps_of_chain (𝒮 : SpaceFillingSLEModel)
     (hChain : Lemma68Guard10.ShellChainEpsStmt 𝒮) : UniformConstantOrderLowerBoundStmt 𝒮 :=
   uniformConstantOrderLowerBound_of_guard 𝒮
     (Lemma68Guard10.guardProbStmtEps_of_chainEps 𝒮
+      (Lemma68Guard10.meshEventsEpsStmt_of_draft 𝒮 hG hC hE) hChain)
+
+/-- **Lemma 6.8, uniform constant-order lower bound from the CG Eps chain (q2, fp-S4S6c-cg-param).** As
+`uniformConstantOrderLowerBoundEps_of_chain`, with `ShellChainCGStmt` (the ball ratio `c₀(CG)`). -/
+theorem uniformConstantOrderLowerBoundCG_of_chain (𝒮 : SpaceFillingSLEModel)
+    (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮)
+    (hChain : Lemma68Guard10.ShellChainCGStmt 𝒮) : UniformConstantOrderLowerBoundStmt 𝒮 :=
+  uniformConstantOrderLowerBound_of_guard 𝒮
+    (Lemma68Guard10.guardProbStmtCG_of_chainCG 𝒮
       (Lemma68Guard10.meshEventsEpsStmt_of_draft 𝒮 hG hC hE) hChain)
 
 end MatedCRT

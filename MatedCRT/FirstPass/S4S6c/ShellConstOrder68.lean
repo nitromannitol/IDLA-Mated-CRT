@@ -144,6 +144,24 @@ theorem exists_shellQ0_68 (CE Cg : ℝ) :
   have hbig : 0 < (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE Cg) := by positivity
   exact ⟨(1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE Cg) / 2, by positivity, by linarith⟩
 
+/-- **The ball ratio at the Green constant `CG` (q2, fp-S4S6c-cg-param, lead item 3: parameterize).** `shellC0 CG =
+exp(-2CG)/32`: the Lemma 6.8 constant `c₀` with `c₀ ≤ exp(-2CG)/16` (`Constants68.hc0C` at `C = CG`, S6r/Constants.lean:71).
+At `CG = 1` it is `shellC068`. Used by the CG Eps family (Guard68S10 `shellEps0ZCG`, `shellS1CG`; ShellChainCore68;
+ShellHoneInst68). -/
+noncomputable def shellC0 (CG : ℝ) : ℝ := Real.exp (-(2 * CG)) / 32
+
+/-- `shellC0 1 = shellC068`. -/
+theorem shellC0_one : shellC0 1 = shellC068 := by
+  unfold shellC0 shellC068
+  norm_num
+
+/-- For `CG > 0`: `0 < shellC0 CG < 1/5` (the range `0 < c₀ < 1/5` of `ShortWindowGoodRadiusPrevalenceStmt`,
+S6r/ShortWindow.lean:61-62). -/
+theorem shellC0_bounds (CG : ℝ) (hCG : 0 < CG) : 0 < shellC0 CG ∧ shellC0 CG < 1 / 5 := by
+  unfold shellC0
+  have h := Real.exp_le_one_iff.2 (show -(2 * CG) ≤ 0 by linarith)
+  exact ⟨by positivity, by linarith⟩
+
 end Lemma68ConstOrder
 end MatedCRT
 

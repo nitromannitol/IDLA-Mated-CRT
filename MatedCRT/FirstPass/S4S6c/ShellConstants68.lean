@@ -66,6 +66,58 @@ theorem shellK68_s1 (γ ρ ω₀ ζ : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hρ0
     (shellK68 γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1).s1 =
       (Real.exp (-2) / 32) ^ ((2 + γ) ^ 2 / 2 + 1) / 44 := rfl
 
+/-- **The shell-chain constants at the Green constant `CG` (q2, fp-S4S6c-cg-param, lead item 3).** `shellKCG … CG hCG` is a
+`Constants68 γ ρ` with the Green constant `C := CG` (the constant of the leaf event `greenLowEvent68 S ω₀ ρ CG`), the ball
+ratio `c0 := exp(-2CG)/32` (= `Lemma68ConstOrder.shellC0 CG`, which is `shellC068` at `CG = 1`) and the sparsity constant
+`s1 := c0^βm/44`. The constraints `hc0'` (`c0 ≤ 1/24`) and `hc0C` (`c0 ≤ exp(-2C)/16`) hold for every `CG > 0`. `Cd = Cg = 1` as in
+`shellK68`, which is kept unchanged (its consumers B1Assembly68 and ShellCorePw68 are not owned by q2). -/
+noncomputable def shellKCG (γ ρ ω₀ ζ CG : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hρ0 : 0 < ρ) (hρ1 : ρ < 1)
+    (hω0 : 0 < ω₀) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2) (hCG : 0 < CG) : Constants68 γ ρ where
+  βm := (2 + γ) ^ 2 / 2 + 1
+  ω := ω₀
+  C := CG
+  Cd := 1
+  Cg := 1
+  ζ := ζ
+  c0 := Real.exp (-(2 * CG)) / 32
+  s1 := (Real.exp (-(2 * CG)) / 32) ^ ((2 + γ) ^ 2 / 2 + 1) / 44
+  hγ0 := hγ0
+  hγ2 := hγ2
+  hρ0 := hρ0
+  hρ1 := hρ1
+  hβ := by linarith
+  hω := hω0
+  hC := hCG
+  hCd := one_pos
+  hCg := one_pos
+  hζ0 := hζ0
+  hζ1 := hζ1
+  hc0 := by positivity
+  hc0' := by
+    have h1 : Real.exp (-(2 * CG)) ≤ 1 := Real.exp_le_one_iff.2 (by linarith)
+    linarith
+  hc0C := by
+    have h2 : 0 < Real.exp (-(2 * CG)) := Real.exp_pos _
+    linarith
+  hs1 := by positivity
+  hs1small := le_of_eq (by ring)
+
+/-- The ball ratio of `shellKCG` is `exp(-2CG)/32`. -/
+theorem shellKCG_c0 (γ ρ ω₀ ζ CG : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hρ0 : 0 < ρ) (hρ1 : ρ < 1)
+    (hω0 : 0 < ω₀) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2) (hCG : 0 < CG) :
+    (shellKCG γ ρ ω₀ ζ CG hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1 hCG).c0 = Real.exp (-(2 * CG)) / 32 := rfl
+
+/-- The Green constant of `shellKCG` is `CG` (the leaf `hGreen` constant agrees with `greenLowEvent68`). -/
+theorem shellKCG_C (γ ρ ω₀ ζ CG : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hρ0 : 0 < ρ) (hρ1 : ρ < 1)
+    (hω0 : 0 < ω₀) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2) (hCG : 0 < CG) :
+    (shellKCG γ ρ ω₀ ζ CG hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1 hCG).C = CG := rfl
+
+/-- The sparsity constant of `shellKCG` is `c0^βm/44` with `βm = (2+γ)²/2 + 1`. -/
+theorem shellKCG_s1 (γ ρ ω₀ ζ CG : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hρ0 : 0 < ρ) (hρ1 : ρ < 1)
+    (hω0 : 0 < ω₀) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2) (hCG : 0 < CG) :
+    (shellKCG γ ρ ω₀ ζ CG hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1 hCG).s1 =
+      (Real.exp (-(2 * CG)) / 32) ^ ((2 + γ) ^ 2 / 2 + 1) / 44 := rfl
+
 /-- **The walk exponent bound (q2, fp-S4S6c-core-fixes, item 2: the exponent split of chat 239 l.747-800).** If
 `0 < ε ≤ 1`, `2ω₀ < κ` and `100 ε^{2ω₀} ≤ R`, then `ε^κ ≤ R/8`. This is the second conjunct `ε^{K.ω} ≤ R/8` of hWalk, with the
 separate walk exponent `κ` in place of `K.ω`; `R ≥ r² ≥ 100 ε^{2ω₀}` for `r ≥ 10 ε^{ω₀}`. Taking `κ = 2/(2+γ)² - ζ` is

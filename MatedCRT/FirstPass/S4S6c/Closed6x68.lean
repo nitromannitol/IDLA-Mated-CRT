@@ -1,4 +1,6 @@
 import MatedCRT.FirstPass.S4S6c.ShellTop68
+import MatedCRT.Proofs.Sec3.ConeBallMass
+import MatedCRT.FirstPass.S4S6c.LitConeLQG68
 import MatedCRT.FirstPass.S5qe
 import MatedCRT.FirstPass.Frozen.S4S5b
 import MatedCRT.FirstPass.S6d
@@ -140,9 +142,117 @@ theorem closed_6_9_hU_eps {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SL
   firstPass_6_9_faithful 𝒮
     (Lemma68ShellTop.hU_top_eps hC.greenKernelLowerBound hC.cellSizeEstimate hC.exitTimeUpperBound hLit hBM hCC hB1 hμ hOne)
 
+/-! ### Named-field variants (q2, fp-S4S6c-cg-param, addendum items (i)-(iii); chat 246 Q4)
+
+The three theorems below replace, in the Eps route only, (i) the certified core `hC : CertifiedReferenceModelCore ν 𝒮`
+by its three used fields as separate binders `hG hE h28`; (ii) the inline `hμ` by the named Prop
+`MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence` (S4S6c/LitConeLQG68.lean, PENDING TRUTH CHECK). The 6.8 variant also
+(iii) discharges `h27 : VolumeGrowthStmt` through `volumeGrowthStmt_of_berestyckiGwynne` (Proofs/Sec3/ConeBallMass.lean:17)
+from the named binder `hBG : BerestyckiGwynneConeBallMassStmt` (Proposed/BerestyckiGwynne.lean:23), as in
+`FirstPass/Closure/Theorem14d.lean` (its `hBG`). The old theorems `closed_6_7/8/9_hU_eps` are kept unchanged. -/
+
+/-- **Lemma 6.7 (faithful header), Eps route, named-field variant.** Binders: the Draft inputs `hG` (Lemma 2.16),
+`h28` (Lemma 2.8) and `hE` (Lemma 2.18) as separate binders; `hLit hBM hCC` cited (60c); `hB1` certified; `hμ` named
+(LitConeLQG68, pending truth check); `hOne` the Eps form (ShellHoneInst68.lean:233). Conclusion: `firstPass_6_7_faithful`. -/
+theorem closed_6_7_hU_eps_fields {𝒮 : SpaceFillingSLEModel}
+    (hG : GreenKernelLowerBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeEpsStmt 𝒮) :
+    FaithfulConstantOrderLowerBoundStmt 𝒮 :=
+  firstPass_6_7_faithful 𝒮
+    (Lemma68ShellTop.hU_top_eps hG h28 hE hLit hBM hCC hB1 hμ hOne)
+
+/-- **Lemma 6.8 (faithful header, localized form), Eps route, named-field variant.** Binders as `closed_6_7_hU_eps_fields`,
+with `hBG : BerestyckiGwynneConeBallMassStmt` in place of `h27`: `h27` is `volumeGrowthStmt_of_berestyckiGwynne hBG`, and
+the cell-size estimate of 6.8 is `h28`. Conclusion: `firstPass_6_8_faithful`. -/
+theorem closed_6_8_hU_eps_fields {𝒮 : SpaceFillingSLEModel}
+    (hG : GreenKernelLowerBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
+    (hBG : BerestyckiGwynneConeBallMassStmt)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeEpsStmt 𝒮) :
+    FaithfulConstantOrderLowerBoundDivStmt 𝒮 :=
+  firstPass_6_8_faithful 𝒮
+    (Lemma68ShellTop.hU_top_eps hG h28 hE hLit hBM hCC hB1 hμ hOne)
+    (volumeGrowthStmt_of_berestyckiGwynne hBG) h28
+
+/-- **Lemma 6.9 (faithful header), Eps route, named-field variant.** Binders as `closed_6_7_hU_eps_fields`.
+Conclusion: `firstPass_6_9_faithful`. -/
+theorem closed_6_9_hU_eps_fields {𝒮 : SpaceFillingSLEModel}
+    (hG : GreenKernelLowerBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeEpsStmt 𝒮) :
+    FaithfulChanceOfBeingAbsorbedStmt 𝒮 :=
+  firstPass_6_9_faithful 𝒮
+    (Lemma68ShellTop.hU_top_eps hG h28 hE hLit hBM hCC hB1 hμ hOne)
+
+/-! ### CG route (q2, fp-S4S6c-cg-param): the Eps route at the Green constant `CG`, with `c₀ = exp(-2CG)/32`.
+
+The binders are those of the named-field variants `closed_6_x_hU_eps_fields` (`hG h28 hE` separate; `hμ` named; `hBG` for
+6.8), with `hOne : ShellOneTestOrderAeCGStmt 𝒮` (ShellHoneInst68.lean: the CG Eps form at `c₀(CG)`). The CG-free Eps
+theorems above are kept unchanged. -/
+
+/-- **Lemma 6.7 (faithful header), CG route.** Binders as `closed_6_7_hU_eps_fields`, with `hOne` the CG form. -/
+theorem closed_6_7_hU_cg {𝒮 : SpaceFillingSLEModel}
+    (hG : GreenKernelLowerBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeCGStmt 𝒮) :
+    FaithfulConstantOrderLowerBoundStmt 𝒮 :=
+  firstPass_6_7_faithful 𝒮
+    (Lemma68ShellTop.hU_top_cg hG h28 hE hLit hBM hCC hB1 hμ hOne)
+
+/-- **Lemma 6.8 (faithful header, localized form), CG route.** As `closed_6_8_hU_eps_fields`, with `hOne` the CG form. -/
+theorem closed_6_8_hU_cg {𝒮 : SpaceFillingSLEModel}
+    (hG : GreenKernelLowerBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
+    (hBG : BerestyckiGwynneConeBallMassStmt)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeCGStmt 𝒮) :
+    FaithfulConstantOrderLowerBoundDivStmt 𝒮 :=
+  firstPass_6_8_faithful 𝒮
+    (Lemma68ShellTop.hU_top_cg hG h28 hE hLit hBM hCC hB1 hμ hOne)
+    (volumeGrowthStmt_of_berestyckiGwynne hBG) h28
+
+/-- **Lemma 6.9 (faithful header), CG route.** Binders as `closed_6_7_hU_cg`. -/
+theorem closed_6_9_hU_cg {𝒮 : SpaceFillingSLEModel}
+    (hG : GreenKernelLowerBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeCGStmt 𝒮) :
+    FaithfulChanceOfBeingAbsorbedStmt 𝒮 :=
+  firstPass_6_9_faithful 𝒮
+    (Lemma68ShellTop.hU_top_cg hG h28 hE hLit hBM hCC hB1 hμ hOne)
+
+/-- **Lemma 6.x, uniform constant-order lower bound (hU), CG route.** Binders as `closed_6_7_hU_cg`. -/
+theorem closed_6_x_hU_cg {𝒮 : SpaceFillingSLEModel}
+    (hG : GreenKernelLowerBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeCGStmt 𝒮) :
+    UniformConstantOrderLowerBoundStmt 𝒮 :=
+  Lemma68ShellTop.hU_top_cg hG h28 hE hLit hBM hCC hB1 hμ hOne
+
 end MatedCRT
 
 #print axioms MatedCRT.closed_6_x_hU_eps
+#print axioms MatedCRT.closed_6_7_hU_eps_fields
+#print axioms MatedCRT.closed_6_8_hU_eps_fields
+#print axioms MatedCRT.closed_6_9_hU_eps_fields
 #print axioms MatedCRT.closed_6_7_hU_eps
 #print axioms MatedCRT.closed_6_8_hU_eps
 #print axioms MatedCRT.closed_6_9_hU_eps
+
+#print axioms MatedCRT.closed_6_x_hU_cg
+#print axioms MatedCRT.closed_6_7_hU_cg
+#print axioms MatedCRT.closed_6_8_hU_cg
+#print axioms MatedCRT.closed_6_9_hU_cg
