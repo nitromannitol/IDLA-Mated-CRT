@@ -250,6 +250,42 @@ theorem start_frontier_before_exit {η : ℝ → ℂ} {m : ℤ → ℤ → ℕ} 
   · exact Nat.find_min hP hj ⟨lt_trans (ENat.natCast_lt_natCast.2 hj) (Nat.find_spec hP).1, hmem⟩
   · exact clause12_of_frontier hη hε hr (Nat.find_spec hP).2
 
+/-! ## Admissibility of a middle-boundary start (operator note 04:27 UTC)
+
+`killed_eq_W` (equality `killed ε η Θ F0 r = W \ Θ` under `W ⊆ F0`) is already proved by z9 as
+`Lemma68Relation.killed_eq_W` (`FirstPass/S6e/Relation.lean:121`, commit 4010091); it is not restated here. Only the
+inclusion needed for admissibility is proved in this file. -/
+
+/-- **Inclusion for the killed set.** If `W = V(Θ̄ + B_r) ⊆ F0`, then every vertex of `W \ Θ` lies in
+`killed ε η Θ F0 r = {v ∈ F0 : d_v < r} \ Θ` (write-up (10)): `d_v < r` because `v ∈ W` means
+`d_v < r` by `cellVertices_thickening_eq` (write-up (9)). -/
+theorem sdiff_W_subset_killed {η : ℝ → ℂ} {ε r : ℝ} (hη : Continuous η) (hε : 0 < ε) {Θ F0 : Finset ℤ}
+    (hF : cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) ⊆ (↑F0 : Set ℤ)) :
+    cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) \ (↑Θ : Set ℤ) ⊆
+      (killed ε η Θ F0 r : Set ℤ) := by
+  rintro v ⟨hvW, hvΘ⟩
+  have hv0 : v ∈ F0 := Finset.mem_coe.1 (hF hvW)
+  have hvd : cellDist ε η Θ v < ENNReal.ofReal r := by
+    rw [cellVertices_thickening_eq hη hε Θ r] at hvW
+    exact hvW
+  have hvr : dd ε η Θ v < r := ENNReal.toReal_lt_of_lt_ofReal hvd
+  exact ⟨hv0, hvr, hvΘ⟩
+
+/-- **Admissibility at a middle-boundary start (`frontier_admissible`).** Let `b` be a start vertex with
+`d_b ≤ r/2 ≤ M_b` (the cell of `b` meets the middle boundary; `dd_bounds`), let `W ⊆ F0`, let the target satisfy
+`A ⊆ W \ Θ`, and let `|A| < s₁ r^(2β)/ε`. Then `b` is admissible at the radius `x = r` in the sense of
+`Lemma68Admissible.Admissible`: clause (12) at `b`, the inclusion `A ⊆ killed r`, and the sparsity clause (15). -/
+theorem frontier_admissible {η : ℝ → ℂ} {ε r s1 β : ℝ} (hη : Continuous η) (hε : 0 < ε) (hs1 : 0 < s1)
+    (hβ : 0 < β) (hr : 0 < r) {Θ F0 A : Finset ℤ} {b : ℤ}
+    (hdd : dd ε η Θ b ≤ r / 2 ∧ r / 2 ≤ ddMax ε η Θ b)
+    (hF : cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) ⊆ (↑F0 : Set ℤ))
+    (hA : (↑A : Set ℤ) ⊆ cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) \ (↑Θ : Set ℤ))
+    (hcard : (A.card : ℝ) < s1 * r ^ (2 * β) / ε) :
+    Admissible ε η Θ F0 A b s1 β r := by
+  unfold Admissible
+  refine ⟨⟨by linarith [hdd.1], by linarith [hdd.2]⟩, hA.trans (sdiff_W_subset_killed hη hε hF), ?_⟩
+  exact sparsity_of_card_bound η A hε hs1 hβ hr hcard le_rfl
+
 end S6k
 
 end MatedCRT
