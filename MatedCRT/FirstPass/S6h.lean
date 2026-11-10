@@ -4,12 +4,13 @@ import MatedCRT.FirstPass.S6e.C17Induction
 import MatedCRT.FirstPass.S6e.Admissible
 import MatedCRT.FirstPass.S6e.Walk
 import MatedCRT.FirstPass.S6e.Cutoff
+import MatedCRT.FirstPass.S6e.Final
 import MatedCRT.Proofs.IDLA.Measurable
 
 /-!
 # FIRST PASS: the configuration bound of Lemma 6.8 (fp-S6h-6-8-bridge-configuration, z8)
 
-Sources: `notes/fp-gaps/CHATGPT-z9-6-8-bridge.md` §1 (`exitQ`), §2.1 (`FullAdm`, zero extension `Qfin`), §3 Steps A–F
+Sources: `notes/fp-gaps/CHATGPT-z9-6-8-bridge.md` §1 (`exitQ`), §2.1 (`FullAdm`; the zero extension is `Lemma68Final.guardedExit`), §3 Steps A–F
 (`configuration_le_pow`), §4 (`hpt`); the test schedule of Steps B–C is the write-up's C1–C3
 (`notes/fp-gaps/CHATGPT-lemma68-open-parts.md`, lines 657–741).
 
@@ -54,12 +55,6 @@ noncomputable def exitQ {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (�
     (i : Config68) : ℝ :=
   (srwLaw (S.mult ε ω) i.a).real
     (Lemma68Walk.exitEvent (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r) (↑i.A : Set ℤ))
-
-open scoped Classical in
-/-- The zero extension `Q` of `exitQ` to the guard (bridge note §2.1). On `FullAdm` it is `exitQ`; otherwise `0`. -/
-noncomputable def Qfin {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ρ s₀ γ ε : ℝ) (ω : Ω) (r : ℝ)
-    (i : Config68) : ℝ :=
-  if FullAdm S ρ s₀ γ ε ω r i then exitQ S ε ω r i else 0
 
 /-- The test-hit event `G_j` of test `j` (bridge note §3 Step C, (3)): the walk leaves `A` between the test times
 `T j` and `T (j+1)`. -/
@@ -177,39 +172,26 @@ theorem configuration_le_pow {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv �
   rw [hq0]
   exact configuration_le_pow_of_schedule hq hq9 hp hr0 hr1 (sc ε ω r i) hV
 
-/-- (Lemma 6.8, the hypothesis `hpt` of `Lemma68Final.probTendsToOne_uniform_half`, bridge note §4) with the
-zero extension `Qfin` of §2.1 and the mesh-indexed form of §2.2: on `E ε ∩ G` every admissible configuration of every
-radius satisfies the quenched bound, including inadmissible configurations (for which `Qfin = 0`). -/
-theorem hpt_configuration {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ρ s₀ γ : ℝ)
-    (E : ℝ → Set Ω) (G : Set Ω) (α : ℝ → ℝ) (dd : Ω → ℝ) (R : ℝ) (ζ p qStar q0 : ℝ)
-    (hq0 : q0 = qStar / 9) (hq : 0 ≤ qStar) (hq9 : qStar ≤ 9) (hp : p ≤ 3)
-    (hα : ∀ ε, 0 < ε → 0 < α ε) (hdd : ∀ ω, dd ω ≤ R) (hR : R ≤ Lemma68Cutoff.rAmp q0 ζ)
+/-- (Lemma 6.8, the hypothesis `hpt` of `Lemma68Final.probTendsToOne_uniform_half_guarded`, bridge note §4, z9's form)
+On `E ε ∩ G`, for every admissible radius `r ∈ [α ε, dd ω]` and every configuration with the guard `FullAdm`, the exit
+probability `exitQ` satisfies `(1 - q0/(1+log(1/r))²)^N` for a count `N ≥ r^(-ζ)/200`. This is `configuration_le_pow`
+with `ι := Config68`, `Adm := FullAdm`, `exitF := exitQ`; the non-admissible configurations are handled by the guard. -/
+theorem probTendsToOne_lemma68_guarded {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} (S : MatedCRTEnv Ω)
+    (ρ s₀ γ : ℝ) {E : ℝ → Set Ω} (hE : ProbTendsToOne P E) {G : Set Ω} (hG : P Gᶜ = 0)
+    {α : ℝ → ℝ} (hα : ∀ ε, 0 < ε → 0 < α ε)
+    {dd : Ω → ℝ} {R : ℝ} (hdd : ∀ ω, dd ω ≤ R) {ζ p qStar q0 : ℝ}
+    (hq0 : 0 < q0) (hq1 : q0 ≤ 1) (hζ : 0 < ζ) (hζ' : ζ < 1 / 2) (hR : R ≤ Lemma68Cutoff.rAmp q0 ζ)
+    (hq0def : q0 = qStar / 9) (hq : 0 ≤ qStar) (hq9 : qStar ≤ 9) (hp : p ≤ 3)
     (sc : ℝ → Ω → ℝ → Config68 → TestSchedule)
     (hsch : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, ∀ r : ℝ, α ε ≤ r → r ≤ dd ω → ∀ i : Config68,
       FullAdm S ρ s₀ γ ε ω r i →
         (sc ε ω r i).Valid (srwLaw (S.mult ε ω) i.a)
           (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r) (↑i.A : Set ℤ) r p qStar ζ) :
-    ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, ∀ r : ℝ, α ε ≤ r → r ≤ dd ω → ∀ i : Config68,
-      ∃ N : ℕ, r ^ (-ζ) / 200 ≤ (N : ℝ) ∧
-        Qfin S ρ s₀ γ ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N := by
-  intro ε hε ω hω r hαr hrd i
-  have hr0 : 0 < r := (hα ε hε).trans_le hαr
-  have hr1 : r ≤ 1 := ((hrd.trans (hdd ω)).trans hR).trans (rAmp_le_one q0 ζ)
-  by_cases hi : FullAdm S ρ s₀ γ ε ω r i
-  · obtain ⟨N, hN, hQ⟩ :=
-      configuration_le_pow S ρ s₀ γ E G α dd R ζ p qStar q0 hq0 hq hq9 hp hα hdd hR sc hsch ε hε ω hω r
-        hαr hrd i hi
-    exact ⟨N, hN, by simpa [Qfin, hi] using hQ⟩
-  · refine ⟨⌈r ^ (-ζ) / 200⌉₊, Nat.le_ceil _, ?_⟩
-    have hq0' : q0 ≤ 1 := by rw [hq0]; linarith
-    have hl : 0 ≤ Real.log (1 / r) := Real.log_nonneg (one_le_one_div hr0 hr1)
-    have hpos : 0 < (1 + Real.log (1 / r)) ^ 2 := pow_pos (by linarith) 2
-    have hbase : 0 ≤ 1 - q0 / (1 + Real.log (1 / r)) ^ 2 := by
-      have : q0 / (1 + Real.log (1 / r)) ^ 2 ≤ 1 := (div_le_one hpos).2 (by nlinarith)
-      linarith
-    have h0 : Qfin S ρ s₀ γ ε ω r i = 0 := by simp [Qfin, hi]
-    rw [h0]
-    exact pow_nonneg hbase _
+    ProbTendsToOne P (fun ε => {ω | ∀ r : ℝ, α ε ≤ r → r ≤ dd ω → ∀ i : Config68,
+      Lemma68Final.guardedExit (fun ε ω r i => FullAdm S ρ s₀ γ ε ω r i) (exitQ S) ε ω r i ≤ 1 / 2}) :=
+  Lemma68Final.probTendsToOne_uniform_half_guarded hE hG hα hdd hq0 hq1 hζ hζ' hR
+    (fun ε ω r i => FullAdm S ρ s₀ γ ε ω r i) (exitQ S)
+    (configuration_le_pow S ρ s₀ γ E G α dd R ζ p qStar q0 hq0def hq hq9 hp hα hdd hR sc hsch)
 
 end Lemma68Config
 
