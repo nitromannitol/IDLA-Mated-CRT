@@ -102,6 +102,17 @@ theorem cellDiamLe_ball_of_meshEvent {γ ω₀ ρ CG ζ α CE : ℝ} {Ω : Type}
     _ ≤ ε ^ (2 / (2 + γ) ^ 2 - ζ) := (hcell k hk).2
     _ ≤ dyadicD r / 100 := hbound
 
+open Classical in
+/-- **`hcap_of_continuous` with a free `s1` and a free window constant (`_g`, z12, fp-S4S6c-shellball).** The statement
+of `hcap_of_continuous` (l.47) involves neither the sparsity exponent nor any window constant (`cRad` of the cell
+vertices of `i.A` meeting `ball z r`), so the `_g` variant is `hcap_of_continuous_s1` (l.58) with `c0W` absent; the
+`FullAdmAt` premise is ignored as before. No hypothesis on `s1` is used. -/
+theorem hcap_of_continuous_g {γ ρ s₀ ε r s1 : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ω : Ω)
+    (hηω : Continuous (S.η ω)) (hε : 0 < ε) (hr : 0 < r) (i : Lemma68Config.Config68) :
+    Lemma68Config.FullAdmAt (s1) S ρ s₀ γ ε ω r i →
+      ∀ z : ℂ, cRad ε (S.η ω) (Finset.filter (fun v => v ∈ cellVertices ε (S.η ω) (Metric.ball z r)) i.A) < r :=
+  hcap_of_continuous_s1 S ω hηω hε hr i
+
 end Lemma68HoneSetupAdapt
 end MatedCRT
 
@@ -111,3 +122,5 @@ end MatedCRT
 #print axioms MatedCRT.Lemma68HoneSetupAdapt.cellDiamLe_ball_of_meshEvent
 
 #print axioms MatedCRT.Lemma68HoneSetupAdapt.hcap_of_continuous_s1
+
+#print axioms MatedCRT.Lemma68HoneSetupAdapt.hcap_of_continuous_g
