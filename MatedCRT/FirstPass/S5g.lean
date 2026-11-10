@@ -16,7 +16,7 @@ random level `mr` such that, with probability tending to one on `{t < T_ρ}` (th
 target centre `η(εa)`, `a ∈ V^ε(B⁻_δ(Λ_t))`, has `μ_h`-mass at least `mr` in the ball of radius `s`.
 
 Route:
-* On `{t < T_ρ}` the cluster lies in `B_{ρ/3}` (`subset_ball_of_lt_clusterExitTime`), so every target cell meets `B_ρ`.
+* On `{t < T_ρ}` the cluster lies in `B_{ρ/3}` (`subset_ball_of_lt_clusterExitTime_cover`), so every target cell meets `B_ρ`.
 * The cell-size estimate (Lemma 2.8, `CellSizeEstimateStmt`, hypothesis `h28`) bounds the diameter of such cells by `1`
   (for `ε < 1`), and a target centre `η(εa)` is an endpoint of its cell, so it lies in the closed ball of radius `ρ + 1`.
 * A finite net `Z` of mesh `s/2` covers that closed ball; every centre `z` of the net gives `B_{s/2}(z) ⊆ B_s(η(εa))`.
@@ -186,7 +186,7 @@ theorem stoppedTargetMass_tendsToOne (𝒮 : SpaceFillingSLEModel) {γ : ℝ} (h
     intro ε hε0 hε1 ω hF hAP hμg hΛω hC a ha
     have := open_pos_of_area_parametrized hAP
     have hmono : MonotoneOn (Λ ω) (Ioi 0) := fun a ha b hb hab => hΛω.2.1.monotoneOn ha hb hab
-    have hsub : Λ ω t ⊆ ball 0 ρ := subset_ball_of_lt_clusterExitTime hρ0 hmono ht hF
+    have hsub : Λ ω t ⊆ ball 0 ρ := subset_ball_of_lt_clusterExitTime_cover hρ0 hmono ht hF
     obtain ⟨x, hxcell, hxin⟩ : (cell ε (S.η ω) a ∩ innerNbhd δ (Λ ω t)).Nonempty := ha
     have hxB : x ∈ ball (0 : ℂ) ρ := hsub hxin.1
     unfold cellSizeEvent at hC

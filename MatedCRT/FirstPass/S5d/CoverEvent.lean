@@ -60,7 +60,7 @@ theorem innerNbhd_subset_fillCells_vertexThresholdSet {ε : ℝ} {η : ℝ → �
 
 /-- Time restriction: for `0 < t < T`, `Λ_t ⊆ B_ρ`, where `T = clusterExitTime Λ ρ` (paper line 1589) and
 `Λ` is nondecreasing on `(0, ∞)` (`SatisfiesHarmonicBallConditions.monotoneOn`). -/
-theorem subset_ball_of_lt_clusterExitTime {Λ : ℝ → Set ℂ} {ρ t : ℝ} (hρ : 0 < ρ)
+theorem subset_ball_of_lt_clusterExitTime_cover {Λ : ℝ → Set ℂ} {ρ t : ℝ} (hρ : 0 < ρ)
     (hmono : MonotoneOn Λ (Ioi 0)) (ht : 0 < t) (hT : t < clusterExitTime Λ ρ) : Λ t ⊆ ball 0 ρ := by
   have hT' : t < sSup {s : ℝ | 0 < s ∧ Λ s ⊆ ball 0 (ρ / 3)} := hT
   have hne : {s : ℝ | 0 < s ∧ Λ s ⊆ ball 0 (ρ / 3)}.Nonempty := by
@@ -152,7 +152,7 @@ theorem tendsToOneOn_cover_vertexThresholdSet {Ω : Type} [MeasurableSpace Ω] {
       by_contra hN
       exact hcon (Or.inr hN)
     exact hnc (innerNbhd_subset_fillCells_vertexThresholdSet hε0.le hN.1 hδ
-      (subset_ball_of_lt_clusterExitTime hρ hN.2 ht hF)
+      (subset_ball_of_lt_clusterExitTime_cover hρ hN.2 ht hF)
       hA (fun k hk => lt_of_le_of_lt ((hZ k hk).2) hεs))
   calc S.P ({ω | t < clusterExitTime (Λ ω) ρ} ∩
         {ω | innerNbhd δ (Λ ω t) ⊆ fillCells ε (S.η ω) (vertexThresholdSet ε (S.η ω) (L ε ω) ρ δ)}ᶜ)

@@ -135,7 +135,7 @@ theorem strictClusterCompactContainmentStep_of_odometerPositivity (𝒮 : SpaceF
   have hε : (0 : ℝ) < ε := hε0
   intro ω hωF hωN hωZ hωE'
   have hap := not_not.mp hωN
-  have hΛball : Λ ω t ⊆ ball 0 ρ := subset_ball_of_lt_clusterExitTime hρ hap.2 ht hωF
+  have hΛball : Λ ω t ⊆ ball 0 ρ := subset_ball_of_lt_clusterExitTime_cover hρ hap.2 ht hωF
   intro a ha
   obtain ⟨y, hyc, hyK⟩ := ha
   have hcellmeet : (cell ε (S.η ω) a ∩ ball 0 ρ).Nonempty := ⟨y, hyc, hΛball hyK.1⟩

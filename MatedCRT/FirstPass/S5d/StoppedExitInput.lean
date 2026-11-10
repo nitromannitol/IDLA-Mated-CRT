@@ -84,7 +84,7 @@ theorem stoppedExit_input (𝒮 : SpaceFillingSLEModel) (h218 : ExitTimeUpperBou
         obtain ⟨hmono, hPI⟩ := hNω
         obtain ⟨hsymm, hlf, hcons, hB, hBfin, hcl, h0⟩ := hPI ε hε0
         have hT : t < clusterExitTime (Λ ω) ρ := hF
-        have hΛball : Λ ω t ⊆ ball 0 ρ := subset_ball_of_lt_clusterExitTime hρ hmono ht hT
+        have hΛball : Λ ω t ⊆ ball 0 ρ := subset_ball_of_lt_clusterExitTime_cover hρ hmono ht hT
         have hVfin : (cellVertices ε (S.η ω) (Λ ω t)).Finite :=
           hBfin.subset (cellVertices_mono_set hΛball)
         have hI : (stoppedKillSet S Λ ρ t ε ω).Finite :=

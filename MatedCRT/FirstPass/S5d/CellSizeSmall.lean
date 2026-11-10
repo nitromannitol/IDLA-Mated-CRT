@@ -11,7 +11,7 @@ exponent of the size event `2/(2+γ)² - ζ` equals `ζ > 0`.
 * `tendsTo_small_cells_on_lt_clusterExitTime`: on `{t < T}` (`T = clusterExitTime`), with probability tending to one, every cell
   meeting `B⁻_{δ/2}(Λ_t)` has diameter `< δ/4` (the referee's "once the maximum cell diameter is less than δ/4", lines 153-175).
 
-For `t < T` the set `Λ_t` lies in `B_ρ` (`subset_ball_of_lt_clusterExitTime`, S5d/CoverEvent.lean:63), using the monotonicity of
+For `t < T` the set `Λ_t` lies in `B_ρ` (`subset_ball_of_lt_clusterExitTime_cover`, S5d/CoverEvent.lean:63), using the monotonicity of
 `Λ` on `(0, ∞)`, which holds almost surely by the harmonic-ball property (`IsConeHarmonicBallFamily`, Defs/Setting.lean:266).
 -/
 
@@ -86,7 +86,7 @@ theorem tendsTo_small_cells_on_lt_clusterExitTime {𝒮 : SpaceFillingSLEModel} 
         obtain ⟨k, hk⟩ := not_forall.1 hE'
         rw [not_imp] at hk
         obtain ⟨⟨y, hyc, hyI⟩, hkd⟩ := hk
-        have hball : Λ ω t ⊆ ball 0 ρ := subset_ball_of_lt_clusterExitTime hρ hM ht hF
+        have hball : Λ ω t ⊆ ball 0 ρ := subset_ball_of_lt_clusterExitTime_cover hρ hM ht hF
         have hne : (cell ε (S.η ω) k ∩ ball 0 ρ).Nonempty := ⟨y, hyc, hball hyI.1⟩
         have hC' : ∀ k : ℤ, (cell ε (S.η ω) k ∩ ball 0 ρ).Nonempty →
             ε ^ (2 / (2 - γ) ^ 2 + 1 / (2 + γ) ^ 2) ≤ diam (cell ε (S.η ω) k) ∧

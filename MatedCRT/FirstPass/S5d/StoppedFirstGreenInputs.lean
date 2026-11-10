@@ -117,7 +117,7 @@ theorem stoppedFirstGreenStep_of_inputs (𝒮 : SpaceFillingSLEModel) (hin : Sto
   obtain ⟨h1, h2, h3⟩ := hωE
   have hε : (0 : ℝ) < ε := hε0
   have hT : t < clusterExitTime (Λ ω) ρ := hωF
-  have hΛball : Λ ω t ⊆ ball 0 ρ := subset_ball_of_lt_clusterExitTime hρ hmono ht hT
+  have hΛball : Λ ω t ⊆ ball 0 ρ := subset_ball_of_lt_clusterExitTime_cover hρ hmono ht hT
   -- the targets lie in the killing set: their cells meet `Λ_t`, and the floor makes them cluster vertices
   have hclMem : ∀ a ∈ stoppedTargetSet S Λ δ t ε ω, a ∈ stoppedKillSet S Λ ρ t ε ω := by
     intro a ha
