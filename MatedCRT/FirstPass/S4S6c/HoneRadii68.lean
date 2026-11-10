@@ -2,6 +2,8 @@ import MatedCRT.FirstPass.S4S6c.ShellHoneInst68
 import MatedCRT.FirstPass.S4S6c.ShellWindowRf68
 import MatedCRT.FirstPass.S4S6c.ShellChainGlue68
 import MatedCRT.FirstPass.S4S6c.ShellHde68
+import MatedCRT.FirstPass.S3t.WalkAdjacency
+import MatedCRT.Proofs.Infra.RandomWalk
 
 /-!
 # Dischargers of the leaf binders of `shellOneTest_of_direct` (z12, fp-S4S6c-hone-radii)
@@ -141,6 +143,30 @@ theorem radius_bounds_of_walk {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η
   obtain ⟨h1, h2⟩ := hRf _ (shellCentre_mem_of_walk hη hε hr hrρ hd hds hs4 hNs hmesh hF0 h0 hKb hRf hadj hst hτ k hk)
   exact ⟨hdr.trans h1, h2.trans (Real.rpow_le_one hd.le hd1 ha0)⟩
 
+/-- **`hRr` in the almost-sure form of `ShellOneTestAt` (ShellHoneInst68.lean:41-43).** `ShellOneTestAt` quantifies over
+`k ≤ n` and over walks `x` almost surely under `srwLaw m s0`. Almost surely: consecutive cells meet
+(`TruncatedLaws.srwLaw_cells_meet_ae`, from the edge condition `hedge`), `x 0 = s0` (`srwLaw_ae_start`), and the killed
+exit is finite (`hτ`, an input). Then `radius_bounds_of_walk` applies. -/
+theorem radius_bounds_ae {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (hε : 0 < ε)
+    {m : ℤ → ℤ → ℕ} (hedge : ∀ j k : ℤ, m j k ≠ 0 → (cell ε η j ∩ cell ε η k).Nonempty) (s0 : ℤ)
+    {Θ F0 : Finset ℤ} {ρ r d a : ℝ} {Rf : ℂ → ℝ} {n : ℕ} (hr : 0 < r) (hrρ : r ≤ ρ / 4) (hd : 0 < d) (hd1 : d ≤ 1)
+    (ha0 : 0 ≤ a) (hdr : r ^ 2 ≤ d) (hds : d ≤ d ^ a) (hs4 : d ^ a ≤ r / 4000)
+    (hNs : 20 * ((n + 1 : ℕ) : ℝ) * d ^ a ≤ r / 20)
+    (hmesh : CellDiamLe ε η (d / 100) Set.univ)
+    (hF0 : (↑F0 : Set ℤ) = cellVertices ε η (Metric.ball (0 : ℂ) ρ))
+    (h0 : (0 : ℂ) ∈ fillCells ε η ↑Θ) (hKb : fillCells ε η ↑Θ ⊆ Metric.ball (0 : ℂ) (ρ / 2))
+    (hRf : ∀ z ∈ shortEligible ρ d a, d ≤ Rf z ∧ Rf z ≤ d ^ a)
+    (hst : (cell ε η s0 ∩ frontier (Metric.thickening (r / 2) (fillCells ε η ↑Θ))).Nonempty)
+    (hτ : ∀ᵐ x ∂srwLaw m s0, vExitTime (killed ε η Θ F0 r) x ≠ ⊤) :
+    ∀ k ≤ n, ∀ᵐ x ∂srwLaw m s0, r ^ 2 ≤ Rf (shellCentre ε η (fillCells ε η ↑Θ) r (d ^ a) d k x) ∧
+      Rf (shellCentre ε η (fillCells ε η ↑Θ) r (d ^ a) d k x) ≤ 1 := by
+  intro k hk
+  filter_upwards [MatedCRT.TruncatedLaws.srwLaw_cells_meet_ae hε.le hedge s0,
+    MatedCRT.srwLaw_ae_start m s0, hτ] with x hadj hx0 hτx
+  have hst' : (cell ε η (x 0) ∩ frontier (Metric.thickening (r / 2) (fillCells ε η ↑Θ))).Nonempty := by
+    rw [hx0]; exact hst
+  exact radius_bounds_of_walk hη hε hr hrρ hd hd1 ha0 hdr hds hs4 hNs hmesh hF0 h0 hKb hRf hadj hst' hτx k hk
+
 /-- **Small-scale exponent bound (real analysis).** If `2 ω < κ` and `ε ≤ c₀ ^ (1 / (κ - 2 ω))`, then
 `ε ^ (κ - 2 ω) ≤ c₀`. Used to turn the ε-smallness of `hεsm` into an explicit hypothesis. -/
 theorem rpow_sub_le_of_small {ε κ ω c0 : ℝ} (hε : 0 < ε) (hc0 : 0 < c0) (hκ : 2 * ω < κ)
@@ -171,3 +197,4 @@ end MatedCRT
 #print axioms MatedCRT.Lemma68HoneRadii.radius_bounds_of_walk
 #print axioms MatedCRT.Lemma68HoneRadii.rpow_sub_le_of_small
 #print axioms MatedCRT.Lemma68HoneRadii.hεcell_of_scale_small
+#print axioms MatedCRT.Lemma68HoneRadii.radius_bounds_ae
