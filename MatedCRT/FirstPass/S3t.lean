@@ -1,6 +1,7 @@
 import MatedCRT.FirstPass.S3t.Integrate
 import MatedCRT.FirstPass.S3t.EpsShell
 import MatedCRT.FirstPass.S3t.BoundaryShells
+import MatedCRT.FirstPass.Frozen.S3S4b
 import MatedCRT.FirstPass.S3t.RiemannSum
 import MatedCRT.FirstPass.S3t.CellGeometry
 import MatedCRT.FirstPass.S3t.VanishingMesh
@@ -315,6 +316,48 @@ theorem truncatedQuenchedLawsFixedTime_of_walk {Ω : Type} [MeasurableSpace Ω] 
     (χ := (χ : ℝ)) (α := 2 / (2 + γ) ^ 2 - ζ) hT hg hM (by exact_mod_cast hχ) hα
     (Good := fun ε ω => MeshGood S γ ζ ρ ε ω ∧ WalkEnvAe S ω) hOcc hShell hShellLimit hShellMeas hMesh hMInv hmpos
     hpath
+
+/-! ## The four-binder target, staged (fp-S3t-staged-inputs, z8)
+
+`FrozenTruncatedQuenchedLawsFixedTime 𝒮` (`Frozen/S3S4b.lean:102`) from the four binders `h211 h28 hm hexit`. The continuity
+of the limit at the regular exits is derived by z10 (`stoppedOccupation_tendsto_discrete`, `ContinuumUnderDiscrete.lean`,
+and `shell_tendsto_discrete`, `BoundaryShells.lean`). The two Brownian measurability facts still routed to ChatGPT are
+the only extra binders: `hmeas` (Step 6, for the indicator of the Brownian stopped occupation of every disk) and
+`hShellMeas` (G1, measurability in `ω` of the Brownian shell functional with the exhaustion radius `(r - dist y z)/2`). -/
+
+/-- The truncated quenched laws at a fixed time, from the four binders and the two routed measurability facts. -/
+theorem truncatedQuenchedLawsFixedTime_of_inputs_staged {𝒮 : SpaceFillingSLEModel}
+    (h211 : RandomWalkToLBMStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮) (hm : MepsScalingInput 𝒮)
+    (hexit : BrownianOutwardExcursionAtExitStep)
+    (hmeas : ∀ (γ : ℝ), 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      ∀ (y z : ℂ) (s T : ℝ), 0 ≤ T → ∀ᵐ ω ∂S.P, AEStronglyMeasurable
+        (fun b => stoppedOccupation (Metric.ball z s) T (fun _ => 1) (rescaledLBMPath (S.clock ω) S.m₀ b))
+        (planarBrownianMotion y))
+    (hShellMeas : ∀ (γ : ℝ), 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      ∀ (y z : ℂ) (r T : ℝ) (n : ℕ), y ∈ Metric.ball z r → 0 ≤ T → AEMeasurable
+        (fun ω => ∫ b, shellTime (ballExhaustion z r ((r - dist y z) / 2) n) (Metric.ball z r) T
+          (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y) S.P) :
+    MatedCRT.FrozenTruncatedQuenchedLawsFixedTime 𝒮 := by
+  intro γ hγ0 hγ2 ρ hρ0 hρ1 Ω _ S hS r z y hr hball hy g hgc hMex hHex T hT
+  obtain ⟨M0, hgb0⟩ := hMex
+  obtain ⟨C, χ, hχ, hgH⟩ := hHex
+  have hMpos : (0 : ℝ) < max M0 1 := lt_of_lt_of_le one_pos (le_max_right _ _)
+  have hg : ∀ x, |g x| ≤ max M0 1 := fun x => (hgb0 x).trans (le_max_left _ _)
+  have ha : 0 < (r - dist y z) / 2 := exhaustion_radius_pos hy
+  have hya : dist y z < r - (r - dist y z) / 2 := by
+    have := Metric.mem_ball.1 hy
+    linarith
+  -- Step 5 (z10): quenched convergence of the stopped occupation, continuity derived.
+  have hOcc := stoppedOccupation_tendsto_discrete h211 hγ0 hγ2 Ω S hS hy hT.le hgc hgb0 hexit
+  -- Step 6 (z10): shell functionals, convergence in probability and a.s. limit.
+  have hsh := shell_tendsto_discrete h211 hγ0 hγ2 Ω S hS (a := (r - dist y z) / 2) ha.le hya hT.le hexit
+    (fun s => hmeas γ hγ0 hγ2 Ω S hS y z s T hT.le)
+  -- Steps 7, 8, 10, 11, 12 (walk theorem, proved).
+  exact truncatedQuenchedLawsFixedTime_of_walk hγ0 hγ2 S hS h28 hm (ζ := 1 / (2 + γ) ^ 2) (ρ := ρ)
+    (by positivity) (by gcongr; norm_num) hρ0 hρ1 hr hy hball ha g hgc hχ hgH hT hg hMpos hOcc hsh.1 hsh.2
+    (fun n => hShellMeas γ hγ0 hγ2 Ω S hS y z r T n hy hT.le)
+
+#print axioms truncatedQuenchedLawsFixedTime_of_inputs_staged
 
 #print axioms truncatedQuenchedLawsFixedTime_of_steps
 #print axioms truncatedQuenchedLawsFixedTime_of_walk
