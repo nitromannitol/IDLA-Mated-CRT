@@ -4,6 +4,11 @@ import MatedCRT.FirstPass.Frozen.S1c
 /-!
 # Borel replacement for the locality Step `ConeHarmonicBallLocalityStep` (fp-S2x-hM-replacement)
 
+**`hA` RETIRED** (operator, chat 223; notes/fp-gaps/CHATGPT-223-idla-z9-hA-analytic-PRO.md): `hA` is FALSE as typed, so the
+route below is not a proof of the Step. The Step is proved with `S = Set.univ` and no `hA` by
+`coneHarmonicBallLocalityStep_of_univ` (FirstPass/S2x/ConeHarmonicBallLocalityUniv.lean). Do not use `hA` or
+`coneHarmonicBallLocalityStep_of_borel` as an input.
+
 `coneHarmonicBallLocalityStep_of_locality` (ConeHarmonicBallLocality.lean) reduces `ConeHarmonicBallLocalityStep` to a
 measurability hypothesis `hM` on the raw set `coneHarmonicBallSet γ ⊆ (UnitBallCircle → ℝ)`. That hypothesis is false as
 typed: membership is not decided by countably many coordinates, so the raw set is not product-measurable (CHATGPT-213 PRO
@@ -93,7 +98,7 @@ measurable set `S` of restrictions to `B_1` works for the quantum cone and for `
 * `hR = ConeRestrictionStep` (IR-A1: the restriction laws of cone and whole-plane fields agree);
 * `hQ`: for each `γ ∈ (0, 2)` there is a quantum cone (existence; the lateral part of a cone gives a whole-plane GFF);
 * `hA`: the coded event is analytic modulo the whole-plane restriction law. This is the internal coding step of CHATGPT-213
-  section 3 (step 3, the set of codes admitting witnesses `ν, T, Λ` is analytic), which no source states; it is NOT proved here.
+  section 3 (step 3, the set of codes admitting witnesses `ν, T, Λ` is analytic), which no source states; it is NOT proved here. RETIRED: `hA` is false as typed (module docstring).
 `ConeHarmonicBallLocalityStep` is not used as an input (ruling 43(c)). -/
 theorem coneHarmonicBallLocalityStep_of_borel
     (hL : ∀ ν ν' : Measure ℂ, ν.restrict (ball 0 1) = ν'.restrict (ball 0 1) →
