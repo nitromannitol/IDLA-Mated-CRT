@@ -8,6 +8,11 @@ import MatedCRT.FirstPass.S5d.ClusterFromOdometer
 import MatedCRT.FirstPass.S5d.StoppedPathwise
 import MatedCRT.FirstPass.S5d.StoppedExitInput
 import MatedCRT.FirstPass.S5d.UnstoppedFromStopped
+import MatedCRT.FirstPass.S2j
+import MatedCRT.FirstPass.S3S4
+import MatedCRT.FirstPass.S1S2S8SA
+import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
+import MatedCRT.Proofs.Measurability.LQGMeasureField
 
 /-!
 # Proposition 5.1 (`firstPass_5_1`, task fp-S5d-5-1-stopped-repair)
@@ -48,5 +53,22 @@ theorem firstPass_5_1_of_steps (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrowth
       hfam h24
       (stoppedFirstGreenStep_of_steps 𝒮 (stoppedFirstGreenInputsStep_of_floorCeiling 𝒮 hfl hmax h218 h217 hμ hcell hlap)
         hcell hlap) hG2)
+
+/-- **Proposition 5.1 with the proved inputs plugged in (task fp-S5d, operator note 02:37 UTC).** Compared with
+`firstPass_5_1_of_steps`: `hμ` is `LQGMeasureField.lqgMeasureFieldMeasurableStep` (Proofs/Measurability/LQGMeasureField.lean:75),
+`hcell` is `adjacentCellsMeetAeStep` (Proofs/MatingOfTrees/AdjacentCells.lean:17), `hlap` is `firstPass_4_4_corrected`
+(FirstPass/S3S4.lean:42), `h217` is `firstPass_2_17 h27` (FirstPass/S1S2S8SA.lean:53); the cone-family input `hfam` is replaced by
+the hypotheses of `coneFamilyAEMeasurable_proved` (FirstPass/S2j.lean:32). The remaining hypotheses are the Draft statements
+`h27`, `h28`, `h24`, `h218`, the cone inputs `hcan`, `hcl`, `hE1`, `hE2`, `hscale`, `h22`, the open steps `hfl`, `hmax` ([C21]) and
+`hG2` (`StoppedSecondGreenStep`, split to z2). -/
+theorem firstPass_5_1_of_open_steps (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
+    (hcan : ConeCanonicalHalfBallStep) (hcl : ConeHalfBallClosureInsideStep) (hE1 : ConeCircleLawUniqueStep)
+    (hE2 : ConeReferenceExistsStep) (hscale : QuantumConeScalingInput) (h22 : LQGMeasurePropertiesStmt)
+    (h24 : ConeHarmonicBallsUpToFixedTimeStmt) (hfl : StoppedFloorStep 𝒮) (hmax : StoppedMaxOutsideStep 𝒮)
+    (h218 : ExitTimeUpperBoundStmt 𝒮) (hG2 : StoppedSecondGreenStep 𝒮) :
+    IDLALowerBoundStmt 𝒮 :=
+  firstPass_5_1_of_steps 𝒮 h27 h28 (coneFamilyAEMeasurable_proved hcan hcl h27 hE1 hE2 hscale h22) h24 hfl hmax h218
+    (firstPass_2_17 h27) (LQGMeasureField.lqgMeasureFieldMeasurableStep 𝒮) (adjacentCellsMeetAeStep 𝒮)
+    (firstPass_4_4_corrected 𝒮) hG2
 
 end MatedCRT
