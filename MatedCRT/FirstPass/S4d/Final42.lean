@@ -12,6 +12,9 @@ import MatedCRT.FirstPass.S4d.Provider24
 import MatedCRT.FirstPass.S1S2S8SA
 import MatedCRT.FirstPass.S3S4
 import MatedCRT.FirstPass.S3S4c
+import MatedCRT.FirstPass.S3S4b
+import MatedCRT.FirstPass.S3g
+import MatedCRT.FirstPass.S3f.FiniteDomainRepresentation
 
 /-!
 # FIRST PASS, Proposition 4.2 (prop:div-sandpile-lower-bound): the assembly (q4, fp-S4d-4-2-assembly)
@@ -36,6 +39,11 @@ import MatedCRT.FirstPass.S3S4c
 * `h33` (Draft Lemma 3.3, `UniformConvergenceGreenKernelStmt`) := `firstPass_3_3` (`FirstPass/S3S4.lean`) from `h210`, `h34`,
   `h214`, `h28`, `h27`, `h218`, `hm`, `hH`; no new hypothesis.
 
+* `h35` (Draft Lemma 3.5, `DiscreteDirichletProblemStmt`) := `MatedCRT.FirstPass35Bridge.discreteDirichletProblem_of_corrected_of_steps`
+  (`FirstPass/S3g.lean`, z8) from `firstPass_3_5_corrected` (`FirstPass/S3S4b.lean`), with `hfinite` :=
+  `MatedCRT.FirstPass37.frozenFiniteDomainDirichletRepresentation_proved` (`FirstPass/S3f/FiniteDomainRepresentation.lean`, proved).
+  The corrected Lemma 3.6 convergence conjunct `h36` (`CorrectedHarmonicConvergenceStmt`) is the explicit input replacing `h35`.
+
 The remaining explicit input replacing `hRU` is the frozen `hrescale : ConeRescaledMeasureIsConeFieldInput`
 (`FirstPass/Frozen/S4d2.lean`, truth check TRUE, chat 153); `hRU` is derived from it in the proof.
 The cone externals `hE1`, `hE2` stay explicit (`FirstPass/Frozen/S2i.lean`).
@@ -52,7 +60,7 @@ external hypotheses listed in the signature. The statement of Proposition 4.2 is
 theorem firstPass_4_2_of_wholeplane_model {𝒮 : SpaceFillingSLEModel}
     (hm : MepsScalingInput 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)
     (h214 : GreenKernelUpperBoundStmt 𝒮)
-    (h28 : CellSizeEstimateStmt 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
+    (h28 : CellSizeEstimateStmt 𝒮) (h36 : CorrectedHarmonicConvergenceStmt 𝒮)
     (h218 : ExitTimeUpperBoundStmt 𝒮) (h27 : VolumeGrowthStmt)
     (hH : FrozenDiscreteHolderContinuityCorrected 𝒮)
     (hEnvS : ConeEnvironmentScalingUnderSLE 𝒮) (hsc : SLEScaleInvarianceInput 𝒮)
@@ -90,6 +98,9 @@ theorem firstPass_4_2_of_wholeplane_model {𝒮 : SpaceFillingSLEModel}
     (coneRescaledHalfBallHorizonUnique_fp hcan hcl hrescale)
   have h23 := firstPass_2_3 h24 h25 h27 hscale h22
   have h34 := MatedCRT.S3S4c.firstPass_3_4 h27 h218 hm hrevuz hdet
+  have h35 := MatedCRT.FirstPass35Bridge.discreteDirichletProblem_of_corrected_of_steps h28
+    (firstPass_3_5_corrected h27 hm h210 h34 h214 h28 h218 hH
+      MatedCRT.FirstPass37.frozenFiniteDomainDirichletRepresentation_proved h36)
   have h33 := firstPass_3_3 h210 h34 h214 h28 h27 h218 hm hH
   exact firstPass_4_2_of_halfball_gate hm h210 h34 h214 h28 h35 h218 h27 hH (hEnvS hsc hrp hind) h23 h24
     h25 h33 hG hpc hsmp hwmp hpole
