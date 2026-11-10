@@ -619,6 +619,42 @@ theorem shellHit_interior_of_mesh {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < ε) (
   rw [frontier_ball _ hR3.ne'] at hzf
   exact absurd (Metric.mem_sphere.1 hzf) (ne_of_lt (hball z hz))
 
+/-- **`shellHit_interior_of_mesh` at the hit vertex (path-level, q4 fp-S4S6c-goodenv-local).** The univ mesh is used only
+on the cell of the hit vertex `x t`, so the binder `hmesh` (univ form) is replaced by the cell diameter bound `hcell` on
+that cell. The walk supplies `hcell` up to its exit time (`Lemma68PathMesh.diam_upto_vExitTime`, PathMesh68.lean),
+which is why the hit time must not exceed the exit time there. -/
+theorem shellHit_interior_of_cellDiam {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < ε) (Kset : Set ℂ) {r s d : ℝ} {R : ℂ → ℝ}
+    (hd : 0 < d) (k : ℕ) (x : ℕ → ℤ)
+    (hR : d ≤ R (shellCentre ε η Kset r s d k x)) (t : ℕ)
+    (ht : shellHit ε η Kset r s k x = (t : ℕ∞))
+    (hcell : ∀ p ∈ cell ε η (x t), ∀ q ∈ cell ε η (x t), dist p q ≤ d / 100) :
+    x t ∈ interiorCellVertices ε η
+      (ball (shellCentre ε η Kset r s d k x) (4 * R (shellCentre ε η Kset r s d k x) / 3)) := by
+  have hdt : (shellHit ε η Kset r s k x).toNat = t := by rw [ht]; simp
+  have hcdef : shellCentre ε η Kset r s d k x
+      = MatedCRT.Lemma68Window.gridRound (d / 100) (vertexPoint ε η (x t)) := by
+    unfold shellCentre
+    rw [hdt]
+  have hpc : dist (shellCentre ε η Kset r s d k x) (vertexPoint ε η (x t)) ≤ d / 100 := by
+    rw [hcdef]
+    exact MatedCRT.Lemma68Window.dist_gridRound_le (by linarith) _
+  have hpcell : vertexPoint ε η (x t) ∈ cell ε η (x t) :=
+    ⟨ε * ((x t : ℤ) : ℝ), ⟨by nlinarith [hε], le_rfl⟩, rfl⟩
+  have hRpos : 0 < R (shellCentre ε η Kset r s d k x) := lt_of_lt_of_le hd hR
+  have hball : ∀ z ∈ cell ε η (x t), dist z (shellCentre ε η Kset r s d k x)
+      < 4 * R (shellCentre ε η Kset r s d k x) / 3 := by
+    intro z hz
+    have h1 : dist z (vertexPoint ε η (x t)) ≤ d / 100 :=
+      hcell z hz (vertexPoint ε η (x t)) hpcell
+    have h2 := dist_triangle z (vertexPoint ε η (x t)) (shellCentre ε η Kset r s d k x)
+    rw [dist_comm (vertexPoint ε η (x t)) (shellCentre ε η Kset r s d k x)] at h2
+    linarith
+  have hR3 : 0 < 4 * R (shellCentre ε η Kset r s d k x) / 3 := by linarith
+  refine ⟨⟨vertexPoint ε η (x t), hpcell, Metric.mem_ball.2 (hball _ hpcell)⟩, ?_⟩
+  rintro ⟨z, hz, hzf⟩
+  rw [frontier_ball _ hR3.ne'] at hzf
+  exact absurd (Metric.mem_sphere.1 hzf) (ne_of_lt (hball z hz))
+
 /-- **`hb` almost surely from the mesh and the window radius (operator request 64e closed).** This replaces
 `hb_ae_valid_centre`: the hit-cell interiority `hhit` is no longer named. It follows from `hmesh` (the grid mesh
 `CellDiamLe ε (S.η ω) (d / 100)`) and `hR` (the window radius at the shell centre is at least `d`, which holds where the
