@@ -6,6 +6,8 @@ import MatedCRT.FirstPass.LPBridge.MinimumPrinciples
 import MatedCRT.FirstPass.LPBridge.LQGTestIntegralMeasurable
 import MatedCRT.FirstPass.LPBridge.PunctureConnected
 import MatedCRT.FirstPass.LPBridge.FiniteMeasureStandardBorel
+import MatedCRT.FirstPass.LPBridge.UniversalMeasurability
+import HarmonicBalls.Steps.Sec2.GreenFunctionBall
 
 /-!
 # In-repository proofs of two frozen inputs of the first pass
@@ -66,5 +68,15 @@ theorem frozenPunctureConnected_inRepo : FrozenPunctureConnected :=
 bridge to `frozenFiniteMeasureDiskStandardBorel_holds` (FirstPass/LPBridge/FiniteMeasureStandardBorel.lean). -/
 theorem frozenFiniteMeasureDiskStandardBorel_inRepo : FrozenFiniteMeasureDiskStandardBorel :=
   frozenFiniteMeasureDiskStandardBorel_holds
+
+/-- The Harmonic-Balls Draft statement `HarmonicBalls.GreenFunctionBallStmt` (HarmonicBalls/Draft/Section2.lean:68),
+one-line bridge to `HarmonicBalls.greenFunctionBall` (Harmonic-Balls-LQG HarmonicBalls/Steps/Sec2/GreenFunctionBall.lean:156). -/
+theorem greenFunctionBall_inRepo : HarmonicBalls.GreenFunctionBallStmt :=
+  HarmonicBalls.greenFunctionBall
+
+/-- Universal measurability of analytic sets (`FrozenUniversalMeasurabilityOfAnalytic`), one-line bridge to
+`frozenUniversalMeasurabilityOfAnalytic_holds` (FirstPass/LPBridge/UniversalMeasurability.lean:18). -/
+theorem frozenUniversalMeasurabilityOfAnalytic_inRepo : FrozenUniversalMeasurabilityOfAnalytic :=
+  frozenUniversalMeasurabilityOfAnalytic_holds
 
 end MatedCRT
