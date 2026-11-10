@@ -32,13 +32,14 @@ noncomputable def discreteSupNorm (ε : ℝ) (η : ℝ → ℂ) (D : Set ℂ) (f
   ⨆ k ∈ cellVertices ε η D, |f k|
 
 /-- **(BE)**, the one-sided boundary continuity estimate of discrete harmonic functions, the upper half of GMS Theorem 3.9
-eq. (3.31) (derived from the two-sided statement). For `γ ∈ (0,2)` and `ρ ∈ (0,1)`, every valid environment `S`
-(`S.IsValid 𝒮 γ`), there are exponents `κ, ν`, a constant `A` and `b > 0` such that, with polynomially high probability
+eq. (3.31) (derived from the two-sided statement). GMS = Gwynne-Miller-Sheffield, *Harmonic functions on mated-CRT
+maps* (bibkey `gwynne2019harmonic`, `docs/campaign/GRAPH.md`); the source of the one-sided form is that Theorem 3.9.
+For `γ ∈ (0,2)` and `ρ ∈ (0,1)`, every valid environment `S` (`S.IsValid 𝒮 γ`), there are exponents `κ, ν`, a constant `A` and `b > 0` such that, with polynomially high probability
 (`PolyHighProb`), every simply connected domain `D ⊆ B_ρ` and every discrete function `f` which is mated-harmonic on the
 interior cells of `D`, and every vertex `x ∈ V^ε(D)` and `t > 0`,
 `f(x) ≤ max_{V^ε(∂D ∩ B_t(η x))} f + A ‖f‖_{∞, V^ε(D)} (t / dist(η x, ∂D))^{-ν}`.
 Chat 202: UNCLEAR as previously typed; repaired binder order (the existential over `κ, ν, A, b` now sits after
-`S.IsValid 𝒮 γ`, per coupling, as in the other freezes), PENDING TRUTH CHECK of the repaired form.
+`S.IsValid 𝒮 γ`, per coupling, as in the other freezes); operator truth check (10:10 UTC): the repaired form is TRUE.
 Frozen with `𝒮` as a parameter; used only as a hypothesis of the annealed clause. -/
 def FrozenOneSidedBoundaryContinuity (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
