@@ -1,26 +1,28 @@
 import MatedCRT.FirstPass.S6r.LocalBudget
 import MatedCRT.FirstPass.S6r.OneTest.WalkStateFirst
 import MatedCRT.FirstPass.S4S6c.HoneInputsDirect
+import MatedCRT.FirstPass.S4S6c.HdiamHvol68
 
 /-!
-# The mass-relative sparsity of the walk-centred hone (fp-S4S6c-hsp-repair; chat 226 l.117-186, patch item 1)
+# The walk-centred hone with the repaired hsp, hdiam and hVol (fp-S4S6c-hsp-repair; chat 226 patch item 1; z10 P1-P3)
 
 The binder `hsp` of `hone_exitQ_walk_of_env_direct` (S4S6c/HoneInputsDirect.lean:83) asks for
 `#(A ∩ V^ε(B_{c0 R_k}(w))) < s1 (c0 R_k)^{2 βm} / ε`. Chat 226 shows that this is false for the intended scales: the
 Lemma 6.8 sparsity at the theorem radius `r` gives `s1 r^{2 βm} / ε` with `r² ≤ R_k`, so only `R_k^{βm}` is available.
+The repaired binder is mass-relative: `ε #(A ∩ V^ε(B_{c0 R_k}(w))) ≤ (1/16) μ(B_{c0 R_k}(w))` for every centre `w`.
 
-This file gives the repaired binder in mass-relative form, `ε #(A ∩ V^ε(B_{c0 R_k}(w))) ≤ (1/16) μ(B_{c0 R_k}(w))`:
-* `hsp_massRel_of_lemma68` derives it from the Lemma 6.8 sparsity at radius `r`, `c0 R ≤ r`, `r² ≤ R`, `16 s1 ≤ c0^βm`
-  and a volume lower bound `(c0 R)^βm ≤ μ(B_{c0 R}(w))` (named binder; Lemma 2.7, `VolumeGrowthStmt`).
-* `firstMoment_walkState_massRel`, `hone_exitQ_walk_massRel`, `hone_exitQ_walk_of_env_massRel` and
-  `hone_exitQ_walk_of_env_direct_massRel` are copies of `firstMoment_walkState` (WalkStateFirst.lean:18),
-  `hone_exitQ_walk` (HoneWalk.lean:37), `hone_exitQ_walk_of_env` (HoneInputs.lean:39) and
-  `hone_exitQ_walk_of_env_direct` (HoneInputsDirect.lean:83), with only `hsp` replaced; all other binders are unchanged.
-* The first-moment proof uses the sparsity at the centre only: `firstMoment_occCount_fm_loc` is
-  `firstMoment_occCount_fm` (FirstMoment.lean:120) with the radius-`r` sparsity and the ball mass replaced by the
-  centre count `hloc` (the conclusion of `localCount_of_ball`, LocalBudget.lean:33, at `x = η(εy)`, radius `c0 R`).
+Contents:
+* `hsp_massRel_of_lemma68`: this binder from the Lemma 6.8 sparsity at radius `r`, `c0 R ≤ r`, `r² ≤ R`, `16 s1 ≤ c0^βm`
+  and a named volume lower bound `hvol` (all centres).
+* `firstMoment_occCount_fm_loc`, `firstMoment_walkState_massRel`, `hone_exitQ_walk_massRel`: the first-moment and walk
+  chain with the mass-relative `hsp` (only the centre count is used; `firstMoment_occCount_fm`, FirstMoment.lean:120).
+* `hone_exitQ_walk_of_env_repaired` (copy of HoneInputs.lean:39): `hVol` replaced by `hVolC`, `hVolY` (P1); `hvol`,
+  `hvol2` from `hvol_of_direct68` (HdiamHvol68.lean:146).
+* `hone_exitQ_walk_of_env_direct_repaired` (copy of HoneInputsDirect.lean:83), the final theorem. `hdiam` is derived by
+  `hdiam_of_rmin68` (HdiamHvol68.lean:124, route B: no exponent inequality, no `r ≥ 10 ε^ω0` binder); `hCellGood` is the
+  mesh bound on `B_{ρc+3/8}` (P2); `hVol` is `hVolC`, `hVolY` (P3); `hsp` is mass-relative.
 
-The original chain is not changed. Its `hsp` is the exponent-`2 βm` form that chat 226 shows to be false.
+The originals (HoneWalk.lean:37, HoneInputs.lean:39, HoneInputsDirect.lean:83) are unchanged.
 -/
 
 open MeasureTheory Set Filter Metric
@@ -358,13 +360,13 @@ theorem hone_exitQ_walk_massRel {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : �
     hmom1 hmom2 (mm := fun k ω => (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal)
     (R := R) hm hRr hstep1 hstep2
 
--- Copy of `hone_exitQ_walk_of_env` (HoneInputs.lean:39) with hsp replaced by its mass-relative form
--- (fp-S4S6c-hsp-repair; chat 226 l.176-182). Other binders unchanged.
+-- Repaired copy of `hone_exitQ_walk_of_env` (HoneInputs.lean:39), P1 of the z10 consumer patch: hsp
+-- mass-relative (fp-S4S6c-hsp-repair); hVol replaced by hVolC, hVolY; hvol, hvol2 from hvol_of_direct68.
 /-- **The hone of `exitQ_le_pow` at the walk-centred test end, with the discharged environment inputs removed.**
 Same conclusion as `hone_exitQ_walk_massRel`. The finiteness, null-singleton, `ρS`, `hvol`, `hvol2` and `hGrLow` inputs are derived
-from the good-event hypotheses `hVol` (volume lower bound at all scales in `[rmin, 1/4]`), `hGreen` (lower Green bound)
+from the good-event hypotheses `hVolC`, `hVolY` (P1: random-radius volume bounds, `hvol_of_direct68`), `hGreen` (lower Green bound)
 and `hWalk` (walk state in its domain). The moment, parameter, sparsity and configuration inputs stay named. -/
-theorem hone_exitQ_walk_of_env_massRel {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
+theorem hone_exitQ_walk_of_env_repaired {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
     (hprop : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε) (hεc : ε ≤ 16 * K.c0)
     {μ : Measure ℂ} [IsFiniteMeasureOnCompacts μ] (hμNull : ∀ v : ℂ, μ {v} = 0)
     (m : ℤ → ℤ → ℕ) (a : ℤ) (A : Set ℤ) (hA : MeasurableSet A) (n : ℕ) {τU : (ℕ → ℤ) → ℕ∞}
@@ -389,10 +391,12 @@ theorem hone_exitQ_walk_of_env_massRel {γ ρc : ℝ} (K : Constants68 γ ρc) (
         ≤ (1 / 16 : ℝ) * (μ (ball w (K.c0 * R k ω))).toReal)
     -- scale range of the good event: every walk test radius satisfies `rmin ≤ c₀ R` (configuration input, q2)
     (rmin : ℝ)
-    (hRmin : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, rmin ≤ K.c0 * R k ω)
-    -- good event of the volume lower bound (lower half of `VolumeGrowthStmt`, all scales in `[rmin, 1/4]`)
-    (hVol : ∀ δ : ℝ, rmin ≤ δ → δ ≤ 1 / 4 → ∀ z ∈ ball (0 : ℂ) (1 - δ),
-      ENNReal.ofReal (δ ^ K.βm) ≤ μ (ball z δ))
+    (_hRmin : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, rmin ≤ K.c0 * R k ω)
+    -- good event of the volume lower bound (P1: the two random-radius volume bounds at `c₀R_k` and `R_k/4`, see `hvol_of_direct68`)
+    (hVolC : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ENNReal.ofReal ((K.c0 * R k ω) ^ K.βm) ≤ μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω)))
+    (hVolY : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ∀ y ∈ ball (0 : ℂ) (1 - R k ω / 4), ENNReal.ofReal ((R k ω / 4) ^ K.βm) ≤ μ (ball y (R k ω / 4)))
     -- good event of the lower Green bound (second conjunct of `GreenKernelLowerBoundStmt`, exponent `K.ω`,
     -- constant `K.C`, radius `ρc`)
     (hGreen : ∀ a ∈ cellVertices ε η (ball 0 (ρc - ε ^ K.ω)), ∀ r : ℝ, ε ^ K.ω ≤ r →
@@ -464,24 +468,8 @@ theorem hone_exitQ_walk_of_env_massRel {γ ρc : ℝ} (K : Constants68 γ ρc) (
       K.c0 * R k ω ≤ R k ω / 24 := fun k ω hω => by
     have h := mul_le_mul_of_nonneg_right K.hc0' (hRpos k ω hω).le
     linarith
-  -- `hvol`: the good volume bound at `δ = c₀R`, centre `v` with `‖v‖ < 1 - R/4 ≤ 1 - c₀R`
-  have hvol : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
-      (K.c0 * R k ω) ^ K.βm ≤ (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal := by
-    intro k ω hω
-    have hR1 := (hRr k ω hω).2
-    have hc := hcR k ω hω
-    have hR0 := hRpos k ω hω
-    have hz : vertexPoint ε η (ω (T k ω).toNat) ∈ ball (0 : ℂ) (1 - K.c0 * R k ω) := by
-      rw [mem_ball_zero_iff]
-      linarith [hx1 k ω hω]
-    have hlow := hVol (K.c0 * R k ω) (hRmin k ω hω) (by linarith) _ hz
-    exact (ENNReal.ofReal_le_iff_le_toReal (measure_ball_lt_top (μ := μ)).ne).mp hlow
-  -- `hvol2`: the good volume bound at `δ = R/4`, centres `y ∈ B_{1-R/4}`
-  have hvol2 : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
-      ∀ y ∈ ball (0 : ℂ) (1 - R k ω / 4), ENNReal.ofReal ((R k ω / 4) ^ K.βm) ≤ μ (ball y (R k ω / 4)) := by
-    intro k ω hω y hy
-    exact hVol (R k ω / 4) (by linarith [hRmin k ω hω, hcR k ω hω, hRpos k ω hω])
-      (by linarith [(hRr k ω hω).2]) y hy
+  -- `hvol`, `hvol2`: the two volume conclusions from the direct binders `hVolC`, `hVolY` (hvol_of_direct68)
+  obtain ⟨hvol, hvol2⟩ := hvol_of_direct68 K ε η hVolC hVolY
   -- `hGrLow`: the good Green bound at the walk state with `r = R/8`; `B(v, c₀R) ⊆ B(v, R/8/3)` since `c₀ ≤ 1/24`
   have hGrLow : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
       ∀ b ∈ cellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω)),
@@ -502,14 +490,15 @@ theorem hone_exitQ_walk_of_env_massRel {γ ρc : ℝ} (K : Constants68 γ ρc) (
     (fun k ω _ => (measure_ball_lt_top (μ := μ)).ne) (fun k ω _ v _ => hμNull v)
     (fun k ω _ => (measure_ball_lt_top (μ := μ)).ne) hdbl
 
--- Copy of `hone_exitQ_walk_of_env_direct` (HoneInputsDirect.lean:83) with hsp replaced by its mass-relative form
--- (fp-S4S6c-hsp-repair; chat 226 l.176-182). Other binders unchanged.
+-- Repaired copy of `hone_exitQ_walk_of_env_direct` (HoneInputsDirect.lean:83): P1-P3 of the z10 consumer patch
+-- with the mass-relative hsp (fp-S4S6c-hsp-repair). hdiam is derived (hdiam_of_rmin68, route B); hCellGood is the
+-- mesh bound on B_{ρc+3/8}; hVol is hVolC, hVolY.
 /-- **The hone of `exitQ_le_pow` at the walk-centred test end, direct inputs discharged from good events.**
 Same conclusion as `hone_exitQ_walk_of_env_massRel`. Removed binders: `hL29` (derived from `hCountGood`), `hcell` and `hh`
 (derived from `hCellGood` and `hεcell`, with `H := ε^θ`). New good-event binders: `hCountGood`, `hCellGood`, `hεcell`,
 with the exponent parameter `ζc`. Kept binders: `hfinE` and `hdiam` (the test balls `B(v, R/4)` leave the good-event
 domain `B_{ρc}`; see the report), and all configuration, moment and sparsity binders of `hone_exitQ_walk_of_env_massRel`. -/
-theorem hone_exitQ_walk_of_env_direct_massRel {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
+theorem hone_exitQ_walk_of_env_direct_repaired {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
     (hprop : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε) (hεc : ε ≤ 16 * K.c0)
     {μ : Measure ℂ} [IsFiniteMeasureOnCompacts μ] (hμNull : ∀ v : ℂ, μ {v} = 0)
     (m : ℤ → ℤ → ℕ) (a : ℤ) (A : Set ℤ) (hA : MeasurableSet A) (n : ℕ) {τU : (ℕ → ℤ) → ℕ∞}
@@ -526,18 +515,17 @@ theorem hone_exitQ_walk_of_env_direct_massRel {γ ρc : ℝ} (K : Constants68 γ
       (fun w => ((ballExitSigma ε η (walkParam ε η (R k) (T k) w)
         (postTimePath (fun n w => w n) (T k) w) : ℕ) : ℝ) ^ 2)) (srwLaw m a))
     (hRr : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, r ^ 2 ≤ R k ω ∧ R k ω ≤ 1)
-    (hdiam : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, ∀ k' : ℤ,
-      (cell ε η k' ∩ ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 4)).Nonempty →
-        diam (cell ε η k') ≤ K.c0 * R k ω)
     (hsp : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, ∀ w : ℂ,
       ε * ((A ∩ cellVertices ε η (ball w (K.c0 * R k ω))).ncard : ℝ)
         ≤ (1 / 16 : ℝ) * (μ (ball w (K.c0 * R k ω))).toReal)
     -- scale range of the good event: every walk test radius satisfies `rmin ≤ c₀ R` (configuration input, q2)
     (rmin : ℝ)
     (hRmin : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, rmin ≤ K.c0 * R k ω)
-    -- good event of the volume lower bound (lower half of `VolumeGrowthStmt`, all scales in `[rmin, 1/4]`)
-    (hVol : ∀ δ : ℝ, rmin ≤ δ → δ ≤ 1 / 4 → ∀ z ∈ ball (0 : ℂ) (1 - δ),
-      ENNReal.ofReal (δ ^ K.βm) ≤ μ (ball z δ))
+    -- good event of the volume lower bound (P1: the two random-radius volume bounds at `c₀R_k` and `R_k/4`, see `hvol_of_direct68`)
+    (hVolC : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ENNReal.ofReal ((K.c0 * R k ω) ^ K.βm) ≤ μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω)))
+    (hVolY : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ∀ y ∈ ball (0 : ℂ) (1 - R k ω / 4), ENNReal.ofReal ((R k ω / 4) ^ K.βm) ≤ μ (ball y (R k ω / 4)))
     -- good event of the lower Green bound (second conjunct of `GreenKernelLowerBoundStmt`)
     (hGreen : ∀ a ∈ cellVertices ε η (ball 0 (ρc - ε ^ K.ω)), ∀ r : ℝ, ε ^ K.ω ≤ r →
       r ≤ infDist (vertexPoint ε η a) (sphere 0 ρc) →
@@ -553,9 +541,9 @@ theorem hone_exitQ_walk_of_env_direct_massRel {γ ρc : ℝ} (K : Constants68 γ
     (hCountGood : ∀ D : Set ℂ, D ⊆ ball (0 : ℂ) ρc → ∀ w : ℤ → ℂ,
       (∀ k ∈ cellVertices ε η D, w k ∈ cell ε η k ∩ closure D) →
       ε⁻¹ * ∫ _ in D, (1 : ℝ) ∂μ - ε ^ (-1 + α) ≤ ∑' _ : cellVertices ε η D, (1 : ℝ))
-    -- NEW good-event input: upper half of Lemma 2.8 (`CellSizeEstimateStmt`) at radius `ρc`, exponent `2/(2+γ)² − ζc`
+    -- NEW good-event input: upper half of Lemma 2.8 (`CellSizeEstimateStmt`) at radius `ρc + 3/8` (P2: mesh bound on the larger ball), exponent `2/(2+γ)² − ζc`
     (ζc : ℝ) (hζc0 : 0 < ζc) (hζc1 : ζc < 1)
-    (hCellGood : ∀ k' : ℤ, (cell ε η k' ∩ ball (0 : ℂ) ρc).Nonempty →
+    (hCellGood : ∀ k' : ℤ, (cell ε η k' ∩ ball (0 : ℂ) (ρc + 3 / 8)).Nonempty →
       diam (cell ε η k') ≤ ε ^ (2 / (2 + γ) ^ 2 - ζc))
     -- NEW configuration input: the cell-size exponent is below the scale range `rmin` (ε small, as in Lemma 2.8's `ε → 0`)
     (hεcell : ε ^ (2 / (2 + γ) ^ 2 - ζc) ≤ rmin / 100)
@@ -594,13 +582,24 @@ theorem hone_exitQ_walk_of_env_direct_massRel {γ ρc : ℝ} (K : Constants68 γ
         (testEndExit ε η (walkParam ε η (R k) (T k)) (T k))).indicator (fun _ => (1 : ℝ)) | (hT k).measurableSpace] x
         ≤ 1 - q := by
   classical
+  -- (0) the vertex-cell diameter bound `hdiam` from `hdiam_of_rmin68` (P2, route B): `hWalk` gives that the walk
+  -- cell meets `B_{ρc}`; the mesh bound is `hCellGood` on `B_{ρc+3/8}`; `ε^θ ≤ rmin/100 ≤ c₀R_k` from
+  -- `hεcell` and `hRmin`. No exponent inequality and no `r ≥ 10 ε^ω0` binder (route A is not used).
+  have hWalkNE : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      (cell ε η (ω (T k ω).toNat) ∩ ball (0 : ℂ) ρc).Nonempty := by
+    intro k ω hω
+    obtain ⟨⟨x, hxc, hxb⟩, -, -⟩ := hWalk k ω hω
+    have h1 := mem_ball_zero_iff.mp hxb
+    have h0 := Real.rpow_pos_of_pos hε K.ω
+    exact ⟨x, hxc, mem_ball_zero_iff.mpr (by linarith)⟩
+  have hdiam := hdiam_of_rmin68 K ε η hη hε (ρ' := ρc + 3 / 8) le_rfl hCellGood hRr hWalkNE hεcell hRmin
   -- the single exponent `θ = 2/(2+γ)² − ζc` of the cell-size good event
   -- (1) every vertex cell of the walk has diameter `≤ ε^θ`, from `hCellGood` (its cell meets `B_{ρc}` by `hWalk`)
   have hcellD : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
       ∀ p ∈ cell ε η (ω (T k ω).toNat), ∀ q ∈ cell ε η (ω (T k ω).toNat), dist p q ≤ ε ^ (2 / (2 + γ) ^ 2 - ζc) := by
     intro k ω hω p hp q hq
     obtain ⟨⟨x, hxc, hxb⟩, -, -⟩ := hWalk k ω hω
-    have hxρ : x ∈ ball (0 : ℂ) ρc := by
+    have hxρ : x ∈ ball (0 : ℂ) (ρc + 3 / 8) := by
       have h1 := mem_ball_zero_iff.mp hxb
       have h0 := Real.rpow_pos_of_pos hε K.ω
       exact mem_ball_zero_iff.mpr (by linarith)
@@ -651,8 +650,8 @@ theorem hone_exitQ_walk_of_env_direct_massRel {γ ρc : ℝ} (K : Constants68 γ
     rw [hint, hsum] at hc
     exact hc
   -- the direct inputs of `hone_exitQ_walk_of_env_massRel`: `hL29`, `hcell` and `hh` (with `H := ε^θ`) are discharged
-  exact hone_exitQ_walk_of_env_massRel K ε η hη hprop hε hεc hμNull m a A hA n hr hr1 hq0c hq hC hCw hCg hT hR hmom1 hmom2
-    hRr hdiam hsp rmin hRmin hVol hGreen hWalk hfinE hL29' hsc hεα hεmass hb (H := fun _ _ => ε ^ (2 / (2 + γ) ^ 2 - ζc))
+  exact hone_exitQ_walk_of_env_repaired K ε η hη hprop hε hεc hμNull m a A hA n hr hr1 hq0c hq hC hCw hCg hT hR hmom1 hmom2
+    hRr hdiam hsp rmin hRmin hVolC hVolY hGreen hWalk hfinE hL29' hsc hεα hεmass hb (H := fun _ _ => ε ^ (2 / (2 + γ) ^ 2 - ζc))
     (fun k ω hω p hp q hq => hcellD k ω hω p hp q hq) (fun k ω hω => hsmallAll k ω hω) hx1 hmomS hgood hN hpos hdbl
 
 end Lemma68Window
@@ -661,5 +660,5 @@ end MatedCRT
 #print axioms MatedCRT.Lemma68Window.hsp_massRel_of_lemma68
 #print axioms MatedCRT.Lemma68Window.firstMoment_walkState_massRel
 #print axioms MatedCRT.Lemma68Window.hone_exitQ_walk_massRel
-#print axioms MatedCRT.Lemma68Window.hone_exitQ_walk_of_env_massRel
-#print axioms MatedCRT.Lemma68Window.hone_exitQ_walk_of_env_direct_massRel
+#print axioms MatedCRT.Lemma68Window.hone_exitQ_walk_of_env_repaired
+#print axioms MatedCRT.Lemma68Window.hone_exitQ_walk_of_env_direct_repaired
