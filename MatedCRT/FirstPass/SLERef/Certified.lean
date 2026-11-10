@@ -49,7 +49,7 @@ open MeasureTheory
 18. `FPSimilarityTransferCorrected 𝒮` (`MatedCRT/FirstPass/SLERef/Similarity.lean:33`).
 
 Conjuncts 2 to 18 are the per-model content of the existing package `SLEReferenceWithSimilarityInput` and of
-`SLEReferenceExtendedInput`, together with `HasReferenceEnvironments` of its reference witness. The closure conjunct
+`SLEReferenceExtendedCorrectedInput` (closure removed, operator note 07:50 UTC; conjunct 2, `SLEModelClosureInput 𝒮`, supplies the closure per model), together with `HasReferenceEnvironments` of its reference witness. The closure conjunct
 `ConeEnvironmentScalingUnderSLE 𝒮` is excluded (see the module docstring). -/
 def CertifiedReferenceModel (ν : ℝ → Measure SLEPathCode) (𝒮 : SpaceFillingSLEModel) : Prop :=
   HasNormalizedSLELaw 𝒮 ν ∧
