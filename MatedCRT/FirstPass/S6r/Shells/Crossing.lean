@@ -121,28 +121,29 @@ lemma firstShellHit_mem {ε : ℝ} {η : ℝ → ℂ} {X : ℕ → ℤ} {S : Set
     (cell ε η (X (firstShellHit ε η X S)) ∩ S).Nonempty :=
   Nat.sInf_mem (⟨n, hn⟩ : Set.Nonempty {m : ℕ | (cell ε η (X m) ∩ S).Nonempty})
 
-/-- Displayed (7.14): the starting cell `H_a` meets `∂(K + B_{r/2})`, so `|f(η a) - r/2| ≤ h_ε`; since
-`h_ε ≤ d/100 ≤ s/100 < 20 s = λ_1`, no point of the starting cell lies on a shell of offset `≥ 20 s`. -/
+/-- Displayed (7.14), referee repair of step 3: the starting cell `H_a` meets `∂(K + B_{r/2})` at a point `p_a`,
+and for **every** `u ∈ H_a` one has `|f(u) - r/2| ≤ |u - p_a| ≤ h_ε` (`f = dist(·, K)`), not only for the vertex
+`η(a)`. Since `h_ε ≤ d/100 ≤ s/100 < 20 s = λ_1`, no point of the whole starting cell lies on a shell of offset
+`≥ 20 s`. -/
 theorem initial_cell_between_shells {K : Set ℂ} (hKne : K.Nonempty) {ε r h d s : ℝ} {η : ℝ → ℂ}
-    {k0 : ℤ} (hε : 0 < ε) (hmeet : (cell ε η k0 ∩ frontier (thickening (r / 2) K)).Nonempty)
+    {k0 : ℤ} (hmeet : (cell ε η k0 ∩ frontier (thickening (r / 2) K)).Nonempty)
     (hdiam : ∀ p ∈ cell ε η k0, ∀ q ∈ cell ε η k0, dist p q ≤ h)
     (hh : h ≤ d / 100) (hsd : d / 100 ≤ s / 100) (hs : 0 < s) :
-    |infDist (vertexPoint ε η k0) K - r / 2| ≤ h ∧ h < 20 * s ∧
+    (∀ p ∈ cell ε η k0, |infDist p K - r / 2| ≤ h) ∧ h < 20 * s ∧
       ∀ lam : ℝ, 20 * s ≤ lam → ∀ p ∈ cell ε η k0, p ∉ twoSidedShell K r lam := by
   obtain ⟨q, hqcell, hqfr⟩ := hmeet
   have hq : infDist q K = r / 2 := frontier_thickening_subset_level hKne (r / 2) hqfr
   have hlt : h < 20 * s := by linarith
-  have hv := vertexPoint_mem_cell (η := η) hε k0
-  refine ⟨?_, hlt, ?_⟩
-  · have h1 := abs_infDist_sub_infDist_le K (vertexPoint ε η k0) q
-    rw [hq] at h1
-    exact h1.trans (hdiam _ hv _ hqcell)
-  · intro lam hlam p hp hSig
+  have hbound : ∀ p ∈ cell ε η k0, |infDist p K - r / 2| ≤ h := by
+    intro p hp
     have h1 := abs_infDist_sub_infDist_le K p q
     rw [hq] at h1
-    have h3 : |infDist p K - r / 2| ≤ h := h1.trans (hdiam p hp q hqcell)
-    have hSig' : |infDist p K - r / 2| = lam := hSig
-    linarith
+    exact h1.trans (hdiam p hp q hqcell)
+  refine ⟨hbound, hlt, ?_⟩
+  intro lam hlam p hp hSig
+  have hSig' : |infDist p K - r / 2| = lam := hSig
+  have h3 := hbound p hp
+  linarith
 
 /-- Step 4, displayed (7.15)-(7.22): on a legal trajectory which exits `U = V(K+B_r) \ Θ` at `τ`, every shell
 `Σ_j`, `1 ≤ j ≤ N`, is hit before `τ`, and the first hitting times are strictly increasing in `j`:
