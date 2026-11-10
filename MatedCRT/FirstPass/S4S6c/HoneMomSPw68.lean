@@ -3,6 +3,10 @@ import MatedCRT.FirstPass.S4S6c.B1Assembly68
 import MatedCRT.FirstPass.S4S6c.Guard68S10
 import MatedCRT.FirstPass.S6r.Shells.ChoiceStopped
 import MatedCRT.FirstPass.S6r.ShellOmegaStop
+import MatedCRT.FirstPass.S4S6c.HoneWalkAe68
+import MatedCRT.FirstPass.S4S6c.ShellCorePw68
+import MatedCRT.FirstPass.S4S6c.HoneSetup68
+import MatedCRT.FirstPass.S4S6c.HoneRadii68
 
 /-!
 # The shell radius for the stopped coordinates, and `hmomS` at one point of the mesh event
@@ -93,6 +97,136 @@ theorem shell_hmom_pair_hR {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult 
           (postTimePath (fun n w => w n) (shellExit ε η Kset r s d Rf k) w) : ℕ) : ℝ) ^ 2)) (srwLaw m a) :=
   HoneMomS239.Shell.shell_hmom_pair hlf hcons hη hp hε a
     (fun k => measurable_shellCentre_radius_stop ε η Kset r s d Rf k) hTdom hRbd k
+
+/-- **The binder `hmomS` of `shellOneTest_of_direct_ae_rcell_rho` (HoneLeafAe68.lean:696) at one point `ω`, at the
+radius `ρmom`.** Under `ω ∈ exitTimeEvent68 S α ρmom CE ε` (the exit-moment clause at the deterministic radius `ρmom`,
+UniformEvents.lean:48), `HoneMomS239.Shell.hmomS_rhoMom` gives the leaf binder for every `k ≤ n` and `P`-almost every
+walk in `leafPre`, with test sets `D ⊆ ball 0 ρmom` (the form of `hmomS_pointwise` with `ρ` replaced by `ρmom`). The
+margin binder `hx1` is not an input of this conclusion. -/
+theorem hmomS_pointwise_rhoMom {γ ρ s₀ α CE ε ρmom C ζ r : ℝ} {Ω : Type} [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) {ω : Ω} (hω : ω ∈ exitTimeEvent68 S α ρmom CE ε) (i : Lemma68Config.Config68) :
+    Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+        x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
+          ∀ D : Set ℂ, MeasurableSet D → D ⊆ ball 0 ρmom → ENNReal.ofReal (ε ^ α) ≤ S.μ ω D →
+            ∀ a ∈ cellVertices ε (S.η ω) D, ∀ N : ℕ,
+              exitTimeMoment (S.mult ε ω) (interiorCellVertices ε (S.η ω) D) a N ≤
+                ENNReal.ofReal (N.factorial * CE ^ N * ε ^ (-(N : ℝ))) *
+                  (⨆ z' ∈ D, ∫⁻ x in Metric.thickening (ε ^ α) D,
+                    ENNReal.ofReal (Real.log (1 / ‖z' - x‖) + 1) ∂(S.μ ω)) ^ N := by
+  intro _ k hk
+  have hcl : S3cBridge.ExitMomentClause (S.mult ε ω) (S.μ ω) (S.η ω) ε α CE ρmom := hω.1
+  exact HoneMomS239.Shell.hmomS_rhoMom hcl (i.A : Set ℤ) (shellCount r (dyadicD r ^ shortExp ζ) - 1)
+    (fillCells ε (S.η ω) (i.Θ : Set ℤ)) (winRf S ρ ζ C r ω) r (dyadicD r ^ shortExp ζ) (dyadicD r) i.a k hk
+
+/-- **The binder `hx1` of `shellOneTest_of_direct_ae_rcell_rho` at one point `ω` (the `ρmom` margin; the residual
+`ShellResX1` of z5).** Under `RegularEnvAt68` at `ω` and `FullAdmAt`, for every `k ≤ n` and `P`-almost every walk in
+`leafPre` the exit vertex satisfies `‖vertexPoint (x T)‖ < ρmom - R / 4`, with `T = shellExit`, `R = winRf (shellCentre)`.
+This is the first conjunct of `HoneWalkAe68.hWalk_ae_of_walk` (chat 239 l.787-793), re-proved from its components
+(`walk_inputs_ae`, `hEl_ae_of_walk`, `hb_ae_of_walk`, `exitVertex_mem_ball_of_sphere`): `hWalk_ae_of_walk` also needs
+`10 ε^{ω₀} ≤ r` with `2 ω₀ < K.ω`, which the `hx1` consumer does not have.
+
+Environment facts at `ω`, all explicit:
+* `hreg` (`RegularEnvAt68`): continuity of `η ω`, curve escape (cocompact limit), local finiteness and adjacency of
+  `S.mult ε ω`, and the edge masses `edgeMeasure ≠ 0, ≠ ⊤`;
+* `hadm` (`FullAdmAt`): `ConfigOK` (the vertex set `F0`, the fill closure in `ball 0 (ρ/2)`, `ball 0 s₀ ⊆ fill`) and,
+  through `hstart_of_fullAdmAt`, the start cell meets the frontier of the thickened fill;
+* `hmω : CellDiamLe ε (η ω) (dyadicD r / 100) univ` (the global mesh, the same form as `hRr_fixedOmega`);
+* `hgap : ρ ≤ ρmom`, `hrρ : r ≤ ρ / 4`, `hrle : r ≤ countThreshold ζ`.
+The window radius `winRf` is in `[dyadicD r, dyadicD r ^ shortExp ζ]` on every eligible centre for every `ω`
+(`windowRfT_rangeShortEligible`: `windowRfT` equals `dyadicD r` on the bad window event), so no window binder is needed. -/
+theorem hx1_fixedOmega {γ ω₀ ρ CG ζ α CE C ε s₀ r ρmom : ℝ} {Ω : Type} [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) {ω : Ω} (hreg : RegularEnvAt68 S γ ω₀ ρ CG ζ α CE ε ω)
+    (hρ1 : ρ < 1) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2) (hε : 0 < ε) (hs₀ : 0 < s₀) (hr0 : 0 < r)
+    (hrρ : r ≤ ρ / 4) (hrle : r ≤ countThreshold ζ) (hgap : ρ ≤ ρmom)
+    (hmω : CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ) (i : Lemma68Config.Config68) :
+    Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+        x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
+          ‖vertexPoint ε (S.η ω) (x (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ)
+            (dyadicD r) (winRf S ρ ζ C r ω) k x).toNat)‖
+            < ρmom - winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+              (dyadicD r ^ shortExp ζ) (dyadicD r) k x) / 4 := by
+  intro hadm
+  obtain ⟨-, hcurve, hmult, hη, -, -, hdeg, hadjC, hadjε⟩ := hreg
+  obtain ⟨hlf, hcons⟩ := hmult ε hε
+  have hedge := hadjε ε hε
+  have hp := Lemma68Geometry.tendsto_cocompact_of_escapes hcurve
+  have hF0 : (↑i.F0 : Set ℤ) = cellVertices ε (S.η ω) (Metric.ball (0 : ℂ) ρ) := hadm.1.1
+  have hKb : fillCells ε (S.η ω) ↑i.Θ ⊆ Metric.ball (0 : ℂ) (ρ / 2) :=
+    subset_closure.trans hadm.1.2.1
+  have h0 : (0 : ℂ) ∈ fillCells ε (S.η ω) ↑i.Θ := hadm.1.2.2 (Metric.mem_ball_self hs₀)
+  have hst := Lemma68ShellCorePw.hstart_of_fullAdmAt S ω i hη hε hr0 hs₀ hadm
+  have hr1 : r ≤ 1 := by linarith
+  have hd := dyadicD_pos r
+  have hd1 := dyadicD_le_one r
+  have hdr : r ^ 2 ≤ dyadicD r := (Lemma68ChainGlue.dyadicD_mem hr0 hr1).1
+  have hd2 : dyadicD r < 2 * r ^ 2 := (Lemma68ChainGlue.dyadicD_mem hr0 hr1).2
+  have ha1 : shortExp ζ ≤ 1 := by unfold shortExp; linarith
+  have hds : dyadicD r ≤ dyadicD r ^ shortExp ζ := by
+    have h := Real.rpow_le_rpow_of_exponent_ge hd hd1 ha1
+    simpa using h
+  have hs4 : dyadicD r ^ shortExp ζ ≤ r / 4000 := shell_size_le hζ0 hr0 hrle hd hd2
+  have hcb := Lemma68ChainGlue.countBound_zeta hζ0 hr0 hrle hd hdr hd2
+  have hζr : r ^ ζ ≤ (2 : ℝ) ^ (-shortExp ζ) / 4000 := by
+    have h := Real.rpow_le_rpow hr0.le hrle hζ0.le
+    unfold countThreshold at h
+    rwa [← Real.rpow_mul (by positivity), one_div_mul_cancel hζ0.ne', Real.rpow_one] at h
+  have hrpos : 0 < r ^ ζ := Real.rpow_pos_of_pos hr0 ζ
+  have hkey : 1 ≤ countConst ζ * r ^ (-ζ) := by
+    unfold countConst
+    rw [Real.rpow_neg hr0.le, ← div_eq_mul_inv, one_le_div hrpos]
+    have hX : (0 : ℝ) < (2 : ℝ) ^ (-shortExp ζ) := by positivity
+    linarith
+  have hN1 : 1 ≤ shellCount r (dyadicD r ^ shortExp ζ) := by
+    have h := hkey.trans hcb
+    exact_mod_cast h
+  have hn : shellCount r (dyadicD r ^ shortExp ζ) - 1 + 1 = shellCount r (dyadicD r ^ shortExp ζ) :=
+    Nat.sub_add_cancel hN1
+  have hNs : 20 * (((shellCount r (dyadicD r ^ shortExp ζ) - 1) + 1 : ℕ) : ℝ) * dyadicD r ^ shortExp ζ
+      ≤ r / 20 := by
+    rw [hn]
+    have h1 : ((shellCount r (dyadicD r ^ shortExp ζ) : ℕ) : ℝ) ≤ r / (400 * dyadicD r ^ shortExp ζ) := by
+      unfold shellCount
+      exact Nat.floor_le (by positivity)
+    have hpos : 0 < 400 * dyadicD r ^ shortExp ζ := by positivity
+    have h2 := (le_div_iff₀ hpos).mp h1
+    nlinarith [h2]
+  have hRf : ∀ z ∈ shortEligible ρ (dyadicD r) (shortExp ζ),
+      dyadicD r ≤ winRf S ρ ζ C r ω z ∧ winRf S ρ ζ C r ω z ≤ dyadicD r ^ shortExp ζ :=
+    Lemma68HoneRadii.windowRfT_rangeShortEligible S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) hd hd1 ha1 ω
+  have hPath := Lemma68HoneGoodEventAe.walk_inputs_ae hη hε hp hedge hlf hcons i.a hF0 hst
+  have hEl := Lemma68HoneGoodEventAe.hEl_ae_of_walk (A := (↑i.A : Set ℤ))
+    (τU := vExitTime (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r)) (Rf := winRf S ρ ζ C r ω)
+    (m := S.mult ε ω) (s0 := i.a) hη hε hr0 hrρ hd hds hs4 hNs rfl hmω hF0 h0 hKb hRf hPath
+  have hhit : ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+      x ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) (↑i.A : Set ℤ)
+        (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
+          (winRf S ρ ζ C r ω) k)
+        (vExitTime (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r)) →
+      ∀ t : ℕ, shellHit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) k x = (t : ℕ∞) →
+        x t ∈ interiorCellVertices ε (S.η ω) (ball (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+          (dyadicD r ^ shortExp ζ) (dyadicD r) k x) (4 * winRf S ρ ζ C r ω (shellCentre ε (S.η ω)
+            (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x) / 3)) :=
+    fun k hk => (hEl k hk).mono fun x hx hxm t ht =>
+      Lemma68HoneExitGeom.shellHit_interior_of_mesh hε (fillCells ε (S.η ω) ↑i.Θ) hd hmω k x
+        (hRf _ (hx hxm)).1 t ht
+  have hb := Lemma68HoneExitGeom.hb_ae_of_walk hη (fillCells ε (S.η ω) ↑i.Θ)
+    (Z := fun k x => shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x)
+    (S.mult ε ω) i.a (shellCount r (dyadicD r ^ shortExp ζ) - 1) hdeg hadjC (fun _ _ => rfl) hhit
+  intro k hk
+  filter_upwards [hb k hk, hEl k hk] with x hbx helx hpre
+  have hbx' := hbx hpre
+  have hz := helx hpre
+  have hRz := hRf _ hz
+  have hmeshLoc : ∀ k' : ℤ, (cell ε (S.η ω) k' ∩ ball (0 : ℂ) ρ).Nonempty →
+      ∀ p ∈ cell ε (S.η ω) k', ∀ q ∈ cell ε (S.η ω) k', dist p q ≤ dyadicD r / 100 :=
+    fun k' hk' => hmω k' (Set.Nonempty.mono (Set.inter_subset_inter_right _ (Set.subset_univ _)) hk')
+  have hv := Lemma68HoneWalkAe.exitVertex_mem_ball_of_sphere hε
+    (x (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
+      (winRf S ρ ζ C r ω) k x).toNat)
+    hd hds hRz.2 hgap hz hmeshLoc hbx'
+  exact mem_ball_zero_iff.mp hv
 
 end HoneMomSPw68
 end MatedCRT
