@@ -1,3 +1,4 @@
+import MatedCRT.FirstPass.S4S6c.ShellCoreCG68
 import MatedCRT.FirstPass.S4S6c.B1EnvPwG68
 import MatedCRT.FirstPass.S4S6c.HoneEnvEvents68
 import MatedCRT.FirstPass.S4S6c.HoneSetupAdapt68
@@ -32,6 +33,7 @@ open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68WalkBridge MatedCRT.Lemma68ChainA
 open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 open MatedCRT.Lemma68ShellHoneInst MatedCRT.Lemma68WindowRf MatedCRT.Lemma68ShellOrderWindow
 open MatedCRT.Lemma68B1Assembly
+open Lemma68ShellCoreCG
 
 /-- The cell-size clause at the radius `ρm` gives the cell-size clause at every smaller radius `ρ ≤ ρm`
 (`cellSizeEvent68`, S6f/UniformEvents.lean): a cell meeting `ball 0 ρ` meets `ball 0 ρm`. -/
@@ -142,8 +144,53 @@ theorem resWalk_pt {γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ} {Ω : Type} 
   obtain ⟨h1, h2, h3⟩ := hx hP
   exact ⟨h1, le_trans (rpow_e_le_rpow_w0 hε0 hε1 hωe) h2, h3⟩
 
+/-! ### STEP B: the two `_holds` (ShellCoreCG68.lean:397 and :461)
+
+The premise `ShellPtPremCG` (post-b51e0dc: `β`, `countingMeshEventR`, no full-support clause) is destructured into the
+clauses of `resGreen_pt` / `resWalk_pt`. The inputs that the premise does not carry are named hypotheses with their
+exact types (BLOCKED, see the report). -/
+
+/-- **`ShellCGResGreen` (`shellCGResGreen_holds`), conditional on the named Green input `hGreenE`.** The Lemma 2.16
+good event at the exponent `e = 2/(2+γ)^2 - ζ` is not a clause of `ShellPtPremCG`: `countingMeshEventR` carries only
+`greenLowEvent68` at `ω₀`. -/
+theorem shellCGResGreen_holds {𝒮 : SpaceFillingSLEModel}
+    (hGreenE : ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+      (Ew : ℝ → Set Ω) (ω : Ω) (_i : Lemma68Config.Config68),
+      ShellPtPremCG 𝒮 γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r S Ew ω →
+        ω ∈ HoneModelInputs68.greenLowerGoodEvent (2 / (2 + γ) ^ 2 - ζ) CG ρ S ε) :
+    ShellCGResGreen 𝒮 := by
+  intro γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω _ S Ew ω i hpre hFA
+  have hGE := hGreenE γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω S Ew ω i hpre
+  obtain ⟨hγ0, hγ2, hω0, -, -, hωe, -, -, hCG, -, -, hζ0, hζ1, hρ0, hρ1, -, hq0, -, hq0c, -, hRρ, hRA,
+    -, hs0, -, -, hε0, -, hrε, hrR, -, hmeshR, -, hcurve, hmult, hcont, hμN, hμF, hdeg, hadj, hadjAll, -, -⟩ := hpre
+  exact resGreen_pt S ω i hω0 hωe hε0 hrε (le_trans hrR hRρ) hρ1 hGE hFA
+
+/-- **`ShellCGResWalk` (`shellCGResWalk_holds`), conditional on the named inputs G1 and `hMesh`.**
+G1 (`hG1`): the walk exponent `ωm` with `2ωm < ω₀` and `10 ε^ωm ≤ r` (ChatGPT request 75a, unanswered).
+`hMesh`: the univ mesh `CellDiamLe` of the walk producer (HoneWalkAe68.lean:111); the premise gives it only on the
+cells meeting `ball 0 ρmesh` (`cellDiamLe` of `meshEventR`). -/
+theorem shellCGResWalk_holds {𝒮 : SpaceFillingSLEModel}
+    (hG1 : ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+      (Ew : ℝ → Set Ω) (ω : Ω) (_i : Lemma68Config.Config68),
+      ShellPtPremCG 𝒮 γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r S Ew ω →
+        ∃ ωm : ℝ, 2 * ωm < ω₀ ∧ 10 * ε ^ ωm ≤ r)
+    (hMesh : ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+      (Ew : ℝ → Set Ω) (ω : Ω) (_i : Lemma68Config.Config68),
+      ShellPtPremCG 𝒮 γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r S Ew ω →
+        CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ) :
+    ShellCGResWalk 𝒮 := by
+  intro γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω _ S Ew ω i hpre hFA
+  obtain ⟨ωm, hωm, hr10m⟩ := hG1 γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω S Ew ω i hpre
+  have hMe := hMesh γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω S Ew ω i hpre
+  obtain ⟨hγ0, hγ2, hω0, -, -, hωe, -, -, hCG, -, -, hζ0, hζ1, hρ0, hρ1, -, hq0, -, hq0c, -, hRρ, hRA,
+    -, hs0, -, -, hε0, -, hrε, hrR, -, hmeshR, -, hcurve, hmult, hcont, hμN, hμF, hdeg, hadj, hadjAll, -, -⟩ := hpre
+  exact resWalk_pt S ω i hγ0 hγ2 hρ0 hρ1 hζ0 hζ1 hCG hω0 hωe hs0 hε0 hrε hrR hRρ hq0 hq0c hRA (countingMeshEventR_meshR hmeshR) hcurve hmult
+    hcont hμN hμF hdeg hadj hadjAll ωm hωm hr10m hMe hFA
+
 end Lemma68CGResGreenWalk
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68CGResGreenWalk.resGreen_pt
 #print axioms MatedCRT.Lemma68CGResGreenWalk.resWalk_pt
+#print axioms MatedCRT.Lemma68CGResGreenWalk.shellCGResGreen_holds
+#print axioms MatedCRT.Lemma68CGResGreenWalk.shellCGResWalk_holds
