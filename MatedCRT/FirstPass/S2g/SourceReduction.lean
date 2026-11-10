@@ -232,7 +232,7 @@ theorem ae_conePathwiseHalfBallInputs_of_draft {γ : ℝ} (hγ0 : 0 < γ) (hγ2 
   filter_upwards [hpart, hmass, hconf', hcont, hharm, hcond,
     hOpen γ γ hγ0 hγ2 hQ Ω P hC hcirc μ hW hL] with ω hp hm hc hcn hh hcd hO
   obtain ⟨hloc, hrad, hmon⟩ := hp
-  refine ⟨hloc, hrad, hmon, hcn, hc, ?_, hh, hcd⟩
+  refine ⟨hloc, fun t ht => (hrad t ht).1, fun t ht => hrad t ht.1, hmon, hcn, hc, ?_, hh, hcd⟩
   have : IsLocallyFiniteMeasure (μ ω) := hloc
   exact bddAbove_of_mass (fun t ht => (hO t (3 / 4) ht (by norm_num) 0 (mem_ball_self (by norm_num))).1) hm
 

@@ -42,13 +42,17 @@ def FrozenGreenBallCentre : Prop :=
   ∀ R : ℝ, 0 < R → ∀ x : ℂ, 0 < ‖x‖ → ‖x‖ < R →
     greenFunction (ball (0 : ℂ) R) 0 x = (2 * Real.pi)⁻¹ * Real.log (R / ‖x‖)
 
-/-- FIRST-PASS FROZEN (PENDING TRUTH CHECK). Initial compact confinement of the whole-plane clusters (EXTERNAL: a result
+/-- FIRST-PASS FROZEN (TRUTH CHECK TRUE). Initial compact confinement of the whole-plane clusters (EXTERNAL: a result
 of the harmonic-balls paper, not of IDLA). For `0 < γ < 2`, a whole-plane GFF `(hC, hcirc)` on `(Ω, P)` and its LQG
 measure `μ` of `h - γ log|·|` (`IsLQGMeasureOfField P γ γ hcirc μ`), almost surely some time `s > 0` has the regularized
 cluster of the obstacle problem in `B_{3/4}` centred at `0` inside `B_{1/2}`. Source: Bou-Rabee and Gwynne, *Harmonic balls
 in Liouville quantum gravity*, arXiv:2208.11795v3, Propositions 5.1-5.2, printed pp. 16-17 (initial compact confinement and
 shrinking of the closed raw clusters to the centre). Terminology: Armstrong-Kuusi-Mourrat harmonic balls, Duplantier-Sheffield
-LQG measure. PENDING TRUTH CHECK: the locator and the exact form are to be verified against the printed statement.
+LQG measure. Truth check TRUE (ChatGPT, 00:50 UTC; notes/fp-gaps/CHATGPT-q1-frozen-truth.md section 1). Provenance: a
+corollary of HB Propositions 5.1-5.2 (printed pp. 16-17) together with Lemmas 3.3 and 3.5 (printed p. 13) and regularization
+(5.5) (printed p. 17), specialized to alpha_0 = gamma < Q; nested compactness gives a unit-disk raw cluster whose closure lies
+in B_{1/2}, and compatibility identifies it with the B_{3/4} raw cluster. The conclusion concerns a local obstacle problem
+driven by a whole-plane log-GFF measure, not a confinement of the clusters themselves.
 Used by: `SourceHalfBallPathwiseStep` (FirstPass/S2g/GoodSetReduction.lean). -/
 def FrozenHBInitialConfinement : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)

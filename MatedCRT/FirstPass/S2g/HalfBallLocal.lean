@@ -179,14 +179,15 @@ transfer by the two locality lemmas above, since `Λ_t` lies in `B_{1/2}` for `t
 theorem pathwiseInputs_of_restrict_eq {μ ν : Measure ℂ}
     (h : μ.restrict (ball (0 : ℂ) (3 / 4)) = ν.restrict (ball (0 : ℂ) (3 / 4)))
     (hν : IsLocallyFiniteMeasure ν) (hμ : ConePathwiseHalfBallInputs μ) : ConePathwiseHalfBallInputs ν := by
-  obtain ⟨_, hdat, hmono, hH, hne, hbdd, hHB, hSat⟩ := hμ
+  obtain ⟨_, hopen, hdat, hmono, hH, hne, hbdd, hHB, hSat⟩ := hμ
   have hfun := regularizedCluster_fun_congr_three_quarters h
   have hcl : ∀ t ∈ Ioo 0 (sSup {t : ℝ | 0 < t ∧ regularizedCluster μ (3 / 4) 0 t ⊆ ball (0 : ℂ) (1 / 2)}),
       closure (regularizedCluster μ (3 / 4) 0 t) ⊆ ball (0 : ℂ) (3 / 4) :=
     fun t ht => closure_subset_ball_three_quarters_of_subset_half (regularizedCluster_subset_half_of_lt_sSup hmono hne ht)
   unfold ConePathwiseHalfBallInputs
   rw [← hfun]
-  refine ⟨hν, fun t ht => radiusThreeQuartersData_of_restrict_eq h (hdat t ht), hmono, hH, hne, hbdd, ?_, ?_⟩
+  refine ⟨hν, fun t ht => by rw [← cluster_congr_restrict t (3 / 4) 0 h]; exact hopen t ht,
+    fun t ht => radiusThreeQuartersData_of_restrict_eq h (hdat t ht), hmono, hH, hne, hbdd, ?_, ?_⟩
   · intro t ht
     exact (isHarmonicBall_iff_of_restrict_eq h (hcl t ht)).mp (hHB t ht)
   · exact satisfiesHarmonicBallConditionsOn_of_restrict_eq h hcl hSat

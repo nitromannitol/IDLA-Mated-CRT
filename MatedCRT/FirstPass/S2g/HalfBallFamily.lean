@@ -63,7 +63,9 @@ HB Theorem 1.1 and Lemma 3.3); Hausdorff continuity on `(0,T+ε)` for some `ε >
 (H4, using `μ(Λ_t) = t`); the HB harmonic-ball conditions on `(0, T)` (H6). -/
 def ConePathwiseHalfBallInputs (μ : Measure ℂ) : Prop :=
   IsLocallyFiniteMeasure μ ∧
-  (∀ t : ℝ, 0 < t → RadiusThreeQuartersData μ t) ∧
+  (∀ t : ℝ, 0 < t → IsOpen (cluster μ (3 / 4) 0 t)) ∧
+  (∀ t ∈ Ioo 0 (sSup {t : ℝ | 0 < t ∧ regularizedCluster μ (3 / 4) 0 t ⊆ ball (0 : ℂ) (1 / 2)}),
+    RadiusThreeQuartersData μ t) ∧
   MonotoneOn (regularizedCluster μ (3 / 4) 0) (Ioi 0) ∧
   (∃ ε : ℝ, 0 < ε ∧ HausdorffContinuousOn (regularizedCluster μ (3 / 4) 0)
     (Ioo 0 (sSup {t : ℝ | 0 < t ∧ regularizedCluster μ (3 / 4) 0 t ⊆ ball (0 : ℂ) (1 / 2)} + ε))) ∧
@@ -86,21 +88,21 @@ theorem canonical_stopped_family_of_pathwise {μ : Measure ℂ}
         (sSup {t : ℝ | 0 < t ∧ regularizedCluster μ (3 / 4) 0 t ⊆ ball (0 : ℂ) (1 / 2)}) ∧
       IsStoppedAtHalfBall (regularizedCluster μ (3 / 4) 0)
         (sSup {t : ℝ | 0 < t ∧ regularizedCluster μ (3 / 4) 0 t ⊆ ball (0 : ℂ) (1 / 2)}) := by
-  obtain ⟨hloc, hdat, hmono, hH, hne, hbdd, hHB, hSat⟩ := h
+  obtain ⟨hloc, hopen, hdat, hmono, hH, hne, hbdd, hHB, hSat⟩ := h
   have := hloc
   have hsub := fun t ht => regularizedCluster_subset_half_of_lt_sSup hmono hne (t := t) ht
   have hfam : IsConeHarmonicBallFamilyOn μ (regularizedCluster μ (3 / 4) 0)
       (sSup {t : ℝ | 0 < t ∧ regularizedCluster μ (3 / 4) 0 t ⊆ ball (0 : ℂ) (1 / 2)}) := by
     unfold IsConeHarmonicBallFamilyOn
     refine ⟨hHB, hSat, ?_⟩
-    exact satisfiesObstacleCharacterizationOn_of_data hmin hC hGB hpole (fun t ht => hdat t ht.1) hsub
+    exact satisfiesObstacleCharacterizationOn_of_data hmin hC hGB hpole hdat hsub
   have hb : ∀ t, Bornology.IsBounded (regularizedCluster μ (3 / 4) 0 t) := fun t =>
     Metric.isBounded_ball.subset (regularizedCluster_subset_ball_three_quarters μ t)
   obtain ⟨ε, hε, hHε⟩ := hH
   have hcontU : ∃ U : ℝ, sSup {t : ℝ | 0 < t ∧ regularizedCluster μ (3 / 4) 0 t ⊆ ball (0 : ℂ) (1 / 2)} < U ∧
       ContinuousOn (fun t => closureRadius (regularizedCluster μ (3 / 4) 0 t)) (Ioo 0 U) :=
     ⟨_, lt_add_of_pos_right _ hε, continuousOn_closureRadius_of_hausdorffContinuousOn hHε hb⟩
-  exact canonical_witness_of_pathwise (fun t ht => (hdat t ht).1) hmono hcontU hne hbdd hfam
+  exact canonical_witness_of_pathwise hopen hmono hcontU hne hbdd hfam
 
 /-- **Almost-sure canonical family (deterministic reduction, q1).** If almost surely the pathwise inputs hold for the cone
 measures `μ ω`, then almost surely there is a stopped family of harmonic balls at the canonical time (the shape of
