@@ -101,6 +101,72 @@ def ShellChainCoreStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
             ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
               Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
 
+/-- **`ShellChainCoreStmt` with the Eps antecedents (q2, fp-S4S6c-eps-chain).** The body of `ShellChainCoreStmt`, plus
+`2 ω₀ β⁻ < α` and `2 ω₀ < 2/(2+γ)² - ζ` next to the `ω₀` hypotheses; `ε ≤ shellEps0 γ α ω₀` in the ε-clause; and the radius
+cutoff `∀ r, 0 < r → r ≤ R → (dyadicD r)^{shortExp ζ} < rhoCell68 ρ - ρ` next to `R ≤ rAmp q0 ζ`. -/
+def ShellChainCoreEpsStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE : ℝ,
+    0 < ω₀ → ω₀ < α → 0 < α → ω₀ < 2 / (2 + γ) ^ 2 - ζ → 2 * ω₀ * chosenBetaMinus γ < α →
+    2 * ω₀ < 2 / (2 + γ) ^ 2 - ζ → 0 < CG → 0 < CE →
+    0 < ζ → ζ < 1 / 2 → 0 < ρ → ρ < 1 →
+    ∀ C C' : ℝ, 0 < C → 0 < C' → WindowPrevAt γ (shortExp ζ) shellC068 C C' →
+    ∃ q0 : ℝ, 0 < q0 ∧ q0 ≤ (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE C) ∧
+    ∀ R : ℝ, 0 < R → R ≤ ρ / 4 → R ≤ Lemma68Cutoff.rAmp q0 ζ →
+      (∀ r : ℝ, 0 < r → r ≤ R → (dyadicD r) ^ shortExp ζ < Lemma68HoneCellGood.rhoCell68 ρ - ρ) →
+    ∀ s₀ : ℝ, 0 < s₀ → s₀ < 1 →
+    ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      HarmonicBalls.PolyHighProb S.P (greenLowEvent68 S ω₀ ρ CG) →
+      HarmonicBalls.PolyHighProb S.P (cellSizeEvent68 S γ ζ ρ) →
+      HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE) →
+    ∀ Ew : ℝ → Set Ω, (∀ δ : ℝ, MeasurableSet[S.fieldSigma] (Ew δ)) →
+      HarmonicBalls.PolyHighProb S.P Ew →
+      (∀ δ : ℝ, ∀ᵐ ω ∂S.P, ω ∈ Ew δ → ω ∉ badWindowOf S.μ ρ (shortExp ζ) shellC068 C δ) →
+      ∀ ε : ℝ, 0 < ε → ε ≤ shellEps0 γ α ω₀ → ∀ᵐ ω ∂S.P, ω ∈ meshEvent S γ ω₀ ρ CG ζ α CE ε →
+        Lemma68Inputs.CurveEscapesBothEnds (S.η ω) →
+        (∀ ε' : ℝ, 0 < ε' → IsLocallyFiniteMult (S.mult ε' ω) ∧ ∀ k : ℤ, S.mult ε' ω k (k + 1) ≠ 0) →
+        ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ R → ω ∈ Ew (dyadicD r) →
+          ∀ i : Lemma68Config.Config68, Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
+            ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
+              Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
+
+/-- **Old implies Eps (q2, fp-S4S6c-eps-chain).** `ShellChainCoreStmt` specialises to `ShellChainCoreEpsStmt`: the Eps
+antecedents are ignored, the ε-clause is used for `ε ≤ shellEps0`, and the radius cutoff is ignored. -/
+theorem shellChainCoreEpsStmt_of_shellChainCoreStmt {𝒮 : SpaceFillingSLEModel} (h : ShellChainCoreStmt 𝒮) :
+    ShellChainCoreEpsStmt 𝒮 := by
+  intro γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ _ _ hCG hCE hζ0 hζ1 hρ0 hρ1 C C' hC hC' hP
+  obtain ⟨q0, hq0, hq0c, hcl⟩ :=
+    h γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hCG hCE hζ0 hζ1 hρ0 hρ1 C C' hC hC' hP
+  refine ⟨q0, hq0, hq0c, ?_⟩
+  intro R hR0 hRρ hRA _ s₀ hs₀ hs₁ Ω _ S hS hGp hCp hEp Ew hEwm hEwp hav ε hε _
+  exact hcl R hR0 hRρ hRA s₀ hs₀ hs₁ Ω S hS hGp hCp hEp Ew hEwm hEwp hav ε hε
+
+/-- **`ShellChainEpsStmt` from the Eps shell-chain core (q2, fp-S4S6c-eps-chain).** As `shellChainStmt_of_core`, with the
+radius cutoff passed through. -/
+theorem shellChainEpsStmt_of_core {𝒮 : SpaceFillingSLEModel} (hprev : ShortWindowGoodRadiusPrevalenceStmt)
+    (hcore : ShellChainCoreEpsStmt 𝒮) : ShellChainEpsStmt 𝒮 := by
+  intro γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hexp1 hexp2 hCG hCE hζ0 hζ1 hρ0 hρ1
+  have ha0 : 0 < shortExp ζ := by unfold shortExp; linarith
+  have ha1 : shortExp ζ < 1 := by unfold shortExp; linarith
+  have hc0 : 0 < shellC068 := by unfold shellC068; positivity
+  have hc1 : shellC068 < 1 / 5 := by
+    unfold shellC068
+    have h := Real.exp_le_one_iff.2 (show (-2 : ℝ) ≤ 0 by norm_num)
+    linarith
+  obtain ⟨C, C', hC0, hC'0, hP⟩ := hprev (shortExp ζ) ha0 ha1 γ hγ0 hγ2 shellC068 hc0 hc1
+  have hP' : WindowPrevAt γ (shortExp ζ) shellC068 C C' := hP
+  obtain ⟨q0, hq0, hq0c, hcl⟩ :=
+    hcore γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hexp1 hexp2 hCG hCE hζ0 hζ1 hρ0 hρ1 C C' hC0 hC'0 hP'
+  have hq1 : q0 ≤ 1 := by
+    have hC1 := one_le_shellChone68 CE C
+    have hb : (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE C) ≤ 1 := by
+      rw [div_le_iff₀ (by linarith)]
+      nlinarith
+    linarith
+  refine ⟨q0, hq0, hq1, fun R hR0 hRρ hRA hcut s₀ hs₀ hs₁ Ω _ S hS hGp hCp hEp => ?_⟩
+  obtain ⟨Ew, hEwm, hEwp, hav⟩ :=
+    shortWindow_fieldFamily_at hγ0 hγ2 S hS (shortExp ζ) shellC068 C C' ρ hρ0 hρ1 hP'
+  exact ⟨Ew, hEwm, hEwp, hcl R hR0 hRρ hRA hcut s₀ hs₀ hs₁ Ω S hS hGp hCp hEp Ew hEwm hEwp hav⟩
+
 /-- **`ShellChainStmt` from the shell-chain core.** The window family is supplied by `shortWindow_fieldFamily_at`
 with the prevalence constants `C, C'` of `hprev` at `(a = shortExp ζ, c₀)`, and the window clause by `hcore`. -/
 theorem shellChainStmt_of_core {𝒮 : SpaceFillingSLEModel} (hprev : ShortWindowGoodRadiusPrevalenceStmt)
@@ -135,8 +201,18 @@ theorem hU_of_core {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBoundStmt
     (hcore : ShellChainCoreStmt 𝒮) : UniformConstantOrderLowerBoundStmt 𝒮 :=
   MatedCRT.uniformConstantOrderLowerBound_of_chain 𝒮 hG hC hE (shellChainStmt_of_core hprev hcore)
 
+/-- **`UniformConstantOrderLowerBoundStmt` (hU) from the Draft inputs and the Eps shell-chain core (q2, fp-S4S6c-eps-chain).**
+Same conclusion as `hU_of_core`, through `uniformConstantOrderLowerBoundEps_of_chain` (Guard68S10.lean). -/
+theorem hU_of_core_eps {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮)
+    (hE : ExitTimeUpperBoundStmt 𝒮) (hprev : ShortWindowGoodRadiusPrevalenceStmt)
+    (hcore : ShellChainCoreEpsStmt 𝒮) : UniformConstantOrderLowerBoundStmt 𝒮 :=
+  MatedCRT.uniformConstantOrderLowerBoundEps_of_chain 𝒮 hG hC hE (shellChainEpsStmt_of_core hprev hcore)
+
 end Lemma68ChainCore
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68ChainCore.shellChainStmt_of_core
 #print axioms MatedCRT.Lemma68ChainCore.hU_of_core
+#print axioms MatedCRT.Lemma68ChainCore.shellChainCoreEpsStmt_of_shellChainCoreStmt
+#print axioms MatedCRT.Lemma68ChainCore.shellChainEpsStmt_of_core
+#print axioms MatedCRT.Lemma68ChainCore.hU_of_core_eps
