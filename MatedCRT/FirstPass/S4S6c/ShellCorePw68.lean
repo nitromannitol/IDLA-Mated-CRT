@@ -468,7 +468,7 @@ def ShellResRr (𝒮 : SpaceFillingSLEModel) : Prop :=
               (dyadicD r ^ shortExp ζ) (dyadicD r) k x) ≤ 1
 
 
-/-- Residual `hVolC` (owner: unassigned): the volume lower bound on the shell exits (constants `c₀`, `β⁻`). -/
+/-- Residual `hVolC` (owner z9, `HVolFullPw68`, uncommitted): the volume lower bound on the shell exits (constants `c₀`, `β⁻`). -/
 def ShellResVolC (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -483,7 +483,7 @@ def ShellResVolC (𝒮 : SpaceFillingSLEModel) : Prop :=
               (shellC068 * winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
                 (dyadicD r ^ shortExp ζ) (dyadicD r) k x)))
 
-/-- Residual `hVolY` (owner: unassigned): the volume lower bound on the balls of the eligible annulus. -/
+/-- Residual `hVolY` (owner z9, `HVolFullPw68`, uncommitted): the volume lower bound on the balls of the eligible annulus. -/
 def ShellResVolY (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -498,7 +498,8 @@ def ShellResVolY (𝒮 : SpaceFillingSLEModel) : Prop :=
               ≤ S.μ ω (ball y (winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
                 (dyadicD r ^ shortExp ζ) (dyadicD r) k x) / 4))
 
-/-- Residual `hGreen` (owner z1; the fixed-`η` lower Green bound, Lemma 2.16). The constant `K.C` is `1`. -/
+/-- Residual `hGreen` (owner z11, `B1EnvPw68`, uncommitted; the fixed-`η` lower Green bound, Lemma 2.16).
+The constant `K.C` must be `CG` (GAP 3, chat 249; `shellK68` still has `C := 1`). -/
 def ShellResGreen (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -511,7 +512,7 @@ def ShellResGreen (𝒮 : SpaceFillingSLEModel) : Prop :=
               else min (r' / ‖vertexPoint ε (S.η ω) a - vertexPoint ε (S.η ω) b‖) ε⁻¹) - 1
             ≤ greenKernel (S.mult ε ω) (interiorCellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) a) r')) a b
 
-/-- Residual `hCountGood` (owner z1; the lower half of the counting bound, Lemma 2.9 at `f ≡ 1`). -/
+/-- Residual `hCountGood` (owner z11, `B1EnvPw68`, uncommitted; the lower half of the counting bound, Lemma 2.9 at `f ≡ 1`). -/
 def ShellResCountGood (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -521,7 +522,8 @@ def ShellResCountGood (𝒮 : SpaceFillingSLEModel) : Prop :=
         (∀ k ∈ cellVertices ε (S.η ω) D, w k ∈ cell ε (S.η ω) k ∩ closure D) →
         ε⁻¹ * ∫ _ in D, (1 : ℝ) ∂(S.μ ω) - ε ^ (-1 + α) ≤ ∑' _ : cellVertices ε (S.η ω) D, (1 : ℝ)
 
-/-- Residual `hCellGood` (owner: unassigned). Its radius is `rhoCell68 ρ`, which exceeds `ρ`, so it is not the
+/-- Residual `hCellGood` (owner z10, `HoneCellGoodSelPw68.hCellGood_fixedOmega`, committed 18d7880; F2: waits for
+q2's `meshEventR` at `rhoCell68 ρ`). Its radius is `rhoCell68 ρ`, which exceeds `ρ`, so it is not the
 `cellSizeEvent68 S γ ζ ρ` of the Stmt (`ball 0 ρ`): a radius mismatch to report. -/
 def ShellResCellGood (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
@@ -531,7 +533,7 @@ def ShellResCellGood (𝒮 : SpaceFillingSLEModel) : Prop :=
       ∀ k' : ℤ, (cell ε (S.η ω) k' ∩ ball (0 : ℂ) (Lemma68HoneCellGood.rhoCell68 ρ)).Nonempty →
         diam (cell ε (S.η ω) k') ≤ ε ^ (2 / (2 + γ) ^ 2 - ζ)
 
-/-- Residual `hRcell` (owner: unassigned): the shell centres lie in the cell-good annulus. -/
+/-- Residual `hRcell` (owner z11, `B1EnvPw68`, uncommitted): the shell centres lie in the cell-good annulus. -/
 def ShellResRcell (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -542,7 +544,7 @@ def ShellResRcell (𝒮 : SpaceFillingSLEModel) : Prop :=
           winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ)
             (dyadicD r) k x) / 4 < Lemma68HoneCellGood.rhoCell68 ρ - ρ
 
-/-- Residual `hx1` (owner: unassigned): the exit vertex lies inside the ball of radius `1 - (window)/4`. -/
+/-- Residual `hx1` (owner q3, `HoneMomSPw68.hx1_fixedOmega`, committed 483b650, at `rhoMom`; waits for goodEnv_loc): the exit vertex lies inside the ball of radius `1 - (window)/4`. -/
 def ShellResX1 (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -555,7 +557,8 @@ def ShellResX1 (𝒮 : SpaceFillingSLEModel) : Prop :=
             < 1 - winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
               (dyadicD r ^ shortExp ζ) (dyadicD r) k x) / 4
 
-/-- Residual `hmomS` (owner: unassigned): the exit-time moment bound on the sub-balls of `B_1` (constant `C_E`). -/
+/-- Residual `hmomS` (owner q3, `HoneMomSPw68.hmomS_pointwise`, committed: ball `0 ρ`, not `0 1`; F4 / goodEnv_loc):
+the exit-time moment bound on the sub-balls of `B_1` (constant `C_E`). -/
 def ShellResMomS (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -570,8 +573,8 @@ def ShellResMomS (𝒮 : SpaceFillingSLEModel) : Prop :=
                 (⨆ z' ∈ D, ∫⁻ x in Metric.thickening (ε ^ α) D,
                   ENNReal.ofReal (Real.log (1 / ‖z' - x‖) + 1) ∂(S.μ ω)) ^ N
 
-/-- Residual `hWalk` (owner: unassigned): the walk exits in the cell-vertex set of `B_{ρ - ε^ω₀}` with the
-window-radius bounds. -/
+/-- Residual `hWalk` (owner z11, `B1EnvPw68`, uncommitted): the walk exits in the cell-vertex set of `B_{ρ - ε^ω₀}`
+with the window-radius bounds. GAP 4: the second conjunct becomes `ε ^ (2/(2+γ)^2 - ζ) ≤ R / 8` (q4 item 2). -/
 def ShellResWalk (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -588,7 +591,7 @@ def ShellResWalk (𝒮 : SpaceFillingSLEModel) : Prop :=
               infDist (vertexPoint ε (S.η ω) (x (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
                 (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k x).toNat)) (sphere 0 ρ)
 
-/-- Residual `hsel` (owner: unassigned): the good-annulus event at each short-eligible centre (constant `c₀`, `C_G`). -/
+/-- Residual `hsel` (owner z10, `HoneCellGoodSelPw68.hsel_fixedOmega`, committed 18d7880; F1: needs `C ≤ CG`): the good-annulus event at each short-eligible centre (constant `c₀`, `C_G`). -/
 def ShellResSel (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -597,7 +600,7 @@ def ShellResSel (𝒮 : SpaceFillingSLEModel) : Prop :=
       ∀ z ∈ shortEligible ρ (dyadicD r) (shortExp ζ),
         IsGoodAnnulusEvent (S.μ ω) shellC068 CG (winRf S ρ ζ C r ω z) z
 
-/-- Residual `hfull` (owner: unassigned): every ball has positive `μ`-mass. -/
+/-- Residual `hfull` (owner z9, `HVolFullPw68`, uncommitted): every ball has positive `μ`-mass. -/
 def ShellResFull (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
