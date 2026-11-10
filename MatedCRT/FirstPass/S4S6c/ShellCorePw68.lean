@@ -2,6 +2,7 @@ import MatedCRT.FirstPass.S4S6c.ShellCoreR68
 import MatedCRT.FirstPass.S4S6c.TraceInputs68
 import MatedCRT.FirstPass.S6n
 import MatedCRT.FirstPass.S4S6c.B1Assembly68
+import MatedCRT.FirstPass.S4S6c.HoneElAe68
 
 /-!
 # Pointwise, radius-uniform inputs for the one-test order (fp-S4S6c-pointwise-r-uniform, z5)
@@ -437,17 +438,6 @@ def ShellResTest (𝒮 : SpaceFillingSLEModel) : Prop :=
         testEnd ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
           (winRf S ρ ζ C r ω) k x ≠ ⊤
 
-/-- Residual `hEl` (owner q4, B1 walk form): the shell centres are short-eligible, almost surely in the walk. -/
-def ShellResEl (𝒮 : SpaceFillingSLEModel) : Prop :=
-  ∀ (γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
-    (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
-    ShellPtPrem 𝒮 γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r S Ew ω →
-    Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
-      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
-        x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
-          shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x ∈
-            shortEligible ρ (dyadicD r) (shortExp ζ)
-
 /-- Residual `hTdom` (owner q1; not dyadic-reducible): the exit time dominates the shell exit. -/
 def ShellResTdom (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
@@ -637,7 +627,7 @@ def ShellResFull (𝒮 : SpaceFillingSLEModel) : Prop :=
 `hε1`, `hεcell` from `ShellResEpsThr`, `hωκ`, `hα`, `hrε`, and `RegularEnvAt68` from the Stmt premises) or is one of
 the residual `ShellRes…` inputs above. -/
 theorem shellOneTestPointwiseEps_of_goodEnv {𝒮 : SpaceFillingSLEModel}
-    (hmesh : ShellResMesh 𝒮) (hTest : ShellResTest 𝒮) (hEl : ShellResEl 𝒮)
+    (hmesh : ShellResMesh 𝒮) (hTest : ShellResTest 𝒮)
     (hTdom : ShellResTdom 𝒮) (hRbd : ShellResRbd 𝒮) (hRr : ShellResRr 𝒮) (hcap : ShellResCap 𝒮)
     (hVolC : ShellResVolC 𝒮) (hVolY : ShellResVolY 𝒮) (hGreen : ShellResGreen 𝒮)
     (hCountGood : ShellResCountGood 𝒮) (hCellGood : ShellResCellGood 𝒮) (hRcell : ShellResRcell 𝒮)
@@ -703,7 +693,9 @@ theorem shellOneTestPointwiseEps_of_goodEnv {𝒮 : SpaceFillingSLEModel}
     (hmesh γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     (hTest γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     hadm
-    (hEl γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
+    (MatedCRT.Lemma68HoneElAe.hEl_fixedOmega (γ := γ) (C := C) S hρ1 hζ0 hζ1 hq0 hq0B hs₀ hε hr0
+      (le_trans hrR hRρ) hrA i ω (hmesh γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre) hcont hcurve hadj
+      (hmult ε hε))
     (hTdom γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     (hRbd γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     (hRr γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
