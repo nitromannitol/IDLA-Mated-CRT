@@ -26,6 +26,7 @@ def FrozenDiscreteHolderContinuityCorrected (𝒮 : SpaceFillingSLEModel) : Prop
 exit time from `ball z r` the path makes an outward radial excursion (`0 < ⟪b(τ) - z, b(t) - b(τ)⟫` for arbitrarily small
 `t > τ`). Source: Mörters–Peres, *Brownian Motion* (Cambridge 2010), Theorem 2.7 and Theorem 2.16 (strong Markov property at
 the exit time and Blumenthal's 0-1 law; standard). The statement is about planar Brownian motion only, not about this
+Truth check UNCLEAR (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md §6): the body of BrownianOutwardExcursionAtExitStep is absent from the checked source; the fixed-disk and simultaneous-in-radius assertions have different truth values.
 paper's objects. Used by: firstPass_3_6. -/
 def FrozenBrownianOutwardExcursionAtExit : Prop :=
   BrownianOutwardExcursionAtExitStep
