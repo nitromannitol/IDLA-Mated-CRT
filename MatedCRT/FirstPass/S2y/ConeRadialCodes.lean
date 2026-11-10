@@ -1087,13 +1087,14 @@ lemma abs_radialCutoff_mul_le (m : ℕ) (x : ℂ) (g : ℝ → ℝ) :
     rw [radialCutoff_eq_zero_of_le hδ.le, zero_mul, abs_zero]
     exact abs_nonneg _
 
-/-- **Sphere-average code is correct almost surely** (chat 231, §3.2). The inner `limsup` is the circle average of the
-continuous cutoff function (`angleQuad_tendsto_circleAverage`); the outer limit is a dominated convergence of the circle
-integral, dominated by `|h_{|x|}(0)|` on the circle.
+/-- **Sphere-average code is correct almost surely, conditional on the angular integrability** (chat 231, §3.2). The inner
+`limsup` is the circle average of the continuous cutoff function (`angleQuad_tendsto_circleAverage`); the outer limit is a
+dominated convergence of the circle integral, dominated by `|h_{|x|}(0)|` on the circle.
 
-NAMED INPUT `hcircInt` (not derived; see the report): the radial circle average is integrable along the circle
-`θ ↦ |h_{|z+re^{iθ}|}(0)|`, almost surely. Chat 231 §3.2 uses this domination without an argument. -/
-theorem radialSphereCode_ae_eq {γ : ℝ} {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {c : Ω → ℝ → ℂ → ℝ}
+NAMED INPUT `hcircInt` (the a.s. angular integrability along `∂B_r(z)`). It is discharged, with no input, by
+`MatedCRT.radialSphereCode_ae_eq` in `S2y/ConeCircInt240.lean` (chat 240 §1), which supplies `hcircInt` through
+`ae_intervalIntegrable_radial_circle`. -/
+theorem radialSphereCode_ae_eq_of_circInt {γ : ℝ} {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {c : Ω → ℝ → ℂ → ℝ}
     (_hcm : ∀ r z, 0 < r → Measurable fun ω => c ω r z)
     (hcont : ∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ))
     (_hrad : HasConeRadialLaw γ P c)
@@ -1154,4 +1155,4 @@ end MatedCRT
 #print axioms MatedCRT.radialPairingCode_ae_eq
 #print axioms MatedCRT.measurable_radialPairingCode
 #print axioms MatedCRT.measurable_radialSphereCode
-#print axioms MatedCRT.radialSphereCode_ae_eq
+#print axioms MatedCRT.radialSphereCode_ae_eq_of_circInt
