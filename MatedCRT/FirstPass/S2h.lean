@@ -287,4 +287,38 @@ theorem certCodeExact_exists (hpole : FrozenGreenDiscPole) :
       ⟨extW w', certSuper_of_certRel hpole (lt_trans hp hpq) hz hzd hb hbd hopen hne hreg hD hD0 hDmem hdense
       (m := localCode (certPhi D U) ν) (idx := certIdx) (fun k J n => localCode_certIdx D U ν k J n) hw'⟩⟩
 
+/-! ### Reduction to the log-GFF zero law (fp-S2h, z1) -/
+
+/-- **Certificate null step from the zero law (fp-S2h, z1).** The exact code pair of `certCodeExact_exists` is admissible,
+so `CertCodeNullStep` follows from the log-GFF zero law `LogCertCodeNullStep` for every exact code pair. -/
+theorem certCodeNullStep_of_log (hpole : FrozenGreenDiscPole)
+    (hlog : ∀ (φs : ℕ → ℂ → ℝ) (B : Set (ℕ → ℝ)), CertTestFamily φs → CertCodeExactStep φs B →
+      LogCertCodeNullStep φs B) : CertCodeNullStep := by
+  obtain ⟨φs, B, hT, hE⟩ := certCodeExact_exists hpole
+  exact ⟨φs, B, hT, hE, hlog φs B hT hE⟩
+
+/-- **Certificate null hull from the zero law (fp-S2h, z1).** -/
+theorem coneCertificateNullHull_of_log (hpole : FrozenGreenDiscPole) (hlaw : FrozenConeLogLocalCodeLaw)
+    (hmeasF : FrozenLQGTestIntegralMeasurable)
+    (hlog : ∀ (φs : ℕ → ℂ → ℝ) (B : Set (ℕ → ℝ)), CertTestFamily φs → CertCodeExactStep φs B →
+      LogCertCodeNullStep φs B) : ConeCertificateNullHullStep :=
+  coneCertificateNullHull_of_steps hlaw hmeasF (certCodeNullStep_of_log hpole hlog)
+
+/-- **`ConeBadNullHullStep` from the zero law (fp-S2h, z1).** The remaining open input is the log-GFF zero law for
+every exact code pair (`LogCertCodeNullStep`, CHATGPT Section 5); everything else is proved or frozen. -/
+theorem coneBadNullHull_of_log (hpole : FrozenGreenDiscPole) (hlaw : FrozenConeLogLocalCodeLaw)
+    (hmeasF : FrozenLQGTestIntegralMeasurable) (hV : VolumeGrowthStmt)
+    (hL : LeastSupersolutionMemOfVolumeGrowthStmt)
+    (hlog : ∀ (φs : ℕ → ℂ → ℝ) (B : Set (ℕ → ℝ)), CertTestFamily φs → CertCodeExactStep φs B →
+      LogCertCodeNullStep φs B) : ConeBadNullHullStep :=
+  coneBadNullHull_proved (coneCertificateNullHull_of_log hpole hlaw hmeasF hlog) hV hL
+
+/-- **`ConeClosureGoodMeasureLawStep` from the zero law (fp-S2h, z1).** -/
+theorem coneClosureGoodMeasureLaw_of_log (hpole : FrozenGreenDiscPole) (hlaw : FrozenConeLogLocalCodeLaw)
+    (hmeasF : FrozenLQGTestIntegralMeasurable) (hV : VolumeGrowthStmt)
+    (hL : LeastSupersolutionMemOfVolumeGrowthStmt)
+    (hlog : ∀ (φs : ℕ → ℂ → ℝ) (B : Set (ℕ → ℝ)), CertTestFamily φs → CertCodeExactStep φs B →
+      LogCertCodeNullStep φs B) : ConeClosureGoodMeasureLawStep :=
+  coneClosureGoodMeasureLaw_proved hpole (coneCertificateNullHull_of_log hpole hlaw hmeasF hlog) hV hL
+
 end MatedCRT
