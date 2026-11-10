@@ -37,7 +37,7 @@ open WalkPotential
 theorem measurable_pathHist (n : ℕ) : Measurable (pathHist n) :=
   measurable_pi_iff.2 fun _ => measurable_pi_apply _
 
-theorem measurable_pathShift (n : ℕ) : Measurable (pathShift n) :=
+theorem walk_measurable_pathShift (n : ℕ) : Measurable (pathShift n) :=
   measurable_pi_iff.2 fun _ => measurable_pi_apply _
 
 theorem pathHist_pathCons (a : ℤ) (n : ℕ) (y : ℕ → ℤ) :
@@ -53,7 +53,7 @@ theorem pathShift_pathCons (a : ℤ) (n : ℕ) (y : ℕ → ℤ) : pathShift (n 
   rw [show n + 1 + k = (n + k) + 1 by omega]
   rfl
 
-theorem pathShift_zero (x : ℕ → ℤ) : pathShift 0 x = x := by
+theorem walk_pathShift_zero (x : ℕ → ℤ) : pathShift 0 x = x := by
   funext k
   simp [pathShift]
 
@@ -82,7 +82,7 @@ theorem lintegral_srwLaw_markov (m : ℤ → ℤ → ℕ) (n : ℕ) :
         = ∫⁻ x, f (fun _ => a) * g x ∂srwLaw m a := by
           refine lintegral_congr_ae ?_
           filter_upwards [hae] with x hx
-          rw [hx, pathShift_zero]
+          rw [hx, walk_pathShift_zero]
       _ = f (fun _ => a) * ∫⁻ x, g x ∂srwLaw m a := lintegral_const_mul _ hg
       _ = ∫⁻ x, f (fun _ => a) * ∫⁻ y, g y ∂srwLaw m a ∂srwLaw m a := by
           rw [lintegral_const, measure_univ, mul_one]
@@ -93,7 +93,7 @@ theorem lintegral_srwLaw_markov (m : ℤ → ℤ → ℕ) (n : ℕ) :
   | succ n ih =>
     intro a f g hg
     have hF1 : Measurable fun x => f (pathHist (n + 1) x) * g (pathShift (n + 1) x) :=
-      ((measurable_of_countable f).comp (measurable_pathHist _)).mul (hg.comp (measurable_pathShift _))
+      ((measurable_of_countable f).comp (measurable_pathHist _)).mul (hg.comp (walk_measurable_pathShift _))
     have hG : Measurable fun b : ℤ => ∫⁻ y, g y ∂srwLaw m b := measurable_of_countable _
     have hF2 : Measurable fun x => f (pathHist (n + 1) x) * ∫⁻ y, g y ∂srwLaw m (x (n + 1)) :=
       ((measurable_of_countable f).comp (measurable_pathHist _)).mul (hG.comp (measurable_pi_apply _))
@@ -111,7 +111,7 @@ theorem srwLaw_markov (m : ℤ → ℤ → ℕ) (a : ℤ) (n : ℕ) (F : Set (Fi
   have hS : MeasurableSet {x : ℕ → ℤ | pathHist n x ∈ F} :=
     measurable_pathHist n (Set.to_countable F).measurableSet
   have hSE : MeasurableSet {x : ℕ → ℤ | pathHist n x ∈ F ∧ pathShift n x ∈ E} :=
-    hS.inter (measurable_pathShift n hE)
+    hS.inter (walk_measurable_pathShift n hE)
   have h := lintegral_srwLaw_markov m n a (F.indicator (1 : (Fin (n + 1) → ℤ) → ℝ≥0∞))
     (g := E.indicator (1 : (ℕ → ℤ) → ℝ≥0∞)) (measurable_one.indicator hE)
   have hl : ∀ x, (F.indicator 1 (pathHist n x) : ℝ≥0∞) * E.indicator 1 (pathShift n x) =

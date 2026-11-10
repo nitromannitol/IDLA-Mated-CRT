@@ -9,8 +9,9 @@ leaves `A` almost surely, `srwLaw m y {vExitTime A = ⊤} = 0`. It follows from 
 (`Audit.StatementsSec3Sec5M1.finite_expectedExitTime`, under local finiteness of the multigraph and the consecutive
 edges `m k (k+1) ≠ 0`) and `ae_vExitTime_ne_top_of_expectedExitTime_ne_top` (OccupationGreen).
 
-This file imports the Audit chain (`IDLA.StrongMarkov`), so it is kept apart from `MarkovFixedTime`, whose root names
-`measurable_pathShift` and `pathShift_zero` clash with those of `IDLA.StrongMarkov`.
+This file imports the Audit chain (`IDLA.StrongMarkov`). The root names of `MarkovFixedTime` were renamed
+`walk_measurable_pathShift` and `walk_pathShift_zero` (operator 22:25 UTC, clash with `IDLA.StrongMarkov`), so the two
+chains can now be imported together.
 -/
 
 open MeasureTheory

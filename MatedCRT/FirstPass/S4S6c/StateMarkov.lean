@@ -70,7 +70,7 @@ theorem srwLaw_markov_state (m : ℤ → ℤ → ℕ) (a : ℤ) (n : ℕ) (G : �
     exact h1.symm.trans h2
   have hmeasL : ∀ y : ℤ, MeasurableSet
       {x : ℕ → ℤ | pathHist n x ∈ stateFiber F y ∧ pathShift n x ∈ G y} := fun y =>
-    (measurable_pathHist n (hfib y)).inter (measurable_pathShift n (hG y))
+    (measurable_pathHist n (hfib y)).inter (walk_measurable_pathShift n (hG y))
   have hmeasFib : ∀ y : ℤ, MeasurableSet {x : ℕ → ℤ | pathHist n x ∈ stateFiber F y} :=
     fun y => measurable_pathHist n (hfib y)
   -- the joint probability is the sum over the states, each term by `srwLaw_markov`

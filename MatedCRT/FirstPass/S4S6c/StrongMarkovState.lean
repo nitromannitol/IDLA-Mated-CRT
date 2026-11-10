@@ -40,7 +40,7 @@ theorem measurableSet_future_at_state (k : ℕ) {G : ℤ → Set (ℕ → ℤ)} 
     have h1 : MeasurableSet ((fun x : ℕ → ℤ => x k) ⁻¹' {y}) :=
       (measurable_pi_apply k) (measurableSet_singleton y)
     exact h1
-  exact hstate.inter (measurable_pathShift k (hG y))
+  exact hstate.inter (walk_measurable_pathShift k (hG y))
 
 /-- **Strong Markov property at a random time with a state-dependent future event** (LEMMA68 N3a). -/
 theorem srwLaw_strong_markov_state (m : ℤ → ℤ → ℕ) (a : ℤ) (τ : (ℕ → ℤ) → ℕ∞)
