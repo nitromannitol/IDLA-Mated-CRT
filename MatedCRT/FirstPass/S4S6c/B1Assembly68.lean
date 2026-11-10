@@ -1,3 +1,4 @@
+import MatedCRT.FirstPass.S4S6c.HoneLeafAe68
 import MatedCRT.FirstPass.S4S6c.HoneReduced68
 import MatedCRT.FirstPass.S4S6c.Uniform68Env
 import MatedCRT.FirstPass.S4S6c.ShellOrderWindow68
@@ -75,9 +76,9 @@ theorem shellOneTest_ae_fixedR {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0
     (hεcell : ε ^ (2 / (2 + γ) ^ 2 - ζ) ≤ K.c0 * r ^ 2 / 100)
     -- window route (ShellOrderAe): the binders of `shellOrderAe_window`
     (hmesh : ∀ᵐ ω ∂S.P, CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ)
-    (hstart : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hstart : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty)
-    (htest : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (htest : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),
         ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
           testEnd ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
@@ -87,31 +88,29 @@ theorem shellOneTest_ae_fixedR {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0
     (hηc : ∀ᵐ ω ∂S.P, Continuous (S.η ω))
     (hμNull : ∀ᵐ ω ∂S.P, ∀ v : ℂ, S.μ ω {v} = 0)
     (hμFin : ∀ᵐ ω ∂S.P, IsFiniteMeasureOnCompacts (S.μ ω))
-    -- the sphere centres and annulus centres of the leaf, as functions of the environment
-    (Z : Ω → ℕ → (ℕ → ℤ) → ℂ)
     -- leaf binders (a.s.-in-`ω`)
-    (hTdom : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hTdom : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k : ℕ, ∃ D : Set ℤ, D.Finite ∧ ∀ w : ℕ → ℤ,
         shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
             (winRf S ρ ζ C r ω) k w < ⊤ →
           shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
             (winRf S ρ ζ C r ω) k w ≤ vExitTime D w)
-    (hRbd : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hRbd : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k : ℕ, ∃ s' : ℝ, ∀ w : ℕ → ℤ,
         shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
             (winRf S ρ ζ C r ω) k w < ⊤ →
           winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ)
             (dyadicD r) k w) ≤ s')
-    (hRr : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hRr : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k : ℕ, ∀ w ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
           (winRf S ρ ζ C r ω) k,
         r ^ 2 ≤ winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ)
             (dyadicD r) k w) ∧
           winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ)
             (dyadicD r) k w) ≤ 1)
-    (hL68 : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hL68 : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ z : ℂ, (((↑i.A : Set ℤ) ∩ cellVertices ε (S.η ω) (ball z r)).ncard : ℝ) < K.s1 * r ^ (2 * K.βm) / ε)
-    (hVolC : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hVolC : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k : ℕ, ∀ w ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
           (winRf S ρ ζ C r ω) k,
         ENNReal.ofReal ((K.c0 * winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
@@ -121,7 +120,7 @@ theorem shellOneTest_ae_fixedR {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0
                 (winRf S ρ ζ C r ω) k w).toNat))
             (K.c0 * winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
               (dyadicD r ^ shortExp ζ) (dyadicD r) k w))))
-    (hVolY : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hVolY : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k : ℕ, ∀ w ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
           (winRf S ρ ζ C r ω) k,
         ∀ y ∈ ball (0 : ℂ) (1 - winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
@@ -130,14 +129,14 @@ theorem shellOneTest_ae_fixedR {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0
               (dyadicD r ^ shortExp ζ) (dyadicD r) k w) / 4) ^ K.βm)
             ≤ S.μ ω (ball y (winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
               (dyadicD r ^ shortExp ζ) (dyadicD r) k w) / 4)))
-    (hGreen : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hGreen : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ a ∈ cellVertices ε (S.η ω) (ball 0 (ρ - ε ^ K.ω)), ∀ r' : ℝ, ε ^ K.ω ≤ r' →
         r' ≤ infDist (vertexPoint ε (S.η ω) a) (sphere 0 ρ) →
         ∀ b ∈ cellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) a) (r' / 3)),
           K.C⁻¹ * Real.log (if vertexPoint ε (S.η ω) a = vertexPoint ε (S.η ω) b then ε⁻¹
               else min (r' / ‖vertexPoint ε (S.η ω) a - vertexPoint ε (S.η ω) b‖) ε⁻¹) - 1
             ≤ greenKernel (S.mult ε ω) (interiorCellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) a) r')) a b)
-    (hWalk : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hWalk : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k : ℕ, ∀ w ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
           (winRf S ρ ζ C r ω) k,
         w (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
@@ -148,14 +147,21 @@ theorem shellOneTest_ae_fixedR {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0
             (dyadicD r ^ shortExp ζ) (dyadicD r) k w) / 8 ≤
             infDist (vertexPoint ε (S.η ω) (w (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
               (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k w).toNat)) (sphere 0 ρ))
-    (hCountGood : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hCountGood : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ D : Set ℂ, D ⊆ ball (0 : ℂ) ρ → ∀ w : ℤ → ℂ,
         (∀ k ∈ cellVertices ε (S.η ω) D, w k ∈ cell ε (S.η ω) k ∩ closure D) →
         ε⁻¹ * ∫ _ in D, (1 : ℝ) ∂(S.μ ω) - ε ^ (-1 + α) ≤ ∑' _ : cellVertices ε (S.η ω) D, (1 : ℝ))
-    (hCellGood : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
-      ∀ k' : ℤ, (cell ε (S.η ω) k' ∩ ball (0 : ℂ) (ρ + 3 / 8)).Nonempty →
+    (hCellGood : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
+      ∀ k' : ℤ, (cell ε (S.η ω) k' ∩ ball (0 : ℂ) (Lemma68HoneCellGood.rhoCell68 ρ)).Nonempty →
         diam (cell ε (S.η ω) k') ≤ ε ^ (2 / (2 + γ) ^ 2 - ζ))
-    (hsc : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    -- cell-control radius of chat 237 section 3: the prefix bound R/4 < rhoCell - rho (k ≤ shellCount - 1)
+    (hRcell : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
+      ∀ k : ℕ, k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1 → ∀ w ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r
+          (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k,
+        winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ)
+            (dyadicD r) k w) / 4 < Lemma68HoneCellGood.rhoCell68 ρ - ρ)
+    (hωκ : K.ω ≤ 2 / (2 + γ) ^ 2 - ζ)
+    (hsc :∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k : ℕ, ∀ w ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
           (winRf S ρ ζ C r ω) k,
         4 * ε ^ α ≤ (S.μ ω (ball (vertexPoint ε (S.η ω)
@@ -163,31 +169,31 @@ theorem shellOneTest_ae_fixedR {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0
               (winRf S ρ ζ C r ω) k w).toNat))
           (K.c0 * winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
             (dyadicD r ^ shortExp ζ) (dyadicD r) k w)))).toReal)
-    (hεα : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hεα : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k : ℕ, ∀ w ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
           (winRf S ρ ζ C r ω) k,
         ε ^ α ≤ winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
           (dyadicD r ^ shortExp ζ) (dyadicD r) k w) / 100)
-    (hεmass : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hεmass : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k : ℕ, ∀ w ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
           (winRf S ρ ζ C r ω) k,
         ε ^ α ≤ (winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
           (dyadicD r ^ shortExp ζ) (dyadicD r) k w) / 4) ^ K.βm)
-    (hb : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hb : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k : ℕ, ∀ w ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
           (winRf S ρ ζ C r ω) k,
         w (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
             (winRf S ρ ζ C r ω) k w).toNat ∈ cellVertices ε (S.η ω)
-          (sphere (Z ω k w) (4 * winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+          (sphere (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k w) (4 * winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
             (dyadicD r ^ shortExp ζ) (dyadicD r) k w) / 3)))
-    (hx1 : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hx1 : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k : ℕ, ∀ w ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
           (winRf S ρ ζ C r ω) k,
         ‖vertexPoint ε (S.η ω) (w (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ)
             (dyadicD r) (winRf S ρ ζ C r ω) k w).toNat)‖
           < 1 - winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
             (dyadicD r ^ shortExp ζ) (dyadicD r) k w) / 4)
-    (hmomS : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hmomS : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k : ℕ, ∀ w ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
           (winRf S ρ ζ C r ω) k,
         ∀ D : Set ℂ, MeasurableSet D → D ⊆ ball 0 1 → ENNReal.ofReal (ε ^ α) ≤ S.μ ω D →
@@ -196,21 +202,21 @@ theorem shellOneTest_ae_fixedR {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0
             ENNReal.ofReal (N.factorial * CE ^ N * ε ^ (-(N : ℝ))) *
               (⨆ z' ∈ D, ∫⁻ x in Metric.thickening (ε ^ α) D,
                 ENNReal.ofReal (Real.log (1 / ‖z' - x‖) + 1) ∂(S.μ ω)) ^ N)
-    (hgood : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hgood : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k : ℕ, ∀ w ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
           (winRf S ρ ζ C r ω) k,
         IsGoodAnnulusEvent (S.μ ω) K.c0 CG (winRf S ρ ζ C r ω (shellCentre ε (S.η ω)
-          (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k w)) (Z ω k w))
-    (hpos : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+          (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k w)) (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k w))
+    (hpos : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k : ℕ, ∀ w ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
           (winRf S ρ ζ C r ω) k,
-        0 < ⨅ y ∈ annulus (Z ω k w) (winRf S ρ ζ C r ω (shellCentre ε (S.η ω)
+        0 < ⨅ y ∈ annulus (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k w) (winRf S ρ ζ C r ω (shellCentre ε (S.η ω)
             (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k w))
           (2 * winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
             (dyadicD r ^ shortExp ζ) (dyadicD r) k w)),
           S.μ ω (ball y (K.c0 * winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
             (dyadicD r ^ shortExp ζ) (dyadicD r) k w))))
-    (hdbl : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    (hdbl : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k : ℕ, ∀ w ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
           (winRf S ρ ζ C r ω) k,
         (S.μ ω (ball (vertexPoint ε (S.η ω)
@@ -223,7 +229,7 @@ theorem shellOneTest_ae_fixedR {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0
               (winRf S ρ ζ C r ω) k w).toNat))
           (K.c0 * winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
             (dyadicD r ^ shortExp ζ) (dyadicD r) k w)))).toReal) :
-    ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+    ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∃ Rf : ℂ → ℝ,
         ShellOneTestAt (S.mult ε ω) i.a (↑i.A : Set ℤ) (S.η ω) ε (fillCells ε (S.η ω) ↑i.Θ)
           (vExitTime (killed ε (S.η ω) i.Θ i.F0 r)) r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf
@@ -243,8 +249,8 @@ theorem shellOneTest_ae_fixedR {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0
     hmesh hstart htest
   have hmultAe := hmult_ae_valid hγ0 hγ2 S hS hε
   filter_upwards [hShell, hmultAe, hcurve, hηc, hμNull, hμFin, hTdom, hRbd, hRr, hL68, hVolC, hVolY,
-    hGreen, hWalk, hCountGood, hCellGood, hsc, hεα, hεmass, hb, hx1, hmomS, hgood, hpos, hdbl]
-    with ω hShω hmω hcω hηω hμNω hμFω hTω hRbω hRrω hLω hVCω hVYω hGω hWω hCGω hCeω hscω hεαω hεmω
+    hGreen, hWalk, hCountGood, hCellGood, hRcell, hsc, hεα, hεmass, hb, hx1, hmomS, hgood, hpos, hdbl]
+    with ω hShω hmω hcω hηω hμNω hμFω hTω hRbω hRrω hLω hVCω hVYω hGω hWω hCGω hCeω hRcω hscω hεαω hεmω
       hbω hx1ω hmSω hgω hpω hdω
   intro hωE hadm
   have hμFin' : IsFiniteMeasureOnCompacts (S.μ ω) := hμFω
@@ -255,23 +261,39 @@ theorem shellOneTest_ae_fixedR {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0
         (dyadicD r ^ shortExp ζ) (dyadicD r) k w) :=
     fun k w hw => mul_le_mul_of_nonneg_left ((hRr' k w hw).1) K.hc0.le
   refine ⟨winRf S ρ ζ C r ω, ?_, hShω hadm⟩
-  exact Lemma68HoneReduced.shellOneTest_of_direct_reduced68 (K := K) (ε := ε) (η := S.η ω) (hη := hηω)
+  -- the leaf takes almost-sure prefix binders; the pointwise B1 binders give them by `Eventually.of_forall`
+  exact Lemma68LeafAe.shellOneTest_of_direct_ae (K := K) (ε := ε) (η := S.η ω) (hη := hηω)
     (hprop := Lemma68Geometry.tendsto_cocompact_of_escapes (hcω)) (hε := hε) (hεc := hεc)
     (μ := S.μ ω) (hμNull := hμNω) (m := S.mult ε ω) (a := i.a) (A := (↑i.A : Set ℤ))
     (hA := i.A.finite_toSet.measurableSet) (n := shellCount r (dyadicD r ^ shortExp ζ) - 1)
     (τU := vExitTime (killed ε (S.η ω) i.Θ i.F0 r)) (Kset := fillCells ε (S.η ω) ↑i.Θ)
     (Rf := winRf S ρ ζ C r ω) (r := r) (s := dyadicD r ^ shortExp ζ) (d := dyadicD r) (q0 := q0) (α := α)
-    (C_exit := CE) (C_good := CG) (Dbl := shellDbl68 CG) (C := shellChone68 CE CG) (N_cov := shellNcov68)
+    (C_exit := CE) (C_good := CG) (C := shellChone68 CE CG) (N_cov := shellNcov68)
     (hr := hr0) (hr1 := hr1) (hq0c := hq0c) (hC := hC0) (hCw := shellChone68_hCw CE CG) (hCg := hCG.le)
-    (hlf := (hmω).1) (hcons := (hmω).2) (hTdom := hTω hωE hadm) (hRbd := hRbω hωE hadm) (hRr := hRr')
-    (hL68 := hLω hωE hadm) (rmin := K.c0 * r ^ 2) (hRmin := hRmin) (hVolC := hVCω hωE hadm)
-    (hVolY := hVYω hωE hadm) (hGreen := hGω hωE hadm) (hWalk := hWω hωE hadm)
+    (hlf := (hmω).1) (hcons := (hmω).2) (hTdom := hTω hωE hadm) (hRbd := hRbω hωE hadm)
+    (hRr := fun k _ => Filter.Eventually.of_forall fun x hx => hRr' k x hx)
+    (hL68 := hLω hωE hadm) (rmin := K.c0 * r ^ 2)
+    (hRmin := fun k _ => Filter.Eventually.of_forall fun x hx => hRmin k x hx)
+    (hVolC := fun k _ => Filter.Eventually.of_forall fun x hx => hVCω hωE hadm k x hx)
+    (hVolY := fun k _ => Filter.Eventually.of_forall fun x hx => hVYω hωE hadm k x hx)
+    (hGreen := hGω hωE hadm)
+    (hWalk := fun k _ => Filter.Eventually.of_forall fun x hx => hWω hωE hadm k x hx)
     (hCountGood := hCGω hωE hadm) (ζc := ζ) (hζc0 := hζ0) (hζc1 := by linarith)
-    (hCellGood := hCeω hωE hadm) (hεcell := hεcell) (hsc := hscω hωE hadm) (Z := Z ω)
-    (hεα := hεαω hωE hadm) (hεmass := hεmω hωE hadm) (hb := hbω hωE hadm) (hx1 := hx1ω hωE hadm)
-    (hmomS := hmSω hωE hadm) (hgood := hgω hωE hadm)
-    (hN := fun _ _ _ R' z' hR' => Lemma68ConstOrder.shellNcov68_spec R' z' hR')
-    (hpos := hpω hωE hadm) (hdbl := hdω hωE hadm)
+    (ρcell := Lemma68HoneCellGood.rhoCell68 ρ) (hρgap := Lemma68HoneCellGood.rhoC_lt_rhoCell68 hρ1)
+    (hCellGood := hCeω hωE hadm)
+    (hRcell := fun k hk => Filter.Eventually.of_forall fun x hx => hRcω hωE hadm k hk x hx)
+    (hωκ := hωκ) (hεcell := hεcell)
+    (hsc := fun k _ => Filter.Eventually.of_forall fun x hx => hscω hωE hadm k x hx)
+    (hεα := fun k _ => Filter.Eventually.of_forall fun x hx => hεαω hωE hadm k x hx)
+    (hεmass := fun k _ => Filter.Eventually.of_forall fun x hx => hεmω hωE hadm k x hx)
+    (hb := fun k _ => Filter.Eventually.of_forall fun x hx => hbω hωE hadm k x hx)
+    (hx1 := fun k _ => Filter.Eventually.of_forall fun x hx => hx1ω hωE hadm k x hx)
+    (hmomS := fun k _ => Filter.Eventually.of_forall fun x hx => hmSω hωE hadm k x hx)
+    (hgood := fun k _ => Filter.Eventually.of_forall fun x hx => hgω hωE hadm k x hx)
+    (hN := fun _ _ => Filter.Eventually.of_forall fun _ _ R' z' hR' =>
+      Lemma68ConstOrder.shellNcov68_spec R' z' hR')
+    (hpos := fun k _ => Filter.Eventually.of_forall fun x hx => hpω hωE hadm k x hx)
+    (hdbl := fun k _ => Filter.Eventually.of_forall fun x hx => hdω hωE hadm k x hx)
 
 end Lemma68B1Assembly
 end MatedCRT
