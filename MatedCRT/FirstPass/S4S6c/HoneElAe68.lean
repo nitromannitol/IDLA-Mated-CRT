@@ -22,10 +22,10 @@ and the walk inputs (`walk_inputs_ae`).
 Named inputs (with no written argument in the B1 binder list; exact types in the statement):
 * `hs₀ : 0 < s₀`. `shellOneTest_at_of_goodEnv` has no positivity of `s₀`; `h0 : 0 ∈ fillCells …` needs `ball 0 s₀ ≠ ∅`.
   The consumer must supply it (the setup `hRr_fixedOmega'` takes it as well).
-* The environment facts at `ω` (the fields of `RegularEnvAt68`, B1Assembly68.lean:553): continuity `hηω`, the
-  cocompact limit `htendω` (from `CurveEscapesBothEnds` by `tendsto_cocompact_of_escapes`, S6e/Geometry.lean:94, when
-  the consumer has `CurveEscapesBothEnds`), the cell-meeting edges `hadjω` (closure form in `RegularEnvAt68`), and the
-  local finiteness `hmultω`. The mesh `hmω` is the binder `hmesh` of the B1 theorem.
+* The environment facts at `ω`, the fields of `RegularEnvAt68` (B1Assembly68.lean:553): continuity `hηω`,
+  `CurveEscapesBothEnds` `hcurveω` (the cocompact limit follows by `tendsto_cocompact_of_escapes`, S6e/Geometry.lean:94),
+  the closed-cell edges `hadjω` (converted to cell form by `cell_isCompact`, S6n.lean:289), and the local finiteness
+  and loop-weight `hmultω`. The mesh `hmω` is the binder `hmesh` of the B1 theorem.
 
 Terminology: Armstrong-Kuusi-Mourrat (shell centres, good annuli), Armitage-Gardiner (exit times of balls),
 Duplantier-Sheffield (the mated-CRT boundary-length parametrisation `η`).
@@ -63,8 +63,9 @@ theorem hEl_fixedOmega {γ ρ : ℝ}
     (i : Lemma68Config.Config68) (ω : Ω)
     (hmω : CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ)
     (hηω : Continuous (S.η ω))
-    (htendω : Tendsto (S.η ω) (cocompact ℝ) (cocompact ℂ))
-    (hadjω : ∀ j k : ℤ, S.mult ε ω j k ≠ 0 → (cell ε (S.η ω) j ∩ cell ε (S.η ω) k).Nonempty)
+    (hcurveω : MatedCRT.Lemma68Inputs.CurveEscapesBothEnds (S.η ω))
+    (hadjω : ∀ u v : ℤ, S.mult ε ω u v ≠ 0 →
+      (closure (cell ε (S.η ω) u) ∩ closure (cell ε (S.η ω) v)).Nonempty)
     (hmultω : IsLocallyFiniteMult (S.mult ε ω) ∧ ∀ k : ℤ, S.mult ε ω k (k + 1) ≠ 0) :
     Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
@@ -119,7 +120,16 @@ theorem hEl_fixedOmega {γ ρ : ℝ}
   have h0 : (0 : ℂ) ∈ fillCells ε (S.η ω) ↑i.Θ := hs0 (Metric.mem_ball_self hs₀)
   have hKb : fillCells ε (S.η ω) ↑i.Θ ⊆ Metric.ball (0 : ℂ) (ρ / 2) := subset_closure.trans hKb0
   have hst := MatedCRT.Lemma68HoneSetup239.hstart_of_fullAdmAt S hε hs₀ ω hηω r hr0 i hFA
-  have hPath := MatedCRT.Lemma68HoneGoodEventAe.walk_inputs_ae hηω hε htendω hadjω hmultω.1 hmultω.2 i.a
+  -- the cells are compact, so the closed-cell adjacency is the cell adjacency
+  have hcl : ∀ k : ℤ, closure (cell ε (S.η ω) k) = cell ε (S.η ω) k :=
+    fun k => (MatedCRT.Lemma68C12Geom.cell_isCompact hηω k).isClosed.closure_eq
+  have hadjC : ∀ j k : ℤ, S.mult ε ω j k ≠ 0 → (cell ε (S.η ω) j ∩ cell ε (S.η ω) k).Nonempty :=
+    fun j k h => by
+      have h' := hadjω j k h
+      rwa [hcl j, hcl k] at h'
+  have htendω : Tendsto (S.η ω) (cocompact ℝ) (cocompact ℂ) :=
+    MatedCRT.Lemma68Geometry.tendsto_cocompact_of_escapes hcurveω
+  have hPath := MatedCRT.Lemma68HoneGoodEventAe.walk_inputs_ae hηω hε htendω hadjC hmultω.1 hmultω.2 i.a
     hF0eq hst
   intro k hk
   exact MatedCRT.Lemma68HoneGoodEventAe.hEl_ae_of_walk (A := (↑i.A : Set ℤ))
