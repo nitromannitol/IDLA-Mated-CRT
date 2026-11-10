@@ -69,8 +69,9 @@ theorem ae_envRegular {𝒮 : SpaceFillingSLEModel} {γ : ℝ} {Ω : Type} [Meas
 
 /-- Named input (probabilistic content of write-up C4 and of the cell-size mesh, for each valid environment): there
 are a radius `dd` and events `E`, `G` with `P(E)` tending to one and `P(Gᶜ) = 0`, on which the per-state inputs
-`StateTestInputs` (C4) and the mesh condition `hmesh` (cells meeting `B_ρ` have diameter at most `Delta p r / 100`
-for `r ≥ 10 ε^ω₀`) hold, with the guard radius `α ε = 10 ε^ω₀`. Not proved here. The regularity of `η`, the local
+`StateTestInputs` (C4) and the mesh condition `hmesh` (cells meeting `B_ρ` have diameter at most
+`min (Delta p r / 100) (c0 * Delta p r)` for `r ≥ 10 ε^ω₀`, the form of `Lemma68Config.probTendsToOne_lemma68_concrete`)
+hold, with the guard radius `α ε = 10 ε^ω₀`. Not proved here. The regularity of `η`, the local
 finiteness of the multiplicities and the containment C12 are derived (see `guardProb_of_concrete`). -/
 def ConcreteGuardInputStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ ω₀ : ℝ, 0 < ω₀ ∧ ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
@@ -84,7 +85,7 @@ def ConcreteGuardInputStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
     ProbTendsToOne S.P E ∧ S.P Gᶜ = 0 ∧
     (∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ dd ω → ∀ k : ℤ,
       (cell ε (S.η ω) k ∩ Metric.ball (0 : ℂ) ρ).Nonempty →
-        Metric.diam (cell ε (S.η ω) k) ≤ Lemma68Scales.Delta p r / 100) ∧
+        Metric.diam (cell ε (S.η ω) k) ≤ min (Lemma68Scales.Delta p r / 100) (c0 * Lemma68Scales.Delta p r)) ∧
     (∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ dd ω → ∀ i : Config68,
       FullAdm S ρ s₀ γ ε ω r i →
         ∃ Good : ℤ → Prop, StateTestInputs (S.mult ε ω) i.a ε (S.η ω) p r (good ε ω) (↑i.A : Set ℤ) qStar c0 Good)
@@ -136,7 +137,7 @@ theorem guardProb_of_concrete (𝒮 : SpaceFillingSLEModel) (hC : ConcreteGuardI
   have hmesh' : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ (G ∩ {ω | EnvRegular S ω}), ∀ r : ℝ,
       10 * ε ^ ω₀ ≤ r → r ≤ min (dd ω) (min R (ρ / 100)) → ∀ k : ℤ,
       (cell ε (S.η ω) k ∩ Metric.ball (0 : ℂ) ρ).Nonempty →
-        Metric.diam (cell ε (S.η ω) k) ≤ Lemma68Scales.Delta p r / 100 :=
+        Metric.diam (cell ε (S.η ω) k) ≤ min (Lemma68Scales.Delta p r / 100) (c0 * Lemma68Scales.Delta p r) :=
     fun ε hε ω hω r h1 h2 => hmesh ε hε ω (hsub ε ω hω).1 r h1 (h2.trans (min_le_left _ _))
   have hstate' : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ (G ∩ {ω | EnvRegular S ω}), ∀ r : ℝ,
       10 * ε ^ ω₀ ≤ r → r ≤ min (dd ω) (min R (ρ / 100)) → ∀ i : Config68, FullAdm S ρ s₀ γ ε ω r i →
@@ -148,9 +149,48 @@ theorem guardProb_of_concrete (𝒮 : SpaceFillingSLEModel) (hC : ConcreteGuardI
     hs₀0 (min_le_right _ _) hq00 hq01 hζ0 hζ1 ((min_le_left _ _).trans hRz) ((min_le_left _ _).trans hR1000) hc0
     hq0d hq0' hq1s hq9 hp3 hpζ hEnv hlf hadj hmesh' hstate'
 
+/-- Converse of `Geometry.tendsto_cocompact_of_escapes`: a curve that is proper for the cocompact filters escapes both
+ends (`Lemma68Inputs.CurveEscapesBothEnds`, `S6e/Inputs.lean`). -/
+theorem escapes_of_tendsto_cocompact {η : ℝ → ℂ}
+    (h : Filter.Tendsto η (Filter.cocompact ℝ) (Filter.cocompact ℂ)) :
+    Lemma68Inputs.CurveEscapesBothEnds η := by
+  intro R hR
+  have hK : (Metric.closedBall (0 : ℂ) R)ᶜ ∈ Filter.cocompact ℂ :=
+    (isCompact_closedBall (0 : ℂ) R).compl_mem_cocompact
+  have hev : ∀ᶠ t in Filter.cocompact ℝ, η t ∈ (Metric.closedBall (0 : ℂ) R)ᶜ := h hK
+  rw [cocompact_eq_atBot_atTop, Filter.eventually_sup, Filter.eventually_atBot, Filter.eventually_atTop] at hev
+  obtain ⟨⟨a, ha⟩, ⟨b, hb⟩⟩ := hev
+  refine ⟨max 1 (max (-a) b), lt_of_lt_of_le one_pos (le_max_left _ _), fun t ht => ?_⟩
+  have hT1 : -a ≤ max 1 (max (-a) b) := (le_max_left _ _).trans (le_max_right _ _)
+  have hTb : b ≤ max 1 (max (-a) b) := (le_max_right _ _).trans (le_max_right _ _)
+  have hmem : η t ∈ (Metric.closedBall (0 : ℂ) R)ᶜ := by
+    rcases le_total 0 t with h0 | h0
+    · rw [abs_of_nonneg h0] at ht
+      exact hb t (by linarith)
+    · rw [abs_of_nonpos h0] at ht
+      exact ha t (by linarith)
+  simpa [Metric.mem_closedBall, dist_zero_right, not_le] using hmem
+
+/-- Almost surely `η` escapes both ends: the body of `EscapeAeStmt` (`S6e/Uniform.lean:143`), from the properness of
+`η` almost surely (`IsValid.ae_tendsto_cocompact`). -/
+theorem ae_escapes_of_valid {𝒮 : SpaceFillingSLEModel} {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    (hS : S.IsValid 𝒮 γ) : ∀ᵐ ω ∂S.P, Lemma68Inputs.CurveEscapesBothEnds (S.η ω) := by
+  filter_upwards [hS.ae_tendsto_cocompact] with ω hω using escapes_of_tendsto_cocompact hω
+
+/-- Almost surely, for every `ε > 0`, the multiplicities `S.mult ε ω` are locally finite with consecutive adjacency:
+the body of `FiniteExitAeStmt` (`S6e/Uniform.lean:149`), from `Uniform68Env.ae_envInputs` and `Uniform68Env.envAt`. -/
+theorem ae_finiteExit_of_valid {𝒮 : SpaceFillingSLEModel} {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (hS : S.IsValid 𝒮 γ) :
+    ∀ᵐ ω ∂S.P, ∀ ε : ℝ, 0 < ε → IsLocallyFiniteMult (S.mult ε ω) ∧ ∀ k : ℤ, S.mult ε ω k (k + 1) ≠ 0 := by
+  filter_upwards [Uniform68Env.ae_envInputs hγ0 hγ2 hS] with ω hω
+  intro ε hε
+  obtain ⟨h1, h2, -⟩ := Uniform68Env.envAt S hε ω hω.1 hω.2.1 hω.2.2
+  exact ⟨h1, h2⟩
+
 end Lemma68Guard
 
 #print axioms MatedCRT.Lemma68Guard.guardProb_of_concrete
-#print axioms MatedCRT.Lemma68Guard.probTendsToOne_guard_concrete
+#print axioms MatedCRT.Lemma68Guard.ae_escapes_of_valid
+#print axioms MatedCRT.Lemma68Guard.ae_finiteExit_of_valid
 
 end MatedCRT
