@@ -322,7 +322,7 @@ theorem hstart_ae_of_valid {𝒮 : SpaceFillingSLEModel} {γ : ℝ} {Ω : Type} 
 
 Eps analogue of `ShellOneTestPointwiseEnvStmt`: the premises and conclusion of `ShellOneTestOrderAeEpsStmt`
 (ShellHoneInst68.lean:233), with the window avoidance at the dyadic scales `(1/2)^k` (pointwise in `ω`), the r-free
-environment facts pointwise at `ω`, and `ε ≤ shellEps0 γ α ω₀` for the ε-clause. Named input, not frozen. -/
+environment facts pointwise at `ω`, and `ε ≤ shellEps0Z γ α ω₀ ζ` for the ε-clause. Named input, not frozen. -/
 
 /-- **The Eps pointwise one-test input** (named; leaf input for q4's `shellOneTest_pointwise_fixedR`). -/
 def ShellOneTestPointwiseEpsStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -385,8 +385,9 @@ theorem shellChainCoreEpsStmt_of_pointwiseEps {𝒮 : SpaceFillingSLEModel} (h :
 
 /-! ### The r-uniform reduction to `shellOneTest_at_of_goodEnv` (fp-S4S6c-b1-glue, z5)
 
-`shellOneTest_at_of_goodEnv` (B1Assembly68.lean:567) is the body at one environment `ω` and one radius `r`. Its binders
-`hεcell`, `hmesh`, `hShell`, `hEl`, ... are statements at fixed `(ω, r, i)`. Here each binder that is not discharged is
+`shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:803; the pointwise form of `shellOneTest_at_of_goodEnv`, B1Assembly68.lean:567)
+is the body at one environment `ω` and one radius `r`. Its binders `hεcell`, `hmesh`, `htest`, `hEl`, ... are statements at
+fixed `(ω, r, i)`. Here each binder that is not discharged is
 stated in r-uniform form: the `ShellRes…` below quantify over all parameters of `ShellOneTestPointwiseEpsStmt` and
 assume `ShellPtPrem`, which is exactly the premise list of that Stmt at `(ω, r)`. Every other binder is discharged. -/
 
@@ -424,16 +425,17 @@ def ShellResMesh (𝒮 : SpaceFillingSLEModel) : Prop :=
     ShellPtPrem 𝒮 γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r S Ew ω →
     CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ
 
-/-- Residual `hShell` (owner q4 / z1): the pointwise shell order for the window `windowRfT` (no pointwise core in the
-repository). -/
-def ShellResShell (𝒮 : SpaceFillingSLEModel) : Prop :=
+/-- Residual `htest` (owner z1, ShellTestPw68): the testEnd finite-domain event at the total window radius, almost surely
+in the walk from `i.a`, at every shell index. This is the binder `htest` of `shellOneTest_at_of_goodEnv'`
+(B1Assembly68.lean:803), which replaced the named pointwise order `hShell` (q4, 71b68c0). -/
+def ShellResTest (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
     ShellPtPrem 𝒮 γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r S Ew ω →
     Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
-      Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r)
-        (windowRfT S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) ω)
-        (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a
+      ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a), ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
+        testEnd ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
+          (winRf S ρ ζ C r ω) k x ≠ ⊤
 
 /-- Residual `hEl` (owner q4, B1 walk form): the shell centres are short-eligible, almost surely in the walk. -/
 def ShellResEl (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -635,7 +637,7 @@ def ShellResFull (𝒮 : SpaceFillingSLEModel) : Prop :=
 `hε1`, `hεcell` from `ShellResEpsThr`, `hωκ`, `hα`, `hrε`, and `RegularEnvAt68` from the Stmt premises) or is one of
 the residual `ShellRes…` inputs above. -/
 theorem shellOneTestPointwiseEps_of_goodEnv {𝒮 : SpaceFillingSLEModel}
-    (hmesh : ShellResMesh 𝒮) (hShell : ShellResShell 𝒮) (hEl : ShellResEl 𝒮)
+    (hmesh : ShellResMesh 𝒮) (hTest : ShellResTest 𝒮) (hEl : ShellResEl 𝒮)
     (hTdom : ShellResTdom 𝒮) (hRbd : ShellResRbd 𝒮) (hRr : ShellResRr 𝒮) (hcap : ShellResCap 𝒮)
     (hVolC : ShellResVolC 𝒮) (hVolY : ShellResVolY 𝒮) (hGreen : ShellResGreen 𝒮)
     (hCountGood : ShellResCountGood 𝒮) (hCellGood : ShellResCellGood 𝒮) (hRcell : ShellResRcell 𝒮)
@@ -686,12 +688,20 @@ theorem shellOneTestPointwiseEps_of_goodEnv {𝒮 : SpaceFillingSLEModel}
   have hpre : ShellPtPrem 𝒮 γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r S Ew ω :=
     ⟨hγ0, hγ2, hω₀, hωα, hα0, hωζ, hωβ, hω2ζ, hCG, hCE, hζ0, hζ1, hρ0, hρ1, hC, hq0, hq0B,
       hR0, hRρ, hRA, hRcut, hs₀, hs₁, hS, hε, hεe, hr10, hrR, hωE, hreg⟩
-  obtain ⟨Rf, h1, h2⟩ := shellOneTest_at_of_goodEnv hγ0 hγ2 S hρ0 hρ1 hζ0 hζ1 hCG hq0 hq0B hε hr0
-    (le_trans hrR hRρ) (le_trans hrR hRA) ω₀ hω₀ (shellK68 γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω₀ hζ0 hζ1) rfl ω hreg i
+  have hq1 : q0 ≤ 1 := by
+    have h2 := one_le_shellChone68 CE CG
+    have h3 : (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE CG) ≤ 1 := by
+      rw [div_le_one (by linarith)]; nlinarith
+    linarith
+  have hrA : r ≤ Lemma68Cutoff.rAmp q0 ζ := le_trans hrR hRA
+  have hrz : r ≤ countThreshold ζ :=
+    le_trans hrA (Lemma68ChainGlue.rAmp_le_countThreshold hq0 hq1 hζ0 hζ1)
+  obtain ⟨Rf, h1, h2⟩ := shellOneTest_at_of_goodEnv' hγ0 hγ2 S hρ0 hρ1 hζ0 hζ1 hCG hq0 hq0B hε hs₀ hr0
+    (le_trans hrR hRρ) hrz hrA ω₀ hω₀ (shellK68 γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω₀ hζ0 hζ1) rfl ω hreg i
     (ζ := ζ) (CG := CG) (CE := CE) (C := C) (α := α) (q0 := q0) (s₀ := s₀) (ε := ε) (r := r)
     hεc hεcell (hωζ.le) hωβ hεs hr10 hε1
     (hmesh γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
-    (hShell γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
+    (hTest γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     hadm
     (hEl γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     (hTdom γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
