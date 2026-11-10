@@ -7,6 +7,7 @@ import MatedCRT.FirstPass.Frozen.S3S4b
 import MatedCRT.FirstPass.S4d.ScaleBridge
 import MatedCRT.FirstPass.S4d.HorizonUnique
 import MatedCRT.FirstPass.Frozen.S4d2
+import MatedCRT.FirstPass.Frozen.S1d
 import MatedCRT.FirstPass.S1S2S8SA
 import MatedCRT.FirstPass.S3S4
 import MatedCRT.FirstPass.S3S4c
@@ -42,14 +43,17 @@ namespace MatedCRT
 open _root_.HarmonicBalls in
 /-- **Proposition 4.2 (`DivSandpileLowerBoundStmt`), assembled (q4, fp-S4d-4-2-assembly).**
 The Draft hypotheses `h23`, `h33`, `h34`, `h24`, `h25` and the closure and Lemma 2.6 steps are derived in the proof (see the
-module docstring); the explicit inputs are the frozen `hrevuz`, `hdet` (for `h34`), the frozen `hrescale` (for `hRU`), and the frozen and
+module docstring); the explicit inputs are the frozen `hrevuz`, `hdet` (for `h34`), the frozen `hrescale` (for `hRU`), the conditional environment scaling `hEnvS` with the three SLE closure inputs `hsc`, `hrp`, `hind`
+(replacing the retired `FrozenConeEnvironmentScaling`; `hEnvS hsc hrp hind` is used where `hcone` was), and the frozen and
 external hypotheses listed in the signature. The statement of Proposition 4.2 is unchanged. -/
 theorem firstPass_4_2_of_wholeplane_model {𝒮 : SpaceFillingSLEModel}
     (hm : MepsScalingInput 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)
     (h214 : GreenKernelUpperBoundStmt 𝒮)
     (h28 : CellSizeEstimateStmt 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
     (h218 : ExitTimeUpperBoundStmt 𝒮) (h27 : VolumeGrowthStmt)
-    (hH : FrozenDiscreteHolderContinuityCorrected 𝒮) (hcone : FrozenConeEnvironmentScaling 𝒮)
+    (hH : FrozenDiscreteHolderContinuityCorrected 𝒮)
+    (hEnvS : ConeEnvironmentScalingUnderSLE 𝒮) (hsc : SLEScaleInvarianceInput 𝒮)
+    (hrp : SLEReparametrizationInput 𝒮) (hind : SLEIndepMonoInput 𝒮)
     (hrevuz : FrozenLBMGreenOccupationRescaled 𝒮) (hdet : FrozenTruncatedQuenchedLawsFixedTime 𝒮)
     (hrescale : ConeRescaledMeasureIsConeFieldInput)
     (hG : _root_.HarmonicBalls.GreenFunctionBallStmt) (hpc : FrozenPunctureConnected)
@@ -81,7 +85,7 @@ theorem firstPass_4_2_of_wholeplane_model {𝒮 : SpaceFillingSLEModel}
   have h23 := firstPass_2_3 h24 h25 h27 hscale h22
   have h34 := MatedCRT.S3S4c.firstPass_3_4 h27 h218 hm hrevuz hdet
   have h33 := firstPass_3_3 h210 h34 h214 h28 h27 h218 hm hH
-  exact firstPass_4_2_of_halfball_gate hm h210 h34 h214 h28 h35 h218 h27 hH hcone h23 h24
+  exact firstPass_4_2_of_halfball_gate hm h210 h34 h214 h28 h35 h218 h27 hH (hEnvS hsc hrp hind) h23 h24
     h25 h33 hG hpc hsmp hwmp hpole
     (firstPass_2_6_corrected hU hmeasT hstd hwmp hCentre hG hpole hOpen hSup hCons hMono hCompat hBdry hExist hThm11
       hProp56 hconf hI2 hK hloc hSC
