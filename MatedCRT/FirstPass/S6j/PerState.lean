@@ -1,6 +1,7 @@
 import MatedCRT.FirstPass.S6j.FiniteExit
 import MatedCRT.FirstPass.S4S6c.TraceFrom68
 import MatedCRT.FirstPass.S6h.Successive
+import MatedCRT.FirstPass.S4S6c.PerTest68
 
 /-!
 # The per-state outer test bound by a local test at the first hitting vertex (fp-S6j, input `hpt`)
@@ -256,6 +257,51 @@ lemma exitSchedule_eq_nextExitSchedule (W : ℤ → Set ℤ) (N : ℕ) :
     show SuccessiveExitStop.nextExit W (Lemma68Successive.exitSchedule W N) =
       SuccessiveExitStop.nextExit W (nextExitSchedule (fun _ => W) N)
     rw [ih]
+
+
+/-- **hloc from printed_test_bound.** The local bound at a middle vertex `y` (PerTest68.lean:82) with the scale `r := R`
+and the local window `I(B_{R/4}(vertexPoint u))`: the printed bound with constant `q₀ = 1/(288 Cd² K²)` gives the bound with
+`min q₀ 1`. All hypotheses are those of `printed_test_bound` (the good-event and configuration inputs at `y`). -/
+theorem hloc_of_printed {μ : Measure ℂ} [SFinite μ] {η : ℝ → ℂ} {m : ℤ → ℤ → ℕ} {A : Set ℤ} {y : ℤ}
+    {ε R mr s1 β c0 C Cd Cg p δ : ℝ} {z : ℂ} {Aset : Finset ℤ}
+    (hap : IsAreaParametrized μ η) (hη : Continuous η) (hε : 0 < ε) (hR : 0 < R) (hR1 : R ≤ 1)
+    (hmr : 0 < mr) (hC : 0 < C) (hCd : 0 < Cd) (hCg : 0 < Cg)
+    (hc0 : 0 < c0) (hc0' : c0 < 1 / 8) (hc0C : c0 ≤ Real.exp (-(2 * C)) / 16) (hεc : ε ≤ 16 * c0)
+    (hp : p ≤ 3) (hRpow : R ^ p / 2 < R)
+    (hmu : ENNReal.ofReal mr ≤ μ (Metric.ball (vertexPoint ε η y) (c0 * R)))
+    (hfinD : (cellVertices ε η (Metric.ball (vertexPoint ε η y) (c0 * R))).Finite)
+    (hfinr : (cellVertices ε η (Metric.ball (vertexPoint ε η y) R)).Finite)
+    (hAs : ∀ k, k ∈ Aset ↔ k ∈ A ∩ cellVertices ε η (Metric.ball (vertexPoint ε η y) (c0 * R)))
+    (hsp : ((A ∩ cellVertices ε η (Metric.ball (vertexPoint ε η y) R)).ncard : ℝ) < s1 * R ^ (2 * β) / ε)
+    (hs : s1 * R ^ (2 * β) ≤ mr / 4)
+    (hdiam : ∀ k : ℤ, (cell ε η k ∩ Metric.ball (vertexPoint ε η y) (R / 4)).Nonempty →
+      Metric.diam (cell ε η k) ≤ c0 * R)
+    (hGreenAt : ∀ b ∈ cellVertices ε η (Metric.ball (vertexPoint ε η y) (c0 * R)),
+      greenKernel m (interiorCellVertices ε η (Metric.ball (vertexPoint ε η y) (R / 8))) y b ≤
+          greenFn m (interiorCellVertices ε η (Metric.ball (vertexPoint ε η y) (R / 8))) y b ∧
+        C⁻¹ * Real.log (if vertexPoint ε η y = vertexPoint ε η b then ε⁻¹
+            else min ((R / 8) / ‖vertexPoint ε η y - vertexPoint ε η b‖) ε⁻¹) - 1
+          ≤ greenKernel m (interiorCellVertices ε η (Metric.ball (vertexPoint ε η y) (R / 8))) y b)
+    (hdy : Metric.diam (cell ε η y) ≤ R / 100) (hmeet : (cell ε η y ∩ Metric.sphere z (4 * R / 3)).Nonempty)
+    (hδ : δ ≤ R / 100) (hμA : μ (closedAnnulus z R) ≠ ⊤)
+    (hint : ∀ v ∈ Metric.ball (vertexPoint ε η y) (R / 4),
+      IntegrableOn (fun u : ℂ => Real.log (R / ‖u - v‖) + 1) (closedAnnulus z R) μ)
+    (hF : ∀ w ∈ closedAnnulus z R, ∫ u in closedAnnulus z R, (Real.log (R / ‖u - w‖) + 1) ∂μ ≤ Cg * mr)
+    (hexit : exitTimeMoment m (interiorCellVertices ε η (Metric.ball (vertexPoint ε η y) (R / 4))) y 2 ≤
+      ENNReal.ofReal (((2 : ℕ).factorial : ℝ) * Cd ^ (2 : ℕ) * ε ^ (-((2 : ℕ) : ℝ))) *
+        (⨆ v ∈ Metric.ball (vertexPoint ε η y) (R / 4),
+          ∫⁻ u in Metric.thickening δ (Metric.ball (vertexPoint ε η y) (R / 4)),
+            ENNReal.ofReal (Real.log (1 / ‖v - u‖) + 1) ∂μ) ^ (2 : ℕ)) :
+    srwLaw m y (TestBound68.stayIn (fun u => interiorCellVertices ε η (Metric.ball (vertexPoint ε η u) (R / 4))) A y) ≤
+      ENNReal.ofReal (1 - min (1 / (288 * Cd ^ 2 * (Cg * (1 + (Real.log 4 - 1)) / (1 - Real.log 2)) ^ 2)) 1 /
+        (1 + Real.log (1 / R)) ^ 2) := by
+  have hRr : Metric.ball (vertexPoint ε η y) (c0 * R) ⊆ Metric.ball (vertexPoint ε η y) R :=
+    Metric.ball_subset_ball (by nlinarith)
+  have hP := printed_test_bound (W := fun u => interiorCellVertices ε η (Metric.ball (vertexPoint ε η u) (R / 4)))
+    hap hη hε hR hR1 hmr hC hCd hCg hc0 hc0' hc0C hεc hR hR1 hp hRpow hmu hfinD hfinr hRr rfl hAs hsp hs
+    hdiam hGreenAt hdy hmeet hδ hμA hint hF hexit
+  refine hP.trans (ENNReal.ofReal_le_ofReal ?_)
+  exact sub_le_sub_left (div_le_div_of_nonneg_right (min_le_left _ _) (by positivity)) 1
 
 end S6j
 
