@@ -1,4 +1,5 @@
 import MatedCRT.FirstPass.S4S6c.HcAssembly68
+import MatedCRT.FirstPass.S4S6c.ExitNull68
 
 /-!
 # First pass, Lemma 6.8: the one-test bound on the sphere band (q2, fp-S4S6c-envscaling-6-7-6-8)
@@ -39,6 +40,16 @@ theorem hc_of_band {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {A : Set ℤ}
     ∀ y ∈ innerVertices H (ball z (4 * R / 3)),
       srwLaw m y (TestBound68.stayIn (fun _ => innerVertices H (ball z (2 * R))) A y) ≤ c :=
   fun y hy => HcAssembly68.hc_of_local hconn hne hd hsm hadj hPb hgeo hρ hy (hfin y hy) hloc
+
+/-- **Almost-sure exit from a finite band** (the `hfin` input of `hc_of_band`). A finite set `A` of vertices is left
+almost surely in finite time from every start, for a locally finite multigraph `m` with `m k (k+1) ≠ 0`
+(`ExitNull68.exit_null_of_finite`). For the band `A = I(B_{4R/3}(z))` the finiteness of `A` is the properness of `η`
+(`IsValid.ae_tendsto_cocompact`), supplied by the event bundle. -/
+theorem hfin_band {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0)
+    {A : Set ℤ} (hA : A.Finite) (y : ℤ) :
+    ∀ᵐ x ∂srwLaw m y, vExitTime A x ≠ ⊤ := by
+  rw [ae_iff]
+  simpa using ExitNull68.exit_null_of_finite hlf hcons hA y
 
 end HcPrinted68
 
