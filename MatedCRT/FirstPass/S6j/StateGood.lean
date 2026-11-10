@@ -1,4 +1,5 @@
 import MatedCRT.FirstPass.S6j.PerState
+import MatedCRT.FirstPass.S4S6c.HcGreen68
 
 /-!
 # The good-state inputs of the local test at the middle vertices (fp-S6j; `hloc` of `StateTestInputs`)
@@ -8,7 +9,7 @@ scale `R`, the sparsity scale `r`, the mass `mr = μ(B_{c₀R}(v)).toReal` and t
 
 * `GoodVertexInputs`: the good-event inputs of that test at one middle vertex. They are NAMED fields (the good event of
   the state, not derived here): `hsp`, `hs` (sparsity and mass lower bound at the scale `r`), `hdy`, `hdiam` (cell geometry),
-  `hGreenAt` (Green comparison), `hint`, `hF` (logarithmic kernel on the closed annulus `A_{R,2R}(z)`) and `hexit` (exit moment).
+  `hGreenLow` (Green lower bound; the upper bound is unconditional), `hint`, `hF` (logarithmic kernel on the closed annulus `A_{R,2R}(z)`) and `hexit` (exit moment).
 * `printedVertex_of_good`: the local bound at `v` by `printed_test_bound`. Discharged here: `μ(B_{c₀R}(v)) ≠ ⊤` and
   `μ(A_{R,2R}(z)) ≠ ⊤` (`IsFiniteMeasureOnCompacts`), the finiteness of the cell vertices of the balls (properness of `η`),
   the set `Aset`, `0 < mr` (from `hs` and `0 < s1`), and the incidence `hmeet` (the middle vertex hypothesis).
@@ -53,10 +54,10 @@ structure GoodVertexInputs (μ : Measure ℂ) (η : ℝ → ℂ) (m : ℤ → �
   hdy : Metric.diam (cell ε η v) ≤ R / 100
   hdiam : ∀ k : ℤ, (cell ε η k ∩ Metric.ball (vertexPoint ε η v) (R / 4)).Nonempty →
     Metric.diam (cell ε η k) ≤ c0 * R
-  hGreenAt : ∀ b ∈ cellVertices ε η (Metric.ball (vertexPoint ε η v) (c0 * R)),
-      greenKernel m (interiorCellVertices ε η (Metric.ball (vertexPoint ε η v) (R / 8))) v b ≤
-          greenFn m (interiorCellVertices ε η (Metric.ball (vertexPoint ε η v) (R / 8))) v b ∧
-        C⁻¹ * Real.log (if vertexPoint ε η v = vertexPoint ε η b then ε⁻¹
+  /-- The Green lower bound (open-parts write-up line 870, "a lower bound on both the Green's kernel and function"). The
+  upper bound `greenKernel ≤ greenFn` is unconditional (`HcGreen68.greenKernel_le_greenFn`). -/
+  hGreenLow : ∀ b ∈ cellVertices ε η (Metric.ball (vertexPoint ε η v) (c0 * R)),
+      C⁻¹ * Real.log (if vertexPoint ε η v = vertexPoint ε η b then ε⁻¹
             else min ((R / 8) / ‖vertexPoint ε η v - vertexPoint ε η b‖) ε⁻¹) - 1
           ≤ greenKernel m (interiorCellVertices ε η (Metric.ball (vertexPoint ε η v) (R / 8))) v b
   hint : ∀ w ∈ Metric.ball (vertexPoint ε η v) (R / 4),
@@ -100,7 +101,7 @@ theorem printedVertex_of_good {μ : Measure ℂ} [SFinite μ] [IsFiniteMeasureOn
     (y := v) (r := r) (R := R) (mr := (μ (Metric.ball (vertexPoint ε η v) (c0 * R))).toReal) (z := z)
     (Aset := hfinI.toFinset) hap hη hε hR hR1 hmr hC hCd hCg hc0 hc0' hc0C hεc hr hr1 hp hRpow
     (le_of_eq (ENNReal.ofReal_toReal hmfin)) hfinD hfinr hRr' rfl (fun _ => hfinI.mem_toFinset)
-    hG.hsp hG.hs hG.hdiam hG.hGreenAt hG.hdy hmeet hδ (measure_closedAnnulus_ne_top z R) hG.hint hG.hF hG.hexit
+    hG.hsp hG.hs hG.hdiam (fun b hb => ⟨HcGreen68.greenKernel_le_greenFn m _ _ b, hG.hGreenLow b hb⟩) hG.hdy hmeet hδ (measure_closedAnnulus_ne_top z R) hG.hint hG.hF hG.hexit
   exact hP
 
 /-- **`hloc` of `StateTestInputs` from the good-state predicate.** Centres `Z`, radii `Rs`, thickenings `δs`, the good-state
