@@ -2,6 +2,7 @@ import MatedCRT.FirstPass.Closure.Theorem14
 import MatedCRT.FirstPass.S218
 import MatedCRT.Proofs.Sec3.ConeBallMass
 import MatedCRT.FirstPass.Frozen.S5Cited
+import MatedCRT.FirstPass.S3t.BLEnvelopeClosure
 
 /-!
 # Theorems 1.4 and 1.6 with the exit-time bound, the volume growth and the truncated laws derived
@@ -17,11 +18,10 @@ import MatedCRT.FirstPass.Frozen.S5Cited
   (`FirstPass/Frozen/S5Cited.lean:35`, definitionally `BerestyckiGwynneConeBallMassStmt`). The name
   `volumeGrowth_of_coneBallMass` of the task note does not occur in the repository; `FirstPass/S5u.lean` only
   documents this provider.
-* (iii) `hdet : FrozenTruncatedQuenchedLawsFixedTime 𝒮` is replaced by the local hypothesis `hT`, standing for
-  `truncatedQuenchedLawsFixedTime_of_inputs` (z8, `FirstPass/S3t.lean`, not yet committed) applied to
+* (iii) `hdet : FrozenTruncatedQuenchedLawsFixedTime 𝒮` is derived: `MatedCRT.TruncatedLaws.truncatedQuenchedLawsFixedTime_of_inputs`
+  (`FirstPass/S3t/BLEnvelopeClosure.lean`, z8, committed 4c8c580) applied to
   `h211 := MatedCRT.CertifiedReferenceModel.randomWalkToLBM hC` (Theorem 2.11 from the certified model), `h28`, `hm`
-  and `hexc`. The type of `hT` follows the convention of `FirstPass/S5qd.lean` and `FirstPass/S34d.lean`. Replace `hT`
-  by that theorem when z8 commits it.
+  and `hexc`. The former binder `hT` (same convention as `FirstPass/S5qd.lean`) is removed.
 
 `hrevuz : FrozenLBMGreenOccupationRescaled 𝒮` (the Revuz occupation identity, source gap) is kept as in
 `closed_1_4_wired`. The other binders are the binders of `closed_1_4_wired` / `closed_1_6_wired`, deduplicated.
@@ -35,7 +35,8 @@ open _root_.HarmonicBalls
 namespace MatedCRT.FirstPassClosure
 
 /-- **Theorem 1.4 (wired closure, derived inputs).** The conclusion of `closed_1_4_wired`, with `h218` derived from
-`h51` and `h27`, `h27` derived from `hBG`, and `hdet` replaced by `hT` (see the module docstring). -/
+`h51` and `h27`, `h27` derived from `hBG`, and `hdet` derived from `truncatedQuenchedLawsFixedTime_of_inputs` (see the module
+docstring). -/
 theorem closed_1_4_derived {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
     (hC : CertifiedReferenceModel ν 𝒮)
     (hscale : QuantumConeScalingInput) (hsc : SLEScaleInvarianceInput 𝒮) (hrp : SLEReparametrizationInput 𝒮)
@@ -48,8 +49,6 @@ theorem closed_1_4_derived {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure S
     (h0 : FPWholePlaneLQGExistence) (h2 : FPWholePlaneLQGCoordinateChange) (hV : FPWholePlaneUpperVolumeTail)
     (hR : FPConeMeanZeroRestriction) (hcone : FrozenConeScalingLaw 𝒮)
     (hrevuz : FrozenLBMGreenOccupationRescaled 𝒮)
-    (hT : RandomWalkToLBMStmt 𝒮 → CellSizeEstimateStmt 𝒮 → MepsScalingInput 𝒮 →
-      FrozenBrownianOutwardExcursionAtExit → FrozenTruncatedQuenchedLawsFixedTime 𝒮)
     (h23 : ConeHarmonicBallsStmt)
     (hdiv : FrozenConeRadialDivergenceCorrected) (hF1 : FrozenUniversalMeasurabilityOfAnalytic)
     (hF2 : FrozenLQGTestIntegralMeasurable) (hF3 : FrozenDiskGreenNonnegCont)
@@ -84,7 +83,8 @@ theorem closed_1_4_derived {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure S
   have h27 : VolumeGrowthStmt := volumeGrowthStmt_of_berestyckiGwynne hBG
   have h218 : ExitTimeUpperBoundStmt 𝒮 := exitTimeUpperBound_of_bg20Prop51_volumeGrowth h51 h27
   have hdet : FrozenTruncatedQuenchedLawsFixedTime 𝒮 :=
-    hT (MatedCRT.CertifiedReferenceModel.randomWalkToLBM hC) h28 hm hexc
+    MatedCRT.TruncatedLaws.truncatedQuenchedLawsFixedTime_of_inputs
+      (MatedCRT.CertifiedReferenceModel.randomWalkToLBM hC) h28 hm hexc
   have h34 : IntegralConvergenceGreenFunctionStmt 𝒮 := S3S4c.firstPass_3_4 h27 h218 hm hrevuz hdet
   have h33 : UniformConvergenceGreenKernelStmt 𝒮 := firstPass_3_3 h210 h34 h214 h28 h27 h218 hm hH
   have hmax : MaximumPrincipleStmt 𝒮 := closed_2_13 hcell
@@ -119,8 +119,6 @@ theorem closed_1_6_derived {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure S
     (h0 : FPWholePlaneLQGExistence) (h2 : FPWholePlaneLQGCoordinateChange) (hV : FPWholePlaneUpperVolumeTail)
     (hR : FPConeMeanZeroRestriction) (hcone : FrozenConeScalingLaw 𝒮)
     (hrevuz : FrozenLBMGreenOccupationRescaled 𝒮)
-    (hT : RandomWalkToLBMStmt 𝒮 → CellSizeEstimateStmt 𝒮 → MepsScalingInput 𝒮 →
-      FrozenBrownianOutwardExcursionAtExit → FrozenTruncatedQuenchedLawsFixedTime 𝒮)
     (h23 : ConeHarmonicBallsStmt)
     (hdiv : FrozenConeRadialDivergenceCorrected) (hF1 : FrozenUniversalMeasurabilityOfAnalytic)
     (hF2 : FrozenLQGTestIntegralMeasurable) (hF3 : FrozenDiskGreenNonnegCont)
@@ -155,7 +153,8 @@ theorem closed_1_6_derived {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure S
   have h27 : VolumeGrowthStmt := volumeGrowthStmt_of_berestyckiGwynne hBG
   have h218 : ExitTimeUpperBoundStmt 𝒮 := exitTimeUpperBound_of_bg20Prop51_volumeGrowth h51 h27
   have hdet : FrozenTruncatedQuenchedLawsFixedTime 𝒮 :=
-    hT (MatedCRT.CertifiedReferenceModel.randomWalkToLBM hC) h28 hm hexc
+    MatedCRT.TruncatedLaws.truncatedQuenchedLawsFixedTime_of_inputs
+      (MatedCRT.CertifiedReferenceModel.randomWalkToLBM hC) h28 hm hexc
   have h34 : IntegralConvergenceGreenFunctionStmt 𝒮 := S3S4c.firstPass_3_4 h27 h218 hm hrevuz hdet
   have h33 : UniformConvergenceGreenKernelStmt 𝒮 := firstPass_3_3 h210 h34 h214 h28 h27 h218 hm hH
   have hmax : MaximumPrincipleStmt 𝒮 := closed_2_13 hcell
