@@ -13,8 +13,9 @@ note: independence is imposed between the cone data and the Lebesgue-area repres
 and the quantum-area-parametrized curve `η`; both triples are equal in law after the similarity, and the scaling
 `η(b ·)` is taken with the quantum-area clock.
 
-Status: PENDING TRUTH CHECK (operator). The truth argument of the note is §7 of `CHATGPT-fpsimilarity-truth.md`; its
-external content enters only through `SLEReferenceExistsInput` (`MatedCRT/FirstPass/Frozen/SLERef.lean`).
+Truth check (2026-11-10): UNSURE for a fixed model (see the docstring of `FPSimilarityTransferCorrected`); its universal
+closure over all models is FALSE. Its external content enters only through `SLEReferenceExistsInput`
+(`MatedCRT/FirstPass/Frozen/SLERef.lean`).
 -/
 
 namespace MatedCRT
@@ -29,7 +30,15 @@ the rescaled circle process, the rescaled quantum area measure and the scaled cu
 `r = coneScaleRadius γ (hcirc ω) b` has the same law as the unscaled triple `(circleProcess (hcirc ω), μ ω, η ω)`.
 
 Independence concerns `ηL`, and the conclusion is an identity in law of the triples built from `η`, as in
-`CHATGPT-fpsimilarity-truth.md` §5. -/
+`CHATGPT-fpsimilarity-truth.md` §5.
+
+Truth check (2026-11-10). For a fixed model `𝒮` the statement is UNSURE: it is valid for a genuinely calibrated SLE model (or
+a model calibrated to its normalized law), and is not automatically discharged for an arbitrary `SpaceFillingSLEModel`, since
+the unrestricted model parameter alone supplies no such fact. Its universal closure over arbitrary models is FALSE. Take an
+always-true predicate and an independent deterministic proper area-parametrized Peano curve whose negative-time trace is a
+nonconical closed region, e.g. `{x + iy : x ≤ y²}`; after the asserted similarity the negative trace becomes
+`{x + iy : x ≤ R_b y²}`, which has a different law for non-degenerate `R_b`. The narrow repair is calibration to the genuine
+normalized SLE law; this does not make a canonical per-model certificate inconsistent. -/
 def FPSimilarityTransferCorrected (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 →
   ∀ (Ω : Type) [mΩ : MeasurableSpace Ω]

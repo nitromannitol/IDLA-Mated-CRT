@@ -74,7 +74,8 @@ standard Borel space `Ω'`, with a measurable measure map `μ' : Ω' → Measure
 supported functions with support in `B_1`. Source: Duplantier-Sheffield, Invent. Math. 2011 (arXiv:0808.1560), Section 3
 (GMC locality, the LQG measure is a measurable function of the circle averages); IDLA arXiv:2211.04891, eq. (2.4), (2.8),
 Fact 2.2(II), p. 12 (cone restriction identity). Terminology: quantum cone (Duplantier-Miller-Sheffield), Kechris standard
-Borel spaces. The standard Borel clause and the measurability of `μ'` are the content of this interface.
+Borel spaces. The standard Borel clause and the measurability of `μ'` are the content of this interface. The original
+carrier `Ω` is not required to be standard Borel.
 Used by: `coneHalfBallGood_of_source` (FirstPass/S2g/GoodSetReduction.lean, via `CandidateConeLogLocalCodeLawStd`). -/
 def FrozenConeLogLocalCodeLawStd : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
@@ -88,8 +89,9 @@ def FrozenConeLogLocalCodeLawStd : Prop :=
 
 -- The whole-plane field law (fact (2) for the fields, `h|_{B_1} =_d (h^ℂ - γ log|·|)|_{B_1}`, Bou-Rabee and Gwynne,
 -- arXiv:2211.04891, eq. (2.4)) is REUSED, not copied: it is `FPConeWholePlaneFieldLaw` (`FirstPass/Frozen/S4S5b.lean:40`),
--- which is `ConeWholePlaneFieldLawStep` (`Proofs/Sec4/Prop42Closure/ConeWholePlaneSteps.lean:66`). Carried-over PENDING
--- TRUTH CHECK: the universal quantifier over whole-plane GFFs on arbitrary `Ω'`. Measurability is not an issue: both
+-- which is `ConeWholePlaneFieldLawStep` (`Proofs/Sec4/Prop42Closure/ConeWholePlaneSteps.lean:66`). Truth check TRUE
+-- (2026-11-10): equality in law of the measurable observation-process laws applies across arbitrary carriers; it does not
+-- assert a coupling on the same carrier. Measurability is not an issue: both
 -- fields are measurable (`IsQuantumCone.measurable_pairing`, `measurable_circle`, `Defs/QuantumCone.lean:84-86`, and
 -- `IsWholePlaneGFF.measurable_pairing`, `measurable_circle`, HarmonicBalls `Defs/GFF.lean:96, 98`). Used by `firstPass_2_4_canonical`, `firstPass_6_1_corrected`,
 -- `firstPass_2_5_canonical`, `firstPass_2_6_corrected` (`S2g/Corrected24.lean`, `S2g/Assembly2456.lean`).

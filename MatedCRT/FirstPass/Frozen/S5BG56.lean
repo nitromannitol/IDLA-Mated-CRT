@@ -18,12 +18,12 @@ namespace MatedCRT
 open MeasureTheory Set Metric
 open _root_.HarmonicBalls
 
-/-- **FIRST-PASS FROZEN (EXTERNAL, cited); PENDING TRUTH CHECK.** Berestycki–Gwynne, *Random walks on mated-CRT planar
+/-- **FIRST-PASS FROZEN (EXTERNAL, cited); TRUTH CHECK TRUE (2026-11-10).** Berestycki–Gwynne, *Random walks on mated-CRT planar
 maps and Liouville Brownian motion*, arXiv:2003.10320v2, Lemma 5.6, equation (5.20) (BG20 Definition 3.2 for the Green
 function killed on a vertex set). For each `ζ ∈ (0,1)`, with polynomially high probability as `ε → 0`,
 `sup_{a,b ∈ V^ε(B_ρ)} G^ε_{V^ε(B_ρ)}(a,b) ≤ ε^{-ζ}`, where `G^ε_A` is the Green function of the walk killed on exiting
-the vertex set `A`. Truth tag: TRUE as typed (chat 197; `notes/fp-gaps/CHATGPT-idla-5-1-gaps.md`, verdict table, row
-`GreenFunctionCrudeBoundStmt`: the BG statement implies the IDLA form). Caveat: `greenFn` is real-valued with junk value
+the vertex set `A`. Truth check (2026-11-10): TRUE (BG20 Definition 3.2, Notation 3.3 and Lemma 5.6, (5.20)). Killing on exiting all of
+`cellVertices(Bρ)` is the correct convention, and the BG statement implies the IDLA form. Caveat: `greenFn` is real-valued with junk value
 `0` when the expectation is infinite, so this Prop does not by itself give finiteness; the derivation in
 `MatedCRT/FirstPass/S5u.lean` uses only finite-domain monotonicity and does not need it. -/
 def FrozenBG20GreenCrudeCanonical (𝒮 : SpaceFillingSLEModel) : Prop :=

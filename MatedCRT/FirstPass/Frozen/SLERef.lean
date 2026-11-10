@@ -30,10 +30,11 @@ cited numbered results of the paper, with the corrected Lemma 3.2 (`SLECitedInpu
 and corrected Lemma 3.2), (b) the corrected similarity transfer `FPSimilarityTransferCorrected`, and (c) the fixed-time
 truncated quenched laws `FrozenTruncatedQuenchedLawsFixedTime`.
 
-PENDING TRUTH CHECK (operator): the truth of this proposition has not been checked by the operator. It is recorded as TRUE
-under the certified reference law by `notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md` (for the truncated laws, §4) and
-`notes/fp-gaps/CHATGPT-fpsimilarity-truth.md` §7 (for the similarity clause); the corrected Lemma 3.2 is UNRESOLVED for an
-unconstrained model.
+Truth check (2026-11-10): UNSURE, model-dependent. Its universal analytic form is not itself a counterexample, so analytic
+transfer is not refuted by quantification over models. Exact non-vacuity (a reference model) additionally requires the
+complete imported `LatticeProb` mating-of-trees coupling contract (`IsMatingOfTreesCoupling`), whose source is absent from
+this snapshot. Earlier records (`notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md` §4, `CHATGPT-fpsimilarity-truth.md` §7) treated
+the certified reference law as TRUE. The corrected Lemma 3.2 is UNRESOLVED for an unconstrained model.
 
 This certificate does not intrinsically characterize the SLE law or impose closure properties on the raw predicate
 `𝒮.IsSLE`. In particular, the existence part alone does not prove `HasNormalizedSLELaw 𝒮 ν` for a target model chosen

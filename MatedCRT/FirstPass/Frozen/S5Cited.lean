@@ -14,6 +14,10 @@ the IDLA lower bound `IDLALowerBoundStmt` (Proposition 5.1) are FIRST-PASS FROZE
 locator, until a truth check. The frozen Props below are definitionally the Draft or Proposed statements; a frozen
 name is used only as a hypothesis type, never as a proved fact.
 
+Truth status (2026-11-10): every entry audited for this paper is TRUE (see the entry docstrings; `FrozenLQGVolumeGrowthAllScales`
+is a derived consequence). The Harmonic-Balls entries are external inputs to this paper; their proofs are results of the
+Harmonic-Balls paper, not of this paper. `FrozenBerestyckiGwynneConeBallMass` is not in that audit and keeps its pending tag.
+
 Rules of this file. (i) A per-model statement keeps the model `𝒮` as a parameter (`FrozenX 𝒮 := XStmt 𝒮`); no
 frozen Prop quantifies over all `SpaceFillingSLEModel`s. (ii) Nothing here is proved. (iii) Items that are about this
 paper's own objects, rather than a cited result, are not frozen here (see the report).
@@ -40,7 +44,7 @@ def FrozenBerestyckiGwynneConeBallMass : Prop :=
 vertices `V^ε(B_ρ) \ V^ε(∂B_ρ)`. It is a derived consequence of `FrozenBG20GreenCrudeCanonical 𝒮`
 (`MatedCRT/FirstPass/Frozen/S5BG56.lean:29`, Berestycki–Gwynne, arXiv:2003.10320, Lemma 5.6, equation (5.20), which kills
 on all of `V^ε(B_ρ)`), by domain monotonicity through `MatedCRT.greenFunctionCrudeBound_of_canonical`
-(`MatedCRT/FirstPass/S5u.lean:61`). Truth: TRUE (operator 09:10; `notes/fp-gaps/CHATGPT-idla-new-frozen-GMS331-BG56.md`).
+(`MatedCRT/FirstPass/S5u.lean:61`). Truth check (2026-11-10): TRUE.
 For each `ζ ∈ (0,1)`, with polynomially high probability as `ε → 0`,
 `sup_{a,b ∈ V^ε(B_ρ)} G^ε_{B_ρ}(a,b) ≤ ε^{-ζ}`. Statement: `MatedCRT/Draft/Section2.lean:201`.
 Used by: `hG15` of `firstPass_5_1` (`MatedCRT/FirstPass/S5q.lean:114`) and of `closed_5_1`
@@ -48,12 +52,12 @@ Used by: `hG15` of `firstPass_5_1` (`MatedCRT/FirstPass/S5q.lean:114`) and of `c
 def FrozenGreenFunctionCrudeBound (𝒮 : SpaceFillingSLEModel) : Prop :=
   GreenFunctionCrudeBoundStmt 𝒮
 
-/-- **FIRST-PASS FROZEN (EXTERNAL, cited); PENDING TRUTH CHECK.** Harmonic-Balls paper, arXiv:2208.11795, the input
+/-- **FIRST-PASS FROZEN (EXTERNAL, cited); TRUTH CHECK TRUE (2026-11-10).** Harmonic-Balls paper, arXiv:2208.11795, the input
 "I2" of its Appendix A (`eq:volume-growth`, source line 3527): for `μ_h`-almost every realization, for all `R > 0`,
 `β⁺`, `β⁻` in the ranges of [C1], there is `r₀ > 0` with `r^{β⁻} ≤ μ_h(B_r(z)) ≤ r^{β⁺}` for `r < r₀`, `z ∈ B_R`.
-CAVEAT (recorded, not resolved here): the HB Draft docstring (`HarmonicBalls/Draft/Section2.lean:115-121`) says this
-is a consequence, not a literature input, and the ChatGPT Pro audit of the 5.1 bundle (`notes/fp-gaps/CHATGPT-idla-5-1-audit-PRO.md`, l.118-132) lists it as unproved (U item `hI2`).
-It is frozen per operator decision 07:42 UTC (G5/G6) and must be re-checked for source status.
+DERIVED CONSEQUENCE, not a separate cited theorem. The HB Draft docstring (`HarmonicBalls/Draft/Section2.lean:115-121`)
+records it as a consequence. One event for all radii and exponents follows by countable reduction and slack; the corrected
+exponent ranges include `γ(Q−α₀)`.
 Statement: `HarmonicBalls/Draft/Section2.lean:122`.
 Used by: `hI2` of `firstPass_5_1` (`S5q.lean:119`), of `closed_5_1` (`Prop51.lean:63`), of
 `coneHalfBallClosureInsideStep_fp` (`MatedCRT/FirstPass/S5r/ClosureInside.lean:25`) and of
@@ -61,47 +65,50 @@ Used by: `hI2` of `firstPass_5_1` (`S5q.lean:119`), of `closed_5_1` (`Prop51.lea
 def FrozenLQGVolumeGrowthAllScales : Prop :=
   LQGVolumeGrowthAllScalesStmt.{0}
 
-/-- **FIRST-PASS FROZEN (EXTERNAL, cited); PENDING TRUTH CHECK.** Harmonic-Balls paper, arXiv:2208.11795, Lemma 6.11
+/-- **FIRST-PASS FROZEN (EXTERNAL, cited); TRUTH CHECK TRUE (2026-11-10).** Harmonic-Balls paper, arXiv:2208.11795, Lemma 6.11
 (`lemma:very-good-annuli-satisfy-harnack-type-estimate`, source line 1567). Statement: `HarmonicBalls/Draft/Section6.lean:415`.
 Used by: `h611` of `firstPass_5_1` (`S5q.lean:118`) and `firstPass_strictObstacleGap` (`S4S5b.lean:25`). -/
 def FrozenVeryGoodAnnulusHarnackType : Prop :=
   VeryGoodAnnulusHarnackTypeStmt.{0}
 
-/-- **FIRST-PASS FROZEN (EXTERNAL, cited); PENDING TRUTH CHECK.** Harmonic-Balls paper, arXiv:2208.11795, Lemma 8.2
+/-- **FIRST-PASS FROZEN (EXTERNAL, cited); TRUTH CHECK TRUE (2026-11-10).** Harmonic-Balls paper, arXiv:2208.11795, Lemma 8.2
 (`lemma:mu_h-doubling-and-harnack`, source line 2151). Statement: `HarmonicBalls/Draft/Section8.lean:74`.
 Used by: `h82` of `firstPass_5_1` (`S5q.lean:119`) and `firstPass_strictObstacleGap` (`S4S5b.lean:27`). -/
 def FrozenTypicalPointManyGoodScales : Prop :=
   TypicalPointManyGoodScalesStmt.{0}
 
-/-- **FIRST-PASS FROZEN (EXTERNAL, cited); PENDING TRUTH CHECK.** Harmonic-Balls paper, arXiv:2208.11795, Proposition 5.3
+/-- **FIRST-PASS FROZEN (EXTERNAL, cited); TRUTH CHECK TRUE (2026-11-10).** Harmonic-Balls paper, arXiv:2208.11795, Proposition 5.3
 (`prop:boundary-measure`, source line 836), read as in the HB docstring (`closure Λ ⊆ B_1`). Statement:
 `HarmonicBalls/Draft/Section5.lean:155`.
 Used by: `hBdry` of `firstPass_5_1` (`S5q.lean:128`), in the canonical half-ball step. -/
 def FrozenClusterBoundaryMeasureZero : Prop :=
   ClusterBoundaryMeasureZeroStmt.{0}
 
-/-- **FIRST-PASS FROZEN (EXTERNAL, cited); PENDING TRUTH CHECK.** Harmonic-Balls paper, arXiv:2208.11795, Theorem 5.5
+/-- **FIRST-PASS FROZEN (EXTERNAL, cited); TRUTH CHECK TRUE (2026-11-10).** Harmonic-Balls paper, arXiv:2208.11795, Theorem 5.5
 (`theorem:full-theorem-minus-uniqueness`, source line 863). Statement: `HarmonicBalls/Draft/Section5.lean:192`.
 Used by: `hEx` of `firstPass_5_1` (`S5q.lean:128`), in the canonical half-ball step and in the closure step
 (`coneHalfBallClosureInsideStep_fp`, `S5r/ClosureInside.lean:31`). -/
 def FrozenExistenceHarmonicBalls : Prop :=
   ExistenceHarmonicBallsStmt.{0}
 
-/-- **FIRST-PASS FROZEN (EXTERNAL, cited); PENDING TRUTH CHECK.** Harmonic-Balls paper, arXiv:2208.11795, Proposition 5.6
-(`prop:uniqueness`, source line 872). Statement: `HarmonicBalls/Draft/Section5.lean:206`.
+/-- **FIRST-PASS FROZEN (EXTERNAL, cited); TRUTH CHECK TRUE (2026-11-10).** Harmonic-Balls paper, arXiv:2208.11795, Proposition 5.6
+(`prop:uniqueness`, source line 872; the enlarged harmonic test class, equality only on positive times). Statement: `HarmonicBalls/Draft/Section5.lean:206`.
 Used by: `hProp56` of `firstPass_5_1` (`S5q.lean:129`), in the canonical half-ball step. -/
 def FrozenUniquenessHarmonicBalls : Prop :=
   UniquenessHarmonicBallsStmt.{0}
 
-/-- **FIRST-PASS FROZEN (EXTERNAL, cited); PENDING TRUTH CHECK.** Harmonic-Balls paper, arXiv:2208.11795, Proposition 1.3
+/-- **FIRST-PASS FROZEN (EXTERNAL, cited); TRUTH CHECK TRUE (2026-11-10).** Harmonic-Balls paper, arXiv:2208.11795, Proposition 1.3
 (`prop:locally-determined`, source line 179; the closed harmonic ball is a local set, Schramm–Sheffield 2013 Lemma 3.9).
 Statement: `HarmonicBalls/Draft/Section1.lean:151`.
 Used by: `hloc` of `firstPass_5_1` (`S5q.lean:132`) and of the closure step (`S5r/ClosureInside.lean:31`). -/
 def FrozenHarmonicBallLocalSet : Prop :=
   HarmonicBallLocalSetStmt.{0}
 
-/-- **FIRST-PASS FROZEN (EXTERNAL, cited); PENDING TRUTH CHECK.** Harmonic-Balls paper, arXiv:2208.11795, Lemma 5.8
-(`lemma:strong-compatibility`, source line 1019), for a deterministic bounded open `U`. Statement:
+/-- **FIRST-PASS FROZEN (EXTERNAL, cited); TRUTH CHECK TRUE (2026-11-10).** Harmonic-Balls paper, arXiv:2208.11795, Lemma 5.8
+(`lemma:strong-compatibility`, source line 1019), for a deterministic bounded open `U`. The corrected paper's Lemma 5.8 (C60) is stated for Green-regular
+domains only; the statement for arbitrary bounded open `U` follows from the separate regular-exhaustion argument (HB
+repository, `Proofs/Sec5/ExhaustionClusterCompatibility.lean`) and its assembly
+(`Proofs/Sec5/StrongCompatibilityAssembly.lean`). Statement:
 `HarmonicBalls/Draft/Section5.lean:246`.
 Used by: `hSC` of `firstPass_5_1` (`S5q.lean:133`) and of the closure step (`S5r/ClosureInside.lean:31`). -/
 def FrozenClusterStrongCompatibility : Prop :=
