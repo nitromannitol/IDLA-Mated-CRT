@@ -231,7 +231,7 @@ theorem hx1_fixedOmega {γ ω₀ ρ CG ζ α CE C ε s₀ r ρmom : ℝ} {Ω : T
 /-- **`hmomS_pointwise` with a general sparsity coefficient `s1` (variant, fp-S4S6c-s1-generic, q3).** The guard
 `FullAdmAt s1` replaces `FullAdmAt (sparsityS1 γ)`. The proof discards the guard (`intro _`), so no property of `s1`
 is used: no hypothesis `0 < s1` or `s1 < 1` is needed. The original `hmomS_pointwise` is unchanged. -/
-theorem hmomS_pointwise_s1 {γ ω₀ ρ CG ζ α CE ε C s₀ r : ℝ} (s1 : ℝ) {Ω : Type} [MeasurableSpace Ω]
+theorem hmomS_pointwise_s1 {γ ω₀ ρ CG ζ α CE ε C s₀ r s1 : ℝ} {Ω : Type} [MeasurableSpace Ω]
     (S : MatedCRTEnv Ω) {ω : Ω} (hω : ω ∈ Lemma68Guard10.meshEvent S γ ω₀ ρ CG ζ α CE ε)
     (i : Lemma68Config.Config68) :
     Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
@@ -253,7 +253,7 @@ theorem hmomS_pointwise_s1 {γ ω₀ ρ CG ζ α CE ε C s₀ r : ℝ} (s1 : ℝ
 /-- **`hmomS_pointwise_rhoMom` with a general sparsity coefficient `s1` (variant, fp-S4S6c-s1-generic, q3).** The guard
 `FullAdmAt s1` replaces `FullAdmAt (sparsityS1 γ)`. The proof discards the guard (`intro _`), so no property of `s1`
 is used: no hypothesis `0 < s1` or `s1 < 1` is needed. The original `hmomS_pointwise_rhoMom` is unchanged. -/
-theorem hmomS_pointwise_rhoMom_s1 {γ ρ s₀ α CE ε ρmom C ζ r : ℝ} (s1 : ℝ) {Ω : Type} [MeasurableSpace Ω]
+theorem hmomS_pointwise_rhoMom_s1 {γ ρ s₀ α CE ε ρmom C ζ r s1 : ℝ} {Ω : Type} [MeasurableSpace Ω]
     (S : MatedCRTEnv Ω) {ω : Ω} (hω : ω ∈ exitTimeEvent68 S α ρmom CE ε) (i : Lemma68Config.Config68) :
     Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
       ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,

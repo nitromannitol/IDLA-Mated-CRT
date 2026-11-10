@@ -55,8 +55,8 @@ the specialisation `s1 := sparsityS1 γ` with the same statement. Mesh: the ball
 `CellDiamLe ε (η ω) (dyadicD r / 100) (ball 0 ρmesh)` of `hx1_fixedOmega`. Same conclusion
 and same hypotheses as `hx1_fixedOmega`, except that the global mesh `univ` is replaced by the ball `ball 0 ρmesh`
 and the mesh gap `dyadicD r / 100 ≤ ρmesh - ρ` is added (named `hgapMesh`, since `hgap : ρ ≤ ρmom` is kept). -/
-theorem hx1_fixedOmega_loc_s1 {γ ω₀ ρ CG ζ α CE C ε s₀ r ρmom ρmesh : ℝ} {Ω : Type} [MeasurableSpace Ω]
-    (s1 : ℝ) (S : MatedCRTEnv Ω) {ω : Ω} (hreg : RegularEnvAt68 S γ ω₀ ρ CG ζ α CE ε ω)
+theorem hx1_fixedOmega_loc_s1 {γ ω₀ ρ CG ζ α CE C ε s₀ r ρmom ρmesh s1 : ℝ} {Ω : Type} [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) {ω : Ω} (hreg : RegularEnvAt68 S γ ω₀ ρ CG ζ α CE ε ω)
     (hρ1 : ρ < 1) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2) (hε : 0 < ε) (hs₀ : 0 < s₀) (hr0 : 0 < r)
     (hrρ : r ≤ ρ / 4) (hrle : r ≤ countThreshold ζ) (hgap : ρ ≤ ρmom)
     (hgapMesh : dyadicD r / 100 ≤ ρmesh - ρ)
@@ -189,7 +189,7 @@ theorem hx1_fixedOmega_loc {γ ω₀ ρ CG ζ α CE C ε s₀ r ρmom ρmesh : �
             (dyadicD r) (winRf S ρ ζ C r ω) k x).toNat)‖
             < ρmom - winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
               (dyadicD r ^ shortExp ζ) (dyadicD r) k x) / 4 :=
-  hx1_fixedOmega_loc_s1 (Lemma68Config.sparsityS1 γ) S hreg hρ1 hζ0 hζ1 hε hs₀ hr0 hrρ hrle hgap hgapMesh hmω i
+  hx1_fixedOmega_loc_s1 (s1 := Lemma68Config.sparsityS1 γ) S hreg hρ1 hζ0 hζ1 hε hs₀ hr0 hrρ hrle hgap hgapMesh hmω i
 
 end HoneX1Loc68
 end MatedCRT
