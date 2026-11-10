@@ -1,6 +1,7 @@
 import MatedCRT.FirstPass.S2h.PlateauNull
 import MatedCRT.FirstPass.S2h.CertCode
 import MatedCRT.FirstPass.S2h.MeasurableIntegral
+import MatedCRT.Proofs.Sec4.Prop42Closure.WholePlaneLQGMeasurable
 
 /-!
 # Transfer of the plateau event through equality in law (fp-S2h, z1, round 17)
@@ -57,5 +58,13 @@ theorem ae_measure_closedBall_lt_top {Ω : Type*} [MeasurableSpace Ω] {P : Meas
   filter_upwards [h] with ω hω
   have := hω.isLocallyFiniteMeasure
   exact (isCompact_closedBall _ _).measure_lt_top
+
+/-- The whole-plane LQG measure is a random measure: `AEMeasurable μ P` (fp-S2h, z1, round 18). This is the proved
+statement `MatedCRT.aemeasurable_wholePlaneLQGMeasure` (Proofs/Sec4/Prop42Closure/WholePlaneLQGMeasurable.lean:98), so no
+external freeze is needed for the measurability of the random measure. -/
+theorem aemeasurable_lqgMeasure_of_wholePlane {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ : ℝ}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ} (hGFF : IsWholePlaneGFF P hC hcirc)
+    (hL : IsLQGMeasureOfField P γ γ hcirc μ) : AEMeasurable μ P :=
+  aemeasurable_wholePlaneLQGMeasure hGFF hL
 
 end MatedCRT
