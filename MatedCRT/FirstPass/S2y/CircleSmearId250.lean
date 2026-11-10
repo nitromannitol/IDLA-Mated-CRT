@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.S2y.LateralBilin250
 import MatedCRT.FirstPass.S2y.CircleKernelSmooth250
+import MatedCRT.FirstPass.S2y.LateralHc250
 
 /-!
 # The circle-smear identity of the whole-plane field (fp-S2y-circle-smear-id, q1; chat 250 §1.2, z8 step R3)
@@ -178,5 +179,209 @@ lemma exists_measurable_circle [IsProbabilityMeasure P] (h : IsWholePlaneGFF P h
     intro z
     show Sᶜ.indicator (fun ω' => hcirc ω' ε z) ω = hcirc ω ε z
     rw [Set.indicator_of_mem (show ω ∈ Sᶜ from hω)]
+
+
+/-! ### Deterministic part: the covariance kernel integrated against circle averages -/
+
+/-- `y ↦ wholePlaneCov x y` is measurable. -/
+lemma measurable_wholePlaneCov_right (x : ℂ) : Measurable fun y => wholePlaneCov x y := by
+  unfold wholePlaneCov
+  fun_prop
+
+/-- `y ↦ wholePlaneCov x y` is locally integrable (its logarithmic singularity at `x` is integrable). -/
+lemma locallyIntegrable_wholePlaneCov_right (x : ℂ) :
+    LocallyIntegrable (fun y => wholePlaneCov x y) volume := by
+  refine locallyIntegrable_iff.2 fun k hk => ?_
+  obtain ⟨R, hR⟩ := hk.isBounded.subset_closedBall (0 : ℂ)
+  obtain ⟨χ, hχ, hχ1⟩ := exists_test_one_on_ball R
+  have hlog : IntegrableOn (fun y => Real.log ‖y - x‖) k := by
+    refine ((HarmonicBalls.S11c.integrable_mul_logNorm_sub hχ x).integrableOn).congr_fun (fun y hy => ?_) hk.measurableSet
+    simp only [hχ1 y (hR hy), one_mul]
+  have hlogB : Continuous fun y : ℂ => Real.log (max ‖y‖ 1) :=
+    Continuous.log (by fun_prop) fun y => (lt_of_lt_of_le one_pos (le_max_right _ _)).ne'
+  have hrhs : IntegrableOn (fun y => (Real.log (max ‖x‖ 1) + Real.log (max ‖y‖ 1)) - Real.log ‖y - x‖) k :=
+    ((continuous_const.add hlogB).continuousOn.integrableOn_compact hk).sub hlog
+  have hae : ∀ᵐ y ∂(volume : Measure ℂ), y ≠ x := by
+    rw [ae_iff]
+    simp
+  refine hrhs.congr_fun_ae ?_
+  refine ae_restrict_of_ae ?_
+  filter_upwards [hae] with y hy
+  have hc : ‖x - y‖ ≠ 0 := norm_ne_zero_iff.mpr (sub_ne_zero.mpr hy.symm)
+  have hA : max ‖x‖ 1 ≠ 0 := (lt_of_lt_of_le one_pos (le_max_right _ _)).ne'
+  have hB : max ‖y‖ 1 ≠ 0 := (lt_of_lt_of_le one_pos (le_max_right _ _)).ne'
+  unfold wholePlaneCov
+  rw [Real.log_div (mul_ne_zero hA hB) hc, Real.log_mul hA hB, norm_sub_rev y x]
+
+/-- **Mean value of the covariance kernel over a circle** (general centre, Duplantier-Sheffield 2011, Section 3.1):
+for every `x` and centre `w`, the average over `∂B_ε(w)` of `wholePlaneCov x` is
+`log max(|x|,1) + avg_{∂B_ε(w)} log max(|·|,1) - (log ε + posLog(ε⁻¹ |w - x|))`. The diagonal `y = x` is codiscrete. -/
+lemma circleAverage_wholePlaneCov_eq {ε : ℝ} (hε : 0 < ε) (x w : ℂ) :
+    Real.circleAverage (fun y => wholePlaneCov x y) w ε =
+      Real.log (max ‖x‖ 1) + Real.circleAverage (fun y => Real.log (max ‖y‖ 1)) w ε
+        - (Real.log ε + Real.posLog (ε⁻¹ * ‖w - x‖)) := by
+  have hlogB : Continuous fun y : ℂ => Real.log (max ‖y‖ 1) :=
+    Continuous.log (by fun_prop) fun y => (lt_of_lt_of_le one_pos (le_max_right _ _)).ne'
+  have hcongr : (fun y => wholePlaneCov x y) =ᶠ[codiscreteWithin (sphere w |ε|)]
+      (fun y => (Real.log (max ‖x‖ 1) + Real.log (max ‖y‖ 1)) - Real.log ‖y - x‖) := by
+    refine MatedCRT.CirclePairing.eventuallyEq_codiscreteWithin_of_ne _ x fun y hy => ?_
+    unfold wholePlaneCov
+    have hc : ‖x - y‖ ≠ 0 := norm_ne_zero_iff.mpr (sub_ne_zero.mpr hy.symm)
+    have hA : max ‖x‖ 1 ≠ 0 := (lt_of_lt_of_le one_pos (le_max_right _ _)).ne'
+    have hB : max ‖y‖ 1 ≠ 0 := (lt_of_lt_of_le one_pos (le_max_right _ _)).ne'
+    rw [Real.log_div (mul_ne_zero hA hB) hc, Real.log_mul hA hB, norm_sub_rev y x]
+  rw [Real.circleAverage_congr_codiscreteWithin hcongr hε.ne']
+  have hI1 : CircleIntegrable (fun y : ℂ => Real.log (max ‖x‖ 1) + Real.log (max ‖y‖ 1)) w ε :=
+    ((continuous_const.add hlogB).continuousOn).circleIntegrable hε.le
+  have hI2 : CircleIntegrable (fun y : ℂ => Real.log ‖y - x‖) w ε :=
+    circleIntegrable_log_norm_sub_const (a := x) (c := w) ε
+  have hs : Real.circleAverage (fun y => (Real.log (max ‖x‖ 1) + Real.log (max ‖y‖ 1)) - Real.log ‖y - x‖) w ε =
+      Real.circleAverage (fun y => Real.log (max ‖x‖ 1) + Real.log (max ‖y‖ 1)) w ε -
+        Real.circleAverage (fun y => Real.log ‖y - x‖) w ε :=
+    Real.circleAverage_sub hI1 hI2
+  have hadd : Real.circleAverage (fun y => Real.log (max ‖x‖ 1) + Real.log (max ‖y‖ 1)) w ε =
+      Real.log (max ‖x‖ 1) + Real.circleAverage (fun y => Real.log (max ‖y‖ 1)) w ε := by
+    have := Real.circleAverage_add (circleIntegrable_const (Real.log (max ‖x‖ 1)) w ε)
+      (hlogB.continuousOn.circleIntegrable hε.le)
+    rw [Real.circleAverage_const] at this
+    exact this
+  rw [hs, hadd, MatedCRT.Field.circleAverage_log_norm_eq w x hε]
+
+/-- The covariance circle average `(x, w) ↦ ⨍_{∂B_ε(w)} wholePlaneCov x ·` is jointly continuous. -/
+lemma continuous_circleAverage_wholePlaneCov {ε : ℝ} (hε : 0 < ε) :
+    Continuous fun p : ℂ × ℂ => Real.circleAverage (fun y => wholePlaneCov p.1 y) p.2 ε := by
+  have hlogB : Continuous fun y : ℂ => Real.log (max ‖y‖ 1) :=
+    Continuous.log (by fun_prop) fun y => (lt_of_lt_of_le one_pos (le_max_right _ _)).ne'
+  have hc : Continuous fun w : ℂ => Real.circleAverage (fun y => Real.log (max ‖y‖ 1)) w ε :=
+    continuous_circleAverage_center hlogB ε
+  have hA : Continuous fun p : ℂ × ℂ => Real.log (max ‖p.1‖ 1) :=
+    Continuous.log (by fun_prop) fun p => (lt_of_lt_of_le one_pos (le_max_right _ _)).ne'
+  have hP : Continuous fun p : ℂ × ℂ => Real.posLog (ε⁻¹ * ‖p.2 - p.1‖) :=
+    Real.continuous_posLog.comp (continuous_const.mul (by fun_prop))
+  have heq : (fun p : ℂ × ℂ => Real.circleAverage (fun y => wholePlaneCov p.1 y) p.2 ε) =
+      fun p => Real.log (max ‖p.1‖ 1) + Real.circleAverage (fun y => Real.log (max ‖y‖ 1)) p.2 ε
+        - (Real.log ε + Real.posLog (ε⁻¹ * ‖p.2 - p.1‖)) :=
+    funext fun p => circleAverage_wholePlaneCov_eq hε p.1 p.2
+  rw [heq]
+  exact (hA.add (hc.comp continuous_snd)).sub (continuous_const.add hP)
+
+/-- **Adjoint on the covariance kernel** (the one-variable adjoint of the circle average, `ConeApproxIdentity`):
+for a test function `φ` and `0 < ε ≤ 1`, `∫ φ(w) ⨍_{∂B_ε(w)} wholePlaneCov x · dw = ∫ K_ε φ(y) wholePlaneCov x y dy`. -/
+lemma adjoint_wholePlaneCov {φ : ℂ → ℝ} (hφ : IsTestFunction univ φ) {ε : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1)
+    (x : ℂ) :
+    ∫ w, φ w * Real.circleAverage (fun y => wholePlaneCov x y) w ε =
+      ∫ y, circleKernel φ ε y * wholePlaneCov x y := by
+  rw [integral_mul_circleAverage_eq (measurable_wholePlaneCov_right x) (locallyIntegrable_wholePlaneCov_right x)
+    hφ.1.continuous hφ.2.1 hε hε1]
+  congr 1
+  funext y
+  ring
+
+/-- Measurability of the potential `x ↦ ∫ ψ(y) wholePlaneCov x y dy` of a test function `ψ`. -/
+lemma measurable_potential {ψ : ℂ → ℝ} (hψ : IsTestFunction univ ψ) :
+    Measurable fun x => ∫ y, ψ y * wholePlaneCov x y := by
+  have hm : Measurable fun p : ℂ × ℂ => ψ p.2 * wholePlaneCov p.1 p.2 := by
+    have h1 : Measurable fun p : ℂ × ℂ => ψ p.2 := hψ.1.continuous.measurable.comp measurable_snd
+    have h2 : Measurable fun p : ℂ × ℂ => wholePlaneCov p.1 p.2 := by
+      unfold wholePlaneCov
+      fun_prop
+    exact h1.mul h2
+  exact (hm.stronglyMeasurable.integral_prod_right (ν := volume)).measurable
+
+/-- Local integrability of the potential of a test function (Fubini on `integrable_prod_wholePlaneCov`). -/
+lemma locallyIntegrable_potential {ψ : ℂ → ℝ} (hψ : IsTestFunction univ ψ) :
+    LocallyIntegrable (fun x => ∫ y, ψ y * wholePlaneCov x y) volume := by
+  refine locallyIntegrable_iff.2 fun k hk => ?_
+  obtain ⟨R, hR⟩ := hk.isBounded.subset_closedBall (0 : ℂ)
+  obtain ⟨χ, hχ, hχ1⟩ := exists_test_one_on_ball R
+  have hJ : Integrable (fun x => ∫ y, χ x * ψ y * wholePlaneCov x y) :=
+    (integrable_prod_wholePlaneCov hχ hψ).integral_prod_left
+  refine (hJ.integrableOn).congr_fun (fun x hx => ?_) hk.measurableSet
+  simp only [hχ1 x (hR hx), one_mul]
+
+/-- **Fubini on the circle** (Armitage-Gardiner, Fubini for the circle average): for a jointly continuous `F`, the test
+integral of a circle average in the first variable is the circle average of the test integrals. The cutoff `χ`
+(a bump equal to `1` on `(0, 2π]`) makes the θ-integrand compactly supported. -/
+lemma integral_mul_circleAverage_comm {φ : ℂ → ℝ} (hφ : IsTestFunction univ φ) (z : ℂ) (ε : ℝ)
+    {F : ℂ → ℂ → ℝ} (hF : Continuous fun p : ℂ × ℂ => F p.1 p.2) :
+    ∫ w, φ w * Real.circleAverage (fun x => F x w) z ε =
+      Real.circleAverage (fun x => ∫ w, φ w * F x w) z ε := by
+  set χ : ContDiffBump (π : ℝ) :=
+    { rIn := π, rOut := 2 * π, rIn_pos := Real.pi_pos, rIn_lt_rOut := by linarith [Real.pi_pos] } with hχdef
+  have hχ1 : ∀ θ ∈ Ioc (0 : ℝ) (2 * π), χ θ = 1 := by
+    intro θ hθ
+    refine χ.one_of_mem_closedBall ?_
+    show θ ∈ Metric.closedBall (π : ℝ) π
+    rw [Metric.mem_closedBall, Real.dist_eq, abs_le]
+    constructor <;> linarith [hθ.1, hθ.2]
+  have hcm : Continuous fun θ : ℝ => circleMap z ε θ := by fun_prop
+  have hφc : Continuous φ := hφ.1.continuous
+  have hcont : Continuous fun p : ℝ × ℂ => χ p.1 * (φ p.2 * F (circleMap z ε p.1) p.2) :=
+    (χ.continuous.comp continuous_fst).mul
+      ((hφc.comp continuous_snd).mul (hF.comp ((hcm.comp continuous_fst).prodMk continuous_snd)))
+  have hsupp : HasCompactSupport
+      (Function.uncurry fun (θ : ℝ) (w : ℂ) => χ θ * (φ w * F (circleMap z ε θ) w)) := by
+    refine HasCompactSupport.intro (χ.hasCompactSupport.isCompact.prod hφ.2.1.isCompact) ?_
+    intro p hp
+    rw [Set.mem_prod, not_and_or] at hp
+    show χ p.1 * (φ p.2 * F (circleMap z ε p.1) p.2) = 0
+    rcases hp with h | h
+    · simp [image_eq_zero_of_notMem_tsupport h]
+    · simp [image_eq_zero_of_notMem_tsupport h]
+  have hswap := integral_integral_swap_of_hasCompactSupport (μ := volume.restrict (Ioc (0 : ℝ) (2 * π)))
+    (ν := (volume : Measure ℂ)) (f := fun (θ : ℝ) (w : ℂ) => χ θ * (φ w * F (circleMap z ε θ) w))
+    hcont hsupp
+  have key : ∀ w, φ w * Real.circleAverage (fun x => F x w) z ε
+      = (2 * π)⁻¹ * ∫ θ in Ioc 0 (2 * π), χ θ * (φ w * F (circleMap z ε θ) w) := by
+    intro w
+    have h1 : ∫ θ in Ioc 0 (2 * π), χ θ * (φ w * F (circleMap z ε θ) w)
+        = ∫ θ in Ioc 0 (2 * π), φ w * F (circleMap z ε θ) w :=
+      setIntegral_congr_fun measurableSet_Ioc fun θ hθ => by rw [hχ1 θ hθ, one_mul]
+    rw [h1, integral_const_mul]
+    unfold Real.circleAverage
+    simp only [smul_eq_mul]
+    rw [intervalIntegral.integral_of_le (by positivity)]
+    ring
+  calc ∫ w, φ w * Real.circleAverage (fun x => F x w) z ε
+      = ∫ w, (2 * π)⁻¹ * ∫ θ in Ioc 0 (2 * π), χ θ * (φ w * F (circleMap z ε θ) w) :=
+        integral_congr_ae (Eventually.of_forall key)
+    _ = (2 * π)⁻¹ * ∫ w, ∫ θ in Ioc 0 (2 * π), χ θ * (φ w * F (circleMap z ε θ) w) :=
+        integral_const_mul _ _
+    _ = (2 * π)⁻¹ * ∫ θ in Ioc 0 (2 * π), ∫ w, χ θ * (φ w * F (circleMap z ε θ) w) :=
+        congrArg (fun t => (2 * π)⁻¹ * t) hswap.symm
+    _ = (2 * π)⁻¹ * ∫ θ in Ioc 0 (2 * π), ∫ w, φ w * F (circleMap z ε θ) w := by
+        congr 1
+        refine setIntegral_congr_fun measurableSet_Ioc fun θ hθ => ?_
+        simp only [hχ1 θ hθ, one_mul]
+    _ = Real.circleAverage (fun x => ∫ w, φ w * F x w) z ε := by
+        unfold Real.circleAverage
+        simp only [smul_eq_mul]
+        rw [intervalIntegral.integral_of_le (by positivity)]
+
+/-- **Two-step adjoint on the covariance kernel**: for a test function `φ`, `0 < ε ≤ 1` and any `z`,
+`∫ φ(w) C_ε(z,w) dw = ⨍_{∂B_ε(z)} G_{K_ε φ}`, where `C_ε(z,w) = ⨍_{x∈∂B_ε(z)} ⨍_{y∈∂B_ε(w)} wholePlaneCov x y`
+(the covariance of two circle averages, `integral_mul_circle_circle`). -/
+lemma integral_mul_circleAverage_circleAverage_eq {φ : ℂ → ℝ} (hφ : IsTestFunction univ φ) {ε : ℝ} (hε : 0 < ε)
+    (hε1 : ε ≤ 1) (z : ℂ) :
+    ∫ w, φ w * Real.circleAverage (fun x => Real.circleAverage (fun y => wholePlaneCov x y) w ε) z ε =
+      Real.circleAverage (fun x => ∫ y, circleKernel φ ε y * wholePlaneCov x y) z ε := by
+  refine (integral_mul_circleAverage_comm hφ z ε
+    (F := fun x w => Real.circleAverage (fun y => wholePlaneCov x y) w ε)
+    (continuous_circleAverage_wholePlaneCov hε)).trans ?_
+  congr 1
+  funext x
+  exact adjoint_wholePlaneCov hφ hε hε1 x
+
+/-- **Adjoint for the potential** (the kernel `ψ = K_ε φ`): `∫ φ(z) ⨍_{∂B_ε(z)} G_ψ = ∫ ψ(x) G_ψ(x) dx`,
+`G_ψ(x) = ∫ ψ(y) wholePlaneCov x y dy`. -/
+lemma adjoint_potential {φ : ℂ → ℝ} (hφ : IsTestFunction univ φ) {ε : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1)
+    (hψ : IsTestFunction univ (circleKernel φ ε)) :
+    ∫ z, φ z * Real.circleAverage (fun x => ∫ y, circleKernel φ ε y * wholePlaneCov x y) z ε =
+      ∫ x, circleKernel φ ε x * ∫ y, circleKernel φ ε y * wholePlaneCov x y := by
+  rw [integral_mul_circleAverage_eq (measurable_potential hψ) (locallyIntegrable_potential hψ)
+    hφ.1.continuous hφ.2.1 hε hε1]
+  congr 1
+  funext x
+  ring
 
 end MatedCRT.LQGMeasure
