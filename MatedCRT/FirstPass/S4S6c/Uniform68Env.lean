@@ -47,4 +47,7 @@ theorem envAt (S : MatedCRTEnv Ω) {ε : ℝ} (hε : 0 < ε) (ω : Ω)
 
 end Uniform68Env
 
+#print axioms MatedCRT.Uniform68Env.ae_envInputs
+#print axioms MatedCRT.Uniform68Env.envAt
+
 end MatedCRT
