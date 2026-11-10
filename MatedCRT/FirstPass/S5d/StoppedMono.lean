@@ -77,7 +77,7 @@ theorem idlaRun_fst_mono {Θ₁ Θ₂ : Set ℤ} (hΘ : Θ₁ ⊆ Θ₂) (xs : L
 
 /-- **Monotonicity of stopped IDLA.** For `Θ₁ ⊆ Θ₂`, the IDLA cluster after `n` walkers stopped upon leaving `Θ₁` is
 contained in the one stopped upon leaving `Θ₂`, for the same walker paths. -/
-theorem stoppedIDLACluster_mono {Θ₁ Θ₂ : Set ℤ} (hΘ : Θ₁ ⊆ Θ₂) (xs : ℕ → ℕ → ℤ) (n : ℕ) :
+theorem stoppedIDLACluster_mono_domain {Θ₁ Θ₂ : Set ℤ} (hΘ : Θ₁ ⊆ Θ₂) (xs : ℕ → ℕ → ℤ) (n : ℕ) :
     stoppedIDLACluster Θ₁ xs n ⊆ stoppedIDLACluster Θ₂ xs n :=
   idlaRun_fst_mono hΘ _ _ _ subset_rfl
 
