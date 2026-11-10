@@ -1,6 +1,5 @@
 import MatedCRT.Defs.Map
 import MatedCRT.FirstPass.S6r.Shells.Parameters
-import MatedCRT.FirstPass.S4S6c.WalkBridge68
 
 /-!
 # Lemma 6.8, S8' on path space: the shell times `T k`, `L k` as stopping times
@@ -16,14 +15,14 @@ All shell times are `ℕ∞`-valued path functionals, `⊤` when the event never
 * `testEnd k x` is the first exit `L_k` of the local disk `B_{R/4}(η(x T_k))` at or after `T_k` (notes (7.35)).
 
 Main results: each functional is prefix-local (its sublevel sets `{F ≤ n}` and its values there depend only on
-`x 0, …, x n`), hence an `IsStoppingTime coordFiltration` by `isStoppingTime_of_prefix`.
+`x 0, …, x n`); the stopping-time forms `IsStoppingTime coordFiltration` are in `ShellOmegaStop.lean`.
 -/
 
 namespace MatedCRT
 namespace Lemma68Omega
 
 open Set Metric MeasureTheory
-open Lemma68Window Lemma68WalkBridge
+open Lemma68Window
 open scoped Classical
 
 open Classical in
@@ -91,19 +90,6 @@ lemma prefixLocal_firstTime {P : (ℕ → ℤ) → ℕ → Prop}
       exact ⟨k, hk, (hP n x y hxy k (hk.trans hm)).2 hPk⟩
   refine ⟨hiff, fun hle => ?_⟩
   exact firstTime_congr (fun k hk => hP n x y hxy k (hk.trans hm)) hle
-
-/-- A prefix-local functional is a stopping time of the coordinate filtration. -/
-theorem isStoppingTime_of_prefixLocal {F : (ℕ → ℤ) → ℕ∞} (hF : PrefixLocal F) :
-    IsStoppingTime coordFiltration F := by
-  refine isStoppingTime_of_prefix F (fun n => ?_)
-  refine ⟨{v | F (fun j => if h : j ≤ n then v ⟨j, Nat.lt_succ_of_le h⟩ else 0) ≤ n}, ?_⟩
-  ext x
-  simp only [Set.mem_ofPred_eq]
-  have hagree : ∀ j ≤ n, x j = (fun j : ℕ => if h : j ≤ n then
-      (fun k : Fin (n + 1) => x k) ⟨j, Nat.lt_succ_of_le h⟩ else 0) j := by
-    intro j hj
-    simp [hj]
-  exact (hF n x _ hagree n le_rfl).1
 
 /-! ### The shell times on path space -/
 
@@ -183,21 +169,6 @@ lemma testEnd_prefixLocal (k : ℕ) : PrefixLocal (testEnd ε η K r s d R k) :=
     exact ⟨fun h => ⟨hh', h.2⟩, fun h => ⟨hh, h.2⟩⟩
   · have hh' : ¬ shellExit ε η K r s d R k y ≤ (m : ℕ∞) := fun h => hh (hiff.2 h)
     exact ⟨fun h => absurd h.1 hh, fun h => absurd h.1 hh'⟩
-
-/-- Notes (7.20)-(7.35) on path space: the shell hit `C_{k+1}` is a stopping time of the coordinates. -/
-theorem isStoppingTime_shellHit (k : ℕ) :
-    IsStoppingTime coordFiltration (shellHit ε η K r s k) :=
-  isStoppingTime_of_prefixLocal (shellHit_prefixLocal ε η K r s k)
-
-/-- PRO step 12: the shell exit `T_k` is a stopping time of the coordinates. -/
-theorem isStoppingTime_shellExit (k : ℕ) :
-    IsStoppingTime coordFiltration (shellExit ε η K r s d R k) :=
-  isStoppingTime_of_prefixLocal (shellExit_prefixLocal ε η K r s d R k)
-
-/-- Notes (7.35): the test end `L_k` is a stopping time of the coordinates. -/
-theorem isStoppingTime_testEnd (k : ℕ) :
-    IsStoppingTime coordFiltration (testEnd ε η K r s d R k) :=
-  isStoppingTime_of_prefixLocal (testEnd_prefixLocal ε η K r s d R k)
 
 end Lemma68Omega
 end MatedCRT
