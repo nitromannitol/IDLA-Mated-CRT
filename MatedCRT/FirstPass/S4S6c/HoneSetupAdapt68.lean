@@ -109,3 +109,5 @@ end MatedCRT
 #print axioms MatedCRT.Lemma68HoneSetupAdapt.hcap_of_continuous
 #print axioms MatedCRT.Lemma68HoneSetupAdapt.shellC068_le_one_adapt
 #print axioms MatedCRT.Lemma68HoneSetupAdapt.cellDiamLe_ball_of_meshEvent
+
+#print axioms MatedCRT.Lemma68HoneSetupAdapt.hcap_of_continuous_s1
