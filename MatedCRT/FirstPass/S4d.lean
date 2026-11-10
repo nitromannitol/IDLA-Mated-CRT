@@ -123,4 +123,42 @@ theorem firstPass_4_2_of_frozen_strictGap {𝒮 : SpaceFillingSLEModel}
   firstPass_4_2_of_strictGapSteps hm h210 h34 h214 h28 h35 h218 h27 hH hcone h23 h24 h33
     (strictGapDeterministicComparison_of_frozen hG hpc hsmp hwmp hpole) hnj hfam
 
+/-- **Proposition 4.2 (first pass), final assembly (q4, fp-S4d-4-2-assembly).** The conclusion `DivSandpileLowerBoundStmt 𝒮`
+(Draft Proposition 4.2, `Draft/Section4.lean:50`) with every route-level input made explicit. The name `firstPass_4_2`
+is taken by FirstPass/S5c.lean (q3's conditional version, with `hgap`), so this is `firstPass_4_2_final`.
+Hypotheses, in order:
+* cited inputs, as in `firstPass_4_2_of_coneFamilyStep`: `hm`, `h210`, `h34`, `h214`, `h28`, `h35`, `h218`, `h27`, `hH`,
+  `hcone`, `h23`, `h24`, `h33`;
+* deterministic comparison, discharged by `strictGapDeterministicComparison_of_frozen` from the explicit inputs
+  `hG` (`HarmonicBalls.GreenFunctionBallStmt`, Draft), `hpc` (`FrozenPunctureConnected`, Frozen/S4d.lean),
+  `hsmp` (`FPStrongMinimumPrinciple`, Frozen/S5c.lean), `hwmp` (`FrozenSuperharmonicMinimumPrinciple`, Frozen/S2g.lean),
+  `hpole` (`FrozenGreenDiscPole`, Frozen/S2g.lean);
+* open NEW input `hnj : StrictGapFixedTimeUnionStep 𝒮` (fixed-time union, ChatGPT Sections 4-5; the measurability
+  input is not yet available, see S4d/StrictGapReduction.lean);
+* open NEW cone steps `hcan : ConeCanonicalHalfBallStep` (FirstPass/S2g.lean:82) and
+  `hcl : ConeHalfBallClosureInsideStep` (Proofs/Sec2/ConeFamilyMeasurable/StoppedClosure.lean:18);
+* frozen cone externals `hE1 : ConeCircleLawUniqueStep` (Frozen/S2i.lean:24), `hE2 : ConeReferenceExistsStep`
+  (Frozen/S2i.lean:40), `hscale : QuantumConeScalingInput` (External/QuantumCone.lean:19), and
+  `h22 : LQGMeasurePropertiesStmt` (Draft/Section2.lean:39).
+The cone family measurability `hfam : ConeFamilyAEMeasurableStep` is discharged by `coneFamilyAEMeasurable_proved`
+(FirstPass/S2j.lean:28). -/
+theorem firstPass_4_2_final {𝒮 : SpaceFillingSLEModel}
+    (hm : MepsScalingInput 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)
+    (h34 : IntegralConvergenceGreenFunctionStmt 𝒮) (h214 : GreenKernelUpperBoundStmt 𝒮)
+    (h28 : CellSizeEstimateStmt 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
+    (h218 : ExitTimeUpperBoundStmt 𝒮) (h27 : VolumeGrowthStmt)
+    (hH : FrozenDiscreteHolderContinuityCorrected 𝒮) (hcone : FrozenConeEnvironmentScaling 𝒮)
+    (h23 : ConeHarmonicBallsStmt) (h24 : ConeHarmonicBallsUpToFixedTimeStmt)
+    (h33 : UniformConvergenceGreenKernelStmt 𝒮)
+    (hG : _root_.HarmonicBalls.GreenFunctionBallStmt) (hpc : FrozenPunctureConnected)
+    (hsmp : FPStrongMinimumPrinciple) (hwmp : FrozenSuperharmonicMinimumPrinciple)
+    (hpole : FrozenGreenDiscPole)
+    (hnj : StrictGapFixedTimeUnionStep 𝒮)
+    (hcan : ConeCanonicalHalfBallStep) (hcl : ConeHalfBallClosureInsideStep)
+    (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
+    (hscale : QuantumConeScalingInput) (h22 : LQGMeasurePropertiesStmt) :
+    DivSandpileLowerBoundStmt 𝒮 :=
+  firstPass_4_2_of_frozen_strictGap hm h210 h34 h214 h28 h35 h218 h27 hH hcone h23 h24 h33 hG hpc hsmp hwmp hpole hnj
+    (coneFamilyAEMeasurable_proved hcan hcl h27 hE1 hE2 hscale h22)
+
 end MatedCRT
