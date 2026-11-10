@@ -13,7 +13,8 @@ namespace MatedCRT
 (b); checked TRUE, including the quantifier order a.s. omega then for all x, notes/fp-gaps/CHATGPT-frozen-truth-2145.md). For `0 < γ < 2` and a valid mated-CRT
 environment `S`, almost surely, for every `x ∈ ℂ` the set of times `s` at which the curve `η` visits `x` is bounded below. This
 makes the smallest vertex `a^ε_x = sInf {a | x ∈ H^ε_a}` of paper line 637 well defined (Defs/Map.lean `vertexOf`).
-Source: Duplantier-Miller-Sheffield, arXiv:1409.7055v4, Lemma 8.11, p. 144. Used by: firstPass_5_3 via `mem_cell_vertexOf_of_first_hit` (FirstPass/S5c/CellFirstHit.lean),
+Source: Duplantier-Miller-Sheffield, arXiv:1409.7055v4, Lemma 8.11, p. 144. Truth check TRUE (ChatGPT, 02:35 UTC; notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md, verdict table).
+Used by: firstPass_5_3_step (renamed from firstPass_5_3) via `mem_cell_vertexOf_of_first_hit` (FirstPass/S5c/CellFirstHit.lean),
 which gives the hypothesis `hmemcell` of `core_subset_fillCells_eventually` (FirstPass/S5c/CoverEventually.lean). -/
 def FPFirstHitVisits (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
