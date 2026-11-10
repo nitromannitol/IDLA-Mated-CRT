@@ -21,9 +21,11 @@ finite). This is the universal form, restricted to probability spaces, of the Ha
 Sources: Bou-Rabee and Gwynne, "Harmonic balls in Liouville quantum gravity", arXiv:2208.11795v3, Section 2.2, p. 9
 (existence for this singular whole-plane field); Duplantier and Sheffield, "Liouville quantum gravity and KPZ", Invent. Math.
 185 (2011), arXiv:0808.1560v2, Proposition 1.1, p. 5 (stated there for bounded domains); Berestycki and Powell,
-arXiv:2404.16642v2, Theorem 2.1, p. 62 (domain case). Truth check TRUE (ChatGPT, universal `hE` of `LQGMeasureExistence`,
-`hb/notes/fp-gaps/CHATGPT-11-7-11-10-statement-audit.md:73`). Used by: firstPass_wholePlaneLQGModel_of_existence
-(`FirstPass/S2m.lean`). -/
+arXiv:2404.16642v2, Theorem 2.1, p. 62 (domain case). Truth check TRUE exactly as typed (verdict in
+`notes/fp-gaps/CHATGPT-idla-S2m-S1cDiv.md`): HB arXiv:2208.11795v3, printed p. 9, equations (2.3), (2.4), (2.6) and
+Fact 2.1(I). The universal carrier (every probability space carrying a whole-plane GFF) follows by the measurable
+construction there; it is not a separately printed theorem. No change to the statement or to its S2m application.
+Used by: firstPass_wholePlaneLQGModel_of_existence (`FirstPass/S2m.lean`). -/
 def FrozenLQGMeasureExistenceInsertion : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω), IsProbabilityMeasure P →
     ∀ (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
