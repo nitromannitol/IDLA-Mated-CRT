@@ -90,7 +90,7 @@ theorem test_step {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {P : ℤ → �
     (hPmem : ∀ v, P v ∈ H v)
     (hsm : ∀ v, (H v ∩ ball (0 : ℂ) ρ).Nonempty → ∀ u ∈ closure (H v), ∀ u' ∈ closure (H v), dist u u' ≤ d)
     (hρ : ‖c‖ + 2 * R < ρ) (hnn : 0 ≤ 2 * R + d + g)
-    (hlegal : ∀ n, m (w n) (w (n + 1)) ≠ 0)
+    (hlegal : ∀ n, w (n + 1) = w n ∨ m (w n) (w (n + 1)) ≠ 0)
     (hPc : dist (P (w 0)) c ≤ g)
     (hE : vExitTime (innerVertices H (ball c (2 * R))) w = (e : ℕ∞)) :
     dist (P (w e)) (P (w 0)) ≤ 2 * R + d + g := by
@@ -101,7 +101,10 @@ theorem test_step {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {P : ℤ → �
   · have hk'in : w (e - 1) ∈ innerVertices H (ball c (2 * R)) := hin (e - 1) (by omega)
     have hmk : m (w (e - 1)) (w e) ≠ 0 := by
       have h := hlegal (e - 1)
-      rwa [show e - 1 + 1 = e by omega] at h
+      rw [show e - 1 + 1 = e by omega] at h
+      rcases h with h | h
+      · exact (hout (by rw [h]; exact hk'in)).elim
+      · exact h
     obtain ⟨q, hqcl, hqs⟩ := ExitPath68.exit_closure_meets_sphere hconn hadj hk'in hmk hout
     have hqn : dist q c = 2 * R := mem_sphere.1 hqs
     have hqball : q ∈ ball (0 : ℂ) ρ := by
@@ -137,7 +140,7 @@ theorem band_induction {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {F : Set 
     (hτsucc : ∀ (M : ℕ) (y : ℕ → ℤ) (i : ℕ), τ M y = (i : ℕ∞) →
       τ (M + 1) y = (i : ℕ∞) + vExitTime (Wt (y i)) (WalkPotential.pathShift i y))
     (hx0 : x 0 = b)
-    (hlegal : ∀ n, m (x n) (x (n + 1)) ≠ 0)
+    (hlegal : ∀ n, x (n + 1) = x n ∨ m (x n) (x (n + 1)) ≠ 0)
     (hfinW : ∀ i, x i ∈ band P F r d → vExitTime (Wt (x i)) (WalkPotential.pathShift i x) ≠ ⊤) :
     ∀ j ≤ N, ∃ i : ℕ, τ j x = (i : ℕ∞) ∧ dist (P (x i)) (P b) ≤ 3 * (j : ℝ) * s := by
   intro j
@@ -162,11 +165,13 @@ theorem band_induction {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {F : Set 
     have hcn := norm_le_add_dist (P (x i)) (ctr (x i))
     have hcP := hctr (x i)
     have hnorm : ‖ctr (x i)‖ + 2 * rad (x i) < ρ := by linarith
-    have hlegal' : ∀ n, m (WalkPotential.pathShift i x n) (WalkPotential.pathShift i x (n + 1)) ≠ 0 := by
+    have hlegal' : ∀ n, WalkPotential.pathShift i x (n + 1) = WalkPotential.pathShift i x n ∨
+        m (WalkPotential.pathShift i x n) (WalkPotential.pathShift i x (n + 1)) ≠ 0 := by
       intro n
       have h := hlegal (i + n)
-      show m (x (i + n)) (x (i + (n + 1))) ≠ 0
-      rwa [show i + (n + 1) = i + n + 1 by omega]
+      show x (i + (n + 1)) = x (i + n) ∨ m (x (i + n)) (x (i + (n + 1))) ≠ 0
+      rw [show i + (n + 1) = i + n + 1 by omega]
+      exact h
     have hPc : dist (P (WalkPotential.pathShift i x 0)) (ctr (x i)) ≤ g := by
       show dist (P (x i)) (ctr (x i)) ≤ g
       rw [dist_comm]
@@ -207,7 +212,7 @@ theorem band_facts {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {F : Set ℂ}
     (hτsucc : ∀ (M : ℕ) (y : ℕ → ℤ) (i : ℕ), τ M y = (i : ℕ∞) →
       τ (M + 1) y = (i : ℕ∞) + vExitTime (Wt (y i)) (WalkPotential.pathShift i y))
     (hx0 : x 0 = b)
-    (hlegal : ∀ n, m (x n) (x (n + 1)) ≠ 0)
+    (hlegal : ∀ n, x (n + 1) = x n ∨ m (x n) (x (n + 1)) ≠ 0)
     (hfinW : ∀ i, x i ∈ band P F r d → vExitTime (Wt (x i)) (WalkPotential.pathShift i x) ≠ ⊤) :
     (∀ j < N, τ j x ≠ ⊤) ∧ (∀ j < N, ∀ k : ℕ, τ j x = (k : ℕ∞) → x k ∈ band P F r d) := by
   have key := band_induction hconn hadj hPmem hsm hFne hFball hctr hWt hrad0 hrad _hr hrρ hs hsr hd hdr hg hgd hNs
