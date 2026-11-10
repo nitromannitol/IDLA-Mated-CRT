@@ -317,6 +317,69 @@ theorem hstart_ae_of_valid {𝒮 : SpaceFillingSLEModel} {γ : ℝ} {Ω : Type} 
       (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty :=
   (TraceInputs68.ae_continuous_eta hS).mono fun ω hω h => hstart_of_fullAdmAt S ω i hω hε hr hs₀ h
 
+/-! ### The Eps pointwise input and its assembly to `ShellChainCoreEpsStmt` (fp-S4S6c-pointwise-r-uniform, q2 Eps chain)
+
+Eps analogue of `ShellOneTestPointwiseEnvStmt`: the premises and conclusion of `ShellOneTestOrderAeEpsStmt`
+(ShellHoneInst68.lean:233), with the window avoidance at the dyadic scales `(1/2)^k` (pointwise in `ω`), the r-free
+environment facts pointwise at `ω`, and `ε ≤ shellEps0 γ α ω₀` for the ε-clause. Named input, not frozen. -/
+
+/-- **The Eps pointwise one-test input** (named; leaf input for q4's `shellOneTest_pointwise_fixedR`). -/
+def ShellOneTestPointwiseEpsStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE : ℝ,
+    0 < ω₀ → ω₀ < α → 0 < α → ω₀ < 2 / (2 + γ) ^ 2 - ζ → 2 * ω₀ * chosenBetaMinus γ < α →
+    2 * ω₀ < 2 / (2 + γ) ^ 2 - ζ → 0 < CG → 0 < CE →
+    0 < ζ → ζ < 1 / 2 → 0 < ρ → ρ < 1 →
+    ∀ C C' : ℝ, 0 < C → 0 < C' → WindowPrevAt γ (shortExp ζ) shellC068 C C' →
+    ∃ q0 : ℝ, 0 < q0 ∧ q0 ≤ (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE C) ∧
+    ∀ R : ℝ, 0 < R → R ≤ ρ / 4 → R ≤ Lemma68Cutoff.rAmp q0 ζ →
+      (∀ r : ℝ, 0 < r → r ≤ R → (dyadicD r) ^ shortExp ζ < Lemma68HoneCellGood.rhoCell68 ρ - ρ) →
+    ∀ s₀ : ℝ, 0 < s₀ → s₀ < 1 →
+    ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      HarmonicBalls.PolyHighProb S.P (greenLowEvent68 S ω₀ ρ CG) →
+      HarmonicBalls.PolyHighProb S.P (cellSizeEvent68 S γ ζ ρ) →
+      HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE) →
+    ∀ Ew : ℝ → Set Ω, (∀ δ : ℝ, MeasurableSet[S.fieldSigma] (Ew δ)) →
+      HarmonicBalls.PolyHighProb S.P Ew →
+      ∀ ε : ℝ, 0 < ε → ε ≤ shellEps0 γ α ω₀ → ∀ ω : Ω, ω ∈ meshEvent S γ ω₀ ρ CG ζ α CE ε →
+        Lemma68Inputs.CurveEscapesBothEnds (S.η ω) →
+        (∀ ε' : ℝ, 0 < ε' → IsLocallyFiniteMult (S.mult ε' ω) ∧ ∀ k : ℤ, S.mult ε' ω k (k + 1) ≠ 0) →
+        Continuous (S.η ω) → (∀ v : ℂ, S.μ ω {v} = 0) → IsFiniteMeasureOnCompacts (S.μ ω) →
+        (∀ k : ℕ, ω ∈ Ew ((1 / 2 : ℝ) ^ k) → ω ∉ badWindowOf S.μ ρ (shortExp ζ) shellC068 C ((1 / 2 : ℝ) ^ k)) →
+        ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ R → ω ∈ Ew (dyadicD r) →
+          ∀ i : Lemma68Config.Config68, Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
+            ∃ Rf : ℂ → ℝ,
+              ShellOneTestAt (S.mult ε ω) i.a (↑i.A : Set ℤ) (S.η ω) ε (fillCells ε (S.η ω) ↑i.Θ)
+                (vExitTime (killed ε (S.η ω) i.Θ i.F0 r)) r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf
+                (shellCount r (dyadicD r ^ shortExp ζ) - 1) (q0 / (1 + Real.log (1 / r)) ^ 2) ∧
+              Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf
+                (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a
+
+/-- **The countable swap for the Eps pointwise input.** The dyadic window avoidance is almost surely at all scales
+(`ae_all_iff` over `ℕ`, from `hav`), and the r-free environment facts are almost surely true (from `hS`). -/
+theorem shellOneTestOrderAeEpsStmt_of_pointwiseEps {𝒮 : SpaceFillingSLEModel} (h : ShellOneTestPointwiseEpsStmt 𝒮) :
+    ShellOneTestOrderAeEpsStmt 𝒮 := by
+  intro γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hωβ hω2ζ hCG hCE hζ0 hζ1 hρ0 hρ1 C C' hC hC' hP
+  obtain ⟨q0, hq0, hq0c, hcl⟩ :=
+    h γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hωβ hω2ζ hCG hCE hζ0 hζ1 hρ0 hρ1 C C' hC hC' hP
+  refine ⟨q0, hq0, hq0c, ?_⟩
+  intro R hR0 hRρ hRA hRcut s₀ hs₀ hs₁ Ω _ S hS hGp hCp hEp Ew hEwm hEwp hav ε hε hεe
+  have hdy : ∀ᵐ ω ∂S.P, ∀ k : ℕ, ω ∈ Ew ((1 / 2 : ℝ) ^ k) →
+      ω ∉ badWindowOf S.μ ρ (shortExp ζ) shellC068 C ((1 / 2 : ℝ) ^ k) :=
+    ae_all_iff.mpr fun k => hav ((1 / 2 : ℝ) ^ k)
+  filter_upwards [hdy, TraceInputs68.ae_continuous_eta hS, ae_null_singleton_of_valid hS,
+    ae_finite_on_compacts_of_valid hS] with ω hω hηc hμN hμF hmesh hcurve hmult
+  exact hcl R hR0 hRρ hRA hRcut s₀ hs₀ hs₁ Ω S hS hGp hCp hEp Ew hEwm hEwp ε hε hεe ω hmesh hcurve hmult
+    hηc hμN hμF hω
+
+/-- **`ShellChainCoreEpsStmt` from the Eps pointwise input** (through `shellOneTestOrderAeEpsStmt_of_pointwiseEps` and
+`shellChainCoreEpsStmt_of_oneTestOrderEps`, ShellHoneInst68.lean:275). -/
+theorem shellChainCoreEpsStmt_of_pointwiseEps {𝒮 : SpaceFillingSLEModel} (h : ShellOneTestPointwiseEpsStmt 𝒮) :
+    ShellChainCoreEpsStmt 𝒮 :=
+  shellChainCoreEpsStmt_of_oneTestOrderEps (shellOneTestOrderAeEpsStmt_of_pointwiseEps h)
+
+#print axioms MatedCRT.Lemma68ShellCorePw.shellOneTestOrderAeEpsStmt_of_pointwiseEps
+#print axioms MatedCRT.Lemma68ShellCorePw.shellChainCoreEpsStmt_of_pointwiseEps
+
 end Lemma68ShellCorePw
 end MatedCRT
 
