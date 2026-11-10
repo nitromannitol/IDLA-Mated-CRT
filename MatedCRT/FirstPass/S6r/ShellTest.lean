@@ -26,6 +26,7 @@ namespace MatedCRT
 namespace Lemma68Window
 
 open Set Metric
+open MeasureTheory
 
 /-! ## Cells: connectedness, the vertex point, the cell-size input -/
 
@@ -303,6 +304,64 @@ theorem first_moment_of_sparsity {cnt m ε s1 cv c0 β R r : ℝ} (hβ : 0 ≤ �
   have h2 : 4 * s1 * R ^ β ≤ cv * c0 ^ β * R ^ β := mul_le_mul_of_nonneg_right hcs hRb
   linarith
 
+/-! ## Step 9, S5 at the shell boundary: the geometric hypotheses of the one-test bound -/
+
+/-- The numerical window of a shell test: the radii `r² ≤ d ≤ R ≤ s ≤ r/4000` (7.42-7.45), the cell-size
+numerics `h < R/4` (from (7.0), `h ≤ d/100`), and the enlargement `0 ≤ e`, `h + e ≤ R/12` of (7.49). -/
+def S5Window (r d R s h e : ℝ) : Prop :=
+  r ^ 2 ≤ d ∧ d ≤ R ∧ R ≤ s ∧ s ≤ r / 4000 ∧ 0 < r ∧ 0 < R ∧ 0 ≤ e ∧ h + e ≤ R / 12 ∧ h < R / 4
+
+/-- Step 9 (`S5_geometry_at_shell_test`, l.601-707), pathwise. At the exit time `T_j` of the walk from `I(B_{4R/3}(z))`
+(step 6), with the exit vertex `b = X_{T_j}` and its vertex point `x' = η(b)`:
+* `|x' - z| ` is within `h` of `4R/3` (7.29);
+* the test ball `B_{R/4}(x')` lies in `I(·)` and in `B_{2R}(z)` (7.36-7.37);
+* the enlarged ball `B_{R/4+e}(x')` lies in the good annulus `{R < |· - z| < 2R}` (7.49);
+* `r² ≤ R < r` (7.44-7.45);
+* the S4 first-moment bound `ε·|A ∩ V(B_{c₀R}(x'))| ≤ μ/4` (7.46-7.48), from the S4 sparsity `hcnt` (the local
+  count of Lemma 6.8's hypothesis at radius `r`, `LocalBudget.lean`, not yet imported) and the volume bound `hvol`. -/
+theorem S5_geometry_at_shell_test {ε : ℝ} {η : ℝ → ℂ} (hε : 0 ≤ ε) (hηc : Continuous η) (x : ℕ → ℤ)
+    (hadj : ∀ n, (cell ε η (x n) ∩ cell ε η (x (n + 1))).Nonempty)
+    {z : ℂ} {r d R s h e : ℝ} (hW : S5Window r d R s h e)
+    {E : Set ℂ} (hmesh : CellDiamLe ε η h E) (hE : frontier (ball z (4 * R / 3)) ⊆ E)
+    {C T : ℕ} (hCT : C < T)
+    (hmin : ∀ n, C ≤ n → n < T → x n ∈ interiorCellVertices ε η (ball z (4 * R / 3)))
+    (hT : x T ∉ interiorCellVertices ε η (ball z (4 * R / 3)))
+    {cnt m s1 cv c0 β : ℝ} (hβ : 0 ≤ β) (hs1 : 0 ≤ s1)
+    (hcnt : ε * cnt ≤ s1 * r ^ (2 * β)) (hvol : cv * c0 ^ β * R ^ β ≤ m) (hcs : 4 * s1 ≤ cv * c0 ^ β) :
+    |dist (vertexPoint ε η (x T)) z - 4 * R / 3| ≤ h ∧
+      ball (vertexPoint ε η (x T)) (R / 4 + e) ⊆ {p | R < dist p z ∧ dist p z < 2 * R} ∧
+      (x T ∈ interiorCellVertices ε η (ball (vertexPoint ε η (x T)) (R / 4)) ∧
+        ball (vertexPoint ε η (x T)) (R / 4) ⊆ ball z (2 * R)) ∧
+      ε * cnt ≤ m / 4 ∧ r ^ 2 ≤ R ∧ R < r := by
+  obtain ⟨hd, hdR, hRs, hs4, hr, hR, he0, hhe, hhR⟩ := hW
+  have hρ : (4 * R / 3 : ℝ) ≠ 0 := by
+    have : (0 : ℝ) < 4 * R / 3 := by linarith
+    exact this.ne'
+  have hb := boundary_start_vertex hηc x hadj hCT hmin hT
+  have hrad := exit_vertex_radius hε hmesh z hρ hE hb
+  obtain ⟨p, hp1, hp2⟩ := hb
+  have hpE : (cell ε η (x T) ∩ E).Nonempty := ⟨p, hp1, hE hp2⟩
+  have hdiam : ∀ q ∈ cell ε η (x T), dist q (vertexPoint ε η (x T)) ≤ h := fun q hq => by
+    rw [dist_comm]
+    exact hmesh (x T) hpE (vertexPoint ε η (x T)) (vertexPoint_mem_cell hε η (x T)) q hq
+  obtain ⟨hI, hball⟩ := exit_cell_test_ball hε hR hdiam hhR hrad
+  have hsq := shell_radius_bounds hd hdR hRs hs4 hr
+  exact ⟨hrad, enlarged_ball_in_annulus hR hrad hhe, ⟨hI, hball⟩,
+    first_moment_of_sparsity hβ hr.le hR.le hs1 (le_trans hd hdR) hcnt hvol hcs, hsq.1, hsq.2.2⟩
+
+/-- Step 9, `(7.50)` in the form consumed by the strong-Markov step (`oneTest_step` of `Amplification.lean`).
+`F` is the test-failure event `{X_n ∈ A for all T_j ≤ n < L_j}`, so `μ[1_F | 𝓖] ≤ 1 - q(r)` on `P` is the bound
+`P(∃ n ∈ [T_j, L_j): X_n ∉ A | 𝓖) ≥ q(r)` (complement). The named hypothesis `hS5` is the S5 one-test estimate
+(z5, not committed), valid on the set `G` of paths whose test geometry is `S5_geometry_at_shell_test`; the
+inclusion `P ⊆ G` is supplied pathwise by that lemma. No probability is estimated here. -/
+theorem S5_at_shell_boundary {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
+    {𝓖 : MeasurableSpace Ω} {F P G : Set Ω} {q : ℝ} (hPG : P ⊆ G)
+    (hS5 : ∀ᵐ ω ∂μ, ω ∈ G → μ[F.indicator (fun _ => (1 : ℝ)) | 𝓖] ω ≤ 1 - q) :
+    ∀ᵐ ω ∂μ, ω ∈ P → μ[F.indicator (fun _ => (1 : ℝ)) | 𝓖] ω ≤ 1 - q :=
+  hS5.mono fun _ h hω => h (hPG hω)
+
+#print axioms MatedCRT.Lemma68Window.S5_geometry_at_shell_test
+#print axioms MatedCRT.Lemma68Window.S5_at_shell_boundary
 #print axioms MatedCRT.Lemma68Window.boundary_start_vertex
 #print axioms MatedCRT.Lemma68Window.exit_vertex_radius
 #print axioms MatedCRT.Lemma68Window.exit_before_next_shell
