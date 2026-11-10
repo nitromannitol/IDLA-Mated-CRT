@@ -105,4 +105,51 @@ theorem stoppedExit_input (𝒮 : SpaceFillingSLEModel) (h218 : ExitTimeUpperBou
             normExitTime_killing_le hlf hcons hI hVfin hIV a
           _ ≤ C ω / ε := hQ a haV
 
+/-- Intersections of two events that hold on `{t < T}` with probability tending to one. -/
+theorem tendsToOneOn_inter {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {F : Set Ω} {E₁ E₂ : ℝ → Set Ω}
+    (h₁ : TendsToOneOn P F E₁) (h₂ : TendsToOneOn P F E₂) : TendsToOneOn P F fun ε => E₁ ε ∩ E₂ ε := by
+  unfold TendsToOneOn at h₁ h₂ ⊢
+  have hsum := h₁.add h₂
+  rw [add_zero] at hsum
+  refine tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hsum ?_ ?_
+  · exact Filter.Eventually.of_forall fun _ => zero_le
+  · refine Filter.Eventually.of_forall fun ε => ?_
+    refine le_trans (measure_mono ?_) (measure_union_le _ _)
+    rintro ω ⟨hF, hn⟩
+    have hn' : ¬ (ω ∈ E₁ ε ∧ ω ∈ E₂ ε) := hn
+    by_cases h1 : ω ∈ E₁ ε
+    · right
+      exact ⟨hF, fun h2 => hn' ⟨h1, h2⟩⟩
+    · left
+      exact ⟨hF, h1⟩
+
+/-- **The floor and ceiling input of the stopped clause (NEW, OPEN; paper Proposition 5.1 proof, [C21]).** For `δ ∈ (0, ρ)`
+and `t > 0` there is a measurable random constant `c > 0` such that, on `{t < T}`, with probability tending to one as
+`ε → 0⁺`: the surplus floor `c/ε ≤ u^ε(a)` on the targets `Z^ε_t` (`stoppedTargetSet`) and the ceiling
+`u^ε(b) ≤ c/(2ε)` off the killing set `I^ε_t` (`stoppedKillSet`). Its written argument is open: the floor at the origin
+and the ceiling are not in the corrected paper (questions (a), (b) to the lead). The exit bound is proved in this file. -/
+def StoppedFloorCeilingStep (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
+  ∀ δ t : ℝ, 0 < δ → δ < ρ → 0 < t →
+    ∃ c : Ω → ℝ, Measurable[S.envSigma] c ∧ (∀ ω, 0 < c ω) ∧
+    TendsToOneOn S.P {ω | t < clusterExitTime (Λ ω) ρ} fun ε => {ω |
+      (∀ a ∈ stoppedTargetSet S Λ δ t ε ω, c ω / ε ≤ stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t a) ∧
+      (∀ b ∉ stoppedKillSet S Λ ρ t ε ω, stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t b ≤ c ω / (2 * ε))}
+
+/-- **The stopped first Green input from the floor and ceiling input.** `StoppedFirstGreenInputsStep` follows from
+`StoppedFloorCeilingStep` (open) together with the proved exit input `stoppedExit_input`: the random constants are `c`
+from the floor and ceiling and `C` from the exit bound. -/
+theorem stoppedFirstGreenInputsStep_of_floorCeiling (𝒮 : SpaceFillingSLEModel) (hfc : StoppedFloorCeilingStep 𝒮)
+    (h218 : ExitTimeUpperBoundStmt 𝒮) (h217 : BoundedExitTimeRVStmt)
+    (hμ : LQGMeasureFieldMeasurableStep 𝒮) (hcell : AdjacentCellsMeetAeStep 𝒮)
+    (hlap : DiscreteLaplacianBoundCorrectedStmt 𝒮) : StoppedFirstGreenInputsStep 𝒮 := by
+  intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS Λ hΛ δ t hδ hδρ ht
+  obtain ⟨c, hcm, hcpos, hFC⟩ := hfc γ hγ hγ2 ρ hρ hρ1 Ω S hS Λ hΛ δ t hδ hδρ ht
+  obtain ⟨C, hCm, hCpos, hE⟩ := stoppedExit_input 𝒮 h218 h217 hμ hcell hlap γ hγ hγ2 ρ hρ hρ1 Ω S hS Λ hΛ δ t hδ hδρ ht
+  refine ⟨c, C, hcm, hCm, hcpos, hCpos, ?_⟩
+  have h := tendsToOneOn_inter hFC hE
+  simpa only [← Set.ofPred_and, and_assoc] using h
+
 end MatedCRT
