@@ -47,7 +47,8 @@ theorem nullMeasurableSet_vertex_imp {𝒮 : SpaceFillingSLEModel} {γ : ℝ} {S
     (hS : S.IsValid 𝒮 γ) (hγ : 0 < γ) (hγ' : γ < 2) {ε : ℝ} (hε : 0 < ε) (ρ t δ : ℝ) (ht : 0 < t)
     (c : Ω → ℝ) (hc : Measurable[S.envSigma] c)
     (hlf : ∀ᵐ ω ∂S.P, ∀ b, {x | S.mult ε ω b x ≠ 0}.Finite) (a : ℤ)
-    (hdist : NullMeasurableSet {ω | δ < infDist (vertexPoint ε (S.η ω) a)
+    (hdist : NullMeasurableSet {ω | a ∈ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t →
+        δ < infDist (vertexPoint ε (S.η ω) a)
         (frontier (fillCells ε (S.η ω) (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t)))} S.P) :
     NullMeasurableSet {ω | a ∈ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t →
       δ < infDist (vertexPoint ε (S.η ω) a)
@@ -68,7 +69,10 @@ theorem nullMeasurableSet_vertex_imp {𝒮 : SpaceFillingSLEModel} {γ : ℝ} {S
   have hineq : NullMeasurableSet {ω | c ω / ε ≤ matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t a +
       t / ε * greenKernel (S.mult ε ω) (ballInterior ε (S.η ω) ρ) 0 a} S.P :=
     nullMeasurableSet_le (hc'.div_const ε) (hL.add (hG.const_mul (t / ε)))
-  exact nullMeasurableSet_imp_imp hmem hdist hineq
+  refine NullMeasurableSet.congr (nullMeasurableSet_imp_imp hmem hdist hineq)
+    (Filter.eventuallyEqSet_iff.2 (Filter.Eventually.of_forall fun ω => ?_))
+  try simp only [mem_ofPred_eq]
+  tauto
 
 /-- **Fixed-mesh null measurability of the success event** (three-inputs §7, reduced to the distance events `hdist`):
 for every `ε > 0` the event `E ε` of `MeanValueSurplusLowerStep` is null measurable. -/
@@ -76,7 +80,8 @@ theorem nullMeasurableSet_success {𝒮 : SpaceFillingSLEModel} {γ : ℝ} {S : 
     (hS : S.IsValid 𝒮 γ) (hγ : 0 < γ) (hγ' : γ < 2) {ε : ℝ} (hε : 0 < ε) (ρ t δ : ℝ) (ht : 0 < t)
     (c : Ω → ℝ) (hc : Measurable[S.envSigma] c)
     (hlf : ∀ᵐ ω ∂S.P, ∀ b, {x | S.mult ε ω b x ≠ 0}.Finite)
-    (hdist : ∀ a : ℤ, NullMeasurableSet {ω | δ < infDist (vertexPoint ε (S.η ω) a)
+    (hdist : ∀ a : ℤ, NullMeasurableSet {ω | a ∈ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t →
+        δ < infDist (vertexPoint ε (S.η ω) a)
         (frontier (fillCells ε (S.η ω) (matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t)))} S.P) :
     NullMeasurableSet {ω | ∀ a ∈ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t,
       δ < infDist (vertexPoint ε (S.η ω) a)
