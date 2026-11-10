@@ -7,6 +7,8 @@ import MatedCRT.FirstPass.S2y.LateralInMeasure250
 import MatedCRT.FirstPass.S2y.LateralBilin250
 import MatedCRT.FirstPass.S2y.ConeApproxIdentity
 import MatedCRT.FirstPass.S2y.ConeRadialCodes
+import MatedCRT.FirstPass.S2y.RadialProcCont250
+import MatedCRT.FirstPass.S2y.RadialProcL4Ae250
 
 /-!
 # FIRST PASS S2y, LateralAssembly250: the whole-plane lateral smear H1 (fp-S2y-decoder-250, z8; chat 250 §1.4, S4)
@@ -21,7 +23,7 @@ Assembly of `WholePlaneLateralSmear250` (`ConeDecoder250`) from the pieces prove
 * Probabilistic (`wholePlaneLateralSmear250_of_radial`): the L² part (`tendsto_integral_sq_pairing_sub`), the L¹ part of
   the radial integral (`tendsto_integral_abs_radial`), and the passage to convergence in probability.
 
-Named radial inputs (chat 250 §1.3, R5), used as hypotheses until their files land:
+Named radial inputs (chat 250 §1.3, R5), discharged below from the landed files:
 `RadialContAe250` (owner z9, `RadialProcCont250.ae_continuousOn_radialVersion`) and `RadialL4Ae250` (owner q2,
 `RadialProcL4Ae250.ae_integrableOn_radialVersion_pow_four`).
 -/
@@ -38,15 +40,15 @@ variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
 /-! ### Named radial inputs (R5) -/
 
 /-- **Radial continuity input** (chat 250 §1.3, R5a; owner z9, `RadialProcCont250.ae_continuousOn_radialVersion`): for every
-whole-plane GFF, almost surely the radial version is continuous on `(0, ∞)`. A named hypothesis until that file lands. -/
+whole-plane GFF, almost surely the radial version is continuous on `(0, ∞)`. Discharged by `radialContAe250_proved` (landed in 538c6c8). -/
 def RadialContAe250 : Prop :=
   ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
     IsProbabilityMeasure P → IsWholePlaneGFF P hC hcirc →
     ∀ᵐ ω ∂P, ContinuousOn (MatedCRT.CirclePairing.radialVersion hcirc ω) (Ioi 0)
 
 /-- **Radial fourth-moment input** (chat 250 §1.3, R5b; owner q2, `RadialProcL4Ae250.ae_integrableOn_radialVersion_pow_four`):
-for every whole-plane GFF, almost surely `|radialVersion|^4` is integrable on every `(0, n]`. A named hypothesis until that
-file lands. -/
+for every whole-plane GFF, almost surely `|radialVersion|^4` is integrable on every `(0, n]`. Discharged by `radialL4Ae250_proved` (landed in 05bde43).
+-/
 def RadialL4Ae250 : Prop :=
   ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
     IsProbabilityMeasure P → IsWholePlaneGFF P hC hcirc →
@@ -437,7 +439,36 @@ theorem coneFieldScalingStep_of_radial (hscale : QuantumConeScalingInput) (hA : 
   coneFieldScalingStep_proved250 hscale
     (coneLateralSmearStep250_of_wholePlane (wholePlaneLateralSmear250_of_radial hA hB))
 
+/-! ### Unconditional H1 from the landed radial inputs (z9 `RadialProcCont250`, q2 `RadialProcL4Ae250`) -/
+
+/-- **R5a, discharged**: the radial version is a.s. continuous on `(0, ∞)` (`RadialProcCont250`, commit 538c6c8). -/
+theorem radialContAe250_proved : RadialContAe250 := by
+  intro Ω _ P hC hcirc _ h
+  exact MatedCRT.RadialProcCont250.ae_continuousOn_radialVersion h
+
+/-- **R5b, discharged**: a.s. `|radialVersion|⁴` is integrable on each `(0, n]` (`RadialProcL4Ae250`, commit 05bde43). -/
+theorem radialL4Ae250_proved : RadialL4Ae250 := by
+  intro Ω _ P hC hcirc _ h
+  exact ae_integrableOn_radialVersion_pow_four h
+
+/-- **The whole-plane lateral smear input H1, unconditional** (chat 250 §1.4). -/
+theorem wholePlaneLateralSmear250_proved : WholePlaneLateralSmear250 :=
+  wholePlaneLateralSmear250_of_radial radialContAe250_proved radialL4Ae250_proved
+
+/-- **`ConeCircleDecoderStep` from the whole-plane input alone** (chat 250 §5; no H2 and no M). -/
+theorem coneCircleDecoderStep_proved_radial : ConeCircleDecoderStep :=
+  coneCircleDecoderStep_of_lateralSmear250 (coneLateralSmearStep250_of_wholePlane wholePlaneLateralSmear250_proved)
+
+/-- **`ConeFieldScalingStep` from the scaling input alone** (chat 250 §5, `coneFieldScalingStep_proved_radial`):
+the decoder `coneCircleDecoderStep_proved_radial` (no H1 hypothesis, no H2, no M) and the unconditional lateral transfer
+`coneLateralTransferStep_proved240`. -/
+theorem coneFieldScalingStep_proved_radial (hscale : QuantumConeScalingInput) : ConeFieldScalingStep :=
+  coneFieldScalingStep_of_decoder hscale coneCircleDecoderStep_proved_radial
+    (coneLateralTransferStep_proved240 hscale)
+
 end MatedCRT.LQGMeasure
 
 #print axioms MatedCRT.LQGMeasure.wholePlaneLateralSmear250_of_radial
 #print axioms MatedCRT.LQGMeasure.coneFieldScalingStep_of_radial
+#print axioms MatedCRT.LQGMeasure.wholePlaneLateralSmear250_proved
+#print axioms MatedCRT.LQGMeasure.coneFieldScalingStep_proved_radial
