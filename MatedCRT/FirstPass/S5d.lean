@@ -34,7 +34,7 @@ namespace MatedCRT
 /-- **Proposition 5.1 from its open steps.** The unstopped conjunct is the stopped conjunct by monotonicity in the stopping domain ([C21];
 `S5d/UnstoppedFromStopped.lean`), so neither Proposition 4.2 nor the strict-positivity input is used; the stopped conjunct is
 `iDLALowerBoundStopped_of_greenSteps` (killing set `V^ε(Λ_t) ∩ S^ε`, targets `V^ε(B⁻_δ(Λ_t)) ∪ {0}`), from the two
-open Green steps: the first one is `stoppedFirstGreenStep_of_steps` from `stoppedFirstGreenInputsStep_of_floorCeiling` (open floor and ceiling input `hfc`, exit input proved in `S5d/StoppedExitInput.lean`) and the standing steps
+open Green steps: the first one is `stoppedFirstGreenStep_of_steps` from `stoppedFirstGreenInputsStep_of_floorCeiling` (open surplus floor `hfl` and open surplus maximum `hmax`, whose ceiling is derived by `stoppedFloorCeiling_of_floor_max`; exit input proved in `S5d/StoppedExitInput.lean`) and the standing steps
 `hcell`, `hlap` ([C21]); the second is `hG2`; the cone-family inputs are `hfam`, `h24`. -/
 theorem firstPass_5_1_of_steps (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
     (hfam : ConeFamilyAEMeasurableStep)
