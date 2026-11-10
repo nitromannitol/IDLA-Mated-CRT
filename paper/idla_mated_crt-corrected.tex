@@ -2328,7 +2328,8 @@ On this probability-one event and on $\{t<\TT\}$, put $v_u=\overline w_u^{B_\rho
 	
 	\begin{lemma} \label{lemma:mean-value-ineq}
 		For each $\delta \in (0, \rho)$ and $t > 0$ on the event $\{t < \TT\}$, 
-		there exists a $\sigma(h,\eta)$-measurable finite random variable $\mathfrak{s} = \mathfrak{s}(\delta) > 0$ such that, except on an event of probability tending to 0 as ${\eps} \to 0$ , 
+		% CORRECTION [C23]: the quantifier order allows \mathfrak{s} to depend on both \delta and t.
+		there exists a $\sigma(h,\eta)$-measurable finite random variable $\mathfrak{s} = \mathfrak{s}(\delta,t) > 0$ such that, except on an event of probability tending to 0 as ${\eps} \to 0$ ,
 		\begin{equation} \label{eq:mean-value-ineq-verify}
 		% CORRECTION [C4]: printed \partial \eta(\Lambdateps) (boundary of a finite point set); intended: boundary of the cell union \overline{\Lambdateps} (eq:vertex-scaling).
 		(t {\eps}^{-1}) \Gr{{\eps}}{\Lambdateps}(0, a) \geq (1 + \mathfrak{s}) \sum_{b \in \Lambdateps} \Gr{{\eps}}{\Lambdateps}(b, a), \quad  \mbox{for all $a \in \Lambdateps$ s.t. $\dist(\eta(a), \partial \overline{\Lambdateps}) > \delta$}.
@@ -2860,7 +2861,7 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		with $a$ replaced by $b \in {\VGeps}(\partial B_{{(4/3)} \mathbf{r}_{z}}({z}))$ for ${z} \in \mathbf{Z}$. We in fact prove the following stronger statement: 
 		a simple random walk $X^{b, {\eps}}_t$ started at such $b$ hits
 		\[
-% CORRECTION [C22] (editorial, referee check chat 185): printed \mathbf{r}_{z/4} read as \mathbf{r}_{z}/4 (four places in this proof); a missing parenthesis in Step 3 and the $ placement in Step 4 fixed.
+% CORRECTION [C22] (editorial, referee check chat 185): printed \mathbf{r}_{z/4} read as \mathbf{r}_{z}/4 (five places in this proof); a missing parenthesis in Step 3 and the $ placement in Step 4 fixed.
 		\mathfrak{E} := {\VGeps}(B_{\mathbf{r}_{z}/4}(\eta(b))) \setminus A
 		\]
 		before exiting ${\VGeps}(B_{\mathbf{r}_{z}/4}(\eta(b)))$ with conditional probability given $(h,\eta)$ bounded from below by a constant.
@@ -3399,7 +3400,8 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 	
 	
 	\begin{lemma} \label{lemma:odometer-bound-mass}
-		The following holds for all $t > 0$ and all sets $B \subset {\VGeps}(B_{\rho}) \setminus \{0\}$:
+		% CORRECTION [C24]: the comparison holds almost surely, simultaneously for every \eps > 0.
+		Almost surely, simultaneously for every ${\eps} > 0$, the following holds for all $t > 0$ and all sets $B \subset {\VGeps}(B_{\rho}) \setminus \{0\}$:
 		\[
 		u_t^{{\eps}}(b) \leq \left( \sup_{\partial B} u_t^{{\eps}} \right) \P[\mbox{$X^{b, {\eps}}$ exits $B$ before hitting $B \setminus \Lambdateps$} | h, \eta], \quad \forall b \in B,
 		\]	
@@ -3439,8 +3441,9 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 	increasing radii. 
 	Eventually the odometer will be so small the upper bound we derive from the following estimate will suffice. 
 	\begin{lemma}[Lemma 4.2 \cite{levine2009strong}] \label{lemma:crude-upper-bound}
-		The following is true for all $t > 0$ with polynomially high probability as ${\eps} \to 0$. 
-		For every point $a \in D_{{\eps}}(t {\eps}^{-1}) \setminus \{0\}$  there is a path $a = a_0 \sim a_1 \sim \cdots \sim a_m = 0$ in $D_{{\eps}}(t {\eps}^{-1})$ 
+		% CORRECTION [C25]: the path starts in the positive stopped support \Lambdateps, and one polynomially-high-probability event works for every t > 0.
+		With polynomially high probability as ${\eps} \to 0$, the following holds simultaneously for every $t > 0$.
+		For every point $a \in \Lambdateps \setminus \{0\}$ there is a path $a = a_0 \sim a_1 \sim \cdots \sim a_m = 0$ in $\Lambdateps$
 		with 
 		\[
 		u^{{\eps}}_t(a_{i+1}) \geq u^{{\eps}}_t(a_i) + \log({\eps}^{-1})^{-2}.
@@ -3453,19 +3456,16 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		\begin{equation} \label{eq:degree-bound}
 		\max_{a \in {\VGeps}(B_{\rho})} \deg^{{\eps}}(a) \leq (\log {\eps}^{-1})^2.
 		\end{equation}
-		Let $a_0 = a$. Inductively, assume that $i\geq 0$ and $a_i \in  D_{{\eps}}(t {\eps}^{-1}) $ has been defined. If $a_i = \{0\}$, set $m=i$ and conclude the induction. If $a_i \not=0$, let $a_{i+1}$ be a neighbor of $a_i$ maximizing $u^{{\eps}}_t(a_{i+1})$.
-		Then $a_{i+1} \in  \Lambdateps$. Indeed, either $a_i \in \Lambdateps$ and hence $a_{i+1} \in \Lambdateps$
-		or $i = 0$ and $a_i$ is on the boundary of $\Lambdateps$. In the latter case, by definition 
-		there is some site in $\Lambdateps$ neighboring $a_i$ with a strictly positive odometer. Since $\Delta^{{\eps}} u^{{\eps}}_t = (\deg^{{\eps}})^{-1}$ on $\Lambdateps$,
-		\eqref{eq:laplacian-of-uteps},	
-		we have that 
+		On this event, fix $t > 0$ and $a \in \Lambdateps \setminus \{0\}$, and let $a_0 = a$. Inductively, assume that $i\geq 0$ and $a_i \in \Lambdateps$ has been defined. If $a_i = \{0\}$, set $m=i$ and conclude the induction. If $a_i \not=0$, let $a_{i+1}$ be a neighbor of $a_i$ maximizing $u^{{\eps}}_t(a_{i+1})$.
+		Since $a_i \in \Lambdateps \setminus \{0\}$, \eqref{eq:laplacian-of-uteps} gives $\Delta^{{\eps}} u^{{\eps}}_t(a_i) = \deg^{{\eps}}(a_i)^{-1}$, so
 		\begin{align*}
 		u^{{\eps}}_t(a_{i+1}) &\geq \frac{1}{\deg^{{\eps}}(a_i)} \sum_{y \sim a_i} u^{{\eps}}_t(y) \quad \text{(choice of $a_{i+1}$)} \\
 		&=  u^{{\eps}}_t(a_i) + \Delta^{{\eps}} u^{{\eps}}_t(a_i) \quad \text{(definition of $\Delta^{\eps}$)} \\
 		&= u^{{\eps}}_t(a_i) + \deg^{{\eps}}(a_i)^{-1} \\
 		&\geq u^{{\eps}}_t(a_i) + \log({\eps}^{-1})^{-2} \quad\text{(by~\eqref{eq:degree-bound})}.
-		\end{align*} 
-		As the number of vertices in $D_{{\eps}}(t {\eps}^{-1})$ is finite and contains the origin, Lemma \ref{lemma:discrete-conservation-of-mass}, there must be a finite $i$ for which $a_i = 0$. 
+		\end{align*}
+		In particular, $u^{{\eps}}_t(a_{i+1}) > 0$, so $a_{i+1} \in \Lambdateps$ and the induction continues.
+		As the number of vertices in $D_{{\eps}}(t {\eps}^{-1})$ is finite and contains the origin, Lemma \ref{lemma:discrete-conservation-of-mass}, there must be a finite $i$ for which $a_i = 0$.
 	\end{proof}
 	
 	
@@ -3619,10 +3619,9 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		{\it Step 3: $k \geq \tau_{{\eps},2}$.} \\
 		We control the size of the odometer by Lemma \ref{lemma:crude-upper-bound}
 		and the upper bound on the Euclidean diameter of cells in the mated-CRT map. 
-		By Lemma \ref{lemma:crude-upper-bound},  w.p.\ tending to 1 as ${\eps} \to 0$, there is a path 
-		of at most $\log({\eps}^{-1})^2 {\eps}^{-\omega_0}$ cells
-		from the boundary of the support of $u_t^{{\eps}}$ 
-		to $\partial \Theta_{\tau_{{\eps},2}}$ along which the odometer increases by ${\eps}^{-\omega_0}$. 
+		By Lemma \ref{lemma:crude-upper-bound},  w.p.\ tending to 1 as ${\eps} \to 0$, for every $a \in \Lambdateps \setminus \Theta_{\tau_{{\eps},2}}$, there is a path
+		of at most $\log({\eps}^{-1})^2 {\eps}^{-\omega_0}$ cells from $a$
+		to $\partial \Theta_{\tau_{{\eps},2}}$ along which the odometer increases by at most ${\eps}^{-\omega_0}$.
 		Thus, by the definition of $\tau_{{\eps},2}$, \eqref{eq:cell-size-estimate-local-div}, and \eqref{eq:choice-of-omega0-div}
 		\begin{equation} \label{eq:distance-of-final-cluster-div-sandpile}
 		u_t^{{\eps}}(a) = 0  \quad \mbox{for $a \in {\VGeps}(B_{\rho})$ such that $\dist(\eta(a), \eta(\Theta_{\tau_{{\eps},2}})) \geq  {\eps}^{\omega_0/2} \log({\eps}^{-1})^2$}
