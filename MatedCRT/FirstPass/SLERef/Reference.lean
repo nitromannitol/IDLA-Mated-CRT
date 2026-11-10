@@ -1,32 +1,41 @@
 import MatedCRT.FirstPass.SLERef.Code
+import MatedCRT.FirstPass.SLERef.Similarity
 import MatedCRT.Draft.Section2
-import MatedCRT.Draft.Section3
+import MatedCRT.Steps.Sec3.DiscretePotentialTightness
+import MatedCRT.FirstPass.Frozen.S3S4b
 
 /-!
-# First pass: reference propositions for the space-filling SLE law (task fp-SLERef-reference-law, worker z10)
+# First pass: reference propositions for the space-filling SLE law (task fp-SLERef-reference-law, worker z10;
+certificate corrected by task fp-SLERef2-certify)
 
 The five numbered results of the paper that are cited from the literature and whose statements quantify over valid
 environments through the abstract predicate `SpaceFillingSLEModel.IsSLE`: Theorem 2.11 (`RandomWalkToLBMStmt`),
 Lemma 2.14 (`GreenKernelUpperBoundStmt`), Lemma 2.16 (`GreenKernelLowerBoundStmt`), Lemma 2.18
-(`ExitTimeUpperBoundStmt`) and Lemma 3.2 (`DiscreteHolderContinuityStmt`). Their Draft statements are unchanged and
-are imported here; this module is not imported by the Draft modules, so there is no cycle.
+(`ExitTimeUpperBoundStmt`) and the corrected Lemma 3.2 (`DiscreteHolderContinuityCorrectedStep`). The printed
+`DiscreteHolderContinuityStmt` is FALSE (docs/campaign/CORRECTED-FORMS.md, entry 3.2) and is not used here.
+This module is not imported by the Draft modules, so there is no cycle.
 
 `SLEReferenceInput ν` says that `ν` is a reference law: it is the normalized law of some model with valid reference
-environments on `ℝ`, and every model with that normalized law satisfies the five cited statements. The corresponding
-frozen proposition `SLEReferenceExistsInput` is in `MatedCRT/FirstPass/Frozen/SLERef.lean`.
+environments on `ℝ`, and every model with that normalized law satisfies the five cited statements.
+`SLEReferenceWithSimilarityInput ν` adds, for the same `ν`, the corrected similarity transfer and the truncated quenched
+laws. `SLEFrozenReferenceInput ν` is the minimal package of `notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md` §8 for the two
+unresolved frozen inputs. The frozen existence proposition `SLEReferenceExistsInput` is in
+`MatedCRT/FirstPass/Frozen/SLERef.lean`. Nothing here asserts that a family `ν` is realized by an SLE; that is the
+frozen input.
 -/
 
 namespace MatedCRT
 
 open MeasureTheory
 
-/-- The five cited numbered results (2.11, 2.14, 2.16, 2.18, 3.2) for one space-filling SLE model `𝒮`. -/
+/-- The five cited numbered results (2.11, 2.14, 2.16, 2.18, and the corrected Lemma 3.2) for one space-filling SLE model
+`𝒮`. The fifth conjunct is `DiscreteHolderContinuityCorrectedStep`, which replaces the printed Lemma 3.2. -/
 def SLECitedInputs (𝒮 : SpaceFillingSLEModel) : Prop :=
   RandomWalkToLBMStmt 𝒮 ∧
   GreenKernelUpperBoundStmt 𝒮 ∧
   GreenKernelLowerBoundStmt 𝒮 ∧
   ExitTimeUpperBoundStmt 𝒮 ∧
-  DiscreteHolderContinuityStmt 𝒮
+  DiscreteHolderContinuityCorrectedStep 𝒮
 
 /-- The model `𝒮` is realized by valid environments with parameter `γ` on the standard Borel space `ℝ`, for every
 `γ ∈ (0, 2)`. The choice of `ℝ` is a sampling-space convention for the reference only. -/
@@ -40,5 +49,46 @@ def SLEReferenceInput (ν : ℝ → Measure SLEPathCode) : Prop :=
   (∃ 𝒮ref : SpaceFillingSLEModel,
     HasNormalizedSLELaw 𝒮ref ν ∧ HasReferenceEnvironments 𝒮ref) ∧
   ∀ 𝒮 : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮 ν → SLECitedInputs 𝒮
+
+/-- `ν` is a reference law with the similarity and truncated-laws clauses, for the same `ν`: every model with normalized
+law `ν` satisfies the corrected similarity transfer `FPSimilarityTransferCorrected` and the fixed-time truncated quenched
+laws `FrozenTruncatedQuenchedLawsFixedTime`. Source: `notes/fp-gaps/CHATGPT-sleref-truth.md` §2.1 and
+`notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md` §4. -/
+def SLEReferenceWithSimilarityInput (ν : ℝ → Measure SLEPathCode) : Prop :=
+  SLEReferenceInput ν ∧
+  ∀ 𝒮 : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮 ν →
+    FPSimilarityTransferCorrected 𝒮 ∧ FrozenTruncatedQuenchedLawsFixedTime 𝒮
+
+/-- The two unresolved estimates for one model: the corrected Lemma 3.2 (`DiscreteHolderContinuityCorrectedStep`, the body
+of `FrozenDiscreteHolderContinuityCorrected`) and the fixed-time truncated quenched laws. -/
+def SLEFrozenEstimates (𝒮 : SpaceFillingSLEModel) : Prop :=
+  DiscreteHolderContinuityCorrectedStep 𝒮 ∧ FrozenTruncatedQuenchedLawsFixedTime 𝒮
+
+/-- The minimal reference package of `notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md` §8, for one law family `ν`: some model
+with normalized law `ν` has valid reference environments, and every model with normalized law `ν` satisfies
+`SLEFrozenEstimates`. The consumers `FrozenDiscreteHolderContinuityCorrected` and `FrozenTruncatedQuenchedLawsFixedTime`
+are derived from it in `MatedCRT/FirstPass/Frozen/SLERef.lean`. -/
+def SLEFrozenReferenceInput (ν : ℝ → Measure SLEPathCode) : Prop :=
+  (∃ 𝒮ref : SpaceFillingSLEModel,
+    HasNormalizedSLELaw 𝒮ref ν ∧ HasReferenceEnvironments 𝒮ref) ∧
+  ∀ 𝒮 : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮 ν → SLEFrozenEstimates 𝒮
+
+/-- The similarity clause and the truncated-laws clause, for the law `ν` of a reference certificate, give the minimal
+frozen package for the same `ν`. -/
+theorem sleFrozenReference_of_withSimilarity {ν : ℝ → Measure SLEPathCode}
+    (hν : SLEReferenceWithSimilarityInput ν) : SLEFrozenReferenceInput ν := by
+  unfold SLEFrozenReferenceInput SLEFrozenEstimates
+  refine ⟨hν.1.1, fun 𝒮 hLaw => ?_⟩
+  exact ⟨(hν.1.2 𝒮 hLaw).2.2.2.2, (hν.2 𝒮 hLaw).2⟩
+
+/-- Projection: the corrected similarity transfer for every model with normalized law `ν`. -/
+theorem similarity_of_referenceLaw {ν : ℝ → Measure SLEPathCode} (hν : SLEReferenceWithSimilarityInput ν)
+    {𝒮 : SpaceFillingSLEModel} (hLaw : HasNormalizedSLELaw 𝒮 ν) : FPSimilarityTransferCorrected 𝒮 :=
+  (hν.2 𝒮 hLaw).1
+
+/-- Projection: the fixed-time truncated quenched laws for every model with normalized law `ν`. -/
+theorem truncatedLaws_of_referenceLaw {ν : ℝ → Measure SLEPathCode} (hν : SLEReferenceWithSimilarityInput ν)
+    {𝒮 : SpaceFillingSLEModel} (hLaw : HasNormalizedSLELaw 𝒮 ν) : FrozenTruncatedQuenchedLawsFixedTime 𝒮 :=
+  (hν.2 𝒮 hLaw).2
 
 end MatedCRT

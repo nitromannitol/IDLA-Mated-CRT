@@ -1,49 +1,69 @@
 import MatedCRT.FirstPass.SLERef.Reference
+import MatedCRT.FirstPass.Frozen.S3S4
 
 /-!
-# First pass: frozen external input for the reference law of whole-plane space-filling SLE (task fp-SLERef-reference-law)
+# First pass: frozen external input for the reference law of whole-plane space-filling SLE (task fp-SLERef-reference-law;
+corrected by task fp-SLERef2-certify)
 
-`SLEReferenceExistsInput` is the frozen literature input that fixes the meaning of the abstract predicate
-`SpaceFillingSLEModel.IsSLE` for the five cited numbered results (2.11, 2.14, 2.16, 2.18, 3.2). It is a proposition
-about laws of curves. No Lean object constructs SLE here, and no Lean proof of the literature transfer is given.
-Design: `notes/fp-gaps/CHATGPT-z2-sle-field-design.md` §2, §4, §8. The propositions it uses are in
-`MatedCRT/FirstPass/SLERef/Reference.lean` and `MatedCRT/FirstPass/SLERef/Code.lean`.
+`SLEReferenceExistsInput` is the frozen literature input for the reference law of whole-plane space-filling SLE. It is a
+proposition about laws of curves and of the cone field, and it does not identify the SLE law intrinsically. No Lean object
+constructs SLE here, and no Lean proof of the literature transfer is given. The propositions it uses are in
+`MatedCRT/FirstPass/SLERef/Reference.lean`, `MatedCRT/FirstPass/SLERef/Similarity.lean` and
+`MatedCRT/FirstPass/SLERef/Code.lean`.
+
+This file also gives the derivations of the two firstPass consumers from the reference package for one chosen law `ν`:
+`FrozenDiscreteHolderContinuityCorrected 𝒮` and `FrozenTruncatedQuenchedLawsFixedTime 𝒮`, for every model `𝒮` with normalized
+law `ν`, and a non-vacuity statement for the reference model.
+
+Sources of the truth discussion: `notes/fp-gaps/CHATGPT-sleref-truth.md` §1.3 and §2.1,
+`notes/fp-gaps/CHATGPT-fpsimilarity-truth.md` §5–§7, `notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md` §§1–4 and §8.
 -/
 
 namespace MatedCRT
 
 open MeasureTheory
 
-/-- FIRST-PASS FROZEN. Reference existence and uniform literature transfer for whole-plane space-filling SLE.
-PENDING TRUTH CHECK (operator): the truth of this proposition has not yet been checked by the operator.
+/-- FIRST-PASS FROZEN. Reference existence and uniform transfer for one chosen law family `ν : ℝ → Measure SLEPathCode`.
+The proposition is `∃ ν, SLEReferenceWithSimilarityInput ν`: some `ν` is the normalized law of a space-filling SLE model
+realized, for every `γ ∈ (0, 2)`, by valid environments on `ℝ`, and every model with normalized law `ν` satisfies (a) the five
+cited numbered results of the paper, with the corrected Lemma 3.2 (`SLECitedInputs`; Theorem 2.11, Lemmas 2.14, 2.16, 2.18
+and corrected Lemma 3.2), (b) the corrected similarity transfer `FPSimilarityTransferCorrected`, and (c) the fixed-time
+truncated quenched laws `FrozenTruncatedQuenchedLawsFixedTime`.
 
-The content: there is a family `ν : ℝ → Measure SLEPathCode` of rational-time code laws such that
-(1) some space-filling SLE model `𝒮ref` has normalized law `ν` (`HasNormalizedSLELaw`) and is realized, for every
-`γ ∈ (0, 2)`, by a valid environment on `ℝ` (`HasReferenceEnvironments`); and
-(2) every space-filling SLE model `𝒮` with normalized law `ν` satisfies the five cited numbered results
-(`SLECitedInputs 𝒮`: Theorem 2.11, Lemmas 2.14, 2.16, 2.18 and Lemma 3.2 of the paper).
+PENDING TRUTH CHECK (operator): the truth of this proposition has not been checked by the operator. It is recorded as TRUE
+under the certified reference law by `notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md` (for the truncated laws, §4) and
+`notes/fp-gaps/CHATGPT-fpsimilarity-truth.md` §7 (for the similarity clause); the corrected Lemma 3.2 is UNRESOLVED for an
+unconstrained model.
 
-The intended witness is the rooted, Lebesgue-area parametrized whole-plane space-filling SLE_κ from `∞` to `∞`, with
-κ = 16/γ² > 4 for γ ∈ (0, 2) and time zero at the visit to the origin, realized by the canonical cone/SLE environments. The transfer argument is: a measurable normalized representative of the coupled curve has code law
-`ν κ` (rational evaluation is a Borel isomorphism onto its image); its independence from the cone data is supplied by the
-coupling; the quantum-area clock is recovered from the field and the normalized curve; the embedded graph is recovered
-from the curve up to homeomorphism. The five cited statements then transfer uniformly from the reference environments: for a code map `X` with law `λ` and
-a subset `B` of the code space, `P_target^*(X_target⁻¹ B) ≤ λ^*(B) = P_reference^*(X_reference⁻¹ B)` (outer probabilities;
-design §5). This is why the reference lives on the standard Borel space `ℝ`; no standard Borel assumption is made on the
-target `Ω`.
-This is a literature input stated as a proposition. It is NOT a Lean construction of SLE, and it does not identify the
-law by any intrinsic characterization.
+This certificate does not intrinsically characterize the SLE law or impose closure properties on the raw predicate
+`𝒮.IsSLE`. In particular, the existence part alone does not prove `HasNormalizedSLELaw 𝒮 ν` for a target model chosen
+beforehand; the target must receive that hypothesis for the same `ν`, or a package containing both the certificate and the
+target's calibration to it. Clause (c) quantifies over the discrete occupation of `MatedCRTEnv` and is not a statement about
+SLE laws alone; this is flagged for the operator.
 
-Sources: Gwynne–Miller–Sheffield, *Harmonic functions on mated-CRT maps* (arXiv:1807.07511v3), §2.1.3, printed pp. 17–18
-(whole-plane imaginary-geometry construction and its Lebesgue-area parametrization); Duplantier–Miller–Sheffield,
-*Liouville quantum gravity as a mating of trees* (arXiv:1409.7055v4), §1.4.1 with footnote 4 on printed p. 26 (chordal
-to whole-plane passage), and Lemma 8.17 on printed p. 149 (quotient of proper continuous surjections with equal fibers).
-The five cited statements carry their own locators in their Draft docstrings (Berestycki–Gwynne 2020 Theorem 1.2,
-Lemmas 5.4 and 4.4, Proposition 5.1; Gwynne–Miller–Sheffield 2019 Theorem 3.9).
-
-Used by: no firstPass_<sec>_<num> theorem yet; the consumer is `MatedCRT.exists_slecited_of_referenceExists`
-(MatedCRT/FirstPass/SLERef.lean). -/
+The law family `ν` is chosen once, inside this existential; every consumer of the clauses above must use that same `ν`. -/
 def SLEReferenceExistsInput : Prop :=
-  ∃ ν : ℝ → Measure SLEPathCode, SLEReferenceInput ν
+  ∃ ν : ℝ → Measure SLEPathCode, SLEReferenceWithSimilarityInput ν
+
+/-- The corrected Lemma 3.2 for a model with normalized law `ν`, from the frozen reference package: the consumer
+`FrozenDiscreteHolderContinuityCorrected 𝒮` of the firstPass theorems. -/
+theorem frozenDiscreteHolder_of_frozenReferenceLaw {ν : ℝ → Measure SLEPathCode} (hν : SLEFrozenReferenceInput ν)
+    {𝒮 : SpaceFillingSLEModel} (hLaw : HasNormalizedSLELaw 𝒮 ν) : FrozenDiscreteHolderContinuityCorrected 𝒮 :=
+  (hν.2 𝒮 hLaw).1
+
+/-- The fixed-time truncated quenched laws for a model with normalized law `ν`, from the frozen reference package: the
+consumer `FrozenTruncatedQuenchedLawsFixedTime 𝒮` of the firstPass theorems. -/
+theorem frozenTruncatedQuenched_of_frozenReferenceLaw {ν : ℝ → Measure SLEPathCode} (hν : SLEFrozenReferenceInput ν)
+    {𝒮 : SpaceFillingSLEModel} (hLaw : HasNormalizedSLELaw 𝒮 ν) : FrozenTruncatedQuenchedLawsFixedTime 𝒮 :=
+  (hν.2 𝒮 hLaw).2
+
+/-- Non-vacuity of the frozen reference package: some space-filling SLE model `𝒮` with normalized law `ν` satisfies both
+frozen estimates, so the firstPass hypotheses `FrozenDiscreteHolderContinuityCorrected 𝒮` and
+`FrozenTruncatedQuenchedLawsFixedTime 𝒮` are realized by the reference model. -/
+theorem exists_model_of_frozenReferenceLaw {ν : ℝ → Measure SLEPathCode} (hν : SLEFrozenReferenceInput ν) :
+    ∃ 𝒮 : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮 ν ∧
+      FrozenDiscreteHolderContinuityCorrected 𝒮 ∧ FrozenTruncatedQuenchedLawsFixedTime 𝒮 := by
+  obtain ⟨⟨𝒮ref, hL, _⟩, hall⟩ := hν
+  exact ⟨𝒮ref, hL, (hall 𝒮ref hL).1, (hall 𝒮ref hL).2⟩
 
 end MatedCRT
