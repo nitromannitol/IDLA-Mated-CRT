@@ -5,6 +5,8 @@ import MatedCRT.FirstPass.S2m
 import MatedCRT.FirstPass.Frozen.S4S5b
 import MatedCRT.FirstPass.Frozen.S3S4b
 import MatedCRT.FirstPass.S4d.ScaleBridge
+import MatedCRT.FirstPass.S4d.HorizonUnique
+import MatedCRT.FirstPass.Frozen.S4d2
 import MatedCRT.FirstPass.S1S2S8SA
 import MatedCRT.FirstPass.S3S4
 import MatedCRT.FirstPass.S3S4c
@@ -21,7 +23,8 @@ import MatedCRT.FirstPass.S3S4c
 * `hScaleInv` (Draft Lemma 2.6) := `firstPass_2_6_corrected` (`FirstPass/S2g/Assembly2456.lean`, q1), same inputs.
 * `h24` (Draft Lemma 2.4) := `coneHarmonicBallsUpToFixedTimeStmt_of_canonical` (`FirstPass/S2g/Draft24.lean`, q1).
 * `h25` (Draft Lemma 2.5) := `coneScaleInvarianceUpToFixedTimeStmt_of_canonical` (`FirstPass/S4d/ScaleBridge.lean`, q4),
-  from the canonical form `firstPass_2_5_corrected` and the explicit NEW step `hRU`.
+  from the canonical form `firstPass_2_5_corrected` and the step `hRU` (`coneRescaledHalfBallHorizonUnique_fp`,
+  `FirstPass/S4d/HorizonUnique.lean`, q4), which is proved from the frozen input `hrescale`.
 * `h23` (Draft Lemma 2.3, `ConeHarmonicBallsStmt`) := `firstPass_2_3` (`FirstPass/S1S2S8SA.lean`) from `h24`, `h25`, `h27`,
   `hscale`, `h22`; no new hypothesis.
 * `h34` (Draft Lemma 3.4, `IntegralConvergenceGreenFunctionStmt`) := `MatedCRT.S3S4c.firstPass_3_4`
@@ -29,7 +32,8 @@ import MatedCRT.FirstPass.S3S4c
 * `h33` (Draft Lemma 3.3, `UniformConvergenceGreenKernelStmt`) := `firstPass_3_3` (`FirstPass/S3S4.lean`) from `h210`, `h34`,
   `h214`, `h28`, `h27`, `h218`, `hm`, `hH`; no new hypothesis.
 
-The remaining explicit NEW input is `hRU : ConeRescaledHalfBallHorizonUniqueFPStep` (`FirstPass/S4d/ScaleBridge.lean`; OPEN).
+The remaining explicit input replacing `hRU` is the frozen `hrescale : ConeRescaledMeasureIsConeFieldInput`
+(`FirstPass/Frozen/S4d2.lean`, truth check TRUE, chat 153); `hRU` is derived from it in the proof.
 The cone externals `hE1`, `hE2` stay explicit (`FirstPass/Frozen/S2i.lean`).
 -/
 
@@ -38,7 +42,7 @@ namespace MatedCRT
 open _root_.HarmonicBalls in
 /-- **Proposition 4.2 (`DivSandpileLowerBoundStmt`), assembled (q4, fp-S4d-4-2-assembly).**
 The Draft hypotheses `h23`, `h33`, `h34`, `h24`, `h25` and the closure and Lemma 2.6 steps are derived in the proof (see the
-module docstring); the explicit inputs are the frozen `hrevuz`, `hdet` (for `h34`), the NEW step `hRU`, and the frozen and
+module docstring); the explicit inputs are the frozen `hrevuz`, `hdet` (for `h34`), the frozen `hrescale` (for `hRU`), and the frozen and
 external hypotheses listed in the signature. The statement of Proposition 4.2 is unchanged. -/
 theorem firstPass_4_2_of_wholeplane_model {𝒮 : SpaceFillingSLEModel}
     (hm : MepsScalingInput 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)
@@ -47,7 +51,7 @@ theorem firstPass_4_2_of_wholeplane_model {𝒮 : SpaceFillingSLEModel}
     (h218 : ExitTimeUpperBoundStmt 𝒮) (h27 : VolumeGrowthStmt)
     (hH : FrozenDiscreteHolderContinuityCorrected 𝒮) (hcone : FrozenConeEnvironmentScaling 𝒮)
     (hrevuz : FrozenLBMGreenOccupationRescaled 𝒮) (hdet : FrozenTruncatedQuenchedLawsFixedTime 𝒮)
-    (hRU : ConeRescaledHalfBallHorizonUniqueFPStep)
+    (hrescale : ConeRescaledMeasureIsConeFieldInput)
     (hG : _root_.HarmonicBalls.GreenFunctionBallStmt) (hpc : FrozenPunctureConnected)
     (hsmp : FPStrongMinimumPrinciple) (hwmp : FrozenSuperharmonicMinimumPrinciple)
     (hpole : FrozenGreenDiscPole)
@@ -73,7 +77,7 @@ theorem firstPass_4_2_of_wholeplane_model {𝒮 : SpaceFillingSLEModel}
   have h25 := coneScaleInvarianceUpToFixedTimeStmt_of_canonical hcan hcl
     (firstPass_2_5_corrected hU hmeasT hstd hwmp hCentre hG hpole hOpen hSup hCons hMono hCompat hBdry hExist hThm11
       hProp56 hconf hI2 hK hloc hSC hE hFL h27 hE1 hE2 hscale h22)
-    hRU
+    (coneRescaledHalfBallHorizonUnique_fp hcan hcl hrescale)
   have h23 := firstPass_2_3 h24 h25 h27 hscale h22
   have h34 := MatedCRT.S3S4c.firstPass_3_4 h27 h218 hm hrevuz hdet
   have h33 := firstPass_3_3 h210 h34 h214 h28 h27 h218 hm hH
