@@ -60,14 +60,17 @@ def FrozenHBInitialConfinement : Prop :=
     IsLQGMeasureOfField P γ γ hcirc μ → ∀ᵐ ω ∂P, ∃ s : ℝ, 0 < s ∧
       HarmonicBalls.regularizedCluster (μ ω) (3 / 4) 0 s ⊆ ball (0 : ℂ) (1 / 2)
 
-/-- FIRST-PASS FROZEN (PENDING TRUTH CHECK). Standard Borel strengthening of `FrozenConeLogLocalCodeLaw`
+/-- FIRST-PASS FROZEN. Truth check TRUE (ChatGPT, 00:50 UTC; notes/fp-gaps/CHATGPT-q1-frozen-truth.md §2: equivalent to
+`FrozenConeLogLocalCodeLaw` after a standard-Borel realization and a measurable GMC version). Derivable from
+`FrozenConeLogLocalCodeLaw` plus the measurable DS11 construction (phase 2). Kept as the frozen interface (operator decision
+01:40 UTC). Standard Borel strengthening of `FrozenConeLogLocalCodeLaw`
 (FirstPass/Frozen/S2h.lean:29): the source whole-plane LQG model of the local law of a quantum cone may be taken on a
 standard Borel space `Ω'`, with a measurable measure map `μ' : Ω' → Measure ℂ`; the laws of the moment vectors
 `momentVec φs (μ ω)` (FirstPass/S2g/GoodSetMoments.lean) agree for every countable family of continuous compactly
 supported functions with support in `B_1`. Source: Duplantier-Sheffield, Invent. Math. 2011 (arXiv:0808.1560), Section 3
 (GMC locality, the LQG measure is a measurable function of the circle averages); IDLA arXiv:2211.04891, eq. (2.4), (2.8),
 Fact 2.2(II), p. 12 (cone restriction identity). Terminology: quantum cone (Duplantier-Miller-Sheffield), Kechris standard
-Borel spaces. PENDING TRUTH CHECK: the standard Borel clause and the measurability of `μ'` are the new content.
+Borel spaces. The standard Borel clause and the measurability of `μ'` are the content of this interface.
 Used by: `coneHalfBallGood_of_source` (FirstPass/S2g/GoodSetReduction.lean, via `CandidateConeLogLocalCodeLawStd`). -/
 def FrozenConeLogLocalCodeLawStd : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
