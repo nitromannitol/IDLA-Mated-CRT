@@ -29,7 +29,8 @@ space-filling SLE `η` (`IsSLE` with the σ-algebra `𝓕` of the field, so `η`
 (`coneScaleRadius`), the triple (circle averages of `h^{(b)} = h(R_b ·) + Q log R_b - γ⁻¹ log b`, `μ_{h^{(b)}}`,
 `η^{(b)}(s) = R_b⁻¹ η(b s)`) has the same law as (circle averages of `h`, `μ_h`, `η`).
 Source: Duplantier–Miller–Sheffield, arXiv:1409.7055v4, Proposition 4.13(i); the joint version is Berestycki–Gwynne,
-arXiv:2003.10320v2, Lemma 2.3 and §6.4, (6.52). Used by: StoppedLayerPotentialStep (Proofs/Sec5/StoppedSurplusSteps.lean:68)
+arXiv:2003.10320v2, Lemma 2.3 and §6.4, (6.52). Truth check FALSE (ChatGPT, 02:21 UTC; notes/fp-gaps/CHATGPT-fpsimilarity-truth.md, opening verdict).
+Used by: StoppedLayerPotentialStep (Proofs/Sec5/StoppedSurplusSteps.lean:68)
 and firstPass_5_1 (stopped clause). Note: `Measure.map` of a non-measurable map is `0`; the equality is meant for the random
 triples the source asserts to be random variables. -/
 def FPSimilarityTransfer (𝒮 : SpaceFillingSLEModel) : Prop :=
