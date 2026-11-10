@@ -4,6 +4,7 @@ import MatedCRT.FirstPass.S4S6c.LitConeLQG68
 import MatedCRT.FirstPass.S5qe
 import MatedCRT.FirstPass.Frozen.S4S5b
 import MatedCRT.FirstPass.S6d
+import MatedCRT.FirstPass.Frozen.S5Cited
 
 /-!
 # Closed Lemmas 6.7, 6.8, 6.9 from the top assembly `hU_top` (q2, fp-S4S6c-closed-6x)
@@ -214,7 +215,7 @@ theorem closed_6_8_hU_cg {𝒮 : SpaceFillingSLEModel}
     (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
     (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
     (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
-    (hBG : BerestyckiGwynneConeBallMassStmt)
+    (hBG : FrozenBerestyckiGwynneConeBallMass)
     (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeCGStmt 𝒮) :
     FaithfulConstantOrderLowerBoundDivStmt 𝒮 :=
   firstPass_6_8_faithful 𝒮
@@ -242,6 +243,58 @@ theorem closed_6_x_hU_cg {𝒮 : SpaceFillingSLEModel}
     UniformConstantOrderLowerBoundStmt 𝒮 :=
   Lemma68ShellTop.hU_top_cg hG h28 hE hLit hBM hCC hB1 hμ hOne
 
+/-! ### CG mesh-radius route (q2, fp-S4S6c-meshEventR): the CG route with `meshEventR` (cell-size component at `(1+ρ)/2`).
+
+Chat 252 §1: the mesh event is `meshEventR` (Guard68S10.lean), and the leaf input is `hOne : ShellOneTestOrderAeCGRStmt 𝒮`
+(ShellHoneInst68.lean). The binders are those of the CG route, with `hBG : FrozenBerestyckiGwynneConeBallMass`
+(Frozen/S5Cited.lean:35; definitionally `BerestyckiGwynneConeBallMassStmt`, TRUE by chat 249) in 6.8. The CG route above is kept. -/
+
+/-- **Lemma 6.7 (faithful header), CG mesh-radius route.** Binders as `closed_6_7_hU_cg`, with `hOne` the `meshEventR` form. -/
+theorem closed_6_7_hU_cgR {𝒮 : SpaceFillingSLEModel}
+    (hG : GreenKernelLowerBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeCGRStmt 𝒮) :
+    FaithfulConstantOrderLowerBoundStmt 𝒮 :=
+  firstPass_6_7_faithful 𝒮
+    (Lemma68ShellTop.hU_top_cgR hG h28 hE hLit hBM hCC hB1 hμ hOne)
+
+/-- **Lemma 6.8 (faithful header, localized form), CG mesh-radius route.** As `closed_6_8_hU_cg`, with `hOne` the
+`meshEventR` form and `hBG : FrozenBerestyckiGwynneConeBallMass`. -/
+theorem closed_6_8_hU_cgR {𝒮 : SpaceFillingSLEModel}
+    (hG : GreenKernelLowerBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
+    (hBG : FrozenBerestyckiGwynneConeBallMass)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeCGRStmt 𝒮) :
+    FaithfulConstantOrderLowerBoundDivStmt 𝒮 :=
+  firstPass_6_8_faithful 𝒮
+    (Lemma68ShellTop.hU_top_cgR hG h28 hE hLit hBM hCC hB1 hμ hOne)
+    (volumeGrowthStmt_of_berestyckiGwynne hBG) h28
+
+/-- **Lemma 6.9 (faithful header), CG mesh-radius route.** Binders as `closed_6_7_hU_cgR`. -/
+theorem closed_6_9_hU_cgR {𝒮 : SpaceFillingSLEModel}
+    (hG : GreenKernelLowerBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeCGRStmt 𝒮) :
+    FaithfulChanceOfBeingAbsorbedStmt 𝒮 :=
+  firstPass_6_9_faithful 𝒮
+    (Lemma68ShellTop.hU_top_cgR hG h28 hE hLit hBM hCC hB1 hμ hOne)
+
+/-- **Lemma 6.x, uniform constant-order lower bound (hU), CG mesh-radius route.** Binders as `closed_6_7_hU_cgR`. -/
+theorem closed_6_x_hU_cgR {𝒮 : SpaceFillingSLEModel}
+    (hG : GreenKernelLowerBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeCGRStmt 𝒮) :
+    UniformConstantOrderLowerBoundStmt 𝒮 :=
+  Lemma68ShellTop.hU_top_cgR hG h28 hE hLit hBM hCC hB1 hμ hOne
+
 end MatedCRT
 
 #print axioms MatedCRT.closed_6_x_hU_eps
@@ -255,4 +308,8 @@ end MatedCRT
 #print axioms MatedCRT.closed_6_x_hU_cg
 #print axioms MatedCRT.closed_6_7_hU_cg
 #print axioms MatedCRT.closed_6_8_hU_cg
+#print axioms MatedCRT.closed_6_x_hU_cgR
+#print axioms MatedCRT.closed_6_7_hU_cgR
+#print axioms MatedCRT.closed_6_8_hU_cgR
+#print axioms MatedCRT.closed_6_9_hU_cgR
 #print axioms MatedCRT.closed_6_9_hU_cg
