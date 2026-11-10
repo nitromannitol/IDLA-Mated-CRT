@@ -24,7 +24,8 @@ with `γ ∈ (0,2)`, `ρ ∈ (0,1)`, a family `Λ` of cone harmonic balls a.s., 
 `s ≤ α (W_t(x) + t G_{B_ρ}(0,x))` for `x ∈ B⁻_{δ/4}(Λ_t) \ {0}` and `|α W_t(x)| ≤ M` on `cl B_ρ`, where `α = c₀/6`,
 `W_t = leastSupersolution (S.μ ω) ρ 0 t` and `G = greenFunction (B_ρ) 0`. Source: the measurable obstacle version
 `StoppedFloorObstacleVersion` (FirstPass/S5k.lean, §4) and the strict gap `HarmonicBallStrictObstacleGapStep` ([C20]) feed
-Steps 5.1-5.2 (`s` from `φ_ω`, (8)-(9); `M` from (12)), proved by z2 in FirstPass/S5l.lean. Taken here as a named hypothesis. -/
+Steps 5.1-5.2 (`s` from `φ_ω`, (8)-(9); `M` from (12)), generic in FirstPass/S5l.lean; the discharge of this Prop is
+FirstPass/S5o.lean (`floorConstantStep_proved`, fp-S5o, z2). Taken here as a named hypothesis. -/
 def FloorConstantStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
