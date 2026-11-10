@@ -43,8 +43,9 @@ theorem frontier_half {cell : ℤ → Set ℂ} {F : Set ℂ} {Θ S' : Set ℤ} {
     {q0 ζ : ℝ} (hq0 : 0 < q0) (hq0' : q0 ≤ 1) (hζ : 0 < ζ) (hζ' : ζ < 1 / 2)
     (hr : 0 < r) (hr1 : r ≤ 1)
     (hrA : r ≤ (q0 / 200 * ζ ^ 2 / (16 * Real.log 2)) ^ (2 / ζ))
-    (hc : ∀ y, srwLaw m y (stayInRegionOf Wt Aof y) ≤
+    (hc : ∀ y ∈ Y, srwLaw m y (stayInRegionOf Wt Aof y) ≤
       ENNReal.ofReal (1 - q0 / (1 + Real.log (1 / r)) ^ 2))
+    (hAY : ∀ y ∉ Y, Aof y = ∅) (hWY : ∀ y ∉ Y, Wt y = univ)
     (N : ℕ) (hN : r ^ (-ζ) / 200 ≤ N)
     (Good : Set (ℕ → ℤ))
     (hGood : ∀ b ∈ FrontierSeparation.frontierVerts cell (Metric.thickening (r / 2) F),
@@ -61,7 +62,7 @@ theorem frontier_half {cell : ℤ → Set ℂ} {F : Set ℂ} {Θ S' : Set ℤ} {
   rw [show (1 : ℝ) - 1 / 2 = 1 / 2 by norm_num]
   exact TailWindow68.printed68_tail_bound_window m b Wt Aof (S' \ Θ)
     (FrontierSeparation.meetVerts cell (Metric.thickening r F) \ Θ) Y τ S hτ0 hτsucc hτtop hS0 hSsucc
-    hq0 hq0' hζ hζ' hr hr1 hrA hc N hN Good (hGood b hb) hfin hYvis hWU hAof
+    hq0 hq0' hζ hζ' hr hr1 hrA hc hAY hWY N hN Good (hGood b hb) hfin hYvis hWU hAof
 
 /-- **Trace bound of one configuration (deterministic core of the printed Lemma 6.8).** Under the hypotheses of
 `Chain68.trace_bound_cluster_open` (cluster geometry, `a ∈ vClosure Θ`, exit almost surely finite) and the window
@@ -86,8 +87,9 @@ theorem trace_half {m : ℤ → ℤ → ℕ} {cell : ℤ → Set ℂ} {F : Set �
     {q0 ζ : ℝ} (hq0 : 0 < q0) (hq0' : q0 ≤ 1) (hζ : 0 < ζ) (hζ' : ζ < 1 / 2)
     (hr1 : r ≤ 1)
     (hrA : r ≤ (q0 / 200 * ζ ^ 2 / (16 * Real.log 2)) ^ (2 / ζ))
-    (hc : ∀ y, srwLaw m y (stayInRegionOf Wt Aof y) ≤
+    (hc : ∀ y ∈ Y, srwLaw m y (stayInRegionOf Wt Aof y) ≤
       ENNReal.ofReal (1 - q0 / (1 + Real.log (1 / r)) ^ 2))
+    (hAY : ∀ y ∉ Y, Aof y = ∅) (hWY : ∀ y ∉ Y, Wt y = univ)
     (N : ℕ) (hN : r ^ (-ζ) / 200 ≤ N)
     (Good : Set (ℕ → ℤ))
     (hGood : ∀ b ∈ FrontierSeparation.frontierVerts cell (Metric.thickening (r / 2) F),
@@ -100,7 +102,7 @@ theorem trace_half {m : ℤ → ℤ → ℕ} {cell : ℤ → Set ℂ} {F : Set �
       {x | ∃ n : ℕ, (n : ℕ∞) < vExitTime {v | (cell v ∩ Metric.thickening r F).Nonempty} x ∧
         x n ∈ {v | (cell v ∩ Metric.thickening r F).Nonempty} \ (S' ∪ Θ)} :=
   Chain68.trace_bound_cluster_open hr hd hbdd hdiamA hconn hne hadj hF ha hexit (by norm_num) (by norm_num)
-    (frontier_half m Wt Aof Y τ S hτ0 hτsucc hτtop hS0 hSsucc hq0 hq0' hζ hζ' hr hr1 hrA hc N hN Good
+    (frontier_half m Wt Aof Y τ S hτ0 hτsucc hτtop hS0 hSsucc hq0 hq0' hζ hζ' hr hr1 hrA hc hAY hWY N hN Good
       hGood hfin hYvis hWU hAof)
 
 end ConfigBound68

@@ -53,8 +53,9 @@ theorem printed68_tail_bound_window (m : ℤ → ℤ → ℕ) (a : ℤ) (Wt Aof 
     {q0 ζ r : ℝ} (hq0 : 0 < q0) (hq0' : q0 ≤ 1) (hζ : 0 < ζ) (hζ' : ζ < 1 / 2)
     (hr : 0 < r) (hr1 : r ≤ 1)
     (hrA : r ≤ (q0 / 200 * ζ ^ 2 / (16 * Real.log 2)) ^ (2 / ζ))
-    (hc : ∀ y, srwLaw m y (stayInRegionOf Wt Aof y) ≤
+    (hc : ∀ y ∈ Y, srwLaw m y (stayInRegionOf Wt Aof y) ≤
       ENNReal.ofReal (1 - q0 / (1 + Real.log (1 / r)) ^ 2))
+    (hAY : ∀ y ∉ Y, Aof y = ∅) (hWY : ∀ y ∉ Y, Wt y = univ)
     (N : ℕ) (hN : r ^ (-ζ) / 200 ≤ N)
     (Good : Set (ℕ → ℤ)) (hGood : srwLaw m a Goodᶜ = 0)
     (hfin : ∀ x ∈ Good, ∀ j < N, τ j x ≠ ⊤)
@@ -91,9 +92,17 @@ theorem printed68_tail_bound_window (m : ℤ → ℤ → ℕ) (a : ℤ) (Wt Aof 
     by_cases hg : x ∈ Good
     · exact Or.inr (hstay N le_rfl x hg hx)
     · exact Or.inl hg
+  -- off the band `Y` the centre is unavailable: its stay region is empty, so the one-test bound holds trivially
+  have hcAll : ∀ y, srwLaw m y (stayInRegionOf Wt Aof y) ≤
+      ENNReal.ofReal (1 - q0 / (1 + Real.log (1 / r)) ^ 2) := by
+    intro y
+    by_cases hy : y ∈ Y
+    · exact hc y hy
+    · rw [stayInRegionOf_of_not_mem hAY hWY y hy]
+      simp
   have hSN : srwLaw m a (S N) ≤ ENNReal.ofReal (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N :=
     srwLaw_successive_exit_le_pow_Of m a Wt Aof τ S hτ0 hτsucc hτtop hS0 hSsucc
-      (Y := (Set.univ : Set ℤ)) (fun y _ => hc y) (fun _ _ _ _ _ => Set.mem_univ _) N
+      (Y := (Set.univ : Set ℤ)) (fun y _ => hcAll y) (fun _ _ _ _ _ => Set.mem_univ _) N
   have hpow : ENNReal.ofReal (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N ≤
       ENNReal.ofReal (Real.exp (-(q0 / (1 + Real.log (1 / r)) ^ 2 * N))) := by
     rw [← ENNReal.ofReal_pow h0q]
