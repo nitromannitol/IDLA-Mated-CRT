@@ -206,8 +206,29 @@ theorem shellChainCoreStmt_of_oneTestOrder {𝒮 : SpaceFillingSLEModel} (h : Sh
   exact Lemma68ChainGlue.exitQ_core_step S ε ω ζ q0 r Rf i hζ0 hζ1 hq0 hq1 hr0 hr1' (hr2.trans hRA) hone hsh
     (hmult ε hε).1 (hmult ε hε).2
 
+/-- **`hrle` is derived, not a new input (q2, fp-S4S6c-core-side-hyps, item (c)).** For `0 < q₀ ≤ 1`, `0 < ζ < 1/2` and
+`r ≤ R ≤ rAmp q₀ ζ`, the radius lies under the count threshold: `r ≤ countThreshold ζ`, by
+`Lemma68ChainGlue.rAmp_le_countThreshold` (ShellChainGlue68.lean:53). The output `q₀ ≤ (1/4)²/(4 shellChone68 CE C) ≤ 1` of
+`ShellOneTestOrderAeStmt` gives `q₀ ≤ 1`, so `ShellOneTestOrderAeStmt` needs no extra antecedent for it. -/
+theorem radius_le_countThreshold_of_oneTest {q0 ζ R r : ℝ} (hq0 : 0 < q0) (hq1 : q0 ≤ 1) (hζ0 : 0 < ζ)
+    (hζ1 : ζ < 1 / 2) (hRA : R ≤ Lemma68Cutoff.rAmp q0 ζ) (hr : r ≤ R) : r ≤ countThreshold ζ :=
+  hr.trans (hRA.trans (Lemma68ChainGlue.rAmp_le_countThreshold hq0 hq1 hζ0 hζ1))
+
+/-- **The leaf constants at the B1 parameters (q2, fp-S4S6c-core-side-hyps, item (d)).** `K = shellK68 γ ρ ω₀ ζ` has
+`K.s1 = sparsityS1 γ` (the coefficient of `FullAdmAt`), `K.βm = chosenBetaMinus γ = (2+γ)²/2+1`, `K.c0 = shellC068 = exp(-2)/32`
+and `K.ω = ω₀`. All four are definitional, so `K` is determined by the binders of `ShellOneTestOrderAeStmt`. -/
+theorem shellK68_params (γ ρ ω₀ ζ : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hρ0 : 0 < ρ) (hρ1 : ρ < 1)
+    (hω0 : 0 < ω₀) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2) :
+    (Lemma68ShellConstants.shellK68 γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1).s1 = Lemma68Config.sparsityS1 γ ∧
+    (Lemma68ShellConstants.shellK68 γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1).βm = chosenBetaMinus γ ∧
+    (Lemma68ShellConstants.shellK68 γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1).c0 = shellC068 ∧
+    (Lemma68ShellConstants.shellK68 γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1).ω = ω₀ :=
+  ⟨rfl, rfl, rfl, rfl⟩
+
 end Lemma68ShellHoneInst
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68ShellHoneInst.shellChainCoreStmt_of_oneTestOrder
 #print axioms MatedCRT.Lemma68ShellHoneInst.shellOneTest_of_direct
+#print axioms MatedCRT.Lemma68ShellHoneInst.radius_le_countThreshold_of_oneTest
+#print axioms MatedCRT.Lemma68ShellHoneInst.shellK68_params
