@@ -164,6 +164,107 @@ theorem hRr_ae_setup_final {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0 : 0
   exact hRr_fixedOmega' S hρ1 hζ0 hζ1 hq0 hq0c hs₀ hε hr0 hrρ hRA E i ω hmω
     (fun hFA => hstart_of_fullAdmAt S hε hs₀ ω hηω r hr0 i hFA) hηω htendω (hadjω ε hε) hmultω
 
+/-! ## Localized mesh bound on the cell-size event (chat 239 §2, l.269-310)
+
+The cell-size event `cellSizeEvent68` (S6f/UniformEvents.lean:41) is the event of Draft Lemma 2.8 at a fixed scale.
+Its upper bound `diam (cell k) ≤ ε^κ`, `κ = 2/(2+γ)² - ζ`, holds on the event for all cells meeting the ball, with no
+null set at a fixed radius. Combined with `dyadicD r ≥ r²` and `10 ε^{ω₀} ≤ r`, it gives the mesh bound for all radii at
+once. -/
+
+/-- `dyadicD r = 1` for `r > 1`: the dyadic scale is capped at `1` (S6r/Window.lean:25). -/
+theorem dyadicD_eq_one_of_one_lt {r : ℝ} (hr : 1 < r) : dyadicD r = 1 := by
+  have h0 : ⌊1 / r ^ 2⌋₊ = 0 :=
+    Nat.floor_eq_zero.mpr ((div_lt_one (pow_pos (zero_lt_one.trans hr) 2)).mpr (by nlinarith))
+  simp only [dyadicD, h0, Nat.log_zero_right, pow_zero]
+
+/-- **Deterministic cutoff.** If `κ = 2/(2+γ)² - ζ > 0`, there is a scale `ε₁ ∈ (0, 1]` with `ε₁^κ ≤ 1/100`. It depends
+only on `γ` and `ζ`, and absorbs the factor `1/100` of `CellDiamLe` at the radii `r > 1`. -/
+theorem exists_cellSize_cutoff {γ ζ : ℝ} (hκ : 0 < 2 / (2 + γ) ^ 2 - ζ) :
+    ∃ ε₁ : ℝ, 0 < ε₁ ∧ ε₁ ≤ 1 ∧ ε₁ ^ (2 / (2 + γ) ^ 2 - ζ) ≤ 1 / 100 := by
+  refine ⟨(1 / 100 : ℝ) ^ (1 / (2 / (2 + γ) ^ 2 - ζ)), Real.rpow_pos_of_pos (by norm_num) _,
+    Real.rpow_le_one (by norm_num) (by norm_num) (one_div_pos.mpr hκ).le, le_of_eq ?_⟩
+  rw [← Real.rpow_mul (by norm_num : (0 : ℝ) ≤ 1 / 100), one_div_mul_cancel hκ.ne', Real.rpow_one]
+
+/-- **Localized mesh bound, deterministic on the cell-size event** (`hmesh_local_of_cellSize`; Draft Lemma 2.8 at the
+mesh radius `ρ_mesh = (1 + ρ)/2`; the exponent `ω₀` of Draft Lemma 2.16, `0 < ω₀`).
+
+Let `ω` lie in `cellSizeEvent68 S γ ζ ((1 + ρ)/2) ε`, with `2 ω₀ < κ = 2/(2+γ)² - ζ` and `0 < ε ≤ ε₁`, where
+`ε₁ ∈ (0, 1]` and `ε₁^κ ≤ 1/100`. Then every radius `r > 0` with `10 ε^{ω₀} ≤ r` yields
+`CellDiamLe ε (η ω) (dyadicD r / 100) (ball 0 ((1 + ρ)/2))`: every cell meeting the mesh ball has diameter at most
+`dyadicD r / 100`. The lower bound of the event is used only to see that these cells are bounded (Mathlib's `diam` of an
+unbounded set is `0`); no continuity of `η ω` is assumed. -/
+theorem hmesh_local_of_cellSize {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) {γ ζ ρ ω₀ ε₁ ε : ℝ}
+    (hω₀ : 0 < ω₀) (hκ : 2 * ω₀ < 2 / (2 + γ) ^ 2 - ζ)
+    (hε₁1 : ε₁ ≤ 1) (hcut : ε₁ ^ (2 / (2 + γ) ^ 2 - ζ) ≤ 1 / 100)
+    (hε : 0 < ε) (hεε₁ : ε ≤ ε₁) (ω : Ω) (hω : ω ∈ cellSizeEvent68 S γ ζ ((1 + ρ) / 2) ε)
+    (r : ℝ) (hr : 0 < r) (hrε : 10 * ε ^ ω₀ ≤ r) :
+    CellDiamLe ε (S.η ω) (dyadicD r / 100) (ball 0 ((1 + ρ) / 2)) := by
+  have hκpos : 0 < 2 / (2 + γ) ^ 2 - ζ := by linarith
+  have hω' : ∀ k : ℤ, (cell ε (S.η ω) k ∩ ball 0 ((1 + ρ) / 2)).Nonempty →
+      ε ^ (2 / (2 - γ) ^ 2 + ζ) ≤ diam (cell ε (S.η ω) k) ∧
+        diam (cell ε (S.η ω) k) ≤ ε ^ (2 / (2 + γ) ^ 2 - ζ) := hω
+  -- (a) cells meeting the mesh ball are bounded: otherwise `diam = 0` contradicts the lower bound
+  have hbdd : ∀ k : ℤ, (cell ε (S.η ω) k ∩ ball 0 ((1 + ρ) / 2)).Nonempty →
+      Bornology.IsBounded (cell ε (S.η ω) k) := by
+    intro k hk
+    by_contra hnb
+    have hlow := (hω' k hk).1
+    rw [diam_eq_zero_of_unbounded hnb] at hlow
+    exact absurd hlow (not_le.mpr (Real.rpow_pos_of_pos hε _))
+  -- (b) `ε^κ ≤ dyadicD r / 100`
+  have hbound : ε ^ (2 / (2 + γ) ^ 2 - ζ) ≤ dyadicD r / 100 := by
+    rcases le_or_gt r 1 with hr1 | hr1
+    · have hsq : r ^ 2 ≤ dyadicD r := sq_le_dyadicD hr hr1
+      have hp : 0 ≤ ε ^ ω₀ := Real.rpow_nonneg hε.le _
+      have hsq2 : (10 * ε ^ ω₀) ^ 2 ≤ r ^ 2 := by
+        nlinarith [mul_nonneg (by linarith : (0 : ℝ) ≤ 10 * ε ^ ω₀) (by linarith : (0 : ℝ) ≤ r - 10 * ε ^ ω₀)]
+      have hpow : ε ^ (2 * ω₀) = (ε ^ ω₀) ^ 2 := by
+        rw [← Real.rpow_natCast, ← Real.rpow_mul hε.le]
+        congr 1
+        push_cast
+        ring
+      have h1 : 100 * ε ^ (2 * ω₀) ≤ dyadicD r := by
+        rw [hpow]
+        nlinarith
+      have h2 : ε ^ (2 / (2 + γ) ^ 2 - ζ) ≤ ε ^ (2 * ω₀) :=
+        Real.rpow_le_rpow_of_exponent_ge hε (hεε₁.trans hε₁1) hκ.le
+      linarith
+    · rw [dyadicD_eq_one_of_one_lt hr1]
+      have h2 : ε ^ (2 / (2 + γ) ^ 2 - ζ) ≤ ε₁ ^ (2 / (2 + γ) ^ 2 - ζ) :=
+        Real.rpow_le_rpow hε.le hεε₁ hκpos.le
+      linarith
+  -- (c) the diameter bound on each cell meeting the mesh ball
+  unfold CellDiamLe
+  intro k hk p hp q hq
+  calc dist p q ≤ diam (cell ε (S.η ω) k) := Metric.dist_le_diam_of_mem (hbdd k hk) hp hq
+    _ ≤ ε ^ (2 / (2 + γ) ^ 2 - ζ) := (hω' k hk).2
+    _ ≤ dyadicD r / 100 := hbound
+
+/-- **Cutoff form of the localized mesh bound.** Under `0 < ω₀` and `2 ω₀ < 2/(2+γ)² - ζ` there is a deterministic
+scale `ε₁ > 0`, depending only on `γ`, `ζ`, `ω₀`, such that for every `ε ∈ (0, ε₁]`, every `ω` in the cell-size event
+at mesh radius `(1+ρ)/2`, and every `r > 0` with `10 ε^{ω₀} ≤ r`: `CellDiamLe ε (η ω) (dyadicD r / 100) (ball 0 ((1+ρ)/2))`.
+No null set and no radius restriction beyond `10 ε^{ω₀} ≤ r`. -/
+theorem hmesh_local_of_cellSize_cutoff {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) {γ ζ ρ ω₀ : ℝ}
+    (hω₀ : 0 < ω₀) (hκ : 2 * ω₀ < 2 / (2 + γ) ^ 2 - ζ) :
+    ∃ ε₁ : ℝ, 0 < ε₁ ∧ ∀ ε : ℝ, 0 < ε → ε ≤ ε₁ → ∀ ω : Ω,
+      ω ∈ cellSizeEvent68 S γ ζ ((1 + ρ) / 2) ε → ∀ r : ℝ, 0 < r → 10 * ε ^ ω₀ ≤ r →
+        CellDiamLe ε (S.η ω) (dyadicD r / 100) (ball 0 ((1 + ρ) / 2)) := by
+  obtain ⟨ε₁, hε₁, hε₁1, hcut⟩ :=
+    exists_cellSize_cutoff (by linarith : (0 : ℝ) < 2 / (2 + γ) ^ 2 - ζ)
+  exact ⟨ε₁, hε₁, fun ε hε hεε₁ ω hω r hr hrε =>
+    hmesh_local_of_cellSize S hω₀ hκ hε₁1 hcut hε hεε₁ ω hω r hr hrε⟩
+
+/-- The same localized mesh bound stated on the cell indices `cellVertices ε η (ball 0 ((1+ρ)/2))`: every cell
+`H^ε_k`, `k` a vertex whose cell meets the mesh ball, has diameter at most `dyadicD r / 100`. -/
+theorem hmesh_local_of_cellSize_vertices {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) {γ ζ ρ ω₀ ε₁ ε : ℝ}
+    (hω₀ : 0 < ω₀) (hκ : 2 * ω₀ < 2 / (2 + γ) ^ 2 - ζ)
+    (hε₁1 : ε₁ ≤ 1) (hcut : ε₁ ^ (2 / (2 + γ) ^ 2 - ζ) ≤ 1 / 100)
+    (hε : 0 < ε) (hεε₁ : ε ≤ ε₁) (ω : Ω) (hω : ω ∈ cellSizeEvent68 S γ ζ ((1 + ρ) / 2) ε)
+    (r : ℝ) (hr : 0 < r) (hrε : 10 * ε ^ ω₀ ≤ r) :
+    ∀ k ∈ cellVertices ε (S.η ω) (ball 0 ((1 + ρ) / 2)), ∀ p ∈ cell ε (S.η ω) k,
+      ∀ q ∈ cell ε (S.η ω) k, dist p q ≤ dyadicD r / 100 :=
+  fun k hk => hmesh_local_of_cellSize S hω₀ hκ hε₁1 hcut hε hεε₁ ω hω r hr hrε k hk
+
 end Lemma68HoneSetup239
 end MatedCRT
 
@@ -172,3 +273,8 @@ end MatedCRT
 #print axioms MatedCRT.Lemma68HoneSetup239.hL68_fixedOmega'
 #print axioms MatedCRT.Lemma68HoneSetup239.hstart_of_fullAdmAt
 #print axioms MatedCRT.Lemma68HoneSetup239.hRr_ae_setup_final
+#print axioms MatedCRT.Lemma68HoneSetup239.dyadicD_eq_one_of_one_lt
+#print axioms MatedCRT.Lemma68HoneSetup239.exists_cellSize_cutoff
+#print axioms MatedCRT.Lemma68HoneSetup239.hmesh_local_of_cellSize
+#print axioms MatedCRT.Lemma68HoneSetup239.hmesh_local_of_cellSize_cutoff
+#print axioms MatedCRT.Lemma68HoneSetup239.hmesh_local_of_cellSize_vertices
