@@ -357,6 +357,36 @@ theorem truncatedQuenchedLawsFixedTime_of_inputs_staged {𝒮 : SpaceFillingSLEM
     (by positivity) (by gcongr; norm_num) hρ0 hρ1 hr hy hball ha g hgc hχ hgH hT hg hMpos hOcc hsh.1 hsh.2
     (fun n => hShellMeas γ hγ0 hγ2 Ω S hS y z r T n hy hT.le)
 
+/-- **Truncated quenched laws at a fixed time, from one named closure input.** The four binders `h211 h28 hmeps hexit`
+and the Brownian envelope closure `hcl : BLEnvelopeClosureInput 𝒮` (`BoundaryShells.lean`) replace the two
+measurability binders of the staged theorem. Step 6 is `shell_tendsto_discrete_of_closure`; the Step 12 Brownian
+measurability is `shellTime_aemeasurable_of_closure`; Step 5 is `stoppedOccupation_tendsto_discrete` (no measurability
+input). -/
+theorem truncatedQuenchedLawsFixedTime_of_inputs_closure {𝒮 : SpaceFillingSLEModel}
+    (h211 : RandomWalkToLBMStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮) (hmeps : MepsScalingInput 𝒮)
+    (hexit : BrownianOutwardExcursionAtExitStep) (hcl : BLEnvelopeClosureInput 𝒮) :
+    MatedCRT.FrozenTruncatedQuenchedLawsFixedTime 𝒮 := by
+  intro γ hγ0 hγ2 ρ hρ0 hρ1 Ω _ S hS r z y hr hball hy g hgc hMex hHex T hT
+  obtain ⟨M0, hgb0⟩ := hMex
+  obtain ⟨C, χ, hχ, hgH⟩ := hHex
+  have hMpos : (0 : ℝ) < max M0 1 := lt_of_lt_of_le one_pos (le_max_right _ _)
+  have hg : ∀ x, |g x| ≤ max M0 1 := fun x => (hgb0 x).trans (le_max_left _ _)
+  have ha : 0 < (r - dist y z) / 2 := exhaustion_radius_pos hy
+  have hya : dist y z < r - (r - dist y z) / 2 := by
+    have := Metric.mem_ball.1 hy
+    linarith
+  -- Step 5 (z10): quenched convergence of the stopped occupation, continuity derived.
+  have hOcc := stoppedOccupation_tendsto_discrete h211 hγ0 hγ2 Ω S hS hy hT.le hgc hgb0 hexit
+  -- Step 6 (z10): shell functionals, with the Brownian measurability derived from `hcl`.
+  have hsh := shell_tendsto_discrete_of_closure h211 hγ0 hγ2 Ω S hS (a := (r - dist y z) / 2) ha.le hya hT.le
+    hexit hcl
+  -- Steps 7, 8, 10, 11, 12 (walk theorem, proved); the Step 12 measurability is derived from `hcl`.
+  exact truncatedQuenchedLawsFixedTime_of_walk hγ0 hγ2 S hS h28 hmeps (ζ := 1 / (2 + γ) ^ 2) (ρ := ρ)
+    (by positivity) (by gcongr; norm_num) hρ0 hρ1 hr hy hball ha g hgc hχ hgH hT hg hMpos hOcc hsh.1 hsh.2
+    (fun n => shellTime_aemeasurable_of_closure hcl hexit γ hγ0 hγ2 Ω S hS y z r T n hy hT.le)
+
+#print axioms truncatedQuenchedLawsFixedTime_of_inputs_closure
+
 #print axioms truncatedQuenchedLawsFixedTime_of_inputs_staged
 
 #print axioms truncatedQuenchedLawsFixedTime_of_steps
