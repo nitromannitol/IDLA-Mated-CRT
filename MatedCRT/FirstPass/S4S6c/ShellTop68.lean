@@ -39,7 +39,23 @@ theorem hU_top {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBoundStmt �
     (ShortWindowHV.hprev_of_shortWindow_noH0V hLit hBM hCC hB1 hμ)
     (Lemma68ShellHoneInst.shellChainCoreStmt_of_oneTestOrder hOne)
 
+/-- **hU from the Draft inputs, the window prevalence (z1) and the Eps one-test order input (q2, fp-S4S6c-eps-chain).**
+As `hU_top`, with `hOne : ShellOneTestOrderAeEpsStmt 𝒮` (the mesh threshold, the exponent antecedents and the radius cutoff). -/
+theorem hU_top_eps {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮)
+    (hE : ExitTimeUpperBoundStmt 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : MatedCRT.ConeWholePlaneFieldLawStep)
+    (hμ : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
+      (hcone : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsProbabilityMeasure P → IsQuantumCone γ P hcone hcirc →
+      ∃ μ : Ω → Measure ℂ, IsLQGMeasure P γ hcirc μ)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeEpsStmt 𝒮) :
+    UniformConstantOrderLowerBoundStmt 𝒮 :=
+  Lemma68ChainCore.hU_of_core_eps hG hC hE
+    (ShortWindowHV.hprev_of_shortWindow_noH0V hLit hBM hCC hB1 hμ)
+    (Lemma68ShellHoneInst.shellChainCoreEpsStmt_of_oneTestOrderEps hOne)
+
 end Lemma68ShellTop
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68ShellTop.hU_top
+#print axioms MatedCRT.Lemma68ShellTop.hU_top_eps
