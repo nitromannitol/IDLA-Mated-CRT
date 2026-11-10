@@ -7,8 +7,8 @@ import MatedCRT.FirstPass.S6e.Cutoff
 Source: `notes/fp-gaps/CHATGPT-lemma68-open-parts.md`, C15-C17 (lines 848-884) and the induction there.
 The walk is abstract here: `G j` is the exit event of the `j`-th test (`F_j = (G j)ᶜ`), `m j` is the
 σ-algebra `F_{T_j}` (monotone in `j`), `H j = ∩_{i<j} F_i` with `H j ∈ m j`. The conditional lower bound of
-the exit probability (C15) is the hypothesis `hstep`, with `R j` the random radius of the `j`-th test. The
-comparison of C15 with `q(r) = q0/(1+log(1/r))²` (C16) is `q_bound_of_radius`.
+the exit probability (C15) is the hypothesis `hstep`, with `R j` the random radius of the `j`-th test. It is needed only on `H j`, where `R j` is a good radius
+(C3: availability; B2: "let `R` be good at `z`"). The comparison of C15 with `q(r) = q0/(1+log(1/r))²` (C16) is `q_bound_of_radius`.
 -/
 
 open MeasureTheory Set
@@ -22,7 +22,8 @@ namespace Lemma68Induction
 theorem measureReal_inter_compl_le {Ω : Type*} [mΩ : MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {m : MeasurableSpace Ω} (hm : m ≤ mΩ) {H G : Set Ω}
     (hH : MeasurableSet[m] H)
-    (hG : MeasurableSet[mΩ] G) {q : ℝ} (hq : ∀ᵐ ω ∂μ, q ≤ (μ[G.indicator (fun _ => (1 : ℝ)) | m]) ω) :
+    (hG : MeasurableSet[mΩ] G) {q : ℝ}
+    (hq : ∀ᵐ ω ∂μ, ω ∈ H → q ≤ (μ[G.indicator (fun _ => (1 : ℝ)) | m]) ω) :
     μ.real (H ∩ Gᶜ) ≤ (1 - q) * μ.real H := by
   have hf : Integrable (G.indicator (fun _ => (1 : ℝ))) μ := (integrable_const (1 : ℝ)).indicator hG
   have hcond := setIntegral_condExp hm hf hH
@@ -31,8 +32,8 @@ theorem measureReal_inter_compl_le {Ω : Type*} [mΩ : MeasurableSpace Ω]
     simp
   have hlow : μ.real H * q ≤ ∫ ω in H, (μ[G.indicator (fun _ => (1 : ℝ)) | m]) ω ∂μ := by
     have h : ∫ _ in H, q ∂μ ≤ ∫ ω in H, (μ[G.indicator (fun _ => (1 : ℝ)) | m]) ω ∂μ :=
-      setIntegral_mono_ae (integrable_const q).integrableOn integrable_condExp.integrableOn
-        (by filter_upwards [hq] with ω hω using hω)
+      setIntegral_mono_ae_restrict (integrable_const q).integrableOn integrable_condExp.integrableOn
+        (by filter_upwards [(ae_restrict_iff' (hm _ hH)).2 hq] with ω hω using hω)
     simpa [setIntegral_const, smul_eq_mul] using h
   have hsplit := measureReal_inter_add_sdiff (μ := μ) hG (s := H)
   rw [Set.sdiff_eq] at hsplit
@@ -40,13 +41,13 @@ theorem measureReal_inter_compl_le {Ω : Type*} [mΩ : MeasurableSpace Ω]
 
 /-- The iteration (C17, the induction giving `P(H_N) ≤ (1-q)^N`): with `H 0 = Ω` and `H (j+1) = H j ∩ (G j)ᶜ`,
 where `G j` is `m (j+1)`-measurable, `H j` is `m j`-measurable (monotone filtration `m`), and the conditional exit
-probability given `m j` is at least `q ≤ 1` almost surely, `P(H_N) ≤ (1 - q)^N`. -/
+probability given `m j` is at least `q ≤ 1` almost surely on `H j`, `P(H_N) ≤ (1 - q)^N`. -/
 theorem measureReal_iterate_le_pow {Ω : Type*} [mΩ : MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] (m : ℕ → MeasurableSpace Ω) (hmono : Monotone m)
     (hm : ∀ j, m j ≤ mΩ) {G : ℕ → Set Ω} (hG : ∀ j, MeasurableSet (G j))
     (hGad : ∀ j, MeasurableSet[m (j + 1)] (G j)) {q : ℝ} (hq1 : q ≤ 1)
-    (hcond : ∀ j, ∀ᵐ ω ∂μ, q ≤ (μ[(G j).indicator (fun _ => (1 : ℝ)) | m j]) ω)
-    (H : ℕ → Set Ω) (hH0 : H 0 = Set.univ) (hHs : ∀ j, H (j + 1) = H j ∩ (G j)ᶜ) :
+    (H : ℕ → Set Ω) (hH0 : H 0 = Set.univ) (hHs : ∀ j, H (j + 1) = H j ∩ (G j)ᶜ)
+    (hcond : ∀ j, ∀ᵐ ω ∂μ, ω ∈ H j → q ≤ (μ[(G j).indicator (fun _ => (1 : ℝ)) | m j]) ω) :
     ∀ N : ℕ, μ.real (H N) ≤ (1 - q) ^ N := by
   have hmeas : ∀ N, MeasurableSet[m N] (H N) := by
     intro N
@@ -105,21 +106,21 @@ theorem C17_le_pow {Ω : Type*} [mΩ : MeasurableSpace Ω]
     (hGad : ∀ j, MeasurableSet[m (j + 1)] (G j)) {qStar r p : ℝ} (hq : 0 ≤ qStar) (hq9 : qStar ≤ 9)
     (hp : p ≤ 3) (hr0 : 0 < r) (hr1 : r ≤ 1) (R : ℕ → Ω → ℝ)
     (hR : ∀ j, ∀ᵐ ω ∂μ, 0 < R j ω ∧ R j ω ≤ 1 ∧ r ^ p / 2 < R j ω)
-    (hstep : ∀ j, ∀ᵐ ω ∂μ, qStar / (1 + Real.log (1 / R j ω)) ^ 2 ≤
-      (μ[(G j).indicator (fun _ => (1 : ℝ)) | m j]) ω)
-    (H : ℕ → Set Ω) (hH0 : H 0 = Set.univ) (hHs : ∀ j, H (j + 1) = H j ∩ (G j)ᶜ) (N : ℕ) :
+    (H : ℕ → Set Ω) (hH0 : H 0 = Set.univ) (hHs : ∀ j, H (j + 1) = H j ∩ (G j)ᶜ)
+    (hstep : ∀ j, ∀ᵐ ω ∂μ, ω ∈ H j → qStar / (1 + Real.log (1 / R j ω)) ^ 2 ≤
+      (μ[(G j).indicator (fun _ => (1 : ℝ)) | m j]) ω) (N : ℕ) :
     μ.real (H N) ≤ (1 - qStar / 9 / (1 + Real.log (1 / r)) ^ 2) ^ N := by
   have ht : 0 ≤ Real.log (1 / r) := Real.log_nonneg (one_le_one_div hr0 hr1)
   have hq1 : qStar / 9 / (1 + Real.log (1 / r)) ^ 2 ≤ 1 := by
     have h1 : qStar / 9 / (1 + Real.log (1 / r)) ^ 2 ≤ qStar / 9 :=
       div_le_self (by linarith) (by nlinarith)
     linarith
-  have hcond : ∀ j, ∀ᵐ ω ∂μ, qStar / 9 / (1 + Real.log (1 / r)) ^ 2 ≤
+  have hcond : ∀ j, ∀ᵐ ω ∂μ, ω ∈ H j → qStar / 9 / (1 + Real.log (1 / r)) ^ 2 ≤
       (μ[(G j).indicator (fun _ => (1 : ℝ)) | m j]) ω := by
     intro j
-    filter_upwards [hstep j, hR j] with ω h1 h2
-    exact (q_bound_of_radius hq hp hr0 hr1 h2.1 h2.2.1 h2.2.2).trans h1
-  exact measureReal_iterate_le_pow μ m hmono hm hG hGad hq1 hcond H hH0 hHs N
+    filter_upwards [hstep j, hR j] with ω h1 h2 hω
+    exact (q_bound_of_radius hq hp hr0 hr1 h2.1 h2.2.1 h2.2.2).trans (h1 hω)
+  exact measureReal_iterate_le_pow μ m hmono hm hG hGad hq1 H hH0 hHs hcond N
 
 /-- (C17 and D1) With the count `N ≥ r^(-ζ)/200` and the cutoff `r ≤ r0` of (D3), the test chain has
 `P(H_N) ≤ 1/2` (`Lemma68Cutoff.D1_le_half_of_le_r0`). The constant is `q0 = qStar/9` (C16). -/
@@ -131,12 +132,12 @@ theorem C17_le_half {Ω : Type*} [mΩ : MeasurableSpace Ω]
     (hc0 : 0 < c0) (hζ : 0 < ζ) (hζ' : ζ < 1 / 2) (hr0 : 0 < r) (hr1 : r ≤ 1)
     (hrr0 : r ≤ Lemma68Cutoff.r0 ρ s₀ p b lam cv c0 (qStar / 9) ζ) (R : ℕ → Ω → ℝ)
     (hR : ∀ j, ∀ᵐ ω ∂μ, 0 < R j ω ∧ R j ω ≤ 1 ∧ r ^ p / 2 < R j ω)
-    (hstep : ∀ j, ∀ᵐ ω ∂μ, qStar / (1 + Real.log (1 / R j ω)) ^ 2 ≤
-      (μ[(G j).indicator (fun _ => (1 : ℝ)) | m j]) ω)
-    (H : ℕ → Set Ω) (hH0 : H 0 = Set.univ) (hHs : ∀ j, H (j + 1) = H j ∩ (G j)ᶜ) {N : ℕ}
+    (H : ℕ → Set Ω) (hH0 : H 0 = Set.univ) (hHs : ∀ j, H (j + 1) = H j ∩ (G j)ᶜ)
+    (hstep : ∀ j, ∀ᵐ ω ∂μ, ω ∈ H j → qStar / (1 + Real.log (1 / R j ω)) ^ 2 ≤
+      (μ[(G j).indicator (fun _ => (1 : ℝ)) | m j]) ω) {N : ℕ}
     (hN : r ^ (-ζ) / 200 ≤ (N : ℝ)) :
     μ.real (H N) ≤ 1 / 2 := by
-  have hpow := C17_le_pow μ m hmono hm hG hGad (le_of_lt hq) hq9 hp hr0 hr1 R hR hstep H hH0 hHs N
+  have hpow := C17_le_pow μ m hmono hm hG hGad (le_of_lt hq) hq9 hp hr0 hr1 R hR H hH0 hHs hstep N
   exact hpow.trans (Lemma68Cutoff.D1_le_half_of_le_r0 hρ hs₀ hcv hc0 (div_pos hq (by norm_num))
     (by linarith) hζ hζ' hr0 hrr0 hN)
 

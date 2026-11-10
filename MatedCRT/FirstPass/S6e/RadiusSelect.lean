@@ -167,12 +167,12 @@ theorem C17_le_pow_selected {Ω : Type*} [mΩ : MeasurableSpace Ω]
     (good : ℕ → ℕ → Ω → Prop) (R : ℕ → Ω → ℝ)
     (hR_def : ∀ j ω, R j ω = firstGoodRadius (Delta p r) (cand (Delta p r)) (numCand (Delta p r))
       (fun k => good j k ω))
-    (hstep : ∀ j, ∀ᵐ ω ∂μ, qStar / (1 + Real.log (1 / R j ω)) ^ 2 ≤
-      (μ[(G j).indicator (fun _ => (1 : ℝ)) | m j]) ω)
-    (H : ℕ → Set Ω) (hH0 : H 0 = Set.univ) (hHs : ∀ j, H (j + 1) = H j ∩ (G j)ᶜ) (N : ℕ) :
+    (H : ℕ → Set Ω) (hH0 : H 0 = Set.univ) (hHs : ∀ j, H (j + 1) = H j ∩ (G j)ᶜ)
+    (hstep : ∀ j, ∀ᵐ ω ∂μ, ω ∈ H j → qStar / (1 + Real.log (1 / R j ω)) ^ 2 ≤
+      (μ[(G j).indicator (fun _ => (1 : ℝ)) | m j]) ω) (N : ℕ) :
     μ.real (H N) ≤ (1 - qStar / 9 / (1 + Real.log (1 / r)) ^ 2) ^ N :=
   Lemma68Induction.C17_le_pow μ m hmono hm hG hGad hq hq9 hp hr0 hr1.le R
-    (hR_firstGood μ hp0 hr0 hr1 good R hR_def) hstep H hH0 hHs N
+    (hR_firstGood μ hp0 hr0 hr1 good R hR_def) H hH0 hHs hstep N
 
 end Lemma68Radius
 
