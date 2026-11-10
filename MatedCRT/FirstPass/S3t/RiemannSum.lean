@@ -299,7 +299,7 @@ theorem quenched_sub_stopped_le {C χ : ℝ≥0} {z : ℂ} {r M d δ T : ℝ} {g
     (hg : HolderOnWith C χ g (ball z r)) (hχ : 0 < χ) (hM : ∀ x, |g x| ≤ M)
     (hq0 : q 0 ∈ interiorCellVertices ε η (ball z r))
     (hadj : ∀ j < ⌊T * mε⌋₊, (cell ε η (q j) ∩ cell ε η (q (j + 1))).Nonempty)
-    (hdiam : ∀ j ≤ ⌊T * mε⌋₊, diam (cell ε η (q j)) ≤ d) :
+    (hdiam : ∀ j ≤ ⌊T * mε⌋₊, (cell ε η (q j) ∩ ball z r).Nonempty → diam (cell ε η (q j)) ≤ d) :
     |mε⁻¹ * (∑ k ∈ range ⌊T * mε⌋₊,
         if (∀ j ≤ k, q j ∈ interiorCellVertices ε η (ball z r)) then g (vertexPoint ε η (q k)) else 0)
       - ∫ t in Ioc (0 : ℝ)
@@ -313,6 +313,12 @@ theorem quenched_sub_stopped_le {C χ : ℝ≥0} {z : ℂ} {r M d δ T : ℝ} {g
   have hvp : ∀ k, k ∈ interiorCellVertices ε η (ball z r) → vertexPoint ε η k ∈ ball z r :=
     fun k hk => cell_subset_of_mem_interiorCellVertices isOpen_ball hk
       (cell_isConnected_of_continuous hε0 hη k) (vertexPoint_mem_cell_of_nonneg hε0 k)
+  have hmeetD : ∀ j, q j ∈ interiorCellVertices ε η (ball z r) →
+      (cell ε η (q j) ∩ ball z r).Nonempty :=
+    fun j hj => ⟨vertexPoint ε η (q j), vertexPoint_mem_cell_of_nonneg hε0 (q j), hvp _ hj⟩
+  have hcell_sub : ∀ j, q j ∈ interiorCellVertices ε η (ball z r) → cell ε η (q j) ⊆ ball z r :=
+    fun j hj => cell_subset_of_mem_interiorCellVertices isOpen_ball hj
+      (cell_isConnected_of_continuous hε0 hη (q j))
   have hTm : 0 ≤ T * mε := mul_nonneg hT hm.le
   have hmN : ((⌊T * mε⌋₊ : ℕ) : ℝ) ≤ T * mε := Nat.floor_le hTm
   have hmN' : T * mε < ((⌊T * mε⌋₊ : ℕ) : ℝ) + 1 := Nat.lt_floor_add_one _
@@ -401,13 +407,17 @@ theorem quenched_sub_stopped_le {C χ : ℝ≥0} {z : ℂ} {r M d δ T : ℝ} {g
     have hint_k : ∀ j ≤ k, vertexPoint ε η (q j) ∈ ball z r := fun j hj => hvp _ (hkI j hj)
     have hdist_k : ∀ j < k, dist (vertexPoint ε η (q j)) (vertexPoint ε η (q (j + 1))) ≤ 2 * d :=
       fun j hj => dist_vertexPoint_le_two_mul_of_cells_meet hε0 hη (hadj j (by omega))
-        (hdiam j (by omega)) (hdiam (j + 1) (by omega))
+        (hdiam j (by omega) (hmeetD j (hkI j (by omega))))
+        (hdiam (j + 1) (by omega) (hmeetD (j + 1) (hkI (j + 1) (by omega))))
     have h1 := abs_sum_sub_integral_le hg hχ hM hm (e := 2 * d) k hint_k hdist_k
     rw [← hWdef] at h1
     have hWk : ∀ t : ℝ≥0, (t : ℝ) ≤ (k : ℝ) / mε → W t ∈ ball z r := walk_mem_ball_of_le hm k hint_k
     have hks : (k : ℝ) / mε ≤ s := hlow _ ha0 hakT hWk
+    have hmeetK1 : (cell ε η (q (k + 1)) ∩ ball z r).Nonempty := by
+      obtain ⟨x, hx1, hx2⟩ := hadj k (by omega)
+      exact ⟨x, hx2, hcell_sub k (hkI k le_rfl) hx1⟩
     obtain ⟨w, hwf, hdw⟩ := exists_frontier_within_two_mul_of_first_exit isOpen_ball hε0 hη hkI hKnot
-      (hadj k (by omega)) (hdiam k (by omega)) (hdiam (k + 1) hkN)
+      (hadj k (by omega)) (hdiam k (by omega) (hmeetD k (hkI k le_rfl))) (hdiam (k + 1) hkN hmeetK1)
     have hAfar : vertexPoint ε η (q k) ∉ ball z (r - δ) := by
       intro hmem
       have h2 := sub_le_dist_center_of_near_frontier hr.ne' hwf hdw
@@ -435,8 +445,8 @@ theorem quenched_sub_stopped_le {C χ : ℝ≥0} {z : ℂ} {r M d δ T : ℝ} {g
         intervalIntegral.integral_add_adjacent_intervals hI1 hI2]
     have hseg := abs_integral_sub_le_of_segment hg hχ hM hm (k := k) (c := c) (e := 2 * d) has'
       (min_le_right _ _) (hint_k k le_rfl)
-      (dist_vertexPoint_le_two_mul_of_cells_meet hε0 hη (hadj k (by omega)) (hdiam k (by omega))
-        (hdiam (k + 1) hkN))
+      (dist_vertexPoint_le_two_mul_of_cells_meet hε0 hη (hadj k (by omega))
+        (hdiam k (by omega) (hmeetD k (hkI k le_rfl))) (hdiam (k + 1) hkN hmeetK1))
       (fun t h1 h2 => hsT_mem t (by linarith) (lt_of_lt_of_le h2 (min_le_left _ _)))
     rw [← hWdef] at hseg
     have hc_le : c - (k : ℝ) / mε ≤ mε⁻¹ := by
@@ -516,8 +526,8 @@ theorem quenched_sub_stopped_le {C χ : ℝ≥0} {z : ℂ} {r M d δ T : ℝ} {g
       exact hkill ⟨j, hj, h⟩
     have hint : ∀ j ≤ N, vertexPoint ε η (q j) ∈ ball z r := fun j hj => hvp _ (hall j hj)
     have hdist : ∀ j < N, dist (vertexPoint ε η (q j)) (vertexPoint ε η (q (j + 1))) ≤ 2 * d :=
-      fun j hj => dist_vertexPoint_le_two_mul_of_cells_meet hε0 hη (hadj j hj) (hdiam j hj.le)
-        (hdiam (j + 1) hj)
+      fun j hj => dist_vertexPoint_le_two_mul_of_cells_meet hε0 hη (hadj j hj)
+        (hdiam j hj.le (hmeetD j (hall j hj.le))) (hdiam (j + 1) hj (hmeetD (j + 1) (hall (j + 1) hj)))
     have hsum : ∑ k ∈ range N, (if (∀ j ≤ k, q j ∈ interiorCellVertices ε η (ball z r)) then
         g (vertexPoint ε η (q k)) else 0) = ∑ k ∈ range N, g (vertexPoint ε η (q k)) :=
       Finset.sum_congr rfl fun k hk => by
