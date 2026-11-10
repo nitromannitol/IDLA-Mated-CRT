@@ -1,3 +1,5 @@
+import MatedCRT.FirstPass.S5r.NullMeasurableCorrected
+import MatedCRT.FirstPass.S2b
 import MatedCRT.FirstPass.S5d.StoppedSteps
 import MatedCRT.FirstPass.S5d.Transfer
 
@@ -19,7 +21,7 @@ open MeasureTheory ProbabilityTheory Filter Topology Set Metric
 open scoped ENNReal NNReal
 
 theorem iDLALowerBoundStopped_of_greenSteps (𝒮 : SpaceFillingSLEModel) (h52 : GeneralIDLALowerBoundRelaxedStep 𝒮)
-    (hfam : ConeFamilyAEMeasurableStep) (h24 : ConeHarmonicBallsUpToFixedTimeStmt)
+    (hfam : ConeFamilyAEMeasurableStep) (h24c : ConeHarmonicBallsUpToFixedTimeCorrectedStmt)
     (hG1 : StoppedFirstGreenStep 𝒮) (hG2 : StoppedSecondGreenStep 𝒮) : IDLALowerBoundStoppedStep 𝒮 := by
   intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS Λ hΛ δ t hδ hδρ ht
   have := hS.isProbabilityMeasure
@@ -38,7 +40,7 @@ theorem iDLALowerBoundStopped_of_greenSteps (𝒮 : SpaceFillingSLEModel) (h52 :
     exact h1.2.2.1
   have hU : ∀ ε, 0 < ε → ∀ k : ℤ, NullMeasurableSet {ω | k ∈ stoppedKillSet S Λ ρ t ε ω} S.P := by
     intro ε hε k
-    have hB := hS.nullMeasurableSet_cellVertices_coneFamily hγ hγ2 hfam h24 hρ hρ1 hΛ ht ε hε.le k
+    have hB := hS.nullMeasurableSet_cellVertices_coneFamily_corrected hγ hγ2 hfam h24c hρ hρ1 hΛ ht ε hε.le k
     have hset : {ω | k ∈ stoppedKillSet S Λ ρ t ε ω} =
         {ω | k ∈ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t} ∩
           {ω | t < clusterExitTime (Λ ω) ρ ∧ k ∈ cellVertices ε (S.η ω) (Λ ω t)} := by

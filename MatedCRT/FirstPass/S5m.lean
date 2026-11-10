@@ -1,3 +1,4 @@
+import MatedCRT.FirstPass.S2b
 import MatedCRT.FirstPass.S5j
 import MatedCRT.Proofs.Sec1.EnvironmentScaling.IGCurveScaling
 
@@ -101,15 +102,16 @@ theorem firstPass_5_1_of_floorCell (𝒮 : SpaceFillingSLEModel)
     (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
     (hcan : ConeCanonicalHalfBallStep) (hcl : ConeHalfBallClosureInsideStep) (hE1 : ConeCircleLawUniqueStep)
     (hE2 : ConeReferenceExistsStep) (hscale : QuantumConeScalingInput) (h22 : LQGMeasurePropertiesStmt)
-    (h24 : ConeHarmonicBallsUpToFixedTimeStmt) (h218 : ExitTimeUpperBoundStmt 𝒮)
+    (h24c : ConeHarmonicBallsUpToFixedTimeCorrectedStmt) (h218 : ExitTimeUpperBoundStmt 𝒮)
     (hfc : StoppedFloorCellStep 𝒮) (hU : FrozenUniversalMeasurabilityOfAnalytic)
     (hm : MepsScalingInput 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮) (h214 : GreenKernelUpperBoundStmt 𝒮)
-    (h211 : RandomWalkToLBMStmt 𝒮) (hrevuz : FrozenLBMGreenOccupation 𝒮) (hdet : FrozenTruncatedDetFixedTime 𝒮)
+    (h211 : RandomWalkToLBMStmt 𝒮) (hrevuz : FrozenLBMGreenOccupationRescaled 𝒮)
+    (hdet : FrozenTruncatedQuenchedLawsFixedTime 𝒮)
     (hexc : FrozenBrownianOutwardExcursionAtExit) (h35 : DiscreteDirichletProblemStmt 𝒮)
-    (hH : FrozenDiscreteHolderContinuityCorrected 𝒮) (hEnv : FrozenConeEnvironmentScaling 𝒮)
+    (hH : FrozenDiscreteHolderContinuityCorrected 𝒮) (hcone : FrozenConeScalingLaw 𝒮)
     (hG : FrozenGreenDiscPole) (hG15 : GreenFunctionCrudeBoundStmt 𝒮) (hG16 : GreenKernelLowerBoundStmt 𝒮) :
     IDLALowerBoundStmt 𝒮 :=
-  firstPass_5_1_of_floorCell_pole 𝒮 h27 h28 hcan hcl hE1 hE2 hscale h22 h24 h218 hfc (stoppedPoleCell_proved 𝒮) hU
-    hm h210 h214 h211 hrevuz hdet hexc h35 hH hEnv hG hG15 hG16
+  firstPass_5_1_of_floorCell_pole 𝒮 h27 h28 hcan hcl hE1 hE2 hscale h22 h24c h218 hfc (stoppedPoleCell_proved 𝒮) hU
+    hm h210 h214 h211 hrevuz hdet hexc h35 hH hcone hG hG15 hG16
 
 end MatedCRT
