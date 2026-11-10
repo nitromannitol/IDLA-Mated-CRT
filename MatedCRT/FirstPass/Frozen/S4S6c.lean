@@ -45,7 +45,12 @@ def FrozenLQGMeasureFieldMeasurable (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
     ∃ g : Ω → Measure ℂ, Measurable[S.fieldSigma] g ∧ ∀ᵐ ω ∂S.P, S.μ ω = g ω
 
-/-- FIRST-PASS FROZEN. Properness of the space-filling curve, almost surely. For every valid environment `S` with
+/-- RETIRED (proved from `IsValid.matingOfTrees`, operator 23:11 UTC): the statement is
+`MatedCRT.MatedCRTEnv.IsValid.ae_tendsto_cocompact` (Proofs/Infra/MatingOfTrees.lean:77), used by
+`ExitAe68.ae_exit_ne_top_of_bounded` and `TraceInputs68.cellVertices_finite_of_tendsto`. Not used in any
+proof from now on; kept unchanged (never delete).
+
+FIRST-PASS FROZEN (original). Properness of the space-filling curve, almost surely. For every valid environment `S` with
 cone parameter `γ`, almost surely `η(t) → ∞` as `|t| → ∞`: `Tendsto (S.η ω) (cocompact ℝ) (cocompact ℂ)`, so that a
 bounded set of the plane is met by `η` only on a bounded interval of parameters (whole-plane space-filling SLE from
 `∞` to `∞`). Source: standard; locator pending (a truth check follows, operator note 2026-11-09 22:25 UTC). Used by: none yet; reserved for the Good event of firstPass_6_8 (LEMMA68 C2, cellVertices
