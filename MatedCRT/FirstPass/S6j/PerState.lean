@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.S6j.FiniteExit
 import MatedCRT.FirstPass.S4S6c.TraceFrom68
+import MatedCRT.FirstPass.S6h.Successive
 
 /-!
 # The per-state outer test bound by a local test at the first hitting vertex (fp-S6j, input `hpt`)
@@ -243,6 +244,18 @@ theorem hpt_of_state (m : ℤ → ℤ → ℕ) (a : ℤ) (η : ℝ → ℂ) (hη
   filter_upwards [hgood j] with x hg hT
   exact perState_stayIn_le hη m (x (T j x).toNat) A hε (hR _) (hR1 _) hc0 hq0
     (hloc _ (hg hT)) (hdy _ (hg hT)) (hdiam _ (hg hT)) (hS2 _ (hg hT))
+
+
+/-- The successive exit schedule of S6h (`Lemma68Successive.exitSchedule`, one window function) is the schedule
+`nextExitSchedule` with the constant family of windows: the finiteness of `FiniteExit` applies to `cfgExit`. -/
+lemma exitSchedule_eq_nextExitSchedule (W : ℤ → Set ℤ) (N : ℕ) :
+    Lemma68Successive.exitSchedule W N = nextExitSchedule (fun _ => W) N := by
+  induction N with
+  | zero => rfl
+  | succ N ih =>
+    show SuccessiveExitStop.nextExit W (Lemma68Successive.exitSchedule W N) =
+      SuccessiveExitStop.nextExit W (nextExitSchedule (fun _ => W) N)
+    rw [ih]
 
 end S6j
 
