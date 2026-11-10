@@ -967,6 +967,138 @@ def ShellChainCGRCStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
               ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
                 Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
 
+/-- **Joint mesh-radius events with the counting component (q2, fp-S4S6c-closed-cgrc).** As `MeshEventsEpsStmt`
+(Green at `ω₀`, cell size at `ζ`, exit time at `α`), with the counting exponent `β > 0` and the counting good event
+`countingGoodEvent S α β ρ` (Lemma 2.9) at the same exponent `α` as the exit event. The chosen `ω₀` also satisfies
+`2 ω₀ β⁻ < α` and `2 ω₀ < 2/(2+γ)² - ζ`. -/
+def CountingMeshEventsEpsStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ ζ : ℝ, 0 < ζ ∧ ζ < 1 / 2 ∧ ∃ ω₀ α β : ℝ, 0 < ω₀ ∧ ω₀ < α ∧ 0 < α ∧ 0 < β ∧
+    ω₀ < 2 / (2 + γ) ^ 2 - ζ ∧ 2 * ω₀ * chosenBetaMinus γ < α ∧ 2 * ω₀ < 2 / (2 + γ) ^ 2 - ζ ∧
+    ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ CG : ℝ, 0 < CG ∧ ∃ CE : ℝ, 0 < CE ∧
+      ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+        HarmonicBalls.PolyHighProb S.P (greenLowEvent68 S ω₀ ρ CG) ∧
+        HarmonicBalls.PolyHighProb S.P (cellSizeEvent68 S γ ζ ρ) ∧
+        HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE) ∧
+        HarmonicBalls.PolyHighProb S.P (HoneModelInputs68.countingGoodEvent S α β ρ)
+
+/-- **`CountingMeshEventsEpsStmt` from the Draft inputs and `CountingAtExitAlphaStmt` (q2, fp-S4S6c-closed-cgrc).** As
+`meshEventsEpsStmt_of_draft`, with the exit exponent `α` and the counting exponent `β` both taken from
+`CountingAtExitAlphaStmt` (one `α` for the two thickenings). `ω₀ = min ωG (min (α/(4β⁻)) (q/4))`, `q = 1/(2+γ)²`, `ζ = q`. -/
+theorem countingMeshEventsEpsStmt_of_draft (𝒮 : SpaceFillingSLEModel) (hG : GreenKernelLowerBoundStmt 𝒮)
+    (hC : CellSizeEstimateStmt 𝒮) (hK : CountingAtExitAlphaStmt 𝒮) : CountingMeshEventsEpsStmt 𝒮 := by
+  intro γ hγ hγ2
+  obtain ⟨ωG, hωG, hGr⟩ := greenLowEvent68_polyHighProb hG hγ hγ2
+  obtain ⟨α, β, hα, hβK, hKr⟩ := hK γ hγ hγ2
+  obtain ⟨q, hq_def⟩ : ∃ q : ℝ, q = 1 / (2 + γ) ^ 2 := ⟨_, rfl⟩
+  have h2γ : 0 < (2 + γ) ^ 2 := by positivity
+  have hq0 : 0 < q := by rw [hq_def]; positivity
+  have hq1 : q < 1 / 2 := by
+    rw [hq_def, div_lt_iff₀ h2γ]
+    nlinarith
+  have hqq : 2 / (2 + γ) ^ 2 - q = q := by rw [hq_def]; ring
+  have hβ : 0 < chosenBetaMinus γ := by unfold chosenBetaMinus; positivity
+  have hβ1 : 1 ≤ chosenBetaMinus γ := by
+    unfold chosenBetaMinus; have := sq_nonneg (2 + γ); linarith
+  obtain ⟨ω₀, hω₀def⟩ : ∃ ω₀ : ℝ, ω₀ = min ωG (min (α / (4 * chosenBetaMinus γ)) (q / 4)) := ⟨_, rfl⟩
+  have hω₀1 : ω₀ ≤ ωG := by rw [hω₀def]; exact min_le_left _ _
+  have hω₀2 : ω₀ ≤ α / (4 * chosenBetaMinus γ) := by
+    rw [hω₀def]; exact (min_le_right _ _).trans (min_le_left _ _)
+  have hω₀3 : ω₀ ≤ q / 4 := by rw [hω₀def]; exact (min_le_right _ _).trans (min_le_right _ _)
+  have hω₀pos : 0 < ω₀ := by
+    rw [hω₀def]; exact lt_min hωG (lt_min (div_pos hα (by linarith)) (by linarith))
+  have hexp1 : 2 * ω₀ * chosenBetaMinus γ < α := by
+    have h4 : ω₀ * (4 * chosenBetaMinus γ) ≤ α := by
+      rwa [le_div_iff₀ (by linarith)] at hω₀2
+    nlinarith
+  have hωα : ω₀ < α := by nlinarith [mul_le_mul_of_nonneg_left hβ1 hω₀pos.le]
+  have hωq : ω₀ < 2 / (2 + γ) ^ 2 - q := by rw [hqq]; linarith
+  have hexp2 : 2 * ω₀ < 2 / (2 + γ) ^ 2 - q := by rw [hqq]; linarith
+  refine ⟨q, hq0, hq1, ω₀, α, β, hω₀pos, hωα, hα, hβK, hωq, hexp1, hexp2, ?_⟩
+  intro ρ hρ0 hρ1
+  obtain ⟨CG, hCG, hGS⟩ := hGr ρ hρ0 hρ1
+  obtain ⟨CE, hCE, hKS⟩ := hKr ρ hρ0 hρ1
+  refine ⟨CG, hCG, CE, hCE, fun Ω _ S hS => ⟨?_, ?_, ?_, ?_⟩⟩
+  · exact hGS ω₀ hω₀pos hω₀1 Ω S hS
+  · exact hC γ hγ hγ2 q ρ hq0 (by linarith) hρ0 hρ1 Ω S hS
+  · exact (hKS Ω S hS).1
+  · exact (hKS Ω S hS).2
+
+/-- **`GuardProbStmt` from the counting CG mesh-radius chain (q2, fp-S4S6c-closed-cgrc).** As
+`guardProbStmtCGR_of_chainCGR`, with `CountingMeshEventsEpsStmt` (the exit and counting events at the one exponent `α`)
+and `ShellChainCGRCStmt`; the almost sure event is `countingMeshEventR`, whose probability is
+`probTendsToOne_countingMeshEventR`. -/
+theorem guardProbStmtCGRC_of_chainCGRC (𝒮 : SpaceFillingSLEModel) (hMesh : CountingMeshEventsEpsStmt 𝒮)
+    (hChain : ShellChainCGRCStmt 𝒮) : Lemma68Uniform.GuardProbStmt 𝒮 := by
+  intro γ hγ0 hγ2
+  obtain ⟨ζ, hζ0, hζ1, ω₀, α, β, hω₀, hωα, hα0, hβ0, hωζ, hexp1, hexp2, hmesh⟩ := hMesh γ hγ0 hγ2
+  refine ⟨ω₀, hω₀, fun ρ hρ0 hρ1 => ?_⟩
+  obtain ⟨CG, hCG, CE, hCE, hPH⟩ := hmesh ρ hρ0 hρ1
+  obtain ⟨_, _, _, _, hPHm⟩ := hmesh ((1 + ρ) / 2) (by linarith) (by linarith)
+  obtain ⟨q0, hq0, hq1, hchain⟩ :=
+    hChain γ hγ0 hγ2 ω₀ α ζ ρ CG CE β hω₀ hωα hα0 hωζ hexp1 hexp2 hCG hCE hβ0 hζ0 hζ1 hρ0 hρ1
+  have hrA : 0 < Lemma68Cutoff.rAmp q0 ζ := Lemma68Cutoff.rAmp_pos hq0 hζ0
+  have hcN : 0 < countConst ζ := countConst_pos ζ
+  obtain ⟨r_amp, hra0, hra1, hbd⟩ :=
+    constant_order_conclusion (c := countConst ζ * q0) (ζ := ζ) (mul_pos hcN hq0) hζ0
+  obtain ⟨Rc, hRc0, hRc⟩ := exists_radius_cutoff_gap hρ0 hρ1 hζ0
+  have hR0 : 0 < min (ρ / 4) (min (Lemma68Cutoff.rAmp q0 ζ) (min r_amp Rc)) :=
+    lt_min (by linarith) (lt_min hrA (lt_min hra0 hRc0))
+  refine ⟨min (ρ / 4) (min (Lemma68Cutoff.rAmp q0 ζ) (min r_amp Rc)), ζ, 2, 9 * q0, q0, hR0,
+    min_le_left _ _, (min_le_right _ _).trans (min_le_left _ _), hζ0, hζ1, hq0, hq1,
+    by ring, by linarith, by linarith, by norm_num,
+    shellS1CG γ CG, shellS1CG_pos γ CG, shellS1CG_lt_one γ CG hCG, ?_⟩
+  intro s₀ hs₀ hs₁ Ω _ S hS
+  set R : ℝ := min (ρ / 4) (min (Lemma68Cutoff.rAmp q0 ζ) (min r_amp Rc)) with hRdef
+  have hRA : R ≤ Lemma68Cutoff.rAmp q0 ζ := (min_le_right _ _).trans (min_le_left _ _)
+  have hRρ : R ≤ ρ / 4 := min_le_left _ _
+  have hRr' : R ≤ r_amp := (min_le_right _ _).trans ((min_le_right _ _).trans (min_le_left _ _))
+  have hRRc : R ≤ Rc := (min_le_right _ _).trans ((min_le_right _ _).trans (min_le_right _ _))
+  have hR1 : R ≤ 1 := hRρ.trans (by linarith)
+  have hRr : ∀ r : ℝ, 0 < r → r ≤ R →
+      Real.exp (-(countConst ζ * q0 * r ^ (-ζ) / (1 + Real.log (1 / r)) ^ 2)) ≤ 1 / 2 :=
+    fun r hr hrle => hbd r hr (hrle.trans hRr')
+  obtain ⟨hGp, _, hEp, hKp⟩ := hPH Ω S hS
+  have hCpm : HarmonicBalls.PolyHighProb S.P (cellSizeEvent68 S γ ζ ((1 + ρ) / 2)) :=
+    (hPHm Ω S hS).2.1
+  obtain ⟨Ew, hEwm, hEwp, hpt⟩ :=
+    hchain R hR0 hRρ hRA (hRc R hR0 hRRc) s₀ hs₀ hs₁ Ω S hS hGp hCpm hEp hKp
+  obtain ⟨dd0, hdd0m, hdd0pos, _, hdd0⟩ := window_cutoff (F := S.fieldSigma) S.P Ew hEwm hEwp
+  have hE : ProbTendsToOne S.P (fun ε => countingMeshEventR S γ ω₀ ρ CG ζ α CE β ε) :=
+    probTendsToOne_countingMeshEventR hGp hCpm hEp hKp
+  have hGae : ∀ᵐ ω ∂S.P, ω ∈ goodField S Ew dd0 := by
+    filter_upwards [Lemma68Guard.ae_escapes_of_valid hS,
+      Lemma68Guard.ae_finiteExit_of_valid hγ0 hγ2 hS, hdd0] with ω h1 h2 h3
+    exact ⟨h1, h2, h3⟩
+  have hG : S.P (goodField S Ew dd0)ᶜ = 0 := ae_iff.1 hGae
+  have he0 : 0 < shellEps0ZCG γ α ω₀ ζ CG := shellEps0ZCG_pos γ α ω₀ ζ CG
+  set e0 : ℝ := shellEps0ZCG γ α ω₀ ζ CG with he0def
+  set E : ℝ → Set Ω := fun ε => if ε ≤ e0 then countingMeshEventR S γ ω₀ ρ CG ζ α CE β ε else ∅ with hEdef
+  have hEp' : ProbTendsToOne S.P E :=
+    probTendsToOne_congr_small he0 hE (fun ε _ hle => by simp [hEdef, hle])
+  have hpt' : ∀ ε : ℝ, 0 < ε → ∀ᵐ ω ∂S.P, ω ∈ E ε ∩ goodField S Ew dd0 →
+      ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ min R (dd0 ω) → ∀ i : Lemma68Config.Config68,
+        Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
+          ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
+            Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N := by
+    intro ε hε
+    by_cases hle : ε ≤ e0
+    · filter_upwards [hpt ε hε hle] with ω hω
+      rintro ⟨hωm, h1, h2, h3⟩ r hr hrd i hadm
+      have hr0 : 0 < r := lt_of_lt_of_le (by positivity) hr
+      have hωm' : ω ∈ countingMeshEventR S γ ω₀ ρ CG ζ α CE β ε := by simpa [hEdef, hle] using hωm
+      exact hω hωm' h1 h2 r hr (hrd.trans (min_le_left _ _))
+        (h3 r hr0 (hrd.trans (min_le_right _ _))) i hadm
+    · refine Filter.Eventually.of_forall fun ω hω => ?_
+      exact absurd hω.1 (by simp [hEdef, hle])
+  refine ⟨fun ω => min R (dd0 ω), measurable_const.min hdd0m, fun ω => lt_min hR0 (hdd0pos ω),
+    fun ω => min_le_left _ _, ?_⟩
+  exact probTendsToOne_half_of_count (α := fun ε => 10 * ε ^ ω₀)
+    (dd := fun ω => min R (dd0 ω)) (E := E)
+    (G := goodField S Ew dd0) (R := R) (cN := countConst ζ) (q0 := q0) (ζ := ζ) hEp' hG
+    (fun ε hε => by positivity) (fun ω => min_le_left _ _) hR1 hcN hq0 hq1 hRr
+    (fun ε ω r i => Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i)
+    (Lemma68Config.exitQ S) hpt'
+
 end Lemma68Guard10
 
 /-- **Lemma 6.8, uniform constant-order lower bound (`UniformConstantOrderLowerBoundStmt`, FirstPass/S6d.lean:95)**,
@@ -1005,9 +1137,23 @@ theorem uniformConstantOrderLowerBoundCGR_of_chain (𝒮 : SpaceFillingSLEModel)
     (Lemma68Guard10.guardProbStmtCGR_of_chainCGR 𝒮
       (Lemma68Guard10.meshEventsEpsStmt_of_draft 𝒮 hG hC hE) hChain)
 
+/-- **Lemma 6.8, uniform constant-order lower bound from the counting CG mesh-radius chain (q2, fp-S4S6c-closed-cgrc).**
+As `uniformConstantOrderLowerBoundCGR_of_chain`, with the counting exponent: the exit and counting events at the one
+exponent of `CountingAtExitAlphaStmt`, and `ShellChainCGRCStmt` (almost sure event `countingMeshEventR`). -/
+theorem uniformConstantOrderLowerBoundCGRC_of_chain (𝒮 : SpaceFillingSLEModel)
+    (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮)
+    (hK : Lemma68Guard10.CountingAtExitAlphaStmt 𝒮)
+    (hChain : Lemma68Guard10.ShellChainCGRCStmt 𝒮) : UniformConstantOrderLowerBoundStmt 𝒮 :=
+  uniformConstantOrderLowerBound_of_guard 𝒮
+    (Lemma68Guard10.guardProbStmtCGRC_of_chainCGRC 𝒮
+      (Lemma68Guard10.countingMeshEventsEpsStmt_of_draft 𝒮 hG hC hK) hChain)
+
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68Guard10.meshEventR_cell
+#print axioms MatedCRT.Lemma68Guard10.countingMeshEventsEpsStmt_of_draft
+#print axioms MatedCRT.Lemma68Guard10.guardProbStmtCGRC_of_chainCGRC
+#print axioms MatedCRT.uniformConstantOrderLowerBoundCGRC_of_chain
 #print axioms MatedCRT.Lemma68Guard10.probTendsToOne_meshEventR
 #print axioms MatedCRT.Lemma68Guard10.countingMeshEventR_green
 #print axioms MatedCRT.Lemma68Guard10.probTendsToOne_countingMeshEventR

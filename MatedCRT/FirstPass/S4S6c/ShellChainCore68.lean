@@ -357,11 +357,45 @@ theorem hU_of_core_cgR {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBound
     (hcore : ShellChainCoreCGRStmt 𝒮) : UniformConstantOrderLowerBoundStmt 𝒮 :=
   MatedCRT.uniformConstantOrderLowerBoundCGR_of_chain 𝒮 hG hC hE (shellChainCGRStmt_of_core hprev hcore)
 
+/-- **`ShellChainCGRCStmt` from the counting CG shell-chain core (q2, fp-S4S6c-closed-cgrc).** As
+`shellChainCGRStmt_of_core`, with `ShellChainCoreCGRCStmt` (counting exponent `β`, counting hypothesis at the chain exponent
+`α`, almost sure clause on `countingMeshEventR`). -/
+theorem shellChainCGRCStmt_of_core {𝒮 : SpaceFillingSLEModel} (hprev : ShortWindowGoodRadiusPrevalenceStmt)
+    (hcore : ShellChainCoreCGRCStmt 𝒮) : ShellChainCGRCStmt 𝒮 := by
+  intro γ hγ0 hγ2 ω₀ α ζ ρ CG CE β hω₀ hωα hα0 hωζ hexp1 hexp2 hCG hCE hβ hζ0 hζ1 hρ0 hρ1
+  have ha0 : 0 < shortExp ζ := by unfold shortExp; linarith
+  have ha1 : shortExp ζ < 1 := by unfold shortExp; linarith
+  obtain ⟨hc0, hc1⟩ := shellC0_bounds CG hCG
+  obtain ⟨C, C', hC0, hC'0, hP⟩ := hprev (shortExp ζ) ha0 ha1 γ hγ0 hγ2 (shellC0 CG) hc0 hc1
+  have hP' : WindowPrevAt γ (shortExp ζ) (shellC0 CG) C C' := hP
+  obtain ⟨q0, hq0, hq0c, hcl⟩ :=
+    hcore γ hγ0 hγ2 ω₀ α ζ ρ CG CE β hω₀ hωα hα0 hωζ hexp1 hexp2 hCG hCE hβ hζ0 hζ1 hρ0 hρ1 C C' hC0 hC'0 hP'
+  have hq1 : q0 ≤ 1 := by
+    have hC1 := one_le_shellChone68 CE C
+    have hb : (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE C) ≤ 1 := by
+      rw [div_le_iff₀ (by linarith)]
+      nlinarith
+    linarith
+  refine ⟨q0, hq0, hq1, fun R hR0 hRρ hRA hcut s₀ hs₀ hs₁ Ω _ S hS hGp hCp hEp hKp => ?_⟩
+  obtain ⟨Ew, hEwm, hEwp, hav⟩ :=
+    shortWindow_fieldFamily_at hγ0 hγ2 S hS (shortExp ζ) (shellC0 CG) C C' ρ hρ0 hρ1 hP'
+  exact ⟨Ew, hEwm, hEwp, hcl R hR0 hRρ hRA hcut s₀ hs₀ hs₁ Ω S hS hGp hCp hEp hKp Ew hEwm hEwp hav⟩
+
+/-- **`UniformConstantOrderLowerBoundStmt` (hU) from the counting CG shell-chain core (q2, fp-S4S6c-closed-cgrc).** Same
+conclusion as `hU_of_core_cgR`, through `uniformConstantOrderLowerBoundCGRC_of_chain` (Guard68S10.lean), with the
+counting input `hK : CountingAtExitAlphaStmt 𝒮` in place of the exit-time input. -/
+theorem hU_of_core_cgRC {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮)
+    (hK : MatedCRT.Lemma68Guard10.CountingAtExitAlphaStmt 𝒮) (hprev : ShortWindowGoodRadiusPrevalenceStmt)
+    (hcore : ShellChainCoreCGRCStmt 𝒮) : UniformConstantOrderLowerBoundStmt 𝒮 :=
+  MatedCRT.uniformConstantOrderLowerBoundCGRC_of_chain 𝒮 hG hC hK (shellChainCGRCStmt_of_core hprev hcore)
+
 end Lemma68ChainCore
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68ChainCore.shellChainCGRStmt_of_core
 #print axioms MatedCRT.Lemma68ChainCore.hU_of_core_cgR
+#print axioms MatedCRT.Lemma68ChainCore.shellChainCGRCStmt_of_core
+#print axioms MatedCRT.Lemma68ChainCore.hU_of_core_cgRC
 #print axioms MatedCRT.Lemma68ChainCore.shellChainStmt_of_core
 #print axioms MatedCRT.Lemma68ChainCore.hU_of_core
 #print axioms MatedCRT.Lemma68ChainCore.shellChainCoreEpsStmt_of_shellChainCoreStmt

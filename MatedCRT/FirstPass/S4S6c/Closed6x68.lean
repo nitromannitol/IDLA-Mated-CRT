@@ -295,6 +295,61 @@ theorem closed_6_x_hU_cgR {𝒮 : SpaceFillingSLEModel}
     UniformConstantOrderLowerBoundStmt 𝒮 :=
   Lemma68ShellTop.hU_top_cgR hG h28 hE hLit hBM hCC hB1 hμ hOne
 
+/-! ### Counting CG mesh-radius route (q2, fp-S4S6c-closed-cgrc): `ShellOneTestOrderAeCGRCStmt` (the counting event
+`countingMeshEventR`) and `CountingAtExitAlphaStmt` (one exponent for the exit and counting events, Guard68S10.lean). The
+exit-time input `hE` of the CG-R closures is not needed: the exit event at the counting exponent comes from `hK`. -/
+
+/-- **Lemma 6.7 (faithful header), counting CG mesh-radius route.** Binders as `closed_6_7_hU_cgR`, with `hOne` the counting
+form and `hK` the counting input of `CountingAtExitAlphaStmt`; `hE` is dropped. -/
+theorem closed_6_7_hU_cgRC {𝒮 : SpaceFillingSLEModel}
+    (hG : GreenKernelLowerBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
+    (hK : Lemma68Guard10.CountingAtExitAlphaStmt 𝒮)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeCGRCStmt 𝒮) :
+    FaithfulConstantOrderLowerBoundStmt 𝒮 :=
+  firstPass_6_7_faithful 𝒮
+    (Lemma68ShellTop.hU_top_cgRC hG h28 hK hLit hBM hCC hB1 hμ hOne)
+
+/-- **Lemma 6.8 (faithful header, localized form), counting CG mesh-radius route.** As `closed_6_8_hU_cgR`, with `hOne` the
+counting form and `hK` the counting input; `hBG : FrozenBerestyckiGwynneConeBallMass` as before. -/
+theorem closed_6_8_hU_cgRC {𝒮 : SpaceFillingSLEModel}
+    (hG : GreenKernelLowerBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
+    (hBG : FrozenBerestyckiGwynneConeBallMass)
+    (hK : Lemma68Guard10.CountingAtExitAlphaStmt 𝒮)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeCGRCStmt 𝒮) :
+    FaithfulConstantOrderLowerBoundDivStmt 𝒮 :=
+  firstPass_6_8_faithful 𝒮
+    (Lemma68ShellTop.hU_top_cgRC hG h28 hK hLit hBM hCC hB1 hμ hOne)
+    (volumeGrowthStmt_of_berestyckiGwynne hBG) h28
+
+/-- **Lemma 6.9 (faithful header), counting CG mesh-radius route.** Binders as `closed_6_7_hU_cgRC`. -/
+theorem closed_6_9_hU_cgRC {𝒮 : SpaceFillingSLEModel}
+    (hG : GreenKernelLowerBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
+    (hK : Lemma68Guard10.CountingAtExitAlphaStmt 𝒮)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeCGRCStmt 𝒮) :
+    FaithfulChanceOfBeingAbsorbedStmt 𝒮 :=
+  firstPass_6_9_faithful 𝒮
+    (Lemma68ShellTop.hU_top_cgRC hG h28 hK hLit hBM hCC hB1 hμ hOne)
+
+/-- **Lemma 6.x, uniform constant-order lower bound (hU), counting CG mesh-radius route.** Binders as `closed_6_7_hU_cgRC`. -/
+theorem closed_6_x_hU_cgRC {𝒮 : SpaceFillingSLEModel}
+    (hG : GreenKernelLowerBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
+    (hK : Lemma68Guard10.CountingAtExitAlphaStmt 𝒮)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeCGRCStmt 𝒮) :
+    UniformConstantOrderLowerBoundStmt 𝒮 :=
+  Lemma68ShellTop.hU_top_cgRC hG h28 hK hLit hBM hCC hB1 hμ hOne
+
 end MatedCRT
 
 #print axioms MatedCRT.closed_6_x_hU_eps
@@ -312,4 +367,8 @@ end MatedCRT
 #print axioms MatedCRT.closed_6_7_hU_cgR
 #print axioms MatedCRT.closed_6_8_hU_cgR
 #print axioms MatedCRT.closed_6_9_hU_cgR
+#print axioms MatedCRT.closed_6_x_hU_cgRC
+#print axioms MatedCRT.closed_6_7_hU_cgRC
+#print axioms MatedCRT.closed_6_8_hU_cgRC
+#print axioms MatedCRT.closed_6_9_hU_cgRC
 #print axioms MatedCRT.closed_6_9_hU_cg
