@@ -1,5 +1,6 @@
 import MatedCRT.Defs.Map
 import MatedCRT.Defs.RandomWalk
+import MatedCRT.FirstPass.S6r.LocalBudget
 
 /-!
 # First-pass 6.8, redesign: the successive two-sided shell test, steps 6-9 (fp-S6r-shell-test, z9)
@@ -317,37 +318,43 @@ def S5Window (r d R s h e : ℝ) : Prop :=
 * the test ball `B_{R/4}(x')` lies in `I(·)` and in `B_{2R}(z)` (7.36-7.37);
 * the enlarged ball `B_{R/4+e}(x')` lies in the good annulus `{R < |· - z| < 2R}` (7.49);
 * `r² ≤ R < r` (7.44-7.45);
-* the S4 first-moment bound `ε·|A ∩ V(B_{c₀R}(x'))| ≤ μ/4` (7.46-7.48), from the S4 sparsity `hcnt` (the local
-  count of Lemma 6.8's hypothesis at radius `r`, `LocalBudget.lean`, not yet imported) and the volume bound `hvol`. -/
-theorem S5_geometry_at_shell_test {ε : ℝ} {η : ℝ → ℂ} (hε : 0 ≤ ε) (hηc : Continuous η) (x : ℕ → ℤ)
+* the S4 first-moment bound `|A ∩ V(B_{c₀R}(x'))| ≤ μ(B_{c₀R}(x'))/(4ε)`, i.e. `ε·|A ∩ V| ≤ μ/4` (7.46-7.48), from
+  the committed `localCount_of_ball` (`LocalBudget.lean`), with the radius-`r` sparsity `hglob` (Lemma 6.8's `A`-hypothesis),
+  the finiteness `hfin` of the cell-vertex sets and the volume lower bound `hvol` as named inputs. -/
+theorem S5_geometry_at_shell_test {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < ε) (hηc : Continuous η) (x : ℕ → ℤ)
     (hadj : ∀ n, (cell ε η (x n) ∩ cell ε η (x (n + 1))).Nonempty)
     {z : ℂ} {r d R s h e : ℝ} (hW : S5Window r d R s h e)
     {E : Set ℂ} (hmesh : CellDiamLe ε η h E) (hE : frontier (ball z (4 * R / 3)) ⊆ E)
     {C T : ℕ} (hCT : C < T)
     (hmin : ∀ n, C ≤ n → n < T → x n ∈ interiorCellVertices ε η (ball z (4 * R / 3)))
     (hT : x T ∉ interiorCellVertices ε η (ball z (4 * R / 3)))
-    {cnt m s1 cv c0 β : ℝ} (hβ : 0 ≤ β) (hs1 : 0 ≤ s1)
-    (hcnt : ε * cnt ≤ s1 * r ^ (2 * β)) (hvol : cv * c0 ^ β * R ^ β ≤ m) (hcs : 4 * s1 ≤ cv * c0 ^ β) :
+    {μ : Measure ℂ} {A : Set ℤ} {s1 β c0 : ℝ} (hs0 : 0 ≤ s1) (hβ0 : 0 ≤ β) (hc0 : 0 < c0) (hc01 : c0 ≤ 1)
+    (hs1small : 44 * s1 ≤ c0 ^ β) (hfin : ∀ w : ℂ, (cellVertices ε η (ball w r)).Finite)
+    (hglob : ∀ w : ℂ, ((A ∩ cellVertices ε η (ball w r)).ncard : ℝ) < s1 * r ^ (2 * β) / ε)
+    (hvol : (c0 * R) ^ β ≤ (μ (ball (vertexPoint ε η (x T)) (c0 * R))).toReal) :
     |dist (vertexPoint ε η (x T)) z - 4 * R / 3| ≤ h ∧
       ball (vertexPoint ε η (x T)) (R / 4 + e) ⊆ {p | R < dist p z ∧ dist p z < 2 * R} ∧
       (x T ∈ interiorCellVertices ε η (ball (vertexPoint ε η (x T)) (R / 4)) ∧
         ball (vertexPoint ε η (x T)) (R / 4) ⊆ ball z (2 * R)) ∧
-      ε * cnt ≤ m / 4 ∧ r ^ 2 ≤ R ∧ R < r := by
+      ((A ∩ cellVertices ε η (ball (vertexPoint ε η (x T)) (c0 * R))).ncard : ℝ) ≤
+        (μ (ball (vertexPoint ε η (x T)) (c0 * R))).toReal / (4 * ε) ∧ r ^ 2 ≤ R ∧ R < r := by
   obtain ⟨hd, hdR, hRs, hs4, hr, hR, he0, hhe, hhR⟩ := hW
   have hρ : (4 * R / 3 : ℝ) ≠ 0 := by
     have : (0 : ℝ) < 4 * R / 3 := by linarith
     exact this.ne'
   have hb := boundary_start_vertex hηc x hadj hCT hmin hT
-  have hrad := exit_vertex_radius hε hmesh z hρ hE hb
+  have hrad := exit_vertex_radius hε.le hmesh z hρ hE hb
   obtain ⟨p, hp1, hp2⟩ := hb
   have hpE : (cell ε η (x T) ∩ E).Nonempty := ⟨p, hp1, hE hp2⟩
   have hdiam : ∀ q ∈ cell ε η (x T), dist q (vertexPoint ε η (x T)) ≤ h := fun q hq => by
     rw [dist_comm]
-    exact hmesh (x T) hpE (vertexPoint ε η (x T)) (vertexPoint_mem_cell hε η (x T)) q hq
-  obtain ⟨hI, hball⟩ := exit_cell_test_ball hε hR hdiam hhR hrad
+    exact hmesh (x T) hpE (vertexPoint ε η (x T)) (vertexPoint_mem_cell hε.le η (x T)) q hq
+  obtain ⟨hI, hball⟩ := exit_cell_test_ball hε.le hR hdiam hhR hrad
   have hsq := shell_radius_bounds hd hdR hRs hs4 hr
+  have hcR : c0 * R ≤ r := le_trans (mul_le_of_le_one_left hR.le hc01) hsq.2.2.le
   exact ⟨hrad, enlarged_ball_in_annulus hR hrad hhe, ⟨hI, hball⟩,
-    first_moment_of_sparsity hβ hr.le hR.le hs1 (le_trans hd hdR) hcnt hvol hcs, hsq.1, hsq.2.2⟩
+    localCount_of_ball hε hs0 hβ0 hr hR hc0 hcR (le_trans hd hdR) hs1small hfin hglob hvol,
+    hsq.1, hsq.2.2⟩
 
 /-- Step 9, `(7.50)` in the form consumed by the strong-Markov step (`oneTest_step` of `Amplification.lean`).
 `F` is the test-failure event `{X_n ∈ A for all T_j ≤ n < L_j}`, so `μ[1_F | 𝓖] ≤ 1 - q(r)` on `P` is the bound
