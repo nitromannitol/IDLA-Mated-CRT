@@ -86,7 +86,65 @@ theorem shellOneTestOrderAeRStmt_of_ae {𝒮 : SpaceFillingSLEModel} (h : ShellO
   intro ω hω hmesh hcurve hmult hωE i hi
   exact hω hmesh hcurve hmult r hr1 hr2 hωE i hi
 
+/-- **The pointwise one-test input on the window-good event** (fp-S4S6c-uniform-r-source). The written argument of the
+corrected draft gives the one-test order on ONE event per `ε`, for all radii at once: the dyadic Borel-Cantelli
+construction of the short-window good radii (corrected draft l.2866-2945, one null set for every dyadic scale), the
+intersection of the `ε`-events with `r² ≤ d < 2r²` for dyadic `d`, uniform over `r` (l.2995-3016), and the one-test
+estimate on a good annulus, which is pointwise (l.3033-3036). Window avoidance is put at each dyadic scale `(1/2)^k`
+(countably many), so the almost-sure part is a countable intersection (`shellOneTestOrderAeStmt_of_pointwise`).
+Named input, not frozen. -/
+def ShellOneTestPointwiseStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE : ℝ,
+    0 < ω₀ → ω₀ < α → 0 < α → ω₀ < 2 / (2 + γ) ^ 2 - ζ → 0 < CG → 0 < CE →
+    0 < ζ → ζ < 1 / 2 → 0 < ρ → ρ < 1 →
+    ∀ C C' : ℝ, 0 < C → 0 < C' → WindowPrevAt γ (shortExp ζ) shellC068 C C' →
+    ∃ q0 : ℝ, 0 < q0 ∧ q0 ≤ (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE C) ∧
+    ∀ R : ℝ, 0 < R → R ≤ ρ / 4 → R ≤ Lemma68Cutoff.rAmp q0 ζ →
+    ∀ s₀ : ℝ, 0 < s₀ → s₀ < 1 →
+    ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      HarmonicBalls.PolyHighProb S.P (greenLowEvent68 S ω₀ ρ CG) →
+      HarmonicBalls.PolyHighProb S.P (cellSizeEvent68 S γ ζ ρ) →
+      HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE) →
+    ∀ Ew : ℝ → Set Ω, (∀ δ : ℝ, MeasurableSet[S.fieldSigma] (Ew δ)) →
+      HarmonicBalls.PolyHighProb S.P Ew →
+      ∀ ε : ℝ, 0 < ε → ∀ ω : Ω, ω ∈ meshEvent S γ ω₀ ρ CG ζ α CE ε →
+        Lemma68Inputs.CurveEscapesBothEnds (S.η ω) →
+        (∀ ε' : ℝ, 0 < ε' → IsLocallyFiniteMult (S.mult ε' ω) ∧ ∀ k : ℤ, S.mult ε' ω k (k + 1) ≠ 0) →
+        (∀ k : ℕ, ω ∈ Ew ((1 / 2 : ℝ) ^ k) → ω ∉ badWindowOf S.μ ρ (shortExp ζ) shellC068 C ((1 / 2 : ℝ) ^ k)) →
+        ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ R → ω ∈ Ew (dyadicD r) →
+          ∀ i : Lemma68Config.Config68, Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
+            ∃ Rf : ℂ → ℝ,
+              ShellOneTestAt (S.mult ε ω) i.a (↑i.A : Set ℤ) (S.η ω) ε (fillCells ε (S.η ω) ↑i.Θ)
+                (vExitTime (killed ε (S.η ω) i.Θ i.F0 r)) r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf
+                (shellCount r (dyadicD r ^ shortExp ζ) - 1) (q0 / (1 + Real.log (1 / r)) ^ 2) ∧
+              Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf
+                (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a
+
+/-- **The countable swap** (fp-S4S6c-uniform-r-source): the pointwise input, with the window avoidance almost surely at
+the countably many dyadic scales `(1/2)^k` (`ae_all_iff` over `ℕ`, from the almost-sure `hav` of
+`ShellOneTestOrderAeStmt`), gives the almost-sure order statement `ShellOneTestOrderAeStmt` with all radii inside `∀ᵐ ω`. -/
+theorem shellOneTestOrderAeStmt_of_pointwise {𝒮 : SpaceFillingSLEModel} (h : ShellOneTestPointwiseStmt 𝒮) :
+    ShellOneTestOrderAeStmt 𝒮 := by
+  intro γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hCG hCE hζ0 hζ1 hρ0 hρ1 C C' hC hC' hP
+  obtain ⟨q0, hq0, hq0c, hcl⟩ :=
+    h γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hCG hCE hζ0 hζ1 hρ0 hρ1 C C' hC hC' hP
+  refine ⟨q0, hq0, hq0c, ?_⟩
+  intro R hR0 hRρ hRA s₀ hs₀ hs₁ Ω _ S hS hGp hCp hEp Ew hEwm hEwp hav ε hε
+  have hdy : ∀ᵐ ω ∂S.P, ∀ k : ℕ, ω ∈ Ew ((1 / 2 : ℝ) ^ k) →
+      ω ∉ badWindowOf S.μ ρ (shortExp ζ) shellC068 C ((1 / 2 : ℝ) ^ k) :=
+    ae_all_iff.mpr fun k => hav ((1 / 2 : ℝ) ^ k)
+  filter_upwards [hdy] with ω hω hmesh hcurve hmult
+  exact hcl R hR0 hRρ hRA s₀ hs₀ hs₁ Ω S hS hGp hCp hEp Ew hEwm hEwp ε hε ω hmesh hcurve hmult hω
+
+/-- **`ShellChainCoreStmt` from the pointwise one-test input** (the variant of `shellChainCoreStmt_of_oneTestOrderR` that
+the written argument supports): through `shellOneTestOrderAeStmt_of_pointwise` and `shellChainCoreStmt_of_oneTestOrder`. -/
+theorem shellChainCoreStmt_of_oneTestPointwise {𝒮 : SpaceFillingSLEModel} (h : ShellOneTestPointwiseStmt 𝒮) :
+    ShellChainCoreStmt 𝒮 :=
+  shellChainCoreStmt_of_oneTestOrder (shellOneTestOrderAeStmt_of_pointwise h)
+
 end Lemma68ShellHoneInst
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68ShellHoneInst.shellOneTestOrderAeRStmt_of_ae
+#print axioms MatedCRT.Lemma68ShellHoneInst.shellOneTestOrderAeStmt_of_pointwise
+#print axioms MatedCRT.Lemma68ShellHoneInst.shellChainCoreStmt_of_oneTestPointwise
