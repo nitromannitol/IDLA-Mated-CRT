@@ -25,9 +25,8 @@ def FrozenDiscreteHolderContinuityCorrected (𝒮 : SpaceFillingSLEModel) : Prop
 /-- FIRST-PASS FROZEN. Regular exit of planar Brownian motion from a disk: almost surely, immediately after the first
 exit time from `ball z r` the path makes an outward radial excursion (`0 < ⟪b(τ) - z, b(t) - b(τ)⟫` for arbitrarily small
 `t > τ`). Source: Mörters–Peres, *Brownian Motion* (Cambridge 2010), Theorem 2.7 and Theorem 2.16 (strong Markov property at
-the exit time and Blumenthal's 0-1 law; standard). The statement is about planar Brownian motion only, not about this
-Truth check UNCLEAR (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md §6): the body of BrownianOutwardExcursionAtExitStep is absent from the checked source; the fixed-disk and simultaneous-in-radius assertions have different truth values.
-paper's objects. Used by: firstPass_3_6. -/
+the exit time and Blumenthal's 0-1 law; standard). The statement is about planar Brownian motion only, not about this paper's objects.
+Truth check TRUE (ChatGPT, batch follow-up turn 2, notes/fp-gaps/CHATGPT-idla-frozen-batch.md, "Follow-up (turn 2)" table, row BrownianOutwardExcursionAtExitStep; supersedes the turn-1 UNCLEAR of 02:54 UTC, §6): the disk and starting point are fixed before the almost-sure quantifier. Used by: firstPass_3_6. -/
 def FrozenBrownianOutwardExcursionAtExit : Prop :=
   BrownianOutwardExcursionAtExitStep
 
