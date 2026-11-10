@@ -1,6 +1,8 @@
 import MatedCRT.Steps.Sec1.Convergence
 import MatedCRT.FirstPass.Frozen.S1c
 import MatedCRT.FirstPass.S1c.Containment
+import MatedCRT.FirstPass.Frozen.S1cDivergence
+import MatedCRT.FirstPass.S1c.RadialDivergence
 
 /-!
 # First pass: `ScaledClusterExitTimeStep` (eq:btb-converge-to-inf, line 3330) by the route of fleet note G-hT (q4)
@@ -10,7 +12,7 @@ The target `ScaledClusterExitTimeStep` (Steps/Sec1/Convergence.lean:92) asserts 
 by three lemmas, all formalized here except the first:
 * `clusterExitTime_rescaled_gt` (Lemma A, deterministic): if `Λ_{2t} ⊆ B_{Rρ/3}` then `t < b T^b`.
 * `coneScaleRadius_lowerTail` (Lemma B): `P[R_b ≤ A] → 0` as `b → ∞`, from the frozen radial divergence
-  `FrozenConeRadialDivergence` (Frozen/S1c.lean) and the crossing lemma `le_of_sSup_le_crossing`.
+  `FrozenConeRadialDivergenceCorrected` (Frozen/S1cDivergence.lean) and the crossing lemma `le_of_sSup_le_crossing`.
 * `FixedTimeRadiusStep` (Lemma 1, NEW, NOT yet formalized): a measurable `M_u` with `Λ_u ⊆ B̄_{M_u}` almost surely.
 The assembly `scaledClusterExitTimeStep_of_radius` proves `ScaledClusterExitTimeStep` from `FixedTimeRadiusStep`,
 so `ScaledClusterExitTimeStep` is NOT proved until `FixedTimeRadiusStep` is.
@@ -192,7 +194,7 @@ c(e^{log A + 1}) + Q (log A + 1)` (crossing lemma), and the right-hand side is a
 theorem coneScaleRadius_lowerTail {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
     {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
     {hcirc : Ω → ℝ → ℂ → ℝ} {μ : Ω → Measure ℂ} (hfield : IsConeField γ P hC hcirc μ)
-    (hdiv : FrozenConeRadialDivergence) {A : ℝ} (hA : 0 < A) :
+    (hdiv : FrozenConeRadialDivergenceCorrected) {A : ℝ} (hA : 0 < A) :
     Tendsto (fun b : ℝ => P {ω | coneScaleRadius γ (hcirc ω) b ≤ A}) atTop (𝓝 0) := by
   obtain ⟨hP, hq, -⟩ := hfield
   have := hP
@@ -203,13 +205,22 @@ theorem coneScaleRadius_lowerTail {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
     refine Measurable.prodMk ?_ ?_
     · exact Measurable.of_eval (fun t => hq.measurable_circle _ 0 (Real.exp_pos _))
     · exact Measurable.of_eval (fun s => hq.measurable_circle _ 0 (Real.exp_pos _))
-  -- (i) almost surely the radial path diverges: transfer the frozen law through `P.map radialProcess`
+  -- (i) almost surely the radial path diverges: the corrected radial divergence (on the carrier `ν`) is transferred along
+  -- rational times to the raw cone law and then to `P` (FirstPass/S1c/RadialDivergence.lean); continuity gives all real times
   have hae : ∀ᵐ ω ∂P, Tendsto (fun s : ℝ => hcirc ω (Real.exp s) 0 + lqgQ γ * s) atTop atTop := by
-    have h1 := hdiv γ hγ hγ2 ν hν
+    have hνp : IsProbabilityMeasure ν := by
+      obtain ⟨h0, -⟩ := hν
+      exact h0
+    have := hνp
+    have h1 := ae_ratDivergence_quantumConeRadialLaw (hdiv γ hγ hγ2 ν hν)
     rw [← hlaw] at h1
     have h2 := ae_of_ae_map hmeasR.aemeasurable h1
-    filter_upwards [h2] with ω hω
-    exact tendsto_atTop_real_of_nnreal hω
+    filter_upwards [h2, hq.ae_continuousOn_circle] with ω hω hωc
+    have hω' : RatDivergence (fun q : ℚ =>
+        hcirc ω (Real.exp (((q : ℝ).toNNReal : ℝ≥0) : ℝ)) 0 + lqgQ γ * q) := hω
+    have hωc' : ContinuousOn (fun r : ℝ => hcirc ω r 0) (Ioi 0) :=
+      hωc.comp (continuousOn_id.prodMk (continuousOn_const (c := (0 : ℂ)))) (fun r hr => ⟨hr, mem_univ _⟩)
+    exact tendsto_circle_of_ratDivergence (c := fun r : ℝ => hcirc ω r 0) hωc' (lqgQ γ) hω'
   -- (ii) almost surely the circle averages at the origin are continuous in the radius
   have hcont : ∀ᵐ ω ∂P, ContinuousOn (fun r : ℝ => hcirc ω r 0) (Ioi 0) := by
     filter_upwards [hq.ae_continuousOn_circle] with ω hω
@@ -254,7 +265,7 @@ theorem coneScaleRadius_lowerTail {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
 NOT yet formalized). For fixed `t > 0`: `{b T^b ≤ t} ⊆ {Λ_{2t} ⊄ B̄_{M}} ∪ {M > n} ∪ {R_b ≤ 3n/ρ}` up to an
 a.s. null set (Lemma A with `M ≤ n` and `R_b > 3n/ρ`), so `P[b T^b ≤ t] ≤ P[M > n] + P[R_b ≤ 3n/ρ]`; choose `n`,
 then `b`. -/
-theorem scaledClusterExitTimeStep_of_radius (hdiv : FrozenConeRadialDivergence) (hR : FixedTimeRadiusStep) :
+theorem scaledClusterExitTimeStep_of_radius (hdiv : FrozenConeRadialDivergenceCorrected) (hR : FixedTimeRadiusStep) :
     ScaledClusterExitTimeStep := by
   intro γ hγ hγ2 ρ hρ hρ1 Ω _ P hC hcirc μ hfield Λ hΛ t ht
   have := hfield.1
@@ -345,8 +356,8 @@ theorem fixedTimeRadiusStep_of_frozen (hF1 : FrozenUniversalMeasurabilityOfAnaly
   fixedTimeRadiusBody_of_frozen hF1 hF2 hF3
 
 /-- FIRST-PASS: `ScaledClusterExitTimeStep` (hT, eq:btb-converge-to-inf) from the frozen inputs: the cone radial
-divergence (`FrozenConeRadialDivergence`, staged) and the three frozen inputs of Lemma 1. -/
-theorem scaledClusterExitTimeStep_fp (hdiv : FrozenConeRadialDivergence)
+divergence (`FrozenConeRadialDivergenceCorrected`, staged) and the three frozen inputs of Lemma 1. -/
+theorem scaledClusterExitTimeStep_fp (hdiv : FrozenConeRadialDivergenceCorrected)
     (hF1 : FrozenUniversalMeasurabilityOfAnalytic) (hF2 : FrozenLQGTestIntegralMeasurable)
     (hF3 : FrozenDiskGreenNonnegCont) : ScaledClusterExitTimeStep :=
   scaledClusterExitTimeStep_of_radius hdiv (fixedTimeRadiusStep_of_frozen hF1 hF2 hF3)

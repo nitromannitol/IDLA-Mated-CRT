@@ -48,7 +48,7 @@ theorem firstPass_1_4 (𝒮 : SpaceFillingSLEModel)
     (h35 : DiscreteDirichletProblemStmt 𝒮)
     (h42 : DivSandpileLowerBoundStmt 𝒮) (h51 : IDLALowerBoundStmt 𝒮) (h61 : IDLAUpperBoundStmt 𝒮)
     (h23 : ConeHarmonicBallsStmt)
-    (hdiv : FrozenConeRadialDivergence) (hF1 : FrozenUniversalMeasurabilityOfAnalytic)
+    (hdiv : FrozenConeRadialDivergenceCorrected) (hF1 : FrozenUniversalMeasurabilityOfAnalytic)
     (hF2 : FrozenLQGTestIntegralMeasurable) (hF3 : FrozenDiskGreenNonnegCont) :
     ConvergenceOfIDLAStmt 𝒮 := by
   have h34 : IntegralConvergenceGreenFunctionStmt 𝒮 :=
@@ -78,7 +78,7 @@ theorem firstPass_1_6 (𝒮 : SpaceFillingSLEModel)
     (h35 : DiscreteDirichletProblemStmt 𝒮)
     (h42 : DivSandpileLowerBoundStmt 𝒮) (h51 : IDLALowerBoundStmt 𝒮) (h61 : IDLAUpperBoundStmt 𝒮)
     (h23 : ConeHarmonicBallsStmt)
-    (hdiv : FrozenConeRadialDivergence) (hF1 : FrozenUniversalMeasurabilityOfAnalytic)
+    (hdiv : FrozenConeRadialDivergenceCorrected) (hF1 : FrozenUniversalMeasurabilityOfAnalytic)
     (hF2 : FrozenLQGTestIntegralMeasurable) (hF3 : FrozenDiskGreenNonnegCont) :
     ConvergenceOfDivSandpileStmt 𝒮 := by
   have h34 : IntegralConvergenceGreenFunctionStmt 𝒮 :=
