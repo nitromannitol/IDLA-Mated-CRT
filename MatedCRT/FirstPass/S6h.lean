@@ -53,7 +53,7 @@ The guarded uniform exit bound `probTendsToOne_lemma68_guarded` with the schedul
 `configuration_le_pow_concrete`. The containment `hC12` (write-up C12) is DISCHARGED here by `Lemma68C12.concreteC12_killed`
 (z10, `S6m.lean`). Named inputs: the environment `hEnv` (η continuous and proper), the local finiteness `hlf`, the cell
 adjacency `hadj` of the multiplicity, the cell-size input `hmesh` (the diameters of the cells meeting `B_ρ` are at most
-`Δ(p,r)/100` for `r ∈ [α ε, dd ω]`; the cell-size estimate Draft `CellSizeEstimateStmt`, Draft/Section2.lean:131, with
+`min (Δ(p,r)/100) (c0 Δ(p,r))` for `r ∈ [α ε, dd ω]`, the scale `c0 Δ` being the one of `stateHdiam`; the cell-size estimate Draft `CellSizeEstimateStmt`, Draft/Section2.lean:131, with
 the exponent comparison on `ω₀`), the per-state inputs `hstate` (write-up C4, `StateTestInputs`), the cutoffs `hRρ`
 (`R ≤ ρ/100`) and `hR1000` (`R ≤ 1000^(-1/ζ)`; implied by `R ≤ r0Min` via `Cutoff.r0Min_le_zeta`), and `0 < s₀`, `0 < ρ`,
 `c0 < 1/8`. -/
@@ -74,7 +74,7 @@ theorem probTendsToOne_lemma68_concrete {Ω : Type} [MeasurableSpace Ω] {P : Me
       (cell ε (S.η ω) j ∩ cell ε (S.η ω) k).Nonempty)
     (hmesh : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, ∀ r : ℝ, α ε ≤ r → r ≤ dd ω → ∀ k : ℤ,
       (cell ε (S.η ω) k ∩ Metric.ball (0 : ℂ) ρ).Nonempty →
-        Metric.diam (cell ε (S.η ω) k) ≤ Lemma68Scales.Delta p r / 100)
+        Metric.diam (cell ε (S.η ω) k) ≤ min (Lemma68Scales.Delta p r / 100) (c0 * Lemma68Scales.Delta p r))
     (hstate : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, ∀ r : ℝ, α ε ≤ r → r ≤ dd ω → ∀ i : Config68, FullAdm S ρ s₀ γ ε ω r i →
       ∃ Good : ℤ → Prop, Lemma68Concrete.StateTestInputs (S.mult ε ω) i.a ε (S.η ω) p r (good ε ω) (↑i.A : Set ℤ)
         qStar c0 Good) :
@@ -115,7 +115,8 @@ theorem probTendsToOne_lemma68_concrete {Ω : Type} [MeasurableSpace Ω] {P : Me
       rw [hF0]
       exact cellVertices_mono_c12 (thickening_fill_subset_ball_c12 (ε := ε) (r := r) hρ0 hr4 hcl)
     exact Lemma68C12.concreteC12_killed (d := Lemma68Scales.Delta p r / 100) (good ε ω) hε hη hproper hp0 hr0 hr1 hpζ
-      hcut hrρ hlf' hcons (hadj ε hε ω hω) hK hKb le_rfl (hmesh ε hε ω hω r hαr hrd) hF
+      hcut hrρ hlf' hcons (hadj ε hε ω hω) hK hKb le_rfl
+      (fun k hk => (hmesh ε hε ω hω r hαr hrd k hk).trans (min_le_left _ _)) hF
       ⟨by linarith [hadm.1.1], by linarith [hadm.1.2]⟩
   exact Lemma68Final.probTendsToOne_uniform_half_guarded hE hG hα hdd hq0 hq1 hζ hζ' hR
     (fun ε ω r i => FullAdm S ρ s₀ γ ε ω r i) (exitQ S)
