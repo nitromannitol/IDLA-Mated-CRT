@@ -11,11 +11,16 @@ Bridge note `notes/fp-gaps/CHATGPT-z9-6-8-bridge.md` §3 (Steps B–F) and the t
 `τ_{N+1} = nextExit W τ_N` are the test times `T_j` of (C3) when the window `W (X_{T_j})` is the cell interval of the
 test disk. The passing events `S_N` of `SuccessiveExitStop` are the complements of the failure events `H_N`.
 
-This route uses `SuccessiveExitStop.srwLaw_successive_exit_le_pow` (q2, proved): the strong Markov property at the
-successive exit times is inside that theorem, so no conditional expectation, stopping σ-algebra or padding is needed.
-Its inputs are: the per-state test bound `hc` (printed_test_bound in `FirstPass/S4S6c/PerTest68.lean`, the write-up
-B18/C15 bound with the uniform constant), the start-state invariant `hSY` (the C6 invariant of the write-up), and the
-almost-sure containment `hC12` (C12: `T_N < τ_U` almost surely), which are named inputs of this file. -/
+This route uses `SuccessiveExitStop.srwLaw_successive_exit_le_pow` (q2, proved), which applies the strong Markov property
+at the outer exit times `τ_N` only. The window at `τ_N` is a function of the vertex `X_{τ_N}`, as C3 requires.
+Its inputs are: the per-state outer test bound `hc` (the write-up C15/B18 bound for the outer window `W y`, uniform
+constant), the start-state invariant `hSY` (C6), and the almost-sure containment `hC12` (C12: `T_N < τ_U` a.s.).
+
+CAVEAT (checked against write-up C4, lines 810–830): `printed_test_bound` (`FirstPass/S4S6c/PerTest68.lean`) is NOT the
+outer per-state bound. It bounds the local test from `b_j = X_{S_j}`, where `S_j` is the exit from `I(B_{4R_j/3}(z_j))`,
+with window `I(B_{R_j/4}(η(b_j)))`. Deriving `hc` for the outer window needs the strong Markov property at `S_j` (the
+tower step of write-up lines 836–860), which is the same content as the conditional step `hstep` of `S6h.lean`. So this
+route does not remove that step; it only replaces the conditional-expectation form by a per-state form. -/
 
 open MeasureTheory Set
 open scoped ENNReal
