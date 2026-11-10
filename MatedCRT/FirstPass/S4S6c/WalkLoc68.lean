@@ -97,8 +97,43 @@ theorem hb_ae_of_walk_loc {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (h
       shellHit_interior_of_mesh_loc hε Kset hd hK hKb hr hrρ hρ hmesh k x (hlam k hk) (hx hxm) t ht
   exact Lemma68HoneExitGeom.hb_ae_of_walk hη Kset m a n hdeg hadj hZ hhit
 
+
+/-- **`hEl` almost surely, with the ball mesh.** Copy of `hEl_ae_of_walk` (HoneGoodEventAe68.lean:196): the shell
+centres are eligible for almost every walk. The univ-form mesh is replaced by the ball mesh on `ball 0 ρmesh`, and the
+gap `hgap` gives `ρ ≤ ρmesh`. The mesh is used only where `shell_fin_of_path_loc` uses it, on the cells meeting
+`ball 0 ρ`, so the mesh restricted to `ball 0 ρ` is what is passed on. -/
+theorem hEl_ae_of_walk_loc {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (hε : 0 < ε)
+    {Θ F0 : Finset ℤ} {ρ r d a s : ℝ} {Rf : ℂ → ℝ} {A : Set ℤ} {τU : (ℕ → ℤ) → ℕ∞} {n : ℕ}
+    {m : ℤ → ℤ → ℕ} {s0 : ℤ} {ρmesh : ℝ}
+    (hr : 0 < r) (hrρ : r ≤ ρ / 4) (hd : 0 < d)
+    (hds : d ≤ d ^ a) (hs4 : d ^ a ≤ r / 4000) (hNs : 20 * ((n + 1 : ℕ) : ℝ) * d ^ a ≤ r / 20) (hs : s = d ^ a)
+    (hgap : d / 100 ≤ ρmesh - ρ)
+    (hmesh : CellDiamLe ε η (d / 100) (Metric.ball (0 : ℂ) ρmesh))
+    (hF0 : (↑F0 : Set ℤ) = cellVertices ε η (Metric.ball (0 : ℂ) ρ))
+    (h0 : (0 : ℂ) ∈ fillCells ε η ↑Θ) (hKb : fillCells ε η ↑Θ ⊆ Metric.ball (0 : ℂ) (ρ / 2))
+    (hRf : ∀ z ∈ shortEligible ρ d a, d ≤ Rf z ∧ Rf z ≤ d ^ a)
+    (hPath : ∀ᵐ x ∂srwLaw m s0, (∀ j : ℕ, (cell ε η (x j) ∩ cell ε η (x (j + 1))).Nonempty) ∧
+      (cell ε η (x 0) ∩ frontier (Metric.thickening (r / 2) (fillCells ε η ↑Θ))).Nonempty ∧
+      vExitTime (Lemma68Admissible.killed ε η Θ F0 r) x ≠ ⊤) :
+    ∀ k ≤ n, ∀ᵐ x ∂srwLaw m s0,
+      x ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η (fillCells ε η ↑Θ) r s d Rf k) τU →
+        shellCentre ε η (fillCells ε η ↑Θ) r s d k x ∈ shortEligible ρ d a := by
+  subst hs
+  have hρ : ρ ≤ ρmesh := by
+    have h0' : 0 ≤ d / 100 := by positivity
+    linarith
+  have hmeshρ : CellDiamLe ε η (d / 100) (Metric.ball (0 : ℂ) ρ) := fun k hk => by
+    obtain ⟨p, hp1, hp2⟩ := hk
+    exact hmesh k ⟨p, hp1, Metric.ball_subset_ball hρ hp2⟩
+  intro k hk
+  filter_upwards [hPath] with x hx _
+  obtain ⟨hadj, hst, hτ⟩ := hx
+  exact (MatedCRT.Lemma68ShellHdePw68.shell_fin_of_path_loc hη hε hr hrρ hd hds hs4 hNs hmeshρ hF0 h0 hKb hRf
+    hadj hst hτ k hk).2
+
 end Lemma68WalkLoc
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68WalkLoc.shellHit_interior_of_mesh_loc
 #print axioms MatedCRT.Lemma68WalkLoc.hb_ae_of_walk_loc
+#print axioms MatedCRT.Lemma68WalkLoc.hEl_ae_of_walk_loc
