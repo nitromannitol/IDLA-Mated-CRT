@@ -2,6 +2,7 @@ import Mathlib
 import MatedCRT.FirstPass.S6h
 import MatedCRT.FirstPass.S6h.Schedule
 import MatedCRT.FirstPass.S6e.Final
+import MatedCRT.FirstPass.S4S6c.Uniform68Env
 
 /-!
 # FIRST PASS: the guarded exit bound of Lemma 6.8 from the concrete configuration lemma (task fp-S6e-lemma68-C17, z9)
@@ -13,9 +14,13 @@ This file turns that bound into the probability statement `probTendsToOne_guard_
 `probTendsToOne_uniform_half_guarded` (`S6e/Final.lean`). The hypothesis `hsch` of `probTendsToOne_lemma68_guarded`
 is therefore no longer needed.
 
-Named input (a Prop, not proved here): `ConcreteGuardInputStmt 𝒮`, the probabilistic content of C4, C12 and the
-environment regularity, for each valid environment. Its existential data are the constants `(R, ζ, p, q⋆, q₀, c₀)`,
-the radius `dd`, and the events `E`, `G` (with `ProbTendsToOne S.P E`, `S.P Gᶜ = 0`) on which the inputs hold.
+Named inputs (Props, not proved here): `ConcreteGuardInputStmt 𝒮` only, namely the per-state test inputs
+`StateTestInputs` (C4) and the cell-size mesh condition `hmesh` (cells meeting `B_ρ` have diameter at most
+`Delta p r / 100` for `r ≥ 10 ε^ω₀`), each on events `E ε ∩ G` with `P(E ε)ᶜ → 0` and `P(Gᶜ) = 0`.
+Derived here: the containment C12 (`Lemma68Config.probTendsToOne_lemma68_concrete`, which proves C12 from
+`Lemma68Concrete.concreteC12_killed`), the environment regularity (`Uniform68Env.ae_envInputs`: continuity and
+properness of `η`, adjacency of cells), the local finiteness and consecutive adjacency of the multiplicities
+(`Uniform68Env.envAt`), and the cap `R ≤ ρ/100` (by replacing `R` and `dd` with their minima with `ρ/100`).
 -/
 
 open MeasureTheory Filter Topology
@@ -50,10 +55,23 @@ theorem probTendsToOne_guard_concrete {Ω : Type} [MeasurableSpace Ω] (S : Mate
     (configuration_le_pow_concrete S ρ s₀ γ E G α dd R ζ p qStar q0 c0 good hq0def hq hq1s hq9 hp hpζ hζ hα hdd hR
       hR1000 hc0 hEnv hlf hstate hC12)
 
-/-- Named input (probabilistic content of write-up C4, C12 and of the environment regularity): for every valid
-environment, there are a radius `dd` and events `E`, `G` with `P(E)` tending to one and `P(Gᶜ) = 0`, on which the
-per-state inputs `StateTestInputs` (C4), the containment `ConcreteC12` (C12), the continuity and escape of `η`, and the
-local finiteness of the multiplicities hold, with the guard radius `α ε = 10 ε^ω₀`. Not proved here. -/
+/-- The environment regularity used by the walk-level inputs, for one `ω`: `η` is continuous and proper, and for
+every `ε > 0` adjacent vertices of the mated-CRT map have meeting cells (Duplantier-Sheffield mating of trees). -/
+abbrev EnvRegular {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ω : Ω) : Prop :=
+  Continuous (S.η ω) ∧ Filter.Tendsto (S.η ω) (Filter.cocompact ℝ) (Filter.cocompact ℂ) ∧
+    ∀ ε : ℝ, 0 < ε → ∀ j k : ℤ, S.mult ε ω j k ≠ 0 → (cell ε (S.η ω) j ∩ cell ε (S.η ω) k).Nonempty
+
+/-- `EnvRegular` holds almost surely (`Uniform68Env.ae_envInputs`, proved in the repository). -/
+theorem ae_envRegular {𝒮 : SpaceFillingSLEModel} {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (hS : S.IsValid 𝒮 γ) :
+    S.P {ω | ¬ EnvRegular S ω} = 0 :=
+  ae_iff.1 (Uniform68Env.ae_envInputs hγ0 hγ2 hS)
+
+/-- Named input (probabilistic content of write-up C4 and of the cell-size mesh, for each valid environment): there
+are a radius `dd` and events `E`, `G` with `P(E)` tending to one and `P(Gᶜ) = 0`, on which the per-state inputs
+`StateTestInputs` (C4) and the mesh condition `hmesh` (cells meeting `B_ρ` have diameter at most `Delta p r / 100`
+for `r ≥ 10 ε^ω₀`) hold, with the guard radius `α ε = 10 ε^ω₀`. Not proved here. The regularity of `η`, the local
+finiteness of the multiplicities and the containment C12 are derived (see `guardProb_of_concrete`). -/
 def ConcreteGuardInputStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ ω₀ : ℝ, 0 < ω₀ ∧ ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∃ R ζ p qStar q0 c0 : ℝ, 0 < R ∧ R ≤ ρ / 4 ∧ R ≤ Lemma68Cutoff.rAmp q0 ζ ∧ R ≤ (1000 : ℝ) ^ (-1 / ζ) ∧
@@ -64,15 +82,12 @@ def ConcreteGuardInputStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∃ dd : Ω → ℝ, Measurable[S.fieldSigma] dd ∧ (∀ ω, 0 < dd ω) ∧ (∀ ω, dd ω ≤ R) ∧
   ∃ (E : ℝ → Set Ω) (G : Set Ω) (good : ℝ → Ω → ℂ → ℕ → Prop),
     ProbTendsToOne S.P E ∧ S.P Gᶜ = 0 ∧
-    (∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G,
-      Continuous (S.η ω) ∧ Filter.Tendsto (S.η ω) (Filter.cocompact ℝ) (Filter.cocompact ℂ)) ∧
-    (∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, IsLocallyFiniteMult (S.mult ε ω) ∧ ∀ k : ℤ, S.mult ε ω k (k + 1) ≠ 0) ∧
+    (∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ dd ω → ∀ k : ℤ,
+      (cell ε (S.η ω) k ∩ Metric.ball (0 : ℂ) ρ).Nonempty →
+        Metric.diam (cell ε (S.η ω) k) ≤ Lemma68Scales.Delta p r / 100) ∧
     (∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ dd ω → ∀ i : Config68,
       FullAdm S ρ s₀ γ ε ω r i →
-        ∃ Good : ℤ → Prop, StateTestInputs (S.mult ε ω) i.a ε (S.η ω) p r (good ε ω) (↑i.A : Set ℤ) qStar c0 Good) ∧
-    (∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ dd ω → ∀ i : Config68,
-      FullAdm S ρ s₀ γ ε ω r i →
-        ConcreteC12 (S.mult ε ω) i.a ε (S.η ω) p r (good ε ω) (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r))
+        ∃ Good : ℤ → Prop, StateTestInputs (S.mult ε ω) i.a ε (S.η ω) p r (good ε ω) (↑i.A : Set ℤ) qStar c0 Good)
 
 /-- The guarded exit bound as a probability statement, for every valid environment (write-up (17)); the form used by
 `Lemma68Uniform.uniform_of_guard` (S6e/Uniform.lean). -/
@@ -86,21 +101,56 @@ def GuardProbStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
     ProbTendsToOne S.P fun ε => {ω | ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ dd ω → ∀ i : Config68,
       guardedExit (fun ε ω r i => FullAdm S ρ s₀ γ ε ω r i) (exitQ S) ε ω r i ≤ 1 / 2}
 
-/-- The concrete input gives the guard probability statement `GuardProbStmt`. -/
+/-- The concrete input gives the guard probability statement `GuardProbStmt`. The cap `R ≤ ρ/100` required by the
+configuration lemma is obtained by replacing `R` and `dd` with `min R (ρ/100)` and `min dd (min R (ρ/100))`. -/
 theorem guardProb_of_concrete (𝒮 : SpaceFillingSLEModel) (hC : ConcreteGuardInputStmt 𝒮) :
     GuardProbStmt 𝒮 := by
   intro γ hγ0 hγ2
   obtain ⟨ω₀, hω₀, hc⟩ := hC γ hγ0 hγ2
   refine ⟨ω₀, hω₀, fun ρ hρ0 hρ1 => ?_⟩
-  obtain ⟨R, ζ, p, qStar, q0, c0, hR0, hRρ, hRz, hR1000, hζ0, hζ1, hq00, hq01, hq0d, hq0', hq1s, hq9, hp3,
+  obtain ⟨R, ζ, p, qStar, q0, c0, hR0, hRρ4, hRz, hR1000, hζ0, hζ1, hq00, hq01, hq0d, hq0', hq1s, hq9, hp3,
     hpζ, hc0, hc2⟩ := hc ρ hρ0 hρ1
-  refine ⟨R, ζ, p, qStar, q0, hR0, hRρ, hRz, hζ0, hζ1, hq00, hq01, hq0d, hq0', hq9, hp3, ?_⟩
+  refine ⟨min R (ρ / 100), ζ, p, qStar, q0, lt_min hR0 (by positivity), (min_le_right _ _).trans (by linarith),
+    (min_le_left _ _).trans hRz, hζ0, hζ1, hq00, hq01, hq0d, hq0', hq9, hp3, ?_⟩
   intro s₀ hs₀0 hs₀1 Ω _ S hS
-  obtain ⟨dd, hdm, hdpos, hddR, E, G, good, hE, hG, hEnv, hlf, hstate, hC12⟩ := hc2 s₀ hs₀0 hs₀1 Ω S hS
-  refine ⟨dd, hdm, hdpos, hddR, ?_⟩
-  exact probTendsToOne_guard_concrete S ρ s₀ γ hE hG (α := fun ε => 10 * ε ^ ω₀)
-    (fun ε hε => by positivity) hddR good hq0d hq0' hq1s hq9 hp3 hpζ hζ0 hζ1 hq00 hq01 hRz hR1000
-    hc0 hEnv hlf hstate hC12
+  obtain ⟨dd, hdm, hdpos, hddR, E, G, good, hE, hG, hmesh, hstate⟩ := hc2 s₀ hs₀0 hs₀1 Ω S hS
+  have hG' : S.P (G ∩ {ω | EnvRegular S ω})ᶜ = 0 := by
+    rw [Set.compl_inter]
+    exact measure_union_null hG (ae_envRegular hγ0 hγ2 hS)
+  have hsub : ∀ ε : ℝ, ∀ ω ∈ E ε ∩ (G ∩ {ω | EnvRegular S ω}), ω ∈ E ε ∩ G ∧ EnvRegular S ω :=
+    fun ε ω hω => ⟨⟨hω.1, hω.2.1⟩, hω.2.2⟩
+  refine ⟨fun ω => min (dd ω) (min R (ρ / 100)), hdm.min measurable_const,
+    fun ω => lt_min (hdpos ω) (lt_min hR0 (by positivity)), fun ω => min_le_right _ _, ?_⟩
+  have hEnv : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ (G ∩ {ω | EnvRegular S ω}),
+      Continuous (S.η ω) ∧ Filter.Tendsto (S.η ω) (Filter.cocompact ℝ) (Filter.cocompact ℂ) :=
+    fun ε _ ω hω => ⟨(hsub ε ω hω).2.1, (hsub ε ω hω).2.2.1⟩
+  have hlf : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ (G ∩ {ω | EnvRegular S ω}),
+      IsLocallyFiniteMult (S.mult ε ω) ∧ ∀ k : ℤ, S.mult ε ω k (k + 1) ≠ 0 := by
+    intro ε hε ω hω
+    obtain ⟨h1, h2, -⟩ := Uniform68Env.envAt S hε ω (hsub ε ω hω).2.1 (hsub ε ω hω).2.2.1
+      (fun ε' hε' j k hjk => (hsub ε ω hω).2.2.2 ε' hε' j k hjk)
+    exact ⟨h1, h2⟩
+  have hadj : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ (G ∩ {ω | EnvRegular S ω}), ∀ j k : ℤ, S.mult ε ω j k ≠ 0 →
+      (cell ε (S.η ω) j ∩ cell ε (S.η ω) k).Nonempty :=
+    fun ε hε ω hω j k hjk => (hsub ε ω hω).2.2.2 ε hε j k hjk
+  have hmesh' : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ (G ∩ {ω | EnvRegular S ω}), ∀ r : ℝ,
+      10 * ε ^ ω₀ ≤ r → r ≤ min (dd ω) (min R (ρ / 100)) → ∀ k : ℤ,
+      (cell ε (S.η ω) k ∩ Metric.ball (0 : ℂ) ρ).Nonempty →
+        Metric.diam (cell ε (S.η ω) k) ≤ Lemma68Scales.Delta p r / 100 :=
+    fun ε hε ω hω r h1 h2 => hmesh ε hε ω (hsub ε ω hω).1 r h1 (h2.trans (min_le_left _ _))
+  have hstate' : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ (G ∩ {ω | EnvRegular S ω}), ∀ r : ℝ,
+      10 * ε ^ ω₀ ≤ r → r ≤ min (dd ω) (min R (ρ / 100)) → ∀ i : Config68, FullAdm S ρ s₀ γ ε ω r i →
+        ∃ Good : ℤ → Prop, StateTestInputs (S.mult ε ω) i.a ε (S.η ω) p r (good ε ω) (↑i.A : Set ℤ) qStar c0 Good :=
+    fun ε hε ω hω r h1 h2 i hi => hstate ε hε ω (hsub ε ω hω).1 r h1 (h2.trans (min_le_left _ _)) i hi
+  exact Lemma68Config.probTendsToOne_lemma68_concrete (P := S.P) S ρ s₀ γ (E := E) hE
+    (G := G ∩ {ω | EnvRegular S ω}) hG' (α := fun ε => 10 * ε ^ ω₀) (fun ε hε => by positivity)
+    (dd := fun ω => min (dd ω) (min R (ρ / 100))) (R := min R (ρ / 100)) (fun ω => min_le_right _ _) good hρ0
+    hs₀0 (min_le_right _ _) hq00 hq01 hζ0 hζ1 ((min_le_left _ _).trans hRz) ((min_le_left _ _).trans hR1000) hc0
+    hq0d hq0' hq1s hq9 hp3 hpζ hEnv hlf hadj hmesh' hstate'
 
 end Lemma68Guard
+
+#print axioms MatedCRT.Lemma68Guard.guardProb_of_concrete
+#print axioms MatedCRT.Lemma68Guard.probTendsToOne_guard_concrete
+
 end MatedCRT
