@@ -20,8 +20,10 @@ Named premises, NOT derivable from the clauses of `ShellPtPremCG` (reported in r
 * `hcapω`: an `∃ t` giving the volume cutoff at `ω` (the `∃ t` clause of `ShellPtPremCG`) TOGETHER WITH the radius cap
   `r ≤ (t / (8 * 2 ^ shortExp ζ)) ^ (1 / (1 + ζ))`. The cap is missing from `ShellPtPremCG`: `t` is only given by an
   existential, while `R` is quantified before `ω`, so no choice of `t` is controlled by the clauses.
-* `hEl`: the leaf centres are eligible (the body of `ShellCGResEl`, ShellCoreCG68.lean:349).
-* `hc` (C-residual only): the exit-vertex centre bound (the `hc` binder of `hVolC_pw_g`).
+* `hEl`: the leaf centres are eligible (the body of `ShellCGResEl`, ShellCoreCG68.lean:324 at b51e0dc).
+* `hc` (C-residual only): the exit-vertex centre bound, in the form of the body of `ShellCGResX1`
+  (ShellCoreCG68.lean:430 at b51e0dc, with `rhoCell68 ρ` in place of `1`; `rhoCell68 ρ ≤ 1` weakens it to the
+  `hc` binder of `hVolC_pw_g`).
 
 `hRr` (the window lies in `[r², 1]` on the leaf) is NOT a named premise: it is derived from `hEl` by
 `windowRfT_bounds` and `dyadicD_mem`.
@@ -61,9 +63,9 @@ theorem resVolC_pt {γ ω₀ ζ ρ CG C R s₀ ε r : ℝ} {Ω : Type} [Measurab
         x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
           (windowRfT S.μ ρ (shortExp ζ) (shellC0 CG) C (dyadicD r) ω) k →
           ‖vertexPoint ε (S.η ω) (x (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
-              (dyadicD r ^ shortExp ζ) (dyadicD r) (windowRfT S.μ ρ (shortExp ζ) (shellC0 CG) C (dyadicD r) ω) k x).toNat)‖ <
-            1 - windowRfT S.μ ρ (shortExp ζ) (shellC0 CG) C (dyadicD r) ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
-              (dyadicD r ^ shortExp ζ) (dyadicD r) k x) / 4) :
+              (dyadicD r ^ shortExp ζ) (dyadicD r) ((windowRfT S.μ ρ (shortExp ζ) (shellC0 CG) C (dyadicD r) ω)) k x).toNat)‖ <
+            Lemma68HoneCellGood.rhoCell68 ρ - (windowRfT S.μ ρ (shortExp ζ) (shellC0 CG) C (dyadicD r) ω)
+              (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x) / 4) :
     Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
       ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
         x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
@@ -85,6 +87,7 @@ theorem resVolC_pt {γ ω₀ ζ ρ CG C R s₀ ε r : ℝ} {Ω : Type} [Measurab
   have ha : shortExp ζ ≤ 1 := by unfold shortExp; linarith
   have ha0 : 0 ≤ shortExp ζ := by unfold shortExp; linarith
   have hda : dyadicD r ^ shortExp ζ ≤ 1 := Real.rpow_le_one (dyadicD_pos r).le (dyadicD_le_one r) ha0
+  have hρc : Lemma68HoneCellGood.rhoCell68 ρ ≤ 1 := (Lemma68HoneCellGood.rhoCell68_lt_one hρ1).le
   -- the window bounds `r² ≤ W ≤ 1` on the leaf, from the eligibility `hEl` (`windowRfT_bounds`, `dyadicD_mem`)
   exact MatedCRT.Lemma68HVolFullPw.hVolC_pw_g (s1 := shellS1CG γ CG) (c0W := shellC0 CG) (t := t) (ζ := ζ)
     (γ := γ) (ρ := ρ) (C := C) (s₀ := s₀) (ε := ε) (r := r) S (shellKCG γ ρ ω₀ ζ CG hγ0 hγ2 hρ0 hρ1 hω₀ hζ0 hζ1 hCG)
@@ -95,7 +98,7 @@ theorem resVolC_pt {γ ω₀ ζ ρ CG C R s₀ ε r : ℝ} {Ω : Type} [Measurab
             (hx hpre)).1,
         le_trans (windowRfT_bounds S.μ ρ (shortExp ζ) (shellC0 CG) C (dyadicD r) (dyadicD_pos r) (dyadicD_le_one r) ha ω
             (hx hpre)).2 hda⟩)
-    hEl hc hadm
+    hEl (fun hA k hk => (hc hA k hk).mono fun x hx hpre => lt_of_lt_of_le (hx hpre) (by linarith [hρc])) hadm
 
 /-- **Volume residual `hVolY` of the CG route, pointwise at one `ω` (`ShellCGResVolY`, ShellCoreCG68.lean:405).**
 The annulus volume bound on `ball 0 (rhoCell68 ρ - W/4)`, from `hVolY_pw_g` on the larger ball `ball 0 (1 - W/4)`
