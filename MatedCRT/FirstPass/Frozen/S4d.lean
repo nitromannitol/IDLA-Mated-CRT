@@ -18,7 +18,8 @@ open Set
 `U ⊆ ℂ` and `z ∈ U`, `U \ {z}` is connected. Source: standard plane topology (the complement of a point in a connected
 open subset of the plane is connected, since a path through `z` can be rerouted inside a small disc about `z`);
 standard; locator pending (e.g. Newman, Elements of the Topology of Plane Sets of Points; or Armitage-Gardiner,
-Classical Potential Theory, §1). Used by: `strictGapDeterministicComparison_of_frozen`
+Classical Potential Theory, §1). Truth check TRUE (ChatGPT, 00:37 UTC; notes/fp-gaps/CHATGPT-frozen-truth-S4d-S11g.md,
+section 1). Used by: `strictGapDeterministicComparison_of_frozen`
 (FirstPass/S4d/DeterministicComparison.lean), to apply the strong minimum principle on `Λ_s \ {0}`. -/
 def FrozenPunctureConnected : Prop :=
   ∀ U : Set ℂ, IsOpen U → IsConnected U → ∀ z ∈ U, IsConnected (U \ {z})
