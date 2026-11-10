@@ -17,6 +17,7 @@ open MeasureTheory HarmonicBalls
 have intersecting cells `η([a - ε, a])`, `η([b - ε, b])`. Source: the mating-of-trees fact of Duplantier-Miller-Sheffield
 (DMS14, Lemma 8.8 with the identification of Definitions 1.1 and 1.2, DMS14 Theorem 1.9); standard; locator pending.
 Same statement as the Step `AdjacentCellsMeetAeStep` (Steps/Infra/MatingOfTrees.lean:30).
+Truth check TRUE for every model (ChatGPT, 02:35 UTC; notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md §1).
 Used by: firstPass_2_13. -/
 def FrozenAdjacentCellsMeetAe (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
