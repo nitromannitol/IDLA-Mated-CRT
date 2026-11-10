@@ -88,9 +88,9 @@ def FaithfulChanceOfBeingAbsorbedStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
 /-- **Uniform-in-`s₀` strengthening of the Lemma 6.7 escape estimate; common core of Lemmas 6.7, 6.8 and 6.9; not a
 printed statement.** The printed Lemmas 6.7 and 6.8 choose `s₁, s₂` after `s₀`
 (`FaithfulConstantOrderLowerBoundStmt`, `FaithfulConstantOrderLowerBoundDivStmt`). The printed Lemma 6.9 proof uses one
-`s₂` for all walkers and all `s₀` (CHATGPT-6-9-printed-proof.md, "Inputs used"; LEMMA68.md proves the uniform choices
-`s₂ = 1/2`, with `s₁` small and depending only on `γ`, not `s₁ = 1/4`: chat 183, the [C22] covering repair). Here `s₁, s₂` are chosen after `ρ` and before `s₀`; the body is that of
-`FaithfulConstantOrderLowerBoundStmt`. A rate `s₃` uniform in `s₀` needs this form: the walker absorption bound
+`s₂` for all walkers and all `s₀` (CHATGPT-6-9-printed-proof.md, "Inputs used"). Here `s₁, s₂` are chosen after `ρ` and
+before `s₀`, and the body is that of `FaithfulConstantOrderLowerBoundStmt`; `s₁ = s₁(ρ,γ)` and `s₂ = 1/2` are the
+constants of correction [C26] (the earlier `s₁ = 1/4` is withdrawn: chat 183, the [C22] covering repair). A rate `s₃` uniform in `s₀` needs this form: the walker absorption bound
 `s₂(s₀)` of the printed 6.7/6.8 only gives the rate `s₂(s₀)/4` (`AbsorptionChernoffStep`). Input of
 `firstPass_6_9_faithful`. -/
 def UniformConstantOrderLowerBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -107,7 +107,7 @@ def UniformConstantOrderLowerBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
           (n : ℕ∞) < vExitTime (cellVertices ε (S.η ω) (thickening r (fillCells ε (S.η ω) Θ))) x ∧
           x n ∈ cellVertices ε (S.η ω) (thickening r (fillCells ε (S.η ω) Θ)) \ (S' ∪ Θ)}}
 
-/-- **Lemma 6.9, faithful header, from the uniform Lemma 6.7/6.8 input** (`firstPass_6_9_faithful`). Reduction: with
+/-- **Lemma 6.9, faithful header, from the uniform Lemma 6.7 escape input** (`firstPass_6_9_faithful`). Reduction: with
 `ω₀, s₁, s₂` from `hU` (`ω₀` before `ρ`, `s₁, s₂` before `s₀`), the rate is `s₃ = s₂/4` and `s₄ = s₂/4`, `s₅ = s₁`;
 `AbsorptionChernoffStep` (proved, Proofs/Sec6/ChanceOfBeingAbsorbed/Chernoff.lean) turns the walker-absorption bound
 of the Lemma 6.7 event into the tail bound, pointwise on that event, and `ProbTendsToOne.mono'` transfers it. -/
@@ -129,11 +129,11 @@ theorem firstPass_6_9_faithful (𝒮 : SpaceFillingSLEModel) (hU : UniformConsta
     (cellVertices ε (S.η ω) (thickening r (fillCells ε (S.η ω) Θ))) s₂ (s₁ * r ^ (2 * chosenBetaMinus γ) / ε)
     hs₂0 hs₂1 (fun a' ha' S' hS' hlt => hω' a' ha' S' hS' hlt) k a hk ha
 
-/-- **Uniform form of Lemma 6.8** (NOT printed). LEMMA68.md proves Lemma 6.8 with the uniform choice `s₂ = 1/2` and
-`s₁` small depending only on `γ` (not `s₁ = 1/4`: chat 183, [C22] covering repair; the earlier value `1/4` is withdrawn),
-and reads "exits through A" as "the walk belongs to A at every
-time strictly before its exit from the indicated vertex set" (LEMMA68.md verdict). The body is that of
-`FaithfulConstantOrderLowerBoundDivStmt`; `s₁, s₂` are chosen after `ρ` and before `s₀`.
+/-- Uniform-in-`s₀` strengthening of the corrected Lemma 6.8 div body (**uniform form of Lemma 6.8**, NOT printed).
+Correction [C26] supplies this form with `s₁ = s₁(ρ,γ)` and `s₂ = 1/2`;
+only `dd` may depend on `s₀`. The body is that of `FaithfulConstantOrderLowerBoundDivStmt`; `s₁, s₂` are chosen after
+`ρ` and before `s₀`. "Exits through A" is read as "the walk belongs to A at every time strictly before its exit from the
+indicated vertex set" (LEMMA68.md verdict).
 
 This is the exact missing clause of `firstPass_6_8_faithful`. `UniformConstantOrderLowerBoundStmt` (the 6.7 body) does
 not imply it: the 6.8 event assumes only local smallness of `A` (for every ball of radius `r`), starts in
@@ -165,9 +165,10 @@ theorem firstPass_6_7_faithful (𝒮 : SpaceFillingSLEModel) (hU : UniformConsta
   obtain ⟨s₁, s₂, hs₁0, hs₁1, hs₂0, hs₂1, hbody⟩ := hU' ρ hρ0 hρ1
   exact fun s₀ hs₀0 hs₀1 => ⟨s₁, s₂, hs₁0, hs₁1, hs₂0, hs₂1, hbody s₀ hs₀0 hs₀1⟩
 
-/-- **Lemma 6.8, faithful header, from the uniform Lemma 6.8 (conditional form, superseded).** Conditional on
-`UniformConstantOrderLowerBoundDivStmt`; kept for the record. The unconditional-in-6.8 route is `firstPass_6_8_faithful`
-(localization from `UniformConstantOrderLowerBoundStmt`). -/
+/-- **Lemma 6.8, faithful header, from the uniform Lemma 6.8 div form (conditional form).** Conditional on
+`UniformConstantOrderLowerBoundDivStmt`: a direct quantifier-weakening wrapper for the strengthened [C26] div form. It is
+useful and correctly typed, even though the current closed route obtains 6.8 by localization from
+`UniformConstantOrderLowerBoundStmt` (`firstPass_6_8_faithful`). -/
 theorem firstPass_6_8_faithful_of_uniform_div (𝒮 : SpaceFillingSLEModel) (hUD : UniformConstantOrderLowerBoundDivStmt 𝒮) :
     FaithfulConstantOrderLowerBoundDivStmt 𝒮 := by
   intro γ hγ0 hγ2
