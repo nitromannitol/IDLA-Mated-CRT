@@ -439,16 +439,7 @@ theorem shellOneTest_ae_fixedR_ae {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (h
     -- operator request 65b: the full support of the measure on balls
     (hfull : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ w : ℂ, ∀ t : ℝ, 0 < t → 0 < S.μ ω (ball w t))
-    -- operator request 64e: the hit cell is interior (`hb_ae_valid_centre`; no guard)
-    (hhit : ∀ᵐ ω ∂S.P, ∀ k, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
-      x ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) (↑i.A : Set ℤ)
-          (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
-            (winRf S ρ ζ C r ω) k) (vExitTime (killed ε (S.η ω) i.Θ i.F0 r)) →
-      ∀ t : ℕ, shellHit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) k x = (t : ℕ∞) →
-        x t ∈ interiorCellVertices ε (S.η ω)
-          (ball (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x)
-            (4 * winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
-              (dyadicD r ^ shortExp ζ) (dyadicD r) k x) / 3))) :
+    :
     ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∃ Rf : ℂ → ℝ,
         ShellOneTestAt (S.mult ε ω) i.a (↑i.A : Set ℤ) (S.η ω) ε (fillCells ε (S.η ω) ↑i.Θ)
@@ -479,15 +470,27 @@ theorem shellOneTest_ae_fixedR_ae {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (h
   -- the a.s. inputs that are discharged (no guard on the environment)
   have hmultAe := hmult_ae_valid hγ0 hγ2 S hS hε
   have hEnv := Uniform68Env.ae_envInputs hγ0 hγ2 hS
-  have hbAe := Lemma68HoneExitGeom.hb_ae_valid_centre hγ0 hγ2 S hS hε
+  have hd0 : 0 < dyadicD r := lt_of_lt_of_le (pow_pos hr0 2) (Lemma68ChainGlue.dyadicD_mem hr0 hr1).1
+  have hd1 : dyadicD r ≤ 1 := by
+    have h4 : r ≤ 1 / 4 := by linarith
+    have h5 : r ^ 2 ≤ 1 / 16 := by nlinarith
+    linarith [(Lemma68ChainGlue.dyadicD_mem hr0 hr1).2]
+  have ha1 : shortExp ζ ≤ 1 := by unfold shortExp; linarith
+  have hbAe := Lemma68HoneExitGeom.hb_ae_valid_centre_mesh hγ0 hγ2 S hS hε
     (fun ω => fillCells ε (S.η ω) ↑i.Θ) (Rf := fun ω => winRf S ρ ζ C r ω)
     (τU := fun ω => vExitTime (killed ε (S.η ω) i.Θ i.F0 r)) (A := (↑i.A : Set ℤ))
-    (r := r) (s := dyadicD r ^ shortExp ζ) (d := dyadicD r) i.a (shellCount r (dyadicD r ^ shortExp ζ) - 1) hhit
+    (r := r) (s := dyadicD r ^ shortExp ζ) (d := dyadicD r) i.a (shellCount r (dyadicD r ^ shortExp ζ) - 1)
+    (fun ω => ω ∈ E ∧ Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i) hd0 hmesh
+    (by
+      filter_upwards [hEl] with ω hElω hG k hk
+      filter_upwards [hElω hG.1 hG.2 k hk] with x hx hxm
+      exact (Lemma68WindowRf.windowRfT_bounds S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) hd0 hd1 ha1 ω (hx hxm)).1)
   filter_upwards [hShell, hmultAe, hEnv, hμNull, hμFin, hTdom, hRbd, hRr, hcap, hVolC, hVolY, hGreen,
     hWalk, hCountGood, hCellGood, hRcell, hx1, hmomS, hsel, hfull, hEl, hbAe]
     with ω hShω hmω hEω hμNω hμFω hTω hRbω hRrω hcpω hVCω hVYω hGω hWω hCGω hCeω hRcω hx1ω hmSω hselω hfuω
       hElω hbω
   intro hωE hadm
+  have hb0 := hbω ⟨hωE, hadm⟩
   have hμFin' : IsFiniteMeasureOnCompacts (S.μ ω) := hμFω
   have hRr' := hRrω hωE hadm
   have hcl : ∀ B ⊆ i.A, B.Nonempty → r ≤ cRad ε (S.η ω) B ∨
@@ -527,13 +530,13 @@ theorem shellOneTest_ae_fixedR_ae {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (h
     (ρcell := Lemma68HoneCellGood.rhoCell68 ρ) (hρgap := Lemma68HoneCellGood.rhoC_lt_rhoCell68 hρ1)
     (hCellGood := hCeω hωE hadm) (hRcell := hRcω hωE hadm)
     (hωκ := hωκ) (hεcell := hεcell)
-    (hsc := hsc) (hεα := hεα) (hεmass := hεmass) (hb := hbω)
+    (hsc := hsc) (hεα := hεα) (hεmass := hεmass) (hb := hb0)
     (hx1 := hx1ω hωE hadm) (hmomS := hmSω hωE hadm) (hgood := hgood)
     (hN := fun _ _ => Filter.Eventually.of_forall fun _ _ R' z' hR' =>
       Lemma68ConstOrder.shellNcov68_spec R' z' hR')
     (hpos := hpos)
     (hdbl := fun k hk => by
-      filter_upwards [hbω k hk, hWω hωE hadm k hk, hgood k hk, hRr' k hk] with x hbx hWx hgx hRx
+      filter_upwards [hb0 k hk, hWω hωE hadm k hk, hgood k hk, hRr' k hk] with x hbx hWx hgx hRx
       intro hxm
       exact Lemma68HoneExitGeom.hdbl_of_exit_geom_path K hEω.1 hε (μ := S.μ ω)
         (Kset := fillCells ε (S.η ω) ↑i.Θ) (Rf := winRf S ρ ζ C r ω) (C_good := CG) (hr := hr0) k x
