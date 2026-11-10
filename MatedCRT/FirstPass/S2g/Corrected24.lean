@@ -25,13 +25,14 @@ namespace MatedCRT
 /-- **`ConeHalfBallClosureInsideStep` from the route-B inputs (q1, fp-S2g).** The whole-plane volume growth (B1) and the
 plateau scale invariance (fact (1)) are proved inside `coneHalfBallClosureInsideStep_fp` from `hI2` and the frozen coordinate
 rule `hK`. The remaining inputs are `hloc`, `hEx`, `hSC`, the volume growth `hVG` (`VolumeGrowthStmt`), and the two NEW
-steps `hB2` (`WholePlaneLQGModelStep`) and `hFL` (`ConeWholePlaneFieldLawStep`). -/
+steps `hB2` (`WholePlaneLQGModelStep`) and `hFL` (`ConeWholePlaneFieldLawStep`, frozen as `FrozenConeWholePlaneFieldLaw`
+in `Frozen/S2g.lean`). -/
 theorem coneHalfBallClosureInsideStep_corrected
     (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
     (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
     (hloc : HarmonicBallLocalSetStmt.{0}) (hEx : ExistenceHarmonicBallsStmt.{0})
     (hSC : ClusterStrongCompatibilityStmt.{0}) (hVG : VolumeGrowthStmt)
-    (hB2 : WholePlaneLQGModelStep) (hFL : ConeWholePlaneFieldLawStep) :
+    (hB2 : WholePlaneLQGModelStep) (hFL : FrozenConeWholePlaneFieldLaw) :
     ConeHalfBallClosureInsideStep :=
   coneHalfBallClosureInsideStep_fp hI2 hK hloc hEx hSC hVG hB2 hFL
 
@@ -50,7 +51,7 @@ theorem firstPass_2_4_corrected
     (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
     (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
     (hloc : HarmonicBallLocalSetStmt.{0}) (hSC : ClusterStrongCompatibilityStmt.{0})
-    (hB2 : WholePlaneLQGModelStep) (hFL : ConeWholePlaneFieldLawStep)
+    (hB2 : WholePlaneLQGModelStep) (hFL : FrozenConeWholePlaneFieldLaw)
     (h27 : VolumeGrowthStmt) :
     ConeHarmonicBallsUpToFixedTimeCanonicalStmt :=
   firstPass_2_4_canonical_of_steps

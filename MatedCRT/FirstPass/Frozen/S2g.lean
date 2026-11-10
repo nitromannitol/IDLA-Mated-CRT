@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.S2f
 import MatedCRT.FirstPass.S2g.GoodSetMoments
+import MatedCRT.Proofs.Sec4.Prop42Closure.ConeWholePlaneSteps
 
 /-!
 # First-pass frozen inputs of the good-set step (fp-S2g, q1)
@@ -81,5 +82,21 @@ def FrozenConeLogLocalCodeLawStd : Prop :=
       IsLQGMeasureOfField P' γ γ hcirc' μ' ∧
       ∀ φs : ℕ → ℂ → ℝ, (∀ k, Continuous (φs k) ∧ HasCompactSupport (φs k) ∧ tsupport (φs k) ⊆ ball (0 : ℂ) 1) →
         P.map (fun ω => momentVec φs (μ ω)) = P'.map (fun ω' => momentVec φs (μ' ω'))
+
+/-- FIRST-PASS FROZEN. Fact (2) for the fields: equality in law of the quantum cone and of the whole-plane field on `B_1`,
+`h|_{B_1} =_d (h^ℂ - γ log|·|)|_{B_1}`, for every whole-plane GFF `h^ℂ` (the statement of `ConeWholePlaneFieldLawStep`,
+`Proofs/Sec4/Prop42Closure/ConeWholePlaneSteps.lean:66`, copied so that this frozen input does not depend on the Proofs
+layer). Source: Bou-Rabee and Gwynne, IDLA arXiv:2211.04891, eq. (2.4), printed pp. 11-12; Duplantier-Miller-Sheffield,
+quantum cones (locator pending). PENDING TRUTH CHECK: the universal quantifier over whole-plane GFFs on arbitrary `Ω'`, and
+the a.e. measurability of `coneFieldOnB1` that `IdentDistrib` needs. Used by: `firstPass_2_4_corrected`,
+`firstPass_6_1_corrected`, `firstPass_2_5_corrected`, `firstPass_2_6_corrected` (`S2g/Corrected24.lean`,
+`S2g/Assembly2456.lean`), via `coneHalfBallClosureInsideStep_corrected`. -/
+def FrozenConeWholePlaneFieldLaw : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
+    ∀ (Ω' : Type) [MeasurableSpace Ω'] (P' : Measure Ω') (hC' : Ω' → (ℂ → ℝ) → ℝ)
+      (hcirc' : Ω' → ℝ → ℂ → ℝ),
+    IsProbabilityMeasure P' → IsWholePlaneGFF P' hC' hcirc' →
+    ProbabilityTheory.IdentDistrib (coneFieldOnB1 hC hcirc) (wholePlaneFieldOnB1 γ hC' hcirc') P P'
 
 end MatedCRT
