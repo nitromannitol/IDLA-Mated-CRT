@@ -85,7 +85,8 @@ def FaithfulChanceOfBeingAbsorbedStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
           ((idlaAggregate Θ (cellVertices ε (S.η ω) (thickening r (fillCells ε (S.η ω) Θ))) (List.ofFn xs) \
             Θ).ncard : ℝ) ≤ s₄ * k} ≤ ENNReal.ofReal (Real.exp (-s₃ * k))}
 
-/-- **Uniform form of Lemma 6.7/6.8** (NOT printed). The printed Lemmas 6.7 and 6.8 choose `s₁, s₂` after `s₀`
+/-- **Uniform-in-`s₀` strengthening of the Lemma 6.7 escape estimate; common core of Lemmas 6.7, 6.8 and 6.9; not a
+printed statement.** The printed Lemmas 6.7 and 6.8 choose `s₁, s₂` after `s₀`
 (`FaithfulConstantOrderLowerBoundStmt`, `FaithfulConstantOrderLowerBoundDivStmt`). The printed Lemma 6.9 proof uses one
 `s₂` for all walkers and all `s₀` (CHATGPT-6-9-printed-proof.md, "Inputs used"; LEMMA68.md proves the uniform choices
 `s₂ = 1/2`, with `s₁` small and depending only on `γ`, not `s₁ = 1/4`: chat 183, the [C22] covering repair). Here `s₁, s₂` are chosen after `ρ` and before `s₀`; the body is that of
