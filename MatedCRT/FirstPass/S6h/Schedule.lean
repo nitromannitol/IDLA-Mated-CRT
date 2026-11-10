@@ -1,6 +1,7 @@
 import Mathlib
-import MatedCRT.FirstPass.S6h
+import MatedCRT.FirstPass.S6h.Core
 import MatedCRT.FirstPass.S6j
+import MatedCRT.FirstPass.S6j.FiniteExit
 import MatedCRT.FirstPass.S6h.Successive
 import MatedCRT.FirstPass.S6e.RadiusSelect
 import MatedCRT.FirstPass.S6e.Cutoff
@@ -12,13 +13,15 @@ import MatedCRT.FirstPass.S4S6c.Uniform68Round
 Write-up C1-C3 (`notes/fp-gaps/CHATGPT-lemma68-open-parts.md` lines 659-805) and bridge note §3, Steps B-F
 (`notes/fp-gaps/CHATGPT-z9-6-8-bridge.md` lines 218-408): the grid centre `z_j = Q_δ(η(X_{T_j}))`, the first-good radius
 `R_j = R_{z_j}` (A5, `Lemma68Radius.firstGoodRadius`, default `δ`), the window `W(y) = I(B_{2R}(z))` at the state `y`, the
-successive exit times `T_{j+1} = nextExit W T_j` (`Lemma68Successive.exitSchedule`), the count `N = ⌊r/(100 s)⌋`, `s = √δ`.
+successive exit times `T_{j+1} = nextExit W T_j` (`cfgExit`, equal to `Lemma68Successive.exitSchedule` by
+`cfgExit_eq_exitSchedule`), the count `N = ⌊r/(100 s)⌋`, `s = √δ`.
 
 Proved here: the structural fields of `TestSchedule.Valid` (monotone σ-algebras `F_{T_j}`, measurability of the test events
-`G_j = testHit`, `G_j ∈ F_{T_{j+1}}`, radius bounds, the count bound), and `hstep` from the conditional strong Markov
-estimate `S6j.hstep_concrete`. Explicit inputs (not proved here): the stopping property `hstop`, the almost-sure finiteness
-`hfin` of the successive exits, the per-state outer test bound `hpt` (write-up C4), the containment `hC12` (write-up C12),
-and the cutoff `hrζ : r ^ ζ ≤ 1/1000` (write-up D1, `s ≤ r/1000`).
+`G_j = testHit`, `G_j ∈ F_{T_{j+1}}`, radius bounds, the count bound), the finiteness of the windows from properness of `η`,
+and `hstep` from `S6j.hstep_of_schedule` (z5), which discharges the a.s. finiteness of the exits.
+Named inputs (NEW steps, not proved here): `OuterTestBound` (write-up C4, per-state outer bound; z5, `S6j/PerState.lean`)
+and `ConcreteC12` (write-up C12; z10, `S6m.lean`). Environment inputs: `η` continuous and proper, local finiteness of the
+walk law. Cutoff: `r ^ ζ ≤ 1/1000`, from `R ≤ 1000^(-1/ζ)` (write-up D1).
 -/
 
 open MeasureTheory Set Filter
@@ -135,6 +138,16 @@ lemma testHit_inter_histSigma (T : ℕ → (ℕ → ℤ) → ℕ∞) (hT : ∀ j
 
 /-! ### The test event as a walk test event after `T_j` -/
 
+/-- Arithmetic of the successive exit: `n < k + v` with `k ≤ n` gives `n - k < v` in `ℕ∞`. -/
+lemma natCast_sub_lt_of_lt_add {k n : ℕ} {v : ℕ∞} (hkn : k ≤ n) (h : (n : ℕ∞) < (k : ℕ∞) + v) :
+    ((n - k : ℕ) : ℕ∞) < v := by
+  induction v using ENat.recTopCoe with
+  | top => exact ENat.natCast_lt_top _
+  | coe l =>
+    have h2 : ((n : ℕ) : ℕ∞) < ((k + l : ℕ) : ℕ∞) := by rw [Nat.cast_add]; exact h
+    have h3 : n < k + l := ENat.natCast_lt_natCast.1 h2
+    exact ENat.natCast_lt_natCast.2 (by omega)
+
 /-- With the successive exit times of a constant window, the test event `G_j` is the walk test event after `T_j`
 (bridge note (4); `nextExit` unfolds to `T_j + vExitTime (W (X_{T_j})) (shift)`). -/
 lemma testHit_eq_walkTestEvent (W : ℤ → Set ℤ) (A : Set ℤ) (j : ℕ) :
@@ -163,14 +176,7 @@ lemma testHit_eq_walkTestEvent (W : ℤ → Set ℤ) (A : Set ℤ) (j : ℕ) :
       unfold SuccessiveExitStop.nextExit at hn2'
       rw [← hk] at hn2'
       simp only [ENat.recTopCoe_natCast] at hn2'
-      generalize vExitTime (W (x k)) (pathShift k x) = v at hn2' ⊢
-      induction v using ENat.recTopCoe with
-      | top => exact ENat.natCast_lt_top _
-      | coe l =>
-        have h' : n < k + l := by
-          have : (n : ℕ∞) < ((k + l : ℕ) : ℕ∞) := by push_cast; exact hn2'
-          exact ENat.natCast_lt_natCast.1 this
-        exact ENat.natCast_lt_natCast.2 (by omega)
+      exact natCast_sub_lt_of_lt_add hkn hn2'
     · have hkn' : k + (n - k) = n := by omega
       show x (k + (n - k)) ∉ A
       rw [hkn']
@@ -195,21 +201,51 @@ noncomputable def cfgWindow (ε : ℝ) (η : ℝ → ℂ) (p r : ℝ) (good : �
   interiorCellVertices ε η
     (Metric.ball (cfgCentre ε η p r y) (2 * cfgStateRadius ε η p r good y))
 
-/-- The successive exit times `T_j` of write-up C3 (`T_{j+1} = nextExit W T_j`). -/
-noncomputable def cfgExit (ε : ℝ) (η : ℝ → ℂ) (p r : ℝ) (good : ℂ → ℕ → Prop) : ℕ → (ℕ → ℤ) → ℕ∞ :=
-  exitSchedule (cfgWindow ε η p r good)
-
 /-- The count `N = ⌊r/(100 s)⌋` with `s = √δ` (write-up C1, Step B of the bridge note). -/
 noncomputable def cfgCount (p r : ℝ) : ℕ :=
   ⌊r / (100 * Real.sqrt (Delta p r))⌋₊
 
+/-- The successive exit times `T_j` of write-up C3, `T_{j+1} = nextExit (W) T_j` with the constant window `W = cfgWindow`
+(the successive exit schedule `S6j.nextExitSchedule`; `cfgExit_eq_exitSchedule` identifies it with `exitSchedule`). -/
+noncomputable def cfgExit (ε : ℝ) (η : ℝ → ℂ) (p r : ℝ) (good : ℂ → ℕ → Prop) : ℕ → (ℕ → ℤ) → ℕ∞ :=
+  S6j.nextExitSchedule (fun _ => cfgWindow ε η p r good)
+
+lemma cfgExit_eq_exitSchedule (ε : ℝ) (η : ℝ → ℂ) (p r : ℝ) (good : ℂ → ℕ → Prop) :
+    cfgExit ε η p r good = exitSchedule (cfgWindow ε η p r good) := by
+  have key : ∀ j : ℕ, S6j.nextExitSchedule (fun _ => cfgWindow ε η p r good) j =
+      exitSchedule (cfgWindow ε η p r good) j := by
+    intro j
+    induction j with
+    | zero => rfl
+    | succ j ih =>
+      show SuccessiveExitStop.nextExit (cfgWindow ε η p r good)
+          (S6j.nextExitSchedule (fun _ => cfgWindow ε η p r good) j) =
+        SuccessiveExitStop.nextExit (cfgWindow ε η p r good) (exitSchedule (cfgWindow ε η p r good) j)
+      rw [ih]
+  funext j
+  exact key j
+
+lemma cfgExit_isWalkRandomTime (ε : ℝ) (η : ℝ → ℂ) (p r : ℝ) (good : ℂ → ℕ → Prop) (j : ℕ) :
+    IsWalkRandomTime (cfgExit ε η p r good j) :=
+  S6j.isWalkRandomTime_nextExitSchedule (fun _ => cfgWindow ε η p r good) j
+
+/-- The windows are finite: `I(B) ⊆ cellVertices B`, the closed ball is compact, and `η` is proper
+(`cellVertices_finite_of_isCompact`). -/
+lemma cfgWindow_finite {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η)
+    (hp : Filter.Tendsto η (Filter.cocompact ℝ) (Filter.cocompact ℂ)) (hε : 0 < ε) (p r : ℝ)
+    (good : ℂ → ℕ → Prop) (y : ℤ) : (cfgWindow ε η p r good y).Finite := by
+  refine (cellVertices_finite_of_isCompact hη hp hε (isCompact_closedBall (cfgCentre ε η p r y)
+    (2 * cfgStateRadius ε η p r good y))).subset ?_
+  intro k hk
+  obtain ⟨z, hz⟩ := hk.1
+  exact ⟨z, hz.1, Metric.ball_subset_closedBall hz.2⟩
+
 /-- The concrete test schedule (C1-C3): `T = cfgExit`, `R_j = cfgStateRadius (X_{T_j})`, `m_j = F_{T_j}`. -/
-noncomputable def cfgSchedule (ε : ℝ) (η : ℝ → ℂ) (p r : ℝ) (good : ℂ → ℕ → Prop)
-    (hstop : ∀ j, IsWalkRandomTime (cfgExit ε η p r good j)) : TestSchedule where
+noncomputable def cfgSchedule (ε : ℝ) (η : ℝ → ℂ) (p r : ℝ) (good : ℂ → ℕ → Prop) : TestSchedule where
   N := cfgCount p r
   T := cfgExit ε η p r good
   R := fun j x => cfgStateRadius ε η p r good (x ((cfgExit ε η p r good j x).toNat))
-  m := fun j => stoppedSigma (cfgExit ε η p r good j) (hstop j)
+  m := fun j => stoppedSigma (cfgExit ε η p r good j) (cfgExit_isWalkRandomTime ε η p r good j)
 
 lemma cfgRadius_bounds {p r : ℝ} (hp : 0 < p) (hr0 : 0 < r) (hr1 : r < 1) (good : ℂ → ℕ → Prop) (z : ℂ) :
     0 < cfgRadius p r good z ∧ cfgRadius p r good z ≤ 1 ∧ r ^ p / 2 < cfgRadius p r good z :=
@@ -240,52 +276,115 @@ lemma cfgCount_lower {p r ζ : ℝ} (hp : 0 < p) (hr0 : 0 < r) (hr1 : r < 1) (hp
 
 /-! ### The concrete `TestSchedule.Valid` -/
 
-/-- **Concrete configuration schedule (Lemma 6.8, bridge note §3 Steps B-F).** For the concrete schedule `cfgSchedule`,
-`TestSchedule.Valid` holds on `ν = srwLaw m a`, given the stopping property `hstop`, the almost-sure finiteness `hfin` of
-the successive exits, the containment `hC12` (write-up C12) and the per-state outer test bound `hpt` (write-up C4, with
-`printed_test_bound` at the local window). The structural fields and `hstep` (via `S6j.hstep_concrete`) are proved. -/
+/-- The per-state outer test bound of write-up C4 for the concrete schedule, in the form taken by
+`S6j.hstep_of_schedule` (input `hpt`): from `X_{T_j}`, the walk stays in `A` until it leaves the window `I(B_{2R}(z))`
+with probability at most `1 - q/(1+log(1/R))²`. A NEW step (C4), named input; z5 proves it in `S6j/PerState.lean`. -/
+def OuterTestBound (m : ℤ → ℤ → ℕ) (a : ℤ) (ε : ℝ) (η : ℝ → ℂ) (p r : ℝ) (good : ℂ → ℕ → Prop) (A : Set ℤ)
+    (qStar : ℝ) : Prop :=
+  ∀ j, ∀ᵐ x ∂srwLaw m a, x ∈ Lemma68Config.testFail A (cfgExit ε η p r good) j →
+    cfgExit ε η p r good j x < ⊤ →
+    srwLaw m (x (cfgExit ε η p r good j x).toNat)
+        (TestBound68.stayIn (cfgWindow ε η p r good) A (x (cfgExit ε η p r good j x).toNat)) ≤
+      ENNReal.ofReal (1 - qStar / (1 + Real.log (1 / cfgStateRadius ε η p r good
+        (x (cfgExit ε η p r good j x).toNat))) ^ 2)
+
+/-- The containment of write-up C12 for the concrete schedule, in the form of `TestSchedule.Valid.hC12`: `T_N < τ_U`
+almost surely. A NEW step (C12), named input; z10 proves it in `S6m.lean`. -/
+def ConcreteC12 (m : ℤ → ℤ → ℕ) (a : ℤ) (ε : ℝ) (η : ℝ → ℂ) (p r : ℝ) (good : ℂ → ℕ → Prop) (U : Set ℤ) : Prop :=
+  ∀ᵐ x ∂srwLaw m a, cfgExit ε η p r good (cfgCount p r) x < vExitTime U x
+
+/-- **Concrete configuration schedule (Lemma 6.8, bridge note §3 Steps B-F).** `TestSchedule.Valid` holds for the concrete
+schedule `cfgSchedule` on `ν = srwLaw m a`, from the environment inputs `hproper` (η continuous and proper), `hlf`, `hcons`
+(local finiteness of the walk law), the per-state bound `hpt` (`OuterTestBound`, write-up C4) and the containment `hC12`
+(`ConcreteC12`, write-up C12). The almost-sure finiteness of the exits and `hstep` (C15) are proved. -/
 theorem cfgSchedule_valid (ε : ℝ) (η : ℝ → ℂ) {p r ζ qStar : ℝ} (good : ℂ → ℕ → Prop) (m : ℤ → ℤ → ℕ) (a : ℤ)
-    (A U : Set ℤ) (hp : 0 < p) (hr0 : 0 < r) (hr1 : r < 1) (hpζ : p = 2 * ζ + 2) (hrζ : r ^ ζ ≤ 1 / 1000)
-    (hq0 : 0 ≤ qStar) (hq1 : qStar ≤ 1)
-    (hstop : ∀ j, IsWalkRandomTime (cfgExit ε η p r good j))
-    (hfin : ∀ j, ∀ᵐ x ∂srwLaw m a, cfgExit ε η p r good j x < ⊤)
-    (hpt : ∀ j, ∀ᵐ x ∂srwLaw m a, x ∈ Lemma68Config.testFail A (cfgExit ε η p r good) j →
-      cfgExit ε η p r good j x < ⊤ →
-      srwLaw m (x (cfgExit ε η p r good j x).toNat)
-          (TestBound68.stayIn (cfgWindow ε η p r good) A (x (cfgExit ε η p r good j x).toNat)) ≤
-        ENNReal.ofReal (1 - qStar / (1 + Real.log (1 / cfgStateRadius ε η p r good
-          (x (cfgExit ε η p r good j x).toNat))) ^ 2))
-    (hC12 : ∀ᵐ x ∂srwLaw m a, cfgExit ε η p r good (cfgCount p r) x < vExitTime U x) :
-    TestSchedule.Valid (cfgSchedule ε η p r good hstop) (srwLaw m a) U A r p qStar ζ := by
+    (A U : Set ℤ) (hε : 0 < ε) (hη : Continuous η)
+    (hproper : Filter.Tendsto η (Filter.cocompact ℝ) (Filter.cocompact ℂ))
+    (hp : 0 < p) (hr0 : 0 < r) (hr1 : r < 1) (hpζ : p = 2 * ζ + 2) (hrζ : r ^ ζ ≤ 1 / 1000)
+    (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) (hq0 : 0 ≤ qStar) (hq1 : qStar ≤ 1)
+    (hpt : OuterTestBound m a ε η p r good A qStar)
+    (hC12 : ConcreteC12 m a ε η p r good U) :
+    TestSchedule.Valid (cfgSchedule ε η p r good) (srwLaw m a) U A r p qStar ζ := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, hC12, ?_⟩
-  · exact monotone_nat_of_le_succ fun j =>
-      stoppedSigma_mono (hstop j) (hstop (j + 1)) fun x => exitSchedule_le_succ _ j x
-  · exact fun j => stoppedSigma_le _ (hstop j)
-  · exact fun x j => exitSchedule_le_succ _ j x
-  · exact fun j => measurableSet_testHit (cfgExit ε η p r good) hstop A j
-  · exact fun j => ⟨measurableSet_testHit (cfgExit ε η p r good) hstop A j,
-      fun k => testHit_inter_histSigma (cfgExit ε η p r good) hstop A j k⟩
+  · refine monotone_nat_of_le_succ fun j => stoppedSigma_mono (cfgExit_isWalkRandomTime ε η p r good j)
+      (cfgExit_isWalkRandomTime ε η p r good (j + 1)) fun x => ?_
+    show cfgExit ε η p r good j x ≤ cfgExit ε η p r good (j + 1) x
+    rw [cfgExit_eq_exitSchedule]
+    exact exitSchedule_le_succ _ j x
+  · exact fun j => stoppedSigma_le _ (cfgExit_isWalkRandomTime ε η p r good j)
+  · intro x j
+    show cfgExit ε η p r good j x ≤ cfgExit ε η p r good (j + 1) x
+    rw [cfgExit_eq_exitSchedule]
+    exact exitSchedule_le_succ _ j x
+  · exact fun j => measurableSet_testHit (cfgExit ε η p r good) (cfgExit_isWalkRandomTime ε η p r good) A j
+  · exact fun j => ⟨measurableSet_testHit (cfgExit ε η p r good) (cfgExit_isWalkRandomTime ε η p r good) A j,
+      fun k => testHit_inter_histSigma (cfgExit ε η p r good) (cfgExit_isWalkRandomTime ε η p r good) A j k⟩
   · exact fun j => ae_of_all _ fun x => cfgRadius_bounds hp hr0 hr1 good _
   · exact cfgCount_lower hp hr0 hr1 hpζ hrζ
   · intro j
-    have hkey := S6j.hstep_concrete m a (cfgExit ε η p r good) hstop (fun _ => cfgWindow ε η p r good) A
+    have hkey := S6j.hstep_of_schedule m a (fun _ => cfgWindow ε η p r good) A
       (Lemma68Config.testFail A (cfgExit ε η p r good))
       (fun j x => cfgStateRadius ε η p r good (x ((cfgExit ε η p r good j x).toNat)))
-      hq0 hq1
-      (fun j => ae_of_all _ fun x _ => ⟨(cfgRadius_bounds hp hr0 hr1 good _).1, (cfgRadius_bounds hp hr0 hr1 good _).2.1⟩)
-      (fun j => by filter_upwards [hfin j] with x hx _ using hx)
+      hq0 hq1 hlf hcons (fun j y => cfgWindow_finite hη hproper hε p r good y)
+      (fun j => ae_of_all _ fun x _ =>
+        ⟨(cfgRadius_bounds hp hr0 hr1 good _).1, (cfgRadius_bounds hp hr0 hr1 good _).2.1⟩)
       hpt j
     have e : (Lemma68Config.testHit A (cfgExit ε η p r good) j).indicator (fun _ => (1 : ℝ)) =
         (walkTestEvent (cfgExit ε η p r good j) (fun y => testEvent (cfgWindow ε η p r good) A y)).indicator
           (fun _ => (1 : ℝ)) := by
-      unfold cfgExit
-      rw [testHit_eq_walkTestEvent]
+      rw [cfgExit_eq_exitSchedule, testHit_eq_walkTestEvent]
     filter_upwards [hkey] with x hx
     intro hxH
     show _ ≤ (srwLaw m a)[(Lemma68Config.testHit A (cfgExit ε η p r good) j).indicator (fun _ => (1 : ℝ)) |
-      stoppedSigma (cfgExit ε η p r good j) (hstop j)] x
+      stoppedSigma (cfgExit ε η p r good j) (cfgExit_isWalkRandomTime ε η p r good j)] x
     rw [e]
     exact hx hxH
+
+/-! ### The configuration bound for the concrete schedule -/
+
+/-- **Lemma 6.8 for the concrete schedule (bridge note §3, assembled).** The configuration bound
+`configuration_le_pow` holds with the schedule `cfgSchedule ε (S.η ω) p r (good ε ω)`, on the good event `E ε ∩ G`, for
+every configuration with the guard `FullAdm`. Named inputs: `hEnv` (η continuous and proper), `hlf` (local finiteness and
+the consecutive-edge condition of the walk law `S.mult ε ω`), `hpt` (`OuterTestBound`, write-up C4), `hC12`
+(`ConcreteC12`, write-up C12), `hR1000` (the cutoff `R ≤ 1000^(-1/ζ)`, write-up D1), `hq1` (the C15 constant `qStar ≤ 1`). -/
+theorem configuration_le_pow_concrete {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ρ s₀ γ : ℝ)
+    (E : ℝ → Set Ω) (G : Set Ω) (α : ℝ → ℝ) (dd : Ω → ℝ) (R : ℝ) (ζ p qStar q0 : ℝ)
+    (good : ℝ → Ω → ℂ → ℕ → Prop)
+    (hq0 : q0 = qStar / 9) (hq : 0 ≤ qStar) (hq1 : qStar ≤ 1) (hq9 : qStar ≤ 9) (hp : p ≤ 3)
+    (hpζ : p = 2 * ζ + 2) (hζ : 0 < ζ) (hα : ∀ ε, 0 < ε → 0 < α ε) (hdd : ∀ ω, dd ω ≤ R)
+    (hR : R ≤ Lemma68Cutoff.rAmp q0 ζ) (hR1000 : R ≤ (1000 : ℝ) ^ (-1 / ζ))
+    (hEnv : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G,
+      Continuous (S.η ω) ∧ Filter.Tendsto (S.η ω) (Filter.cocompact ℝ) (Filter.cocompact ℂ))
+    (hlf : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, IsLocallyFiniteMult (S.mult ε ω) ∧ ∀ k : ℤ, S.mult ε ω k (k + 1) ≠ 0)
+    (hpt : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, ∀ r : ℝ, α ε ≤ r → r ≤ dd ω → ∀ i : Config68, FullAdm S ρ s₀ γ ε ω r i →
+      OuterTestBound (S.mult ε ω) i.a ε (S.η ω) p r (good ε ω) (↑i.A : Set ℤ) qStar)
+    (hC12 : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, ∀ r : ℝ, α ε ≤ r → r ≤ dd ω → ∀ i : Config68, FullAdm S ρ s₀ γ ε ω r i →
+      ConcreteC12 (S.mult ε ω) i.a ε (S.η ω) p r (good ε ω) (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r)) :
+    ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, ∀ r : ℝ, α ε ≤ r → r ≤ dd ω → ∀ i : Config68, FullAdm S ρ s₀ γ ε ω r i →
+      ∃ N : ℕ, r ^ (-ζ) / 200 ≤ (N : ℝ) ∧
+        exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N := by
+  have hp0 : 0 < p := by rw [hpζ]; positivity
+  refine configuration_le_pow S ρ s₀ γ E G α dd R ζ p qStar q0 hq0 hq hq9 hp hα hdd hR
+    (fun ε ω r _ => cfgSchedule ε (S.η ω) p r (good ε ω)) ?_
+  intro ε hε ω hω r hαr hrd i hi
+  have hr0 : 0 < r := (hα ε hε).trans_le hαr
+  have hcut : r ^ ζ ≤ 1 / 1000 := by
+    calc r ^ ζ ≤ ((1000 : ℝ) ^ (-1 / ζ)) ^ ζ :=
+          Real.rpow_le_rpow hr0.le (hrd.trans ((hdd ω).trans hR1000)) hζ.le
+      _ = 1 / 1000 := by
+          rw [← Real.rpow_mul (by norm_num)]
+          have h1 : -1 / ζ * ζ = -1 := by field_simp
+          rw [h1, Real.rpow_neg_one]
+          norm_num
+  have hr1 : r < 1 := by
+    by_contra h
+    have h1r : 1 ≤ r := not_lt.1 h
+    have h1 : 1 ≤ r ^ ζ := Real.one_le_rpow h1r hζ.le
+    linarith
+  obtain ⟨hη, hproper⟩ := hEnv ε hε ω hω
+  obtain ⟨hlf', hcons⟩ := hlf ε hε ω hω
+  exact cfgSchedule_valid ε (S.η ω) (good ε ω) (S.mult ε ω) i.a (↑i.A) _ hε hη hproper hp0 hr0 hr1 hpζ hcut
+    hlf' hcons hq hq1 (hpt ε hε ω hω r hαr hrd i hi) (hC12 ε hε ω hω r hαr hrd i hi)
 
 end Lemma68Concrete
 end MatedCRT
