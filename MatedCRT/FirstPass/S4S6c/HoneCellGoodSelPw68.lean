@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.S4S6c.HoneSetup68
 import MatedCRT.FirstPass.S4S6c.HoneCellGood68
+import MatedCRT.FirstPass.S4S6c.Guard68S10
 import MatedCRT.FirstPass.S4S6c.ShellWindowRf68
 import MatedCRT.Proofs.Sec6.AnnulusHit.EventInvariance
 
@@ -18,9 +19,9 @@ This file gives both conclusions at ONE environment `ω`, with no almost-sure qu
 binder types, so the consumer may pass the results to the binders directly.
 
 Named inputs (exact types in the statements; each one is the missing ingredient reported in the task report):
-* `hCellGood_fixedOmega`: `hcell : ω ∈ cellSizeEvent68 S γ ζ (rhoCell68 ρ) ε`. The mesh event `meshEvent`
-  (Guard68S10.lean:45) carries the cell-size event at radius `ρ`, not at `rhoCell68 ρ`; `rhoCell68 ρ > ρ` (HoneCellGood68),
-  so `meshEvent` does not give `hCellGood` (see the report).
+* `hCellGood_fixedOmega`: `hmesh : ω ∈ meshEventR S γ ω₀ ρ CG ζ α CE ε` (q2, Guard68S10.lean:52). Its cell-size component is
+  at the mesh radius `(1 + ρ)/2 = rhoCell68 ρ` (`Lemma68Guard10.meshEventR_cell`, Guard68S10.lean:58), so the cell clause is
+  projected, with no new premise. The earlier bare binder `hcell` (fp-S4S6c-cellgood-sel-pw) is retired.
 * `hsel_fixedOmega`: `hwin : ω ∉ badWindowOf S.μ ρ (shortExp ζ) shellC068 C (dyadicD r)`, the complement of the window
   event at the scale `dyadicD r` (ShellChain68.lean:33). It is the pointwise form of the a.s. premise
   `∀ δ, ∀ᵐ ω, ω ∈ Ew δ → ω ∉ badWindowOf …` of `ShellOneTestOrderAeEpsStmt` (ShellHoneInst68.lean, the Eps statement).
@@ -50,13 +51,13 @@ open MatedCRT.Lemma68ConstOrder MatedCRT.Lemma68ShellConstants MatedCRT.Lemma68S
 /-- **`hCellGood` at one environment (fp-S4S6c-cellgood-sel-pw).** The cell-size event at the separate cell-control
 radius `ρ_cell = rhoCell68 ρ = (1 + ρ)/2` (chat 237 §3, chat 239 l.478-501) gives the upper cell-diameter bound on
 every cell meeting `B(0, ρ_cell)`: the upper half of `cellSizeEvent68` is literally the binder. -/
-theorem hCellGood_fixedOmega {γ ζ ρ ε s₀ r : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ω : Ω)
-    (i : Lemma68Config.Config68)
-    (hcell : ω ∈ cellSizeEvent68 S γ ζ (Lemma68HoneCellGood.rhoCell68 ρ) ε) :
+theorem hCellGood_fixedOmega {γ ζ ρ ε s₀ r ω₀ CG α CE : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    (ω : Ω) (i : Lemma68Config.Config68)
+    (hmesh : ω ∈ Lemma68Guard10.meshEventR S γ ω₀ ρ CG ζ α CE ε) :
     Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k' : ℤ, (cell ε (S.η ω) k' ∩ ball (0 : ℂ) (Lemma68HoneCellGood.rhoCell68 ρ)).Nonempty →
         diam (cell ε (S.η ω) k') ≤ ε ^ (2 / (2 + γ) ^ 2 - ζ) :=
-  fun _ k' hk => (hcell k' hk).2
+  fun _ k' hk => (Lemma68Guard10.meshEventR_cell hmesh k' hk).2
 
 /-- **`hsel` at one environment (fp-S4S6c-cellgood-sel-pw).** Off the window event at the scale `dyadicD r`, every
 short-eligible centre `z` has the window radius `winRf S ρ ζ C r ω z = windowRf … z`, which is a good annulus radius for
