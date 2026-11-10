@@ -75,8 +75,24 @@ theorem closed_6_9_hU {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPat
   firstPass_6_9_faithful 𝒮
     (Lemma68ShellTop.hU_top hC.greenKernelLowerBound hC.cellSizeEstimate hC.exitTimeUpperBound hLit hBM hCC hB1 hμ hOne)
 
+/-- **Lemma 6.x, uniform constant-order lower bound (hU), closed from the Eps top assembly (q2, fp-S4S6c-eps-chain).**
+Binders as `closed_6_7_hU`, with `hOne` the Eps form `ShellOneTestOrderAeEpsStmt` (threshold `ε ≤ shellEps0`, exponents
+`2ω₀β⁻ < α`, `2ω₀ < 2/(2+γ)² - ζ`, radius cutoff). Conclusion: `UniformConstantOrderLowerBoundStmt 𝒮` (the hU that
+`firstPass_6_x_faithful` consumes). -/
+theorem closed_6_x_hU_eps {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
+    (hC : CertifiedReferenceModelCore ν 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
+      (hcone : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsProbabilityMeasure P → IsQuantumCone γ P hcone hcirc →
+      ∃ μ : Ω → Measure ℂ, IsLQGMeasure P γ hcirc μ)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeEpsStmt 𝒮) :
+    UniformConstantOrderLowerBoundStmt 𝒮 :=
+  Lemma68ShellTop.hU_top_eps hC.greenKernelLowerBound hC.cellSizeEstimate hC.exitTimeUpperBound hLit hBM hCC hB1 hμ hOne
+
 end MatedCRT
 
+#print axioms MatedCRT.closed_6_x_hU_eps
 #print axioms MatedCRT.closed_6_7_hU
 #print axioms MatedCRT.closed_6_8_hU
 #print axioms MatedCRT.closed_6_9_hU
