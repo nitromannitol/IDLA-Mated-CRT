@@ -1,0 +1,81 @@
+import MatedCRT.FirstPass.S2y.LateralBilin250
+import MatedCRT.FirstPass.S2y.CircleKernelSmooth250
+
+/-!
+# The circle-smear identity of the whole-plane field (fp-S2y-circle-smear-id, q1; chat 250 §1.2, z8 step R3)
+
+For a test function `φ` and a radius `ε > 0`, the smeared circle average `∫ φ(z) h_ε(z) dz` of a whole-plane GFF equals
+the pairing `(h, K_ε φ)` with the circle kernel `K_ε φ = circleKernel φ ε`, almost surely (Duplantier-Sheffield 2011,
+Section 3.1; Armitage-Gardiner, Fubini for the adjoint of the circle average).
+
+The proof is the L² argument of z8's notes: `J := ∫ φ h_ε` is square integrable, and `E[(J - (h, K_ε φ))²] = 0`
+by Fubini on the second moments `wholePlaneGFFCov`.
+
+This file contains the covariance identities of circle averages (`integral_mul_circle_circle`,
+`integral_mul_circle_pairing`), reduced to `IsWholePlaneGFF.covariance_eq` as in `LateralBilin250.integral_mul_pairing`.
+-/
+
+open MeasureTheory ProbabilityTheory Filter Set Topology Real Metric HarmonicBalls
+open scoped ENNReal
+
+namespace MatedCRT.LQGMeasure
+
+variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+
+/-- The a.s. circle-smear identity for the whole-plane field (chat 250 §1.2; z8 step R3): the smeared circle average
+`∫ φ(z) h_ε(z) dz` is the pairing `(h, K_ε φ)` of the circle kernel `K_ε φ = circleKernel φ ε`. -/
+def CircleSmearIdentity (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (φ : ℂ → ℝ) (ε : ℝ) :
+    Prop :=
+  ∀ᵐ ω ∂P, ∫ z, φ z * hcirc ω ε z = hC ω (circleKernel φ ε)
+
+/-- The second moment of two circle averages of positive radius is the double circle average of `wholePlaneCov`
+(the covariance of `IsWholePlaneGFF`, both observables centred). -/
+lemma integral_mul_circle_circle [IsProbabilityMeasure P] (h : IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε)
+    (z w : ℂ) :
+    ∫ ω, hcirc ω ε z * hcirc ω ε w ∂P =
+      Real.circleAverage (fun x => Real.circleAverage (fun y => wholePlaneCov x y) w ε) z ε := by
+  have hc : cov[fun ω => hcirc ω ε z, fun ω => hcirc ω ε w; P] =
+      Real.circleAverage (fun x => Real.circleAverage (fun y => wholePlaneCov x y) w ε) z ε :=
+    h.covariance_eq (.circle ε z) (.circle ε w) hε hε
+  have h0z : ∫ ω, hcirc ω ε z ∂P = 0 := h.integral_eq_zero (.circle ε z) hε
+  have h0w : ∫ ω, hcirc ω ε w ∂P = 0 := h.integral_eq_zero (.circle ε w) hε
+  rw [← hc]
+  simp only [covariance, h0z, h0w, sub_zero]
+
+/-- The second moment of a circle average of positive radius and a pairing with a test function is the circle average
+of the potential `x ↦ ∫ ψ(y) wholePlaneCov x y dy`. -/
+lemma integral_mul_circle_pairing [IsProbabilityMeasure P] (h : IsWholePlaneGFF P hC hcirc) {ψ : ℂ → ℝ}
+    (hψ : IsTestFunction univ ψ) {ε : ℝ} (hε : 0 < ε) (z : ℂ) :
+    ∫ ω, hcirc ω ε z * hC ω ψ ∂P =
+      Real.circleAverage (fun x => ∫ y, ψ y * wholePlaneCov x y) z ε := by
+  have hc : cov[fun ω => hcirc ω ε z, fun ω => hC ω ψ; P] =
+      Real.circleAverage (fun x => ∫ y, ψ y * wholePlaneCov x y) z ε :=
+    h.covariance_eq (.circle ε z) (.pairing ψ) hε hψ
+  have h0z : ∫ ω, hcirc ω ε z ∂P = 0 := h.integral_eq_zero (.circle ε z) hε
+  have h0ψ : ∫ ω, hC ω ψ ∂P = 0 := h.integral_eq_zero (.pairing ψ) hψ
+  rw [← hc]
+  simp only [covariance, h0z, h0ψ, sub_zero]
+
+/-- Pointwise bound (equality off the diagonal): `wholePlaneCov x y ≤ log max(|x|,1) + log max(|y|,1) - log|x - y|`. -/
+lemma wholePlaneCov_le_log (x y : ℂ) :
+    wholePlaneCov x y ≤ Real.log (max ‖x‖ 1) + Real.log (max ‖y‖ 1) - Real.log ‖x - y‖ := by
+  unfold wholePlaneCov
+  by_cases hxy : x = y
+  · subst hxy
+    simp only [sub_self, norm_zero, Real.log_zero, div_zero]
+    have h1 : 0 ≤ Real.log (max ‖x‖ 1) := Real.log_nonneg (le_max_right _ _)
+    linarith
+  · have hc : ‖x - y‖ ≠ 0 := norm_ne_zero_iff.mpr (sub_ne_zero.mpr hxy)
+    have hA : max ‖x‖ 1 ≠ 0 := (lt_of_lt_of_le one_pos (le_max_right _ _)).ne'
+    have hB : max ‖y‖ 1 ≠ 0 := (lt_of_lt_of_le one_pos (le_max_right _ _)).ne'
+    have h1 := Real.log_div (mul_ne_zero hA hB) hc
+    have h2 := Real.log_mul hA hB
+    linarith
+
+/-- Mean value property of `log‖· - x‖` at a point `x` of the circle `∂B_ε(z)`: the circle average is `log ε`. -/
+lemma circleAverage_log_norm_sub_of_mem_sphere {z x : ℂ} {ε : ℝ} (hε : 0 < ε) (hx : ‖z - x‖ = ε) :
+    Real.circleAverage (fun y => Real.log ‖y - x‖) z ε = Real.log ε := by
+  rw [MatedCRT.Field.circleAverage_log_norm_eq z x hε, hx, inv_mul_cancel₀ hε.ne']
+  simp [Real.posLog]
+
+end MatedCRT.LQGMeasure
