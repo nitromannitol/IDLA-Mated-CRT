@@ -93,6 +93,8 @@ def FrozenLBMGreenOccupationRescaled (𝒮 : SpaceFillingSLEModel) : Prop :=
 expectations) of the truncated discrete occupation to the quenched expected truncated LBM occupation. Source:
 Berestycki–Gwynne, *Random walks on mated-CRT planar maps and Liouville Brownian motion*, arXiv:2003.10320v2, Theorem 1.2
 (partial: a corollary asserting convergence of quenched expectations; see notes/fp-gaps/CHATGPT-3-4-restatements.md).
+Truth check UNRESOLVED for an unconstrained SLE model; TRUE under the certified reference law, see SLEReferenceExistsInput
+(ChatGPT, 02:35 UTC; notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md §4).
 Used by: firstPass_3_4 (to be re-checked against this form). -/
 def FrozenTruncatedQuenchedLawsFixedTime (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
