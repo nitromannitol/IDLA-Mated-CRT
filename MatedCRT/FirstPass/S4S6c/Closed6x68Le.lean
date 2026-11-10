@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.S4S6c.Closed6x68
 import MatedCRT.FirstPass.S4S6c.ShellChainCGRCXLe68
+import MatedCRT.FirstPass.S4S6c.CGRCXLeCore68
 
 /-!
 # Closed Lemmas 6.7, 6.8, 6.9 from the X counting CG one-test input under `C ≤ CG` (fp-S4S6c-chain-le, request 80a)
@@ -57,8 +58,61 @@ theorem firstPass_6_9_of_hOneXLe {ν : ℝ → Measure SLEPathCode} {𝒮 : Spac
       (CertifiedReferenceModel.cellSizeEstimate hCRM)
       (CountingExitAlpha68.countingAtExitAlphaStmt_of_firstPass hCRM) hprevLe hOneXLe)
 
+/-! ### Residual forms: the one-test input from `shellOneTestOrderAeCGRCXLe_of_open3` (z5, CGRCXLeCore68.lean). -/
+
+/-- **Lemma 6.7, first-pass form from the residuals under `C ≤ CG` (request 80a).** As `firstPass_6_7_of_hOneXLe`, with
+`hOneXLe` produced by `Lemma68CGRCXLeCore.shellOneTestOrderAeCGRCXLe_of_open3` from the residuals `hTest` (79a), `hGreen`
+(75a), `hWalk` (75a G1), `hRad` (77a), `hCtr` (74a); the volume growth `hVG` is a binder. -/
+theorem firstPass_6_7_of_residuals {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLEModel}
+    (hCRM : CertifiedReferenceModel ν 𝒮)
+    (hprevLe : Lemma68CGRCXLe.WindowPrevLeCGStmt)
+    (hVG : VolumeGrowthStmt)
+    (hTest : MatedCRT.Lemma68CGResLoc.ShellCGTestEndLoc 𝒮)
+    (hGreen : MatedCRT.Lemma68ShellCoreCG.ShellCGResGreen 𝒮)
+    (hWalk : MatedCRT.Lemma68ShellCoreCG.ShellCGResWalk 𝒮)
+    (hRad : MatedCRT.Lemma68CGRCXG2Core.ShellCGResG2Rad 𝒮)
+    (hCtr : MatedCRT.Lemma68CGRCXG2Core.ShellCGResG2Ctr 𝒮) :
+    FaithfulConstantOrderLowerBoundStmt 𝒮 :=
+  firstPass_6_7_of_hOneXLe hCRM hprevLe
+    (Lemma68CGRCXLeCore.shellOneTestOrderAeCGRCXLe_of_open3 hVG hTest hGreen hWalk hRad hCtr)
+
+/-- **Lemma 6.8, first-pass form from the residuals under `C ≤ CG` (localized, request 80a).** As
+`firstPass_6_8_of_hOneXLe`; the volume growth comes from the binder `hBG` (`volumeGrowthStmt_of_berestyckiGwynne`), the
+residuals as in `firstPass_6_7_of_residuals`. -/
+theorem firstPass_6_8_of_residuals {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLEModel}
+    (hCRM : CertifiedReferenceModel ν 𝒮)
+    (hprevLe : Lemma68CGRCXLe.WindowPrevLeCGStmt)
+    (hBG : FrozenBerestyckiGwynneConeBallMass)
+    (hTest : MatedCRT.Lemma68CGResLoc.ShellCGTestEndLoc 𝒮)
+    (hGreen : MatedCRT.Lemma68ShellCoreCG.ShellCGResGreen 𝒮)
+    (hWalk : MatedCRT.Lemma68ShellCoreCG.ShellCGResWalk 𝒮)
+    (hRad : MatedCRT.Lemma68CGRCXG2Core.ShellCGResG2Rad 𝒮)
+    (hCtr : MatedCRT.Lemma68CGRCXG2Core.ShellCGResG2Ctr 𝒮) :
+    FaithfulConstantOrderLowerBoundDivStmt 𝒮 :=
+  firstPass_6_8_of_hOneXLe hCRM hprevLe hBG
+    (Lemma68CGRCXLeCore.shellOneTestOrderAeCGRCXLe_of_open3 (volumeGrowthStmt_of_berestyckiGwynne hBG)
+      hTest hGreen hWalk hRad hCtr)
+
+/-- **Lemma 6.9, first-pass form from the residuals under `C ≤ CG` (request 80a).** As `firstPass_6_9_of_hOneXLe`, with
+the residuals and the volume growth `hVG` as in `firstPass_6_7_of_residuals`. -/
+theorem firstPass_6_9_of_residuals {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLEModel}
+    (hCRM : CertifiedReferenceModel ν 𝒮)
+    (hprevLe : Lemma68CGRCXLe.WindowPrevLeCGStmt)
+    (hVG : VolumeGrowthStmt)
+    (hTest : MatedCRT.Lemma68CGResLoc.ShellCGTestEndLoc 𝒮)
+    (hGreen : MatedCRT.Lemma68ShellCoreCG.ShellCGResGreen 𝒮)
+    (hWalk : MatedCRT.Lemma68ShellCoreCG.ShellCGResWalk 𝒮)
+    (hRad : MatedCRT.Lemma68CGRCXG2Core.ShellCGResG2Rad 𝒮)
+    (hCtr : MatedCRT.Lemma68CGRCXG2Core.ShellCGResG2Ctr 𝒮) :
+    FaithfulChanceOfBeingAbsorbedStmt 𝒮 :=
+  firstPass_6_9_of_hOneXLe hCRM hprevLe
+    (Lemma68CGRCXLeCore.shellOneTestOrderAeCGRCXLe_of_open3 hVG hTest hGreen hWalk hRad hCtr)
+
 end MatedCRT
 
 #print axioms MatedCRT.firstPass_6_7_of_hOneXLe
 #print axioms MatedCRT.firstPass_6_8_of_hOneXLe
 #print axioms MatedCRT.firstPass_6_9_of_hOneXLe
+#print axioms MatedCRT.firstPass_6_7_of_residuals
+#print axioms MatedCRT.firstPass_6_8_of_residuals
+#print axioms MatedCRT.firstPass_6_9_of_residuals
