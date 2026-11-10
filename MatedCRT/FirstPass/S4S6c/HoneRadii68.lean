@@ -75,8 +75,8 @@ theorem hRmin_of_hRr {γ ρc : ℝ} (K : Constants68 γ ρc) {ε : ℝ} {η : �
   exact mul_le_mul_of_nonneg_left (hRr k ω hω).1 K.hc0.le
 
 /-- **Binder `hεcell` of `shellOneTest_of_direct` (ShellHoneInst68.lean:109) at `rmin := K.c0 * r ^ 2`, conditional.**
-The leaf binder is `ε ^ (2/(2+γ)^2 - ζc) ≤ rmin / 100`, which as typed is FALSE for `ε` near `16 c0` and small `r`.
-It holds once the scale range `10 ε^ω ≤ r` of Lemma 6.8 (corrected paper, lemma:constant-order-lower-bound-div,
+The leaf binder is `ε ^ (2/(2+γ)^2 - ζc) ≤ rmin / 100`. The leaf hypotheses do not imply it (they give only `ε ≤ 16 c0`):
+it needs `ε ^ (2/(2+γ)^2 - ζc) ≤ c0 r ^ 2 / 100`, i.e. `ε` small relative to the scale `r`. It holds once the scale range `10 ε^ω ≤ r` of Lemma 6.8 (corrected paper, lemma:constant-order-lower-bound-div,
 corrected draft l.2788-2790, `r ∈ [10 ε^ω, δ]`) is assumed and `ε` is small enough that `ε ^ (2/(2+γ)^2 - ζc - 2ω) ≤ c0`
 (hεsm). The last needs `2 ω < 2/(2+γ)^2 - ζc` (NOT in the sources: the relation between the Lemma 6.8 exponent `ω` and
 the cell exponent of `hCellGood`). -/
