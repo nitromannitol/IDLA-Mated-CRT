@@ -96,14 +96,14 @@ theorem stayIn_shift_of_outer {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {A
     (hsm : ∀ v, ∀ x ∈ closure (H v), ∀ y ∈ closure (H v), dist x y ≤ d)
     (hadj : ∀ u v, m u v ≠ 0 → (closure (H u) ∩ closure (H v)).Nonempty)
     (hPb : ∀ b, P b ∈ H b) (hgeo : 4 * R / 3 + d + ρ + d < 2 * R) (hρ : d < ρ)
-    (hleg : ∀ n, w (n + 1) = w n ∨ m (w n) (w (n + 1)) ≠ 0)
+    (hleg : w (k₀ + 1) = w k₀ ∨ m (w k₀) (w (k₀ + 1)) ≠ 0)
     (hτ : vExitTime (innerVertices H (ball z (4 * R / 3))) w = ((k₀ + 1 : ℕ) : ℕ∞))
     (hstay : ∀ n : ℕ, (n : ℕ∞) < vExitTime (innerVertices H (ball z (2 * R))) w → w n ∈ A) :
     WalkPotential.pathShift (k₀ + 1) w ∈
       TestBound68.stayIn (fun b => innerVertices H (ball (P b) ρ)) A (w (k₀ + 1)) := by
   obtain ⟨hpre, hexit⟩ := (NextExitStop.vExitTime_eq_coe_iff _ w (k₀ + 1)).mp hτ
   have hmk : m (w k₀) (w (k₀ + 1)) ≠ 0 := by
-    rcases hleg k₀ with h | h
+    rcases hleg with h | h
     · exact absurd (by rw [h]; exact hpre k₀ (by omega)) hexit
     · exact h
   have hsphB : (closure (H (w (k₀ + 1))) ∩ Metric.sphere z (4 * R / 3)).Nonempty :=
