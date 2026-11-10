@@ -266,6 +266,21 @@ theorem hmesh_local_of_cellSize_vertices {Ω : Type} [MeasurableSpace Ω] (S : M
       ∀ q ∈ cell ε (S.η ω) k, dist p q ≤ dyadicD r / 100 :=
   fun k hk => hmesh_local_of_cellSize S hω₀ hκ hε₁1 hcut hε hεε₁ ω hω r hr hrε k hk
 
+/-- **Mesh bound on the ball of radius `ρ`** (`hmesh_local_of_cellSize_ball`): the cells of `F0 = cellVertices ε η (ball 0 ρ)`
+(the visited set of `ConfigOK`) have diameter at most `dyadicD r / 100`. This is the narrowest typed form of chat 239's
+`CellDiamLe … (i.F0)`; it follows from the mesh-radius form since `ball 0 ρ ⊆ ball 0 ((1+ρ)/2)` for `ρ ≤ 1`. -/
+theorem hmesh_local_of_cellSize_ball {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) {γ ζ ρ ω₀ ε₁ ε : ℝ}
+    (hρ1 : ρ ≤ 1) (hω₀ : 0 < ω₀) (hκ : 2 * ω₀ < 2 / (2 + γ) ^ 2 - ζ)
+    (hε₁1 : ε₁ ≤ 1) (hcut : ε₁ ^ (2 / (2 + γ) ^ 2 - ζ) ≤ 1 / 100)
+    (hε : 0 < ε) (hεε₁ : ε ≤ ε₁) (ω : Ω) (hω : ω ∈ cellSizeEvent68 S γ ζ ((1 + ρ) / 2) ε)
+    (r : ℝ) (hr : 0 < r) (hrε : 10 * ε ^ ω₀ ≤ r) :
+    CellDiamLe ε (S.η ω) (dyadicD r / 100) (ball 0 ρ) := by
+  have hsub : ball (0 : ℂ) ρ ⊆ ball (0 : ℂ) ((1 + ρ) / 2) := ball_subset_ball (by linarith)
+  unfold CellDiamLe
+  intro k hk p hp q hq
+  exact hmesh_local_of_cellSize S hω₀ hκ hε₁1 hcut hε hεε₁ ω hω r hr hrε k
+    (hk.mono (inter_subset_inter_right _ hsub)) p hp q hq
+
 /-- **Almost-sure mesh bound on dyadic scales** (`hmesh_ae_dyadic_of_cellSize`). If the cell-size event holds with
 polynomially high probability as `ε → 0` at mesh radius `(1+ρ)/2` (`HarmonicBalls.PolyHighProb`; the input
 `CellSizeEstimateStmt` of Draft Lemma 2.8 gives it), then almost surely, for all large `m`, the localized mesh bound holds
@@ -301,3 +316,4 @@ end MatedCRT
 #print axioms MatedCRT.Lemma68HoneSetup239.hmesh_local_of_cellSize_cutoff
 #print axioms MatedCRT.Lemma68HoneSetup239.hmesh_local_of_cellSize_vertices
 #print axioms MatedCRT.Lemma68HoneSetup239.hmesh_ae_dyadic_of_cellSize
+#print axioms MatedCRT.Lemma68HoneSetup239.hmesh_local_of_cellSize_ball
