@@ -142,4 +142,28 @@ theorem mem_ballExhaustion_of_dist_lt (z y : ℂ) (r : ℝ) {a : ℝ} (ha : 0 �
   have : a / ((n : ℝ) + 1) ≤ a := div_le_self ha (by linarith [(Nat.cast_nonneg n : (0 : ℝ) ≤ n)])
   linarith
 
+/-- The exhaustion radius of Step 6: `a = (r - |y - z|)/2 > 0` for `y ∈ B_r(z)`. -/
+theorem exhaustion_radius_pos {z y : ℂ} {r : ℝ} (hy : y ∈ ball z r) : 0 < (r - dist y z) / 2 := by
+  rw [mem_ball] at hy
+  linarith
+
+/-- The disks `ballExhaustion z r a n` are open. -/
+theorem isOpen_ballExhaustion (z : ℂ) (r a : ℝ) (n : ℕ) : IsOpen (ballExhaustion z r a n) :=
+  isOpen_ball
+
+/-- The starting point `y` of the walk lies in every disk `D_n` of the Step 6 exhaustion. -/
+theorem mem_ballExhaustion_of_mem {z y : ℂ} {r : ℝ} (hy : y ∈ ball z r) (n : ℕ) :
+    y ∈ ballExhaustion z r ((r - dist y z) / 2) n := by
+  rw [mem_ball] at hy
+  exact mem_ballExhaustion_of_dist_lt z y r (exhaustion_radius_pos (mem_ball.2 hy)).le (by linarith) n
+
+/-- **Step 6, pathwise (concrete data).** For `y ∈ B_r(z)`, the shell functionals of the Step 6 exhaustion
+`D_n = B_{r - δ_n}(z)`, `δ_n = a/(n+1)`, `a = (r - |y - z|)/2`, tend to `0` along every continuous path. -/
+theorem shellTime_ballExhaustion_tendsto {z y : ℂ} {r : ℝ} (hy : y ∈ ball z r) (T : ℝ) {w : ℝ≥0 → ℂ}
+    (hw : Continuous w) :
+    Tendsto (fun n => shellTime (ballExhaustion z r ((r - dist y z) / 2) n) (ball z r) T w) atTop (𝓝 0) :=
+  shellTime_tendsto_zero (ballExhaustion_monotone z r (exhaustion_radius_pos hy).le)
+    (isOpen_ballExhaustion z r _) (fun n => ballExhaustion_subset z r (exhaustion_radius_pos hy).le n)
+    (ball_subset_iUnion_ballExhaustion z r _) hw
+
 end MatedCRT.TruncatedLaws
