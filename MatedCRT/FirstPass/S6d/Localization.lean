@@ -17,7 +17,7 @@ open scoped ENNReal NNReal
 
 open Classical in
 /-- `n < τ_A` (the first exit time of `A`) iff the path stays in `A` at all times `k ≤ n`. -/
-theorem lt_vExitTime_iff {A : Set ℤ} {x : ℕ → ℤ} {n : ℕ} :
+theorem lt_vExitTime_iff_loc {A : Set ℤ} {x : ℕ → ℤ} {n : ℕ} :
     (n : ℕ∞) < vExitTime A x ↔ ∀ k ≤ n, x k ∈ A := by
   unfold vExitTime
   split_ifs with h
@@ -56,7 +56,7 @@ theorem measurableSet_stay_target (A' A : Set ℤ) :
   have hset : {x : ℕ → ℤ | ∀ n : ℕ, (n : ℕ∞) < vExitTime A' x → x n ∈ A} =
       ⋂ n : ℕ, {x : ℕ → ℤ | (∀ k ≤ n, x k ∈ A') → x n ∈ A} := by
     ext x
-    simp only [mem_ofPred_eq, mem_iInter, lt_vExitTime_iff]
+    simp only [mem_ofPred_eq, mem_iInter, lt_vExitTime_iff_loc]
   rw [hset]
   exact MeasurableSet.iInter fun n => measurableSet_stay_step A' A n
 
@@ -73,8 +73,8 @@ theorem walk_stays_in_W1 {m : ℤ → ℤ → ℕ} {x : ℕ → ℤ} {W0 W1 : Se
   | succ k ih =>
     intro hk
     have hk' : (k : ℕ∞) < vExitTime (W0 ∪ W1) x :=
-      lt_vExitTime_iff.2 fun j hj => (lt_vExitTime_iff.1 hk) j (by omega)
-    have hmem : x (k + 1) ∈ W0 ∪ W1 := (lt_vExitTime_iff.1 hk) (k + 1) le_rfl
+      lt_vExitTime_iff_loc.2 fun j hj => (lt_vExitTime_iff_loc.1 hk) j (by omega)
+    have hmem : x (k + 1) ∈ W0 ∪ W1 := (lt_vExitTime_iff_loc.1 hk) (k + 1) le_rfl
     rcases hstep k with h | h
     · rw [h]; exact ih hk'
     · rcases hmem with h0 | h1
@@ -104,8 +104,8 @@ theorem srw_localized_bound (m : ℤ → ℤ → ℕ) (a : ℤ) (A A' W0 W1 Θ' 
     obtain ⟨n, hn, hxn⟩ := hxT
     have hW : ∀ k : ℕ, (k : ℕ∞) < vExitTime (W0 ∪ W1) x → x k ∈ W1 :=
       walk_stays_in_W1 hx.1 ha1 hx.2 hno
-    have hnA' : (n : ℕ∞) < vExitTime A' x := lt_vExitTime_iff.2 fun k hk =>
-      hA' _ (hW k (lt_vExitTime_iff.2 fun j hj => (lt_vExitTime_iff.1 hn) j (le_trans hj hk)))
+    have hnA' : (n : ℕ∞) < vExitTime A' x := lt_vExitTime_iff_loc.2 fun k hk =>
+      hA' _ (hW k (lt_vExitTime_iff_loc.2 fun j hj => (lt_vExitTime_iff_loc.1 hn) j (le_trans hj hk)))
     have hxA : x n ∈ A := hxB n hnA'
     exact hxn.2 (Or.inl ⟨hxA, hW n hn⟩)
   have hcompl := prob_compl_eq_one_sub (μ := srwLaw m a) hBm
