@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.S5qd
 import MatedCRT.FirstPass.Closure.Section3
+import MatedCRT.FirstPass.S3i.LensClosed
 
 /-!
 # Proposition 5.1 with the certified reference model without its frozen truncated-laws conjunct (fp-S5-certified-core, z5)
@@ -110,6 +111,20 @@ theorem closed_3_6_corrected_core {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Me
   MatedCRT.FirstPass36.firstPass_3_6_convergence_corrected (𝒮 := 𝒮) hC.randomWalkToLBM hC.cellSizeEstimate
     hC.mepsScaling hexc hC.frozenDiscreteHolderContinuityCorrected
 
+/-- **Corrected Lemma 3.6, closed in the annealed form (core certified model).** The counted conclusion is the
+conjunction of the convergence clause `CorrectedHarmonicConvergenceStmt` (`Draft/Section3HarmonicCorrected.lean:29`) and
+the annealed same-walk clause `CorrectedHarmonicSameWalkAnnealedStmt` (`FirstPass/S3i/Statement.lean:39`). The Draft rate
+clause `CorrectedHarmonicSameWalkRateStmt` (`Draft/Section3HarmonicCorrected.lean:68`) is not used. The proof is
+`MatedCRT.FirstPass36.firstPass_3_6_closed` (`FirstPass/S3i/LensClosed.lean:31`), with the frozen inputs `h211`, `h28`,
+`hm`, `h32` supplied by the core projections; `hexc` and `hBE` remain binders, since neither is a conjunct of
+`CertifiedReferenceModel` (`FirstPass/SLERef/Certified.lean:54`). -/
+theorem closed_3_6_annealed_core {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
+    (hC : CertifiedReferenceModelCore ν 𝒮) (hexc : FrozenBrownianOutwardExcursionAtExit)
+    (hBE : MatedCRT.FirstPass36.FrozenOneSidedBoundaryContinuity 𝒮) :
+    CorrectedHarmonicConvergenceStmt 𝒮 ∧ MatedCRT.FirstPass36.CorrectedHarmonicSameWalkAnnealedStmt 𝒮 :=
+  MatedCRT.FirstPass36.firstPass_3_6_closed hC.randomWalkToLBM hC.cellSizeEstimate hC.mepsScaling hexc
+    hC.frozenDiscreteHolderContinuityCorrected hBE
+
 /-- Lemma 3.4 (integral convergence of the Green function), core form: `closed_3_4_hdetSwap`
 (`FirstPass/HdetSwap.lean:65`) with the truncated quenched laws from the four-binder theorem
 `MatedCRT.TruncatedLaws.truncatedQuenchedLawsFixedTime_of_inputs` (`FirstPass/S3t/BLEnvelopeClosure.lean:43`), which needs
@@ -199,5 +214,6 @@ theorem closed_5_1_canon_noCell_core {𝒮 : SpaceFillingSLEModel} (ν : ℝ →
 #print axioms MatedCRT.FirstPassClosure.closed_3_3_core
 #print axioms MatedCRT.FirstPassClosure.closed_3_5_core
 #print axioms MatedCRT.FirstPassClosure.closed_5_1_canon_noCell_core
+#print axioms MatedCRT.FirstPassClosure.closed_3_6_annealed_core
 
 end MatedCRT.FirstPassClosure
