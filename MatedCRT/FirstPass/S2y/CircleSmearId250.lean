@@ -111,4 +111,43 @@ lemma circleAverage_wholePlaneCov_of_mem_sphere {z x : ℂ} {ε : ℝ} (hε : 0 
     exact this
   rw [hs, hadd, circleAverage_log_norm_sub_of_mem_sphere hε hx]
 
+/-- **Sup bound for the circle averages** (z8 step R3, sub-step 1): for `‖z‖ ≤ R`, the second moment of the circle average
+of radius `ε` is bounded uniformly, `E[h_ε(z)²] ≤ 2 log max(R + ε, 1) - log ε`. -/
+lemma integral_sq_circle_le [IsProbabilityMeasure P] (h : IsWholePlaneGFF P hC hcirc) {R ε : ℝ} (hε : 0 < ε)
+    {z : ℂ} (hz : ‖z‖ ≤ R) :
+    ∫ ω, hcirc ω ε z ^ 2 ∂P ≤ 2 * Real.log (max (R + ε) 1) - Real.log ε := by
+  have hsq : (fun ω => hcirc ω ε z ^ 2) = fun ω => hcirc ω ε z * hcirc ω ε z := funext fun ω => sq _
+  rw [hsq, integral_mul_circle_circle h hε z z]
+  have habs : |ε| = ε := abs_of_pos hε
+  have hlogB : Continuous fun y : ℂ => Real.log (max ‖y‖ 1) :=
+    Continuous.log (by fun_prop) fun y => (lt_of_lt_of_le one_pos (le_max_right _ _)).ne'
+  -- on the circle `∂B_ε(z)`, `|y| ≤ R + ε`, so `log max(|y|,1) ≤ log max(R+ε,1)`
+  have hLpt : ∀ y : ℂ, ‖y - z‖ ≤ ε → Real.log (max ‖y‖ 1) ≤ Real.log (max (R + ε) 1) := by
+    intro y hy
+    apply Real.log_le_log (lt_of_lt_of_le one_pos (le_max_right _ _))
+    apply max_le_max _ le_rfl
+    have hsplit : z + (y - z) = y := by ring
+    calc ‖y‖ = ‖z + (y - z)‖ := by rw [hsplit]
+      _ ≤ ‖z‖ + ‖y - z‖ := norm_add_le _ _
+      _ ≤ R + ε := by linarith
+  have hsph : ∀ x ∈ Metric.sphere z |ε|, ‖z - x‖ = ε := fun x hx => by
+    rw [mem_sphere_iff_norm] at hx
+    rw [norm_sub_rev, hx, habs]
+  have hEq : Set.EqOn (fun x => Real.circleAverage (fun y => wholePlaneCov x y) z ε)
+      (fun x => Real.log (max ‖x‖ 1) + Real.circleAverage (fun y => Real.log (max ‖y‖ 1)) z ε - Real.log ε)
+      (Metric.sphere z |ε|) := fun x hx => circleAverage_wholePlaneCov_of_mem_sphere hε (hsph x hx)
+  rw [Real.circleAverage_congr_sphere hEq]
+  have hB : Real.circleAverage (fun y => Real.log (max ‖y‖ 1)) z ε ≤ Real.log (max (R + ε) 1) :=
+    Real.circleAverage_mono_on_of_le_circle (hlogB.continuousOn.circleIntegrable hε.le) fun y hy => by
+      rw [mem_sphere_iff_norm, habs] at hy
+      exact hLpt y hy.le
+  have hFint : CircleIntegrable (fun x : ℂ => Real.log (max ‖x‖ 1) +
+      Real.circleAverage (fun y => Real.log (max ‖y‖ 1)) z ε - Real.log ε) z ε :=
+    ((hlogB.add continuous_const).sub continuous_const).continuousOn.circleIntegrable hε.le
+  refine Real.circleAverage_mono_on_of_le_circle hFint fun x hx => ?_
+  have hxz : ‖x - z‖ ≤ ε := by
+    rw [mem_sphere_iff_norm, habs] at hx
+    exact hx.le
+  linarith [hLpt x hxz, hB]
+
 end MatedCRT.LQGMeasure
