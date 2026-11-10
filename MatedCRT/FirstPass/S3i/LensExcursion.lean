@@ -222,6 +222,177 @@ theorem safe_survival_le_explicit_gms {p : ℝ} (hp : 0 < p) (hp1 : p < 1)
   exact measure_nested_disk_survival_le_explicit_gms hp hp1 cutoff distance factor hdist hscale hη hr
     (fun i hi => (hgeometry i hi).1) ha haS hadj hnb hfin hnext hgeom hz hadmiss hgood
 
+/-- Pointwise port of `GMSBoundaryHit.lean:13`: the walk from `a` near the centre `x` of the ball `B_R(x)`
+reaches `∂B_{r 0}(z)` after `∂B_R(x)` only with probability at most the explicit survival bound. -/
+theorem boundary_hit_le_explicit_gms {p : ℝ} (hp : 0 < p) (hp1 : p < 1)
+    {M : ℝ → ℤ → ℤ → ℕ} {η : ℝ → ℂ} (hη : Continuous η) (hwalk : SeparatingWalkGeom η M)
+    {ε β ρ : ℝ} {z x : ℂ} {a : ℤ} {r : ℕ → ℝ} {n : ℕ} {R buffer margin bound : ℝ}
+    (cutoff distance factor : ℝ) (hdist : 0 < distance)
+    (hscale : distance ≤ factor * cutoff * (2 : ℝ) ^ (n + 1))
+    (hε : 0 < ε) (hR : 0 < R) (hbuffer : 0 < buffer) (hmargin : bound ≤ margin) (hr : Antitone r)
+    (hgeometry : ∀ i ≤ n, 0 < r i ∧ R + buffer - dist z x + margin < r i / 4 ∧
+      Metric.ball z (2 * r i) ⊆ Metric.ball 0 ρ)
+    (hsize : ∀ i, (cell ε η i ∩ Metric.ball 0 ρ).Nonempty → Metric.diam (cell ε η i) ≤ bound)
+    (ha : a ∈ interiorCellVertices ε η (Metric.ball z (r n)))
+    (haS : a ∈ cellVertices ε η (Metric.ball z (r n / 2)))
+    (hatarget : a ∈ interiorCellVertices ε η (Metric.ball x R))
+    (hadj : ∀ v w, M ε v w ≠ 0 → (cell ε η v ∩ cell ε η w).Nonempty)
+    (hnb : ∀ i ≤ n, ∀ v ∈ interiorCellVertices ε η (Metric.ball z (r i)), ∀ w,
+      M ε v w ≠ 0 → w ∈ interiorCellVertices ε η (Metric.ball z (r i)) ∪
+        cellVertices ε η (Metric.sphere z (r i)))
+    (htargetnb : ∀ v ∈ interiorCellVertices ε η (Metric.ball x R), ∀ w, M ε v w ≠ 0 →
+      w ∈ interiorCellVertices ε η (Metric.ball x R) ∪ cellVertices ε η (Metric.sphere x R))
+    (hfin : ∀ᵐ path ∂srwLaw (M ε) a, vExitTime (interiorCellVertices ε η (Metric.ball z (r 0))) path ≠ ⊤)
+    (hnext : ∀ i < n, cellVertices ε η (Metric.sphere z (r (i + 1))) ∩
+      cellVertices ε η (Metric.ball z (r (i + 1))) ⊆ cellVertices ε η (Metric.ball z (r i / 2)))
+    (hz : z ∈ Metric.ball (0 : ℂ) ρ)
+    (hadmiss : ∀ i ≤ n, ε ^ β ≤ r i / 2 ∧ r i / 2 ≤ ρ ∧ Metric.ball z (2 * (r i / 2)) ⊆ Metric.ball 0 ρ)
+    (hgood : ∀ z ∈ Metric.ball (0 : ℂ) ρ, ∀ s : ℝ, ε ^ β ≤ s → s ≤ ρ →
+      Metric.ball z (2 * s) ⊆ Metric.ball 0 ρ → ∀ v ∈ cellVertices ε η (Metric.ball z s),
+      ENNReal.ofReal p ≤ srwLaw (M ε) v
+        {x' | ∀ y ∈ cellVertices ε η (Metric.sphere z (s / 2)),
+          walkDisconnectsBeforeHit (M ε) (cellVertices ε η (Metric.sphere z (2 * s))) y x'}) :
+    srwLaw (M ε) a {path | vHitTime (cellVertices ε η (Metric.sphere z (r 0))) path ≤
+      vHitTime (cellVertices ε η (Metric.sphere x R)) path} ≤
+      ENNReal.ofReal ((factor * cutoff / distance) ^ (-Real.log (1 - p) / Real.log 2)) := by
+  calc _ ≤ srwLaw (M ε) a {path | ∀ i ≤ n,
+        vHitTime (cellVertices ε η (Metric.sphere z (r i))) path ≤
+          vHitTime (cellVertices ε η (Metric.sphere x R)) path} := by
+        apply measure_mono_ae
+        filter_upwards [ae_nestedSphereCellHit_data hη r hr n
+          (fun i hi => (hgeometry i hi).1) ha hnb hfin] with path hordered
+        intro houter i hi
+        exact (hordered.2 0 i (Nat.zero_le i) hi).trans houter
+    _ ≤ _ := (srwLaw_sphere_hit_order_le_nested_interior_survival hR hatarget htargetnb
+        (fun i => cellVertices ε η (Metric.sphere z (r i))) n).trans
+        (safe_survival_le_explicit_gms (radius := fun _ => R) hp hp1 hη hwalk cutoff distance factor
+          hdist hscale hε hbuffer hmargin hr hgeometry hsize ha haS hadj hnb hfin hnext hz hadmiss hgood)
+
+/-- Pointwise port of `GMSDyadicBoundaryHit.lean:14`: the dyadic annuli between `cutoff` and `distance` are
+chosen by `exists_admissible_dyadic_annulus_scales`, and the boundary-hit bound is applied with factor `1`. -/
+theorem dyadic_boundary_hit_le_explicit_gms {p : ℝ} (hp : 0 < p) (hp1 : p < 1)
+    {M : ℝ → ℤ → ℤ → ℕ} {η : ℝ → ℂ} (hη : Continuous η) (hwalk : SeparatingWalkGeom η M)
+    {ε β ρ : ℝ} {z x : ℂ} {a : ℤ} {R buffer margin bound cutoff distance : ℝ}
+    (hε : 0 < ε) (hR : 0 < R) (hbuffer : 0 < buffer) (hmargin : bound ≤ margin)
+    (hc : 0 < cutoff) (hd : cutoff ≤ distance) (hmesh : 2 * ε ^ β ≤ cutoff)
+    (hclear : 4 * (R + buffer - dist z x + margin) < cutoff)
+    (hcontain : 2 * distance + dist z 0 ≤ ρ) (hz : z ∈ Metric.ball (0 : ℂ) ρ)
+    (hsize : ∀ i, (cell ε η i ∩ Metric.ball 0 ρ).Nonempty → Metric.diam (cell ε η i) ≤ bound)
+    (ha : a ∈ interiorCellVertices ε η (Metric.ball z cutoff))
+    (haS : a ∈ cellVertices ε η (Metric.ball z (cutoff / 2)))
+    (hatarget : a ∈ interiorCellVertices ε η (Metric.ball x R))
+    (hadj : ∀ v w, M ε v w ≠ 0 → (cell ε η v ∩ cell ε η w).Nonempty)
+    (hnb : ∀ s : ℝ, ∀ v ∈ interiorCellVertices ε η (Metric.ball z s), ∀ w,
+      M ε v w ≠ 0 → w ∈ interiorCellVertices ε η (Metric.ball z s) ∪
+        cellVertices ε η (Metric.sphere z s))
+    (htargetnb : ∀ v ∈ interiorCellVertices ε η (Metric.ball x R), ∀ w, M ε v w ≠ 0 →
+      w ∈ interiorCellVertices ε η (Metric.ball x R) ∪ cellVertices ε η (Metric.sphere x R))
+    (hfin : ∀ᵐ path ∂srwLaw (M ε) a, vExitTime (interiorCellVertices ε η (Metric.ball z distance)) path ≠ ⊤)
+    (hgood : ∀ z ∈ Metric.ball (0 : ℂ) ρ, ∀ s : ℝ, ε ^ β ≤ s → s ≤ ρ →
+      Metric.ball z (2 * s) ⊆ Metric.ball 0 ρ → ∀ v ∈ cellVertices ε η (Metric.ball z s),
+      ENNReal.ofReal p ≤ srwLaw (M ε) v
+        {x' | ∀ y ∈ cellVertices ε η (Metric.sphere z (s / 2)),
+          walkDisconnectsBeforeHit (M ε) (cellVertices ε η (Metric.sphere z (2 * s))) y x'}) :
+    srwLaw (M ε) a {path | vHitTime (cellVertices ε η (Metric.sphere z distance)) path ≤
+      vHitTime (cellVertices ε η (Metric.sphere x R)) path} ≤
+      ENNReal.ofReal ((cutoff / distance) ^ (-Real.log (1 - p) / Real.log 2)) := by
+  obtain ⟨n, r, hr, hlast, hfirst, hscale, hgeometry, hadmiss, hnext⟩ :=
+    exists_admissible_dyadic_annulus_scales (η := η) (x := x) hc hd hmesh hclear hcontain
+  have ha' : a ∈ interiorCellVertices ε η (Metric.ball z (r n)) := by simpa [hlast] using ha
+  have haS' : a ∈ cellVertices ε η (Metric.ball z (r n / 2)) := by simpa [hlast] using haS
+  have hsub := interiorCellVertices_concentric_ball_mono (ε := ε) hη z hfirst
+  have hfin' : ∀ᵐ path ∂srwLaw (M ε) a,
+      vExitTime (interiorCellVertices ε η (Metric.ball z (r 0))) path ≠ ⊤ := by
+    filter_upwards [hfin] with path hpath
+    exact ne_top_of_le_ne_top hpath (vExitTime_mono_domain hsub path)
+  have ha0 := interiorCellVertices_concentric_ball_mono (ε := ε) hη z (hr (Nat.zero_le n)) ha'
+  have hdist : 0 < distance := lt_of_lt_of_le hc hd
+  have hscale' : distance ≤ 1 * cutoff * (2 : ℝ) ^ (n + 1) := by simpa using hscale
+  calc _ ≤ srwLaw (M ε) a {path | vHitTime (cellVertices ε η (Metric.sphere z (r 0))) path ≤
+        vHitTime (cellVertices ε η (Metric.sphere x R)) path} :=
+        srwLaw_sphere_hit_order_le_of_radius_le hη (hgeometry 0 (Nat.zero_le n)).1 hfirst ha0
+          (fun s _ => hnb s) hfin _
+    _ ≤ ENNReal.ofReal ((cutoff / distance) ^ (-Real.log (1 - p) / Real.log 2)) := by
+        simpa only [one_mul] using
+          boundary_hit_le_explicit_gms hp hp1 hη hwalk cutoff distance 1 hdist hscale' hε hR hbuffer
+            hmargin hr hgeometry hsize ha' haS' hatarget hadj (fun i _ => hnb (r i)) htargetnb hfin'
+            hnext hz hadmiss hgood
+
+/-- Pointwise port of `GMSBoundaryCellHit.lean:15`: the boundary cell `a` of `∂B_r(z)` (cell size `d`) hits
+`∂B_{distance}(vertexPoint a)` before `∂B_{r+3d}(z)` with the explicit survival bound. The geometry of the disc
+`B_{r+3d}(z)` and of `B_{cutoff}(vertexPoint a)` comes from `disk_dirichlet_decomposition_geometry`. -/
+theorem boundary_cell_hit_le_explicit_gms {p : ℝ} (hp : 0 < p) (hp1 : p < 1)
+    {M : ℝ → ℤ → ℤ → ℕ} {η : ℝ → ℂ} (hη : Continuous η)
+    (hproper : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hwalk : SeparatingWalkGeom η M)
+    {ε β ρ : ℝ} {z : ℂ} {a : ℤ} {r d cutoff distance : ℝ}
+    (hadj : ∀ v w, M ε v w ≠ 0 → (cell ε η v ∩ cell ε η w).Nonempty)
+    (hlf : IsLocallyFiniteMult (M ε)) (hsucc : ∀ k : ℤ, M ε k (k + 1) ≠ 0)
+    (hε : 0 < ε) (hr : 0 < r) (hd : 0 < d) (hcut : 24 * d < cutoff) (hcd : cutoff ≤ distance)
+    (hmesh : 2 * ε ^ β ≤ cutoff)
+    (hcontain : 2 * distance + dist (vertexPoint ε η a) 0 ≤ ρ)
+    (hcenter : vertexPoint ε η a ∈ Metric.ball (0 : ℂ) ρ)
+    (hsize : ∀ i, (cell ε η i ∩ Metric.ball 0 ρ).Nonempty → Metric.diam (cell ε η i) ≤ d)
+    (hdiam : Metric.diam (cell ε η a) ≤ d)
+    (ha : a ∈ cellVertices ε η (Metric.sphere z r))
+    (hgood : ∀ z' ∈ Metric.ball (0 : ℂ) ρ, ∀ s : ℝ, ε ^ β ≤ s → s ≤ ρ →
+      Metric.ball z' (2 * s) ⊆ Metric.ball 0 ρ → ∀ v ∈ cellVertices ε η (Metric.ball z' s),
+      ENNReal.ofReal p ≤ srwLaw (M ε) v
+        {x' | ∀ y ∈ cellVertices ε η (Metric.sphere z' (s / 2)),
+          walkDisconnectsBeforeHit (M ε) (cellVertices ε η (Metric.sphere z' (2 * s))) y x'}) :
+    srwLaw (M ε) a {path | vHitTime (cellVertices ε η (Metric.sphere (vertexPoint ε η a) distance)) path ≤
+      vHitTime (cellVertices ε η (Metric.sphere z (r + 3 * d))) path} ≤
+      ENNReal.ofReal ((cutoff / distance) ^ (-Real.log (1 - p) / Real.log 2)) := by
+  obtain ⟨hstart, hstartS, htarget, hclear⟩ :=
+    boundary_cell_annulus_geometry hε.le hη hd hcut hdiam ha
+  have hc : 0 < cutoff := by linarith
+  have hdist : 0 < distance := lt_of_lt_of_le hc hcd
+  have hR : 0 < r + 3 * d := by linarith
+  have hnb : ∀ s : ℝ, ∀ v ∈ interiorCellVertices ε η (Metric.ball (vertexPoint ε η a) s), ∀ w,
+      M ε v w ≠ 0 → w ∈ interiorCellVertices ε η (Metric.ball (vertexPoint ε η a) s) ∪
+        cellVertices ε η (Metric.sphere (vertexPoint ε η a) s) := by
+    intro s v hv w hvw
+    obtain ⟨q, _, hq⟩ := hv.1
+    have hs : 0 < s := lt_of_le_of_lt dist_nonneg (Metric.mem_ball.mp hq)
+    exact (disk_dirichlet_decomposition_geometry hε hs hη hproper hadj hlf hsucc
+      (z := vertexPoint ε η a)).2.2.1 v hv w hvw
+  have hsub := interiorCellVertices_concentric_ball_mono (ε := ε) hη (vertexPoint ε η a) hcd
+  have hfin := (disk_dirichlet_decomposition_geometry hε hdist hη hproper hadj hlf hsucc
+    (z := vertexPoint ε η a)).2.2.2.2 a (hsub hstart)
+  have htargetnb := (disk_dirichlet_decomposition_geometry hε hR hη hproper hadj hlf hsucc
+    (z := z)).2.2.1
+  exact dyadic_boundary_hit_le_explicit_gms hp hp1 hη hwalk hε hR hd le_rfl hc hcd hmesh hclear
+    hcontain hcenter hsize hstart hstartS htarget hadj hnb htargetnb hfin hgood
+
+/-- Pointwise port of `GMSMesoscopicHit.lean:13`, the boundary-cell hit estimate of the discrete excursion lemma
+`srwLaw_discrete_exit_excursion_le` (`hbound`), with cell size `d = ε^a`, disconnection exponent `b`, and
+mesoscopic scale `ℓ = 100 ε^a + ε^b`: the boundary cell `j` of `∂B_r(z)` reaches `∂B_{distance}(vertexPoint j)`
+before `∂B_{r+3ε^a}(z)` with probability at most `(2ℓ/distance)^ν`, `ν = -log(1-p)/log 2`. -/
+theorem mesoscopic_boundary_cell_hit_le_explicit_gms {p : ℝ} (hp : 0 < p) (hp1 : p < 1)
+    {M : ℝ → ℤ → ℤ → ℕ} {η : ℝ → ℂ} (hη : Continuous η)
+    (hproper : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hwalk : SeparatingWalkGeom η M)
+    {ε a b ρ : ℝ} {z : ℂ} {j : ℤ} {r distance : ℝ}
+    (hadj : ∀ v w, M ε v w ≠ 0 → (cell ε η v ∩ cell ε η w).Nonempty)
+    (hlf : IsLocallyFiniteMult (M ε)) (hsucc : ∀ k : ℤ, M ε k (k + 1) ≠ 0)
+    (hε : 0 < ε) (hr : 0 < r) (hscale : 2 * (100 * ε ^ a + ε ^ b) ≤ distance)
+    (hcontain : 2 * distance + dist (vertexPoint ε η j) 0 ≤ ρ)
+    (hcenter : vertexPoint ε η j ∈ Metric.ball (0 : ℂ) ρ)
+    (hsize : ∀ i, (cell ε η i ∩ Metric.ball 0 ρ).Nonempty → Metric.diam (cell ε η i) ≤ ε ^ a)
+    (hdiam : Metric.diam (cell ε η j) ≤ ε ^ a)
+    (hj : j ∈ cellVertices ε η (Metric.sphere z r))
+    (hgood : ∀ z' ∈ Metric.ball (0 : ℂ) ρ, ∀ s : ℝ, ε ^ b ≤ s → s ≤ ρ →
+      Metric.ball z' (2 * s) ⊆ Metric.ball 0 ρ → ∀ v ∈ cellVertices ε η (Metric.ball z' s),
+      ENNReal.ofReal p ≤ srwLaw (M ε) v
+        {x' | ∀ y ∈ cellVertices ε η (Metric.sphere z' (s / 2)),
+          walkDisconnectsBeforeHit (M ε) (cellVertices ε η (Metric.sphere z' (2 * s))) y x'}) :
+    srwLaw (M ε) j {path | vHitTime (cellVertices ε η (Metric.sphere (vertexPoint ε η j) distance)) path ≤
+      vHitTime (cellVertices ε η (Metric.sphere z (r + 3 * ε ^ a))) path} ≤
+      ENNReal.ofReal ((2 * (100 * ε ^ a + ε ^ b) / distance) ^ (-Real.log (1 - p) / Real.log 2)) := by
+  have ha : 0 < ε ^ a := Real.rpow_pos_of_pos hε _
+  have hb : 0 < ε ^ b := Real.rpow_pos_of_pos hε _
+  exact boundary_cell_hit_le_explicit_gms (β := b) (cutoff := 2 * (100 * ε ^ a + ε ^ b))
+    (distance := distance) (d := ε ^ a) hp hp1 hη hproper hwalk hadj hlf hsucc hε hr ha
+    (by linarith) hscale (by linarith) hcontain hcenter hsize hdiam hj hgood
+
 /-- The pointwise good-event properties at scale `ε` and environment `ω` used by the excursion lemma: the cell-size
 bound (LEMMA36 (b)), and the simultaneous annulus disconnection (LEMMA36 (c), GMS (3.35), in the form of
 `GMSUniformRate.lean:13`): for every disc `B_s(c)` with `c ∈ B_{ρ₁}`, `ε^β ≤ s`, `B_{2s}(c) ⊆ B_{ρ₁}`, and every
