@@ -2896,32 +2896,58 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		\E[ V | h ,\eta] &= \sum_{b' \in \mathfrak{E}} \Gr{{\eps}}{B_{\mathbf{r}_{z}/4}(\eta(b))}(b, b') \qquad \mbox{(definition of $V$ and $\Gr{{\eps}}{B_{\mathbf{r}_{z}}(\eta(b))}$)} \\
 		&\geq \sum_{b' \in {\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) \cap \mathfrak{E}} \Gr{{\eps}}{B_{\mathbf{r}_{z}/4}(\eta(b))}(b, b') \quad \mbox{(where $\boldsymbol{c_0}$
 			is as in \eqref{eq:choice-of-constant-annulus})} \\
-		&\geq \left( \inf_{b' \in {\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))} \Gr{{\eps}}{B_{\mathbf{r}_{z}/4}(\eta(b))}(b, b') \right) (|{\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))| - |A \cap {\VGeps}(B_{\mathbf{r}_{z}}(\eta(b))| ) \\	
-		&\geq \left( \inf_{b' \in {\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))} \Gr{{\eps}}{B_{\mathbf{r}_{z}/4}(\eta(b))}(b, b') \right) {\eps}^{-1} (\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) -  s_1 r^{2 \beta^-} 
-		- {\eps}^{\alpha}) 		\stepcounter{equation}\tag{\theequation}\label{eq:lower-bound-on-V-intermediate} \\
-		&\qquad \mbox{(by the assumption on $A$ and Lemma \ref{lemma:mu_h-convergence})}.
+% CORRECTION [C22] (2026-11-10, under the author's standing approval of IDLA corrections; text from ChatGPT chat 176): printed: Step 3 bounded |A cap V(B_{c_0 r_z}(eta(b)))| by the sparsity bound of a single radius-r ball, giving s_1 r^{2 beta^-}; this needs c_0 r_z <= r, which the radius selection does not give. Corrected: cover B_{c_0 r_z}(eta(b)) by at most (1+2c_0 r_z/r)^2 radius-r balls, giving 10 s_1 r_z^{beta^-} eps^{-1} (r^2 <= delta <= r_z, beta^- > 1), and take s_1 < c/10.
+		&\geq \left( \inf_{b' \in {\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))} \Gr{{\eps}}{B_{\mathbf{r}_{z}/4}(\eta(b))}(b, b') \right) (|{\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))| - |A \cap {\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))| ) .
+		\end{align*}
+		To bound the last term, cover $B_{\boldsymbol{c_0}\mathbf{r}_{z}}(\eta(b))$ by at most
+		\[
+		\left(1+\frac{2\boldsymbol{c_0}\mathbf{r}_{z}}{r}\right)^2
+		\]
+		balls of radius $r$.  By the assumption on $A$,
+		\begin{align*}
+		{\eps}|A \cap {\VGeps}(B_{\boldsymbol{c_0}\mathbf{r}_{z}}(\eta(b)))|
+		&\leq s_1\left(1+\frac{2\boldsymbol{c_0}\mathbf{r}_{z}}{r}\right)^2r^{2\beta^-} \\
+		&\leq 2s_1r^{2\beta^-}
+		+8s_1\boldsymbol{c_0}^2\mathbf{r}_{z}^{\,2}r^{2\beta^- -2}
+		\leq 10s_1\mathbf{r}_{z}^{\beta^-}.
+		\end{align*}
+		Indeed, since $r,\mathbf{r}_{z}\in[\delta,\sqrt{\delta}]$, we have $r^2\leq\delta\leq\mathbf{r}_{z}$; hence, using $\beta^->1$ and $\mathbf{r}_{z}\leq1$,
+		\[
+		r^{2\beta^-}\leq\mathbf{r}_{z}^{\beta^-},
+		\qquad
+		\mathbf{r}_{z}^{\,2}r^{2\beta^- -2}
+		\leq\mathbf{r}_{z}^{\,\beta^-+1}
+		\leq\mathbf{r}_{z}^{\beta^-}.
+		\]
+		It follows that
+		\begin{align*}
+		\E[ V | h ,\eta]
+		&\geq \left( \inf_{b' \in {\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))} \Gr{{\eps}}{B_{\mathbf{r}_{z}/4}(\eta(b))}(b, b') \right) {\eps}^{-1}
+		\left(\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) - 10s_1\mathbf{r}_{z}^{\beta^-}
+		- {\eps}^{\alpha}\right)
+		\stepcounter{equation}\tag{\theequation}\label{eq:lower-bound-on-V-intermediate} \\
+		&\qquad \mbox{(by the preceding covering estimate and Lemma \ref{lemma:mu_h-convergence})}.
 		\end{align*}
 		We claim that for a sufficiently small, deterministic choice of $\boldsymbol{\pi} > 0$ and $s_1 > 0$, 
 		\begin{equation}\label{eq:use-of-assumption-on-omega}
-		\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) -  s_1 r^{2 \beta^-} 
+		\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) - 10s_1\mathbf{r}_{z}^{\beta^-}
 		- {\eps}^{\alpha} \geq  C'\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))
 		\end{equation} 
 		for some deterministic constant $C' = C'(\rho, \gamma)$.
 		Indeed, for a deterministic constant $c = c(\rho, \gamma)$ which will change from line to line we have
 		\begin{align*}
-		&\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) -  s_1 r^{2 \beta^-} 
+		&\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) - 10s_1\mathbf{r}_{z}^{\beta^-}
 		- {\eps}^{\alpha} \\
-		&= \frac{1}{2} \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))  + \frac{1}{2} \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) - 
-		s_1 r^{2 \beta^-} 
+		&= \frac{1}{2} \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))  + \frac{1}{2} \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) -
+		10s_1\mathbf{r}_{z}^{\beta^-}
 		- {\eps}^{\alpha}  \\
 		&\geq \frac{1}{2} \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))  + c \times \mathbf{r}_{z}^{\beta^-} -
-		s_1 r^{2 \beta^-} 
+		10s_1\mathbf{r}_{z}^{\beta^-}
 		- {\eps}^{\alpha}  \quad \mbox{(by Lemma \ref{lemma:volume-growth})} \\
-		&\geq \frac{1}{2} \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))  + c \times \delta^{\beta^-} -
-		s_1 \times \delta^{\beta^-}
-		- {\eps}^{\alpha}  \quad \mbox{(since $\mathbf{r}_{z} > \delta$ and $r < \sqrt{\delta}$)} \\
-		&\geq \frac{1}{2} \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))  + c \times \delta^{\beta^-} 
-		- {\eps}^{\alpha}  \quad \mbox{(for small $s_1 < c$)}  \\
+		&\geq \frac{1}{2} \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))  + c \times \mathbf{r}_{z}^{\beta^-}
+		- {\eps}^{\alpha}  \quad \mbox{(for small $s_1 < c/10$)}  \\
+		&\geq \frac{1}{2} \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))  + c \times \delta^{\beta^-}
+		- {\eps}^{\alpha}  \quad \mbox{(since $\mathbf{r}_{z} > \delta$)} \\
 		&\geq \frac{1}{2} \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))  + c \times {\eps}^{\omega \beta^-} 
 		- {\eps}^{2 \beta^- \omega}  \quad \mbox{($\delta > {\eps}^{\omega}$ and $\alpha \geq 2 \beta^- \omega$ by assumption)}  \\
 		&\geq \frac{1}{2} \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) \quad \mbox{(for $\boldsymbol{\pi}$ small depending only on $c$).}
@@ -2929,10 +2955,12 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		Therefore, 
 		\begin{align*}
 		&\E[ V | h ,\eta] \\
-		&\geq \left( \inf_{b' \in {\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))} \Gr{{\eps}}{B_{\mathbf{r}_{z}/4}(\eta(b))}(b, b') \right) {\eps}^{-1} (\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) -  s_1 r^{2 \beta^-} 
-		- {\eps}^{\alpha}) 
+		&\geq \left( \inf_{b' \in {\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))} \Gr{{\eps}}{B_{\mathbf{r}_{z}/4}(\eta(b))}(b, b') \right) {\eps}^{-1}
+		\left(\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) - 10s_1\mathbf{r}_{z}^{\beta^-}
+		- {\eps}^{\alpha}\right)
 		\quad \mbox{(by \eqref{eq:lower-bound-on-V-intermediate})} \\
-		&\geq \frac{1}{2} {\eps}^{-1} (\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) -  s_1 r^{2 \beta^-} 
+		&\geq \frac{1}{2} {\eps}^{-1} (\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) - 10s_1\mathbf{r}_{z}^{\beta^-}
+% END CORRECTION [C22]
 		- {\eps}^{\alpha})  
 		\quad \mbox{(by \eqref{eq:choice-of-constant-annulus} and Lemma \ref{lemma:greens-kernel-lower-bound})} \\
 		&\geq \frac{1}{2} {\eps}^{-1} \times  C'\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))
