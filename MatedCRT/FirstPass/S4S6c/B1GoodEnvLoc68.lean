@@ -5,6 +5,7 @@ import MatedCRT.FirstPass.S4S6c.HoneCellGoodSelPw68
 import MatedCRT.FirstPass.S4S6c.HVolFullPw68
 import MatedCRT.FirstPass.S4S6c.StopFinPw68
 import MatedCRT.FirstPass.S4S6c.HoneX1Loc68
+import MatedCRT.FirstPass.S4S6c.CGResElSel68
 
 /-!
 # `shellOneTest_at_of_goodEnv_loc_g2`: the `_g` leaf with the landed producers discharged (fp-S4S6c-goodenv-local, q4)
@@ -379,11 +380,6 @@ theorem shellOneTest_at_of_goodEnv_loc_g2 {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : 
         (windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω)
         (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a)
     (hadm : Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i)
-    (hEl : Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
-      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
-        x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) ((windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω)) k →
-          shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x ∈
-            shortEligible ρ (dyadicD r) (shortExp ζ))
     -- the volume cutoff `t` and the volume bound at `ω` (inputs of `hVolC_pw_g`, `hVolY_pw_g`)
     (t : ℝ) (ht : 0 < t)
     (hrt : r ≤ (t / (8 * 2 ^ shortExp ζ)) ^ (1 / (1 + ζ)))
@@ -460,6 +456,19 @@ theorem shellOneTest_at_of_goodEnv_loc_g2 {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : 
   have hηω : Continuous (S.η ω) := hreg'.2.2.2.1
   have hball : Metric.ball (0 : ℂ) ρ ⊆ Metric.ball (0 : ℂ) (Lemma68HoneCellGood.rhoCell68 ρ) :=
     Metric.ball_subset_ball (by unfold Lemma68HoneCellGood.rhoCell68; linarith)
+  have hd0 : 0 < dyadicD r := lt_of_lt_of_le (pow_pos hr0 2) (Lemma68ChainGlue.dyadicD_mem hr0 hr1).1
+  have hd1 : dyadicD r ≤ 1 := by
+    have h4 : r ≤ 1 / 4 := by linarith
+    have h5 : r ^ 2 ≤ 1 / 16 := by nlinarith
+    linarith [(Lemma68ChainGlue.dyadicD_mem hr0 hr1).2]
+  have ha1 : shortExp ζ ≤ 1 := by unfold shortExp; linarith
+  have hds : dyadicD r ≤ dyadicD r ^ shortExp ζ := by
+    simpa using Real.rpow_le_rpow_of_exponent_ge hd0 hd1 ha1
+  have hgapMesh : dyadicD r / 100 ≤ Lemma68HoneCellGood.rhoCell68 ρ - ρ := by linarith [hds, hcutR, hd0]
+  have hElPw := Lemma68CGResElSel.hEl_fixedOmega_ball (γ := γ) (ρ := ρ) (s1 := shellS1CG γ CG) (c0W := c0W)
+    (ζ := ζ) (C := C) (s₀ := s₀) (ε := ε) (r := r) (q0 := q0) (CE := CE) (CG := CG) S
+    hρ1 hζ0 hζ1 hq0 hq0c hs₀ hε hr0 hrρ hRA i ω hmesh hgapMesh hηω hreg'.2.1 hreg'.2.2.2.2.2.2.2.1
+    (hreg'.2.2.1 ε hε)
   have hRr := Lemma68HoneRrLocal.hRr_fixedOmega_loc_g (γ := γ) (ρ := ρ) (s1 := shellS1CG γ CG)
     (c0W := c0W) (C := C) S hρ1 hζ0 hζ1 hq0 hq0c hs₀ hε hr0 hrρ hRA i ω
     (Lemma68HoneRrLocal.cellDiamLe_mono_set hball hmesh) hηω
@@ -472,17 +481,9 @@ theorem shellOneTest_at_of_goodEnv_loc_g2 {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : 
   have hCellGood := Lemma68HoneCellGoodSelPw.hCellGood_fixedOmega_s1 (s₀ := s₀) (r := r)
     (s1 := shellS1CG γ CG) S ω i hωR
   have hVolC := Lemma68HVolFullPw.hVolC_pw_g (γ := γ) (ρ := ρ) (ζ := ζ) (C := C) (s₀ := s₀) (ε := ε) (r := r)
-    (t := t) (s1 := shellS1CG γ CG) (c0W := c0W) S K ω i hζ0 hζ1 hr0 hr1 ht hc0 hc0' hrt hcut hRr hEl hc
+    (t := t) (s1 := shellS1CG γ CG) (c0W := c0W) S K ω i hζ0 hζ1 hr0 hr1 ht hc0 hc0' hrt hcut hRr hElPw hc
   have hVolY := Lemma68HVolFullPw.hVolY_pw_g (γ := γ) (ρ := ρ) (ζ := ζ) (C := C) (s₀ := s₀) (ε := ε) (r := r)
-    (t := t) (s1 := shellS1CG γ CG) (c0W := c0W) S K ω i hζ0 hζ1 hr0 hr1 ht hc0 hc0' hrt hcut hEl hRr
-  have hd0 : 0 < dyadicD r := lt_of_lt_of_le (pow_pos hr0 2) (Lemma68ChainGlue.dyadicD_mem hr0 hr1).1
-  have hd1 : dyadicD r ≤ 1 := by
-    have h4 : r ≤ 1 / 4 := by linarith
-    have h5 : r ^ 2 ≤ 1 / 16 := by nlinarith
-    linarith [(Lemma68ChainGlue.dyadicD_mem hr0 hr1).2]
-  have ha1 : shortExp ζ ≤ 1 := by unfold shortExp; linarith
-  have hds : dyadicD r ≤ dyadicD r ^ shortExp ζ := by
-    simpa using Real.rpow_le_rpow_of_exponent_ge hd0 hd1 ha1
+    (t := t) (s1 := shellS1CG γ CG) (c0W := c0W) S K ω i hζ0 hζ1 hr0 hr1 ht hc0 hc0' hrt hcut hElPw hRr
   have htend : Tendsto (S.η ω) (cocompact ℝ) (cocompact ℂ) :=
     Lemma68Geometry.tendsto_cocompact_of_escapes hreg'.2.1
   have hstopFinPw := Lemma68StopFinPw.hstopFin_pw_g (γ := γ) (ρ := ρ) (s₀ := s₀) (ε := ε)
@@ -494,7 +495,7 @@ theorem shellOneTest_at_of_goodEnv_loc_g2 {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : 
     hε hs₀ hr0 hrρ hrz (by unfold Lemma68HoneCellGood.rhoCell68; linarith)
     (by linarith [hds, hcutR, hd0]) hmesh i
   exact shellOneTest_at_of_goodEnv_loc_gN hγ0 hγ2 c0W S hρ0 hρ1 hζ0 hζ1 hCG hq0 hq0c hε hs₀ hr0 hrρ hrz hRA
-    ω₀ hω0 K hK ω hreg i hεc hεcell hκ2 hα hεs hrε hε1 hmesh hShellLoc hadm hEl hstopFinPw hRr hcap
+    ω₀ hω0 K hK ω hreg i hεc hεcell hκ2 hα hεs hrε hε1 hmesh hShellLoc hadm hElPw hstopFinPw hRr hcap
     (fun hA k hk => (hVolC hA k hk))
     (fun hA k hk => (hVolY hA k hk).mono fun x hx hxl y hy =>
       hx hxl y (Metric.ball_subset_ball (by unfold Lemma68HoneCellGood.rhoCell68; linarith) hy))
