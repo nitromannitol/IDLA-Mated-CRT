@@ -8,6 +8,7 @@ import MatedCRT.FirstPass.S4d.ScaleBridge
 import MatedCRT.FirstPass.S4d.HorizonUnique
 import MatedCRT.FirstPass.Frozen.S4d2
 import MatedCRT.FirstPass.Frozen.S1d
+import MatedCRT.FirstPass.S4d.Provider24
 import MatedCRT.FirstPass.S1S2S8SA
 import MatedCRT.FirstPass.S3S4
 import MatedCRT.FirstPass.S3S4c
@@ -22,7 +23,9 @@ import MatedCRT.FirstPass.S3S4c
   whole-plane field law `FPConeWholePlaneFieldLaw` (`Frozen/S4S5b.lean`) and `FrozenLQGMeasureExistenceInsertion`
   (`Frozen/S2m.lean`).
 * `hScaleInv` (Draft Lemma 2.6) := `firstPass_2_6_corrected` (`FirstPass/S2g/Assembly2456.lean`, q1), same inputs.
-* `h24` (Draft Lemma 2.4) := `coneHarmonicBallsUpToFixedTimeStmt_of_canonical` (`FirstPass/S2g/Draft24.lean`, q1).
+* `h24` (Draft Lemma 2.4) := `coneHarmonicBallsUpToFixedTimeStmt_of_provider` (`FirstPass/S4d/Provider24.lean`, q4) applied to the
+  provider form `coneHarmonicBallsProviderFP4_of_canonical (firstPass_2_4_corrected ...)` (operator note chat 174). The Draft clause
+  `T' = T` is derived there from the closure step `hcl`, not read off Lemma 2.4.
 * `h25` (Draft Lemma 2.5) := `coneScaleInvarianceUpToFixedTimeStmt_of_canonical` (`FirstPass/S4d/ScaleBridge.lean`, q4),
   from the canonical form `firstPass_2_5_corrected` and the step `hRU` (`coneRescaledHalfBallHorizonUnique_fp`,
   `FirstPass/S4d/HorizonUnique.lean`, q4), which is proved from the frozen input `hrescale`.
@@ -77,7 +80,10 @@ theorem firstPass_4_2_of_wholeplane_model {𝒮 : SpaceFillingSLEModel}
   have hcan := coneCanonicalHalfBallStep_of_draft hU hmeasT hstd hwmp hCentre hG hpole hOpen hSup hCons hMono hCompat
     hBdry hExist hThm11 hProp56 hconf
   have hcl := coneHalfBallClosureInsideStep_corrected hI2 hK hloc hExist hSC h27 hE hFL
-  have h24 := coneHarmonicBallsUpToFixedTimeStmt_of_canonical hcan hcl
+  have h24P := coneHarmonicBallsProviderFP4_of_canonical
+    (MatedCRT.firstPass_2_4_corrected hU hmeasT hstd hwmp hCentre hG hpole hOpen hSup hCons hMono hCompat hBdry hExist
+      hThm11 hProp56 hconf hI2 hK hloc hSC hE hFL h27)
+  have h24 := coneHarmonicBallsUpToFixedTimeStmt_of_provider h24P hcl
   have h25 := coneScaleInvarianceUpToFixedTimeStmt_of_canonical hcan hcl
     (firstPass_2_5_corrected hU hmeasT hstd hwmp hCentre hG hpole hOpen hSup hCons hMono hCompat hBdry hExist hThm11
       hProp56 hconf hI2 hK hloc hSC hE hFL h27 hE1 hE2 hscale h22)
