@@ -3,6 +3,7 @@ import MatedCRT.FirstPass.LPBridge.PunctureConnected
 import MatedCRT.FirstPass.LPBridge.FiniteMeasureStandardBorel
 import MatedCRT.FirstPass.LPBridge.InRepoProofs
 import MatedCRT.FirstPass.LPBridge.MinimumPrinciples
+import MatedCRT.FirstPass.LPBridge.LQGTestIntegralMeasurable
 
 /-!
 # Phase 2 rewire of the counted IDLA theorems (task p2-rewire-counted)
@@ -13,9 +14,9 @@ the theorem `<countedName>_p2` has the same conclusion and the remaining binders
 LP and LQG bridges as the discharged inputs:
 `MatedCRT.frozenPunctureConnected_holds`, `MatedCRT.frozenSuperharmonicMinimumPrinciple_holds`,
 `MatedCRT.fpStrongMinimumPrinciple_holds`, `MatedCRT.frozenFiniteMeasureDiskStandardBorel_holds`,
-`MatedCRT.frozenLQGMeasureFieldMeasurable_holds`, `MatedCRT.fpLQGMeasureLocality_holds`.
-Inputs not yet discharged stay binders: `FrozenUniversalMeasurabilityOfAnalytic`, `FrozenLQGTestIntegralMeasurable`,
-`FrozenBrownianOutwardExcursionAtExit`.
+`MatedCRT.frozenLQGMeasureFieldMeasurable_holds`, `MatedCRT.fpLQGMeasureLocality_holds`,
+`MatedCRT.frozenLQGTestIntegralMeasurable_holds`.
+Inputs not yet discharged stay binders: `FrozenUniversalMeasurabilityOfAnalytic`, `FrozenBrownianOutwardExcursionAtExit`.
 -/
 
 open MeasureTheory Set Filter Topology Metric
@@ -26,7 +27,7 @@ noncomputable section
 
 namespace MatedCRT.Phase2
 
-/-- IDLA result 1.4 (`closed_1_4_derived`, Closure/Theorem14d.lean) with the Phase-2 bridges applied to the wrapper `HBRewire.closed_1_4_derived_hb`: the inputs hμae, hSB, hLoc, hmin, hpc, hsmp are discharged. Binders hF1, hF2, hexc remain. -/
+/-- IDLA result 1.4 (`closed_1_4_derived`, Closure/Theorem14d.lean) with the Phase-2 bridges applied to the wrapper `HBRewire.closed_1_4_derived_hb`: the inputs hF2, hμae, hSB, hLoc, hmin, hpc, hsmp are discharged. Binders hF1, hexc remain. -/
 theorem closed_1_4_derived_p2
     {𝒮 : SpaceFillingSLEModel}
     (ν : ℝ → Measure SLEPathCode)
@@ -55,7 +56,6 @@ theorem closed_1_4_derived_p2
     (h23 : ConeHarmonicBallsStmt)
     (hdiv : FrozenConeRadialDivergenceCorrected)
     (hF1 : FrozenUniversalMeasurabilityOfAnalytic)
-    (hF2 : FrozenLQGTestIntegralMeasurable)
     (hF3 : FrozenDiskGreenNonnegCont)
     (hcell : FrozenAdjacentCellsMeetAe 𝒮)
     (hexc : FrozenBrownianOutwardExcursionAtExit)
@@ -96,8 +96,8 @@ theorem closed_1_4_derived_p2
     (hsc := hsc) (hrp := hrp) (hind := hind) (hEnvS := hEnvS) (hm := hm) (hdeg := hdeg) (hBG := hBG)
     (h28 := h28) (h29 := h29) (h210 := h210) (h214 := h214) (h216 := h216) (h51 := h51) (hH := hH)
     (h0 := h0) (h2 := h2) (hV := hV) (hR := hR) (hcone := hcone) (hrevuz := hrevuz) (h23 := h23)
-    (hdiv := hdiv) (hF1 := hF1) (hF2 := hF2) (hF3 := hF3) (hcell := hcell) (hexc := hexc)
-    (hμae := MatedCRT.frozenLQGMeasureFieldMeasurable_holds 𝒮)
+    (hdiv := hdiv) (hF1 := hF1) (hF2 := MatedCRT.frozenLQGTestIntegralMeasurable_holds) (hF3 := hF3)
+    (hcell := hcell) (hexc := hexc) (hμae := MatedCRT.frozenLQGMeasureFieldMeasurable_holds 𝒮)
     (hSB := MatedCRT.frozenFiniteMeasureDiskStandardBorel_holds) (hsup := hsup) (hmodel := hmodel)
     (hFL := hFL) (hLoc := MatedCRT.fpLQGMeasureLocality_holds) (hpair := hpair) (hstd := hstd)
     (hmin := MatedCRT.frozenSuperharmonicMinimumPrinciple_holds) (hGBC := hGBC) (hconf := hconf)
@@ -108,7 +108,7 @@ theorem closed_1_4_derived_p2
     (hsmp := MatedCRT.fpStrongMinimumPrinciple_holds) (hnj := hnj) (hcan := hcan) (hcl := hcl)
     (hcan6 := hcan6)
 
-/-- IDLA result 1.6 (`closed_1_6_derived`, Closure/Theorem14d.lean) with the Phase-2 bridges applied to the wrapper `HBRewire.closed_1_6_derived_hb`: the inputs hμae, hSB, hLoc, hmin, hpc, hsmp are discharged. Binders hF1, hF2, hexc remain. -/
+/-- IDLA result 1.6 (`closed_1_6_derived`, Closure/Theorem14d.lean) with the Phase-2 bridges applied to the wrapper `HBRewire.closed_1_6_derived_hb`: the inputs hF2, hμae, hSB, hLoc, hmin, hpc, hsmp are discharged. Binders hF1, hexc remain. -/
 theorem closed_1_6_derived_p2
     {𝒮 : SpaceFillingSLEModel}
     (ν : ℝ → Measure SLEPathCode)
@@ -137,7 +137,6 @@ theorem closed_1_6_derived_p2
     (h23 : ConeHarmonicBallsStmt)
     (hdiv : FrozenConeRadialDivergenceCorrected)
     (hF1 : FrozenUniversalMeasurabilityOfAnalytic)
-    (hF2 : FrozenLQGTestIntegralMeasurable)
     (hF3 : FrozenDiskGreenNonnegCont)
     (hcell : FrozenAdjacentCellsMeetAe 𝒮)
     (hexc : FrozenBrownianOutwardExcursionAtExit)
@@ -178,8 +177,8 @@ theorem closed_1_6_derived_p2
     (hsc := hsc) (hrp := hrp) (hind := hind) (hEnvS := hEnvS) (hm := hm) (hdeg := hdeg) (hBG := hBG)
     (h28 := h28) (h29 := h29) (h210 := h210) (h214 := h214) (h216 := h216) (h51 := h51) (hH := hH)
     (h0 := h0) (h2 := h2) (hV := hV) (hR := hR) (hcone := hcone) (hrevuz := hrevuz) (h23 := h23)
-    (hdiv := hdiv) (hF1 := hF1) (hF2 := hF2) (hF3 := hF3) (hcell := hcell) (hexc := hexc)
-    (hμae := MatedCRT.frozenLQGMeasureFieldMeasurable_holds 𝒮)
+    (hdiv := hdiv) (hF1 := hF1) (hF2 := MatedCRT.frozenLQGTestIntegralMeasurable_holds) (hF3 := hF3)
+    (hcell := hcell) (hexc := hexc) (hμae := MatedCRT.frozenLQGMeasureFieldMeasurable_holds 𝒮)
     (hSB := MatedCRT.frozenFiniteMeasureDiskStandardBorel_holds) (hsup := hsup) (hmodel := hmodel)
     (hFL := hFL) (hLoc := MatedCRT.fpLQGMeasureLocality_holds) (hpair := hpair) (hstd := hstd)
     (hmin := MatedCRT.frozenSuperharmonicMinimumPrinciple_holds) (hGBC := hGBC) (hconf := hconf)
@@ -190,10 +189,9 @@ theorem closed_1_6_derived_p2
     (hsmp := MatedCRT.fpStrongMinimumPrinciple_holds) (hnj := hnj) (hcan := hcan) (hcl := hcl)
     (hcan6 := hcan6)
 
-/-- IDLA result 2.4 (`firstPass_2_4_canonical`, S2g/Corrected24.lean) with the Phase-2 bridges applied to the wrapper `HBRewire.firstPass_2_4_canonical_hb`: the input hmin is discharged. Binders hU, hmeasT remain. -/
+/-- IDLA result 2.4 (`firstPass_2_4_canonical`, S2g/Corrected24.lean) with the Phase-2 bridges applied to the wrapper `HBRewire.firstPass_2_4_canonical_hb`: the inputs hmeasT, hmin are discharged. Binder hU remains. -/
 theorem firstPass_2_4_canonical_p2
     (hU : FrozenUniversalMeasurabilityOfAnalytic)
-    (hmeasT : FrozenLQGTestIntegralMeasurable)
     (hstd : FrozenConeLogLocalCodeLawStd)
     (hCentre : FrozenGreenBallCentre)
     (hOpen : ClusterOpenLaplacianStmt.{0})
@@ -214,16 +212,16 @@ theorem firstPass_2_4_canonical_p2
     (hFL : FPConeWholePlaneFieldLaw)
     (h27 : VolumeGrowthStmt)
     : ConeHarmonicBallsUpToFixedTimeCanonicalStmt :=
-  MatedCRT.HBRewire.firstPass_2_4_canonical_hb (hU := hU) (hmeasT := hmeasT) (hstd := hstd)
+  MatedCRT.HBRewire.firstPass_2_4_canonical_hb (hU := hU)
+    (hmeasT := MatedCRT.frozenLQGTestIntegralMeasurable_holds) (hstd := hstd)
     (hmin := MatedCRT.frozenSuperharmonicMinimumPrinciple_holds) (hCentre := hCentre)
     (hOpen := hOpen) (hSup := hSup) (hCons := hCons) (hMono := hMono) (hCompat := hCompat)
     (hBdry := hBdry) (hExist := hExist) (hThm11 := hThm11) (hProp56 := hProp56) (hconf := hconf)
     (hI2 := hI2) (hK := hK) (hloc := hloc) (hSC := hSC) (hE := hE) (hFL := hFL) (h27 := h27)
 
-/-- IDLA result 2.5 (`firstPass_2_5_canonical`, S2g/Assembly2456.lean) with the Phase-2 bridges applied to the wrapper `HBRewire.firstPass_2_5_canonical_hb`: the input hmin is discharged. Binders hU, hmeasT remain. -/
+/-- IDLA result 2.5 (`firstPass_2_5_canonical`, S2g/Assembly2456.lean) with the Phase-2 bridges applied to the wrapper `HBRewire.firstPass_2_5_canonical_hb`: the inputs hmeasT, hmin are discharged. Binder hU remains. -/
 theorem firstPass_2_5_canonical_p2
     (hU : FrozenUniversalMeasurabilityOfAnalytic)
-    (hmeasT : FrozenLQGTestIntegralMeasurable)
     (hstd : FrozenConeLogLocalCodeLawStd)
     (hCentre : FrozenGreenBallCentre)
     (hOpen : ClusterOpenLaplacianStmt.{0})
@@ -248,17 +246,17 @@ theorem firstPass_2_5_canonical_p2
     (hscale : QuantumConeScalingInput)
     (h22 : LQGMeasurePropertiesStmt)
     : ConeScaleInvarianceUpToFixedTimeCanonicalStmt :=
-  MatedCRT.HBRewire.firstPass_2_5_canonical_hb (hU := hU) (hmeasT := hmeasT) (hstd := hstd)
+  MatedCRT.HBRewire.firstPass_2_5_canonical_hb (hU := hU)
+    (hmeasT := MatedCRT.frozenLQGTestIntegralMeasurable_holds) (hstd := hstd)
     (hmin := MatedCRT.frozenSuperharmonicMinimumPrinciple_holds) (hCentre := hCentre)
     (hOpen := hOpen) (hSup := hSup) (hCons := hCons) (hMono := hMono) (hCompat := hCompat)
     (hBdry := hBdry) (hExist := hExist) (hThm11 := hThm11) (hProp56 := hProp56) (hconf := hconf)
     (hI2 := hI2) (hK := hK) (hloc := hloc) (hSC := hSC) (hE := hE) (hFL := hFL) (h27 := h27)
     (hE1 := hE1) (hE2 := hE2) (hscale := hscale) (h22 := h22)
 
-/-- IDLA result 2.6 (`firstPass_2_6_corrected`, S2g/Assembly2456.lean) with the Phase-2 bridges applied to the wrapper `HBRewire.firstPass_2_6_corrected_hb`: the input hmin is discharged. Binders hU, hmeasT remain. -/
+/-- IDLA result 2.6 (`firstPass_2_6_corrected`, S2g/Assembly2456.lean) with the Phase-2 bridges applied to the wrapper `HBRewire.firstPass_2_6_corrected_hb`: the inputs hmeasT, hmin are discharged. Binder hU remains. -/
 theorem firstPass_2_6_corrected_p2
     (hU : FrozenUniversalMeasurabilityOfAnalytic)
-    (hmeasT : FrozenLQGTestIntegralMeasurable)
     (hstd : FrozenConeLogLocalCodeLawStd)
     (hCentre : FrozenGreenBallCentre)
     (hOpen : ClusterOpenLaplacianStmt.{0})
@@ -283,14 +281,15 @@ theorem firstPass_2_6_corrected_p2
     (hscale : QuantumConeScalingInput)
     (h22 : LQGMeasurePropertiesStmt)
     : ConeScaleInvarianceStmt :=
-  MatedCRT.HBRewire.firstPass_2_6_corrected_hb (hU := hU) (hmeasT := hmeasT) (hstd := hstd)
+  MatedCRT.HBRewire.firstPass_2_6_corrected_hb (hU := hU)
+    (hmeasT := MatedCRT.frozenLQGTestIntegralMeasurable_holds) (hstd := hstd)
     (hmin := MatedCRT.frozenSuperharmonicMinimumPrinciple_holds) (hCentre := hCentre)
     (hOpen := hOpen) (hSup := hSup) (hCons := hCons) (hMono := hMono) (hCompat := hCompat)
     (hBdry := hBdry) (hExist := hExist) (hThm11 := hThm11) (hProp56 := hProp56) (hconf := hconf)
     (hI2 := hI2) (hK := hK) (hloc := hloc) (hSC := hSC) (hE := hE) (hFL := hFL) (h27 := h27)
     (hE1 := hE1) (hE2 := hE2) (hscale := hscale) (h22 := h22)
 
-/-- IDLA result 4.2 (`firstPass_4_2_of_wholeplane_model`, S4d/Final42.lean) with the Phase-2 bridges applied to the wrapper `HBRewire.firstPass_4_2_of_wholeplane_model_hb`: the inputs hpc, hsmp, hwmp are discharged. Binders hU, hmeasT remain. -/
+/-- IDLA result 4.2 (`firstPass_4_2_of_wholeplane_model`, S4d/Final42.lean) with the Phase-2 bridges applied to the wrapper `HBRewire.firstPass_4_2_of_wholeplane_model_hb`: the inputs hmeasT, hpc, hsmp, hwmp are discharged. Binder hU remains. -/
 theorem firstPass_4_2_of_wholeplane_model_p2
     {𝒮 : SpaceFillingSLEModel}
     (hm : MepsScalingInput 𝒮)
@@ -309,7 +308,6 @@ theorem firstPass_4_2_of_wholeplane_model_p2
     (hdet : FrozenTruncatedQuenchedLawsFixedTime 𝒮)
     (hrescale : ConeRescaledMeasureIsConeFieldInput)
     (hU : FrozenUniversalMeasurabilityOfAnalytic)
-    (hmeasT : FrozenLQGTestIntegralMeasurable)
     (hstd : FrozenConeLogLocalCodeLawStd)
     (hCentre : FrozenGreenBallCentre)
     (hOpen : ClusterOpenLaplacianStmt.{0})
@@ -338,11 +336,12 @@ theorem firstPass_4_2_of_wholeplane_model_p2
     (hsc := hsc) (hrp := hrp) (hind := hind) (hrevuz := hrevuz) (hdet := hdet)
     (hrescale := hrescale) (hpc := MatedCRT.frozenPunctureConnected_holds)
     (hsmp := MatedCRT.fpStrongMinimumPrinciple_holds)
-    (hwmp := MatedCRT.frozenSuperharmonicMinimumPrinciple_holds) (hU := hU) (hmeasT := hmeasT)
-    (hstd := hstd) (hCentre := hCentre) (hOpen := hOpen) (hSup := hSup) (hCons := hCons)
-    (hMono := hMono) (hCompat := hCompat) (hBdry := hBdry) (hExist := hExist) (hThm11 := hThm11)
-    (hProp56 := hProp56) (hconf := hconf) (hI2 := hI2) (hK := hK) (hloc := hloc) (hSC := hSC)
-    (hE := hE) (hFL := hFL) (hE1 := hE1) (hE2 := hE2) (hscale := hscale) (h22 := h22)
+    (hwmp := MatedCRT.frozenSuperharmonicMinimumPrinciple_holds) (hU := hU)
+    (hmeasT := MatedCRT.frozenLQGTestIntegralMeasurable_holds) (hstd := hstd) (hCentre := hCentre)
+    (hOpen := hOpen) (hSup := hSup) (hCons := hCons) (hMono := hMono) (hCompat := hCompat)
+    (hBdry := hBdry) (hExist := hExist) (hThm11 := hThm11) (hProp56 := hProp56) (hconf := hconf)
+    (hI2 := hI2) (hK := hK) (hloc := hloc) (hSC := hSC) (hE := hE) (hFL := hFL) (hE1 := hE1)
+    (hE2 := hE2) (hscale := hscale) (h22 := h22)
 
 end MatedCRT.Phase2
 
