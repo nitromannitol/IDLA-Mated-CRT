@@ -195,6 +195,26 @@ theorem ae_nextExitSchedule_lt_top_of_finite (m : ℤ → ℤ → ℕ) (a : ℤ)
   ae_nextExitSchedule_lt_top m a W
     (fun j y => ExitNull68.exit_null_of_finite hlf hcons (hW j y) y) j
 
+/-- `hstep_concrete` with the successive exit schedule as the random times `τ j = T_j`: the finiteness input `hfin` is
+discharged by `ae_nextExitSchedule_lt_top_of_finite`. The remaining inputs are `hq0`, `hq1` (`qStar ≤ 1`, the printed
+constant of C15), `hR` (the test radius), and `hpt` (the per-state printed test bound at `X_{T_j}`, `printed_test_bound`). -/
+theorem hstep_of_schedule (m : ℤ → ℤ → ℕ) (a : ℤ) (W : ℕ → ℤ → Set ℤ) (A : Set ℤ) (H : ℕ → Set (ℕ → ℤ))
+    (R : ℕ → (ℕ → ℤ) → ℝ) {qStar : ℝ} (hq0 : 0 ≤ qStar) (hq1 : qStar ≤ 1)
+    (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) (hW : ∀ (j : ℕ) (y : ℤ), (W j y).Finite)
+    (hR : ∀ j, ∀ᵐ x ∂srwLaw m a, x ∈ H j → 0 < R j x ∧ R j x ≤ 1)
+    (hpt : ∀ j, ∀ᵐ x ∂srwLaw m a, x ∈ H j → nextExitSchedule W j x < ⊤ →
+      srwLaw m (x (nextExitSchedule W j x).toNat)
+          (TestBound68.stayIn (W j) A (x (nextExitSchedule W j x).toNat)) ≤
+        ENNReal.ofReal (1 - qStar / (1 + Real.log (1 / R j x)) ^ 2)) (j : ℕ) :
+    ∀ᵐ x ∂srwLaw m a, x ∈ H j → qStar / (1 + Real.log (1 / R j x)) ^ 2 ≤
+      condExp (stoppedSigma (nextExitSchedule W j) (isWalkRandomTime_nextExitSchedule W j)) (srwLaw m a)
+        ((walkTestEvent (nextExitSchedule W j) (fun y => testEvent (W j) A y)).indicator
+          (fun _ => (1 : ℝ))) x := by
+  have hfin : ∀ j, ∀ᵐ x ∂srwLaw m a, x ∈ H j → nextExitSchedule W j x < ⊤ := fun j =>
+    (ae_nextExitSchedule_lt_top_of_finite m a W hlf hcons hW j).mono fun _ hx _ => hx
+  exact hstep_concrete m a (nextExitSchedule W) (fun j => isWalkRandomTime_nextExitSchedule W j) W A H R
+    hq0 hq1 hR hfin hpt j
+
 end S6j
 
 end MatedCRT
