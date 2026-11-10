@@ -43,7 +43,9 @@ def FrozenUniversalMeasurabilityOfAnalytic : Prop :=
 
 /-- FIRST-PASS FROZEN. Field-level measurability of the LQG measure against test functions. For `0 < γ < 2`, every
 γ-quantum cone field `(P, hC, hcirc, μ)` (`IsConeField`) and every continuous compactly supported `φ : ℂ → ℝ`, the map
-`ω ↦ ∫ φ dμ_ω` is measurable. This is the field-level measurability of the dyadic approximations of the LQG measure
+`ω ↦ ∫ φ dμ_ω` is almost everywhere measurable (`AEMeasurable _ P`, not `Measurable`: `IsLQGMeasure` constrains `μ`
+only almost surely, HB `Defs/LQG.lean:63`; corrected after ChatGPT 00:53 UTC, notes/fp-gaps/CHATGPT-z1-logcert-null.md
+§8.2, with a counterexample to everywhere measurability). This is the field-level measurability of the dyadic approximations of the LQG measure
 (Duplantier–Sheffield 2011, Prop. 1.1, as cited in `HarmonicBalls.Defs.LQG`), and the operator's wave-4 ruling
 (measurability of `ω ↦ μ_h(S)`), which determines it on dyadic squares. Locator: standard; locator pending.
 Used by: firstPass_1_4, firstPass_1_6 (FirstPass/S1c/Composition.lean) via fixedTimeRadiusStep_of_frozen (FirstPass/S1c.lean),
@@ -51,7 +53,7 @@ through nullMeasurableSet_threshold (FirstPass/S1c/Measurability.lean) and fixed
 def FrozenLQGTestIntegralMeasurable : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
-    ∀ φ : ℂ → ℝ, Continuous φ → HasCompactSupport φ → Measurable fun ω => ∫ x, φ x ∂(μ ω)
+    ∀ φ : ℂ → ℝ, Continuous φ → HasCompactSupport φ → AEMeasurable (fun ω => ∫ x, φ x ∂(μ ω)) P
 
 /-- FIRST-PASS FROZEN. Disc Green function with pole at the centre. For every radius `R > 0`, the Green function
 `G_{B_R}(0,·) = greenFunction (ball 0 R) 0` is nonnegative and continuous on `B_R ∖ {0}`; explicitly

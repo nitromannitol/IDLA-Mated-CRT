@@ -47,19 +47,19 @@ measurable `P`-null set `M`. Then `A` has a measurable null hull on `Measure ℂ
 of the codes: `B` agrees a.e. with a measurable `S`, and the discrepancy set `D` is covered by a measurable null set `T`. -/
 theorem nullHull_of_analytic_code {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hF1 : FrozenUniversalMeasurabilityOfAnalytic) (μ : Ω → Measure ℂ) (f : Measure ℂ → (ℕ → ℝ))
-    (hf : Measurable f) (hμ : Measurable fun ω => f (μ ω)) (A : Set (Measure ℂ)) (B : Set (ℕ → ℝ))
+    (hf : Measurable f) (hμ : AEMeasurable (fun ω => f (μ ω)) P) (A : Set (Measure ℂ)) (B : Set (ℕ → ℝ))
     (hBa : AnalyticSet B) (hAB : A ⊆ f ⁻¹' B) (M : Set Ω) (hM0 : P M = 0)
     (hcov : ∀ ω, f (μ ω) ∈ B → ω ∈ M) :
     ∃ N : Set (Measure ℂ), MeasurableSet N ∧ A ⊆ N ∧ P (μ ⁻¹' N) = 0 := by
   have : IsProbabilityMeasure (P.map fun ω => f (μ ω)) :=
-    (Measure.isProbabilityMeasure_map_iff hμ.aemeasurable).mpr inferInstance
+    (Measure.isProbabilityMeasure_map_iff hμ).mpr inferInstance
   have hnull : NullMeasurableSet B (P.map fun ω => f (μ ω)) :=
     hF1 (ℕ → ℝ) (P.map fun ω => f (μ ω)) inferInstance B hBa
   obtain ⟨S, hS, hBS⟩ := hnull
   have hD : (P.map fun ω => f (μ ω)) {x | ¬ (x ∈ B ↔ x ∈ S)} = 0 := by
     refine measure_mono_null (fun x hx => fun heq => hx (eq_iff_iff.mp heq)) (ae_iff.1 hBS)
   have hT : P ((fun ω => f (μ ω)) ⁻¹' toMeasurable (P.map fun ω => f (μ ω)) {x | ¬ (x ∈ B ↔ x ∈ S)}) = 0 := by
-    rw [← Measure.map_apply hμ (measurableSet_toMeasurable _ _), measure_toMeasurable]
+    rw [← Measure.map_apply_of_aemeasurable hμ (measurableSet_toMeasurable _ _), measure_toMeasurable]
     exact hD
   refine ⟨f ⁻¹' (S ∪ toMeasurable (P.map fun ω => f (μ ω)) {x | ¬ (x ∈ B ↔ x ∈ S)}),
     hf (hS.union (measurableSet_toMeasurable _ _)), ?_, ?_⟩
@@ -123,13 +123,13 @@ theorem measurable_localCode {φs : ℕ → ℂ → ℝ} (hcont : ∀ k, Continu
 measures with finite mass have codes in `B`, then the certificate measures have a measurable null hull. No measurability
 of `B` is needed: `toMeasurable` gives the measurable superset with the same outer mass. -/
 theorem nullHull_of_code_law {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (μ : Ω → Measure ℂ) {X : Type}
-    [MeasurableSpace X] (f : Measure ℂ → X) (hf : Measurable f) (hμ : Measurable fun ω => f (μ ω))
+    [MeasurableSpace X] (f : Measure ℂ → X) (hf : Measurable f) (hμ : AEMeasurable (fun ω => f (μ ω)) P)
     (A : Set (Measure ℂ)) (B : Set X) (hAB : A ⊆ f ⁻¹' B) (hB : (P.map fun ω => f (μ ω)) B = 0) :
     ∃ N : Set (Measure ℂ), MeasurableSet N ∧ A ⊆ N ∧ P (μ ⁻¹' N) = 0 := by
   refine ⟨f ⁻¹' toMeasurable (P.map fun ω => f (μ ω)) B, hf (measurableSet_toMeasurable _ _),
     fun ν hν => Set.preimage_mono (subset_toMeasurable _ _) (hAB hν), ?_⟩
   show P ((fun ω => f (μ ω)) ⁻¹' toMeasurable (P.map fun ω => f (μ ω)) B) = 0
-  rw [← Measure.map_apply hμ (measurableSet_toMeasurable _ _), measure_toMeasurable]
+  rw [← Measure.map_apply_of_aemeasurable hμ (measurableSet_toMeasurable _ _), measure_toMeasurable]
   exact hB
 
 /-- A measure on `ℂ` is locally finite when it has finite mass on every closed disc `B̄_n` (the LQG measure of the cone
@@ -186,8 +186,8 @@ theorem coneCertificateNullHull_of_steps (hlaw : FrozenConeLogLocalCodeLaw)
   have hconeB : (P.map fun ω => localCode φs (μ ω)) B = 0 := by
     rw [hcodeLaw]
     exact hlogB
-  have hμm : Measurable fun ω => localCode φs (μ ω) :=
-    Measurable.of_eval fun k => hmeasF γ hγ hγ2 Ω P hC hcirc μ hcone (φs k) (hφs k).1 (hφs k).2.1
+  have hμm : AEMeasurable (fun ω => localCode φs (μ ω)) P :=
+    aemeasurable_pi_iff.2 fun k => hmeasF γ hγ hγ2 Ω P hC hcirc μ hcone (φs k) (hφs k).1 (hφs k).2.1
   obtain ⟨N₁, hN₁m, hN₁, hN₁0⟩ := nullHull_of_code_law P μ (localCode φs) hfm hμm
     {ν | HasRatPlateauCert ν ∧ LocFinMeasure ν} B
     (fun ν hν => (hB.2 ν hν.2).1 hν.1) hconeB

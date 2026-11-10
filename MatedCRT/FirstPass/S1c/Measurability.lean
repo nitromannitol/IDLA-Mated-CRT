@@ -21,7 +21,7 @@ and a random measure `μ` whose masses of the closed disc are finite almost sure
 theorem nullMeasurableSet_threshold {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     (hF1 : FrozenUniversalMeasurabilityOfAnalytic) {μ : Ω → Measure ℂ} {R u : ℝ} (hR : 0 ≤ R) (hu : 0 < u)
     (hμ : ∀ᵐ ω ∂P, μ ω (closedBall (0 : ℂ) R) < ⊤)
-    (hmeas : ∀ φ : ℂ → ℝ, Continuous φ → HasCompactSupport φ → Measurable fun ω => ∫ x, φ x ∂(μ ω))
+    (hmeas : ∀ φ : ℂ → ℝ, Continuous φ → HasCompactSupport φ → AEMeasurable (fun ω => ∫ x, φ x ∂(μ ω)) P)
     (φs : ℕ → ℂ → ℝ) (hφs : ∀ k, φs k ∈ nonnegTest R)
     (hdense : ∀ φ ∈ nonnegTest R, ∀ ε : ℝ, 0 < ε → ∃ k, ∀ x ∈ closedBall (0 : ℂ) R,
         |φ x - φs k x| < ε ∧ |Laplacian.laplacian φ x - Laplacian.laplacian (φs k) x| < ε)
@@ -30,15 +30,23 @@ theorem nullMeasurableSet_threshold {Ω : Type} [MeasurableSpace Ω] {P : Measur
     NullMeasurableSet
       {ω | -u * greenFunction (ball (0 : ℂ) R) 0 p < leastSupersolution (μ ω) R 0 u p} P := by
   let Y : Ω → (ℕ → ℝ) := fun ω k => ∫ x, φs k x ∂(μ ω)
-  have hY : Measurable Y :=
-    measurable_pi_iff.2 fun k => hmeas (φs k)
+  have hY : AEMeasurable Y P :=
+    aemeasurable_pi_iff.2 fun k => hmeas (φs k)
       (contDiff_two_of_isTestFunction (hφs k).1).continuous (hφs k).1.2.1
+  -- a measurable representative of the moment vector, equal to `Y` almost surely
+  let g : Ω → (ℕ → ℝ) := hY.mk Y
+  have hg : Measurable g := hY.measurable_mk
+  have hYg : Y =ᵐ[P] g := hY.ae_eq_mk
   have hA : ∀ q : ℚ, AnalyticSet (Prod.fst '' supersolutionPairs hR φs u
       (greenFunction (ball (0 : ℂ) R) 0) ⟨p, hp⟩ (q : ℝ)) :=
     fun q => analyticSet_supersolutionMoments hR (fun k => (hφs k).1) u _ ⟨p, hp⟩ (q : ℝ)
   have hNM : ∀ q : ℚ, NullMeasurableSet (Y ⁻¹' (Prod.fst '' supersolutionPairs hR φs u
       (greenFunction (ball (0 : ℂ) R) 0) ⟨p, hp⟩ (q : ℝ))) P := fun q =>
-    (hF1 (ℕ → ℝ) (P.map Y) (by infer_instance) _ (hA q)).preimage ⟨hY, fun _ h => h⟩
+    ((hF1 (ℕ → ℝ) (P.map g) (by infer_instance) _ (hA q)).preimage ⟨hg, fun _ h => h⟩).congr
+      (by
+        rw [Filter.eventuallyEqSet_iff]
+        filter_upwards [hYg] with ω hω
+        simp only [mem_preimage, hω])
   have hset : {ω | -u * greenFunction (ball (0 : ℂ) R) 0 p < leastSupersolution (μ ω) R 0 u p} =ᵐ[P]
       ⋃ q : ℚ, ({ω | -u * greenFunction (ball (0 : ℂ) R) 0 p < (q : ℝ)} ∩
         (Y ⁻¹' (Prod.fst '' supersolutionPairs hR φs u (greenFunction (ball (0 : ℂ) R) 0) ⟨p, hp⟩ (q : ℝ)))ᶜ) := by

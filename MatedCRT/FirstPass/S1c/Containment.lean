@@ -66,7 +66,7 @@ theorem nullMeasurableSet_not_mem_cluster {Ω : Type} [MeasurableSpace Ω] {P : 
     (hF1 : FrozenUniversalMeasurabilityOfAnalytic) (hF3 : FrozenDiskGreenNonnegCont)
     {μ : Ω → Measure ℂ} {u R0 : ℝ} (hu : 0 < u) (hR0 : 0 ≤ R0)
     (hloc : ∀ᵐ ω ∂P, μ ω (closedBall (0 : ℂ) R0) < ⊤)
-    (hmeas : ∀ φ : ℂ → ℝ, Continuous φ → HasCompactSupport φ → Measurable fun ω => ∫ x, φ x ∂(μ ω))
+    (hmeas : ∀ φ : ℂ → ℝ, Continuous φ → HasCompactSupport φ → AEMeasurable (fun ω => ∫ x, φ x ∂(μ ω)) P)
     (φs : ℕ → ℂ → ℝ) (hφs : ∀ k, φs k ∈ nonnegTest R0)
     (hdense : ∀ φ ∈ nonnegTest R0, ∀ ε : ℝ, 0 < ε → ∃ k, ∀ x ∈ closedBall (0 : ℂ) R0,
         |φ x - φs k x| < ε ∧ |Laplacian.laplacian φ x - Laplacian.laplacian (φs k) x| < ε)
@@ -93,7 +93,7 @@ theorem nullMeasurableSet_forall_not_mem_cluster {Ω : Type} [MeasurableSpace Ω
     [IsProbabilityMeasure P] (hF1 : FrozenUniversalMeasurabilityOfAnalytic) (hF3 : FrozenDiskGreenNonnegCont)
     {μ : Ω → Measure ℂ} {u : ℝ} (hu : 0 < u) (n : ℕ)
     (hloc : ∀ R : ℕ, ∀ᵐ ω ∂P, μ ω (closedBall (0 : ℂ) (R : ℝ)) < ⊤)
-    (hmeas : ∀ φ : ℂ → ℝ, Continuous φ → HasCompactSupport φ → Measurable fun ω => ∫ x, φ x ∂(μ ω))
+    (hmeas : ∀ φ : ℂ → ℝ, Continuous φ → HasCompactSupport φ → AEMeasurable (fun ω => ∫ x, φ x ∂(μ ω)) P)
     (φs : ℕ → ℕ → ℂ → ℝ) (hφs : ∀ (R : ℕ) (k : ℕ), φs R k ∈ nonnegTest (R : ℝ))
     (hdense : ∀ R : ℕ, ∀ φ ∈ nonnegTest (R : ℝ), ∀ ε : ℝ, 0 < ε → ∃ k, ∀ x ∈ closedBall (0 : ℂ) (R : ℝ),
         |φ x - φs R k x| < ε ∧ |Laplacian.laplacian φ x - Laplacian.laplacian (φs R k) x| < ε)
@@ -129,7 +129,7 @@ theorem nullMeasurableSet_exists_forall_cluster {Ω : Type} [MeasurableSpace Ω]
     [IsProbabilityMeasure P] (hF1 : FrozenUniversalMeasurabilityOfAnalytic) (hF3 : FrozenDiskGreenNonnegCont)
     {μ : Ω → Measure ℂ} {u : ℝ} (hu : 0 < u) (n : ℕ)
     (hloc : ∀ R : ℕ, ∀ᵐ ω ∂P, μ ω (closedBall (0 : ℂ) (R : ℝ)) < ⊤)
-    (hmeas : ∀ φ : ℂ → ℝ, Continuous φ → HasCompactSupport φ → Measurable fun ω => ∫ x, φ x ∂(μ ω))
+    (hmeas : ∀ φ : ℂ → ℝ, Continuous φ → HasCompactSupport φ → AEMeasurable (fun ω => ∫ x, φ x ∂(μ ω)) P)
     (φs : ℕ → ℕ → ℂ → ℝ) (hφs : ∀ (R : ℕ) (k : ℕ), φs R k ∈ nonnegTest (R : ℝ))
     (hdense : ∀ R : ℕ, ∀ φ ∈ nonnegTest (R : ℝ), ∀ ε : ℝ, 0 < ε → ∃ k, ∀ x ∈ closedBall (0 : ℂ) (R : ℝ),
         |φ x - φs R k x| < ε ∧ |Laplacian.laplacian φ x - Laplacian.laplacian (φs R k) x| < ε) :
