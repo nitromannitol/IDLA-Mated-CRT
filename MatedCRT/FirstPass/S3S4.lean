@@ -14,6 +14,8 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.PathFunctionalStep
 import MatedCRT.Proofs.Sec4.SubsequentialProperties.PreparedInputs
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.PreparedConeScaling
 import MatedCRT.FirstPass.Frozen.S3S4
+import MatedCRT.FirstPass.Frozen.S3c
+import MatedCRT.FirstPass.S3c.ExitTimeCore
 
 /-!
 # First pass: paper-owned results of Sections 3 and 4 (task fp-S3S4, q2)
@@ -27,11 +29,13 @@ namespace MatedCRT
 
 /-- **Lemma 3.1** (lemma:discrete-potential-tightness), corrected form (C3, C11; `DiscretePotentialTightnessCorrectedStmt`,
 since the printed Draft is false). Hypotheses: `MepsScalingInput` (External, eq:meps-scaling), Lemma 2.7
-(`VolumeGrowthStmt`), Lemma 2.18 (`ExitTimeUpperBoundStmt`) and the frozen corrected Lemma 3.2. -/
+(`VolumeGrowthStmt`), the first clause of Lemma 2.18 in the per-model form `BG20Prop51 𝒮` (frozen, BG20 Proposition 5.1,
+`FirstPass/Frozen/S3c.lean`; task fp-S3c2-3-1-per-model, replacing `ExitTimeUpperBoundStmt 𝒮`) and the frozen corrected
+Lemma 3.2. The second clause of Lemma 2.18 is derived by `exitTimeUpperBoundStmt_core` (FirstPass/S3c/ExitTimeCore.lean). -/
 theorem firstPass_3_1_corrected {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingInput 𝒮) (h27 : VolumeGrowthStmt)
-    (h218 : ExitTimeUpperBoundStmt 𝒮) (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) :
+    (hBG : BG20Prop51 𝒮) (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) :
     DiscretePotentialTightnessCorrectedStmt 𝒮 :=
-  discretePotentialTightnessCorrected_of_inputs hm h27 h218 h32
+  discretePotentialTightnessCorrected_of_inputs hm h27 (exitTimeUpperBoundStmt_core hBG h27) h32
 
 /-- **Lemma 4.3** (lemma:discrete-basic-properties, paper line 1690). No hypothesis. -/
 theorem firstPass_4_3 (𝒮 : SpaceFillingSLEModel) : DiscreteBasicPropertiesStmt 𝒮 :=

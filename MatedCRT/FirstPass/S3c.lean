@@ -147,6 +147,22 @@ theorem firstPass_3_1_countable_of_bg20 {𝒮 : SpaceFillingSLEModel} {ν : ℝ 
     DiscretePotentialTightnessCountableStmt 𝒮 :=
   firstPass_3_1_countable hm h27 (exitTimeUpperBoundStmt_of_bg20 hν hBG hLaw h27) h32
 
+/-- **Lemma 3.1, samplewise faithful form, per-model exit-time input** (task fp-S3c2-3-1-per-model). As
+`firstPass_3_1_faithful_of_bg20`, but the exit-time input is the per-model frozen `BG20Prop51 𝒮` (BG20 Proposition 5.1,
+`FirstPass/Frozen/S3c.lean`) instead of the reference-package form `BG20Prop51Ref ν`, which is FALSE as typed (chat 186).
+The second clause of Lemma 2.18 is derived from `BG20Prop51 𝒮` and `VolumeGrowthStmt` by `exitTimeUpperBoundStmt_core`. -/
+theorem firstPass_3_1_faithful_of_bg20Model {𝒮 : SpaceFillingSLEModel} (hBG : BG20Prop51 𝒮)
+    (hm : MepsScalingInput 𝒮) (h27 : VolumeGrowthStmt) (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) :
+    DiscretePotentialTightnessPointwiseStmt 𝒮 :=
+  firstPass_3_1_faithful hm h27 (exitTimeUpperBoundStmt_core hBG h27) h32
+
+/-- **Lemma 3.1 (countable-family form), per-model exit-time input** (task fp-S3c2-3-1-per-model; as
+`firstPass_3_1_countable_of_bg20` with `BG20Prop51 𝒮` in place of `BG20Prop51Ref ν`). -/
+theorem firstPass_3_1_countable_of_bg20Model {𝒮 : SpaceFillingSLEModel} (hBG : BG20Prop51 𝒮)
+    (hm : MepsScalingInput 𝒮) (h27 : VolumeGrowthStmt) (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) :
+    DiscretePotentialTightnessCountableStmt 𝒮 :=
+  firstPass_3_1_countable hm h27 (exitTimeUpperBoundStmt_core hBG h27) h32
+
 end S3c
 
 end MatedCRT
@@ -155,4 +171,6 @@ end MatedCRT
 #print axioms MatedCRT.S3c.firstPass_3_1_faithful
 #print axioms MatedCRT.S3c.firstPass_3_1_faithful_of_bg20
 #print axioms MatedCRT.S3c.firstPass_3_1_countable_of_bg20
+#print axioms MatedCRT.S3c.firstPass_3_1_faithful_of_bg20Model
+#print axioms MatedCRT.S3c.firstPass_3_1_countable_of_bg20Model
 #print axioms MatedCRT.exitTimeUpperBoundStmt_of_bg20
