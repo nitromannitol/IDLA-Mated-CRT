@@ -1,3 +1,5 @@
+import MatedCRT.FirstPass.S4S6c.CountingExitAlpha68
+import MatedCRT.FirstPass.SLERef.Certified
 import MatedCRT.FirstPass.S4S6c.ShellTop68
 import MatedCRT.Proofs.Sec3.ConeBallMass
 import MatedCRT.FirstPass.S4S6c.LitConeLQG68
@@ -350,6 +352,53 @@ theorem closed_6_x_hU_cgRC {𝒮 : SpaceFillingSLEModel}
     UniformConstantOrderLowerBoundStmt 𝒮 :=
   Lemma68ShellTop.hU_top_cgRC hG h28 hK hLit hBM hCC hB1 hμ hOne
 
+/-! ### First-pass forms from the certified reference model (q2, fp-S4S6c-closed-cgrc; lead li 17:45 UTC).
+The Draft inputs `GreenKernelLowerBoundStmt 𝒮` (Lemma 2.16) and `CellSizeEstimateStmt 𝒮` (Lemma 2.8) are the projections
+`CertifiedReferenceModel.greenKernelLowerBound` (SLERef/Certified.lean:131) and `CertifiedReferenceModel.cellSizeEstimate`
+(SLERef/Certified.lean:100) of the certified reference model `hCRM` (a FIRST-PASS FROZEN bundle, Certified.lean:54). The counting
+input `CountingAtExitAlphaStmt 𝒮` is `CountingExitAlpha68.countingAtExitAlphaStmt_of_firstPass hCRM` (CountingExitAlpha68.lean:152).
+The only producer binder left is `hOne : ShellOneTestOrderAeCGRCStmt 𝒮` (ShellHoneInst68.lean:414). -/
+
+/-- **Lemma 6.7, first-pass form of the counting CG route.** Binders: `hCRM`, the literature inputs `LitExistence`,
+`LitWholePlaneBallMass`, `LitCoordChange`, `LitQuantumConeLQGMeasureExistence`, the frozen `FPConeWholePlaneFieldLaw`, and
+the producer `hOne`. -/
+theorem firstPass_6_7_of_hOne {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLEModel}
+    (hCRM : CertifiedReferenceModel ν 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeCGRCStmt 𝒮) :
+    FaithfulConstantOrderLowerBoundStmt 𝒮 :=
+  closed_6_7_hU_cgRC (CertifiedReferenceModel.greenKernelLowerBound hCRM)
+    (CertifiedReferenceModel.cellSizeEstimate hCRM) hLit hBM hCC hB1 hμ
+    (CountingExitAlpha68.countingAtExitAlphaStmt_of_firstPass hCRM) hOne
+
+/-- **Lemma 6.8, first-pass form of the counting CG route (localized).** As `firstPass_6_7_of_hOne`, with the frozen
+`FrozenBerestyckiGwynneConeBallMass` input `hBG` (Frozen/S5Cited.lean:35). -/
+theorem firstPass_6_8_of_hOne {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLEModel}
+    (hCRM : CertifiedReferenceModel ν 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
+    (hBG : FrozenBerestyckiGwynneConeBallMass)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeCGRCStmt 𝒮) :
+    FaithfulConstantOrderLowerBoundDivStmt 𝒮 :=
+  closed_6_8_hU_cgRC (CertifiedReferenceModel.greenKernelLowerBound hCRM)
+    (CertifiedReferenceModel.cellSizeEstimate hCRM) hLit hBM hCC hB1 hμ hBG
+    (CountingExitAlpha68.countingAtExitAlphaStmt_of_firstPass hCRM) hOne
+
+/-- **Lemma 6.9, first-pass form of the counting CG route.** Binders as `firstPass_6_7_of_hOne`. -/
+theorem firstPass_6_9_of_hOne {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLEModel}
+    (hCRM : CertifiedReferenceModel ν 𝒮)
+    (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
+    (hCC : MatedCRT.S2VG.LitCoordChange) (hB1 : FPConeWholePlaneFieldLaw)
+    (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
+    (hOne : Lemma68ShellHoneInst.ShellOneTestOrderAeCGRCStmt 𝒮) :
+    FaithfulChanceOfBeingAbsorbedStmt 𝒮 :=
+  closed_6_9_hU_cgRC (CertifiedReferenceModel.greenKernelLowerBound hCRM)
+    (CertifiedReferenceModel.cellSizeEstimate hCRM) hLit hBM hCC hB1 hμ
+    (CountingExitAlpha68.countingAtExitAlphaStmt_of_firstPass hCRM) hOne
+
 end MatedCRT
 
 #print axioms MatedCRT.closed_6_x_hU_eps
@@ -371,4 +420,7 @@ end MatedCRT
 #print axioms MatedCRT.closed_6_7_hU_cgRC
 #print axioms MatedCRT.closed_6_8_hU_cgRC
 #print axioms MatedCRT.closed_6_9_hU_cgRC
+#print axioms MatedCRT.firstPass_6_7_of_hOne
+#print axioms MatedCRT.firstPass_6_8_of_hOne
+#print axioms MatedCRT.firstPass_6_9_of_hOne
 #print axioms MatedCRT.closed_6_9_hU_cg
