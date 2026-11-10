@@ -1,10 +1,12 @@
 import MatedCRT.FirstPass.S5S6S7
+import MatedCRT.FirstPass.S6p
 import MatedCRT.FirstPass.Closure.SLEPackage
 
 /-!
 # Closed results, Section 6 (task fp-Closure-counted-results, worker z1)
 
-Closed: 6.4 (`closed_6_4`, good annulus prevalence) and 6.5 (`closed_6_5`, annulus hit) are aliases (no SLE model).
+Closed: 6.4 (`closed_6_4`, corrected [C18] uniform form, `firstPass_6_4_uniform`) and 6.5 (`closed_6_5`, annulus hit) are
+aliases (no SLE model).
 6.10 (`closed_6_10`) is stated for a model `𝒮` with normalized law `ν`, with `GreenKernelLowerBoundStmt` and
 `ExitTimeUpperBoundStmt` from the package. Not closed: 6.1 (needs Lemma 5.1, not counted).
 -/
@@ -13,8 +15,10 @@ open MeasureTheory
 
 namespace MatedCRT
 
-/-- Lemma 6.4 (good prevalence of annuli), closed. Hypotheses: frozen whole-plane Props. -/
-alias closed_6_4 := firstPass_6_4
+/-- Lemma 6.4 (good prevalence of annuli), corrected form [C18] with `C = C(γ, c₀)`: `GoodAnnulusPrevalenceUniformStmt`,
+from `firstPass_6_4_uniform` (S6p.lean, z8). Hypotheses: the frozen whole-plane Props and the EXTERNAL / frozen inputs of
+`firstPass_6_4_uniform` (the same four hypotheses as the printed `firstPass_6_4`). -/
+alias closed_6_4 := MatedCRT.FirstPass64.firstPass_6_4_uniform
 
 /-- Lemma 6.5 (annulus hit), closed. Hypotheses: frozen whole-plane Props. -/
 alias closed_6_5 := firstPass_6_5
