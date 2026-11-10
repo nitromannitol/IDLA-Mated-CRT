@@ -3,6 +3,7 @@ import MatedCRT.FirstPass.S4d.StrictGapReduction
 import MatedCRT.FirstPass.S4d.DeterministicComparison
 import MatedCRT.FirstPass.S4d.FixedTimeUnion
 import MatedCRT.FirstPass.S4d.FixedTimeFinal
+import MatedCRT.FirstPass.S2g.HalfBallGate
 
 /-!
 # FIRST PASS, Proposition 4.2 (prop:div-sandpile-lower-bound): assembly with the cone family (q4)
@@ -217,5 +218,41 @@ theorem firstPass_4_2_of_fixed_time_steps {𝒮 : SpaceFillingSLEModel}
     (strictGapFixedTimeUnionStep_of_steps 𝒮 h24 h25
       (coneFamilyAEMeasurable_proved hcan hcl h27 hE1 hE2 hscale h22) hScaleInv hscale)
     hcan hcl hE1 hE2 hscale h22
+
+open _root_.HarmonicBalls in
+/-- **Prop 4.2 with the canonical half-ball gate discharged (q4, fp-S4d-4-2-assembly).** `ConeCanonicalHalfBallStep`
+is no longer a hypothesis: it is `coneCanonicalHalfBallStep_of_draft` (`FirstPass/S2g/HalfBallGate.lean`, q1), applied to
+its Draft statements and frozen inputs. The gate's minimum principle, Green ball and pole inputs are `hwmp`, `hG`, `hpole`.
+Still explicit: the closure step `hcl` (`ConeHalfBallClosureInsideStep`; route B, `coneHalfBallClosureInsideStep_corrected`,
+reduces it to the open `WholePlaneLQGModelStep` and `ConeWholePlaneFieldLawStep`), the scale invariance Lemma 2.6 `hScaleInv`,
+the frozen cone externals `hE1`, `hE2` and the quantum cone scaling inputs. Statement of Prop 4.2 unchanged. -/
+theorem firstPass_4_2_of_halfball_gate {𝒮 : SpaceFillingSLEModel}
+    (hm : MepsScalingInput 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)
+    (h34 : IntegralConvergenceGreenFunctionStmt 𝒮) (h214 : GreenKernelUpperBoundStmt 𝒮)
+    (h28 : CellSizeEstimateStmt 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
+    (h218 : ExitTimeUpperBoundStmt 𝒮) (h27 : VolumeGrowthStmt)
+    (hH : FrozenDiscreteHolderContinuityCorrected 𝒮) (hcone : FrozenConeEnvironmentScaling 𝒮)
+    (h23 : ConeHarmonicBallsStmt) (h24 : ConeHarmonicBallsUpToFixedTimeStmt)
+    (h25 : ConeScaleInvarianceUpToFixedTimeStmt) (h33 : UniformConvergenceGreenKernelStmt 𝒮)
+    (hG : _root_.HarmonicBalls.GreenFunctionBallStmt) (hpc : FrozenPunctureConnected)
+    (hsmp : FPStrongMinimumPrinciple) (hwmp : FrozenSuperharmonicMinimumPrinciple)
+    (hpole : FrozenGreenDiscPole)
+    (hScaleInv : ConeScaleInvarianceStmt)
+    (hU : FrozenUniversalMeasurabilityOfAnalytic) (hmeasT : FrozenLQGTestIntegralMeasurable)
+    (hstd : FrozenConeLogLocalCodeLawStd) (hCentre : FrozenGreenBallCentre)
+    (hOpen : ClusterOpenLaplacianStmt.{0}) (hSup : LeastSupersolutionMemStmt.{0})
+    (hCons : ClusterConservationOfMassStmt.{0}) (hMono : ClusterMonotoneStmt.{0})
+    (hCompat : ClusterCompatibilityStmt.{0}) (hBdry : ClusterBoundaryMeasureZeroStmt.{0})
+    (hExist : ExistenceHarmonicBallsStmt.{0}) (hThm11 : ExistenceUniquenessHarmonicBallsStmt.{0})
+    (hProp56 : UniquenessHarmonicBallsStmt.{0}) (hconf : FrozenHBInitialConfinement)
+    (hcl : ConeHalfBallClosureInsideStep)
+    (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
+    (hscale : QuantumConeScalingInput) (h22 : LQGMeasurePropertiesStmt) :
+    DivSandpileLowerBoundStmt 𝒮 :=
+  firstPass_4_2_of_fixed_time_steps hm h210 h34 h214 h28 h35 h218 h27 hH hcone h23 h24 h25 h33 hG hpc hsmp hwmp hpole
+    hScaleInv
+    (coneCanonicalHalfBallStep_of_draft hU hmeasT hstd hwmp hCentre hG hpole hOpen hSup hCons hMono hCompat hBdry
+      hExist hThm11 hProp56 hconf)
+    hcl hE1 hE2 hscale h22
 
 end MatedCRT
