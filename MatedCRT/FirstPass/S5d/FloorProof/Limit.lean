@@ -39,6 +39,15 @@ theorem measure_le_three {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (A B
     _ ≤ P (B ∪ C) + P D := measure_union_le _ _
     _ ≤ P B + P C + P D := add_le_add_left (measure_union_le _ _) _
 
+
+/-- The union bound for four events (used in the event inclusion of Section 9). -/
+theorem measure_le_four {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (A B C D : Set Ω) :
+    P (A ∪ B ∪ C ∪ D) ≤ P A + (P B + (P C + P D)) := by
+  calc P (A ∪ B ∪ C ∪ D) ≤ P (A ∪ B ∪ C) + P D := measure_union_le _ _
+    _ ≤ (P (A ∪ B) + P C) + P D := by gcongr; exact measure_union_le _ _
+    _ ≤ ((P A + P B) + P C) + P D := by gcongr; exact measure_union_le _ _
+    _ = P A + (P B + (P C + P D)) := by ring
+
 end FloorProof
 
 end MatedCRT
