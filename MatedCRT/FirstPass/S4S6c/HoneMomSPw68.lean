@@ -269,5 +269,58 @@ theorem hmomS_pointwise_rhoMom_s1 {γ ρ s₀ α CE ε ρmom C ζ r s1 : ℝ} {�
   exact HoneMomS239.Shell.hmomS_rhoMom hcl (i.A : Set ℤ) (shellCount r (dyadicD r ^ shortExp ζ) - 1)
     (fillCells ε (S.η ω) (i.Θ : Set ℤ)) (winRf S ρ ζ C r ω) r (dyadicD r ^ shortExp ζ) (dyadicD r) i.a k hk
 
+/-- **`hmomS_pointwise_s1` with a free window constant `c0W` (`_g`, fp-S4S6c-c0-generic, q3).** The window radius
+`winRf S ρ ζ C r ω` (= `windowRfT S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) ω`, B1Assembly68.lean:63-65) is written
+inline as `windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω` (`Lemma68WindowRf.windowRfT`, no new definition). The guard
+`FullAdmAt s1` is generic in `s1`. The proof discards the guard (`intro _`) and passes the radius to
+`HoneMomS239.Shell.hmomS_rhoMom` as an arbitrary function, so no hypothesis on `s1` or `c0W` is used, and the value of
+`shellC068` is never read. The conclusion is the binder `hmomS` of `shellOneTest_at_of_goodEnv_loc_g` (B1Assembly68.lean:1216)
+with the test radius `ρ`; for its radius `rhoCell68 ρ` use `hmomS_pointwise_rhoMom_s1_g`. -/
+theorem hmomS_pointwise_s1_g {γ ω₀ ρ CG ζ α CE ε C s₀ r s1 c0W : ℝ} {Ω : Type} [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) {ω : Ω} (hω : ω ∈ Lemma68Guard10.meshEvent S γ ω₀ ρ CG ζ α CE ε)
+    (i : Lemma68Config.Config68) :
+    Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+        x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
+          (Lemma68WindowRf.windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω) k →
+          ∀ D : Set ℂ, MeasurableSet D → D ⊆ ball 0 ρ → ENNReal.ofReal (ε ^ α) ≤ S.μ ω D →
+            ∀ a ∈ cellVertices ε (S.η ω) D, ∀ N : ℕ,
+              exitTimeMoment (S.mult ε ω) (interiorCellVertices ε (S.η ω) D) a N ≤
+                ENNReal.ofReal (N.factorial * CE ^ N * ε ^ (-(N : ℝ))) *
+                  (⨆ z' ∈ D, ∫⁻ x in Metric.thickening (ε ^ α) D,
+                    ENNReal.ofReal (Real.log (1 / ‖z' - x‖) + 1) ∂(S.μ ω)) ^ N := by
+  intro _
+  have hexit : ω ∈ exitTimeEvent68 S α ρ CE ε := hω.2
+  have hcl : S3cBridge.ExitMomentClause (S.mult ε ω) (S.μ ω) (S.η ω) ε α CE ρ := hexit.1
+  intro k hk
+  exact HoneMomS239.Shell.hmomS_rhoMom hcl (i.A : Set ℤ) (shellCount r (dyadicD r ^ shortExp ζ) - 1)
+    (fillCells ε (S.η ω) (i.Θ : Set ℤ))
+    (Lemma68WindowRf.windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω) r (dyadicD r ^ shortExp ζ) (dyadicD r)
+    i.a k hk
+
+/-- **`hmomS_pointwise_rhoMom_s1` with a free window constant `c0W` (`_g`, fp-S4S6c-c0-generic, q3).** The guard
+`FullAdmAt s1` is generic in `s1` and the window radius is `windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω` (inline,
+in place of `winRf S ρ ζ C r ω`). The proof discards the guard and uses only the exit-moment clause at `ρmom`; no
+hypothesis on `s1` or `c0W` is used. With `ρmom := rhoCell68 ρ` this is the binder `hmomS` of
+`shellOneTest_at_of_goodEnv_loc_g` (B1Assembly68.lean:1216, test sets in `ball 0 (rhoCell68 ρ)`). -/
+theorem hmomS_pointwise_rhoMom_s1_g {γ ρ s₀ α CE ε ρmom C ζ r s1 c0W : ℝ} {Ω : Type} [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) {ω : Ω} (hω : ω ∈ exitTimeEvent68 S α ρmom CE ε) (i : Lemma68Config.Config68) :
+    Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+        x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
+          (Lemma68WindowRf.windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω) k →
+          ∀ D : Set ℂ, MeasurableSet D → D ⊆ ball 0 ρmom → ENNReal.ofReal (ε ^ α) ≤ S.μ ω D →
+            ∀ a ∈ cellVertices ε (S.η ω) D, ∀ N : ℕ,
+              exitTimeMoment (S.mult ε ω) (interiorCellVertices ε (S.η ω) D) a N ≤
+                ENNReal.ofReal (N.factorial * CE ^ N * ε ^ (-(N : ℝ))) *
+                  (⨆ z' ∈ D, ∫⁻ x in Metric.thickening (ε ^ α) D,
+                    ENNReal.ofReal (Real.log (1 / ‖z' - x‖) + 1) ∂(S.μ ω)) ^ N := by
+  intro _ k hk
+  have hcl : S3cBridge.ExitMomentClause (S.mult ε ω) (S.μ ω) (S.η ω) ε α CE ρmom := hω.1
+  exact HoneMomS239.Shell.hmomS_rhoMom hcl (i.A : Set ℤ) (shellCount r (dyadicD r ^ shortExp ζ) - 1)
+    (fillCells ε (S.η ω) (i.Θ : Set ℤ))
+    (Lemma68WindowRf.windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω) r (dyadicD r ^ shortExp ζ) (dyadicD r)
+    i.a k hk
+
 end HoneMomSPw68
 end MatedCRT
