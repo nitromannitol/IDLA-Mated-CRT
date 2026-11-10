@@ -5,6 +5,7 @@ import MatedCRT.FirstPass.S2g.Section6Canonical
 import MatedCRT.FirstPass.S2g.HalfBallGate
 import MatedCRT.FirstPass.S2i.CanonicalFactor
 import MatedCRT.FirstPass.S2i.GlobalFactor
+import MatedCRT.FirstPass.Frozen.S4S5b
 
 /-! # Corrected Lemmas 2.5, 2.6 and Proposition 6.1: assembly (fp-S2g, q1, round 42)
 
@@ -17,7 +18,7 @@ import MatedCRT.FirstPass.S2i.GlobalFactor
   `FrozenConeLogLocalCodeLawStd` as the frozen interface (operator decision 01:40 UTC); the closure-step inputs of
   `coneHalfBallClosureInsideStep_corrected` (route B, `S2k.lean:38`): `LQGVolumeGrowthAllScalesStmt`,
   `FrozenInsertionCoordinateRule`, `HarmonicBallLocalSetStmt`, `ClusterStrongCompatibilityStmt`, `WholePlaneLQGModelStep`,
-  `FrozenConeWholePlaneFieldLaw` (frozen, `Frozen/S2g.lean`); `VolumeGrowthStmt`; for 2.5 and 2.6 also the frozen cone externals `ConeCircleLawUniqueStep`
+  `FPConeWholePlaneFieldLaw` (frozen, `Frozen/S4S5b.lean:40`); `VolumeGrowthStmt`; for 2.5 and 2.6 also the frozen cone externals `ConeCircleLawUniqueStep`
   and `ConeReferenceExistsStep` (`FirstPass/Frozen/S2i.lean`), and `QuantumConeScalingInput`, `LQGMeasurePropertiesStmt`. -/
 
 open MeasureTheory Set Filter Topology Metric HarmonicBalls
@@ -40,7 +41,7 @@ theorem firstPass_6_1_corrected (𝒮 : SpaceFillingSLEModel) (h610 : IterativeB
     (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
     (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
     (hloc : HarmonicBallLocalSetStmt.{0}) (hSC : ClusterStrongCompatibilityStmt.{0})
-    (hB2 : WholePlaneLQGModelStep) (hFL : FrozenConeWholePlaneFieldLaw)
+    (hB2 : WholePlaneLQGModelStep) (hFL : FPConeWholePlaneFieldLaw)
     (h27 : VolumeGrowthStmt) : IDLAUpperBoundStmt 𝒮 :=
   firstPass_6_1_canonical24 𝒮 h610 h51
     (firstPass_2_4_corrected hU hmeasT hstd hmin hCentre hGB hpole hOpen hSup hCons hMono hCompat hBdry hExist hThm11
@@ -64,7 +65,7 @@ theorem firstPass_2_5_corrected
     (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
     (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
     (hloc : HarmonicBallLocalSetStmt.{0}) (hSC : ClusterStrongCompatibilityStmt.{0})
-    (hB2 : WholePlaneLQGModelStep) (hFL : FrozenConeWholePlaneFieldLaw)
+    (hB2 : WholePlaneLQGModelStep) (hFL : FPConeWholePlaneFieldLaw)
     (h27 : VolumeGrowthStmt)
     (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
     (hscale : QuantumConeScalingInput) (h22 : LQGMeasurePropertiesStmt) :
@@ -94,7 +95,7 @@ theorem firstPass_2_6_corrected
     (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
     (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
     (hloc : HarmonicBallLocalSetStmt.{0}) (hSC : ClusterStrongCompatibilityStmt.{0})
-    (hB2 : WholePlaneLQGModelStep) (hFL : FrozenConeWholePlaneFieldLaw)
+    (hB2 : WholePlaneLQGModelStep) (hFL : FPConeWholePlaneFieldLaw)
     (h27 : VolumeGrowthStmt)
     (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
     (hscale : QuantumConeScalingInput) (h22 : LQGMeasurePropertiesStmt) :
