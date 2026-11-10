@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.S3c.CommonSelection
 import MatedCRT.FirstPass.S3c.Thinning
+import MatedCRT.FirstPass.S3c.PointwiseSelection
 import MatedCRT.FirstPass.Frozen.S3S4
 
 /-!
@@ -16,6 +17,12 @@ quantifier. ChatGPT's fidelity check (notes/fp-gaps/CHATGPT-fidelity-corrected-2
   `tightnessSelectionStep_of_meps` and `tightnessEquicontinuityStep_of_steps` with the almost-sure event moved in front of
   the domain and the data (the events used there do not mention `D`, `E`, `u`, `C`);
 * the deterministic thinning is `exists_polySummable_thinning` (FirstPass/S3c/Thinning.lean).
+
+Task fp-S3c-3-1-fidelity-fix (audit notes/fp-gaps/CHATGPT-idla-3-1-audit.md, §1.3): the admissibility of the data
+(range, convergence of the scales, positivity of `C`, the two bounds) is samplewise. `DiscretePotentialTightnessPointwiseStmt`
+puts it inside the implication on the common event (only the measurability of the data is global); it is proved by
+`tightness_selection_pointwise` (FirstPass/S3c/PointwiseSelection.lean). `DiscretePotentialTightnessFaithfulStmt` and
+`firstPass_3_1_corrected` are kept unchanged for their consumers.
 -/
 
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric HarmonicBalls
@@ -84,8 +91,47 @@ theorem firstPass_3_1_corrected {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingI
   refine ⟨φ, hφ, Ω₀, hΩ₀, fun D hDρ hDo hDc E u C h1 h2 h3 h4 h5 h6 h7 h8 => ?_⟩
   exact hsel D hDρ hDo hDc E u C (by unfold IsTightnessData; exact ⟨h1, h2, h3, h4, h5, h6, h7, h8⟩)
 
+/-- **Lemma 3.1, corrected, samplewise admissibility** (task fp-S3c-3-1-fidelity-fix, audit §1.3). As
+`DiscretePotentialTightnessFaithfulStmt`, but only the measurability of the data is imposed on the whole carrier; the
+range condition, the convergence of the scales, the positivity of `C` and the two bounds are imposed at each sample
+`ω ∈ Ω₀` inside the implication (`PointwiseTightnessData`). The conclusion is the same. -/
+def DiscretePotentialTightnessPointwiseStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
+  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+  ∀ σ₀ : ℕ → ℝ, (∀ n, 0 < σ₀ n) → Tendsto σ₀ atTop (𝓝 0) →
+  ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∃ Ω₀ : Set Ω, (∀ᵐ ω ∂S.P, ω ∈ Ω₀) ∧
+  ∀ D : Set ℂ, D ⊆ ball 0 ρ → IsOpen D → IsConnected D →
+  ∀ (E : Ω → ℕ → ℝ) (u : Ω → ℕ → ℤ → ℝ) (C : Ω → ℝ),
+    (∀ n, Measurable[S.envSigma] fun ω => E ω n) → (∀ n a, Measurable[S.envSigma] fun ω => u ω n a) →
+    Measurable[S.envSigma] C →
+  ∃ Φ : Ω → ℕ → ℕ, (∀ k, Measurable[S.envSigma] fun ω => Φ ω k) ∧
+    ∀ ω ∈ Ω₀, PointwiseTightnessData S D (fun k => σ₀ (φ k)) E u C ω →
+      StrictMono (Φ ω) ∧ ∃ ubar : ℂ → ℝ, ContinuousOn ubar D ∧
+      (∀ O : Set ℂ, IsCompact O → closure O ⊆ D →
+        TendstoUniformlyOn (fun k => rescale (S.mε (E ω (Φ ω k))) (E ω (Φ ω k)) (S.η ω) (u ω (Φ ω k)))
+          ubar atTop O) ∧
+      ((SimplyConnectedSpace D ∧
+          (∀ n, ∀ a ∈ interiorCellVertices (E ω n) (S.η ω) D, matedLaplacian (S.mult (E ω n) ω) (u ω n) a = 0) ∧
+          ∃ χ C' : ℝ, 0 < χ ∧ χ ≤ 1 ∧ 0 < C' ∧ ∀ n, E ω n < 1 →
+            ∀ a ∈ cellVertices (E ω n) (S.η ω) (frontier D), ∀ b ∈ cellVertices (E ω n) (S.η ω) (frontier D),
+              |u ω n a - u ω n b| ≤
+                C' / E ω n * max (E ω n) ‖vertexPoint (E ω n) (S.η ω) a - vertexPoint (E ω n) (S.η ω) b‖ ^ χ) →
+        TendstoUniformlyOn (fun k => rescale (S.mε (E ω (Φ ω k))) (E ω (Φ ω k)) (S.η ω) (u ω (Φ ω k)))
+          ubar atTop (closure D))
+
+/-- **Lemma 3.1, corrected, samplewise faithful form** (`DiscretePotentialTightnessPointwiseStmt`; fidelity fix §1.3). -/
+theorem firstPass_3_1_faithful {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingInput 𝒮) (h27 : VolumeGrowthStmt)
+    (h218 : ExitTimeUpperBoundStmt 𝒮) (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) :
+    DiscretePotentialTightnessPointwiseStmt 𝒮 := by
+  intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS σ₀ hpos hlim
+  obtain ⟨φ, hφ, hpoly⟩ := exists_polySummable_thinning hpos hlim
+  obtain ⟨Ω₀, hΩ₀, hsel⟩ := tightness_selection_pointwise hm (boundedExitTimeRV_of_steps h27) h218 h32
+    (adjacentCellsMeetAeStep 𝒮) γ hγ hγ2 ρ hρ hρ1 Ω S hS (fun k => σ₀ (φ k)) hpoly
+  exact ⟨φ, hφ, Ω₀, hΩ₀, fun D hDρ hDo hDc E u C hEm hum hCm => hsel D hDρ hDo hDc E u C hEm hum hCm⟩
+
 end S3c
 
 end MatedCRT
 
 #print axioms MatedCRT.S3c.firstPass_3_1_corrected
+#print axioms MatedCRT.S3c.firstPass_3_1_faithful
