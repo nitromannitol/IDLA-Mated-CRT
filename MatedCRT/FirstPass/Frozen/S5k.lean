@@ -18,8 +18,11 @@ for every radius `ρ ∈ (0,1)` and every `t > 0`, the continuum least supersolu
 Liouville quantum gravity", arXiv:2208.11795, Lemma 3.1 (`lemma:basic-properties`, printed line 621), in the form
 `LeastSupersolutionMemStmt` (Harmonic-Balls-LQG `HarmonicBalls/Draft/Section3.lean`), applied to the `γ`-LQG measure
 `S.μ` of the quantum cone `S.hC`, `S.hcirc` (`IsQuantumCone`, `IsLQGMeasure`, Setting.lean). The printed statement is for
-the LQG measure of a whole-plane GFF; the transfer from the quantum cone to that setting is NOT checked here.
-PENDING TRUTH CHECK (locator of the transfer from the cone to the whole-plane GFF: pending). Used by:
+the LQG measure of a whole-plane GFF; the transfer from the quantum cone to that setting is checked below.
+Truth check TRUE (chat 150; notes/fp-gaps/CHATGPT-z10-S5k-frozen.md). The cone is compared with a whole-plane GFF with
+insertion parameter `α₀ = γ`: IDLA, arXiv:2211.04891v2, (2.4), (2.8) and Fact 2.2(II), p. 12, give the restricted-field law
+and the measure locality; HB, arXiv:2208.11795v3, Lemma 3.1, p. 13, applied with `α₀ = γ`; its deterministic underpinning is
+HB Appendix A, pp. 65–67, especially Lemma A.1 (simultaneous parameters). Used by:
 `isObstacleSolutionOn_leastSupersolution` (FirstPass/S5k/Identify.lean) and `stoppedFloorObstacleVersion_proved`
 (FirstPass/S5k.lean). -/
 def FrozenLeastSupersolutionMemCone (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -32,7 +35,9 @@ subtype `{ν : Measure ℂ | IsFiniteMeasure ν ∧ ν|_{B̄_ρ} = ν}` of Mathl
 `ν ↦ ν(A)`) is a standard Borel space. Equivalently, the finite measures on the compact metric space `B̄_ρ` with the weak
 topology form a Polish space whose Borel σ-algebra is the evaluation σ-algebra. Source: standard measure theory (Kechris,
 Classical Descriptive Set Theory, Thm 17.23-17.24 and §17.E; Parthasarathy, Probability Measures on Metric Spaces, Thm II.6.2).
-Standard; locator pending. PENDING TRUTH CHECK. Used by: `stoppedFloorObstacleVersion_proved` (FirstPass/S5k.lean), via the
+Truth check TRUE (chat 150; notes/fp-gaps/CHATGPT-z10-S5k-frozen.md): Kechris, Classical Descriptive Set Theory (1995),
+§17.E, Theorem 17.23, p. 112; Theorem 17.24, pp. 112–113; and the following paragraph, p. 113, followed by the
+finite-measure normalization (an isolated extra point) given in that note. Used by: `stoppedFloorObstacleVersion_proved` (FirstPass/S5k.lean), via the
 Lusin-Souslin decoder of Step 4.2 (the planned FirstPass/S5k/Decoder.lean). -/
 def FrozenFiniteMeasureDiskStandardBorel : Prop :=
   ∀ ρ : ℝ, 0 < ρ →
