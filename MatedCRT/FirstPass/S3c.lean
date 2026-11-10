@@ -1,6 +1,7 @@
 import MatedCRT.FirstPass.S3c.CommonSelection
 import MatedCRT.FirstPass.S3c.Thinning
 import MatedCRT.FirstPass.S3c.PointwiseSelection
+import MatedCRT.FirstPass.S3c.CountableFamilies
 import MatedCRT.FirstPass.Frozen.S3S4
 
 /-!
