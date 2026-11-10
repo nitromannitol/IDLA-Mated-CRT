@@ -88,7 +88,7 @@ def FaithfulChanceOfBeingAbsorbedStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
 /-- **Uniform form of Lemma 6.7/6.8** (NOT printed). The printed Lemmas 6.7 and 6.8 choose `s₁, s₂` after `s₀`
 (`FaithfulConstantOrderLowerBoundStmt`, `FaithfulConstantOrderLowerBoundDivStmt`). The printed Lemma 6.9 proof uses one
 `s₂` for all walkers and all `s₀` (CHATGPT-6-9-printed-proof.md, "Inputs used"; LEMMA68.md proves the uniform choices
-`s₁ = 1/4`, `s₂ = 1/2`). Here `s₁, s₂` are chosen after `ρ` and before `s₀`; the body is that of
+`s₂ = 1/2`, with `s₁` small and depending only on `γ`, not `s₁ = 1/4`: chat 183, the [C22] covering repair). Here `s₁, s₂` are chosen after `ρ` and before `s₀`; the body is that of
 `FaithfulConstantOrderLowerBoundStmt`. A rate `s₃` uniform in `s₀` needs this form: the walker absorption bound
 `s₂(s₀)` of the printed 6.7/6.8 only gives the rate `s₂(s₀)/4` (`AbsorptionChernoffStep`). Input of
 `firstPass_6_9_faithful`. -/
@@ -128,8 +128,9 @@ theorem firstPass_6_9_faithful (𝒮 : SpaceFillingSLEModel) (hU : UniformConsta
     (cellVertices ε (S.η ω) (thickening r (fillCells ε (S.η ω) Θ))) s₂ (s₁ * r ^ (2 * chosenBetaMinus γ) / ε)
     hs₂0 hs₂1 (fun a' ha' S' hS' hlt => hω' a' ha' S' hS' hlt) k a hk ha
 
-/-- **Uniform form of Lemma 6.8** (NOT printed). LEMMA68.md proves Lemma 6.8 with the uniform choices `s₁ = 1/4`,
-`s₂ = 1/2` ("Lemma 6.8 holds with s₁ = 1/4, s₂ = 1/2"), and reads "exits through A" as "the walk belongs to A at every
+/-- **Uniform form of Lemma 6.8** (NOT printed). LEMMA68.md proves Lemma 6.8 with the uniform choice `s₂ = 1/2` and
+`s₁` small depending only on `γ` (not `s₁ = 1/4`: chat 183, [C22] covering repair; the earlier value `1/4` is withdrawn),
+and reads "exits through A" as "the walk belongs to A at every
 time strictly before its exit from the indicated vertex set" (LEMMA68.md verdict). The body is that of
 `FaithfulConstantOrderLowerBoundDivStmt`; `s₁, s₂` are chosen after `ρ` and before `s₀`.
 
