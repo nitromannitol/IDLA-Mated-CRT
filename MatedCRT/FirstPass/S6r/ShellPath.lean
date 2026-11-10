@@ -13,7 +13,9 @@ import MatedCRT.FirstPass.S6e.Admissible
 * the cell-level exit set of the killed walk is the thickening of the filled set `K = fillCells Θ`
   (`cellVertices_thickening_eq`, GeometryId), so the killed set `U` contains `V^ε(K + B_r) \ Θ` once the
   named hypothesis `F0 ⊇ {dd < r}` holds (`cellVertices_thickening_sdiff_subset_killed`, the one inclusion needed);
-* the nearest-neighbour steps give the cell adjacency `cell (x m) ∩ cell (x (m+1)) ≠ ∅` (`hadj_of_nn`);
+* consecutive positions of the walk have intersecting cells, `cell (x m) ∩ cell (x (m+1)) ≠ ∅` (named input `hadj`).
+  The edges of the map join touching cells, not only labels `k ± 1` (`bmEdgeCount` joins any `j ≠ k`), so
+  nearest-neighbour steps are not assumed; `hadj_of_nn` is kept for paths that do move by `±1`;
 * the mesh condition `CellDiamLe ε η h Set.univ` (every cell has diameter at most `h`) is an environment
   hypothesis; it gives the diameter and centre-mesh conditions of the chain.
 
@@ -128,7 +130,7 @@ section Pathwise
 variable {ε : ℝ} {η : ℝ → ℂ}
 
 /-- The four shell-order inequalities of `exitQ_le_pow` (S4S6c/WalkBridge68) for the `ShellOmega` times
-`T k = shellExit k`, `L k = testEnd k` on one nearest-neighbour path `x` with finite exits (`hfin`), the
+`T k = shellExit k`, `L k = testEnd k` on one path `x` with intersecting consecutive cells `hadj` and finite exits (`hfin`), the
 hitting shells found by `bad_path_crosses_all_shells`, and the shell chain `shell_chain_pathwise`.
 Named inputs: `hF0` (`F0 ⊇ {dd < r}`, B2), `hmesh` (mesh on all cells), `hstart`, `hfin`, `hzE` (eligibility). -/
 theorem shell_ineqs_path {Θ F0 : Finset ℤ} {r s d h : ℝ} {R : ℂ → ℝ} {Elig : ℂ → Prop} {n : ℕ} {x : ℕ → ℤ}
@@ -136,7 +138,7 @@ theorem shell_ineqs_path {Θ F0 : Finset ℤ} {r s d h : ℝ} {R : ℂ → ℝ} 
     (hh : h ≤ d / 100) (hds : d / 100 ≤ s / 100) (hΘne : Θ.Nonempty)
     (hR : ∀ w, Elig w → d ≤ R w ∧ R w ≤ s) (hF0 : ∀ v : ℤ, dd ε η Θ v < r → v ∈ F0)
     (hmesh : CellDiamLe ε η h Set.univ) (hNs : 20 * ((n + 1 : ℕ) : ℝ) * s ≤ r / 20)
-    (hnn : ∀ m, x (m + 1) = x m + 1 ∨ x (m + 1) = x m - 1)
+    (hadj : ∀ m, (cell ε η (x m) ∩ cell ε η (x (m + 1))).Nonempty)
     (hstart : (cell ε η (x 0) ∩ frontier (thickening (r / 2) (fillCells ε η ↑Θ))).Nonempty)
     (hτ : vExitTime (killed ε η Θ F0 r) x ≠ ⊤)
     (hfin : ∀ k ≤ n, shellExit ε η (fillCells ε η ↑Θ) r s d R k x ≠ ⊤ ∧
@@ -158,7 +160,7 @@ theorem shell_ineqs_path {Θ F0 : Finset ℤ} {r s d h : ℝ} {R : ℂ → ℝ} 
     fun hv => vExitTime_toNat_not_mem hτ (cellVertices_thickening_sdiff_subset_killed hη hε hF0 hv)
   have hhs : h ≤ s / 100 := le_trans hh hds
   obtain ⟨hhit, -, -⟩ := bad_path_crosses_all_shells hKne hε hη hr hs hhs x
-    (vExitTime (killed ε η Θ F0 r) x).toNat (n + 1) (↑Θ : Set ℤ) hΘv hτ' (fun m _ => hadj_of_nn hε x hnn m)
+    (vExitTime (killed ε η Θ F0 r) x).toNat (n + 1) (↑Θ : Set ℤ) hΘv hτ' (fun m _ => hadj m)
     hstart (fun m _ => cell_diam_of_univ hε hmesh (x m)) hNs
   have hex : ∀ k ≤ n, ∃ m, (cell ε η (x m) ∩
       twoSidedShell (fillCells ε η ↑Θ) r (shellOffset s (k + 1))).Nonempty := by
@@ -263,7 +265,7 @@ theorem shell_ineqs_path {Θ F0 : Finset ℤ} {r s d h : ℝ} {R : ℂ → ℝ} 
     fun k _ => cellDiamLe_of_univ hmesh _
   obtain ⟨hTTL, -, hTn, hLn⟩ := shell_chain_pathwise (K := fillCells ε η ↑Θ) (Θv := (↑Θ : Set ℤ))
     (x := x) (n := n) (τ := (vExitTime (killed ε η Θ F0 r) x).toNat)
-    hKne hη hε hr hs hs4 hd hh hds (fun m => hadj_of_nn hε x hnn m) hΘv hτ' hstart
+    hKne hη hε hr hs hs4 hd hh hds (fun m => hadj m) hΘv hτ' hstart
     (fun m _ => cell_diam_of_univ hε hmesh (x m)) hNs R Elig hR
     (fun k => gridRound (d / 100) (vertexPoint ε η (x (hitTime ε η (fillCells ε η ↑Θ) r s x k))))
     (fun k _ => rfl) hzElig hmesh'
