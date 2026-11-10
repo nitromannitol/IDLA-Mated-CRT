@@ -3,6 +3,7 @@ import MatedCRT.FirstPass.S4S6c.TraceInputs68
 import MatedCRT.FirstPass.S6n
 import MatedCRT.FirstPass.S4S6c.B1Assembly68
 import MatedCRT.FirstPass.S4S6c.HoneElAe68
+import MatedCRT.FirstPass.S4S6c.HoneSetupAdapt68
 
 /-!
 # Pointwise, radius-uniform inputs for the one-test order (fp-S4S6c-pointwise-r-uniform, z5)
@@ -476,14 +477,6 @@ def ShellResRr (𝒮 : SpaceFillingSLEModel) : Prop :=
             winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
               (dyadicD r ^ shortExp ζ) (dyadicD r) k x) ≤ 1
 
-open Classical in
-/-- Residual `hcap` (owner: unassigned): the cap radius of the sub-cluster is below `r`. -/
-def ShellResCap (𝒮 : SpaceFillingSLEModel) : Prop :=
-  ∀ (γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
-    (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
-    ShellPtPrem 𝒮 γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r S Ew ω →
-    Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
-      ∀ z : ℂ, cRad ε (S.η ω) (Finset.filter (fun v => v ∈ cellVertices ε (S.η ω) (Metric.ball z r)) i.A) < r
 
 /-- Residual `hVolC` (owner: unassigned): the volume lower bound on the shell exits (constants `c₀`, `β⁻`). -/
 def ShellResVolC (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -628,7 +621,7 @@ def ShellResFull (𝒮 : SpaceFillingSLEModel) : Prop :=
 the residual `ShellRes…` inputs above. -/
 theorem shellOneTestPointwiseEps_of_goodEnv {𝒮 : SpaceFillingSLEModel}
     (hmesh : ShellResMesh 𝒮) (hTest : ShellResTest 𝒮)
-    (hTdom : ShellResTdom 𝒮) (hRbd : ShellResRbd 𝒮) (hRr : ShellResRr 𝒮) (hcap : ShellResCap 𝒮)
+    (hTdom : ShellResTdom 𝒮) (hRbd : ShellResRbd 𝒮) (hRr : ShellResRr 𝒮)
     (hVolC : ShellResVolC 𝒮) (hVolY : ShellResVolY 𝒮) (hGreen : ShellResGreen 𝒮)
     (hCountGood : ShellResCountGood 𝒮) (hCellGood : ShellResCellGood 𝒮) (hRcell : ShellResRcell 𝒮)
     (hx1 : ShellResX1 𝒮) (hmomS : ShellResMomS 𝒮) (hWalk : ShellResWalk 𝒮) (hsel : ShellResSel 𝒮)
@@ -678,14 +671,8 @@ theorem shellOneTestPointwiseEps_of_goodEnv {𝒮 : SpaceFillingSLEModel}
   have hpre : ShellPtPrem 𝒮 γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r S Ew ω :=
     ⟨hγ0, hγ2, hω₀, hωα, hα0, hωζ, hωβ, hω2ζ, hCG, hCE, hζ0, hζ1, hρ0, hρ1, hC, hq0, hq0B,
       hR0, hRρ, hRA, hRcut, hs₀, hs₁, hS, hε, hεe, hr10, hrR, hωE, hreg⟩
-  have hq1 : q0 ≤ 1 := by
-    have h2 := one_le_shellChone68 CE CG
-    have h3 : (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE CG) ≤ 1 := by
-      rw [div_le_one (by linarith)]; nlinarith
-    linarith
   have hrA : r ≤ Lemma68Cutoff.rAmp q0 ζ := le_trans hrR hRA
-  have hrz : r ≤ countThreshold ζ :=
-    le_trans hrA (Lemma68ChainGlue.rAmp_le_countThreshold hq0 hq1 hζ0 hζ1)
+  have hrz : r ≤ countThreshold ζ := MatedCRT.Lemma68HoneSetupAdapt.hrz_of_rAmp hq0 hq0B hζ0 hζ1 hrA
   obtain ⟨Rf, h1, h2⟩ := shellOneTest_at_of_goodEnv' hγ0 hγ2 S hρ0 hρ1 hζ0 hζ1 hCG hq0 hq0B hε hs₀ hr0
     (le_trans hrR hRρ) hrz hrA ω₀ hω₀ (shellK68 γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω₀ hζ0 hζ1) rfl ω hreg i
     (ζ := ζ) (CG := CG) (CE := CE) (C := C) (α := α) (q0 := q0) (s₀ := s₀) (ε := ε) (r := r)
@@ -699,7 +686,7 @@ theorem shellOneTestPointwiseEps_of_goodEnv {𝒮 : SpaceFillingSLEModel}
     (hTdom γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     (hRbd γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     (hRr γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
-    (hcap γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
+    (MatedCRT.Lemma68HoneSetupAdapt.hcap_of_continuous (γ := γ) (ρ := ρ) (s₀ := s₀) S ω hcont hε hr0 i)
     (hVolC γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     (hVolY γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     (hGreen γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
