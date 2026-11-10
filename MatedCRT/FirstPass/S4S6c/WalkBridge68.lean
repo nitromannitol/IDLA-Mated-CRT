@@ -5,6 +5,7 @@ import MatedCRT.FirstPass.S6e.Relation
 import MatedCRT.FirstPass.S6h.Core
 import MatedCRT.FirstPass.S6r.Amplification
 import MatedCRT.FirstPass.S4S6c.ExitNull68
+import MatedCRT.FirstPass.S6r.OneTest.Count
 
 /-!
 # Lemma 6.8, walk bridge (q2, S10 item (b))
@@ -223,6 +224,40 @@ theorem q_le_one {q0 r : ℝ} (hq0 : 0 ≤ q0) (hq1 : q0 ≤ 1) (hr : 0 < r) (hr
   have hD : 1 ≤ (1 + Real.log (1 / r)) ^ 2 := by nlinarith
   calc q0 / (1 + Real.log (1 / r)) ^ 2 ≤ q0 := div_le_self hq0 hD
     _ ≤ 1 := hq1
+
+/-- `shell_bad_bound` (S6r/OneTest/Count.lean) in the restricted form of `prefix_bad_bound_of_lt`: the shell-order
+inequalities `hTT`, `hLT` are needed only where `T (j+1) < τ_U`, the crossing and end inequalities only on
+`{τ_U ≠ ⊤}`, and the null set `{τ_U = ⊤}` is the input `hnull`. Same conclusion as `shell_bad_bound`. -/
+theorem shell_bad_bound_of_lt {Ω E : Type*} [mΩ : MeasurableSpace Ω] [MeasurableSpace E]
+    {μ : Measure Ω} [IsProbabilityMeasure μ]
+    (𝓕 : Filtration ℕ mΩ) {X : ℕ → Ω → E} (hX : ∀ n, Measurable[𝓕 n] (X n)) {A : Set E}
+    (hA : MeasurableSet A) {σ : (ℕ → E) → ℕ} (Pb : Ω → E → Measure (ℕ → E))
+    {T : ℕ → Ω → ℕ∞} (hT : ∀ k, IsStoppingTime 𝓕 (T k))
+    {τU : Ω → ℕ∞} (hτ : IsStoppingTime 𝓕 τU) {m R : ℕ → Ω → ℝ}
+    {c C ε r q0 : ℝ} (hc : 0 < c) (hC : 0 < C) (hε : 0 < ε) (hr : 0 < r) (hr1 : r ≤ 1)
+    (hq0 : 0 ≤ q0) (hq01 : q0 ≤ 1) (hq0c : q0 ≤ c ^ 2 / (4 * C))
+    (hLst : ∀ k, IsStoppingTime 𝓕 (testEnd σ X (T k)))
+    (hV1 : ∀ k, Integrable (testCount A σ X (T k)) μ)
+    (hV2 : ∀ k, Integrable (fun ω => testCount A σ X (T k) ω ^ 2) μ)
+    (hSM1 : ∀ k, StrongMarkovAt μ (hT k) X Pb (occCount A σ))
+    (hSM2 : ∀ k, StrongMarkovAt μ (hT k) X Pb (fun w => occCount A σ w ^ 2))
+    (hm : ∀ k, ∀ ω ∈ prefixSet X A (T k) τU, 0 < m k ω)
+    (hRr : ∀ k, ∀ ω ∈ prefixSet X A (T k) τU, r ^ 2 ≤ R k ω ∧ R k ω ≤ 1)
+    (hstep1 : ∀ k, ∀ ω ∈ prefixSet X A (T k) τU,
+      c * ε⁻¹ * m k ω ≤ ∫ w, occCount A σ w ∂(Pb ω (X (T k ω).toNat ω)))
+    (hstep2 : ∀ k, ∀ ω ∈ prefixSet X A (T k) τU,
+      ∫ w, occCount A σ w ^ 2 ∂(Pb ω (X (T k ω).toNat ω))
+        ≤ C * ε⁻¹ ^ 2 * (1 + Real.log (1 / R k ω)) ^ 2 * m k ω ^ 2)
+    (n : ℕ) (hTT : ∀ j < n, ∀ ω, T (j + 1) ω < τU ω → T j ω ≤ T (j + 1) ω)
+    (hLT : ∀ j < n, ∀ ω, T (j + 1) ω < τU ω → testEnd σ X (T j) ω ≤ T (j + 1) ω)
+    (hcross : ∀ ω ∈ noEscapeSet X A τU, τU ω ≠ ⊤ → T n ω < τU ω)
+    (hend : ∀ ω ∈ noEscapeSet X A τU, τU ω ≠ ⊤ → testEnd σ X (T n) ω ≤ τU ω)
+    (hnull : μ {ω | τU ω = ⊤} = 0) :
+    μ.real (noEscapeSet X A τU) ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ (n + 1) :=
+  prefix_bad_bound_of_lt 𝓕 hX hA hT hLst hτ (oneTest_q_bounds hq0 hq01 hr hr1).2 n
+    (fun k _ => conditional_one_test 𝓕 hX hA Pb (hT k) hc hC hε hr hr1 hq0c (hLst k)
+      (hV1 k) (hV2 k) (hSM1 k) (hSM2 k) (hm k) (hRr k) (hstep1 k) (hstep2 k))
+    hTT hLT hcross hend hnull
 
 end Lemma68WalkBridge
 
