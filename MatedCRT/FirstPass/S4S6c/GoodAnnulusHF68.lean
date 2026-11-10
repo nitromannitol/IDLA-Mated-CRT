@@ -71,7 +71,7 @@ theorem integrableOn_of_lintegral_ne_top {μ : Measure ℂ} {S : Set ℂ} {f : �
   constructor <;> linarith [le_max_left (f u) 0, le_max_right (f u) 0]
 
 /-- The logarithmic kernel `u ↦ log(R/|u-v|) + 1` is measurable. -/
-theorem measurable_logKernel (R : ℝ) (v : ℂ) :
+theorem measurable_logKernel_goodAnnulus (R : ℝ) (v : ℂ) :
     Measurable (fun u : ℂ => Real.log (R / ‖u - v‖) + 1) := by
   fun_prop
 
@@ -119,7 +119,7 @@ theorem hint_of_goodAnnulus {μ : Measure ℂ} {c0 C R : ℝ} {z x : ℂ}
     ∀ v ∈ openAnnulus z R, IntegrableOn (fun u : ℂ => Real.log (R / ‖u - v‖) + 1) (openAnnulus z R) μ := by
   intro v hv
   refine integrableOn_of_lintegral_ne_top (c := Real.log 4) (Real.log_nonneg (by norm_num))
-    (measurable_logKernel R v) (isOpen_openAnnulus z R).measurableSet hμA ?_ ?_
+    (measurable_logKernel_goodAnnulus R v) (isOpen_openAnnulus z R).measurableSet hμA ?_ ?_
   · intro u hu
     exact neg_log_four_le_logKernel (norm_nonneg _) (norm_sub_le_four_mul_of_mem hu hv)
   · exact ne_top_of_le_ne_top (ENNReal.mul_ne_top ENNReal.ofReal_ne_top hmfin)
