@@ -49,5 +49,32 @@ theorem windowRf_bounds {Ω : Type} (μ : Ω → Measure ℂ) (ρ a c₀ C d : �
   rcases hmem with ⟨_, h1, h2⟩
   exact ⟨h1, h2⟩
 
+open scoped Classical in
+/-- **The total window radius of the shell chain.** On the complement of the window event `badWindowOf μ ρ a c₀ C d`
+it is the chosen good radius `windowRf`; on the event it is `d`. Its range `d ≤ · ≤ d^a` holds for every `ω`
+(`windowRfT_bounds`), so the range `hR` of `shellOrder_fullAdm_ae_omega` needs no almost-sure window hypothesis. -/
+noncomputable def windowRfT {Ω : Type} (μ : Ω → Measure ℂ) (ρ a c₀ C d : ℝ) (ω : Ω) : ℂ → ℝ :=
+  fun z => if ω ∈ badWindowOf μ ρ a c₀ C d then d else windowRf μ c₀ C a d ω z
+
+/-- `d ≤ d^a` for `0 < d ≤ 1` and `a ≤ 1`: the power is antitone in the exponent on `(0,1]`. -/
+theorem le_rpow_short68 {d a : ℝ} (hd0 : 0 < d) (hd1 : d ≤ 1) (ha : a ≤ 1) : d ≤ d ^ a := by
+  have h := Real.rpow_le_rpow_of_exponent_ge hd0 hd1 ha
+  rwa [Real.rpow_one] at h
+
+/-- **Range of the total window radius, for every environment.** For `z` eligible, `windowRfT` lies in `[d, d^a]`. -/
+theorem windowRfT_bounds {Ω : Type} (μ : Ω → Measure ℂ) (ρ a c₀ C d : ℝ) (hd0 : 0 < d) (hd1 : d ≤ 1) (ha : a ≤ 1)
+    (ω : Ω) {z : ℂ} (hz : z ∈ shortEligible ρ d a) :
+    d ≤ windowRfT μ ρ a c₀ C d ω z ∧ windowRfT μ ρ a c₀ C d ω z ≤ d ^ a := by
+  unfold windowRfT
+  split_ifs with hb
+  · exact ⟨le_rfl, le_rpow_short68 hd0 hd1 ha⟩
+  · exact windowRf_bounds μ ρ a c₀ C d ω hb hz
+
+/-- **Off the window event, the total radius is the chosen good radius.** -/
+theorem windowRfT_of_not_bad {Ω : Type} (μ : Ω → Measure ℂ) (ρ a c₀ C d : ℝ) (ω : Ω)
+    (hω : ω ∉ badWindowOf μ ρ a c₀ C d) (z : ℂ) :
+    windowRfT μ ρ a c₀ C d ω z = windowRf μ c₀ C a d ω z := by
+  simp [windowRfT, hω]
+
 end Lemma68WindowRf
 end MatedCRT
