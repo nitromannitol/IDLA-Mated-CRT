@@ -154,6 +154,47 @@ theorem ae_cellVertices_add_ball_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measu
       {k : ℤ | cellDist ε (η ω) Θ k < ENNReal.ofReal r} :=
   hae.mono fun _ h => cellVertices_add_ball_eq h hε Θ r
 
+/-- (B2.1 density step, general form) For a dense range `φ` and a continuous `F`, the infimum of `F ∘ φ` equals the
+infimum of `F`. -/
+lemma iInf_denseRange_eq {α β : Type*} [TopologicalSpace β] {φ : α → β} (hφ : DenseRange φ) {F : β → ℝ≥0∞}
+    (hF : Continuous F) : ⨅ a, F (φ a) = ⨅ x, F x := by
+  refine le_antisymm (le_iInf fun x => ?_) (le_iInf fun a => iInf_le F (φ a))
+  have hmem : F x ∈ closure (F '' range φ) := mem_closure_image hF.continuousAt (hφ x)
+  have hle : closure (F '' range φ) ⊆ Ici (⨅ a, F (φ a)) := by
+    apply closure_minimal _ isClosed_Ici
+    rintro _ ⟨_, ⟨a, rfl⟩, rfl⟩
+    exact iInf_le (fun a => F (φ a)) a
+  exact hle hmem
+
+/-- The rational pairs are dense in `ℂ` (B2.1 (5)): the map `(a, b) ↦ a + i b` from `ℚ × ℚ` has dense range. -/
+lemma denseRange_ratPair : DenseRange (fun z : ℚ × ℚ => Complex.mk (z.1 : ℝ) (z.2 : ℝ)) := by
+  have hg : DenseRange (Prod.map ((↑) : ℚ → ℝ) ((↑) : ℚ → ℝ)) :=
+    DenseRange.prodMap Rat.denseRange_cast Rat.denseRange_cast
+  have hs : Function.Surjective (fun p : ℝ × ℝ => Complex.mk p.1 p.2) := fun w => ⟨(w.re, w.im), rfl⟩
+  have hc : Continuous fun p : ℝ × ℝ => Complex.mk p.1 p.2 := Complex.equivRealProdCLM.symm.continuous
+  exact DenseRange.comp hs.denseRange hg hc
+
+/-- (B2.1 (5)) For a continuous `η`, the infimum over the rational parameters of the cell `I_k` of the distance from
+`ζ` to `η q` is the distance from `ζ` to the cell `H_k = η(I_k)`. -/
+lemma iInf_ratInt_edist_eq {η : ℝ → ℂ} (hη : Continuous η) {ε : ℝ} (hε : 0 < ε) (ζ : ℂ) (k : ℤ) :
+    ⨅ q : ratInt ε k, edist ζ (η ((q : ℚ) : ℝ)) = Metric.infEDist ζ (cell ε η k) := by
+  refine (iInf_ratInt_eq (h := fun s => edist ζ (η s)) (continuous_const.edist hη) hε k).trans ?_
+  rw [cell, Metric.infEDist, iInf_image]
+
+/-- (B2.1 (5), write-up (5)) The capacity radius `c_B` is the infimum over all centres `z ∈ ℂ` of the maximal distance
+from `z` to the cells `H_v`, `v ∈ B`. -/
+theorem capRadius_eq_iInf_complex {η : ℝ → ℂ} (hη : Continuous η) {ε : ℝ} (hε : 0 < ε) (B : Finset ℤ) :
+    capRadius ε η B = ⨅ z : ℂ, ⨆ v : B, Metric.infEDist z (cell ε η v.1) := by
+  have hG : Continuous fun z : ℂ => ⨆ v : B, Metric.infEDist z (cell ε η v.1) := by
+    simp only [← Finset.sup_univ_eq_iSup]
+    exact Continuous.finset_sup_apply fun v _ => Metric.continuous_infEDist
+  have h1 : capRadius ε η B =
+      ⨅ z : ℚ × ℚ, ⨆ v : B, Metric.infEDist (Complex.mk (z.1 : ℝ) (z.2 : ℝ)) (cell ε η v.1) := by
+    unfold capRadius
+    refine iInf_congr fun z => iSup_congr fun v => ?_
+    exact iInf_ratInt_edist_eq hη hε _ v.1
+  exact h1.trans (iInf_denseRange_eq denseRange_ratPair hG)
+
 end Lemma68GeometryId
 
 end MatedCRT
