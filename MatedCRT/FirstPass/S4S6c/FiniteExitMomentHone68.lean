@@ -2,6 +2,10 @@ import MatedCRT.FirstPass.S4S6c.FiniteExitMoment68
 import MatedCRT.FirstPass.S6j
 import MatedCRT.FirstPass.S4S6c.WalkBridge68
 import MatedCRT.FirstPass.S6r.OneTest.Count
+import MatedCRT.FirstPass.S4S6c.HoneWalk
+import MatedCRT.FirstPass.S6r.OneTest.Concrete
+import MatedCRT.FirstPass.S3i.StrongMarkov
+import MatedCRT.FirstPass.S5c.GreenUpper
 
 /-!
 # Integrability of the test count on finite test domains (fp-S4S6c-exit-moment, items (2) and (3))
@@ -167,6 +171,110 @@ lemma srwLaw_postTime_gt_le {m : ℤ → ℤ → ℕ} {T : (ℕ → ℤ) → ℕ
     _ ≤ (1 / 2 : ℝ≥0∞) ^ j * 1 :=
         mul_le_mul_of_nonneg_left prob_le_one (by exact zero_le)
     _ = (1 / 2 : ℝ≥0∞) ^ j := mul_one _
+
+/-- Block bound for the `p`-th power of a natural number (`0 < p`). -/
+lemma nat_pow_le_tsum_block (p L : ℕ) (hp : 0 < p) (hL : 0 < L) (n : ℕ) :
+    ((n : ℝ≥0∞)) ^ p ≤ ∑' k : ℕ, (if k * L < n then (((k + 1) * L : ℕ) : ℝ≥0∞) ^ p else 0) := by
+  rcases Nat.eq_zero_or_pos n with rfl | hn
+  · simp [zero_pow hp.ne']
+  · obtain ⟨m, rfl⟩ : ∃ m, n = m + 1 := ⟨n - 1, by omega⟩
+    have hdiv : (m / L) * L + m % L = m := by
+      rw [mul_comm]
+      exact Nat.div_add_mod m L
+    have hmod := Nat.mod_lt m hL
+    have hmod' : m % L + 1 ≤ L := hmod
+    set q := m / L with hq
+    have h1 : q * L < m + 1 := by linarith [Nat.zero_le (m % L)]
+    have h2 : m + 1 ≤ (q + 1) * L := by
+      rw [add_mul, one_mul]
+      linarith
+    have h2' : ((m + 1 : ℕ) : ℝ≥0∞) ≤ (((q + 1) * L : ℕ) : ℝ≥0∞) := Nat.cast_le.2 h2
+    calc (((m + 1 : ℕ)) : ℝ≥0∞) ^ p ≤ (((q + 1) * L : ℕ) : ℝ≥0∞) ^ p := by gcongr
+      _ = (if q * L < m + 1 then (((q + 1) * L : ℕ) : ℝ≥0∞) ^ p else 0) := by simp [h1]
+      _ ≤ _ := ENNReal.le_tsum (f := fun k : ℕ => if k * L < m + 1 then
+          (((k + 1) * L : ℕ) : ℝ≥0∞) ^ p else 0) q
+
+/-- `{T < ⊤}` is measurable for a walk random time. -/
+lemma measurableSet_lt_top_of_walk {T : (ℕ → ℤ) → ℕ∞} (hTw : S6j.IsWalkRandomTime T) :
+    MeasurableSet {x : ℕ → ℤ | T x < ⊤} := by
+  have hset : {x : ℕ → ℤ | T x < ⊤} = ⋃ k : ℕ, {x : ℕ → ℤ | T x = (k : ℕ∞)} := by
+    ext x
+    simp only [mem_ofPred_eq, mem_iUnion]
+    constructor
+    · intro h
+      obtain ⟨k, hk⟩ := ENat.ne_top_iff_exists.1 h.ne
+      exact ⟨k, hk.symm⟩
+    · rintro ⟨k, hk⟩
+      rw [hk]
+      exact ENat.natCast_lt_top k
+  rw [hset]
+  exact MeasurableSet.iUnion fun k => S6j.histSigma_le k _ (hTw k)
+
+/-- **Integrability of the post-`T` exit count on a finite test domain (core).** For a walk random time `T`
+and `Z ≤ τ_G(post-T path)` almost surely on `{T < ⊤}`, the function `1_{T<⊤} (toNat Z)^p` is integrable for
+every `p > 0` for which `∑_k ((k+1)L)^p 2^{-k} < ∞`. -/
+lemma integrable_postTime_pow {m : ℤ → ℤ → ℕ} {T : (ℕ → ℤ) → ℕ∞} (hTw : S6j.IsWalkRandomTime T)
+    {G : Set ℤ} {L : ℕ} (hL0 : 0 < L)
+    (hL : ∀ b : ℤ, srwLaw m b {x | (L : ℕ∞) < vExitTime G x} ≤ 1 / 2)
+    {a : ℤ} {Z : (ℕ → ℤ) → ℕ∞} (hZm : Measurable fun x => (Z x).toNat)
+    (hZ : ∀ᵐ x ∂srwLaw m a, T x < ⊤ → Z x ≤ vExitTime G (postTimePath (fun n w => w n) T x))
+    (p : ℕ) (hp : 0 < p)
+    (hfin : ∑' k : ℕ, (((k + 1) * L : ℕ) : ℝ≥0∞) ^ p * (1 / 2 : ℝ≥0∞) ^ k ≠ ⊤) :
+    Integrable ({x : ℕ → ℤ | T x < ⊤}.indicator (fun x => ((Z x).toNat : ℝ) ^ p)) (srwLaw m a) := by
+  have hTm := measurableSet_lt_top_of_walk hTw
+  have hEm : ∀ j : ℕ, MeasurableSet {x : ℕ → ℤ | T x < ⊤ ∧
+      ((j * L : ℕ) : ℕ∞) < vExitTime G (postTimePath (fun n w => w n) T x)} :=
+    fun j => measurableSet_postTime_gt hTw G (j * L)
+  have hfm : Measurable (fun x : ℕ → ℤ =>
+      ({x : ℕ → ℤ | T x < ⊤}.indicator (fun x => (((Z x).toNat : ℕ) : ℝ≥0∞) ^ p)) x) :=
+    ((measurable_from_nat.comp hZm).pow_const p).indicator hTm
+  have hkey : ∀ᵐ x ∂srwLaw m a,
+      ({x : ℕ → ℤ | T x < ⊤}.indicator (fun x => (((Z x).toNat : ℕ) : ℝ≥0∞) ^ p)) x ≤
+        ∑' j : ℕ, {x : ℕ → ℤ | T x < ⊤ ∧
+          ((j * L : ℕ) : ℕ∞) < vExitTime G (postTimePath (fun n w => w n) T x)}.indicator
+            (fun _ => (((j + 1) * L : ℕ) : ℝ≥0∞) ^ p) x := by
+    filter_upwards [hZ] with x hZx
+    by_cases hT : T x < ⊤
+    · rw [Set.indicator_of_mem (show x ∈ {x : ℕ → ℤ | T x < ⊤} from hT)]
+      refine (nat_pow_le_tsum_block p L hp hL0 (Z x).toNat).trans (ENNReal.tsum_le_tsum fun j => ?_)
+      by_cases hj : j * L < (Z x).toNat
+      · have hlt : ((j * L : ℕ) : ℕ∞) < Z x := natCast_lt_of_lt_toNat _ _ hj
+        have hmem : x ∈ {x : ℕ → ℤ | T x < ⊤ ∧
+            ((j * L : ℕ) : ℕ∞) < vExitTime G (postTimePath (fun n w => w n) T x)} :=
+          ⟨hT, lt_of_lt_of_le hlt (hZx hT)⟩
+        rw [Set.indicator_of_mem hmem]
+        simp only [hj, ↓reduceIte, le_refl]
+      · simp [hj]
+    · rw [Set.indicator_of_notMem (show x ∉ {x : ℕ → ℤ | T x < ⊤} from hT)]
+      exact zero_le
+  have hlin : ∫⁻ x, ({x : ℕ → ℤ | T x < ⊤}.indicator (fun x => (((Z x).toNat : ℕ) : ℝ≥0∞) ^ p)) x
+      ∂srwLaw m a ≤ ∑' j : ℕ, (((j + 1) * L : ℕ) : ℝ≥0∞) ^ p * (1 / 2 : ℝ≥0∞) ^ j := by
+    calc ∫⁻ x, ({x : ℕ → ℤ | T x < ⊤}.indicator (fun x => (((Z x).toNat : ℕ) : ℝ≥0∞) ^ p)) x ∂srwLaw m a
+        ≤ ∫⁻ x, ∑' j : ℕ, {x : ℕ → ℤ | T x < ⊤ ∧
+            ((j * L : ℕ) : ℕ∞) < vExitTime G (postTimePath (fun n w => w n) T x)}.indicator
+              (fun _ => (((j + 1) * L : ℕ) : ℝ≥0∞) ^ p) x ∂srwLaw m a := lintegral_mono_ae hkey
+      _ = ∑' j : ℕ, ∫⁻ x, {x : ℕ → ℤ | T x < ⊤ ∧
+            ((j * L : ℕ) : ℕ∞) < vExitTime G (postTimePath (fun n w => w n) T x)}.indicator
+              (fun _ => (((j + 1) * L : ℕ) : ℝ≥0∞) ^ p) x ∂srwLaw m a :=
+          lintegral_tsum fun j => (measurable_const.indicator (hEm j)).aemeasurable
+      _ = ∑' j : ℕ, (((j + 1) * L : ℕ) : ℝ≥0∞) ^ p * srwLaw m a {x : ℕ → ℤ | T x < ⊤ ∧
+            ((j * L : ℕ) : ℕ∞) < vExitTime G (postTimePath (fun n w => w n) T x)} :=
+          tsum_congr fun j => lintegral_indicator_const (hEm j) _
+      _ ≤ ∑' j : ℕ, (((j + 1) * L : ℕ) : ℝ≥0∞) ^ p * (1 / 2 : ℝ≥0∞) ^ j :=
+          ENNReal.tsum_le_tsum fun j => mul_le_mul_of_nonneg_left
+            (srwLaw_postTime_gt_le hTw hL j a) (by exact zero_le)
+  have hfin' : ∫⁻ x, ({x : ℕ → ℤ | T x < ⊤}.indicator (fun x => (((Z x).toNat : ℕ) : ℝ≥0∞) ^ p)) x
+      ∂srwLaw m a ≠ ⊤ := ne_top_of_le_ne_top hfin hlin
+  have hint := integrable_toReal_of_lintegral_ne_top hfm.aemeasurable hfin'
+  refine hint.congr (ae_of_all _ fun x => ?_)
+  dsimp only
+  by_cases hT : T x < ⊤
+  · rw [Set.indicator_of_mem (show x ∈ {x : ℕ → ℤ | T x < ⊤} from hT),
+      Set.indicator_of_mem (show x ∈ {x : ℕ → ℤ | T x < ⊤} from hT),
+      ENNReal.toReal_pow, ENNReal.toReal_natCast]
+  · rw [Set.indicator_of_notMem (show x ∉ {x : ℕ → ℤ | T x < ⊤} from hT),
+      Set.indicator_of_notMem (show x ∉ {x : ℕ → ℤ | T x < ⊤} from hT)]
+    simp
 
 end FiniteExitMomentHone68
 end MatedCRT
