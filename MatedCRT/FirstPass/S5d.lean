@@ -7,6 +7,7 @@ import MatedCRT.FirstPass.S5d.ClusterInner
 import MatedCRT.FirstPass.S5d.ClusterFromOdometer
 import MatedCRT.FirstPass.S5d.StoppedPathwise
 import MatedCRT.FirstPass.S5d.StoppedExitInput
+import MatedCRT.FirstPass.S5d.UnstoppedFromStopped
 
 /-!
 # Proposition 5.1 (`firstPass_5_1`, task fp-S5d-5-1-stopped-repair)
@@ -30,22 +31,19 @@ Hence `firstPass_5_1_of_steps` is a conditional reduction, not a `PROVED-FP` the
 
 namespace MatedCRT
 
-/-- **Proposition 5.1 from its open steps.** The unstopped conjunct uses only `hI`, the discrete-cluster form of Proposition 4.2 (`DiscreteClusterInnerBoundStep`,
-the paper's own result taken as a hypothesis; replaces the strict-positivity input `hP` of the previous version, see the
-report of this round); the stopped conjunct is
+/-- **Proposition 5.1 from its open steps.** The unstopped conjunct is the stopped conjunct by monotonicity in the stopping domain ([C21];
+`S5d/UnstoppedFromStopped.lean`), so neither Proposition 4.2 nor the strict-positivity input is used; the stopped conjunct is
 `iDLALowerBoundStopped_of_greenSteps` (killing set `V^ε(Λ_t) ∩ S^ε`, targets `V^ε(B⁻_δ(Λ_t)) ∪ {0}`), from the two
 open Green steps: the first one is `stoppedFirstGreenStep_of_steps` from `stoppedFirstGreenInputsStep_of_floorCeiling` (open floor and ceiling input `hfc`, exit input proved in `S5d/StoppedExitInput.lean`) and the standing steps
 `hcell`, `hlap` ([C21]); the second is `hG2`; the cone-family inputs are `hfam`, `h24`. -/
 theorem firstPass_5_1_of_steps (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
-    (h53 : MeanValueInequalityStmt 𝒮) (h54 : LLowerBoundStmt 𝒮)
-    (hI : DiscreteClusterInnerBoundStep 𝒮) (hfam : ConeFamilyAEMeasurableStep)
+    (hfam : ConeFamilyAEMeasurableStep)
     (h24 : ConeHarmonicBallsUpToFixedTimeStmt) (hfc : StoppedFloorCeilingStep 𝒮)
     (h218 : ExitTimeUpperBoundStmt 𝒮) (h217 : BoundedExitTimeRVStmt) (hμ : LQGMeasureFieldMeasurableStep 𝒮)
     (hcell : AdjacentCellsMeetAeStep 𝒮) (hlap : DiscreteLaplacianBoundCorrectedStmt 𝒮)
     (hG2 : StoppedSecondGreenStep 𝒮) :
     IDLALowerBoundStmt 𝒮 :=
-  iDLALowerBound_of_steps 𝒮 (generalIDLALowerBoundRelaxed_of_volumeGrowth_cellSize 𝒮 h27 h28) h53 h54 h28
-    hI
+  S5d.iDLALowerBound_of_stoppedStep 𝒮
     (iDLALowerBoundStopped_of_greenSteps 𝒮 (generalIDLALowerBoundRelaxed_of_volumeGrowth_cellSize 𝒮 h27 h28)
       hfam h24
       (stoppedFirstGreenStep_of_steps 𝒮 (stoppedFirstGreenInputsStep_of_floorCeiling 𝒮 hfc h218 h217 hμ hcell hlap)
