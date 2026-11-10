@@ -14,7 +14,9 @@ namespace MatedCRT
 open MeasureTheory Filter Topology HarmonicBalls MarkovProcess
 open scoped NNReal
 
-/-- FIRST-PASS FROZEN. Radial divergence of the conditioned process. For `0 < γ < 2` and every probability `ν` on
+/-- RETIRED (FALSE, ChatGPT 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md §1). Replaced by
+`FrozenConeRadialDivergenceCorrected` (Frozen/S1cDivergence.lean); kept for reference, not used.
+FIRST-PASS FROZEN (retired). Radial divergence of the conditioned process. For `0 < γ < 2` and every probability `ν` on
 continuous paths which is the conditioned Brownian motion `B̂` of `IsBMConditionedPositive (Q - γ) ν` (drift
 `c = Q - γ = 2/γ - γ/2 > 0`), `ν`-almost surely `B̂_s + c s → ∞` as `s → ∞` on `ℝ≥0`. In the coordinates of the quantum
 cone radial law (`quantumConeRadialLaw γ ν`, second component `s ↦ B̂_s - γ s`), this reads: almost surely the
@@ -25,7 +27,7 @@ of Duplantier–Miller–Sheffield (2014, *Mating of trees*, arXiv:1409.7055v4),
 (the conditioned process `B̂` of the radial part); the identification of the weak limit `ν` of `IsBMConditionedPositive`
 with the h-transform is part of this standard fact. Locator: standard; locator pending.
 Truth check FALSE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md §1): the almost-sure conclusion lives on an uncountable raw function space with the product sigma-algebra, where real-time divergence is not an almost-sure property. Counterexample: the complement has outer measure one.
-Used by: coneScaleRadius_lowerTail (MatedCRT/FirstPass/S1c.lean). -/
+Used by: none after the repair (formerly coneScaleRadius_lowerTail, MatedCRT/FirstPass/S1c.lean). -/
 def FrozenConeRadialDivergence : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ν : Measure (ContinuousPath ℝ), IsBMConditionedPositive (lqgQ γ - γ) ν →
     ∀ᵐ x ∂(quantumConeRadialLaw γ ν),
