@@ -30,7 +30,7 @@ lemma mem_of_lt_pathExitTime {U : Set ℂ} {f : ℝ≥0 → ℂ} {t : ℝ≥0}
     from ⟨t, rfl, hf⟩)
   exact absurd hle (not_le.2 h)
 
-lemma le_pathExitTime_of_forall_mem {U : Set ℂ} {f : ℝ≥0 → ℂ} {a : ℝ}
+lemma le_pathExitTime_of_forall_mem_riemann {U : Set ℂ} {f : ℝ≥0 → ℂ} {a : ℝ}
     (h : ∀ t : ℝ≥0, (t : ℝ) ≤ a → f t ∈ U) : ENNReal.ofReal a ≤ pathExitTime U f := by
   refine le_sInf ?_
   rintro _ ⟨t, rfl, hf⟩
@@ -343,7 +343,7 @@ theorem quenched_sub_stopped_le {C χ : ℝ≥0} {z : ℂ} {r M d δ T : ℝ} {g
     exact lt_of_lt_of_le h1 (min_le_right _ _)
   have hlow : ∀ a : ℝ, 0 ≤ a → a ≤ T → (∀ t : ℝ≥0, (t : ℝ) ≤ a → W t ∈ ball z r) → a ≤ s := by
     intro a ha0 haT hW
-    have h1 : ENNReal.ofReal a ≤ pathExitTime (ball z r) W := le_pathExitTime_of_forall_mem hW
+    have h1 : ENNReal.ofReal a ≤ pathExitTime (ball z r) W := le_pathExitTime_of_forall_mem_riemann hW
     have h2 : ENNReal.ofReal a ≤ min (ENNReal.ofReal T) (pathExitTime (ball z r) W) :=
       le_min (ENNReal.ofReal_le_ofReal haT) h1
     have h3 := ENNReal.toReal_mono hne_min h2
