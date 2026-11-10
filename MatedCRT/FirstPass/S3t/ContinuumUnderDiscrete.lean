@@ -1,4 +1,7 @@
 import MatedCRT.FirstPass.S3t.BLExtension
+import MatedCRT.FirstPass.S3t.LBMRegular
+import MatedCRT.FirstPass.S3t.StoppedContinuity
+import MatedCRT.Proofs.LBM.TimeChangeContinuity
 import MatedCRT.FirstPass.S3t.Bounds
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.WalkMeasurability
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.PathFunctionalStep
@@ -16,8 +19,12 @@ functional `H = stoppedOccupation (ball z r) T g`. Its measurability inputs are 
 `aestronglyMeasurable_stoppedOccupation_interpolatedWalk` (proved here, as the existing truncated-occupation lemma uses
 `(pathExitTime D w).toReal` rather than `(min (ofReal T) (pathExitTime D w)).toReal`).
 
-The only input not yet proved is `hcont`: continuity of the stopped occupation at the almost surely regular exits of the
-limiting LBM (Step 3 `continuousAt_stoppedOccupation` with Step 4 `ae_regularExit_rescaledLBM`).
+The continuity input of Step 2 is taken along the continuous paths `𝒞 = {v | Continuous v}` (the stopped occupation is
+not continuous along all paths; see `StoppedContinuity.lean`). Its almost sure ingredients are derived here: continuity
+of the rescaled LBM paths (`IsLQGClock`, `continuous_rescaledLBMPath`), regular exit (Step 4,
+`ae_regularExit_rescaledLBM`, which needs `0 < S.m₀ = hS.m₀_pos`), and continuity at continuous regular paths (Step 3,
+`continuousAt_stoppedOccupation_cont`). The only named inputs are `RandomWalkToLBMStmt 𝒮` and
+`BrownianOutwardExcursionAtExitStep`.
 -/
 
 open MeasureTheory Filter Topology Set Metric
@@ -62,36 +69,45 @@ theorem aestronglyMeasurable_stoppedOccupation_interpolatedWalk {μ : Measure (�
   rw [heq]
   exact hsm.aestronglyMeasurable
 
+/-- The rescaled LBM paths of `S` are almost surely continuous, for every starting point `y`: they are the
+`IsLQGClock`-limits of the time-changed Brownian paths (`continuous_rescaledLBMPath`). -/
+theorem ae_continuous_rescaledLBMPath {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (Ω : Type) [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ) (y : ℂ) :
+    ∀ᵐ ω ∂S.P, ∀ᵐ b ∂planarBrownianMotion y, Continuous (rescaledLBMPath (S.clock ω) S.m₀ b) :=
+  hS.isLQGClock.mono fun _ hω => (hω y).2.mono fun _ hb => continuous_rescaledLBMPath hb
+
 /-- **Step 5.** Convergence in probability of the quenched expectation of the stopped occupation `H = stoppedOccupation
 (ball z r) T g` under the discrete walk law from `vertexOf ε η y`, to the continuum quenched expectation under planar
-Brownian motion from `y`. The inputs are the bounded-Lipschitz convergence `RandomWalkToLBMStmt 𝒮` (Theorem 2.11) and
-`hcont`, the almost-sure continuity of `H` at the regular exits of the limiting LBM (Steps 3 and 4; `_hy` is the
-starting-point hypothesis that Step 4 needs when `hcont` is derived). -/
+Brownian motion from `y ∈ B_r(z)`. The named inputs are the bounded-Lipschitz convergence `RandomWalkToLBMStmt 𝒮`
+(Theorem 2.11) and `BrownianOutwardExcursionAtExitStep` (the outward excursion that gives the almost sure regular exit,
+Step 4). The almost sure continuity of `H` along the continuous paths at the regular exits (Steps 3 and 4) is derived. -/
 theorem stoppedOccupation_tendsto_discrete {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkToLBMStmt 𝒮)
     {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
-    (hS : S.IsValid 𝒮 γ) {y z : ℂ} {r T : ℝ} (_hy : y ∈ ball z r) (hT : 0 ≤ T) {g : ℂ → ℝ} (hg : Continuous g)
-    {M : ℝ} (hgb : ∀ x, |g x| ≤ M)
-    (hcont : ∀ᵐ ω ∂S.P, ∀ᵐ b ∂planarBrownianMotion y,
-      PathFunctionalContinuousAt (stoppedOccupation (ball z r) T g) (rescaledLBMPath (S.clock ω) S.m₀ b)) :
+    (hS : S.IsValid 𝒮 γ) {y z : ℂ} {r T : ℝ} (hy : y ∈ ball z r) (hT : 0 ≤ T) {g : ℂ → ℝ} (hg : Continuous g)
+    {M : ℝ} (hgb : ∀ x, |g x| ≤ M) (hexit : BrownianOutwardExcursionAtExitStep) :
     MatedCRT.TendstoInProbability S.P
       (fun ε ω => ∫ q, stoppedOccupation (ball z r) T g (interpolatedWalk ε (S.η ω) (S.mε ε) q)
         ∂srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y))
       (fun ω => ∫ b, stoppedOccupation (ball z r) T g (rescaledLBMPath (S.clock ω) S.m₀ b)
         ∂planarBrownianMotion y) := by
   have : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
-  -- continuity within the whole path space `𝒞 = univ` is continuity
-  have hcontW : ∀ᵐ ω ∂S.P, ∀ᵐ b ∂planarBrownianMotion y,
-      PathFunctionalContinuousWithinAt Set.univ (stoppedOccupation (ball z r) T g)
-        (rescaledLBMPath (S.clock ω) S.m₀ b) :=
-    hcont.mono fun ω h => h.mono fun b hb η hη => by
-      obtain ⟨ρ, hρ, hh⟩ := hb η hη
-      exact ⟨ρ, hρ, fun v _ hv => hh v hv⟩
+  have hpath : ∀ᵐ ω ∂S.P, ∀ᵐ b ∂planarBrownianMotion y, Continuous (rescaledLBMPath (S.clock ω) S.m₀ b) :=
+    ae_continuous_rescaledLBMPath Ω S hS y
+  -- Step 4: almost sure regular exit; Step 3: continuity at continuous regular paths
+  have hreg := ae_regularExit_rescaledLBM hS (hS.m₀_pos hγ0 hγ2) hy hexit
+  have hcont : ∀ᵐ ω ∂S.P, ∀ᵐ b ∂planarBrownianMotion y,
+      MatedCRT.PathFunctionalContinuousWithinAt {v : ℝ≥0 → ℂ | Continuous v}
+        (stoppedOccupation (ball z r) T g) (rescaledLBMPath (S.clock ω) S.m₀ b) := by
+    filter_upwards [hreg, hpath] with ω hω hωp
+    filter_upwards [hω, hωp] with b hb hcb
+    exact continuousAt_stoppedOccupation_cont hg hcb hT hb
   exact quenched_integral_tendsto_of_bl_of_ae_continuous
     (fun ε ω => srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y)) (fun _ _ => inferInstance)
     (fun ε ω q => interpolatedWalk ε (S.η ω) (S.mε ε) q) (planarBrownianMotion y)
-    (fun ω b => rescaledLBMPath (S.clock ω) S.m₀ b) Set.univ Set.univ_nonempty
-    (fun _ _ => Eventually.of_forall fun _ => Set.mem_univ _)
-    (Eventually.of_forall fun _ => Eventually.of_forall fun _ => Set.mem_univ _)
+    (fun ω b => rescaledLBMPath (S.clock ω) S.m₀ b) {v : ℝ≥0 → ℂ | Continuous v}
+    ⟨fun _ => (0 : ℂ), continuous_const⟩
+    (fun ε ω => Eventually.of_forall fun q => continuous_interpolatedWalk ε (S.mε ε) (S.η ω) q)
+    hpath
     (fun F hF => h211 γ hγ0 hγ2 Ω S hS {y} isCompact_singleton y (mem_singleton y) F hF)
     (fun F hF ε ω => (interpolatedWalkMeasurableStep ε (S.mε ε) (S.η ω) (S.mult ε ω)
       (vertexOf ε (S.η ω) y)).1 F hF)
@@ -99,6 +115,6 @@ theorem stoppedOccupation_tendsto_discrete {𝒮 : SpaceFillingSLEModel} (h211 :
     (fun F hF => ((lbmPathFunctionalMeasurableStep_holds 𝒮) γ hγ0 hγ2 Ω S hS y F hF).2)
     (stoppedOccupation (ball z r) T g) ⟨T * M, fun w => abs_stoppedOccupation_le (D := ball z r) hgb hT w⟩
     (fun ε ω => aestronglyMeasurable_stoppedOccupation_interpolatedWalk ε (S.η ω) (S.mε ε) z r T hg)
-    hcontW
+    hcont
 
 end MatedCRT.TruncatedLaws

@@ -160,13 +160,13 @@ theorem mem_ballExhaustion_of_mem {z y : ℂ} {r : ℝ} (hy : y ∈ ball z r) (n
   rw [mem_ball] at hy
   exact mem_ballExhaustion_of_dist_lt z y r (exhaustion_radius_pos (mem_ball.2 hy)).le (by linarith) n
 
-/-- **Step 6, pathwise (concrete data).** For `y ∈ B_r(z)`, the shell functionals of the Step 6 exhaustion
-`D_n = B_{r - δ_n}(z)`, `δ_n = a/(n+1)`, `a = (r - |y - z|)/2`, tend to `0` along every continuous path. -/
-theorem shellTime_ballExhaustion_tendsto {z y : ℂ} {r : ℝ} (hy : y ∈ ball z r) (T : ℝ) {w : ℝ≥0 → ℂ}
+/-- **Step 6, pathwise.** For `a ≥ 0`, the shell functionals of the exhaustion `D_n = B_{r - a/(n+1)}(z)` of `B_r(z)`
+tend to `0` along every continuous path (Armitage-Gardiner: the balls increase to `B_r(z)`). -/
+theorem shellTime_ballExhaustion_tendsto {z : ℂ} {r a : ℝ} (ha : 0 ≤ a) (T : ℝ) {w : ℝ≥0 → ℂ}
     (hw : Continuous w) :
-    Tendsto (fun n => shellTime (ballExhaustion z r ((r - dist y z) / 2) n) (ball z r) T w) atTop (𝓝 0) :=
-  shellTime_tendsto_zero (ballExhaustion_monotone z r (exhaustion_radius_pos hy).le)
-    (isOpen_ballExhaustion z r _) (fun n => ballExhaustion_subset z r (exhaustion_radius_pos hy).le n)
+    Tendsto (fun n => shellTime (ballExhaustion z r a n) (ball z r) T w) atTop (𝓝 0) :=
+  shellTime_tendsto_zero (ballExhaustion_monotone z r ha)
+    (isOpen_ballExhaustion z r _) (fun n => ballExhaustion_subset z r ha n)
     (ball_subset_iUnion_ballExhaustion z r _) hw
 
 /-! ### Probabilistic layer (Step 6): the shell functionals converge in probability -/
@@ -212,30 +212,28 @@ theorem integrable_of_ae_bound {α : Type*} [MeasurableSpace α] {μ : Measure �
     {C : ℝ} (hf : AEStronglyMeasurable f μ) (hC : ∀ᵐ x ∂μ, ‖f x‖ ≤ C) : Integrable f μ :=
   Integrable.mono' (integrable_const C) hf hC
 
-/-- **Step 6, probabilistic.** For the Step 6 exhaustion `D_n = B_{r - a/(n+1)}(z)` of `D = B_r(z)` with
-`a = (r - |y - z|)/2`: the shell functionals converge in probability under the discrete law (difference of two
-applications of Step 5, to `D` and `D_n`), and their continuum limits tend to `0` almost surely as `n → ∞`
-(dominated convergence with bound `T`, and the pathwise shell limit `shellTime_ballExhaustion_tendsto` along the a.s.
-continuous paths `rescaledLBMPath (S.clock ω) S.m₀ b`). Named inputs: `hcont` (Steps 3–4, continuity at the regular exits)
-and `hmeas` (measurability of the LBM exit functionals in the Brownian path; not provided by `IsValid`). -/
+/-- **Step 6, probabilistic.** For the exhaustion `D_n = B_{r - a/(n+1)}(z)` of `D = B_r(z)`, with `0 ≤ a` and
+`|y - z| < r - a` (for instance `a = (r - |y - z|)/2`): the shell functionals converge in probability under the discrete
+law (difference of two applications of Step 5, to `D` and `D_n`), and their continuum limits tend to `0` almost surely
+as `n → ∞` (dominated convergence with bound `T`, and the pathwise shell limit `shellTime_ballExhaustion_tendsto` along
+the a.s. continuous paths `rescaledLBMPath (S.clock ω) S.m₀ b`). Named inputs: `hexit` (the outward excursion, Step 4) and
+`hmeas` (measurability of the LBM exit functionals in the Brownian path; not provided by `IsValid`). -/
 theorem shell_tendsto_discrete {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkToLBMStmt 𝒮)
     {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
-    (hS : S.IsValid 𝒮 γ) {y z : ℂ} {r T : ℝ} (hy : y ∈ ball z r) (hT : 0 ≤ T)
-    (hcont : ∀ s : ℝ, y ∈ ball z s → ∀ᵐ ω ∂S.P, ∀ᵐ b ∂planarBrownianMotion y,
-      PathFunctionalContinuousAt (stoppedOccupation (ball z s) T (fun _ => 1))
-        (rescaledLBMPath (S.clock ω) S.m₀ b))
+    (hS : S.IsValid 𝒮 γ) {y z : ℂ} {r T : ℝ} {a : ℝ} (ha : 0 ≤ a) (hya : dist y z < r - a) (hT : 0 ≤ T)
+    (hexit : BrownianOutwardExcursionAtExitStep)
     (hmeas : ∀ s : ℝ, ∀ᵐ ω ∂S.P, AEStronglyMeasurable
       (fun b => stoppedOccupation (ball z s) T (fun _ => 1) (rescaledLBMPath (S.clock ω) S.m₀ b))
       (planarBrownianMotion y)) :
     (∀ n : ℕ, TendstoInProbability S.P
-      (fun ε ω => ∫ q, shellTime (ballExhaustion z r ((r - dist y z) / 2) n) (ball z r) T
+      (fun ε ω => ∫ q, shellTime (ballExhaustion z r a n) (ball z r) T
           (interpolatedWalk ε (S.η ω) (S.mε ε) q) ∂srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y))
-      (fun ω => ∫ b, shellTime (ballExhaustion z r ((r - dist y z) / 2) n) (ball z r) T
+      (fun ω => ∫ b, shellTime (ballExhaustion z r a n) (ball z r) T
           (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y)) ∧
-    (∀ᵐ ω ∂S.P, Tendsto (fun n : ℕ => ∫ b, shellTime (ballExhaustion z r ((r - dist y z) / 2) n) (ball z r) T
+    (∀ᵐ ω ∂S.P, Tendsto (fun n : ℕ => ∫ b, shellTime (ballExhaustion z r a n) (ball z r) T
           (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y) atTop (𝓝 0)) := by
   have : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
-  have ha : 0 ≤ (r - dist y z) / 2 := (exhaustion_radius_pos hy).le
+  have hy : y ∈ ball z r := mem_ball.2 (by linarith)
   -- Step 5 for every disk containing `y`
   have hstep5 : ∀ s : ℝ, y ∈ ball z s → TendstoInProbability S.P
       (fun ε ω => ∫ q, stoppedOccupation (ball z s) T (fun _ => 1)
@@ -243,7 +241,7 @@ theorem shell_tendsto_discrete {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkT
       (fun ω => ∫ b, stoppedOccupation (ball z s) T (fun _ => 1)
         (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y) :=
     fun s hs => stoppedOccupation_tendsto_discrete h211 hγ0 hγ2 Ω S hS hs hT continuous_const
-      (M := 1) (fun x => by simp) (hcont s hs)
+      (M := 1) (fun x => by simp) hexit
   have hbd : ∀ (s : ℝ) (w : ℝ≥0 → ℂ), ‖stoppedOccupation (ball z s) T (fun _ => 1) w‖ ≤ T := by
     intro s w
     have h := abs_stoppedOccupation_le (D := ball z s) (g := fun _ => (1 : ℝ)) (M := 1)
@@ -252,11 +250,11 @@ theorem shell_tendsto_discrete {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkT
     linarith
   -- the discrete shell functional is the difference of the two stopped occupations
   have hdisc : ∀ (n : ℕ) (ε : ℝ) (ω : Ω),
-      ∫ q, shellTime (ballExhaustion z r ((r - dist y z) / 2) n) (ball z r) T
+      ∫ q, shellTime (ballExhaustion z r a n) (ball z r) T
           (interpolatedWalk ε (S.η ω) (S.mε ε) q) ∂srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y) =
         (∫ q, stoppedOccupation (ball z r) T (fun _ => 1)
             (interpolatedWalk ε (S.η ω) (S.mε ε) q) ∂srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y)) -
-        ∫ q, stoppedOccupation (ballExhaustion z r ((r - dist y z) / 2) n) T (fun _ => 1)
+        ∫ q, stoppedOccupation (ballExhaustion z r a n) T (fun _ => 1)
             (interpolatedWalk ε (S.η ω) (S.mε ε) q) ∂srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y) := by
     intro n ε ω
     have h1 : Integrable (fun q : ℕ → ℤ => stoppedOccupation (ball z r) T (fun _ => 1)
@@ -264,11 +262,11 @@ theorem shell_tendsto_discrete {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkT
       integrable_of_ae_bound
         (aestronglyMeasurable_stoppedOccupation_interpolatedWalk ε (S.η ω) (S.mε ε) z r T continuous_const)
         (Eventually.of_forall fun q => hbd r _)
-    have h2 : Integrable (fun q : ℕ → ℤ => stoppedOccupation (ballExhaustion z r ((r - dist y z) / 2) n) T
+    have h2 : Integrable (fun q : ℕ → ℤ => stoppedOccupation (ballExhaustion z r a n) T
         (fun _ => 1) (interpolatedWalk ε (S.η ω) (S.mε ε) q)) (srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y)) :=
       integrable_of_ae_bound
         (aestronglyMeasurable_stoppedOccupation_interpolatedWalk ε (S.η ω) (S.mε ε)
-          z (r - (r - dist y z) / 2 / ((n : ℝ) + 1)) T continuous_const)
+          z (r - a / ((n : ℝ) + 1)) T continuous_const)
         (Eventually.of_forall fun q => hbd _ _)
     rw [← integral_sub h1 h2]
     congr 1
@@ -278,16 +276,16 @@ theorem shell_tendsto_discrete {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkT
   have hcontin : ∀ n : ℕ, ∀ᵐ ω ∂S.P,
       (∫ b, stoppedOccupation (ball z r) T (fun _ => 1) (rescaledLBMPath (S.clock ω) S.m₀ b)
           ∂planarBrownianMotion y) -
-        ∫ b, stoppedOccupation (ballExhaustion z r ((r - dist y z) / 2) n) T (fun _ => 1)
+        ∫ b, stoppedOccupation (ballExhaustion z r a n) T (fun _ => 1)
           (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y =
-      ∫ b, shellTime (ballExhaustion z r ((r - dist y z) / 2) n) (ball z r) T
+      ∫ b, shellTime (ballExhaustion z r a n) (ball z r) T
           (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y := by
     intro n
-    filter_upwards [hmeas r, hmeas (r - (r - dist y z) / 2 / ((n : ℝ) + 1))] with ω h1 h2
+    filter_upwards [hmeas r, hmeas (r - a / ((n : ℝ) + 1))] with ω h1 h2
     have i1 : Integrable (fun b => stoppedOccupation (ball z r) T (fun _ => 1)
         (rescaledLBMPath (S.clock ω) S.m₀ b)) (planarBrownianMotion y) :=
       integrable_of_ae_bound h1 (Eventually.of_forall fun b => hbd r _)
-    have i2 : Integrable (fun b => stoppedOccupation (ballExhaustion z r ((r - dist y z) / 2) n) T
+    have i2 : Integrable (fun b => stoppedOccupation (ballExhaustion z r a n) T
         (fun _ => 1) (rescaledLBMPath (S.clock ω) S.m₀ b)) (planarBrownianMotion y) :=
       integrable_of_ae_bound h2 (Eventually.of_forall fun b => hbd _ _)
     rw [← integral_sub i1 i2]
@@ -296,27 +294,27 @@ theorem shell_tendsto_discrete {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkT
     exact (shellTime_eq_sub _ _ T _).symm
   -- measurability of the continuum shell functionals, a.s.
   have hmeasShell : ∀ n : ℕ, ∀ᵐ ω ∂S.P, AEStronglyMeasurable
-      (fun b => shellTime (ballExhaustion z r ((r - dist y z) / 2) n) (ball z r) T
+      (fun b => shellTime (ballExhaustion z r a n) (ball z r) T
         (rescaledLBMPath (S.clock ω) S.m₀ b)) (planarBrownianMotion y) := by
     intro n
-    filter_upwards [hmeas r, hmeas (r - (r - dist y z) / 2 / ((n : ℝ) + 1))] with ω h1 h2
+    filter_upwards [hmeas r, hmeas (r - a / ((n : ℝ) + 1))] with ω h1 h2
     exact (h1.sub h2).congr (Eventually.of_forall fun b => (shellTime_eq_sub _ _ T _).symm)
   refine ⟨fun n => ?_, ?_⟩
   · -- convergence in probability: Step 5 for `D` and for `D_n`, then the difference
     have key := tendstoInProbability_sub_of (hstep5 r hy)
-      (hstep5 (r - (r - dist y z) / 2 / ((n : ℝ) + 1)) (mem_ballExhaustion_of_mem hy n))
+      (hstep5 (r - a / ((n : ℝ) + 1)) (mem_ballExhaustion_of_dist_lt z y r ha hya n))
     have hY : (fun ω => (∫ b, stoppedOccupation (ball z r) T (fun _ => 1)
           (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y) -
-        ∫ b, stoppedOccupation (ball z (r - (r - dist y z) / 2 / ((n : ℝ) + 1))) T (fun _ => 1)
+        ∫ b, stoppedOccupation (ball z (r - a / ((n : ℝ) + 1))) T (fun _ => 1)
           (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y)
-        =ᵐ[S.P] (fun ω => ∫ b, shellTime (ballExhaustion z r ((r - dist y z) / 2) n) (ball z r) T
+        =ᵐ[S.P] (fun ω => ∫ b, shellTime (ballExhaustion z r a n) (ball z r) T
           (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y) :=
       (hcontin n).mono fun ω h => h
-    have hX : (fun ε ω => ∫ q, shellTime (ballExhaustion z r ((r - dist y z) / 2) n) (ball z r) T
+    have hX : (fun ε ω => ∫ q, shellTime (ballExhaustion z r a n) (ball z r) T
           (interpolatedWalk ε (S.η ω) (S.mε ε) q) ∂srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y)) =
         (fun ε ω => (∫ q, stoppedOccupation (ball z r) T (fun _ => 1)
             (interpolatedWalk ε (S.η ω) (S.mε ε) q) ∂srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y)) -
-          ∫ q, stoppedOccupation (ball z (r - (r - dist y z) / 2 / ((n : ℝ) + 1))) T (fun _ => 1)
+          ∫ q, stoppedOccupation (ball z (r - a / ((n : ℝ) + 1))) T (fun _ => 1)
             (interpolatedWalk ε (S.η ω) (S.mε ε) q) ∂srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y)) :=
       funext fun ε => funext fun ω => hdisc n ε ω
     rw [hX]
@@ -326,15 +324,15 @@ theorem shell_tendsto_discrete {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkT
     have hcb : ∀ᵐ b ∂planarBrownianMotion y, Continuous (rescaledLBMPath (S.clock ω) S.m₀ b) :=
       (hω y).2.mono fun b hb => continuous_rescaledLBMPath hb
     have hdct := tendsto_integral_of_dominated_convergence (μ := planarBrownianMotion y)
-      (F := fun n b => shellTime (ballExhaustion z r ((r - dist y z) / 2) n) (ball z r) T
+      (F := fun n b => shellTime (ballExhaustion z r a n) (ball z r) T
         (rescaledLBMPath (S.clock ω) S.m₀ b))
       (f := fun _ => (0 : ℝ)) (fun _ => T) hmeasω (integrable_const T)
       (fun n => Eventually.of_forall fun b => by
         have h1 := shellTime_nonneg (ballExhaustion_subset z r ha n) T (rescaledLBMPath (S.clock ω) S.m₀ b)
-        have h2 := shellTime_le (Dn := ballExhaustion z r ((r - dist y z) / 2) n) (D := ball z r) hT
+        have h2 := shellTime_le (Dn := ballExhaustion z r a n) (D := ball z r) hT
           (rescaledLBMPath (S.clock ω) S.m₀ b)
         rw [Real.norm_eq_abs, abs_le]
         constructor <;> linarith)
-      (hcb.mono fun b hb => shellTime_ballExhaustion_tendsto hy T hb)
+      (hcb.mono fun b hb => shellTime_ballExhaustion_tendsto ha T hb)
     simpa only [integral_zero] using hdct
 end MatedCRT.TruncatedLaws
