@@ -167,6 +167,9 @@ theorem shellCGResGreen_holds {𝒮 : SpaceFillingSLEModel}
 
 /-- **`ShellCGResWalk` (`shellCGResWalk_holds`), conditional on the named inputs G1 and `hMesh`.**
 G1 (`hG1`): the walk exponent `ωm` with `2ωm < ω₀` and `10 ε^ωm ≤ r` (ChatGPT request 75a, unanswered).
+**REFUTED as stated, do not instantiate:** for `0 < ε < 1` and `r = 10 ε^ω₀` (allowed by the premise, whose only lower
+bound on `r` is `10 ε^ω₀ ≤ r`), `10 ε^ωm ≤ r` gives `ωm ≥ ω₀`, contradicting `2ωm < ω₀`. The split route
+(`ε^e ≤ ε^(2ω₀) ≤ (r/10)^2` from the premise clause `2ω₀ < e`) needs a lower bound `r^2/100 ≤ winRf/8` instead.
 `hMesh`: the univ mesh `CellDiamLe` of the walk producer (HoneWalkAe68.lean:111); the premise gives it only on the
 cells meeting `ball 0 ρmesh` (`cellDiamLe` of `meshEventR`). -/
 theorem shellCGResWalk_holds {𝒮 : SpaceFillingSLEModel}
