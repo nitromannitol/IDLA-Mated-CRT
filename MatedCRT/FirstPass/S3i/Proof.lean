@@ -1,6 +1,7 @@
 import MatedCRT.FirstPass.S3i.Statement
 import MatedCRT.FirstPass.S3i.Frozen
 import MatedCRT.FirstPass.S3e
+import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.WalkContinuity
 
 /-!
 # Corrected Lemma 3.6, annealed clause: the eight steps (fp-S3-6-annealed-route; PRO sameWalk §2.4, l.302-490)
@@ -13,8 +14,9 @@ Status of the steps (PRO numbering):
   through `σ` and the strong Markov property at `σ` (PRO l.343-400, 401-421: "must be formalized carefully").
 * Step 5 (apply (BE)): NAMED, through the hypothesis `hLens : FrozenOneSidedBoundaryContinuity 𝒮 → QuenchedLensStep 𝒮`.
   The exponent algebra `(t/d)^{-ν} ≤ (cK)^ν ε^{νb/2}` is PROVED (`boundary_power_le_fp36`).
-* Step 7 (Hölder datum): PROVED (`holder_disc_le_fp36`, `sameWalk_disc_le_of_near_fp36`), with the exit point on the
-  closed disc taken from the lens clause (PRO l.422-457 says "on the finite-exit branch, Z, P ∈ closed D").
+* Step 7 (Hölder datum): PROVED (`holder_disc_le_fp36`, `sameWalk_disc_le_of_near_fp36`). The exit point lies in the
+  closed disc on the good branch by `sameWalkExitPoint_mem_closedBall_fp36` (continuity of the interpolated walk,
+  `pathExitPosition_mem_closedBall_fp36`; PRO l.422-457 "on the finite-exit branch, Z, P ∈ closed D").
 * Step 8 (annealed split): PROVED (`sectionwiseOuterProb_le_of_good_fp36`).
 
 Terminology: quenched and annealed laws (Armstrong-Kuusi-Mourrat); same-walk coupling and one-sided boundary estimate
@@ -87,6 +89,68 @@ lemma ballRetraction_mem_closedBall_fp36 {z : ℂ} {r : ℝ} (hr : 0 < r) (x : �
   rw [norm_mul, Complex.norm_real, Real.norm_of_nonneg (div_nonneg hr.le hmax.le), ← dist_eq_norm,
     div_mul_eq_mul_div, div_le_iff₀ hmax]
   exact mul_le_mul_of_nonneg_left (le_max_right _ _) hr.le
+
+/-- **Exit position of a continuous path (PRO Step 7, good branch).** If a continuous path starts in the open disc
+`B_r(z)` and its first exit time from it is finite, the exit position `pathExitPosition` lies in the closed disc
+`B̄_r(z)`: the path stays in `B_r(z)` before the exit time `τ`, and `τ` lies in the closure of `[0, τ)`. -/
+lemma pathExitPosition_mem_closedBall_fp36 {z : ℂ} {r : ℝ} {f : ℝ≥0 → ℂ} (hf : Continuous f)
+    (h0 : f 0 ∈ ball z r) (hfin : HarmonicBalls.pathExitTime (ball z r) f < ⊤) :
+    pathExitPosition (ball z r) f ∈ closedBall z r := by
+  have hcl : IsClosed {t : ℝ≥0 | f t ∉ ball z r} := (isOpen_ball.isClosed_compl).preimage hf
+  have hne : {t : ℝ≥0 | f t ∉ ball z r}.Nonempty := by
+    by_contra hne
+    rw [Set.not_nonempty_iff_eq_empty] at hne
+    have htop : HarmonicBalls.pathExitTime (ball z r) f = ⊤ := by
+      unfold HarmonicBalls.pathExitTime
+      rw [sInf_eq_top]
+      rintro x ⟨t, rfl, ht⟩
+      have hmem : t ∈ ({t : ℝ≥0 | f t ∉ ball z r} : Set ℝ≥0) := ht
+      rw [hne] at hmem
+      exact hmem.elim
+    exact hfin.ne htop
+  have hval : HarmonicBalls.pathExitTime (ball z r) f =
+      ((sInf {t : ℝ≥0 | f t ∉ ball z r} : ℝ≥0) : ℝ≥0∞) := by
+    unfold HarmonicBalls.pathExitTime
+    apply le_antisymm
+    · apply sInf_le
+      exact ⟨sInf {t : ℝ≥0 | f t ∉ ball z r}, rfl, hcl.csInf_mem hne (OrderBot.bddBelow _)⟩
+    · refine le_sInf ?_
+      rintro x ⟨t, rfl, ht⟩
+      exact ENNReal.coe_le_coe.2 (csInf_le (OrderBot.bddBelow _) ht)
+  set τ : ℝ≥0 := sInf {t : ℝ≥0 | f t ∉ ball z r} with hτdef
+  have hout : f τ ∉ ball z r := hcl.csInf_mem hne (OrderBot.bddBelow _)
+  have hbefore : ∀ t : ℝ≥0, t < τ → f t ∈ ball z r := by
+    intro t ht
+    by_contra hnot
+    have hle : HarmonicBalls.pathExitTime (ball z r) f ≤ (t : ℝ≥0∞) := by
+      unfold HarmonicBalls.pathExitTime
+      exact sInf_le ⟨t, rfl, hnot⟩
+    rw [hval] at hle
+    exact absurd ht (not_lt.2 (ENNReal.coe_le_coe.1 hle))
+  have hτ0 : τ ≠ 0 := by
+    intro h0'
+    exact hout (by rw [h0']; exact h0)
+  have hpe : pathExitPosition (ball z r) f = f τ := by
+    unfold pathExitPosition
+    rw [hval]
+    rfl
+  rw [hpe]
+  have hτcl : τ ∈ closure (Set.Ico (0 : ℝ≥0) τ) := by
+    rw [closure_Ico hτ0.symm]
+    exact ⟨zero_le, le_rfl⟩
+  have hsub : f '' Set.Ico (0 : ℝ≥0) τ ⊆ ball z r := by
+    rintro _ ⟨t, ht, rfl⟩
+    exact hbefore t ht.2
+  have himg : f τ ∈ closure (f '' Set.Ico (0 : ℝ≥0) τ) :=
+    image_closure_subset_closure_image hf ⟨τ, hτcl, rfl⟩
+  exact closure_ball_subset_closedBall (closure_mono hsub himg)
+
+/-- **Good-branch exit point (PRO Step 7 hypothesis `hZ`).** On the good branch the exit point `Z` of the unrestricted
+interpolated walk lies in `B̄_r(z)`: the interpolated walk is continuous (`continuous_interpolatedWalk`). -/
+lemma sameWalkExitPoint_mem_closedBall_fp36 {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} {r : ℝ} {z : ℂ}
+    {ε : ℝ} {ω : Ω} {x : ℕ → ℤ} (hgood : SameWalkGood S r z ε ω x) :
+    sameWalkExitPoint S r z ε ω x ∈ closedBall z r :=
+  pathExitPosition_mem_closedBall_fp36 (continuous_interpolatedWalk ε (S.mε ε) (S.η ω) x) hgood.1 hgood.2
 
 /-- **Step 7 (Hölder datum, real form).** If `ψ` is `χ`-Hölder with constant `H` on the closed disc, `Z, P ∈ B̄_r(z)`
 and `|Z - P| ≤ s/2`, then `|ψ(Z) - ψ(P)| ≤ H s^χ` (PRO l.422-441). -/
@@ -184,7 +248,6 @@ def QuenchedLensStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ ε : ℝ, 0 < ε → ε < ε₀ →
     S.P (G ε)ᶜ ≤ ENNReal.ofReal (C₁ * ε ^ κ) ∧
     ∀ ω ∈ G ε,
-      (∀ x : ℕ → ℤ, SameWalkGood S r z ε ω x → sameWalkExitPoint S r z ε ω x ∈ closedBall z r) ∧
       srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y) {x | ¬ SameWalkGood S r z ε ω x}
         ≤ ENNReal.ofReal (C * ε ^ (ν * b / 2)) ∧
       srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y)
@@ -217,7 +280,7 @@ theorem firstPass_3_6_annealed {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkT
           (1 + (H : ℝ)) * ε ^ (b * (χ : ℝ) / 2) < sameWalkExitDiscrepancy S r z ψ ε p.1 p.2})
         ≤ ENNReal.ofReal (2 * C * ε ^ (ν * b / 2)) := by
     intro ω hωG
-    obtain ⟨hZall, hbad, hfar⟩ := hω ω hωG
+    obtain ⟨hbad, hfar⟩ := hω ω hωG
     have hincl : Prod.mk ω ⁻¹' {p : Ω × (ℕ → ℤ) |
           (1 + (H : ℝ)) * ε ^ (b * (χ : ℝ) / 2) < sameWalkExitDiscrepancy S r z ψ ε p.1 p.2}
         ⊆ {x | ¬ SameWalkGood S r z ε ω x} ∪
@@ -230,7 +293,7 @@ theorem firstPass_3_6_annealed {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkT
         by_contra hnf
         have hnear : dist (sameWalkExitPoint S r z ε ω x) (sameWalkProjected S r z ε ω x)
             ≤ ε ^ (b / 2) / 2 := not_lt.1 hnf
-        have hd := sameWalk_disc_le_of_near_fp36 hr hψ (Real.rpow_nonneg hε.le _) hg (hZall x hg) hnear
+        have hd := sameWalk_disc_le_of_near_fp36 hr hψ (Real.rpow_nonneg hε.le _) hg (sameWalkExitPoint_mem_closedBall_fp36 hg) hnear
         have e : (ε ^ (b / 2)) ^ (χ : ℝ) = ε ^ (b * (χ : ℝ) / 2) := by
           rw [← Real.rpow_mul hε.le]
           ring_nf
