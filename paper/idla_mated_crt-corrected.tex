@@ -2615,12 +2615,13 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 	we may use this to `start' and `stop' walkers as they go through certain sets.  To that end, we introduce the following definitions. 
 	For continuity of literature, we use the same notation as \cite{duminil2013containing}. 
 	\begin{definition} \label{def:stopped-idla}
-		Given sets $\Theta \subset \Theta' \subset {\VGeps}$, and vertices $a_1, \ldots, a_k \in \Theta$, 
+		% CORRECTION [C31]: allow the starting sites used by stopped/restarted IDLA (printed: $a_1, \ldots, a_k \in \Theta$).
+		Given sets $\Theta \subset \Theta' \subset {\VGeps}$, and vertices $a_1, \ldots, a_k \in \Theta'$, 
 		denote by 
 		\[
 		A(\Theta; a_1, \ldots, a_k \to \Theta') \subset {\VGeps} 
 		\]
-		the IDLA aggregate with the following initial condition: the set $\Theta$ is completely occupied, $k$ independent simple random walks are started at $a_1, \ldots, a_k$, and the walkers are stopped upon exiting $\Theta'$. Let
+		the IDLA aggregate with the following initial condition: the set $\Theta$ is completely occupied, $k$ independent simple random walks are started at $a_1, \ldots, a_k$, and the walkers are stopped upon exiting $\Theta'$. A walker whose starting vertex is not occupied by the current aggregate is absorbed at its starting vertex at time zero. Let
 		\[
 		P(\Theta; a_1, \ldots, a_k \to \Theta') \subset \partial \Theta'
 		\] 
@@ -2633,7 +2634,8 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 	\end{definition}
 	In this notation, the Abelian property of IDLA is the following. 
 	\begin{lemma}[Section 4 \cite{diaconis1991growth}] \label{lemma:abelian-IDLA}
-		For every $\sigma(h,\eta)$-measurable choice of $\Theta \subset \Theta' \subset {\VGeps}$ and $a_1, \ldots, a_k \subset \Theta$, the conditional laws given $(h,\eta)$ of
+		% CORRECTION [C31]: starting sites in Theta' as in Definition 6.2 (printed: $a_1, \ldots, a_k \subset \Theta$).
+		For every $\sigma(h,\eta)$-measurable choice of $\Theta \subset \Theta' \subset {\VGeps}$ and $a_1, \ldots, a_k \in \Theta'$, the conditional laws given $(h,\eta)$ of
 		\[
 		\begin{aligned}
 		A(\Theta; a_1, \ldots, a_k) \quad \text{and} \quad
@@ -2659,7 +2661,8 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 	is true:
 	\begin{equation} \label{eq:good-annulus-event}
 	% CORRECTION [C5] (provisional, E-A10): printed \log \frac{1}{|u-v|}, not scale invariant (E_r(z) a.s. empty for r < e^{1-C}/4, contradicting Lemmas 6.4-6.5).
-\sup_{v \in \A_{r, 2r}(z)} \int_{\A_{r,2r}(z)} \left(\log \frac{r}{|u-v|} + 1 \right) d \mu_h(u) \leq C \min_{w \in \A_{r, 2 r}(z)} \mu_h(B_{\boldsymbol{c_0} r}(w)).
+\sup_{v \in \A_{r, 2r}(z)} \int_{\A_{r,2r}(z)} \left(\log \frac{r}{|u-v|} + 1 \right) d \mu_h(u) \leq C \inf_{w \in \A_{r, 2 r}(z)} \mu_h(B_{\boldsymbol{c_0} r}(w)).
+	% CORRECTION [C27]: the annulus is open; use an infimum, as in the proof of Lemma 6.8 (printed: \min).
 	\end{equation}
 	An annulus $\A_{r, 2 r}(z)$ for which $E_r(z)$ holds it said to be {\it good}. In this subsection we prove that there are many good annuli in $B_{\rho}$. 
 	\begin{lemma} \label{lemma:good-prevalance}
@@ -2681,7 +2684,9 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 	the whole-plane GFF plus $-\gamma \log|\cdot|$ normalized so that its circle average over $B_1$ is 0. Also recall 
 	the notation for annuli from \eqref{eq:annulus}.
 	\begin{lemma} \label{lemma:annulus-hit}
-		For each $p  \in (0,1)$, there exists $C  = C(p) > 0$ such that the event $E_r(z) := E_r(z; C)$ of \eqref{eq:good-annulus-event} satisfies 
+		For each $p  \in (0,1)$, there exists $C=C(p,\gamma,\boldsymbol c_0)>0$ such that the event
+		% CORRECTION [C28]: record the actual deterministic dependencies (printed: C = C(p)).
+		 $E_r(z) := E_r(z; C)$ of \eqref{eq:good-annulus-event} satisfies 
 		\[
 		\begin{aligned}
 		\P\left[ E_r(z) \right] \geq p,&\quad \forall r > 0, \\
@@ -2702,15 +2707,66 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		
 		Fix $r > 0$ and then $z$ such that the annulus $\A_{r/3, 3 r}(z)$ lies at Euclidean distance at least $r/100$ from the origin. 
 		Note that $E_r(z)$ depends only on $h|_{\A_{r/3,3r}(z)}$. Thus, the log function is bounded above and below in the region of dependence of $E_r(z)$. 
-		Hence, by Weyl scaling (Fact~\ref{fact:lqg-measure}), there is a constant $A>0$ depending only on $\gamma$ such that 
-		\begin{equation}
-		\frac{\mathcal L^{h}_{r}(z)}{\mathcal{R}^h_r(z)} \leq A  \frac{\mathcal L^{h^\C}_{r}(z)}{\mathcal{R}^{h^\C}_r(z)}.
-		\end{equation} 
-		Thus, 
+		% CORRECTION [C28]: the kernel K_r is signed, so bounded Weyl densities do not
+		% directly give a multiplicative comparison of the two integrals (printed: the ratio comparison L/R <= A L^C/R^C).
+		Write
 		\[
-		\frac{\mathcal L^{h^\C}_{r}(z)}{\mathcal{R}^{h^\C}_r(z)}  \leq C_1 \implies \frac{\mathcal L^{h}_{r}(z)}{\mathcal{R}^h_r(z)} \leq C_1 A
-		\]	
-		and hence \eqref{eq:good-annulus-event} occurs for $C := A \times C_1$ if it occurs for $h^{\C}$.
+		d\mu_h(u)=q(u)\,d\mu_{h^\C}(u)
+		\quad\text{on }\A_{r/3,3r}(z).
+		\]
+		The separation of this annulus from the origin implies that there are
+		numbers $0<a\leq b<\infty$, possibly depending on $(r,z)$, such that
+		\[
+		a\leq q(u)\leq b
+		\quad\text{on }\A_{r/3,3r}(z),
+		\qquad
+		\frac ba\leq A_\gamma
+		\]
+		for a deterministic $A_\gamma<\infty$.
+
+		Set
+		\[
+		K_r(u,v):=\log\frac r{|u-v|}+1,
+		\qquad
+		m^\C_r(z):=
+		\inf_{w\in\A_{r,2r}(z)}
+		\mu_{h^\C}(B_{\boldsymbol c_0r}(w)).
+		\]
+		Suppose that $E_r(z;C_1)$ holds for $h^\C$.  Averaging its defining
+		inequality over normalized arclength measure on
+		$\partial B_{3r/2}(z)$ gives
+		\[
+		\mu_{h^\C}(\A_{r,2r}(z))
+		\leq
+		\frac{C_1}{1-\log 2}\,m^\C_r(z).
+		\]
+		Since $K_r\geq 1-\log 4$ on
+		$\A_{r,2r}(z)\times\A_{r,2r}(z)$, for every
+		$v\in\A_{r,2r}(z)$,
+		\begin{align*}
+		\int_{\A_{r,2r}(z)} K_r(u,v)q(u)\,d\mu_{h^\C}(u)
+		&\leq
+		b\int_{\A_{r,2r}(z)} (K_r(u,v))_+\,d\mu_{h^\C}(u)\\
+		&\leq
+		b C_1\left(
+		1+\frac{\log 4-1}{1-\log 2}
+		\right)m^\C_r(z).
+		\end{align*}
+		On the other hand,
+		\[
+		\inf_{w\in\A_{r,2r}(z)}
+		\mu_h(B_{\boldsymbol c_0r}(w))
+		\geq a\,m^\C_r(z).
+		\]
+		Hence $E_r(z;C)$ holds for $h$, where
+		\[
+		C
+		=
+		A_\gamma C_1
+		\left(
+		1+\frac{\log 4-1}{1-\log 2}
+		\right).
+		\]
 		\medskip
 		
 		{\it Step 2: Whole-plane GFF.} \\
@@ -2790,9 +2846,29 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		and a random  $\sigma(h)$-measurable $\boldsymbol{\delta}>0$ such that with probability approaching one as ${\eps}$ goes to zero, the following is true for all $r \in [10 {\eps}^{\omega}, \boldsymbol{\delta}]$ and all sets $\Theta \subset {\VGeps}$ such that $\overline{\Theta} \Subset B_{\rho/2}$ and $B_{s_0} \subset \overline{\Theta}$ with $\overline{\Theta}$ as in \eqref{eq:vertex-scaling}.  
 		
 		For all $A \subset {\VGeps}(\overline{\Theta} + B_{r}) \setminus \Theta$
-		such that, for all $z \in \C$,  $|A \cap {\VGeps}(B_r(z))| < s_1 r^{2 \beta^-} {\eps}^{-1}$, where $\beta^-$ is as in Lemma \ref{lemma:volume-growth}, we have
+		such that, for all $z \in \C$,  $|A \cap {\VGeps}(B_r(z))| < s_1 r^{2 \beta^-} {\eps}^{-1}$, where $\beta^-$ is as in Lemma \ref{lemma:volume-growth}, the following holds.
+		% CORRECTION [C30]: explicitly define the pre-exit path event (and "we have" -> "the following holds.") (printed: "$X^{a,\eps}$ exits ${\VGeps}(\overline{\Theta} + B_{r}) \setminus \Theta$ through $A$").
+		Set
 		\[
-		\sup_{a \in {\VGeps}(\partial (\overline{\Theta} + B_{r/2}))} \P[\mbox{$X^{a, {\eps}}$ exits $ {\VGeps}(\overline{\Theta} + B_{r}) \setminus \Theta $ through $A$} | h , \eta] \leq  1 - s_2 ,
+		U_{\Theta,r}:=
+		{\VGeps}(\overline{\Theta}+B_r)\setminus\Theta
+		\]
+		and, for
+		$a\in{\VGeps}(\partial(\overline{\Theta}+B_{r/2}))$, let
+		\[
+		\tau_{\Theta,r}^{a}
+		:=
+		\inf\{n\geq0:X_n^{a,\eps}\notin U_{\Theta,r}\}.
+		\]
+		Then
+		\[
+		\sup_{a \in {\VGeps}(\partial (\overline{\Theta} + B_{r/2}))}
+		\P\left[
+		X_n^{a,\eps}\in A
+		\text{ for every }0\leq n<\tau_{\Theta,r}^{a}
+		\,\middle|\,h,\eta
+		\right]
+		\leq 1-s_2,
 		\]
 		where $X^{a, {\eps}}$ is simple random walk started at $a \in {\VGeps}$. 
 	\end{lemma}
@@ -2911,8 +2987,25 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 	\]
 	List the seven-adic radii in $[d,d^\vartheta]$ in decreasing
 	order and continue the list below $d$ to obtain an infinite
-	seven-adic sequence.  Apply Lemma \ref{lemma:annulus-iterate}, after
-	translating by $z$, to the corresponding events, with scale radii
+	seven-adic sequence.
+	% CORRECTION [C29]: justify translation since the quantum-cone field is not
+	% itself translation invariant (printed: "Apply Lemma ..., after translating by $z$, ...").
+	For this fixed $z$, modulo an additive constant we may write
+	\[
+	h(z+\cdot)=\widetilde h^\C+\phi_z,
+	\qquad
+	\phi_z(w):=-\gamma\log|z+w|,
+	\]
+	where $\widetilde h^\C$ is a whole-plane GFF modulo additive constant.
+	All of the annuli under consideration avoid $-z$, so $\phi_z$ is a
+	deterministic continuous function on their union.  Adding $\phi_z$
+	induces an invertible map on each annular field modulo additive constant.
+	Consequently the translated events satisfy the hypotheses of
+	Lemma \ref{lemma:annulus-iterate}, with the same marginal probability
+	lower bound and the same constants.
+
+	We therefore apply Lemma \ref{lemma:annulus-iterate} to the translated
+	events, with scale radii
 	$3R$, annular parameters $1/4$ and $3/4$, and
 	\[
 		\alpha_0:=\frac{10\log 7}{1-\vartheta}.
@@ -3493,7 +3586,8 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 	\begin{proof}
 		For $s_0 \in (0,1)$, let $\omega$, $s_1, s_2$ be as in Lemma \ref{lemma:constant-order-lower-bound} 
 		and fix ${\eps}$ and $r \geq 10 {\eps}^{\omega}$ for which the event of Lemma \ref{lemma:constant-order-lower-bound}  occurs. Set $s_5 = \min(\frac{s_1}{s^{-1}_2 + C}, s_1)$ for a
-		deterministic constant $C > 0$ from \eqref{eq:number-of-walkers-nb-bound} below.  Let $k \leq s_5 r^{2 \beta^-} {\eps}^{-1}$ and $a_1, \ldots, a_{k} \in \Theta$
+		deterministic constant $C > 0$ from \eqref{eq:number-of-walkers-nb-bound} below.  Let $k \leq s_5 r^{2 \beta^-} {\eps}^{-1}$ and $a_1, \ldots, a_{k} \in \cl(\Theta)$
+		% CORRECTION [C31]: match the statement and the subsequent argument (printed: $\in \Theta$).
 		be given. 
 		
 		Start with the set $\Theta$ completely occupied and consider an infinite number of walkers each started at an arbitrary site in $\cl(\Theta)$ and stopped upon exiting ${\VGeps}(\overline\Theta + B_r)$. Let $\mathcal{N}(k_1)$ denote the number of such walkers 

@@ -104,6 +104,21 @@ Printed: Lemma 7.4 started from every a in D_eps(t eps^{-1}) and required the pa
 ## [C26] Lemma 6.8: replacement proof (applied 2026-11-10 under the author's standing approval)
 Printed (corrected draft through [C25]): the proof of Lemma 6.8 did not establish the lemma. An independent referee check (ChatGPT chat 225, notes/fp-gaps/CHATGPT-225-idla-C22-referee-PRO.md) found that the Step 1 good annuli lie outside the exit domain of the walk, that after [C5] Steps 2 and 4 still used the old non-scale-invariant logarithmic kernel, and smaller gaps in the Green lower bound, the ball-to-annulus inclusion, the stopping convention and the exponent bookkeeping; the [C22] Step 3 covering estimate is correct locally but is superseded. Corrected: the proof is replaced by a target-scale short-window good-annulus construction with two-sided-shell amplification (the architecture of chats 188, 190, 193). The statement is unchanged; the proof gives the stronger order s_1 = s_1(rho, gamma), s_2 = 1/2 chosen before s_0, only delta depending on s_0. Text: ChatGPT chat 229 (notes/fp-gaps/CHATGPT-229-idla-C26-lemma-6-8-proof-PRO.txt). Compiled: pdflatex 0 errors, 0 undefined references.
 
+## [C27] Section 6, good-annulus event (eq:good-annulus-event): min -> inf (applied 2026-11-10 under the author's standing approval)
+Printed: C min over the open annulus A_{r,2r}(z) of mu_h(B_{c_0 r}(w)); no attainment argument, while the [C26] proof substitutes m_R(z) defined as an infimum. Corrected: inf (strictly positive by a finite net and full support). Independent Pro referee of [C26], ChatGPT chat 244 (notes/fp-gaps/CHATGPT-244-idla-C26-lemma-6-8-referee-PRO.md), Gap 1.
+
+## [C28] Lemma 6.5 (lemma:annulus-hit): Weyl comparison for the signed [C5] kernel, and C = C(p, gamma, c_0) (applied 2026-11-10 under the author's standing approval)
+Printed: Step 1 compares the ratios L/R for h and h^C by bounded Weyl densities; after [C5] the kernel log(r/|u-v|) + 1 is negative for |u-v| > e r, so bounded densities do not give the multiplicative comparison. Corrected: write d mu_h = q d mu_{h^C} with a <= q <= b, b/a <= A_gamma on A_{r/3,3r}(z); average the h^C event over the circle of radius 3r/2 to bound the annulus mass, bound the positive part of the kernel, and get E_r(z; C) for h with C = A_gamma C_1 (1 + (log 4 - 1)/(1 - log 2)). The statement now records C = C(p, gamma, c_0) (c_0 = c_0(rho, gamma)), consistent with [C18]. Chat 244, Gap 2.
+
+## [C29] Lemma 6.8 proof ([C26], short-window good radii): translated application of Lemma 6.6 (applied 2026-11-10 under the author's standing approval)
+Printed: "Apply Lemma 6.6, after translating by z"; the quantum-cone field is not translation invariant. Corrected: h(z + .) = h~^C + phi_z modulo constants with phi_z(w) = -gamma log|z + w| deterministic and continuous on the annuli (they avoid -z); adding phi_z is invertible on each annular sigma-field modulo constants, so Lemma 6.6 applies to the translated events with the same constants. Chat 244, Gap 3.
+
+## [C30] Lemma 6.8 statement: the event "exits ... through A" defined explicitly (applied 2026-11-10 under the author's standing approval)
+Printed: "X^{a,eps} exits V(Theta-bar + B_r) minus Theta through A" (A is a subset of the domain, not of its exit boundary). Corrected: with U = V(Theta-bar + B_r) minus Theta and tau the exit time of U, the event is {X_n in A for every 0 <= n < tau}, as the [C26] proof (eq:c26-bad-event) and Section 7 use it. Chat 244, Gap 4.
+
+## [C31] Definition 6.2 (def:stopped-idla), the Abelian-property lemma (lemma:abelian-IDLA) and the proof of Lemma 6.9: starting sites (applied 2026-11-10 under the author's standing approval)
+Printed: a_1, ..., a_k in Theta (Definition 6.2, lemma:abelian-IDLA "subset Theta", proof of Lemma 6.9), while the restarted aggregates start walkers on the boundary of the stopping set and Lemma 6.9 is stated for a_i in cl(Theta). Corrected: a_i in Theta' in Definition 6.2 and lemma:abelian-IDLA (a walker started at an unoccupied vertex is absorbed there at time zero), and a_i in cl(Theta) in the proof of Lemma 6.9. Not a defect of [C26]. Chat 244, Gap 5.
+
 ## Readings (not corrections of the paper; line numbers of the corrected draft)
 
 ### (R1) The origin vertex `0` and `a^eps_0` (ESCALATIONS E-x3-3, worker A, 2026-11-04)
