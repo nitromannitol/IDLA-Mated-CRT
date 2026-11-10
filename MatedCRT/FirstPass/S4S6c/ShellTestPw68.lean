@@ -234,8 +234,109 @@ theorem shellTest_pw68 {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRT
   filter_upwards [ae_all_iff.2 hk] with x hx
   exact hx
 
+/-- **The sparsity-parameter form of `shellTest_pw68` (fp-S4S6c-s1, z1).** The guard `FullAdmAt` is taken at the
+exponent `s1` in place of `sparsityS1 γ`; the shell finiteness is `shellHde_pw68_s1` at the same `s1`. -/
+theorem shellTest_pw68_s1 {γ : ℝ} (s1 : ℝ) {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    {ε ρ s₀ ζ r : ℝ} (hε : 0 < ε) (hs₀ : 0 < s₀) (hζ : 0 < ζ) (hζ1 : ζ < 1 / 2) (hr : 0 < r)
+    (hrz : r ≤ countThreshold ζ) (hrρ : r ≤ ρ / 4) (i : Lemma68Config.Config68) {ω : Ω}
+    {Rf : ℂ → ℝ} {Elig : ℂ → Prop}
+    (hη : Continuous (S.η ω))
+    (hcurve : Lemma68Inputs.CurveEscapesBothEnds (S.η ω))
+    (hlf : IsLocallyFiniteMult (S.mult ε ω))
+    (hcons : ∀ k : ℤ, S.mult ε ω k (k + 1) ≠ 0)
+    (hmap : ∀ j k : ℤ, S.mult ε ω j k ≠ 0 → (cell ε (S.η ω) j ∩ cell ε (S.η ω) k).Nonempty)
+    (hkill : ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a), vExitTime (killed ε (S.η ω) i.Θ i.F0 r) x ≠ ⊤)
+    (hR : ∀ w, Elig w → dyadicD r ≤ Rf w ∧ Rf w ≤ dyadicD r ^ shortExp ζ)
+    (hElig : ∀ w, w ∈ shortEligible ρ (dyadicD r) (shortExp ζ) → Elig w)
+    (hmesh : CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ)
+    (hstart : Lemma68Config.FullAdmAt (s1) S ρ s₀ γ ε ω r i →
+      (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty) :
+    Lemma68Config.FullAdmAt (s1) S ρ s₀ γ ε ω r i →
+      ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a), ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
+        testEnd ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf k x ≠ ⊤ := by
+  -- properness of η at ω (the cocompact form of the curve escaping both ends, S6e/Geometry.lean:94)
+  have hprop : Tendsto (S.η ω) (cocompact ℝ) (cocompact ℂ) :=
+    Lemma68Geometry.tendsto_cocompact_of_escapes hcurve
+  -- deterministic parameter facts (as in shellHde_pw68)
+  have hr1 : r ≤ 1 := hrz.trans (countThreshold_le_one hζ)
+  have hd : 0 < dyadicD r := dyadicD_pos r
+  have hd1 : dyadicD r ≤ 1 := dyadicD_le_one r
+  have hd2 : dyadicD r < 2 * r ^ 2 := dyadicD_lt_two_mul_sq hr hr1
+  have hs : 0 < dyadicD r ^ shortExp ζ := Real.rpow_pos_of_pos hd _
+  have hs1 : dyadicD r ^ shortExp ζ ≤ 1 :=
+    Real.rpow_le_one hd.le hd1 (by unfold shortExp; linarith)
+  have hs4 : dyadicD r ^ shortExp ζ ≤ r / 4000 := shell_size_le hζ hr hrz hd hd2
+  have h400 : 400 * dyadicD r ^ shortExp ζ ≤ r := by linarith
+  have hc1 : 1 ≤ shellCount r (dyadicD r ^ shortExp ζ) := by
+    apply Nat.le_floor
+    rw [Nat.cast_one, le_div_iff₀ (by linarith)]
+    linarith
+  have hfl : (shellCount r (dyadicD r ^ shortExp ζ) : ℝ) * (400 * dyadicD r ^ shortExp ζ) ≤ r := by
+    have h := Nat.floor_le (show 0 ≤ r / (400 * dyadicD r ^ shortExp ζ) by positivity)
+    exact (le_div_iff₀ (by linarith)).1 h
+  have hmesh_ball : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) ρ) :=
+    fun k hk => hmesh k (by obtain ⟨y, hy⟩ := hk; exact ⟨y, hy.1, Set.mem_univ _⟩)
+  intro hadm
+  have hadm' := hadm
+  unfold Lemma68Config.FullAdmAt Lemma68Config.ConfigOK at hadm'
+  obtain ⟨⟨-, hcl, hball⟩, -⟩ := hadm'
+  have hK : (fillCells ε (S.η ω) ↑i.Θ).Nonempty := ⟨0, hball (Metric.mem_ball_self hs₀)⟩
+  have hKb : fillCells ε (S.η ω) ↑i.Θ ⊆ Metric.ball (0 : ℂ) (ρ / 2) :=
+    fun y hy => hcl (subset_closure hy)
+  -- the shell exit is finite almost surely (shellHde_pw68, without htest)
+  have hA : ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),
+      (∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
+        shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf k x ≠ ⊤) ∧
+      (∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
+        Elig (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x)) :=
+    Lemma68ShellHdePw68.shellHde_pw68_s1 s1 S hε hs₀ hζ hζ1 hr hrz hrρ i hη hmap hkill hR hElig hmesh_ball hstart hadm
+  have hadjA := Lemma68ShellPathAe.ae_cell_adjacent (S.mult ε ω) i.a hε hmap
+  have hfin : (cellVertices ε (S.η ω) (Metric.ball (0 : ℂ) (ρ + 3))).Finite :=
+    TraceInputs68.cellVertices_finite_of_tendsto hε hprop Metric.isBounded_ball
+  have hk : ∀ k : ℕ, ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),
+      k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1 →
+        testEnd ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf k x ≠ ⊤ := by
+    intro k
+    by_cases hkN : k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1
+    · have hTw : S6j.IsWalkRandomTime
+          (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf k) :=
+        FiniteExitMomentHone68.isWalkRandomTime_of_isStoppingTime
+          (Lemma68OmegaStop.isStoppingTime_of_prefixLocal
+            (Lemma68Omega.shellExit_prefixLocal ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+              (dyadicD r ^ shortExp ζ) (dyadicD r) Rf k))
+      have hlam : shellOffset (dyadicD r ^ shortExp ζ) (k + 1) ≤ r / 20 := by
+        have hk1 : ((k + 1 : ℕ) : ℝ) ≤ (shellCount r (dyadicD r ^ shortExp ζ) : ℝ) := by
+          exact_mod_cast (by omega : k + 1 ≤ shellCount r (dyadicD r ^ shortExp ζ))
+        unfold shellOffset
+        nlinarith [mul_le_mul_of_nonneg_right hk1 hs.le]
+      have hIG : ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),
+          shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf k x < ⊤ →
+            interiorCellVertices ε (S.η ω) (Metric.ball (vertexPoint ε (S.η ω)
+              (x (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
+                Rf k x).toNat))
+              (Rf (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x)
+                / 4))
+            ⊆ cellVertices ε (S.η ω) (Metric.ball (0 : ℂ) (ρ + 3)) := by
+        filter_upwards [hadjA, hA] with x hadjx hx hT
+        exact testInterior_sub_pw68 hε hd hd1 hr hrρ hmesh hK hKb hlam
+          ((hR _ (hx.2 k hkN)).2.trans hs1) hadjx hT.ne
+      have hfinite := FiniteExitTestEnd68.testEnd_ne_top_of_finite (m := S.mult ε ω) hlf hcons hTw hfin i.a
+        (I := fun x => interiorCellVertices ε (S.η ω) (Metric.ball (vertexPoint ε (S.η ω)
+          (x (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
+            Rf k x).toNat))
+          (Rf (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x)
+            / 4)))
+        hIG (testE := fun x => testEnd ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ)
+          (dyadicD r) Rf k x) (fun _ => rfl)
+      filter_upwards [hfinite, hA] with x h1 hx _
+      exact h1 (lt_top_iff_ne_top.2 (hx.1 k hkN))
+    · exact Filter.Eventually.of_forall fun x hx => absurd hx hkN
+  filter_upwards [ae_all_iff.2 hk] with x hx
+  exact hx
+
 end Lemma68ShellTestPw68
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68ShellTestPw68.testInterior_sub_pw68
 #print axioms MatedCRT.Lemma68ShellTestPw68.shellTest_pw68
+#print axioms MatedCRT.Lemma68ShellTestPw68.shellTest_pw68_s1
