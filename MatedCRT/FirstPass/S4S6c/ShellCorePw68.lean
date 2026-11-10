@@ -5,6 +5,7 @@ import MatedCRT.FirstPass.S4S6c.B1Assembly68
 import MatedCRT.FirstPass.S4S6c.HoneElAe68
 import MatedCRT.FirstPass.S4S6c.HoneSetupAdapt68
 import MatedCRT.FirstPass.S4S6c.ShellTestPw68
+import MatedCRT.FirstPass.S4S6c.WindowRfGlobal68
 
 /-!
 # Pointwise, radius-uniform inputs for the one-test order (fp-S4S6c-pointwise-r-uniform, z5)
@@ -614,7 +615,7 @@ def ShellResFull (𝒮 : SpaceFillingSLEModel) : Prop :=
 the residual `ShellRes…` inputs above. -/
 theorem shellOneTestPointwiseEps_of_goodEnv {𝒮 : SpaceFillingSLEModel}
     (hmesh : ShellResMesh 𝒮)
-    (hTdom : ShellResTdom 𝒮) (hRbd : ShellResRbd 𝒮) (hRr : ShellResRr 𝒮)
+    (hTdom : ShellResTdom 𝒮) (hRr : ShellResRr 𝒮)
     (hVolC : ShellResVolC 𝒮) (hVolY : ShellResVolY 𝒮) (hGreen : ShellResGreen 𝒮)
     (hCountGood : ShellResCountGood 𝒮) (hCellGood : ShellResCellGood 𝒮) (hRcell : ShellResRcell 𝒮)
     (hx1 : ShellResX1 𝒮) (hmomS : ShellResMomS 𝒮) (hWalk : ShellResWalk 𝒮) (hsel : ShellResSel 𝒮)
@@ -685,7 +686,9 @@ theorem shellOneTestPointwiseEps_of_goodEnv {𝒮 : SpaceFillingSLEModel}
       (le_trans hrR hRρ) hrA i ω (hmesh γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre) hcont hcurve hadj
       (hmult ε hε))
     (hTdom γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
-    (hRbd γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
+    (fun _ k => MatedCRT.Lemma68WindowRfGlobal.windowRfT_hRbd_global S.μ ρ (shortExp ζ) shellC068 C (dyadicD r)
+      (dyadicD_pos r) (dyadicD_le_one r) (by unfold shortExp; linarith) ω ε (S.η ω)
+      (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) k)
     (hRr γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     (MatedCRT.Lemma68HoneSetupAdapt.hcap_of_continuous (γ := γ) (ρ := ρ) (s₀ := s₀) S ω hcont hε hr0 i)
     (hVolC γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
