@@ -523,6 +523,91 @@ theorem measurable_angleQuad_eval {ι : Type*} (n : ℕ) (p : ℝ → ι) (a : �
   refine Measurable.const_mul ?_ _
   exact Finset.measurable_sum _ fun j _ => (measurable_pi_apply (p _)).const_mul _
 
+/-! ### Radial and sphere-average codes (chat 231, §2) -/
+
+/-- The countable coordinates of a circle-average process: `(r, z) ↦ h_r(z)` on `(0,∞) × ℂ`. -/
+abbrev ConeCircleCode := Set.Ioi (0 : ℝ) × ℂ → ℝ
+
+/-- The cutoff scale `δ_m = (1/2)^(m+2)` (chat 231, §2). -/
+def radialEps (m : ℕ) : ℝ := (2 : ℝ)⁻¹ ^ (m + 2)
+
+lemma radialEps_pos (m : ℕ) : 0 < radialEps m := pow_pos (by norm_num) _
+
+lemma radialEps_tendsto : Tendsto radialEps atTop (𝓝 0) := by
+  have h : radialEps = fun m : ℕ => ((2 : ℝ)⁻¹) ^ 2 * ((2 : ℝ)⁻¹) ^ m := by
+    funext m
+    unfold radialEps
+    rw [pow_add]
+    ring
+  rw [h]
+  have := (tendsto_pow_atTop_nhds_zero_of_lt_one (r := (2 : ℝ)⁻¹) (by norm_num) (by norm_num)).const_mul
+    (((2 : ℝ)⁻¹) ^ 2)
+  simpa using this
+
+/-- The continuous radial cutoff `χ_m(r) = max(0, min(1, r/δ_m - 1))`: it vanishes for `r ≤ δ_m` and equals `1` for
+`r ≥ 2 δ_m` (chat 231, §2). -/
+def radialCutoff (m : ℕ) (r : ℝ) : ℝ := max 0 (min 1 (r / radialEps m - 1))
+
+lemma radialCutoff_mem_Icc (m : ℕ) (r : ℝ) : 0 ≤ radialCutoff m r ∧ radialCutoff m r ≤ 1 :=
+  ⟨le_max_left _ _, max_le zero_le_one (min_le_left _ _)⟩
+
+lemma radialCutoff_eq_zero_of_le {m : ℕ} {r : ℝ} (h : r ≤ radialEps m) : radialCutoff m r = 0 := by
+  have hδ := radialEps_pos m
+  have : r / radialEps m - 1 ≤ 0 := by
+    rw [sub_nonpos, div_le_one hδ]
+    exact h
+  unfold radialCutoff
+  rw [min_eq_right (by linarith : r / radialEps m - 1 ≤ 1), max_eq_left this]
+
+lemma radialCutoff_eq_one_of_le {m : ℕ} {r : ℝ} (h : 2 * radialEps m ≤ r) : radialCutoff m r = 1 := by
+  have hδ := radialEps_pos m
+  have : 1 ≤ r / radialEps m - 1 := by
+    rw [le_sub_iff_add_le, le_div_iff₀ hδ]
+    linarith
+  unfold radialCutoff
+  rw [min_eq_left this, max_eq_right zero_le_one]
+
+lemma continuous_radialCutoff (m : ℕ) : Continuous (radialCutoff m) := by
+  unfold radialCutoff
+  have hδ := radialEps_pos m
+  fun_prop
+
+/-- The cutoff is eventually `1` at each fixed positive radius, since `δ_m → 0`. -/
+lemma radialCutoff_eventually_eq_one {r : ℝ} (hr : 0 < r) : ∀ᶠ m in atTop, radialCutoff m r = 1 := by
+  filter_upwards [radialEps_tendsto.eventually (gt_mem_nhds (show (0 : ℝ) < r / 2 from half_pos hr))] with m hm
+  apply radialCutoff_eq_one_of_le
+  linarith
+
+/-- The safe positive radius `max(|x|, δ_m)` (chat 231, §2). -/
+def safeRadius (m : ℕ) (x : ℂ) : Set.Ioi (0 : ℝ) :=
+  ⟨max ‖x‖ (radialEps m), lt_of_lt_of_le (radialEps_pos m) (le_max_right _ _)⟩
+
+/-- **Radial pairing code** (chat 231, §2.1). The pairing `∫ φ(x) h_{|x|}(0) dx` is recovered from countably many circle
+coordinates, at the safe radii `max(|x|, δ_m) > 0`, by midpoint sums in `n` and a `limsup` in `m`. It never queries the
+origin `q(0, 0)`. -/
+def radialPairingCode (φ : ℂ → ℝ) (q : ConeCircleCode) : ℝ :=
+  limsup (fun m : ℕ => limsup (fun n : ℕ =>
+    planeQuad n fun x => φ x * radialCutoff m ‖x‖ * q (safeRadius m x, 0)) atTop) atTop
+
+/-- **Radial sphere-average code** (chat 231, §2.2). The circle average of `x ↦ h_{|x|}(0)` over `∂B_r(z)`, recovered from
+countably many circle coordinates at the safe radii `max(|x|, δ_m) > 0`. -/
+def radialSphereCode (r : ℝ) (z : ℂ) (q : ConeCircleCode) : ℝ :=
+  limsup (fun m : ℕ => limsup (fun n : ℕ =>
+    angleQuad n fun θ => radialCutoff m ‖circleMap z r θ‖ * q (safeRadius m (circleMap z r θ), 0)) atTop) atTop
+
+/-- The radial pairing code is Borel in the countable circle coordinates (chat 231, §2.1). -/
+theorem measurable_radialPairingCode (φ : ℂ → ℝ) : Measurable (radialPairingCode φ) := by
+  unfold radialPairingCode
+  refine Measurable.limsup fun m => Measurable.limsup fun n => ?_
+  exact measurable_planeQuad_eval n (fun x => (safeRadius m x, (0 : ℂ))) (fun x => φ x * radialCutoff m ‖x‖)
+
+/-- The radial sphere-average code is Borel in the countable circle coordinates (chat 231, §2.2). -/
+theorem measurable_radialSphereCode (r : ℝ) (z : ℂ) : Measurable (radialSphereCode r z) := by
+  unfold radialSphereCode
+  refine Measurable.limsup fun m => Measurable.limsup fun n => ?_
+  exact measurable_angleQuad_eval n (fun θ => (safeRadius m (circleMap z r θ), (0 : ℂ)))
+    (fun θ => radialCutoff m ‖circleMap z r θ‖)
+
 end
 
 end MatedCRT
