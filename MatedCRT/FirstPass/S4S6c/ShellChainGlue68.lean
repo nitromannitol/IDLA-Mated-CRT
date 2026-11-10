@@ -118,3 +118,53 @@ theorem exitQ_le_pow_count {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
 
 end Lemma68ChainGlue
 end MatedCRT
+
+namespace MatedCRT
+namespace Lemma68ChainGlue
+
+open MatedCRT.Lemma68Window MatedCRT.Lemma68Omega MatedCRT.Lemma68GeometryId MatedCRT.Lemma68Admissible
+open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68WalkBridge MatedCRT.Lemma68ChainAe
+open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
+
+/-- The one-test parameter `q = q₀ / (1 + log(1/r))²` lies in `[0, 1]` for `0 < q₀ ≤ 1` and `0 < r ≤ 1`. -/
+theorem oneTest_q_le_one {q0 r : ℝ} (hq1 : q0 ≤ 1) (hr : 0 < r) (hr1 : r ≤ 1) :
+    q0 / (1 + Real.log (1 / r)) ^ 2 ≤ 1 := by
+  have hl : 0 ≤ Real.log (1 / r) := Real.log_nonneg (by rw [le_div_iff₀ hr]; linarith)
+  have h1 : 1 ≤ (1 + Real.log (1 / r)) ^ 2 := by nlinarith
+  exact (div_le_one (by linarith)).mpr (by linarith)
+
+/-- **The pointwise step of `ShellChainCoreStmt`, parameters discharged.** For the parameters of the core
+(`0 < ζ < 1/2`, `0 < q₀ ≤ 1`, `0 < r ≤ 1`, `r ≤ R ≤ rAmp q₀ ζ`) and the shell scale `s = d^a` with `d = dyadicD r`, the
+exit bound of the core, `∃ N, c_N r^{-ζ} ≤ N ∧ exitQ ≤ (1 - q₀/(1+log(1/r))²)^N`, follows from the two named inputs
+`hone` (one-test bound on the shells, walk-centred form) and `hShell` (shell order, `n = shellCount r s - 1`).
+The radius range is used only through `rAmp_le_countThreshold` (so `r ≤ countThreshold ζ`) and `dyadicD_mem`. -/
+theorem exitQ_core_step {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ε : ℝ) (ω : Ω) (ζ q0 r : ℝ)
+    (Rf : ℂ → ℝ) (i : Lemma68Config.Config68)
+    (hζ : 0 < ζ) (hζ1 : ζ < 1 / 2) (hq0 : 0 < q0) (hq1 : q0 ≤ 1) (hr : 0 < r) (hr1 : r ≤ 1)
+    (hRA : r ≤ Lemma68Cutoff.rAmp q0 ζ)
+    (hone : ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),
+      x ∈ prefixSet (fun j (y : ℕ → ℤ) => y j) (↑i.A : Set ℤ)
+          (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf k)
+          (vExitTime (killed ε (S.η ω) i.Θ i.F0 r)) →
+        (srwLaw (S.mult ε ω) i.a)[(testFailSet (fun j (y : ℕ → ℤ) => y j) (↑i.A : Set ℤ)
+          (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf k)
+          (Lemma68Window.testEndExit ε (S.η ω)
+            (shellWalkParam ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf k)
+            (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf k))).indicator
+          (fun _ => (1 : ℝ)) |
+          (isStoppingTime_shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf
+            k).measurableSpace] x
+          ≤ 1 - q0 / (1 + Real.log (1 / r)) ^ 2)
+    (hShell : Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf
+      (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a)
+    (hlf : IsLocallyFiniteMult (S.mult ε ω)) (hcons : ∀ k : ℤ, S.mult ε ω k (k + 1) ≠ 0) :
+    ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
+      Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N := by
+  obtain ⟨hrd, hd2⟩ := dyadicD_mem hr hr1
+  have hd : 0 < dyadicD r := lt_of_lt_of_le (by positivity) hrd
+  have hrz : r ≤ countThreshold ζ := hRA.trans (rAmp_le_countThreshold hq0 hq1 hζ hζ1)
+  exact exitQ_le_pow_count S ε ω ζ r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf i (oneTest_q_le_one hq1 hr hr1)
+    hζ hr hrz hd hrd hd2 rfl hone hShell hlf hcons
+
+end Lemma68ChainGlue
+end MatedCRT
