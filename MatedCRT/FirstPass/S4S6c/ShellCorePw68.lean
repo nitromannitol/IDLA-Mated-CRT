@@ -6,6 +6,8 @@ import MatedCRT.FirstPass.S4S6c.HoneElAe68
 import MatedCRT.FirstPass.S4S6c.HoneSetupAdapt68
 import MatedCRT.FirstPass.S4S6c.ShellTestPw68
 import MatedCRT.FirstPass.S4S6c.WindowRfGlobal68
+import MatedCRT.FirstPass.S4S6c.HoneRrLocal68
+import MatedCRT.FirstPass.S4S6c.B1EnvPw68
 
 /-!
 # Pointwise, radius-uniform inputs for the one-test order (fp-S4S6c-pointwise-r-uniform, z5)
@@ -615,9 +617,9 @@ def ShellResFull (𝒮 : SpaceFillingSLEModel) : Prop :=
 the residual `ShellRes…` inputs above. -/
 theorem shellOneTestPointwiseEps_of_goodEnv {𝒮 : SpaceFillingSLEModel}
     (hmesh : ShellResMesh 𝒮)
-    (hTdom : ShellResTdom 𝒮) (hRr : ShellResRr 𝒮)
+    (hTdom : ShellResTdom 𝒮)
     (hVolC : ShellResVolC 𝒮) (hVolY : ShellResVolY 𝒮) (hGreen : ShellResGreen 𝒮)
-    (hCountGood : ShellResCountGood 𝒮) (hCellGood : ShellResCellGood 𝒮) (hRcell : ShellResRcell 𝒮)
+    (hCountGood : ShellResCountGood 𝒮) (hCellGood : ShellResCellGood 𝒮)
     (hx1 : ShellResX1 𝒮) (hmomS : ShellResMomS 𝒮) (hWalk : ShellResWalk 𝒮) (hsel : ShellResSel 𝒮)
     (hfull : ShellResFull 𝒮) : ShellOneTestPointwiseEpsStmt 𝒮 := by
   intro γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hωβ hω2ζ hCG hCE hζ0 hζ1 hρ0 hρ1 C C' hC hC' hP
@@ -675,6 +677,19 @@ theorem shellOneTestPointwiseEps_of_goodEnv {𝒮 : SpaceFillingSLEModel}
       (by unfold shortExp; linarith) ω hw)
     (fun _ hw => hw) (hmesh γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     (fun hFA => MatedCRT.Lemma68HoneSetup239.hstart_of_fullAdmAt S hε hs₀ ω hcont r hr0 i hFA)
+  -- pointwise producers of the hEl, hRr and hRcell binders (z10 hEl_fixedOmega, z12 hRr_fixedOmega_loc,
+  -- z11 hRcell_pw); the ball-form mesh comes from the meshEvent at radius rho (cellDiamLe_ball_of_meshEvent)
+  have hmω : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) ρ) :=
+    MatedCRT.Lemma68HoneSetupAdapt.cellDiamLe_ball_of_meshEvent (c0 := shellC068) S ω hmeshω hε hρ1 hr0
+      (le_trans hrR hRρ) MatedCRT.Lemma68HoneSetupAdapt.shellC068_le_one_adapt hεcell
+  have htendω : Filter.Tendsto (S.η ω) (Filter.cocompact ℝ) (Filter.cocompact ℂ) :=
+    MatedCRT.Lemma68Geometry.tendsto_cocompact_of_escapes hcurve
+  have hElω := MatedCRT.Lemma68HoneElAe.hEl_fixedOmega (γ := γ) (C := C) S hρ1 hζ0 hζ1 hq0 hq0B hs₀ hε hr0
+    (le_trans hrR hRρ) hrA i ω (hmesh γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre) hcont hcurve hadj
+    (hmult ε hε)
+  have hRrω := MatedCRT.Lemma68HoneRrLocal.hRr_fixedOmega_loc (γ := γ) (ρ := ρ) (C := C) S hρ1 hζ0 hζ1 hq0 hq0B hs₀ hε
+    hr0 (le_trans hrR hRρ) hrA i ω hmω hcont htendω (hadjAll ε hε) (hmult ε hε)
+  have hRcellω := MatedCRT.Lemma68B1EnvPw.hRcell_pw (γ := γ) (ρ := ρ) S ω i hζ0 hζ1 hElω (hRcut r hr0 hrR)
   obtain ⟨Rf, h1, h2⟩ := shellOneTest_at_of_goodEnv' hγ0 hγ2 S hρ0 hρ1 hζ0 hζ1 hCG hq0 hq0B hε hs₀ hr0
     (le_trans hrR hRρ) hrz hrA ω₀ hω₀ (shellK68 γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω₀ hζ0 hζ1) rfl ω hreg i
     (ζ := ζ) (CG := CG) (CE := CE) (C := C) (α := α) (q0 := q0) (s₀ := s₀) (ε := ε) (r := r)
@@ -682,21 +697,19 @@ theorem shellOneTestPointwiseEps_of_goodEnv {𝒮 : SpaceFillingSLEModel}
     (hmesh γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     hTest
     hadm
-    (MatedCRT.Lemma68HoneElAe.hEl_fixedOmega (γ := γ) (C := C) S hρ1 hζ0 hζ1 hq0 hq0B hs₀ hε hr0
-      (le_trans hrR hRρ) hrA i ω (hmesh γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre) hcont hcurve hadj
-      (hmult ε hε))
+    hElω
     (hTdom γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     (fun _ k => MatedCRT.Lemma68WindowRfGlobal.windowRfT_hRbd_global S.μ ρ (shortExp ζ) shellC068 C (dyadicD r)
       (dyadicD_pos r) (dyadicD_le_one r) (by unfold shortExp; linarith) ω ε (S.η ω)
       (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) k)
-    (hRr γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
+    hRrω
     (MatedCRT.Lemma68HoneSetupAdapt.hcap_of_continuous (γ := γ) (ρ := ρ) (s₀ := s₀) S ω hcont hε hr0 i)
     (hVolC γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     (hVolY γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     (hGreen γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     (hCountGood γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     (hCellGood γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
-    (hRcell γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
+    hRcellω
     (hx1 γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     (hmomS γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
     (hWalk γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
