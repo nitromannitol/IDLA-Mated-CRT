@@ -16,6 +16,8 @@ namespace MatedCRT
 \cite{gwynne2019harmonic} Theorem 3.9 (locator: GMS Theorem 3.9, (3.30)–(3.33), arXiv:1807.07511v3, per notes/fp-gaps/CHATGPT-frozen-locators.md; the paper's citation is "Theorem 3.9").
 The printed Draft `DiscreteHolderContinuityStmt` is FALSE (review-L32 F1, docs/campaign/CORRECTED-FORMS.md, entry 3.2);
 this is the corrected statement `DiscreteHolderContinuityCorrectedStep` of Steps/Sec3/DiscretePotentialTightness.lean:71.
+Truth check UNRESOLVED for an unconstrained SLE model; TRUE under the certified reference law, see SLEReferenceExistsInput
+(ChatGPT, 02:35 UTC; notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md §3).
 Used by: firstPass_3_1_corrected. -/
 def FrozenDiscreteHolderContinuityCorrected (𝒮 : SpaceFillingSLEModel) : Prop :=
   DiscreteHolderContinuityCorrectedStep 𝒮
