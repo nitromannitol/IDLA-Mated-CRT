@@ -9,7 +9,7 @@ import MatedCRT.FirstPass.S2m
 
 Copy of `coneHalfBallClosureInsideStep_corrected` (`FirstPass/S2g/Corrected24.lean:33`) with the same statement and the same
 proof, placed in `MatedCRT.S5r`. Reason: `FirstPass/S2g/Corrected24.lean` and `FirstPass/S2b.lean` both declare
-`MatedCRT.firstPass_2_4_corrected` (with different conclusions), so a module that imports both (for example
+`MatedCRT.firstPass_2_4_corrected` (with different conclusions; since fp-S2g-rename the S2g one is firstPass_2_4_canonical), so a module that imports both (for example
 `FirstPass/S5q.lean`, which imports `FirstPass/S2b.lean` through `FirstPass/S5m.lean`) cannot import `Corrected24`.
 This copy imports the same modules as `Corrected24` except `Corrected24` itself. The original file is not edited.
 -/

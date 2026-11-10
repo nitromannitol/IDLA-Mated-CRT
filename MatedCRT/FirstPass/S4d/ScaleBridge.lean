@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.S2g.Draft24
 `ConeScaleInvarianceUpToFixedTimeStmt` (Draft `Section2.lean:88`; paper `lemma:scale-invariance-up-to-fixed-time`,
 `idla_mated_crt-corrected.tex:548`) is stated for an arbitrary stopping time `T` and adds the uniqueness of the rescaled
 stopping time. The corrected canonical form `ConeScaleInvarianceUpToFixedTimeCanonicalStmt` (`FirstPass/S2g.lean:51`,
-proved by `firstPass_2_5_corrected`, `S2g/Assembly2456.lean`) is stated at the canonical half-ball time `halfBallTime`.
+proved by `firstPass_2_5_canonical`, `S2g/Assembly2456.lean`) is stated at the canonical half-ball time `halfBallTime`.
 
 This file bridges the two statements with two inputs:
 * the identity `halfBallTime (μ ω) = T'` for every stopped family `Λ'` on `(0, T')`, proved here from the canonical

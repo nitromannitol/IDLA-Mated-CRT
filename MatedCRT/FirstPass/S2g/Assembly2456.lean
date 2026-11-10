@@ -11,9 +11,9 @@ import MatedCRT.FirstPass.S2g.AELaw
 
 /-! # Corrected Lemmas 2.5, 2.6 and Proposition 6.1: assembly (fp-S2g, q1, round 42)
 
-* `firstPass_6_1_corrected` goes through the canonical Lemma 2.4 `firstPass_2_4_corrected` (`Corrected24.lean`), not through
+* `firstPass_6_1_corrected` goes through the canonical Lemma 2.4 `firstPass_2_4_canonical` (`Corrected24.lean`), not through
   the factor step.
-* `firstPass_2_5_corrected` and `firstPass_2_6_corrected` apply the z2 factor lemmas `coneCanonicalFactor_proved`
+* `firstPass_2_5_canonical` and `firstPass_2_6_corrected` apply the z2 factor lemmas `coneCanonicalFactor_proved`
   (`S2i/CanonicalFactor.lean:199`) and `coneGlobalFamilyFactor_proved` (`S2i/GlobalFactor.lean:524`) to the half-ball step
   `coneCanonicalHalfBallStep_of_draft` (`HalfBallGate.lean`). The half-ball step uses no factor step, so there is no cycle.
 * Common inputs (all four results): the Draft and frozen inputs of `coneCanonicalHalfBallStep_of_draft`, with
@@ -46,14 +46,14 @@ theorem firstPass_6_1_corrected (𝒮 : SpaceFillingSLEModel) (h610 : IterativeB
     (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion) (hFL : FPConeWholePlaneFieldLaw)
     (h27 : VolumeGrowthStmt) : IDLAUpperBoundStmt 𝒮 :=
   firstPass_6_1_canonical24 𝒮 h610 h51
-    (firstPass_2_4_corrected hU hmeasT hstd hmin hCentre hGB hpole hOpen hSup hCons hMono hCompat hBdry hExist hThm11
+    (firstPass_2_4_canonical hU hmeasT hstd hmin hCentre hGB hpole hOpen hSup hCons hMono hCompat hBdry hExist hThm11
       hProp56 hconf hI2 hK hloc hSC hE hFL h27)
 
 /-- **Corrected Lemma 2.5, canonical stopped factorization and joint law (q1, fp-S2g).** The factor step
 `ConeCanonicalFactorStep` is obtained from the proved lemma `coneCanonicalFactor_proved` (z2) applied to the half-ball step
 `coneCanonicalHalfBallStep_of_draft` and the closure step `coneHalfBallClosureInsideStep_corrected`; no factor step is
 assumed. -/
-theorem firstPass_2_5_corrected
+theorem firstPass_2_5_canonical
     (hU : FrozenUniversalMeasurabilityOfAnalytic) (hmeasT : FrozenLQGTestIntegralMeasurable)
     (hstd : FrozenConeLogLocalCodeLawStd)
     (hmin : FrozenSuperharmonicMinimumPrinciple) (hCentre : FrozenGreenBallCentre)

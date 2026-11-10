@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.S2m
 
 /-! # Corrected Lemma 2.4, canonical stopped family: assembly (fp-S2g, q1, round 42)
 
-`firstPass_2_4_corrected` is the statement `ConeHarmonicBallsUpToFixedTimeCanonicalStmt` (`S2g.lean`, corrected canonical
+`firstPass_2_4_canonical` is the statement `ConeHarmonicBallsUpToFixedTimeCanonicalStmt` (`S2g.lean`, corrected canonical
 stopping time `T = halfBallTime`, notes/fp-gaps/CHATGPT-2-4-2-5-statements.md). It is assembled from
 
 * `coneCanonicalHalfBallStep_of_draft` (`HalfBallGate.lean`): the pathwise canonical half-ball existence, from the Draft
@@ -41,7 +41,7 @@ theorem coneHalfBallClosureInsideStep_corrected
     (MatedCRT.FirstPass.S2m.firstPass_wholePlaneLQGModel_of_existence hE) hFL
 
 /-- **Corrected Lemma 2.4 (canonical stopped family, q1, fp-S2g).** The conditional assembly. -/
-theorem firstPass_2_4_corrected
+theorem firstPass_2_4_canonical
     (hU : FrozenUniversalMeasurabilityOfAnalytic) (hmeasT : FrozenLQGTestIntegralMeasurable)
     (hstd : FrozenConeLogLocalCodeLawStd)
     (hmin : FrozenSuperharmonicMinimumPrinciple) (hCentre : FrozenGreenBallCentre)

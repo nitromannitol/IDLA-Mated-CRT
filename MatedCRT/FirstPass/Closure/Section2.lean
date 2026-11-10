@@ -18,10 +18,10 @@ namespace MatedCRT
 
 /-- Lemma 2.4 (existence up to fixed time), closed in the S2g form. Conclusion
 `ConeHarmonicBallsUpToFixedTimeCanonicalStmt`. -/
-alias closed_2_4 := firstPass_2_4_corrected
+alias closed_2_4 := firstPass_2_4_canonical
 
 /-- Lemma 2.5 (scale invariance up to fixed time), closed in the S2g canonical form. -/
-alias closed_2_5 := firstPass_2_5_corrected
+alias closed_2_5 := firstPass_2_5_canonical
 
 /-- Lemma 2.6 (scale invariance), closed. Conclusion `ConeScaleInvarianceStmt`. -/
 alias closed_2_6 := firstPass_2_6_corrected

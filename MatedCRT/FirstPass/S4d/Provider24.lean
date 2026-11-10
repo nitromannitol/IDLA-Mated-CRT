@@ -10,7 +10,7 @@ The printed Lemma 2.4 gives, for a.e. sample, a time `T > 0`, a family `{Λ_t}_{
 other stopped family (Draft `ConeHarmonicBallsUpToFixedTimeStmt`, Draft/Section2.lean:66, clause `T' = T ∧ EqOn`).
 
 * `coneHarmonicBallsUpToFixedTimeCorrected_of_canonical`: the provider form (`ConeHarmonicBallsUpToFixedTimeCorrectedStmt`
-  of FirstPass/S2b.lean:43, stated here in the same form) from the canonical corrected Lemma 2.4 `firstPass_2_4_corrected`
+  of FirstPass/S2b.lean:43, stated here in the same form) from the canonical corrected Lemma 2.4 `firstPass_2_4_canonical`
   (FirstPass/S2g/Corrected24.lean:44), with `T := halfBallTime`.
 * `coneHarmonicBallsUpToFixedTimeStmt_of_corrected`: the Draft statement from the provider form and the closure-inside step.
   The clause `T' = T` is NOT read off Lemma 2.4; it is the consequence of `ConeHalfBallClosureInsideStep` by

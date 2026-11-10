@@ -91,7 +91,7 @@ def FrozenConeLogLocalCodeLawStd : Prop :=
 -- which is `ConeWholePlaneFieldLawStep` (`Proofs/Sec4/Prop42Closure/ConeWholePlaneSteps.lean:66`). Carried-over PENDING
 -- TRUTH CHECK: the universal quantifier over whole-plane GFFs on arbitrary `Ω'`. Measurability is not an issue: both
 -- fields are measurable (`IsQuantumCone.measurable_pairing`, `measurable_circle`, `Defs/QuantumCone.lean:84-86`, and
--- `IsWholePlaneGFF.measurable_pairing`, `measurable_circle`, HarmonicBalls `Defs/GFF.lean:96, 98`). Used by `firstPass_2_4_corrected`, `firstPass_6_1_corrected`,
--- `firstPass_2_5_corrected`, `firstPass_2_6_corrected` (`S2g/Corrected24.lean`, `S2g/Assembly2456.lean`).
+-- `IsWholePlaneGFF.measurable_pairing`, `measurable_circle`, HarmonicBalls `Defs/GFF.lean:96, 98`). Used by `firstPass_2_4_canonical`, `firstPass_6_1_corrected`,
+-- `firstPass_2_5_canonical`, `firstPass_2_6_corrected` (`S2g/Corrected24.lean`, `S2g/Assembly2456.lean`).
 
 end MatedCRT

@@ -27,10 +27,10 @@ import MatedCRT.FirstPass.S3f.FiniteDomainRepresentation
   (`Frozen/S2m.lean`).
 * `hScaleInv` (Draft Lemma 2.6) := `firstPass_2_6_corrected` (`FirstPass/S2g/Assembly2456.lean`, q1), same inputs.
 * `h24` (Draft Lemma 2.4) := `coneHarmonicBallsUpToFixedTimeStmt_of_provider` (`FirstPass/S4d/Provider24.lean`, q4) applied to the
-  provider form `coneHarmonicBallsProviderFP4_of_canonical (firstPass_2_4_corrected ...)` (operator note chat 174). The Draft clause
+  provider form `coneHarmonicBallsProviderFP4_of_canonical (firstPass_2_4_canonical ...)` (operator note chat 174). The Draft clause
   `T' = T` is derived there from the closure step `hcl`, not read off Lemma 2.4.
 * `h25` (Draft Lemma 2.5) := `coneScaleInvarianceUpToFixedTimeStmt_of_canonical` (`FirstPass/S4d/ScaleBridge.lean`, q4),
-  from the canonical form `firstPass_2_5_corrected` and the step `hRU` (`coneRescaledHalfBallHorizonUnique_fp`,
+  from the canonical form `firstPass_2_5_canonical` and the step `hRU` (`coneRescaledHalfBallHorizonUnique_fp`,
   `FirstPass/S4d/HorizonUnique.lean`, q4), which is proved from the frozen input `hrescale`.
 * `h23` (Draft Lemma 2.3, `ConeHarmonicBallsStmt`) := `firstPass_2_3` (`FirstPass/S1S2S8SA.lean`) from `h24`, `h25`, `h27`,
   `hscale`, `h22`; no new hypothesis.
@@ -89,11 +89,11 @@ theorem firstPass_4_2_of_wholeplane_model {𝒮 : SpaceFillingSLEModel}
     hBdry hExist hThm11 hProp56 hconf
   have hcl := coneHalfBallClosureInsideStep_corrected hI2 hK hloc hExist hSC h27 hE hFL
   have h24P := coneHarmonicBallsProviderFP4_of_canonical
-    (MatedCRT.firstPass_2_4_corrected hU hmeasT hstd hwmp hCentre hG hpole hOpen hSup hCons hMono hCompat hBdry hExist
+    (MatedCRT.firstPass_2_4_canonical hU hmeasT hstd hwmp hCentre hG hpole hOpen hSup hCons hMono hCompat hBdry hExist
       hThm11 hProp56 hconf hI2 hK hloc hSC hE hFL h27)
   have h24 := coneHarmonicBallsUpToFixedTimeStmt_of_provider h24P hcl
   have h25 := coneScaleInvarianceUpToFixedTimeStmt_of_canonical hcan hcl
-    (firstPass_2_5_corrected hU hmeasT hstd hwmp hCentre hG hpole hOpen hSup hCons hMono hCompat hBdry hExist hThm11
+    (firstPass_2_5_canonical hU hmeasT hstd hwmp hCentre hG hpole hOpen hSup hCons hMono hCompat hBdry hExist hThm11
       hProp56 hconf hI2 hK hloc hSC hE hFL h27 hE1 hE2 hscale h22)
     (coneRescaledHalfBallHorizonUnique_fp hcan hcl hrescale)
   have h23 := firstPass_2_3 h24 h25 h27 hscale h22
