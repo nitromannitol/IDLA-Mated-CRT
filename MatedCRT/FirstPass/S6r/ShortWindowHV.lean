@@ -1,4 +1,5 @@
 import MatedCRT.FirstPass.S6r.ShortWindowDerived
+import MatedCRT.FirstPass.S6r.ShortWindowH0
 import MatedCRT.FirstPass.S2VG.Literature
 import MatedCRT.Steps.Sec6.AnnulusHit
 import HarmonicBalls.Proofs.GFF.CircleAverageLognormalMoments
@@ -278,8 +279,25 @@ theorem wholePlaneUpperVolumeTailStep_of_ballMass (hBM : MatedCRT.S2VG.LitWholeP
     _ = ENNReal.ofReal ((K1 + |C|) * s ^ (min (α / 2) (α * p))) := by
         rw [← ENNReal.ofReal_add hK1s hCs, ← add_mul]
 
+/-- **`hprev_of_shortWindow_noH0` with `hV` discharged (fp-S6r-hV-derived; operator note of lead li, 12:55 UTC).**
+The frozen input `hV : FPWholePlaneUpperVolumeTail` of `hprev_of_shortWindow_noH0` (`ShortWindowH0.lean:62`) is replaced
+by `wholePlaneUpperVolumeTailStep_of_ballMass hBM hCC`. The frozen Prop `FPWholePlaneUpperVolumeTail` is by definition
+`WholePlaneUpperVolumeTailStep` (`FirstPass/Frozen/S5S6S7.lean:38`), so the term is accepted without a conversion.
+The remaining binders are `hE` (`LitExistence`, for `h0`), `hBM` and `hCC` (the two cited inputs of `hV`), `hB1` and `hμ`,
+as in `hprev_of_shortWindow_noH0`. -/
+theorem hprev_of_shortWindow_noH0V (hE : MatedCRT.S2VG.LitExistence)
+    (hBM : MatedCRT.S2VG.LitWholePlaneBallMass) (hCC : MatedCRT.S2VG.LitCoordChange)
+    (hB1 : ConeWholePlaneFieldLawStep)
+    (hμ : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
+      (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsProbabilityMeasure P → IsQuantumCone γ P hC hcirc →
+      ∃ μ : Ω → Measure ℂ, IsLQGMeasure P γ hcirc μ) :
+    ShortWindowGoodRadiusPrevalenceStmt :=
+  MatedCRT.Lemma68Window.hprev_of_shortWindow_noH0 hE hCC
+    (wholePlaneUpperVolumeTailStep_of_ballMass hBM hCC) hB1 hμ
+
 end MatedCRT.ShortWindowHV
 
 #print axioms MatedCRT.ShortWindowHV.sdw_affineCoordChange_explicit
 #print axioms MatedCRT.ShortWindowHV.coordFactor_markov
 #print axioms MatedCRT.ShortWindowHV.wholePlaneUpperVolumeTailStep_of_ballMass
+#print axioms MatedCRT.ShortWindowHV.hprev_of_shortWindow_noH0V
