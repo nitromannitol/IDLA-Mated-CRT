@@ -14,6 +14,8 @@ have diameter `≤ ε ^ b`) does not control the cells of `v` and of its interio
 `3δ` bound are not derivable from the hypotheses. The hypothesis is the one of `QuenchedLensStep`
 (`MatedCRT/FirstPass/S3i/Statement.lean:43`, `ball z r ⊆ ball 0 ρ`) and of
 `MatedCRT/FirstPass/S3i/LensStep.lean:122` (`hball`).
+The first conjunct `v ∈ cellVertices ε η (frontier (ball z r))` needs no lens hypothesis and is proved
+unconditionally as `boundaryVertex_mem_sphere_cells_fp36`.
 
 The definitions `FiniteExitData`, `FP36OneSidedBEAt`, `FP36GoodEnv` are copies of the plan's
 "Minimal internal definitions", kept in the private namespace `MatedCRT.FirstPass36.H4` until the defs
@@ -131,6 +133,29 @@ lemma dist_ballRetraction_le {z w q : ℂ} {r : ℝ} (hr : 0 < r) (hw : dist w z
     rw [hw] at h2
     linarith [le_abs_self (dist q z - r)]
 
+/-- First conjunct of Lemma 4 (plan §4, H4), with no lens hypothesis: a vertex `v` of the boundary of the
+interior of `B_r(z)` has a cell meeting the circle `∂B_r(z)`. Proof: `v` is adjacent to an interior vertex `u₀`
+whose cell lies in the disk, so the cell of `v` meets the disk; it is not interior, so it meets the circle. -/
+lemma boundaryVertex_mem_sphere_cells_fp36
+    {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω}
+    {ρ₀ ρ₁ b ν A r ε : ℝ} {z y : ℂ} {ω : Ω} {v : ℤ}
+    (hε : 0 < ε) (hr : 0 < r)
+    (hgood : FP36GoodEnv S ρ₀ ρ₁ b ν A r z y ε ω)
+    (hv : v ∈ vBoundary (S.mult ε ω)
+      (interiorCellVertices ε (S.η ω) (ball z r))) :
+    v ∈ cellVertices ε (S.η ω) (frontier (ball z r)) := by
+  obtain ⟨hA, hadj, -, -, -, -⟩ := hgood
+  have hη : Continuous (S.η ω) := hA.1
+  obtain ⟨hvI, u₀, hu₀, hmu₀⟩ := hv
+  obtain ⟨x₀, hx₀u, hx₀v⟩ := hadj u₀ v hmu₀
+  have hint : cell ε (S.η ω) u₀ ⊆ ball z r :=
+    cell_subset_ball_of_not_frontier hε hη hr hu₀.1 hu₀.2
+  have hmeet : (cell ε (S.η ω) v ∩ ball z r).Nonempty := ⟨x₀, hx₀v, hint hx₀u⟩
+  have hmem : v ∈ cellVertices ε (S.η ω) (ball z r) := hmeet
+  by_contra hnot
+  exact hvI (Set.mem_sdiff_of_mem hmem hnot)
+
 /-- **Lemma 4 (plan §4, H4) with the lens hypothesis `hball`.** A vertex `v` of the boundary of the interior
 of the lens `B_r(z)` has a cell meeting the circle `∂B_r(z)`, its representative `q = η(εv)` is within `δ = ε^b`
 of the circle, its radial retraction `P` is within `δ` of `q`, and every interior neighbour `u` of `v`
@@ -155,6 +180,8 @@ lemma boundaryVertexGeometry_fp36_of_ball
     ∀ u ∈ I, m u v ≠ 0 →
       dist (vertexPoint ε η u) P ≤ 3 * δ := by
   intro δ η m I q P
+  have hvF : v ∈ cellVertices ε η (frontier (ball z r)) :=
+    boundaryVertex_mem_sphere_cells_fp36 hε hr hgood hv
   obtain ⟨hA, hadj, hmesh, -, -, -⟩ := hgood
   have hη : Continuous η := hA.1
   -- every interior cell lies in the disk
@@ -165,14 +192,9 @@ lemma boundaryVertexGeometry_fp36_of_ball
     intro k hk
     obtain ⟨x, hx1, hx2⟩ := hk
     exact hmesh k ⟨x, hx1, hball hx2⟩
-  obtain ⟨hvI, u₀, hu₀, hmu₀⟩ := hv
+  obtain ⟨-, u₀, hu₀, hmu₀⟩ := hv
   obtain ⟨x₀, hx₀u, hx₀v⟩ := hadj u₀ v hmu₀
   have hmeetv : (cell ε η v ∩ ball z r).Nonempty := ⟨x₀, hx₀v, hint u₀ hu₀ hx₀u⟩
-  have hmem : v ∈ cellVertices ε η (ball z r) := hmeetv
-  -- the cell of `v` meets the circle: otherwise `v` would be interior
-  have hvF : v ∈ cellVertices ε η (frontier (ball z r)) := by
-    by_contra hnot
-    exact hvI (Set.mem_sdiff_of_mem hmem hnot)
   have hwex : ∃ w, w ∈ cell ε η v ∧ w ∈ frontier (ball z r) := hvF
   obtain ⟨w, hwv, hwF⟩ := hwex
   have hwsph : dist w z = r := by
