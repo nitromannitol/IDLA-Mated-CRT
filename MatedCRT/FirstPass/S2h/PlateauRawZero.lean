@@ -59,22 +59,46 @@ with almost everywhere measurable raw radii `ω ↦ rawRadius (μ ω) N p` (for 
 probability of the plateau event is invariant under the scalings `r ↦ s r`, then for every positive radius the
 probability that `r` is a plateau radius of `μ ω` is zero. -/
 theorem plateauRadii_zero_of_ae_raw (P : Measure Ω) [IsFiniteMeasure P] (μ : Ω → Measure ℂ)
-    (hraw : ∀ (N : ℕ) (p : ℚ), AEMeasurable (fun ω => rawRadius (μ ω) N (p : ℝ)) P)
+    (hraw : ∀ (N : ℕ) (p : ℚ), 0 < N → 0 < (p : ℝ) → AEMeasurable (fun ω => rawRadius (μ ω) N (p : ℝ)) P)
     (hscale : ∀ s r : ℝ, 0 < s → 0 < r →
       P {ω | s * r ∈ plateauRadii (μ ω)} = P {ω | r ∈ plateauRadii (μ ω)}) :
     ∀ r : ℝ, 0 < r → P {ω | r ∈ plateauRadii (μ ω)} = 0 := by
+  -- the raw radii enter the plateau only for `0 < N` and `0 < p` (fp-S2h, z1, round 16)
   obtain ⟨R, hRm, hRae⟩ : ∃ R : ℕ × ℚ → Ω → ℝ, (∀ q, Measurable (R q)) ∧
-      ∀ q : ℕ × ℚ, (fun ω => rawRadius (μ ω) q.1 (q.2 : ℝ)) =ᵐ[P] R q :=
-    ⟨fun q => (hraw q.1 q.2).mk _, fun q => (hraw q.1 q.2).measurable_mk,
-      fun q => (hraw q.1 q.2).ae_eq_mk⟩
-  have hZ : ∀ᵐ ω ∂P, ∀ q : ℕ × ℚ, rawRadius (μ ω) q.1 (q.2 : ℝ) = R q ω :=
-    ae_all_iff.2 fun q => hRae q
+      ∀ q : ℕ × ℚ, 0 < q.1 → 0 < (q.2 : ℝ) → (fun ω => rawRadius (μ ω) q.1 (q.2 : ℝ)) =ᵐ[P] R q := by
+    refine ⟨fun q => if h : 0 < q.1 ∧ 0 < (q.2 : ℝ) then (hraw q.1 q.2 h.1 h.2).mk _ else fun _ => 0, ?_, ?_⟩
+    · intro q
+      by_cases h : 0 < q.1 ∧ 0 < (q.2 : ℝ)
+      · simp only [h]
+        exact (hraw q.1 q.2 h.1 h.2).measurable_mk
+      · simp only [h]
+        exact measurable_const
+    · intro q h1 h2
+      have h : 0 < q.1 ∧ 0 < (q.2 : ℝ) := ⟨h1, h2⟩
+      simp only [h]
+      exact (hraw q.1 q.2 h.1 h.2).ae_eq_mk
+  have hZ : ∀ᵐ ω ∂P, ∀ q : ℕ × ℚ, 0 < q.1 → 0 < (q.2 : ℝ) → rawRadius (μ ω) q.1 (q.2 : ℝ) = R q ω := by
+    rw [ae_all_iff]
+    intro q
+    by_cases h : 0 < q.1 ∧ 0 < (q.2 : ℝ)
+    · filter_upwards [hRae q h.1 h.2] with ω hω
+      intro _ _
+      exact hω
+    · exact Filter.Eventually.of_forall fun ω h1 h2 => absurd ⟨h1, h2⟩ h
   have hpl : ∀ r : ℝ, P {ω | r ∈ plateauRadii (μ ω)} = P {ω | r ∈ plateauOf R ω} := by
     intro r
     refine measure_congr (Filter.eventuallyEqSet_iff.2 ?_)
     filter_upwards [hZ] with ω hω
-    have hω' : ∀ (N : ℕ) (p : ℚ), rawRadius (μ ω) N (p : ℝ) = R (N, p) ω := fun N p => hω (N, p)
-    simp only [plateauRadii, plateauOf, mem_ofPred_eq, hω']
+    have hω' : ∀ (N : ℕ) (p : ℚ), 0 < N → 0 < (p : ℝ) → rawRadius (μ ω) N (p : ℝ) = R (N, p) ω :=
+      fun N p hN hp => hω (N, p) hN hp
+    simp only [plateauRadii, plateauOf, mem_ofPred_eq]
+    constructor
+    · rintro ⟨N, hN, p, q, hp, hpq, hrN, h1, h2⟩
+      have hq : (0 : ℝ) < q := lt_trans hp hpq
+      exact ⟨N, hN, p, q, hp, hpq, hrN, (hω' N p hN hp).symm.trans h1, (hω' N q hN hq).symm.trans h2⟩
+    · rintro ⟨N, hN, p, q, hp, hpq, hrN, h1, h2⟩
+      have hq : (0 : ℝ) < q := lt_trans hp hpq
+      exact ⟨N, hN, p, q, hp, hpq, hrN, (hω' N p hN hp).trans h1, (hω' N q hN hq).trans h2⟩
   have hEm := measurableSet_plateauOf R hRm
   have hcount : ∀ ω : Ω, {r : ℝ | (ω, r) ∈ {x : Ω × ℝ | x.2 ∈ plateauOf R x.1}}.Countable :=
     fun ω => plateauOf_countable R ω
