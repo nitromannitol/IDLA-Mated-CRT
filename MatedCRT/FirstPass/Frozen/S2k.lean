@@ -1,13 +1,15 @@
 import Mathlib.MeasureTheory.Measure.Regular
+import HarmonicBalls.Defs.LQG
 
 /-! # FIRST PASS Frozen statements for S2k (task fp-S2k-closure-inside)
 
-Each `def` below is an EXTERNAL general-measure-theory fact used as an explicit hypothesis. Nothing here is about this
-paper's clusters, odometers, harmonic balls or IDLA processes. -/
+Each `def` below is an EXTERNAL fact used as an explicit hypothesis. Nothing here is about this paper's clusters,
+odometers, harmonic balls or IDLA processes: the statements concern general measure theory and the whole-plane GFF and
+its LQG measure. -/
 
 namespace MatedCRT.FirstPass.S2k
 
-open MeasureTheory
+open MeasureTheory HarmonicBalls
 
 /-- FIRST-PASS FROZEN. Lusin's theorem for finite Borel measures on complete separable metric spaces, in the form
 used by the Borel full-law transfer (cycle note section 3.1). For a finite Borel measure `P` on a complete separable
@@ -21,5 +23,25 @@ def FrozenLusinCompactContinuity : Prop :=
     [MetricSpace Y] [SecondCountableTopology Y] [MeasurableSpace Y] [BorelSpace Y]
     (P : Measure X) [IsFiniteMeasure P] (F : X → Y), Measurable F →
     ∀ ε : ENNReal, 0 < ε → ∃ K : Set X, IsCompact K ∧ P Kᶜ < ε ∧ ContinuousOn F K
+
+/-- FIRST-PASS FROZEN (PENDING TRUTH CHECK). The insertion-`α` coordinate rule for fixed complex affine maps, at all real
+scales: restated from `MatedCRT.InsertionCoordinateExtensionStep` (`Proofs/Sec4/Prop42Closure/InsertionCoordinate.lean:37`,
+input K of the Proposition 4.2 plateau argument), with the same body. For `0 < γ < 2`, `α < Q`, a probability space carrying a
+whole-plane GFF `(hC, hcirc)` whose insertion-`α` LQG measure is `μ`, and every affine map `z ↦ a z + b` with `a ≠ 0`, almost
+surely the circle averages `(ε, z) ↦ h_{|a|ε}(a z + b) + Q log|a|` converge vaguely to `μ ∘ φ⁻¹` along all dyadic scales.
+Locators: Harmonic-Balls arXiv:2208.11795v3, Fact 2.1 and equation (2.7), printed p. 9 (normalized log-GFF scaling and GMC
+covariance); Duplantier-Sheffield arXiv:0808.1560v2, Proposition 2.1, printed p. 13 (coordinate change of the LQG measure under
+conformal maps, `h̃ = h∘ψ + Q log|ψ′|`) and Proposition 1.1, p. 5. The whole-plane affine case at non-dyadic scales is not printed
+in those places (see `Proposed/DuplantierSheffieldCoordinate2011.lean`, docstring of `DS11CoordinateRuleFixedAffine`); the
+truth check of this exact form is pending with the operator.
+Used by: firstPass_plateauScaleInvarianceStep (`S2k.lean`, through `insertionLQGScalingLawStep_of_coordinateRule`). -/
+def FrozenInsertionCoordinateRule : Prop :=
+  ∀ (γ α : ℝ), 0 < γ → γ < 2 → α < lqgQ γ →
+  ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (μ : Ω → Measure ℂ), IsProbabilityMeasure P → IsWholePlaneGFF P hC hcirc →
+    IsLQGMeasureOfField P γ α hcirc μ →
+  ∀ a : ℂ, a ≠ 0 → ∀ b : ℂ, ∀ᵐ ω ∂P,
+    IsLQGLimit γ (fun ε z => fieldCircleAverage α (hcirc ω) (‖a‖ * ε) (a * z + b) + lqgQ γ * Real.log ‖a‖)
+      ((μ ω).map fun x => (x - b) / a)
 
 end MatedCRT.FirstPass.S2k
