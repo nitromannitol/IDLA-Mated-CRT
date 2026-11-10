@@ -66,7 +66,9 @@ q1 constraints, `R ≤ ρ/4`, `R ≤ rAmp q0 ζ`, `ζ < 1/2`, `0 < q0 ≤ 1`, an
 of polynomially high probability, there is a window family `Ew` of polynomially high probability such that on the
 mesh event, for every admissible configuration at radius `r ∈ [10 ε^ω₀, R]` whose dyadic window event holds, the
 quenched exit probability is at most `(1 - q0/(1 + log(1/r))²)^N` for some shell count `N` with
-`countConst ζ · r^{-ζ} ≤ N` (`count_hypothesis`, S6r/Count.lean:92). -/
+`countConst ζ · r^{-ζ} ≤ N` (`count_hypothesis`, S6r/Count.lean:92). The clause is almost sure in `ω` for each `ε` (`∀ᵐ ω ∂S.P`), with every radius
+`r` quantified inside it: a per-radius almost-sure clause cannot be combined over uncountably many `r`, while the
+pointwise-in-`ω` window clause is not obtained from the field-measurable window family (S4S6c/ShellChain68.lean). -/
 def ShellChainStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE R q0 s₀ : ℝ,
     0 < ω₀ → ω₀ < α → 0 < α → ω₀ < 2 / (2 + γ) ^ 2 - ζ → 0 < CG → 0 < CE →
@@ -78,7 +80,7 @@ def ShellChainStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
       HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE) →
       ∃ Ew : ℝ → Set Ω, (∀ δ : ℝ, MeasurableSet[S.fieldSigma] (Ew δ)) ∧
         HarmonicBalls.PolyHighProb S.P Ew ∧
-        ∀ ε : ℝ, 0 < ε → ∀ ω ∈ meshEvent S γ ω₀ ρ CG ζ α CE ε,
+        ∀ ε : ℝ, 0 < ε → ∀ᵐ ω ∂S.P, ω ∈ meshEvent S γ ω₀ ρ CG ζ α CE ε →
           Lemma68Inputs.CurveEscapesBothEnds (S.η ω) →
           (∀ ε' : ℝ, 0 < ε' → IsLocallyFiniteMult (S.mult ε' ω) ∧ ∀ k : ℤ, S.mult ε' ω k (k + 1) ≠ 0) →
           ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ R → ω ∈ Ew (dyadicD r) →
@@ -229,6 +231,22 @@ lemma exit_le_half_of_count {cN q0 ζ r x : ℝ} {N : ℕ} (hcN : 0 < cN) (hq0 :
   exact hx.trans ((one_sub_pow_le_exp hq1' N).trans
     ((exp_le_of_counts hcN.le hq0.le hr0 hr1 hN le_rfl).trans hexp))
 
+/-- Monotonicity of `ProbTendsToOne` under an inclusion holding `P`-almost surely for each `ε`: if `E ε ⊆ F ε` up to a
+null set, then `F` has probability tending to one (the almost-sure form of `ProbTendsToOne.mono_pos`). -/
+lemma probTendsToOne_mono_ae {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {E F : ℝ → Set Ω}
+    (h : ProbTendsToOne P E) (hEF : ∀ ε : ℝ, 0 < ε → ∀ᵐ ω ∂P, ω ∈ E ε → ω ∈ F ε) : ProbTendsToOne P F := by
+  unfold ProbTendsToOne at h ⊢
+  refine tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds h (Eventually.of_forall fun _ => zero_le)
+    (eventually_nhdsWithin_of_forall fun ε hε => ?_)
+  have hN : P {ω | ¬ (ω ∈ E ε → ω ∈ F ε)} = 0 := ae_iff.1 (hEF ε hε)
+  calc P (F ε)ᶜ ≤ P ((E ε)ᶜ ∪ {ω | ¬ (ω ∈ E ε → ω ∈ F ε)}) := by
+        refine measure_mono (fun ω hω => ?_)
+        by_cases hωE : ω ∈ E ε
+        · exact Or.inr (fun himp => hω (himp hωE))
+        · exact Or.inl hωE
+    _ ≤ P (E ε)ᶜ + P {ω | ¬ (ω ∈ E ε → ω ∈ F ε)} := measure_union_le _ _
+    _ = P (E ε)ᶜ := by rw [hN, add_zero]
+
 /-- The guard from a per-configuration count bound on the good event (the analogue of
 `Lemma68Final.probTendsToOne_uniform_half_guarded` with the count constant `cN` in place of `1/200`). -/
 theorem probTendsToOne_half_of_count {Ω ι : Type} [MeasurableSpace Ω] {P : Measure Ω}
@@ -239,7 +257,7 @@ theorem probTendsToOne_half_of_count {Ω ι : Type} [MeasurableSpace Ω] {P : Me
     (hRr : ∀ r : ℝ, 0 < r → r ≤ R →
       Real.exp (-(cN * q0 * r ^ (-ζ) / (1 + Real.log (1 / r)) ^ 2)) ≤ 1 / 2)
     (Adm : ℝ → Ω → ℝ → ι → Prop) (exitF : ℝ → Ω → ℝ → ι → ℝ)
-    (hpt : ∀ ε, 0 < ε → ∀ ω ∈ E ε ∩ G, ∀ r : ℝ, α ε ≤ r → r ≤ dd ω → ∀ i : ι, Adm ε ω r i →
+    (hpt : ∀ ε, 0 < ε → ∀ᵐ ω ∂P, ω ∈ E ε ∩ G → ∀ r : ℝ, α ε ≤ r → r ≤ dd ω → ∀ i : ι, Adm ε ω r i →
       ∃ N : ℕ, cN * r ^ (-ζ) ≤ (N : ℝ) ∧
         exitF ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N) :
     ProbTendsToOne P (fun ε => {ω | ∀ r : ℝ, α ε ≤ r → r ≤ dd ω → ∀ i : ι,
@@ -249,13 +267,14 @@ theorem probTendsToOne_half_of_count {Ω ι : Type} [MeasurableSpace Ω] {P : Me
     unfold ProbTendsToOne
     simp only [hG]
     exact tendsto_const_nhds
-  refine (hE.inter hGa).mono_pos ?_
-  intro ε hε ω hω r hαr hrd i
+  refine probTendsToOne_mono_ae (hE.inter hGa) fun ε hε => ?_
+  filter_upwards [hpt ε hε] with ω hω
+  intro hωEG r hαr hrd i
   have hr0 : 0 < r := (hα ε hε).trans_le hαr
   have hrR : r ≤ R := hrd.trans (hdd ω)
   by_cases hA : Adm ε ω r i
   · rw [Lemma68Final.guardedExit_of_adm hA]
-    obtain ⟨N, hN, hQ⟩ := hpt ε hε ω hω r hαr hrd i hA
+    obtain ⟨N, hN, hQ⟩ := hω hωEG r hαr hrd i hA
     exact exit_le_half_of_count hcN hq0 hq1 hr0 (hrR.trans hR1) hN hQ (hRr r hr0 hrR)
   · rw [Lemma68Final.guardedExit_of_not_adm hA]
     norm_num
@@ -302,14 +321,16 @@ theorem guardProbStmt_of_chain (𝒮 : SpaceFillingSLEModel) (hMesh : MeshEvents
       Lemma68Guard.ae_finiteExit_of_valid hγ0 hγ2 hS, hdd0] with ω h1 h2 h3
     exact ⟨h1, h2, h3⟩
   have hG : S.P (goodField S Ew dd0)ᶜ = 0 := ae_iff.1 hGae
-  have hpt' : ∀ ε : ℝ, 0 < ε → ∀ ω ∈ meshEvent S γ ω₀ ρ CG ζ α CE ε ∩ goodField S Ew dd0,
+  have hpt' : ∀ ε : ℝ, 0 < ε → ∀ᵐ ω ∂S.P, ω ∈ meshEvent S γ ω₀ ρ CG ζ α CE ε ∩ goodField S Ew dd0 →
       ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ min R (dd0 ω) → ∀ i : Lemma68Config.Config68,
         Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
           ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
             Lemma68Config.exitQ S ε ω r i ≤ (1 - (1 / 9 : ℝ) / (1 + Real.log (1 / r)) ^ 2) ^ N := by
-    rintro ε hε ω ⟨hωm, h1, h2, h3⟩ r hr hrd i hadm
+    intro ε hε
+    filter_upwards [hpt ε hε] with ω hω
+    rintro ⟨hωm, h1, h2, h3⟩ r hr hrd i hadm
     have hr0 : 0 < r := lt_of_lt_of_le (by positivity) hr
-    exact hpt ε hε ω hωm h1 h2 r hr (hrd.trans (min_le_left _ _))
+    exact hω hωm h1 h2 r hr (hrd.trans (min_le_left _ _))
       (h3 r hr0 (hrd.trans (min_le_right _ _))) i hadm
   refine ⟨fun ω => min R (dd0 ω), measurable_const.min hdd0m, fun ω => lt_min hR0 (hdd0pos ω),
     fun ω => min_le_left _ _, ?_⟩
