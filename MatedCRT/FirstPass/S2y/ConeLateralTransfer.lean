@@ -1,4 +1,5 @@
 import MatedCRT.FirstPass.S2y.ConeFieldPairing
+import MatedCRT.FirstPass.S2y.ConeRadialCodes
 
 /-!
 # The generic lateral-transfer theorem (fp-S2y-cone-lateral, sections 5-7 of notes/fp-gaps/CHATGPT-231)
@@ -328,5 +329,40 @@ theorem coneFieldScalingStep_proved_no_hpair
     ConeFieldScalingStep :=
   coneFieldScalingStep_of_decoder hscale hdec
     (coneLateralTransferStep_of_radialCodes hscale rp rs hrp_m hrs_m hpairAE hsphereAE)
+
+/-- **Provider for `ConeLateralTransferStep` (chat 231 §6), with the radial codes concrete.** The radial pairing code
+`radialPairingCode` and the radial sphere code `radialSphereCode` are z11's (`S2y/ConeRadialCodes.lean`, sections 3a–3c:
+`radialPairingCode_ae_eq` a.s. correct, committed 0c9e804; `radialSphereCode_ae_eq` committed 996e267, conditional on its
+named input `hcircInt`). The one named input left is `hcircInt`: for every field with the radial law, the circle
+integrand `θ ↦ |c(|z + r e^{iθ}|, 0)|` is a.s. interval integrable on `[0, 2π]`. It is not derived in the paper
+(chat 231 §3.2 uses it without argument). -/
+theorem coneLateralTransferStep_proved (hscale : QuantumConeScalingInput)
+    (hcircInt : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (c : Ω → ℝ → ℂ → ℝ),
+      (∀ r z, 0 < r → Measurable fun ω => c ω r z) →
+      (∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ)) →
+      (∃ ν : Measure (ContinuousPath ℝ), IsBMConditionedPositive (lqgQ γ - γ) ν ∧
+        P.map (fun ω => radialProcess (c ω)) = quantumConeRadialLaw γ ν) →
+      ∀ r z, 0 < r → ∀ᵐ ω ∂P,
+        IntervalIntegrable (fun θ : ℝ => |c ω ‖circleMap z r θ‖ 0|) MeasureTheory.volume 0 (2 * Real.pi)) :
+    ConeLateralTransferStep :=
+  coneLateralTransferStep_of_radialCodes hscale radialPairingCode radialSphereCode
+    measurable_radialPairingCode measurable_radialSphereCode
+    (fun _ _ _ _ _ hcm hcont hrad φ hφ => radialPairingCode_ae_eq hcm hcont hrad φ hφ)
+    (fun Ω _ P γ c hcm hcont hrad _r z hr =>
+      radialSphereCode_ae_eq hcm hcont hrad (hcircInt Ω P γ c hcm hcont hrad) hr z)
+
+/-- **`ConeFieldScalingStep` without `hpair`, with the radial codes concrete (chat 231 §7).** Two named inputs remain:
+the circle decoder `hdec : ConeCircleDecoderStep` (z1, `coneCircleDecoderStep_proved`, blocked on G1/G2, request 59a) and
+the sphere-integrability input `hcircInt` of `coneLateralTransferStep_proved`. -/
+theorem coneFieldScalingStep_proved_no_hpair_radial (hscale : QuantumConeScalingInput) (hdec : ConeCircleDecoderStep)
+    (hcircInt : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (c : Ω → ℝ → ℂ → ℝ),
+      (∀ r z, 0 < r → Measurable fun ω => c ω r z) →
+      (∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ)) →
+      (∃ ν : Measure (ContinuousPath ℝ), IsBMConditionedPositive (lqgQ γ - γ) ν ∧
+        P.map (fun ω => radialProcess (c ω)) = quantumConeRadialLaw γ ν) →
+      ∀ r z, 0 < r → ∀ᵐ ω ∂P,
+        IntervalIntegrable (fun θ : ℝ => |c ω ‖circleMap z r θ‖ 0|) MeasureTheory.volume 0 (2 * Real.pi)) :
+    ConeFieldScalingStep :=
+  coneFieldScalingStep_of_decoder hscale hdec (coneLateralTransferStep_proved hscale hcircInt)
 
 end MatedCRT.LQGMeasure
