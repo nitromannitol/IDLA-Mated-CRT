@@ -8,7 +8,7 @@ Operator note 07:50 UTC, items 2 and 4 (`notes/fp-gaps/CHATGPT-idla-frozen-SLERe
 is edited (`Draft/`, `External/` are frozen); every corrected clause is a NEW `def`, and the printed forms are kept.
 
 * Item 4, Lemma 2.18 (`ExitTimeUpperBoundStmt`, `MatedCRT/Draft/Section2.lean:239`). Its second clause quantifies over all
-  `D ⊆ B_ρ`, which is false as cited. `ExitTimeUpperBoundBallStmt` keeps the first clause verbatim (the BG20 Proposition 5.1
+  `D ⊆ B_ρ`, which is TRUE, derived from BG20 Prop 5.1 + Lemma A.1 (chat 200, `notes/fp-gaps/CHATGPT-idla-2-18-exit-time.md`), not verbatim; theorem `exitTimeUpperBound_of_bg20Prop51_volumeGrowth` (FirstPass/S218.lean). `ExitTimeUpperBoundBallStmt` keeps the first clause verbatim (the BG20 Proposition 5.1
   event, `BG20Prop51`) and restricts the second clause to the balls `ball x s ⊆ ball 0 ρ`, with `0 < s`
   (`notes/fp-gaps/CHATGPT-idla-exit-time-ball.md` §1, verdict TRUE). The note also offers a standalone form without the
   first clause; that form is not used here.
@@ -36,7 +36,7 @@ open scoped ENNReal NNReal
 /-- Item 4: the exit-time clause of Lemma 2.18 (Berestycki–Gwynne Proposition 5.1, Lemma A.1) for balls. The first clause is the
 clause of `ExitTimeUpperBoundStmt 𝒮` (`MatedCRT/Draft/Section2.lean:239`), verbatim. The second clause is restricted to the
 balls `ball x s ⊆ ball 0 ρ` with `0 < s`, with the same bound. Source: `notes/fp-gaps/CHATGPT-idla-exit-time-ball.md` §1
-(verdict TRUE). It replaces `ExitTimeUpperBoundStmt 𝒮`, whose unrestricted second clause is FALSE as cited. -/
+(verdict TRUE). It replaces `ExitTimeUpperBoundStmt 𝒮`, whose unrestricted second clause is TRUE, derived from BG20 Prop 5.1 + Lemma A.1 (chat 200, `notes/fp-gaps/CHATGPT-idla-2-18-exit-time.md`), not verbatim; theorem `exitTimeUpperBound_of_bg20Prop51_volumeGrowth` (FirstPass/S218.lean). -/
 def ExitTimeUpperBoundBallStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ α : ℝ, 0 < α ∧ ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ C : ℝ, 0 < C ∧
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
