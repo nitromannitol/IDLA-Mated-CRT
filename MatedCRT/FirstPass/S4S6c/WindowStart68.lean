@@ -1,6 +1,7 @@
 import MatedCRT.FirstPass.S6n
 import MatedCRT.FirstPass.S4S6c.TraceInputs68
 import MatedCRT.FirstPass.S6h.Core
+import MatedCRT.FirstPass.S4S6c.ShellOrderWindow68
 
 /-!
 # The start cell meets the frontier of the `r/2`-thickening, under the full guard (fp-S4S6c-window-hstart)
@@ -25,6 +26,8 @@ binder of `shellOrderAe_window` must carry the guard `FullAdm` (the same guard a
 
 open MeasureTheory Set Filter Topology Metric
 open MatedCRT.Lemma68C12Geom
+open MatedCRT.Lemma68Window MatedCRT.Lemma68Omega MatedCRT.Lemma68GeometryId MatedCRT.Lemma68Admissible
+open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68Geometry MatedCRT.Lemma68WindowRf
 
 namespace MatedCRT
 namespace Lemma68WindowStart
@@ -68,8 +71,29 @@ theorem hstart_fullAdm_ae {𝒮 : SpaceFillingSLEModel} {γ : ℝ} {Ω : Type} [
     exact ⟨k, Finset.mem_coe.1 hk⟩
   exact cell_meets_frontier_thickening hε hη hΘ hr hlo.1 hlo.2
 
+/-- **The window route of 6.8 with the guarded start cell discharged.** `shellOrderAe_window`
+(ShellOrderWindow68.lean:34) with its binder `hstart` replaced by `hstart_fullAdm_ae`, the guarded start-cell fact
+proved above. All other binders and the conclusion are those of `shellOrderAe_window`, unchanged. -/
+theorem shellOrderAe_window_noStart {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
+    {ε ρ s₀ ζ r c₀ C : ℝ} (hε : 0 < ε) (hs₀ : 0 < s₀) (hζ : 0 < ζ) (hζ1 : ζ < 1 / 2) (hr : 0 < r)
+    (hrz : r ≤ countThreshold ζ) (hrρ : r ≤ ρ / 4) (i : Lemma68Config.Config68)
+    (hmesh : ∀ᵐ ω ∂S.P, CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ)
+    (htest : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+      ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),
+        ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
+          testEnd ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
+            (windowRfT S.μ ρ (shortExp ζ) c₀ C (dyadicD r) ω) k x ≠ ⊤) :
+    ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
+      Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r)
+        (windowRfT S.μ ρ (shortExp ζ) c₀ C (dyadicD r) ω)
+        (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a :=
+  MatedCRT.Lemma68ShellOrderWindow.shellOrderAe_window hγ0 hγ2 S hS hε hs₀ hζ hζ1 hr hrz hrρ i hmesh
+    (hstart_fullAdm_ae S hS hε hs₀ hr i) htest
+
 #print axioms MatedCRT.Lemma68WindowStart.cell_meets_frontier_thickening
 #print axioms MatedCRT.Lemma68WindowStart.hstart_fullAdm_ae
+#print axioms MatedCRT.Lemma68WindowStart.shellOrderAe_window_noStart
 
 end Lemma68WindowStart
 end MatedCRT
