@@ -1,4 +1,5 @@
 import MatedCRT.FirstPass.S4S6c.HoneSetup68
+import MatedCRT.FirstPass.S4S6c.WindowStart68
 
 /-!
 # Discharge of the cap-radius input and of the leaf binder `hL68` (z12, fp-S4S6c-setup-239)
@@ -22,8 +23,14 @@ open scoped ENNReal Topology
 namespace MatedCRT
 namespace Lemma68HoneSetup239
 
-open MatedCRT.Lemma68Admissible MatedCRT.Lemma68Geometry MatedCRT.Lemma68HoneSetup
-open MatedCRT.Lemma68Window
+open MatedCRT.Lemma68ChainCore MatedCRT.Lemma68ShellChain MatedCRT.Lemma68Guard10 DyadicCutoff68
+open MatedCRT.Lemma68Window MatedCRT.Lemma68Omega MatedCRT.Lemma68GeometryId MatedCRT.Lemma68Admissible
+open MatedCRT.Lemma68ConstOrder MatedCRT.Lemma68ShellConstants
+open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68WalkBridge MatedCRT.Lemma68ChainAe
+open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
+open MatedCRT.Lemma68ShellHoneInst MatedCRT.Lemma68WindowRf
+open MatedCRT.Lemma68ChainGlue MatedCRT.Lemma68HoneRadii
+open MatedCRT.Lemma68Geometry MatedCRT.Lemma68HoneSetup MatedCRT.Lemma68WindowStart
 
 /-- A cell meeting an open ball contains the image of a rational parameter lying in that ball: the rationals are dense
 in the parameter interval `Icc (ε (k-1)) (ε k)` of the cell `cell ε η k = η '' Icc (ε (k-1)) (ε k)`, and `η` is
@@ -116,9 +123,52 @@ theorem hL68_fixedOmega' {γ ρ s₀ ε : ℝ} {Ω : Type} [MeasurableSpace Ω] 
       (fun v hv => (Finset.mem_filter.mp (Finset.mem_coe.mp hv)).2)
   exact fun z => hL68_of_clause K i.A hε hr hs1 hcl hcapz z
 
+/-- **`hstart` from `FullAdmAt` (chat 239 §2, item `hstart`).** The start cell `H_a` meets the frontier of the
+`r/2`-thickening of `fillCells Θ` (Armstrong-Kuusi-Mourrat: the cell-distance window). From the first conjunct
+`2 dd_a ≤ r ≤ 2 M_a` of `Admissible` (`FullAdmAt`'s second component) through the deterministic core
+`cell_meets_frontier_thickening` (WindowStart68.lean). The filled set is nonempty because `ball 0 s₀ ⊆ fillCells Θ`
+(`ConfigOK`, third conjunct) and `0 < s₀`. -/
+theorem hstart_of_fullAdmAt {γ ρ s₀ ε : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    (hε : 0 < ε) (hs₀ : 0 < s₀) (ω : Ω) (hηω : Continuous (S.η ω)) (r : ℝ) (hr : 0 < r)
+    (i : Lemma68Config.Config68)
+    (hFA : Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i) :
+    (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty := by
+  have hΘ : i.Θ.Nonempty := by
+    by_contra h
+    rw [Finset.not_nonempty_iff_eq_empty] at h
+    have h0 : (0 : ℂ) ∈ fillCells ε (S.η ω) ↑i.Θ := hFA.1.2.2 (Metric.mem_ball_self hs₀)
+    rw [h] at h0
+    simp [fillCells] at h0
+  exact cell_meets_frontier_thickening hε hηω hΘ hr hFA.2.1.1 hFA.2.1.2
+
+/-- **`hRr_ae_setup` in the `FullAdmAt (sparsityS₁ γ)` form, with `hrle`, `hstart` and `hηc` discharged.**
+The binders are the B1 parameters on `q₀` (`0 < q₀`, `q₀ ≤ (1/4)²/(4 shellChone68 C_E C_G)`, `r ≤ rAmp q₀ ζ`, which
+give `hrle` in `hRr_fixedOmega'`) and the mesh binder `hmesh` (the `r`-dependent `CellDiamLe … univ`, not localized:
+see the report). `hstart` is `hstart_of_fullAdmAt`, `hηc` is `Lemma68Inputs.ae_continuous_of_isValid`. -/
+theorem hRr_ae_setup_final {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
+    {ζ C s₀ ε r q0 CE CG : ℝ} (hρ1 : ρ < 1) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2)
+    (hq0 : 0 < q0) (hq0c : q0 ≤ (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE CG))
+    (hs₀ : 0 < s₀) (hε : 0 < ε) (hr0 : 0 < r) (hrρ : r ≤ ρ / 4) (hRA : r ≤ Lemma68Cutoff.rAmp q0 ζ)
+    (E : Set Ω) (i : Lemma68Config.Config68)
+    (hmesh : ∀ᵐ ω ∂S.P, CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ) :
+    ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+        r ^ 2 ≤ winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+            (dyadicD r ^ shortExp ζ) (dyadicD r) k x) ∧
+          winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+            (dyadicD r ^ shortExp ζ) (dyadicD r) k x) ≤ 1 := by
+  filter_upwards [hmesh, Lemma68Inputs.ae_continuous_of_isValid hS,
+    hmult_ae_valid hγ0 hγ2 S hS hε, TraceInputs68.ae_adjacent hγ0 hγ2 S hS,
+    hS.ae_tendsto_cocompact] with ω hmω hηω hmultω hadjω htendω
+  exact hRr_fixedOmega' S hρ1 hζ0 hζ1 hq0 hq0c hs₀ hε hr0 hrρ hRA E i ω hmω
+    (fun hFA => hstart_of_fullAdmAt S hε hs₀ ω hηω r hr0 i hFA) hηω htendω (hadjω ε hε) hmultω
+
 end Lemma68HoneSetup239
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68HoneSetup239.exists_ratInt_mem_ball_of_cell
 #print axioms MatedCRT.Lemma68HoneSetup239.cRad_lt_of_subset_cellVertices_ball
 #print axioms MatedCRT.Lemma68HoneSetup239.hL68_fixedOmega'
+#print axioms MatedCRT.Lemma68HoneSetup239.hstart_of_fullAdmAt
+#print axioms MatedCRT.Lemma68HoneSetup239.hRr_ae_setup_final
