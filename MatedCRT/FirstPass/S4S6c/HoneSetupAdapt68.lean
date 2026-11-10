@@ -51,6 +51,17 @@ theorem hcap_of_continuous {γ ρ s₀ ε r : ℝ} {Ω : Type} [MeasurableSpace 
   fun _ z => MatedCRT.Lemma68HoneSetup239.cRad_lt_of_subset_cellVertices_ball (z := z) hηω hε hr
     (fun _ hv => (Finset.mem_filter.mp (Finset.mem_coe.mp hv)).2)
 
+open Classical in
+/-- **`hcap_of_continuous` with a free `s1` (z12, fp-S4S6c-shellball).** Copy of `hcap_of_continuous` (l.47) with
+`sparsityS1 γ` replaced by a parameter `s1`. The proof ignores the `FullAdmAt` premise, so no hypothesis on `s1` is
+needed. -/
+theorem hcap_of_continuous_s1 {γ ρ s₀ ε r s1 : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ω : Ω)
+    (hηω : Continuous (S.η ω)) (hε : 0 < ε) (hr : 0 < r) (i : Lemma68Config.Config68) :
+    Lemma68Config.FullAdmAt (s1) S ρ s₀ γ ε ω r i →
+      ∀ z : ℂ, cRad ε (S.η ω) (Finset.filter (fun v => v ∈ cellVertices ε (S.η ω) (Metric.ball z r)) i.A) < r :=
+  fun _ z => MatedCRT.Lemma68HoneSetup239.cRad_lt_of_subset_cellVertices_ball (z := z) hηω hε hr
+    (fun _ hv => (Finset.mem_filter.mp (Finset.mem_coe.mp hv)).2)
+
 /-- `shellC068 = exp(-2)/32 ≤ 1`, the constant `c₀ = K.c0` of the leaf constants (`shellK68_params`). -/
 theorem shellC068_le_one_adapt : shellC068 ≤ 1 := by
   unfold shellC068

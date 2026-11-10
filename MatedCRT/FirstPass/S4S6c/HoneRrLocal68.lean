@@ -219,6 +219,129 @@ theorem hRr_fixedOmega_loc_half {γ ρ : ℝ}
   hRr_fixedOmega_loc S hρ1 hζ0 hζ1 hq0 hq0c hs₀ hε hr0 hrρ hRA i ω
     (cellDiamLe_mono_set (Metric.ball_subset_ball (by linarith)) hmω) hηω htendω hadjω hmultω
 
+
+/-- **`hstart_of_fullAdmAt` with a free `s1`.** Copy of `Lemma68HoneSetup239.hstart_of_fullAdmAt`
+(HoneSetup239_68.lean:132) with `sparsityS1 γ` replaced by a parameter `s1`. The proof uses only the first and second
+components of `FullAdmAt` (`ConfigOK`, `Admissible`), never the value of `s1`: no hypothesis on `s1` is needed. -/
+theorem hstart_of_fullAdmAt_s1 {ρ s₀ γ ε s1 : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    (hε : 0 < ε) (hs₀ : 0 < s₀) (ω : Ω) (hηω : Continuous (S.η ω)) (r : ℝ) (hr : 0 < r)
+    (i : Lemma68Config.Config68)
+    (hFA : Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i) :
+    (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty := by
+  have hΘ : i.Θ.Nonempty := by
+    by_contra h
+    rw [Finset.not_nonempty_iff_eq_empty] at h
+    have h0 : (0 : ℂ) ∈ fillCells ε (S.η ω) ↑i.Θ := hFA.1.2.2 (Metric.mem_ball_self hs₀)
+    rw [h] at h0
+    simp [fillCells] at h0
+  exact Lemma68WindowStart.cell_meets_frontier_thickening hε hηω hΘ hr hFA.2.1.1 hFA.2.1.2
+
+/-- **`hRr_fixedOmega_loc` with a free `s1` (z12, fp-S4S6c-shellball).** Copy of `hRr_fixedOmega_loc` (l.121) with
+`Lemma68Config.sparsityS1 γ` replaced by a parameter `s1`; the proof is unchanged except for the `_s1` start lemma.
+No hypothesis on `s1` is used: `FullAdmAt` enters only through `hFA.1` and `hstart_of_fullAdmAt_s1`. -/
+theorem hRr_fixedOmega_loc_s1 {γ ρ s1 : ℝ}
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    {ζ C s₀ ε r q0 CE CG : ℝ} (hρ1 : ρ < 1) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2)
+    (hq0 : 0 < q0) (hq0c : q0 ≤ (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE CG))
+    (hs₀ : 0 < s₀) (hε : 0 < ε) (hr0 : 0 < r) (hrρ : r ≤ ρ / 4) (hRA : r ≤ Lemma68Cutoff.rAmp q0 ζ)
+    (i : Lemma68Config.Config68) (ω : Ω)
+    (hmω : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) ρ))
+    (hηω : Continuous (S.η ω))
+    (htendω : Tendsto (S.η ω) (cocompact ℝ) (cocompact ℂ))
+    (hadjω : ∀ j k : ℤ, S.mult ε ω j k ≠ 0 → (cell ε (S.η ω) j ∩ cell ε (S.η ω) k).Nonempty)
+    (hmultω : IsLocallyFiniteMult (S.mult ε ω) ∧ ∀ k : ℤ, S.mult ε ω k (k + 1) ≠ 0) :
+    Lemma68Config.FullAdmAt (s1) S ρ s₀ γ ε ω r i →
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+        x ∈ Lemma68B1Assembly.leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
+            (Lemma68B1Assembly.winRf S ρ ζ C r ω) k →
+          r ^ 2 ≤ Lemma68B1Assembly.winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+              (dyadicD r ^ shortExp ζ) (dyadicD r) k x) ∧
+            Lemma68B1Assembly.winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+              (dyadicD r ^ shortExp ζ) (dyadicD r) k x) ≤ 1 := by
+  have hrle : r ≤ countThreshold ζ :=
+    radius_le_countThreshold_of_oneTest hq0 (Lemma68HoneSetup.q0_le_one_of_shellChone hq0c) hζ0 hζ1 hRA le_rfl
+  have hr1 : r ≤ 1 := by linarith
+  have ha0 : 0 ≤ shortExp ζ := shortExp_nonneg hζ0.le
+  have ha1 : shortExp ζ ≤ 1 := by unfold shortExp; linarith
+  have hd := dyadicD_pos r
+  have hd1 := dyadicD_le_one r
+  have hdr : r ^ 2 ≤ dyadicD r := (dyadicD_mem hr0 hr1).1
+  have hd2 : dyadicD r < 2 * r ^ 2 := (dyadicD_mem hr0 hr1).2
+  have hds : dyadicD r ≤ dyadicD r ^ shortExp ζ := by
+    have h := Real.rpow_le_rpow_of_exponent_ge hd hd1 ha1
+    simpa using h
+  have hs4 : dyadicD r ^ shortExp ζ ≤ r / 4000 := shell_size_le hζ0 hr0 hrle hd hd2
+  have hcb := countBound_zeta hζ0 hr0 hrle (dyadicD_pos r) hdr hd2
+  have hζr : r ^ ζ ≤ (2 : ℝ) ^ (-shortExp ζ) / 4000 := by
+    have h := Real.rpow_le_rpow hr0.le hrle hζ0.le
+    unfold countThreshold at h
+    rwa [← Real.rpow_mul (by positivity), one_div_mul_cancel hζ0.ne', Real.rpow_one] at h
+  have hrpos : 0 < r ^ ζ := Real.rpow_pos_of_pos hr0 ζ
+  have hkey : 1 ≤ countConst ζ * r ^ (-ζ) := by
+    unfold countConst
+    rw [Real.rpow_neg hr0.le, ← div_eq_mul_inv, one_le_div hrpos]
+    have hX : (0 : ℝ) < (2 : ℝ) ^ (-shortExp ζ) := by positivity
+    linarith
+  have hN1 : 1 ≤ shellCount r (dyadicD r ^ shortExp ζ) := by
+    have h := hkey.trans hcb
+    exact_mod_cast h
+  have hn : shellCount r (dyadicD r ^ shortExp ζ) - 1 + 1 = shellCount r (dyadicD r ^ shortExp ζ) :=
+    Nat.sub_add_cancel hN1
+  have hNs : 20 * (((shellCount r (dyadicD r ^ shortExp ζ) - 1) + 1 : ℕ) : ℝ) * dyadicD r ^ shortExp ζ
+      ≤ r / 20 := by
+    rw [hn]
+    have h1 : ((shellCount r (dyadicD r ^ shortExp ζ) : ℕ) : ℝ) ≤ r / (400 * dyadicD r ^ shortExp ζ) := by
+      unfold shellCount
+      exact Nat.floor_le (by positivity)
+    have hpos : 0 < 400 * dyadicD r ^ shortExp ζ := by positivity
+    have h2 := (le_div_iff₀ hpos).mp h1
+    nlinarith [h2]
+  have hRf := windowRfT_rangeShortEligible S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) hd hd1 ha1 ω
+  intro hFA k hk
+  obtain ⟨hF0eq, hKb0, hs0⟩ := hFA.1
+  have h0 : (0 : ℂ) ∈ fillCells ε (S.η ω) ↑i.Θ := hs0 (Metric.mem_ball_self hs₀)
+  have hKb : fillCells ε (S.η ω) ↑i.Θ ⊆ Metric.ball (0 : ℂ) (ρ / 2) := subset_closure.trans hKb0
+  have hst : (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty :=
+    hstart_of_fullAdmAt_s1 S hε hs₀ ω hηω r hr0 i hFA
+  have hτ : ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a, vExitTime (killed ε (S.η ω) i.Θ i.F0 r) x ≠ ⊤ := by
+    have hU : Bornology.IsBounded (Metric.ball (0 : ℂ) ρ) := Metric.isBounded_ball
+    filter_upwards [ExitAe68.ae_exit_ne_top_of_bounded hε hηω htendω hmultω.1 hmultω.2 hU i.a] with x hx
+    refine ne_top_of_le_ne_top hx (GreenTest68.vExitTime_le_of_subset ?_ x)
+    intro v hv
+    have hvF : v ∈ (↑i.F0 : Set ℤ) := Finset.mem_coe.2 hv.1
+    rw [hF0eq] at hvF
+    have hvF' : (cell ε (S.η ω) v ∩ Metric.ball (0 : ℂ) ρ).Nonempty := hvF
+    obtain ⟨p, hp1, hp2⟩ := hvF'
+    exact ⟨p, subset_closure hp1, hp2⟩
+  exact (radius_bounds_ae_loc hηω hε hadjω i.a hr0 hrρ hd hd1 ha0 hdr hds hs4 hNs hmω hF0eq h0 hKb hRf hst hτ k hk).mono
+    fun x hx _ => hx
+
+
+/-- **`hRr_fixedOmega_loc_half` with a free `s1` (z12, fp-S4S6c-shellball).** Copy of `hRr_fixedOmega_loc_half`
+(l.200), delegating to `hRr_fixedOmega_loc_s1`. No hypothesis on `s1` is used. -/
+theorem hRr_fixedOmega_loc_half_s1 {γ ρ s1 : ℝ}
+    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    {ζ C s₀ ε r q0 CE CG : ℝ} (hρ1 : ρ < 1) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2)
+    (hq0 : 0 < q0) (hq0c : q0 ≤ (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE CG))
+    (hs₀ : 0 < s₀) (hε : 0 < ε) (hr0 : 0 < r) (hrρ : r ≤ ρ / 4) (hRA : r ≤ Lemma68Cutoff.rAmp q0 ζ)
+    (i : Lemma68Config.Config68) (ω : Ω)
+    (hmω : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) ((1 + ρ) / 2)))
+    (hηω : Continuous (S.η ω))
+    (htendω : Tendsto (S.η ω) (cocompact ℝ) (cocompact ℂ))
+    (hadjω : ∀ j k : ℤ, S.mult ε ω j k ≠ 0 → (cell ε (S.η ω) j ∩ cell ε (S.η ω) k).Nonempty)
+    (hmultω : IsLocallyFiniteMult (S.mult ε ω) ∧ ∀ k : ℤ, S.mult ε ω k (k + 1) ≠ 0) :
+    Lemma68Config.FullAdmAt (s1) S ρ s₀ γ ε ω r i →
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+        x ∈ Lemma68B1Assembly.leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
+            (Lemma68B1Assembly.winRf S ρ ζ C r ω) k →
+          r ^ 2 ≤ Lemma68B1Assembly.winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+              (dyadicD r ^ shortExp ζ) (dyadicD r) k x) ∧
+            Lemma68B1Assembly.winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+              (dyadicD r ^ shortExp ζ) (dyadicD r) k x) ≤ 1 :=
+  hRr_fixedOmega_loc_s1 (s1 := s1) S hρ1 hζ0 hζ1 hq0 hq0c hs₀ hε hr0 hrρ hRA i ω
+    (cellDiamLe_mono_set (Metric.ball_subset_ball (by linarith)) hmω) hηω htendω hadjω hmultω
+
+
 end HoneRrLoc
 
 end Lemma68HoneRrLocal
