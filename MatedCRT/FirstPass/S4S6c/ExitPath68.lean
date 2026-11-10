@@ -68,7 +68,8 @@ theorem inner_of_near {H : ℤ → Set ℂ} {c : ℂ} {ρ R' : ℝ} {k : ℤ} (h
 `k' → k` from `k' ∈ I(B_ρ(c))`, has all its points within `ρ + d` of `c` (cells are `d`-small in their closures). -/
 theorem near_of_inner_or_adj {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {c : ℂ} {d ρ : ℝ} {k : ℤ}
     (hconn : ∀ v, IsPreconnected (H v)) (hd : 0 ≤ d)
-    (hsm : ∀ v, ∀ x ∈ closure (H v), ∀ y ∈ closure (H v), dist x y ≤ d)
+    (hsm : ∀ v, (closure (H v) ∩ closedBall c ρ).Nonempty →
+      ∀ x ∈ closure (H v), ∀ y ∈ closure (H v), dist x y ≤ d)
     (hadj : ∀ u v, m u v ≠ 0 → (closure (H u) ∩ closure (H v)).Nonempty)
     (hk : k ∈ innerVertices H (ball c ρ) ∨ ∃ k', k' ∈ innerVertices H (ball c ρ) ∧ m k' k ≠ 0) :
     ∀ x ∈ H k, dist x c ≤ ρ + d := by
@@ -82,7 +83,7 @@ theorem near_of_inner_or_adj {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {c 
     have hcl : closure (H k') ⊆ closedBall c ρ :=
       closure_minimal (fun y hy => ball_subset_closedBall (hsub' hy)) isClosed_closedBall
     have hqc : dist q c ≤ ρ := Metric.mem_closedBall.mp (hcl hq1)
-    have hxq : dist x q ≤ d := hsm k x (subset_closure hx) q hq2
+    have hxq : dist x q ≤ d := hsm k ⟨q, hq2, Metric.mem_closedBall.mpr hqc⟩ x (subset_closure hx) q hq2
     have h4 := dist_triangle x q c
     linarith
 
@@ -93,7 +94,8 @@ at step `k₀ + 1`), let `w` stay in the outer window `I(B_{2R}(z))` until its o
 theorem stayIn_shift_of_outer {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {A : Set ℤ} {d R ρ : ℝ} {z : ℂ}
     {P : ℤ → ℂ} {w : ℕ → ℤ} {k₀ : ℕ}
     (hconn : ∀ v, IsPreconnected (H v)) (hne : ∀ v, (H v).Nonempty) (hd : 0 ≤ d)
-    (hsm : ∀ v, ∀ x ∈ closure (H v), ∀ y ∈ closure (H v), dist x y ≤ d)
+    (hsm : ∀ v, (closure (H v) ∩ closedBall z (2 * R)).Nonempty →
+      ∀ x ∈ closure (H v), ∀ y ∈ closure (H v), dist x y ≤ d)
     (hadj : ∀ u v, m u v ≠ 0 → (closure (H u) ∩ closure (H v)).Nonempty)
     (hPb : ∀ b, P b ∈ H b) (hgeo : 4 * R / 3 + d + ρ + d < 2 * R) (hρ : d < ρ)
     (hleg : w (k₀ + 1) = w k₀ ∨ m (w k₀) (w (k₀ + 1)) ≠ 0)
@@ -110,8 +112,10 @@ theorem stayIn_shift_of_outer {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {A
     exit_closure_meets_sphere hconn hadj (hpre k₀ (by omega)) hmk hexit
   have hPz : dist (P (w (k₀ + 1))) z ≤ 4 * R / 3 + d := by
     obtain ⟨q, hqb, hqs⟩ := hsphB
-    have h1 := hsm (w (k₀ + 1)) (P (w (k₀ + 1))) (subset_closure (hPb _)) q hqb
     have h2 : dist q z = 4 * R / 3 := Metric.mem_sphere.mp hqs
+    have hR0 : 0 ≤ 4 * R / 3 := by rw [← h2]; exact dist_nonneg
+    have hqz : q ∈ closedBall z (2 * R) := Metric.mem_closedBall.mpr (by rw [h2]; linarith)
+    have h1 := hsm (w (k₀ + 1)) ⟨q, hqb, hqz⟩ (P (w (k₀ + 1))) (subset_closure (hPb _)) q hqb
     have h3 := dist_triangle (P (w (k₀ + 1))) q z
     linarith
   have hLoc : ∀ t : ℕ, (t : ℕ∞) < vExitTime (innerVertices H (ball (P (w (k₀ + 1))) ρ))

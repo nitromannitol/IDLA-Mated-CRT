@@ -123,7 +123,8 @@ stays in `A` until its exit from `I(B_{2R}(z))` with probability at most `c`, pr
 theorem hc_of_local {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {A : Set ℤ} {d R ρ : ℝ} {z : ℂ} {P : ℤ → ℂ} {y : ℤ}
     {c : ℝ≥0∞}
     (hconn : ∀ v, IsPreconnected (H v)) (hne : ∀ v, (H v).Nonempty) (hd : 0 ≤ d)
-    (hsm : ∀ v, ∀ x ∈ closure (H v), ∀ y' ∈ closure (H v), dist x y' ≤ d)
+    (hsm : ∀ v, (closure (H v) ∩ closedBall z (2 * R)).Nonempty →
+      ∀ x ∈ closure (H v), ∀ y' ∈ closure (H v), dist x y' ≤ d)
     (hadj : ∀ u v, m u v ≠ 0 → (closure (H u) ∩ closure (H v)).Nonempty)
     (hPb : ∀ b, P b ∈ H b) (hgeo : 4 * R / 3 + d + ρ + d < 2 * R) (hρ : d < ρ)
     (hy : y ∈ innerVertices H (ball z (4 * R / 3)))

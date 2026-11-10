@@ -25,7 +25,8 @@ namespace LocalWindow68
 from `k' ∈ I(B_ρ(p))`, lies in the outer window `I(B_{2R}(z))`. -/
 theorem local_window_mem_outer {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {d R ρ : ℝ} {z p : ℂ} {b k : ℤ}
     (hconn : ∀ v, IsPreconnected (H v)) (hne : ∀ v, (H v).Nonempty) (hd : 0 ≤ d)
-    (hsm : ∀ v, ∀ x ∈ closure (H v), ∀ y ∈ closure (H v), dist x y ≤ d)
+    (hsm : ∀ v, (closure (H v) ∩ closedBall z (2 * R)).Nonempty →
+      ∀ x ∈ closure (H v), ∀ y ∈ closure (H v), dist x y ≤ d)
     (hadj : ∀ u v, m u v ≠ 0 → (closure (H u) ∩ closure (H v)).Nonempty)
     (hpb : p ∈ H b) (hsph : (H b ∩ Metric.sphere z (4 * R / 3)).Nonempty)
     (hgeo : 4 * R / 3 + d + ρ + d < 2 * R)
@@ -33,8 +34,10 @@ theorem local_window_mem_outer {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {
     k ∈ innerVertices H (ball z (2 * R)) := by
   have hpz : dist p z ≤ 4 * R / 3 + d := by
     obtain ⟨q, hqb, hqs⟩ := hsph
-    have h1 := hsm b p (subset_closure hpb) q (subset_closure hqb)
     have h2 : dist q z = 4 * R / 3 := Metric.mem_sphere.mp hqs
+    have hR0 : 0 ≤ 4 * R / 3 := by rw [← h2]; exact dist_nonneg
+    have hqz : q ∈ closedBall z (2 * R) := Metric.mem_closedBall.mpr (by rw [h2]; linarith)
+    have h1 := hsm b ⟨q, subset_closure hqb, hqz⟩ p (subset_closure hpb) q (subset_closure hqb)
     have h3 := dist_triangle p q z
     linarith
   have hnear : ∀ x ∈ H k, dist x p ≤ ρ + d := by
@@ -49,7 +52,8 @@ theorem local_window_mem_outer {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {
       have hcl : closure (H k') ⊆ closedBall p ρ :=
         closure_minimal (fun y hy => ball_subset_closedBall (hsub' hy)) isClosed_closedBall
       have hqp : dist q p ≤ ρ := Metric.mem_closedBall.mp (hcl hq1)
-      have hxq : dist x q ≤ d := hsm k x (subset_closure hx) q hq2
+      have hqz : q ∈ closedBall z (2 * R) := Metric.mem_closedBall.mpr (by linarith [dist_triangle q p z])
+      have hxq : dist x q ≤ d := hsm k ⟨q, hq2, hqz⟩ x (subset_closure hx) q hq2
       have h4 := dist_triangle x q p
       linarith
   have hsubz : ∀ x ∈ H k, x ∈ ball z (2 * R) := by
