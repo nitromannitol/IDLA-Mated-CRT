@@ -3,6 +3,10 @@ import MatedCRT.FirstPass.LICGRCX68
 /-!
 # The counting one-test order input under the constant order `C ≤ CG` (lead li, round 78, request 80a)
 
+**RETIRED (route wrong; operator note 19:56 UTC, Codex Q4 in notes/fp-gaps/CODEX-idla-hOne-residuals-sol-20261110.md):**
+its call-site witness `WindowPrevLeCGStmt` is false (`CG = 1` forces `C ≥ 4(1 - log 2) > 1`). Successor interface:
+`LICGRCY68.ShellOneTestOrderAeCGRCYStmt` (split constants, `C` free).
+
 `ShellOneTestOrderAeCGRCXLeStmt` is `ShellOneTestOrderAeCGRCXStmt` (LICGRCX68.lean) with one extra premise `C ≤ CG`
 right after `WindowPrevAt γ (shortExp ζ) (shellC0 CG) C C'`. Nothing else changes.
 
