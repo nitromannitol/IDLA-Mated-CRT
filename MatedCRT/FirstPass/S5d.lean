@@ -5,6 +5,7 @@ import MatedCRT.Steps.Sec5.IDLALowerBound
 import MatedCRT.FirstPass.S5d.StoppedReduction
 import MatedCRT.FirstPass.S5d.ClusterInner
 import MatedCRT.FirstPass.S5d.ClusterFromOdometer
+import MatedCRT.FirstPass.S5d.StoppedPathwise
 
 /-!
 # Proposition 5.1 (`firstPass_5_1`, task fp-S5d-5-1-stopped-repair)
@@ -17,8 +18,11 @@ import MatedCRT.FirstPass.S5d.ClusterFromOdometer
   - `StrictStoppedOdometerPositivityStep` (referee §3.2-3.3, §5.2: the stopped odometer is strictly positive on `B⁻_σ(Λ_t)`
     w.h.p. on `{t < T}`). It gives `StrictClusterCompactContainmentStep` (G1c, referee §3 eq. (3.1); `S5d/ClusterFromOdometer.lean`),
     which gives `DiscreteClusterInnerBoundStep` with Lemma 2.8 (`S5d/ClusterInner.lean`);
-  - `StoppedFirstGreenStep`, `StoppedSecondGreenStep` (the two Green inequalities of the stopped clause, referee §5),
-    from which `IDLALowerBoundStoppedStep` follows (`MatedCRT/FirstPass/S5d/StoppedReduction.lean`).
+  - the stopped clause needs `StoppedSecondGreenStep` (open) and the first Green inequality, which is now reduced to the
+    single open input `StoppedFirstGreenInputsStep` (floor, ceiling, exit; `S5d/StoppedFirstGreenInputs.lean`, [C21]). The
+    deterministic package of that reduction is discharged in `S5d/StoppedPathwise.lean`
+    (`stoppedFirstGreenStep_of_steps`), and `IDLALowerBoundStoppedStep` follows from the two Green steps
+    (`MatedCRT/FirstPass/S5d/StoppedReduction.lean`).
 
 Hence `firstPass_5_1_of_steps` is a conditional reduction, not a `PROVED-FP` theorem.
 -/
@@ -28,16 +32,19 @@ namespace MatedCRT
 /-- **Proposition 5.1 from its open steps.** The unstopped conjunct uses only `hP` and `h28` (through the compact containment
 `strictClusterCompactContainmentStep_of_odometerPositivity`); the stopped conjunct is
 `iDLALowerBoundStopped_of_greenSteps` (killing set `V^ε(Λ_t) ∩ S^ε`, targets `V^ε(B⁻_δ(Λ_t)) ∪ {0}`), from the two
-open Green steps `hG1`, `hG2` and the cone-family inputs `hfam`, `h24`. -/
+open Green steps: the first one is `stoppedFirstGreenStep_of_steps` from the open input `hin` and the standing steps
+`hcell`, `hlap` ([C21]); the second is `hG2`; the cone-family inputs are `hfam`, `h24`. -/
 theorem firstPass_5_1_of_steps (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
     (h53 : MeanValueInequalityStmt 𝒮) (h54 : LLowerBoundStmt 𝒮)
     (hP : StrictStoppedOdometerPositivityStep 𝒮) (hfam : ConeFamilyAEMeasurableStep)
-    (h24 : ConeHarmonicBallsUpToFixedTimeStmt) (hG1 : StoppedFirstGreenStep 𝒮) (hG2 : StoppedSecondGreenStep 𝒮) :
+    (h24 : ConeHarmonicBallsUpToFixedTimeStmt) (hin : StoppedFirstGreenInputsStep 𝒮)
+    (hcell : AdjacentCellsMeetAeStep 𝒮) (hlap : DiscreteLaplacianBoundCorrectedStmt 𝒮)
+    (hG2 : StoppedSecondGreenStep 𝒮) :
     IDLALowerBoundStmt 𝒮 :=
   iDLALowerBound_of_steps 𝒮 (generalIDLALowerBoundRelaxed_of_volumeGrowth_cellSize 𝒮 h27 h28) h53 h54 h28
     (discreteClusterInnerBound_of_compactContainment 𝒮 h28
       (strictClusterCompactContainmentStep_of_odometerPositivity 𝒮 h28 hP))
     (iDLALowerBoundStopped_of_greenSteps 𝒮 (generalIDLALowerBoundRelaxed_of_volumeGrowth_cellSize 𝒮 h27 h28)
-      hfam h24 hG1 hG2)
+      hfam h24 (stoppedFirstGreenStep_of_steps 𝒮 hin hcell hlap) hG2)
 
 end MatedCRT
