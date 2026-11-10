@@ -85,4 +85,21 @@ theorem localCode_mem_of_plateau {ν : Measure ℂ} [IsFiniteMeasureOnCompacts �
     certRel_of_certReal hpole hz hzd hb hopen hne hreg hD hD0 hp hv.1, discOfCert hv'.1.1,
     certRel_of_certReal hpole hz hzd hb hopen hne hreg hD hD0 (lt_trans hp hpq) hv'.1⟩
 
+/-- Coordinates of the certificate code: the moment of `D k` against the cutoff `θ_{J,n}` is `localCode` of `certPhi`. -/
+theorem localCode_certIdx (D : ℕ → ℂ → ℝ) (U : ℕ → Set ℂ) (ν : Measure ℂ) (k : ℕ) (J : Finset ℕ) (n : ℕ) :
+    localCode (certPhi D U) ν (certIdx k J n) =
+      ∫ x, D k x * cutoffBall (⋃ i ∈ J, U i ∩ ball (0 : ℂ) 1) n x ∂ν := by
+  simp only [localCode, certPhi_certIdx]
+
+/-- Coordinates which do not decode to a triple carry the zero test function. -/
+theorem certPhi_of_decode_none (D : ℕ → ℂ → ℝ) (U : ℕ → Set ℂ) {p : ℕ}
+    (h : Encodable.decode (α := ℕ × Finset ℕ × ℕ) p = none) : certPhi D U p = fun _ => 0 := by
+  simp only [certPhi, h]
+
+/-- Coordinates decoding to `(k, J, n)` carry `D k` times the cutoff `θ_{J,n}`. -/
+theorem certPhi_of_decode_some (D : ℕ → ℂ → ℝ) (U : ℕ → Set ℂ) {p k : ℕ} {J : Finset ℕ} {n : ℕ}
+    (h : Encodable.decode (α := ℕ × Finset ℕ × ℕ) p = some (k, J, n)) :
+    certPhi D U p = fun x => D k x * cutoffBall (⋃ i ∈ J, U i ∩ ball (0 : ℂ) 1) n x := by
+  simp only [certPhi, h]
+
 end MatedCRT

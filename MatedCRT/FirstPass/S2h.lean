@@ -2,6 +2,7 @@ import MatedCRT.FirstPass.S2g.Family
 import MatedCRT.FirstPass.Frozen.S1c
 import MatedCRT.FirstPass.Frozen.S2h
 import MatedCRT.FirstPass.S2h.CertCode
+import MatedCRT.FirstPass.S2h.CertSuperBack
 import MatedCRT.FirstPass.S2h.LeastSuper
 import MatedCRT.FirstPass.S2h.MeasurableIntegral
 import Mathlib.MeasureTheory.Constructions.Polish.Basic
@@ -241,5 +242,49 @@ theorem coneClosureGoodMeasureLaw_proved (hpole : FrozenGreenDiscPole) (hc : Con
     (hV : VolumeGrowthStmt) (hL : LeastSupersolutionMemOfVolumeGrowthStmt) :
     ConeClosureGoodMeasureLawStep :=
   coneClosureGoodMeasureLawStep_of_parts hpole hc (coneLeastSuperNullHull_proved hV hL)
+
+/-! ### The certificate code is admissible and exact (fp-S2h, z1) -/
+
+/-- The test family of the certificate code is admissible: each coordinate is continuous, nonnegative, with compact
+support in `B(0,1)` (`D k` is supported in `B_{3/4}`, and the cutoffs are continuous and nonnegative). -/
+theorem certTestFamily_certPhi {D : ℕ → ℂ → ℝ} (hD : ∀ k, D k ∈ nonnegTest (3 / 4)) (U : ℕ → Set ℂ) :
+    CertTestFamily (certPhi D U) := by
+  intro p
+  rcases hdec : (Encodable.decode (α := ℕ × Finset ℕ × ℕ) p) with _ | ⟨k, J, n⟩
+  · rw [certPhi_of_decode_none D U hdec]
+    refine ⟨continuous_const, HasCompactSupport.zero, ?_, fun x => le_refl _⟩
+    simp [tsupport]
+  · rw [certPhi_of_decode_some D U hdec]
+    have hk := hD k
+    refine ⟨hk.1.1.continuous.mul (continuous_cutoffBall _ _), hk.1.2.1.mul_right, ?_,
+      fun x => mul_nonneg (hk.2 x) (cutoffBall_nonneg _ _ x)⟩
+    exact tsupport_mul_subset_left.trans (hk.1.2.2.trans (ball_subset_ball (by norm_num)))
+
+/-- **The certificate code exists (fp-S2h, z1).** Under the frozen pole continuity `FrozenGreenDiscPole`, the family
+`certPhi D U` and the analytic set `B` of the relation witnesses satisfy `CertCodeExactStep`: the forward half from
+`localCode_mem_of_plateau`, the backward half from `certSuper_of_certRel` (with `B` the set of `analyticSet_certCodes`). -/
+theorem certCodeExact_exists (hpole : FrozenGreenDiscPole) :
+    ∃ (φs : ℕ → ℂ → ℝ) (B : Set (ℕ → ℝ)), CertTestFamily φs ∧ CertCodeExactStep φs B := by
+  obtain ⟨D, hDmem, hdense⟩ := exists_dense_nonnegTest_family (3 / 4)
+  obtain ⟨z, hz, hzd⟩ := exists_punct_dense_data
+  obtain ⟨b, hb, hbd⟩ := exists_sphere_dense_data
+  obtain ⟨U, hopen, hne, hreg⟩ := exists_regular_basis_family
+  have hD : ∀ k, IsTestFunction (ball (0 : ℂ) (3 / 4)) (D k) := fun k => (hDmem k).1
+  have hD0 : ∀ k x, 0 ≤ D k x := fun k x => (hDmem k).2 x
+  refine ⟨certPhi D U, {m : ℕ → ℝ | ∃ p q : ℚ, 0 < (p : ℝ) ∧ (p : ℝ) < (q : ℝ) ∧
+      ∃ w : DiscW, CertRel z b U certIdx (certL D) m (p : ℝ) w ∧
+        ∃ w' : DiscW, CertRel z b U certIdx (certL D) m (q : ℝ) w'}, certTestFamily_certPhi hDmem U, ?_⟩
+  unfold CertCodeExactStep
+  refine ⟨analyticSet_certCodes (certL_continuous hD), fun ν hν => ?_⟩
+  have := isFiniteMeasureOnCompacts_of_locFin hν
+  constructor
+  · intro hplat
+    exact localCode_mem_of_plateau hpole hz hzd hb hopen hne hreg hD hD0 hplat
+  · intro hmem
+    obtain ⟨p, q, hp, hpq, w, hw, w', hw'⟩ := hmem
+    refine ⟨p, q, hp, hpq, ⟨extW w, certSuper_of_certRel hpole hp hz hzd hb hbd hopen hne hreg hD hD0 hDmem hdense
+      (m := localCode (certPhi D U) ν) (idx := certIdx) (fun k J n => localCode_certIdx D U ν k J n) hw⟩,
+      ⟨extW w', certSuper_of_certRel hpole (lt_trans hp hpq) hz hzd hb hbd hopen hne hreg hD hD0 hDmem hdense
+      (m := localCode (certPhi D U) ν) (idx := certIdx) (fun k J n => localCode_certIdx D U ν k J n) hw'⟩⟩
 
 end MatedCRT
