@@ -131,7 +131,7 @@ theorem band_induction {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {F : Set 
     (hsm : ∀ v, (H v ∩ ball (0 : ℂ) ρ).Nonempty → ∀ u ∈ closure (H v), ∀ u' ∈ closure (H v), dist u u' ≤ d)
     (hFne : F.Nonempty) (hFball : F ⊆ ball (0 : ℂ) (ρ / 2))
     (hctr : ∀ v, dist (ctr v) (P v) ≤ g)
-    (hWt : ∀ v, Wt v = innerVertices H (ball (ctr v) (2 * rad v)))
+    (hWt : ∀ v, dist (P v) (P b) ≤ 3 * r / 100 → Wt v = innerVertices H (ball (ctr v) (2 * rad v)))
     (hrad0 : ∀ v ∈ band P F r d, 0 ≤ rad v) (hrad : ∀ v ∈ band P F r d, rad v ≤ s)
     (_hr : 0 < r) (hrρ : r ≤ ρ / 100) (hs : 0 < s) (hsr : s ≤ r / 1000) (hd : 0 ≤ d) (hdr : d ≤ r / 1000)
     (hg : 0 ≤ g) (hgd : g + d < s) (hNs : (N : ℝ) * s ≤ r / 100)
@@ -141,7 +141,7 @@ theorem band_induction {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {F : Set 
       τ (M + 1) y = (i : ℕ∞) + vExitTime (Wt (y i)) (WalkPotential.pathShift i y))
     (hx0 : x 0 = b)
     (hlegal : ∀ n, x (n + 1) = x n ∨ m (x n) (x (n + 1)) ≠ 0)
-    (hfinW : ∀ i, x i ∈ band P F r d → vExitTime (Wt (x i)) (WalkPotential.pathShift i x) ≠ ⊤) :
+    (hfinW : ∀ i, dist (P (x i)) (P b) ≤ 3 * r / 100 → vExitTime (Wt (x i)) (WalkPotential.pathShift i x) ≠ ⊤) :
     ∀ j ≤ N, ∃ i : ℕ, τ j x = (i : ℕ∞) ∧ dist (P (x i)) (P b) ≤ 3 * (j : ℝ) * s := by
   intro j
   induction j with
@@ -153,8 +153,8 @@ theorem band_induction {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {F : Set 
   | succ j ih =>
     intro hj
     obtain ⟨i, hi, hdist⟩ := ih (by omega)
-    have hbi : x i ∈ band P F r d :=
-      mem_band_of_dist hd hstart (le_trans hdist (js_bound hs (by omega) hNs))
+    have hxi3 : dist (P (x i)) (P b) ≤ 3 * r / 100 := le_trans hdist (js_bound hs (by omega) hNs)
+    have hbi : x i ∈ band P F r d := mem_band_of_dist hd hstart hxi3
     have hrad_i := hrad (x i) hbi
     have hrad0_i := hrad0 (x i) hbi
     have hρpos : 0 < ρ := by linarith
@@ -176,10 +176,10 @@ theorem band_induction {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {F : Set 
       show dist (P (x i)) (ctr (x i)) ≤ g
       rw [dist_comm]
       exact hctr (x i)
-    obtain ⟨e, he⟩ := ENat.ne_top_iff_exists.1 (hfinW i hbi)
+    obtain ⟨e, he⟩ := ENat.ne_top_iff_exists.1 (hfinW i hxi3)
     have hE : vExitTime (innerVertices H (ball (ctr (x i)) (2 * rad (x i))))
         (WalkPotential.pathShift i x) = (e : ℕ∞) := by
-      rw [← hWt (x i)]
+      rw [← hWt (x i) hxi3]
       exact he.symm
     have hbd : dist (P (x (i + e))) (P (x i)) ≤ 2 * rad (x i) + d + g :=
       test_step hconn hadj hPmem hsm hnorm (by linarith) hlegal' hPc hE
@@ -203,7 +203,7 @@ theorem band_facts {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {F : Set ℂ}
     (hsm : ∀ v, (H v ∩ ball (0 : ℂ) ρ).Nonempty → ∀ u ∈ closure (H v), ∀ u' ∈ closure (H v), dist u u' ≤ d)
     (hFne : F.Nonempty) (hFball : F ⊆ ball (0 : ℂ) (ρ / 2))
     (hctr : ∀ v, dist (ctr v) (P v) ≤ g)
-    (hWt : ∀ v, Wt v = innerVertices H (ball (ctr v) (2 * rad v)))
+    (hWt : ∀ v, dist (P v) (P b) ≤ 3 * r / 100 → Wt v = innerVertices H (ball (ctr v) (2 * rad v)))
     (hrad0 : ∀ v ∈ band P F r d, 0 ≤ rad v) (hrad : ∀ v ∈ band P F r d, rad v ≤ s)
     (_hr : 0 < r) (hrρ : r ≤ ρ / 100) (hs : 0 < s) (hsr : s ≤ r / 1000) (hd : 0 ≤ d) (hdr : d ≤ r / 1000)
     (hg : 0 ≤ g) (hgd : g + d < s) (hNs : (N : ℝ) * s ≤ r / 100)
@@ -213,7 +213,7 @@ theorem band_facts {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {F : Set ℂ}
       τ (M + 1) y = (i : ℕ∞) + vExitTime (Wt (y i)) (WalkPotential.pathShift i y))
     (hx0 : x 0 = b)
     (hlegal : ∀ n, x (n + 1) = x n ∨ m (x n) (x (n + 1)) ≠ 0)
-    (hfinW : ∀ i, x i ∈ band P F r d → vExitTime (Wt (x i)) (WalkPotential.pathShift i x) ≠ ⊤) :
+    (hfinW : ∀ i, dist (P (x i)) (P b) ≤ 3 * r / 100 → vExitTime (Wt (x i)) (WalkPotential.pathShift i x) ≠ ⊤) :
     (∀ j < N, τ j x ≠ ⊤) ∧ (∀ j < N, ∀ k : ℕ, τ j x = (k : ℕ∞) → x k ∈ band P F r d) := by
   have key := band_induction hconn hadj hPmem hsm hFne hFball hctr hWt hrad0 hrad _hr hrρ hs hsr hd hdr hg hgd hNs
     hstart hτ0 hτsucc hx0 hlegal hfinW
