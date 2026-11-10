@@ -93,7 +93,7 @@ theorem coneHalfBallGood_of_source (hU : FrozenUniversalMeasurabilityOfAnalytic)
   have hLf : ∀ᵐ ω ∂P, IsLocallyFiniteMeasure (μ ω) := by
     filter_upwards [hL] with ω hω
     exact hω.isLocallyFiniteMeasure
-  have hmeask : ∀ k, Measurable (fun ω => ∫ x, φs k x ∂(μ ω)) := fun k =>
+  have hmeask : ∀ k, AEMeasurable (fun ω => ∫ x, φs k x ∂(μ ω)) P := fun k =>
     hmeasT γ hγ0 hγ2 Ω P hC hcirc μ hcone (φs k) (hφs k).1 (hφs k).2.1
   have hae : ∀ k, (fun ω => momentVec φs (μ ω) k) =ᵐ[P] (fun ω => ∫ x, φs k x ∂(μ ω)) := by
     intro k
@@ -101,7 +101,7 @@ theorem coneHalfBallGood_of_source (hU : FrozenUniversalMeasurabilityOfAnalytic)
     have := hω
     exact intG_eq_integral (hφs k).1 (hφs k).2.1 (μ ω)
   have hAEM : AEMeasurable (fun ω => momentVec φs (μ ω)) P :=
-    AEMeasurable.of_eval fun k => ((hmeask k).aemeasurable).congr (hae k).symm
+    AEMeasurable.of_eval fun k => (hmeask k).congr (hae k).symm
   -- transfer of the full law to the cone
   have hcone_map : P.map (fun ω => momentVec φs (μ ω)) B = 1 := by
     rw [hlaw φs hφs]
