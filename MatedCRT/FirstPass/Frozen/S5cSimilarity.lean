@@ -22,7 +22,7 @@ explicit in the input (operator truth check 20:04 UTC, notes/fp-gaps/CHATGPT-fro
 noncomputable def FPScaledMeasure (μ : Measure ℂ) (R b : ℝ) : Measure ℂ :=
   ENNReal.ofReal b⁻¹ • μ.map fun x => (R : ℂ)⁻¹ * x
 
-/-- **FIRST-PASS FROZEN.** Similarity transfer of the whole-plane quantum cone `h` and the independent space-filling SLE_{16/γ²}
+/-- RETIRED (FALSE, ChatGPT 02:21 UTC; corrected form by lead li's team). **FIRST-PASS FROZEN.** Similarity transfer of the whole-plane quantum cone `h` and the independent space-filling SLE_{16/γ²}
 `η` (steps2-r3 Section 9; CHATGPT-similarity-transfer.md). For `γ ∈ (0,2)`, a quantum cone `h` (`IsConeField`) and a whole-plane
 space-filling SLE `η` (`IsSLE` with the σ-algebra `𝓕` of the field, so `η` is independent of `𝓕`), with the circle averages and
 `μ_h` `𝓕`-measurable: for every deterministic `b > 0`, with `R_b = sup {r > 0 : h_r(0) + Q log r = γ⁻¹ log b}`
