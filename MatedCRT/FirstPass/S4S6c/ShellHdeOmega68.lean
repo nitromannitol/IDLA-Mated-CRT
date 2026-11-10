@@ -33,7 +33,7 @@ theorem shellHde_ae68_omega {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0 <
     (hR : ∀ᵐ ω ∂S.P, ∀ w, Elig ω w → dyadicD r ≤ Rf ω w ∧ Rf ω w ≤ dyadicD r ^ shortExp ζ)
     (hElig : ∀ᵐ ω ∂S.P, ∀ w, w ∈ shortEligible ρ (dyadicD r) (shortExp ζ) → Elig ω w)
     (hmesh : ∀ᵐ ω ∂S.P, CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ)
-    (hstart : ∀ᵐ ω ∂S.P,
+    (hstart : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
       (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty) :
     ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
       ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),
@@ -74,6 +74,7 @@ theorem shellHde_ae68_omega {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0 <
     Lemma68ShellEnvAeInputs.hkill_of_valid hγ0 hγ2 S hS hε (Θ := i.Θ) (F0 := i.F0) (r := r) (a := i.a),
     hmesh, hstart, hR, hElig] with ω hη hmap _hkill hm hst hRω hEω
   intro hadm
+  have hstA := hst hadm
   unfold Lemma68Config.FullAdm Lemma68Config.ConfigOK at hadm
   obtain ⟨⟨hF0eq, hcl, hball⟩, -⟩ := hadm
   have h0K : (0 : ℂ) ∈ fillCells ε (S.η ω) ↑i.Θ := hball (Metric.mem_ball_self hs₀)
@@ -83,7 +84,7 @@ theorem shellHde_ae68_omega {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0 <
   filter_upwards [srwLaw_ae_start (S.mult ε ω) i.a,
     Lemma68ShellPathAe.ae_cell_adjacent (S.mult ε ω) i.a hε (hmap ε hε), _hkill] with x hx0 hadj hτ
   have hpath := shell_fin_of_path (ε := ε) (R := Rf ω) (n := shellCount r (dyadicD r ^ shortExp ζ) - 1)
-    hη hε hr hrρ hd hds hs4 hNs hm hF0eq h0K hKb hRS hadj (by rw [hx0]; exact hst) hτ
+    hη hε hr hrρ hd hds hs4 hNs hm hF0eq h0K hKb hRS hadj (by rw [hx0]; exact hstA) hτ
   exact ⟨fun k hk => (hpath k hk).1, fun k hk => hEω _ (hpath k hk).2⟩
 
 /-- **The full shell hypothesis `hde`, almost surely, with an environment-dependent radius.** The testEnd conjunct is the
@@ -98,7 +99,7 @@ theorem shellHde68_full_omega {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0
     (hR : ∀ᵐ ω ∂S.P, ∀ w, Elig ω w → dyadicD r ≤ Rf ω w ∧ Rf ω w ≤ dyadicD r ^ shortExp ζ)
     (hElig : ∀ᵐ ω ∂S.P, ∀ w, w ∈ shortEligible ρ (dyadicD r) (shortExp ζ) → Elig ω w)
     (hmesh : ∀ᵐ ω ∂S.P, CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ)
-    (hstart : ∀ᵐ ω ∂S.P,
+    (hstart : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
       (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty)
     (htest : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
       ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),

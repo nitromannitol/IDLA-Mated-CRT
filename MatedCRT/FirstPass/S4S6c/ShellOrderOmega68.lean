@@ -32,7 +32,8 @@ theorem shellOrder_fullAdm_ae_omega {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (h�
     {Rf : Ω → ℂ → ℝ} {Elig : Ω → ℂ → Prop}
     (hR : ∀ᵐ ω ∂S.P, ∀ w, Elig ω w → dyadicD r ≤ Rf ω w ∧ Rf ω w ≤ dyadicD r ^ shortExp ζ)
     (hmesh : ∀ᵐ ω ∂S.P, CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ)
-    (hstart : ∀ᵐ ω ∂S.P,
+    -- guarded by `FullAdm` (the start cell meets the frontier only for a full admissible configuration, see reports/q4.md)
+    (hstart : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
       (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty)
     -- guarded by `FullAdm` (the z11 deviation: the unguarded form is not provable, reports/z11.md l.25-32)
     (hde : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdm S ρ s₀ γ ε ω r i →
@@ -74,6 +75,7 @@ theorem shellOrder_fullAdm_ae_omega {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (h�
     Lemma68ShellEnvAeInputs.hkill_of_valid hγ0 hγ2 S hS hε (Θ := i.Θ) (F0 := i.F0) (r := r) (a := i.a),
     hmesh, hstart, hR, hde] with ω hη hmap hkill hm hst hRω hdeω
   intro hadm
+  have hstA := hst hadm
   have hdeA := hdeω hadm
   unfold Lemma68Config.FullAdm Lemma68Config.ConfigOK at hadm
   obtain ⟨⟨hF0eq, hcl, hball⟩, -⟩ := hadm
@@ -103,7 +105,7 @@ theorem shellOrder_fullAdm_ae_omega {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (h�
     have hmem := hmono (Lemma68ShellOrderFullAdm.dd_lt_mem_cellVertices_thickening hη hε hK hr hv)
     rw [← hF0eq] at hmem
     exact Finset.mem_coe.1 hmem
-  exact Lemma68ShellWire.shellOrderAe_of_path hη hε hr hs hs4 hd le_rfl hds hΘ hRω hF0 hm hNs hst (hmap ε hε)
+  exact Lemma68ShellWire.shellOrderAe_of_path hη hε hr hs hs4 hd le_rfl hds hΘ hRω hF0 hm hNs hstA (hmap ε hε)
     (hkill.and hdeA)
 
 end Lemma68ShellOrderOmega
