@@ -19,7 +19,7 @@ open HarmonicBalls
 
 /-- The cluster `U_w = {x ∈ B_ρ : x = 0 ∨ -t G_{B_ρ}(0,x) < w x}` of a candidate `w` (Step 4.1 of the floor note); the
 same shape as `HarmonicBalls.cluster` (pole `0`). -/
-def obstacleCluster (ρ t : ℝ) (w : ℂ → ℝ) : Set ℂ :=
+def floorObstacleCluster (ρ t : ℝ) (w : ℂ → ℝ) : Set ℂ :=
   {x ∈ ball (0 : ℂ) ρ | x = 0 ∨ -t * greenFunction (ball 0 ρ) 0 x < w x}
 
 /-- The set `{w₁ > w₂} ∩ B_ρ` on which the comparison of Step 4.2 is made. -/
@@ -34,10 +34,10 @@ structure IsObstacleSolutionOn (ρ t : ℝ) (ν : Measure ℂ) (w : ℂ → ℝ)
   zero_on_sphere : ∀ x ∈ sphere (0 : ℂ) ρ, w x = 0
   obstacle : ∀ x ∈ closedBall (0 : ℂ) ρ, x ≠ 0 → -t * greenFunction (ball 0 ρ) 0 x ≤ w x
   laplacian_le : LaplacianLE w ν (ball (0 : ℂ) ρ)
-  laplacian_eq : HasLaplacian w ν 0 (obstacleCluster ρ t w)
+  laplacian_eq : HasLaplacian w ν 0 (floorObstacleCluster ρ t w)
 
 theorem mem_obstacleCluster {ρ t : ℝ} {w : ℂ → ℝ} {x : ℂ} :
-    x ∈ obstacleCluster ρ t w ↔ x ∈ ball (0 : ℂ) ρ ∧ (x = 0 ∨ -t * greenFunction (ball 0 ρ) 0 x < w x) :=
+    x ∈ floorObstacleCluster ρ t w ↔ x ∈ ball (0 : ℂ) ρ ∧ (x = 0 ∨ -t * greenFunction (ball 0 ρ) 0 x < w x) :=
   Iff.rfl
 
 theorem mem_posSetOn {ρ : ℝ} {w₁ w₂ : ℂ → ℝ} {x : ℂ} :
@@ -61,7 +61,7 @@ theorem IsObstacleSolutionOn.le_of_solution {ρ t : ℝ} {ν : Measure ℂ} {w�
   have hDcl : closure (posSetOn ρ w₁ w₂) ⊆ closedBall (0 : ℂ) ρ :=
     (closure_mono hDball).trans closure_ball_subset_closedBall
   -- `D ⊆ U_{w₁}`: off the pole, `w₁ > w₂ ≥ -tG`
-  have hDcluster : posSetOn ρ w₁ w₂ ⊆ obstacleCluster ρ t w₁ := by
+  have hDcluster : posSetOn ρ w₁ w₂ ⊆ floorObstacleCluster ρ t w₁ := by
     intro x hx
     obtain ⟨hxb, hpos⟩ := mem_posSetOn.1 hx
     refine mem_obstacleCluster.2 ⟨hxb, ?_⟩
@@ -74,7 +74,7 @@ theorem IsObstacleSolutionOn.le_of_solution {ρ t : ℝ} {ν : Measure ℂ} {w�
   have hkey : ∀ φ : ℂ → ℝ, IsTestFunction (posSetOn ρ w₁ w₂) φ → 0 ≤ φ →
       0 ≤ ∫ x, (w₁ x - w₂ x) * Δ φ x := by
     intro φ hφD hφ0
-    have hφ1 : IsTestFunction (obstacleCluster ρ t w₁) φ := isTestFunction_of_subset hφD hDcluster
+    have hφ1 : IsTestFunction (floorObstacleCluster ρ t w₁) φ := isTestFunction_of_subset hφD hDcluster
     have hφb : IsTestFunction (ball (0 : ℂ) ρ) φ := isTestFunction_of_subset hφD hDball
     obtain ⟨hνφ, -, heq1⟩ := h₁.laplacian_eq.2 φ hφ1
     rw [integral_zero_measure, sub_zero] at heq1

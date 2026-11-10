@@ -32,7 +32,7 @@ theorem integrable_restrict_iff_of_tsupport {μ : Measure ℂ} {A : Set ℂ} {φ
 /-- The cluster `U_w` of a function continuous on `B̄_ρ` is open (pole `0`, `t > 0`): away from the pole this is the
 openness of `{w + tG > 0}`, and at the pole `G(0,·) → +∞` (`FrozenGreenDiscPole`) while `w` is bounded below. -/
 theorem isOpen_obstacleCluster (hG : FrozenGreenDiscPole) {ρ t : ℝ} {w : ℂ → ℝ} (hρ : 0 < ρ) (ht : 0 < t)
-    (hw : ContinuousOn w (closedBall (0 : ℂ) ρ)) : IsOpen (obstacleCluster ρ t w) := by
+    (hw : ContinuousOn w (closedBall (0 : ℂ) ρ)) : IsOpen (floorObstacleCluster ρ t w) := by
   rw [isOpen_iff_mem_nhds]
   rintro x ⟨hxb, hx⟩
   by_cases hx0 : x = 0
@@ -45,12 +45,12 @@ theorem isOpen_obstacleCluster (hG : FrozenGreenDiscPole) {ρ t : ℝ} {w : ℂ 
       hGt.eventually_gt_atTop _
     have hballP : ∀ᶠ y in 𝓝[≠] (0 : ℂ), y ∈ ball (0 : ℂ) ρ :=
       nhdsWithin_le_nhds (isOpen_ball.mem_nhds (mem_ball_self hρ))
-    have hpunct : ∀ᶠ y in 𝓝[≠] (0 : ℂ), y ∈ obstacleCluster ρ t w := by
+    have hpunct : ∀ᶠ y in 𝓝[≠] (0 : ℂ), y ∈ floorObstacleCluster ρ t w := by
       filter_upwards [hG1, nhdsWithin_le_nhds hw1, hballP] with y hG1y hw1y hby
       refine mem_obstacleCluster.2 ⟨hby, Or.inr ?_⟩
       have h2 : 1 - w 0 < greenFunction (ball 0 ρ) 0 y * t := (div_lt_iff₀ ht).mp hG1y
       nlinarith
-    have hev : ∀ᶠ y in 𝓝 (0 : ℂ), y ∈ obstacleCluster ρ t w := by
+    have hev : ∀ᶠ y in 𝓝 (0 : ℂ), y ∈ floorObstacleCluster ρ t w := by
       filter_upwards [eventually_nhdsWithin_iff.mp hpunct] with y hy
       by_cases hy0 : y = 0
       · subst hy0
@@ -66,7 +66,7 @@ theorem isOpen_obstacleCluster (hG : FrozenGreenDiscPole) {ρ t : ℝ} {w : ℂ 
     have hO := hfc.isOpen_inter_preimage hopen (isOpen_Ioi : IsOpen (Ioi (0 : ℝ)))
     have hxO : x ∈ ball (0 : ℂ) ρ \ {0} ∩ (fun y => w y + t * greenFunction (ball 0 ρ) 0 y) ⁻¹' Ioi 0 := by
       refine ⟨⟨hxb, hx0⟩, ?_⟩
-      have := (mem_obstacleCluster.1 (show x ∈ obstacleCluster ρ t w from ⟨hxb, hx⟩)).2
+      have := (mem_obstacleCluster.1 (show x ∈ floorObstacleCluster ρ t w from ⟨hxb, hx⟩)).2
       rcases this with h | h
       · exact absurd h hx0
       · show 0 < w x + t * greenFunction (ball 0 ρ) 0 x
@@ -103,11 +103,11 @@ theorem isObstacleSolutionOn_leastSupersolution (hG : FrozenGreenDiscPole) {μ :
   have hΛt : Λ t ⊆ ball (0 : ℂ) (ρ / 3) :=
     Set.Subset.trans (hΛ.2.1.monotoneOn ht hs hts.le) hsub
   obtain ⟨hLam, hcont, hLap, hzero⟩ := hΛ.2.2 t (ρ / 3) ht (by linarith) hΛt ρ (by linarith)
-  have hUopen : IsOpen (obstacleCluster ρ t (leastSupersolution μ ρ 0 t)) :=
+  have hUopen : IsOpen (floorObstacleCluster ρ t (leastSupersolution μ ρ 0 t)) :=
     isOpen_obstacleCluster hG hρ ht hcont
-  have hUball : obstacleCluster ρ t (leastSupersolution μ ρ 0 t) ⊆ ball (0 : ℂ) ρ :=
+  have hUball : floorObstacleCluster ρ t (leastSupersolution μ ρ 0 t) ⊆ ball (0 : ℂ) ρ :=
     fun x hx => (mem_obstacleCluster.1 hx).1
-  have hUsub : obstacleCluster ρ t (leastSupersolution μ ρ 0 t) ⊆ Λ t := by
+  have hUsub : floorObstacleCluster ρ t (leastSupersolution μ ρ 0 t) ⊆ Λ t := by
     rw [hLam]
     exact hUopen.subset_interior_iff.mpr subset_closure
   obtain ⟨-, hLE, -⟩ := hsup

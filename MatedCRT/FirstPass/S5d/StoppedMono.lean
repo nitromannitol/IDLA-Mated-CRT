@@ -14,7 +14,7 @@ namespace MatedCRT
 open Classical
 
 /-- A walker that first leaves `A₁` at a site outside `A₂ ⊇ A₁` also first leaves `A₂` there. -/
-theorem firstExitSite_eq_of_subset {A₁ A₂ : Set ℤ} (hA : A₁ ⊆ A₂) {x : ℕ → ℤ} {b : ℤ}
+theorem stoppedFirstExitSite_eq_of_subset {A₁ A₂ : Set ℤ} (hA : A₁ ⊆ A₂) {x : ℕ → ℤ} {b : ℤ}
     (h₁ : firstExitSite A₁ x = some b) (hb : b ∉ A₂) : firstExitSite A₂ x = some b := by
   unfold firstExitSite at h₁ ⊢
   split_ifs at h₁ with hex₁
@@ -55,7 +55,7 @@ theorem idlaStep_fst_mono {Θ₁ Θ₂ : Set ℤ} (hΘ : Θ₁ ⊆ Θ₂) {s₁ 
       rw [e₁]
       by_cases hb₂ : b₁ ∈ s₂.1
       · exact Set.union_subset (hs.trans hA) (Set.singleton_subset_iff.mpr (hA hb₂))
-      · have h₂ := firstExitSite_eq_of_subset hs h₁ hb₂
+      · have h₂ := stoppedFirstExitSite_eq_of_subset hs h₁ hb₂
         have e₂ : idlaStep Θ₂ s₂ x = (s₂.1 ∪ {b₁}, s₂.2) := by
           simp [idlaStep, h₂, hΘ hb₁]
         rw [e₂]

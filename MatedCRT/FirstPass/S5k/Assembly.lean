@@ -73,9 +73,9 @@ theorem IsObstacleSolutionOn.congr_closedBall {ρ t : ℝ} {ν : Measure ℂ} {w
     (h : IsObstacleSolutionOn ρ t ν w) (hw : EqOn w' w (closedBall (0 : ℂ) ρ)) :
     IsObstacleSolutionOn ρ t ν w' := by
   have hball : EqOn w' w (ball (0 : ℂ) ρ) := hw.mono ball_subset_closedBall
-  have hU : obstacleCluster ρ t w ⊆ ball (0 : ℂ) ρ := fun x hx => (mem_obstacleCluster.1 hx).1
-  have hUopen : IsOpen (obstacleCluster ρ t w) := isOpen_obstacleCluster hG hρ ht h.continuousOn
-  have hcl : obstacleCluster ρ t w' = obstacleCluster ρ t w := by
+  have hU : floorObstacleCluster ρ t w ⊆ ball (0 : ℂ) ρ := fun x hx => (mem_obstacleCluster.1 hx).1
+  have hUopen : IsOpen (floorObstacleCluster ρ t w) := isOpen_obstacleCluster hG hρ ht h.continuousOn
+  have hcl : floorObstacleCluster ρ t w' = floorObstacleCluster ρ t w := by
     ext x
     simp only [mem_obstacleCluster]
     constructor

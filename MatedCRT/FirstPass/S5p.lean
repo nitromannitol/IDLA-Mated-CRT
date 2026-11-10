@@ -47,7 +47,7 @@ theorem isObstacleSolutionOn_of_eqOn_closedBall (hG : FrozenGreenDiscPole) {ρ t
     (hρ : 0 < ρ) (ht : 0 < t) (h : IsObstacleSolutionOn ρ t ν w) (heq : EqOn w w' (closedBall (0 : ℂ) ρ)) :
     IsObstacleSolutionOn ρ t ν w' := by
   have hball : EqOn w w' (ball (0 : ℂ) ρ) := heq.mono ball_subset_closedBall
-  have hcl : obstacleCluster ρ t w = obstacleCluster ρ t w' := by
+  have hcl : floorObstacleCluster ρ t w = floorObstacleCluster ρ t w' := by
     ext x
     rw [mem_obstacleCluster, mem_obstacleCluster]
     constructor

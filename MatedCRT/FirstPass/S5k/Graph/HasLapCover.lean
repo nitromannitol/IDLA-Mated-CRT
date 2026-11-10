@@ -18,7 +18,7 @@ open MeasureTheory Metric Set Filter Topology Laplacian HarmonicBalls
 
 /-- **Cover of the cluster.** Every point of `U_w` lies in an admissible disk with a rational test (pole: `G → +∞`). -/
 theorem exists_disk_cover {ρ t : ℝ} (hG : FrozenGreenDiscPole) (hρ : 0 < ρ) (ht : 0 < t) {D₀ : Set ℂ}
-    (hD₀d : Dense D₀) (f : DiskFun ρ) {x : ℂ} (hx : x ∈ obstacleCluster ρ t (extDisk ρ f)) :
+    (hD₀d : Dense D₀) (f : DiskFun ρ) {x : ℂ} (hx : x ∈ floorObstacleCluster ρ t (extDisk ρ f)) :
     ∃ q₀ ∈ D₀, ∃ r c : ℚ, AdmDisk ρ q₀ r ∧ 0 < c ∧ HypDisk ρ t D₀ f q₀ r c ∧ x ∈ ball q₀ (r : ℝ) := by
   obtain ⟨hxb, hxc⟩ := mem_obstacleCluster.1 hx
   by_cases hx0 : x = 0
@@ -86,14 +86,14 @@ theorem exists_disk_cover {ρ t : ℝ} (hG : FrozenGreenDiscPole) (hρ : 0 < ρ)
 on the test functions of the countable dense family of each admissible disk where the rational test holds. -/
 theorem hasLaplacian_extDisk_iff {ρ t : ℝ} (hG : FrozenGreenDiscPole) (hρ : 0 < ρ) (ht : 0 < t)
     {D₀ : Set ℂ} (hD₀d : Dense D₀) (ν : FinMeasDisk ρ) (f : DiskFun ρ) :
-    HasLaplacian (extDisk ρ f) (ν : Measure ℂ) 0 (obstacleCluster ρ t (extDisk ρ f)) ↔
+    HasLaplacian (extDisk ρ f) (ν : Measure ℂ) 0 (floorObstacleCluster ρ t (extDisk ρ f)) ↔
       ∀ q₀ ∈ D₀, ∀ r c : ℚ, AdmDisk ρ q₀ r → 0 < c → HypDisk ρ t D₀ f q₀ r c →
         ∀ φ ∈ Phidisk ρ (ball q₀ (r : ℝ)), Lf ν f (psiF (ρ := ρ) φ) = 0 := by
   have : IsFiniteMeasure (ν : Measure ℂ) := ν.2.1
   constructor
   · intro hH q₀ _ r c hadm hc hyp φ hφ
     have hφt : IsTestFunction (ball q₀ (r : ℝ)) φ := (Phidisk_spec ρ _).1 hφ
-    have hφU : IsTestFunction (obstacleCluster ρ t (extDisk ρ f)) φ :=
+    have hφU : IsTestFunction (floorObstacleCluster ρ t (extDisk ρ f)) φ :=
       isTestFunction_of_subset hφt (ball_subset_obstacleCluster hG hρ hD₀d f hadm hc hyp)
     obtain ⟨-, -, heq⟩ := hH.2 φ hφU
     rw [Lf_psiF ν f hφt]
@@ -102,14 +102,14 @@ theorem hasLaplacian_extDisk_iff {ρ t : ℝ} (hG : FrozenGreenDiscPole) (hρ : 
     linarith
   · intro hall
     let I := {p : D₀ × ℚ × ℚ // AdmDisk ρ (p.1 : ℂ) p.2.1 ∧ 0 < p.2.2 ∧ HypDisk ρ t D₀ f (p.1 : ℂ) p.2.1 p.2.2}
-    have hDU : ∀ i : I, ball ((i.1.1 : ℂ)) ((i.1.2.1 : ℚ) : ℝ) ⊆ obstacleCluster ρ t (extDisk ρ f) :=
+    have hDU : ∀ i : I, ball ((i.1.1 : ℂ)) ((i.1.2.1 : ℚ) : ℝ) ⊆ floorObstacleCluster ρ t (extDisk ρ f) :=
       fun i => ball_subset_obstacleCluster hG hρ hD₀d f i.2.1 (by exact_mod_cast i.2.2.1) i.2.2.2
-    have hU : obstacleCluster ρ t (extDisk ρ f) ⊆ ⋃ i : I, ball ((i.1.1 : ℂ)) ((i.1.2.1 : ℚ) : ℝ) := by
+    have hU : floorObstacleCluster ρ t (extDisk ρ f) ⊆ ⋃ i : I, ball ((i.1.1 : ℂ)) ((i.1.2.1 : ℚ) : ℝ) := by
       intro x hx
       obtain ⟨q₀, hq₀, r, c, hadm, hc, hyp, hxb⟩ := exists_disk_cover hG hρ ht hD₀d f hx
       exact Set.mem_iUnion.2 ⟨⟨⟨⟨q₀, hq₀⟩, r, c⟩, hadm, by exact_mod_cast hc, hyp⟩, hxb⟩
-    have hUball : obstacleCluster ρ t (extDisk ρ f) ⊆ ball (0 : ℂ) ρ := fun x hx => (mem_obstacleCluster.1 hx).1
-    have hvan := vanish_of_local (U := obstacleCluster ρ t (extDisk ρ f))
+    have hUball : floorObstacleCluster ρ t (extDisk ρ f) ⊆ ball (0 : ℂ) ρ := fun x hx => (mem_obstacleCluster.1 hx).1
+    have hvan := vanish_of_local (U := floorObstacleCluster ρ t (extDisk ρ f))
       (fun i : I => ball ((i.1.1 : ℂ)) ((i.1.2.1 : ℚ) : ℝ)) (fun i => isOpen_ball) hDU hU (Lt ν f)
       (fun φ ψ hφ hψ => Lt_add ν f hUball hφ hψ) (Lt_zero ν f)
       (fun i φ hφ => Lt_eq_zero_of_Phidisk ν f

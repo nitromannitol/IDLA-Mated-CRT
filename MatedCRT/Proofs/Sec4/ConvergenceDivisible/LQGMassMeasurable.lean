@@ -11,7 +11,7 @@ open MeasureTheory Filter Topology Set Metric HarmonicBalls HasOuterApproxClosed
 open scoped ENNReal NNReal
 
 /-- A compact set has measurable LQG mass. -/
-theorem MatedCRTEnv.IsValid.aemeasurable_lqg_compact_mass
+theorem MatedCRTEnv.IsValid.aemeasurable_lqg_compact_mass_div
     {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
     {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
     {K : Set ℂ} (hK : IsCompact K) :
@@ -55,12 +55,12 @@ theorem MatedCRTEnv.IsValid.aemeasurable_lqg_compact_mass
     exact ht
 
 /-- A compact set has measurable extended nonnegative LQG mass. -/
-theorem MatedCRTEnv.IsValid.aemeasurable_lqg_compact_mass_ennreal
+theorem MatedCRTEnv.IsValid.aemeasurable_lqg_compact_mass_ennreal_div
     {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
     {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
     {K : Set ℂ} (hK : IsCompact K) :
     AEMeasurable (fun ω => S.μ ω K) S.P := by
-  apply (hS.aemeasurable_lqg_compact_mass hK).ennreal_ofReal.congr
+  apply (hS.aemeasurable_lqg_compact_mass_div hK).ennreal_ofReal.congr
   filter_upwards [hS.isLQGMeasure] with ω hω
   let _ := hω.isLocallyFiniteMeasure
   exact ENNReal.ofReal_toReal hK.measure_ne_top
@@ -79,7 +79,7 @@ theorem MatedCRTEnv.IsValid.aemeasurable_lqg_closed_mass
   have hunion : (⋃ n, K n) = F := by
     simp only [K, ← inter_iUnion, iUnion_closedBall_nat, inter_univ]
   have hm : AEMeasurable (fun ω => ⨆ n, S.μ ω (K n)) S.P :=
-    AEMeasurable.iSup fun n => hS.aemeasurable_lqg_compact_mass_ennreal (hK n)
+    AEMeasurable.iSup fun n => hS.aemeasurable_lqg_compact_mass_ennreal_div (hK n)
   convert hm using 1
   funext ω
   rw [← hmono.measure_iUnion, hunion]
@@ -96,9 +96,9 @@ theorem MatedCRTEnv.IsValid.aemeasurable_lqg_mass_inter_compact
       isPiSystem_isClosed with
   | empty => simp
   | basic A hA =>
-    exact hS.aemeasurable_lqg_compact_mass_ennreal (hK.inter_left hA)
+    exact hS.aemeasurable_lqg_compact_mass_ennreal_div (hK.inter_left hA)
   | compl A hA ih =>
-    apply (hS.aemeasurable_lqg_compact_mass_ennreal hK).sub ih |>.congr
+    apply (hS.aemeasurable_lqg_compact_mass_ennreal_div hK).sub ih |>.congr
     filter_upwards [hS.isLQGMeasure] with ω hω
     let _ := hω.isLocallyFiniteMeasure
     have hfin : S.μ ω (A ∩ K) ≠ ∞ := ne_top_of_le_ne_top hK.measure_ne_top
