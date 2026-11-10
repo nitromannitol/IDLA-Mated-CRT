@@ -22,6 +22,7 @@ quantum cone of Definition 4.10 (p. 79) and its uniqueness, Lemma 4.9 (p. 79); c
 Remark 4.4 (pp. 74-75). The paper's cone is Definition 2.1 (paper/idla_mated_crt-corrected.tex, lines 427-439).
 Not a verbatim numbered theorem of DMS: the equality of process laws is a measure-theoretic reduction to the
 radial and lateral laws. Truth check TRUE (notes/fp-gaps/CHATGPT-idla-new-frozen-truth-2306.md, section 1).
+Truth check TRUE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md, table row): DMS arXiv:1409.7055v4 pp. 74-75 Remark 4.4 and p. 79 Lemma 4.9, Definition 4.10.
 Used by: coneCanonicalFactor_proved (MatedCRT/FirstPass/S2i.lean). -/
 def ConeCircleLawUniqueStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 →
@@ -40,6 +41,7 @@ of the field; Duplantier-Sheffield, "Liouville quantum gravity and KPZ" (arXiv:0
 Proposition 3.1 (p. 17). The paper's cone is Definition 2.1 (paper/idla_mated_crt-corrected.tex, lines 427-439). Not a
 verbatim numbered theorem: the standard Borel realization is an additional construction. Truth check TRUE
 (notes/fp-gaps/CHATGPT-idla-new-frozen-truth-2306.md, section 2).
+Truth check TRUE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md, table row): DMS arXiv:1409.7055v4 p. 79 Definition 4.10; DS arXiv:0808.1560v2 Propositions 1.1 and 3.1.
 Used by: coneCanonicalFactor_proved (MatedCRT/FirstPass/S2i.lean). -/
 def ConeReferenceExistsStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 →
