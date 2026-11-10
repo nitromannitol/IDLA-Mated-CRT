@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.S4S6c.HoneSetup68
 import MatedCRT.FirstPass.S4S6c.WindowStart68
+import MatedCRT.FirstPass.S4S6c.HVolCutoff68
 
 /-!
 # Discharge of the cap-radius input and of the leaf binder `hL68` (z12, fp-S4S6c-setup-239)
@@ -265,6 +266,27 @@ theorem hmesh_local_of_cellSize_vertices {Ω : Type} [MeasurableSpace Ω] (S : M
       ∀ q ∈ cell ε (S.η ω) k, dist p q ≤ dyadicD r / 100 :=
   fun k hk => hmesh_local_of_cellSize S hω₀ hκ hε₁1 hcut hε hεε₁ ω hω r hr hrε k hk
 
+/-- **Almost-sure mesh bound on dyadic scales** (`hmesh_ae_dyadic_of_cellSize`). If the cell-size event holds with
+polynomially high probability as `ε → 0` at mesh radius `(1+ρ)/2` (`HarmonicBalls.PolyHighProb`; the input
+`CellSizeEstimateStmt` of Draft Lemma 2.8 gives it), then almost surely, for all large `m`, the localized mesh bound holds
+at the scale `ε = 2^{-m}` for every radius `r` with `10 ε^{ω₀} ≤ r`. The Borel-Cantelli step is
+`Lemma68Cutoff.ae_eventually_dyadic_of_polyHighProb`. The scale is dyadic: a fixed-`ε` almost-sure statement is not
+available from `PolyHighProb`. -/
+theorem hmesh_ae_dyadic_of_cellSize {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) {γ ζ ρ ω₀ : ℝ}
+    (hω₀ : 0 < ω₀) (hκ : 2 * ω₀ < 2 / (2 + γ) ^ 2 - ζ)
+    (hP : HarmonicBalls.PolyHighProb S.P (cellSizeEvent68 S γ ζ ((1 + ρ) / 2))) :
+    ∀ᵐ ω ∂S.P, ∃ N : ℕ, ∀ m : ℕ, N ≤ m → ∀ r : ℝ, 0 < r → 10 * ((1 / 2 : ℝ) ^ m) ^ ω₀ ≤ r →
+      CellDiamLe ((1 / 2 : ℝ) ^ m) (S.η ω) (dyadicD r / 100) (ball 0 ((1 + ρ) / 2)) := by
+  obtain ⟨ε₁, hε₁, hloc⟩ := hmesh_local_of_cellSize_cutoff (ρ := ρ) S hω₀ hκ
+  obtain ⟨n₀, hn₀⟩ := exists_pow_lt_of_lt_one hε₁ (by norm_num : (1 / 2 : ℝ) < 1)
+  filter_upwards [Lemma68Cutoff.ae_eventually_dyadic_of_polyHighProb hP] with ω hω
+  obtain ⟨N₁, hN₁⟩ := hω
+  refine ⟨max n₀ N₁, fun m hm r hr hrε => ?_⟩
+  have hle : (1 / 2 : ℝ) ^ m ≤ (1 / 2 : ℝ) ^ n₀ :=
+    pow_le_pow_of_le_one (by norm_num) (by norm_num) ((le_max_left _ _).trans hm)
+  exact hloc ((1 / 2 : ℝ) ^ m) (by positivity) (hle.trans_lt hn₀).le ω
+    (hN₁ m ((le_max_right _ _).trans hm)) r hr hrε
+
 end Lemma68HoneSetup239
 end MatedCRT
 
@@ -278,3 +300,4 @@ end MatedCRT
 #print axioms MatedCRT.Lemma68HoneSetup239.hmesh_local_of_cellSize
 #print axioms MatedCRT.Lemma68HoneSetup239.hmesh_local_of_cellSize_cutoff
 #print axioms MatedCRT.Lemma68HoneSetup239.hmesh_local_of_cellSize_vertices
+#print axioms MatedCRT.Lemma68HoneSetup239.hmesh_ae_dyadic_of_cellSize
