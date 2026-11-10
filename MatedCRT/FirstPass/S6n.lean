@@ -271,6 +271,186 @@ theorem infDist_mem_Ioo_of_window {K H : Set ℂ} {x0 xj y u : ℂ} {r d s : ℝ
   have h' := abs_le.1 h
   constructor <;> linarith [h'.1, h'.2, hx'.1, hx'.2]
 
+/-! ### (C5) from the admissibility bounds: the cell `H_a` meets every level `t ∈ [d_a, M_a]`
+
+The write-up (line 689) takes `K = Θ̄`, the closure of the union of the cells of the cluster `Θ`. The
+cell distances `d_k` and `M_k` of the write-up (3)–(4) are `Lemma68Geometry.cellDist` and `cellDistMax`,
+the infima and suprema of the rational approximations `pointDist`; they equal the infimum and supremum of
+`dist(·,K)` on the cell, and the intermediate value property on the connected cell gives the level point. -/
+
+/-- The cluster set `K = Θ̄` of the write-up (line 689): the closure of the union of the cells of `Θ`. -/
+noncomputable def clusterK (ε : ℝ) (η : ℝ → ℂ) (Θ : Finset ℤ) : Set ℂ :=
+  closure (fillCells ε η ↑Θ)
+
+/-- The rational points `η q`, `q ∈ ℚ ∩ H_w`, `w ∈ Θ`: the dense set behind `pointDist`. -/
+def ratSet (ε : ℝ) (η : ℝ → ℂ) (Θ : Finset ℤ) : Set ℂ :=
+  {y | ∃ w ∈ Θ, ∃ q ∈ Lemma68Geometry.ratInt ε w, η (q : ℝ) = y}
+
+theorem cell_isCompact {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (k : ℤ) :
+    IsCompact (cell ε η k) :=
+  isCompact_Icc.image hη
+
+theorem vertexPoint_mem_cell {ε : ℝ} {η : ℝ → ℂ} (hε : 0 ≤ ε) (k : ℤ) :
+    vertexPoint ε η k ∈ cell ε η k :=
+  ⟨ε * k, ⟨mul_le_mul_of_nonneg_left (by linarith) hε, le_rfl⟩, rfl⟩
+
+/-- `ℚ ∩ [a, b]` is dense in `[a, b]` for `a < b`. -/
+theorem mem_closure_ratInt_image {a b t : ℝ} (hab : a < b) (ht : t ∈ Icc a b) :
+    t ∈ closure (((↑) : ℚ → ℝ) '' {q : ℚ | (q : ℝ) ∈ Icc a b}) := by
+  rw [Metric.mem_closure_iff]
+  intro e he
+  have h1 : max a (t - e) < min b (t + e) :=
+    max_lt (lt_min hab (by linarith [ht.1])) (lt_min (by linarith [ht.2]) (by linarith))
+  obtain ⟨q, hq1, hq2⟩ := exists_rat_btwn h1
+  have hq1' : a < (q : ℝ) := lt_of_le_of_lt (le_max_left _ _) hq1
+  have hq1'' : t - e < (q : ℝ) := lt_of_le_of_lt (le_max_right _ _) hq1
+  have hq2' : (q : ℝ) < b := lt_of_lt_of_le hq2 (min_le_left _ _)
+  have hq2'' : (q : ℝ) < t + e := lt_of_lt_of_le hq2 (min_le_right _ _)
+  refine ⟨(q : ℝ), ⟨q, ⟨hq1'.le, hq2'.le⟩, rfl⟩, ?_⟩
+  rw [Real.dist_eq, abs_sub_lt_iff]
+  constructor <;> linarith
+
+theorem pointDist_eq_infEDist (ε : ℝ) (η : ℝ → ℂ) (Θ : Finset ℤ) (q : ℚ) :
+    Lemma68Geometry.pointDist ε η Θ q = infEDist (η q) (ratSet ε η Θ) := by
+  unfold Lemma68Geometry.pointDist
+  apply le_antisymm
+  · refine le_infEDist.2 ?_
+    rintro y ⟨w, hw, t, ht, rfl⟩
+    exact le_trans (iInf_le _ (⟨w, hw⟩ : Θ)) (iInf_le _ (⟨t, ht⟩ : Lemma68Geometry.ratInt ε w))
+  · refine le_iInf fun w => le_iInf fun t => infEDist_le_edist_of_mem ?_
+    exact ⟨w.1, w.2, t.1, t.2, rfl⟩
+
+theorem closure_ratSet_eq {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < ε) (hη : Continuous η) (Θ : Finset ℤ) :
+    closure (ratSet ε η Θ) = clusterK ε η Θ := by
+  apply le_antisymm
+  · unfold clusterK
+    apply closure_minimal ?_ isClosed_closure
+    rintro y ⟨w, hw, t, ht, rfl⟩
+    apply subset_closure
+    refine mem_iUnion₂.2 ⟨w, hw, ?_⟩
+    exact ⟨(t : ℝ), ht, rfl⟩
+  · unfold clusterK
+    apply closure_minimal ?_ isClosed_closure
+    intro x hx
+    obtain ⟨k, hk, hxk⟩ := mem_iUnion₂.1 hx
+    obtain ⟨s, hs, rfl⟩ := hxk
+    have hab : ε * ((k : ℝ) - 1) < ε * k := mul_lt_mul_of_pos_left (by linarith) hε
+    have hcl := mem_closure_ratInt_image hab hs
+    have hsub : η '' ((((↑) : ℚ → ℝ) '' {q : ℚ | (q : ℝ) ∈ Icc (ε * ((k : ℝ) - 1)) (ε * k)})) ⊆
+        ratSet ε η Θ := by
+      rintro _ ⟨_, ⟨q, hq, rfl⟩, rfl⟩
+      exact ⟨k, hk, q, hq, rfl⟩
+    exact closure_mono hsub (image_closure_subset_closure_image hη ⟨s, hcl, rfl⟩)
+
+theorem clusterK_eq_fillCells {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (Θ : Finset ℤ) :
+    clusterK ε η Θ = fillCells ε η ↑Θ := by
+  unfold clusterK
+  exact (Θ.finite_toSet.isCompact_biUnion fun k _ => cell_isCompact hη k).isClosed.closure_eq
+
+theorem clusterK_isCompact {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (Θ : Finset ℤ) :
+    IsCompact (clusterK ε η Θ) := by
+  rw [clusterK_eq_fillCells hη]
+  exact Θ.finite_toSet.isCompact_biUnion fun k _ => cell_isCompact hη k
+
+theorem clusterK_nonempty {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < ε) {Θ : Finset ℤ} (hΘ : Θ.Nonempty) :
+    (clusterK ε η Θ).Nonempty := by
+  obtain ⟨w, hw⟩ := hΘ
+  exact ⟨vertexPoint ε η w, subset_closure (mem_iUnion₂.2 ⟨w, hw, vertexPoint_mem_cell hε.le w⟩)⟩
+
+/-- `pointDist` is the distance to the cluster `K = Θ̄`, as an extended real. -/
+theorem pointDist_eq_ofReal_infDist {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < ε) (hη : Continuous η)
+    {Θ : Finset ℤ} (hΘ : Θ.Nonempty) (q : ℚ) :
+    Lemma68Geometry.pointDist ε η Θ q = ENNReal.ofReal (infDist (η q) (clusterK ε η Θ)) := by
+  have hne := clusterK_nonempty hε hΘ (η := η)
+  rw [pointDist_eq_infEDist, ← infEDist_closure, closure_ratSet_eq hε hη]
+  unfold Metric.infDist
+  rw [ENNReal.ofReal_toReal (infEDist_ne_top hne)]
+
+/-- (C5, from the admissibility bounds) If `d_a ≤ t ≤ M_a`, the cell `H_a` meets the level set
+`{x : dist(x,K) = t}` (intermediate value on the connected compact cell). -/
+theorem exists_mem_cell_infDist_eq {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < ε) (hη : Continuous η)
+    {Θ : Finset ℤ} (hΘ : Θ.Nonempty) {a : ℤ} {t : ℝ}
+    (hdd : Lemma68Admissible.dd ε η Θ a ≤ t) (htM : t ≤ Lemma68Admissible.ddMax ε η Θ a) :
+    ∃ y ∈ cell ε η a, infDist y (clusterK ε η Θ) = t := by
+  have hf : Continuous fun s : ℝ => infDist (η s) (clusterK ε η Θ) :=
+    (Metric.continuous_infDist_pt _).comp hη
+  have hab : ε * ((a : ℝ) - 1) < ε * a := mul_lt_mul_of_pos_left (by linarith) hε
+  have hTc : IsCompact ((fun s : ℝ => infDist (η s) (clusterK ε η Θ)) ''
+      Icc (ε * ((a : ℝ) - 1)) (ε * a)) := isCompact_Icc.image hf
+  have hTconn : IsPreconnected ((fun s : ℝ => infDist (η s) (clusterK ε η Θ)) ''
+      Icc (ε * ((a : ℝ) - 1)) (ε * a)) := isPreconnected_Icc.image _ hf.continuousOn
+  have hTne : ((fun s : ℝ => infDist (η s) (clusterK ε η Θ)) ''
+      Icc (ε * ((a : ℝ) - 1)) (ε * a)).Nonempty := (nonempty_Icc.2 hab.le).image _
+  have hsInf := hTc.sInf_mem hTne
+  have hsSup := hTc.sSup_mem hTne
+  have hbdd := hTc.bddBelow
+  have hbddA := hTc.bddAbove
+  have hnn : ∀ x ∈ ((fun s : ℝ => infDist (η s) (clusterK ε η Θ)) ''
+      Icc (ε * ((a : ℝ) - 1)) (ε * a)), 0 ≤ x := by
+    rintro x ⟨s, -, rfl⟩
+    exact infDist_nonneg
+  obtain ⟨q0, hq0a, hq0b⟩ := exists_rat_btwn hab
+  have hq0 : q0 ∈ Lemma68Geometry.ratInt ε a := ⟨hq0a.le, hq0b.le⟩
+  have hcd : Lemma68Geometry.cellDist ε η Θ a ≠ ⊤ := by
+    refine ne_top_of_le_ne_top (b := Lemma68Geometry.pointDist ε η Θ q0) ?_ ?_
+    · rw [pointDist_eq_ofReal_infDist hε hη hΘ]
+      exact ENNReal.ofReal_ne_top
+    · exact iInf_le (fun q : Lemma68Geometry.ratInt ε a => Lemma68Geometry.pointDist ε η Θ (q : ℚ))
+        ⟨q0, hq0⟩
+  have h1 : ENNReal.ofReal (sInf ((fun s : ℝ => infDist (η s) (clusterK ε η Θ)) ''
+      Icc (ε * ((a : ℝ) - 1)) (ε * a))) ≤ Lemma68Geometry.cellDist ε η Θ a := by
+    unfold Lemma68Geometry.cellDist
+    refine le_iInf fun q => ?_
+    rw [pointDist_eq_ofReal_infDist hε hη hΘ]
+    apply ENNReal.ofReal_le_ofReal
+    exact csInf_le hbdd ⟨(q : ℝ), q.2, rfl⟩
+  have h2 : Lemma68Geometry.cellDistMax ε η Θ a ≤ ENNReal.ofReal (sSup ((fun s : ℝ =>
+      infDist (η s) (clusterK ε η Θ)) '' Icc (ε * ((a : ℝ) - 1)) (ε * a))) := by
+    unfold Lemma68Geometry.cellDistMax
+    refine iSup_le fun q => ?_
+    rw [pointDist_eq_ofReal_infDist hε hη hΘ]
+    apply ENNReal.ofReal_le_ofReal
+    exact le_csSup hbddA ⟨(q : ℝ), q.2, rfl⟩
+  have hlo : sInf ((fun s : ℝ => infDist (η s) (clusterK ε η Θ)) ''
+      Icc (ε * ((a : ℝ) - 1)) (ε * a)) ≤ t := by
+    have h := ENNReal.toReal_mono hcd h1
+    rw [ENNReal.toReal_ofReal (hnn _ hsInf)] at h
+    unfold Lemma68Admissible.dd at hdd
+    linarith
+  have hhi : t ≤ sSup ((fun s : ℝ => infDist (η s) (clusterK ε η Θ)) ''
+      Icc (ε * ((a : ℝ) - 1)) (ε * a)) := by
+    have h := ENNReal.toReal_mono ENNReal.ofReal_ne_top h2
+    rw [ENNReal.toReal_ofReal (hnn _ hsSup)] at h
+    unfold Lemma68Admissible.ddMax at htM
+    linarith
+  obtain ⟨s, hs, hsv⟩ := (isPreconnected_Icc.image _ hf.continuousOn).Icc_subset hsInf hsSup
+    ⟨hlo, hhi⟩
+  exact ⟨η s, ⟨s, hs, rfl⟩, hsv⟩
+
+/-- (C5) The vertex `a` with `2 d_a ≤ r ≤ 2 M_a` (the admissibility clause (12) at `x = r`) satisfies
+`|dist(η(a), K) − r/2| ≤ d`, given the cell-size bound `d` on the cells meeting `B_ρ`. -/
+theorem vertex_sub_half_of_admissible {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < ε) (hη : Continuous η)
+    {Θ : Finset ℤ} (hΘ : Θ.Nonempty) {ρ d r : ℝ} {a : ℤ}
+    (hKρ : clusterK ε η Θ ⊆ ball 0 (ρ / 2)) (hr : r < ρ)
+    (hdiam : ∀ v : ℤ, (cell ε η v ∩ ball 0 ρ).Nonempty →
+      ∀ u ∈ cell ε η v, ∀ w ∈ cell ε η v, dist u w ≤ d)
+    (hdd : 2 * Lemma68Admissible.dd ε η Θ a ≤ r) (hddM : r ≤ 2 * Lemma68Admissible.ddMax ε η Θ a) :
+    |infDist (vertexPoint ε η a) (clusterK ε η Θ) - r / 2| ≤ d := by
+  obtain ⟨y, hy, hyt⟩ := exists_mem_cell_infDist_eq hε hη hΘ (a := a) (t := r / 2) (by linarith) (by linarith)
+  have hyball : y ∈ ball (0 : ℂ) ρ :=
+    mem_ball_zero_iff.2 (norm_lt_of_infDist_eq (clusterK_isCompact hη Θ) (clusterK_nonempty hε hΘ)
+      hKρ hyt (by linarith))
+  exact abs_infDist_sub_le_of_mem_level (hdiam a ⟨y, hy, hyball⟩) (vertexPoint_mem_cell hε.le a)
+    hy hyt
+
+/-! ### The schedule's centres (write-up C1, C2 for the concrete schedule) -/
+
+/-- (C2) for the concrete schedule: `|z_j − η(X_{T_j})| < δ/100`, with `z_j = cfgCentre` and `δ = Δ(p,r)`. -/
+theorem cfgCentre_dist_lt {ε : ℝ} {η : ℝ → ℂ} {p r : ℝ} (y : ℤ) :
+    dist (Lemma68Concrete.cfgCentre ε η p r y) (vertexPoint ε η y) <
+      Lemma68Scales.Delta p r / 100 :=
+  gridRound_dist_lt (by linarith [Lemma68Radius.delta_pos p r]) (vertexPoint ε η y)
+
 end Lemma68C12Geom
 
 end MatedCRT
