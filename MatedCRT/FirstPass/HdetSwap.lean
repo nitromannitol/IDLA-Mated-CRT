@@ -70,7 +70,20 @@ theorem closed_3_4_hdetSwap {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure 
     (MatedCRT.TruncatedLaws.truncatedQuenchedLawsFixedTime_of_inputs_closure hC.randomWalkToLBM
       hC.cellSizeEstimate hC.mepsScaling hexit hcl)
 
+/-- Lemma 3.3 for a certified reference model `hC` (`closed_3_3` in `FirstPass/Closure/Section3.lean`), with its
+Lemma 3.4 input `closed_3_4` replaced by `closed_3_4_hdetSwap`. It is consumed by the 5.1 closure
+`closed_5_1_canon_noCell_derived` (`FirstPass/S5qd.lean:171`), so it is on the same counted chain. The conclusion is
+unchanged. -/
+theorem closed_3_3_hdetSwap {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
+    (hC : CertifiedReferenceModel ν 𝒮) (h27 : VolumeGrowthStmt)
+    (hexit : BrownianOutwardExcursionAtExitStep) (hcl : MatedCRT.TruncatedLaws.BLEnvelopeClosureInput 𝒮) :
+    UniformConvergenceGreenKernelStmt 𝒮 :=
+  firstPass_3_3 (𝒮 := 𝒮) (h34 := closed_3_4_hdetSwap ν hC h27 hexit hcl) hC.degreeMeasureConvergence
+    hC.greenKernelUpperBound hC.cellSizeEstimate h27 hC.exitTimeUpperBound hC.mepsScaling
+    hC.frozenDiscreteHolderContinuityCorrected
+
 end MatedCRT
 
 #print axioms MatedCRT.firstPass_4_2_of_wholeplane_model_hdetSwap
 #print axioms MatedCRT.closed_3_4_hdetSwap
+#print axioms MatedCRT.closed_3_3_hdetSwap
