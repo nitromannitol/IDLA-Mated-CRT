@@ -86,6 +86,7 @@ The printed proof inferred the strict gap eq:strictly-above-in-interior from con
 
 ## [C21] Proposition 5.1: application of Lemma 5.2 (author-approved 2026-11-10)
 The printed proof applied Lemma 5.2 without verifying its hypotheses for the chosen sets (G1a, G1b), used the full sandpile cluster where coverage by the strict positivity set is needed (G1c), and did not justify the stated stopping domain. The proof is replaced by one direct argument: O_1 = cells of B_{delta}^-(Lambda_t), I_eps = Lambda_t^eps intersected with the cells of Lambda_t, the surplus u^eps >= c/eps on O_1 from the strict gap of [C20] and the convergence results, a maximum-principle comparison giving the mean-value inequality on I_eps, the Green-kernel lower bound for the second hypothesis, and the vertexwise proof of Lemma 5.2 (after Lawler-Bramson-Griffeath, Section 3) on the origin component; monotonicity in the stopping domain gives both conclusions. Statement unchanged; supersedes the in-proof comment of [C4]. Sources: notes/fp-gaps/CHATGPT-5-1-gaps-referee.md (repairs), notes/fp-gaps/CHATGPT-idla-corrections-4-2-5-1.md (text).
+Independent referee check (notes/fp-gaps/CHATGPT-idla-C20-C21-referee.md): [C20] and [C21] correct and complete; two sentences of surrounding exposition (before lemma:mean-value-ineq and after lemma:L-lower-bound) updated to the new organization (editorial).
 
 ## Readings (not corrections of the paper; line numbers of the corrected draft)
 
