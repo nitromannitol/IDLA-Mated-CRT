@@ -91,9 +91,85 @@ theorem hmeshExit_of_cellSize {γ ζ ρ ω₀ α R r ε : ℝ} {Ω : Type} [Meas
   intro k hk p hp q hq
   exact hmesh k (hk.mono (inter_subset_inter_right _ hsub)) p hp q hq
 
+/-- The cell entry at a general window constant: `ε ≤ c₀W^{1/d}` with `0 < c₀W` and `0 < d` gives `ε^d ≤ c₀W`. -/
+lemma rpow_le_c0W_of_le {ε c0W d : ℝ} (hε : 0 < ε) (hc : 0 < c0W) (hd : 0 < d) (hle : ε ≤ c0W ^ (1 / d)) :
+    ε ^ d ≤ c0W := by
+  calc ε ^ d ≤ (c0W ^ (1 / d)) ^ d := Real.rpow_le_rpow hε.le hle hd.le
+    _ = c0W := by rw [← Real.rpow_mul hc.le, one_div_mul_cancel hd.ne', Real.rpow_one]
+
+/-- **The exit-cell mesh bound with a general window constant (fp-S4S6c-meshexit-cg, z10).** `hmeshExit_of_cellSize` with
+the Eps threshold `shellEps0Z` (its constant `shellC068`) replaced by the threshold `min (shellEps0CG γ α ω₀ CG) (c0W^(1/(κ-2ω₀)))`,
+which is `shellEps0ZCG γ α ω₀ ζ CG` when `c0W = shellC0 CG`. Hypotheses on the window constant that the proof uses:
+`0 < c0W` (sign in `mul_le_mul`) and `c0W ≤ 1/100` (the cut `ε^κ ≤ 1/100` of `hmesh_local_of_cellSize`). The Green constant
+enters only through `0 ≤ CG` (for `ε ≤ 1`: `shellEps0CG ≤ exp(-2CG)/2 ≤ 1`). The sparsity exponent does not occur. -/
+theorem hmeshExit_of_cellSize_g {γ ζ ρ ω₀ α R r ε CG c0W : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    (ω : Ω) (hω₀ : 0 < ω₀) (hκ : 2 * ω₀ < 2 / (2 + γ) ^ 2 - ζ) (hζ1 : ζ < 1 / 2)
+    (hCG : 0 ≤ CG) (hc0W : 0 < c0W) (hc0W1 : c0W ≤ 1 / 100)
+    (hε : 0 < ε) (hεS : ε ≤ min (shellEps0CG γ α ω₀ CG) (c0W ^ (1 / (2 / (2 + γ) ^ 2 - ζ - 2 * ω₀))))
+    (hRcut : ∀ r' : ℝ, 0 < r' → r' ≤ R → (dyadicD r') ^ shortExp ζ < rhoCell68 ρ - ρ)
+    (hrR : r ≤ R) (hrε : 10 * ε ^ ω₀ ≤ r)
+    (hω : ω ∈ cellSizeEvent68 S γ ζ (rhoCell68 ρ) ε) :
+    CellDiamLe ε (S.η ω) (dyadicD r / 100) (ball (0 : ℂ) (ρ + dyadicD r / 100)) := by
+  have hr : 0 < r := lt_of_lt_of_le (mul_pos (by norm_num) (Real.rpow_pos_of_pos hε _)) hrε
+  have hd : 0 < 2 / (2 + γ) ^ 2 - ζ - 2 * ω₀ := by linarith
+  have hε1 : ε ≤ 1 := by
+    have h1 : shellEps0CG γ α ω₀ CG ≤ Real.exp (-(2 * CG)) / 2 := by
+      unfold shellEps0CG; exact min_le_left _ _
+    have h2 : Real.exp (-(2 * CG)) ≤ 1 := Real.exp_le_one_iff.mpr (by linarith)
+    have h3 : shellEps0CG γ α ω₀ CG ≤ 1 := by linarith
+    exact (hεS.trans (min_le_left _ _)).trans h3
+  have hcut1 : ε ^ (2 / (2 + γ) ^ 2 - ζ - 2 * ω₀) ≤ c0W :=
+    rpow_le_c0W_of_le hε hc0W hd (hεS.trans (min_le_right _ _))
+  have hsplit : ε ^ (2 / (2 + γ) ^ 2 - ζ) = ε ^ (2 / (2 + γ) ^ 2 - ζ - 2 * ω₀) * ε ^ (2 * ω₀) := by
+    rw [← Real.rpow_add hε]; congr 1; ring
+  have hcut2 : ε ^ (2 * ω₀) ≤ 1 := Real.rpow_le_one hε.le hε1 (by linarith)
+  have hκ100 : ε ^ (2 / (2 + γ) ^ 2 - ζ) ≤ 1 / 100 := by
+    rw [hsplit]
+    calc ε ^ (2 / (2 + γ) ^ 2 - ζ - 2 * ω₀) * ε ^ (2 * ω₀) ≤ c0W * 1 :=
+          mul_le_mul hcut1 hcut2 (Real.rpow_nonneg hε.le _) hc0W.le
+      _ ≤ 1 / 100 := by rw [mul_one]; exact hc0W1
+  have hmesh := hmesh_local_of_cellSize (ρ := ρ) S hω₀ hκ hε1 hκ100 hε le_rfl ω hω r hr hrε
+  have hshort : dyadicD r ≤ dyadicD r ^ shortExp ζ :=
+    le_rpow_short68 (dyadicD_pos r) (dyadicD_le_one r) (by unfold shortExp; linarith)
+  have hcutR := hRcut r hr hrR
+  have hgap : rhoCell68 ρ - ρ = (1 - ρ) / 2 := by unfold rhoCell68; ring
+  have hsmall : dyadicD r / 100 ≤ (1 - ρ) / 2 := by
+    have := dyadicD_pos r
+    linarith
+  have hsub : ball (0 : ℂ) (ρ + dyadicD r / 100) ⊆ ball (0 : ℂ) ((1 + ρ) / 2) :=
+    ball_subset_ball (by linarith)
+  unfold CellDiamLe at hmesh ⊢
+  intro k hk p hp q hq
+  exact hmesh k (hk.mono (inter_subset_inter_right _ hsub)) p hp q hq
+
+/-- `shellC0 CG ≤ 1/100` for `1 ≤ CG`: `shellC0 CG = exp(-2CG)/32 ≤ exp(-2)/32 = shellC068 ≤ 1/100`. -/
+lemma shellC0_le_hundredth {CG : ℝ} (hCG : 1 ≤ CG) : Lemma68ConstOrder.shellC0 CG ≤ 1 / 100 := by
+  have h1 : Real.exp (-(2 * CG)) ≤ Real.exp (-2) := Real.exp_le_exp.mpr (by linarith)
+  have h2 := shellC068_le_hundredth
+  unfold shellC068 at h2
+  unfold Lemma68ConstOrder.shellC0
+  linarith
+
+/-- **The exit-cell mesh bound at the CG leaf (fp-S4S6c-meshexit-cg, z10).** `hmeshExit_of_cellSize_g` at the exact threshold
+`shellEps0ZCG γ α ω₀ ζ CG` (Guard68S10.lean, the threshold of the z5 CG leaf thresholds) and the window constant
+`c0W = shellC0 CG`, for `1 ≤ CG`. -/
+theorem hmeshExit_of_cellSize_CG {γ ζ ρ ω₀ α R r ε CG : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    (ω : Ω) (hω₀ : 0 < ω₀) (hκ : 2 * ω₀ < 2 / (2 + γ) ^ 2 - ζ) (hζ1 : ζ < 1 / 2) (hCG : 1 ≤ CG)
+    (hε : 0 < ε) (hεS : ε ≤ shellEps0ZCG γ α ω₀ ζ CG)
+    (hRcut : ∀ r' : ℝ, 0 < r' → r' ≤ R → (dyadicD r') ^ shortExp ζ < rhoCell68 ρ - ρ)
+    (hrR : r ≤ R) (hrε : 10 * ε ^ ω₀ ≤ r)
+    (hω : ω ∈ cellSizeEvent68 S γ ζ (rhoCell68 ρ) ε) :
+    CellDiamLe ε (S.η ω) (dyadicD r / 100) (ball (0 : ℂ) (ρ + dyadicD r / 100)) :=
+  hmeshExit_of_cellSize_g (c0W := Lemma68ConstOrder.shellC0 CG) S ω hω₀ hκ hζ1 (by linarith)
+    (shellC0_bounds CG (by linarith)).1 (shellC0_le_hundredth hCG) hε hεS hRcut hrR hrε hω
+
 end Lemma68MeshExitPw
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68MeshExitPw.shellEps0Z_le_one
 #print axioms MatedCRT.Lemma68MeshExitPw.shellC068_le_hundredth
 #print axioms MatedCRT.Lemma68MeshExitPw.hmeshExit_of_cellSize
+#print axioms MatedCRT.Lemma68MeshExitPw.rpow_le_c0W_of_le
+#print axioms MatedCRT.Lemma68MeshExitPw.hmeshExit_of_cellSize_g
+#print axioms MatedCRT.Lemma68MeshExitPw.shellC0_le_hundredth
+#print axioms MatedCRT.Lemma68MeshExitPw.hmeshExit_of_cellSize_CG
