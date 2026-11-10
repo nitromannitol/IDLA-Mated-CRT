@@ -1,5 +1,8 @@
 import MatedCRT.FirstPass.S4S6c.ShellCoreCG68
 import MatedCRT.FirstPass.S4S6c.ShellHoneInst68
+import MatedCRT.FirstPass.S4S6c.CGResCount68
+import MatedCRT.FirstPass.S4S6c.CGResRr68
+import MatedCRT.FirstPass.S4S6c.CGResX1MomS68
 
 /-!
 # The a.s. counting swap of the CG pointwise producer (fp-S4S6c-cgrc-swap, z5)
@@ -59,6 +62,28 @@ theorem shellOneTestOrderAeCGRC_of_res {𝒮 : SpaceFillingSLEModel} (hVG : Volu
     hηc hμN hμF hdg hadjA hadjAll hcutA (fun k hk => hω k hk)
 
 #print axioms MatedCRT.Lemma68ShellOneCGRC.shellOneTestOrderAeCGRC_of_res
+
+/-- **The counting swap with the landed residual wrappers (fp-S4S6c-cgrc-swap, step 3, partial).**
+`ShellOneTestOrderAeCGRCStmt` from `shellOneTestOrderAeCGRC_of_res`, with three residuals discharged by their committed
+wrappers: `ShellCGResRr` (`shellCGResRr_holds`, CGResRr68.lean), `ShellCGResCountGood` (`shellCGResCountGood_holds`,
+CGResCount68.lean) and `ShellCGResX1` (`shellCGResX1_holds`, CGResX1MomS68.lean). The binders that remain are the residual
+Props without a committed producer: `ShellCGResEl`, `ShellCGResStopFin` (z10), `ShellCGResLoc` (z1), `ShellCGResVolC`,
+`ShellCGResVolY` (z9), `ShellCGResGreen`, `ShellCGResWalk` (z11), `ShellCGResSel` (z10), `ShellCGResMomS` (q3) and the temporary
+`ShellCGResPos` (q4). The conditional wrappers `shellCGResGreen_holds`, `shellCGResWalk_holds`, `shellCGResSel_of_hCCG` and
+`shellCGResMomS_holds_of_exitRhoCell` are not used: their extra inputs (`hGreenE`, the G1 of request 75a, `hCCG : C ≤ CG`,
+the named premise `ShellCGExitRhoCell`) are open. -/
+theorem shellOneTestOrderAeCGRC_holds {𝒮 : SpaceFillingSLEModel} (hVG : VolumeGrowthStmt)
+    (hEl : ShellCGResEl 𝒮) (hstopFin : ShellCGResStopFin 𝒮)
+    (hShellLoc : ShellCGResLoc 𝒮) (hVolC : ShellCGResVolC 𝒮) (hVolY : ShellCGResVolY 𝒮)
+    (hGreen : ShellCGResGreen 𝒮) (hsel : ShellCGResSel 𝒮)
+    (hmomS : ShellCGResMomS 𝒮) (hWalk : ShellCGResWalk 𝒮) (hPos : ShellCGResPos 𝒮) :
+    ShellOneTestOrderAeCGRCStmt 𝒮 :=
+  shellOneTestOrderAeCGRC_of_res hVG hShellLoc hEl hstopFin
+    (MatedCRT.Lemma68CGResRr.shellCGResRr_holds 𝒮) hVolC hVolY hGreen
+    (MatedCRT.Lemma68CGResCount.shellCGResCountGood_holds 𝒮) hsel
+    (MatedCRT.Lemma68CGResX1MomS.shellCGResX1_holds 𝒮) hmomS hWalk hPos
+
+#print axioms MatedCRT.Lemma68ShellOneCGRC.shellOneTestOrderAeCGRC_holds
 
 end Lemma68ShellOneCGRC
 end MatedCRT
