@@ -582,6 +582,11 @@ theorem uniformConstantOrderLowerBoundEps_of_chain (𝒮 : SpaceFillingSLEModel)
 
 end MatedCRT
 
+#print axioms MatedCRT.Lemma68Guard10.shellEps0_pos
+#print axioms MatedCRT.Lemma68Guard10.exists_radius_cutoff_gap
+#print axioms MatedCRT.Lemma68Guard10.meshEventsEpsStmt_of_draft
+#print axioms MatedCRT.Lemma68Guard10.shellChainEpsStmt_of_shellChainStmt
+#print axioms MatedCRT.Lemma68Guard10.probTendsToOne_congr_small
 #print axioms MatedCRT.Lemma68Guard10.guardProbStmtEps_of_chainEps
 #print axioms MatedCRT.uniformConstantOrderLowerBoundEps_of_chain
 #print axioms MatedCRT.Lemma68Guard10.guardProbStmt_of_chain
