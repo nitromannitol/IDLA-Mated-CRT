@@ -10,7 +10,7 @@ Q2a steps 3-4 and Q4). Three changes with respect to the X chain:
 
 * The radius clause carries the volume guard `LICGRCY68.VolReady68 S γ ζ r ω` after `ω ∈ Ew (dyadicD r)`. At the guard
   assembly the radius bound is `dd ω = min R (min (dd₀ ω) ((tVol ω / (8 · 2^a))^(1/(1+ζ))))`, with `tVol` the
-  field-measurable volume cutoff `FieldVolCutoffStmt` (Codex Q2a step 5; q2's `VolCutoffField68.lean`, not yet landed).
+  field-measurable volume cutoff `FieldVolCutoffStmt` (Codex Q2a step 5; q2's `VolCutoffField68.lean:171`, derived from `VolumeGrowthStmt` in `Closed6x68Y.lean`).
 * A second Green exponent `ωG` with `2 * ω₀ < ωG` (`LICGRCY68` (75a)). The mesh exponent `ω₀` of
   `CountingMeshEventsHiStmt` is chosen with `4 * ω₀ ≤ ωG`, so that `greenLowEvent68_polyHighProb` (UniformEvents.lean:74)
   gives `PolyHighProb (greenLowEvent68 S ωG ρ CG)` with the same `CG` as at `ω₀`.
@@ -34,7 +34,7 @@ open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 
 /-- **Field-measurable volume cutoff (named input; Codex Q2a step 5).** For `γ ∈ (0,2)`, every valid model and every
 `ω` off a null set, there is a field-measurable radius `tVol ω > 0` below which every ball `B(z, δ)`, `z ∈ B(0, 1-δ)`,
-has mass at least `δ^b` with `b = (2+γ)²/2 + 1`. Discharged by q2's `VolCutoffField68.lean` from `VolumeGrowthStmt`. -/
+has mass at least `δ^b` with `b = (2+γ)²/2 + 1`. Discharged from `VolumeGrowthStmt` by q2's `VolCutoffField68.volume_lower_cutoff_fieldMeasurable_vr` (`Closed6x68Y.lean`). -/
 def FieldVolCutoffStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
     ∃ tVol : Ω → ℝ, Measurable[S.fieldSigma] tVol ∧ (∀ ω, 0 < tVol ω) ∧
