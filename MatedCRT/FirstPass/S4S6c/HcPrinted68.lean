@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.S4S6c.HcAssembly68
 import MatedCRT.FirstPass.S4S6c.ExitNull68
+import MatedCRT.FirstPass.S4S6c.SuccessiveExitStop
 
 /-!
 # First pass, Lemma 6.8: the one-test bound on the sphere band (q2, fp-S4S6c-envscaling-6-7-6-8)
@@ -50,6 +51,49 @@ theorem hfin_band {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m) (hcons
     ∀ᵐ x ∂srwLaw m y, vExitTime A x ≠ ⊤ := by
   rw [ae_iff]
   simpa using ExitNull68.exit_null_of_finite hlf hcons hA y
+
+open scoped Classical in
+/-- The test-window family of the trace argument: `bandWt Y W y = W` on the band `Y`, and `univ` off it (such centres
+are unavailable; their stay region is empty, `TailWindow68.stayInRegionOf_of_not_mem`). -/
+noncomputable def bandWt (Y W : Set ℤ) (y : ℤ) : Set ℤ := if y ∈ Y then W else univ
+
+open scoped Classical in
+/-- The stay-set family of the trace argument: `bandAof Y A y = A` on the band `Y`, and `∅` off it. -/
+noncomputable def bandAof (Y A : Set ℤ) (y : ℤ) : Set ℤ := if y ∈ Y then A else ∅
+
+theorem bandWt_of_mem {Y W : Set ℤ} {y : ℤ} (hy : y ∈ Y) : bandWt Y W y = W := by
+  unfold bandWt; simp [hy]
+
+theorem bandWt_of_not_mem {Y W : Set ℤ} {y : ℤ} (hy : y ∉ Y) : bandWt Y W y = univ := by
+  unfold bandWt; simp [hy]
+
+theorem bandAof_of_mem {Y A : Set ℤ} {y : ℤ} (hy : y ∈ Y) : bandAof Y A y = A := by
+  unfold bandAof; simp [hy]
+
+theorem bandAof_of_not_mem {Y A : Set ℤ} {y : ℤ} (hy : y ∉ Y) : bandAof Y A y = ∅ := by
+  unfold bandAof; simp [hy]
+
+/-- **One-test bound of the trace argument on the band.** With the band `Y = I(B_{4R/3}(z))`, the window
+`W = I(B_{2R}(z))` and the stay set `A`, the walk from a band vertex stays in `A` before leaving `W` with probability at
+most `c` (the `hc` input of `ConfigBound68.trace_half`, in the form `bandWt`/`bandAof`). -/
+theorem hc_band {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {A : Set ℤ} {d R ρ : ℝ} {z : ℂ} {P : ℤ → ℂ} {c : ℝ≥0∞}
+    (hconn : ∀ v, IsPreconnected (H v)) (hne : ∀ v, (H v).Nonempty) (hd : 0 ≤ d)
+    (hsm : ∀ v, (closure (H v) ∩ closedBall z (2 * R)).Nonempty →
+      ∀ x ∈ closure (H v), ∀ y' ∈ closure (H v), dist x y' ≤ d)
+    (hadj : ∀ u v, m u v ≠ 0 → (closure (H u) ∩ closure (H v)).Nonempty)
+    (hPb : ∀ b, P b ∈ H b) (hgeo : 4 * R / 3 + d + ρ + d < 2 * R) (hρ : d < ρ)
+    (hfin : ∀ y ∈ innerVertices H (ball z (4 * R / 3)),
+      ∀ᵐ x ∂srwLaw m y, vExitTime (innerVertices H (ball z (4 * R / 3))) x ≠ ⊤)
+    (hloc : ∀ b ∈ {b : ℤ | (closure (H b) ∩ Metric.sphere z (4 * R / 3)).Nonempty},
+      srwLaw m b (TestBound68.stayIn (fun b => innerVertices H (ball (P b) ρ)) A b) ≤ c) :
+    ∀ y ∈ innerVertices H (ball z (4 * R / 3)),
+      srwLaw m y (SuccessiveExitStop.stayInRegionOf
+        (bandWt (innerVertices H (ball z (4 * R / 3))) (innerVertices H (ball z (2 * R))))
+        (bandAof (innerVertices H (ball z (4 * R / 3))) A) y) ≤ c := by
+  intro y hy
+  have h := hc_of_band hconn hne hd hsm hadj hPb hgeo hρ hfin hloc y hy
+  simp only [SuccessiveExitStop.stayInRegionOf, bandWt_of_mem hy, bandAof_of_mem hy]
+  exact h
 
 end HcPrinted68
 
