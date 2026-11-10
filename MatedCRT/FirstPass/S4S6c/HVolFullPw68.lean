@@ -159,6 +159,100 @@ theorem hVolY_pw {γ ρ ζ C s₀ ε r t : ℝ} {Ω : Type} [MeasurableSpace Ω]
   have hR1 := hRs.mono fun x hx hpre => lt_of_le_of_lt (hx hpre) (lt_of_le_of_lt hda (show (1 : ℝ) < 4 by norm_num))
   exact hVolY_ae_pw hc0 hc0' hcut hR0 hRt hR1
 
+/-- **`hVolC_pw` with the sparsity coefficient as a parameter `s1` (`hVolC_pw_s1`).** The statement of `hVolC_pw` with
+`Lemma68Config.sparsityS1 γ` replaced by an arbitrary `s1 : ℝ` in every `FullAdmAt`. The proof only passes the guard
+`FullAdmAt s1` through the binders `hRr`, `hEl`, `hc` and uses no property of `s1`, so no hypothesis on `s1` is needed.
+Instantiate `s1 := Lemma68Config.sparsityS1 γ` to recover `hVolC_pw`. -/
+theorem hVolC_pw_s1 {γ ρ ζ C s₀ ε r t s1 : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    (K : Constants68 γ ρ) (ω : Ω) (i : Lemma68Config.Config68)
+    (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2) (hr0 : 0 < r) (hr1 : r ≤ 1) (ht : 0 < t)
+    (hc0 : 0 < K.c0) (hc0' : K.c0 ≤ 1 / 4)
+    (hrt : r ≤ (t / (8 * 2 ^ shortExp ζ)) ^ (1 / (1 + ζ)))
+    (hcut : ∀ δ : ℝ, 0 < δ → δ < t → ∀ z ∈ ball (0 : ℂ) (1 - δ), ENNReal.ofReal (δ ^ K.βm) ≤ S.μ ω (ball z δ))
+    (hRr : Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+        x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
+          r ^ 2 ≤ winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+              (dyadicD r ^ shortExp ζ) (dyadicD r) k x) ∧
+            winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+              (dyadicD r ^ shortExp ζ) (dyadicD r) k x) ≤ 1)
+    (hEl : Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+        x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
+          shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x ∈
+            shortEligible ρ (dyadicD r) (shortExp ζ))
+    (hc : Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+        x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
+          ‖vertexPoint ε (S.η ω) (x (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+              (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k x).toNat)‖ <
+            1 - winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+              (dyadicD r ^ shortExp ζ) (dyadicD r) k x) / 4) :
+    Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+        x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
+          ENNReal.ofReal ((K.c0 * winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+              (dyadicD r ^ shortExp ζ) (dyadicD r) k x)) ^ K.βm)
+            ≤ S.μ ω (ball (vertexPoint ε (S.η ω) (x (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+                (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k x).toNat))
+              (K.c0 * winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+                (dyadicD r ^ shortExp ζ) (dyadicD r) k x))) := by
+  intro hadm k hk
+  have ha : shortExp ζ ≤ 1 := by unfold shortExp; linarith
+  have hR0 := (hRr hadm k hk).mono fun x hx hpre => lt_of_lt_of_le (pow_pos hr0 2) (hx hpre).1
+  have hRs := (hEl hadm k hk).mono fun x hx hpre =>
+    (windowRfT_bounds S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) (dyadicD_pos r) (dyadicD_le_one r) ha ω
+      (hx hpre)).2
+  have hRt := hRs.mono fun x hx hpre =>
+    Lemma68Cutoff239.four_mul_lt_of_radius_cap rfl hζ0 ht hr0 (dyadicD_pos r)
+      (dyadicD_lt_two_mul_sq hr0 hr1) (hx hpre) hrt
+  exact (Lemma68Cutoff239.hVolC_hVolY_ae_of_cutoff hc0 hc0' ht hcut hR0 hRt (hc hadm k hk)).1
+
+/-- **`hVolY_pw` with the sparsity coefficient as a parameter `s1` (`hVolY_pw_s1`).** The statement of `hVolY_pw` with
+`Lemma68Config.sparsityS1 γ` replaced by an arbitrary `s1 : ℝ` in every `FullAdmAt`. As for `hVolC_pw_s1`, the proof
+uses no property of `s1`, so no hypothesis on `s1` is needed. Instantiate `s1 := Lemma68Config.sparsityS1 γ` to recover
+`hVolY_pw`. -/
+theorem hVolY_pw_s1 {γ ρ ζ C s₀ ε r t s1 : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    (K : Constants68 γ ρ) (ω : Ω) (i : Lemma68Config.Config68)
+    (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2) (hr0 : 0 < r) (hr1 : r ≤ 1) (ht : 0 < t)
+    (hc0 : 0 < K.c0) (hc0' : K.c0 ≤ 1 / 4)
+    (hrt : r ≤ (t / (8 * 2 ^ shortExp ζ)) ^ (1 / (1 + ζ)))
+    (hcut : ∀ δ : ℝ, 0 < δ → δ < t → ∀ z ∈ ball (0 : ℂ) (1 - δ), ENNReal.ofReal (δ ^ K.βm) ≤ S.μ ω (ball z δ))
+    (hEl : Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+        x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
+          shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x ∈
+            shortEligible ρ (dyadicD r) (shortExp ζ))
+    (hRr : Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+        x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
+          r ^ 2 ≤ winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+              (dyadicD r ^ shortExp ζ) (dyadicD r) k x) ∧
+            winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+              (dyadicD r ^ shortExp ζ) (dyadicD r) k x) ≤ 1) :
+    Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
+      ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
+        x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
+          ∀ y ∈ ball (0 : ℂ) (1 - winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+            (dyadicD r ^ shortExp ζ) (dyadicD r) k x) / 4),
+            ENNReal.ofReal ((winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+                (dyadicD r ^ shortExp ζ) (dyadicD r) k x) / 4) ^ K.βm)
+              ≤ S.μ ω (ball y (winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+                (dyadicD r ^ shortExp ζ) (dyadicD r) k x) / 4)) := by
+  intro hadm k hk
+  have ha : shortExp ζ ≤ 1 := by unfold shortExp; linarith
+  have hRs := (hEl hadm k hk).mono fun x hx hpre =>
+    (windowRfT_bounds S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) (dyadicD_pos r) (dyadicD_le_one r) ha ω
+      (hx hpre)).2
+  have hR0 := (hRr hadm k hk).mono fun x hx hpre => lt_of_lt_of_le (pow_pos hr0 2) (hx hpre).1
+  have hRt := hRs.mono fun x hx hpre =>
+    Lemma68Cutoff239.four_mul_lt_of_radius_cap rfl hζ0 ht hr0 (dyadicD_pos r)
+      (dyadicD_lt_two_mul_sq hr0 hr1) (hx hpre) hrt
+  have hda : dyadicD r ^ shortExp ζ ≤ 1 :=
+    Real.rpow_le_one (dyadicD_pos r).le (dyadicD_le_one r) (by unfold shortExp; linarith)
+  have hR1 := hRs.mono fun x hx hpre => lt_of_le_of_lt (hx hpre) (lt_of_le_of_lt hda (show (1 : ℝ) < 4 by norm_num))
+  exact hVolY_ae_pw hc0 hc0' hcut hR0 hRt hR1
+
 end Lemma68HVolFullPw
 end MatedCRT
 
@@ -167,3 +261,5 @@ end MatedCRT
 #print axioms MatedCRT.Lemma68HVolFullPw.hfull_pw
 #print axioms MatedCRT.Lemma68HVolFullPw.hVolC_pw
 #print axioms MatedCRT.Lemma68HVolFullPw.hVolY_pw
+#print axioms MatedCRT.Lemma68HVolFullPw.hVolC_pw_s1
+#print axioms MatedCRT.Lemma68HVolFullPw.hVolY_pw_s1
