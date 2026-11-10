@@ -384,4 +384,277 @@ lemma adjoint_potential {φ : ℂ → ℝ} (hφ : IsTestFunction univ φ) {ε : 
   funext x
   ring
 
+/-! ### Random part: the `L²` argument for the smeared circle average `J := ∫ φ h_ε` -/
+
+/-- Discriminant form of Cauchy-Schwarz: if `2ct ≤ t²a + b` for all `t > 0` with `a, b, c ≥ 0`, then `c² ≤ ab`. -/
+lemma sq_le_mul_of_forall_two_mul_le {a b c : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c)
+    (h : ∀ t : ℝ, 0 < t → 2 * c * t ≤ t ^ 2 * a + b) : c ^ 2 ≤ a * b := by
+  rcases hc.eq_or_lt with hc0 | hc0
+  · rw [← hc0]
+    simpa using mul_nonneg ha hb
+  have hc' : c ≠ 0 := hc0.ne'
+  rcases ha.eq_or_lt with ha0 | ha0
+  · exfalso
+    have ht : 0 < (b + 1) / (2 * c) := div_pos (by linarith) (by linarith)
+    have h1 := h _ ht
+    have e : 2 * c * ((b + 1) / (2 * c)) = b + 1 := by field_simp
+    rw [e, ← ha0, mul_zero, zero_add] at h1
+    linarith
+  · have ha' : a ≠ 0 := ha0.ne'
+    have ht : 0 < c / a := div_pos hc0 ha0
+    have h1 := h _ ht
+    have e1 : 2 * c * (c / a) = 2 * (c ^ 2 / a) := by ring
+    have e2 : (c / a) ^ 2 * a = c ^ 2 / a := by field_simp
+    rw [e1, e2] at h1
+    have h3 : c ^ 2 / a ≤ b := by linarith
+    rw [div_le_iff₀ ha0] at h3
+    linarith [mul_comm a b]
+
+/-- Each circle average of positive radius, at any centre, is square integrable (the field is Gaussian). -/
+lemma memLp_circle_any (h : IsWholePlaneGFF P hC hcirc) {r : ℝ} (hr : 0 < r) (z : ℂ) :
+    MemLp (fun ω => hcirc ω r z) 2 P :=
+  (MatedCRT.Field.wpSpace_gaussian h).memLp (Submodule.subset_span ⟨⟨GFFObservable.circle r z, hr⟩, rfl⟩)
+
+/-- The measurable version `g` of the circle averages is square integrable at each point. -/
+lemma memLp_of_ae_circle (h : IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε) {g : Ω → ℂ → ℝ}
+    (hg : ∀ᵐ ω ∂P, ∀ z, g ω z = hcirc ω ε z) (z : ℂ) : MemLp (fun ω => g ω z) 2 P :=
+  (memLp_circle_any h hε z).ae_eq (hg.mono fun _ hω => (hω z).symm)
+
+/-- **Fubini for the smeared circle average** against a square integrable variable `X`:
+`E[X · ∫ φ(z) g(z) dz] = ∫ φ(z) E[X g(z)] dz` (`integral_mul_integral_swap`, `X ∈ L²`). -/
+lemma integral_mul_smear_swap [IsProbabilityMeasure P] (h : IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε)
+    {g : Ω → ℂ → ℝ} (hgm : Measurable fun p : Ω × ℂ => g p.1 p.2)
+    (hg : ∀ᵐ ω ∂P, ∀ z, g ω z = hcirc ω ε z) {φ : ℂ → ℝ} (hφ : IsTestFunction univ φ)
+    {X : Ω → ℝ} (hX : MemLp X 2 P) :
+    ∫ ω, X ω * (∫ z, φ z * g ω z) ∂P = ∫ z, φ z * ∫ ω, X ω * g ω z ∂P := by
+  obtain ⟨R, hR⟩ := hφ.2.1.isCompact.isBounded.subset_closedBall (0 : ℂ)
+  have hgR : ∀ z, φ z ≠ 0 → ‖z‖ ≤ R := fun z hz =>
+    mem_closedBall_zero_iff.1 (hR (subset_tsupport φ (Function.mem_support.2 hz)))
+  have hAL2 : ∀ᵐ y ∂(volume.restrict (closedBall (0 : ℂ) R)), MemLp (fun ω => g ω y) 2 P :=
+    ae_restrict_of_ae (ae_of_all _ fun y => memLp_of_ae_circle h hε hg y)
+  have hAint : IntegrableOn (fun y => ∫ ω, (g ω y) ^ 2 ∂P) (closedBall (0 : ℂ) R) := by
+    have hm : Measurable fun y => ∫ ω, (g ω y) ^ 2 ∂P := by
+      have hm2 : Measurable fun q : ℂ × Ω => g q.2 q.1 ^ 2 := (hgm.comp measurable_swap).pow_const 2
+      exact (hm2.stronglyMeasurable.integral_prod_right (ν := P)).measurable
+    refine Measure.integrableOn_of_bounded (M := 2 * Real.log (max (R + ε) 1) - Real.log ε)
+      measure_closedBall_lt_top.ne hm.aestronglyMeasurable ?_
+    filter_upwards [ae_restrict_mem measurableSet_closedBall] with y hy
+    have heq : ∫ ω, g ω y ^ 2 ∂P = ∫ ω, hcirc ω ε y ^ 2 ∂P :=
+      integral_congr_ae (hg.mono fun ω hω => by beta_reduce; rw [hω y])
+    rw [Real.norm_of_nonneg (integral_nonneg fun ω => sq_nonneg _), heq]
+    exact integral_sq_circle_le h hε (mem_closedBall_zero_iff.1 hy)
+  exact integral_mul_integral_swap hgm hX hφ hgR hAL2 hAint
+
+/-- The weighted second moment `ω ↦ ∫ |φ(z)| g(ω,z)² dz` is integrable: Fubini on `P ⊗ dz` (`integrable_prod_iff'`),
+with `E[g(z)²] ≤ 2 log max(R+ε,1) - log ε` on the support of `φ`. -/
+lemma integrable_weighted_sq [IsProbabilityMeasure P] (h : IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε)
+    {g : Ω → ℂ → ℝ} (hgm : Measurable fun p : Ω × ℂ => g p.1 p.2)
+    (hg : ∀ᵐ ω ∂P, ∀ z, g ω z = hcirc ω ε z) {φ : ℂ → ℝ} (hφ : IsTestFunction univ φ) {R : ℝ}
+    (hgR : ∀ z, φ z ≠ 0 → ‖z‖ ≤ R) :
+    Integrable (fun ω => ∫ z, |φ z| * g ω z ^ 2) P := by
+  have hφc : Continuous φ := hφ.1.continuous
+  have hHm : Measurable fun p : Ω × ℂ => |φ p.2| * g p.1 p.2 ^ 2 :=
+    (continuous_abs.measurable.comp (hφc.measurable.comp measurable_snd)).mul (hgm.pow_const 2)
+  have hHint : Integrable (fun p : Ω × ℂ => |φ p.2| * g p.1 p.2 ^ 2) (P.prod volume) := by
+    rw [integrable_prod_iff' hHm.aestronglyMeasurable]
+    refine ⟨Eventually.of_forall fun z => ?_, ?_⟩
+    · exact ((memLp_of_ae_circle h hε hg z).integrable_sq).const_mul |φ z|
+    · have hM : ∀ z, ∫ ω, ‖|φ z| * g ω z ^ 2‖ ∂P ≤ (2 * Real.log (max (R + ε) 1) - Real.log ε) * |φ z| := by
+        intro z
+        by_cases hz : φ z = 0
+        · simp [hz]
+        · have heq : ∫ ω, g ω z ^ 2 ∂P = ∫ ω, hcirc ω ε z ^ 2 ∂P :=
+            integral_congr_ae (hg.mono fun ω hω => by beta_reduce; rw [hω z])
+          have hsq : ∫ ω, g ω z ^ 2 ∂P ≤ 2 * Real.log (max (R + ε) 1) - Real.log ε := by
+            rw [heq]
+            exact integral_sq_circle_le h hε (hgR z hz)
+          have hnorm : ∀ ω, ‖|φ z| * g ω z ^ 2‖ = |φ z| * g ω z ^ 2 := fun ω =>
+            Real.norm_of_nonneg (mul_nonneg (abs_nonneg _) (sq_nonneg _))
+          simp only [hnorm]
+          rw [integral_const_mul]
+          nlinarith [mul_le_mul_of_nonneg_left hsq (abs_nonneg (φ z))]
+      have hmeasN : AEStronglyMeasurable (fun z => ∫ ω, ‖|φ z| * g ω z ^ 2‖ ∂P) volume :=
+        ((hHm.comp measurable_swap).norm.stronglyMeasurable.integral_prod_right (ν := P)).aestronglyMeasurable
+      have hφint : Integrable φ := hφc.integrable_of_hasCompactSupport hφ.2.1
+      refine Integrable.mono' ((hφint.abs).const_mul (2 * Real.log (max (R + ε) 1) - Real.log ε)) hmeasN
+        (Eventually.of_forall fun z => ?_)
+      rw [Real.norm_eq_abs, abs_of_nonneg (integral_nonneg fun ω => norm_nonneg _)]
+      exact hM z
+  exact hHint.integral_prod_left
+
+/-- **Pathwise Cauchy-Schwarz** for the weighted integral `∫ φ f` with `f` continuous:
+`(∫ φ f)² ≤ (∫ |φ|) (∫ |φ| f²)`. -/
+lemma sq_integral_mul_le {φ : ℂ → ℝ} (hφ : IsTestFunction univ φ) {f : ℂ → ℝ} (hf : Continuous f) :
+    (∫ z, φ z * f z) ^ 2 ≤ (∫ z, |φ z|) * ∫ z, |φ z| * f z ^ 2 := by
+  have hφc : Continuous φ := hφ.1.continuous
+  have hcs : ∀ k : ℂ → ℝ, Continuous k → Integrable (fun z => |φ z| * k z) := fun k hk =>
+    ((continuous_abs.comp hφc).mul hk).integrable_of_hasCompactSupport (hφ.2.1.comp_left abs_zero).mul_right
+  have hI1 : Integrable (fun z => |φ z|) := by simpa using hcs 1 continuous_const
+  have hI2 : Integrable (fun z => |φ z| * f z ^ 2) := hcs _ (hf.pow 2)
+  have hI3 : Integrable (fun z => |φ z| * |f z|) := hcs _ hf.abs
+  have ha0 : 0 ≤ ∫ z, |φ z| := integral_nonneg fun z => abs_nonneg _
+  have hb0 : 0 ≤ ∫ z, |φ z| * f z ^ 2 := integral_nonneg fun z => mul_nonneg (abs_nonneg _) (sq_nonneg _)
+  have hc0 : 0 ≤ ∫ z, |φ z| * |f z| := integral_nonneg fun z => mul_nonneg (abs_nonneg _) (abs_nonneg _)
+  have hJc : |∫ z, φ z * f z| ≤ ∫ z, |φ z| * |f z| := by
+    refine abs_integral_le_integral_abs.trans (le_of_eq ?_)
+    simp only [abs_mul]
+  have hdisc : ∀ t : ℝ, 0 < t →
+      2 * (∫ z, |φ z| * |f z|) * t ≤ t ^ 2 * (∫ z, |φ z|) + ∫ z, |φ z| * f z ^ 2 := by
+    intro t _
+    have hpt : ∀ z, 2 * t * (|φ z| * |f z|) ≤ t ^ 2 * |φ z| + |φ z| * f z ^ 2 := by
+      intro z
+      have h0 : 0 ≤ |φ z| * (t - |f z|) ^ 2 := mul_nonneg (abs_nonneg _) (sq_nonneg _)
+      have e : |φ z| * (t - |f z|) ^ 2 = t ^ 2 * |φ z| - 2 * t * (|φ z| * |f z|) + |φ z| * f z ^ 2 := by
+        rw [← sq_abs (f z)]
+        ring
+      linarith
+    have hI4 : Integrable (fun z => t ^ 2 * |φ z| + |φ z| * f z ^ 2) := (hI1.const_mul (t ^ 2)).add hI2
+    have hint := integral_mono (hI3.const_mul (2 * t)) hI4 hpt
+    rw [integral_const_mul, integral_add (hI1.const_mul _) hI2, integral_const_mul] at hint
+    linarith
+  have hc2 := sq_le_mul_of_forall_two_mul_le ha0 hb0 hc0 hdisc
+  have hsq : (∫ z, φ z * f z) ^ 2 ≤ (∫ z, |φ z| * |f z|) ^ 2 := by
+    have h0 := mul_self_le_mul_self (abs_nonneg (∫ z, φ z * f z)) hJc
+    nlinarith [sq_abs (∫ z, φ z * f z)]
+  linarith [hsq, hc2]
+
+/-- **`L²` bound for the smeared circle average** (z8, R3 sub-step 1): `J ω := ∫ φ(z) g(ω,z) dz` is square integrable,
+by the pathwise Cauchy-Schwarz inequality and the integrability of `ω ↦ ∫ |φ| g²`. -/
+lemma memLp_smear_integral [IsProbabilityMeasure P] (h : IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε)
+    {g : Ω → ℂ → ℝ} (hgm : Measurable fun p : Ω × ℂ => g p.1 p.2) (hgc : ∀ ω, Continuous fun z => g ω z)
+    (hg : ∀ᵐ ω ∂P, ∀ z, g ω z = hcirc ω ε z) {φ : ℂ → ℝ} (hφ : IsTestFunction univ φ) :
+    MemLp (fun ω => ∫ z, φ z * g ω z) 2 P := by
+  obtain ⟨R, hR⟩ := hφ.2.1.isCompact.isBounded.subset_closedBall (0 : ℂ)
+  have hgR : ∀ z, φ z ≠ 0 → ‖z‖ ≤ R := fun z hz =>
+    mem_closedBall_zero_iff.1 (hR (subset_tsupport φ (Function.mem_support.2 hz)))
+  have hb := integrable_weighted_sq h hε hgm hg hφ hgR
+  have hJm : AEStronglyMeasurable (fun ω => ∫ z, φ z * g ω z) P :=
+    (((hφ.1.continuous.measurable.comp measurable_snd).mul hgm).stronglyMeasurable.integral_prod_right
+      (ν := volume)).aestronglyMeasurable
+  have hint : Integrable (fun ω => (∫ z, φ z * g ω z) ^ 2) P :=
+    Integrable.mono' (hb.const_mul (∫ z, |φ z|)) (hJm.pow 2)
+      (Eventually.of_forall fun ω => by
+        rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
+        exact sq_integral_mul_le hφ (hgc ω))
+  exact (memLp_two_iff_integrable_sq hJm).2 hint
+
+/-- The circle kernel `K_ε φ = circleKernel φ ε` of a test function is a test function (its support lies in
+`closedBall 0 (R + ε)`, `R` a radius of `tsupport φ`). -/
+lemma isTestFunction_circleKernel {φ : ℂ → ℝ} (hφ : IsTestFunction univ φ) {ε : ℝ} (hε : 0 ≤ ε) :
+    IsTestFunction univ (circleKernel φ ε) := by
+  obtain ⟨R, hR⟩ := hφ.2.1.isCompact.isBounded.subset_closedBall (0 : ℂ)
+  refine ⟨circleKernel_contDiff250 hφ ε,
+    HasCompactSupport.intro (isCompact_closedBall (0 : ℂ) (R + ε)) ?_, Set.subset_univ _⟩
+  intro x hx
+  have hφz : ∀ θ : ℝ, φ (x - circleMap 0 ε θ) = 0 := by
+    intro θ
+    refine image_eq_zero_of_notMem_tsupport fun hmem => hx ?_
+    have h1 := mem_closedBall_zero_iff.1 (hR hmem)
+    rw [mem_closedBall_zero_iff]
+    have h2 : ‖x‖ ≤ ‖x - circleMap 0 ε θ‖ + ‖circleMap 0 ε θ‖ := by
+      simpa using norm_add_le (x - circleMap 0 ε θ) (circleMap 0 ε θ)
+    rw [norm_circleMap_zero_eq hε] at h2
+    linarith
+  simp [circleKernel, hφz]
+
+/-- **The circle-smear identity** (z8, step R3; chat 250 §1.2; Duplantier-Sheffield 2011 §3.1). For a whole-plane GFF
+`h`, a test function `φ` and `0 < ε ≤ 1`, almost surely `∫ φ(z) h_ε(z) dz = (h, K_ε φ)` with `K_ε φ = circleKernel φ ε`.
+Proof (L²): with `J := ∫ φ g`, `Y := hC(K_ε φ)` and `Z := J - Y`, `E[Z·g(z)] = 0` for every `z` (second adjoint
+`integral_mul_circleAverage_circleAverage_eq`), hence `E[Z·J] = 0`; `E[Z·Y] = 0` (first adjoint `adjoint_potential`);
+so `E[Z²] = 0` and `Z = 0` a.s. -/
+theorem circleSmear_ae_eq [IsProbabilityMeasure P] (h : IsWholePlaneGFF P hC hcirc) {φ : ℂ → ℝ}
+    (hφ : IsTestFunction univ φ) {ε : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1) :
+    CircleSmearIdentity P hC hcirc φ ε := by
+  unfold CircleSmearIdentity
+  obtain ⟨g, hgm, hgc, hg⟩ := exists_measurable_circle h hε
+  have hψ : IsTestFunction univ (circleKernel φ ε) := isTestFunction_circleKernel hφ hε.le
+  have hJ : MemLp (fun ω => ∫ z, φ z * g ω z) 2 P := memLp_smear_integral h hε hgm hgc hg hφ
+  have hY : MemLp (fun ω => hC ω (circleKernel φ ε)) 2 P := memLp_pairing h hψ
+  have hZ : MemLp (fun ω => (∫ z, φ z * g ω z) - hC ω (circleKernel φ ε)) 2 P := hJ.sub hY
+  -- the pointwise identity `g(z) = hcirc(z)` used under the integral in `z`
+  have hz : ∀ z, ∫ ω, hC ω (circleKernel φ ε) * g ω z ∂P =
+      Real.circleAverage (fun x => ∫ y, circleKernel φ ε y * wholePlaneCov x y) z ε := by
+    intro z
+    rw [← integral_mul_circle_pairing h hψ hε z]
+    exact integral_congr_ae (hg.mono fun ω hω => by beta_reduce; rw [hω z]; ring)
+  -- E1: E[Y · J] = E[Y²]
+  have E1 : ∫ ω, hC ω (circleKernel φ ε) * (∫ z, φ z * g ω z) ∂P =
+      ∫ ω, hC ω (circleKernel φ ε) * hC ω (circleKernel φ ε) ∂P := by
+    have hs : ∫ ω, hC ω (circleKernel φ ε) * (∫ z, φ z * g ω z) ∂P =
+        ∫ z, φ z * ∫ ω, hC ω (circleKernel φ ε) * g ω z ∂P :=
+      integral_mul_smear_swap h hε hgm hg hφ hY
+    rw [hs, integral_mul_pairing h hψ hψ, ← adjoint_potential hφ hε hε1 hψ]
+    exact integral_congr_ae (Eventually.of_forall fun z => by beta_reduce; rw [hz z])
+  -- E2: E[g(z) · J] = E[g(z) · Y] for every z
+  have E2 : ∀ z, ∫ ω, g ω z * (∫ z', φ z' * g ω z') ∂P = ∫ ω, g ω z * hC ω (circleKernel φ ε) ∂P := by
+    intro z
+    have hgz := memLp_of_ae_circle h hε hg z
+    have hs : ∫ ω, g ω z * (∫ z', φ z' * g ω z') ∂P =
+        ∫ y, φ y * ∫ ω, g ω z * g ω y ∂P :=
+      integral_mul_smear_swap h hε hgm hg hφ hgz
+    have hc : ∀ y, ∫ ω, g ω z * g ω y ∂P = Real.circleAverage (fun x => Real.circleAverage
+        (fun u => wholePlaneCov x u) y ε) z ε := by
+      intro y
+      have e : ∫ ω, g ω z * g ω y ∂P = ∫ ω, hcirc ω ε z * hcirc ω ε y ∂P :=
+        integral_congr_ae (hg.mono fun ω hω => by beta_reduce; rw [hω z, hω y])
+      rw [e]
+      exact integral_mul_circle_circle h hε z y
+    have e2 : ∫ y, φ y * ∫ ω, g ω z * g ω y ∂P = ∫ w, φ w * Real.circleAverage (fun x =>
+        Real.circleAverage (fun u => wholePlaneCov x u) w ε) z ε :=
+      integral_congr_ae (Eventually.of_forall fun y => by beta_reduce; rw [hc y])
+    have e3 : ∫ ω, g ω z * hC ω (circleKernel φ ε) ∂P = ∫ ω, hcirc ω ε z * hC ω (circleKernel φ ε) ∂P :=
+      integral_congr_ae (hg.mono fun ω hω => by beta_reduce; rw [hω z])
+    rw [hs, e2, integral_mul_circleAverage_circleAverage_eq hφ hε hε1 z, e3,
+      integral_mul_circle_pairing h hψ hε z]
+  -- E3: E[Z · J] = 0, through `E[Z · g(z)] = 0` for every `z`
+  have E3 : ∫ ω, ((∫ z, φ z * g ω z) - hC ω (circleKernel φ ε)) * (∫ z, φ z * g ω z) ∂P = 0 := by
+    have hs : ∫ ω, ((∫ z, φ z * g ω z) - hC ω (circleKernel φ ε)) * (∫ z, φ z * g ω z) ∂P =
+        ∫ z, φ z * ∫ ω, ((∫ z', φ z' * g ω z') - hC ω (circleKernel φ ε)) * g ω z ∂P :=
+      integral_mul_smear_swap h hε hgm hg hφ hZ
+    have hzero : ∀ z, ∫ ω, ((∫ z', φ z' * g ω z') - hC ω (circleKernel φ ε)) * g ω z ∂P = 0 := by
+      intro z
+      have hgz := memLp_of_ae_circle h hε hg z
+      have i1 : Integrable (fun ω => g ω z * (∫ z', φ z' * g ω z')) P := hgz.integrable_mul hJ
+      have i2 : Integrable (fun ω => g ω z * hC ω (circleKernel φ ε)) P := hgz.integrable_mul hY
+      calc ∫ ω, ((∫ z', φ z' * g ω z') - hC ω (circleKernel φ ε)) * g ω z ∂P
+          = ∫ ω, (g ω z * (∫ z', φ z' * g ω z') - g ω z * hC ω (circleKernel φ ε)) ∂P :=
+            integral_congr_ae (Eventually.of_forall fun ω => by ring)
+        _ = ∫ ω, g ω z * (∫ z', φ z' * g ω z') ∂P - ∫ ω, g ω z * hC ω (circleKernel φ ε) ∂P :=
+            integral_sub i1 i2
+        _ = 0 := by rw [E2 z, sub_self]
+    rw [hs]
+    simp only [hzero, mul_zero, integral_zero]
+  -- E4: E[Z · Y] = 0 (first adjoint)
+  have E4 : ∫ ω, ((∫ z, φ z * g ω z) - hC ω (circleKernel φ ε)) * hC ω (circleKernel φ ε) ∂P = 0 := by
+    have i1 : Integrable (fun ω => hC ω (circleKernel φ ε) * (∫ z, φ z * g ω z)) P := hY.integrable_mul hJ
+    have i2 : Integrable (fun ω => hC ω (circleKernel φ ε) * hC ω (circleKernel φ ε)) P := hY.integrable_mul hY
+    calc ∫ ω, ((∫ z, φ z * g ω z) - hC ω (circleKernel φ ε)) * hC ω (circleKernel φ ε) ∂P
+        = ∫ ω, (hC ω (circleKernel φ ε) * (∫ z, φ z * g ω z) -
+            hC ω (circleKernel φ ε) * hC ω (circleKernel φ ε)) ∂P :=
+          integral_congr_ae (Eventually.of_forall fun ω => by ring)
+      _ = ∫ ω, hC ω (circleKernel φ ε) * (∫ z, φ z * g ω z) ∂P -
+          ∫ ω, hC ω (circleKernel φ ε) * hC ω (circleKernel φ ε) ∂P := integral_sub i1 i2
+      _ = 0 := by rw [E1, sub_self]
+  -- E5: E[Z²] = E[Z·J] - E[Z·Y] = 0, hence Z = 0 a.s.
+  have hZ2 : ∫ ω, ((∫ z, φ z * g ω z) - hC ω (circleKernel φ ε)) ^ 2 ∂P = 0 := by
+    have i3 : Integrable (fun ω => ((∫ z, φ z * g ω z) - hC ω (circleKernel φ ε)) * (∫ z, φ z * g ω z)) P :=
+      hZ.integrable_mul hJ
+    have i4 : Integrable (fun ω => ((∫ z, φ z * g ω z) - hC ω (circleKernel φ ε)) *
+        hC ω (circleKernel φ ε)) P := hZ.integrable_mul hY
+    calc ∫ ω, ((∫ z, φ z * g ω z) - hC ω (circleKernel φ ε)) ^ 2 ∂P
+        = ∫ ω, (((∫ z, φ z * g ω z) - hC ω (circleKernel φ ε)) * (∫ z, φ z * g ω z) -
+            ((∫ z, φ z * g ω z) - hC ω (circleKernel φ ε)) * hC ω (circleKernel φ ε)) ∂P :=
+          integral_congr_ae (Eventually.of_forall fun ω => by ring)
+      _ = ∫ ω, ((∫ z, φ z * g ω z) - hC ω (circleKernel φ ε)) * (∫ z, φ z * g ω z) ∂P -
+          ∫ ω, ((∫ z, φ z * g ω z) - hC ω (circleKernel φ ε)) * hC ω (circleKernel φ ε) ∂P :=
+          integral_sub i3 i4
+      _ = 0 := by rw [E3, E4, sub_self]
+  have hZ0 := (integral_eq_zero_iff_of_nonneg (fun ω => sq_nonneg _) hZ.integrable_sq).1 hZ2
+  -- conclusion: almost surely `J = Y`, and `J = ∫ φ hcirc` since `g = hcirc` a.s.
+  filter_upwards [hZ0, hg] with ω hω1 hω2
+  have h1 : (∫ z, φ z * g ω z) - hC ω (circleKernel φ ε) = 0 := pow_eq_zero_iff two_ne_zero |>.1 hω1
+  have hf : (fun z => φ z * hcirc ω ε z) = fun z => φ z * g ω z := funext fun z => by rw [hω2 z]
+  rw [hf]
+  linarith
+
 end MatedCRT.LQGMeasure
