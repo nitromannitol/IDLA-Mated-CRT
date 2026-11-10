@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.S5c
 import MatedCRT.FirstPass.S4d.StrictGapReduction
+import MatedCRT.FirstPass.S4d.DeterministicComparison
 
 /-!
 # FIRST PASS, Proposition 4.2 (prop:div-sandpile-lower-bound): assembly with the cone family (q4)
@@ -97,5 +98,29 @@ theorem firstPass_4_2_assembled {𝒮 : SpaceFillingSLEModel}
     DivSandpileLowerBoundStmt 𝒮 :=
   firstPass_4_2_of_coneFamilyStep hm h210 h34 h214 h28 h35 h218 h27 hH hcone h23 h24 h33 hgap
     (coneFamilyAEMeasurable_proved hcan hcl h27 hE1 hE2 hscale h22)
+
+/-- **Proposition 4.2 (first pass), with the deterministic comparison discharged (q4, fp-S4d-4-2-assembly).** Same
+conclusion as `firstPass_4_2_of_strictGapSteps`, with `hdet` proved by `strictGapDeterministicComparison_of_frozen`
+(S4d/DeterministicComparison.lean) from the explicit potential-theoretic inputs `hG` (HB `GreenFunctionBallStmt`, Draft),
+`hpc` (`FrozenPunctureConnected`, Frozen/S4d.lean), `hsmp` (`FPStrongMinimumPrinciple`, Frozen/S5c.lean), `hwmp`
+(`FrozenSuperharmonicMinimumPrinciple`) and `hpole` (`FrozenGreenDiscPole`, Frozen/S2g.lean). Open NEW inputs left:
+`hnj : StrictGapFixedTimeUnionStep 𝒮` (Sections 4-5) and the cone measurability `hfam`. The cited inputs are as in
+`firstPass_4_2_of_coneFamilyStep`. -/
+theorem firstPass_4_2_of_frozen_strictGap {𝒮 : SpaceFillingSLEModel}
+    (hm : MepsScalingInput 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)
+    (h34 : IntegralConvergenceGreenFunctionStmt 𝒮) (h214 : GreenKernelUpperBoundStmt 𝒮)
+    (h28 : CellSizeEstimateStmt 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
+    (h218 : ExitTimeUpperBoundStmt 𝒮) (h27 : VolumeGrowthStmt)
+    (hH : FrozenDiscreteHolderContinuityCorrected 𝒮) (hcone : FrozenConeEnvironmentScaling 𝒮)
+    (h23 : ConeHarmonicBallsStmt) (h24 : ConeHarmonicBallsUpToFixedTimeStmt)
+    (h33 : UniformConvergenceGreenKernelStmt 𝒮)
+    (hG : _root_.HarmonicBalls.GreenFunctionBallStmt) (hpc : FrozenPunctureConnected)
+    (hsmp : FPStrongMinimumPrinciple) (hwmp : FrozenSuperharmonicMinimumPrinciple)
+    (hpole : FrozenGreenDiscPole)
+    (hnj : StrictGapFixedTimeUnionStep 𝒮)
+    (hfam : ConeFamilyAEMeasurableStep) :
+    DivSandpileLowerBoundStmt 𝒮 :=
+  firstPass_4_2_of_strictGapSteps hm h210 h34 h214 h28 h35 h218 h27 hH hcone h23 h24 h33
+    (strictGapDeterministicComparison_of_frozen hG hpc hsmp hwmp hpole) hnj hfam
 
 end MatedCRT
