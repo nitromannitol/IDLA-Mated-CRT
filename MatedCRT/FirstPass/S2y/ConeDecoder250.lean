@@ -203,6 +203,69 @@ theorem coneFieldScalingStep_proved250 (hscale : QuantumConeScalingInput) (H1 : 
   coneFieldScalingStep_of_decoder hscale (coneCircleDecoderStep_of_lateralSmear250 H1)
     (coneLateralTransferStep_proved240 hscale)
 
+/-! ### Transfer of the lateral smear from the whole-plane GFF to the quantum cone (chat 250 §1.4) -/
+
+/-- The circle smear at radius `ε` of a lateral process `ℓ : Admissible → ℝ`: the `limsup` of the midpoint Riemann
+sums of `z ↦ φ(z) ℓ(.circle ε z)`. A measurable function of the lateral process. -/
+noncomputable def lateralSmearOf (φ : ℂ → ℝ) (ε : ℝ) (hε : 0 < ε) (ℓ : GFFObservable.Admissible → ℝ) : ℝ :=
+  circleSmearCode φ ε hε (fun p => ℓ ⟨.circle p.1.1 p.2, p.1.2⟩)
+
+lemma measurable_lateralSmearOf (φ : ℂ → ℝ) (ε : ℝ) (hε : 0 < ε) : Measurable (lateralSmearOf φ ε hε) := by
+  unfold lateralSmearOf circleSmearCode
+  refine Measurable.limsup fun k => ?_
+  exact measurable_planeQuad_eval (n := k)
+    (p := fun z : ℂ => (⟨.circle ε z, hε⟩ : GFFObservable.Admissible)) (a := φ)
+
+/-- Convergence in measure is transported along an equality of laws `P.map Λ = P'.map Λ'` (`lateral_law`). -/
+lemma tendstoInMeasure_of_lawEq {Ω Ω' E : Type*} [MeasurableSpace Ω] [MeasurableSpace Ω'] [MeasurableSpace E]
+    {P : Measure Ω} {P' : Measure Ω'} {Λ : Ω → E} {Λ' : Ω' → E} {ι : Type*} {l : Filter ι}
+    {F : ι → E → ℝ} {L : E → ℝ} (hΛ : AEMeasurable Λ P) (hΛ' : AEMeasurable Λ' P')
+    (hlaw : P.map Λ = P'.map Λ') (hF : ∀ i, Measurable (F i)) (hL : Measurable L)
+    (h : TendstoInMeasure P' (fun i ω => F i (Λ' ω)) l (fun ω => L (Λ' ω))) :
+    TendstoInMeasure P (fun i ω => F i (Λ ω)) l (fun ω => L (Λ ω)) := by
+  intro ε hε
+  refine Tendsto.congr (fun i => ?_) (h ε hε)
+  have hS : MeasurableSet {ℓ : E | ε ≤ edist (F i ℓ) (L ℓ)} :=
+    measurableSet_le measurable_const ((hF i).edist hL)
+  show P' (Λ' ⁻¹' {ℓ : E | ε ≤ edist (F i ℓ) (L ℓ)}) = P (Λ ⁻¹' {ℓ : E | ε ≤ edist (F i ℓ) (L ℓ)})
+  rw [← Measure.map_apply_of_aemeasurable hΛ' hS, ← Measure.map_apply_of_aemeasurable hΛ hS, hlaw]
+
+/-- **The whole-plane lateral smear input** (chat 250 §1, the reference theorem `wholePlaneGFF_lateralSmear_tendstoInMeasure`):
+for every whole-plane GFF and every test function, the lateral circle smears converge in probability to the lateral
+pairing. Named, not proved here. -/
+def WholePlaneLateralSmear250 : Prop :=
+  ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
+    IsProbabilityMeasure P → IsWholePlaneGFF P hC hcirc →
+    ∀ (φ : ℂ → ℝ) (hφ : IsTestFunction Set.univ φ),
+      TendstoInMeasure P
+        (fun n ω => lateralSmearOf φ (pairingRadius n) (pairingRadius_pos n) (lateralProcess (hC ω) (hcirc ω)))
+        atTop (fun ω => lateralProcess (hC ω) (hcirc ω) ⟨.pairing φ, hφ⟩)
+
+/-- **The cone lateral smear from the whole-plane one** (chat 250 §1.4): the transfer through `IsQuantumCone.lateral_law`,
+with the a.e. measurability of the lateral process (`aemeasurable_lateralProcess_of_isQuantumCone`, and the whole-plane
+version `CirclePairing.aemeasurable_lateralProcess`). -/
+theorem coneLateralSmear_of_wholePlane (hW : WholePlaneLateralSmear250) {γ : ℝ} {Ω : Type} [MeasurableSpace Ω]
+    {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+    (hQ : IsQuantumCone γ P hC hcirc) (φ : ℂ → ℝ) (hφ : IsTestFunction Set.univ φ) :
+    TendstoInMeasure P
+      (fun n ω => lateralSmearOf φ (pairingRadius n) (pairingRadius_pos n) (lateralProcess (hC ω) (hcirc ω)))
+      atTop (fun ω => lateralProcess (hC ω) (hcirc ω) ⟨.pairing φ, hφ⟩) := by
+  obtain ⟨Ω', _, P', hC', hcirc', hP', hG, hlaw⟩ := hQ.lateral_law
+  exact tendstoInMeasure_of_lawEq (Λ := fun ω => lateralProcess (hC ω) (hcirc ω))
+    (Λ' := fun ω' => lateralProcess (hC' ω') (hcirc' ω'))
+    (F := fun n ℓ => lateralSmearOf φ (pairingRadius n) (pairingRadius_pos n) ℓ)
+    (L := fun ℓ : GFFObservable.Admissible → ℝ => ℓ ⟨.pairing φ, hφ⟩)
+    (MatedCRT.Sec1.aemeasurable_lateralProcess_of_isQuantumCone hQ)
+    (MatedCRT.CirclePairing.aemeasurable_lateralProcess hG.measurable_pairing hG.measurable_circle
+      hG.ae_continuousOn_circle)
+    hlaw (fun n => measurable_lateralSmearOf φ (pairingRadius n) (pairingRadius_pos n))
+    (measurable_pi_apply _) (hW Ω' P' hC' hcirc' hP' hG φ hφ)
+
+/-- **`ConeLateralSmearStep250` from the whole-plane input** `WholePlaneLateralSmear250` (chat 250 §1.4). -/
+theorem coneLateralSmearStep250_of_wholePlane (hW : WholePlaneLateralSmear250) : ConeLateralSmearStep250 := by
+  intro _ _ _ Ω _ P hC hcirc _ hQ φ hφ
+  exact coneLateralSmear_of_wholePlane hW hQ φ hφ
+
 end MatedCRT.LQGMeasure
 
 #print axioms MatedCRT.LQGMeasure.measurable_conePairingApprox
