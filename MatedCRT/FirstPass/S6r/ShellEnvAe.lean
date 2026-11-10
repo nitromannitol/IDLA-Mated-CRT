@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.S6r.ShellPathAe
 import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
+import MatedCRT.FirstPass.S6r.ShellOrder
 
 /-!
 # Lemma 6.8 shell order on the environment, almost surely (`ShellEnvAe`)
@@ -24,20 +25,6 @@ open MatedCRT.Lemma68ShellPath
 
 namespace MatedCRT
 namespace Lemma68ShellEnvAe
-
-/-- The four shell-order inequalities of `Lemma68ShellPathAe.shell_ineqs_ae` for the walk on `mm` from `a`, with
-environment `η`: shell spacing `T_j ≤ T_{j+1}`, test end `L_j ≤ T_{j+1}` (both under `T_{j+1} < τ_U`), and the crossing
-`T_n < τ_U`, `L_n ≤ τ_U`, all almost surely on the path. -/
-def ShellOrderAe (ε : ℝ) (η : ℝ → ℂ) (Θ F0 : Finset ℤ) (r s d : ℝ) (R : ℂ → ℝ) (n : ℕ)
-    (mm : ℤ → ℤ → ℕ) (a : ℤ) : Prop :=
-  (∀ j < n, ∀ᵐ x ∂(srwLaw mm a),
-      shellExit ε η (fillCells ε η ↑Θ) r s d R (j + 1) x < vExitTime (killed ε η Θ F0 r) x →
-        shellExit ε η (fillCells ε η ↑Θ) r s d R j x ≤ shellExit ε η (fillCells ε η ↑Θ) r s d R (j + 1) x) ∧
-  (∀ j < n, ∀ᵐ x ∂(srwLaw mm a),
-      shellExit ε η (fillCells ε η ↑Θ) r s d R (j + 1) x < vExitTime (killed ε η Θ F0 r) x →
-        testEnd ε η (fillCells ε η ↑Θ) r s d R j x ≤ shellExit ε η (fillCells ε η ↑Θ) r s d R (j + 1) x) ∧
-  (∀ᵐ x ∂(srwLaw mm a), shellExit ε η (fillCells ε η ↑Θ) r s d R n x < vExitTime (killed ε η Θ F0 r) x) ∧
-  (∀ᵐ x ∂(srwLaw mm a), testEnd ε η (fillCells ε η ↑Θ) r s d R n x ≤ vExitTime (killed ε η Θ F0 r) x)
 
 /-- The map input of the shell chain, almost surely on the environment: every edge `S.mult ε ω j k ≠ 0` of the
 mated-CRT map joins intersecting SLE cells, for all mesh sizes `ε > 0` (`adjacentCellsMeetAeStep`). -/
@@ -66,7 +53,7 @@ theorem shell_order_env_ae {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0 < 
       (∀ k ≤ n, shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑Θ) r s d R k x ≠ ⊤ ∧
         testEnd ε (S.η ω) (fillCells ε (S.η ω) ↑Θ) r s d R k x ≠ ⊤) ∧
       (∀ k ≤ n, Elig (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑Θ) r s d k x))) :
-    ∀ᵐ ω ∂S.P, ShellOrderAe ε (S.η ω) Θ F0 r s d R n (S.mult ε ω) a := by
+    ∀ᵐ ω ∂S.P, Lemma68ShellOrder.ShellOrderAe ε (S.η ω) Θ F0 r s d R n (S.mult ε ω) a := by
   filter_upwards [hη, hF0, hmesh, hstart, hkill, hde, map_cells_meet_ae hγ0 hγ2 S hS]
     with ω hη' hF0' hmesh' hstart' hkill' hde' hmap'
   exact Lemma68ShellPathAe.shell_ineqs_ae hη' hε hr hs hs4 hd hh hds hΘne hR hF0' hmesh' hNs hstart'
