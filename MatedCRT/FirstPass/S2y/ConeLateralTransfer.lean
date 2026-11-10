@@ -18,7 +18,7 @@ or uncountable index set `ConeJointIndex` is determined by its finite-dimensiona
 the circle process.
 -/
 
-open MeasureTheory ProbabilityTheory Filter Topology Set Metric HarmonicBalls
+open MeasureTheory ProbabilityTheory Filter Topology Set Metric HarmonicBalls MarkovProcess
 open scoped NNReal ENNReal
 
 namespace MatedCRT.LQGMeasure
@@ -242,5 +242,91 @@ theorem jointLateralLaw_of_circleLaw {γ : ℝ} {Ω : Type} [MeasurableSpace Ω]
         rw [hmu]
     _ = P.map (fun ω => (circleProcess (hcirc ω), lateralProcess (hC ω) (hcirc ω))) :=
         measurable_splitConeJoint.aemeasurable.map_map_of_aemeasurable hVH
+
+/-- **Provider for `ConeLateralTransferStep` (chat 231 §6), with the radial codes as binders.** The radial pairing code
+`rp` and the radial sphere code `rs` are z11's `radialPairingCode` and `radialSphereCode` (`S2y/ConeRadialCodes.lean`,
+not yet committed). The binders `hpairAE` and `hsphereAE` are the a.s. identities of `radialPairingCode_ae_eq` and
+`radialSphereCode_ae_eq`, for a field with the radial law. The rescaling uses the scaling input `hscale`; the circle
+law equality is `hscale` applied to the rescaled circle process. -/
+theorem coneLateralTransferStep_of_radialCodes
+    (hscale : QuantumConeScalingInput)
+    (rp : (ℂ → ℝ) → (Set.Ioi (0 : ℝ) × ℂ → ℝ) → ℝ)
+    (rs : ℝ → ℂ → (Set.Ioi (0 : ℝ) × ℂ → ℝ) → ℝ)
+    (hrp_m : ∀ φ, Measurable (rp φ)) (hrs_m : ∀ r z, Measurable (rs r z))
+    (hpairAE : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (c : Ω → ℝ → ℂ → ℝ),
+      (∀ r z, 0 < r → Measurable fun ω => c ω r z) →
+      (∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ)) →
+      (∃ ν : Measure (ContinuousPath ℝ), IsBMConditionedPositive (lqgQ γ - γ) ν ∧
+        P.map (fun ω => radialProcess (c ω)) = quantumConeRadialLaw γ ν) →
+      ∀ φ : ℂ → ℝ, IsTestFunction Set.univ φ →
+        ∀ᵐ ω ∂P, rp φ (circleProcess (c ω)) = ∫ x, φ x * c ω ‖x‖ 0)
+    (hsphereAE : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (c : Ω → ℝ → ℂ → ℝ),
+      (∀ r z, 0 < r → Measurable fun ω => c ω r z) →
+      (∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ)) →
+      (∃ ν : Measure (ContinuousPath ℝ), IsBMConditionedPositive (lqgQ γ - γ) ν ∧
+        P.map (fun ω => radialProcess (c ω)) = quantumConeRadialLaw γ ν) →
+      ∀ (r : ℝ) (z : ℂ), 0 < r →
+        ∀ᵐ ω ∂P, rs r z (circleProcess (c ω)) = Real.circleAverage (fun x => c ω ‖x‖ 0) z r) :
+    ConeLateralTransferStep := by
+  intro γ hγ hγ2 Ω _ P hC hcirc hP hQ b hb c D hcm hc hD
+  have hqc : Measurable fun ω => circleProcess (c ω) := measurable_circleProcess_of hcm
+  have hqh : Measurable fun ω => circleProcess (hcirc ω) :=
+    measurable_circleProcess_of hQ.measurable_circle
+  have hpos : ∀ᵐ ω ∂P, 0 < coneScaleRadius γ (hcirc ω) b :=
+    MatedCRT.Sec1.ae_coneScaleRadius_pos hscale hγ hγ2 hQ hb
+  have hcont : ∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ) := by
+    filter_upwards [hQ.ae_continuousOn_circle, hc, hpos] with ω hω hcω hpω
+    rw [hcω]
+    exact continuousOn_rescaledCircle γ b _ hpω hω
+  have hlaw : P.map (fun ω => circleProcess (c ω)) = P.map (fun ω => circleProcess (hcirc ω)) := by
+    calc P.map (fun ω => circleProcess (c ω))
+        = P.map (fun ω => circleProcess
+            (rescaledCircle γ (hcirc ω) (coneScaleRadius γ (hcirc ω) b) b)) :=
+          Measure.map_congr (hc.mono fun ω hω => congrArg circleProcess hω)
+      _ = P.map (fun ω => circleProcess (hcirc ω)) := hscale γ hγ hγ2 Ω P hC hcirc hP hQ b hb
+  have hradC : ∃ ν : Measure (ContinuousPath ℝ), IsBMConditionedPositive (lqgQ γ - γ) ν ∧
+      P.map (fun ω => radialProcess (c ω)) = quantumConeRadialLaw γ ν := by
+    obtain ⟨ν, hν, hrad⟩ := hQ.radial_law
+    refine ⟨ν, hν, ?_⟩
+    have e1 : ∀ h : ℝ → ℂ → ℝ, radialProcess h = radialOfCircle (circleProcess h) :=
+      fun h => radialProcess_eq_radialOfCircle h
+    calc P.map (fun ω => radialProcess (c ω))
+        = P.map (fun ω => radialOfCircle (circleProcess (c ω))) := by simp only [e1]
+      _ = (P.map fun ω => circleProcess (c ω)).map radialOfCircle :=
+          (Measure.map_map measurable_radialOfCircle hqc).symm
+      _ = (P.map fun ω => circleProcess (hcirc ω)).map radialOfCircle := by rw [hlaw]
+      _ = P.map (fun ω => radialOfCircle (circleProcess (hcirc ω))) :=
+          Measure.map_map measurable_radialOfCircle hqh
+      _ = P.map (fun ω => radialProcess (hcirc ω)) := by simp only [e1]
+      _ = quantumConeRadialLaw γ ν := hrad
+  exact jointLateralLaw_of_circleLaw hP hQ hcm hcont hlaw D hD rp rs hrp_m hrs_m
+    (hpairAE Ω P γ c hcm hcont hradC) (hpairAE Ω P γ hcirc hQ.measurable_circle hQ.ae_continuousOn_circle hQ.radial_law)
+    (hsphereAE Ω P γ c hcm hcont hradC) (hsphereAE Ω P γ hcirc hQ.measurable_circle hQ.ae_continuousOn_circle hQ.radial_law)
+
+/-- **`ConeFieldScalingStep` without `hpair` (chat 231 §7), with the circle decoder as a binder.** `hdec` is
+`ConeCircleDecoderStep` (z1, `coneCircleDecoderStep_proved`, not yet committed); the lateral transfer is
+`coneLateralTransferStep_of_radialCodes`. -/
+theorem coneFieldScalingStep_proved_no_hpair
+    (hscale : QuantumConeScalingInput) (hdec : ConeCircleDecoderStep)
+    (rp : (ℂ → ℝ) → (Set.Ioi (0 : ℝ) × ℂ → ℝ) → ℝ)
+    (rs : ℝ → ℂ → (Set.Ioi (0 : ℝ) × ℂ → ℝ) → ℝ)
+    (hrp_m : ∀ φ, Measurable (rp φ)) (hrs_m : ∀ r z, Measurable (rs r z))
+    (hpairAE : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (c : Ω → ℝ → ℂ → ℝ),
+      (∀ r z, 0 < r → Measurable fun ω => c ω r z) →
+      (∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ)) →
+      (∃ ν : Measure (ContinuousPath ℝ), IsBMConditionedPositive (lqgQ γ - γ) ν ∧
+        P.map (fun ω => radialProcess (c ω)) = quantumConeRadialLaw γ ν) →
+      ∀ φ : ℂ → ℝ, IsTestFunction Set.univ φ →
+        ∀ᵐ ω ∂P, rp φ (circleProcess (c ω)) = ∫ x, φ x * c ω ‖x‖ 0)
+    (hsphereAE : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (c : Ω → ℝ → ℂ → ℝ),
+      (∀ r z, 0 < r → Measurable fun ω => c ω r z) →
+      (∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ)) →
+      (∃ ν : Measure (ContinuousPath ℝ), IsBMConditionedPositive (lqgQ γ - γ) ν ∧
+        P.map (fun ω => radialProcess (c ω)) = quantumConeRadialLaw γ ν) →
+      ∀ (r : ℝ) (z : ℂ), 0 < r →
+        ∀ᵐ ω ∂P, rs r z (circleProcess (c ω)) = Real.circleAverage (fun x => c ω ‖x‖ 0) z r) :
+    ConeFieldScalingStep :=
+  coneFieldScalingStep_of_decoder hscale hdec
+    (coneLateralTransferStep_of_radialCodes hscale rp rs hrp_m hrs_m hpairAE hsphereAE)
 
 end MatedCRT.LQGMeasure
