@@ -217,6 +217,33 @@ theorem perState_stayIn_le {η : ℝ → ℂ} (hη : Continuous η) {ε R c0 q0 
     (fun v hv => interiorCellVertices_vertex_ball_sub hη hε hR hc0 hv (hdy v hv) (hdiam v hv))
     (fun v hv => hloc v hv) hS2
 
+
+/-- **hpt in the form of `cfgSchedule_valid` (S6h/Schedule.lean).** For a family of successive times `T j`, a centre
+map `Z` and a radius map `Rs` (instantiated at `cfgCentre`, `cfgStateRadius`), and a predicate `Good` on the states
+(the good event of the configuration), the almost-sure per-state bound at the state `X_{T_j}` holds. The hypotheses are
+per state: `hloc` (printed_test_bound at the local windows of the middle vertices), `hdy`, `hdiam` (cell diameters) and
+`hS2` (z12's S2), and `hgood` is the almost-sure statement that the exit state is good. -/
+theorem hpt_of_state (m : ℤ → ℤ → ℕ) (a : ℤ) (η : ℝ → ℂ) (hη : Continuous η) {ε c0 q0 : ℝ} (A : Set ℤ)
+    (T : ℕ → (ℕ → ℤ) → ℕ∞) (Z : ℤ → ℂ) (Rs : ℤ → ℝ) (Good : ℤ → Prop)
+    (hε : 0 < ε) (hc0 : c0 < 1 / 8) (hq0 : 0 < q0)
+    (hR : ∀ y, 0 < Rs y) (hR1 : ∀ y, Rs y ≤ 1)
+    (hloc : ∀ y, Good y → ∀ v ∈ middleVertices ε η (Z y) (Rs y),
+      srwLaw m v (TestBound68.stayIn (fun u => interiorCellVertices ε η (Metric.ball (vertexPoint ε η u) (Rs y / 4)))
+        A v) ≤ ENNReal.ofReal (1 - min q0 1 / (1 + Real.log (1 / Rs y)) ^ 2))
+    (hdy : ∀ y, Good y → ∀ v ∈ middleVertices ε η (Z y) (Rs y), Metric.diam (cell ε η v) ≤ Rs y / 100)
+    (hdiam : ∀ y, Good y → ∀ v ∈ middleVertices ε η (Z y) (Rs y), ∀ k : ℤ,
+      (cell ε η k ∩ Metric.ball (vertexPoint ε η v) (Rs y / 4)).Nonempty → Metric.diam (cell ε η k) ≤ c0 * Rs y)
+    (hS2 : ∀ y, Good y → ∀ᵐ p ∂srwLaw m y,
+      vHitTime (middleVertices ε η (Z y) (Rs y)) p < vExitTime (interiorCellVertices ε η (Metric.ball (Z y) (2 * Rs y))) p)
+    (hgood : ∀ j, ∀ᵐ x ∂srwLaw m a, T j x < ⊤ → Good (x (T j x).toNat)) (j : ℕ) :
+    ∀ᵐ x ∂srwLaw m a, T j x < ⊤ →
+      srwLaw m (x (T j x).toNat)
+          (TestBound68.stayIn (fun y => interiorCellVertices ε η (Metric.ball (Z y) (2 * Rs y))) A (x (T j x).toNat)) ≤
+        ENNReal.ofReal (1 - min q0 1 / (1 + Real.log (1 / Rs (x (T j x).toNat))) ^ 2) := by
+  filter_upwards [hgood j] with x hg hT
+  exact perState_stayIn_le hη m (x (T j x).toNat) A hε (hR _) (hR1 _) hc0 hq0
+    (hloc _ (hg hT)) (hdy _ (hg hT)) (hdiam _ (hg hT)) (hS2 _ (hg hT))
+
 end S6j
 
 end MatedCRT
