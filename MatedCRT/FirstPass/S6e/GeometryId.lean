@@ -115,6 +115,45 @@ theorem cellVertices_add_ball_eq {η : ℝ → ℂ} (hη : Continuous η) {ε : 
   rw [← thickening_eq_add_ball]
   exact cellVertices_thickening_eq hη hε Θ r
 
+/-- (B2.1, density, supremum form) For a continuous `h : ℝ → ℝ≥0∞`, the supremum over the rational points of `I_k`
+equals the supremum over `I_k`; this turns the countable formula (4) into a supremum over the cell. -/
+lemma iSup_ratInt_eq {h : ℝ → ℝ≥0∞} (hh : Continuous h) {ε : ℝ} (hε : 0 < ε) (k : ℤ) :
+    ⨆ q : ratInt ε k, h ((q : ℚ) : ℝ) = ⨆ s ∈ Icc (ε * ((k : ℝ) - 1)) (ε * k), h s := by
+  apply le_antisymm
+  · refine iSup_le fun q => ?_
+    exact le_iSup₂ (f := fun s _ => h s) ((q : ℚ) : ℝ) q.2
+  · refine iSup₂_le fun s hs => ?_
+    have hmem : h s ∈ closure (h '' (((↑) : ℚ → ℝ) '' ratInt ε k)) :=
+      mem_closure_image hh.continuousAt (Icc_subset_closure_ratInt hε k hs)
+    have hle : closure (h '' (((↑) : ℚ → ℝ) '' ratInt ε k)) ⊆ Iic (⨆ q : ratInt ε k, h ((q : ℚ) : ℝ)) := by
+      apply closure_minimal _ isClosed_Iic
+      rintro _ ⟨_, ⟨q, hq, rfl⟩, rfl⟩
+      exact le_iSup (fun q : ratInt ε k => h ((q : ℚ) : ℝ)) ⟨q, hq⟩
+    exact hle hmem
+
+/-- (B2.1 (1), write-up (4)) The maximal distance `M_k` is the supremum over the cell `H_k` of the distance to `K`. -/
+lemma cellDistMax_eq_iSup_cell {η : ℝ → ℂ} (hη : Continuous η) {ε : ℝ} (hε : 0 < ε) (Θ : Finset ℤ) (k : ℤ) :
+    cellDistMax ε η Θ k = ⨆ u ∈ cell ε η k, Metric.infEDist u (fillCells ε η ↑Θ) := by
+  have hcont : Continuous fun s : ℝ => Metric.infEDist (η s) (fillCells ε η ↑Θ) :=
+    Metric.continuous_infEDist.comp hη
+  unfold cellDistMax
+  refine (iSup_congr fun q : ratInt ε k => pointDist_eq_infEDist hη hε Θ (q : ℚ)).trans
+    ((iSup_ratInt_eq (h := fun s => Metric.infEDist (η s) (fillCells ε η ↑Θ)) hcont hε k).trans ?_)
+  rw [cell, iSup_image]
+
+/-- Almost-sure form of the cell identification: the curve is continuous almost surely (write-up IsValid). -/
+theorem ae_cellDist_eq_iInf_cell {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {η : Ω → ℝ → ℂ}
+    (hae : ∀ᵐ ω ∂P, Continuous (η ω)) {ε : ℝ} (hε : 0 < ε) (Θ : Finset ℤ) (k : ℤ) :
+    ∀ᵐ ω ∂P, cellDist ε (η ω) Θ k = ⨅ u ∈ cell ε (η ω) k, Metric.infEDist u (fillCells ε (η ω) ↑Θ) :=
+  hae.mono fun _ h => cellDist_eq_iInf_cell h hε Θ k
+
+/-- Almost-sure form of `V(K + B_r) = {k : d_k < r}`. -/
+theorem ae_cellVertices_add_ball_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {η : Ω → ℝ → ℂ}
+    (hae : ∀ᵐ ω ∂P, Continuous (η ω)) {ε : ℝ} (hε : 0 < ε) (Θ : Finset ℤ) (r : ℝ) :
+    ∀ᵐ ω ∂P, cellVertices ε (η ω) (fillCells ε (η ω) ↑Θ + Metric.ball (0 : ℂ) r) =
+      {k : ℤ | cellDist ε (η ω) Θ k < ENNReal.ofReal r} :=
+  hae.mono fun _ h => cellVertices_add_ball_eq h hε Θ r
+
 end Lemma68GeometryId
 
 end MatedCRT
