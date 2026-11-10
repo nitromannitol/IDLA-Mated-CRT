@@ -349,7 +349,7 @@ theorem coneLateralTransferStep_proved (hscale : QuantumConeScalingInput)
     measurable_radialPairingCode measurable_radialSphereCode
     (fun _ _ _ _ _ hcm hcont hrad φ hφ => radialPairingCode_ae_eq hcm hcont hrad φ hφ)
     (fun Ω _ P γ c hcm hcont hrad _r z hr =>
-      radialSphereCode_ae_eq hcm hcont hrad (hcircInt Ω P γ c hcm hcont hrad) hr z)
+      radialSphereCode_ae_eq_of_circInt hcm hcont hrad (hcircInt Ω P γ c hcm hcont hrad) hr z)
 
 /-- **`ConeFieldScalingStep` without `hpair`, with the radial codes concrete (chat 231 §7).** Two named inputs remain:
 the circle decoder `hdec : ConeCircleDecoderStep` (z1, `coneCircleDecoderStep_proved`, blocked on G1/G2, request 59a) and
