@@ -6,10 +6,11 @@ import MatedCRT.FirstPass.S3t
 # Lemma 3.4 with the truncated quenched laws derived (fp-S3t-consumers, z5)
 
 `firstPass_3_4_derived` is `MatedCRT.S3S4c.firstPass_3_4` (`FirstPass/S3S4c.lean:149`) with the frozen hypothesis
-`hdet : FrozenTruncatedQuenchedLawsFixedTime 𝒮` removed. The input is the local hypothesis `hT`, which stands for the
-derivation `truncatedQuenchedLawsFixedTime_of_inputs` (z8, `FirstPass/S3t.lean`, not yet committed) with arguments
-`h211`, `h28`, `hm`, `hexc` (note `notes/fp-gaps/CHATGPT-idla-3-4-truncated-laws.md` §4). When z8 commits that theorem,
-replace `hT` by it. The old `firstPass_3_4` is unchanged. Terminology: Berestycki–Powell, Armitage–Gardiner for the
+`hdet : FrozenTruncatedQuenchedLawsFixedTime 𝒮` removed. `firstPass_3_4_derived` takes the local hypothesis `hT`, standing
+for the derivation `truncatedQuenchedLawsFixedTime_of_inputs` (not yet committed; note
+`notes/fp-gaps/CHATGPT-idla-3-4-truncated-laws.md` §4). `firstPass_3_4_derived_staged` instead uses the committed staged
+theorem `MatedCRT.TruncatedLaws.truncatedQuenchedLawsFixedTime_of_inputs_staged` (`FirstPass/S3t.lean:329`) with the two
+routed measurability binders `hmeas`, `hShellMeas`. The old `firstPass_3_4` is unchanged. Terminology: Berestycki–Powell, Armitage–Gardiner for the
 Green function; Duplantier–Sheffield for the LQG measure.
 -/
 

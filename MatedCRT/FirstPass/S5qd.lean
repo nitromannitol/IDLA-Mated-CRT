@@ -7,9 +7,11 @@ import MatedCRT.FirstPass.S3t
 
 `firstPass_5_1_derived` is `firstPass_5_1` (`FirstPass/S5q.lean:98`) with the frozen hypothesis
 `hdet : FrozenTruncatedQuenchedLawsFixedTime 𝒮` removed (it was at `S5q.lean:55` in `firstPass_5_1_of_obstacleVersion`
-and at `S5q.lean:111` in `firstPass_5_1`). The input is the local hypothesis `hT`, standing for the derivation
-`truncatedQuenchedLawsFixedTime_of_inputs` (z8, `FirstPass/S3t.lean`, not yet committed) applied to `h211`, `h28`, `hm`,
-`hexc`; replace `hT` by that theorem when z8 commits it. The old `firstPass_5_1` is unchanged.
+and at `S5q.lean:111` in `firstPass_5_1`). The `_derived` declarations take the local hypothesis `hT`, standing for the
+derivation `truncatedQuenchedLawsFixedTime_of_inputs` (not yet committed). The `_derived_staged` declarations
+(`firstPass_5_1_derived_staged`, `closed_5_1_canon_noCell_derived_staged`) use the committed staged theorem
+`MatedCRT.TruncatedLaws.truncatedQuenchedLawsFixedTime_of_inputs_staged` (`FirstPass/S3t.lean:329`) with the two routed
+measurability binders `hmeas`, `hShellMeas`. The old `firstPass_5_1` is unchanged.
 
 `closed_5_1_canon_noCell_derived` is `closed_5_1_canon_noCell` (`Closure/Prop51Canon.lean:70`) with the same substitution.
 The closure `closed_5_1` (`Closure/Prop51.lean:43`) took `hdet := hC.frozenTruncatedQuenchedLaws`; here the body is
