@@ -2823,164 +2823,641 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 	
 	
 	
-	\begin{proof}[Proof of Lemma \ref{lemma:constant-order-lower-bound-div}] 
-		Let $\omega = \omega(\gamma) > 0$ be as in Lemma \ref{lemma:greens-kernel-lower-bound}.
-		We may assume, by possibly taking $\omega$ smaller, that $2 \beta^{-} \omega \leq \alpha$, where $\beta^-$ and $\alpha$ are as in 
-		Lemmas \ref{lemma:volume-growth} and \ref{lemma:mu_h-convergence}. This will be used in \eqref{eq:use-of-assumption-on-omega} below. 
-		
-		Let $E_{r}(z) = E_r(z; C)$
-		and $C > 0$ be the event and parameter from Lemma \ref{lemma:good-prevalance}.
-		By Lemma \ref{lemma:good-prevalance}, it holds with polynomially high probability as $\delta \to 0$ that for each $z \in (B_{\rho - 3 \sqrt{\delta}} \setminus B_{10 \sqrt{\delta}}) \cap \frac{\delta}{100} \Z^2$, there exists $\mathbf{r}_z = \mathbf{r}_z(\delta) \in [\delta,\delta^{1/2}]$ such that $E_{\mathbf{r}_z}(z)$ occurs. 
-		By Lemma~\ref{lemma:volume-growth}, it also holds with polynomially high probability as $\delta \to 0$ that 
-		\begin{equation} \label{eq:volume-growth-lower-bound}
-		\mu_h\left( B_{\delta}(x) \right)  \geq \delta^{\beta^-}, \quad \forall x \in B_{1 - \delta}.
-		\end{equation}
-		By the Borel-Cantelli lemma, a.s.\ there exists a random $\boldsymbol{\delta}' > 0$ such that the preceding two sentences hold for all dyadic $\delta < \boldsymbol{\delta}'$. 
-		We restrict to the event that the statements in Lemmas \ref{lemma:mu_h-convergence}, \ref{lemma:greens-kernel-lower-bound}, and \ref{lemma:exit-time-upper-bound} all hold, which happens with probability tending to 1 as ${\eps}\to 0$.  (For Lemma \ref{lemma:mu_h-convergence} we suppose that convergence holds for some countable family of polynomials which are dense in the uniform topology in $B_{\rho}$.) Our calculations below will require ${\eps}$ to be small in a deterministic way, so we fix a small deterministic $\boldsymbol{\pi}$ (which we will determine below) and an ${\eps} < \boldsymbol{\pi}$.  
-		
-		\medskip
-		{\it Step 1: Reduction to random walk in a good annulus.}  \\
-		We surround $\Theta$ by good annuli. By our assumptions on $\Theta$, by possibly taking $\boldsymbol{\pi}$ smaller, depending only on $s_0$, we can arrange that
-		\begin{equation} \label{eq:boundary-inside}
-		(\overline{\Theta} + B_{20 \sqrt{\delta }}) \setminus (\overline{\Theta} + B_{\sqrt{\delta }}) \Subset  B_\rho \setminus B_{10 \sqrt{\delta }}, \quad \forall \delta < \boldsymbol{\pi} \wedge \boldsymbol{\delta}'.
-		\end{equation}
-		By~\eqref{eq:boundary-inside} and the fact that $\mathbf{r}_z \in [\delta , \delta^{1/2}]$, we obtain that for each $\delta < \boldsymbol{\pi} \wedge \boldsymbol{\delta}'$ there exists $\mathbf{Z} = \mathbf{Z}(\delta) \subset (B_{\rho - \delta } \setminus B_{10 \sqrt{\delta }})  \cap \frac{\delta }{100} \Z^2$ for which
-		\begin{equation} \label{eq:cover-continuous}
-		(\overline{\Theta} + B_{4 \sqrt{\delta }}) \setminus (\overline{\Theta} + B_{3 \sqrt{\delta }}) \Subset \bigcup_{{z} \in \mathbf{Z}} B_{\mathbf{r}_{{z}}/2}({z}) \Subset B_{\rho- 10 \sqrt{\delta}}
-		\end{equation} 
-		and 
-		\begin{equation} \label{eq:cover-in-complement}
-		\bigcup_{{z} \in \mathbf{Z}} B_{3 \mathbf{r}_{{z}}}({z}) \Subset (\overline \Theta + B_{2 \sqrt{\delta}})^c.
-		\end{equation}
-		We now fix a dyadic $\delta \in (10 {\eps}^{\omega}, \boldsymbol{\pi} \wedge \boldsymbol{\delta}')$ 	
-		and let $r \in [\delta, \sqrt{\delta}] < \rho/4$. We continue with this choice of $r$ as the lemma statement follows once we choose
-		$\boldsymbol{\delta} = \sqrt{\boldsymbol{\pi} \wedge \boldsymbol{\delta}'}$.
-		
-		
-		By \eqref{eq:cover-continuous} and the strong Markov property of simple random walk, it suffices to prove the lemma 
-		with $a$ replaced by $b \in {\VGeps}(\partial B_{{(4/3)} \mathbf{r}_{z}}({z}))$ for ${z} \in \mathbf{Z}$. We in fact prove the following stronger statement: 
-		a simple random walk $X^{b, {\eps}}_t$ started at such $b$ hits
-		\[
-% CORRECTION [C22] (editorial, referee check chat 185): printed \mathbf{r}_{z/4} read as \mathbf{r}_{z}/4 (five places in this proof); a missing parenthesis in Step 3 and the $ placement in Step 4 fixed.
-		\mathfrak{E} := {\VGeps}(B_{\mathbf{r}_{z}/4}(\eta(b))) \setminus A
-		\]
-		before exiting ${\VGeps}(B_{\mathbf{r}_{z}/4}(\eta(b)))$ with conditional probability given $(h,\eta)$ bounded from below by a constant.
-		See Figure \ref{fig:path-decomposition}.  
-		\medskip
-		
-		{\it Step 2: Random walk in a good annulus.} \\
-		Let $\xi_{\mathbf{r}_{z}}$ 
-		be the first time that $X^{b, {\eps}}_t$ hits ${\VGeps}(\partial B_{\mathbf{r}_{z}/4}(\eta(b)))$ and let 
-		\begin{equation} \label{eq:visit-count}
-		V = \sum_{t=0}^{\xi_{\mathbf{r}_{z}}} 1 \{ X^{b, {\eps}}_t \in \mathfrak{E}\}  = \left( \text{number of visits of $\mathfrak{E}$ by $X^{b, {\eps}}$ before time $\xi_{\mathbf{r}_{z}}$} \right) .
-		\end{equation}
-		By the second moment method, 
-		\begin{equation} \label{eq:second-moment-lower-bound}
-		\P[V \geq 1 | h, \eta] \geq \frac{(\E[V | h, \eta])^2}{\E[V^2 | h , \eta]}.
-		\end{equation}		
-		In the next two steps we show that 
-		\begin{equation} \label{eq:lower-bound-on-V}
-		\E[ V | h ,\eta] \geq  {\eps}^{-1} C^{-1} \times \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))
-		\end{equation}
-		and
-		\begin{equation} \label{eq:upper-bound-on-V}
-		\E[ V^2 | h ,\eta]   \leq  C {\eps}^{-2} \left(\sup_{v \in \A_{\mathbf{r}_{z}, 2\mathbf{r}_{z}}(z)} \int_{\A_{\mathbf{r}_{z},2 \mathbf{r}_{z}}(z)} \left( \log \frac{1}{|u-v|} + 1  \right) d \mu_h(u)\right)^2,
-		\end{equation}	
-		for some large deterministic constant $C = C(\rho, \gamma) > 0$. 
-		Combining \eqref{eq:lower-bound-on-V} and \eqref{eq:upper-bound-on-V}  
-		together with the definition of the event $E_r(z)$ in \eqref{eq:good-annulus-event}, leads to 
-		a constant order lower bound in \eqref{eq:second-moment-lower-bound}. This completes the proof by the definition~\eqref{eq:visit-count} of $V$. 
-		\medskip 
-		
-		{\it Step 3: Lower bound on the numerator.} \\ 
-		We lower bound the numerator:
-		\begin{align*}
-		\E[ V | h ,\eta] &= \sum_{b' \in \mathfrak{E}} \Gr{{\eps}}{B_{\mathbf{r}_{z}/4}(\eta(b))}(b, b') \qquad \mbox{(definition of $V$ and $\Gr{{\eps}}{B_{\mathbf{r}_{z}}(\eta(b))}$)} \\
-		&\geq \sum_{b' \in {\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) \cap \mathfrak{E}} \Gr{{\eps}}{B_{\mathbf{r}_{z}/4}(\eta(b))}(b, b') \quad \mbox{(where $\boldsymbol{c_0}$
-			is as in \eqref{eq:choice-of-constant-annulus})} \\
-% CORRECTION [C22] (2026-11-10, under the author's standing approval of IDLA corrections; text from ChatGPT chat 176): printed: Step 3 bounded |A cap V(B_{c_0 r_z}(eta(b)))| by the sparsity bound of a single radius-r ball, giving s_1 r^{2 beta^-}; this needs c_0 r_z <= r, which the radius selection does not give. Corrected: cover B_{c_0 r_z}(eta(b)) by at most (1+2c_0 r_z/r)^2 radius-r balls, giving 10 s_1 r_z^{beta^-} eps^{-1} (r^2 <= delta <= r_z, beta^- > 1), and take s_1 < c/10.
-		&\geq \left( \inf_{b' \in {\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))} \Gr{{\eps}}{B_{\mathbf{r}_{z}/4}(\eta(b))}(b, b') \right) (|{\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))| - |A \cap {\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))| ) .
-		\end{align*}
-		To bound the last term, cover $B_{\boldsymbol{c_0}\mathbf{r}_{z}}(\eta(b))$ by at most
-		\[
-		\left(1+\frac{2\boldsymbol{c_0}\mathbf{r}_{z}}{r}\right)^2
-		\]
-		balls of radius $r$.  By the assumption on $A$,
-		\begin{align*}
-		{\eps}|A \cap {\VGeps}(B_{\boldsymbol{c_0}\mathbf{r}_{z}}(\eta(b)))|
-		&\leq s_1\left(1+\frac{2\boldsymbol{c_0}\mathbf{r}_{z}}{r}\right)^2r^{2\beta^-} \\
-		&\leq 2s_1r^{2\beta^-}
-		+8s_1\boldsymbol{c_0}^2\mathbf{r}_{z}^{\,2}r^{2\beta^- -2}
-		\leq 10s_1\mathbf{r}_{z}^{\beta^-}.
-		\end{align*}
-		Indeed, since $r,\mathbf{r}_{z}\in[\delta,\sqrt{\delta}]$, we have $r^2\leq\delta\leq\mathbf{r}_{z}$; hence, using $\beta^->1$ and $\mathbf{r}_{z}\leq1$,
-		\[
-		r^{2\beta^-}\leq\mathbf{r}_{z}^{\beta^-},
+% CORRECTION [C26]: replace the proof of Lemma 6.8 by a target-scale short-window good-annulus construction and two-sided-shell amplification; this also repairs the [C5] kernel, Green-function, cell-size, stopping-time, and exponent-bookkeeping gaps.
+\begin{proof}[Proof of Lemma \ref{lemma:constant-order-lower-bound-div}]
+	As in the rest of this section, take the exponent $\beta^-$ in the
+	statement to be a fixed deterministic choice allowed by Lemma
+	\ref{lemma:volume-growth}, depending only on $\gamma$, and write
+	$\beta=\beta^-$.  Fix once and for all
+	\[
+		0<\zeta<\frac12,
 		\qquad
-		\mathbf{r}_{z}^{\,2}r^{2\beta^- -2}
-		\leq\mathbf{r}_{z}^{\,\beta^-+1}
-		\leq\mathbf{r}_{z}^{\beta^-}.
-		\]
-		It follows that
-		\begin{align*}
-		\E[ V | h ,\eta]
-		&\geq \left( \inf_{b' \in {\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))} \Gr{{\eps}}{B_{\mathbf{r}_{z}/4}(\eta(b))}(b, b') \right) {\eps}^{-1}
-		\left(\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) - 10s_1\mathbf{r}_{z}^{\beta^-}
-		- {\eps}^{\alpha}\right)
-		\stepcounter{equation}\tag{\theequation}\label{eq:lower-bound-on-V-intermediate} \\
-		&\qquad \mbox{(by the preceding covering estimate and Lemma \ref{lemma:mu_h-convergence})}.
-		\end{align*}
-		We claim that for a sufficiently small, deterministic choice of $\boldsymbol{\pi} > 0$ and $s_1 > 0$, 
-		\begin{equation}\label{eq:use-of-assumption-on-omega}
-		\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) - 10s_1\mathbf{r}_{z}^{\beta^-}
-		- {\eps}^{\alpha} \geq  C'\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))
-		\end{equation} 
-		for some deterministic constant $C' = C'(\rho, \gamma)$.
-		Indeed, for a deterministic constant $c = c(\rho, \gamma)$ which will change from line to line we have
-		\begin{align*}
-		&\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) - 10s_1\mathbf{r}_{z}^{\beta^-}
-		- {\eps}^{\alpha} \\
-		&= \frac{1}{2} \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))  + \frac{1}{2} \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) -
-		10s_1\mathbf{r}_{z}^{\beta^-}
-		- {\eps}^{\alpha}  \\
-		&\geq \frac{1}{2} \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))  + c \times \mathbf{r}_{z}^{\beta^-} -
-		10s_1\mathbf{r}_{z}^{\beta^-}
-		- {\eps}^{\alpha}  \quad \mbox{(by Lemma \ref{lemma:volume-growth})} \\
-		&\geq \frac{1}{2} \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))  + c \times \mathbf{r}_{z}^{\beta^-}
-		- {\eps}^{\alpha}  \quad \mbox{(for small $s_1 < c/10$)}  \\
-		&\geq \frac{1}{2} \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))  + c \times \delta^{\beta^-}
-		- {\eps}^{\alpha}  \quad \mbox{(since $\mathbf{r}_{z} > \delta$)} \\
-		&\geq \frac{1}{2} \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))  + c \times {\eps}^{\omega \beta^-} 
-		- {\eps}^{2 \beta^- \omega}  \quad \mbox{($\delta > {\eps}^{\omega}$ and $\alpha \geq 2 \beta^- \omega$ by assumption)}  \\
-		&\geq \frac{1}{2} \mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) \quad \mbox{(for $\boldsymbol{\pi}$ small depending only on $c$).}
-		\end{align*}
-		Therefore, 
-		\begin{align*}
-		&\E[ V | h ,\eta] \\
-		&\geq \left( \inf_{b' \in {\VGeps}(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))} \Gr{{\eps}}{B_{\mathbf{r}_{z}/4}(\eta(b))}(b, b') \right) {\eps}^{-1}
-		\left(\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) - 10s_1\mathbf{r}_{z}^{\beta^-}
-		- {\eps}^{\alpha}\right)
-		\quad \mbox{(by \eqref{eq:lower-bound-on-V-intermediate})} \\
-		&\geq \frac{1}{2} {\eps}^{-1} (\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b))) - 10s_1\mathbf{r}_{z}^{\beta^-}
-% END CORRECTION [C22]
-		- {\eps}^{\alpha})  
-		\quad \mbox{(by \eqref{eq:choice-of-constant-annulus} and Lemma \ref{lemma:greens-kernel-lower-bound})} \\
-		&\geq \frac{1}{2} {\eps}^{-1} \times  C'\mu_h(B_{\boldsymbol{c_0} \mathbf{r}_{z}}(\eta(b)))
-		\quad \mbox{(by \eqref{eq:use-of-assumption-on-omega})},
-		\end{align*}
-		which implies \eqref{eq:lower-bound-on-V} with $C^{-1} := C'/2$.
-		\medskip
-		
-		{\it Step 4: Upper bound on the denominator} \\ 
-		We finally upper bound the denominator in~\eqref{eq:second-moment-lower-bound}; here the deterministic constant $C = C(\rho, \gamma) > 0$ also changes from line to-line: 
-		\begin{align*}
-		&\E[ V^2 | h ,\eta] \\
-		&\leq \E[ \xi_{\mathbf{r}_{z}}^2 | h ,\eta] \\
-		&\leq C {\eps}^{-2} \left(\sup_{v \in B_{\mathbf{r}_{z}/4}(\eta(b))} \int_{B_{\mathbf{r}_{z}/4+{\eps}^{\alpha}}(\eta(b))} \left( \log \frac{1}{|u-v|} + 1  \right) d \mu_h(u) \right)^2  \quad \mbox{(by Lemma \ref{lemma:exit-time-upper-bound})} \\
-		&\leq C {\eps}^{-2} \left(\sup_{v \in \A_{\mathbf{r}_{z}, 2\mathbf{r}_{z}}(z)} \int_{\A_{\mathbf{r}_{z},2 \mathbf{r}_{z}}(z)} \left( \log \frac{1}{|u-v|} + 1  \right) d \mu_h(u) \right)^2 \\
-		&\qquad \mbox{(since $r_{z} \geq \delta \geq 10 {\eps}^{\alpha}$ and $b \in {\VGeps}(\partial B_{(4/3) \mathbf{r}_z}(z))$} .
-		\end{align*}
-		This shows \eqref{eq:upper-bound-on-V}. 	\end{proof}
+		\vartheta:=\frac{1+\zeta}{2}\in\left(\frac12,\frac34\right).
+	\]
+	Let $\kappa=\kappa(\gamma)>0$ be an exponent for which Lemma
+	\ref{lemma:cell-size-estimate} gives the upper bound
+	$\mathrm{diam}(\Heps{v})\leq \eps^\kappa$.  Let $\omega_{\rm G}$ be the
+	exponent in Lemma \ref{lemma:greens-kernel-lower-bound}, and let
+	$\alpha_{\rm c}$ and $\alpha_{\rm e}$ be the exponents in Lemmas
+	\ref{lemma:mu_h-convergence} and \ref{lemma:exit-time-upper-bound},
+	respectively.  We choose
+	\begin{equation} \label{eq:c26-choice-omega}
+		0<2\omega<\min\left\{
+		\kappa,\omega_{\rm G},\alpha_{\rm e},
+		\frac{\alpha_{\rm c}}{\beta},
+		\frac{\alpha_{\rm e}}{\beta}
+		\right\}.
+	\end{equation}
+	In particular, $\omega=\omega(\gamma)$.
+
+	Let $C_{\rm G}=C_{\rm G}(\rho,\gamma)$ be the constant in Lemma
+	\ref{lemma:greens-kernel-lower-bound}.  We use the freedom in the
+	choice made in \eqref{eq:choice-of-constant-annulus} to take
+	$\boldsymbol{c_0}$ still smaller, if necessary, so that
+	\begin{equation} \label{eq:c26-choice-c0}
+		\boldsymbol{c_0}<\frac1{48},
+		\qquad
+		C_{\rm G}^{-1}\log\frac1{8\boldsymbol{c_0}}-1\geq\frac12.
+	\end{equation}
+	This only changes the deterministic constant in Lemmas
+	\ref{lemma:annulus-hit} and \ref{lemma:good-prevalance}.
+
+	We first record three consequences of the results preceding the
+	lemma.  They will be used simultaneously below.
+
+	\medskip
+	\noindent
+	{\it Uniform lower volume bound.}
+	By Lemma \ref{lemma:volume-growth} and the Borel--Cantelli lemma,
+	there is an a.s. positive, $\sigma(h)$-measurable random variable
+	$\boldsymbol t_*$ such that
+	\begin{equation} \label{eq:c26-volume-all-scales}
+		\mu_h(B_t(x))\geq c_{\rm v}t^\beta,
+		\qquad x\in B_\rho,\quad 0<t<\boldsymbol t_*,
+	\end{equation}
+	where $c_{\rm v}=2^{-\beta}$.  Indeed, first apply Lemma
+	\ref{lemma:volume-growth} at all sufficiently small dyadic radii.
+	For an arbitrary $t$, choose a dyadic $q\in[t/2,t]$ and use
+	$B_q(x)\subset B_t(x)$.  We decrease $\boldsymbol t_*$ so that all
+	balls under consideration are contained in the range of Lemma
+	\ref{lemma:volume-growth}.
+
+	\medskip
+	\noindent
+	{\it Good radii in a short window.}
+	There are a deterministic $C>0$ and an a.s. positive,
+	$\sigma(h)$-measurable random variable $\boldsymbol d_*$ with the
+	following property.  For every dyadic $d<\boldsymbol d_*$ and every
+	\[
+		z\in Z_d:=\left(B_{\rho-3d^\vartheta}\setminus
+		B_{10d^\vartheta}\right)\cap\frac d{100}\Z^2,
+	\]
+	there is a measurably chosen radius
+	\begin{equation} \label{eq:c26-short-window-radius}
+		R_z(d)\in[d,d^\vartheta]\cap\{7^{-n}:n\in\N\}
+	\end{equation}
+	for which $E_{R_z(d)}(z;C)$ occurs.
+
+	This is the proof of Lemma \ref{lemma:good-prevalance} with its
+	list of radii restricted to the shorter window $[d,d^\vartheta]$.
+	For completeness, we give the details.  Adding a constant to $h$
+	multiplies every $\mu_h$-mass in the definition of $E_R(z;C)$ by
+	the same factor.
+	Consequently this event is determined by the restriction of $h$,
+	viewed modulo additive constant, to
+	\[
+		\A_{(1-\boldsymbol{c_0})R,(2+\boldsymbol{c_0})R}(z)
+		\subset \A_{3R/4,9R/4}(z).
+	\]
+	List the seven-adic radii in $[d,d^\vartheta]$ in decreasing
+	order and continue the list below $d$ to obtain an infinite
+	seven-adic sequence.  Apply Lemma \ref{lemma:annulus-iterate}, after
+	translating by $z$, to the corresponding events, with scale radii
+	$3R$, annular parameters $1/4$ and $3/4$, and
+	\[
+		\alpha_0:=\frac{10\log 7}{1-\vartheta}.
+	\]
+	We use the conclusion only for the first $K(d)$ terms, namely the
+	radii which belong to $[d,d^\vartheta]$.
+	Choose the probability threshold furnished by that lemma, and then
+	choose $C$ by Lemma \ref{lemma:annulus-hit}.  The hypotheses of
+	Lemma \ref{lemma:annulus-hit} hold for every $z\in Z_d$ and every
+	$R\in[d,d^\vartheta]$: namely,
+	$B_{3R}(z)\subset B_\rho$ and
+	$\dist(\A_{R/3,3R}(z),\{0\})\geq 7d^\vartheta\geq R/100$.
+	They also hold for every radius in the continuation below $d$, since
+	such a radius is no larger than $d$.
+	The number $K(d)$ of candidate radii satisfies
+	\[
+		K(d)\geq\frac{(1-\vartheta)\log(1/d)}{\log 7}-2.
+	\]
+	Consequently the probability that no candidate radius is good at a
+	fixed $z$ is at most $C_1d^{10}$.  Since $|Z_d|\leq C_2d^{-2}$,
+	the probability that some $z\in Z_d$ has no good radius is at most
+	$C_3d^8$.  Summing over dyadic $d$ and applying Borel--Cantelli gives
+	$\boldsymbol d_*$.  We decrease this cutoff by a deterministic amount,
+	if necessary, so that the finite list in $[d,d^\vartheta]$ is nonempty
+	for every dyadic $d<\boldsymbol d_*$.  Choosing, for example, the first
+	good radius in that list gives the asserted measurable selection.
+
+	\medskip
+	\noindent
+	{\it Conversion of the corrected annulus kernel.}
+	For $R<1$, $z\in\C$, set
+	\[
+		m_R(z):=\inf_{w\in\A_{R,2R}(z)}
+		\mu_h(B_{\boldsymbol{c_0}R}(w)).
+	\]
+	There is a deterministic $C_0=C_0(\rho,\gamma)>0$ such that, on
+	$E_R(z;C)$, the following holds.  If
+	$F\subset\A_{R,2R}(z)$ is Borel, $v\in\A_{R,2R}(z)$, and
+	$|u-v|\leq R$ for every $u\in F$, then
+	\begin{equation} \label{eq:c26-absolute-potential}
+		\int_F\left(\log\frac1{|u-v|}+1\right)d\mu_h(u)
+		\leq C_0\left(1+\log\frac1R\right)m_R(z).
+	\end{equation}
+	To see this, write
+	$K_R(u,v)=\log(R/|u-v|)+1$.  If $\nu_R$ is normalized arclength
+	measure on $\partial B_{3R/2}(z)$, then the mean-value property for
+	$\log|\cdot|$ gives, for $u\in\A_{R,2R}(z)$,
+	\[
+		\int K_R(u,v)d\nu_R(v)
+		=1+\log\frac{R}{\max\{|u-z|,3R/2\}}
+		\geq 1-\log2.
+	\]
+	Since $K_R\geq1-\log4$ on the product of the annulus with
+	itself and $\mu_h$ is finite on compact sets, we may apply Fubini
+	after adding the constant $\log4-1$.  Averaging the defining
+	inequality for $E_R(z;C)$ therefore yields
+	\begin{equation} \label{eq:c26-annulus-mass}
+		\mu_h(\A_{R,2R}(z))
+		\leq\frac{C}{1-\log2}m_R(z).
+	\end{equation}
+	For the fixed $v$ in the claim, $K_R\geq1$ on $F$, whereas
+	$K_R\geq1-\log4$ on the whole annulus.  Hence
+	\begin{align*}
+		\int_F K_R(u,v)d\mu_h(u)
+		&=\int_{\A_{R,2R}(z)}K_R(u,v)d\mu_h(u)
+		-\int_{\A_{R,2R}(z)\setminus F}K_R(u,v)d\mu_h(u)\\
+		&\leq C m_R(z)+(\log4-1)\mu_h(\A_{R,2R}(z))
+		\leq C_4m_R(z),
+	\end{align*}
+	by \eqref{eq:c26-annulus-mass}.  Adding
+	$\log(1/R)\mu_h(F)$ and again using
+	\eqref{eq:c26-annulus-mass} proves
+	\eqref{eq:c26-absolute-potential}.  This is the point at which the
+	scale-invariant kernel from correction \textup{[C5]} is used.
+
+	We now specify the high-probability event for the map.  Put
+	\[
+		h_\eps:=\sup\{\mathrm{diam}(\Heps{v}):\Heps{v}\cap B_\rho\neq\emptyset\}.
+	\]
+	Intersect the simultaneous events in Lemmas
+	\ref{lemma:cell-size-estimate}, \ref{lemma:mu_h-convergence},
+	\ref{lemma:greens-kernel-lower-bound}, and
+	\ref{lemma:exit-time-upper-bound}.  Their intersection has
+	probability tending to one as $\eps\to0$.  By
+	\eqref{eq:c26-choice-omega}, for all sufficiently small deterministic
+	$\eps$, on this event, whenever $r\geq10\eps^\omega$ and $d$ is
+	dyadic with $r^2\leq d<2r^2$, we have
+	\begin{equation} \label{eq:c26-mesh-preparation}
+		\begin{gathered}
+		 \eps\leq8\boldsymbol{c_0},\qquad
+		 h_\eps\leq\frac{\boldsymbol{c_0}d}{100},
+		 \qquad \eps^{\alpha_{\rm e}}\leq\frac d{100},
+		 \qquad \eps^{\omega_{\rm G}}\leq\frac d4,\\
+		 \eps^{\alpha_{\rm c}}
+		 \leq\frac{c_{\rm v}\boldsymbol{c_0}^\beta}{8}d^\beta,
+		 \qquad
+		 \eps^{\alpha_{\rm e}}
+		 \leq c_{\rm v}4^{-\beta}d^\beta.
+		\end{gathered}
+	\end{equation}
+	All of these inequalities are uniform over $r$ in the indicated
+	range.  For example, $d\geq r^2\geq100\eps^{2\omega}$, and the
+	strict exponent inequalities in \eqref{eq:c26-choice-omega} absorb
+	the fixed constants in \eqref{eq:c26-mesh-preparation}; the first
+	inequality there follows by taking $\eps$ deterministically small.
+
+	Choose
+	\begin{equation} \label{eq:c26-choice-s1}
+		0<s_1\leq\min\left\{\frac12,
+		\frac{c_{\rm v}\boldsymbol{c_0}^\beta}{8}\right\}.
+	\end{equation}
+	We next prove the local random-walk estimate which will be applied at
+	each shell.
+
+	\medskip
+	\noindent
+	{\it One good-annulus test.}
+	Suppose that $r^2\leq d\leq R\leq d^\vartheta$, that
+	$E_R(z;C)$ occurs, that $B_{3R}(z)\subset B_\rho$, and that
+	\[
+		b\in\VGeps(\partial B_{4R/3}(z)).
+	\]
+	Write $x=\eta(b)$ and set
+	\[
+		D:=B_{R/4}(x),
+		\qquad D_0:=B_{\boldsymbol{c_0}R}(x),
+		\qquad m_0:=\mu_h(D_0).
+	\]
+	We also suppose that $d^\vartheta\leq r/4000$ and that all the
+	radii in this display are below $\boldsymbol t_*$.  Let
+	\[
+		\tau_D:=\inf\{n\geq0:X_n^{b,\eps}\notin
+		(\VGeps(D)\setminus\VGeps(\partial D))\},
+		\qquad
+		V:=\sum_{0\leq n<\tau_D}
+		1\{X_n^{b,\eps}\notin A\}.
+	\]
+	We claim that, for a deterministic $q_0=q_0(\rho,\gamma)>0$,
+	\begin{equation} \label{eq:c26-one-test}
+		\P[V\geq1\mid h,\eta]
+		\geq\frac{q_0}{(1+\log(1/r))^2}.
+	\end{equation}
+
+	First, $D_0\subset B_r(x)$ since $R\leq d^\vartheta\leq r/4000$,
+	and $R\geq r^2$.  Moreover,
+	$h_\eps\leq\boldsymbol{c_0}d/100\leq
+	\boldsymbol{c_0}R/100$.  Since $x=\eta(b)$ belongs to the cell of
+	$b$, that cell is contained in $D$; and a cell which meets $D_0$ is
+	contained in $B_{\boldsymbol{c_0}R+h_\eps}(x)\subset D$.  Hence
+	the cell of $b$ and every cell in $\VGeps(D_0)$ belong to
+	$\VGeps(D)\setminus\VGeps(\partial D)$.  Hence the sparsity
+	hypothesis on $A$, \eqref{eq:c26-volume-all-scales},
+	\eqref{eq:c26-mesh-preparation}, and
+	\eqref{eq:c26-choice-s1} give
+	\begin{align}
+		|\VGeps(D_0)\setminus A|
+		&\geq \eps^{-1}
+		\left(m_0-\eps^{\alpha_{\rm c}}-s_1r^{2\beta}\right)
+		\notag\\
+		&\geq \frac12\eps^{-1}m_0.
+		\label{eq:c26-target-count}
+	\end{align}
+	Indeed, $m_0\geq c_{\rm v}\boldsymbol{c_0}^\beta R^\beta$,
+	$r^{2\beta}\leq R^\beta$, and the first line is Lemma
+	\ref{lemma:mu_h-convergence} with the function equal to one.
+
+	If $b'\in\VGeps(D_0)$, then
+	$b'\in\VGeps(B_{R/12}(x))$ by
+	\eqref{eq:c26-choice-c0}.  Furthermore, choosing a point of
+	$\Heps{b'}\cap D_0$ and using
+	\eqref{eq:c26-mesh-preparation},
+	\[
+		|\eta(b')-x|\leq2\boldsymbol{c_0}R.
+	\]
+	We check explicitly the hypotheses of Lemma
+	\ref{lemma:greens-kernel-lower-bound} for the ball $D=B_{R/4}(x)$.
+	By \eqref{eq:c26-mesh-preparation}, $R/4\geq d/4\geq
+	\eps^{\omega_{\rm G}}$.  Also $B_{3R}(z)\subset B_\rho$ and
+	$\left||x-z|-4R/3\right|\leq h_\eps$ give
+	\[
+		\dist(x,\partial B_\rho)\geq
+		3R-\frac43R-h_\eps>\frac R4\geq
+		\eps^{\omega_{\rm G}},
+	\]
+	so $b\in\VGeps(B_{\rho-\eps^{\omega_{\rm G}}})$ and
+	$R/4\leq\dist(x,\partial B_\rho)$.  Finally,
+	$b'\in\VGeps(B_{R/12}(x))$, and
+	\[
+		\left(\frac{R/4}{|x-\eta(b')|}\right)\wedge\eps^{-1}
+		\geq\frac1{8\boldsymbol{c_0}}
+	\]
+	by the preceding distance estimate and
+	$\eps\leq8\boldsymbol{c_0}$.  The lemma therefore gives
+	\begin{equation} \label{eq:c26-green-half}
+		\Gr{{\eps}}{D}(b,b')
+		\geq C_{\rm G}^{-1}\log\frac1{8\boldsymbol{c_0}}-1
+		\geq\frac12.
+	\end{equation}
+	Consequently, by the exact pre-exit Green-function identity,
+	\begin{equation} \label{eq:c26-first-moment}
+		\E[V\mid h,\eta]
+		\geq\frac14\eps^{-1}m_0.
+	\end{equation}
+
+	Since the cell of $b$ meets $\partial B_{4R/3}(z)$,
+	\[
+		\left||x-z|-\frac43R\right|\leq h_\eps.
+	\]
+	It follows from \eqref{eq:c26-mesh-preparation} that
+	\begin{equation} \label{eq:c26-ball-in-annulus}
+		B_{R/4+\eps^{\alpha_{\rm e}}}(x)
+		\subset\A_{R,2R}(z).
+	\end{equation}
+	Indeed, the inner and outer radial bounds are respectively
+	$(4/3-1/4-2/100)R=319R/300>R$ and
+	$(4/3+1/4+2/100)R=481R/300<2R$.
+	The same estimates put $D$ in this annulus, and if $u$ belongs to
+	the left side of \eqref{eq:c26-ball-in-annulus} and $v\in D$, then
+	$|u-v|<R$.  Also $x\in\A_{R,2R}(z)$, so $m_R(z)\leq m_0$.
+	The mass hypothesis in Lemma \ref{lemma:exit-time-upper-bound} holds
+	because
+	\[
+		\mu_h(D)\geq c_{\rm v}(R/4)^\beta
+		\geq c_{\rm v}4^{-\beta}d^\beta
+		\geq\eps^{\alpha_{\rm e}}.
+	\]
+	Using \eqref{eq:c26-absolute-potential} in that lemma with $N=2$
+	therefore gives
+	\begin{equation} \label{eq:c26-second-moment}
+		\E[V^2\mid h,\eta]
+		\leq\E[\tau_D^2\mid h,\eta]
+		\leq C_5\eps^{-2}
+		\left(1+\log\frac1R\right)^2m_0^2.
+	\end{equation}
+	The second moment method, \eqref{eq:c26-first-moment}, and
+	\eqref{eq:c26-second-moment} imply
+	\[
+		\P[V\geq1\mid h,\eta]
+		\geq\frac{q_*}{(1+\log(1/R))^2}
+	\]
+	for some $q_*\in(0,1)$, after decreasing the constant if
+	necessary.  Finally, $R\geq d\geq r^2$, so
+	$1+\log(1/R)\leq2(1+\log(1/r))$ after decreasing the deterministic
+	upper cutoff for $r$.  This proves \eqref{eq:c26-one-test}, with
+	$q_0=q_*/4$.
+
+	\medskip
+	\noindent
+	{\it Two-sided shells.}
+	We now fix $s_0\in(0,1)$.  Choose a deterministic
+	$r_0=r_0(s_0,\rho,\gamma)>0$ so small that the following hold for
+	every $0<r\leq r_0$.  If $d$ is the dyadic number determined by
+	\begin{equation} \label{eq:c26-base-scale}
+		r^2\leq d<2r^2
+	\end{equation}
+	and $s=d^\vartheta$, then
+	\begin{equation} \label{eq:c26-geometric-cutoffs}
+		\begin{gathered}
+		 s\leq r/4000,\qquad r\leq\min\{e^{-1},\rho/100\},\\
+		 10s+2d/100<s_0,\\
+		 \rho/2+0.55r+2d/100+3s<\rho,
+		\end{gathered}
+	\end{equation}
+	Such an $r_0$ exists since
+	$s\leq2^\vartheta r^{1+\zeta}=o(r)$.  We will decrease $r_0$
+	once more at the end of the proof to obtain the numerical bound
+	$s_2=1/2$.
+
+	Set
+	\begin{equation} \label{eq:c26-random-cutoff}
+		\boldsymbol\delta
+		:=r_0\wedge\sqrt{\boldsymbol d_*/4}
+		\wedge
+		\left(\frac{\boldsymbol t_*}{2^{\vartheta+1}}
+		\right)^{1/(2\vartheta)}.
+	\end{equation}
+	This is positive and $\sigma(h)$-measurable.  Fix
+	$r\in[10\eps^\omega,\boldsymbol\delta]$, an admissible $\Theta$ and
+	$A$, and
+	\[
+		a\in\VGeps(\partial(\overline\Theta+B_{r/2})).
+	\]
+	For the dyadic $d$ in \eqref{eq:c26-base-scale} and
+	$s=d^\vartheta$, the definition of $\boldsymbol\delta$ gives
+	\begin{equation} \label{eq:c26-cutoff-consequences}
+		d<\boldsymbol d_*,
+		\qquad s<\boldsymbol t_*/2,
+		\qquad s\leq r/4000.
+	\end{equation}
+	Indeed, $d<2r^2\leq\boldsymbol d_*/2$ and
+	$s<2^\vartheta r^{2\vartheta}\leq\boldsymbol t_*/2$.
+	Thus the short-window selector and all lower volume bounds used below
+	are available at every selected radius.
+
+	Let $\mathcal F_n$ be the natural filtration of the walk.  Write
+	\[
+		K:=\overline\Theta,
+		\qquad
+		U:=\VGeps(K+B_r)\setminus\Theta,
+		\qquad
+		\tau:=\inf\{n\geq0:X_n^{a,\eps}\notin U\},
+	\]
+	and put $f(x)=\dist(x,K)$.  The starting cell meets
+	$\{f=r/2\}$, so it intersects $K+B_r$ and cannot correspond to a
+	vertex of $\Theta$; hence $a\in U$.  The set $U$ is finite: indeed,
+	the properness of the space-filling curve implies that a bounded
+	Euclidean set meets only finitely many $\eps$-cells.  Since the
+	map is connected, simple random walk exits every finite vertex set
+	almost surely (from each vertex choose a finite path out of the set
+	and iterate the resulting uniform positive exit probability).  Thus
+	$\tau<\infty$ almost surely.  With the exit-through convention used in
+	the statement, the bad event is
+	\begin{equation} \label{eq:c26-bad-event}
+		\mathcal B:=\{X_n^{a,\eps}\in A\text{ for every }0\leq n<\tau\}.
+	\end{equation}
+
+	For $d,s$ as above, let
+	\[
+		N:=\left\lfloor\frac r{400s}\right\rfloor,
+		\qquad \lambda_j:=20js,
+		\qquad
+		\Sigma_j:=\left\{x:\left|f(x)-\frac r2\right|=\lambda_j\right\},
+		\quad 1\leq j\leq N.
+	\]
+	By \eqref{eq:c26-geometric-cutoffs},
+	\begin{equation} \label{eq:c26-number-shells}
+		20s\leq\lambda_j\leq r/20,
+		\qquad
+		N\geq c_Nr^{-\zeta},
+		\qquad c_N:=2^{-\vartheta}/800.
+	\end{equation}
+	In particular, every $\Sigma_j$ is contained in the band
+	$0.45r\leq f\leq0.55r$.
+
+	The starting cell meets $\{f=r/2\}$.  Hence every point of this cell
+	has $|f-r/2|\leq h_\eps<\lambda_1$.  Define
+	\[
+		C_j:=\inf\{n\geq0:\Heps{X_n^{a,\eps}}\cap\Sigma_j\neq\emptyset\}.
+	\]
+	On $\mathcal B$, each $C_j$ is strictly smaller than $\tau$.  Indeed,
+	consecutive cells intersect, so the union of the cells visited from
+	time zero through time $\tau$ is connected.  At time $\tau$ either
+	$X_\tau^{a,\eps}\in\Theta$, in which case its cell is contained in
+	$K$ and $f=0$ there, or
+	$X_\tau^{a,\eps}\notin\VGeps(K+B_r)$, in which case $f\geq r$ on
+	its cell.  The continuous image of the connected union under
+	$|f-r/2|$ therefore contains $[0,r/2]$.  The terminal cell itself
+	meets none of the sets $\Sigma_j$, since on it either $f=0$ or
+	$f\geq r$, while $\lambda_j<r/2$.  Hence every level $\lambda_j$
+	is reached before time $\tau$.  More generally,
+	\begin{equation} \label{eq:c26-shell-order}
+		C_{j+1}<\tau\quad\Longrightarrow\quad C_j<C_{j+1}.
+	\end{equation}
+	The strictness follows because one cell cannot meet two successive
+	shells, whose levels are separated by $20s$, whereas
+	$h_\eps<s/100$.
+
+	Let $Q_d$ denote a deterministic nearest-point rounding map onto
+	$(d/100)\Z^2$.  On $\{C_j<\infty\}$, set
+	\[
+		x_j:=\eta(X_{C_j}^{a,\eps}),
+		\qquad z_j:=Q_d(x_j).
+	\]
+	Choose $y_j\in\Heps{X_{C_j}^{a,\eps}}\cap\Sigma_j$.  Then
+	\[
+		\dist(z_j,\Sigma_j)
+		\leq |z_j-x_j|+|x_j-y_j|
+		\leq\frac{2d}{100}.
+	\]
+	Since $B_{s_0}\subset K$ and $K\Subset B_{\rho/2}$,
+	\[
+		|y_j|\geq s_0,
+		\qquad
+		|y_j|\leq\rho/2+0.55r.
+	\]
+	Together with \eqref{eq:c26-geometric-cutoffs}, this implies
+	\[
+		z_j\in Z_d.
+	\]
+	We may therefore define
+	\[
+		R_j:=R_{z_j}(d)
+	\]
+	on $\{C_j<\infty\}$; choose fixed deterministic defaults for
+	$x_j,z_j,R_j$ on $\{C_j=\infty\}$.  The selected radius is good,
+	and
+	\begin{equation} \label{eq:c26-R-range}
+		r^2\leq d\leq R_j\leq s.
+	\end{equation}
+	Consequently
+	\begin{equation} \label{eq:c26-center-near-shell}
+		\dist(z_j,\Sigma_j)\leq\frac{2d}{100}
+		\leq\frac{R_j}{50}.
+	\end{equation}
+	For every $u$ in the cell at time $C_j$,
+	$|u-z_j|\leq|u-x_j|+|x_j-z_j|\leq2d/100\leq R_j/50$.
+	Thus the whole cell at time $C_j$ is contained in
+	$B_{R_j/50}(z_j)$.
+
+	Since every cell is connected, for every Euclidean ball $B$ one has
+	\[
+		\{v:\Heps{v}\subset B\}
+		=\VGeps(B)\setminus\VGeps(\partial B).
+	\]
+	On $\{C_j<\infty\}$ define
+	\[
+		T_j:=\inf\left\{n\geq C_j:
+		\Heps{X_n^{a,\eps}}\not\subset B_{4R_j/3}(z_j)\right\},
+	\]
+	and set $T_j=\infty$ on $\{C_j=\infty\}$.  This is a stopping
+	time.  The cell at time $C_j$ is contained in the displayed ball, so
+	$T_j>C_j$.  The set of cells contained in a bounded ball is finite,
+	and simple random walk exits every finite vertex set almost surely;
+	hence $T_j<\infty$ whenever $C_j<\infty$.  At time $T_j$ the exit
+	cell intersects the preceding cell, which is contained in the ball,
+	but is not itself contained in the ball.  Since cells are connected,
+	\begin{equation} \label{eq:c26-boundary-start}
+		X_{T_j}^{a,\eps}\in
+		\VGeps(\partial B_{4R_j/3}(z_j)).
+	\end{equation}
+	The measurability assertion follows since $z_j,R_j$ are
+	$\mathcal F_{C_j}$-measurable.  On $\{T_j<\infty\}$ put
+	\[
+		b_j:=X_{T_j}^{a,\eps},
+		\qquad x'_j:=\eta(b_j),
+		\qquad D_j:=B_{R_j/4}(x'_j),
+	\]
+	and define
+	\[
+		L_j:=\inf\{n\geq T_j:X_n^{a,\eps}\notin
+		(\VGeps(D_j)\setminus\VGeps(\partial D_j))\}.
+	\]
+	Set $L_j=\infty$ on $\{T_j=\infty\}$.  Since
+	$x'_j\in\Heps{b_j}$ and $h_\eps\leq R_j/100$, the cell of
+	$b_j$ is contained in $D_j$.  Thus $L_j>T_j$ whenever
+	$T_j<\infty$.  The vertex set $\VGeps(D_j)$ is finite, so
+	$L_j<\infty$ whenever $T_j<\infty$.  Every cell used from time
+	$C_j$ through time $L_j$,
+	including the exit cell at time $L_j$, is contained in
+	$B_{2R_j}(z_j)$.  Indeed, before $T_j$ the cells are contained in
+	$B_{4R_j/3}(z_j)$; the cell at $T_j$ meets its boundary; the cells
+	strictly before $L_j$ are contained in $D_j$; and the cell at
+	time $L_j$ meets $\partial D_j$.  The latter follows because it
+	intersects the preceding cell in $D_j$ and is not an interior
+	vertex of $D_j$.  Using $h_\eps\leq R_j/100$ gives
+	\[
+		\frac43R_j+h_\eps+\frac14R_j+2h_\eps<2R_j.
+	\]
+	By \eqref{eq:c26-center-near-shell}, every point of these cells
+	satisfies
+	\begin{equation} \label{eq:c26-test-near-shell}
+		\left|\left|f-\frac r2\right|-\lambda_j\right|<3s.
+	\end{equation}
+	Since consecutive shell levels are separated by $20s$, we obtain the
+	pathwise ordering
+	\begin{equation} \label{eq:c26-test-order}
+		C_{j+1}<\tau
+		\quad\Longrightarrow\quad
+		C_j<T_j<L_j<C_{j+1},
+		\qquad 1\leq j<N.
+	\end{equation}
+	In fact, for every $j$, $C_j<\tau$ implies $L_j<\tau$.  Indeed,
+	\eqref{eq:c26-test-near-shell} and $\lambda_j\leq r/20$ imply that
+	every whole cell used by any test satisfies
+	\begin{equation} \label{eq:c26-test-inside-U}
+		0.449r<f<0.551r.
+	\end{equation}
+	Such a cell lies in $(K+B_r)\setminus K$, so its vertex belongs to
+	$U$.
+
+	We can now apply the one-test estimate.  On $\{T_j<\tau\}$,
+	\eqref{eq:c26-boundary-start}, \eqref{eq:c26-R-range}, the goodness
+	of $R_j$, and the preceding containment verify all the hypotheses of
+	\eqref{eq:c26-one-test}.  The strong Markov property at $T_j$ gives
+	\begin{equation} \label{eq:c26-conditional-test}
+		\P\left[
+		\left.\exists n\in[T_j,L_j):X_n^{a,\eps}\notin A
+		\,\right|\mathcal F_{T_j},h,\eta\right]
+		\geq q(r):=\frac{q_0}{(1+\log(1/r))^2}
+	\end{equation}
+	on $\{T_j<\tau\}$.  By \eqref{eq:c26-test-inside-U}, every hit in
+	\eqref{eq:c26-conditional-test} is a visit to $U\setminus A$ before
+	$\tau$.
+
+	For $1\leq j\leq N$, define
+	\[
+		\mathcal P_j:=\{T_j<\tau,\ X_n^{a,\eps}\in A\text{ for all }n<T_j\},
+	\]
+	and
+	\[
+		\mathcal Q_j:=\{X_n^{a,\eps}\in A\text{ for all }T_j\leq n<L_j\}.
+	\]
+	Then $\mathcal P_j\in\mathcal F_{T_j}$, and
+	\eqref{eq:c26-conditional-test} implies
+	\[
+		\P[\mathcal Q_j\mid\mathcal F_{T_j},h,\eta]
+		\leq1-q(r)
+		\quad\text{on }\mathcal P_j.
+	\]
+	The pathwise ordering \eqref{eq:c26-test-order} gives
+	\[
+		\mathcal P_{j+1}\subset\mathcal P_j\cap\mathcal Q_j,
+		\qquad j<N.
+	\]
+	Therefore, by conditional expectation,
+	\[
+		\P[\mathcal P_{j+1}\mid h,\eta]
+		\leq(1-q(r))\P[\mathcal P_j\mid h,\eta].
+	\]
+	On the event $\mathcal B$, every shell is reached and every local
+	test fails; in particular,
+	$\mathcal B\subset\mathcal P_N\cap\mathcal Q_N$.  Iterating the last
+	display and using the final test gives
+	\begin{align}
+		\P[\mathcal B\mid h,\eta]
+		&\leq(1-q(r))^N\notag\\
+		&\leq\exp\left[-\frac{c_*r^{-\zeta}}
+		{(1+\log(1/r))^2}\right],
+		\qquad c_*:=c_Nq_0>0.
+		\label{eq:c26-amplified-bound}
+	\end{align}
+	No independence of the tests is used.
+
+	Since
+	$r^{-\zeta}/(1+\log(1/r))^2\to\infty$ as $r\to0$, choose a
+	deterministic $r_{\rm amp}=r_{\rm amp}(\rho,\gamma)>0$ so that
+	the right side of \eqref{eq:c26-amplified-bound} is at most $1/2$
+	for every $0<r\leq r_{\rm amp}$.  Replace $r_0$ in
+	\eqref{eq:c26-random-cutoff} by $r_0\wedge r_{\rm amp}$ and
+	redefine $\boldsymbol\delta$ accordingly.  Thus the conclusion
+	of the lemma holds with
+	\[
+		s_2=\frac12.
+	\]
+	The construction is simultaneous for every admissible
+	$r,\Theta,A$, and starting vertex $a$ on the common event described
+	above, whose probability tends to one as $\eps\to0$.  The random
+	cutoff \eqref{eq:c26-random-cutoff} is $\sigma(h)$-measurable.
+
+	Finally, although the statement places the choices of $s_1,s_2$
+	after $s_0$, the proof gives the stronger dependence order: the
+	constants $s_1$ in \eqref{eq:c26-choice-s1} and $s_2=1/2$ depend
+	only on $(\rho,\gamma)$ and are chosen before $s_0$; only
+	$\boldsymbol\delta$ depends on $s_0$.
+\end{proof}
 	\begin{figure}
 		\includegraphics[width=0.5\textwidth]{Figures/fig-reduction-to-ball.pdf}
 		\caption{Illustration of part of the proof of Lemma \ref{lemma:constant-order-lower-bound}; only parts of the sets are shown and aspect ratios are not drawn to scale.
