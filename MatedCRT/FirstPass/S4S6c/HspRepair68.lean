@@ -3,6 +3,7 @@ import MatedCRT.FirstPass.S6r.OneTest.WalkStateFirst
 import MatedCRT.FirstPass.S4S6c.HoneInputsDirect
 import MatedCRT.FirstPass.S4S6c.HdiamHvol68
 import MatedCRT.FirstPass.S4S6c.HspCentre68
+import MatedCRT.FirstPass.S4S6c.SecondRho68
 
 /-!
 # The walk-centred hone with the repaired hsp, hdiam and hVol (fp-S4S6c-hsp-repair; chat 226 patch item 1; z10 P1-P3)
@@ -231,14 +232,28 @@ theorem firstMoment_walkState_massRel {γ ρc : ℝ} (K : Constants68 γ ρc) {�
     linarith
   exact firstMoment_occCount_fm_loc K hη hprop hε hεc hR rfl hdiam hloc hGr hfinE hL29 hsc
 
--- Copy of `hone_exitQ_walk` (HoneWalk.lean:37) with hsp replaced by its mass-relative form
--- (fp-S4S6c-hsp-repair; chat 226 l.176-182). Other binders unchanged.
-/-- **The hone of `exitQ_le_pow` at the walk-centred test end** (family over `k ≤ n`). The parameter is
-`ρ_k = walkParam (R k) (T k)`, the test end is `L_k = testEndExit ε η ρ_k (T k)`, the count is `σ_D` for
-`D = B_{R_k/4}(η(ε X_{T_k}))`. `hstep1` and `hstep2` are derived (`firstMoment_walkState_massRel`,
-`secondMoment_walkState`); their omega-wise side conditions are named over the prefix set. `hmom1`, `hmom2`
-(finite exit-time moments), `hRr` (parameter range), and the mass comparison `hdbl` stay named. -/
-theorem hone_exitQ_walk_massRel {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
+/-- **The volume lower bound of the radius-`ρmom` chain (fp-S4S6c-hsp-rhomom).** Copy of `hvol_of_direct68`
+(HdiamHvol68.lean:146) with the radius `1` of `hVolY` replaced by `ρmom`: the centre bound `hvol` at `c₀R_k`
+comes from `hVolC`, and the bound `hvol2` at `ball 0 (ρmom - R_k/4)` is `hVolY`. -/
+theorem hvol_of_direct_rho {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) {μ : Measure ℂ}
+    [IsFiniteMeasureOnCompacts μ] {A : Set ℤ} {τU : (ℕ → ℤ) → ℕ∞} {T : ℕ → (ℕ → ℤ) → ℕ∞}
+    {R : ℕ → (ℕ → ℤ) → ℝ} {ρmom : ℝ}
+    (hVolC : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ENNReal.ofReal ((K.c0 * R k ω) ^ K.βm) ≤ μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω)))
+    (hVolY : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ∀ y ∈ ball (0 : ℂ) (ρmom - R k ω / 4), ENNReal.ofReal ((R k ω / 4) ^ K.βm) ≤ μ (ball y (R k ω / 4))) :
+    (∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      (K.c0 * R k ω) ^ K.βm ≤ (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal) ∧
+    (∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ∀ y ∈ ball (0 : ℂ) (ρmom - R k ω / 4), ENNReal.ofReal ((R k ω / 4) ^ K.βm) ≤ μ (ball y (R k ω / 4))) := by
+  refine ⟨fun k ω hω => ?_, hVolY⟩
+  exact (ENNReal.ofReal_le_iff_le_toReal (measure_ball_lt_top (μ := μ)).ne).mp (hVolC k ω hω)
+
+
+/-- Radius-`ρmom` generalization of `hone_exitQ_walk_massRel` (fp-S4S6c-hsp-rhomom): the radius `1` of the walk
+chain is the parameter `ρmom` (`hx1`, `hVolY`/`hvol2`, `hmomS`, `hρS` read `ρmom` in place of `1`).
+The radius-1 name is the wrapper at `ρmom := 1`. -/
+theorem hone_exitQ_walk_massRel_rho {ρmom : ℝ} {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
     (hprop : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε) (hεc : ε ≤ 16 * K.c0)
     {μ : Measure ℂ} (m : ℤ → ℤ → ℕ) (a : ℤ) (A : Set ℤ) (hA : MeasurableSet A) (n : ℕ) {τU : (ℕ → ℤ) → ℕ∞}
     {r q0 q α C_exit C_good Dbl C : ℝ} {N_cov : ℕ} (hr : 0 < r) (hr1 : r ≤ 1)
@@ -254,7 +269,6 @@ theorem hone_exitQ_walk_massRel {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : �
       (fun w => ((ballExitSigma ε η (walkParam ε η (R k) (T k) w)
         (postTimePath (fun n w => w n) (T k) w) : ℕ) : ℝ) ^ 2)) (srwLaw m a))
     (hRr : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, r ^ 2 ≤ R k ω ∧ R k ω ≤ 1)
-    -- first-moment side conditions at the walk state `y = ω (T k ω).toNat`
     (hdiam : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, ∀ k' : ℤ,
       (cell ε η k' ∩ ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 4)).Nonempty →
         diam (cell ε η k') ≤ K.c0 * R k ω)
@@ -281,8 +295,6 @@ theorem hone_exitQ_walk_massRel {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : �
         ≤ ((cellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).ncard : ℝ))
     (hsc : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
       4 * ε ^ α ≤ (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal)
-    -- second-moment side conditions at the walk state `b = ω (T k ω).toNat`, centre `vertexPoint ε η b`,
-    -- shell centre `Z k ω`, mesh `H k ω`, outer radius `Rb k ω`
     {Z : ℕ → (ℕ → ℤ) → ℂ} {H Rb : ℕ → (ℕ → ℤ) → ℝ}
     (hεα : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, ε ^ α ≤ R k ω / 100)
     (hεmass : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
@@ -293,9 +305,9 @@ theorem hone_exitQ_walk_massRel {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : �
       ∀ p ∈ cell ε η (ω (T k ω).toNat), ∀ q ∈ cell ε η (ω (T k ω).toNat), dist p q ≤ H k ω)
     (hh : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, H k ω ≤ R k ω / 100)
     (hx1 : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
-      ‖vertexPoint ε η (ω (T k ω).toNat)‖ < 1 - R k ω / 4)
+      ‖vertexPoint ε η (ω (T k ω).toNat)‖ < ρmom - R k ω / 4)
     (hvol2 : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
-      ∀ y ∈ ball (0 : ℂ) (1 - R k ω / 4), ENNReal.ofReal ((R k ω / 4) ^ K.βm) ≤ μ (ball y (R k ω / 4)))
+      ∀ y ∈ ball (0 : ℂ) (ρmom - R k ω / 4), ENNReal.ofReal ((R k ω / 4) ^ K.βm) ≤ μ (ball y (R k ω / 4)))
     (hρS : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
       ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 4) ⊆ ball 0 (Rb k ω))
     (hmomS : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
@@ -342,7 +354,7 @@ theorem hone_exitQ_walk_massRel {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : �
           * (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal ^ 2 := by
     intro k ω hω
     have hR0 : 0 < R k ω := lt_of_lt_of_le (pow_pos hr 2) (hRr k ω hω).1
-    have hS := secondMoment_walkState (μ := μ) (η := η) (m := m) (A := A) (ε := ε) (R := R k ω)
+    have hS := secondMoment_walkState_rho (μ := μ) (η := η) (m := m) (A := A) (ε := ε) (R := R k ω)
       (α := α) (ρ := Rb k ω) (C_exit := C_exit) (c₀ := K.c0) (C_good := C_good) (βm := K.βm)
       (h := H k ω) (N_cov := N_cov) (z := Z k ω) (b := ω (T k ω).toNat) (Dbl := Dbl)
       hε hR0 (hRr k ω hω).2 K.hc0 hc0' hCg (hεα k ω hω) (hεmass k ω hω) (hb k ω hω) (hcell k ω hω)
@@ -360,6 +372,219 @@ theorem hone_exitQ_walk_massRel {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : �
     (ρ := fun k => walkParam ε η (R k) (T k)) (fun k => measurable_walkParam (hT k) (hR k) ε η)
     hmom1 hmom2 (mm := fun k ω => (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal)
     (R := R) hm hRr hstep1 hstep2
+
+-- Copy of `hone_exitQ_walk` (HoneWalk.lean:37) with hsp replaced by its mass-relative form
+-- (fp-S4S6c-hsp-repair; chat 226 l.176-182). Other binders unchanged.
+/-- **The hone of `exitQ_le_pow` at the walk-centred test end** (family over `k ≤ n`). The parameter is
+`ρ_k = walkParam (R k) (T k)`, the test end is `L_k = testEndExit ε η ρ_k (T k)`, the count is `σ_D` for
+`D = B_{R_k/4}(η(ε X_{T_k}))`. `hstep1` and `hstep2` are derived (`firstMoment_walkState_massRel`,
+`secondMoment_walkState`); their omega-wise side conditions are named over the prefix set. `hmom1`, `hmom2`
+(finite exit-time moments), `hRr` (parameter range), and the mass comparison `hdbl` stay named. -/
+theorem hone_exitQ_walk_massRel {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
+    (hprop : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε) (hεc : ε ≤ 16 * K.c0)
+    {μ : Measure ℂ} (m : ℤ → ℤ → ℕ) (a : ℤ) (A : Set ℤ) (hA : MeasurableSet A) (n : ℕ) {τU : (ℕ → ℤ) → ℕ∞}
+    {r q0 q α C_exit C_good Dbl C : ℝ} {N_cov : ℕ} (hr : 0 < r) (hr1 : r ≤ 1)
+    (hq0c : q0 ≤ (1 / 4 : ℝ) ^ 2 / (4 * C)) (hq : q = q0 / (1 + Real.log (1 / r)) ^ 2)
+    (hC : 0 < C) (hCw : 32 * C_exit ^ 2 * ((1 + (N_cov : ℝ) * Real.log 4) * C_good) ^ 2 * Dbl ^ 2 ≤ C)
+    (hCg : 0 ≤ C_good)
+    {T : ℕ → (ℕ → ℤ) → ℕ∞} (hT : ∀ k, IsStoppingTime coordFiltration (T k))
+    {R : ℕ → (ℕ → ℤ) → ℝ} (hR : ∀ k, Measurable[(hT k).measurableSpace] (R k))
+    (hmom1 : ∀ k, Integrable ({w | T k w < ⊤}.indicator
+      (fun w => ((ballExitSigma ε η (walkParam ε η (R k) (T k) w)
+        (postTimePath (fun n w => w n) (T k) w) : ℕ) : ℝ))) (srwLaw m a))
+    (hmom2 : ∀ k, Integrable ({w | T k w < ⊤}.indicator
+      (fun w => ((ballExitSigma ε η (walkParam ε η (R k) (T k) w)
+        (postTimePath (fun n w => w n) (T k) w) : ℕ) : ℝ) ^ 2)) (srwLaw m a))
+    (hRr : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, r ^ 2 ≤ R k ω ∧ R k ω ≤ 1)
+    (hdiam : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, ∀ k' : ℤ,
+      (cell ε η k' ∩ ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 4)).Nonempty →
+        diam (cell ε η k') ≤ K.c0 * R k ω)
+    (hsp : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ε * ((A ∩ cellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).ncard : ℝ)
+        ≤ (1 / 16 : ℝ) * (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal)
+    (hvol : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      (K.c0 * R k ω) ^ K.βm ≤ (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal)
+    (hGr : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ∀ b ∈ cellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω)),
+      greenKernel m (interiorCellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 8)))
+          (ω (T k ω).toNat) b
+          ≤ greenFn m (interiorCellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 8)))
+            (ω (T k ω).toNat) b ∧
+        K.C⁻¹ * Real.log (if vertexPoint ε η (ω (T k ω).toNat) = vertexPoint ε η b then ε⁻¹
+            else min ((R k ω / 8) / ‖vertexPoint ε η (ω (T k ω).toNat) - vertexPoint ε η b‖) ε⁻¹) - 1
+          ≤ greenKernel m (interiorCellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 8)))
+            (ω (T k ω).toNat) b)
+    (hfinE : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      expectedExitTime m (interiorCellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 4)))
+        (ω (T k ω).toNat) ≠ ⊤)
+    (hL29 : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ε⁻¹ * (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal - ε ^ (-1 + α)
+        ≤ ((cellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).ncard : ℝ))
+    (hsc : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      4 * ε ^ α ≤ (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal)
+    {Z : ℕ → (ℕ → ℤ) → ℂ} {H Rb : ℕ → (ℕ → ℤ) → ℝ}
+    (hεα : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, ε ^ α ≤ R k ω / 100)
+    (hεmass : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ε ^ α ≤ (R k ω / 4) ^ K.βm)
+    (hb : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ω (T k ω).toNat ∈ cellVertices ε η (sphere (Z k ω) (4 * R k ω / 3)))
+    (hcell : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ∀ p ∈ cell ε η (ω (T k ω).toNat), ∀ q ∈ cell ε η (ω (T k ω).toNat), dist p q ≤ H k ω)
+    (hh : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, H k ω ≤ R k ω / 100)
+    (hx1 : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ‖vertexPoint ε η (ω (T k ω).toNat)‖ < 1 - R k ω / 4)
+    (hvol2 : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ∀ y ∈ ball (0 : ℂ) (1 - R k ω / 4), ENNReal.ofReal ((R k ω / 4) ^ K.βm) ≤ μ (ball y (R k ω / 4)))
+    (hρS : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 4) ⊆ ball 0 (Rb k ω))
+    (hmomS : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ∀ D : Set ℂ, MeasurableSet D → D ⊆ ball 0 (Rb k ω) → ENNReal.ofReal (ε ^ α) ≤ μ D →
+      ∀ a ∈ cellVertices ε η D, ∀ N : ℕ,
+        exitTimeMoment m (interiorCellVertices ε η D) a N ≤
+          ENNReal.ofReal (N.factorial * C_exit ^ N * ε ^ (-(N : ℝ))) *
+            (⨆ z' ∈ D, ∫⁻ w in Metric.thickening (ε ^ α) D,
+              ENNReal.ofReal (Real.log (1 / ‖z' - w‖) + 1) ∂μ) ^ N)
+    (hgood : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      IsGoodAnnulusEvent μ K.c0 C_good (R k ω) (Z k ω))
+    (hN : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ∀ (R' : ℝ) (z' : ℂ), 0 < R' → ∃ t : Finset ℂ, t.card ≤ N_cov ∧
+        (∀ v ∈ t, v ∈ annulus z' R' (2 * R')) ∧ annulus z' R' (2 * R') ⊆ ⋃ v ∈ t, ball v R')
+    (hpos : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      0 < ⨅ w ∈ annulus (Z k ω) (R k ω) (2 * R k ω), μ (ball w (K.c0 * R k ω)))
+    (hfin : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      μ (ball (Z k ω) (3 * R k ω)) ≠ ⊤)
+    (hatom : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ∀ v ∈ annulus (Z k ω) (R k ω) (2 * R k ω), μ {v} = 0)
+    (hfinD : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (3 * K.c0 * R k ω)) ≠ ⊤)
+    (hdbl : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (3 * K.c0 * R k ω))).toReal
+        ≤ Dbl * (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal) :
+    ∀ k ≤ n, ∀ᵐ x ∂srwLaw m a, x ∈ prefixSet (fun (j : ℕ) (y : ℕ → ℤ) => y j) A (T k) τU →
+      (srwLaw m a)[(testFailSet (fun (j : ℕ) (y : ℕ → ℤ) => y j) A (T k)
+        (testEndExit ε η (walkParam ε η (R k) (T k)) (T k))).indicator (fun _ => (1 : ℝ)) | (hT k).measurableSpace] x
+        ≤ 1 - q
+    := hone_exitQ_walk_massRel_rho (ρmom := 1) K ε η hη hprop hε hεc m a A hA n hr hr1 hq0c hq hC
+    hCw hCg hT hR hmom1 hmom2 hRr hdiam hsp hvol hGr hfinE hL29 hsc hεα hεmass hb hcell hh hx1 hvol2
+    hρS hmomS hgood hN hpos hfin hatom hfinD hdbl
+
+/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_repaired` (fp-S4S6c-hsp-rhomom): the radius `1` of the walk
+chain is the parameter `ρmom` (`hx1`, `hVolY`/`hvol2`, `hmomS`, `hρS` read `ρmom` in place of `1`).
+The radius-1 name is the wrapper at `ρmom := 1`. -/
+theorem hone_exitQ_walk_of_env_repaired_rho {ρmom : ℝ} {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
+    (hprop : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε) (hεc : ε ≤ 16 * K.c0)
+    {μ : Measure ℂ} [IsFiniteMeasureOnCompacts μ] (hμNull : ∀ v : ℂ, μ {v} = 0)
+    (m : ℤ → ℤ → ℕ) (a : ℤ) (A : Set ℤ) (hA : MeasurableSet A) (n : ℕ) {τU : (ℕ → ℤ) → ℕ∞}
+    {r q0 q α C_exit C_good Dbl C : ℝ} {N_cov : ℕ} (hr : 0 < r) (hr1 : r ≤ 1)
+    (hq0c : q0 ≤ (1 / 4 : ℝ) ^ 2 / (4 * C)) (hq : q = q0 / (1 + Real.log (1 / r)) ^ 2)
+    (hC : 0 < C) (hCw : 32 * C_exit ^ 2 * ((1 + (N_cov : ℝ) * Real.log 4) * C_good) ^ 2 * Dbl ^ 2 ≤ C)
+    (hCg : 0 ≤ C_good)
+    {T : ℕ → (ℕ → ℤ) → ℕ∞} (hT : ∀ k, IsStoppingTime coordFiltration (T k))
+    {R : ℕ → (ℕ → ℤ) → ℝ} (hR : ∀ k, Measurable[(hT k).measurableSpace] (R k))
+    (hmom1 : ∀ k, Integrable ({w | T k w < ⊤}.indicator
+      (fun w => ((ballExitSigma ε η (walkParam ε η (R k) (T k) w)
+        (postTimePath (fun n w => w n) (T k) w) : ℕ) : ℝ))) (srwLaw m a))
+    (hmom2 : ∀ k, Integrable ({w | T k w < ⊤}.indicator
+      (fun w => ((ballExitSigma ε η (walkParam ε η (R k) (T k) w)
+        (postTimePath (fun n w => w n) (T k) w) : ℕ) : ℝ) ^ 2)) (srwLaw m a))
+    (hRr : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, r ^ 2 ≤ R k ω ∧ R k ω ≤ 1)
+    (hdiam : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, ∀ k' : ℤ,
+      (cell ε η k' ∩ ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 4)).Nonempty →
+        diam (cell ε η k') ≤ K.c0 * R k ω)
+    (hsp : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ε * ((A ∩ cellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).ncard : ℝ)
+        ≤ (1 / 16 : ℝ) * (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal)
+    (rmin : ℝ)
+    (_hRmin : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, rmin ≤ K.c0 * R k ω)
+    (hVolC : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ENNReal.ofReal ((K.c0 * R k ω) ^ K.βm) ≤ μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω)))
+    (hVolY : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ∀ y ∈ ball (0 : ℂ) (ρmom - R k ω / 4), ENNReal.ofReal ((R k ω / 4) ^ K.βm) ≤ μ (ball y (R k ω / 4)))
+    (hGreen : ∀ a ∈ cellVertices ε η (ball 0 (ρc - ε ^ K.ω)), ∀ r : ℝ, ε ^ K.ω ≤ r →
+      r ≤ infDist (vertexPoint ε η a) (sphere 0 ρc) →
+      ∀ b ∈ cellVertices ε η (ball (vertexPoint ε η a) (r / 3)),
+      K.C⁻¹ * Real.log (if vertexPoint ε η a = vertexPoint ε η b then ε⁻¹
+            else min (r / ‖vertexPoint ε η a - vertexPoint ε η b‖) ε⁻¹) - 1
+          ≤ greenKernel m (interiorCellVertices ε η (ball (vertexPoint ε η a) r)) a b)
+    (hWalk : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ω (T k ω).toNat ∈ cellVertices ε η (ball 0 (ρc - ε ^ K.ω)) ∧ ε ^ K.ω ≤ R k ω / 8 ∧
+        R k ω / 8 ≤ infDist (vertexPoint ε η (ω (T k ω).toNat)) (sphere 0 ρc))
+    (hfinE : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      expectedExitTime m (interiorCellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 4)))
+        (ω (T k ω).toNat) ≠ ⊤)
+    (hL29 : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ε⁻¹ * (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal - ε ^ (-1 + α)
+        ≤ ((cellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).ncard : ℝ))
+    (hsc : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      4 * ε ^ α ≤ (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal)
+    {Z : ℕ → (ℕ → ℤ) → ℂ} {H : ℕ → (ℕ → ℤ) → ℝ}
+    (hεα : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, ε ^ α ≤ R k ω / 100)
+    (hεmass : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ε ^ α ≤ (R k ω / 4) ^ K.βm)
+    (hb : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ω (T k ω).toNat ∈ cellVertices ε η (sphere (Z k ω) (4 * R k ω / 3)))
+    (hcell : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ∀ p ∈ cell ε η (ω (T k ω).toNat), ∀ q ∈ cell ε η (ω (T k ω).toNat), dist p q ≤ H k ω)
+    (hh : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, H k ω ≤ R k ω / 100)
+    (hx1 : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ‖vertexPoint ε η (ω (T k ω).toNat)‖ < ρmom - R k ω / 4)
+    (hmomS : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ∀ D : Set ℂ, MeasurableSet D → D ⊆ ball 0 ρmom → ENNReal.ofReal (ε ^ α) ≤ μ D →
+      ∀ a ∈ cellVertices ε η D, ∀ N : ℕ,
+        exitTimeMoment m (interiorCellVertices ε η D) a N ≤
+          ENNReal.ofReal (N.factorial * C_exit ^ N * ε ^ (-(N : ℝ))) *
+            (⨆ z' ∈ D, ∫⁻ w in Metric.thickening (ε ^ α) D,
+              ENNReal.ofReal (Real.log (1 / ‖z' - w‖) + 1) ∂μ) ^ N)
+    (hgood : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      IsGoodAnnulusEvent μ K.c0 C_good (R k ω) (Z k ω))
+    (hN : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ∀ (R' : ℝ) (z' : ℂ), 0 < R' → ∃ t : Finset ℂ, t.card ≤ N_cov ∧
+        (∀ v ∈ t, v ∈ annulus z' R' (2 * R')) ∧ annulus z' R' (2 * R') ⊆ ⋃ v ∈ t, ball v R')
+    (hpos : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      0 < ⨅ w ∈ annulus (Z k ω) (R k ω) (2 * R k ω), μ (ball w (K.c0 * R k ω)))
+    (hdbl : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (3 * K.c0 * R k ω))).toReal
+        ≤ Dbl * (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal) :
+    ∀ k ≤ n, ∀ᵐ x ∂srwLaw m a, x ∈ prefixSet (fun (j : ℕ) (y : ℕ → ℤ) => y j) A (T k) τU →
+      (srwLaw m a)[(testFailSet (fun (j : ℕ) (y : ℕ → ℤ) => y j) A (T k)
+        (testEndExit ε η (walkParam ε η (R k) (T k)) (T k))).indicator (fun _ => (1 : ℝ)) | (hT k).measurableSpace] x
+        ≤ 1 - q := by
+  have hρS : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 4) ⊆ ball 0 ρmom := by
+    intro k ω hω u hu
+    have hx := hx1 k ω hω
+    have hd : ‖u - vertexPoint ε η (ω (T k ω).toNat)‖ < R k ω / 4 := by
+      simpa [dist_eq_norm] using hu
+    have htri := norm_add_le (vertexPoint ε η (ω (T k ω).toNat)) (u - vertexPoint ε η (ω (T k ω).toNat))
+    have hsum : vertexPoint ε η (ω (T k ω).toNat) + (u - vertexPoint ε η (ω (T k ω).toNat)) = u := by ring
+    rw [hsum] at htri
+    rw [mem_ball_zero_iff]
+    linarith
+  have hRpos : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, 0 < R k ω :=
+    fun k ω hω => lt_of_lt_of_le (pow_pos hr 2) (hRr k ω hω).1
+  have hcR : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      K.c0 * R k ω ≤ R k ω / 24 := fun k ω hω => by
+    have h := mul_le_mul_of_nonneg_right K.hc0' (hRpos k ω hω).le
+    linarith
+  obtain ⟨hvol, hvol2⟩ := hvol_of_direct_rho K ε η hVolC hVolY
+  have hGrLow : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ∀ b ∈ cellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω)),
+      K.C⁻¹ * Real.log (if vertexPoint ε η (ω (T k ω).toNat) = vertexPoint ε η b then ε⁻¹
+            else min ((R k ω / 8) / ‖vertexPoint ε η (ω (T k ω).toNat) - vertexPoint ε η b‖) ε⁻¹) - 1
+          ≤ greenKernel m (interiorCellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 8)))
+            (ω (T k ω).toNat) b := by
+    intro k ω hω b hb
+    obtain ⟨hA1, hA2, hA3⟩ := hWalk k ω hω
+    have hsub : ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω) ⊆
+        ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 8 / 3) :=
+      ball_subset_ball (by linarith [hcR k ω hω])
+    exact hGreen (ω (T k ω).toNat) hA1 (R k ω / 8) hA2 hA3 b
+      (Set.Nonempty.mono (Set.inter_subset_inter_right _ hsub) hb)
+  exact hone_exitQ_walk_massRel_rho K ε η hη hprop hε hεc m a A hA n hr hr1 hq0c hq hC hCw hCg hT hR hmom1 hmom2 hRr hdiam hsp
+    hvol (fun k ω hω b hb => ⟨HcGreen68.greenKernel_le_greenFn m _ _ b, hGrLow k ω hω b hb⟩)
+    hfinE hL29 hsc (Z := Z) (H := H) (Rb := fun _ _ => ρmom) hεα hεmass hb hcell hh hx1 hvol2 hρS hmomS hgood hN hpos
+    (fun k ω _ => (measure_ball_lt_top (μ := μ)).ne) (fun k ω _ v _ => hμNull v)
+    (fun k ω _ => (measure_ball_lt_top (μ := μ)).ne) hdbl
 
 -- Repaired copy of `hone_exitQ_walk_of_env` (HoneInputs.lean:39), P1 of the z10 consumer patch: hsp
 -- mass-relative (fp-S4S6c-hsp-repair); hVol replaced by hVolC, hVolY; hvol, hvol2 from hvol_of_direct68.
@@ -390,23 +615,18 @@ theorem hone_exitQ_walk_of_env_repaired {γ ρc : ℝ} (K : Constants68 γ ρc) 
     (hsp : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
       ε * ((A ∩ cellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).ncard : ℝ)
         ≤ (1 / 16 : ℝ) * (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal)
-    -- scale range of the good event: every walk test radius satisfies `rmin ≤ c₀ R` (configuration input, q2)
     (rmin : ℝ)
     (_hRmin : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, rmin ≤ K.c0 * R k ω)
-    -- good event of the volume lower bound (P1: the two random-radius volume bounds at `c₀R_k` and `R_k/4`, see `hvol_of_direct68`)
     (hVolC : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
       ENNReal.ofReal ((K.c0 * R k ω) ^ K.βm) ≤ μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω)))
     (hVolY : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
       ∀ y ∈ ball (0 : ℂ) (1 - R k ω / 4), ENNReal.ofReal ((R k ω / 4) ^ K.βm) ≤ μ (ball y (R k ω / 4)))
-    -- good event of the lower Green bound (second conjunct of `GreenKernelLowerBoundStmt`, exponent `K.ω`,
-    -- constant `K.C`, radius `ρc`)
     (hGreen : ∀ a ∈ cellVertices ε η (ball 0 (ρc - ε ^ K.ω)), ∀ r : ℝ, ε ^ K.ω ≤ r →
       r ≤ infDist (vertexPoint ε η a) (sphere 0 ρc) →
       ∀ b ∈ cellVertices ε η (ball (vertexPoint ε η a) (r / 3)),
       K.C⁻¹ * Real.log (if vertexPoint ε η a = vertexPoint ε η b then ε⁻¹
             else min (r / ‖vertexPoint ε η a - vertexPoint ε η b‖) ε⁻¹) - 1
           ≤ greenKernel m (interiorCellVertices ε η (ball (vertexPoint ε η a) r)) a b)
-    -- the walk state lies in the domain of the good Green bound, with margin `R/8` to `∂B_ρ` (configuration input, q2)
     (hWalk : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
       ω (T k ω).toNat ∈ cellVertices ε η (ball 0 (ρc - ε ^ K.ω)) ∧ ε ^ K.ω ≤ R k ω / 8 ∧
         R k ω / 8 ≤ infDist (vertexPoint ε η (ω (T k ω).toNat)) (sphere 0 ρc))
@@ -449,57 +669,15 @@ theorem hone_exitQ_walk_of_env_repaired {γ ρc : ℝ} (K : Constants68 γ ρc) 
     ∀ k ≤ n, ∀ᵐ x ∂srwLaw m a, x ∈ prefixSet (fun (j : ℕ) (y : ℕ → ℤ) => y j) A (T k) τU →
       (srwLaw m a)[(testFailSet (fun (j : ℕ) (y : ℕ → ℤ) => y j) A (T k)
         (testEndExit ε η (walkParam ε η (R k) (T k)) (T k))).indicator (fun _ => (1 : ℝ)) | (hT k).measurableSpace] x
-        ≤ 1 - q := by
-  -- `ρS` with `Rb := 1`: a ball of radius `R/4` about a point of norm `< 1 - R/4` lies in the unit ball.
-  have hρS : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
-      ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 4) ⊆ ball 0 1 := by
-    intro k ω hω u hu
-    have hx := hx1 k ω hω
-    have hd : ‖u - vertexPoint ε η (ω (T k ω).toNat)‖ < R k ω / 4 := by
-      simpa [dist_eq_norm] using hu
-    have htri := norm_add_le (vertexPoint ε η (ω (T k ω).toNat)) (u - vertexPoint ε η (ω (T k ω).toNat))
-    have hsum : vertexPoint ε η (ω (T k ω).toNat) + (u - vertexPoint ε η (ω (T k ω).toNat)) = u := by ring
-    rw [hsum] at htri
-    rw [mem_ball_zero_iff]
-    linarith
-  -- scale bookkeeping: `c₀ ≤ 1/24` gives `c₀R ≤ R/24 ≤ R/4` and `c₀R ≤ R/24`, and `R > 0` from `r² ≤ R`
-  have hRpos : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, 0 < R k ω :=
-    fun k ω hω => lt_of_lt_of_le (pow_pos hr 2) (hRr k ω hω).1
-  have hcR : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
-      K.c0 * R k ω ≤ R k ω / 24 := fun k ω hω => by
-    have h := mul_le_mul_of_nonneg_right K.hc0' (hRpos k ω hω).le
-    linarith
-  -- `hvol`, `hvol2`: the two volume conclusions from the direct binders `hVolC`, `hVolY` (hvol_of_direct68)
-  obtain ⟨hvol, hvol2⟩ := hvol_of_direct68 K ε η hVolC hVolY
-  -- `hGrLow`: the good Green bound at the walk state with `r = R/8`; `B(v, c₀R) ⊆ B(v, R/8/3)` since `c₀ ≤ 1/24`
-  have hGrLow : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
-      ∀ b ∈ cellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω)),
-      K.C⁻¹ * Real.log (if vertexPoint ε η (ω (T k ω).toNat) = vertexPoint ε η b then ε⁻¹
-            else min ((R k ω / 8) / ‖vertexPoint ε η (ω (T k ω).toNat) - vertexPoint ε η b‖) ε⁻¹) - 1
-          ≤ greenKernel m (interiorCellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 8)))
-            (ω (T k ω).toNat) b := by
-    intro k ω hω b hb
-    obtain ⟨hA1, hA2, hA3⟩ := hWalk k ω hω
-    have hsub : ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω) ⊆
-        ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 8 / 3) :=
-      ball_subset_ball (by linarith [hcR k ω hω])
-    exact hGreen (ω (T k ω).toNat) hA1 (R k ω / 8) hA2 hA3 b
-      (Set.Nonempty.mono (Set.inter_subset_inter_right _ hsub) hb)
-  exact hone_exitQ_walk_massRel K ε η hη hprop hε hεc m a A hA n hr hr1 hq0c hq hC hCw hCg hT hR hmom1 hmom2 hRr hdiam hsp
-    hvol (fun k ω hω b hb => ⟨HcGreen68.greenKernel_le_greenFn m _ _ b, hGrLow k ω hω b hb⟩)
-    hfinE hL29 hsc (Z := Z) (H := H) (Rb := fun _ _ => 1) hεα hεmass hb hcell hh hx1 hvol2 hρS hmomS hgood hN hpos
-    (fun k ω _ => (measure_ball_lt_top (μ := μ)).ne) (fun k ω _ v _ => hμNull v)
-    (fun k ω _ => (measure_ball_lt_top (μ := μ)).ne) hdbl
+        ≤ 1 - q
+    := hone_exitQ_walk_of_env_repaired_rho (ρmom := 1) K ε η hη hprop hε hεc hμNull m a A hA n hr
+    hr1 hq0c hq hC hCw hCg hT hR hmom1 hmom2 hRr hdiam hsp rmin _hRmin hVolC hVolY hGreen hWalk
+    hfinE hL29 hsc hεα hεmass hb hcell hh hx1 hmomS hgood hN hpos hdbl
 
--- Repaired copy of `hone_exitQ_walk_of_env_direct` (HoneInputsDirect.lean:83): P1-P3 of the z10 consumer patch
--- with the mass-relative hsp (fp-S4S6c-hsp-repair). hdiam is derived (hdiam_of_rmin68, route B); hCellGood is the
--- mesh bound on B_{ρc+3/8}; hVol is hVolC, hVolY.
-/-- **The hone of `exitQ_le_pow` at the walk-centred test end, direct inputs discharged from good events.**
-Same conclusion as `hone_exitQ_walk_of_env_massRel`. Removed binders: `hL29` (derived from `hCountGood`), `hcell` and `hh`
-(derived from `hCellGood` and `hεcell`, with `H := ε^θ`). New good-event binders: `hCountGood`, `hCellGood`, `hεcell`,
-with the exponent parameter `ζc`. Kept binders: `hfinE` and `hdiam` (the test balls `B(v, R/4)` leave the good-event
-domain `B_{ρc}`; see the report), and all configuration, moment and sparsity binders of `hone_exitQ_walk_of_env_massRel`. -/
-theorem hone_exitQ_walk_of_env_direct_repaired {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
+/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_direct_repaired` (fp-S4S6c-hsp-rhomom): the radius `1` of the walk
+chain is the parameter `ρmom` (`hx1`, `hVolY`/`hvol2`, `hmomS`, `hρS` read `ρmom` in place of `1`).
+The radius-1 name is the wrapper at `ρmom := 1`. -/
+theorem hone_exitQ_walk_of_env_direct_repaired_rho {ρmom : ℝ} {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
     (hprop : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε) (hεc : ε ≤ 16 * K.c0)
     {μ : Measure ℂ} [IsFiniteMeasureOnCompacts μ] (hμNull : ∀ v : ℂ, μ {v} = 0)
     (m : ℤ → ℤ → ℕ) (a : ℤ) (A : Set ℤ) (hA : MeasurableSet A) (n : ℕ) {τU : (ℕ → ℤ) → ℕ∞}
@@ -517,34 +695,27 @@ theorem hone_exitQ_walk_of_env_direct_repaired {γ ρc : ℝ} (K : Constants68 �
         (postTimePath (fun n w => w n) (T k) w) : ℕ) : ℝ) ^ 2)) (srwLaw m a))
     (hRr : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, r ^ 2 ≤ R k ω ∧ R k ω ≤ 1)
     (hL68 : ∀ z : ℂ, ((A ∩ cellVertices ε η (ball z r)).ncard : ℝ) < K.s1 * r ^ (2 * K.βm) / ε)
-    -- scale range of the good event: every walk test radius satisfies `rmin ≤ c₀ R` (configuration input, q2)
     (rmin : ℝ)
     (hRmin : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, rmin ≤ K.c0 * R k ω)
-    -- good event of the volume lower bound (P1: the two random-radius volume bounds at `c₀R_k` and `R_k/4`, see `hvol_of_direct68`)
     (hVolC : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
       ENNReal.ofReal ((K.c0 * R k ω) ^ K.βm) ≤ μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω)))
     (hVolY : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
-      ∀ y ∈ ball (0 : ℂ) (1 - R k ω / 4), ENNReal.ofReal ((R k ω / 4) ^ K.βm) ≤ μ (ball y (R k ω / 4)))
-    -- good event of the lower Green bound (second conjunct of `GreenKernelLowerBoundStmt`)
+      ∀ y ∈ ball (0 : ℂ) (ρmom - R k ω / 4), ENNReal.ofReal ((R k ω / 4) ^ K.βm) ≤ μ (ball y (R k ω / 4)))
     (hGreen : ∀ a ∈ cellVertices ε η (ball 0 (ρc - ε ^ K.ω)), ∀ r : ℝ, ε ^ K.ω ≤ r →
       r ≤ infDist (vertexPoint ε η a) (sphere 0 ρc) →
       ∀ b ∈ cellVertices ε η (ball (vertexPoint ε η a) (r / 3)),
       K.C⁻¹ * Real.log (if vertexPoint ε η a = vertexPoint ε η b then ε⁻¹
             else min (r / ‖vertexPoint ε η a - vertexPoint ε η b‖) ε⁻¹) - 1
           ≤ greenKernel m (interiorCellVertices ε η (ball (vertexPoint ε η a) r)) a b)
-    -- the walk state lies in the domain of the good Green bound, with margin `R/8` to `∂B_ρ` (configuration input, q2)
     (hWalk : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
       ω (T k ω).toNat ∈ cellVertices ε η (ball 0 (ρc - ε ^ K.ω)) ∧ ε ^ K.ω ≤ R k ω / 8 ∧
         R k ω / 8 ≤ infDist (vertexPoint ε η (ω (T k ω).toNat)) (sphere 0 ρc))
-    -- NEW good-event input: lower half of Lemma 2.9 (`CountingMeasureConvergenceStmt`) at `f ≡ 1`, for `D ⊆ B_{ρc}`
     (hCountGood : ∀ D : Set ℂ, D ⊆ ball (0 : ℂ) ρc → ∀ w : ℤ → ℂ,
       (∀ k ∈ cellVertices ε η D, w k ∈ cell ε η k ∩ closure D) →
       ε⁻¹ * ∫ _ in D, (1 : ℝ) ∂μ - ε ^ (-1 + α) ≤ ∑' _ : cellVertices ε η D, (1 : ℝ))
-    -- NEW good-event input: upper half of Lemma 2.8 (`CellSizeEstimateStmt`) at radius `ρc + 3/8` (P2: mesh bound on the larger ball), exponent `2/(2+γ)² − ζc`
     (ζc : ℝ) (hζc0 : 0 < ζc) (hζc1 : ζc < 1)
     (hCellGood : ∀ k' : ℤ, (cell ε η k' ∩ ball (0 : ℂ) (ρc + 3 / 8)).Nonempty →
       diam (cell ε η k') ≤ ε ^ (2 / (2 + γ) ^ 2 - ζc))
-    -- NEW configuration input: the cell-size exponent is below the scale range `rmin` (ε small, as in Lemma 2.8's `ε → 0`)
     (hεcell : ε ^ (2 / (2 + γ) ^ 2 - ζc) ≤ rmin / 100)
     (hfinE : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
       expectedExitTime m (interiorCellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 4)))
@@ -558,9 +729,9 @@ theorem hone_exitQ_walk_of_env_direct_repaired {γ ρc : ℝ} (K : Constants68 �
     (hb : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
       ω (T k ω).toNat ∈ cellVertices ε η (sphere (Z k ω) (4 * R k ω / 3)))
     (hx1 : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
-      ‖vertexPoint ε η (ω (T k ω).toNat)‖ < 1 - R k ω / 4)
+      ‖vertexPoint ε η (ω (T k ω).toNat)‖ < ρmom - R k ω / 4)
     (hmomS : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
-      ∀ D : Set ℂ, MeasurableSet D → D ⊆ ball 0 1 → ENNReal.ofReal (ε ^ α) ≤ μ D →
+      ∀ D : Set ℂ, MeasurableSet D → D ⊆ ball 0 ρmom → ENNReal.ofReal (ε ^ α) ≤ μ D →
       ∀ a ∈ cellVertices ε η D, ∀ N : ℕ,
         exitTimeMoment m (interiorCellVertices ε η D) a N ≤
           ENNReal.ofReal (N.factorial * C_exit ^ N * ε ^ (-(N : ℝ))) *
@@ -581,9 +752,6 @@ theorem hone_exitQ_walk_of_env_direct_repaired {γ ρc : ℝ} (K : Constants68 �
         (testEndExit ε η (walkParam ε η (R k) (T k)) (T k))).indicator (fun _ => (1 : ℝ)) | (hT k).measurableSpace] x
         ≤ 1 - q := by
   classical
-  -- (0) the vertex-cell diameter bound `hdiam` from `hdiam_of_rmin68` (P2, route B): `hWalk` gives that the walk
-  -- cell meets `B_{ρc}`; the mesh bound is `hCellGood` on `B_{ρc+3/8}`; `ε^θ ≤ rmin/100 ≤ c₀R_k` from
-  -- `hεcell` and `hRmin`. No exponent inequality and no `r ≥ 10 ε^ω0` binder (route A is not used).
   have hWalkNE : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
       (cell ε η (ω (T k ω).toNat) ∩ ball (0 : ℂ) ρc).Nonempty := by
     intro k ω hω
@@ -592,8 +760,6 @@ theorem hone_exitQ_walk_of_env_direct_repaired {γ ρc : ℝ} (K : Constants68 �
     have h0 := Real.rpow_pos_of_pos hε K.ω
     exact ⟨x, hxc, mem_ball_zero_iff.mpr (by linarith)⟩
   have hdiam := hdiam_of_rmin68 K ε η hη hε (ρ' := ρc + 3 / 8) le_rfl hCellGood hRr hWalkNE hεcell hRmin
-  -- the single exponent `θ = 2/(2+γ)² − ζc` of the cell-size good event
-  -- (1) every vertex cell of the walk has diameter `≤ ε^θ`, from `hCellGood` (its cell meets `B_{ρc}` by `hWalk`)
   have hcellD : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
       ∀ p ∈ cell ε η (ω (T k ω).toNat), ∀ q ∈ cell ε η (ω (T k ω).toNat), dist p q ≤ ε ^ (2 / (2 + γ) ^ 2 - ζc) := by
     intro k ω hω p hp q hq
@@ -603,7 +769,6 @@ theorem hone_exitQ_walk_of_env_direct_repaired {γ ρc : ℝ} (K : Constants68 �
       have h0 := Real.rpow_pos_of_pos hε K.ω
       exact mem_ball_zero_iff.mpr (by linarith)
     exact (dist_le_diam_cell_direct hη _ hp hq).trans (hCellGood _ ⟨x, hxc, hxρ⟩)
-  -- (2) the diameter bound is below `R/100`, from `hεcell` and `rmin ≤ c₀R ≤ R`
   have hsmallAll : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
       ε ^ (2 / (2 + γ) ^ 2 - ζc) ≤ R k ω / 100 := by
     intro k ω hω
@@ -611,7 +776,6 @@ theorem hone_exitQ_walk_of_env_direct_repaired {γ ρc : ℝ} (K : Constants68 �
     have hrmin : rmin ≤ R k ω :=
       le_trans (hRmin k ω hω) (mul_le_of_le_one_left hRpos.le (by linarith [K.hc0']))
     linarith
-  -- (3) the lower counting bound (`hL29`) at the walk test ball `B(v, c₀R)`, from `hCountGood`
   have hL29' : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
       ε⁻¹ * (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal - ε ^ (-1 + α)
         ≤ ((cellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).ncard : ℝ) := by
@@ -648,8 +812,6 @@ theorem hone_exitQ_walk_of_env_direct_repaired {γ ρc : ℝ} (K : Constants68 �
         ← Nat.card_eq_fintype_card, Nat.card_coe_set_eq]
     rw [hint, hsum] at hc
     exact hc
-  -- the direct inputs of `hone_exitQ_walk_of_env_massRel`: `hL29`, `hcell` and `hh` (with `H := ε^θ`) are discharged
-  -- the walk-centre mass-relative sparsity, from Lemma 6.8 (hL68 at radius r) and hVolC at the centre (HspCentre68)
   have hβ2 : (2 : ℝ) ≤ K.βm := by nlinarith [K.hγ0, K.hβ, sq_nonneg γ]
   have hβ1 : (1 : ℝ) ≤ K.βm := by linarith
   have hsp : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
@@ -659,9 +821,95 @@ theorem hone_exitQ_walk_of_env_direct_repaired {γ ρc : ℝ} (K : Constants68 �
     exact Lemma68Centre.hsp_centre_of_lemma68 hη hprop hε K.hs1 hβ1 hβ2 K.hc0 K.hc0'
       (lt_of_lt_of_le (pow_pos hr 2) (hRr k ω hω).1) hr hr1 K.hs1small (hRr k ω hω).1 hL68
       ((ENNReal.ofReal_le_iff_le_toReal (measure_ball_lt_top (μ := μ)).ne).mp (hVolC k ω hω))
-  exact hone_exitQ_walk_of_env_repaired K ε η hη hprop hε hεc hμNull m a A hA n hr hr1 hq0c hq hC hCw hCg hT hR hmom1 hmom2
+  exact hone_exitQ_walk_of_env_repaired_rho K ε η hη hprop hε hεc hμNull m a A hA n hr hr1 hq0c hq hC hCw hCg hT hR hmom1 hmom2
     hRr hdiam hsp rmin hRmin hVolC hVolY hGreen hWalk hfinE hL29' hsc hεα hεmass hb (H := fun _ _ => ε ^ (2 / (2 + γ) ^ 2 - ζc))
     (fun k ω hω p hp q hq => hcellD k ω hω p hp q hq) (fun k ω hω => hsmallAll k ω hω) hx1 hmomS hgood hN hpos hdbl
+
+-- Repaired copy of `hone_exitQ_walk_of_env_direct` (HoneInputsDirect.lean:83): P1-P3 of the z10 consumer patch
+-- with the mass-relative hsp (fp-S4S6c-hsp-repair). hdiam is derived (hdiam_of_rmin68, route B); hCellGood is the
+-- mesh bound on B_{ρc+3/8}; hVol is hVolC, hVolY.
+/-- **The hone of `exitQ_le_pow` at the walk-centred test end, direct inputs discharged from good events.**
+Same conclusion as `hone_exitQ_walk_of_env_massRel`. Removed binders: `hL29` (derived from `hCountGood`), `hcell` and `hh`
+(derived from `hCellGood` and `hεcell`, with `H := ε^θ`). New good-event binders: `hCountGood`, `hCellGood`, `hεcell`,
+with the exponent parameter `ζc`. Kept binders: `hfinE` and `hdiam` (the test balls `B(v, R/4)` leave the good-event
+domain `B_{ρc}`; see the report), and all configuration, moment and sparsity binders of `hone_exitQ_walk_of_env_massRel`. -/
+theorem hone_exitQ_walk_of_env_direct_repaired {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
+    (hprop : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε) (hεc : ε ≤ 16 * K.c0)
+    {μ : Measure ℂ} [IsFiniteMeasureOnCompacts μ] (hμNull : ∀ v : ℂ, μ {v} = 0)
+    (m : ℤ → ℤ → ℕ) (a : ℤ) (A : Set ℤ) (hA : MeasurableSet A) (n : ℕ) {τU : (ℕ → ℤ) → ℕ∞}
+    {r q0 q α C_exit C_good Dbl C : ℝ} {N_cov : ℕ} (hr : 0 < r) (hr1 : r ≤ 1)
+    (hq0c : q0 ≤ (1 / 4 : ℝ) ^ 2 / (4 * C)) (hq : q = q0 / (1 + Real.log (1 / r)) ^ 2)
+    (hC : 0 < C) (hCw : 32 * C_exit ^ 2 * ((1 + (N_cov : ℝ) * Real.log 4) * C_good) ^ 2 * Dbl ^ 2 ≤ C)
+    (hCg : 0 ≤ C_good)
+    {T : ℕ → (ℕ → ℤ) → ℕ∞} (hT : ∀ k, IsStoppingTime coordFiltration (T k))
+    {R : ℕ → (ℕ → ℤ) → ℝ} (hR : ∀ k, Measurable[(hT k).measurableSpace] (R k))
+    (hmom1 : ∀ k, Integrable ({w | T k w < ⊤}.indicator
+      (fun w => ((ballExitSigma ε η (walkParam ε η (R k) (T k) w)
+        (postTimePath (fun n w => w n) (T k) w) : ℕ) : ℝ))) (srwLaw m a))
+    (hmom2 : ∀ k, Integrable ({w | T k w < ⊤}.indicator
+      (fun w => ((ballExitSigma ε η (walkParam ε η (R k) (T k) w)
+        (postTimePath (fun n w => w n) (T k) w) : ℕ) : ℝ) ^ 2)) (srwLaw m a))
+    (hRr : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, r ^ 2 ≤ R k ω ∧ R k ω ≤ 1)
+    (hL68 : ∀ z : ℂ, ((A ∩ cellVertices ε η (ball z r)).ncard : ℝ) < K.s1 * r ^ (2 * K.βm) / ε)
+    (rmin : ℝ)
+    (hRmin : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, rmin ≤ K.c0 * R k ω)
+    (hVolC : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ENNReal.ofReal ((K.c0 * R k ω) ^ K.βm) ≤ μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω)))
+    (hVolY : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ∀ y ∈ ball (0 : ℂ) (1 - R k ω / 4), ENNReal.ofReal ((R k ω / 4) ^ K.βm) ≤ μ (ball y (R k ω / 4)))
+    (hGreen : ∀ a ∈ cellVertices ε η (ball 0 (ρc - ε ^ K.ω)), ∀ r : ℝ, ε ^ K.ω ≤ r →
+      r ≤ infDist (vertexPoint ε η a) (sphere 0 ρc) →
+      ∀ b ∈ cellVertices ε η (ball (vertexPoint ε η a) (r / 3)),
+      K.C⁻¹ * Real.log (if vertexPoint ε η a = vertexPoint ε η b then ε⁻¹
+            else min (r / ‖vertexPoint ε η a - vertexPoint ε η b‖) ε⁻¹) - 1
+          ≤ greenKernel m (interiorCellVertices ε η (ball (vertexPoint ε η a) r)) a b)
+    (hWalk : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ω (T k ω).toNat ∈ cellVertices ε η (ball 0 (ρc - ε ^ K.ω)) ∧ ε ^ K.ω ≤ R k ω / 8 ∧
+        R k ω / 8 ≤ infDist (vertexPoint ε η (ω (T k ω).toNat)) (sphere 0 ρc))
+    (hCountGood : ∀ D : Set ℂ, D ⊆ ball (0 : ℂ) ρc → ∀ w : ℤ → ℂ,
+      (∀ k ∈ cellVertices ε η D, w k ∈ cell ε η k ∩ closure D) →
+      ε⁻¹ * ∫ _ in D, (1 : ℝ) ∂μ - ε ^ (-1 + α) ≤ ∑' _ : cellVertices ε η D, (1 : ℝ))
+    (ζc : ℝ) (hζc0 : 0 < ζc) (hζc1 : ζc < 1)
+    (hCellGood : ∀ k' : ℤ, (cell ε η k' ∩ ball (0 : ℂ) (ρc + 3 / 8)).Nonempty →
+      diam (cell ε η k') ≤ ε ^ (2 / (2 + γ) ^ 2 - ζc))
+    (hεcell : ε ^ (2 / (2 + γ) ^ 2 - ζc) ≤ rmin / 100)
+    (hfinE : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      expectedExitTime m (interiorCellVertices ε η (ball (vertexPoint ε η (ω (T k ω).toNat)) (R k ω / 4)))
+        (ω (T k ω).toNat) ≠ ⊤)
+    (hsc : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      4 * ε ^ α ≤ (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal)
+    {Z : ℕ → (ℕ → ℤ) → ℂ}
+    (hεα : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, ε ^ α ≤ R k ω / 100)
+    (hεmass : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ε ^ α ≤ (R k ω / 4) ^ K.βm)
+    (hb : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ω (T k ω).toNat ∈ cellVertices ε η (sphere (Z k ω) (4 * R k ω / 3)))
+    (hx1 : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ‖vertexPoint ε η (ω (T k ω).toNat)‖ < 1 - R k ω / 4)
+    (hmomS : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ∀ D : Set ℂ, MeasurableSet D → D ⊆ ball 0 1 → ENNReal.ofReal (ε ^ α) ≤ μ D →
+      ∀ a ∈ cellVertices ε η D, ∀ N : ℕ,
+        exitTimeMoment m (interiorCellVertices ε η D) a N ≤
+          ENNReal.ofReal (N.factorial * C_exit ^ N * ε ^ (-(N : ℝ))) *
+            (⨆ z' ∈ D, ∫⁻ w in Metric.thickening (ε ^ α) D,
+              ENNReal.ofReal (Real.log (1 / ‖z' - w‖) + 1) ∂μ) ^ N)
+    (hgood : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      IsGoodAnnulusEvent μ K.c0 C_good (R k ω) (Z k ω))
+    (hN : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      ∀ (R' : ℝ) (z' : ℂ), 0 < R' → ∃ t : Finset ℂ, t.card ≤ N_cov ∧
+        (∀ v ∈ t, v ∈ annulus z' R' (2 * R')) ∧ annulus z' R' (2 * R') ⊆ ⋃ v ∈ t, ball v R')
+    (hpos : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      0 < ⨅ w ∈ annulus (Z k ω) (R k ω) (2 * R k ω), μ (ball w (K.c0 * R k ω)))
+    (hdbl : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
+      (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (3 * K.c0 * R k ω))).toReal
+        ≤ Dbl * (μ (ball (vertexPoint ε η (ω (T k ω).toNat)) (K.c0 * R k ω))).toReal) :
+    ∀ k ≤ n, ∀ᵐ x ∂srwLaw m a, x ∈ prefixSet (fun (j : ℕ) (y : ℕ → ℤ) => y j) A (T k) τU →
+      (srwLaw m a)[(testFailSet (fun (j : ℕ) (y : ℕ → ℤ) => y j) A (T k)
+        (testEndExit ε η (walkParam ε η (R k) (T k)) (T k))).indicator (fun _ => (1 : ℝ)) | (hT k).measurableSpace] x
+        ≤ 1 - q
+    := hone_exitQ_walk_of_env_direct_repaired_rho (ρmom := 1) K ε η hη hprop hε hεc hμNull m a A hA
+    n hr hr1 hq0c hq hC hCw hCg hT hR hmom1 hmom2 hRr hL68 rmin hRmin hVolC hVolY hGreen hWalk
+    hCountGood ζc hζc0 hζc1 hCellGood hεcell hfinE hsc hεα hεmass hb hx1 hmomS hgood hN hpos hdbl
 
 end Lemma68Window
 end MatedCRT
@@ -671,3 +919,8 @@ end MatedCRT
 #print axioms MatedCRT.Lemma68Window.hone_exitQ_walk_massRel
 #print axioms MatedCRT.Lemma68Window.hone_exitQ_walk_of_env_repaired
 #print axioms MatedCRT.Lemma68Window.hone_exitQ_walk_of_env_direct_repaired
+
+
+#print axioms MatedCRT.Lemma68Window.hone_exitQ_walk_massRel_rho
+#print axioms MatedCRT.Lemma68Window.hone_exitQ_walk_of_env_repaired_rho
+#print axioms MatedCRT.Lemma68Window.hone_exitQ_walk_of_env_direct_repaired_rho
