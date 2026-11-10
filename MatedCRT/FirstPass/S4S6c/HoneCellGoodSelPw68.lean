@@ -116,6 +116,29 @@ theorem hsel_fixedOmega_s1 {γ ω₀ ρ ζ C r CG s₀ ε s1 : ℝ} {Ω : Type} 
   rw [hT]
   exact IsGoodAnnulusEvent.mono_const hCCG hw.2
 
+/-- **`hsel` at one environment, generic sparsity exponent and window constant (fp-S4S6c-meshexit-cg, z10).** Same statement
+as `hsel_fixedOmega_s1` with the window constant `shellC068` replaced by a free `c0W : ℝ`: the bad window event is
+`badWindowOf S.μ ρ (shortExp ζ) c0W C (dyadicD r)` and the window radius is `windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω z`
+(`winRf` at `c0W = shellC068`). The proof reads the window constant only through the good-annulus constant `K.c0`, so the one
+premise on it is `hKc0 : K.c0 = c0W` (`shellK68` gives `K.c0 = shellC068`). The premises `0 < γ < 2`, `0 < ρ < 1`, `0 < ω₀`,
+`0 < ζ < 1/2` and `K = shellK68 …` are not used by the proof and are dropped. `hCCG : C ≤ CG` stays named. -/
+theorem hsel_fixedOmega_g {γ ρ ζ C r CG s₀ ε s1 c0W : ℝ} {Ω : Type} [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) (K : Constants68 γ ρ) (hKc0 : K.c0 = c0W)
+    (ω : Ω) (i : Lemma68Config.Config68)
+    (hwin : ω ∉ badWindowOf S.μ ρ (shortExp ζ) c0W C (dyadicD r)) (hCCG : C ≤ CG) :
+    Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
+      ∀ z ∈ shortEligible ρ (dyadicD r) (shortExp ζ),
+        IsGoodAnnulusEvent (S.μ ω) K.c0 CG (windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω z) z := by
+  intro _ z hz
+  rw [hKc0]
+  have hw := windowRf_spec S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω hwin hz
+  have hT : windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω z
+      = windowRf S.μ c0W C (shortExp ζ) (dyadicD r) ω z := by
+    unfold windowRfT
+    simp only [hwin, ↓reduceIte]
+  rw [hT]
+  exact IsGoodAnnulusEvent.mono_const hCCG hw.2
+
 end Lemma68HoneCellGoodSelPw
 end MatedCRT
 
@@ -124,3 +147,4 @@ end MatedCRT
 
 #print axioms MatedCRT.Lemma68HoneCellGoodSelPw.hCellGood_fixedOmega_s1
 #print axioms MatedCRT.Lemma68HoneCellGoodSelPw.hsel_fixedOmega_s1
+#print axioms MatedCRT.Lemma68HoneCellGoodSelPw.hsel_fixedOmega_g
