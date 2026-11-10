@@ -82,8 +82,45 @@ theorem hsel_fixedOmega {γ ω₀ ρ ζ C r CG s₀ ε : ℝ} {Ω : Type} [Measu
   rw [hT]
   exact IsGoodAnnulusEvent.mono_const hCCG hw.2
 
+/-- **`hCellGood` at one environment, generic sparsity exponent (fp-S4S6c-s1-generic, z10).** Same statement as
+`hCellGood_fixedOmega` with `Lemma68Config.sparsityS1 γ` replaced by a free `s1 : ℝ`. The proof does not use the guard
+`FullAdmAt`, so no hypothesis on `s1` is needed. -/
+theorem hCellGood_fixedOmega_s1 {γ ζ ρ ε s₀ r ω₀ CG α CE s1 : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    (ω : Ω) (i : Lemma68Config.Config68)
+    (hmesh : ω ∈ Lemma68Guard10.meshEventR S γ ω₀ ρ CG ζ α CE ε) :
+    Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
+      ∀ k' : ℤ, (cell ε (S.η ω) k' ∩ ball (0 : ℂ) (Lemma68HoneCellGood.rhoCell68 ρ)).Nonempty →
+        diam (cell ε (S.η ω) k') ≤ ε ^ (2 / (2 + γ) ^ 2 - ζ) :=
+  fun _ k' hk => (Lemma68Guard10.meshEventR_cell hmesh k' hk).2
+
+/-- **`hsel` at one environment, generic sparsity exponent (fp-S4S6c-s1-generic, z10).** Same statement as
+`hsel_fixedOmega` with `Lemma68Config.sparsityS1 γ` replaced by a free `s1 : ℝ`; `hCCG : C ≤ CG` stays a named premise
+(operator request 73a). The proof does not use the guard `FullAdmAt`, so no hypothesis on `s1` is needed. -/
+theorem hsel_fixedOmega_s1 {γ ω₀ ρ ζ C r CG s₀ ε s1 : ℝ} {Ω : Type} [MeasurableSpace Ω]
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) (hρ0 : 0 < ρ) (hρ1 : ρ < 1) (hω0 : 0 < ω₀) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2)
+    (S : MatedCRTEnv Ω) (K : Constants68 γ ρ)
+    (hK : K = Lemma68ShellConstants.shellK68 γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1)
+    (ω : Ω) (i : Lemma68Config.Config68)
+    (hwin : ω ∉ badWindowOf S.μ ρ (shortExp ζ) shellC068 C (dyadicD r)) (hCCG : C ≤ CG) :
+    Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
+      ∀ z ∈ shortEligible ρ (dyadicD r) (shortExp ζ),
+        IsGoodAnnulusEvent (S.μ ω) K.c0 CG (Lemma68HoneSetup.winRf S ρ ζ C r ω z) z := by
+  intro _ z hz
+  have hc0 : K.c0 = shellC068 := by
+    rw [hK]; exact (shellK68_params γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1).2.2.1
+  rw [hc0]
+  have hw := windowRf_spec S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) ω hwin hz
+  have hT : Lemma68HoneSetup.winRf S ρ ζ C r ω z = windowRf S.μ shellC068 C (shortExp ζ) (dyadicD r) ω z := by
+    unfold Lemma68HoneSetup.winRf windowRfT
+    simp only [hwin, ↓reduceIte]
+  rw [hT]
+  exact IsGoodAnnulusEvent.mono_const hCCG hw.2
+
 end Lemma68HoneCellGoodSelPw
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68HoneCellGoodSelPw.hCellGood_fixedOmega
 #print axioms MatedCRT.Lemma68HoneCellGoodSelPw.hsel_fixedOmega
+
+#print axioms MatedCRT.Lemma68HoneCellGoodSelPw.hCellGood_fixedOmega_s1
+#print axioms MatedCRT.Lemma68HoneCellGoodSelPw.hsel_fixedOmega_s1
