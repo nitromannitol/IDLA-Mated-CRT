@@ -44,7 +44,7 @@ def HasReferenceEnvironments (𝒮 : SpaceFillingSLEModel) : Prop :=
     ∃ S : MatedCRTEnv ℝ, S.IsValid 𝒮 γ
 
 /-- `ν` is a reference law for the five cited results: some model with the normalized law `ν` has valid reference
-environments, and every model with the normalized law `ν` satisfies the five cited statements. -/
+environments, and every model with the normalized law `ν` satisfies the five cited statements. SUPERSEDED (chat 186): the second conjunct is FALSE as typed. It quantifies `SLECitedInputs` over the `IsSLE` semantics, field and graph of every model, which the normalized code law does not fix. Superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`); kept unchanged. -/
 def SLEReferenceInput (ν : ℝ → Measure SLEPathCode) : Prop :=
   (∃ 𝒮ref : SpaceFillingSLEModel,
     HasNormalizedSLELaw 𝒮ref ν ∧ HasReferenceEnvironments 𝒮ref) ∧
@@ -53,7 +53,7 @@ def SLEReferenceInput (ν : ℝ → Measure SLEPathCode) : Prop :=
 /-- `ν` is a reference law with the similarity and truncated-laws clauses, for the same `ν`: every model with normalized
 law `ν` satisfies the corrected similarity transfer `FPSimilarityTransferCorrected` and the fixed-time truncated quenched
 laws `FrozenTruncatedQuenchedLawsFixedTime`. Source: `notes/fp-gaps/CHATGPT-sleref-truth.md` §2.1 and
-`notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md` §4. -/
+`notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md` §4. SUPERSEDED (chat 186): the second conjunct is FALSE as typed, for the reason given at `SLEReferenceInput`: `FPSimilarityTransferCorrected` and `FrozenTruncatedQuenchedLawsFixedTime` both quantify over valid environments `S : MatedCRTEnv Ω` with `S.IsValid 𝒮 γ`. Superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`); kept unchanged. -/
 def SLEReferenceWithSimilarityInput (ν : ℝ → Measure SLEPathCode) : Prop :=
   SLEReferenceInput ν ∧
   ∀ 𝒮 : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮 ν →
@@ -67,7 +67,7 @@ def SLEFrozenEstimates (𝒮 : SpaceFillingSLEModel) : Prop :=
 /-- The minimal reference package of `notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md` §8, for one law family `ν`: some model
 with normalized law `ν` has valid reference environments, and every model with normalized law `ν` satisfies
 `SLEFrozenEstimates`. The consumers `FrozenDiscreteHolderContinuityCorrected` and `FrozenTruncatedQuenchedLawsFixedTime`
-are derived from it in `MatedCRT/FirstPass/Frozen/SLERef.lean`. -/
+are derived from it in `MatedCRT/FirstPass/Frozen/SLERef.lean`. SUPERSEDED (chat 186): the second conjunct `SLEFrozenEstimates` is FALSE as typed, for the reason given at `SLEReferenceInput`: it contains `DiscreteHolderContinuityCorrectedStep` and `FrozenTruncatedQuenchedLawsFixedTime`, both quantified over the `IsSLE` semantics of every model. Superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`); kept unchanged. -/
 def SLEFrozenReferenceInput (ν : ℝ → Measure SLEPathCode) : Prop :=
   (∃ 𝒮ref : SpaceFillingSLEModel,
     HasNormalizedSLELaw 𝒮ref ν ∧ HasReferenceEnvironments 𝒮ref) ∧

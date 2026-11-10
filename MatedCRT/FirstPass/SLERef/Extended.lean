@@ -22,6 +22,8 @@ import MatedCRT.Steps.Sec1.Convergence
 Every clause has the form `∀ 𝒮, HasNormalizedSLELaw 𝒮 ν → X 𝒮`, as the existing clauses of `SLEReferenceInput`.
 `SLEReferenceInput` itself is not changed, since `SLEReferenceExistsInput` (frozen) is stated through it.
 
+SUPERSEDED (chat 186): the eight clauses above are FALSE as typed. Each has the form `∀ 𝒮, HasNormalizedSLELaw 𝒮 ν → X 𝒮`, and `HasNormalizedSLELaw` fixes only the SLE code law, not the `IsSLE` semantics, field, graph or clock that the clauses concern. `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`) replaces them, per model. These declarations are kept unchanged.
+
 `ConeEnvironmentScalingUnderSLE 𝒮` is NOT derived here: under the closure clause it is equivalent to
 `ConeEnvironmentScalingStep 𝒮`, which the fleet retired as FALSE (`FrozenConeEnvironmentScaling`, `Frozen/S3S4.lean`;
 `notes/fp-gaps/TRUTH-CHECK-2.md`, entry `FrozenConeEnvironmentScaling — FALSE`). See `coneEnvironmentScalingUnderSLE_iff`.
@@ -39,49 +41,49 @@ def SLEModelClosureInput (𝒮 : SpaceFillingSLEModel) : Prop :=
   SLEScaleInvarianceInput 𝒮 ∧ SLEReparametrizationInput 𝒮 ∧ SLEIndepMonoInput 𝒮
 
 /-- Uniform closure clause of the reference package: every model with normalized law `ν` satisfies
-`SLEModelClosureInput`. Source: Miller–Sheffield, *Imaginary Geometry IV*, §§1.2.3, 4.3. PENDING TRUTH CHECK. -/
+`SLEModelClosureInput`. Source: Miller–Sheffield, *Imaginary Geometry IV*, §§1.2.3, 4.3. FALSE as typed (chat 186): `HasNormalizedSLELaw 𝒮 ν` fixes only the SLE code law, not the `IsSLE` semantics, field, graph or clock quantified here; superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`). -/
 def SLEModelClosureClause (ν : ℝ → Measure SLEPathCode) : Prop :=
   ∀ 𝒮 : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮 ν → SLEModelClosureInput 𝒮
 
 /-- Uniform clause: every model with normalized law `ν` satisfies `MepsScalingInput` (the scaling `C⁻¹ε⁻¹ ≤ m_ε ≤ Cε⁻¹`).
 Source: Berestycki–Gwynne, *Random walks on mated-CRT planar maps and Liouville Brownian motion*, arXiv:2003.10320, eq. (1.8),
-as cited in `MatedCRT/External/SLE.lean` (line 63). PENDING TRUTH CHECK. -/
+as cited in `MatedCRT/External/SLE.lean` (line 63). FALSE as typed (chat 186): `HasNormalizedSLELaw 𝒮 ν` fixes only the SLE code law, not the `IsSLE` semantics, field, graph or clock quantified here; superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`). -/
 def MepsScalingClause (ν : ℝ → Measure SLEPathCode) : Prop :=
   ∀ 𝒮 : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮 ν → MepsScalingInput 𝒮
 
 /-- Uniform clause: every model with normalized law `ν` satisfies `DegreeBoundInput`. Source: Gwynne–Miller–Sun (GMS19),
-Lemma 2.6, as cited in `MatedCRT/External/SLE.lean` (line 70). PENDING TRUTH CHECK. -/
+Lemma 2.6, as cited in `MatedCRT/External/SLE.lean` (line 70). FALSE as typed (chat 186): `HasNormalizedSLELaw 𝒮 ν` fixes only the SLE code law, not the `IsSLE` semantics, field, graph or clock quantified here; superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`). -/
 def DegreeBoundClause (ν : ℝ → Measure SLEPathCode) : Prop :=
   ∀ 𝒮 : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮 ν → DegreeBoundInput 𝒮
 
 /-- Uniform clause: every model with normalized law `ν` satisfies `CellSizeEstimateStmt` (the cell-size estimate).
 Source: Berestycki–Gwynne, arXiv:2003.10320, Lemma 2.4 (printed Lemma 2.8, `MatedCRT/Draft/Section2.lean:131`).
-PENDING TRUTH CHECK. -/
+FALSE as typed (chat 186): `HasNormalizedSLELaw 𝒮 ν` fixes only the SLE code law, not the `IsSLE` semantics, field, graph or clock quantified here; superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`). -/
 def CellSizeEstimateClause (ν : ℝ → Measure SLEPathCode) : Prop :=
   ∀ 𝒮 : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮 ν → CellSizeEstimateStmt 𝒮
 
 /-- Uniform clause: every model with normalized law `ν` satisfies `CountingMeasureConvergenceStmt`. Source:
-Berestycki–Gwynne, arXiv:2003.10320, Lemma A.4 (printed Lemma 2.9, `MatedCRT/Draft/Section2.lean:143`). PENDING TRUTH CHECK. -/
+Berestycki–Gwynne, arXiv:2003.10320, Lemma A.4 (printed Lemma 2.9, `MatedCRT/Draft/Section2.lean:143`). FALSE as typed (chat 186): `HasNormalizedSLELaw 𝒮 ν` fixes only the SLE code law, not the `IsSLE` semantics, field, graph or clock quantified here; superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`). -/
 def CountingMeasureConvergenceClause (ν : ℝ → Measure SLEPathCode) : Prop :=
   ∀ 𝒮 : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮 ν → CountingMeasureConvergenceStmt 𝒮
 
 /-- Uniform clause: every model with normalized law `ν` satisfies `DegreeMeasureConvergenceStmt`. Source:
 Berestycki–Gwynne, arXiv:2003.10320, Corollary A.6 (printed Lemma 2.10, `MatedCRT/Draft/Section2.lean:157`).
-PENDING TRUTH CHECK. -/
+FALSE as typed (chat 186): `HasNormalizedSLELaw 𝒮 ν` fixes only the SLE code law, not the `IsSLE` semantics, field, graph or clock quantified here; superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`). -/
 def DegreeMeasureConvergenceClause (ν : ℝ → Measure SLEPathCode) : Prop :=
   ∀ 𝒮 : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮 ν → DegreeMeasureConvergenceStmt 𝒮
 
 /-- Environment clause (not an SLE-marginal clause): every model with normalized law `ν` satisfies `FrozenConeScalingLaw`,
 the law-level cone scaling of the quantum cone environment. Source: Duplantier–Miller–Sheffield, *Mating of trees*,
 arXiv:1409.7055v4, Proposition 4.13(i), with Duplantier–Sheffield, arXiv:0808.1560v2, Proposition 2.1 (locators as in
-`MatedCRT/FirstPass/Frozen/S4S6c.lean`). PENDING TRUTH CHECK. -/
+`MatedCRT/FirstPass/Frozen/S4S6c.lean`). FALSE as typed (chat 186): `HasNormalizedSLELaw 𝒮 ν` fixes only the SLE code law, not the `IsSLE` semantics, field, graph or clock quantified here; superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`). -/
 def FrozenConeScalingClause (ν : ℝ → Measure SLEPathCode) : Prop :=
   ∀ 𝒮 : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮 ν → FrozenConeScalingLaw 𝒮
 
 /-- Environment clause (LQG/LBM side, not an SLE-marginal clause): every model with normalized law `ν` satisfies
 `FrozenLBMGreenOccupationRescaled`. Source: Garban–Rhodes–Vargas, *Liouville Brownian motion*, arXiv:1301.2876, the PCAF
 construction and occupation identity, with the deterministic rescaling and LQG coordinate change of the Lean normalization
-`2/S.m₀`. It is NOT literally GRV Theorem 2.7(1). PENDING TRUTH CHECK. -/
+`2/S.m₀`. It is NOT literally GRV Theorem 2.7(1). FALSE as typed (chat 186): `HasNormalizedSLELaw 𝒮 ν` fixes only the SLE code law, not the `IsSLE` semantics, field, graph or clock quantified here; superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`). -/
 def FrozenLBMGreenOccupationClause (ν : ℝ → Measure SLEPathCode) : Prop :=
   ∀ 𝒮 : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮 ν → FrozenLBMGreenOccupationRescaled 𝒮
 
@@ -92,8 +94,8 @@ def SLEReferenceExtendedInput (ν : ℝ → Measure SLEPathCode) : Prop :=
     CellSizeEstimateClause ν ∧ CountingMeasureConvergenceClause ν ∧ DegreeMeasureConvergenceClause ν ∧
     FrozenConeScalingClause ν ∧ FrozenLBMGreenOccupationClause ν
 
-/-- FIRST-PASS FROZEN (new with fp-SLERef-extend-package; PENDING TRUTH CHECK). Some law family `ν` carries the extended
-reference package. Analogue of `SLEReferenceExistsInput` (`MatedCRT/FirstPass/Frozen/SLERef.lean`) for the new clauses. -/
+/-- FIRST-PASS FROZEN (new with fp-SLERef-extend-package; FALSE as typed, chat 186). Some law family `ν` carries the extended
+reference package. Analogue of `SLEReferenceExistsInput` (`MatedCRT/FirstPass/Frozen/SLERef.lean`) for the new clauses. SUPERSEDED (chat 186): classed FALSE as typed, because it inherits the eight clauses above; superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`). -/
 def SLEReferenceExtendedExistsInput : Prop :=
   ∃ ν : ℝ → Measure SLEPathCode, SLEReferenceExtendedInput ν
 

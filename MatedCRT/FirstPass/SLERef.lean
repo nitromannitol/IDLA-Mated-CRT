@@ -3,6 +3,7 @@ import MatedCRT.FirstPass.SLERef.Similarity
 import MatedCRT.FirstPass.SLERef.Reference
 import MatedCRT.FirstPass.Frozen.SLERef
 import MatedCRT.FirstPass.SLERef.Extended
+import MatedCRT.FirstPass.SLERef.Certified
 
 /-!
 # First pass: consumers of the reference law of whole-plane space-filling SLE (task fp-SLERef-reference-law, worker z10;
