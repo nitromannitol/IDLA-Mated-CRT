@@ -100,9 +100,54 @@ theorem hShellBall_loc {γ ζ ρ s₀ ε r ρmesh : ℝ} {Ω : Type} [Measurable
   rw [hitTime_eq_toNat_shellHit]
   exact hkey
 
+
+/-- **`hShellBall` at a free sparsity exponent `s1` (z12, fp-S4S6c-shellball; z1's `_s1` form).** The conclusion is
+exactly z1's `hShellBall` binder of `shellOrder_fullAdm_ae_omega_loc_s1` (ShellOrderLoc68.lean): the gap antecedent
+`2 * (dyadicD r / 100) + 2 * dyadicD r ^ shortExp ζ ≤ ρmesh - ρ` and the guard `FullAdmAt s1`. The proof is that of
+`hShellBall_loc` (l.68) with `sparsityS1 γ` replaced by `s1`; the gap antecedent is not used (only `ρ ≤ ρmesh`).
+No hypothesis on `s1` is used. -/
+theorem hShellBall_loc_s1 {γ ζ ρ s₀ ε r ρmesh s1 : ℝ} {Ω : Type} [MeasurableSpace Ω]
+    (S : MatedCRTEnv Ω) (i : Lemma68Config.Config68) {Rf : Ω → ℂ → ℝ}
+    (hρ : ρ ≤ ρmesh)
+    (hR : ∀ᵐ ω ∂S.P, ∀ w ∈ shortEligible ρ (dyadicD r) (shortExp ζ),
+      dyadicD r ≤ Rf ω w ∧ Rf ω w ≤ dyadicD r ^ shortExp ζ)
+    (hmesh : ∀ᵐ ω ∂S.P, CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) ρmesh))
+    (hEl : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
+      ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a), ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
+        shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x
+          ∈ shortEligible ρ (dyadicD r) (shortExp ζ)) :
+    2 * (dyadicD r / 100) + 2 * dyadicD r ^ shortExp ζ ≤ ρmesh - ρ →
+    ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
+      ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a), ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
+        CellDiamLe ε (S.η ω) (dyadicD r / 100)
+          (Metric.ball (gridRound (dyadicD r / 100)
+              (vertexPoint ε (S.η ω) (x (hitTime ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+                (dyadicD r ^ shortExp ζ) x k))))
+            (2 * Rf ω (gridRound (dyadicD r / 100)
+              (vertexPoint ε (S.η ω) (x (hitTime ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
+                (dyadicD r ^ shortExp ζ) x k)))))) := by
+  intro _
+  filter_upwards [hmesh, hR, hEl] with ω hm hRω hElω
+  intro hFA
+  filter_upwards [hElω hFA] with x hx
+  intro k hk
+  have hkey : CellDiamLe ε (S.η ω) (dyadicD r / 100)
+      (Metric.ball (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x)
+        (2 * Rf ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x))) := by
+    have hc := hx k hk
+    have hRc := hRω _ hc
+    have hd0 : 0 < dyadicD r := by unfold dyadicD; positivity
+    have hd0a : 0 ≤ dyadicD r ^ shortExp ζ := Real.rpow_nonneg hd0.le _
+    have hsub := ball_two_mul_R_subset_of_shortEligible hc hRc.2 hd0a
+    exact Lemma68HoneRrLocal.cellDiamLe_mono_set (hsub.trans (Metric.ball_subset_ball hρ)) hm
+  rw [hitTime_eq_toNat_shellHit]
+  exact hkey
+
 end Lemma68ShellBallLoc
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68ShellBallLoc.hitTime_eq_toNat_shellHit
 #print axioms MatedCRT.Lemma68ShellBallLoc.ball_two_mul_R_subset_of_shortEligible
 #print axioms MatedCRT.Lemma68ShellBallLoc.hShellBall_loc
+
+#print axioms MatedCRT.Lemma68ShellBallLoc.hShellBall_loc_s1
