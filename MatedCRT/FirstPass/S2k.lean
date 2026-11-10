@@ -7,7 +7,7 @@ import MatedCRT.FirstPass.Frozen.S2k
 * `wholePlaneVolumeGrowthAeStep_fp`: `WholePlaneVolumeGrowthAeStep` (B1, `ConeWholePlaneSteps.lean:47`) from the EXTERNAL
   Harmonic-Balls Draft `LQGVolumeGrowthAllScalesStmt` (I2, `HarmonicBalls/Draft/Section2.lean:122`). PROVED-FP.
 * `plateauScaleInvarianceStep_fp`: `PlateauScaleInvarianceStep` (fact (1), `HalfBallPlateau.lean:51`) from I2 and the
-  frozen coordinate rule `FrozenInsertionCoordinateRule` (input K, `FirstPass/Frozen/S2k.lean`, PENDING TRUTH CHECK). The
+  frozen coordinate rule `FrozenInsertionCoordinateRule` (input K, `FirstPass/Frozen/S2k.lean`, TRUE as typed, truth note §1). The
   bounded-representative input H is not used: `FirstPass/S2k/PlateauHBFree.lean` (cycle note section 4.1). PROVED-FP
   conditional on K.
 * `coneHalfBallClosureInsideStep_fp`: `ConeHalfBallClosureInsideStep` (`StoppedClosure.lean:18`) from the fact (1) above
@@ -26,7 +26,7 @@ theorem wholePlaneVolumeGrowthAeStep_fp (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
   wholePlaneVolumeGrowthAeStep_of_allScales hI2
 
 /-- **Fact (1), plateau scale invariance (PROVED-FP, H-free).** Conditional on I2 and on the frozen coordinate rule
-`FrozenInsertionCoordinateRule` (input K, PENDING TRUTH CHECK). The bounded-representative input H is not used
+`FrozenInsertionCoordinateRule` (input K, TRUE as typed). The bounded-representative input H is not used
 (`PlateauHBFree.lean`, cycle note section 4.1). -/
 theorem plateauScaleInvarianceStep_fp (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
     (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule) : PlateauScaleInvarianceStep :=

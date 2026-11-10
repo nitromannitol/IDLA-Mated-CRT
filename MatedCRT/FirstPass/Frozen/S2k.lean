@@ -24,7 +24,7 @@ def FrozenLusinCompactContinuity : Prop :=
     (P : Measure X) [IsFiniteMeasure P] (F : X → Y), Measurable F →
     ∀ ε : ENNReal, 0 < ε → ∃ K : Set X, IsCompact K ∧ P Kᶜ < ε ∧ ContinuousOn F K
 
-/-- FIRST-PASS FROZEN (PENDING TRUTH CHECK). The insertion-`α` coordinate rule for fixed complex affine maps, at all real
+/-- FIRST-PASS FROZEN (TRUE as typed; truth note notes/fp-gaps/CHATGPT-idla-K-S2h-S2k-truth.md §1). The insertion-`α` coordinate rule for fixed complex affine maps, at all real
 scales: restated from `MatedCRT.InsertionCoordinateExtensionStep` (`Proofs/Sec4/Prop42Closure/InsertionCoordinate.lean:37`,
 input K of the Proposition 4.2 plateau argument), with the same body. For `0 < γ < 2`, `α < Q`, a probability space carrying a
 whole-plane GFF `(hC, hcirc)` whose insertion-`α` LQG measure is `μ`, and every affine map `z ↦ a z + b` with `a ≠ 0`, almost
@@ -32,8 +32,10 @@ surely the circle averages `(ε, z) ↦ h_{|a|ε}(a z + b) + Q log|a|` converge 
 Locators: Harmonic-Balls arXiv:2208.11795v3, Fact 2.1 and equation (2.7), printed p. 9 (normalized log-GFF scaling and GMC
 covariance); Duplantier-Sheffield arXiv:0808.1560v2, Proposition 2.1, printed p. 13 (coordinate change of the LQG measure under
 conformal maps, `h̃ = h∘ψ + Q log|ψ′|`) and Proposition 1.1, p. 5. The whole-plane affine case at non-dyadic scales is not printed
-in those places (see `Proposed/DuplantierSheffieldCoordinate2011.lean`, docstring of `DS11CoordinateRuleFixedAffine`); the
-truth check of this exact form is pending with the operator.
+in those places (see `Proposed/DuplantierSheffieldCoordinate2011.lean`, docstring of `DS11CoordinateRuleFixedAffine`), so the
+statement is not literally DS11 Proposition 2.1. It is a corollary of standard GFF/GMC facts: the dyadic limit has a measurable
+decoder, the insertion measure has no atom at `0`, convergence holds away from `0`, the limit is identified along each `R 2^{-n}`,
+and the affine change of variables applies (truth note §1, steps A–E).
 Used by: firstPass_plateauScaleInvarianceStep (`S2k.lean`, through `insertionLQGScalingLawStep_of_coordinateRule`). -/
 def FrozenInsertionCoordinateRule : Prop :=
   ∀ (γ α : ℝ), 0 < γ → γ < 2 → α < lqgQ γ →
