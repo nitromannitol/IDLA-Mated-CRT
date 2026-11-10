@@ -174,10 +174,90 @@ theorem hgood_of_selector (K : Constants68 γ ρc) {ε : ℝ} {η : ℝ → ℂ}
   rw [hZ k ω]
   exact hsel _ (hEl k ω hω)
 
+/-- **The explicit smallness threshold.** For `e := α - 2 ω βm > 0` and `ε ≤ ((100 c₀)^βm / 4)^(1/e)`, the power
+`ε^e` is at most `(100 c₀)^βm / 4`. This is the deterministic "ε small" of `eq:c26-mesh-preparation` made explicit. -/
+theorem rpow_le_of_threshold {ε c0 βm e : ℝ} (hε : 0 ≤ ε) (he : 0 < e) (hc : 0 < c0)
+    (hεs : ε ≤ ((100 * c0) ^ βm / 4) ^ (1 / e)) :
+    ε ^ e ≤ (100 * c0) ^ βm / 4 := by
+  have h0 : 0 ≤ (100 * c0) ^ βm / 4 :=
+    div_nonneg (Real.rpow_nonneg (by linarith) _) (by norm_num)
+  calc ε ^ e ≤ (((100 * c0) ^ βm / 4) ^ (1 / e)) ^ e := Real.rpow_le_rpow hε hεs he.le
+    _ = (100 * c0) ^ βm / 4 := by
+        rw [one_div]
+        exact Real.rpow_inv_rpow h0 he.ne'
+
+/-- **`hεc` from the explicit threshold.** Under `2ωβm < α`, `ε ≤ ε₀` and `10 ε^ω ≤ r`, one has
+`4 ε^α ≤ (c₀ r²)^βm`: `r² ≥ 100 ε^{2ω}` and `ε^α = ε^{2ωβm} ε^{α - 2ωβm}`. -/
+theorem hεc_of_threshold (K : Constants68 γ ρc) {ε r α : ℝ} (hε : 0 < ε)
+    (hrε : 10 * ε ^ K.ω ≤ r) (hα : 2 * K.ω * K.βm < α)
+    (hεs : ε ≤ ((100 * K.c0) ^ K.βm / 4) ^ (1 / (α - 2 * K.ω * K.βm))) :
+    4 * ε ^ α ≤ (K.c0 * r ^ 2) ^ K.βm := by
+  have hβ0 : 0 ≤ K.βm := by
+    have h1 := K.hβ
+    have h2 : 0 ≤ (2 + γ) ^ 2 / 2 := by positivity
+    linarith
+  have he : 0 < α - 2 * K.ω * K.βm := by linarith
+  have hT := rpow_le_of_threshold hε.le he K.hc0 hεs
+  have hsq := eps_pow_two_le_sq hε hrε
+  have hPnn : 0 ≤ ε ^ (2 * K.ω * K.βm) := (Real.rpow_pos_of_pos hε _).le
+  have hPe : ε ^ α = ε ^ (2 * K.ω * K.βm) * ε ^ (α - 2 * K.ω * K.βm) := by
+    rw [← Real.rpow_add hε]
+    congr 1
+    ring
+  have h1 : 4 * ε ^ α ≤ ε ^ (2 * K.ω * K.βm) * (100 * K.c0) ^ K.βm := by
+    rw [hPe]
+    nlinarith [mul_le_mul_of_nonneg_left hT hPnn]
+  have h2 : (K.c0 * (100 * ε ^ (2 * K.ω))) ^ K.βm = ε ^ (2 * K.ω * K.βm) * (100 * K.c0) ^ K.βm := by
+    have e1 : ε ^ (2 * K.ω * K.βm) = (ε ^ (2 * K.ω)) ^ K.βm := Real.rpow_mul hε.le _ _
+    rw [e1, show K.c0 * (100 * ε ^ (2 * K.ω)) = (100 * K.c0) * ε ^ (2 * K.ω) by ring,
+      Real.mul_rpow (by linarith [K.hc0]) (Real.rpow_nonneg hε.le _)]
+    ring
+  have h3 : (K.c0 * (100 * ε ^ (2 * K.ω))) ^ K.βm ≤ (K.c0 * r ^ 2) ^ K.βm :=
+    Real.rpow_le_rpow (mul_nonneg K.hc0.le (mul_nonneg (by norm_num) (Real.rpow_nonneg hε.le _)))
+      (mul_le_mul_of_nonneg_left (by linarith) K.hc0.le) hβ0
+  linarith
+
+/-- **The good-event discharge `hsc` with the explicit threshold.** Same conclusion as `hsc_of_volC`; the smallness
+input is now the explicit threshold `ε ≤ ((100 c₀)^βm/4)^(1/(α - 2ωβm))` (with `2ωβm < α`). -/
+theorem hsc_of_volC_threshold (K : Constants68 γ ρc) {ε : ℝ} {η : ℝ → ℂ} {Kset : Set ℂ} {r s d α : ℝ}
+    {Rf : ℂ → ℝ} {A : Set ℤ} {τU : (ℕ → ℤ) → ℕ∞} {μ : Measure ℂ} [IsFiniteMeasureOnCompacts μ]
+    (hε : 0 < ε) (hrε : 10 * ε ^ K.ω ≤ r) (hα : 2 * K.ω * K.βm < α)
+    (hεs : ε ≤ ((100 * K.c0) ^ K.βm / 4) ^ (1 / (α - 2 * K.ω * K.βm)))
+    (hRr : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η Kset r s d Rf k) τU,
+      r ^ 2 ≤ Rf (shellCentre ε η Kset r s d k ω) ∧ Rf (shellCentre ε η Kset r s d k ω) ≤ 1)
+    (hVolC : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η Kset r s d Rf k) τU,
+      ENNReal.ofReal ((K.c0 * Rf (shellCentre ε η Kset r s d k ω)) ^ K.βm)
+        ≤ μ (ball (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat))
+          (K.c0 * Rf (shellCentre ε η Kset r s d k ω)))) :
+    ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η Kset r s d Rf k) τU,
+      4 * ε ^ α ≤ (μ (ball (vertexPoint ε η (ω (shellExit ε η Kset r s d Rf k ω).toNat))
+        (K.c0 * Rf (shellCentre ε η Kset r s d k ω)))).toReal :=
+  hsc_of_volC K (hεc_of_threshold K hε hrε hα hεs) hRr hVolC
+
+/-- **The good-event discharge `hgood` on the shells `k ≤ n`.** The binder `hgood` of `shellOneTest_of_direct` ranges over
+all `k`; for a shell `k` the walk does not reach, the shell centre is the default junk value and need not be eligible.
+This is the variant on the shells `k ≤ n` (the range of `ShellOneTestAt`, ShellHoneInst68.lean:41), the minimal
+binder change proposed to the operator. -/
+theorem hgood_of_selector_le (K : Constants68 γ ρc) {ε : ℝ} {η : ℝ → ℂ} {Kset : Set ℂ} {r s d a ρ C_good : ℝ}
+    {Rf : ℂ → ℝ} {A : Set ℤ} {τU : (ℕ → ℤ) → ℕ∞} {μ : Measure ℂ} {Z : ℕ → (ℕ → ℤ) → ℂ} (n : ℕ)
+    (hsel : ∀ z ∈ shortEligible ρ d a, IsGoodAnnulusEvent μ K.c0 C_good (Rf z) z)
+    (hEl : ∀ k ≤ n, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η Kset r s d Rf k) τU,
+      shellCentre ε η Kset r s d k ω ∈ shortEligible ρ d a)
+    (hZ : ∀ k ω, Z k ω = shellCentre ε η Kset r s d k ω) :
+    ∀ k ≤ n, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (shellExit ε η Kset r s d Rf k) τU,
+      IsGoodAnnulusEvent μ K.c0 C_good (Rf (shellCentre ε η Kset r s d k ω)) (Z k ω) := by
+  intro k hk ω hω
+  rw [hZ k ω]
+  exact hsel _ (hEl k hk ω hω)
+
 end Lemma68HoneGoodEvent
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68HoneGoodEvent.hεα_of_radius
+#print axioms MatedCRT.Lemma68HoneGoodEvent.rpow_le_of_threshold
+#print axioms MatedCRT.Lemma68HoneGoodEvent.hεc_of_threshold
+#print axioms MatedCRT.Lemma68HoneGoodEvent.hsc_of_volC_threshold
+#print axioms MatedCRT.Lemma68HoneGoodEvent.hgood_of_selector_le
 #print axioms MatedCRT.Lemma68HoneGoodEvent.hεmass_of_radius
 #print axioms MatedCRT.Lemma68HoneGoodEvent.hsc_of_volC
 #print axioms MatedCRT.Lemma68HoneGoodEvent.hpos_of_fullSupport
