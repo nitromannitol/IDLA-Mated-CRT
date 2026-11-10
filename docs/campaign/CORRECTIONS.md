@@ -78,6 +78,9 @@ In the proof of Lemma 4.8, replace `m_eps phi^delta(eta(b)) + delta` by `m_eps (
 ## [C18] Lemma 6.4 constant dependency (author-approved 2026-11-09)
 Replace "a constant C depending only on gamma" by "depending only on gamma and c_0". The proof gives C(gamma, c_0); a good annulus forces C >= (1 - log 2)/(16 c_0^2) (packing), and c_0 = c_0(rho, gamma) is the standing choice, so C(gamma) is unjustified (false if inf_rho c_0 = 0). All later uses fix rho. See fleet notes fp-gaps/CHATGPT-s6-constants.md and CHATGPT-6-4-referee.md.
 
+## [C19] Lemma 6.8/6.9 negative-binomial tail events (author-approved 2026-11-10)
+In the proof of lemma:chance-of-being-absorbed, eq:number-of-walkers-nb-bound and the display after it bound P[N(.) <= ...]; both events are reversed and now read P[N(k_1) > (s_2^{-1}+C) k_1 | h, eta] <= exp(-c k_1) and P[N((s_2^{-1}+C)^{-1} k) > k | h, eta] <= exp(-c k). The stochastic domination by NegBinom(k_1, s_2) bounds the probability of needing too many walkers; with certain absorption N(m) = m and the printed left side equals 1. Typo-level; the inclusive threshold of the conclusion is routine rounding (the direct proof in notes/fp-gaps/CHATGPT-6-9-claims-referee.md gives s_3 = log(27/16)/4, s_4 = 1/4, s_5 = 1/8 from the uniform constants of LEMMA68). Source: notes/fp-gaps/CHATGPT-6-9-claims-referee.md (G2).
+
 ## Readings (not corrections of the paper; line numbers of the corrected draft)
 
 ### (R1) The origin vertex `0` and `a^eps_0` (ESCALATIONS E-x3-3, worker A, 2026-11-04)

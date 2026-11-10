@@ -2986,13 +2986,16 @@ are recorded in \texttt{docs/campaign/LEMMA36-REPLACEMENT.md}.
 		\]
 		where $\mathrm{NegBinom}(k_1,s_2)$ denotes a random variable drawn from a negative binomial distribution with $n = k_1$ and $p = s_2$, sampled independently from $(h,\eta)$. 
 		Therefore, by a concentration inequality for negative binomial random variables, for each $k_1 \leq s_1 r^{2 \beta^-} {\eps}^{-1}$, 
+		% CORRECTION [C19] (author-approved 2026-11-10) Printed: \mathcal{N}(k_1) \leq (s_2^{-1}+C)k_1 here and \mathcal{N}(\cdot) \leq k in the next display.
+		% Both tail events were reversed: the negative-binomial domination bounds the probability of needing too many walkers (with certain
+		% absorption \mathcal{N}(m)=m, so the printed left side equals 1). The inclusive threshold in the conclusion is routine rounding.
 		\begin{equation} \label{eq:number-of-walkers-nb-bound}
-		\P[ \mathcal{N}(k_1) \leq (s_2^{-1} + C) k_1 | h, \eta] \leq \exp(-c k_1), \quad \mbox{for deterministic constants $C, c > 0$}.
+		\P[ \mathcal{N}(k_1) > (s_2^{-1} + C) k_1 | h, \eta] \leq \exp(-c k_1), \quad \mbox{for deterministic constants $C, c > 0$}.
 		\end{equation}
 		Thus, if we choose $k_1 = (s_2^{-1} + C)^{-1} \times k$, we have by our choice of $s_5$ and 
 		\eqref{eq:number-of-walkers-nb-bound}, 
 		\[
-		\P\left[ \mathcal{N}((s_2^{-1} + C)^{-1} \times k) \leq k | h , \eta \right]  \leq \exp(-c k),
+		\P\left[ \mathcal{N}((s_2^{-1} + C)^{-1} \times k) > k | h , \eta \right]  \leq \exp(-c k),
 		\] 
 		where the deterministic constant $c$ has changed compared to \eqref{eq:number-of-walkers-nb-bound}.
 		By definition of $\mathcal{N}$, this implies the desired conclusion with $s_3 = c$ and $s_4 = (s_2^{-1} + C)^{-1}$.
