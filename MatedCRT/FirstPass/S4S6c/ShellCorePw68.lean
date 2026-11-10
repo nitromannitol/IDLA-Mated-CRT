@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.S4S6c.ShellCoreR68
 import MatedCRT.FirstPass.S4S6c.TraceInputs68
+import MatedCRT.FirstPass.S6n
 
 /-!
 # Pointwise, radius-uniform inputs for the one-test order (fp-S4S6c-pointwise-r-uniform, z5)
@@ -165,6 +166,157 @@ theorem shellOneTestOrderAeStmt_of_pointwiseEnv {𝒮 : SpaceFillingSLEModel} (h
   exact hcl R hR0 hRρ hRA s₀ hs₀ hs₁ Ω S hS hGp hCp hEp Ew hEwm hEwp ε hε ω hmesh hcurve hmult
     hηc hμN hμF hω
 
+/-! ### The start cell meets the frontier of the thickened fill (`hstart`), from admissibility
+
+The start binder `hstart` of `shellOneTest_ae_fixedR` (B1Assembly68.lean:85) follows from the first conjunct of
+`Admissible` (`2 dd ≤ r ≤ 2 ddMax`, S6e/Admissible.lean:46): `dd`, `ddMax` are the infimum and supremum of
+`dist(η q, K)` over the rational parameters of the start cell (S6e/Geometry.lean:33-42), and `K` is the fill. -/
+
+/-- The rational-sample distance is the distance to the filled set: `pointDist ε η Θ q = Metric.infEDist (η q) (fillCells …)`.
+The samples `η q'` (rational `q'` in the cells `w ∈ Θ`) are dense in the fill, by continuity of `η`. -/
+theorem pointDist_eq_infEdist {η : ℝ → ℂ} (hη : Continuous η) {ε : ℝ} (hε : 0 < ε) (Θ : Finset ℤ) (q : ℚ) :
+    Lemma68Geometry.pointDist ε η Θ q = Metric.infEDist (η q) (fillCells ε η ↑Θ) := by
+  set T : Set ℂ := ⋃ w : Θ, ⋃ t : Lemma68Geometry.ratInt ε w.1, {η ((t : ℚ) : ℝ)} with hT
+  have hTK : T ⊆ fillCells ε η ↑Θ := by
+    intro y hy
+    simp only [hT, mem_iUnion, mem_singleton_iff] at hy
+    obtain ⟨w, t, rfl⟩ := hy
+    refine mem_iUnion₂.mpr ⟨w.1, Finset.mem_coe.mpr w.2, ?_⟩
+    exact ⟨((t : ℚ) : ℝ), t.2, rfl⟩
+  -- density of the rational parameters in each closed cell interval
+  have hD : ∀ w : ℤ, ∀ x ∈ Icc (ε * ((w : ℝ) - 1)) (ε * w),
+      x ∈ closure (Ioo (ε * ((w : ℝ) - 1)) (ε * w) ∩ range (Rat.cast : ℚ → ℝ)) := by
+    intro w x hx
+    have hab : ε * ((w : ℝ) - 1) ≠ ε * w := by
+      have : ε * ((w : ℝ) - 1) < ε * w := mul_lt_mul_of_pos_left (by linarith) hε
+      exact this.ne
+    have h1 : Ioo (ε * ((w : ℝ) - 1)) (ε * w) ⊆
+        closure (Ioo (ε * ((w : ℝ) - 1)) (ε * w) ∩ range (Rat.cast : ℚ → ℝ)) :=
+      Dense.open_subset_closure_inter Rat.denseRange_cast isOpen_Ioo
+    have hx' : x ∈ closure (Ioo (ε * ((w : ℝ) - 1)) (ε * w)) := by
+      rw [closure_Ioo hab]
+      exact hx
+    exact closure_minimal h1 isClosed_closure hx'
+  have hTcl : ∀ w : ℤ, w ∈ Θ → ∀ x ∈ Icc (ε * ((w : ℝ) - 1)) (ε * w), η x ∈ closure T := by
+    intro w hw x hx
+    refine map_mem_closure hη (hD w x hx) ?_
+    intro y hy
+    obtain ⟨hyI, q', rfl⟩ := hy
+    simp only [hT, mem_iUnion, mem_singleton_iff]
+    refine ⟨⟨w, hw⟩, ⟨q', ⟨hyI.1.le, hyI.2.le⟩⟩, rfl⟩
+  have hKcl : fillCells ε η ↑Θ ⊆ closure T := by
+    intro y hy
+    obtain ⟨w, hw, hy⟩ := mem_iUnion₂.mp hy
+    obtain ⟨s, hs, rfl⟩ := hy
+    exact hTcl w (Finset.mem_coe.mp hw) s hs
+  have hpd : Lemma68Geometry.pointDist ε η Θ q = Metric.infEDist (η q) T := by
+    simp only [Lemma68Geometry.pointDist, hT, Metric.infEDist_iUnion, Metric.infEDist_singleton]
+  rw [hpd]
+  apply le_antisymm
+  · calc Metric.infEDist (η q) T = Metric.infEDist (η q) (closure T) := (Metric.infEDist_closure).symm
+      _ ≤ Metric.infEDist (η q) (fillCells ε η ↑Θ) := Metric.infEDist_anti hKcl
+  · exact Metric.infEDist_anti hTK
+
+/-- **The start cell meets the frontier of the thickened fill, from admissibility.** At a fixed radius `r > 0` with
+`2 dd(a) ≤ r ≤ 2 ddMax(a)` (the first conjunct of `Admissible`), the continuous function `t ↦ dist(η t, K)` (with
+`K = fillCells`) takes the value `r/2` on the start cell `η[ε(a-1), εa]`: the infimum and supremum over the cell are
+attained (compactness), and the intermediate value theorem applies on the connected cell interval. The frontier of
+`thickening (r/2) K` is `{dist(·, K) = r/2}` (`frontier_thickening_eq`, S6n.lean:56), `K` being compact and nonempty. -/
+theorem start_frontier_of_admissible {η : ℝ → ℂ} (hη : Continuous η) {ε r : ℝ} (hε : 0 < ε) (hr : 0 < r)
+    (Θ : Finset ℤ) (a : ℤ) (hK : (fillCells ε η ↑Θ).Nonempty)
+    (h1 : 2 * Lemma68Admissible.dd ε η Θ a ≤ r) (h2 : r ≤ 2 * Lemma68Admissible.ddMax ε η Θ a) :
+    (cell ε η a ∩ frontier (Metric.thickening (r / 2) (fillCells ε η ↑Θ))).Nonempty := by
+  set K := fillCells ε η ↑Θ with hKdef
+  have hKc : IsCompact K :=
+    (Finset.finite_toSet Θ).isCompact_biUnion fun w _ => isCompact_Icc.image hη
+  have hfr := Lemma68C12Geom.frontier_thickening_eq hKc hK (half_pos hr)
+  have hIle : ε * ((a : ℝ) - 1) ≤ ε * a := mul_le_mul_of_nonneg_left (by linarith) hε.le
+  set I : Set ℝ := Icc (ε * ((a : ℝ) - 1)) (ε * a) with hIdef
+  have hIne : I.Nonempty := nonempty_Icc.mpr hIle
+  set g : ℝ → ℝ := fun t => Metric.infDist (η t) K with hgdef
+  have hg : Continuous g := (Metric.continuous_infDist_pt K).comp hη
+  obtain ⟨t0, ht0I, ht0⟩ := isCompact_Icc.exists_isMinOn hIne hg.continuousOn
+  obtain ⟨t1, ht1I, ht1⟩ := isCompact_Icc.exists_isMaxOn hIne hg.continuousOn
+  have hfin : ∀ x : ℂ, Metric.infEDist x K ≠ ⊤ := fun x => by obtain ⟨y, hy⟩ := hK; exact ne_top_of_le_ne_top (edist_ne_top x y) (Metric.infEDist_le_edist_of_mem hy)
+  have hgeq : ∀ x : ℂ, ENNReal.ofReal (Metric.infDist x K) = Metric.infEDist x K :=
+    fun x => ENNReal.ofReal_toReal (hfin x)
+  have hgnn : ∀ t : ℝ, 0 ≤ g t := fun t => Metric.infDist_nonneg
+  have hpdq : ∀ q : ℚ, Lemma68Geometry.pointDist ε η Θ q = Metric.infEDist (η q) K :=
+    fun q => pointDist_eq_infEdist hη hε Θ q
+  -- (i) some cell point is at distance at most r/2 from K
+  have hlo : ∃ t ∈ I, g t ≤ r / 2 := by
+    by_contra hcon
+    push Not at hcon
+    have hgt0 : r / 2 < g t0 := hcon t0 ht0I
+    have hlb : ∀ q ∈ Lemma68Geometry.ratInt ε a,
+        ENNReal.ofReal (g t0) ≤ Lemma68Geometry.pointDist ε η Θ q := by
+      intro q hq
+      rw [hpdq q, ← hgeq (η q)]
+      exact ENNReal.ofReal_le_ofReal (isMinOn_iff.mp ht0 (q : ℝ) hq)
+    obtain ⟨q0, hq0a, hq0b⟩ := exists_rat_btwn (show ε * ((a : ℝ) - 1) < ε * a by linarith)
+    have hne : Lemma68Geometry.cellDist ε η Θ a ≠ ⊤ := by
+      refine ne_top_of_le_ne_top ?_ (iInf_le (fun q : Lemma68Geometry.ratInt ε a =>
+        Lemma68Geometry.pointDist ε η Θ (q : ℚ)) ⟨q0, ⟨hq0a.le, hq0b.le⟩⟩)
+      rw [hpdq q0]
+      exact hfin _
+    have hle : ENNReal.ofReal (g t0) ≤ Lemma68Geometry.cellDist ε η Θ a := by
+      unfold Lemma68Geometry.cellDist
+      exact le_iInf fun q => hlb (q : ℚ) q.2
+    have hdd : g t0 ≤ Lemma68Admissible.dd ε η Θ a := by
+      unfold Lemma68Admissible.dd
+      have := ENNReal.toReal_mono hne hle
+      rwa [ENNReal.toReal_ofReal (hgnn t0)] at this
+    linarith
+  -- (ii) some cell point is at distance at least r/2 from K
+  have hhi : ∃ t ∈ I, r / 2 ≤ g t := by
+    by_contra hcon
+    push Not at hcon
+    have hlt : g t1 < r / 2 := hcon t1 ht1I
+    have hub : ∀ q ∈ Lemma68Geometry.ratInt ε a,
+        Lemma68Geometry.pointDist ε η Θ q ≤ ENNReal.ofReal (g t1) := by
+      intro q hq
+      rw [hpdq q, ← hgeq (η q)]
+      exact ENNReal.ofReal_le_ofReal (isMaxOn_iff.mp ht1 (q : ℝ) hq)
+    have hsup : Lemma68Geometry.cellDistMax ε η Θ a ≤ ENNReal.ofReal (g t1) := by
+      unfold Lemma68Geometry.cellDistMax
+      exact iSup_le fun q => hub (q : ℚ) q.2
+    have hmax : Lemma68Admissible.ddMax ε η Θ a ≤ g t1 := by
+      unfold Lemma68Admissible.ddMax
+      have := ENNReal.toReal_mono ENNReal.ofReal_ne_top hsup
+      rwa [ENNReal.toReal_ofReal (hgnn t1)] at this
+    linarith
+  -- (iii) the intermediate value theorem on the cell interval
+  obtain ⟨tlo, htloI, htlo⟩ := hlo
+  obtain ⟨thi, lthiI, hthi⟩ := hhi
+  have hmem : r / 2 ∈ g '' uIcc tlo thi :=
+    intermediate_value_uIcc hg.continuousOn (Set.mem_uIcc.mpr (Or.inl ⟨htlo, hthi⟩))
+  obtain ⟨s, hs, hgs⟩ := hmem
+  have hsI : s ∈ I := uIcc_subset_Icc htloI lthiI hs
+  refine ⟨η s, ⟨s, hsI, rfl⟩, ?_⟩
+  rw [hfr]
+  exact hgs
+
+/-- **`hstart` at one environment, from the full admissibility guard.** For a continuous curve `η ω` (the a.s. fact
+`TraceInputs68.ae_continuous_eta`), `ε > 0`, `r > 0`, `s₀ > 0`: `FullAdmAt` at `ω` gives the start-cell condition of
+`shellOneTest_ae_fixedR` (B1Assembly68.lean:85-86). The fill is nonempty since `ball 0 s₀ ⊆ fillCells` (ConfigOK). -/
+theorem hstart_of_fullAdmAt {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) {ρ s₀ γ ε r s1 : ℝ} (ω : Ω)
+    (i : Lemma68Config.Config68) (hη : Continuous (S.η ω)) (hε : 0 < ε) (hr : 0 < r) (hs₀ : 0 < s₀)
+    (h : Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i) :
+    (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty := by
+  obtain ⟨hcfg, hadm⟩ := h
+  have hK : (fillCells ε (S.η ω) ↑i.Θ).Nonempty :=
+    ⟨0, hcfg.2.2 (Metric.mem_ball_self hs₀)⟩
+  exact start_frontier_of_admissible hη hε hr i.Θ i.a hK hadm.1.1 hadm.1.2
+
+/-- **`hstart` almost surely, for every radius** (the binder of `shellOneTest_ae_fixedR`, B1Assembly68.lean:85): for a valid
+environment the start-cell condition holds almost surely on the event `FullAdmAt`, with no further hypothesis. -/
+theorem hstart_ae_of_valid {𝒮 : SpaceFillingSLEModel} {γ : ℝ} {Ω : Type} [MeasurableSpace Ω]
+    {S : MatedCRTEnv Ω} (hS : S.IsValid 𝒮 γ) {ρ s₀ ε r s1 : ℝ} (i : Lemma68Config.Config68)
+    (hε : 0 < ε) (hr : 0 < r) (hs₀ : 0 < s₀) :
+    ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
+      (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty :=
+  (TraceInputs68.ae_continuous_eta hS).mono fun ω hω h => hstart_of_fullAdmAt S ω i hω hε hr hs₀ h
+
 end Lemma68ShellCorePw
 end MatedCRT
 
@@ -174,3 +326,7 @@ end MatedCRT
 #print axioms MatedCRT.Lemma68ShellCorePw.ae_null_singleton_of_valid
 #print axioms MatedCRT.Lemma68ShellCorePw.ae_finite_on_compacts_of_valid
 #print axioms MatedCRT.Lemma68ShellCorePw.shellOneTestOrderAeStmt_of_pointwiseEnv
+#print axioms MatedCRT.Lemma68ShellCorePw.pointDist_eq_infEdist
+#print axioms MatedCRT.Lemma68ShellCorePw.start_frontier_of_admissible
+#print axioms MatedCRT.Lemma68ShellCorePw.hstart_of_fullAdmAt
+#print axioms MatedCRT.Lemma68ShellCorePw.hstart_ae_of_valid
