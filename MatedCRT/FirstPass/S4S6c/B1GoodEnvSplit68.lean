@@ -16,8 +16,9 @@ Changes from `shellOneTest_at_of_goodEnv_loc_g2` (B1GoodEnvLoc68.lean:360):
 * `C_good := C` in `hgood_ae`, in `hdbl_of_exit_geom_path_gexp` and in the leaf
   `Lemma68LeafAe.shellOneTest_of_direct_ae_rcell_stopFin_rho_gexp` (`C_exit := CE`, `C := shellChone68 CE C`);
   `hq0c` and `hC : 0 < C` are stated in `C`;
-* the Green range and the walk second conjunct use a free real exponent `ωG` (`2 * ω₀ < ωG`, operator 75a), passed as
-  `ωg` of the leaf; the walk first conjunct keeps `ε ^ K.ω`; the cell-size and `hεcell` exponents keep `κ = 2/(2+γ)²-ζ`;
+* the Green range is the event premise `hωG : ω ∈ greenLowEvent68 S ωG ρ CG ε` (the Stmt premise; `hGreen` is derived
+  from it, `K.C = CG`), and the walk second conjunct uses the free real exponent `ωG` (`2 * ω₀ < ωG`), passed as `ωg` of the
+  leaf; the walk first conjunct keeps `ε ^ K.ω`; the cell-size and `hεcell` exponents keep `κ = 2/(2+γ)²-ζ`;
 * `hmomS` is derived from the exit membership `hωX : ω ∈ exitTimeEvent68 S α (rhoCell68 ρ) CE ε`
   (`HoneMomSPw68.hmomS_pointwise_rhoMom_s1_g`);
 * the radius cap `t`, `ht`, `hrt`, `hcut` stays an explicit argument.
@@ -154,7 +155,7 @@ theorem hdbl_of_exit_geom_path_gexp {γ ρc ζc ωG : ℝ} (K : Constants68 γ �
 
 /-- **`shellOneTest_at_of_goodEnv_loc_split` (fp-S4S6c-goodenv-split, q4).** The one-test leaf for the CG route with the
 good-annulus constant `C` split from the Green constant `CG` (Codex Q4). Named inputs (producers not landed):
-`hTest` (test-end finiteness, `ShellCGTestEndLoc`), `hc` (74a), `hGreen`, `hWalk` (free exponent `ωG`), `hCountGood`,
+`hTest` (test-end finiteness, `ShellCGTestEndLoc`), `hc` (74a), `hWalk` (free exponent `ωG`), `hCountGood`,
 `hcutR`, and the radius cap `t ht hrt hcut`. The exit membership `hωX` replaces the moment premise `hmomS`. -/
 theorem shellOneTest_at_of_goodEnv_loc_split {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (c0W : ℝ)
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
@@ -195,14 +196,9 @@ theorem shellOneTest_at_of_goodEnv_loc_split {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2
             (dyadicD r) (windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω) k x).toNat)‖ <
             1 - windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
               (dyadicD r ^ shortExp ζ) (dyadicD r) k x) / 4)
-    -- the Green range at the free exponent `ωG` (the leaf's `hGreen` with `ωg := ωG`)
-    (hGreen : Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
-      ∀ a ∈ cellVertices ε (S.η ω) (ball 0 (ρ - ε ^ K.ω)), ∀ r' : ℝ, ε ^ ωG ≤ r' →
-        r' ≤ infDist (vertexPoint ε (S.η ω) a) (sphere 0 ρ) →
-        ∀ b ∈ cellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) a) (r' / 3)),
-          K.C⁻¹ * Real.log (if vertexPoint ε (S.η ω) a = vertexPoint ε (S.η ω) b then ε⁻¹
-            else min (r' / ‖vertexPoint ε (S.η ω) a - vertexPoint ε (S.η ω) b‖) ε⁻¹) - 1
-          ≤ greenKernel (S.mult ε ω) (interiorCellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) a) r')) a b)
+    -- the Green event at the free exponent `ωG` (the Stmt premise `ω ∈ greenLowEvent68 S ωG ρ CG ε`); its radius
+    -- ball `ball 0 (ρ - ε ^ ωG)` contains the walk's `ball 0 (ρ - ε ^ K.ω)` since `K.ω ≤ ωG`
+    (hωG : ω ∈ MatedCRT.greenLowEvent68 S ωG ρ CG ε)
     (hCountGood : Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
       ∀ D : Set ℂ, D ⊆ ball (0 : ℂ) ρ → ∀ w : ℤ → ℂ,
         (∀ k ∈ cellVertices ε (S.η ω) D, w k ∈ cell ε (S.η ω) k ∩ closure D) →
@@ -325,6 +321,24 @@ theorem shellOneTest_at_of_goodEnv_loc_split {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2
   have hω1 : 0 ≤ K.ω := by rw [hKω]; exact hω0.le
   have hα2 : 2 * K.ω ≤ α := le_trans (le_mul_of_one_le_right (by linarith) hβ1) hα.le
   have hαm : 2 * K.ω * K.βm ≤ α := hα.le
+  -- the Green range (leaf `hGreen`, exponent `ωG`) from the event premise `hωG`: `K.C = CG`, and the walk's
+  -- ball `ball 0 (ρ - ε ^ K.ω)` lies in the event's ball `ball 0 (ρ - ε ^ ωG)` since `ε ^ ωG ≤ ε ^ K.ω`
+  have hKC : K.C = CG := by subst hK; rfl
+  have hKωG : K.ω ≤ ωG := by rw [hKω]; linarith
+  have hGreen : Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
+      ∀ a ∈ cellVertices ε (S.η ω) (ball 0 (ρ - ε ^ K.ω)), ∀ r' : ℝ, ε ^ ωG ≤ r' →
+        r' ≤ infDist (vertexPoint ε (S.η ω) a) (sphere 0 ρ) →
+        ∀ b ∈ cellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) a) (r' / 3)),
+          K.C⁻¹ * Real.log (if vertexPoint ε (S.η ω) a = vertexPoint ε (S.η ω) b then ε⁻¹
+            else min (r' / ‖vertexPoint ε (S.η ω) a - vertexPoint ε (S.η ω) b‖) ε⁻¹) - 1
+          ≤ greenKernel (S.mult ε ω) (interiorCellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) a) r')) a b :=
+    fun _ a ha r' hr' hr'' b hb => by
+      rw [hKC]
+      have hball' : ball (0 : ℂ) (ρ - ε ^ K.ω) ⊆ ball (0 : ℂ) (ρ - ε ^ ωG) :=
+        Metric.ball_subset_ball (by linarith [Real.rpow_le_rpow_of_exponent_ge hε hε1 hKωG])
+      have hG := hωG
+      simp only [MatedCRT.greenLowEvent68, Set.mem_ofPred_eq] at hG
+      exact hG a (MatedCRT.cellVertices_mono_ball68 hball' ha) r' hr' hr'' b hb
   have hTend := Lemma68Geometry.tendsto_cocompact_of_escapes hcurve
   have hmω := hmult ε hε
   obtain ⟨hdr, hd2⟩ := Lemma68ChainGlue.dyadicD_mem hr0 hr1
