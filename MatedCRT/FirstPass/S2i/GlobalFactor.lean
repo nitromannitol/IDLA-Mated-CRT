@@ -359,4 +359,284 @@ theorem measurable_circleProcess_of_quantumCone {γ : ℝ} {Ω : Type} [Measurab
   refine measurable_pi_iff.2 fun q => ?_
   exact hQC.measurable_circle (q.1 : ℝ) q.2 q.1.2
 
+
+/-- The almost sure facts of a sample used by the global factor: continuity, the LQG limit and, for every scale
+`n + 1`, the positivity of the scale radius and the LQG limit of the rescaled profile. -/
+def ConeExtra {Ω : Type} (γ : ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (ω : Ω) : Prop :=
+  ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2) (Ioi 0 ×ˢ univ) ∧ IsLQGLimit γ (hcirc ω) (μ ω) ∧
+    ∀ n : ℕ, 0 < coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1) ∧
+      IsLQGLimit γ (rescaledCircle γ (hcirc ω) (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1)) ((n : ℝ) + 1))
+        (rescaledMeasure (μ ω) (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1)) ((n : ℝ) + 1))
+
+
+/-- **Reference good set (Section 9, G1-G2).** On the reference cone, a Borel set `Bs` of sample codes of continuous
+profiles captures almost every sample; the rescaled codes at every scale are almost surely in `B`, and the scaled
+canonical horizons are almost surely unbounded. -/
+theorem global_reference_good (γ : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) {D : ℕ → CirclePt} (hD : DenseRange D)
+    (hscale : QuantumConeScalingInput) {Ω : Type} [MeasurableSpace Ω] [StandardBorelSpace Ω]
+    (P : Measure Ω) [IsProbabilityMeasure P]
+    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ) (hcone : IsConeField γ P hC hcirc μ)
+    (B : Set (ℕ → ℝ)) (hB : MeasurableSet B) (F : (ℕ → ℝ) → ℝ × (ℕ → ℕ → Bool)) (hF : Measurable F)
+    (hcls : CanonicalFactorClauses γ (fun p => (F (circleCode D p)).1)
+      (fun p => decodeFamily (F (circleCode D p))) ((circleCode D) ⁻¹' B))
+    (hextra : ∀ᵐ ω ∂P, ConeExtra γ hcirc μ ω) :
+    ∃ Bs : Set (ℕ → ℝ), MeasurableSet Bs ∧ (∀ x ∈ Bs, ContinuousOn (profAlong γ hD x) (Ioi 0)) ∧
+      ∀ᵐ ω ∂P, circleCode D (circleProcess (hcirc ω)) ∈ B ∧ circleCode D (circleProcess (hcirc ω)) ∈ Bs ∧
+        (∀ n : ℕ, scodeG γ hD Bs n (circleCode D (circleProcess (hcirc ω))) ∈ B) ∧
+        ∀ M : ℕ, ∃ n : ℕ, (M : ℝ) < ((n : ℝ) + 1) *
+          (F (scodeG γ hD Bs n (circleCode D (circleProcess (hcirc ω)))) ).1 := by
+  have hP' : IsProbabilityMeasure P := hcone.1
+  have hQC : IsQuantumCone γ P hC hcirc := hcone.2.1
+  have hκ : Measurable fun ω => circleCode D (circleProcess (hcirc ω)) :=
+    (measurable_circleCode D).comp (measurable_circleProcess_of_quantumCone hQC)
+  have hcont : ∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2) (Ioi 0 ×ˢ univ) := by
+    filter_upwards [hextra] with ω hω
+    exact hω.1
+  obtain ⟨Et, hEt, htm, ht0⟩ := exists_measurable_superset_of_null (ae_iff.1 hcont)
+  have hEm : MeasurableSet Etᶜ := htm.compl
+  have hEfull : P Etᶜᶜ = 0 := by
+    rw [compl_compl]
+    exact ht0
+  obtain ⟨Bs, hBs, hBsE, hBsae⟩ :=
+    exists_borel_full_image P (fun ω => circleCode D (circleProcess (hcirc ω))) hκ Etᶜ hEm hEfull
+  have hcontS : ∀ x ∈ Bs, ContinuousOn (profAlong γ hD x) (Ioi 0) := by
+    intro x hx
+    obtain ⟨ω, hωE, hωx⟩ := hBsE hx
+    have hcω : ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2) (Ioi 0 ×ˢ univ) := by
+      by_contra hn
+      exact hωE (hEt hn)
+    rw [← hωx]
+    exact profAlong_continuousOn_code γ hD (hcirc ω) hcω
+  refine ⟨Bs, hBs, hcontS, ?_⟩
+  have hiB : ∀ᵐ ω ∂P, circleCode D (circleProcess (hcirc ω)) ∈ B :=
+    (hcls.2 Ω P hC hcirc μ hcone).2.2
+  have hcc : Measurable (circleCode D) := measurable_circleCode D
+  have hgAE : ∀ n : ℕ, AEMeasurable (fun ω => circleProcess (rescaledCircle γ (hcirc ω)
+      (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1)) ((n : ℝ) + 1))) P := fun n =>
+    Sec1.aemeasurable_circleProcess_rescaledCircle hscale hγ0 hγ2 hQC (by positivity)
+  have hlawn : ∀ n : ℕ, P.map (fun ω => circleCode D (circleProcess (rescaledCircle γ (hcirc ω)
+      (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1)) ((n : ℝ) + 1)))) =
+      P.map (fun ω => circleCode D (circleProcess (hcirc ω))) := by
+    intro n
+    have hl := hscale γ hγ0 hγ2 Ω P hC hcirc hP' hQC ((n : ℝ) + 1) (by positivity)
+    calc P.map (fun ω => circleCode D (circleProcess (rescaledCircle γ (hcirc ω)
+          (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1)) ((n : ℝ) + 1))))
+        = (P.map (fun ω => circleProcess (rescaledCircle γ (hcirc ω)
+          (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1)) ((n : ℝ) + 1)))).map (circleCode D) :=
+          (AEMeasurable.map_map_of_aemeasurable hcc.aemeasurable (hgAE n)).symm
+      _ = (P.map (fun ω => circleProcess (hcirc ω))).map (circleCode D) := by rw [hl]
+      _ = P.map (fun ω => circleCode D (circleProcess (hcirc ω))) :=
+          AEMeasurable.map_map_of_aemeasurable hcc.aemeasurable
+            (measurable_circleProcess_of_quantumCone hQC).aemeasurable
+  have hscMem : ∀ n : ℕ, ∀ᵐ ω ∂P, circleCode D (circleProcess (rescaledCircle γ (hcirc ω)
+      (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1)) ((n : ℝ) + 1))) ∈ B := fun n =>
+    ae_mem_of_law_eq_measurable hB hκ.aemeasurable ((hcc.comp_aemeasurable (hgAE n))) (hlawn n) hiB
+  have hscEq : ∀ n : ℕ, ∀ᵐ ω ∂P, scodeG γ hD Bs n (circleCode D (circleProcess (hcirc ω))) =
+      circleCode D (circleProcess (rescaledCircle γ (hcirc ω)
+        (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1)) ((n : ℝ) + 1))) := by
+    intro n
+    filter_upwards [hBsae, hextra] with ω h1 h2
+    exact scodeG_eq_circleCode γ hD Bs (hcirc ω) (continuous_circleProcess_of_continuousOn h2.1) n h1
+      (h2.2.2 n).1
+  have hscAll : ∀ᵐ ω ∂P, ∀ n : ℕ, scodeG γ hD Bs n (circleCode D (circleProcess (hcirc ω))) =
+      circleCode D (circleProcess (rescaledCircle γ (hcirc ω)
+        (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1)) ((n : ℝ) + 1))) := ae_all_iff.2 hscEq
+  have hpos : ∀ᵐ ω ∂P, 0 < (F (circleCode D (circleProcess (hcirc ω)))).1 := by
+    filter_upwards [hextra, hiB] with ω h1 h2
+    have h := hcls.1 (hcirc ω) h2 h1.1 (μ ω) h1.2.1
+    have hp : 0 < halfBallTime (μ ω) := h.2.2.1
+    rw [h.1] at hp
+    exact hp
+  have hΨm : Measurable fun x : ℕ → ℝ => (F x).1 := measurable_fst.comp hF
+  have hTn : ∀ n : ℕ, AEMeasurable (fun ω => (F (circleCode D (circleProcess (rescaledCircle γ (hcirc ω)
+      (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1)) ((n : ℝ) + 1))))).1) P := fun n =>
+    hΨm.comp_aemeasurable (hcc.comp_aemeasurable (hgAE n))
+  have hlawT : ∀ n : ℕ, P.map (fun ω => (F (circleCode D (circleProcess (rescaledCircle γ (hcirc ω)
+      (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1)) ((n : ℝ) + 1))))).1) =
+      P.map (fun ω => (F (circleCode D (circleProcess (hcirc ω)))).1) := by
+    intro n
+    calc P.map (fun ω => (F (circleCode D (circleProcess (rescaledCircle γ (hcirc ω)
+          (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1)) ((n : ℝ) + 1))))).1)
+        = (P.map (fun ω => circleCode D (circleProcess (rescaledCircle γ (hcirc ω)
+          (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1)) ((n : ℝ) + 1))))).map (fun x => (F x).1) :=
+          (AEMeasurable.map_map_of_aemeasurable hΨm.aemeasurable
+            (hcc.comp_aemeasurable (hgAE n))).symm
+      _ = (P.map (fun ω => circleCode D (circleProcess (hcirc ω)))).map (fun x => (F x).1) := by
+          rw [hlawn n]
+      _ = P.map (fun ω => (F (circleCode D (circleProcess (hcirc ω)))).1) :=
+          AEMeasurable.map_map_of_aemeasurable hΨm.aemeasurable hκ.aemeasurable
+  have hscMemAll : ∀ᵐ ω ∂P, ∀ n : ℕ, circleCode D (circleProcess (rescaledCircle γ (hcirc ω)
+      (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1)) ((n : ℝ) + 1))) ∈ B := ae_all_iff.2 hscMem
+  have hunb := ae_forall_exists_scale_gt (P := P)
+    (X := fun ω => (F (circleCode D (circleProcess (hcirc ω)))).1) (hΨm.comp_aemeasurable hκ.aemeasurable)
+    hpos (T := fun n ω => (F (circleCode D (circleProcess (rescaledCircle γ (hcirc ω)
+      (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1)) ((n : ℝ) + 1)))) ).1) hTn hlawT
+  filter_upwards [hiB, hBsae, hscAll, hunb, hscMemAll] with ω h1 h2 h3 h4 h5
+  refine ⟨h1, h2, fun n => ?_, fun M => ?_⟩
+  · rw [h3 n]
+    exact h5 n
+  · obtain ⟨k, hk⟩ := h4 M
+    refine ⟨k, ?_⟩
+    rw [h3 k]
+    exact hk
+
+
+/-- The radius of a sample code (on the set `S` of codes of continuous profiles) is the cone scale radius of the profile. -/
+theorem radiusOn_circleCode (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (S : Set (ℕ → ℝ))
+    (c : ℝ → ℂ → ℝ) (hc : Continuous (circleProcess c)) (b : ℝ)
+    (hS : circleCode D (circleProcess c) ∈ S) :
+    radiusOn γ hD S b (circleCode D (circleProcess c)) = coneScaleRadius γ c b := by
+  have hprof : (fun q : CirclePt => profileDec hD (circleCode D (circleProcess c)) q) = circleProcess c := by
+    funext q
+    exact profileDec_circleCode hD hc q
+  unfold radiusOn
+  simp only [hS, ↓reduceIte]
+  rw [hprof, coneScaleRadius_extCircle_circleProcess]
+
+/-- The Borel set of codes on which the global family is glued (Section 9, G1): codes of the reference samples that
+lie in the Borel set `B` of the canonical factor, with all rescaled codes in `B` and the scaled horizons unbounded. -/
+def globalBss (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (B Bs : Set (ℕ → ℝ))
+    (F : (ℕ → ℝ) → ℝ × (ℕ → ℕ → Bool)) : Set (ℕ → ℝ) :=
+  (B ∩ Bs ∩ (⋂ n : ℕ, scodeG γ hD Bs n ⁻¹' B)) ∩
+    (⋂ M : ℕ, ⋃ n : ℕ, {x : ℕ → ℝ | (M : ℝ) < ((n : ℝ) + 1) * (F (scodeG γ hD Bs n x)).1})
+
+theorem measurableSet_globalBss (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRange D) (B Bs : Set (ℕ → ℝ))
+    (F : (ℕ → ℝ) → ℝ × (ℕ → ℕ → Bool)) (hF : Measurable F) (hB : MeasurableSet B) (hBs : MeasurableSet Bs)
+    (hcont : ∀ x ∈ Bs, ContinuousOn (profAlong γ hD x) (Ioi 0)) :
+    MeasurableSet (globalBss γ hD B Bs F) := by
+  have hsc : ∀ n : ℕ, Measurable (scodeG γ hD Bs n) := fun n =>
+    measurable_pi_iff.2 fun k => measurable_scodeG γ hD Bs ((n : ℝ) + 1) hBs hcont k
+  have hΨn : ∀ n : ℕ, Measurable fun x : ℕ → ℝ => (F (scodeG γ hD Bs n x)).1 := fun n =>
+    measurable_fst.comp (hF.comp (hsc n))
+  refine MeasurableSet.inter (MeasurableSet.inter (hB.inter hBs) (MeasurableSet.iInter fun n => hsc n hB)) ?_
+  exact MeasurableSet.iInter fun M => MeasurableSet.iUnion fun n =>
+    measurableSet_lt measurable_const ((hΨn n).const_mul _)
+
+
+/-- **`ConeGlobalFamilyFactorStep` (FirstPass S2i, z2; Section 9 of notes/fp-gaps/CHATGPT-q1-open-steps.md).** From the
+canonical factor (`coneCanonicalFactor_code_of`, the closure step `ConeHalfBallClosureInsideStep`, the volume growth
+statement), the scale invariance in law `QuantumConeScalingInput`, the LQG measure properties `LQGMeasurePropertiesStmt`,
+and the two frozen cone externals. -/
+theorem coneGlobalFamilyFactor_proved (hcan : ConeCanonicalHalfBallStep)
+    (hcl : ConeHalfBallClosureInsideStep) (h27 : VolumeGrowthStmt)
+    (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
+    (hscale : QuantumConeScalingInput) (h22 : LQGMeasurePropertiesStmt) :
+    ConeGlobalFamilyFactorStep := by
+  intro γ hγ0 hγ2
+  obtain ⟨Ω, instΩ, hSB, P, hC, hcirc, μ, hcone⟩ := hE2 γ hγ0 hγ2
+  have hP : IsProbabilityMeasure P := hcone.1
+  have hQC : IsQuantumCone γ P hC hcirc := hcone.2.1
+  have hextra : ∀ᵐ ω ∂P, ConeExtra γ hcirc μ ω := by
+    have hcont : ∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2) (Ioi 0 ×ˢ univ) :=
+      hQC.ae_continuousOn_circle
+    have hLQG : ∀ᵐ ω ∂P, IsLQGLimit γ (hcirc ω) (μ ω) := hcone.2.2
+    have hRL : ∀ n : ℕ, ∀ᵐ ω ∂P, 0 < coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1) ∧
+        IsLQGLimit γ (rescaledCircle γ (hcirc ω) (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1)) ((n : ℝ) + 1))
+          (rescaledMeasure (μ ω) (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1)) ((n : ℝ) + 1)) := fun n =>
+      (coneLQGScalingStep_of_steps h22 (coneScaleRadiusPosStep_of_input hscale)) γ hγ0 hγ2 Ω P hC hcirc μ hcone
+        ((n : ℝ) + 1) (by positivity)
+    filter_upwards [hcont, hLQG, ae_all_iff.2 hRL] with ω h1 h2 h3
+    exact ⟨h1, h2, h3⟩
+  obtain ⟨D, B, F, hD, hB, hF, hcls, hwit⟩ :=
+    coneCanonicalFactor_code_of hcan hcl h27 hE1 γ hγ0 hγ2 Ω P hC hcirc μ hcone (ConeExtra γ hcirc μ) hextra
+  obtain ⟨Bs, hBs, hcontS, hgood⟩ :=
+    global_reference_good γ hγ0 hγ2 hD hscale P hC hcirc μ hcone B hB F hF hcls hextra
+  have hBssm : MeasurableSet (globalBss γ hD B Bs F) :=
+    measurableSet_globalBss γ hD B Bs F hF hB hBs hcontS
+  refine ⟨fun p => globalCode γ hD Bs F (circleCode D p), (circleCode D) ⁻¹' globalBss γ hD B Bs F,
+    measurable_circleCode D hBssm, ?_, ?_⟩
+  · intro c hcG hcc ν hν Λ' hΛ'
+    have hcpc : Continuous (circleProcess c) := continuous_circleProcess_of_continuousOn hcc
+    obtain ⟨⟨⟨hxB, hxS⟩, hxA⟩, hxC⟩ := hcG
+    obtain ⟨ω, hωE, hωx⟩ := hwit _ hxB
+    obtain ⟨hcontω, hLQGω, hRLω⟩ := hωE
+    have hprof : circleProcess (hcirc ω) = circleProcess c :=
+      eq_of_circleCode_eq hD (continuous_circleProcess_of_continuousOn hcontω) hcpc hωx
+    have hcfun : ∀ ε : ℝ, 0 < ε → ∀ z : ℂ, c ε z = hcirc ω ε z := fun ε hε z =>
+      (congrFun hprof (⟨ε, hε⟩, z)).symm
+    have hνμ : μ ω = ν := hLQGω.unique (isLQGLimit_congr hcfun hν)
+    subst hνμ
+    have hRe : ∀ b : ℝ, coneScaleRadius γ c b = coneScaleRadius γ (hcirc ω) b := fun b => by
+      rw [← coneScaleRadius_extCircle_circleProcess γ c b, ← hprof,
+        coneScaleRadius_extCircle_circleProcess γ (hcirc ω) b]
+    have hRpos : ∀ n : ℕ, 0 < coneScaleRadius γ c ((n : ℝ) + 1) := fun n => by
+      rw [hRe]
+      exact (hRLω n).1
+    have hid : ∀ n : ℕ, scodeG γ hD Bs n (circleCode D (circleProcess c)) =
+        circleCode D (circleProcess (rescaledCircle γ c (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1))) :=
+      fun n => scodeG_eq_circleCode γ hD Bs c hcpc n hxS (hRpos n)
+    have hRx : ∀ n : ℕ, radiusOn γ hD Bs ((n : ℝ) + 1) (circleCode D (circleProcess c)) =
+        coneScaleRadius γ c ((n : ℝ) + 1) := fun n => radiusOn_circleCode γ hD Bs c hcpc _ hxS
+    have hcnG : ∀ n : ℕ, circleProcess (rescaledCircle γ c (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1))
+        ∈ (circleCode D) ⁻¹' B := by
+      intro n
+      show circleCode D (circleProcess (rescaledCircle γ c (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1))) ∈ B
+      rw [← hid n]
+      exact (Set.mem_iInter.mp hxA) n
+    have hcncont : ∀ n : ℕ, ContinuousOn
+        (fun p : ℝ × ℂ => rescaledCircle γ c (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1) p.1 p.2)
+        (Ioi 0 ×ˢ univ) := fun n => continuousOn_rescaledCircle hcc (hRpos n)
+    have hcnLQG : ∀ n : ℕ, IsLQGLimit γ (rescaledCircle γ c (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1))
+        (rescaledMeasure (μ ω) (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1)) := by
+      intro n
+      rw [hRe]
+      refine isLQGLimit_congr ?_ (hRLω n).2
+      intro ε hε z
+      have hR : 0 < coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1) := (hRLω n).1
+      unfold rescaledCircle
+      rw [hcfun (coneScaleRadius γ (hcirc ω) ((n : ℝ) + 1) * ε) (mul_pos hR hε)]
+    have hcl_n : ∀ n : ℕ, halfBallTime (rescaledMeasure (μ ω) (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1)) = (F (circleCode D (circleProcess (rescaledCircle γ c (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1))))).1 ∧
+        (∃ Γ : ℝ → Set ℂ, IsConeHarmonicBallFamilyOn (rescaledMeasure (μ ω) (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1)) Γ (halfBallTime (rescaledMeasure (μ ω) (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1))) ∧
+          IsStoppedAtHalfBall Γ (halfBallTime (rescaledMeasure (μ ω) (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1)))) ∧
+        0 < halfBallTime (rescaledMeasure (μ ω) (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1)) ∧
+        ∀ (T : ℝ) (Γ : ℝ → Set ℂ), 0 < T → IsConeHarmonicBallFamilyOn (rescaledMeasure (μ ω) (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1)) Γ T →
+          IsStoppedAtHalfBall Γ T → familyProcess Γ T = decodeFamily (F (circleCode D (circleProcess (rescaledCircle γ c (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1))))) := by
+      intro n
+      exact hcls.1 _ (hcnG n) (hcncont n) _ (hcnLQG n)
+    have hex : ∀ n : ℕ, ∃ Γ : ℝ → Set ℂ, IsConeHarmonicBallFamilyOn
+        (rescaledMeasure (μ ω) (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1)) Γ
+        (halfBallTime (rescaledMeasure (μ ω) (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1))) ∧
+        IsStoppedAtHalfBall Γ
+        (halfBallTime (rescaledMeasure (μ ω) (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1))) :=
+      fun n => (hcl_n n).2.1
+    choose Γ hΓ hst using hex
+    have hT : ∀ n : ℕ, (F (scodeG γ hD Bs n (circleCode D (circleProcess c)))).1 =
+        halfBallTime (rescaledMeasure (μ ω) (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1)) := by
+      intro n
+      rw [hid n]
+      exact ((hcl_n n).1).symm
+    have hdec : ∀ n : ℕ, decodeFamily (F (scodeG γ hD Bs n (circleCode D (circleProcess c)))) =
+        familyProcess (Γ n) (halfBallTime (rescaledMeasure (μ ω) (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1))) := by
+      intro n
+      rw [hid n]
+      exact ((hcl_n n).2.2.2 _ (Γ n) ((hcl_n n).2.2.1) (hΓ n) (hst n)).symm
+    have hcov : ∀ M : ℕ, ∃ n : ℕ, (M : ℝ) < ((n : ℝ) + 1) *
+        halfBallTime (rescaledMeasure (μ ω) (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1)) := by
+      intro M
+      obtain ⟨n, hn⟩ := Set.mem_iUnion.mp (Set.mem_iInter.mp hxC M)
+      exact ⟨n, by rw [← hT n]; exact hn⟩
+    show globalFamilyProcess Λ' = globalCode γ hD Bs F (circleCode D (circleProcess c))
+    exact globalFamilyProcess_eq_globalCode γ hD Bs F (circleCode D (circleProcess c)) hΛ'
+      (fun n => coneScaleRadius γ c ((n : ℝ) + 1)) (fun n => halfBallTime
+        (rescaledMeasure (μ ω) (coneScaleRadius γ c ((n : ℝ) + 1)) ((n : ℝ) + 1)))
+      Γ hRpos hRx hΓ hst hT hdec hcov
+  · intro Ω' _ P' hC' hcirc' μ' hcone'
+    have hGm : MeasurableSet ((circleCode D) ⁻¹' globalBss γ hD B Bs F) := measurable_circleCode D hBssm
+    refine ⟨(measurable_globalCode γ hD Bs F hF hBs hcontS |>.comp (measurable_circleCode D)).aemeasurable, ?_⟩
+    have hGref : ∀ᵐ ω ∂P, circleProcess (hcirc ω) ∈ (circleCode D) ⁻¹' globalBss γ hD B Bs F := by
+      filter_upwards [hgood] with ω hω
+      obtain ⟨h1, h2, h3, h4⟩ := hω
+      show circleCode D (circleProcess (hcirc ω)) ∈ globalBss γ hD B Bs F
+      unfold globalBss
+      exact ⟨⟨⟨h1, h2⟩, Set.mem_iInter.2 h3⟩, Set.mem_iInter.2 fun M => Set.mem_iUnion.2 (h4 M)⟩
+    have hQcC : AEMeasurable (fun ω => circleProcess (hcirc ω)) P :=
+      (measurable_circleProcess_of_quantumCone hQC).aemeasurable
+    have hQcC' : AEMeasurable (fun ω => circleProcess (hcirc' ω)) P' :=
+      (measurable_circleProcess_of_quantumCone hcone'.2.1).aemeasurable
+    have hlaw := hE1 γ hγ0 hγ2 Ω P hC hcirc μ hcone Ω' P' hC' hcirc' μ' hcone'
+    have h1 : ∀ᵐ y ∂(P.map (fun ω => circleProcess (hcirc ω))), y ∈ (circleCode D) ⁻¹' globalBss γ hD B Bs F :=
+      (ae_map_iff hQcC hGm).2 hGref
+    rw [hlaw] at h1
+    exact (ae_map_iff hQcC' hGm).1 h1
+
 end MatedCRT
