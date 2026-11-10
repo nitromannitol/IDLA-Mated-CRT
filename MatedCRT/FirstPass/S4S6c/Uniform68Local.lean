@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.S4S6c.Uniform68Events
 import MatedCRT.FirstPass.S4S6c.GreenTest68
+import MatedCRT.FirstPass.S4S6c.Uniform68Selector
 
 /-!
 # Event inputs of the local test `hloc` (q2, task fp-S4S6c-envscaling-6-7-6-8, file `Uniform68Local.lean`)
@@ -82,10 +83,27 @@ theorem prob_le_min_q0 {P : ℝ≥0∞} {X L : ℝ} (h : P ≤ ENNReal.ofReal (1
   have := div_le_div_of_nonneg_right (min_le_right 1 X) (sq_nonneg L)
   linarith
 
+/-- **The selected radius is a good seven-adic radius.** If some candidate exponent `n ∈ [n₋, n₊]` is good at the centre,
+then the selector `Uniform68Selector.selectRadius` returns `7^{-n}` for a good candidate `n` (the least one), so the radius
+`R_j` of the test is good (the good-annulus property `IsGoodAnnulusEvent` of the cover event holds at `R_j`). -/
+theorem selectRadius_good {δ : ℝ} (good : ℤ → Prop) (h : ∃ n ∈ Uniform68Selector.candidates δ, good n) :
+    ∃ n : ℤ, n ∈ Uniform68Selector.candidates δ ∧ good n ∧
+      Uniform68Selector.selectRadius δ good = (1 / 7 : ℝ) ^ n := by
+  classical
+  have hne : ((Uniform68Selector.candidates δ).filter good).Nonempty := by
+    obtain ⟨n, hn, hg⟩ := h
+    exact ⟨n, Finset.mem_filter.mpr ⟨hn, hg⟩⟩
+  have hmem := Finset.min'_mem _ hne
+  rw [Finset.mem_filter] at hmem
+  refine ⟨_, hmem.1, hmem.2, ?_⟩
+  unfold Uniform68Selector.selectRadius
+  simp [hne]
+
 end Uniform68Local
 
 #print axioms MatedCRT.Uniform68Local.greenLow_of_event
 #print axioms MatedCRT.Uniform68Local.exitMoment_of_event
 #print axioms MatedCRT.Uniform68Local.prob_le_min_q0
+#print axioms MatedCRT.Uniform68Local.selectRadius_good
 
 end MatedCRT
