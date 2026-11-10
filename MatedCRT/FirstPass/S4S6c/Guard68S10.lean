@@ -365,6 +365,41 @@ lemma shellEps0_pos (γ α ω₀ : ℝ) : 0 < shellEps0 γ α ω₀ := by
   apply Real.rpow_pos_of_pos
   apply div_pos (Real.rpow_pos_of_pos (by positivity) _) (by norm_num)
 
+/-- **The mesh threshold with the cell entry (q2, fp-S4S6c-core-fixes, z5 GAP 1).** With `A = 2/(2+γ)² - ζ` and
+`c₀ = shellC068`, `shellEps0Z γ α ω₀ ζ = min (shellEps0 γ α ω₀) (c₀^{1/(A - 2ω₀)})`. The second entry gives the leaf
+binder `ε^{A - 2ω₀} ≤ c₀` (B1Assembly68.lean:86 at `r = 10 ε^{ω₀}`), see `shellEps0Z_pow_le`. The old `shellEps0` is kept
+unchanged (ShellCorePw68 uses it). -/
+noncomputable def shellEps0Z (γ α ω₀ ζ : ℝ) : ℝ :=
+  min (shellEps0 γ α ω₀) (Lemma68ConstOrder.shellC068 ^ (1 / (2 / (2 + γ) ^ 2 - ζ - 2 * ω₀)))
+
+/-- `shellEps0Z` is positive. -/
+lemma shellEps0Z_pos (γ α ω₀ ζ : ℝ) : 0 < shellEps0Z γ α ω₀ ζ := by
+  unfold shellEps0Z
+  apply lt_min (shellEps0_pos γ α ω₀)
+  apply Real.rpow_pos_of_pos
+  unfold Lemma68ConstOrder.shellC068
+  positivity
+
+/-- `shellEps0Z` is at most `shellEps0`, so every `ε ≤ shellEps0Z` also satisfies `ε ≤ shellEps0`. -/
+lemma shellEps0Z_le (γ α ω₀ ζ : ℝ) : shellEps0Z γ α ω₀ ζ ≤ shellEps0 γ α ω₀ :=
+  min_le_left _ _
+
+/-- **The cell entry of the Eps threshold.** If `2ω₀ < A` and `0 < ε ≤ shellEps0Z γ α ω₀ ζ`, then
+`ε^{A - 2ω₀} ≤ shellC068` (the leaf binder `hεcell` of B1Assembly68.lean:86 at `r = 10 ε^{ω₀}`). -/
+lemma shellEps0Z_pow_le {γ α ω₀ ζ ε : ℝ} (hε : 0 < ε) (hd : 0 < 2 / (2 + γ) ^ 2 - ζ - 2 * ω₀)
+    (hle : ε ≤ shellEps0Z γ α ω₀ ζ) :
+    ε ^ (2 / (2 + γ) ^ 2 - ζ - 2 * ω₀) ≤ Lemma68ConstOrder.shellC068 := by
+  have hc : 0 < Lemma68ConstOrder.shellC068 := by
+    unfold Lemma68ConstOrder.shellC068
+    positivity
+  have h1 : ε ≤ Lemma68ConstOrder.shellC068 ^ (1 / (2 / (2 + γ) ^ 2 - ζ - 2 * ω₀)) :=
+    le_trans hle (min_le_right _ _)
+  calc ε ^ (2 / (2 + γ) ^ 2 - ζ - 2 * ω₀)
+      ≤ (Lemma68ConstOrder.shellC068 ^ (1 / (2 / (2 + γ) ^ 2 - ζ - 2 * ω₀)))
+          ^ (2 / (2 + γ) ^ 2 - ζ - 2 * ω₀) := Real.rpow_le_rpow hε.le h1 hd.le
+    _ = Lemma68ConstOrder.shellC068 := by
+      rw [← Real.rpow_mul hc.le, one_div_mul_cancel hd.ne', Real.rpow_one]
+
 /-- **The deterministic radius cutoff of the Eps chain** (CHATGPT-237 l.335-348). For `0 < ρ < 1` and `ζ > 0` there is
 `Rc > 0` such that every `0 < R ≤ Rc` satisfies `∀ r, 0 < r → r ≤ R → (dyadicD r)^{shortExp ζ} < rhoCell68 ρ - ρ`.
 Proof: `rhoCell68 ρ - ρ = (1-ρ)/2 =: g`, `Rc := g/2`; then `dyadicD r < 2 r² ≤ 2 Rc² < g²` (`dyadicD_lt_two_mul_sq`),
@@ -457,7 +492,7 @@ def ShellChainEpsStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
       HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE) →
       ∃ Ew : ℝ → Set Ω, (∀ δ : ℝ, MeasurableSet[S.fieldSigma] (Ew δ)) ∧
         HarmonicBalls.PolyHighProb S.P Ew ∧
-        ∀ ε : ℝ, 0 < ε → ε ≤ shellEps0 γ α ω₀ → ∀ᵐ ω ∂S.P, ω ∈ meshEvent S γ ω₀ ρ CG ζ α CE ε →
+        ∀ ε : ℝ, 0 < ε → ε ≤ shellEps0Z γ α ω₀ ζ → ∀ᵐ ω ∂S.P, ω ∈ meshEvent S γ ω₀ ρ CG ζ α CE ε →
           Lemma68Inputs.CurveEscapesBothEnds (S.η ω) →
           (∀ ε' : ℝ, 0 < ε' → IsLocallyFiniteMult (S.mult ε' ω) ∧ ∀ k : ℤ, S.mult ε' ω k (k + 1) ≠ 0) →
           ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r → r ≤ R → ω ∈ Ew (dyadicD r) →
@@ -531,8 +566,8 @@ theorem guardProbStmtEps_of_chainEps (𝒮 : SpaceFillingSLEModel) (hMesh : Mesh
       Lemma68Guard.ae_finiteExit_of_valid hγ0 hγ2 hS, hdd0] with ω h1 h2 h3
     exact ⟨h1, h2, h3⟩
   have hG : S.P (goodField S Ew dd0)ᶜ = 0 := ae_iff.1 hGae
-  have he0 : 0 < shellEps0 γ α ω₀ := shellEps0_pos γ α ω₀
-  set e0 : ℝ := shellEps0 γ α ω₀ with he0def
+  have he0 : 0 < shellEps0Z γ α ω₀ ζ := shellEps0Z_pos γ α ω₀ ζ
+  set e0 : ℝ := shellEps0Z γ α ω₀ ζ with he0def
   set E : ℝ → Set Ω := fun ε => if ε ≤ e0 then meshEvent S γ ω₀ ρ CG ζ α CE ε else ∅ with hEdef
   have hEp' : ProbTendsToOne S.P E :=
     probTendsToOne_congr_small he0 hE (fun ε _ hle => by simp [hEdef, hle])
@@ -591,3 +626,5 @@ end MatedCRT
 #print axioms MatedCRT.uniformConstantOrderLowerBoundEps_of_chain
 #print axioms MatedCRT.Lemma68Guard10.guardProbStmt_of_chain
 #print axioms MatedCRT.uniformConstantOrderLowerBound_of_chain
+#print axioms MatedCRT.Lemma68Guard10.shellEps0Z_pos
+#print axioms MatedCRT.Lemma68Guard10.shellEps0Z_pow_le

@@ -66,5 +66,16 @@ theorem shellK68_s1 (γ ρ ω₀ ζ : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hρ0
     (shellK68 γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1).s1 =
       (Real.exp (-2) / 32) ^ ((2 + γ) ^ 2 / 2 + 1) / 44 := rfl
 
+/-- **The walk exponent bound (q2, fp-S4S6c-core-fixes, item 2: the exponent split of chat 239 l.747-800).** If
+`0 < ε ≤ 1`, `2ω₀ < κ` and `100 ε^{2ω₀} ≤ R`, then `ε^κ ≤ R/8`. This is the second conjunct `ε^{K.ω} ≤ R/8` of hWalk, with the
+separate walk exponent `κ` in place of `K.ω`; `R ≥ r² ≥ 100 ε^{2ω₀}` for `r ≥ 10 ε^{ω₀}`. Taking `κ = 2/(2+γ)² - ζ` is
+allowed: `2ω₀ < κ` is the Eps antecedent `2 ω₀ < 2/(2+γ)² - ζ`. -/
+theorem pow_le_div_eight_of_two_omega {ε ω₀ κ R : ℝ} (hε0 : 0 < ε) (hε1 : ε ≤ 1) (hκ : 2 * ω₀ < κ)
+    (hR : 100 * ε ^ (2 * ω₀) ≤ R) : ε ^ κ ≤ R / 8 := by
+  have h1 : ε ^ κ ≤ ε ^ (2 * ω₀) := Real.rpow_le_rpow_of_exponent_ge hε0 hε1 hκ.le
+  have h2 : 0 ≤ ε ^ (2 * ω₀) := Real.rpow_nonneg hε0.le _
+  linarith
+
 end Lemma68ShellConstants
 end MatedCRT
+#print axioms MatedCRT.Lemma68ShellConstants.pow_le_div_eight_of_two_omega
