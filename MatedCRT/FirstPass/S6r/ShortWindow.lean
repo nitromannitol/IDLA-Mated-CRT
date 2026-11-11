@@ -15,10 +15,10 @@ The proof is the annulus-iteration argument of `goodAnnulusPrevalence_uniform_of
 and rate changed:
 * radii `r_k = 7^{-(s+2k)}`, `s = ⌈a L / log 7⌉` (`L = log(1/d)`), `1 ≤ k ≤ K`, `K = ⌊(L/log 7 - s)/2⌋`. These are
   seven-adic points of `[d, d^a]` with ratio `1/49`, so the annulus inputs `(r/3, 3r)` and `s₁ = 1/12` of S6p apply
-  unchanged. This subfamily of the PRO radii (ratio `1/7`) is what those inputs require; any good radius found in it is
+  unchanged. This subfamily of the seven-adic radii (ratio `1/7`) is what those inputs require; any good radius found in it is
   a good radius of `[d, d^a]`.
 * rate `α = 16 log 7 / (1-a)`: `K ≥ (1-a) L / (2 log 7) - 3/2`, so `α K ≥ 8L - 24 log 7/(1-a)` and
-  `exp(-α K) ≤ exp(24 log 7/(1-a)) d⁸` (PRO's `α_mix = 8 log 7/(1-a)` on the seven-adic scales gives the same `d⁸`).
+  `exp(-α K) ≤ exp(24 log 7/(1-a)) d⁸` (the constant `α_mix = 8 log 7/(1-a)` on the seven-adic scales gives the same `d⁸`).
 * grid: `|Z_d| ≤ (201/d)²`, union bound over `Z_d`, giving `C' d⁶`.
 
 Named inputs (hypotheses, as in S6p): the annulus-iteration statement `AnnulusIterateStmt` (Draft/Section6), the
@@ -134,7 +134,7 @@ lemma shortCount_ge {d a : ℝ} (hd : 0 < d) (hd1 : d < 1) (ha : 0 < a) :
     ring
   linarith
 
-/-- The exponential bound `exp(-α K) ≤ exp(24 log 7/(1-a)) d⁸` with `α = 16 log 7/(1-a)` (PRO: `C e^{-α K} ≤ C' d⁸`). -/
+/-- The exponential bound `exp(-α K) ≤ exp(24 log 7/(1-a)) d⁸` with `α = 16 log 7/(1-a)` (with `C e^{-α K} ≤ C' d⁸`). -/
 lemma exp_shortCount_le {d a : ℝ} (hd : 0 < d) (hd1 : d < 1) (ha : 0 < a) (ha1 : a < 1) :
     Real.exp (-(16 * Real.log 7 / (1 - a)) * (shortCount d a : ℝ)) ≤
       Real.exp (24 * Real.log 7 / (1 - a)) * d ^ 8 := by

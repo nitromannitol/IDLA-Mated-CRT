@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.S6r.Shells
 # Lemma 6.8, S8' wiring: the shell hypotheses `hTT`, `hLT`, `hcross`, `hend` (pathwise)
 
 Steps 4-9 (displayed (7.20)-(7.41)).
-Index convention of `Amplification.lean`: shells and tests `k = 0, ..., n`; the notes' shell `Σ_{k+1}`
+Index convention of `Amplification.lean`: shells and tests `k = 0, ..., n`; the write-up's shell `Σ_{k+1}`
 has offset `shellOffset s (k+1) = 20 (k+1) s`, and `N = n + 1`.
 
 For one walk `x : ℕ → ℤ` (one sample path; the probabilistic layer applies it pathwise):
@@ -27,7 +27,7 @@ open Set Metric
 
 variable {ε : ℝ} {η : ℝ → ℂ} {K : Set ℂ} {r s h : ℝ}
 
-/-- Notes (7.20): `C_{k+1} = inf {n ≥ 0 : H_{X_n} ∩ Σ_{k+1} ≠ ∅}`, shell `Σ_{k+1}` of offset `20 (k+1) s`. -/
+/-- Write-up (7.20): `C_{k+1} = inf {n ≥ 0 : H_{X_n} ∩ Σ_{k+1} ≠ ∅}`, shell `Σ_{k+1}` of offset `20 (k+1) s`. -/
 noncomputable def hitTime (ε : ℝ) (η : ℝ → ℂ) (K : Set ℂ) (r s : ℝ) (x : ℕ → ℤ) (k : ℕ) : ℕ :=
   firstShellHit ε η x (twoSidedShell K r (shellOffset s (k + 1)))
 
@@ -37,7 +37,7 @@ lemma shellOffset_succ (s : ℝ) (j : ℕ) :
   push_cast
   ring
 
-/-- A cell whose vertex lies in `I(D)` lies in `D`: the cell is connected and misses `∂D` (notes (7.33)). -/
+/-- A cell whose vertex lies in `I(D)` lies in `D`: the cell is connected and misses `∂D` (write-up (7.33)). -/
 lemma cell_subset_of_mem_interior (hηc : Continuous η) (k : ℤ) {D : Set ℂ}
     (hk : k ∈ interiorCellVertices ε η D) : cell ε η k ⊆ D := by
   obtain ⟨hne, hnfr⟩ := mem_interiorCellVertices_iff.1 hk
@@ -45,7 +45,7 @@ lemma cell_subset_of_mem_interior (hηc : Continuous η) (k : ℤ) {D : Set ℂ}
     Set.disjoint_iff_inter_eq_empty.2 (Set.not_nonempty_iff_eq_empty.1 hnfr)
   exact subset_of_isPreconnected_of_disjoint_frontier (isPreconnected_cell ε η hηc k) hfr hne
 
-/-- Notes (7.22)-(7.26): if every point of the cell of `k` is within `ρ` of `z`, then `k ∈ I(B_ρ(z))`. -/
+/-- Write-up (7.22)-(7.26): if every point of the cell of `k` is within `ρ` of `z`, then `k ∈ I(B_ρ(z))`. -/
 lemma mem_interior_of_cell_lt (hε : 0 ≤ ε) {k : ℤ} {z : ℂ} {ρ : ℝ} (hρ : 0 < ρ)
     (hk : ∀ p ∈ cell ε η k, dist p z < ρ) : k ∈ interiorCellVertices ε η (ball z ρ) := by
   refine mem_interiorCellVertices_iff.2 ⟨⟨vertexPoint ε η k, vertexPoint_mem_cell_nonneg hε η k,
@@ -55,7 +55,7 @@ lemma mem_interior_of_cell_lt (hε : 0 ≤ ε) {k : ℤ} {z : ℂ} {ρ : ℝ} (h
   have hpz : dist p z = ρ := mem_sphere.1 hp2
   linarith [hk p hp1]
 
-/-- Steps 6-8 at one shell (notes (7.28)-(7.38)): for the first exit `T` of `B_{4R/3}(z)` after `C`, the vertex
+/-- Steps 6-8 at one shell (write-up (7.28)-(7.38)): for the first exit `T` of `B_{4R/3}(z)` after `C`, the vertex
 `x T` lies in `I(D)` for the local disk `D = B_{R/4}(η(X_T))` and `D ⊆ B_{2R}(z)`. Uses the cell-size input
 on `B_{2R}(z)` (`CellDiamLe`), `h < R/4`. -/
 lemma test_ball_of_exit (hηc : Continuous η) (hε : 0 ≤ ε) (x : ℕ → ℤ)
@@ -84,7 +84,7 @@ lemma test_ball_of_exit (hηc : Continuous η) (hε : 0 ≤ ε) (x : ℕ → ℤ
     fun p hp => hmesh (x T) hneE p hp (vertexPoint ε η (x T)) (vertexPoint_mem_cell_nonneg hε η (x T))
   exact exit_cell_test_ball hε hR hdiam hhR hrad
 
-/-- Steps 4-8 at one shell `k` with a next shell (notes (7.33), (7.38)): with `C = C_{k+1}`, `C1 = C_{k+2}`,
+/-- Steps 4-8 at one shell `k` with a next shell (write-up (7.33), (7.38)): with `C = C_{k+1}`, `C1 = C_{k+2}`,
 `T` the first exit of `B_{4R/3}(z)` after `C`, `L` the first exit of the local disk after `T`:
 `C < T < C1` and `L < C1`. Uses the shell-spacing geometry `hsep` (7.32) from `cell_misses_next_shell`. -/
 lemma shell_step_order (hηc : Continuous η) (hε : 0 ≤ ε) (x : ℕ → ℤ)
@@ -114,7 +114,7 @@ lemma shell_step_order (hηc : Continuous η) (hε : 0 ≤ ε) (x : ℕ → ℤ)
   obtain ⟨hD, hDsub⟩ := test_ball_of_exit hηc hε x hadj hR hhR hmesh hCTlt hmin hT
   exact test_finishes_before_next_shell hηc x hadj hR hsep hCC hC1 hCT hCin hmin hT hTL hDsub hD hLmin hL
 
-/-- Step 8 at the last shell (notes (7.39)-(7.41)): every vertex `x m` with `C ≤ m ≤ L` lies in
+/-- Step 8 at the last shell (write-up (7.39)-(7.41)): every vertex `x m` with `C ≤ m ≤ L` lies in
 `U = V(K+B_r) \ Θ`. The level window `0 < f < r` near the centre comes from `level_near_centre` and
 `level_window`; the adjacent vertex `x L` is controlled through the overlap point with `D`. -/
 lemma last_shell_mem_U (hηc : Continuous η) (hε : 0 ≤ ε) (x : ℕ → ℤ)
@@ -185,7 +185,7 @@ lemma last_shell_mem_U (hηc : Continuous η) (hε : 0 ≤ ε) (x : ℕ → ℤ)
   have htri := abs_sub_le (infDist p K) (infDist w K) (r / 2)
   exact level_window hlam hs4 (by linarith)
 
-/-- Pathwise chain (notes (7.33), (7.38), (7.39), steps 4-9 of S7'). For a walk `x` with exit index `τ`
+/-- Pathwise chain (write-up (7.33), (7.38), (7.39), steps 4-9 of S7'). For a walk `x` with exit index `τ`
 (`x τ ∉ U`) and the mesh hypotheses `CellDiamLe` on the shell balls, the first hitting times
 `hitTime k` (step 4), the shell centres (step 5, `shell_hit_choose_center`) and the first exit times
 `T k`, `L k` (steps 6-8) satisfy:

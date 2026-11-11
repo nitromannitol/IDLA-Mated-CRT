@@ -19,8 +19,7 @@ Named inputs (each enters as a hypothesis of the lemma that uses it):
 * `hηc : Continuous η` (cells are connected), `hadj` (consecutive walk vertices have intersecting cells);
 * the shell data of steps 1-5 (`Σ'`, the entry times `C_j ≤ C_{j+1}` of (7.22), `dist z Σ ≤ R/50` of (7.25));
 * the cell-size input `CellDiamLe` (the paper's `h_ε`, (7.0));
-* the S5 one-test bound (7.50) is NOT formalized here (probability space, filtration, strong Markov at `T_j`);
-  see the report. The geometric hypotheses of S5 at `x'_j` are discharged below.
+* the S5 one-test bound (7.50) is NOT formalized here (probability space, filtration, strong Markov at `T_j`). The geometric hypotheses of S5 at `x'_j` are discharged below.
 -/
 
 namespace MatedCRT
