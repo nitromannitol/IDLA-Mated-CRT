@@ -27,7 +27,8 @@ rest on retired inputs. Changes:
 * Lemma 3.4 is `MatedCRT.S3S4c.firstPass_3_4` (quenched route; the sample-path inputs are retired).
 * Lemma 4.1 is `firstPass_4_1_coneLaw` (FirstPass/S4S6c.lean) with `FrozenConeScalingLaw`.
 * The environment scaling enters as the frozen EXTERNAL `ConeEnvironmentScalingUnderSLE 𝒮` (Frozen/S1d.lean), with the
-  three SLE closure inputs as hypotheses. The retired `FrozenConeEnvironmentScaling` is not used.
+  three SLE closure inputs as hypotheses. The retired `FrozenConeEnvironmentScaling` is not a hypothesis of
+  `firstPass_1_4` or `firstPass_1_6`, but it is still the hypothesis `hcone` of `firstPass_4_2_final` (FirstPass/S4d.lean:151).
 * Lemma 3.1 (corrected, `MatedCRT.S3c.firstPass_3_1_corrected`) is not consumed by this chain.
 -/
 

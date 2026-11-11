@@ -73,7 +73,8 @@ noncomputable def MatedCRTEnv.rescaleWithCircle {Ω : Type} [MeasurableSpace Ω]
     (hcirc' : Ω → ℝ → ℂ → ℝ) : MatedCRTEnv Ω :=
   { S.rescaleWith γ b hC' clock' with hcirc := hcirc' }
 
-/-- Legacy combined assumption. Its raw-circle measurability conjunct can fail:
+/-- RETIRED (audit R2): possibly false as typed, unused.
+Legacy combined assumption. Its raw-circle measurability conjunct can fail:
 on a measurable null set let positive-radius averages equal `-Q log r` and let
 the zero-radius value encode a nonmeasurable subset of that null set. For `b = 2`
 the level set is empty there, so the rescaled value sees that nonmeasurable
