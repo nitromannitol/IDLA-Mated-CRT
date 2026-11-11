@@ -16,3 +16,5 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/FirstPass/Main/Axioms.lean | archive/MatedCRT/FirstPass/Main/Axioms.lean | B04 |
 | MatedCRT/FirstPass/S1c/Axioms.lean | archive/MatedCRT/FirstPass/S1c/Axioms.lean | B05 |
 | MatedCRT/FirstPass/S1c/FinalAxioms.lean | archive/MatedCRT/FirstPass/S1c/FinalAxioms.lean | B05 |
+| MatedCRT/FirstPass/S1d/FinalAxioms.lean | archive/MatedCRT/FirstPass/S1d/FinalAxioms.lean | B06 |
+| MatedCRT/FirstPass/S1d/JointBridge.lean | archive/MatedCRT/FirstPass/S1d/JointBridge.lean | B06 |
