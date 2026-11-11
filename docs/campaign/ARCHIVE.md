@@ -80,3 +80,6 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/Proofs/IDLA/JointConvergence.lean | archive/MatedCRT/Proofs/IDLA/JointConvergence.lean | B26 |
 | MatedCRT/Proofs/LBM/BrownianPositiveExcursion.lean | archive/MatedCRT/Proofs/LBM/BrownianPositiveExcursion.lean | B28 |
 | MatedCRT/Proofs/LBM/GaussianSign.lean | archive/MatedCRT/Proofs/LBM/GaussianSign.lean | B28 |
+| MatedCRT/Proofs/Sandpile/ClusterIdentityCorrected.lean | archive/MatedCRT/Proofs/Sandpile/ClusterIdentityCorrected.lean | B30 |
+| MatedCRT/Proofs/Sandpile/Properties.lean | archive/MatedCRT/Proofs/Sandpile/Properties.lean | B30 |
+| MatedCRT/Proofs/Sandpile/StoppedEquation.lean | archive/MatedCRT/Proofs/Sandpile/StoppedEquation.lean | B30 |
