@@ -163,3 +163,4 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/Proofs/Sec4/DivSandpileLowerBound/StrictGapDirichletCoordinates.lean | archive/MatedCRT/Proofs/Sec4/DivSandpileLowerBound/StrictGapDirichletCoordinates.lean | B43 |
 | MatedCRT/Proofs/Sec4/DivSandpileLowerBound/StrictGapLocalLaw.lean | archive/MatedCRT/Proofs/Sec4/DivSandpileLowerBound/StrictGapLocalLaw.lean | B43 |
 | MatedCRT/Proofs/Sec4/DivSandpileLowerBound/StrictGapPairingTransport.lean | archive/MatedCRT/Proofs/Sec4/DivSandpileLowerBound/StrictGapPairingTransport.lean | B43 |
+| MatedCRT/Proofs/Sec4/ObstacleSpecialization/SmallMesh.lean | archive/MatedCRT/Proofs/Sec4/ObstacleSpecialization/SmallMesh.lean | B44 |
