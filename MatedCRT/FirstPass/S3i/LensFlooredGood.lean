@@ -43,7 +43,7 @@ theorem fp36_good_core_floored {𝒮 : SpaceFillingSLEModel} (h28 : CellSizeEsti
     (hρ0 : 0 < ρ) (hρρ₀ : ρ < ρ₀) (hρ₀ρ₁ : ρ₀ < ρ₁) (hρ₁1 : ρ₁ < 1) (hmid : (1 + ρ₀) / 2 = ρ₁)
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
     (r : ℝ) (z y : ℂ) (hr : 0 < r) (hball : ball z r ⊆ ball 0 ρ) (hy : y ∈ ball z r) :
-    ∃ ν A κ C₁ ε₀ : ℝ, 0 < ν ∧ 0 < A ∧ 0 < κ ∧ 0 ≤ C₁ ∧ 0 < ε₀ ∧
+    ∃ ν A κ C₁ ε₀ : ℝ, 0 < ν ∧ 0 < A ∧ 0 < κ ∧ 0 ≤ C₁ ∧ 0 < ε₀ ∧ ε₀ ≤ 1 ∧
     ∃ G : ℝ → Set Ω, ∀ ε : ℝ, 0 < ε → ε < ε₀ →
       0 < S.mε ε ∧ 8 * ε ^ b < r ∧ 64 * ε ^ b ≤ ε ^ (b / 2) ∧
       closure (ball z (r + 4 * ε ^ b)) ⊆ ball 0 ρ₀ ∧
@@ -80,8 +80,10 @@ theorem fp36_good_core_floored {𝒮 : SpaceFillingSLEModel} (h28 : CellSizeEsti
   have hnorm : ‖z‖ + r ≤ ρ := norm_add_le_of_ball_subset hr hball
   have hε₀ : 0 < min r₀ (min εm (min δ1 (min δ2 (min δ3 (min δ4 1))))) :=
     lt_min hr₀ (lt_min hεm (lt_min hδ1 (lt_min hδ2 (lt_min hδ3 (lt_min hδ4 one_pos)))))
+  have hε₀le : min r₀ (min εm (min δ1 (min δ2 (min δ3 (min δ4 1))))) ≤ 1 :=
+    (min_le_right _ _).trans ((min_le_right _ _).trans ((min_le_right _ _).trans ((min_le_right _ _).trans ((min_le_right _ _).trans (min_le_right _ _)))))
   refine ⟨ν, A, κ, max C 0, min r₀ (min εm (min δ1 (min δ2 (min δ3 (min δ4 1))))), hν, hA, hκ,
-    le_max_right C 0, hε₀, G, ?_⟩
+    le_max_right C 0, hε₀, hε₀le, G, ?_⟩
   intro ε hε hεε₀
   obtain ⟨hεr₀, hεrest⟩ := lt_min_iff.1 hεε₀
   obtain ⟨hεm', hεrest⟩ := lt_min_iff.1 hεrest
@@ -160,7 +162,7 @@ theorem commonGood_fp36_floored {𝒮 : SpaceFillingSLEModel} (h28 : CellSizeEst
     let ρ₁ := (ρ + 2) / 3
     ρ < ρ₀ ∧ ρ₀ < ρ₁ ∧ ρ₁ < 1 ∧
     ∃ ν A κ C₁ ε₀ : ℝ,
-      0 < ν ∧ 0 < A ∧ 0 < κ ∧ 0 ≤ C₁ ∧ 0 < ε₀ ∧
+      0 < ν ∧ 0 < A ∧ 0 < κ ∧ 0 ≤ C₁ ∧ 0 < ε₀ ∧ ε₀ ≤ 1 ∧
     ∃ G : ℝ → Set Ω,
     ∀ ε : ℝ, 0 < ε → ε < ε₀ →
       let δ := ε ^ b
