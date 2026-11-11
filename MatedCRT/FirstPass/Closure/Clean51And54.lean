@@ -7,14 +7,14 @@ import MatedCRT.FirstPass.Frozen.S5BG56
 import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 
 /-!
-# Proposition 5.1 and Lemma 5.4 with no Draft binder (task p2-clean-5-1-5-4-then-steps-4-2)
+# Proposition 5.1 and Lemma 5.4 with no Draft binder
 
 `closed_5_1_clean` is `closed_5_1_ownBinders` (Closure/H24cBridge.lean) with the two paper-own binders of the
 Draft form replaced:
 
 * `h22 : LQGMeasurePropertiesStmt` (Lemma 2.2) is supplied by the proved counted form `closed_2_2_ownBinders`
   (Closure/OwnBinderRewire.lean), whose binders are the literature input `hscale`, the Frozen
-  `hBG : FrozenBerestyckiGwynneConeBallMass` and the operator-kept Step `hND : LQGMeasureNonDyadicDilationPart`.
+  `hBG : FrozenBerestyckiGwynneConeBallMass` and the Step `hND : LQGMeasureNonDyadicDilationPart`.
 * `hG15 : GreenFunctionCrudeBoundStmt 𝒮` (Lemma 2.15) is supplied by the Berestycki–Gwynne canonical Green bound
   `greenFunctionCrudeBound_of_canonical` (FirstPass/S5u.lean:61) from the Frozen input
   `hcanon : FrozenBG20GreenCrudeCanonical 𝒮` (BG20 Lemma 5.6, eq. (5.20); FirstPass/Frozen/S5BG56.lean:18), and the
@@ -24,7 +24,7 @@ Draft form replaced:
 `h215 : GreenFunctionCrudeBoundStmt 𝒮` as in `closed_5_1_clean`, and `h216 : GreenKernelLowerBoundStmt 𝒮`
 (Lemma 2.16) and `h29 : CountingMeasureConvergenceStmt 𝒮` (Lemma 2.9) as the projections of the core certified
 reference model `hC : CertifiedReferenceModel ν 𝒮` (FirstPass/SLERef/Certified.lean:103 and :131). The projections are
-conjuncts of `hC` (Berestycki–Gwynne Lemma A.4 and Lemma 2.16); no counted row of COUNTED.md covers Lemmas 2.9 or 2.16.
+conjuncts of `hC` (Berestycki–Gwynne Lemma A.4 and Lemma 2.16).
 -/
 
 open MeasureTheory
