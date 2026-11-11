@@ -350,6 +350,22 @@ Derived forms (binders of `T` -> binders of `T_derivedInputs`; 14 forms; binder 
 | `closed_7_1_lp` | 29 -> 21 | hGBC, h32, hSup, hCons, hMono, hCompat, hThm11, hProp56HB |
 | `closed_8_1_lp_noSup` | 46 -> 22 | hm, h210, h34, h214, h28, h35c, h218, hH, hcone, h23, h24c, h33, hCentre, hOpen, hSup, hCons, hMono, hCompat, hBdry, hThm11, hProp56, h27, hmodel, h611 |
 
+### Hypotheses the conclusions do not need (second stage; 2026-11-11)
+
+`MatedCRT/FirstPass/Derived/CountedMinimal.lean` (generated; axiom audit `MatedCRT/Audit/MinimalCountedAxioms.lean`:
+propext, Classical.choice, Quot.sound). For a counted theorem `T` (in its form of the table above when it has one),
+`T_minimalInputs` states the same conclusion from a proper subset of the hypotheses: the conclusion follows without the
+others by theorems already in the repository (search over all compiled theorems of this repository and of the
+Harmonic-Balls package; the compiled file is the check). No binder is added and `T` is unchanged. The search finds no
+such reduction for the other counted theorems; in particular the forms of 1.4 and 1.6 keep their 24 binders.
+
+| counted `T` | binders | not needed |
+|---|---|---|
+| `closed_4_2_lp` | 25 -> 24 | hcone (`FrozenConeScalingLaw`) |
+| `firstPass_6_7` | 9 -> 7 | hB1 (`ConeWholePlaneFieldLawStep`), hμ (`LitQuantumConeLQGMeasureExistence`) |
+| `firstPass_6_8` | 9 -> 7 | hB1, hμ |
+| `firstPass_6_9` | 9 -> 7 | hB1, hμ |
+
 ## Appendix B path: forms with the occupation identity or the strong compatibility derived (2026-11-11)
 
 The counted declarations of the Table are unchanged. The forms below have the same conclusions as the counted forms of
