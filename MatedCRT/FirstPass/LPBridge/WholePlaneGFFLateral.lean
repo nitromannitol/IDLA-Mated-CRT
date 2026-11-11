@@ -49,46 +49,44 @@ lemma circleAverage_log_norm_sub_eq {r : ℝ} (hr : 0 < r) (z : ℂ) :
     rw [hpos, Real.log_mul (inv_ne_zero hr.ne') hz0.ne', Real.log_inv]
     ring
 
-/-- The circle average of the covariance kernel `wholePlaneCov z ·` over `∂B_r(0)`, for `|z| ≠ r`. -/
-lemma circleAverage_wholePlaneCov_of_ne {r : ℝ} (hr : 0 < r) {z : ℂ} (hz : ‖z‖ ≠ r) :
+/-- The circle average of the covariance kernel `wholePlaneCov z ·` over `∂B_r(0)`, for every `z ∈ ℂ`
+(Duplantier-Sheffield 2011, Section 3.1; the mean value property of `log |· - z|`). The point `w = z` of the
+circle, where `wholePlaneCov` takes the junk value `0`, is a single point of the codiscrete filter and does not
+contribute. -/
+lemma circleAverage_wholePlaneCov {r : ℝ} (hr : 0 < r) (z : ℂ) :
     Real.circleAverage (fun w : ℂ => wholePlaneCov z w) 0 r =
       Real.log (max ‖z‖ 1) + Real.log (max r 1) - Real.log (max r ‖z‖) := by
   have hA : max ‖z‖ 1 ≠ 0 := (lt_of_lt_of_le one_pos (le_max_right _ _)).ne'
   have hB : max r 1 ≠ 0 := (lt_of_lt_of_le one_pos (le_max_right _ _)).ne'
-  have hcongr : EqOn (fun w : ℂ => wholePlaneCov z w)
-      (fun w : ℂ => Real.log (max ‖z‖ 1) + Real.log (max r 1) - Real.log ‖w - z‖)
-      (Metric.sphere (0 : ℂ) |r|) := by
-    intro w hw
-    rw [mem_sphere_zero_iff_norm, abs_of_pos hr] at hw
-    have hwz : ‖z - w‖ ≠ 0 := by
+  have hgood : (Metric.sphere (0 : ℂ) |r| \ {z}) ∈ codiscreteWithin (Metric.sphere (0 : ℂ) |r|) := by
+    rw [codiscreteWithin_iff_locallyFiniteComplementWithin]
+    intro x _
+    refine ⟨univ, univ_mem, (Set.finite_singleton z).subset ?_⟩
+    rintro y ⟨-, hyS, hy⟩
+    exact Set.mem_singleton_iff.mp (not_not.mp fun hne => hy ⟨hyS, hne⟩)
+  have hcod : (fun w : ℂ => wholePlaneCov z w) =ᶠ[codiscreteWithin (Metric.sphere (0 : ℂ) |r|)]
+      (fun w : ℂ => Real.log (max ‖z‖ 1) + Real.log (max r 1) - Real.log ‖w - z‖) := by
+    filter_upwards [hgood] with w hw
+    obtain ⟨hwS, hwz⟩ := hw
+    rw [mem_sphere_zero_iff_norm, abs_of_pos hr] at hwS
+    have hwz' : ‖z - w‖ ≠ 0 := by
       rw [norm_ne_zero_iff, sub_ne_zero]
-      rintro rfl
-      exact hz hw
+      exact fun h => hwz (Set.mem_singleton_iff.mpr h.symm)
     unfold wholePlaneCov
-    dsimp only
-    rw [hw, Real.log_div (mul_ne_zero hA hB) hwz, Real.log_mul hA hB, norm_sub_rev]
-  have hint : ∀ f : ℂ → ℝ, Continuous f → True := fun _ _ => trivial
+    rw [hwS, Real.log_div (mul_ne_zero hA hB) hwz', Real.log_mul hA hB, norm_sub_rev]
   have h1 : CircleIntegrable (fun _ : ℂ => Real.log (max ‖z‖ 1) + Real.log (max r 1)) 0 r := by
     unfold CircleIntegrable
     exact intervalIntegrable_const
-  have h2 : CircleIntegrable (fun w : ℂ => Real.log ‖w - z‖) 0 r := by
-    unfold CircleIntegrable
-    apply Continuous.intervalIntegrable
-    apply Continuous.log
-    · exact ((continuous_circleMap _ _).sub continuous_const).norm
-    · intro θ
-      rw [norm_ne_zero_iff, sub_ne_zero]
-      intro hθ
-      apply hz
-      rw [← hθ, norm_circleMap_zero, abs_of_pos hr]
-  rw [Real.circleAverage_congr_sphere hcongr]
+  have h2 : CircleIntegrable (fun w : ℂ => Real.log ‖w - z‖) 0 r :=
+    circleIntegrable_log_norm_sub_const (c := (0 : ℂ)) (a := z) r
+  rw [Real.circleAverage_congr_codiscreteWithin hcod hr.ne']
   have key := Real.circleAverage_fun_sub h1 h2
   beta_reduce at key
   rw [key, Real.circleAverage_const, circleAverage_log_norm_sub_eq hr z]
 
 /-- Circle averages of `z ↦ circleAverage (wholePlaneCov z ·) 0 r` over `∂B_s(0)` for `s ≠ r`:
 the circle-circle covariance `log max(s,1) + log max(r,1) - log max(r,s)` (Duplantier-Sheffield 2011, eq. (3.2)). -/
-lemma circleAverage_circleAverage_wholePlaneCov {r s : ℝ} (hr : 0 < r) (hs : 0 < s) (hsr : s ≠ r) :
+lemma circleAverage_circleAverage_wholePlaneCov {r s : ℝ} (hr : 0 < r) (hs : 0 < s) :
     Real.circleAverage (fun z : ℂ => Real.circleAverage (fun w : ℂ => wholePlaneCov z w) 0 r) 0 s =
       Real.log (max s 1) + Real.log (max r 1) - Real.log (max r s) := by
   have hc : EqOn (fun z : ℂ => Real.circleAverage (fun w : ℂ => wholePlaneCov z w) 0 r)
@@ -97,7 +95,7 @@ lemma circleAverage_circleAverage_wholePlaneCov {r s : ℝ} (hr : 0 < r) (hs : 0
     intro z hz
     rw [mem_sphere_zero_iff_norm, abs_of_pos hs] at hz
     dsimp only
-    rw [circleAverage_wholePlaneCov_of_ne hr (by rw [hz]; exact hsr), hz]
+    rw [circleAverage_wholePlaneCov hr z, hz]
   rw [Real.circleAverage_congr_sphere hc, Real.circleAverage_const]
 
 /-- The pairing covariance with a circle average, as the smear of the observable (Harmonic-Balls `wholePlaneGFFCov`). -/
@@ -168,5 +166,68 @@ lemma ae_radialIntegral_eq {P : Measure Ω} {hcirc : Ω → ℝ → ℂ → ℝ}
   congr 1
   rw [hω (radialPoint x)]
   simp [radialPoint, hx]
+
+/-! ### Second moments and the covariance of circle averages and pairings -/
+
+section Covariances
+
+variable {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+
+/-- Circle averages of positive radius are square integrable (Gaussian observables). -/
+lemma memLp_two_circle (h : IsWholePlaneGFF P hC hcirc) {r : ℝ} (hr : 0 < r) (z : ℂ) :
+    MemLp (fun ω => hcirc ω r z) 2 P :=
+  (h.isGaussianProcess.hasGaussianLaw_eval ⟨.circle r z, hr⟩).memLp_two
+
+/-- Pairings with test functions are square integrable (Gaussian observables). -/
+lemma memLp_two_pairing (h : IsWholePlaneGFF P hC hcirc) {φ : ℂ → ℝ}
+    (hφ : IsTestFunction Set.univ φ) : MemLp (fun ω => hC ω φ) 2 P :=
+  (h.isGaussianProcess.hasGaussianLaw_eval ⟨.pairing φ, hφ⟩).memLp_two
+
+/-- For a centred second variable, the covariance is the mean of the product. -/
+lemma covariance_eq_integral_of_mean_zero {X Y : Ω → ℝ} (hY : ∫ ω, Y ω ∂P = 0)
+    (hYi : Integrable Y P) (hXY : Integrable (fun ω => X ω * Y ω) P) :
+    covariance X Y P = ∫ ω, X ω * Y ω ∂P := by
+  unfold covariance
+  have hpt : ∀ ω, (X ω - ∫ ω, X ω ∂P) * (Y ω - ∫ ω, Y ω ∂P) =
+      X ω * Y ω - (∫ ω, X ω ∂P) * Y ω := by
+    intro ω
+    rw [hY]
+    ring
+  simp_rw [hpt]
+  rw [integral_sub hXY (hYi.const_mul _), integral_const_mul, hY, mul_zero, sub_zero]
+
+/-- The covariance of two circle averages at `0` is the circle-circle kernel
+(Duplantier-Sheffield 2011, eq. (3.2); Armitage-Gardiner, mean value property of `log|·-z|`). -/
+lemma integral_circle_mul_circle [IsProbabilityMeasure P] (h : IsWholePlaneGFF P hC hcirc) {s r : ℝ} (hs : 0 < s) (hr : 0 < r) :
+    ∫ ω, hcirc ω s 0 * hcirc ω r 0 ∂P =
+      Real.circleAverage (fun z : ℂ => Real.circleAverage (fun w : ℂ => wholePlaneCov z w) 0 r) 0 s := by
+  have hc : covariance (fun ω => hcirc ω s 0) (fun ω => hcirc ω r 0) P =
+      Real.circleAverage (fun z : ℂ => Real.circleAverage (fun w : ℂ => wholePlaneCov z w) 0 r) 0 s :=
+    h.covariance_eq (.circle s 0) (.circle r 0) hs hr
+  have hY : ∫ ω, hcirc ω r 0 ∂P = 0 := h.integral_eq_zero (.circle r 0) hr
+  have hYi : Integrable (fun ω => hcirc ω r 0) P :=
+    (memLp_two_circle h hr 0).integrable one_le_two
+  have hXY : Integrable (fun ω => hcirc ω s 0 * hcirc ω r 0) P :=
+    (memLp_two_circle h hs 0).integrable_mul (memLp_two_circle h hr 0)
+  rw [covariance_eq_integral_of_mean_zero hY hYi hXY] at hc
+  exact hc
+
+/-- The covariance of a pairing with a circle average is the integral of the kernel against the test function. -/
+lemma integral_pairing_mul_circle [IsProbabilityMeasure P] (h : IsWholePlaneGFF P hC hcirc) {φ : ℂ → ℝ}
+    (hφ : IsTestFunction Set.univ φ) {r : ℝ} (hr : 0 < r) :
+    ∫ ω, hC ω φ * hcirc ω r 0 ∂P =
+      ∫ x, φ x * Real.circleAverage (fun w : ℂ => wholePlaneCov x w) 0 r := by
+  have hc : covariance (fun ω => hC ω φ) (fun ω => hcirc ω r 0) P =
+      ∫ x, φ x * Real.circleAverage (fun w : ℂ => wholePlaneCov x w) 0 r :=
+    h.covariance_eq (.pairing φ) (.circle r 0) hφ hr
+  have hY : ∫ ω, hcirc ω r 0 ∂P = 0 := h.integral_eq_zero (.circle r 0) hr
+  have hYi : Integrable (fun ω => hcirc ω r 0) P :=
+    (memLp_two_circle h hr 0).integrable one_le_two
+  have hXY : Integrable (fun ω => hC ω φ * hcirc ω r 0) P :=
+    (memLp_two_pairing h hφ).integrable_mul (memLp_two_circle h hr 0)
+  rw [covariance_eq_integral_of_mean_zero hY hYi hXY] at hc
+  exact hc
+
+end Covariances
 
 end MatedCRT.WholePlaneGFFLateral
