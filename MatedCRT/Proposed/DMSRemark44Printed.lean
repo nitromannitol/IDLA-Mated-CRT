@@ -101,8 +101,8 @@ def DMS14Remark44PrintedWiener : Prop :=
 /-- **Residual transfer type, not printed and not proved here.** The clauses of `DMS14Remark44PrintedWiener` for an
 arbitrary probability space `(Ω, P)` carrying a Brownian motion `B` (`ProbabilityTheory.IsBrownianReal`, whose
 coordinates are only almost-everywhere measurable) and a measurable version `F` of the drifted post-last-zero path.
-Passing from the Wiener-space clauses to this form is the arbitrary-space transfer of steps4-r2.tex Section 2
-(lines 443–460: measurable rational-time versions, continuous extension, law identification); it is not formalized.
+Passing from the Wiener-space clauses to this form is the arbitrary-space transfer
+(measurable rational-time versions, continuous extension, law identification); it is not formalized.
 The numbered target `DMS14Remark44PostLastZeroLaw` follows from this Prop by
 `MatedCRT.Sec1.dms14Remark44PostLastZeroLaw_of_transferResidual`, a conditional assembly, not a closure. -/
 def DMS14Remark44TransferResidual : Prop :=

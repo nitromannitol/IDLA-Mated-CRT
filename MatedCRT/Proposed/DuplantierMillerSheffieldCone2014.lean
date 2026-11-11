@@ -13,7 +13,7 @@ import LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.MatedCRTLastZeroR
 This file stages a distribution-valued instance of Duplantier–Miller–Sheffield,
 *Liouville quantum gravity as a mating of trees*, arXiv:1409.7055v4,
 Proposition 4.13(i), p. 80, proof p. 81. It is a proposition to be
-source-checked by the operator, not a theorem or an axiom.
+source-checked, not a theorem or an axiom.
 
 The cone is built using Definition 4.10, p. 79, and the post-last-zero
 construction in Remark 4.4, pp. 74–75. The field uses the radial and lateral
@@ -109,9 +109,8 @@ theorem lqgQ_sub_pos_of_lt_two {γ : ℝ} (h0 : 0 < γ) (h2 : γ < 2) :
 standard Brownian motion `B` on a probability space and drift `d = lqgQ γ - γ` (`0 < γ < 2`, so
 `d > 0`), every measurable continuous-path version `F` of the post-last-zero process
 `dmsPostLastZeroPath d (B · ω)` has the weak-limit conditioned law `IsBMConditionedPositive d` of
-Definition 2.1 of the paper. Operator to verify this against the DMS text before use.
-Caution: env-steps.tex:217–242 cites this remark for the conditioned-law identification and does
-not prove it; m1 (reports/m1.md) read Remark 4.4 as a description of the post-last-zero
+Definition 2.1 of the paper. To be verified against the DMS text before use.
+Caution: this remark is cited for the conditioned-law identification but does not prove it; it describes the post-last-zero
 construction only. -/
 def DMS14Remark44PostLastZeroLaw : Prop :=
   ∀ (γ : ℝ), 0 < γ → γ < 2 →

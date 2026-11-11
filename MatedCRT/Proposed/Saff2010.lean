@@ -3,8 +3,7 @@ import Mathlib
 /-!
 # Staged literature inputs: logarithmic potential theory (E. B. Saff, arXiv:1010.3760v1)
 
-Task `z5-m5q-steps3-bounded-representatives-repair`. Staged for independent source audit. The operator promotes these
-Props to `MatedCRT/External` only after the source check. Each Prop here is an explicit hypothesis, not a proof of the
+Staged for independent source audit. These Props are promoted to `MatedCRT/External` only after the source check. Each Prop here is an explicit hypothesis, not a proof of the
 cited statement. Nothing in this file is assumed by a numbered result.
 
 Source: E. B. Saff, *Logarithmic Potential Theory with Applications to Approximation Theory*, arXiv:1010.3760v1
@@ -46,15 +45,15 @@ Printed texts (verbatim, LaTeX as printed):
 Conventions of this staging, all recorded explicitly:
 * Saff's kernel is `log(1/|z-t|)`, with the classical value `+∞` at the pole `t = z`. Lean's `Real.log 0 = 0` is not used:
   `saffLogPotential` is `EReal`-valued and has the pole convention. This differs from HB's `newtonKernelEReal` only by the
-  normalisation `N = (2π)⁻¹ log(1/|x-y|)`, and by the Riesz measure identification `λ = ν/(2π)` (steps3:146-148).
+  normalisation `N = (2π)⁻¹ log(1/|x-y|)`, and by the Riesz measure identification `λ = ν/(2π)`.
 * "q.e." (quasi-everywhere) means outside a set of logarithmic capacity zero. Capacity is not formalized in this
   repository, so the notion is a parameter `IsPolar : Set ℂ → Prop` of the Green characterization. A caller must
   instantiate it with the capacity-zero predicate. The Props below are not usable without that instantiation.
 * Theorem 2.4 as printed quantifies over all superharmonic `f`, with `λ` any positive measure on `D`. Staged here is the
-  special case steps3 uses (steps3:146-148): `λ` finite with compact support in `D`, and `λ` the Riesz measure of `f`
+  special case used here: `λ` finite with compact support in `D`, and `λ` the Riesz measure of `f`
   through the distributional identity (2.9). The general printed form is not staged: for `D` bounded and `λ` of infinite
   mass, the integral in (2.7) need not converge. Example: `f(z) = -(1-|z|²)⁻¹` on the unit disc is superharmonic,
-  with `-Δf` of infinite mass. This is a suspected printed-statement issue, reported to the operator, not a Lean claim.
+  with `-Δf` of infinite mass. This is a suspected printed-statement issue, not a Lean claim.
 -/
 
 open MeasureTheory Filter Set Metric Topology
@@ -83,12 +82,11 @@ def SaffSuperharmonicOn (D : Set ℂ) (f : ℂ → EReal) : Prop :=
   (¬ ∀ z ∈ D, f z = ⊤) ∧ LowerSemicontinuousOn f D ∧
     ∀ z₀ ∈ D, ∀ r : ℝ, 0 < r → sphere z₀ r ⊆ D → saffCircleAverage f z₀ r ≤ f z₀
 
-/-- **Staged input: Saff Theorem 2.4 (Riesz decomposition), printed p. 180, (2.7)-(2.8), in the special case used by
-steps3:211-225.** Let `D` be a bounded domain, `f` superharmonic in `D`, and `m` a finite positive measure with compact
+/-- **Staged input: Saff Theorem 2.4 (Riesz decomposition), printed p. 180, (2.7)-(2.8), in the special case used here.** Let `D` be a bounded domain, `f` superharmonic in `D`, and `m` a finite positive measure with compact
 support in `D`. Suppose `m` is the Riesz measure of `f` through the distributional identity (2.9) and (2.8):
 `∫ φ dm = -(2π)⁻¹ ∫ f Δφ dm₂` for every smooth `φ` with compact support in `D`. Then for every subdomain `D'` with
 `closure D' ⊆ D` there is a function `h`, harmonic on `D'`, with `f = h + U^m` on `D'`.
-Source locators: Theorem 2.4 (p. 180), (2.7)-(2.8) (p. 180), (2.9) (p. 181). Uses: steps3:211-225 and the representative
+Source locators: Theorem 2.4 (p. 180), (2.7)-(2.8) (p. 180), (2.9) (p. 181). Uses: the representative
 lemma `BoundedJensenRepresentativesStep` (`Proofs/Sec4/Prop42Closure/BoundedRepresentatives.lean`). -/
 def SaffRieszDecompositionLocalStmt : Prop :=
   ∀ (D : Set ℂ) (f : ℂ → EReal) (m : Measure ℂ), IsOpen D → IsConnected D → Bornology.IsBounded D →
