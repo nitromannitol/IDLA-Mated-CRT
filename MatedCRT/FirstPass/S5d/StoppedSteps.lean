@@ -8,9 +8,9 @@ import MatedCRT.FirstPass.S5d.StoppedMono
 Route of the direct repair of the stopped clause:
 the walkers are killed on leaving the strict discrete cluster `Λ^ε_t` intersected with `V^ε(Λ_t)` (the killing set
 `I_ε`), and the relaxed Lemma 5.2 (`GeneralIDLALowerBoundRelaxedStep`) is applied with targets `Z_ε = V^ε(B⁻_δ(Λ_t))` (no origin, [C21]).
-The two Green inequalities that Lemma 5.2 needs on `Z_ε` are the two NEW probabilistic steps `StoppedFirstGreenStep`
+The two Green inequalities that Lemma 5.2 needs on `Z_ε` are the two probabilistic steps `StoppedFirstGreenStep`
 (first Green inequality (5.5) with `Z_ε ⊆ I_ε`) and `StoppedSecondGreenStep` (second Green inequality (5.7)). They are
-open: their written arguments are referee sections 5.1-5.3 (which use referee sections 1-3) and are not formalized here.
+named hypotheses (see docs/campaign/COUNTED.md): their written arguments are referee sections 5.1-5.3 (which use referee sections 1-3) and are not part of this file.
 
 The reduction of the stopped conjunct to these two steps is `MatedCRT.iDLALowerBoundStopped_of_greenSteps`
 (MatedCRT/FirstPass/S5d/StoppedReduction.lean).
@@ -56,7 +56,7 @@ def stoppedSecondGreenEvent {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω
       (∑' b : stoppedKillSet S Λ ρ t ε ω, greenFn (S.mult ε ω) (stoppedKillSet S Λ ρ t ε ω) b a) /
         greenFn (S.mult ε ω) (stoppedKillSet S Λ ρ t ε ω) a a}
 
-/-- **NEW, OPEN (probabilistic input; referee section 5.1-5.2, equations (5.1), (5.2), (5.4), (5.5)).** On `{t < T}`, with
+/-- **Named hypothesis (see docs/campaign/COUNTED.md): probabilistic input; referee section 5.1-5.2, equations (5.1), (5.2), (5.4), (5.5)).** On `{t < T}`, with
 probability tending to `1` as `ε → 0⁺`, the first Green event holds with a positive measurable random factor `s`
 (here `s = c/(2C)` with the random constants `c` of (5.1) and `C` of the exit-time bound). The factor `s` is the same for
 all `ε`, as in `GeneralIDLALowerBoundRelaxedStep` (Steps/Sec5/IDLALowerBound.lean:40). -/
@@ -68,7 +68,7 @@ def StoppedFirstGreenStep (𝒮 : SpaceFillingSLEModel) : Prop :=
     ∃ s : Ω → ℝ, Measurable[S.envSigma] s ∧ (∀ ω, 0 < s ω) ∧
     TendsToOneOn S.P {ω | t < clusterExitTime (Λ ω) ρ} (stoppedFirstGreenEvent S Λ ρ t δ s)
 
-/-- **NEW, OPEN (probabilistic input; referee section 5.3, equation (5.7)).** On `{t < T}`, with probability tending to
+/-- **Named hypothesis (see docs/campaign/COUNTED.md): probabilistic input; referee section 5.3, equation (5.7).** On `{t < T}`, with probability tending to
 `1` as `ε → 0⁺`, every target satisfies the second Green inequality of Lemma 5.2 with exponent `q = 1/4`. -/
 def StoppedSecondGreenStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →

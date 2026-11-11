@@ -7,7 +7,7 @@ import MatedCRT.FirstPass.S5d.ClusterFromOdometer
 /-!
 # The first Green inequality of the stopped clause from its surplus inputs
 
-Reduces `StoppedFirstGreenStep` (StoppedSteps.lean:63) to one NEW probabilistic input, `StoppedFirstGreenInputsStep`:
+Reduces `StoppedFirstGreenStep` (StoppedSteps.lean:63) to one probabilistic input, `StoppedFirstGreenInputsStep`:
 random constants `c, C > 0` such that, with probability tending to one on `{t < T}`,
 * (floor) `c/ε ≤ u^ε(a)` for every target `a ∈ Z^ε_t` (`stoppedTargetSet`);
 * (ceiling) `u^ε(b) ≤ c/(2ε)` for every `b` outside the killing set `I^ε_t` (`stoppedKillSet`);
@@ -15,7 +15,7 @@ random constants `c, C > 0` such that, with probability tending to one on `{t < 
 
 The floor is the strict-gap argument of [C21] (CORRECTIONS.md; corrected tex 2350-2395, "u^ε ≥ c ε⁻¹ for every cell meeting
 B⁻_{δ/2}(Λ_t)"), the pole value at `0` being an extra claim (`0 ∈ O₁` is required by Lemma 5.2, Draft/Section5.lean:40).
-The ceiling is NOT written in [C21]: the comparison there uses `M_ε = sup_{a∉I} u^ε(a)` without a bound `M_ε ≤ c/(2ε)`.
+The ceiling is not stated in [C21]: the comparison there uses `M_ε = sup_{a∉I} u^ε(a)` without a bound `M_ε ≤ c/(2ε)`.
 
 The deterministic part is complete: `firstGreen_of_floor_ceiling_exit` (below) is `firstGreen_pathwise` (GreenEvent.lean:78)
 with the Finset sums turned into `tsum`s by `firstGreen_relaxed` (GreenEvent.lean:49); the surplus identity is
@@ -60,7 +60,7 @@ def StoppedPathwiseInputs {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) 
       mLaplacian (S.mult ε ω) (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t) a = (mdeg (S.mult ε ω) a : ℝ)⁻¹) ∧
   (0 : ℤ) ∈ cellVertices ε (S.η ω) (Λ ω t)
 
-/-- **OPEN (probabilistic input; [C21] of CORRECTIONS.md, referee 5.1-5.2 (5.1), (5.2), (5.4), (5.5)).** For `δ ∈ (0, ρ)`
+/-- **Named hypothesis (see docs/campaign/COUNTED.md): probabilistic input; [C21] of CORRECTIONS.md, referee 5.1-5.2 (5.1), (5.2), (5.4), (5.5)).** For `δ ∈ (0, ρ)`
 and `t > 0`, there are measurable random constants `c, C > 0` such that on `{t < T}`, with probability tending to `1` as
 `ε → 0⁺`: the surplus floor on the targets `Z^ε_t = stoppedTargetSet`, the ceiling off the killing set `I^ε_t =
 stoppedKillSet`, and the exit bound `∑_{b∈I} G_I(b,a) ≤ C/ε` on the targets. -/
@@ -87,7 +87,7 @@ theorem mem_cellVertices_ball_of_mem_matedDiscreteCluster {m : ℤ → ℤ → �
   unfold matedDiscreteCluster discreteCluster at h
   exact h.1
 
-/-- **Reduction.** The NEW input `StoppedFirstGreenInputsStep` (with the deterministic `StoppedPathwiseInputs`, assumed almost
+/-- **Reduction.** The input `StoppedFirstGreenInputsStep` (with the deterministic `StoppedPathwiseInputs`, assumed almost
 surely for every `ε > 0`) gives the first Green step of the stopped clause with the factor `s = c/(2C)`. -/
 theorem stoppedFirstGreenStep_of_inputs (𝒮 : SpaceFillingSLEModel) (hin : StoppedFirstGreenInputsStep 𝒮)
     (hdet : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →

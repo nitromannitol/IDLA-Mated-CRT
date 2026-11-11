@@ -20,9 +20,9 @@ Proved here (deterministic):
 * `measure_annulus_le_covN`, `scaleCov_annulus_mass_le`: `μ(𝔸) ≤ N_R ≤ C m_R^φ` on the event;
 * `printedL_le_of_event_unit`: `L_R(z) ≤ C (1 + log 4)(1 + log(1/R)) m_R^φ` for `0 < R ≤ 1`.
 
-Not proved here:
-* the measurability of the event, OPEN: the countable reduction of `covN` and `massBumpR` as functions of
-  `μ` is not yet written;
+Not in this file (see docs/campaign/COUNTED.md):
+* the measurability of the event: the countable reduction of `covN` and `massBumpR` as functions of
+  `μ` is not in this file;
 * the uniform one-annulus probability, kept as the named hypothesis `ScaleCovUniformPrevalenceStmt`.
 
 Terminology: LQG measure (Duplantier-Sheffield), good annuli (Berestycki-Powell, Armstrong-Kuusi-Mourrat),
@@ -74,7 +74,7 @@ noncomputable def massBumpR (c0 R : ℝ) (z : ℂ) (μ : Measure ℂ) : ℝ≥0�
 def ScaleCovGoodAnnulusEvent (c0 C R : ℝ) (z : ℂ) (μ : Measure ℂ) : Prop :=
   0 < massBumpR c0 R z μ ∧ massBumpR c0 R z μ < ⊤ ∧ covN R z μ ≤ ENNReal.ofReal C * massBumpR c0 R z μ
 
-/-- **Named hypothesis, not proved here** (from the corrected Lemma 6.4/6.5): a uniform lower
+/-- **Named hypothesis** (see docs/campaign/COUNTED.md; from the corrected Lemma 6.4/6.5): a uniform lower
 bound `p ≤ P(G_{R,z}(C))` for all `R > 0` and `z ∈ ℂ`. Translation and dilation invariance of the whole-plane GFF gives
 the independence of `(R, z)`; the positivity at one annulus is the prevalence input. -/
 def ScaleCovUniformPrevalenceStmt {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (μ : Ω → Measure ℂ)

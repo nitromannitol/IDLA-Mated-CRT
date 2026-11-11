@@ -120,12 +120,12 @@ theorem tendsToOneOn_inter {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {F 
     · left
       exact ⟨hF, h1⟩
 
-/-- **The surplus floor of the stopped clause (OPEN; paper Proposition 5.1 proof, [C21], corrected tex 2362-2363).** For
+/-- **The surplus floor of the stopped clause (named hypothesis, see docs/campaign/COUNTED.md; paper Proposition 5.1 proof, [C21], corrected tex 2362-2363).** For
 `δ ∈ (0, ρ)` and `t > 0` there is a measurable random constant `c > 0` such that, on `{t < T}`, with probability tending to one as
 `ε → 0⁺`, the surplus floor `c/ε ≤ u^ε(a)` holds for every target `a ∈ Z^ε_t = V^ε(B⁻_δ(Λ_t))` (`stoppedTargetSet`). The written
 source: the strict-gap argument of Proposition 4.2 ([C20], tex 1912-1960) with the convergence of Theorem `convergence-divisible`
 and Lemmas `uniform-convergence-of-greens-function`, `cell-size-estimate`, giving `u^ε(a) ≥ c ε⁻¹` for every cell meeting
-`B⁻_{δ/2}(Λ_t)` off an event of vanishing probability (tex 2362). Not formalized: the rescaled convergence is the missing input. -/
+`B⁻_{δ/2}(Λ_t)` off an event of vanishing probability (tex 2362). The rescaled convergence is a separate input (see docs/campaign/COUNTED.md). -/
 def StoppedFloorStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
@@ -135,7 +135,7 @@ def StoppedFloorStep (𝒮 : SpaceFillingSLEModel) : Prop :=
     TendsToOneOn S.P {ω | t < clusterExitTime (Λ ω) ρ} fun ε => {ω |
       ∀ a ∈ stoppedTargetSet S Λ δ t ε ω, c ω / ε ≤ stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t a}
 
-/-- **The surplus maximum outside the killing set (OPEN; paper Proposition 5.1 proof, [C21], corrected tex 2364).** With
+/-- **The surplus maximum outside the killing set (named hypothesis, see docs/campaign/COUNTED.md; paper Proposition 5.1 proof, [C21], corrected tex 2364).** With
 `M^ε = sup_{a ∉ I^ε_t} u^ε(a)`, for every `κ > 0` the event `M^ε ≤ κ/(2ε)` (i.e. `ε M^ε ≤ κ/2`) holds on `{t < T}` with
 probability tending to one as `ε → 0⁺`: the written statement is `ε M^ε → 0` in probability on `{t < T}`. -/
 def StoppedMaxOutsideStep (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -150,7 +150,7 @@ def StoppedMaxOutsideStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 there is a measurable random constant `c > 0` such that, on `{t < T}`, with probability tending to one as `ε → 0⁺`: the surplus
 floor `c/ε ≤ u^ε(a)` on the targets `Z^ε_t` (`stoppedTargetSet`) and the ceiling `u^ε(b) ≤ c/(2ε)` off the killing set `I^ε_t`
 (`stoppedKillSet`). It is DERIVED from the floor `StoppedFloorStep` and the maximum `StoppedMaxOutsideStep`
-(`stoppedFloorCeiling_of_floor_max`), so it is not a separate open input. -/
+(`stoppedFloorCeiling_of_floor_max`), so it is not a separate input. -/
 def StoppedFloorCeilingStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
@@ -161,7 +161,7 @@ def StoppedFloorCeilingStep (𝒮 : SpaceFillingSLEModel) : Prop :=
       (∀ a ∈ stoppedTargetSet S Λ δ t ε ω, c ω / ε ≤ stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t a) ∧
       (∀ b ∉ stoppedKillSet S Λ ρ t ε ω, stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t b ≤ c ω / (2 * ε))}
 
-/-- **The ceiling from the surplus maximum.** `StoppedFloorCeilingStep` follows from the open floor `StoppedFloorStep` and the
+/-- **The ceiling from the surplus maximum.** `StoppedFloorCeilingStep` follows from the floor `StoppedFloorStep` and the
 open maximum `StoppedMaxOutsideStep`: the constant `c` of the floor serves for the ceiling, by `tendsToOneOn_randomLevel`
 (`S5d/RandomLevel.lean`) for the level `x ↦ ∀ b ∉ I^ε_t, u^ε(b) ≤ x`, which is monotone in `x`. -/
 theorem stoppedFloorCeiling_of_floor_max (𝒮 : SpaceFillingSLEModel) (hfl : StoppedFloorStep 𝒮)
@@ -178,8 +178,8 @@ theorem stoppedFloorCeiling_of_floor_max (𝒮 : SpaceFillingSLEModel) (hfl : St
   have h := tendsToOneOn_inter hF hC
   simpa only [TendsToOneOn, Set.ofPred_and] using h
 
-/-- **The stopped first Green input from the floor and the maximum.** `StoppedFirstGreenInputsStep` follows from the open
-floor `StoppedFloorStep` and the open maximum `StoppedMaxOutsideStep` (through `stoppedFloorCeiling_of_floor_max`), together
+/-- **The stopped first Green input from the floor and the maximum.** `StoppedFirstGreenInputsStep` follows from the
+floor `StoppedFloorStep` and the maximum `StoppedMaxOutsideStep` (through `stoppedFloorCeiling_of_floor_max`), together
 with the proved exit input `stoppedExit_input`: the random constants are `c` from the floor and `C` from the exit bound. -/
 theorem stoppedFirstGreenInputsStep_of_floorCeiling (𝒮 : SpaceFillingSLEModel) (hfl : StoppedFloorStep 𝒮)
     (hmax : StoppedMaxOutsideStep 𝒮)

@@ -2,7 +2,7 @@ import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.DyadicModulus
 import MatedCRT.Draft.Section3Prepared
 
 /-! The prepared-sequence obligation in Lemma 3.7, corrected paper lines 1562–1693.
-The interior step remains open; it must use the deterministic preparation before random extraction. -/
+The interior step is a named hypothesis (see docs/campaign/COUNTED.md); it must use the deterministic preparation before random extraction. -/
 
 namespace MatedCRT
 

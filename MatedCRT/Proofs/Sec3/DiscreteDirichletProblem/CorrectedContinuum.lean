@@ -87,7 +87,7 @@ def ProjectedDirichletData {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
       F ε ω b = S.mε ε * φ (ballRetraction z r (vertexPoint ε (S.η ω) b)))
 
 /-- Corrected Lemma 3.5, Steps 1–2, paper lines 1532–1574: local uniform
-convergence to the projected continuum candidate. This remains open. -/
+convergence to the projected continuum candidate. This Prop is a named hypothesis (see docs/campaign/COUNTED.md). -/
 def ProjectedDirichletInteriorStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
@@ -98,7 +98,7 @@ def ProjectedDirichletInteriorStep (𝒮 : SpaceFillingSLEModel) : Prop :=
     (dirichletLimit S r z ψ (fun x => φ (ballRetraction z r x))) (closedBall z r')
 
 /-- Corrected Lemma 3.5, Step 3, paper lines 1575–1595: the boundary-layer
-barrier for projected Dirichlet data. This remains open. -/
+barrier for projected Dirichlet data. This Prop is a named hypothesis (see docs/campaign/COUNTED.md). -/
 def ProjectedDirichletBoundaryStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
@@ -111,7 +111,7 @@ def ProjectedDirichletBoundaryStep (𝒮 : SpaceFillingSLEModel) : Prop :=
         dirichletLimit S r z ψ (fun y => φ (ballRetraction z r y)) ω x|} ≤ e
 
 /-- Corrected Lemma 3.5, Step 1, paper lines 1532–1545: pointwise convergence
-for projected Dirichlet data. This remains open. -/
+for projected Dirichlet data. This Prop is a named hypothesis (see docs/campaign/COUNTED.md). -/
 def ProjectedDirichletPointwiseStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →

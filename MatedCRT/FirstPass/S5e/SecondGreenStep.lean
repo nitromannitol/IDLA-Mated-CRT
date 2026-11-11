@@ -7,7 +7,7 @@ import MatedCRT.Draft.Section2
 # The stopped second Green inequality from its probabilistic inputs (FIRST PASS, S5e)
 
 Reduces `StoppedSecondGreenStep` (FirstPass/S5d/StoppedSteps.lean:73, the second Green inequality (5.7) of the stopped
-clause, correction [C21]) to two NEW probabilistic inputs, `StoppedFloorHalfStep` and `StoppedMassLowerStep`, and to the
+clause, correction [C21]) to two probabilistic inputs, `StoppedFloorHalfStep` and `StoppedMassLowerStep`, and to the
 Draft statements 2.8 (`CellSizeEstimateStmt`), 2.15 (`GreenFunctionCrudeBoundStmt`) and 2.16
 (`GreenKernelLowerBoundStmt`), together with the pathwise inputs `stoppedPathwiseInputs_ae`. The deterministic argument
 is `MatedCRT.S5e.secondGreen_pointwise` (SecondGreenDet.lean).
@@ -21,7 +21,7 @@ open MeasureTheory Set Metric Filter Topology
 
 namespace MatedCRT.S5e
 
-/-- **OPEN (probabilistic input; correction [C21], tex 2355-2362: "a positive random `c` such that
+/-- **Named hypothesis (see docs/campaign/COUNTED.md): probabilistic input; correction [C21], tex 2355-2362: "a positive random `c` such that
 `u^ε(a) ≥ c ε^{-1}` for every cell meeting `B⁻_{δ/2}(Λ_t)`").** For `δ ∈ (0, ρ)` and `t > 0`, on `{t < T}`, with
 probability tending to `1` as `ε → 0⁺`, every cell meeting `B⁻_{δ/2}(Λ_t)` has positive stopped odometer. This is the
 floor of the first Green step (`StoppedFirstGreenInputsStep`, StoppedFirstGreenInputs.lean) at level `δ/2` on the cells
@@ -35,11 +35,11 @@ def StoppedFloorHalfStep (𝒮 : SpaceFillingSLEModel) : Prop :=
       (cell ε (S.η ω) k ∩ innerNbhd (δ / 2) (Λ ω t)).Nonempty →
         0 < stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t k}
 
-/-- **OPEN (probabilistic input; correction [C21], tex 2368-2372: "the full support of `μ_h` and a finite cover of
+/-- **Named hypothesis (see docs/campaign/COUNTED.md): probabilistic input; correction [C21], tex 2368-2372: "the full support of `μ_h` and a finite cover of
 the possible centers give a uniform positive random lower bound for the masses of these smaller balls").** For `ρ, s > 0`
 there is a measurable random `mr > 0` with `μ_h(B_s(z)) ≥ mr` for every `z ∈ B̄_ρ`, almost surely. For each outcome the
 bound is deterministic (`MatedCRT.S5c.mass_net_lower_bound` from `IsAreaParametrized`); the measurable choice of `mr` is
-the open part. -/
+kept as a hypothesis (see docs/campaign/COUNTED.md). -/
 def StoppedMassLowerStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →

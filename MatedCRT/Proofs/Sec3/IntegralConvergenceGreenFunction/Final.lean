@@ -5,7 +5,7 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ContinuumIdentifica
 # Lemma 3.4: assembly from its steps
 
 `integralConvergenceGreenFunction_of_steps` derives `IntegralConvergenceGreenFunctionStmt` from the
-Revuz identity `LBMGreenOccupationStep` (open) and four named steps:
+Revuz identity `LBMGreenOccupationStep` (see docs/campaign/COUNTED.md) and four named steps:
 
 * `TruncatedOccupationFixedTimeStep`: fixed-time convergence of the truncated occupation sums;
 * `LBMExitTimeIntegrableStep`: the LBM exit time from a ball is integrable for almost every environment;
@@ -22,11 +22,11 @@ open MeasureTheory Set Metric Filter Topology _root_.HarmonicBalls MarkovProcess
 open scoped ENNReal NNReal
 
 /-- **Fixed-time convergence** of the truncated occupation sums: the hypothesis `hfixed` of
-`integralConvergenceGreenFunction_of_fixed_and_ae_continuum`. OPEN. Source: Theorem 2.11 applied to
+`integralConvergenceGreenFunction_of_fixed_and_ae_continuum`. See docs/campaign/COUNTED.md. Source: Theorem 2.11 applied to
 the environment-dependent functional `φ^{f(ω)}_T`. The Draft encoding of Theorem 2.11
-(`RandomWalkToLBMStmt`) covers only deterministic functionals (the encoding question is open). The discrete
+(`RandomWalkToLBMStmt`) covers only deterministic functionals (the encoding question: see docs/campaign/COUNTED.md). The discrete
 Riemann sum must also be compared with the interpolated occupation at the window of the discrete exit
-(this comparison is open). -/
+(this comparison is a named hypothesis; see docs/campaign/COUNTED.md). -/
 def TruncatedOccupationFixedTimeStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
@@ -38,7 +38,7 @@ def TruncatedOccupationFixedTimeStep (𝒮 : SpaceFillingSLEModel) : Prop :=
     (truncatedLBMOccupation S (ball z r) y f T)
 
 /-- **Integrability of the LBM exit time** from a ball, for almost every environment, in the Brownian
-variable: the hypothesis `hexit` of `truncatedLBMOccupation_tendsto_of_integrable_exit`. OPEN. Source
+variable: the hypothesis `hexit` of `truncatedLBMOccupation_tendsto_of_integrable_exit`. See docs/campaign/COUNTED.md. Source
 route: Lemma 2.18 with N = 2 and `MepsScalingInput`; Theorem 2.11 for `min(T, τ)`, which is continuous at
 regular exits (this needs `BrownianOutwardExcursionAtExitStep`); monotone convergence in `T`. -/
 def LBMExitTimeIntegrableStep (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -50,7 +50,7 @@ def LBMExitTimeIntegrableStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 
 /-- **Measurability of the truncated LBM occupations**: for almost every environment the truncated path
 integrals are strongly measurable in the Brownian variable, and the truncated occupations are
-measurable in the environment (the hypotheses `hmeas`, `hVm` of the assembly). OPEN: the extension of
+measurable in the environment (the hypotheses `hmeas`, `hVm` of the assembly). The named step (see docs/campaign/COUNTED.md) is the extension of
 `LBMPathFunctionalMeasurableStep` from bounded Lipschitz functionals to the environment-dependent
 functionals `φ^{f(ω)}`. -/
 def LBMTruncatedOccupationMeasurableStep (𝒮 : SpaceFillingSLEModel) : Prop :=

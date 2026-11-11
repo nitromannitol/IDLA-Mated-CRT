@@ -4,7 +4,7 @@ import MatedCRT.Proposed.DuplantierMillerSheffieldCone2014
 /-!
 # Distributional cone scaling through the canonical law
 
-The canonical identification remains a separate
+The canonical identification is a separate
 obligation.  Given the joint law of the distribution and its embedding radius,
 the DMS scaling law transfers to the environment's representative.
 -/
@@ -223,7 +223,7 @@ theorem canonicalConeDistributionRadiusLawStep_of_distribution
     hH'.aemeasurable.prodMk hmR', hjoint⟩
 
 /-- DMS scaling transfers through the joint field–radius law; the latter is
-still to be proved from the canonical cone identification. -/
+a named step (see docs/campaign/COUNTED.md) about the canonical cone identification. -/
 theorem rescaledConeDistributionLawStep_of_canonical
     (𝒮 : SpaceFillingSLEModel) (hdms : Proposed.DMS14ConeScaling)
     (hcanonical : CanonicalConeDistributionRadiusLawStep 𝒮) :
