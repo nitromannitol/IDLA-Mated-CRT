@@ -13,7 +13,7 @@ theorem harmonicPathExitStep_of_inputs (𝒮 : SpaceFillingSLEModel)
 
 /-- **Lemma 3.6**, final form: from Theorem 2.11 and Lemma 2.8 (cited), the Brownian
 regular-exit input, measurability of LBM path functionals, and the exit-cell
-comparison `HarmonicExitCellStep` (whose printed proof has the gap E-c2-8). -/
+comparison `HarmonicExitCellStep` (whose printed proof has a gap). -/
 theorem convergenceHarmonicFunctions_final (𝒮 : SpaceFillingSLEModel)
     (h211 : RandomWalkToLBMStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
     (hexc : BrownianOutwardExcursionAtExitStep) (hX : LBMPathFunctionalMeasurableStep 𝒮)
