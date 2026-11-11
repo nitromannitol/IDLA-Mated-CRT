@@ -81,3 +81,26 @@ lemma covariance_radial_radial (h : IsWholePlaneGFF P hC hcirc) {t s : ℝ} (ht 
 end
 
 end MatedCRT.ConeMeanZeroRestriction
+
+namespace MatedCRT.ConeMeanZeroRestriction
+
+noncomputable section
+
+variable {Ω : Type*} [MeasurableSpace Ω]
+variable {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+
+lemma covariance_symm' (X Y : Ω → ℝ) (P : Measure Ω) :
+    covariance X Y P = covariance Y X P := by
+  simp only [covariance, mul_comm]
+
+/-- Expectation of a product with a centred circle average: `E[h_s(0) h_t(0)] = avg_{∂B_t(0)} cW · s`. -/
+lemma integral_circle_mul_circle_centred (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    {t s : ℝ} (ht : 0 < t) (hs : 0 < s) :
+    ∫ ω, hcirc ω s 0 * hcirc ω t 0 ∂P = Real.circleAverage (fun x : ℂ => cW x s) 0 t := by
+  have hX : MemLp (fun ω => hcirc ω s 0) 2 P := memLp_two_circle h hs 0
+  have hY : MemLp (fun ω => hcirc ω t 0) 2 P := memLp_two_circle h ht 0
+  have hYc : ∫ ω, hcirc ω t 0 ∂P = 0 := h.integral_eq_zero (.circle t 0) ht
+  have hcov : covariance (fun ω => hcirc ω s 0) (fun ω => hcirc ω t 0) P =
+      ∫ ω, hcirc ω s 0 * hcirc ω t 0 ∂P :=
+    covariance_eq_integral_of_mean_zero hYc (hY.integrable one_le_two) (hX.integrable_mul hY)
+  rw [← hcov, covariance_symm', covariance_radial_radial h ht hs]
