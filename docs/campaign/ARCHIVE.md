@@ -19,3 +19,7 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/FirstPass/S1d/FinalAxioms.lean | archive/MatedCRT/FirstPass/S1d/FinalAxioms.lean | B06 |
 | MatedCRT/FirstPass/S1d/JointBridge.lean | archive/MatedCRT/FirstPass/S1d/JointBridge.lean | B06 |
 | MatedCRT/FirstPass/S2VG/Wrappers.lean | archive/MatedCRT/FirstPass/S2VG/Wrappers.lean | B07 |
+| MatedCRT/FirstPass/S2g/Assembly24Axioms.lean | archive/MatedCRT/FirstPass/S2g/Assembly24Axioms.lean | B08 |
+| MatedCRT/FirstPass/S2g/FullImageAxioms.lean | archive/MatedCRT/FirstPass/S2g/FullImageAxioms.lean | B08 |
+| MatedCRT/FirstPass/S2g/HVGoodAxioms.lean | archive/MatedCRT/FirstPass/S2g/HVGoodAxioms.lean | B08 |
+| MatedCRT/FirstPass/S2g/LawAxioms.lean | archive/MatedCRT/FirstPass/S2g/LawAxioms.lean | B08 |
