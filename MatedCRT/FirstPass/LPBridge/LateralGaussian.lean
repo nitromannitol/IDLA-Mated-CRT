@@ -104,8 +104,7 @@ theorem ae_radialIntegral_eq_avgRot {P : Measure Ω} [IsProbabilityMeasure P]
 lemma radialKernel_comm (s t : ℝ) :
     Real.log (max s 1) + Real.log (max t 1) - Real.log (max s t)
       = Real.log (max t 1) + Real.log (max s 1) - Real.log (max t s) := by
-  rw [max_comm t s]
-  ring
+  exact LatticeProb.LogPotentialCircle.circleCovariance_comm s t
 
 /-- Second moment of a pairing with a radial test function: `E[hC(ψ)²] = ∫∫ ψ ψ C`. -/
 theorem integral_pairing_sq_eq [IsProbabilityMeasure P] (h : IsWholePlaneGFF P hC hcirc)
