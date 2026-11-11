@@ -1,5 +1,7 @@
 import MatedCRT.LPStaging.Prob.CauchyInProbabilitySubseq
 import MatedCRT.Proofs.Sec3.KilledOccupation.RegClockApprox
+import MatedCRT.Proofs.Sec3.KilledOccupation.LimClockFun
+import MatedCRT.Proofs.Sec3.KilledOccupation.ClockAnnealedCauchy
 
 /-!
 # Identification of the limit clock: Borel-Cantelli transfer from a product measure
@@ -135,7 +137,7 @@ theorem iInf_rat_gt_ofReal_eq {F : ℝ≥0 → ℝ} (hmono : Monotone F) (hcont 
 
 /-- Almost sure subsequential convergence from convergence in measure, uniformly on bounded time intervals: if for every
 `T` and `η > 0` the `μ`-mass of `{∃ t ≤ T, η ≤ |a m b t - F b t|}` tends to `0` along `m`, then along a strictly increasing
-subsequence `k` of `n`, for `μ`-almost every `b`, `a (n (k j)) b t → F b t` for every `t`. This is the step (a) of the
+subsequence `k` of `n`, for `μ`-almost every `b`, `a (n (k j)) b t → F b t` for every `t`. This is the first step of the
 identification of the limit clock (the quenched convergence in probability of `IsLQGClock` gives the hypothesis). -/
 theorem ae_tendsto_subseq_of_tendsto_measure {X : Type*} [MeasurableSpace X] (μ : Measure X)
     (a : ℕ → X → ℝ≥0 → ℝ) (F : X → ℝ≥0 → ℝ) (n : ℕ → ℕ) (hn : StrictMono n)
@@ -163,8 +165,9 @@ theorem ae_tendsto_subseq_of_tendsto_measure {X : Type*} [MeasurableSpace X] (μ
   exact tendsto_sub_nhds_zero_iff.1 h1
 
 /-- If the consecutive ennDist-gaps of the nonnegative sequence `ofReal (x m)` are eventually at most `(1/2)^m` and
-a subsequence converges to `L`, the `limsup` of `ofReal (x m)` is `ofReal L`. This is the form of Step L7(b) that
-uses the Borel-Cantelli gap bound of L6 (`clockGapFun` dominates `ennDist` at each rational time). -/
+a subsequence converges to `L`, the `limsup` of `ofReal (x m)` is `ofReal L`. This is the form used at each rational
+time in the identification of the limit clock, where the Borel-Cantelli gap bound is available (`clockGapFun`
+dominates `ennDist` at each rational time). -/
 theorem limsup_ofReal_eq_of_gap {x : ℕ → ℝ} {L : ℝ} {k : ℕ → ℕ} (hk : StrictMono k) (hx : ∀ m, 0 ≤ x m)
     (hgap : ∀ᶠ m in atTop,
       ennDist (ENNReal.ofReal (x m)) (ENNReal.ofReal (x (m + 1))) ≤ ENNReal.ofReal ((1 / 2 : ℝ) ^ m))
@@ -178,7 +181,7 @@ theorem limsup_ofReal_eq_of_gap {x : ℕ → ℝ} {L : ℝ} {k : ℕ → ℕ} (h
   have hT : Tendsto x atTop (𝓝 L) := tendsto_of_subseq_of_gap_le_geometric_two hk hgap' hsub
   exact ((ENNReal.continuous_ofReal.tendsto L).comp hT).limsup_eq
 
-/-- Borel-Cantelli for the clock gap (Step L6 of the limit-clock identification). Under the hypothesis `hbd` that the
+/-- Borel-Cantelli for the clock gap. Under the hypothesis `hbd` that the
 image `M` of `P ⊗ planarBrownianMotion y` under `(ω, b) ↦ (ψ ω, b)` gives the events `{ofReal ((1/2)^k) < gap k}` mass at
 most `(1/2)^k`, for `P`-almost every `ω` and `planarBrownianMotion y`-almost every `b` the clock gap at the scales
 `ε k`, `ε (k+1)` is eventually at most `(1/2)^k`. -/
@@ -192,10 +195,114 @@ theorem ae_ae_eventually_clockGap_le {Ω : Type*} [MeasurableSpace Ω] (P : Meas
   ae_ae_eventually_le_of_map_prob_le P (planarBrownianMotion y) ψ hψ
     (fun k => clockGapFun γ σ (ε k) (ε (k + 1))) hbd
 
-end MatedCRT.KilledOccupation
+/-- Identification of the limit clock. Let the field `hcirc ω` have a.s. continuous circle averages
+(`hcont`) and let `F ω` be an LQG clock of `hcirc ω` for the planar Brownian motion from `y`, in the sense of
+`IsLQGClock` (`hclk`). Let `n` be a strictly increasing sequence of scales with `dyadicScale (n 0) < 1 - ρ`, and assume
+the summable bounds `hbd` for the gaps of the regularized clocks at the scales `dyadicScale (n k)`. Then for
+`P`-almost every `ω` and `planarBrownianMotion y`-almost every `b`, the limit clock `limClockFun` of the regularized
+clocks along `n` is the clock `F ω b` stopped at the exit time `exitNN z r b` (Duplantier-Sheffield, quantum clock of the
+LQG measure; Berestycki-Powell, Gaussian free field circle averages). -/
+theorem ae_limClockFun_eq_clock {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ ρ r : ℝ) (z y : ℂ) (hr : 0 < r)
+    (hball : Metric.ball z r ⊆ Metric.ball 0 ρ) (hy : y ∈ Metric.ball z r)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (F : Ω → ContinuousPath ℂ → ℝ≥0 → ℝ)
+    (hmeas : ∀ (r : ℝ) (z : ℂ), 0 < r → Measurable fun ω => hcirc ω r z)
+    (hcont : ∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ))
+    (hclk : ∀ᵐ ω ∂P, IsLQGClock planarBrownianMotion γ (hcirc ω) y (F ω) ∧
+      ∀ᵐ b ∂planarBrownianMotion y, IsTimeChangeClock (F ω b))
+    (n : ℕ → ℕ) (hn : StrictMono n) (hn0 : dyadicScale (n 0) < 1 - ρ)
+    (hbd : ∀ k : ℕ, ((P.prod (planarBrownianMotion y)).map fun p : Ω × ContinuousPath ℂ =>
+        ((fun ω (q : UnitDiskCircleIndex) => hcirc ω q.1.1 q.1.2) p.1, p.2))
+        {x | ENNReal.ofReal ((1 / 2 : ℝ) ^ k) <
+          clockGapFun γ (exitNN z r) (dyadicScale (n k)) (dyadicScale (n (k + 1))) x}
+          ≤ ENNReal.ofReal ((1 / 2 : ℝ) ^ k)) :
+    ∀ᵐ ω ∂P, ∀ᵐ b ∂planarBrownianMotion y, ∀ s : ℝ≥0,
+      limClockFun γ (fun k => dyadicScale (n k)) (fun q : UnitDiskCircleIndex => hcirc ω q.1.1 q.1.2)
+        (exitNN z r) b s = ENNReal.ofReal (F ω b (min s (exitNN z r b))) := by
+  have hanti : ∀ m k : ℕ, m ≤ k → dyadicScale k ≤ dyadicScale m := fun m k hmk => by
+    unfold dyadicScale
+    exact pow_le_pow_of_le_one (by norm_num) (by norm_num) hmk
+  have hεpos : ∀ k : ℕ, 0 < dyadicScale (n k) := fun k => by
+    unfold dyadicScale
+    positivity
+  have hεlt : ∀ k : ℕ, dyadicScale (n k) < 1 - ρ := fun k =>
+    lt_of_le_of_lt (hanti _ _ (hn.monotone (Nat.zero_le k))) hn0
+  have hψ : Measurable fun ω (q : UnitDiskCircleIndex) => hcirc ω q.1.1 q.1.2 :=
+    measurable_unitDiskCircle hcirc hmeas
+  have hL6 := ae_ae_eventually_clockGap_le P y γ (exitNN z r) (fun k => dyadicScale (n k))
+    (fun ω (q : UnitDiskCircleIndex) => hcirc ω q.1.1 q.1.2) hψ hbd
+  filter_upwards [hL6, hcont, hclk] with ω h6 hωc hωk
+  obtain ⟨hlq, hTC⟩ := hωk
+  obtain ⟨k, hk, hsub⟩ := ae_tendsto_subseq_of_tendsto_measure (planarBrownianMotion y)
+    (fun m b t => lqgClockApprox γ (hcirc ω) (dyadicScale m) b t) (F ω) n hn
+    (fun T η hη => hlq T η hη)
+  filter_upwards [hsub, ae_planarBrownianMotion_eval_zero y, hTC, h6] with b hb hb0 hT hb6
+  intro s
+  have hq : ∀ q : ℚ≥0, Filter.limsup (fun m => regClockFun γ (dyadicScale (n m))
+      (fun q : UnitDiskCircleIndex => hcirc ω q.1.1 q.1.2) (exitNN z r) b (q : ℝ≥0)) Filter.atTop =
+      ENNReal.ofReal (F ω b (min (q : ℝ≥0) (exitNN z r b))) := by
+    intro q
+    have hL0 : ∀ m : ℕ, regClockFun γ (dyadicScale (n m))
+        (fun q : UnitDiskCircleIndex => hcirc ω q.1.1 q.1.2) (exitNN z r) b (q : ℝ≥0) =
+        ENNReal.ofReal (lqgClockApprox γ (hcirc ω) (dyadicScale (n m)) b
+          (min (q : ℝ≥0) (exitNN z r b))) := fun m =>
+      regClockFun_eq_ofReal_lqgClockApprox (hεpos m) (hεlt m) hωc hr hball hy hb0 (q : ℝ≥0)
+    have hfun : (fun m => regClockFun γ (dyadicScale (n m))
+        (fun q : UnitDiskCircleIndex => hcirc ω q.1.1 q.1.2) (exitNN z r) b (q : ℝ≥0)) =
+        fun m => ENNReal.ofReal (lqgClockApprox γ (hcirc ω) (dyadicScale (n m)) b
+          (min (q : ℝ≥0) (exitNN z r b))) := funext hL0
+    have hgap : ∀ᶠ m in Filter.atTop,
+        ennDist (ENNReal.ofReal (lqgClockApprox γ (hcirc ω) (dyadicScale (n m)) b (min (q : ℝ≥0) (exitNN z r b))))
+          (ENNReal.ofReal (lqgClockApprox γ (hcirc ω) (dyadicScale (n (m + 1))) b
+            (min (q : ℝ≥0) (exitNN z r b)))) ≤ ENNReal.ofReal ((1 / 2 : ℝ) ^ m) := by
+      filter_upwards [hb6] with m hm
+      rw [← hL0 m, ← hL0 (m + 1)]
+      exact (le_iSup (fun q' : ℚ≥0 => ennDist (regClockFun γ (dyadicScale (n m))
+        (fun q : UnitDiskCircleIndex => hcirc ω q.1.1 q.1.2) (exitNN z r) b (q' : ℝ≥0))
+        (regClockFun γ (dyadicScale (n (m + 1)))
+        (fun q : UnitDiskCircleIndex => hcirc ω q.1.1 q.1.2) (exitNN z r) b (q' : ℝ≥0))) q).trans hm
+    rw [hfun]
+    exact limsup_ofReal_eq_of_gap hk (fun m => lqgClockApprox_nonneg (hεpos m) (hcirc ω) b _) hgap
+      (hb (min (q : ℝ≥0) (exitNN z r b)))
+  have hiInf : (⨅ q : {q : ℚ≥0 // s < (q : ℝ≥0)}, Filter.limsup (fun m => regClockFun γ (dyadicScale (n m))
+      (fun q : UnitDiskCircleIndex => hcirc ω q.1.1 q.1.2) (exitNN z r) b (q.1 : ℝ≥0)) Filter.atTop) =
+      ⨅ q : {q : ℚ≥0 // s < (q : ℝ≥0)}, ENNReal.ofReal (F ω b (min (q.1 : ℝ≥0) (exitNN z r b))) :=
+    iInf_congr fun q => hq q.1
+  show (⨅ q : {q : ℚ≥0 // s < (q : ℝ≥0)}, Filter.limsup (fun m => regClockFun γ (dyadicScale (n m))
+      (fun q : UnitDiskCircleIndex => hcirc ω q.1.1 q.1.2) (exitNN z r) b (q.1 : ℝ≥0)) Filter.atTop) = _
+  rw [hiInf]
+  exact iInf_rat_gt_ofReal_eq hT.strictMono.monotone hT.continuous (exitNN z r b) s
 
-#print axioms MatedCRT.KilledOccupation.ae_ae_eventually_clockGap_le
-#print axioms MatedCRT.KilledOccupation.ae_ae_eventually_le_of_map_prob_le
-#print axioms MatedCRT.KilledOccupation.iInf_rat_gt_ofReal_eq
-#print axioms MatedCRT.KilledOccupation.exists_strictMono_ae_eventually_notMem
-#print axioms MatedCRT.KilledOccupation.tendsto_of_subseq_of_gap_le_geometric_two
+/-- The quantum cone instance of the identification of the limit clock. For a valid mated-CRT environment `S` there
+is a strictly increasing sequence `n` of dyadic scales, with `dyadicScale (n 0) < 1 - ρ`, such that the consecutive gaps
+of the regularized clocks satisfy the summable bounds under the coupled law `clockAnnealedLaw S.P S.hcirc y` of the
+circle averages and the planar Brownian motion from `y`, and such that the limit clock along `n` is the clock `S.clock`
+of Liouville Brownian motion stopped at the exit time of `ball z r`. The bounds are part of the conclusion because they
+depend only on the coupled law, so they hold for any field with the same law of circle averages. -/
+theorem exists_strictMono_ae_limClockFun_eq_clock_cone {Ω : Type} [MeasurableSpace Ω] (𝒮 : SpaceFillingSLEModel)
+    (γ ρ : ℝ) (hρ : ρ < 1) (z y : ℂ) (r : ℝ) (hr : 0 < r) (hball : Metric.ball z r ⊆ Metric.ball 0 ρ)
+    (hy : y ∈ Metric.ball z r) (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ) :
+    ∃ n : ℕ → ℕ, StrictMono n ∧ dyadicScale (n 0) < 1 - ρ ∧
+      (∀ k : ℕ, clockAnnealedLaw S.P S.hcirc y
+        {x | ENNReal.ofReal ((1 / 2 : ℝ) ^ k) <
+          clockGapFun γ (exitNN z r) (dyadicScale (n k)) (dyadicScale (n (k + 1))) x}
+          ≤ ENNReal.ofReal ((1 / 2 : ℝ) ^ k)) ∧
+      ∀ᵐ ω ∂S.P, ∀ᵐ b ∂planarBrownianMotion y, ∀ s : ℝ≥0,
+        limClockFun γ (fun k => dyadicScale (n k)) (clockPsi S.hcirc ω) (exitNN z r) b s =
+          ENNReal.ofReal (S.clock ω b (min s (exitNN z r b))) := by
+  have hanti : ∀ m k : ℕ, m ≤ k → dyadicScale k ≤ dyadicScale m := fun m k hmk => by
+    unfold dyadicScale
+    exact pow_le_pow_of_le_one (by norm_num) (by norm_num) hmk
+  obtain ⟨n₀, hn₀⟩ : ∃ n₀ : ℕ, dyadicScale n₀ < 1 - ρ := by
+    obtain ⟨m, hm⟩ := exists_pow_lt_of_lt_one (sub_pos.2 hρ) (by norm_num : (1 / 2 : ℝ) < 1)
+    refine ⟨m, ?_⟩
+    unfold dyadicScale
+    simpa using hm
+  obtain ⟨n, hn, hn0, hbd⟩ := LatticeProb.exists_strictMono_prob_le_of_cauchy (clockAnnealedLaw S.P S.hcirc y)
+    (fun a b => clockGapFun γ (exitNN z r) (dyadicScale a) (dyadicScale b))
+    (tendsto_clockGap_cone 𝒮 γ ρ hρ z y r hr hball hy S hS) n₀
+  have hn0' : dyadicScale (n 0) < 1 - ρ := lt_of_le_of_lt (hanti _ _ hn0) hn₀
+  exact ⟨n, hn, hn0', hbd,
+    ae_limClockFun_eq_clock S.P γ ρ r z y hr hball hy S.hcirc S.clock hS.isQuantumCone.measurable_circle
+      hS.isQuantumCone.ae_continuousOn_circle (hS.isLQGClock.mono fun ω h => h y) n hn hn0' hbd⟩
+
+end MatedCRT.KilledOccupation
