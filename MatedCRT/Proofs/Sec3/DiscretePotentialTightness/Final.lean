@@ -4,7 +4,7 @@ import MatedCRT.Proofs.Sec3.DiscretePotentialTightness.Main
 # Lemma 3.1 (corrected): final form
 
 `discretePotentialTightnessCorrected_of_inputs` proves `DiscretePotentialTightnessCorrectedStmt`
-(MatedCRT/Steps/Sec3/DiscretePotentialTightness.lean; Lemma 3.1 with the changes N1, `D` open (E-c1-4) and N3).
+(MatedCRT/Steps/Sec3/DiscretePotentialTightness.lean; Lemma 3.1 with the changes N1, `D` open and N3).
 Its hypotheses are:
 
 * `MepsScalingInput` (External, MatedCRT/External/SLE.lean; eq:meps-scaling, BG20 (1.8)), cited;
