@@ -1,0 +1,1 @@
+-- scratch (not committed; owned by c1): name checks for MatedCRT/Proofs/Sec4/Equibounded.lean. Intentionally empty.

@@ -1,0 +1,2 @@
+import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.PlanarBrownianIncrement
+#print axioms MatedCRT.integrableOn_planar_norm_rpow

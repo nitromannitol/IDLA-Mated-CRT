@@ -1,0 +1,2 @@
+import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.GMCVersionComparison
+#print axioms MatedCRT.tendsto_gmc_mass_L1_of_regularization_versions

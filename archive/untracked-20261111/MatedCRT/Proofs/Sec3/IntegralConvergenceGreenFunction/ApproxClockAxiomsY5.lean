@@ -1,0 +1,4 @@
+import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.PathOccupationEnergy
+#print axioms MatedCRT.measurable_rieszEnergyKernel
+#print axioms MatedCRT.pathOccupationMeasure_finiteDimensionalEnergy_of_increment_energy
+#print axioms MatedCRT.ae_pathOccupationMeasure_riesz_energy_lt_top

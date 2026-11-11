@@ -1,0 +1,2 @@
+import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.DirectIdentification
+#print axioms MatedCRT.bmEdgeCount_ne_zero_of_directRel

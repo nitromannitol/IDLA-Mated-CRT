@@ -1,0 +1,2 @@
+import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.OccupationMassExpectation
+#print axioms MatedCRT.IsWholePlaneGFF.occupation_mass_limit_expectation

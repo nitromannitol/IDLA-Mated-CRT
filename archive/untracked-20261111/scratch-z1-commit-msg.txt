@@ -1,0 +1,12 @@
+Ledger: counted rows for 6.1, 7.1, 8.1 and LP rewires; Lemma 3.6 provenance rows; PHASE2 (b) status
+
+- COUNTED.md: rows 6.1, 7.1, 8.1 now count closed_6_1_clean, closed_7_1_clean, closed_8_1_full (replacing
+  firstPass_6_1_corrected, firstPass_7_1, firstPass_8_1); binder classes recounted from the signatures.
+- COUNTED.md: LP rows 6.1lp, 7.1lp, 8.1lp, 4.2lp, 5.1lp, 5.3lp, 5.4lp (commits 7b19a40a, a04b0cb4, e2d3bf22).
+- COUNTED.md: row 3.6 marked CONDITIONAL on hBE (FALSE as typed); hBE status updated.
+- COUNTED.md: Appendix B section with frozenLBMGreenOccupationRescaled closed, closed2, closed3, closed4 binders.
+- FROZEN-PROVENANCE.md: rows 81 (FrozenOneSidedBoundaryContinuity, FALSE as typed) and 82 (its Floored form,
+  PENDING TRUTH CHECK MQ-li-7a); summary 82 rows.
+- PHASE2-INVENTORY.md: status column of the (b) table refreshed from the LPBridge concluders (11 discharged, 7 not started).
+
+Co-Authored-By: Claude Haiku 5.5 <noreply@anthropic.com>

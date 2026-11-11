@@ -1,0 +1,45 @@
+import MatedCRT.Audit.CorrectedForms
+import MatedCRT.Proofs.Infra.MatingOfTrees
+import MatedCRT.External.SLE
+import Mathlib.Analysis.Convex.Contractible
+
+/-! PROBE (worker A, never commit). -/
+
+open MatedCRT
+#print MatedCRT.MatedMapStructureStep
+#print MatedCRT.IsLocallyFiniteMult
+#check @MatedCRT.mLaplacian_const_mul
+#check @MatedCRT.Sec7.mLaplacian_const_mul
+#check @MatedCRT.mdeg_pos_of_ne_zero
+#check @MatedCRT.WalkPotential.mLaplacian_greenFn
+#check @MatedCRT.greenKernel_laplacian_of_firstStep
+#check @MatedCRT.Sec7.mLaplacian_stoppedOdometer
+#check @Complex.norm_real
+#check @Complex.abs_re_le_norm
+#check @Metric.continuousOn_iff
+#check @Metric.tendstoUniformlyOn_iff
+#check @Metric.uniformContinuousOn_iff
+#check @IsCompact.uniformContinuousOn_of_continuous
+#check @Filter.mem_cocompact
+#check @IsCompact.compl_mem_cocompact
+#check @finsum_sub_distrib
+#check @finsum_mul
+#check @single_le_finsum
+#check @finsum_nonneg
+#check @map_finsum
+#check @Real.continuousAt_rpow_const
+#check @ENNReal.ofReal_lt_one
+#check @IsOpen.inter_frontier_eq
+#check @Metric.diam_mono
+#check @Metric.dist_le_diam_of_mem
+#check @Nat.cast_finsum
+#check @mem_ball_zero_iff
+#check @Complex.dist_eq
+#check @Complex.norm_I
+#check @Int.ceil_lt_add_one
+#check @Nat.find_min
+#check @Set.ncard_pos
+#check @Real.iSup_le
+#check @IsClosed.notMem_iff_infDist_pos
+#check @Metric.infDist_le_dist_of_mem
+#check @MatedCRT.MatedCRTEnv.mult_symm

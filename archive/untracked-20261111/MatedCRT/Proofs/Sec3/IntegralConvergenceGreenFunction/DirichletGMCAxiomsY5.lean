@@ -1,0 +1,4 @@
+import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.DirichletGMCExpectation
+import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ClockGMCNormalization
+#print axioms MatedCRT.IsDirichletGFF.gmcApprox_integral_real_apply
+#print axioms MatedCRT.gmcApprox_eq_clock_density

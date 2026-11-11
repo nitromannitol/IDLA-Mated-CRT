@@ -1,0 +1,3 @@
+import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.WholePlaneClockExpectation
+#print axioms MatedCRT.IsWholePlaneGFF.clockDensity_integral_real_apply
+#print axioms MatedCRT.IsWholePlaneGFF.circle_secondMoment_inside_unit

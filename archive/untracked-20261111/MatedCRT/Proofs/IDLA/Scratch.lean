@@ -1,0 +1,1 @@
+-- c2 scratch file for name lookups (#check); untracked, not part of the build.

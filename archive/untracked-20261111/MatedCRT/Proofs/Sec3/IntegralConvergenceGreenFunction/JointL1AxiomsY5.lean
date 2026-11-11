@@ -1,0 +1,4 @@
+import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.JointL1Convergence
+import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ConditionalMassBound
+#print axioms MatedCRT.tendsto_integral_norm_prod_of_conditional_L1
+#print axioms MatedCRT.integral_abs_sub_le_twice_mean

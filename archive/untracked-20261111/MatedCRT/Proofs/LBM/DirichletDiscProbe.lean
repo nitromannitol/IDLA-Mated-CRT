@@ -1,0 +1,31 @@
+import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.GeneralPotentialTranslation
+import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.DirichletUniqueness
+import MatedCRT.Proofs.Sec4.ConvergenceDivisible.VolumeGrowthInsideUnit
+import HarmonicBalls.Proofs.Sec6.DiscPotentialHolderTranslation
+import HarmonicBalls.Proofs.Sec3.ClusterCompatibility
+
+/-! PROBE (c1, not to be committed). -/
+open MeasureTheory
+#check @ContinuousOn.measurable_piecewise
+#check @Set.piecewise_eq_indicator
+#check @aestronglyMeasurable_indicator_iff
+#check @memLp_top_of_bound
+#check @MeasureTheory.IntegrableOn.congr_fun
+#check @setIntegral_withDensity_eq_setIntegral_toReal_smul
+#check @MeasureTheory.restrict_withDensity
+#check @MeasureTheory.withDensity_congr_ae
+#check @MeasureTheory.withDensity_smul
+#check @MeasureTheory.integrableOn_iff_integrable_of_support_subset
+#check @MeasureTheory.setIntegral_eq_integral_of_forall_compl_eq_zero
+#check @HarmonicBalls.integrable_mul_laplacian_of_test
+#check @HarmonicBalls.Section6.greenPotential_disc_holderOnWith_of_volumeGrowth
+#check @MatedCRT.MatedCRTEnv.IsValid.ae_volumeGrowth_inside_unit
+#print HarmonicBalls.VolumeGrowth
+#check @MatedCRT.VolumeGrowthStmt
+#check @HarmonicBalls.IsLQGMeasure.isLocallyFiniteMeasure
+#check @MatedCRT.hasLaplacian_const_mul_zero_left
+#check @MatedCRT.ballGreenPotential_hasLaplacian_of_upper
+#check @HarmonicBalls.hasLaplacian_zero_of_harmonicOnNhd
+#check @HolderOnWith.continuousOn
+#check @MeasureTheory.withDensity_mono
+#check @MeasureTheory.Measure.isLocallyFiniteMeasure_of_le

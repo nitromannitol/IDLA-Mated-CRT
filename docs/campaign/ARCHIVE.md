@@ -516,3 +516,63 @@ Each batch is `git mv`ed from `MatedCRT/` to `archive/MatedCRT/` in import order
 | MatedCRT/FirstPass/S2h/CertRel.lean | archive/MatedCRT/FirstPass/S2h/CertRel.lean | R2-B20 |
 
 Checks after the last R2 batch (R2-B20, commit 1c285f95): `lb MatedCRT.Audit.CountedAxioms` BUILD OK (log logs/lb/120749-3415599.log); `lc` strict CHECK OK for `MatedCRT/Assembly/Main.lean` (log logs/lc/120740-3415276.log). Dangling imports from `MatedCRT/` files: 11, all from untracked files under `MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/` that import modules archived in earlier rounds (not from R2 batches).
+
+## Untracked files, 2026-11-11 (operator decision)
+
+Operator decision (tasks/li.md, decisions (1) and (3), 2026-11-11 12:25 UTC): untracked files of unknown owner are archived here. Each file was moved with a plain `mv` (nothing deleted) and then `git add`ed at its new path. Classes: `26` = the 26 files of `notes/untracked-152.md`; `probe` = untracked `*Probe*` files under `MatedCRT/` that are not under `MatedCRT/LPStaging/`, were not modified in the 60 minutes before the move, and are not named in a `tasks/*.md` of mcrt or hb; `other` = `scratch-z1-commit-msg.txt` (repository root) and `docs/campaign/ESCALATIONS.md` (untracked, one blank line).
+
+Checks before the move: no tracked file and no untracked file imports a moved module (`git grep` and `grep` of `import <module>` for each moved `.lean` file: 0 hits).
+
+Left in place (untracked, not moved): `MatedCRT/LPStaging/Analysis/z8ProbeAll.lean`, `z8ProbeAxioms.lean`, `z8ProbeB.lean`, `z8ProbeC.lean`, `z8ProbeF.lean`, `z8ProbeLap.lean`, `z8ProbeT.lean` (LPStaging rule); `MatedCRT/LPStaging/Analysis/LogPotentialCircle.lean`, `MatedCRT/LPStaging/Analysis/TestFunctionLogIntegrable.lean`, `MatedCRT/LPStaging/Prob/GaussianShiftMoment.lean` (LPStaging, not in the lists).
+
+| old path | new path | class |
+|---|---|---|
+| MatedCRT/Proofs/Field/ConeLateralLevel.lean | archive/untracked-20261111/MatedCRT/Proofs/Field/ConeLateralLevel.lean | 26 |
+| MatedCRT/Proofs/Field/ConeRadialRiemann.lean | archive/untracked-20261111/MatedCRT/Proofs/Field/ConeRadialRiemann.lean | 26 |
+| MatedCRT/Proofs/IDLA/NamesY2.lean | archive/untracked-20261111/MatedCRT/Proofs/IDLA/NamesY2.lean | 26 |
+| MatedCRT/Proofs/IDLA/Scratch.lean | archive/untracked-20261111/MatedCRT/Proofs/IDLA/Scratch.lean | 26 |
+| MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/AxiomCheckY5.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/AxiomCheckY5.lean | 26 |
+| MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/CellCoverAxiomsY5.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/CellCoverAxiomsY5.lean | 26 |
+| MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/DirectIdentificationAxiomsY5.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/DirectIdentificationAxiomsY5.lean | 26 |
+| MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/FiberChainAxiomsY5.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/FiberChainAxiomsY5.lean | 26 |
+| MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/Decomposition.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/Decomposition.lean | 26 |
+| MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/ApproxClockAxiomsY5.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/ApproxClockAxiomsY5.lean | 26 |
+| MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/ClockSubstitutionAxiomsY5.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/ClockSubstitutionAxiomsY5.lean | 26 |
+| MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/DirichletGMCAxiomsY5.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/DirichletGMCAxiomsY5.lean | 26 |
+| MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/EnergyAxiomsY5.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/EnergyAxiomsY5.lean | 26 |
+| MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/GMCExpectationAxiomsY5.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/GMCExpectationAxiomsY5.lean | 26 |
+| MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/GMCVersionL1AxiomsY5.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/GMCVersionL1AxiomsY5.lean | 26 |
+| MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/JointL1AxiomsY5.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/JointL1AxiomsY5.lean | 26 |
+| MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/OccupationExitAxiomsY5.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/OccupationExitAxiomsY5.lean | 26 |
+| MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/OccupationMassLimitAxiomsY5.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/OccupationMassLimitAxiomsY5.lean | 26 |
+| MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/WholePlaneClockAxiomsY5.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/WholePlaneClockAxiomsY5.lean | 26 |
+| MatedCRT/Proofs/Sec4/ConvergenceDivisible/ExternalConeScalePositivity.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec4/ConvergenceDivisible/ExternalConeScalePositivity.lean | 26 |
+| MatedCRT/Proofs/Sec4/EquiboundedScratch.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec4/EquiboundedScratch.lean | 26 |
+| MatedCRT/Proofs/Sec6/ChanceOfBeingAbsorbed/NameCheck.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec6/ChanceOfBeingAbsorbed/NameCheck.lean | 26 |
+| MatedCRT/Proofs/Sec6/ConstantOrderLowerBound/NameCheck.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec6/ConstantOrderLowerBound/NameCheck.lean | 26 |
+| MatedCRT/Proofs/Sec6/IDLAUpperBound/PrintScratch.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec6/IDLAUpperBound/PrintScratch.lean | 26 |
+| MatedCRT/Proofs/WalkPotential/Scratch.lean | archive/untracked-20261111/MatedCRT/Proofs/WalkPotential/Scratch.lean | 26 |
+| MatedCRT/Steps/Sec4/Scratch.lean | archive/untracked-20261111/MatedCRT/Steps/Sec4/Scratch.lean | 26 |
+| MatedCRT/Assembly/EnvProbe.lean | archive/untracked-20261111/MatedCRT/Assembly/EnvProbe.lean | probe |
+| MatedCRT/Assembly/EnvProbe7.lean | archive/untracked-20261111/MatedCRT/Assembly/EnvProbe7.lean | probe |
+| MatedCRT/Assembly/EnvProbe7b.lean | archive/untracked-20261111/MatedCRT/Assembly/EnvProbe7b.lean | probe |
+| MatedCRT/Assembly/ScanProbe.lean | archive/untracked-20261111/MatedCRT/Assembly/ScanProbe.lean | probe |
+| MatedCRT/Assembly/SigProbe.lean | archive/untracked-20261111/MatedCRT/Assembly/SigProbe.lean | probe |
+| MatedCRT/Audit/RefutationsProbe.lean | archive/untracked-20261111/MatedCRT/Audit/RefutationsProbe.lean | probe |
+| MatedCRT/FirstPass/S4d/AxProbe42.lean | archive/untracked-20261111/MatedCRT/FirstPass/S4d/AxProbe42.lean | probe |
+| MatedCRT/FirstPass/S6j/AxProbeFiniteExit.lean | archive/untracked-20261111/MatedCRT/FirstPass/S6j/AxProbeFiniteExit.lean | probe |
+| MatedCRT/Proofs/Field/ConeProbe.lean | archive/untracked-20261111/MatedCRT/Proofs/Field/ConeProbe.lean | probe |
+| MatedCRT/Proofs/Infra/LedgerProbe.lean | archive/untracked-20261111/MatedCRT/Proofs/Infra/LedgerProbe.lean | probe |
+| MatedCRT/Proofs/Infra/LedgerProbe2.lean | archive/untracked-20261111/MatedCRT/Proofs/Infra/LedgerProbe2.lean | probe |
+| MatedCRT/Proofs/Infra/LedgerProbe3.lean | archive/untracked-20261111/MatedCRT/Proofs/Infra/LedgerProbe3.lean | probe |
+| MatedCRT/Proofs/Infra/SourceProbe.lean | archive/untracked-20261111/MatedCRT/Proofs/Infra/SourceProbe.lean | probe |
+| MatedCRT/Proofs/LBM/DirichletDiscProbe.lean | archive/untracked-20261111/MatedCRT/Proofs/LBM/DirichletDiscProbe.lean | probe |
+| MatedCRT/Proofs/Measurability/Probe.lean | archive/untracked-20261111/MatedCRT/Proofs/Measurability/Probe.lean | probe |
+| MatedCRT/Proofs/Sec1/Probe.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec1/Probe.lean | probe |
+| MatedCRT/Proofs/Sec2/LQGMeasureProperties/Probe.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec2/LQGMeasureProperties/Probe.lean | probe |
+| MatedCRT/Proofs/Sec2/VolumeGrowthHalf/Probe.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec2/VolumeGrowthHalf/Probe.lean | probe |
+| MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/Probe.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/Probe.lean | probe |
+| MatedCRT/Proofs/Sec4/SubsequentialProperties/Probe.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec4/SubsequentialProperties/Probe.lean | probe |
+| MatedCRT/Proofs/Sec5/MeanValueInequality/HBProbe.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec5/MeanValueInequality/HBProbe.lean | probe |
+| scratch-z1-commit-msg.txt | archive/untracked-20261111/scratch-z1-commit-msg.txt | other |
+| docs/campaign/ESCALATIONS.md | archive/untracked-20261111/docs/campaign/ESCALATIONS.md | other |

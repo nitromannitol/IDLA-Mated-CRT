@@ -1,0 +1,1 @@
+-- superseded by MatedCRT/Proofs/Field/ConeRadialSums.lean (c2 WIP, untracked; safe to delete)
