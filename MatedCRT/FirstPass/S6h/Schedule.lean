@@ -11,7 +11,7 @@ import MatedCRT.FirstPass.S4S6c.Uniform68Round
 /-!
 # The concrete test schedule of Lemma 6.8
 
-Write-up C1-C3 and bridge note §3, Steps B-F: the grid centre `z_j = Q_δ(η(X_{T_j}))`, the first-good radius
+Write-up C1-C3 and bridge argument §3, Steps B-F: the grid centre `z_j = Q_δ(η(X_{T_j}))`, the first-good radius
 `R_j = R_{z_j}` (A5, `Lemma68Radius.firstGoodRadius`, default `δ`), the window `W(y) = I(B_{2R}(z))` at the state `y`, the
 successive exit times `T_{j+1} = nextExit W T_j` (`cfgExit`, equal to `Lemma68Successive.exitSchedule` by
 `cfgExit_eq_exitSchedule`), the count `N = ⌊r/(100 s)⌋`, `s = √δ`.
@@ -149,7 +149,7 @@ lemma natCast_sub_lt_of_lt_add {k n : ℕ} {v : ℕ∞} (hkn : k ≤ n) (h : (n 
     exact ENat.natCast_lt_natCast.2 (by omega)
 
 /-- With the successive exit times of a constant window, the test event `G_j` is the walk test event after `T_j`
-(bridge note (4); `nextExit` unfolds to `T_j + vExitTime (W (X_{T_j})) (shift)`). -/
+(bridge argument (4); `nextExit` unfolds to `T_j + vExitTime (W (X_{T_j})) (shift)`). -/
 lemma testHit_eq_walkTestEvent (W : ℤ → Set ℤ) (A : Set ℤ) (j : ℕ) :
     walkTestEvent (exitSchedule W j) (fun y => testEvent W A y) =
       Lemma68Config.testHit A (exitSchedule W) j := by
@@ -201,7 +201,7 @@ noncomputable def cfgWindow (ε : ℝ) (η : ℝ → ℂ) (p r : ℝ) (good : �
   interiorCellVertices ε η
     (Metric.ball (cfgCentre ε η p r y) (2 * cfgStateRadius ε η p r good y))
 
-/-- The count `N = ⌊r/(100 s)⌋` with `s = √δ` (write-up C1, Step B of the bridge note). -/
+/-- The count `N = ⌊r/(100 s)⌋` with `s = √δ` (write-up C1, Step B of the bridge argument). -/
 noncomputable def cfgCount (p r : ℝ) : ℕ :=
   ⌊r / (100 * Real.sqrt (Delta p r))⌋₊
 
@@ -339,7 +339,7 @@ theorem outerTestBound_of_state (m : ℤ → ℤ → ℕ) (a : ℤ) (ε : ℝ) (
     rw [hmin] at h2
     exact h2
 
-/-- **Concrete configuration schedule (Lemma 6.8, bridge note §3 Steps B-F).** `TestSchedule.Valid` holds for the concrete
+/-- **Concrete configuration schedule (Lemma 6.8, bridge argument §3 Steps B-F).** `TestSchedule.Valid` holds for the concrete
 schedule `cfgSchedule` on `ν = srwLaw m a`, from the environment inputs `hproper` (η continuous and proper), `hlf`, `hcons`
 (local finiteness of the walk law), the per-state bound `hpt` (`OuterTestBound`, write-up C4) and the containment `hC12`
 (`ConcreteC12`, write-up C12). The almost-sure finiteness of the exits and `hstep` (C15) are proved. -/
@@ -388,7 +388,7 @@ theorem cfgSchedule_valid (ε : ℝ) (η : ℝ → ℂ) {p r ζ qStar : ℝ} (go
 
 /-! ### The configuration bound for the concrete schedule -/
 
-/-- **Lemma 6.8 for the concrete schedule (bridge note §3, assembled).** The configuration bound
+/-- **Lemma 6.8 for the concrete schedule (bridge argument §3, assembled).** The configuration bound
 `configuration_le_pow` holds with the schedule `cfgSchedule ε (S.η ω) p r (good ε ω)`, on the good event `E ε ∩ G`, for
 every configuration with the guard `FullAdm`. Named inputs: `hEnv` (η continuous and proper), `hlf` (local finiteness and
 the consecutive-edge condition of the walk law `S.mult ε ω`), `hstate` (the per-state inputs `StateTestInputs` of C4,

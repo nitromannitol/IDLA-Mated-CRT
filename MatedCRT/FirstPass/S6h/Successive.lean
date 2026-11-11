@@ -103,7 +103,7 @@ theorem srwLaw_exitEvent_le_pow (m : ℤ → ℤ → ℕ) (a : ℤ) (W : ℤ →
     rfl (fun N => rfl) hc hSY N
   exact (measure_mono_ae (exitEvent_ae_le_passSet W A U N hC12)).trans h1
 
-/-- **The configuration bound in real form** (bridge note §3, display (10)): with the uniform per-test constant
+/-- **The configuration bound in real form** (bridge argument §3, display (10)): with the uniform per-test constant
 `x0 = 1 - q0/(1+log(1/r))²`, the real quenched exit probability is at most `x0^N`. -/
 theorem exitEvent_real_le_pow (m : ℤ → ℤ → ℕ) (a : ℤ) (W : ℤ → Set ℤ) (A U : Set ℤ) (N : ℕ) {x0 : ℝ}
     (hx0 : 0 ≤ x0) (hC12 : ∀ᵐ x ∂srwLaw m a, exitSchedule W N x < vExitTime U x)

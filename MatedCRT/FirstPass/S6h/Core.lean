@@ -27,7 +27,7 @@ namespace MatedCRT
 
 namespace Lemma68Config
 
-/-- A configuration of Lemma 6.8 (bridge note §1): the frozen cell set `F0`, the blocked set `Θ`, the target set `A` and
+/-- A configuration of Lemma 6.8 (bridge argument §1): the frozen cell set `F0`, the blocked set `Θ`, the target set `A` and
 the start vertex `a` (the vertex `i.a` of `srwLaw`). -/
 structure Config68 where
   F0 : Finset ℤ
@@ -35,7 +35,7 @@ structure Config68 where
   A : Finset ℤ
   a : ℤ
 
-/-- The radius-independent part of the configuration guard (bridge note §2.1). -/
+/-- The radius-independent part of the configuration guard (bridge argument §2.1). -/
 def ConfigOK {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ρ s₀ ε : ℝ) (ω : Ω) (i : Config68) : Prop :=
   (↑i.F0 : Set ℤ) = cellVertices ε (S.η ω) (Metric.ball 0 ρ) ∧
     closure (fillCells ε (S.η ω) (↑i.Θ : Set ℤ)) ⊆ Metric.ball 0 (ρ / 2) ∧
@@ -75,24 +75,24 @@ def FullAdm {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ρ s₀ γ ε
   ConfigOK S ρ s₀ ε ω i ∧
     Lemma68Admissible.Admissible ε (S.η ω) i.Θ i.F0 i.A i.a (1 / 4) ((2 + γ) ^ 2 / 2 + 1) r
 
-/-- The raw quenched exit probability `exitQ` (bridge note §1): `P^a(exitEvent U A)` for the simple random walk law
+/-- The raw quenched exit probability `exitQ` (bridge argument §1): `P^a(exitEvent U A)` for the simple random walk law
 `srwLaw (S.mult ε ω) i.a` and the killed set `U = killed ε η Θ F0 r`. -/
 noncomputable def exitQ {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ε : ℝ) (ω : Ω) (r : ℝ)
     (i : Config68) : ℝ :=
   (srwLaw (S.mult ε ω) i.a).real
     (Lemma68Walk.exitEvent (Lemma68Admissible.killed ε (S.η ω) i.Θ i.F0 r) (↑i.A : Set ℤ))
 
-/-- The test-hit event `G_j` of test `j` (bridge note §3 Step C, (3)): the walk leaves `A` between the test times
+/-- The test-hit event `G_j` of test `j` (bridge argument §3 Step C, (3)): the walk leaves `A` between the test times
 `T j` and `T (j+1)`. -/
 def testHit (A : Set ℤ) (T : ℕ → (ℕ → ℤ) → ℕ∞) (j : ℕ) : Set (ℕ → ℤ) :=
   {x | ∃ n : ℕ, T j x ≤ n ∧ (n : ℕ∞) < T (j + 1) x ∧ x n ∉ A}
 
-/-- The failure events `H_N` of the test chain (bridge note (3)): `H 0 = univ`, `H (j+1) = H j ∩ (G_j)ᶜ`. -/
+/-- The failure events `H_N` of the test chain (bridge argument (3)): `H 0 = univ`, `H (j+1) = H j ∩ (G_j)ᶜ`. -/
 def testFail (A : Set ℤ) (T : ℕ → (ℕ → ℤ) → ℕ∞) : ℕ → Set (ℕ → ℤ)
   | 0 => univ
   | j + 1 => testFail A T j ∩ (testHit A T j)ᶜ
 
-/-- Unfolded form of `H_N` (bridge note (4)): the path avoids `A` at every time of every test interval `j < N`. -/
+/-- Unfolded form of `H_N` (bridge argument (4)): the path avoids `A` at every time of every test interval `j < N`. -/
 theorem mem_testFail_iff (A : Set ℤ) (T : ℕ → (ℕ → ℤ) → ℕ∞) (x : ℕ → ℤ) (N : ℕ) :
     x ∈ testFail A T N ↔ ∀ j < N, x ∉ testHit A T j := by
   induction N with
@@ -112,7 +112,7 @@ theorem rAmp_le_one (q0 ζ : ℝ) : Lemma68Cutoff.rAmp q0 ζ ≤ 1 := by
   unfold Lemma68Cutoff.rAmp
   exact min_le_left _ _
 
-/-- The concrete test schedule of one configuration (bridge note §3 Steps B–C; write-up C1–C3): the test count `N`,
+/-- The concrete test schedule of one configuration (bridge argument §3 Steps B–C; write-up C1–C3): the test count `N`,
 the test times `T j`, the radii `R j` and the stopping σ-algebras `m j = F_{T_j}`. Its properties are in `Valid`. -/
 structure TestSchedule where
   N : ℕ
@@ -172,7 +172,7 @@ theorem configuration_le_pow_of_schedule {ν : Measure (ℕ → ℤ)} [IsProbabi
     (testFail A sc.T) rfl (fun j => rfl) hV.hstep sc.N
   exact (measureReal_le_of_ae_le hD).trans hC17
 
-/-- (Lemma 6.8, per configuration; bridge note §3, `configuration_le_pow`) On the good event `E ε ∩ G`, for every admissible
+/-- (Lemma 6.8, per configuration; bridge argument §3, `configuration_le_pow`) On the good event `E ε ∩ G`, for every admissible
 radius `r ∈ [α ε, dd ω]` and every configuration satisfying the guard `FullAdm`, the exit probability `exitQ` is at most
 `(1 - q0/(1+log(1/r))²)^N` for a count `N ≥ r^(-ζ)/200`. The schedule `sc` (C1–C3) and its inputs C12, C15 are the
 hypotheses `hsch`. -/
