@@ -157,7 +157,7 @@ theorem normalizedExitInteriorStep_of_statements (𝒮 : SpaceFillingSLEModel)
   exact normalizedExitInterior_of_statements 𝒮 h33 h35 h217 h218 hAe hγ hγ2 hρ hρ1 S hS hr hr' hball
 
 /-- **Lemma 3.7** from Lemmas 3.3, 3.5, 2.17, 2.18 and Lemma 3.1 (corrected, almost-sure hypotheses,
-`DiscretePotentialTightnessAeStep`; E-c2-6). Lemma 3.2 is not used. -/
+`DiscretePotentialTightnessAeStep`). Lemma 3.2 is not used. -/
 theorem convergenceNormalizedExitTime_of_statements (𝒮 : SpaceFillingSLEModel)
     (h33 : UniformConvergenceGreenKernelStmt 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
     (h217 : BoundedExitTimeRVStmt) (h218 : ExitTimeUpperBoundStmt 𝒮)
