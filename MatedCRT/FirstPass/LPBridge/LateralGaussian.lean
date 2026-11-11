@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.LPBridge.WholePlaneGFFLateral
 import MatedCRT.FirstPass.LPBridge.RotationalAverage
+import MatedCRT.LPStaging.Bonanno.RadialPointRotation
 
 /-!
 # Gaussianity of the lateral family of the whole-plane GFF (N2)
@@ -80,9 +81,8 @@ lemma integral_test_mul_wholePlaneCov {ψ : ℂ → ℝ} (hψ : IsTestFunction S
 
 /-- The radial point of a rotated point is the radial point of the point. -/
 lemma radialPoint_rot (θ : ℝ) (x : ℂ) : radialPoint (rot θ x) = radialPoint x := by
-  have hz : rot θ x = 0 ↔ x = 0 := by
-    rw [← norm_eq_zero, norm_rot, norm_eq_zero]
-  simp only [radialPoint, hz, norm_rot]
+  rw [radialPoint_eq_latticeProb]
+  exact LatticeProb.radialPoint_rot θ x
 
 /-- The radial integral of `φ` agrees almost surely with the radial integral of its rotational average. -/
 theorem ae_radialIntegral_eq_avgRot {P : Measure Ω} [IsProbabilityMeasure P]

@@ -1,6 +1,7 @@
 import MatedCRT.Defs.QuantumCone
 import HarmonicBalls.Proofs.GFF.MeasurableContinuousCircleVersion
 import MatedCRT.LPStaging.Analysis.LogPotentialCircle
+import MatedCRT.LPStaging.Bonanno.WholePlaneLateral
 
 /-!
 # Radial integrals and lateral pairings of the whole-plane GFF
@@ -66,10 +67,13 @@ def radialPoint (x : ℂ) : CircleParameter :=
     · norm_num
     · exact norm_pos_iff.2 h⟩, 0)
 
+/-- The radial point is the radial point of the Lattice-Probability circle-average parametrisation
+(same defining formula). -/
+lemma radialPoint_eq_latticeProb : radialPoint = LatticeProb.radialPoint := rfl
+
 lemma measurable_radialPoint : Measurable radialPoint := by
-  refine Measurable.prodMk ?_ measurable_const
-  refine Measurable.subtype_mk ?_
-  exact Measurable.ite (measurableSet_singleton (0 : ℂ)) measurable_const measurable_norm
+  rw [radialPoint_eq_latticeProb]
+  exact LatticeProb.measurable_radialPoint
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
@@ -97,11 +101,8 @@ lemma exists_ae_circle_version {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → �
 lemma measurable_radialIntegral_version {F : Ω → C(CircleParameter, ℝ)} (hF : Measurable F)
     {φ : ℂ → ℝ} (hφ : Measurable φ) :
     Measurable fun ω => ∫ x, φ x * F ω (radialPoint x) := by
-  have hjoint : Measurable (fun q : Ω × ℂ => φ q.2 * F q.1 (radialPoint q.2)) := by
-    refine Measurable.mul (hφ.comp measurable_snd) ?_
-    exact (measurable_circle_version_joint hF).comp
-      (measurable_fst.prodMk (measurable_radialPoint.comp measurable_snd))
-  exact (hjoint.stronglyMeasurable.integral_prod_right (ν := volume)).measurable
+  rw [radialPoint_eq_latticeProb]
+  exact LatticeProb.measurable_radialIntegral_version hF hφ
 
 /-- Almost surely, the radial integral of `hcirc` is the radial integral of the measurable version. -/
 lemma ae_radialIntegral_eq {P : Measure Ω} {hcirc : Ω → ℝ → ℂ → ℝ}
@@ -136,15 +137,8 @@ lemma memLp_two_pairing (h : IsWholePlaneGFF P hC hcirc) {φ : ℂ → ℝ}
 /-- For a centred second variable, the covariance is the mean of the product. -/
 lemma covariance_eq_integral_of_mean_zero {X Y : Ω → ℝ} (hY : ∫ ω, Y ω ∂P = 0)
     (hYi : Integrable Y P) (hXY : Integrable (fun ω => X ω * Y ω) P) :
-    covariance X Y P = ∫ ω, X ω * Y ω ∂P := by
-  unfold covariance
-  have hpt : ∀ ω, (X ω - ∫ ω, X ω ∂P) * (Y ω - ∫ ω, Y ω ∂P) =
-      X ω * Y ω - (∫ ω, X ω ∂P) * Y ω := by
-    intro ω
-    rw [hY]
-    ring
-  simp_rw [hpt]
-  rw [integral_sub hXY (hYi.const_mul _), integral_const_mul, hY, mul_zero, sub_zero]
+    covariance X Y P = ∫ ω, X ω * Y ω ∂P :=
+  LatticeProb.covariance_eq_integral_of_mean_zero hY hYi hXY
 
 /-- The covariance of two circle averages at `0` is the circle-circle kernel
 (Duplantier-Sheffield 2011, eq. (3.2); Armitage-Gardiner, mean value property of `log|·-z|`). -/
@@ -531,12 +525,8 @@ lemma integral_radialIntegral_eq_zero [IsProbabilityMeasure P] (h : IsWholePlane
 
 /-- Covariances are unchanged by almost sure modifications of the two variables. -/
 lemma covariance_congr_ae {X X' Y Y' : Ω → ℝ} (hX : X =ᵐ[P] X') (hY : Y =ᵐ[P] Y') :
-    covariance X Y P = covariance X' Y' P := by
-  unfold covariance
-  rw [integral_congr_ae hX, integral_congr_ae hY]
-  refine integral_congr_ae ?_
-  filter_upwards [hX, hY] with ω h1 h2
-  rw [h1, h2]
+    covariance X Y P = covariance X' Y' P :=
+  LQGMetric.CircleAvg.covariance_congr_ae hX hY
 
 end RadialCov
 
