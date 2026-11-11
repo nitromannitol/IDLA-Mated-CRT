@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S2i.BorelFactor
 import MatedCRT.Defs.QuantumCone
 
-/-! # Dense evaluation code of circle average processes (fp-S2i, z2)
+/-! # Dense evaluation code of circle average processes
 
 The circle average process lives in the uncountable product `Set.Ioi (0 : ℝ) × ℂ → ℝ`. A fixed dense sequence `D` of
 positive-radius points turns it into a countable real code, which is measurable (`measurable_circleCode`). A continuous

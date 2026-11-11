@@ -1,13 +1,13 @@
 import MatedCRT.FirstPass.S2i.CircleCode
 
-/-! # Grid decoder of circle codes (FirstPass S2i, z2)
+/-! # Grid decoder of circle codes
 
 For a dense sequence `D` of the circle carrier and a code `x : ℕ → ℝ` (dense values `x k ≈ p (D k)`), the grid decoder
 `profileDec D hD x q` is the limit superior of the values `x (gridIndex N q)` along the grid `2^{-N}`, where
 `gridIndex N q` is the least index `k` with `dist (D k) q < (1/2)^N`. It is jointly measurable in `(x, q)`
 (`measurable_profileDec`), and it recovers every continuous circle average process from its code
 (`profileDec_circleCode`). This is the measurable continuous-profile decoder used by the global family factor
-(`FirstPass/S2i/GlobalFactor.lean`, notes/z2-global-design.md). -/
+(`FirstPass/S2i/GlobalFactor.lean`). -/
 
 namespace MatedCRT
 

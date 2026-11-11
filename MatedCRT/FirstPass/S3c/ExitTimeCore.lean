@@ -4,11 +4,11 @@ import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.ExpectedExitMonotone
 import MatedCRT.Proofs.Infra.Setting
 
 /-!
-# Exit-time bridge, core (task fp-S3c-3-1-fidelity-fix, route A; z12)
+# Exit-time bridge, core
 
 `normExitTime ≤ expectedExitTime` (`ofReal_normExitTime_le_expectedExitTime'`), and the deterministic core
 `exitTimeClauses_of_events` of the second clause of `ExitTimeUpperBoundStmt` (Draft Lemma 2.18) from the first
-clause at two radii and the volume-growth lower bound (audit §2.3).
+clause at two radii and the volume-growth lower bound.
 -/
 
 namespace MatedCRT
@@ -66,7 +66,7 @@ def ExitMomentClause (m : ℤ → ℤ → ℕ) (μ : Measure ℂ) (η : ℝ → 
         ENNReal.ofReal (N.factorial * C ^ N * ε ^ (-(N : ℝ))) *
           (⨆ z ∈ D, ∫⁻ w in thickening (ε ^ α) D, ENNReal.ofReal (Real.log (1 / ‖z - w‖) + 1) ∂μ) ^ N
 
-/-- Deterministic core of the second clause of Lemma 2.18 (audit §2.3). For `0 < ε` small, `D ⊆ B_ρ`, `a ∈ V^ε(D)`:
+/-- Deterministic core of the second clause of Lemma 2.18. For `0 < ε` small, `D ⊆ B_ρ`, `a ∈ V^ε(D)`:
 the killed set of `D` is contained in the killed set of `D' = B_{ε^{2α}}(D)`, whose mass is at least `ε^{α₀}`
 (volume growth at the point `x₀ ∈ D`), and the first moment on `D'` is bounded by the first clause at the radius `ρ'`. -/
 theorem second_clause_of_events (m : ℤ → ℤ → ℕ) (μ : Measure ℂ) (η : ℝ → ℂ) (hη : Continuous η)
@@ -165,7 +165,7 @@ theorem clauses_of_events (m : ℤ → ℤ → ℕ) (μ : Measure ℂ) (η : ℝ
 
 end S3cBridge
 
-/-- **Lemma 2.18 (`ExitTimeUpperBoundStmt`) from BG20 Proposition 5.1** (route A, audit §2.3). The mass-restricted first
+/-- **Lemma 2.18 (`ExitTimeUpperBoundStmt`) from BG20 Proposition 5.1**. The mass-restricted first
 moment `BG20Prop51` (frozen) and the volume growth `VolumeGrowthStmt` (Lemma 2.7) imply both clauses of Lemma 2.18,
 including the unrestricted-domain clause for every `D ⊆ B_ρ`. -/
 theorem exitTimeUpperBoundStmt_core {𝒮 : SpaceFillingSLEModel} (hBG : BG20Prop51 𝒮) (h27 : VolumeGrowthStmt) :

@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S2i.BorelFactor
 import HarmonicBalls.Proofs.Sec5.AnalyticSetNullMeasurable
 
-/-! # Borel factor of a full-measure graph of codes (FirstPass S2i, z2)
+/-! # Borel factor of a full-measure graph of codes
 
 Lusin-Souslin type factorization for a measurable map `J` from a standard Borel probability space into the code space
 `(ℕ → ℝ) × (ℝ × (ℕ → ℕ → Bool))`, whose values on a measurable full set `E0` form a graph over the first coordinate

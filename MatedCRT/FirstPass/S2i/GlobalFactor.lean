@@ -4,12 +4,11 @@ import MatedCRT.FirstPass.S2g.ScaleInvariance
 import MatedCRT.FirstPass.S2i.ContinuousDecoder
 import MatedCRT.Proofs.Measurability.ConeRescaledCircle
 
-/-! # The global family factor (FirstPass S2i, z2): `ConeGlobalFamilyFactorStep`
+/-! # The global family factor: `ConeGlobalFamilyFactorStep`
 
 Deterministic part: the extension `extCircle` of a carrier point, the scaled circle profiles `scaleProc γ n p`
 (`circleProcess` of the rescaled profile at the cone scale radius `scaleRad γ n p` and scale `b n = n + 1`), and their
-identities with the cone scaling (`scaleProc_circleProcess`). Route: notes/fp-gaps/CHATGPT-q1-open-steps.md Section 9,
-with the gluing `globalFamilyProcess_eq_of_scales` (FirstPass/S2g/ScaleGluing.lean). -/
+identities with the cone scaling (`scaleProc_circleProcess`), with the gluing `globalFamilyProcess_eq_of_scales` (FirstPass/S2g/ScaleGluing.lean). -/
 
 namespace MatedCRT
 
@@ -513,7 +512,7 @@ theorem measurableSet_globalBss (γ : ℝ) {D : ℕ → CirclePt} (hD : DenseRan
     measurableSet_lt measurable_const ((hΨn n).const_mul _)
 
 
-/-- **`ConeGlobalFamilyFactorStep` (FirstPass S2i, z2; Section 9 of notes/fp-gaps/CHATGPT-q1-open-steps.md).** From the
+/-- **`ConeGlobalFamilyFactorStep`.** From the
 canonical factor (`coneCanonicalFactor_code_of`, the closure step `ConeHalfBallClosureInsideStep`, the volume growth
 statement), the scale invariance in law `QuantumConeScalingInput`, the LQG measure properties `LQGMeasurePropertiesStmt`,
 and the two frozen cone externals. -/

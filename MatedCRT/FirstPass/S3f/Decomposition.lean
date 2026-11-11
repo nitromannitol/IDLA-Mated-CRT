@@ -1,4 +1,4 @@
--- Renamed copy (z1, fp-Closure-round2 step 4) of the untracked draft MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/Decomposition.lean (owner c1); namespace MatedCRT.FirstPass37; srwLaw_nonadjacent_null -> WalkSteps.srwLaw_nonadjacent_null (Walk.lean:38); imports the S3f copy of ExitValue.
+-- Renamed copy of the untracked draft MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/Decomposition.lean; namespace MatedCRT.FirstPass37; srwLaw_nonadjacent_null -> WalkSteps.srwLaw_nonadjacent_null (Walk.lean:38); imports the S3f copy of ExitValue.
 import MatedCRT.FirstPass.S3f.ExitValue
 import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.GreenRepresentation
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBound.Walk

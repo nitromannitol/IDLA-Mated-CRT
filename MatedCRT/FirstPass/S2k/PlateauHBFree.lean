@@ -1,9 +1,9 @@
 import MatedCRT.Proofs.Sec4.Prop42Closure.PlateauCanonicalLaw
 import MatedCRT.Proofs.Sec4.Prop42Closure.ScaledRegularizedFamily
 
-/-! # FIRST PASS S2k: plateau scale invariance without the bounded-representative input H (task fp-S2k-closure-inside)
+/-! # FIRST PASS S2k: plateau scale invariance without the bounded-representative input H
 
-Written argument: `notes/fp-gaps/CHATGPT-closure-inside-cycle.md` section 4.1, eqs (11)-(14). The route Z5 of
+The canonical-law route of
 `Proofs/Sec4/Prop42Closure/PlateauCanonicalLaw.lean` (`plateauScaleInvarianceStep_of_canonical`) takes the regularized
 family of the dilated measure from the input H (`ScaledBoundedRepresentativesStep`), which is false for general measures
 (steps3:117-137). Here it is not assumed. The canonical radii of the dilated measure `μ'' = scaledMeasure μ a c` are computed

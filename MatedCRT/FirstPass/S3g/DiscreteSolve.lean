@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Sec4.GreenLaplacian
 import MatedCRT.Proofs.Sec4.SubsequentialProperties.DiscreteComparison
 
-/-! # Discrete Dirichlet problem on a finite set (fp-S3g)
+/-! # Discrete Dirichlet problem on a finite set
 
 On a finite set `A` of vertices of a locally finite multigraph, the maximum principle (as an injectivity statement)
 makes the restricted Laplacian injective, hence surjective (finite dimension). This gives a discrete solution with

@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.Frozen.S3c
 import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.ExpectedExitMonotone
 
 /-!
-# Exit-time bridge: `ExitTimeUpperBoundStmt` from BG20 Proposition 5.1 (task fp-S3c-3-1-fidelity-fix, route A; z12)
+# Exit-time bridge: `ExitTimeUpperBoundStmt` from BG20 Proposition 5.1
 
-Audit `notes/fp-gaps/CHATGPT-idla-3-1-audit.md` §2.3. The mass-restricted first moment `BG20Prop51` (frozen,
+The mass-restricted first moment `BG20Prop51` (frozen,
 `MatedCRT/FirstPass/Frozen/S3c.lean`) gives the first clause of `ExitTimeUpperBoundStmt` for `D` with `μ_h(D) ≥ ε^α`.
 The second clause, for arbitrary `D ⊆ B_ρ`, is obtained by enlarging `D` to `D' = B_{ε^{2α}}(D)`, whose mass is at least
 `ε^{α₀}` by the volume growth (Lemma 2.7), and using the monotonicity of the killed vertex sets: a cell that meets `D`
@@ -46,7 +46,7 @@ theorem subset_interior_of_not_frontier {c D : Set ℂ} (hc : IsPreconnected c) 
   exact hc.subset_left_of_subset_union isOpen_interior isOpen_interior hdisj hcover ⟨x₀, hx₀c, hx₀int⟩
 
 /-- Killed vertex sets are monotone in the domain: if `D ⊆ D'` and the curve is continuous, then
-`V^ε_int(D) ⊆ V^ε_int(D')` (Audit §2.3: a cell meeting `D` and avoiding `∂D` lies in `int D ⊆ int D'`). -/
+`V^ε_int(D) ⊆ V^ε_int(D')` (a cell meeting `D` and avoiding `∂D` lies in `int D ⊆ int D'`). -/
 theorem interiorCellVertices_mono_of_subset {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) {D D' : Set ℂ}
     (hDD' : D ⊆ D') : interiorCellVertices ε η D ⊆ interiorCellVertices ε η D' := by
   rintro k ⟨hk1, hk2⟩

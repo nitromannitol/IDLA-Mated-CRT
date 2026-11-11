@@ -1,7 +1,7 @@
 import MatedCRT.Steps.Sec3.ConvergenceHarmonicFunctions
 import MatedCRT.Proofs.Infra.LocallyFinite
 
-/-! # Geometry for the boundary-stability bridge of corrected Lemma 3.5 (fp-S3g)
+/-! # Geometry for the boundary-stability bridge of corrected Lemma 3.5
 
 Elementary facts about cells, the vertex map `vertexOf`, the retraction `ballRetraction`, and the discrete
 boundary of `interiorCellVertices ε η (ball z r)`. They feed `discreteDirichletProblem_of_corrected`. -/

@@ -1,11 +1,11 @@
 import MatedCRT.Defs.Setting
 
-/-! # Countable code and decoder of a cone harmonic-ball family (fp-S2i, z2)
+/-! # Countable code and decoder of a cone harmonic-ball family
 
 For a family `Λ` with the regularity, monotonicity and Hausdorff continuity of `SatisfiesHarmonicBallConditionsOn`, the
 family is coded by `codeFamily T Λ = (T, a)` with `a i k = true` iff `q_i < T` and `z_k ∈ Λ_{q_i}`, along two fixed dense
 sequences `q` (positive times) and `z` (centres). The decoder `decodeFamily` reads the whole process `(t, x) ↦ (0 < t < T ∧
-x ∈ Λ_t)` back from the code (notes `CHATGPT-q1-open-steps.md` §6, C1–C3). Every operation is a countable quantifier over
+x ∈ Λ_t)` back from the code. Every operation is a countable quantifier over
 the code, so the decoder is measurable in the code (`codeCl_measurable`, `decodeFamily_measurable`).
 Key steps: closure of `Λ_t` is the closure of the countable union of `Λ_{q_i}`, `q_i < t` (Hausdorff continuity from the
 left), and regular openness gives `Λ_t = interior (closure Λ_t)`. -/

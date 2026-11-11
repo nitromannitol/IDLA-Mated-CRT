@@ -5,7 +5,7 @@ import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 import MatedCRT.FirstPass.Frozen.S3S4
 
 /-!
-# Regularity good event and convergence from the corrected discrete Hölder estimate (task fp-S3e2-3-6-h32-retarget, worker z10)
+# Regularity good event and convergence from the corrected discrete Hölder estimate
 
 Adapted copy of `MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/HolderGoodEvent.lean`. The Hölder hypothesis is the corrected
 form `FrozenDiscreteHolderContinuityCorrected 𝒮` (the body of `DiscreteHolderContinuityCorrectedStep 𝒮`,
@@ -16,7 +16,7 @@ The only change in the proof is the destructuring of the Hölder data. The print
 `∀ χ, ∃ ξ', 0 < ξ' ∧ ξ' < 1 ∧ ξ' ≤ χ ∧ ∀ C', ∃ C, ...`; the corrected form is
 `∀ χ C', ... → ∃ ξ' C, 0 < ξ' ∧ ξ' < 1 ∧ 0 < C ∧ ...`. The clause `ξ' ≤ χ` was bound but never used by the printed proof, and
 `CorrectedHarmonicRegularityGoodEventStep` asks only for `0 < ξ`. The constant C' is instantiated once, at `C₀ + 1`, as in the
-printed proof. The dependence of ξ' on C' is covered by the argument in notes/fp-gaps/CHATGPT-idla-3-6-sameWalk.md §3.
+printed proof. The dependence of ξ' on C' is covered by the same-walk argument.
 -/
 
 namespace MatedCRT

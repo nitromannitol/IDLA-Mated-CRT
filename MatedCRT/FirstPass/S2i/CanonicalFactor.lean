@@ -7,13 +7,13 @@ import MatedCRT.FirstPass.Frozen.S2i
 import MatedCRT.FirstPass.S2g.Canonical
 import MatedCRT.Proofs.Sec2.ConeFamilyMeasurable.StoppedClosure
 
-/-! # Canonical factorization on the cone-law support (FirstPass S2i, z2)
+/-! # Canonical factorization on the cone-law support
 
 Proof of `ConeCanonicalFactorStep` (`FirstPass/S2g/Canonical.lean`) from the canonical Lemma 2.4 and the closure
 containment of stopped families, with two EXTERNAL inputs (`FirstPass/Frozen/S2i.lean`): the cone circle law is unique in
 law (`ConeCircleLawUniqueStep`) and a standard Borel reference cone exists (`ConeReferenceExistsStep`).
 
-Route (notes/fp-gaps/CHATGPT-q1-open-steps.md Section 7, F1-F6): on a reference cone, the joint code
+On a reference cone, the joint code
 `J ω = (circleCode D (circleProcess (hcirc ω)), processCodeTimed (halfBallTime (μ ω)) (familyProcess (Λ ω) (halfBallTime (μ ω))))`
 is measurable up to a null set; its values on a measurable full set form a graph over the circle code
 (`processCode_eq_of_circleCode_eq`: equal circle codes give equal LQG measures, canonical times and processes); the Borel
@@ -73,7 +73,7 @@ abbrev CanonicalFactorClauses (γ : ℝ) (ΨT : (Ioi (0 : ℝ) × ℂ → ℝ) �
       AEMeasurable ΨT (P.map fun ω => circleProcess (hcirc ω)) ∧
       AEMeasurable Ψ (P.map fun ω => circleProcess (hcirc ω)) ∧ ∀ᵐ ω ∂P, circleProcess (hcirc ω) ∈ G
 
-/-- **Code form of the canonical factor (FirstPass S2i, z2).** The witnesses of `ConeCanonicalFactorStep` can be taken
+/-- **Code form of the canonical factor.** The witnesses of `ConeCanonicalFactorStep` can be taken
 of the form `ΨT p = (F (circleCode D p)).1`, `Ψ p = decodeFamily (F (circleCode D p))`, `G = circleCode D ⁻¹' B` with
 `F` measurable (the joint code of the Borel factor). Used by the global family step. -/
 theorem coneCanonicalFactor_code_of (hcan : ConeCanonicalHalfBallStep)
@@ -180,7 +180,7 @@ theorem coneCanonicalFactor_code_of (hcan : ConeCanonicalHalfBallStep)
     obtain ⟨ω, hω, hJω⟩ := hBw x hx
     exact ⟨ω, (hgoodE0 ω hω).2.2, congrArg Prod.fst ((hgoodE0 ω hω).2.1.symm.trans hJω)⟩
 
-/-- Code form of the canonical factor (FirstPass S2i, z2): the witnesses of `ConeCanonicalFactorStep` in code form,
+/-- Code form of the canonical factor: the witnesses of `ConeCanonicalFactorStep` in code form,
 for the reference cone of `ConeReferenceExistsStep`. -/
 theorem coneCanonicalFactor_code (hcan : ConeCanonicalHalfBallStep)
     (hcl : ConeHalfBallClosureInsideStep) (h27 : VolumeGrowthStmt)
@@ -194,7 +194,7 @@ theorem coneCanonicalFactor_code (hcan : ConeCanonicalHalfBallStep)
     hcirc μ hcone (fun _ => True) (ae_of_all P fun _ => trivial)
   exact ⟨D, B, F, h1, h2, h3, h4⟩
 
-/-- **`ConeCanonicalFactorStep` (FirstPass S2i, z2).** From the canonical Lemma 2.4 (`firstPass_2_4_canonical_of_steps`),
+/-- **`ConeCanonicalFactorStep`.** From the canonical Lemma 2.4 (`firstPass_2_4_canonical_of_steps`),
 the closure step `ConeHalfBallClosureInsideStep`, the volume growth statement, and the two frozen cone externals. -/
 theorem coneCanonicalFactor_proved (hcan : ConeCanonicalHalfBallStep)
     (hcl : ConeHalfBallClosureInsideStep) (h27 : VolumeGrowthStmt)

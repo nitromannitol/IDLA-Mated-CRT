@@ -3,7 +3,7 @@ import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.BoundaryStartingExit
 import MatedCRT.FirstPass.Frozen.S3S4b
 
 /-!
-# First pass: the finite-domain Dirichlet representation as a theorem (task fp-S3f-3-7-corrected-and-closure, part 3, worker z1)
+# First pass: the finite-domain Dirichlet representation as a theorem
 
 `FrozenFiniteDomainDirichletRepresentation` (MatedCRT/FirstPass/Frozen/S3S4b.lean) is the random-walk fact of Lawler–Limic,
 *Random Walk: A Modern Introduction* (Cambridge 2010), Corollary 6.2.4, used by the corrected Lemma 3.5. Its content is proved in

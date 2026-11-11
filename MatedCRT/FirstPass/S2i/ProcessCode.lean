@@ -1,13 +1,13 @@
 import MatedCRT.FirstPass.S2i.FamilyCode
 
-/-! # Measurable decoder and process code (FirstPass S2i, z2)
+/-! # Measurable decoder and process code
 
 The space-time process of a family stopped at `T` is coded by its bits at the dense pairs `(posTime i, centre k)`
 (`processCodeTimed`). This file proves that the decoder `decodeFamily` is jointly measurable in the code, that the process code
 is a measurable function of the pair (horizon, process), and that the code of a stopped family is its process code
 (`codeFamily_eq_processCode`). It also proves the deterministic congruence of LQG limits under equality of the circle
 averages at positive radii (Duplantier-Sheffield, Berestycki-Powell). Used by the canonical factor
-(`FirstPass/S2i/CanonicalFactor.lean`, notes/fp-gaps/CHATGPT-q1-open-steps.md Section 7). -/
+(`FirstPass/S2i/CanonicalFactor.lean`). -/
 
 namespace MatedCRT
 

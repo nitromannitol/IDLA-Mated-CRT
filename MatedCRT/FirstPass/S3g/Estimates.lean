@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S3g.Geometry
 import MatedCRT.FirstPass.S3g.DiscreteSolve
 import MatedCRT.Defs.Notation
 
-/-! # Estimates for the boundary-stability bridge of corrected Lemma 3.5 (fp-S3g)
+/-! # Estimates for the boundary-stability bridge of corrected Lemma 3.5
 
 * `boundary_bound`: a boundary cell `b` (meeting the sphere, of diameter `≤ D ≤ s`) has
   `|φ(η b) - φ(π η b)| ≤ C D^χ`, where `π` is the radial retraction onto `cl B_r(z)`; this uses only the Hölder

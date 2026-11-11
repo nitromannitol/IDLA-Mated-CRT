@@ -1,9 +1,9 @@
 import MatedCRT.Defs.Setting
 import MatedCRT.Proofs.Sec2.ConeFamily
 
-/-! # Uniqueness of stopped horizons (fp-S2i, z2)
+/-! # Uniqueness of stopped horizons
 
-Notes `CHATGPT-q1-open-steps.md` §5. Two families for the same measure, both stopped at `∂B_{1/2}`
+Two families for the same measure, both stopped at `∂B_{1/2}`
 (`IsStoppedAtHalfBall`), have the same horizon, provided each has closure contained in `B_{1/2}` at every time before its
 horizon (`ConeHalfBallClosureInsideStep`, a.s.). Proof: if `T₁ < T₂`, at a time `t' ∈ (T₁, T₂)` the compact set
 `cl Λ₂_{t'}` lies in `B_{1/2}`, hence in a ball `B_r` with `r < 1/2`; by monotonicity and fixed-time uniqueness
