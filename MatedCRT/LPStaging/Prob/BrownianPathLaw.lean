@@ -22,8 +22,6 @@ is the identity when `d = 0` because there are then no coordinates at all.
 import Mathlib
 import MatedCRT.LPStaging.Prob.BrownianMarkov
 
-/-! Port of LatticeProb.Prob.BrownianPathLaw (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2. -/
-
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal Topology
 

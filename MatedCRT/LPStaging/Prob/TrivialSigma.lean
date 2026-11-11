@@ -16,8 +16,6 @@ import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
 import Mathlib.Analysis.SpecificLimits.Basic
 
 /-!
-Port of LatticeProb.Prob.TrivialSigma (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2.
-
 # Trivial σ-algebras and conditional expectations onto decreasing σ-algebras
 
 A σ-algebra `m` is trivial for a measure `P` when every `m`-measurable set has `P`-measure `0`

@@ -29,8 +29,6 @@ The proof shows that the path is almost surely a function of the increments afte
 The namespace `BrownianGermZeroOneExample` checks that the hypotheses are satisfiable.
 -/
 
-
-/-! Port of LatticeProb.Prob.BrownianGermZeroOne (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2. -/
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped NNReal
 

@@ -7,8 +7,6 @@ noise, with no Kolmogorov extension theorem.  Kolmogorov-Chentsov, proved in
 moment of a centred Gaussian of variance `v` is a fixed multiple of `v ^ 2`, so
 a pre-Brownian motion satisfies the Kolmogorov condition with exponents
 `p = 4`, `q = 2`, and `q > 1` is what the chaining needs.
-
-Port of LatticeProb.Gauss.BrownianCont (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2.
 -/
 import Mathlib
 import LatticeProb.Prob.Chentsov

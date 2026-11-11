@@ -45,8 +45,6 @@ import MatedCRT.LPStaging.Prob.BrownianPathLaw
 import LatticeProb.Prob.StoppingDyadic
 import MatedCRT.LPStaging.Prob.BrownianMarkov
 
-/-! Port of LatticeProb.Prob.BrownianStrongMarkov (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2. -/
-
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal Topology
 

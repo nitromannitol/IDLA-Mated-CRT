@@ -22,8 +22,6 @@ written instead as the countable intersection, over `n`, of the events that the 
 path to the complement of `U` drops below `1 / (n + 1)` at some time in `[0, t]`. Each of these
 is an open condition and is decided by a countable dense set of times, as in
 `measurableSet_exists_le_lt_norm` for balls.
-
-Port of LatticeProb.Prob.BrownianOpenExitStopping (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2.
 -/
 
 open MeasureTheory Set

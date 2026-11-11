@@ -3,8 +3,6 @@ The isonormal process: a linear isometry from `ℓ²` of the index set into the
 square-integrable functions on the Gaussian product space, whose values are
 centred Gaussians.
 
-Port of LatticeProb.Gauss.Isonormal (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2.
-
 The coordinates of the product of standard Gaussians are an orthonormal family
 in `L²`, so `ℓ²` of the index set is carried into `L²` by a linear isometry.
 What makes the image Gaussian is that the partial sums along an exhaustion of

@@ -12,8 +12,6 @@ import Mathlib.MeasureTheory.Function.ConditionalExpectation.PullOut
 import Mathlib.MeasureTheory.Function.L2Space
 
 /-!
-Port of LatticeProb.Prob.TrivialSigmaJoin (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2.
-
 # Independent joins of decreasing σ-algebras with trivial germs
 
 Let `𝒜 n` and `ℬ n` be decreasing sequences of σ-algebras such that `𝒜 0` and `ℬ 0` are

@@ -25,8 +25,6 @@ The stopping time an application has in mind is the exit time of a ball, and the
 fact that makes it one is proved here: for a process with continuous paths, the
 event of having left the ball before a time `t` is decided by countably many
 times in `[0, t]`, hence lies in the natural filtration at `t`.
-
-Port of LatticeProb.Prob.BrownianMarkov (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2.
 -/
 import Mathlib
 import MatedCRT.LPStaging.Prob.BrownianExit

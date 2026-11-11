@@ -15,8 +15,6 @@ This is the single-time building block of the maximal estimate
 `LatticeProb.IsBrownianReal.measure_exists_le_abs_le` (the reflection
 principle / dyadic chaining bound), which the sandpile paper's localization
 lemma quotes.
-
-Port of LatticeProb.Prob.BrownianTail (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2.
 -/
 import Mathlib
 

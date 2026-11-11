@@ -1,8 +1,6 @@
 /-
 Reading finitely many coordinates of an independent family.
 
-Port of LatticeProb.Prob.FiniteMarginal (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2.
-
 Every application of a concentration inequality in the papers is to a function
 of the field that reads only a finite box, and the inequalities are stated for
 `Measure.pi` over a finite index type.  What connects the two is that reading an

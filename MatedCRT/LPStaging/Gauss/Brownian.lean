@@ -7,8 +7,6 @@ theorem, which would produce a process with those laws, is not available.  White
 noise supplies one directly: the indicators of the intervals `(0, t]` have
 `L²`-inner products `min s t`, so the isonormal process evaluated at them is a
 centred Gaussian process with the covariance of Brownian motion.
-
-Port of LatticeProb.Gauss.Brownian (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2.
 -/
 import Mathlib
 import MatedCRT.LPStaging.Gauss.WhiteNoise

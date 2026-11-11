@@ -20,8 +20,6 @@ add up.
 The conclusion is the Gaussian bound `C exp (- c A ^ 2 / T)` on the probability
 that the motion leaves the ball of radius `A` about its starting point before
 time `T`, with `C = 4 d + 4` and `c = 1 / 32` depending only on the dimension.
-
-Port of LatticeProb.Prob.BrownianExit (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2.
 -/
 import Mathlib
 import MatedCRT.LPStaging.Prob.BrownianMax

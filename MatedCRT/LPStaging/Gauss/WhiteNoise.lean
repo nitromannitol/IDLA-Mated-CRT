@@ -8,8 +8,6 @@ extension theorem: `L²` of a separable measure is a separable Hilbert space, so
 it has a countable orthonormal basis, and the product of standard Gaussians over
 that basis carries it isometrically into `L²` of a probability space.  The image
 of a test function is white noise evaluated at it.
-
-Port of LatticeProb.Gauss.WhiteNoise (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2.
 -/
 import Mathlib
 import MatedCRT.LPStaging.Gauss.Process

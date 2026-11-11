@@ -21,8 +21,6 @@ For Brownian motion `B` on `EuclideanSpace ℝ (Fin d)` with `1 ≤ d`, the firs
 Only one coordinate and its Gaussian marginal laws are needed. At the square times `(n + 1)^2`,
 the coordinate lies in any fixed bounded interval with probability tending to zero. This rules out
 remaining in a bounded set forever.
-
-Port of LatticeProb.Prob.BrownianOpenExitFinite (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2.
 -/
 
 open MeasureTheory ProbabilityTheory Set Filter

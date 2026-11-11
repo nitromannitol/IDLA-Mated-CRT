@@ -2,8 +2,6 @@
 An independent family of standard Gaussians indexed by an arbitrary set, and the
 law of a finite linear combination of its coordinates.
 
-Port of LatticeProb.Gauss.Coords (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2.
-
 The construction of every Gaussian process here starts from one object: the
 product of standard Gaussians over an index set.  What is needed of it is the
 law of `∑_{i ∈ s} c_i ω_i` for a finite `s`, and that is Fubini: reading the

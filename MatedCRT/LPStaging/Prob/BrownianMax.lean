@@ -26,8 +26,6 @@ Finally the bound is transported to a process with only almost surely continuous
 paths and no measurability: a pre-Brownian motion has a measurable modification
 with continuous paths, and two modifications with continuous paths agree at
 every time almost surely.
-
-Port of LatticeProb.Prob.BrownianMax (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2.
 -/
 import Mathlib
 import LatticeProb.Prob.Dyadic

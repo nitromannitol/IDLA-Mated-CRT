@@ -7,8 +7,6 @@ the Gaussian product space.  The composite is a family of centred Gaussians
 indexed by the Hilbert space, linear in the index and with covariance the inner
 product; that is white noise on the space, and Brownian motion is its
 restriction to the indicators of intervals.
-
-Port of LatticeProb.Gauss.Process (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2.
 -/
 import Mathlib
 import MatedCRT.LPStaging.Gauss.Isonormal

@@ -1,8 +1,6 @@
 /-
 Gaussian laws are closed under almost sure limits.
 
-Port of LatticeProb.Gauss.Limit (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2.
-
 Mathlib 4.32 has Gaussian measures and their characteristic functions but no
 statement that a limit of Gaussians is Gaussian, and that is the one step every
 construction of a Gaussian process by an orthogonal series needs: the partial
