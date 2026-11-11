@@ -2,7 +2,8 @@ import Mathlib
 import HarmonicBalls.Defs.Brownian
 import HarmonicBalls.Proofs.Sec4.GreenAwayFromPole
 import MarkovProcess.Path.ExitTimeShift
-import MatedCRT.Proofs.Sec3.KilledOccupation.RemovedTail
+import MatedCRT.Proofs.Sec3.KilledOccupation.WeightedClock
+import MatedCRT.Proofs.Sec3.KilledOccupation.ClockIdentificationConcrete
 
 /-!
 # Finiteness of the weighted clock and measurability of the clock functionals (ClockFinite)
@@ -192,5 +193,174 @@ theorem ae_measurable_regDensity {P : Measure Ω} {hC : Ω → (ℂ → ℝ) →
       hω.comp h1 (fun x _ => ⟨mem_Ioi.2 hε, mem_univ x⟩)
     exact continuousOn_univ.mp h2
   exact measurable_regDensity_of_continuous γ ε hε (hc ω) hcont
+
+
+/-! ### Measurability of the regularized clocks
+
+The printed measurability binders `hreg`, `hνm`, `hRm` quantify over every field `ω`, but `IsWholePlaneGFF` makes the
+circle averages continuous in the centre only for almost every `ω`. We therefore replace the field by `modField N hc`,
+which is `0` on a measurable null set `N` of the field index and equals `hc` off `N`. -/
+
+/-- Evaluation of a path at a measurable time, jointly measurable in the path and the time. -/
+lemma measurable_path_eval {X : Type*} [MeasurableSpace X] {b : X → ContinuousPath ℂ} {u : X → ℝ≥0}
+    (hb : Measurable b) (hu : Measurable u) : Measurable fun x => b x (u x) :=
+  ContinuousEval.continuous_eval.measurable.comp (hb.prodMk hu)
+
+/-- Tonelli-type measurability of `x ↦ ∫⁻_{[0, s x]} g(x, u) dμ(u)` for a fixed s-finite measure `μ` on `ℝ≥0`. -/
+lemma measurable_lintegral_Icc_fixed {X : Type*} [MeasurableSpace X] (μ : Measure ℝ≥0) [SFinite μ]
+    {s : X → ℝ≥0} (hs : Measurable s) {g : X × ℝ≥0 → ℝ≥0∞} (hg : Measurable g) :
+    Measurable fun x => ∫⁻ u in Icc 0 (s x), g (x, u) ∂μ := by
+  have hS : MeasurableSet {p : X × ℝ≥0 | p.2 ∈ Icc 0 (s p.1)} := by
+    have h : {p : X × ℝ≥0 | p.2 ∈ Icc 0 (s p.1)} = {p | 0 ≤ p.2} ∩ {p | p.2 ≤ s p.1} := by
+      ext p
+      simp [mem_Icc]
+    rw [h]
+    exact (measurableSet_le measurable_const measurable_snd).inter
+      (measurableSet_le measurable_snd (hs.comp measurable_fst))
+  have hF : Measurable fun p : X × ℝ≥0 => (Icc 0 (s p.1)).indicator (fun u => g (p.1, u)) p.2 := by
+    have h : (fun p : X × ℝ≥0 => (Icc 0 (s p.1)).indicator (fun u => g (p.1, u)) p.2) =
+        fun p => if p.2 ∈ Icc 0 (s p.1) then g p else 0 := by
+      ext p
+      simp [Set.indicator_apply]
+    rw [h]
+    exact Measurable.ite hS hg measurable_const
+  have key : (fun x => ∫⁻ u in Icc 0 (s x), g (x, u) ∂μ) =
+      fun x => ∫⁻ u, (Icc 0 (s x)).indicator (fun u => g (x, u)) u ∂μ := by
+    funext x
+    exact (lintegral_indicator measurableSet_Icc _).symm
+  rw [key]
+  exact hF.lintegral_prod_right'
+
+/-- `regDensity` in closed form: `ε^{γ²/2} exp(γ (h_ε(x) - γ log (|x| ∨ ε)))` (`circleAverage_log_norm_eq`). -/
+lemma regDensity_formula (γ ε : ℝ) (hε : 0 < ε) (hc : ℝ → ℂ → ℝ) (x : ℂ) :
+    regDensity γ ε hc x = ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ * (hc ε x - γ * Real.log (max ‖x‖ ε)))) := by
+  unfold regDensity HarmonicBalls.fieldCircleAverage
+  rw [circleAverage_log_norm_eq hε x]
+
+lemma measurable_nuDensity_of_continuous (γ ε : ℝ) (hc : ℝ → ℂ → ℝ) (hcont : Continuous fun x => hc ε x) :
+    Measurable (nuDensity γ ε hc) := by
+  unfold nuDensity
+  exact ENNReal.measurable_ofReal.comp (measurable_const.mul (Real.measurable_exp.comp
+    (measurable_const.mul hcont.measurable)))
+
+/-- Joint measurability of `(ω, x) ↦ ε^{γ²/2} exp(γ (F ω x - γ log (|x| ∨ ε)))` when `F` is continuous in `x` and
+measurable in `ω`: a Carathéodory function. -/
+lemma measurable_uncurry_regDensity {Ω : Type*} [MeasurableSpace Ω] (γ ε : ℝ) (hε : 0 < ε) {F : Ω → ℂ → ℝ}
+    (hF_cont : ∀ ω, Continuous fun x => F ω x) (hF_meas : ∀ x, Measurable fun ω => F ω x) :
+    Measurable fun q : Ω × ℂ =>
+      ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ * (F q.1 q.2 - γ * Real.log (max ‖q.2‖ ε)))) := by
+  let u : ℂ → Ω → ℝ := fun x ω => ε ^ (γ ^ 2 / 2) * Real.exp (γ * (F ω x - γ * Real.log (max ‖x‖ ε)))
+  have hlog : Continuous fun x : ℂ => Real.log (max ‖x‖ ε) :=
+    Continuous.log (continuous_norm.max continuous_const)
+      (fun x => (lt_of_lt_of_le hε (le_max_right _ _)).ne')
+  have hu_cont : ∀ ω : Ω, Continuous fun x : ℂ => u x ω := fun ω =>
+    continuous_const.mul (Real.continuous_exp.comp
+      (continuous_const.mul ((hF_cont ω).sub (continuous_const.mul hlog))))
+  have hu_meas : ∀ x : ℂ, Measurable fun ω : Ω => u x ω := fun x =>
+    measurable_const.mul (Real.measurable_exp.comp (measurable_const.mul ((hF_meas x).sub measurable_const)))
+  have hU : Measurable (Function.uncurry u) := measurable_uncurry_of_continuous_of_measurable hu_cont hu_meas
+  exact ENNReal.measurable_ofReal.comp (hU.comp measurable_swap)
+
+open Classical in
+/-- The field `hc` with its values on the measurable set `N` of field indices replaced by `0`. -/
+def modField {Ω : Type*} (N : Set Ω) (hc : Ω → ℝ → ℂ → ℝ) : Ω → ℝ → ℂ → ℝ :=
+  fun ω r z => if ω ∈ N then 0 else hc ω r z
+
+lemma modField_eq_of_not_mem {Ω : Type*} {N : Set Ω} {hc : Ω → ℝ → ℂ → ℝ} {ω : Ω} (hω : ω ∉ N) :
+    modField N hc ω = hc ω := by
+  funext r z
+  simp [modField, hω]
+
+/-- Off a measurable null set of field indices, the circle averages of `IsWholePlaneGFF` are continuous in the centre
+(`ae_continuousOn_circle`). -/
+lemma exists_null_continuous {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
+    {hc : Ω → ℝ → ℂ → ℝ} (hGFF : HarmonicBalls.IsWholePlaneGFF P hC hc) :
+    ∃ N : Set Ω, MeasurableSet N ∧ P N = 0 ∧
+      ∀ ω, ω ∉ N → ∀ ε : ℝ, 0 < ε → Continuous fun x : ℂ => hc ω ε x := by
+  have h := hGFF.ae_continuousOn_circle
+  rw [ae_iff] at h
+  refine ⟨toMeasurable P {ω | ¬ ContinuousOn (fun p : ℝ × ℂ => hc ω p.1 p.2) (Ioi 0 ×ˢ univ)},
+    measurableSet_toMeasurable _ _, by rw [measure_toMeasurable]; exact h, fun ω hω ε hε => ?_⟩
+  have hgood : ContinuousOn (fun p : ℝ × ℂ => hc ω p.1 p.2) (Ioi 0 ×ˢ univ) := by
+    by_contra hbad
+    exact hω (subset_toMeasurable _ _ hbad)
+  have h1 : ContinuousOn (fun x : ℂ => ((ε, x) : ℝ × ℂ)) univ :=
+    (continuous_const.prodMk continuous_id).continuousOn
+  have h2 : ContinuousOn (fun x : ℂ => hc ω ε x) univ :=
+    hgood.comp h1 (fun x _ => ⟨mem_Ioi.2 hε, mem_univ x⟩)
+  exact continuousOn_univ.mp h2
+
+lemma modField_continuous {Ω : Type*} {N : Set Ω} {hc : Ω → ℝ → ℂ → ℝ}
+    (hgood : ∀ ω, ω ∉ N → ∀ ε : ℝ, 0 < ε → Continuous fun x : ℂ => hc ω ε x)
+    (ω : Ω) (ε : ℝ) (hε : 0 < ε) : Continuous fun x : ℂ => modField N hc ω ε x := by
+  by_cases hω : ω ∈ N
+  · have h : (fun x : ℂ => modField N hc ω ε x) = fun _ => 0 := by
+      funext x
+      simp [modField, hω]
+    rw [h]
+    exact continuous_const
+  · have h : (fun x : ℂ => modField N hc ω ε x) = fun x => hc ω ε x := by
+      funext x
+      simp [modField, hω]
+    rw [h]
+    exact hgood ω hω ε hε
+
+/-- Joint measurability of `(ω, x) ↦ regDensity γ ε (modField N hc ω) x`, for `ε > 0`. -/
+lemma measurable_regDensity_modField {Ω : Type*} [MeasurableSpace Ω] {N : Set Ω} (hN : MeasurableSet N)
+    {hc : Ω → ℝ → ℂ → ℝ} (hmeas : ∀ ε : ℝ, 0 < ε → ∀ x : ℂ, Measurable fun ω => hc ω ε x)
+    (hgood : ∀ ω, ω ∉ N → ∀ ε : ℝ, 0 < ε → Continuous fun x : ℂ => hc ω ε x) (γ ε : ℝ) (hε : 0 < ε) :
+    Measurable fun q : Ω × ℂ => regDensity γ ε (modField N hc q.1) q.2 := by
+  have hF_cont : ∀ ω, Continuous fun x => modField N hc ω ε x := fun ω => modField_continuous hgood ω ε hε
+  have hF_meas : ∀ x, Measurable fun ω => modField N hc ω ε x := fun x =>
+    Measurable.ite hN measurable_const (hmeas ε hε x)
+  have h := measurable_uncurry_regDensity (Ω := Ω) γ ε hε hF_cont hF_meas
+  simp only [regDensity_formula γ ε hε]
+  exact h
+
+/-- The removed-part functional `R_{ε,a}` (`clockDistR`) is measurable on the product, for `ε > 0`. -/
+lemma measurable_clockDistR_of_density {Ω : Type*} [MeasurableSpace Ω] (γ ε a : ℝ)
+    (hc : Ω → ℝ → ℂ → ℝ) (σ : ContinuousPath ℂ → ℝ≥0) (hσ : Measurable σ)
+    (hG : Measurable fun q : Ω × ℂ => regDensity γ ε (hc q.1) q.2) :
+    Measurable (clockDistR γ hc σ ε a) := by
+  have : SFinite timeLeb := by
+    unfold timeLeb
+    infer_instance
+  have hσ' : Measurable fun x : Ω × ContinuousPath ℂ => σ x.2 := hσ.comp measurable_snd
+  have hev : Measurable fun p : (Ω × ContinuousPath ℂ) × ℝ≥0 => p.1.2 p.2 :=
+    measurable_path_eval (measurable_snd.comp measurable_fst) measurable_snd
+  have hpair : Measurable fun p : (Ω × ContinuousPath ℂ) × ℝ≥0 => (p.1.1, p.1.2 p.2) :=
+    (measurable_fst.comp measurable_fst).prodMk hev
+  have hg : Measurable fun p : (Ω × ContinuousPath ℂ) × ℝ≥0 =>
+      if ‖p.1.2 p.2‖ < 2 * a then regDensity γ ε (hc p.1.1) (p.1.2 p.2) else 0 :=
+    Measurable.ite (measurableSet_lt (continuous_norm.measurable.comp hev) measurable_const)
+      (hG.comp hpair) measurable_const
+  exact measurable_lintegral_Icc_fixed timeLeb hσ' hg
+
+/-- The regularized clocks of the modified field are jointly measurable, for `ε > 0`: `hreg`, `hνm`, `hRm` hold for
+every field index. -/
+lemma measurable_modField_clockDistR {Ω : Type*} [MeasurableSpace Ω] {N : Set Ω} (hN : MeasurableSet N)
+    {hc : Ω → ℝ → ℂ → ℝ} (hmeas : ∀ ε : ℝ, 0 < ε → ∀ x : ℂ, Measurable fun ω => hc ω ε x)
+    (hgood : ∀ ω, ω ∉ N → ∀ ε : ℝ, 0 < ε → Continuous fun x : ℂ => hc ω ε x) (γ ε a : ℝ) (hε : 0 < ε)
+    (σ : ContinuousPath ℂ → ℝ≥0) (hσ : Measurable σ) :
+    Measurable (clockDistR γ (modField N hc) σ ε a) :=
+  measurable_clockDistR_of_density γ ε a (modField N hc) σ hσ
+    (measurable_regDensity_modField hN hmeas hgood γ ε hε)
+
+/-! ### Transfer of events along a null set of fields -/
+
+lemma ae_fst_notMem_prod {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} (PB : Measure (ContinuousPath ℂ))
+    [SFinite PB] {N : Set Ω} (hN0 : P N = 0) : ∀ᵐ x ∂(P.prod PB), x.1 ∉ N := by
+  rw [ae_iff]
+  have h : {x : Ω × ContinuousPath ℂ | ¬ x.1 ∉ N} = N ×ˢ (univ : Set (ContinuousPath ℂ)) := by
+    ext x
+    simp
+  rw [h, Measure.prod_prod, hN0, zero_mul]
+
+lemma measure_prod_congr_of_fst_notMem {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    (PB : Measure (ContinuousPath ℂ)) [SFinite PB] {N : Set Ω} (hN0 : P N = 0)
+    {S T : Set (Ω × ContinuousPath ℂ)} (h : ∀ x : Ω × ContinuousPath ℂ, x.1 ∉ N → (x ∈ S ↔ x ∈ T)) :
+    (P.prod PB) S = (P.prod PB) T := by
+  refine measure_congr (Filter.eventuallyEqSet_iff.2 ?_)
+  filter_upwards [ae_fst_notMem_prod PB hN0] with x hx using h x hx
 
 end MatedCRT.KilledOccupation
