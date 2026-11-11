@@ -1,6 +1,8 @@
 import MatedCRT.FirstPass.LPBridge.ConeMeanZeroRestriction
 import MatedCRT.FirstPass.LPBridge.LateralGaussian
 import MatedCRT.LPStaging.Gauss.GaussianProcessLawExt
+import MatedCRT.FirstPass.LPBridge.GFFRadialBrownian
+import MatedCRT.FirstPass.LPBridge.LateralProcessAEMeasurable
 
 /-!
 # Lateral part of a whole-plane GFF: finite-dimensional law
@@ -350,6 +352,16 @@ theorem coneRadialAbsIntegrable_holds : ConeRadialAbsIntegrable := by
   simp [G, hω, radialPoint, hy]
 
 end ConeRadialMain
+
+/-- **Cone mean-zero restriction, conditional on the radial/lateral independence.** The reduction
+`coneMeanZeroRestrictionStep_of_inputs` with the lateral law (`lateralLawFinite_holds`), the a.e. measurability of the
+lateral process (`lateralProcessAEMeasurable_holds`), the radial Brownian law (`gffRadialBrownian_holds`) and the cone
+radial absolute integrability (`coneRadialAbsIntegrable_holds`). The remaining input is the whole-plane radial/lateral
+independence `GFFRadialLateralIndep` (paper l.437-438, l.442). -/
+theorem fpConeMeanZeroRestriction_of_radialLateralIndep (hInd : GFFRadialLateralIndep) :
+    MatedCRT.FPConeMeanZeroRestriction :=
+  coneMeanZeroRestrictionStep_of_inputs lateralLawFinite_holds lateralProcessAEMeasurable_holds hInd
+    gffRadialBrownian_holds coneRadialAbsIntegrable_holds
 
 end MatedCRT.ConeMeanZeroRestriction
 
