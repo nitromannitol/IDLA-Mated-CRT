@@ -143,3 +143,6 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/RegularizedOccupationLimit.lean | archive/MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/RegularizedOccupationLimit.lean | B39 |
 | MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/WholePlaneCircleVariance.lean | archive/MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/WholePlaneCircleVariance.lean | B39 |
 | MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/WholePlaneClockExpectation.lean | archive/MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/WholePlaneClockExpectation.lean | B39 |
+| MatedCRT/Proofs/Sec3/UniformConvergenceGreenKernel/LocalCompactness.lean | archive/MatedCRT/Proofs/Sec3/UniformConvergenceGreenKernel/LocalCompactness.lean | B40 |
+| MatedCRT/Proofs/Sec3/UniformConvergenceGreenKernel/PreparedLocalCompactness.lean | archive/MatedCRT/Proofs/Sec3/UniformConvergenceGreenKernel/PreparedLocalCompactness.lean | B40 |
+| MatedCRT/Proofs/Sec3/UniformConvergenceGreenKernel/PreparedRandomCompactness.lean | archive/MatedCRT/Proofs/Sec3/UniformConvergenceGreenKernel/PreparedRandomCompactness.lean | B40 |
