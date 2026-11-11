@@ -7,7 +7,7 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.InsertionDyadicDecoder
 Internal module; it cites no literature input. It formalizes one written component of "Identification for the fixed
 affine map": for a complex-affine map `z ↦ a z + b`, `a ≠ 0`,
 the insertion circle array `(r, z) ↦ H(|a| r, a z + b) + Q log |a|` is the normalized
-array `H^a(r, z + b/a)` of eq:normalized-circle-dilation up to the random constant `h(|a|, 0)` and a deterministic
+array `H^a(r, z + b/a)` up to the random constant `h(|a|, 0)` and a deterministic
 constant.
 
 * `circleAverage_log_complexAffine`, `affineCircleArray_eq_normalized`: the deterministic circle-average identity.

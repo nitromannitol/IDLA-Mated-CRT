@@ -4,26 +4,23 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.ScaledRegularizedFamily
 import MatedCRT.Proofs.Sec4.Prop42Closure.ConePrematureNull
 import MatedCRT.Proposed.DuplantierSheffieldCoordinate2011
 
-/-! # Plateau scale invariance and the cone half-ball closure: the final consumer (Proposition 4.2, z5)
-
-Task `z5-plateau-scaling-final-consumer`. Written argument: `notes/prop42-proof/prop42-proof.tex`, lines 245-268.
+/-! # Plateau scale invariance and the cone half-ball closure: the final consumer (Proposition 4.2)
 
 `plateauScaleInvarianceStep_assembled` proves `PlateauScaleInvarianceStep` (`HalfBallPlateau.lean:51`) from three
 hypotheses, each a `Prop` in full:
 * `hI2 : LQGVolumeGrowthAllScalesStmt.{0}`: the Harmonic-Balls input I2 (`HarmonicBalls/Draft/Section2.lean:122`), the
   volume growth of every whole-plane LQG measure on every ball. Retained; not proved here.
 * `hDS : MatedCRT.Proposed.DS11CoordinateRuleFixedAffine`: input K, the LQG coordinate rule for the fixed affine maps at
-  all real scales (`WPN-42-insertion-coordinate-extension`, `docs/campaign/GAPS-TAKEOVER-20261108.md`). The field law and
+  all real scales (`docs/campaign/GAPS-TAKEOVER-20261108.md`). The field law and
   the Borel recovery of the insertion measure are proved in `InsertionScalingLaw.lean`; the coordinate rule is not.
 * `hrep : ScaledBoundedRepresentativesStep`: input H, bounded subharmonic representatives of the dilated measure, for every
-  measure and every bounded `Λ` (the repaired Step, steps3:319; `WPN-42-scaled-representatives`,
-  `ScaledRegularizedFamily.lean:43`). The deterministic scaling of the regularized
+  measure and every bounded `Λ` (the repaired Step, `ScaledRegularizedFamily.lean:43`). The deterministic scaling of the regularized
   family is proved from it (`scaledRegularizedFamilyStep_of_representatives`).
 
 `coneHalfBallClosureInsideStep_assembled` feeds this statement to the half-ball/plateau reduction
 `coneHalfBallClosureInsideStep_of_inputs` (`ConePrematureNull.lean:183`), where `PlateauScaleInvarianceStep` is the input
 `hfact1`. The other inputs of the reduction are carried explicitly:
-* locality: `hLoc : LQGMeasureLocalityFunctionalStep` (`WPN-42-locality`, `LQGMeasureFunctional.lean:42`);
+* locality: `hLoc : LQGMeasureLocalityFunctionalStep` (`LQGMeasureFunctional.lean:42`);
 * cone transfer: `hFL : ConeWholePlaneFieldLawStep`, `hB2 : WholePlaneLQGModelStep`, `hVG : VolumeGrowthStmt` (IDLA Lemma 2.7);
 * the Harmonic-Balls inputs `hloc`, `hEx`, `hSC` of the reduction.
 The whole-plane volume growth input `WholePlaneVolumeGrowthAeStep` (B1) is not a further input: it follows from I2

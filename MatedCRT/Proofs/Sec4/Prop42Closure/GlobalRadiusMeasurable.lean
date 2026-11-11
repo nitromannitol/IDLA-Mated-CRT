@@ -7,8 +7,8 @@ import HarmonicBalls.Proofs.Sec5.RegularizedGeometry
 
 The route for `R_h(q)` and `(h,r) ↦ 1{r ∈ P(h)}`.
 Here `Λ t` is the global regularized family of Theorem 5.5 (`IsRegularizedClusterFamily`, HB Section5.lean:88), the raw
-cluster in the disk `B_R` is `cluster μ R 0 t` (HB Defs/Obstacle.lean:69, eq:non-co-set, line 592) and the regularized
-cluster is `regularizedCluster μ R 0 t = interior (closure (cluster μ R 0 t))` (HB Section5.lean:56, eq:regular-cluster,
+cluster in the disk `B_R` is `cluster μ R 0 t` (HB Defs/Obstacle.lean:69, line 592) and the regularized
+cluster is `regularizedCluster μ R 0 t = interior (closure (cluster μ R 0 t))` (HB Section5.lean:56,
 line 846).
 
 Route, in the paper's order:
@@ -158,7 +158,7 @@ theorem exists_canonicalRawClusterFamilies :
   choose G hG using fun n : ℕ => exists_canonicalRawClusterFamily (R := (n : ℝ) + 1) (by positivity)
   exact ⟨G, hG⟩
 
-/-- **A.e. measurability of the rational-time radii from canonical codes** (the route of prop42-proof.tex:263-268).
+/-- **A.e. measurability of the rational-time radii from canonical codes**.
 Let `μ` be an almost-everywhere measurable random measure such that, almost surely, every `μ ω` has volume growth on every
 disk `B_{n+1}`, and `Λ ω` is almost surely a regularized global family at `0`. Then for every `q > 0` (in particular every
 rational `q > 0`) the radius `ω ↦ familyRadius (Λ ω q)` is almost everywhere measurable. -/

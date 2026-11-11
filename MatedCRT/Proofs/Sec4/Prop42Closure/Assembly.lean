@@ -8,7 +8,7 @@ The two forms of Proposition 4.2 in the names used by the consumers (Proposition
 * `discreteClusterInnerBound_prop42`: `DiscreteClusterInnerBoundStep` (the `Λ^ε_t` form used by Proposition 5.1).
 
 Their proofs are those of `Final.lean`. The only hypothesis specific to Proposition 4.2 is `HarmonicBallStrictObstacleGapStep`
-(`Final.lean:32`, the fixed-time strict obstacle gap of draft lines 18-228, which worker m6 proves). The other hypotheses
+(`Final.lean:32`, the fixed-time strict obstacle gap of draft lines 18-228). The other hypotheses
 are numbered results of the paper, Theorem 4.1 (`ConvergenceDivisibleStmt`), Theorem 2.3 (`ConeHarmonicBallsStmt`), Lemma 2.4
 (`ConeHarmonicBallsUpToFixedTimeStmt`), Lemma 2.7 (`VolumeGrowthStmt`), Lemma 2.8 (`CellSizeEstimateStmt`), Lemma 3.3
 (`UniformConvergenceGreenKernelStmt`), and the Section 2 measurability step `ConeFamilyAEMeasurableStep`. The closure step

@@ -6,12 +6,12 @@ import MatedCRT.Proofs.Sec2.ConeScaleInvarianceUpToFixedTime.Obstacle
 import HarmonicBalls.Proofs.Sec6.GreenDilation
 import HarmonicBalls.Audit.GreenSubharmonicTestClass
 
-/-! # Scaled regularized cluster families (Proposition 4.2, z5)
+/-! # Scaled regularized cluster families (Proposition 4.2)
 
-Task `z5-scaled-regularized-family`. The Step is `ScaledRegularizedFamilyStep` (`PlateauScaleLaw.lean`): for `a, c > 0`
+The Step is `ScaledRegularizedFamilyStep` (`PlateauScaleLaw.lean`): for `a, c > 0`
 the dilation `μ ↦ c⁻¹ μ(a ·)`, `Λ ↦ a⁻¹ Λ(c ·)` of a regularized cluster family at `0` is one at `0`.
-Written argument: `notes/prop42-proof/prop42-proof.tex` lines 252-256 (scaling of the mean-value property, mass
-parameter and family conditions) and [HB] Lemma 5.7 (`lqg_harmonic_ball-corrected.tex` lines 905-938).
+The argument uses the scaling of the mean-value property, mass
+parameter and family conditions, and [HB] Lemma 5.7 (`lqg_harmonic_ball-corrected.tex` lines 905-938).
 
 Proved here from existing MatedCRT and HB dilation lemmas:
 * the bridges `scaledMeasure = rescaledMeasure` and `scaledFamily = rescaledFamily` for `a, c > 0`;
@@ -22,7 +22,7 @@ Proved here from existing MatedCRT and HB dilation lemmas:
   subharmonic test class (`HarmonicBalls.greenFunction_dilation`, `HarmonicBalls.greenPotential_dilation`).
 
 Not proved here: the bounded-domain representatives of the dilated subharmonic balls, carried as the named Step
-`ScaledBoundedRepresentativesStep` for bounded `Λ` (the repair of steps3:319). See its docstring for the boundary. -/
+`ScaledBoundedRepresentativesStep` for bounded `Λ` (the bounded repair). See its docstring for the boundary. -/
 
 namespace MatedCRT
 
@@ -34,15 +34,14 @@ balls.** For `a, c > 0` and a bounded subharmonic ball `Λ` centred at `0` for `
 subharmonic test class `subharmonicBallTestClass ((a·)⁻¹ Λ) 0` agrees, at the centre and `μ_a`-a.e. on `(a·)⁻¹ Λ`,
 with a test function of the bounded-domain class `boundedSubharmonicBallTestClass ((a·)⁻¹ Λ) 0`.
 This is `HasBoundedSubharmonicRepresentatives` (HB `Audit/GreenSubharmonicTestClass.lean:48`) for the scaled data.
-The boundedness of `Λ` is the repair of steps3 (`notes/wpn-steps3/steps3.tex:319`, Proposition
-`prop:bounded-scaled-representatives`). Without it the Step is false: for `μ = δ₀`, `Λ = ℂ`, `a = c = 1`, the zero test
-function has no bounded-domain representative (steps3:117-137). No ambient hypothesis on `μ` is added. The repaired
-statement is proved in steps3 from the bounded Jensen lemma (steps3:230-317), which is not formalized here, so the Step
+The boundedness of `Λ` is the repair of the representative Step. Without it the Step is false: for `μ = δ₀`, `Λ = ℂ`, `a = c = 1`, the zero test
+function has no bounded-domain representative. No ambient hypothesis on `μ` is added. The repaired
+statement is proved from the bounded Jensen lemma, which is not formalized here, so the Step
 remains a named input. Boundary: the unscaled witnesses `O` of `subharmonicBallTestClass` need not be bounded, and HB's
 Audit states the representative assertion as an open potential-theoretic claim (`GreenSubharmonicTestClass.lean:1-6`). HB's
 `Proofs/Potential/BoundedSubharmonicRepresentatives.lean` reduces it to the μ-free pointwise criterion
 `forall_hasBoundedSubharmonicRepresentatives_iff_pointwise` (line 140) and proves transfer under absolute continuity
-(line 160); none of these covers the dilated measure. The written argument (prop42-proof.tex:252-256) scales the
+(line 160); none of these covers the dilated measure. The argument scales the
 mean-value property but does not treat unbounded witnesses. -/
 def ScaledBoundedRepresentativesStep : Prop :=
   ∀ (μ : Measure ℂ) (Λ : Set ℂ) (a c : ℝ), 0 < a → 0 < c → IsSubharmonicBall μ Λ 0 → Bornology.IsBounded Λ →

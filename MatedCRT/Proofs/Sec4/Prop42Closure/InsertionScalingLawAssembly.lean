@@ -2,9 +2,9 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.InsertionCoordinateExtensionProof
 import MatedCRT.Proofs.Sec4.Prop42Closure.InsertionScalingLaw
 
 /-!
-# Input K of Proposition 4.2 from its two named inputs: the exact Step and its fixed-`a` form (steps3:678-713)
+# Input K of Proposition 4.2 from its two named inputs: the exact Step and its fixed-`a` form
 
-Task `z1-steps3-insertion-scaling-consumer-assembly`. A bounded consumer integration. It is not an unconditional closure of
+A bounded consumer integration. It is not an unconditional closure of
 Input K and not a closure of Proposition 4.2. Beyond the field data of each statement (a probability space, a whole-plane
 GFF, its insertion-`α` LQG measure, `0 < γ < 2`, `α < Q`, and `a > 0`), the exports take exactly the two named inputs of the
 Step `InsertionLQGScalingLawStep` (`Proofs/Sec4/Prop42Closure/PlateauScaleLaw.lean:106`):
@@ -13,7 +13,7 @@ Step `InsertionLQGScalingLawStep` (`Proofs/Sec4/Prop42Closure/PlateauScaleLaw.le
   compact-interior form of Sheffield-Wang, arXiv:1605.06171v2, Theorem 1.1, p. 3. It is a literature input carried as an
   explicit hypothesis; its admission as a source is not established here.
 * `hDec : LocalDirichletHarmonicDecompositionStep` (`Proofs/Sec4/Prop42Closure/InsertionCoordinate.lean:663`), the local
-  Dirichlet/harmonic decomposition (steps3:609-621), a producer residual.
+  Dirichlet/harmonic decomposition, a producer residual.
 
 Route. `insertionCoordinateExtensionStep_of_components hSWI hDec` (`InsertionCoordinateExtensionProof.lean:280`) proves the
 fixed-map coordinate rule `InsertionCoordinateExtensionStep`. The checked consumer

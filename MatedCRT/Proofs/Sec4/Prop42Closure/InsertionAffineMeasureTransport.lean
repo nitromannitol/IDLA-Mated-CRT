@@ -114,7 +114,7 @@ theorem smul_withDensity_fun (c : ℝ≥0∞) (hc : c ≠ ∞) (μ : Measure ℂ
   rw [Measure.smul_apply, withDensity_apply _ hB, withDensity_apply _ hB, smul_eq_mul,
     lintegral_const_mul' c G hc]
 
-/-- The real identity behind eq:fixed-factor-approx. With `A = H(Rr, az)`, `H^a(r,z) = H_a`, `p = h_∘(R,0)` and
+/-- The real identity behind the fixed-factor approximation. With `A = H(Rr, az)`, `H^a(r,z) = H_a`, `p = h_∘(R,0)` and
 `hA : A + Q log R = H_a + p + (Q-α) log R` (the affine circle export at `b = 0`),
 `r^{γ²/2} e^{γ H_a} = C_a⁻¹ R² (Rr)^{γ²/2} e^{γ A}`, using `γ Q = 2 + γ²/2`. -/
 theorem affine_density_identity {γ α : ℝ} (hγ : 0 < γ) {R r A Ha p : ℝ} (hR : 0 < R) (hr : 0 < r)
@@ -269,7 +269,7 @@ theorem measure_eq_of_avoid_zero {ν₁ ν₂ : Measure ℂ} [IsFiniteMeasureOnC
     hD.congr' (hev.mono fun ε hε => (hdec ε hε).symm)
   exact sub_eq_zero.1 (tendsto_nhds_unique tendsto_const_nhds hconst)
 
-/-- **Fixed-affine measure identification** (eq:affine-dilation-measure). For a fixed `a ≠ 0`, on a
+/-- **Fixed-affine measure identification.** For a fixed `a ≠ 0`, on a
 full-probability event, `C_a μ^a = (x ↦ x/a)_* μ` as measures on `ℂ`, where `μ^a` is the dyadic insertion limit of the
 normalized field `H^a` (hypothesis `hμa`) and `μ` that of `H` (hypothesis `hμ`). The convergence away from `0` uses the
 checked punctured all-scale consumer; the atoms at `0` are null by the unconditional no-atom export. The normalized
@@ -422,7 +422,7 @@ theorem transEquiv_map_volume (p : ℂ) : Measure.map (transEquiv p) volume = vo
   (measurePreserving_sub_right volume p).map_eq
 
 /-- **Translated approximation identity**. For `a ≠ 0`, `b ∈ ℂ` and `r > 0`, the approximating measure of
-the affine circle array `affineCircleArray α Q a b h` (eq:affine-circle-array, with `Q = lqgQ γ`) is
+the affine circle array `affineCircleArray α Q a b h` (with `Q = lqgQ γ`) is
 `C_a (z ↦ z - b/a)_* M^a_r`, where `M^a_r = lqgApprox γ (fieldCircleAverage α (normalizedCircleProc a h)) r`. -/
 theorem lqgApprox_affineArray_eq {γ α : ℝ} {a b : ℂ} (ha : a ≠ 0) (h : ℝ → ℂ → ℝ) {r : ℝ}
     (hr : 0 < r) :

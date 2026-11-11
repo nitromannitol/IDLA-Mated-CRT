@@ -5,24 +5,23 @@ import HarmonicBalls.Proofs.Potential.BoundedJensenSmoothTests
 import HarmonicBalls.Proofs.Potential.BoundedDomainGreenMeasurability
 import HarmonicBalls.Proofs.Potential.GreenPotentialExceptionalSet
 
-/-! # Bounded representatives of the dilated subharmonic balls (Proposition 4.2, z5)
+/-! # Bounded representatives of the dilated subharmonic balls (Proposition 4.2)
 
-Task `z5-m5q-steps3-bounded-representatives-repair`. Written argument: `notes/wpn-steps3/steps3.tex`, lines 211-368:
-the representative lemma `lem:bounded-jensen-representatives` (steps3:230-317) and the bounded repair
-`prop:bounded-scaled-representatives` (steps3:319-368).
+The representative lemma `BoundedJensenRepresentativesStep` and the bounded repair `ScaledBoundedRepresentativesStep`
+are treated here.
 
 Proved here:
 * `hasSubMeanValueProperty_scaled_boundedTestClass`: for a bounded-domain test function `f` of the dilated set
-  `a⁻¹ Λ`, the sub-mean inequality for `scaledMeasure μ a c` on `a⁻¹ Λ` (steps3:340-368: the change of variables
+  `a⁻¹ Λ`, the sub-mean inequality for `scaledMeasure μ a c` on `a⁻¹ Λ` (the change of variables
   `F(y) = f(y/a)` into `T_b(Λ, 0)`, and the scaled mean-value transfer of `ScaledRegularizedFamily.lean`).
-* `scaledBoundedRepresentativesStep_of_jensen`: the repaired `ScaledBoundedRepresentativesStep` (bounded `Λ`,
-  steps3:319), from the representative lemma `BoundedJensenRepresentativesStep`. The mass identity
+* `scaledBoundedRepresentativesStep_of_jensen`: the repaired `ScaledBoundedRepresentativesStep` (bounded `Λ`),
+  from the representative lemma `BoundedJensenRepresentativesStep`. The mass identity
   `μ_a(a⁻¹ Λ) = c⁻¹ μ(Λ) ∈ (0, ∞)` and the boundedness and openness of `a⁻¹ Λ` are proved here.
 
 * `bounded_jensen_representatives_of_localization_and_fatou`: the representative lemma `BoundedJensenRepresentativesStep`
-  (steps3:230-233) from `JensenGreenLocalizationStmt` (steps3:180-225, Riesz localization of the real Green potentials;
+  from `JensenGreenLocalizationStmt` (Riesz localization of the real Green potentials;
   Saff Theorem 2.4 staged in `Proposed/Saff2010.lean`) and `JensenFatouFinitenessStmt`. The latter is the theorem
-  `jensenFatouFinitenessStmt_of_smoothing`, from the named smoothing input `JensenSmoothingStmt` (steps3:247-262) and
+  `jensenFatouFinitenessStmt_of_smoothing`, from the named smoothing input `JensenSmoothingStmt` and
   Harmonic-Balls lemmas (smooth tests, Fatou, finiteness). The witness transport and the bounded-domain localization `V`
   are Harmonic-Balls lemmas too; `greenKernelExtended` is established for bounded domains only. -/
 
@@ -31,22 +30,22 @@ namespace MatedCRT
 open MeasureTheory Filter Set Metric HarmonicBalls InnerProductSpace
 open scoped Pointwise ENNReal
 
-/-- **Named Step: the bounded representative lemma (steps3:230-233).** Let `S` be bounded and open, `z ∈ S`, and
-`0 < m S < ∞`. If the sub-mean inequality (eq:submean) holds for `m` on `S` for every bounded-domain test function of
+/-- **Named Step: the bounded representative lemma.** Let `S` be bounded and open, `z ∈ S`, and
+`0 < m S < ∞`. If the sub-mean inequality holds for `m` on `S` for every bounded-domain test function of
 `S` at `z`, then every subharmonic test function of `S` at `z` has a bounded-domain representative for `m`
 (`HasBoundedSubharmonicRepresentatives`, HB `Audit/GreenSubharmonicTestClass.lean:48`).
-Written proof: steps3:234-317 (potential localization, bounded approximation and the Green identification).
+The argument uses potential localization, bounded approximation and the Green identification.
 Consumer: `scaledBoundedRepresentativesStep_of_jensen`, which gives the repaired `ScaledBoundedRepresentativesStep`. -/
 def BoundedJensenRepresentativesStep : Prop :=
   ∀ (m : Measure ℂ) (S : Set ℂ) (z : ℂ), IsOpen S → Bornology.IsBounded S → z ∈ S → 0 < m S → m S < ⊤ →
     (∀ f ∈ boundedSubharmonicBallTestClass S z, HasSubMeanValueProperty m S z f) →
     HasBoundedSubharmonicRepresentatives m S z
 
-/-- **Named internal Step: Riesz localization of the real Green potentials (steps3:180-225, eq:potential-localization).**
+/-- **Named internal Step: Riesz localization of the real Green potentials.**
 For bounded open `V ⊆ O` and a finite measure `ν` carried by a compact `K ⊆ V`, there is a harmonic `a` on `V` such that
 at every `x ∈ V` with `ν {x} = 0`: `G_O(x, ·)` is `ν`-integrable iff `G_V(x, ·)` is, and then
 `P_O ν x = a x + P_V ν x` (Armitage-Gardiner terminology: the real Green potentials of the Harmonic-Balls kernel).
-Written proof: steps3:180-225 (regular parts bounded on compact sets) and Saff Theorem 2.4 (`Proposed/Saff2010.lean`). -/
+The argument uses regular parts bounded on compact sets and Saff Theorem 2.4 (`Proposed/Saff2010.lean`). -/
 def JensenGreenLocalizationStmt : Prop :=
   ∀ (O V : Set ℂ) (ν : Measure ℂ) (K : Set ℂ), IsOpen O → IsOpen V → Bornology.IsBounded V → V ⊆ O →
     IsCompact K → K ⊆ V → IsFiniteMeasure ν → ν Kᶜ = 0 →
@@ -55,7 +54,7 @@ def JensenGreenLocalizationStmt : Prop :=
         (Integrable (greenFunction O x) ν ↔ Integrable (greenFunction V x) ν) ∧
         (Integrable (greenFunction V x) ν → greenPotential O ν x = a x + greenPotential V ν x)
 
-/-- **Named internal Step: Jensen-Fatou finiteness (steps3:247-262, eq:potential-jensen).** Let `V` be bounded open,
+/-- **Named internal Step: Jensen-Fatou finiteness.** Let `V` be bounded open,
 `S ∋ z` bounded open with `closure S ⊆ V`, and `ν` a finite measure carried by a compact `K ⊆ V`, with `ν {z} = 0` and
 `G_V(z, ·) ∈ L¹(ν)`. If `m S < ∞` and `m` satisfies the sub-mean inequality on `T_b(S, z)`, then `m`-almost every
 `x ∈ S` has `ν {x} = 0` and `G_V(x, ·) ∈ L¹(ν)`. Written proof: smooth superharmonic approximants `F_n = -χ u_{2,n}` in
@@ -102,7 +101,7 @@ theorem bounded_jensen_representatives_of_localization_and_fatou (hLoc : JensenG
   · filter_upwards [ae_restrict_mem hSmeas, hfin] with x hxS hx
     exact (hid₂ x (hS' hxS) hx.1).2 hx.2
 
-/-- **The sub-mean inequality on the bounded test class of the dilated set (steps3:340-368).** For a subharmonic ball
+/-- **The sub-mean inequality on the bounded test class of the dilated set.** For a subharmonic ball
 `Λ` of `μ` at `0` and `a, c > 0`, every `f ∈ T_b(a⁻¹ Λ, 0)` satisfies the sub-mean inequality for `μ_a = scaledMeasure μ a c`
 on `a⁻¹ Λ`. Here `F(y) = f(y / a)` lies in `T_b(Λ, 0)` (`boundedSubharmonicBallTestClass_rescaled`), and the scaled
 mean-value transfer is `hasSubMeanValueProperty_rescaledMeasure`. -/
@@ -152,11 +151,11 @@ theorem scaledBoundedRepresentativesStep_of_localization_and_fatou (hLoc : Jense
     (hFat : JensenFatouFinitenessStmt) : ScaledBoundedRepresentativesStep :=
   scaledBoundedRepresentativesStep_of_jensen (bounded_jensen_representatives_of_localization_and_fatou hLoc hFat)
 
-/-- **Named internal Step: superharmonic smoothing of the classical Green potential (steps3:247-262).** Let `V` be bounded
+/-- **Named internal Step: superharmonic smoothing of the classical Green potential.** Let `V` be bounded
 open, `S ∋ z` bounded open with `closure S ⊆ V`, and `ν` a finite measure carried by a compact `K ⊆ V`, with `ν {z} = 0`
 and `G_V(z, ·) ∈ L¹(ν)`. There are smooth compactly supported `F n` with `0 ≤ Δ (F n)` on `S` (so that `-F n` is
 superharmonic there), `F n ≤ c` on `S`, `F n z` convergent, and the classical potential `x ↦ ∫⁻ G_V(x, ·) dν` is bounded by
-`liminf (-F n x + c)` on `S`. Written proof: steps3:247-262, the radial convolution of the superharmonic potential (pointwise
+`liminf (-F n x + c)` on `S`. The argument is the radial convolution of the superharmonic potential (pointwise
 convergence from the circle-mean inequality and lower semicontinuity) with a cut-off `χ`. -/
 def JensenSmoothingStmt : Prop :=
   ∀ (V S : Set ℂ) (z : ℂ) (ν : Measure ℂ) (K : Set ℂ),

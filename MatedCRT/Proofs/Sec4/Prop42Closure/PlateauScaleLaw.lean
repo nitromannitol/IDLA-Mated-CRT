@@ -99,8 +99,7 @@ whole-plane GFF with insertion `α` (`IsWholePlaneGFF`, `IsLQGMeasureOfField`), 
 field `h''` (the affine transform `h^ℂ(a ·) - h^ℂ_a(0)` of draft line 245) whose insertion-`α` LQG measure `μ''` satisfies
 `μ.map (· / a) = c • μ''` for a random constant `c > 0` (draft line 252, `μ_{h_a}(E) = e^{-γ c_a} μ_h(aE)`), and
 `μ'' =_d μ` (draft line 245, `h_a =_d h^α`).
-Sources: draft lines 245-256; DS11 Prop 2.1 (LQG coordinate change, all real scales); `INPUT-REQUESTS.md` IR-c4-3
-(the dyadic gap). Not `WholePlaneLQGCoordinateChangeStep` (`MatedCRT/Steps/Sec6/AnnulusHit.lean:65`), which is the
+Sources: draft lines 245-256; DS11 Prop 2.1 (LQG coordinate change, all real scales); the dyadic gap. Not `WholePlaneLQGCoordinateChangeStep` (`MatedCRT/Steps/Sec6/AnnulusHit.lean:65`), which is the
 `α = 0`, dyadic version. -/
 def InsertionLQGScalingLawStep : Prop :=
   ∀ γ α : ℝ, 0 < γ → γ < 2 → α < lqgQ γ →

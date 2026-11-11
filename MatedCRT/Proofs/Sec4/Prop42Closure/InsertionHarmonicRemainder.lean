@@ -60,7 +60,7 @@ Source status (unverified; R2 source hold of `docs/campaign/MATH-OPEN-20261109.m
   p. 415, as cited by the Wikipedia article "Weyl's lemma (Laplace equation)". The printed text has not been checked.
   The campaign doc records Project Euclid full-page and download attempts that did not expose it; a bibliographic search
   confirmed only the journal record (volume 7, pp. 411–444). The lemma number and the page are unverified. The DOI recorded
-  in the campaign doc, `10.1215/S0012-7094-40-00725-6`, is a source lead only.
+  in the campaign doc, `10.1215/S0012-7094-40-00725-6`, is only an unverified pointer to the source.
 * Armitage–Gardiner attribution (*Classical Potential Theory*): no theorem number is given; the attribution is unverified.
 * The conclusion bundles two facts, which are not established as one cited lemma: (i) Weyl's lemma proper, that a function
   annihilating planar Laplacians of test functions supported in `D` is (almost everywhere) a harmonic function on `D`;
