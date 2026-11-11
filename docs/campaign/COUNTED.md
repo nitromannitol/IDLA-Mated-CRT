@@ -103,11 +103,11 @@ The forms 1.4n, 1.6n and 2.3lp are rows of their own in the table; each is the s
 ## Existence of the coupling
 
 Status: **PENDING TRUTH CHECK**. Existence is not proved in this repository; it is a cited literature input. It concerns
-the valid environments `MatedCRTEnv.IsValid 𝒮 γ` (MatedCRT/Defs/Setting.lean:141).
+the valid environments `MatedCRTEnv.IsValid 𝒮 γ` (MatedCRT/Defs/Setting.lean:142).
 
 - **Literature inputs named.** `IsMatingOfTreesCoupling` (LatticeProb module
   `LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.IsMatingOfTreesCoupling` (Lattice-Probability/LatticeProb/Bonanno/MatedCRTHarmonic/Frozen/IsMatingOfTreesCoupling.lean:61); MatedCRT/Defs/Setting.lean:7, MatedCRT/Defs/Setting.lean:14, MatedCRT/Defs/Setting.lean:157-165) is the coupling
-  conjunct of `IsValid`. `MatedCRTEnv.IsValid` (Setting.lean:141) has the fields `isQuantumCone`, `isLQGMeasure`,
+  conjunct of `IsValid`. `MatedCRTEnv.IsValid` (Setting.lean:142) has the fields `isQuantumCone`, `isLQGMeasure`,
   `isSLE` and the coupling. `HasReferenceEnvironments 𝒮` (MatedCRT/FirstPass/SLERef/Reference.lean:42) gives valid
   environments for every γ ∈ (0,2); it is a conjunct of `CertifiedReferenceModel ν 𝒮` (SLERef/Certified.lean:54, :54).
 - **Corrected-tex invocations** (paper/idla_mated_crt-corrected.tex):

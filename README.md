@@ -10,58 +10,58 @@ The table gives, for each numbered result, its Lean statement and the declaratio
 
 | Result | Lean statement | Declaration or hypothesis field in the main route | First-pass closure |
 |---|---|---|---|
-| Theorem 1.4 | `ConvergenceOfIDLAStmt` (Draft/Section1.lean:44) | `convergenceOfIDLA_conditional` (Assembly/Main.lean:342) | `closed_1_4_lp_noSC_noSup` (FirstPass/Closure/LssDerived.lean:54; applies `closed_1_4_lp_noSC`, Clean14And16LPNoSC.lean:24) |
-| Theorem 1.6 | `ConvergenceOfDivSandpileStmt` (Draft/Section1.lean:55) | `convergenceOfDivSandpile_conditional` (Assembly/Main.lean:349) | `closed_1_6_lp_noSC_noSup` (FirstPass/Closure/LssDerived.lean:95; applies `closed_1_6_lp_noSC`, Clean14And16LPNoSC.lean:73) |
+| Theorem 1.4 | `ConvergenceOfIDLAStmt` (Draft/Section1.lean:44) | `convergenceOfIDLA_conditional` (Assembly/Main.lean:354) | `closed_1_4_lp_noSC_noSup` (FirstPass/Closure/LssDerived.lean:54; applies `closed_1_4_lp_noSC`, Clean14And16LPNoSC.lean:24) |
+| Theorem 1.6 | `ConvergenceOfDivSandpileStmt` (Draft/Section1.lean:55) | `convergenceOfDivSandpile_conditional` (Assembly/Main.lean:361) | `closed_1_6_lp_noSC_noSup` (FirstPass/Closure/LssDerived.lean:95; applies `closed_1_6_lp_noSC`, Clean14And16LPNoSC.lean:73) |
 | Fact 2.2 | `LQGMeasurePropertiesStmt` (Draft/Section2.lean:39) | hypothesis `lqgMeasureProperties` (Assembly/Hypotheses.lean:65) | not counted (cited result) |
-| Theorem 2.3 | `ConeHarmonicBallsStmt` (Draft/Section2.lean:56) | `coneHarmonicBalls` (Assembly/Main.lean:112) | `closed_2_3_lp` (FirstPass/Closure/Clean2xLP.lean:37) |
-| Lemma 2.4 | `ConeHarmonicBallsUpToFixedTimeStmt` (Draft/Section2.lean:66) | `coneHarmonicBallsUpToFixedTime` (Assembly/Main.lean:97) | `closed_2_4_lp` (FirstPass/Closure/Clean2xLP.lean:77) |
-| Lemma 2.5 | `ConeScaleInvarianceUpToFixedTimeStmt` (Draft/Section2.lean:88) | `coneScaleInvarianceUpToFixedTime` (Assembly/Main.lean:102) | `closed_2_5_lp` (FirstPass/Closure/Clean2xLP.lean:99) |
+| Theorem 2.3 | `ConeHarmonicBallsStmt` (Draft/Section2.lean:56) | `coneHarmonicBalls` (Assembly/Main.lean:124) | `closed_2_3_lp` (FirstPass/Closure/Clean2xLP.lean:37) |
+| Lemma 2.4 | `ConeHarmonicBallsUpToFixedTimeStmt` (Draft/Section2.lean:66) | `coneHarmonicBallsUpToFixedTime` (Assembly/Main.lean:109) | `closed_2_4_lp` (FirstPass/Closure/Clean2xLP.lean:77) |
+| Lemma 2.5 | `ConeScaleInvarianceUpToFixedTimeStmt` (Draft/Section2.lean:88) | `coneScaleInvarianceUpToFixedTime` (Assembly/Main.lean:114) | `closed_2_5_lp` (FirstPass/Closure/Clean2xLP.lean:99) |
 | Lemma 2.6 | `ConeScaleInvarianceStmt` (Draft/Section2.lean:108) | none in Assembly/Main.lean | `closed_2_6_lp` (FirstPass/Closure/Clean2xLP.lean:122) |
 | Lemma 2.7 | `VolumeGrowthStmt` (Draft/Section2.lean:121) | hypothesis `volumeGrowth` (Assembly/Hypotheses.lean:67) | not counted (cited result) |
 | Lemma 2.8 | `CellSizeEstimateStmt` (Draft/Section2.lean:131) | hypothesis `cellSizeEstimate` (Assembly/Hypotheses.lean:69) | not counted (cited result) |
 | Lemma 2.9 | `CountingMeasureConvergenceStmt` (Draft/Section2.lean:143) | hypothesis `countingMeasureConvergence` (Assembly/Hypotheses.lean:71) | not counted (cited result) |
 | Lemma 2.10 | `DegreeMeasureConvergenceStmt` (Draft/Section2.lean:157) | hypothesis `degreeMeasureConvergence` (Assembly/Hypotheses.lean:73) | not counted (cited result) |
 | Theorem 2.11 | `RandomWalkToLBMStmt` (Draft/Section2.lean:169) | hypothesis `randomWalkToLBM` (Assembly/Hypotheses.lean:75) | not counted (cited result) |
-| Lemma 2.13 | `MaximumPrincipleStmt` (Draft/Section2.lean:183) | `maximumPrinciple` (Assembly/Main.lean:117) | `closed_2_13_cellRewire` (FirstPass/Closure/CellRewire.lean:21) |
+| Lemma 2.13 | `MaximumPrincipleStmt` (Draft/Section2.lean:183) | `maximumPrinciple` (Assembly/Main.lean:129) | `closed_2_13_cellRewire` (FirstPass/Closure/CellRewire.lean:21) |
 | Lemma 2.14 | `GreenKernelUpperBoundStmt` (Draft/Section2.lean:191) | hypothesis `greenKernelUpperBound` (Assembly/Hypotheses.lean:77) | not counted (cited result) |
 | Lemma 2.15 | `GreenFunctionCrudeBoundStmt` (Draft/Section2.lean:201) | hypothesis `greenFunctionCrudeBound` (Assembly/Hypotheses.lean:79) | not counted (cited result) |
 | Lemma 2.16 | `GreenKernelLowerBoundStmt` (Draft/Section2.lean:212) | hypothesis `greenKernelLowerBound` (Assembly/Hypotheses.lean:81) | not counted (cited result) |
-| Lemma 2.17 | `BoundedExitTimeRVStmt` (Draft/Section2.lean:227) | `boundedExitTimeRV` (Assembly/Main.lean:121) | `firstPass_2_17_ownBinders` (FirstPass/Closure/OwnBinderRewire.lean:85) |
+| Lemma 2.17 | `BoundedExitTimeRVStmt` (Draft/Section2.lean:227) | `boundedExitTimeRV` (Assembly/Main.lean:133) | `firstPass_2_17_ownBinders` (FirstPass/Closure/OwnBinderRewire.lean:85) |
 | Lemma 2.18 | `ExitTimeUpperBoundStmt` (Draft/Section2.lean:239) | hypothesis `exitTimeUpperBound` (Assembly/Hypotheses.lean:83) | not counted (cited result) |
-| Lemma 2.19 | `ExpectedExitTimeExplicitBoundStmt` (Draft/Section2.lean:260) | `expectedExitTimeExplicitBound` (Assembly/Main.lean:125) | `closed_2_19_ownBinders` (FirstPass/Closure/OwnBinderRewire.lean:39) |
-| Lemma 3.1 (corrected) | `DiscretePotentialTightnessCorrectedStmt` (Steps/Sec3/DiscretePotentialTightness.lean:102) | `discretePotentialTightnessCorrected` (Assembly/Main.lean:131) | `firstPass_3_1_faithful` (FirstPass/S3c.lean:125); open DRAFT binders: h27, h218 |
+| Lemma 2.19 | `ExpectedExitTimeExplicitBoundStmt` (Draft/Section2.lean:260) | `expectedExitTimeExplicitBound` (Assembly/Main.lean:137) | `closed_2_19_ownBinders` (FirstPass/Closure/OwnBinderRewire.lean:39) |
+| Lemma 3.1 (corrected) | `DiscretePotentialTightnessCorrectedStmt` (Steps/Sec3/DiscretePotentialTightness.lean:102) | `discretePotentialTightnessCorrected` (Assembly/Main.lean:143) | `firstPass_3_1_faithful` (FirstPass/S3c.lean:125); open DRAFT binders: h27, h218 |
 | Lemma 3.2 | `DiscreteHolderContinuityStmt` (Draft/Section3.lean:71) | hypothesis `discreteHolderContinuityCorrected` (Assembly/Hypotheses.lean:165) | not counted (cited result) |
-| Lemma 3.3 | `UniformConvergenceGreenKernelStmt` (Draft/Section3.lean:93) | `uniformConvergenceGreenKernel` (Assembly/Main.lean:149) | `closed_3_3_ownBinders` (FirstPass/Closure/OwnBinderRewire.lean:45) |
+| Lemma 3.3 | `UniformConvergenceGreenKernelStmt` (Draft/Section3.lean:93) | `uniformConvergenceGreenKernel` (Assembly/Main.lean:161) | `closed_3_3_ownBinders` (FirstPass/Closure/OwnBinderRewire.lean:45) |
 | Lemma 3.4 | `IntegralConvergenceGreenFunctionStmt` (Draft/Section3.lean:109) | hypothesis `integralConvergenceGreenFunction` (Assembly/Hypotheses.lean:169) | `closed_3_4_ownBinders` (FirstPass/Closure/OwnBinderRewire.lean:51) |
-| Lemma 3.5 | `DiscreteDirichletProblemStmt` (Draft/Section3.lean:132) | `discreteDirichletProblem` (Assembly/Main.lean:155) | `closed_3_5_lp` (FirstPass/Closure/CleanSec23LP.lean:45) |
-| Lemma 3.6 | `ConvergenceHarmonicFunctionsStmt` (Draft/Section3.lean:157) | `convergenceHarmonicFunctions` (Assembly/Main.lean:143) | `closed_3_6_lp` (FirstPass/Closure/CleanSec23LP.lean:53); conditional on `FrozenOneSidedBoundaryContinuity` (false as typed; a corrected replacement is pending a truth check) |
-| Lemma 3.7 | `ConvergenceNormalizedExitTimeStmt` (Draft/Section3.lean:173) | `convergenceNormalizedExitTime` (Assembly/Main.lean:163) | `closed_3_7_lp` (FirstPass/Closure/CleanSec23LP.lean:61) |
-| Theorem 4.1 | `ConvergenceDivisibleStmt` (Draft/Section4.lean:38) | `convergenceDivisible` (Assembly/Main.lean:194) | `closed_4_1_lp` (FirstPass/Closure/CleanSec456LP.lean:30) |
-| Proposition 4.2 | `DivSandpileLowerBoundStmt` (Draft/Section4.lean:49) | `divSandpileLowerBound` (Assembly/Main.lean:200) | `closed_4_2_lp` (FirstPass/Closure/Clean42And5LP.lean:47) |
+| Lemma 3.5 | `DiscreteDirichletProblemStmt` (Draft/Section3.lean:132) | `discreteDirichletProblem` (Assembly/Main.lean:167) | `closed_3_5_lp` (FirstPass/Closure/CleanSec23LP.lean:45) |
+| Lemma 3.6 | `ConvergenceHarmonicFunctionsStmt` (Draft/Section3.lean:157) | `convergenceHarmonicFunctions` (Assembly/Main.lean:155) | `closed_3_6_lp` (FirstPass/Closure/CleanSec23LP.lean:53); conditional on `FrozenOneSidedBoundaryContinuity` (false as typed; a corrected replacement is pending a truth check) |
+| Lemma 3.7 | `ConvergenceNormalizedExitTimeStmt` (Draft/Section3.lean:173) | `convergenceNormalizedExitTime` (Assembly/Main.lean:175) | `closed_3_7_lp` (FirstPass/Closure/CleanSec23LP.lean:61) |
+| Theorem 4.1 | `ConvergenceDivisibleStmt` (Draft/Section4.lean:38) | `convergenceDivisible` (Assembly/Main.lean:206) | `closed_4_1_lp` (FirstPass/Closure/CleanSec456LP.lean:30) |
+| Proposition 4.2 | `DivSandpileLowerBoundStmt` (Draft/Section4.lean:49) | `divSandpileLowerBound` (Assembly/Main.lean:212) | `closed_4_2_lp` (FirstPass/Closure/Clean42And5LP.lean:47) |
 | Lemma 4.3 | `DiscreteBasicPropertiesStmt` (Draft/Section4.lean:60) | `discreteBasicProperties` (Proofs/Sec4/ObstacleSpecialization/Final.lean:28) | `closed_4_3` (FirstPass/Closure/Section4.lean:18) |
 | Lemma 4.4 (corrected) | `DiscreteLaplacianBoundCorrectedStmt` (Draft/Section4.lean:161) | `discreteLaplacianBoundCorrected` (Proofs/Sec4/ObstacleSpecialization/Final.lean:33) | `closed_4_4` (FirstPass/Closure/Section4.lean:22) |
 | Lemma 4.5 | `DiscreteConservationOfMassStmt` (Draft/Section4.lean:93) | `discreteConservationOfMassCorrected` (Proofs/Sec4/ObstacleSpecialization/Final.lean:38); not referenced in Assembly/Main.lean | `closed_4_5` (FirstPass/Closure/Section4.lean:27) |
-| Lemma 4.6 | `SubsequentialConvergenceStmt` (Draft/Section4.lean:109) | `subsequentialConvergence` (Assembly/Main.lean:174) | `firstPass_4_6_h35c` (FirstPass/Closure/H35CorrectedRewire.lean:74); open DRAFT binders: h27, h218, h28, h35c, h37 |
+| Lemma 4.6 | `SubsequentialConvergenceStmt` (Draft/Section4.lean:109) | `subsequentialConvergence` (Assembly/Main.lean:186) | `firstPass_4_6_h35c` (FirstPass/Closure/H35CorrectedRewire.lean:74); open DRAFT binders: h27, h218, h28, h35c, h37 |
 | Lemma 4.7 | `EquiboundedStmt` (Draft/Section4.lean:126) | `equibounded` (Assembly/Main.lean:170) | `closed_4_7_ownBinders` (FirstPass/Closure/OwnBinderRewire.lean:65) |
-| Lemma 4.8 | `SubsequentialPropertiesStmt` (Draft/Section4.lean:144) | `subsequentialProperties` (Assembly/Main.lean:181) | `closed_4_8_lp` (FirstPass/Closure/CleanSec456LP.lean:38) |
-| Proposition 5.1 | `IDLALowerBoundStmt` (Draft/Section5.lean:27) | `iDLALowerBound` (Assembly/Main.lean:252) | `closed_5_1_lp_noSup` (FirstPass/Closure/LssDerived.lean:353; applies `closed_5_1_lp`, Clean42And5LP.lean:79) |
+| Lemma 4.8 | `SubsequentialPropertiesStmt` (Draft/Section4.lean:144) | `subsequentialProperties` (Assembly/Main.lean:193) | `closed_4_8_lp` (FirstPass/Closure/CleanSec456LP.lean:38) |
+| Proposition 5.1 | `IDLALowerBoundStmt` (Draft/Section5.lean:27) | `iDLALowerBound` (Assembly/Main.lean:264) | `closed_5_1_lp_noSup` (FirstPass/Closure/LssDerived.lean:353; applies `closed_5_1_lp`, Clean42And5LP.lean:79) |
 | Lemma 5.2 | `GeneralIDLALowerBoundStmt` (Draft/Section5.lean:47) | none in Assembly/Main.lean | `closed_5_2_ownBinders` (FirstPass/Closure/OwnBinderRewire.lean:79) |
-| Lemma 5.3 | `MeanValueInequalityStmt` (Draft/Section5.lean:67) | `meanValueInequality` (Assembly/Main.lean:213) | `closed_5_3_clean` (FirstPass/Closure/HLsRewire53.lean:109) |
-| Lemma 5.4 | `LLowerBoundStmt` (Draft/Section5.lean:85) | `lLowerBound` (Assembly/Main.lean:223) | `closed_5_4_clean` (FirstPass/Closure/Clean51And54.lean:73) |
-| Proposition 6.1 | `IDLAUpperBoundStmt` (Draft/Section6.lean:31) | `iDLAUpperBound` (Assembly/Main.lean:304) | `closed_6_1_lp_noSup` (FirstPass/Closure/LssDerived.lean:257; applies `closed_6_1_lp`, Clean61And71LP.lean:43) |
+| Lemma 5.3 | `MeanValueInequalityStmt` (Draft/Section5.lean:67) | `meanValueInequality` (Assembly/Main.lean:225) | `closed_5_3_clean` (FirstPass/Closure/HLsRewire53.lean:109) |
+| Lemma 5.4 | `LLowerBoundStmt` (Draft/Section5.lean:85) | `lLowerBound` (Assembly/Main.lean:235) | `closed_5_4_clean` (FirstPass/Closure/Clean51And54.lean:73) |
+| Proposition 6.1 | `IDLAUpperBoundStmt` (Draft/Section6.lean:31) | `iDLAUpperBound` (Assembly/Main.lean:316) | `closed_6_1_lp_noSup` (FirstPass/Closure/LssDerived.lean:257; applies `closed_6_1_lp`, Clean61And71LP.lean:43) |
 | Lemma 6.3 | `AbelianIDLAStmt` (Draft/Section6.lean:46) | none in Assembly/Main.lean | not counted (cited result) |
-| Lemma 6.4 | `GoodAnnulusPrevalenceStmt` (Draft/Section6.lean:60) | `goodAnnulusPrevalence` (Assembly/Main.lean:268) | `closed_6_4_lp` (FirstPass/Closure/CleanSec456LP.lean:45) |
-| Lemma 6.5 | `AnnulusHitStmt` (Draft/Section6.lean:72) | `annulusHit` (Assembly/Main.lean:263) | `firstPass_6_5_uniform` (FirstPass/S6q.lean:26) |
+| Lemma 6.4 | `GoodAnnulusPrevalenceStmt` (Draft/Section6.lean:60) | `goodAnnulusPrevalence` (Assembly/Main.lean:280) | `closed_6_4_lp` (FirstPass/Closure/CleanSec456LP.lean:45) |
+| Lemma 6.5 | `AnnulusHitStmt` (Draft/Section6.lean:72) | `annulusHit` (Assembly/Main.lean:275) | `firstPass_6_5_uniform` (FirstPass/S6q.lean:26) |
 | Lemma 6.6 | `AnnulusIterateStmt` (Draft/Section6.lean:88) | `annulusIterate` (Proofs/Field/LawTransferComplete.lean:71) | not counted (cited result) |
-| Lemma 6.7 | `ConstantOrderLowerBoundLogStmt` (Steps/Sec6/ConstantOrderLowerBound.lean:33) | `constantOrderLowerBoundLog` (Assembly/Main.lean:279) | `firstPass_6_7` (FirstPass/LIClosed68Y.lean:30); binders to examine: hLit, hBM, hCC, hμ |
-| Lemma 6.8 | `ConstantOrderLowerBoundDivLogStmt` (Steps/Sec6/ConstantOrderLowerBoundDiv.lean:32) | `constantOrderLowerBoundDivLog` (Assembly/Main.lean:273) | `firstPass_6_8` (FirstPass/LIClosed68Y.lean:40); binders to examine: hLit, hBM, hCC, hμ |
-| Lemma 6.9 | `ChanceOfBeingAbsorbedLogLossStmt` (Steps/Sec6/IterativeBound.lean:73) | `chanceOfBeingAbsorbedLogLoss` (Assembly/Main.lean:288) | `firstPass_6_9` (FirstPass/LIClosed68Y.lean:51); binders to examine: hLit, hBM, hCC, hμ |
-| Lemma 6.10 | `IterativeBoundStmt` (Draft/Section6.lean:162) | `iterativeBound` (Assembly/Main.lean:294) | `closed_6_10_lp` (FirstPass/Closure/CleanSec456LP.lean:52) |
-| Proposition 7.1 | `DivSandpileUpperBoundStmt` (Draft/Section7.lean:22) | `divSandpileUpperBound` (Assembly/Main.lean:326) | `closed_7_1_lp` (FirstPass/Closure/Clean61And71LP.lean:84) |
-| Lemma 7.2 | `MassBoundOdometerAboveScaleStmt` (Draft/Section7.lean:77) | `massBoundOdometerAboveScale` (Assembly/Main.lean:312) | `closed_7_2` (FirstPass/Closure/Section7.lean:18) |
-| Lemma 7.3 | `OdometerBoundMassStmt` (Draft/Section7.lean:46) | `odometerBoundMass` (Assembly/Main.lean:317) | `closed_7_3` (FirstPass/Closure/Section7.lean:23) |
-| Lemma 7.4 | `CrudeUpperBoundStmt` (Draft/Section7.lean:67) | `crudeUpperBound` (Assembly/Main.lean:321) | not counted (cited result) |
-| Proposition 8.1 | `IDLAConstrainedConvergenceStmt` (Draft/Section8.lean:20) | `iDLAConstrainedConvergence` (Assembly/Main.lean:334) | `closed_8_1_lp_noSup` (FirstPass/Closure/LssDerived.lean:295; applies `closed_8_1_lp`, Clean81LP.lean:43); open DRAFT binders: h210, h34, h214, h28, h35c, h218, h23, h33, h27 (MQ-li-4 switch) |
+| Lemma 6.7 | `ConstantOrderLowerBoundLogStmt` (Steps/Sec6/ConstantOrderLowerBound.lean:33) | `constantOrderLowerBoundLog` (Assembly/Main.lean:291) | `firstPass_6_7` (FirstPass/LIClosed68Y.lean:30); binders to examine: hLit, hBM, hCC, hμ |
+| Lemma 6.8 | `ConstantOrderLowerBoundDivLogStmt` (Steps/Sec6/ConstantOrderLowerBoundDiv.lean:32) | `constantOrderLowerBoundDivLog` (Assembly/Main.lean:285) | `firstPass_6_8` (FirstPass/LIClosed68Y.lean:40); binders to examine: hLit, hBM, hCC, hμ |
+| Lemma 6.9 | `ChanceOfBeingAbsorbedLogLossStmt` (Steps/Sec6/IterativeBound.lean:73) | `chanceOfBeingAbsorbedLogLoss` (Assembly/Main.lean:300) | `firstPass_6_9` (FirstPass/LIClosed68Y.lean:51); binders to examine: hLit, hBM, hCC, hμ |
+| Lemma 6.10 | `IterativeBoundStmt` (Draft/Section6.lean:162) | `iterativeBound` (Assembly/Main.lean:306) | `closed_6_10_lp` (FirstPass/Closure/CleanSec456LP.lean:52) |
+| Proposition 7.1 | `DivSandpileUpperBoundStmt` (Draft/Section7.lean:22) | `divSandpileUpperBound` (Assembly/Main.lean:338) | `closed_7_1_lp` (FirstPass/Closure/Clean61And71LP.lean:84) |
+| Lemma 7.2 | `MassBoundOdometerAboveScaleStmt` (Draft/Section7.lean:77) | `massBoundOdometerAboveScale` (Assembly/Main.lean:324) | `closed_7_2` (FirstPass/Closure/Section7.lean:18) |
+| Lemma 7.3 | `OdometerBoundMassStmt` (Draft/Section7.lean:46) | `odometerBoundMass` (Assembly/Main.lean:329) | `closed_7_3` (FirstPass/Closure/Section7.lean:23) |
+| Lemma 7.4 | `CrudeUpperBoundStmt` (Draft/Section7.lean:67) | `crudeUpperBound` (Assembly/Main.lean:333) | not counted (cited result) |
+| Proposition 8.1 | `IDLAConstrainedConvergenceStmt` (Draft/Section8.lean:20) | `iDLAConstrainedConvergence` (Assembly/Main.lean:346) | `closed_8_1_lp_noSup` (FirstPass/Closure/LssDerived.lean:295; applies `closed_8_1_lp`, Clean81LP.lean:43); open DRAFT binders: h210, h34, h214, h28, h35c, h218, h23, h33, h27 (MQ-li-4 switch) |
 | Lemma A.1 | `DiscreteDivergenceTheoremStmt` (Draft/SectionA.lean:25) | `discreteDivergenceTheorem` (Proofs/SecA/DiscreteDivergence.lean:54) | `discreteDivergenceTheorem` (Proofs/SecA/DiscreteDivergence.lean:54) |
 | Lemma A.2 | `DiscreteBasicPropertiesGeneralStmt` (Draft/SectionA.lean:32) | `discreteBasicPropertiesGeneral` (Proofs/SecA/Statements.lean:62) | `discreteBasicPropertiesGeneral` (Proofs/SecA/Statements.lean:62) |
 | Lemma A.3 | `DiscreteLaplacianBoundGeneralStmt` (Draft/SectionA.lean:43) | `discreteLaplacianBoundGeneral` (Proofs/SecA/Statements.lean:66) | `discreteLaplacianBoundGeneral` (Proofs/SecA/Statements.lean:66) |
