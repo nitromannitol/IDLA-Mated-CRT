@@ -34,7 +34,7 @@ open scoped Classical
 variable (ε : ℝ) (η : ℝ → ℂ) (K : Set ℂ) (r s d : ℝ) (R : ℂ → ℝ)
 
 /-- The index map of the shell centre: `j ↦ (R z, z)` with `z = Q_{d/100}(η(j))` the grid centre of the vertex point of the
-cell with index `j` (the centre of `shellCentre`, notes (7.23)); `R z` is the good radius of notes (7.33). -/
+cell with index `j` (the centre of `shellCentre`, write-up (7.23)); `R z` is the good radius of write-up (7.33). -/
 noncomputable def shellParamOfIndex (j : ℤ) : ℝ × ℂ :=
   (R (gridRound (d / 100) (vertexPoint ε η j)), gridRound (d / 100) (vertexPoint ε η j))
 

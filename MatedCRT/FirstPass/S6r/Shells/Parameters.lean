@@ -6,11 +6,11 @@ import MatedCRT.FirstPass.S6r.Constants
 Steps 1 and 2 of S7' (displayed (7.0)-(7.13)).
 Terminology: `K = closure Θ`, `f = dist(·, K)` (`Metric.infDist`), the open thickening `K + B_r = {f < r}`
 (`Metric.thickening r K`), and the two-sided shell `Σ_j = {|f - r/2| = λ_j}` of Armstrong, Kuusi and Mourrat's
-level-set construction. Radii `d`, `s = d^a`, `g = d/100` and the grid `gℤ²` are as in the note.
+level-set construction. Radii `d`, `s = d^a`, `g = d/100` and the grid `gℤ²` are as in the write-up.
 
-Named hypotheses (not derivable from the printed S7' text; see the report):
+Named hypotheses (not derivable from the printed S7' text):
 * `hEligReg`: a grid centre whose `3s`-ball lies in the good-radius region is eligible for the S2 field
-  (the note uses "eligible" without defining it);
+  (the write-up uses "eligible" without defining it);
 * `hReg`: the good-radius region contains the annulus `{9 s₀/10 ≤ |x| ≤ 3ρ/4}` (the region is used, not defined).
 -/
 
