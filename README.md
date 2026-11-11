@@ -6,9 +6,9 @@ Each numbered result is stated in Lean (`MatedCRT/Draft` and `MatedCRT/Steps`). 
 
 ## Main results
 
-The table gives, for each numbered result, its Lean statement and the declaration that carries it in the main route. A field of `MainHypotheses` is a hypothesis of the route. The statement column names the statement as its Draft or Steps file defines it; where the route uses a corrected input, the route column names that input. Paths are relative to `MatedCRT/`.
+The table gives, for each numbered result, its Lean statement and the declaration or `MainHypotheses` field that carries it in the main route. A field of `MainHypotheses` is a hypothesis of the route, not a declaration. The statement column names the statement as its Draft or Steps file defines it; where the route uses a corrected input, the route column names that input. Paths are relative to `MatedCRT/`.
 
-| Result | Lean statement | Declaration in the main route |
+| Result | Lean statement | Declaration or hypothesis field in the main route |
 |---|---|---|
 | Theorem 1.4 | `ConvergenceOfIDLAStmt` (Draft/Section1.lean:45) | `convergenceOfIDLA_conditional` (Assembly/Main.lean:343) |
 | Theorem 1.6 | `ConvergenceOfDivSandpileStmt` (Draft/Section1.lean:56) | `convergenceOfDivSandpile_conditional` (Assembly/Main.lean:350) |
