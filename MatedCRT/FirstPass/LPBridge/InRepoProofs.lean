@@ -8,6 +8,7 @@ import MatedCRT.FirstPass.LPBridge.PunctureConnected
 import MatedCRT.FirstPass.LPBridge.FiniteMeasureStandardBorel
 import MatedCRT.FirstPass.LPBridge.UniversalMeasurability
 import HarmonicBalls.Steps.Sec2.GreenFunctionBall
+import MatedCRT.FirstPass.HBRewire
 
 /-!
 # In-repository proofs of two frozen inputs of the first pass
@@ -78,5 +79,10 @@ theorem greenFunctionBall_inRepo : HarmonicBalls.GreenFunctionBallStmt :=
 `frozenUniversalMeasurabilityOfAnalytic_holds` (FirstPass/LPBridge/UniversalMeasurability.lean:18). -/
 theorem frozenUniversalMeasurabilityOfAnalytic_inRepo : FrozenUniversalMeasurabilityOfAnalytic :=
   frozenUniversalMeasurabilityOfAnalytic_holds
+
+/-- The disc pole input (`FrozenGreenDiscPole`), one-line bridge to the Harmonic-Balls rewire
+`MatedCRT.HBRewire.FrozenGreenDiscPole_of_hb` (FirstPass/HBRewire.lean:41). -/
+theorem frozenGreenDiscPole_inRepo : FrozenGreenDiscPole :=
+  HBRewire.FrozenGreenDiscPole_of_hb
 
 end MatedCRT
