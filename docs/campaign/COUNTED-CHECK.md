@@ -1,46 +1,46 @@
 # COUNTED.md declaration check
 
-Checks every row of the Table in `docs/campaign/COUNTED.md` (lines 197–264, including the LP forms, the audit rows m1 and B6, and the `_noSup` counted forms), the Appendix B rows (lines 265–277), and every declaration that COUNTED.md names only in its prose (lines 1–196; first match under `MatedCRT/`).
+Checks every row of the Table in `docs/campaign/COUNTED.md` (lines 197–264, including the LP forms, the audit rows m1 and B6, and the `_noSup` counted forms), the Appendix B rows (lines 271–277), the three rows of the section "Appendix B path: forms with the occupation identity or the strong compatibility derived" (lines 340–342), and every declaration that COUNTED.md names only in its prose (lines 1–196; first match under `MatedCRT/`).
 
-Checked at HEAD 00098347 (2026-11-11 14:37 UTC). Declarations, tracking and hashes are read at that HEAD (the sandbox working tree, which has no uncommitted edit in any file of the 53 row files). The last commit to COUNTED.md is 10d46a40 (2026-11-11 13:29:59 UTC), before this check.
+Checked on 2026-11-11 between 19:29 and 19:45 UTC. Declarations, tracking and hashes are read at HEAD db27b2ef (the commit that carries the COUNTED.md rows checked here). Axioms are read from two single-file compile checks against the built library: `MatedCRT/Audit/CountedAxioms.lean` at HEAD 90fdc2d3 (fleet log `logs/lc/192916-1503494.log`) and `MatedCRT/Audit/AppendixBAxioms.lean` at HEAD 3c1fada4 (fleet log `logs/lc/194008-1521693.log`; the module was built first, `logs/lb/193038-1506076.log`, BUILD OK).
 
-**Axioms are not a clean-HEAD result.** They come from the work-comp build `llb MatedCRT.Audit.CountedAxioms` (log `lb-143151-1415935.log` in the work-comp mirror), which synced the sandbox working tree at about 14:45 UTC. That tree has 76 uncommitted modified `.lean` files in the import closure of `CountedAxioms.lean`: 9 in `MatedCRT/` (including `MatedCRT/Audit/CountedAxioms.lean` itself, which is committed with this file) and 67 in `Harmonic-Balls-LQG/HarmonicBalls/`. None of the 53 row files is among them. The axiom column therefore describes the working tree at build time. A clean-HEAD axiom check is open (see Notes).
+**Axioms are a clean-tree result.** At both compile checks `git status` showed no modified tracked file (only untracked files, none imported by the two audit files' closures as committed). The library pins are those of the pin switch closed at 19:13 UTC (Lattice-Probability 8fcf8461). The earlier check (HEAD 00098347) read its axioms from a working tree with 76 uncommitted files; that caveat no longer applies.
 
 ## Method
 
 1. Declaration: the file named in the row is searched for the declaration keyword line (theorem, lemma, def, abbrev, structure, class, instance); the actual line is compared with the stated line. Prose-only names are searched under `MatedCRT/` (first match) and carry no stated line. The fully qualified name uses the namespace in force at the declaration.
 2. Tracking: `git ls-files --error-unmatch`. Hashes: each 7–40-hex token in the row is checked with `git cat-file -t` and must be a commit.
-3. Axioms: one `#print axioms` per distinct declaration in `MatedCRT/Audit/CountedAxioms.lean` (tracked; 53 imports; 116 print lines, one per distinct declaration), built with `llb` on work-comp (see the header). "std" means exactly `propext, Classical.choice, Quot.sound`. The log lines are wrapped by Lake; they were joined before the check (`scratch-z8/buildlog-ax.txt`).
+3. Axioms: one `#print axioms` per distinct declaration, in `MatedCRT/Audit/CountedAxioms.lean` (tracked; 55 imports; 118 print lines) and in `MatedCRT/Audit/AppendixBAxioms.lean` (tracked, 3c1fada4; 2 imports; 14 print lines, of which 5 are rows here and 9 are steps of the Appendix B chain). "std" means exactly `propext, Classical.choice, Quot.sound`. Wrapped log lines are joined before the check.
 
-Fleet scripts (scratch, not committed): `/home/nitro/paper-fleets/mcrt/scratch-z8/` (`gen_raw.sh` builds the row list, `check_rows.sh` runs steps 1–2, `mk.sh` joins step 3 and writes the table).
+Fleet scripts (scratch, not committed): `/home/nitro/paper-fleets/mcrt/scratch-fp/cc/` (`raw.tsv` is the row list: the 128 rows of the earlier check plus 7; `check_rows.sh` runs steps 1–2; `mk.sh` joins step 3 and writes the table; both scripts are the earlier ones of `scratch-z8/` with the directory changed).
 
 ## Summary
 
-- Rows checked: 128 = Table 60, Appendix B 4, prose-only names 64. Of the Table rows, 13 name a `_noSup` declaration (rows 1.4, 1.4n, 1.6, 1.6n, 5.1, 5.1lp, 6.1, 6.1lp, 8.1, 8.1lp, B6 ×2, m1).
-- Distinct declarations: 116. Found: 128 of 128 rows. Missing: 0. Tracked by git: 128 of 128. Wrong line: 0.
-- Axioms: 116 of 116 distinct declarations report exactly `propext, Classical.choice, Quot.sound` on the working tree described above. Non-standard: 0. sorryAx: 0.
-- `_noSup` declarations: 8, all in `MatedCRT/FirstPass/Closure/LssDerived.lean` (lines 54, 95, 136, 193, 257, 295, 353, 396), all std.
-- Commit hashes cited: 31; all are commits; unknown: 0.
-- Rows OK: 128 of 128. Mismatches: 0.
+- Rows checked: 135 = Table 61 (the 60 of the earlier check and the row 3.6 form `closed_3_6_lp_uniform`), Appendix B 7 (`_closed` to `_closed5`, `_of_coneGFFLaw`, `_of_fieldLaw`), derived forms of the Appendix B path 3 (`closed_5_1_lp_noSup_noSC`, `closed_1_4_derivedOccupation`, `closed_1_6_derivedOccupation`), prose-only names 64.
+- Distinct declarations: 123. Found: 135 of 135 rows. Missing: 0. Tracked by git: 135 of 135. Wrong line: 0.
+- Axioms: 135 of 135 rows report exactly `propext, Classical.choice, Quot.sound` (132 print lines in the two logs, all std; 123 of them are rows here). Non-standard: 0. sorryAx: 0.
+- `_noSup` declarations: 8, all in `MatedCRT/FirstPass/Closure/LssDerived.lean` (lines 54, 95, 136, 193, 257, 295, 353, 396), all std; and `closed_5_1_lp_noSup_noSC` (`MatedCRT/FirstPass/Closure/Clean51NoSC.lean:24`), std.
+- Commit hash citations: 40; all are commits; unknown: 0.
+- Rows OK: 135 of 135. Mismatches: 0.
 
-## Mismatches for z1 (COUNTED.md line numbers)
+## Mismatches (COUNTED.md line numbers)
 
-None at HEAD 00098347.
+None at HEAD db27b2ef.
 
-## Changes since the previous check (3cd8222b; axioms at 689539f8)
+## Changes since the previous check (HEAD 00098347, 2026-11-11 14:37 UTC)
 
-- The Table moved to COUNTED.md lines 197–264 (was 193–260); Appendix B to lines 265–276.
-- The counted forms switched to the `_noSup` wrappers (z1 ledger switch, 89ec667d; the declarations were committed in 3588558d): 13 rows now name `closed_1_4_lp_noSC_noSup`, `closed_1_6_lp_noSC_noSup`, `firstPassMain_1_4_full_noSup`, `firstPassMain_1_6_full_noSup`, `closed_5_1_lp_noSup`, `closed_6_1_lp_noSup`, `closed_8_1_lp_noSup` and `closed_5_1_cellRewire_noSup`.
-- `MatedCRT/Audit/CountedAxioms.lean`: one import added (`MatedCRT.FirstPass.Closure.LssDerived`; 53 imports, was 52) and eight `#print axioms` lines added for the `_noSup` declarations (116 distinct, was 108). Every earlier line is kept.
-- Rows 120 → 128; distinct declarations 108 → 116.
-- Prose-only names: the earlier list of 56 cannot be reproduced from the current text. This run re-derives it: backticked names containing `_` or `.` in lines 1–196 that the Table does not name, first match under `MatedCRT/`. The result is 64 names.
-- Two prose names are not rows, because no declaration keyword line exists under `MatedCRT/`. Both were checked by hand. `LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.IsMatingOfTreesCoupling` is a module path; the file exists in the Lattice-Probability checkout (`LatticeProb/Bonanno/MatedCRTHarmonic/Frozen/IsMatingOfTreesCoupling.lean`). `MatedCRTEnv.IsValid` is a structure at `MatedCRT/Defs/Setting.lean:142`; COUNTED.md's prose cites `:141`, the docstring line above it. Neither is axiom-checked.
+- Axioms are now read on a tree with no modified tracked file (see the header).
+- `MatedCRT/Audit/CountedAxioms.lean`: 55 imports and 118 print lines (was 53 and 116); the two additions are `closed_3_6_lp_uniform` (5953dbf2) and `frozenLBMGreenOccupationRescaled_closed5` (13fc8225). Both rows were added to the table below by hand at the time; they are now in the row list.
+- New audit file `MatedCRT/Audit/AppendixBAxioms.lean` (3c1fada4) for the Appendix B chain and the forms derived from it.
+- New rows: Appendix B `frozenLBMGreenOccupationRescaled_of_coneGFFLaw` (COUNTED.md:276) and `frozenLBMGreenOccupationRescaled_of_fieldLaw` (:277); derived forms `closed_5_1_lp_noSup_noSC` (:340, row id 5.1b), `closed_1_4_derivedOccupation` (:341, 1.4b), `closed_1_6_derivedOccupation` (:342, 1.6b). The ids 5.1b, 1.4b, 1.6b are labels of this check; these three declarations are not counted forms of the Table.
+- Rows 128 → 135; distinct declarations 116 → 123. The Table (lines 197–264) and the prose (lines 1–196) of COUNTED.md did not move.
+- Not covered: the derived-input forms of `MatedCRT/FirstPass/Derived/Counted.lean` (COUNTED.md section "Derived-input forms"); their axioms are printed by `MatedCRT/Audit/DerivedCountedAxioms.lean`, which this check does not run.
 
 ## Notes
 
-- Working tree versus HEAD (axioms only). At the build, the uncommitted `.lean` files in the closure were: `MatedCRT/Audit/CountedAxioms.lean` (this run's edit), `MatedCRT/FirstPass/LPBridge/LateralGaussian.lean`, `MatedCRT/FirstPass/LPBridge/WholePlaneGFFLateral.lean`, `MatedCRT/FirstPass/S1c/TestLocal.lean`, `MatedCRT/FirstPass/S2g/AllDisks.lean`, `MatedCRT/Proofs/Sec3/ConvergenceNormalizedExitTime/LaplacianTranslation.lean`, `MatedCRT/Proofs/Sec3/UniformConvergenceGreenKernel/HarmonicTranslation.lean`, `MatedCRT/Proofs/Sec4/ObstacleSpecialization.lean`, `MatedCRT/Proofs/Sec5/SupersolutionBorelCode.lean`, and 67 `HarmonicBalls/` files (Defs, Proofs/Potential, Proofs/Sec11, and others; list reproducible with `scratch-z8/closure_dirty.sh`). Their owners are not this check's. A clean-HEAD axiom run needs those files committed or a clean-clone build (operator decision).
 - The line `#print axioms for every declaration counted in ...` (`CountedAxioms.lean:56`) is inside a comment; it is not a command.
-- Prose-only names are declaration-like names in lines 1–196 that the Table does not name. The check reports whether each exists and is axiom-clean; it does not decide whether a prose name is a counted declaration. Some are superseded forms, for example `closed_1_4_full` and `closed_1_6_full`, which the Table no longer uses; both exist.
+- Prose-only names are declaration-like names in lines 1–196 that the Table does not name (the 64 names of the earlier check; the list was not re-derived). The check reports whether each exists and is axiom-clean; it does not decide whether a prose name is a counted declaration. Some are superseded forms, for example `closed_1_4_full` and `closed_1_6_full`, which the Table no longer uses; both exist.
+- Two prose names are not rows, because no declaration keyword line exists under `MatedCRT/`: `LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.IsMatingOfTreesCoupling` is a module path of the Lattice-Probability checkout, and `MatedCRTEnv.IsValid` is a structure at `MatedCRT/Defs/Setting.lean:142` (the prose cites `:141`, the docstring line above it). Neither is axiom-checked.
 
 ## Full table
 
@@ -67,7 +67,7 @@ None at HEAD 00098347.
 | 222 | 3.4 | `closed_3_4_ownBinders` | MatedCRT/FirstPass/Closure/OwnBinderRewire.lean | 51 | 51 | yes | - | std | OK |
 | 223 | 3.5 | `closed_3_5_lp` | MatedCRT/FirstPass/Closure/CleanSec23LP.lean | 45 | 45 | yes | - | std | OK |
 | 224 | 3.6 | `closed_3_6_lp` | MatedCRT/FirstPass/Closure/CleanSec23LP.lean | 53 | 53 | yes | - | std | OK (superseded form; kept by name) |
-| 224 | 3.6 | `closed_3_6_lp_uniform` | MatedCRT/FirstPass/Closure/CleanSec23LPUniform.lean | 30 | 30 | yes | 5953dbf2 (commit) | std | OK (axioms: working tree, lb log 172523-1146840.log; label "working tree") |
+| 224 | 3.6 | `closed_3_6_lp_uniform` | MatedCRT/FirstPass/Closure/CleanSec23LPUniform.lean | 30 | 30 | yes | 5953dbf2 (commit) | std | OK |
 | 225 | 3.7 | `closed_3_7_lp` | MatedCRT/FirstPass/Closure/CleanSec23LP.lean | 61 | 61 | yes | - | std | OK |
 | 226 | 4.1 | `closed_4_1_lp` | MatedCRT/FirstPass/Closure/CleanSec456LP.lean | 30 | 30 | yes | a4ac5fc6 (commit), e7a5833 (commit) | std | OK |
 | 227 | 4.2 | `closed_4_2_lp` | MatedCRT/FirstPass/Closure/Clean42And5LP.lean | 47 | 47 | yes | - | std | OK |
@@ -111,7 +111,12 @@ None at HEAD 00098347.
 | 272 | AppB | `frozenLBMGreenOccupationRescaled_closed2` | MatedCRT/Proofs/Sec3/KilledOccupation/OccupationClosure2.lean | 32 | 32 | yes | 582e360 (commit), 6675b36 (commit) | std | OK |
 | 273 | AppB | `frozenLBMGreenOccupationRescaled_closed3` | MatedCRT/Proofs/Sec3/KilledOccupation/OccupationClosure3.lean | 68 | 68 | yes | 23f4c7e6 (commit) | std | OK |
 | 274 | AppB | `frozenLBMGreenOccupationRescaled_closed4` | MatedCRT/Proofs/Sec3/KilledOccupation/OccupationClosure4.lean | 76 | 76 | yes | d90cbe4e (commit) | std | OK |
-| 275 | AppB | `frozenLBMGreenOccupationRescaled_closed5` | MatedCRT/Proofs/Sec3/KilledOccupation/OccupationClosure5.lean | 19 | 19 | yes | d51a926b (commit) | std | OK |
+| 275 | AppB | `frozenLBMGreenOccupationRescaled_closed5` | MatedCRT/Proofs/Sec3/KilledOccupation/OccupationClosure5.lean | 19 | 19 | yes | 793bf5b4 (commit), d51a926b (commit) | std | OK |
+| 276 | AppB | `frozenLBMGreenOccupationRescaled_of_coneGFFLaw` | MatedCRT/Proofs/Sec3/KilledOccupation/OccupationClosureCone.lean | 48 | 48 | yes | ac2932c7 (commit) | std | OK |
+| 277 | AppB | `frozenLBMGreenOccupationRescaled_of_fieldLaw` | MatedCRT/FirstPass/Closure/AppendixBRewire.lean | 124 | 124 | yes | 56d06e72 (commit) | std | OK |
+| 340 | 5.1b | `closed_5_1_lp_noSup_noSC` | MatedCRT/FirstPass/Closure/Clean51NoSC.lean | 24 | 24 | yes | 488d5bf2 (commit) | std | OK |
+| 341 | 1.4b | `closed_1_4_derivedOccupation` | MatedCRT/FirstPass/Closure/AppendixBRewire.lean | 156 | 156 | yes | c4e59c78 (commit) | std | OK |
+| 342 | 1.6b | `closed_1_6_derivedOccupation` | MatedCRT/FirstPass/Closure/AppendixBRewire.lean | 206 | 206 | yes | c4e59c78 (commit) | std | OK |
 | 0 | prose | `MatedCRT.GFFExistence.exists_harmonicBalls_isWholePlaneGFF` | MatedCRT/FirstPass/LPBridge/GFFExistence.lean | 22 | not stated | yes | - | std | OK |
 | 0 | prose | `MatedCRT.S2VG.LitExistence` | MatedCRT/FirstPass/S2VG/Literature.lean | 44 | not stated | yes | - | std | OK |
 | 0 | prose | `MatedCRT.ratPoint` | MatedCRT/FirstPass/S2g/LawCode.lean | 24 | not stated | yes | - | std | OK |
