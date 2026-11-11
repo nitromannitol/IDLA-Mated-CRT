@@ -7,7 +7,7 @@ import MatedCRT.Steps.Sec2.BoundedExitTimeRV
 # Lemma 3.1 (corrected) from its inputs
 
 `discretePotentialTightness_of_inputs` proves `DiscretePotentialTightnessCorrectedStmt`. This is Lemma 3.1 with the
-changes N1, `D` open (E-c1-4) and N3 listed in MatedCRT/Steps/Sec3/DiscretePotentialTightness.lean. Its inputs are:
+changes N1, `D` open and N3 listed in MatedCRT/Steps/Sec3/DiscretePotentialTightness.lean. Its inputs are:
 
 * `MepsScalingInput` (eq:meps-scaling, BG20 (1.8));
 * `BoundedExitTimeRVStmt` and `ExitTimeUpperBoundStmt` (Lemmas 2.17 and 2.18);
