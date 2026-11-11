@@ -1,4 +1,5 @@
 import Mathlib
+import MatedCRT.LPStaging.Analysis.CircleAverageRadialContinuity
 
 /-!
 # Continuity of the circle average of a radial function
@@ -52,42 +53,8 @@ lemma arcW_rpow_eq {v : ℝ} (hv : v ∈ Ioo (0 : ℝ) 1) (q : ℝ) :
   ring
 
 lemma integrableOn_mul_one_sub_rpow_neg {s : ℝ} (hs0 : 0 ≤ s) (hs1 : s < 1) :
-    IntegrableOn (fun v : ℝ => (v * (1 - v)) ^ (-s)) (Ioo (0 : ℝ) 1) := by
-  have hI1 : IntegrableOn (fun v : ℝ => v ^ (-s)) (Ioo (0 : ℝ) 1) :=
-    (intervalIntegral.integrableOn_Ioo_rpow_iff one_pos).2 (by linarith)
-  have hI2 : IntegrableOn (fun v : ℝ => (1 - v) ^ (-s)) (Ioo (0 : ℝ) 1) := by
-    have h := ((intervalIntegral.intervalIntegrable_rpow' (r := -s) (a := 0) (b := 1)
-      (by linarith)).comp_sub_left 1)
-    simp only [sub_zero, sub_self] at h
-    have h2 := intervalIntegrable_iff.1 h
-    rw [Set.uIoc_comm, Set.uIoc_of_le zero_le_one] at h2
-    exact h2.mono_set Ioo_subset_Ioc_self
-  refine Integrable.mono' ((hI1.add hI2).const_mul ((1 / 2 : ℝ) ^ (-s))) ?_ ?_
-  · refine ContinuousOn.aestronglyMeasurable ?_ measurableSet_Ioo
-    exact ContinuousOn.rpow_const (by fun_prop) fun v hv =>
-      Or.inl (mul_pos hv.1 (by linarith [hv.2])).ne'
-  · filter_upwards [ae_restrict_mem measurableSet_Ioo] with v hv
-    have hv0 : 0 < v := hv.1
-    have hv1 : 0 < 1 - v := by linarith [hv.2]
-    rw [Real.norm_of_nonneg (Real.rpow_nonneg (mul_nonneg hv0.le hv1.le) _),
-      Real.mul_rpow hv0.le hv1.le]
-    have hA : 0 ≤ v ^ (-s) := Real.rpow_nonneg hv0.le _
-    have hB : 0 ≤ (1 - v) ^ (-s) := Real.rpow_nonneg hv1.le _
-    rcases le_total v (1 / 2) with h | h
-    · have hc : (1 - v) ^ (-s) ≤ (1 / 2 : ℝ) ^ (-s) :=
-        Real.rpow_le_rpow_of_nonpos (by norm_num) (by linarith) (by linarith)
-      have hc0 : 0 ≤ (1 / 2 : ℝ) ^ (-s) := Real.rpow_nonneg (by norm_num) _
-      have h1 := mul_le_mul_of_nonneg_left hc hA
-      have h2 := mul_nonneg hc0 hB
-      simp only [Pi.add_apply, mul_add]
-      linarith [mul_comm (v ^ (-s)) ((1 / 2 : ℝ) ^ (-s))]
-    · have hc : v ^ (-s) ≤ (1 / 2 : ℝ) ^ (-s) :=
-        Real.rpow_le_rpow_of_nonpos (by norm_num) (by linarith) (by linarith)
-      have hc0 : 0 ≤ (1 / 2 : ℝ) ^ (-s) := Real.rpow_nonneg (by norm_num) _
-      have h1 := mul_le_mul_of_nonneg_right hc hB
-      have h2 := mul_nonneg hc0 hA
-      simp only [Pi.add_apply, mul_add]
-      linarith
+    IntegrableOn (fun v : ℝ => (v * (1 - v)) ^ (-s)) (Ioo (0 : ℝ) 1) :=
+  LatticeProb.CircleAverageRadialContinuity.integrableOn_mul_one_sub_rpow_neg hs0 hs1
 
 /-- The arcsine weight has `w^q` integrable on `(0,1)` for `0 ≤ q < 2`: this is where `p > 2` enters
 (`q = p/(p-1)` is the Hölder conjugate of `p`). -/
@@ -99,12 +66,8 @@ lemma integrableOn_arcW_rpow {q : ℝ} (hq0 : 0 ≤ q) (hq2 : q < 2) :
 /-! ### The radius `radiusV` and its change of variables -/
 
 lemma radiusV_pos {ε t v : ℝ} (hε : 0 < ε) (ht : 0 ≤ t) (hv : 0 < v) :
-    0 < (t - ε) ^ 2 + 4 * t * ε * v := by
-  rcases ht.eq_or_lt with h0 | ht'
-  · subst h0
-    nlinarith [mul_pos hε hε]
-  · have : 0 < 4 * t * ε * v := by positivity
-    nlinarith [sq_nonneg (t - ε)]
+    0 < (t - ε) ^ 2 + 4 * t * ε * v :=
+  LatticeProb.CircleAverageRadialContinuity.radiusV_pos hε ht hv
 
 lemma hasDerivAt_radiusV {ε t v : ℝ} (hε : 0 < ε) (ht : 0 ≤ t) (hv : 0 < v) :
     HasDerivAt (radiusV ε t) (4 * t * ε / (2 * radiusV ε t v)) v := by
@@ -195,91 +158,36 @@ lemma integrableOn_and_integral_radiusV_le {g : ℝ → ℝ} {ε t R : ℝ} (hε
 
 lemma norm_circle_radial_eq (t ε θ : ℝ) :
     ‖(t : ℂ) + (ε : ℂ) * Complex.exp ((θ : ℂ) * Complex.I)‖ =
-      √(t ^ 2 + ε ^ 2 + 2 * t * ε * Real.cos θ) := by
-  have h : ‖(t : ℂ) + (ε : ℂ) * Complex.exp ((θ : ℂ) * Complex.I)‖ ^ 2 =
-      t ^ 2 + ε ^ 2 + 2 * t * ε * Real.cos θ := by
-    rw [Complex.sq_norm, Complex.normSq_apply]
-    simp [Complex.exp_ofReal_mul_I_re, Complex.exp_ofReal_mul_I_im]
-    linear_combination (ε ^ 2) * Real.sin_sq_add_cos_sq θ
-  rw [← h, Real.sqrt_sq (norm_nonneg _)]
+      √(t ^ 2 + ε ^ 2 + 2 * t * ε * Real.cos θ) :=
+  LatticeProb.CircleAverageRadialContinuity.norm_circle_radial_eq t ε θ
 
 /-- Rotation: `|z + ε e^{iθ}| = |t + ε e^{i(θ - arg z)}|` with `t = |z|`. -/
 lemma norm_circle_eq_rotate (z : ℂ) (ε θ : ℝ) :
     ‖z + (ε : ℂ) * Complex.exp ((θ : ℂ) * Complex.I)‖ =
-      ‖((‖z‖ : ℝ) : ℂ) + (ε : ℂ) * Complex.exp (((θ - Complex.arg z : ℝ) : ℂ) * Complex.I)‖ := by
-  have hz : z = ((‖z‖ : ℝ) : ℂ) * Complex.exp ((Complex.arg z : ℂ) * Complex.I) :=
-    (Complex.norm_mul_exp_arg_mul_I z).symm
-  have h2 : Complex.exp ((Complex.arg z : ℂ) * Complex.I) *
-      Complex.exp (((θ - Complex.arg z : ℝ) : ℂ) * Complex.I) =
-      Complex.exp ((θ : ℂ) * Complex.I) := by
-    rw [← Complex.exp_add]
-    congr 1
-    push_cast
-    ring
-  have key : z + (ε : ℂ) * Complex.exp ((θ : ℂ) * Complex.I) =
-      Complex.exp ((Complex.arg z : ℂ) * Complex.I) *
-        (((‖z‖ : ℝ) : ℂ) + (ε : ℂ) * Complex.exp (((θ - Complex.arg z : ℝ) : ℂ) * Complex.I)) := by
-    linear_combination hz + (-(ε : ℂ)) * h2
-  rw [key, norm_mul, Complex.norm_exp_ofReal_mul_I, one_mul]
+      ‖((‖z‖ : ℝ) : ℂ) + (ε : ℂ) * Complex.exp (((θ - Complex.arg z : ℝ) : ℂ) * Complex.I)‖ :=
+  LatticeProb.CircleAverageRadialContinuity.norm_circle_eq_rotate z ε θ
 
 /-- Periodic shift of the integral over one period. -/
 lemma integral_rotate_two_pi (G : ℝ → ℝ) (hG : Function.Periodic G (2 * π)) (φ : ℝ) :
-    ∫ θ in (0 : ℝ)..2 * π, G (θ - φ) = ∫ θ in (0 : ℝ)..2 * π, G θ := by
-  rw [intervalIntegral.integral_comp_sub_right (f := G) (d := φ)]
-  have h := hG.intervalIntegral_add_eq (-φ) 0
-  rw [zero_add] at h
-  rw [zero_sub, show 2 * π - φ = -φ + 2 * π by ring]
-  exact h
+    ∫ θ in (0 : ℝ)..2 * π, G (θ - φ) = ∫ θ in (0 : ℝ)..2 * π, G θ :=
+  LatticeProb.CircleAverageRadialContinuity.integral_rotate_two_pi G hG φ
 
 /-- Reflection `θ ↦ 2π - θ` (no integrability needed for the reflected half). -/
 lemma integral_two_pi_eq_two_mul_half (h : ℝ → ℝ) (hsymm : ∀ θ, h (2 * π - θ) = h θ)
     (hint : IntervalIntegrable h MeasureTheory.volume 0 π) :
-    ∫ θ in (0 : ℝ)..2 * π, h θ = 2 * ∫ θ in (0 : ℝ)..π, h θ := by
-  have hint2 : IntervalIntegrable h MeasureTheory.volume π (2 * π) := by
-    have h' := hint.comp_sub_left (2 * π)
-    simp only [hsymm] at h'
-    rw [sub_zero, show 2 * π - π = π by ring] at h'
-    rw [intervalIntegrable_iff] at h' ⊢
-    rw [Set.uIoc_comm]
-    exact h'
-  rw [← intervalIntegral.integral_add_adjacent_intervals hint hint2]
-  have hsecond : ∫ θ in π..2 * π, h θ = ∫ θ in (0 : ℝ)..π, h θ := by
-    have h' := intervalIntegral.integral_comp_sub_left (f := h) (d := 2 * π) (a := 0) (b := π)
-    simp only [hsymm] at h'
-    rw [show 2 * π - π = π by ring, sub_zero] at h'
-    exact h'.symm
-  rw [hsecond]
-  ring
+    ∫ θ in (0 : ℝ)..2 * π, h θ = 2 * ∫ θ in (0 : ℝ)..π, h θ :=
+  LatticeProb.CircleAverageRadialContinuity.integral_two_pi_eq_two_mul_half h hsymm hint
 
 lemma image_half_one_add_cos :
-    (fun θ : ℝ => (1 + Real.cos θ) / 2) '' Ioo 0 π = Ioo 0 1 := by
-  ext v
-  constructor
-  · rintro ⟨θ, hθ, rfl⟩
-    have h1 : Real.cos θ < 1 := by
-      have := Real.cos_lt_cos_of_nonneg_of_le_pi (le_refl 0) hθ.2.le hθ.1
-      simpa using this
-    have h2 : -1 < Real.cos θ := by
-      have := Real.cos_lt_cos_of_nonneg_of_le_pi hθ.1.le (le_refl π) hθ.2
-      simpa using this
-    exact ⟨by linarith, by linarith⟩
-  · rintro ⟨hv0, hv1⟩
-    refine ⟨Real.arccos (2 * v - 1), ⟨Real.arccos_pos.2 (by linarith),
-      Real.arccos_lt_pi.2 (by linarith)⟩, ?_⟩
-    simp only
-    rw [Real.cos_arccos (by linarith) (by linarith)]
-    ring
+    (fun θ : ℝ => (1 + Real.cos θ) / 2) '' Ioo 0 π = Ioo 0 1 :=
+  LatticeProb.CircleAverageRadialContinuity.image_half_one_add_cos
 
-lemma injOn_half_one_add_cos : InjOn (fun θ : ℝ => (1 + Real.cos θ) / 2) (Ioo 0 π) := by
-  intro x hx y hy hxy
-  have hxy' : (1 + Real.cos x) / 2 = (1 + Real.cos y) / 2 := hxy
-  have hc : Real.cos x = Real.cos y := by linarith
-  exact Real.injOn_cos (Ioo_subset_Icc_self hx) (Ioo_subset_Icc_self hy) hc
+lemma injOn_half_one_add_cos : InjOn (fun θ : ℝ => (1 + Real.cos θ) / 2) (Ioo 0 π) :=
+  LatticeProb.CircleAverageRadialContinuity.injOn_half_one_add_cos
 
 lemma hasDerivAt_half_one_add_cos (θ : ℝ) :
-    HasDerivAt (fun θ : ℝ => (1 + Real.cos θ) / 2) (-Real.sin θ / 2) θ := by
-  have := ((Real.hasDerivAt_cos θ).const_add 1).div_const 2
-  simpa using this
+    HasDerivAt (fun θ : ℝ => (1 + Real.cos θ) / 2) (-Real.sin θ / 2) θ :=
+  LatticeProb.CircleAverageRadialContinuity.hasDerivAt_half_one_add_cos θ
 
 /-- The pointwise identity behind the substitution `v = (1 + cos θ)/2` on `(0,π)`. -/
 lemma integrand_half_eq {a : ℝ → ℝ} {ε t θ : ℝ} (hθ : θ ∈ Ioo 0 π) :
@@ -426,14 +334,8 @@ lemma sub_truncN_le {n : ℝ} (hn : 0 ≤ n) (y : ℝ) : |y - truncN n y| ≤ ma
 /-- The Hölder pair `p`, `q = p/(p-1)`: `1 < p`, `0 < q < 2` when `p > 2`. -/
 lemma conjExponent_facts {p : ℝ} (hp : 2 < p) :
     1 < p ∧ 0 < Real.conjExponent p ∧ Real.conjExponent p < 2 ∧
-      p.HolderConjugate (Real.conjExponent p) := by
-  have hp1 : 1 < p := by linarith
-  refine ⟨hp1, ?_, ?_, Real.HolderConjugate.conjExponent hp1⟩
-  · unfold Real.conjExponent
-    apply div_pos <;> linarith
-  · unfold Real.conjExponent
-    rw [div_lt_iff₀ (by linarith)]
-    linarith
+      p.HolderConjugate (Real.conjExponent p) :=
+  LatticeProb.CircleAverageRadialContinuity.conjExponent_facts hp
 
 /-- The arcsine `L^q` norm of the weight, `q = p/(p-1)`. -/
 def arcNorm (p : ℝ) : ℝ :=
@@ -512,15 +414,12 @@ lemma continuousOn_a_radius {a : ℝ → ℝ} {ε t : ℝ} (ha : ContinuousOn a 
 
 lemma continuousOn_max_abs_sub {a : ℝ → ℝ} {n : ℝ} (ha : ContinuousOn a (Ioi 0)) :
     ContinuousOn (fun r => max (|a r| - n) 0) (Ioi 0) :=
-  (continuous_id.max continuous_const : Continuous fun x : ℝ => max x 0).comp_continuousOn
-    ((continuous_abs.comp_continuousOn ha).sub continuousOn_const)
+  LatticeProb.CircleAverageRadialContinuity.continuousOn_max_abs_sub ha
 
 /-- The continuous bound of `|a|` on the radial interval `[ε/2, R]`. -/
 lemma exists_bound_Icc {a : ℝ → ℝ} {ε R : ℝ} (hε : 0 < ε) (ha : ContinuousOn a (Ioi 0)) :
-    ∃ K0 : ℝ, ∀ x ∈ Icc (ε / 2) R, |a x| ≤ K0 := by
-  obtain ⟨K0, hK⟩ := (isCompact_Icc (a := ε / 2) (b := R)).exists_bound_of_continuousOn
-    (ha.mono fun x hx => lt_of_lt_of_le (half_pos hε) hx.1)
-  exact ⟨K0, fun x hx => by simpa [Real.norm_eq_abs] using hK x hx⟩
+    ∃ K0 : ℝ, ∀ x ∈ Icc (ε / 2) R, |a x| ≤ K0 :=
+  LatticeProb.CircleAverageRadialContinuity.exists_bound_Icc hε ha
 
 /-- The radial integrand is integrable on `(0,1)` for `t ∈ [0, R-ε]`. -/
 lemma integrableOn_radial_of_mem {a : ℝ → ℝ} {p ε R : ℝ} (hp : 2 < p) (hε : 0 < ε)
@@ -580,6 +479,24 @@ def kappaN (a : ℝ → ℝ) (R p n : ℝ) : ℝ := ∫ r in Ioc 0 R, (max (|a r
 
 /-- The uniform error bound `δ_n = ((R/ε²) κ_n)^{1/p} ‖w‖_{L^q}`. -/
 def deltaN (a : ℝ → ℝ) (ε R p n : ℝ) : ℝ := ((R / ε ^ 2) * kappaN a R p n) ^ (1 / p) * arcNorm p
+
+/-! ### Bridges to the general development in `LatticeProb.CircleAverageRadialContinuity` -/
+
+theorem arcW_eq_latticeProb : arcW = LatticeProb.CircleAverageRadialContinuity.arcW := rfl
+
+theorem radiusV_eq_latticeProb :
+    radiusV = LatticeProb.CircleAverageRadialContinuity.radiusV := rfl
+
+theorem radialKernelInt_eq_latticeProb :
+    radialKernelInt = LatticeProb.CircleAverageRadialContinuity.radialKernelInt := rfl
+
+theorem truncN_eq_latticeProb : truncN = LatticeProb.CircleAverageRadialContinuity.truncN := rfl
+
+theorem arcNorm_eq_latticeProb : arcNorm = LatticeProb.CircleAverageRadialContinuity.arcNorm := rfl
+
+theorem kappaN_eq_latticeProb : kappaN = LatticeProb.CircleAverageRadialContinuity.kappaN := rfl
+
+theorem deltaN_eq_latticeProb : deltaN = LatticeProb.CircleAverageRadialContinuity.deltaN := rfl
 
 lemma kappaN_nonneg (a : ℝ → ℝ) (R p n : ℝ) : 0 ≤ kappaN a R p n :=
   setIntegral_nonneg measurableSet_Ioc (fun _ _ => Real.rpow_nonneg (le_max_right _ _) _)
@@ -724,12 +641,5 @@ theorem continuous_circleAverage_radial_of_memLp
       (fun z =>
         Real.circleAverage
           (fun x : ℂ => a ‖x‖) z ε)
-      (Metric.closedBall (0 : ℂ) (R - ε)) := by
-  have hΦ := continuousOn_radialKernelInt hp hε ha haLp
-  have hcomp : ContinuousOn (fun z : ℂ => π⁻¹ * radialKernelInt a ε ‖z‖)
       (Metric.closedBall (0 : ℂ) (R - ε)) :=
-    continuousOn_const.mul (hΦ.comp continuous_norm.continuousOn fun z hz =>
-      ⟨norm_nonneg _, by simpa using hz⟩)
-  refine hcomp.congr fun z hz => ?_
-  exact circleAverage_radial_eq a z (integrableOn_radial_of_mem hp hε ha haLp
-    ⟨norm_nonneg _, by simpa using hz⟩)
+  LatticeProb.CircleAverageRadialContinuity.continuous_circleAverage_radial_of_memLp hε hp ha haLp
