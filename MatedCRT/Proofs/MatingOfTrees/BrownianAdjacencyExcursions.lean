@@ -5,7 +5,7 @@ import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.BrownianMinimumUnique
 /-!
 # Strict excursions between the endpoint cells and the middle minimum
 
-Deterministic component of the adjacent-cell step (steps2-r3:602-630, audited; sha256 88dfb1f9).
+Deterministic component of the adjacent-cell step.
 Let `X` be continuous and let `bmAdjacent ε X j k` hold (Definition 1.1, eq:edge-map). Let `τ` be the
 unique time at which `X` attains its minimum `c` over the middle interval `[ε j, ε k - ε]`. Then the
 last level-`c` time `u` in the left endpoint cell `[ε j - ε, ε j]` and the first level-`c` time `v` in
@@ -22,7 +22,7 @@ commit 31e7483), used unchanged.
 
 Distinct local-minimum values are not needed here. The fixed-mesh almost-sure corollary
 `MatedCRTHarmonic.MatedCRT.SeparatedMinimum.ae_bmAdjacent_strict_excursions` uses
-`ae_unique_minimizer_grid` (steps2-r3:534-599) only at its end.
+`ae_unique_minimizer_grid` only at its end.
 -/
 
 namespace MatedCRT.StrictAdjacencyExcursions

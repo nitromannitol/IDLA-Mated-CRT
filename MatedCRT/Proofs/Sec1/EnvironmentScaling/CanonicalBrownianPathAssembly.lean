@@ -15,7 +15,7 @@ measurable coordinates `B t`, the measurable continuous-path version of the refe
 The sublinear growth (the Gaussian tail
 bound and the reflection bound for the maximum, followed by Borel-Cantelli) is the argument discharged in
 `GaussianBandProof.lean`. The conditioned-law identification written there (the entrance and transition
-densities of the conditioned drifted Brownian motion, `env-steps.tex:217-242`, citing DMS Remark 4.4,
+densities of the conditioned drifted Brownian motion, citing DMS Remark 4.4,
 pp. 74-75) is not formalized here. It enters only as the explicit hypothesis
 `MatedCRT.Proposed.DMS14Remark44PostLastZeroLaw` in the law-identity corollaries. Nothing in this file
 identifies that hypothesis with a literal theorem of Duplantier-Miller-Sheffield.

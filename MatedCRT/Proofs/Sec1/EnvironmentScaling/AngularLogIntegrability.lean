@@ -13,7 +13,7 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling.RadialLocalIntegrability
 
 Deterministic component of the angular assertion:
 "Angular integrals remain finite for circles through zero, since a logarithmic singularity is
-integrable in the angle."  The lateral observable `ℓ(r,z)` of `env-steps.tex:128-135` integrates
+integrable in the angle."  The lateral observable `ℓ(r,z)` integrates
 the radial function over the circle `θ ↦ z + r e^{iθ}`; that circle passes through `0` exactly when
 `‖z‖ = r`.
 

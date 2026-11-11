@@ -4,17 +4,16 @@ import MatedCRT.Proofs.Measurability.ConePairing
 /-!
 # Lateral circle observables of the actual field: angular integrals, countable arrays, lateral law
 
-Sources: env-steps.tex:128-135 (the lateral observables `ℓ(r,z)`, `ℓ(φ)`) and 248-255 (finiteness of the lateral
-integrals, circles through zero); `Defs/QuantumCone.lean:63-68` (`lateralEval`, `lateralProcess`); the `lateral_law`
+Sources: the lateral observables `ℓ(r,z)`, `ℓ(φ)` and finiteness of the lateral integrals, circles through zero; `Defs/QuantumCone.lean:63-68` (`lateralEval`, `lateralProcess`); the `lateral_law`
 clause of `IsQuantumCone`, which stays an explicit hypothesis.
 
 * `aemeasurable_lateralCircle`: the lateral circle coordinate `h_r(z) - Real.circleAverage (x ↦ h_{|x|}(0)) z r` is
   a.e. measurable for every `r > 0` and every `z`, circles through `0` included.
 * `lateralCircleCoord_eq_normalized`: the same coordinate written with the angular integral
-  `(2π)⁻¹ ∫_{[0,2π]} h_{|z + r e^{iθ}|}(0) dθ` of env-steps.tex:128-135.
+  `(2π)⁻¹ ∫_{[0,2π]} h_{|z + r e^{iθ}|}(0) dθ`.
 * `ae_intervalIntegrable_lateralCircle_through_zero`, `ae_integrableOn_lateralCircle_through_zero`: for a circle through
   `0` (`‖z‖ = r`) the angular integrand has a logarithmic singularity; under the explicit radial log majorant
-  `RadialLogMajorant` (env-steps.tex:248-251) it is a.s. Lebesgue integrable on `[0, 2π]`.
+  `RadialLogMajorant` it is a.s. Lebesgue integrable on `[0, 2π]`.
 * `lateralArray`: countably many lateral observables, read from the jointly measurable version
   `CirclePairing.lateralVersionEval` (ConePairing.lean). It is measurable as an `ℕ → ℝ`-valued map, equals the lateral
   process at all of its coordinates simultaneously on the a.s. continuity event, and its pullbacks by measurable
@@ -35,7 +34,7 @@ namespace MatedCRT.Sec1
 variable {Ω : Type*} [MeasurableSpace Ω]
 
 /-- The radial log majorant at the centre `0`, on the radii `(0, 2r]`: almost surely `|h_t(0)| ≤ C (1 + |log t|)`.
-This is the analytic premise of env-steps.tex:248-251 (sublinear growth of the radial process
+This is the analytic premise (sublinear growth of the radial process
 `t ↦ h_{e^{-t}}(0)`); it is taken as an explicit hypothesis, not derived here. -/
 def RadialLogMajorant (hcirc : Ω → ℝ → ℂ → ℝ) (P : Measure Ω) (r : ℝ) : Prop :=
   ∀ᵐ ω ∂P, ∃ C : ℝ, ∀ t : ℝ, 0 < t → t ≤ 2 * r → |hcirc ω t 0| ≤ C * (1 + |Real.log t|)
@@ -54,7 +53,7 @@ lemma lateralEval_circle_eq (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → 
 
 omit [MeasurableSpace Ω] in
 /-- **Angular integral of the lateral circle coordinate.**  At the actual field,
-`ℓ(r,z) = h_r(z) - (2π)⁻¹ ∫_{[0,2π]} h_{|z + r e^{iθ}|}(0) dθ` (env-steps.tex:128-135). -/
+`ℓ(r,z) = h_r(z) - (2π)⁻¹ ∫_{[0,2π]} h_{|z + r e^{iθ}|}(0) dθ`. -/
 lemma lateralCircleCoord_eq_normalized (hcirc : Ω → ℝ → ℂ → ℝ) (r : ℝ) (z : ℂ) (ω : Ω) :
     lateralCircleCoord hcirc r z ω = hcirc ω r z - (2 * Real.pi)⁻¹ *
       ∫ θ in Icc 0 (2 * Real.pi), hcirc ω ‖z + (r : ℂ) * exp (I * (θ : ℂ))‖ 0 := by
@@ -77,7 +76,7 @@ theorem aemeasurable_lateralCircle {P : Measure Ω} {hcirc : Ω → ℝ → ℂ 
   exact (hmc r z hr).aemeasurable.sub hA
 
 /-- **Circles through zero: the angular integrand is a.s. interval integrable.**  For `‖z‖ = r` the integrand
-`θ ↦ h_{|z + r e^{iθ}|}(0)` has a logarithmic singularity at one angle (env-steps.tex:248-251); under the radial log
+`θ ↦ h_{|z + r e^{iθ}|}(0)` has a logarithmic singularity at one angle; under the radial log
 majorant it is a.s. interval integrable on `[0, 2π]`. -/
 theorem ae_intervalIntegrable_lateralCircle_through_zero {P : Measure Ω} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hcont : ∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2) (Ioi 0 ×ˢ univ))

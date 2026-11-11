@@ -5,7 +5,7 @@ import Mathlib.Probability.Independence.Basic
 /-!
 # Resampling on the original probability space
 
-The measurable lifting lemma in `env-steps.tex`, lines 665–691.  Mathlib supplies
+The measurable lifting lemma.  Mathlib supplies
 both the regular conditional distribution and the measurable inverse-CDF kernel
 representation; no assumption on the sample space being standard Borel is used.
 -/

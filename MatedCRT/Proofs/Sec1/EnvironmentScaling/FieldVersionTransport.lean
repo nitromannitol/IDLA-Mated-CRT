@@ -3,7 +3,7 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling.Field
 /-!
 # Transport of radial and lateral versions
 
-The simultaneous positive-circle identification in env-steps.tex:321–335
+The simultaneous positive-circle identification
 transports the actual radial and lateral processes.  No joint measurability of
 the supplied circle representative is used.  The spatial origin and its
 possible angular preimage are null in the integrals defining the lateral part.

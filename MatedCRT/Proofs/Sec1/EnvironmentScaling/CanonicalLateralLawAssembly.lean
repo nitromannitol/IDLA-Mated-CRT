@@ -6,18 +6,17 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling.LateralCircleMeasurability
 
 This bridge uses Leonardo Bonanno's `LatticeProb.Bonanno.LQGMetric.Field.MeasurableAvg` through the imported environment `Field` module and its observable-law infrastructure.
 
-Sources: env-steps.tex:128-143 (the lateral observables `ℓ(φ)`, `ℓ(r,z)`; the meaning of `IsWholePlaneGFF`) and
-env-steps.tex:240-257 (radial integrability and finiteness of the lateral integrals, circles through zero, determination
+Covers the lateral observables `ℓ(φ)`, `ℓ(r,z)` (the meaning of `IsWholePlaneGFF`) and radial integrability, and finiteness of the lateral integrals, circles through zero, determination
 by countably many radial evaluations, the Gaussian covariance determining the lateral law, and independence in the cone
-predicate). Definitions: `Defs/QuantumCone.lean` (`IsQuantumCone`, `radialProcess`, `quantumConeRadialLaw`,
+predicate. Definitions: `Defs/QuantumCone.lean` (`IsQuantumCone`, `radialProcess`, `quantumConeRadialLaw`,
 `lateralProcess`). Field inputs: `IsWholePlaneGFF.lateral_law_eq` (Field.lean:128) and `IsQuantumCone.lateral_law_eq`
 (Field.lean:152). Measurability of the countable array: `LateralCircleMeasurability.lean`.
 
 * `ae_circleArray_eq_normalized`, `ae_actualCircleCoords_eq_lateralArray`: coordinate identification. Almost surely, for all
   `n` at once, the countable array along circles `cc n = (r_n, z_n)` with `r_n > 0` is the actual lateral circle coordinate
-  `h_{r_n}(z_n) - (2π)⁻¹ ∫_{[0,2π]} h_{|z_n + r_n e^{iθ}|}(0) dθ` (env-steps.tex:128-135).
+  `h_{r_n}(z_n) - (2π)⁻¹ ∫_{[0,2π]} h_{|z_n + r_n e^{iθ}|}(0) dθ`.
 * `ae_circleArray_integrableOn`: for circles through `0` the angular integral is almost surely a Lebesgue integral, under
-  the explicit premise `RadialLogMajorant` (env-steps.tex:248-251; not derived here).
+  the explicit premise `RadialLogMajorant`; not derived here.
 * `map_actualCircleCoords_eq_of_isWholePlaneGFF`, `map_lateralArray_eq_of_isWholePlaneGFF`,
   `map_lateralArray_eq_of_isQuantumCone`: for any countable family `c` of admissible observables (pairings and circles), the
   law of the measurable lateral array does not depend on the representing field; the actual circle coordinates have a
@@ -27,7 +26,7 @@ predicate). Definitions: `Defs/QuantumCone.lean` (`IsQuantumCone`, `radialProces
   radial law `quantumConeRadialLaw γ ν` and the canonical law of the whole-plane lateral array.
 
 Not claimed here: continuity of `ℓ` in `(r, z)` (a continuous-path version); the derivation of `RadialLogMajorant`
-(sublinear radial growth, entrance-chain domination); the Riemann-sum argument of env-steps.tex:249-250 (the countable
+(sublinear radial growth, entrance-chain domination); the Riemann-sum argument (the countable
 determination is that of `CirclePairing.radialVersion`, ConePairing.lean); the derivation of the cone's `lateral_law`
 clause from the covariance. These stay explicit hypotheses or are left unformalized.
 -/
@@ -44,7 +43,7 @@ def circleAdmissible (cc : ℕ → ℝ × ℂ) (hcc : ∀ n, 0 < (cc n).1) : ℕ
   fun n => (⟨GFFObservable.circle (cc n).1 (cc n).2, hcc n⟩ : {o : GFFObservable // o.IsAdmissible})
 
 /-- **Coordinate identification.** Almost surely, for all `n` at once, the countable lateral array along `cc` equals the
-actual lateral circle coordinate written with the angular integral (env-steps.tex:128-135):
+actual lateral circle coordinate written with the angular integral:
 `ℓ(r_n, z_n) = h_{r_n}(z_n) - (2π)⁻¹ ∫_{[0,2π]} h_{|z_n + r_n e^{iθ}|}(0) dθ`. -/
 theorem ae_circleArray_eq_normalized {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hcont : ∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2) (Ioi 0 ×ˢ univ))
@@ -69,7 +68,7 @@ theorem ae_actualCircleCoords_eq_lateralArray {P : Measure Ω} {hC : Ω → (ℂ
   exact hω.symm
 
 /-- **Finite angular integrals on circles through zero.** For each `n` with `‖z_n‖ = r_n`, under the radial log majorant at
-`r_n` (the explicit premise `RadialLogMajorant`, env-steps.tex:248-251), the angular integrand is almost surely integrable
+`r_n` (the explicit premise `RadialLogMajorant`, the angular integrand is almost surely integrable
 on `[0, 2π]`, so the angular integral of `ae_circleArray_eq_normalized` is a genuine finite integral. -/
 theorem ae_circleArray_integrableOn {P : Measure Ω} {hcirc : Ω → ℝ → ℂ → ℝ}
     (hcont : ∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2) (Ioi 0 ×ˢ univ))
@@ -148,7 +147,7 @@ theorem map_lateralArray_eq_of_isQuantumCone {γ : ℝ} {Ω₁ Ω₂ : Type} [Me
     (MatedCRT.Sec1.IsQuantumCone.lateral_law_eq h₁ h₂) c
 
 /-- **Radial/lateral independence passes to the countable array.** The `indep` clause of `IsQuantumCone` (independence in
-the cone predicate, env-steps.tex:255-256) gives the independence of the radial process and the countable lateral array:
+the cone predicate) gives the independence of the radial process and the countable lateral array:
 the array is a.s. a measurable function of the lateral process (`ae_lateralArray_eq`). -/
 theorem indepFun_radial_lateralArray_of_isQuantumCone {γ : ℝ} {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
     {hcirc : Ω → ℝ → ℂ → ℝ} (hQ : IsQuantumCone γ P hC hcirc) (c : ℕ → GFFObservable.Admissible) :
@@ -164,8 +163,7 @@ theorem indepFun_radial_lateralArray_of_isQuantumCone {γ : ℝ} {P : Measure Ω
 /-- **Joint law of the radial process and the countable lateral array of a γ-quantum cone.** By independence
 (`indepFun_radial_lateralArray_of_isQuantumCone`), the joint law is the product of the marginals: the radial law
 `quantumConeRadialLaw γ ν` (the `radial_law` clause, with the conditioned Brownian motion `ν`), and the law of the countable
-lateral array along `c`, which is the canonical law of the whole-plane lateral array (the `lateral_law` clause,
-env-steps.tex:255-257). The `lateral_law` clause is used as given; it is not derived from the covariance here. With `c` a
+lateral array along `c`, which is the canonical law of the whole-plane lateral array (the `lateral_law` clause). The `lateral_law` clause is used as given; it is not derived from the covariance here. With `c` a
 family of circles (`circleAdmissible cc hcc`) this is the joint law of the radial process and the actual circle coordinates. -/
 theorem map_radial_lateralArray_of_isQuantumCone {γ : ℝ} {P : Measure Ω} [IsProbabilityMeasure P]
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hQ : IsQuantumCone γ P hC hcirc)

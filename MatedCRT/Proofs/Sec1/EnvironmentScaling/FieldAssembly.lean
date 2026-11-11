@@ -4,7 +4,7 @@ import MatedCRT.Proposed.DuplantierMillerSheffieldCone2014
 /-!
 # Distributional cone scaling through the canonical law
 
-The canonical identification in env-steps.tex:210–296 remains a separate
+The canonical identification remains a separate
 obligation.  Given the joint law of the distribution and its embedding radius,
 the DMS scaling law transfers to the environment's representative.
 -/
@@ -172,7 +172,7 @@ def CanonicalConeDistributionLawStep (𝒮 : SpaceFillingSLEModel) : Prop :=
           (fun t => B t ω) (fun t => B' t ω) = distributionEmbeddingRadius γ b (H' ω)
 
 /-- The canonical joint distribution and embedding-radius identification.
-This is the remaining internal identification from env-steps.tex:210–296,
+This is the remaining internal identification,
 not a literature input or the conclusion of the scaling theorem. -/
 def CanonicalConeDistributionRadiusLawStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω]

@@ -8,7 +8,7 @@ import MatedCRT.Proposed.DuplantierSheffieldCoordinate2011
 The local decomposition and the dyadic zero-boundary measures are hypotheses.
 The Sheffield--Wang input remains staged and explicit. This bridges those
 hypotheses to the random-radius identity in `AreaScaling`, without asserting
-a cone all-scale theorem. See `env-steps.tex`, lines 715--730.
+a cone all-scale theorem.
 -/
 
 open MeasureTheory Filter Set HarmonicBalls

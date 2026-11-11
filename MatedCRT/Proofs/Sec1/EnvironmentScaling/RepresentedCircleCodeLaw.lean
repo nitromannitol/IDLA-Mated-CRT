@@ -14,7 +14,7 @@ these codes determine their joint law on `𝒟'(ℂ) × C(E,ℝ)`, so the identi
   `map_eq_of_codeTests_map_eq` (CountableObservableIdentification.lean) is reused, not reproved.
 
 Scope. The represented distribution `H` and the continuous representative `Φ` are supplied as measurable maps; neither is
-constructed. The continuous modification of Duplantier-Sheffield circle averages is not used, and no WPN-53 or WPN-54
+constructed. The continuous modification of Duplantier-Sheffield circle averages is not used, and no extra
 premise appears: continuity of `Φ` is part of its type. This file does not discharge the represented-grid
 producer and does not close any environment-scaling step.
 -/

@@ -1,23 +1,23 @@
 import MatedCRT.Proofs.Sec1.EnvironmentScaling.AllStartsClock
 
 /-!
-# Borel clock-limit path map of the all-start selection (lem:allstarts, env-steps.tex:398-421)
+# Borel clock-limit path map of the all-start selection
 
-Source: `lem:allstarts`, proof at env-steps.tex:398-421. The Cauchy convergence set of the selected dyadic clocks
+The Cauchy convergence set of the selected dyadic clocks
 `A_{n_k(a,z)}(a,w,·)` in `𝒯 = C([0,∞),ℝ)` is Borel; its locally uniform limit `J(a,z,w)`, extended by `t ↦ t`
 off convergence, is a Borel map into `𝒯`; and `F(a,w,·) = J(a,w(0),w)` is one Borel formula in `(a,w)`
-(env-steps.tex:419-421).
+.
 
 Lean names for the paper's objects:
-* `ClockPath`: `𝒯 = C([0,∞),ℝ)` (env-steps.tex:389) as `C(ℝ≥0, ℝ)` with the compact-open topology, which is locally
+* `ClockPath`: `𝒯 = C([0,∞),ℝ)` as `C(ℝ≥0, ℝ)` with the compact-open topology, which is locally
   uniform convergence on `[0,∞)`. `clockPath_polishSpace` is its Polish structure (same argument as
   CircleProcessSpace.lean, `posCircleFns_polishSpace`).
-* `idClockPath`: the default path `t ↦ t` (env-steps.tex:408).
-* `clockApproxPath`, `selClockPath`: the dyadic clocks `A_n(a,w,·)` (eq:clockapprox) and the selected ones
+* `idClockPath`: the default path `t ↦ t`.
+* `clockApproxPath`, `selClockPath`: the dyadic clocks `A_n(a,w,·)` and the selected ones
   `A_{n_k(a,z)}(a,w,·)` with `nselFun` (AllStartsClock.lean, `borelSubsequenceSelectionStep_nselFun`).
 * `clockConvergenceSet γ`: the set of `((a,z),w)` on which the selected clocks converge in `𝒯`.
-* `clockLimitPath`: `J(a,z,w)` (env-steps.tex:402-407) as a `𝒯`-valued path; its coercion is `clockLimit`.
-* `clockLimitFn`: `F(a,w,·) = J(a,w(0),w)` (env-steps.tex:419-421).
+* `clockLimitPath`: `J(a,z,w)` as a `𝒯`-valued path; its coercion is `clockLimit`.
+* `clockLimitFn`: `F(a,w,·) = J(a,w(0),w)`.
 
 Proved here, with no hypothesis, for the constructed subsequence `nselFun γ`:
 * `measurableSet_clockConvergenceSet`: the convergence set is Borel.
@@ -35,27 +35,27 @@ open scoped NNReal
 
 namespace MatedCRT.ClockLimitBorel
 
-/-- The path space `𝒯 = C([0,∞),ℝ)` of env-steps.tex:389 with the compact-open topology, which is locally uniform
+/-- The path space `𝒯 = C([0,∞),ℝ)` with the compact-open topology, which is locally uniform
 convergence on `[0,∞)`. -/
 abbrev ClockPath : Type := C(ℝ≥0, ℝ)
 
-/-- The identity path `t ↦ t`: the default of `J` off convergence (env-steps.tex:408). -/
+/-- The identity path `t ↦ t`: the default of `J` off convergence. -/
 def idClockPath : ClockPath := ⟨fun t => (t : ℝ), NNReal.continuous_coe⟩
 
 /-- `𝒯` is completely metrizable: its compact-convergence uniformity is countably generated and complete. -/
 theorem clockPath_isCompletelyMetrizableSpace : IsCompletelyMetrizableSpace ClockPath :=
   IsCompletelyMetrizableSpace.of_completeSpace_metrizable
 
-/-- The Polish structure on the clock path space `𝒯 = C([0,∞),ℝ)` (env-steps.tex:389). -/
+/-- The Polish structure on the clock path space `𝒯 = C([0,∞),ℝ)`. -/
 instance clockPath_polishSpace : PolishSpace ClockPath where
   toSecondCountableTopology := inferInstance
   toIsCompletelyMetrizableSpace := clockPath_isCompletelyMetrizableSpace
 
-/-- The dyadic clock `A_n(a,w,·)` (eq:clockapprox) as a path in `𝒯`. -/
+/-- The dyadic clock `A_n(a,w,·)` as a path in `𝒯`. -/
 noncomputable def clockApproxPath (γ : ℝ) (a : CircleFns) (n : ℕ) (w : ContinuousPath ℂ) : ClockPath :=
   ⟨clockApprox γ a n w, continuous_clockApprox γ a n w⟩
 
-/-- The selected clock `A_{n_k(a,z)}(a,w,·)` as a function of `x = ((a,z),w)` (env-steps.tex:404-411). -/
+/-- The selected clock `A_{n_k(a,z)}(a,w,·)` as a function of `x = ((a,z),w)`. -/
 noncomputable def selClockPath (γ : ℝ) (k : ℕ) (x : (CircleFns × ℂ) × ContinuousPath ℂ) : ClockPath :=
   clockApproxPath γ x.1.1 (nselFun γ x.1.1 x.1.2 k) x.2
 
@@ -81,13 +81,13 @@ theorem exists_locallyUniform_iff_exists_clockPath (γ : ℝ) (nsel : CircleFns 
   · rintro ⟨c, hc⟩
     exact ⟨c, ContinuousMap.tendsto_iff_tendstoLocallyUniformly.1 hc⟩
 
-/-- The convergence set of the selected clocks (env-steps.tex:398-411): the `((a,z),w)` for which
+/-- The convergence set of the selected clocks: the `((a,z),w)` for which
 `(A_{n_k(a,z)}(a,w,·))_k` converges in `𝒯`. In the complete space `𝒯` this is the set where the selected sequence is
-Cauchy for `d_𝒯`, the sequence whose almost-sure Cauchy property Borel–Cantelli gives on eq:cauchy. -/
+Cauchy for `d_𝒯`, the sequence whose almost-sure Cauchy property Borel–Cantelli gives, in the sense of `CauchyInProbability`. -/
 def clockConvergenceSet (γ : ℝ) : Set ((CircleFns × ℂ) × ContinuousPath ℂ) :=
   {x | ∃ c : ClockPath, Tendsto (fun k => selClockPath γ k x) atTop (𝓝 c)}
 
-/-- **The convergence set is Borel** (env-steps.tex:398-411). It is the set where a sequence of Borel
+/-- **The convergence set is Borel**. It is the set where a sequence of Borel
 `𝒯`-valued maps converges, in the Polish space `𝒯` (Mathlib `measurableSet_exists_tendsto`). -/
 theorem measurableSet_clockConvergenceSet (γ : ℝ) : MeasurableSet (clockConvergenceSet γ) :=
   measurableSet_exists_tendsto (l := atTop) fun k => measurable_selClockPath γ k
@@ -106,7 +106,7 @@ theorem continuous_clockLimit (γ : ℝ) (nsel : CircleFns → ℂ → ℕ → �
   · exact h.choose_spec.continuous ((Eventually.of_forall fun k => continuous_clockApprox γ a (nsel a z k) w).frequently)
   · exact NNReal.continuous_coe
 
-/-- `J(a,z,w)` as a path in `𝒯` (env-steps.tex:402-407): its coercion to a function is `clockLimit γ nsel a z w`. -/
+/-- `J(a,z,w)` as a path in `𝒯`: its coercion to a function is `clockLimit γ nsel a z w`. -/
 noncomputable def clockLimitPath (γ : ℝ) (nsel : CircleFns → ℂ → ℕ → ℕ) (a : CircleFns) (z : ℂ)
     (w : ContinuousPath ℂ) : ClockPath :=
   ⟨clockLimit γ nsel a z w, continuous_clockLimit γ nsel a z w⟩
@@ -126,7 +126,7 @@ theorem tendsto_clockApproxPath_clockLimitPath {γ : ℝ} {nsel : CircleFns → 
   rw [hc]
   exact h.choose_spec
 
-/-- Off the convergence set, `J` is the identity path `t ↦ t` (env-steps.tex:408). -/
+/-- Off the convergence set, `J` is the identity path `t ↦ t`. -/
 theorem clockLimitPath_eq_idClockPath {γ : ℝ} {nsel : CircleFns → ℂ → ℕ → ℕ} {a : CircleFns} {z : ℂ}
     {w : ContinuousPath ℂ}
     (h : ¬ ∃ f : ℝ≥0 → ℝ, TendstoLocallyUniformly (fun k => clockApprox γ a (nsel a z k) w) f atTop) :
@@ -137,7 +137,7 @@ theorem clockLimitPath_eq_idClockPath {γ : ℝ} {nsel : CircleFns → ℂ → �
   split_ifs
   rfl
 
-/-- **Borel clock-limit component** (env-steps.tex:402-407, 413-421). The map `((a,z),w) ↦ J(a,z,w) ∈ 𝒯` is Borel for
+/-- **Borel clock-limit component**. The map `((a,z),w) ↦ J(a,z,w) ∈ 𝒯` is Borel for
 the constructed subsequence `nselFun γ`. Proof: on the Borel convergence set, `J` is the pointwise limit of the Borel maps
 `selClockPath γ k`; off it, `J` is the constant identity path. The glued maps `g_k` are Borel and converge pointwise to `J`
 everywhere, so `J` is Borel (`measurable_of_tendsto_metrizable`, `𝒯` being pseudometrizable). -/
@@ -166,7 +166,7 @@ theorem measurable_clockLimitPath_nselFun (γ : ℝ) :
     rw [clockLimitPath_eq_idClockPath (γ := γ) (nsel := nselFun γ) (a := x.1.1) (z := x.1.2) (w := x.2) hf]
     exact tendsto_const_nhds
 
-/-- `F(a,w,·) = J(a,w(0),w)` (env-steps.tex:419-421): the path-valued all-start map, one formula in `(a,w)` for every
+/-- `F(a,w,·) = J(a,w(0),w)`: the path-valued all-start map, one formula in `(a,w)` for every
 Brownian start `w(0)`. -/
 noncomputable def clockLimitFn (γ : ℝ) (p : CircleFns × ContinuousPath ℂ) : ClockPath :=
   clockLimitPath γ (nselFun γ) p.1 (p.2 0) p.2
@@ -180,7 +180,7 @@ theorem measurable_clockLimitFn_start (hev : Measurable fun w : ContinuousPath �
     Measurable fun p : CircleFns × ContinuousPath ℂ => ((p.1, p.2 0), p.2) :=
   (measurable_fst.prodMk (hev.comp measurable_snd)).prodMk measurable_snd
 
-/-- **The all-start path map is Borel** (env-steps.tex:419-421): `(a,w) ↦ J(a,w(0),w) ∈ 𝒯`, for every start `w(0)` at
+/-- **The all-start path map is Borel**: `(a,w) ↦ J(a,w(0),w) ∈ 𝒯`, for every start `w(0)` at
 once. It is the composite of the Borel limit `J` with the Borel start map; the composite is formed without an expected
 type and then matched, which avoids higher-order unification against `clockLimitFn`. -/
 theorem measurable_clockLimitFn (γ : ℝ) : Measurable (clockLimitFn γ) := by
@@ -188,7 +188,7 @@ theorem measurable_clockLimitFn (γ : ℝ) : Measurable (clockLimitFn γ) := by
     (measurable_clockLimitFn_start measurable_clockLimitFn_evalZero)
   exact h
 
-/-- **Named Step `BorelClockLimitPathStep`, proved for `nselFun`** (env-steps.tex:413-421): the path-valued
+/-- **Named Step `BorelClockLimitPathStep`, proved for `nselFun`**: the path-valued
 all-start map `(a,w) ↦ J(a,w(0),w)` is Borel. -/
 def BorelClockLimitPathStep (γ : ℝ) : Prop := Measurable (clockLimitFn γ)
 

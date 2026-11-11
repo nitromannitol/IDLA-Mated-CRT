@@ -5,7 +5,7 @@ import LatticeProb.Bonanno.LQGMetric.Field.StandardBorelRange
 /-!
 # Countable coding of plane distributions
 
-The reconstruction portion of `lem:code`, env-steps.tex:176–207.  The countable Borel code is supplied by Bonanno’s construction; no completion
+The reconstruction portion.  The countable Borel code is supplied by Bonanno’s construction; no completion
 of the field sigma-algebra is used.
 -/
 

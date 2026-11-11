@@ -2,10 +2,10 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling.RadialLocalIntegrability
 import Mathlib.MeasureTheory.Function.Floor
 
 /-!
-# Measurable radial integrals (env-steps.tex:247-252)
+# Measurable radial integrals
 
 Second component of the radial-integral argument for the lateral observables
-`ℓ(φ) = h_C(φ) - ∫ φ(z) a(|z|,0) dz` (env-steps.tex:128-135).  For a radial family
+`ℓ(φ) = h_C(φ) - ∫ φ(z) a(|z|,0) dz`.  For a radial family
 `X r ω` (the value of the radial path at radius `r = |z|`), the test integral
 `ω ↦ ∫ z, φ z * X ‖z‖ ω` is measurable.
 
@@ -253,7 +253,7 @@ theorem tendsto_radialRiemann {a b : ℝ} (hab : a < b) (φ : ℂ → ℝ) (hφ 
 measurable and `r ↦ X r ω` is continuous on `[a, b]` for almost every `ω`, then
 `ω ↦ ∫_{a ≤ |z| < b} φ(z) X(|z|)(ω) dz` is a.e. measurable: it is the almost-sure limit of the
 measurable Riemann sums `∑_{k<m} X(r_k)(ω) ∫_{cell k} φ`, each a finite combination of
-countably many radial evaluations (env-steps.tex:251-252). -/
+countably many radial evaluations. -/
 theorem aemeasurable_radialAnnulus_test_integral {Ω : Type*} [MeasurableSpace Ω]
     (P : Measure Ω) (X : ℝ → Ω → ℝ) (hXm : ∀ r : ℝ, Measurable fun ω => X r ω)
     {a b : ℝ} (hab : a < b) (φ : ℂ → ℝ) (hφ : Continuous φ)
@@ -372,7 +372,7 @@ theorem aemeasurable_ball_test_integral {Ω : Type*} [MeasurableSpace Ω] (P : M
     exact tendsto_radialBallTruncation hb φ hφ (fun r => X r ω) hωc C hC
 
 /-- Radial path, test integral over a ball of radius `b ≤ 1` near the origin
-(env-steps.tex:243-252, with `t = -log|z|`).  Given measurable radial evaluations `B t`, a.s.
+(with `t = -log|z|`).  Given measurable radial evaluations `B t`, a.s.
 continuity of `t ↦ B t ω`, and a.s. sublinear growth `B t ω / t → 0` (the inward branch),
 the test integral `ω ↦ ∫_{B(0,b)} φ(z) B(-log|z|)(ω) dz` is a.e. measurable.  The sublinear
 growth is a premise here (it is the Gaussian and Borel–Cantelli step of the paper); the
@@ -400,7 +400,7 @@ theorem aemeasurable_ball_radialPath {Ω : Type*} [MeasurableSpace Ω] (P : Meas
     exact hC (-Real.log r) ht
 
 /-- Radial path, test integral over a compact annulus `{a ≤ |z| < b}` with `0 < a`
-(env-steps.tex:243-252).  Measurable radial evaluations and a.s. continuity of `t ↦ B t ω`
+.  Measurable radial evaluations and a.s. continuity of `t ↦ B t ω`
 suffice; no growth premise is needed on a compact annulus. -/
 theorem aemeasurable_radialAnnulus_radialPath {Ω : Type*} [MeasurableSpace Ω]
     (P : Measure Ω) (B : ℝ → Ω → ℝ) (hBm : ∀ t : ℝ, Measurable fun ω => B t ω)

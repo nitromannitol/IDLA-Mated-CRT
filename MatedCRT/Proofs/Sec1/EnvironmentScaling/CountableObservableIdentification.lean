@@ -19,11 +19,10 @@ parts.
 
 The code `d ↦ (d (test c))_c` is a measurable embedding of distributions into `CoordJ → ℝ`
 (`planeDistributionCode.embedding`, `DistributionCode.lean`). So the joint law of the countable pairings determines the law
-of every measurable representing distribution. This is the distribution half of the countable determining-family argument
-of env-steps.tex:264–272. The circle-process half, the law on `C(E, ℝ)` from countably many grid circles, is not part of
+of every measurable representing distribution. This is the distribution half of the countable determining-family argument.  The circle-process half, the law on `C(E, ℝ)` from countably many grid circles, is not part of
 this file.
 
-The statements take the WPN-53 premise `hF : IsBMConditionedPositive (lqgQ γ - γ) (P0.map F)` and an explicit
+The statements take the premise `hF : IsBMConditionedPositive (lqgQ γ - γ) (P0.map F)` and an explicit
 whole-plane witness with its lateral-law identities as hypotheses, and assume nothing else beyond the cone predicates and
 the represented distributions. No rescaling, no environment-scaling closure and no same-space field construction is proved
 here.
@@ -109,7 +108,7 @@ theorem ae_countableObservables_recovery {γ : ℝ} {Ω : Type} [MeasurableSpace
       coneTransport (radialProcess (hcirc ω), lateralProcess (hC ω) (hcirc ω)) (countableObservable i) :=
   (ae_coneObservables_eq_transport_of_isQuantumCone h).mono fun _ hω i => hω (countableObservable i)
 
-/-- Joint law of the countable family under the reference. The WPN-53 premise `hF` and the whole-plane witness
+/-- Joint law of the countable family under the reference. The premise `hF` and the whole-plane witness
 `hW` with its lateral law `hlat` are explicit hypotheses; the conclusion is the reference assembly of
 `map_coneObservables_index_eq_reference_assembly` at the index `CountableObservableIndex`. -/
 theorem map_countableObservables_eq_reference {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
@@ -178,7 +177,7 @@ theorem map_eq_of_codeTests_map_eq {Ω Ω' : Type} [MeasurableSpace Ω] [Measura
   exact hcode
 
 /-- Represented distributions under the reference: two measurable distributions representing the cone observables of two
-cone environments with the same reference data (WPN-53 premise `hF`, whole-plane witness `hW`, lateral identities `hlat`
+cone environments with the same reference data (premise `hF`, whole-plane witness `hW`, lateral identities `hlat`
 and `hlat'`) have equal laws. The representation `hrep` and `hrep'` is an explicit hypothesis, as is the measurability of
 the representing distributions. -/
 theorem map_represented_distribution_eq_of_reference {γ : ℝ} {Ω Ω' : Type} [MeasurableSpace Ω]

@@ -10,8 +10,7 @@ import MatedCRT.Proofs.MatingOfTrees.ConnectedCellTraces
 
 The labels of the cells meeting a connected path form a connected
 graph, and the fixed-mesh restriction gives common contact times for countably many label pairs at one
-mesh. The barrier consumer is written for one fixed mesh `ε`, and its almost-sure input
-(`eq:ae-envelope`, lines 379-384) has a null set that may depend on `ε`. The dyadic family below is a countable joint
+mesh. The barrier consumer is written for one fixed mesh `ε`, and its almost-sure input has a null set that may depend on `ε`. The dyadic family below is a countable joint
 version of the fixed-mesh event, provided as the requested dyadic specialization; the printed text does not itself fix a
 set of dyadic meshes.
 

@@ -15,7 +15,6 @@ import Mathlib.Topology.PartitionOfUnity
 /-!
 # Area measure at a random radius
 
-Deterministic parts of `env-steps.tex`, Lemma `area-scale`, lines 693–747.
 The all-scale convergence away from zero is an explicit hypothesis, not a
 consequence of dyadic convergence. Under this hypothesis, the regularized
 change of variables and nonatomicity identify the rescaled area measure even
@@ -203,7 +202,7 @@ theorem lqgApprox_rescaled_normalization {γ R b ε : ℝ}
   ring
 
 /-- The regularized area scaling identity, tested against an arbitrary
-function. This is equation `approxscale` in `env-steps.tex`, lines 733–739. -/
+function. -/
 theorem integral_lqgApprox_rescaled {γ R b ε : ℝ}
     (hγ : γ ≠ 0) (hR : 0 < R) (hb : 0 < b) (hε : 0 < ε)
     {h : ℝ → ℂ → ℝ} (hc : Continuous (h (R * ε))) (f : ℂ → ℝ) :

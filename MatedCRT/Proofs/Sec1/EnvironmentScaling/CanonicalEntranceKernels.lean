@@ -3,7 +3,7 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling.CanonicalConeIdentification
 /-!
 # Finite-dimensional entrance kernels of the conditioned drifted Brownian motion
 
-Component of env-steps.tex:217-242 (audited, sha256 26dfc02c…aa03ae4): the killed
+The killed
 drifted kernel `p_t^d`, the survival function `h_d(x) = 1 - e^{-2dx}`, the
 conditioned kernel `p_t^d(x,y) h_d(y)/h_d(x)`, the entrance density, and the
 finite-dimensional chain of conditioned kernels.
@@ -30,23 +30,23 @@ namespace MatedCRT.Sec1
 
 /-- Killed transition density of Brownian motion with drift `d` at time `t`, from
 the reflection principle: `p_t^d(x,y) = e^{d(y-x) - d²t/2} (g_t(y-x) - g_t(y+x))`,
-with `g_t` the centred normal density of variance `t` (env-steps.tex:220-223). -/
+with `g_t` the centred normal density of variance `t`. -/
 def killedDriftDensity (d t x y : ℝ) : ℝ :=
   Real.exp (d * (y - x) - d ^ 2 * t / 2) *
     (gaussianPDFReal 0 t.toNNReal (y - x) - gaussianPDFReal 0 t.toNNReal (y + x))
 
 /-- Survival function of drift-`d` Brownian motion killed at `0`:
-`h_d(x) = 1 - e^{-2dx}` (env-steps.tex:223). -/
+`h_d(x) = 1 - e^{-2dx}`. -/
 def driftSurvival (d x : ℝ) : ℝ :=
   1 - Real.exp (-2 * d * x)
 
 /-- Conditioned (Doob h-transform, conditioning on survival) transition density
-`p_t^d(x,y) h_d(y) / h_d(x)` (env-steps.tex:229). -/
+`p_t^d(x,y) h_d(y) / h_d(x)`. -/
 def conditionedDriftDensity (d t x y : ℝ) : ℝ :=
   killedDriftDensity d t x y * driftSurvival d y / driftSurvival d x
 
 /-- Entrance density of the conditioned kernel as `x ↓ 0`:
-`(y/(dt)) g_t(y) e^{dy - d²t/2} (1 - e^{-2dy})` (env-steps.tex:231-232). -/
+`(y/(dt)) g_t(y) e^{dy - d²t/2} (1 - e^{-2dy})`. -/
 def entranceDriftDensity (d t y : ℝ) : ℝ :=
   y / (d * t) * gaussianPDFReal 0 t.toNNReal y * Real.exp (d * y - d ^ 2 * t / 2) *
     (1 - Real.exp (-2 * d * y))
@@ -87,7 +87,7 @@ theorem driftSurvival_generator (d x : ℝ) :
       d * (2 * d * Real.exp (-2 * d * x)) = 0 := by
   ring
 
-/-- Survival identification (env-steps.tex:227-228, "solve ½u'' + du' = 0, u(0) = 0,
+/-- Survival identification ("solve ½u'' + du' = 0, u(0) = 0,
 u(∞) = 1"): a function that is differentiable on `(0,∞)` with derivative `v` and `v'=w`
 there, satisfies `½ w + d v = 0` on `(0,∞)`, tends to `0` as `x ↓ 0` and to `1` as
 `x → ∞`, is the survival function `h_d`. -/
@@ -188,7 +188,7 @@ theorem driftSurvival_eq_of_generator {d : ℝ} (hd : 0 < d) {u v w : ℝ → �
 /-- Chain of conditioned kernels for the finite-dimensional laws. Started at
 position `x` at time `s`, observed at times `τ 0, …, τ (n-1)` at positions
 `y 0, …, y (n-1)`; each factor is a conditioned kernel over the gap to the
-previous observation (the Markov product, env-steps.tex:234-237). -/
+previous observation (the Markov product). -/
 def conditionedChainDensity (d : ℝ) : (n : ℕ) → ℝ → ℝ → (Fin n → ℝ) → (Fin n → ℝ) → ℝ
   | 0, _, _, _, _ => 1
   | n + 1, s, x, τ, y =>
@@ -209,7 +209,7 @@ def positiveOrthant (n : ℕ) : Set (Fin n → ℝ) :=
   Set.pi Set.univ fun _ => Set.Ioi 0
 
 /-- The conditioned kernel converges to the entrance density as the starting
-point decreases to `0` (env-steps.tex:230-232). The analytic limit is
+point decreases to `0`. The analytic limit is
 `tendsto_gaussian_conditioned_entrance_density`. -/
 theorem tendsto_conditionedDriftDensity_entrance {d τ y : ℝ} (hd : d ≠ 0) (hτ : 0 < τ) :
     Tendsto (fun x => conditionedDriftDensity d τ x y) (𝓝[>] 0)
@@ -295,7 +295,7 @@ For every starting point `x > 0` of the conditioned drifted process `X` (law `P 
 and every strictly increasing family of positive observation times `τ`, the law of
 `(X (τ i))_i` is the chain density restricted to the positive orthant. This encodes the
 Markov property of the h-transform together with its disintegration
-(env-steps.tex:229-237). It is not DMS Remark 4.4. -/
+. It is not DMS Remark 4.4. -/
 def ConditionedDriftFDDPremise {Ω : Type*} [MeasurableSpace Ω] (d : ℝ)
     (X : ℝ → Ω → ℝ) (P : ℝ → Measure Ω) : Prop :=
   ∀ x : ℝ, 0 < x → ∀ (n : ℕ) (τ : Fin n → ℝ), StrictMono τ → (∀ i, 0 < τ i) →

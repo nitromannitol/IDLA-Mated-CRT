@@ -152,7 +152,7 @@ theorem map_prod_toIcoMod_add_uniformIco {p : ℝ} {E : Type*} [MeasurableSpace 
 
 /-- Joint independence. If `U ∼ uniformIco p` and `U ⊥ I`, and `a` is measurable, then
 `V = (U + a(I)) mod p` is uniform on `[0,p)` and `V ⊥ I` (as random elements: the law of `(V, I)`
-is the product `uniformIco p ⊗ P.map I`). Source: `env-steps.tex` lines 794–804. -/
+is the product `uniformIco p ⊗ P.map I`). -/
 theorem indepFun_toIcoMod_add_uniformIco {p : ℝ} {Ω E : Type*} [MeasurableSpace Ω]
     [MeasurableSpace E] {P : Measure Ω} [IsProbabilityMeasure P] (hp : 0 < p) {U : Ω → ℝ}
     {I : Ω → E} (hU : Measurable U) (hI : Measurable I) (hUlaw : P.map U = uniformIco p)

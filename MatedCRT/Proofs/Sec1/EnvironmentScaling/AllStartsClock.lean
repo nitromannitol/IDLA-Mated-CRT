@@ -4,18 +4,18 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling.Clock
 import MatedCRT.Proofs.Sec1.EnvironmentScaling
 
 /-!
-# All-starts clock set `𝒢` (lem:allstarts, env-steps.tex:380-446): definitions, Steps, transfer
+# All-starts clock set `𝒢`: definitions, Steps, transfer
 
-Source: `lem:allstarts` (env-steps.tex:380-446) and the proof of `prop:clock` (env-steps.tex:449-487).
+
 
 Lean names for the paper's objects:
-* `posCircleExt a`: the continuous positive-circle field `a ∈ C((0,∞) × ℂ, ℝ)` (env-steps.tex:112), extended by `0`
+* `posCircleExt a`: the continuous positive-circle field `a ∈ C((0,∞) × ℂ, ℝ)`, extended by `0`
   to radius `0` so that `lqgClockApprox` can read it; only the dyadic radii `dyadicScale n` are read.
-* `clockApprox γ a n w`: the approximating clock `A_n(a,w,·)` of eq:clockapprox (`lqgClockApprox` at `dyadicScale n`).
-* `pathDist`: the metric `d_𝒯` of env-steps.tex:398-400. `CauchyInProbability`: the condition eq:cauchy.
-* `timeClockSet`: `𝒯_*` of eq:timeclock.
-* `AdmitsAllStartClock γ a`, `allStartsSet γ`: `a ∈ 𝒢` iff one `F` satisfies eq:ucp and eq:timeclock for every start.
-* `clockLimit γ nsel a z`: `J(a,z,·)` (env-steps.tex:402-407) for a subsequence choice `nsel`.
+* `clockApprox γ a n w`: the approximating clock `A_n(a,w,·)` (`lqgClockApprox` at `dyadicScale n`).
+* `pathDist`: the metric `d_𝒯`. `CauchyInProbability`: the Cauchy condition.
+* `timeClockSet`: `𝒯_*`.
+* `AdmitsAllStartClock γ a`, `allStartsSet γ`: `a ∈ 𝒢` iff one `F` satisfies `IsLQGClock` and `IsTimeChangeClock` for every start.
+* `clockLimit γ nsel a z`: `J(a,z,·)` for a subsequence choice `nsel`.
 * `SelectedAllStartsRelation γ nsel a z`: `Q(a,z)`; `selectedAllStartsSet γ nsel`: `{a : ∀ z, Q(a,z)}`.
 
 Proved here (no Step hypothesis):
@@ -28,19 +28,17 @@ Proved here (no Step hypothesis):
   `ae_allStarts_of_map_eq`: `a₀ ∈ 𝒢` almost surely and equality in law give `aᵦ ∈ 𝒢` almost surely.
 
 Proved for the constructed subsequence `nselFun` (Mathlib compact-open Borel structure, no binder):
-* `borelSubsequenceSelectionStep_nselFun`: `BorelSubsequenceSelectionStep γ (nselFun γ)` (lem:allstarts proof,
-  env-steps.tex:380-446: Borel recursive choice of `n_k(a,z)`, strictly increasing, with the tail bound).
-* `borelAllStartsRelationStep_nselFun`: `BorelAllStartsRelationStep γ (nselFun γ)` (env-steps.tex:413-421: `Q` is Borel,
+* `borelSubsequenceSelectionStep_nselFun`: `BorelSubsequenceSelectionStep γ (nselFun γ)` (Borel recursive choice of `n_k(a,z)`, strictly increasing, with the tail bound).
+* `borelAllStartsRelationStep_nselFun`: `BorelAllStartsRelationStep γ (nselFun γ)` (`Q` is Borel,
   via the good sets, the pointwise limsup, the rational reduction `isTimeChangeClock_iff_rat`, and the kernel section lemma).
 
-Rescaled measurable version `a_b` (env-steps.tex:463-465), proved for every valid environment from
+Rescaled measurable version `a_b`, proved for every valid environment from
 `QuantumConeScalingInput` (`rescaledCircleVersionStep_of_isValid`: positivity and measurability of the cone scale radius).
 With it, `rescaledConeClockStep_of_inputs` reduces `RescaledConeClockStep` to `[PolishSpace CircleFns]`, the staged Preston
 input and `QuantumConeScalingInput`.
 
 Still hypotheses (binder form, outside the constructed subsequence): `[MeasurableSpace CircleFns] [BorelSpace CircleFns]`
-and `[PolishSpace CircleFns]` in `allStartsSet_isUniversallyMeasurable` / `ae_allStarts_of_map_eq` (Polish structure: owned by
-the circle-process-space task).
+and `[PolishSpace CircleFns]` in `allStartsSet_isUniversallyMeasurable` / `ae_allStarts_of_map_eq` (Polish structure, not constructed here).
 -/
 
 open MatedCRT.EnvClock
@@ -50,46 +48,46 @@ namespace MatedCRT.AllStarts
 open HarmonicBalls MeasureTheory MarkovProcess Filter
 open scoped ENNReal NNReal
 
-/-- The positive-circle index set `E = (0,∞) × ℂ` (env-steps.tex:112). -/
+/-- The positive-circle index set `E = (0,∞) × ℂ`. -/
 abbrev PosCircle : Type := Set.Ioi (0 : ℝ) × ℂ
 
-/-- `H = C(E,ℝ)` with the compact-open topology (env-steps.tex:380). -/
+/-- `H = C(E,ℝ)` with the compact-open topology. -/
 abbrev CircleFns : Type := C(PosCircle, ℝ)
 
 /-- Zero extension of a continuous circle function to all radii; only the dyadic radii are read. -/
 noncomputable def posCircleExt (a : CircleFns) : ℝ → ℂ → ℝ :=
   fun r z => if h : 0 < r then a (⟨r, h⟩, z) else 0
 
-/-- `A_n(a,w,·)` of eq:clockapprox: `lqgClockApprox` at the dyadic scale `dyadicScale n`. -/
+/-- `A_n(a,w,·)`: `lqgClockApprox` at the dyadic scale `dyadicScale n`. -/
 noncomputable def clockApprox (γ : ℝ) (a : CircleFns) (n : ℕ) (w : ContinuousPath ℂ) : ℝ≥0 → ℝ :=
   lqgClockApprox γ (posCircleExt a) (dyadicScale n) w
 
-/-- The metric `d_𝒯` of env-steps.tex:398-400 on `C([0,∞),ℝ)`: `∑_{j≥1} 2^{-j} min {1, sup_{t≤j} |f(t) - g(t)|}`,
+/-- The metric `d_𝒯` on `C([0,∞),ℝ)`: `∑_{j≥1} 2^{-j} min {1, sup_{t≤j} |f(t) - g(t)|}`,
 indexed here by `j ↦ j+1`. -/
 noncomputable def pathDist (f g : ℝ≥0 → ℝ) : ℝ :=
   ∑' j : ℕ, (1 / 2 : ℝ) ^ (j + 1) * min 1 (⨆ t ∈ Set.Icc (0 : ℝ≥0) ((j + 1 : ℕ) : ℝ≥0), |f t - g t|)
 
-/-- The condition eq:cauchy: for every `k ≥ 1` there is `N` with `W_z {d_𝒯(A_n, A_m) > 2^{-k}} < 2^{-k}` for `n, m ≥ N`. -/
+/-- The Cauchy condition: for every `k ≥ 1` there is `N` with `W_z {d_𝒯(A_n, A_m) > 2^{-k}} < 2^{-k}` for `n, m ≥ N`. -/
 def CauchyInProbability (γ : ℝ) (a : CircleFns) (z : ℂ) : Prop :=
   ∀ k : ℕ, 1 ≤ k → ∃ N : ℕ, ∀ n m : ℕ, N ≤ n → N ≤ m →
     planarBrownianMotion z {w | (1 / 2 : ℝ) ^ k < pathDist (clockApprox γ a n w) (clockApprox γ a m w)}
       < ENNReal.ofReal ((1 / 2 : ℝ) ^ k)
 
-/-- `𝒯_*` of eq:timeclock: `F 0 = 0`, `F` continuous and strictly increasing, `F t → ∞` (`IsTimeChangeClock`). -/
+/-- `𝒯_*`: `F 0 = 0`, `F` continuous and strictly increasing, `F t → ∞` (`IsTimeChangeClock`). -/
 def timeClockSet : Set (ℝ≥0 → ℝ) := {f | IsTimeChangeClock f}
 
-/-- lem:allstarts: `a ∈ 𝒢` iff some single `F (w,t)` satisfies eq:ucp (`IsLQGClock`, with `hε = posCircleExt a`)
-and eq:timeclock for every starting point `z`; eq:timeclock holds `W_z`-almost surely. -/
+/-- `a ∈ 𝒢` iff some single `F (w,t)` satisfies `IsLQGClock` (with `hε = posCircleExt a`)
+and `IsTimeChangeClock` for every starting point `z`; it holds `W_z`-almost surely. -/
 def AdmitsAllStartClock (γ : ℝ) (a : CircleFns) : Prop :=
   ∃ F : ContinuousPath ℂ → ℝ≥0 → ℝ, ∀ z : ℂ,
     IsLQGClock planarBrownianMotion γ (posCircleExt a) z F ∧
       ∀ᵐ B ∂planarBrownianMotion z, IsTimeChangeClock (F B)
 
-/-- The set `𝒢` of lem:allstarts (env-steps.tex:380-446). -/
+/-- The set `𝒢`. -/
 def allStartsSet (γ : ℝ) : Set CircleFns := {a | AdmitsAllStartClock γ a}
 
 open Classical in
-/-- `J(a,z,w)` (env-steps.tex:402-407) for a subsequence choice `nsel a z k = n_k(a,z)`: the locally uniform limit of
+/-- `J(a,z,w)` for a subsequence choice `nsel a z k = n_k(a,z)`: the locally uniform limit of
 `A_{n_k}(a,·,w)` when it exists, and `t ↦ t` otherwise. -/
 noncomputable def clockLimit (γ : ℝ) (nsel : CircleFns → ℂ → ℕ → ℕ) (a : CircleFns) (z : ℂ)
     (w : ContinuousPath ℂ) : ℝ≥0 → ℝ :=
@@ -97,7 +95,7 @@ noncomputable def clockLimit (γ : ℝ) (nsel : CircleFns → ℂ → ℕ → �
     h.choose
   else fun t => (t : ℝ)
 
-/-- `Q(a,z)` (lem:allstarts proof, env-steps.tex:380-446): eq:cauchy holds, and `J(a,z,w) ∈ 𝒯_*` for `W_z`-almost
+/-- `Q(a,z)`: the Cauchy condition holds, and `J(a,z,w) ∈ 𝒯_*` for `W_z`-almost
 every `w`. The probability-one clause `W_z{J ∈ 𝒯_*} = 1` is read as the almost-sure statement: for a nonmeasurable
 `J` the outer-measure equation does not give almost-sure membership, and the almost-sure form needs no measurability
 of `J` in the characterization (`J` is measurable for the Borel Step, which is still outstanding). -/
@@ -108,7 +106,7 @@ def SelectedAllStartsRelation (γ : ℝ) (nsel : CircleFns → ℂ → ℕ → �
 def selectedAllStartsSet (γ : ℝ) (nsel : CircleFns → ℂ → ℕ → ℕ) : Set CircleFns :=
   {a | ∀ z : ℂ, SelectedAllStartsRelation γ nsel a z}
 
-/-! ### Deterministic facts on `pathDist` and locally uniform limits (env-steps.tex:398-411)
+/-! ### Deterministic facts on `pathDist` and locally uniform limits
 
 A `pathDist`-small step gives a small sup-distance on each `[0, J]`, and a tail of small steps gives a locally uniform
 limit with an explicit rate. These are the metric inputs of the characterization below. -/
@@ -353,8 +351,8 @@ lemma continuous_clockApprox (γ : ℝ) (a : CircleFns) (n : ℕ) (w : Continuou
 
 end PathDistFacts
 
-/-- The tail property of a subsequence choice `k ↦ n_k(a,z)` (lem:allstarts proof, env-steps.tex:404-411): strictly
-increasing in `k`, and when eq:cauchy holds at `(a,z)`, the chosen indices satisfy the displayed tail bound for every
+/-- The tail property of a subsequence choice `k ↦ n_k(a,z)`: strictly
+increasing in `k`, and when the Cauchy condition holds at `(a,z)`, the chosen indices satisfy the displayed tail bound for every
 `k ≥ 1` and all `n, m ≥ n_k`. -/
 def SubsequenceTailProperty (γ : ℝ) (nsel : CircleFns → ℂ → ℕ → ℕ) : Prop :=
   (∀ (a : CircleFns) (z : ℂ), StrictMono (nsel a z)) ∧
@@ -364,24 +362,24 @@ def SubsequenceTailProperty (γ : ℝ) (nsel : CircleFns → ℂ → ℕ → ℕ
         < ENNReal.ofReal ((1 / 2 : ℝ) ^ k))
 
 /-- **Named Step `BorelSubsequenceSelectionStep` (measurability clause outstanding).** The recursive choice of the
-lem:allstarts proof: each `(a,z) ↦ n_k(a,z)` is Borel (clause 1, not proved here), and the tail property
+subsequence: each `(a,z) ↦ n_k(a,z)` is Borel (clause 1, not proved here), and the tail property
 `SubsequenceTailProperty` holds (clauses 2-3). -/
 def BorelSubsequenceSelectionStep [MeasurableSpace CircleFns] (γ : ℝ)
     (nsel : CircleFns → ℂ → ℕ → ℕ) : Prop :=
   (∀ k : ℕ, Measurable fun p : CircleFns × ℂ => nsel p.1 p.2 k) ∧ SubsequenceTailProperty γ nsel
 
 /-- **Named Step `BorelAllStartsRelationStep` (outstanding, not proved).** `Q` is a Borel subset of
-`C(E,ℝ) × ℂ`: the `W_z`-probabilities of eq:cauchy and of `{J ∈ 𝒯_*}` are Borel in `(a,z)`. -/
+`C(E,ℝ) × ℂ`: the `W_z`-probabilities of the Cauchy condition and of `{J ∈ 𝒯_*}` are Borel in `(a,z)`. -/
 def BorelAllStartsRelationStep [MeasurableSpace CircleFns] (γ : ℝ) (nsel : CircleFns → ℂ → ℕ → ℕ) : Prop :=
   MeasurableSet {p : CircleFns × ℂ | SelectedAllStartsRelation γ nsel p.1 p.2}
 
 /-- **Step `AllStartsCharacterizationStep`, proved** (`allStartsCharacterization_of_tail`, from `SubsequenceTailProperty`).
-Both directions of lem:allstarts: `F = J(a, w(0), ·)` witnesses `a ∈ 𝒢` when `Q(a,·)` holds for every start, and
-conversely any `F` witnessing `a ∈ 𝒢` forces eq:cauchy and `J = F` `W_z`-a.s. (env-steps.tex:380-446). -/
+Both directions: `F = J(a, w(0), ·)` witnesses `a ∈ 𝒢` when `Q(a,·)` holds for every start, and
+conversely any `F` witnessing `a ∈ 𝒢` forces the Cauchy condition and `J = F` `W_z`-a.s. -/
 def AllStartsCharacterizationStep (γ : ℝ) (nsel : CircleFns → ℂ → ℕ → ℕ) : Prop :=
   allStartsSet γ = selectedAllStartsSet γ nsel
 
-/-! ### Probability: the characterization of `𝒢` (lem:allstarts, env-steps.tex:380-446)
+/-! ### Probability: the characterization of `𝒢`
 
 Union bounds only (no Borel-Cantelli). With `D_m = {2^{-m} < d_𝒯(A_{n_m}, A_{n_{m+1}})}`, `W_z(D_m) < 2^{-m}` for
 `m ≥ 1`; the good set `G_K` (steps at rate `2^{-m}` from `K+1` on) has `W_z(G_K^c) ≤ 2^{-K}`. On `G_K` the selected
@@ -430,7 +428,7 @@ lemma measure_iUnion_half_pow_le {Ω : Type*} [MeasurableSpace Ω] (μ : Measure
     ring
   rw [← ENNReal.ofReal_tsum_of_nonneg (fun i => by positivity) hs, htsum]
 
-/-- `IsLQGClock` at one starting point makes the approximations Cauchy in probability (eq:cauchy). -/
+/-- `IsLQGClock` at one starting point makes the approximations Cauchy in probability. -/
 theorem cauchyInProbability_of_isLQGClock {γ : ℝ} {a : CircleFns} {z : ℂ}
     {F : ContinuousPath ℂ → ℝ≥0 → ℝ} (hL : IsLQGClock planarBrownianMotion γ (posCircleExt a) z F) :
     CauchyInProbability γ a z := by
@@ -517,7 +515,7 @@ lemma clockLimit_tendsto_of_goodSet {γ : ℝ} {nsel : CircleFns → ℂ → ℕ
   exact hex.choose_spec
 
 /-- The exceptional sets have measure zero: on `G_K`, `J(a,z,·)` is the locally uniform limit, and the limit of the
-probabilities of `{ η/2 ≤ |A_{n_k} - F| }` tends to `0` (outer-measure argument of env-steps.tex:438-446). -/
+probabilities of `{ η/2 ≤ |A_{n_k} - F| }` tends to `0` (outer-measure argument). -/
 theorem measure_badSet_eq_zero {γ : ℝ} {nsel : CircleFns → ℂ → ℕ → ℕ} (htail : SubsequenceTailProperty γ nsel)
     {a : CircleFns} {z : ℂ} {F : ContinuousPath ℂ → ℝ≥0 → ℝ}
     (hL : IsLQGClock planarBrownianMotion γ (posCircleExt a) z F) (T : ℕ) {η : ℝ} (hη : 0 < η) :
@@ -696,7 +694,7 @@ theorem admitsAllStartClock_of_selected {γ : ℝ} {nsel : CircleFns → ℂ →
   rw [h0]
   exact hB
 
-/-- **The characterization of lem:allstarts**: `𝒢 = {a : ∀ z, Q(a,z)}` for any subsequence choice with the tail
+/-- **The characterization of `𝒢`**: `𝒢 = {a : ∀ z, Q(a,z)}` for any subsequence choice with the tail
 property. Proved from `SubsequenceTailProperty` (the measurability clause of `BorelSubsequenceSelectionStep` is not
 used here). -/
 theorem allStartsSet_eq_selected (γ : ℝ) (nsel : CircleFns → ℂ → ℕ → ℕ)
@@ -711,12 +709,12 @@ theorem allStartsCharacterization_of_tail (γ : ℝ) (nsel : CircleFns → ℂ �
     (htail : SubsequenceTailProperty γ nsel) : AllStartsCharacterizationStep γ nsel :=
   allStartsSet_eq_selected γ nsel htail
 
-/-! ### Measurability of the selection (lem:allstarts proof, env-steps.tex:380-421)
+/-! ### Measurability of the selection
 
 `CircleFns = C(Set.Ioi 0 × ℂ, ℝ)` and `ContinuousPath ℂ = C(ℝ≥0, ℂ)` carry Mathlib's compact-open Borel structure
 (`ContinuousMap.measurableSpace`, `BorelSpace`), and both are second countable (`ContinuousMap.instSecondCountableTopology`:
 the domains are locally compact and second countable). Hence continuous maps on their product are measurable. The
-selection below is the recursive choice of env-steps.tex:404-411, made total by a fallback index. -/
+selection below is the recursive choice, made total by a fallback index. -/
 
 section Measurability
 
@@ -739,7 +737,7 @@ lemma clockApprox_eq_integral (γ : ℝ) (a : CircleFns) (n : ℕ) (w : Continuo
 instance Ioi_zero_locallyCompactSpace : LocallyCompactSpace (Set.Ioi (0 : ℝ)) :=
   isOpen_Ioi.locallyCompactSpace
 
-/-- The clock approximation is jointly continuous in `(a, w, t)` (env-steps.tex:395-397). -/
+/-- The clock approximation is jointly continuous in `(a, w, t)`. -/
 theorem continuous_clockApprox_joint (γ : ℝ) (n : ℕ) :
     Continuous fun x : CircleFns × ContinuousPath ℂ × ℝ≥0 => clockApprox γ x.1 n x.2.1 x.2.2 := by
   set p0 : Set.Ioi (0 : ℝ) := ⟨dyadicScale n, allStarts_dyadicScale_pos n⟩ with hp0
@@ -816,7 +814,7 @@ theorem continuous_pathDist_summand (γ : ℝ) (n m j : ℕ) :
       |clockApprox γ x.1 n x.2 t - clockApprox γ x.1 m x.2 t|) hjoint hK hne (fun x t => abs_nonneg _)
   exact continuous_const.mul (continuous_const.min hsup)
 
-/-- `pathDist` between two clock approximations is continuous in `(a, w)` (env-steps.tex:398-400). -/
+/-- `pathDist` between two clock approximations is continuous in `(a, w)`. -/
 theorem continuous_pathDist_clockApprox (γ : ℝ) (n m : ℕ) :
     Continuous fun x : CircleFns × ContinuousPath ℂ =>
       pathDist (clockApprox γ x.1 n x.2) (clockApprox γ x.1 m x.2) := by
@@ -834,7 +832,7 @@ theorem measurable_planarBM_section {U : Set (CircleFns × ContinuousPath ℂ)} 
     hU.preimage ((measurable_fst.comp measurable_fst).prodMk measurable_snd)
   exact Kernel.measurable_kernel_prodMk_left (κ := κ) ht
 
-/-- The level-`k` tail bound from index `N` (the form of eq:cauchy, env-steps.tex:398-402). -/
+/-- The level-`k` tail bound from index `N`. -/
 def tailBelow (γ : ℝ) (k N : ℕ) (a : CircleFns) (z : ℂ) : Prop :=
   ∀ n m : ℕ, N ≤ n → N ≤ m →
     planarBrownianMotion z {w | (1 / 2 : ℝ) ^ k < pathDist (clockApprox γ a n w) (clockApprox γ a m w)}
@@ -903,7 +901,7 @@ theorem measurable_nselStep (γ : ℝ) (k : ℕ) {prev : CircleFns × ℂ → �
   classical
   exact measurable_find (exists_selPred γ k prev) (measurableSet_selPred γ k hprev)
 
-/-- The subsequence choice `k ↦ n_k(a,z)` of lem:allstarts (env-steps.tex:404-411), by recursion on `k`. -/
+/-- The subsequence choice `k ↦ n_k(a,z)`, by recursion on `k`. -/
 noncomputable def nselSeq (γ : ℝ) : ℕ → CircleFns × ℂ → ℕ
   | 0 => fun _ => 0
   | k + 1 => nselStep γ k (nselSeq γ k)
@@ -942,13 +940,13 @@ theorem nselSeq_tail (γ : ℝ) (a : CircleFns) (z : ℂ) (hC : CauchyInProbabil
 noncomputable def nselFun (γ : ℝ) (a : CircleFns) (z : ℂ) (k : ℕ) : ℕ := nselSeq γ k (a, z)
 
 /-- **The selection Step `BorelSubsequenceSelectionStep` holds** for the constructed subsequence `nselFun`
-(lem:allstarts proof, env-steps.tex:404-411): Borel in `(a, z)`, strictly increasing in `k`, with the tail bound. -/
+Borel in `(a, z)`, strictly increasing in `k`, with the tail bound. -/
 theorem borelSubsequenceSelectionStep_nselFun (γ : ℝ) : BorelSubsequenceSelectionStep γ (nselFun γ) :=
   ⟨fun k => measurable_nselSeq γ k,
     (fun a z => strictMono_nat_of_lt_succ fun k => nselSeq_lt_succ γ k (a, z)),
     fun a z hC k hk n m hn hm => nselSeq_tail γ a z hC k hk n m hn hm⟩
 
-/-- **Rational reduction of `𝒯_*`** (env-steps.tex:413-416): for a continuous `f`, `f` is an `IsTimeChangeClock` iff
+/-- **Rational reduction of `𝒯_*`**: for a continuous `f`, `f` is an `IsTimeChangeClock` iff
 `f 0 = 0`, `f` is strictly increasing on the nonnegative rationals, and `f` is unbounded on the naturals. -/
 theorem isTimeChangeClock_iff_rat {f : ℝ≥0 → ℝ} (hf : Continuous f) :
     IsTimeChangeClock f ↔ f 0 = 0 ∧
@@ -1017,7 +1015,7 @@ theorem isTimeChangeClock_iff_rat {f : ℝ≥0 → ℝ} (hf : Continuous f) :
     obtain ⟨N, hN⟩ := hunb ⌈b⌉₊
     exact ⟨(N : ℝ≥0), le_trans (Nat.le_ceil b) hN.le⟩
 
-/-- The Cauchy-in-probability relation is Borel in `(a, z)` (the countable form of eq:cauchy). -/
+/-- The Cauchy-in-probability relation is Borel in `(a, z)` (the countable form of the Cauchy condition). -/
 theorem measurableSet_cauchyInProbability (γ : ℝ) :
     MeasurableSet {p : CircleFns × ℂ | CauchyInProbability γ p.1 p.2} := by
   have hset : {p : CircleFns × ℂ | CauchyInProbability γ p.1 p.2} = ⋂ k : ℕ,
@@ -1037,14 +1035,14 @@ theorem measurableSet_cauchyInProbability (γ : ℝ) :
     exact MeasurableSet.iUnion fun N => measurableSet_tailBelow γ k N
   exact allStarts_measurableSet_imp hex
 
-/-! #### The Borel relation `Q` of the selected subsequence (`BorelAllStartsRelationStep`, env-steps.tex:413-421)
+/-! #### The Borel relation `Q` of the selected subsequence (`BorelAllStartsRelationStep`)
 
 For `x = ((a, z), w)` the selected approximations `A_{n_k(a,z)}(a, w)` are Borel in `x` (countable index `n_k(a,z)`,
 continuity in `(a, w)`); the pointwise limit `L_t(x) = limsup_k A_{n_k(a,z)}(a,w)(t)` is Borel, and it is the
 locally uniform limit on the good set `G = ⋃_K G_K`. On `G` the limit is continuous, so `IsTimeChangeClock` is the
 countable rational condition `timeCondRat` (`isTimeChangeClock_iff_rat`). -/
 
-/-- The rational form of `IsTimeChangeClock` (env-steps.tex:413-416): `L 0 = 0`, strict increase on the nonnegative
+/-- The rational form of `IsTimeChangeClock`: `L 0 = 0`, strict increase on the nonnegative
 rationals, and unboundedness on the naturals. -/
 def timeCondRat (L : ℝ≥0 → ℝ) : Prop :=
   L 0 = 0 ∧ (∀ q r : ℚ, 0 ≤ q → q < r → L (q : ℝ).toNNReal < L (r : ℝ).toNNReal) ∧
@@ -1156,7 +1154,7 @@ theorem isTimeChangeClock_iff_timeCondRat {γ : ℝ} {a : CircleFns} {z : ℂ} {
   simp only [timeCondRat, hlim]
 
 /-- The exceptional set of the Borel relation: starting data and paths in some good set whose clock limit is not a
-time-change clock (env-steps.tex:413-421). -/
+time-change clock. -/
 def selBadSet (γ : ℝ) : Set ((CircleFns × ℂ) × ContinuousPath ℂ) :=
   {x | (∃ K : ℕ, x.2 ∈ goodSet γ (nselFun γ) x.1.1 x.1.2 K) ∧
     ¬ timeCondRat (fun t => limsup (fun k => clockApprox γ x.1.1 (nselFun γ x.1.1 x.1.2 k) x.2 t) atTop)}
@@ -1171,7 +1169,7 @@ theorem measurable_planarBM_section_pair {S : Set ((CircleFns × ℂ) × Continu
   exact Kernel.measurable_kernel_prodMk_left (κ := κ) hS
 
 /-- For a Cauchy starting pair, almost every clock limit is a time-change clock iff the exceptional set has measure zero
-(the outer-measure argument: the good sets have full measure, env-steps.tex:438-446). -/
+(the outer-measure argument: the good sets have full measure. -/
 theorem ae_timeClock_iff_measure_selBad {γ : ℝ} (htail : SubsequenceTailProperty γ (nselFun γ))
     {a : CircleFns} {z : ℂ} (hC : CauchyInProbability γ a z) :
     (∀ᵐ w ∂planarBrownianMotion z, clockLimit γ (nselFun γ) a z w ∈ timeClockSet) ↔
@@ -1217,7 +1215,7 @@ theorem selected_iff_measure_selBad {γ : ℝ} (htail : SubsequenceTailProperty 
     exact ⟨hC, (ae_timeClock_iff_measure_selBad htail hC).mpr hμ⟩
 
 /-- **The Borel relation Step `BorelAllStartsRelationStep` holds for the constructed subsequence `nselFun`**
-(env-steps.tex:413-421: `Q` is a Borel relation). -/
+(`Q` is a Borel relation). -/
 theorem borelAllStartsRelationStep_nselFun (γ : ℝ) : BorelAllStartsRelationStep γ (nselFun γ) := by
   have hmeasure : Measurable fun p : CircleFns × ℂ =>
       planarBrownianMotion p.2 {w | (p, w) ∈ selBadSet γ} :=
@@ -1232,7 +1230,7 @@ theorem borelAllStartsRelationStep_nselFun (γ : ℝ) : BorelAllStartsRelationSt
 
 end Measurability
 
-/-- `𝒢` is universally measurable (env-steps.tex:380-446: complement = projection of a Borel subset of `H × ℂ`,
+/-- `𝒢` is universally measurable (complement = projection of a Borel subset of `H × ℂ`,
 hence analytic; analytic sets are universally measurable, staged as `PrestonAnalyticUniversallyMeasurableStmt`).
 Hypotheses: the characterization Step, the Borel Step, Polish `C(E,ℝ)`, and the Preston input. -/
 theorem allStartsSet_isUniversallyMeasurable [MeasurableSpace CircleFns] [BorelSpace CircleFns]
@@ -1263,8 +1261,7 @@ theorem allStartsSet_isUniversallyMeasurable [MeasurableSpace CircleFns] [BorelS
   have h := (hPreston CircleFns (allStartsSet γ)ᶜ hanalytic ν hν).compl
   rwa [compl_compl] at h
 
-/-- The almost-sure membership `a₀ ∈ 𝒢` transfers to `aᵦ` under equality in law (proof of `prop:clock`,
-env-steps.tex:449-487: the Borel null sandwich of the universally measurable `𝒢`). -/
+/-- The almost-sure membership `a₀ ∈ 𝒢` transfers to `aᵦ` under equality in law (the Borel null sandwich of the universally measurable `𝒢`). -/
 theorem ae_allStarts_of_map_eq [MeasurableSpace CircleFns] [BorelSpace CircleFns] [PolishSpace CircleFns]
     {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsFiniteMeasure P]
     (hPreston : PrestonAnalyticUniversallyMeasurableStmt) (γ : ℝ) (nsel : CircleFns → ℂ → ℕ → ℕ)
@@ -1275,7 +1272,7 @@ theorem ae_allStarts_of_map_eq [MeasurableSpace CircleFns] [BorelSpace CircleFns
   ae_mem_of_map_eq_of_univMeas ha₀ haᵦ hlaw
     (allStartsSet_isUniversallyMeasurable hPreston γ nsel hchar hBorel) hall
 
-/-- Fields that agree on the dyadic radii `dyadicScale k` (in particular on `E`, env-steps.tex:469-471) have the same
+/-- Fields that agree on the dyadic radii `dyadicScale k` (in particular on `E`) have the same
 `IsLQGClock`: the approximations `lqgClockApprox` read only these values. -/
 theorem isLQGClock_congr_dyadic {Q : ProbabilityTheory.Kernel ℂ (ContinuousPath ℂ)} {γ : ℝ} {g g' : ℝ → ℂ → ℝ}
     (hg : ∀ k : ℕ, ∀ z : ℂ, g (dyadicScale k) z = g' (dyadicScale k) z) {x : ℂ}
@@ -1290,7 +1287,7 @@ theorem isLQGClock_congr_dyadic {Q : ProbabilityTheory.Kernel ℂ (ContinuousPat
   unfold IsLQGClock
   simp only [happ, iff_self]
 
-/-! ### Law transfer on `CircleFns` (the measurable-version law step of prop:clock, env-steps.tex:463-465)
+/-! ### Law transfer on `CircleFns` (the measurable-version law step)
 
 The Borel σ-algebra of `CircleFns = C(E, ℝ)` is generated by the evaluations
 (`ContinuousMap.measurableSpace_eq_iSup_comap_eval`). Hence a law on `CircleFns` is determined by the laws of the
@@ -1345,24 +1342,23 @@ theorem map_eq_of_ae_coord {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {X
 
 end LawTransfer
 
-/-! ### The rescaled all-starts clock step (prop:clock, env-steps.tex:449-475)
+/-! ### The rescaled all-starts clock step
 
-Given a valid environment `S` and `b > 0`, the proof of prop:clock is: the measurable version `a_0` of the positive
+Given a valid environment `S` and `b > 0`, the proof is: the measurable version `a_0` of the positive
 circle process of `S` lies in `𝒢` almost surely (validity clock and dyadic congruence); the measurable version `a_b` of
 the rescaled process `c` has the law of `a_0` (`QuantumConeScalingInput`, with the almost-sure coordinate identities);
 the Borel null sandwich of `𝒢` transfers membership to `a_b`; the clock of `a_b` is a clock of `c` (dyadic congruence).
-The two measurable versions are the Steps `CanonicalCircleVersionStep` (lem:canonical, env-steps.tex:210-216, invoked
-for `a_0` at env-steps.tex:453-456) and `RescaledCircleVersionStep` (the measurable positive-circle version `a_b` of `a^b`,
-env-steps.tex:463-465). -/
+The two measurable versions are the Steps `CanonicalCircleVersionStep` (invoked
+for `a_0`) and `RescaledCircleVersionStep` (the measurable positive-circle version `a_b` of `a^b`). -/
 
-/-- Canonical measurable version of the positive-circle process (lem:canonical, env-steps.tex:210-216): for a valid
+/-- Canonical measurable version of the positive-circle process: for a valid
 environment, the positive-circle process has a measurable `CircleFns`-valued version. -/
 def CanonicalCircleVersionStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
     ∃ a0 : Ω → CircleFns, Measurable a0 ∧
       ∀ᵐ ω ∂S.P, ∀ p : PosCircle, circleFnsCoord (a0 ω) p = circleProcess (S.hcirc ω) p
 
-/-- Measurable positive-circle version of the rescaled process `a^b` (env-steps.tex:463-465, "the measurable
+/-- Measurable positive-circle version of the rescaled process `a^b` ("the measurable
 positive-circle version a_b of a^b"): every almost-sure rescaling `c` of the circle process has a measurable version. -/
 def RescaledCircleVersionStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
@@ -1378,7 +1374,7 @@ lemma posCircleExt_eq_circleFnsCoord {a : CircleFns} {r : ℝ} (hr : 0 < r) (z :
 
 /-- **The rescaled all-starts clock step**, conditional on the two measurable versions (`CanonicalCircleVersionStep`,
 `RescaledCircleVersionStep`), the law-scaling input `QuantumConeScalingInput`, the staged Preston input and the Polish
-structure of `CircleFns` (prop:clock, env-steps.tex:449-475). -/
+structure of `CircleFns`. -/
 theorem rescaledConeClockStep_of_canonical [PolishSpace CircleFns]
     (hPreston : PrestonAnalyticUniversallyMeasurableStmt) (hscale : QuantumConeScalingInput)
     {𝒮 : SpaceFillingSLEModel} (hcan : CanonicalCircleVersionStep 𝒮)
@@ -1431,7 +1427,7 @@ theorem rescaledConeClockStep_of_canonical [PolishSpace CircleFns]
   rw [posCircleExt_eq_circleFnsCoord (allStarts_dyadicScale_pos k) z']
   exact hωab _
 
-/-! ### Measurable versions of a.s. continuous circle processes (lem:canonical, env-steps.tex:210-216)
+/-! ### Measurable versions of a.s. continuous circle processes
 
 A circle-average process with measurable positive-radius coordinates whose paths are almost surely continuous on `E`
 has a measurable `CircleFns`-valued version. For a valid environment both hypotheses are fields of the quantum cone
@@ -1474,8 +1470,7 @@ theorem exists_measurable_circleFns_version {Ω : Type*} [MeasurableSpace Ω] {P
   simp [a0, hω]
 
 /-- **The canonical measurable version for every valid environment** (first conjunct of `CanonicalCircleVersionStep`),
-from the measurable circle coordinates and the almost-sure continuity on `E` of the quantum cone (lem:canonical,
-env-steps.tex:210-216). -/
+from the measurable circle coordinates and the almost-sure continuity on `E` of the quantum cone. -/
 theorem canonicalCircleVersionStep_of_isValid (𝒮 : SpaceFillingSLEModel) : CanonicalCircleVersionStep 𝒮 := by
   intro γ _ _ Ω _ S hS
   have hmeas : ∀ p : PosCircle, Measurable fun ω => S.hcirc ω p.1.1 p.2 := fun p =>
@@ -1489,13 +1484,13 @@ theorem canonicalCircleVersionStep_of_isValid (𝒮 : SpaceFillingSLEModel) : Ca
 
 /-- **The rescaled all-starts clock step**, now with the canonical version proved for every valid environment. The
 remaining inputs are the rescaled measurable version `RescaledCircleVersionStep`, the Polish structure of `CircleFns`,
-the staged Preston input and `QuantumConeScalingInput` (prop:clock, env-steps.tex:449-475). -/
+the staged Preston input and `QuantumConeScalingInput`. -/
 theorem rescaledConeClockStep_of_rescaledVersion [PolishSpace CircleFns]
     (hPreston : PrestonAnalyticUniversallyMeasurableStmt) (hscale : QuantumConeScalingInput)
     {𝒮 : SpaceFillingSLEModel} (hres : RescaledCircleVersionStep 𝒮) : RescaledConeClockStep 𝒮 :=
   rescaledConeClockStep_of_canonical hPreston hscale (canonicalCircleVersionStep_of_isValid 𝒮) hres
 
-/-! ### The rescaled measurable version `a_b` (env-steps.tex:463-465)
+/-! ### The rescaled measurable version `a_b`
 
 The rescaled positive-circle process `(r, z) ↦ a₀(R r, R z) + Q log R - γ⁻¹ log b` is built from a measurable version
 `a₀` of the canonical process (`canonicalCircleVersionStep_of_isValid`) and a measurable, everywhere positive radius `R`
@@ -1530,7 +1525,7 @@ theorem measurable_eval_comp {Ω : Type*} [MeasurableSpace Ω] {f : Ω → Circl
     (hf : Measurable f) (hq : Measurable q) : Measurable fun ω => f ω (q ω) :=
   measurable_eval_circleFns.comp (hf.prodMk hq)
 
-/-- The rescaled positive-circle process `(r, z) ↦ a₀(ρ r, ρ z) + Q log ρ - γ⁻¹ log b` (env-steps.tex:463-465). -/
+/-- The rescaled positive-circle process `(r, z) ↦ a₀(ρ r, ρ z) + Q log ρ - γ⁻¹ log b`. -/
 noncomputable def rescaledVersion (γ b : ℝ) (a0 : CircleFns) (ρ : ℝ) (hρ : 0 < ρ) : CircleFns :=
   ⟨fun p => a0 (rescaleCirclePt ρ hρ p) + lqgQ γ * Real.log ρ - γ⁻¹ * Real.log b,
     ((a0.continuous.comp (continuous_rescaleCirclePt ρ hρ)).add continuous_const).sub continuous_const⟩
@@ -1560,7 +1555,7 @@ theorem exists_measurable_pos_version {Ω : Type*} [MeasurableSpace Ω] {P : Mea
     rw [← h1]
     simp [h2]
 
-/-- **The rescaled measurable version `a_b` for every valid environment** (env-steps.tex:463-465). The input
+/-- **The rescaled measurable version `a_b` for every valid environment**. The input
 `QuantumConeScalingInput` gives the almost-sure positivity of the cone scale radius `R_b`. -/
 theorem rescaledCircleVersionStep_of_isValid (hscale : QuantumConeScalingInput) (𝒮 : SpaceFillingSLEModel) :
     RescaledCircleVersionStep 𝒮 := by
@@ -1587,8 +1582,7 @@ theorem rescaledCircleVersionStep_of_isValid (hscale : QuantumConeScalingInput) 
     rfl
 
 /-- **The rescaled all-starts clock step, with the rescaled measurable version proved.** `RescaledConeClockStep` now
-needs only the Polish structure of `CircleFns`, the staged Preston input and `QuantumConeScalingInput`
-(prop:clock, env-steps.tex:449-475). -/
+needs only the Polish structure of `CircleFns`, the staged Preston input and `QuantumConeScalingInput`. -/
 theorem rescaledConeClockStep_of_inputs [PolishSpace CircleFns]
     (hPreston : PrestonAnalyticUniversallyMeasurableStmt) (hscale : QuantumConeScalingInput)
     (𝒮 : SpaceFillingSLEModel) : RescaledConeClockStep 𝒮 :=

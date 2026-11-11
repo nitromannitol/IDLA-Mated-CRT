@@ -5,8 +5,8 @@ import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
 /-!
 # Borel null sandwiches and law transfer for universally measurable sets
 
-Measure-theoretic first component of `lem:allstarts` (env-steps.tex:380-446) and of the proof of `prop:clock`
-(env-steps.tex:449-487). A universally measurable set `G` is null-measurable for every finite Borel measure, in
+Measure-theoretic first component of the all-starts clock lemma and of its rescaling step.
+A universally measurable set `G` is null-measurable for every finite Borel measure, in
 particular for the law `ν = P.map X`, so it is sandwiched between Borel sets `A ⊆ G ⊆ B` with `ν (B \ A) = 0`.
 Equality in law then transfers almost-sure membership in `G` from `X` to `Y`, using only the inverse images of
 `A` and `B`; the probability space need not be complete.
@@ -41,8 +41,7 @@ theorem hasBorelNullSandwich_of_nullMeasurableSet {ν : Measure E} {G : Set E}
   · exact Or.inl ⟨hxB, hxG⟩
 
 /-- Equality in law transfers almost-sure membership in a set with a Borel null sandwich. Only the inverse images
-of the Borel sets `A` and `B` enter, so the probability space need not be complete (proof of `prop:clock`,
-env-steps.tex:449-487). -/
+of the Borel sets `A` and `B` enter, so the probability space need not be complete (proof of the rescaling step). -/
 theorem ae_mem_of_map_eq {P : Measure Ω} {X Y : Ω → E}
     (hX : Measurable X) (hY : Measurable Y) (hlaw : P.map X = P.map Y)
     {G : Set E} (hG : HasBorelNullSandwich (P.map X) G)

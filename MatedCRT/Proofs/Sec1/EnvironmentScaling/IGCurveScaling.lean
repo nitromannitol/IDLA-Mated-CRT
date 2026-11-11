@@ -104,8 +104,7 @@ theorem affineReroot_rotation_eq (c : C(ℝ, ℂ)) (k : ℤ) (hfh : firstHit c 0
     affineReroot 0 1 (-(2 * Real.pi * k)) c = c :=
   affineReroot_zero_one_eq c _ hfh (exp_neg_two_pi_int_mul_I k)
 
-/-- **Deterministic core of the first component of `lem:mainlaw`** (`env-steps.tex`
-774–799). `K ω` is the raw circle array, `Φ` is a witness with `L ω = Φ (K ω)` almost
+/-- **Deterministic core of the first component of the main law.** `K ω` is the raw circle array, `Φ` is a witness with `L ω = Φ (K ω)` almost
 surely, the covariance clause holds at every deterministic `(z₀, s, φ)` with `s > 0`,
 and `L ω` is transient almost surely. Then `q₀(L) = firstHit (L ω) 0` vanishes almost
 surely, and simultaneously for every `k : ℤ`, `Φ (K + k p) = Φ K` almost surely,
@@ -180,7 +179,7 @@ theorem affineReroot_scale_rotation_eq (c : C(ℝ, ℂ)) (s : ℝ) (k : ℤ)
   simp only [affineReroot, ContinuousMap.coe_mk, hexp, hfh, Complex.ofReal_zero, zero_mul,
     Complex.exp_zero]
 
-/-- **Deterministic scale-`s` identity** (`env-steps.tex` 790–802). For `s > 0`, almost
+/-- **Deterministic scale-`s` identity.** For `s > 0`, almost
 surely and simultaneously for every `m : ℤ`, `Φ (K(s·, s·) + m p) = R_{0,s,0} L`, where
 `R_{0,s,0} L (t) = s⁻¹ L(s² t)`. The integer is absorbed by the rotation family itself. -/
 theorem igMap_scale_identity {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ)
@@ -213,8 +212,8 @@ theorem floor_remainder_mem_Ico (x p : ℝ) (hp : 0 < p) :
   rw [add_mul, one_mul] at h2'
   constructor <;> linarith
 
-/-- **Positive-scale identity with the random integer removed** (`env-steps.tex` 790–802,
-before the law step). Let `K(s r, s w) = A(r, w) + U` define the scaled array, `a` the
+/-- **Positive-scale identity with the random integer removed**
+(before the law step). Let `K(s r, s w) = A(r, w) + U` define the scaled array, `a` the
 normalizing constant `circleAvg (I) s 0`, `p = 2πχ`, `k = ⌊(U + a)/p⌋` and
 `V = U + a − k p ∈ [0, p)`. Then almost surely `Φ (A − a + V) = s⁻¹ L(s² ·)`. -/
 theorem igMap_scale_normalized_identity {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)

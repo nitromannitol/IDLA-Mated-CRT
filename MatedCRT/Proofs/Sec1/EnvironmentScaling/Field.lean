@@ -5,9 +5,9 @@ import HarmonicBalls.Proofs.Sec8.WholePlaneObservableLaw
 /-!
 # Rescaled field pairings
 
-The coding and simultaneous representation from env-steps.tex:176–207 give
-an exactly field-measurable distribution.  Lines 309–314 require joint
-measurability of its evaluation at a dilated test; this is proved below.  The observable-law bridge uses Leonardo Bonanno’s LatticeProb field results via
+The coding and simultaneous representation give
+an exactly field-measurable distribution.  Joint measurability of its evaluation at a dilated test is required;
+it is proved below.  The observable-law bridge uses Leonardo Bonanno’s LatticeProb field results via
 `HarmonicBalls.Proofs.Sec8.WholePlaneObservableLaw`.
 -/
 
@@ -427,7 +427,7 @@ theorem IsQuantumCone.distribution_law_eq
     IsQuantumCone.observable_law_eq h h']
 
 /-- Joint measurability of evaluation at a variable dilation, on the imported
-plane distribution and test-function carriers (env-steps.tex:309–314). -/
+plane distribution and test-function carriers. -/
 def VariableDilationPairingStep : Prop :=
   ∀ φ : LQGMetric.TestC,
     Measurable fun p : LQGMetric.DistC × ℝ => p.1 (LQGMetric.testAffinePull p.2 0 φ)
@@ -552,7 +552,7 @@ theorem measurable_fieldRadialVersion {Ω : Type} [MeasurableSpace Ω] (S : Mate
   exact CirclePairing.measurable_radialVersion (fun r _ _ => hm r)
 
 /-- One event suffices for recovering all positive-radius centered circles,
-using continuity in the radius (env-steps.tex:259–278). -/
+using continuity in the radius. -/
 theorem ae_fieldRadialVersion_eq {Ω : Type} [MeasurableSpace Ω]
     {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) :
     ∀ᵐ ω ∂S.P, ∀ r : ℝ, 0 < r → fieldRadialVersion S ω r = S.hcirc ω r 0 := by
@@ -1098,7 +1098,7 @@ theorem exists_rescaled_pairing
   exact ⟨hRω, hRω ▸ hposω.ne'⟩
 
 /-- The distributional cone-scaling boundary, stated on all admissible
-observables. This is the remaining law identification in env-steps.tex:299–335;
+observables. This is the remaining law identification;
 it is not supplied by the circle-only `QuantumConeScalingInput`. -/
 def RescaledConeObservableLawStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω]

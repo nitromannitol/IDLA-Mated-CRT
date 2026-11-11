@@ -5,7 +5,7 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling.AreaScaling
 
 The interval identities are the pointwise hypotheses supplied by `areaParam`
 in Leonardo Bonanno's `LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.IsMatingOfTreesCoupling`.
-They implement the signed inverse formula of `env-steps.tex`, lines 749–765.
+They implement the signed inverse formula.
 The measure itself can be supplied by the existing field-pairing recovery;
 no field-to-curve map is assumed here.
 -/

@@ -5,8 +5,8 @@ import MatedCRT.Proofs.Measurability.ConePairing
 /-!
 # Canonical observable assembly: finite-dimensional laws of cone observables
 
-Sources: env-steps.tex:248-280. Lines 248-257: radial integrability, finiteness of the angular integrals for circles
-through zero, and their determination by countably many radial evaluations. Lines 257-270: the Gaussian covariance fixes
+Radial integrability, finiteness of the angular integrals for circles
+through zero, and their determination by countably many radial evaluations; the Gaussian covariance fixes
 the lateral law, and independence in the cone predicate identifies the joint law of the cone observables with the lateral
 GFF plus the independent radial function. The source cites Duplantier–Miller–Sheffield (Lemma 4.9 and Definition 4.10) for the
 distribution-valued cone; this file does not use that citation (Duplantier–Miller–Sheffield, arXiv:1409.7055).
@@ -164,7 +164,7 @@ lemma ae_ne_zero_complex : ∀ᵐ x : ℂ ∂(volume : Measure ℂ), x ≠ 0 := 
   rw [ae_iff]
   simp
 
-/-- **Observable equality (env-steps.tex:248-257).** Let `hcirc` have circle averages continuous on `(0, ∞) × ℂ` almost
+/-- **Observable equality.** Let `hcirc` have circle averages continuous on `(0, ∞) × ℂ` almost
 surely. Then almost surely, for every admissible observable `o`, the value `o(h)` of the field equals the transport of its
 radial process and its lateral process: `o(h) = coneTransport (radialProcess h, lateralProcess h) o`. The identity needs no
 integrability assumption, because both sides use the same integrals up to a null set. -/
@@ -238,7 +238,7 @@ theorem map_finite_coneObservables_eq {γ : ℝ} {Ω : Type} [MeasurableSpace Ω
     rw [hsplit, hν, hQ]
   rw [Measure.map_congr hV, hcomp, hprod]
 
-/-- **Joint law of all cone observables (env-steps.tex:257-270).** For `h : IsQuantumCone γ P hC hcirc`, with the explicitly
+/-- **Joint law of all cone observables.** For `h : IsQuantumCone γ P hC hcirc`, with the explicitly
 supplied radial law `quantumConeRadialLaw γ ν` and the actual lateral law `Q`, the law of the whole family of admissible
 observables, in the product σ-algebra, is the image of `quantumConeRadialLaw γ ν ⊗ Q` under `coneTransport`. No
 countability of the observables is used: the observable equality holds almost surely for all of them at once. -/

@@ -3,9 +3,9 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling.GaussianBandProof
 import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
-# Measurable circle averages of random radial families (env-steps.tex:128-135, 248-251)
+# Measurable circle averages of random radial families
 
-Fixed-circle measurability component of the lateral observable of `env-steps.tex:128-135`,
+Fixed-circle measurability component of the lateral observable,
 `ℓ(r,z) = a(r,z) - (1/2π) ∫_0^{2π} a(|z + r e^{iθ}|, 0) dθ` for `r > 0`.  For a random radial
 family `X s ω` (the value at radius `s` of a radial path), this file proves:
 
@@ -20,7 +20,7 @@ family `X s ω` (the value at radius `s` of a radial path), this file proves:
   logarithmic majorant `|X t ω| ≤ C (1 + |log t|)` on `(0, 2r]`, the angular integrand is a.s. interval
   integrable (`intervalIntegrable_radial_circle`), so the normalized integral is a finite average a.s.
 * `aemeasurable_circle_radialPath`, `ae_intervalIntegrable_circle_radialPath`: the radial path
-  `X s ω = B (-log s) ω` (`t = -log|z|`, env-steps.tex:243-252).
+  `X s ω = B (-log s) ω` (`t = -log|z|`).
 * `aemeasurable_circle_brownian`, `ae_intervalIntegrable_circle_brownian`: the same for a Brownian
   motion `B` (`IsBrownianReal`), where the continuity and growth premises are derived from
   `IsBrownianReal` and only the coordinate measurability `hBm` remains a premise.
@@ -198,7 +198,7 @@ theorem aemeasurable_circle_integral {Ω : Type*} [MeasurableSpace Ω] (P : Meas
   exact AEMeasurable.congr hF.measurable.aemeasurable hagree.symm
 
 /-- **Normalized circle average.**  The normalized integral `(2π)⁻¹ ∫_{[0,2π]} X |z + r e^{iθ}| ω dθ`,
-the angular average in the lateral observable `ℓ(r,z)` of env-steps.tex:128-135, is a.e. measurable for
+the angular average in the lateral observable `ℓ(r,z)`, is a.e. measurable for
 fixed `z` and `r > 0`. -/
 theorem aemeasurable_circle_average {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
     (X : ℝ → Ω → ℝ) (hXm : ∀ s : ℝ, 0 < s → Measurable fun ω => X s ω)
@@ -252,7 +252,7 @@ theorem ae_intervalIntegrable_circle_through_zero {Ω : Type*} [MeasurableSpace 
   exact intervalIntegrable_radial_circle hωc hr hz (le_refl (2 * r)) hC
 
 /-- Radial path: the family `s ↦ B (-log s)` is a.s. continuous on `(0, ∞)` when `t ↦ B t ω` is
-a.s. continuous (env-steps.tex:243-252, `t = -log|z|`). -/
+a.s. continuous (`t = -log|z|`). -/
 lemma ae_continuousOn_log_radialPath {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {B : ℝ → Ω → ℝ} (hcont : ∀ᵐ ω ∂P, Continuous fun t : ℝ => B t ω) :
     ∀ᵐ ω ∂P, ContinuousOn (fun s : ℝ => B (-Real.log s) ω) (Ioi 0) := by
@@ -273,7 +273,7 @@ theorem aemeasurable_circle_radialPath {Ω : Type*} [MeasurableSpace Ω] (P : Me
     (ae_continuousOn_log_radialPath hcont) z hr
 
 /-- Sublinear growth gives the logarithmic majorant on `(0, 2r]` for the radial path, when `2r ≤ 1`
-(then `-log t ≥ 0` for `0 < t ≤ 2r`).  The growth is the Brownian `o(t)` bound of env-steps.tex:248-251,
+(then `-log t ≥ 0` for `0 < t ≤ 2r`).  The growth is the Brownian `o(t)` bound,
 as a premise `hsub`; the linear envelope is `exists_abs_le_mul_one_add_of_sublinear`. -/
 lemma ae_log_majorant_radialPath {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {B : ℝ → Ω → ℝ} {r : ℝ} (hr2 : 2 * r ≤ 1) (hcont : ∀ᵐ ω ∂P, Continuous fun t : ℝ => B t ω)
@@ -300,7 +300,7 @@ theorem ae_intervalIntegrable_circle_radialPath {Ω : Type*} [MeasurableSpace Ω
     (ae_continuousOn_log_radialPath hcont) hr hz (ae_log_majorant_radialPath hr2 hcont hsub)
 
 /-- **Brownian radial path, normalized circle average.**  For a Brownian motion `B` indexed by
-`ℝ≥0` (`IsBrownianReal`), the radial path is read as `t ↦ B t.toNNReal` (env-steps.tex:243-252).  Its
+`ℝ≥0` (`IsBrownianReal`), the radial path is read as `t ↦ B t.toNNReal`.  Its
 a.s. continuity is `IsBrownianReal.cont`.  The coordinate measurability `hBm` remains a premise, since
 `IsBrownianReal` gives measurability only almost everywhere (through `HasLaw`). -/
 theorem aemeasurable_circle_brownian {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}

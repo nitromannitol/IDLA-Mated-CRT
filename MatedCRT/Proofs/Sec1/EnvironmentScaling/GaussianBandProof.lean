@@ -6,7 +6,7 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling.BrownianSublinear
 # Discharge of the named Step `GaussianBandStep` for Brownian motion with measurable coordinates
 
 The reflection bound for the maximum of the path
-(`env-steps.tex:247-248`) and the sublinear growth `B t / t → 0` (the premise `hsub`).
+and the sublinear growth `B t / t → 0` (the premise `hsub`).
 
 `MatedCRT.Sec1.GaussianBandStep B P` is the Gaussian maximal estimate on a horizon. Here it is proved,
 not assumed, for a Brownian motion `B` in the sense of Mathlib (`ProbabilityTheory.IsBrownianReal B P`)

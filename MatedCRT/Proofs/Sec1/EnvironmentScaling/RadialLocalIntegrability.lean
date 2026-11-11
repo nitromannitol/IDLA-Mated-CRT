@@ -155,7 +155,7 @@ theorem locallyIntegrable_of_continuousOn_compl_zero {f : ℂ → ℝ}
 
 /-- Radial form: for `g` continuous on `(0, ∞)` and bounded near zero by
 `C (1 + |log r|)` on `(0, δ]`, the function `z ↦ g ‖z‖` is locally integrable on `ℂ`.
-This is the statement of env-steps.tex:243-252 for a radial function; radiality is
+This is the statement for a radial function; radiality is
 the form `g ∘ norm`. -/
 theorem locallyIntegrable_radial {g : ℝ → ℝ} (hg : ContinuousOn g (Ioi 0)) {C δ : ℝ}
     (hδ : 0 < δ) (hbound : ∀ r : ℝ, 0 < r → r ≤ δ → |g r| ≤ C * (1 + |Real.log r|)) :

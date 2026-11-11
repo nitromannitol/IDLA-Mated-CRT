@@ -6,8 +6,7 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling.CanonicalBrownianPathAssembly
 # Canonical reference observable law: cone observables with a supplied conditioned path law
 
 The conditioned drifted Brownian law of the cone radial process; its
-identification with DMS Remark 4.4, pp. 74-75, is the explicit premise `MatedCRT.Proposed.DMS14Remark44PostLastZeroLaw`
-and `env-steps.tex:254-280` (the joint law of the cone observables, lines 257-270).
+identification with DMS Remark 4.4, pp. 74-75, is the explicit premise `MatedCRT.Proposed.DMS14Remark44PostLastZeroLaw`, and the joint law of the cone observables.
 
 This file specializes `CanonicalObservableAssembly.lean`. The radial clause of `IsQuantumCone` is the existential
 `∃ ν, IsBMConditionedPositive (lqgQ γ - γ) ν ∧ P.map radialProcess = quantumConeRadialLaw γ ν`. Here the witness is the
@@ -87,7 +86,7 @@ theorem map_finite_coneObservables_eq_reference
   let _ := hW
   exact map_finite_coneObservables_eq h (P0.map F) (radialProcess_map_eq_reference h hF) _ hlat c
 
-/-- **Joint law of all cone observables with the reference radial law (env-steps.tex:257-270).** The hypotheses are those of
+/-- **Joint law of all cone observables with the reference radial law.** The hypotheses are those of
 `map_finite_coneObservables_eq_reference`. The law of the whole family of admissible observables, in the product σ-algebra,
 is the image of `quantumConeRadialLaw γ (P0.map F) ⊗ P'.map lateralProcess` under `coneTransport`. No countability of the
 observables is used. -/

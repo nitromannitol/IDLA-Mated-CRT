@@ -26,7 +26,7 @@ Results.
   Remark 4.4 input `MatedCRT.Proposed.DMS14Remark44PostLastZeroLaw` displayed as a premise.
 
 Premises kept explicit, not discharged. `hF : IsBMConditionedPositive (lqgQ γ - γ) (P0.map F)` is the reference conditioned
-positive law; it is the WPN-53 bridge recorded in `docs/campaign/EnvironmentScaling.md`, and it is not proved here.
+positive law; it is the bridge recorded in `docs/campaign/EnvironmentScaling.md`, and it is not proved here.
 `hR : DMS14Remark44PostLastZeroLaw` is the held DMS Remark 4.4 input, used only in the Brownian version; it is not promoted
 to a source.
 
@@ -52,7 +52,7 @@ of the observable is finite: a pairing with a test function `φ` gives `x ↦ φ
 integral in `lateralEval` (its radial part agrees with `radialContribution` almost everywhere in `x`); a circle `(r, z)` with
 `0 < r` gives the angular integrand `θ ↦ h_{|z + r e^{iθ}|}(0)` interval integrable on `[0, 2π]`, the integrand of the circle
 average `Real.circleAverage (fun x ↦ h_{|x|}(0)) z r` in `lateralEval`. A circle through `0` is included: the logarithmic
-singularity is integrable in the angle (env-steps.tex:248). -/
+singularity is integrable in the angle. -/
 def ObservableRadialIntegrable (hcirc : ℝ → ℂ → ℝ) : GFFObservable → Prop
   | .pairing φ => Integrable (fun x : ℂ => φ x * hcirc ‖x‖ 0)
   | .circle r z =>
@@ -112,9 +112,8 @@ theorem aemeasurable_coneObservables_of_isQuantumCone {γ : ℝ} {Ω : Type} [Me
     exact hω (o i)
   exact hT.congr hV.symm
 
-/-- **Reference observable law with actual integrability (env-steps.tex:241-272).** Let `h : IsQuantumCone γ P hC hcirc`. Let
-`hF : IsBMConditionedPositive (lqgQ γ - γ) (P0.map F)` be the reference conditioned positive law, kept as an explicit premise
-(the WPN-53 bridge). Let `(P', hC', hcirc', hW)` be a whole-plane GFF whose lateral law is `hlat`. For any family
+/-- **Reference observable law with actual integrability.** Let `h : IsQuantumCone γ P hC hcirc`. Let
+`hF : IsBMConditionedPositive (lqgQ γ - γ) (P0.map F)` be the reference conditioned positive law, kept as an explicit premise. Let `(P', hC', hcirc', hW)` be a whole-plane GFF whose lateral law is `hlat`. For any family
 `o : ι → GFFObservable.Admissible` (finite `ι = Fin n`, countable `ι = ℕ`):
 1. `P`-a.s., every `o i` has finite radial integrals (`ObservableRadialIntegrable`);
 2. the observable vector `ω ↦ (o i)(h)(ω)` is `P`-a.e. measurable into `ι → ℝ`;

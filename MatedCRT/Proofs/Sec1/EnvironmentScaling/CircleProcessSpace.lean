@@ -10,8 +10,8 @@ import Mathlib.Topology.UniformSpace.CompactConvergence
 /-!
 # Polish and Borel structure of the circle-process space `C((0,∞) × ℂ, ℝ)`
 
-Source: env-steps.tex:112 (the positive-circle index `E = (0,∞) × ℂ`) and env-steps.tex:380 (`H = C(E,ℝ)` with the
-compact-open topology), the ambient space of the all-start clock lemma `lem:allstarts` (env-steps.tex:380-446).
+The positive-circle index `E = (0,∞) × ℂ` and `H = C(E,ℝ)` with the
+compact-open topology: the ambient space of the all-start clock lemma.
 
 This file supplies the Polish and Borel instances that `MatedCRT/Proofs/Sec1/EnvironmentScaling/AllStartsClock.lean`
 currently takes as binders (`[PolishSpace CircleFns]`, `[MeasurableSpace CircleFns] [BorelSpace CircleFns]`). It adds no
@@ -34,12 +34,12 @@ open MeasureTheory TopologicalSpace
 
 namespace MatedCRT.CircleProcessSpace
 
-/-- The positive-circle index set `E = (0,∞) × ℂ` (env-steps.tex:112). It is the same type as
+/-- The positive-circle index set `E = (0,∞) × ℂ`. It is the same type as
 `MatedCRT.AllStarts.PosCircle` in `AllStartsClock.lean`. -/
 abbrev PosCircleIndex : Type := Set.Ioi (0 : ℝ) × ℂ
 
 /-- The space `H = C(E, ℝ)` of continuous positive-circle functions with the compact-open topology
-(env-steps.tex:380). It is the same type as `MatedCRT.AllStarts.CircleFns`. -/
+. It is the same type as `MatedCRT.AllStarts.CircleFns`. -/
 abbrev PosCircleFns : Type := C(PosCircleIndex, ℝ)
 
 /-! ### Domain instances on `E = (0,∞) × ℂ` -/
@@ -64,7 +64,7 @@ theorem posCircleFns_isCompletelyMetrizableSpace :
     IsCompletelyMetrizableSpace PosCircleFns :=
   IsCompletelyMetrizableSpace.of_completeSpace_metrizable
 
-/-- The Polish structure on `H = C(E,ℝ)` with the compact-open topology (env-steps.tex:380). -/
+/-- The Polish structure on `H = C(E,ℝ)` with the compact-open topology. -/
 instance posCircleFns_polishSpace : PolishSpace PosCircleFns where
   toSecondCountableTopology := inferInstance
   toIsCompletelyMetrizableSpace := posCircleFns_isCompletelyMetrizableSpace

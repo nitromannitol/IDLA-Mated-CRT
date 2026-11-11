@@ -10,7 +10,7 @@ at `t.toNNReal`.  The conclusion `ae_tendsto_div_real_of_gaussianBandStep` is ex
 (`CanonicalConeIdentification.lean`).
 
 Route.  The only probabilistic input is the Gaussian maximal estimate for the path on a horizon,
-retained as the named Step `GaussianBandStep B P` (env-steps.tex:247-248, "the reflection bound for
+retained as the named Step `GaussianBandStep B P` ("the reflection bound for
 the maximum").  Everything else is proved here:
 
 * `measure_bandExceed_le` and `tsum_measure_bandExceed_ne_top`: for a band level `c > 0` the exceptional
