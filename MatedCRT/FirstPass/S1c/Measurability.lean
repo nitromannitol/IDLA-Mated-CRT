@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S1c.Threshold
 import MatedCRT.FirstPass.Frozen.S1c
 
 /-!
-# Null-measurability of the threshold event (Lemma 1, fleet note G-hT)
+# Null-measurability of the threshold event (Lemma 1)
 
 For a random locally finite measure `μ_ω` on `ℂ` and a point `p ≠ 0` of the closed disc, the event
 `{ω | -uG(0,p) < v_{B_R;0}(u)(p)(μ_ω)}` is a countable union, over rationals `q`, of the sets
