@@ -10,7 +10,7 @@ Fixed-circle measurability component of the lateral observable,
 `ℓ(r,z) = a(r,z) - (1/2π) ∫_0^{2π} a(|z + r e^{iθ}|, 0) dθ` for `r > 0`.
 
 The radial-family statements and their proofs are the general ones of
-`LatticeProb.AngularIntegralMeasurable` (`MatedCRT/LPStaging/Analysis/AngularIntegralMeasurable.lean`).
+`LatticeProb.AngularIntegralMeasurable` (`LatticeProb/Analysis/AngularIntegralMeasurable.lean`).
 This file keeps the lateral-observable names: each statement is the LP statement with the same
 hypotheses, its proof cites the LP lemma, and the circle definitions agree with the LP ones by `rfl`.
 The Brownian specializations (`aemeasurable_circle_brownian`, `ae_intervalIntegrable_circle_brownian`)

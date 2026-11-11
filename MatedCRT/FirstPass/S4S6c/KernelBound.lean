@@ -11,7 +11,7 @@ For `u` with `‖u - z‖ ≤ 2R` and `v = circleMap z (3R/2) θ`, the corrected
 the joint integrability (`CircleIntegrability.lean`). Open: the product integrability itself and the Fubini assembly.
 
 The seven statements below are the specialisations of the general kernel bounds of `LatticeProb.CircleKernelBounds`
-(`MatedCRT/LPStaging/Analysis/CircleKernelBounds.lean`, a copy of the LatticeProb module); the proofs are citations.
+(`LatticeProb/Analysis/CircleKernelBounds.lean`); the proofs are citations.
 -/
 
 open MeasureTheory Real Set Metric

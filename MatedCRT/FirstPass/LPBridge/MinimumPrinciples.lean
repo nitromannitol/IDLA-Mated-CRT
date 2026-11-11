@@ -11,7 +11,7 @@ import LatticeProb.Analysis.SuperharmonicMinimumPrinciple
 (FirstPass/Frozen/S5c.lean) follow from the minimum principles of `LatticeProb.SuperMeanValueOn`
 (Armitage and Gardiner, *Classical Potential Theory*, §3.2) once a continuous distributionally superharmonic function is
 superharmonic in the sphere-average sense. That last step is `LatticeProb.superMeanValueOn_of_distribLaplacianLE`
-(MatedCRT/LPStaging/Analysis/DistributionalLaplacian.lean).
+(LatticeProb/Analysis/DistributionalLaplacian.lean).
 -/
 
 namespace MatedCRT

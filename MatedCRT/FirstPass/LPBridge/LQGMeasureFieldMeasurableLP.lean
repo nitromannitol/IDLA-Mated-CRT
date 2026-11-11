@@ -7,7 +7,8 @@ import MatedCRT.Proofs.Measurability.FieldCircle
 
 `FrozenLQGMeasureFieldMeasurable 𝒮` asserts that for every valid environment `S` the γ-LQG measure `S.μ` agrees
 almost surely with a `σ(h)`-measurable random measure. The general statement is
-`LatticeProb.exists_measurable_version_of_lqgArea_ambient` (mirror `MatedCRT.LPStaging.Bonanno.LQGMeasureFieldMeasurableAmbient`;
+`LatticeProb.exists_measurable_version_of_lqgArea_ambient`
+(module `LatticeProb.Bonanno.LQGMetric.Field.LQGMeasureFieldMeasurableAmbient`;
 Duplantier–Sheffield 2011, arXiv:0808.1560v2, Proposition 1.1): for circle averages `H r z ω` whose dyadic restrictions
 are jointly measurable and a.s. continuous in `z`, the γ-LQG area measure `μ` (`IsLQGAreaOf`: the a.s. vague limit of
 `ε^{γ²/2} e^{γ H ε z} dz` along `ε = 2^{-k}`) agrees a.s. with an `m`-measurable random measure.

@@ -18,7 +18,7 @@ GFF (whose observables are almost sure limits of Riemann sums of circle averages
   elements of a centred Gaussian linear space keeps it a centred Gaussian linear space.
 
 The definitions and the proofs of this file are those of `LatticeProb.GaussianClosure`
-(MatedCRT/LPStaging/Gauss/GaussianClosure.lean); the statements here are unchanged.
+(LatticeProb/Gauss/GaussianClosure.lean); the statements here are unchanged.
 -/
 
 namespace MatedCRT.Field.GaussClosure

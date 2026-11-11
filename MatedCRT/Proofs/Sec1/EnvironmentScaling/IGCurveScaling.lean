@@ -23,8 +23,8 @@ Proved here:
   `k = ⌊(U + a)/p⌋`; the random integer is removed by the simultaneous identity.
 
 The general statements behind the identities above (an arbitrary real constant `χ` in place
-of `igChi γ`, and an arbitrary witness map `Φ`) are proved in `LatticeProb.AffineScaleRotation`,
-mirrored in `MatedCRT.LPStaging.Analysis.AffineScaleRotation`. The declarations here are their
+of `igChi γ`, and an arbitrary witness map `Φ`) are proved in `LatticeProb.AffineScaleRotation`
+(module `LatticeProb.Analysis.AffineScaleRotation`). The declarations here are their
 specializations at `χ = igChi γ`; `exp_neg_two_pi_int_mul_I` and `floor_remainder_mem_Ico` are
 Mathlib facts stated for this file.
 

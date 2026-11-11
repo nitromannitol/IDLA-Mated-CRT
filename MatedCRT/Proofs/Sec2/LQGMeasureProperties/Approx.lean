@@ -1,5 +1,6 @@
 import MatedCRT.Steps.Sec2.LQGMeasureProperties
 import LatticeProb.Analysis.CircleAverageUniformLimit
+import LatticeProb.LQG.MassFunctional
 
 /-!
 # Fact 2.2 III (Weyl scaling) and the circle average approximations of the LQG measure
@@ -43,46 +44,17 @@ theorem tendsto_dyadicScale : Tendsto dyadicScale atTop (𝓝 0) :=
 
 /-- The circle average of a continuous function is continuous in the centre. -/
 theorem continuous_circleAverage_center {f : ℂ → ℝ} (hf : Continuous f) (R : ℝ) :
-    Continuous fun c => Real.circleAverage f c R := by
-  unfold Real.circleAverage
-  have hc : Continuous fun p : ℂ × ℝ => circleMap p.1 R p.2 := by
-    simp only [circleMap]
-    fun_prop
-  have h := intervalIntegral.continuous_parametric_intervalIntegral_of_continuous'
-    (μ := volume) (f := fun c θ => f (circleMap c R θ)) (hf.comp hc) 0 (2 * Real.pi)
-  exact h.const_smul ((2 * Real.pi)⁻¹ : ℝ)
+    Continuous fun c => Real.circleAverage f c R :=
+  (LatticeProb.Gauss.Section6.continuous_circleAverage_radius_center hf).comp
+    (continuous_const.prodMk continuous_id)
 
 /-- The circle averages `f_r` of a continuous `f` converge to `f` uniformly on compact sets as `r → 0`. -/
 theorem tendstoUniformlyOn_circleAverage {f : ℂ → ℝ} (hf : Continuous f) {K : Set ℂ} (hK : IsCompact K)
     {r : ℕ → ℝ} (hr : Tendsto r atTop (𝓝 0)) :
     TendstoUniformlyOn (fun k z => Real.circleAverage f z (r k)) f atTop K := by
-  have hL : IsCompact (cthickening 1 K) := hK.cthickening
-  have hu := hL.uniformContinuousOn_of_continuous hf.continuousOn
-  rw [Metric.uniformContinuousOn_iff] at hu
-  rw [Metric.tendstoUniformlyOn_iff]
-  intro ε hε
-  obtain ⟨δ, hδ, hδf⟩ := hu (ε / 2) (half_pos hε)
-  have hev : ∀ᶠ k in atTop, |r k| < min δ 1 := by
-    filter_upwards [hr.eventually (Metric.ball_mem_nhds (0 : ℝ) (lt_min hδ one_pos))] with k hk
-    simpa [Real.dist_eq] using hk
-  filter_upwards [hev] with k hk z hz
-  have hci : CircleIntegrable f z (r k) := hf.continuousOn.circleIntegrable'
-  have hsphere : ∀ x ∈ sphere z |r k|, |f x - f z| ≤ ε / 2 := by
-    intro x hx
-    rw [mem_sphere] at hx
-    have hxL : x ∈ cthickening 1 K :=
-      mem_cthickening_of_dist_le x z 1 K hz (by rw [hx]; exact (hk.trans_le (min_le_right _ _)).le)
-    have := hδf x hxL z (self_subset_cthickening K hz) (by rw [hx]; exact hk.trans_le (min_le_left _ _))
-    rw [Real.dist_eq] at this
-    exact this.le
-  have hdiff : Real.circleAverage f z (r k) - f z = Real.circleAverage (fun x => f x - f z) z (r k) := by
-    rw [Real.circleAverage_fun_sub hci (circleIntegrable_const _ _ _), Real.circleAverage_const]
-  rw [Real.dist_eq, abs_sub_comm, hdiff]
-  calc |Real.circleAverage (fun x => f x - f z) z (r k)|
-      ≤ Real.circleAverage (fun x => |f x - f z|) z (r k) := Real.abs_circleAverage_le_circleAverage_abs
-    _ ≤ ε / 2 := Real.circleAverage_mono_on_of_le_circle
-        ((hf.sub continuous_const).abs.continuousOn.circleIntegrable') hsphere
-    _ < ε := half_lt_self hε
+  have h := LatticeProb.Gauss.Section6.tendstoUniformlyOn_circleAverage hf hK
+  rw [tendstoUniformlyOn_iff_tendsto] at h ⊢
+  exact h.comp (hr.prodMap tendsto_id)
 
 /-- Uniform convergence on a compact set is preserved by composition with a continuous function. -/
 theorem TendstoUniformlyOn.comp_continuous_left {u : ℕ → ℂ → ℝ} {v : ℂ → ℝ} {K : Set ℂ} (hK : IsCompact K)

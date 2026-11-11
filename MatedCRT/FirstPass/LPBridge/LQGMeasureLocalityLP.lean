@@ -11,7 +11,7 @@ Target: `MatedCRT.FPLQGMeasureLocality` (`MatedCRT/FirstPass/Frozen/S4S5b.lean:3
 for ONE measurable `Λ` on the restricted field `(TestB1 → ℝ) × (CircleB1 → ℝ)` such that `μ(U) = Λ(h|_{B₁})` a.s. for
 the cone field and, with the same `Λ`, for the whole-plane field.
 
-What Harmonic Balls proves: `LatticeProb.LQG.lqgLocality_of_gff` (`HarmonicBalls/LPStage/LQGMeasureLocality2.lean:171`,
+What Harmonic Balls proves: `LatticeProb.LQG.lqgLocality_of_gff` (`LatticeProb/LQG/LQGMeasureLocality2.lean:171`,
 unconditional). For each whole-plane model separately, `μ(U)` equals a.s. a `fieldSigmaAlgebra α₀ hC U`-measurable
 random variable `Y` whose choice depends on the model. This is the existence form of locality. It does not give the
 common `Λ` of `FPLQGMeasureLocality`, and it says nothing about the cone field (`IsConeField`).

@@ -5,7 +5,7 @@ import LatticeProb.Analysis.DistributionalLaplacian
 # Bridge: the distributional Laplacian of HarmonicBalls and of the lattice-probability staging
 
 `HarmonicBalls.LaplacianLE` (HarmonicBalls/Defs/Laplacian.lean) and `LatticeProb.DistribLaplacianLE`
-(LPStaging/Analysis/DistributionalLaplacian.lean) have the same definition, so the two notions agree.
+(LatticeProb/Analysis/DistributionalLaplacian.lean) have the same definition, so the two notions agree.
 -/
 
 namespace MatedCRT
