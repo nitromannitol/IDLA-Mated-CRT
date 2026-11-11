@@ -1,4 +1,5 @@
 import MatedCRT.Defs.Setting
+import MatedCRT.LPStaging.Prob.MeasureLiminfTails
 
 /-!
 # The good annulus event through countably many integrals (proof of IR-c4-6, deterministic part)
@@ -66,15 +67,8 @@ lemma eventually_cutoff_eq_one {V : Set ℂ} (hV : IsOpen V) (hVc : Vᶜ.Nonempt
 /-- If `F_n ≤ f` and `F_n(u) = f(u)` eventually at each `u`, then `∫⁻ f = sup_n ∫⁻ F_n`. -/
 lemma lintegral_eq_iSup_of_eventually_eq {m : Measure ℂ} {F : ℕ → ℂ → ℝ≥0∞} {f : ℂ → ℝ≥0∞}
     (hF : ∀ n, Measurable (F n)) (hle : ∀ n u, F n u ≤ f u) (hev : ∀ u, ∀ᶠ n in atTop, F n u = f u) :
-    ∫⁻ u, f u ∂m = ⨆ n, ∫⁻ u, F n u ∂m := by
-  refine le_antisymm ?_ (iSup_le fun n => lintegral_mono (hle n))
-  have hlim : ∀ u, liminf (fun n => F n u) atTop = f u := fun u => by
-    rw [liminf_congr (hev u), liminf_const]
-  calc ∫⁻ u, f u ∂m = ∫⁻ u, liminf (fun n => F n u) atTop ∂m := by simp_rw [hlim]
-    _ ≤ liminf (fun n => ∫⁻ u, F n u ∂m) atTop := lintegral_liminf_le hF
-    _ ≤ ⨆ n, ∫⁻ u, F n u ∂m := by
-      rw [liminf_eq_iSup_iInf_of_nat]
-      exact iSup_mono fun n => iInf₂_le n le_rfl
+    ∫⁻ u, f u ∂m = ⨆ n, ∫⁻ u, F n u ∂m :=
+  LatticeProb.MeasureLiminfTails.lintegral_eq_iSup_of_eventually_eq hF hle hev
 
 /-- `∫⁻ ofReal g dm = ofReal (∫ g dm)` for continuous compactly supported `g ≥ 0` and locally finite `m`. -/
 lemma lintegral_ofReal_eq {m : Measure ℂ} [IsLocallyFiniteMeasure m] {g : ℂ → ℝ} (hg : Continuous g)
@@ -195,9 +189,8 @@ lemma measurable_logKernel (r : ℝ) (v : ℂ) : Measurable (logKernel r v) := b
   unfold logKernel
   fun_prop
 
-lemma liminf_le_iSup_nat (f : ℕ → ℝ≥0∞) : liminf f atTop ≤ ⨆ n, f n := by
-  rw [liminf_eq_iSup_iInf_of_nat]
-  exact iSup_mono fun n => iInf₂_le n le_rfl
+lemma liminf_le_iSup_nat (f : ℕ → ℝ≥0∞) : liminf f atTop ≤ ⨆ n, f n :=
+  LatticeProb.MeasureLiminfTails.liminf_le_iSup_nat f
 
 /-- `∫_V (log (r / |u - v|) + 1)⁺ dm(u) = sup_n ofReal (∫ χ_{V,n} ℓ_{v,n} dm)`. -/
 lemma setLIntegral_logKernel_eq_iSup {m : Measure ℂ} [IsLocallyFiniteMeasure m] {V : Set ℂ} (hV : IsOpen V)
@@ -292,82 +285,13 @@ lemma iInf_measure_ball_eq {m : Measure ℂ} {K : Set ℂ} (hK : IsCompact K) (h
     {δ₀ : ℝ} (hδ₀ : 0 < δ₀) {w : ℕ → ℂ} (hw : DenseRange w) :
     ⨅ x ∈ K, m (ball x ρ) =
       ⨆ n : ℕ, ⨅ i, ⨅ (_ : infDist (w i) K < δ₀ / ((n : ℝ) + 1)),
-        m (ball (w i) (ρ - 2 * (δ₀ / ((n : ℝ) + 1)))) := by
-  set δ : ℕ → ℝ := fun n => δ₀ / ((n : ℝ) + 1) with hδdef
-  have hδpos : ∀ n, 0 < δ n := fun n => by positivity
-  have hδanti : ∀ {n k : ℕ}, n ≤ k → δ k ≤ δ n := fun {n k} hnk => by
-    have : (n : ℝ) ≤ k := by exact_mod_cast hnk
-    exact div_le_div_of_nonneg_left hδ₀.le (by positivity) (by linarith)
-  refine le_antisymm ?_ (iSup_le fun n => le_iInf₂ fun x hx => ?_)
-  swap
-  · obtain ⟨i, hi⟩ := hw.exists_mem_open isOpen_ball ⟨x, mem_ball_self (hδpos n)⟩
-    refine iInf₂_le_of_le i ((infDist_le_dist_of_mem hx).trans_lt (mem_ball.1 hi)) (measure_mono ?_)
-    refine ball_subset_ball' ?_
-    have := mem_ball.1 hi
-    have := hδpos n
-    linarith
-  by_contra hcon
-  push Not at hcon
-  obtain ⟨s, hs1, hs2⟩ := exists_between hcon
-  have hn : ∀ n, ∃ i, infDist (w i) K < δ n ∧ m (ball (w i) (ρ - 2 * δ n)) < s := by
-    intro n
-    have h := (le_iSup (fun n : ℕ => ⨅ i, ⨅ (_ : infDist (w i) K < δ n), m (ball (w i) (ρ - 2 * δ n))) n).trans_lt hs1
-    obtain ⟨i, hi⟩ := iInf_lt_iff.1 h
-    obtain ⟨hc, hlt⟩ := iInf_lt_iff.1 hi
-    exact ⟨i, hc, hlt⟩
-  choose i hic his using hn
-  have hy : ∀ n, ∃ y ∈ K, dist (w (i n)) y < δ n := fun n => (infDist_lt_iff hKne).1 (hic n)
-  choose y hyK hyd using hy
-  obtain ⟨y₀, hy₀K, φ, hφ, hφlim⟩ := hK.tendsto_subseq hyK
-  -- every ball `B_{ρ - 3δ_N}(y₀)` has mass less than `s`
-  have hN : ∀ N : ℕ, m (ball y₀ (ρ - 3 * δ N)) ≤ s := by
-    intro N
-    have h1 : ∀ᶠ j in atTop, dist (y (φ j)) y₀ < δ N / 2 :=
-      (tendsto_iff_dist_tendsto_zero.1 hφlim).eventually (gt_mem_nhds (by linarith [hδpos N]))
-    have h2 : ∀ᶠ j in atTop, 2 * N + 1 ≤ φ j := hφ.tendsto_atTop.eventually_ge_atTop _
-    obtain ⟨j, hj1, hj2⟩ := (h1.and h2).exists
-    have hδj : δ (φ j) ≤ δ N / 2 := by
-      have := hδanti hj2
-      have e : δ (2 * N + 1) = δ N / 2 := by
-        simp only [hδdef]
-        push_cast
-        field_simp
-        ring
-      linarith
-    have hdj : dist y₀ (w (i (φ j))) < δ N := by
-      have h3 := hyd (φ j)
-      have h4 := dist_triangle y₀ (y (φ j)) (w (i (φ j)))
-      rw [dist_comm (y (φ j)) (w (i (φ j)))] at h4
-      rw [dist_comm] at hj1
-      linarith
-    refine (measure_mono (ball_subset_ball' ?_)).trans (his (φ j)).le
-    have := hδpos N
-    linarith
-  have hU : ball y₀ ρ = ⋃ N : ℕ, ball y₀ (ρ - 3 * δ N) := by
-    refine Subset.antisymm (fun x hx => ?_) (iUnion_subset fun N => ball_subset_ball (by linarith [hδpos N]))
-    have hx' : 0 < ρ - dist x y₀ := by rw [mem_ball] at hx; linarith
-    obtain ⟨N, hN⟩ := exists_nat_gt (3 * δ₀ / (ρ - dist x y₀))
-    refine mem_iUnion.2 ⟨N, mem_ball.2 ?_⟩
-    have h1 : 3 * δ₀ < N * (ρ - dist x y₀) := by rwa [div_lt_iff₀ hx'] at hN
-    have h2 : 3 * δ N < ρ - dist x y₀ := by
-      simp only [hδdef]
-      rw [← mul_div_assoc, div_lt_iff₀ (by positivity)]
-      have e : (ρ - dist x y₀) * ((N : ℝ) + 1) = N * (ρ - dist x y₀) + (ρ - dist x y₀) := by ring
-      linarith
-    linarith
-  have hmono : Monotone fun N : ℕ => ball y₀ (ρ - 3 * δ N) := fun N N' hNN' =>
-    ball_subset_ball (by linarith [hδanti hNN'])
-  have hball : m (ball y₀ ρ) ≤ s := by
-    rw [hU]
-    exact le_of_tendsto' (tendsto_measure_iUnion_atTop hmono) hN
-  exact absurd ((iInf₂_le y₀ hy₀K).trans hball) (not_le.2 hs2)
+        m (ball (w i) (ρ - 2 * (δ₀ / ((n : ℝ) + 1)))) :=
+  LatticeProb.MeasureLiminfTails.iInf_measure_ball_eq hK hKne ρ hδ₀ hw
 
 /-! ### The countable criterion -/
 
-lemma ball_compl_nonempty (x : ℂ) (s : ℝ) : (ball x s)ᶜ.Nonempty := by
-  refine ⟨x + ((|s| + 1 : ℝ) : ℂ), fun h => ?_⟩
-  rw [mem_ball, dist_eq_norm, add_sub_cancel_left, Complex.norm_real, Real.norm_of_nonneg (by positivity)] at h
-  linarith [le_abs_self s]
+lemma ball_compl_nonempty (x : ℂ) (s : ℝ) : (ball x s)ᶜ.Nonempty :=
+  LatticeProb.MeasureLiminfTails.ball_compl_nonempty x s
 
 /-- The compact annuli `K_k = {r + r/(k+3) ≤ |x - z| ≤ 2r - r/(k+3)}` exhausting `𝔸_{r,2r}(z)`. -/
 def compactAnnulus (z : ℂ) (r : ℝ) (k : ℕ) : Set ℂ :=
