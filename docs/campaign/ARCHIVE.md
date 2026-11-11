@@ -10,3 +10,6 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/Audit/AnnulusBarrierResidualLedger.lean | archive/MatedCRT/Audit/AnnulusBarrierResidualLedger.lean | B02 |
 | MatedCRT/Audit/InsertionScalingComponents.lean | archive/MatedCRT/Audit/InsertionScalingComponents.lean | B02 |
 | MatedCRT/Audit/RepresentedConeStateLaw.lean | archive/MatedCRT/Audit/RepresentedConeStateLaw.lean | B02 |
+| MatedCRT/Defs/GaussianMultiplicativeChaos.lean | archive/MatedCRT/Defs/GaussianMultiplicativeChaos.lean | B03 |
+| MatedCRT/Defs/LogCorrelatedField.lean | archive/MatedCRT/Defs/LogCorrelatedField.lean | B03 |
+| MatedCRT/Defs/RandomMeasureConvergence.lean | archive/MatedCRT/Defs/RandomMeasureConvergence.lean | B03 |
