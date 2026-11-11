@@ -92,6 +92,11 @@ Defs field `IsObstacleSetting.locallyFinite` (Defs/Sandpile.lean) keeps the unfo
   (Declarations remain at Proofs/Sec7/MassBoundOdometer/Count.lean:28, Proofs/Sec6/ConstantOrderLowerBoundDiv/
   Geometry.lean:106 and Proofs/Sec3/DiscretePotentialTightness/Cells.lean:77; unify at cleanup.)
 
+## D10. LP-form aliases and superseded wrappers (2026-11-11, lead li 10:20)
+- `MatedCRT.closed_2_13_lp` (FirstPass/Closure/CleanSec23LP.lean:31) and `MatedCRT.closed_2_13_cellRewire` (FirstPass/Closure/CellRewire.lean:21) have the same body `closed_2_13 (adjacentCellsMeetAeStep 𝒮)` and the same statement `MaximumPrincipleStmt 𝒮`. Same statement. CANONICAL: `closed_2_13_cellRewire` (COUNTED row 2.13).
+- Superseded, not duplicates: `closed_3_5_ownBinders` (FirstPass/Closure/OwnBinderRewire.lean:57), `firstPass_3_6_ownBinders` (:197) and `firstPass_3_7_ownBinders` (:103) differ from `closed_3_5_lp`, `closed_3_6_lp`, `closed_3_7_lp` (CleanSec23LP.lean:45, :53, :61) by the hexc binder, which is discharged there. COUNTED counts the _lp forms; the wrappers stay in place.
+- Not an alias: `closed_3_1_lp` (CleanSec23LP.lean:37) replaces the Draft h27 and h218 by hBG and hC, so its hypotheses are stronger than those of `firstPass_3_1_faithful`. It is not counted (COUNTED row 3.1 note).
+
 ## Related, not duplicates (checked)
 - `greenFn_eq_zero_of_not_mem` (Proofs/Infra/RandomWalk.lean:44, start outside `A`) vs
   `greenFn_eq_zero_of_not_mem_right` (Proofs/Sec7/OdometerBoundMass/Laplacian.lean:30, target outside `A`).
