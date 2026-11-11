@@ -15,7 +15,7 @@ absolute approximation of the circle average by pairings with test functions sup
 * `exists_fieldSigma_version_of_tendstoInMeasure`: an in-probability limit of such pairings has an almost surely
   equal `fieldSigmaAlgebra 0 hC U`-measurable version (a.s. convergent subsequence, then `limsup`).
 * `coneCircleAverageLocalityStep_of_absApprox`: the Step follows from the absolute approximation hypothesis `hAbs`,
-  which is NOT proved in this file (see the report).
+  which is NOT proved in this file.
 -/
 
 namespace MatedCRT
