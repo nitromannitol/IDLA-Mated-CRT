@@ -6,9 +6,9 @@ by. Nothing has been edited in the owners' files. Paths are relative to MatedCRT
 unfolding `IsLocallyFiniteMult m := ∀ a, {b | m a b ≠ 0}.Finite` (Proofs/Infra/DiscretePotential.lean:23).
 
 ## D1. `Δ G_A(·, b) = -δ_b` on a finite `A` (eq:discrete-green-laplacian, l.797)
-- `MatedCRT.greenFn_laplacian_fst` — Proofs/Sec4/ObstacleSpecialization/GreenMarkov.lean:57 (x1, from c1's abstract
+- `MatedCRT.greenFn_laplacian_fst` — Proofs/Sec4/ObstacleSpecialization/GreenMarkov.lean:56 (x1, from c1's abstract
   `laplacian_toReal_of_recursion`, Proofs/Sec4/GreenRecursion.lean:108). Users: GreenMarkov.lean (the proved steps
-  `greenKernelLaplacianStep` :72, `normExitTimeLaplacianStep` :77, hence Proofs/Sec3/UniformConvergenceGreenKernel/
+  `greenKernelLaplacianStep` :71, `normExitTimeLaplacianStep` :76, hence Proofs/Sec3/UniformConvergenceGreenKernel/
   {BoundaryMaximum,HarmonicAwayFromPole}.lean, Proofs/Sec4/DivSandpileLowerBound/OdometerComparison.lean,
   Audit/Reductions.lean), Proofs/Sec5/LLowerBound/GreenSum.lean, Proofs/Sec5/MeanValueInequality/GreenReversibility.lean.
 - `MatedCRT.WalkPotential.mLaplacian_greenFn` — Proofs/WalkPotential/GreenFirstStep.lean:210 (c3, self-contained
@@ -28,7 +28,7 @@ unfolding `IsLocallyFiniteMult m := ∀ a, {b | m a b ≠ 0}.Finite` (Proofs/Inf
 - CANONICAL: `visitsTrunc` and its lemmas (c1). `visitsUpTo` is used only inside c3's file.
 
 ## D3. First-step decomposition `E^a[F] = ∫ E^c[F((a, ·))] p(a, dc)`
-- `MatedCRT.lintegral_srwLaw_firstStep` — Proofs/Sec4/ObstacleSpecialization/GreenMarkov.lean:24 (x1).
+- `MatedCRT.lintegral_srwLaw_firstStep` — Proofs/Sec4/ObstacleSpecialization/GreenMarkov.lean:23 (x1).
 - `MatedCRT.WalkPotential.lintegral_srwLaw_eq_pathCons` — Proofs/WalkPotential/GreenFirstStep.lean:123 (c3): identical
   statement and proof; `lintegral_firstStep` :135 is its corollary for `F((a, y)) = k + H(y)`.
 - CANONICAL: one lemma in Proofs/WalkPotential/Markov.lean next to `srwLaw_eq_srwFirstStepLaw` (:234), the fact both
@@ -94,7 +94,7 @@ Defs field `IsObstacleSetting.locallyFinite` (Defs/Sandpile.lean) keeps the unfo
 
 ## D10. LP-form aliases and superseded wrappers (2026-11-11, lead li 10:20)
 - `MatedCRT.closed_2_13_lp` (FirstPass/Closure/CleanSec23LP.lean:31) and `MatedCRT.closed_2_13_cellRewire` (FirstPass/Closure/CellRewire.lean:21) have the same body `closed_2_13 (adjacentCellsMeetAeStep 𝒮)` and the same statement `MaximumPrincipleStmt 𝒮`. Same statement. CANONICAL: `closed_2_13_cellRewire` (COUNTED row 2.13).
-- Superseded, not duplicates: `closed_3_5_ownBinders` (FirstPass/Closure/OwnBinderRewire.lean:57), `firstPass_3_6_ownBinders` (:197) and `firstPass_3_7_ownBinders` (:103) differ from `closed_3_5_lp`, `closed_3_6_lp`, `closed_3_7_lp` (CleanSec23LP.lean:45, :53, :61) by the hexc binder, which is discharged there. COUNTED counts the _lp forms; the wrappers stay in place.
+- Superseded, not duplicates: `closed_3_5_ownBinders` (FirstPass/Closure/OwnBinderRewire.lean:57), `firstPass_3_6_ownBinders` (:197) and `firstPass_3_7_ownBinders` (:103) differ from `closed_3_5_lp`, `closed_3_6_lp`, `closed_3_7_lp` (CleanSec23LP.lean:61, :61, :61) by the hexc binder, which is discharged there. COUNTED counts the _lp forms; the wrappers stay in place.
 - Superseded bases, not duplicates (rule 1, p2-ledger-lp-counted-status): each _lp form is a strict sub-list of its base, and the base stays in place: `firstPass_2_4_ownBinders`, `firstPass_2_5_ownBinders`, `firstPass_2_6_ownBinders`, `firstPass_4_1_coneLaw_ownBinders`, `closed_4_8_corrected_ownBinders`, `closed_6_10_ownBinders`, `firstPass_6_4_uniform`, `closed_1_4_full`, `closed_1_4_lp`, `closed_1_6_full`, `closed_1_6_lp`, `closed_2_3_lit`, `closed_2_3_lit_noSC`, `closed_4_2_clean`, `closed_5_1_clean`, `closed_6_1_clean`, `closed_7_1_clean`, `closed_8_1_full`. `firstPass_3_6_closed` (S3i/LensClosed.lean:31) is not a base of `closed_3_6_lp`: it binds `ν` and `hC` only in the lp form, and h211, h28, hexc only in its own form.
 - Not an alias: `closed_3_1_lp` (CleanSec23LP.lean:37) replaces the Draft h27 and h218 by hBG and hC, so its hypotheses are stronger than those of `firstPass_3_1_faithful`. It is not counted (COUNTED row 3.1 note).
 
