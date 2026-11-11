@@ -10,7 +10,7 @@ correction [C13], docs/campaign/CORRECTIONS.md) has two clauses. The first is th
 fixed-start annealed same-walk comparison with threshold `q = bχ/2` (tex lines 1431-1441). That clause is the Lean statement
 `MatedCRT.FirstPass36.CorrectedHarmonicSameWalkAnnealedStmt 𝒮` (FirstPass/S3i/Statement.lean:39), which is used here as the
 rate conjunct. The pointwise clause of the Draft statement `CorrectedHarmonicSameWalkRateStmt`
-(Draft/Section3HarmonicCorrected.lean:68) is not used: it was retired by the operator as false (see the header of
+(Draft/Section3HarmonicCorrected.lean:68) is not used: it was retired as false (see the header of
 FirstPass/S3i/Statement.lean).
 
 Inputs: those of `closed_3_6_corrected` (Closure/Section3.lean), namely the projections of `hC : CertifiedReferenceModel ν 𝒮`

@@ -15,7 +15,7 @@ import MatedCRT.FirstPass.S3t.BLEnvelopeClosure
 * (ii) `h27 : VolumeGrowthStmt` (IDLA Lemma 2.7) is derived: `volumeGrowthStmt_of_berestyckiGwynne hBG`
   (`MatedCRT/Proofs/Sec3/ConeBallMass.lean:17`), from the new binder `hBG : FrozenBerestyckiGwynneConeBallMass`
   (`FirstPass/Frozen/S5Cited.lean:35`, definitionally `BerestyckiGwynneConeBallMassStmt`). The name
-  `volumeGrowth_of_coneBallMass` of the task note does not occur in the repository; `FirstPass/S5u.lean` only
+  `volumeGrowth_of_coneBallMass` does not occur in the repository; `FirstPass/S5u.lean` only
   documents this provider.
 * (iii) `hdet : FrozenTruncatedQuenchedLawsFixedTime 𝒮` is derived: `MatedCRT.TruncatedLaws.truncatedQuenchedLawsFixedTime_of_inputs`
   (`FirstPass/S3t/BLEnvelopeClosure.lean`, committed 4c8c580) applied to

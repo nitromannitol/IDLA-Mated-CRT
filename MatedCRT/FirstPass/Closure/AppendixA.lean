@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S1S2S8SA
 
 /-!
-# Closed results, Appendix A (task fp-Closure-counted-results, worker z1)
+# Closed results, Appendix A
 
 Each `closed_A_k` is `firstPass_A_k` (S1S2S8SA.lean), restated by `alias`. The firstPass theorems have no
 hypotheses, so the closed results have none. Discrete potential theory: discrete divergence theorem and discrete

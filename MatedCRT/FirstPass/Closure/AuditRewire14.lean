@@ -11,7 +11,7 @@ import MatedCRT.Proofs.Sec3.ConeBallMass
 import MatedCRT.FirstPass.Frozen.S4d2
 
 /-!
-# Theorems 1.4 and 1.6 without the paper-step binders (audit B4, round 1)
+# Theorems 1.4 and 1.6 without the paper-step binders
 
 `closed_1_4_p3` and `closed_1_6_p3` have the conclusions of `MatedCRT.Phase2.closed_1_4_derived_p2` and
 `closed_1_6_derived_p2` (`FirstPass/Phase2Rewire.lean`), and the same binders except the six paper-step inputs
