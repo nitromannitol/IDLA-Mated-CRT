@@ -13,9 +13,9 @@ import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 /-!
 # Audit: corrected and relaxed forms versus the Draft statements
 
-For every numbered result which a worker proved (or reduced) in a corrected or relaxed form instead of its Draft
+For every numbered result which was proved (or reduced) in a corrected or relaxed form instead of its Draft
 statement, this file records the logical relation between the two forms as Lean facts, so that the relation can be checked
-with them in hand. The table, the escalations and the authors are in `docs/campaign/CORRECTED-FORMS.md`.
+with them in hand. The corrections they rest on are listed in `docs/campaign/CORRECTIONS.md`.
 
 * `corrected ⇒ Draft`: 5.2 (`GeneralIDLALowerBoundRelaxedStep`), 6.3 (`AbelianIDLAAnyStartStep`, proved).
 * `Draft ⇒ corrected`: 3.2, 4.4, 4.5, 6.7 (b), 6.8 (b), 6.9 (local rate and (b)), 7.2 (above scale).

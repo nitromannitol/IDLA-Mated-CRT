@@ -6,11 +6,7 @@ import Mathlib.Analysis.Convex.Contractible
 /-!
 # Audit: Lean refutations of Draft statements which are false as drafted
 
-`MatedCRT/Audit/CorrectedForms.lean` refutes the Draft Lemmas 4.4 and 4.5. This file was
-planned (worker A) to refute the three other Drafts that were known to be false only by a written argument
-(`docs/campaign/CORRECTED-FORMS.md`). Status (2026-11-05): only the refutation of **Lemma 3.1** is in this file;
-the refutations of Lemmas 3.2 and 7.2 below are PLANNED (their written arguments are still to be recorded)
-and not yet formalized.
+`MatedCRT/Audit/CorrectedForms.lean` refutes the Draft Lemmas 4.4 and 4.5. This file refutes the Draft Lemma 3.1 (FALSE as typed; see docs/campaign/FROZEN-PROVENANCE.md). The refutations of Lemmas 3.2 and 7.2, which are false only by a written argument, are not formalized here: their written arguments are still to be recorded.
 Each refutation holds for every valid environment `S` (`S.IsValid 𝒮 γ`, some `γ ∈ (0, 2)`) and uses one cited input,
 taken as an explicit hypothesis:
 
@@ -20,7 +16,7 @@ taken as an explicit hypothesis:
   vacuous. The data `u^ε(a) = m_ε 1{Re η(a) > 1/8}` satisfy `|u^ε| ≤ C ε⁻¹` by the scaling of `m_ε`. Their rescalings
   `ū^ε(x) = 1{Re η(a^ε_x) > 1/8}` converge uniformly on `O = D` along no subsequence to a continuous limit,
   because the cells shrink uniformly on `D` (continuity and transience of `η`).
-* **Lemma 3.2 (printed form)** (review-L32 F1): its boundary exponent cannot be chosen independently of `χ`.
+* **Lemma 3.2 (printed form)**: its boundary exponent cannot be chosen independently of `χ`.
   The adopted Draft statement is corrected [C6]; the counterexample concerns the earlier printed form.
 * **Lemma 7.2** (`MassBoundOdometerStmt`: radii below the cell scale) from Lemma 2.8:
   `not_massBoundOdometerStmt`. Take `Θ = {0}` and the first grid time `t = jθ` at which `Λ^ε_t` has a vertex

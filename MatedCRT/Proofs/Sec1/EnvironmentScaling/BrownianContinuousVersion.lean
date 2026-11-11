@@ -3,9 +3,8 @@ import Mathlib.Probability.BrownianMotion.Basic
 /-!
 # Continuous version of a real Brownian motion (R-CV)
 
-This file proves `ContVersion`, the statement of the former scratch hypothesis `ContVersionHyp`
-(`scratch-q1/q1-assembly.lean`). It is the continuous-version step of the arbitrary-space transfer of
-DMS Remark 4.4 (steps4-final Section 2, lines 443-460): every real Brownian motion `B` on a probability space
+This file proves `ContVersion`, the continuous-version step of the arbitrary-space transfer of
+DMS Remark 4.4: every real Brownian motion `B` on a probability space
 has a process `D` with measurable coordinates that is again Brownian (Mathlib's
 `ProbabilityTheory.IsBrownianReal`), is indistinguishable from `B` almost surely, and has every path continuous.
 

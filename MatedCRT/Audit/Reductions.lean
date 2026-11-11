@@ -82,16 +82,14 @@ import MatedCRT.Proofs.Field.ConeCircleModConst
 For every numbered result of "Internal DLA on mated-CRT maps" (arXiv:2211.04891) whose reduction is committed, an
 `example` restates the best current reduction with its exact hypothesis list: the Draft statements of other numbered
 results (`...Stmt`, `MatedCRT/Draft`), the literature inputs (`...Input`, `MatedCRT/External`) and the open step
-Props (`...Step`, `MatedCRT/Steps`). Every proved step is discharged inside the example (since 2026-11-04 14:50Z this
-includes `AdjacentCellsMeetAeStep`, proved by `adjacentCellsMeetAeStep`). If a Draft statement, a
+Props (`...Step`, `MatedCRT/Steps`). Every proved step is discharged inside the example (this includes `AdjacentCellsMeetAeStep`, proved by `adjacentCellsMeetAeStep`). If a Draft statement, a
 reduction theorem or a step changes, or a reduction acquires a new hypothesis, this file stops compiling. The summary
-table, with the reducing theorems' locations and owners, is `docs/campaign/REDUCTIONS.md`.
+table, with the reducing theorems' locations, is `docs/campaign/REDUCTIONS.md`.
 
 Each example closes its goal with `audit_apply e` (`apply e`, then `assumption` on every hypothesis of `e`), so the
 binders of the example are exactly the hypotheses the reduction still needs.
 
-Where a Draft statement is false or open (E-c1-1 for Lemma 4.4, E-c3-2 for Lemma 7.2, E-c5-1 for Lemma 6.9, E-A10
-for Lemmas 6.4-6.10), the example names the corrected statement that is proved (`...CorrectedStmt`,
+Where a Draft statement is false or open (for Lemma 4.4, Lemma 7.2, Lemma 6.9 and Lemmas 6.4-6.10), the example names the corrected statement that is proved (`...CorrectedStmt`,
 `...AboveScaleStmt`, `...LocalRateStmt`, `...LogStmt`), and the docstring records which consumers still use the
 Draft form.
 
@@ -142,11 +140,9 @@ example (h1 : WholePlaneLogLQGExistenceStep) (h2 : WholePlaneConeHarmonicBallsSt
   audit_apply coneHarmonicBallsUpToFixedTime_of_steps
 
 /-! **Lemmas 2.5 and 2.6** (`coneScaleInvarianceUpToFixedTime_of_steps`, MatedCRT/Steps/Sec2/ConeScaleInvarianceUpTo
-FixedTime.lean:260; `coneScaleInvariance_of_steps`, MatedCRT/Steps/Sec2/ConeScaleInvariance.lean:104) are checked in
-docs/campaign/REDUCTIONS.md only: `MatedCRT.rescaledMeasure` is declared both in MatedCRT.Steps.Sec1.Convergence and in
-the Lemma 2.5 module chain ("environment already contains", 2026-11-04 20:01Z), so Theorems 1.4/1.6 and Lemmas 2.5/2.6
-cannot be imported together. Once one is renamed, restore the imports and these examples (hypothesis lists read from
-the environment at 19:50Z):
+FixedTime.lean:260; `coneScaleInvariance_of_steps`, MatedCRT/Steps/Sec2/ConeScaleInvariance.lean:104) are checked only in docs/campaign/REDUCTIONS.md: `MatedCRT.rescaledMeasure` is declared both in MatedCRT.Steps.Sec1.Convergence and in
+the Lemma 2.5 module chain, so Theorems 1.4/1.6 and Lemmas 2.5/2.6
+cannot be imported together. Once one is renamed, restore the imports and these examples (hypothesis lists):
 
     example (hQ : QuantumConeScalingInput) (h1 : ConeHarmonicBallStrictGrowthStep) (h2 : ConeLQGScalingStep)
         (h3 : ConeRescaledCircleAEMeasurableStep) (h4 : ConeHalfBallFamilyFunctionalStep)
@@ -158,9 +154,9 @@ the environment at 19:50Z):
         ConeScaleInvarianceStmt := by
       audit_apply coneScaleInvariance_of_steps
 
-c5's input-level forms (a0d10e4; MatedCRT/Proofs/Sec2/ConeScaleInvarianceUpToFixedTime/Main.lean:21, 30, 61 and
+the input-level forms (MatedCRT/Proofs/Sec2/ConeScaleInvarianceUpToFixedTime/Main.lean:21, 30, 61 and
 MatedCRT/Proofs/Sec2/ConeScaleInvariance/Main.lean:14; `ConeHarmonicBallFamilyOnScalingStep` proved, `ConeLQGScaling
-Step` from Fact 2.2 and `ConeScaleRadiusPosStep`), equally blocked by F10, hypothesis lists read at 00:30Z:
+Step` from Fact 2.2 and `ConeScaleRadiusPosStep`), equally blocked by F10, hypothesis lists:
 Lemma 2.5 `coneScaleInvarianceUpToFixedTime_of_inputs` (QuantumConeScalingInput, LQGMeasurePropertiesStmt,
 ConeScaleRadiusPosStep, ConeHarmonicBallStrictGrowthStep, ConeRescaledCircleAEMeasurableStep,
 ConeHalfBallFamilyFunctionalStep); Lemma 2.6 `coneScaleInvariance_of_inputs` (QuantumConeScalingInput,
@@ -170,14 +166,14 @@ Theorem 2.3 `coneHarmonicBalls_of_inputs` (the six steps of Lemma 2.4 and the in
 -/
 
 /-- **Fact 2.2** (cited) from its cited parts (DS11): non-atomicity and dilation covariance, and the locality step
-`ConeCircleAverageLocalityStep` (`LQGMeasure.lqgMeasureProperties_of_steps`, 102275a). The part Props are not in
-MatedCRT/External (see REDUCTIONS.md, F11). -/
+`ConeCircleAverageLocalityStep` (`LQGMeasure.lqgMeasureProperties_of_steps`). The part Props are not in
+MatedCRT/External. -/
 example (hna : LQGMeasureNonAtomicPart) (hloc : ConeCircleAverageLocalityStep)
     (hdil : LQGMeasureDilationCovariancePart) : LQGMeasurePropertiesStmt := by
   audit_apply LQGMeasure.lqgMeasureProperties_of_steps
 
 /-- **Lemma 2.13**, proved: `maximumPrinciple_of_steps` with `AdjacentCellsMeetAeStep` proved
-(`adjacentCellsMeetAeStep`, x4, on Leonardo Bonanno's mating-of-trees bundle). -/
+(`adjacentCellsMeetAeStep`, on Leonardo Bonanno's mating-of-trees bundle). -/
 example (𝒮 : SpaceFillingSLEModel) : MaximumPrincipleStmt 𝒮 := by
   have hadj : AdjacentCellsMeetAeStep 𝒮 := adjacentCellsMeetAeStep 𝒮
   audit_apply maximumPrinciple_of_steps
@@ -194,16 +190,15 @@ example (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrowthStmt) (h218 : ExitTimeU
 
 /-! ## Section 3 -/
 
-/-- **Lemma 3.1**, corrected form `DiscretePotentialTightnessCorrectedStmt` (E-c1-4 `D` open; review-L32 N1 Hölder
-data `C'ε⁻¹`, N3 polynomially summable scales), from two steps (`discretePotentialTightness_of_steps`). The Draft
-`DiscretePotentialTightnessStmt` (false for non-open `D`, E-c1-4) has no reduction; Lemmas 3.3, 3.7 and 4.6 consume
+/-- **Lemma 3.1**, corrected form `DiscretePotentialTightnessCorrectedStmt` (`D` open; [C6] Hölder data `C'ε⁻¹`, [C11] polynomially summable scales), from two steps (`discretePotentialTightness_of_steps`). The Draft
+`DiscretePotentialTightnessStmt` (false for non-open `D`) has no reduction; Lemmas 3.3, 3.7 and 4.6 consume
 it. -/
 example (𝒮 : SpaceFillingSLEModel) (heq : TightnessEquicontinuityStep 𝒮) (hsel : TightnessSelectionStep 𝒮) :
     DiscretePotentialTightnessCorrectedStmt 𝒮 := by
   audit_apply discretePotentialTightness_of_steps
 
 /-- **Lemma 3.1**, corrected form, from Lemmas 2.17, 2.18, the literature input `MepsScalingInput` and the corrected
-Lemma 3.2 `DiscreteHolderContinuityCorrectedStep` (review-L32; (L2) ruling pending)
+Lemma 3.2 `DiscreteHolderContinuityCorrectedStep` (`DiscreteHolderContinuityCorrectedStep`)
 (`discretePotentialTightness_of_inputs`; both steps of the previous example proved). -/
 example (𝒮 : SpaceFillingSLEModel) (hm : MepsScalingInput 𝒮) (h217 : BoundedExitTimeRVStmt)
     (h218 : ExitTimeUpperBoundStmt 𝒮) (h32 : DiscreteHolderContinuityCorrectedStep 𝒮) :
@@ -211,12 +206,12 @@ example (𝒮 : SpaceFillingSLEModel) (hm : MepsScalingInput 𝒮) (h217 : Bound
   have hadj : AdjacentCellsMeetAeStep 𝒮 := adjacentCellsMeetAeStep 𝒮
   audit_apply discretePotentialTightness_of_inputs
 
-/-! **Lemma 3.3** from Lemmas 2.10, 3.4, 2.14, 2.8, 3.1 (Draft, E-c1-4), 2.13 and two steps
+/-! **Lemma 3.3** from Lemmas 2.10, 3.4, 2.14, 2.8, 3.1 (Draft), 2.13 and two steps
 (`uniformConvergenceGreenKernel_of_steps`). The boundary step is proved (`greenKernelBoundaryStep`,
 MatedCRT/Proofs/Sec3/UniformConvergenceGreenKernel/BoundaryStep.lean:16, with `uniformConvergenceGreenKernel_of_interior
 Step` :131 needing `GreenKernelInteriorStep` only), but that module cannot be imported together with Lemma 3.7's:
 `MatedCRT.harmonicAt_comp_add_const` is declared both in Proofs/Sec3/UniformConvergenceGreenKernel/HarmonicTranslation
-and in a Proofs/Sec3/ConvergenceNormalizedExitTime module (2026-11-04 20:04Z). Once renamed, switch to:
+and in a Proofs/Sec3/ConvergenceNormalizedExitTime module. Once renamed, switch to:
 
     example (𝒮 : SpaceFillingSLEModel) (h210 : DegreeMeasureConvergenceStmt 𝒮)
         (h34 : IntegralConvergenceGreenFunctionStmt 𝒮) (h214 : GreenKernelUpperBoundStmt 𝒮)
@@ -224,7 +219,7 @@ and in a Proofs/Sec3/ConvergenceNormalizedExitTime module (2026-11-04 20:04Z). O
         (hi : GreenKernelInteriorStep 𝒮) : UniformConvergenceGreenKernelStmt 𝒮 := by
       audit_apply uniformConvergenceGreenKernel_of_interiorStep
 
-DISABLED 2026-11-05 (c1; REDUCTIONS.md F15): the module of this reduction, MatedCRT/Steps/Sec3/
+DISABLED: the module of this reduction, MatedCRT/Steps/Sec3/
 UniformConvergenceGreenKernel.lean, declares `MatedCRT.rescaledGreenKernel` (:16), which is also declared in
 MatedCRT/Proofs/Sec4/SubsequentialProperties/ClusterContainment.lean:26, imported by the final forms of Lemma 4.8 and
 Theorem 4.1 (section `FinalForms`). Lemma 3.3 cannot be imported together with them. The example was:
@@ -250,7 +245,7 @@ example (𝒮 : SpaceFillingSLEModel) (h211 : RandomWalkToLBMStmt 𝒮) (h28 : C
     (hp : HarmonicPathExitStep 𝒮) (hc : HarmonicExitCellStep 𝒮) : ConvergenceHarmonicFunctionsStmt 𝒮 := by
   audit_apply convergenceHarmonicFunctions_of_steps
 
-/-- **Lemma 3.7** from Lemmas 3.3, 2.9, 2.19, 3.5, 3.1 (Draft, E-c1-4), 2.8, 2.17 and two steps
+/-- **Lemma 3.7** from Lemmas 3.3, 2.9, 2.19, 3.5, 3.1 (Draft), 2.8, 2.17 and two steps
 (`convergenceNormalizedExitTime_of_interior_discrete_boundary`). -/
 example (𝒮 : SpaceFillingSLEModel) (h33 : UniformConvergenceGreenKernelStmt 𝒮)
     (h29 : CountingMeasureConvergenceStmt 𝒮) (h219 : ExpectedExitTimeExplicitBoundStmt 𝒮)
@@ -262,7 +257,7 @@ example (𝒮 : SpaceFillingSLEModel) (h33 : UniformConvergenceGreenKernelStmt �
 /-! ## Section 4 -/
 
 /-- **Theorem 4.1** from Lemmas 4.6, 4.8 and `ConvergenceDivisibleEventMeasurableStep` (`convergenceDivisible_of_steps`;
-the uniqueness step proved by `obstacleLimitUniqueness`, x3, from the proved steps `matedCRTScalingConstantPositive`
+the uniqueness step proved by `obstacleLimitUniqueness`, from the proved steps `matedCRTScalingConstantPositive`
 and `obstacleLimitMaximumPrinciple`). -/
 example (𝒮 : SpaceFillingSLEModel) (h48 : SubsequentialPropertiesStmt 𝒮) (h46 : SubsequentialConvergenceStmt 𝒮)
     (hmeas : ConvergenceDivisibleEventMeasurableStep 𝒮) : ConvergenceDivisibleStmt 𝒮 := by
@@ -270,7 +265,7 @@ example (𝒮 : SpaceFillingSLEModel) (h48 : SubsequentialPropertiesStmt 𝒮) (
   audit_apply convergenceDivisible_of_steps
 
 /-- **Theorem 4.1** from Lemmas 4.6, 4.8, 2.7 and `ConeEnvironmentScalingStep` (the scaling step of Theorems 1.4,
-1.6) (`convergenceDivisible_of_scaling`, x3: the event-measurability step from the cone scaling). -/
+1.6) (`convergenceDivisible_of_scaling`: the event-measurability step from the cone scaling). -/
 example (𝒮 : SpaceFillingSLEModel) (h48 : SubsequentialPropertiesStmt 𝒮) (h46 : SubsequentialConvergenceStmt 𝒮)
     (h27 : VolumeGrowthStmt) (hsc : ConeEnvironmentScalingStep 𝒮) : ConvergenceDivisibleStmt 𝒮 := by
   audit_apply convergenceDivisible_of_scaling
@@ -282,15 +277,15 @@ example (𝒮 : SpaceFillingSLEModel) (h41 : ConvergenceDivisibleStmt 𝒮) (h23
     (hin : ObstacleClusterInnerApproximationStep 𝒮) : DivSandpileLowerBoundStmt 𝒮 := by
   audit_apply divSandpileLowerBound_of_inputs
 
-/-- **Lemma 4.3** from `BallInteriorConnectedStep` (E-c1-2) (`discreteBasicProperties_of_inputs`). -/
+/-- **Lemma 4.3** from `BallInteriorConnectedStep` (`discreteBasicProperties_of_inputs`). -/
 example (𝒮 : SpaceFillingSLEModel) (hconn : BallInteriorConnectedStep 𝒮) : DiscreteBasicPropertiesStmt 𝒮 := by
   have hadj : AdjacentCellsMeetAeStep 𝒮 := adjacentCellsMeetAeStep 𝒮
   have hG : GreenKernelLaplacianStep := greenKernelLaplacianStep
   have hN : NormExitTimeLaplacianStep := normExitTimeLaplacianStep
   audit_apply discreteBasicProperties_of_inputs
 
-/-- **Lemma 4.4**, corrected form (E-c1-1), from `BallInteriorConnectedStep`
-(`discreteLaplacianBoundCorrected_of_inputs`). The Draft `DiscreteLaplacianBoundStmt` (false, E-c1-1;
+/-- **Lemma 4.4**, corrected form, from `BallInteriorConnectedStep`
+(`discreteLaplacianBoundCorrected_of_inputs`). The Draft `DiscreteLaplacianBoundStmt` (false;
 `CorrectedForms.not_discreteLaplacianBoundStmt`) has no reduction; Lemmas 4.6 and 4.8 still consume it (7.2-7.4 are
 checked below through this corrected form). -/
 example (𝒮 : SpaceFillingSLEModel) (hconn : BallInteriorConnectedStep 𝒮) :
@@ -299,7 +294,7 @@ example (𝒮 : SpaceFillingSLEModel) (hconn : BallInteriorConnectedStep 𝒮) :
   have hG : GreenKernelLaplacianStep := greenKernelLaplacianStep
   audit_apply discreteLaplacianBoundCorrected_of_inputs
 
-/-- **Lemma 4.5**, corrected form (E-c1-1), from `BallInteriorConnectedStep`
+/-- **Lemma 4.5**, corrected form, from `BallInteriorConnectedStep`
 (`discreteConservationOfMassCorrected_of_inputs`). -/
 example (𝒮 : SpaceFillingSLEModel) (hconn : BallInteriorConnectedStep 𝒮) :
     DiscreteConservationOfMassCorrectedStmt 𝒮 := by
@@ -307,7 +302,7 @@ example (𝒮 : SpaceFillingSLEModel) (hconn : BallInteriorConnectedStep 𝒮) :
   have hG : GreenKernelLaplacianStep := greenKernelLaplacianStep
   audit_apply discreteConservationOfMassCorrected_of_inputs
 
-/-- **Lemma 4.6** from Lemmas 4.7, 4.4 (Draft, E-c1-1), 3.1, 3.5 and three steps
+/-- **Lemma 4.6** from Lemmas 4.7, 4.4 (Draft), 3.1, 3.5 and three steps
 (`subsequentialConvergence_of_steps`). -/
 example (𝒮 : SpaceFillingSLEModel) (h47 : EquiboundedStmt 𝒮) (h44 : DiscreteLaplacianBoundStmt 𝒮)
     (h31 : DiscretePotentialTightnessStmt 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
@@ -320,7 +315,7 @@ example (𝒮 : SpaceFillingSLEModel) (h43 : DiscreteBasicPropertiesStmt 𝒮) (
     (h218 : ExitTimeUpperBoundStmt 𝒮) (hm : MepsScalingInput 𝒮) : EquiboundedStmt 𝒮 := by
   audit_apply equibounded_of_steps
 
-/-- **Lemma 4.8** from Lemmas 3.3, 3.5, 3.7, 4.6, 4.3, 4.4 (Draft, E-c1-1), 2.13 and two steps
+/-- **Lemma 4.8** from Lemmas 3.3, 3.5, 3.7, 4.6, 4.3, 4.4 (Draft), 2.13 and two steps
 (`subsequentialProperties_of_steps`). -/
 example (𝒮 : SpaceFillingSLEModel) (h33 : UniformConvergenceGreenKernelStmt 𝒮)
     (h35 : DiscreteDirichletProblemStmt 𝒮) (h37 : ConvergenceNormalizedExitTimeStmt 𝒮)
@@ -343,14 +338,13 @@ example (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrowthStmt) (h28 : CellSizeEs
   have hI : DiscreteClusterInnerBoundStep 𝒮 := by audit_apply discreteClusterInnerBound_of_steps
   audit_apply iDLALowerBound_of_volumeGrowth_cellSize
 
-/-- **Lemma 5.2** from the cited Lemmas 2.7, 2.8 only (`generalIDLALowerBound_of_volumeGrowth_cellSize`, 727dab9;
-E-c2-1 resolved without a step). -/
+/-- **Lemma 5.2** from the cited Lemmas 2.7, 2.8 only (`generalIDLALowerBound_of_volumeGrowth_cellSize`). -/
 example (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮) :
     GeneralIDLALowerBoundStmt 𝒮 := by
   audit_apply generalIDLALowerBound_of_volumeGrowth_cellSize
 
 /-- **Lemma 5.3** from Lemmas 4.4 (corrected), 2.13, 4.1, 3.3, 2.18 and `MeanValueSurplusStep`
-(`meanValueInequality_of_surplus`; E-x1-1 boundary repair). -/
+(`meanValueInequality_of_surplus`). -/
 example (𝒮 : SpaceFillingSLEModel) (h44 : DiscreteLaplacianBoundCorrectedStmt 𝒮) (h213 : MaximumPrincipleStmt 𝒮)
     (h41 : ConvergenceDivisibleStmt 𝒮) (h33 : UniformConvergenceGreenKernelStmt 𝒮)
     (h218 : ExitTimeUpperBoundStmt 𝒮) (hsur : MeanValueSurplusStep 𝒮) : MeanValueInequalityStmt 𝒮 := by
@@ -366,8 +360,7 @@ example (𝒮 : SpaceFillingSLEModel) (h215 : GreenFunctionCrudeBoundStmt 𝒮) 
 /-- **Lemma 6.3**, proved (`AbelianIDLA.abelianIDLA`). -/
 example (𝒮 : SpaceFillingSLEModel) : AbelianIDLAStmt 𝒮 := AbelianIDLA.abelianIDLA 𝒮
 
-/-- **Lemma 6.4** from Lemma 6.5 and two field steps (`goodAnnulusPrevalence_of_annulusHit`; Lemma 6.6 proved, IR-c4-5
-from `ConeMeanZeroRestrictionStep` by `annulusIterateConeTransfer`, IR-c4-6 from `CircleAverageModConstStep` by
+/-- **Lemma 6.4** from Lemma 6.5 and two field steps (`goodAnnulusPrevalence_of_annulusHit`; Lemma 6.6 proved, from `ConeMeanZeroRestrictionStep` by `annulusIterateConeTransfer`, from `CircleAverageModConstStep` by
 `goodAnnulusEventLocality`). -/
 example (h65 : AnnulusHitStmt) (hR : ConeMeanZeroRestrictionStep) (hD : CircleAverageModConstStep) :
     GoodAnnulusPrevalenceStmt := by
@@ -379,7 +372,7 @@ example (h1 : WholePlaneLQGExistenceStep) (h2 : ConeWholePlaneWeylComparisonStep
     (h3 : WholePlaneLQGCoordinateChangeStep) (h4 : WholePlaneUpperVolumeTailStep) : AnnulusHitStmt := by
   audit_apply annulusHit_of_volumeTail
 
-/-- **Lemma 6.6**, proved (`annulusIterate`, x4: `annulusIterate_of_leo` on Leonardo Bonanno's
+/-- **Lemma 6.6**, proved (`annulusIterate`: `annulusIterate_of_leo` on Leonardo Bonanno's
 `LQGMetric.LM.lmLem3_1a`, with the law transfer `annulusGFFLawTransfer : AnnulusGFFLawTransferStep`). -/
 example : AnnulusIterateStmt := annulusIterate
 
@@ -390,9 +383,9 @@ example (𝒮 : SpaceFillingSLEModel) (h68 : ConstantOrderLowerBoundDivStmt 𝒮
   have hadj : AdjacentCellsMeetAeStep 𝒮 := adjacentCellsMeetAeStep 𝒮
   audit_apply constantOrderLowerBound
 
-/-- **Lemma 6.8**, E-A10 (b) form `ConstantOrderLowerBoundDivLogStmt` (`1 - s₂/(1+|log r|)²`), from Lemmas 2.16,
-2.7, 2.8, 2.9, 2.18, 6.4 and `LQGMeasureFieldMeasurableStep` (`constantOrderLowerBoundDiv_of_inputs`, 29311ac: the
-false-as-drafted `GoodScaleEventMeasurableStep` (E-c2-4) replaced by its a.s. form, proved from
+/-- **Lemma 6.8**, [C5] log-loss form `ConstantOrderLowerBoundDivLogStmt` (`1 - s₂/(1+|log r|)²`), from Lemmas 2.16,
+2.7, 2.8, 2.9, 2.18, 6.4 and `LQGMeasureFieldMeasurableStep` (`constantOrderLowerBoundDiv_of_inputs`: the
+false-as-drafted `GoodScaleEventMeasurableStep` replaced by its a.s. form, proved from
 `LQGMeasureFieldMeasurableStep`). The Draft `ConstantOrderLowerBoundDivStmt` has no reduction; Lemma 6.7 (Draft
 form), 6.9 (local rate) and Proposition 7.1 consume it. -/
 example (𝒮 : SpaceFillingSLEModel) (h216 : GreenKernelLowerBoundStmt 𝒮) (h27 : VolumeGrowthStmt)
@@ -401,36 +394,36 @@ example (𝒮 : SpaceFillingSLEModel) (h216 : GreenKernelLowerBoundStmt 𝒮) (h
     ConstantOrderLowerBoundDivLogStmt 𝒮 := by
   audit_apply constantOrderLowerBoundDiv_of_inputs
 
-/-- **Lemma 6.9**, local-rate form `ChanceOfBeingAbsorbedLocalRateStmt` (E-c5-1), from Lemma 6.7
+/-- **Lemma 6.9**, local-rate form `ChanceOfBeingAbsorbedLocalRateStmt`, from Lemma 6.7
 (`chanceOfBeingAbsorbedLocalRate`). The Draft `ChanceOfBeingAbsorbedStmt` implies it
 (`ChanceOfBeingAbsorbedStmt.localRate`) but has no reduction. -/
 example (𝒮 : SpaceFillingSLEModel) (h67 : ConstantOrderLowerBoundStmt 𝒮) :
     ChanceOfBeingAbsorbedLocalRateStmt 𝒮 := by
   audit_apply chanceOfBeingAbsorbedLocalRate
 
-/-- **Lemma 6.7**, E-A10 (b) form `ConstantOrderLowerBoundLogStmt` (absorption probability `s₂/(1+|log r|)²`), from
-Lemmas 6.8 (b), 2.7, 2.8, 2.19 (`constantOrderLowerBoundLog`). -/
+/-- **Lemma 6.7**, [C5] log-loss form `ConstantOrderLowerBoundLogStmt` (absorption probability `s₂/(1+|log r|)²`), from
+Lemmas 6.8 ([C5] form), 2.7, 2.8, 2.19 (`constantOrderLowerBoundLog`). -/
 example (𝒮 : SpaceFillingSLEModel) (h68 : ConstantOrderLowerBoundDivLogStmt 𝒮) (h27 : VolumeGrowthStmt)
     (h28 : CellSizeEstimateStmt 𝒮) (h219 : ExpectedExitTimeExplicitBoundStmt 𝒮) :
     ConstantOrderLowerBoundLogStmt 𝒮 := by
   have hadj : AdjacentCellsMeetAeStep 𝒮 := adjacentCellsMeetAeStep 𝒮
   audit_apply constantOrderLowerBoundLog
 
-/-- **Lemma 6.9**, E-A10 (b) form `ChanceOfBeingAbsorbedLogLossStmt` (with `s₃` chosen after `s₀`, E-c5-1), from
-Lemma 6.7 (b) (`chanceOfBeingAbsorbedLogLoss_of_steps`, the Chernoff step proved). -/
+/-- **Lemma 6.9**, [C5] log-loss form `ChanceOfBeingAbsorbedLogLossStmt` (with `s₃` chosen after `s₀`), from
+Lemma 6.7 ([C5] form) (`chanceOfBeingAbsorbedLogLoss_of_steps`, the Chernoff step proved). -/
 example (𝒮 : SpaceFillingSLEModel) (h67 : ConstantOrderLowerBoundLogStmt 𝒮) :
     ChanceOfBeingAbsorbedLogLossStmt 𝒮 := by
   have hC : AbsorptionChernoffStep := Absorption.absorptionChernoffStep
   audit_apply chanceOfBeingAbsorbedLogLoss_of_steps
 
-/-- **Lemma 6.10** from Lemmas 6.8 (b), 2.7, 2.8, 2.19, through Lemmas 6.7 (b) and 6.9 (b) (`iterativeBound_of_div`;
+/-- **Lemma 6.10** from Lemmas 6.8 ([C5] form), 2.7, 2.8, 2.19, through Lemmas 6.7 and 6.9 ([C5] forms) (`iterativeBound_of_div`;
 `AdjacentCellsMeetStep` from `AdjacentCellsMeetAeStep.probTendsToOne`). -/
 example (𝒮 : SpaceFillingSLEModel) (h68 : ConstantOrderLowerBoundDivLogStmt 𝒮) (h27 : VolumeGrowthStmt)
     (h28 : CellSizeEstimateStmt 𝒮) (h219 : ExpectedExitTimeExplicitBoundStmt 𝒮) : IterativeBoundStmt 𝒮 := by
   have hadj : AdjacentCellsMeetAeStep 𝒮 := adjacentCellsMeetAeStep 𝒮
   audit_apply iterativeBound_of_div
 
-/-- **Theorem 6.1** from Lemma 6.10, Proposition 5.1 and `BoundaryLayerMeasurableStep` (E-c2-3)
+/-- **Theorem 6.1** from Lemma 6.10, Proposition 5.1 and `BoundaryLayerMeasurableStep`
 (`IDLAUpperBound.iDLAUpperBound_of_steps`; Lemma 6.3 used in its proved form). -/
 example (𝒮 : SpaceFillingSLEModel) (h610 : IterativeBoundStmt 𝒮) (h51 : IDLALowerBoundStmt 𝒮)
     (hm : BoundaryLayerMeasurableStep 𝒮) (hfam : ConeFamilyAEMeasurableStep)
@@ -441,8 +434,7 @@ example (𝒮 : SpaceFillingSLEModel) (h610 : IterativeBoundStmt 𝒮) (h51 : ID
 
 /-! **Proposition 7.1**: the final form (`divSandpileUpperBound_of_meshScaling`, no Draft 7.2) is checked in the
 section `FinalForms` below. The earlier carved form (`divSandpileUpperBound_of_carved_inputs`,
-MatedCRT/Steps/Sec7/DivSandpileUpperBound.lean:164) had the hypothesis list (read from the environment 2026-11-04
-14:56Z):
+MatedCRT/Steps/Sec7/DivSandpileUpperBound.lean:164) had the hypothesis list:
 
     example (𝒮 : SpaceFillingSLEModel) (h23 : ConeHarmonicBallsStmt) (h68 : ConstantOrderLowerBoundDivStmt 𝒮)
         (h27 : VolumeGrowthStmt) (h72 : MassBoundOdometerStmt 𝒮) (h41 : ConvergenceDivisibleStmt 𝒮)
@@ -452,12 +444,11 @@ MatedCRT/Steps/Sec7/DivSandpileUpperBound.lean:164) had the hypothesis list (rea
         DivSandpileUpperBoundStmt 𝒮 := by
       audit_apply divSandpileUpperBound_of_carved_inputs
 
-It consumes the Draft 7.2 `MassBoundOdometerStmt`, refuted by E-c3-2, and the Draft 6.8 (no log loss, E-A10), so it
+It consumes the Draft 7.2 `MassBoundOdometerStmt`, refuted ([C8]), and the Draft 6.8 (no log loss, [C5]), so it
 is vacuous until it is rerouted through `MassBoundOdometerAboveScaleStmt` and `ConstantOrderLowerBoundDivLogStmt`. -/
 
-/-- **Lemma 7.2**, corrected form `MassBoundOdometerAboveScaleStmt` (E-c3-2, `s ≥ ε^β`), from Lemmas 2.16, 2.8 and
-the corrected Lemma 4.4 (`CorrectedForms.massBoundOdometerAboveScale_of_corrected`, in place of the false Draft 4.4 used
-by c3's `massBoundOdometerAboveScale_of_draft`). -/
+/-- **Lemma 7.2**, corrected form `MassBoundOdometerAboveScaleStmt` ([C8], `s ≥ ε^β`), from Lemmas 2.16, 2.8 and
+the corrected Lemma 4.4 (`CorrectedForms.massBoundOdometerAboveScale_of_corrected`, in place of the false Draft 4.4 used by `massBoundOdometerAboveScale_of_draft`). -/
 example (𝒮 : SpaceFillingSLEModel) (h216 : GreenKernelLowerBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
     (h44 : DiscreteLaplacianBoundCorrectedStmt 𝒮) : MassBoundOdometerAboveScaleStmt 𝒮 := by
   audit_apply CorrectedForms.massBoundOdometerAboveScale_of_corrected
@@ -486,9 +477,9 @@ example : DiscreteLaplacianBoundGeneralStmt := discreteLaplacianBoundGeneral
 /-- **Lemma A.4**, proved. -/
 example : DiscreteConservationOfMassGeneralStmt := discreteConservationOfMassGeneral
 
-/-! ## Final forms (re-synced 2026-11-05 07:00Z)
+/-! ## Final forms
 
-The best committed reduction of each result, read from the environment (theorem ⇒ statement, with its hypothesis
+The reduction of each result (theorem ⇒ statement, with its hypothesis
 list). The examples above record earlier reductions that still compile. Proved statements and steps are discharged:
 Lemmas 2.13, 4.3, corrected 4.4, corrected 4.5 (`discreteBasicProperties`, `discreteLaplacianBoundCorrected`,
 `discreteConservationOfMassCorrected`), `LQGMeasureFieldMeasurableStep` (e27e1bb), `OdometerObstacleApproximationStep`,
@@ -498,7 +489,7 @@ section FinalForms
 
 /-- **Theorem 1.4**, final form: Propositions 4.2, 5.1, 6.1, 7.1 and Fact 2.2, the literature inputs
 `QuantumConeScalingInput`, the three SLE inputs, the steps `RescaledConeFieldStep`, `RescaledConeClockStep`,
-`RescaledMatingOfTreesStep`, and the Section 2 steps `ConeHarmonicBallStrictGrowthStep` (E-c5-3),
+`RescaledMatingOfTreesStep`, and the Section 2 steps `ConeHarmonicBallStrictGrowthStep`,
 `ConeHalfBallFamilyFunctionalStep` (`convergenceOfIDLA_of_bounds_coneSteps` with
 `coneEnvironmentScalingStep_of_inputs`). -/
 example (𝒮 : SpaceFillingSLEModel) (h42 : DivSandpileLowerBoundStmt 𝒮) (h51 : IDLALowerBoundStmt 𝒮)
@@ -556,7 +547,7 @@ example (hgrow : ConeHarmonicBallStrictGrowthStep) (hscale : QuantumConeScalingI
     (hfun : ConeHalfBallFamilyFunctionalStep) : ConeScaleInvarianceUpToFixedTimeStmt := by
   audit_apply coneScaleInvarianceUpToFixedTime_final
 
-/-- **Lemma 2.6**, final form (`coneScaleInvariance_final`; its law equality: E-c3-3). -/
+/-- **Lemma 2.6**, final form (`coneScaleInvariance_final`; its law equality). -/
 example (hscale : QuantumConeScalingInput) (hna : LQGMeasureNonAtomicPart) (hloc : LQGMeasureLocalityPart)
     (hdil : LQGMeasureDilationCovariancePart) (hfun : ConeHarmonicBallFunctionalStep) : ConeScaleInvarianceStmt := by
   audit_apply coneScaleInvariance_final
@@ -569,8 +560,8 @@ example (hc : ConeWholePlaneCouplingStep) : VolumeGrowthLowerStmt := by
 example (𝒮 : SpaceFillingSLEModel) (hc : ConeWholePlaneCouplingStep) : CellSizeUpperStmt 𝒮 := by
   audit_apply cellSizeUpperStmt_of_coupling
 
-/-- **Lemma 3.1**, corrected form (E-c1-4), final: Lemmas 2.7, 2.18, `MepsScalingInput` and the corrected cited
-Lemma 3.2 (E-chk-1, correction approved 2026-11-05) (`discretePotentialTightnessCorrected_of_inputs`). -/
+/-- **Lemma 3.1**, corrected form, final: Lemmas 2.7, 2.18, `MepsScalingInput` and the corrected cited
+Lemma 3.2 ([C6]) (`discretePotentialTightnessCorrected_of_inputs`). -/
 example (𝒮 : SpaceFillingSLEModel) (hm : MepsScalingInput 𝒮) (h27 : VolumeGrowthStmt)
     (h218 : ExitTimeUpperBoundStmt 𝒮) (h32 : DiscreteHolderContinuityCorrectedStep 𝒮) :
     DiscretePotentialTightnessCorrectedStmt 𝒮 := by
@@ -582,8 +573,8 @@ example (𝒮 : SpaceFillingSLEModel) (hm : MepsScalingInput 𝒮) (h27 : Volume
     DiscretePotentialTightnessAeStep 𝒮 :=
   discretePotentialTightnessAeStep_of_inputs hm (boundedExitTimeRV_of_steps h27) h218 h32
 
-/-- **Lemma 3.7**, final form (980cf27): Lemmas 3.3, 3.5, 2.17, 2.18 and the a.s. interior form of the corrected 3.1
-(`DiscretePotentialTightnessAeStep`, E-c2-6) (`convergenceNormalizedExitTime_of_statements`). -/
+/-- **Lemma 3.7**, final form: Lemmas 3.3, 3.5, 2.17, 2.18 and the a.s. interior form of the corrected 3.1
+(`DiscretePotentialTightnessAeStep`) (`convergenceNormalizedExitTime_of_statements`). -/
 example (𝒮 : SpaceFillingSLEModel) (h33 : UniformConvergenceGreenKernelStmt 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
     (h217 : BoundedExitTimeRVStmt) (h218 : ExitTimeUpperBoundStmt 𝒮) (hAe : DiscretePotentialTightnessAeStep 𝒮) :
     ConvergenceNormalizedExitTimeStmt 𝒮 := by
@@ -591,7 +582,7 @@ example (𝒮 : SpaceFillingSLEModel) (h33 : UniformConvergenceGreenKernelStmt �
 
 /-- **Theorem 4.1**, final form (ec0044b, `convergenceDivisible_final_of_coneFamily`): Lemmas 2.7, 2.18, 3.3, 3.5, 3.7,
 2.4, `MepsScalingInput`, the corrected cited Lemma 3.2, `ConeFamilyAEMeasurableStep` (derived above) and three
-odometer steps of Lemma 4.6 (E-x3-2). -/
+odometer steps of Lemma 4.6. -/
 example (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrowthStmt) (h218 : ExitTimeUpperBoundStmt 𝒮) (hm : MepsScalingInput 𝒮)
     (h33 : UniformConvergenceGreenKernelStmt 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
     (h37 : ConvergenceNormalizedExitTimeStmt 𝒮) (h24 : ConeHarmonicBallsUpToFixedTimeStmt)
@@ -601,26 +592,25 @@ example (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrowthStmt) (h218 : ExitTimeU
   audit_apply convergenceDivisible_final_of_coneFamily
 
 /-- **Proposition 4.2**, final form (fb05dfd, `divSandpileLowerBound_final`): Theorem 4.1, 2.3, Lemmas 2.4, 2.7,
-2.8, 3.3, `ConeFamilyAEMeasurableStep` and the strict obstacle gap `HarmonicBallStrictObstacleGapStep`
-(E-x3-1 / E-c2-5). -/
+2.8, 3.3, `ConeFamilyAEMeasurableStep` and the strict obstacle gap `HarmonicBallStrictObstacleGapStep`. -/
 example (𝒮 : SpaceFillingSLEModel) (h41 : ConvergenceDivisibleStmt 𝒮) (h23 : ConeHarmonicBallsStmt)
     (h24 : ConeHarmonicBallsUpToFixedTimeStmt) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
     (h33 : UniformConvergenceGreenKernelStmt 𝒮) (hfam : ConeFamilyAEMeasurableStep)
     (hgap : HarmonicBallStrictObstacleGapStep 𝒮) : DivSandpileLowerBoundStmt 𝒮 := by
   audit_apply divSandpileLowerBound_final
 
-/-- **Lemma 4.3**, proved (E-c1-2 resolved). -/
+/-- **Lemma 4.3**, proved. -/
 example (𝒮 : SpaceFillingSLEModel) : DiscreteBasicPropertiesStmt 𝒮 := discreteBasicProperties 𝒮
 
-/-- **Lemma 4.4**, corrected form (E-c1-1), proved. -/
+/-- **Lemma 4.4**, corrected form, proved. -/
 example (𝒮 : SpaceFillingSLEModel) : DiscreteLaplacianBoundCorrectedStmt 𝒮 := discreteLaplacianBoundCorrected 𝒮
 
-/-- **Lemma 4.5**, corrected form (E-c1-1), proved. -/
+/-- **Lemma 4.5**, corrected form, proved. -/
 example (𝒮 : SpaceFillingSLEModel) : DiscreteConservationOfMassCorrectedStmt 𝒮 :=
   discreteConservationOfMassCorrected 𝒮
 
 /-- **Lemma 4.6**, final form (`subsequentialConvergence_of_inputs`; no Draft 3.1, no Draft 4.4): `MepsScalingInput`,
-Lemmas 2.7, 2.18, 3.5, the corrected cited Lemma 3.2 and three odometer steps (x3; E-x3-2). -/
+Lemmas 2.7, 2.18, 3.5, the corrected cited Lemma 3.2 and three odometer steps. -/
 example (𝒮 : SpaceFillingSLEModel) (hm : MepsScalingInput 𝒮) (h27 : VolumeGrowthStmt) (h218 : ExitTimeUpperBoundStmt 𝒮)
     (h32 : DiscreteHolderContinuityCorrectedStep 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
     (hlc : OdometerLocalCompactnessCorrectedStep 𝒮) (hbu : OdometerBoundaryUpgradeCorrectedStep 𝒮)
@@ -642,7 +632,7 @@ example (𝒮 : SpaceFillingSLEModel) (h33 : UniformConvergenceGreenKernelStmt �
 
 /-- **Proposition 5.1**, final form (7fdfd3c, `iDLALowerBound_final_of_strictGap`): cited Lemmas 2.7, 2.8, 2.9, 2.15,
 2.16, 2.18; Theorem 4.1, 2.3, Lemmas 2.4, 3.3, 2.17; `ConeFamilyAEMeasurableStep`; the surplus lower bound of Lemma
-5.3 (E-c2-5), the strict obstacle gap (E-x3-1) and the stopped forms of Lemmas 5.3, 5.4 (E-c1-5). -/
+5.3, the strict obstacle gap and the stopped forms of Lemmas 5.3, 5.4. -/
 example (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
     (h29 : CountingMeasureConvergenceStmt 𝒮) (h215 : GreenFunctionCrudeBoundStmt 𝒮)
     (h216 : GreenKernelLowerBoundStmt 𝒮) (h218 : ExitTimeUpperBoundStmt 𝒮) (h41 : ConvergenceDivisibleStmt 𝒮)
@@ -655,7 +645,7 @@ example (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrowthStmt) (h28 : CellSizeEs
   audit_apply iDLALowerBound_final_of_strictGap
 
 /-- **Lemma 5.3**, final form (`meanValueInequality_of_lower`): Theorem 4.1, Lemmas 3.3, 2.17, 2.18 and the surplus
-lower bound `MeanValueSurplusLowerStep` (E-c2-5); corrected 4.4, 2.13 and the field measurability proved. -/
+lower bound `MeanValueSurplusLowerStep`; corrected 4.4, 2.13 and the field measurability proved. -/
 example (𝒮 : SpaceFillingSLEModel) (h41 : ConvergenceDivisibleStmt 𝒮) (h33 : UniformConvergenceGreenKernelStmt 𝒮)
     (h218 : ExitTimeUpperBoundStmt 𝒮) (h217 : BoundedExitTimeRVStmt) (hsur : MeanValueSurplusLowerStep 𝒮) :
     MeanValueInequalityStmt 𝒮 := by
@@ -665,8 +655,8 @@ example (𝒮 : SpaceFillingSLEModel) (h41 : ConvergenceDivisibleStmt 𝒮) (h33
   have hfm : LQGMeasureFieldMeasurableStep 𝒮 := LQGMeasureField.lqgMeasureFieldMeasurableStep 𝒮
   audit_apply meanValueInequality_of_lower
 
-/-- **Theorem 6.1**, final form (bddd0ce, `iDLAUpperBound_final`): Lemma 6.10, Proposition 5.1 and the Section 2
-inputs of Lemma 2.4 and of `ConeFamilyAEMeasurableStep` (E-c2-3 resolved). -/
+/-- **Theorem 6.1**, final form (`iDLAUpperBound_final`): Lemma 6.10, Proposition 5.1 and the Section 2
+inputs of Lemma 2.4 and of `ConeFamilyAEMeasurableStep`. -/
 example (𝒮 : SpaceFillingSLEModel) (h610 : IterativeBoundStmt 𝒮) (h51 : IDLALowerBoundStmt 𝒮)
     (hHB : HarmonicBallsDraftInputs) (h0 : WholePlaneLogLQGExistenceStep) (h3 : ConeRestrictionStep)
     (h4 : ConeHarmonicBallLocalityStep) (hgrow : ConeHarmonicBallStrictGrowthStep) (hscale : QuantumConeScalingInput)
@@ -674,8 +664,8 @@ example (𝒮 : SpaceFillingSLEModel) (h610 : IterativeBoundStmt 𝒮) (h51 : ID
     (h27 : VolumeGrowthStmt) : IDLAUpperBoundStmt 𝒮 := by
   audit_apply iDLAUpperBound_final
 
-/-- **Lemma 6.4**, final form (`goodAnnulusPrevalence_final`): five whole-plane/cone field steps (c4);
-`CircleAverageModConstStep` is proved (f4f87aa, `Field.ConeCircle.circleAverageModConstStep`). -/
+/-- **Lemma 6.4**, final form (`goodAnnulusPrevalence_final`): five whole-plane/cone field steps;
+`CircleAverageModConstStep` is proved (`Field.ConeCircle.circleAverageModConstStep`). -/
 example (h1 : WholePlaneLQGExistenceStep) (h2 : ConeWholePlaneWeylComparisonStep)
     (h3 : WholePlaneLQGCoordinateChangeStep) (h4 : WholePlaneUpperVolumeTailStep) (hR : ConeMeanZeroRestrictionStep) :
     GoodAnnulusPrevalenceStmt := by
@@ -700,7 +690,7 @@ example (𝒮 : SpaceFillingSLEModel) (h216 : GreenKernelLowerBoundStmt 𝒮) (h
   · audit_apply iterativeBound_final
 
 /-- **Proposition 7.1**, final form (d17f14c, `divSandpileUpperBound_of_meshScaling`; no step, no Draft 7.2, no Draft
-6.8): `MepsScalingInput`, Theorems 2.3, 4.1, Lemmas 6.8 (b), 2.7, corrected 7.2, 3.3, 2.8, 7.3, 7.4. -/
+6.8): `MepsScalingInput`, Theorems 2.3, 4.1, Lemmas 6.8 ([C5] form), 2.7, corrected 7.2, 3.3, 2.8, 7.3, 7.4. -/
 example (𝒮 : SpaceFillingSLEModel) (hm : MepsScalingInput 𝒮) (h23 : ConeHarmonicBallsStmt)
     (h68 : ConstantOrderLowerBoundDivLogStmt 𝒮) (h27 : VolumeGrowthStmt) (h72 : MassBoundOdometerAboveScaleStmt 𝒮)
     (h41 : ConvergenceDivisibleStmt 𝒮) (h33 : UniformConvergenceGreenKernelStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)

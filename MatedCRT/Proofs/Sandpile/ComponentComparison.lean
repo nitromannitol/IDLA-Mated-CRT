@@ -3,8 +3,7 @@ import MatedCRT.Proofs.Sec4.ObstacleSpecialization.Escape
 
 /-! Comparison with the global sandpile on the component of the origin.
 
-This combines worker x2's least-action comparison with worker c1's
-origin-component obstacle construction. -/
+This combines the least-action comparison with the origin-component obstacle construction. -/
 
 namespace MatedCRT.Sandpile
 

@@ -36,14 +36,13 @@ of "Internal DLA on mated-CRT maps" (Bou-Rabee and Gwynne, arXiv:2211.04891) sti
 and 1.6 (`convergenceOfIDLA_conditional`, `convergenceOfDivSandpile_conditional`, MatedCRT/Assembly/Main.lean). A
 proved step or a proved numbered result is not a field: it is discharged in Main.lean. A field is also dropped when its
 Prop is reduced to fields already present, or to admitted inputs: `DirichletLimitStep` is discharged this way, by
-`dirichletLimitStep_of_volumeGrowth` from `volumeGrowth` (2026-11-07).
+`dirichletLimitStep_of_volumeGrowth` from `volumeGrowth`.
 
 The fields are grouped:
 * (a) cited results of the paper (Draft statements of results the paper quotes from the literature), and the
   statements of [BG22] the paper cites, from the harmonic-balls formalization;
 * (b) literature inputs (`...Input`, MatedCRT/External);
-* (c) open named steps (`...Step`), with their owner (task files of 2026-11-07; "no current owner" when no task file
-  names the step);
+* (c) open named steps (`...Step`);
 * (d) the corrected cited Lemma 3.2, retained as an explicit input;
 * (e) paper-owned numbered results whose committed reduction still needs open steps that are not fields.
 
@@ -57,7 +56,7 @@ namespace MatedCRT
 /-- The remaining hypotheses of the conditional proof of Theorems 1.4 and 1.6 for the space-filling SLE model `𝒮`.
 Field counts: (a) 12, (b) 3, (c) 25, (d) 1, (e) 1; total 42.
 
-No field is a Draft known false: the Draft Lemma 3.1 (refuted in Lean, `not_discretePotentialTightnessStmt`, E-c1-4)
+No field is a Draft known false: the Draft Lemma 3.1 (refuted in Lean, `not_discretePotentialTightnessStmt`; see docs/campaign/FROZEN-PROVENANCE.md)
 is no longer consumed, since Lemma 3.3 goes through the almost-sure corrected 3.1 (`uniformConvergenceGreenKernel_final`,
 763b7d7). The Draft Lemmas 4.4 and 4.5 (refuted in Lean, Audit/CorrectedForms.lean) are used only in their corrected
 forms. -/
@@ -98,81 +97,75 @@ structure MainHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   1.6, 2.3 (through 2.5 and the measurability of its families). -/
   quantumConeScaling : QuantumConeScalingInput
   -- (c) Open named steps
-  /-- Theorems 1.4, 1.6: the rescaled environment is valid (eq:scale-invariance-of-field-and-eta, IR-c3-1). Reduced
-  (`coneEnvironmentScalingStep_of_inputs`, 4e02fde) to the External SLE and quantum cone scaling inputs,
+  /-- Theorems 1.4, 1.6: the rescaled environment is valid (eq:scale-invariance-of-field-and-eta). Reduced
+  (`coneEnvironmentScalingStep_of_inputs`) to the External SLE and quantum cone scaling inputs,
   Fact 2.2, and the steps `RescaledConeFieldStep`, `RescaledConeClockStep`, and
   `RescaledMatingOfTreesStep`. -/
   coneEnvironmentScaling : ConeEnvironmentScalingStep 𝒮
-  /-- Lemma 2.4: existence of the whole-plane log-singular LQG objects. Owner: c5 (sec2-finalize). -/
+  /-- Lemma 2.4: existence of the whole-plane log-singular LQG objects. -/
   wholePlaneLogLQGExistence : WholePlaneLogLQGExistenceStep
-  /-- Lemma 2.4: restriction to the cone. Owner: c5. -/
+  /-- Lemma 2.4: restriction to the cone. -/
   coneRestriction : ConeRestrictionStep
-  /-- Lemma 2.4: locality of the cone harmonic balls. Owner: c5. -/
+  /-- Lemma 2.4: locality of the cone harmonic balls. -/
   coneHarmonicBallLocality : ConeHarmonicBallLocalityStep
-  /-- Lemmas 2.4, 2.5, Theorems 1.4, 1.6: strict growth of the cone harmonic balls (`T' = T`, E-c5-3, not in the
-  paper). Owner: c5 / operator (E-c5-3: admit as an External input?). -/
+  /-- Lemmas 2.4, 2.5, Theorems 1.4, 1.6: strict growth of the cone harmonic balls (`T' = T`, not in the
+  paper). -/
   coneHarmonicBallStrictGrowth : ConeHarmonicBallStrictGrowthStep
-  /-- Lemma 2.5, Theorems 1.4, 1.6: the half-ball family is a functional of the field. Owner: c5. -/
+  /-- Lemma 2.5, Theorems 1.4, 1.6: the half-ball family is a functional of the field. -/
   coneHalfBallFamilyFunctional : ConeHalfBallFamilyFunctionalStep
   /-- Lemma 3.5: interior estimate. Reduced (`dirichletInteriorStep_of_moduli`) to `DirichletPointwiseStep` and
-  `DirichletDiscreteModulusStep`, which are open and not fields. Owner: c1 (task brownian-dirichlet-disc). -/
+  `DirichletDiscreteModulusStep`, which are open and not fields. -/
   dirichletInterior : DirichletInteriorStep 𝒮
-  /-- Lemma 3.5: boundary estimate. Owner: c1 (task brownian-dirichlet-disc). -/
+  /-- Lemma 3.5: boundary estimate. -/
   dirichletBoundary : DirichletBoundaryStep 𝒮
   /-- Lemma 3.6: planar Brownian motion makes an outward excursion right after its exit from a disk (strong Markov
   property at the exit time and Blumenthal's 0-1 law, Mörters-Peres Thms 2.16, 2.7; not in MarkovProcess). Used by
-  `convergenceHarmonicFunctions_of_inputs` (ab6ed20). Owner: m2 (task sec3-lbm-steps) / operator (input request: strong
-  Markov, 0-1 law). -/
+  `convergenceHarmonicFunctions_of_inputs`. -/
   brownianOutwardExcursionAtExit : BrownianOutwardExcursionAtExitStep
   /-- Lemma 3.6: measurability of bounded Lipschitz functionals of rescaled Liouville Brownian motion (joint
-  measurability of the LQG clock). Used by `convergenceHarmonicFunctions_of_inputs`. Owner: m2. -/
+  measurability of the LQG clock). Used by `convergenceHarmonicFunctions_of_inputs`. -/
   lbmPathFunctionalMeasurable : LBMPathFunctionalMeasurableStep 𝒮
   /-- Propositions 4.2 and 5.1: the least supersolution is strictly above the obstacle on the harmonic ball
-  (eq:strictly-above-in-interior; E-x3-1, E-c2-5). Replaces `ObstacleClusterInnerApproximationStep`
-  (`obstacleClusterInnerApproximation_of_strictGap`). Owner: m6 (task m6-prop42-strict-obstacle-gap). -/
+  (eq:strictly-above-in-interior). Replaces `ObstacleClusterInnerApproximationStep`
+  (`obstacleClusterInnerApproximation_of_strictGap`). -/
   harmonicBallStrictObstacleGap : HarmonicBallStrictObstacleGapStep 𝒮
-  /-- Lemma 4.6 (corrected route): local compactness of the odometers. No current owner (x3.md assigned Lemma 4.6 to
-  c1; no current task file names the step). -/
+  /-- Lemma 4.6 (corrected route): local compactness of the odometers. -/
   odometerLocalCompactnessCorrected : OdometerLocalCompactnessCorrectedStep 𝒮
-  /-- Lemma 4.6 (corrected route): boundary upgrade. No current owner (as above). -/
+  /-- Lemma 4.6 (corrected route): boundary upgrade. -/
   odometerBoundaryUpgradeCorrected : OdometerBoundaryUpgradeCorrectedStep 𝒮
-  /-- Lemma 4.6: measurable selection of the subsequence (E-x3-2). No current owner (as above). -/
+  /-- Lemma 4.6: measurable selection of the subsequence. -/
   odometerMeasurableSelection : OdometerMeasurableSelectionStep 𝒮
-  /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5), interior lower bound of the obstacle surplus. Not a field
-  any more: `StoppedSurplusInteriorStep` is supplied by `stoppedSurplusInterior_of_gap` from the strict obstacle gap
-  `harmonicBallStrictObstacleGap`, `mepsScaling` and the three named inputs below (z1, 2026-11-08; E-c1-5 (c)-(e)). -/
+  /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)`, interior lower bound of the obstacle surplus. Not a field: `StoppedSurplusInteriorStep` is supplied by `stoppedSurplusInterior_of_gap` from the strict obstacle gap
+  `harmonicBallStrictObstacleGap`, `mepsScaling` and the three named inputs below. -/
   stoppedSurplusPole : StoppedInterior.StoppedSurplusPoleStep 𝒮
-  /-- Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5 (d)): the discrete-to-continuum geometry of the `δ`-interior. -/
+  /-- Lemma 5.3 on `V^ε(Λ_t)`: the discrete-to-continuum geometry of the `δ`-interior. -/
   stoppedInteriorGeometry : StoppedInterior.StoppedInteriorGeometryStep 𝒮
-  /-- Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5 (e)): measurability of the continuum margin on the random compact set. -/
+  /-- Lemma 5.3 on `V^ε(Λ_t)`: measurability of the continuum margin on the random compact set. -/
   stoppedInteriorMeasurable : StoppedInterior.StoppedInteriorMeasurableStep 𝒮
-  /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5), exterior upper bound of the obstacle surplus. The field
-  `StoppedSurplusExteriorStep` is no longer assumed: it is supplied by `stoppedSurplusExterior_of_nullMeasurableOrigin`
-  from `mepsScaling` and this origin measurability input (z1, 2026-11-08; ESCALATIONS E-c1-5 (b)). -/
+  /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)`, exterior upper bound of the obstacle surplus. The field
+  `StoppedSurplusExteriorStep` is not assumed: it is supplied by `stoppedSurplusExterior_of_nullMeasurableOrigin`
+  from `mepsScaling` and this origin measurability input. -/
   coneOriginNullMeasurable : ConeOriginNullMeasurableStep 𝒮
-  /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5), Green potential of the boundary layer `A \ Λ^ε_t`.
-  No current owner. -/
+  /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)`, Green potential of the boundary layer `A \ Λ^ε_t`. -/
   stoppedLayerPotential : StoppedLayerPotentialStep 𝒮
-  /-- Lemma 5.3 (through `meanValueSurplusStep_of_lower`): the lower surplus estimate (E-x1-1, E-c2-5). No current
-  owner. -/
+  /-- Lemma 5.3 (through `meanValueSurplusStep_of_lower`): the lower surplus estimate. -/
   meanValueSurplusLower : MeanValueSurplusLowerStep 𝒮
-  /-- Lemma 6.4: restriction of the cone field to annuli has mean zero (IR-c4-5). Owner: z1 (z1-sec6-annulus-hit-finish). -/
+  /-- Lemma 6.4: restriction of the cone field to annuli has mean zero -/
   coneMeanZeroRestriction : ConeMeanZeroRestrictionStep
-  /-- Lemma 6.5: existence of the whole-plane LQG objects (IR-c4-1). Owner: z1. -/
+  /-- Lemma 6.5: existence of the whole-plane LQG objects -/
   wholePlaneLQGExistence : WholePlaneLQGExistenceStep
-  /-- Lemma 6.5: Weyl comparison of the cone and whole-plane fields (IR-c4-2). Owner: z1. -/
+  /-- Lemma 6.5: Weyl comparison of the cone and whole-plane fields -/
   coneWholePlaneWeylComparison : ConeWholePlaneWeylComparisonStep
-  /-- Lemma 6.5: coordinate change (IR-c4-3). Owner: z1. -/
+  /-- Lemma 6.5: coordinate change -/
   wholePlaneLQGCoordinateChange : WholePlaneLQGCoordinateChangeStep
-  /-- Lemma 6.5: upper volume tail of the whole-plane LQG measure (IR-c4-4). Owner: z1. -/
+  /-- Lemma 6.5: upper volume tail of the whole-plane LQG measure -/
   wholePlaneUpperVolumeTail : WholePlaneUpperVolumeTailStep
   -- (d) Corrected cited statement
-  /-- The corrected cited **Lemma 3.2** (GMS19 Theorem 3.9; review-L32, correction approved 2026-11-05).
+  /-- The corrected cited **Lemma 3.2** (GMS19 Theorem 3.9; correction [C6] of docs/campaign/CORRECTIONS.md).
   Used by both corrected forms of Lemma 3.1. -/
   discreteHolderContinuityCorrected : DiscreteHolderContinuityCorrectedStep 𝒮
-  -- (e) Paper-owned results whose committed reduction still needs open steps
-  /-- **Lemma 3.4** (convergence of integrals of the Green function). Owner: m2 (task sec3-lbm-steps; pieces committed:
-  25d726a, 66df860, a8566fc, e1f2928). Reduced by `integralConvergenceGreenFunction_of_steps` to the open LBM steps
+  -- (e) Results of the paper whose committed reduction still needs open steps
+  /-- **Lemma 3.4** (convergence of integrals of the Green function). Reduced by `integralConvergenceGreenFunction_of_steps` to the open LBM steps
   (not fields). Used by 3.3, 3.5 and the Section 5 stopped steps. -/
   integralConvergenceGreenFunction : IntegralConvergenceGreenFunctionStmt 𝒮
 

@@ -5,33 +5,24 @@ import MatedCRT.Proposed.DuplantierSheffieldCoordinate2011
 
 /-! # Residual audit of the plateau-scale assembly and of the Proposition 4.2 consumers
 
-Task `z5-plateau-scaling-residual-audit`. Audit only. Every declaration here is an exact-type check, a conditional
+Audit only. Every declaration here is an exact-type check, a conditional
 consumer that takes each unresolved Step as an explicit argument, an axiom print, or a source-preparation check.
 Nothing here closes a numbered result, proves a named Step, or adds a literature input.
 
 ## Named residuals (hypotheses, never proved or assumed in this file)
 
 * Scaling gap K, `MatedCRT.Proposed.DS11CoordinateRuleFixedAffine` (= `InsertionCoordinateExtensionStep`):
-  `WPN-42-insertion-coordinate-extension`, `docs/campaign/GAPS-TAKEOVER-20261108.md:288`. An OPEN INTERNAL EXTENSION of
-  DS11 Prop. 2.1 (p. 13): the printed rule has no whole-plane field and no non-dyadic scales `|a| ∉ 2^ℤ`.
-* Scaling gap H, `MatedCRT.ScaledBoundedRepresentativesStep`: `WPN-42-scaled-representatives`, GAPS:244. Its quantifier is
-  over all `μ : Measure ℂ` and all `Λ` with `IsSubharmonicBall μ Λ 0` and `Bornology.IsBounded Λ` (the repaired form,
-  steps3:319; the unbounded form is false, steps3:117-137). It is wider than the LQG measures the consumer applies it to;
+  An open extension of DS11 Prop. 2.1 (p. 13): the printed rule has no whole-plane field and no non-dyadic scales `|a| ∉ 2^ℤ`.
+* Scaling gap H, `MatedCRT.ScaledBoundedRepresentativesStep`. Its quantifier is
+  over all `μ : Measure ℂ` and all `Λ` with `IsSubharmonicBall μ Λ 0` and `Bornology.IsBounded Λ` (the repaired form; the unbounded form is false). It is wider than the LQG measures the consumer applies it to;
   no ambient hypothesis on `μ` is added.
-* The nine WPN of the 14:40 operator entry: WPN-36-uniform-cell (`UniformCellSizeUpperStep`), WPN-36-pointwise-event
-  (`PointwiseCellAnnulusEnvelopeStep`), WPN-36-pointwise-rates (`PointwiseSameWalkRatesStep`), WPN-42-locality
-  (`LQGMeasureLocalityFunctionalStep`), WPN-51-origin (`ConeOriginNullMeasurableStep`), WPN-51-pole
-  (`StoppedInterior.StoppedSurplusPoleStep`), WPN-51-geometry (`StoppedInterior.StoppedInteriorGeometryStep`),
-  WPN-51-margin (`StoppedInterior.StoppedInteriorMeasurableStep`), WPN-51-layer (`StoppedLayerPotentialStep`).
-  Written proofs audited by the 16:25 operator entry: uniform-cell, locality, origin and geometry CORRECT as declared;
-  pointwise-event and margin: the declared Steps are false, and the audited repaired forms are the ones to route;
-  pointwise-rates, pole and layer not yet returned.
-  None is routed into Lean by this file.
+* Residual Steps of the audit (none is routed into Lean here): `UniformCellSizeUpperStep`, `PointwiseCellAnnulusEnvelopeStep`, `PointwiseSameWalkRatesStep`, `LQGMeasureLocalityFunctionalStep`, `ConeOriginNullMeasurableStep`, `StoppedInterior.StoppedSurplusPoleStep`, `StoppedInterior.StoppedInteriorGeometryStep`, `StoppedInterior.StoppedInteriorMeasurableStep`, `StoppedLayerPotentialStep`.
+  Audit status: the uniform-cell, locality, origin and geometry Steps are CORRECT as declared; the pointwise-event and margin Steps are FALSE as typed (see docs/campaign/FROZEN-PROVENANCE.md), and their audited repaired forms are the ones to use; the pointwise-rates, pole and layer Steps are not yet audited.
 * Strict obstacle gap, `MatedCRT.HarmonicBallStrictObstacleGapStep 𝒮` (`DivSandpileLowerBound/Final.lean:32`): the only
   Proposition-4.2-specific hypothesis of `divSandpileLowerBound_prop42` (`Prop42Closure/Assembly.lean`). It is not an input of
   the cone-closure reduction.
 
-## Source-preparation findings (corrections to the owned statements; no Proposed file is edited here)
+## Source-preparation findings (corrections to the Proposed statements, not applied here)
 
 * F1, Dirichlet normalization. DS11 p. 4 prints `(f₁, f₂)∇ := (2π)⁻¹ ∫_D ∇f₁(z)·∇f₂(z) dz` (checked on the rendered
   page image), and says that with this factor the two-point covariance is `-log|z - w|` rather than `-(2π)⁻¹ log|z - w|`.
@@ -50,12 +41,11 @@ Nothing here closes a numbered result, proves a named Step, or adds a literature
   `DS11IsLQGLimitInside` also requires `IsLocallyFiniteMeasure m` on all of `ℂ`, which additionally asks finiteness on compact
   sets meeting `∂D`. With `h₀` only `ContinuousOn D`, that is a strengthening. Section 5 expresses the printed local finiteness
   on `D` and proves that the global carrier implies it.
-* F4, provenance. `WholePlaneLQGModelStep` (B2; `Proofs/Sec4/Prop42Closure/ConeWholePlaneSteps.lean:57`) is an existence
-  input sourced to Harmonic-Balls `LQGMeasureExistence` and `MatedCRT/Proposed/Berestycki2017.lean`. Its Prop is not in
-  `MatedCRT/External` (flagged for the operator, not moved). `ConeWholePlaneFieldLawStep` (IDLA eq. (2.4)) is likewise not in
+* F4, provenance. `WholePlaneLQGModelStep` (`Proofs/Sec4/Prop42Closure/ConeWholePlaneSteps.lean:57`) is an existence
+  input sourced to Harmonic-Balls `LQGMeasureExistence` and `MatedCRT/Proposed/Berestycki2017.lean`. Its Prop is not in `MatedCRT/External`. `ConeWholePlaneFieldLawStep` (IDLA eq. (2.4)) is likewise not in
   External.
 
-Nothing in F1-F4 is a numbered closure; each is a residual for the operator. -/
+Nothing in F1-F4 is a numbered closure; each is a residual. -/
 
 namespace MatedCRT
 
@@ -117,9 +107,8 @@ theorem check_coneHalfBallClosureInsideStep_assembled :
 
 * cited input I2, the Harmonic-Balls volume growth of every whole-plane LQG measure on every ball (`hI2`);
 * cited Harmonic-Balls statements `hloc`, `hEx`, `hSC` (Draft Sections 1 and 5), and cited IDLA Lemma 2.7 `hVG`;
-* cited fact `hB2` (existence of the whole-plane LQG measure, flag F4) and cited IDLA eq. (2.4) `hFL`;
-* unresolved internal Steps, each a named Prop: the scaling gap K `hDS` (`WPN-42-insertion-coordinate-extension`), the
-  scaling gap H `hrep` (`WPN-42-scaled-representatives`), and the locality Step `hLoc` (`WPN-42-locality`).
+* cited fact `hB2` (existence of the whole-plane LQG measure, finding F4) and cited IDLA eq. (2.4) `hFL`;
+* unresolved internal Steps, each a named Prop: the scaling gap K `hDS`, the scaling gap H `hrep`, and the locality Step `hLoc`.
 
 `HarmonicBallStrictObstacleGapStep` is not an argument: the cone-closure route does not use the strict obstacle gap. -/
 theorem cone_closure_conditional

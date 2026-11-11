@@ -3,9 +3,9 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.InsertionLocalCircleRecovery
 import MatedCRT.Proofs.Sec4.Prop42Closure.InsertionScalingLawAssembly
 
 /-!
-# Audit: the projection producer composed into the local Dirichlet components (steps3:600-628, 678-713)
+# Audit: the projection producer composed into the local Dirichlet components 
 
-Task `z1-steps3-local-decomposition-component-audit`. An exact-type composition with named residuals. It proves no Step
+An exact-type composition with named residuals. It proves no Step
 and claims no closure. The composed components are:
 
 * the proved projection producer `MatedCRT.dirichletPairing_projection_gaussian_covariance`
@@ -26,10 +26,7 @@ covariances `hRcov` and the continuous modification `hRcont` of the projected ci
 Not used anywhere: independence of normalized pieces, finiteness of the zero-boundary limit, and any norm premise. The
 literature input is the explicit hypothesis `SheffieldWangCircleAverageAllScaleInteriorStmt.{0}` of the existing consumer.
 
-Credit: this file uses no Leonardo Bonanno declaration directly. The harmonic-balls interface it names,
-`HarmonicBalls.GFFObservable` and `IsWholePlaneGFF`, is compared with his `LQGDimension`/`LQGMetric` interfaces in
-`REUSE-LEO.md` (section 2), not reused from his code. Bonanno modules reached through the imports are credited in
-`InsertionScalingLawAssembly.lean`.
+
 -/
 
 open MeasureTheory ProbabilityTheory HarmonicBalls Set Filter Topology

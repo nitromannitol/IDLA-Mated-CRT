@@ -78,10 +78,9 @@ discharged here: Lemmas 2.13, 4.3, 4.4 (corrected), 7.3 (from 4.4 corrected), 6.
 `StoppedLLowerBoundStep` (`stoppedLLowerBound_of_inputs`); `StoppedMeanValueInequalityStep` is reduced to three
 obstacle-surplus steps (`stoppedMeanValueInequality_of_steps`).
 
-Corrected forms used where the Draft is false or open: 3.1 corrected (by 3.5, 4.6), 3.1 almost-sure corrected (E-c2-6,
-by 3.3, 3.7), 4.4 corrected (by 5.1, 5.3, 7.2-7.4), the E-A10 (b) log-loss forms of 6.7, 6.8, 6.9 (by 6.10, 7.1),
+Corrected forms used where the Draft is false or open: 3.1 corrected (by 3.5, 4.6), 3.1 almost-sure corrected (by 3.3, 3.7), 4.4 corrected (by 5.1, 5.3, 7.2-7.4), the [C5] log-loss forms of 6.7, 6.8, 6.9 (by 6.10, 7.1),
 7.2 corrected (above scale, by 7.1). No Draft form reported false is consumed: the Draft 3.1, refuted in Lean
-(Audit/Refutations.lean), is not a field of `MainHypotheses` any more.
+(Audit/Refutations.lean), is not a field of `MainHypotheses`.
 
 This file is regenerated as steps close; keep it mechanical.
 -/
@@ -133,7 +132,7 @@ theorem discretePotentialTightnessCorrected (H : MainHypotheses 𝒮) : Discrete
   discretePotentialTightnessCorrected_of_inputs H.mepsScaling H.volumeGrowth H.exitTimeUpperBound
     H.discreteHolderContinuityCorrected
 
-/-- **Lemma 3.1**, almost-sure interior form (E-c2-6), from the normalization, Lemmas 2.17 and 2.18,
+/-- **Lemma 3.1**, almost-sure interior form, from the normalization, Lemmas 2.17 and 2.18,
 and corrected Lemma 3.2. -/
 theorem discretePotentialTightnessAe (H : MainHypotheses 𝒮) : DiscretePotentialTightnessAeStep 𝒮 :=
   discretePotentialTightnessAeStep_of_inputs H.mepsScaling H.boundedExitTimeRV H.exitTimeUpperBound
@@ -159,8 +158,8 @@ theorem discreteDirichletProblem (H : MainHypotheses 𝒮) : DiscreteDirichletPr
     H.expectedExitTimeExplicitBound H.cellSizeEstimate (dirichletLimitStep_of_volumeGrowth 𝒮 H.volumeGrowth)
     H.dirichletInterior H.dirichletBoundary
 
-/-- **Lemma 3.7** (`convergenceNormalizedExitTime_of_statements`, x1, 980cf27: through the almost-sure corrected
-Lemma 3.1, E-c2-6; no Draft 3.1). -/
+/-- **Lemma 3.7** (`convergenceNormalizedExitTime_of_statements`: through the almost-sure corrected
+Lemma 3.1; no Draft 3.1). -/
 theorem convergenceNormalizedExitTime (H : MainHypotheses 𝒮) : ConvergenceNormalizedExitTimeStmt 𝒮 :=
   convergenceNormalizedExitTime_of_statements 𝒮 H.uniformConvergenceGreenKernel H.discreteDirichletProblem
     H.boundedExitTimeRV H.exitTimeUpperBound H.discretePotentialTightnessAe
@@ -197,7 +196,7 @@ theorem convergenceDivisible (H : MainHypotheses 𝒮) : ConvergenceDivisibleStm
     (obstacleLimitUniqueness 𝒮) H.convergenceDivisibleEventMeasurable
 
 /-- **Proposition 4.2** (`divSandpileLowerBound_prop42`, Proofs/Sec4/Prop42Closure/Assembly.lean, the printed form of
-`divSandpileLowerBound_final`, x3, fb05dfd: the inner approximation from the strict obstacle gap). -/
+`divSandpileLowerBound_final`: the inner approximation from the strict obstacle gap). -/
 theorem divSandpileLowerBound (H : MainHypotheses 𝒮) : DivSandpileLowerBoundStmt 𝒮 :=
   divSandpileLowerBound_prop42 𝒮 H.convergenceDivisible H.coneHarmonicBalls H.coneHarmonicBallsUpToFixedTime
     H.volumeGrowth H.cellSizeEstimate H.uniformConvergenceGreenKernel H.coneFamilyAEMeasurable
@@ -235,7 +234,7 @@ theorem discreteClusterInnerBound (H : MainHypotheses 𝒮) : DiscreteClusterInn
     H.volumeGrowth H.cellSizeEstimate H.uniformConvergenceGreenKernel H.coneFamilyAEMeasurable
     H.harmonicBallStrictObstacleGap
 
-/-- Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5; `stoppedMeanValueInequality_of_steps`, 16ca787: three obstacle-surplus steps). -/
+/-- Lemma 5.3 on `V^ε(Λ_t)` (`stoppedMeanValueInequality_of_steps`: three obstacle-surplus steps). -/
 theorem stoppedMeanValueInequality (H : MainHypotheses 𝒮) : StoppedMeanValueInequalityStep 𝒮 :=
   stoppedMeanValueInequality_of_steps 𝒮 H.convergenceDivisible H.uniformConvergenceGreenKernel H.exitTimeUpperBound
     H.integralConvergenceGreenFunction H.boundedExitTimeRV
@@ -244,12 +243,12 @@ theorem stoppedMeanValueInequality (H : MainHypotheses 𝒮) : StoppedMeanValueI
     (stoppedSurplusExterior_of_nullMeasurableOrigin 𝒮 H.mepsScaling H.coneOriginNullMeasurable)
     H.stoppedLayerPotential
 
-/-- Lemma 5.4 on `V^ε(Λ_t)` (E-c1-5; `stoppedLLowerBound_of_inputs`, a9952ca: from Lemmas 2.9, 2.15, 2.16). -/
+/-- Lemma 5.4 on `V^ε(Λ_t)` (`stoppedLLowerBound_of_inputs`: from Lemmas 2.9, 2.15, 2.16). -/
 theorem stoppedLLowerBound (H : MainHypotheses 𝒮) : StoppedLLowerBoundStep 𝒮 :=
   stoppedLLowerBound_of_inputs 𝒮 H.greenFunctionCrudeBound H.greenKernelLowerBound H.countingMeasureConvergence
 
-/-- **Proposition 5.1** (`iDLALowerBound_final_of_strictGap`, 7fdfd3c and fb05dfd: through Lemmas 5.2-5.4 and their
-forms on `V^ε(Λ_t)`, E-c1-5). -/
+/-- **Proposition 5.1** (`iDLALowerBound_final_of_strictGap`: through Lemmas 5.2-5.4 and their
+forms on `V^ε(Λ_t)`). -/
 theorem iDLALowerBound (H : MainHypotheses 𝒮) : IDLALowerBoundStmt 𝒮 :=
   iDLALowerBound_final_of_strictGap 𝒮 H.volumeGrowth H.cellSizeEstimate H.countingMeasureConvergence
     H.greenFunctionCrudeBound H.greenKernelLowerBound H.exitTimeUpperBound H.convergenceDivisible
@@ -270,13 +269,13 @@ theorem goodAnnulusPrevalence (H : MainHypotheses 𝒮) : GoodAnnulusPrevalenceS
   goodAnnulusPrevalence_of_annulusHit H.annulusHit H.coneMeanZeroRestriction
     Field.ConeCircle.circleAverageModConstStep
 
-/-- **Lemma 6.8**, E-A10 (b) form (`constantOrderLowerBoundDiv_of_inputs`). -/
+/-- **Lemma 6.8**, [C5] log-loss form (`constantOrderLowerBoundDiv_of_inputs`). -/
 theorem constantOrderLowerBoundDivLog (H : MainHypotheses 𝒮) : ConstantOrderLowerBoundDivLogStmt 𝒮 :=
   constantOrderLowerBoundDiv_of_inputs 𝒮 H.greenKernelLowerBound H.volumeGrowth H.cellSizeEstimate
     H.countingMeasureConvergence H.exitTimeUpperBound H.goodAnnulusPrevalence
     (LQGMeasureField.lqgMeasureFieldMeasurableStep 𝒮)
 
-/-- **Lemma 6.7**, E-A10 (b) form (`MatedCRT.constantOrderLowerBoundLog`). -/
+/-- **Lemma 6.7**, [C5] log-loss form (`MatedCRT.constantOrderLowerBoundLog`). -/
 theorem constantOrderLowerBoundLog (H : MainHypotheses 𝒮) : ConstantOrderLowerBoundLogStmt 𝒮 := by
   have h68 := H.constantOrderLowerBoundDivLog
   have h27 := H.volumeGrowth
@@ -285,7 +284,7 @@ theorem constantOrderLowerBoundLog (H : MainHypotheses 𝒮) : ConstantOrderLowe
   have hcell := adjacentCellsMeetAeStep 𝒮
   apply _root_.MatedCRT.constantOrderLowerBoundLog <;> assumption
 
-/-- **Lemma 6.9**, E-A10 (b) form (`chanceOfBeingAbsorbedLogLoss_of_steps`, with `Absorption.absorptionChernoffStep`). -/
+/-- **Lemma 6.9**, [C5] log-loss form (`chanceOfBeingAbsorbedLogLoss_of_steps`, with `Absorption.absorptionChernoffStep`). -/
 theorem chanceOfBeingAbsorbedLogLoss (H : MainHypotheses 𝒮) : ChanceOfBeingAbsorbedLogLossStmt 𝒮 := by
   have h67 := H.constantOrderLowerBoundLog
   have hC : AbsorptionChernoffStep := Absorption.absorptionChernoffStep
@@ -309,7 +308,7 @@ theorem iDLAUpperBound (H : MainHypotheses 𝒮) : IDLAUpperBoundStmt 𝒮 :=
 
 /-! ## Section 7 -/
 
-/-- **Lemma 7.2**, corrected form (E-c3-2; `massBoundOdometerAboveScale_of_corrected`, on Lemma 4.4 corrected). -/
+/-- **Lemma 7.2**, corrected form ([C8]; `massBoundOdometerAboveScale_of_corrected`, on Lemma 4.4 corrected). -/
 theorem massBoundOdometerAboveScale (H : MainHypotheses 𝒮) : MassBoundOdometerAboveScaleStmt 𝒮 :=
   massBoundOdometerAboveScale_of_corrected H.greenKernelLowerBound H.cellSizeEstimate
     (discreteLaplacianBoundCorrected 𝒮)
@@ -322,8 +321,8 @@ theorem odometerBoundMass (𝒮 : SpaceFillingSLEModel) : OdometerBoundMassStmt 
 theorem crudeUpperBound (H : MainHypotheses 𝒮) : CrudeUpperBoundStmt 𝒮 :=
   crudeUpperBound_of_corrected (discreteLaplacianBoundCorrected 𝒮) H.degreeBound
 
-/-- **Proposition 7.1** (`divSandpileUpperBound_of_meshScaling`, x2, d17f14c: the shell iteration from
-`MepsScalingInput`; on Lemmas 6.8 (b) and 7.2 corrected). -/
+/-- **Proposition 7.1** (`divSandpileUpperBound_of_meshScaling`: the shell iteration from
+`MepsScalingInput`; on Lemmas 6.8 ([C5] form) and 7.2 corrected). -/
 theorem divSandpileUpperBound (H : MainHypotheses 𝒮) : DivSandpileUpperBoundStmt 𝒮 :=
   divSandpileUpperBound_of_meshScaling 𝒮 H.mepsScaling H.coneHarmonicBalls H.constantOrderLowerBoundDivLog
     H.volumeGrowth H.massBoundOdometerAboveScale H.convergenceDivisible H.uniformConvergenceGreenKernel
