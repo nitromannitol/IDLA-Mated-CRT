@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Sec4.ObstacleSpecialization.Escape
 
 /-!
-# Section 4: Lemmas 4.3-4.5 from `AdjacentCellsMeetAeStep` alone (ESCALATIONS E-c1-1, E-c1-2)
+# Section 4: Lemmas 4.3-4.5 from `AdjacentCellsMeetAeStep` alone
 
 Almost surely, for all `ε > 0`, the mated-CRT map of Definition 1.1 has the deterministic properties
 `IsRegularMatedMap` (`ae_isRegularMatedMap`): `η` is continuous (`IsValid.isAreaParametrized`) and proper
@@ -33,7 +33,7 @@ theorem discreteBasicProperties_of_escape {𝒮 : SpaceFillingSLEModel} (hcell :
   intro t ε ht hε
   exact matedBasicProperties_of_regular (hd ε hε) ht
 
-/-- **Lemma 4.4** (lemma:discrete-laplacian-bound, line 1697), corrected (E-c1-1: the origin claim needs
+/-- **Lemma 4.4** (lemma:discrete-laplacian-bound, line 1697), corrected (the origin claim needs
 `0 ∈ V^ε(B_ρ) \ V^ε(∂B_ρ)`), from `AdjacentCellsMeetAeStep` only. -/
 theorem discreteLaplacianBoundCorrected_of_escape {𝒮 : SpaceFillingSLEModel} (hcell : AdjacentCellsMeetAeStep 𝒮) :
     DiscreteLaplacianBoundCorrectedStmt 𝒮 := by
@@ -42,7 +42,7 @@ theorem discreteLaplacianBoundCorrected_of_escape {𝒮 : SpaceFillingSLEModel} 
   intro t ε ht hε
   exact matedLaplacianBound_of_regular (hd ε hε) ht
 
-/-- **Lemma 4.5** (lemma:discrete-conservation-of-mass, line 1705), corrected (E-c1-1: the mass identity needs
+/-- **Lemma 4.5** (lemma:discrete-conservation-of-mass, line 1705), corrected (the mass identity needs
 `0 ∈ V^ε(B_ρ) \ V^ε(∂B_ρ)`), from `AdjacentCellsMeetAeStep` only. -/
 theorem discreteConservationOfMassCorrected_of_escape {𝒮 : SpaceFillingSLEModel}
     (hcell : AdjacentCellsMeetAeStep 𝒮) : DiscreteConservationOfMassCorrectedStmt 𝒮 := by

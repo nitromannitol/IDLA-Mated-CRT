@@ -3,7 +3,7 @@ import MatedCRT.Proofs.Sec4.ObstacleSpecialization.GreenMarkov
 import MatedCRT.Proofs.WalkPotential.MaximumPrinciple
 
 /-!
-# Section 4: Lemmas 4.3-4.5 without connectivity of `V^ε(B_ρ) \ V^ε(∂B_ρ)` (ESCALATIONS E-c1-2)
+# Section 4: Lemmas 4.3-4.5 without connectivity of `V^ε(B_ρ) \ V^ε(∂B_ρ)`
 
 Appendix A assumes that `V` is connected (line 3339; field `IsObstacleSetting.connected`), and the reduction of
 lines 3400-3411 applies it to `V = V^ε(B_ρ) \ V^ε(∂B_ρ)`, which need not be connected. We apply Appendix A to the
@@ -400,7 +400,7 @@ theorem matedBasicProperties_of_regular (hd : IsRegularMatedMap m ε η) (ht : 0
         exact inv_nonneg.2 (Nat.cast_nonneg _)
   · exact matedBasicProperties_fixed hd.continuous hd.cells_meet (fun h => absurd h h0) fun h => absurd h h0
 
-/-- **Lemma 4.4** for fixed `t, ε` (origin claim under `0 ∈ V`, E-c1-1), without connectivity of `V`. -/
+/-- **Lemma 4.4** for fixed `t, ε` (origin claim under `0 ∈ V`), without connectivity of `V`. -/
 theorem matedLaplacianBound_of_regular (hd : IsRegularMatedMap m ε η) (ht : 0 < t) :
     (∀ a ∈ matedDiscreteCluster m ε η ρ t,
       matedLaplacian m (matedLeastSupersolution m ε η ρ t) a = ((matedDeg m a : ℕ) : ℝ)⁻¹) ∧
@@ -431,7 +431,7 @@ theorem matedLaplacianBound_of_regular (hd : IsRegularMatedMap m ε η) (ht : 0 
       exact lt_mul_of_one_lt_left (inv_pos.2 (Nat.cast_pos.2 (IsObstacleSetting.mdeg_origin_pos hS))) h1
   · exact matedLaplacianBound_fixed hd.continuous hd.cells_meet fun h => absurd h h0
 
-/-- **Lemma 4.5** for fixed `t, ε` (mass identity under `0 ∈ V`, E-c1-1), without connectivity of `V`. -/
+/-- **Lemma 4.5** for fixed `t, ε` (mass identity under `0 ∈ V`), without connectivity of `V`. -/
 theorem matedConservationOfMass_of_regular (hd : IsRegularMatedMap m ε η) (ht : 0 < t) :
     (matedDiscreteCluster m ε η ρ t).Finite ∧
     ((matedDiscreteCluster m ε η ρ t).ncard : ℝ) ≤ t / ε ∧

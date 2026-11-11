@@ -4,7 +4,6 @@ import MatedCRT.Proofs.WalkPotential.Markov
 /-!
 # `GreenKernelLaplacianStep` and `NormExitTimeLaplacianStep`
 
-This module was first written by worker c1.
 
 The first-step recursion of the expected truncated visit counts `E N c = E_c[visits to b before min(τ_A, N)]`,
 from the Markov property at time `1` (`srwLaw_eq_srwFirstStepLaw`, `lintegral_srwStep`,
