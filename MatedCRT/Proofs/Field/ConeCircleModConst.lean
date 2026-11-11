@@ -5,7 +5,7 @@ import LatticeProb.Bonanno.LQGMetric.Field.MarkovGermVerPot
 /-!
 # Circle-average differences of the quantum cone are determined by the field modulo additive constant
 
-`circleAverageModConstStep : CircleAverageModConstStep` (the field input of IR-c4-6, Lemma 6.4): for the `γ`-quantum
+`circleAverageModConstStep : CircleAverageModConstStep` (the field input, Lemma 6.4): for the `γ`-quantum
 cone `h`, an open `U ⊆ B_1` and circles whose closed discs lie in `U`, the difference `h_ε(x) - h_s(y)` is a.s. equal to
 a random variable measurable for `σ(h|_U)` modulo additive constant (`modConstSigma hC U`).
 
@@ -361,7 +361,7 @@ lemma radius_pos_lt {ρ : ℝ} (hρ : 0 < ρ) (n : ℕ) :
   have hq1 : (2 : ℝ)⁻¹ ^ (n + 1) < 1 := pow_lt_one₀ (by norm_num) (by norm_num) (by omega)
   exact ⟨mul_pos hρ (by linarith), mul_lt_of_lt_one_right hρ (by linarith)⟩
 
-/-- **`CircleAverageModConstStep`** (the field input of IR-c4-6, Lemma 6.4): for the quantum cone, circle-average
+/-- **`CircleAverageModConstStep`** (the field input, Lemma 6.4): for the quantum cone, circle-average
 differences over circles whose closed discs lie in an open `U ⊆ B_1` are a.s. `σ(h|_U)`-measurable modulo additive
 constant. -/
 theorem circleAverageModConstStep : CircleAverageModConstStep := by
