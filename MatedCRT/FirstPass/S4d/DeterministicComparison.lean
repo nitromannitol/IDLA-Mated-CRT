@@ -7,7 +7,7 @@ import HarmonicBalls.Draft.Section2
 import HarmonicBalls.Proofs.Sec3.ClusterCompatibility
 
 /-!
-# FIRST PASS, Proposition 4.2 (q4): the deterministic comparison `Λ_s ⊆ 𝒞_t` (ChatGPT Section 2)
+# FIRST PASS, Proposition 4.2: the deterministic comparison `Λ_s ⊆ 𝒞_t`
 
 Task fp-S4d-4-2-assembly. For one realization of the cone family and `0 < s < t` with `t < T_ρ`, the earlier harmonic
 ball lies in the unregularized obstacle cluster at time `t` (`StrictGapDeterministicComparisonStep`).
@@ -30,7 +30,7 @@ namespace MatedCRT
 
 open MeasureTheory Filter Topology Set Metric _root_.HarmonicBalls
 
-/-- Lower bound of the least supersolution (ChatGPT Section 2.1, eq. (7)): `w_u(x) ≥ -u G(0,x)` off the pole, for
+/-- Lower bound of the least supersolution: `w_u(x) ≥ -u G(0,x)` off the pole, for
 `u ≥ 0`, since the infimum runs over supersolutions, each bounded below by the obstacle, and `0` is a supersolution. -/
 theorem leastSupersolution_ge_obstacle {μ : Measure ℂ} {r u : ℝ} (hu : 0 ≤ u) {x : ℂ}
     (hx : x ∈ closedBall (0 : ℂ) r) (hxz : x ≠ 0) :
@@ -40,7 +40,7 @@ theorem leastSupersolution_ge_obstacle {μ : Measure ℂ} {r u : ℝ} (hu : 0 �
   rintro _ ⟨w, hw, rfl⟩
   exact hw.2.2 x hx hxz
 
-/-- Boundary value (ChatGPT Section 2.1, eq. (10)): if `Λ = int cl C_u` (obstacle characterization), then
+/-- Boundary value: if `Λ = int cl C_u` (obstacle characterization), then
 `v_u = w_u + u G ≤ 0` at every `x ∈ B_ρ \ {0}` outside `Λ`. Proof: if `v_u(x) > 0`, continuity gives a neighbourhood of
 `x` inside `C_u`, hence `x ∈ int cl C_u = Λ`. -/
 theorem odometer_nonpos_of_not_mem {μ : Measure ℂ} {ρ u : ℝ} {Λ : Set ℂ}
@@ -68,7 +68,7 @@ theorem odometer_nonpos_of_not_mem {μ : Measure ℂ} {ρ u : ℝ} {Λ : Set ℂ
   rw [hobs]
   exact interior_mono subset_closure hint
 
-/-- Distributional comparison of the odometer difference (ChatGPT Section 2.2, eq. (12)): if `W ⊆ Λ_s ⊆ Λ_t` and
+/-- Distributional comparison of the odometer difference: if `W ⊆ Λ_s ⊆ Λ_t` and
 `Δw_u = μ|Λ_u` in `U ⊇ W`, then `Δ(w_t - w_s) ≤ 0` in `W`, because `∫ φ dμ|Λ_t = ∫ φ dμ|Λ_s` for every test function
 `φ` supported in `W`. -/
 theorem laplacianLE_sub_of_hasLaplacian_comparison {μ : Measure ℂ} {U W Λs Λt : Set ℂ} {wt ws : ℂ → ℝ}
@@ -109,7 +109,7 @@ theorem hasLaplacian_zero_of_pole_notMem {G : ℂ → ℝ} {U W : Set ℂ}
   rw [hG']
   simp
 
-/-- **Deterministic comparison (ChatGPT Section 2; the statement `StrictGapDeterministicComparisonStep`).** For one
+/-- **Deterministic comparison (the statement `StrictGapDeterministicComparisonStep`).** For one
 realization of the cone family, `0 < s < t < T_ρ` gives `Λ_s ⊆ 𝒞_t`, the unregularized obstacle cluster of `μ` in `B_ρ`
 at time `t`. -/
 theorem strictGapDeterministicComparison_of_frozen

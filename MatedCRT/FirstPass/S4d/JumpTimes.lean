@@ -1,11 +1,10 @@
 import Mathlib
 
 /-!
-# FIRST PASS, Proposition 4.2 (q4): countably many jump times of positive probability
+# FIRST PASS, Proposition 4.2: countably many jump times of positive probability
 
-Task fp-S4d-4-2-assembly, operator note 00:08 UTC: prove `HarmonicBallStrictObstacleGapStep` following
-notes/fp-gaps/CHATGPT-4-2-strict-gap-proof.md. This file is ChatGPT Section 3 (eqs. (17)-(21)) and the
-probabilistic conclusion of Section 4 (eq. (25)-(26)), in generic form for an increasing family of random open sets.
+This file contains the countable-witness argument and the
+probabilistic conclusion, in generic form for an increasing family of random open sets.
 
 For a family `U t ω` (increasing in `t`, open values) and a deterministic time `t`, the jump event is
 `{U_t ≠ U_{t-}}` with `U_{t-} = ⋃_{0<s<t} U_s`. A jump is witnessed pathwise by a set `K` of a countable cover
@@ -19,11 +18,11 @@ namespace MatedCRT
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
-/-- The jump event `{U_t ≠ U_{t-}}` with `U_{t-} = ⋃_{0<s<t} U_s` (ChatGPT Section 3, eq. (18)). -/
+/-- The jump event `{U_t ≠ U_{t-}}` with `U_{t-} = ⋃_{0<s<t} U_s`. -/
 def strictGapJumpEvent (U : ℝ → Ω → Set ℂ) (t : ℝ) : Set Ω :=
   {ω | U t ω ≠ ⋃ s ∈ Ioo (0 : ℝ) t, U s ω}
 
-/-- The witness event `A_t^K = {K ⊆ U_t} ∩ ⋂_{q ∈ ℚ ∩ (0,t)} {K ⊄ U_q}` (ChatGPT Section 3, eq. (19)). -/
+/-- The witness event `A_t^K = {K ⊆ U_t} ∩ ⋂_{q ∈ ℚ ∩ (0,t)} {K ⊄ U_q}`. -/
 def strictGapWitnessEvent (U : ℝ → Ω → Set ℂ) (K : Set ℂ) (t : ℝ) : Set Ω :=
   {ω | K ⊆ U t ω ∧ ∀ q : ℚ, 0 < (q : ℝ) → (q : ℝ) < t → ¬ K ⊆ U (q : ℝ) ω}
 
@@ -59,7 +58,7 @@ theorem measurableSet_strictGapWitnessEvent {U : ℝ → Ω → Set ℂ} {K : Se
 
 omit [MeasurableSpace Ω] in
 /-- Two witness events at distinct positive times are disjoint, since `A_a^K ⊆ {K ⊆ U_q}` for a rational
-`q ∈ (a, b)` by monotonicity (ChatGPT Section 3). -/
+`q ∈ (a, b)` by monotonicity. -/
 theorem strictGapWitnessEvent_disjoint {U : ℝ → Ω → Set ℂ}
     (hmono : ∀ ω : Ω, ∀ s t : ℝ, 0 < s → s ≤ t → U s ω ⊆ U t ω) (K : Set ℂ) {a b : ℝ}
     (ha : 0 < a) (hab : a < b) :
@@ -90,7 +89,7 @@ theorem strictGapWitness_pos_countable {U : ℝ → Ω → Set ℂ}
   exact ⟨⟨t, ht0⟩, htP, rfl⟩
 
 omit [MeasurableSpace Ω] in
-/-- Pathwise witnesses (ChatGPT Section 3, eq. (20)): a jump at `t` is witnessed by some `K ∈ 𝒦` with
+/-- Pathwise witnesses: a jump at `t` is witnessed by some `K ∈ 𝒦` with
 `x ∈ K ⊆ U_t`, where `x ∈ U_t \ U_{t-}`. -/
 theorem strictGapJumpEvent_subset_witness {U : ℝ → Ω → Set ℂ}
     (hmono : ∀ ω : Ω, ∀ s t : ℝ, 0 < s → s ≤ t → U s ω ⊆ U t ω)
@@ -114,7 +113,7 @@ theorem strictGapJumpEvent_subset_witness {U : ℝ → Ω → Set ℂ}
   refine mem_iUnion₂.mpr ⟨K, hK𝒦, hKU, fun q hq0 hqt hKq => hxn ?_⟩
   exact mem_iUnion₂.mpr ⟨(q : ℝ), ⟨hq0, hqt⟩, hKq hxK⟩
 
-/-- **Countably many jump times of positive probability** (ChatGPT Section 3, eq. (21)). For an increasing family
+/-- **Countably many jump times of positive probability**. For an increasing family
 of random open sets indexed by `t > 0`, with a countable cover `𝒦` of the open sets by sets whose witness
 events are measurable, the set of `t > 0` at which `P(U_t ≠ U_{t-}) > 0` is countable. -/
 theorem strictGapJump_pos_countable {U : ℝ → Ω → Set ℂ}
@@ -151,7 +150,7 @@ theorem not_countable_Ioi_zero_real : ¬ (Ioi (0 : ℝ)).Countable := by
     fun y _ => ⟨Real.exp y, Real.exp_pos y, Real.log_exp y⟩
   exact Set.Countable.mono hsub (h.image Real.log)
 
-/-- **Section 4 conclusion (ChatGPT eqs. (25)-(26)).** If `t ↦ P(U_t ≠ U_{t-})` is constant on `(0,∞)` and the
+/-- **Probabilistic conclusion.** If `t ↦ P(U_t ≠ U_{t-})` is constant on `(0,∞)` and the
 jump times of positive probability are countable, the constant is `0`: for every deterministic `t > 0`, almost
 surely `U_t = U_{t-}`. -/
 theorem strictGapJump_null_of_const {U : ℝ → Ω → Set ℂ} (P : Measure Ω)

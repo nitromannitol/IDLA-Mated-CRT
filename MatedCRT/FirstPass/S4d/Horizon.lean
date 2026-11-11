@@ -3,7 +3,7 @@ import Mathlib
 /-!
 # Unbounded stopping horizons almost surely (FIRST PASS, S4d, B2 part II, probabilistic)
 
-ChatGPT answer §4.2-4.3, equations (4.5)-(4.7). Base horizon `T0` and rescaled horizons `Tn n` (weights `b n = n + 1`)
+Base horizon `T0` and rescaled horizons `Tn n` (weights `b n = n + 1`)
 are related by the law equality of Lemma 2.5 (`ConeScaleInvarianceUpToFixedTimeStmt`), evaluated on the event
 `{s < T}`, which is the coordinate `(s, 0)` of the family process (the origin lies in every positive-time slice).
 Then `P(T_n ≤ s) = P(T0 ≤ s)` and `T0 > 0` a.s. give: almost surely `sup_n (n+1) T_n = ∞`.

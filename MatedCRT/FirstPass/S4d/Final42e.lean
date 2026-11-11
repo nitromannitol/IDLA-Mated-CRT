@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4d.Final42
 import MatedCRT.Proofs.Sec1.EnvironmentScaling
 
 /-!
-# FIRST PASS, Proposition 4.2: the environment-scaling input `hEnvS` (q4, task fp-S4d-hEnvS-drop)
+# FIRST PASS, Proposition 4.2: the environment-scaling input `hEnvS`
 
 `firstPass_4_2_of_wholeplane_model` (`FirstPass/S4d/Final42.lean:60`) takes `hEnvS : ConeEnvironmentScalingUnderSLE 𝒮`
 (`FirstPass/Frozen/S1d.lean:38`). That Prop is `hsc → hrp → hind → ConeEnvironmentScalingStep 𝒮`, so under the three SLE
@@ -38,7 +38,7 @@ theorem coneEnvironmentScalingUnderSLE_of_inputs {𝒮 : SpaceFillingSLEModel}
   fun _ _ _ => coneEnvironmentScalingStep_of_inputs 𝒮 hscale h22 hsc hrp hind hfield hclock hmating
 
 open _root_.HarmonicBalls in
-/-- **Proposition 4.2 without the separate `hEnvS` binder (q4, fp-S4d-hEnvS-drop).** Same conclusion and binders as
+/-- **Proposition 4.2 without the separate `hEnvS` binder.** Same conclusion and binders as
 `firstPass_4_2_of_wholeplane_model`, with `hEnvS` replaced by the named steps `hfield`, `hclock`, `hmating`.
 `coneEnvironmentScalingUnderSLE_of_inputs` rebuilds `hEnvS` from them, and the counted theorem is applied unchanged. -/
 theorem firstPass_4_2_of_wholeplane_model_noEnvS {𝒮 : SpaceFillingSLEModel}

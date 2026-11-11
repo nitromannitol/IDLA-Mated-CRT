@@ -1,15 +1,15 @@
 import Mathlib
 
 /-!
-# FIRST PASS, Proposition 4.2 (q4): countable proxies for the strict-gap jump event (B3)
+# FIRST PASS, Proposition 4.2: countable proxies for the strict-gap jump event (B3)
 
-Task fp-S4d-4-2-assembly, operator note 00:53 UTC: start (B3). For open sets `U s`, increasing in `s` and regular
+For open sets `U s`, increasing in `s` and regular
 (`interior (closure (U s)) = U s`, the regular openness of harmonic balls; Armitage-Gardiner, Sec. 1), the jump event
 `{U_t ≠ ⋃_{0<s<t} U_s}` is decided by countably many coordinates `1_{d ∈ U_s}` with `d ∈ D` (a countable dense set) and
 `s ∈ {t} ∪ ℚ`. Such events are measurable in the product σ-algebra on paths (B3). The naive jump event is not: its
 quantifier over the points of the plane is uncountable.
 
-Chain (ChatGPT Section 3, eqs. (17)-(19)): `ratBallCover` (countable cover), `strictGap_jump_iff` (witness
+Chain: `ratBallCover` (countable cover), `strictGap_jump_iff` (witness
 characterisation, by compactness of closed balls), `closedBall_subset_iff_proxy` (inclusion of a closed ball through
 countable coordinates), `strictGap_jump_iff_proxy`, and `measurableSet_strictGapProxyEvent` (measurability).
 -/
@@ -18,8 +18,7 @@ open MeasureTheory Set Metric Filter Topology
 
 namespace MatedCRT
 
-/-- The countable cover `𝒦` by closed balls with centres in `D` and positive rational radii (ChatGPT Section 3,
-eq. (17)). -/
+/-- The countable cover `𝒦` by closed balls with centres in `D` and positive rational radii. -/
 def ratBallCover (D : Set ℂ) : Set (Set ℂ) :=
   (fun x : ℂ × ℚ => closedBall x.1 (x.2 : ℝ)) '' (D ×ˢ {r : ℚ | 0 < r})
 
@@ -97,7 +96,7 @@ theorem closedBall_subset_iff_proxy {D U : Set ℂ} (hD : Dense D) (hU : IsOpen 
     have h2 : 0 < 1 / ((n : ℝ) + 1) := by positivity
     linarith
 
-/-- The witness characterisation of the jump (ChatGPT Section 3): for an increasing family of open sets `U s` and
+/-- The witness characterisation of the jump: for an increasing family of open sets `U s` and
 `t > 0`, `U_t ≠ ⋃_{0<s<t} U_s` iff some `K` of the cover `𝒦` satisfies `K ⊆ U_t` and `K ⊄ U_q` for all rational `0 < q < t`. -/
 theorem strictGap_jump_iff {U : ℝ → Set ℂ} {t : ℝ} (ht : 0 < t)
     (hmono : MonotoneOn U (Ioi 0)) (hopen : ∀ s : ℝ, 0 < s → IsOpen (U s))

@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S4d.RegDecode
 import MatedCRT.Proofs.Measurability.ConeRescaledCircle
 
 /-!
-# B2R: measurability of the rescaled whole process (FIRST PASS, S4d, ChatGPT answer §5)
+# B2R: measurability of the rescaled whole process (FIRST PASS, S4d)
 
 The rescaled pair of Lemma 2.6, `(circleProcess (rescaledCircle … R_b …), globalFamilyProcess (rescaledFamily (Λ ω) R_b b))`,
 is a.e. measurable. The rescaled family is decoded from a measurable version of the global family at the random point
@@ -22,7 +22,7 @@ def rescaledProc {Ω : Type*} (D : Set ℂ) (Gm : Ω → ℝ × ℂ → Prop) (R
   0 < p.1 ∧ ∃ q ∈ D, ∃ r : ℚ, 0 < r ∧ (Rm ω : ℂ) * p.2 ∈ closedBall q (r : ℝ) ∧
     ProxySub D (famOf (Gm ω) (b * p.1)) q (r : ℝ)
 
-/-- **B2R: the rescaled pair is a.e. measurable** (ChatGPT §5, for each deterministic `b > 0`), in the existence form
+/-- **B2R: the rescaled pair is a.e. measurable** (for each deterministic `b > 0`), in the existence form
 `ConeStoppedBaseExistsFP4` of Lemma 2.4 (FirstPass/S4d/GlobalMeasurable.lean), which the provider
 `ConeHarmonicBallsProviderFP4` gives by `coneStoppedBaseExists_of_provider`. The Draft wrapper is at the end of the file. -/
 theorem coneRescaledGlobalFamilyAEMeasurable_of_exists {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)

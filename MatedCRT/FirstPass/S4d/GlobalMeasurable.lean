@@ -9,7 +9,7 @@ import MatedCRT.Proofs.Measurability.ConeRescaledCircle
 /-!
 # B2: measurability of the whole global family process (FIRST PASS, S4d)
 
-`ConeGlobalFamilyAEMeasurableStep` (ChatGPT answer §4, operator 01:12): the pair `(circleProcess (hcirc ω), globalFamilyProcess
+`ConeGlobalFamilyAEMeasurableStep`: the pair `(circleProcess (hcirc ω), globalFamilyProcess
 (Λ ω))` is a.e. measurable. Proved from the stopped measurability theorem `ConeFamilyAEMeasurableStep` (conj 1 and conj 2),
 Lemma 2.4 (`ConeHarmonicBallsUpToFixedTimeStmt`) and Lemma 2.5 (`ConeScaleInvarianceUpToFixedTimeStmt`), by gluing the
 countably many rescaled stopped families `n ↦ (n+1)`: on a conull event the glued decoded process equals the global family
@@ -143,7 +143,7 @@ theorem familyProcess_rescaled_zero_iff {μ : Measure ℂ} {Λ : ℝ → Set ℂ
     rw [mul_zero]
     exact hfam.2.1.mem (b * s) ⟨mul_pos hb hs, mul_lt_mul_of_pos_left h hb⟩
 
-/-- **Existence part of Lemma 2.4 (q4, fp-S4d-4-2-h24-gate-consumers).** For a.e. sample there are `T > 0` and a family
+/-- **Existence part of Lemma 2.4.** For a.e. sample there are `T > 0` and a family
 `Λ` of cone harmonic balls on `(0, T)` stopped at `∂B_{1/2}` at `T`. This is the existence clause of the provider form
 `ConeHarmonicBallsProviderFP4` (FirstPass/S4d/Provider24.lean) and of the Draft `ConeHarmonicBallsUpToFixedTimeStmt`
 (Draft/Section2.lean:66); the uniqueness clauses (the Draft `T' = T`) are not used by the measurability steps. -/
@@ -159,7 +159,7 @@ theorem coneStoppedBaseExists_of_draft (h24 : ConeHarmonicBallsUpToFixedTimeStmt
   obtain ⟨T, hT, Λ', h1, h2, -⟩ := hω
   exact ⟨T, hT, Λ', h1, h2⟩
 
-/-- **B2: the global family process is a.e. measurable** (`ConeGlobalFamilyAEMeasurableStep`, ChatGPT §4). From the
+/-- **B2: the global family process is a.e. measurable** (`ConeGlobalFamilyAEMeasurableStep`). From the
 stopped measurability theorem `ConeFamilyAEMeasurableStep` (conjunctions 1 and 2), Lemma 2.4 and Lemma 2.5, with the
 weights `b n = n + 1`. -/
 theorem coneGlobalFamilyAEMeasurable_of_exists {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)

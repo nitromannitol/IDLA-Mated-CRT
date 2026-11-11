@@ -6,8 +6,7 @@ import MatedCRT.FirstPass.S4d.JumpProxy
 For an open regular open set `U ⊆ ℂ` (`interior (closure U) = U`, Armitage-Gardiner Section 1.3) membership is
 decided by countably many coordinates: `w ∈ U` iff some closed ball `closedBall p r`, `p ∈ D` (a countable dense set)
 and `r ∈ ℚ_{>0}`, contains `w` and is contained in `U`, and the containment `closedBall p r ⊆ U` is the countable
-condition `ProxySub D U p r` (`JumpProxy`). This is the decoder used for the measurable whole-process representatives
-(ChatGPT answer, §3, steps 3.2-3.3, operator 01:12). Everything is deterministic except the measurability lemma.
+condition `ProxySub D U p r` (`JumpProxy`). This is the decoder used for the measurable whole-process representatives. Everything is deterministic except the measurability lemma.
 -/
 
 open MeasureTheory Set Filter Topology Metric

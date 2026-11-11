@@ -4,10 +4,10 @@ import MatedCRT.FirstPass.S4d.RegDecode
 /-!
 # Glueing stopped families into the global family (FIRST PASS, S4d, B2 part II, deterministic)
 
-Deterministic content of the B2 argument (ChatGPT answer §4.4-4.5, operator 01:12). For a global cone family `Λg` and
+Deterministic content of the B2 argument. For a global cone family `Λg` and
 stopped families `Λs n` (horizons `b n * Ts n`, rescalings `x ↦ R n x`, `R n > 0`) on the same measure `μ`:
 * the stopped family agrees with the global one at every time below its horizon (obstacle characterization; equation
-  (4.10) of the ChatGPT answer);
+  (4.10));
 * the rescaled stopped process at `(t / b n, z / R n)` decides `z ∈ Λg t` once `t < b n * Ts n`, and some `n` has
   `t < b n * Ts n` whenever the horizons are unbounded.
 -/

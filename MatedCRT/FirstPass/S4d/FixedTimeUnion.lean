@@ -12,7 +12,7 @@ Proves `StrictGapFixedTimeUnionStep 𝒮` (`StrictGapReduction.lean`) from three
 * `ConeGlobalFamilyPairAEMeasurableStep` (B2, OPEN named step) and `ConeRescaledPairAEMeasurableStep` (B2R, OPEN);
 * `FrozenConeScalingLaw 𝒮` (FIRST-PASS FROZEN; positivity of `R_b`).
 
-Route (ChatGPT Sections 3-5, operator 00:08): `P(E_t)` is constant in `t > 0` (`strictGapEvent_const`); a
+Route: `P(E_t)` is constant in `t > 0` (`strictGapEvent_const`); a
 measurable version of the pair gives a gated family `gatedFamily N Gm` that is good everywhere and has measurable
 coordinates; `strictGapJump_pos_countable` makes `{t | P(E_t) > 0}` countable, so the constant is `0`
 (`strictGapJump_null_of_const`); hence `Λ_t = ⋃_{0<s<t} Λ_s` a.s.

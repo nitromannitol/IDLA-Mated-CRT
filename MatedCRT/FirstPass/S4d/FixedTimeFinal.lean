@@ -7,7 +7,7 @@ import MatedCRT.Proofs.Sec1.ConeScaleRadius
 /-!
 # The fixed-time union from the paper's dependencies (FIRST PASS, S4d, final interface)
 
-`StrictGapFixedTimeUnionStep 𝒮` (ChatGPT §9, operator 01:25) from the Draft statements `h24` (Lemma 2.4), `h25`
+`StrictGapFixedTimeUnionStep 𝒮` from the Draft statements `h24` (Lemma 2.4), `h25`
 (Lemma 2.5), the stopped measurability step `hfam` (supplied by `coneFamilyAEMeasurable_proved` in the assembly), `h26`
 (Lemma 2.6, `ConeScaleInvarianceStmt`, explicit paper dependency) and the quantum-cone scaling input `hscale`, which gives
 the positivity of the cone scale radii. The measurability of the global and rescaled pairs is proved (B2, B2R).
@@ -22,7 +22,7 @@ open MeasureTheory Set Filter Topology Metric
 
 namespace MatedCRT
 
-/-- **StrictGapFixedTimeUnionStep from the existence clause of Lemma 2.4** (q4, fp-S4d-4-2-h24-gate-consumers). The
+/-- **StrictGapFixedTimeUnionStep from the existence clause of Lemma 2.4**. The
 uniqueness clause `T' = T` of the Draft `ConeHarmonicBallsUpToFixedTimeStmt` is not used. -/
 theorem strictGapFixedTimeUnionStep_of_exists (𝒮 : SpaceFillingSLEModel)
     (hexist : ConeStoppedBaseExistsFP4) (h25 : ConeScaleInvarianceUpToFixedTimeStmt)
@@ -47,7 +47,7 @@ theorem strictGapFixedTimeUnionStep_of_steps (𝒮 : SpaceFillingSLEModel)
   strictGapFixedTimeUnionStep_of_exists 𝒮 (coneStoppedBaseExists_of_draft h24) h25 hfam h26 hscale
 
 /-- **StrictGapFixedTimeUnionStep from the provider form of Lemma 2.4** (`ConeHarmonicBallsProviderFP4`,
-FirstPass/S4d/Provider24.lean; chat 174 decision: the chain takes the provider form, not the Draft with `T' = T`). -/
+FirstPass/S4d/Provider24.lean; the chain takes the provider form, not the Draft with `T' = T`). -/
 theorem strictGapFixedTimeUnionStep_of_provider (𝒮 : SpaceFillingSLEModel)
     (hprov : ConeHarmonicBallsProviderFP4) (h25 : ConeScaleInvarianceUpToFixedTimeStmt)
     (hfam : ConeFamilyAEMeasurableStep) (h26 : ConeScaleInvarianceStmt) (hscale : QuantumConeScalingInput) :

@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S2g.Draft24
 import MatedCRT.FirstPass.S4d.GlobalMeasurable
 
 /-!
-# FIRST PASS, Lemma 2.4 in provider form and its Draft consequence (q4, fp-S4d-4-2-assembly-c, operator note chat 174)
+# FIRST PASS, Lemma 2.4 in provider form and its Draft consequence
 
 The printed Lemma 2.4 gives, for a.e. sample, a time `T > 0`, a family `{Λ_t}_{0<t<T}` of harmonic balls stopped at
 `∂B_{1/2}` at `T`, and uniqueness of that family on `(0, T)`. It does not give the stopping-time clause `T' = T` for every
@@ -32,7 +32,7 @@ def ConeHarmonicBallsProviderFP4 : Prop :=
     IsConeHarmonicBallFamilyOn (μ ω) Λ T ∧ IsStoppedAtHalfBall Λ T ∧
     ∀ Λ' : ℝ → Set ℂ, IsConeHarmonicBallFamilyOn (μ ω) Λ' T → EqOn Λ' Λ (Ioo 0 T)
 
-/-- **Lemma 2.4 in provider form from the canonical corrected Lemma 2.4 (q4, fp-S4d-4-2-assembly-c).** The canonical
+/-- **Lemma 2.4 in provider form from the canonical corrected Lemma 2.4.** The canonical
 stopping time `halfBallTime (μ ω)` is the witness `T`; its uniqueness clause is the canonical `UniqueConeFamilyOn`. -/
 theorem coneHarmonicBallsProviderFP4_of_canonical (hcan : ConeHarmonicBallsUpToFixedTimeCanonicalStmt) :
     ConeHarmonicBallsProviderFP4 := by
@@ -42,8 +42,7 @@ theorem coneHarmonicBallsProviderFP4_of_canonical (hcan : ConeHarmonicBallsUpToF
   obtain ⟨hpos, huniq, hst⟩ := hω
   exact ⟨halfBallTime (μ ω), hpos, Λ ω, huniq.1, hst, huniq.2⟩
 
-/-- **Draft Lemma 2.4 (`ConeHarmonicBallsUpToFixedTimeStmt`) from the provider form and the closure-inside step
-(q4, fp-S4d-4-2-assembly-c).** For every stopped family `Λ'` on `(0, T')`, `T' = T` by `stopped_unique_of_closureInside_fp`,
+/-- **Draft Lemma 2.4 (`ConeHarmonicBallsUpToFixedTimeStmt`) from the provider form and the closure-inside step.** For every stopped family `Λ'` on `(0, T')`, `T' = T` by `stopped_unique_of_closureInside_fp`,
 and agreement on `(0, T)` follows from `IsConeHarmonicBallFamilyOn.eqOn`. -/
 theorem coneHarmonicBallsUpToFixedTimeStmt_of_provider (hprov : ConeHarmonicBallsProviderFP4)
     (hcl : ConeHalfBallClosureInsideStep) : ConeHarmonicBallsUpToFixedTimeStmt := by
@@ -60,7 +59,7 @@ theorem coneHarmonicBallsUpToFixedTimeStmt_of_provider (hprov : ConeHarmonicBall
   rw [hTT]
   exact heq
 
-/-- **The existence part of the provider form (q4, fp-S4d-4-2-h24-gate-consumers).** The provider `ConeHarmonicBallsProviderFP4`
+/-- **The existence part of the provider form.** The provider `ConeHarmonicBallsProviderFP4`
 gives the existence clause `ConeStoppedBaseExistsFP4` (FirstPass/S4d/GlobalMeasurable.lean) by forgetting its uniqueness
 clause. This is the conversion that the measurability steps `coneGlobalFamilyAEMeasurable_of_exists` use once the chain is
 retyped to the provider form. -/
