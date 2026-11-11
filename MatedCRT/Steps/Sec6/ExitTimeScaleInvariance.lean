@@ -1,7 +1,7 @@
 import MatedCRT.Draft.Section2
 
 /-!
-# Lemma 6.8, Step 4: the exit-time moment bound at the scale of a good annulus (ESCALATIONS E-A10)
+# Lemma 6.8, Step 4: the exit-time moment bound at the scale of a good annulus 
 
 Step 4 of the proof of Lemma 6.8 (lemma:constant-order-lower-bound-div, lines 2595-2604) bounds the second moment of
 the exit time `ξ` of the walk from the ball `B' = B_{𝐫_z/4}(η(b))`, which lies in the good annulus `𝔸_{𝐫_z, 2𝐫_z}(z)`,
@@ -10,15 +10,15 @@ event (eq:good-annulus-event, line 2315). After correction [C5] (`MatedCRT.IsGoo
 event is the scale-invariant `log (r/|u - v|) + 1`, while the integrand of Lemma 2.18 is `log (1/|u - v|) + 1`.
 
 * `ExitTimeScaleInvariantStep`: the scale-invariant form of Lemma 2.18 for balls `B_s(y) ⊆ B_ρ` with `s ≥ ε^κ`. With it,
-  Step 4 gives an `r`-independent `s₂`, as printed. It is route (a) of E-A10. It is NOT a consequence of the Draft
+  Step 4 gives an `r`-independent `s₂`, as printed. It is route (a). It is NOT a consequence of the Draft
   statements and the admitted inputs (QuantumConeScalingInput, ConeRestrictionInput, SLEModelInvarianceInput, Fact 2.2):
   the only exact symmetry of the quantum-cone mated-CRT environment is the scaling about the origin (random radius
   `R_b`), and an origin-fixing similarity sending `B_s(y)` into `B_ρ` leaves the additive loss
   `log ((|y| + s)/(ρ s))` (`MatedCRT.log_div_add_log_le_log_one_div_scaled`); Step 4 needs `|y| ≥ s₀`, `s ≤ √δ → 0`.
-  It is a new literature input (not stated in BG20) and would have to be admitted by the operator.
+  It is a new literature input (not stated in BG20) and would have to be admitted as a literature input.
 * `ExitTimeLogLossStep`: what Lemma 2.18 does give for balls, the scale-invariant integrand plus the additive loss
   `log (1/s) μ_h(B_{s + ε^α}(y))`. Proved below from `ExitTimeUpperBoundStmt`
-  (`exitTimeLogLossStep_of_exitTimeUpperBound`). This is route (b) of E-A10: Step 4 then gives
+  (`exitTimeLogLossStep_of_exitTimeUpperBound`). This is route (b): Step 4 then gives
   `P[V ≥ 1 | h, η] ≥ c (1 + log (1/𝐫_z))⁻²`, so `s₂` of Lemmas 6.7-6.8 carries the factor `(1 + |log r|)⁻²`.
 -/
 
@@ -27,14 +27,14 @@ namespace MatedCRT
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric HarmonicBalls
 open scoped ENNReal NNReal
 
-/-- **Route (a) of E-A10** (Lemma 6.8, Step 4, line 2600): the scale-invariant version of Lemma 2.18 (BG20
+/-- **Route (a)** (Lemma 6.8, Step 4, line 2600): the scale-invariant version of Lemma 2.18 (BG20
 Proposition 5.1, line 921) for balls. There are `α = α(γ) > 0`, `κ = κ(γ) > 0` and `C = C(ρ, γ) > 0` such that with
 polynomially high probability as `ε → 0`: for every ball `B_s(y) ⊆ B_ρ` with `s ≥ ε^κ` and `μ_h(B_s(y)) ≥ ε^α`, every
 `a ∈ V^ε(B_s(y))` and every `N ∈ ℕ`,
 `E[(τ^ε_{B_s(y)}(a))^N | h, η] ≤ N! C^N ε^{-N} (sup_{v ∈ B_s(y)} ∫_{B_{ε^α}(B_s(y))} (log (s/|u - v|) + 1) dμ_h(u))^N`.
 Step 4 uses `N = 2`, `y = η(b)`, `s = 𝐫_z/4`. The integrand is taken through its positive part, as in
 `MatedCRT.IsGoodAnnulusEvent`. Not derivable from the Draft statements and the admitted inputs (see the module
-docstring and ESCALATIONS "E-A10 resolution (c4)"). -/
+docstring). -/
 def ExitTimeScaleInvariantStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ α κ : ℝ, 0 < α ∧ 0 < κ ∧ ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ C : ℝ, 0 < C ∧
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
@@ -46,7 +46,7 @@ def ExitTimeScaleInvariantStep (𝒮 : SpaceFillingSLEModel) : Prop :=
           (⨆ v ∈ ball y s, ∫⁻ u in thickening (ε ^ α) (ball y s),
             ENNReal.ofReal (Real.log (s / ‖u - v‖) + 1) ∂S.μ ω) ^ N}
 
-/-- **Route (b) of E-A10** (Lemma 6.8, Step 4, line 2600): Lemma 2.18 for balls, written with the scale-invariant
+/-- **Route (b)** (Lemma 6.8, Step 4, line 2600): Lemma 2.18 for balls, written with the scale-invariant
 integrand plus the loss term. There are `α = α(γ) > 0` and `C = C(ρ, γ) > 0` such that with polynomially high
 probability as `ε → 0`: for every ball `B_s(y) ⊆ B_ρ` with `μ_h(B_s(y)) ≥ ε^α`, every `a ∈ V^ε(B_s(y))` and `N ∈ ℕ`,
 `E[(τ^ε_{B_s(y)}(a))^N | h, η] ≤ N! C^N ε^{-N} (sup_{v ∈ B_s(y)} ∫_{B_{ε^α}(B_s(y))} (log (s/|u - v|) + 1) dμ_h(u)`
@@ -115,7 +115,7 @@ theorem iSup_setLIntegral_log_one_div_le (μ : Measure ℂ) (D T : Set ℂ) {s :
     exact le_iSup₂ (f := fun v (_ : v ∈ D) =>
       ∫⁻ u in T, ENNReal.ofReal (Real.log (s / ‖u - v‖) + 1) ∂μ) v hv
 
-/-- **Route (b) of E-A10**: Lemma 2.18 implies its log-loss form for balls. -/
+/-- **Route (b)**: Lemma 2.18 implies its log-loss form for balls. -/
 theorem exitTimeLogLossStep_of_exitTimeUpperBound {𝒮 : SpaceFillingSLEModel}
     (h218 : ExitTimeUpperBoundStmt 𝒮) : ExitTimeLogLossStep 𝒮 := by
   intro γ hγ hγ2

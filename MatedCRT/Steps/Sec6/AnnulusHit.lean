@@ -9,7 +9,7 @@ The event is the corrected one, with the scale-invariant integrand `log (r/|u - 
 
 The printed proof compares the `γ`-quantum cone field `h` with a whole-plane GFF `h^ℂ` (Step 1) and uses the exact
 scale and translation invariance of `h^ℂ` modulo additive constants (Step 2). The literature facts on the fields are
-the step Props below (INPUT-REQUESTS IR-c4-1 to IR-c4-4). Their deterministic content is proved in
+the step Props below. Their deterministic content is proved in
 `MatedCRT/Proofs/Sec6/AnnulusHit/EventInvariance.lean`:
 
 * Step 1 (lines 2348-2363). `ConeWholePlaneWeylComparisonStep`: eq:gff (line 444, `h|_{B_1} =d (h^ℂ - γ log|·|)|_{B_1}`)
@@ -34,7 +34,7 @@ open MeasureTheory ProbabilityTheory Filter Set Metric HarmonicBalls
 open scoped ENNReal
 
 /-- **A whole-plane GFF with its LQG measure exists** (Sheffield 2007, Section 2; Duplantier-Sheffield 2011,
-Proposition 1.1; INPUT-REQUESTS IR-c4-1). -/
+Proposition 1.1). -/
 def WholePlaneLQGExistenceStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ (Ω' : Type) (_ : MeasurableSpace Ω') (P' : Measure Ω')
     (hC' : Ω' → (ℂ → ℝ) → ℝ) (hcirc' : Ω' → ℝ → ℂ → ℝ) (μ' : Ω' → Measure ℂ),
@@ -44,7 +44,7 @@ def WholePlaneLQGExistenceStep : Prop :=
 (lines 2348-2355). By eq:gff (line 444), `h|_{B_1} =d (h^ℂ - γ log |·|)|_{B_1}`. Weyl scaling (Fact 2.2(iii),
 Duplantier-Sheffield 2011 Proposition 1.2) gives `μ_{h^ℂ - γ log|·|} = |x|^{-γ²} μ_{h^ℂ}` away from `0`. Hence
 `μ_h|_{B_1}` and `(|x|^{-γ²} μ_{h^ℂ})|_{B_1}` have the same law. Applied to the event `E_r(z; C)`, which depends
-only on the measure on `𝔸_{r/3,3r}(z) ⊆ B_ρ`, this gives the comparison below (INPUT-REQUESTS IR-c4-2). -/
+only on the measure on `𝔸_{r/3,3r}(z) ⊆ B_ρ`, this gives the comparison below. -/
 def ConeWholePlaneWeylComparisonStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∀ c₀ : ℝ, 0 < c₀ → c₀ < 1 / 5 → ∀ C : ℝ, 0 < C →
   ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
@@ -61,7 +61,7 @@ def ConeWholePlaneWeylComparisonStep : Prop :=
 eq:gff-scaling for `h^ℂ`, the LQG coordinate change formula and Weyl scaling by constants, Duplantier-Sheffield 2011
 Propositions 1.2 and 2.1). For `r > 0` and `z ∈ ℂ`, `h'' = h^ℂ(r · + z) - h^ℂ_r(z)` is again a whole-plane GFF.
 Its LQG measure `μ''` satisfies `μ_{h^ℂ} ∘ (x ↦ r x + z) = c μ''` with
-`c = r^{γQ} e^{γ h^ℂ_r(z)} ∈ (0, ∞)` (INPUT-REQUESTS IR-c4-3). -/
+`c = r^{γQ} e^{γ h^ℂ_r(z)} ∈ (0, ∞)`. -/
 def WholePlaneLQGCoordinateChangeStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 →
   ∀ (Ω' : Type) [MeasurableSpace Ω'] (P' : Measure Ω') (hC' : Ω' → (ℂ → ℝ) → ℝ)
@@ -75,7 +75,7 @@ def WholePlaneLQGCoordinateChangeStep : Prop :=
 /-- **Step 2 input: the ratio `L_1(0)/R_1(0)` is a positive finite random variable** (line 2367, last sentence). For
 the whole-plane LQG measure, a.s. `sup_v ∫_{𝔸_{1,2}} (log (1/|u - v|) + 1) dμ(u) < ∞` (the LQG measure of
 `B_s(v)` is at most `s^α` uniformly, Rhodes-Vargas 2014 Theorem 2.6) and `min_w μ(B_{𝐜₀}(w)) > 0` (full support).
-Hence `P[E_1(0; C)] → 1` as `C → ∞` (INPUT-REQUESTS IR-c4-4). -/
+Hence `P[E_1(0; C)] → 1` as `C → ∞`. -/
 def WholePlaneGoodAnnulusTightnessStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ c₀ : ℝ, 0 < c₀ → c₀ < 1 / 5 → ∀ p : ℝ, 0 < p → p < 1 → ∃ C : ℝ, 0 < C ∧
   ∀ (Ω' : Type) [MeasurableSpace Ω'] (P' : Measure Ω') (hC' : Ω' → (ℂ → ℝ) → ℝ)
@@ -84,7 +84,7 @@ def WholePlaneGoodAnnulusTightnessStep : Prop :=
     P' {ω | ¬ IsGoodAnnulusEvent (μ' ω) c₀ C 1 0} ≤ ENNReal.ofReal (1 - p)
 
 /-- **Uniform upper volume bound for the whole-plane LQG measure with polynomially high probability** (the literature
-content of IR-c4-4; Rhodes-Vargas 2014 Theorem 2.6, BG20 arXiv:2003.10320 eq. (A.2), from the positive moments of
+content: Rhodes-Vargas 2014 Theorem 2.6, BG20 arXiv:2003.10320 eq. (A.2), from the positive moments of
 Gaussian multiplicative chaos). There are `β, q > 0` such that `μ_{h^ℂ}(B_s(z)) ≤ s^β` for all `z ∈ B_3` at once,
 except on an event of probability `O(s^q)`. With it and `WholePlaneLQGExistenceStep`, the tightness step
 `WholePlaneGoodAnnulusTightnessStep` is proved (`MatedCRT/Proofs/Sec6/AnnulusHit/Main.lean`): the denominator

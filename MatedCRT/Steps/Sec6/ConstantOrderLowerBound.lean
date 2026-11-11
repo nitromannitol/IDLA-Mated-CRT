@@ -27,8 +27,7 @@ namespace MatedCRT
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- **Lemma 6.7, route (b) of E-A10** (lemma:constant-order-lower-bound, line 2410; ESCALATIONS "STATEMENT CHANGES
-(b)"). The Draft statement `ConstantOrderLowerBoundStmt` with the absorption probability `s₂` replaced by
+/-- **Lemma 6.7, route (b)** (lemma:constant-order-lower-bound, line 2410). The Draft statement `ConstantOrderLowerBoundStmt` with the absorption probability `s₂` replaced by
 `s₂ / (1 + |log r|)²`: the proof (lines 2449-2461) passes the bound `1 - s₂ / (1 + |log r|)²` of Lemma 6.8 in its
 route (b) form (`ConstantOrderLowerBoundDivLogStmt`) through unchanged. -/
 def ConstantOrderLowerBoundLogStmt (𝒮 : SpaceFillingSLEModel) : Prop :=

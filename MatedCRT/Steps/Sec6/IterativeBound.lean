@@ -14,20 +14,20 @@ Carving. The quenched part (one environment `(m, η)`, the conclusions of Lemmas
 `QuenchedIterationStep`; `iterativeBound_of_steps` (MatedCRT/Proofs/Sec6/IterativeBound/OfSteps.lean) chooses the
 parameters and passes to the annealed outer integral of the Draft.
 
-Departures from the printed proof, all reported (ESCALATIONS E-c5-2 and the report of worker c5):
+Departures from the printed proof, all reported:
 * **Lemma 6.3 with arbitrary starting sites** (`AbelianIDLAAnyStartStep`). The frozen `AbelianIDLAStmt` assumes
   `a₁, …, a_k ∈ Θ` (as printed, line 2306), but Lemma 6.10 starts at `a_i ∈ cl(Θ)` and every round restarts the
   walkers at `P_{k-1} ⊆ ∂Θ'_{k-1}`, outside `Θ^{k-1}` (lines 2717-2726); Lemma 6.3's own conclusion restarts outside
   `Θ` too. The Abelian property of Diaconis-Fulton (1991, Section 4) holds for arbitrary starting sites.
 * **Lemma 6.9 at `(1 + ρ)/2`.** Lemma 6.9 requires `Θ̄ ⋐ B_{ρ/2}`, but the clusters `Θ^k` of the iteration are only
   in `B_{ρ/2 + R}` (line 2837: `R < ρ/4`). Lemma 6.9 is applied with `(1 + ρ)/2` in place of `ρ`, and `R < (1-ρ)/4`.
-* **Lemma 6.9 in the E-A10 (b) form** (`ChanceOfBeingAbsorbedLogLossStmt`): the rates `s₃, s₄` carry the factor
-  `(1 + |log r|)⁻²`, and `s₃` is chosen after `s₀` (E-c5-1). It is implied by the drafted Lemma 6.9 and by its
+* **Lemma 6.9 in form (b)** (`ChanceOfBeingAbsorbedLogLossStmt`): the rates `s₃, s₄` carry the factor
+  `(1 + |log r|)⁻²`, and `s₃` is chosen after `s₀`. It is implied by the drafted Lemma 6.9 and by its
   local-rate reading (`ChanceOfBeingAbsorbedLocalRateStmt.logLoss`). The halving time of `|P_k|` grows by
   `(1 + |log r_k|)²`, which the exponent `β < 1/(2β⁻)` absorbs (the constant `C(s₄, s₅)` of line 2835 too, so `C = 1`).
 * **Adjacent cells meet** (`AdjacentCellsMeetStep`): Step 3 and the restart sites use that the cells of adjacent
   vertices intersect. This is Definition 1.2; the map of `MatedCRTEnv.mult` is Definition 1.1, and the equivalence is
-  Duplantier-Miller-Sheffield (mating of trees) Theorem 1.9 / Lemma 8.8 (INPUT-REQUESTS IR-A2).
+  Duplantier-Miller-Sheffield (mating of trees) Theorem 1.9 / Lemma 8.8.
 -/
 
 namespace MatedCRT
@@ -53,7 +53,7 @@ vertices of degree `0` or `∞`). -/
 def IsSrwPathLaw (m : ℤ → ℤ → ℕ) : Prop :=
   ∀ a : ℤ, ∀ᵐ x ∂srwLaw m a, x 0 = a ∧ ∀ n : ℕ, x (n + 1) = x n ∨ m (x n) (x (n + 1)) ≠ 0
 
-/-- The conclusion of Lemma 6.9 (E-A10 (b) form) for one environment `(m, ε, η)` with the parameters `ρ, β⁻, ω, s₀,
+/-- The conclusion of Lemma 6.9 (form (b)) for one environment `(m, ε, η)` with the parameters `ρ, β⁻, ω, s₀,
 s₃, s₄, s₅` and the value `dd` of the random radius `𝛅`: for `r ∈ [10 ε^ω, dd]`, `Θ̄ ⋐ B_{ρ/2}`, `B_{s₀} ⊆ Θ̄`,
 `k ≤ s₅ r^{2β⁻} ε⁻¹` and `a₁, …, a_k ∈ cl(Θ)`,
 `P[|A(Θ; a → V^ε(Θ̄ + B_r)) \ Θ| ≤ s₄ (1 + |log r|)⁻² k] ≤ exp(-s₃ (1 + |log r|)⁻² k)`. -/
@@ -68,8 +68,8 @@ def AbsorptionBound (m : ℤ → ℤ → ℕ) (ε : ℝ) (η : ℝ → ℂ) (ρ 
 
 /-! ## Statement forms of the inputs -/
 
-/-- **Lemma 6.9** in the form of the E-A10 verdict (b) (ESCALATIONS, "STATEMENT CHANGES (b)", 6.9), with the order of
-quantifiers of E-c5-1 (`s₃` after `s₀`): the rates are `s₃ (1 + |log r|)⁻²` and `s₄ (1 + |log r|)⁻²`. -/
+/-- **Lemma 6.9** in form (b), with the order of
+quantifiers (`s₃` after `s₀`): the rates are `s₃ (1 + |log r|)⁻²` and `s₄ (1 + |log r|)⁻²`. -/
 def ChanceOfBeingAbsorbedLogLossStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∀ βm : ℝ, (2 + γ) ^ 2 / 2 < βm →
   ∃ ω₀ : ℝ, 0 < ω₀ ∧
@@ -78,7 +78,7 @@ def ChanceOfBeingAbsorbedLogLossStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∃ dd : Ω → ℝ, Measurable[S.fieldSigma] dd ∧ (∀ ω, 0 < dd ω) ∧
     ProbTendsToOne S.P fun ε => {ω | AbsorptionBound (S.mult ε ω) ε (S.η ω) ρ βm ω₀ s₀ s₃ s₄ s₅ (dd ω)}
 
-/-- The local-rate reading of Lemma 6.9 (E-c5-1) implies the E-A10 (b) form (the rates only decrease). -/
+/-- The local-rate reading of Lemma 6.9 implies the (b) form (the rates only decrease). -/
 theorem ChanceOfBeingAbsorbedLocalRateStmt.logLoss {𝒮 : SpaceFillingSLEModel}
     (h : ChanceOfBeingAbsorbedLocalRateStmt 𝒮) : ChanceOfBeingAbsorbedLogLossStmt 𝒮 := by
   intro γ hγ hγ2 ρ hρ hρ1 βm hβm
@@ -98,14 +98,14 @@ theorem ChanceOfBeingAbsorbedLocalRateStmt.logLoss {𝒮 : SpaceFillingSLEModel}
   · have : s₃ / (1 + |Real.log r|) ^ 2 ≤ s₃ := div_le_self hs₃.le hL
     nlinarith
 
-/-- The drafted Lemma 6.9 implies its E-A10 (b) form. -/
+/-- The drafted Lemma 6.9 implies its form (b). -/
 theorem ChanceOfBeingAbsorbedStmt.logLoss {𝒮 : SpaceFillingSLEModel} (h : ChanceOfBeingAbsorbedStmt 𝒮) :
     ChanceOfBeingAbsorbedLogLossStmt 𝒮 :=
   h.localRate.logLoss
 
 /-! ## Steps -/
 
-/-- Step (literature input, ESCALATIONS E-c5-2): **Lemma 6.3 for arbitrary starting sites** (Diaconis-Fulton 1991,
+/-- Step (literature input): **Lemma 6.3 for arbitrary starting sites** (Diaconis-Fulton 1991,
 Section 4), almost surely for all `ε > 0`. It is `AbelianIDLAStmt` without the hypothesis `a₁, …, a_k ∈ Θ`. -/
 def AbelianIDLAAnyStartStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
@@ -118,7 +118,7 @@ theorem AbelianIDLAAnyStartStep.abelianIDLA {𝒮 : SpaceFillingSLEModel} (h : A
   filter_upwards [h γ hγ hγ2 Ω S hS] with ω hω ε hε Θ Θ' k a hΘ _ B
   exact hω ε hε Θ Θ' k a hΘ B
 
-/-- Step (literature input, INPUT-REQUESTS IR-A2: Duplantier-Miller-Sheffield, mating of trees, Theorem 1.9 /
+/-- Step (literature input: Duplantier-Miller-Sheffield, mating of trees, Theorem 1.9 /
 Lemma 8.8, the equivalence of Definitions 1.1 and 1.2): with probability tending to `1`, the cells of adjacent
 vertices of `V^ε(B_ρ)` intersect. -/
 def AdjacentCellsMeetStep (𝒮 : SpaceFillingSLEModel) : Prop :=

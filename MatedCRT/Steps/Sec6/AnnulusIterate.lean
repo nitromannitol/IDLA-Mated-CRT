@@ -17,7 +17,7 @@ open scoped ENNReal
 
 /-- Law transfer for a countable family of events determined by the whole-plane GFF on annuli
 modulo constants. The target events are measurable for the normalized distribution restricted to
-each annulus. This is the missing bridge between the two GFF interfaces (IR-x1-1). -/
+each annulus. This is the missing bridge between the two GFF interfaces. -/
 def AnnulusGFFLawTransferStep : Prop :=
   ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ), IsProbabilityMeasure P → IsWholePlaneGFF P hC hcirc →

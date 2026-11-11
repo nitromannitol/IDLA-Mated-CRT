@@ -15,7 +15,7 @@ binomial random variable with parameters `k` and `s₂`, which gives the exponen
 * `chanceOfBeingAbsorbedLocalRate_of_steps`: Lemma 6.7 + `AbsorptionChernoffStep` give Lemma 6.9 with the rate `s₃`
   chosen after `s₀` (`ChanceOfBeingAbsorbedLocalRateStmt`).
 
-**Order of quantifiers (ESCALATION E-c5-1).** The printed statement (line 2627) and `ChanceOfBeingAbsorbedStmt` choose
+**Order of quantifiers.** The printed statement (line 2627) and `ChanceOfBeingAbsorbedStmt` choose
 `s₃` before `s₀`, but the printed proof takes `s₃ = c`, the rate of the negative binomial concentration bound
 (eq:number-of-walkers-nb-bound, line 2657) for success probability `s₂`, and `s₂ = s₂(s₀)` comes from Lemma 6.7.
 Lemma 6.7 gives no lower bound on the absorption probability uniform in `s₀`, and for `k = 1` the conclusion of
@@ -29,7 +29,7 @@ namespace MatedCRT
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- **Lemma 6.9** with the rate `s₃` chosen after `s₀` (ESCALATION E-c5-1); otherwise identical to
+/-- **Lemma 6.9** with the rate `s₃` chosen after `s₀`; otherwise identical to
 `ChanceOfBeingAbsorbedStmt`. -/
 def ChanceOfBeingAbsorbedLocalRateStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∀ βm : ℝ, (2 + γ) ^ 2 / 2 < βm →
@@ -73,7 +73,7 @@ theorem ProbTendsToOne.mono' {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} 
   tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds h (fun _ => zero_le)
     (fun ε => measure_mono (compl_subset_compl.2 (hEF ε)))
 
-/-- **Lemma 6.9** (local-rate reading, E-c5-1) from Lemma 6.7 and the Chernoff-type iteration, with
+/-- **Lemma 6.9** (local-rate reading) from Lemma 6.7 and the Chernoff-type iteration, with
 `s₃ = s₄ = s₂/4` and `s₅ = s₁`, and the same `ω₀` and `𝛅` as in Lemma 6.7. -/
 theorem chanceOfBeingAbsorbedLocalRate_of_steps (𝒮 : SpaceFillingSLEModel) (h67 : ConstantOrderLowerBoundStmt 𝒮)
     (hC : AbsorptionChernoffStep) : ChanceOfBeingAbsorbedLocalRateStmt 𝒮 := by

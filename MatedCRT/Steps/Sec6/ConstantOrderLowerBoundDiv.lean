@@ -2,14 +2,14 @@ import MatedCRT.Draft.Section6
 import MatedCRT.Steps.Sec6.ExitTimeScaleInvariance
 
 /-!
-# Lemma 6.8 (lemma:constant-order-lower-bound-div, line 2455; proof lines 2493-2621), route (b) of E-A10
+# Lemma 6.8 (lemma:constant-order-lower-bound-div, line 2455; proof lines 2493-2621), route (b)
 
-`ConstantOrderLowerBoundDivLogStmt` is Lemma 6.8 in the form of ESCALATIONS "E-A10 resolution (c4)", verdict (b):
+`ConstantOrderLowerBoundDivLogStmt` is Lemma 6.8 in form (b):
 the constant `s₂` of the printed statement is replaced by `s₂ / (1 + |log r|)²`. Everything else is the Draft
-statement `ConstantOrderLowerBoundDivStmt` verbatim (in particular the reading E-A9 of "exits through `A`").
+statement `ConstantOrderLowerBoundDivStmt` verbatim (in particular the reading of "exits through `A`").
 
 The proof (`constantOrderLowerBoundDiv_of_steps`, MatedCRT/Proofs/Sec6/ConstantOrderLowerBoundDiv/OfSteps.lean)
-follows lines 2493-2621 with the scale fix of E-A10 for line 2506 (`δ` dyadic with `√δ ∈ (r/(8√2), r/8]`, the shell
+follows lines 2493-2621 with the scale fix for line 2506 (`δ` dyadic with `√δ ∈ (r/(8√2), r/8]`, the shell
 `(Θ̄ + B_{r/2+√δ}) \ (Θ̄ + B_{r/2})` in place of `(Θ̄ + B_{4√δ}) \ (Θ̄ + B_{3√δ})`), and Step 4 of route (b)
 (`ExitTimeLogLossStep`, a consequence of Lemma 2.18). Two facts which the printed proof uses without proof are
 isolated here:
@@ -25,7 +25,7 @@ namespace MatedCRT
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric HarmonicBalls
 open scoped ENNReal NNReal
 
-/-- **Lemma 6.8, route (b) of E-A10** (lemma:constant-order-lower-bound-div, line 2455). The Draft statement
+/-- **Lemma 6.8, route (b)** (lemma:constant-order-lower-bound-div, line 2455). The Draft statement
 `ConstantOrderLowerBoundDivStmt` with the bound `1 - s₂` replaced by `1 - s₂ / (1 + |log r|)²`: the second moment
 bound of Step 4 (line 2612) loses the factor `(1 + log (1/𝐫_z))²` against the scale-invariant good-annulus event of
 correction [C5], and `𝐫_z ≥ δ ≥ r²/128`. -/
