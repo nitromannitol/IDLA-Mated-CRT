@@ -6,7 +6,7 @@ import MatedCRT.Steps.Sec5.IDLALowerBound
 Proposition 5.1 (corrected.tex:1972-1982) claims the inner bound also for walkers stopped upon exiting `V^ε(Λ_t)`, and
 Theorem 6.1 uses exactly this form (lines 2860-2870). The printed proof (lines 2030-2048) gives the bound for walkers
 stopped upon exiting the discrete cluster `Λ^ε_t` only; since `Λ^ε_t ⊄ V^ε(Λ_t)` in general, this does not imply the
-stated claim (E-c1-5).
+stated claim.
 
 The argument of the printed proof does give the stated claim once the two conditions of Lemma 5.2 are known for the
 domain `O₂^ε = V^ε(Λ_t)` instead of `Λ^ε_t`: these are Lemmas 5.3 and 5.4 with `Λ^ε_t` replaced by `V^ε(Λ_t)`
@@ -29,7 +29,7 @@ open scoped ENNReal NNReal
 the vertex set `V^ε(Λ_t)` of the cells meeting the harmonic ball): for `δ ∈ (0, ρ)` and `t > 0` there is a
 `σ(h, η)`-measurable `𝔰 > 0` such that, on `{t < T}`, except on an event of probability tending to `0`,
 `(1 + 𝔰) ∑_{b ∈ V^ε(Λ_t)} G(b, a) ≤ t ε⁻¹ G(0, a)` for all `a ∈ V^ε(Λ_t)` with `dist(η(a), ∂ V̄^ε(Λ_t)) > δ`,
-`G = G^ε_{V^ε(Λ_t)}`. Not in the paper (E-c1-5). -/
+`G = G^ε_{V^ε(Λ_t)}`. Not in the paper. -/
 def StoppedMeanValueInequalityStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
@@ -47,7 +47,7 @@ def StoppedMeanValueInequalityStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 /-- **Lemma 5.4 on `V^ε(Λ_t)`**: there is a deterministic `q > 0` such that for `δ ∈ (0, ρ)` and `t > 0`, on
 `{t < T}`, except on an event of probability tending to `0`,
 `∑_{b ∈ V^ε(Λ_t)} G(b, a) / G(a, a) ≥ ε^{-q}` for all `a ∈ V^ε(Λ_t)` with `dist(η(a), ∂ V̄^ε(Λ_t)) > δ`,
-`G = G^ε_{V^ε(Λ_t)}`. Not in the paper (E-c1-5). -/
+`G = G^ε_{V^ε(Λ_t)}`. Not in the paper. -/
 def StoppedLLowerBoundStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ q : ℝ, 0 < q ∧
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →

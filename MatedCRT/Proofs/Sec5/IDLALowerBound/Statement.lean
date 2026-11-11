@@ -6,7 +6,7 @@ import MatedCRT.Proofs.Sec5.GeneralIDLALowerBound.Statement
 
 Lemma 5.2 in its relaxed form (`GeneralIDLALowerBoundRelaxedStep`, the hypotheses its proof uses) holds under the
 inputs of `generalIDLALowerBound_of_inputs`: Lemma 2.7, Lemma 2.8 and the measurability of the environment
-(`EnvSigmaMeasurableStep`, ESCALATIONS E-c2-1). Proposition 5.1 then needs Lemmas 5.3, 5.4, the discrete-cluster form
+(`EnvSigmaMeasurableStep`). Proposition 5.1 then needs Lemmas 5.3, 5.4, the discrete-cluster form
 of Proposition 4.2 and the stopped step `IDLALowerBoundStoppedStep` (MatedCRT/Steps/Sec5/IDLALowerBound.lean).
 -/
 

@@ -8,7 +8,7 @@ in the paper (corrected.tex 2128-2140): a lower bound on the obstacle surplus
 `v^ε_t = w̃^ε_t + (t ε⁻¹) g^ε_{B_ρ}(0, ·)` and an upper bound on the normalized
 exit time. The finite-graph comparison and margin are proved in
 `ObstacleComparison.lean`; the contact `v^ε_t = 0` off `Λ^ε_t` is proved in
-`BoundaryContactDirect.lean` without any connectivity hypothesis (E-c1-2), so
+`BoundaryContactDirect.lean` without any connectivity hypothesis, so
 the event below carries no obstacle-setting field.
 -/
 

@@ -13,9 +13,9 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.Assembly
 * cited results: Lemmas 2.7, 2.8, 2.9, 2.15, 2.16, 2.18;
 * the Draft statements of the earlier results it uses, each reduced elsewhere: Theorem 4.1 (`ConvergenceDivisibleStmt`),
   Theorem 2.3, Lemma 3.3, Lemma 2.17, the corrected Lemma 4.4;
-* the open steps: `ConeFamilyAEMeasurableStep`, `LQGMeasureFieldMeasurableStep`, `MeanValueSurplusLowerStep` (Lemma 5.3; E-c2-5),
-  `ObstacleClusterInnerApproximationStep` (Proposition 4.2; E-x3-1), and the two steps of the stopped part,
-  `StoppedMeanValueInequalityStep`, `StoppedLLowerBoundStep` (E-c1-5).
+* the open steps: `ConeFamilyAEMeasurableStep`, `LQGMeasureFieldMeasurableStep`, `MeanValueSurplusLowerStep` (Lemma 5.3),
+  `ObstacleClusterInnerApproximationStep` (Proposition 4.2), and the two steps of the stopped part,
+  `StoppedMeanValueInequalityStep`, `StoppedLLowerBoundStep`.
 Lemma 2.13 is proved (`maximumPrinciple_of_steps` with `adjacentCellsMeetAeStep`) and Lemma 5.2 (relaxed) is reduced to
 Lemmas 2.7 and 2.8 (`generalIDLALowerBoundRelaxed_of_volumeGrowth_cellSize`).
 
@@ -78,7 +78,7 @@ theorem iDLALowerBound_of_discreteClusterInner (𝒮 : SpaceFillingSLEModel)
   exact iDLALowerBound_of_volumeGrowth_cellSize 𝒮 h27 h28 h53 h54 hD hstop
 
 /-- **Proposition 5.1** with the step of Proposition 4.2 replaced by the strict obstacle gap on the harmonic ball
-(`HarmonicBallStrictObstacleGapStep`, E-x3-1/E-c2-5), Lemma 2.4 and cone-family measurability. The `Λ^ε_t` form of
+(`HarmonicBallStrictObstacleGapStep`), Lemma 2.4 and cone-family measurability. The `Λ^ε_t` form of
 Proposition 4.2 is `discreteClusterInnerBound_prop42` (Proofs/Sec4/Prop42Closure/Assembly.lean). -/
 theorem iDLALowerBound_final_of_strictGap (𝒮 : SpaceFillingSLEModel)
     (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮) (h29 : CountingMeasureConvergenceStmt 𝒮)
