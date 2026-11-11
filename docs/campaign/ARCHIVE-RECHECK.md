@@ -348,9 +348,9 @@ Columns: importers = all tracked importers; in closure = importers inside the cl
 
 ## Update after rule R2 (2026-11-11)
 
-Rule R2 (`docs/campaign/ARCHIVE.md`, section "Rule R2 (2026-11-11), batches B13 onward") replaces the 00:05:14 UTC condition used for the table above. The closure and the roots are unchanged; the moved modules were not reachable from them.
+Rule R2 (`docs/campaign/ARCHIVE.md`, section "Rule R2 (2026-11-11), batches R2-B13 onward") replaces the 00:05:14 UTC condition used for the table above. The closure and the roots are unchanged; the moved modules were not reachable from them.
 
-- Moved under R2: 202 modules in six batches: B13 `46f75d04` (40), B14 `fbd1f17d` (40), B15 `5c48639e` (40), B16 `b005d22e` (40), B17 `21dc7c40` (40), B18 `1ae21b45` (2). Each batch: 0 imports of its own modules from files under `MatedCRT/`.
+- Moved under R2: 202 modules in six batches: R2-B13 `46f75d04` (40), R2-B14 `fbd1f17d` (40), R2-B15 `5c48639e` (40), R2-B16 `b005d22e` (40), R2-B17 `21dc7c40` (40), R2-B18 `1ae21b45` (2). Each batch: 0 imports of its own modules from files under `MatedCRT/`.
 - Still in `MatedCRT/` (70 candidates, at the last batch):
   - e: 38, listed in `notes/hyg-A.txt`, `hyg-B.txt`, `hyg-C.txt`, `stale-1.txt` or `stale-1b.txt` while z9 and z10 report IN_PROGRESS (`MatedCRT/FirstPass/S4e.lean` is also named, see b);
   - d: 30, imported by a file that stays under `MatedCRT/`;
@@ -360,11 +360,11 @@ Rule R2 (`docs/campaign/ARCHIVE.md`, section "Rule R2 (2026-11-11), batches B13 
 - If z9 and z10 read DONE, 66 of the 70 are movable (two batches, 40 and 26); the 4 still held would be `S1c/Composition.lean`, `S4e.lean`, `LPBridge/GFFInterface.lean` and `S4e/RescaledDecode.lean` (imported by `S4e.lean`).
 - Not from these batches: 11 dangling imports from 8 untracked files under `MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/` (e.g. `JointL1AxiomsY5.lean`) import modules archived earlier. Their owner must act before those files are committed.
 
-## Final update (rule R2, batches B19 and B20, 2026-11-11)
+## Final update (rule R2, batches R2-B19 and R2-B20, 2026-11-11)
 
-After z9 and z10 reported DONE (z11 was DONE), the 38 hygiene/stale files of the pinned list became movable. Batches B19 `f3352f00` (40 modules) and B20 `1c285f95` (26 modules) moved them. Total moved under rule R2 in this round: 268 modules (B13 to B20).
+After z9 and z10 reported DONE (z11 was DONE), the 38 hygiene/stale files of the pinned list became movable. Batches R2-B19 `f3352f00` (40 modules) and R2-B20 `1c285f95` (26 modules) moved them. Total moved under rule R2 in this round: 268 modules (R2-B13 to R2-B20).
 
-Still in `MatedCRT/` (4 candidates, at the commit of B20):
+Still in `MatedCRT/` (4 candidates, at the commit of R2-B20):
 - a: `MatedCRT/FirstPass/LPBridge/GFFInterface.lean` (its commit f5419921, after the cutoff, adds code);
 - b: `MatedCRT/FirstPass/S1c/Composition.lean` and `MatedCRT/FirstPass/S4e.lean` (named in a tasks file modified on 2026-11-11);
 - d: `MatedCRT/FirstPass/S4e/RescaledDecode.lean` (imported by `S4e.lean`, which stays).
