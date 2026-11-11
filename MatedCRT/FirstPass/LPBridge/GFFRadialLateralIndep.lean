@@ -519,4 +519,112 @@ lemma isAeLimitOf_span_of_orthogonal [IsProbabilityMeasure P] {ι : Type*} (G : 
 
 end HilbertClosure
 
+/-! ## The radial integrals `∫ φ(x) h_{|x|}(0) dx` are Gaussian limits -/
+
+section RadialIntegralGaussian
+
+open MatedCRT.Field.GaussClosure
+
+variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+
+/-- The radial integral `ω ↦ ∫ φ(x) h_{|x|}(0) dx` of a test function is square integrable. -/
+lemma memLp_two_radialIntegral (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    {F : Ω → C(CircleParameter, ℝ)} (hF : Measurable F)
+    (hFae : ∀ᵐ ω ∂P, ∀ p : CircleParameter, F ω p = hcirc ω (p.1 : ℝ) p.2)
+    {φ : ℂ → ℝ} (hφ : IsTestFunction Set.univ φ) :
+    MemLp (fun ω => ∫ x, φ x * hcirc ω ‖x‖ 0) 2 P := by
+  have htr := MatedCRT.WholePlaneGFFLateral.integrable_radial_triple h hF hFae hφ hφ
+  have hsq : ∀ ω, ∫ p : ℂ × ℂ, φ p.1 * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint p.1) *
+      (φ p.2 * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint p.2)) ∂(volume.prod volume) =
+      (∫ x, φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) ^ 2 := by
+    intro ω
+    rw [sq]
+    exact integral_prod_mul (fun x => φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x))
+      (fun y => φ y * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint y))
+  have hQ : Integrable (fun ω => (∫ x, φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) ^ 2) P :=
+    htr.integral_prod_left.congr (ae_of_all _ fun ω => hsq ω)
+  have hjoint : Measurable (fun q : Ω × ℂ => F q.1 (MatedCRT.WholePlaneGFFLateral.radialPoint q.2)) :=
+    (measurable_circle_version_joint hF).comp
+      (measurable_fst.prodMk (MatedCRT.WholePlaneGFFLateral.measurable_radialPoint.comp measurable_snd))
+  have hmeas : Measurable (fun q : Ω × ℂ => φ q.2 * F q.1 (MatedCRT.WholePlaneGFFLateral.radialPoint q.2)) :=
+    (hφ.1.continuous.measurable.comp measurable_snd).mul hjoint
+  have hRadm : AEStronglyMeasurable (fun ω => ∫ x, φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) P :=
+    (hmeas.stronglyMeasurable.integral_prod_right (f := fun ω x =>
+      φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x))).aestronglyMeasurable
+  have hmem : MemLp (fun ω => ∫ x, φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) 2 P := by
+    rw [memLp_two_iff_integrable_sq hRadm]
+    exact hQ
+  have hae : (fun ω => ∫ x, φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) =ᵐ[P]
+      (fun ω => ∫ x, φ x * hcirc ω ‖x‖ 0) := by
+    filter_upwards [MatedCRT.WholePlaneGFFLateral.ae_radialIntegral_eq hFae φ] with ω hω
+    exact hω.symm
+  exact hmem.ae_eq hae
+
+/-- Orthogonality of the radial integral: if `Z ∈ L²(P)` is orthogonal to the circle averages
+`h_{|x|}(0)` for `x ≠ 0`, then `E[Z ∫ φ(x) h_{|x|}(0) dx] = 0`. -/
+lemma integral_mul_radialIntegral_eq_zero (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    {F : Ω → C(CircleParameter, ℝ)} (hF : Measurable F)
+    (hFae : ∀ᵐ ω ∂P, ∀ p : CircleParameter, F ω p = hcirc ω (p.1 : ℝ) p.2)
+    {φ : ℂ → ℝ} (hφ : IsTestFunction Set.univ φ) {Z : Ω → ℝ} (hZ : MemLp Z 2 P)
+    (horth : ∀ x : ℂ, x ≠ 0 → ∫ ω, Z ω * hcirc ω ‖x‖ 0 ∂P = 0) :
+    ∫ ω, Z ω * (∫ x, φ x * hcirc ω ‖x‖ 0) ∂P = 0 := by
+  obtain ⟨Z', hZ'm, hZZ'⟩ : ∃ Z' : Ω → ℝ, Measurable Z' ∧ Z =ᵐ[P] Z' :=
+    ⟨hZ.aestronglyMeasurable.mk Z, hZ.aestronglyMeasurable.stronglyMeasurable_mk.measurable,
+      hZ.aestronglyMeasurable.ae_eq_mk⟩
+  have hZ' : MemLp Z' 2 P := hZ.ae_eq hZZ'
+  have horth' : ∀ x : ℂ, x ≠ 0 → ∫ ω, Z' ω * hcirc ω ‖x‖ 0 ∂P = 0 := fun x hx => by
+    rw [← horth x hx]
+    refine integral_congr_ae ?_
+    filter_upwards [hZZ'] with ω hω
+    rw [hω]
+  have hint := MatedCRT.WholePlaneGFFLateral.integrable_radial_mul h hF hFae hφ hZ'm hZ' rfl
+  have step1 : (fun ω => Z' ω * ∫ x, φ x * hcirc ω ‖x‖ 0) =ᵐ[P]
+      (fun ω => ∫ x, Z' ω * (φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x))) := by
+    filter_upwards [MatedCRT.WholePlaneGFFLateral.ae_radialIntegral_eq hFae φ] with ω hω
+    rw [hω, integral_const_mul]
+  have hI : Integrable (Function.uncurry fun (ω : Ω) (x : ℂ) =>
+      Z' ω * (φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x))) (P.prod volume) := by
+    refine hint.congr (ae_of_all _ fun q => ?_)
+    simp only [Function.uncurry]
+    ring
+  have hae0 : ({(0 : ℂ)}ᶜ : Set ℂ) ∈ ae (volume : Measure ℂ) :=
+    compl_mem_ae_iff.2 (measure_singleton 0)
+  have hzero : ∀ᵐ x ∂(volume : Measure ℂ),
+      ∫ ω, Z' ω * (φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) ∂P = 0 := by
+    filter_upwards [hae0] with x hx
+    have hx0 : x ≠ 0 := Set.mem_compl_singleton_iff.1 hx
+    calc ∫ ω, Z' ω * (φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) ∂P
+        = ∫ ω, φ x * (Z' ω * hcirc ω ‖x‖ 0) ∂P := by
+          refine integral_congr_ae ?_
+          filter_upwards [hFae] with ω hω
+          rw [hω, radialPoint_fst_of_ne hx0, radialPoint_snd]
+          ring
+      _ = 0 := by rw [integral_const_mul, horth' x hx0, mul_zero]
+  have main : ∫ ω, Z' ω * (∫ x, φ x * hcirc ω ‖x‖ 0) ∂P = 0 := by
+    rw [integral_congr_ae step1, integral_integral_swap hI, integral_congr_ae hzero]
+    simp
+  calc ∫ ω, Z ω * (∫ x, φ x * hcirc ω ‖x‖ 0) ∂P
+      = ∫ ω, Z' ω * (∫ x, φ x * hcirc ω ‖x‖ 0) ∂P := by
+        refine integral_congr_ae ?_
+        filter_upwards [hZZ'] with ω hω
+        rw [hω]
+    _ = 0 := main
+
+/-- The radial integral is an almost sure limit of elements of the span of the admissible observables
+(Hilbert projection criterion of `isAeLimitOf_span_of_orthogonal`). -/
+lemma isAeLimitOf_radialIntegral (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    {F : Ω → C(CircleParameter, ℝ)} (hF : Measurable F)
+    (hFae : ∀ᵐ ω ∂P, ∀ p : CircleParameter, F ω p = hcirc ω (p.1 : ℝ) p.2)
+    {φ : ℂ → ℝ} (hφ : IsTestFunction Set.univ φ) :
+    IsAeLimitOf P (Submodule.span ℝ (Set.range fun o : GFFObservable.Admissible =>
+      fun ω => o.1.eval (hC ω) (hcirc ω)) : Set (Ω → ℝ))
+      (fun ω => ∫ x, φ x * hcirc ω ‖x‖ 0) := by
+  refine isAeLimitOf_span_of_orthogonal (fun o : GFFObservable.Admissible =>
+      fun ω => o.1.eval (hC ω) (hcirc ω)) (fun o => memLp_two_observable h o.1 o.2) _
+    (memLp_two_radialIntegral h hF hFae hφ) fun Z hZ hperp => ?_
+  exact integral_mul_radialIntegral_eq_zero h hF hFae hφ hZ fun x hx =>
+    hperp ⟨GFFObservable.circle ‖x‖ 0, norm_pos_iff.2 hx⟩
+
+end RadialIntegralGaussian
+
 end MatedCRT.ConeMeanZeroRestriction
