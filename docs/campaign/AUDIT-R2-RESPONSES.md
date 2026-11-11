@@ -2,20 +2,20 @@
 
 Responses to the round-2 audit of the IDLA paper (arXiv:2211.04891): notes/fp-gaps/OPUS-AUDIT-R2.md in the fleet directory (not in the repository). Finding IDs are those of the audit: K1 (line 33), M5 to M8 (lines 89 to 119), M13 to M15 (lines 153 to 176), MINOR IDLA (A) and (B) (lines 193 to 229), and the IDLA rows marked Partial or N in the audit tables (lines 230 to 309).
 
-Status values: FIXED <commit> (text or Lean change landed); IN PROGRESS (<worker>) (owned by a worker, not landed); Responded (<reason>) (no change in this repository, with the reason; new mathematics is routed to the operator).
+Status values: FIXED <commit> (text or Lean change landed); IN PROGRESS (<worker>) (owned by a worker, not landed); Responded (<reason>) (no change in this repository, with the reason; new mathematics is routed to the operator); PENDING MATH (MQ-li-<n>) (the row's fix waits for the math desk's answer in notes/fp-gaps/MATH-ANSWERS.md, fleet directory; <n> is the MATH-QUEUE item).
 
 ## Findings
 
 | Row | Finding | Status |
 |---|---|---|
-| K1 | `FrozenOneSidedBoundaryContinuity` is false as typed (`FirstPass/S3i/Frozen.lean:44`) | IN PROGRESS (z9) |
+| K1 | `FrozenOneSidedBoundaryContinuity` is false as typed (`FirstPass/S3i/Frozen.lean:44`) | PENDING MATH (MQ-li-7a, MQ-li-9) |
 | M5 | Campaign and audit voice in the paper body (subsection "Uses of Lemma 3.6", bracketed tags, Appendices B and C) | FIXED 9c18ae6, 0204400, 21d373b |
 | M6 | Email locators for C4 and C34 (proofs of Lemmas 5.3 and 5.4) | FIXED 453b2ec, ed7f547 |
 | M7 | Lemma 3.5 Step 3: limit Laplacian displayed as -1 (new mathematics: [C17] edit) | Responded (routed MQ-li-7b-d; awaiting math answer; truth check pending) |
 | M8 | Proposition 7.1 Steps 1 and 2 defects (GAPS E-x2-1) omitted from the email | FIXED 453b2ec (email item, flagged open), ed7f547 (GAPS status) |
-| M13 | B5: Appendix B theorem is a frozen conjunct of `CertifiedReferenceModelCore` | IN PROGRESS (z10; scope notes/li-tmp-z10-appB.md; gaps MQ-li-8a to 8e) |
+| M13 | B5: Appendix B theorem is a frozen conjunct of `CertifiedReferenceModelCore` | PENDING MATH (MQ-li-8a..8e) |
 | M14 | B6: COUNTED.md and `firstPassMain_1_4_full` / `_1_6_full` | FIXED 1f2548b (z1) |
-| M15 | Non-vacuity of the coupling: GFF part | IN PROGRESS (z8; ledger section by z1; quantum-cone and LQG-measure existence cited, MQ-li-8f) |
+| M15 | Non-vacuity of the coupling: GFF part | PENDING MATH (MQ-li-8f) |
 
 ### MINOR IDLA (A)
 
@@ -42,7 +42,7 @@ Status values: FIXED <commit> (text or Lean change landed); IN PROGRESS (<worker
 |---|---|---|
 | B1 | `hsup`: `ConeLeastSupersolutionTransfer` removes nothing (`FirstPass/S5kLemma31.lean:43`) | Responded (routed MQ-li-4) |
 | B2 | Duplicate binders `hsc`, `hrp`, `hind` and six `*HB` duplicates (`S5Cited.lean:39-75`) | FIXED b5f433a, cf167df (Main.lean pointing: z1) |
-| B3 | Derived-but-cited binders `hE1`/`hE2`, `hSC`, core conjunct 18 (truth UNSURE), `hBG` (truth pending) | IN PROGRESS (z12, p2-audit-r2-b3-owner-and-marker): analysis recorded in the section below; no binder discharged; `hSC`: every bounded open U derived in Lean from `hI2` (`LQGVolumeGrowthAllScalesStmt`) by Green-regular exhaustion (HB `Proofs/Sec5/StrongCompatibilityAssembly.lean:15`; axioms propext, Classical.choice, Quot.sound; exhaustion lemma `Proofs/Sec5/ExhaustionClusterCompatibility.lean`, no sorry); proof route differs from the printed proof of Lemma 5.8 (the Green-regular HB `Proofs/Sec5/GreenRegularLQGCompatibility.lean:25` is not used by that chain); the IDLA derivation is `frozenClusterStrongCompatibility_of_volumeGrowth` (`MatedCRT/FirstPass/Closure/HSCDerived.lean`, commit db6f210; axioms standard); `hSC` stays cited in IDLA; truth reduces to `hI2` and the exhaustion step (not in the printed source); `hE1`, `hE2` cited (MQ-li-8f); `hBG` literature input (truth pending); conjunct 18 cited (MQ-li-6) |
+| B3 | Derived-but-cited binders `hE1`/`hE2`, `hSC`, core conjunct 18 (truth UNSURE), `hBG` (truth pending) | PENDING MATH (MQ-li-6, MQ-li-8f, MQ-li-10): analysis recorded in the section below; no binder discharged; `hSC`: every bounded open U derived in Lean from `hI2` (`LQGVolumeGrowthAllScalesStmt`) by Green-regular exhaustion (HB `Proofs/Sec5/StrongCompatibilityAssembly.lean:15`; axioms propext, Classical.choice, Quot.sound; exhaustion lemma `Proofs/Sec5/ExhaustionClusterCompatibility.lean`, no sorry); proof route differs from the printed proof of Lemma 5.8 (the Green-regular HB `Proofs/Sec5/GreenRegularLQGCompatibility.lean:25` is not used by that chain); the IDLA derivation is `frozenClusterStrongCompatibility_of_volumeGrowth` (`MatedCRT/FirstPass/Closure/HSCDerived.lean`, commit db6f210; axioms standard); `hSC` stays cited in IDLA; truth reduces to `hI2` and the exhaustion step (not in the printed source); `hE1`, `hE2` cited (MQ-li-8f); `hBG` literature input (truth pending); conjunct 18 cited (MQ-li-6) |
 | B4 | Wrong claim at `FirstPass/S1d.lean:30` | FIXED 1ef63ce (z5) |
 | B5 | Lemma 7.4: no counted theorem; `Draft/Section7.lean:67` still has ∀t | FIXED ff66f92 (`closed_7_4_corrected`) |
 | B6 | LP `areaParam`: conditional on a vague limit; "is proved" docstring | FIXED fbc6a0e (z5, LP) |
@@ -55,13 +55,13 @@ Status values: FIXED <commit> (text or Lean change landed); IN PROGRESS (<worker
 |---|---|---|
 | R1-A7 | IDLA A7 (Partial) | FIXED 9c18ae6, 21d373b (= M5) |
 | R1-C11 | IDLA C11 list (Partial) | FIXED 453b2ec (= A10) |
-| R1-B5 | IDLA B5 (Partial) | IN PROGRESS (z10) (= M13) |
+| R1-B5 | IDLA B5 (Partial) | PENDING MATH (MQ-li-8a..8e) (= M13) |
 | R1-B6 | IDLA B6 (No) | FIXED 1f2548b (= M14) |
-| R1-B7 | IDLA B7 (No; the fix is vacuous) | IN PROGRESS (z9) (= K1) |
+| R1-B7 | IDLA B7 (No; the fix is vacuous) | PENDING MATH (MQ-li-7a, MQ-li-9) (= K1) |
 | R1-m2 | IDLA m2, `hsup` (No) | Responded (routed MQ-li-4) (= B1) |
-| R1-m3 | IDLA m3, `closed_3_1` is the weak form (No) | IN PROGRESS (z1; COUNTED.md counts `closed_3_1_faithful` and `closed_3_1_countable`) |
+| R1-m3 | IDLA m3, `closed_3_1` is the weak form (No) | FIXED 1f2548b3 (COUNTED.md:25-27 and :216 count firstPass_3_1_faithful, S3c.lean:125; closed_3_1 is not counted; closed_3_1_faithful and closed_3_1_countable are not declared at HEAD and are not counted) |
 | R1-m4 | IDLA m4, Lemma 7.4 has no counted theorem (No) | FIXED ff66f92 (= B5) |
-| R1-m7 | IDLA m7, LP non-vacuity assumed (M15) | IN PROGRESS (z8; ledger z1) (= M15) |
+| R1-m7 | IDLA m7, LP non-vacuity assumed (M15) | PENDING MATH (MQ-li-8f) (= M15) |
 
 ## IDLA part (A) rows marked P or N (audit lines 269 to 309)
 
