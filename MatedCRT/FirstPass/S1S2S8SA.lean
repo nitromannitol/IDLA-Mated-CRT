@@ -71,7 +71,7 @@ theorem firstPass_8_1 {𝒮 : SpaceFillingSLEModel} (h42 : DivSandpileLowerBound
 statements, used by the printed proof), Lemma 2.7 (`VolumeGrowthStmt`, cited), Lemma 2.2 (`LQGMeasurePropertiesStmt`,
 cited) and the quantum-cone scaling input (`QuantumConeScalingInput`, External). Proof:
 `coneHarmonicBalls_of_numbered_results`. Note: the Draft of Lemma 2.4 used as `h24` contains the clause `T' = T`,
-which is not printed (see the report). -/
+which is not printed. -/
 theorem firstPass_2_3 (h24 : ConeHarmonicBallsUpToFixedTimeStmt) (h25 : ConeScaleInvarianceUpToFixedTimeStmt)
     (h27 : VolumeGrowthStmt) (hscale : QuantumConeScalingInput) (h22 : LQGMeasurePropertiesStmt) :
     ConeHarmonicBallsStmt :=

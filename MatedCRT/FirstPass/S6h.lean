@@ -10,7 +10,7 @@ namespace MatedCRT
 
 namespace Lemma68Config
 
-/-- (Lemma 6.8, the hypothesis `hpt` of `Lemma68Final.probTendsToOne_uniform_half_guarded`, bridge note §4)
+/-- (Lemma 6.8, the hypothesis `hpt` of `Lemma68Final.probTendsToOne_uniform_half_guarded`, bridge argument §4)
 On `E ε ∩ G`, for every admissible radius `r ∈ [α ε, dd ω]` and every configuration with the guard `FullAdm`, the exit
 probability `exitQ` satisfies `(1 - q0/(1+log(1/r))²)^N` for a count `N ≥ r^(-ζ)/200`. This is `configuration_le_pow`
 with `ι := Config68`, `Adm := FullAdm`, `exitF := exitQ`; the non-admissible configurations are handled by the guard. -/

@@ -228,7 +228,7 @@ theorem srwLaw_condExp_strong_markov (m : ℤ → ℤ → ℕ) (a : ℤ) (τ : (
     ← ENNReal.tsum_toReal_eq hle, measureReal_def, hSM]
 
 /-- The test event `G_j` of C15 at the state `y`: the walk started at `y` leaves `A` at a time before its exit from the
-window `W y`. In the shifted frame at `T_j` this is `{∃ n, T_j ≤ n < T_{j+1}, X_n ∉ A}` (open-parts C15; bridge note Step C).
+window `W y`. In the shifted frame at `T_j` this is `{∃ n, T_j ≤ n < T_{j+1}, X_n ∉ A}` (open-parts C15; bridge argument Step C).
 Its complement is `TestBound68.stayIn W A y` (the walk stays in `A` until it exits `W y`). -/
 def testEvent (W : ℤ → Set ℤ) (A : Set ℤ) (y : ℤ) : Set (ℕ → ℤ) :=
   {p | ∃ i : ℕ, (i : ℕ∞) < vExitTime (W y) p ∧ p i ∉ A}
@@ -258,7 +258,7 @@ Inputs:
   `printed_test_bound` (S4S6c/PerTest68.lean:82, the quenched B18/C15 bound) with the test radius `r := R j x`; its
   geometric hypotheses hold for `x ∈ H j` by the configuration (S6h.lean), and are not repeated here.
 * `hfin` is the almost sure finiteness of `T_j` on `H_j`. The written argument (open-parts C15, "almost surely finite
-  stopping time") states it but does not prove it; it is an input here (see the report).
+  stopping time") states it but does not prove it; it is an input here.
 * `hR` are the radius bounds of C3, `hq0`, `hq1` the constant bounds (`qStar = 1/(288 C_d² K²)` of `printed_test_bound`). -/
 theorem hstep_concrete (m : ℤ → ℤ → ℕ) (a : ℤ) (τ : ℕ → (ℕ → ℤ) → ℕ∞) (hτ : ∀ j, IsWalkRandomTime (τ j))
     (W : ℕ → ℤ → Set ℤ) (A : Set ℤ) (H : ℕ → Set (ℕ → ℤ)) (R : ℕ → (ℕ → ℤ) → ℝ) {qStar : ℝ}

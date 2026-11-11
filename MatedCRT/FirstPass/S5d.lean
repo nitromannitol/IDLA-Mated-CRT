@@ -35,7 +35,7 @@ import MatedCRT.FirstPass.S5d.FloorCellStep
     (`stoppedFirstGreenStep_of_steps`), and `IDLALowerBoundStoppedStep` follows from the two Green steps
     (`MatedCRT/FirstPass/S5d/StoppedReduction.lean`).
 
-Hence `firstPass_5_1_of_steps` is a conditional reduction, not a `PROVED-FP` theorem.
+Hence `firstPass_5_1_of_steps` is a conditional reduction, not a theorem proved in the first pass.
 -/
 
 namespace MatedCRT

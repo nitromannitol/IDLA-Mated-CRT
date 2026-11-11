@@ -14,7 +14,7 @@ inputs of `MatedCRT/FirstPass/Frozen/S3S4b.lean` and `MatedCRT/FirstPass/Frozen/
 Lemma 3.5 is proved here in its corrected form [C13] (`DiscreteDirichletProblemCorrectedStmt`, boundary datum
 `φ(π_D(η(b)))`), which is the form of the paper's corrected statement. The Draft form `DiscreteDirichletProblemStmt`
 (boundary datum `φ(η(b))`, Hölder `φ` on a neighbourhood; review-S2) is not proved in this file: it needs the Steps
-`DirichletInteriorStep` and `DirichletBoundaryStep` (MatedCRT/Steps/Sec3/DiscreteDirichletProblem.lean:51, :74), see the report.
+`DirichletInteriorStep` and `DirichletBoundaryStep` (MatedCRT/Steps/Sec3/DiscreteDirichletProblem.lean:51, :74).
 -/
 
 namespace MatedCRT

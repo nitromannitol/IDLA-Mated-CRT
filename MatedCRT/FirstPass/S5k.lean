@@ -26,7 +26,7 @@ For `γ ∈ (0,2)`, `ρ ∈ (0,1)`, a valid mated-CRT environment `S` on `Ω`, a
 (`HarmonicBalls.leastSupersolution`, the obstacle `-t G_{B_ρ}(0,·)`, Harmonic-Balls-LQG `HarmonicBalls/Defs/Obstacle.lean:63`).
 
 The measurability is with respect to `S.fieldSigma`, not the ambient σ-algebra; no measurability of the raw expression
-`leastSupersolution (S.μ ω) …` is asserted. Source: Part I, Step 4.2 and (7) of the floor note. -/
+`leastSupersolution (S.μ ω) …` is asserted. Source: Part I, Step 4.2 and (7). -/
 def StoppedFloorObstacleVersion (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →

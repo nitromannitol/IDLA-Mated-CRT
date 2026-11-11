@@ -29,7 +29,7 @@ def SubsequentialLimitProperties {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTE
   HasLaplacian w (ENNReal.ofReal (S.c₀ / 6) • S.μ ω) 0
     {x ∈ ball (0 : ℂ) ρ | x = 0 ∨ -t * (S.c₀ / 6) * greenFunction (ball 0 ρ) 0 x < w x}
 
-/-- **Lemma 4.8, corrected** (audit PRO l.206-260, the minimal corrected target). For `γ`, `ρ`, a valid environment
+/-- **Lemma 4.8, corrected** (the minimal corrected target). For `γ`, `ρ`, a valid environment
 `S`, a fixed `t > 0` and a positive input sequence `εs → 0`, one deterministic strictly monotone `φ`, chosen after `t`
 and `εs`, satisfies almost surely: relative compactness `OdometerPreparedCompactness` of `εs ∘ φ`, and
 `SubsequentialLimitProperties` for every uniform limit `w` of the rescaled least supersolutions along a further

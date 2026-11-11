@@ -17,7 +17,7 @@ Printed quantifier order (paper/idla_mated_crt-corrected.tex: `lemma:constant-or
 The bodies (the event, `dd`, the probability bounds) are those of the Draft statements `ConstantOrderLowerBoundStmt`,
 `ConstantOrderLowerBoundDivStmt` and `ChanceOfBeingAbsorbedStmt` (MatedCRT/Draft/Section6.lean), unchanged. Only the
 quantifiers over `ω₀`, `s₃` and `β⁻` differ: the Draft headers choose `ω₀` after `ρ` and quantify `β⁻` over all
-`β⁻ > (2+γ)²/2`. Neither Draft form implies the faithful one (see the report of this round).
+`β⁻ > (2+γ)²/2`. Neither Draft form implies the faithful one.
 -/
 
 namespace MatedCRT

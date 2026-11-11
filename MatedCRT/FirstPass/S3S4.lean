@@ -85,7 +85,7 @@ closed disk) form `ConvergenceHarmonicFunctionsStmt`. Hypotheses: Draft Lemma 2.
 (`CellSizeEstimateStmt`, cited), `MepsScalingInput` (External) and the frozen regular-exit input of planar Brownian motion. The path
 step uses the proved measurability `interpolatedWalkMeasurableStep` (inside `harmonicPathExitStep_of_inputs`) and the proved
 `lbmPathFunctionalMeasurableStep_holds`; the exit-cell comparison is `harmonicExitCellStep_of_inputs`. The corrected Lemma 3.6 of
-[C13] (uniform convergence and same-walk comparison) is NOT this theorem; see the report. -/
+[C13] (uniform convergence and same-walk comparison) is NOT this theorem. -/
 theorem firstPass_3_6 {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkToLBMStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
     (hm : MepsScalingInput 𝒮) (hexc : FrozenBrownianOutwardExcursionAtExit) :
     ConvergenceHarmonicFunctionsStmt 𝒮 :=

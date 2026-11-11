@@ -56,7 +56,7 @@ lemma nextExitSchedule_const_eq (W : ℤ → Set ℤ) : ∀ j : ℕ,
   | j + 1 => by
     rw [S6j.nextExitSchedule, exitSchedule, nextExitSchedule_const_eq W j]
 
-/-- **Write-up C12 for the concrete test schedule (Lemma 6.8, bridge note Step D).** Almost surely, `T_N < τ_U` for the
+/-- **Write-up C12 for the concrete test schedule (Lemma 6.8, bridge argument Step D).** Almost surely, `T_N < τ_U` for the
 killed set `U = killed ε η Θ F0 r`, the schedule `cfgExit` and the count `N = cfgCount p r`. Its hypotheses are the
 inputs of `cfgSchedule_valid` and the cell-size bound at scale `Δ(p,r)/100`. -/
 theorem concreteC12_killed {ε ρ d r p ζ : ℝ} {η : ℝ → ℂ} (good : ℂ → ℕ → Prop) {m : ℤ → ℤ → ℕ} {a : ℤ}

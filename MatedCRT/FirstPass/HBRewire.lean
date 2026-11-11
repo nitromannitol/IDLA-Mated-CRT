@@ -13,8 +13,7 @@ Namespace `MatedCRT.HBRewire`. The Harmonic-Balls inputs that HB proves uncondit
 theorems bind are discharged here. Each counted theorem `T` gets a `T_hb` with the same conclusion and the remaining
 binders; the discharged binders are passed as the `_of_hb` proofs below.
 Discharged: `GreenFunctionBallStmt` (HB Prop 2.3) and `FrozenGreenDiscPole` (its MatedCRT copy, proved from the same HB
-Prop 2.3 and the HB pole limit). Not discharged here (HB result conditional on literature or model inputs; see the
-report): ClusterOpenLaplacian, LeastSupersolutionMem, ClusterMonotone, ClusterConservation, ClusterCompatibility,
+Prop 2.3 and the HB pole limit). Not discharged here (HB result conditional on literature or model inputs): ClusterOpenLaplacian, LeastSupersolutionMem, ClusterMonotone, ClusterConservation, ClusterCompatibility,
 LQGVolumeGrowthAllScales, VeryGoodAnnulusHarnackType, and the MatedCRT copies FrozenLeastSupersolutionMemCone and
 FrozenLQGVolumeGrowthAllScales / FrozenVeryGoodAnnulusHarnackType.
 -/

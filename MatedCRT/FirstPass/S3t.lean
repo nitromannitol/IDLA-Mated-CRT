@@ -85,7 +85,7 @@ theorem truncatedQuenchedLawsFixedTime_of_steps {Ω : Type} [MeasurableSpace Ω]
     (hShellLimit : ∀ᵐ ω ∂S.P,
       Tendsto (fun n => ∫ b, shellTime (ballExhaustion z r a n) (Metric.ball z r) T
         (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y) atTop (𝓝 0))
-    -- Named measurability of the LBM shell limit in the environment (G1: not written in the answer; see report).
+    -- Named measurability of the LBM shell limit in the environment (gap G1: not written in the source).
     (hShellMeas : ∀ n, AEMeasurable (fun ω => ∫ b, shellTime (ballExhaustion z r a n) (Metric.ball z r) T
         (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y) S.P)
     -- Step 7: mesh-good events have probability tending to one (upper half of Lemma 2.8).

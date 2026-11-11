@@ -131,20 +131,20 @@ each realised by a declaration already proved in `MatedCRT/Proofs/Sec3/IntegralC
   (ContinuumOccupation.lean:100);
 * step 9 (identification of the limit with the Green integral): the identity clause of `FrozenLBMGreenOccupationRescaled`.
 
-Section 11 obligations of that note, against the Lean definitions (the proof is closed: `#print axioms` is transitive):
+Section 11 obligations of the write-up, against the Lean definitions (the proof is closed: `#print axioms` is transitive):
 * 11.1: `c₀ = 2/m₀` is definitional (Defs/Setting.lean:188); the lower scaling `c ε⁻¹ ≤ m_ε` is `MepsScalingInput`
   (External/SLE.lean:63), which gives `C⁻¹ ε⁻¹ ≤ m_ε` for small `ε`.
 * 11.2: `IsHolderContinuousOn` is global with exponent in `(0,1]` (Defs/Notation.lean:103). The Lean inclusion is
-  `envSigma ≤` the NULL-MEASURABLE σ-algebra (Proofs/Measurability/EnvSigmaCore.lean:11), not the ambient one of the note; it
+  `envSigma ≤` the NULL-MEASURABLE σ-algebra (Proofs/Measurability/EnvSigmaCore.lean:11), not the ambient one of the write-up; it
   suffices through `IsValid.aemeasurable_of_envSigma` (EnvSigmaCore.lean:37), used by GreenIntegralMeasurable.lean:147 and
   TestFunctionTightness.lean:62.
 * 11.3: `MatedCRTEnv` (Defs/Setting.lean:105) has no path-realisation field. The functional form is `exists_truncated_joint`
   (Proofs/Sec3/IntegralConvergenceGreenFunction/TruncatedJointAE.lean:27): a jointly measurable version, a.e. equal to the
-  truncated path integrals. The note's `Xbar` for the path itself is not needed, since `rescaledLBMPath` is defined directly.
+  truncated path integrals. The write-up's `Xbar` for the path itself is not needed, since `rescaledLBMPath` is defined directly.
 * 11.4: the walk law `srwLaw` (Defs/RandomWalk.lean:72) needs no kernel interface. Cell facts: `vertexPoint ∈ cell`
   (Proofs/Sec6/ConstantOrderLowerBoundDiv/Geometry.lean:106); `k ∈ interiorCellVertices ε η (ball z r)` gives
-  `vertexPoint ε η k ∈ ball z r` (Sec3/IntegralConvergenceGreenFunction/OccupationTail.lean:12), note step 2 (5).
-* 11.5: `greenFn` is `(∫⁻ visits).toReal` (Defs/RandomWalk.lean:95), the note's formula; the exit moments are ENNReal
+  `vertexPoint ε η k ∈ ball z r` (Sec3/IntegralConvergenceGreenFunction/OccupationTail.lean:12), write-up step 2 (5).
+* 11.5: `greenFn` is `(∫⁻ visits).toReal` (Defs/RandomWalk.lean:95), the write-up's formula; the exit moments are ENNReal
   lintegrals (`exitTimeMoment`, RandomWalk.lean:108; `ExitTimeUpperBoundStmt`, Draft/Section2.lean:239), so no `toReal` encoding. -/
 theorem firstPass_3_4 {𝒮 : SpaceFillingSLEModel} (h27 : VolumeGrowthStmt) (h18 : ExitTimeUpperBoundStmt 𝒮)
     (hscale : MepsScalingInput 𝒮) (hrevuz : FrozenLBMGreenOccupationRescaled 𝒮)
