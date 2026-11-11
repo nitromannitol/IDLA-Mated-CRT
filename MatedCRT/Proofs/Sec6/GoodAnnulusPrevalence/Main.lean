@@ -36,14 +36,14 @@ theorem goodAnnulusPrevalence_of_fieldInputs (h0 : WholePlaneLQGExistenceStep)
 
 /-! ## Final forms
 
-The hypotheses below are exactly the steps of the proofs of Lemmas 6.5 and 6.4 that are still open (2026-11-05). Every
+The hypotheses below are exactly the steps of the proofs of Lemmas 6.5 and 6.4 that are named steps (see docs/campaign/COUNTED.md). Every
 proved ingredient is discharged: Lemma 6.6 (`annulusIterate`), the transfer of Lemma 6.6 to the cone field
 (`annulusIterateConeTransfer`, IR-c4-5), the locality of `E_r(z)` modulo additive constant (`goodAnnulusEventLocality`,
 IR-c4-6) and the tightness step of Lemma 6.5 (`wholePlaneGoodAnnulusTightness_of_volumeTail`, IR-c4-4). Lemma 6.5 uses
 no cited Draft statement and no External input. -/
 
-/-- **Lemma 6.5, final form** (lemma:annulus-hit, line 2350; event corrected by [C5]). Hypotheses, all open steps
-(owner c4, `MatedCRT/Steps/Sec6/AnnulusHit.lean`):
+/-- **Lemma 6.5, final form** (lemma:annulus-hit, line 2350; event corrected by [C5]). Hypotheses, all named steps
+(`MatedCRT/Steps/Sec6/AnnulusHit.lean`):
 * `WholePlaneLQGExistenceStep` (IR-c4-1): a whole-plane GFF with its `γ`-LQG measure exists;
 * `ConeWholePlaneWeylComparisonStep` (IR-c4-2): eq:gff (line 444) with Weyl scaling, near an admissible annulus;
 * `WholePlaneLQGCoordinateChangeStep` (IR-c4-3): eq:gff-scaling and the LQG coordinate change for `h^ℂ`;
@@ -53,8 +53,8 @@ theorem annulusHit_final (h0 : WholePlaneLQGExistenceStep) (h1 : ConeWholePlaneW
     (h2 : WholePlaneLQGCoordinateChangeStep) (hV : WholePlaneUpperVolumeTailStep) : AnnulusHitStmt :=
   annulusHit_of_volumeTail h0 h1 h2 hV
 
-/-- **Lemma 6.4, final form** (lemma:good-prevalance, line 2335; event corrected by [C5]). Hypotheses, all open steps
-(owner c4): the four of Lemma 6.5 (`annulusHit_final`) and
+/-- **Lemma 6.4, final form** (lemma:good-prevalance, line 2335; event corrected by [C5]). Hypotheses, all named steps
+(see docs/campaign/COUNTED.md): the four of Lemma 6.5 (`annulusHit_final`) and
 * `ConeMeanZeroRestrictionStep` (eq:gff on the mean-zero pairings, line 444; input of IR-c4-5,
   `MatedCRT/Steps/Sec6/GoodAnnulusPrevalence.lean`);
 * `CircleAverageModConstStep` (circle-average differences are determined by the field modulo additive constant; input

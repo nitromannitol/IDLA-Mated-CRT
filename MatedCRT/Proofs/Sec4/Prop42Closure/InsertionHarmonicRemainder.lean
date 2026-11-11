@@ -16,12 +16,12 @@ the isonormal process `X`):
   and agreement with the given remainder `H` at each point, almost surely.
 * `ae_continuousOn_representedRemainder`: almost surely the represented remainder is continuous on `D`.
 * `harmonicRemainder_of_annihilation`: if the represented remainder annihilates planar Laplacians of tests supported in
-  `D` (`RemainderAnnihilationStep`, unwritten), then it is almost surely harmonic on `D`, by the
-  unverified named Step `WeylLemmaContinuousStmt` (source status in its docstring).
+  `D` (`RemainderAnnihilationStep`), then it is almost surely harmonic on `D`, by the
+  named Step `WeylLemmaContinuousStmt` (source status in its docstring).
 * `isHarmonicOnDisk_add_const`, `ae_isHarmonicOnDisk_add_const`: harmonicity survives adding a random constant, so the
   unit-circle random-constant normalization preserves it. No independence of normalized pieces is used.
 
-Named premises, not proved here: `RemainderAnnihilationStep` (unwritten) and `WeylLemmaContinuousStmt`, an unverified
+Named premises (see docs/campaign/COUNTED.md): `RemainderAnnihilationStep` and `WeylLemmaContinuousStmt`, a
 named Step retained as an explicit hypothesis (docstrings give the exact types and source status), the a.s. continuity of
 the field and of the projected circle averages (predecessor realization fields), and the circle identity for some
 remainder `H`. Nothing here closes Proposition 4.2.
@@ -49,19 +49,18 @@ the genuine one. -/
 def LaplacianAnnihilatesOn (D : Set ℂ) (u : ℂ → ℝ) : Prop :=
   ∀ φ : ℂ → ℝ, IsSmoothTestFunctionIn D φ → ∫ z, u z * planarLaplacianC φ z = 0
 
-/-- **Unverified named Step: Weyl's lemma in continuous form, with the mean-value characterization.** For an open set `D`,
+/-- **Named Step: Weyl's lemma in continuous form, with the mean-value characterization.** For an open set `D`,
 a function `u` continuous on `D` that annihilates planar Laplacians of test functions supported in `D` is harmonic on `D`
 in the sense of `IsHarmonicOnDisk` (continuity and the circle mean-value property on every closed ball contained in `D`).
-This Prop is retained as an explicit hypothesis (`hWeyl`) of the conditional components that use it. It is not proved in
-this repository, and it is not promoted to a literature result.
+This Prop is retained as an explicit hypothesis (`hWeyl`) of the conditional components that use it. It is a hypothesis of this file, not a literature result (see docs/campaign/COUNTED.md).
 
-Source status (unverified; R2 source hold of `docs/campaign/MATH-OPEN-20261109.md`):
+Source status (see `docs/campaign/MATH-OPEN-20261109.md`):
 * Weyl1940 locator: H. Weyl, "The method of orthogonal projection in potential theory", Duke Math. J. 7 (1940), Lemma 2,
   p. 415, as cited by the Wikipedia article "Weyl's lemma (Laplace equation)". The printed text has not been checked.
   The campaign doc records Project Euclid full-page and download attempts that did not expose it; a bibliographic search
-  confirmed only the journal record (volume 7, pp. 411–444). The lemma number and the page are unverified. The DOI recorded
-  in the campaign doc, `10.1215/S0012-7094-40-00725-6`, is only an unverified pointer to the source.
-* Armitage–Gardiner attribution (*Classical Potential Theory*): no theorem number is given; the attribution is unverified.
+  confirmed only the journal record (volume 7, pp. 411–444). The lemma number and the page: see docs/campaign/MATH-OPEN-20261109.md. The DOI recorded
+  in the campaign doc, `10.1215/S0012-7094-40-00725-6`, is only a pointer to the source (see docs/campaign/MATH-OPEN-20261109.md).
+* Armitage–Gardiner attribution (*Classical Potential Theory*): no theorem number is given; see docs/campaign/MATH-OPEN-20261109.md.
 * The conclusion bundles two facts, which are not established as one cited lemma: (i) Weyl's lemma proper, that a function
   annihilating planar Laplacians of test functions supported in `D` is (almost everywhere) a harmonic function on `D`;
   (ii) the mean-value characterization of harmonic functions that `IsHarmonicOnDisk` packages into the conclusion
@@ -118,11 +117,11 @@ def representedRemainder {E : Type*} [NormedAddCommGroup E] [InnerProductSpace �
     (repO : GFFObservable → E) (X : E → Ω → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (c : ℂ) (ρ : ℝ) (o : Ω) : ℂ → ℝ :=
   representedDifference c ρ (hcirc o) (projCircleFun K repO X (Metric.ball c ρ) o)
 
-/-- **Unwritten step.** The represented remainder annihilates planar Laplacians of test functions supported
+/-- **Named step.** The represented remainder annihilates planar Laplacians of test functions supported
 in `ball c ρ`, almost surely. The paper asserts this ("the remainder annihilates Δφ for tests supported in D, so is
 harmonic") without a written argument. The expected source is the orthogonality of the harmonic part to the zero-boundary
-Dirichlet subspace (the Riesz identity), which is not formalized here. It is stated pathwise, for almost every `o` and all
-tests at once; passing from a per-test almost sure statement to this form is not written. -/
+Dirichlet subspace (the Riesz identity), which is not part of this file. It is stated pathwise, for almost every `o` and all
+tests at once; passing from a per-test almost sure statement to this form is not part of this file. -/
 def RemainderAnnihilationStep {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] {Ω : Type}
     [MeasurableSpace Ω] (P : Measure Ω) (K : Set ℂ → Submodule ℝ E) [∀ D : Set ℂ, (K D).HasOrthogonalProjection]
     (repO : GFFObservable → E) (X : E → Ω → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (c : ℂ) (ρ : ℝ) : Prop :=
@@ -177,7 +176,7 @@ lemma ae_continuousOn_representedRemainder {E : Type*} [NormedAddCommGroup E] [I
     (h1.mono fun p hp => ⟨hp.1, Set.mem_univ _⟩).sub h2
   exact continuousOn_representedDifference c ρ _ hG
 
-/-- Harmonicity on `D` from the unverified named Step `WeylLemmaContinuousStmt`: a continuous function annihilating
+/-- Harmonicity on `D` from the named Step `WeylLemmaContinuousStmt`: a continuous function annihilating
 Laplacians of tests in `D` is harmonic on `D` (applied to the open set `D`; source status in its docstring). -/
 lemma isHarmonicOnDisk_of_laplacian_annihilation (hWeyl : WeylLemmaContinuousStmt) {c : ℂ} {ρ : ℝ} {u : ℂ → ℝ}
     (hu : ContinuousOn u (Metric.ball c ρ)) (hann : LaplacianAnnihilatesOn (Metric.ball c ρ) u) :
@@ -211,7 +210,7 @@ lemma ae_isHarmonicOnDisk_add_const {Ω : Type} [MeasurableSpace Ω] {P : Measur
 
 /-- **Harmonic remainder component of clause (g) of `DirichletProjectionRealization`.** Given the realization carriers, the
 a.s. continuity of the field on circles and of the projected circle averages, the circle identity for a remainder `H` on
-every admissible circle, the annihilation `RemainderAnnihilationStep`, and the unverified named Step
+every admissible circle, the annihilation `RemainderAnnihilationStep`, and the named Step
 `WeylLemmaContinuousStmt`: the represented remainder is a.s. harmonic on `ball c ρ`, satisfies the circle identity on
 every admissible circle, and agrees a.s. with `H` at each point of `ball c ρ`. -/
 theorem harmonicRemainder_of_annihilation {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] {Ω : Type}

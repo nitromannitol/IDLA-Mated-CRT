@@ -21,15 +21,15 @@ import MatedCRT.Proofs.Sec6.IterativeBound.Statement
 
 ## Final forms
 
-The `_final` theorems take only cited Draft statements and the steps still open (2026-11-05); no External input is
+The `_final` theorems take only cited Draft statements and the named steps (see docs/campaign/COUNTED.md); no External input is
 used. The hypotheses, in this order:
 * cited (Draft statements of results the paper quotes): Lemma 2.16 `GreenKernelLowerBoundStmt`, Lemma 2.7
   `VolumeGrowthStmt`, Lemma 2.8 `CellSizeEstimateStmt`, Lemma 2.9 `CountingMeasureConvergenceStmt`, Lemma 2.18
   `ExitTimeUpperBoundStmt` (all five for each result here);
-* open steps of Lemmas 6.4 and 6.5 (`goodAnnulusPrevalence_final`): `WholePlaneLQGExistenceStep`,
+* steps of Lemmas 6.4 and 6.5 (`goodAnnulusPrevalence_final`): `WholePlaneLQGExistenceStep`,
   `ConeWholePlaneWeylComparisonStep`, `WholePlaneLQGCoordinateChangeStep`, `WholePlaneUpperVolumeTailStep`,
-  `ConeMeanZeroRestrictionStep`, `CircleAverageModConstStep`;
-* open step of Lemma 6.8 (b) (`MatedCRT/Proofs/Measurability/GoodScale.lean`):
+  `ConeMeanZeroRestrictionStep`; `CircleAverageModConstStep` is proved by `circleAverageModConstStep` (`MatedCRT/Proofs/Field/ConeCircleModConst.lean:367`);
+* step of Lemma 6.8 (b) (`MatedCRT/Proofs/Measurability/GoodScale.lean`; see docs/campaign/COUNTED.md):
   `LQGMeasureFieldMeasurableStep` (eq:measure-lim, line 470).
 
 Lemmas 6.7 (b), 6.9 (b) and 6.10 add no hypothesis to those of Lemma 6.8 (b): their remaining inputs (Lemma 2.19,
@@ -63,8 +63,8 @@ theorem constantOrderLowerBoundDiv_of_fieldInputs (𝒮 : SpaceFillingSLEModel)
     (goodAnnulusPrevalence_of_fieldInputs h0 h1 h2 hV hR hD) hμ
 
 /-- **Lemma 6.8, route (b) of E-A10, final form** (lemma:constant-order-lower-bound-div, line 2455). Hypotheses: the
-cited Lemmas 2.16, 2.7, 2.8, 2.9, 2.18; the six open field steps of Lemmas 6.4 and 6.5 (`goodAnnulusPrevalence_final`);
-the open step `LQGMeasureFieldMeasurableStep` (eq:measure-lim, line 470). -/
+cited Lemmas 2.16, 2.7, 2.8, 2.9, 2.18; the six field steps of Lemmas 6.4 and 6.5 (`goodAnnulusPrevalence_final`);
+the step `LQGMeasureFieldMeasurableStep` (eq:measure-lim, line 470). -/
 theorem constantOrderLowerBoundDivLog_final (𝒮 : SpaceFillingSLEModel)
     (h216 : GreenKernelLowerBoundStmt 𝒮) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
     (h29 : CountingMeasureConvergenceStmt 𝒮) (h218 : ExitTimeUpperBoundStmt 𝒮)

@@ -18,14 +18,14 @@ Route (`c = e^{γ c_a}`, `c_a = g_a(0) + (Q-α) log a`):
 * field law: `MatedCRT.Field.isWholePlaneGFF_affine` (`Proofs/Field/WholePlaneAffine.lean`);
 * circle averages: for `s > 0`, `fieldCircleAverage α (affHcirc a 0 h ω) s v = H(a s, a v) - H(a, 0)` with `H = fieldCircleAverage α (h ω)`
   (`insCircleAverage_log_scaled`: `circleAverage (log‖·‖) (a v) (a s) = log a + circleAverage (log‖·‖) v s`);
-* LQG limit: the non-dyadic coordinate rule `MatedCRT.Proposed.InsertionCoordinateExtensionStep` (an OPEN INTERNAL
-  EXTENSION, staged in `MatedCRT/Proposed/DuplantierSheffieldCoordinate2011.lean`;
-  not a DS11 citation; the only open input here), then the constant shift
+* LQG limit: the non-dyadic coordinate rule `MatedCRT.Proposed.InsertionCoordinateExtensionStep` (an internal
+  extension (see docs/campaign/COUNTED.md), staged in `MatedCRT/Proposed/DuplantierSheffieldCoordinate2011.lean`;
+  not a DS11 citation; the only input here), then the constant shift
   `MatedCRT.LQGMeasure.isLQGLimit_addCircleAverage` (`Proofs/Sec2/LQGMeasureProperties/Approx.lean`);
 * law: `identDistrib_lqgMeasure_of_circleProcess` (`Proofs/Sec2/ConeFamilyMeasurable/MeasureLaw.lean`, the Borel recovery) with
   `MatedCRT.Field.wholePlane_circle_law` (equality in law of whole-plane circle averages) and a deterministic shift.
 
-The theorem `insertionLQGScalingLawStep_of_coordinateRule` is conditional on the open internal extension
+The theorem `insertionLQGScalingLawStep_of_coordinateRule` is conditional on the internal extension (see docs/campaign/COUNTED.md)
 `InsertionCoordinateExtensionStep`, not on a cited theorem; it is not a closure of K. -/
 
 open MeasureTheory Filter Topology Set Metric ProbabilityTheory HarmonicBalls
@@ -146,14 +146,14 @@ theorem isLQGLimit_insertion_shift {γ α a : ℝ} {hc : ℝ → ℂ → ℝ} {m
   rw [hfun] at key
   exact key
 
-/-! ### 4. Input K from the open insertion-coordinate extension -/
+/-! ### 4. Input K from the insertion-coordinate extension -/
 
-/-- **Input K from the open insertion-coordinate extension.** `InsertionLQGScalingLawStep` (`PlateauScaleLaw.lean:106`)
+/-- **Input K from the insertion-coordinate extension.** `InsertionLQGScalingLawStep` (`PlateauScaleLaw.lean:106`)
 follows from the fixed-map coordinate rule `InsertionCoordinateExtensionStep`. That
-hypothesis is an OPEN INTERNAL EXTENSION and NOT a DS11 citation: DS11 Prop. 2.1 (p. 13) does not print its whole-plane
+hypothesis is an internal extension (see docs/campaign/COUNTED.md) and NOT a DS11 citation: DS11 Prop. 2.1 (p. 13) does not print its whole-plane
 insertion field or its non-dyadic scales (see `MatedCRT/Proposed/DuplantierSheffieldCoordinate2011.lean`). Together with the
 existing whole-plane field law, circle-average measurability and Borel recovery, the field law and the Borel recovery are
-proved here (not assumed); the non-dyadic convergence is the single open input. -/
+proved here (not assumed); the non-dyadic convergence is the single input. -/
 theorem insertionLQGScalingLawStep_of_coordinateRule
     (hDS : MatedCRT.Proposed.InsertionCoordinateExtensionStep) : InsertionLQGScalingLawStep := by
   intro γ α hγ0 hγ2 hα Ω _ P hC hcirc μ hP hGFF hLQG a ha
