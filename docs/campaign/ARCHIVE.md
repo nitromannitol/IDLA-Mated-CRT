@@ -219,3 +219,13 @@ Moved with git mv from MatedCRT/ to archive/ (same relative path). Each file is 
 | MatedCRT/FirstPass/S5s.lean | archive/MatedCRT/FirstPass/S5s.lean | no own error; it imports MatedCRT.FirstPass.S5s.Copies, which fails | not reached from any root; imports only Copies |
 
 Other entries of the same whole-library build are not tracked modules: 16 are untracked probe or axiom-check files (for example MatedCRT/Audit/RefutationsProbe.lean, MatedCRT/Proofs/IDLA/NamesY2.lean); 11 name modules that are archived or have no file, and are imported by untracked IntegralConvergenceGreenFunction/*AxiomsY5.lean files (for example JointL1AxiomsY5.lean imports ...JointL1Convergence and ...ConditionalMassBound, which are archived). Those untracked files are left in place.
+
+## Batch G (dev artifacts)
+
+Moved with git mv from MatedCRT/ to archive/ (same relative path), task p2-clean-h1. Each file name contains `Test`, the dev-artifact pattern of the hygiene table (a) in reports/z9-hygiene-h1.txt. For each file: no Lean file under MatedCRT/ imports it (working tree, untracked files included), no active task file in tasks/ names it, and it is not reachable from the library root MatedCRT.lean, the 22 FirstPass/Closure modules, any */Main.lean, the closed_ declarations or the names of README.md and PHASE2-INVENTORY.md. Build check after the moves: lb +MatedCRT, the 22 Closure modules and +MatedCRT.FirstPass.Main, all pass (log notes/z9-scripts/lb-batchG.txt, LB_RC=0).
+
+| old path | new path | importers | owner | reachable from roots |
+|---|---|---|---|---|
+| MatedCRT/FirstPass/S4S6c/TestBridge.lean | archive/MatedCRT/FirstPass/S4S6c/TestBridge.lean | none | none | no |
+| MatedCRT/FirstPass/S4S6c/TestProduct.lean | archive/MatedCRT/FirstPass/S4S6c/TestProduct.lean | none | none | no |
+| MatedCRT/FirstPass/S6r/OneTest/ExitQHone.lean | archive/MatedCRT/FirstPass/S6r/OneTest/ExitQHone.lean | none | none | no; its path is named in a docstring of MatedCRT/FirstPass/S6r/Shells/ChoiceStopped.lean (lines 8, 130), not an import |
