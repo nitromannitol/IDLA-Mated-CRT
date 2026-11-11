@@ -12,7 +12,7 @@ kind `cited` are not counted here. Two extra rows (B6) give the counted forms th
   one-line application of another theorem, located in `file`; the proof of the row is there.
 - **Binder classes**: each explicit or implicit binder is classed by the file that defines its Prop:
   External, Frozen, Proposed, HB (HarmonicBalls/Draft), HBdef (other HarmonicBalls), model core
-  (CertifiedReferenceModel and CertifiedReferenceModelCore, SLERef/Certified.lean:54 and SLERef/S5qe; class `model core`, lead li 2026-11-11 08:20), data (SpaceFillingSLEModel, `ν`), Def (MatedCRT/Defs), Step (a paper step outside
+  (CertifiedReferenceModel and CertifiedReferenceModelCore, SLERef/Certified.lean:54 and FirstPass/S5qe.lean:33; class `model core`, lead li 2026-11-11 08:20), data (SpaceFillingSLEModel, `ν`), Def (MatedCRT/Defs), Step (a paper step outside
   Frozen, External and Proposed), DRAFT (MatedCRT/Draft, a Draft statement of this paper), Proof? (defined in a
   non-Frozen FirstPass or Proofs file, to be examined), std (Mathlib types). A binder whose Prop is an alias (its
   definition is one identifier) takes the class of the target when the target is Proposed, External, HB or DRAFT.
@@ -102,7 +102,7 @@ Status: **PENDING TRUTH CHECK**. Existence is not proved in this repository; it 
 the valid environments `MatedCRTEnv.IsValid 𝒮 γ` (MatedCRT/Defs/Setting.lean:141).
 
 - **Literature inputs named.** `IsMatingOfTreesCoupling` (LatticeProb module
-  `LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.IsMatingOfTreesCoupling`; Setting.lean:7, :14, :157-165) is the coupling
+  `LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.IsMatingOfTreesCoupling` (Lattice-Probability/LatticeProb/Bonanno/MatedCRTHarmonic/Frozen/IsMatingOfTreesCoupling.lean:61); Setting.lean:7, :14, :157-165) is the coupling
   conjunct of `IsValid`. `MatedCRTEnv.IsValid` (Setting.lean:141) has the fields `isQuantumCone`, `isLQGMeasure`,
   `isSLE` and the coupling. `HasReferenceEnvironments 𝒮` (MatedCRT/FirstPass/SLERef/Reference.lean:42) gives valid
   environments for every γ ∈ (0,2); it is a conjunct of `CertifiedReferenceModel ν 𝒮` (SLERef/Certified.lean:54, :54).

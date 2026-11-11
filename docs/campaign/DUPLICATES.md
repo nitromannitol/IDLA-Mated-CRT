@@ -79,7 +79,7 @@ Prop by definition, so mixing them costs nothing at use sites. CANONICAL for new
 Defs field `IsObstacleSetting.locallyFinite` (Defs/Sandpile.lean) keeps the unfolded form.
 
 ## D9. Name clashes that block imports ("environment already contains"; c1, 2026-11-05)
-- `MatedCRT.rescaledGreenKernel`: Steps/Sec3/UniformConvergenceGreenKernel.lean:16 (Lemma 3.3 reduction) and
+- `MatedCRT.rescaledGreenKernel`: Proofs/Sec4/SubsequentialProperties/ClusterContainment.lean:26 (Lemma 3.3 reduction) and
   Proofs/Sec4/SubsequentialProperties/ClusterContainment.lean:26 (Lemma 4.8 chain, imported by
   Proofs/Sec4/ConvergenceDivisible/Final.lean). Blocks importing 3.3's reduction together with the final forms of 4.1,
   4.2, 4.8, 5.1 (REDUCTIONS F15). CANONICAL: the Steps definition (3.3 is upstream); the Sec4 owner (m4) renames or
