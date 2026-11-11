@@ -9,7 +9,7 @@ import MatedCRT.External.SLE
 import MatedCRT.Draft.Section2
 
 /-!
-# Common polynomially good environment (plan CHATGPT-221, section 3, Lemma 3; owner q4, task H3)
+# Common polynomially good environment (plan section 3, Lemma 3)
 
 Part A (this stage): the discrete and probabilistic helpers used by Lemma 3.
 * `exists_chain_forward`, `exists_vPath_to_boundary`: a finite set `A` of vertices, with consecutive edges
@@ -330,7 +330,7 @@ theorem fp36_good_core {𝒮 : SpaceFillingSLEModel} (h28 : CellSizeEstimateStmt
   dsimp only
   exact ⟨hareaω, fun j k hjk => hreg'.cells_meet j k hjk, hmesh, hfe, hint0, hbeω⟩
 
-/-- **Lemma 3 (`commonGood_fp36`, plan CHATGPT-221 section 3): the common polynomially good environment.** The exponent
+/-- **Lemma 3 (`commonGood_fp36`, plan section 3): the common polynomially good environment.** The exponent
 is the gamma-only `b = 1/(2+γ)^2` of the verdict (not the `b` of `FrozenOneSidedBoundaryContinuity`), and `CellSizeEstimateStmt`
 is used at `ζ = b`, so that its upper diameter exponent `2/(2+γ)^2 - ζ` equals `b`. -/
 theorem commonGood_fp36 {𝒮 : SpaceFillingSLEModel}

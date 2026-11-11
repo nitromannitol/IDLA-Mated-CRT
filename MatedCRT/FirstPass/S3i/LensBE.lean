@@ -4,8 +4,8 @@ import MatedCRT.FirstPass.S3i.Proof
 /-!
 # Lens hitting probability from the one-sided BE estimate (plan Lemma 6)
 
-Source: `notes/fp-gaps/CHATGPT-221-idla-3-6-QuenchedLensStep-plan-PRO.md`, section 6 "Apply BE to the lens hitting
-probability". Lemma 1 (`exitHitProb_basic`, owner z10) and Lemma 5 (`lensGeometry_fp36`, owner z11) enter as binders
+Plan section 6 "Apply BE to the lens hitting
+probability". Lemma 1 (`exitHitProb_basic`) and Lemma 5 (`lensGeometry_fp36`) enter as binders
 with the plan's exact types until they land. The exponent is `boundary_power_le_fp36` (`S3i/Proof.lean:50`).
 
 Terminology: discrete harmonic measure of the lens domain (Armitage-Gardiner: the exit distribution of the random walk

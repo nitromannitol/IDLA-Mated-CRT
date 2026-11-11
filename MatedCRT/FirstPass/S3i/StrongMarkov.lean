@@ -5,7 +5,7 @@ import MatedCRT.Proofs.Infra.RandomWalk
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.CellIntegral
 
 /-!
-# Strong Markov inequality at `vExitTime` (plan `CHATGPT-221-idla-3-6-QuenchedLensStep-plan-PRO`, §2, worker H2)
+# Strong Markov inequality at `vExitTime` (plan §2)
 
 Plan Lemma 2, `srwLaw_strongMarkov_vExitTime`, stated exactly as in the plan, in the private namespace
 `MatedCRT.FirstPass36.H2`. The definitions `shiftedPath`, `FiniteExitData`, `exitHitProb` are copies of the

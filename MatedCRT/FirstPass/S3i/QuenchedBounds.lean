@@ -7,11 +7,11 @@ import MatedCRT.FirstPass.S3i.LensGeometry
 import MatedCRT.FirstPass.S3i.BoundaryCell
 
 /-!
-# The two quenched estimates on a good environment (plan Lemma 7, worker H7)
+# The two quenched estimates on a good environment (plan Lemma 7)
 
-Plan: `notes/fp-gaps/CHATGPT-221-idla-3-6-QuenchedLensStep-plan-PRO.md`, section 7 (l.411-461).
+Plan section 7.
 Lemmas 1, 2, 4, 5, 6 of the plan are taken as hypotheses with the plan's exact types, named
-`FP36LemmaOne`, `FP36LemmaTwo`, `FP36LemmaFour`, `FP36LemmaFive`, `FP36LemmaSix` (workers H1, H2, H4, H5, H6).
+`FP36LemmaOne`, `FP36LemmaTwo`, `FP36LemmaFour`, `FP36LemmaFive`, `FP36LemmaSix`.
 
 This file proves the start and finite-exit clause (plan steps 1-4) and the lens clause (plan steps 5-12).
 
@@ -26,7 +26,7 @@ open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal NNReal
 
 open Classical in
-/-- Plan Lemma 1 (`exitHitProb_basic`, worker H1): the finite-domain exit package, as a hypothesis type. -/
+/-- Plan Lemma 1 (`exitHitProb_basic`): the finite-domain exit package, as a hypothesis type. -/
 def FP36LemmaOne : Prop :=
   ∀ {m : ℤ → ℤ → ℕ} {A B : Set ℤ}, FiniteExitData m A →
     (∀ a ∈ A, srwLaw m a {x | UsesEdges m a x ∧ vExitTime A x < ⊤} = 1) ∧

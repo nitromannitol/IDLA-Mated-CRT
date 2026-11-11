@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S3i.BoundaryCell
 import MatedCRT.FirstPass.S3i.LensDefs
 
 /-!
-# Lens geometry and the local zero boundary (plan `CHATGPT-221-idla-3-6-QuenchedLensStep-plan-PRO`, §5, worker H5)
+# Lens geometry and the local zero boundary (plan §5)
 
 Deterministic. Plan Lemma 5, `lensGeometry_fp36`: the enlarged-disk lens `U = B_{r+4δ}(z) ∩ B_{s/4}(P)`
 (`δ = ε^b`, `s = ε^(b/2)`, `P = ballRetraction z r (η(εv))`) has `v` as an interior cell, is a convex
@@ -13,7 +13,7 @@ Uses Lemma 4 (`H4.boundaryVertexGeometry_fp36_of_ball`, `BoundaryCell.lean`). Th
 `ball z r ⊆ ball 0 ρ₁` of Lemma 4 is derived here from `houter` and `hρ`.
 
 The definitions `fp36LensDomain`, `fp36LensFarCells`, `FP36GoodEnv` are imported from
-`MatedCRT/FirstPass/S3i/LensDefs.lean` (the plan's "Minimal internal definitions", committed by z1).
+`MatedCRT/FirstPass/S3i/LensDefs.lean` (the plan's "Minimal internal definitions").
 -/
 
 namespace MatedCRT
@@ -66,7 +66,7 @@ lemma exists_point_on_enlarged_sphere {z q : ℂ} {r δ : ℝ} (hδ : 0 ≤ δ) 
         ← dist_eq_norm, sub_mul, div_mul_cancel₀ _ ht.ne', one_mul]
       linarith
 
-/-- **Lemma 5 (plan §5, H5): lens geometry and the local zero boundary.** -/
+/-- **Lemma 5 (plan §5): lens geometry and the local zero boundary.** -/
 lemma lensGeometry_fp36
     {Ω : Type} [MeasurableSpace Ω]
     {S : MatedCRTEnv Ω}

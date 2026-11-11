@@ -4,14 +4,14 @@ import MatedCRT.FirstPass.S3i.LensStep
 import MatedCRT.FirstPass.S3i.ExitAlmostSure
 
 /-!
-# Plan Lemma 7 with the corrected exit input (fp-S3i-H7-corrected, worker z12; operator ruling chat 232)
+# Plan Lemma 7 with the corrected exit input
 
 `S3i/QuenchedBounds.lean` (commit 6b13afa) takes the finite-domain package `FP36LemmaOne` as a binder `L1`.
 Its conjunct 1, `srwLaw m a {x | UsesEdges m a x ∧ vExitTime A x < ⊤} = 1`, is false as typed, so that theorem
 is vacuous. This file restates Lemma 7 with `L1` replaced by the almost-sure exit statement alone:
 
 * `hexit : ∀ {m} {A'}, FiniteExitData m A' → ∀ a ∈ A', srwLaw m a {x | vExitTime A' x < ⊤} = 1`
-  (chat 232, part (a): true as typed; `srwLaw_vExitTime_lt_top_fp36` of `S3i/ExitAlmostSure.lean`, z10, supplies it).
+  (part (a): true as typed; `srwLaw_vExitTime_lt_top_fp36` of `S3i/ExitAlmostSure.lean`, supplies it).
 * Lemma 6 is used in its closed form `lensProb_le_fp36_closed` (`S3i/LensBEClosed.lean`), which takes no exit input.
 * The far-exit clause replaces the all-time event `UsesEdges` by the almost-sure step property
   `H2.ae_step_adjacent` (Lemma 2). Steps that stay put are allowed by that property and are harmless in the pathwise
@@ -230,10 +230,10 @@ theorem quenchedBoundsOnGoodStmt_of_exit
   intro Ω _ S ρ₀ ρ₁ b ν A r ε z y ω hε hb hν hA hr hρ hmpos hscale houter hgood
   exact quenchedBoundsOnGood_fp36_of_exit hexit hε hb hν hA hr hρ hmpos hscale houter hgood
 
-/-! ## The unconditional consumer: the exit input is the z10 theorem `srwLaw_vExitTime_lt_top_fp36` -/
+/-! ## The unconditional consumer: the exit input is the theorem `srwLaw_vExitTime_lt_top_fp36` -/
 
 /-- **`QuenchedBoundsOnGoodStmt` with no binder.** The almost-sure exit input is `srwLaw_vExitTime_lt_top_fp36`
-(`S3i/ExitAlmostSure.lean`, z10, almost-sure exit from a finite exit set, Lemma 1 conjunct 1 as corrected). -/
+(`S3i/ExitAlmostSure.lean`, almost-sure exit from a finite exit set, Lemma 1 conjunct 1 as corrected). -/
 theorem quenchedBoundsOnGoodStmt_closed : QuenchedBoundsOnGoodStmt :=
   quenchedBoundsOnGoodStmt_of_exit srwLaw_vExitTime_lt_top_fp36
 

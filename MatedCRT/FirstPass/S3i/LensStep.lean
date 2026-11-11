@@ -3,10 +3,10 @@ import MatedCRT.FirstPass.S3i.LensDefs
 import MatedCRT.FirstPass.S3i.GoodEvent
 
 /-!
-# Lemma 8 and the closed annealed Lemma 3.6 (plan CHATGPT-221, section 8 and "Final change"; owner q4, task H8)
+# Lemma 8 and the closed annealed Lemma 3.6 (plan section 8 and "Final change")
 
-Route: the BE/lens route (operator note 11:27 UTC; the annulus route with `hgms` is dropped).
-* `QuenchedBoundsOnGoodStmt`: plan Lemma 7 (section 7, `quenchedBoundsOnGood_fp36`, z12, `S3i/QuenchedBounds.lean`),
+Route: the BE/lens route (the annulus route with `hgms` is dropped).
+* `QuenchedBoundsOnGoodStmt`: plan Lemma 7 (section 7, `quenchedBoundsOnGood_fp36`, `S3i/QuenchedBounds.lean`),
   as a named input with the plan's exact type, until it lands.
 * `quenchedLensStep_of_BE`: plan Lemma 8. From `FrozenOneSidedBoundaryContinuity 𝒮` (the BE input), `CellSizeEstimateStmt`
   and `MepsScalingInput`, the exact `QuenchedLensStep 𝒮`: the exponent `b = 1/(2+γ)^2` and the good event come from
@@ -23,7 +23,7 @@ namespace FirstPass36
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal NNReal
 
-/-- **Lemma 7 of the plan (section 7), a named input until `quenchedBoundsOnGood_fp36` (z12) lands.** On a good environment
+/-- **Lemma 7 of the plan (section 7), a named input until `quenchedBoundsOnGood_fp36` lands.** On a good environment
 `FP36GoodEnv S ρ₀ ρ₁ b ν A r z y ε ω`, with `ε` small: the walk from the start vertex leaves the disc with probability one
 (first estimate: exactly zero), and the far-exit event has quenched mass at most `A 96^ν ε^{νb/2}`. -/
 def QuenchedBoundsOnGoodStmt : Prop :=
@@ -56,7 +56,7 @@ theorem quenchedLensStep_of_BE {𝒮 : SpaceFillingSLEModel}
 
 /-- **Corrected Lemma 3.6, annealed clause, closed (final change of `firstPass_3_6_annealed`, plan "Final change").**
 `firstPass_3_6_annealed` (`S3i/Proof.lean:262`, unchanged) with `hLens` replaced by `quenchedLensStep_of_BE`. The only
-remaining named input of the quenched route is `hQB` (Lemma 7, z12). -/
+remaining named input of the quenched route is `hQB` (Lemma 7). -/
 theorem firstPass_3_6_annealed_closed {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkToLBMStmt 𝒮)
     (h28 : CellSizeEstimateStmt 𝒮) (hm : MepsScalingInput 𝒮) (hexc : FrozenBrownianOutwardExcursionAtExit)
     (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) (hBE : FrozenOneSidedBoundaryContinuity 𝒮)

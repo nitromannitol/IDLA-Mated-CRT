@@ -3,8 +3,7 @@ import MatedCRT.FirstPass.S3i.Frozen
 /-!
 # Minimal internal definitions for the lens route of `QuenchedLensStep` (S3i)
 
-Ordinary definitions from the approved plan (`notes/fp-gaps/CHATGPT-221-idla-3-6-QuenchedLensStep-plan-PRO.md`,
-section "Minimal internal definitions"), not new frozen inputs. Shared by the workers z10, q3, q4, z11, z12.
+Ordinary definitions from the approved plan (section "Minimal internal definitions"), not new frozen inputs. Shared by the lens files of this directory.
 -/
 
 namespace MatedCRT

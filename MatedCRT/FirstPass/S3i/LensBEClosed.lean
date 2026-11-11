@@ -5,15 +5,14 @@ import MatedCRT.FirstPass.S3i.ExitProbability
 /-!
 # Lens hitting probability, closed form (S3i): plan Lemma 6 with Lemmas 1 and 5 discharged
 
-Closed form of `lensProb_le_fp36` (`MatedCRT/FirstPass/S3i/LensBE.lean`), owner z1, task
-fp-S3i-LensBE-closed (operator note 11:42 UTC).
+Closed form of `lensProb_le_fp36` (`MatedCRT/FirstPass/S3i/LensBE.lean`).
 
-* Lemma 5 is `H5.lensGeometry_fp36` (`MatedCRT/FirstPass/S3i/LensGeometry.lean`, owner z11). Its
+* Lemma 5 is `H5.lensGeometry_fp36` (`MatedCRT/FirstPass/S3i/LensGeometry.lean`). Its
   hypotheses and conclusion are the binder of `lensProb_le_fp36`, argument for argument, so it is
   applied directly.
 * Lemma 1 enters Lemma 6 only through its conjuncts 2-4 (range in `[0,1]`, discrete harmonicity on
   the exit set, boundary values `1_B` off the exit set), proved in `MatedCRT/FirstPass/S3i/ExitProbability.lean`
-  (owner z10). Conjunct 1 (almost-sure exit from the exit set) is not used by Lemma 6 and is not
+  Conjunct 1 (almost-sure exit from the exit set) is not used by Lemma 6 and is not
   assumed here.
 -/
 
