@@ -1,6 +1,7 @@
 import Mathlib
 import MatedCRT.Defs.Setting
 import MatedCRT.Proofs.Sec3.KilledOccupation.ClockClosure
+import MatedCRT.Proofs.Sec3.KilledOccupation.OccupationAssembly
 
 /-!
 # Identification of a clock from convergence of its approximants (fibre argument)
@@ -421,5 +422,152 @@ theorem regClock_identification_cone {Ω : Type*} [MeasurableSpace Ω] (P : Meas
   rw [Set.mem_ofPred_eq, Set.mem_ofPred_eq]
   unfold clockDistD
   rw [modField_eq_of_not_mem hx]
+
+/-! ### The cone clock identification `S.clock = φ` (hS6) and the cone reduction -/
+
+/-- A disc `B_r(z)` contained in `B_ρ(0)` with `ρ < 1` has `r ≤ 2`: the points `z ± 1` lie in the disc when `r > 2`,
+and `2 = |(z+1) - (z-1)| ≤ |z+1| + |z-1| < 2ρ < 2`. -/
+lemma radius_le_two_of_ball_subset {z : ℂ} {r ρ : ℝ} (hρ : ρ < 1) (hball : ball z r ⊆ ball 0 ρ) : r ≤ 2 := by
+  by_contra hr
+  rw [not_le] at hr
+  have h1 : z + 1 ∈ ball z r := by
+    rw [mem_ball, dist_eq_norm, add_sub_cancel_left, norm_one]
+    linarith
+  have h2 : z - 1 ∈ ball z r := by
+    rw [mem_ball, dist_eq_norm, sub_sub_cancel_left, norm_neg, norm_one]
+    linarith
+  have h3 := hball h1
+  have h4 := hball h2
+  rw [mem_ball, dist_zero_right] at h3 h4
+  have h5 : ‖(z + 1) - (z - 1)‖ ≤ ‖z + 1‖ + ‖z - 1‖ := norm_sub_le _ _
+  rw [show (z + 1) - (z - 1) = (2 : ℂ) by ring] at h5
+  have h7 : ‖(2 : ℂ)‖ = 2 := by simp
+  linarith
+
+/-- **hS6 for the quantum cone** (identification `φ = Φ` of the killed-occupation chain, tex:370-425). The clock of
+`S` is identified with the weighted clock of the base measure `dA` on `[0, σ]`, almost surely, for planar Brownian
+paths from `y`. Abstract inputs: the cone's origin tail moment `hT0cone` (lem:occ-tails, appendix tex:296, for the
+field `coneShift γ (S.hcirc ω)`), the ordinary Brownian occupation identity `hS0` (Step S0, tex:48-52), the base
+identity `hbase` (lem:occ-base, tex:140-151), its measurability `hmeas`, the weight identity `hweight` (eq:occ-weight),
+the finiteness `hS3`, and the χ_a-parts convergence `hE` (tex:377-385). The LQG clock property `isLQGClock` is that of
+`MatedCRTEnv.IsValid`. -/
+theorem hS6_cone (𝒮 : SpaceFillingSLEModel) {Ω : Type} [MeasurableSpace Ω] {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
+    (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ) {p κ : ℝ} (hp0 : 0 < p) (hp1 : p < min 1 (4 / γ ^ 2 - 1))
+    (hκ : κ = (2 - γ ^ 2 / 2) * p - γ ^ 2 * p ^ 2 / 2)
+    (hT0cone : ∃ C a₀ : ℝ, 0 < a₀ ∧ ∀ a ∈ Ioo 0 a₀, ∀ ε ∈ Ioo 0 a₀,
+      ∫⁻ ω, weightedMass γ ε (coneShift γ (S.hcirc ω)) (ball 0 a) ^ p ∂S.P ≤
+        ENNReal.ofReal (C * a ^ κ * (1 + Real.log (1 / a)) ^ p))
+    (dA : Ω → ContinuousPath ℂ → Measure ℝ≥0)
+    {z : ℂ} {r : ℝ} (hr : 0 < r) (hr2 : r ≤ 2) (hG : GreenDiskFormula z r) {y : ℂ} (hy : y ∈ ball z r)
+    [IsProbabilityMeasure (HarmonicBalls.planarBrownianMotion y)] (hS0 : BrownianOccupationOnBall z r)
+    (K : Kernel (Ω × ContinuousPath ℂ) ℝ≥0) [IsSFiniteKernel K] (hK : ∀ x, K x = dA x.1 x.2)
+    (ν : Ω → Measure ℂ) (hD : ball z r ⊆ ball (0 : ℂ) 1)
+    (hbase : BaseOccupationIdentity S.P (HarmonicBalls.planarBrownianMotion y) (ball z r)
+      (HarmonicBalls.greenFunction (ball z r) y) ν dA (exitNN z r))
+    (hmeas : ∀ᵐ ω ∂S.P, ∀ q : ℂ → ℝ≥0∞, Measurable q →
+      Measurable fun b => ∫⁻ u in Icc 0 (exitNN z r b), q (b u) ∂(dA ω b))
+    (hweight : ∀ᵐ ω ∂S.P, ∀ T : Set ℂ, MeasurableSet T → T ⊆ ball 0 1 →
+      ∀ g : ℂ → ℝ≥0∞, Measurable g →
+        ∫⁻ x in T, g x ∂(S.μ ω) = ∫⁻ x in T, g x * gammaWeight γ x ∂(ν ω))
+    (hS3 : ∀ᵐ ω ∂S.P, ∫⁻ x in ball z r, ENNReal.ofReal (HarmonicBalls.greenFunction (ball z r) y x) ∂(S.μ ω) < ⊤)
+    (hE : ∀ a : ℝ, 0 < a → ∀ η : ℝ, 0 < η →
+      Tendsto (fun ε => (S.P.prod (HarmonicBalls.planarBrownianMotion y))
+        {x | ENNReal.ofReal η < clockDistE γ (fun ω => coneShift γ (S.hcirc ω)) dA (exitNN z r) ε a x})
+        (𝓝[>] (0 : ℝ)) (𝓝 0)) :
+    ∀ᵐ ω ∂S.P, ∀ᵐ b ∂HarmonicBalls.planarBrownianMotion y, ∀ s ≤ exitNN z r b,
+      S.clock ω b s = (weightedClock (dA ω b) (fun u => gammaWeight γ (b u)) (exitNN z r b) s).toReal := by
+  have hσ : Measurable (exitNN z r) :=
+    ENNReal.measurable_toNNReal.comp (ContinuousPath.measurable_exitTime (ball z r) Metric.isOpen_ball)
+  have := hS.isProbabilityMeasure
+  have hcone := hS.isQuantumCone
+  obtain ⟨N, hN, hN0, hcont⟩ := exists_null_continuous_cone γ hcone
+  have hfin := weightedClock_ae_prod_ne_top S.P (HarmonicBalls.planarBrownianMotion y) γ hD S.μ ν dA
+    (exitNN z r) K hK hσ hbase hmeas hweight hS3
+  have hcv := regClock_identification_cone S.P hγ0 hγ2 hp0 hp1 hκ hcone (fun ω => coneShift γ (S.hcirc ω)) rfl
+    hT0cone dA hr hr2 hG hy hS0 K hK S.μ ν hD hbase hmeas hweight hS3 hE
+  have hlq : ∀ᵐ ω ∂S.P, ∀ (T : ℝ≥0) (η : ℝ), 0 < η →
+      Tendsto (fun k : ℕ => (HarmonicBalls.planarBrownianMotion y)
+        {b | ∃ t ≤ T, η ≤ |HarmonicBalls.lqgClockApprox γ (S.hcirc ω) (HarmonicBalls.dyadicScale k) b t -
+          S.clock ω b t|}) atTop (𝓝 0) :=
+    hS.isLQGClock.mono fun ω hω => (hω y).1
+  exact clock_eq_of_approx_convergence S.P (HarmonicBalls.planarBrownianMotion y) (exitNN z r)
+    (fun k ω b s => HarmonicBalls.lqgClockApprox γ (S.hcirc ω) (HarmonicBalls.dyadicScale k) b s)
+    (fun ω b s => (weightedClock (dA ω b) (fun u => gammaWeight γ (b u)) (exitNN z r b) s).toReal) S.clock
+    (fun η hη => tendsto_approx_cone S.P (HarmonicBalls.planarBrownianMotion y) S.hcirc dA (exitNN z r)
+      ⟨N, hN, hN0, hcont⟩ hfin hcv η hη) hlq
+
+/-- **Killed-occupation reduction with the cone identification** (the frozen `frozenLBMGreenOccupationRescaled_of_appendixB`,
+OccupationAssembly.lean:178, with its hypothesis `hS6` derived by `hS6_cone`). Its named inputs are those of the frozen
+reduction, except `hS6`, together with: `hS0` (Step S0, the ordinary Brownian occupation identity, tex:48-52), `hT0cone`
+(lem:occ-tails, appendix tex:296, for the field `coneShift γ (S.hcirc ω)`, for every admissible exponent `p`), `hE`
+(the χ_a-parts converge in probability, tex:377-385), and `hKern` (the base clock `dA` is the kernel `K` of its
+measurability, implicit in lem:occ-base). -/
+theorem frozenLBMGreenOccupationRescaled_of_appendixB_cone (𝒮 : SpaceFillingSLEModel)
+    (ν : (γ : ℝ) → (Ω : Type) → [MeasurableSpace Ω] → MatedCRTEnv Ω → Ω → Measure ℂ)
+    (dA : (γ : ℝ) → (Ω : Type) → [MeasurableSpace Ω] → MatedCRTEnv Ω → Ω → ContinuousPath ℂ → Measure ℝ≥0)
+    (hm0 : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω),
+      S.IsValid 𝒮 γ → 0 < S.m₀)
+    (hBase : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∀ (Ω : Type) [MeasurableSpace Ω]
+      (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ → ∀ (r : ℝ) (z y : ℂ), 0 < r → ball z r ⊆ ball 0 ρ → y ∈ ball z r →
+      BaseOccupationIdentity S.P (HarmonicBalls.planarBrownianMotion y) (ball z r)
+        (HarmonicBalls.greenFunction (ball z r) y) (ν γ Ω S) (dA γ Ω S) (exitNN z r))
+    (hWeight : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω),
+      S.IsValid 𝒮 γ → OccWeightIdentity S.P S.μ (ν γ Ω S) γ)
+    (hMeas : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∀ (Ω : Type) [MeasurableSpace Ω]
+      (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ → ∀ (r : ℝ) (z y : ℂ), 0 < r → ball z r ⊆ ball 0 ρ → y ∈ ball z r →
+      ∀ᵐ ω ∂S.P, ∀ q : ℂ → ℝ≥0∞, Measurable q →
+        Measurable fun b => ∫⁻ u in Icc (0 : ℝ≥0) (exitNN z r b), q (b u) ∂(dA γ Ω S ω b))
+    (hS0 : ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∀ (z : ℂ) (r : ℝ), 0 < r → ball z r ⊆ ball 0 ρ → BrownianOccupationOnBall z r)
+    (hT0cone : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω),
+      S.IsValid 𝒮 γ → ∀ p κ : ℝ, 0 < p → p < min 1 (4 / γ ^ 2 - 1) → κ = (2 - γ ^ 2 / 2) * p - γ ^ 2 * p ^ 2 / 2 →
+      ∃ C a₀ : ℝ, 0 < a₀ ∧ ∀ a ∈ Ioo 0 a₀, ∀ ε ∈ Ioo 0 a₀,
+        ∫⁻ ω, weightedMass γ ε (coneShift γ (S.hcirc ω)) (ball 0 a) ^ p ∂S.P ≤
+          ENNReal.ofReal (C * a ^ κ * (1 + Real.log (1 / a)) ^ p))
+    (hE : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∀ (Ω : Type) [MeasurableSpace Ω]
+      (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ → ∀ (r : ℝ) (z y : ℂ), 0 < r → ball z r ⊆ ball 0 ρ → y ∈ ball z r →
+      ∀ a : ℝ, 0 < a → ∀ η : ℝ, 0 < η →
+        Tendsto (fun ε => (S.P.prod (HarmonicBalls.planarBrownianMotion y))
+          {x | ENNReal.ofReal η < clockDistE γ (fun ω => coneShift γ (S.hcirc ω)) (dA γ Ω S) (exitNN z r) ε a x})
+          (𝓝[>] (0 : ℝ)) (𝓝 0))
+    (hKern : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω),
+      S.IsValid 𝒮 γ → ∃ K : Kernel (Ω × ContinuousPath ℂ) ℝ≥0, IsSFiniteKernel K ∧
+        ∀ x, K x = dA γ Ω S x.1 x.2)
+    (hBG : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω),
+      S.IsValid 𝒮 γ → ∃ e : ℝ, 0 < e ∧ BGMassUpperBoundDyadic S.P S.μ e)
+    (hGreen : ∀ ρ : ℝ, ∀ z : ℂ, ∀ r : ℝ, 0 < r → ball z r ⊆ ball 0 ρ → GreenDiskFormula z r)
+    (hExit : ∀ (z y : ℂ) (r : ℝ), 0 < r → y ∈ ball z r →
+      ∀ᵐ (b : ContinuousPath ℂ) ∂HarmonicBalls.planarBrownianMotion y, HarmonicBalls.pathExitTime (ball z r) ⇑b < ⊤) :
+    FrozenLBMGreenOccupationRescaled 𝒮 := by
+  intro γ hγ0 hγ2 ρ hρ0 hρ1 Ω _ S hS r z y hr hball hy
+  have := hS.isProbabilityMeasure
+  obtain ⟨e, he, hBGe⟩ := hBG γ hγ0 hγ2 Ω S hS
+  have hS3 : ∀ᵐ ω ∂S.P, ∫⁻ x in ball z r, ENNReal.ofReal (HarmonicBalls.greenFunction (ball z r) y x) ∂(S.μ ω) < ⊤ :=
+    ae_greenFunction_lintegral_lt_top S.P S.μ he hBGe hρ1 hr hball (hGreen ρ z r hr hball) hy
+  have hclock : ∀ᵐ ω ∂S.P, ∀ᵐ b ∂HarmonicBalls.planarBrownianMotion y, HarmonicBalls.IsTimeChangeClock (S.clock ω b) :=
+    hS.isLQGClock.mono fun _ hω => (hω y).2
+  have hσexit : ∀ᵐ b ∂HarmonicBalls.planarBrownianMotion y,
+      (∀ s < exitNN z r b, b s ∈ ball z r) ∧ b (exitNN z r b) ∉ ball z r :=
+    (hExit z y r hr hy).mono fun b hb => exitNN_props_of_lt_top hb
+  obtain ⟨p, κ, hp0, hp1, hκ⟩ : ∃ p κ : ℝ, 0 < p ∧ p < min 1 (4 / γ ^ 2 - 1) ∧
+      κ = (2 - γ ^ 2 / 2) * p - γ ^ 2 * p ^ 2 / 2 := by
+    have h4 : 1 < 4 / γ ^ 2 := by
+      rw [lt_div_iff₀ (by positivity : (0 : ℝ) < γ ^ 2)]
+      nlinarith [mul_pos hγ0 hγ0]
+    have hm : 0 < min 1 (4 / γ ^ 2 - 1) := lt_min one_pos (by linarith)
+    exact ⟨min 1 (4 / γ ^ 2 - 1) / 2, (2 - γ ^ 2 / 2) * (min 1 (4 / γ ^ 2 - 1) / 2) -
+      γ ^ 2 * (min 1 (4 / γ ^ 2 - 1) / 2) ^ 2 / 2, half_pos hm, by linarith, rfl⟩
+  have hr2 : r ≤ 2 := radius_le_two_of_ball_subset hρ1 hball
+  have hD : ball z r ⊆ ball (0 : ℂ) 1 := hball.trans (Metric.ball_subset_ball hρ1.le)
+  obtain ⟨K, hKs, hK⟩ := hKern γ hγ0 hγ2 Ω S hS
+  have := hKs
+  have hS6 := hS6_cone 𝒮 hγ0 hγ2 S hS hp0 hp1 hκ (hT0cone γ hγ0 hγ2 Ω S hS p κ hp0 hp1 hκ) (dA γ Ω S) hr hr2
+    (hGreen ρ z r hr hball) hy (hS0 ρ hρ0 hρ1 z r hr hball) K hK (ν γ Ω S) hD
+    (hBase γ hγ0 hγ2 ρ hρ0 hρ1 Ω S hS r z y hr hball hy) (hMeas γ hγ0 hγ2 ρ hρ0 hρ1 Ω S hS r z y hr hball hy)
+    (weight_identity_of_occWeight (hWeight γ hγ0 hγ2 Ω S hS)) hS3
+    (hE γ hγ0 hγ2 ρ hρ0 hρ1 Ω S hS r z y hr hball hy)
+  exact rescaled_occupation_green_identity S γ ρ hγ0 hγ2 hρ0 hρ1 𝒮 hS r z y hr hball hy (ν γ Ω S) (dA γ Ω S)
+    (exitNN z r) (hm0 γ hγ0 hγ2 Ω S hS) hclock hσexit (hBase γ hγ0 hγ2 ρ hρ0 hρ1 Ω S hS r z y hr hball hy)
+    (hMeas γ hγ0 hγ2 ρ hρ0 hρ1 Ω S hS r z y hr hball hy)
+    (weight_identity_of_occWeight (hWeight γ hγ0 hγ2 Ω S hS)) hS6 hS3
 
 end MatedCRT.KilledOccupation
