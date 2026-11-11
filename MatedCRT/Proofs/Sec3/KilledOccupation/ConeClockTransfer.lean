@@ -1,4 +1,6 @@
 import Mathlib
+import MatedCRT.Defs.Setting
+import MatedCRT.Proofs.Sec3.KilledOccupation.ClockClosure
 
 /-!
 # Identification of a clock from convergence of its approximants (fibre argument)
@@ -11,6 +13,7 @@ clock `clock ω`. Then the clock equals `Φ` almost surely, on `[0, σ]`.
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped ENNReal NNReal
+open Metric MarkovProcess
 
 namespace MatedCRT.KilledOccupation
 
@@ -117,5 +120,183 @@ theorem clock_eq_of_approx_convergence {Ω β : Type*} [MeasurableSpace Ω] [Mea
   obtain ⟨m, hm⟩ := exists_nat_one_div_lt hpos
   have hm' : η m ≤ |clock ω b s - Φ ω b s| := by rw [hη]; exact hm.le
   exact hb (⌈s⌉₊) m ⟨s, Nat.le_ceil s, hs, hm'⟩
+
+/-! ### The cone field in the GFF interface of the clock identification -/
+
+/-- The cone circle averages with the logarithmic part added back: `coneShift γ hcirc r z = hcirc r z +
+γ · (average of log‖·‖ over ∂B_r(z))`, the inverse of `HarmonicBalls.fieldCircleAverage`. With `hcirc` the circle
+averages `h_r(z)` of the γ-quantum cone `h = h^ℂ - γ log|·|` (eq:gff, tex:427-445), `coneShift γ hcirc` is the
+whole-plane circle average field `h^ℂ_r(z)` of that identity. -/
+noncomputable def coneShift (γ : ℝ) (hcirc : ℝ → ℂ → ℝ) : ℝ → ℂ → ℝ :=
+  fun r z => hcirc r z + γ * Real.circleAverage (fun x : ℂ => Real.log ‖x‖) z r
+
+/-- The circle averages of the cone are recovered from `coneShift`:
+`fieldCircleAverage γ (coneShift γ hcirc) = hcirc`. -/
+lemma fieldCircleAverage_coneShift (γ : ℝ) (hcirc : ℝ → ℂ → ℝ) (r : ℝ) (z : ℂ) :
+    HarmonicBalls.fieldCircleAverage γ (coneShift γ hcirc) r z = hcirc r z := by
+  unfold HarmonicBalls.fieldCircleAverage coneShift
+  ring
+
+/-- For `ε > 0` the logarithmic part of `coneShift` is `γ log (max |x| ε)` (Jensen's formula,
+`circleAverage_log_norm_eq`), so `coneShift γ hcirc ε` is continuous wherever `hcirc ε` is. -/
+lemma continuous_coneShift {γ : ℝ} {hcirc : ℝ → ℂ → ℝ} {ε : ℝ} (hε : 0 < ε)
+    (hcont : Continuous fun x : ℂ => hcirc ε x) : Continuous fun x : ℂ => coneShift γ hcirc ε x := by
+  have h : (fun x : ℂ => coneShift γ hcirc ε x) =
+      fun x : ℂ => hcirc ε x + γ * Real.log (max ‖x‖ ε) := by
+    funext x
+    unfold coneShift
+    rw [circleAverage_log_norm_eq hε x]
+  rw [h]
+  exact hcont.add (continuous_const.mul
+    ((continuous_norm.max continuous_const).log fun x => (lt_max_of_lt_right hε).ne'))
+
+/-- **Cone version of `exists_null_continuous`.** Off a measurable null set of environments the circle averages of
+the quantum cone are continuous in the centre for every positive radius (`IsQuantumCone.ae_continuousOn_circle`),
+hence so are those of `coneShift`. -/
+lemma exists_null_continuous_cone {Ω : Type*} [MeasurableSpace Ω] (γ : ℝ) {P : Measure Ω}
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hcone : IsQuantumCone γ P hC hcirc) :
+    ∃ N : Set Ω, MeasurableSet N ∧ P N = 0 ∧
+      ∀ ω, ω ∉ N → ∀ ε : ℝ, 0 < ε → Continuous fun x : ℂ => coneShift γ (hcirc ω) ε x := by
+  have h := hcone.ae_continuousOn_circle
+  rw [ae_iff] at h
+  refine ⟨toMeasurable P {ω | ¬ ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2) (Ioi 0 ×ˢ univ)},
+    measurableSet_toMeasurable _ _, by rw [measure_toMeasurable]; exact h, fun ω hω ε hε => ?_⟩
+  have hgood : ContinuousOn (fun p : ℝ × ℂ => hcirc ω p.1 p.2) (Ioi 0 ×ˢ univ) := by
+    by_contra hbad
+    exact hω (subset_toMeasurable _ _ hbad)
+  have h1 : ContinuousOn (fun x : ℂ => ((ε, x) : ℝ × ℂ)) univ :=
+    (continuous_const.prodMk continuous_id).continuousOn
+  have h2 : ContinuousOn (fun x : ℂ => hcirc ω ε x) univ :=
+    hgood.comp h1 (fun x _ => ⟨mem_Ioi.2 hε, mem_univ x⟩)
+  exact continuous_coneShift hε (continuousOn_univ.mp h2)
+
+/-! ### The regularized cone clock is the approximating LQG clock -/
+
+/-- Lower integral of `e^{g}` against the time measure: for continuous nonnegative `g`, the integral over `[0, t]` of
+`ofReal (g u)` with respect to `timeLeb` is `ofReal` of the Lebesgue integral `∫_0^t g`. -/
+lemma lintegral_Icc_timeLeb_ofReal {g : ℝ≥0 → ℝ} (hg : Continuous g) (hg0 : ∀ u, 0 ≤ g u) (t : ℝ≥0) :
+    ∫⁻ u in Icc 0 t, ENNReal.ofReal (g u) ∂timeLeb =
+      ENNReal.ofReal (∫ x in (0 : ℝ)..(t : ℝ), g x.toNNReal) := by
+  have hf : Continuous fun x : ℝ => g x.toNNReal := hg.comp continuous_real_toNNReal
+  have hpre : MeasurableSet (Real.toNNReal ⁻¹' Icc 0 t) := measurable_real_toNNReal measurableSet_Icc
+  have hset : Real.toNNReal ⁻¹' Icc 0 t ∩ Ici (0 : ℝ) = Icc (0 : ℝ) (t : ℝ) := by
+    ext x
+    simp [Real.toNNReal_le_iff_le_coe, and_comm]
+  unfold timeLeb
+  rw [Measure.restrict_map measurable_real_toNNReal measurableSet_Icc,
+    lintegral_map hg.measurable.ennreal_ofReal measurable_real_toNNReal,
+    Measure.restrict_restrict hpre, hset]
+  have hint : IntegrableOn (fun x : ℝ => g x.toNNReal) (Icc 0 (t : ℝ)) := hf.integrableOn_Icc
+  rw [← MeasureTheory.ofReal_integral_eq_lintegral_ofReal hint (ae_of_all _ fun x => hg0 _),
+    intervalIntegral.integral_of_le (NNReal.coe_nonneg t), integral_Icc_eq_integral_Ioc]
+
+/-- The regularized clock of the cone is the approximating LQG clock: at a time `s ≤ σ`, `regClock` of the field
+`coneShift γ hcirc` equals `ofReal` of `lqgClockApprox γ hcirc ε b s = ∫_0^s ε^{γ²/2} e^{γ h_ε(b_u)} du`, for a
+continuous path `b` and a scale `ε > 0` with `hcirc ε` continuous. -/
+lemma regClock_coneShift_eq_ofReal {γ ε : ℝ} (hε : 0 < ε) {hcirc : ℝ → ℂ → ℝ}
+    (hcont : Continuous fun x : ℂ => hcirc ε x) (b : ContinuousPath ℂ) (σ s : ℝ≥0) (hs : s ≤ σ) :
+    regClock γ ε (coneShift γ hcirc) σ ⇑b s = ENNReal.ofReal (HarmonicBalls.lqgClockApprox γ hcirc ε b s) := by
+  have hdens : ∀ x : ℂ, regDensity γ ε (coneShift γ hcirc) x =
+      ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc ε x)) := by
+    intro x
+    unfold regDensity
+    rw [fieldCircleAverage_coneShift]
+  have hg : Continuous fun u : ℝ≥0 => ε ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc ε (b u)) :=
+    continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul (hcont.comp b.continuous)))
+  have hg0 : ∀ u : ℝ≥0, 0 ≤ ε ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc ε (b u)) :=
+    fun u => (mul_pos (Real.rpow_pos_of_pos hε _) (Real.exp_pos _)).le
+  unfold regClock
+  rw [min_eq_left hs]
+  simp only [hdens]
+  rw [lintegral_Icc_timeLeb_ofReal hg hg0 s]
+  rfl
+
+/-! ### The cone version of the closed identification of the clock -/
+
+/-- **Cone version of `regClock_identification_closed`** (tex:370-414 for the γ-quantum cone). The whole-plane GFF
+`hGFF` of `regClock_identification_closed` is replaced by the quantum cone `hcone` (continuity of the circle averages
+off a null set, measurability of each circle average, `exists_null_continuous_cone`), and the origin tail moment by its
+cone form `hT0cone` for the field `hc = coneShift γ hcirc` (lem:occ-tails, appendix tex:296, through eq:occ-field,
+tex:20-29), a named hypothesis. The other hypotheses are those of `regClock_identification_closed`. -/
+theorem regClock_identification_cone {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {p κ : ℝ} (hp0 : 0 < p) (hp1 : p < min 1 (4 / γ ^ 2 - 1))
+    (hκ : κ = (2 - γ ^ 2 / 2) * p - γ ^ 2 * p ^ 2 / 2)
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hcone : IsQuantumCone γ P hC hcirc)
+    (hc : Ω → ℝ → ℂ → ℝ) (hc_def : hc = fun ω => coneShift γ (hcirc ω))
+    (hT0cone : ∃ C a₀ : ℝ, 0 < a₀ ∧ ∀ a ∈ Ioo 0 a₀, ∀ ε ∈ Ioo 0 a₀,
+      ∫⁻ ω, weightedMass γ ε (hc ω) (ball 0 a) ^ p ∂P ≤
+        ENNReal.ofReal (C * a ^ κ * (1 + Real.log (1 / a)) ^ p))
+    (dA : Ω → ContinuousPath ℂ → Measure ℝ≥0)
+    {z : ℂ} {r : ℝ} (hr : 0 < r) (hr2 : r ≤ 2) (hG : GreenDiskFormula z r) {y : ℂ} (hy : y ∈ ball z r)
+    [IsProbabilityMeasure (HarmonicBalls.planarBrownianMotion y)] (hS0 : BrownianOccupationOnBall z r)
+    (K : Kernel (Ω × ContinuousPath ℂ) ℝ≥0) [IsSFiniteKernel K] (hK : ∀ x, K x = dA x.1 x.2)
+    (μ ν : Ω → Measure ℂ) (hD : ball z r ⊆ ball (0 : ℂ) 1)
+    (hbase : ∀ᵐ ω ∂P, ∀ q : ℂ → ℝ≥0∞, Measurable q → (∃ M : ℝ≥0∞, M ≠ ⊤ ∧ ∀ x, q x ≤ M) →
+      ∫⁻ b, ∫⁻ u in Icc 0 (exitNN z r b), q (b u) ∂(dA ω b) ∂(HarmonicBalls.planarBrownianMotion y) =
+        ∫⁻ x in ball z r, ENNReal.ofReal (2 * HarmonicBalls.greenFunction (ball z r) y x) * q x ∂(ν ω))
+    (hmeas : ∀ᵐ ω ∂P, ∀ q : ℂ → ℝ≥0∞, Measurable q →
+      Measurable fun b => ∫⁻ u in Icc 0 (exitNN z r b), q (b u) ∂(dA ω b))
+    (hweight : ∀ᵐ ω ∂P, ∀ S : Set ℂ, MeasurableSet S → S ⊆ ball 0 1 →
+      ∀ g : ℂ → ℝ≥0∞, Measurable g →
+        ∫⁻ x in S, g x ∂(μ ω) = ∫⁻ x in S, g x * gammaWeight γ x ∂(ν ω))
+    (hS3 : ∀ᵐ ω ∂P, ∫⁻ x in ball z r, ENNReal.ofReal (HarmonicBalls.greenFunction (ball z r) y x) ∂(μ ω) < ⊤)
+    (hE : ∀ a : ℝ, 0 < a → ∀ η : ℝ, 0 < η →
+      Tendsto (fun ε => (P.prod (HarmonicBalls.planarBrownianMotion y))
+        {x | ENNReal.ofReal η < clockDistE γ hc dA (exitNN z r) ε a x}) (𝓝[>] (0 : ℝ)) (𝓝 0)) :
+    ∀ η : ℝ, 0 < η →
+      Tendsto (fun ε => (P.prod (HarmonicBalls.planarBrownianMotion y))
+        {x | ENNReal.ofReal η < clockDistD γ hc dA (exitNN z r) ε x}) (𝓝[>] (0 : ℝ)) (𝓝 0) := by
+  classical
+  have hσ : Measurable (exitNN z r) :=
+    ENNReal.measurable_toNNReal.comp (ContinuousPath.measurable_exitTime (ball z r) Metric.isOpen_ball)
+  obtain ⟨N, hN, hN0, hgood0⟩ := exists_null_continuous_cone γ hcone
+  have hgood : ∀ ω, ω ∉ N → ∀ ε : ℝ, 0 < ε → Continuous fun x : ℂ => hc ω ε x := fun ω hω ε hε => by
+    rw [hc_def]
+    exact hgood0 ω hω ε hε
+  have hmeasCirc : ∀ ε : ℝ, 0 < ε → ∀ x : ℂ, Measurable fun ω => hc ω ε x := fun ε hε x => by
+    rw [hc_def]
+    exact (hcone.measurable_circle ε x hε).add measurable_const
+  have hreg' : ∀ ω, ∀ ε : ℝ, 0 < ε → Measurable (regDensity γ ε (modField N hc ω)) := fun ω ε hε =>
+    measurable_regDensity_of_continuous γ ε hε _ (modField_continuous hgood ω ε hε)
+  have hνm' : ∀ ω, ∀ ε : ℝ, 0 < ε → Measurable (nuDensity γ ε (modField N hc ω)) := fun ω ε hε =>
+    measurable_nuDensity_of_continuous γ ε _ (modField_continuous hgood ω ε hε)
+  have hRm' : ∀ ε a : ℝ, 0 < ε → Measurable (clockDistR γ (modField N hc) (exitNN z r) ε a) :=
+    fun ε a hε => measurable_modField_clockDistR hN hmeasCirc hgood γ ε a hε (exitNN z r) hσ
+  have hQm : ∀ a : ℝ, Measurable (clockDistQ γ dA (exitNN z r) a) :=
+    fun a => measurable_clockDistQ_of_kernel γ dA K hK hσ a
+  have hfin := weightedClock_ae_prod_ne_top P (HarmonicBalls.planarBrownianMotion y) γ hD μ ν dA
+    (exitNN z r) K hK hσ hbase hmeas hweight hS3
+  have hNae : ∀ᵐ ω ∂P, ω ∉ N := by
+    rw [ae_iff]
+    simpa using hN0
+  -- the origin tail moment of the modified field, transferred from `hc` along the null set `N`
+  have hT0 : ∃ C a₀ : ℝ, 0 < a₀ ∧ ∀ a ∈ Ioo 0 a₀, ∀ ε ∈ Ioo 0 a₀,
+      ∫⁻ ω, weightedMass γ ε (modField N hc ω) (ball 0 a) ^ p ∂P ≤
+        ENNReal.ofReal (C * a ^ κ * (1 + Real.log (1 / a)) ^ p) := by
+    obtain ⟨C, a₀, ha₀, hT⟩ := hT0cone
+    refine ⟨C, a₀, ha₀, fun a ha ε hε => ?_⟩
+    have hae : (fun ω => weightedMass γ ε (modField N hc ω) (ball 0 a) ^ p) =ᵐ[P]
+        (fun ω => weightedMass γ ε (hc ω) (ball 0 a) ^ p) := by
+      filter_upwards [hNae] with ω hω
+      rw [modField_eq_of_not_mem hω]
+    exact (lintegral_congr_ae hae).trans_le (hT a ha ε hε)
+  have hR' := removed_tail_small_mod P hγ0 hγ2 hp0 hp1 hκ (modField N hc) hT0 hr hr2 hG hy hS0 hreg' hRm'
+  have hE' : ∀ a : ℝ, 0 < a → ∀ η : ℝ, 0 < η →
+      Tendsto (fun ε => (P.prod (HarmonicBalls.planarBrownianMotion y))
+        {x | ENNReal.ofReal η < clockDistE γ (modField N hc) dA (exitNN z r) ε a x}) (𝓝[>] (0 : ℝ)) (𝓝 0) := by
+    intro a ha η hη
+    refine Tendsto.congr (fun ε => ?_) (hE a ha η hη)
+    refine measure_prod_congr_of_fst_notMem _ hN0 (fun x hx => ?_)
+    rw [Set.mem_ofPred_eq, Set.mem_ofPred_eq]
+    unfold clockDistE
+    rw [modField_eq_of_not_mem hx]
+  have main := regClock_identification P (HarmonicBalls.planarBrownianMotion y) hγ0.ne' (modField N hc) dA
+    (exitNN z r) hreg' hνm' hQm hfin hE' hR'
+  intro η hη
+  refine Tendsto.congr (fun ε => ?_) (main η hη)
+  refine measure_prod_congr_of_fst_notMem _ hN0 (fun x hx => ?_) |>.symm
+  rw [Set.mem_ofPred_eq, Set.mem_ofPred_eq]
+  unfold clockDistD
+  rw [modField_eq_of_not_mem hx]
 
 end MatedCRT.KilledOccupation
