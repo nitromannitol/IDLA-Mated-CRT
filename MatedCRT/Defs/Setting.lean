@@ -96,7 +96,8 @@ open scoped ENNReal NNReal
 
 /-- A model of the law of whole-plane space-filling SLE (see the module docstring): `IsSLE P 𝓕 κ η` stands for
 "under `P`, the curve `η` viewed modulo increasing reparametrization is a whole-plane space-filling SLE_κ from `∞` to
-`∞`, independent of `𝓕`". -/
+`∞`, independent of `𝓕`". Read null-robustly: 𝓕 ≤ mΩ; the law and the independence are those of a measurable
+representative, a.e. equal modulo increasing reparametrization; independence is of the curve class. -/
 structure SpaceFillingSLEModel where
   /-- The predicate "`η` is a whole-plane space-filling SLE_κ independent of `𝓕`". -/
   IsSLE : ∀ {Ω : Type} [MeasurableSpace Ω], Measure Ω → MeasurableSpace Ω → ℝ → (Ω → ℝ → ℂ) → Prop
