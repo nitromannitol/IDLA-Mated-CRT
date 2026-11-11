@@ -10,7 +10,7 @@ import MatedCRT.FirstPass.S6r.ShellOrder
 
 * `map_cells_meet_ae` discharges `hmap` on the environment: `adjacentCellsMeetAeStep` (proved, MatingOfTrees/AdjacentCells)
   gives, `S.P`-almost surely, that every edge `S.mult ε ω j k ≠ 0` joins two intersecting cells, for all `ε > 0`.
-  No literature input is used for this step (operator 09:08).
+  No literature input is used for this step.
 * `shell_order_env_ae` gives `ShellOrderAe` `S.P`-almost surely. Its remaining inputs are a.s. environment conditions
   (continuity of `η`, mesh, start, `F0 ⊇ {dd < r}`), the killed exit `vExitTime (killed ..) x ≠ ⊤` as an explicit
   hypothesis `hkill` (the conclusion of `ae_killed_exit_ne_top`, KilledExitAe, which cannot be imported here: its
