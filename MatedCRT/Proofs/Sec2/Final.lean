@@ -19,13 +19,13 @@ The results of Section 2 on the harmonic balls of the `γ`-quantum cone, from
 * Lemma 2.7 (`VolumeGrowthStmt`, BG20 Lemma A.1) where the measurability of the stopped families is used;
 * the named steps not in the paper (each documented at its definition):
   `WholePlaneLogLQGExistenceStep`, `ConeRestrictionStep`, `ConeHarmonicBallLocalityStep` (Lemma 2.4),
-  `ConeHarmonicBallStrictGrowthStep` (strict growth `cl Λ_s ⊆ Λ_t`, ESCALATIONS E-c5-3; used by every route to 2.3-2.5
+  `ConeHarmonicBallStrictGrowthStep` (strict growth `cl Λ_s ⊆ Λ_t`; used by every route to 2.3-2.5
   and to the measurability of the stopped families), `ConeHalfBallFamilyFunctionalStep` (Lemma 2.5) and
   `ConeHarmonicBallFunctionalStep` (Lemma 2.6), the measurable dependence of the harmonic balls on the circle average
   process.
 
 The measurability step `ConeFamilyAEMeasurableStep` is obtained without circularity (`coneFamilyAEMeasurable_final`):
-m5's `coneFamilyAEMeasurableStep_of_scaling` uses neither Lemma 2.5 nor Theorem 2.3, only Lemma 2.7, strict growth, the
+`coneFamilyAEMeasurableStep_of_scaling` uses neither Lemma 2.5 nor Theorem 2.3, only Lemma 2.7, strict growth, the
 quantum cone scaling and the LQG scaling of Fact 2.2.
 -/
 
