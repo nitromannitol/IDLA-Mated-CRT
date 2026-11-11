@@ -7,7 +7,7 @@ import MatedCRT.FirstPass.S3S4b
 import MatedCRT.FirstPass.S3S4c
 
 /-!
-# Plumbing of Proposition 5.1 (fp-S5j, z8)
+# Plumbing of Proposition 5.1
 
 `firstPass_5_1_of_floorCell_pole` assembles the first-pass proof of Proposition 5.1 (the IDLA lower bound
 `IDLALowerBoundStmt`, Draft Section 5) from the open-step composition `firstPass_5_1_of_open_steps`
@@ -29,7 +29,7 @@ open steps `StoppedPoleCellStep` (FirstPass/S5f/Steps.lean:39). No hypothesis is
 
 namespace MatedCRT
 
-/-- **Proposition 5.1, plumbing (fp-S5j).** The IDLA lower bound `IDLALowerBoundStmt 𝒮` from the floor input
+/-- **Proposition 5.1, plumbing.** The IDLA lower bound `IDLALowerBoundStmt 𝒮` from the floor input
 `StoppedFloorCellStep` (`hfc`), the pole input `StoppedPoleCellStep` (`hpole`, open) and the frozen universal measurability
 `hU`, with the remaining Draft, frozen and external inputs as explicit hypotheses. -/
 theorem firstPass_5_1_of_floorCell_pole (𝒮 : SpaceFillingSLEModel)
