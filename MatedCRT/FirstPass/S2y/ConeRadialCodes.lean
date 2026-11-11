@@ -6,13 +6,13 @@ import Mathlib.Analysis.SpecificLimits.Normed
 import MarkovProcess.Examples.BrownianMotion
 
 /-!
-# Radial and sphere-average codes of a quantum cone (fp-S2y-cone-codes, chat 231 §§1-3)
+# Radial and sphere-average codes of a quantum cone
 
 Duplantier-Sheffield (arXiv:1409.7055, Definition 4.10) and Armstrong-Kuusi-Mourrat style decoders for the circle average
 process: the pairings `(h, φ)` and the circle averages `h_r(z)` of a `γ`-quantum cone are recovered from countably many
 circle coordinates, by finite Riemann sums followed by `limsup`.
 
-Section 1 (this part): the shared countable reconstruction layer.
+The shared countable reconstruction layer.
 * `planeQuad n f`: the midpoint Riemann sum of `f` on the `N_n × N_n` grid of `[-R_n, R_n]²`, `N_n = 2^(n+1)`,
   `R_n = n + 1`, times `Δ_n²`. `planeQuad_tendsto_integral`: convergence to `∫ f` for continuous compactly supported `f`.
 * `angleQuad n g`: the midpoint sum of `g` on `[0, 2π]` with `N_n` cells. `angleQuad_tendsto_circleAverage`.
@@ -31,7 +31,7 @@ noncomputable section
 
 /-! ### Grid data -/
 
-/-- Grid size `N_n = 2^(n+1)` of the level-`n` quadrature (chat 231, §1.1). -/
+/-- Grid size `N_n = 2^(n+1)` of the level-`n` quadrature. -/
 def planeN (n : ℕ) : ℕ := 2 ^ (n + 1)
 
 /-- Half-width `R_n = n + 1` of the level-`n` plane box `[-R_n, R_n]²`. -/
@@ -51,12 +51,12 @@ def planeCenter (n i j : ℕ) : ℂ :=
 def planeCell (n i j : ℕ) : Set ℂ :=
   {z | z.re ∈ Ico (planeLine n i) (planeLine n (i + 1)) ∧ z.im ∈ Ico (planeLine n j) (planeLine n (j + 1))}
 
-/-- **Midpoint Riemann sum on the plane grid** (chat 231, §1.1): `planeQuad n f = ∑_{i,j} Δ_n² f(c_{ij})`. Only the values
+/-- **Midpoint Riemann sum on the plane grid**: `planeQuad n f = ∑_{i,j} Δ_n² f(c_{ij})`. Only the values
 of `f` at the midpoints enter, which are countably many points. -/
 def planeQuad (n : ℕ) (f : ℂ → ℝ) : ℝ :=
   ∑ i ∈ Finset.range (planeN n), ∑ j ∈ Finset.range (planeN n), planeDelta n ^ 2 * f (planeCenter n i j)
 
-/-- **Midpoint sum on the circle** (chat 231, §1.1): `angleQuad n g = N_n⁻¹ ∑_j g(2π (j+1/2) / N_n)`. -/
+/-- **Midpoint sum on the circle**: `angleQuad n g = N_n⁻¹ ∑_j g(2π (j+1/2) / N_n)`. -/
 def angleQuad (n : ℕ) (g : ℝ → ℝ) : ℝ :=
   ((planeN n : ℝ))⁻¹ * ∑ j ∈ Finset.range (planeN n), g (2 * π * ((j : ℝ) + 1 / 2) / (planeN n : ℝ))
 
@@ -323,7 +323,7 @@ lemma abs_planeQuad_sub_integral_le {f : ℂ → ℝ} (hf : Continuous f) (hfc :
   simpa [Measure.real] using this
 
 /-- **Plane Riemann sums converge.** For continuous compactly supported `f`, the midpoint sums `planeQuad n f` converge to
-`∫ f` (chat 231, §1.1). -/
+`∫ f`. -/
 theorem planeQuad_tendsto_integral {f : ℂ → ℝ} (hf : Continuous f) (hfc : HasCompactSupport f) :
     Tendsto (fun n => planeQuad n f) atTop (𝓝 (∫ x, f x)) := by
   obtain ⟨S, hS0⟩ := hfc.isCompact.isBounded.subset_closedBall (0 : ℂ)
@@ -481,7 +481,7 @@ lemma abs_circle_integral_sub_angleQuad_le {g : ℝ → ℝ} (hg : Continuous g)
     _ = η := by field_simp
 
 /-- **Circle midpoint sums converge.** For `f` continuous on `ℂ`, the midpoint sums `angleQuad n` of `θ ↦ f(z + r e^{iθ})`
-converge to the circle average `Real.circleAverage f z r` (chat 231, §1.1). -/
+converge to the circle average `Real.circleAverage f z r`. -/
 theorem angleQuad_tendsto_circleAverage {f : ℂ → ℝ} {z : ℂ} {r : ℝ}
     (hf : Continuous fun θ : ℝ => f (circleMap z r θ)) :
     Tendsto (fun n => angleQuad n (fun θ => f (circleMap z r θ))) atTop
@@ -507,7 +507,7 @@ theorem angleQuad_tendsto_circleAverage {f : ℂ → ℝ} {z : ℂ} {r : ℝ}
 
 /-! ### Measurability in the countable coordinates -/
 
-/-- **Grid sums are Borel in the coordinates** (chat 231, §1.1). For deterministic weights `a` and points `p` of an
+/-- **Grid sums are Borel in the coordinates**. For deterministic weights `a` and points `p` of an
 index type `ι`, the map `q ↦ planeQuad n (x ↦ a x * q (p x))` is a finite sum of constants times coordinates of `q`,
 hence measurable for the product σ-algebra on `ι → ℝ`. -/
 theorem measurable_planeQuad_eval {ι : Type*} (n : ℕ) (p : ℂ → ι) (a : ℂ → ℝ) :
@@ -524,12 +524,12 @@ theorem measurable_angleQuad_eval {ι : Type*} (n : ℕ) (p : ℝ → ι) (a : �
   refine Measurable.const_mul ?_ _
   exact Finset.measurable_sum _ fun j _ => (measurable_pi_apply (p _)).const_mul _
 
-/-! ### Radial and sphere-average codes (chat 231, §2) -/
+/-! ### Radial and sphere-average codes -/
 
 /-- The countable coordinates of a circle-average process: `(r, z) ↦ h_r(z)` on `(0,∞) × ℂ`. -/
 abbrev ConeCircleCode := Set.Ioi (0 : ℝ) × ℂ → ℝ
 
-/-- The cutoff scale `δ_m = (1/2)^(m+2)` (chat 231, §2). -/
+/-- The cutoff scale `δ_m = (1/2)^(m+2)`. -/
 def radialEps (m : ℕ) : ℝ := (2 : ℝ)⁻¹ ^ (m + 2)
 
 lemma radialEps_pos (m : ℕ) : 0 < radialEps m := pow_pos (by norm_num) _
@@ -546,7 +546,7 @@ lemma radialEps_tendsto : Tendsto radialEps atTop (𝓝 0) := by
   simpa using this
 
 /-- The continuous radial cutoff `χ_m(r) = max(0, min(1, r/δ_m - 1))`: it vanishes for `r ≤ δ_m` and equals `1` for
-`r ≥ 2 δ_m` (chat 231, §2). -/
+`r ≥ 2 δ_m`. -/
 def radialCutoff (m : ℕ) (r : ℝ) : ℝ := max 0 (min 1 (r / radialEps m - 1))
 
 lemma radialCutoff_mem_Icc (m : ℕ) (r : ℝ) : 0 ≤ radialCutoff m r ∧ radialCutoff m r ≤ 1 :=
@@ -579,30 +579,30 @@ lemma radialCutoff_eventually_eq_one {r : ℝ} (hr : 0 < r) : ∀ᶠ m in atTop,
   apply radialCutoff_eq_one_of_le
   linarith
 
-/-- The safe positive radius `max(|x|, δ_m)` (chat 231, §2). -/
+/-- The safe positive radius `max(|x|, δ_m)`. -/
 def safeRadius (m : ℕ) (x : ℂ) : Set.Ioi (0 : ℝ) :=
   ⟨max ‖x‖ (radialEps m), lt_of_lt_of_le (radialEps_pos m) (le_max_right _ _)⟩
 
-/-- **Radial pairing code** (chat 231, §2.1). The pairing `∫ φ(x) h_{|x|}(0) dx` is recovered from countably many circle
+/-- **Radial pairing code**. The pairing `∫ φ(x) h_{|x|}(0) dx` is recovered from countably many circle
 coordinates, at the safe radii `max(|x|, δ_m) > 0`, by midpoint sums in `n` and a `limsup` in `m`. It never queries the
 origin `q(0, 0)`. -/
 def radialPairingCode (φ : ℂ → ℝ) (q : ConeCircleCode) : ℝ :=
   limsup (fun m : ℕ => limsup (fun n : ℕ =>
     planeQuad n fun x => φ x * radialCutoff m ‖x‖ * q (safeRadius m x, 0)) atTop) atTop
 
-/-- **Radial sphere-average code** (chat 231, §2.2). The circle average of `x ↦ h_{|x|}(0)` over `∂B_r(z)`, recovered from
+/-- **Radial sphere-average code**. The circle average of `x ↦ h_{|x|}(0)` over `∂B_r(z)`, recovered from
 countably many circle coordinates at the safe radii `max(|x|, δ_m) > 0`. -/
 def radialSphereCode (r : ℝ) (z : ℂ) (q : ConeCircleCode) : ℝ :=
   limsup (fun m : ℕ => limsup (fun n : ℕ =>
     angleQuad n fun θ => radialCutoff m ‖circleMap z r θ‖ * q (safeRadius m (circleMap z r θ), 0)) atTop) atTop
 
-/-- The radial pairing code is Borel in the countable circle coordinates (chat 231, §2.1). -/
+/-- The radial pairing code is Borel in the countable circle coordinates. -/
 theorem measurable_radialPairingCode (φ : ℂ → ℝ) : Measurable (radialPairingCode φ) := by
   unfold radialPairingCode
   refine Measurable.limsup fun m => Measurable.limsup fun n => ?_
   exact measurable_planeQuad_eval n (fun x => (safeRadius m x, (0 : ℂ))) (fun x => φ x * radialCutoff m ‖x‖)
 
-/-- The radial sphere-average code is Borel in the countable circle coordinates (chat 231, §2.2). -/
+/-- The radial sphere-average code is Borel in the countable circle coordinates. -/
 theorem measurable_radialSphereCode (r : ℝ) (z : ℂ) : Measurable (radialSphereCode r z) := by
   unfold radialSphereCode
   refine Measurable.limsup fun m => Measurable.limsup fun n => ?_
@@ -613,11 +613,11 @@ theorem measurable_radialSphereCode (r : ℝ) (z : ℂ) : Measurable (radialSphe
 open ProbabilityTheory HarmonicBalls MarkovProcess
 open scoped NNReal ENNReal
 
-/-! ### Correctness of the radial codes (chat 231, §3) -/
+/-! ### Correctness of the radial codes -/
 
 /-- The rescaled circle-average process `c` has the radial law of the `γ`-quantum cone: its radial process
 `t ↦ c_{e^{-t}}(0)`, `s ↦ c_{e^s}(0)` has the law `quantumConeRadialLaw γ ν` for a conditioned Brownian motion `ν`
-(Definition 2.1; chat 231, §3). -/
+(Definition 2.1). -/
 def HasConeRadialLaw (γ : ℝ) {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (c : Ω → ℝ → ℂ → ℝ) : Prop :=
   ∃ ν : Measure (ContinuousPath ℝ), IsBMConditionedPositive (HarmonicBalls.lqgQ γ - γ) ν ∧
     P.map (fun ω => radialProcess (c ω)) = quantumConeRadialLaw γ ν
@@ -690,7 +690,7 @@ lemma lintegral_ofReal_sq_brownian (t : ℝ≥0) :
         rw [hv, hmean] at h2
         simpa using h2.symm
 
-/-- **The one-time bound** `E|B_t + γ t| ≤ 1 + t + |γ| t` (chat 231, §3.1; `|x| ≤ 1 + x²` replaces Cauchy-Schwarz). -/
+/-- **The one-time bound** `E|B_t + γ t| ≤ 1 + t + |γ| t`. -/
 lemma lintegral_ofReal_abs_add_le (γ : ℝ) (t : ℝ≥0) :
     ∫⁻ w, ENNReal.ofReal |w t + γ * t| ∂(brownianMotion 0) ≤ ENNReal.ofReal (1 + t + |γ| * t) := by
   have hpt : ∀ w : ContinuousPath ℝ, ENNReal.ofReal |w t + γ * t|
@@ -745,7 +745,7 @@ lemma measurable_uncurry_radial {Ω : Type*} [MeasurableSpace Ω] {c : Ω → �
       exact continuous_const
   · exact (hcm (Real.exp (-t)) 0 (Real.exp_pos _)).indicator hT
 
-/-- **Change of variables `y = e^{-t}` on `(0,1]`** (chat 231, §3.1; `lintegral_image_eq_lintegral_abs_deriv_mul`). -/
+/-- **Change of variables `y = e^{-t}` on `(0,1]`**. -/
 lemma lintegral_Ioc_eq_radial (g : ℝ → ℝ) :
     ∫⁻ y in Set.Ioc (0 : ℝ) 1, ENNReal.ofReal (y * |g y|) =
       ∫⁻ t in Set.Ici (0 : ℝ), ENNReal.ofReal (Real.exp (-2 * t)) * ENNReal.ofReal |g (Real.exp (-t))| := by
@@ -804,7 +804,7 @@ lemma lintegral_radial_le {γ : ℝ} {Ω : Type*} [MeasurableSpace Ω] {P : Meas
   rw [hs] at h3
   exact h3
 
-/-- **Almost sure finiteness of the radial integral** (Tonelli; chat 231, §3.1): almost surely
+/-- **Almost sure finiteness of the radial integral** (Tonelli): almost surely
 `∫_{t ≥ 0} e^{-2t} |1_T c_{e^{-t}}(0)| dt < ∞`. -/
 lemma ae_lintegral_radial_lt_top {γ : ℝ} {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {c : Ω → ℝ → ℂ → ℝ}
     (hcm : ∀ r z, 0 < r → Measurable fun ω => c ω r z) {ν : Measure (ContinuousPath ℝ)}
@@ -955,7 +955,7 @@ lemma isFiniteMeasure_of_radial_law {γ : ℝ} {Ω : Type*} [MeasurableSpace Ω]
   rw [Measure.map_apply (measurable_radialProcess_circle hcm) MeasurableSet.univ, Set.preimage_univ] at h
   exact ⟨by rw [h]; exact ENNReal.one_lt_top⟩
 
-/-- **Radial pairing code is correct almost surely** (chat 231, §3.2). For the rescaled circle averages `c` with the radial
+/-- **Radial pairing code is correct almost surely**. For the rescaled circle averages `c` with the radial
 law of the quantum cone, almost surely the radial pairing code of the circle process is the pairing `∫ φ(x) h_{|x|}(0) dx`.
 The inner `limsup` is the plane integral of a continuous compactly supported function (`planeQuad_tendsto_integral`); the
 outer `limsup` is a dominated limit as the cutoff radius `δ_m → 0`. -/
@@ -1029,7 +1029,7 @@ theorem radialPairingCode_ae_eq {γ : ℝ} {Ω : Type*} [MeasurableSpace Ω] {P 
   simp only [hinner]
   exact houter.limsup_eq
 
-/-! ### The sphere-average code (chat 231, §3.2) -/
+/-! ### The sphere-average code -/
 
 /-- **The circle meets the origin in at most one angle on `(0, 2π]`.** Hence the set of angles with `circleMap z r θ = 0`
 is null for Lebesgue measure on `(0, 2π]` (the zero set of `circleMap` is discrete). -/
@@ -1087,12 +1087,12 @@ lemma abs_radialCutoff_mul_le (m : ℕ) (x : ℂ) (g : ℝ → ℝ) :
     rw [radialCutoff_eq_zero_of_le hδ.le, zero_mul, abs_zero]
     exact abs_nonneg _
 
-/-- **Sphere-average code is correct almost surely, conditional on the angular integrability** (chat 231, §3.2). The inner
+/-- **Sphere-average code is correct almost surely, conditional on the angular integrability**. The inner
 `limsup` is the circle average of the continuous cutoff function (`angleQuad_tendsto_circleAverage`); the outer limit is a
 dominated convergence of the circle integral, dominated by `|h_{|x|}(0)|` on the circle.
 
 NAMED INPUT `hcircInt` (the a.s. angular integrability along `∂B_r(z)`). It is discharged, with no input, by
-`MatedCRT.radialSphereCode_ae_eq` in `S2y/ConeCircInt240.lean` (chat 240 §1), which supplies `hcircInt` through
+`MatedCRT.radialSphereCode_ae_eq` in `S2y/ConeCircInt240.lean`, which supplies `hcircInt` through
 `ae_intervalIntegrable_radial_circle`. -/
 theorem radialSphereCode_ae_eq_of_circInt {γ : ℝ} {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {c : Ω → ℝ → ℂ → ℝ}
     (_hcm : ∀ r z, 0 < r → Measurable fun ω => c ω r z)

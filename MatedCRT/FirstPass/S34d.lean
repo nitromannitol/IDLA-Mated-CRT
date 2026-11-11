@@ -4,11 +4,11 @@ import MatedCRT.FirstPass.S3t
 import MatedCRT.FirstPass.S3t.BLEnvelopeClosure
 
 /-!
-# Lemma 3.4 with the truncated quenched laws derived (fp-S3t-consumers, z5)
+# Lemma 3.4 with the truncated quenched laws derived
 
-`firstPass_3_4_derived` is `MatedCRT.S3S4c.firstPass_3_4` (`FirstPass/S3S4c.lean:149`) with the frozen hypothesis
-`hdet : FrozenTruncatedQuenchedLawsFixedTime 𝒮` removed. `firstPass_3_4_derived` takes the local hypothesis `hT`, standing
-for the derivation `truncatedQuenchedLawsFixedTime_of_inputs`. The old `firstPass_3_4` is unchanged.
+`firstPass_3_4_derived` is `MatedCRT.S3S4c.firstPass_3_4` (`FirstPass/S3S4c.lean:149`) without the frozen hypothesis
+`hdet : FrozenTruncatedQuenchedLawsFixedTime 𝒮`. `firstPass_3_4_derived` takes the local hypothesis `hT`, standing
+for the derivation `truncatedQuenchedLawsFixedTime_of_inputs`.
 
 `firstPass_3_4_derived_closed` takes no `hT`: it uses the four-binder theorem
 `MatedCRT.TruncatedLaws.truncatedQuenchedLawsFixedTime_of_inputs` (`FirstPass/S3t/BLEnvelopeClosure.lean:43`, commit

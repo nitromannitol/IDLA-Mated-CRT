@@ -6,11 +6,11 @@ import MatedCRT.FirstPass.S3c.ExitTimeCore
 import MatedCRT.FirstPass.Frozen.S3S4
 
 /-!
-# First pass, result 3.1 (IDLA Lemma 3.1, lemma:discrete-potential-tightness), faithful corrected form (q4)
+# First pass, result 3.1 (IDLA Lemma 3.1, lemma:discrete-potential-tightness), faithful corrected form
 
-Task fp-S3c-3-1-faithful. The Draft form `DiscretePotentialTightnessCorrectedStmt`
+The Draft form `DiscretePotentialTightnessCorrectedStmt`
 (MatedCRT/Steps/Sec3/DiscretePotentialTightness.lean) places the domain `D` and the random data before the almost-sure
-quantifier. ChatGPT's fidelity check (notes/fp-gaps/CHATGPT-fidelity-corrected-2.md) found this TOO WEAK for [C11].
+quantifier. It is too weak for [C11] (see docs/campaign/FROZEN-PROVENANCE.md).
 `DiscretePotentialTightnessFaithfulStmt` below puts the deterministic thinning and one probability-one event first.
 
 `MatedCRT.S3c.firstPass_3_1_corrected` proves it from the same inputs as `MatedCRT.firstPass_3_1_corrected`
@@ -20,7 +20,7 @@ quantifier. ChatGPT's fidelity check (notes/fp-gaps/CHATGPT-fidelity-corrected-2
   the domain and the data (the events used there do not mention `D`, `E`, `u`, `C`);
 * the deterministic thinning is `exists_polySummable_thinning` (FirstPass/S3c/Thinning.lean).
 
-Task fp-S3c-3-1-fidelity-fix (audit notes/fp-gaps/CHATGPT-idla-3-1-audit.md, §1.3): the admissibility of the data
+The admissibility of the data
 (range, convergence of the scales, positivity of `C`, the two bounds) is samplewise. `DiscretePotentialTightnessPointwiseStmt`
 puts it inside the implication on the common event (only the measurability of the data is global); it is proved by
 `tightness_selection_pointwise` (FirstPass/S3c/PointwiseSelection.lean). `DiscretePotentialTightnessFaithfulStmt` and
@@ -93,7 +93,7 @@ theorem firstPass_3_1_corrected {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingI
   refine ⟨φ, hφ, Ω₀, hΩ₀, fun D hDρ hDo hDc E u C h1 h2 h3 h4 h5 h6 h7 h8 => ?_⟩
   exact hsel D hDρ hDo hDc E u C (by unfold IsTightnessData; exact ⟨h1, h2, h3, h4, h5, h6, h7, h8⟩)
 
-/-- **Lemma 3.1, corrected, samplewise admissibility** (task fp-S3c-3-1-fidelity-fix, audit §1.3). As
+/-- **Lemma 3.1, corrected, samplewise admissibility**. As
 `DiscretePotentialTightnessFaithfulStmt`, but only the measurability of the data is imposed on the whole carrier; the
 range condition, the convergence of the scales, the positivity of `C` and the two bounds are imposed at each sample
 `ω ∈ Ω₀` inside the implication (`PointwiseTightnessData`). The conclusion is the same. -/
@@ -121,7 +121,7 @@ def DiscretePotentialTightnessPointwiseStmt (𝒮 : SpaceFillingSLEModel) : Prop
         TendstoUniformlyOn (fun k => rescale (S.mε (E ω (Φ ω k))) (E ω (Φ ω k)) (S.η ω) (u ω (Φ ω k)))
           ubar atTop (closure D))
 
-/-- **Lemma 3.1, corrected, samplewise faithful form** (`DiscretePotentialTightnessPointwiseStmt`; fidelity fix §1.3). -/
+/-- **Lemma 3.1, corrected, samplewise faithful form** (`DiscretePotentialTightnessPointwiseStmt`). -/
 theorem firstPass_3_1_faithful {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingInput 𝒮) (h27 : VolumeGrowthStmt)
     (h218 : ExitTimeUpperBoundStmt 𝒮) (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) :
     DiscretePotentialTightnessPointwiseStmt 𝒮 := by
@@ -131,7 +131,7 @@ theorem firstPass_3_1_faithful {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingIn
     (adjacentCellsMeetAeStep 𝒮) γ hγ hγ2 ρ hρ hρ1 Ω S hS (fun k => σ₀ (φ k)) hpoly
   exact ⟨φ, hφ, Ω₀, hΩ₀, fun D hDρ hDo hDc E u C hEm hum hCm => hsel D hDρ hDo hDc E u C hEm hum hCm⟩
 
-/-- **Lemma 3.1, faithful form with the exit-time input of BG20 Proposition 5.1** (route A, fp-S3c-3-1-fidelity-fix).
+/-- **Lemma 3.1, faithful form with the exit-time input of BG20 Proposition 5.1**.
 `ExitTimeUpperBoundStmt 𝒮` (Lemma 2.18, both clauses) is proved in `S3c/ExitTimeCore.lean` from the frozen
 `BG20Prop51Ref ν` and `VolumeGrowthStmt`. Consumers should use this name instead of passing `h218`. -/
 theorem firstPass_3_1_faithful_of_bg20 {𝒮 : SpaceFillingSLEModel} {ν : ℝ → Measure SLEPathCode}
@@ -140,23 +140,23 @@ theorem firstPass_3_1_faithful_of_bg20 {𝒮 : SpaceFillingSLEModel} {ν : ℝ �
     DiscretePotentialTightnessPointwiseStmt 𝒮 :=
   firstPass_3_1_faithful hm h27 (exitTimeUpperBoundStmt_of_bg20 hν hBG hLaw h27) h32
 
-/-- **Lemma 3.1 (countable-family form) with the exit-time input of BG20 Proposition 5.1** (route A). -/
+/-- **Lemma 3.1 (countable-family form) with the exit-time input of BG20 Proposition 5.1**. -/
 theorem firstPass_3_1_countable_of_bg20 {𝒮 : SpaceFillingSLEModel} {ν : ℝ → Measure SLEPathCode}
     (hν : SLEReferenceInput ν) (hBG : BG20Prop51Ref ν) (hLaw : HasNormalizedSLELaw 𝒮 ν)
     (hm : MepsScalingInput 𝒮) (h27 : VolumeGrowthStmt) (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) :
     DiscretePotentialTightnessCountableStmt 𝒮 :=
   firstPass_3_1_countable hm h27 (exitTimeUpperBoundStmt_of_bg20 hν hBG hLaw h27) h32
 
-/-- **Lemma 3.1, samplewise faithful form, per-model exit-time input** (task fp-S3c2-3-1-per-model). As
+/-- **Lemma 3.1, samplewise faithful form, per-model exit-time input**. As
 `firstPass_3_1_faithful_of_bg20`, but the exit-time input is the per-model frozen `BG20Prop51 𝒮` (BG20 Proposition 5.1,
-`FirstPass/Frozen/S3c.lean`) instead of the reference-package form `BG20Prop51Ref ν`, which is FALSE as typed (chat 186).
+`FirstPass/Frozen/S3c.lean`) instead of the reference-package form `BG20Prop51Ref ν`, which is FALSE as typed (see docs/campaign/FROZEN-PROVENANCE.md).
 The second clause of Lemma 2.18 is derived from `BG20Prop51 𝒮` and `VolumeGrowthStmt` by `exitTimeUpperBoundStmt_core`. -/
 theorem firstPass_3_1_faithful_of_bg20Model {𝒮 : SpaceFillingSLEModel} (hBG : BG20Prop51 𝒮)
     (hm : MepsScalingInput 𝒮) (h27 : VolumeGrowthStmt) (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) :
     DiscretePotentialTightnessPointwiseStmt 𝒮 :=
   firstPass_3_1_faithful hm h27 (exitTimeUpperBoundStmt_core hBG h27) h32
 
-/-- **Lemma 3.1 (countable-family form), per-model exit-time input** (task fp-S3c2-3-1-per-model; as
+/-- **Lemma 3.1 (countable-family form), per-model exit-time input** (as
 `firstPass_3_1_countable_of_bg20` with `BG20Prop51 𝒮` in place of `BG20Prop51Ref ν`). -/
 theorem firstPass_3_1_countable_of_bg20Model {𝒮 : SpaceFillingSLEModel} (hBG : BG20Prop51 𝒮)
     (hm : MepsScalingInput 𝒮) (h27 : VolumeGrowthStmt) (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) :

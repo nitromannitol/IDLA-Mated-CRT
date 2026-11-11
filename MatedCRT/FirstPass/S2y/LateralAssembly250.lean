@@ -171,7 +171,7 @@ lemma integrable_mul_radial {a : ℂ → ℝ} (hloc : LocallyIntegrable a volume
     exact hR (subset_tsupport g (Function.mem_support.2 hgx))
   exact (integrableOn_iff_integrable_of_support_subset hsupp).1 hK
 
-/-! ### The radial integral: integrability in `ω` (copy of the integrability step of `tendsto_integral_abs_radial_gen`) -/
+/-! ### The radial integral: integrability in `ω` (the integrability step of `tendsto_integral_abs_radial_gen`) -/
 
 /-- The random variable `ω ↦ ∫ g(y) A(ω, y) dy` is integrable for a jointly measurable `A` whose slices are `L²` and
 agree a.s. with the circle averages `h_r(0)` off the centre (the integrability step of `tendsto_integral_abs_radial_gen`,

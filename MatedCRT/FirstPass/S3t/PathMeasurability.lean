@@ -3,9 +3,9 @@ import MarkovProcess.Path.ExitTimeShift
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.WalkContinuity
 
 /-!
-# Stopped occupation on the continuous-path carrier (fp-S3t-four-binder, z8)
+# Stopped occupation on the continuous-path carrier
 
-Answer 46(a3) of `notes/fp-gaps/CHATGPT-216-idla-hdet-truncated-gaps-PRO.md` (sections 1 and 2, lines 423-549): the stopped
+The stopped
 occupation `∫_{(0, min (T, τ_D)]} g(w_t) dt` is Borel on the path space `ContinuousPath ℂ = C(ℝ≥0, ℂ)`, with its Borel
 σ-algebra `MarkovProcess.ContinuousPath.instMeasurableSpace`, where `τ_D` is the exit time of the open set `D`
 (Duplantier–Sheffield truncated occupation; potential-theoretic exit time of Armitage–Gardiner).
