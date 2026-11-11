@@ -22,7 +22,7 @@ A candidate correction is to require 0 ∈ V for these two conclusions. Continui
 
 ## E-x1-1 — MINIMAL-CORRECTION to the boundary argument
 
-**Status (2026-11-11):** applied: paper [C34] (Proposition 5.1 proof); email item 'Proposition 5.1 (boundary vanishing)'.
+**Status (2026-11-11):** applied: paper [C34] (Lemma 5.3 proof, corr:2455); email item 'Lemma 5.3 (boundary vanishing, in its proof)'.
 
 At corrected.tex:2117–2124 replace the assertion that the ambient Green function and w̃ vanish individually on ∂Λεt by: “w̃ + (t/ε) ḡBρ(·,0) vanishes on ∂Λεt by obstacle contact, while ḡΛεt and q̄Λεt vanish there by killing.” No change to the lemma statement is proposed by this item.
 
@@ -50,7 +50,7 @@ The weaker condition P(F \ E) = 0 suffices for the countable Borel–Cantelli ap
 
 ## E-A8 — MINIMAL-CORRECTION to the remaining proof notation
 
-**Status (2026-11-11):** applied: paper [C4] (four proof occurrences replaced by the cell-union boundary); email item 'Lemmas 5.3 and 5.4'.
+**Status (2026-11-11):** applied: paper [C4] (four proof occurrences, in the proofs of Lemma 5.4 (corr:2397, 2403) and Lemma 5.3 (corr:2432, 2472), replaced by the cell-union boundary); email item 'Lemmas 5.3 and 5.4'.
 
 The statements of Lemmas 5.3 and 5.4 and the definition of O₁ in Proposition 5.1 already use ∂Λ̄εt, with [C4] (corrected.tex:2011–2012, 2023–2024, 2032–2033). Four proof occurrences still use ∂η(Λεt), at 2062, 2067, 2095 and 2132. Proposed marked change: replace ∂η(Λεt) by ∂Λ̄εt at each of those four locations. This continues [C4]; it does not change either lemma's statement.
 
@@ -216,7 +216,7 @@ The further input needed at 2043 is B⁻_{δ/2}(Λ_t) ⊆ fill(Λᵋ_t), with pr
 The resulting conclusion is the ordinary lower bound and the version stopped at Λᵋ_t; see `joint_iDLALowerBound_discrete_of_steps` (Proofs/IDLA/JointDiscreteLowerBound.lean:14). This checks the geometric use in Proposition 5.1 and the unstopped lower bound used in the main theorem. It does **not** establish the proposition's distinct claim for stopping at Vᵋ(Λ_t), which Proposition 6.1 uses; that remains E-c1-5 and cannot be obtained merely by the displayed correction. The inner estimate is likewise conditional on the independently assigned strict-obstacle input.
 ## E-x2-1 — MINIMAL-CORRECTION to the shell proof, conditional on corrected numbered inputs
 
-**Status (2026-11-11):** NOT applied. Conditional verdict; the replacement is defined by reference to Lean files and to separate inputs; see AUDIT-R1-RESPONSES.md, IDLA (A).
+**Status (2026-11-11):** NOT applied. Conditional verdict; the replacement is defined by reference to Lean files and to separate inputs; see AUDIT-R1-RESPONSES.md, IDLA (A). Flagged as open (AUDIT-R2 M8) in the email item 'Proposition 7.1, Steps 1 and 2 (flagged as open)'; no new argument is supplied.
 
 The following geometric-radius calculation was the first partial finding; the complete conditional verdict is recorded below. Write `q = 1 - s₂ ∈ (0,1)` and `p = 1/(2β⁻) > 0`. Suppose the stated contraction `O_j ≤ q O_{j-1}` has been established for `1 ≤ j < τ₁`, and `0 ≤ ε O₀ < δ₀`. For `1 ≤ k < τ₁`, the definition of `τ₁` makes the maximum in the definition of `r_k` attain its first term, and hence
 

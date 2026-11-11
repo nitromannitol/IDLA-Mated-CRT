@@ -9,7 +9,7 @@ verdicts in the inbox entry of 13:55 UTC). Line numbers refer to the published s
   Lemma 3.4, last display (l.1172); Lemma 3.5 (l.1246); Lemma 3.7 and the same PDE restated in its proof
   (lemma:convergence-of-the-normalized-exit-time); Theorem 4.1 and the remark after it (theorem:convergence-divisible);
   Lemma 4.8 items 1 and 3 (lemma:subsequential-properties).
-- Published: `m_0/6`, `m_0 x`, `m_0 psi`, `-m_0/6`.  Corrected: `c_0/6`, `c_0 x`, `c_0 psi`, `-c_0/6`, with `c_0 := 2/m_0`.
+- Published: `m_0/6`, `m_0 x`, `m_0 psi`, `-m_0/6`.  Corrected: `lambda_0/6`, `lambda_0 x`, `lambda_0 psi`, `-lambda_0/6`, with `lambda_0 := 2/m_0`.
 - Reason: with the Green's function normalized by `Delta G = -delta` (l.1493, 1625; HB Prop 2.3), the occupation density
   of standard Brownian motion is `2G`, and the walk at step `m_eps t` approximates `X_t = LBM_{m_0 t}` (l.715). So
   `m_eps^{-1} sum_x G^eps(a_y, x) f(eta(x)) -> m_0^{-1} int 2 G f dmu_h`; the printed `m_0` holds iff `m_0^2 = 2`, false
@@ -40,12 +40,12 @@ verdicts in the inbox entry of 13:55 UTC). Line numbers refer to the published s
   (l.1016, 1040) and all four uses provide it (l.1191, 1346, 1419, 1752).
 
 ## [C4] Distance to the boundary of the cell union in Lemmas 5.3-5.4 (ESCALATIONS E-A8, TYPO)
-- Where: Lemma 5.3 (l.1999), Lemma 5.4 (l.2009), and the set `O_1` in the proof of Proposition 5.1 (l.2018).
+- Where: Lemma 5.3 (l.1999), Lemma 5.4 (l.2009), and the set `O_1` in the proof of Proposition 5.1 (l.2018). The four proof occurrences are in the proof of Lemma 5.4 (corr:2397, 2403) and in the proof of Lemma 5.3 (corr:2432, 2472).
 - Published: `dist(eta(a), partial eta(Lambda^eps_t)) > delta`.  Corrected: `dist(eta(a), partial overline{Lambda^eps_t}) > delta`.
 - Reason: `eta(Lambda^eps_t)` is a finite point set, so the published condition never holds (the lemmas are vacuous and
   `O_1 = emptyset` in the proof of Prop 5.1); the proof of Prop 5.1 (l.2024) uses the cell union `overline{Lambda^eps_t}`.
 
-- Also (2026-11-11, GAPS-SEC2567A.md E-A8): the four proof occurrences of the boundary predicate in the proof of Proposition 5.1 (dist(eta(a), partial eta(Lambda)) > delta, in the displays after the strict-gap and surplus steps) are replaced by partial overline{Lambda}, the boundary of the cell union, marked [C4].
+- Also (2026-11-11, GAPS-SEC2567A.md E-A8): the four proof occurrences of the boundary predicate in the proofs of Lemma 5.4 (corr:2397, 2403) and Lemma 5.3 (corr:2432, 2472) (dist(eta(a), partial eta(Lambda)) > delta, in the displays after the strict-gap and surplus steps) are replaced by partial overline{Lambda}, the boundary of the cell union, marked [C4].
 ## [C5] Scale-invariant integrand in the good-annulus event (ESCALATIONS E-A10, CONFIRMED)
 - Where: eq:good-annulus-event (l.2314).  Published: `log(1/|u-v|) + 1`.  Corrected: `log(r/|u-v|) + 1`.
 - Reason: for `u, v` in `A_{r,2r}(z)`, `|u - v| < 4r`, so the published left side is at least `(log(1/(4r)) + 1) mu_h(A)`
@@ -77,7 +77,7 @@ The printed random input sequence precedes a high-probability extraction. First 
 Put the deterministic sequence, and in Lemma 4.6 fixed t, before a deterministic thinning and the almost-sure conclusion. Lemma 4.6 states relative compactness on the closed ball, Hölder limits and measurable selection. See AUDIT-C11-C12-USES.md; downstream identification is conditional on independent repairs.
 
 ## [C13] Harmonic convergence and boundary representatives (author-approved 2026-11-06)
-Lemma 3.6: replace the printed Hölder datum evaluated at the exit-cell representative by continuous datum on the closed disk, evaluated after nearest-point projection. Add uniform convergence and the polynomial same-walk comparison, with the corrected unrestricted-walk proof. Apply the projection convention to Lemma 3.5 boundary data as well. Boundary-cell representatives can lie outside the disk and the exit functional is not everywhere continuous. See `LEMMA36-REPLACEMENT.md` and `AUDIT-L36-USES.md`.
+Lemma 3.6: replace the printed Hölder datum evaluated at the exit-cell representative by continuous datum on the closed disk, evaluated after nearest-point projection. Add uniform convergence. The polynomial same-walk comparison is an optional strengthening, proved for the unrestricted walk. Apply the projection convention to Lemma 3.5 boundary data as well. Boundary-cell representatives can lie outside the disk and the exit functional is not everywhere continuous. See `LEMMA36-REPLACEMENT.md` and `AUDIT-L36-USES.md`.
 
 - Also (2026-11-11): the unmarked boundary-stability consequence in the proof of Lemma 4.8 (polynomial boundary data differ from their projected values by o(m_eps)) carries this marker. Appendix C (the replacement argument for Lemma 3.6, transcribed from docs/campaign/LEMMA36-REPLACEMENT.md) is the written proof of this entry, and the uses in Section 4 are listed there.
 ## [C14] Normalized comparison boundary offset (author-approved 2026-11-06)
@@ -108,8 +108,8 @@ Printed: The statement wrote \mathfrak{s}=\mathfrak{s}(\delta), even though the 
 ## [C24] Lemma 7.3: almost-sure simultaneous scope (applied 2026-11-10 under the author's standing approval)
 Printed: The statement omitted its ambient probabilistic scope. Corrected: state that the comparison holds almost surely, simultaneously for every eps > 0. The quantifiers over t, B and b, the displayed inequality and the proof are unchanged. Text: CHAT163-idla-7-8-audit-PRO.md, section 4 (ChatGPT chat 163); exact LaTeX from ChatGPT chat 215.
 
-## [C25] Lemma 7.4: positive stopped support and one event simultaneous in t (applied 2026-11-10 under the author's standing approval)
-Printed: Lemma 7.4 started from every a in D_eps(t eps^{-1}) and required the path to stay in that cluster, while the increments are for the stopped odometer u_t^eps. Since D_eps(t eps^{-1}) is the closure of the positive stopped support, a starting point can have zero stopped odometer, and the first increment by log(eps^{-1})^{-2} need not hold. The wording also placed "for all t > 0" outside "with polynomially high probability." Corrected: on the single degree-bound event, simultaneously for every t > 0 and every nonzero a in Lambda_t^eps={u_t^eps>0}, construct the increasing path entirely in Lambda_t^eps. The proof now inducts inside Lambda_t^eps and deletes the boundary-start alternative. In Step 3 of Proposition 7.1, apply the path to each a in Lambda_t^eps outside Theta_{tau_{eps,2}} and stop it on first reaching the boundary of Theta_{tau_{eps,2}}. In the same Step 3 the path bound reads "the odometer increases by at most eps^{-omega_0}". Text: CHAT163-idla-7-8-audit-PRO.md, section 4 (ChatGPT chat 163); exact LaTeX from ChatGPT chat 215 (notes/fp-gaps/CHATGPT-215-idla-tex-C23-C25-PRO.md).
+## [C25] Lemma 7.4: positive unstopped support and one event simultaneous in t (applied 2026-11-10 under the author's standing approval)
+Printed: Lemma 7.4 started from every a in D_eps(t eps^{-1}) and required the path to stay in that cluster, while the increments are for the stopped odometer u_t^eps. Since D_eps(t eps^{-1}) is the closure of the positive unstopped support, a starting point can have zero stopped odometer, and the first increment by log(eps^{-1})^{-2} need not hold. The wording also placed "for all t > 0" outside "with polynomially high probability." Corrected: on the single degree-bound event, simultaneously for every t > 0 and every nonzero a in Lambda_t^eps={u_t^eps>0}, construct the increasing path entirely in Lambda_t^eps. The proof now inducts inside Lambda_t^eps and deletes the boundary-start alternative. In Step 3 of Proposition 7.1, apply the path to each a in Lambda_t^eps outside Theta_{tau_{eps,2}} and stop it on first reaching the boundary of Theta_{tau_{eps,2}}. In the same Step 3 the path bound reads "the odometer increases by at most eps^{-omega_0}". Text: CHAT163-idla-7-8-audit-PRO.md, section 4 (ChatGPT chat 163); exact LaTeX from ChatGPT chat 215 (notes/fp-gaps/CHATGPT-215-idla-tex-C23-C25-PRO.md).
 
 ## [C26] Lemma 6.8: replacement proof (applied 2026-11-10 under the author's standing approval)
 Printed (corrected draft through [C25]): the proof of Lemma 6.8 did not establish the lemma. An independent referee check (ChatGPT chat 225, notes/fp-gaps/CHATGPT-225-idla-C22-referee-PRO.md) found that the Step 1 good annuli lie outside the exit domain of the walk, that after [C5] Steps 2 and 4 still used the old non-scale-invariant logarithmic kernel, and smaller gaps in the Green lower bound, the ball-to-annulus inclusion, the stopping convention and the exponent bookkeeping; the [C22] Step 3 covering estimate is correct locally but is superseded. Corrected: the proof is replaced by a target-scale short-window good-annulus construction with two-sided-shell amplification (the architecture of chats 188, 190, 193). The statement is unchanged; the proof gives the stronger order s_1 = s_1(rho, gamma), s_2 = 1/2 chosen before s_0, only delta depending on s_0. Text: ChatGPT chat 229 (notes/fp-gaps/CHATGPT-229-idla-C26-lemma-6-8-proof-PRO.txt). Compiled: pdflatex 0 errors, 0 undefined references.
@@ -141,11 +141,11 @@ Printed: a_1, ..., a_k in Theta (Definition 6.2, lemma:abelian-IDLA "subset Thet
 - Corrected: G undirected, locally finite, connected and infinite; V a finite set containing the origin. The remark gives the componentwise argument (paths in G to V^c; finite maximum principle on each component; obstacle zero on components not containing 0).
 - Reason: GAPS-SEC2567A.md E-c1-2 (MINIMAL-CORRECTION). The Section 4 reduction can give a disconnected ball-interior set. Email item: Appendix A (new item).
 
-## [C34] Proposition 5.1 proof: boundary vanishing (E-x1-1, 2026-11-11)
-- Where: proof of Proposition 5.1, the sentence 'Since w~ = gr_{B_rho}(., 0) = q = 0 on partial Lambda' (before the display for v - v~).
+## [C34] Lemma 5.3 proof: boundary vanishing (E-x1-1, 2026-11-11)
+- Where: proof of Lemma 5.3 (corr:2455), the sentence 'Since w~ = gr_{B_rho}(., 0) = q = 0 on partial Lambda' (before the display for v - v~).
 - Printed: the ambient Green function and w~ vanish individually on the cluster boundary.
 - Corrected: w~ + (t/eps) gr_{B_rho}(., 0) vanishes on partial Lambda by obstacle contact (the obstacle is -(t/eps) gr_{B_rho}(., 0)); gr_Lambda and q_Lambda vanish there by killing. The statement is unchanged.
-- Reason: GAPS-SEC2567A.md E-x1-1 (MINIMAL-CORRECTION). Email item: Proposition 5.1 (new minor item).
+- Reason: GAPS-SEC2567A.md E-x1-1 (MINIMAL-CORRECTION). Email item: Lemma 5.3 (boundary vanishing, in its proof).
 
 ## [C35] Lemma 6.9: quantifier order of s_3 (E-c5-1, 2026-11-11)
 - Where: statement of lemma:chance-of-being-absorbed.
