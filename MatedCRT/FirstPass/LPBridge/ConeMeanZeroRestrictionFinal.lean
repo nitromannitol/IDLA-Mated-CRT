@@ -4,6 +4,7 @@ import MatedCRT.LPStaging.Gauss.GaussianProcessLawExt
 import MatedCRT.FirstPass.LPBridge.GFFRadialBrownian
 import MatedCRT.FirstPass.LPBridge.LateralProcessAEMeasurable
 import MatedCRT.FirstPass.LPBridge.ConeRadialAbsIntegrable
+import MatedCRT.FirstPass.LPBridge.GFFRadialLateralIndep
 
 /-!
 # Lateral part of a whole-plane GFF: finite-dimensional law
@@ -137,6 +138,11 @@ theorem fpConeMeanZeroRestriction_of_radialLateralIndep (hInd : GFFRadialLateral
     MatedCRT.FPConeMeanZeroRestriction :=
   coneMeanZeroRestrictionStep_of_inputs lateralLawFinite_holds lateralProcessAEMeasurable_holds hInd
     gffRadialBrownian_holds coneRadialAbsIntegrable_holds
+
+/-- **Cone mean-zero restriction.** `fpConeMeanZeroRestriction_of_radialLateralIndep` applied to the whole-plane
+radial/lateral independence `gffRadialLateralIndep_holds` (paper l.437-438, l.442). -/
+theorem fpConeMeanZeroRestriction_holds : MatedCRT.FPConeMeanZeroRestriction :=
+  fpConeMeanZeroRestriction_of_radialLateralIndep gffRadialLateralIndep_holds
 
 end MatedCRT.ConeMeanZeroRestriction
 
