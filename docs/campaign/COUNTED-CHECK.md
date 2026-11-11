@@ -1,6 +1,6 @@
 # COUNTED.md declaration check
 
-Checks every row of the Table in `docs/campaign/COUNTED.md` (lines 197–264, including the LP forms, the audit rows m1 and B6, and the `_noSup` counted forms), the Appendix B rows (lines 265–276), and every declaration that COUNTED.md names only in its prose (lines 1–196; first match under `MatedCRT/`).
+Checks every row of the Table in `docs/campaign/COUNTED.md` (lines 197–264, including the LP forms, the audit rows m1 and B6, and the `_noSup` counted forms), the Appendix B rows (lines 265–277), and every declaration that COUNTED.md names only in its prose (lines 1–196; first match under `MatedCRT/`).
 
 Checked at HEAD 00098347 (2026-11-11 14:37 UTC). Declarations, tracking and hashes are read at that HEAD (the sandbox working tree, which has no uncommitted edit in any file of the 53 row files). The last commit to COUNTED.md is 10d46a40 (2026-11-11 13:29:59 UTC), before this check.
 
@@ -110,6 +110,7 @@ None at HEAD 00098347.
 | 272 | AppB | `frozenLBMGreenOccupationRescaled_closed2` | MatedCRT/Proofs/Sec3/KilledOccupation/OccupationClosure2.lean | 32 | 32 | yes | 582e360 (commit), 6675b36 (commit) | std | OK |
 | 273 | AppB | `frozenLBMGreenOccupationRescaled_closed3` | MatedCRT/Proofs/Sec3/KilledOccupation/OccupationClosure3.lean | 68 | 68 | yes | 23f4c7e6 (commit) | std | OK |
 | 274 | AppB | `frozenLBMGreenOccupationRescaled_closed4` | MatedCRT/Proofs/Sec3/KilledOccupation/OccupationClosure4.lean | 76 | 76 | yes | d90cbe4e (commit) | std | OK |
+| 275 | AppB | `frozenLBMGreenOccupationRescaled_closed5` | MatedCRT/Proofs/Sec3/KilledOccupation/OccupationClosure5.lean | 19 | 19 | yes | d51a926b (commit) | std | OK |
 | 0 | prose | `MatedCRT.GFFExistence.exists_harmonicBalls_isWholePlaneGFF` | MatedCRT/FirstPass/LPBridge/GFFExistence.lean | 22 | not stated | yes | - | std | OK |
 | 0 | prose | `MatedCRT.S2VG.LitExistence` | MatedCRT/FirstPass/S2VG/Literature.lean | 44 | not stated | yes | - | std | OK |
 | 0 | prose | `MatedCRT.ratPoint` | MatedCRT/FirstPass/S2g/LawCode.lean | 24 | not stated | yes | - | std | OK |

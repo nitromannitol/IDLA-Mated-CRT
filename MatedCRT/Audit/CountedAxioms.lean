@@ -48,6 +48,7 @@ import MatedCRT.Proofs.Sec3.KilledOccupation.OccupationClosure
 import MatedCRT.Proofs.Sec3.KilledOccupation.OccupationClosure2
 import MatedCRT.Proofs.Sec3.KilledOccupation.OccupationClosure3
 import MatedCRT.Proofs.Sec3.KilledOccupation.OccupationClosure4
+import MatedCRT.Proofs.Sec3.KilledOccupation.OccupationClosure5
 import MatedCRT.Proofs.Sec4.SubsequentialProperties.CircleAverage
 import MatedCRT.Proofs.SecA.DiscreteDivergence
 import MatedCRT.Proofs.SecA.Statements
@@ -108,6 +109,7 @@ import MatedCRT.Proofs.SecA.Statements
 #print axioms MatedCRT.KilledOccupation.frozenLBMGreenOccupationRescaled_closed2
 #print axioms MatedCRT.KilledOccupation.frozenLBMGreenOccupationRescaled_closed3
 #print axioms MatedCRT.KilledOccupation.frozenLBMGreenOccupationRescaled_closed4
+#print axioms MatedCRT.KilledOccupation.frozenLBMGreenOccupationRescaled_closed5
 #print axioms MatedCRT.GFFExistence.exists_harmonicBalls_isWholePlaneGFF
 #print axioms MatedCRT.S2VG.LitExistence
 #print axioms MatedCRT.ratPoint
