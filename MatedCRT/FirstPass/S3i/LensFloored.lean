@@ -11,23 +11,45 @@ import MatedCRT.FirstPass.S3i.Proof
 
 Source: Gwynne–Miller–Sheffield, *Harmonic functions on mated-CRT maps*, arXiv:1807.07511v3, Theorem 3.9,
 equation (3.31) and its proof on p. 32, with Lemma 3.11 (p. 31). Quoted from
-the campaign record of the GMS extraction (MQ-li-7 (a)):
+the campaign record of the GMS extraction (MQ-li-7 (a)) and from the rendered PDF, pp. 30-32 (MQ-li-14;
+PDF page = printed page; script letters transcribed as in the record):
 
 * (3.31), p. 30: "If D is simply connected, then we also have the boundary continuity estimate
   min_{y∈VGε(∂D∩Bt(η(x)))} fε(y) − A‖fε‖∞ (t/dist(η(x),∂D))^{−ξ} ≤ fε(x) ≤ max_{y∈VGε(∂D∩Bt(η(x)))} fε(y)
   + A‖fε‖∞ (t/dist(η(x),∂D))^{−ξ}, ∀x ∈ VGε(D), ∀t > 0."
-* Lemma 3.11, p. 31: "For each ρ ∈ (0, 1), there exists α = α(γ) > 0, β = β(γ) > 0, and p = p(ρ, γ) > 0 such that for
+* Q3, Lemma 3.11, p. 31 (the printed dependence β = β(γ)): "For each ρ ∈ (0, 1), there exists α = α(γ) > 0, β = β(γ) > 0, and p = p(ρ, γ) > 0 such that for
   each ε ∈ (0, 1), the following holds with probability 1 − Oε(ε^α). For each z ∈ Bρ(0) and each r ∈ [ε^β, ρ] with
   B2r(z) ⊂ Bρ(0), min_{x∈VGε(Br(z))} Pεx[Xε disconnects VGε(∂Br/2(z)) from VGε(∂B2r(z)) before hitting VGε(∂B2r(z))]
   ≥ p. (3.35)"
-* Proof of (3.31), p. 32: "By applying the Markov property of Xε and (3.35) with r = e^{−k} for k ∈ [⌈log t^{−1}⌉,
-  ⌊log(2 dist(η(x),∂D))^{−1}⌋], we get that for t > 2 dist(η(x),∂D), Pεx[Xε first hits VGε(∂D) at a point in
-  VGε(∂D∩Bt(η(x)))] ≥ 1 − p^{log(t/dist)−2} ≥ 1 − A (t/dist(η(x),∂D))^{−ξ} (3.38) ... (the case t < 2 dist(η(x),∂D)
-  can be dealt with by increasing A)."
+* Q4, p. 31, proof of Lemma 3.11 (the γ-only choice of β): "Let α_0 = α_0(γ) > 0 and β_0 = β_0(γ) > 0 be chosen so
+  that the conclusion of Proposition 3.6 is satisfied." [...] "The statement of the lemma for a small enough choice of
+  α ∈ (0, α_0) and β ∈ (0, β_0) follows from this last estimate by taking a union bound over all
+  z ∈ (ε^{α_0/100}ℤ^2) ∩ B_ρ(0) and all r ∈ ε^{α_0/100}ℤ with r ≥ ε^{β_0} and B_{2r}(z) ⊂ B_ρ(0)."
+* Q1, p. 32, first paragraph of the proof of Theorem 3.9 (the floor enters through E^ε): "Proof of Theorem 3.9. Let
+  α, β, and p be chosen so that the conclusion of Lemma 3.11 is satisfied for ε > 0. We can assume without loss of
+  generality that β < 1/(50(2+γ)^2), so that Lemma 2.7 applies with q = 100β. Let E^ε be the event that (3.35) holds
+  for each z ∈ B_ρ(0) and each r ∈ [ε^β, ρ] with B_{2r}(z) ⊂ B_ρ(0) and that diam(H^ε_x) ≤ ε^{100β} for each
+  x ∈ 𝒱𝒢^ε(B_ρ(0)), so that by Lemma 3.11 and Lemma 2.7, after possibly shrinking α we can arrange that
+  ℙ[E^ε] = 1 − O_ε(ε^α). Throughout the proof we assume that E^ε occurs and we let 𝔣^ε : 𝒱𝒢^ε(D) → ℝ be a discrete
+  harmonic function as in the theorem statement."
+* Q2, p. 32, the paragraph proving (3.31) (PDF text; the log in (3.38) is corrected, MQ-li-14 reading 3 (i)): "Now
+  assume that D is simply connected. To prove the boundary estimate (3.31), we observe that if x ∈ 𝒱𝒢^ε(D) and
+  r ≥ 2 dist(η(x), ∂D), then since ℂ \ D is connected, in order for a random walk started from x to disconnect
+  𝒱𝒢^ε(B_{r/2}(0)) from ∞, it must first hit 𝒱𝒢^ε(∂D). By applying the Markov property of X^ε and (3.35) with
+  r = e^{−k} for k ∈ [log⌈t^{−1}⌉, log⌊2 dist(η(x), ∂D)^{−1}⌋], we get that for t > 2 dist(η(x), ∂D),
+  P̄^ε_x[X^ε first hits 𝒱𝒢^ε(∂D) at a point in 𝒱𝒢^ε(∂D ∩ B_t(η(x)))] ≥ 1 − p^{log(t/dist(η(x),∂D))−2}
+  [corrected; PDF prints t/dist(η(x),∂D) − 2] ≥ 1 − A (t/dist(η(x), ∂D))^{−ξ} (3.38) for a possibly larger choice of
+  A and smaller choice of ξ. Again using that 𝔣^ε is discrete harmonic, we obtain (3.31) (the when case t < 2
+  dist(η(x), ∂D) can be dealt with by increasing A)."
 
-The sentence of the p. 32 proof that fixes `β` before `ρ` is NOT in that extraction: the quoted (3.38) sentence does
-not mention `β`. The ordering used here rests on the notation of Lemma 3.11, where `β = β(γ)` and only `p = p(ρ, γ)`
-carries `ρ`. The printed (3.31) has no floor; the floor `ε ^ β` is the one of the proof (MATH-ANSWERS MQ-li-7 (a)).
+The floor enters the proof of (3.31) through the event E^ε (Q1): on E^ε, (3.35) holds only for r ∈ [ε^β, ρ], and
+keeping in (3.38) only the k with e^{−k} ≥ ε^β gives the floored form, with dist(η(x),∂D) replaced by
+max(dist(η(x),∂D), ε^β) (MQ-li-14 reading 1). The printed (3.31) has no floor; the floor `ε ^ β` is the one of the
+proof. No sentence of the proof states that β is fixed before ρ. The order comes from the notation β = β(γ) (Q3) and
+the γ-only choice of β in Q4 (MQ-li-14 reading 2).
+uniformity in rho: from the printed dependence beta = beta(gamma) (Lemma 3.11, Q3) and the gamma-only choice
+in its proof (Q4); no sentence of the proof states the order explicitly.
+The Q2 text keeps the printed B_{r/2}(0), where the centre η(x) is meant (MQ-li-14 reading 3 (iii)).
 PENDING TRUTH CHECK (docs/campaign/FROZEN-PROVENANCE.md): the uniform form is TRUE per MQ-li-7 (a) and MQ-li-9 only
 if `β(γ)` is uniform in `ρ`, which the extraction supports by notation alone.
 -/
@@ -42,7 +64,7 @@ open scoped ENNReal NNReal
 chosen before `ρ`, `Ω` and `S`. The body is that of `FrozenOneSidedBoundaryContinuityFloored`
 (S3i/FrozenFloored.lean:34-44) with the existential over `β` moved in front of `∀ ρ`.
 Such a `β` is the one of GMS Lemma 3.11 (p. 31), which depends on `γ` only; see the module docstring for the
-extraction and its gap. PENDING TRUTH CHECK. -/
+extraction and the order of `β` and `ρ`. PENDING TRUTH CHECK. -/
 def FrozenOneSidedBoundaryContinuityFlooredUniform (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ β : ℝ, 0 < β ∧ β < 1 ∧
   ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
