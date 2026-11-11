@@ -1,13 +1,13 @@
 import MatedCRT.Draft.Section2
 
 /-!
-# FIRST PASS S4S6c, HVolCutoff68: the random-radius volume bounds from Lemma 2.7 (task fp-S4S6c-hvol-cutoff, worker z9)
+# FIRST PASS S4S6c, HVolCutoff68: the random-radius volume bounds from Lemma 2.7
 
 Source. `VolumeGrowthStmt` (Draft/Section2.lean:121; paper Lemma 2.7, BG20 Lemma A.1) bounds the quantum ball masses
 `μ(B_δ(z))` from below by `δ^{β⁻}` for all `z ∈ B_{1-δ}`, outside an event of polynomially small probability as
 `δ → 0` (`HarmonicBalls.PolyHighProb`). The consumer `hone_exitQ_walk_of_env_direct_repaired` (HspRepair68.lean)
-needs the same bound at the random radii `c₀R_k` and `R_k/4` (its binders `hVolC`, `hVolY`). The route of chat 226
-(notes/fp-gaps/CHATGPT-226-idla-6-8-chain-inputs-PRO.md, l.186-231):
+needs the same bound at the random radii `c₀R_k` and `R_k/4` (its binders `hVolC`, `hVolY`). The route
+:
 1. take an auxiliary exponent `(2+γ)²/2 < β₀ < β⁻` and apply `VolumeGrowthStmt` with exponent `β₀`;
 2. Borel–Cantelli over the dyadic scales `2^{-m}`: almost surely the dyadic event holds for all large `m`;
 3. for `δ` below a random cutoff `t(μ) > 0`, take the dyadic scale `q ∈ [δ/2, δ)`; then
@@ -17,7 +17,7 @@ The cutoff is stated almost surely (`volume_lower_cutoff_ae`, `volume_bounds_ae`
 
 Limit. The cutoff is small and random, so the two bounds below hold only at radii `R/4 < t(μ)`. The walk radii of the
 consumer satisfy only `r² ≤ R_k ≤ 1` (`hRr`, HspRepair68.lean), so `VolumeGrowthStmt` does not give `hVolC`, `hVolY`
-for every walk event (the all-scales coefficient-one bound is not in the sources). Reported in reports/z9.md.
+for every walk event (the all-scales coefficient-one bound is not in the sources). Reported in
 -/
 namespace MatedCRT
 open MeasureTheory Set Filter Metric

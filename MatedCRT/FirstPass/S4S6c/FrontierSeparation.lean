@@ -3,12 +3,12 @@ import MatedCRT.Proofs.Sec6.ConstantOrderLowerBound.Walk
 import MatedCRT.Proofs.Infra.RandomWalk
 
 /-!
-# Frontier separation for the trace of Lemma 6.7 (q2, task fp-S4S6c; LEMMA68 6.7)
+# Frontier separation for the trace of Lemma 6.7
 
 Printed proof of Lemma 6.7 (paper `lemma:constant-order-lower-bound`, corrected paper lines 2776-2792):
 the walk from `a ∈ cl(Θ)` reaches the frontier `F = V(∂(Θ̄ + B_{r/2}))` before it exits
-`V = V(Θ̄ + B_r)`, by the cell-size estimate `lemma:cell-size-estimate`. Written argument: LEMMA68,
-proof of Lemma 6.7 (notes/fp-gaps/LEMMA68.md, lines 514-548): connectedness of the successive cells
+`V = V(Θ̄ + B_r)`, by the cell-size estimate `lemma:cell-size-estimate`. The printed
+The printed proof of Lemma 6.7: connectedness of the successive cells
 and the smallness of their diameters.
 
 Notation. `cell v ⊆ ℂ` is the cell of the vertex `v ∈ ℤ`; `U1` is the open inner set `Θ̄ + B_{r/2}` and
@@ -78,7 +78,7 @@ theorem notMem_of_vExitTime_eq {A : Set ℤ} {x : ℕ → ℤ} {N : ℕ} (h : vE
     exact hs
   · exact absurd h (by simp)
 
-/-- **Frontier separation, deterministic core of LEMMA68 6.7.** A chain `x` that starts at `a` with
+/-- **Frontier separation, deterministic core of the printed Lemma 6.7.** A chain `x` that starts at `a` with
 closed start cell in `U1`, whose consecutive terms are equal or adjacent, and which first leaves `V(U2)` at
 time `N`, visits `V(∂U1)` at some time `n < N`. -/
 theorem exists_frontierVerts_before_exit {m : ℤ → ℤ → ℕ} {cell : ℤ → Set ℂ} {U1 U2 : Set ℂ}
@@ -138,8 +138,8 @@ theorem ae_srwStep_legal (m : ℤ → ℤ → ℕ) (a : ℤ) :
   filter_upwards [h] with x hx
   exact not_not.1 hx
 
-/-- **Frontier separation, walk-law form (LEMMA68 6.7).** Let `hexit` be the almost-sure finiteness of the exit
-time from `V(U2)` (the walk exits the finite set `W = V(U2)` almost surely; LEMMA68 6.7, written argument).
+/-- **Frontier separation, walk-law form.** Let `hexit` be the almost-sure finiteness of the exit
+time from `V(U2)` (the walk exits the finite set `W = V(U2)` almost surely; the printed Lemma 6.7).
 Then the walk from `a` almost surely does not avoid `V(∂U1)` before its exit from `V(U2)`. This is the input
 `hF` of `TraceFrom68.trace_bound_of_exit_bound`. The hypothesis `hexit` is discharged in the repository by
 `ae_vExitTime_ne_top_of_expectedExitTime_ne_top` (OccupationGreen.lean) and
@@ -162,7 +162,7 @@ theorem srwLaw_frontier_separation {m : ℤ → ℤ → ℕ} {cell : ℤ → Set
     exact hmem n hn hF
   exact measure_eq_zero_iff_ae_notMem.2 hae
 
-/-- **LEMMA68 6.7 from 6.8, with frontier separation proved (walk-law form).** The trace bound follows from the
+/-- **Printed Lemma 6.7 from 6.8, with frontier separation proved (walk-law form).** The trace bound follows from the
 Lemma 6.8 bound at every frontier start `b ∈ V(∂U1)`; the frontier separation is supplied by
 `srwLaw_frontier_separation`. -/
 theorem trace_bound_of_frontier {m : ℤ → ℤ → ℕ} {cell : ℤ → Set ℂ} {U1 U2 : Set ℂ}

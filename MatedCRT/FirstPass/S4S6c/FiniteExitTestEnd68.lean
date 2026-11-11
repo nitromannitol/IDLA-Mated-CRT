@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.S4S6c.StrongMarkovState
 import MatedCRT.Proofs.IDLA.Measurable
 
 /-!
-# The test end is finite on a finite test domain (fp-S4S6c-exit-moment, item 3)
+# The test end is finite on a finite test domain (item 3)
 
 For a walk random time `T` and a finite vertex set `G`, the post-`T` path leaves `G` almost surely on `{T < ∞}`
 (strong Markov at `T` and `ExitNull68.exit_null_of_finite`). Hence the test end `firstTime (T ≤ k ∧ x k ∉ I)`,
@@ -82,7 +82,7 @@ lemma ae_post_exit_finite {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m
   by_contra hn
   exact hcon ⟨n, hn⟩
 
-/-- **Test end is finite on a finite test domain (item (3)).** If the test interiors `I x` (for `T x < ∞`) lie in
+/-- **Test end is finite on a finite test domain .** If the test interiors `I x` (for `T x < ∞`) lie in
 a finite vertex set `G`, then the test end `testE x = firstTime (T x ≤ k ∧ x k ∉ I x)` is almost surely finite on
 `{T < ∞}`. The exit of the post-`T` path from `G` supplies the time `k`. -/
 theorem testEnd_ne_top_of_finite {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m)

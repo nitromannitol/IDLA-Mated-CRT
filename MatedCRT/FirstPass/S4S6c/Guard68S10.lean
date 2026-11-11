@@ -14,18 +14,18 @@ import MatedCRT.FirstPass.S4S6c.HoneCellGood68
 import MatedCRT.FirstPass.S4S6c.HoneModelInputs68
 
 /-!
-# Lemma 6.8, redesigned guard (q2, S10): `GuardProbStmt` from the mesh events and the shell chain
+# Lemma 6.8, redesigned guard (S10): `GuardProbStmt` from the mesh events and the shell chain
 
-Route (operator 06:52; redesign note section 12 (S10); shells note section 13): the guard
+Route: the guard
 `Lemma68Uniform.GuardProbStmt` (S6e/Uniform.lean:132) follows from
 
 * `meshEventsStmt_of_draft`: the three events of `draft68_uniform_events` (S6f/UniformEvents.lean:114), proved from
   the Draft hypotheses `GreenKernelLowerBoundStmt`, `CellSizeEstimateStmt`, `ExitTimeUpperBoundStmt` with the
-  exponent `ζ = 1/(2+γ)² < 1/2` (the exponent used in the q1 proof; its statement only records `ζ < 1`).
+  exponent `ζ = 1/(2+γ)² < 1/2` (its statement only records `ζ < 1`).
 * `ShellChainStmt`: the per-radius quenched count bound on the good event, with the count constant
   `countConst ζ = 2^{-a}/800` of the landed count lemma (S6r/Count.lean:25, `count_bound`, `count_hypothesis`).
   The window good event at the dyadic window scale `dyadicD r` (S6r/Window.lean:25) is supplied by a family `Ew` of
-  polynomially high probability (the S2.3 short-window prevalence, owned by z5 as `S6r/Prevalence.lean`; not yet in Lean).
+  polynomially high probability (the S2.3 short-window prevalence; not yet in Lean).
   OPEN.
 * `window_cutoff`: the dyadic Borel-Cantelli cutoff for `Ew`, proved from `DyadicCutoff68.ae_mem_goodFrom` and `ddOf`.
 * the count-to-half step: `exit_le_half_of_count` from `one_sub_pow_le_exp`, `exp_le_of_counts` and
@@ -46,14 +46,14 @@ event, the cell-size event and the exit-time event, all at mesh `ε`. -/
 def meshEvent {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (γ ω₀ ρ CG ζ α CE : ℝ) (ε : ℝ) : Set Ω :=
   greenLowEvent68 S ω₀ ρ CG ε ∩ cellSizeEvent68 S γ ζ ρ ε ∩ exitTimeEvent68 S α ρ CE ε
 
-/-- **The mesh event with the cell-size component at the mesh radius `ρmesh = (1 + ρ)/2` (q2, fp-S4S6c-meshEventR;
-chat 252 §1).** The Green and exit components stay at the radius `ρ`; only the cell-size component is at `(1 + ρ)/2`
+/-- **The mesh event with the cell-size component at the mesh radius `ρmesh = (1 + ρ)/2`.**
+The Green and exit components stay at the radius `ρ`; only the cell-size component is at `(1 + ρ)/2`
 (`rhoCell68 ρ`). Then `hmesh_local_of_cellSize` (HoneSetup239_68.lean:197) bounds the cells on the ball `B(0, (1+ρ)/2)`,
 which contains the exit cell of the walk (`hmeshExit_of_cellSize`, MeshExitPw68.lean:60). `meshEvent` is kept. -/
 def meshEventR {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (γ ω₀ ρ CG ζ α CE : ℝ) (ε : ℝ) : Set Ω :=
   greenLowEvent68 S ω₀ ρ CG ε ∩ cellSizeEvent68 S γ ζ ((1 + ρ) / 2) ε ∩ exitTimeEvent68 S α ρ CE ε
 
-/-- The cell-size component of `meshEventR` (q2, fp-S4S6c-meshEventR). It is the hypothesis `hω` of
+/-- The cell-size component of `meshEventR`. It is the hypothesis `hω` of
 `hmeshExit_of_cellSize` (MeshExitPw68.lean:60) and of `hCellGood_fixedOmega` (HoneCellGoodSelPw68.lean:53), with
 `rhoCell68 ρ = (1 + ρ)/2` (definitional). -/
 lemma meshEventR_cell {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} {γ ω₀ ρ CG ζ α CE ε : ℝ} {ω : Ω}
@@ -79,7 +79,7 @@ def MeshEventsStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
         HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE)
 
 /-- OPEN INPUT (redesign S10 with the S2.3 window family and the S5-S8 shell chain). For constants satisfying the
-q1 constraints, `R ≤ ρ/4`, `R ≤ rAmp q0 ζ`, `ζ < 1/2`, `0 < q0 ≤ 1`, and every valid environment whose mesh events are
+the constraints, `R ≤ ρ/4`, `R ≤ rAmp q0 ζ`, `ζ < 1/2`, `0 < q0 ≤ 1`, and every valid environment whose mesh events are
 of polynomially high probability, there is a window family `Ew` of polynomially high probability such that on the
 mesh event, for every admissible configuration at radius `r ∈ [10 ε^ω₀, R]` whose dyadic window event holds, the
 quenched exit probability is at most `(1 - q0/(1 + log(1/r))²)^N` for some shell count `N` with
@@ -125,7 +125,7 @@ lemma probTendsToOne_of_polyHighProb {Ω : Type} [MeasurableSpace Ω] {P : Measu
   · exact Eventually.of_forall fun _ => zero_le
   · filter_upwards [Ioo_mem_nhdsGT hr₀] with r hr using h r hr.1 hr.2
 
-/-- **Probability bound of `meshEventR` (q2, fp-S4S6c-meshEventR).** As for `meshEvent`: the three events have
+/-- **Probability bound of `meshEventR`.** As for `meshEvent`: the three events have
 polynomially high probability, the cell-size one at `(1 + ρ)/2`, so the mesh event has `ProbTendsToOne` as `ε ↓ 0`. -/
 lemma probTendsToOne_meshEventR {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} {γ ω₀ ρ CG ζ α CE : ℝ}
     (hG : HarmonicBalls.PolyHighProb S.P (greenLowEvent68 S ω₀ ρ CG))
@@ -217,8 +217,8 @@ theorem window_cutoff {Ω : Type} {F : MeasurableSpace Ω} [m : MeasurableSpace 
     simp only [show (1 / 2 : ℝ) ^ Nat.log 2 ⌊1 / r ^ 2⌋₊ < r₀ from hlt, ↓reduceIte] at hmem
     exact hmem
 
-/-- (S10) The mesh events of `draft68_uniform_events`, with `ζ = 1/(2+γ)² < 1/2` (the q1 proof's exponent; the
-statement of q1 only records `ζ < 1`), from the three Draft hypotheses. -/
+/-- (S10) The mesh events of `draft68_uniform_events`, with `ζ = 1/(2+γ)² < 1/2` (the proof's exponent; the
+statement only records `ζ < 1`), from the three Draft hypotheses. -/
 theorem meshEventsStmt_of_draft (𝒮 : SpaceFillingSLEModel) (hG : GreenKernelLowerBoundStmt 𝒮)
     (hC : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮) : MeshEventsStmt 𝒮 := by
   intro γ hγ hγ2
@@ -317,7 +317,7 @@ theorem guardProbStmt_of_chain (𝒮 : SpaceFillingSLEModel) (hMesh : MeshEvents
   obtain ⟨ζ, hζ0, hζ1, ω₀, α, hω₀, hωα, hα0, hωζ, hmesh⟩ := hMesh γ hγ0 hγ2
   refine ⟨ω₀, hω₀, fun ρ hρ0 hρ1 => ?_⟩
   obtain ⟨CG, hCG, CE, hCE, hPH⟩ := hmesh ρ hρ0 hρ1
-  -- the admissible `q0` comes from the chain, after the constants (CHATGPT-234 Q1); no fixed `q0 = 1/9`
+  -- the admissible `q0` comes from the chain, after the constants; no fixed `q0 = 1/9`
   obtain ⟨q0, hq0, hq1, hchain⟩ :=
     hChain γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hCG hCE hζ0 hζ1 hρ0 hρ1
   have hrA : 0 < Lemma68Cutoff.rAmp q0 ζ := Lemma68Cutoff.rAmp_pos hq0 hζ0
@@ -369,7 +369,7 @@ theorem guardProbStmt_of_chain (𝒮 : SpaceFillingSLEModel) (hMesh : MeshEvents
     (fun ε hε => by positivity) (fun ω => min_le_left _ _) hR1 hcN hq0 hq1 hRr
     (fun ε ω r i => Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i) (Lemma68Config.exitQ S) hpt'
 
-/-! ### The Eps forms: mesh threshold, exponent antecedents, radius cutoff (q2, fp-S4S6c-eps-chain)
+/-! ### The Eps forms: mesh threshold, exponent antecedents, radius cutoff
 
 The old statements `MeshEventsStmt`, `ShellChainStmt` and the guard are kept unchanged (their importers build).
 The Eps forms add: `ε ≤ shellEps0 γ α ω₀` in the ε-clause; `2 ω₀ β⁻ < α` and `2 ω₀ < 2/(2+γ)² - ζ` next to the `ω₀`
@@ -377,8 +377,8 @@ hypotheses (`β⁻ = chosenBetaMinus γ`); and the deterministic radius cutoff `
 for `0 < r ≤ R`, next to `R ≤ rAmp q₀ ζ`. The consumer chooses `ω₀ ≤ α/(4β⁻)`, `ω₀ ≤ q/4` and `R ≤ Rc`. -/
 
 /-- **The mesh threshold `ε₀` of the Eps chain.** `shellEps0 γ α ω₀ = min (e⁻²/2) (((100 c₀)^{β⁻}/4)^{1/(α - 2ω₀β⁻)})` with
-`c₀ = shellC068 = e⁻²/32` and `β⁻ = chosenBetaMinus γ`. The first entry is the leaf threshold `ε ≤ 16 K.c0` (q1 G2, `16 c₀ = e⁻²/2`);
-the second is the threshold of `hsc_of_volC_threshold` (z10). -/
+`c₀ = shellC068 = e⁻²/32` and `β⁻ = chosenBetaMinus γ`. The first entry is the leaf threshold `ε ≤ 16 K.c0` (`16 c₀ = e⁻²/2`);
+the second is the threshold of `hsc_of_volC_threshold`. -/
 noncomputable def shellEps0 (γ α ω₀ : ℝ) : ℝ :=
   min (Real.exp (-2) / 2)
     (((100 * Lemma68ConstOrder.shellC068) ^ chosenBetaMinus γ / 4) ^ (1 / (α - 2 * ω₀ * chosenBetaMinus γ)))
@@ -390,7 +390,7 @@ lemma shellEps0_pos (γ α ω₀ : ℝ) : 0 < shellEps0 γ α ω₀ := by
   apply Real.rpow_pos_of_pos
   apply div_pos (Real.rpow_pos_of_pos (by positivity) _) (by norm_num)
 
-/-- **The mesh threshold with the cell entry (q2, fp-S4S6c-core-fixes, z5 GAP 1).** With `A = 2/(2+γ)² - ζ` and
+/-- **The mesh threshold with the cell entry.** With `A = 2/(2+γ)² - ζ` and
 `c₀ = shellC068`, `shellEps0Z γ α ω₀ ζ = min (shellEps0 γ α ω₀) (c₀^{1/(A - 2ω₀)})`. The second entry gives the leaf
 binder `ε^{A - 2ω₀} ≤ c₀` (B1Assembly68.lean:86 at `r = 10 ε^{ω₀}`), see `shellEps0Z_pow_le`. The old `shellEps0` is kept
 unchanged (ShellCorePw68 uses it). -/
@@ -425,7 +425,7 @@ lemma shellEps0Z_pow_le {γ α ω₀ ζ ε : ℝ} (hε : 0 < ε) (hd : 0 < 2 / (
     _ = Lemma68ConstOrder.shellC068 := by
       rw [← Real.rpow_mul hc.le, one_div_mul_cancel hd.ne', Real.rpow_one]
 
-/-! ### The Eps chain at the Green constant `CG` (q2, fp-S4S6c-cg-param, lead item 3: parameterize, do not restrict CG)
+/-! ### The Eps chain at the Green constant `CG` (do not restrict CG)
 
 `c₀(CG) = shellC0 CG = exp(-2CG)/32` (`Lemma68ConstOrder.shellC0`) replaces `shellC068` in the Eps chain, so that the leaf
 constant `K.C := CG` (`shellKCG`) satisfies `hc0C : c₀ ≤ exp(-2 K.C)/16`. The leaf threshold `16 c₀(CG) = exp(-2CG)/2`
@@ -498,7 +498,7 @@ lemma shellS1CG_lt_one (γ CG : ℝ) (hCG : 0 < CG) : shellS1CG γ CG < 1 := by
   unfold shellS1CG
   linarith
 
-/-- **The deterministic radius cutoff of the Eps chain** (CHATGPT-237 l.335-348). For `0 < ρ < 1` and `ζ > 0` there is
+/-- **The deterministic radius cutoff of the Eps chain**. For `0 < ρ < 1` and `ζ > 0` there is
 `Rc > 0` such that every `0 < R ≤ Rc` satisfies `∀ r, 0 < r → r ≤ R → (dyadicD r)^{shortExp ζ} < rhoCell68 ρ - ρ`.
 Proof: `rhoCell68 ρ - ρ = (1-ρ)/2 =: g`, `Rc := g/2`; then `dyadicD r < 2 r² ≤ 2 Rc² < g²` (`dyadicD_lt_two_mul_sq`),
 and `(dyadicD r)^{shortExp ζ} ≤ (dyadicD r)^{1/2} = √(dyadicD r) < g` since `shortExp ζ ≥ 1/2` and `dyadicD r ≤ 1`. -/
@@ -522,7 +522,7 @@ lemma exists_radius_cutoff_gap {ρ ζ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) (h�
     _ = Real.sqrt (dyadicD r) := (Real.sqrt_eq_rpow _).symm
     _ < (1 - ρ) / 2 := (Real.sqrt_lt' hgpos).2 hxg
 
-/-- **`MeshEventsStmt` with the exponent antecedents (q2, fp-S4S6c-eps-chain).** The same mesh events, and the chosen `ω₀`
+/-- **`MeshEventsStmt` with the exponent antecedents.** The same mesh events, and the chosen `ω₀`
 also satisfies `2 ω₀ β⁻ < α` and `2 ω₀ < 2/(2+γ)² - ζ`. -/
 def MeshEventsEpsStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ ζ : ℝ, 0 < ζ ∧ ζ < 1 / 2 ∧ ∃ ω₀ α : ℝ, 0 < ω₀ ∧ ω₀ < α ∧ 0 < α ∧
@@ -533,7 +533,7 @@ def MeshEventsEpsStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
         HarmonicBalls.PolyHighProb S.P (cellSizeEvent68 S γ ζ ρ) ∧
         HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE)
 
-/-- **`MeshEventsEpsStmt` from the Draft hypotheses (q2, fp-S4S6c-eps-chain).** As `meshEventsStmt_of_draft`, with
+/-- **`MeshEventsEpsStmt` from the Draft hypotheses.** As `meshEventsStmt_of_draft`, with
 `ω₀ = min ωG (min (α/(4β⁻)) (q/4))` where `q = 1/(2+γ)² = 2/(2+γ)² - ζ`; then `2ω₀β⁻ ≤ α/2 < α` and `2ω₀ ≤ q/2 < q`. -/
 theorem meshEventsEpsStmt_of_draft (𝒮 : SpaceFillingSLEModel) (hG : GreenKernelLowerBoundStmt 𝒮)
     (hC : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮) : MeshEventsEpsStmt 𝒮 := by
@@ -573,7 +573,7 @@ theorem meshEventsEpsStmt_of_draft (𝒮 : SpaceFillingSLEModel) (hG : GreenKern
   · exact hC γ hγ hγ2 q ρ hq0 (by linarith) hρ0 hρ1 Ω S hS
   · exact hES Ω S hS
 
-/-- **`ShellChainStmt` with the Eps antecedents (q2, fp-S4S6c-eps-chain).** The body of `ShellChainStmt`, plus `2 ω₀ β⁻ < α`
+/-- **`ShellChainStmt` with the Eps antecedents.** The body of `ShellChainStmt`, plus `2 ω₀ β⁻ < α`
 and `2 ω₀ < 2/(2+γ)² - ζ` next to the `ω₀` hypotheses; `ε ≤ shellEps0 γ α ω₀` in the ε-clause; and the radius cutoff
 `∀ r, 0 < r → r ≤ R → (dyadicD r)^{shortExp ζ} < rhoCell68 ρ - ρ` next to `R ≤ rAmp q0 ζ`. -/
 def ShellChainEpsStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -598,7 +598,7 @@ def ShellChainEpsStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
               ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
                 Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
 
-/-- **Old implies Eps (q2, fp-S4S6c-eps-chain).** `ShellChainStmt` specialises to `ShellChainEpsStmt`: the Eps antecedents are
+/-- **Old implies Eps.** `ShellChainStmt` specialises to `ShellChainEpsStmt`: the Eps antecedents are
 ignored and the ε-clause is used for `ε ≤ shellEps0`. -/
 theorem shellChainEpsStmt_of_shellChainStmt {𝒮 : SpaceFillingSLEModel} (h : ShellChainStmt 𝒮) :
     ShellChainEpsStmt 𝒮 := by
@@ -609,7 +609,7 @@ theorem shellChainEpsStmt_of_shellChainStmt {𝒮 : SpaceFillingSLEModel} (h : S
   obtain ⟨Ew, hEwm, hEwp, hpt⟩ := hR R hR0 hRρ hRA s₀ hs₀ hs₁ Ω S hS hGp hCp hEp
   exact ⟨Ew, hEwm, hEwp, fun ε hε _ => hpt ε hε⟩
 
-/-- **`ShellChainEpsStmt` at the Green constant `CG` (q2, fp-S4S6c-cg-param).** The body of `ShellChainEpsStmt` with the
+/-- **`ShellChainEpsStmt` at the Green constant `CG`.** The body of `ShellChainEpsStmt` with the
 threshold `shellEps0ZCG γ α ω₀ ζ CG` and the sparsity constant `shellS1CG γ CG` (both at the ball ratio `c₀(CG)`). The Green
 event `greenLowEvent68 S ω₀ ρ CG` is the event of the leaf constant `K.C = CG` (`shellKCG`). -/
 def ShellChainCGStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -634,7 +634,7 @@ def ShellChainCGStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
               ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
                 Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
 
-/-- **`ShellChainCGStmt` with the mesh-radius cell event (q2, fp-S4S6c-meshEventR; chat 252 §1).** The body of
+/-- **`ShellChainCGStmt` with the mesh-radius cell event.** The body of
 `ShellChainCGStmt`, with the cell-size hypothesis at the mesh radius `(1 + ρ)/2` (`rhoCell68 ρ`) and the almost sure
 mesh clause on `meshEventR` (cell component at `(1 + ρ)/2`; Green and exit components at `ρ`). -/
 def ShellChainCGRStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -669,7 +669,7 @@ lemma probTendsToOne_congr_small {Ω : Type} [MeasurableSpace Ω] {P : Measure �
   filter_upwards [Ioo_mem_nhdsGT he0] with ε hε
   rw [hEF ε hε.1 hε.2.le]
 
-/-- **The guard `GuardProbStmt` from the Eps mesh events and the Eps shell chain (q2, fp-S4S6c-eps-chain).** As
+/-- **The guard `GuardProbStmt` from the Eps mesh events and the Eps shell chain.** As
 `guardProbStmt_of_chain`, with `ω₀, ζ` from `MeshEventsEpsStmt`, `R = min (ρ/4) (min (rAmp q₀ ζ) (min r_amp Rc))` (`Rc` the radius
 cutoff of `exists_radius_cutoff_gap`), and the ε-events `E ε = if ε ≤ shellEps0 then meshEvent ε else ∅`: for `ε > shellEps0` the
 event is empty and the inclusion is vacuous; `ProbTendsToOne` only sees `ε ≤ shellEps0`. -/
@@ -743,7 +743,7 @@ theorem guardProbStmtEps_of_chainEps (𝒮 : SpaceFillingSLEModel) (hMesh : Mesh
     (fun ε ω r i => Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i)
     (Lemma68Config.exitQ S) hpt'
 
-/-- **`GuardProbStmt` from the CG Eps chain (q2, fp-S4S6c-cg-param).** As `guardProbStmtEps_of_chainEps`, with the chain
+/-- **`GuardProbStmt` from the CG Eps chain.** As `guardProbStmtEps_of_chainEps`, with the chain
 `ShellChainCGStmt` at `c₀(CG)`; the witness `s₁ = shellS1CG γ CG` is chosen after `CG` (inside `∀ ρ`, as in the Eps copy). -/
 theorem guardProbStmtCG_of_chainCG (𝒮 : SpaceFillingSLEModel) (hMesh : MeshEventsEpsStmt 𝒮)
     (hChain : ShellChainCGStmt 𝒮) : Lemma68Uniform.GuardProbStmt 𝒮 := by
@@ -815,7 +815,7 @@ theorem guardProbStmtCG_of_chainCG (𝒮 : SpaceFillingSLEModel) (hMesh : MeshEv
     (fun ε ω r i => Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i)
     (Lemma68Config.exitQ S) hpt'
 
-/-- **`GuardProbStmt` from the CG mesh-radius chain (q2, fp-S4S6c-meshEventR).** As `guardProbStmtCG_of_chainCG`, with the
+/-- **`GuardProbStmt` from the CG mesh-radius chain.** As `guardProbStmtCG_of_chainCG`, with the
 chain `ShellChainCGRStmt`. The cell-size factor of `meshEventR` at `(1 + ρ)/2` is the cell-size factor of `MeshEventsEpsStmt`
 instantiated once more at the mesh radius `(1 + ρ)/2` (same `ζ`, `ω₀`, `α`; its Green and exit factors are not used). -/
 theorem guardProbStmtCGR_of_chainCGR (𝒮 : SpaceFillingSLEModel) (hMesh : MeshEventsEpsStmt 𝒮)
@@ -890,7 +890,7 @@ theorem guardProbStmtCGR_of_chainCGR (𝒮 : SpaceFillingSLEModel) (hMesh : Mesh
     (fun ε ω r i => Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i)
     (Lemma68Config.exitQ S) hpt'
 
-/-- **The counting component of the CG mesh-radius event (q2, fp-S4S6c-goodevents-cgr).** The mesh event `meshEventR`
+/-- **The counting component of the CG mesh-radius event.** The mesh event `meshEventR`
 intersected with the good counting event `countingGoodEvent` (Lemma 2.9, Berestycki-Gwynne; HoneModelInputs68.lean:48) at
 the exponents `α`, `β`. Its counting component is the membership taken by `hCountGood_pw` (B1EnvPw68.lean:65); its Green
 component is the lower-bound body of `greenLowEvent68` (`countingMeshEventR_green`). -/
@@ -898,26 +898,26 @@ def countingMeshEventR {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (γ
     Set Ω :=
   meshEventR S γ ω₀ ρ CG ζ α CE ε ∩ HoneModelInputs68.countingGoodEvent S α β ρ ε
 
-/-- The mesh component of `countingMeshEventR` (q2, fp-S4S6c-goodevents-cgr). -/
+/-- The mesh component of `countingMeshEventR`. -/
 lemma countingMeshEventR_meshR {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} {γ ω₀ ρ CG ζ α CE β ε : ℝ}
     {ω : Ω} (h : ω ∈ countingMeshEventR S γ ω₀ ρ CG ζ α CE β ε) :
     ω ∈ meshEventR S γ ω₀ ρ CG ζ α CE ε :=
   h.1
 
-/-- The Green component of `countingMeshEventR` (q2, fp-S4S6c-goodevents-cgr): `ω ∈ greenLowEvent68 S ω₀ ρ CG ε`, the
+/-- The Green component of `countingMeshEventR`: `ω ∈ greenLowEvent68 S ω₀ ρ CG ε`, the
 lower Green bound of Draft Lemma 2.16. Its body is the body of `hGreen_pw` (B1EnvPw68.lean:54) at `K.ω := ω₀`, `K.C := CG`,
 radius `ρ`; the conjunct `greenKernel ≤ greenFn` of `greenLowerGoodEvent` is not used by the one-test hone. -/
 lemma countingMeshEventR_green {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} {γ ω₀ ρ CG ζ α CE β ε : ℝ}
     {ω : Ω} (h : ω ∈ countingMeshEventR S γ ω₀ ρ CG ζ α CE β ε) : ω ∈ greenLowEvent68 S ω₀ ρ CG ε :=
   h.1.1.1
 
-/-- The counting component of `countingMeshEventR` (q2, fp-S4S6c-goodevents-cgr). -/
+/-- The counting component of `countingMeshEventR`. -/
 lemma countingMeshEventR_counting {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} {γ ω₀ ρ CG ζ α CE β ε : ℝ}
     {ω : Ω} (h : ω ∈ countingMeshEventR S γ ω₀ ρ CG ζ α CE β ε) :
     ω ∈ HoneModelInputs68.countingGoodEvent S α β ρ ε :=
   h.2
 
-/-- **Probability bound of `countingMeshEventR` (q2, fp-S4S6c-goodevents-cgr).** Given the Green, cell-size (at `(1 + ρ)/2`),
+/-- **Probability bound of `countingMeshEventR`.** Given the Green, cell-size (at `(1 + ρ)/2`),
 exit-time and counting events with polynomially high probability, `countingMeshEventR` has `ProbTendsToOne` as `ε ↓ 0`. -/
 lemma probTendsToOne_countingMeshEventR {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
     {γ ω₀ ρ CG ζ α CE β : ℝ}
@@ -928,7 +928,7 @@ lemma probTendsToOne_countingMeshEventR {Ω : Type} [MeasurableSpace Ω] {S : Ma
     ProbTendsToOne S.P (fun ε => countingMeshEventR S γ ω₀ ρ CG ζ α CE β ε) :=
   (probTendsToOne_meshEventR hG hC hE).inter (probTendsToOne_of_polyHighProb hK)
 
-/-- **Named input, not a Draft statement (q2, fp-S4S6c-goodevents-cgr; for operator decision).** The counting bound at
+/-- **Named input, not a Draft statement.** The counting bound at
 the exit exponent. `CountingMeasureConvergenceStmt` (Draft/Section2.lean:143) gives `α`, `β` with the counting event for
 all radii, and `ExitTimeUpperBoundStmt` (Draft/Section2.lean:239) gives its own `α`; the one-test hone uses one `α` for the
 exit thickening and the counting thickening (`ε ^ α`). This Prop asks for one pair `(α, β)` with both. Paper: Lemma
@@ -940,7 +940,7 @@ def CountingAtExitAlphaStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
       HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE) ∧
       HarmonicBalls.PolyHighProb S.P (HoneModelInputs68.countingGoodEvent S α β ρ)
 
-/-- **`ShellChainCGRStmt` with the counting component (q2, fp-S4S6c-goodevents-cgr).** The body of `ShellChainCGRStmt`
+/-- **`ShellChainCGRStmt` with the counting component.** The body of `ShellChainCGRStmt`
 (cell-size hypothesis at `(1 + ρ)/2`), with the counting exponent `β > 0`, the counting hypothesis
 `PolyHighProb (countingGoodEvent S α β ρ)` at the chain exponent `α`, and the almost sure clause on `countingMeshEventR`. -/
 def ShellChainCGRCStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -967,7 +967,7 @@ def ShellChainCGRCStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
               ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
                 Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
 
-/-- **Joint mesh-radius events with the counting component (q2, fp-S4S6c-closed-cgrc).** As `MeshEventsEpsStmt`
+/-- **Joint mesh-radius events with the counting component.** As `MeshEventsEpsStmt`
 (Green at `ω₀`, cell size at `ζ`, exit time at `α`), with the counting exponent `β > 0` and the counting good event
 `countingGoodEvent S α β ρ` (Lemma 2.9) at the same exponent `α` as the exit event. The chosen `ω₀` also satisfies
 `2 ω₀ β⁻ < α` and `2 ω₀ < 2/(2+γ)² - ζ`. -/
@@ -981,7 +981,7 @@ def CountingMeshEventsEpsStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
         HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE) ∧
         HarmonicBalls.PolyHighProb S.P (HoneModelInputs68.countingGoodEvent S α β ρ)
 
-/-- **`CountingMeshEventsEpsStmt` from the Draft inputs and `CountingAtExitAlphaStmt` (q2, fp-S4S6c-closed-cgrc).** As
+/-- **`CountingMeshEventsEpsStmt` from the Draft inputs and `CountingAtExitAlphaStmt`.** As
 `meshEventsEpsStmt_of_draft`, with the exit exponent `α` and the counting exponent `β` both taken from
 `CountingAtExitAlphaStmt` (one `α` for the two thickenings). `ω₀ = min ωG (min (α/(4β⁻)) (q/4))`, `q = 1/(2+γ)²`, `ζ = q`. -/
 theorem countingMeshEventsEpsStmt_of_draft (𝒮 : SpaceFillingSLEModel) (hG : GreenKernelLowerBoundStmt 𝒮)
@@ -1023,7 +1023,7 @@ theorem countingMeshEventsEpsStmt_of_draft (𝒮 : SpaceFillingSLEModel) (hG : G
   · exact (hKS Ω S hS).1
   · exact (hKS Ω S hS).2
 
-/-- **`GuardProbStmt` from the counting CG mesh-radius chain (q2, fp-S4S6c-closed-cgrc).** As
+/-- **`GuardProbStmt` from the counting CG mesh-radius chain.** As
 `guardProbStmtCGR_of_chainCGR`, with `CountingMeshEventsEpsStmt` (the exit and counting events at the one exponent `α`)
 and `ShellChainCGRCStmt`; the almost sure event is `countingMeshEventR`, whose probability is
 `probTendsToOne_countingMeshEventR`. -/
@@ -1103,14 +1103,14 @@ end Lemma68Guard10
 
 /-- **Lemma 6.8, uniform constant-order lower bound (`UniformConstantOrderLowerBoundStmt`, FirstPass/S6d.lean:95)**,
 from the Draft hypotheses `GreenKernelLowerBoundStmt`, `CellSizeEstimateStmt`, `ExitTimeUpperBoundStmt` (the inputs of
-q1's `draft68_uniform_events`) and the open shell chain `Lemma68Guard10.ShellChainStmt`. -/
+`draft68_uniform_events`) and the open shell chain `Lemma68Guard10.ShellChainStmt`. -/
 theorem uniformConstantOrderLowerBound_of_chain (𝒮 : SpaceFillingSLEModel)
     (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮)
     (hChain : Lemma68Guard10.ShellChainStmt 𝒮) : UniformConstantOrderLowerBoundStmt 𝒮 :=
   uniformConstantOrderLowerBound_of_guard 𝒮
     (Lemma68Guard10.guardProbStmt_of_chain 𝒮 (Lemma68Guard10.meshEventsStmt_of_draft 𝒮 hG hC hE) hChain)
 
-/-- **Lemma 6.8, uniform constant-order lower bound from the Eps chain (q2, fp-S4S6c-eps-chain).** As
+/-- **Lemma 6.8, uniform constant-order lower bound from the Eps chain.** As
 `uniformConstantOrderLowerBound_of_chain`, with `ShellChainEpsStmt` and the Eps mesh events. -/
 theorem uniformConstantOrderLowerBoundEps_of_chain (𝒮 : SpaceFillingSLEModel)
     (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮)
@@ -1119,7 +1119,7 @@ theorem uniformConstantOrderLowerBoundEps_of_chain (𝒮 : SpaceFillingSLEModel)
     (Lemma68Guard10.guardProbStmtEps_of_chainEps 𝒮
       (Lemma68Guard10.meshEventsEpsStmt_of_draft 𝒮 hG hC hE) hChain)
 
-/-- **Lemma 6.8, uniform constant-order lower bound from the CG Eps chain (q2, fp-S4S6c-cg-param).** As
+/-- **Lemma 6.8, uniform constant-order lower bound from the CG Eps chain.** As
 `uniformConstantOrderLowerBoundEps_of_chain`, with `ShellChainCGStmt` (the ball ratio `c₀(CG)`). -/
 theorem uniformConstantOrderLowerBoundCG_of_chain (𝒮 : SpaceFillingSLEModel)
     (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮)
@@ -1128,7 +1128,7 @@ theorem uniformConstantOrderLowerBoundCG_of_chain (𝒮 : SpaceFillingSLEModel)
     (Lemma68Guard10.guardProbStmtCG_of_chainCG 𝒮
       (Lemma68Guard10.meshEventsEpsStmt_of_draft 𝒮 hG hC hE) hChain)
 
-/-- **Lemma 6.8, uniform constant-order lower bound from the CG mesh-radius chain (q2, fp-S4S6c-meshEventR).** As
+/-- **Lemma 6.8, uniform constant-order lower bound from the CG mesh-radius chain.** As
 `uniformConstantOrderLowerBoundCG_of_chain`, with `ShellChainCGRStmt` (the cell-size event at `(1 + ρ)/2`). -/
 theorem uniformConstantOrderLowerBoundCGR_of_chain (𝒮 : SpaceFillingSLEModel)
     (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮)
@@ -1137,7 +1137,7 @@ theorem uniformConstantOrderLowerBoundCGR_of_chain (𝒮 : SpaceFillingSLEModel)
     (Lemma68Guard10.guardProbStmtCGR_of_chainCGR 𝒮
       (Lemma68Guard10.meshEventsEpsStmt_of_draft 𝒮 hG hC hE) hChain)
 
-/-- **Lemma 6.8, uniform constant-order lower bound from the counting CG mesh-radius chain (q2, fp-S4S6c-closed-cgrc).**
+/-- **Lemma 6.8, uniform constant-order lower bound from the counting CG mesh-radius chain.**
 As `uniformConstantOrderLowerBoundCGR_of_chain`, with the counting exponent: the exit and counting events at the one
 exponent of `CountingAtExitAlphaStmt`, and `ShellChainCGRCStmt` (almost sure event `countingMeshEventR`). -/
 theorem uniformConstantOrderLowerBoundCGRC_of_chain (𝒮 : SpaceFillingSLEModel)

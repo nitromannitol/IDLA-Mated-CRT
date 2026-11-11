@@ -8,7 +8,7 @@ import MatedCRT.FirstPass.S4S6c.WindowStop68
 import MatedCRT.Proofs.Infra.RandomWalk
 
 /-!
-# The per-test bound hc of the printed Lemma 6.8 (q2, task fp-S4S6c-envscaling-6-7-6-8; LEMMA68 C4, eq (C15))
+# The per-test bound hc of the printed Lemma 6.8
 
 `hc_of_local`: from a vertex `y` inside the sphere window `I(B_{4R/3}(z))`, the walk started at `y` stays in `A` until
 its exit from the outer window `I(B_{2R}(z))` with probability at most `c`, provided every local test (from a vertex whose
@@ -116,7 +116,7 @@ theorem legalExit_exit_closure_meets_sphere {H : ℤ → Set ℂ} {m : ℤ → �
   · rw [legalExit_eq_top_of_not hcond] at hk
     exact absurd hk (ENat.top_ne_natCast k)
 
-/-- **Per-test bound hc (LEMMA68 (C15), one centre).** From a vertex `y` of the sphere window `I(B_{4R/3}(z))`, the walk
+/-- **Per-test bound hc, one centre.** From a vertex `y` of the sphere window `I(B_{4R/3}(z))`, the walk
 stays in `A` until its exit from `I(B_{2R}(z))` with probability at most `c`, provided: the sphere exit is a.s. finite
 (`hfin`), and every local test from a vertex whose closed cell meets `∂B_{4R/3}(z)` has stay-in probability at most `c`
 (`hloc`). -/
@@ -210,7 +210,7 @@ theorem hc_of_local {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {A : Set ℤ
     _ ≤ c + 0 := by rw [htop0]; exact add_le_add hpart le_rfl
     _ = c := add_zero c
 
-/-- **Start cell inside the sphere window (LEMMA68 C3, `H_{X_{T_j}} ⊂ B_{g+d}(z_j) ⊂ B_{4R/3}(z_j)`).** If the cell of
+/-- **Start cell inside the sphere window (`H_{X_{T_j}} ⊂ B_{g+d}(z_j) ⊂ B_{4R/3}(z_j)`).** If the cell of
 `y` has diameter at most `d` and contains a point `p` within `g` of the centre `c`, and `d + g < R'`, then `y` lies in the
 inner window `I(B_{R'}(c))`. Discharges the start hypothesis `hy` of `hc_of_local`. -/
 theorem start_mem_sphere_window {H : ℤ → Set ℂ} {d g R' : ℝ} {c p : ℂ} {y : ℤ}

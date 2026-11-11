@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.PrintedTest68
 
 /-!
-# The Green lower bound `hG` of the per-test bound of Lemma 6.8 (q2, task fp-S4S6c; LEMMA68 B4, B11-B13)
+# The Green lower bound `hG` of the per-test bound of Lemma 6.8 (B11-B13)
 
 The test window `W y = I(B_{R/4}(x))` (interior vertices, `x = η(y)`) is killed on leaving the interior of the
 disk. The expected visits `G_{W y}(y, b)` are bounded below through the Green kernel lower bound of the paper
@@ -107,7 +107,7 @@ theorem interiorCellVertices_mono_of_radius {η : ℝ → ℂ} (hη : Continuous
     have hc : c0 * R < 1 / 8 * R := mul_lt_mul_of_pos_right hc0' hR
     linarith
 
-/-- **Green lower bound at the test window (LEMMA68 B4, B11-B13).** Let `x = η(y)`, `R > 0`, `0 < c₀ < 1/8`,
+/-- **Green lower bound at the test window (B11-B13).** Let `x = η(y)`, `R > 0`, `0 < c₀ < 1/8`,
 `c₀ ≤ e^{-2C}/16` and `ε ≤ 16 c₀`. Assume the cell-diameter bound `diam H_k ≤ c₀R` on the cells meeting `B_{R/4}(x)`, and
 the Green kernel lower bound of Draft Lemma 2.16 (`GreenKernelLowerBoundStmt`, at the start `y`, radius `R/8`, target `b`).
 Then for each target `b ∈ V(B_{c₀R}(x))` the expected visits to `b` before exit of `I(B_{R/4}(x))` are at least `1/2`. -/
@@ -199,7 +199,7 @@ theorem ofReal_half : ENNReal.ofReal (1 / 2) = (1 / 2 : ℝ≥0∞) := by
 
 /-- Cells of diameter at most `c₀R` that meet `B_{R/4}(x)` and a ball `B_s(x)` with `s + c₀R < R/4` lie in the interior
 window `I(B_{R/4}(x))`: the cell of a vertex of `V(B_s(x))` lies within `s + c₀R < R/4` of `x`, so it misses the sphere
-`∂B_{R/4}(x)` (the cell-to-window inclusion of LEMMA68 C4, B11). -/
+`∂B_{R/4}(x)` (B11). -/
 theorem cellVertices_sub_interior {η : ℝ → ℂ} (hη : Continuous η) {ε R c0 s : ℝ} {x : ℂ}
     (hR : 0 < R) (hc0 : 0 ≤ c0) (hsc : s + c0 * R < R / 4)
     (hdiam : ∀ k : ℤ, (cell ε η k ∩ ball x (R / 4)).Nonempty → diam (cell ε η k) ≤ c0 * R) :
@@ -219,7 +219,7 @@ theorem cellVertices_sub_interior {η : ℝ → ℂ} (hη : Continuous η) {ε R
   have hsph : dist w x = R / 4 := mem_sphere.mp hw2
   linarith
 
-/-- **Per-test bound of Lemma 6.8 with the Green lower bound derived (LEMMA68 C15-C16, B4, B11-B13).** Let `x = η(y)`
+/-- **Per-test bound of Lemma 6.8 with the Green lower bound derived (B4, B11-B13).** Let `x = η(y)`
 be the start of a test window, `B_{c₀R}(x)` the target ball, `W y = I(B_{R/4}(x))` the window. Given the ball-mass
 bound, the sparsity of `A`, the cell-diameter bound and the Draft Lemma 2.16 conjunct at every target, the walk from `y`
 stays in `A` until it exits `W y` with probability at most `1 - q₀ (1 + log(1/r))⁻²`. The second moment `hmom` (B5) stays

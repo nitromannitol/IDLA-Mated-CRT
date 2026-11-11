@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S6r.Constants
 import MatedCRT.FirstPass.S4S6c.HVolCutoff68
 
 /-!
-# Almost-sure cutoff premise of the pointwise `hVolC` and `hVolY` (chat 239 §3)
+# Almost-sure cutoff premise of the pointwise `hVolC` and `hVolY`
 
 The premise `hcut` of `hVolC_pw` and `hVolY_pw` (HVolFullPw68.lean) is, at one environment `ω`, the existence of a
 radius `t > 0` below which the LQG volume `S.μ ω` satisfies the coefficient-one lower bound
@@ -20,7 +20,7 @@ namespace Lemma68HVolCutoffAe
 
 open MeasureTheory Set Filter Metric
 
-/-- **Almost-sure cutoff premise (chat 239 §3, Lemma 2.7 with Borel–Cantelli).** Let `S` be a mated-CRT environment
+/-- **Almost-sure cutoff premise (Lemma 2.7 with Borel–Cantelli).** Let `S` be a mated-CRT environment
 with `S.IsValid 𝒮 γ`, so that `S.μ ω` is the `γ`-LQG measure of the quantum cone `(S.hC, S.hcirc)`, and let
 `β > (2+γ)²/2`. Given the volume-growth input `hVG : VolumeGrowthStmt`, almost surely under `S.P` there is `t > 0`
 with `δ^β ≤ S.μ ω (B_δ(z))` for all `0 < δ < t` and all `z ∈ B_{1-δ}`. -/

@@ -40,7 +40,7 @@ lemma ae_center_mem {m : ℤ → ℤ → ℕ} {D : Set ℤ} (a : ℤ) {τ : (ℕ
 -- `hR` is part of the hone interface; it is needed for the measurability of the test count, which is
 -- currently the named hypothesis `hmeasBall`, so the binder is kept unused here.
 set_option linter.unusedVariables false in
-/-- **Hone binders `hmom1`, `hmom2` on finite test domains (fp-S4S6c-exit-moment item 2).** If each `T k`
+/-- **Hone binders `hmom1`, `hmom2` on finite test domains.** If each `T k`
 is dominated by the exit time of a finite vertex set `D_k` (`T k ≤ τ_{D_k}` on `{T k < ⊤}`) and the radii
 `R k` are bounded on `{T k < ⊤}`, then the test counts `1_{T_k<∞} ballExitSigma` have finite first and second
 moments under `srwLaw m a`. The test balls live in the finite vertex set of the cells meeting the balls of

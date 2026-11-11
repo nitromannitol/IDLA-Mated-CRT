@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S4S6c.PathMesh68
 import MatedCRT.FirstPass.S4S6c.HoneExitGeom68
 
 /-!
-# The margin binder `hx1` with the ball mesh (fp-S4S6c-x1-loc, q3)
+# The margin binder `hx1` with the ball mesh
 
 `hx1_fixedOmega` (HoneMomSPw68.lean:138) takes the global mesh `CellDiamLe ε (η ω) (dyadicD r / 100) univ`. Here the mesh
 is the ball form `CellDiamLe ε (η ω) (dyadicD r / 100) (ball 0 ρmesh)` with `dyadicD r / 100 ≤ ρmesh - ρ`. The instance
@@ -48,7 +48,7 @@ theorem cell_meets_ball_of_frontier {ε : ℝ} {η : ℝ → ℂ} {a : ℤ} {K :
     closure_minimal (hT.trans Metric.ball_subset_closedBall) Metric.isClosed_closedBall
   exact ⟨p, hpc, Metric.closedBall_subset_ball (by linarith) (hcl (frontier_subset_closure hpf))⟩
 
-/-- **`hx1_fixedOmega_loc_s1`: `hx1_fixedOmega_loc` with a general sparsity coefficient `s1` (variant, fp-S4S6c-s1-generic, q3).**
+/-- **`hx1_fixedOmega_loc_s1`: `hx1_fixedOmega_loc` with a general sparsity coefficient `s1` (variant).**
 The guard `FullAdmAt s1` replaces `FullAdmAt (sparsityS1 γ)`. The proof uses only `ConfigOK` (of `hadm.1`) and
 `hstart_of_fullAdmAt`, which are generic in `s1`; no hypothesis on `s1` is needed. The original `hx1_fixedOmega_loc` is
 the specialisation `s1 := sparsityS1 γ` with the same statement. Mesh: the ball form
@@ -174,7 +174,7 @@ theorem hx1_fixedOmega_loc_s1 {γ ω₀ ρ CG ζ α CE C ε s₀ r ρmom ρmesh 
     hd hds hRz.2 hgap hz hmeshLoc hbx'
   exact mem_ball_zero_iff.mp hv
 
-/-- **`hx1_fixedOmega_loc_s1` with a free window constant `c0W` (`_g`, fp-S4S6c-c0-generic, q3).** The window radius
+/-- **`hx1_fixedOmega_loc_s1` with a free window constant `c0W` (`_g`).** The window radius
 `winRf S ρ ζ C r ω` (= `windowRfT S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) ω`, B1Assembly68.lean:63-65) is written
 inline as `windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω` (`Lemma68WindowRf.windowRfT`, no new definition), in the
 statement and in the proof. The proof is that of `hx1_fixedOmega_loc_s1` with `shellC068` replaced by `c0W` in the

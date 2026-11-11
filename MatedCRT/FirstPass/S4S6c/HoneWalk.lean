@@ -5,9 +5,9 @@ import MatedCRT.FirstPass.S6r.Shells.ChoiceStopped
 import MatedCRT.FirstPass.S4S6c.WalkBridge68
 
 /-!
-# The walk-centred hone of `exitQ_le_pow` (q2, fp-S4S6c-rename-hone; z8 draft notes/z8-hone-walk-draft.lean)
+# The walk-centred hone of `exitQ_le_pow`
 
-Landed from z8's draft unchanged in its statement and proof. It instantiates `hone_exitQ_concrete`
+Landed unchanged in its statement and proof. It instantiates `hone_exitQ_concrete`
 (S6r/OneTest/Concrete.lean:408) at the walk-centred parameter `walkParam ε η (R k) (T k)`, with `hstep1`, `hstep2`
 from `firstMoment_walkState` and `secondMoment_walkState`. The named inputs are the finite exit-time moments, the
 parameter range, the first- and second-moment side conditions over the prefix set, and the mass comparison `hdbl`.

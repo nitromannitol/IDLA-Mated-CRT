@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.S3t.WalkAdjacency
 import MatedCRT.Proofs.Infra.RandomWalk
 
 /-!
-# Almost-sure forms of the good-event dischargers (fp-S4S6c-good-event-ae, z10)
+# Almost-sure forms of the good-event dischargers
 
 `HoneGoodEvent68.lean` discharges the binders `hεα`, `hεmass`, `hsc`, `hgood`, `hpos` of `shellOneTest_of_direct`
 pointwise: the per-path inputs `hPath` (consecutive cells meet, the start cell meets the frontier, the killed exit is
@@ -22,7 +22,7 @@ surely. This file gives the almost sure forms, in the shape of `shellOneTest_of_
   HoneGoodEvent68 applied at almost every path. `hEl_ae_of_walk` gives the eligibility of the shell centres `hEl` from
   `walk_inputs_ae` through `shellCentre_eligible_of_walk` (ShellHde68.lean:215).
 
-Named inputs (not in the corrected paper's statements; see the report): `hst`, `hedge`, `hlf`, `hcons`, `hp`, `hF0`
+Named inputs (not in the corrected paper's statements): `hst`, `hedge`, `hlf`, `hcons`, `hp`, `hF0`
 (the environment and start of the walk, as in HoneSetup68.lean:112-133), `hεs` (the explicit ε-threshold of
 `hsc_ae_threshold`), `hfull` (full support of the measure), `hsel`, `hZ`, `hVolC`, `hRr`.
 

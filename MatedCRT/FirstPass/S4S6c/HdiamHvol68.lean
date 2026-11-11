@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.HoneInputsDirect
 
 /-!
-# The binders `hdiam` and `hVol` of `hone_exitQ_walk_of_env_direct` (task fp-S4S6c-hdiam-hvol; worker z10)
+# The binders `hdiam` and `hVol` of `hone_exitQ_walk_of_env_direct`
 
 Replacement inputs for two binders of `hone_exitQ_walk_of_env_direct` (HoneInputsDirect.lean), each stated with
 exactly the type it replaces, so that the consumer can take them unchanged.

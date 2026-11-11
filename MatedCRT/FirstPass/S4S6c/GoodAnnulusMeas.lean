@@ -2,10 +2,10 @@ import MatedCRT.FirstPass.S4S6c.GoodRadiusCover
 import MatedCRT.Proofs.Measurability.GoodScale
 
 /-!
-# Field measurability of the good-annulus cover events: `hmeas` of eq (9) discharged (q2, round 63)
+# Field measurability of the good-annulus cover events: `hmeas` of eq (9) discharged
 
 `GoodRadiusCover.goodAnnulusCover_dyadic` takes the field measurability of the cover events as a hypothesis `hmeas`
-(LEMMA68 Lemma 2 item 2, eq (9)). This file removes it for a measure-valued `μ'` that is measurable for the
+. This file removes it for a measure-valued `μ'` that is measurable for the
 field σ-algebra `m'` and almost surely equal to `μ`. For the LQG measure such a `μ'` exists by
 `MatedCRT.lqgMeasureFieldMeasurableStep` (Proofs/Measurability/LQGMeasureField.lean).
 

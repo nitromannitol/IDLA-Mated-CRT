@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S4S6c.ExitNull68
 import MatedCRT.FirstPass.S4S6c.SuccessiveExitStop
 
 /-!
-# First pass, Lemma 6.8: the one-test bound on the sphere band (q2, fp-S4S6c-envscaling-6-7-6-8)
+# First pass, Lemma 6.8: the one-test bound on the sphere band
 
 The printed one-test bound `hc` of the trace argument (`ConfigBound68.trace_half`) is needed only at the vertices of the
 band `Y = I(B_{4R/3}(z))` (the vertices visited at the test-start times, `hYvis`). For such a vertex it is the local

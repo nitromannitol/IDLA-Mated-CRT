@@ -2,10 +2,10 @@ import MatedCRT.FirstPass.S4S6c.HoneWalk
 import MatedCRT.FirstPass.S4S6c.HcGreen68
 
 /-!
-# Inputs of the walk hone `hone_exitQ_walk`, discharged where the repository gives them (q4, task fp-S4S6c-hone-inputs)
+# Inputs of the walk hone `hone_exitQ_walk`, discharged where the repository gives them
 
 `hone_exitQ_walk` (`FirstPass/S4S6c/HoneWalk.lean:37`) takes 26 named side conditions. `hone_exitQ_walk_of_env` below
-removes those with a deterministic source for the configuration of q2 (shell exit `T k = shellExit k`, test radius
+removes those with a deterministic source for the configuration (shell exit `T k = shellExit k`, test radius
 `R k` at the walk state). The removed inputs and their sources:
 
 * `hfin`, `hfinD` (`μ (ball _ _) ≠ ⊤`): `measure_ball_lt_top` from the local finiteness `[IsFiniteMeasureOnCompacts μ]`,
@@ -15,7 +15,7 @@ removes those with a deterministic source for the configuration of q2 (shell exi
 * `hGr` (first conjunct `greenKernel ≤ greenFn`): deterministic `HcGreen68.greenKernel_le_greenFn` (HcGreen68.lean:23).
 * `hvol`, `hvol2` (volume lower bound `μ(B_δ(z)) ≥ δ^{β⁻}` for `z ∈ B_{1-δ}`): the lower half of `VolumeGrowthStmt`
   (Draft/Section2.lean:121; paper Lemma 2.7 = `lemma:volume-growth`), taken on the good event `hVol` at the scales
-  `δ ∈ [rmin, 1/4]`. The all-scales form is not written in the paper (per-scale PolyHighProb only); see the report.
+  `δ ∈ [rmin, 1/4]`. The all-scales form is not written in the paper (per-scale PolyHighProb only).
 * `hGrLow` (lower Green bound): the second conjunct of `GreenKernelLowerBoundStmt` (Draft/Section2.lean:212; paper
   Lemma 2.16 = `lemma:greens-kernel-lower-bound`) on the good event `hGreen`. Its domain `b ∈ B(v, r/3)` with `r = R/8`
   contains `B(v, c₀R)` because `c₀ ≤ 1/24` (Constants68.hc0').
@@ -59,7 +59,7 @@ theorem hone_exitQ_walk_of_env {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ
     (hsp : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, ∀ w : ℂ,
       ((A ∩ cellVertices ε η (ball w (K.c0 * R k ω))).ncard : ℝ)
         < K.s1 * (K.c0 * R k ω) ^ (2 * K.βm) / ε)
-    -- scale range of the good event: every walk test radius satisfies `rmin ≤ c₀ R` (configuration input, q2)
+    -- scale range of the good event: every walk test radius satisfies `rmin ≤ c₀ R` (configuration input)
     (rmin : ℝ)
     (hRmin : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, rmin ≤ K.c0 * R k ω)
     -- good event of the volume lower bound (lower half of `VolumeGrowthStmt`, all scales in `[rmin, 1/4]`)
@@ -73,7 +73,7 @@ theorem hone_exitQ_walk_of_env {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ
       K.C⁻¹ * Real.log (if vertexPoint ε η a = vertexPoint ε η b then ε⁻¹
             else min (r / ‖vertexPoint ε η a - vertexPoint ε η b‖) ε⁻¹) - 1
           ≤ greenKernel m (interiorCellVertices ε η (ball (vertexPoint ε η a) r)) a b)
-    -- the walk state lies in the domain of the good Green bound, with margin `R/8` to `∂B_ρ` (configuration input, q2)
+    -- the walk state lies in the domain of the good Green bound, with margin `R/8` to `∂B_ρ` (configuration input)
     (hWalk : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
       ω (T k ω).toNat ∈ cellVertices ε η (ball 0 (ρc - ε ^ K.ω)) ∧ ε ^ K.ω ≤ R k ω / 8 ∧
         R k ω / 8 ≤ infDist (vertexPoint ε η (ω (T k ω).toNat)) (sphere 0 ρc))

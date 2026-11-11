@@ -1,16 +1,16 @@
 import Mathlib
 
 /-!
-# Candidate radii of Lemma 2 (LEMMA68 eq (9)) (q2, task fp-S4S6c)
+# Candidate radii of Lemma 2
 
-Eq (9) of LEMMA68 asks that a good radius `R_z` lie in `[δ, √δ] ∩ {7^{-n} : n ∈ ℕ}`. The deterministic part is that this
+The candidate-radius condition asks that a good radius `R_z` lie in `[δ, √δ] ∩ {7^{-n} : n ∈ ℕ}`. The deterministic part is that this
 set is nonempty for every dyadic-scale `δ ≤ 1/49`: the powers `7^{-n}` have ratio `7`, which is at most `δ^{-1/2}`
 on `(0, 1/49]`. Goodness of the radius is the probabilistic part of Lemma 2 and is not here.
 -/
 
 namespace MatedCRT
 
-/-- For `0 < δ ≤ 1/49` there is `n : ℕ` with `δ ≤ 7^{-n} ≤ √δ` (LEMMA68 eq (9)). -/
+/-- For `0 < δ ≤ 1/49` there is `n : ℕ` with `δ ≤ 7^{-n} ≤ √δ`. -/
 theorem exists_seven_pow_mem_Icc {δ : ℝ} (hδ0 : 0 < δ) (hδ1 : δ ≤ 1 / 49) :
     ∃ n : ℕ, δ ≤ (1 / 7 : ℝ) ^ n ∧ (1 / 7 : ℝ) ^ n ≤ Real.sqrt δ := by
   classical

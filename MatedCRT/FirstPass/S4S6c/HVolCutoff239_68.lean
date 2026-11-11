@@ -3,13 +3,13 @@ import MatedCRT.FirstPass.S4S6c.ShellWindowRf68
 
 /-!
 # FIRST PASS S4S6c, HVolCutoff239_68: measurable random volume cutoff and walk-a.e. volume inputs
-(task fp-S4S6c-vol-cutoff-239, worker z9; chat 239 section 3, notes/fp-gaps/CHATGPT-239-idla-hU-named-inputs-PRO.md l.361-542)
+ (l.361-542)
 
 * `volume_lower_cutoff_measurable`, `volume_bounds_measurable_ae` (item 1): a MEASURABLE, almost surely positive cutoff
   `tVol : Ω → ℝ` such that the lower volume bounds of Lemma 2.7 (`VolumeGrowthStmt`) hold for every scale `δ < tVol ω`.
   The dyadic bad events are replaced by measurable hulls `toMeasurable` of equal measure, so no measurability of the
   field events is assumed (Borel–Cantelli for outer measures, `ae_eventually_notMem`).
-* `four_mul_lt_of_radius_cap`, `measurable_radius_cap` (item 1, merge helpers for z5): the radius cap `4R < t` for a walk
+* `four_mul_lt_of_radius_cap`, `measurable_radius_cap` (item 1): the radius cap `4R < t` for a walk
   radius `R ≤ d^a`, `d < 2r²`, `a = (1+ζ)/2`, when `r ≤ (t/(8·2^a))^{1/(1+ζ)}`; the cap is measurable in the field.
 * `hVolC_hVolY_ae_of_cutoff` (item 2): the walk-a.e. consumer inputs `hVolC`, `hVolY` derived inside the almost-everywhere
   set by `volume_bounds_of_cutoff`, from the cutoff, the radius cap `4 R < t` and the centre bound `‖c‖ < 1 - R/4`.
@@ -274,7 +274,7 @@ theorem mass_pos_of_cutoff {μ : Measure ℂ} {β t δ : ℝ} {z : ℂ}
 /-- **Positivity of an annulus infimum from the cutoff (no full support).** If every centre `w ∈ S` lies in
 `B_{1-R/4}` and `R/4 < t`, then `⨅ w ∈ S, μ (B_{c₀R}(w)) ≥ (c₀R)^β > 0` by `volume_bounds_of_cutoff`. The consumer
 `pos_iInf_annulus_ball` (HoneGoodEvent68.lean:119) instead needs positivity at the cover minimiser at radius `c₀R/2`;
-see the report: the containment `S ⊆ B_{1-R/4}` is not among that consumer's hypotheses. -/
+the containment `S ⊆ B_{1-R/4}` is not among that consumer's hypotheses. -/
 theorem pos_iInf_of_cutoff {μ : Measure ℂ} {β t c0 R : ℝ} {S : Set ℂ} (hc0 : 0 < c0) (hc0' : c0 ≤ 1 / 4) (hR : 0 < R)
     (hcut : ∀ δ : ℝ, 0 < δ → δ < t → ∀ z ∈ ball (0 : ℂ) (1 - δ), ENNReal.ofReal (δ ^ β) ≤ μ (ball z δ))
     (hRt : R / 4 < t) (hS : ∀ w ∈ S, ‖w‖ < 1 - R / 4) :
@@ -282,7 +282,7 @@ theorem pos_iInf_of_cutoff {μ : Measure ℂ} {β t c0 R : ℝ} {S : Set ℂ} (h
   lt_of_lt_of_le (ENNReal.ofReal_pos.mpr (Real.rpow_pos_of_pos (mul_pos hc0 hR) β))
     (le_iInf₂ fun w hw => (Lemma68Cutoff.volume_bounds_of_cutoff hc0 hc0' hR hcut hRt (hS w hw)).1)
 
-/-- **The annulus of an eligible shell centre lies in the cutoff domain (chat 246 Q3).** Let `z ∈ shortEligible ρ d a`,
+/-- **The annulus of an eligible shell centre lies in the cutoff domain.** Let `z ∈ shortEligible ρ d a`,
 so `‖z‖ < ρ - 3 d^a`, and let `0 < R ≤ d^a` with `ρ < 1`. For `w ∈ 𝔸_{R,2R}(z) = B_{2R}(z) \ closedBall z R`:
 `‖w‖ ≤ ‖z‖ + dist w z < ρ - 3 d^a + 2R ≤ ρ - R < 1 - R/4`. -/
 theorem norm_lt_of_mem_annulus_eligible {ρ d a R : ℝ} {z w : ℂ} (hρ : ρ < 1) (hz : z ∈ Lemma68Window.shortEligible ρ d a)
@@ -295,7 +295,7 @@ theorem norm_lt_of_mem_annulus_eligible {ρ d a R : ℝ} {z w : ℂ} (hρ : ρ <
   rw [← dist_eq_norm] at htri
   linarith
 
-/-- **Positivity of the annulus infimum at an eligible centre (chat 246 Q3 step 3).** The corrected local form of
+/-- **Positivity of the annulus infimum at an eligible centre.** The corrected local form of
 `pos_iInf_annulus_ball`: no full support is used; the cutoff bound below `t` and `4R < t` (`R/4 < t`) suffice, because
 the whole annulus `𝔸_{R,2R}(z)` lies in `B_{1-R/4}` by `norm_lt_of_mem_annulus_eligible`. -/
 theorem pos_iInf_annulus_of_eligible {μ : Measure ℂ} {β t c0 ρ d a R : ℝ} {z : ℂ} (hc0 : 0 < c0) (hc0' : c0 ≤ 1 / 4)
@@ -304,7 +304,7 @@ theorem pos_iInf_annulus_of_eligible {μ : Measure ℂ} {β t c0 ρ d a R : ℝ}
     0 < ⨅ w ∈ annulus z R (2 * R), μ (ball w (c0 * R)) :=
   pos_iInf_of_cutoff hc0 hc0' hR0 hcut hRt (fun _ hw => norm_lt_of_mem_annulus_eligible hρ hz hR0 hRs hw)
 
-/-- **Almost-sure corrected `hpos` (chat 246 Q3 step 4), walk form.** For a walk law `ν`, a prefix event `pre`, shell
+/-- **Almost-sure corrected `hpos`, walk form.** For a walk law `ν`, a prefix event `pre`, shell
 centres `z x` and walk radii `R x`: if almost surely on `pre`, the centre is eligible (`z x ∈ shortEligible ρ d a`), the
 radius is positive, `R x ≤ d^a` and `4 R x < t`, and the cutoff bound holds below `t` for the field `μ`, then the annulus
 infimum at `z x` with radius `R x` is almost surely positive on `pre`. No full support and no centre-only `hVolC` is used.

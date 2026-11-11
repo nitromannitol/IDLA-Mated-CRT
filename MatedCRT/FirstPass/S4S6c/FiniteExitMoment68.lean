@@ -5,7 +5,7 @@ import MatedCRT.Proofs.IDLA.StrongMarkov
 import MatedCRT.Proofs.WalkPotential.MarkovFixedTime
 
 /-!
-# Exit-time moments of a finite domain (fp-S4S6c-exit-moment, item (1))
+# Exit-time moments of a finite domain
 
 For a finite set `D ⊆ ℤ` of vertices of a locally finite multigraph `m` with `m k (k + 1) ≠ 0`, the first exit
 time `τ_D` of simple random walk (Armitage–Gardiner: exit time of a set) satisfies:
@@ -243,7 +243,7 @@ lemma toReal_sq_toENNReal (t : ℕ∞) :
   | top => simp
   | coe n => simp
 
-/-- **Item (1) of fp-S4S6c-exit-moment.** For a finite vertex set `D` of a locally finite multigraph with
+/-- **Finite-domain exit moment.** For a finite vertex set `D` of a locally finite multigraph with
 `m k (k+1) ≠ 0`, the exit time `τ_D` of simple random walk from `a` is almost surely finite, has finite first
 and second moments `E_a[τ_D]`, `E_a[τ_D²]`, and `τ_D` and `τ_D²` are integrable. -/
 theorem finiteDomain_exitMoments68 {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m)

@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# Lemma 1 of the Lemma 6.8 argument: pointwise circle average of the corrected kernel (q2, task fp-S4S6c)
+# Lemma 1 of the Lemma 6.8 argument: pointwise circle average of the corrected kernel
 
-Source: `notes/fp-gaps/LEMMA68.md`, "Lemma 1 (what the corrected good event controls)", lines 91-143, the first display of
+The printed "Lemma 1 (what the corrected good event controls)", lines 91-143, the first display of
 the proof: averaging `v ↦ log(R/|u-v|) + 1` over the circle `v = z + (3R/2) e^{iθ}` gives at least `κ₀ = 1 - log 2 > 0`
 for every `u` with `|u - z| ≤ 2R`, including `u` on that circle. The single point `v = u` of the circle, where the kernel
 is singular, is a null set of the parameter `θ` (the parametrization is injective on a period), so it does not affect the

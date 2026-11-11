@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S3c.ExitTimeCore
 
 /-!
-# The exit-moment input `hmomS` of the one-test bound (fp-S4S6c-hone-momS)
+# The exit-moment input `hmomS` of the one-test bound
 
 `ShellHoneInst68.shellOneTest_of_direct` takes the pathwise exit-moment bound `hmomS` (ShellHoneInst68.lean:127)
 for every test domain `D ⊆ ball 0 1`. The source (Lemma 2.18, first clause; Draft `ExitTimeUpperBoundStmt`,

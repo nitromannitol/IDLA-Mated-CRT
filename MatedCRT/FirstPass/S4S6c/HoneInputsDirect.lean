@@ -5,10 +5,10 @@ open HarmonicBalls (annulus)
 
 /-!
 # The hone of `exitQ_le_pow` at the walk-centred test end, with the direct inputs discharged from good events
-(task fp-S4S6c-hone-direct-inputs; worker q3)
+
 
 `hone_exitQ_walk_of_env_direct` is `hone_exitQ_walk_of_env` (HoneInputs.lean:39) with the direct inputs
-`hL29`, `hcell`, `hh` discharged, and `hfinE`, `hdiam` still binders (see the report). The new good-event hypotheses are
+`hL29`, `hcell`, `hh` discharged, and `hfinE`, `hdiam` still binders. The new good-event hypotheses are
 environment-level, at the fixed environment `(η, μ)` and scale `ε`, and are restrictions of the Draft good events:
 
 * `hCountGood`: the lower half of Lemma 2.9 (`CountingMeasureConvergenceStmt`, Draft/Section2.lean:143) at `f ≡ 1`,
@@ -79,7 +79,7 @@ theorem exists_cellPoint_choice_direct {ε : ℝ} {η : ℝ → ℂ} (D : Set �
 Same conclusion as `hone_exitQ_walk_of_env`. Removed binders: `hL29` (derived from `hCountGood`), `hcell` and `hh`
 (derived from `hCellGood` and `hεcell`, with `H := ε^θ`). New good-event binders: `hCountGood`, `hCellGood`, `hεcell`,
 with the exponent parameter `ζc`. Kept binders: `hfinE` and `hdiam` (the test balls `B(v, R/4)` leave the good-event
-domain `B_{ρc}`; see the report), and all configuration, moment and sparsity binders of `hone_exitQ_walk_of_env`. -/
+domain `B_{ρc}`), and all configuration, moment and sparsity binders of `hone_exitQ_walk_of_env`. -/
 theorem hone_exitQ_walk_of_env_direct {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
     (hprop : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε) (hεc : ε ≤ 16 * K.c0)
     {μ : Measure ℂ} [IsFiniteMeasureOnCompacts μ] (hμNull : ∀ v : ℂ, μ {v} = 0)
@@ -103,7 +103,7 @@ theorem hone_exitQ_walk_of_env_direct {γ ρc : ℝ} (K : Constants68 γ ρc) (�
     (hsp : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, ∀ w : ℂ,
       ((A ∩ cellVertices ε η (ball w (K.c0 * R k ω))).ncard : ℝ)
         < K.s1 * (K.c0 * R k ω) ^ (2 * K.βm) / ε)
-    -- scale range of the good event: every walk test radius satisfies `rmin ≤ c₀ R` (configuration input, q2)
+    -- scale range of the good event: every walk test radius satisfies `rmin ≤ c₀ R` (configuration input)
     (rmin : ℝ)
     (hRmin : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU, rmin ≤ K.c0 * R k ω)
     -- good event of the volume lower bound (lower half of `VolumeGrowthStmt`, all scales in `[rmin, 1/4]`)
@@ -116,7 +116,7 @@ theorem hone_exitQ_walk_of_env_direct {γ ρc : ℝ} (K : Constants68 γ ρc) (�
       K.C⁻¹ * Real.log (if vertexPoint ε η a = vertexPoint ε η b then ε⁻¹
             else min (r / ‖vertexPoint ε η a - vertexPoint ε η b‖) ε⁻¹) - 1
           ≤ greenKernel m (interiorCellVertices ε η (ball (vertexPoint ε η a) r)) a b)
-    -- the walk state lies in the domain of the good Green bound, with margin `R/8` to `∂B_ρ` (configuration input, q2)
+    -- the walk state lies in the domain of the good Green bound, with margin `R/8` to `∂B_ρ` (configuration input)
     (hWalk : ∀ k, ∀ ω ∈ prefixSet (fun (j : ℕ) (w : ℕ → ℤ) => w j) A (T k) τU,
       ω (T k ω).toNat ∈ cellVertices ε η (ball 0 (ρc - ε ^ K.ω)) ∧ ε ^ K.ω ≤ R k ω / 8 ∧
         R k ω / 8 ≤ infDist (vertexPoint ε η (ω (T k ω).toNat)) (sphere 0 ρc))

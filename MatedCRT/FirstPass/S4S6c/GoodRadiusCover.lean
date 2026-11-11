@@ -2,9 +2,9 @@ import MatedCRT.Draft.Section6
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.Threshold
 
 /-!
-# Lemma 2, eq (9): good radii on dyadic scales with a field-measurable cutoff (q2, task fp-S4S6c; LEMMA68)
+# Lemma 2, eq (9): good radii on dyadic scales with a field-measurable cutoff
 
-Written argument: notes/fp-gaps/LEMMA68.md, Lemma 2 item 2 (eq (9)), with the cover events of
+, Lemma 2 item 2 (eq (9)), with the cover events of
 `GoodAnnulusPrevalenceStmt` (Draft/Section6.lean:60). The polynomial failure bound of that statement, the dyadic
 Borel-Cantelli step, and a field-measurable cutoff `δ_*` give: for every dyadic `δ < δ_*` and every grid centre
 `z` of `B_{ρ-3√δ} \ B_{10√δ}`, a good radius `r ∈ [δ, √δ] ∩ {7^{-n}}` with `IsGoodAnnulusEvent`.
@@ -12,7 +12,7 @@ Borel-Cantelli step, and a field-measurable cutoff `δ_*` give: for every dyadic
 * `BallMassLower`-style threshold: `exists_dyadic_threshold` (generic, reuses `ConstantOrderDiv.exists_measurable_threshold`).
 * `GoodAnnulusCoverEvent`: the event of `GoodAnnulusPrevalenceStmt` at scale `δ`, copied verbatim.
 * `goodAnnulusCover_dyadic`: eq (9) from a polynomial bound and the field-measurability of the cover events.
-  The measurability of the cover events is NOT yet proved (LEMMA68.md 620-636 gap; see the report).
+  The measurability of the cover events is NOT yet proved (620-636 gap).
 -/
 
 open MeasureTheory Set Metric Filter
@@ -49,8 +49,8 @@ def GoodAnnulusCoverEvent {Ω : Type*} (μ : Ω → Measure ℂ) (ρ c₀ C δ :
     (∃ m n : ℤ, z = ((δ / 100 : ℝ) : ℂ) * (m + n * Complex.I)) →
     ∃ r : ℝ, δ ≤ r ∧ r ≤ Real.sqrt δ ∧ (∃ n : ℕ, r = (7 : ℝ)⁻¹ ^ n) ∧ IsGoodAnnulusEvent (μ ω) c₀ C r z}
 
-/-- **Lemma 2, eq (9)** (LEMMA68 Lemma 2 item 2). Given the polynomial bound of the cover events with constant `C`
-(from `GoodAnnulusPrevalenceStmt`) and their field-measurability (OPEN, see the report), for almost every `ω` there is a
+/-- **Lemma 2, eq (9)**. Given the polynomial bound of the cover events with constant `C`
+(from `GoodAnnulusPrevalenceStmt`) and their field-measurability (OPEN), for almost every `ω` there is a
 field-measurable cutoff `tStar ω > 0` such that for every dyadic `δ = (1/2)^n < tStar ω` every grid centre has a good radius. -/
 theorem goodAnnulusCover_dyadic {Ω : Type*} {m' : MeasurableSpace Ω} [MeasurableSpace Ω]
     {P : Measure Ω} [IsProbabilityMeasure P] (μ : Ω → Measure ℂ) {ρ c₀ C : ℝ}
@@ -79,9 +79,9 @@ theorem cover_polyHighProb_of_prevalence (hprev : GoodAnnulusPrevalenceStmt) {γ
   obtain ⟨C, hC0, h⟩ := hprev γ hγ hγ2 ρ hρ hρ1 c₀ hc₀ hc₀'
   exact ⟨C, hC0, h⟩
 
-/-- **Lemma 2, eq (9), minorant form** (LEMMA68 Lemma 2 item 2, closing paragraph). The dyadic good-radius conclusion needs
+/-- **Lemma 2, eq (9), minorant form** (closing paragraph). The dyadic good-radius conclusion needs
 only field-measurable events `F n ⊆ cover_n` whose complements are summable in probability: the existence of such a
-minorant is the OPEN NEW step (LEMMA68.md 620-636; see the report). `goodAnnulusCover_dyadic` is the case `F n = cover_n`. -/
+minorant is the OPEN NEW step (620-636). `goodAnnulusCover_dyadic` is the case `F n = cover_n`. -/
 theorem goodAnnulusCover_dyadic_of_minorant {Ω : Type*} {m' : MeasurableSpace Ω} [MeasurableSpace Ω]
     {P : Measure Ω} [IsProbabilityMeasure P] (μ : Ω → Measure ℂ) {ρ c₀ C : ℝ}
     (hF : ∃ F : ℕ → Set Ω, (∀ n : ℕ, MeasurableSet[m'] (F n)) ∧

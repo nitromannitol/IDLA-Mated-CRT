@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S5qe
 import MatedCRT.FirstPass.S6r.Constants
 
 /-!
-# Model inputs of the Lemma 6.8 one-test chain: the Green and counting binders (fp-S4S6c-hone-model-inputs, z5)
+# Model inputs of the Lemma 6.8 one-test chain: the Green and counting binders
 
 `shellOneTest_of_direct` (`FirstPass/S4S6c/ShellHoneInst68.lean:53`) takes model inputs about the environment that are
 not deterministic at a fixed `η`:

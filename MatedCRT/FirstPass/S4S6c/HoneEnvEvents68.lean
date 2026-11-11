@@ -4,10 +4,10 @@ import MatedCRT.FirstPass.S6r.Amplification
 import HarmonicBalls.Proofs.Sec2.PolyHighProb
 
 /-!
-# Environment events of the one-test hone, from the Draft statements (fp-S4S6c-env-events, z1)
+# Environment events of the one-test hone, from the Draft statements
 
-Operator task `fp-S4S6c-env-events`, answering q4 blocker B2. Chat 239
-(`notes/fp-gaps/CHATGPT-239-idla-hU-named-inputs-PRO.md`, l.502-507 and l.819-830) rules that the binders `hGreen`,
+Answering blocker B2.
+rules that the binders `hGreen`,
 `hCountGood`, `hGrLow`, `hlf`, `hcons` need no External Prop:
 
 * `hGreen`: the good event `greenLowerGoodEvent` (Lemma 2.16, lower Green bound) is the body of
@@ -17,7 +17,7 @@ Operator task `fp-S4S6c-env-events`, answering q4 blocker B2. Chat 239
   (HoneModelInputs68.lean:112) (`countingGood_polyHighProb`).
 * `hlf`, `hcons`: the almost-sure finiteness of the multiplicities is `FiniteExitAeStmt` (S6e/Uniform.lean:150), filtered
   into the common environment event `commonEnvEvent` (`finiteExit_of_mem`).
-* `hGrLow` (chat 226, l.231-251): derived from the Green event, the corrected walk hypothesis `hWalk` (the almost-sure form
+* `hGrLow` (l.231-251): derived from the Green event, the corrected walk hypothesis `hWalk` (the almost-sure form
   of HoneLeafAe68.lean:190 and :424) and `c₀ ≤ 1/24` (`Constants68.hc0'`, S6r/Constants.lean:70).
 
 Terminology: polynomially high probability (Armstrong-Kuusi-Mourrat; `HarmonicBalls.PolyHighProb`), Lemma 2.9 and 2.16

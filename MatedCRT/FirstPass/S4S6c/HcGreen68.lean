@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4S6c.PrintedGreen68
 import MatedCRT.FirstPass.S4S6c.HcAssembly68
 
 /-!
-# The per-centre local test of the printed Lemma 6.8 from the Green estimates (q2, task fp-S4S6c-envscaling-6-7-6-8; LEMMA68 C4)
+# The per-centre local test of the printed Lemma 6.8 from the Green estimates
 
 * `greenKernel_le_greenFn`: deterministic, the first conjunct of `hGreenAt` of
   `PrintedGreen68.stayIn_le_printed_green_draft`: `g_A(a,b) = G_A(a,b)/deg(b) ≤ G_A(a,b)` (Green kernel of Berestycki-Gwynne,

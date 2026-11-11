@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.S3t.WalkAdjacency
 import MatedCRT.Proofs.Infra.RandomWalk
 
 /-!
-# Dischargers of the leaf binders of `shellOneTest_of_direct` (z12, fp-S4S6c-hone-radii)
+# Dischargers of the leaf binders of `shellOneTest_of_direct`
 
 Leaf: `shellOneTest_of_direct` (S4S6c/ShellHoneInst68.lean:53). Each lemma below concludes the binder type of that
 theorem, with the substitution stated in its docstring. Hypotheses that are not in the leaf are listed explicitly.
@@ -125,7 +125,7 @@ theorem shellCentre_mem_of_walk {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous 
 
 /-- **`hRr` along one walk (`k ≤ n`).** From `shellCentre_mem_of_walk` and the range `hRf`: the radius at the shell
 centre lies in `[r ^ 2, 1]`, using `r ^ 2 ≤ d` and `d ≤ 1`, `0 ≤ a`. This is the pointwise content of the binder
-`hRr` of `shellOneTest_of_direct`, for the walks that the leaf's `prefixSet` does not single out (see the report). -/
+`hRr` of `shellOneTest_of_direct`, for the walks that the leaf's `prefixSet` does not single out. -/
 theorem radius_bounds_of_walk {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (hε : 0 < ε)
     {Θ F0 : Finset ℤ} {ρ r d a : ℝ} {Rf : ℂ → ℝ} {n : ℕ} (hr : 0 < r) (hrρ : r ≤ ρ / 4) (hd : 0 < d) (hd1 : d ≤ 1)
     (ha0 : 0 ≤ a) (hdr : r ^ 2 ≤ d) (hds : d ≤ d ^ a) (hs4 : d ^ a ≤ r / 4000)

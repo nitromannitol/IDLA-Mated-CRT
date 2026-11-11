@@ -3,7 +3,7 @@ import MatedCRT.Proofs.WalkPotential.MarkovFixedTime
 
 /-!
 # The good event of the printed Lemma 6.8: legal walks with almost surely finite window exits
-(q2, task fp-S4S6c-envscaling-6-7-6-8; LEMMA68 C1-C2, the event `Good` of `ConfigBound68`)
+ (the event `Good` of `ConfigBound68`)
 
 For a walk `x` from `b`, the good event is: `x 0 = b`, every step is a stay or an edge, and every window exit
 `vExitTime (W (x i)) (pathShift i x)` is finite, where `W y` is the inner test window of the vertex `y`.
@@ -84,7 +84,7 @@ theorem ae_all_exit_ne_top (m : ℤ → ℤ → ℕ) (W : ℤ → Set ℤ) (b : 
   intro hi
   exact hx ⟨i, hi⟩
 
-/-- **Good event (LEMMA68 C1-C2).** For the walk from `b`, almost surely: `x 0 = b`, every step is a stay or an edge
+/-- **Good event.** For the walk from `b`, almost surely: `x 0 = b`, every step is a stay or an edge
 (`FrontierSeparation.ae_srwStep_legal`), and every window exit along the path is finite. -/
 theorem ae_good (m : ℤ → ℤ → ℕ) (W : ℤ → Set ℤ) (b : ℤ)
     (hW : ∀ y, srwLaw m y {x | vExitTime (W y) x = ⊤} = 0) :

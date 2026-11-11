@@ -2,13 +2,13 @@ import MatedCRT.FirstPass.S4S6c.BandInduction68
 import MatedCRT.FirstPass.S4S6c.FrontierSeparation
 
 /-!
-# Frontier starts, the rounding map and cell diameters of the printed Lemma 6.8 (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# Frontier starts, the rounding map and cell diameters of the printed Lemma 6.8
 
-Deterministic inputs of `BandInduction68` (LEMMA68 write-up C1, C5):
+Deterministic inputs of `BandInduction68` (C5):
 
 * `start_dist_of_frontier`: a frontier vertex `b` of `U₁ = thickening (r/2) F` (a cell meeting `∂U₁`) has
   `|dist(P b, F) - r/2| ≤ d`, where `d` bounds the cell diameter (hypothesis `hstart` of `BandInduction68`).
-* `roundC`, `dist_roundC_le`: the Borel rounding map `Q_δ` of LEMMA68 (C1), `Q_δ(x₁,x₂) = g(⌊x₁/g + 1/2⌋, ⌊x₂/g + 1/2⌋)`,
+* `roundC`, `dist_roundC_le`: the Borel rounding map `Q_δ`, `Q_δ(x₁,x₂) = g(⌊x₁/g + 1/2⌋, ⌊x₂/g + 1/2⌋)`,
   with `|Q_δ(x) - x| ≤ g`; the test centre is `ctr v = Q_δ(P v)`, hypothesis `hctr`.
 * `dist_le_of_diam_le`: a cell of diameter at most `d` (the cell-size estimate, `CellSizeEstimateStmt`) has all pairs of
   closure points at distance at most `d` (hypothesis `hsm` of `BandInduction68`), for bounded cells.
@@ -28,7 +28,7 @@ theorem infDist_eq_of_mem_frontier {F : Set ℂ} {t : ℝ} (ht : 0 ≤ t) {u : �
   have h : infEDist u F = ENNReal.ofReal t := Metric.frontier_thickening_subset F hu
   rw [infDist, h, ENNReal.toReal_ofReal ht]
 
-/-- **Frontier start (LEMMA68 C5).** For a vertex `b` whose cell meets the frontier of `U₁ = thickening (r/2) F`, the
+/-- **Frontier start.** For a vertex `b` whose cell meets the frontier of `U₁ = thickening (r/2) F`, the
 vertex point `P b` satisfies `|dist(P b, F) - r/2| ≤ d`. The frontier point `u` lies in `B_ρ` (its distance to `F` is
 `r/2`, and `r ≤ ρ/100`), so the cell-size bound `hsm` applies to the cell of `b`. -/
 theorem start_dist_of_frontier {H : ℤ → Set ℂ} {P : ℤ → ℂ} {F : Set ℂ} {r ρ d : ℝ} {b : ℤ}
@@ -52,7 +52,7 @@ theorem start_dist_of_frontier {H : ℤ → Set ℂ} {P : ℤ → ℂ} {F : Set 
   rw [hinf] at hlip
   exact hlip.trans hd
 
-/-- The rounding map `Q_δ` of LEMMA68 (C1) on `ℂ` with mesh `g = δ/100`:
+/-- The rounding map `Q_δ`on `ℂ` with mesh `g = δ/100`:
 `Q_δ(x₁, x₂) = g (⌊x₁/g + 1/2⌋, ⌊x₂/g + 1/2⌋)` (Borel, coordinatewise). -/
 noncomputable def roundC (g : ℝ) (z : ℂ) : ℂ :=
   ⟨g * (⌊z.re / g + 1 / 2⌋ : ℝ), g * (⌊z.im / g + 1 / 2⌋ : ℝ)⟩
@@ -70,7 +70,7 @@ theorem abs_round_coord_le {g : ℝ} (hg : 0 < g) (x : ℝ) :
   · nlinarith
   · nlinarith
 
-/-- **Rounding (LEMMA68 C2).** `dist(Q_δ z, z) ≤ g`, using `‖w‖ ≤ |re w| + |im w|` on `ℂ`. -/
+/-- **Rounding.** `dist(Q_δ z, z) ≤ g`, using `‖w‖ ≤ |re w| + |im w|` on `ℂ`. -/
 theorem dist_roundC_le {g : ℝ} (hg : 0 < g) (z : ℂ) : dist (roundC g z) z ≤ g := by
   rw [dist_eq_norm]
   calc ‖roundC g z - z‖ ≤ |(roundC g z - z).re| + |(roundC g z - z).im| :=

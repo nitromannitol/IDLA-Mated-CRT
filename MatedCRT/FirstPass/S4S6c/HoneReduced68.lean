@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.S4S6c.FiniteExitMoment68
 import MatedCRT.Audit.StatementsSec3Sec5M1
 
 /-!
-# Lemma 6.8, one-test leaf with the committed dischargers plugged in (q1, fp-S4S6c-hone-reduced)
+# Lemma 6.8, one-test leaf with the committed dischargers plugged in
 
 `shellOneTest_of_direct_reduced68` is `shellOneTest_of_direct` (ShellHoneInst68.lean:53) with the binders that a committed
 lemma discharges removed, and the discharging lemma's own binders added. Conclusion unchanged.
@@ -13,11 +13,11 @@ lemma discharges removed, and the discharging lemma's own binders added. Conclus
 Binder table (outer binder : status)
 * `hmom1`, `hmom2` : DISCHARGED by `hmom_pair_of_finiteDomain_meas` (BallExitMeas68.lean:49), at `T k = shellExit k`,
   `R k = Rf ∘ shellCentre k`. Its own binders become NEW binders of this theorem: `hlf`, `hcons`, `hTdom`, `hRbd`
-  (q3 design, routed 60e).
+  (routed 60e).
 * `hfinE` : DISCHARGED by `MatedCRT.Audit.StatementsSec3Sec5M1.finite_expectedExitTime` (Audit/StatementsSec3Sec5M1.lean:441)
   on the interior cell set of the test ball, which is finite by `TraceInputs68.cellVertices_finite_of_tendsto`
   (TraceInputs68.lean:76). Uses the shared binders `hlf`, `hcons`.
-* All other binders stay as binders (OPEN; routing in the report).
+* All other binders stay as binders (OPEN).
 -/
 
 open HarmonicBalls (annulus)

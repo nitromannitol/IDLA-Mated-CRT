@@ -8,7 +8,7 @@ import MatedCRT.FirstPass.S3i.StrongMarkov
 import MatedCRT.FirstPass.S5c.GreenUpper
 
 /-!
-# Integrability of the test count on finite test domains (fp-S4S6c-exit-moment, items (2) and (3))
+# Integrability of the test count on finite test domains
 
 Stage 1: monotonicity of the exit time in the set, the stopping-time bridge to `S6j.IsWalkRandomTime`,
 the geometric tail of the post-`T` exit time (strong Markov at `T`, `FiniteExitMoment68.srwLaw_tail_le`),

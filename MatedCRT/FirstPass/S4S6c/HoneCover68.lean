@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S6r.ShellOmega
 import MatedCRT.FirstPass.S6r.Amplification
 
 /-!
-# The deterministic annulus cover behind the hypothesis `hN` of `shellOneTest_of_direct` (fp-S4S6c-hone-cover, z1)
+# The deterministic annulus cover behind the hypothesis `hN` of `shellOneTest_of_direct`
 
 The binder `hN` of `shellOneTest_of_direct` (`S4S6c/ShellHoneInst68.lean`) asks that, for every shell `k` and every
 environment `ω` in the prefix set, every open annulus `𝔸_{R',2R'}(z')` is covered by at most `N_cov` balls of radius
@@ -28,7 +28,7 @@ open scoped Classical
 namespace MatedCRT
 namespace Lemma68HoneCover
 
-/-- **`hN` discharged by the annulus cover (fp-S4S6c-hone-cover).** For any count `N_cov` with `AnnulusCover68 N_cov`,
+/-- **`hN` discharged by the annulus cover.** For any count `N_cov` with `AnnulusCover68 N_cov`,
 the binder `hN` of `shellOneTest_of_direct` holds for the walk-centred shells: every annulus `𝔸_{R',2R'}(z')` with
 `R' > 0` is covered by a finite set `t` of at most `N_cov` centres lying in the annulus, with the balls of radius `R'`. -/
 theorem hN_of_annulusCover68 (ε : ℝ) (η : ℝ → ℂ) (Kset : Set ℂ) (r s d : ℝ) (Rf : ℂ → ℝ) (A : Set ℤ)
@@ -40,7 +40,7 @@ theorem hN_of_annulusCover68 (ε : ℝ) (η : ℝ → ℂ) (Kset : Set ℂ) (r s
         HarmonicBalls.annulus z' R' (2 * R') ⊆ ⋃ v ∈ t, ball v R' :=
   fun _ _ _ R' z' hR => hcov R' z' hR
 
-/-- **`hN` at the universal count (fp-S4S6c-hone-cover).** The binder `hN` of `shellOneTest_of_direct` at the count
+/-- **`hN` at the universal count.** The binder `hN` of `shellOneTest_of_direct` at the count
 `N_cov := shellNcov68` (ShellConstOrder68), which is the count fixed in the constants of the one-test bound. -/
 theorem hN_shellNcov68 (ε : ℝ) (η : ℝ → ℂ) (Kset : Set ℂ) (r s d : ℝ) (Rf : ℂ → ℝ) (A : Set ℤ)
     (τU : (ℕ → ℤ) → ℕ∞) :
