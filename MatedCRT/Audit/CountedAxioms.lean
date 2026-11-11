@@ -10,6 +10,7 @@ import MatedCRT.FirstPass.Closure.Clean71
 import MatedCRT.FirstPass.Closure.Clean81Full
 import MatedCRT.FirstPass.Closure.Clean81LP
 import MatedCRT.FirstPass.Closure.CleanSec23LP
+import MatedCRT.FirstPass.Closure.CleanSec23LPUniform
 import MatedCRT.FirstPass.Closure.CleanSec456LP
 import MatedCRT.FirstPass.Closure.Final14Full
 import MatedCRT.FirstPass.Closure.Final14LP
@@ -72,6 +73,7 @@ import MatedCRT.Proofs.SecA.Statements
 #print axioms MatedCRT.closed_3_4_ownBinders
 #print axioms MatedCRT.closed_3_5_lp
 #print axioms MatedCRT.closed_3_6_lp
+#print axioms MatedCRT.closed_3_6_lp_uniform
 #print axioms MatedCRT.closed_3_7_lp
 #print axioms MatedCRT.closed_4_1_lp
 #print axioms MatedCRT.FirstPassClosure.closed_4_2_lp
