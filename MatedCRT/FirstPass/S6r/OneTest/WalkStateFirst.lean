@@ -1,5 +1,14 @@
 import MatedCRT.FirstPass.S6r.OneTest.FirstMoment
 
+/-!
+# First moment at a walk state
+
+Serves Lemma 6.8 (`lemma:constant-order-lower-bound-div`) through its replacement proof [C26] (`eq:c26-first-moment`):
+the first moment of the occupation count at a walk state, `E_b[V_occ | h, η] ≥ (1/4) ε⁻¹ m₀` with
+`m₀ = μ(B_{c₀R}(x))`, is `firstMoment_occCount_fm` with sparsity radius `c₀R`. Main declarations: `walkParam` (the
+walk-centred test parameter `(R w, η(ε X_{T w}))`) and `firstMoment_walkState`.
+-/
+
 open MeasureTheory Set Filter Metric
 open scoped ENNReal
 namespace MatedCRT

@@ -3,6 +3,21 @@ import MatedCRT.FirstPass.S6e.Final
 import MatedCRT.FirstPass.S6h.Schedule
 import MatedCRT.FirstPass.S6m
 
+/-!
+# Lemma 6.8: the configuration bound with the guard and the concrete test schedule
+
+Serves Lemma 6.8 (`lemma:constant-order-lower-bound-div`) through its replacement proof [C26]: with probability tending
+to one, the guarded exit probability of every configuration at every admissible radius `r` is at most `1/2`; the
+non-admissible configurations are excluded by the guard. Main declarations: `probTendsToOne_lemma68_guarded` (supplies
+the hypothesis `hpt` of `Lemma68Final.probTendsToOne_uniform_half_guarded`), `probTendsToOne_lemma68_concrete` (the same
+with the concrete test schedule), and the inclusions `thickening_fill_subset_ball_c12` and `cellVertices_mono_c12`.
+
+## Main statements
+* `probTendsToOne_lemma68_guarded`: the guarded exit bound holds with probability tending to one.
+* `probTendsToOne_lemma68_concrete`: the same statement for the concrete test schedule.
+* `thickening_fill_subset_ball_c12`, `cellVertices_mono_c12`: inclusions for the cell vertices of a set of the plane.
+-/
+
 open MeasureTheory Set Filter
 open scoped ENNReal
 

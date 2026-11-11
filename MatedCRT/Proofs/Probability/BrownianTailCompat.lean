@@ -33,6 +33,15 @@ lemma quotes.
 -/
 import Mathlib
 
+/-!
+# Gaussian tail of pre-Brownian motion at a single time
+
+Serves the Section 1 environment scaling (Theorems 1.4 and 1.6, `theorem:convergence-of-IDLA`,
+`theorem:convergence-of-div-sandpile`) as the single-time input of `BrownianMaxCompat`, hence of `GaussianBandStep`.
+Main declaration: `MatedCRT.Probability.BrownianTailCompat.measure_ge_le_exp`: for a pre-Brownian motion `B` with
+`0 < T` and `0 < a`, `P {a ≤ B T} ≤ exp (-a ^ 2 / (2 T))` (Chernoff bound with the normal moment generating function).
+-/
+
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal
 

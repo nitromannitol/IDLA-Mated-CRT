@@ -4,6 +4,16 @@ import MatedCRT.FirstPass.S6r.OneTest.Concrete
 import MatedCRT.FirstPass.S3i.StrongMarkov
 import MatedCRT.FirstPass.S5c.GreenUpper
 
+/-!
+# Hone binders on finite test domains
+
+Serves Lemma 6.8 (`lemma:constant-order-lower-bound-div`) through its replacement proof [C26] (`eq:c26-first-moment`,
+`eq:c26-second-moment`): the binders `hmom1`, `hmom2` of the walk-centred exit estimates are discharged on finite test
+domains. Main declarations: `hmom_pair_of_finiteDomain` (finite first and second moments of the test counts
+`1_{T_k<∞} ballExitSigma` under `srwLaw m a`, when each `T_k` is dominated by the exit time of a finite vertex set) and
+`ae_center_mem` (the centre vertex of a dominated random time lies almost surely in `D ∪ ∂D ∪ {a}`).
+-/
+
 namespace MatedCRT
 namespace FiniteExitMomentHoneMain68
 

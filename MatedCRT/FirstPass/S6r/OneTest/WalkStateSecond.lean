@@ -1,5 +1,14 @@
 import MatedCRT.FirstPass.S6r.OneTest.SecondMoment
 
+/-!
+# Second moment at a walk state
+
+Serves Lemma 6.8 (`lemma:constant-order-lower-bound-div`) through its replacement proof [C26] (`eq:c26-second-moment`):
+the second moment of the occupation count at a walk state, `E_b[V_occ² | h, η] ≤ C₂ ε⁻² (1+log(1/R))² m₀²`, is
+`secondMoment_occCount` at the walk start `b = X_T`, with the mass at `B_{3c₀R}` replaced by `m₀`. Main declaration:
+`secondMoment_walkState`.
+-/
+
 open MeasureTheory Set Filter Metric HarmonicBalls
 open scoped ENNReal
 namespace MatedCRT

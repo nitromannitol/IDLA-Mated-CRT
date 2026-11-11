@@ -60,6 +60,21 @@ import LatticeProb.Prob.Dyadic
 import LatticeProb.Prob.Ottaviani
 import MatedCRT.Proofs.Probability.BrownianTailCompat
 
+/-!
+# Gaussian maximal estimate for Brownian motion
+
+Serves the Section 1 environment scaling (Theorems 1.4 and 1.6, `theorem:convergence-of-IDLA`,
+`theorem:convergence-of-div-sandpile`): it is the Brownian input of the named Step `GaussianBandStep`, discharged in
+`Proofs/Sec1/EnvironmentScaling/GaussianBandProof.lean`. The estimate is Ottaviani's maximal inequality on a dyadic grid.
+
+## Main statements
+* `measure_grid_max_le`: for a monotone family of times spanning at most `T`, the chance that `|B (t k) - B (t 0)|`
+  reaches `2 α` is at most `4 exp (-α ^ 2 / (2 T))`.
+* `measure_exists_abs_sub_ge_le`: `P {∃ s ≤ T, a ≤ |B s - B 0|} ≤ 4 exp (-(a ^ 2 / (32 T)))`.
+* `measure_abs_sub_ge_le`, `measure_abs_ge_le_exp`: Gaussian tails of an increment and of a single value.
+* `ae_forall_eq_of_modification`: modifications with almost surely continuous paths agree almost surely.
+-/
+
 open MeasureTheory ProbabilityTheory Filter MeasurableSpace
 
 open scoped ENNReal NNReal Topology

@@ -1,6 +1,15 @@
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.CorrectedProjectedIdentification
 import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.CorrectedContinuum
 
+/-!
+# Divisible-sandpile convergence from the corrected Dirichlet steps
+
+Serves Theorem 4.1 (`theorem:convergence-divisible`): on `{t < T}` the rescaled `w̃` converges to `(m0/6) w_t^{B_ρ}`
+uniformly on `B_ρ` in probability. The corrected Lemma 3.5 (`lemma:discrete-dirichlet-problem`) enters through its
+projected pointwise, boundary-barrier and finite-domain steps. Main declarations:
+`convergenceDivisible_of_projected_dirichlet_steps` and `convergenceDivisible_of_dirichlet_pointwise_step`.
+-/
+
 namespace MatedCRT
 
 open MeasureTheory _root_.HarmonicBalls

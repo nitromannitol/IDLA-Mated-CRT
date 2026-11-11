@@ -1,5 +1,14 @@
 import MatedCRT.FirstPass.S6r.OneTest.WalkStateSecond
 
+/-!
+# Second moments with a free test radius
+
+Serves Lemma 6.8 (`lemma:constant-order-lower-bound-div`) through its replacement proof [C26] (`eq:c26-second-moment`):
+the second-moment estimates with the radius `1` in the hypotheses `hx1` and `hvol` replaced by a parameter `ρmom`.
+Main declarations: `secondMoment_occCount_rho` (a copy of `secondMoment_occCount`) and `secondMoment_walkState_rho`
+(a copy of `secondMoment_walkState`, `WalkStateSecond.lean`); the originals are unchanged.
+-/
+
 open MeasureTheory Set Filter Metric HarmonicBalls
 open scoped ENNReal
 
