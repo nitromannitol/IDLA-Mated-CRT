@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S6r.ShortWindowClosed
 import MatedCRT.FirstPass.Frozen.S5S6S7
 
 /-!
-# hprev of the short-window good-radius prevalence, whole-plane inputs frozen (fp-S6r-shortwindow-frozen)
+# hprev of the short-window good-radius prevalence, whole-plane inputs frozen
 
 `shortWindowGoodRadiusPrevalence_closed` (ShortWindowClosed.lean, `MatedCRT.Lemma68Window`) proves
 `ShortWindowGoodRadiusPrevalenceStmt` from four named inputs: `h0 : WholePlaneLQGExistenceStep`,

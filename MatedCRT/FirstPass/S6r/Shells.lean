@@ -3,12 +3,12 @@ import MatedCRT.FirstPass.S6r.Shells.Crossing
 /-!
 # Lemma 6.8, window S7': choice of the shell centre at the hitting time
 
-Step 5 of the redesigned S7' (`notes/fp-gaps/CHATGPT-idla-6-8-shells.md`, displayed (7.23)-(7.26)).
+Step 5 of the redesigned S7' (displayed (7.23)-(7.26)).
 At the first hitting time `C_j` of the shell `Σ_j`, the centre is the grid rounding `z = Q_d(η(a))` of the
 vertex point of the current cell, and `R = R_z` is its good radius. The shell is within distance `g + h_ε` of
 `z`, and the current cell lies in the ball `B_{R/50}(z)`.
 
-Referee repair (`notes/fp-gaps/CHATGPT-idla-6-8-shells-referee.md`, step 5): the printed (7.13) covers grid
+Step 5 of the referee repair: the printed (7.13) covers grid
 centres within distance `g` of the shell, while the selected centre is within `g + h_ε ≤ 2g`. So
 `shell_hit_choose_center` keeps the named hypothesis `hzElig` (consumed by `S6r/ShellWiring.lean`), and
 `shell_hit_choose_center_direct` derives the eligibility of `z` from the geometry (cutoffs `hcut1`, `hcut2`).

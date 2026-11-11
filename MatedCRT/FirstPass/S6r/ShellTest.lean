@@ -3,9 +3,9 @@ import MatedCRT.Defs.RandomWalk
 import MatedCRT.FirstPass.S6r.LocalBudget
 
 /-!
-# First-pass 6.8, redesign: the successive two-sided shell test, steps 6-9 (fp-S6r-shell-test, z9)
+# First-pass 6.8, redesign: the successive two-sided shell test, steps 6-9
 
-Written argument: `notes/fp-gaps/CHATGPT-idla-6-8-shells.md`: step 6 `boundary_start_time` (l.397-441), step 7
+Steps 6 (`boundary_start_time`) and 7
 `test_finishes_before_next_shell` (l.442-546), step 8 `local_test_stays_in_U` (l.547-600), step 9
 `S5_geometry_at_shell_test` (l.601-707). Setup (l.15-57): `K = closure Θ`, `U = V(K+B_r) \ Θ`, `f = dist(·,K)`,
 `s = d^a`, `h_ε` the cell-size bound (7.0).
@@ -209,7 +209,7 @@ theorem exit_before_next_shell {ε : ℝ} {η : ℝ → ℂ} (hηc : Continuous 
       exact ⟨p, hp1, mem_ball.2 (by rw [hpz]; linarith)⟩
   exact hsep (x C1) hbad hC1
 
-/-- Step 7, strengthened ordering (referee repair, `CHATGPT-idla-6-8-shells-referee.md` item (iii)): whenever the
+/-- Step 7, strengthened ordering (referee repair, item (iii)): whenever the
 next shell is reached, `C_j < T_j < L_j < C_{j+1}`, pathwise (not only on the bad event). `hxT` is `x T ∈ I(D')` for
 the local disk `D' = B_{R/4}(η(X_T))` (`ShellWiring.test_ball_of_exit`), `hD' : D' ⊆ B_{2R}(z)`; the strict `T < L`
 comes from `x T ∈ I(D')` and `x L ∉ I(D')`. Uses `hηc`, `hadj`. -/
@@ -335,8 +335,7 @@ theorem first_moment_of_sparsity {cnt m ε s1 cv c0 β R r : ℝ} (hβ : 0 ≤ �
 /-! ## Step 9, S5 at the shell boundary: the geometric hypotheses of the one-test bound -/
 
 /-- The numerical window of a shell test: the radii `r² ≤ d ≤ R ≤ s ≤ r/4000` (7.42-7.45), the cell-size
-numerics `h < R/4` (from (7.0), `h ≤ d/100`), and the enlargement `0 ≤ e`, `h + e ≤ R/12` of (7.49). Referee repair (Step 9, `CHATGPT-idla-6-8-shells-referee.md`
-item (ii)): `h ≤ R/100` and `e ≤ R/100`, the latter being `ε^{α_e} ≤ R/100` for the enlargement `e = ε^{α_e}`. -/
+numerics `h < R/4` (from (7.0), `h ≤ d/100`), and the enlargement `0 ≤ e`, `h + e ≤ R/12` of (7.49). Step 9, item (ii): `h ≤ R/100` and `e ≤ R/100`, the latter being `ε^{α_e} ≤ R/100` for the enlargement `e = ε^{α_e}`. -/
 def S5Window (r d R s h e : ℝ) : Prop :=
   r ^ 2 ≤ d ∧ d ≤ R ∧ R ≤ s ∧ s ≤ r / 4000 ∧ 0 < r ∧ 0 < R ∧ 0 ≤ e ∧ h + e ≤ R / 12 ∧ h < R / 4 ∧ h ≤ R / 100 ∧ e ≤ R / 100
 
@@ -387,7 +386,7 @@ theorem S5_geometry_at_shell_test {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < ε) (
 /-- Step 9, `(7.50)` in the form consumed by the strong-Markov step (`oneTest_step` of `Amplification.lean`).
 `F` is the test-failure event `{X_n ∈ A for all T_j ≤ n < L_j}`, so `μ[1_F | 𝓖] ≤ 1 - q(r)` on `P` is the bound
 `P(∃ n ∈ [T_j, L_j): X_n ∉ A | 𝓖) ≥ q(r)` (complement). The named hypothesis `hS5` is the S5 one-test estimate
-(z5, not committed), valid on the set `G` of paths whose test geometry is `S5_geometry_at_shell_test`; the
+valid on the set `G` of paths whose test geometry is `S5_geometry_at_shell_test`; the
 inclusion `P ⊆ G` is supplied pathwise by that lemma. No probability is estimated here. -/
 theorem S5_at_shell_boundary {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
     {𝓖 : MeasurableSpace Ω} {F P G : Set Ω} {q : ℝ} (hPG : P ⊆ G)

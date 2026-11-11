@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S6r.ShortWindow
 import MatedCRT.Proofs.Measurability.GoodScale
 
 /-!
-# Field measurability of the short-window event `Ew` (6.8, PRO step 3)
+# Field measurability of the short-window event `Ew` (6.8)
 
 The event of `ShortWindowGoodRadiusPrevalenceStmt` (`FirstPass/S6r/ShortWindow.lean:61`) is
 `Ew(ω) = {ω | ∃ z ∈ shortEligible ρ d a, ∀ r ∈ shortWindowRadii d a, ¬ IsGoodAnnulusEvent (μ ω) c₀ C r z}`.

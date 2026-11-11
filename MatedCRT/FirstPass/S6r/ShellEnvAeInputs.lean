@@ -4,7 +4,7 @@ import MatedCRT.Proofs.Infra.LocallyFinite
 import MatedCRT.FirstPass.S4S6c.TraceInputs68
 
 /-!
-# Inputs of the shell order on the environment (`ShellEnvAeInputs`, task fp-S6r-shell-order-inputs)
+# Inputs of the shell order on the environment (`ShellEnvAeInputs`)
 
 `shell_order_env_ae` (ShellEnvAe) takes two binders about the walk on `S.mult ε ω` from `a`:
 

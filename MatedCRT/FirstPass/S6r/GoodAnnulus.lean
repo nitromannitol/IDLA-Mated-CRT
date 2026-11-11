@@ -1,7 +1,7 @@
 import HarmonicBalls.Defs.Notation
 
 /-!
-# Scale-covariant good-annulus event (chat 188, §3 `S1_correctedGoodAnnulus`): deterministic part
+# Scale-covariant good-annulus event (§3 `S1_correctedGoodAnnulus`): deterministic part
 
 For a locally finite measure `μ` on `ℂ` (for the paper, `μ = μ_h`, the LQG measure) write
 `𝔸 = 𝔸_{R,2R}(z) = annulus z R (2R)` (`HarmonicBalls.annulus`: the open annulus `{R < |u - z| < 2R}`), and
@@ -12,7 +12,7 @@ For a locally finite measure `μ` on `ℂ` (for the paper, `μ = μ_h`, the LQG 
 * `ScaleCovGoodAnnulusEvent c0 C R z μ = {0 < m_R^φ < ∞, N_R ≤ C m_R^φ}`.
 
 This is the corrected good-annulus event of Lemmas 6.4/6.5. It replaces the printed unscaled, signed kernel
-`log (1/|u-v|) + 1` ([C5], repair in `notes/fp-gaps/CHATGPT-lemma68-open-parts.md` §A4).
+`log (1/|u-v|) + 1` ([C5]).
 
 Proved here (deterministic):
 * `scaleCovGoodAnnulusEvent_smul_iff`: the event is invariant under `μ ↦ a μ`, `a > 0` (§3 item 2);
@@ -58,7 +58,7 @@ noncomputable def printedKernel (v u : ℂ) : ℝ≥0∞ :=
 noncomputable def covN (R : ℝ) (z : ℂ) (μ : Measure ℂ) : ℝ≥0∞ :=
   ⨆ v ∈ closure (annulus z R (2 * R)), ∫⁻ u in annulus z R (2 * R), covKernel R v u ∂μ
 
-/-- `L_R(z; μ) = sup_{v ∈ closure 𝔸} ∫_𝔸 (log (1/|u-v|) + 1) dμ(u)` (the `L_R` of §1 of the chat 188 answer). -/
+/-- `L_R(z; μ) = sup_{v ∈ closure 𝔸} ∫_𝔸 (log (1/|u-v|) + 1) dμ(u)` (the `L_R` of §1). -/
 noncomputable def printedL (R : ℝ) (z : ℂ) (μ : Measure ℂ) : ℝ≥0∞ :=
   ⨆ v ∈ closure (annulus z R (2 * R)), ∫⁻ u in annulus z R (2 * R), printedKernel v u ∂μ
 
@@ -74,7 +74,7 @@ noncomputable def massBumpR (c0 R : ℝ) (z : ℂ) (μ : Measure ℂ) : ℝ≥0�
 def ScaleCovGoodAnnulusEvent (c0 C R : ℝ) (z : ℂ) (μ : Measure ℂ) : Prop :=
   0 < massBumpR c0 R z μ ∧ massBumpR c0 R z μ < ⊤ ∧ covN R z μ ≤ ENNReal.ofReal C * massBumpR c0 R z μ
 
-/-- **Named hypothesis, not proved here** (§3 item 3 of chat 188, from the corrected Lemma 6.4/6.5): a uniform lower
+/-- **Named hypothesis, not proved here** (§3 item 3, from the corrected Lemma 6.4/6.5): a uniform lower
 bound `p ≤ P(G_{R,z}(C))` for all `R > 0` and `z ∈ ℂ`. Translation and dilation invariance of the whole-plane GFF gives
 the independence of `(R, z)`; the positivity at one annulus is the prevalence input. -/
 def ScaleCovUniformPrevalenceStmt {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (μ : Ω → Measure ℂ)

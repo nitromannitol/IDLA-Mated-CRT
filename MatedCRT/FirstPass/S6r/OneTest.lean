@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-# One-test estimate (chat 188, §3 `S5_oneTest`): the deterministic part
+# One-test estimate (§3 `S5_oneTest`): the deterministic part
 
 For a measure `P` (for the paper, the conditional law given `(h, η)`) and a measurable one-test variable
 `V : Ω → ℝ≥0∞`:
@@ -18,7 +18,7 @@ value of `m_R^φ` (positive and finite on the good event). `V` is abstract: the 
 
 Terminology: second-moment (Paley-Zygmund) method; Armstrong-Kuusi-Mourrat (good annuli and one-test estimates).
 
-## Conditional form and the hypothesis `hone` (notes (8.4), task fp-S6r-S5-one-test)
+## Conditional form and the hypothesis `hone`
 
 `oneTest_hone_shell` is the one-test estimate (7.50) in the form consumed by `prefix_bad_bound`
 (`hone` of `S6r/Amplification.lean`): with `𝓖 = 𝓕_{T_k}`, `P = prefixSet`, `F = testFailSet`, `q = q0/(1 + log(1/r))²`
@@ -74,7 +74,7 @@ theorem paley_zygmund_sq (P : Measure Ω) {V : Ω → ℝ≥0∞} (hV : Measurab
     _ = (∫⁻ ω, V ω ^ 2 ∂P) * P {ω | V ω ≠ 0} := by
       rw [mul_pow, rpow_half_sq, rpow_half_sq]
 
-/-- (S5.3) of chat 188 §7: the one-test lower bound `P{V ≠ 0} ≥ c²/(C (1 + log(1/R))²)` from the first moment (S5.1) and
+/-- (S5.3): the one-test lower bound `P{V ≠ 0} ≥ c²/(C (1 + log(1/R))²)` from the first moment (S5.1) and
 the second moment (S5.2); `0 < R ≤ 1` makes `1 + log(1/R) ≥ 1 > 0`. -/
 theorem oneTest_prob_lower {c C ε m R : ℝ} (hc : 0 < c) (hC : 0 < C) (hε : 0 < ε) (hm : 0 < m)
     (hR : 0 < R) (hR1 : R ≤ 1) (P : Measure Ω) {V : Ω → ℝ≥0∞} (hV : Measurable V)
@@ -104,7 +104,7 @@ theorem oneTest_prob_lower {c C ε m R : ℝ} (hc : 0 < c) (hC : 0 < C) (hε : 0
   rw [← hratio, ENNReal.ofReal_div_of_pos hb0]
   exact ENNReal.div_le_of_le_mul hmain
 
-/-- (S5.4) of chat 188 §7: for `r² ≤ R ≤ 1`, `log(1/R) ≤ 2 log(1/r)`, so the one-test bound has the form
+/-- (S5.4): for `r² ≤ R ≤ 1`, `log(1/R) ≤ 2 log(1/r)`, so the one-test bound has the form
 `q(r) / (1 + log(1/r))²` with `q = c²/(4C)`. -/
 theorem oneTest_prob_lower_log {c C ε m r R : ℝ} (hc : 0 < c) (hC : 0 < C) (hε : 0 < ε) (hm : 0 < m)
     (hr : 0 < r) (hr1 : r ≤ 1) (hRr : r ^ 2 ≤ R) (hR : 0 < R) (hR1 : R ≤ 1)

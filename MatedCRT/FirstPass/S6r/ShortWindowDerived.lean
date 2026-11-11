@@ -5,10 +5,10 @@ import MatedCRT.Steps.Sec6.AnnulusHit
 import MatedCRT.Steps.Sec6.GoodAnnulusPrevalence
 
 /-!
-# hprev of the short-window good-radius prevalence, with the whole-plane steps derived (fp-S6r-shortwindow-derived)
+# hprev of the short-window good-radius prevalence, with the whole-plane steps derived
 
-Follow-up to `ShortWindowFrozen.lean` (`hprev_of_shortWindow_frozen`), following the repair plan of chat 230
-(`notes/fp-gaps/CHATGPT-230-idla-z12-shortwindow-steps-PRO.md`, section 2 and section 4, patch items 2 and 4).
+Follow-up to `ShortWindowFrozen.lean` (`hprev_of_shortWindow_frozen`), following the repair plan
+(patch items 2 and 4).
 
 * Item 4 (`coneMeanZeroRestriction_of_fullB1Law`): `ConeMeanZeroRestrictionStep` from the full field law on `B_1`
   (`ConeWholePlaneFieldLawStep`, the frozen `FPConeWholePlaneFieldLaw`) by the measurable projection onto the
@@ -71,7 +71,7 @@ theorem sdw_isLQGLimit_shift {γ κ : ℝ} {g : ℝ → ℂ → ℝ} {ν : Measu
   rw [integral_smul_measure, ENNReal.toReal_ofReal (Real.exp_pos _).le, smul_eq_mul]
   exact Tendsto.congr (fun k => (key k).symm) ((h.tendsto_integral f hf hc).const_mul _)
 
-/-- The coordinate-change constant `κ = h_r(z) + Q log r` of the affine map `x ↦ r x + z` (chat 230, section 2),
+/-- The coordinate-change constant `κ = h_r(z) + Q log r` of the affine map `x ↦ r x + z`,
 for a circle-average family `h`: the circle averages of `h(r · + z) - h_r(z)` plus `κ` are those of
 `h(r · + z) + Q log r`. -/
 noncomputable def sdw_coordKappa (γ r : ℝ) (z : ℂ) (h : ℝ → ℂ → ℝ) : ℝ :=
@@ -114,7 +114,7 @@ theorem wholePlaneLQGCoordinateChangeStep_of_coordChange (hCC : MatedCRT.S2VG.Li
       add_neg_cancel, Real.exp_zero, ENNReal.ofReal_one, one_smul]
 
 /-- The mean-zero pairing projection: from the pairings and circle averages on `B_1` to the pairings with the
-test functions `φ` supported in `B_1` with `∫ φ = 0` (the measurable projection of chat 230, section 4). -/
+test functions `φ` supported in `B_1` with `∫ φ = 0` (the measurable projection). -/
 def sdw_meanZeroProjection :
     ((TestB1 → ℝ) × (CircleB1 → ℝ)) →
       ({φ : ℂ → ℝ // IsTestFunction (ball (0 : ℂ) 1) φ ∧ ∫ x, φ x = 0} → ℝ) :=

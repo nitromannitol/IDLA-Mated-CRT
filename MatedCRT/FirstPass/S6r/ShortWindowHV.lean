@@ -5,9 +5,9 @@ import MatedCRT.Steps.Sec6.AnnulusHit
 import HarmonicBalls.Proofs.GFF.CircleAverageLognormalMoments
 
 /-!
-# `hV = WholePlaneUpperVolumeTailStep`, derived from the ball-mass input (fp-S6r-hV-derived, z1)
+# `hV = WholePlaneUpperVolumeTailStep`, derived from the ball-mass input
 
-Chat 230, section 3 (`notes/fp-gaps/CHATGPT-230-idla-z12-shortwindow-steps-PRO.md`), patch item 3. The upper volume tail
+Patch item 3. The upper volume tail
 of the whole-plane LQG measure follows from three inputs:
 * `LitWholePlaneBallMass` (Ding-Gwynne, arXiv:1807.01072, Lemma 3.8, eq. (3.14)): the ball masses of the unit square
   are at most `ε` with polynomially high probability, for the normalized whole-plane field;
@@ -39,7 +39,7 @@ theorem coordKappa_eq_of_pos (γ r : ℝ) (hr : 0 < r) (z : ℂ) (h : ℝ → �
   unfold sdw_coordKappa
   rw [Complex.norm_real, Real.norm_of_nonneg hr.le]
 
-/-- **Explicit affine coordinate change (chat 230, section 3).** For a whole-plane GFF `(hC, hcirc)` with LQG measure
+/-- **Explicit affine coordinate change.** For a whole-plane GFF `(hC, hcirc)` with LQG measure
 `μ` and `r > 0`, the push-forward of `μ` under `x ↦ (x - z)/r` is `e^{γκ}` times the LQG measure `μ''` of the
 normalized whole-plane field `h(r · + z) - κ`, where `κ = h_r(z) + Q log r`. The multiplier is kept explicit. The proof
 is that of `wholePlaneLQGCoordinateChangeStep_of_coordChange` (`ShortWindowDerived.lean:85`), with the multiplier
@@ -134,7 +134,7 @@ theorem coordFactor_markov (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC
   rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top, hlin, ← ENNReal.ofReal_mul hk0.le,
     ENNReal.ofReal_div_of_pos ht]
 
-/-- **Affine ball-mass transfer and the upper volume tail (chat 230, section 3; `hV` derived).** Under the cited
+/-- **Affine ball-mass transfer and the upper volume tail (`hV` derived).** Under the cited
 ball-mass bounds `LitWholePlaneBallMass` and the cited coordinate change `LitCoordChange`, the whole-plane upper
 volume tail `WholePlaneUpperVolumeTailStep` holds: `μ(B_s(z)) ≤ s^{α/2}` for all `z ∈ B_3`, outside an event of
 probability `O(s^q)`. -/
@@ -279,7 +279,7 @@ theorem wholePlaneUpperVolumeTailStep_of_ballMass (hBM : MatedCRT.S2VG.LitWholeP
     _ = ENNReal.ofReal ((K1 + |C|) * s ^ (min (α / 2) (α * p))) := by
         rw [← ENNReal.ofReal_add hK1s hCs, ← add_mul]
 
-/-- **`hprev_of_shortWindow_noH0` with `hV` discharged (fp-S6r-hV-derived; operator note of lead li, 12:55 UTC).**
+/-- **`hprev_of_shortWindow_noH0` with `hV` discharged.**
 The frozen input `hV : FPWholePlaneUpperVolumeTail` of `hprev_of_shortWindow_noH0` (`ShortWindowH0.lean:62`) is replaced
 by `wholePlaneUpperVolumeTailStep_of_ballMass hBM hCC`. The frozen Prop `FPWholePlaneUpperVolumeTail` is by definition
 `WholePlaneUpperVolumeTailStep` (`FirstPass/Frozen/S5S6S7.lean:38`), so the term is accepted without a conversion.

@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# S0: the constants of Lemma 6.8 on the short-window route (fp-S6r)
+# S0: the constants of Lemma 6.8 on the short-window route
 
-Written argument: `notes/fp-gaps/CHATGPT-idla-6-8-redesign.md` §2 (`S0_constants`, lines 86-121). The constants are
+The constants are
 fixed once, as functions of `(γ, ρ)` only, before `s₀` and before `ε`:
 * `βm`: the volume exponent `β⁻ > (2+γ)²/2` (Lemma 2.7, `VolumeGrowthStmt`, the lower bound `δ^{βm} ≤ μ(B_δ)`);
 * `ω`: the mesh exponent `ω₀ > 0` of Lemma 6.8 (`10 ε^{ω₀} ≤ r`);
@@ -11,7 +11,7 @@ fixed once, as functions of `(γ, ρ)` only, before `s₀` and before `ε`:
   `Cg`: the corrected good-annulus constant (`IsGoodAnnulusEvent`, Lemma 6.4 as corrected in S1);
 * `ζ ∈ (0, 1/2)`: the short-window exponent, with `a = shortExp ζ = (1 + ζ)/2 ∈ (1/2, 3/4)`;
 * `c0`: the ball ratio, with `c0 ≤ 1/24` (so that the instance of Lemma 2.16 at radius `r = R/8` covers
-  `V(B_{c0 R})`; this is flag 1 of round 26) and `c0 ≤ exp(-2C)/16` as in `perState_local_bound`;
+  `V(B_{c0 R})`) and `c0 ≤ exp(-2C)/16` as in `perState_local_bound`;
 * `s1`: the sparsity constant with `44 s1 ≤ c0^βm` (as in `perState_local_bound`); `s2 = 1/2`.
 
 The exponent conditions on `ω` in §2 of the redesign (mesh errors of Lemmas 2.8, 2.9, 2.16, 2.18) concern the

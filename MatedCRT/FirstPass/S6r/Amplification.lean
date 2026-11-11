@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S6r.Constants
 /-!
 # 6.8 redesign, S8': strong-Markov shell amplification (steps 10-14)
 
-Source: `notes/fp-gaps/CHATGPT-idla-6-8-shells.md`, section 8' (l.708-972).
+
 Index convention: the notes' shells and tests `j = 1, ..., N` are the Lean indices
 `k = 0, ..., n` with `N = n + 1`; `shell_chain_bound` has `n + 1` tests.
 

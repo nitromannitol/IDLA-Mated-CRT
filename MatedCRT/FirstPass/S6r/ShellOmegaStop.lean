@@ -37,7 +37,7 @@ theorem isStoppingTime_shellHit (k : ℕ) :
     IsStoppingTime coordFiltration (shellHit ε η K r s k) :=
   isStoppingTime_of_prefixLocal (shellHit_prefixLocal ε η K r s k)
 
-/-- PRO step 12: the shell exit `T_k` is a stopping time of the coordinates. -/
+/-- The shell exit `T_k` is a stopping time of the coordinates. -/
 theorem isStoppingTime_shellExit (k : ℕ) :
     IsStoppingTime coordFiltration (shellExit ε η K r s d R k) :=
   isStoppingTime_of_prefixLocal (shellExit_prefixLocal ε η K r s d R k)

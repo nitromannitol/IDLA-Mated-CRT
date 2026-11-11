@@ -1,16 +1,16 @@
 import MatedCRT.FirstPass.S6r.Constants
 
 /-!
-# S2 and S3: the dyadic scale, the short window and the three scale relations (fp-S6r)
+# S2 and S3: the dyadic scale, the short window and the three scale relations
 
-Written argument: `notes/fp-gaps/CHATGPT-idla-6-8-redesign.md` §4 `S2_goodRadiusShortWindow` (lines 165-214) and
+The statement `S2_goodRadiusShortWindow` and
 §5 `S3_scaleRelations` (lines 215-245).
 
 * `dyadicD r` is the dyadic scale `d(r) = 2^{-⌊log₂(1/r²)⌋}` with `r² ≤ d(r) < 2r²` (S2.1).
 * The short window of test radii is `[d, d^a]`, `a = shortExp ζ = (1+ζ)/2` (S2.2). `winSelect` is the first-good-radius
   choice among the seven-adic candidates `7^{-m}` of the short window (default `d`), the analogue of `firstGoodRadius`
   for the window. The prevalence statement (S2.3: some candidate is good, for all eligible `z`) is NOT proved here; it
-  enters later as a named hypothesis on the `good` predicate, from the corrected good-annulus event (S1, z12) and
+  enters later as a named hypothesis on the `good` predicate, from the corrected good-annulus event (S1) and
   GM Lemma 3.1 / printed 6.6.
 * S3 (the three relations of §5): `r² ≤ R` (S3.1), `R ≤ 2 r^{1+ζ}` (S3.2), and `c₀R < r` (S3.3, under the deterministic
   cutoff `2 c₀ r^ζ < 1`, i.e. `r < (1/(2c₀))^{1/ζ}`).

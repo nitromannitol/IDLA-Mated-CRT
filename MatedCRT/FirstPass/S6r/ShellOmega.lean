@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S6r.Shells.Parameters
 /-!
 # Lemma 6.8, S8' on path space: the shell times `T k`, `L k` as stopping times
 
-Source: `notes/fp-gaps/CHATGPT-idla-6-8-redesign-PRO.md` step 12 (l.634-679) and notes (7.33)-(7.35).
+Equations (7.33)-(7.35).
 Path space `Ω = ℕ → ℤ` with the coordinate filtration `coordFiltration` (`WalkBridge68.lean:33`).
 
 All shell times are `ℕ∞`-valued path functionals, `⊤` when the event never occurs:
@@ -103,7 +103,7 @@ noncomputable def shellHit (k : ℕ) (x : ℕ → ℤ) : ℕ∞ :=
 noncomputable def shellCentre (k : ℕ) (x : ℕ → ℤ) : ℂ :=
   gridRound (d / 100) (vertexPoint ε η (x (shellHit ε η K r s k x).toNat))
 
-/-- Notes (7.33), PRO step 12: the first exit `T_k` of `I(B_{4R/3}(z_k))` at or after the hit `C_{k+1}`. -/
+/-- Equation (7.33): the first exit `T_k` of `I(B_{4R/3}(z_k))` at or after the hit `C_{k+1}`. -/
 noncomputable def shellExit (k : ℕ) (x : ℕ → ℤ) : ℕ∞ :=
   firstTime (fun m => shellHit ε η K r s k x ≤ (m : ℕ∞) ∧
     x m ∉ interiorCellVertices ε η (ball (shellCentre ε η K r s d k x) (4 * R (shellCentre ε η K r s d k x) / 3)))

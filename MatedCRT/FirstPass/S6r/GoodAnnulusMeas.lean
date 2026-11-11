@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S6r.GoodAnnulus
 
 /-!
-# Measurability of the scale-covariant good-annulus event (chat 188, §3 item 1)
+# Measurability of the scale-covariant good-annulus event (§3 item 1)
 
 Companion of `GoodAnnulus.lean` (namespace `MatedCRT.Lemma68Window`). Notation: `𝔸 = annulus z R (2R)`,
 `covN` = `N_R`, `massBumpR` = `m_R^φ`, `ScaleCovGoodAnnulusEvent c0 C R z`.

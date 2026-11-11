@@ -3,7 +3,7 @@ import MatedCRT.Proofs.Sec6.GoodAnnulusPrevalence.Counting
 import MatedCRT.Proofs.Field.LawTransferComplete
 
 /-!
-# Short-window good-radius prevalence (PRO step 3, `short_window_good_radius_prevalence`; chat 188 S2.3)
+# Short-window good-radius prevalence (`short_window_good_radius_prevalence`)
 
 For `0 < a < 1` and a small `d ∈ (0,1)`, the candidate radii are the seven-adic points of the short window
 `[d, d^a]` (`shortWindowRadii`), and the eligible centres are the grid points `(d/100) ℤ²` in
@@ -24,7 +24,7 @@ and rate changed:
 Named inputs (hypotheses, as in S6p): the annulus-iteration statement `AnnulusIterateStmt` (Draft/Section6), the
 one-annulus hit bound `AnnulusHitUniformStmt` (S6p; the chat's "choose `C_G` so that the one-annulus probability exceeds
 `p(α_mix)`"), the cone transfer `AnnulusIterateConeTransferStep` and the locality `GoodAnnulusEventLocalityStep`.
-Borel-Cantelli (the random cutoff `d_*(h)` of PRO step 3) is in `shortWindow_borel_cantelli`.
+Borel-Cantelli (the random cutoff `d_*(h)` ) is in `shortWindow_borel_cantelli`.
 
 Terminology: Armstrong-Kuusi-Mourrat (good annuli, annulus iteration), Berestycki-Powell and Duplantier-Sheffield (LQG
 measure, cone fields), Armitage-Gardiner (potential theory).
@@ -47,15 +47,15 @@ noncomputable def shortCount (d a : ℝ) : ℕ :=
 /-- The radii `r_k = 7^{-(s + 2k)}`. -/
 noncomputable def shortRadius (d a : ℝ) (k : ℕ) : ℝ := (7 : ℝ)⁻¹ ^ (shortStart d a + 2 * k)
 
-/-- The seven-adic radii of the short window `[d, d^a]` (PRO step 3, `ℛ_d`). -/
+/-- The seven-adic radii of the short window `[d, d^a]` (`ℛ_d`). -/
 def shortWindowRadii (d a : ℝ) : Set ℝ := {r | (∃ n : ℕ, r = (7 : ℝ)⁻¹ ^ n) ∧ d ≤ r ∧ r ≤ d ^ a}
 
-/-- The eligible centres `Z_d = (d/100) ℤ² ∩ (B_{ρ-3s} \ B_{10s})`, `s = d^a` (PRO step 3). -/
+/-- The eligible centres `Z_d = (d/100) ℤ² ∩ (B_{ρ-3s} \ B_{10s})`, `s = d^a`. -/
 def shortEligible (ρ d a : ℝ) : Set ℂ :=
   {z | z ∈ ball (0 : ℂ) (ρ - 3 * d ^ a) \ ball 0 (10 * d ^ a) ∧
     ∃ m n : ℤ, z = ((d / 100 : ℝ) : ℂ) * (m + n * Complex.I)}
 
-/-- **PRO step 3** (`short_window_good_radius_prevalence`): for every `a ∈ (0,1)`, `γ`, `c₀`, there are `C` (the
+/-- (`short_window_good_radius_prevalence`): for every `a ∈ (0,1)`, `γ`, `c₀`, there are `C` (the
 constant of the good event) and `C'` such that, for every whole-plane cone field, every `ρ ∈ (0,1)` and every
 `d ∈ (0,1)`, the probability that some eligible centre has no good seven-adic radius in `[d, d^a]` is at most `C' d⁶`. -/
 def ShortWindowGoodRadiusPrevalenceStmt : Prop :=
@@ -118,7 +118,7 @@ lemma shortRadius_ge {d a : ℝ} (hd : 0 < d) (k : ℕ) (hk1 : 1 ≤ k) (hK : k 
   push_cast
   nlinarith
 
-/-- The count bound `K ≥ (1-a) L / (2 log 7) - 3/2` (PRO step 3: `K(d) ≥ (1-a) log(1/d)/log 7 - 2`, on even scales). -/
+/-- The count bound `K ≥ (1-a) L / (2 log 7) - 3/2` (`K(d) ≥ (1-a) log(1/d)/log 7 - 2`, on even scales). -/
 lemma shortCount_ge {d a : ℝ} (hd : 0 < d) (hd1 : d < 1) (ha : 0 < a) :
     (1 - a) * (-Real.log d) / (2 * Real.log 7) - 3 / 2 ≤ (shortCount d a : ℝ) := by
   have hX : 0 ≤ a * (-Real.log d) / Real.log 7 :=
@@ -164,13 +164,13 @@ lemma card_shortGrid (M : ℕ) :
   rw [Finset.card_product, Int.card_Icc, show ((M : ℤ) + 1 - -(M : ℤ)).toNat = 2 * M + 1 by omega]
   ring
 
-/-- **Borel-Cantelli form of PRO step 3** (the random cutoff): if the bad events have summable probabilities along the
+/-- **Borel-Cantelli form** (the random cutoff): if the bad events have summable probabilities along the
 dyadic scales, then almost surely only finitely many dyadic scales are bad. -/
 theorem shortWindow_borel_cantelli {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (B : ℕ → Set Ω)
     (hsum : ∑' k : ℕ, P (B k) ≠ ⊤) : ∀ᵐ ω ∂P, ∀ᶠ k in atTop, ω ∉ B k :=
   ae_eventually_notMem hsum
 
-/-- **PRO step 3 (short-window good-radius prevalence)**, from the named annulus inputs of S6p. -/
+/-- **Short-window good-radius prevalence**, from the named annulus inputs of S6p. -/
 theorem shortWindow_prevalence_of_steps (h66 : AnnulusIterateStmt) (h65 : FirstPass64.AnnulusHitUniformStmt)
     (hT : AnnulusIterateConeTransferStep) (hL : GoodAnnulusEventLocalityStep) :
     ShortWindowGoodRadiusPrevalenceStmt := by
@@ -289,7 +289,7 @@ theorem shortWindow_prevalence_of_steps (h66 : AnnulusIterateStmt) (h65 : FirstP
     _ ≤ ENNReal.ofReal (201 ^ 2 * C₆ * Real.exp (24 * Real.log 7 / (1 - a)) * d ^ 6) :=
         ENNReal.ofReal_le_ofReal hreal
 
-/-- **PRO step 3, with the annulus iteration discharged**: `AnnulusIterateStmt` is the unconditional theorem
+/-- **Annulus iteration discharged**: `AnnulusIterateStmt` is the unconditional theorem
 `MatedCRT.annulusIterate` (`Proofs/Field/LawTransferComplete.lean`). The remaining named inputs are the one-annulus hit
 bound `FirstPass64.AnnulusHitUniformStmt` (S6p; from `firstPass_6_5_uniform` with its frozen inputs), the cone transfer
 `AnnulusIterateConeTransferStep` (needs the Step `ConeMeanZeroRestrictionStep`) and the locality

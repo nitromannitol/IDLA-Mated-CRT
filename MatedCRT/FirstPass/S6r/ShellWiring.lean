@@ -4,15 +4,15 @@ import MatedCRT.FirstPass.S6r.Shells
 /-!
 # Lemma 6.8, S8' wiring: the shell hypotheses `hTT`, `hLT`, `hcross`, `hend` (pathwise)
 
-Source: `notes/fp-gaps/CHATGPT-idla-6-8-shells.md`, steps 4-9 (displayed (7.20)-(7.41)).
+Steps 4-9 (displayed (7.20)-(7.41)).
 Index convention of `Amplification.lean`: shells and tests `k = 0, ..., n`; the notes' shell `Σ_{k+1}`
 has offset `shellOffset s (k+1) = 20 (k+1) s`, and `N = n + 1`.
 
 For one walk `x : ℕ → ℤ` (one sample path; the probabilistic layer applies it pathwise):
-* `hitTime ε η K r s x k` is the first hitting index `C_{k+1}` of `Σ_{k+1}` (z10, step 4, `firstShellHit`);
+* `hitTime ε η K r s x k` is the first hitting index `C_{k+1}` of `Σ_{k+1}` (step 4, `firstShellHit`);
 * `T k` is the first exit time of `I(B_{4R_k/3}(z_k))` after `hitTime k` (ShellTest, steps 6-7);
 * `L k` is the first exit time of `I(B_{R_k/4}(η(X_{T_k})))` after `T k` (ShellTest, steps 7-8);
-* `z_k = gridRound (d/100) (vertexPoint (x (hitTime k)))`, `R_k = R z_k` (z10, step 5, `shell_hit_choose_center`).
+* `z_k = gridRound (d/100) (vertexPoint (x (hitTime k)))`, `R_k = R z_k` (step 5, `shell_hit_choose_center`).
 
 The first-exit properties of `T`, `L` are hypotheses of `shell_chain_pathwise` (they characterise the
 stopping times; the probabilistic layer supplies them).
@@ -186,8 +186,8 @@ lemma last_shell_mem_U (hηc : Continuous η) (hε : 0 ≤ ε) (x : ℕ → ℤ)
   exact level_window hlam hs4 (by linarith)
 
 /-- Pathwise chain (notes (7.33), (7.38), (7.39), steps 4-9 of S7'). For a walk `x` with exit index `τ`
-(`x τ ∉ U`) and the mesh hypotheses of z10 and `CellDiamLe` on the shell balls, the first hitting times
-`hitTime k` (z10, step 4), the shell centres (z10, step 5, `shell_hit_choose_center`) and the first exit times
+(`x τ ∉ U`) and the mesh hypotheses `CellDiamLe` on the shell balls, the first hitting times
+`hitTime k` (step 4), the shell centres (step 5, `shell_hit_choose_center`) and the first exit times
 `T k`, `L k` (steps 6-8) satisfy:
 * `T k ≤ T (k+1)` and `L k ≤ T (k+1)` for `k < n` (the pathwise forms of `hTT`, `hLT`, via
 `T k < C_{k+1} < T_{k+1}` and `L k < C_{k+1}`), and `T n < τ`, `L n ≤ τ` (`hcross`, `hend`), in `ℕ∞`. -/
@@ -216,7 +216,7 @@ theorem shell_chain_pathwise {K : Set ℂ} {r s d h ε : ℝ} {η : ℝ → ℂ}
     (∀ k < n, (T k : ℕ∞) ≤ (T (k + 1) : ℕ∞) ∧ (L k : ℕ∞) ≤ (T (k + 1) : ℕ∞)) ∧
       (∀ k < n, T k < L k ∧ L k < hitTime ε η K r s x (k + 1)) ∧
       (T n : ℕ∞) < (τ : ℕ∞) ∧ (L n : ℕ∞) ≤ (τ : ℕ∞) := by
-  -- step 4 (z10): all shells are hit before τ, and the hitting times strictly increase
+  -- step 4: all shells are hit before τ, and the hitting times strictly increase
   have hhs : h ≤ s / 100 := le_trans hh hds
   have hbad := bad_path_crosses_all_shells hKne hε hη hr hs hhs x τ (n + 1) Θv hΘv hτ
     (fun m _ => hadj m) hstart hdiam hNs
@@ -229,7 +229,7 @@ theorem shell_chain_pathwise {K : Set ℂ} {r s d h ε : ℝ} {η : ℝ → ℂ}
     intro k hk
     obtain ⟨m, -, hm⟩ := hhit (k + 1) (by omega) (by omega)
     exact firstShellHit_mem hm
-  -- step 5 (z10, `shell_hit_choose_center`): the centre `z_k` and the good radius `R_k`
+  -- step 5 (`shell_hit_choose_center`): the centre `z_k` and the good radius `R_k`
   have hsc : ∀ k ≤ n, (∃ y ∈ twoSidedShell K r (shellOffset s (k + 1)),
       dist (zc k) y ≤ R (zc k) / 50) ∧
       (∀ p ∈ cell ε η (x (hitTime ε η K r s x k)), dist p (zc k) < 4 * R (zc k) / 3) ∧

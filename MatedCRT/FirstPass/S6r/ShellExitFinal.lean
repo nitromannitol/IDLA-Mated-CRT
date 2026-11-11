@@ -13,7 +13,7 @@ form of the conclusion of `Lemma68ShellPathAe.shell_ineqs_ae` (ShellPathAe, comm
 imported here, because its import closure (GoodScale: `MatedCRT.measurable_logKernel`) clashes with the one of
 WalkBridge68 (GoodAnnulusHF68). Once the clash is resolved, `hShell` is discharged by `shell_order_env_ae` (ShellEnvAe) for a.s. `ω`, or by
 `shell_ineqs_ae` (with `hmap`, `hlf`, `hcons`, its hae (d), (e)) and `exitQ_le_pow_shell` becomes unconditional
-except for the one-test bound `hone` (z8, S6r/OneTest) and the environment `hlf`, `hcons`.
+except for the one-test bound `hone` (S6r/OneTest) and the environment `hlf`, `hcons`.
 -/
 
 namespace MatedCRT
@@ -25,7 +25,7 @@ open MatedCRT.Lemma68WalkBridge MatedCRT.Lemma68ChainAe
 open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe
 
 /-- **Lemma 6.8, shell form.** For the shell times `T k = shellExit k`, `L k = testEnd k` of `ShellOmega`,
-`exitQ ≤ (1 - q) ^ (n + 1)`, given the one-test bound `hone` (z8), the four almost-sure shell-order inequalities
+`exitQ ≤ (1 - q) ^ (n + 1)`, given the one-test bound `hone`, the four almost-sure shell-order inequalities
 (named inputs, discharged by `shell_ineqs_ae` after the import clash), and the environment finiteness hypotheses
 `hlf`, `hcons` of the multigraph `S.mult ε ω`. -/
 theorem exitQ_le_pow_shell {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ε : ℝ) (ω : Ω) (r s d : ℝ)

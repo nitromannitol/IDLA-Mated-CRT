@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.S6r.Window
 import MatedCRT.FirstPass.S6j.StateLocal
 
 /-!
-# S4: the local A-budget from the radius-`r` sparsity, and the per-state bound in the short window (fp-S6r)
+# S4: the local A-budget from the radius-`r` sparsity, and the per-state bound in the short window
 
-Written argument: `notes/fp-gaps/CHATGPT-idla-6-8-redesign.md` §6 `S4_localABudget` (lines 246-302).
+
 
 Let `x = η(b)` and `R = R_z(d)` with `R` in the short window of `r` (`Window.lean`). Since `c₀R < r`, the ball
 `B_{c₀R}(x)` lies in `B_r(x)`, so the Lemma 6.8 sparsity hypothesis at the centre `x` and radius `r` bounds the local
