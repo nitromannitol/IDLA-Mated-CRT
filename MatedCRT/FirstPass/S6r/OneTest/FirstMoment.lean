@@ -8,16 +8,15 @@ import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.Visit
 /-!
 # The first moment of the one-test count (`one_test_from_boundary`)
 
-Equations B8, B10, B13, B14.
 Notation: `x = η(y)`, `D = B_{R/4}(x)`, `D₀ = B_{c₀R}(x)`, `ID` the discrete interior `I(D)` (exit set of `σ_D`),
 `m₀ = μ(D₀)`, `S = V^ε(D₀) \ A`.
 
-* (B13) Green lower bound at each `b ∈ S`: `1/2 ≤ G_{I(D)}(y, b)`, from Lemma 2.16 at radius `R/8`
+* Green lower bound at each `b ∈ S`: `1/2 ≤ G_{I(D)}(y, b)`, from Lemma 2.16 at radius `R/8`
   (`GreenTest68.hG_of_green`, which needs the ω-wise Lemma 2.16 input `hGr`).
-* (B14) `E_y[V_occ] ≥ ∑_{b∈S} G_{I(D)}(y,b) ≥ |S|/2`: pathwise `V_occ ≥ ∑_{b∈S} visits_b` (up to the null set
+* `E_y[V_occ] ≥ ∑_{b∈S} G_{I(D)}(y,b) ≥ |S|/2`: pathwise `V_occ ≥ ∑_{b∈S} visits_b` (up to the null set
   `{σ_D = ∞}`) and Tonelli (`lintegral_tsum`).
-* (B10) `|S| ≥ ε⁻¹ m₀/2`: the lower count of Lemma 2.9 with `f = 1` (input `hL29`) and the sparsity at the centre `x`
-  (`localCount_of_ball`), under the scale condition `4ε^α ≤ m₀` (input `hsc`, B2).
+* `|S| ≥ ε⁻¹ m₀/2`: the lower count of Lemma 2.9 with `f = 1` (input `hL29`) and the sparsity at the centre `x`
+  (`localCount_of_ball`), under the scale condition `4ε^α ≤ m₀` (input `hsc`).
 
 Result: `(1/4) ε⁻¹ μ(D₀) ≤ E_y[V_occ]` with `V_occ = occCount A σ_D` (`OneTest/Count.lean`). The constant `1/4` depends
 on no parameter, in particular not on `(γ, ρ)`.
@@ -116,7 +115,7 @@ lemma ae_exitTime_lt_top_fm {m : ℤ → ℤ → ℕ} {ID : Set ℤ} {y : ℤ}
 * `hsp`: the Lemma 6.8 sparsity at every centre, radius `r`; `hvol`: the volume lower bound (Lemma 2.7).
 * `hfinE`: finite expected exit time of `ID` (Lemma 2.18, second display, with Lemma 2.17).
 * `hL29`: the lower count of Lemma 2.9 with `f = 1` on `D₀` (`ε⁻¹ μ(D₀) - ε^{-1+α} ≤ |V^ε(D₀)|`).
-* `hsc`: the scale condition `4 ε^α ≤ μ(D₀)` (B2). -/
+* `hsc`: the scale condition `4 ε^α ≤ μ(D₀)`. -/
 theorem firstMoment_occCount_fm {γ ρ : ℝ} (K : Constants68 γ ρ) {μ : Measure ℂ} {η : ℝ → ℂ}
     {m : ℤ → ℤ → ℕ} {A ID : Set ℤ} {ε R r α : ℝ} {y : ℤ}
     (hη : Continuous η) (hprop : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε)
@@ -140,7 +139,7 @@ theorem firstMoment_occCount_fm {γ ρ : ℝ} (K : Constants68 γ ρ) {μ : Meas
       ≤ ∫ w, occCount A (fun w => (vExitTime ID w).toNat) w ∂(srwLaw m y) := by
   have hfinD : (cellVertices ε η (ball (vertexPoint ε η y) (K.c0 * R))).Finite :=
     S6j.perState_cellVertices_ball_finite hη hprop hε _ _
-  -- the sparsity at the centre `x` (B4/B3: `|A ∩ V(D₀)| ≤ m₀/(4ε)`)
+  -- the sparsity at the centre `x` (`|A ∩ V(D₀)| ≤ m₀/(4ε)`)
   have hloc := localCount_of_ball (μ := μ) (ε := ε) (η := η) (A := A) (x := vertexPoint ε η y)
     (R := R) (r := r) (s1 := K.s1) (β := K.βm) (c0 := K.c0) hε K.hs1.le
     (by linarith [K.one_le_βm]) hr hR K.hc0 hcR hr2 K.hs1small
@@ -154,7 +153,7 @@ theorem firstMoment_occCount_fm {γ ρ : ℝ} (K : Constants68 γ ρ) {μ : Meas
     rw [hS] at hb
     exact hb.2
   have hSfin : S.Finite := hfinD.subset hSV
-  -- (B10): `|S| ≥ ε⁻¹ m₀ / 2`
+  -- `|S| ≥ ε⁻¹ m₀ / 2`
   have hcardSum : ((V \ A).ncard : ℝ) + ((V ∩ A).ncard : ℝ) = V.ncard := by
     have h := Set.ncard_inter_add_ncard_sdiff_eq_ncard V A hfinD
     have h2 : (V \ A).ncard + (V ∩ A).ncard = V.ncard := by rw [add_comm]; exact h
@@ -172,13 +171,13 @@ theorem firstMoment_occCount_fm {γ ρ : ℝ} (K : Constants68 γ ρ) {μ : Meas
     rw [hrpow] at hL29
     rw [hS]
     linarith [e1, e2, hL29, hloc', hcardSum]
-  -- (B13): the Green lower bound `1/2 ≤ G_{I(D)}(y, b)` for `b ∈ S`
+  -- the Green lower bound `1/2 ≤ G_{I(D)}(y, b)` for `b ∈ S`
   have hG : ∀ b ∈ S, ENNReal.ofReal (1 / 2) ≤ ∫⁻ w, visitsBeforeExit ID b w ∂srwLaw m y := by
     intro b hb
     have hbV : b ∈ V := hSV hb
     rw [GreenTest68.lintegral_visits_eq_tsum, hID]
     exact GreenTest68.hG_of_green hη hε hR K.hC K.hc0 K.c0_lt_eighth K.hc0C hεc hdiam hbV (hGr b hbV)
-  -- (B14): Tonelli, `∫⁻ visitCount ID S = ∑_{b∈S} ∫⁻ visits_b`
+  -- Tonelli, `∫⁻ visitCount ID S = ∑_{b∈S} ∫⁻ visits_b`
   have hsum : ∫⁻ w, ConstantOrderDiv.visitCount ID S w ∂srwLaw m y
       = ∑' b : S, ∫⁻ w, visitsBeforeExit ID (b : ℤ) w ∂srwLaw m y := by
     calc ∫⁻ w, ConstantOrderDiv.visitCount ID S w ∂srwLaw m y

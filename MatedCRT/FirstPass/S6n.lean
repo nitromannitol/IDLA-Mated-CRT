@@ -4,17 +4,17 @@ import MatedCRT.FirstPass.S6e.Admissible
 import MatedCRT.FirstPass.S4S6c.Uniform68Round
 
 /-!
-# Lemma 6.8: the deterministic geometry behind C12 (write-up (C1)–(C11))
+# Lemma 6.8: the deterministic geometry behind the strict bound
 
-Source: write-up lines 660–805 (tags (C1)–(C11)).
+Source: the printed Lemma 6.8 (`paper/idla_mated_crt-corrected.tex`).
 The deterministic statements are proved here, as statements about real numbers, points of `ℂ`,
 the grid rounding `Q_δ` (`Uniform68Round.gridRound`) and the schedule's centres and radii
 (`Lemma68Concrete.cfgCentre`, `cfgRadius`).
 
-* (C1) enters as the explicit cutoff bundle `hC1 : r ≤ ρ/100 ∧ s ≤ r/1000 ∧ 10 s < s₀/4 ∧ d ≤ δ/100`
-  with `s = √δ`, `δ > 0`; the write-up says these follow from the final cutoffs.
-* (C6), (C10), (C12) and the good event of A5 (existence of a good radius) are not proved here.
-* The cell-size bound `d` (write-up (C5), (C11)) enters as the hypothesis `∀ u ∈ H, ∀ v ∈ H, dist u v ≤ d`
+* The explicit cutoff bundle `hC1 : r ≤ ρ/100 ∧ s ≤ r/1000 ∧ 10 s < s₀/4 ∧ d ≤ δ/100`
+  with `s = √δ`, `δ > 0`.
+* The remaining cutoff conditions and the good event (existence of a good radius) are not proved here.
+* The cell-size bound `d` enters as the hypothesis `∀ u ∈ H, ∀ v ∈ H, dist u v ≤ d`
   on the cell `H`; the caller supplies it from the cell-size estimate on the good event.
 -/
 
@@ -25,9 +25,9 @@ namespace MatedCRT
 
 namespace Lemma68C12Geom
 
-/-! ### (C2) Borel rounding moves a point strictly less than the mesh -/
+/-! ### Borel rounding moves a point strictly less than the mesh -/
 
-/-- (C2) `|Q_δ(x) − x| ≤ g/√2 < g`: the Borel rounding `Q_δ` with mesh `g > 0` moves `x` by less than `g`. -/
+/-- `|Q_δ(x) − x| ≤ g/√2 < g`: the Borel rounding `Q_δ` with mesh `g > 0` moves `x` by less than `g`. -/
 theorem gridRound_dist_lt {g : ℝ} (hg : 0 < g) (x : ℂ) :
     dist (Uniform68Round.gridRound g x) x < g := by
   have h1 := Uniform68Round.abs_gridRound1_sub_le hg x.re
@@ -48,9 +48,9 @@ theorem gridRound_mem_lattice (g : ℝ) (x : ℂ) :
     ∃ m n : ℤ, Uniform68Round.gridRound g x = ⟨g * m, g * n⟩ :=
   ⟨⌊x.re / g + 1 / 2⌋, ⌊x.im / g + 1 / 2⌋, rfl⟩
 
-/-! ### (C4) The boundary of `K + B_t` -/
+/-! ### The boundary of `K + B_t` -/
 
-/-- (C4) For nonempty compact `K` and `t > 0`: `∂(K + B_t) = {x : dist(x,K) = t}`.
+/-- For nonempty compact `K` and `t > 0`: `∂(K + B_t) = {x : dist(x,K) = t}`.
 Here `K + B_t` is `Metric.thickening t K`. -/
 theorem frontier_thickening_eq {K : Set ℂ} (hK : IsCompact K) (hne : K.Nonempty) {t : ℝ} (ht : 0 < t) :
     frontier (thickening t K) = {x | infDist x K = t} := by
@@ -99,7 +99,7 @@ theorem frontier_thickening_eq {K : Set ℂ} (hK : IsCompact K) (hne : K.Nonempt
       have : infDist x K < t := (infDist_lt_iff hne).2 ⟨z, hz, hzd⟩
       linarith
 
-/-! ### (C5) The distance to `K` is 1-Lipschitz; the level set lies in `B_ρ` -/
+/-! ### The distance to `K` is 1-Lipschitz; the level set lies in `B_ρ` -/
 
 /-- `|dist(x,K) − dist(y,K)| ≤ |x − y|`. -/
 theorem abs_infDist_sub_infDist_le (K : Set ℂ) (x y : ℂ) :
@@ -109,7 +109,7 @@ theorem abs_infDist_sub_infDist_le (K : Set ℂ) (x y : ℂ) :
   · linarith [infDist_le_infDist_add_dist (x := x) (y := y) (s := K), dist_comm x y]
   · linarith [infDist_le_infDist_add_dist (x := y) (y := x) (s := K), dist_comm x y]
 
-/-- (C5) If a cell `H` has diameter at most `d` and meets the level set `{dist(·,K) = t}` at `y`,
+/-- If a cell `H` has diameter at most `d` and meets the level set `{dist(·,K) = t}` at `y`,
 then every point `x₀` of `H` satisfies `|dist(x₀,K) − t| ≤ d`. -/
 theorem abs_infDist_sub_le_of_mem_level {K H : Set ℂ} {d t : ℝ} {x0 y : ℂ}
     (hH : ∀ u ∈ H, ∀ v ∈ H, dist u v ≤ d) (hx0 : x0 ∈ H) (hy : y ∈ H) (hyt : infDist y K = t) :
@@ -128,9 +128,9 @@ theorem norm_lt_of_infDist_eq {K : Set ℂ} (hK : IsCompact K) (hne : K.Nonempty
   have hyk : ‖y - k‖ = t := by rw [← dist_eq_norm, ← hkd, hy]
   linarith
 
-/-! ### (C7), (C8): the centres `z_j` and the window -/
+/-! ### The centres `z_j` and the window -/
 
-/-- (C7) From `|dist(x₀,K) − r/2| ≤ d`, `dist(x_j, x₀) ≤ 3js` and `Ns ≤ r/100` with `j ≤ N`:
+/-- From `|dist(x₀,K) − r/2| ≤ d`, `dist(x_j, x₀) ≤ 3js` and `Ns ≤ r/100` with `j ≤ N`:
 `|dist(x_j,K) − r/2| ≤ d + 3r/100`, that is `r/2 − d − 3r/100 ≤ dist(x_j,K) ≤ r/2 + d + 3r/100`. -/
 theorem infDist_xj_bound {K : Set ℂ} {x0 xj : ℂ} {r d s : ℝ} {j N : ℕ}
     (hx0 : |infDist x0 K - r / 2| ≤ d) (hs : 0 ≤ s) (hjN : j ≤ N) (hN : (N : ℝ) * s ≤ r / 100)
@@ -142,7 +142,7 @@ theorem infDist_xj_bound {K : Set ℂ} {x0 xj : ℂ} {r d s : ℝ} {j N : ℕ}
   rw [abs_le] at h1 h2 hx0 ⊢
   constructor <;> linarith [h2.1, h2.2, hx0.1, hx0.2]
 
-/-- (C8, first part) Under (C1) and (C7), `x_j ∉ K`, `|x_j| ≥ s₀` and `|x_j| < ρ/2 + r`. -/
+/-- Under the cutoff bundle and the window condition, `x_j ∉ K`, `|x_j| ≥ s₀` and `|x_j| < ρ/2 + r`. -/
 theorem xj_norm_bounds {K : Set ℂ} (hK : IsCompact K) (hne : K.Nonempty) {ρ s0 r d δ s : ℝ}
     (hδ : 0 < δ) (hs : s = Real.sqrt δ) (hρ1 : ρ < 1)
     (hKρ : K ⊆ ball 0 (ρ / 2)) (hBs : ball 0 s0 ⊆ K)
@@ -169,13 +169,13 @@ theorem xj_norm_bounds {K : Set ℂ} (hK : IsCompact K) (hne : K.Nonempty) {ρ s
   have hn := norm_sub_norm_le x k
   exact ⟨hs0x, by linarith⟩
 
-/-- The membership predicate of the write-up's grid set `Z_δ = (δ/100)ℤ² ∩ (B_{ρ−3√δ} \ B_{10√δ})`
-(write-up A5, line 306). -/
+/-- The membership predicate of the grid set `Z_δ = (δ/100)ℤ² ∩ (B_{ρ−3√δ} \ B_{10√δ})`
+-/
 def zDeltaSet (δ ρ : ℝ) : Set ℂ :=
   {z | (∃ m n : ℤ, z = ⟨δ / 100 * m, δ / 100 * n⟩) ∧ ‖z‖ < ρ - 3 * Real.sqrt δ ∧
     10 * Real.sqrt δ ≤ ‖z‖}
 
-/-- (C8, second part) Under (C1) and `s₀ ≤ |x| < ρ/2 + r`, the rounded centre `z = Q_δ(x)` satisfies
+/-- Under the cutoff bundle and `s₀ ≤ |x| < ρ/2 + r`, the rounded centre `z = Q_δ(x)` satisfies
 `10 s < |z|`, `|z| + 3s < ρ`, `|z − x| < δ/100`, and `z` lies on the lattice `(δ/100)ℤ²`;
 in particular `z ∈ Z_δ`. -/
 theorem zcentre_bounds {ρ s0 r d δ s : ℝ} {x z : ℂ}
@@ -209,9 +209,9 @@ theorem zcentre_bounds {ρ s0 r d δ s : ℝ} {x z : ℂ}
     · rw [← hs]; linarith
   exact ⟨hzn1, hzn2, hzx, hZ⟩
 
-/-! ### (C9): the enlarged disk stays in the interior region -/
+/-! ###: the enlarged disk stays in the interior region -/
 
-/-- (C9) If `|z| < ρ/2 + r + δ/100` and `R ≤ s` then `|z| + 2R < 3ρ/4`. -/
+/-- If `|z| < ρ/2 + r + δ/100` and `R ≤ s` then `|z| + 2R < 3ρ/4`. -/
 theorem norm_add_two_radius_lt {ρ r δ s R : ℝ} {z : ℂ} (hρ0 : 0 < ρ)
     (hC : r ≤ ρ / 100 ∧ s ≤ r / 1000) (hδ : δ < s) (hz : ‖z‖ < ρ / 2 + r + δ / 100) (hR : R ≤ s) :
     ‖z‖ + 2 * R < 3 * ρ / 4 := by
@@ -220,7 +220,7 @@ theorem norm_add_two_radius_lt {ρ r δ s R : ℝ} {z : ℂ} (hρ0 : 0 < ρ)
 
 /-! ### The radii `R_j = R_{z_j}` of the schedule (A5) -/
 
-/-- The first-good radius of the schedule lies in `[δ, √δ]` (write-up A5: `R ∈ [δ, √δ]`), so `R ≤ s` and
+/-- The first-good radius of the schedule lies in `[δ, √δ]` (`R ∈ [δ, √δ]`), so `R ≤ s` and
 `4R/3 ≥ δ/50`. This holds for every centre, the default `δ` included. -/
 theorem cfgRadius_mem_Icc {p r : ℝ} (hp : 0 < p) (hr0 : 0 < r) (hr1 : r < 1)
     (good : ℂ → ℕ → Prop) (z : ℂ) :
@@ -232,9 +232,9 @@ theorem cfgRadius_mem_Icc {p r : ℝ} (hp : 0 < p) (hr0 : 0 < r) (hr1 : r < 1)
   have hmem := Lemma68Radius.firstGood_cand_mem hδ0 (good z)
   exact Lemma68Radius.selectable_bounds hδ0 hδ1 hmem
 
-/-! ### (C3) Test disks -/
+/-! ### Test disks -/
 
-/-- (C3) If `H` has diameter at most `d ≤ δ/100`, `x ∈ H`, `|z − x| < δ/100` and `R ≥ δ`, then
+/-- If `H` has diameter at most `d ≤ δ/100`, `x ∈ H`, `|z − x| < δ/100` and `R ≥ δ`, then
 every `u ∈ H` satisfies `|u − z| < 4R/3`; that is `H ⊂ B_{δ/50}(z) ⊂ B_{4R/3}(z)`. -/
 theorem cell_sub_testDisk {H : Set ℂ} {d δ R : ℝ} {x z u : ℂ} (hδ : 0 ≤ δ) (hd : d ≤ δ / 100)
     (hR : δ ≤ R) (hH : ∀ u ∈ H, ∀ v ∈ H, dist u v ≤ d) (hx : x ∈ H) (hu : u ∈ H)
@@ -245,11 +245,11 @@ theorem cell_sub_testDisk {H : Set ℂ} {d δ R : ℝ} {x z u : ℂ} (hδ : 0 �
   rw [dist_comm x z] at h2
   linarith
 
-/-! ### (C11): the deterministic implication behind the strict bound -/
+/-! ###: the deterministic implication behind the strict bound -/
 
-/-- (C11), deterministic part. Let `y` be the state point `η(X_n)` (in the cell `H` of `X_n`, of
-diameter at most `d`) with `|y − x_j| < 3s` (window inclusion (C10), a hypothesis here), `|x_j − x₀| ≤ 3js`,
-`j + 1 ≤ N`, `Ns ≤ r/100`, `s ≤ r/1000` and `d ≤ s/100`, and `|dist(x₀,K) − r/2| ≤ d` (C5).
+/-- Deterministic part. Let `y` be the state point `η(X_n)` (in the cell `H` of `X_n`, of
+diameter at most `d`) with `|y − x_j| < 3s` (window inclusion, a hypothesis here), `|x_j − x₀| ≤ 3js`,
+`j + 1 ≤ N`, `Ns ≤ r/100`, `s ≤ r/1000` and `d ≤ s/100`, and `|dist(x₀,K) − r/2| ≤ d`.
 Then every `u ∈ H` satisfies `2r/5 < dist(u,K) < 3r/5`. -/
 theorem infDist_mem_Ioo_of_window {K H : Set ℂ} {x0 xj y u : ℂ} {r d s : ℝ} {j N : ℕ}
     (hx0 : |infDist x0 K - r / 2| ≤ d) (hs : 0 ≤ s) (hd : d ≤ s / 100) (hs' : s ≤ r / 1000)
@@ -271,14 +271,14 @@ theorem infDist_mem_Ioo_of_window {K H : Set ℂ} {x0 xj y u : ℂ} {r d s : ℝ
   have h' := abs_le.1 h
   constructor <;> linarith [h'.1, h'.2, hx'.1, hx'.2]
 
-/-! ### (C5) from the admissibility bounds: the cell `H_a` meets every level `t ∈ [d_a, M_a]`
+/-! ### from the admissibility bounds: the cell `H_a` meets every level `t ∈ [d_a, M_a]`
 
-The write-up (line 689) takes `K = Θ̄`, the closure of the union of the cells of the cluster `Θ`. The
-cell distances `d_k` and `M_k` of the write-up (3)–(4) are `Lemma68Geometry.cellDist` and `cellDistMax`,
+We take `K = Θ̄`, the closure of the union of the cells of the cluster `Θ`. The
+cell distances `d_k` and `M_k` are `Lemma68Geometry.cellDist` and `cellDistMax`,
 the infima and suprema of the rational approximations `pointDist`; they equal the infimum and supremum of
 `dist(·,K)` on the cell, and the intermediate value property on the connected cell gives the level point. -/
 
-/-- The cluster set `K = Θ̄` of the write-up (line 689): the closure of the union of the cells of `Θ`. -/
+/-- The cluster set `K = Θ̄`: the closure of the union of the cells of `Θ`. -/
 noncomputable def clusterK (ε : ℝ) (η : ℝ → ℂ) (Θ : Finset ℤ) : Set ℂ :=
   closure (fillCells ε η ↑Θ)
 
@@ -366,7 +366,7 @@ theorem pointDist_eq_ofReal_infDist {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < ε)
   unfold Metric.infDist
   rw [ENNReal.ofReal_toReal (infEDist_ne_top hne)]
 
-/-- (C5, from the admissibility bounds) If `d_a ≤ t ≤ M_a`, the cell `H_a` meets the level set
+/-- If `d_a ≤ t ≤ M_a`, the cell `H_a` meets the level set
 `{x : dist(x,K) = t}` (intermediate value on the connected compact cell). -/
 theorem exists_mem_cell_infDist_eq {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < ε) (hη : Continuous η)
     {Θ : Finset ℤ} (hΘ : Θ.Nonempty) {a : ℤ} {t : ℝ}
@@ -427,7 +427,7 @@ theorem exists_mem_cell_infDist_eq {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < ε) 
     ⟨hlo, hhi⟩
   exact ⟨η s, ⟨s, hs, rfl⟩, hsv⟩
 
-/-- (C5) The vertex `a` with `2 d_a ≤ r ≤ 2 M_a` (the admissibility clause (12) at `x = r`) satisfies
+/-- The vertex `a` with `2 d_a ≤ r ≤ 2 M_a` (the admissibility clause (12) at `x = r`) satisfies
 `|dist(η(a), K) − r/2| ≤ d`, given the cell-size bound `d` on the cells meeting `B_ρ`. -/
 theorem vertex_sub_half_of_admissible {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < ε) (hη : Continuous η)
     {Θ : Finset ℤ} (hΘ : Θ.Nonempty) {ρ d r : ℝ} {a : ℤ}
@@ -443,9 +443,9 @@ theorem vertex_sub_half_of_admissible {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < �
   exact abs_infDist_sub_le_of_mem_level (hdiam a ⟨y, hy, hyball⟩) (vertexPoint_mem_cell hε.le a)
     hy hyt
 
-/-! ### The schedule's centres (write-up C1, C2 for the concrete schedule) -/
+/-! ### The schedule's centres (for the concrete schedule) -/
 
-/-- (C2) for the concrete schedule: `|z_j − η(X_{T_j})| < δ/100`, with `z_j = cfgCentre` and `δ = Δ(p,r)`. -/
+/-- for the concrete schedule: `|z_j − η(X_{T_j})| < δ/100`, with `z_j = cfgCentre` and `δ = Δ(p,r)`. -/
 theorem cfgCentre_dist_lt {ε : ℝ} {η : ℝ → ℂ} {p r : ℝ} (y : ℤ) :
     dist (Lemma68Concrete.cfgCentre ε η p r y) (vertexPoint ε η y) <
       Lemma68Scales.Delta p r / 100 :=

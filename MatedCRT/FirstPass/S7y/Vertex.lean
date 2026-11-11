@@ -2,7 +2,7 @@ import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.Vertex
 import MatedCRT.FirstPass.S7y.Core
 
 /-!
-# Measurable-binder copy of `stay_le_at_frontier_vertex` (fp-S7y-h29-measurable, operator plumbing)
+# Measurable-binder copy of `stay_le_at_frontier_vertex`
 
 Copy of `ConstantOrderDiv.stay_le_at_frontier_vertex` (MatedCRT/Proofs/Sec6/ConstantOrderLowerBoundDiv/Vertex.lean:30)
 with the Lemma 2.9 hypothesis `CountingAt` replaced by `CountingAtMeas` (Borel `D`, S7y/Core.lean). The proof is the

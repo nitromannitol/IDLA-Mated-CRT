@@ -2,30 +2,29 @@ import MatedCRT.FirstPass.SLERef.Certified
 import MatedCRT.FirstPass.SLERef.BG20
 
 /-!
-# First pass: corrected SLE reference clauses, items 2 and 4 (task fp-SLERef-items-2-4, worker z10)
+# Corrected SLE reference clauses for Lemma 2.9 and Lemma 2.18
 
-Operator note 07:50 UTC, items 2 and 4 (`notes/fp-gaps/CHATGPT-idla-frozen-SLERef-BG20-PRO.md`). No printed statement
-is edited (`Draft/`, `External/` are frozen); every corrected clause is a NEW `def`, and the printed forms are kept.
+The printed statements in `Draft/` and `External/` are not edited. Each corrected clause is a new definition, and the
+printed forms are kept.
 
-* Item 4, Lemma 2.18 (`ExitTimeUpperBoundStmt`, `MatedCRT/Draft/Section2.lean:239`). Its second clause quantifies over all
-  `D ⊆ B_ρ`, which is TRUE, derived from BG20 Prop 5.1 + Lemma A.1 (chat 200, `notes/fp-gaps/CHATGPT-idla-2-18-exit-time.md`), not verbatim; theorem `exitTimeUpperBound_of_bg20Prop51_volumeGrowth` (FirstPass/S218.lean). `ExitTimeUpperBoundBallStmt` keeps the first clause verbatim (the BG20 Proposition 5.1
-  event, `BG20Prop51`) and restricts the second clause to the balls `ball x s ⊆ ball 0 ρ`, with `0 < s`
-  (`notes/fp-gaps/CHATGPT-idla-exit-time-ball.md` §1, verdict TRUE). The note also offers a standalone form without the
-  first clause; that form is not used here.
-* Item 2, Lemma 2.9 (`CountingMeasureConvergenceStmt`, `MatedCRT/Draft/Section2.lean:143`). `CountingMeasureConvergenceCorrectedStmt`
-  adds `MeasurableSet D` (the set integral `∫_D` is over a measurable set) and takes `w k ∈ cell ∩ D`. Source check: the corrected
-  draft (`paper/idla_mated_crt-corrected.tex`, `lemma:mu_h-convergence`) reads `w^ε_a ∈ H^ε_a ∩ cl(D)`, so the printed `closure D`
-  is the source text. The corrected clause is a weakening, and it follows from the printed clause without new mathematics
-  (`countingMeasureConvergenceCorrected_of_printed`).
+* Lemma 2.18 (`ExitTimeUpperBoundStmt`, `MatedCRT/Draft/Section2.lean:239`). Its second clause quantifies over all
+  `D ⊆ B_ρ`. That clause is TRUE, derived from Berestycki–Gwynne (arXiv:2003.10320v2, Proposition 5.1 and Lemma A.1),
+  not verbatim; theorem `exitTimeUpperBound_of_bg20Prop51_volumeGrowth` (FirstPass/S218.lean). `ExitTimeUpperBoundBallStmt`
+  keeps the first clause verbatim (the event of `BG20Prop51`) and restricts the second clause to the balls
+  `ball x s ⊆ ball 0 ρ`, with `0 < s`. A standalone form without the first clause is not used here.
+* Lemma 2.9 (`CountingMeasureConvergenceStmt`, `MatedCRT/Draft/Section2.lean:143`). `CountingMeasureConvergenceCorrectedStmt`
+  adds `MeasurableSet D` (the set integral `∫_D` is over a measurable set) and takes `w k ∈ cell ∩ D`. Source check: the
+  corrected draft (`paper/idla_mated_crt-corrected.tex`, `lemma:mu_h-convergence`) reads `w^ε_a ∈ H^ε_a ∩ cl(D)`, so the
+  printed `closure D` is the source text. The corrected clause is a weakening, and it follows from the printed clause
+  without new mathematics (`countingMeasureConvergenceCorrected_of_printed`).
 
 Packages. `SLEReferenceBallCorrectedInput ν` is `SLEReferenceExtendedCorrectedInput ν` with `SLECitedInputs` replaced by
 `SLECitedInputsBall` and `CountingMeasureConvergenceClause` replaced by `CountingMeasureConvergenceCorrectedClause`. Its
-universal form (`∀ 𝒮` with normalized law `ν`) inherits the open verdict of the 06:10 operator note on `SLEReferenceInput`.
-`CertifiedReferenceModelBall ν 𝒮` is the per-model corrected version of `CertifiedReferenceModel ν 𝒮`: conjunct 6 is replaced by
-`CountingMeasureConvergenceCorrectedStmt 𝒮` and conjunct 14 by `ExitTimeUpperBoundBallStmt 𝒮`; every other conjunct, including
-`BG20Prop51 𝒮`, is unchanged.
+universal form (`∀ 𝒮` with normalized law `ν`) is not asserted here. `CertifiedReferenceModelBall ν 𝒮` is the per-model
+corrected version of `CertifiedReferenceModel ν 𝒮`: conjunct 6 is replaced by `CountingMeasureConvergenceCorrectedStmt 𝒮`
+and conjunct 14 by `ExitTimeUpperBoundBallStmt 𝒮`; every other conjunct, including `BG20Prop51 𝒮`, is unchanged.
 
-Nothing here asserts that a family `ν` is realized by an SLE; that remains the frozen input. No existence proposition is added.
+Nothing here asserts that a family `ν` is realized by an SLE; that remains the Frozen input. No existence proposition is added.
 -/
 
 namespace MatedCRT
@@ -33,10 +32,7 @@ namespace MatedCRT
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric
 open scoped ENNReal NNReal
 
-/-- Item 4: the exit-time clause of Lemma 2.18 (Berestycki–Gwynne Proposition 5.1, Lemma A.1) for balls. The first clause is the
-clause of `ExitTimeUpperBoundStmt 𝒮` (`MatedCRT/Draft/Section2.lean:239`), verbatim. The second clause is restricted to the
-balls `ball x s ⊆ ball 0 ρ` with `0 < s`, with the same bound. Source: `notes/fp-gaps/CHATGPT-idla-exit-time-ball.md` §1
-(verdict TRUE). It replaces `ExitTimeUpperBoundStmt 𝒮`, whose unrestricted second clause is TRUE, derived from BG20 Prop 5.1 + Lemma A.1 (chat 200, `notes/fp-gaps/CHATGPT-idla-2-18-exit-time.md`), not verbatim; theorem `exitTimeUpperBound_of_bg20Prop51_volumeGrowth` (FirstPass/S218.lean). -/
+/-- Lemma 2.18, exit-time clause for balls (Berestycki–Gwynne, arXiv:2003.10320v2, Proposition 5.1 and Lemma A.1). The first clause is the clause of `ExitTimeUpperBoundStmt 𝒮` (`MatedCRT/Draft/Section2.lean:239`), verbatim. The second clause is restricted to the balls `ball x s ⊆ ball 0 ρ` with `0 < s`, with the same bound. It replaces `ExitTimeUpperBoundStmt 𝒮`, whose unrestricted second clause is TRUE, derived from BG20 Prop 5.1 + Lemma A.1, theorem `exitTimeUpperBound_of_bg20Prop51_volumeGrowth` (FirstPass/S218.lean). -/
 def ExitTimeUpperBoundBallStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ α : ℝ, 0 < α ∧ ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ C : ℝ, 0 < C ∧
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
@@ -89,7 +85,7 @@ theorem exitTimeUpperBoundBall_of_printed {𝒮 : SpaceFillingSLEModel} (h : Exi
   exact polyHighProb_of_subset_event (hS Ω S hv)
     (fun ε ω hω => ⟨hω.1, fun x s _ hsub => hω.2 (ball x s) hsub⟩)
 
-/-- The five cited numbered results with the item-4 correction: `SLECitedInputs 𝒮` with `ExitTimeUpperBoundBallStmt 𝒮` in
+/-- The five cited numbered results with the Lemma 2.18 correction: `SLECitedInputs 𝒮` with `ExitTimeUpperBoundBallStmt 𝒮` in
 place of `ExitTimeUpperBoundStmt 𝒮`. -/
 def SLECitedInputsBall (𝒮 : SpaceFillingSLEModel) : Prop :=
   RandomWalkToLBMStmt 𝒮 ∧
@@ -102,7 +98,7 @@ theorem sleCitedBall_of_printed {𝒮 : SpaceFillingSLEModel} (h : SLECitedInput
   obtain ⟨hRW, hGU, hGL, hEB, hDH⟩ := h
   exact ⟨hRW, hGU, hGL, exitTimeUpperBoundBall_of_printed hEB, hDH⟩
 
-/-- Reference package with the item-4 correction: `SLEReferenceInput ν` with `SLECitedInputsBall` in the second conjunct. -/
+/-- Reference package with the Lemma 2.18 correction: `SLEReferenceInput ν` with `SLECitedInputsBall` in the second conjunct. -/
 def SLEReferenceBallInput (ν : ℝ → Measure SLEPathCode) : Prop :=
   (∃ 𝒮ref : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮ref ν ∧ HasReferenceEnvironments 𝒮ref) ∧
   ∀ 𝒮 : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮 ν → SLECitedInputsBall 𝒮
@@ -111,10 +107,10 @@ def SLEReferenceBallInput (ν : ℝ → Measure SLEPathCode) : Prop :=
 def CountingMeasureConvergenceCorrectedClause (ν : ℝ → Measure SLEPathCode) : Prop :=
   ∀ 𝒮 : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮 ν → CountingMeasureConvergenceCorrectedStmt 𝒮
 
-/-- Corrected package (new name), items 2 and 4 applied to `SLEReferenceExtendedCorrectedInput ν`: `SLEReferenceBallInput ν`
+/-- Corrected package (new name) for Lemma 2.9 and Lemma 2.18, applied to `SLEReferenceExtendedCorrectedInput ν`: `SLEReferenceBallInput ν`
 and the seven analytic clauses, with `CountingMeasureConvergenceCorrectedClause ν` in place of
 `CountingMeasureConvergenceClause ν`. The closure clause is absent, as in `SLEReferenceExtendedCorrectedInput`. The
-universal form `∀ 𝒮` is the open question of the 06:10 operator note (see the module docstring). -/
+universal form `∀ 𝒮` is not asserted here. -/
 def SLEReferenceBallCorrectedInput (ν : ℝ → Measure SLEPathCode) : Prop :=
   SLEReferenceBallInput ν ∧ MepsScalingClause ν ∧ DegreeBoundClause ν ∧ CellSizeEstimateClause ν ∧
     CountingMeasureConvergenceCorrectedClause ν ∧ DegreeMeasureConvergenceClause ν ∧
@@ -171,7 +167,7 @@ theorem countingMeasureConvergenceCorrected (h : CertifiedReferenceModelBall ν 
   obtain ⟨_, _, _, _, _, hC, _, _, _, _, _, _, _, _, _, _, _, _⟩ := h
   exact hC
 
-/-- The five cited numbered results with the item-4 correction, from conjuncts 11, 12, 13, 14 and 15. -/
+/-- The five cited numbered results with the Lemma 2.18 correction, from conjuncts 11, 12, 13, 14 and 15. -/
 theorem sleCitedBall (h : CertifiedReferenceModelBall ν 𝒮) : SLECitedInputsBall 𝒮 := by
   obtain ⟨_, _, _, _, _, _, _, _, _, _, hRW, hGU, hGL, hEB, hDH, _, _, _⟩ := h
   exact ⟨hRW, hGU, hGL, hEB, hDH⟩

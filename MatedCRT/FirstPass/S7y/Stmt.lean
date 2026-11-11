@@ -2,11 +2,10 @@ import MatedCRT.Draft.Section2
 import MatedCRT.FirstPass.SLERef.BG20
 
 /-!
-# Counting-measure clause of Lemma 2.9 with `MeasurableSet D` (fp-S7y-h29-measurable)
+# Counting-measure clause of Lemma 2.9 with `MeasurableSet D`
 
-Operator audit (`notes/fp-gaps/CHATGPT-idla-7-8-audit-PRO.md`, the `h29` row of the hypothesis table and "The two required
-interface repairs", item 2 of the minimal correction list): `CountingMeasureConvergenceStmt 𝒮`
-(MatedCRT/Draft/Section2.lean:143, BG20 Lemma A.4, FROZEN) quantifies over arbitrary `D ⊆ B_ρ`, while BG20 states the
+The `h29` hypothesis of Lemma 2.9 is restated for Borel `D`: `CountingMeasureConvergenceStmt 𝒮`
+(MatedCRT/Draft/Section2.lean:143, BG20 Lemma A.4) quantifies over arbitrary `D ⊆ B_ρ`, while BG20 states the
 result for Borel `D`. The repair adds `MeasurableSet D` before `D ⊆ ball 0 ρ` and keeps the choice-point condition
 `w k ∈ cell ε η k ∩ closure D` unchanged.
 
@@ -21,7 +20,7 @@ namespace MatedCRT
 
 open MeasureTheory Set Metric
 
-/-- **Lemma 2.9, Borel form** (lemma:mu_h-convergence, line 680; BG20 Lemma A.4; operator audit item 2). Same as
+/-- **Lemma 2.9, Borel form** (lemma:mu_h-convergence, line 680; BG20 Lemma A.4). Same as
 `CountingMeasureConvergenceStmt` (MatedCRT/Draft/Section2.lean:143) with `MeasurableSet D` added before `D ⊆ B_ρ`. The
 choice-point condition is `w k ∈ cell ε η k ∩ closure D`, as in the Draft. -/
 def CountingMeasureConvergenceMeasurableStmt (𝒮 : SpaceFillingSLEModel) : Prop :=

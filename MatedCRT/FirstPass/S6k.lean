@@ -152,7 +152,7 @@ lemma frontier_thickening_sub_thickening {K : Set ℂ} {s t : ℝ} (ht : 0 < t) 
   exact (ENNReal.ofReal_lt_ofReal_iff ht).2 hst
 
 /-- **Boundary-start clauses (12).** If the cell of `b` meets the middle boundary `frontier (thickening (r/2) K)`,
-then `2 d_b ≤ r ≤ 2 M_b` (write-up (3)-(4), `d_b = dd`, `M_b = ddMax`), i.e. the clause (12) of
+then `2 d_b ≤ r ≤ 2 M_b` (`d_b = dd`, `M_b = ddMax`), i.e. the clause (12) of
 `Lemma68Admissible.Admissible` at the radius `x = r`. Here `d_b = inf_{u ∈ H_b} dist(u, K)` and
 `M_b = sup_{u ∈ H_b} dist(u, K)`, and a point `z` of the frontier has `dist(z, K) = r/2`. -/
 lemma clause12_of_frontier {η : ℝ → ℂ} {ε : ℝ} (hη : Continuous η) (hε : 0 < ε) {Θ : Finset ℤ} {r : ℝ}
@@ -257,8 +257,8 @@ theorem start_frontier_before_exit {η : ℝ → ℂ} {m : ℤ → ℤ → ℕ} 
 inclusion needed for admissibility is proved in this file. -/
 
 /-- **Inclusion for the killed set.** If `W = V(Θ̄ + B_r) ⊆ F0`, then every vertex of `W \ Θ` lies in
-`killed ε η Θ F0 r = {v ∈ F0 : d_v < r} \ Θ` (write-up (10)): `d_v < r` because `v ∈ W` means
-`d_v < r` by `cellVertices_thickening_eq` (write-up (9)). -/
+`killed ε η Θ F0 r = {v ∈ F0 : d_v < r} \ Θ`: `d_v < r` because `v ∈ W` means
+`d_v < r` by `cellVertices_thickening_eq`. -/
 theorem sdiff_W_subset_killed {η : ℝ → ℂ} {ε r : ℝ} (hη : Continuous η) (hε : 0 < ε) {Θ F0 : Finset ℤ}
     (hF : cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) ⊆ (↑F0 : Set ℤ)) :
     cellVertices ε η (thickening r (fillCells ε η (↑Θ : Set ℤ))) \ (↑Θ : Set ℤ) ⊆

@@ -4,8 +4,8 @@ import MatedCRT.FirstPass.S7y.Final
 /-!
 # Proposition 7.1 with the Borel form of the Lemma 2.9 hypothesis
 
-Operator audit (, the `h29` row and item 2 of the minimal correction list):
-`CountingMeasureConvergenceStmt 𝒮` (MatedCRT/Draft/Section2.lean:143, BG20 Lemma A.4, FROZEN) quantifies over arbitrary
+The `h29` hypothesis of Lemma 2.9 is restated for Borel `D`:
+`CountingMeasureConvergenceStmt 𝒮` (MatedCRT/Draft/Section2.lean:143, BG20 Lemma A.4) quantifies over arbitrary
 `D ⊆ B_ρ`, while BG20 states the result for Borel `D`. The Borel form `CountingMeasureConvergenceMeasurableStmt` is
 defined in `MatedCRT/FirstPass/S7y/Stmt.lean`, with `countingMeasureConvergenceMeasurable_of_stmt` (the Draft statement
 implies it).
@@ -13,7 +13,7 @@ implies it).
 `firstPass_7_1_support_measurable` below is `firstPass_7_1_support` (MatedCRT/FirstPass/S7x.lean:105) with `h29` in the
 Borel form. Its only use of `h29` is the Lemma 6.8 chain through `constantOrderLowerBoundDivLog_final_meas`
 (`MatedCRT/FirstPass/S7y/Final.lean`), a measurable-binder copy of
-`constantOrderLowerBoundDivLog_final` (Proofs/Sec6/ConstantOrderLowerBoundDiv/Final.lean:68). The copies are plumbing:
+`constantOrderLowerBoundDivLog_final` (Proofs/Sec6/ConstantOrderLowerBoundDiv/Final.lean:68). The copies are wrappers:
 every instantiation of Lemma 2.9 in that chain is at an open ball, which is measurable.
 
 No Draft statement is edited, and no Prop is frozen.
