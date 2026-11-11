@@ -4,6 +4,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.PosLog
 import Mathlib.Analysis.SpecialFunctions.Integrals.PosLogEqCircleAverage
 import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 import Mathlib.Topology.DiscreteSubset
+import MatedCRT.LPStaging.Analysis.CircleLogIntegrals
 
 /-!
 # The whole-plane covariance kernel under real affine maps
@@ -38,32 +39,23 @@ theorem wholePlaneCov_of_ne {x y : ℂ} (hxy : x ≠ y) :
   ring
 
 /-- `log⁺ |x| = log max(|x|, 1)`. -/
-theorem posLog_norm_eq_log_max (x : ℂ) : Real.posLog ‖x‖ = Real.log (max ‖x‖ 1) := by
-  rcases le_total ‖x‖ 1 with h | h
-  · rw [max_eq_right h, Real.log_one]
-    exact max_eq_left (Real.log_nonpos (norm_nonneg x) h)
-  · rw [max_eq_left h]
-    exact max_eq_right (Real.log_nonneg h)
+theorem posLog_norm_eq_log_max (x : ℂ) : Real.posLog ‖x‖ = Real.log (max ‖x‖ 1) :=
+  LatticeProb.CircleLogIntegrals.posLog_norm_eq_log_max x
 
 /-- The mean value property of `log |· - u|` on the circle `∂B_r(z)`, `r > 0` (Mathlib). -/
 theorem circleAverage_log_norm_eq (z u : ℂ) {r : ℝ} (hr : 0 < r) :
     Real.circleAverage (fun w => Real.log ‖w - u‖) z r =
       Real.log r + Real.posLog (r⁻¹ * ‖z - u‖) :=
-  circleAverage_log_norm_sub_const_eq_log_radius_add_posLog hr.ne'
+  LatticeProb.CircleLogIntegrals.circleAverage_log_norm_eq z u hr
 
 /-- `w ↦ log max(|w|,1)` is continuous. -/
 theorem continuous_log_max_norm : Continuous fun w : ℂ => Real.log (max ‖w‖ 1) :=
-  (continuous_norm.max continuous_const).log fun _ => (lt_of_lt_of_le one_pos (le_max_right _ _)).ne'
+  LatticeProb.CircleLogIntegrals.continuous_log_max_norm
 
 /-- The codiscrete filter of any set contains the complement of a point. -/
 theorem eventually_ne_codiscreteWithin (S : Set ℂ) (u : ℂ) :
-    ∀ᶠ w in codiscreteWithin S, w ≠ u := by
-  rw [eventually_codiscreteWithin_iff_forall_eventually_nhdsNE]
-  intro x _
-  by_cases hxu : x = u
-  · subst hxu
-    exact eventually_nhdsWithin_of_forall fun y hy _ => hy
-  · exact ((eventually_ne_nhds hxu).filter_mono nhdsWithin_le_nhds).mono fun y hy _ => hy
+    ∀ᶠ w in codiscreteWithin S, w ≠ u :=
+  LatticeProb.CircleLogIntegrals.eventually_ne_codiscreteWithin S u
 
 /-- The log-kernel closed form of `A₀(u) = avg_{w ∈ ∂B_r(z)} G(u, w)` for `r > 0`:
 `A₀(u) = log max(|u|,1) + F₀ - (log r + log⁺(|z - u|/r))`, where `F₀ = avg_{∂B_r(z)} log max(|w|,1)`. -/
@@ -148,31 +140,17 @@ theorem wholePlaneCov_affine_eq {x y : ℂ} {r : ℝ} (hr : 0 < r) (z : ℂ) (hx
 
 /-- **Scaling of circle averages.** For `r ∈ ℝ`, `avg_{u ∈ ∂B_s(w)} f (r u + z) = avg_{v ∈ ∂B_{rs}(rw + z)} f v`. -/
 theorem circleAverage_affine (f : ℂ → ℝ) (r : ℝ) (z w : ℂ) (s : ℝ) :
-    Real.circleAverage (fun u => f (r * u + z)) w s = Real.circleAverage f (r * w + z) (r * s) := by
-  unfold Real.circleAverage
-  congr 1
-  refine intervalIntegral.integral_congr fun θ _ => ?_
-  simp only [circleMap]
-  congr 1
-  push_cast
-  ring
+    Real.circleAverage (fun u => f (r * u + z)) w s = Real.circleAverage f (r * w + z) (r * s) :=
+  LatticeProb.CircleLogIntegrals.circleAverage_affine f r z w s
 
 /-- **Change of variables on `ℂ`.** For `r > 0`: `∫ u, F u = r² ∫ x, F (r x + z)`. -/
 theorem integral_affine_change (F : ℂ → ℝ) {r : ℝ} (hr : 0 < r) (z : ℂ) :
-    ∫ u, F u = r ^ 2 * ∫ x, F ((r : ℂ) * x + z) := by
-  have hT : ∫ x : ℂ, F (x + z) = ∫ u, F u := integral_add_right_eq_self F z
-  have hS := Measure.integral_comp_smul (volume : Measure ℂ) (fun x : ℂ => F (x + z)) r
-  rw [Complex.finrank_real_complex, abs_of_nonneg (inv_nonneg.2 (sq_nonneg r)), smul_eq_mul] at hS
-  simp only [Complex.real_smul] at hS
-  rw [hS, ← hT, ← mul_assoc, mul_inv_cancel₀ (pow_ne_zero 2 hr.ne'), one_mul]
+    ∫ u, F u = r ^ 2 * ∫ x, F ((r : ℂ) * x + z) :=
+  LatticeProb.CircleLogIntegrals.integral_affine_change F hr z
 
 /-- **Change of variables for pairings.** For `r > 0`: `∫ y, φ((y - z)/r) F(y) dy = r² ∫ x, φ(x) F(r x + z) dx`. -/
 theorem integral_affine_pullback (φ F : ℂ → ℝ) {r : ℝ} (hr : 0 < r) (z : ℂ) :
-    ∫ y, φ ((y - z) / (r : ℂ)) * F y = r ^ 2 * ∫ x, φ x * F ((r : ℂ) * x + z) := by
-  have hr' : (r : ℂ) ≠ 0 := by exact_mod_cast hr.ne'
-  rw [integral_affine_change (fun y => φ ((y - z) / (r : ℂ)) * F y) hr z]
-  congr 1
-  refine integral_congr_ae (Filter.Eventually.of_forall fun x => ?_)
-  simp only [add_sub_cancel_right, mul_div_cancel_left₀ x hr']
+    ∫ y, φ ((y - z) / (r : ℂ)) * F y = r ^ 2 * ∫ x, φ x * F ((r : ℂ) * x + z) :=
+  LatticeProb.CircleLogIntegrals.integral_affine_pullback φ F hr z
 
 end MatedCRT.Field

@@ -1,4 +1,5 @@
 import MatedCRT.FirstPass.S2y.ConeRadialCodes
+import MatedCRT.LPStaging.Analysis.CircleLogIntegrals
 
 /-!
 # Internal angular integrability on the circles of a quantum cone
@@ -26,137 +27,50 @@ namespace MatedCRT
 
 /-- The sum of the unit vectors `e^{iα}` and `e^{iθ}` has modulus `2 |cos((θ-α)/2)|`. -/
 lemma norm_exp_add_exp_mul_I (α θ : ℝ) :
-    ‖Complex.exp (α * Complex.I) + Complex.exp (θ * Complex.I)‖ = 2 * |Real.cos ((θ - α) / 2)| := by
-  have h1 : Complex.exp (α * Complex.I)
-      = Complex.exp (((α + θ) / 2 : ℝ) * Complex.I) * Complex.exp (-(((θ - α) / 2 : ℝ) : ℂ) * Complex.I) := by
-    rw [← Complex.exp_add]; congr 1; push_cast; ring
-  have h2 : Complex.exp (θ * Complex.I)
-      = Complex.exp (((α + θ) / 2 : ℝ) * Complex.I) * Complex.exp ((((θ - α) / 2 : ℝ) : ℂ) * Complex.I) := by
-    rw [← Complex.exp_add]; congr 1; push_cast; ring
-  have h3 : Complex.exp (-(((θ - α) / 2 : ℝ) : ℂ) * Complex.I)
-      + Complex.exp ((((θ - α) / 2 : ℝ) : ℂ) * Complex.I) = 2 * ((Real.cos ((θ - α) / 2) : ℝ) : ℂ) := by
-    rw [Complex.ofReal_cos, Complex.two_cos, add_comm]
-  rw [h1, h2, ← mul_add, h3, norm_mul, Complex.norm_exp_ofReal_mul_I, one_mul, norm_mul,
-    Complex.norm_real, Real.norm_eq_abs]
-  norm_num
+    ‖Complex.exp (α * Complex.I) + Complex.exp (θ * Complex.I)‖ = 2 * |Real.cos ((θ - α) / 2)| :=
+  LatticeProb.CircleLogIntegrals.norm_exp_add_exp_mul_I α θ
 
 /-- On the tangent circle `‖z‖ = r` one writes `z = r e^{iα}`, and then `‖circleMap z r θ‖ = 2 r |cos((θ-α)/2)|`. -/
 lemma norm_circleMap_tangent {r : ℝ} (hr : 0 < r) (α θ : ℝ) :
-    ‖circleMap ((r : ℂ) * Complex.exp (α * Complex.I)) r θ‖ = 2 * r * |Real.cos ((θ - α) / 2)| := by
-  have hx : circleMap ((r : ℂ) * Complex.exp (α * Complex.I)) r θ
-      = (r : ℂ) * (Complex.exp (α * Complex.I) + Complex.exp (θ * Complex.I)) := by
-    simp only [circleMap]; ring
-  rw [hx, norm_mul, norm_exp_add_exp_mul_I, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hr]
-  ring
+    ‖circleMap ((r : ℂ) * Complex.exp (α * Complex.I)) r θ‖ = 2 * r * |Real.cos ((θ - α) / 2)| :=
+  LatticeProb.CircleLogIntegrals.norm_circleMap_tangent hr α θ
 
 /-- Reverse triangle inequality on a circle: `|‖z‖ - r| ≤ ‖circleMap z r θ‖`. -/
 lemma abs_norm_sub_le_norm_circleMap (z : ℂ) {r : ℝ} (hr : 0 < r) (θ : ℝ) :
-    |‖z‖ - r| ≤ ‖circleMap z r θ‖ := by
-  have hw : ‖(r : ℂ) * Complex.exp (θ * Complex.I)‖ = r := by
-    rw [norm_mul, Complex.norm_real, Complex.norm_exp_ofReal_mul_I, mul_one, Real.norm_eq_abs, abs_of_pos hr]
-  have hc : circleMap z r θ = z + (r : ℂ) * Complex.exp (θ * Complex.I) := rfl
-  rw [hc]
-  have h1 := norm_sub_le (z + (r : ℂ) * Complex.exp (θ * Complex.I)) ((r : ℂ) * Complex.exp (θ * Complex.I))
-  have h2 := norm_sub_le (z + (r : ℂ) * Complex.exp (θ * Complex.I)) z
-  rw [add_sub_cancel_right, hw] at h1
-  rw [add_sub_cancel_left, hw] at h2
-  rw [abs_sub_le_iff]
-  constructor <;> linarith
+    |‖z‖ - r| ≤ ‖circleMap z r θ‖ :=
+  LatticeProb.CircleLogIntegrals.abs_norm_sub_le_norm_circleMap z hr θ
 
 /-- Upper bound on a circle: `‖circleMap z r θ‖ ≤ ‖z‖ + r`. -/
-lemma norm_circleMap_le_add (z : ℂ) {r : ℝ} (hr : 0 < r) (θ : ℝ) : ‖circleMap z r θ‖ ≤ ‖z‖ + r := by
-  have hc : circleMap z r θ = z + (r : ℂ) * Complex.exp (θ * Complex.I) := rfl
-  rw [hc]
-  refine (norm_add_le _ _).trans (le_of_eq ?_)
-  rw [norm_mul, Complex.norm_real, Complex.norm_exp_ofReal_mul_I, mul_one, Real.norm_eq_abs, abs_of_pos hr]
+lemma norm_circleMap_le_add (z : ℂ) {r : ℝ} (hr : 0 < r) (θ : ℝ) : ‖circleMap z r θ‖ ≤ ‖z‖ + r :=
+  LatticeProb.CircleLogIntegrals.norm_circleMap_le_add z hr θ
 
 lemma measurable_norm_circleMap (z : ℂ) (r : ℝ) : Measurable fun θ : ℝ => ‖circleMap z r θ‖ :=
-  (continuous_norm.comp (continuous_circleMap z r)).measurable
+  LatticeProb.CircleLogIntegrals.measurable_norm_circleMap z r
 
-lemma volume_Ioc_two_pi_ne_top : volume (Ioc (0 : ℝ) (2 * π)) ≠ ∞ := by
-  rw [Real.volume_Ioc]
-  exact ENNReal.ofReal_ne_top
+lemma volume_Ioc_two_pi_ne_top : volume (Ioc (0 : ℝ) (2 * π)) ≠ ∞ :=
+  LatticeProb.CircleLogIntegrals.volume_Ioc_two_pi_ne_top
 
 /-- `θ ↦ log |cos((θ-α)/2)|` is interval integrable on `[0, 2π]`: `Real.intervalIntegrable_log_cos` on the
 rescaled and shifted interval. -/
 lemma intervalIntegrable_log_cos_affine (α : ℝ) :
-    IntervalIntegrable (fun θ : ℝ => Real.log (Real.cos ((θ - α) / 2))) volume 0 (2 * π) := by
-  have h1 := (intervalIntegrable_log_cos (a := -α / 2) (b := (2 * π - α) / 2)).comp_mul_left
-    (c := (1 / 2 : ℝ))
-  have h2 := h1.comp_sub_right α
-  have ea : -α / 2 / (1 / 2) + α = 0 := by ring
-  have eb : (2 * π - α) / 2 / (1 / 2) + α = 2 * π := by ring
-  rw [ea, eb] at h2
-  convert h2 using 1
-  funext θ
-  simp only [Function.comp]
-  rw [show (θ - α) / 2 = 1 / 2 * (θ - α) by ring]
+    IntervalIntegrable (fun θ : ℝ => Real.log (Real.cos ((θ - α) / 2))) volume 0 (2 * π) :=
+  LatticeProb.CircleLogIntegrals.intervalIntegrable_log_cos_affine α
 
 /-- **Tangent case, deterministic.** If `‖z‖ = r`, the function `θ ↦ 1_{‖circleMap z r θ‖ ≤ 1} (-log ‖circleMap z r θ‖)`
 is integrable on `(0, 2π]`: its logarithmic singularity at the (at most one) point where the circle meets the origin is
 the one of `log |cos|`. -/
 lemma integrableOn_log_small_tangent {r : ℝ} (hr : 0 < r) (α : ℝ) :
     IntegrableOn (fun θ : ℝ => Set.indicator {θ : ℝ | ‖circleMap ((r : ℂ) * Complex.exp (α * Complex.I)) r θ‖ ≤ 1}
-      (fun θ : ℝ => -Real.log ‖circleMap ((r : ℂ) * Complex.exp (α * Complex.I)) r θ‖) θ) (Ioc 0 (2 * π)) := by
-  have hρ := measurable_norm_circleMap ((r : ℂ) * Complex.exp (α * Complex.I)) r
-  have hmeas : Measurable fun θ : ℝ => Set.indicator {θ : ℝ | ‖circleMap ((r : ℂ) * Complex.exp (α * Complex.I)) r θ‖ ≤ 1}
-      (fun θ : ℝ => -Real.log ‖circleMap ((r : ℂ) * Complex.exp (α * Complex.I)) r θ‖) θ :=
-    ((Real.measurable_log.comp hρ).neg).indicator (measurableSet_le hρ measurable_const)
-  have hl : IntegrableOn (fun θ : ℝ => ‖Real.log (Real.cos ((θ - α) / 2))‖) (Ioc 0 (2 * π)) :=
-    (intervalIntegrable_log_cos_affine α).norm.1
-  have hc : IntegrableOn (fun _ : ℝ => |Real.log (2 * r)|) (Ioc 0 (2 * π)) := integrableOn_const volume_Ioc_two_pi_ne_top
-  refine Integrable.mono' (Integrable.add hc hl) hmeas.aestronglyMeasurable (ae_of_all _ fun θ => ?_)
-  simp only [Set.indicator_apply, Set.mem_ofPred_eq]
-  split_ifs with hθ
-  · rcases (norm_nonneg (circleMap ((r : ℂ) * Complex.exp (α * Complex.I)) r θ)).eq_or_lt with h0 | hpos
-    · rw [← h0, Real.log_zero, neg_zero, norm_zero]
-      exact add_nonneg (abs_nonneg _) (norm_nonneg _)
-    · rw [norm_circleMap_tangent hr] at hpos ⊢
-      have hcos : |Real.cos ((θ - α) / 2)| ≠ 0 := by
-        intro h
-        rw [h, mul_zero] at hpos
-        exact lt_irrefl _ hpos
-      have hlog : Real.log (2 * r * |Real.cos ((θ - α) / 2)|)
-          = Real.log (2 * r) + Real.log (Real.cos ((θ - α) / 2)) := by
-        rw [Real.log_mul (mul_pos two_pos hr).ne' hcos, Real.log_abs]
-      rw [hlog]
-      calc ‖-(Real.log (2 * r) + Real.log (Real.cos ((θ - α) / 2)))‖
-          = ‖Real.log (2 * r) + Real.log (Real.cos ((θ - α) / 2))‖ := norm_neg _
-        _ ≤ ‖Real.log (2 * r)‖ + ‖Real.log (Real.cos ((θ - α) / 2))‖ := norm_add_le _ _
-        _ = |Real.log (2 * r)| + ‖Real.log (Real.cos ((θ - α) / 2))‖ := by rw [Real.norm_eq_abs]
-  · simp only [norm_zero]
-    exact add_nonneg (abs_nonneg _) (norm_nonneg _)
+      (fun θ : ℝ => -Real.log ‖circleMap ((r : ℂ) * Complex.exp (α * Complex.I)) r θ‖) θ) (Ioc 0 (2 * π)) :=
+  LatticeProb.CircleLogIntegrals.integrableOn_log_small_tangent hr α
 
 /-- **Deterministic integrability of the small-radius logarithm on a circle**. For `r > 0`,
 `θ ↦ 1_{‖circleMap z r θ‖ ≤ 1} (-log ‖circleMap z r θ‖)` is integrable on `(0, 2π]`. If `‖z‖ ≠ r` the circle keeps distance
 `|‖z‖ - r| > 0` from the origin; if `‖z‖ = r` this is `integrableOn_log_small_tangent`. -/
 lemma integrableOn_log_small_circleMap (z : ℂ) {r : ℝ} (hr : 0 < r) :
     IntegrableOn (fun θ : ℝ => Set.indicator {θ : ℝ | ‖circleMap z r θ‖ ≤ 1}
-      (fun θ : ℝ => -Real.log ‖circleMap z r θ‖) θ) (Ioc 0 (2 * π)) := by
-  by_cases hz : ‖z‖ = r
-  · obtain ⟨α, rfl⟩ : ∃ α : ℝ, z = (r : ℂ) * Complex.exp (α * Complex.I) := by
-      refine ⟨Complex.arg z, ?_⟩
-      have h := Complex.norm_mul_exp_arg_mul_I z
-      rw [hz] at h
-      exact h.symm
-    exact integrableOn_log_small_tangent hr α
-  · have hρ := measurable_norm_circleMap z r
-    have hmeas : Measurable fun θ : ℝ => Set.indicator {θ : ℝ | ‖circleMap z r θ‖ ≤ 1}
-        (fun θ : ℝ => -Real.log ‖circleMap z r θ‖) θ :=
-      ((Real.measurable_log.comp hρ).neg).indicator (measurableSet_le hρ measurable_const)
-    have hδ : 0 < |‖z‖ - r| := abs_pos.2 (sub_ne_zero.2 hz)
-    have hc : IntegrableOn (fun _ : ℝ => |Real.log (|‖z‖ - r|)|) (Ioc 0 (2 * π)) := integrableOn_const volume_Ioc_two_pi_ne_top
-    refine Integrable.mono' hc hmeas.aestronglyMeasurable (ae_of_all _ fun θ => ?_)
-    simp only [Set.indicator_apply, Set.mem_ofPred_eq]
-    split_ifs with hθ
-    · have hlow := abs_norm_sub_le_norm_circleMap z hr θ
-      have hl1 : Real.log |‖z‖ - r| ≤ Real.log ‖circleMap z r θ‖ := Real.log_le_log hδ hlow
-      have hl2 : 0 ≤ -Real.log ‖circleMap z r θ‖ := neg_nonneg.2 (Real.log_nonpos (norm_nonneg _) hθ)
-      have hB : -Real.log |‖z‖ - r| ≤ |Real.log (|‖z‖ - r|)| := neg_le_abs _
-      rw [Real.norm_eq_abs, abs_of_nonneg hl2]
-      linarith
-    · simp only [norm_zero]
-      exact abs_nonneg _
+      (fun θ : ℝ => -Real.log ‖circleMap z r θ‖) θ) (Ioc 0 (2 * π)) :=
+  LatticeProb.CircleLogIntegrals.integrableOn_log_small_circleMap z hr
 
 /-- The majorant of the small-radius part: `1_{‖circleMap z r θ‖ ≤ 1} (1 + (1+|γ|)(-log ‖circleMap z r θ‖))`. -/
 noncomputable def smallDominator (γ : ℝ) (z : ℂ) (r : ℝ) (θ : ℝ) : ℝ :=
