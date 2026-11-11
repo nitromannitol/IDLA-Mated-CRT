@@ -13,7 +13,7 @@ import MatedCRT.FirstPass.S4S6c.ShellChainCore68
   shell stopping times. The binders `hT` and `hR` of the direct hone are discharged for shells (`isStoppingTime_shellExit`,
   `measurable_shellRadius_stopped`). Every other binder is kept as a named hypothesis with the exact type obtained by the
   substitution `T k := shellExit k`, `R k := Rf(shellCentre k)`.
-* `ShellOneTestOrderAeStmt 𝒮`: NAMED INPUT (the Q2 form): the almost-sure, uniform-in-r pointwise
+* `ShellOneTestOrderAeStmt 𝒮`: NAMED INPUT: the almost-sure, uniform-in-r pointwise
   statement of `ShellChainCoreStmt`, where for each good `(ω, r, i)` some radius configuration `Rf` gives the one-test
   bound and the shell order `ShellOrderAe` on the shells `k ≤ shellCount r s - 1`.
 * `shellChainCoreStmt_of_oneTestOrder`: `ShellChainCoreStmt 𝒮` from `ShellOneTestOrderAeStmt 𝒮`, through `exitQ_core_step`.
@@ -151,10 +151,10 @@ theorem shellOneTest_of_direct {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ
     (fun k => measurable_shellRadius_stopped ε η Kset r s d Rf k) hmom1 hmom2 hRr hL68 rmin hRmin hVolC hVolY hGreen
     hWalk hCountGood ζc hζc0 hζc1 hCellGood hεcell hfinE hsc hεα hεmass hb hx1 hmomS hgood hN hpos hdbl
 
-/-- **NAMED INPUT (Q2 form): the almost-sure, uniform-in-r shell chain.** This is
+/-- **NAMED INPUT: the almost-sure, uniform-in-r shell chain.** This is
 `ShellChainCoreStmt 𝒮` (ShellChainCore68.lean) with its conclusion replaced by the two pointwise inputs of
 `exitQ_core_step`: the one-test bound `ShellOneTestAt` and the shell order `ShellOrderAe`, for some radius configuration
-`Rf` at each good `(ω, r, i)`. The uniformity in `r` inside the almost-sure quantifier is the open point Q2. -/
+`Rf` at each good `(ω, r, i)`. The uniformity in `r` inside the almost-sure quantifier is an open point. -/
 def ShellOneTestOrderAeStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE : ℝ,
     0 < ω₀ → ω₀ < α → 0 < α → ω₀ < 2 / (2 + γ) ^ 2 - ζ → 0 < CG → 0 < CE →

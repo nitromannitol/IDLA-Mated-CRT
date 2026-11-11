@@ -7,7 +7,7 @@ import MatedCRT.FirstPass.S4S6c.CGResCtr68
 import MatedCRT.FirstPass.S4S6c.CGResCount68
 
 /-!
-# The one-test order input with the square premise, with no named input (fp-S4S6c-cgrcy-sq, z5)
+# The one-test order input with the square premise, with no named input
 
 Produces `Lemma68CGRCYSq.ShellOneTestOrderAeCGRCYSqStmt 𝒮` (ShellChainCGRCYSq68.lean:42), the one-test order input whose
 radius clause carries the square premise `4 * ε ^ ω₀ ≤ r ^ 2` in addition to `10 * ε ^ ω₀ ≤ r` (request 83a, option (a)).
@@ -43,7 +43,7 @@ open MatedCRT.Lemma68ShellOneCGRCX
 open MatedCRT.Lemma68CGRCXG2Core
 open MatedCRT.LICGRCY68
 
-/-- **The one-test order input with the square premise, with no named input (fp-S4S6c-cgrcy-sq, z5).**
+/-- **The one-test order input with the square premise, with no named input.**
 `Lemma68CGRCYSq.ShellOneTestOrderAeCGRCYSqStmt 𝒮`: the shell one-test at every radius with `10 * ε ^ ω₀ ≤ r`,
 `4 * ε ^ ω₀ ≤ r ^ 2`, `r ≤ R`, `ω ∈ Ew (dyadicD r)` and the volume guard, almost surely. The walk is `walkG_pt_sq`;
 the test end and the centre bound are the landed `shellCGTestEndLoc_holds` and `shellCGResG2Ctr_holds`. -/

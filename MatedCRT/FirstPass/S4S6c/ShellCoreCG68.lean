@@ -74,7 +74,7 @@ theorem shellKCG_eps_cell {γ ρ : ℝ} (K : Constants68 γ ρ) (ω₀ α ζ CG 
 
 `ShellOneTestOrderAeCGStmt` (ShellHoneInst68.lean) is stated with `meshEvent` (cell size at `ρ`). The leaf
 `shellOneTest_at_of_goodEnv_loc` (B1Assembly68.lean) needs the cell size at the mesh radius `(1+ρ)/2`, i.e. the
-event `meshEventR` (Guard68S10.lean). `ShellOneTestOrderAeCGRStmt` is that variant; the choice of `hOne` is a separate decision. -/
+event `meshEventR` (Guard68S10.lean). `ShellOneTestOrderAeCGRStmt` is that variant; the choice of `hOne` is a separate question. -/
 
 open MeasureTheory Set Filter Metric
 open scoped ENNReal Topology

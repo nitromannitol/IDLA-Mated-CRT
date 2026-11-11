@@ -7,7 +7,7 @@ The tests are events about the future of the walk whose law depends on the curre
 `y`, the test event is `G y`. `srwLaw_markov_state` extends `srwLaw_markov` (fixed future set) to state-dependent future
 sets: `P^a(history ∈ F, future ∈ G(x_n)) = ∫_{history ∈ F} P^{x_n}(G(x_n)) dP^a`. The proof decomposes by the state
 `y = x_n` (a countable disjoint union over `y ∈ ℤ`) and applies `srwLaw_markov` to each fibre. It is the input that the
-random-time (stopping-time) version of the test product needs (open step N3a of the round report).
+random-time (stopping-time) version of the test product needs; that version is an open step.
 -/
 
 open MeasureTheory Set

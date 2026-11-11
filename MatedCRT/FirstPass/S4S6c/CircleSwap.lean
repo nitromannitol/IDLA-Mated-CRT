@@ -6,7 +6,7 @@ import Mathlib
 , "Lemma 1", proof, eq. (6): `M ≤ κ₀⁻¹ C_A m` comes from averaging `F(v) = ∫_A K(u,v) dμ(u)` over the circle
 `v = z + t e^{iθ}`, `t = 3R/2`, and interchanging the integrals in `u` (over `A`) and `θ` (over `(0, 2π]`).
 This file proves the interchange `∫_A (circle average of K(u,·)) dμ(u) = circle average of F` for a jointly measurable
-kernel with joint integrability. The joint integrability is a SEPARATE step (OPEN, see the round report): it follows from
+kernel with joint integrability. The joint integrability is a SEPARATE step (OPEN): it follows from
 the closed-form slice averages `circleAverage (log ‖· - u‖) z t = log t + log⁺(t⁻¹ ‖z - u‖)` of Mathlib together with the
 lower bound `K ≥ -a₀` on the annulus; it is taken here as the explicit hypothesis `hjoint`.
 -/

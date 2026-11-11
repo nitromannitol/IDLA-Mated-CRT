@@ -20,7 +20,7 @@ exponent is `s1 := shellS1CG γ CG`.
   `exitTimeEvent68 S α ρ CE ε` quantifies only over `D ⊆ ball 0 ρ` (UniformEvents.lean:48-50). It is therefore kept as the
   named hypothesis `hexitR`.
 * `resMomS_ballRho_pt`: the same moments on `D ⊆ ball 0 ρ` (the conclusion of `hmomS_pointwise_s1_g`), from `meshEventR`
-  alone. It does NOT match `ShellCGResMomS`; it is recorded for a decision on the radius of the binder.
+  alone. It does NOT match `ShellCGResMomS`; it is recorded for the open choice of the radius of the binder.
 -/
 
 namespace MatedCRT
@@ -152,7 +152,7 @@ def ShellCGExitRhoCell (𝒮 : SpaceFillingSLEModel) : Prop :=
     ω ∈ exitTimeEvent68 S α (Lemma68HoneCellGood.rhoCell68 ρ) CE ε
 
 /-- **`ShellCGResMomS` holds, given the named premise `ShellCGExitRhoCell` (STEP B).** Conditional: the premise is not
-derivable from the clauses of `ShellPtPremCG`; a decision is needed (see the module docstring). -/
+derivable from the clauses of `ShellPtPremCG`; an open choice is needed (see the module docstring). -/
 theorem shellCGResMomS_holds_of_exitRhoCell (𝒮 : SpaceFillingSLEModel) (hexit : ShellCGExitRhoCell 𝒮) :
     ShellCGResMomS 𝒮 := by
   intro γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω _ S Ew ω i hpre hFA
@@ -160,7 +160,7 @@ theorem shellCGResMomS_holds_of_exitRhoCell (𝒮 : SpaceFillingSLEModel) (hexit
 
 /-- The residual `ShellCGResMomS` with the test sets in `ball 0 ρ` instead of `ball 0 (rhoCell68 ρ)` (
 auxiliary, NOT the current residual). It holds with no premise beyond `ShellPtPremCG`: the moments on `D ⊆ ball 0 ρ` come from
-`meshEventR` (`resMomS_ballRho_pt`). Recorded for a decision on the radius of the residual and of
+`meshEventR` (`resMomS_ballRho_pt`). Recorded for the open choice of the radius of the residual and of
 `shellOneTest_at_of_goodEnv_loc_g`'s `hmomS` binder (B1Assembly68.lean:1296-1310). -/
 def ShellCGResMomSBallRho (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)

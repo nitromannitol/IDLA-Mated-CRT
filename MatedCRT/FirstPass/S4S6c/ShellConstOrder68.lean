@@ -2,10 +2,9 @@ import MatedCRT.FirstPass.S4S6c.ShellConstants68
 import HarmonicBalls.Defs.Notation
 
 /-!
-# The constants of the shell chain in dependency order (Q1)
+# The constants of the shell chain in dependency order
 
-The order of (Q1, "Correct dependency order" and "Lean interface
-ruling"): the exponents and the mesh constants first; then `c₀ := K.c0` with `K := shellK68`; then the window prevalence
+The order: the exponents and the mesh constants first; then `c₀ := K.c0` with `K := shellK68`; then the window prevalence
 constants `C_good`, `C_fail` from `hprev` at `(shortExp ζ, γ, c₀)`; then the constant `C_hone` of the one-test bound; only
 then `q₀ ≤ 1/(64 C_hone)`, and only then the radius cutoff and `s₀`.
 

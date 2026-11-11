@@ -8,7 +8,7 @@ import MatedCRT.Defs.QuantumCone
 (`closed_6_x_hU`, `closed_6_7/8/9_hU_eps`, Closed6x68.lean): for every `γ ∈ (0,2)`, on every probability space carrying a
 quantum cone field `hcone`/`hcirc` (Duplantier-Sheffield), there is an LQG measure `μ` of that field.
 
-Source (Q4): the canonical quantum-cone field
+Source: the canonical quantum-cone field
 of Duplantier-Sheffield (arXiv:1409.7055, Definition 4.10 and the description of the circle-average embedding) together
 with the subcritical GMC construction of its LQG measure. It is a literature input, not a result of the IDLA paper.
 

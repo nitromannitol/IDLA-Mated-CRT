@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4S6c.ShellConstOrder68
 import MatedCRT.Defs.Setting
 
 /-!
-# The doubling constant `Dbl = max 1 C_good` of the one-test bound (Q1 step 5)
+# The doubling constant `Dbl = max 1 C_good` of the one-test bound
 
 The side condition `hdbl` of `shellOneTest_of_direct` (ShellHoneInst68.lean) bounds the mass of the enlarged test ball by
 the mass of the test ball: `μ(B_{3 c₀ R}(x)) ≤ Dbl · μ(B_{c₀ R}(x))`. With `Dbl := max 1 C_good` it follows from the

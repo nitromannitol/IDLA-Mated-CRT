@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.CGResWalkLoc68
 
 /-!
-# The split-leaf walk binder `hWalk` with the Green exponent `ωG` (fp-S4S6c-walk-omegaG, z11)
+# The split-leaf walk binder `hWalk` with the Green exponent `ωG`
 
 The split leaf `B1GoodEnvSplit68.shellOneTest_at_of_goodEnv_loc_split` takes the walk binder `hWalk` with
 first conjunct on `ball 0 (ρ - ε ^ K.ω)` and second conjunct `ε ^ ωG ≤ winRf / 8`. Two producers:

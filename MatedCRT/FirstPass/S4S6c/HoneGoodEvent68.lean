@@ -240,7 +240,7 @@ all `k`. The development gives eligibility of the shell centres (`hEl`) only for
 (`shell_fin_of_path`, ShellHde68.lean:215; the scale hypothesis `hNs`). On the prefix set the shell exit is finite for
 every `k` (`T < τU` with `τU` in `ℕ∞` forces `T ≠ ⊤`), so the walk does reach each shell, but the Lean development does
 not show that its centre is eligible for `k > n`. This is the variant on the shells `k ≤ n`, the range of
-`ShellOneTestAt` (ShellHoneInst68.lean:41): the minimal binder change proposed for decision. -/
+`ShellOneTestAt` (ShellHoneInst68.lean:41): the minimal candidate binder change. -/
 theorem hgood_of_selector_le (K : Constants68 γ ρc) {ε : ℝ} {η : ℝ → ℂ} {Kset : Set ℂ} {r s d a ρ C_good : ℝ}
     {Rf : ℂ → ℝ} {A : Set ℤ} {τU : (ℕ → ℤ) → ℕ∞} {μ : Measure ℂ} {Z : ℕ → (ℕ → ℤ) → ℂ} (n : ℕ)
     (hsel : ∀ z ∈ shortEligible ρ d a, IsGoodAnnulusEvent μ K.c0 C_good (Rf z) z)
