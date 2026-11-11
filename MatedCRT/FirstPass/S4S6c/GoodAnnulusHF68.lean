@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.OpenAnnulus68
 
 /-!
-# The good-annulus bound `hF` and the integrability `hint` of LEMMA68 on the open annulus (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# The good-annulus bound `hF` and the integrability `hint` of LEMMA68 on the open annulus
 
 Let `A = A_{R,2R}(z)` (`openAnnulus z R`) and let `IsGoodAnnulusEvent μ c₀ C R z` (Defs/Setting.lean:333) hold.
 For a centre `w ∈ A` the event bounds the lintegral `∫⁻_A ofReal(log(R/|u-w|)+1) dμ` by the supremum over `v ∈ A`,

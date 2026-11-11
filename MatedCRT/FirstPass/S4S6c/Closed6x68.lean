@@ -9,7 +9,7 @@ import MatedCRT.FirstPass.S6d
 import MatedCRT.FirstPass.Frozen.S5Cited
 
 /-!
-# Closed Lemmas 6.7, 6.8, 6.9 from the top assembly `hU_top` (q2, fp-S4S6c-closed-6x)
+# Closed Lemmas 6.7, 6.8, 6.9 from the top assembly `hU_top`
 
 Each theorem is the faithful Section 6 header of `firstPass_6_x_faithful` (FirstPass/S6d.lean) applied to the uniform
 input `hU_top` (ShellTop68.lean, f10d512). The model enters only through the core certified reference model
@@ -24,8 +24,8 @@ Binder status (the same in the three theorems; a binder not used by a theorem is
 * `hLit : LitExistence`, `hBM : LitWholePlaneBallMass`, `hCC : LitCoordChange`: cited, pending request 60c.
 * `hμ`: quantum-cone LQG existence for every `γ ∈ (0,2)`: pending request 60b.
 * `h27 : VolumeGrowthStmt` (6.8 only, Draft Section 2): named input.
-* `hOne : ShellOneTestOrderAeStmt 𝒮` (B1, ShellHoneInst68.lean:158): named input, proof by q1 (B1Assembly68).
-* Eps route (`closed_6_7_hU_eps`, `closed_6_8_hU_eps`, `closed_6_9_hU_eps`, `closed_6_x_hU_eps`; q2, fp-S4S6c-eps-closures):
+* `hOne : ShellOneTestOrderAeStmt 𝒮` (B1, ShellHoneInst68.lean:158): named input, proof in B1Assembly68.
+* Eps route (`closed_6_7_hU_eps`, `closed_6_8_hU_eps`, `closed_6_9_hU_eps`, `closed_6_x_hU_eps`):
   the same binders with `hOne : ShellOneTestOrderAeEpsStmt 𝒮` (ShellHoneInst68.lean:233: mesh threshold `ε ≤ shellEps0`,
   exponent antecedents, radius cutoff). B1 in the old form gives it by `shellOneTestOrderAeEpsStmt_of_old` (ShellHoneInst68).
 
@@ -39,7 +39,7 @@ open scoped ENNReal
 namespace MatedCRT
 
 /-- **Lemma 6.7 (faithful header), closed from the top assembly.** Binders: `hC` certified (core), `hB1` certified,
-`hLit hBM hCC` cited (60c), `hμ` pending (60b), `hOne` B1 (q1). Conclusion: `firstPass_6_7_faithful` (S6d.lean:160). -/
+`hLit hBM hCC` cited (60c), `hμ` pending (60b), `hOne` B1. Conclusion: `firstPass_6_7_faithful` (S6d.lean:160). -/
 theorem closed_6_7_hU {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
     (hC : CertifiedReferenceModelCore ν 𝒮)
     (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
@@ -54,7 +54,7 @@ theorem closed_6_7_hU {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPat
 
 /-- **Lemma 6.8 (faithful header, localized form), closed from the top assembly.** Binders: `hC` certified (core; its
 `cellSizeEstimate` is the `h28` of 6.8), `hB1` certified, `hLit hBM hCC` cited (60c), `hμ` pending (60b), `h27`
-`VolumeGrowthStmt` named, `hOne` B1 (q1). Conclusion: `firstPass_6_8_faithful` (S6d.lean:195). -/
+`VolumeGrowthStmt` named, `hOne` B1. Conclusion: `firstPass_6_8_faithful` (S6d.lean:195). -/
 theorem closed_6_8_hU {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
     (hC : CertifiedReferenceModelCore ν 𝒮)
     (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
@@ -70,7 +70,7 @@ theorem closed_6_8_hU {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPat
     h27 hC.cellSizeEstimate
 
 /-- **Lemma 6.9 (faithful header), closed from the top assembly.** Binders: `hC` certified (core), `hB1` certified,
-`hLit hBM hCC` cited (60c), `hμ` pending (60b), `hOne` B1 (q1). Conclusion: `firstPass_6_9_faithful` (S6d.lean:114). -/
+`hLit hBM hCC` cited (60c), `hμ` pending (60b), `hOne` B1. Conclusion: `firstPass_6_9_faithful` (S6d.lean:114). -/
 theorem closed_6_9_hU {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
     (hC : CertifiedReferenceModelCore ν 𝒮)
     (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
@@ -83,7 +83,7 @@ theorem closed_6_9_hU {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPat
   firstPass_6_9_faithful 𝒮
     (Lemma68ShellTop.hU_top hC.greenKernelLowerBound hC.cellSizeEstimate hC.exitTimeUpperBound hLit hBM hCC hB1 hμ hOne)
 
-/-- **Lemma 6.x, uniform constant-order lower bound (hU), closed from the Eps top assembly (q2, fp-S4S6c-eps-chain).**
+/-- **Lemma 6.x, uniform constant-order lower bound (hU), closed from the Eps top assembly.**
 Binders as `closed_6_7_hU`, with `hOne` the Eps form `ShellOneTestOrderAeEpsStmt` (threshold `ε ≤ shellEps0`, exponents
 `2ω₀β⁻ < α`, `2ω₀ < 2/(2+γ)² - ζ`, radius cutoff). Conclusion: `UniformConstantOrderLowerBoundStmt 𝒮` (the hU that
 `firstPass_6_x_faithful` consumes). -/
@@ -145,7 +145,7 @@ theorem closed_6_9_hU_eps {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SL
   firstPass_6_9_faithful 𝒮
     (Lemma68ShellTop.hU_top_eps hC.greenKernelLowerBound hC.cellSizeEstimate hC.exitTimeUpperBound hLit hBM hCC hB1 hμ hOne)
 
-/-! ### Named-field variants (q2, fp-S4S6c-cg-param, addendum items (i)-(iii); chat 246 Q4)
+/-! ### Named-field variants
 
 The three theorems below replace, in the Eps route only, (i) the certified core `hC : CertifiedReferenceModelCore ν 𝒮`
 by its three used fields as separate binders `hG hE h28`; (ii) the inline `hμ` by the named Prop
@@ -194,7 +194,7 @@ theorem closed_6_9_hU_eps_fields {𝒮 : SpaceFillingSLEModel}
   firstPass_6_9_faithful 𝒮
     (Lemma68ShellTop.hU_top_eps hG h28 hE hLit hBM hCC hB1 hμ hOne)
 
-/-! ### CG route (q2, fp-S4S6c-cg-param): the Eps route at the Green constant `CG`, with `c₀ = exp(-2CG)/32`.
+/-! ### CG route: the Eps route at the Green constant `CG`, with `c₀ = exp(-2CG)/32`.
 
 The binders are those of the named-field variants `closed_6_x_hU_eps_fields` (`hG h28 hE` separate; `hμ` named; `hBG` for
 6.8), with `hOne : ShellOneTestOrderAeCGStmt 𝒮` (ShellHoneInst68.lean: the CG Eps form at `c₀(CG)`). The CG-free Eps
@@ -245,11 +245,11 @@ theorem closed_6_x_hU_cg {𝒮 : SpaceFillingSLEModel}
     UniformConstantOrderLowerBoundStmt 𝒮 :=
   Lemma68ShellTop.hU_top_cg hG h28 hE hLit hBM hCC hB1 hμ hOne
 
-/-! ### CG mesh-radius route (q2, fp-S4S6c-meshEventR): the CG route with `meshEventR` (cell-size component at `(1+ρ)/2`).
+/-! ### CG mesh-radius route: the CG route with `meshEventR` (cell-size component at `(1+ρ)/2`).
 
-Chat 252 §1: the mesh event is `meshEventR` (Guard68S10.lean), and the leaf input is `hOne : ShellOneTestOrderAeCGRStmt 𝒮`
+The mesh event is `meshEventR` (Guard68S10.lean), and the leaf input is `hOne : ShellOneTestOrderAeCGRStmt 𝒮`
 (ShellHoneInst68.lean). The binders are those of the CG route, with `hBG : FrozenBerestyckiGwynneConeBallMass`
-(Frozen/S5Cited.lean:35; definitionally `BerestyckiGwynneConeBallMassStmt`, TRUE by chat 249) in 6.8. The CG route above is kept. -/
+(Frozen/S5Cited.lean:35; definitionally `BerestyckiGwynneConeBallMassStmt`) in 6.8. The CG route above is kept. -/
 
 /-- **Lemma 6.7 (faithful header), CG mesh-radius route.** Binders as `closed_6_7_hU_cg`, with `hOne` the `meshEventR` form. -/
 theorem closed_6_7_hU_cgR {𝒮 : SpaceFillingSLEModel}
@@ -297,7 +297,7 @@ theorem closed_6_x_hU_cgR {𝒮 : SpaceFillingSLEModel}
     UniformConstantOrderLowerBoundStmt 𝒮 :=
   Lemma68ShellTop.hU_top_cgR hG h28 hE hLit hBM hCC hB1 hμ hOne
 
-/-! ### Counting CG mesh-radius route (q2, fp-S4S6c-closed-cgrc): `ShellOneTestOrderAeCGRCStmt` (the counting event
+/-! ### Counting CG mesh-radius route: `ShellOneTestOrderAeCGRCStmt` (the counting event
 `countingMeshEventR`) and `CountingAtExitAlphaStmt` (one exponent for the exit and counting events, Guard68S10.lean). The
 exit-time input `hE` of the CG-R closures is not needed: the exit event at the counting exponent comes from `hK`. -/
 
@@ -352,7 +352,7 @@ theorem closed_6_x_hU_cgRC {𝒮 : SpaceFillingSLEModel}
     UniformConstantOrderLowerBoundStmt 𝒮 :=
   Lemma68ShellTop.hU_top_cgRC hG h28 hK hLit hBM hCC hB1 hμ hOne
 
-/-! ### First-pass forms from the certified reference model (q2, fp-S4S6c-closed-cgrc; lead li 17:45 UTC).
+/-! ### First-pass forms from the certified reference model.
 The Draft inputs `GreenKernelLowerBoundStmt 𝒮` (Lemma 2.16) and `CellSizeEstimateStmt 𝒮` (Lemma 2.8) are the projections
 `CertifiedReferenceModel.greenKernelLowerBound` (SLERef/Certified.lean:131) and `CertifiedReferenceModel.cellSizeEstimate`
 (SLERef/Certified.lean:100) of the certified reference model `hCRM` (a FIRST-PASS FROZEN bundle, Certified.lean:54). The counting

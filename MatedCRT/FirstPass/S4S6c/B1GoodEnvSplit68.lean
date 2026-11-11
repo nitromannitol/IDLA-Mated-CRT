@@ -5,9 +5,9 @@ import MatedCRT.FirstPass.S4S6c.HoneExitGeom68
 import MatedCRT.FirstPass.S4S6c.HoneCellGoodSelPw68
 
 /-!
-# `shellOneTest_at_of_goodEnv_loc_split`: the split-constant one-test leaf, free Green exponent (fp-S4S6c-goodenv-split, q4)
+# `shellOneTest_at_of_goodEnv_loc_split`: the split-constant one-test leaf, free Green exponent
 
-Codex Q4 (notes/fp-gaps/CODEX-idla-hOne-residuals-sol-20261110.md l.257-347): the good-annulus constant of the
+The good-annulus constant of the
 selector is the prevalence witness `C`, not `CG`; the Green constant `K.C = CG` and `K.c0 = shellC0 CG` are kept.
 Changes from `shellOneTest_at_of_goodEnv_loc_g2` (B1GoodEnvLoc68.lean:360):
 
@@ -42,7 +42,7 @@ open MatedCRT.Lemma68ShellHoneInst MatedCRT.Lemma68WindowRf MatedCRT.Lemma68Shel
 open MeasureTheory Set Filter Metric
 open scoped ENNReal Topology
 
-/-- **The one-test doubling bound, split exponent with a free walk exponent `ωG` (fp-S4S6c-goodenv-split, q4).**
+/-- **The one-test doubling bound, split exponent with a free walk exponent `ωG`.**
 Copy of `hdbl_of_exit_geom_path_split` (HoneExitGeom68.lean:556); the walk second conjunct is `ε ^ ωG ≤ R/8`. -/
 theorem hdbl_of_exit_geom_path_gexp {γ ρc ζc ωG : ℝ} (K : Constants68 γ ρc) {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η)
     (hε : 0 < ε) {μ : Measure ℂ} [IsFiniteMeasureOnCompacts μ]
@@ -153,8 +153,8 @@ theorem hdbl_of_exit_geom_path_gexp {γ ρc ζc ωG : ℝ} (K : Constants68 γ �
 
 
 
-/-- **`shellOneTest_at_of_goodEnv_loc_split` (fp-S4S6c-goodenv-split, q4).** The one-test leaf for the CG route with the
-good-annulus constant `C` split from the Green constant `CG` (Codex Q4). Named inputs (producers not landed):
+/-- **`shellOneTest_at_of_goodEnv_loc_split`.** The one-test leaf for the CG route with the
+good-annulus constant `C` split from the Green constant `CG`. Named inputs (producers not landed):
 `hTest` (test-end finiteness, `ShellCGTestEndLoc`), `hc` (74a), `hWalk` (free exponent `ωG`), `hCountGood`,
 `hcutR`, and the radius cap `t ht hrt hcut`. The exit membership `hωX` replaces the moment premise `hmomS`. -/
 theorem shellOneTest_at_of_goodEnv_loc_split {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (c0W : ℝ)
@@ -304,7 +304,7 @@ theorem shellOneTest_at_of_goodEnv_loc_split {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2
     (ρmesh := Lemma68HoneCellGood.rhoCell68 ρ) (s1 := shellS1CG γ CG) (c0W := c0W) S hreg hρ1 hζ0 hζ1
     hε hs₀ hr0 hrρ hrz (by unfold Lemma68HoneCellGood.rhoCell68; linarith)
     (by linarith [hds, hcutR, hd0]) hmesh i
-  -- the moment premise from the exit membership at the cell radius (q3, `hmomS_pointwise_rhoMom_s1_g`)
+  -- the moment premise from the exit membership at the cell radius (`hmomS_pointwise_rhoMom_s1_g`)
   have hmomS := MatedCRT.HoneMomSPw68.hmomS_pointwise_rhoMom_s1_g (γ := γ) (ρ := ρ) (s₀ := s₀) (α := α)
     (CE := CE) (ε := ε) (ρmom := Lemma68HoneCellGood.rhoCell68 ρ) (C := C) (ζ := ζ) (r := r)
     (s1 := shellS1CG γ CG) (c0W := c0W) S hωX i
