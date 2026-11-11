@@ -6,6 +6,7 @@ import MatedCRT.FirstPass.LPBridge.MinimumPrinciples
 import MatedCRT.FirstPass.LPBridge.LQGTestIntegralMeasurable
 import MatedCRT.FirstPass.LPBridge.UniversalMeasurability
 import MatedCRT.FirstPass.LPBridge.PairingLawIG4
+import MatedCRT.FirstPass.LPBridge.BrownianOutwardExcursion
 
 /-!
 # Phase 2 rewire of the counted IDLA theorems (task p2-rewire-counted)
@@ -19,8 +20,11 @@ LP and LQG bridges as the discharged inputs:
 `MatedCRT.frozenLQGMeasureFieldMeasurable_holds`, `MatedCRT.fpLQGMeasureLocality_holds`,
 `MatedCRT.frozenLQGTestIntegralMeasurable_holds`, `MatedCRT.frozenUniversalMeasurabilityOfAnalytic_holds`,
 `MatedCRT.fpPairingLawIG4_holds`.
-Inputs not yet discharged stay binders: `FPConeMeanZeroRestriction` and `FrozenBrownianOutwardExcursionAtExit`
-(their bridges are pending), together with the other frozen inputs of each wrapper.
+Inputs not yet discharged stay binders: `FPConeMeanZeroRestriction` (hR) stays a binder in the `_p2` wrappers of 1.4
+and 1.6 and in `closed_1_4_p4`, `closed_1_6_p4`; `FrozenBrownianOutwardExcursionAtExit` (hexc) is discharged by
+`frozenBrownianOutwardExcursionAtExit_holds` in `closed_1_4_p4`, `closed_1_6_p4`, `closed_3_5_p2`, `closed_3_6_p2`,
+`closed_3_7_p2` (the `_p2` wrappers of 1.4 and 1.6 keep their hexc binder). The other frozen inputs of each wrapper stay
+binders.
 -/
 
 open MeasureTheory Set Filter Topology Metric
@@ -344,6 +348,155 @@ theorem firstPass_4_2_of_wholeplane_model_p2
     (hBdry := hBdry) (hExist := hExist) (hThm11 := hThm11) (hProp56 := hProp56) (hconf := hconf)
     (hI2 := hI2) (hK := hK) (hloc := hloc) (hSC := hSC) (hE := hE) (hFL := hFL) (hE1 := hE1)
     (hE2 := hE2) (hscale := hscale) (h22 := h22)
+
+/-- Counted result 3.5 (`closed_3_5`, Closure/Section3.lean) with the Brownian outward excursion input (hexc)
+discharged by `frozenBrownianOutwardExcursionAtExit_holds`. -/
+theorem closed_3_5_p2 {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
+    (hC : CertifiedReferenceModel ν 𝒮) (h27 : VolumeGrowthStmt) :
+    DiscreteDirichletProblemCorrectedStmt 𝒮 :=
+  closed_3_5 ν hC h27 MatedCRT.frozenBrownianOutwardExcursionAtExit_holds
+
+/-- Counted result 3.6 (`closed_3_6`, Closure/Section3.lean) with the Brownian outward excursion input (hexc)
+discharged by `frozenBrownianOutwardExcursionAtExit_holds`. -/
+theorem closed_3_6_p2 {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
+    (hC : CertifiedReferenceModel ν 𝒮) : ConvergenceHarmonicFunctionsStmt 𝒮 :=
+  closed_3_6 ν hC MatedCRT.frozenBrownianOutwardExcursionAtExit_holds
+
+/-- Counted result 3.7 (`closed_3_7`, Closure/Section3.lean) with the Brownian outward excursion input (hexc)
+discharged by `frozenBrownianOutwardExcursionAtExit_holds`. -/
+theorem closed_3_7_p2 {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
+    (hC : CertifiedReferenceModel ν 𝒮) (h27 : VolumeGrowthStmt) :
+    ConvergenceNormalizedExitTimeStmt 𝒮 :=
+  closed_3_7 ν hC h27 MatedCRT.frozenBrownianOutwardExcursionAtExit_holds
+
+/-- Result 1.4 (`closed_1_4_derived_p2`) with hexc discharged by `frozenBrownianOutwardExcursionAtExit_holds`; hR remains a binder. -/
+theorem closed_1_4_p4
+    {𝒮 : SpaceFillingSLEModel}
+    (ν : ℝ → Measure SLEPathCode)
+    (hC : CertifiedReferenceModel ν 𝒮)
+    (hscale : QuantumConeScalingInput)
+    (hsc : SLEScaleInvarianceInput 𝒮)
+    (hrp : SLEReparametrizationInput 𝒮)
+    (hind : SLEIndepMonoInput 𝒮)
+    (hEnvS : ConeEnvironmentScalingUnderSLE 𝒮)
+    (hm : MepsScalingInput 𝒮)
+    (hdeg : DegreeBoundInput 𝒮)
+    (hBG : FrozenBerestyckiGwynneConeBallMass)
+    (h28 : CellSizeEstimateStmt 𝒮)
+    (h29 : CountingMeasureConvergenceStmt 𝒮)
+    (h210 : DegreeMeasureConvergenceStmt 𝒮)
+    (h214 : GreenKernelUpperBoundStmt 𝒮)
+    (h216 : GreenKernelLowerBoundStmt 𝒮)
+    (h51 : BG20Prop51 𝒮)
+    (hH : FrozenDiscreteHolderContinuityCorrected 𝒮)
+    (h0 : FPWholePlaneLQGExistence)
+    (h2 : FPWholePlaneLQGCoordinateChange)
+    (hV : FPWholePlaneUpperVolumeTail)
+    (hR : FPConeMeanZeroRestriction)
+    (hcone : FrozenConeScalingLaw 𝒮)
+    (hrevuz : FrozenLBMGreenOccupationRescaled 𝒮)
+    (h23 : ConeHarmonicBallsStmt)
+    (hdiv : FrozenConeRadialDivergenceCorrected)
+    (hF3 : FrozenDiskGreenNonnegCont)
+    (hcell : FrozenAdjacentCellsMeetAe 𝒮)
+    (hsup : FrozenLeastSupersolutionMemCone 𝒮)
+    (hmodel : FPWholePlaneLQGModel)
+    (hFL : FPConeWholePlaneFieldLaw)
+    (hstd : FrozenConeLogLocalCodeLawStd)
+    (hGBC : FrozenGreenBallCentre)
+    (hconf : FrozenHBInitialConfinement)
+    (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
+    (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion)
+    (hE1 : ConeCircleLawUniqueStep)
+    (hE2 : ConeReferenceExistsStep)
+    (h22 : LQGMeasurePropertiesStmt)
+    (h24c : ConeHarmonicBallsUpToFixedTimeCorrectedStmt)
+    (hG15 : FrozenGreenFunctionCrudeBound 𝒮)
+    (h32 : ClusterOpenLaplacianStmt.{0})
+    (h611 : FrozenVeryGoodAnnulusHarnackType)
+    (h82 : FrozenTypicalPointManyGoodScales)
+    (hI2 : FrozenLQGVolumeGrowthAllScales)
+    (hSup : LeastSupersolutionMemStmt.{0})
+    (hCons : ClusterConservationOfMassStmt.{0})
+    (hMono : ClusterMonotoneStmt.{0})
+    (hCompat : ClusterCompatibilityStmt.{0})
+    (hBdry : FrozenClusterBoundaryMeasureZero)
+    (hEx : FrozenExistenceHarmonicBalls)
+    (hThm11 : ExistenceUniquenessHarmonicBallsStmt.{0})
+    (hProp56 : FrozenUniquenessHarmonicBalls)
+    (hloc : FrozenHarmonicBallLocalSet)
+    (hSC : FrozenClusterStrongCompatibility)
+    (hnj : StrictGapFixedTimeUnionStep 𝒮)
+    (hcan : ConeCanonicalHalfBallStep)
+    (hcl : ConeHalfBallClosureInsideStep)
+    (hcan6 : ConeHarmonicBallsUpToFixedTimeCanonicalStmt)
+    : ConvergenceOfIDLAStmt 𝒮 :=
+  closed_1_4_derived_p2 ν hC hscale hsc hrp hind hEnvS hm hdeg hBG h28 h29 h210 h214 h216 h51 hH h0 h2 hV hR hcone hrevuz h23 hdiv hF3 hcell MatedCRT.frozenBrownianOutwardExcursionAtExit_holds hsup hmodel hFL hstd hGBC hconf hK hE hE1 hE2 h22 h24c hG15 h32 h611 h82 hI2 hSup hCons hMono hCompat hBdry hEx hThm11 hProp56 hloc hSC hnj hcan hcl hcan6
+
+/-- Result 1.6 (`closed_1_6_derived_p2`) with hexc discharged by `frozenBrownianOutwardExcursionAtExit_holds`; hR remains a binder. -/
+theorem closed_1_6_p4
+    {𝒮 : SpaceFillingSLEModel}
+    (ν : ℝ → Measure SLEPathCode)
+    (hC : CertifiedReferenceModel ν 𝒮)
+    (hscale : QuantumConeScalingInput)
+    (hsc : SLEScaleInvarianceInput 𝒮)
+    (hrp : SLEReparametrizationInput 𝒮)
+    (hind : SLEIndepMonoInput 𝒮)
+    (hEnvS : ConeEnvironmentScalingUnderSLE 𝒮)
+    (hm : MepsScalingInput 𝒮)
+    (hdeg : DegreeBoundInput 𝒮)
+    (hBG : FrozenBerestyckiGwynneConeBallMass)
+    (h28 : CellSizeEstimateStmt 𝒮)
+    (h29 : CountingMeasureConvergenceStmt 𝒮)
+    (h210 : DegreeMeasureConvergenceStmt 𝒮)
+    (h214 : GreenKernelUpperBoundStmt 𝒮)
+    (h216 : GreenKernelLowerBoundStmt 𝒮)
+    (h51 : BG20Prop51 𝒮)
+    (hH : FrozenDiscreteHolderContinuityCorrected 𝒮)
+    (h0 : FPWholePlaneLQGExistence)
+    (h2 : FPWholePlaneLQGCoordinateChange)
+    (hV : FPWholePlaneUpperVolumeTail)
+    (hR : FPConeMeanZeroRestriction)
+    (hcone : FrozenConeScalingLaw 𝒮)
+    (hrevuz : FrozenLBMGreenOccupationRescaled 𝒮)
+    (h23 : ConeHarmonicBallsStmt)
+    (hdiv : FrozenConeRadialDivergenceCorrected)
+    (hF3 : FrozenDiskGreenNonnegCont)
+    (hcell : FrozenAdjacentCellsMeetAe 𝒮)
+    (hsup : FrozenLeastSupersolutionMemCone 𝒮)
+    (hmodel : FPWholePlaneLQGModel)
+    (hFL : FPConeWholePlaneFieldLaw)
+    (hstd : FrozenConeLogLocalCodeLawStd)
+    (hGBC : FrozenGreenBallCentre)
+    (hconf : FrozenHBInitialConfinement)
+    (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
+    (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion)
+    (hE1 : ConeCircleLawUniqueStep)
+    (hE2 : ConeReferenceExistsStep)
+    (h22 : LQGMeasurePropertiesStmt)
+    (h24c : ConeHarmonicBallsUpToFixedTimeCorrectedStmt)
+    (hG15 : FrozenGreenFunctionCrudeBound 𝒮)
+    (h32 : ClusterOpenLaplacianStmt.{0})
+    (h611 : FrozenVeryGoodAnnulusHarnackType)
+    (h82 : FrozenTypicalPointManyGoodScales)
+    (hI2 : FrozenLQGVolumeGrowthAllScales)
+    (hSup : LeastSupersolutionMemStmt.{0})
+    (hCons : ClusterConservationOfMassStmt.{0})
+    (hMono : ClusterMonotoneStmt.{0})
+    (hCompat : ClusterCompatibilityStmt.{0})
+    (hBdry : FrozenClusterBoundaryMeasureZero)
+    (hEx : FrozenExistenceHarmonicBalls)
+    (hThm11 : ExistenceUniquenessHarmonicBallsStmt.{0})
+    (hProp56 : FrozenUniquenessHarmonicBalls)
+    (hloc : FrozenHarmonicBallLocalSet)
+    (hSC : FrozenClusterStrongCompatibility)
+    (hnj : StrictGapFixedTimeUnionStep 𝒮)
+    (hcan : ConeCanonicalHalfBallStep)
+    (hcl : ConeHalfBallClosureInsideStep)
+    (hcan6 : ConeHarmonicBallsUpToFixedTimeCanonicalStmt)
+    : ConvergenceOfDivSandpileStmt 𝒮 :=
+  closed_1_6_derived_p2 ν hC hscale hsc hrp hind hEnvS hm hdeg hBG h28 h29 h210 h214 h216 h51 hH h0 h2 hV hR hcone hrevuz h23 hdiv hF3 hcell MatedCRT.frozenBrownianOutwardExcursionAtExit_holds hsup hmodel hFL hstd hGBC hconf hK hE hE1 hE2 h22 h24c hG15 h32 h611 h82 hI2 hSup hCons hMono hCompat hBdry hEx hThm11 hProp56 hloc hSC hnj hcan hcl hcan6
+
 
 end MatedCRT.Phase2
 
