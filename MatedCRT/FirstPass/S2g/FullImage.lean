@@ -1,8 +1,8 @@
 import MatedCRT.FirstPass.Frozen.S1c
 
-/-! # Full Borel image of a Borel event of full measure (plan H2, q1, fp-S2g)
+/-! # Full Borel image of a Borel event of full measure (plan H2)
 
-The measure-theoretic lemma of `notes/fp-gaps/CHATGPT-q1-open-steps.md` section 2 (eq. (2)), used for the Borel full set of
+The measure-theoretic lemma of section 2 (eq. (2)), used for the Borel full set of
 local measures in H2. Let `F : Z → X` be measurable between Polish spaces, `P` a probability on `Z`, and `E` a measurable set
 with `P E = 1`. The image `F '' E` is analytic (Mathlib `MeasurableSet.analyticSet_image`), hence null-measurable for the law
 `P.map F` by the frozen Lusin input `FrozenUniversalMeasurabilityOfAnalytic` (`FirstPass/Frozen/S1c.lean:40`). It has full
@@ -12,7 +12,7 @@ namespace MatedCRT
 
 open MeasureTheory
 
-/-- **Full Borel image (fp-S2g, q1).** Under `FrozenUniversalMeasurabilityOfAnalytic`, a measurable `F` between Polish
+/-- **Full Borel image.** Under `FrozenUniversalMeasurabilityOfAnalytic`, a measurable `F` between Polish
 spaces and a measurable event `E` of full measure, there is a Borel set `B ⊆ F '' E` of full law `P.map F`. -/
 theorem exists_measurable_subset_image_full_law (hU : FrozenUniversalMeasurabilityOfAnalytic)
     {Z X : Type} [MeasurableSpace Z] [StandardBorelSpace Z] [TopologicalSpace X] [PolishSpace X]

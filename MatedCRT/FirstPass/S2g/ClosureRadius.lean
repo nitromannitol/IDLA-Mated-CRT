@@ -3,9 +3,9 @@ import MatedCRT.Defs.Setting
 import MatedCRT.FirstPass.S2g.HalfBallStop
 
 /-!
-# Closure radius and the canonical half-ball stopping (fp-S2g, q1)
+# Closure radius and the canonical half-ball stopping
 
-Connection step of `notes/fp-gaps/CHATGPT-q1-open-steps.md` Section 3 (H4, H5, H8). For `L ⊆ ℂ` let `closureRadius L`
+Connection step of (H4, H5, H8). For `L ⊆ ℂ` let `closureRadius L`
 be the supremum of `‖x‖` over `closure L`, the radius of the smallest closed disc centred at `0` containing the closure
 (Armitage-Gardiner, the radius about a point). For an open set inside `B_{3/4}` and `0 ≤ a`, `L ⊆ B_a` (open ball) if and
 only if `closureRadius L ≤ a`. This turns the containment stopping predicate of the canonical half-ball time (`B_{1/2}`
@@ -79,7 +79,7 @@ theorem closureRadius_le_of_subset_ball {L : Set ℂ} {a : ℝ} (ha : 0 ≤ a) (
     closure_minimal (h.trans ball_subset_closedBall) isClosed_closedBall
   exact mem_closedBall_zero_iff.mp (hcl hz)
 
-/-- **Connection lemma** (CHATGPT-q1-open-steps.md H5). For an open set `L ⊆ B_{3/4}` and `0 ≤ a`:
+/-- **Connection lemma** (H5). For an open set `L ⊆ B_{3/4}` and `0 ≤ a`:
 `L ⊆ B_a` if and only if `closureRadius L ≤ a`. -/
 theorem subset_ball_iff_closureRadius_le {L : Set ℂ} {a : ℝ} (hL : IsOpen L) (hb : L ⊆ ball 0 (3 / 4))
     (ha : 0 ≤ a) : L ⊆ ball 0 a ↔ closureRadius L ≤ a := by
@@ -91,7 +91,7 @@ theorem subset_ball_iff_closureRadius_le {L : Set ℂ} {a : ℝ} (hL : IsOpen L)
     intro x hx
     exact mem_closedBall_zero_iff.mpr ((norm_le_closureRadius hb (subset_closure hx)).trans h)
 
-/-- **Canonical half-ball stopping of an open increasing family** (CHATGPT-q1-open-steps.md H4, H5, H8, deterministic part).
+/-- **Canonical half-ball stopping of an open increasing family** (H4, H5, H8, deterministic part).
 Let `L t` be open subsets of `B_{3/4}` with `L t ⊆ L s` for `0 < t ≤ s`, the closure radius continuous on `(0, ∞)`,
 the pole `0` in `L t` for `t > 0`, some `L s ⊆ B_{1/2}` with `s > 0`, and bounded stopping set
 `{t > 0 : L t ⊆ B_{1/2}}`. Then `T = sup {t > 0 : L t ⊆ B_{1/2}}` is positive, `L t ⊆ B_{1/2}` for `0 < t < T`, and

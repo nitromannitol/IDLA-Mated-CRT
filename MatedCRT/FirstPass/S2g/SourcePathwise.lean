@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S2g.SourceReduction
 import MatedCRT.FirstPass.S2g.GoodSetReduction
 
-/-! # The source pathwise gate `SourceHalfBallPathwiseStep` from the Draft statements (fp-S2g, q1)
+/-! # The source pathwise gate `SourceHalfBallPathwiseStep` from the Draft statements
 
 `SourceHalfBallPathwiseStep` (`GoodSetReduction.lean`) asks, for every `γ ∈ (0,2)` and every whole-plane source `μ` of
 `IsLQGMeasureOfField P γ γ`, that `ConePathwiseHalfBallInputs (μ ω)` holds almost surely. It is discharged here by
@@ -20,7 +20,7 @@ theorem lt_lqgQ_of_mem_Ioo {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) : γ < lqg
     nlinarith
   linarith
 
-/-- **`SourceHalfBallPathwiseStep` from the Draft statements (q1, fp-S2g).** The pathwise half-ball inputs of every
+/-- **`SourceHalfBallPathwiseStep` from the Draft statements.** The pathwise half-ball inputs of every
 whole-plane source hold almost surely, given the Draft statements (Lemma 3.5, Proposition 5.3, Theorem 5.5, Theorem 1.1,
 Proposition 5.6, the obstacle clauses of the mated-CRT paper) and the frozen initial confinement. -/
 theorem sourceHalfBallPathwiseStep_of_draft (hOpen : ClusterOpenLaplacianStmt.{0})

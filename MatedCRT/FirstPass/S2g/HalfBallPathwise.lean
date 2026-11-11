@@ -2,9 +2,9 @@ import Mathlib
 import MatedCRT.FirstPass.S2g.ClosureRadius
 
 /-!
-# Pathwise canonical half-ball witness (fp-S2g, q1)
+# Pathwise canonical half-ball witness
 
-Reduction of the witness `Λ t = regularizedCluster μ (3/4) 0 t` of `ConeCanonicalHalfBallStep` (CHATGPT-q1-open-steps.md
+Reduction of the witness `Λ t = regularizedCluster μ (3/4) 0 t` of `ConeCanonicalHalfBallStep` (
 H8) to pathwise inputs. Free from the definitions: the regularized cluster is open, lies in `B_{3/4}` (interior of a
 closure inside the closed disc, `open_subset_ball_of_subset_closedBall`), and contains the pole `0` once the raw cluster
 is open (`cluster` contains its pole by its first clause `x = z`). The remaining inputs are the monotonicity (HB Lemma 3.3),
@@ -40,7 +40,7 @@ theorem zero_mem_regularizedCluster_of_open {μ : Measure ℂ} {t : ℝ} (hopen 
   unfold regularizedCluster
   exact interior_maximal subset_closure hopen h0
 
-/-- **Pathwise canonical half-ball witness** (CHATGPT-q1-open-steps.md H4, H5, H8). For a measure `μ` on `ℂ`, if the raw
+/-- **Pathwise canonical half-ball witness** (H4, H5, H8). For a measure `μ` on `ℂ`, if the raw
 clusters `Λ_{B_{3/4};0}(t)` are open for `t > 0`, the regularized clusters are monotone and have continuous closure radius
 on `(0, ∞)`, some regularized cluster at a positive time is inside `B_{1/2}`, the stopping set is bounded above, and the
 family `t ↦ regularizedCluster μ (3/4) 0 t` has the harmonic-ball properties on `(0, T)` with `T` the canonical time, then

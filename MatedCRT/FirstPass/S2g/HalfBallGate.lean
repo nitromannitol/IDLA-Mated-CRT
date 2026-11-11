@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S2g.CanonicalGate
 import MatedCRT.FirstPass.S2g.SourcePathwise
 
-/-! # The canonical half-ball gate with the source pathwise step discharged (fp-S2g, q1)
+/-! # The canonical half-ball gate with the source pathwise step discharged
 
 `coneCanonicalHalfBallStep_of_inputs` (`CanonicalGate.lean`) takes the pathwise source step `SourceHalfBallPathwiseStep` as an
 input. It is discharged here from the Draft statements (`sourceHalfBallPathwiseStep_of_draft`, `SourcePathwise.lean`). The
@@ -12,7 +12,7 @@ open MeasureTheory Set Filter Topology Metric HarmonicBalls
 
 namespace MatedCRT
 
-/-- **`ConeCanonicalHalfBallStep` from the Draft statements and the remaining inputs (q1, fp-S2g).** -/
+/-- **`ConeCanonicalHalfBallStep` from the Draft statements and the remaining inputs.** -/
 theorem coneCanonicalHalfBallStep_of_draft (hU : FrozenUniversalMeasurabilityOfAnalytic)
     (hmeasT : FrozenLQGTestIntegralMeasurable) (hstd : CandidateConeLogLocalCodeLawStd)
     (hmin : FrozenSuperharmonicMinimumPrinciple) (hC : FrozenGreenBallCentre)

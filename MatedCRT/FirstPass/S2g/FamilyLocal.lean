@@ -2,9 +2,9 @@ import Mathlib
 import MatedCRT.Defs.Setting
 
 /-!
-# Local transfer of the harmonic-ball fields (fp-S2g, q1)
+# Local transfer of the harmonic-ball fields
 
-Step H6 of `notes/fp-gaps/CHATGPT-q1-open-steps.md` Section 3: the harmonic-ball properties of a family `Λ_t` inside a
+Step H6: the harmonic-ball properties of a family `Λ_t` inside a
 disc `B` depend only on the restriction of the measure to `B`. Concretely, if `μ` and `ν` have the same restriction to
 `B` and every `Λ_t` (`0 < t < T`) has closure in `B`, then
 

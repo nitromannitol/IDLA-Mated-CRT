@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S2g.MomentSeparation
 
 /-!
-# The canonical half-ball gate, from its inputs (q1, fp-S2g)
+# The canonical half-ball gate, from its inputs
 
 The open gate `ConeCanonicalHalfBallStep` (`S2g.lean`) is reduced, deterministically, to the inputs of the good-set
 route: the frozen measurability inputs `FrozenUniversalMeasurabilityOfAnalytic` and `FrozenLQGTestIntegralMeasurable`,
@@ -15,7 +15,7 @@ functions and obstacle problem (Armitage-Gardiner).
 
 namespace MatedCRT
 
-/-- **Canonical half-ball gate from its inputs (q1, fp-S2g).** `ConeCanonicalHalfBallStep` follows from the good-set route. -/
+/-- **Canonical half-ball gate from its inputs.** `ConeCanonicalHalfBallStep` follows from the good-set route. -/
 theorem coneCanonicalHalfBallStep_of_inputs (hU : FrozenUniversalMeasurabilityOfAnalytic)
     (hmeasT : FrozenLQGTestIntegralMeasurable)
     (hsrc : SourceHalfBallPathwiseStep) (hstd : CandidateConeLogLocalCodeLawStd)
@@ -24,7 +24,7 @@ theorem coneCanonicalHalfBallStep_of_inputs (hU : FrozenUniversalMeasurabilityOf
     ConeCanonicalHalfBallStep :=
   coneCanonicalHalfBallStep_of_good (coneHalfBallGood_of_source_sep hU hmeasT hsrc hstd) hmin hC hGB hpole
 
-/-- **Corrected Lemma 2.4, canonical form, from the good-set inputs (q1, fp-S2g).** The canonical statement
+/-- **Corrected Lemma 2.4, canonical form, from the good-set inputs.** The canonical statement
 `ConeHarmonicBallsUpToFixedTimeCanonicalStmt` follows from the inputs of `coneCanonicalHalfBallStep_of_inputs` together
 with the closure containment step and the volume growth statement used by `firstPass_2_4_canonical_of_steps`. -/
 theorem firstPass_2_4_canonical_of_inputs (hU : FrozenUniversalMeasurabilityOfAnalytic)

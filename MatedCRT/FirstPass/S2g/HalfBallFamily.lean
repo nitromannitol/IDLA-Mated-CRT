@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S2g.AllDisksCont
 import MatedCRT.FirstPass.S2g.HalfBallPathwise
 import MatedCRT.FirstPass.S2g.RadiusContinuity
 
-/-! # Pathwise canonical half-ball family from the radius-3/4 data (fp-S2g, q1; CHATGPT-q1-open-steps.md H6-H8)
+/-! # Pathwise canonical half-ball family from the radius-3/4 data (H6-H8)
 
 The deterministic assembly of `ConeCanonicalHalfBallStep`. The witness is `Λ t = regularizedCluster μ (3/4) 0 t` and the
 canonical time is `T = sup {t > 0 : Λ_t ⊆ B_{1/2}}`. The predicate `ConePathwiseHalfBallInputs μ` collects the pathwise
@@ -30,7 +30,7 @@ def RadiusThreeQuartersData (μ : Measure ℂ) (t : ℝ) : Prop :=
     HasLaplacian (leastSupersolution μ (3 / 4) 0 t) (μ.restrict (regularizedCluster μ (3 / 4) 0 t)) 0
       (ball (0 : ℂ) (3 / 4))
 
-/-- **Obstacle characterization of the regularized-cluster family (deterministic, q1).** If the radius-`3/4` data holds at
+/-- **Obstacle characterization of the regularized-cluster family (deterministic).** If the radius-`3/4` data holds at
 each `t ∈ (0,T)` and `Λ_t ⊆ B_{1/2}` there, the family `Λ_t = regularizedCluster μ (3/4) 0 t` satisfies
 `SatisfiesObstacleCharacterizationOn` on `(0, T)`: it is `obstacle_clause_all_radii` at each time. -/
 theorem satisfiesObstacleCharacterizationOn_of_data {μ : Measure ℂ} [IsLocallyFiniteMeasure μ] {T : ℝ}
@@ -56,9 +56,9 @@ theorem regularizedCluster_subset_half_of_lt_sSup {μ : Measure ℂ}
   obtain ⟨s, hs, hts⟩ := exists_lt_of_lt_csSup hSne ht.2
   exact (hmono (show t ∈ Ioi 0 from ht.1) (show s ∈ Ioi 0 from hs.1) hts.le).trans hs.2
 
-/-- **Pathwise canonical inputs of the cone measure `μ` (NEW, open; q1).** The statement that `μ` satisfies, pathwise, what
+/-- **Pathwise canonical inputs of the cone measure `μ` (NEW; open).** The statement that `μ` satisfies, pathwise, what
 `ConeCanonicalHalfBallStep` needs for the witness `Λ_t = regularizedCluster μ (3/4) 0 t`. Each conjunct is a NEW input with
-its source in `notes/fp-gaps/CHATGPT-q1-open-steps.md`: the radius-3/4 data at every time (H2, H3); monotonicity (H4, from
+its source in : the radius-3/4 data at every time (H2, H3); monotonicity (H4, from
 HB Theorem 1.1 and Lemma 3.3); Hausdorff continuity on `(0,T+ε)` for some `ε > 0` (H5; the stopping argument uses continuity at `T` only); a small-time inclusion and boundedness of the stopping set
 (H4, using `μ(Λ_t) = t`); the HB harmonic-ball conditions on `(0, T)` (H6). -/
 def ConePathwiseHalfBallInputs (μ : Measure ℂ) : Prop :=
@@ -76,7 +76,7 @@ def ConePathwiseHalfBallInputs (μ : Measure ℂ) : Prop :=
   SatisfiesHarmonicBallConditionsOn μ (regularizedCluster μ (3 / 4) 0) 0
     (sSup {t : ℝ | 0 < t ∧ regularizedCluster μ (3 / 4) 0 t ⊆ ball (0 : ℂ) (1 / 2)})
 
-/-- **Canonical stopped family from the pathwise inputs (deterministic, q1).** Under `ConePathwiseHalfBallInputs μ` and the
+/-- **Canonical stopped family from the pathwise inputs (deterministic).** Under `ConePathwiseHalfBallInputs μ` and the
 frozen potential-theory inputs, the canonical time `T = sup {t > 0 : Λ_t ⊆ B_{1/2}}` is positive, `Λ` is a family of harmonic
 balls on `(0,T)` with the properties of Theorem 2.3 and the obstacle characterization, and it is stopped at `∂B_{1/2}` at `T`. -/
 theorem canonical_stopped_family_of_pathwise {μ : Measure ℂ}
@@ -104,9 +104,8 @@ theorem canonical_stopped_family_of_pathwise {μ : Measure ℂ}
     ⟨_, lt_add_of_pos_right _ hε, continuousOn_closureRadius_of_hausdorffContinuousOn hHε hb⟩
   exact canonical_witness_of_pathwise hopen hmono hcontU hne hbdd hfam
 
-/-- **Almost-sure canonical family (deterministic reduction, q1).** If almost surely the pathwise inputs hold for the cone
-measures `μ ω`, then almost surely there is a stopped family of harmonic balls at the canonical time (the shape of
-`ConeCanonicalHalfBallStep`). -/
+/-- **Almost-sure canonical family (deterministic reduction).** If almost surely the pathwise inputs hold for the cone
+measures `μ ω`, then almost surely there is a stopped family of harmonic balls at the canonical time (the shape of `ConeCanonicalHalfBallStep`). -/
 theorem ae_canonical_family_of_pathwise {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (μ : Ω → Measure ℂ)
     (hmin : FrozenSuperharmonicMinimumPrinciple) (hC : FrozenGreenBallCentre)
     (hGB : HarmonicBalls.GreenFunctionBallStmt) (hpole : FrozenGreenDiscPole)

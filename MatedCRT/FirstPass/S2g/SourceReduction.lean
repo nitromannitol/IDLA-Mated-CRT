@@ -5,7 +5,7 @@ import HarmonicBalls.Draft.Section3
 import HarmonicBalls.Draft.Section5
 import MatedCRT.FirstPass.Frozen.S2g
 
-/-! # Source pathwise inputs from the Draft statements of Harmonic Balls (fp-S2g, q1)
+/-! # Source pathwise inputs from the Draft statements of Harmonic Balls
 
 Reduction of the pathwise half-ball inputs `ConePathwiseHalfBallInputs` (HalfBallFamily.lean) of the whole-plane source
 to the Draft statements of Harmonic Balls (arXiv:2208.11795): `ClusterOpenLaplacianStmt` (Lemma 3.2),
@@ -24,7 +24,7 @@ Proved here, deterministic or Draft-level:
 Not hypotheses here: `ae_conePathwiseHalfBallInputs_of_draft` (below) proves `HalfBallBoundaryNull` from the radius-1 Draft
 statement `ClusterBoundaryMeasureZeroStmt` (`frontier_null_of_radius_one`), and all clauses of `ConePathwiseHalfBallInputs`
 (the Hausdorff continuity, clause 4; the family identification, clauses 7-8; the mass clause 6), so the earlier N1-N3 items
-are moot (operator 01:40 UTC). -/
+are moot. -/
 
 open MeasureTheory Set Filter Topology Metric HarmonicBalls
 
@@ -137,7 +137,7 @@ theorem monotoneOn_regularizedCluster_of_monotone_cluster {μ : Measure ℂ}
   intro t₁ ht₁ t₂ _ h12
   exact interior_mono (closure_mono (hmono t₁ t₂ (mem_Ioi.mp ht₁) h12))
 
-/-- NEW hypothesis (q1, fp-S2g; not in the Draft, not frozen): radius-`3/4` boundary-nullness of the raw clusters of the
+/-- NEW hypothesis (not in the Draft; not frozen): radius-`3/4` boundary-nullness of the raw clusters of the
 source, for every `t > 0`: `μ (∂Λ^{3/4}_t ∩ B_{3/4}) = 0`. The Draft gives the radius-1 analogue only, with closure in `B_1`
 (`ClusterBoundaryMeasureZeroStmt`, HB Draft/Section5.lean:155). -/
 def HalfBallBoundaryNull (μ : Measure ℂ) : Prop :=
@@ -219,7 +219,7 @@ theorem bddAbove_of_mass {μ : Measure ℂ} [IsLocallyFiniteMeasure μ]
   have h3 := ENNReal.toReal_mono hfin hle
   rwa [ENNReal.toReal_ofReal ht0.le] at h3
 
-/-- **Pathwise inputs of the whole-plane source (q1, fp-S2g; Draft reduction, no open hypothesis).** Almost surely
+/-- **Pathwise inputs of the whole-plane source (Draft reduction; no open hypothesis).** Almost surely
 `ConePathwiseHalfBallInputs` holds for `μ ω`. The inputs are the Draft statements `ClusterOpenLaplacianStmt`,
 `LeastSupersolutionMemStmt`, `ClusterConservationOfMassStmt`, `ClusterMonotoneStmt` (obstacle clauses), `ClusterCompatibilityStmt`
 (Lemma 3.5), `ClusterBoundaryMeasureZeroStmt` (Proposition 5.3, radius `1`), `ExistenceHarmonicBallsStmt` (Theorem 5.5, the family `Λ`

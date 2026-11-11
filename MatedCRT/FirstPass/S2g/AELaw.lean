@@ -1,6 +1,6 @@
 import MatedCRT.FirstPass.S2g.ScaleInvariance
 
-/-! # Lemma 2.6 with measurable joint laws (q1, fp-S2g-2-4-2-5-corrected)
+/-! # Lemma 2.6 with measurable joint laws
 
 The Draft form `ConeScaleInvarianceStmt` states the equality of the push-forwards
 `P.map (circle, globalFamilyProcess)` and its rescaled version, with no measurability clause. `Measure.map` of a map that is
@@ -13,7 +13,7 @@ namespace MatedCRT
 
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric HarmonicBalls
 
-/-- **Corrected Lemma 2.6, measurable law form (`ConeScaleInvarianceAEStmt`, q1).** For a cone field, a global family `Λ` of
+/-- **Corrected Lemma 2.6, measurable law form (`ConeScaleInvarianceAEStmt`).** For a cone field, a global family `Λ` of
 harmonic balls almost surely, and `b > 0`: the joint process (circle process, global family process) and the joint process of
 the rescaled circle and rescaled family are both almost everywhere measurable, and their push-forward laws agree (the Draft
 `ConeScaleInvarianceStmt`). Lemma 2.6 of the corrected paper, with its law stated through AE-measurable maps. -/
@@ -29,7 +29,7 @@ def ConeScaleInvarianceAEStmt : Prop :=
       P.map (fun ω => (circleProcess (rescaledCircle γ (hcirc ω) (coneScaleRadius γ (hcirc ω) b) b),
         globalFamilyProcess (rescaledFamily (Λ ω) (coneScaleRadius γ (hcirc ω) b) b)))
 
-/-- **Lemma 2.6, measurable law, from the a.s. factorization (q1).** The equality of laws is
+/-- **Lemma 2.6, measurable law, from the a.s. factorization.** The equality of laws is
 `coneScaleInvariance_of_globalFamilyFactor`; the two AE-measurability clauses come from the a.s. identities
 `globalFamilyProcess (Λ ω) = Φ (circleProcess (hcirc ω))` with `Φ` AE-measurable on the circle law. -/
 theorem coneScaleInvarianceAE_of_globalFamilyFactor (hfac : ConeGlobalFamilyFactorStep)

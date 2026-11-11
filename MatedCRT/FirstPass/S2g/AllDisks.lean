@@ -1,14 +1,13 @@
 import MatedCRT.FirstPass.S2g.GoodSet
 import MatedCRT.FirstPass.Frozen.S2g
 
-/-! # All-disks obstacle clause from the radius-3/4 clause (fp-S2g, q1; CHATGPT-q1-open-steps.md H7)
+/-! # All-disks obstacle clause from the radius-3/4 clause (H7)
 
 Deterministic part of `ConeCanonicalHalfBallStep`. For a measure `μ`, a time `t > 0` and `A = Λ_t` (open, containing the
 pole `0`, contained in `B_{1/2}`), the least supersolution `W = leastSupersolution μ (3/4) 0 t` at radius `3/4` determines
 the least supersolutions at every radius `ρ > r` with `A ⊆ B_r`: the candidate `allDisksCandidate W t ρ` is `W + c` on
 `B_{3/4}` (with `c` the constant `t G_{B_{3/4}}(0,·) - t G_{B_ρ}(0,·)`, which is constant by the centre formula
-`FrozenGreenBallCentre`) and `-t G_{B_ρ}(0,·)` off `B_{3/4}`. The pole cancels in the centre formula. Written argument:
-`notes/fp-gaps/CHATGPT-q1-open-steps.md` Section 3 H7; least-ness is `certificate_le_supersolution` (GoodSet.lean).
+`FrozenGreenBallCentre`) and `-t G_{B_ρ}(0,·)` off `B_{3/4}`. The pole cancels in the centre formula. Least-ness is `certificate_le_supersolution` (GoodSet.lean).
 
 Laplacian identity (`allDisks_integral_identity`): the potential `U = W + t G_{B_{3/4}}(0,·)` (zero off `B_{3/4}`) satisfies
 `Δ U = μ|_A - t δ_0` tested against cut-off test functions; the cut-off `χ` equals `1` on `B_{5/8} ⊇ Ā`. -/
@@ -45,7 +44,7 @@ theorem allDisksCandidate_eq_of_centre (hC : FrozenGreenBallCentre) {W : ℂ →
   ring
 
 open Classical in
-/-- The potential `U = W + t G_{B_{3/4}}(0,·)` on `B_{3/4}`, extended by `0` (ChatGPT H7 `u`). -/
+/-- The potential `U = W + t G_{B_{3/4}}(0,·)` on `B_{3/4}`, extended by `0`. -/
 noncomputable def allDisksPotential (W : ℂ → ℝ) (t : ℝ) : ℂ → ℝ :=
   fun x => if x ∈ ball (0 : ℂ) (3 / 4) then W x + t * greenFunction (ball (0 : ℂ) (3 / 4)) 0 x else 0
 

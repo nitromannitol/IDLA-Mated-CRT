@@ -3,10 +3,10 @@ import MatedCRT.FirstPass.Frozen.S2g
 import MatedCRT.FirstPass.S1c.Moments
 
 /-!
-# Good set, deterministic part: contact sets of certificates (fp-S2g, q1)
+# Good set, deterministic part: contact sets of certificates
 
 Pure potential theory on `B_R` with pole `0` (Armitage-Gardiner notation; HB `supersolutions`, `leastSupersolution`,
-`cluster`). Written argument: `notes/fp-gaps/CHATGPT-cone-good-set.md` Section 4.1; the minimum principle and the
+`cluster`). The minimum principle and the
 pole behaviour of the disc Green function are the frozen EXTERNAL inputs of `Frozen/S2g.lean`.
 -/
 
@@ -76,7 +76,7 @@ theorem integrable_mul_laplacian_of_contOn {R : ℝ} {w : ℂ → ℝ} (hw : Con
     (hw.mul hΔ.continuousOn).integrableOn_compact (isCompact_closedBall (0 : ℂ) R)
   exact (integrableOn_iff_integrable_of_support_subset hsupp).mp hint
 
-/-- **Deterministic comparison (written argument: `notes/fp-gaps/CHATGPT-cone-good-set.md` Section 4.1).** Let `w` be a
+/-- **Deterministic comparison.** Let `w` be a
 supersolution for the obstacle `-t G_{B_R}(0,·)` with zero boundary values, and suppose `Δw = μ|_A` in `B_R` for the
 contact set `A = certCluster R t w` (condition C4). Then `w` lies below every supersolution `v` with the same obstacle.
 The proof applies the minimum principle `FrozenSuperharmonicMinimumPrinciple` to `v - w` on the open set `A`. -/

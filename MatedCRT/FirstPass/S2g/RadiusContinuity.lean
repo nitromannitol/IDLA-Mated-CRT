@@ -1,7 +1,7 @@
 import MatedCRT.Defs.Setting
 import MatedCRT.FirstPass.S2g.ClosureRadius
 
-/-! # Continuity of the closure radius under Hausdorff continuity (fp-S2g, q1; CHATGPT-q1-open-steps.md H5, step P2)
+/-! # Continuity of the closure radius under Hausdorff continuity (H5; step P2)
 
 If `t ↦ Λ_t` is Hausdorff continuous on a set `S` (the closure-continuity field of Theorem 1.1, HB
 `HarmonicBalls.HausdorffContinuousOn`) and every `Λ_t` is bounded, then `t ↦ closureRadius (Λ_t)` is continuous on `S`.
@@ -36,7 +36,7 @@ theorem closureRadius_le_add_of_hausdorffEDist {L M : Set ℂ} (hMb : Bornology.
   rw [← dist_eq_norm] at htri
   linarith
 
-/-- **Continuity of the closure radius (P2, q1).** If `t ↦ Λ_t` is Hausdorff continuous on `S` and each `Λ_t` is
+/-- **Continuity of the closure radius (P2).** If `t ↦ Λ_t` is Hausdorff continuous on `S` and each `Λ_t` is
 bounded, then `t ↦ closureRadius (Λ_t)` is continuous on `S`. -/
 theorem continuousOn_closureRadius_of_hausdorffContinuousOn {Λ : ℝ → Set ℂ} {S : Set ℝ}
     (hH : HausdorffContinuousOn Λ S) (hb : ∀ t, Bornology.IsBounded (Λ t)) :

@@ -1,6 +1,6 @@
 import MatedCRT.FirstPass.S2g.AllDisks
 
-/-! # All-disks candidate: continuity up to the boundary (fp-S2g, q1; CHATGPT-q1-open-steps.md H7, step L1)
+/-! # All-disks candidate: continuity up to the boundary (H7; step L1)
 
 For the candidate `allDisksCandidate W t ρ` of `AllDisks.lean`: if `W` is continuous on `closedBall 0 (3/4)` and vanishes on
 `sphere 0 (3/4)` (clauses 2 and 4 of the radius-`3/4` obstacle characterization), then the candidate is continuous on
@@ -13,7 +13,7 @@ open MeasureTheory Filter Topology Set Metric HarmonicBalls
 open scoped ContDiff
 
 open Classical in
-/-- **H7 step L1 (q1, fp-S2g).** The all-radii candidate is continuous on the closed ball `closedBall 0 ρ`. -/
+/-- **H7 step L1.** The all-radii candidate is continuous on the closed ball `closedBall 0 ρ`. -/
 theorem allDisksCandidate_continuousOn (hC : FrozenGreenBallCentre) (hGB : HarmonicBalls.GreenFunctionBallStmt)
     (hpole : FrozenGreenDiscPole) {W : ℂ → ℝ} {t ρ : ℝ} (hρ : 0 < ρ)
     (hWc : ContinuousOn W (closedBall (0 : ℂ) (3 / 4)))
@@ -65,7 +65,7 @@ theorem allDisksCandidate_continuousOn (hC : FrozenGreenBallCentre) (hGB : Harmo
     exact continuousOn_const.mul ((hpole ρ hρ).1.mono hsub)
 
 open Classical in
-/-- **H7 step L2a (q1, fp-S2g; clause 3 at radius `ρ`).** The all-radii candidate has Laplacian `μ|_A` on `B_ρ`, with the
+/-- **H7 step L2a (clause 3 at radius `ρ`).** The all-radii candidate has Laplacian `μ|_A` on `B_ρ`, with the
 Laplacian identity of `allDisks_integral_identity` as its distributional content (the candidate is locally integrable on
 `B_ρ` by L1). -/
 theorem allDisksCandidate_hasLaplacian (hC : FrozenGreenBallCentre) (hGB : HarmonicBalls.GreenFunctionBallStmt)
@@ -85,7 +85,7 @@ theorem allDisksCandidate_hasLaplacian (hC : FrozenGreenBallCentre) (hGB : Harmo
   simp
 
 open Classical in
-/-- **H7 step L2b (q1, fp-S2g; `LaplacianLE` of the candidate).** The candidate is a Laplacian sub-solution `ΔW ≤ μ` on
+/-- **H7 step L2b (`LaplacianLE` of the candidate).** The candidate is a Laplacian sub-solution `ΔW ≤ μ` on
 `B_ρ`, since `μ|_A ≤ μ` and the test functions are nonnegative. -/
 theorem allDisksCandidate_laplacianLE (hC : FrozenGreenBallCentre) (hGB : HarmonicBalls.GreenFunctionBallStmt)
     (hpole : FrozenGreenDiscPole) {μ : Measure ℂ} [IsLocallyFiniteMeasure μ] {W : ℂ → ℝ} {t ρ : ℝ} {A : Set ℂ}
@@ -103,7 +103,7 @@ theorem allDisksCandidate_laplacianLE (hC : FrozenGreenBallCentre) (hGB : Harmon
   exact integral_mono_measure Measure.restrict_le_self (ae_of_all _ (fun x => hφ0 x)) hφi
 
 open Classical in
-/-- **H7 step L3 (q1, fp-S2g; membership in the supersolutions at radius `ρ`).** The all-radii candidate is continuous
+/-- **H7 step L3 (membership in the supersolutions at radius `ρ`).** The all-radii candidate is continuous
 (L1), a Laplacian sub-solution (L2b) and dominates the obstacle `-t G_{B_ρ}(0,·)` off the pole. Off `B_{3/4}` it equals the
 obstacle; on `B_{3/4}` the domination is `hlow` rewritten by the centre formula (`log (3/(4‖x‖)) = log (3/(4ρ)) + log (ρ/‖x‖)`),
 and on the sphere `‖x‖ = ρ` the Green function of `B_ρ` vanishes (sphere zero of `GreenFunctionBallStmt`). -/
@@ -143,7 +143,7 @@ theorem allDisksCandidate_mem_supersolutions (hC : FrozenGreenBallCentre) (hGB :
   · simp only [allDisksCandidate, h3, ↓reduceIte, le_refl]
 
 open Classical in
-/-- **H7 sphere clause (q1, fp-S2g).** For `A ⊆ B_r` with `r < ρ`, the all-radii candidate vanishes on `∂B_ρ`. Off
+/-- **H7 sphere clause.** For `A ⊆ B_r` with `r < ρ`, the all-radii candidate vanishes on `∂B_ρ`. Off
 `B_{3/4}` it is the obstacle `-t G_{B_ρ}(0,·)`, which vanishes on the sphere. For `ρ < 3/4` the sphere lies in `B_{3/4} \ A`,
 where `W = -t G_{B_{3/4}}(0,·)`, so the candidate is `-t G_{B_{3/4}}(0,·) + t (2π)⁻¹ log (3/(4ρ)) = 0`. -/
 theorem allDisksCandidate_sphere_eq_zero (hC : FrozenGreenBallCentre) (hGB : HarmonicBalls.GreenFunctionBallStmt)
@@ -176,7 +176,7 @@ theorem allDisksCandidate_sphere_eq_zero (hC : FrozenGreenBallCentre) (hGB : Har
     rw [hG0, mul_zero]
 
 open Classical in
-/-- **H7 step L4 (q1, fp-S2g; least-ness at radius `ρ`).** Let `A ⊆ B_r` with `r < ρ`. The all-radii candidate is the least
+/-- **H7 step L4 (least-ness at radius `ρ`).** Let `A ⊆ B_r` with `r < ρ`. The all-radii candidate is the least
 supersolution at radius `ρ` on `closedBall 0 ρ`: it is a certificate for `certificate_le_supersolution` (zero on `∂B_ρ`, which
 lies outside `A`; below the obstacle off `A`, by the centre formula at `3/4` and `hobs`). On `∂B_ρ` with `ρ < 3/4` the value
 `W = -t G_{B_{3/4}}(0,·)` (off `A`) makes the candidate `-t G_{B_ρ}(0,·) = 0`. -/
@@ -211,7 +211,7 @@ theorem leastSupersolution_eq_allDisksCandidate (hmin : FrozenSuperharmonicMinim
   rintro _ ⟨v, hv, rfl⟩
   exact hle v hv x hx
 
-/-- **H7 step L5 (q1, fp-S2g; the cluster does not depend on the radius).** If `cluster μ (3/4) 0 t ⊆ B_ρ` and `W` is the
+/-- **H7 step L5 (the cluster does not depend on the radius).** If `cluster μ (3/4) 0 t ⊆ B_ρ` and `W` is the
 radius-`3/4` least supersolution on `B_{3/4}`, the cluster at radius `ρ` equals the cluster at radius `3/4`: inside
 `B_{3/4}` both are `{x ≠ 0 : -t G_{B_{3/4}}(0,x) < W x} ∪ {0}` (the centre formula cancels `-t G_{B_ρ}`), and outside
 `B_{3/4}` the candidate is the obstacle, so the radius-`ρ` cluster has no points there. -/
@@ -274,7 +274,7 @@ theorem hasLaplacian_of_eqOn_ball {w w' : ℂ → ℝ} {μp μn : Measure ℂ} {
   · rw [laplacian_eq_zero_off_tsupport (fun hT => hx (hφ.2.2 hT)), mul_zero, mul_zero]
 
 open Classical in
-/-- **H7 obstacle clause at every radius (q1, fp-S2g).** Given the radius-`3/4` data at time `t`: the least supersolution
+/-- **H7 obstacle clause at every radius.** Given the radius-`3/4` data at time `t`: the least supersolution
 `v = leastSupersolution μ (3/4) 0 t` is a supersolution, vanishes on `∂B_{3/4}`, has Laplacian `μ|_A` on `B_{3/4}` for
 `A = interior (closure (cluster μ (3/4) 0 t))`, and the cluster is open; and `A ⊆ B_r` with `r < ρ`. Then the four clauses of
 `SatisfiesObstacleCharacterizationOn` hold at radius `ρ` with the same set `A`. The obstacle inequality off `A` (`hobs`) is

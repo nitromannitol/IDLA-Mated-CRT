@@ -1,9 +1,9 @@
 import MatedCRT.FirstPass.S2g.HalfBallFamily
 
 /-!
-# Locality of the radius-3/4 cluster data (deterministic, q1, fp-S2g)
+# Locality of the radius-3/4 cluster data (deterministic)
 
-Route: `notes/fp-gaps/CHATGPT-q1-open-steps.md` Section 3, H3 (`A^μ_t = A^{μ⁰}_t`). The supersolution inequality on
+Route: H3 (`A^μ_t = A^{μ⁰}_t`). The supersolution inequality on
 `B_r` only sees the restriction of `μ` to `B_r`: `LaplacianLE w μ U` and `HasLaplacian w μpos μneg U` test against
 functions whose support lies in `U`. Hence the least supersolution, the cluster, the regularized cluster and the
 radius-3/4 data at each time depend on `μ` only through `μ.restrict (ball 0 (3/4))`. This is the deterministic part of
@@ -171,7 +171,7 @@ theorem satisfiesHarmonicBallConditionsOn_of_restrict_eq {μ ν : Measure ℂ} {
   hausdorffContinuousOn := hd.hausdorffContinuousOn
   iInter_eq := hd.iInter_eq
 
-/-- **Transfer of the pathwise half-ball inputs (deterministic, q1).** `ConePathwiseHalfBallInputs` depends on the measure
+/-- **Transfer of the pathwise half-ball inputs (deterministic).** `ConePathwiseHalfBallInputs` depends on the measure
 only through its restriction to `B_{3/4}` and its local finiteness. If `μ` has the inputs and `ν` is locally finite and
 agrees with `μ` on `B_{3/4}`, then `ν` has them, with the same canonical time. The regularized cluster family at radius
 `3/4` is unchanged (`regularizedCluster_fun_congr_three_quarters`), its harmonic-ball and obstacle clauses on `(0, T)`

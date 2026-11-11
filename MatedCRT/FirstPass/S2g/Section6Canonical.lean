@@ -4,7 +4,7 @@ import MatedCRT.Proofs.Measurability.BoundaryLayer
 import MatedCRT.Proofs.IDLA.UpperEventMeasurable
 import MatedCRT.Proofs.Sec6.IDLAUpperBound.OfSteps
 
-/-! # Proposition 6.1 from the corrected Lemma 2.4, canonical form (q1, fp-S2g)
+/-! # Proposition 6.1 from the corrected Lemma 2.4, canonical form
 
 The Section 6 chain takes the Draft Lemma 2.4 `ConeHarmonicBallsUpToFixedTimeStmt` (`Draft/Section2.lean:66-72`) as the
 hypothesis `h24` of `MatedCRTEnv.IsValid.exists_measurable_familyProcess` (`Proofs/Measurability/BoundaryLayer.lean:369`),
@@ -25,7 +25,7 @@ namespace MatedCRT
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- **Measurable space-time process from the canonical Lemma 2.4 (q1, fp-S2g).** The conclusion of
+/-- **Measurable space-time process from the canonical Lemma 2.4.** The conclusion of
 `MatedCRTEnv.IsValid.exists_measurable_familyProcess` (`Proofs/Measurability/BoundaryLayer.lean:369`), obtained from the
 canonical statement `ConeHarmonicBallsUpToFixedTimeCanonicalStmt` through `exists_measurable_familyProcess_of_canonical`
 (`FirstPass/S2g/ProcessMeasurable.lean`), with no Draft clause `T' = T`. -/
@@ -37,7 +37,7 @@ theorem MatedCRTEnv.IsValid.exists_measurable_familyProcess_canonical {Ω : Type
         ∀ (t : ℝ) (x : ℂ), X ω (t, x) ↔ t ∈ Ioo 0 T ∧ x ∈ Λ' t :=
   exists_measurable_familyProcess_of_canonical hγ hγ2 hcan hS.isConeField
 
-/-- **`BoundaryLayerMeasurableStep` of Proposition 6.1 from the canonical Lemma 2.4 (q1, fp-S2g).** The proof of
+/-- **`BoundaryLayerMeasurableStep` of Proposition 6.1 from the canonical Lemma 2.4.** The proof of
 `boundaryLayerMeasurableStep_of_coneFamilyAEMeasurable` (`Proofs/Measurability/BoundaryLayer.lean:415`) with the canonical
 measurable space-time process. -/
 theorem boundaryLayerMeasurableStep_of_canonical (𝒮 : SpaceFillingSLEModel)
@@ -60,7 +60,7 @@ section UpperEventCanonical
 
 open Classical
 
-/-- **The fixed-cluster upper-bound event is null measurable, from the canonical Lemma 2.4 (q1, fp-S2g).** The proof of
+/-- **The fixed-cluster upper-bound event is null measurable, from the canonical Lemma 2.4.** The proof of
 `MatedCRTEnv.IsValid.nullMeasurableSet_upper_cluster_event` (`Proofs/IDLA/UpperEventMeasurable.lean:115`). -/
 theorem MatedCRTEnv.IsValid.nullMeasurableSet_upper_cluster_event_canonical
     {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
@@ -110,7 +110,7 @@ theorem MatedCRTEnv.IsValid.nullMeasurableSet_upper_cluster_event_canonical
   · simpa [hU hx, hηω.1] using hy
   · simpa [hU hx, hηω.1] using hy
 
-/-- **Proposition 6.1 transfers from sectionwise probabilities to the joint outer law, canonical form (q1, fp-S2g).** The proof
+/-- **Proposition 6.1 transfers from sectionwise probabilities to the joint outer law, canonical form.** The proof
 of `joint_iDLAUpperBound_of_sectionwise` (`Proofs/IDLA/UpperEventMeasurable.lean:174`) with the canonical Lemma 2.4. -/
 theorem joint_iDLAUpperBound_of_sectionwise_canonical (𝒮 : SpaceFillingSLEModel)
     (hcan : ConeHarmonicBallsUpToFixedTimeCanonicalStmt)
@@ -131,7 +131,7 @@ theorem joint_iDLAUpperBound_of_sectionwise_canonical (𝒮 : SpaceFillingSLEMod
 
 end UpperEventCanonical
 
-/-- **The sectionwise upper bound of Proposition 6.1 transferred to the joint law, canonical form (q1, fp-S2g).** The proof of
+/-- **The sectionwise upper bound of Proposition 6.1 transferred to the joint law, canonical form.** The proof of
 `iDLAUpperBound_of_steps` (`Proofs/Sec6/IDLAUpperBound/OfSteps.lean:303`) with the canonical Lemma 2.4. -/
 theorem iDLAUpperBound_of_steps_canonical (𝒮 : SpaceFillingSLEModel) (h610 : IterativeBoundStmt 𝒮)
     (h51 : IDLALowerBoundStmt 𝒮) (hm : BoundaryLayerMeasurableStep 𝒮)
@@ -139,14 +139,14 @@ theorem iDLAUpperBound_of_steps_canonical (𝒮 : SpaceFillingSLEModel) (h610 : 
   joint_iDLAUpperBound_of_sectionwise_canonical 𝒮 hcan
     (IDLAUpperBound.iDLAUpperBoundSectionwise_of_steps 𝒮 h610 h51 hm)
 
-/-- **Proposition 6.1 (prop:IDLA-upper-bound) from the corrected Lemma 2.4, canonical form (q1, fp-S2g).** Hypotheses:
+/-- **Proposition 6.1 (prop:IDLA-upper-bound) from the corrected Lemma 2.4, canonical form.** Hypotheses:
 Lemma 6.10 (`IterativeBoundStmt`), Proposition 5.1 (`IDLALowerBoundStmt`) and the canonical Lemma 2.4
 (`ConeHarmonicBallsUpToFixedTimeCanonicalStmt`). The Draft clause `T' = T` is not used. -/
 theorem firstPass_6_1_canonical24 (𝒮 : SpaceFillingSLEModel) (h610 : IterativeBoundStmt 𝒮)
     (h51 : IDLALowerBoundStmt 𝒮) (hcan : ConeHarmonicBallsUpToFixedTimeCanonicalStmt) : IDLAUpperBoundStmt 𝒮 :=
   iDLAUpperBound_of_steps_canonical 𝒮 h610 h51 (boundaryLayerMeasurableStep_of_canonical 𝒮 hcan) hcan
 
-/-- **Proposition 6.1 from the canonical factorization (q1, fp-S2g).** `firstPass_6_1_canonical24` with the canonical
+/-- **Proposition 6.1 from the canonical factorization.** `firstPass_6_1_canonical24` with the canonical
 Lemma 2.4 `firstPass_2_4_canonical_of_factor` (`FirstPass/S2g/Canonical.lean:69`). The only NEW hypothesis is
 `ConeCanonicalFactorStep` (OPEN, `FirstPass/S2g/Canonical.lean:32`). -/
 theorem firstPass_6_1_canonical24_of_factor (𝒮 : SpaceFillingSLEModel) (h610 : IterativeBoundStmt 𝒮)

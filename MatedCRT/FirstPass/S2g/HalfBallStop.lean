@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# The half-ball time from a continuous radius (fp-S2g, q1)
+# The half-ball time from a continuous radius
 
-Deterministic part of CHATGPT-q1-open-steps.md Section 3, steps H4-H5 (the stopping predicate of the canonical half-ball
+Deterministic part of steps H4-H5 (the stopping predicate of the canonical half-ball
 time). For a family of sets `Λ_t`, let `R(t)` be the radius of the closure of `Λ_t`, the supremum of `|z|` over
 `closure Λ_t`. The half-ball time is the supremum `T` of the times `t > 0` with `R(t) ≤ a` (here `a = 1/2`). If `R` is
 continuous on `(0, ∞)`, then `R(T) = a`, and for every `r < a` some `t ∈ (0, T)` has `r < R(t)`.
@@ -14,7 +14,7 @@ namespace MatedCRT
 
 open Set Filter Topology
 
-/-- The level-set supremum of a continuous radius (CHATGPT-q1-open-steps.md H4-H5). With `S = {t > 0 | R t ≤ a}` nonempty
+/-- The level-set supremum of a continuous radius (H4-H5). With `S = {t > 0 | R t ≤ a}` nonempty
 and bounded above, `T = sSup S` is positive, `R T = a`, and for every `r < a` some `t ∈ (0, T)` satisfies `r < R t`. -/
 theorem sup_level_radius_eq {R : ℝ → ℝ} {a : ℝ}
     (hR : ∃ U : ℝ, sSup {t : ℝ | 0 < t ∧ R t ≤ a} < U ∧ ContinuousOn R (Ioo 0 U))

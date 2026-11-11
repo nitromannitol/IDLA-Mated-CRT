@@ -1,10 +1,9 @@
 import MatedCRT.FirstPass.S2g
 import MatedCRT.FirstPass.S2g.Canonical
 
-/-! # Canonical stopped existence from the factorization (q1, fp-S2g)
+/-! # Canonical stopped existence from the factorization
 
-`ConeCanonicalHalfBallStep` (the pathwise existence of the canonical stopped family, `S2g.lean`) is a consequence of z2's
-`ConeCanonicalFactorStep` (`S2g/Canonical.lean`): clause (ii) of that step gives, at every continuous circle process in the
+`ConeCanonicalHalfBallStep` (the pathwise existence of the canonical stopped family, `S2g.lean`) is a consequence of the `ConeCanonicalFactorStep` (`S2g/Canonical.lean`): clause (ii) of that step gives, at every continuous circle process in the
 full-law set `G` and every LQG limit, a canonical stopped family with positive time. So the pathwise route
 `ConePathwiseHalfBallInputs` is an independent alternative, not needed once the factor step is available. The corrected
 Lemma 2.4 from the factor step is `firstPass_2_4_canonical_of_factor` (`S2g/Canonical.lean:69`). -/
@@ -13,8 +12,8 @@ namespace MatedCRT
 
 open MeasureTheory Filter Set
 
-/-- **CYCLE: DO NOT USE (q1, fp-S2g).** This implication runs from `ConeCanonicalFactorStep` to `ConeCanonicalHalfBallStep`,
-but `ConeCanonicalFactorStep` is proved from `ConeCanonicalHalfBallStep` (`FirstPass/S2i/CanonicalFactor.lean:199`, z2).
+/-- **CYCLE: DO NOT USE.** This implication runs from `ConeCanonicalFactorStep` to `ConeCanonicalHalfBallStep`,
+but `ConeCanonicalFactorStep` is proved from `ConeCanonicalHalfBallStep` (`FirstPass/S2i/CanonicalFactor.lean:199`).
 Using both is circular. Kept only as a reference implication; `ConeCanonicalHalfBallStep` must be proved directly
 (`coneCanonicalHalfBallStep_of_pathwise`, `FirstPass/S2g.lean`). -/
 theorem coneCanonicalHalfBallStep_of_factor (hfac : ConeCanonicalFactorStep) : ConeCanonicalHalfBallStep := by

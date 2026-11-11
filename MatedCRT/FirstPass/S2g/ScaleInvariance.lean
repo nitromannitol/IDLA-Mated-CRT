@@ -5,7 +5,7 @@ import MatedCRT.Proofs.Sec1.ConeScaleRadius
 import MatedCRT.Proofs.Measurability.ConeRescaledCircle
 import MatedCRT.Draft.Section2
 
-/-! # Lemma 2.6 (scale invariance of the global family) from the a.s. factorization (q1, fp-S2g)
+/-! # Lemma 2.6 (scale invariance of the global family) from the a.s. factorization
 
 The first-pass theorem `firstPass_2_6` (`FirstPass/S1S2S8SA.lean:83`) takes the retired input
 `FrozenConeHarmonicBallFunctional` (all continuous circle processes, `FirstPass/Frozen/S1S2S8SA.lean:35`), which is not
@@ -13,14 +13,14 @@ admissible. Its proof, `coneScaleInvariance_core` (`Steps/Sec2/ConeScaleInvarian
 along a.e. `ω`, for the field and for its rescaled version. This file replaces the input by an almost-sure factorization on
 a measurable set of circle processes of full cone law (`ConeGlobalFamilyFactorStep`), and proves Lemma 2.6 from it.
 
-Written argument of the new step: `notes/fp-gaps/G-S2-2-5-2-6.md` Sections 2–3 (formulas (9)–(10)), which use Theorem 1
-(stopped code) of Section 1 and the good support of `notes/fp-gaps/G-S2-measurable.md` Section 3. -/
+Argument for the new step (formulas (9)–(10)), which uses Theorem 1
+(stopped code) and the good support -/
 
 namespace MatedCRT
 
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric HarmonicBalls
 
-/-- **OPEN NEW step (q1, fp-S2g; neither proved nor frozen): the global family is a measurable functional of the circle
+/-- **OPEN NEW step (neither proved nor frozen): the global family is a measurable functional of the circle
 process on the cone-law support.** There are a map `Φ` from circle average processes to space-time processes and a
 measurable set `G` of circle average processes such that: (i) on `G`, for every continuous circle average process `c` with
 `circleProcess c ∈ G`, every LQG limit `ν` of `c` and every global family `Λ` for `ν`, the process `globalFamilyProcess Λ`
@@ -45,7 +45,7 @@ theorem ae_mem_of_law_eq_measurable {Ω X : Type*} [MeasurableSpace Ω] [Measura
   rw [← hlaw] at h1
   exact (ae_map_iff hg (p := fun y => y ∈ G) hG).1 h1
 
-/-- **Lemma 2.6 from the a.s. factorization (q1, fp-S2g).** The scale invariance of the global family: the joint law of the
+/-- **Lemma 2.6 from the a.s. factorization.** The scale invariance of the global family: the joint law of the
 circle process and of the global family is invariant under the cone rescaling, given `ConeGlobalFamilyFactorStep`,
 the quantum-cone scaling law and the LQG measure properties. The proof is `coneScaleInvariance_core` with the identity
 applied almost surely, the rescaled circle process lying in `G` almost surely by equality in law. -/

@@ -1,7 +1,7 @@
 import HarmonicBalls.Draft.Section3
 import HarmonicBalls.Draft.Section5
 
-/-! # Source pathwise inputs through the Harmonic Balls family (fp-S2g, q1; operator note 00:50 UTC)
+/-! # Source pathwise inputs through the Harmonic Balls family
 
 For a whole-plane source `μ`, let `Λ` be a family of Theorem 5.5 (`IsRegularizedClusterFamily`) and let
 `A_t = regularizedCluster μ (3/4) 0 t`. The identifications `Λ_t = A_t` used for the pathwise inputs are proved from

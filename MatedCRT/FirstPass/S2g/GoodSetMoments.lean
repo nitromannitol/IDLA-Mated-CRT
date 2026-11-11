@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# Measurable moment vectors of locally finite measures (q1, fp-S2g)
+# Measurable moment vectors of locally finite measures
 
-Helper for the good-set step `ConeHalfBallGoodMeasureLawStep` (`S2g/HalfBallGood.lean`), route 5 of `notes/q1.md`:
+Helper for the good-set step `ConeHalfBallGoodMeasureLawStep` (`S2g/HalfBallGood.lean`), route 5:
 the moment vector `ν ↦ (∫ φ_k dν)_k` of a countable test family is measurable on the space of measures `Measure ℂ`, and
 the set of locally finite measures is measurable. Mathlib has no `measurable_integral` for `ν ↦ ∫ f dν`, so the integral is
 written as the difference of two lintegrals (the Bochner formula `integral_eq_lintegral_pos_part_sub_lintegral_neg_part`),

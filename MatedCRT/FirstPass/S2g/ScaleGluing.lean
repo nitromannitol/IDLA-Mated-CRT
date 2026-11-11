@@ -1,16 +1,16 @@
 import MatedCRT.FirstPass.S2g.Canonical
 
-/-! # Scale gluing for the global family (q1, fp-S2g): two scale-independent pieces of Lemma 2.6
+/-! # Scale gluing for the global family: two scale-independent pieces of Lemma 2.6
 
 For the all-time family of Lemma 2.6 (`ConeScaleInvarianceStmt`), the global family of a cone measure is glued from the
-canonical families at the scales `b_k = k + 1` (G-S2-2-5-2-6 Section 2). This file proves the two pieces that do not
+canonical families at the scales `b_k = k + 1`. This file proves the two pieces that do not
 depend on any measurability of the gluing:
 
 * `eqOn_of_isConeHarmonicBallFamily`: a global cone family agrees with any cone family on `(0, T)` on that interval
   (fixed-time uniqueness, `IsConeHarmonicBallFamilyOn.eqOn`);
 * `ae_forall_exists_scale_gt`: almost surely, for every `M`, some scale `(k+1) T_k` exceeds `M`, when the scaled canonical
   times `T_k` have the law of the canonical time `X`, which is almost surely positive. This is `sup_k L_k = ∞` in
-  G-S2-2-5-2-6 Section 2 (`P[L_n ≤ M] → 0`). -/
+  (`P[L_n ≤ M] → 0`). -/
 
 namespace MatedCRT
 
@@ -26,7 +26,7 @@ theorem eqOn_of_isConeHarmonicBallFamily {μ : Measure ℂ} {Λ Λ' : ℝ → Se
   · have h := (hΛ.isConeHarmonicBallFamilyOn hT).eqOn hΛ'
     rwa [min_self] at h
 
-/-- **Sup of the scaled canonical times is infinite, almost surely (q1, fp-S2g).** Let `X` be a.s. positive and a.e.
+/-- **Sup of the scaled canonical times is infinite, almost surely.** Let `X` be a.s. positive and a.e.
 measurable, and let `T k` (scale `k + 1`) have the law of `X`. Then almost surely, for every `M`, there is `k` with
 `M < (k + 1) * T k`. Proof: `P[∀ k, (k+1) T_k ≤ M] ≤ P[X ≤ 1/(j+1)]` for every `j`, and `P[X ≤ 1/(j+1)] → P[X ≤ 0] = 0`
 by continuity from above. -/
@@ -100,7 +100,7 @@ theorem ae_forall_exists_scale_gt {Ω : Type*} [MeasurableSpace Ω] {P : Measure
   ext ω
   simp only [mem_ofPred_eq, not_exists, not_lt]
 
-/-- **Scale gluing of a global cone family (deterministic; G-S2-2-5-2-6 eq. (10)).** Let `Λ` be a global cone family for
+/-- **Scale gluing of a global cone family (deterministic).** Let `Λ` be a global cone family for
 `μ` and let `Λs n` be cone families for `μ` on `(0, L n)`, where the scales cover every natural number
 (`∀ M, ∃ n, M < L n`). Then the global family process of `Λ` is the glued process
 `(t, x) ↦ 0 < t ∧ ∃ n, t < L n ∧ x ∈ Λs n t`. Fixed-time uniqueness (`eqOn_of_isConeHarmonicBallFamily`) identifies `Λ_t`

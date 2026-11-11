@@ -1,15 +1,15 @@
 import MatedCRT.FirstPass.S2g.GoodSet
 
 /-!
-# Good set, family side and the reduction to the null hull (fp-S2g, q1)
+# Good set, family side and the reduction to the null hull
 
-Deterministic part of `ConeClosureGoodMeasureLawStep` (`FirstPass/S2f.lean`). Written argument:
-`notes/fp-gaps/CHATGPT-cone-good-set.md` Section 3 (conditions C1-C4 of a certificate) and Section 4.2 (a family
+Deterministic part of `ConeClosureGoodMeasureLawStep` (`FirstPass/S2f.lean`).
+ (conditions C1-C4 of a certificate; a family
 counterexample produces a certificate pair). In the real-variable form used here, a certificate needs no countable
 coding; the coding and the zero cone law (Sections 1-3, 5-6) are the open probabilistic step `ConeBadNullHullStep`.
 
 A closure failure at time `t` forces the raw radius to equal `1/2` at every time in `(t, T)` (monotonicity), so the
-family gives a plateau pair of rational times `p < q` in `(t, T)`, each carrying a certificate (CHATGPT 4.2, (30)-(33)).
+family gives a plateau pair of rational times `p < q` in `(t, T)`, each carrying a certificate.
 -/
 
 namespace MatedCRT
@@ -17,7 +17,7 @@ namespace MatedCRT
 open MeasureTheory Filter Topology Set Metric HarmonicBalls
 
 /-- The certificate `CertReal ν t w` on the disc `B_{3/4}` with pole `0` at time `t > 0` (Armitage-Gardiner notation;
-CHATGPT-cone-good-set.md Section 3, C1-C4 without countable coding). `w` is continuous on `B̄_{3/4}` (the candidate),
+ C1-C4 without countable coding). `w` is continuous on `B̄_{3/4}` (the candidate),
 lies above the Green obstacle `-t G_{B_{3/4}}(0,·)` off the pole (C1), vanishes on `∂B_{3/4}` (C2), its contact set
 `certCluster (3/4) t w` has closure in `B̄_{1/2}` which reaches the circle `|x| = 1/2` (C3), and `Δ w = ν` restricted to
 the interior of the closure of the contact set (C4). -/
@@ -36,7 +36,7 @@ def CertSuper (ν : Measure ℂ) (t : ℝ) (w : ℂ → ℝ) : Prop :=
   CertReal ν t w ∧ w ∈ supersolutions ν (3 / 4) 0 t
 
 /-- The bad event of the good set: two rational times `0 < p < q` each carry a certificate for `ν` (a plateau pair of
-raw radii, CHATGPT-cone-good-set.md (37)). -/
+raw radii, (37)). -/
 def HasRatPlateauCert (ν : Measure ℂ) : Prop :=
   ∃ p q : ℚ, 0 < (p : ℝ) ∧ (p : ℝ) < (q : ℝ) ∧ (∃ w : ℂ → ℝ, CertSuper ν (p : ℝ) w) ∧
     ∃ w : ℂ → ℝ, CertSuper ν (q : ℝ) w
@@ -54,7 +54,7 @@ theorem zero_mem_supersolutions_ball (μ : Measure ℂ) {t : ℝ} (ht : 0 ≤ t)
     show -t * greenFunction (ball 0 (3 / 4)) 0 x ≤ 0
     linarith
 
-/-- The pointwise infimum argument at the pole (CHATGPT-cone-good-set.md Section 4.1): the least supersolution lies
+/-- The pointwise infimum argument at the pole: the least supersolution lies
 above the Green obstacle at every point of `B̄_{3/4}` off the pole. -/
 theorem leastSupersolution_obstacle (μ : Measure ℂ) {t : ℝ} (ht : 0 ≤ t) {x : ℂ}
     (hx : x ∈ closedBall (0 : ℂ) (3 / 4)) (hx0 : x ≠ 0) :
@@ -66,7 +66,7 @@ theorem leastSupersolution_obstacle (μ : Measure ℂ) {t : ℝ} (ht : 0 ≤ t) 
     exact hw.2.2 x hx hx0
 
 /-- A point of the closure of the family at a time `s ∈ (0, T)` which lies outside `B_{1/2}` gives the certificate
-`leastSupersolution ν (3/4) 0 s` at time `s` (CHATGPT-cone-good-set.md Section 4.2, (29)-(33) for one time). -/
+`leastSupersolution ν (3/4) 0 s` at time `s`. -/
 theorem certSuper_least_of_mem_closure (hpole : FrozenGreenDiscPole) {ν : Measure ℂ} {Λ : ℝ → Set ℂ} {T : ℝ}
     (hfam : IsConeHarmonicBallFamilyOn ν Λ T) (hst : IsStoppedAtHalfBall Λ T) {s : ℝ} (hs : s ∈ Ioo 0 T)
     {x : ℂ} (hxs : x ∈ closure (Λ s)) (hxb : x ∉ ball (0 : ℂ) (1 / 2))
@@ -136,7 +136,7 @@ def BadMeasureNullHull {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (μ : �
     P (μ ⁻¹' N) = 0
 
 /-- The reduction of `ConeClosureGoodMeasureLawStep` to the bad null hull for every cone field. OPEN (NEW): the zero
-cone law, CHATGPT-cone-good-set.md Sections 1-3 (coding, Borel relation, analytic projection), 5 (plateau radii,
+cone law, (coding, Borel relation, analytic projection), 5 (plateau radii,
 Tonelli, scaling, zero law) and 6 (null hull). -/
 def ConeBadNullHullStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)

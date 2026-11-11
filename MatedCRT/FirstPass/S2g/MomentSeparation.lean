@@ -3,7 +3,7 @@ import Mathlib.Topology.ContinuousMap.SecondCountableSpace
 import Mathlib.MeasureTheory.Measure.HasOuterApproxClosed
 
 /-!
-# Countable determination of locally finite measures on `B_{3/4}` (q1, fp-S2g)
+# Countable determination of locally finite measures on `B_{3/4}`
 
 Proves `CandidateMomentSeparation` (`S2g/GoodSetReduction.lean`): there is a countable family `φs` of continuous
 compactly supported functions with support in `B_1` such that two locally finite measures on `ℂ` with the same moment
@@ -120,7 +120,7 @@ theorem momSep_family_props {R : ℝ} (hR : R < 1) {ψ : ℂ → ℝ} (hc : Cont
   refine ⟨hc, HasCompactSupport.intro (isCompact_closedBall _ _) hv, ?_⟩
   exact (closure_minimal hsupp isClosed_closedBall).trans (closedBall_subset_ball hR)
 
-/-- **Countable determining family (q1, fp-S2g).** There is a countable family `φs` of continuous compactly supported
+/-- **Countable determining family.** There is a countable family `φs` of continuous compactly supported
 functions with `tsupport ⊆ B_1` such that: for every `ρ < 1` and every continuous `g` vanishing outside `B̄_ρ`, equal
 integrals of the `φs k` against two locally finite measures force equal integrals of `g`. -/
 theorem exists_momSep_family :
@@ -218,7 +218,7 @@ theorem exists_momSep_family :
       rw [Real.dist_eq]
       exact key δ hδ
 
-/-- **Equal restrictions to `B_{3/4}` (q1, fp-S2g).** Two locally finite measures on `ℂ` that integrate every continuous
+/-- **Equal restrictions to `B_{3/4}`.** Two locally finite measures on `ℂ` that integrate every continuous
 function vanishing outside `B̄_{3/4}` to the same value have equal restrictions to the open ball `B_{3/4}`. -/
 theorem restrict_ball_eq_of_det {ν₁ ν₂ : Measure ℂ} [IsLocallyFiniteMeasure ν₁] [IsLocallyFiniteMeasure ν₂]
     (hdet : ∀ g : ℂ → ℝ, Continuous g → (∀ x, x ∉ closedBall (0 : ℂ) (3 / 4) → g x = 0) →
@@ -277,7 +277,7 @@ theorem restrict_ball_eq_of_det {ν₁ ν₂ : Measure ℂ} [IsLocallyFiniteMeas
   rw [integral_indicator measurableSet_ball, integral_indicator measurableSet_ball] at hu
   exact hu
 
-/-- **`CandidateMomentSeparation` is proved (q1, fp-S2g).** The countable family of `exists_momSep_family` separates the
+/-- **`CandidateMomentSeparation` is proved.** The countable family of `exists_momSep_family` separates the
 moment vectors of locally finite measures on `B_{3/4}`. -/
 theorem candidateMomentSeparation_proved : CandidateMomentSeparation := by
   obtain ⟨φs, hφs, hdet⟩ := exists_momSep_family
@@ -290,7 +290,7 @@ theorem candidateMomentSeparation_proved : CandidateMomentSeparation := by
   have hk : intG (φs k) ν₁ = intG (φs k) ν₂ := congrFun hmom k
   rwa [intG_eq_integral (hφs k).1 (hφs k).2.1 ν₁, intG_eq_integral (hφs k).1 (hφs k).2.1 ν₂] at hk
 
-/-- **Good-set reduction without the separation input (q1, fp-S2g).** `coneHalfBallGood_of_source` with
+/-- **Good-set reduction without the separation input.** `coneHalfBallGood_of_source` with
 `CandidateMomentSeparation` discharged by `candidateMomentSeparation_proved`. The remaining hypotheses are the open
 `SourceHalfBallPathwiseStep`, the candidate `CandidateConeLogLocalCodeLawStd` (not frozen), and the frozen
 `FrozenUniversalMeasurabilityOfAnalytic` and `FrozenLQGTestIntegralMeasurable`. -/

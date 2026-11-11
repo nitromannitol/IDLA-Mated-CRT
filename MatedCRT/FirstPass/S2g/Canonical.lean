@@ -6,7 +6,7 @@ import MatedCRT.Proofs.Sec2.ConeScaleInvarianceUpToFixedTime.LQGScaling
 import MatedCRT.Proofs.Sec1.ConeScaleRadius
 import MatedCRT.Proofs.Measurability.ConeRescaledCircle
 
-/-! # Corrected Lemmas 2.4 and 2.5 from the canonical factorization (q1, fp-S2g)
+/-! # Corrected Lemmas 2.4 and 2.5 from the canonical factorization
 
 The canonical statements `ConeHarmonicBallsUpToFixedTimeCanonicalStmt` (2.4) and
 `ConeScaleInvarianceUpToFixedTimeCanonicalStmt` (2.5) of `FirstPass/S2g.lean` are proved here from one NEW hypothesis,
@@ -14,8 +14,8 @@ The canonical statements `ConeHarmonicBallsUpToFixedTimeCanonicalStmt` (2.4) and
 time, its stopped family and the space-time process of every stopped family are measurable functionals of the circle
 process (the stopped analogue of `ConeGlobalFamilyFactorStep`, `FirstPass/S2g/ScaleInvariance.lean`).
 
-Written argument of the new step: `notes/fp-gaps/G-S2-2-5-2-6.md` Section 1 (Theorem 1, formulas (4), (7), (8)), with the
-good local support of `notes/fp-gaps/G-S2-measurable.md` Section 3. Caveat: Theorem 1 identifies the stopping time of an
+Argument for the new step (Theorem 1, formulas (4), (7), (8)), with the
+good local support: Theorem 1 identifies the stopping time of an
 arbitrary stopped family with the closure-based first time `τ(c)`; equality with the open-containment `halfBallTime` needs
 the no-plateau property at `1/2` (the closure route, `ConeHalfBallClosureInsideStep`). -/
 
@@ -23,7 +23,7 @@ namespace MatedCRT
 
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric HarmonicBalls
 
-/-- **OPEN NEW step (q1, fp-S2g; neither proved nor frozen): canonical factorization on the cone-law support.** There are
+/-- **OPEN NEW step (neither proved nor frozen): canonical factorization on the cone-law support.** There are
 measurable maps `ΨT` (canonical time) and `Ψ` (space-time process) of circle average processes and a measurable set `G` of
 full cone law such that, for every continuous `c` with `circleProcess c ∈ G` and every LQG limit `ν` of `c`:
 (i) `halfBallTime ν = ΨT (circleProcess c)`; (ii) there is a canonical stopped family for `ν`, with positive time;
@@ -64,7 +64,7 @@ theorem rescaledFamily_transfer_fp {μ : Measure ℂ} {R b T : ℝ} {Λ : ℝ �
   · have := h2.eqOn hΛ''
     rwa [min_self] at this
 
-/-- **Corrected Lemma 2.4 from the canonical factorization (q1, fp-S2g).** The canonical time is `ΨT` of the circle process
+/-- **Corrected Lemma 2.4 from the canonical factorization.** The canonical time is `ΨT` of the circle process
 and the canonical family's process is `Ψ` of it, almost surely: this gives both measurability claims with no closure step. -/
 theorem firstPass_2_4_canonical_of_factor (hfac : ConeCanonicalFactorStep) :
     ConeHarmonicBallsUpToFixedTimeCanonicalStmt := by
@@ -100,7 +100,7 @@ theorem firstPass_2_4_canonical_of_factor (hfac : ConeCanonicalFactorStep) :
   filter_upwards [hx] with ω hω
   exact ⟨hω.1, uniqueConeFamilyOn_of_family hω.2.1, hω.2.2⟩
 
-/-- **Corrected Lemma 2.5 from the canonical factorization (q1, fp-S2g).** The rescaled canonical time `Tb = halfBallTime ν`
+/-- **Corrected Lemma 2.5 from the canonical factorization.** The rescaled canonical time `Tb = halfBallTime ν`
 is `ΨT` of the rescaled circle process, the family `Λb` is the inverse rescaling of the canonical family of `ν`
 (`rescaledFamily_transfer_fp`), and the joint laws agree since both processes are `Ψ` of the circle process, which has the
 same law before and after rescaling (`QuantumConeScalingInput`). -/

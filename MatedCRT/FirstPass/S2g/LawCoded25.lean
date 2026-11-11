@@ -3,11 +3,11 @@ import MatedCRT.FirstPass.S2g.LawCode
 import MatedCRT.FirstPass.S2g.ScaleInvariance
 import MatedCRT.FirstPass.S2g.Canonical
 
-/-! # Lemma 2.5 in coded law form (q1, fp-S2g)
+/-! # Lemma 2.5 in coded law form
 
 The corrected Lemma 2.5 compares the stopped codes `stoppedCode T Λ = (T, code of the masked process)` of the circle process
 and of the rescaled family by `IdentDistrib`. The canonical lifetime `T = halfBallTime` and the masked process are, almost
-surely, measurable functions of the circle process (`ConeCanonicalFactorStep`, `S2g/Canonical.lean`, z2's open step, used
+surely, measurable functions of the circle process (`ConeCanonicalFactorStep`, `S2g/Canonical.lean`, the open step, used
 as a hypothesis). The rescaled family `Λb` is the transfer, by `rescaledFamily_transfer_fp`, of the canonical family of the
 rescaled measure `rescaledMeasure (μ ω) R_b b`, whose existence is clause (ii) of the same step applied to the rescaled
 circle process (`ConeLQGScalingStep`, `QuantumConeScalingInput`). -/
@@ -16,7 +16,7 @@ namespace MatedCRT
 
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric HarmonicBalls
 
-/-- **Lemma 2.5, coded law (q1, fp-S2g).** For a cone field, a family `Λ` which is almost surely the canonical stopped family
+/-- **Lemma 2.5, coded law.** For a cone field, a family `Λ` which is almost surely the canonical stopped family
 of `μ` (positive time `halfBallTime (μ ω)`, family on `(0, T)`, stopped at `∂B_{1/2}`), and `b > 0`, with `R` the cone scale
 radius and `Tb = halfBallTime (rescaledMeasure (μ ω) R b)`: the lifetime `Tb` is a.e. measurable, there is a family `Λb` for
 `μ` which is unique on `(0, b Tb)` and whose rescaling is stopped at `∂B_{1/2}` at `Tb`, and the stopped codes of the circle
@@ -37,7 +37,7 @@ def ConeScaleInvarianceUpToFixedTimeCodedStmt : Prop :=
         (fun ω => (circleProcess (rescaledCircle γ (hcirc ω) (R ω) b),
           stoppedCode (Tb ω) (rescaledFamily (Λb ω) (R ω) b))) P P
 
-/-- **Lemma 2.5, coded law, from the canonical factorization (q1, fp-S2g).** The factor identities of
+/-- **Lemma 2.5, coded law, from the canonical factorization.** The factor identities of
 `ConeCanonicalFactorStep` at the circle process and at the rescaled circle process express both stopped codes as the same
 measurable map of the circle process, and the rescaled circle process has the same law (`QuantumConeScalingInput`). -/
 theorem firstPass_2_5_coded_of_canonicalFactor (hfac : ConeCanonicalFactorStep)

@@ -1,10 +1,10 @@
 import MatedCRT.FirstPass.S2g.PlateauZero
 
 /-!
-# The plateau at radius `1/2` from a certificate (fp-S2g, q1)
+# The plateau at radius `1/2` from a certificate
 
-Deterministic part of CHATGPT-cone-good-set.md Section 5.4. A certificate `CertSuper ν t w` on `B_{3/4}` identifies the
-HB cluster `Λ_{B_{3/4};0}(t)` with its contact set `certCluster (3/4) t w` (leastness, Section 4.1 and the membership of
+Deterministic part of A certificate `CertSuper ν t w` on `B_{3/4}` identifies the
+HB cluster `Λ_{B_{3/4};0}(t)` with its contact set `certCluster (3/4) t w` (leastness and the membership of
 `w` in `S_{B_{3/4};0}(t)`). Compatibility of clusters across discs (HB Lemma 3.5, the hypothesis `hcomp`, to be
 instantiated almost surely) identifies the cluster in `B_1` with it. Hence the raw radius of `B_1` at the two rational
 times is `1/2`, and `1/2` is a plateau radius of `ν` (PlateauZero.lean, (37)).
@@ -15,7 +15,7 @@ namespace MatedCRT
 open MeasureTheory Filter Topology Set Metric HarmonicBalls
 open scoped ENNReal
 
-/-- Leastness at a certificate (CHATGPT-cone-good-set.md 4.1, Armitage-Gardiner comparison of supersolutions): for
+/-- Leastness at a certificate (4.1, Armitage-Gardiner comparison of supersolutions): for
 `CertSuper ν t w` with `ν(B̄_{3/4}) < ∞` and `t > 0`, the least supersolution equals `w` at every point of `B̄_{3/4}`
 other than the pole. The comparison `w ≤ v` for every supersolution `v` is `certificate_le_supersolution`, applied with
 the open set `A = int (closure (certCluster))`, which contains the pole. -/
@@ -39,7 +39,7 @@ theorem leastSupersolution_eq_of_certSuper (hmin : FrozenSuperharmonicMinimumPri
     le_csInf ⟨w x, w, hS, rfl⟩ (by rintro _ ⟨v, hv, rfl⟩; exact hle v hv x hx)
   exact le_antisymm (leastSupersolution_le hS hx hx0) hwle
 
-/-- The HB cluster of the disc `B_{3/4}` is the contact set of the certificate (CHATGPT-cone-good-set.md 5.4). -/
+/-- The HB cluster of the disc `B_{3/4}` is the contact set of the certificate (5.4). -/
 theorem cluster_eq_certCluster_of_certSuper (hmin : FrozenSuperharmonicMinimumPrinciple)
     (hpole : FrozenGreenDiscPole) {ν : Measure ℂ} (hν : ν (closedBall (0 : ℂ) (3 / 4)) < ⊤) {t : ℝ} (ht : 0 < t)
     {w : ℂ → ℝ} (hc : CertSuper ν t w) :
@@ -77,7 +77,7 @@ theorem rawRadius_one_eq_half_of_certSuper (hmin : FrozenSuperharmonicMinimumPri
   simpa [mem_closedBall, dist_zero_right] using hclosed hy
 
 /-- A rational plateau pair of certificates for `ν` gives the plateau radius `1/2` of `ν` in `B_1`
-(CHATGPT-cone-good-set.md 5.4), provided the compatibility of clusters across discs holds for `ν` at every positive time
+(5.4), provided the compatibility of clusters across discs holds for `ν` at every positive time
 (HB Lemma 3.5 for the measure `ν`, a.s. for the LQG measure). -/
 theorem half_mem_plateauRadii_of_hasRatPlateauCert (hmin : FrozenSuperharmonicMinimumPrinciple)
     (hpole : FrozenGreenDiscPole) {ν : Measure ℂ} (hν : ν (closedBall (0 : ℂ) (3 / 4)) < ⊤)

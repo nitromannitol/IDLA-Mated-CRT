@@ -1,6 +1,6 @@
 import MatedCRT.FirstPass.S2g
 
-/-! # Measurable version of the canonical cone family process (q1, fp-S2g helper)
+/-! # Measurable version of the canonical cone family process
 
 The Section 6 consumers of Lemma 2.4 (`MatedCRTEnv.IsValid.exists_measurable_familyProcess`,
 `Proofs/Measurability/BoundaryLayer.lean:369`) take the Draft statement `ConeHarmonicBallsUpToFixedTimeStmt`, whose

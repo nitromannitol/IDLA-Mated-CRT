@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S2g.HalfBallFamily
 import MatedCRT.FirstPass.S2g.SourceFamily
 
-/-! # Pathwise clauses from one Theorem 5.5 family (fp-S2g, q1; operator note 00:50 UTC)
+/-! # Pathwise clauses from one Theorem 5.5 family
 
 Let `μ` be a whole-plane source, `A_t = regularizedCluster μ (3/4) 0 t`, and let `Λ` be a family of Theorem 5.5
 (`IsRegularizedClusterFamily μ Λ 0`) with `Λ_t` a harmonic ball for `t > 0`. Put
@@ -56,7 +56,7 @@ theorem exists_right_neighbourhood_subset {Λ : ℝ → Set ℂ} {T : ℝ} (hT :
   have htri := dist_triangle y x 0
   exact mem_ball.2 (by linarith)
 
-/-- **Pathwise clauses from one Theorem 5.5 family (deterministic, q1).** Let `Λ` satisfy `IsRegularizedClusterFamily μ Λ 0`
+/-- **Pathwise clauses from one Theorem 5.5 family (deterministic).** Let `Λ` satisfy `IsRegularizedClusterFamily μ Λ 0`
 (Theorem 5.5, pathwise), with raw clusters open, compatible at natural radii (Lemma 3.5), monotone regularized clusters and
 mass `μ(Λ_t) = t` on `{closure Λ_t ⊆ closedBall(1/2)}`; let the regularized clusters meet `B_{1/2}` at some time, and let
 each `Λ_t` be a harmonic ball. Then `μ` satisfies `ConePathwiseHalfBallInputs` with the witness `A_t = regularizedCluster μ (3/4) 0 t`.

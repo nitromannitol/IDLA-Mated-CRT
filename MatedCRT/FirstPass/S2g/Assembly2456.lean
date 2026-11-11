@@ -9,15 +9,15 @@ import MatedCRT.FirstPass.Frozen.S4S5b
 import MatedCRT.FirstPass.S2m
 import MatedCRT.FirstPass.S2g.AELaw
 
-/-! # Corrected Lemmas 2.5, 2.6 and Proposition 6.1: assembly (fp-S2g, q1, round 42)
+/-! # Corrected Lemmas 2.5, 2.6 and Proposition 6.1: assembly
 
 * `firstPass_6_1_corrected` goes through the canonical Lemma 2.4 `firstPass_2_4_canonical` (`Corrected24.lean`), not through
   the factor step.
-* `firstPass_2_5_canonical` and `firstPass_2_6_corrected` apply the z2 factor lemmas `coneCanonicalFactor_proved`
+* `firstPass_2_5_canonical` and `firstPass_2_6_corrected` apply the factor lemmas `coneCanonicalFactor_proved`
   (`S2i/CanonicalFactor.lean:199`) and `coneGlobalFamilyFactor_proved` (`S2i/GlobalFactor.lean:524`) to the half-ball step
   `coneCanonicalHalfBallStep_of_draft` (`HalfBallGate.lean`). The half-ball step uses no factor step, so there is no cycle.
 * Common inputs (all four results): the Draft and frozen inputs of `coneCanonicalHalfBallStep_of_draft`, with
-  `FrozenConeLogLocalCodeLawStd` as the frozen interface (operator decision 01:40 UTC); the closure-step inputs of
+  `FrozenConeLogLocalCodeLawStd` as the frozen interface; the closure-step inputs of
   `coneHalfBallClosureInsideStep_corrected` (route B, `S2k.lean:38`): `LQGVolumeGrowthAllScalesStmt`,
   `FrozenInsertionCoordinateRule`, `HarmonicBallLocalSetStmt`, `ClusterStrongCompatibilityStmt`, `FrozenLQGMeasureExistenceInsertion` (`WholePlaneLQGModelStep` by `firstPass_wholePlaneLQGModel_of_existence`, S2m),
   `FPConeWholePlaneFieldLaw` (frozen, `Frozen/S4S5b.lean:40`); `VolumeGrowthStmt`; for 2.5 and 2.6 also the frozen cone externals `ConeCircleLawUniqueStep`
@@ -27,7 +27,7 @@ open MeasureTheory Set Filter Topology Metric HarmonicBalls
 
 namespace MatedCRT
 
-/-- **Corrected Proposition 6.1 (q1, fp-S2g).** The upper bound from the corrected canonical Lemma 2.4. -/
+/-- **Corrected Proposition 6.1.** The upper bound from the corrected canonical Lemma 2.4. -/
 theorem firstPass_6_1_corrected (𝒮 : SpaceFillingSLEModel) (h610 : IterativeBoundStmt 𝒮)
     (h51 : IDLALowerBoundStmt 𝒮)
     (hU : FrozenUniversalMeasurabilityOfAnalytic) (hmeasT : FrozenLQGTestIntegralMeasurable)
@@ -49,8 +49,8 @@ theorem firstPass_6_1_corrected (𝒮 : SpaceFillingSLEModel) (h610 : IterativeB
     (firstPass_2_4_canonical hU hmeasT hstd hmin hCentre hGB hpole hOpen hSup hCons hMono hCompat hBdry hExist hThm11
       hProp56 hconf hI2 hK hloc hSC hE hFL h27)
 
-/-- **Corrected Lemma 2.5, canonical stopped factorization and joint law (q1, fp-S2g).** The factor step
-`ConeCanonicalFactorStep` is obtained from the proved lemma `coneCanonicalFactor_proved` (z2) applied to the half-ball step
+/-- **Corrected Lemma 2.5, canonical stopped factorization and joint law.** The factor step
+`ConeCanonicalFactorStep` is obtained from the proved lemma `coneCanonicalFactor_proved` applied to the half-ball step
 `coneCanonicalHalfBallStep_of_draft` and the closure step `coneHalfBallClosureInsideStep_corrected`; no factor step is
 assumed. -/
 theorem firstPass_2_5_canonical
@@ -79,8 +79,8 @@ theorem firstPass_2_5_canonical
       (coneHalfBallClosureInsideStep_corrected hI2 hK hloc hExist hSC h27 hE hFL) h27 hE1 hE2)
     hscale h22
 
-/-- **Corrected Lemma 2.6, global family scale invariance (q1, fp-S2g).** The global factor step
-`ConeGlobalFamilyFactorStep` is obtained from the proved lemma `coneGlobalFamilyFactor_proved` (z2) applied to the half-ball
+/-- **Corrected Lemma 2.6, global family scale invariance.** The global factor step
+`ConeGlobalFamilyFactorStep` is obtained from the proved lemma `coneGlobalFamilyFactor_proved` applied to the half-ball
 step `coneCanonicalHalfBallStep_of_draft` and the closure step `coneHalfBallClosureInsideStep_corrected`; no factor step is
 assumed. -/
 theorem firstPass_2_6_corrected
@@ -109,7 +109,7 @@ theorem firstPass_2_6_corrected
       (coneHalfBallClosureInsideStep_corrected hI2 hK hloc hExist hSC h27 hE hFL) h27 hE1 hE2 hscale h22)
     hscale h22
 
-/-- **Corrected Lemma 2.6, measurable law (q1, fp-S2g-2-4-2-5-corrected).** The law of the global family with the a.e.
+/-- **Corrected Lemma 2.6, measurable law.** The law of the global family with the a.e.
 measurability of both joint processes (`ConeScaleInvarianceAEStmt`, `FirstPass/S2g/AELaw.lean`), from the same inputs as
 `firstPass_2_6_corrected`. The factor step is the proved `coneGlobalFamilyFactor_proved`; no factor step is assumed. -/
 theorem firstPass_2_6_law_corrected

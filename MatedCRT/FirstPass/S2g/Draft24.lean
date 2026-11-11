@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S2g
 import MatedCRT.Proofs.Sec6.IDLAUpperBound.OfConeFamily
 
-/-! # Draft Lemma 2.4 and Proposition 6.1 from the canonical step and the closure step (q1, fp-S2g helper)
+/-! # Draft Lemma 2.4 and Proposition 6.1 from the canonical step and the closure step
 
 The Section 6 chain (`Proofs/Sec6/IDLAUpperBound/OfConeFamily.lean:16`) takes the Draft statement
 `ConeHarmonicBallsUpToFixedTimeStmt` (`Draft/Section2.lean:66-72`), whose clause `T' = T` says that the stopping time is
@@ -59,7 +59,7 @@ theorem stopped_unique_of_closureInside_fp {Λ Λ' : ℝ → Set ℂ} {T T' : �
   have h2 : T ≤ T' := stopped_le_of_closureInside_fp hT' h' hmono (by rw [min_comm]; exact heq) hcl
   exact le_antisymm h2 h1
 
-/-- **Draft Lemma 2.4 from the canonical step and the closure step (q1, fp-S2g).** The stopping time `T = halfBallTime`
+/-- **Draft Lemma 2.4 from the canonical step and the closure step.** The stopping time `T = halfBallTime`
 of the canonical family is the stopping time of every stopped family on the same measure, and every such family agrees
 with the canonical one on `(0, T)`. -/
 theorem coneHarmonicBallsUpToFixedTimeStmt_of_canonical (hcan : ConeCanonicalHalfBallStep)
@@ -77,7 +77,7 @@ theorem coneHarmonicBallsUpToFixedTimeStmt_of_canonical (hcan : ConeCanonicalHal
   rw [hTT]
   exact heq
 
-/-- **Proposition 6.1 from the canonical step, the closure step and the Section 6 inputs (q1, fp-S2g).** The composition
+/-- **Proposition 6.1 from the canonical step, the closure step and the Section 6 inputs.** The composition
 `iDLAUpperBound_of_coneFamilyAEMeasurable` with the Draft Lemma 2.4 of `coneHarmonicBallsUpToFixedTimeStmt_of_canonical`
 in place of the Draft statement. Hypotheses: Lemma 6.10 (`IterativeBoundStmt`), Proposition 5.1 (`IDLALowerBoundStmt`),
 the measurability step `ConeFamilyAEMeasurableStep` (its rescaled conjunct is OPEN), and the two steps above. -/

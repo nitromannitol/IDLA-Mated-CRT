@@ -1,13 +1,13 @@
 import MatedCRT.Defs.Setting
 import Mathlib.Data.Rat.Denumerable
 
-/-! # Countable codes of space-time processes (q1, fp-S2g; law encoding of Lemmas 2.5 and 2.6)
+/-! # Countable codes of space-time processes (law encoding of Lemmas 2.5 and 2.6)
 
 Lemmas 2.5 and 2.6 are stated as equalities in law of (circle process, family code), not of raw processes.
 The code of a `Prop`-valued space-time process `F : ℝ × ℂ → Prop` is its restriction to the countable set
 `{(q_i, z_j)}` of rational times and rational-complex points, a `Bool`-valued sequence on `ℕ × ℕ` with the product
 σ-algebra. The code of a family is the code of its process; a code determines the process on the countable set,
-and the decoder for the full family is in the notes (`notes/fp-gaps/CHATGPT-idla-2-5-2-6-law-encoding.md` Section 3).
+and the decoder for the full family is treated separately.
 
 Enumerations: `ratTime` lists all of `ℚ` (times `≤ 0` are excluded in the code by the decision `0 < q`, as in
 `globalFamilyProcess`), and `ratPoint` lists the dense set `ℚ + iℚ` of `ℂ`. -/

@@ -1,6 +1,6 @@
 import MatedCRT.FirstPass.S2g.Section6Canonical
 
-/-! Axiom check for the canonical Proposition 6.1 (q1, fp-S2g). -/
+/-! Axiom check for the canonical Proposition 6.1. -/
 
 #print axioms MatedCRT.firstPass_6_1_canonical24
 #print axioms MatedCRT.firstPass_6_1_canonical24_of_factor

@@ -2,9 +2,9 @@ import Mathlib
 import MatedCRT.Defs.Setting
 
 /-!
-# Locality of the local obstacle clusters (fp-S2g, q1)
+# Locality of the local obstacle clusters
 
-Deterministic part of CHATGPT-q1-open-steps.md Section 3, H3 (equation (7)): the local obstacle problem in `B_r`
+Deterministic part of H3 (equation (7)): the local obstacle problem in `B_r`
 depends only on the restriction of the measure to `B_r`. The supersolutions `S_{B_r;z}(t)` are defined through the
 distributional inequality `LaplacianLE w μ (B_r)`, whose test functions have support in `B_r`, and the Green function
 `G_{B_r}` does not involve the measure. Hence equal restrictions to `B_r` give equal supersolutions, least
