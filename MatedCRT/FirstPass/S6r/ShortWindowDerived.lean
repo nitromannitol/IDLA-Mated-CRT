@@ -19,8 +19,8 @@ Follow-up to `ShortWindowFrozen.lean` (`hprev_of_shortWindow_frozen`), following
   coordinate change of the LQG measure (`LitCoordChange`, class b, Duplantier-Sheffield 2011 Prop. 2.1), the proved
   affine invariance `wholePlaneGFFAffineInvariance_proved`, and the constant-shift identity proved here
   (`sdw_isLQGLimit_shift`). The factor `c = exp(γ κ)` with `κ = h_r(z) + Q log r` is kept explicit.
-* `hprev_of_shortWindow_derived`: `hprev_of_shortWindow_frozen` with `h2` discharged as above and `hR` discharged by
-  item 4, so that `hμ` and `hCC` are the only new named hypotheses (`h0` and `hV` stay frozen as before).
+* `hprev_of_shortWindow_derived`: `hprev_of_shortWindow_frozen` with `h2` discharged as above and `hR` discharged,
+  so that `hμ` and `hCC` are the only new named hypotheses (`h0` and `hV` stay frozen as before).
 
 The argument uses the notation of Armstrong-Kuusi-Mourrat (cone and field restriction) and Duplantier-Sheffield (LQG
 measure, coordinate change, quantum cone).
@@ -147,8 +147,8 @@ theorem coneMeanZeroRestriction_of_fullB1Law (hB1 : ConeWholePlaneFieldLawStep)
   exact e1
 
 /-- **hprev of the short-window good-radius prevalence, with the whole-plane steps derived.** The conclusion of
-`shortWindowGoodRadiusPrevalence_closed` with `h2` derived from `hCC` (item 2) and `hR` derived from the full field law
-`hB1` and the cone LQG measure `hμ` (item 4); `h0` and `hV` are the frozen Props `FPWholePlaneLQGExistence` and
+`shortWindowGoodRadiusPrevalence_closed` with `h2` derived from `hCC` and `hR` derived from the full field law
+`hB1` and the cone LQG measure `hμ`; `h0` and `hV` are the frozen Props `FPWholePlaneLQGExistence` and
 `FPWholePlaneUpperVolumeTail`, as in `hprev_of_shortWindow_frozen`. -/
 theorem hprev_of_shortWindow_derived (h0 : MatedCRT.FPWholePlaneLQGExistence)
     (hCC : MatedCRT.S2VG.LitCoordChange) (hV : MatedCRT.FPWholePlaneUpperVolumeTail)

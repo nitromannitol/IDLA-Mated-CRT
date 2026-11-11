@@ -15,15 +15,15 @@ This is the corrected good-annulus event of Lemmas 6.4/6.5. It replaces the prin
 `log (1/|u-v|) + 1` ([C5]).
 
 Proved here (deterministic):
-* `scaleCovGoodAnnulusEvent_smul_iff`: the event is invariant under `μ ↦ a μ`, `a > 0` (§3 item 2);
-* `scaleCovGoodAnnulusEvent_congr`: locality, the event depends only on `μ.restrict (ball z (3R))` (§3 item 1);
-* `measure_annulus_le_covN`, `scaleCov_annulus_mass_le`: `μ(𝔸) ≤ N_R ≤ C m_R^φ` on the event (§3 item 4);
-* `printedL_le_of_event_unit`: `L_R(z) ≤ C (1 + log 4)(1 + log(1/R)) m_R^φ` for `0 < R ≤ 1` (§3 item 4).
+* `scaleCovGoodAnnulusEvent_smul_iff`: the event is invariant under `μ ↦ a μ`, `a > 0`;
+* `scaleCovGoodAnnulusEvent_congr`: locality, the event depends only on `μ.restrict (ball z (3R))`;
+* `measure_annulus_le_covN`, `scaleCov_annulus_mass_le`: `μ(𝔸) ≤ N_R ≤ C m_R^φ` on the event;
+* `printedL_le_of_event_unit`: `L_R(z) ≤ C (1 + log 4)(1 + log(1/R)) m_R^φ` for `0 < R ≤ 1`.
 
 Not proved here:
-* the measurability of the event (§3 item 1), OPEN: the countable reduction of `covN` and `massBumpR` as functions of
+* the measurability of the event, OPEN: the countable reduction of `covN` and `massBumpR` as functions of
   `μ` is not yet written;
-* the uniform one-annulus probability (§3 item 3), kept as the named hypothesis `ScaleCovUniformPrevalenceStmt`.
+* the uniform one-annulus probability, kept as the named hypothesis `ScaleCovUniformPrevalenceStmt`.
 
 Terminology: LQG measure (Duplantier-Sheffield), good annuli (Berestycki-Powell, Armstrong-Kuusi-Mourrat),
 log kernel potential theory (Armitage-Gardiner).
@@ -74,7 +74,7 @@ noncomputable def massBumpR (c0 R : ℝ) (z : ℂ) (μ : Measure ℂ) : ℝ≥0�
 def ScaleCovGoodAnnulusEvent (c0 C R : ℝ) (z : ℂ) (μ : Measure ℂ) : Prop :=
   0 < massBumpR c0 R z μ ∧ massBumpR c0 R z μ < ⊤ ∧ covN R z μ ≤ ENNReal.ofReal C * massBumpR c0 R z μ
 
-/-- **Named hypothesis, not proved here** (§3 item 3, from the corrected Lemma 6.4/6.5): a uniform lower
+/-- **Named hypothesis, not proved here** (from the corrected Lemma 6.4/6.5): a uniform lower
 bound `p ≤ P(G_{R,z}(C))` for all `R > 0` and `z ∈ ℂ`. Translation and dilation invariance of the whole-plane GFF gives
 the independence of `(R, z)`; the positivity at one annulus is the prevalence input. -/
 def ScaleCovUniformPrevalenceStmt {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (μ : Ω → Measure ℂ)
@@ -172,7 +172,7 @@ lemma massBumpR_smul {a : ℝ≥0∞} (ha0 : a ≠ 0) (ha : a ≠ ⊤) (c0 R : �
   unfold massBumpR bumpMass
   simp only [lintegral_smul_measure, smul_eq_mul, ENNReal.mul_iInf_of_ne ha0 ha]
 
-/-- §3 item 2: multiplying `μ` by a positive constant leaves the good-annulus event unchanged. -/
+/-- Multiplying `μ` by a positive constant leaves the good-annulus event unchanged. -/
 lemma scaleCovGoodAnnulusEvent_smul_iff {a : ℝ} (ha : 0 < a) (c0 C R : ℝ) (z : ℂ) (μ : Measure ℂ) :
     ScaleCovGoodAnnulusEvent c0 C R z (ENNReal.ofReal a • μ) ↔ ScaleCovGoodAnnulusEvent c0 C R z μ := by
   set c : ℝ≥0∞ := ENNReal.ofReal a with hcdef
@@ -201,7 +201,7 @@ lemma scaleCovGoodAnnulusEvent_smul_iff {a : ℝ} (ha : 0 < a) (c0 C R : ℝ) (z
   unfold ScaleCovGoodAnnulusEvent
   rw [covN_smul, massBumpR_smul hc0 hctop, hpos, hmul_lt, ← hC']
 
-/-! ### Consequences on the event (§3 item 4) -/
+/-! ### Consequences on the event -/
 
 lemma measure_annulus_le_covN {R : ℝ} (hR : 0 < R) (z : ℂ) (μ : Measure ℂ) :
     μ (annulus z R (2 * R)) ≤ covN R z μ := by
@@ -232,7 +232,7 @@ lemma measure_annulus_le_covN {R : ℝ} (hR : 0 < R) (z : ℂ) (μ : Measure ℂ
     _ ≤ covN R z μ := le_iSup₂ (f := fun v (_ : v ∈ closure (annulus z R (2 * R))) =>
         ∫⁻ u in annulus z R (2 * R), covKernel R v u ∂μ) v (subset_closure hvA)
 
-/-- §3 item 4, first part: on the event, `μ(𝔸_{R,2R}(z)) ≤ N_R ≤ C m_R^φ`. -/
+/-- On the event, `μ(𝔸_{R,2R}(z)) ≤ N_R ≤ C m_R^φ`. -/
 lemma scaleCov_annulus_mass_le {c0 C R : ℝ} (hR : 0 < R) {z : ℂ} {μ : Measure ℂ}
     (h : ScaleCovGoodAnnulusEvent c0 C R z μ) :
     μ (annulus z R (2 * R)) ≤ ENNReal.ofReal C * massBumpR c0 R z μ :=
@@ -256,7 +256,7 @@ lemma measurable_covKernel (R : ℝ) (v : ℂ) : Measurable (covKernel R v) := b
   exact ENNReal.measurable_ofReal.comp
     ((Real.measurable_log.comp (measurable_const.div ((measurable_id.sub_const v).norm))).add_const 1)
 
-/-- §3 item 4, second part: on the event, `L_R(z) ≤ C (1 + |log (4R)|) m_R^φ`. -/
+/-- On the event, `L_R(z) ≤ C (1 + |log (4R)|) m_R^φ`. -/
 lemma printedL_le_of_event {c0 C R : ℝ} (hR : 0 < R) (hC : 0 ≤ C) {z : ℂ} {μ : Measure ℂ}
     (h : ScaleCovGoodAnnulusEvent c0 C R z μ) :
     printedL R z μ ≤ ENNReal.ofReal (C * (1 + |Real.log (4 * R)|)) * massBumpR c0 R z μ := by
@@ -302,7 +302,7 @@ lemma one_add_abs_log_four_mul_le {R : ℝ} (hR : 0 < R) (hR1 : R ≤ 1) :
     rw [abs_of_nonneg hn]
     nlinarith [mul_nonneg hL4 hl]
 
-/-- §3 item 4 in the paper's form: for `0 < R ≤ 1`, `L_R(z) ≤ C (1 + log 4)(1 + log(1/R)) m_R^φ` on the event. -/
+/-- In the paper's form: for `0 < R ≤ 1`, `L_R(z) ≤ C (1 + log 4)(1 + log(1/R)) m_R^φ` on the event. -/
 lemma printedL_le_of_event_unit {c0 C R : ℝ} (hR : 0 < R) (hR1 : R ≤ 1) (hC : 0 ≤ C) {z : ℂ}
     {μ : Measure ℂ} (h : ScaleCovGoodAnnulusEvent c0 C R z μ) :
     printedL R z μ ≤ ENNReal.ofReal (C * ((1 + Real.log 4) * (1 + Real.log (1 / R)))) * massBumpR c0 R z μ :=

@@ -3,14 +3,14 @@ import MatedCRT.FirstPass.S6r.Shells.Parameters
 import MatedCRT.FirstPass.S6r.Amplification
 
 /-!
-# The count hypothesis (7.10) of the Lemma 6.8 amplification (fp-S6r-S6-test-count)
+# The count hypothesis (7.10) of the Lemma 6.8 amplification
 
 Discharges the count hypothesis `c_N r^{-ζ} ≤ N` of `shell_product_le_half` (`FirstPass/S6r/Amplification.lean`) for the
 shell count `N = shellCount r s = ⌊r / (400 s)⌋₊` (`FirstPass/S6r/Shells/Parameters.lean`, `shell_parameters`), with
 `s = d^a`, `a = shortExp ζ = (1 + ζ)/2` and `r² ≤ d < 2r²`.
 
-Sources: `notes/fp-gaps/CHATGPT-idla-6-8-shells.md` l.58-138 (step 1: `N = ⌊r/(400 s)⌋`, (7.9), and (7.10) with
-`c_N = 2^{-a}/800`); `notes/fp-gaps/CHATGPT-idla-6-8-redesign.md` l.362-393 (`S6_numberOfTests`, (S6.1)-(S6.2)).
+The count: `N = ⌊r/(400 s)⌋`, (7.9), and (7.10) with
+`c_N = 2^{-a}/800`.
 
 The constant `c_N` depends only on `ζ = K.ζ`, which `Constants68 γ ρ` fixes from `(γ, ρ)` in S0. The threshold
 `r₁ = (2^{-a}/4000)^{1/ζ}` is the largest radius with `s ≤ r/4000`, the side condition of `shell_parameters`.
@@ -75,7 +75,7 @@ lemma shell_size_le {ζ r d : ℝ} (hζ : 0 < ζ) (hr : 0 < r) (hrle : r ≤ cou
             = r / 4000 * ((2 : ℝ) ^ shortExp ζ * (2 : ℝ) ^ (-shortExp ζ)) := by ring
         rw [e, h6, mul_one]
 
-/-- **(7.10), fp-S6r-S6-test-count.** For `K : Constants68 γ ρ` there is `r₁ ∈ (0, 1]` such that for `0 < r ≤ r₁` and
+/-- **(7.10).** For `K : Constants68 γ ρ` there is `r₁ ∈ (0, 1]` such that for `0 < r ≤ r₁` and
 `r² ≤ d < 2r²`, the shell count `N = shellCount r (d^a)` satisfies `c_N r^{-ζ} ≤ N` with `c_N = countConst K.ζ`
 (depends only on `ζ`, which is fixed by `(γ, ρ)`). Proof: `shell_parameters` (last conjunct) with `s ≤ r/4000`
 from `shell_size_le`. -/
@@ -99,7 +99,7 @@ theorem count_hypothesis {γ ρ : ℝ} (K : Constants68 γ ρ) :
   rw [hn] at h
   exact h
 
-/-- **Lemma 6.8, steps 13-14 with the count discharged (fp-S6r-S6-test-count).** `shell_product_le_half` for the
+/-- **Lemma 6.8, steps 13-14 with the count discharged.** `shell_product_le_half` for the
 shell count `N = shellCount r (d^a)`: its count hypothesis is supplied by `count_hypothesis` (with `cN = countConst K.ζ`,
 which depends only on `(γ, ρ)`), so only `0 < r ≤ r_amp`, `r² ≤ d < 2r²` and `N = n + 1` remain. -/
 theorem shell_product_le_half_of_shells {γ ρ : ℝ} (K : Constants68 γ ρ) {q0 : ℝ} (hq0 : 0 < q0) :

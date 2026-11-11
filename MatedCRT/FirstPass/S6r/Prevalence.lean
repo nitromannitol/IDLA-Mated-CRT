@@ -4,11 +4,10 @@ import MatedCRT.FirstPass.S6r.Window
 import MatedCRT.FirstPass.S6p
 
 /-!
-# Prevalence bridge for the good-annulus event (Lemma 6.8 window; fp-S6r-prevalence-bridge)
+# Prevalence bridge for the good-annulus event (Lemma 6.8 window)
 
-Sources: `notes/fp-gaps/CHATGPT-idla-6-4-6-5-fidelity.md` l.1-43 (the [C5] event is the positive part of
-`log (R/|u-v|) + 1`; the factor-4 kernel of the redesign is not literally the Lean event), and
-`notes/fp-gaps/CHATGPT-idla-6-8-redesign.md` l.165-214 (S2.3, short-window prevalence).
+The [C5] event is the positive part of
+`log (R/|u-v|) + 1`; the factor-4 kernel is not literally the Lean event.
 
 * (i) `scaleCovGoodAnnulusEvent_of_isGoodAnnulusEvent`: the [C5] event `IsGoodAnnulusEvent` (Defs/Setting.lean)
   implies the scale-covariant event `ScaleCovGoodAnnulusEvent` (kernel `log (4R/|u-v|) + 1`, S6r/GoodAnnulus.lean:74)
@@ -22,7 +21,7 @@ Sources: `notes/fp-gaps/CHATGPT-idla-6-4-6-5-fidelity.md` l.1-43 (the [C5] event
   prevalence `C5AllScalesPrevalenceStmt` (named) and a.s. non-degeneracy `AnnulusNondegenerateAe` (named).
 * (iii) deterministic part of S2.3: a seven-adic `7^{-n} ∈ [d, d^a]` is a window candidate `winCand`, and the first
   good candidate `winSelect` is good (`winSelect_good_of_seven_adic`). The probability bound (S2.3, the short-window
-  prevalence) is owned by z12 (`MatedCRT/FirstPass/S6r/ShortWindow.lean`, `ShortWindowGoodRadiusPrevalenceStmt`), not
+  prevalence) is in `MatedCRT/FirstPass/S6r/ShortWindow.lean` (`ShortWindowGoodRadiusPrevalenceStmt`), not
   duplicated here; the restricted (ii) above is the cone-field input of that chain.
 
 Terminology: LQG measure (Duplantier-Sheffield), good annuli (Berestycki-Powell, Armstrong-Kuusi-Mourrat),
