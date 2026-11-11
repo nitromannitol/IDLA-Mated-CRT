@@ -18,8 +18,8 @@ rescaled environment `S.rescaleWithCircle γ b hC' clock' c` has
 `MatedCRTEnv.IsValid` for the rescaled environment are obtained as follows.
 * `isProbabilityMeasure`: same `P`.
 * `isAreaParametrized`: deterministic (`isAreaParametrized_rescale`), `μ'(η'[s,t]) = b⁻¹ μ(η[bs,bt]) = t - s`, on the
-  event `R_b > 0` (a.s. by `QuantumConeScalingInput`, `Sec1.ae_coneScaleRadius_pos`, worker c3).
-* `isLQGMeasure`: Fact 2.2 III, IV (`LQGMeasurePropertiesStmt`) through worker c5's `coneLQGScalingStep_of_steps`.
+  event `R_b > 0` (a.s. by `QuantumConeScalingInput`, `Sec1.ae_coneScaleRadius_pos`).
+* `isLQGMeasure`: Fact 2.2 III, IV (`LQGMeasurePropertiesStmt`) through `coneLQGScalingStep_of_steps`.
 * `isQuantumCone`: `ae_continuousOn_circle` (pathwise, `R_b > 0`) and `radial_law` (the radial process is a measurable
   function of the circle average process, whose law is preserved by `QuantumConeScalingInput`) are derived here;
   `measurable_circle` is proved using a jointly measurable modification; `measurable_pairing`, `indep`, and

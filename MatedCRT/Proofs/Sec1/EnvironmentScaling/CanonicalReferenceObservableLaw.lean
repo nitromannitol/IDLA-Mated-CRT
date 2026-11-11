@@ -5,8 +5,8 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling.CanonicalBrownianPathAssembly
 /-!
 # Canonical reference observable law: cone observables with a supplied conditioned path law
 
-Sources: `notes/env-steps/env-steps.tex:217-242` (the conditioned drifted Brownian law of the cone radial process; its
-identification with DMS Remark 4.4, pp. 74-75, is the explicit premise `MatedCRT.Proposed.DMS14Remark44PostLastZeroLaw`)
+The conditioned drifted Brownian law of the cone radial process; its
+identification with DMS Remark 4.4, pp. 74-75, is the explicit premise `MatedCRT.Proposed.DMS14Remark44PostLastZeroLaw`
 and `env-steps.tex:254-280` (the joint law of the cone observables, lines 257-270).
 
 This file specializes `CanonicalObservableAssembly.lean`. The radial clause of `IsQuantumCone` is the existential

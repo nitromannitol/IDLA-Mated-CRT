@@ -7,7 +7,7 @@ import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 /-!
 # Local integrability of radial functions with logarithmic growth at zero
 
-Deterministic component of `notes/env-steps/env-steps.tex:243-252`.  The
+The
 paper's claim has two parts.  On the inward branch Brownian growth is `o(t)`
 as `t → ∞` (with `t = -log |z|`), which bounds the radial function by
 `C (1 + |log |z||)` near zero; on a bounded annulus the radial function is

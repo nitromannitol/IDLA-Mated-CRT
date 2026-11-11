@@ -8,7 +8,7 @@ drifted kernel `p_t^d`, the survival function `h_d(x) = 1 - e^{-2dx}`, the
 conditioned kernel `p_t^d(x,y) h_d(y)/h_d(x)`, the entrance density, and the
 finite-dimensional chain of conditioned kernels.
 
-The entrance-density analytic limit and its Gaussian specialisation are m1's
+The entrance-density analytic limit and its Gaussian specialisation are
 results in `CanonicalConeIdentification` (`tendsto_conditioned_entrance_density`,
 `tendsto_gaussian_conditioned_entrance_density`); they are reused, not reproved.
 
@@ -209,7 +209,7 @@ def positiveOrthant (n : ℕ) : Set (Fin n → ℝ) :=
   Set.pi Set.univ fun _ => Set.Ioi 0
 
 /-- The conditioned kernel converges to the entrance density as the starting
-point decreases to `0` (env-steps.tex:230-232). The analytic limit is m1's
+point decreases to `0` (env-steps.tex:230-232). The analytic limit is
 `tendsto_gaussian_conditioned_entrance_density`. -/
 theorem tendsto_conditionedDriftDensity_entrance {d τ y : ℝ} (hd : d ≠ 0) (hτ : 0 < τ) :
     Tendsto (fun x => conditionedDriftDensity d τ x y) (𝓝[>] 0)

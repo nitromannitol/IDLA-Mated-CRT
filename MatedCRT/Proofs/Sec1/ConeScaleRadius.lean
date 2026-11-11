@@ -25,7 +25,7 @@ has the law of that of `h`).
   `R_b > 0`, the level set is closed, nonempty and bounded, and `R_b < q` iff `|X - γ⁻¹ log b|` is bounded below on
   each `[q, M] ∩ ℚ` (`sSup_levelSet_lt_iff`): a countable condition on the measurable circle averages.
 
-As by-products: worker c5's `ConeScaleRadiusPosStep` and `ConeRescaledCircleAEMeasurableStep` (hypotheses of
+As by-products: `ConeScaleRadiusPosStep` and `ConeRescaledCircleAEMeasurableStep` (hypotheses of
 Lemma 2.5) follow from the same input.
 -/
 
@@ -311,11 +311,11 @@ theorem coneScaleRadiusStep_of_input (hscale : QuantumConeScalingInput) : ConeSc
   have hpos := Sec1.ae_coneScaleRadius_pos hscale hγ hγ2 hfield.2.1 hb
   exact ⟨Sec1.aemeasurable_coneScaleRadius hfield.2.1 hpos, hpos⟩
 
-/-- Worker c5's `ConeScaleRadiusPosStep` (a hypothesis of Lemma 2.5) from `QuantumConeScalingInput`. -/
+/-- `ConeScaleRadiusPosStep` (a hypothesis of Lemma 2.5) from `QuantumConeScalingInput`. -/
 theorem coneScaleRadiusPosStep_of_input (hscale : QuantumConeScalingInput) : ConeScaleRadiusPosStep :=
   fun γ hγ hγ2 _ _ _ _ _ hP hcone b hb => @Sec1.ae_coneScaleRadius_pos hscale γ hγ hγ2 _ _ _ hP _ _ hcone b hb
 
-/-- Worker c5's `ConeRescaledCircleAEMeasurableStep` (a hypothesis of Lemma 2.5) from `QuantumConeScalingInput`: the
+/-- `ConeRescaledCircleAEMeasurableStep` (a hypothesis of Lemma 2.5) from `QuantumConeScalingInput`: the
 circle average process of `h^b` has the law of that of `h`, so it is a.e.-measurable. -/
 theorem coneRescaledCircleAEMeasurableStep_of_input (hscale : QuantumConeScalingInput) :
     ConeRescaledCircleAEMeasurableStep := by

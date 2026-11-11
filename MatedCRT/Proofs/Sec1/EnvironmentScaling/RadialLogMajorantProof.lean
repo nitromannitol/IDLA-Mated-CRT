@@ -7,7 +7,7 @@ import MarkovProcess.Examples.BrownianMotion
 /-!
 # Radial log majorant of a quantum cone and local integrability of its radial part
 
-Component of `notes/env-steps/env-steps.tex:243-252`: the radial function of a quantum cone is locally integrable on
+The radial function of a quantum cone is locally integrable on
 the plane, its radial log majorant (`RadialLogMajorant`) holds almost surely, and every test-function pairing with it
 is integrable.
 

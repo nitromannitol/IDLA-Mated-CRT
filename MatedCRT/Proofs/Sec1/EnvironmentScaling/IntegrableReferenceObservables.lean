@@ -5,9 +5,7 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling.ConeObservableIntegrability
 # Integrable reference observables of the actual cone
 
 Assembly of the concrete reference observable law (`CanonicalReferenceObservableLaw.lean`) with the actual radial and
-angular integral finiteness (`ConeObservableIntegrability.lean`), for the actual cone `IsQuantumCone`. Source:
-`notes/env-steps/env-steps.tex:241-272`: the integrability paragraph (241-251), the joint-law and independence paragraph
-(253-263) and the countable coding paragraph (264-272), as audited.
+angular integral finiteness (`ConeObservableIntegrability.lean`), for the actual cone `IsQuantumCone`.
 
 Index. The statements hold for an arbitrary family `o : ι → GFFObservable.Admissible` with `ι : Type`. The finite family is
 `ι = Fin n` and the countable family is `ι = ℕ`; the proofs use the product σ-algebra only.

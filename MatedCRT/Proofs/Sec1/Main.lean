@@ -9,8 +9,7 @@ four scaling steps. Three of them are proved or reduced here:
 * `ConeScaleRadiusStep`: from `QuantumConeScalingInput` (`coneScaleRadiusStep_of_input`);
 * `ScaledClusterExitTimeStep`: from Lemma 2.5, `ConeFamilyAEMeasurableStep` and `ConeHarmonicBallStrictGrowthStep`
   (`scaledClusterExitTimeStep_of_steps`).
-The fourth, `ConeEnvironmentScalingStep` (the rescaled environment is valid), remains a hypothesis (INPUT-REQUESTS
-IR-c3-1). Through worker c5's reductions of Lemma 2.5 and of `ConeFamilyAEMeasurableStep`, the Section 2 hypotheses
+The fourth, `ConeEnvironmentScalingStep` (the rescaled environment is valid), remains a hypothesis. Through the reductions of Lemma 2.5 and of `ConeFamilyAEMeasurableStep`, the Section 2 hypotheses
 become Fact 2.2, strict growth and the half-ball functional step (`..._of_coneSteps`).
 -/
 
@@ -36,7 +35,7 @@ theorem convergenceOfDivSandpile_of_scalingInputs (𝒮 : SpaceFillingSLEModel)
     (scaledClusterExitTimeStep_of_steps h25 hmeas hgrow)
 
 /-- Lemma 2.5 and `ConeFamilyAEMeasurableStep` from Fact 2.2, strict growth and the half-ball functional step
-(worker c5's reductions, with `ConeScaleRadiusPosStep`, `ConeRescaledCircleAEMeasurableStep` discharged by the
+(the reductions, with `ConeScaleRadiusPosStep`, `ConeRescaledCircleAEMeasurableStep` discharged by the
 scaling of the quantum cone). -/
 theorem coneScaleInvarianceUpToFixedTime_and_aemeasurable_of_coneSteps (hscale : QuantumConeScalingInput)
     (h22 : LQGMeasurePropertiesStmt) (hgrow : ConeHarmonicBallStrictGrowthStep)

@@ -4,7 +4,7 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling.CircleProcessSpace
 /-!
 # Represented continuous circle process: joint law from countable codes
 
-Source: notes/env-steps/env-steps.tex:264-271, the written dense-coordinate law identification: "Use countably many test
+The written dense-coordinate law identification: "Use countably many test
 pairings to code `Ĥ`, and evaluations on a countable dense subset of `E` to code a continuous circle process. Joint laws of
 these codes determine their joint law on `𝒟'(ℂ) × C(E,ℝ)`, so the identification is simultaneous."
 
@@ -15,7 +15,7 @@ these codes determine their joint law on `𝒟'(ℂ) × C(E,ℝ)`, so the identi
 
 Scope. The represented distribution `H` and the continuous representative `Φ` are supplied as measurable maps; neither is
 constructed. The continuous modification of Duplantier-Sheffield circle averages is not used, and no WPN-53 or WPN-54
-premise appears: continuity of `Φ` is part of its type. This file does not discharge the protected m1 represented-grid
+premise appears: continuity of `Φ` is part of its type. This file does not discharge the represented-grid
 producer and does not close any environment-scaling step.
 -/
 

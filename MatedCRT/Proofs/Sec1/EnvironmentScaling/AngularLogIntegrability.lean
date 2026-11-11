@@ -11,7 +11,7 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling.RadialLocalIntegrability
 /-!
 # Angular integrability of logarithmic radial singularities on circles through zero
 
-Deterministic component of the angular assertion in `notes/env-steps/env-steps.tex:250-251`:
+Deterministic component of the angular assertion:
 "Angular integrals remain finite for circles through zero, since a logarithmic singularity is
 integrable in the angle."  The lateral observable `ℓ(r,z)` of `env-steps.tex:128-135` integrates
 the radial function over the circle `θ ↦ z + r e^{iθ}`; that circle passes through `0` exactly when

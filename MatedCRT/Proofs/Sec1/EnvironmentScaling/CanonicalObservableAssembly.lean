@@ -32,7 +32,7 @@ Proved here:
 
 Remaining canonical inputs, not derived here: the identification of the explicit radial law `ν` with a post-last-zero or
 conditioned Brownian law (this is where `DMS14Remark44PostLastZeroLaw`, `Proposed/DuplantierMillerSheffieldCone2014.lean`,
-would enter; this file does not use it); the represented-circle recovery of a distribution (task m1); sublinear radial
+would enter; this file does not use it); the represented-circle recovery of a distribution; sublinear radial
 growth (`RadialLogMajorant`); the continuity of the cone's circle process (taken from `IsQuantumCone.ae_continuousOn_circle`).
 -/
 

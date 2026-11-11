@@ -12,7 +12,7 @@ for a Brownian motion `B` in the sense of Mathlib (`ProbabilityTheory.IsBrownian
 measurable coordinates `B t`, the measurable continuous-path version of the reference cone process
 `referenceConeConditionedPath γ (B · ω)` needs no `hsub` premise and no `GaussianBandStep` premise.
 
-Source: `notes/env-steps/env-steps.tex:217-250`. The sublinear growth written there (the Gaussian tail
+The sublinear growth (the Gaussian tail
 bound and the reflection bound for the maximum, followed by Borel-Cantelli) is the argument discharged in
 `GaussianBandProof.lean`. The conditioned-law identification written there (the entrance and transition
 densities of the conditioned drifted Brownian motion, `env-steps.tex:217-242`, citing DMS Remark 4.4,

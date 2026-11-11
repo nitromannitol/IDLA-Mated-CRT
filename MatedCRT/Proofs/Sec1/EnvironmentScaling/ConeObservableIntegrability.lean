@@ -5,8 +5,8 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling.RadialLogMajorantProof
 /-!
 # Actual-cone observable integrability: fixed circles, countable families and tests
 
-Component of `notes/env-steps/env-steps.tex:241-251` (Gaussian bounds, logarithmic majorant, through-zero angular
-integrability and countable radial approximation), for the actual quantum cone of `IsQuantumCone`.
+Gaussian bounds, logarithmic majorant, through-zero angular
+integrability and countable radial approximation, for the actual quantum cone of `IsQuantumCone`.
 
 Hypotheses. Every statement assumes only the cone `IsQuantumCone γ P hC hcirc` (with `[IsProbabilityMeasure P]` where
 the radial law is used). The radial log majorant `RadialLogMajorant` is not a premise here: it is derived from the

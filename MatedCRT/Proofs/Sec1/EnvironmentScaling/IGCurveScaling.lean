@@ -3,9 +3,6 @@ import LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.IsMatingOfTreesCoupling
 /-!
 # Deterministic no-period and integer-rotation component of the IG curve scaling
 
-Source: `notes/env-steps/env-steps.tex`, proof of `lem:mainlaw`, lines 774–799
-(sha256 `26dfc02c…`).
-
 The frozen interface is Leonardo Bonanno's
 `LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.IsMatingOfTreesCoupling`, with its
 `MatedCRTAffineReroot`, `MatedCRTIgPullback`, `MatedCRTFirstHit`, `MatedCRTIgChi`,

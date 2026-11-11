@@ -3,7 +3,7 @@ import Mathlib
 /-!
 # Real-time sublinear growth of Brownian motion (the `hsub` premise)
 
-Component of `notes/env-steps/env-steps.tex:243-250`.  For a Brownian motion `B` on `ℝ≥0` with
+For a Brownian motion `B` on `ℝ≥0` with
 measurable coordinates, almost surely `B t / t → 0` as `t → ∞` through the reals, the path being read
 at `t.toNNReal`.  The conclusion `ae_tendsto_div_real_of_gaussianBandStep` is exactly the premise
 `hsub` of `MatedCRT.Sec1.exists_measurable_referenceConeConditionedPath`
@@ -34,8 +34,7 @@ variable {Ω : Type*} [MeasurableSpace Ω]
 
 /-- **Named Step: the Gaussian maximal estimate for the path on a horizon.**  For every horizon
 `T` and every width `a > 0`, the probability that `|B s - B 0| ≥ a` for some `s ≤ T` is at most
-`4 exp(-a² / (32 T))`.  This is the reflection-type bound for the maximum of
-`notes/env-steps/env-steps.tex:247-248`.  Its Lean proof for `ProbabilityTheory.IsBrownianReal B P`
+`4 exp(-a² / (32 T))`.  This is the reflection-type bound for the maximum of the path on the horizon.  Its Lean proof for `ProbabilityTheory.IsBrownianReal B P`
 with measurable coordinates is `LatticeProb.measure_exists_abs_sub_ge_le`
 (lattice-probability, `LatticeProb/Prob/BrownianMax.lean:247`), which is not importable at the
 repository's pin: `LatticeProb.Prob.BrownianTail` fails to build (`BrownianTail.lean:120:41`).  It

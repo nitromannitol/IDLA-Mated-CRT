@@ -9,8 +9,7 @@ import Mathlib.Probability.Independence.Basic
 /-!
 # Uniform translation modulo `p` and joint independence (IG curve scaling)
 
-Source: `notes/env-steps/env-steps.tex`, proof of `lem:mainlaw`, lines 794–804 (the
-modulo-uniform argument). If `U` is uniform on `[0,p)`, jointly independent of the data `I`, and
+The modulo-uniform argument. If `U` is uniform on `[0,p)`, jointly independent of the data `I`, and
 `a` is measurable, then `V = (U + a(I)) mod p` is uniform on `[0,p)` and independent of `I`, hence
 of every measurable function `G(I)`, for instance of the scaled data `I_scaled(I)`. The
 representative of `U + a(I)` in `[0,p)` is `toIcoMod hp 0 (U + a(I))`.
