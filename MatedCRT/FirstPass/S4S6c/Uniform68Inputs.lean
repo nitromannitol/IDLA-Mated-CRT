@@ -8,7 +8,7 @@ import MatedCRT.FirstPass.S4S6c.OpenAnnulus68
   target statement `UniformConstantOrderLowerBoundStmt` (FirstPass/S6d.lean:90, with `A = S' \ Θ`), for finite `A`.
 * `measure_closedBall_ne_top`, `measure_openAnnulus_ne_top`: the finiteness inputs `hmfin` and `hμA` of the local test,
   from finiteness of `μ` on compact sets (the local finiteness part of `LQGMeasurePropertiesStmt`, Draft/Section2.lean:39,
-  item 1: `IsLocallyFiniteMeasure (μ ω)` almost surely).
+  `IsLocallyFiniteMeasure (μ ω)` almost surely).
 
 Terminology: LQG measure `μ` (Duplantier-Sheffield, Berestycki-Powell); Armitage-Gardiner annulus `A_{R,2R}(z)`.
 -/

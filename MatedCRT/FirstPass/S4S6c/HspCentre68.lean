@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S6r.LocalBudget
 
 /-!
-# FIRST PASS S4S6c, HspCentre68: the mass-relative sparsity at the walk centre (item 1)
+# FIRST PASS S4S6c, HspCentre68: the mass-relative sparsity at the walk centre
 
 Lemma 6.8 (Draft/Section6.lean:115-116) gives the sparsity `|A ∩ V^ε(B_r(z))| < s₁ r^{2β⁻} ε⁻¹` for every centre
 `z ∈ ℂ` at the single radius `r`. The chain needs the mass-relative form

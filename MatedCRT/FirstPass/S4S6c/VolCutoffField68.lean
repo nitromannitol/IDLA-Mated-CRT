@@ -5,7 +5,7 @@ import MatedCRT.Proofs.Sec6.IterativeBound.FieldSigma
 /-!
 # Field-measurable volume cutoff (Lemma 2.7 at dyadic scales, field-measurable)
 
-Codex Q2a step 5 (`notes/fp-gaps/CODEX-idla-hOne-residuals-sol-20261110.md`, lines 140-164). The existing
+The existing
 `Lemma68Cutoff239.volume_lower_cutoff_measurable` gives only an ambient `Measurable` cutoff, which does not justify
 `Measurable[S.fieldSigma]`. This file gives the field-measurable version, for the LQG measure `S.μ` of a valid
 environment (Duplantier-Sheffield, Berestycki-Powell volume growth; Lemma 2.7 of the paper, `VolumeGrowthStmt`).

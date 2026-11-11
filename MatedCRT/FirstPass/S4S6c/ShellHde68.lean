@@ -8,7 +8,7 @@ import MatedCRT.FirstPass.S6r.ShellTest
 
 For a configuration `i` satisfying the full guard `FullAdm` at radius `r`, the shell exits `T_k` (`shellExit`) are finite
 and the shell centres `z_k` (`shellCentre`) are eligible, for `k ≤ n = shellCount r s - 1`, almost surely. The eligibility
-predicate used is the set `Z_d = shortEligible ρ d s` (PRO step 3), and the caller's `Elig` must contain it (binder `hElig`).
+predicate used is the set `Z_d = shortEligible ρ d s`, and the caller's `Elig` must contain it (binder `hElig`).
 
 The argument is pathwise (route steps 1-5 and 7):
 * Let `U = killed ε η Θ F0 r` and `τ = vExitTime U x`. Since `τ < ⊤`, the cells `cell (x 0), …, cell (x τ)` form a chain of

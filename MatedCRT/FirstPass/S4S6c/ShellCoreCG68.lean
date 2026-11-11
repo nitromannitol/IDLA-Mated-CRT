@@ -243,7 +243,7 @@ theorem hgapShell_of_rAmp_le {ρ ζ q0 r : ℝ} (hρ1 : ρ < 1) (hζ0 : 0 < ζ) 
 (B1Assembly68.lean:1216, fb32a38) at `K = shellKCG`. Every binder of that lemma is one of: (a) a deterministic fact of the
 parameters, discharged here; (b) `hmesh`, `hcap`, `hCellGood`, `hfull`, discharged here from the Stmt's ω-level premises;
 (c) one of the twelve residual binders `ShellCGRes…` below, quantified over all parameters and assumed as named hypotheses
-of the producer, each to be supplied by its owner. -/
+of the producer. -/
 
 /-- `shellC0 CG = exp(-2CG)/32 ≤ 1` for `CG > 0`. -/
 theorem shellC0_le_one_cg {CG : ℝ} (hCG : 0 < CG) : shellC0 CG ≤ 1 := by
