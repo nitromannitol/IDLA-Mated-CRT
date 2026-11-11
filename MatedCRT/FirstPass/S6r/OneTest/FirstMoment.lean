@@ -6,9 +6,9 @@ import MatedCRT.FirstPass.S6j.StateLocal
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.Visit
 
 /-!
-# The first moment of the one-test count (PRO notes step 8 `one_test_from_boundary`; fp-S6r)
+# The first moment of the one-test count (`one_test_from_boundary`)
 
-Written argument: `notes/fp-gaps/CHATGPT-lemma68-open-parts.md` §B3-B5 (eqs. B8, B10, B13, B14) and PRO step 8.
+Equations B8, B10, B13, B14.
 Notation: `x = η(y)`, `D = B_{R/4}(x)`, `D₀ = B_{c₀R}(x)`, `ID` the discrete interior `I(D)` (exit set of `σ_D`),
 `m₀ = μ(D₀)`, `S = V^ε(D₀) \ A`.
 
@@ -23,7 +23,7 @@ Result: `(1/4) ε⁻¹ μ(D₀) ≤ E_y[V_occ]` with `V_occ = occCount A σ_D` (
 on no parameter, in particular not on `(γ, ρ)`.
 
 Terminology: Green function of the killed walk (Armitage-Gardiner; Berestycki-Gwynne BG20 Lemma 4.4 for Lemma 2.16);
-occupation count and exit time (PRO step 8). Not used: the goodness of `R` at `z` and `b ∈ V(∂B_{4R/3}(z))`; the
+occupation count and exit time. Not used: the goodness of `R` at `z` and `b ∈ V(∂B_{4R/3}(z))`; the
 first moment needs neither (the conclusion holds without them).
 -/
 
@@ -106,7 +106,7 @@ lemma ae_exitTime_lt_top_fm {m : ℤ → ℤ → ℕ} {ID : Set ℤ} {y : ℤ}
     exact h1
   exact hμ
 
-/-- **The first moment of the one-test count** (PRO step 8, `E_b[V_occ | h, η] ≥ c₁ ε⁻¹ m₀`, with `c₁ = 1/4`).
+/-- **The first moment of the one-test count** (`E_b[V_occ | h, η] ≥ c₁ ε⁻¹ m₀`, with `c₁ = 1/4`).
 `D = B_{R/4}(η y)`, `ID = I(D)` the discrete interior (`hID`), `σ_D = vExitTime ID`, `D₀ = B_{c₀R}(η y)`, `m₀ = μ(D₀)`,
 `A` the set of occupied sites. The start is the vertex `y`, the walk law `srwLaw m y` with `m = S.mult ε ω`.
 

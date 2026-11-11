@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.S6r.OneTest.Count
 import MatedCRT.FirstPass.S6r.Prevalence
 
 /-!
-# Second moment of the one-test occupation count (PRO step 8 `one_test_from_boundary`; Lemma 6.8 redesign)
+# Second moment of the one-test occupation count (`one_test_from_boundary`; Lemma 6.8)
 
-Setting (PRO step 8; open-parts B5 (B17)): `b` a start vertex in `V^ε(∂B_{4R/3}(z))`, `x = η(εb)`, `D = B_{R/4}(x)`,
+Setting: `b` a start vertex in `V^ε(∂B_{4R/3}(z))`, `x = η(εb)`, `D = B_{R/4}(x)`,
 `D₀ = B_{3c₀R}(x)`, `ID = interiorCellVertices ε η D` (the discrete interior of `D`), `σ_D(w) = (vExitTime ID w).toNat`,
 `V_occ = occCount A σ_D`. Claim: `E_b[V_occ²] ≤ C₂ ε⁻² (1 + log(1/R))² μ(D₀)²`, with
 `C₂ = 32 C_exit² ((1 + N log 4) C_good)²`.
@@ -16,7 +16,7 @@ on the good annulus, through `printedL_le_of_event` after the [C5] bridge `scale
 
 Named inputs (each is a pointwise slice of a Stmt, or a side condition, all listed in the theorem):
 * `hmom`: the first conjunct of `ExitTimeUpperBoundStmt` (Lemma 2.18) at `ω`, for all Borel `D ⊆ B_ρ`. The ball form
-  `ExitTimeUpperBoundBallStmt` (chat 184) replaces only the expected-exit-time conjunct, so it cannot supply `N = 2`.
+  `ExitTimeUpperBoundBallStmt` replaces only the expected-exit-time conjunct, so it cannot supply `N = 2`.
 * `hvol`: the lower half of `VolumeGrowthStmt` (Lemma 2.7) at `ω`, radius `R/4`, centres in `B_{1-R/4}`.
 * `hgood`: the [C5] good-annulus event `IsGoodAnnulusEvent`, with the covering, positivity, atomlessness and finiteness
   side conditions of the bridge `scaleCovGoodAnnulusEvent_of_isGoodAnnulusEvent`.
@@ -69,7 +69,7 @@ lemma lintegral_occCount_sq_le (m : ℤ → ℤ → ℕ) (A ID : Set ℤ) (b : �
         ENNReal.ofReal_le_ofReal (pow_le_pow_left₀ h0 h1 2)
     _ ≤ ((vExitTime ID w : ℕ∞) : ENNReal) ^ 2 := ofReal_sq_toNat_le _
 
-/-- Geometry (PRO step 8: `B_{R/4+δ}(x) ⊆ 𝔸_{R,2R}(z)`): if `|x - z| ∈ [4R/3 - R/100, 4R/3 + R/100]` and `0 ≤ δ ≤ R/100`,
+/-- Geometry (`B_{R/4+δ}(x) ⊆ 𝔸_{R,2R}(z)`): if `|x - z| ∈ [4R/3 - R/100, 4R/3 + R/100]` and `0 ≤ δ ≤ R/100`,
 then `B_{R/4+δ}(x) ⊆ annulus z R (2R)`. -/
 lemma ball_add_subset_annulus {z x : ℂ} {R δ : ℝ} (hR : 0 < R) (hδ : δ ≤ R / 100)
     (hxz : 4 * R / 3 - R / 100 ≤ ‖x - z‖ ∧ ‖x - z‖ ≤ 4 * R / 3 + R / 100) :
@@ -138,7 +138,7 @@ lemma sup_log_le_printedL {z x : ℂ} {R δ : ℝ} (hR : 0 < R) (hδ : δ ≤ R 
         le_iSup₂ (f := fun v (_ : v ∈ closure (annulus z R (2 * R))) =>
           ∫⁻ w in annulus z R (2 * R), printedKernel v w ∂μ) v hvA
 
-/-- **Second moment of the one-test count** (PRO step 8; B5 (B17)). For `ID = interiorCellVertices ε η (B_{R/4}(x))`,
+/-- **Second moment of the one-test count**. For `ID = interiorCellVertices ε η (B_{R/4}(x))`,
 `x = η(εb)` (the cell of `b` contains `x`), `D₀ = B_{3c₀R}(x)`, `σ_D = (vExitTime ID ·).toNat`, `V_occ = occCount A σ_D`:
 `E_b[V_occ²] ≤ 32 C_exit² ((1 + N log 4) C_good)² ε⁻² (1 + log(1/R))² μ(D₀)²`.
 Named inputs: `hmom` (first conjunct of `ExitTimeUpperBoundStmt`, Lemma 2.18, at `ω`), `hvol` (Lemma 2.7 lower half at `ω`),
@@ -199,7 +199,7 @@ theorem secondMoment_occCount (m : ℤ → ℤ → ℕ) (μ : Measure ℂ) (η :
   have hxID : b ∈ cellVertices ε η (ball x (R / 4)) :=
     ⟨x, hxcell, mem_ball_self (by linarith)⟩
   have hM := hmom (ball x (R / 4)) measurableSet_ball hρ hmassD b hxID 2
-  -- step 2 (PRO step 8; B5 (B15)): the potential is bounded by the printed L_R(z) on the good annulus
+  -- step 2: the potential is bounded by the printed L_R(z) on the good annulus
   set D0 := ball x (3 * c₀ * R) with hD0
   set Cg := (1 + N_cov * Real.log 4) * C_good with hCg_def
   have hlog4pos : 0 ≤ Real.log 4 := Real.log_nonneg (by norm_num)

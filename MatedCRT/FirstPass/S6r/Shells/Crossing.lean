@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S6r.Shells.Parameters
 /-!
 # Lemma 6.8, window S7': successive shell crossing (steps 3 and 4)
 
-Steps 3 and 4 of the redesigned S7' (`notes/fp-gaps/CHATGPT-idla-6-8-shells.md`, displayed (7.14)-(7.22)).
+Steps 3 and 4 of S7' (displayed (7.14)-(7.22)).
 Cells are `H^ε_k = η([ε(k-1), εk])` (`MatedCRT.cell`), vertices `η(εk)` (`MatedCRT.vertexPoint`), the walk
 `X : ℕ → ℤ` is a legal graph trajectory (consecutive cells intersect), and `𝒞_m = ⋃_{n ≤ m} H_{X_n}` is the
 connected union of the cells visited up to time `m` (displayed (7.16)).

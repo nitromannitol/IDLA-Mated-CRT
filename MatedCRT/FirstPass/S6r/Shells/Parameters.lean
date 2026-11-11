@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S6r.Constants
 /-!
 # Lemma 6.8, window S7': two-sided shells, parameters and grid cover
 
-Steps 1 and 2 of the redesigned S7' (`notes/fp-gaps/CHATGPT-idla-6-8-shells.md`, displayed (7.0)-(7.13)).
+Steps 1 and 2 of S7' (displayed (7.0)-(7.13)).
 Terminology: `K = closure Θ`, `f = dist(·, K)` (`Metric.infDist`), the open thickening `K + B_r = {f < r}`
 (`Metric.thickening r K`), and the two-sided shell `Σ_j = {|f - r/2| = λ_j}` of Armstrong, Kuusi and Mourrat's
 level-set construction. Radii `d`, `s = d^a`, `g = d/100` and the grid `gℤ²` are as in the note.

@@ -1,12 +1,11 @@
 import MatedCRT.Defs.Setting
 
 /-!
-# First pass: the normalized law of whole-plane space-filling SLE (task fp-SLERef-reference-law, worker z10)
+# First pass: the normalized law of whole-plane space-filling SLE
 
-`SLEPathCode`, `slePathCode` and `IsLebesgueRepresentative` are promoted unchanged from the probe
-`notes/z2-sle-field-probe.lean` (namespace `MatedCRT.Probe`, z2, 2026-11-10 01:35 UTC). The new declaration
+`SLEPathCode`, `slePathCode` and `IsLebesgueRepresentative` are promoted unchanged from an earlier probe (namespace `MatedCRT.Probe`). The new declaration
 `HasNormalizedSLELaw 𝒮 ν` replaces the probe's stand-in `canonicalSLECodeLaw` by an explicit law family `ν`.
-Design: `notes/fp-gaps/CHATGPT-z2-sle-field-design.md` §1, §7, §8.
+
 
 Nothing in this module asserts that a family `ν` is the law of an SLE, nor that a measurable normalized representative
 exists. The reference existence and the uniform literature transfer are the frozen input `SLEReferenceExistsInput`

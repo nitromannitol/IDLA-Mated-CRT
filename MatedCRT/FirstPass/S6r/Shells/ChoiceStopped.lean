@@ -3,12 +3,11 @@ import MatedCRT.FirstPass.S6r.OneTest.SrwStrongMarkov
 import MatedCRT.FirstPass.S6r.Shells.Choice
 
 /-!
-# First pass: the shell parameter `ρ_k` is measurable for the stopping-time σ-algebra of `T_k` (task fp-S6r-shell-param-stopped,
-worker z10)
+# First pass: the shell parameter `ρ_k` is measurable for the stopping-time σ-algebra of `T_k`
 
 The parametric one-test (`MatedCRT/FirstPass/S6r/OneTest/ExitQHone.lean`, hypothesis `hρ`) needs, for the paper's shell
 parameters, that `ρ_k : (ℕ → ℤ) → ℝ × ℂ` be `𝓕_{T_k}`-measurable, where `T_k` is the shell exit of `ShellOmega`
-(`shellExit`, PRO step 12) and `ρ_k` is the pair (radius, centre) chosen at the shell hit `C_{k+1}` (`shellHit`).
+(`shellExit`) and `ρ_k` is the pair (radius, centre) chosen at the shell hit `C_{k+1}` (`shellHit`).
 
 Route. The centre `z_k = shellCentre k x = Q_{d/100}(η(x_{C_{k+1}}))` depends on the path only through the value of the
 coordinate process at the stopping time `C_{k+1}`; the radius `R z_k` is a function of `z_k`. Let `H : ℤ → ℝ × ℂ` be the index
@@ -19,11 +18,10 @@ map `j ↦ (R (Q_{d/100}(η j)), Q_{d/100}(η j))`. Then `ρ_k x = H (x_{C_{k+1}
 * `C_{k+1} ≤ T_k` pointwise (`shellHit_le_shellExit`, from the definition of `shellExit` as a first time), so
   `𝓕_{C_{k+1}} ≤ 𝓕_{T_k}` (`IsStoppingTime.measurableSpace_mono`).
 
-Identification. The parameter is built from `ShellOmega.shellCentre` (z9) and `R` exactly as `shellExit` and `testEnd`
-use them. The total choices `shellCentreAt` / `shellRadiusAt` of `Shells/Choice.lean` differ from z9's (default `0` for the
+Identification. The parameter is built from `ShellOmega.shellCentre` and `R` exactly as `shellExit` and `testEnd`
+use them. The total choices `shellCentreAt` / `shellRadiusAt` of `Shells/Choice.lean` differ from those of `ShellOmega` (default `0` for the
 centre and `d` for the radius at a missing hit; grid `g` instead of `d/100`; `firstShellHit` instead of `shellHit`), so they are
-not used for `ρ_k`. The variant `shellParamAt` with `shellRadiusAt` is also proved measurable, for the case that the operator
-wants the eligibility default in the radius (this would also require changing `shellExit` to the same radius).
+not used for `ρ_k`. The variant `shellParamAt` with `shellRadiusAt` is also proved measurable, for the case that the eligibility default in the radius is wanted (this would also require changing `shellExit` to the same radius).
 -/
 
 namespace MatedCRT
@@ -40,7 +38,7 @@ cell with index `j` (the centre of `shellCentre`, notes (7.23)); `R z` is the go
 noncomputable def shellParamOfIndex (j : ℤ) : ℝ × ℂ :=
   (R (gridRound (d / 100) (vertexPoint ε η j)), gridRound (d / 100) (vertexPoint ε η j))
 
-/-- The shell parameter `ρ_k = (R z_k, z_k)` at the shell hit `C_{k+1}`, with `z_k = shellCentre k` (ShellOmega, z9). -/
+/-- The shell parameter `ρ_k = (R z_k, z_k)` at the shell hit `C_{k+1}`, with `z_k = shellCentre k` (ShellOmega). -/
 noncomputable def shellParam (k : ℕ) (x : ℕ → ℤ) : ℝ × ℂ :=
   (R (shellCentre ε η K r s d k x), shellCentre ε η K r s d k x)
 

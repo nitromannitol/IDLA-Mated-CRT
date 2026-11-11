@@ -1,13 +1,13 @@
 import MatedCRT.FirstPass.S6r.OneTest.ParamOneTest
 
 /-!
-# The hone hypothesis of `exitQ_le_pow`, from the parametric one-test estimate (q2, S4S6c/WalkBridge68.lean)
+# The hone hypothesis of `exitQ_le_pow`, from the parametric one-test estimate (S4S6c/WalkBridge68.lean)
 
 `exitQ_le_pow` takes, for every `k ≤ n`, the bound `μ[1_{testFail (T k) (L k)} | 𝓕_{T k}] x ≤ 1 - q` on the event
 `x ∈ prefixSet`, with `μ = srwLaw (S.mult ε ω) i.a` (the environment `ω` is fixed, so the multigraph `m` is fixed).
 Here the test end is `L k = testEndParam (σ k) (ρ k) (T k)`: the exit time `σ k` of the test ball depends on the
-`𝓕_{T k}`-measurable parameter `ρ k` (radius and centre, PRO step 8). The bound is `conditional_one_test_param` with
-`q = q0 / (1 + log (1/r))²`; the moment bounds `hstep1`, `hstep2` remain named hypotheses (z1 / z12).
+`𝓕_{T k}`-measurable parameter `ρ k` (radius and centre). The bound is `conditional_one_test_param` with
+`q = q0 / (1 + log (1/r))²`; the moment bounds `hstep1`, `hstep2` remain named hypotheses.
 -/
 
 open MeasureTheory Set Filter

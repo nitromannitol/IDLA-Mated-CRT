@@ -3,12 +3,12 @@ import MatedCRT.FirstPass.S4S6c.WalkBridge68
 import MatedCRT.FirstPass.S4S6c.StateMarkov
 
 /-!
-# Strong Markov property at a stopping time for the simple random walk (task fp-S6r-S5-one-test, blocker (c))
+# Strong Markov property at a stopping time for the simple random walk
 
 Let `P^a = srwLaw m a` be the law of the simple random walk on path space `ℕ → ℤ` (`x 0 = a`), `coordFiltration`
 its coordinate filtration, and `T` a stopping time of `coordFiltration` with values in `ℕ∞`. For a nonnegative
 measurable path functional `G` whose composition with the shift at `T` is integrable on `{T < ∞}`, the functional
-`StrongMarkovAt` (PRO step 14) holds: `E[G ∘ θ_T | 𝓕_T] = E_{X_T}[G]` on `{T < ∞}`.
+`StrongMarkovAt` holds: `E[G ∘ θ_T | 𝓕_T] = E_{X_T}[G]` on `{T < ∞}`.
 
 Route:
 1. the set form of the fixed-time Markov property, `srwLaw_markov_state`, is lifted to the functional form by
@@ -174,7 +174,7 @@ theorem measurable_stopped_indicator {T : (ℕ → ℤ) → ℕ∞} (hT : IsStop
   rw [hfun]
   exact ((Measurable.of_discrete (f := g)).comp hst).indicator hlt
 
-/-- **Strong Markov property at `T`, simple random walk, nonnegative functionals** (PRO step 14).
+/-- **Strong Markov property at `T`, simple random walk, nonnegative functionals**.
 The integrability `hint` of `G ∘ θ_T` on `{T < ∞}` is a named hypothesis. -/
 theorem strongMarkovAt_srwLaw (m : ℤ → ℤ → ℕ) (a : ℤ) {T : (ℕ → ℤ) → ℕ∞}
     (hT : IsStoppingTime coordFiltration T) {G : (ℕ → ℤ) → ℝ} (hG : Measurable G) (hG0 : ∀ w, 0 ≤ G w)
@@ -252,7 +252,7 @@ theorem measurable_occCount (A : Set ℤ) {σ : (ℕ → ℤ) → ℕ} (hσ : Me
       (Measurable.of_discrete (f := Aᶜ.indicator (fun _ : ℤ => (1 : ℝ)))).comp (measurable_pi_apply n)
   exact hF.comp (hσ.prodMk measurable_id)
 
-/-- **Strong Markov property at `T` for the occupation count** (`V_occ` of PRO step 8, started at `T`). -/
+/-- **Strong Markov property at `T` for the occupation count** (`V_occ`, started at `T`). -/
 theorem strongMarkovAt_occCount (m : ℤ → ℤ → ℕ) (a : ℤ) (A : Set ℤ) {σ : (ℕ → ℤ) → ℕ}
     (hσ : Measurable σ) {T : (ℕ → ℤ) → ℕ∞} (hT : IsStoppingTime coordFiltration T)
     (hint : Integrable
@@ -262,7 +262,7 @@ theorem strongMarkovAt_occCount (m : ℤ → ℤ → ℕ) (a : ℤ) (A : Set ℤ
       (occCount A σ) :=
   strongMarkovAt_srwLaw m a hT (measurable_occCount A hσ) (occCount_nonneg A σ) hint
 
-/-- **Strong Markov property at `T` for the square of the occupation count** (the second moment of PRO step 8). -/
+/-- **Strong Markov property at `T` for the square of the occupation count** (the second moment of the occupation count). -/
 theorem strongMarkovAt_occCount_sq (m : ℤ → ℤ → ℕ) (a : ℤ) (A : Set ℤ) {σ : (ℕ → ℤ) → ℕ}
     (hσ : Measurable σ) {T : (ℕ → ℤ) → ℕ∞} (hT : IsStoppingTime coordFiltration T)
     (hint : Integrable

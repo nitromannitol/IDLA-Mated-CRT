@@ -1,9 +1,9 @@
 import MatedCRT.FirstPass.S6r.OneTest.SrwStrongMarkov
 
 /-!
-# Strong Markov property with an `𝓕_T`-measurable parameter (task fp-S6r-S5-one-test, parametric test)
+# Strong Markov property with an `𝓕_T`-measurable parameter (parametric test)
 
-In PRO step 8 the test ball `D₀ = B_{c₀R}(x)` and the exit time `σ_D` of its discrete interior depend on the radius
+The test ball `D₀ = B_{c₀R}(x)` and the exit time `σ_D` of its discrete interior depend on the radius
 `R` and the centre `x`, which are chosen at the shell hit. The post-`T` occupation count is then
 `∑_{n < σ_{ρ}} 1{X_{T+n} ∉ A}` with a parameter `ρ` that is `𝓕_T`-measurable (not a function of the post-`T` path).
 
@@ -213,7 +213,7 @@ theorem measurable_stopped_indicator_param {T : (ℕ → ℤ) → ℕ∞} (hT : 
   rw [hfun]
   exact (hg.comp (hρ.prodMk hst)).indicator hlt
 
-/-- **Strong Markov property at `T` with an `𝓕_T`-measurable parameter** (PRO step 14, parametric test):
+/-- **Strong Markov property at `T` with an `𝓕_T`-measurable parameter** (parametric test):
 on `{T < ∞}`, `E[G(ρ, θ_T) | 𝓕_T] = E_{X_T}[G(ρ, ·)]` for the simple random walk `P^a = srwLaw m a`. -/
 def StrongMarkovAtParam (m : ℤ → ℤ → ℕ) (a : ℤ) {T : (ℕ → ℤ) → ℕ∞} (hT : IsStoppingTime coordFiltration T)
     (ρ : (ℕ → ℤ) → P) (G : P → (ℕ → ℤ) → ℝ) : Prop :=

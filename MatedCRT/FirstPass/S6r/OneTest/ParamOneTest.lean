@@ -1,16 +1,16 @@
 import MatedCRT.FirstPass.S6r.OneTest.ParamStrongMarkov
 
 /-!
-# The one-test estimate at `T` with the parametric test (PRO step 14, parametric `conditional_one_test`)
+# The one-test estimate at `T` with the parametric test (parametric `conditional_one_test`)
 
 Parametric version of `conditional_one_test` (Count.lean): the test ball `D₀ = B_{c₀R}(x)` and its exit time `σ_D`
-depend on the `𝓕_T`-measurable parameter `ρ` (radius and centre chosen at the shell hit, PRO step 8). The test
+depend on the `𝓕_T`-measurable parameter `ρ` (radius and centre chosen at the shell hit). The test
 end is `L = T + σ_ρ(post-T path)`, the count is `V = 1_{T<∞} ∑_{n < σ_ρ} 1{X_{T+n} ∉ A}`.
 
 The conditional moments of `V` are the fixed-start moments at `X_T` by `StrongMarkovAtParam`
 (`strongMarkovAt_occCount_param`, `_sq_param`). The bound is `oneTest_hone_shell` (generic in the count).
 Named inputs: `hLst` (the test end is a stopping time), `hint1`, `hint2` (integrability), `hρ`, `hσ`, and the moment
-bounds `hstep1`, `hstep2` (PRO step 8, Steps 2-4, Lemmas 2.7, 2.9, 2.16, 2.18) that are not formalized here.
+bounds `hstep1`, `hstep2` (Steps 2-4, Lemmas 2.7, 2.9, 2.16, 2.18) that are not formalized here.
 -/
 
 open MeasureTheory Set Filter

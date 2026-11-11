@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S6r.OneTest.ParamOneTest
 
 /-!
-# The concrete test exit time of PRO step 8 and the hone of `exitQ_le_pow` (fp-S6r-one-test-concrete)
+# The concrete test exit time and the hone of `exitQ_le_pow`
 
 For the parameter `q = (R, x)` the test ball is `D = B_{R/4}(x)`, its discrete interior is
 `I(D) = interiorCellVertices ε η D` (the cells meeting `D` but not `∂D`), and `σ_D` is the first exit time of the walk
@@ -16,7 +16,7 @@ from `I(D)` (Armitage–Gardiner: exit time of a set; Armstrong–Kuusi–Mourra
   (`isStoppingTime_testEndExit`) and covers the count window (`testEndExit_cover`).
 * Proved here: measurability of `σ_D` in the parameter and the path (`measurable_ballExitSigma`), that `testEndExit`
   is a stopping time, the coverage, the integrability of the count `V` from the named finite-exit-moment hypotheses,
-  and the hone family `hone_exitQ_concrete` with the named PRO step 8 moment side conditions `hm`, `hRr`, `hstep1`,
+  and the hone family `hone_exitQ_concrete` with the named moment side conditions `hm`, `hRr`, `hstep1`,
   `hstep2`.
 -/
 
@@ -194,7 +194,7 @@ theorem toNat_eq_succ_iff' (e : ℕ∞) (n : ℕ) :
     · intro h; exact ⟨by omega, by omega⟩
     · rintro ⟨h1, h2⟩; omega
 
-/-- **Measurability of the exit time `σ_D`** in the parameter `q = (R, x)` and the path (PRO step 8, `hσ`). -/
+/-- **Measurability of the exit time `σ_D`** in the parameter `q = (R, x)` and the path (`hσ`). -/
 theorem measurable_ballExitSigma (hη : Continuous η) (hε : 0 < ε) :
     Measurable (fun p : (ℝ × ℂ) × (ℕ → ℤ) => ballExitSigma ε η p.1 p.2) := by
   refine measurable_to_countable' fun n => ?_
@@ -403,7 +403,7 @@ theorem integrable_testCountParam_sq_of_moment (ε : ℝ) (η : ℝ → ℂ) (h�
 `ρ k = (R, x)` and `σ = ballExitSigma ε η`, with the stopping-time test end `L k = testEndExit ε η (ρ k) (T k)`).
 Discharged here: the stopping time `hLst`, the coverage `hcov`, the measurability of `σ_D` (`hσ`) and the integrability
 of the count (`hint1`, `hint2`, from `hmom1`, `hmom2`). Named: the finite exit-time moments `hmom1`, `hmom2` (the
-post-T exit times have finite first and second moments under `srwLaw m a`), and the PRO step 8 side conditions `hm`,
+post-T exit times have finite first and second moments under `srwLaw m a`), and the side conditions `hm`,
 `hRr`, `hstep1`, `hstep2`. -/
 theorem hone_exitQ_concrete (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η) (hε : 0 < ε)
     (m : ℤ → ℤ → ℕ) (a : ℤ) (A : Set ℤ) (hA : MeasurableSet A) (n : ℕ) {τU : (ℕ → ℤ) → ℕ∞}

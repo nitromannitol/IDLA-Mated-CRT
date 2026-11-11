@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.SLERef.Reference
 import MatedCRT.FirstPass.Frozen.S3c
 
 /-!
-# BG20 Proposition 5.1 and the reference package (fp-SLERef-closure-repair, item 3)
+# BG20 Proposition 5.1 and the reference package
 
 Operator note 07:50 UTC (Pro item 3): `BG20Prop51Ref ν` (`MatedCRT/FirstPass/Frozen/S3c.lean:54`) is circular. Its premise
 is `SLEReferenceInput ν`, which already contains `ExitTimeUpperBoundStmt 𝒮` (Lemma 2.18), whose first clause is the

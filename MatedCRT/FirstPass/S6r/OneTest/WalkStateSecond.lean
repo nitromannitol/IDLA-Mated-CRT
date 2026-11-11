@@ -5,9 +5,9 @@ open scoped ENNReal
 namespace MatedCRT
 namespace Lemma68Window
 
-/-- **The second moment at a walk state** (PRO step 8: `E_b[V_occ² | h, η] ≤ C₂ ε⁻² (1+log(1/R))² m₀²`).
+/-- **The second moment at a walk state** (`E_b[V_occ² | h, η] ≤ C₂ ε⁻² (1+log(1/R))² m₀²`).
 This is `secondMoment_occCount` at the start `b = X_T`, `x = η(ε b)`, `ID = I(B_{R/4}(x))`, with the mass at
-`B_{3c₀R}(x)` of the z1 statement replaced by `m₀ = μ(B_{c₀R}(x))` through the named comparison `hdbl`
+`B_{3c₀R}(x)` of `secondMoment_occCount` replaced by `m₀ = μ(B_{c₀R}(x))` through the named comparison `hdbl`
 (`μ(B_{3c₀R}(x)) ≤ Dbl · μ(B_{c₀R}(x))`). The side conditions of `secondMoment_occCount` are named and passed. -/
 theorem secondMoment_walkState {μ : Measure ℂ} {η : ℝ → ℂ} {m : ℤ → ℤ → ℕ} {A : Set ℤ}
     {ε R α ρ C_exit c₀ C_good βm h Dbl : ℝ} {N_cov : ℕ} {z : ℂ} {b : ℤ}

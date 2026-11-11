@@ -10,7 +10,7 @@ noncomputable def walkParam (ε : ℝ) (η : ℝ → ℂ) (R : (ℕ → ℤ) →
   (R w, vertexPoint ε η (w (T w).toNat))
 
 
-/-- **The first moment at a walk state** (PRO step 8: `E_b[V_occ | h, η] ≥ (1/4) ε⁻¹ m₀`, `m₀ = μ(B_{c₀R}(x))`,
+/-- **The first moment at a walk state** (`E_b[V_occ | h, η] ≥ (1/4) ε⁻¹ m₀`, `m₀ = μ(B_{c₀R}(x))`,
 `x = η(ε y)`, `y` the walk state). This is `firstMoment_occCount_fm` with the sparsity radius `r = c₀R`
 (`c₀R ≤ r` and `r² ≤ R` hold since `c₀ ≤ 1/24`, `R ≤ 1`). Named omega-wise inputs: `hdiam` (cell size, Lemma 2.8),
 `hsp` (sparsity, Lemma 6.8), `hvol` (ball mass, Lemma 2.7), `hGr` (Green lower bound, Lemma 2.16), `hfinE`
