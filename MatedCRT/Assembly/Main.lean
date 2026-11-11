@@ -138,13 +138,13 @@ theorem discretePotentialTightnessAe (H : MainHypotheses 𝒮) : DiscretePotenti
   discretePotentialTightnessAeStep_of_inputs H.mepsScaling H.boundedExitTimeRV H.exitTimeUpperBound
     H.discreteHolderContinuityCorrected
 
-/-- **Lemma 3.6** (`convergenceHarmonicFunctions_of_inputs`, ab6ed20: Theorem 2.11, Lemma 2.8, `MepsScalingInput`
+/-- **Lemma 3.6** (`convergenceHarmonicFunctions_of_inputs`: Theorem 2.11, Lemma 2.8, `MepsScalingInput`
 and two steps). -/
 theorem convergenceHarmonicFunctions (H : MainHypotheses 𝒮) : ConvergenceHarmonicFunctionsStmt 𝒮 :=
   convergenceHarmonicFunctions_of_inputs 𝒮 H.randomWalkToLBM H.cellSizeEstimate H.mepsScaling
     H.brownianOutwardExcursionAtExit H.lbmPathFunctionalMeasurable
 
-/-- **Lemma 3.3** (`uniformConvergenceGreenKernel_final`, 763b7d7: through the almost-sure corrected Lemma 3.1, its
+/-- **Lemma 3.3** (`uniformConvergenceGreenKernel_final`: through the almost-sure corrected Lemma 3.1, its
 interior and boundary steps proved; no Draft 3.1). -/
 theorem uniformConvergenceGreenKernel (H : MainHypotheses 𝒮) : UniformConvergenceGreenKernelStmt 𝒮 :=
   uniformConvergenceGreenKernel_final 𝒮 H.degreeMeasureConvergence H.integralConvergenceGreenFunction
@@ -176,7 +176,7 @@ theorem subsequentialConvergence (H : MainHypotheses 𝒮) : SubsequentialConver
     H.discreteDirichletProblem H.odometerLocalCompactnessCorrected H.odometerBoundaryUpgradeCorrected
     H.odometerMeasurableSelection
 
-/-- **Lemma 4.8** (`subsequentialProperties_of_inputs`, 7582c60: no step; `OdometerDistributionalLimitCorrectedStep`
+/-- **Lemma 4.8** (`subsequentialProperties_of_inputs`: no step; `OdometerDistributionalLimitCorrectedStep`
 proved from Lemma 3.3). -/
 theorem subsequentialProperties (H : MainHypotheses 𝒮) : SubsequentialPropertiesStmt 𝒮 :=
   subsequentialProperties_of_inputs 𝒮 H.uniformConvergenceGreenKernel H.discreteDirichletProblem

@@ -21,7 +21,7 @@ therefore the explicit premise `DirichletProjectionRealization` (per whole-plane
 construction, not made here); the two pairing premises of the producer, `DirichletRieszIdentity` and
 `DirichletProjectionGreenRealization`; the realization of the GFF observables by the isonormal process; the circle
 covariances `hRcov` and the continuous modification `hRcont` of the projected circle averages; and the harmonic remainder
-`H` with the coordinatewise identity (steps3:609-621).
+`H` with the coordinatewise identity.
 
 Not used anywhere: independence of normalized pieces, finiteness of the zero-boundary limit, and any norm premise. The
 literature input is the explicit hypothesis `SheffieldWangCircleAverageAllScaleInteriorStmt.{0}` of the existing consumer.
@@ -106,7 +106,7 @@ theorem isDirichletGFF_of_projection {Ω E : Type*} [MeasurableSpace Ω] [Normed
   · refine hRcont.mono fun ω hω => hω.congr fun p hp => ?_
     exact ite_eq_left (show 0 < p.1 ∧ Metric.closedBall p.2 p.1 ⊆ D from hp).2
 
-/-- **Projection realization of one whole-plane GFF on one disk: the residual premise** (steps3:603-625). Let `(hC, hcirc)`
+/-- **Projection realization of one whole-plane GFF on one disk: the residual premise**. Let `(hC, hcirc)`
 be a whole-plane GFF on `Ω`, let `repO` be the representatives of the observables in the energy space `E`, let `ev` be the
 Dirichlet-function map, and let `K D` be the Dirichlet subspace of `D`. Then there are an isonormal process `X` on `E` and a
 harmonic remainder `H` such that: `X` realizes the admissible observables of `(hC, hcirc)`; the Riesz identity and the

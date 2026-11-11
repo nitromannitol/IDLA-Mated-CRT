@@ -57,8 +57,7 @@ namespace MatedCRT
 Field counts: (a) 12, (b) 3, (c) 25, (d) 1, (e) 1; total 42.
 
 No field is a Draft known false: the Draft Lemma 3.1 (refuted in Lean, `not_discretePotentialTightnessStmt`; see docs/campaign/FROZEN-PROVENANCE.md)
-is no longer consumed, since Lemma 3.3 goes through the almost-sure corrected 3.1 (`uniformConvergenceGreenKernel_final`,
-763b7d7). The Draft Lemmas 4.4 and 4.5 (refuted in Lean, Audit/CorrectedForms.lean) are used only in their corrected
+is no longer consumed, since Lemma 3.3 goes through the almost-sure corrected 3.1 (`uniformConvergenceGreenKernel_final`). The Draft Lemmas 4.4 and 4.5 (refuted in Lean, Audit/CorrectedForms.lean) are used only in their corrected
 forms. -/
 structure MainHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   -- (a) Cited results
