@@ -23,3 +23,13 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/FirstPass/S2g/FullImageAxioms.lean | archive/MatedCRT/FirstPass/S2g/FullImageAxioms.lean | B08 |
 | MatedCRT/FirstPass/S2g/HVGoodAxioms.lean | archive/MatedCRT/FirstPass/S2g/HVGoodAxioms.lean | B08 |
 | MatedCRT/FirstPass/S2g/LawAxioms.lean | archive/MatedCRT/FirstPass/S2g/LawAxioms.lean | B08 |
+| MatedCRT/FirstPass/S2h/ConeNullHull.lean | archive/MatedCRT/FirstPass/S2h/ConeNullHull.lean | B09 |
+| MatedCRT/FirstPass/S2h/LogPathwise.lean | archive/MatedCRT/FirstPass/S2h/LogPathwise.lean | B09 |
+| MatedCRT/FirstPass/S2h/LogScale.lean | archive/MatedCRT/FirstPass/S2h/LogScale.lean | B09 |
+| MatedCRT/FirstPass/S2h/LogZero.lean | archive/MatedCRT/FirstPass/S2h/LogZero.lean | B09 |
+| MatedCRT/FirstPass/S2h/PlateauCode.lean | archive/MatedCRT/FirstPass/S2h/PlateauCode.lean | B09 |
+| MatedCRT/FirstPass/S2h/PlateauLaw.lean | archive/MatedCRT/FirstPass/S2h/PlateauLaw.lean | B09 |
+| MatedCRT/FirstPass/S2h/PlateauNull.lean | archive/MatedCRT/FirstPass/S2h/PlateauNull.lean | B09 |
+| MatedCRT/FirstPass/S2h/PlateauRawZero.lean | archive/MatedCRT/FirstPass/S2h/PlateauRawZero.lean | B09 |
+| MatedCRT/FirstPass/S2h/PlateauTransfer.lean | archive/MatedCRT/FirstPass/S2h/PlateauTransfer.lean | B09 |
+| MatedCRT/FirstPass/S2h/ScaledField.lean | archive/MatedCRT/FirstPass/S2h/ScaledField.lean | B09 |
