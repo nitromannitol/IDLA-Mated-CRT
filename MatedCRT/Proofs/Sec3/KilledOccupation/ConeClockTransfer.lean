@@ -194,15 +194,26 @@ lemma lintegral_Icc_timeLeb_ofReal {g : ℝ≥0 → ℝ} (hg : Continuous g) (hg
 `coneShift γ hcirc` equals `ofReal` of `lqgClockApprox γ hcirc ε b s = ∫_0^s ε^{γ²/2} e^{γ h_ε(b_u)} du`, for a
 continuous path `b` and a scale `ε > 0` with `hcirc ε` continuous. -/
 lemma regClock_coneShift_eq_ofReal {γ ε : ℝ} (hε : 0 < ε) {hcirc : ℝ → ℂ → ℝ}
-    (hcont : Continuous fun x : ℂ => hcirc ε x) (b : ContinuousPath ℂ) (σ s : ℝ≥0) (hs : s ≤ σ) :
+    (hcont : Continuous fun x : ℂ => coneShift γ hcirc ε x) (b : ContinuousPath ℂ) (σ s : ℝ≥0) (hs : s ≤ σ) :
     regClock γ ε (coneShift γ hcirc) σ ⇑b s = ENNReal.ofReal (HarmonicBalls.lqgClockApprox γ hcirc ε b s) := by
+  -- the circle averages `hcirc ε` are the shifted field minus the logarithmic part
+  have hcirc_cont : Continuous fun x : ℂ => hcirc ε x := by
+    have h : (fun x : ℂ => hcirc ε x) =
+        fun x : ℂ => coneShift γ hcirc ε x - γ * Real.log (max ‖x‖ ε) := by
+      funext x
+      unfold coneShift
+      rw [circleAverage_log_norm_eq hε x]
+      ring
+    rw [h]
+    exact hcont.sub (continuous_const.mul
+      ((continuous_norm.max continuous_const).log fun x => (lt_max_of_lt_right hε).ne'))
   have hdens : ∀ x : ℂ, regDensity γ ε (coneShift γ hcirc) x =
       ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc ε x)) := by
     intro x
     unfold regDensity
     rw [fieldCircleAverage_coneShift]
   have hg : Continuous fun u : ℝ≥0 => ε ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc ε (b u)) :=
-    continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul (hcont.comp b.continuous)))
+    continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul (hcirc_cont.comp b.continuous)))
   have hg0 : ∀ u : ℝ≥0, 0 ≤ ε ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc ε (b u)) :=
     fun u => (mul_pos (Real.rpow_pos_of_pos hε _) (Real.exp_pos _)).le
   unfold regClock
@@ -210,6 +221,118 @@ lemma regClock_coneShift_eq_ofReal {γ ε : ℝ} (hε : 0 < ε) {hcirc : ℝ →
   simp only [hdens]
   rw [lintegral_Icc_timeLeb_ofReal hg hg0 s]
   rfl
+
+/-- The approximating LQG clock is nonnegative (its integrand `ε^{γ²/2} e^{γ h_ε}` is positive). -/
+lemma lqgClockApprox_nonneg {γ ε : ℝ} (hε : 0 < ε) (hcirc : ℝ → ℂ → ℝ) (b : ContinuousPath ℂ) (t : ℝ≥0) :
+    0 ≤ HarmonicBalls.lqgClockApprox γ hcirc ε b t := by
+  unfold HarmonicBalls.lqgClockApprox
+  exact intervalIntegral.integral_nonneg (NNReal.coe_nonneg t)
+    fun u _ => (mul_pos (Real.rpow_pos_of_pos hε _) (Real.exp_pos _)).le
+
+/-- The `ennDist` of two `ofReal` values dominates `ofReal` of the distance of the reals, `ennDist x y = (x - y) +
+(y - x)` in truncated subtraction. -/
+lemma ofReal_le_ennDist_ofReal {a b η : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (hη : η ≤ |a - b|) :
+    ENNReal.ofReal η ≤ ennDist (ENNReal.ofReal a) (ENNReal.ofReal b) := by
+  unfold ennDist
+  rcases le_total a b with hab | hab
+  · have h1 : η ≤ b - a := by
+      rw [abs_sub_comm, abs_of_nonneg (by linarith : (0 : ℝ) ≤ b - a)] at hη
+      exact hη
+    calc ENNReal.ofReal η ≤ ENNReal.ofReal (b - a) := ENNReal.ofReal_le_ofReal h1
+      _ = ENNReal.ofReal b - ENNReal.ofReal a := ENNReal.ofReal_sub b ha
+      _ ≤ (ENNReal.ofReal a - ENNReal.ofReal b) + (ENNReal.ofReal b - ENNReal.ofReal a) := le_add_self
+  · have h1 : η ≤ a - b := by
+      rw [abs_of_nonneg (by linarith : (0 : ℝ) ≤ a - b)] at hη
+      exact hη
+    calc ENNReal.ofReal η ≤ ENNReal.ofReal (a - b) := ENNReal.ofReal_le_ofReal h1
+      _ = ENNReal.ofReal a - ENNReal.ofReal b := ENNReal.ofReal_sub a hb
+      _ ≤ (ENNReal.ofReal a - ENNReal.ofReal b) + (ENNReal.ofReal b - ENNReal.ofReal a) := le_self_add
+
+/-- **Convergence of the approximants of the cone clock** (abstract form of `regClock_identification_cone` with the
+approximants `lqgClockApprox γ (hcirc ω) (dyadicScale k)` in place of the regularized clocks). The hypotheses are the
+a.s. continuity off a null set `N` (`exists_null_continuous_cone`), the a.s. finiteness of the total clock mass, and
+the conclusion of `regClock_identification_cone` for the sup-distance `clockDistD`; the sup-distance dominates the
+approximation error at each time `s ≤ σ` (`regClock_coneShift_eq_ofReal`). -/
+theorem tendsto_approx_cone {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (Q : Measure (ContinuousPath ℂ)) [IsProbabilityMeasure Q] {γ : ℝ}
+    (hcirc : Ω → ℝ → ℂ → ℝ) (dA : Ω → ContinuousPath ℂ → Measure ℝ≥0) (σ : ContinuousPath ℂ → ℝ≥0)
+    (hN : ∃ N : Set Ω, MeasurableSet N ∧ P N = 0 ∧
+      ∀ ω, ω ∉ N → ∀ ε : ℝ, 0 < ε → Continuous fun x : ℂ => coneShift γ (hcirc ω) ε x)
+    (hfin : ∀ᵐ x ∂(P.prod Q),
+      weightedClock (dA x.1 x.2) (fun u => gammaWeight γ (x.2 u)) (σ x.2) (σ x.2) ≠ ⊤)
+    (hcv : ∀ η : ℝ, 0 < η → Tendsto (fun ε => (P.prod Q)
+      {x | ENNReal.ofReal η < clockDistD γ (fun ω => coneShift γ (hcirc ω)) dA σ ε x})
+      (𝓝[>] (0 : ℝ)) (𝓝 0))
+    (η : ℝ) (hη : 0 < η) :
+    Tendsto (fun k : ℕ => (P.prod Q) {x : Ω × ContinuousPath ℂ | ∃ s ≤ σ x.2,
+      η ≤ |HarmonicBalls.lqgClockApprox γ (hcirc x.1) (HarmonicBalls.dyadicScale k) x.2 s -
+        (weightedClock (dA x.1 x.2) (fun u => gammaWeight γ (x.2 u)) (σ x.2) s).toReal|}) atTop (𝓝 0) := by
+  obtain ⟨N, hNm, hN0, hcont⟩ := hN
+  have hΦ : Tendsto (fun k : ℕ => HarmonicBalls.dyadicScale k) atTop (𝓝[>] (0 : ℝ)) := by
+    unfold HarmonicBalls.dyadicScale
+    exact tendsto_nhdsWithin_iff.2 ⟨tendsto_pow_atTop_nhds_zero_of_lt_one (r := (2 : ℝ)⁻¹) (by norm_num) (by norm_num),
+      Filter.Eventually.of_forall fun k => Set.mem_Ioi.2 (pow_pos (by norm_num : (0 : ℝ) < 2⁻¹) k)⟩
+  have hE := (hcv (η / 2) (half_pos hη)).comp hΦ
+  have hNull : (P.prod Q) {x : Ω × ContinuousPath ℂ | x.1 ∈ N} = 0 := by
+    have hset : {x : Ω × ContinuousPath ℂ | x.1 ∈ N} = N ×ˢ univ := by
+      ext x
+      simp
+    rw [hset, Measure.prod_prod, hN0, zero_mul]
+  have hF := ae_iff.1 hfin
+  refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hE (fun k => zero_le) (fun k => ?_)
+  have hεpos : 0 < HarmonicBalls.dyadicScale k := by
+    unfold HarmonicBalls.dyadicScale
+    exact pow_pos (by norm_num) k
+  have hsub : {x : Ω × ContinuousPath ℂ | ∃ s ≤ σ x.2,
+      η ≤ |HarmonicBalls.lqgClockApprox γ (hcirc x.1) (HarmonicBalls.dyadicScale k) x.2 s -
+        (weightedClock (dA x.1 x.2) (fun u => gammaWeight γ (x.2 u)) (σ x.2) s).toReal|} ⊆
+      ({x : Ω × ContinuousPath ℂ | ENNReal.ofReal (η / 2) <
+          clockDistD γ (fun ω => coneShift γ (hcirc ω)) dA σ (HarmonicBalls.dyadicScale k) x} ∪
+        {x : Ω × ContinuousPath ℂ | x.1 ∈ N}) ∪
+      {x : Ω × ContinuousPath ℂ | ¬ (weightedClock (dA x.1 x.2) (fun u => gammaWeight γ (x.2 u)) (σ x.2) (σ x.2) ≠ ⊤)} := by
+    intro x hx
+    obtain ⟨s, hs, hsη⟩ := hx
+    by_cases hxN : x.1 ∈ N
+    · exact Or.inl (Or.inr hxN)
+    by_cases hfx : weightedClock (dA x.1 x.2) (fun u => gammaWeight γ (x.2 u)) (σ x.2) (σ x.2) = ⊤
+    · exact Or.inr (fun h => h hfx)
+    refine Or.inl (Or.inl ?_)
+    show ENNReal.ofReal (η / 2) < clockDistD γ (fun ω => coneShift γ (hcirc ω)) dA σ (HarmonicBalls.dyadicScale k) x
+    have hw : weightedClock (dA x.1 x.2) (fun u => gammaWeight γ (x.2 u)) (σ x.2) s ≠ ⊤ :=
+      ne_top_of_le_ne_top hfx (weightedClock_mono _ _ _ hs)
+    have hreg := regClock_coneShift_eq_ofReal hεpos (hcont x.1 hxN _ hεpos) x.2 (σ x.2) s hs
+    have hle : ENNReal.ofReal η ≤ ennDist
+        (regClock γ (HarmonicBalls.dyadicScale k) (coneShift γ (hcirc x.1)) (σ x.2) ⇑x.2 s)
+        (weightedClock (dA x.1 x.2) (fun u => gammaWeight γ (x.2 u)) (σ x.2) s) := by
+      rw [hreg, ← ENNReal.ofReal_toReal hw]
+      exact ofReal_le_ennDist_ofReal (lqgClockApprox_nonneg hεpos _ _ _) ENNReal.toReal_nonneg hsη
+    have hlt : ENNReal.ofReal (η / 2) < ENNReal.ofReal η :=
+      (ENNReal.ofReal_lt_ofReal_iff hη).2 (by linarith)
+    unfold clockDistD
+    exact lt_of_lt_of_le hlt (hle.trans (le_iSup (fun s' : ℝ≥0 => ennDist
+      (regClock γ (HarmonicBalls.dyadicScale k) (coneShift γ (hcirc x.1)) (σ x.2) ⇑x.2 s')
+      (weightedClock (dA x.1 x.2) (fun u => gammaWeight γ (x.2 u)) (σ x.2) s')) s))
+  calc (P.prod Q) {x : Ω × ContinuousPath ℂ | ∃ s ≤ σ x.2,
+        η ≤ |HarmonicBalls.lqgClockApprox γ (hcirc x.1) (HarmonicBalls.dyadicScale k) x.2 s -
+          (weightedClock (dA x.1 x.2) (fun u => gammaWeight γ (x.2 u)) (σ x.2) s).toReal|}
+      ≤ (P.prod Q) (({x : Ω × ContinuousPath ℂ | ENNReal.ofReal (η / 2) <
+          clockDistD γ (fun ω => coneShift γ (hcirc ω)) dA σ (HarmonicBalls.dyadicScale k) x} ∪
+        {x : Ω × ContinuousPath ℂ | x.1 ∈ N}) ∪
+      {x : Ω × ContinuousPath ℂ | ¬ (weightedClock (dA x.1 x.2) (fun u => gammaWeight γ (x.2 u)) (σ x.2) (σ x.2) ≠ ⊤)}) :=
+        measure_mono hsub
+    _ ≤ (P.prod Q) ({x : Ω × ContinuousPath ℂ | ENNReal.ofReal (η / 2) <
+          clockDistD γ (fun ω => coneShift γ (hcirc ω)) dA σ (HarmonicBalls.dyadicScale k) x} ∪
+        {x : Ω × ContinuousPath ℂ | x.1 ∈ N}) +
+        (P.prod Q) {x : Ω × ContinuousPath ℂ | ¬ (weightedClock (dA x.1 x.2) (fun u => gammaWeight γ (x.2 u)) (σ x.2) (σ x.2) ≠ ⊤)} :=
+        measure_union_le _ _
+    _ ≤ ((P.prod Q) {x : Ω × ContinuousPath ℂ | ENNReal.ofReal (η / 2) <
+          clockDistD γ (fun ω => coneShift γ (hcirc ω)) dA σ (HarmonicBalls.dyadicScale k) x} +
+        (P.prod Q) {x : Ω × ContinuousPath ℂ | x.1 ∈ N}) +
+        (P.prod Q) {x : Ω × ContinuousPath ℂ | ¬ (weightedClock (dA x.1 x.2) (fun u => gammaWeight γ (x.2 u)) (σ x.2) (σ x.2) ≠ ⊤)} :=
+        add_le_add (measure_union_le _ _) le_rfl
+    _ = (P.prod Q) {x : Ω × ContinuousPath ℂ | ENNReal.ofReal (η / 2) <
+          clockDistD γ (fun ω => coneShift γ (hcirc ω)) dA σ (HarmonicBalls.dyadicScale k) x} := by
+        rw [hNull, hF, add_zero, add_zero]
 
 /-! ### The cone version of the closed identification of the clock -/
 
