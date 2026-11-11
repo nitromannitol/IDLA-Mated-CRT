@@ -4,13 +4,13 @@ import MatedCRT.FirstPass.S6r.ShellPathAe
 import MatedCRT.FirstPass.S6r.ShellTest
 
 /-!
-# The shell hypothesis `hde` of `shellOrder_fullAdm_ae`, almost surely (fp-S4S6c-shell-hde, chat 226 patch item 5)
+# The shell hypothesis `hde` of `shellOrder_fullAdm_ae`, almost surely
 
 For a configuration `i` satisfying the full guard `FullAdm` at radius `r`, the shell exits `T_k` (`shellExit`) are finite
 and the shell centres `z_k` (`shellCentre`) are eligible, for `k ≤ n = shellCount r s - 1`, almost surely. The eligibility
 predicate used is the set `Z_d = shortEligible ρ d s` (PRO step 3), and the caller's `Elig` must contain it (binder `hElig`).
 
-The argument is pathwise (chat 226 l.295-330, route steps 1-5 and 7):
+The argument is pathwise (route steps 1-5 and 7):
 * Let `U = killed ε η Θ F0 r` and `τ = vExitTime U x`. Since `τ < ⊤`, the cells `cell (x 0), …, cell (x τ)` form a chain of
   connected sets (`ae_cell_adjacent`, `cell_isPreconnected`), so the union is connected
   (`IsPreconnected.iUnion_of_chain`). The level `f = |dist(·, K) - r/2|` is continuous, equals `0` on the start cell
@@ -24,12 +24,12 @@ The argument is pathwise (chat 226 l.295-330, route steps 1-5 and 7):
 
 Inputs that are not derived here: `hmesh` (the mesh bound `CellDiamLe`), `hstart` (the start cell meets the frontier of
 the `r/2`-thickening), `hR` (the range of `Rf` on `Elig`), `hElig` (`Elig` contains `Z_d`; the definition choice of `Elig`),
-and the test-end finiteness `htest` (the conjunct `testEnd ≠ ⊤`, the q3 finite-domain exit lemma; binder until q3 commits).
+and the test-end finiteness `htest` (the conjunct `testEnd ≠ ⊤`).
 `hkill` is derived from `Lemma68ShellEnvAeInputs.hkill_of_valid`.
 
 The almost-sure statement carries the guard `FullAdm` pointwise in `ω`: `FullAdm` supplies `ball 0 s₀ ⊆ fillCells Θ`,
 `closure (fillCells Θ) ⊆ ball 0 (ρ/2)` and `F0 = cellVertices (ball 0 ρ)`, which the level and eligibility arguments use.
-Without it the conclusion is not derivable (see the report on the binder `hde` of `shellOrder_fullAdm_ae`).
+Without it the conclusion is not derivable.
 -/
 
 open MeasureTheory Set Filter
@@ -362,7 +362,7 @@ theorem shellHde_ae68 {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0 < γ) (
   exact ⟨fun k hk => (hpath k hk).1, fun k hk => hElig _ (hpath k hk).2⟩
 
 /-- **The full shell hypothesis `hde`, almost surely, with the testEnd conjunct as a named input.** `htest` is the
-finite-domain exit statement for the test ends (`testEnd ≠ ⊤`, the q3 lemma `testEnd_ne_top_of_finite` once committed),
+finite-domain exit statement for the test ends (`testEnd ≠ ⊤`),
 guarded by `FullAdm` as well. The conclusion is the conjunction of `shellHde_ae68` with `htest`. -/
 theorem shellHde68_full {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)

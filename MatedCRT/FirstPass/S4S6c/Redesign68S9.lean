@@ -2,10 +2,7 @@ import Mathlib
 import MatedCRT.FirstPass.S6e.C17Induction
 
 /-!
-# Lemma 6.8, the constant-order exit bound `s2 = 1/2` in the redesigned schedule (q2, S9)
-
-Source: notes/fp-gaps/CHATGPT-idla-6-8-redesign.md, section 11 (`S9_constantOrder`); referee
-notes/fp-gaps/CHATGPT-idla-6-8-redesign-referee.md (S9 CORRECT).
+# Lemma 6.8, the constant-order exit bound `s2 = 1/2` in the redesigned schedule (S9)
 
 In the redesign the test radii `R_j` lie in the window `[d, d^a]` with `r^2 ≤ d < 2 r^2` (S2-S3), so
 `r^2 ≤ R_j` for every test radius. The C17 chain `MatedCRT.Lemma68Induction.C17_le_half` is applied at the

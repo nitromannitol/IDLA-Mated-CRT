@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.S4S6c.ShellConstants68
 import HarmonicBalls.Defs.Notation
 
 /-!
-# The constants of the shell chain in dependency order (q2, fp-S4S6c-constants-order, Q1)
+# The constants of the shell chain in dependency order (Q1)
 
-The order of `notes/fp-gaps/CHATGPT-234-idla-6-8-q2-constants-PRO.md` (Q1, "Correct dependency order" and "Lean interface
+The order of (Q1, "Correct dependency order" and "Lean interface
 ruling"): the exponents and the mesh constants first; then `c₀ := K.c0` with `K := shellK68`; then the window prevalence
 constants `C_good`, `C_fail` from `hprev` at `(shortExp ζ, γ, c₀)`; then the constant `C_hone` of the one-test bound; only
 then `q₀ ≤ 1/(64 C_hone)`, and only then the radius cutoff and `s₀`.
@@ -144,7 +144,7 @@ theorem exists_shellQ0_68 (CE Cg : ℝ) :
   have hbig : 0 < (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE Cg) := by positivity
   exact ⟨(1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE Cg) / 2, by positivity, by linarith⟩
 
-/-- **The ball ratio at the Green constant `CG` (q2, fp-S4S6c-cg-param, lead item 3: parameterize).** `shellC0 CG =
+/-- **The ball ratio at the Green constant `CG`.** `shellC0 CG =
 exp(-2CG)/32`: the Lemma 6.8 constant `c₀` with `c₀ ≤ exp(-2CG)/16` (`Constants68.hc0C` at `C = CG`, S6r/Constants.lean:71).
 At `CG = 1` it is `shellC068`. Used by the CG Eps family (Guard68S10 `shellEps0ZCG`, `shellS1CG`; ShellChainCore68;
 ShellHoneInst68). -/

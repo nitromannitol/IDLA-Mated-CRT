@@ -1,14 +1,14 @@
 import MatedCRT.FirstPass.S4S6c.Lemma3Moment
 
 /-!
-# LEMMA68 Lemma 3, eqs (21)-(22): the second-moment wiring and eq (15) (q2, task fp-S4S6c; write-up B5)
+# Lemma 3: the second-moment wiring
 
 Inputs (hypotheses, with their sources):
 * the printed Lemma 2.18 with `N = 2` (Draft `ExitTimeUpperBoundStmt`, Section2.lean:234): `E[τ²] ≤ 2! C² ε⁻² S²`, where
   `S` is the supremum over the centre of the log-potential integral and `τ = σ_D` is the exit time;
-* eq (21) (LEMMA68.md 330-345): `S ≤ C₁ (1 + log(1/R)) m₀`, from Lemma 1 (eq (5)) and the mass bound (eq (6)).
+* eq (21) (330-345): `S ≤ C₁ (1 + log(1/R)) m₀`, from Lemma 1 (eq (5)) and the mass bound (eq (6)).
 The occupation count `V = ∑_{n < σ_D} 1{X_n ∈ I(D) \ A}` satisfies `V ≤ σ_D = τ`. The eq (20) lower bound `E V ≥ ¼ ε⁻¹ m₀`
-is a further hypothesis (Green identity and Lemma 2.16, write-up B4).
+is a further hypothesis (Green identity and Lemma 2.16).
 -/
 
 open MeasureTheory

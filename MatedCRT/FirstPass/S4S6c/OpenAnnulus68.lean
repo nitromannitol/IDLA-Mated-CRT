@@ -1,11 +1,11 @@
 import MatedCRT.FirstPass.S4S6c.AnnulusGeometry68
 
 /-!
-# The open annulus of the good-annulus event (q2, task fp-S4S6c-envscaling-6-7-6-8; fidelity fix of the LEMMA68 `hF`)
+# The open annulus of the good-annulus event
 
 `IsGoodAnnulusEvent μ c₀ C r z` (Defs/Setting.lean:333) integrates over the open annulus
 `A_{r,2r}(z) = B_{2r}(z) \ cl B_r(z)` (paper line 383: `A_{r1,r2}(z) = B_{r2}(z) \ cl(B_{r1}(z))`). The good-annulus
-bound `hF` of LEMMA68 therefore lives on this open annulus `openAnnulus z R`, not on the closed `closedAnnulus z R`
+bound `hF` therefore lives on this open annulus `openAnnulus z R`, not on the closed `closedAnnulus z R`
 (AnnulusGeometry68.lean:21), whose two boundary circles the event does not control.
 
 The test disk `B_{R/4}(x)` and its `δ`-thickening, with `‖x - z‖ ∈ [4R/3 - R/100, 4R/3 + R/100]` and `δ ≤ R/100`,
@@ -47,7 +47,7 @@ theorem sphere_subset_openAnnulus {z : ℂ} {R : ℝ} (hR : 0 < R) :
   constructor <;> linarith
 
 /-- A point `u` with `‖u - x‖ ≤ R/4 + R/100`, where `‖x - z‖` lies in the window `4R/3 ± R/100`, lies in the open
-annulus `A_{R,2R}(z)` (write-up B5-B6 with the strict inequalities). -/
+annulus `A_{R,2R}(z)`. -/
 theorem mem_openAnnulus_of_dist_le {x z u : ℂ} {R : ℝ} (hR : 0 < R)
     (hx : 4 * R / 3 - R / 100 ≤ ‖x - z‖ ∧ ‖x - z‖ ≤ 4 * R / 3 + R / 100)
     (hu : ‖u - x‖ ≤ R / 4 + R / 100) : u ∈ openAnnulus z R := by

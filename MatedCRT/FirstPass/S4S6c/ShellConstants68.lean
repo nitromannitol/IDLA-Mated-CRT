@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S6r.Constants
 
 /-!
-# The constants of the shell-chain core (q2, fp-S4S6c-hU-chain; item (6) of the lead's note of 11:47 UTC)
+# The constants of the shell-chain core
 
 `shellK68 γ ρ ω₀ ζ` is a `Constants68 γ ρ` (S6r/Constants.lean:41) with the mesh exponent `ω := ω₀` and the window
 exponent `ζ`. Its ball ratio `c0 = exp(-2)/32` is a universal number, and its sparsity constant
@@ -66,11 +66,11 @@ theorem shellK68_s1 (γ ρ ω₀ ζ : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hρ0
     (shellK68 γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1).s1 =
       (Real.exp (-2) / 32) ^ ((2 + γ) ^ 2 / 2 + 1) / 44 := rfl
 
-/-- **The shell-chain constants at the Green constant `CG` (q2, fp-S4S6c-cg-param, lead item 3).** `shellKCG … CG hCG` is a
+/-- **The shell-chain constants at the Green constant `CG`.** `shellKCG … CG hCG` is a
 `Constants68 γ ρ` with the Green constant `C := CG` (the constant of the leaf event `greenLowEvent68 S ω₀ ρ CG`), the ball
 ratio `c0 := exp(-2CG)/32` (= `Lemma68ConstOrder.shellC0 CG`, which is `shellC068` at `CG = 1`) and the sparsity constant
 `s1 := c0^βm/44`. The constraints `hc0'` (`c0 ≤ 1/24`) and `hc0C` (`c0 ≤ exp(-2C)/16`) hold for every `CG > 0`. `Cd = Cg = 1` as in
-`shellK68`, which is kept unchanged (its consumers B1Assembly68 and ShellCorePw68 are not owned by q2). -/
+`shellK68`, which is kept unchanged. -/
 noncomputable def shellKCG (γ ρ ω₀ ζ CG : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hρ0 : 0 < ρ) (hρ1 : ρ < 1)
     (hω0 : 0 < ω₀) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2) (hCG : 0 < CG) : Constants68 γ ρ where
   βm := (2 + γ) ^ 2 / 2 + 1
@@ -118,7 +118,7 @@ theorem shellKCG_s1 (γ ρ ω₀ ζ CG : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (h
     (shellKCG γ ρ ω₀ ζ CG hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1 hCG).s1 =
       (Real.exp (-(2 * CG)) / 32) ^ ((2 + γ) ^ 2 / 2 + 1) / 44 := rfl
 
-/-- **The walk exponent bound (q2, fp-S4S6c-core-fixes, item 2: the exponent split of chat 239 l.747-800).** If
+/-- **The walk exponent bound.** If
 `0 < ε ≤ 1`, `2ω₀ < κ` and `100 ε^{2ω₀} ≤ R`, then `ε^κ ≤ R/8`. This is the second conjunct `ε^{K.ω} ≤ R/8` of hWalk, with the
 separate walk exponent `κ` in place of `K.ω`; `R ≥ r² ≥ 100 ε^{2ω₀}` for `r ≥ 10 ε^{ω₀}`. Taking `κ = 2/(2+γ)² - ζ` is
 allowed: `2ω₀ < κ` is the Eps antecedent `2 ω₀ < 2/(2+γ)² - ζ`. -/

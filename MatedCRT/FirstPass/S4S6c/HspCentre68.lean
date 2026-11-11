@@ -1,11 +1,11 @@
 import MatedCRT.FirstPass.S6r.LocalBudget
 
 /-!
-# FIRST PASS S4S6c, HspCentre68: the mass-relative sparsity at the walk centre (task fp-S4S6c-hvol-cutoff, item 1; worker z9)
+# FIRST PASS S4S6c, HspCentre68: the mass-relative sparsity at the walk centre (item 1)
 
 Lemma 6.8 (Draft/Section6.lean:115-116) gives the sparsity `|A ∩ V^ε(B_r(z))| < s₁ r^{2β⁻} ε⁻¹` for every centre
 `z ∈ ℂ` at the single radius `r`. The chain needs the mass-relative form
-`ε #(A ∩ V^ε(B_{c₀R}(w))) ≤ (1/16) μ(B_{c₀R}(w))` (chat 226 l.176-182) at the walk centre `w` only, where the
+`ε #(A ∩ V^ε(B_{c₀R}(w))) ≤ (1/16) μ(B_{c₀R}(w))` at the walk centre `w` only, where the
 lower bound `(c₀R)^{β⁻} ≤ μ(B_{c₀R}(w))` is the consumer's `hVolC`.
 
 * Case `c₀R ≤ r`: the ball `B_{c₀R}(w)` lies in `B_r(w)` (Lemma 6.8 at the centre `w`), and `16 s₁ ≤ c₀^{β⁻}`.

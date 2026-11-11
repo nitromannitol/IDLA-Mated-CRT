@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.CellBoundary
 
 /-!
-# Local test windows lie in the outer test window (q2, task fp-S4S6c-envscaling-6-7-6-8; LEMMA68 C4, eq (C14))
+# Local test windows lie in the outer test window
 
 In the printed proof of Lemma 6.8 a walk leaving the outer test disk `B_{4R/3}(z)` at a cell `b` meeting its sphere
 starts a local test in the disk `B_ρ(p)` with `p ∈ H b` (the local test disk `B_{R/4}(η b)`). The local test window
@@ -19,7 +19,7 @@ namespace MatedCRT
 
 namespace LocalWindow68
 
-/-- **Local window inside the outer window (LEMMA68 (C14)).** Let `H v` be connected cells with `d`-small closures and
+/-- **Local window inside the outer window.** Let `H v` be connected cells with `d`-small closures and
 `hadj`-adjacent cells meeting. Let `p ∈ H b` where the cell `H b` meets the sphere `∂B_{4R/3}(z)`, and suppose
 `4R/3 + d + ρ + d < 2R`. Then every cell of the local window `I(B_ρ(p))`, and every cell `k` with a step `k' → k`
 from `k' ∈ I(B_ρ(p))`, lies in the outer window `I(B_{2R}(z))`. -/

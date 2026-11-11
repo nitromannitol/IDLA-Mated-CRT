@@ -1,10 +1,10 @@
 import MatedCRT.FirstPass.S4S6c.NextExitStop
 
 /-!
-# LEMMA68 N3c: the next exit time is a stopping time (q2, task fp-S4S6c; write-up C1-C3)
+# The next exit time is a stopping time
 
 For a stopping time `T` (the start of the current test) and a state-dependent region `W (x T)` (the disk of the test, a function of
-the state at `T`), the next exit time is `T_next = T + vExitTime (W (x T)) (pathShift T x)` (write-up C1, eq (27)).
+the state at `T`), the next exit time is `T_next = T + vExitTime (W (x T)) (pathShift T x)`.
 * `determinacy_of_pathHist_set`: a stopping set `{T = j} = {pathHist j ∈ G}` is determined by `pathHist k` for `k ≥ j`;
 * `nextExitTime_determinacy`: `{T_next = k}` is determined by `pathHist k`;
 * `nextExitTime_stop`: `{T_next = k} = {pathHist k ∈ F}` with `F` measurable, the stopping property required by
@@ -63,7 +63,7 @@ theorem nextExitTime_determinacy (T : (ℕ → ℤ) → ℕ) (W : ℤ → Set �
   rw [hTy, ← hxj, hwin]
   exact_mod_cast hsum
 
-/-- **The stopping property of the next exit time** (write-up C1; the hypothesis `hstop` of `srwLaw_successive_tests_le_pow`):
+/-- **The stopping property of the next exit time** (the hypothesis `hstop` of `srwLaw_successive_tests_le_pow`):
 if the current test time has the `pathHist` form, so does the next exit time. -/
 theorem nextExitTime_stop (T : (ℕ → ℤ) → ℕ) (W : ℤ → Set ℤ)
     (hTF : ∀ j : ℕ, ∃ G : Set (Fin (j + 1) → ℤ), MeasurableSet G ∧ {x | T x = j} = {x | pathHist j x ∈ G})

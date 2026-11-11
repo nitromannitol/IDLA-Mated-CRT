@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4S6c.TestBound68
 import MatedCRT.FirstPass.S5c.GreenCount
 
 /-!
-# Printed geometry for the per-test bound of Lemma 6.8 (q2, task fp-S4S6c; LEMMA68 B3, C4)
+# Printed geometry for the per-test bound of Lemma 6.8 (C4)
 
 `TestBound68.stayIn_le_log` takes four environment inputs hS (counting), hT (sparsity), hD (target set inside the
 window, outside `A`) and hG, hmom (Green lower bound and second moment). This file discharges the first three from the
@@ -19,7 +19,7 @@ open scoped ENNReal
 namespace MatedCRT
 namespace PrintedTest68
 
-/-- Counting input hS of `TestBound68.stayIn_le_log` (LEMMA68 B3, eq. (16)): a ball `B_R(z)` of area mass at least
+/-- Counting input hS of `TestBound68.stayIn_le_log`: a ball `B_R(z)` of area mass at least
 `mr` contains at least `mr ε⁻¹` cell vertices. -/
 theorem hS_of_mass {μ : Measure ℂ} {η : ℝ → ℂ} (hap : IsAreaParametrized μ η) {ε R mr : ℝ} {z : ℂ}
     (hε : 0 < ε) (hfin : (cellVertices ε η (ball z R)).Finite)
@@ -30,7 +30,7 @@ theorem hS_of_mass {μ : Measure ℂ} {η : ℝ → ℂ} (hap : IsAreaParametriz
   rw [sub_zero, mul_comm]
   exact h
 
-/-- Sparsity input hT of `TestBound68.stayIn_le_log` (LEMMA68 Lemma 6.8 hypothesis): the sparse set
+/-- Sparsity input hT of `TestBound68.stayIn_le_log`: the sparse set
 `Aset = A ∩ V^ε(B_R(z))` has at most `ε⁻¹ (s₁ r^{2β})` elements when `|A ∩ V^ε(B_r(z))| < s₁ r^{2β} ε⁻¹` and
 `B_R(z) ⊆ B_r(z)`. -/
 theorem hT_of_sparse {η : ℝ → ℂ} {ε r R s1 β : ℝ} {z : ℂ} {A : Set ℤ} {Aset : Finset ℤ}
@@ -55,7 +55,7 @@ theorem hT_of_sparse {η : ℝ → ℂ} {ε r R s1 β : ℝ} {z : ℂ} {A : Set 
   rw [hc]
   linarith [hle, hsp, h2]
 
-/-- Target condition hD of `TestBound68.stayIn_le_log` (LEMMA68 C4, eq. (C14)): each target vertex of the test ball
+/-- Target condition hD of `TestBound68.stayIn_le_log`: each target vertex of the test ball
 `V^ε(B_R(z))` that is not in the sparse set lies in the window `W y` and outside `A`. -/
 theorem hD_of_window {η : ℝ → ℂ} {ε R : ℝ} {z : ℂ} {A W : Set ℤ} {Aset : Finset ℤ}
     (hfin : (cellVertices ε η (ball z R)).Finite) (hW : cellVertices ε η (ball z R) ⊆ W)
@@ -65,7 +65,7 @@ theorem hD_of_window {η : ℝ → ℂ} {ε R : ℝ} {z : ℂ} {A W : Set ℤ} {
   simp only [Finset.mem_sdiff, Set.Finite.mem_toFinset, hAs] at hb
   exact ⟨hW hb.1, fun hA => hb.2 ⟨hA, hb.1⟩⟩
 
-/-- **Per-test bound of Lemma 6.8 (LEMMA68 C15-C16, eq. (15)) on the printed geometry.** The probability that the
+/-- **Per-test bound of Lemma 6.8 on the printed geometry.** The probability that the
 walk from `y` stays in `A` until it exits the window `W y` is at most `1 - q₀ (1 + log(1/r))⁻²`, where the test ball
 `B_R(z)` has area mass at least `mr`, the printed sparsity bounds `|A ∩ V^ε(B_r(z))|`, and the window contains
 `V^ε(B_R(z))`. The Green lower bound `hG` (B4) and the second moment `hmom` (B5) are the remaining inputs. -/

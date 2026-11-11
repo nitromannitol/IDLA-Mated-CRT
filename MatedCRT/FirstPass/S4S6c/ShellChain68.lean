@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S6r.WindowEventMeasurable
 import MatedCRT.Proofs.Measurability.LQGMeasureField
 
 /-!
-# The field-measurable short window family (q2, fp-S4S6c-6-8-identification; ShellChainStmt item (a))
+# The field-measurable short window family
 
 `ShellChainStmt` (S4S6c/Guard68S10.lean:70) needs a window family `Ew` with `MeasurableSet[S.fieldSigma] (Ew δ)` and
 polynomially high probability. The window event of `S.μ` is the bad event
@@ -10,7 +10,7 @@ polynomially high probability. The window event of `S.μ` is the bad event
 good window. `S.μ` is only almost surely `S.fieldSigma`-measurable (`LQGMeasureFieldMeasurableStep`, GoodScale.lean:316,
 proved as `lqgMeasureFieldMeasurableStep`, Proofs/Measurability/LQGMeasureField.lean:75). Let `μ'` be that version.
 
-* `badWindowOf μ' ...` is `S.fieldSigma`-measurable (`measurableSet_shortWindowEvent_of_measurable`, z12,
+* `badWindowOf μ' ...` is `S.fieldSigma`-measurable (`measurableSet_shortWindowEvent_of_measurable`,
   S6r/WindowEventMeasurable.lean), so `Ew δ := (badWindowOf μ' ... δ)ᶜ` is `S.fieldSigma`-measurable.
 * `S.P (badWindowOf μ' δ) ≤ S.P (badWindowOf S.μ δ)`, because the two bad events differ only inside the null set
   `{μ' ≠ S.μ}`. The bound `ofReal (C' * δ^6)` of the prevalence statement then gives `PolyHighProb`.

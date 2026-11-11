@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4S6c.SuccessiveTests
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.Visit
 
 /-!
-# LEMMA68 N3c: the stopping property of the concrete test times (q2, task fp-S4S6c; write-up C1-C3)
+# The stopping property of the concrete test times
 
 The successive-test lemma `srwLaw_successive_tests_le_pow` needs, for each test index `N` and time `k`, that the event
 `S N ∩ {τ N = k}` is determined by the history `pathHist k`. This file proves the three building blocks:
@@ -11,7 +11,7 @@ The successive-test lemma `srwLaw_successive_tests_le_pow` needs, for each test 
 * `vExitTime_eq_coe_iff`: `vExitTime A x = m` iff `x_i ∈ A` for `i < m` and `x_m ∉ A`;
 * `vExitTime_pathShift_congr`: after a shift `j`, the event `{vExitTime A (pathShift j x) = m}` with `j + m ≤ k` depends only
   on `pathHist k`.
-The next exit time `T_{j+1} = T_j + vExitTime (region of x_{T_j}) (pathShift T_j x)` (write-up C1) combines them.
+The next exit time `T_{j+1} = T_j + vExitTime (region of x_{T_j}) (pathShift T_j x)` combines them.
 -/
 
 open MeasureTheory Set

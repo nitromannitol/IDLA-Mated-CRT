@@ -3,11 +3,11 @@ import MatedCRT.FirstPass.S4S6c.ShellWindowRf68
 import MatedCRT.FirstPass.S4S6c.Guard68S10
 
 /-!
-# The exit-cell mesh bound at the walk radius `ρ + dyadicD r / 100` (fp-S4S6c-cellgood-meshexit, z10)
+# The exit-cell mesh bound at the walk radius `ρ + dyadicD r / 100`
 
-The binder `hmeshExit` of the goodEnv localisation (q4, reports/q4.md l.13-24) asks that the cells of mesh `ε` meeting
+The binder `hmeshExit` of the goodEnv localisation (l.13-24) asks that the cells of mesh `ε` meeting
 the ball `B(0, ρ + h)`, `h = dyadicD r / 100`, have diameter at most `h`. The walk stops at its exit vertex, which lies in a
-cell meeting `B(0, ρ + h)` but not necessarily in `B(0, ρ)` (q4 report, blocker 1(i)). The bound at radius `ρ` is not enough.
+cell meeting `B(0, ρ + h)` but not necessarily in `B(0, ρ)`. The bound at radius `ρ` is not enough.
 
 Route.
 * `hmesh_local_of_cellSize` (HoneSetup239_68.lean:197, Draft Lemma 2.8 at the mesh radius `(1+ρ)/2`) gives the mesh bound on
@@ -53,7 +53,7 @@ lemma shellC068_le_hundredth : shellC068 ≤ 1 / 100 := by
   unfold shellC068
   linarith
 
-/-- **The exit-cell mesh bound at the radius `ρ + dyadicD r / 100` (fp-S4S6c-cellgood-meshexit).** From the cell-size
+/-- **The exit-cell mesh bound at the radius `ρ + dyadicD r / 100`.** From the cell-size
 event at the cell-control radius `rhoCell68 ρ = (1+ρ)/2` and the Eps hypotheses of `ShellOneTestOrderAeEpsStmt`
 (`0 < ω₀`, `2ω₀ < κ`, `0 < ε ≤ shellEps0Z`, the cutoff `hRcut`, `10 ε^{ω₀} ≤ r ≤ R`), every cell of mesh `ε` meeting
 `B(0, ρ + dyadicD r / 100)` has diameter at most `dyadicD r / 100`. -/
@@ -97,7 +97,7 @@ lemma rpow_le_c0W_of_le {ε c0W d : ℝ} (hε : 0 < ε) (hc : 0 < c0W) (hd : 0 <
   calc ε ^ d ≤ (c0W ^ (1 / d)) ^ d := Real.rpow_le_rpow hε.le hle hd.le
     _ = c0W := by rw [← Real.rpow_mul hc.le, one_div_mul_cancel hd.ne', Real.rpow_one]
 
-/-- **The exit-cell mesh bound with a general window constant (fp-S4S6c-meshexit-cg, z10).** `hmeshExit_of_cellSize` with
+/-- **The exit-cell mesh bound with a general window constant.** `hmeshExit_of_cellSize` with
 the Eps threshold `shellEps0Z` (its constant `shellC068`) replaced by the threshold `min (shellEps0CG γ α ω₀ CG) (c0W^(1/(κ-2ω₀)))`,
 which is `shellEps0ZCG γ α ω₀ ζ CG` when `c0W = shellC0 CG`. Hypotheses on the window constant that the proof uses:
 `0 < c0W` (sign in `mul_le_mul`) and `c0W ≤ 1/100` (the cut `ε^κ ≤ 1/100` of `hmesh_local_of_cellSize`). The Green constant
@@ -150,8 +150,8 @@ lemma shellC0_le_hundredth {CG : ℝ} (hCG : 1 ≤ CG) : Lemma68ConstOrder.shell
   unfold Lemma68ConstOrder.shellC0
   linarith
 
-/-- **The exit-cell mesh bound at the CG leaf (fp-S4S6c-meshexit-cg, z10).** `hmeshExit_of_cellSize_g` at the exact threshold
-`shellEps0ZCG γ α ω₀ ζ CG` (Guard68S10.lean, the threshold of the z5 CG leaf thresholds) and the window constant
+/-- **The exit-cell mesh bound at the CG leaf.** `hmeshExit_of_cellSize_g` at the exact threshold
+`shellEps0ZCG γ α ω₀ ζ CG` (Guard68S10.lean) and the window constant
 `c0W = shellC0 CG`, for `1 ≤ CG`. -/
 theorem hmeshExit_of_cellSize_CG {γ ζ ρ ω₀ α R r ε CG : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (ω : Ω) (hω₀ : 0 < ω₀) (hκ : 2 * ω₀ < 2 / (2 + γ) ^ 2 - ζ) (hζ1 : ζ < 1 / 2) (hCG : 1 ≤ CG)

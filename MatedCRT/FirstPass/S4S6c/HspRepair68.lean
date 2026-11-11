@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.S4S6c.HspCentre68
 import MatedCRT.FirstPass.S4S6c.SecondRho68
 
 /-!
-# The walk-centred hone with the repaired hsp, hdiam and hVol (fp-S4S6c-hsp-repair; chat 226 patch item 1; z10 P1-P3)
+# The walk-centred hone with the repaired hsp, hdiam and hVol
 
 The binder `hsp` of `hone_exitQ_walk_of_env_direct` (S4S6c/HoneInputsDirect.lean:83) asks for
 `#(A ∩ V^ε(B_{c0 R_k}(w))) < s1 (c0 R_k)^{2 βm} / ε`. Chat 226 shows that this is false for the intended scales: the
@@ -38,7 +38,7 @@ open Lemma68ShellParam (measurable_coord_toNat_stop)
 namespace Lemma68Window
 
 
-/-- **The mass-relative sparsity from the Lemma 6.8 sparsity (chat 226 l.117-170).** Let `r` be the radius of the
+/-- **The mass-relative sparsity from the Lemma 6.8 sparsity.** Let `r` be the radius of the
 Lemma 6.8 sparsity `#(A ∩ V^ε(B_r(z))) < s1 r^{2β⁻} ε⁻¹` at every centre `z`. If the local radius satisfies
 `c0 R ≤ r` (so `V^ε(B_{c0R}(w)) ⊆ V^ε(B_r(w))`, no covering), `r² ≤ R` (`R_k ≥ r²`), `16 s1 ≤ c0^{β⁻}`, and the ball
 mass has the volume lower bound `(c0 R)^{β⁻} ≤ μ(B_{c0R}(w))` (`hvol`, a named input), then
@@ -85,7 +85,7 @@ theorem hsp_massRel_of_lemma68 {μ : Measure ℂ} {η : ℝ → ℂ} {A : Set �
   linarith
 
 
-/-- **The first moment of the one-test count, from the centre count (chat 226 l.176-182 route).** This is the proof of
+/-- **The first moment of the one-test count, from the centre count.** This is the proof of
 `firstMoment_occCount_fm` (FirstMoment.lean:120) with the radius-`r` sparsity `hsp` and the ball mass `hvol` replaced by
 the centre count `hloc` at `x = η(εy)` and radius `c0 R` (the conclusion of `localCount_of_ball`). The radius of the
 test is `c0 R`; no other use of `r` occurs in the proof. -/
@@ -194,7 +194,7 @@ theorem firstMoment_occCount_fm_loc {γ ρ : ℝ} (K : Constants68 γ ρ) {μ : 
   linarith [hS_lower, hreal]
 
 
-/-- **The first moment at a walk state, mass-relative sparsity (chat 226 l.176-182).** Copy of `firstMoment_walkState`
+/-- **The first moment at a walk state, mass-relative sparsity.** Copy of `firstMoment_walkState`
 (WalkStateFirst.lean:18) whose `hsp` is `ε #(A ∩ V^ε(B_{c0R}(w))) ≤ (1/16) μ(B_{c0R}(w))` for every centre `w`. Only
 the centre `w = η(εy)` is used. The binders `_hR1` and `_hvol` (the window bound `R ≤ 1` and the centre volume
 bound of `firstMoment_walkState`) are kept so that the chain calls keep their argument order; the mass-relative `hsp`
@@ -232,7 +232,7 @@ theorem firstMoment_walkState_massRel {γ ρc : ℝ} (K : Constants68 γ ρc) {�
     linarith
   exact firstMoment_occCount_fm_loc K hη hprop hε hεc hR rfl hdiam hloc hGr hfinE hL29 hsc
 
-/-- **The volume lower bound of the radius-`ρmom` chain (fp-S4S6c-hsp-rhomom).** Copy of `hvol_of_direct68`
+/-- **The volume lower bound of the radius-`ρmom` chain.** Copy of `hvol_of_direct68`
 (HdiamHvol68.lean:146) with the radius `1` of `hVolY` replaced by `ρmom`: the centre bound `hvol` at `c₀R_k`
 comes from `hVolC`, and the bound `hvol2` at `ball 0 (ρmom - R_k/4)` is `hVolY`. -/
 theorem hvol_of_direct_rho {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) {μ : Measure ℂ}
@@ -250,7 +250,7 @@ theorem hvol_of_direct_rho {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (�
   exact (ENNReal.ofReal_le_iff_le_toReal (measure_ball_lt_top (μ := μ)).ne).mp (hVolC k ω hω)
 
 
-/-- Radius-`ρmom` generalization of `hone_exitQ_walk_massRel` (fp-S4S6c-hsp-rhomom): the radius `1` of the walk
+/-- Radius-`ρmom` generalization of `hone_exitQ_walk_massRel`: the radius `1` of the walk
 chain is the parameter `ρmom` (`hx1`, `hVolY`/`hvol2`, `hmomS`, `hρS` read `ρmom` in place of `1`).
 The radius-1 name is the wrapper at `ρmom := 1`. -/
 theorem hone_exitQ_walk_massRel_rho {ρmom : ℝ} {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
@@ -374,7 +374,7 @@ theorem hone_exitQ_walk_massRel_rho {ρmom : ℝ} {γ ρc : ℝ} (K : Constants6
     (R := R) hm hRr hstep1 hstep2
 
 -- Copy of `hone_exitQ_walk` (HoneWalk.lean:37) with hsp replaced by its mass-relative form
--- (fp-S4S6c-hsp-repair; chat 226 l.176-182). Other binders unchanged.
+--. Other binders unchanged.
 /-- **The hone of `exitQ_le_pow` at the walk-centred test end** (family over `k ≤ n`). The parameter is
 `ρ_k = walkParam (R k) (T k)`, the test end is `L_k = testEndExit ε η ρ_k (T k)`, the count is `σ_D` for
 `D = B_{R_k/4}(η(ε X_{T_k}))`. `hstep1` and `hstep2` are derived (`firstMoment_walkState_massRel`,
@@ -468,7 +468,7 @@ theorem hone_exitQ_walk_massRel {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : �
     hCw hCg hT hR hmom1 hmom2 hRr hdiam hsp hvol hGr hfinE hL29 hsc hεα hεmass hb hcell hh hx1 hvol2
     hρS hmomS hgood hN hpos hfin hatom hfinD hdbl
 
-/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_repaired` (fp-S4S6c-hsp-rhomom): the radius `1` of the walk
+/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_repaired`: the radius `1` of the walk
 chain is the parameter `ρmom` (`hx1`, `hVolY`/`hvol2`, `hmomS`, `hρS` read `ρmom` in place of `1`).
 The radius-1 name is the wrapper at `ρmom := 1`. -/
 theorem hone_exitQ_walk_of_env_repaired_rho {ρmom : ℝ} {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
@@ -586,8 +586,8 @@ theorem hone_exitQ_walk_of_env_repaired_rho {ρmom : ℝ} {γ ρc : ℝ} (K : Co
     (fun k ω _ => (measure_ball_lt_top (μ := μ)).ne) (fun k ω _ v _ => hμNull v)
     (fun k ω _ => (measure_ball_lt_top (μ := μ)).ne) hdbl
 
--- Repaired copy of `hone_exitQ_walk_of_env` (HoneInputs.lean:39), P1 of the z10 consumer patch: hsp
--- mass-relative (fp-S4S6c-hsp-repair); hVol replaced by hVolC, hVolY; hvol, hvol2 from hvol_of_direct68.
+-- Repaired copy of `hone_exitQ_walk_of_env` (HoneInputs.lean:39), P1 of the consumer patch: hsp
+-- mass-relative; hVol replaced by hVolC, hVolY; hvol, hvol2 from hvol_of_direct68.
 /-- **The hone of `exitQ_le_pow` at the walk-centred test end, with the discharged environment inputs removed.**
 Same conclusion as `hone_exitQ_walk_massRel`. The finiteness, null-singleton, `ρS`, `hvol`, `hvol2` and `hGrLow` inputs are derived
 from the good-event hypotheses `hVolC`, `hVolY` (P1: random-radius volume bounds, `hvol_of_direct68`), `hGreen` (lower Green bound)
@@ -674,7 +674,7 @@ theorem hone_exitQ_walk_of_env_repaired {γ ρc : ℝ} (K : Constants68 γ ρc) 
     hr1 hq0c hq hC hCw hCg hT hR hmom1 hmom2 hRr hdiam hsp rmin _hRmin hVolC hVolY hGreen hWalk
     hfinE hL29 hsc hεα hεmass hb hcell hh hx1 hmomS hgood hN hpos hdbl
 
-/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_direct_repaired` (fp-S4S6c-hsp-rhomom): the radius `1` of the walk
+/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_direct_repaired`: the radius `1` of the walk
 chain is the parameter `ρmom` (`hx1`, `hVolY`/`hvol2`, `hmomS`, `hρS` read `ρmom` in place of `1`).
 The radius-1 name is the wrapper at `ρmom := 1`. -/
 theorem hone_exitQ_walk_of_env_direct_repaired_rho {ρmom : ℝ} {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
@@ -825,14 +825,14 @@ theorem hone_exitQ_walk_of_env_direct_repaired_rho {ρmom : ℝ} {γ ρc : ℝ} 
     hRr hdiam hsp rmin hRmin hVolC hVolY hGreen hWalk hfinE hL29' hsc hεα hεmass hb (H := fun _ _ => ε ^ (2 / (2 + γ) ^ 2 - ζc))
     (fun k ω hω p hp q hq => hcellD k ω hω p hp q hq) (fun k ω hω => hsmallAll k ω hω) hx1 hmomS hgood hN hpos hdbl
 
--- Repaired copy of `hone_exitQ_walk_of_env_direct` (HoneInputsDirect.lean:83): P1-P3 of the z10 consumer patch
--- with the mass-relative hsp (fp-S4S6c-hsp-repair). hdiam is derived (hdiam_of_rmin68, route B); hCellGood is the
+-- Repaired copy of `hone_exitQ_walk_of_env_direct` (HoneInputsDirect.lean:83): P1-P3 of the consumer patch
+-- with the mass-relative hsp. hdiam is derived (hdiam_of_rmin68, route B); hCellGood is the
 -- mesh bound on B_{ρc+3/8}; hVol is hVolC, hVolY.
 /-- **The hone of `exitQ_le_pow` at the walk-centred test end, direct inputs discharged from good events.**
 Same conclusion as `hone_exitQ_walk_of_env_massRel`. Removed binders: `hL29` (derived from `hCountGood`), `hcell` and `hh`
 (derived from `hCellGood` and `hεcell`, with `H := ε^θ`). New good-event binders: `hCountGood`, `hCellGood`, `hεcell`,
 with the exponent parameter `ζc`. Kept binders: `hfinE` and `hdiam` (the test balls `B(v, R/4)` leave the good-event
-domain `B_{ρc}`; see the report), and all configuration, moment and sparsity binders of `hone_exitQ_walk_of_env_massRel`. -/
+domain `B_{ρc}`), and all configuration, moment and sparsity binders of `hone_exitQ_walk_of_env_massRel`. -/
 theorem hone_exitQ_walk_of_env_direct_repaired {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
     (hprop : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε) (hεc : ε ≤ 16 * K.c0)
     {μ : Measure ℂ} [IsFiniteMeasureOnCompacts μ] (hμNull : ∀ v : ℂ, μ {v} = 0)

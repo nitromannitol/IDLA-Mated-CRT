@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S4S6c.Guard68S10
 import MatedCRT.FirstPass.S4S6c.ShellConstOrder68
 
 /-!
-# The shell-chain core, the reduction of `ShellChainStmt` to it, and the reduction of `hU` (q2, fp-S4S6c-hU-chain)
+# The shell-chain core, the reduction of `ShellChainStmt` to it, and the reduction of `hU`
 
 * `WindowPrevAt γ a c₀ C C'`: the prevalence bound of `ShortWindowGoodRadiusPrevalenceStmt` (S6r/ShortWindow.lean:61)
   at fixed window constants `(a, c₀, C, C')`, with the bad window `badWindowOf` (ShellChain68.lean:33).
@@ -101,7 +101,7 @@ def ShellChainCoreStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
             ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
               Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
 
-/-- **`ShellChainCoreStmt` with the Eps antecedents (q2, fp-S4S6c-eps-chain).** The body of `ShellChainCoreStmt`, plus
+/-- **`ShellChainCoreStmt` with the Eps antecedents.** The body of `ShellChainCoreStmt`, plus
 `2 ω₀ β⁻ < α` and `2 ω₀ < 2/(2+γ)² - ζ` next to the `ω₀` hypotheses; `ε ≤ shellEps0 γ α ω₀` in the ε-clause; and the radius
 cutoff `∀ r, 0 < r → r ≤ R → (dyadicD r)^{shortExp ζ} < rhoCell68 ρ - ρ` next to `R ≤ rAmp q0 ζ`. -/
 def ShellChainCoreEpsStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -129,7 +129,7 @@ def ShellChainCoreEpsStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
             ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
               Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
 
-/-- **Old implies Eps (q2, fp-S4S6c-eps-chain).** `ShellChainCoreStmt` specialises to `ShellChainCoreEpsStmt`: the Eps
+/-- **Old implies Eps.** `ShellChainCoreStmt` specialises to `ShellChainCoreEpsStmt`: the Eps
 antecedents are ignored, the ε-clause is used for `ε ≤ shellEps0`, and the radius cutoff is ignored. -/
 theorem shellChainCoreEpsStmt_of_shellChainCoreStmt {𝒮 : SpaceFillingSLEModel} (h : ShellChainCoreStmt 𝒮) :
     ShellChainCoreEpsStmt 𝒮 := by
@@ -140,7 +140,7 @@ theorem shellChainCoreEpsStmt_of_shellChainCoreStmt {𝒮 : SpaceFillingSLEModel
   intro R hR0 hRρ hRA _ s₀ hs₀ hs₁ Ω _ S hS hGp hCp hEp Ew hEwm hEwp hav ε hε _
   exact hcl R hR0 hRρ hRA s₀ hs₀ hs₁ Ω S hS hGp hCp hEp Ew hEwm hEwp hav ε hε
 
-/-- **`ShellChainEpsStmt` from the Eps shell-chain core (q2, fp-S4S6c-eps-chain).** As `shellChainStmt_of_core`, with the
+/-- **`ShellChainEpsStmt` from the Eps shell-chain core.** As `shellChainStmt_of_core`, with the
 radius cutoff passed through. -/
 theorem shellChainEpsStmt_of_core {𝒮 : SpaceFillingSLEModel} (hprev : ShortWindowGoodRadiusPrevalenceStmt)
     (hcore : ShellChainCoreEpsStmt 𝒮) : ShellChainEpsStmt 𝒮 := by
@@ -167,7 +167,7 @@ theorem shellChainEpsStmt_of_core {𝒮 : SpaceFillingSLEModel} (hprev : ShortWi
     shortWindow_fieldFamily_at hγ0 hγ2 S hS (shortExp ζ) shellC068 C C' ρ hρ0 hρ1 hP'
   exact ⟨Ew, hEwm, hEwp, hcl R hR0 hRρ hRA hcut s₀ hs₀ hs₁ Ω S hS hGp hCp hEp Ew hEwm hEwp hav⟩
 
-/-- **`ShellChainCoreEpsStmt` at the Green constant `CG` (q2, fp-S4S6c-cg-param).** The body of `ShellChainCoreEpsStmt` with the
+/-- **`ShellChainCoreEpsStmt` at the Green constant `CG`.** The body of `ShellChainCoreEpsStmt` with the
 window constant `c₀(CG) = shellC0 CG` in `WindowPrevAt` and `badWindowOf`, the threshold `shellEps0ZCG γ α ω₀ ζ CG` and the
 sparsity `shellS1CG γ CG`. -/
 def ShellChainCoreCGStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -195,7 +195,7 @@ def ShellChainCoreCGStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
             ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
               Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
 
-/-- **`ShellChainCGStmt` from the CG shell-chain core (q2, fp-S4S6c-cg-param).** The window family is supplied by
+/-- **`ShellChainCGStmt` from the CG shell-chain core.** The window family is supplied by
 `shortWindow_fieldFamily_at` with the prevalence constants `C, C'` of `hprev` at `(a = shortExp ζ, c₀ = c₀(CG))`; `hprev` holds
 for every `c₀ ∈ (0, 1/5)` (`ShortWindowGoodRadiusPrevalenceStmt`, S6r/ShortWindow.lean:61), and `c₀(CG) ∈ (0,1/5)` for `CG > 0`
 (`shellC0_bounds`). -/
@@ -254,21 +254,21 @@ theorem hU_of_core {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBoundStmt
     (hcore : ShellChainCoreStmt 𝒮) : UniformConstantOrderLowerBoundStmt 𝒮 :=
   MatedCRT.uniformConstantOrderLowerBound_of_chain 𝒮 hG hC hE (shellChainStmt_of_core hprev hcore)
 
-/-- **`UniformConstantOrderLowerBoundStmt` (hU) from the Draft inputs and the Eps shell-chain core (q2, fp-S4S6c-eps-chain).**
+/-- **`UniformConstantOrderLowerBoundStmt` (hU) from the Draft inputs and the Eps shell-chain core.**
 Same conclusion as `hU_of_core`, through `uniformConstantOrderLowerBoundEps_of_chain` (Guard68S10.lean). -/
 theorem hU_of_core_eps {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮)
     (hE : ExitTimeUpperBoundStmt 𝒮) (hprev : ShortWindowGoodRadiusPrevalenceStmt)
     (hcore : ShellChainCoreEpsStmt 𝒮) : UniformConstantOrderLowerBoundStmt 𝒮 :=
   MatedCRT.uniformConstantOrderLowerBoundEps_of_chain 𝒮 hG hC hE (shellChainEpsStmt_of_core hprev hcore)
 
-/-- **`UniformConstantOrderLowerBoundStmt` (hU) from the Draft inputs and the CG shell-chain core (q2, fp-S4S6c-cg-param).**
+/-- **`UniformConstantOrderLowerBoundStmt` (hU) from the Draft inputs and the CG shell-chain core.**
 Same conclusion as `hU_of_core_eps`, through `uniformConstantOrderLowerBoundCG_of_chain` (Guard68S10.lean). -/
 theorem hU_of_core_cg {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮)
     (hE : ExitTimeUpperBoundStmt 𝒮) (hprev : ShortWindowGoodRadiusPrevalenceStmt)
     (hcore : ShellChainCoreCGStmt 𝒮) : UniformConstantOrderLowerBoundStmt 𝒮 :=
   MatedCRT.uniformConstantOrderLowerBoundCG_of_chain 𝒮 hG hC hE (shellChainCGStmt_of_core hprev hcore)
 
-/-- **`ShellChainCoreCGStmt` with the mesh-radius cell event (q2, fp-S4S6c-meshEventR; chat 252 §1).** The body of
+/-- **`ShellChainCoreCGStmt` with the mesh-radius cell event.** The body of
 `ShellChainCoreCGStmt`, with the cell-size hypothesis at the mesh radius `(1 + ρ)/2` (`rhoCell68 ρ`) and the almost sure
 mesh clause on `meshEventR` (cell component at `(1 + ρ)/2`; Green and exit components at `ρ`). -/
 def ShellChainCoreCGRStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -296,7 +296,7 @@ def ShellChainCoreCGRStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
             ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
               Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
 
-/-- **`ShellChainCoreCGRStmt` with the counting component (q2, fp-S4S6c-goodevents-cgr).** The body of
+/-- **`ShellChainCoreCGRStmt` with the counting component.** The body of
 `ShellChainCoreCGRStmt`, with the counting exponent `β > 0`, the counting hypothesis `PolyHighProb (countingGoodEvent S α β ρ)`
 at the chain exponent `α`, and the almost sure clause on `countingMeshEventR` (Guard68S10). -/
 def ShellChainCoreCGRCStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -326,7 +326,7 @@ def ShellChainCoreCGRCStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
             ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
               Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
 
-/-- **`ShellChainCGRStmt` from the CG mesh-radius shell-chain core (q2, fp-S4S6c-meshEventR).** As
+/-- **`ShellChainCGRStmt` from the CG mesh-radius shell-chain core.** As
 `shellChainCGStmt_of_core`, with `ShellChainCoreCGRStmt` and `meshEventR`. -/
 theorem shellChainCGRStmt_of_core {𝒮 : SpaceFillingSLEModel} (hprev : ShortWindowGoodRadiusPrevalenceStmt)
     (hcore : ShellChainCoreCGRStmt 𝒮) : ShellChainCGRStmt 𝒮 := by
@@ -349,15 +349,15 @@ theorem shellChainCGRStmt_of_core {𝒮 : SpaceFillingSLEModel} (hprev : ShortWi
     shortWindow_fieldFamily_at hγ0 hγ2 S hS (shortExp ζ) (shellC0 CG) C C' ρ hρ0 hρ1 hP'
   exact ⟨Ew, hEwm, hEwp, hcl R hR0 hRρ hRA hcut s₀ hs₀ hs₁ Ω S hS hGp hCp hEp Ew hEwm hEwp hav⟩
 
-/-- **`UniformConstantOrderLowerBoundStmt` (hU) from the Draft inputs and the CG mesh-radius shell-chain core (q2,
-fp-S4S6c-meshEventR).** Same conclusion as `hU_of_core_cg`, through `uniformConstantOrderLowerBoundCGR_of_chain`
+/-- **`UniformConstantOrderLowerBoundStmt` (hU) from the Draft inputs and the CG mesh-radius shell-chain core.**
+Same conclusion as `hU_of_core_cg`, through `uniformConstantOrderLowerBoundCGR_of_chain`
 (Guard68S10.lean). -/
 theorem hU_of_core_cgR {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮)
     (hE : ExitTimeUpperBoundStmt 𝒮) (hprev : ShortWindowGoodRadiusPrevalenceStmt)
     (hcore : ShellChainCoreCGRStmt 𝒮) : UniformConstantOrderLowerBoundStmt 𝒮 :=
   MatedCRT.uniformConstantOrderLowerBoundCGR_of_chain 𝒮 hG hC hE (shellChainCGRStmt_of_core hprev hcore)
 
-/-- **`ShellChainCGRCStmt` from the counting CG shell-chain core (q2, fp-S4S6c-closed-cgrc).** As
+/-- **`ShellChainCGRCStmt` from the counting CG shell-chain core.** As
 `shellChainCGRStmt_of_core`, with `ShellChainCoreCGRCStmt` (counting exponent `β`, counting hypothesis at the chain exponent
 `α`, almost sure clause on `countingMeshEventR`). -/
 theorem shellChainCGRCStmt_of_core {𝒮 : SpaceFillingSLEModel} (hprev : ShortWindowGoodRadiusPrevalenceStmt)
@@ -381,7 +381,7 @@ theorem shellChainCGRCStmt_of_core {𝒮 : SpaceFillingSLEModel} (hprev : ShortW
     shortWindow_fieldFamily_at hγ0 hγ2 S hS (shortExp ζ) (shellC0 CG) C C' ρ hρ0 hρ1 hP'
   exact ⟨Ew, hEwm, hEwp, hcl R hR0 hRρ hRA hcut s₀ hs₀ hs₁ Ω S hS hGp hCp hEp hKp Ew hEwm hEwp hav⟩
 
-/-- **`UniformConstantOrderLowerBoundStmt` (hU) from the counting CG shell-chain core (q2, fp-S4S6c-closed-cgrc).** Same
+/-- **`UniformConstantOrderLowerBoundStmt` (hU) from the counting CG shell-chain core.** Same
 conclusion as `hU_of_core_cgR`, through `uniformConstantOrderLowerBoundCGRC_of_chain` (Guard68S10.lean), with the
 counting input `hK : CountingAtExitAlphaStmt 𝒮` in place of the exit-time input. -/
 theorem hU_of_core_cgRC {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮)

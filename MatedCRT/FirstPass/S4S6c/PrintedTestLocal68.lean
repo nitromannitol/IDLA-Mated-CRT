@@ -1,12 +1,12 @@
 import MatedCRT.FirstPass.S4S6c.PrintedTest68
 
 /-!
-# The printed test bound with the local sparsity hypothesis `hA_local` (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# The printed test bound with the local sparsity hypothesis `hA_local`
 
-Operator note (05:35 UTC, chat 176, `notes/fp-gaps/CHATGPT-idla-6-8-hRr.md`): the sparsity count of the test ball
+The sparsity count of the test ball
 `B_{c0 R}(η(y))` is bounded by the single local estimate
 
-  `|A ∩ V^ε(B_{c0 R}(η(y)))| ≤ μ(B_{c0 R}(η(y))) / (4 ε)`   (`hA_local`),
+  `|A ∩ V^ε(B_{c0 R}(η(y)))| ≤ μ(B_{c0 R}(η(y))) / (4 ε)` (`hA_local`),
 
 which replaces the trio `hRr`, `hsp`, `hs` of `PrintedTest68.stayIn_le_printed` (the count at the `r`-ball and the
 `s1 r^{2β}` budget): no ball inclusion `B_{c0R} ⊆ B_r` is needed any more.

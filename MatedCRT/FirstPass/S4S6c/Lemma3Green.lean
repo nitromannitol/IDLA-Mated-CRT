@@ -1,12 +1,12 @@
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.Visit
 
 /-!
-# LEMMA68 Lemma 3, eq (20): the expected occupation from the Green lower bound (q2, task fp-S4S6c; write-up B4)
+# Lemma 3: the expected occupation from the Green lower bound
 
 For a path measure `μ` on `ℕ → ℤ` and a finite set `B` of vertices, the expected number of visits to `B` before the exit
 time `τ_A = vExitTime A` is `∑_{b∈B} G(b)`, with the discrete Green function `G(b) = ∑_n μ{n < τ_A, x_n = b}`. The Green lower
-bound `G(b) ≥ ½` on `B` (Lemma 2.16, Draft Section2:207, in the walk model; write-up B4) then gives `E[V] ≥ |B|/2`, where
-`V = ∑_{n < τ_A} 1{x_n ∈ B}` is the occupation count. The counting bound `|B| ≥ ¼ ε⁻¹ m₀` (write-up B3) and the Lemma 2.16
+bound `G(b) ≥ ½` on `B` (Lemma 2.16; Draft Section2:207; in the walk model) then gives `E[V] ≥ |B|/2`, where
+`V = ∑_{n < τ_A} 1{x_n ∈ B}` is the occupation count. The counting bound `|B| ≥ ¼ ε⁻¹ m₀` and the Lemma 2.16
 inequality are the inputs of eq (20).
 -/
 

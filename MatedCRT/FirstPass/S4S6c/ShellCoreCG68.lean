@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S4S6c.ShellCorePw68
 import MatedCRT.FirstPass.S4S6c.HVolCutoffAe68
 
 /-!
-# The CG leaf thresholds of the hOne route (fp-S4S6c-b1-glue, z5)
+# The CG leaf thresholds of the hOne route
 
 For the leaf constant `K = shellKCG γ ρ ω₀ ζ CG` (`K.C = CG`, `K.c0 = c₀(CG) = exp(-2CG)/32 = shellC0 CG`,
 `K.ω = ω₀`, `K.βm = (2+γ)²/2 + 1`), the threshold hypotheses of `shellOneTest_at_of_goodEnv_loc`
@@ -70,11 +70,11 @@ theorem shellKCG_eps_cell {γ ρ : ℝ} (K : Constants68 γ ρ) (ω₀ α ζ CG 
         linarith
     _ = shellC0 CG * r ^ 2 / 100 := by ring
 
-/-! ### The CG pointwise input and its countable swap (fp-S4S6c-b1-glue, z5)
+/-! ### The CG pointwise input and its countable swap
 
 `ShellOneTestOrderAeCGStmt` (ShellHoneInst68.lean) is stated with `meshEvent` (cell size at `ρ`). The leaf
 `shellOneTest_at_of_goodEnv_loc` (B1Assembly68.lean) needs the cell size at the mesh radius `(1+ρ)/2`, i.e. the
-event `meshEventR` (q2, Guard68S10.lean). `ShellOneTestOrderAeCGRStmt` is that variant; the choice of hOne is the lead's. -/
+event `meshEventR` (Guard68S10.lean). `ShellOneTestOrderAeCGRStmt` is that variant; the choice of `hOne` is a separate decision. -/
 
 open MeasureTheory Set Filter Metric
 open scoped ENNReal Topology
@@ -138,7 +138,7 @@ def ShellOneTestPointwiseCGRStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
               Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf
                 (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a
 
-/-! ### Deterministic leaf discharges at the CG leaf (fp-S4S6c-b1-glue, z5; lead 17:07)
+/-! ### Deterministic leaf discharges at the CG leaf
 
 The binders of `shellOneTest_at_of_goodEnv_loc_g` (B1Assembly68.lean) that are deterministic functions of the
 parameters are discharged here. The gap binder `hgapShell` (ShellOrderLoc68.lean:170) is not implied by the
@@ -237,7 +237,7 @@ theorem hgapShell_of_rAmp_le {ρ ζ q0 r : ℝ} (hρ1 : ρ < 1) (hζ0 : 0 < ζ) 
   have hpow := dyadicD_pow_le_of_sq hr0 hr1 hζ0 hc0 (by linarith)
   exact hgapShell_of_pow_le hζ0 hζ1 (dyadicD_pos r) (dyadicD_le_one r) hpow
 
-/-! ### The CG-R pointwise producer (fp-S4S6c-b1-glue, z5; lead 17:07 and 17:20)
+/-! ### The CG-R pointwise producer
 
 `shellOneTestPointwiseCGR_of_goodEnv_loc_g` proves `ShellOneTestPointwiseCGRStmt` from `shellOneTest_at_of_goodEnv_loc_g`
 (B1Assembly68.lean:1216, fb32a38) at `K = shellKCG`. Every binder of that lemma is one of: (a) a deterministic fact of the
@@ -305,11 +305,11 @@ def ShellPtPremCG (𝒮 : SpaceFillingSLEModel) (γ ω₀ α ζ ρ CG CE β C q0
       ENNReal.ofReal (δ ^ ((2 + γ) ^ 2 / 2 + 1)) ≤ S.μ ω (ball z δ)) ∧
     (∀ k : ℕ, ω ∈ Ew ((1 / 2 : ℝ) ^ k) → ω ∉ badWindowOf S.μ ρ (shortExp ζ) (shellC0 CG) C ((1 / 2 : ℝ) ^ k))
 
-/-! #### The twelve residual binders (owners in the report). Each is a binder of `shellOneTest_at_of_goodEnv_loc_g`
+/-! #### The twelve residual binders. Each is a binder of `shellOneTest_at_of_goodEnv_loc_g`
 with `c0W := shellC0 CG`, `s1 := shellS1CG γ CG`, `K.c0 := shellC0 CG`, `K.βm := (2+γ)^2/2+1`, `K.C := CG`, `K.ω := ω₀`,
 quantified over all parameters and assuming `ShellPtPremCG`. -/
 
-/-- Residual `hShellLoc` (z1, ShellOrderLoc68 pointwise form at `hmesh`). -/
+/-- Residual `hShellLoc` (ShellOrderLoc68 pointwise form at `hmesh`). -/
 def ShellCGResLoc (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -320,7 +320,7 @@ def ShellCGResLoc (𝒮 : SpaceFillingSLEModel) : Prop :=
           (windowRfT S.μ ρ (shortExp ζ) (shellC0 CG) C (dyadicD r) ω)
           (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a
 
-/-- Residual `hEl` (z10, `hEl_fixedOmega_g`): the leaf centres are eligible. -/
+/-- Residual `hEl` (`hEl_fixedOmega_g`): the leaf centres are eligible. -/
 def ShellCGResEl (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -332,7 +332,7 @@ def ShellCGResEl (𝒮 : SpaceFillingSLEModel) : Prop :=
           shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x ∈
             shortEligible ρ (dyadicD r) (shortExp ζ)
 
-/-- Residual `hstopFin` (q1): the shell exit lands in a finite set. -/
+/-- Residual `hstopFin`: the shell exit lands in a finite set. -/
 def ShellCGResStopFin (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -345,7 +345,7 @@ def ShellCGResStopFin (𝒮 : SpaceFillingSLEModel) : Prop :=
             x (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
               (windowRfT S.μ ρ (shortExp ζ) (shellC0 CG) C (dyadicD r) ω) k x).toNat ∈ F
 
-/-- Residual `hRr` (z12, `hRr_fixedOmega_loc_g`): the window lies in `[r², 1]` on the leaf. -/
+/-- Residual `hRr` (`hRr_fixedOmega_loc_g`): the window lies in `[r², 1]` on the leaf. -/
 def ShellCGResRr (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -359,7 +359,7 @@ def ShellCGResRr (𝒮 : SpaceFillingSLEModel) : Prop :=
             (windowRfT S.μ ρ (shortExp ζ) (shellC0 CG) C (dyadicD r) ω)
               (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x) ≤ 1
 
-/-- Residual `hVolC` (z9, `hVolC_pw_g`): the ball-volume lower bound at the leaf centres (`K.c0 = shellC0 CG`, `K.βm`). -/
+/-- Residual `hVolC` (`hVolC_pw_g`): the ball-volume lower bound at the leaf centres (`K.c0 = shellC0 CG`, `K.βm`). -/
 def ShellCGResVolC (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -376,7 +376,7 @@ def ShellCGResVolC (𝒮 : SpaceFillingSLEModel) : Prop :=
               (shellC0 CG * (windowRfT S.μ ρ (shortExp ζ) (shellC0 CG) C (dyadicD r) ω)
                 (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x)))
 
-/-- Residual `hVolY` (z9, `hVolY_pw_g`): the ball-volume lower bound on the annuli around the leaf centres. -/
+/-- Residual `hVolY` (`hVolY_pw_g`): the ball-volume lower bound on the annuli around the leaf centres. -/
 def ShellCGResVolY (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -393,7 +393,7 @@ def ShellCGResVolY (𝒮 : SpaceFillingSLEModel) : Prop :=
               ≤ S.μ ω (ball y ((windowRfT S.μ ρ (shortExp ζ) (shellC0 CG) C (dyadicD r) ω)
                 (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x) / 4))
 
-/-- Residual `hGreen` (q1 / B1EnvPwG68, free Green exponent; `K.C = CG`, `K.ω = ω₀`). -/
+/-- Residual `hGreen` (free Green exponent; `K.C = CG`; `K.ω = ω₀`). -/
 def ShellCGResGreen (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -406,7 +406,7 @@ def ShellCGResGreen (𝒮 : SpaceFillingSLEModel) : Prop :=
               else min (r' / ‖vertexPoint ε (S.η ω) a - vertexPoint ε (S.η ω) b‖) ε⁻¹) - 1
             ≤ greenKernel (S.mult ε ω) (interiorCellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) a) r')) a b
 
-/-- Residual `hCountGood` (q2 / B1EnvPwG68): the counting lower bound on the cells of a set `D ⊆ B(0,ρ)`. -/
+/-- Residual `hCountGood`: the counting lower bound on the cells of a set `D ⊆ B(0,ρ)`. -/
 def ShellCGResCountGood (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -416,7 +416,7 @@ def ShellCGResCountGood (𝒮 : SpaceFillingSLEModel) : Prop :=
         (∀ k ∈ cellVertices ε (S.η ω) D, w k ∈ cell ε (S.η ω) k ∩ closure D) →
         ε⁻¹ * ∫ _ in D, (1 : ℝ) ∂(S.μ ω) - ε ^ (-1 + α) ≤ ∑' _ : cellVertices ε (S.η ω) D, (1 : ℝ)
 
-/-- Residual `hsel` (z10, `hsel_fixedOmega_g`): the eligible centres carry good annulus events (`K.c0 = shellC0 CG`). -/
+/-- Residual `hsel` (`hsel_fixedOmega_g`): the eligible centres carry good annulus events (`K.c0 = shellC0 CG`). -/
 def ShellCGResSel (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -426,7 +426,7 @@ def ShellCGResSel (𝒮 : SpaceFillingSLEModel) : Prop :=
         IsGoodAnnulusEvent (S.μ ω) (shellC0 CG) CG
           ((windowRfT S.μ ρ (shortExp ζ) (shellC0 CG) C (dyadicD r) ω) z) z
 
-/-- Residual `hx1` (q3, HoneX1Loc68): the leaf exit lies in the cell-size ball. -/
+/-- Residual `hx1` (HoneX1Loc68): the leaf exit lies in the cell-size ball. -/
 def ShellCGResX1 (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -440,7 +440,7 @@ def ShellCGResX1 (𝒮 : SpaceFillingSLEModel) : Prop :=
             < Lemma68HoneCellGood.rhoCell68 ρ - (windowRfT S.μ ρ (shortExp ζ) (shellC0 CG) C (dyadicD r) ω)
               (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x) / 4
 
-/-- Residual `hmomS` (q3, HoneMomSPw68): the exit-time moments on the sets `D ⊆ B(0, rhoCell68 ρ)`. -/
+/-- Residual `hmomS` (HoneMomSPw68): the exit-time moments on the sets `D ⊆ B(0, rhoCell68 ρ)`. -/
 def ShellCGResMomS (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -457,7 +457,7 @@ def ShellCGResMomS (𝒮 : SpaceFillingSLEModel) : Prop :=
                 (⨆ z' ∈ D, ∫⁻ x in Metric.thickening (ε ^ α) D,
                   ENNReal.ofReal (Real.log (1 / ‖z' - x‖) + 1) ∂(S.μ ω)) ^ N
 
-/-- Residual `hWalk` (z11, split form at the exponent `2/(2+γ)² - ζ`; `K.ω = ω₀`). -/
+/-- Residual `hWalk` (split form at the exponent `2/(2+γ)² - ζ`; `K.ω = ω₀`). -/
 def ShellCGResWalk (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
@@ -477,9 +477,9 @@ def ShellCGResWalk (𝒮 : SpaceFillingSLEModel) : Prop :=
                 (dyadicD r ^ shortExp ζ) (dyadicD r) ((windowRfT S.μ ρ (shortExp ζ) (shellC0 CG) C (dyadicD r) ω)) k x).toNat))
                 (sphere 0 ρ)
 
-/-- **Temporary positivity residual `hPos` (fp-S4S6c-cgrc-swap, lead 18:05).** The ball positivity `0 < S.μ ω (ball w τ)` that
+/-- **Temporary positivity residual `hPos`.** The ball positivity `0 < S.μ ω (ball w τ)` that
 `shellOneTest_at_of_goodEnv_loc_g` takes as `hfull` (the `hωFull` binder of `_g2`, B1GoodEnvLoc68.lean:167). It is stated
-at the `FullAdmAt` point, under `ShellPtPremCG`, exactly as the binder. Deleted when q4 posts the narrow hωFull-free `_g2`
+at the `FullAdmAt` point, under `ShellPtPremCG`, exactly as the binder. Deleted when the narrow hωFull-free `_g2`
 (annulus positivity from `Lemma68Cutoff239.pos_iInf_of_cutoff`, HVolCutoff239_68.lean:278). -/
 def ShellCGResPos (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)

@@ -3,11 +3,11 @@ import MatedCRT.FirstPass.S4S6c.ExitMoment68
 import MatedCRT.FirstPass.S4S6c.SupKernel68
 
 /-!
-# LEMMA68 per-test bound with the Draft exit-time moment and the Lemma 1 potential bound (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# Per-test bound with the Draft exit-time moment and the Lemma 1 potential bound
 
 `stayIn_le_printed_green` (GreenTest68.lean) with its second-moment hypothesis `hmom` discharged by the Draft Lemma 2.18
 instance at `N = 2` (`hexit`, Draft `ExitTimeUpperBoundStmt`, EXTERNAL) and the potential bound `hS` (eq (21), from Lemma 1
-of `SupKernel68.lean`). Write-up B5 (notes/fp-gaps/CHATGPT-lemma68-open-parts.md, eqs (B15)-(B17)).
+of `SupKernel68.lean`).
 
 Geometry used: for `D = B_{R/4}(x)` and `E = B_δ(D)` with `δ ≤ 1/2`, `R ≤ 1`, every `u ∈ E`, `v ∈ D` satisfy `|u - v| ≤ 1`
 (`thickening_ball_dist_le_one`), so the kernel integrand of the Draft statement is nonnegative on `E`.
@@ -19,7 +19,7 @@ open scoped ENNReal
 namespace MatedCRT
 
 /-- Points of the `δ`-thickening of `B_{R/4}(x)` are within distance `1` of the points of `B_{R/4}(x)`, when
-`R ≤ 1` and `δ ≤ 1/2` (write-up B5: `|u - v| < R/2 + ε^α ≤ 1`). -/
+`R ≤ 1` and `δ ≤ 1/2`. -/
 theorem thickening_ball_dist_le_one {x u v : ℂ} {R δ : ℝ} (hR : R ≤ 1) (hδ : δ ≤ 1 / 2)
     (hu : u ∈ thickening δ (ball x (R / 4))) (hv : v ∈ ball x (R / 4)) :
     ‖u - v‖ ≤ 1 := by
@@ -33,7 +33,7 @@ theorem thickening_ball_dist_le_one {x u v : ℂ} {R δ : ℝ} (hR : R ≤ 1) (h
   have t3 := dist_comm x v
   linarith
 
-/-- **Potential supremum for the Draft kernel** (LEMMA68 eq (21) for `D = B_{R/4}(x)`, `E = B_δ(D)`): with the good
+/-- **Potential supremum for the Draft kernel** (for `D = B_{R/4}(x)`, `E = B_δ(D)`): with the good
 annulus `A` containing `D` and `E`, the supremum in the Draft Lemma 2.18 statement is at most the Lemma 1 bound. -/
 theorem draft_sup_le_of_annulus {A : Set ℂ} (μ : Measure ℂ) [SFinite μ] {x z : ℂ} {R C mr δ : ℝ}
     (hR0 : 0 < R) (hR1 : R ≤ 1) (hδ : δ ≤ 1 / 2)
@@ -49,7 +49,7 @@ theorem draft_sup_le_of_annulus {A : Set ℂ} (μ : Measure ℂ) [SFinite μ] {x
   sup_kernel_le_of_annulus μ hR0 hR1 hA hAb hμA hsph (Metric.isOpen_thickening.measurableSet) hEA hDA
     (fun _ hu _ hv => thickening_ball_dist_le_one hR1 hδ hu hv) hC hmr hint hF
 
-/-- **LEMMA68 per-test bound, Draft second moment** (write-up B5 with `hmom` from Draft Lemma 2.18). Same conclusion and
+/-- **Per-test bound, Draft second moment** (with `hmom` from Draft Lemma 2.18). Same conclusion and
 hypotheses as `stayIn_le_printed_green`, except that the second moment is supplied by the `N = 2` instance `hexit` of the
 Draft exit-time bound (constant `Cd`, supremum `S` over the centre of the kernel integral) and the potential bound `hS`. -/
 theorem stayIn_le_printed_green_draft {μ : Measure ℂ} {η : ℝ → ℂ} {m : ℤ → ℤ → ℕ} {W : ℤ → Set ℤ} {A : Set ℤ}

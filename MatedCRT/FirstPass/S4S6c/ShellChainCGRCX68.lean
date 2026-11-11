@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S4S6c.ShellTop68
 import MatedCRT.FirstPass.S4S6c.ExitRhoCell68
 
 /-!
-# The counting CG chain with the exit clause at the cell radius (fp-S4S6c-cgrcx-closures, lead li request 77b)
+# The counting CG chain with the exit clause at the cell radius
 
 X copies of the counting CG chain, each step carrying the exit clause at the cell radius `rhoCell68 ρ`:
 
@@ -32,7 +32,7 @@ open MatedCRT.Lemma68Omega MatedCRT.Lemma68GeometryId MatedCRT.Lemma68Admissible
 open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68ChainAe
 open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 
-/-- **`ShellChainCoreCGRCStmt` with the exit clause at the cell radius (fp-S4S6c-cgrcx-closures).** Copy of
+/-- **`ShellChainCoreCGRCStmt` with the exit clause at the cell radius.** Copy of
 `ShellChainCoreCGRCStmt` (ShellChainCore68.lean:302) with `PolyHighProb S.P (exitTimeEvent68 S α (rhoCell68 ρ) CE)` after
 the exit hypothesis at radius `ρ`, and the almost sure premise `ω ∈ exitTimeEvent68 S α (rhoCell68 ρ) CE ε` after the
 membership in `countingMeshEventR`. The conclusion is that of `ShellChainCoreCGRCStmt`. -/
@@ -65,7 +65,7 @@ def ShellChainCoreCGRCXStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
             ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
               Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
 
-/-- **`ShellChainCoreCGRCXStmt` from the X one-test order input (fp-S4S6c-cgrcx-closures).** Copy of
+/-- **`ShellChainCoreCGRCXStmt` from the X one-test order input.** Copy of
 `shellChainCoreCGRCStmt_of_oneTestOrderCGRC` (ShellHoneInst68.lean:448) with the extra exit clause passed through. -/
 theorem shellChainCoreCGRCX_of_oneTestOrderCGRCX {𝒮 : SpaceFillingSLEModel}
     (h : LICGRCX68.ShellOneTestOrderAeCGRCXStmt 𝒮) : ShellChainCoreCGRCXStmt 𝒮 := by
@@ -88,7 +88,7 @@ theorem shellChainCoreCGRCX_of_oneTestOrderCGRCX {𝒮 : SpaceFillingSLEModel}
   exact Lemma68ChainGlue.exitQ_core_step S ε ω ζ q0 r Rf i hζ0 hζ1 hq0 hq1 hr0 hr1' (hr2.trans hRA) hone hsh
     (hmult ε hε).1 (hmult ε hε).2
 
-/-- **`ShellChainCGRCStmt` with the exit clause at the cell radius (fp-S4S6c-cgrcx-closures).** Copy of
+/-- **`ShellChainCGRCStmt` with the exit clause at the cell radius.** Copy of
 `ShellChainCGRCStmt` (Guard68S10.lean:946) with the extra `PolyHighProb` at `rhoCell68 ρ` (after the one at `ρ`) and the
 extra almost sure premise `ω ∈ exitTimeEvent68 S α (rhoCell68 ρ) CE ε`. -/
 def ShellChainCGRCXStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -117,7 +117,7 @@ def ShellChainCGRCXStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
               ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
                 Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
 
-/-- **`ShellChainCGRCXStmt` from the X counting core (fp-S4S6c-cgrcx-closures).** Copy of `shellChainCGRCStmt_of_core`
+/-- **`ShellChainCGRCXStmt` from the X counting core.** Copy of `shellChainCGRCStmt_of_core`
 (ShellChainCore68.lean:361) with the exit clause at `rhoCell68 ρ` passed through. -/
 theorem shellChainCGRCX_of_core {𝒮 : SpaceFillingSLEModel} (hprev : ShortWindowGoodRadiusPrevalenceStmt)
     (hcore : ShellChainCoreCGRCXStmt 𝒮) : ShellChainCGRCXStmt 𝒮 := by
@@ -140,7 +140,7 @@ theorem shellChainCGRCX_of_core {𝒮 : SpaceFillingSLEModel} (hprev : ShortWind
     shortWindow_fieldFamily_at hγ0 hγ2 S hS (shortExp ζ) (shellC0 CG) C C' ρ hρ0 hρ1 hP'
   exact ⟨Ew, hEwm, hEwp, hcl R hR0 hRρ hRA hcut s₀ hs₀ hs₁ Ω S hS hGp hCp hEp hEr hKp Ew hEwm hEwp hav⟩
 
-/-- **`GuardProbStmt` from the X counting CG chain (fp-S4S6c-cgrcx-closures).** Copy of `guardProbStmtCGRC_of_chainCGRC`
+/-- **`GuardProbStmt` from the X counting CG chain.** Copy of `guardProbStmtCGRC_of_chainCGRC`
 (Guard68S10.lean:1030). The exponent `α` is the one of `CountingMeshEventsEpsStmt` (the same at every radius); at the
 radius `ρ` one constant `CE` serves both `ρ` and `rhoCell68 ρ` (`polyHighProb_exitTimeEvent68_common_CE`); the almost sure
 event is `countingMeshEventR ∩ exitTimeEvent68 S α (rhoCell68 ρ) CE`. -/
@@ -230,7 +230,7 @@ theorem guardProbStmtCGRCX_of_chainCGRCX (𝒮 : SpaceFillingSLEModel)
     (fun ε ω r i => Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i)
     (Lemma68Config.exitQ S) hpt'
 
-/-- **`UniformConstantOrderLowerBoundStmt` from the X counting CG chain (fp-S4S6c-cgrcx-closures).** Copy of
+/-- **`UniformConstantOrderLowerBoundStmt` from the X counting CG chain.** Copy of
 `uniformConstantOrderLowerBoundCGRC_of_chain` (Guard68S10.lean:1143). -/
 theorem uniformConstantOrderLowerBoundCGRCX_of_chain (𝒮 : SpaceFillingSLEModel)
     (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮)
@@ -240,7 +240,7 @@ theorem uniformConstantOrderLowerBoundCGRCX_of_chain (𝒮 : SpaceFillingSLEMode
     (guardProbStmtCGRCX_of_chainCGRCX 𝒮
       (Lemma68Guard10.countingMeshEventsEpsStmt_of_draft 𝒮 hG hC hK) hChain)
 
-/-- **hU from the X counting CG shell-chain core (fp-S4S6c-cgrcx-closures).** Copy of `hU_of_core_cgRC`
+/-- **hU from the X counting CG shell-chain core.** Copy of `hU_of_core_cgRC`
 (ShellChainCore68.lean:387). -/
 theorem hU_of_core_cgRCX {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮)
     (hK : Lemma68Guard10.CountingAtExitAlphaStmt 𝒮) (hprev : ShortWindowGoodRadiusPrevalenceStmt)
@@ -251,7 +251,7 @@ end Lemma68CGRCX
 
 namespace Lemma68ShellTopCGRCX
 
-/-- **`UniformConstantOrderLowerBoundStmt` (hU) from the X counting CG one-test order input (fp-S4S6c-cgrcx-closures).**
+/-- **`UniformConstantOrderLowerBoundStmt` (hU) from the X counting CG one-test order input.**
 Copy of `Lemma68ShellTop.hU_top_cgRC` (ShellTop68.lean:92) with `hOne` the X form `LICGRCX68.ShellOneTestOrderAeCGRCXStmt`. -/
 theorem hU_top_cgRCX {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮)
     (hK : MatedCRT.Lemma68Guard10.CountingAtExitAlphaStmt 𝒮)

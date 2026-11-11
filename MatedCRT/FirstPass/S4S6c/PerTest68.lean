@@ -1,18 +1,18 @@
 import MatedCRT.FirstPass.S4S6c.AnnulusGeometry68
 
 /-!
-# LEMMA68 uniform per-test bound (q2, task fp-S4S6c-envscaling-6-7-6-8; write-up B5, B18, C15-C16)
+# Uniform per-test bound
 
 The per-test bound of the printed Lemma 6.8 in the form consumed by `TailBound68.printed68_tail_bound`:
 `srwLaw (stayIn) ≤ ofReal (1 - q0 / (1 + log(1/r))²)` with the deterministic constant
 `q0 = 1 / (288 Cd² C1²)`, `C1 = Cg (1 + (log 4 - 1)) / (1 - log 2)`.
 
-Inputs (each traced in the write-up):
+Inputs:
 * the cell geometry: the test vertex `y` has its cell of diameter `≤ R/100` and meeting the sphere `∂B_{4R/3}(z)`
   (B5, cell-size bound; the good event supplies the diameter bound);
-* the good-annulus bound `hF` with constant `Cg` and the mass `mr` (LEMMA68 eq (4), Lemma 1 hypothesis);
+* the good-annulus bound `hF` with constant `Cg` and the mass `mr`(Lemma 1 hypothesis);
 * the Draft Lemma 2.18 `N = 2` exit-time instance `hexit` with constant `Cd` (EXTERNAL, Draft `ExitTimeUpperBoundStmt`);
-* the radius bound `r^p/2 < R` with `p ≤ 3` (write-up C16), which gives `1 + log(1/R) ≤ 3 (1 + log(1/r))`.
+* the radius bound `r^p/2 < R` with `p ≤ 3`, which gives `1 + log(1/R) ≤ 3 (1 + log(1/r))`.
 
 The choice `C0 = Cd/(1 + log(1/r))` in `GreenTest68.stayIn_le_printed_green_draft` makes its second moment the sharp
 `2 Cd² ε⁻² Sr²` and turns its `(1 + log(1/r))⁻²` factor into `q0 (1 + log(1/r))⁻²`.
@@ -23,7 +23,7 @@ open scoped ENNReal
 
 namespace MatedCRT
 
-/-- `1 + log(1/R) ≤ 3 (1 + log(1/r))` when `R > r^p/2` with `p ≤ 3` and `0 < r ≤ 1` (write-up C16). -/
+/-- `1 + log(1/R) ≤ 3 (1 + log(1/r))` when `R > r^p/2` with `p ≤ 3` and `0 < r ≤ 1`. -/
 theorem one_add_log_inv_le_three {R r p : ℝ} (hr : 0 < r) (hr1 : r ≤ 1) (hp : p ≤ 3) (hR : 0 < R)
     (hRpow : r ^ p / 2 < R) :
     1 + Real.log (1 / R) ≤ 3 * (1 + Real.log (1 / r)) := by
@@ -75,7 +75,7 @@ theorem vertex_norm_sub_of_cell_meets_sphere {η : ℝ → ℂ} (hη : Continuou
   have h2 := abs_le.mp (key.trans hdist)
   constructor <;> linarith [h2.1, h2.2]
 
-/-- **LEMMA68 per-test bound, uniform form** (write-up B18, C15-C16). For a test vertex `y` whose cell has diameter at most
+/-- **Per-test bound, uniform form.** For a test vertex `y` whose cell has diameter at most
 `R/100` and meets the sphere `∂B_{4R/3}(z)`, with the good-annulus bound (`hF`, constant `Cg`, mass `mr`), the Draft
 Lemma 2.18 second moment (`hexit`, constant `Cd`) and the radius bound `r^p/2 < R`, `p ≤ 3`, the walk from `y` stays in `A`
 until it exits the test window with probability at most `1 - q0 / (1 + log(1/r))²`, `q0 = 1 / (288 Cd² C1²)`. -/

@@ -1,16 +1,16 @@
 import MatedCRT.FirstPass.S4S6c.UniformLayer68
 
 /-!
-# The deterministic layer crossing of the printed Lemma 6.7 (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# The deterministic layer crossing of the printed Lemma 6.7
 
-Source: LEMMA68.md, "Proof of Lemma 6.7", the geometric crossing. With `K = Ā = fillCells ε η Θ`, `G = K + B_{r/2}`
+The printed "Proof of Lemma 6.7", the geometric crossing. With `K = Ā = fillCells ε η Θ`, `G = K + B_{r/2}`
 (an open set), the layer is `L = V(∂G)` and the window is `W = V(K + B_r)` (cell vertices, `Defs/Map.lean`).
 
 Deterministic statement (`layer_crossing`): a path `x` from `a ∈ cl Θ` whose consecutive vertices are joined by edges
 of the map (`m (x n) (x (n+1)) ≠ 0`), whose edges join cells that meet (`hadj`), whose boundary cells of `Θ` have
 diameter `< r/2` (`hdiam`), and which leaves `W` at some time, hits `L` at some time `k` strictly before its exit from `W`.
 
-Proof (LEMMA68.md): `cell(x_0) ⊆ G`; the first index `M` with `cell(x_M) ⊄ G` satisfies `M ≤ N` (`N` the exit time of
+Proof: `cell(x_0) ⊆ G`; the first index `M` with `cell(x_M) ⊄ G` satisfies `M ≤ N` (`N` the exit time of
 `W`); the connected set `cell(x_M)` meets `G` (at a point of `cell(x_{M-1})`) and `Gᶜ`, hence meets the frontier of `G`;
 so `x_M ∈ L` and `x_M ∈ W` (the frontier lies in `K + B_r`), giving `M < N`.
 
@@ -95,7 +95,7 @@ lemma exists_first {P : ℕ → Prop} (h : ∃ j, ¬ P j) :
     ∃ M : ℕ, ¬ P M ∧ (∀ j : ℕ, j < M → P j) ∧ ∀ j : ℕ, ¬ P j → M ≤ j :=
   ⟨Nat.find h, Nat.find_spec h, fun _ hj => not_not.1 (Nat.find_min h hj), fun _ hj => Nat.find_min' h hj⟩
 
-/-- **Deterministic layer crossing** (LEMMA68.md, "Proof of Lemma 6.7"; the `hcross` input of
+/-- **Deterministic layer crossing** (printed "Proof of Lemma 6.7"; the `hcross` input of
 `UniformLayer68.srwLaw_visit_ge_of_layer`). -/
 theorem layer_crossing (m : ℤ → ℤ → ℕ) (hη : Continuous η) (hε : 0 < ε) {r : ℝ} (hr : 0 < r)
     (Θ : Set ℤ) (a : ℤ) (ha : a ∈ vClosure m Θ)

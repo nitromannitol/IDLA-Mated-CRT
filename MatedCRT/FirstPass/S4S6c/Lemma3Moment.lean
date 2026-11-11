@@ -1,10 +1,10 @@
 import Mathlib.MeasureTheory.Integral.MeanInequalities
 
 /-!
-# LEMMA68 Lemma 3, eq (15): the second-moment step (q2, task fp-S4S6c)
+# Lemma 3: the second-moment step
 
 The lower bound of eq (15) is a Paley–Zygmund / Cauchy–Schwarz argument for the occupation count
-`V = ∑_{n < σ_D} 1{X_n ∈ I(D) \ A}` (LEMMA68.md 300-330, eqs (20)-(22)):
+`V = ∑_{n < σ_D} 1{X_n ∈ I(D) \ A}` (300-330, eqs (20)-(22)):
 * `E[V] ≥ ¼ ε⁻¹ m₀` (eq (20): the Green function identity and (18)-(19), from `GreenKernelLowerBoundStmt`, Draft Section2:207);
 * `E[V²] ≤ C₂ ε⁻² (1 + log(1/R))² m₀²` (eq (22): the printed Lemma 2.18 with `N = 2`, Draft Section2:234, together with
   the bound (21) on the sup of the log potential by `C₁ (1 + log(1/R)) m₀`).

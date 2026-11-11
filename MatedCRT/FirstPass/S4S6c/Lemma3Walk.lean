@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S4S6c.Lemma3Second
 import MatedCRT.FirstPass.S4S6c.Lemma3Green
 
 /-!
-# LEMMA68 Lemma 3, eq (15), in the walk model (q2, task fp-S4S6c; write-up B1-B5)
+# Lemma 3 in the walk model
 
 The occupation count `occ A B x = ∑_{n} 1{n < τ_A(x), x_n ∈ B}` of a finite set `B` before the exit time `τ_A = vExitTime A`.
 The eq (15) probability `P(occ > 0)` is bounded below by `q* = 1/(16 C₂ L²)`, `C₂ = 2 C² C₁²`, from:

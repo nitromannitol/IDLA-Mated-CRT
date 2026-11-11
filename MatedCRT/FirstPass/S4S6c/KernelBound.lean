@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.CircleIntegrability
 
 /-!
-# Uniform bound on the corrected kernel over the good annulus (q2, task fp-S4S6c; LEMMA68 Lemma 1)
+# Uniform bound on the corrected kernel over the good annulus
 
 For `u` with `‖u - z‖ ≤ 2R` and `v = circleMap z (3R/2) θ`, the corrected kernel `K(u,v) = log(R/|u-v|) + 1` satisfies
 `K ≥ -a₀` with `a₀ = log 4 - 1` (since `|u - v| ≤ 4R`), and its circle average is at most `log R + 1 - log(3R/2)`

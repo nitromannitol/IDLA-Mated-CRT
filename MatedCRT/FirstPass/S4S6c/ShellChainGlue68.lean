@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S6e.Cutoff
 import MatedCRT.FirstPass.S6r.Window
 
 /-!
-# Glue of the shell-chain core: count, dyadic scale, radius range (q2, fp-S4S6c-hU-chain)
+# Glue of the shell-chain core: count, dyadic scale, radius range
 
 * `countBound_zeta`: the count bound `c_N r^{-ζ} ≤ shellCount r (d^a)` of `count_bound` (S6r/Count.lean) with the constant
   `K` replaced by the exponent `ζ` (the proof of `count_bound` uses only `ζ > 0`). Constants68 is not needed.

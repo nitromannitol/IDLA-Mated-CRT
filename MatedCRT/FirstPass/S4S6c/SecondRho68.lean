@@ -7,7 +7,7 @@ namespace MatedCRT
 namespace Lemma68Window
 
 /-- Copy of `secondMoment_occCount` (SecondMoment.lean:147) with the radius `1` of `hx1` and `hvol`
-replaced by `ρmom` (fp-S4S6c-hsp-rhomom). The original is unchanged. -/
+replaced by `ρmom`. The original is unchanged. -/
 theorem secondMoment_occCount_rho {ρmom : ℝ} (m : ℤ → ℤ → ℕ) (μ : Measure ℂ) (η : ℝ → ℂ) (ID A : Set ℤ)
     (ε R α ρ C_exit c₀ C_good βm h : ℝ) (N_cov : ℕ) (z x : ℂ) (b : ℤ)
     (hID : ID = interiorCellVertices ε η (ball x (R / 4)))
@@ -133,7 +133,7 @@ theorem secondMoment_occCount_rho {ρmom : ℝ} (m : ℤ → ℤ → ℕ) (μ : 
         rw [hCg_def]
 
 /-- Copy of `secondMoment_walkState` (WalkStateSecond.lean:12) with the radius `1` of `hx1` and `hvol`
-replaced by `ρmom` (fp-S4S6c-hsp-rhomom). The original is unchanged. -/
+replaced by `ρmom`. The original is unchanged. -/
 theorem secondMoment_walkState_rho {ρmom : ℝ} {μ : Measure ℂ} {η : ℝ → ℂ} {m : ℤ → ℤ → ℕ} {A : Set ℤ}
     {ε R α ρ C_exit c₀ C_good βm h Dbl : ℝ} {N_cov : ℕ} {z : ℂ} {b : ℤ}
     (hε : 0 < ε) (hR : 0 < R) (hR1 : R ≤ 1) (hc₀ : 0 < c₀) (hc₀' : c₀ < 1 / 5) (hCg : 0 ≤ C_good)

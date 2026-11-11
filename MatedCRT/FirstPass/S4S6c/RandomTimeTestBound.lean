@@ -1,12 +1,12 @@
 import MatedCRT.FirstPass.S4S6c.StrongMarkovState
 
 /-!
-# One-test bound at a random time (q2, task fp-S4S6c; LEMMA68 N3a, set form)
+# One-test bound at a random time (set form)
 
 The random-time version of `TestBridge.lean`. If, from every state `y ∈ Y`, the test event `G y` has probability at most `c`,
 and `S` is an event on which the state at the random time `τ` lies in `Y`, then the probability that `S` occurs, `τ < ∞`
 and the test passes after `τ`, is at most `c` times the probability of `S ∩ {τ < ∞}`. This is the hypothesis shape that the
-product bound `TestProduct.lean` needs for the successive tests of LEMMA68 (eqs (23)-(27)), with the filtration `F_τ`
+product bound `TestProduct.lean` needs for the successive tests, with the filtration `F_τ`
 replaced by the events `S` of the stopping property.
 -/
 

@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.HspRepair68
 
 /-!
-# Exponent-split copy of the repaired walk chain (fp-S4S6c-exp-split, q1)
+# Exponent-split copy of the repaired walk chain
 
 Copy of `hone_exitQ_walk_of_env_repaired_rho` (HspRepair68.lean:474) with the hWalk second conjunct
 `ε ^ (2/(2+γ)^2 - ζc) ≤ R k ω / 8` (κ) and hGreen at scale κ (`ε ^ κ ≤ r`). The split conjunct is the
@@ -18,7 +18,7 @@ open Lemma68ShellParam (measurable_coord_toNat_stop)
 
 namespace Lemma68Window
 
-/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_repaired` (fp-S4S6c-hsp-rhomom): the radius `1` of the walk
+/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_repaired`: the radius `1` of the walk
 chain is the parameter `ρmom` (`hx1`, `hVolY`/`hvol2`, `hmomS`, `hρS` read `ρmom` in place of `1`).
 The radius-1 name is the wrapper at `ρmom := 1`. -/
 theorem hone_exitQ_walk_of_env_repaired_rho_split {ρmom : ℝ} {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)

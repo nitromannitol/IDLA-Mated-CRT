@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.Lemma3Green
 
 /-!
-# LEMMA68 Lemma 3, eqs (16)-(18): the counting bound and the first moment (q2, task fp-S4S6c; write-up B3)
+# Lemma 3: the counting bound and the first moment
 
 * `counting_half`: if the vertices of `D₀` number at least `ε⁻¹ (m₀ − e₁)` (the counting bound of Lemma 2.9 at `f ≡ 1`, eq (16)),
   and the sparse set `A` meets them in at most `ε⁻¹ s` vertices (the sparsity hypothesis `|A ∩ V(B_r)| < s₁ r^{2β⁻} ε⁻¹`, with

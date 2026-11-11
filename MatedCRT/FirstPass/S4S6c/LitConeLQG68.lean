@@ -2,18 +2,18 @@ import MatedCRT.FirstPass.S2VG.Literature
 import MatedCRT.Defs.QuantumCone
 
 /-!
-# The named literature input for the quantum-cone LQG measure (q2, fp-S4S6c-cg-param, addendum: chat 246 Q4)
+# The named literature input for the quantum-cone LQG measure
 
 `LitQuantumConeLQGMeasureExistence` is the inline binder `hμ` of the closed Section 6 theorems
 (`closed_6_x_hU`, `closed_6_7/8/9_hU_eps`, Closed6x68.lean): for every `γ ∈ (0,2)`, on every probability space carrying a
 quantum cone field `hcone`/`hcirc` (Duplantier-Sheffield), there is an LQG measure `μ` of that field.
 
-Source (chat 246, Q4, notes/fp-gaps/CHATGPT-246-idla-hU-tdom-rbd-hpos-counting-PRO.md): the canonical quantum-cone field
+Source (Q4): the canonical quantum-cone field
 of Duplantier-Sheffield (arXiv:1409.7055, Definition 4.10 and the description of the circle-average embedding) together
 with the subcritical GMC construction of its LQG measure. It is a literature input, not a result of the IDLA paper.
 
 PENDING TRUTH CHECK: the Prop is not yet in `MatedCRT/External` and its exact form is not yet audited against the
-Duplantier-Sheffield statement; it is defined here, as a named binder only, until the operator promotes or retires it.
+Duplantier-Sheffield statement; it is defined here, as a named binder only, until it is promoted or retired.
 -/
 
 namespace MatedCRT.S2VG

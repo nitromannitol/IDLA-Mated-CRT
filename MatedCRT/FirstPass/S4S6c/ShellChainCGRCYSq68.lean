@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4S6c.ShellChainCGRCY68
 import MatedCRT.FirstPass.LICGRCY68
 
 /-!
-# The square-premise variant of the Y counting CG chain (fp-S4S6c-chain-sq, lead request 83a)
+# The square-premise variant of the Y counting CG chain
 
 The split-leaf walk `walkG_pt_sq` (CGResWalkG68.lean:117) needs the square premise `4 * ε ^ ω₀ ≤ r ^ 2` in addition to
 the radius premise `10 * ε ^ ω₀ ≤ r` of the one-test. This file carries that premise through the Y chain:
@@ -35,7 +35,7 @@ open MatedCRT.Lemma68Omega MatedCRT.Lemma68GeometryId MatedCRT.Lemma68Admissible
 open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68WalkBridge MatedCRT.Lemma68ChainAe
 open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 
-/-- **The one-test order input with the square premise (fp-S4S6c-chain-sq, lead request 83a).** Copy of
+/-- **The one-test order input with the square premise.** Copy of
 `LICGRCY68.ShellOneTestOrderAeCGRCYStmt` (LICGRCY68.lean:45) except the radius premise: the shell one-test is asserted
 only for radii with `10 * ε ^ ω₀ ≤ r` and the square premise `4 * ε ^ ω₀ ≤ r ^ 2` of the leaf walk `walkG_pt_sq`
 (CGResWalkG68.lean:117). -/
@@ -88,7 +88,7 @@ theorem shellOneTestOrderAeCGRCYSq_of_Y {𝒮 : SpaceFillingSLEModel}
   intro ω hω hmesh hexit hgreen hcurve hmult r hr1 _ hr3 hωE hvol i hi
   exact hω hmesh hexit hgreen hcurve hmult r hr1 hr3 hωE hvol i hi
 
-/-- **`ShellChainCGRCYStmt` with the square premise (fp-S4S6c-chain-sq).** Copy of `ShellChainCGRCYStmt`
+/-- **`ShellChainCGRCYStmt` with the square premise.** Copy of `ShellChainCGRCYStmt`
 (ShellChainCGRCY68.lean:108) whose radius clause carries the square premise `4 * ε ^ ω₀ ≤ r ^ 2` after `10 * ε ^ ω₀ ≤ r`. -/
 def ShellChainCGRCYSqStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE β : ℝ,
@@ -119,7 +119,7 @@ def ShellChainCGRCYSqStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
               ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
                 Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
 
-/-- **`ShellChainCGRCYSqStmt` from the square one-test order input (fp-S4S6c-chain-sq).** Copy of
+/-- **`ShellChainCGRCYSqStmt` from the square one-test order input.** Copy of
 `shellChainCGRCY_of_oneTestOrderCGRCY` (ShellChainCGRCY68.lean:140). The window constants `C, C'` come from `hprev`,
 the one-test supplies `q0, εG` and the shell order at radii satisfying both premises, and the exit step is
 `Lemma68ChainGlue.exitQ_core_step` as before. -/
@@ -152,7 +152,7 @@ theorem shellChainCGRCYSq_of_oneTestOrderCGRCYSq {𝒮 : SpaceFillingSLEModel}
   exact Lemma68ChainGlue.exitQ_core_step S ε ω ζ q0 r Rf i hζ0 hζ1 hq0 hq1 hr0 hr1' (hr3.trans hRA) hone hsh
     (hmult ε hε).1 (hmult ε hε).2
 
-/-- **The square premise fails at the least consumer radius (fp-S4S6c-chain-sq; the obstruction).** For `ω₀ > 0` there
+/-- **The square premise fails at the least consumer radius (the obstruction).** For `ω₀ > 0` there
 is `ε₀ > 0` such that for `0 < ε < ε₀` the radius `r = 10 * ε ^ ω₀` (the least radius of the consumers' clause
 `10 * ε ^ ω₀ ≤ r`, ShellChainCGRCY68.lean:172 and S6e/Uniform.lean:140) violates `4 * ε ^ ω₀ ≤ r ^ 2`. With
 `x = ε ^ ω₀ < 1/25` one has `4 x ≤ 100 x ^ 2` false. -/

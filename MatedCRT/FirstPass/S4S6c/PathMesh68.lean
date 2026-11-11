@@ -7,13 +7,13 @@ import MatedCRT.FirstPass.S6r.Window
 import MatedCRT.FirstPass.S3S4c
 
 /-!
-# Path-level mesh bound up to the exit time (fp-S4S6c-goodenv-local, q4; chat 252 §3)
+# Path-level mesh bound up to the exit time
 
-The walk `x` is killed on leaving `killed ε η Θ F0 r` (Admissible.lean, the write-up set `U_x`); its exit time is
+The walk `x` is killed on leaving `killed ε η Θ F0 r` (Admissible.lean); its exit time is
 `τ = vExitTime (killed ε η Θ F0 r) x ∈ ℕ ∪ {∞}`. The mesh bound `CellDiamLe ε η (dyadicD r / 100) (ball 0 ρmesh)` is used
 only on the cells of the walk vertices `x m` with `m ≤ τ`, and not on the whole plane.
 
-Route (chat 252 §3, the exact conclusion of `walk_mem_meshBall_upto_vExitTime`).
+Route (the exact conclusion of `walk_mem_meshBall_upto_vExitTime`).
 * For `m < τ`: `x m ∈ killed ⊆ F0` (`S3S4c.lt_vExitTime_iff`), so its cell meets `ball 0 ρ ⊆ ball 0 ρmesh`.
 * For `m = τ = n + 1`: `x n ∈ killed` and the cell of `x n` meets `ball 0 ρ`. A point `p` of it and a point `q` of the
   common part of the cells of `x n` and `x (n+1)` (the step `hadj`) satisfy `dist p q ≤ dyadicD r / 100 ≤ ρmesh - ρ` by the
@@ -21,7 +21,7 @@ Route (chat 252 §3, the exact conclusion of `walk_mem_meshBall_upto_vExitTime`)
 * For `m = τ = 0`: the start cell meets `ball 0 ρ` (hypothesis `hst`; a start set `K ⊆ ball 0 (ρ / 2)` gives it).
 
 The instance `ρmesh := ρ + dyadicD r / 100` (`diam_upto_vExitTime_exit`) is the radius of the exit-cell mesh bound
-`hmeshExit` (MeshExitPw68.lean). No new input: the walk, the killed set and the cells are the Defs of the write-up.
+`hmeshExit` (MeshExitPw68.lean). No new input: the walk, the killed set and the cells are the definitions.
 
 Terminology: Armstrong-Kuusi-Mourrat (cells `H^ε_a`, mesh), Duplantier-Sheffield (boundary-length parametrisation),
 Armitage-Gardiner (balls, open balls `ball 0 ρ`).
@@ -35,7 +35,7 @@ namespace Lemma68PathMesh
 open Lemma68Admissible Lemma68Window
 
 /-- The walk `x` killed on leaving `killed ε η Θ F0 r` has every vertex `x m`, `m ≤ τ`, in a cell meeting the ball
-`ball 0 ρmesh`; the mesh bound is needed only on the cells of the walk up to `τ` (chat 252 §3). -/
+`ball 0 ρmesh`; the mesh bound is needed only on the cells of the walk up to `τ`. -/
 theorem walk_mem_meshBall_upto_vExitTime {ε : ℝ} {η : ℝ → ℂ} {Θ F0 : Finset ℤ} {r ρ ρmesh h : ℝ}
     {x : ℕ → ℤ}
     (hh : 0 ≤ h)
@@ -98,7 +98,7 @@ theorem diam_upto_vExitTime {ε : ℝ} {η : ℝ → ℂ} {Θ F0 : Finset ℤ} {
   fun m hm =>
     hmesh (x m) (walk_mem_meshBall_upto_vExitTime hh hF0 hgap hmesh hadj hst m hm)
 
-/-- The instance `ρmesh := ρ + h` (chat 252 §3): the exit cell of the killed walk is covered by the mesh bound on
+/-- The instance `ρmesh := ρ + h`: the exit cell of the killed walk is covered by the mesh bound on
 `ball 0 (ρ + h)`. With `h = dyadicD r / 100` this is the binder `hmeshExit` of MeshExitPw68.lean. -/
 theorem diam_upto_vExitTime_exit {ε : ℝ} {η : ℝ → ℂ} {Θ F0 : Finset ℤ} {r ρ h : ℝ}
     {x : ℕ → ℤ}

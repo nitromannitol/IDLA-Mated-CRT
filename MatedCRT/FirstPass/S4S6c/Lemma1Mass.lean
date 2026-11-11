@@ -2,20 +2,20 @@ import MatedCRT.FirstPass.S4S6c.KernelProduct
 import MatedCRT.FirstPass.S4S6c.CircleSwap
 
 /-!
-# Lemma 1 of the Lemma 6.8 argument: the mass bound (6) (q2, task fp-S4S6c; LEMMA68 eq (6))
+# Lemma 1 of the Lemma 6.8 argument: the mass bound (6)
 
 For a measurable annulus `A ⊆ closedBall z (2R)` of finite `μ`-mass, with `F(v) = ∫_A (log(R/|u-v|)+1) dμ(u)`
 bounded by `C * m` on the circle `∂B_{3R/2}(z)`, the mass satisfies `(1 - log 2) μ(A) ≤ C m`, i.e.
 `M ≤ κ₀⁻¹ C m` with `κ₀ = 1 - log 2`. Proof: the pointwise circle-average bound (`GoodAnnulusKernel`), the Fubini
 interchange of `CircleSwap` with the joint integrability of `KernelProduct`, and the bound of the circle average of `F`.
-The hypothesis on `F` is only needed on the circle, which is weaker than the good-annulus event (4) of LEMMA68.
+The hypothesis on `F` is only needed on the circle, which is weaker than the good-annulus event (4).
 -/
 
 open MeasureTheory Real Set Metric
 
 namespace MatedCRT
 
-/-- **Mass bound of Lemma 1** (LEMMA68 eq (6)): `(1 - log 2) μ(A) ≤ C m`. -/
+/-- **Mass bound of Lemma 1**: `(1 - log 2) μ(A) ≤ C m`. -/
 theorem lemma1_mass_le {A : Set ℂ} (μ : Measure ℂ) [SFinite μ] {z : ℂ} {R C m : ℝ} (hR : 0 < R)
     (hA : MeasurableSet A) (hAb : A ⊆ closedBall z (2 * R)) (hμA : μ A ≠ ⊤)
     (hC : 0 ≤ C) (hm : 0 ≤ m)

@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4S6c.ShellChainCGRCX68
 import MatedCRT.FirstPass.LICGRCXLe68
 
 /-!
-# The X counting CG chain under the constant order `C ≤ CG` (fp-S4S6c-chain-le, lead li, request 80a)
+# The X counting CG chain under the constant order `C ≤ CG`
 
 Copy of the X chain of `ShellChainCGRCX68.lean` in which the one-test input is
 `LICGRCXLe68.ShellOneTestOrderAeCGRCXLeStmt` (the premise `C ≤ CG` after `WindowPrevAt`) and the prevalence input is
@@ -10,7 +10,7 @@ Copy of the X chain of `ShellChainCGRCX68.lean` in which the one-test input is
 `guardProbStmtCGRCX_of_chainCGRCX` and `uniformConstantOrderLowerBoundCGRCX_of_chain` do not mention `C`, so they are
 reused from `ShellChainCGRCX68.lean`.
 
-`WindowPrevLeCGStmt` is open mathematics (the residual of request 80a, reports/q3.md), not a frozen input.
+`WindowPrevLeCGStmt` is open mathematics, not a frozen input.
 Terminology: Armstrong-Kuusi-Mourrat (good annuli, shell order), Armitage-Gardiner (balls).
 -/
 
@@ -27,16 +27,16 @@ open MatedCRT.Lemma68Omega MatedCRT.Lemma68GeometryId MatedCRT.Lemma68Admissible
 open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68ChainAe
 open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 
-/-- **The window constant with `C ≤ CG` (residual of request 80a, lead li).** For `γ`, `ζ`, `CG` in the ranges of the
+/-- **The window constant with `C ≤ CG`.** For `γ`, `ζ`, `CG` in the ranges of the
 chain there are window constants `0 < C ≤ CG` and `C'` with `WindowPrevAt γ (shortExp ζ) (shellC0 CG) C C'`. This is
 `ShortWindowGoodRadiusPrevalenceStmt` (S6r/ShortWindow.lean:61) at `a = shortExp ζ`, `c₀ = shellC0 CG`, with the extra bound
-`C ≤ CG`, which the repository does not give (q3 trace, reports/q3.md). Open mathematics: NOT a frozen input.
-FALSE (Codex 19:56 Q4: CG = 1 forces C ≥ 4(1-log 2) > 1); route retired (lead li, 20:05 UTC). -/
+`C ≤ CG`, which the repository does not give. Open mathematics: NOT a frozen input.
+FALSE (CG = 1 forces C ≥ 4(1-log 2) > 1); route retired. -/
 def WindowPrevLeCGStmt : Prop :=
   ∀ γ ζ CG : ℝ, 0 < γ → γ < 2 → 0 < shortExp ζ → shortExp ζ < 1 → 0 < CG →
     ∃ C C' : ℝ, 0 < C ∧ C ≤ CG ∧ 0 < C' ∧ WindowPrevAt γ (shortExp ζ) (shellC0 CG) C C'
 
-/-- **`ShellChainCoreCGRCXStmt` under `C ≤ CG` (request 80a).** The core `ShellChainCoreCGRCXStmt`
+/-- **`ShellChainCoreCGRCXStmt` under `C ≤ CG`.** The core `ShellChainCoreCGRCXStmt`
 (ShellChainCGRCX68.lean:39) with the extra premise `C ≤ CG` after `WindowPrevAt`; the conclusion is unchanged. -/
 def ShellChainCoreCGRCXLeStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE β : ℝ,
@@ -67,7 +67,7 @@ def ShellChainCoreCGRCXLeStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
             ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
               Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
 
-/-- **`ShellChainCoreCGRCXLeStmt` from the X one-test order input (fp-S4S6c-cgrcx-closures).** Copy of
+/-- **`ShellChainCoreCGRCXLeStmt` from the X one-test order input.** Copy of
 `shellChainCoreCGRCStmt_of_oneTestOrderCGRC` (ShellHoneInst68.lean:448) with the extra exit clause passed through. -/
 theorem shellChainCoreCGRCXLe_of_oneTestOrderCGRCXLe {𝒮 : SpaceFillingSLEModel}
     (h : LICGRCXLe68.ShellOneTestOrderAeCGRCXLeStmt 𝒮) : ShellChainCoreCGRCXLeStmt 𝒮 := by
@@ -91,7 +91,7 @@ theorem shellChainCoreCGRCXLe_of_oneTestOrderCGRCXLe {𝒮 : SpaceFillingSLEMode
     (hmult ε hε).1 (hmult ε hε).2
 
 
-/-- **`ShellChainCGRCXStmt` from the X counting core under `C ≤ CG` (request 80a).** Copy of `shellChainCGRCX_of_core`
+/-- **`ShellChainCGRCXStmt` from the X counting core under `C ≤ CG`.** Copy of `shellChainCGRCX_of_core`
 (ShellChainCGRCX68.lean:122) with `hprevLe` in place of `hprev`: the window constant `C` and its bound `C ≤ CG` come from one
 existential. -/
 theorem shellChainCGRCXLe_of_core {𝒮 : SpaceFillingSLEModel} (hprevLe : WindowPrevLeCGStmt)
@@ -115,7 +115,7 @@ theorem shellChainCGRCXLe_of_core {𝒮 : SpaceFillingSLEModel} (hprevLe : Windo
   exact ⟨Ew, hEwm, hEwp, hcl R hR0 hRρ hRA hcut s₀ hs₀ hs₁ Ω S hS hGp hCp hEp hEr hKp Ew hEwm hEwp hav⟩
 
 
-/-- **`hU` from the X counting core under `C ≤ CG` (request 80a).** Copy of `hU_of_core_cgRCX`
+/-- **`hU` from the X counting core under `C ≤ CG`.** Copy of `hU_of_core_cgRCX`
 (ShellChainCGRCX68.lean:245), with `hprevLe` for the prevalence input. -/
 theorem hU_of_core_cgRCXLe {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮)
     (hK : Lemma68Guard10.CountingAtExitAlphaStmt 𝒮) (hprevLe : WindowPrevLeCGStmt)
@@ -127,7 +127,7 @@ end Lemma68CGRCXLe
 namespace Lemma68ShellTopCGRCXLe
 
 /-- **`UniformConstantOrderLowerBoundStmt` (hU) from the X counting CG one-test order input under `C ≤ CG`
-(request 80a).** Copy of `hU_top_cgRCX` (ShellChainCGRCX68.lean:256) with the prevalence inputs `hLit hBM hCC hB1 hμ`
+.** Copy of `hU_top_cgRCX` (ShellChainCGRCX68.lean:256) with the prevalence inputs `hLit hBM hCC hB1 hμ`
 replaced by `hprevLe`, and `hOne` by `hOneXLe`. -/
 theorem hU_top_cgRCXLe {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮)
     (hK : MatedCRT.Lemma68Guard10.CountingAtExitAlphaStmt 𝒮)

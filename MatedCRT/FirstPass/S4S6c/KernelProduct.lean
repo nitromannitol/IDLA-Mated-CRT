@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.KernelBound
 
 /-!
-# Joint integrability of the corrected kernel on the annulus times the circle (q2, task fp-S4S6c; LEMMA68 Lemma 1)
+# Joint integrability of the corrected kernel on the annulus times the circle
 
 `integrable_kernel_prod` is the hypothesis `hjoint` of `CircleSwap.lean`, for the kernel
 `K(u,v) = log(R/|u-v|) + 1` and the circle `∂B_{3R/2}(z)`, under the measure `μ.restrict A ⊗ (0, 2π]`.

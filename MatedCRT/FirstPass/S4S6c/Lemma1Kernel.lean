@@ -1,11 +1,11 @@
 import MatedCRT.FirstPass.S4S6c.Lemma1Mass
 
 /-!
-# Lemma 1 of the Lemma 6.8 argument: the kernel bound on subsets (q2, task fp-S4S6c; LEMMA68 eq (5))
+# Lemma 1 of the Lemma 6.8 argument: the kernel bound on subsets
 
 For `0 < R ≤ 1`, a measurable annulus `A ⊆ closedBall z (2R)` of finite `μ`-mass, a measurable `E ⊆ A` and `v ∈ A`:
 `∫_E (log(R/|u-v|) + 1 + log(1/R)) dμ(u) ≤ C m (1 + a₀)(1 + log(1/R)) / κ₀`, with `a₀ = log 4 - 1`, `κ₀ = 1 - log 2`.
-This is LEMMA68 eq (5) with the constant `C₁ = C (1+a₀)/κ₀`: the integrand is the paper's `log(1/|u-v|) + 1` up to the
+This is the bound with the constant `C₁ = C (1+a₀)/κ₀`: the integrand is the paper's `log(1/|u-v|) + 1` up to the
 diagonal `u = v`, where the paper's kernel is `+∞` (the diagonal is `μ`-null once `F(v)` is finite; not formalized here).
 Proof: split `∫_A = ∫_E + ∫_{A∖E}`; the kernel is `≥ -a₀` on `A` (`|u-v| ≤ 4R`); `F(v) ≤ C m` by hypothesis (4) at `v`;
 the mass bound `κ₀ μ(A) ≤ C m` of `Lemma1Mass`; and the elementary algebra `kernel_E_algebra`.
@@ -27,7 +27,7 @@ theorem kernel_E_algebra {X Cm M κ a L : ℝ} (hκ : 0 < κ) (hκ1 : κ ≤ 1) 
   have h4 : 0 ≤ Cm * (a * L) := mul_nonneg hCm (mul_nonneg ha hL)
   nlinarith [h1, h2, h3, h4]
 
-/-- **Kernel bound on subsets of the annulus** (LEMMA68 eq (5)). -/
+/-- **Kernel bound on subsets of the annulus**. -/
 theorem lemma1_kernel_bound_E {A E : Set ℂ} (μ : Measure ℂ) [SFinite μ] {z v : ℂ} {R C m : ℝ}
     (hR0 : 0 < R) (hR1 : R ≤ 1) (hA : MeasurableSet A) (hAb : A ⊆ closedBall z (2 * R)) (hμA : μ A ≠ ⊤)
     (hsph : sphere z (3 * R / 2) ⊆ A) (hE : MeasurableSet E) (hEA : E ⊆ A)
