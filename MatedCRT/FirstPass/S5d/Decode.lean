@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.S5c.HExclusive
 import MatedCRT.Defs.Sandpile
 
 /-!
-# Decoding the stopped odometer on a cell: deterministic part of the cluster-positivity step (task fp-S5d-5-1-stopped-repair)
+# Decoding the stopped odometer on a cell: deterministic part of the cluster-positivity step
 
-Referee notes/fp-gaps/CHATGPT-5-1-gaps-referee.md section 3.3 (exclusive-point transfer). If the rescaled stopped odometer
+Exclusive-point transfer. If the rescaled stopped odometer
 `rescale mε ε η (stoppedOdometer m ε η ρ t)` is positive at every point of the cell `H^ε_a`, then the label `a` lies in the
 strict discrete cluster `matedDiscreteCluster m ε η ρ t`. The proof uses an exclusive representative `x` of the cell
 (`MatedCRT.S5c.exists_exclusive_mem_cell`, HExclusive.lean), at which the decoder returns `a`

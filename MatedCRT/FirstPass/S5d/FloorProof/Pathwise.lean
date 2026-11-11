@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S5d.FloorProof.Geometry
 import MatedCRT.FirstPass.S5d.FloorProof.MinPrinciple
 
 /-!
-# Pathwise floor on one cell (task fp-S5d-5-1, floor note Part I, Sections 6, 8.1-8.3)
+# Pathwise floor on one cell
 
 Deterministic estimates for one outcome `ω` and one mesh `ε`. With `w̃ = matedLeastSupersolution`, `g = ε⁻¹ g_{B_ρ}(0,·)`,
 `w̄ = rescale (m_ε) ε η w̃`, `ḡ = rescale (m_ε) ε η g` (floor note (1)), an exclusive point `x` of a cell `H_a` has

@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S5d.StoppedSteps
 import MatedCRT.FirstPass.S5d.Transfer
 
 /-!
-# Reduction of the stopped clause of Proposition 5.1 to the two Green steps (task fp-S5d-5-1-stopped-repair)
+# Reduction of the stopped clause of Proposition 5.1 to the two Green steps
 
 `iDLALowerBoundStopped_of_greenSteps`: `IDLALowerBoundStoppedStep` (Steps/Sec5/IDLALowerBound.lean:68) follows from the
 relaxed Lemma 5.2 (`GeneralIDLALowerBoundRelaxedStep`), the cone-family measurability inputs, and the NEW Green steps

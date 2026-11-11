@@ -5,7 +5,7 @@ import MatedCRT.Steps.Infra.MatingOfTrees
 import MatedCRT.Draft.Section4
 
 /-!
-# The pathwise package of the stopped clause, discharged (task fp-S5d-5-1-stopped-repair)
+# The pathwise package of the stopped clause, discharged
 
 `StoppedFirstGreenInputs.lean` reduces `StoppedFirstGreenStep` to the open input `StoppedFirstGreenInputsStep` and to the
 almost sure deterministic package `StoppedPathwiseInputs` (the hypothesis `hdet` of `stoppedFirstGreenStep_of_inputs`).

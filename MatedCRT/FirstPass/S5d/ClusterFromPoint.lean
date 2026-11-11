@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S5d.ClusterFromOdometer
 import MatedCRT.FirstPass.S5c.HExclusive
 
 /-!
-# Strict compact containment from the point-level inner containment (task fp-S5d-5-1-stopped-repair)
+# Strict compact containment from the point-level inner containment
 
 Second route to `StrictClusterCompactContainmentStep` (ClusterInner.lean), which does not use the odometer step
 `StrictStoppedOdometerPositivityStep`. The point-level containment `DiscreteClusterInnerBoundStep` (the `Λ^ε_t` form of

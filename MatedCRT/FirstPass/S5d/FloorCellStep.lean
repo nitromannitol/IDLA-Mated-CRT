@@ -5,8 +5,7 @@ import MatedCRT.FirstPass.S5e.SecondGreenStep
 /-!
 # The single floor input of the stopped clause: `StoppedFloorCellStep`
 
-`StoppedFloorCellStep 𝒮` is the floor on every cell meeting `B⁻_{δ/2}(Λ_t)` (corrected tex 2362; the expanded argument
-`notes/fp-gaps/CHATGPT-z5-floor.md`, Part I, proves this cell form). It is the ONE floor input of Proposition 5.1 and of the
+`StoppedFloorCellStep 𝒮` is the floor on every cell meeting `B⁻_{δ/2}(Λ_t)` (corrected tex 2362). It is the ONE floor input of Proposition 5.1 and of the
 second Green step (`StoppedFloorHalfStep`, S5e/SecondGreenStep.lean:29). Here it is derived:
 * `stoppedFloorStep_of_cellFloor`: `StoppedFloorStep` (the floor on the vertices `V^ε(B⁻_δ(Λ_t))`, S5d/StoppedExitInput.lean:129),
   since every target vertex `a` has its cell meeting `B⁻_δ(Λ_t) ⊆ B⁻_{δ/2}(Λ_t)`;
@@ -21,7 +20,7 @@ namespace MatedCRT
 /-- **The floor on every cell meeting `B⁻_{δ/2}(Λ_t)` (the single floor input of Proposition 5.1, OPEN).** For `δ ∈ (0, ρ)` and `t > 0`
 there is a measurable random constant `c > 0` such that, on `{t < T}`, with probability tending to one as `ε → 0⁺`: every cell
 `cell ε (S.η ω) k` meeting `B⁻_{δ/2}(Λ_t)` satisfies `c/ε ≤ u^ε(k)` (`stoppedOdometer`). Source: corrected tex 2362 ([C21]) and the
-expanded argument of `notes/fp-gaps/CHATGPT-z5-floor.md` (Part I, Steps 1-9; its inputs are h41, h33, h28, hm, hgap, hμae, hcell). -/
+expanded argument (Steps 1-9; its inputs are h41, h33, h28, hm, hgap, hμae, hcell). -/
 def StoppedFloorCellStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →

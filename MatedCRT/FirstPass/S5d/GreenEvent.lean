@@ -7,8 +7,7 @@ import MatedCRT.Proofs.Infra.RandomWalk
 # The Green event of the stopped clause, pathwise
 
 Deterministic content of the Green event of Lemma 5.2 (`GeneralIDLALowerBoundRelaxedStep`,
-Steps/Sec5/IDLALowerBound.lean:40) for a finite killing set `I ⊆ ℤ` (referee notes/fp-gaps/CHATGPT-5-1-gaps-referee.md
-§5.2–5.3). With `g_I = G_I / deg` (Armitage-Gardiner Green kernel), `q_I(a) = ∑_{b∈I} g_I(a,b)` and `κ = t/ε`:
+Steps/Sec5/IDLALowerBound.lean:40) for a finite killing set `I ⊆ ℤ`. With `g_I = G_I / deg` (Armitage-Gardiner Green kernel), `q_I(a) = ∑_{b∈I} g_I(a,b)` and `κ = t/ε`:
 * first Green inequality (5.5): `(1+s) q_I(a) ≤ κ g_I(a,0)`;
 * second Green inequality (5.7): `e ≤ q_I(a) / g_I(a,a)`.
 Both are converted to the form in which the relaxed step states them, using reversibility `G_I(b,a) = deg(a) g_I(a,b)`

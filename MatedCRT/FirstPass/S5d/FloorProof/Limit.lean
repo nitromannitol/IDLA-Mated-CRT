@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# The epsilon-n limit behind the outer-probability conclusion of the floor (task fp-S5d-5-1, floor note Part I, Step 9)
+# The epsilon-n limit behind the outer-probability conclusion of the floor
 
-Pure measure-theoretic bookkeeping for `notes/fp-gaps/CHATGPT-z5-floor.md`, Section 9, equations (25)-(26): a family of
+Pure measure-theoretic bookkeeping for the floor argument (Section 9, equations (25)-(26)): a family of
 probabilities `f ε` is bounded, for every fixed index `n`, by `h n + q n ε` where `q n ε → 0` as `ε → 0⁺` (the finitely
 many good events of Section 7 at the fixed index `n`) and `h n → 0` as `n → ∞` (the localization `P(L_n^c) → 0`,
 equation (17)). Then `f ε → 0`. No measure theory beyond the union bound is used here.

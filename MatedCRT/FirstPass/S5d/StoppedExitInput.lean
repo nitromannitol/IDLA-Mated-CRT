@@ -7,7 +7,7 @@ import MatedCRT.Proofs.Measurability.GoodScale
 import MatedCRT.Draft.Section2
 
 /-!
-# The exit-sum input (E) of the stopped clause (task fp-S5d-5-1-stopped-repair)
+# The exit-sum input (E) of the stopped clause
 
 Proves the exit bound `∑_{b ∈ I^ε_t} g_{I}(a, b) ≤ C(ω) / ε` on the targets `a ∈ Z^ε_t` (the third conjunct of
 `StoppedFirstGreenInputsStep`, referee/paper: `q^ε_{I_ε}(a) ≤ C ε⁻¹` with a finite positive random `C`, paper

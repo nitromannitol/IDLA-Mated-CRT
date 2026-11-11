@@ -4,7 +4,7 @@ import HarmonicBalls.Defs.Obstacle
 import HarmonicBalls.Defs.Green
 
 /-!
-# The floor constant `FloorConstantStep` (task fp-S5d-5-1, floor note Part I, Steps 4-5; a named hypothesis)
+# The floor constant `FloorConstantStep`
 
 `FloorConstantStep 𝒮` is the single input of `stoppedFloorCell_proved` (S5d/FloorProof.lean) that is not proved there:
 the floor constant `s`, the bound `M` and their measurability for `S.fieldSigma`, with the floor on `B⁻_{δ/4}(Λ_t) \ {0}`

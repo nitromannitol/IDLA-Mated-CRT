@@ -4,9 +4,9 @@ import MatedCRT.FirstPass.S5d.CoverEvent
 import MatedCRT.FirstPass.S5d.Decode
 
 /-!
-# The compact containment (3.1) from strict positivity of the stopped odometer (task fp-S5d-5-1-stopped-repair)
+# The compact containment (3.1) from strict positivity of the stopped odometer
 
-Referee notes/fp-gaps/CHATGPT-5-1-gaps-referee.md section 3 (compact-containment statement (3.1)) and section 5.2.
+Compact-containment statement (3.1).
 The NEW probabilistic step `StrictClusterCompactContainmentStep` (ClusterInner.lean) is reduced to one NEW step,
 `StrictStoppedOdometerPositivityStep`: on `{t < T}`, with probability tending to one, the stopped odometer
 `u^ε_t = w̃^ε_t + (t/ε) g^ε_{B_ρ}(0, ·)` (`stoppedOdometer`, Defs/Sandpile.lean:93) is strictly positive at the vertices

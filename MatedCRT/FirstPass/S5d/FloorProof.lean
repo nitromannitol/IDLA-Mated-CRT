@@ -19,7 +19,7 @@ import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.HarmonicPathExit
 import MatedCRT.Proofs.Sec6.IterativeBound.FieldSigma
 
 /-!
-# The floor of the stopped clause: `StoppedFloorCellStep` (task fp-S5d-5-1, floor note Part I; theorem `stoppedFloorCell_proved`)
+# The floor of the stopped clause: `StoppedFloorCellStep`
 
 `stoppedFloorCell_proved` proves the single floor input `StoppedFloorCellStep 𝒮` (S5d/FloorCellStep.lean) from the named
 inputs of floor note Part I, Section 1 (`h41`, `h33`, `h28`, `hm`, `hcell`) and the floor constant `FloorConstantStep` (the

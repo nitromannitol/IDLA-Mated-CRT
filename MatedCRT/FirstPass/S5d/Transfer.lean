@@ -9,7 +9,7 @@ Transfer step of the proof of Proposition 5.1 (paper lines 2343-2358). Given (i)
 of the vertex-threshold sets `O₁ = vertexThresholdSet` with probability tending to one (`tendsToOneOn_cover_vertexThresholdSet`),
 and (ii) the conclusion of Lemma 5.2 (`GeneralIDLALowerBoundStmt`, first conjunct) for these sets `O₁`, the first conjunct of
 `IDLALowerBoundStmt` follows. The hypotheses of Lemma 5.2 for `O₁` (`0 ∈ O₁`, connectivity, mean-value inequalities) are NOT
-discharged here: that is gaps G1a/G1b of `notes/z5.md`, and (ii) is taken as an input.
+discharged here: that is gaps G1a/G1b, and (ii) is taken as an input.
 
 The outer-probability facts used (subadditivity, monotonicity, the environment bound `idlaJointMeasure_env_le`) are
 proved here from the definition `jointOuterProb` (Defs/Notation.lean) and the existing environment bound in

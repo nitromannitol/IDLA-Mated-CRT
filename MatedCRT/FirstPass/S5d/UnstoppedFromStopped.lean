@@ -3,7 +3,7 @@ import MatedCRT.Draft.Section5
 import MatedCRT.FirstPass.S5d.StoppedMono
 
 /-!
-# The unstopped conjunct of Proposition 5.1 from the stopped conjunct (task fp-S5d-5-1-stopped-repair)
+# The unstopped conjunct of Proposition 5.1 from the stopped conjunct
 
 Corrected proof [C21] (paper/idla_mated_crt-corrected.tex, proof of Proposition 5.1): "monotonicity in the stopping domain gives
 both conclusions". The IDLA cluster is the stopped cluster with the whole lattice as stopping domain,

@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S5d.FloorProof.Pathwise
 
 /-!
-# The floor on one cell, pathwise (task fp-S5d-5-1, floor note Part I, Sections 8.1-8.3)
+# The floor on one cell, pathwise
 
 `floor_cell_bound`: for one outcome and one mesh `ε`, if the cell `H_k` meets `B⁻_{δ/2}(Λ_t)` and the localized good events
 of Section 7 hold (`hEw`, `hEg`, `hM`, `hsmall`, `hpole`, the obstacle bound `hS` of the floor constant `s`), then

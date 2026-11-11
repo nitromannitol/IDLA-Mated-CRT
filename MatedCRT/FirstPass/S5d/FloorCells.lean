@@ -2,10 +2,9 @@ import MatedCRT.FirstPass.S5c.HExclusive
 import MatedCRT.Defs.Notation
 
 /-!
-# Proposition 5.1, floor argument: exclusive representatives in the inner neighbourhood (task fp-S5d, [C21])
+# Proposition 5.1, floor argument: exclusive representatives in the inner neighbourhood
 
-Written source: corrected tex 2362-2363 (`[C21]`: the floor `u^ε(a) ≥ c ε⁻¹` on the targets `a ∈ V^ε(B⁻_δ(Λ_t))`) and the
-referee `notes/fp-gaps/CHATGPT-idla-C20-C21-referee.md` lines 153-175, which give the two deterministic facts formalized here:
+Written source: corrected tex 2362-2363 (`[C21]`: the floor `u^ε(a) ≥ c ε⁻¹` on the targets `a ∈ V^ε(B⁻_δ(Λ_t))`) and the two deterministic facts formalized here:
 * every cell of positive mass has a point lying in no other cell (`S5c.exists_exclusive_mem_cell`, S5c/HExclusive.lean:66, from
   the quantum-area parametrization `IsAreaParametrized`, Defs/Setting.lean:125);
 * once the cells have diameter below `δ/4`, every cell meeting `B⁻_{δ/2}(Λ_t)` lies in `B⁻_{δ/4}(Λ_t)`.

@@ -2,10 +2,9 @@ import MatedCRT.FirstPass.S5c.GreenTarget
 import MatedCRT.FirstPass.S5d.GreenEvent
 
 /-!
-# The second Green inequality of the stopped clause, pathwise (task fp-S5d-5-1-stopped-repair)
+# The second Green inequality of the stopped clause, pathwise
 
-Pathwise form of the second Green inequality (5.7) of the stopped clause (referee repair, notes/fp-gaps/
-CHATGPT-5-1-gaps-referee.md section 5.3; Proposition 5.1 proof [C21]) on the killing domain `J` (the stopped killing set
+Pathwise form of the second Green inequality (5.7) of the stopped clause (Proposition 5.1 proof [C21]) on the killing domain `J` (the stopped killing set
 `I^ε_t`) instead of the ball domain `B = K_ε(B_r(η(a)))` of `MatedCRT.S5c.green_ratio_target`.
 
 Route: `B ⊆ J` and the first-step monotonicity of the Green kernel (`MatedCRT.greenKernel_mono_of_firstStep`) give

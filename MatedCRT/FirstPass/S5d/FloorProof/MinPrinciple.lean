@@ -1,9 +1,9 @@
 import MatedCRT.Proofs.Sec5.StoppedPoleFiniteComparison
 
 /-!
-# Minimum principle along consecutive edges for the floor (task fp-S5d-5-1, floor note Part I, Step 8.2)
+# Minimum principle along consecutive edges for the floor
 
-Step 8.2 of `notes/fp-gaps/CHATGPT-z5-floor.md` applies the finite-set minimum principle to the degree-normalized killed Green
+Step 8.2 of the floor argument applies the finite-set minimum principle to the degree-normalized killed Green
 function `g_{B_ρ}(0,·)`, which is superharmonic on the finite set `A^ε` (including at its source). The library lemma
 `MatedCRT.nonneg_of_lapSum_nonpos` (Proofs/Infra/DiscretePotential.lean) needs `A^ε` connected; here the propagation is done
 along the consecutive edges `m k (k+1) ≠ 0` (which hold for every mesh and outcome, `MatedCRTEnv.mult_succ_ne_zero`), so no

@@ -2,10 +2,9 @@ import MatedCRT.Defs.Map
 import MatedCRT.Defs.Notation
 
 /-!
-# Cells meeting an inner neighbourhood lie in a smaller one (task fp-S5d-5-1-stopped-repair)
+# Cells meeting an inner neighbourhood lie in a smaller one
 
-Deterministic geometry behind the compact-containment step (referee notes/fp-gaps/CHATGPT-5-1-gaps-referee.md section 3.1 and
-section 5.2): if a cell `H^ε_a` meets the `δ`-inner neighbourhood `B⁻_δ(X) = innerNbhd δ X` and has diameter at most `δ/2`,
+Deterministic geometry behind the compact-containment step: if a cell `H^ε_a` meets the `δ`-inner neighbourhood `B⁻_δ(X) = innerNbhd δ X` and has diameter at most `δ/2`,
 then the whole cell lies in `B⁻_{δ/2}(X)`. No probability and no paper input. The diameter bound is the output of the
 cell-size estimate (Lemma 2.8, `CellSizeEstimateStmt`); boundedness of the cell is part of the hypothesis.
 -/

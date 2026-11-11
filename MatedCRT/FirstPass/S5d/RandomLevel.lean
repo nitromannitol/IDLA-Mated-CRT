@@ -1,7 +1,7 @@
 import MatedCRT.Defs.Notation
 
 /-!
-# A random level from fixed levels (task fp-S5d-5-1-stopped-repair)
+# A random level from fixed levels
 
 The ceiling of the stopped clause of Proposition 5.1 (`S5d/StoppedExitInput.lean`) is the bound `u^ε ≤ c/(2ε)` off the
 killing set with a positive random constant `c`. The written source ([C21], corrected tex 2364) gives it at every fixed level

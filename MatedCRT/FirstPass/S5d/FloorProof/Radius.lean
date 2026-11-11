@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S5c.GreenLog
 
 /-!
-# Deterministic annuli and tolerances of the floor (task fp-S5d-5-1, floor note Part I, Section 7)
+# Deterministic annuli and tolerances of the floor
 
 For the localized index `n` (with real parameter `N ≥ 0`), the radius `r_N` of floor note equation (18) is chosen so that the
 continuum pole bound `N + 4 ≤ α t G_{B_ρ}(0,x)` holds for `0 < |x| ≤ 3 r_N`. This uses the logarithmic lower bound of the disk

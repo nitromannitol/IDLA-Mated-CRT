@@ -3,9 +3,9 @@ import MatedCRT.FirstPass.S5c.GreenCount
 import MatedCRT.FirstPass.S5d.StoppedMono
 
 /-!
-# The stopped clause of Proposition 5.1: killing and target sets and the two Green steps (task fp-S5d-5-1-stopped-repair)
+# The stopped clause of Proposition 5.1: killing and target sets and the two Green steps
 
-Route of the direct repair of the stopped clause (referee notes/fp-gaps/CHATGPT-5-1-gaps-referee.md section 5):
+Route of the direct repair of the stopped clause:
 the walkers are killed on leaving the strict discrete cluster `Λ^ε_t` intersected with `V^ε(Λ_t)` (the killing set
 `I_ε`), and the relaxed Lemma 5.2 (`GeneralIDLALowerBoundRelaxedStep`) is applied with targets `Z_ε = V^ε(B⁻_δ(Λ_t))` (no origin, [C21]).
 The two Green inequalities that Lemma 5.2 needs on `Z_ε` are the two NEW probabilistic steps `StoppedFirstGreenStep`

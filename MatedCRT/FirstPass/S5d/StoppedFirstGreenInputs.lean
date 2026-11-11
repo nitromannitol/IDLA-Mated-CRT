@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.S5d.CoverEvent
 import MatedCRT.FirstPass.S5d.ClusterFromOdometer
 
 /-!
-# The first Green inequality of the stopped clause from its surplus inputs (task fp-S5d-5-1-stopped-repair)
+# The first Green inequality of the stopped clause from its surplus inputs
 
 Reduces `StoppedFirstGreenStep` (StoppedSteps.lean:63) to one NEW probabilistic input, `StoppedFirstGreenInputsStep`:
 random constants `c, C > 0` such that, with probability tending to one on `{t < T}`,

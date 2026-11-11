@@ -3,7 +3,7 @@ import MatedCRT.Defs.RandomWalk
 /-!
 # Monotonicity of stopped IDLA in the stopping domain
 
-Used in the stopped clause of Proposition 5.1 (referee notes/fp-gaps/CHATGPT-5-1-gaps-referee.md §5.4, last paragraph):
+Used in the stopped clause of Proposition 5.1:
 for stopping domains `Θ₁ ⊆ Θ₂`, every site occupied by IDLA stopped upon leaving `Θ₁` is occupied by IDLA stopped upon
 leaving `Θ₂`, for the same walker paths. The argument is deterministic: induction on the walkers, with the invariant
 `A₁ ⊆ A₂` on the two aggregates.

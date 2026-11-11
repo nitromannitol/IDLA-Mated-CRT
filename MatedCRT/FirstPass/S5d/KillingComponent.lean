@@ -5,7 +5,7 @@ import MatedCRT.Proofs.Infra.RandomWalk
 /-!
 # Vanishing of the killed Green function across components
 
-Referee notes/fp-gaps/CHATGPT-5-1-gaps-referee.md §5.4: for a finite killing set `I ⊆ ℤ` and `a ∈ I` not joined to `0`
+For a finite killing set `I ⊆ ℤ` and `a ∈ I` not joined to `0`
 by a path inside `I`, the Green function vanishes: `G_I(a,0) = 0`. Proof: the maximum principle on the set `U` of
 vertices of `I` reached from `a` inside `I` (`nonpos_of_lapSum_nonneg`, applied to `±G_I(·,0)`), with
 `Δ G_I(·,0) = -δ_0 = 0` on `U` (`WalkPotential.mLaplacian_greenFn`) and `G_I(·,0) = 0` off `I`

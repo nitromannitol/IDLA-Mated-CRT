@@ -3,9 +3,9 @@ import MatedCRT.FirstPass.S5c.GreenCount
 import MatedCRT.Steps.Sec5.IDLALowerBound
 
 /-!
-# The discrete cluster inner bound (G1c) from the compact-containment step (task fp-S5d-5-1-stopped-repair)
+# The discrete cluster inner bound (G1c) from the compact-containment step
 
-Referee notes/fp-gaps/CHATGPT-5-1-gaps-referee.md section 3: the strict discrete cluster `matedDiscreteCluster`
+The strict discrete cluster `matedDiscreteCluster`
 (the surplus set `S_ε = {v_ε > 0}`) covers the inner neighbourhood `K_s = B⁻_s(Λ_t)` by `fillCells` with probability tending
 to one on `{t < T}` (compact-containment statement (3.1)). This file reduces `DiscreteClusterInnerBoundStep`
 (Steps/Sec5/IDLALowerBound.lean:57) to (3.1), `StrictClusterCompactContainmentStep` (NEW, OPEN), and to the cell-size

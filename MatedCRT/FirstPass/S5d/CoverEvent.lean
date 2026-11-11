@@ -8,7 +8,7 @@ Probability bookkeeping around the deterministic covering lemma. Inputs, all as 
 `CellSizeEstimateStmt 𝒮` (Lemma 2.8, paper line 669) with `ζ = 1/(2+γ)²`, and the cover event `TendsToOneOn`
 for the cluster `L` (Proposition 4.2 at `δ/2`, paper line 1611, when `L` is the divisible sandpile cluster).
 The cluster `L` is a parameter: the sets `O₁` of Lemma 5.2 are taken inside `L` by the caller, which is
-where the gaps G1a/G1b/G1c of `notes/z5.md` enter, not here.
+where the gaps G1a/G1b/G1c enter, not here.
 
 Deterministic covering: `innerNbhd_subset_fillCells_vertexThresholdSet` reduces to
 `MatedCRT.IDLALowerBound.innerNbhd_subset_fillCells_deep` (`MatedCRT/Proofs/Sec5/IDLALowerBound/Geometry.lean`,

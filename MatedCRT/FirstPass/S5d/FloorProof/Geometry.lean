@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S5d.FloorCells
 import MatedCRT.Defs.Map
 
 /-!
-# Deterministic cell geometry for the floor of Proposition 5.1 (task fp-S5d-5-1, floor note Part I, Sections 6-8)
+# Deterministic cell geometry for the floor of Proposition 5.1
 
 Deterministic facts about one mesh `ε` and one outcome of the mated-CRT map `η`:
 * an exclusive point `x` of a cell (lying in no other cell, `S5c.exists_exclusive_mem_cell`) has `a^ε_x = a`

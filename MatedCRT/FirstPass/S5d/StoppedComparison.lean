@@ -8,7 +8,7 @@ import MatedCRT.Proofs.Infra.RandomWalk
 /-!
 # Deterministic comparison for the stopped clause of Proposition 5.1
 
-Referee notes/fp-gaps/CHATGPT-5-1-gaps-referee.md §5.2 (maximum-principle comparison (5.3)), §5.2 (5.5).
+Maximum-principle comparison (5.3), (5.5).
 For a finite killing set `I ⊆ ℤ` (the intersection `S_ε ∩ V^ε(Λ_t)` of the referee) and the Green combination
 `J_I(a) = κ g_I(a,0) - ∑_{b∈I} g_I(a,b)`, `g_I = G_I / deg` (Armitage-Gardiner Green kernel), the discrete
 Laplacian of `J_I` on `I` is `1/deg(a) - κ 1_{a=0}/deg(0)`. A surplus `v` with the same Laplacian on `I` and
