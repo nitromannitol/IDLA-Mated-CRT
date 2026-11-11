@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.S5u
 import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 
 /-!
-# Closure of Proposition 5.1 from the canonical Berestycki–Gwynne Green bound (fp-S5-canon, z2)
+# Closure of Proposition 5.1 from the canonical Berestycki–Gwynne Green bound
 
 `closed_5_1_canon` has the hypotheses and the conclusion of `closed_5_1_cited`
 (`MatedCRT/FirstPass/Closure/Prop51Cited.lean`), except one hypothesis. The cited Green-function crude bound
@@ -41,7 +41,7 @@ theorem closed_5_1_canon {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLE
     (hGBC : FrozenGreenBallCentre) (hconf : FrozenHBInitialConfinement)
     (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
     (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion)
-    -- TRUE steps (chat 180 §3)
+    -- TRUE steps
     (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
     -- External input
     (hscale : QuantumConeScalingInput)
@@ -79,7 +79,7 @@ theorem closed_5_1_canon_noCell {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Meas
     (hGBC : FrozenGreenBallCentre) (hconf : FrozenHBInitialConfinement)
     (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
     (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion)
-    -- TRUE steps (chat 180 §3)
+    -- TRUE steps
     (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
     -- External input
     (hscale : QuantumConeScalingInput)

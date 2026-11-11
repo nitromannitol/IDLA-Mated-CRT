@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.Closure.Prop51
 import MatedCRT.FirstPass.Frozen.S5Cited
 
 /-!
-# Closure of Proposition 5.1 with the cited inputs frozen (fp-S5-uitems-and-cited-freeze, z2)
+# Closure of Proposition 5.1 with the cited inputs frozen
 
 `closed_5_1_cited` has the hypotheses and the conclusion of `closed_5_1` (`MatedCRT/FirstPass/Closure/Prop51.lean`). The
 cited Harmonic-Balls and BG20 gap hypotheses are typed by their FIRST-PASS FROZEN names from
@@ -10,7 +10,7 @@ cited Harmonic-Balls and BG20 gap hypotheses are typed by their FIRST-PASS FROZE
 A frozen name is definitionally its Stmt, so the proof is `closed_5_1` itself.
 
 Still plain Stmt gaps (not frozen by this file): `h27 : VolumeGrowthStmt` (its provider
-`volumeGrowthStmt_of_berestyckiGwynne` needs `FrozenBerestyckiGwynneConeBallMass`; wiring it is an operator decision),
+`volumeGrowthStmt_of_berestyckiGwynne` needs `FrozenBerestyckiGwynneConeBallMass`; wiring it is still pending),
 `h22`, `h24c`, `h32`, `hSup`, `hCons`, `hMono`, `hCompat`, `hThm11`.
 -/
 
@@ -32,7 +32,7 @@ theorem closed_5_1_cited {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLE
     (hGBC : FrozenGreenBallCentre) (hconf : FrozenHBInitialConfinement)
     (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
     (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion)
-    -- TRUE steps (chat 180 §3)
+    -- TRUE steps
     (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
     -- External input
     (hscale : QuantumConeScalingInput)

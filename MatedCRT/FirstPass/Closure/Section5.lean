@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.S5S6S7
 import MatedCRT.FirstPass.SLERef.Certified
 
 /-!
-# Closed results, Section 5 (task fp-Closure-counted-results, fp-Closure-round3, worker z1)
+# Closed results, Section 5
 
-Closed for a model `𝒮` with certified reference model `hC : CertifiedReferenceModel ν 𝒮` (chat 186): 5.2 (`closed_5_2`,
+Closed for a model `𝒮` with certified reference model `hC : CertifiedReferenceModel ν 𝒮`: 5.2 (`closed_5_2`,
 input `hC.cellSizeEstimate`), 5.4 (`closed_5_4`, inputs `hC.greenKernelLowerBound`, `hC.countingMeasureConvergence` and the
 explicit `GreenFunctionCrudeBoundStmt 𝒮`). Not closed: 5.3 (gaps G9 and 4.1); 5.1 is not in the counted set.
 -/

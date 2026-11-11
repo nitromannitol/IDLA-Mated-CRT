@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.S4S6c
 import MatedCRT.FirstPass.SLERef.Certified
 
 /-!
-# Closure of Proposition 5.1 (fp-Closure51-closed-5-1, z12)
+# Closure of Proposition 5.1
 
 `closed_5_1 ν hC`: the conclusion `IDLALowerBoundStmt 𝒮` of `firstPass_5_1` (`FirstPass/S5q.lean`), for a model `𝒮`
 with certified reference model `hC : CertifiedReferenceModel ν 𝒮` (`FirstPass/SLERef/Certified.lean`).
@@ -19,7 +19,7 @@ Discharged from `hC` and the closed theorems of `FirstPass/Closure`:
 
 Kept as explicit hypotheses:
 * FIRST-PASS FROZEN inputs (`Frozen/`), `hcell : FrozenAdjacentCellsMeetAe 𝒮` is the input of `closed_2_13`;
-* the two TRUE steps `hE1`, `hE2` (chat 180 §3);
+* the two TRUE steps `hE1`, `hE2`;
 * `hscale` (External, `QuantumConeScalingInput`);
 * GAPS, not discharged here (every one is a real gap; see the report):
   - `h27 : VolumeGrowthStmt`: provider `volumeGrowthStmt_of_berestyckiGwynne` needs `BerestyckiGwynneConeBallMassStmt`
@@ -52,7 +52,7 @@ theorem closed_5_1 {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCo
     (hGBC : FrozenGreenBallCentre) (hconf : FrozenHBInitialConfinement)
     (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
     (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion)
-    -- TRUE steps (chat 180 §3)
+    -- TRUE steps
     (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
     -- External input
     (hscale : QuantumConeScalingInput)
