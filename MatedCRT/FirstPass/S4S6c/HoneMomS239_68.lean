@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.S4S6c.BallExitMeas68
 import MatedCRT.FirstPass.S4S6c.ShellHoneInst68
 
 /-!
-# The rho_mom form of the exit-moment input (fp-S4S6c-momS-239, chat 239 section 4)
+# The rho_mom form of the exit-moment input
 
 Chat 239 section 4 asks for the leaf binder `hmomS` at a deterministic radius `ρmom < 1`:
 `S3cBridge.ExitMomentClause m μ η ε α C_exit ρmom`, with the test balls contained in `ball 0 ρmom`.
@@ -28,7 +28,7 @@ open scoped ENNReal NNReal
 top-level statement `ExitTimeUpperBoundStmt 𝒮` (Draft), for every valid mated-CRT environment `S` the event
 `{ω | ExitMomentClause (S.mult ε ω) (S.μ ω) (S.η ω) ε α C ρmom}` has polynomially high probability, with the
 exponent `α` and the constant `C = C_exit(ρmom)` chosen before the environment. The constant depends on `ρmom`
-only, so it is fixed before the scale `s₀` of the hone (chat 239 section 4). -/
+only, so it is fixed before the scale `s₀` of the hone. -/
 theorem exitMomentClause_rhoMom_polyHighProb {𝒮 : SpaceFillingSLEModel} (hE : ExitTimeUpperBoundStmt 𝒮)
     {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {ρmom : ℝ} (hρ0 : 0 < ρmom) (hρ1 : ρmom < 1) :
     ∃ α : ℝ, 0 < α ∧ ∃ C : ℝ, 0 < C ∧
@@ -41,7 +41,7 @@ theorem exitMomentClause_rhoMom_polyHighProb {𝒮 : SpaceFillingSLEModel} (hE :
     polyHighProb_of_subset_event (hPHP Ω S hS) (fun _ _ hω => hω.1)⟩
 
 /-- **Test-ball containment with a radius margin.** If `‖x‖ + r ≤ ρ`, the test ball `ball x r` lies in `ball 0 ρ`.
-The margin is the input of the containment step (chat 239 section 4): the centre `x` is a vertex of the exit cell,
+The margin is the input of the containment step: the centre `x` is a vertex of the exit cell,
 and the cell diameter plus the test radius is below `ρmom`. -/
 theorem testBall_sub_ballRho {x : ℂ} {r ρ : ℝ} (h : ‖x‖ + r ≤ ρ) : ball x r ⊆ ball (0 : ℂ) ρ :=
   Metric.ball_subset_ball' (by rw [dist_zero_right]; linarith)
@@ -61,7 +61,7 @@ open MatedCRT.Lemma68ShellIdent MatedCRT.Lemma68OmegaStop
 finite-domain domination and the radius bound.** The shell exit `shellExit k` and the centre radius
 `Rf ∘ shellCentre k` are inserted into `BallExitMeas68.hmom_pair_of_finiteDomain_meas`. The named inputs are
 `hR` (the radius is `𝓕_{shellExit k}`-measurable), `hTdom` (the shell exit is dominated by the exit time of a finite
-vertex set) and `hRbd` (the radius is bounded on `{shellExit k < ∞}`); `hTdom` and `hRbd` stay with q1 (60e). -/
+vertex set) and `hRbd` (the radius is bounded on `{shellExit k < ∞}`); `hTdom` and `hRbd` stay open. -/
 theorem shell_hmom_pair {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m)
     (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0)
     {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ))
@@ -83,8 +83,8 @@ theorem shell_hmom_pair {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m)
     (R := fun k w => Rf (shellCentre ε η Kset r s d k w)) hlf hcons hη hp hε a
     (fun k => isStoppingTime_shellExit ε η Kset r s d Rf k) hR hTdom hRbd k
 
-/-- **Test-ball containment at the exit vertex (chat 239 section 4, step (2)).** The margin `hx1` at the
-deterministic radius `ρmom` (q1's binder, ShellHoneInst68 `hx1` at `ρmom`) gives
+/-- **Test-ball containment at the exit vertex.** The margin `hx1` at the
+deterministic radius `ρmom` (ShellHoneInst68 `hx1` at `ρmom`) gives
 `ball (vertexPoint ε η v) (R/4) ⊆ ball 0 ρmom`, where `v` is the exit vertex and `R = Rf (shellCentre k)`. -/
 theorem exitBall_sub_ballRho {ε : ℝ} {η : ℝ → ℂ} {Kset : Set ℂ} {Rf : ℂ → ℝ} {r s d ρmom : ℝ} (k : ℕ)
     (ω : ℕ → ℤ)
@@ -95,7 +95,7 @@ theorem exitBall_sub_ballRho {ε : ℝ} {η : ℝ → ℂ} {Kset : Set ℂ} {Rf 
   apply testBall_sub_ballRho
   linarith
 
-/-- **`hmomS` at the deterministic radius `ρmom`, in q1's binder form (`D ⊆ ball 0 ρmom`).** The pathwise clause
+/-- **`hmomS` at the deterministic radius `ρmom`, in the binder form (`D ⊆ ball 0 ρmom`).** The pathwise clause
 `ExitMomentClause m μ η ε α C_exit ρmom` of the environment (the event of `exitMomentClause_rhoMom_polyHighProb`) gives,
 for every index `k ≤ n` and `P`-almost every walk `x` in `prefixSet` of the shell exit, the conclusion of the leaf
 binder `hmomS` (ShellHoneInst68.lean:127) with the test sets in `ball 0 ρmom` in place of `ball 0 1`. -/

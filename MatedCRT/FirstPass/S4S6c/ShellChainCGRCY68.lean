@@ -2,19 +2,18 @@ import MatedCRT.FirstPass.S4S6c.ShellChainCGRCX68
 import MatedCRT.FirstPass.LICGRCY68
 
 /-!
-# The Y counting CG chain: split Green exponent and volume-guarded radius (fp-S4S6c-chain-y, lead li 20:05 UTC)
+# The Y counting CG chain: split Green exponent and volume-guarded radius
 
 Copy of the X chain of `ShellChainCGRCX68.lean` consuming the one-test input
-`LICGRCY68.ShellOneTestOrderAeCGRCYStmt` (Codex 19:56, notes/fp-gaps/CODEX-idla-hOne-residuals-sol-20261110.md
-Q2a steps 3-4 and Q4). Three changes with respect to the X chain:
+`LICGRCY68.ShellOneTestOrderAeCGRCYStmt`. Three changes with respect to the X chain:
 
 * The radius clause carries the volume guard `LICGRCY68.VolReady68 S γ ζ r ω` after `ω ∈ Ew (dyadicD r)`. At the guard
   assembly the radius bound is `dd ω = min R (min (dd₀ ω) ((tVol ω / (8 · 2^a))^(1/(1+ζ))))`, with `tVol` the
-  field-measurable volume cutoff `FieldVolCutoffStmt` (Codex Q2a step 5; q2's `VolCutoffField68.lean:171`, derived from `VolumeGrowthStmt` in `Closed6x68Y.lean`).
+  field-measurable volume cutoff `FieldVolCutoffStmt` (`VolCutoffField68.lean:171`, derived from `VolumeGrowthStmt` in `Closed6x68Y.lean`).
 * A second Green exponent `ωG` with `2 * ω₀ < ωG` (`LICGRCY68` (75a)). The mesh exponent `ω₀` of
   `CountingMeshEventsHiStmt` is chosen with `4 * ω₀ ≤ ωG`, so that `greenLowEvent68_polyHighProb` (UniformEvents.lean:74)
   gives `PolyHighProb (greenLowEvent68 S ωG ρ CG)` with the same `CG` as at `ω₀`.
-* The good-annulus constant `C` is free: no comparison with `CG` (Codex Q4; `WindowPrevLeCGStmt` is false).
+* The good-annulus constant `C` is free: no comparison with `CG` (`WindowPrevLeCGStmt` is false).
 
 Terminology: Armstrong-Kuusi-Mourrat (good annuli, shell order), Duplantier-Sheffield (LQG measure), Armitage-Gardiner (balls).
 -/
@@ -32,9 +31,9 @@ open MatedCRT.Lemma68Omega MatedCRT.Lemma68GeometryId MatedCRT.Lemma68Admissible
 open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68ChainAe
 open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 
-/-- **Field-measurable volume cutoff (named input; Codex Q2a step 5).** For `γ ∈ (0,2)`, every valid model and every
+/-- **Field-measurable volume cutoff (named input).** For `γ ∈ (0,2)`, every valid model and every
 `ω` off a null set, there is a field-measurable radius `tVol ω > 0` below which every ball `B(z, δ)`, `z ∈ B(0, 1-δ)`,
-has mass at least `δ^b` with `b = (2+γ)²/2 + 1`. Discharged from `VolumeGrowthStmt` by q2's `VolCutoffField68.volume_lower_cutoff_fieldMeasurable_vr` (`Closed6x68Y.lean`). -/
+has mass at least `δ^b` with `b = (2+γ)²/2 + 1`. Discharged from `VolumeGrowthStmt` by `VolCutoffField68.volume_lower_cutoff_fieldMeasurable_vr` (`Closed6x68Y.lean`). -/
 def FieldVolCutoffStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
     ∃ tVol : Ω → ℝ, Measurable[S.fieldSigma] tVol ∧ (∀ ω, 0 < tVol ω) ∧
@@ -55,7 +54,7 @@ def CountingMeshEventsHiStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
         HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE) ∧
         HarmonicBalls.PolyHighProb S.P (HoneModelInputs68.countingGoodEvent S α β ρ)
 
-/-- **`CountingMeshEventsHiStmt` from the Draft inputs (fp-S4S6c-chain-y).** Copy of `countingMeshEventsEpsStmt_of_draft`
+/-- **`CountingMeshEventsHiStmt` from the Draft inputs.** Copy of `countingMeshEventsEpsStmt_of_draft`
 (Guard68S10.lean:987) with the mesh exponent `ω₀ = min (ωG/4) (min (α/(4β⁻)) (q/4))`, where `ωG` is the Draft Green
 exponent of `greenLowEvent68_polyHighProb`. The old choice `ω₀ = min ωG (…)` gives no room for `2 * ω₀ < ωG`. -/
 theorem countingMeshEventsHi_of_draft (𝒮 : SpaceFillingSLEModel) (hG : GreenKernelLowerBoundStmt 𝒮)
@@ -101,7 +100,7 @@ theorem countingMeshEventsHi_of_draft (𝒮 : SpaceFillingSLEModel) (hG : GreenK
   · exact (hKS Ω S hS).1
   · exact (hKS Ω S hS).2
 
-/-- **`ShellChainCGRCXStmt` with the Y one-test input (fp-S4S6c-chain-y).** The X chain statement with: the Green exponent
+/-- **`ShellChainCGRCXStmt` with the Y one-test input.** The X chain statement with: the Green exponent
 `ωG` (`2 * ω₀ < ωG`, universal, its `PolyHighProb` at `ρ`, `CG` as at `ω₀`), the constant `εG` (from the one-test input,
 after `q0`), `ε ≤ εG` and the almost sure membership `ω ∈ greenLowEvent68 S ωG ρ CG ε`, and the volume guard
 `VolReady68 S γ ζ r ω` in the radius clause. -/
@@ -133,7 +132,7 @@ def ShellChainCGRCYStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
               ∃ N : ℕ, countConst ζ * r ^ (-ζ) ≤ (N : ℝ) ∧
                 Lemma68Config.exitQ S ε ω r i ≤ (1 - q0 / (1 + Real.log (1 / r)) ^ 2) ^ N
 
-/-- **`ShellChainCGRCYStmt` from the Y one-test order input (fp-S4S6c-chain-y).** Copy of `shellChainCGRCX_of_core`
+/-- **`ShellChainCGRCYStmt` from the Y one-test order input.** Copy of `shellChainCGRCX_of_core`
 (ShellChainCGRCX68.lean:122) and `shellChainCoreCGRCX_of_oneTestOrderCGRCX` (:70): the window constants `C, C'` come from
 `hprev` (free, no `C ≤ CG`), the one-test input supplies `q0, εG` and the shell order, the exit step is
 `Lemma68ChainGlue.exitQ_core_step` as in the X chain. -/
@@ -165,10 +164,10 @@ theorem shellChainCGRCY_of_oneTestOrderCGRCY {𝒮 : SpaceFillingSLEModel} (hpre
   exact Lemma68ChainGlue.exitQ_core_step S ε ω ζ q0 r Rf i hζ0 hζ1 hq0 hq1 hr0 hr1' (hr2.trans hRA) hone hsh
     (hmult ε hε).1 (hmult ε hε).2
 
-/-- **`GuardProbStmt` from the Y counting CG chain (fp-S4S6c-chain-y).** Copy of `guardProbStmtCGRCX_of_chainCGRCX`
+/-- **`GuardProbStmt` from the Y counting CG chain.** Copy of `guardProbStmtCGRCX_of_chainCGRCX`
 (ShellChainCGRCX68.lean:147) with `CountingMeshEventsHiStmt`, the Green event at `ωG` (almost sure, `ε ≤ εG`) and the
 radius `dd ω = min R (min (dd₀ ω) ((tVol ω / (8·2^a))^(1/(1+ζ))))`. The almost sure event is `goodField ∩ {volume cutoff at
-tVol ω}`; `r ≤ dd ω` gives `VolReady68 S γ ζ r ω` with `t = tVol ω` (Codex Q2a step 4). -/
+tVol ω}`; `r ≤ dd ω` gives `VolReady68 S γ ζ r ω` with `t = tVol ω`. -/
 theorem guardProbStmtCGRCY_of_chainCGRCY (𝒮 : SpaceFillingSLEModel)
     (hMesh : CountingMeshEventsHiStmt 𝒮) (hVol : FieldVolCutoffStmt 𝒮) (hChain : ShellChainCGRCYStmt 𝒮) :
     Lemma68Uniform.GuardProbStmt 𝒮 := by
@@ -277,7 +276,7 @@ theorem guardProbStmtCGRCY_of_chainCGRCY (𝒮 : SpaceFillingSLEModel)
     (fun ε ω r i => Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i)
     (Lemma68Config.exitQ S) hpt'
 
-/-- **`UniformConstantOrderLowerBoundStmt` from the Y counting CG chain (fp-S4S6c-chain-y).** -/
+/-- **`UniformConstantOrderLowerBoundStmt` from the Y counting CG chain.** -/
 theorem uniformConstantOrderLowerBoundCGRCY_of_chain (𝒮 : SpaceFillingSLEModel)
     (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮)
     (hK : Lemma68Guard10.CountingAtExitAlphaStmt 𝒮) (hVol : FieldVolCutoffStmt 𝒮)
@@ -289,7 +288,7 @@ end Lemma68CGRCY
 
 namespace Lemma68ShellTopCGRCY
 
-/-- **`UniformConstantOrderLowerBoundStmt` (hU) from the Y counting CG one-test order input (fp-S4S6c-chain-y).**
+/-- **`UniformConstantOrderLowerBoundStmt` (hU) from the Y counting CG one-test order input.**
 Copy of `Lemma68ShellTopCGRCX.hU_top_cgRCX` (ShellChainCGRCX68.lean:256) with `hOne` the Y form
 `LICGRCY68.ShellOneTestOrderAeCGRCYStmt` and the volume cutoff `hVol : FieldVolCutoffStmt 𝒮` as an extra input. -/
 theorem hU_top_cgRCY {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮)

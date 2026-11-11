@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.S4S6c.HoneSetupAdapt68
 import MatedCRT.FirstPass.S4S6c.Guard68S10
 
 /-!
-# The CG residuals `ShellCGResGreen` and `ShellCGResWalk` (fp-S4S6c-cgres-green-walk, z11)
+# The CG residuals `ShellCGResGreen` and `ShellCGResWalk`
 
 STEP A. `resGreen_pt` and `resWalk_pt` have as binders only the individual ω-level clauses of `ShellPtPremCG`
 that they use, the `FullAdmAt` premise, and the named inputs listed below. Their conclusions are the bodies of
@@ -108,7 +108,7 @@ theorem resWalk_pt {γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ} {Ω : Type} 
     (hdeg : ∀ v : ℤ, edgeMeasure (S.mult ε ω) v univ ≠ 0 ∧ edgeMeasure (S.mult ε ω) v univ ≠ ⊤)
     (hadj : ∀ u v : ℤ, S.mult ε ω u v ≠ 0 → (closure (cell ε (S.η ω) u) ∩ closure (cell ε (S.η ω) v)).Nonempty)
     (hadjAll : ∀ ε' : ℝ, 0 < ε' → ∀ u v : ℤ, S.mult ε' ω u v ≠ 0 → (cell ε' (S.η ω) u ∩ cell ε' (S.η ω) v).Nonempty)
-    -- named input G1: the walk exponent of `hWalk_pw_g` (B1EnvPwG68.lean:120; ChatGPT request 75a)
+    -- named input G1: the walk exponent of `hWalk_pw_g` (B1EnvPwG68.lean:120)
     (ωm : ℝ) (hωm : 2 * ωm < ω₀) (hr10m : 10 * ε ^ ωm ≤ r)
     -- named input: the univ mesh of the walk producer (HoneWalkAe68.lean:111)
     (hmesh : CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ)
@@ -148,7 +148,7 @@ theorem resWalk_pt {γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ} {Ω : Type} 
 
 The premise `ShellPtPremCG` (post-b51e0dc: `β`, `countingMeshEventR`, no full-support clause) is destructured into the
 clauses of `resGreen_pt` / `resWalk_pt`. The inputs that the premise does not carry are named hypotheses with their
-exact types (BLOCKED, see the report). -/
+exact types (BLOCKED). -/
 
 /-- **`ShellCGResGreen` (`shellCGResGreen_holds`), conditional on the named Green input `hGreenE`.** The Lemma 2.16
 good event at the exponent `e = 2/(2+γ)^2 - ζ` is not a clause of `ShellPtPremCG`: `countingMeshEventR` carries only
@@ -166,7 +166,7 @@ theorem shellCGResGreen_holds {𝒮 : SpaceFillingSLEModel}
   exact resGreen_pt S ω i hω0 hωe hε0 hrε (le_trans hrR hRρ) hρ1 hGE hFA
 
 /-- **`ShellCGResWalk` (`shellCGResWalk_holds`), conditional on the named inputs G1 and `hMesh`.**
-G1 (`hG1`): the walk exponent `ωm` with `2ωm < ω₀` and `10 ε^ωm ≤ r` (ChatGPT request 75a, unanswered).
+G1 (`hG1`): the walk exponent `ωm` with `2ωm < ω₀` and `10 ε^ωm ≤ r` (unanswered).
 **REFUTED as stated, do not instantiate:** for `0 < ε < 1` and `r = 10 ε^ω₀` (allowed by the premise, whose only lower
 bound on `r` is `10 ε^ω₀ ≤ r`), `10 ε^ωm ≤ r` gives `ωm ≥ ω₀`, contradicting `2ωm < ω₀`. The split route
 (`ε^e ≤ ε^(2ω₀) ≤ (r/10)^2` from the premise clause `2ω₀ < e`) needs a lower bound `r^2/100 ≤ winRf/8` instead.

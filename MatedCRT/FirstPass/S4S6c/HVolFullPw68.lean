@@ -3,13 +3,13 @@ import MatedCRT.FirstPass.S4S6c.HVolCutoff239_68
 
 /-!
 # FIRST PASS S4S6c, HVolFullPw68: pointwise volume and full-support inputs of `shellOneTest_at_of_goodEnv'`
-(task fp-S4S6c-volfull-pw-docs, worker z9; residuals `ShellResVolC`, `ShellResVolY`, `ShellResFull` of
-ShellCorePw68.lean, reports/z5.md l.17-19)
+(residuals `ShellResVolC`, `ShellResVolY`, `ShellResFull` of
+ShellCorePw68.lean, l.17-19)
 
 * `hVolC_pw`, `hVolY_pw`: the binders `hVolC`, `hVolY` of `shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:803) at ONE
   environment `ω`. The environment fact is the value at `ω` of the measurable cutoff of `volume_bounds_measurable_ae`
   (HVolCutoff239_68.lean:206), given as the explicit pointwise hypothesis `hcut` with the cutoff `t`. The walk facts are the
-  binders `hRr`, `hEl` of the same theorem and the exit-vertex centre bound `hc` (no written argument yet: see the report).
+  binders `hRr`, `hEl` of the same theorem and the exit-vertex centre bound `hc`.
 * `hVolY_ae_pw`: the a.s. form of the second volume input, from `volume_bounds_of_cutoff` with the centre `0`.
 * `fullSupport_ae`: the full support of `S.μ ω` almost surely (`MatedCRT.Field.wholePlane_lqg_full_support_ae`).
 * `hfull_pw`: the binder `hfull` of `shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:923) at one `ω`, from the pointwise

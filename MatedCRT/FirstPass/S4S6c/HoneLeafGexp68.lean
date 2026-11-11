@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.HoneLeafAe68
 
 /-!
-# Free Green exponent variants of the exponent-split walk chain (fp-S4S6c-green-exp-generic, q1)
+# Free Green exponent variants of the exponent-split walk chain
 
 Variants (suffix `_gexp`) of `hone_exitQ_walk_of_env_repaired_rho_split` (HspRepairSplit68),
 `hone_exitQ_walk_of_env_cellR_rho_split` (HoneCellR68), `hone_exitQ_walk_of_env_direct_ae_rho_split` and
@@ -22,7 +22,7 @@ open Lemma68WalkBridge (coordFiltration)
 open Lemma68ShellParam (measurable_coord_toNat_stop)
 namespace Lemma68Window
 
-/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_repaired` (fp-S4S6c-hsp-rhomom): the radius `1` of the walk
+/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_repaired`: the radius `1` of the walk
 chain is the parameter `ρmom` (`hx1`, `hVolY`/`hvol2`, `hmomS`, `hρS` read `ρmom` in place of `1`).
 The radius-1 name is the wrapper at `ρmom := 1`. -/
 theorem hone_exitQ_walk_of_env_repaired_rho_gexp {ρmom : ℝ} {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
@@ -156,7 +156,7 @@ open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68WalkBridge MatedCRT.Lemma68ChainA
 open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 open MatedCRT.Lemma68ShellHoneInst
 
-/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_cellR_split` (fp-S4S6c-hsp-rhomom): the radius `1` of the walk
+/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_cellR_split`: the radius `1` of the walk
 chain is the parameter `ρmom` (`hx1`, `hVolY`/`hvol2`, `hmomS`, `hρS` read `ρmom` in place of `1`).
 The radius-1 name is the wrapper at `ρmom := 1`. -/
 theorem hone_exitQ_walk_of_env_cellR_rho_gexp {ρmom : ℝ} {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
@@ -334,7 +334,7 @@ open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68WalkBridge MatedCRT.Lemma68ChainA
 open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 open MatedCRT.Lemma68ShellHoneInst
 
-/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_direct_ae` (fp-S4S6c-hsp-rhomom): the radius `1` of the walk
+/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_direct_ae`: the radius `1` of the walk
 chain is the parameter `ρmom` (`hx1`, `hVolY`/`hvol2`, `hmomS`, `hρS` read `ρmom` in place of `1`).
 The radius-1 name is the wrapper at `ρmom := 1`. -/
 theorem hone_exitQ_walk_of_env_direct_ae_rho_gexp {ρmom : ℝ} {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)

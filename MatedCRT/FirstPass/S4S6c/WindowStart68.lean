@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S6h.Core
 import MatedCRT.FirstPass.S4S6c.ShellOrderWindow68
 
 /-!
-# The start cell meets the frontier of the `r/2`-thickening, under the full guard (fp-S4S6c-window-hstart)
+# The start cell meets the frontier of the `r/2`-thickening, under the full guard
 
 The binder `hstart` of `shellOrderAe_window` (ShellOrderWindow68.lean:39-40) asks that the start cell
 `H^ε_a` (`a = i.a`) meets the frontier of `thickening (r/2) (fillCells ε η Θ)` (`Θ = i.Θ`).
@@ -21,7 +21,7 @@ The binder `hstart` of `shellOrderAe_window` (ShellOrderWindow68.lean:39-40) ask
 
 The unguarded `hstart` is NOT provable: if `i.a ∈ i.Θ` then `H_a ⊆ fillCells Θ ⊆ thickening (r/2) (fillCells Θ)`, an open
 set, so `H_a` misses its frontier; and if `dd_a > r/2` the cell is too far from `K` to reach distance `r/2`. Hence the
-binder of `shellOrderAe_window` must carry the guard `FullAdm` (the same guard as `htest` and `hde`). See the report.
+binder of `shellOrderAe_window` must carry the guard `FullAdm` (the same guard as `htest` and `hde`). 
 -/
 
 open MeasureTheory Set Filter Topology Metric

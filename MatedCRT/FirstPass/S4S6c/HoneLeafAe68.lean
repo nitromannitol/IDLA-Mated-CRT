@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.S4S6c.HoneRcell68
 import MatedCRT.FirstPass.S4S6c.BallExitMeasAe68
 
 /-!
-# The one-test leaf with almost-sure walk binders (q1, fp-S4S6c-leaf-ae)
+# The one-test leaf with almost-sure walk binders
 
 `shellOneTest_of_direct_ae` has the conclusion of `shellOneTest_of_direct_reduced68` (HoneReduced68.lean:41). Every binder of
 the form `∀ k, ∀ ω ∈ prefixSet … (T k) τU, P k ω` is restated as `∀ k ≤ n, ∀ᵐ x ∂srwLaw m a, x ∈ prefixSet … → P k x`
@@ -18,7 +18,7 @@ the form `∀ k, ∀ ω ∈ prefixSet … (T k) τU, P k ω` is restated as `∀
   `R' k := Rn R n k` is `R k` for `k ≤ n` and `0` beyond.
 * The conclusion is transferred back on `k ≤ n` by the congruence `condExp_testInd_congr` and `x ∉ Bs` a.s.
 
-No edit of another worker's file. Terminology: Armstrong-Kuusi-Mourrat (shells, one-test bound), Armitage-Gardiner (exit times).
+ Terminology: Armstrong-Kuusi-Mourrat (shells, one-test bound), Armitage-Gardiner (exit times).
 -/
 
 open HarmonicBalls (annulus)
@@ -152,7 +152,7 @@ theorem condExp_testInd_congr (m : ℤ → ℤ → ℕ) (a : ℤ) (A : Set ℤ) 
       = (srwLaw m a)[testInd A ε η T' R' | hT'.measurableSpace] x := by
   subst hTT; subst hRR; rfl
 
-/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_direct_ae` (fp-S4S6c-hsp-rhomom): the radius `1` of the walk
+/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_direct_ae`: the radius `1` of the walk
 chain is the parameter `ρmom` (`hx1`, `hVolY`/`hvol2`, `hmomS`, `hρS` read `ρmom` in place of `1`).
 The radius-1 name is the wrapper at `ρmom := 1`. -/
 theorem hone_exitQ_walk_of_env_direct_ae_rho {ρmom : ℝ} {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
@@ -465,7 +465,7 @@ theorem hone_exitQ_walk_of_env_direct_ae {γ ρc : ℝ} (K : Constants68 γ ρc)
     ζc hζc0 hζc1 ρcell hρgap hCellGood hRcell hωκ hεcell hfinE hsc hεα hεmass hb hx1 hmomS hgood hN
     hpos hdbl
 
-/-- Radius-`ρmom` generalization of `shellOneTest_of_direct_ae` (fp-S4S6c-hsp-rhomom): the radius `1` of the walk
+/-- Radius-`ρmom` generalization of `shellOneTest_of_direct_ae`: the radius `1` of the walk
 chain is the parameter `ρmom` (`hx1`, `hVolY`/`hvol2`, `hmomS`, `hρS` read `ρmom` in place of `1`).
 The radius-1 name is the wrapper at `ρmom := 1`. -/
 theorem shellOneTest_of_direct_ae_rho {ρmom : ℝ} {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
@@ -689,7 +689,7 @@ theorem shellOneTest_of_direct_ae {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : 
     hVolY hGreen hWalk hCountGood ζc hζc0 hζc1 ρcell hρgap hCellGood hRcell hωκ hεcell hsc hεα
     hεmass hb hx1 hmomS hgood hN hpos hdbl
 
-/-- **New leaf theorem on the `ρmom` chain (fp-S4S6c-hsp-rhomom).** Radius-`ρmom` version of
+/-- **New leaf theorem on the `ρmom` chain.** Radius-`ρmom` version of
 `shellOneTest_of_direct_ae_rcell`: the radius `1` of the walk chain is replaced by `ρmom` (`0 < ρmom < 1`); `hmomS`
 is over `D ⊆ ball 0 ρmom`, and `hx1`, `hVolY` at `ρmom - Rf/4`. The radius-1 statement
 `shellOneTest_of_direct_ae_rcell` is unchanged. -/
@@ -927,7 +927,7 @@ theorem shellOneTest_of_direct_ae_rcell {γ ρc : ℝ} (K : Constants68 γ ρc) 
       MatedCRT.Audit.StatementsSec3Sec5M1.finite_expectedExitTime hlf hcons (hfinD _ _) _)
     hsc hεα hεmass hb hx1 hmomS hgood hN hpos hdbl
 
-/-- **Radius-`ρmom` one-test bound with a finite stopped-range localization (chat 246 Q1, item 4).** Copy of
+/-- **Radius-`ρmom` one-test bound with a finite stopped-range localization (item 4).** Copy of
 `shellOneTest_of_direct_ae_rho` with `hTdom` replaced by `hstopFin` (the stopped shell vertex lies a.s. in a finite set)
 and the radius bound `hRbd` in its a.s. form; the moments come from `BallExitMeasAe68.hmom_pair_stopFin_ae`. -/
 theorem shellOneTest_of_direct_ae_stopFin_rho {ρmom : ℝ} {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
@@ -1044,7 +1044,7 @@ theorem shellOneTest_of_direct_ae_stopFin_rho {ρmom : ℝ} {γ ρc : ℝ} (K : 
       MatedCRT.Audit.StatementsSec3Sec5M1.finite_expectedExitTime hlf hcons (hfinD _ _) _)
     hsc hεα hεmass hb hx1 hmomS hgood hN hpos hdbl
 
-/-- Radius-1 wrapper of `shellOneTest_of_direct_ae_stopFin_rho` (chat 246 Q1). -/
+/-- Radius-1 wrapper of `shellOneTest_of_direct_ae_stopFin_rho`. -/
 theorem shellOneTest_of_direct_ae_stopFin {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
     (hprop : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε) (hεc : ε ≤ 16 * K.c0)
     {μ : Measure ℂ} [IsFiniteMeasureOnCompacts μ] (hμNull : ∀ v : ℂ, μ {v} = 0)
@@ -1149,7 +1149,7 @@ theorem shellOneTest_of_direct_ae_stopFin {γ ρc : ℝ} (K : Constants68 γ ρc
     hRmin hVolC hVolY hGreen hWalk hCountGood ζc hζc0 hζc1 ρcell hρgap hCellGood hRcell hωκ hεcell
     hsc hεα hεmass hb hx1 hmomS hgood hN hpos hdbl
 
-/-- **New leaf theorem on the `ρmom` chain without `hTdom` (chat 246 Q1).** Copy of
+/-- **New leaf theorem on the `ρmom` chain without `hTdom`.** Copy of
 `shellOneTest_of_direct_ae_rcell_rho` with `hstopFin`; the moments come from `hmom_pair_stopFin_ae`. -/
 theorem shellOneTest_of_direct_ae_rcell_stopFin_rho (ρmom : ℝ) (_hρmom0 : 0 < ρmom) (_hρmom1 : ρmom < 1) {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
     (hprop : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε) (hεc : ε ≤ 16 * K.c0)
@@ -1269,11 +1269,11 @@ theorem shellOneTest_of_direct_ae_rcell_stopFin_rho (ρmom : ℝ) (_hρmom0 : 0 
     hsc hεα hεmass hb hx1 hmomS hgood hN hpos hdbl
 
 
--- ## Exponent-split leaf variants (fp-S4S6c-exp-split, q1)
+-- ## Exponent-split leaf variants
 -- Copies of the hTdom-free and direct leaves with hWalk second conjunct `ε ^ κ ≤ R/8`, hGreen at scale κ,
 -- and `hκ2 : 2 * K.ω < κ` in place of `hωκ`. The old declarations are unchanged.
 
-/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_direct_ae` (fp-S4S6c-hsp-rhomom): the radius `1` of the walk
+/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_direct_ae`: the radius `1` of the walk
 chain is the parameter `ρmom` (`hx1`, `hVolY`/`hvol2`, `hmomS`, `hρS` read `ρmom` in place of `1`).
 The radius-1 name is the wrapper at `ρmom := 1`. -/
 theorem hone_exitQ_walk_of_env_direct_ae_rho_split {ρmom : ℝ} {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
@@ -1496,7 +1496,7 @@ theorem hone_exitQ_walk_of_env_direct_ae_rho_split {ρmom : ℝ} {γ ρc : ℝ} 
         hcong.symm
     _ ≤ 1 - q := hc
 
-/-- Radius-`ρmom` generalization of `shellOneTest_of_direct_ae_split` (fp-S4S6c-hsp-rhomom): the radius `1` of the walk
+/-- Radius-`ρmom` generalization of `shellOneTest_of_direct_ae_split`: the radius `1` of the walk
 chain is the parameter `ρmom` (`hx1`, `hVolY`/`hvol2`, `hmomS`, `hρS` read `ρmom` in place of `1`).
 The radius-1 name is the wrapper at `ρmom := 1`. -/
 theorem shellOneTest_of_direct_ae_rho_split {ρmom : ℝ} {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
@@ -1720,7 +1720,7 @@ theorem shellOneTest_of_direct_ae_split {γ ρc : ℝ} (K : Constants68 γ ρc) 
     hVolY ζc hζc0 hζc1 hGreen hWalk hCountGood ρcell hρgap hCellGood hRcell hκ2 hεcell hsc hεα
     hεmass hb hx1 hmomS hgood hN hpos hdbl
 
-/-- **Radius-`ρmom` one-test bound with a finite stopped-range localization (chat 246 Q1, item 4).** Copy of
+/-- **Radius-`ρmom` one-test bound with a finite stopped-range localization (item 4).** Copy of
 `shellOneTest_of_direct_ae_rho_split` with `hTdom` replaced by `hstopFin` (the stopped shell vertex lies a.s. in a finite set)
 and the radius bound `hRbd` in its a.s. form; the moments come from `BallExitMeasAe68.hmom_pair_stopFin_ae`. -/
 theorem shellOneTest_of_direct_ae_stopFin_rho_split {ρmom : ℝ} {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
@@ -1837,7 +1837,7 @@ theorem shellOneTest_of_direct_ae_stopFin_rho_split {ρmom : ℝ} {γ ρc : ℝ}
       MatedCRT.Audit.StatementsSec3Sec5M1.finite_expectedExitTime hlf hcons (hfinD _ _) _)
     hsc hεα hεmass hb hx1 hmomS hgood hN hpos hdbl
 
-/-- Radius-1 wrapper of `shellOneTest_of_direct_ae_stopFin_rho_split` (chat 246 Q1). -/
+/-- Radius-1 wrapper of `shellOneTest_of_direct_ae_stopFin_rho_split`. -/
 theorem shellOneTest_of_direct_ae_stopFin_split {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
     (hprop : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε) (hεc : ε ≤ 16 * K.c0)
     {μ : Measure ℂ} [IsFiniteMeasureOnCompacts μ] (hμNull : ∀ v : ℂ, μ {v} = 0)

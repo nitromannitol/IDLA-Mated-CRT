@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S4S6c.B1GoodEnvLoc68
 import MatedCRT.FirstPass.S4S6c.CGResLoc68
 
 /-!
-# CG-R counting swap with the `_g2` producer (fp-S4S6c-cgrcx-g2, z5)
+# CG-R counting swap with the `_g2` producer
 
 `MatedCRT.Lemma68B1Assembly.shellOneTest_at_of_goodEnv_loc_g2` (B1GoodEnvLoc68.lean:360) has no `hShellLoc`, `hEl`,
 `hstopFin`, `hRr`, `hVolC`, `hVolY`, `hsel`, `hPos`, `hx1`, `hcap`, `hCellGood` binders: they are discharged inside it.
@@ -72,7 +72,7 @@ def ShellCGResG2CLe (𝒮 : SpaceFillingSLEModel) : Prop :=
     ShellPtPremCG 𝒮 γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r S Ew ω →
     Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i → C ≤ CG
 
-/-- **The CG-R pointwise producer through `_g2` (fp-S4S6c-cgrcx-g2, z5).** `ShellOneTestPointwiseCGRXStmt` from
+/-- **The CG-R pointwise producer through `_g2`.** `ShellOneTestPointwiseCGRXStmt` from
 `shellOneTest_at_of_goodEnv_loc_g2`, with the binders listed in the module docstring. Copy of
 `shellOneTestPointwiseCGRX_of_goodEnv_loc_g` (ShellOneCGRCX68.lean) with the call replaced. The cutoff radius `t` and the
 cut `hcut` come from `ShellCGResG2Rad`, not from the Stmt premise `(∃ t, cut)`, which is therefore unused. -/
@@ -134,7 +134,7 @@ theorem shellOneTestPointwiseCGRX_of_g2 {𝒮 : SpaceFillingSLEModel}
 
 #print axioms MatedCRT.Lemma68CGRCXG2Core.shellOneTestPointwiseCGRX_of_g2
 
-/-- **The CG-R counting swap through `_g2` (fp-S4S6c-cgrcx-g2, z5).** `LICGRCX68.ShellOneTestOrderAeCGRCXStmt` from
+/-- **The CG-R counting swap through `_g2`.** `LICGRCX68.ShellOneTestOrderAeCGRCXStmt` from
 `shellOneTestPointwiseCGRX_of_g2` by the almost sure swap of `shellOneTestOrderAeCGRCX_of_open` (ShellOneCGRCX68.lean:158).
 Binders: `hVG` (Lemma 2.7, frozen) and the residuals `hTest` (79a), `hGreen` (75a), `hWalk` (75a G1), `hRad` (77a),
 `hCtr` (74a), `hCLe` (73a). -/

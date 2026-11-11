@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.S4S6c.CGResRr68
 import MatedCRT.FirstPass.S4S6c.CGResX1MomS68
 
 /-!
-# The a.s. counting swap of the CG pointwise producer (fp-S4S6c-cgrc-swap, z5)
+# The a.s. counting swap of the CG pointwise producer
 
 `shellOneTestOrderAeCGRC_of_res` proves `ShellOneTestOrderAeCGRCStmt` (ShellHoneInst68.lean:414, the counting one-test
 order input with the mesh clause `countingMeshEventR`) from the pointwise producer
@@ -64,15 +64,15 @@ theorem shellOneTestOrderAeCGRC_of_res {𝒮 : SpaceFillingSLEModel} (hVG : Volu
 
 #print axioms MatedCRT.Lemma68ShellOneCGRC.shellOneTestOrderAeCGRC_of_res
 
-/-- **The counting swap with the landed residual wrappers (`shellOneTestOrderAeCGRC_of_open`, fp-S4S6c-cgrc-swap, step 3).**
+/-- **The counting swap with the landed residual wrappers (`shellOneTestOrderAeCGRC_of_open`, step 3).**
 `ShellOneTestOrderAeCGRCStmt` (ShellHoneInst68.lean:414) from `shellOneTestOrderAeCGRC_of_res` with the five residuals whose
 unconditional wrappers have landed plugged in: `ShellCGResEl`, `ShellCGResStopFin` (`shellCGResEl_holds`,
 `shellCGResStopFin_holds`, CGResElSel68.lean, 1f1a4b4), `ShellCGResRr` (`shellCGResRr_holds`, CGResRr68.lean),
 `ShellCGResCountGood` (`shellCGResCountGood_holds`, CGResCount68.lean) and `ShellCGResX1` (`shellCGResX1_holds`,
-CGResX1MomS68.lean). The binders that stay open are the residual Props not yet discharged: `ShellCGResLoc` (z1),
-`ShellCGResVolC`, `ShellCGResVolY` (z9, radius cap 77a), `ShellCGResGreen`, `ShellCGResWalk` (z11, G1 of request 75a),
-`ShellCGResSel` (z10, C ≤ CG, request 73a), `ShellCGResMomS` (q3, named premise `ShellCGExitRhoCell`, request 77b), and the
-temporary `ShellCGResPos` (q4). The conditional wrappers are not plugged: their extra inputs are open. -/
+CGResX1MomS68.lean). The binders that stay open are the residual Props not yet discharged: `ShellCGResLoc`,
+`ShellCGResVolC`, `ShellCGResVolY` (radius cap 77a), `ShellCGResGreen`, `ShellCGResWalk`,
+`ShellCGResSel` (C ≤ CG), `ShellCGResMomS` (named premise `ShellCGExitRhoCell`), and the
+temporary `ShellCGResPos`. The conditional wrappers are not plugged: their extra inputs are open. -/
 theorem shellOneTestOrderAeCGRC_of_open {𝒮 : SpaceFillingSLEModel} (hVG : VolumeGrowthStmt)
     (hShellLoc : ShellCGResLoc 𝒮) (hVolC : ShellCGResVolC 𝒮) (hVolY : ShellCGResVolY 𝒮)
     (hGreen : ShellCGResGreen 𝒮) (hsel : ShellCGResSel 𝒮)

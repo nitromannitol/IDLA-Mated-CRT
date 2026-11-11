@@ -4,11 +4,11 @@ import MatedCRT.FirstPass.S4S6c.HoneCellGood68
 import MatedCRT.FirstPass.S4S6c.HspRepairSplit68
 
 /-!
-# Walk-level one-test chain with the cell-control radius `ρcell` (fp-S4S6c-leaf-ae, round 2, q1)
+# Walk-level one-test chain with the cell-control radius `ρcell`
 
 `hone_exitQ_walk_of_env_cellR` is `hone_exitQ_walk_of_env_direct_repaired` (HspRepair68.lean:502) with the
-cell-control binder moved from the radius `ρc + 3/8` to the radius `ρcell := (1 + ρc)/2` of chat 237 section 3
-(z1, HoneCellGood68.lean: `rhoCell68`). The test-ball diameter bound `hdiam` is `hdiam_test_ball_of_walk`
+cell-control binder moved from the radius `ρc + 3/8` to the radius `ρcell := (1 + ρc)/2`
+ (HoneCellGood68.lean: `rhoCell68`). The test-ball diameter bound `hdiam` is `hdiam_test_ball_of_walk`
 (HoneCellGood68.lean:110) instead of `hdiam_of_rmin68`, which needs `ρc + 3/8 ≤ ρ'`. The new prefix binder `hRcell`
 (`R/4 < ρcell - ρc`) keeps the test balls `B(v, R/4)`, `v ∈ B_{ρc}`, inside `B_{ρcell}`. The exponent relation
 `hωκ : K.ω ≤ κ` (`κ = 2/(2+γ)² - ζc`) is the one exponent input; `ε ≤ 1` follows from `ε ≤ 16 c₀` and `c₀ ≤ 1/24`.
@@ -31,7 +31,7 @@ open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68WalkBridge MatedCRT.Lemma68ChainA
 open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 open MatedCRT.Lemma68ShellHoneInst
 
-/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_cellR` (fp-S4S6c-hsp-rhomom): the radius `1` of the walk
+/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_cellR`: the radius `1` of the walk
 chain is the parameter `ρmom` (`hx1`, `hVolY`/`hvol2`, `hmomS`, `hρS` read `ρmom` in place of `1`).
 The radius-1 name is the wrapper at `ρmom := 1`. -/
 theorem hone_exitQ_walk_of_env_cellR_rho {ρmom : ℝ} {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
@@ -278,11 +278,11 @@ theorem hone_exitQ_walk_of_env_cellR {γ ρc : ℝ} (K : Constants68 γ ρc) (ε
     hpos hdbl
 
 
--- ## Exponent-split variants (fp-S4S6c-exp-split, q1)
+-- ## Exponent-split variants
 -- Hypotheses: hWalk second conjunct `ε ^ κ ≤ R k ω / 8` (κ = 2/(2+γ)^2 - ζc), hGreen at scale κ,
 -- and `hκ2 : 2 * K.ω < κ` in place of `hωκ : K.ω ≤ κ`. The old declarations are unchanged.
 
-/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_cellR_split` (fp-S4S6c-hsp-rhomom): the radius `1` of the walk
+/-- Radius-`ρmom` generalization of `hone_exitQ_walk_of_env_cellR_split`: the radius `1` of the walk
 chain is the parameter `ρmom` (`hx1`, `hVolY`/`hvol2`, `hmomS`, `hρS` read `ρmom` in place of `1`).
 The radius-1 name is the wrapper at `ρmom := 1`. -/
 theorem hone_exitQ_walk_of_env_cellR_rho_split {ρmom : ℝ} {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)

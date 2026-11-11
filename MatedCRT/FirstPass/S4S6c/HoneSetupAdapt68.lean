@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4S6c.HoneSetup239_68
 import MatedCRT.FirstPass.S4S6c.B1Assembly68
 
 /-!
-# Adapters from the good event to the binders of `shellOneTest_at_of_goodEnv'` (z12, fp-S4S6c-setup-adapters)
+# Adapters from the good event to the binders of `shellOneTest_at_of_goodEnv'`
 
 `B1Assembly68.shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:803) takes the binders `hrz`, `hcap`, `hmesh` and `hRr`
 at one environment `ω`. This file gives pointwise adapters, at one `ω`, for
@@ -13,7 +13,7 @@ at one environment `ω`. This file gives pointwise adapters, at one `ω`, for
 * `hmesh` in the ball form `CellDiamLe ε (η ω) (dyadicD r / 100) (ball 0 ρ)` from `ω ∈ meshEvent` (the cell-size
   component of `meshEvent` is at radius `ρ`, Guard68S10.lean:45) and the binder `hεcell` (`cellDiamLe_ball_of_meshEvent`).
 
-`hRr` is not adapted here: its derivation uses the univ-form mesh bound; see the report (blocker).
+`hRr` is not adapted here: its derivation uses the univ-form mesh bound(blocker).
 
 Terminology: Armstrong-Kuusi-Mourrat (cell-size event, good annuli), Armitage-Gardiner (exit times of balls),
 Duplantier-Sheffield (quantum-length balls; `η` the boundary-length parametrisation).
@@ -52,7 +52,7 @@ theorem hcap_of_continuous {γ ρ s₀ ε r : ℝ} {Ω : Type} [MeasurableSpace 
     (fun _ hv => (Finset.mem_filter.mp (Finset.mem_coe.mp hv)).2)
 
 open Classical in
-/-- **`hcap_of_continuous` with a free `s1` (z12, fp-S4S6c-shellball).** Copy of `hcap_of_continuous` (l.47) with
+/-- **`hcap_of_continuous` with a free `s1`.** Copy of `hcap_of_continuous` (l.47) with
 `sparsityS1 γ` replaced by a parameter `s1`. The proof ignores the `FullAdmAt` premise, so no hypothesis on `s1` is
 needed. -/
 theorem hcap_of_continuous_s1 {γ ρ s₀ ε r s1 : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ω : Ω)
@@ -103,7 +103,7 @@ theorem cellDiamLe_ball_of_meshEvent {γ ω₀ ρ CG ζ α CE : ℝ} {Ω : Type}
     _ ≤ dyadicD r / 100 := hbound
 
 open Classical in
-/-- **`hcap_of_continuous` with a free `s1` and a free window constant (`_g`, z12, fp-S4S6c-shellball).** The statement
+/-- **`hcap_of_continuous` with a free `s1` and a free window constant (`_g`).** The statement
 of `hcap_of_continuous` (l.47) involves neither the sparsity exponent nor any window constant (`cRad` of the cell
 vertices of `i.A` meeting `ball z r`), so the `_g` variant is `hcap_of_continuous_s1` (l.58) with `c0W` absent; the
 `FullAdmAt` premise is ignored as before. No hypothesis on `s1` is used. -/

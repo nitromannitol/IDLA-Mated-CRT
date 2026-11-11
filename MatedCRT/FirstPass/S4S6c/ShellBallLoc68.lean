@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.HoneRrLocal68
 
 /-!
-# The shell-centre ball bound with the ball mesh (fp-S4S6c-shellball, z12; chat 252 §2, §4)
+# The shell-centre ball bound with the ball mesh
 
 `hShellBall_loc` is the binder `hShellBall` of `shellOrder_fullAdm_ae_omega_loc` (ShellOrderLoc68.lean): on the
 shell-centre balls `B(zc k, 2 R(zc k))`, with `zc k = gridRound (dyadicD r / 100) (vertexPoint (x (hitTime k)))`, the
@@ -14,7 +14,7 @@ Route. (i) `hitTime_eq_toNat_shellHit`: the ℕ-valued hitting time of `ShellWir
 (iii) the ball mesh `CellDiamLe (dyadicD r / 100) (B(0, ρmesh))` restricts to `B(c, 2R) ⊆ B(0, ρmesh)`
 (`cellDiamLe_mono_set`).
 
-The centre eligibility `c ∈ shortEligible` is the input `hEl`: it is the `Elig`-conjunct of z1's `hde`
+The centre eligibility `c ∈ shortEligible` is the input `hEl`: it is the `Elig`-conjunct of `hde`
 (ShellOrderLoc68.lean) with `Elig := shortEligible ρ d a`, and it is discharged by `hEl_ae_of_walk_loc` (WalkLoc68.lean)
 on the walk inputs.
 
@@ -59,11 +59,11 @@ theorem ball_two_mul_R_subset_of_shortEligible {ρ d a R : ℝ} {c : ℂ} (hc : 
   linarith
 
 
-/-- **`hShellBall` with the ball mesh (z1's binder, ShellOrderLoc68.lean).** On the shell-centre balls
+/-- **`hShellBall` with the ball mesh (ShellOrderLoc68.lean).** On the shell-centre balls
 `B(zc k, 2 R(zc k))`, with `zc k = gridRound (dyadicD r / 100) (vertexPoint (x (hitTime k)))`, the cell-diameter bound
 `dyadicD r / 100` holds, almost surely. Inputs: `hR` (the `Rf` bound on `shortEligible ρ d a`, `d = dyadicD r`,
-`a = shortExp ζ`, i.e. z1's `hR` with `Elig := shortEligible`), `hmesh` (the ball mesh on `B(0, ρmesh)`), `hρ : ρ ≤ ρmesh`,
-and `hEl` (the centre eligibility: the `Elig`-conjunct of z1's `hde` with `Elig := shortEligible ρ d a`). No gap beyond
+`a = shortExp ζ`, i.e. `hR` with `Elig := shortEligible`), `hmesh` (the ball mesh on `B(0, ρmesh)`), `hρ : ρ ≤ ρmesh`,
+and `hEl`. No gap beyond
 `ρ ≤ ρmesh` is needed (`ball_two_mul_R_subset_of_shortEligible`). -/
 theorem hShellBall_loc {γ ζ ρ s₀ ε r ρmesh : ℝ} {Ω : Type} [MeasurableSpace Ω]
     (S : MatedCRTEnv Ω) (i : Lemma68Config.Config68) {Rf : Ω → ℂ → ℝ}
@@ -101,8 +101,8 @@ theorem hShellBall_loc {γ ζ ρ s₀ ε r ρmesh : ℝ} {Ω : Type} [Measurable
   exact hkey
 
 
-/-- **`hShellBall` at a free sparsity exponent `s1` (z12, fp-S4S6c-shellball; z1's `_s1` form).** The conclusion is
-exactly z1's `hShellBall` binder of `shellOrder_fullAdm_ae_omega_loc_s1` (ShellOrderLoc68.lean): the gap antecedent
+/-- **`hShellBall` at a free sparsity exponent `s1`.** The conclusion is
+exactly the `hShellBall` binder of `shellOrder_fullAdm_ae_omega_loc_s1` (ShellOrderLoc68.lean): the gap antecedent
 `2 * (dyadicD r / 100) + 2 * dyadicD r ^ shortExp ζ ≤ ρmesh - ρ` and the guard `FullAdmAt s1`. The proof is that of
 `hShellBall_loc` (l.68) with `sparsityS1 γ` replaced by `s1`; the gap antecedent is not used (only `ρ ≤ ρmesh`).
 No hypothesis on `s1` is used. -/

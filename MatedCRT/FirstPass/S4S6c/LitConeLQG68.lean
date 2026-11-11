@@ -12,7 +12,7 @@ Source (Q4): the canonical quantum-cone field
 of Duplantier-Sheffield (arXiv:1409.7055, Definition 4.10 and the description of the circle-average embedding) together
 with the subcritical GMC construction of its LQG measure. It is a literature input, not a result of the IDLA paper.
 
-PENDING TRUTH CHECK: the Prop is not yet in `MatedCRT/External` and its exact form is not yet audited against the
+The Prop is not yet in `MatedCRT/External` and its exact form is not yet checked against the
 Duplantier-Sheffield statement; it is defined here, as a named binder only, until it is promoted or retired.
 -/
 

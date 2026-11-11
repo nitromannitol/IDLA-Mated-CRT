@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4S6c.HoneSetup239_68
 import MatedCRT.FirstPass.S4S6c.HoneGoodEventAe68
 
 /-!
-# The eligibility binder `hEl` at one environment (fp-S4S6c-hel-walk, z10)
+# The eligibility binder `hEl` at one environment
 
 `shellOneTest_at_of_goodEnv` (B1Assembly68.lean:567) takes the eligibility of the shell centres as the binder `hEl`
 (B1Assembly68.lean:~600): at one environment `ω`, under `FullAdmAt`, for every shell `k ≤ shellCount - 1`, almost surely
@@ -19,7 +19,7 @@ Discharged from the landed setup (not binders): `hs4`, `hNs`, `hds`, `hd` (`dyad
 `hF0`, `h0`, `hKb` (from `FullAdmAt`, `ConfigOK`), the start `hst` (`hstart_of_fullAdmAt`, HoneSetup239_68.lean:131),
 and the walk inputs (`walk_inputs_ae`).
 
-Named inputs (with no written argument in the B1 binder list; exact types in the statement):
+Named inputs (exact types in the statement):
 * `hs₀ : 0 < s₀`. `shellOneTest_at_of_goodEnv` has no positivity of `s₀`; `h0 : 0 ∈ fillCells …` needs `ball 0 s₀ ≠ ∅`.
   The consumer must supply it (the setup `hRr_fixedOmega'` takes it as well).
 * The environment facts at `ω`, the fields of `RegularEnvAt68` (B1Assembly68.lean:553): continuity `hηω`,
@@ -136,7 +136,7 @@ theorem hEl_fixedOmega {γ ρ : ℝ}
     (τU := vExitTime (killed ε (S.η ω) i.Θ i.F0 r))
     hηω hε hr0 hrρ hd hds hs4 hNs rfl hmω hF0eq h0 hKb hRf hPath k hk
 
-/-- **`hstart_of_fullAdmAt` at a generic sparsity exponent `s1` (fp-S4S6c-s1-generic, z10).** Same proof as
+/-- **`hstart_of_fullAdmAt` at a generic sparsity exponent `s1`.** Same proof as
 `MatedCRT.Lemma68HoneSetup239.hstart_of_fullAdmAt` (HoneSetup239_68.lean:132). That proof reads only the fields
 `hFA.1.2.2`, `hFA.2.1.1` and `hFA.2.1.2` of `FullAdmAt`, none of which uses the value of the sparsity exponent, so no
 hypothesis on `s1` is needed. -/
@@ -153,7 +153,7 @@ theorem hstart_of_fullAdmAt_s1 {γ ρ s₀ ε s1 : ℝ} {Ω : Type} [MeasurableS
     simp [fillCells] at h0
   exact Lemma68WindowStart.cell_meets_frontier_thickening hε hηω hΘ hr hFA.2.1.1 hFA.2.1.2
 
-/-- **The eligibility binder `hEl` at a generic sparsity exponent `s1` (fp-S4S6c-s1-generic, z10).** Same statement and
+/-- **The eligibility binder `hEl` at a generic sparsity exponent `s1`.** Same statement and
 proof as `hEl_fixedOmega` (line 58) with `Lemma68Config.sparsityS1 γ` replaced by `s1`; its start `hst` is the generic
 copy `hstart_of_fullAdmAt_s1` above. No hypothesis on `s1` is used. -/
 theorem hEl_fixedOmega_s1 {γ ρ s1 : ℝ}
@@ -237,7 +237,7 @@ theorem hEl_fixedOmega_s1 {γ ρ s1 : ℝ}
     (τU := vExitTime (killed ε (S.η ω) i.Θ i.F0 r))
     hηω hε hr0 hrρ hd hds hs4 hNs rfl hmω hF0eq h0 hKb hRf hPath k hk
 
-/-- **`hEl` at one environment, generic sparsity exponent and window constant (fp-S4S6c-meshexit-cg, z10).** Same statement
+/-- **`hEl` at one environment, generic sparsity exponent and window constant.** Same statement
 as `hEl_fixedOmega_s1` with the window constant `shellC068` replaced by a free `c0W : ℝ`: the window radius is
 `windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω`, which is `winRf` at `c0W = shellC068`. The sparsity exponent `s1` is
 free as in `hEl_fixedOmega_s1`. The proof uses no hypothesis on `c0W` (`windowRfT_rangeShortEligible` is generic in the

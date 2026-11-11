@@ -9,18 +9,18 @@ import MatedCRT.FirstPass.S4S6c.CGResElSel68
 import MatedCRT.FirstPass.S4S6c.ShellHdePw68
 
 /-!
-# `shellOneTest_at_of_goodEnv_loc_g2`: the `_g` leaf with the landed producers discharged (fp-S4S6c-goodenv-local, q4)
+# `shellOneTest_at_of_goodEnv_loc_g2`: the `_g` leaf with the landed producers discharged
 
 `shellOneTest_at_of_goodEnv_loc_g` (B1Assembly68.lean:1216) with the landed producers applied inside:
 * `hmesh` (CellDiamLe on `ball 0 (rhoCell68 ρ)`) from the cell clause of `meshEventR` (`cellDiamLe_rhoCell_of_cellSize`);
 * `hCellGood` from `hCellGood_fixedOmega_s1` (HoneCellGoodSelPw68), `hsel` from `hsel_fixedOmega_g` (needs `hKc0`, `hwin`, `hCCG`);
 * `hRr` from `hRr_fixedOmega_loc_g` (HoneRrLocal68, at the radius `ball 0 ρ ⊆ ball 0 (rhoCell68 ρ)`), `hcap` from `hcap_of_continuous_g`;
 * `hVolC` from `hVolC_pw_g` and `hVolY` from `hVolY_pw_g` (HVolFullPw68), the `hVolY` ball `ball 0 (1 - W/4)` included in `ball 0 (rhoCell68 ρ - W/4)`;
-* no full support: the walk positivity `hpos` is `hpos_ae_narrow` (eligibility of the shell centres, the radius cap `4 R < t`, the cutoff `hcut`), so `hωFull` is dropped (chat 246 Q3 items 3-5).
+* no full support: the walk positivity `hpos` is `hpos_ae_narrow` (eligibility of the shell centres, the radius cap `4 R < t`, the cutoff `hcut`), so `hωFull` is dropped.
 
-Kept as named binders (inputs of the producers that have not landed): `hShellLoc` (z1), `hadm`, `hEl` (`hEl_fixedOmega_g`
-needs the univ mesh, HoneElAe68.lean:247), `hstopFin` (z10), `hc` (74a, the exit-vertex centre bound of `hVolC_pw_g`),
-`hGreen`, `hCountGood`, `hcutR` (z12), `hx1`, `hmomS` (q3), `hWalk`, and the volume cutoff `t`, `ht`, `hrt`, `hcut`.
+Kept as named binders (inputs of the producers that have not landed): `hShellLoc`, `hadm`, `hEl` (`hEl_fixedOmega_g`
+needs the univ mesh, HoneElAe68.lean:247), `hstopFin`, `hc` (74a, the exit-vertex centre bound of `hVolC_pw_g`),
+`hGreen`, `hCountGood`, `hcutR`, `hx1`, `hmomS`, `hWalk`, and the volume cutoff `t`, `ht`, `hrt`, `hcut`.
 
 This file imports the producers, which import `B1Assembly68` (so they cannot be imported there). `K.c0 = exp(-(2CG))/32`
 (`shellKCG`, ShellConstants68.lean:74) gives `0 < K.c0 ≤ 1/4` by unfolding.
@@ -42,7 +42,7 @@ open MatedCRT.Lemma68ShellHoneInst MatedCRT.Lemma68WindowRf MatedCRT.Lemma68Shel
 open MeasureTheory Set Filter Metric
 open scoped ENNReal Topology
 
-/-- **The cell-diameter mesh at `rhoCell68 ρ` from the cell-size event (fp-S4S6c-goodenv-local, q4).** On the event
+/-- **The cell-diameter mesh at `rhoCell68 ρ` from the cell-size event.** On the event
 `cellSizeEvent68 … (rhoCell68 ρ) ε`, a cell meeting `ball 0 (rhoCell68 ρ)` has diameter at most `ε ^ κ`, and
 `ε ^ κ ≤ c₀ r² / 100 ≤ dyadicD r / 100` (`hεcell`, `c₀ ≤ 1`, `r² ≤ dyadicD r`). This is the argument of
 `cellDiamLe_ball_of_meshEvent` (HoneSetupAdapt68.lean:78) with `ball 0 ρ` replaced by `ball 0 (rhoCell68 ρ)`. -/
@@ -70,7 +70,7 @@ theorem cellDiamLe_rhoCell_of_cellSize {γ ζ ρ ε c0 r : ℝ} {Ω : Type} [Mea
     _ ≤ ε ^ (2 / (2 + γ) ^ 2 - ζ) := (hcell k hk).2
     _ ≤ dyadicD r / 100 := hbound
 
-/-- **The narrow walk positivity `hpos` (chat 246 Q3 step 4), without full support.** Path-level form of
+/-- **The narrow walk positivity `hpos`, without full support.** Path-level form of
 `HoneGoodEventAe68.hpos_ae` (HoneGoodEventAe68.lean:174): the full-support binder `hfull` is replaced by the a.s.
 eligibility of the shell centres (`hEl`) and the radius bound `R ≤ d ^ a`; the annulus infimum is positive by
 `Lemma68Cutoff239.pos_iInf_annulus_of_eligible` (HVolCutoff239_68.lean:301), which needs only the cutoff below `t`
@@ -122,9 +122,9 @@ theorem shellOneTest_at_of_goodEnv_loc_gN {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : 
     (hα : 2 * K.ω * K.βm < α)
     (hεs : ε ≤ ((100 * K.c0) ^ K.βm / 4) ^ (1 / (α - 2 * K.ω * K.βm)))
     (hrε : 10 * ε ^ K.ω ≤ r) (hε1 : ε ≤ 1)
-    -- the exit mesh on the cell-size event of `meshEventR` (radius `rhoCell68 ρ = (1 + ρ)/2`, chat 252)
+    -- the exit mesh on the cell-size event of `meshEventR` (radius `rhoCell68 ρ = (1 + ρ)/2`)
     (hmesh : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) (Lemma68HoneCellGood.rhoCell68 ρ)))
-    -- named localized producer (z1 ShellOrderLoc68 pointwise form; z8 ShellPathLoc68), at `hmesh`
+    -- named localized producer, at `hmesh`
     (hShellLoc : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) (Lemma68HoneCellGood.rhoCell68 ρ)) →
       Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
       Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r)
@@ -202,7 +202,7 @@ theorem shellOneTest_at_of_goodEnv_loc_gN {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : 
               ENNReal.ofReal (N.factorial * CE ^ N * ε ^ (-(N : ℝ))) *
                 (⨆ z' ∈ D, ∫⁻ x in Metric.thickening (ε ^ α) D,
                   ENNReal.ofReal (Real.log (1 / ‖z' - x‖) + 1) ∂(S.μ ω)) ^ N)
-    -- the walk second conjunct at the split exponent κ = 2/(2+γ)^2 - ζ (q1 `_split` leaf; not `K.ω`)
+    -- the walk second conjunct at the split exponent κ = 2/(2+γ)^2 - ζ (not `K.ω`)
     (hWalk : Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
       ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
         x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) ((windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω)) k →
@@ -269,7 +269,7 @@ theorem shellOneTest_at_of_goodEnv_loc_gN {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : 
           (dyadicD r ^ shortExp ζ) (dyadicD r) k x) := fun k hk =>
     (hEl hadm k hk).mono fun x hx hxm =>
       (Lemma68WindowRf.windowRfT_bounds S.μ ρ (shortExp ζ) c0W C (dyadicD r) hd0 hd1 ha1 ω (hx hxm)).1
-  -- the walk bound `hb` at `ω`: the localized copy of `hb_ae_of_walk` (WalkLoc68, z12), on the mesh `hmesh`;
+  -- the walk bound `hb` at `ω`: the localized copy of `hb_ae_of_walk` (WalkLoc68), on the mesh `hmesh`;
   -- its gap `dyadicD r / 100 ≤ rhoCell68 ρ - ρ` follows from `dyadicD r / 100 ≤ dyadicD r ^ shortExp ζ` and `hcutR`
   have hbω := Lemma68WalkLoc.hb_ae_of_walk_loc (ρ := ρ) (ρmesh := Lemma68HoneCellGood.rhoCell68 ρ) (r := r)
     (s := dyadicD r ^ shortExp ζ) (d := dyadicD r) (A := (↑i.A : Set ℤ))
@@ -345,7 +345,7 @@ theorem shellOneTest_at_of_goodEnv_loc_gN {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : 
 
 #print axioms MatedCRT.Lemma68B1Assembly.shellOneTest_at_of_goodEnv_loc_g
 
-/-- **`shellOneTest_at_of_goodEnv_loc_g` with the landed producers discharged (fp-S4S6c-goodenv-local, q4).**
+/-- **`shellOneTest_at_of_goodEnv_loc_g` with the landed producers discharged.**
 Same conclusion as `shellOneTest_at_of_goodEnv_loc_g`, with no full-support binder (`hωFull` is dropped: the walk
 positivity is `hpos_ae_narrow`, from the eligibility of the shell centres and the cutoff). Discharged here: `hmesh`
 (from the mesh event `hωR : ω ∈ meshEventR …` at radius `rhoCell68 ρ`), `hRr` (`hRr_fixedOmega_loc_g`), `hcap`,
@@ -374,9 +374,9 @@ theorem shellOneTest_at_of_goodEnv_loc_g2 {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : 
     (hα : 2 * K.ω * K.βm < α)
     (hεs : ε ≤ ((100 * K.c0) ^ K.βm / 4) ^ (1 / (α - 2 * K.ω * K.βm)))
     (hrε : 10 * ε ^ K.ω ≤ r) (hε1 : ε ≤ 1)
-    -- the mesh event `meshEventR` (its cell clause is at radius `rhoCell68 ρ = (1 + ρ)/2`, chat 252)
+    -- the mesh event `meshEventR` (its cell clause is at radius `rhoCell68 ρ = (1 + ρ)/2`)
     (hωR : ω ∈ Lemma68Guard10.meshEventR S γ ω₀ ρ CG ζ α CE ε)
-    -- named localized producer (z1 ShellOrderLoc68 pointwise form), at the mesh `CellDiamLe … (ball 0 (rhoCell68 ρ))`
+    -- named localized producer, at the mesh `CellDiamLe … (ball 0 (rhoCell68 ρ))`
     (hadm : Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i)
     (hTest : Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
       ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a), ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,

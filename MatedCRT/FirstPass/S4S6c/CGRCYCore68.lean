@@ -3,19 +3,18 @@ import MatedCRT.FirstPass.S4S6c.CGRCXG2Core68
 import MatedCRT.FirstPass.S4S6c.B1GoodEnvSplit68
 
 /-!
-# The counting one-test order under the split constants: assembler (fp-S4S6c-cgrcy, z5)
+# The counting one-test order under the split constants: assembler
 
-Assembles `LICGRCY68.ShellOneTestOrderAeCGRCYStmt` (lead, a03e347; Codex 19:56 UTC, notes/fp-gaps/
-CODEX-idla-hOne-residuals-sol-20261110.md). The good-annulus constant `C` stays free: there is no `C ≤ CG` anywhere.
+Assembles `LICGRCY68.ShellOneTestOrderAeCGRCYStmt`. The good-annulus constant `C` stays free: there is no `C ≤ CG` anywhere.
 
 Three changes relative to the CGRCX interface, and where each one enters:
-* (77a, Codex Q2a steps 1-2) the radius clause carries the volume guard `VolReady68 S γ ζ r ω`. The pointwise producer
+* (77a) the radius clause carries the volume guard `VolReady68 S γ ζ r ω`. The pointwise producer
   destructs it, `obtain ⟨t, ht, hcut, hrt⟩ := hvol`, and passes the four facts to the split leaf. No `ShellCGResG2Rad`.
 * (75a) a Green exponent `ωG` with `2 * ω₀ < ωG`, the premise `ω ∈ greenLowEvent68 S ωG ρ CG ε`, and the mesh bound
   `ε ≤ εG`, where `εG` is an explicit positive function of the constants (`epsG`).
 * No `hCCG`, no `hCLe`, no `hVG`: the cut comes from `VolReady68`, not from the volume cutoff a.s. (`cutoff_ae`).
 
-Chain: the split leaf `Lemma68B1Assembly.shellOneTest_at_of_goodEnv_loc_split` (B1GoodEnvSplit68.lean, q4, landed 3b38f40)
+Chain: the split leaf `Lemma68B1Assembly.shellOneTest_at_of_goodEnv_loc_split` (B1GoodEnvSplit68.lean, landed 3b38f40)
 gives the pointwise pair; `shellOneTestPointwiseCGRY_of_split` supplies its binders; `shellOneTestOrderAeCGRCY_of_pointwise`
 is the almost sure swap.
 
@@ -24,10 +23,10 @@ residual), and the walk binder at the free exponent `ωG` only in the second con
 keeps `ε ^ ω₀` (= `ε ^ K.ω`). The residual `ShellCGResWalkY` below has exactly this form.
 
 NAMED INPUTS (not yet landed; each replaced by a theorem when it lands):
-* `epsG` with `ShellEpsGPos epsG` (z11, `shellEpsG68`, CGResGreenY68.lean).
-* `ShellCGResWalkY 𝒮 epsG` (z11, CGResGreenY68.lean).
-Residuals taken from other tasks and used unchanged: `ShellCGTestEndLoc` (79a, z1, CGResLoc68.lean:102) and
-`ShellCGResG2Ctr` (74a, z9, CGRCXG2Core68.lean:53).
+* `epsG` with `ShellEpsGPos epsG` (`shellEpsG68`, CGResGreenY68.lean).
+* `ShellCGResWalkY 𝒮 epsG` (CGResGreenY68.lean).
+Residuals taken from other tasks and used unchanged: `ShellCGTestEndLoc` (79a, CGResLoc68.lean:102) and
+`ShellCGResG2Ctr` (74a, CGRCXG2Core68.lean:53).
 -/
 
 namespace MatedCRT
@@ -47,7 +46,7 @@ open MatedCRT.Lemma68ShellOneCGRCX
 open MatedCRT.Lemma68CGRCXG2Core
 open MatedCRT.LICGRCY68
 
-/-- **Positivity of the mesh constant (named input, z11).** `epsG γ ω₀ α ζ ρ CG CE β ωG` is positive under the hypotheses
+/-- **Positivity of the mesh constant (named input).** `epsG γ ω₀ α ζ ρ CG CE β ωG` is positive under the hypotheses
 of `LICGRCY68.ShellOneTestOrderAeCGRCYStmt` (where `2 * ω₀ < ωG`). -/
 def ShellEpsGPos (epsG : ℝ → ℝ → ℝ → ℝ → ℝ → ℝ → ℝ → ℝ → ℝ → ℝ) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE β ωG : ℝ,
@@ -55,7 +54,7 @@ def ShellEpsGPos (epsG : ℝ → ℝ → ℝ → ℝ → ℝ → ℝ → ℝ →
     2 * ω₀ < 2 / (2 + γ) ^ 2 - ζ → 0 < CG → 0 < CE → 0 < β →
     0 < ζ → ζ < 1 / 2 → 0 < ρ → ρ < 1 → 2 * ω₀ < ωG → 0 < epsG γ ω₀ α ζ ρ CG CE β ωG
 
-/-- **Residual of the walk to the cell vertices at the free exponent `ωG` (named input, z11).** The `hWalk` binder of
+/-- **Residual of the walk to the cell vertices at the free exponent `ωG` (named input).** The `hWalk` binder of
 `shellOneTest_at_of_goodEnv_loc_split`: as `ShellCGResWalk` (ShellCoreCG68.lean:461), with the cell ball `ball 0 (ρ - ε ^ ω₀)`
 and the second conjunct `ε ^ ωG ≤ window / 8`, under the premises `2 * ω₀ < ωG`, `ε ≤ epsG …`, `ω ∈ greenLowEvent68 …`. -/
 def ShellCGResWalkY (𝒮 : SpaceFillingSLEModel) (epsG : ℝ → ℝ → ℝ → ℝ → ℝ → ℝ → ℝ → ℝ → ℝ → ℝ) : Prop :=
@@ -120,7 +119,7 @@ def ShellOneTestPointwiseCGRYStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
               Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf
                 (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a
 
-/-- **The almost sure swap (fp-S4S6c-cgrcy, z5).** `ShellOneTestOrderAeCGRCYStmt` from its pointwise form. The a.s.
+/-- **The almost sure swap.** `ShellOneTestOrderAeCGRCYStmt` from its pointwise form. The a.s.
 premises used are the continuity of the trace, `μ{v} = 0`, finiteness on compacts, the degree and adjacency facts, and the
 dyadic family `hav` (by `ae_all_iff`); none is a residual. No volume cutoff is needed: the cut is in `VolReady68`. -/
 theorem shellOneTestOrderAeCGRCY_of_pointwise {𝒮 : SpaceFillingSLEModel} (hPw : ShellOneTestPointwiseCGRYStmt 𝒮) :
@@ -143,7 +142,7 @@ theorem shellOneTestOrderAeCGRCY_of_pointwise {𝒮 : SpaceFillingSLEModel} (hPw
 
 #print axioms MatedCRT.Lemma68CGRCYCore.shellOneTestOrderAeCGRCY_of_pointwise
 
-/-- **The CG-R pointwise producer under the split constants (fp-S4S6c-cgrcy, z5).** From the landed split leaf
+/-- **The CG-R pointwise producer under the split constants.** From the landed split leaf
 `Lemma68B1Assembly.shellOneTest_at_of_goodEnv_loc_split` (B1GoodEnvSplit68.lean). The volume guard is destructed
 (`obtain ⟨t, ht, hcut, hrt⟩ := hvol`), the cut for `ShellPtPremCG` is `⟨t, ht, hcut⟩`, and the leaf's binders are supplied
 as in `shellOneTestPointwiseCGRX_of_g2` (CGRCXG2Core68.lean), with the walk residual at `ωG`. No `hCCG`, no `hRad`. -/
@@ -204,11 +203,11 @@ theorem shellOneTestPointwiseCGRY_of_split {𝒮 : SpaceFillingSLEModel}
 
 #print axioms MatedCRT.Lemma68CGRCYCore.shellOneTestPointwiseCGRY_of_split
 
-/-- **The CG-R counting swap under the split constants (fp-S4S6c-cgrcy, z5).** `LICGRCY68.ShellOneTestOrderAeCGRCYStmt`
+/-- **The CG-R counting swap under the split constants.** `LICGRCY68.ShellOneTestOrderAeCGRCYStmt`
 from the split leaf through the pointwise producer and the a.s. swap.
 
-Final binders: `epsG` and `hεG` (the walk mesh constant and its positivity, z11), `hTest` (test end, 79a, z1), `hCtr`
-(centre bound, 74a, z9), `hWalk` (75a G1 at `ωG`, z11). No `hVG`, no `hCCG`, no `hRad`, no Green residual (the Green bound is
+Final binders: `epsG` and `hεG` (the walk mesh constant and its positivity), `hTest` (test end, 79a), `hCtr`
+ (centre bound, 74a), `hWalk` (75a G1 at `ωG`). No `hVG`, no `hCCG`, no `hRad`, no Green residual (the Green bound is
 the event premise), no leaf binder (the split leaf is landed, B1GoodEnvSplit68.lean). -/
 theorem shellOneTestOrderAeCGRCY_of_split {𝒮 : SpaceFillingSLEModel}
     (epsG : ℝ → ℝ → ℝ → ℝ → ℝ → ℝ → ℝ → ℝ → ℝ → ℝ) (hεG : ShellEpsGPos epsG)

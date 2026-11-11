@@ -1,12 +1,12 @@
 import MatedCRT.FirstPass.S4S6c.ShellChainCore68
 
 /-!
-# Uniform window avoidance and simultaneous window membership (z10, fp-S4S6c-window-uniform; chat 234 Q2)
+# Uniform window avoidance and simultaneous window membership
 
 Three results, each obtained from landed lemmas (no new mathematics):
 
 * `badWindow_avoid_uniform`: from the single almost-sure identity `μ' = μ` (independent of the scale), almost surely,
-  for every scale `δ` at once, `ω ∈ (badWindowOf μ' δ)ᶜ` implies `ω ∉ badWindowOf μ δ` (chat 234 Q2, part 1).
+  for every scale `δ` at once, `ω ∈ (badWindowOf μ' δ)ᶜ` implies `ω ∉ badWindowOf μ δ` (part 1).
   `badWindowOf` is ShellChain68.lean:33, `badWindowOf_iff_of_eq` is ShellChain68.lean:37.
 * `shortWindow_fieldFamily_uniform`: `shortWindow_fieldFamily_at` (ShellChainCore68.lean:42) with the avoidance conjunct
   in the uniform form `∀ᵐ ω, ∀ δ, ...` instead of `∀ δ, ∀ᵐ ω, ...`. The proof is that of `shortWindow_fieldFamily_at`
@@ -26,7 +26,7 @@ namespace Lemma68WindowUniform
 open MatedCRT.Lemma68Window MatedCRT.Lemma68ShellChain MatedCRT.Lemma68Guard10
 open MatedCRT.Lemma68ChainCore DyadicCutoff68 Lemma68Window
 
-/-- **Uniform avoidance from one almost-sure field identity (chat 234 Q2, part 1).** If `μ'` agrees with `μ` almost
+/-- **Uniform avoidance from one almost-sure field identity (part 1).** If `μ'` agrees with `μ` almost
 surely, then almost surely, for every scale `δ` simultaneously, a point of the complement of the bad window of `μ'`
 is outside the bad window of `μ`. The exceptional null set `{μ' ≠ μ}` does not depend on `δ`. -/
 theorem badWindow_avoid_uniform {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (μ μ' : Ω → Measure ℂ)
@@ -66,7 +66,7 @@ theorem shortWindow_fieldFamily_uniform {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
     exact (hbad_le r).trans (hP ρ hρ hρ1 Ω S.P S.hC S.hcirc S.μ hcone r hr hr1)
   · exact badWindow_avoid_uniform S.P S.μ μ' hμ'ae ρ a c₀ C
 
-/-- **Field-measurable window family with simultaneous membership (chat 234 Q2, part 2).** The family of
+/-- **Field-measurable window family with simultaneous membership (part 2).** The family of
 `shortWindow_fieldFamily_uniform` carries the cutoff `dd` of `window_cutoff` (Guard68S10.lean:114): `dd` is
 field-measurable with values in `(0, 1]`, and almost surely every dyadic window event `ω ∈ Ew (dyadicD r)` holds
 for all `0 < r ≤ dd ω` at once. Nothing is claimed for `r > dd ω`. -/

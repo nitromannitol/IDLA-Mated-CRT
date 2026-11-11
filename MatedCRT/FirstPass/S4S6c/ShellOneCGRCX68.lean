@@ -2,10 +2,10 @@ import MatedCRT.FirstPass.S4S6c.ShellOneCGRC68
 import MatedCRT.FirstPass.LICGRCX68
 
 /-!
-# The CG-R counting swap with the exit-time event at the cell radius (fp-S4S6c-cgrcx-producer, z5)
+# The CG-R counting swap with the exit-time event at the cell radius
 
 `shellOneTestOrderAeCGRCX_of_open` proves `LICGRCX68.ShellOneTestOrderAeCGRCXStmt` (LICGRCX68.lean, the statement after
-request 77b: `ShellOneTestOrderAeCGRCStmt` plus the `PolyHighProb` hypothesis at radius `rhoCell68 ρ` and the almost sure
+Named input 77b: `ShellOneTestOrderAeCGRCStmt` plus the `PolyHighProb` hypothesis at radius `rhoCell68 ρ` and the almost sure
 premise `ω ∈ exitTimeEvent68 S α (rhoCell68 ρ) CE ε` after the `countingMeshEventR` premise).
 
 The moment residual `ShellCGResMomS` is not a binder here. Its pointwise body is `resMomS_pt` (CGResX1MomS68.lean:97), which
@@ -76,7 +76,7 @@ def ShellOneTestPointwiseCGRXStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
               Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf
                 (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a
 
-/-- **The CG-R pointwise producer with the exit premise (fp-S4S6c-cgrcx-producer).** Copy of
+/-- **The CG-R pointwise producer with the exit premise.** Copy of
 `shellOneTestPointwiseCGR_of_goodEnv_loc_g` (ShellCoreCG68.lean:496) with two changes: the premise
 `ω ∈ exitTimeEvent68 S α (rhoCell68 ρ) CE ε` (`hexitω`) is an argument, and the moment residual is the pointwise body
 `resMomS_pt S i hexitω` (CGResX1MomS68.lean:97) instead of the binder `hmomS`. The remaining twelve residuals are the
@@ -149,7 +149,7 @@ theorem shellOneTestPointwiseCGRX_of_goodEnv_loc_g {𝒮 : SpaceFillingSLEModel}
 
 #print axioms MatedCRT.Lemma68ShellOneCGRCX.shellOneTestPointwiseCGRX_of_goodEnv_loc_g
 
-/-- **The CG-R counting swap with the exit-time event at the cell radius (fp-S4S6c-cgrcx-producer, z5).**
+/-- **The CG-R counting swap with the exit-time event at the cell radius.**
 `LICGRCX68.ShellOneTestOrderAeCGRCXStmt` from `shellOneTestPointwiseCGRX_of_goodEnv_loc_g` by the almost sure swap of
 `shellOneTestOrderAeCGRC_of_res` (ShellOneCGRC68.lean:65). Binders: `hVG` (Lemma 2.7, frozen) and the residual Props that
 remain open, as in `shellOneTestOrderAeCGRC_of_open` (ShellOneCGRC68.lean:76) except `hmomS`. Plugged: `ShellCGResEl`,

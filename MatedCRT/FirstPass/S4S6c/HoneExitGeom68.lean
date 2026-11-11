@@ -8,7 +8,7 @@ import MatedCRT.FirstPass.S4S6c.TraceInputs68
 import MatedCRT.FirstPass.S4S6c.WindowMult68
 
 /-!
-# The exit geometry of the one-test hone (fp-S4S6c-hone-exit-geometry)
+# The exit geometry of the one-test hone
 
 Binders of `shellOneTest_of_direct` (ShellHoneInst68.lean:53):
 
@@ -16,7 +16,7 @@ Binders of `shellOneTest_of_direct` (ShellHoneInst68.lean:53):
   `cell_meets_sphere_of_exit`: an interior vertex `k'` adjacent to the non-interior vertex `k` gives a point of
   `H_k ∩ ∂B` (`ExitPath68.exit_closure_meets_sphere`, ExitPath68.lean:27, in closure form), and the cell is closed
   (`cell_isCompact`, S6n.lean:289). The binder `hb` itself is not discharged here: it quantifies over every path in
-  `prefixSet`, which carries no adjacency between consecutive vertices (see the report).
+  `prefixSet`, which carries no adjacency between consecutive vertices.
 * `hdbl` (after l.139): `hdbl_of_exit_geom` discharges it from `hb`, `hWalk`, `hCellGood`, `hεcell`, `hRmin`, `hgood`
   and `hDbl : C_good ≤ Dbl`. The exit vertex `x = η(ε X_T)` lies in the cell `H_{X_T}`, which meets `∂B_{4R/3}(Z_k)`
   and has diameter at most `c₀R/100`; hence `x ∈ 𝔸_{R,2R}(Z_k)` and `B_{3c₀R}(x) ⊆ 𝔸_{R,2R}(Z_k)` (with `c₀ ≤ 1/24`),
@@ -41,7 +41,7 @@ open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 Defs/Map.lean), `m k' k ≠ 0` with the closures of adjacent cells meeting, and `k` is not interior, then the cell
 `H_k` meets the sphere `∂B_ρ(c)`. This is the closure form `ExitPath68.exit_closure_meets_sphere` with the
 closedness of the compact cell (`cell_isCompact`, S6n.lean:289). The step "the cell at the exit time meets its
-boundary" is CHATGPT-229 l.674-690 (proof of Lemma 6.8, corrected [C26]). -/
+boundary" is the printed proof of Lemma 6.8 (corrected [C26]). -/
 theorem cell_meets_sphere_of_exit {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η)
     {m : ℤ → ℤ → ℕ} {c : ℂ} {ρ : ℝ} {k' k : ℤ}
     (hadj : ∀ u v, m u v ≠ 0 → (closure (cell ε η u) ∩ closure (cell ε η v)).Nonempty)
@@ -176,7 +176,7 @@ theorem hdbl_of_exit_geom {γ ρc ζc : ℝ} (K : Constants68 γ ρc) {ε : ℝ}
           (K.c0 * Rf (shellCentre ε η Kset r s d k ω)))).toReal := by
         rw [ENNReal.toReal_mul, ENNReal.toReal_ofReal (hCg.trans hDbl)]
 
-/-! ## Step adjacency of the simple random walk, almost surely (operator item 2)
+/-! ## Step adjacency of the simple random walk, almost surely
 
 `srwStep m v` (Defs/RandomWalk.lean:47) is the normalized edge measure `∑_b m(v,b) δ_b` when `v` has positive finite
 degree; otherwise it is the Dirac mass at `v` (a junk branch). So the adjacency claim needs the degree hypothesis
@@ -251,11 +251,11 @@ theorem srwLaw_step_ae_adjacent (m : ℤ → ℤ → ℕ)
   rw [ae_iff]
   simpa using srwLaw_stepZero_null m hdeg j a
 
-/-! ## `hb` in the almost-sure form (operator item 3)
+/-! ## `hb` in the almost-sure form
 
 The deterministic core is `cell_meets_sphere_of_exit`. Along a path with step adjacency, the exit time `T = t` is
 finite (`prefixSet` gives `T < τU`). Either the exit is at the hit time (excluded by the named hypothesis `hhit`, the
-hit-cell interiority, operator request 64e), or `hit ≤ t - 1`; then `x (t-1)` is interior, `x t` is not, and the
+hit-cell interiority), or `hit ≤ t - 1`; then `x (t-1)` is interior, `x t` is not, and the
 exit cell meets the sphere. The centre is the grid centre `shellCentre`; `hZ` identifies it with `Z`. -/
 
 /-- **`hb` almost surely.** The exit-cell-meets-sphere claim of `hb` (ShellHoneInst68.lean:121), for almost every
@@ -315,9 +315,9 @@ theorem hb_ae_of_walk {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (Kset 
       obtain ⟨p, hp1, hp2⟩ := cell_meets_sphere_of_exit hη hadj hinQ (hxadj q) hPt.2
       exact ⟨p, hp1, hp2⟩
 
-/-! ## `hdbl` with the constant `shellDbl68 C_good` (operator item 1, chat 237 section 4)
+/-! ## `hdbl` with the constant `shellDbl68 C_good`
 
-The conclusion is the chat 237 form `≤ shellDbl68 C_good * (μ B_{c₀R}(x)).toReal`. It carries no extra hypothesis on
+The conclusion is the form `≤ shellDbl68 C_good * (μ B_{c₀R}(x)).toReal`. It carries no extra hypothesis on
 `Dbl`: the binder `hdbl` of `shellOneTest_of_direct` with a free `Dbl` is NOT this statement. It is the binder with
 `Dbl := shellDbl68 C_good`. -/
 
@@ -437,7 +437,7 @@ theorem hdbl_of_exit_geom_237 {γ ρc ζc : ℝ} (K : Constants68 γ ρc) {ε : 
             (K.c0 * Rf (shellCentre ε η Kset r s d k ω)))).toReal := by
         rw [ENNReal.toReal_mul, ENNReal.toReal_ofReal hD0]
 
-/-- **The one-test doubling bound at one walk and one shell (fp-S4S6c-B1-assembly-ae).** The pointwise form of
+/-- **The one-test doubling bound at one walk and one shell.** The pointwise form of
 `hdbl_of_exit_geom_237` at the shell `k` and the walk `ω`, with the cell-control radius `ρ'` (`ρc ≤ ρ'`) in place of
 `ρc + 3/8`: the exit cell meets `B_{ρc - ε^ω}` (`hWalk`), hence `B_{ρ'}`. The hypotheses are the instances at `(k, ω)`
 of those of `hdbl_of_exit_geom_237`, so that they can be taken almost surely in the walk (`ae_all_iff`). -/
@@ -549,7 +549,7 @@ theorem hdbl_of_exit_geom_path {γ ρc ζc : ℝ} (K : Constants68 γ ρc) {ε :
         rw [ENNReal.toReal_mul, ENNReal.toReal_ofReal hD0]
 
 #print axioms MatedCRT.Lemma68HoneExitGeom.hdbl_of_exit_geom_path
-/-- **The one-test doubling bound, split exponent (q4, fp-S4S6c-goodenv-local).** The copy of `hdbl_of_exit_geom_path` with the walk second conjunct `ε ^ κ ≤ R/8`, κ = `2 / (2 + γ) ^ 2 - ζc` (exponent split, chat 239 l.747-800); the proof does not use that conjunct. The pointwise form of
+/-- **The one-test doubling bound, split exponent.** The copy of `hdbl_of_exit_geom_path` with the walk second conjunct `ε ^ κ ≤ R/8`, κ = `2 / (2 + γ) ^ 2 - ζc` (exponent split); the proof does not use that conjunct. The pointwise form of
 `hdbl_of_exit_geom_237` at the shell `k` and the walk `ω`, with the cell-control radius `ρ'` (`ρc ≤ ρ'`) in place of
 `ρc + 3/8`: the exit cell meets `B_{ρc - ε^ω}` (`hWalk`), hence `B_{ρ'}`. The hypotheses are the instances at `(k, ω)`
 of those of `hdbl_of_exit_geom_237`, so that they can be taken almost surely in the walk (`ae_all_iff`). -/
@@ -664,12 +664,12 @@ theorem hdbl_of_exit_geom_path_split {γ ρc ζc : ℝ} (K : Constants68 γ ρc)
 #print axioms MatedCRT.Lemma68HoneExitGeom.hdbl_of_exit_geom_path_split
 
 
-/-! ## Environment inputs of `hb`, discharged (fp-S4S6c-walk-env-adjacency)
+/-! ## Environment inputs of `hb`, discharged
 
 For a valid environment `S` and `ε > 0`, the edge multiplicity `m = S.mult ε ω` of the mated-CRT map satisfies, almost
 surely in `ω`, the deterministic hypotheses `hdeg` and `hadj` of `hb_ae_of_walk`. -/
 
-/-- **Degree of the mated-CRT map, almost surely (operator item 1).** For a valid environment `S` and `ε > 0`, almost
+/-- **Degree of the mated-CRT map, almost surely.** For a valid environment `S` and `ε > 0`, almost
 surely in `ω`, every vertex `v` of the multigraph `S.mult ε ω` has `edgeMeasure m v univ ≠ 0` and `≠ ⊤`. Proof: local
 finiteness and consecutive adjacency (`Lemma68WindowMult.hmult_of_valid68`) give `edgeMeasure_univ`, which identifies
 the total mass with the degree `mdeg m v`; the degree is nonzero because of the neighbour `v + 1`
@@ -684,7 +684,7 @@ theorem hdeg_of_valid {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0 < γ) (
   rw [edgeMeasure_univ hlf v]
   exact ⟨by exact_mod_cast mdeg_ne_zero_of_ne_zero hlf (hsucc v), ENNReal.natCast_ne_top _⟩
 
-/-- **Closed-cell adjacency of the mated-CRT map, almost surely (operator item 2).** For a valid environment `S` and
+/-- **Closed-cell adjacency of the mated-CRT map, almost surely.** For a valid environment `S` and
 `ε > 0`, almost surely in `ω`, every edge `S.mult ε ω u v ≠ 0` joins vertices whose closed cells meet. Proof: the open
 cells of adjacent vertices meet almost surely (`TraceInputs68.ae_adjacent`), and the closed-cell form is
 `TraceInputs68.closure_cells_meet_of_mult`. -/
@@ -695,7 +695,7 @@ theorem hadj_of_valid {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0 < γ) (
       (closure (cell ε (S.η ω) u) ∩ closure (cell ε (S.η ω) v)).Nonempty := by
   filter_upwards [TraceInputs68.ae_adjacent hγ0 hγ2 S hS] with ω hω
   exact TraceInputs68.closure_cells_meet_of_mult (hω ε hε)
-/-- **The hit cell lies in the interior of the `4R/3`-ball (operator request 64e).** Let `t = shellHit`, the first time
+/-- **The hit cell lies in the interior of the `4R/3`-ball.** Let `t = shellHit`, the first time
 the walk's cell meets the two-sided shell `Σ_{k+1}`. The centre `shellCentre` is the grid rounding of `vertexPoint (x t)`,
 so it is within `d / 100` of that vertex (`dist_gridRound_le`); the cell of `x t` has diameter at most `d / 100`
 (`CellDiamLe`, the mesh). If the window radius at the centre is at least `d`, every point of the cell lies within
@@ -732,7 +732,7 @@ theorem shellHit_interior_of_mesh {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < ε) (
   rw [frontier_ball _ hR3.ne'] at hzf
   exact absurd (Metric.mem_sphere.1 hzf) (ne_of_lt (hball z hz))
 
-/-- **`shellHit_interior_of_mesh` at the hit vertex (path-level, q4 fp-S4S6c-goodenv-local).** The univ mesh is used only
+/-- **`shellHit_interior_of_mesh` at the hit vertex (path-level).** The univ mesh is used only
 on the cell of the hit vertex `x t`, so the binder `hmesh` (univ form) is replaced by the cell diameter bound `hcell` on
 that cell. The walk supplies `hcell` up to its exit time (`Lemma68PathMesh.diam_upto_vExitTime`, PathMesh68.lean),
 which is why the hit time must not exceed the exit time there. -/
@@ -768,7 +768,7 @@ theorem shellHit_interior_of_cellDiam {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < �
   rw [frontier_ball _ hR3.ne'] at hzf
   exact absurd (Metric.mem_sphere.1 hzf) (ne_of_lt (hball z hz))
 
-/-- **`hb` almost surely from the mesh and the window radius (operator request 64e closed).** This replaces
+/-- **`hb` almost surely from the mesh and the window radius.** This replaces
 `hb_ae_valid_centre`: the hit-cell interiority `hhit` is no longer named. It follows from `hmesh` (the grid mesh
 `CellDiamLe ε (S.η ω) (d / 100)`) and `hR` (the window radius at the shell centre is at least `d`, which holds where the
 centre is eligible for the window). The guard `G` is a predicate of the environment; in the B1 application it is

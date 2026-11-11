@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S4S6c.HoneSetup239_68
 import MatedCRT.FirstPass.S4S6c.B1Assembly68
 
 /-!
-# The hRr chain with a localized mesh bound (fp-S4S6c-hRr-local, z12)
+# The hRr chain with a localized mesh bound
 
 `hRr` of `shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:803; binder `hRr` at about l.844) at ONE environment point `ω`.
 The univ-form mesh `CellDiamLe ε (η ω) (dyadicD r / 100) Set.univ` of `hRr_fixedOmega'` (HoneSetup68.lean:152) is replaced
@@ -196,7 +196,7 @@ theorem hRr_fixedOmega_loc {γ ρ : ℝ}
     fun x hx _ => hx
 
 /-- **`hRr_fixedOmega_loc` with the mesh bound on the larger ball `B(0, (1+ρ)/2)`.** The `(1+ρ)/2` form of the mesh
-(the q4 interface) implies the `ρ` form, because `B(0, ρ) ⊆ B(0, (1+ρ)/2)` for `ρ < 1`. -/
+ implies the `ρ` form, because `B(0, ρ) ⊆ B(0, (1+ρ)/2)` for `ρ < 1`. -/
 theorem hRr_fixedOmega_loc_half {γ ρ : ℝ}
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     {ζ C s₀ ε r q0 CE CG : ℝ} (hρ1 : ρ < 1) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2)
@@ -236,7 +236,7 @@ theorem hstart_of_fullAdmAt_s1 {ρ s₀ γ ε s1 : ℝ} {Ω : Type} [MeasurableS
     simp [fillCells] at h0
   exact Lemma68WindowStart.cell_meets_frontier_thickening hε hηω hΘ hr hFA.2.1.1 hFA.2.1.2
 
-/-- **`hRr_fixedOmega_loc` with a free `s1` (z12, fp-S4S6c-shellball).** Copy of `hRr_fixedOmega_loc` (l.121) with
+/-- **`hRr_fixedOmega_loc` with a free `s1`.** Copy of `hRr_fixedOmega_loc` (l.121) with
 `Lemma68Config.sparsityS1 γ` replaced by a parameter `s1`; the proof is unchanged except for the `_s1` start lemma.
 No hypothesis on `s1` is used: `FullAdmAt` enters only through `hFA.1` and `hstart_of_fullAdmAt_s1`. -/
 theorem hRr_fixedOmega_loc_s1 {γ ρ s1 : ℝ}
@@ -317,7 +317,7 @@ theorem hRr_fixedOmega_loc_s1 {γ ρ s1 : ℝ}
     fun x hx _ => hx
 
 
-/-- **`hRr_fixedOmega_loc_half` with a free `s1` (z12, fp-S4S6c-shellball).** Copy of `hRr_fixedOmega_loc_half`
+/-- **`hRr_fixedOmega_loc_half` with a free `s1`.** Copy of `hRr_fixedOmega_loc_half`
 (l.200), delegating to `hRr_fixedOmega_loc_s1`. No hypothesis on `s1` is used. -/
 theorem hRr_fixedOmega_loc_half_s1 {γ ρ s1 : ℝ}
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
@@ -342,8 +342,8 @@ theorem hRr_fixedOmega_loc_half_s1 {γ ρ s1 : ℝ}
     (cellDiamLe_mono_set (Metric.ball_subset_ball (by linarith)) hmω) hηω htendω hadjω hmultω
 
 
-/-- **`hRr_fixedOmega_loc` with a free sparsity exponent `s1` and a free window constant `c0W` (`_g`, z12,
-fp-S4S6c-shellball; lead operator note 17:07).** Copy of `hRr_fixedOmega_loc_s1` (l.242) in which the window radius
+/-- **`hRr_fixedOmega_loc` with a free sparsity exponent `s1` and a free window constant `c0W` (`_g`).**
+Copy of `hRr_fixedOmega_loc_s1` (l.242) in which the window radius
 `Lemma68B1Assembly.winRf S ρ ζ C r ω` (= `windowRfT S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) ω`, B1Assembly68.lean:63-65)
 is written inline with the window constant `c0W` in place of `shellC068`. No hypothesis on `s1` or `c0W` is used: the
 only window fact used, `windowRfT_rangeShortEligible` (HoneRadii68.lean:34), holds for every real `c₀`, and the proof
@@ -425,8 +425,8 @@ theorem hRr_fixedOmega_loc_g {γ ρ s1 c0W : ℝ}
   exact (radius_bounds_ae_loc hηω hε hadjω i.a hr0 hrρ hd hd1 ha0 hdr hds hs4 hNs hmω hF0eq h0 hKb hRf hst hτ k hk).mono
     fun x hx _ => hx
 
-/-- **`hRr_fixedOmega_loc_half` with a free sparsity exponent `s1` and a free window constant `c0W` (`_g`, z12,
-fp-S4S6c-shellball).** Copy of `hRr_fixedOmega_loc_half` (l.200) and `hRr_fixedOmega_loc_half_s1` (l.322) with
+/-- **`hRr_fixedOmega_loc_half` with a free sparsity exponent `s1` and a free window constant `c0W` (`_g`).**
+Copy of `hRr_fixedOmega_loc_half` (l.200) and `hRr_fixedOmega_loc_half_s1` (l.322) with
 `sparsityS1 γ` replaced by `s1` and `shellC068` by `c0W`; delegates to `hRr_fixedOmega_loc_g`. No hypothesis on `s1`
 or `c0W` is used. -/
 theorem hRr_fixedOmega_loc_half_g {γ ρ s1 c0W : ℝ}

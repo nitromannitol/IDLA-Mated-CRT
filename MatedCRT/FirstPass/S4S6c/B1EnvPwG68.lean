@@ -7,15 +7,15 @@ import MatedCRT.FirstPass.S6e.Geometry
 import MatedCRT.FirstPass.S4S6c.HoneRrLocal68
 import MatedCRT.FirstPass.S4S6c.B1EnvPw68
 /-!
-# Generic adapters for the binders of `shellOneTest_at_of_goodEnv'` (fp-S4S6c-c0-generic-z9)
+# Generic adapters for the binders of `shellOneTest_at_of_goodEnv'`
 
 Generic copies, at one environment `ω`, of the pointwise adapters `hGreen_pw`, `hCountGood_pw`, `hRcell_pw` and
-`hWalk_pw` of B1EnvPw68.lean (z11, e0cc869), which are left unchanged. The sparsity exponent is a parameter `s1`
+`hWalk_pw` of B1EnvPw68.lean (e0cc869), which are left unchanged. The sparsity exponent is a parameter `s1`
 (replacing `Lemma68Config.sparsityS1 γ` in every `FullAdmAt`), and the window constant is a parameter `c0W`
 (replacing `shellC068` in the window radius, written inline as `windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω`).
 `hGreen_pw_g` and `hCountGood_pw_g` have no window, so they take `s1` only.
 
-The named gaps of z11 stay explicit binders: `hcut` (G2) of `hRcell_pw_g`; `hωm`, `hr10` (G1) of `hWalk_pw_g`.
+The named gaps stay explicit binders: `hcut` (G2) of `hRcell_pw_g`; `hωm`, `hr10` (G1) of `hWalk_pw_g`.
 The start lemma of `hWalk_pw_g` is the `s1`-generic `Lemma68HoneRrLocal.hstart_of_fullAdmAt_s1`
 (HoneRrLocal68.lean:226); `walk_conclusion_of_ball` is taken from B1EnvPw68.lean.
 

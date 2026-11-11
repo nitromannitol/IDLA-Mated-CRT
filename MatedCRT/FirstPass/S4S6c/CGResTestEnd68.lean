@@ -5,10 +5,10 @@ import MatedCRT.FirstPass.S4S6c.ShellHde68
 import MatedCRT.FirstPass.S6r.ShellWiring
 
 /-!
-# The test-end finiteness `ShellCGTestEndLoc` (fp-S4S6c-testend-loc, z1)
+# The test-end finiteness `ShellCGTestEndLoc`
 
 `ShellCGTestEndLoc 𝒮` (CGResLoc68.lean) asks that, on the shell chain of `ShellPtPremCG`, the test ends `L_k` of the
-shells are almost surely finite. The route is the localized one of Codex Q3 (notes/fp-gaps/CODEX-idla-hOne-residuals-sol-20261110.md,
+shells are almost surely finite. The route is the localized one (
 lines 199-256), with no global mesh and no new probability event:
 
 1. `testEnd ≤ τ` deterministically, where `τ = vExitTime (killed …) x` is the killed exit time (`testEnd_le_vExit_of_path_loc`).
@@ -74,7 +74,7 @@ theorem cell_meets_ball2_mem_killed {η : ℝ → ℂ} {ε : ℝ} (hη : Continu
       Metric.infDist_zero_of_mem ((cell_subset_fillCells (ε := ε) (η := η) hΘv) hyc)
     linarith
 
-/-- **Localized test ends (Codex Q3, steps 1-4).** Copy of `shell_fin_of_path_loc` (ShellHdePw68.lean:49) with the
+/-- **Localized test ends (steps 1-4).** Copy of `shell_fin_of_path_loc` (ShellHdePw68.lean:49) with the
 exit bound exported and the test end added. Deterministically, on one walk `x` from the start cell, with the killed
 exit time `τ = vExitTime (killed ε η Θ F0 r) x` finite: for every shell `k ≤ n` the centre is eligible and the test end
 `testEnd k x` is at most `τ`. The mesh bound is used only on `B_ρ(0)`. -/
@@ -167,7 +167,7 @@ theorem testEnd_le_vExit_of_path_loc {η : ℝ → ℂ} {ε : ℝ} (hη : Contin
   have hexit : shellExit ε η (fillCells ε η ↑Θ) r (d ^ a) d R k x ≤ (τ : ℕ∞) := by
     unfold shellExit
     exact (firstTime_le_iff _ τ).2 ⟨τ, le_rfl, hitle, hxτB⟩
-  -- Codex Q3 steps 2-4: the test end is at most the killed exit time
+  -- Steps 2-4: the test end is at most the killed exit time
   have hExitNe : shellExit ε η (fillCells ε η ↑Θ) r (d ^ a) d R k x ≠ ⊤ :=
     ne_top_of_le_ne_top (ENat.natCast_ne_top τ) hexit
   have hshC : shellHit ε η (fillCells ε η ↑Θ) r (d ^ a) k x = (C : ℕ∞) := by
@@ -233,7 +233,7 @@ theorem testEnd_le_vExit_of_path_loc {η : ℝ → ℂ} {ε : ℝ} (hη : Contin
     exact (firstTime_le_iff _ τ).2 ⟨τ, le_rfl, hexit, hτball⟩
   exact ⟨htest, hzS⟩
 
-/-- **The residual `ShellCGTestEndLoc 𝒮` holds for every `𝒮` (z1, fp-S4S6c-testend-loc).** Destructures the 43
+/-- **The residual `ShellCGTestEndLoc 𝒮` holds for every `𝒮`.** Destructures the 43
 clauses of `ShellPtPremCG` (current form, ShellCoreCG68.lean), derives the mesh on `B_{ρ_cell}(0)` from the counting event,
 the killed exit a.s. finite, the start and the adjacency almost surely, and applies `testEnd_le_vExit_of_path_loc`. -/
 theorem shellCGTestEndLoc_holds (𝒮 : SpaceFillingSLEModel) : Lemma68CGResLoc.ShellCGTestEndLoc 𝒮 := by

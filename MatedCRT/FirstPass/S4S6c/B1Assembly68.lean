@@ -15,7 +15,7 @@ import MatedCRT.FirstPass.S4S6c.WindowRfGlobal68
 import MatedCRT.FirstPass.S4S6c.WalkLoc68
 
 /-!
-# The one-test bound and the shell order at a fixed radius, almost surely (q1, fp-S4S6c-B1-assembly)
+# The one-test bound and the shell order at a fixed radius, almost surely
 
 `shellOneTest_ae_fixedR` is the almost-sure form, at one fixed radius `r`, of the two conjuncts of the B1 conclusion
 `ShellOneTestOrderAeStmt` (ShellHoneInst68.lean:159): the one-test bound `ShellOneTestAt` and the shell order `ShellOrderAe`,
@@ -29,7 +29,7 @@ for the window radius `Rf = winRf S ρ ζ C r ω` of the environment `ω`.
   `hRmin` is derived from `hRr` with `rmin := K.c0 * r ^ 2`.
 
 Not proved here: the quantifier order of `ShellOneTestOrderAeStmt` (`∀ r` sits inside `∀ᵐ ω`), and the deterministic side
-conditions `hεc`, `hεcell`, which depend on `ε` and `r` and are not implied by that statement (see the report).
+conditions `hεc`, `hεcell`, which depend on `ε` and `r` and are not implied by that statement.
 
 Terminology: Armstrong-Kuusi-Mourrat (shells, one-test bound), Armitage-Gardiner (exit times of balls).
 -/
@@ -162,7 +162,7 @@ theorem shellOneTest_ae_fixedR {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0
     (hCellGood : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k' : ℤ, (cell ε (S.η ω) k' ∩ ball (0 : ℂ) (Lemma68HoneCellGood.rhoCell68 ρ)).Nonempty →
         diam (cell ε (S.η ω) k') ≤ ε ^ (2 / (2 + γ) ^ 2 - ζ))
-    -- cell-control radius of chat 237 section 3: the prefix bound R/4 < rhoCell - rho (k ≤ shellCount - 1)
+    -- cell-control radius: the prefix bound R/4 < rhoCell - rho (k ≤ shellCount - 1)
     (hRcell : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k : ℕ, k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1 → ∀ w ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r
           (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k,
@@ -304,14 +304,14 @@ theorem shellOneTest_ae_fixedR {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0
     (hdbl := fun k _ => Filter.Eventually.of_forall fun x hx => hdω hωE hadm k x hx)
 
 open Classical in
-/-- **The one-test bound and the shell order at a fixed radius, almost surely, from the walk-form leaf (q4,
-fp-S4S6c-B1-assembly-ae, part 2).** The same per-radius conclusion as `shellOneTest_ae_fixedR`, from the walk-form leaf
+/-- **The one-test bound and the shell order at a fixed radius, almost surely, from the walk-form leaf
+part 2).** The same per-radius conclusion as `shellOneTest_ae_fixedR`, from the walk-form leaf
 `shellOneTest_of_direct_ae` (HoneLeafAe68.lean:385), at the shell constants `K := shellK68 γ ρ ω₀ ζ …`.
 Every leaf binder is an almost-sure statement in the walk form `∀ k ≤ n, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a, x ∈ leafPre … → …`.
 Discharged here: the environment (`Uniform68Env.ae_envInputs`, `hmult_ae_valid`), `hb` (`hb_ae_valid_centre`), `hdbl`
 (`hdbl_of_exit_geom_path`, pointwise in the walk), `hL68` (`hL68_of_clause`, with the `Admissible` clause of `FullAdmAt`),
 `hεα`, `hεmass`, `hsc`, `hpos`, `hgood` (HoneGoodEventAe68 and HoneGoodEventAe68.hgood_ae), `hN` (`shellNcov68_spec`).
-The rest are named hypotheses, listed in the binder table of the report. -/
+The rest are named hypotheses, listed in the binder table. -/
 theorem shellOneTest_ae_fixedR_ae {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
     {ζ CG CE C α q0 s₀ ε r : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2)
@@ -321,7 +321,7 @@ theorem shellOneTest_ae_fixedR_ae {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (h
     (E : Set Ω) (i : Lemma68Config.Config68)
     (ω₀ : ℝ) (hω0 : 0 < ω₀)
     (K : Constants68 γ ρ) (hK : K = shellK68 γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1)
-    -- eps threshold and exponents (named; q2 checking)
+    -- eps threshold and exponents (named)
     (hεc : ε ≤ 16 * K.c0)
     (hεcell : ε ^ (2 / (2 + γ) ^ 2 - ζ) ≤ K.c0 * r ^ 2 / 100)
     (hωκ : K.ω ≤ 2 / (2 + γ) ^ 2 - ζ)
@@ -361,10 +361,10 @@ theorem shellOneTest_ae_fixedR_ae {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (h
               (dyadicD r ^ shortExp ζ) (dyadicD r) k x) ∧
             winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
               (dyadicD r ^ shortExp ζ) (dyadicD r) k x) ≤ 1)
-    -- operator request 66b: the cluster-radius cap of the leaf `hL68`
+    -- the cluster-radius cap of the leaf `hL68`
     (hcap : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ z : ℂ, cRad ε (S.η ω) (Finset.filter (fun v => v ∈ cellVertices ε (S.η ω) (Metric.ball z r)) i.A) < r)
-    -- operator request 60d: the volume lower bounds (walk form)
+    -- the volume lower bounds (walk form)
     (hVolC : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
         x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
@@ -395,7 +395,7 @@ theorem shellOneTest_ae_fixedR_ae {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (h
       ∀ D : Set ℂ, D ⊆ ball (0 : ℂ) ρ → ∀ w : ℤ → ℂ,
         (∀ k ∈ cellVertices ε (S.η ω) D, w k ∈ cell ε (S.η ω) k ∩ closure D) →
         ε⁻¹ * ∫ _ in D, (1 : ℝ) ∂(S.μ ω) - ε ^ (-1 + α) ≤ ∑' _ : cellVertices ε (S.η ω) D, (1 : ℝ))
-    -- the cell-control event at the leaf radius rho_cell = rhoCell68 rho (chat 237 version: q1)
+    -- the cell-control event at the leaf radius rho_cell = rhoCell68 rho
     (hCellGood : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k' : ℤ, (cell ε (S.η ω) k' ∩ ball (0 : ℂ) (Lemma68HoneCellGood.rhoCell68 ρ)).Nonempty →
         diam (cell ε (S.η ω) k') ≤ ε ^ (2 / (2 + γ) ^ 2 - ζ))
@@ -404,7 +404,7 @@ theorem shellOneTest_ae_fixedR_ae {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (h
         x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
           winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ)
             (dyadicD r) k x) / 4 < Lemma68HoneCellGood.rhoCell68 ρ - ρ)
-    -- operator request 60f, 62b, 64d: walk-form inputs of the leaf
+    -- walk-form inputs of the leaf
     (hx1 : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
         x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
@@ -441,7 +441,7 @@ theorem shellOneTest_ae_fixedR_ae {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (h
         x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
           shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r) k x ∈
             shortEligible ρ (dyadicD r) (shortExp ζ))
-    -- operator request 65b: the full support of the measure on balls
+    -- the full support of the measure on balls
     (hfull : ∀ᵐ ω ∂S.P, ω ∈ E → Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ w : ℂ, ∀ t : ℝ, 0 < t → 0 < S.μ ω (ball w t))
     :
@@ -549,7 +549,7 @@ theorem shellOneTest_ae_fixedR_ae {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (h
         (K.c0 * r ^ 2) (mul_le_mul_of_nonneg_left (hRx hxm).1 K.hc0.le) (hWx hxm) (hCeω hωE hadm) hεcell
         (hgx hxm) (hbx hxm))
 
-/-- **The regular environment at one environment `ω` and one scale `ε` (q4, fp-S4S6c-goodenv-body).** The r-free
+/-- **The regular environment at one environment `ω` and one scale `ε`.** The r-free
 almost-sure inputs of the B1 assembly, gathered at `ω`: the eps-event `ω ∈ meshEvent` (Green lower bound, cell size and
 exit time at `ε`), the curve escapes both ends, the multiplicities are locally finite with consecutive edges (every
 `ε'`), `η ω` is continuous, `μ ω` has no atoms and is finite on compacts, and the degree and closed-cell adjacency
@@ -566,11 +566,11 @@ def RegularEnvAt68 {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (γ ω�
     (∀ ε' : ℝ, 0 < ε' → ∀ u v : ℤ, S.mult ε' ω u v ≠ 0 → (cell ε' (S.η ω) u ∩ cell ε' (S.η ω) v).Nonempty)
 
 open Classical in
-/-- **The one-test bound and the shell order at one radius, at one regular environment (q4, fp-S4S6c-goodenv-body,
-operator request, chat 239 l.84-95).** The body of `shellOneTest_ae_fixedR_ae` at one fixed environment `ω` and one fixed
+/-- **The one-test bound and the shell order at one radius, at one regular environment.**
+The body of `shellOneTest_ae_fixedR_ae` at one fixed environment `ω` and one fixed
 radius `r`: the almost-sure environment inputs are the fields of `RegularEnvAt68`, and the almost-sure leaf inputs are
 the walk-form binders (`∀ k ≤ n, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a, x ∈ leafPre … → …`). The window route is the named
-pointwise order `hShell` (the pointwise core of `shellOrderAe_window` is not in the repository; see the report). The
+pointwise order `hShell` (the pointwise core of `shellOrderAe_window` is not in the repository). The
 window event enters through the mesh `hmesh` at `dyadicD r` (the dyadic premise of `cellDiam_ae_dyadicD` at `ω`). -/
 theorem shellOneTest_at_of_goodEnv {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
@@ -582,7 +582,7 @@ theorem shellOneTest_at_of_goodEnv {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     (K : Constants68 γ ρ) (hK : K = shellK68 γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1)
     (ω : Ω) (hreg : RegularEnvAt68 S γ ω₀ ρ CG ζ α CE ε ω)
     (i : Lemma68Config.Config68)
-    -- eps threshold and exponents (named; q2 checking)
+    -- eps threshold and exponents (named)
     (hεc : ε ≤ 16 * K.c0)
     (hεcell : ε ^ (2 / (2 + γ) ^ 2 - ζ) ≤ K.c0 * r ^ 2 / 100)
     (hωκ : K.ω ≤ 2 / (2 + γ) ^ 2 - ζ)
@@ -597,7 +597,7 @@ theorem shellOneTest_at_of_goodEnv {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
         (windowRfT S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) ω)
         (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a)
     (hadm : Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i)
-    -- the shell centres are short-eligible (walk form; named, see the report)
+    -- the shell centres are short-eligible (walk form; named)
     (hEl : Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
         x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
@@ -793,14 +793,14 @@ theorem shellOneTest_at_of_goodEnv {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
 
 open Classical in
 /-- **The one-test bound and the shell order at one radius, at one regular environment, with the pointwise shell order
-derived (q4, fp-S4S6c-shell-pointwise).** This is `shellOneTest_at_of_goodEnv` with its named pointwise order `hShell`
+derived.** This is `shellOneTest_at_of_goodEnv` with its named pointwise order `hShell`
 replaced by the pointwise cores: `Lemma68ShellOrderPw.shellOrderAe_window_pw` (ShellOrderPw68.lean, the pointwise core of
-`shellOrderAe_window`) and the pointwise shell hde `Lemma68ShellHdePw68.shellHde68_full_pw` (ShellHdePw68.lean, z1).
+`shellOrderAe_window`) and the pointwise shell hde `Lemma68ShellHdePw68.shellHde68_full_pw` (ShellHdePw68.lean).
 The environment facts at `ω` are fields of `RegularEnvAt68`: the continuity `Continuous (S.η ω)`, the adjacency of the open
 cells at every scale (the last field, `Lemma68ShellEnvAe.map_cells_meet_ae`), and the killed exit, from the local finiteness
 of the multiplicities (`Lemma68KilledExitAe.ae_killed_exit_ne_top`). The start is `hstart_of_fullAdmAt`
 (HoneSetup239_68.lean). The mesh `hmesh` is the univ form, which implies the ball form used by `shellHde68_full_pw`.
-The new named input is `htest`, the q3 testEnd finite-domain event of `shellOrderAe_window`, now at `ω`. The hypotheses
+The new named input is `htest`, the testEnd finite-domain event of `shellOrderAe_window`, now at `ω`. The hypotheses
 `hs₀` and `hrz` are binders of `shellOneTest_ae_fixedR_ae`, and they are kept. -/
 theorem shellOneTest_at_of_goodEnv' {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
@@ -812,7 +812,7 @@ theorem shellOneTest_at_of_goodEnv' {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2
     (K : Constants68 γ ρ) (hK : K = shellK68 γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1)
     (ω : Ω) (hreg : RegularEnvAt68 S γ ω₀ ρ CG ζ α CE ε ω)
     (i : Lemma68Config.Config68)
-    -- eps threshold and exponents (named; q2 checking)
+    -- eps threshold and exponents (named)
     (hεc : ε ≤ 16 * K.c0)
     (hεcell : ε ^ (2 / (2 + γ) ^ 2 - ζ) ≤ K.c0 * r ^ 2 / 100)
     (hωκ : K.ω ≤ 2 / (2 + γ) ^ 2 - ζ)
@@ -828,7 +828,7 @@ theorem shellOneTest_at_of_goodEnv' {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2
           testEnd ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
             (winRf S ρ ζ C r ω) k x ≠ ⊤)
     (hadm : Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i)
-    -- the shell centres are short-eligible (walk form; named, see the report)
+    -- the shell centres are short-eligible (walk form; named)
     (hEl : Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
         x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
@@ -956,21 +956,21 @@ theorem shellOneTest_at_of_goodEnv' {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2
 
 open Classical in
 /-- **The one-test bound and the shell order at one radius, at one regular environment, with the exit mesh localized to a ball
-and the walk exponent split (q4, fp-S4S6c-goodenv-local).** This is `shellOneTest_at_of_goodEnv'` for the canonical CG route
+and the walk exponent split.** This is `shellOneTest_at_of_goodEnv'` for the canonical CG route
 (`ShellOneTestOrderAeCGStmt`, ShellHoneInst68.lean): the leaf constant is `K = shellKCG … CG` (`hK`), and the statement is
 kept at this `K` (`K.C = CG`, `K.c0 = c₀(CG)`, `K.s1 = shellS1CG γ CG`). Changes against `shellOneTest_at_of_goodEnv'`:
-* the univ mesh is replaced by the ball mesh `hmesh` at radius `rhoCell68 ρ = (1+ρ)/2` (operator decision, 16:52 UTC; its
+* the univ mesh is replaced by the ball mesh `hmesh` at radius `rhoCell68 ρ = (1+ρ)/2` (its
   producer is the cell clause of `meshEventR`, Guard68S10.lean);
 * the walk exponent is split: `hκ2 : 2 * K.ω < κ` with `κ = 2/(2+γ)^2 - ζ` replaces `hωκ`; the second conjunct of `hWalk` is
-  `ε ^ κ ≤ R/8` (the consumer leaf is q1's `_split` variant); `hα` and `hεs` keep `K.ω`;
-* `hTdom` is replaced by the stopping-time finiteness `hstopFin` (q1, `shellOneTest_of_direct_ae_rcell_stopFin_rho`), and
+  `ε ^ κ ≤ R/8`; `hα` and `hεs` keep `K.ω`;
+* `hTdom` is replaced by the stopping-time finiteness `hstopFin` (`shellOneTest_of_direct_ae_rcell_stopFin_rho`), and
   `hRbd` is discharged by `windowRfT_hRbd_global` (WindowRfGlobal68.lean);
 * `hx1`, `hmomS`, `hVolY` are taken at the radius `ρmom = rhoCell68 ρ = (1+ρ)/2` (the leaf's `ρmom`);
 * the cut `hcutR : dyadicD r ^ shortExp ζ < rhoCell68 ρ - ρ` is the cut of `ShellOneTestOrderAeCGStmt`, and `hRcell` is dropped;
-* the walk bound `hb` is `hb_ae_of_walk_loc` (WalkLoc68, z12) on `hmesh`; the pointwise shell order `hShell` is the named
-  localized producer `hShellLoc` (z1's pointwise localized order has not landed);
+* the walk bound `hb` is `hb_ae_of_walk_loc` (WalkLoc68) on `hmesh`; the pointwise shell order `hShell` is the named
+  localized producer `hShellLoc`;
 * `hfull` is kept: `pos_iInf_annulus_ball` (HoneGoodEvent68.lean:119) needs the positivity of every ball of the annulus, not
-  only `μ (ball x (c₀ R))` as chat 239 l.512-540 states. -/
+  only `μ (ball x (c₀ R))` as stated. -/
 theorem shellOneTest_at_of_goodEnv_loc {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     {ζ CG CE C α q0 s₀ ε r : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2)
@@ -988,9 +988,9 @@ theorem shellOneTest_at_of_goodEnv_loc {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ 
     (hα : 2 * K.ω * K.βm < α)
     (hεs : ε ≤ ((100 * K.c0) ^ K.βm / 4) ^ (1 / (α - 2 * K.ω * K.βm)))
     (hrε : 10 * ε ^ K.ω ≤ r) (hε1 : ε ≤ 1)
-    -- the exit mesh on the cell-size event of `meshEventR` (radius `rhoCell68 ρ = (1 + ρ)/2`, chat 252)
+    -- the exit mesh on the cell-size event of `meshEventR` (radius `rhoCell68 ρ = (1 + ρ)/2`)
     (hmesh : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) (Lemma68HoneCellGood.rhoCell68 ρ)))
-    -- named localized producer (z1 ShellOrderLoc68 pointwise form; z8 ShellPathLoc68), at `hmesh`
+    -- named localized producer, at `hmesh`
     (hShellLoc : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) (Lemma68HoneCellGood.rhoCell68 ρ)) →
       Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
       Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r)
@@ -1068,7 +1068,7 @@ theorem shellOneTest_at_of_goodEnv_loc {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ 
               ENNReal.ofReal (N.factorial * CE ^ N * ε ^ (-(N : ℝ))) *
                 (⨆ z' ∈ D, ∫⁻ x in Metric.thickening (ε ^ α) D,
                   ENNReal.ofReal (Real.log (1 / ‖z' - x‖) + 1) ∂(S.μ ω)) ^ N)
-    -- the walk second conjunct at the split exponent κ = 2/(2+γ)^2 - ζ (q1 `_split` leaf; not `K.ω`)
+    -- the walk second conjunct at the split exponent κ = 2/(2+γ)^2 - ζ (not `K.ω`)
     (hWalk : Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
       ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
         x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) (winRf S ρ ζ C r ω) k →
@@ -1133,7 +1133,7 @@ theorem shellOneTest_at_of_goodEnv_loc {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ 
           (dyadicD r ^ shortExp ζ) (dyadicD r) k x) := fun k hk =>
     (hEl hadm k hk).mono fun x hx hxm =>
       (Lemma68WindowRf.windowRfT_bounds S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) hd0 hd1 ha1 ω (hx hxm)).1
-  -- the walk bound `hb` at `ω`: the localized copy of `hb_ae_of_walk` (WalkLoc68, z12), on the mesh `hmesh`;
+  -- the walk bound `hb` at `ω`: the localized copy of `hb_ae_of_walk` (WalkLoc68), on the mesh `hmesh`;
   -- its gap `dyadicD r / 100 ≤ rhoCell68 ρ - ρ` follows from `dyadicD r / 100 ≤ dyadicD r ^ shortExp ζ` and `hcutR`
   have hbω := Lemma68WalkLoc.hb_ae_of_walk_loc (ρ := ρ) (ρmesh := Lemma68HoneCellGood.rhoCell68 ρ) (r := r)
     (s := dyadicD r ^ shortExp ζ) (d := dyadicD r) (A := (↑i.A : Set ℤ))
@@ -1209,7 +1209,7 @@ theorem shellOneTest_at_of_goodEnv_loc {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ 
 #print axioms MatedCRT.Lemma68B1Assembly.shellOneTest_at_of_goodEnv_loc
 
 open Classical in
-/-- **Copy of `shellOneTest_at_of_goodEnv_loc` with a free window constant `c0W` (q4, z5 B1, fp-S4S6c-goodenv-local).**
+/-- **Copy of `shellOneTest_at_of_goodEnv_loc` with a free window constant `c0W`.**
 Every window radius `winRf S ρ ζ C r ω` of `shellOneTest_at_of_goodEnv_loc` is written inline as
 `windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω`, and `shellC068` is replaced by `c0W`; no new definition is made.
 The statement and the proof are otherwise unchanged: `K.c0` (of `shellKCG`) is kept in `hVolC`, `hsel` and `hεcell`. -/
@@ -1230,9 +1230,9 @@ theorem shellOneTest_at_of_goodEnv_loc_g {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : �
     (hα : 2 * K.ω * K.βm < α)
     (hεs : ε ≤ ((100 * K.c0) ^ K.βm / 4) ^ (1 / (α - 2 * K.ω * K.βm)))
     (hrε : 10 * ε ^ K.ω ≤ r) (hε1 : ε ≤ 1)
-    -- the exit mesh on the cell-size event of `meshEventR` (radius `rhoCell68 ρ = (1 + ρ)/2`, chat 252)
+    -- the exit mesh on the cell-size event of `meshEventR` (radius `rhoCell68 ρ = (1 + ρ)/2`)
     (hmesh : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) (Lemma68HoneCellGood.rhoCell68 ρ)))
-    -- named localized producer (z1 ShellOrderLoc68 pointwise form; z8 ShellPathLoc68), at `hmesh`
+    -- named localized producer, at `hmesh`
     (hShellLoc : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) (Lemma68HoneCellGood.rhoCell68 ρ)) →
       Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
       Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r)
@@ -1310,7 +1310,7 @@ theorem shellOneTest_at_of_goodEnv_loc_g {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : �
               ENNReal.ofReal (N.factorial * CE ^ N * ε ^ (-(N : ℝ))) *
                 (⨆ z' ∈ D, ∫⁻ x in Metric.thickening (ε ^ α) D,
                   ENNReal.ofReal (Real.log (1 / ‖z' - x‖) + 1) ∂(S.μ ω)) ^ N)
-    -- the walk second conjunct at the split exponent κ = 2/(2+γ)^2 - ζ (q1 `_split` leaf; not `K.ω`)
+    -- the walk second conjunct at the split exponent κ = 2/(2+γ)^2 - ζ (not `K.ω`)
     (hWalk : Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
       ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
         x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r) ((windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω)) k →
@@ -1375,7 +1375,7 @@ theorem shellOneTest_at_of_goodEnv_loc_g {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : �
           (dyadicD r ^ shortExp ζ) (dyadicD r) k x) := fun k hk =>
     (hEl hadm k hk).mono fun x hx hxm =>
       (Lemma68WindowRf.windowRfT_bounds S.μ ρ (shortExp ζ) c0W C (dyadicD r) hd0 hd1 ha1 ω (hx hxm)).1
-  -- the walk bound `hb` at `ω`: the localized copy of `hb_ae_of_walk` (WalkLoc68, z12), on the mesh `hmesh`;
+  -- the walk bound `hb` at `ω`: the localized copy of `hb_ae_of_walk` (WalkLoc68), on the mesh `hmesh`;
   -- its gap `dyadicD r / 100 ≤ rhoCell68 ρ - ρ` follows from `dyadicD r / 100 ≤ dyadicD r ^ shortExp ζ` and `hcutR`
   have hbω := Lemma68WalkLoc.hb_ae_of_walk_loc (ρ := ρ) (ρmesh := Lemma68HoneCellGood.rhoCell68 ρ) (r := r)
     (s := dyadicD r ^ shortExp ζ) (d := dyadicD r) (A := (↑i.A : Set ℤ))
@@ -1450,7 +1450,7 @@ theorem shellOneTest_at_of_goodEnv_loc_g {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : �
 
 #print axioms MatedCRT.Lemma68B1Assembly.shellOneTest_at_of_goodEnv_loc_g
 
-/-- **Mesh bound on the visited set from the radius-`ρ` cell-size event (q4, fp-S4S6c-goodenv-loc).** The cells
+/-- **Mesh bound on the visited set from the radius-`ρ` cell-size event.** The cells
 meeting `ball 0 ρ` (the visited set `F0 = cellVertices ε η (ball 0 ρ)` of `ConfigOK`) have diameter at most
 `dyadicD r / 100` on the cell-size event of `meshEvent`, which is at radius `ρ` (not `(1+ρ)/2`). Route:
 `hmesh_local_of_cellSize` at the radius `2ρ - 1`, for which `(1 + (2ρ-1))/2 = ρ`. The strict `2 ω₀ < κ` is the
@@ -1467,7 +1467,7 @@ theorem cellDiamLe_F0_of_cellSize {Ω : Type} [MeasurableSpace Ω] (S : MatedCRT
   rw [e] at h
   exact h
 
-/-- **Walk exponent `κ = 2/(2+γ)² - ζ` at a shell centre (q4, fp-S4S6c-goodenv-loc, q2 item 2).** The walk second
+/-- **Walk exponent `κ = 2/(2+γ)² - ζ` at a shell centre.** The walk second
 conjunct `ε ^ κ ≤ R / 8` follows from `10 ε^{ω₀} ≤ r` and `r² ≤ R` (the `hRr` lower bound) by
 `pow_le_div_eight_of_two_omega`, with the strict `2 ω₀ < κ`. κ enters this bound only; it is not used in `hα` or `hεs`. -/
 theorem rpow_kappa_le_div_eight {ε ω₀ κ r R : ℝ} (hε0 : 0 < ε) (hε1 : ε ≤ 1) (hκ : 2 * ω₀ < κ)

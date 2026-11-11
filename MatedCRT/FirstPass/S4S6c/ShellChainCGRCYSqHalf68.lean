@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S4S6c.Closed6x68Y
 import MatedCRT.FirstPass.S4S6c.CGRCYSqInst68
 
 /-!
-# The square chain at the half exponent: the guard, `hU` and the 6.7/6.8/6.9 closures (fp-S4S6c-chain-sq-half)
+# The square chain at the half exponent: the guard, `hU` and the 6.7/6.8/6.9 closures
 
 The consumers of the guard (`GuardProbStmt`, S6e/Uniform.lean:132; `UniformConstantOrderLowerBoundStmt`, S6d.lean:96;
 the faithful headers S6d.lean:41, 57, 75) state the radius clause `10 * ε ^ ω₀' ≤ r` with an existential witness `ω₀'`.
@@ -33,7 +33,7 @@ open MatedCRT.Lemma68Omega MatedCRT.Lemma68GeometryId MatedCRT.Lemma68Admissible
 open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68WalkBridge MatedCRT.Lemma68ChainAe
 open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 
-/-- **The half-exponent radius premises (fp-S4S6c-chain-sq-half).** For `0 < ε ≤ 1` and `10 * ε ^ (ω₀ / 2) ≤ r` one has
+/-- **The half-exponent radius premises.** For `0 < ε ≤ 1` and `10 * ε ^ (ω₀ / 2) ≤ r` one has
 `10 * ε ^ ω₀ ≤ r` and `4 * ε ^ ω₀ ≤ r ^ 2`. With `a = ε ^ (ω₀ / 2)`: `ε ^ ω₀ = a ^ 2 ≤ a ≤ 1`. -/
 theorem radius_premises_of_half {ε ω₀ r : ℝ} (hε0 : 0 < ε) (hε1 : ε ≤ 1) (hω₀ : 0 < ω₀)
     (hr : 10 * ε ^ (ω₀ / 2) ≤ r) : 10 * ε ^ ω₀ ≤ r ∧ 4 * ε ^ ω₀ ≤ r ^ 2 := by
@@ -50,7 +50,7 @@ theorem radius_premises_of_half {ε ω₀ r : ℝ} (hε0 : 0 < ε) (hε1 : ε �
   · nlinarith [mul_le_mul_of_nonneg_left ha1 ha0.le]
   · nlinarith [mul_le_mul hr hr hr0 (by linarith)]
 
-/-- **`GuardProbStmt` from the square chain at the half exponent (fp-S4S6c-chain-sq-half).** Copy of
+/-- **`GuardProbStmt` from the square chain at the half exponent.** Copy of
 `guardProbStmtCGRCY_of_chainCGRCY` (ShellChainCGRCY68.lean:172) with `hChain : ShellChainCGRCYSqStmt 𝒮`. The witness is
 `ω₀ / 2`; the mesh, Green and exit events are those at the internal `ω₀`. The almost sure event is restricted to
 `ε ≤ min (shellEps0ZCG) (min εG 1)`, so that `ε ≤ 1` holds in the radius premise (`radius_premises_of_half`). -/
@@ -166,7 +166,7 @@ theorem guardProbStmtCGRCYSq_of_chain (𝒮 : SpaceFillingSLEModel)
     (fun ε ω r i => Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i)
     (Lemma68Config.exitQ S) hpt'
 
-/-- **The uniform constant-order bound from the square chain (fp-S4S6c-chain-sq-half, hU).** Copy of
+/-- **The uniform constant-order bound from the square chain (hU).** Copy of
 `Lemma68ShellTopCGRCY.hU_top_cgRCY` (ShellChainCGRCY68.lean:295) with `hOne` the square form. -/
 theorem hU_top_cgRCYSq {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮)
     (hK : MatedCRT.Lemma68Guard10.CountingAtExitAlphaStmt 𝒮)
@@ -183,7 +183,7 @@ theorem hU_top_cgRCYSq {𝒮 : SpaceFillingSLEModel} (hG : GreenKernelLowerBound
       (Lemma68CGRCYSq.shellChainCGRCYSq_of_oneTestOrderCGRCYSq
         (ShortWindowHV.hprev_of_shortWindow_noH0V hLit hBM hCC hB1 hμ) hOne))
 
-/-- **Lemma 6.7, first-pass form of the square counting CG route (fp-S4S6c-chain-sq-half).** As
+/-- **Lemma 6.7, first-pass form of the square counting CG route.** As
 `MatedCRT.firstPass_6_7_of_hOneY` (Closed6x68Y.lean:39) with `hOneYSq`. -/
 theorem firstPass_6_7_of_hOneYSq {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLEModel}
     (hCRM : CertifiedReferenceModel ν 𝒮)
@@ -198,7 +198,7 @@ theorem firstPass_6_7_of_hOneYSq {ν : ℝ → Measure SLEPathCode} {𝒮 : Spac
       (CertifiedReferenceModel.cellSizeEstimate hCRM) (CountingExitAlpha68.countingAtExitAlphaStmt_of_firstPass hCRM)
       hLit hBM hCC hB1 hμ (fieldVolCutoffStmt_of_volumeGrowth hVG) hOneYSq)
 
-/-- **Lemma 6.8, first-pass form of the square counting CG route (fp-S4S6c-chain-sq-half).** As
+/-- **Lemma 6.8, first-pass form of the square counting CG route.** As
 `MatedCRT.firstPass_6_8_of_hOneY` (Closed6x68Y.lean:54) with `hOneYSq`. -/
 theorem firstPass_6_8_of_hOneYSq {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLEModel}
     (hCRM : CertifiedReferenceModel ν 𝒮)
@@ -214,7 +214,7 @@ theorem firstPass_6_8_of_hOneYSq {ν : ℝ → Measure SLEPathCode} {𝒮 : Spac
       hLit hBM hCC hB1 hμ (fieldVolCutoffStmt_of_volumeGrowth (volumeGrowthStmt_of_berestyckiGwynne hBG)) hOneYSq)
     (volumeGrowthStmt_of_berestyckiGwynne hBG) (CertifiedReferenceModel.cellSizeEstimate hCRM)
 
-/-- **Lemma 6.9, first-pass form of the square counting CG route (fp-S4S6c-chain-sq-half).** As
+/-- **Lemma 6.9, first-pass form of the square counting CG route.** As
 `MatedCRT.firstPass_6_9_of_hOneY` (Closed6x68Y.lean:70) with `hOneYSq`. -/
 theorem firstPass_6_9_of_hOneYSq {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLEModel}
     (hCRM : CertifiedReferenceModel ν 𝒮)
@@ -229,7 +229,7 @@ theorem firstPass_6_9_of_hOneYSq {ν : ℝ → Measure SLEPathCode} {𝒮 : Spac
       (CertifiedReferenceModel.cellSizeEstimate hCRM) (CountingExitAlpha68.countingAtExitAlphaStmt_of_firstPass hCRM)
       hLit hBM hCC hB1 hμ (fieldVolCutoffStmt_of_volumeGrowth hVG) hOneYSq)
 
-/-- **Lemma 6.7 with no named one-test input (fp-S4S6c-chain-sq-half).** `firstPass_6_7_of_hOneYSq` with the square
+/-- **Lemma 6.7 with no named one-test input.** `firstPass_6_7_of_hOneYSq` with the square
 one-test `CGRCYSqInst68.shellOneTestOrderAeCGRCYSq_holds`. -/
 theorem firstPass_6_7_sq {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLEModel}
     (hCRM : CertifiedReferenceModel ν 𝒮)
@@ -240,7 +240,7 @@ theorem firstPass_6_7_sq {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFilling
     FaithfulConstantOrderLowerBoundStmt 𝒮 :=
   firstPass_6_7_of_hOneYSq hCRM hLit hBM hCC hB1 hμ hVG (Lemma68CGRCYSqInst.shellOneTestOrderAeCGRCYSq_holds 𝒮)
 
-/-- **Lemma 6.8 with no named one-test input (fp-S4S6c-chain-sq-half).** `firstPass_6_8_of_hOneYSq` with the square
+/-- **Lemma 6.8 with no named one-test input.** `firstPass_6_8_of_hOneYSq` with the square
 one-test `CGRCYSqInst68.shellOneTestOrderAeCGRCYSq_holds`. -/
 theorem firstPass_6_8_sq {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLEModel}
     (hCRM : CertifiedReferenceModel ν 𝒮)
@@ -251,7 +251,7 @@ theorem firstPass_6_8_sq {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFilling
     FaithfulConstantOrderLowerBoundDivStmt 𝒮 :=
   firstPass_6_8_of_hOneYSq hCRM hLit hBM hCC hB1 hμ hBG (Lemma68CGRCYSqInst.shellOneTestOrderAeCGRCYSq_holds 𝒮)
 
-/-- **Lemma 6.9 with no named one-test input (fp-S4S6c-chain-sq-half).** `firstPass_6_9_of_hOneYSq` with the square
+/-- **Lemma 6.9 with no named one-test input.** `firstPass_6_9_of_hOneYSq` with the square
 one-test `CGRCYSqInst68.shellOneTestOrderAeCGRCYSq_holds`. -/
 theorem firstPass_6_9_sq {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLEModel}
     (hCRM : CertifiedReferenceModel ν 𝒮)

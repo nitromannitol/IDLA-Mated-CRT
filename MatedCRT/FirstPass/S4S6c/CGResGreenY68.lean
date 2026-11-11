@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4S6c.CGResWalkLoc68
 
 /-!
 # Pointwise producers of the split-leaf Green and walk binders at the Green exponent `ωG`
-(fp-S4S6c-green-omegaG, z11; Codex 19:56 UTC, residual 75a)
+ (residual 75a)
 
 `LICGRCY68.ShellOneTestOrderAeCGRCYStmt` takes a Green exponent `ωG`, independent of the shell exponent `ω₀`,
 with the event `greenLowEvent68 S ωG ρ CG ε`. The split leaf `B1Assembly68.shellOneTest_at_of_goodEnv_loc_g`
@@ -11,7 +11,7 @@ producers with `K.ω` replaced by `ωG`. Writing `e := 2 / (2 + γ) ^ 2 - ζ` (t
 
 * `greenY_pt` (`hGreen`): the event `greenLowEvent68 S ωG ρ CG ε` gives the bound for `ε ^ ωG ≤ r'`. The body needs
   it for `ε ^ e ≤ r'`, which follows when `ε ^ ωG ≤ ε ^ e`, i.e. `e ≤ ωG` (for `0 < ε ≤ 1`).
-  **Named hypothesis `hGe : e ≤ ωG`, not in the operator's list of premises** (`2 * ω₀ < ωG` alone is not enough:
+  **Named hypothesis `hGe : e ≤ ωG`, not in the list of premises** (`2 * ω₀ < ωG` alone is not enough:
   for `ωG < e` the radii `r' ∈ [ε ^ e, ε ^ ωG)` are not covered by the event).
 * `walkY_pt` (`hWalk`): the walk producer `Lemma68CGResWalkLoc.hWalk_pw_g_loc` at the exponent `e` (`K.ω := e`,
   `ωm := ω₀`; its hypotheses are `2 * ω₀ < e`, `ShellPtPremCG` clause 8, and `10 * ε ^ ω₀ ≤ r`). Its first conjunct
@@ -35,7 +35,7 @@ open MatedCRT.Lemma68ShellHoneInst MatedCRT.Lemma68WindowRf MatedCRT.Lemma68Shel
 open MatedCRT.Lemma68B1Assembly
 open Lemma68ShellCoreCG
 
-/-- **The mesh-range constant `εG` of `LICGRCY68` (fp-S4S6c-green-omegaG).** `εG := min 1 (shellEps0ZCG …)`:
+/-- **The mesh-range constant `εG` of `LICGRCY68`.** `εG := min 1 (shellEps0ZCG …)`:
 positive, at most `1`, and at most `shellEps0ZCG`. Depends only on the constants `γ α ω₀ ζ CG`. -/
 noncomputable def shellEpsG68 (γ α ω₀ ζ CG : ℝ) : ℝ :=
   min 1 (Lemma68Guard10.shellEps0ZCG γ α ω₀ ζ CG)

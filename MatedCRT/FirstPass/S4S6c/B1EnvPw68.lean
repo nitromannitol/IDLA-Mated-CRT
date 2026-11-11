@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.S4S6c.HoneRcell68
 import MatedCRT.FirstPass.S4S6c.ShellChainGlue68
 import MatedCRT.FirstPass.S6e.Geometry
 /-!
-# Pointwise environment adapters for the binders of `shellOneTest_at_of_goodEnv'` (fp-S4S6c-env-pw-adapters, z11)
+# Pointwise environment adapters for the binders of `shellOneTest_at_of_goodEnv'`
 
 Each theorem here has as conclusion exactly one binder of `shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:803),
 at one environment point `ω`: `hGreen` (l.874), `hCountGood` (l.881), `hRcell` (l.888) and `hWalk` (l.909). The

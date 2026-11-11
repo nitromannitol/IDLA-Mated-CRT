@@ -1,11 +1,11 @@
 import MatedCRT.FirstPass.S4S6c.HoneCellR68
 
 /-!
-# Discharge of the prefix binder `hRcell` (fp-S4S6c-leaf-rcell-tdom, q1)
+# Discharge of the prefix binder `hRcell`
 
 The cell-control binder `hRcell` of `shellOneTest_of_direct_ae` (HoneLeafAe68.lean) asks that the shell radius
-satisfies `R_k / 4 < rhoCell - rho_c` on the prefix set, almost surely for `k ≤ n`. The written argument
-(CHATGPT-237 section 3, l.335-348) gives it from two facts:
+satisfies `R_k / 4 < rhoCell - rho_c` on the prefix set, almost surely for `k ≤ n`. The argument
+ (l.335-348) gives it from two facts:
 
 * the selected test radius satisfies `R_k ≤ d ^ a` (`d = dyadicD r`, `a = shortExp ζ`), because the centre is
   eligible (`shortEligible`) and the radius selector obeys `Rf z ≤ d ^ a` there (`windowRfT_rangeShortEligible`
@@ -49,7 +49,7 @@ theorem radius_le_of_eligible_ae {ε : ℝ} {η : ℝ → ℂ} {Kset : Set ℂ} 
 
 /-- **Binder `hRcell` of `shellOneTest_of_direct_ae`, discharged.** From the radius bound
 (`radius_le_of_eligible_ae`), `0 ≤ d ^ aW` (`0 < d`, `0 ≤ aW`) and the cutoff `d ^ aW < g` with
-`g = rhoCell - rho_c` (chat 237 section 3; the hypothesis `hcut`). -/
+`g = rhoCell - rho_c` (the hypothesis `hcut`). -/
 theorem hRcell_of_eligible {ε : ℝ} {η : ℝ → ℂ} {Kset : Set ℂ} {Rf : ℂ → ℝ} {A : Set ℤ}
     {τU : (ℕ → ℤ) → ℕ∞} {n : ℕ} {m : ℤ → ℤ → ℕ} {a0 : ℤ} {r sc d ρ aW g : ℝ}
     (hd : 0 < d)

@@ -10,7 +10,7 @@ import MatedCRT.FirstPass.S4S6c.HoneRadii68
 
 /-!
 # The shell radius for the stopped coordinates, and `hmomS` at one point of the mesh event
-(fp-S4S6c-momS-pw, chat 239 section 4)
+
 
 * `measurable_shellCentre_radius_stop` (hR of `HoneMomS239_68.Shell.shell_hmom_pair`): the radius
   `Rf (shellCentre k)` is measurable for the σ-algebra of the stopped coordinates at the shell exit `shellExit k`.
@@ -20,7 +20,7 @@ import MatedCRT.FirstPass.S4S6c.HoneRadii68
 * `hmomS_pointwise`: the binder `hmomS` of `shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:803), at one `ω`,
   from `ω ∈ meshEvent` (its exit-time component is the exit-moment clause at the radius `ρ` with constant `CE`,
   `exitTimeEvent68`, UniformEvents.lean:48) through `HoneMomS239.Shell.hmomS_rhoMom`.
-  The radius of the test sets is `ρ` (the `ρmom` of q1's binder form), not `1`.
+  The radius of the test sets is `ρ`, not `1`.
 -/
 
 namespace MatedCRT
@@ -79,7 +79,7 @@ theorem hmomS_pointwise {γ ω₀ ρ CG ζ α CE ε C s₀ r : ℝ} {Ω : Type} 
     (fillCells ε (S.η ω) (i.Θ : Set ℤ)) (winRf S ρ ζ C r ω) r (dyadicD r ^ shortExp ζ) (dyadicD r) i.a k hk
 
 /-- **The leaf moments `hmom1`, `hmom2` with hR discharged.** `HoneMomS239.Shell.shell_hmom_pair` with its binder
-`hR` supplied by `measurable_shellCentre_radius_stop`; the named inputs left are `hTdom` and `hRbd` (q1 / operator). -/
+`hR` supplied by `measurable_shellCentre_radius_stop`; the named inputs left are `hTdom` and `hRbd`. -/
 theorem shell_hmom_pair_hR {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m)
     (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0)
     {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ))
@@ -120,9 +120,9 @@ theorem hmomS_pointwise_rhoMom {γ ρ s₀ α CE ε ρmom C ζ r : ℝ} {Ω : Ty
     (fillCells ε (S.η ω) (i.Θ : Set ℤ)) (winRf S ρ ζ C r ω) r (dyadicD r ^ shortExp ζ) (dyadicD r) i.a k hk
 
 /-- **The binder `hx1` of `shellOneTest_of_direct_ae_rcell_rho` at one point `ω` (the `ρmom` margin; the residual
-`ShellResX1` of z5).** Under `RegularEnvAt68` at `ω` and `FullAdmAt`, for every `k ≤ n` and `P`-almost every walk in
+`ShellResX1`).** Under `RegularEnvAt68` at `ω` and `FullAdmAt`, for every `k ≤ n` and `P`-almost every walk in
 `leafPre` the exit vertex satisfies `‖vertexPoint (x T)‖ < ρmom - R / 4`, with `T = shellExit`, `R = winRf (shellCentre)`.
-This is the first conjunct of `HoneWalkAe68.hWalk_ae_of_walk` (chat 239 l.787-793), re-proved from its components
+This is the first conjunct of `HoneWalkAe68.hWalk_ae_of_walk`, re-proved from its components
 (`walk_inputs_ae`, `hEl_ae_of_walk`, `hb_ae_of_walk`, `exitVertex_mem_ball_of_sphere`): `hWalk_ae_of_walk` also needs
 `10 ε^{ω₀} ≤ r` with `2 ω₀ < K.ω`, which the `hx1` consumer does not have.
 
@@ -228,7 +228,7 @@ theorem hx1_fixedOmega {γ ω₀ ρ CG ζ α CE C ε s₀ r ρmom : ℝ} {Ω : T
     hd hds hRz.2 hgap hz hmeshLoc hbx'
   exact mem_ball_zero_iff.mp hv
 
-/-- **`hmomS_pointwise` with a general sparsity coefficient `s1` (variant, fp-S4S6c-s1-generic, q3).** The guard
+/-- **`hmomS_pointwise` with a general sparsity coefficient `s1` (variant).** The guard
 `FullAdmAt s1` replaces `FullAdmAt (sparsityS1 γ)`. The proof discards the guard (`intro _`), so no property of `s1`
 is used: no hypothesis `0 < s1` or `s1 < 1` is needed. The original `hmomS_pointwise` is unchanged. -/
 theorem hmomS_pointwise_s1 {γ ω₀ ρ CG ζ α CE ε C s₀ r s1 : ℝ} {Ω : Type} [MeasurableSpace Ω]
@@ -250,7 +250,7 @@ theorem hmomS_pointwise_s1 {γ ω₀ ρ CG ζ α CE ε C s₀ r s1 : ℝ} {Ω : 
   exact HoneMomS239.Shell.hmomS_rhoMom hcl (i.A : Set ℤ) (shellCount r (dyadicD r ^ shortExp ζ) - 1)
     (fillCells ε (S.η ω) (i.Θ : Set ℤ)) (winRf S ρ ζ C r ω) r (dyadicD r ^ shortExp ζ) (dyadicD r) i.a k hk
 
-/-- **`hmomS_pointwise_rhoMom` with a general sparsity coefficient `s1` (variant, fp-S4S6c-s1-generic, q3).** The guard
+/-- **`hmomS_pointwise_rhoMom` with a general sparsity coefficient `s1` (variant).** The guard
 `FullAdmAt s1` replaces `FullAdmAt (sparsityS1 γ)`. The proof discards the guard (`intro _`), so no property of `s1`
 is used: no hypothesis `0 < s1` or `s1 < 1` is needed. The original `hmomS_pointwise_rhoMom` is unchanged. -/
 theorem hmomS_pointwise_rhoMom_s1 {γ ρ s₀ α CE ε ρmom C ζ r s1 : ℝ} {Ω : Type} [MeasurableSpace Ω]
@@ -269,7 +269,7 @@ theorem hmomS_pointwise_rhoMom_s1 {γ ρ s₀ α CE ε ρmom C ζ r s1 : ℝ} {�
   exact HoneMomS239.Shell.hmomS_rhoMom hcl (i.A : Set ℤ) (shellCount r (dyadicD r ^ shortExp ζ) - 1)
     (fillCells ε (S.η ω) (i.Θ : Set ℤ)) (winRf S ρ ζ C r ω) r (dyadicD r ^ shortExp ζ) (dyadicD r) i.a k hk
 
-/-- **`hmomS_pointwise_s1` with a free window constant `c0W` (`_g`, fp-S4S6c-c0-generic, q3).** The window radius
+/-- **`hmomS_pointwise_s1` with a free window constant `c0W` (`_g`).** The window radius
 `winRf S ρ ζ C r ω` (= `windowRfT S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) ω`, B1Assembly68.lean:63-65) is written
 inline as `windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω` (`Lemma68WindowRf.windowRfT`, no new definition). The guard
 `FullAdmAt s1` is generic in `s1`. The proof discards the guard (`intro _`) and passes the radius to
@@ -298,7 +298,7 @@ theorem hmomS_pointwise_s1_g {γ ω₀ ρ CG ζ α CE ε C s₀ r s1 c0W : ℝ} 
     (Lemma68WindowRf.windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω) r (dyadicD r ^ shortExp ζ) (dyadicD r)
     i.a k hk
 
-/-- **`hmomS_pointwise_rhoMom_s1` with a free window constant `c0W` (`_g`, fp-S4S6c-c0-generic, q3).** The guard
+/-- **`hmomS_pointwise_rhoMom_s1` with a free window constant `c0W` (`_g`).** The guard
 `FullAdmAt s1` is generic in `s1` and the window radius is `windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω` (inline,
 in place of `winRf S ρ ζ C r ω`). The proof discards the guard and uses only the exit-moment clause at `ρmom`; no
 hypothesis on `s1` or `c0W` is used. With `ρmom := rhoCell68 ρ` this is the binder `hmomS` of

@@ -7,19 +7,19 @@ import MatedCRT.FirstPass.S4S6c.ShellHoneInst68
 import MatedCRT.FirstPass.S6r.Count
 
 /-!
-# Setup discharges of the leaf binders at the fixed-radius B1 setting (z12, fp-S4S6c-hone-setup)
+# Setup discharges of the leaf binders at the fixed-radius B1 setting
 
 * `hRr_fixedOmega` and `hRr_fixedOmega'`: the radius bound `r ^ 2 ≤ Rf (shellCentre …) ≤ 1` along the walk, for every
   `k ≤ n` with `n + 1 ≤ shellCount r (dyadicD r ^ shortExp ζ)`, at ONE environment `ω`. No almost-sure quantifier in `ω`
   remains: the environment facts at `ω` are pointwise hypotheses. Conclusion: almost surely in the walk `x` under
   `srwLaw (S.mult ε ω) i.a`. The primed form derives `hrle : r ≤ countThreshold ζ` from the B1 hypotheses on `q₀`
   (`0 < q₀`, `q₀ ≤ (1/4)²/(4 shellChone68 C_E C_G)`, `r ≤ rAmp q₀ ζ`) through `radius_le_countThreshold_of_oneTest`
-  (ShellHoneInst68.lean, q2 item (c)).
+  (ShellHoneInst68.lean).
 * `hRr_ae_setup` and `hRr_ae_setup'`: the almost-sure-in-`ω` forms (`filter_upwards` of the fixed-`ω` ones). The binders
-  `hmesh`, `hstart`, `hηc` stay those of the setting (`hmesh`, `hstart` routed to z5).
+  `hmesh`, `hstart`, `hηc` stay those of the setting (`hmesh`).
 * `card_lt_of_tRad_lt`: `tRad` below `r` gives the count bound `|B| < s₁ r^{2β} / ε`.
 * `hL68_of_clause` and `hL68_fixedOmega`: the leaf binder `hL68` (ShellHoneInst68.lean:74) at one `ω`, for every `r` in
-  `[10 ε^{K.ω}, R]`, from the sparsity clause of `Admissible` (write-up (15)) at `(K.s1, K.βm)`, with the cap-radius
+  `[10 ε^{K.ω}, R]`, from the sparsity clause of `Admissible` at `(K.s1, K.βm)`, with the cap-radius
   inequality `hcap` as a named input.
 
 Terminology: Armstrong-Kuusi-Mourrat (shells, good annuli), Armitage-Gardiner (exit times of balls),
@@ -41,7 +41,7 @@ open MatedCRT.Lemma68ShellHoneInst MatedCRT.Lemma68WindowRf
 open MatedCRT.Lemma68ChainGlue MatedCRT.Lemma68HoneRadii
 
 /-- The window radius at the environment `ω` (mirror of `Lemma68B1Assembly.winRf`, B1Assembly68.lean:50, which
-does not build in the current working tree: see the report). Same body, so `winRf` is definitionally that radius. -/
+does not build in the current working tree. Same body, so `winRf` is definitionally that radius. -/
 noncomputable def winRf {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ρ ζ C r : ℝ) (ω : Ω) : ℂ → ℝ :=
   windowRfT S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) ω
 
@@ -71,7 +71,7 @@ At `ω` with `ω ∈ E` and `FullAdm`, for every `k ≤ shellCount r (dyadicD r 
 `srwLaw (S.mult ε ω) i.a`, the radius at the shell centre lies in `[r ^ 2, 1]`. The conclusion is the shape of
 `radius_bounds_ae` (HoneRadii68.lean). No almost-sure quantifier in `ω` remains: the environment facts at `ω` are the
 pointwise hypotheses `hmω`, `hstω`, `hηω`, `htendω`, `hadjω`, `hmultω`. `hmω` and `hstω` are the `r`-dependent binders
-of the setting (`hmesh`, `hstart`; routed to z5). `hrle` is the named setup input (see `hRr_fixedOmega'`). -/
+of the setting (`hmesh`; `hstart`). `hrle` is the named setup input (see `hRr_fixedOmega'`). -/
 theorem hRr_fixedOmega {γ ρ : ℝ}
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     {ζ C s₀ ε r : ℝ} (hρ1 : ρ < 1) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2)
@@ -218,7 +218,7 @@ theorem hRr_ae_setup' {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0 : 0 < γ
     E i hmesh hstart hηc
 
 /-- **Count bound from `tRad`.** `tRad ε s₁ β B = (|B| ε / s₁)^{1/(2β)}`; if it is below `r > 0` then
-`|B| < s₁ r^{2β} / ε` (write-up (14)-(15), Armitage-Gardiner-free: pure real analysis). -/
+`|B| < s₁ r^{2β} / ε` (pure real analysis). -/
 theorem card_lt_of_tRad_lt {ε s1 βm r : ℝ} (B : Finset ℤ) (hε : 0 < ε) (hs1 : 0 < s1) (hβ : 0 < βm)
     (h : tRad ε s1 βm B < r) : (B.card : ℝ) < s1 * r ^ (2 * βm) / ε := by
   unfold tRad at h
@@ -234,7 +234,7 @@ open scoped Classical in
 /-- **The leaf binder `hL68` (ShellHoneInst68.lean:74) from the sparsity clause of `Admissible`.** The clause (15)
 at `s₁ = K.s1`, `β = K.βm`, `x = r` gives, for `B = A ∩ V(B_r z)`, either `r ≤ c_B` or `t_B < r`. The second case is
 the count bound (`card_lt_of_tRad_lt`). The first case is excluded by the named input `hcap : c_B < r`, which is NOT
-derivable from the sources (see the report). `hs1 : 0 < K.s1` is needed for the empty configuration. -/
+derivable from the sources. `hs1 : 0 < K.s1` is needed for the empty configuration. -/
 theorem hL68_of_clause {γ ρc : ℝ} (K : Constants68 γ ρc) {η : ℝ → ℂ} {ε r : ℝ} (A : Finset ℤ) (hε : 0 < ε)
     (hr : 0 < r) (hs1 : 0 < K.s1)
     (hclause : ∀ B ⊆ A, B.Nonempty → r ≤ cRad ε η B ∨ tRad ε K.s1 K.βm B < r)

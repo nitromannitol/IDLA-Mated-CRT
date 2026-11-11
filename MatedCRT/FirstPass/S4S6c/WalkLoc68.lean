@@ -2,12 +2,12 @@ import MatedCRT.FirstPass.S4S6c.ShellHdePw68
 import MatedCRT.FirstPass.S4S6c.HoneExitGeom68
 
 /-!
-# Walk lemmas with the mesh localized to a ball (fp-S4S6c-walk-loc, z12; chat 252 §2, §4)
+# Walk lemmas with the mesh localized to a ball
 
 Localized copies of walk lemmas whose univ-form mesh `CellDiamLe ε η (d / 100) Set.univ` is replaced by the ball form
 `CellDiamLe ε η (d / 100) (Metric.ball 0 ρmesh)` with a general `ρmesh` and the gap `d / 100 ≤ ρmesh - ρ`. The consumer
 instantiates `d := dyadicD r` and `ρmesh := ρ + dyadicD r / 100` (hmeshExit, MeshExitPw68.lean), which gives the form
-`dyadicD r / 100` of the task. The originals are kept unchanged:
+`dyadicD r / 100`. The originals are kept unchanged:
 * `shellHit_interior_of_mesh_loc`: copy of `shellHit_interior_of_mesh` (HoneExitGeom68.lean:591);
 * `hb_ae_of_walk_loc`: copy of `hb_ae_of_walk` (HoneExitGeom68.lean:264); its named hit-cell interiority `hhit` is
   derived from the ball mesh (via `shellHit_interior_of_mesh_loc`) instead of being an input.

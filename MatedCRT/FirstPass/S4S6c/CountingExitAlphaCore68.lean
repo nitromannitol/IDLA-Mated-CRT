@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S4S6c.HoneModelInputs68
 import MatedCRT.FirstPass.S4S6c.CountingExitAlpha68
 
 /-!
-# The counting exponent at the exit exponent from the core certified model (fp-S4S6c-hk-core, z12)
+# The counting exponent at the exit exponent from the core certified model
 
 The first-pass producer `CountingExitAlpha68.countingAtExitAlphaStmt_of_firstPass` (CountingExitAlpha68.lean:152)
 takes the full certified reference model `CertifiedReferenceModel ν 𝒮` (FirstPass/SLERef/Certified.lean:54). It uses
@@ -21,7 +21,7 @@ open MeasureTheory
 namespace MatedCRT
 namespace CountingExitAlphaCore68
 
-/-- **Counting exponent at the exit exponent from the core certified model (z12, fp-S4S6c-hk-core).** The
+/-- **Counting exponent at the exit exponent from the core certified model.** The
 one-exponent counting statement `CountingAtExitAlphaStmt 𝒮` (Guard68S10.lean:937), from the core certified reference
 model `CertifiedReferenceModelCore ν 𝒮`. The proof is that of `countingAtExitAlphaStmt_of_firstPass`
 (CountingExitAlpha68.lean:152), with the core projections in place of the full-model ones. -/

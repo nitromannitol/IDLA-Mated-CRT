@@ -3,9 +3,9 @@ import MatedCRT.FirstPass.S4S6c.WindowStart68
 import MatedCRT.FirstPass.S4S6c.HVolCutoff68
 
 /-!
-# Discharge of the cap-radius input and of the leaf binder `hL68` (z12, fp-S4S6c-setup-239)
+# Discharge of the cap-radius input and of the leaf binder `hL68`
 
-Following chat 239 §2 (notes/fp-gaps/CHATGPT-239-idla-hU-named-inputs-PRO.md, l.114-236), checked against the definitions:
+The following steps are checked against the definitions:
 
 * `capRadius ε η B = ⨅ z : ℚ × ℚ, ⨆ v : B, ⨅ q : ratInt ε v, edist z (η q)` (S6e/Geometry.lean:46) and
   `cRad = (capRadius).toReal` (S6e/Admissible.lean:35). The infimum runs over rational centres, so a witness centre
@@ -54,7 +54,7 @@ theorem exists_ratInt_mem_ball_of_cell {ε : ℝ} {η : ℝ → ℂ} (hη : Cont
   exact ⟨q, Ioo_subset_Icc_self hxO.2, hxO.1⟩
 
 /-- **Witness bound for `c_B`.** If every vertex of `B` has its cell meeting the open ball `ball z r`, then
-`c_B = cRad ε η B < r` (chat 239 §2; the infimum in `capRadius` is over rational centres). Proof: pick a rational
+`c_B = cRad ε η B < r` (the infimum in `capRadius` is over rational centres). Proof: pick a rational
 parameter `Q v` per vertex with `dist (η (Q v)) z < r`; the largest of these distances is `< r`; a rational centre `w`
 within `δ/2` of `z` (where `δ = r - max`) has `dist (w, η (Q v)) < r - δ/2` for every `v`. The empty case gives
 `cRad ∅ = 0` (`capRadius ∅ = ⨅ z, 0`). -/
@@ -124,7 +124,7 @@ theorem hL68_fixedOmega' {γ ρ s₀ ε : ℝ} {Ω : Type} [MeasurableSpace Ω] 
       (fun v hv => (Finset.mem_filter.mp (Finset.mem_coe.mp hv)).2)
   exact fun z => hL68_of_clause K i.A hε hr hs1 hcl hcapz z
 
-/-- **`hstart` from `FullAdmAt` (chat 239 §2, item `hstart`).** The start cell `H_a` meets the frontier of the
+/-- **`hstart` from `FullAdmAt` (item `hstart`).** The start cell `H_a` meets the frontier of the
 `r/2`-thickening of `fillCells Θ` (Armstrong-Kuusi-Mourrat: the cell-distance window). From the first conjunct
 `2 dd_a ≤ r ≤ 2 M_a` of `Admissible` (`FullAdmAt`'s second component) through the deterministic core
 `cell_meets_frontier_thickening` (WindowStart68.lean). The filled set is nonempty because `ball 0 s₀ ⊆ fillCells Θ`
@@ -145,7 +145,7 @@ theorem hstart_of_fullAdmAt {γ ρ s₀ ε : ℝ} {Ω : Type} [MeasurableSpace �
 /-- **`hRr_ae_setup` in the `FullAdmAt (sparsityS₁ γ)` form, with `hrle`, `hstart` and `hηc` discharged.**
 The binders are the B1 parameters on `q₀` (`0 < q₀`, `q₀ ≤ (1/4)²/(4 shellChone68 C_E C_G)`, `r ≤ rAmp q₀ ζ`, which
 give `hrle` in `hRr_fixedOmega'`) and the mesh binder `hmesh` (the `r`-dependent `CellDiamLe … univ`, not localized:
-see the report). `hstart` is `hstart_of_fullAdmAt`, `hηc` is `Lemma68Inputs.ae_continuous_of_isValid`. -/
+`hstart` is `hstart_of_fullAdmAt`, `hηc` is `Lemma68Inputs.ae_continuous_of_isValid`. -/
 theorem hRr_ae_setup_final {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
     {ζ C s₀ ε r q0 CE CG : ℝ} (hρ1 : ρ < 1) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2)
@@ -165,7 +165,7 @@ theorem hRr_ae_setup_final {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0 : 0
   exact hRr_fixedOmega' S hρ1 hζ0 hζ1 hq0 hq0c hs₀ hε hr0 hrρ hRA E i ω hmω
     (fun hFA => hstart_of_fullAdmAt S hε hs₀ ω hηω r hr0 i hFA) hηω htendω (hadjω ε hε) hmultω
 
-/-! ## Localized mesh bound on the cell-size event (chat 239 §2, l.269-310)
+/-! ## Localized mesh bound on the cell-size event (l.269-310)
 
 The cell-size event `cellSizeEvent68` (S6f/UniformEvents.lean:41) is the event of Draft Lemma 2.8 at a fixed scale.
 Its upper bound `diam (cell k) ≤ ε^κ`, `κ = 2/(2+γ)² - ζ`, holds on the event for all cells meeting the ball, with no
@@ -267,7 +267,7 @@ theorem hmesh_local_of_cellSize_vertices {Ω : Type} [MeasurableSpace Ω] (S : M
   fun k hk => hmesh_local_of_cellSize S hω₀ hκ hε₁1 hcut hε hεε₁ ω hω r hr hrε k hk
 
 /-- **Mesh bound on the ball of radius `ρ`** (`hmesh_local_of_cellSize_ball`): the cells of `F0 = cellVertices ε η (ball 0 ρ)`
-(the visited set of `ConfigOK`) have diameter at most `dyadicD r / 100`. This is the narrowest typed form of chat 239's
+(the visited set of `ConfigOK`) have diameter at most `dyadicD r / 100`. This is the narrowest typed form of the route's
 `CellDiamLe … (i.F0)`; it follows from the mesh-radius form since `ball 0 ρ ⊆ ball 0 ((1+ρ)/2)` for `ρ ≤ 1`. -/
 theorem hmesh_local_of_cellSize_ball {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) {γ ζ ρ ω₀ ε₁ ε : ℝ}
     (hρ1 : ρ ≤ 1) (hω₀ : 0 < ω₀) (hκ : 2 * ω₀ < 2 / (2 + γ) ^ 2 - ζ)

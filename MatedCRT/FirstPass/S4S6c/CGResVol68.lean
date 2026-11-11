@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.S4S6c.HoneCellGood68
 
 /-!
 # FIRST PASS S4S6c, CGResVol68: the volume residuals of the CG pointwise route
-(task fp-S4S6c-cgres-vol, worker z9; residuals `ShellCGResVolC`, `ShellCGResVolY` of ShellCoreCG68.lean)
+ (residuals `ShellCGResVolC`; `ShellCGResVolY` of ShellCoreCG68.lean)
 
 STEP A (this file): `resVolC_pt` and `resVolY_pt`, the pointwise volume bounds at ONE environment `ω`, with the
 constants `K := shellKCG …` (so `K.c0 = shellC0 CG` and `K.βm = (2+γ)²/2+1` by unfolding). The producers are
@@ -16,7 +16,7 @@ constants `K := shellKCG …` (so `K.c0 = shellC0 CG` and `K.βm = (2+γ)²/2+1`
 Clauses of `ShellPtPremCG` used: `0 < γ`, `γ < 2`, `0 < ω₀`, `0 < CG`, `0 < ζ`, `ζ < 1/2`, `0 < ρ`, `ρ < 1`,
 `0 < ε`, `10 ε^ω₀ ≤ r`, `r ≤ R`, `R ≤ ρ/4`. The global full-support clause and the mesh clause are not used.
 
-Named premises, NOT derivable from the clauses of `ShellPtPremCG` (reported in reports/z9.md):
+Named premises, NOT derivable from the clauses of `ShellPtPremCG` (reported in):
 * `hcapω`: an `∃ t` giving the volume cutoff at `ω` (the `∃ t` clause of `ShellPtPremCG`) TOGETHER WITH the radius cap
   `r ≤ (t / (8 * 2 ^ shortExp ζ)) ^ (1 / (1 + ζ))`. The cap is missing from `ShellPtPremCG`: `t` is only given by an
   existential, while `R` is quantified before `ω`, so no choice of `t` is controlled by the clauses.

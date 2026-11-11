@@ -3,9 +3,9 @@ import MatedCRT.FirstPass.S4S6c.HoneExitGeom68
 import MatedCRT.FirstPass.S4S6c.HoneInputsDirect
 
 /-!
-# Walk-a.s. prefix forms of `hWalk` and `hx1` (fp-S4S6c-hwalk-prefix, z10)
+# Walk-a.s. prefix forms of `hWalk` and `hx1`
 
-Chat 239 section 5 (`notes/fp-gaps/CHATGPT-239-idla-hU-named-inputs-PRO.md` l.783-801) retires the universal-path
+Chat 239 section 5 (l.783-801) retires the universal-path
 form of `hWalk` and `hx1` (not derivable) and retains the prefix form
 `∀ᵐ x ∂srwLaw m i.a, x ∈ prefixSet … → vertexPoint ε η (x (T k x).toNat) ∈ ball 0 (ρmom - R k x / 4) ∧ ε ^ K.ω ≤ R k x / 8`.
 Here `T k x = shellExit … k x` and `R k x = Rf (shellCentre … k x)`. The radius `ρmom` is deterministic; `hx1` is the
@@ -92,7 +92,7 @@ theorem eps_pow_le_eighth_of_radius {ε ω0 ω r R : ℝ} (hε : 0 < ε) (hε1 :
   have hR0 : 0 ≤ R := le_trans (sq_nonneg r) hrR
   linarith
 
-/-- **`hWalk` and `hx1` in the walk-a.s. prefix form (chat 239 l.787-793).** Under the walk law `srwLaw m s0`,
+/-- **`hWalk` and `hx1` in the walk-a.s. prefix form.** Under the walk law `srwLaw m s0`,
 for every shell `k ≤ n`, almost surely on the prefix set `prefixSet … (shellExit … k) τU`: the exit vertex
 `x (T k x).toNat` lies in `B(0, ρmom - R k x / 4)` and `ε^{K.ω} ≤ R k x / 8`, where `R k x = Rf (shellCentre … k x)`.
 The radius `ρmom` is any deterministic radius with `ρ ≤ ρmom` (the gap cutoff; the consumer takes `ρmom < 1`).

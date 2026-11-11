@@ -7,7 +7,7 @@ import MatedCRT.FirstPass.S4S6c.HoneSetupAdapt68
 import MatedCRT.FirstPass.S4S6c.CGResGreenWalk68
 
 /-!
-# The CG walk residual with the ball-form mesh (fp-S4S6c-cgres-walk-meshloc, z11)
+# The CG walk residual with the ball-form mesh
 
 (1) `hWalk_ae_of_walk_loc` and `hWalk_pw_g_loc`: copies of `HoneWalkAe68.hWalk_ae_of_walk` and of
 `B1EnvPwG68.hWalk_pw_g` whose univ-form mesh `CellDiamLe … Set.univ` is replaced by the ball form
@@ -18,7 +18,7 @@ exit-cell bounds use the ball-form lemmas of WalkLoc68 (`shellHit_interior_of_me
 (2) `shellCGResWalk_holds_loc : ShellCGResWalk 𝒮` with the `hMesh` binder removed: the mesh is
 `cellDiamLe_rhoCell_of_meshEventR` on the premise (with `c0 := 1`, whose `hεcell` is `eps_rpow_le_div_hundred`
 from `2ω₀ < e` and `10 ε^ω₀ ≤ r`), and the gap comes from premise clause `2(d/100) + 2d^a ≤ rhoCell68 ρ - ρ`.
-The Green-scale input stays the single named binder `hG1` (request 75a; refuted as stated, see its docstring).
+The Green-scale input stays the single named binder `hG1` (refuted as stated; see its docstring).
 -/
 
 namespace MatedCRT
@@ -185,7 +185,7 @@ The premise `ShellPtPremCG` is destructured. The mesh is `cellDiamLe_rhoCell_of_
 `eps_rpow_le_div_hundred`), the gap is clause `2(d/100) + 2d^a ≤ rhoCell68 ρ - ρ`, the exponent split is
 `ε^e ≤ ε^ω₀` (`ω₀ < e`).
 
-Named input (the Green-scale input, request 75a), the exact type the walk producer's second conjunct needs:
+Named input (the Green-scale input), the exact type the walk producer's second conjunct needs:
 `hG1 : ∀ (…) premise → ∃ ωm, 2 * ωm < ω₀ ∧ 10 * ε ^ ωm ≤ r` (the hypotheses `hωm`, `hr10` of `hWalk_pw_g_loc`,
 read through `eps_pow_le_eighth_of_radius`, HoneWalkAe68.lean:77).
 **REFUTED as stated, do not instantiate:** for `0 < ε < 1` and `r = 10 ε^ω₀` (allowed by the premise), `10 ε^ωm ≤ r`
