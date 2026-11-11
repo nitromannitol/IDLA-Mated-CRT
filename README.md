@@ -10,8 +10,8 @@ The table gives, for each numbered result, its Lean statement and the declaratio
 
 | Result | Lean statement | Declaration or hypothesis field in the main route | First-pass closure |
 |---|---|---|---|
-| Theorem 1.4 | `ConvergenceOfIDLAStmt` (Draft/Section1.lean:45) | `convergenceOfIDLA_conditional` (Assembly/Main.lean:342) | `closed_1_4_lp_noSC` (FirstPass/Closure/Clean14And16LPNoSC.lean:24) |
-| Theorem 1.6 | `ConvergenceOfDivSandpileStmt` (Draft/Section1.lean:56) | `convergenceOfDivSandpile_conditional` (Assembly/Main.lean:349) | `closed_1_6_lp_noSC` (FirstPass/Closure/Clean14And16LPNoSC.lean:73) |
+| Theorem 1.4 | `ConvergenceOfIDLAStmt` (Draft/Section1.lean:45) | `convergenceOfIDLA_conditional` (Assembly/Main.lean:342) | `closed_1_4_lp_noSC_noSup` (FirstPass/Closure/LssDerived.lean:54; applies `closed_1_4_lp_noSC`, Clean14And16LPNoSC.lean:24) |
+| Theorem 1.6 | `ConvergenceOfDivSandpileStmt` (Draft/Section1.lean:56) | `convergenceOfDivSandpile_conditional` (Assembly/Main.lean:349) | `closed_1_6_lp_noSC_noSup` (FirstPass/Closure/LssDerived.lean:95; applies `closed_1_6_lp_noSC`, Clean14And16LPNoSC.lean:73) |
 | Fact 2.2 | `LQGMeasurePropertiesStmt` (Draft/Section2.lean:39) | hypothesis `lqgMeasureProperties` (Assembly/Hypotheses.lean:65) | not counted (cited result) |
 | Theorem 2.3 | `ConeHarmonicBallsStmt` (Draft/Section2.lean:56) | `coneHarmonicBalls` (Assembly/Main.lean:112) | `closed_2_3_lp` (FirstPass/Closure/Clean2xLP.lean:37) |
 | Lemma 2.4 | `ConeHarmonicBallsUpToFixedTimeStmt` (Draft/Section2.lean:66) | `coneHarmonicBallsUpToFixedTime` (Assembly/Main.lean:97) | `closed_2_4_lp` (FirstPass/Closure/Clean2xLP.lean:77) |
@@ -44,11 +44,11 @@ The table gives, for each numbered result, its Lean statement and the declaratio
 | Lemma 4.6 | `SubsequentialConvergenceStmt` (Draft/Section4.lean:110) | `subsequentialConvergence` (Assembly/Main.lean:174) | `firstPass_4_6_h35c` (FirstPass/Closure/H35CorrectedRewire.lean:74); open DRAFT binders: h27, h218, h28, h35c, h37 |
 | Lemma 4.7 | `EquiboundedStmt` (Draft/Section4.lean:127) | `equibounded` (Assembly/Main.lean:170) | `closed_4_7_ownBinders` (FirstPass/Closure/OwnBinderRewire.lean:65) |
 | Lemma 4.8 | `SubsequentialPropertiesStmt` (Draft/Section4.lean:145) | `subsequentialProperties` (Assembly/Main.lean:181) | `closed_4_8_lp` (FirstPass/Closure/CleanSec456LP.lean:38) |
-| Proposition 5.1 | `IDLALowerBoundStmt` (Draft/Section5.lean:27) | `iDLALowerBound` (Assembly/Main.lean:252) | `closed_5_1_lp` (FirstPass/Closure/Clean42And5LP.lean:79) |
+| Proposition 5.1 | `IDLALowerBoundStmt` (Draft/Section5.lean:27) | `iDLALowerBound` (Assembly/Main.lean:252) | `closed_5_1_lp_noSup` (FirstPass/Closure/LssDerived.lean:353; applies `closed_5_1_lp`, Clean42And5LP.lean:79) |
 | Lemma 5.2 | `GeneralIDLALowerBoundStmt` (Draft/Section5.lean:47) | none in Assembly/Main.lean | `closed_5_2_ownBinders` (FirstPass/Closure/OwnBinderRewire.lean:79) |
 | Lemma 5.3 | `MeanValueInequalityStmt` (Draft/Section5.lean:67) | `meanValueInequality` (Assembly/Main.lean:213) | `closed_5_3_clean` (FirstPass/Closure/HLsRewire53.lean:109) |
 | Lemma 5.4 | `LLowerBoundStmt` (Draft/Section5.lean:85) | `lLowerBound` (Assembly/Main.lean:223) | `closed_5_4_clean` (FirstPass/Closure/Clean51And54.lean:73) |
-| Proposition 6.1 | `IDLAUpperBoundStmt` (Draft/Section6.lean:31) | `iDLAUpperBound` (Assembly/Main.lean:304) | `closed_6_1_lp` (FirstPass/Closure/Clean61And71LP.lean:43) |
+| Proposition 6.1 | `IDLAUpperBoundStmt` (Draft/Section6.lean:31) | `iDLAUpperBound` (Assembly/Main.lean:304) | `closed_6_1_lp_noSup` (FirstPass/Closure/LssDerived.lean:257; applies `closed_6_1_lp`, Clean61And71LP.lean:43) |
 | Lemma 6.3 | `AbelianIDLAStmt` (Draft/Section6.lean:46) | none in Assembly/Main.lean | not counted (cited result) |
 | Lemma 6.4 | `GoodAnnulusPrevalenceStmt` (Draft/Section6.lean:60) | `goodAnnulusPrevalence` (Assembly/Main.lean:268) | `closed_6_4_lp` (FirstPass/Closure/CleanSec456LP.lean:45) |
 | Lemma 6.5 | `AnnulusHitStmt` (Draft/Section6.lean:72) | `annulusHit` (Assembly/Main.lean:263) | `firstPass_6_5_uniform` (FirstPass/S6q.lean:26) |
@@ -61,7 +61,7 @@ The table gives, for each numbered result, its Lean statement and the declaratio
 | Lemma 7.2 | `MassBoundOdometerAboveScaleStmt` (Draft/Section7.lean:77) | `massBoundOdometerAboveScale` (Assembly/Main.lean:312) | `closed_7_2` (FirstPass/Closure/Section7.lean:18) |
 | Lemma 7.3 | `OdometerBoundMassStmt` (Draft/Section7.lean:46) | `odometerBoundMass` (Assembly/Main.lean:317) | `closed_7_3` (FirstPass/Closure/Section7.lean:23) |
 | Lemma 7.4 | `CrudeUpperBoundStmt` (Draft/Section7.lean:67) | `crudeUpperBound` (Assembly/Main.lean:321) | not counted (cited result) |
-| Proposition 8.1 | `IDLAConstrainedConvergenceStmt` (Draft/Section8.lean:20) | `iDLAConstrainedConvergence` (Assembly/Main.lean:334) | `closed_8_1_lp` (FirstPass/Closure/Clean81LP.lean:43); open DRAFT binders: h210, h34, h214, h28, h35c, h218, h23, h33 |
+| Proposition 8.1 | `IDLAConstrainedConvergenceStmt` (Draft/Section8.lean:20) | `iDLAConstrainedConvergence` (Assembly/Main.lean:334) | `closed_8_1_lp_noSup` (FirstPass/Closure/LssDerived.lean:295; applies `closed_8_1_lp`, Clean81LP.lean:43); open DRAFT binders: h210, h34, h214, h28, h35c, h218, h23, h33, h27 (MQ-li-4 switch) |
 | Lemma A.1 | `DiscreteDivergenceTheoremStmt` (Draft/SectionA.lean:25) | `discreteDivergenceTheorem` (Proofs/SecA/DiscreteDivergence.lean:54) | `discreteDivergenceTheorem` (Proofs/SecA/DiscreteDivergence.lean:54) |
 | Lemma A.2 | `DiscreteBasicPropertiesGeneralStmt` (Draft/SectionA.lean:32) | `discreteBasicPropertiesGeneral` (Proofs/SecA/Statements.lean:62) | `discreteBasicPropertiesGeneral` (Proofs/SecA/Statements.lean:62) |
 | Lemma A.3 | `DiscreteLaplacianBoundGeneralStmt` (Draft/SectionA.lean:43) | `discreteLaplacianBoundGeneral` (Proofs/SecA/Statements.lean:66) | `discreteLaplacianBoundGeneral` (Proofs/SecA/Statements.lean:66) |
