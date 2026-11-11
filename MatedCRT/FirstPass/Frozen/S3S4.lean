@@ -12,7 +12,7 @@ namespace MatedCRT
 
 /-- Lemma 3.2 (`lemma:discrete-holder-continuity`, paper line 1018), corrected form, cited from `\cite{gwynne2019harmonic}` Theorem 3.9 (locator: GMS Theorem 3.9, (3.30)-(3.33), arXiv:1807.07511v3; the paper's citation is "Theorem 3.9").
 The printed Draft `DiscreteHolderContinuityStmt` is FALSE; this is the corrected statement.
-Truth check: UNRESOLVED for an unconstrained SLE model; TRUE under the certified reference law, see `SLEReferenceExistsInput`. -/
+Truth check: UNSURE (see docs/campaign/FROZEN-PROVENANCE.md) for an unconstrained SLE model; TRUE under the certified reference law, see `SLEReferenceExistsInput`. -/
 def FrozenDiscreteHolderContinuityCorrected (𝒮 : SpaceFillingSLEModel) : Prop :=
   DiscreteHolderContinuityCorrectedStep 𝒮
 

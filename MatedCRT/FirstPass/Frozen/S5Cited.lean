@@ -24,7 +24,7 @@ open _root_.HarmonicBalls
 namespace MatedCRT
 
 /-- Literature input. Berestycki-Gwynne, *Random walks on mated-CRT planar maps and Liouville Brownian motion*, arXiv:2003.10320v2, Lemma A.1, equation (A.1), p. 66 (locator as in `MatedCRT/Proposed/BerestyckiGwynne.lean`). Uniform ball-mass estimates for the quantum cone.
-Truth-checked: pending. -/
+PENDING TRUTH CHECK (see docs/campaign/FROZEN-PROVENANCE.md). -/
 def FrozenBerestyckiGwynneConeBallMass : Prop :=
   BerestyckiGwynneConeBallMassStmt
 

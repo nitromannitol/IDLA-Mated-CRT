@@ -61,7 +61,7 @@ def FrozenLBMGreenOccupationRescaled (𝒮 : SpaceFillingSLEModel) : Prop :=
         (2 / S.m₀) * ∫ x in ball z r, greenFunction (ball z r) y x * f x ∂S.μ ω
 
 /-- Restated `TruncatedDetFixedTimeStep`: convergence in probability of the quenched laws (quenched expectations) of the truncated discrete occupation to the quenched expected truncated LBM occupation. Source: Berestycki-Gwynne, *Random walks on mated-CRT planar maps and Liouville Brownian motion*, arXiv:2003.10320v2, Theorem 1.2 (partial: a corollary asserting convergence of quenched expectations).
-Truth check: UNRESOLVED for an unconstrained SLE model; TRUE under the certified reference law, see `SLEReferenceExistsInput`. -/
+Truth check: UNSURE (see docs/campaign/FROZEN-PROVENANCE.md) for an unconstrained SLE model; TRUE under the certified reference law, see `SLEReferenceExistsInput`. -/
 def FrozenTruncatedQuenchedLawsFixedTime (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →

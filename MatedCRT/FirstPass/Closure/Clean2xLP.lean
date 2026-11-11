@@ -23,7 +23,7 @@ discharged by existing theorems whose statements are exactly the binder types:
   binder `hSC` is `frozenClusterStrongCompatibility_of_volumeGrowth hI2`
   (`MatedCRT/FirstPass/Closure/HSCDerived.lean:19`). No other binder of these rows has a concluder.
 
-The binders `hND` (`LQGMeasureNonDyadicDilationPart`, kept by operator ruling), `hscale`
+The binders `hND` (`LQGMeasureNonDyadicDilationPart`), `hscale`
 (`QuantumConeScalingInput`), `hE1`, `hE2`, `hBG` and the Harmonic-Balls Draft statements stay as hypotheses.
 Conclusions are unchanged.
 -/
