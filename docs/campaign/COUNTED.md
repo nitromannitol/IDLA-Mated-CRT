@@ -11,8 +11,8 @@ kind `cited` are not counted here. Two extra rows (B6) give the counted forms th
 - **Kind**: `COUNTED (proof)` if the body is a tactic proof or a multi-step term. `DERIVED (file)` if the body is a
   one-line application of another theorem, located in `file`; the proof of the row is there.
 - **Binder classes**: each explicit or implicit binder is classed by the file that defines its Prop:
-  External, Frozen, Proposed, HB (HarmonicBalls/Draft), HBdef (other HarmonicBalls), core
-  (CertifiedReferenceModel), data (SpaceFillingSLEModel, `ν`), Def (MatedCRT/Defs), Step (a paper step outside
+  External, Frozen, Proposed, HB (HarmonicBalls/Draft), HBdef (other HarmonicBalls), model core
+  (CertifiedReferenceModel and CertifiedReferenceModelCore, SLERef/Certified.lean:54 and SLERef/S5qe; class `model core`, lead li 2026-11-11 08:20), data (SpaceFillingSLEModel, `ν`), Def (MatedCRT/Defs), Step (a paper step outside
   Frozen, External and Proposed), DRAFT (MatedCRT/Draft, a Draft statement of this paper), Proof? (defined in a
   non-Frozen FirstPass or Proofs file, to be examined), std (Mathlib types). A binder whose Prop is an alias (its
   definition is one identifier) takes the class of the target when the target is Proposed, External, HB or DRAFT.
@@ -27,7 +27,7 @@ kind `cited` are not counted here. Two extra rows (B6) give the counted forms th
   `firstPass_3_1_faithful` (FirstPass/S3c.lean:125, samplewise form, `DiscretePotentialTightnessPointwiseStmt`) and
   `firstPass_3_1_countable` (FirstPass/S3c/CountableFamilies.lean:97, countable families). The Draft
   (Draft/Section3.lean:42) has no `IsOpen D`; both candidates assume `IsOpen D`. The row uses the samplewise form. The
-  lead to confirm the choice and the `IsOpen` difference. The corrected paper says "every connected domain D ⊂ B_ρ" (tex l.985) and does not state openness, so **IsOpen D added, not in the paper**.
+  Lead decision (lead li 2026-11-11 08:20): "domain" in the corrected tex l.981-986 ("every connected domain D ⊂ B_ρ") means an open connected set (the standard convention of potential theory), so `IsOpen D` is the printed hypothesis, not an addition; the "not in the paper" flag is dropped. The choice of the samplewise form is not changed by this decision.
 - **1.4 and 1.6 (audit B6).** Counted as `closed_1_4_full` and `closed_1_6_full` (Closure/Final14Full.lean), the same
   binders as `firstPassMain_1_4_full` and `firstPassMain_1_6_full` (FirstPass/Main.lean, section Counted). Their only
   flagged binder is `hND`.
@@ -39,6 +39,34 @@ kind `cited` are not counted here. Two extra rows (B6) give the counted forms th
   generator picked the declaration with the name stated in the row; the lead to confirm each.
 - **Draft binders in counted forms.** Several rows bind `VolumeGrowthStmt` (2.7, DRAFT `h27`) or
   `ExitTimeUpperBoundStmt` (2.18, DRAFT `h218`) or other Draft statements of this paper. The flags show which.
+
+## Lead decisions of 2026-11-11 08:20 and operator items
+
+- Row 3.1: `IsOpen D` is the printed hypothesis (domain = open connected set); the "not in the paper" flag is dropped
+  (lead li 2026-11-11 08:20).
+- Binder class `model core` for `CertifiedReferenceModel` and `CertifiedReferenceModelCore` (SLERef/Certified.lean:54,
+  SLERef/S5qe); as now (lead li 2026-11-11 08:20).
+- hE1 `ConeCircleLawUniqueStep` and hE2 `ConeReferenceExistsStep`: keep class Frozen (FirstPass/Frozen/S2i.lean:16, :27).
+- Blockers owned by other workers, not worked here: h35 in 4.1, 4.2, 4.6 (z12, H35CorrectedRewire.lean); hG15 and h215
+  (5.1, 5.4), h22 in 5.1 and 5.4, hnj, hcan, hcl in 4.2 (z9, Clean51And54.lean, Steps42.lean).
+
+**FOR OPERATOR.**
+
+- Literature binders hLit, hBM, hCC, hμ are class `HB Proposed` with locators S2VG/Literature.lean:44, :25, :32 and
+  S4S6c/LitConeLQG68.lean:26. They are not staged in MatedCRT/External; staging is for the operator.
+- `hcone : FrozenConeEnvironmentScaling 𝒮` is documented FALSE (Frozen/S3S4.lean:25-27; Frozen/S4S6c.lean:7). The counted
+  4.1 form `firstPass_4_1_ownBinders_counted` (H35CorrectedRewire.lean:53) and the 4.2 copy `firstPass_4_2_final_h35c`
+  (H35CorrectedRewire.lean:64) bind it. The 4.1 cone-law form `firstPass_4_1_coneLaw_h35c` binds
+  `FrozenConeScalingLaw` instead (Frozen/S4S6c.lean:18). The 4.2 row needs the same replacement; the operator decides.
+- 4.6 copy (z12): operator decision needed, add `h28` (or `hC`) to `firstPass_4_6_corrected`'s copy.
+- **Import clash (blocks closed_5_3_ownBinders).** `MatedCRT.ratPoint` is declared twice: FirstPass/S2g/LawCode.lean:24
+  (`ratPoint (j : ℕ) : ℂ`) and Proofs/Sec4/SubsequentialProperties/CircleAverage.lean:23 (`ratPoint (q₁ q₂ : ℚ) : ℂ`).
+  LawCode is in the import closure of `firstPass_5_3_final` (S5c/FinalSurplus.lean:229) and of `firstPass_2_6_coded_of_globalFamilyFactor`
+  (S2g/LawCoded.lean:33); CircleAverage is in the closure of every Closure/Section3, Section4, CellRewire, H35CorrectedRewire and
+  OwnBinderRewire wrapper that 5.3 uses. Any file importing both fails ("environment already contains 'MatedCRT.ratPoint'").
+  Fix needed from the owner of one of the two files: rename one declaration (e.g. LawCode's to `codeRatPoint`); not edited here.
+- The Frozen binders `hexc` (FrozenBrownianOutwardExcursionAtExit) and `hcone` (FrozenConeScalingLaw) are added to the
+  5.3 and 4.1 rows as inputs of `closed_3_5` and of the cone-law route; the operator to confirm.
 
 ## Existence of the coupling
 
@@ -95,36 +123,43 @@ theorem that concludes it, and the reason it is not wrapped.
 - h44 `DiscreteLaplacianBoundCorrectedStmt` (5.3): `closed_4_4` (Closure/Section4.lean:22), binder `𝒮` only.
   h213 `MaximumPrincipleStmt` (5.3): `closed_2_13_cellRewire` (CellRewire.lean:21), binder `𝒮` only.
   h610 `IterativeBoundStmt` (6.1): `closed_6_10` (Section6.lean:30), binders h0, h2, hV, hR (Frozen). Wrapped as `closed_6_10_ownBinders` (line 123).
-- **BLOCKED h35** `DiscreteDirichletProblemStmt 𝒮` (Draft/Section3.lean:132; 4.1, 4.2, 4.6). Expected: this Prop. Available:
-  only `DiscreteDirichletProblemCorrectedStmt 𝒮` (closed_3_5). The uncorrected Prop is concluded only by
-  `Assembly/Main.lean:156` from `MainHypotheses`. Blocks 4.1, 4.2, 4.6, and so h41 (5.3) and hconv (7.1).
+- **h35 (4.1, 4.2, 4.6), owner z12** (lead li 2026-11-11 08:20) `DiscreteDirichletProblemStmt 𝒮` (Draft/Section3.lean:132).
+  Available: `DiscreteDirichletProblemCorrectedStmt 𝒮` (closed_3_5). The uncorrected Prop is concluded only by
+  `Assembly/Main.lean:156` from `MainHypotheses`. z12 copies (H35CorrectedRewire.lean): `firstPass_4_1_coneLaw_h35c` (:39),
+  `firstPass_4_2_final_h35c` (:64), `firstPass_4_1_ownBinders_h35c`, `firstPass_4_1_ownBinders_counted`. Used by 5.3 (h41) above.
 - **BLOCKED h24** `ConeHarmonicBallsUpToFixedTimeStmt` (4.2). Available: `ConeHarmonicBallsUpToFixedTimeCanonicalStmt` (2.4).
 - **BLOCKED h24c** `ConeHarmonicBallsUpToFixedTimeCorrectedStmt` (5.1; FirstPass/S2b.lean:43). No counted theorem concludes it.
-- **BLOCKED hG15, h215** `GreenFunctionCrudeBoundStmt 𝒮` (Draft/Section2.lean:201; cited 2.15). Expected: this Prop. `firstPass_4_1_ownBinders` (line 211) has h35 as its only Draft binder.
+- **BLOCKED hG15, h215, owner z9** (lead li 2026-11-11 08:20) `GreenFunctionCrudeBoundStmt 𝒮` (Draft/Section2.lean:201; cited 2.15). Expected: this Prop. `firstPass_4_1_ownBinders` (line 211) has h35 as its only Draft binder.
   Available: none (the only occurrences in MatedCRT are binders, e.g. `firstPass_5_4`, S5S6S7.lean:42). Blocks 5.1 and 5.4.
-- **BLOCKED hLs** `ConeScaleInvarianceCodedStmt` (5.3; FirstPass/S2g/LawCoded.lean:20). Available: `ConeScaleInvarianceStmt`
-  (2.6) only.
+- **hLs (5.3), discharged** `ConeScaleInvarianceCodedStmt` (FirstPass/S2g/LawCoded.lean:20) by `coneScaleInvarianceCoded_ownBinders`
+  (HLsRewire53.lean:46) = `firstPass_2_6_coded_of_globalFamilyFactor` (S2g/LawCoded.lean:33) applied to
+  `coneGlobalFamilyFactor_ownBinders` (HLsRewire53.lean:35) = `coneGlobalFamilyFactor_proved` (S2i/GlobalFactor.lean:519) with
+  `hcan`, `hcl`, `closed_2_2_ownBinders` (h22, keeps `hND`), `volumeGrowthStmt_of_berestyckiGwynne` (h27). Lead li 2026-11-11 08:20.
+- **h41 (5.3), discharged** by `firstPass_4_1_coneLaw_ownBinders` (HLsRewire53.lean:59) = `firstPass_4_1_coneLaw_h35c`
+  (H35CorrectedRewire.lean:39) with the core reference model `hC` and `closed_3_5` (input `hexc`, Frozen); cone-law input `hcone`
+  (`FrozenConeScalingLaw`, Frozen/S4S6c.lean:18). Not the counted 4.1 form (`hcone` FALSE there, see FOR OPERATOR).
 - **BLOCKED h51, h61, h71, h42** (6.1, 8.1): h51 needs `closed_5_1` (blocked by h24c, hG15); h61 needs `firstPass_6_1`
   (blocked by h51); h71 needs `firstPass_7_1` (blocked by hconv); h42 needs `firstPass_4_2_final` (blocked by h35, h24),
   or `Phase2Rewire.lean:338` (not examined this round).
 - hconv (7.1), h41 (5.3): `firstPass_4_1` (blocked by h35). h37 (4.6): `firstPass_3_7_ownBinders` (blocked by h35 in 4.6).
-- Check: `firstPass_2_5_canonical_p2` and `firstPass_2_6_corrected_p2` also bind `hE1 : ConeCircleLawUniqueStep` and
-  `hE2 : ConeReferenceExistsStep` (Step-named; the ledger's flag rule did not flag them). To re-check.
+- hE1 `ConeCircleLawUniqueStep`, hE2 `ConeReferenceExistsStep` (bound by `firstPass_2_5_canonical_p2`, `firstPass_2_6_corrected_p2`,
+  and by the 5.3 route): **resolved** (lead li 2026-11-11 08:20): keep the class Frozen, as the file defines them
+  (FirstPass/Frozen/S2i.lean:16, :27; reports/z9.md).
 
 **Classification of the remaining paper-own and Proof? binders.**
 
 | Binder | Prop (location) | Class | Source | Status |
 |---|---|---|---|---|
 | hND | `LQGMeasureNonDyadicDilationPart` | Step | cited input, not staged | kept by operator ruling (tasks/li.md:196; req 104a) |
-| hLit | `MatedCRT.S2VG.LitExistence` (FirstPass/S2VG/Literature.lean:44) | literature | HarmonicBalls Proposed/LQG.lean (abbrev) | cited, not in MatedCRT/External |
-| hBM | `LitWholePlaneBallMass` (S2VG/Literature.lean:25) | literature | HarmonicBalls Proposed/LQG.lean:154; Ding-Gwynne arXiv:1807.01072 Lemma 3.8 | cited, not in External |
-| hCC | `LitCoordChange` (S2VG/Literature.lean:32) | literature | HarmonicBalls Proposed/LQG.lean (abbrev) | cited, not in External |
-| hμ | `LitQuantumConeLQGMeasureExistence` (FirstPass/S4S6c/LitConeLQG68.lean:26) | literature | not checked this round | cited, not in External |
+| hLit | `MatedCRT.S2VG.LitExistence` (FirstPass/S2VG/Literature.lean:44) | HB Proposed (lead li 2026-11-11 08:20) | HarmonicBalls Proposed/LQG.lean (abbrev) | not staged in External: FOR OPERATOR |
+| hBM | `LitWholePlaneBallMass` (FirstPass/S2VG/Literature.lean:25) | HB Proposed (lead li 2026-11-11 08:20) | HarmonicBalls Proposed/LQG.lean:154; Ding-Gwynne arXiv:1807.01072 Lemma 3.8 | not staged in External: FOR OPERATOR |
+| hCC | `LitCoordChange` (FirstPass/S2VG/Literature.lean:32) | HB Proposed (lead li 2026-11-11 08:20) | HarmonicBalls Proposed/LQG.lean (abbrev) | not staged in External: FOR OPERATOR |
+| hμ | `LitQuantumConeLQGMeasureExistence` (FirstPass/S4S6c/LitConeLQG68.lean:26) | HB Proposed (lead li 2026-11-11 08:20) | not checked this round | not staged in External: FOR OPERATOR |
 | hBE | `FrozenOneSidedBoundaryContinuity 𝒮` (FirstPass/S3i/Frozen.lean:44) | Proof? | not checked this round | examine (3.6) |
 | hnj | `StrictGapFixedTimeUnionStep 𝒮` (FirstPass/S4d/StrictGapReduction.lean:35) | Step | paper-own step | needs proof (4.2) |
-| hcan | `ConeCanonicalHalfBallStep` (FirstPass/S2g.lean:81) | Step | paper-own step | needs proof (4.2) |
-| hcl | `ConeHalfBallClosureInsideStep` (Proofs/Sec2/ConeFamilyMeasurable/StoppedClosure.lean:18) | Step | paper-own step | needs proof (4.2) |
-| hLs | `ConeScaleInvarianceCodedStmt` (FirstPass/S2g/LawCoded.lean:20) | paper-own (coded 2.6) | paper-own | blocked (5.3) |
+| hcan | `ConeCanonicalHalfBallStep` (FirstPass/S2g.lean:81) | Step | paper-own step | needs proof (4.2); owner z9 (lead li 2026-11-11 08:20); kept as binder in 5.3 (HLsRewire53.lean) |
+| hcl | `ConeHalfBallClosureInsideStep` (Proofs/Sec2/ConeFamilyMeasurable/StoppedClosure.lean:18) | Step | paper-own step | needs proof (4.2); owner z9; kept as binder in 5.3 (HLsRewire53.lean) |
+| hLs | `ConeScaleInvarianceCodedStmt` (FirstPass/S2g/LawCoded.lean:20) | paper-own (coded 2.6) | paper-own | discharged in 5.3: `coneScaleInvarianceCoded_ownBinders` (HLsRewire53.lean:46); its inputs hcan, hcl, hND stay |
 | h24c | `ConeHarmonicBallsUpToFixedTimeCorrectedStmt` (FirstPass/S2b.lean:43) | paper-own (corrected 2.4) | paper-own | blocked (5.1) |
 
 ## Table
@@ -143,24 +178,24 @@ regenerate after any change to a counted declaration.
 | 2.13 | `closed_2_13` | MatedCRT/FirstPass/Closure/Section2.lean:33 | DERIVED (FirstPass/S1S2S8SA.lean) | Frozen 1 data 1 | none | Audit m1: binds hcell (FrozenAdjacentCellsMeetAe). Wrapper closed_2_13_cellRewire (Closure/CellRewire.lean). |
 | 2.17 | `firstPass_2_17_ownBinders` | MatedCRT/FirstPass/Closure/OwnBinderRewire.lean:85 | DERIVED (own-binder wrapper of `firstPass_2_17`) | Frozen 1 | none | Own-binder wrapper: h27 by `volumeGrowthStmt_of_berestyckiGwynne hBG` (Proofs/Sec3/ConeBallMass.lean:17; hBG Frozen). |
 | 2.19 | `closed_2_19_ownBinders` | MatedCRT/FirstPass/Closure/OwnBinderRewire.lean:39 | DERIVED (own-binder wrapper of `closed_2_19`) | core 1 Frozen 1 data 2 | none | Own-binder wrapper of closed_2_19 (Closure/Section2.lean:40): h27 supplied by the cited volume-growth input (hBG Frozen). |
-| 3.1 | `firstPass_3_1_faithful` | MatedCRT/FirstPass/S3c.lean:125 | COUNTED (proof) | DRAFT 2 External 1 Frozen 1 data 1 | DRAFT:h27, DRAFT:h218 | Audit m3. Own-binder wrapper `firstPass_3_1_ownBinders` (MatedCRT/FirstPass/Closure/OwnBinderRewire.lean:92) removes h27 and h218 (h218 by `CertifiedReferenceModel.exitTimeUpperBound`); row kept on `firstPass_3_1_faithful` per lead. Concludes `DiscretePotentialTightnessPointwiseStmt 𝒮` (S3c.lean:100; samplewise form, fidelity fix §1.3), not the Draft `DiscretePotentialTightnessStmt 𝒮` (Draft/Section3.lean:42). Corrected tex lemma:discrete-potential-tightness (l.981-986): "every connected domain D ⊂ B_ρ"; the paper does not say D is open. **IsOpen D added, not in the paper** (S3c.lean:105; the Draft has IsConnected only). closed_3_1 (weak form, DiscretePotentialTightnessCorrectedStmt) is not counted; closed_3_1_faithful / closed_3_1_countable do not exist. Alternative: firstPass_3_1_countable (S3c/CountableFamilies.lean:97). Lead to confirm. |
+| 3.1 | `firstPass_3_1_faithful` | MatedCRT/FirstPass/S3c.lean:125 | COUNTED (proof) | DRAFT 2 External 1 Frozen 1 data 1 | DRAFT:h27, DRAFT:h218 | Audit m3. Own-binder wrapper `firstPass_3_1_ownBinders` (MatedCRT/FirstPass/Closure/OwnBinderRewire.lean:92) removes h27 and h218 (h218 by `CertifiedReferenceModel.exitTimeUpperBound`); row kept on `firstPass_3_1_faithful` per lead. Concludes `DiscretePotentialTightnessPointwiseStmt 𝒮` (S3c.lean:100; samplewise form, fidelity fix §1.3), not the Draft `DiscretePotentialTightnessStmt 𝒮` (Draft/Section3.lean:42). Corrected tex lemma:discrete-potential-tightness (l.981-986): "every connected domain D ⊂ B_ρ"; the paper does not say D is open. `IsOpen D` is the printed hypothesis: "domain" = open connected set (lead li 2026-11-11 08:20; S3c.lean:105; the Draft has IsConnected only). closed_3_1 (weak form, DiscretePotentialTightnessCorrectedStmt) is not counted; closed_3_1_faithful / closed_3_1_countable do not exist. Alternative: firstPass_3_1_countable (S3c/CountableFamilies.lean:97). |
 | 3.3 | `closed_3_3_ownBinders` | MatedCRT/FirstPass/Closure/OwnBinderRewire.lean:45 | DERIVED (own-binder wrapper of `closed_3_3`) | core 1 Frozen 1 data 2 | none | Own-binder wrapper of closed_3_3 (Closure/Section3.lean:43): h27 supplied as in the 2.19 row. |
 | 3.4 | `closed_3_4_ownBinders` | MatedCRT/FirstPass/Closure/OwnBinderRewire.lean:51 | DERIVED (own-binder wrapper of `closed_3_4`) | core 1 Frozen 1 data 2 | none | Own-binder wrapper of closed_3_4 (Closure/Section3.lean:36): h27 supplied as in the 2.19 row. |
 | 3.5 | `closed_3_5_ownBinders` | MatedCRT/FirstPass/Closure/OwnBinderRewire.lean:57 | DERIVED (own-binder wrapper of `closed_3_5`) | core 1 Frozen 2 data 2 | none | Own-binder wrapper of closed_3_5 (Closure/Section3.lean:66): h27 supplied; hexc (FrozenBrownianOutwardExcursionAtExit) stays. |
 | 3.6 | `firstPass_3_6_ownBinders` | MatedCRT/FirstPass/Closure/OwnBinderRewire.lean:197 | DERIVED (own-binder wrapper of `firstPass_3_6_closed`) | data 2 core 1 External 1 Frozen 2 Proof? 1 | Proof?:hBE | Own-binder wrapper (partial): h211 and h28 by the CertifiedReferenceModel projections on hC. hBE (FrozenOneSidedBoundaryContinuity, FirstPass/S3i/Frozen.lean:44) stays. Operator note 13:12 UTC: counted via firstPass_3_6_closed. |
 | 3.7 | `firstPass_3_7_ownBinders` | MatedCRT/FirstPass/Closure/OwnBinderRewire.lean:103 | DERIVED (own-binder wrapper of `firstPass_3_7_corrected`) | External 1 core 1 Frozen 3 data 2 | none | Own-binder wrapper of firstPass_3_7_corrected (S3f.lean:29): h27 and h218 (core) and h33, h35c (via 3.3 and 3.5 wrappers). |
-| 4.1 | `firstPass_4_1_ownBinders` | MatedCRT/FirstPass/Closure/OwnBinderRewire.lean:211 | DERIVED (own-binder wrapper of `firstPass_4_1`) | DRAFT 1 External 1 Frozen 3 core 1 data 2 | DRAFT:h35 | Own-binder wrapper (partial): h210, h34, h214, h28, h218, h27 supplied. h35 (DiscreteDirichletProblemStmt) stays: expected this Prop, available only DiscreteDirichletProblemCorrectedStmt (closed_3_5). Blocked. |
-| 4.2 | `firstPass_4_2_final` | MatedCRT/FirstPass/S4d.lean:146 | COUNTED (proof) | DRAFT 11 External 2 Frozen 8 HB 1 Proof? 3 data 1 | DRAFT:h210, DRAFT:h34, DRAFT:h214, DRAFT:h28, DRAFT:h35, DRAFT:h218, DRAFT:h27, DRAFT:h23, DRAFT:h24, DRAFT:h33, Proof?:hnj, Proof?:hcan, Proof?:hcl, DRAFT:h22 |  |
+| 4.1 | `firstPass_4_1_coneLaw_ownBinders` | MatedCRT/FirstPass/Closure/HLsRewire53.lean:59 | DERIVED (cone-law form `firstPass_4_1_coneLaw_h35c`, MatedCRT/FirstPass/Closure/H35CorrectedRewire.lean:39) | data 2 core 1 Frozen 3 | none | Cone-law form (lead li 2026-11-11 08:20; z12, reports/z12.md, commit 41c6038). Not `firstPass_4_1_ownBinders` (OwnBinderRewire.lean:211, h35 open) and not `firstPass_4_1_ownBinders_counted` (H35CorrectedRewire.lean:53), whose `hcone : FrozenConeEnvironmentScaling 𝒮` is documented FALSE (Frozen/S3S4.lean:25-27; Frozen/S4S6c.lean:7). Binders: `hC` (model core), `hBG`, `hexc` (Frozen; input of `closed_3_5`, added by this row), `hcone` (`FrozenConeScalingLaw`, Frozen/S4S6c.lean:18). h210, h34, h214, h28, h218, h27, hH from `hC` and `hBG`; h35c from `closed_3_5`. |
+| 4.2 | `firstPass_4_2_final_h35c` | MatedCRT/FirstPass/Closure/H35CorrectedRewire.lean:64 | COUNTED (proof) | DRAFT 11 External 2 Frozen 8 HB 1 Proof? 3 data 1 | DRAFT:h210, DRAFT:h34, DRAFT:h214, DRAFT:h28, DRAFT:h35c, DRAFT:h218, DRAFT:h27, DRAFT:h23, DRAFT:h24, DRAFT:h33, Proof?:hnj, Proof?:hcan, Proof?:hcl, DRAFT:h22, FALSE:hcone (FrozenConeEnvironmentScaling, Frozen/S3S4.lean:25-27) | z12 copy of `firstPass_4_2_final` (S4d.lean:146) with h35 replaced by h35c; no counted discharge (closed_3_5 needs `hC`, and 4.2 binds none). FOR OPERATOR: `hcone` is documented FALSE. hnj, hcan, hcl: owner z9 (lead li 2026-11-11 08:20). h24 blocked (see above). |
 | 4.3 | `closed_4_3` | MatedCRT/FirstPass/Closure/Section4.lean:18 | DERIVED (FirstPass/S3S4.lean) | data 1 | none |  |
 | 4.4 | `closed_4_4` | MatedCRT/FirstPass/Closure/Section4.lean:22 | DERIVED (FirstPass/S3S4.lean) | data 1 | none |  |
 | 4.5 | `closed_4_5` | MatedCRT/FirstPass/Closure/Section4.lean:27 | DERIVED (FirstPass/S3S4.lean) | data 1 | none |  |
-| 4.6 | `firstPass_4_6_corrected` | MatedCRT/FirstPass/S3S4.lean:102 | DERIVED (Proofs/Sec4/SubsequentialProperties/PreparedInputs.lean) | DRAFT 4 External 1 Frozen 1 data 1 | DRAFT:h27, DRAFT:h218, DRAFT:h35, DRAFT:h37 |  |
+| 4.6 | `firstPass_4_6_corrected` | MatedCRT/FirstPass/S3S4.lean:102 | DERIVED (Proofs/Sec4/SubsequentialProperties/PreparedInputs.lean) | DRAFT 4 External 1 Frozen 1 data 1 | DRAFT:h27, DRAFT:h218, DRAFT:h35, DRAFT:h37 | z12 (reports/z12.md) BLOCKED, named: the h35c copy of 4.6 needs `CellSizeEstimateStmt 𝒮` as its bridge input; its binders are hm, h27, h218, hH, h35, h37 (no h28, no hC). Not added (a new binder changes the statement). OPERATOR DECISION: add `h28` (or `hC`) to a 4.6 copy. |
 | 4.7 | `closed_4_7_ownBinders` | MatedCRT/FirstPass/Closure/OwnBinderRewire.lean:65 | DERIVED (own-binder wrapper of `closed_4_7`) | core 1 Frozen 1 data 2 | none | Own-binder wrapper of closed_4_7 (Closure/Section4.lean:31): h27 supplied. |
 | 4.8 | `closed_4_8_corrected_ownBinders` | MatedCRT/FirstPass/Closure/OwnBinderRewire.lean:71 | DERIVED (own-binder wrapper of `closed_4_8_corrected`) | core 1 Frozen 2 data 2 | none | Own-binder wrapper of closed_4_8_corrected (S4x8.lean:45): h27 supplied; hexc stays. |
-| 5.1 | `closed_5_1` | MatedCRT/FirstPass/Closure/Prop51.lean:44 | COUNTED (proof) | DRAFT 3 External 1 Frozen 20 HB 14 Proof? 1 core 1 data 2 | DRAFT:h27, DRAFT:h22, Proof?:h24c, DRAFT:hG15 | closed_5_1 binds hcell (wrapper closed_5_1_cellRewire, Closure/CellRewire.lean) and paper-step gap inputs (h22, h24c, h27, hG15, ...); its row is not clean under the literature-binder rule. |
+| 5.1 | `closed_5_1_ownBinders` | MatedCRT/FirstPass/Closure/H24cBridge.lean:89 (namespace MatedCRT.FirstPassClosure) | DERIVED (own-binder wrapper of `closed_5_1_cellRewire`, CellRewire.lean:30) | data 2 core 1 Frozen 20 External 1 HB 14 DRAFT 2 | DRAFT:h22, DRAFT:hG15 | z9 (reports/z9.md, commit d711c51): h24c := `coneHarmonicBallsUpToFixedTimeCorrected_of_firstPass_2_4` (H24cBridge.lean; the canonical 2.4 with h27 by `volumeGrowthStmt_of_berestyckiGwynne`, plus hBG). h22 is available as `closed_2_2_ownBinders hscale hBG hND` (OwnBinderRewire.lean:116), which adds hND (Step, kept by ruling); not applied by z9. hG15 (`GreenFunctionCrudeBoundStmt`, Draft/Section2.lean:201) open, owner z9. |
 | 5.2 | `closed_5_2_ownBinders` | MatedCRT/FirstPass/Closure/OwnBinderRewire.lean:79 | DERIVED (own-binder wrapper of `closed_5_2`) | core 1 Frozen 1 data 2 | none | Own-binder wrapper of closed_5_2 (Closure/Section5.lean:17): h27 supplied. |
-| 5.3 | `firstPass_5_3_final` | MatedCRT/FirstPass/S5c/FinalSurplus.lean:229 | COUNTED (proof) | DRAFT 6 External 2 Frozen 6 Proof? 1 data 1 | Proof?:hLs, DRAFT:h44, DRAFT:h213, DRAFT:h41, DRAFT:h33, DRAFT:h218, DRAFT:h217 |  |
-| 5.4 | `closed_5_4` | MatedCRT/FirstPass/Closure/Section5.lean:22 | DERIVED (FirstPass/S5S6S7.lean) | DRAFT 1 core 1 data 2 | DRAFT:h215 |  |
+| 5.3 | `closed_5_3_ownBinders` | MatedCRT/FirstPass/Closure/HLsRewire53.lean:73 | COUNTED (proof) | Step 3 External 2 Frozen 11 core 1 data 2 | Step:hcan, Step:hcl, Step:hND (kept by operator ruling) | Counted form of `firstPass_5_3_final` (S5c/FinalSurplus.lean:229). hLs discharged by `coneScaleInvarianceCoded_ownBinders` (HLsRewire53.lean:46). h44 `closed_4_4`; h213 `closed_2_13_cellRewire`; h41 `firstPass_4_1_coneLaw_ownBinders` (:59); h33 `closed_3_3_ownBinders`; h218 `hC.exitTimeUpperBound`; h217 `firstPass_2_17_ownBinders`. Added Frozen binders: `hexc` (input of `closed_3_5`) and `hcone` (`FrozenConeScalingLaw`). hcan, hcl: owner z9. Lead li 2026-11-11 08:20. NOT YET COMPILING in one file: import clash `MatedCRT.ratPoint` (FOR OPERATOR). |
+| 5.4 | `closed_5_4` | MatedCRT/FirstPass/Closure/Section5.lean:22 | DERIVED (FirstPass/S5S6S7.lean) | DRAFT 1 core 1 data 2 | DRAFT:h215 | z9 owns h215 (lead li 2026-11-11 08:20); no new row text in reports/z9.md as of 08:19 UTC. |
 | 6.1 | `firstPass_6_1_corrected` | MatedCRT/FirstPass/S2g/Assembly2456.lean:31 | DERIVED (FirstPass/S2g/Section6Canonical.lean) | DRAFT 3 Frozen 10 HB 13 data 1 | DRAFT:h610, DRAFT:h51, DRAFT:h27 |  |
 | 6.4 | `firstPass_6_4_uniform` | MatedCRT/FirstPass/S6p.lean:213 | COUNTED (proof) | Frozen 4 | none | Operator note 05:50 UTC: counted via firstPass_6_4_uniform (S6p.lean). |
 | 6.5 | `firstPass_6_5_uniform` | MatedCRT/FirstPass/S6q.lean:26 | DERIVED (FirstPass/S6p.lean) | Frozen 3 | none | Candidate; the uniform form firstPass_6_5_uniform is named in tasks/li.md. |
