@@ -2,6 +2,7 @@ import MatedCRT.FirstPass.LPBridge.ConeMeanZeroRestriction
 import MatedCRT.FirstPass.LPBridge.WholePlaneGFFLateral
 import MatedCRT.FirstPass.LPBridge.LateralGaussian
 import MatedCRT.Proofs.Field.ConeGaussianClosure
+import MatedCRT.Proofs.Field.ConeLevelIntegrable
 
 /-!
 # The radial and lateral parts of a whole-plane GFF are independent
@@ -798,5 +799,235 @@ lemma isAeLimitOf_circleAverage (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityM
         hperp ⟨GFFObservable.circle ‖x‖ 0, norm_pos_iff.2 hx⟩
 
 end CircleAverageGaussian
+
+/-! ## Assembly: the radial and lateral parts of a whole-plane GFF are independent -/
+
+section Assembly
+
+open MatedCRT.Field.GaussClosure
+
+variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+
+/-- The lateral observables computed from a jointly measurable version `F` of the circle averages of the radial
+part `x ↦ h_{|x|}(0)`: `(h, φ) - ∫ φ(x) h_{|x|}(0) dx` and `h_r(z) - avg_{∂B_r(z)} h_{|·|}(0)`. -/
+noncomputable def lateralEvalF (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
+    (F : Ω → C(CircleParameter, ℝ)) : GFFObservable → Ω → ℝ
+  | .pairing φ => fun ω => hC ω φ -
+      ∫ x, φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)
+  | .circle r z => fun ω => hcirc ω r z -
+      Real.circleAverage (fun x => F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) z r
+
+omit [MeasurableSpace Ω] in
+/-- On the good set where `F` is the circle average version, the circle averages of `F` and of `h_{|·|}(0)` agree. -/
+lemma circleAverage_eq_of_good {F : Ω → C(CircleParameter, ℝ)} {ω : Ω}
+    (hω : ∀ p : CircleParameter, F ω p = hcirc ω (p.1 : ℝ) p.2) {z : ℂ} {r : ℝ} (hr : 0 < r) :
+    Real.circleAverage (fun x => hcirc ω ‖x‖ 0) z r =
+      Real.circleAverage (fun x => F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) z r := by
+  simp only [Real.circleAverage, smul_eq_mul,
+    intervalIntegral.integral_of_le (by positivity : (0 : ℝ) ≤ 2 * π)]
+  congr 1
+  refine integral_congr_ae ?_
+  filter_upwards [circleMap_ne_zero_ae hr] with θ hθ
+  rw [hω, radialPoint_fst_of_ne hθ, radialPoint_snd]
+
+omit [MeasurableSpace Ω] in
+lemma lateralEvalF_eq {F : Ω → C(CircleParameter, ℝ)} {ω : Ω}
+    (hω : ∀ p : CircleParameter, F ω p = hcirc ω (p.1 : ℝ) p.2) (o : GFFObservable.Admissible) :
+    lateralEvalF hC hcirc F o.1 ω = lateralEval (hC ω) (hcirc ω) o.1 := by
+  obtain ⟨o, ho⟩ := o
+  have hae0 : ∀ᵐ x ∂(volume : Measure ℂ), x ≠ 0 := by
+    filter_upwards [compl_mem_ae_iff.2 (measure_singleton (0 : ℂ))] with x hx
+    exact Set.mem_compl_singleton_iff.1 hx
+  cases o with
+  | pairing φ =>
+    have e : ∫ x, φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x) =
+        ∫ x, φ x * hcirc ω ‖x‖ 0 := by
+      refine integral_congr_ae (μ := (volume : Measure ℂ)) ?_
+      filter_upwards [hae0] with x hx
+      rw [hω, radialPoint_fst_of_ne hx, radialPoint_snd]
+    simp only [lateralEvalF, lateralEval, e]
+  | circle r z =>
+    have hr : 0 < r := ho
+    simp only [lateralEvalF, lateralEval, circleAverage_eq_of_good hω hr]
+
+lemma measurable_radialIntegralF {F : Ω → C(CircleParameter, ℝ)} (hF : Measurable F)
+    {φ : ℂ → ℝ} (hφ : IsTestFunction Set.univ φ) :
+    Measurable (fun ω => ∫ x, φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) := by
+  have hjoint : Measurable (fun q : Ω × ℂ =>
+      F q.1 (MatedCRT.WholePlaneGFFLateral.radialPoint q.2)) :=
+    (measurable_circle_version_joint hF).comp (measurable_fst.prodMk
+      (MatedCRT.WholePlaneGFFLateral.measurable_radialPoint.comp measurable_snd))
+  have hmeas : Measurable (fun q : Ω × ℂ =>
+      φ q.2 * F q.1 (MatedCRT.WholePlaneGFFLateral.radialPoint q.2)) :=
+    (hφ.1.continuous.measurable.comp measurable_snd).mul hjoint
+  exact (hmeas.stronglyMeasurable.integral_prod_right (ν := volume)
+    (f := fun ω x => φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x))).measurable
+
+lemma measurable_circleAverageF {F : Ω → C(CircleParameter, ℝ)} (hF : Measurable F) (z : ℂ) (r : ℝ) :
+    Measurable (fun ω => Real.circleAverage (fun x => F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) z r) := by
+  have hjoint : Measurable (fun q : Ω × ℝ =>
+      F q.1 (MatedCRT.WholePlaneGFFLateral.radialPoint (circleMap z r q.2))) :=
+    (measurable_circle_version_joint hF).comp (measurable_fst.prodMk
+      (MatedCRT.WholePlaneGFFLateral.measurable_radialPoint.comp
+        ((continuous_circleMap z r).measurable.comp measurable_snd)))
+  have hint := (hjoint.stronglyMeasurable.integral_prod_right
+    (ν := (volume : Measure ℝ).restrict (Set.Ioc (0 : ℝ) (2 * π)))
+    (f := fun ω θ => F ω (MatedCRT.WholePlaneGFFLateral.radialPoint (circleMap z r θ)))).measurable
+  have e : (fun ω => Real.circleAverage (fun x => F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) z r) =
+      fun ω => (2 * π)⁻¹ * ∫ θ in Set.Ioc (0 : ℝ) (2 * π),
+        F ω (MatedCRT.WholePlaneGFFLateral.radialPoint (circleMap z r θ)) := by
+    funext ω
+    simp only [Real.circleAverage, smul_eq_mul, intervalIntegral.integral_of_le (by positivity : (0 : ℝ) ≤ 2 * π)]
+  rw [e]
+  exact hint.const_mul _
+
+lemma lateralEvalF_ae_eq {F : Ω → C(CircleParameter, ℝ)}
+    (hFae : ∀ᵐ ω ∂P, ∀ p : CircleParameter, F ω p = hcirc ω (p.1 : ℝ) p.2) :
+    (fun ω (o : GFFObservable.Admissible) => lateralEvalF hC hcirc F o.1 ω) =ᵐ[P]
+      (fun ω => lateralProcess (hC ω) (hcirc ω)) := by
+  filter_upwards [hFae] with ω hω
+  funext o
+  exact lateralEvalF_eq hω o
+
+lemma isAeLimitOf_congr_ae' {M : Set (Ω → ℝ)} {Z Z' : Ω → ℝ} (hZ : IsAeLimitOf P M Z)
+    (hZZ' : Z =ᵐ[P] Z') : IsAeLimitOf P M Z' := by
+  obtain ⟨Y, hY, hlim⟩ := hZ
+  refine ⟨Y, hY, ?_⟩
+  filter_upwards [hlim, hZZ'] with ω h1 h2
+  rw [← h2]
+  exact h1
+
+lemma measurable_observable' (h : IsWholePlaneGFF P hC hcirc) (o : GFFObservable.Admissible) :
+    Measurable (fun ω => o.1.eval (hC ω) (hcirc ω)) := by
+  obtain ⟨o, ho⟩ := o
+  cases o with
+  | pairing φ => exact h.measurable_pairing φ ho
+  | circle r z => exact h.measurable_circle r z ho
+
+lemma measurable_lateralEvalF (h : IsWholePlaneGFF P hC hcirc) {F : Ω → C(CircleParameter, ℝ)}
+    (hF : Measurable F) (o : GFFObservable.Admissible) :
+    Measurable (lateralEvalF hC hcirc F o.1) := by
+  obtain ⟨o, ho⟩ := o
+  cases o with
+  | pairing φ => exact (h.measurable_pairing φ ho).sub (measurable_radialIntegralF hF ho)
+  | circle r z => exact (h.measurable_circle r z ho).sub (measurable_circleAverageF hF z r)
+
+end Assembly
+
+/-! ## The independence theorem -/
+
+section Final
+
+open MatedCRT.Field.GaussClosure
+
+variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+
+/-- Each radial circle average is uncorrelated with the lateral observables computed from `F`. -/
+lemma covariance_radial_lateralF (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    {F : Ω → C(CircleParameter, ℝ)} (hF : Measurable F)
+    (hFae : ∀ᵐ ω ∂P, ∀ p : CircleParameter, F ω p = hcirc ω (p.1 : ℝ) p.2)
+    {s : ℝ} (hs : 0 < s) (o : GFFObservable.Admissible) :
+    covariance (fun ω => hcirc ω s 0) (lateralEvalF hC hcirc F o.1) P = 0 := by
+  have hae : (fun ω => lateralEvalF hC hcirc F o.1 ω) =ᵐ[P]
+      (fun ω => lateralEval (hC ω) (hcirc ω) o.1) := by
+    filter_upwards [hFae] with ω hω
+    exact lateralEvalF_eq hω o
+  exact (covariance_congr_ae (Filter.EventuallyEq.refl _ _) hae).trans
+    (covariance_circle_lateralEval h hF hFae hs o)
+
+/-- **Radial-lateral independence for whole-plane GFFs** (the content of `GFFRadialLateralIndep`). -/
+theorem gffRadialLateralIndep_aux [IsProbabilityMeasure P] (h : IsWholePlaneGFF P hC hcirc) :
+    IndepFun (fun ω => radialProcess (hcirc ω)) (fun ω => lateralProcess (hC ω) (hcirc ω)) P := by
+  obtain ⟨F, hF, hFae⟩ := exists_ae_circle_version h
+  let X : ℝ≥0 ⊕ ℝ≥0 → Ω → ℝ := Sum.elim (fun t ω => hcirc ω (Real.exp (-(t : ℝ))) 0)
+    (fun s ω => hcirc ω (Real.exp (s : ℝ)) 0)
+  let M0 : Submodule ℝ (Ω → ℝ) :=
+    Submodule.span ℝ (Set.range fun o : GFFObservable.Admissible => fun ω => o.1.eval (hC ω) (hcirc ω))
+  have hM0 : IsCentredGaussianSpace P (M0 : Set (Ω → ℝ)) :=
+    isCentredGaussianSpace_span h.isGaussianProcess (measurable_observable' h)
+      (fun o => h.integral_eq_zero o.1 o.2)
+  let RadF : {φ : ℂ → ℝ // IsTestFunction Set.univ φ} → Ω → ℝ :=
+    fun φ ω => ∫ x, φ.1 x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)
+  let AvgF : {p : ℝ × ℂ // 0 < p.1} → Ω → ℝ :=
+    fun p ω => Real.circleAverage (fun x => F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) p.1.2 p.1.1
+  have hRadm : ∀ φ, Measurable (RadF φ) := fun φ => measurable_radialIntegralF hF φ.2
+  have hAvgm : ∀ p, Measurable (AvgF p) := fun p => measurable_circleAverageF hF p.1.2 p.1.1
+  have hRadA : ∀ φ, IsAeLimitOf P (M0 : Set (Ω → ℝ)) (RadF φ) := by
+    intro φ
+    refine isAeLimitOf_congr_ae' (isAeLimitOf_radialIntegral h hF hFae φ.2) ?_
+    filter_upwards [ae_radialIntegral_eq hFae φ.1] with ω hω
+    exact hω
+  have hAvgA : ∀ p, IsAeLimitOf P (M0 : Set (Ω → ℝ)) (AvgF p) := by
+    intro p
+    refine isAeLimitOf_congr_ae' (isAeLimitOf_circleAverage h hF hFae (z := p.1.2) (r := p.1.1) p.2) ?_
+    filter_upwards [hFae] with ω hω
+    exact circleAverage_eq_of_good (z := p.1.2) hω p.2
+  let Mone : Submodule ℝ (Ω → ℝ) := M0 ⊔ Submodule.span ℝ (Set.range RadF)
+  have hM1 : IsCentredGaussianSpace P (Mone : Set (Ω → ℝ)) :=
+    isCentredGaussianSpace_sup_span_range hM0 RadF hRadm hRadA
+  have hAvgA' : ∀ p, IsAeLimitOf P (Mone : Set (Ω → ℝ)) (AvgF p) := fun p =>
+    IsAeLimitOf.mono (SetLike.coe_subset_coe.2 le_sup_left) (hAvgA p)
+  let Mall : Submodule ℝ (Ω → ℝ) := Mone ⊔ Submodule.span ℝ (Set.range AvgF)
+  have hMall : IsCentredGaussianSpace P (Mall : Set (Ω → ℝ)) :=
+    isCentredGaussianSpace_sup_span_range hM1 AvgF hAvgm hAvgA'
+  have hM0_le : M0 ≤ Mall := (le_sup_left : M0 ≤ Mone).trans (le_sup_left : Mone ≤ Mall)
+  have hmemM0 : ∀ o : GFFObservable.Admissible,
+      (fun ω => o.1.eval (hC ω) (hcirc ω)) ∈ Mall :=
+    fun o => hM0_le (Submodule.subset_span ⟨o, rfl⟩)
+  have hmemRad : ∀ φ, RadF φ ∈ Mall := fun φ =>
+    (le_sup_right : Submodule.span ℝ (Set.range RadF) ≤ Mone).trans le_sup_left
+      (Submodule.subset_span ⟨φ, rfl⟩)
+  have hmemAvg : ∀ p, AvgF p ∈ Mall := fun p =>
+    (le_sup_right : Submodule.span ℝ (Set.range AvgF) ≤ Mall) (Submodule.subset_span ⟨p, rfl⟩)
+  have hYmem : ∀ o : GFFObservable.Admissible, lateralEvalF hC hcirc F o.1 ∈ Mall := by
+    rintro ⟨o, ho⟩
+    cases o with
+    | pairing φ =>
+      have e : lateralEvalF hC hcirc F (GFFObservable.pairing φ) =
+          (fun ω => (GFFObservable.pairing φ).eval (hC ω) (hcirc ω)) - RadF ⟨φ, ho⟩ := by
+        funext ω
+        rfl
+      rw [e]
+      exact Submodule.sub_mem _ (hmemM0 ⟨GFFObservable.pairing φ, ho⟩) (hmemRad ⟨φ, ho⟩)
+    | circle r z =>
+      have hr : 0 < r := ho
+      have e : lateralEvalF hC hcirc F (GFFObservable.circle r z) =
+          (fun ω => (GFFObservable.circle r z).eval (hC ω) (hcirc ω)) - AvgF ⟨(r, z), hr⟩ := by
+        funext ω
+        rfl
+      rw [e]
+      exact Submodule.sub_mem _ (hmemM0 ⟨GFFObservable.circle r z, hr⟩) (hmemAvg ⟨(r, z), hr⟩)
+  have hW : ∀ t, Sum.elim X (fun o : GFFObservable.Admissible => lateralEvalF hC hcirc F o.1) t ∈ Mall := by
+    rintro ((t | s) | o)
+    · exact hmemM0 ⟨GFFObservable.circle (Real.exp (-(t : ℝ))) 0, Real.exp_pos _⟩
+    · exact hmemM0 ⟨GFFObservable.circle (Real.exp (s : ℝ)) 0, Real.exp_pos _⟩
+    · exact hYmem o
+  have hG : IsGaussianProcess
+      (Sum.elim X (fun o : GFFObservable.Admissible => lateralEvalF hC hcirc F o.1)) P :=
+    isGaussianProcess_of_isCentredGaussianSpace hMall hW
+  have hXm : ∀ t : ℝ≥0 ⊕ ℝ≥0, Measurable (X t) := by
+    rintro (t | s)
+    · exact h.measurable_circle _ 0 (Real.exp_pos _)
+    · exact h.measurable_circle _ 0 (Real.exp_pos _)
+  have hcov : ∀ (t : ℝ≥0 ⊕ ℝ≥0) (o : GFFObservable.Admissible),
+      covariance (X t) (lateralEvalF hC hcirc F o.1) P = 0 := by
+    rintro (t | s) o
+    · exact covariance_radial_lateralF h hF hFae (Real.exp_pos (-(t : ℝ))) o
+    · exact covariance_radial_lateralF h hF hFae (Real.exp_pos (s : ℝ)) o
+  have hI := IsGaussianProcess.indepFun_of_covariance_eq_zero hG (fun t => (hXm t).aemeasurable)
+    (fun o => (measurable_lateralEvalF h hF o).aemeasurable) hcov
+  let A : (ℝ≥0 ⊕ ℝ≥0 → ℝ) → (ℝ≥0 → ℝ) × (ℝ≥0 → ℝ) :=
+    fun f => (fun t => f (Sum.inl t), fun s => f (Sum.inr s))
+  have hA : Measurable A :=
+    Measurable.prodMk (measurable_pi_iff.mpr fun t => measurable_pi_apply (Sum.inl t))
+      (measurable_pi_iff.mpr fun s => measurable_pi_apply (Sum.inr s))
+  have hI2 := hI.comp hA measurable_id
+  exact hI2.congr (ae_of_all _ fun ω => rfl) (lateralEvalF_ae_eq hFae)
+
+end Final
+
+theorem gffRadialLateralIndep_holds : GFFRadialLateralIndep := by
+  intro Ω _ P hC hcirc hP h
+  exact gffRadialLateralIndep_aux h
 
 end MatedCRT.ConeMeanZeroRestriction
