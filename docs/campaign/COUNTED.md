@@ -27,7 +27,7 @@ kind `cited` are not counted here. Two extra rows (B6) give the counted forms th
   `firstPass_3_1_faithful` (FirstPass/S3c.lean:125, samplewise form, `DiscretePotentialTightnessPointwiseStmt`) and
   `firstPass_3_1_countable` (FirstPass/S3c/CountableFamilies.lean:97, countable families). The Draft
   (Draft/Section3.lean:42) has no `IsOpen D`; both candidates assume `IsOpen D`. The row uses the samplewise form. The
-  lead to confirm the choice and the `IsOpen` difference.
+  lead to confirm the choice and the `IsOpen` difference. The corrected paper says "every connected domain D ⊂ B_ρ" (tex l.985) and does not state openness, so **IsOpen D added, not in the paper**.
 - **1.4 and 1.6 (audit B6).** Counted as `closed_1_4_full` and `closed_1_6_full` (Closure/Final14Full.lean), the same
   binders as `firstPassMain_1_4_full` and `firstPassMain_1_6_full` (FirstPass/Main.lean, section Counted). Their only
   flagged binder is `hND`.
@@ -39,6 +39,34 @@ kind `cited` are not counted here. Two extra rows (B6) give the counted forms th
   generator picked the declaration with the name stated in the row; the lead to confirm each.
 - **Draft binders in counted forms.** Several rows bind `VolumeGrowthStmt` (2.7, DRAFT `h27`) or
   `ExitTimeUpperBoundStmt` (2.18, DRAFT `h218`) or other Draft statements of this paper. The flags show which.
+
+## Existence of the coupling
+
+Status: **PENDING TRUTH CHECK**. Existence is not proved in this repository; it is a cited literature input. It concerns
+the valid environments `MatedCRTEnv.IsValid 𝒮 γ` (MatedCRT/Defs/Setting.lean:141).
+
+- **Literature inputs named.** `IsMatingOfTreesCoupling` (LatticeProb module
+  `LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.IsMatingOfTreesCoupling`; Setting.lean:7, :14, :157-165) is the coupling
+  conjunct of `IsValid`. `MatedCRTEnv.IsValid` (Setting.lean:141) has the fields `isQuantumCone`, `isLQGMeasure`,
+  `isSLE` and the coupling. `HasReferenceEnvironments 𝒮` (MatedCRT/FirstPass/SLERef/Reference.lean:42) gives valid
+  environments for every γ ∈ (0,2); it is a conjunct of `CertifiedReferenceModel ν 𝒮` (SLERef/Certified.lean:54, :64).
+- **Corrected-tex invocations** (paper/idla_mated_crt-corrected.tex):
+  - l.179-180: "mating-of-trees bijections" as the analogy for the mated-CRT map, citing [ghs-mating-survey].
+  - l.189-191: "Let h be the random distribution on C corresponding to a γ-quantum cone ... Let η be a whole-plane
+    space-filling SLE, independent of h, with parameter κ = 16/γ² ∈ (4,∞)."
+  - l.427 (Definition [def:quantum-cone], circle-average embedding) and l.466-472 (μ_h, the γ-LQG area measure).
+  - l.611-612 and l.624: whole-plane space-filling SLE η, "see [ghs-mating-survey, Section 3.6]".
+  - The paper has no numbered theorem stating existence of the coupling; the pair (h, η) is given by l.189-191 and
+    l.611-632. Truth check for the lead: whether the pairing is the cited mating-of-trees input or a paper-own claim.
+- **Proved here.** The GFF conjunct: `MatedCRT.GFFExistence.exists_harmonicBalls_isWholePlaneGFF`
+  (MatedCRT/FirstPass/LPBridge/GFFExistence.lean:22, commit cf7f8cd): ∃ Ω, a measurable space, a probability P, hC,
+  hcirc with `HarmonicBalls.IsWholePlaneGFF P hC hcirc`.
+- **Open conjuncts of `IsValid`** (reports/z8.md (c)): (i) the radial law of `isQuantumCone`, `∃ ν, IsBMConditionedPositive
+  (lqgQ γ - γ) ν ∧ P.map (radialProcess ∘ hcirc) = quantumConeRadialLaw γ ν` (locator MQ-li-8; no External Prop yet);
+  (ii) `isLQGMeasure : IsLQGMeasure S.P γ S.hcirc S.μ`, cited via `FPWholePlaneLQGExistence`
+  (FirstPass/Frozen/S5S6S7.lean:13).
+- **Effect on the ledger.** The Draft statements quantify over all `S : MatedCRTEnv Ω` with `S.IsValid 𝒮 γ`, so the
+  counted implications do not use an existence statement. Existence matters only for non-vacuity of the statements.
 
 ## Table
 
@@ -56,7 +84,7 @@ regenerate after any change to a counted declaration.
 | 2.13 | `closed_2_13` | MatedCRT/FirstPass/Closure/Section2.lean:33 | DERIVED (FirstPass/S1S2S8SA.lean) | Frozen 1 data 1 | none | Audit m1: binds hcell (FrozenAdjacentCellsMeetAe). Wrapper closed_2_13_cellRewire (Closure/CellRewire.lean). |
 | 2.17 | `firstPass_2_17` | MatedCRT/FirstPass/S1S2S8SA.lean:53 | DERIVED (Steps/Sec2/BoundedExitTimeRV.lean) | DRAFT 1 | DRAFT:h27 | Candidate; not named in tasks/li.md; to be confirmed by the lead. |
 | 2.19 | `closed_2_19` | MatedCRT/FirstPass/Closure/Section2.lean:40 | DERIVED (FirstPass/S1S2S8SA.lean) | DRAFT 1 core 1 data 2 | DRAFT:h27 |  |
-| 3.1 | `firstPass_3_1_faithful` | MatedCRT/FirstPass/S3c.lean:125 | COUNTED (proof) | DRAFT 2 External 1 Frozen 1 data 1 | DRAFT:h27, DRAFT:h218 | Audit m3. closed_3_1 concludes DiscretePotentialTightnessCorrectedStmt (weak form) and is not counted. closed_3_1_faithful / closed_3_1_countable do not exist; the counted-form names are firstPass_3_1_faithful (samplewise, S3c.lean) and firstPass_3_1_countable (countable families). The Draft (Draft/Section3.lean:42) has no IsOpen D; both forms assume IsOpen D: mismatch for the lead. |
+| 3.1 | `firstPass_3_1_faithful` | MatedCRT/FirstPass/S3c.lean:125 | COUNTED (proof) | DRAFT 2 External 1 Frozen 1 data 1 | DRAFT:h27, DRAFT:h218 | Audit m3. Concludes `DiscretePotentialTightnessPointwiseStmt 𝒮` (S3c.lean:100; samplewise form, fidelity fix §1.3), not the Draft `DiscretePotentialTightnessStmt 𝒮` (Draft/Section3.lean:42). Corrected tex lemma:discrete-potential-tightness (l.981-986): "every connected domain D ⊂ B_ρ"; the paper does not say D is open. **IsOpen D added, not in the paper** (S3c.lean:105; the Draft has IsConnected only). closed_3_1 (weak form, DiscretePotentialTightnessCorrectedStmt) is not counted; closed_3_1_faithful / closed_3_1_countable do not exist. Alternative: firstPass_3_1_countable (S3c/CountableFamilies.lean:97). Lead to confirm. |
 | 3.3 | `closed_3_3` | MatedCRT/FirstPass/Closure/Section3.lean:43 | DERIVED (FirstPass/S3S4.lean) | DRAFT 1 core 1 data 2 | DRAFT:h27 |  |
 | 3.4 | `closed_3_4` | MatedCRT/FirstPass/Closure/Section3.lean:36 | DERIVED (FirstPass/S3S4c.lean) | DRAFT 1 core 1 data 2 | DRAFT:h27 |  |
 | 3.5 | `closed_3_5` | MatedCRT/FirstPass/Closure/Section3.lean:66 | DERIVED (FirstPass/S3S4b.lean) | DRAFT 1 Frozen 1 core 1 data 2 | DRAFT:h27 |  |
