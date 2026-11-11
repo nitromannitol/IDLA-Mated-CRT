@@ -1,4 +1,5 @@
 import Mathlib
+import MatedCRT.LPStaging.Prob.BrownianGermZeroOne
 
 /-!
 # A real Brownian motion is positive at arbitrarily small times
@@ -202,6 +203,15 @@ theorem ae_frequently_pos_of_isBrownianReal {X : ℝ≥0 → Ω → ℝ} {P : Me
   refine ⟨Real.toNNReal (q : ℝ), hUu ⟨Real.toNNReal_pos.2 (Rat.cast_pos.2 hq.1), ?_⟩, hpos⟩
   rw [← NNReal.coe_lt_coe, Real.coe_toNNReal _ (Rat.cast_nonneg.2 hq.1.le)]
   exact lt_trans hq.2 (NNReal.coe_lt_coe.2 hm)
+
+/-- **Positive values at arbitrarily small times, unconditionally.** For a real Brownian motion
+`X` with measurable coordinates, almost surely `0 < X t` for arbitrarily small `t > 0`. This is
+`ae_frequently_pos_of_isBrownianReal` with Blumenthal's zero-one law `isTrivialSigma_iInf_bmPast`
+(Mörters–Peres, *Brownian Motion*, Theorem 2.7) supplying the hypothesis `hBlum`. -/
+theorem ae_frequently_pos_of_isBrownianReal_blumenthal {X : ℝ≥0 → Ω → ℝ} {P : Measure Ω}
+    (hX : IsBrownianReal X P) (hXm : ∀ t, Measurable (X t)) :
+    ∀ᵐ ω ∂P, ∃ᶠ t in 𝓝[>] (0 : ℝ≥0), 0 < X t ω :=
+  ae_frequently_pos_of_isBrownianReal hX hXm (isTrivialSigma_iInf_bmPast hX hXm)
 
 end LatticeProb
 

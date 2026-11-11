@@ -1,5 +1,6 @@
 import MatedCRT.LPStaging.Prob.TrivialSigmaJoin
 import MatedCRT.LPStaging.Prob.BrownianOutwardExcursion
+import MatedCRT.LPStaging.Prob.BrownianGermZeroOne
 
 /-!
 # Germ 0-1 law for planar Brownian motion from the coordinate germ laws
@@ -96,5 +97,19 @@ theorem ae_frequently_pos_of_indepFun_of_coordinates {P : Measure Ω} [IsProbabi
     (hNW : IndepFun N (fun ω (s : ℝ≥0) => W s ω) P) (hN0 : ∀ᵐ ω ∂P, N ω ≠ 0) :
     ∀ᵐ ω ∂P, ∃ᶠ s in 𝓝[>] (0 : ℝ≥0), 0 < pairing (N ω) (W s ω) :=
   ae_frequently_pos_of_indepFun hW (isTrivialSigma_iInf_pathSigmaTo_planar hW hre him) hN hNW hN0
+
+/-- **Planar random direction, unconditional.** If `N ≠ 0` a.s. is independent of a planar
+Brownian motion `W`, then almost surely `⟪N, W_s⟫ > 0` for arbitrarily small `s > 0`. The coordinate
+germ laws `⨅ n, σ(Re W_s : s ≤ 1/(n+1))` and `⨅ n, σ(Im W_s : s ≤ 1/(n+1))` are trivial by
+Blumenthal's zero-one law `isTrivialSigma_iInf_bmPast` applied to the two real coordinates. -/
+theorem ae_frequently_pos_of_indepFun_planar {P : Measure Ω} [IsProbabilityMeasure P]
+    {W : ℝ≥0 → Ω → ℂ} (hW : IsPlanarBrownian W P)
+    {N : Ω → ℂ} (hN : AEMeasurable N P)
+    (hNW : IndepFun N (fun ω (s : ℝ≥0) => W s ω) P) (hN0 : ∀ᵐ ω ∂P, N ω ≠ 0) :
+    ∀ᵐ ω ∂P, ∃ᶠ s in 𝓝[>] (0 : ℝ≥0), 0 < pairing (N ω) (W s ω) :=
+  ae_frequently_pos_of_indepFun_of_coordinates hW
+    (isTrivialSigma_iInf_bmPast hW.re fun t => Complex.measurable_re.comp (hW.measurable t))
+    (isTrivialSigma_iInf_bmPast hW.im fun t => Complex.measurable_im.comp (hW.measurable t))
+    hN hNW hN0
 
 end LatticeProb.PlanarBrownian
