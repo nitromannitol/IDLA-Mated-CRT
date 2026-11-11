@@ -2,46 +2,22 @@ import MatedCRT.FirstPass.SLERef.Reference
 import MatedCRT.FirstPass.Frozen.S3S4
 
 /-!
-# First pass: frozen external input for the reference law of whole-plane space-filling SLE (task fp-SLERef-reference-law;
-corrected by task fp-SLERef2-certify)
+# Frozen external input for the reference law of whole-plane space-filling SLE
 
-`SLEReferenceExistsInput` is the frozen literature input for the reference law of whole-plane space-filling SLE. It is a
-proposition about laws of curves and of the cone field, and it does not identify the SLE law intrinsically. No Lean object
-constructs SLE here, and no Lean proof of the literature transfer is given. The propositions it uses are in
-`MatedCRT/FirstPass/SLERef/Reference.lean`, `MatedCRT/FirstPass/SLERef/Similarity.lean` and
-`MatedCRT/FirstPass/SLERef/Code.lean`.
+`SLEReferenceExistsInput` is the frozen literature input for the reference law of whole-plane space-filling SLE. It is a proposition about laws of curves and of the cone field, and it does not identify the SLE law intrinsically. No Lean object constructs SLE here, and no Lean proof of the literature transfer is given. The propositions it uses are in `MatedCRT/FirstPass/SLERef/Reference.lean`, `MatedCRT/FirstPass/SLERef/Similarity.lean` and `MatedCRT/FirstPass/SLERef/Code.lean`.
 
-This file also gives the derivations of the two firstPass consumers from the reference package for one chosen law `ν`:
-`FrozenDiscreteHolderContinuityCorrected 𝒮` and `FrozenTruncatedQuenchedLawsFixedTime 𝒮`, for every model `𝒮` with normalized
-law `ν`, and a non-vacuity statement for the reference model.
+This file also gives the derivations of the two consumers from the reference package for one chosen law `ν`: `FrozenDiscreteHolderContinuityCorrected 𝒮` and `FrozenTruncatedQuenchedLawsFixedTime 𝒮`, for every model `𝒮` with normalized law `ν`, and a non-vacuity statement for the reference model.
 
-Sources of the truth discussion: `notes/fp-gaps/CHATGPT-sleref-truth.md` §1.3 and §2.1,
-`notes/fp-gaps/CHATGPT-fpsimilarity-truth.md` §5–§7, `notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md` §§1–4 and §8.
+Sources of the truth discussion: the SLE reference-law note (§1.3, §2.1), the similarity transfer note (§5-§7), and the frozen SLE note (§§1-4, §8).
 -/
 
 namespace MatedCRT
 
 open MeasureTheory
 
-/-- FIRST-PASS FROZEN. Reference existence and uniform transfer for one chosen law family `ν : ℝ → Measure SLEPathCode`.
-The proposition is `∃ ν, SLEReferenceWithSimilarityInput ν`: some `ν` is the normalized law of a space-filling SLE model
-realized, for every `γ ∈ (0, 2)`, by valid environments on `ℝ`, and every model with normalized law `ν` satisfies (a) the five
-cited numbered results of the paper, with the corrected Lemma 3.2 (`SLECitedInputs`; Theorem 2.11, Lemmas 2.14, 2.16, 2.18
-and corrected Lemma 3.2), (b) the corrected similarity transfer `FPSimilarityTransferCorrected`, and (c) the fixed-time
-truncated quenched laws `FrozenTruncatedQuenchedLawsFixedTime`.
-
-Truth check (2026-11-10): UNSURE, model-dependent. Its universal analytic form is not itself a counterexample, so analytic
-transfer is not refuted by quantification over models. Exact non-vacuity (a reference model) additionally requires the
-complete imported `LatticeProb` mating-of-trees coupling contract (`IsMatingOfTreesCoupling`), whose source is absent from
-this snapshot. Earlier records (`notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md` §4, `CHATGPT-fpsimilarity-truth.md` §7) treated
-the certified reference law as TRUE. The corrected Lemma 3.2 is UNRESOLVED for an unconstrained model.
-
-This certificate does not intrinsically characterize the SLE law or impose closure properties on the raw predicate
-`𝒮.IsSLE`. In particular, the existence part alone does not prove `HasNormalizedSLELaw 𝒮 ν` for a target model chosen
-beforehand; the target must receive that hypothesis for the same `ν`, or a package containing both the certificate and the
-target's calibration to it. Clause (c) quantifies over the discrete occupation of `MatedCRTEnv` and is not a statement about
-SLE laws alone; this is flagged for the operator.
-
+/-- Reference existence and uniform transfer for one chosen law family `ν : ℝ → Measure SLEPathCode`. The proposition is `∃ ν, SLEReferenceWithSimilarityInput ν`: some `ν` is the normalized law of a space-filling SLE model realized, for every `γ ∈ (0, 2)`, by valid environments on `ℝ`, and every model with normalized law `ν` satisfies (a) the five cited numbered results of the paper, with the corrected Lemma 3.2 (`SLECitedInputs`; Theorem 2.11, Lemmas 2.14, 2.16, 2.18 and corrected Lemma 3.2), (b) the corrected similarity transfer `FPSimilarityTransferCorrected`, and (c) the fixed-time truncated quenched laws `FrozenTruncatedQuenchedLawsFixedTime`.
+Truth check: UNSURE, model-dependent. Its universal analytic form is not itself a counterexample, so analytic transfer is not refuted by quantification over models. Exact non-vacuity (a reference model) additionally requires the complete imported `LatticeProb` mating-of-trees coupling contract (`IsMatingOfTreesCoupling`), whose source is absent from this snapshot. The corrected Lemma 3.2 is UNRESOLVED for an unconstrained model.
+This certificate does not intrinsically characterize the SLE law or impose closure properties on the raw predicate `𝒮.IsSLE`. In particular, the existence part alone does not prove `HasNormalizedSLELaw 𝒮 ν` for a target model chosen beforehand; the target must receive that hypothesis for the same `ν`, or a package containing both the certificate and the target's calibration to it. Clause (c) quantifies over the discrete occupation of `MatedCRTEnv` and is not a statement about SLE laws alone.
 The law family `ν` is chosen once, inside this existential; every consumer of the clauses above must use that same `ν`. -/
 def SLEReferenceExistsInput : Prop :=
   ∃ ν : ℝ → Measure SLEPathCode, SLEReferenceWithSimilarityInput ν
