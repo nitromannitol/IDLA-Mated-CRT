@@ -49,6 +49,13 @@ Each `_bm` theorem is a top-level result of `MatedCRT/FirstPass/Closure/*.lean`,
 applied to `MatedCRT.frozenBrownianOutwardExcursionAtExit_holds` (`MatedCRT/FirstPass/LPBridge/BrownianOutwardExcursion.lean`),
 the planar Brownian outward excursion at exit from a disk (strong Markov property at the exit time and Blumenthal 0-1 law;
 Mörters-Peres, *Brownian Motion*, Theorems 2.16 and 2.7). The originals are unchanged.
+
+The wrappers are closures of the following numbered results of `paper/idla_mated_crt-corrected.tex`, by label (the
+counted forms are listed in docs/campaign/COUNTED.md): Lemma 3.3 (`lemma:uniform-convergence-of-greens-function`), Lemma 3.4
+(`lemma:integral-convergence-of-greens-function`), Lemma 3.5 (`lemma:discrete-dirichlet-problem`), Lemma 3.6
+(`lemma:convergence-of-harmonic-functions`), Lemma 3.7 (`lemma:convergence-of-the-normalized-exit-time`), Lemma 4.8
+(`lemma:subsequential-properties`), Proposition 5.1 (`prop:IDLA-lower-bound`), Theorem 1.4
+(`theorem:convergence-of-IDLA`) and Theorem 1.6 (`theorem:convergence-of-div-sandpile`).
 -/
 
 namespace MatedCRT
