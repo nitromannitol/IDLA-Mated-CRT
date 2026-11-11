@@ -399,6 +399,87 @@ theorem clockMeasure_restrict_eq_withDensity {F : ℝ≥0 → ℝ} (hm : Monoton
 
 end Weighted
 
+/-! ## 5. The weighted clock on a base measure `dA` on `ℝ≥0` (Icc convention of `weightedClock`) -/
+
+section NNRealBase
+
+/-- An atom of the base measure at `0` carries no weight once `∫⁻_{[0,0]} w dA = 0`: the integrals of
+`K · w` over `[0,σ]` and over `(0,σ]` agree. -/
+lemma setLIntegral_Icc_eq_Ioc {dA : Measure ℝ≥0} {w : ℝ≥0 → ℝ≥0∞} (hw : Measurable w)
+    (h0 : ∫⁻ u in Icc (0 : ℝ≥0) 0, w u ∂dA = 0) (K : ℝ≥0 → ℝ≥0∞) (σ : ℝ≥0) :
+    ∫⁻ u in Icc (0 : ℝ≥0) σ, K u * w u ∂dA = ∫⁻ u in Ioc (0 : ℝ≥0) σ, K u * w u ∂dA := by
+  have hae : ∀ᵐ u ∂(dA.restrict (Icc (0 : ℝ≥0) 0)), K u * w u = 0 := by
+    filter_upwards [(lintegral_eq_zero_iff hw).mp h0] with u hu
+    simp [hu]
+  rw [← Set.Icc_union_Ioc_eq_Icc (le_refl (0 : ℝ≥0)) (by positivity),
+    Measure.restrict_union (Set.disjoint_left.mpr fun x hx1 hx2 => (not_le.mpr hx2.1) hx1.2)
+      measurableSet_Ioc, lintegral_add_measure, lintegral_congr_ae hae, lintegral_zero, zero_add]
+
+/-- The Stieltjes measure of a clock `F` whose values on `[0,σ]` are the weighted clock
+`∫⁻_{[0,s]} w dA` (the identification `φ = Φ` of S6, Icc convention) is the image of the weighted
+measure `w dA` under `ℝ≥0 → ℝ` on `(0,σ]`. -/
+theorem clockMeasure_restrict_eq_weighted {F : ℝ≥0 → ℝ} (hm : Monotone F) (hc : Continuous F)
+    (h0 : F 0 = 0) {dA : Measure ℝ≥0} {w : ℝ≥0 → ℝ≥0∞} (hw : Measurable w) {σ : ℝ≥0}
+    (hF : ∀ s : ℝ≥0, s ≤ σ → F s = (∫⁻ u in Icc (0 : ℝ≥0) s, w u ∂dA).toReal)
+    (hfin : ∫⁻ u in Icc (0 : ℝ≥0) σ, w u ∂dA ≠ ⊤) :
+    (clockMeasure hm).restrict (Ioc (0 : ℝ) (σ : ℝ)) =
+      ((dA.map ((↑) : ℝ≥0 → ℝ)).withDensity fun x : ℝ => w x.toNNReal).restrict
+        (Ioc (0 : ℝ) (σ : ℝ)) := by
+  have hcoe : Measurable ((↑) : ℝ≥0 → ℝ) := measurable_coe_nnreal_real
+  have h0' : ∫⁻ u in Icc (0 : ℝ≥0) 0, w u ∂dA = 0 := by
+    have hle : ∫⁻ u in Icc (0 : ℝ≥0) 0, w u ∂dA ≠ ⊤ :=
+      ne_top_of_le_ne_top hfin (lintegral_mono_set (Set.Icc_subset_Icc le_rfl (by positivity)))
+    have hz := hF 0 (by positivity)
+    rw [h0] at hz
+    exact ((ENNReal.toReal_eq_zero_iff _).mp hz.symm).resolve_right hle
+  have hpre : ((↑) : ℝ≥0 → ℝ) ⁻¹' Ioc (0 : ℝ) (σ : ℝ) = Ioc (0 : ℝ≥0) σ := by
+    ext u
+    simp
+  have hweightR : ∀ s : ℝ≥0, weightMass (dA.map ((↑) : ℝ≥0 → ℝ)) (fun x : ℝ => w x.toNNReal) (s : ℝ)
+      = ∫⁻ u in Icc (0 : ℝ≥0) s, w u ∂dA := by
+    intro s
+    unfold weightMass
+    rw [setLIntegral_map (f := fun x : ℝ => w x.toNNReal) measurableSet_Ioc (hw.comp measurable_real_toNNReal) hcoe]
+    simp only [Real.toNNReal_coe]
+    rw [show ((↑) : ℝ≥0 → ℝ) ⁻¹' Ioc (0 : ℝ) (s : ℝ) = Ioc (0 : ℝ≥0) s by ext u; simp]
+    have := setLIntegral_Icc_eq_Ioc hw h0' (fun _ => 1) s
+    simp only [one_mul] at this
+    exact this.symm
+  exact clockMeasure_restrict_eq_withDensity hm hc h0 (dA.map ((↑) : ℝ≥0 → ℝ))
+    (fun x : ℝ => w x.toNNReal) (fun s hs => by rw [hweightR s]; exact hF s hs)
+    (by rw [hweightR σ]; exact hfin)
+
+/-- Integrals against the Stieltjes measure of the clock over `(0,σ]` are weighted integrals over
+`[0,σ]` against `dA`: `∫_{(0,σ]} H dF = ∫_{[0,σ]} H(u) w(u) dA(u)` (change of density of S7, :430-441). -/
+theorem lintegral_clockMeasure_Ioc_eq {F : ℝ≥0 → ℝ} (hm : Monotone F) (hc : Continuous F)
+    (h0 : F 0 = 0) {dA : Measure ℝ≥0} {w : ℝ≥0 → ℝ≥0∞} (hw : Measurable w) {σ : ℝ≥0}
+    (hF : ∀ s : ℝ≥0, s ≤ σ → F s = (∫⁻ u in Icc (0 : ℝ≥0) s, w u ∂dA).toReal)
+    (hfin : ∫⁻ u in Icc (0 : ℝ≥0) σ, w u ∂dA ≠ ⊤) (H : ℝ → ℝ≥0∞) (hH : Measurable H) :
+    ∫⁻ s in Ioc (0 : ℝ) (σ : ℝ), H s ∂(clockMeasure hm) =
+      ∫⁻ u in Icc (0 : ℝ≥0) σ, H (u : ℝ) * w u ∂dA := by
+  have hcoe : Measurable ((↑) : ℝ≥0 → ℝ) := measurable_coe_nnreal_real
+  have hg : Measurable fun x : ℝ => w x.toNNReal := hw.comp measurable_real_toNNReal
+  have h0' : ∫⁻ u in Icc (0 : ℝ≥0) 0, w u ∂dA = 0 := by
+    have hle : ∫⁻ u in Icc (0 : ℝ≥0) 0, w u ∂dA ≠ ⊤ :=
+      ne_top_of_le_ne_top hfin (lintegral_mono_set (Set.Icc_subset_Icc le_rfl (by positivity)))
+    have hz := hF 0 (by positivity)
+    rw [h0] at hz
+    exact ((ENNReal.toReal_eq_zero_iff _).mp hz.symm).resolve_right hle
+  rw [clockMeasure_restrict_eq_weighted hm hc h0 hw hF hfin,
+    restrict_withDensity measurableSet_Ioc, lintegral_withDensity_eq_lintegral_mul _ hg hH,
+    Measure.restrict_map hcoe measurableSet_Ioc]
+  simp only [Pi.mul_apply]
+  rw [lintegral_map (f := fun a : ℝ => w a.toNNReal * H a) (hg.mul hH) hcoe]
+  rw [show ((↑) : ℝ≥0 → ℝ) ⁻¹' Ioc (0 : ℝ) (σ : ℝ) = Ioc (0 : ℝ≥0) σ by ext u; simp]
+  rw [show ∫⁻ u in Icc (0 : ℝ≥0) σ, H (u : ℝ) * w u ∂dA =
+      ∫⁻ u in Ioc (0 : ℝ≥0) σ, H (u : ℝ) * w u ∂dA from
+    setLIntegral_Icc_eq_Ioc hw h0' (fun u => H (u : ℝ)) σ]
+  refine lintegral_congr (fun a => ?_)
+  simp only [Real.toNNReal_coe]
+  exact mul_comm _ _
+
+end NNRealBase
+
 end
 
 end MatedCRT.KilledOccupation
