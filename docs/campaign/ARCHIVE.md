@@ -512,3 +512,5 @@ Each batch is `git mv`ed from `MatedCRT/` to `archive/MatedCRT/` in import order
 | MatedCRT/FirstPass/S2h/CertSets.lean | archive/MatedCRT/FirstPass/S2h/CertSets.lean | B20 |
 | MatedCRT/FirstPass/S2h/Cutoff.lean | archive/MatedCRT/FirstPass/S2h/Cutoff.lean | B20 |
 | MatedCRT/FirstPass/S2h/CertRel.lean | archive/MatedCRT/FirstPass/S2h/CertRel.lean | B20 |
+
+Checks after the last R2 batch (B20, commit 1c285f95): `lb MatedCRT.Audit.CountedAxioms` BUILD OK (log logs/lb/120749-3415599.log); `lc` strict CHECK OK for `MatedCRT/Assembly/Main.lean` (log logs/lc/120740-3415276.log). Dangling imports from `MatedCRT/` files: 11, all from untracked files under `MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/` that import modules archived in earlier rounds (not from R2 batches).
