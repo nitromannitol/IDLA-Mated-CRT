@@ -359,3 +359,14 @@ Rule R2 (`docs/campaign/ARCHIVE.md`, section "Rule R2 (2026-11-11), batches B13 
   - uncommitted edits: 0.
 - If z9 and z10 read DONE, 66 of the 70 are movable (two batches, 40 and 26); the 4 still held would be `S1c/Composition.lean`, `S4e.lean`, `LPBridge/GFFInterface.lean` and `S4e/RescaledDecode.lean` (imported by `S4e.lean`).
 - Not from these batches: 11 dangling imports from 8 untracked files under `MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/` (e.g. `JointL1AxiomsY5.lean`) import modules archived earlier. Their owner must act before those files are committed.
+
+## Final update (rule R2, batches B19 and B20, 2026-11-11)
+
+After z9 and z10 reported DONE (z11 was DONE), the 38 hygiene/stale files of the pinned list became movable. Batches B19 `f3352f00` (40 modules) and B20 `1c285f95` (26 modules) moved them. Total moved under rule R2 in this round: 268 modules (B13 to B20).
+
+Still in `MatedCRT/` (4 candidates, at the commit of B20):
+- a: `MatedCRT/FirstPass/LPBridge/GFFInterface.lean` (its commit f5419921, after the cutoff, adds code);
+- b: `MatedCRT/FirstPass/S1c/Composition.lean` and `MatedCRT/FirstPass/S4e.lean` (named in a tasks file modified on 2026-11-11);
+- d: `MatedCRT/FirstPass/S4e/RescaledDecode.lean` (imported by `S4e.lean`, which stays).
+
+The closure is unchanged: 1819 lean files (1818 under `MatedCRT/` plus `MatedCRT.lean`). The moved modules were not reachable from the roots. The 11 pre-existing dangling imports from untracked files (see the update above) are still open.
