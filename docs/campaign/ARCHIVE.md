@@ -33,3 +33,6 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/FirstPass/S2h/PlateauRawZero.lean | archive/MatedCRT/FirstPass/S2h/PlateauRawZero.lean | B09 |
 | MatedCRT/FirstPass/S2h/PlateauTransfer.lean | archive/MatedCRT/FirstPass/S2h/PlateauTransfer.lean | B09 |
 | MatedCRT/FirstPass/S2h/ScaledField.lean | archive/MatedCRT/FirstPass/S2h/ScaledField.lean | B09 |
+| MatedCRT/FirstPass/S2k/BorelTransfer.lean | archive/MatedCRT/FirstPass/S2k/BorelTransfer.lean | B10 |
+| MatedCRT/FirstPass/S2k/PlateauClosure.lean | archive/MatedCRT/FirstPass/S2k/PlateauClosure.lean | B10 |
+| MatedCRT/FirstPass/S2k/PlateauTonelli.lean | archive/MatedCRT/FirstPass/S2k/PlateauTonelli.lean | B10 |
