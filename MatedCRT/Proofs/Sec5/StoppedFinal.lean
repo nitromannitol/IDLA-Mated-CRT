@@ -4,7 +4,7 @@ import MatedCRT.Proofs.Measurability.LQGMeasureField
 import MatedCRT.Steps.Sec2.MaximumPrinciple
 
 /-!
-# Lemmas 5.3 and 5.4 on `V^ε(Λ_t)` (E-c1-5): final forms
+# Lemmas 5.3 and 5.4 on `V^ε(Λ_t)`: final forms
 
 * `stoppedLLowerBound_of_inputs` (Proofs/Sec5/StoppedLLowerBound.lean): `StoppedLLowerBoundStep` from Lemmas 2.9, 2.15
   and 2.16.

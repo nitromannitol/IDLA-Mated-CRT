@@ -3,7 +3,7 @@ import MatedCRT.Proofs.Sec5.StoppedActualMarginCode
 /-!
 # The stopped margin step assembled from the actual code producers
 
-Task `z5-stopped-margin-step-assembly`. Source: `notes/wpn-steps2/steps2-r3.tex`, lines 3386-3435: the erosion
+The erosion
 minimum `M̂ = m(K, f)` of the actual code, the everywhere positive choice `c_pos = M̂` where `M̂ > 0` and `1`
 otherwise, and the almost-sure identity `t < T → M̂ = M` added to the good event.
 
@@ -30,7 +30,7 @@ namespace MatedCRT.StoppedMarginStepAssembly
 
 open MeasureTheory Filter Topology Set Metric
 
-/-- The measurable positive choice `c_pos` of the margin (steps2 3422-3435): `M` where `M > 0`, and `1` otherwise.
+/-- The measurable positive choice `c_pos` of the margin: `M` where `M > 0`, and `1` otherwise.
 It is everywhere positive, and measurable for every σ-algebra for which `M` is measurable. -/
 noncomputable def cPos {Ω : Type} (M : Ω → ℝ) : Ω → ℝ :=
   fun ω => if 0 < M ω then M ω else 1

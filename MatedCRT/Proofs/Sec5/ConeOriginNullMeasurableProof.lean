@@ -4,28 +4,28 @@ import MatedCRT.Proposed.PrestonAnalytic2008
 import HarmonicBalls.Proofs.Potential.GreenBall
 
 /-!
-# The obstacle code for `ConeOriginNullMeasurableStep` (steps2.tex 796-1009)
+# The obstacle code for `ConeOriginNullMeasurableStep`
 
-Components, in the order of steps2 (proved here unless marked residual):
+Components, in the order of the written argument (proved here unless marked residual):
 
 * `A` (transfer): a measurable `c : Ω → X` pulls back universally measurable sets to null-measurable sets of any
-  finite measure on `Ω`; incomplete `Ω` causes no difficulty (steps2 954-955).
+  finite measure on `Ω`; incomplete `Ω` causes no difficulty.
 * `C` (Borel version): the a.s. continuous circle process of `IsQuantumCone` has a Borel version
   `c : Ω → PosCircleFns` that equals it off a measurable null set (`PosCircleFns = C((0,∞)×ℂ,ℝ)`, Polish).
   The family `Λ` is never assumed measurable.
-* `G1-G4` (cluster-interior coding, steps2 957-990): for open `K`, `B ⊆ closure K` iff a countable rational code
+* `G1-G4` (cluster-interior coding): for open `K`, `B ⊆ closure K` iff a countable rational code
   holds; the cluster `K_R(μ,t)` is open; `Λ_t = int cl K_R` turns the inclusion into the code; the cluster is a
   margin condition on the supersolutions, and the supersolution traces on `closedBall 0 R` have the same values.
-* `P` (Borel code, steps2 838-955): the cluster code `A_{R,p}` is universally measurable, using the projection of a
+* `P` (Borel code): the cluster code `A_{R,p}` is universally measurable, using the projection of a
   Borel relation (analytic) and the Preston input `PrestonAnalyticUniversallyMeasurableStmt` (hypothesis `hP`,
   staged in `Proposed/PrestonAnalytic2008.lean`, not yet a source-checked `External` input).
-* `F` (steps2 992-1009): completion measurability of `{¬ B_s(0) ⊆ Λ_t}` from the Borel code. The theorem
+* `F`: completion measurability of `{¬ B_s(0) ⊆ Λ_t}` from the Borel code. The theorem
   `coneOriginNullMeasurableStep_of_inputs` is `ConeOriginNullMeasurableStep 𝒮` under the two named inputs `hP` and
   the residual `CodeSectionStmt 𝒮` (the Borel relation whose a.s. section is the supersolution traces).
 
 Not proved here (named residual `CodeSectionStmt`): the mass code (`IsLQGMeasure` on a countable test family), the
 countable dense family of nonnegative test functions with `C²` approximation, and the Borel measurability of the
-limits `J_φ`. This is implementation remaining; the written argument is steps2 838-926.
+limits `J_φ`. This is implementation remaining.
 -/
 
 open HarmonicBalls
@@ -89,7 +89,7 @@ theorem exists_measurable_circleFns_version {Ω : Type*} [MeasurableSpace Ω] (P
   · intro ω hω p
     simp [F, hω]
 
-/-! ### G1. Rational coding of an open set (steps2 957-969) -/
+/-! ### G1. Rational coding of an open set -/
 
 /-- The Gaussian rationals `ℚ + iℚ`: a countable dense subset of `ℂ`. -/
 def gaussRat : Set ℂ := range fun q : ℚ × ℚ => (q.1 : ℂ) + (q.2 : ℂ) * Complex.I
@@ -150,7 +150,7 @@ theorem subset_closure_iff_code {D K B : Set ℂ} (hD : Dense D) (hK : IsOpen K)
       _ < ε / 2 + ε / 2 := add_lt_add hxq hqp
       _ = ε := by ring
 
-/-! ### G2. Openness of the cluster off and at the pole (steps2 971-990) -/
+/-! ### G2. Openness of the cluster off and at the pole -/
 
 /-- The centred Green function of `B_R` at a point of the punctured ball: `G_{B_R}(0,y) = (2π)⁻¹ log(R/|y|)`
 (`greenFunction_ball` with the explicit `greenBall` formula at the pole `0`). -/
@@ -197,7 +197,7 @@ theorem neg_mul_greenBall_lt {R t M : ℝ} (hR : 0 < R) (ht : 0 < t) {y : ℂ} (
   linarith
 
 /-- A punctured neighbourhood of the pole lies in the cluster when the least supersolution is continuous on the
-closed ball (steps2 971-990: `v_R` is bounded below near `0`, while `-t G_{B_R}(0,x) → -∞`). -/
+closed ball (`v_R` is bounded below near `0`, while `-t G_{B_R}(0,x) → -∞`). -/
 theorem exists_ball_subset_cluster_zero {μ : Measure ℂ} {R t : ℝ} (hR : 0 < R) (ht : 0 < t)
     (hv : ContinuousOn (leastSupersolution μ R 0 t) (closedBall 0 R)) :
     ∃ ε > 0, ball (0 : ℂ) ε ⊆ cluster μ R 0 t := by
@@ -229,7 +229,7 @@ theorem exists_ball_subset_cluster_zero {μ : Measure ℂ} {R t : ℝ} (hR : 0 <
     exact ⟨hyball, Or.inr (by linarith)⟩
 
 /-- **Openness of the cluster `K_R(μ,t) = {0} ∪ {x : 0 < |x| < R, v_R(x) > -t G_{B_R}(0,x)}`** when the least
-supersolution is continuous on the closed ball (`ConeOriginNull` route; steps2 971-990). -/
+supersolution is continuous on the closed ball (`ConeOriginNull` route). -/
 theorem isOpen_cluster_zero {μ : Measure ℂ} {R t : ℝ} (hR : 0 < R) (ht : 0 < t)
     (hv : ContinuousOn (leastSupersolution μ R 0 t) (closedBall 0 R)) :
     IsOpen (cluster μ R 0 t) := by
@@ -254,7 +254,7 @@ theorem isOpen_cluster_zero {μ : Measure ℂ} {R t : ℝ} (hR : 0 < R) (ht : 0 
       · exact absurd h hx0
       · exact ⟨⟨hxb, hx0⟩, by simp only [Set.mem_preimage, Set.mem_Ioi]; linarith⟩
 
-/-! ### G3. Cluster-interior coding of a harmonic-ball family (steps2 957-969, 971-990) -/
+/-! ### G3. Cluster-interior coding of a harmonic-ball family -/
 
 /-- **The inclusion code for the cluster.** If `Λ = int cl K_R(μ,t)` with `K_R` the open cluster, then
 `B_s ⊆ Λ` iff every rational point of `B_s` is a limit, at every scale, of rational points of the cluster. -/
@@ -267,7 +267,7 @@ theorem ball_subset_iff_code_of_cluster {μ : Measure ℂ} {Λt : Set ℂ} {R t 
   rw [hΛ, isOpen_ball.subset_interior_iff]
   exact subset_closure_iff_code gaussRat_dense (isOpen_cluster_zero hR ht hv) isOpen_ball
 
-/-! ### G4. The cluster as a margin condition on the supersolutions (steps2 957-969, 971-990) -/
+/-! ### G4. The cluster as a margin condition on the supersolutions -/
 
 /-- For a nonempty set of reals bounded below, `a < sInf S` iff some margin `1/(n+1)` lies below all of `S`. -/
 theorem lt_sInf_iff_margin {S : Set ℝ} (hS : S.Nonempty) (hb : BddBelow S) (a : ℝ) :
@@ -304,7 +304,7 @@ theorem mem_cluster_iff_margin {μ : Measure ℂ} {R t : ℝ} (ht : 0 < t) {x : 
     rintro _ ⟨w, hw, rfl⟩
     exact hall w hw
 
-/-! ### P. The obstacle code as a Borel relation (steps2 838-955) -/
+/-! ### P. The obstacle code as a Borel relation -/
 
 /-- The trace space `C(closedBall 0 R, ℝ)` of the supersolutions: a Polish space (`C(K,ℝ)`, `K` compact). -/
 abbrev BallFns (R : ℝ) : Type := C(closedBall (0 : ℂ) R, ℝ)
@@ -369,7 +369,7 @@ theorem univMeasurable_exists_lt (hP : PrestonAnalyticUniversallyMeasurableStmt)
   rw [hset]
   exact hP PosCircleFns _ han ν inferInstance
 
-/-- The cluster code `A_{R,p}` (steps2 957-969): `A_{R,0}` holds, `A_{R,p}` fails outside `B_R`, and for
+/-- The cluster code `A_{R,p}`: `A_{R,0}` holds, `A_{R,p}` fails outside `B_R`, and for
 `p ∈ B_R \ {0}` it asserts that some margin `1/(n+1)` below the obstacle is attained by no trace. -/
 def codeAt {R : ℝ} (𝒜 : Set (PosCircleFns × BallFns R)) (t : ℝ) (p : ℂ) (c : PosCircleFns) : Prop :=
   p = 0 ∨ ∃ hp : p ∈ ball (0 : ℂ) R, ∃ n : ℕ,
@@ -433,7 +433,7 @@ theorem mem_cluster_iff_codeAt {μ : Measure ℂ} {R t : ℝ} (hR : 0 < R) (ht :
         by_contra hlt
         exact hn ⟨w, (hsec w).2 hw, not_le.1 hlt⟩
 
-/-- The inclusion code `I_R` (steps2 957-969) pulled back along the circle process, as a set of outcomes. -/
+/-- The inclusion code `I_R` pulled back along the circle process, as a set of outcomes. -/
 def inclusionCodeSet {Ω : Type} (c : Ω → PosCircleFns) {R : ℝ} (𝒜 : Set (PosCircleFns × BallFns R)) (t s : ℝ) :
     Set Ω :=
   ⋂ q ∈ gaussRat ∩ ball (0 : ℂ) s, ⋂ k ∈ {k : ℕ | 0 < k},
@@ -454,7 +454,7 @@ theorem nullMeasurableSet_inclusionCodeSet {Ω : Type} [MeasurableSpace Ω] (P :
     NullMeasurableSet.biInter (Set.to_countable _) fun k _ =>
       NullMeasurableSet.biUnion ((gaussRat_countable.mono inter_subset_left)) fun p _ => h p
 
-/-! ### M. The mass code: the limit functional `J_φ` is Borel and equals `∫ φ dμ` (steps2 838-866) -/
+/-! ### M. The mass code: the limit functional `J_φ` is Borel and equals `∫ φ dμ` -/
 
 theorem dyadicScale_pos' (k : ℕ) : 0 < dyadicScale k := by
   unfold dyadicScale
@@ -517,7 +517,7 @@ theorem tendsto_massApprox_of_isLQGLimit {γ : ℝ} {hcirc : ℝ → ℂ → ℝ
   (hlim.tendsto_integral φ hφ hφs).congr fun k => integral_lqgApprox_eq_massApprox γ k hf
 
 open Classical in
-/-- The limit functional `J_φ` of steps2 838-866: the limit of the dyadic approximations when it exists, and `0`
+/-- The limit functional `J_φ`: the limit of the dyadic approximations when it exists, and `0`
 otherwise. -/
 noncomputable def massLimit (γ : ℝ) (φ : ℂ → ℝ) (f : PosCircleFns) : ℝ :=
   if h : ∃ L, Tendsto (fun k => massApprox γ φ k f) atTop (𝓝 L) then h.choose else 0
@@ -532,7 +532,7 @@ theorem massLimit_eq_of_tendsto {γ : ℝ} {φ : ℂ → ℝ} {f : PosCircleFns}
   rw [hval]
   exact tendsto_nhds_unique hex.choose_spec h
 
-/-- **The limit functional is Borel** (steps2 838-866, `J_φ` Borel): the set where the dyadic approximations converge is
+/-- **The limit functional is Borel** (`J_φ` Borel): the set where the dyadic approximations converge is
 Borel, and on it the limit is a pointwise limit of Borel functions. -/
 theorem measurable_massLimit (γ : ℝ) (φ : ℂ → ℝ) (hφ : Continuous φ) : Measurable (massLimit γ φ) := by
   have hS : MeasurableSet {f : PosCircleFns | ∃ L, Tendsto (fun k => massApprox γ φ k f) atTop (𝓝 L)} :=
@@ -557,7 +557,7 @@ theorem measurable_massLimit (γ : ℝ) (φ : ℂ → ℝ) (hφ : Continuous φ)
     rw [e]
     exact tendsto_const_nhds
 
-/-- **Mass code (steps2 838-866).** For a circle process `f` agreeing with `hcirc` at positive radii and an LQG limit
+/-- **Mass code.** For a circle process `f` agreeing with `hcirc` at positive radii and an LQG limit
 `m` of `hcirc`, `J_φ(f) = ∫ φ dm` for every continuous compactly supported `φ`. -/
 theorem massLimit_eq_integral (γ : ℝ) {hcirc : ℝ → ℂ → ℝ} {m : Measure ℂ} (hlim : IsLQGLimit γ hcirc m)
     {φ : ℂ → ℝ} (hφ : Continuous φ) (hφs : HasCompactSupport φ) {f : PosCircleFns}
@@ -565,9 +565,9 @@ theorem massLimit_eq_integral (γ : ℝ) {hcirc : ℝ → ℂ → ℝ} {m : Meas
     massLimit γ φ f = ∫ z, φ z ∂m :=
   massLimit_eq_of_tendsto (tendsto_massApprox_of_isLQGLimit hlim hφ hφs hf)
 
-/-! ### F. Completion measurability of the origin inclusion event (steps2 992-1009) -/
+/-! ### F. Completion measurability of the origin inclusion event -/
 
-/-- **Residual input: the Borel obstacle code (steps2 838-955).** For a Borel version `c` of the circle process and
+/-- **Residual input: the Borel obstacle code.** For a Borel version `c` of the circle process and
 every radius `R > 0` and time `t > 0` there is a Borel relation `𝒜 ⊆ C((0,∞)×ℂ,ℝ) × C(closedBall 0 R, ℝ)` whose
 section at almost every outcome is the set of traces of the supersolutions of the obstacle problem for
 `(μ_ω, R, t)`. Its proof needs the mass code (`IsLQGMeasure` on a countable test family), a countable dense family of

@@ -3,9 +3,9 @@ import MatedCRT.Proofs.Sec5.StoppedCompactCode
 /-!
 # Shifted rational-ball membership code and measurable versions
 
-Source: steps2-r3 (sha256 `88dfb1f9…`), lines 3146-3163 (the rational-membership coding paragraph). It uses the cluster
-code `A_{R,p}` of `eq:clusterpointcode` (steps2-r3:1058-1069, realised as `ConeOriginNull.codeAt`) and the family identity
-`eq:familyobstacle` (steps2-r3:947-952, realised as `SatisfiesObstacleCharacterization`).
+It uses the cluster
+code `A_{R,p}` (realised as `ConeOriginNull.codeAt`) and the family identity
+(realised as `SatisfiesObstacleCharacterization`).
 
 For fixed `t > 0` and integer radii `R = n + 1`, the shifted rational-ball predicate `RatBallPred` at a Gaussian rational
 `q ∈ ℚ + iℚ` is a countable Boolean combination of the cluster codes. It is null-measurable
@@ -26,15 +26,14 @@ open HarmonicBalls MatedCRT.CircleProcessSpace MatedCRT.ConeOriginNull
 namespace MatedCRT
 namespace StoppedRationalMembership
 
-/-- The shifted rational-ball predicate of a membership predicate `M` at `q` (steps2-r3:3146-3156): for some scale
+/-- The shifted rational-ball predicate of a membership predicate `M` at `q`: for some scale
 `1/j`, `j ≥ 1`, every Gaussian rational `q'` of the ball `B_{1/j}(q)`, centred at `q` (shifted, not at `0`), is
 approximated at every scale `1/k` by a Gaussian rational `p` with `M p`. Here `Q = ℚ + iℚ` is `gaussRat`. -/
 def RatBallPred (M : ℂ → Prop) (q : ℂ) : Prop :=
   ∃ j : ℕ, 0 < j ∧ ∀ q' ∈ gaussRat ∩ ball q (1 / (j : ℝ)), ∀ k : ℕ, 0 < k →
     ∃ p ∈ gaussRat ∩ {p | dist p q' < 1 / (k : ℝ)}, M p
 
-/-- The countable rational-point membership code at radius `R` (steps2-r3:3146-3156 with `A_{R,p}` of
-`eq:clusterpointcode`): `RatBallPred` with `M p = codeAt 𝒜 t p c`, the cluster code of the circle outcome `c`. -/
+/-- The countable rational-point membership code at radius `R` (with `A_{R,p}`): `RatBallPred` with `M p = codeAt 𝒜 t p c`, the cluster code of the circle outcome `c`. -/
 def ratBallCode {R : ℝ} (𝒜 : Set (PosCircleFns × BallFns R)) (t : ℝ) (q : ℂ) (c : PosCircleFns) : Prop :=
   RatBallPred (fun p => codeAt 𝒜 t p c) q
 
@@ -100,7 +99,7 @@ theorem nullMeasurableSet_ratBallCode_preimage {Ω : Type*} [MeasurableSpace Ω]
     exact nullMeasurableSet_ratBallCode hP h𝒜 q ν
 
 /-- The limsup (frequently) event of the rational membership codes at `z`: `ω` belongs to it iff the code at `z` holds for
-infinitely many integer radii `n + 1` (steps2-r3:3158-3160). -/
+infinitely many integer radii `n + 1`. -/
 def ratLimsupEvent {Ω : Type*} (c : Ω → PosCircleFns)
     (𝒜 : ∀ n : ℕ, Set (PosCircleFns × BallFns ((n : ℝ) + 1))) (t : ℝ) (z : ℂ) : Set Ω :=
   ⋂ N : ℕ, ⋃ n ∈ {n : ℕ | N ≤ n}, {ω | ratBallCode (𝒜 n) t z (c ω)}
@@ -119,7 +118,7 @@ theorem nullMeasurableSet_ratLimsupEvent {Ω : Type*} [MeasurableSpace Ω] (P : 
     nullMeasurableSet_ratBallCode_preimage P hc hP (h𝒜 n) z
 
 /-- A measurable version of the rational membership event at `z`: the measurable hull (`toMeasurable`) of the limsup
-event. It is measurable for every `z` (steps2-r3:3158-3160, "measurable versions"). -/
+event. It is measurable for every `z`. -/
 noncomputable def ratVersion {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (c : Ω → PosCircleFns)
     (𝒜 : ∀ n : ℕ, Set (PosCircleFns × BallFns ((n : ℝ) + 1))) (t : ℝ) (z : ℂ) : Set Ω :=
   toMeasurable P (ratLimsupEvent c 𝒜 t z)
@@ -150,7 +149,7 @@ theorem ae_ratVersion_iff {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [Is
     exact (hzω.mono fun n hn => hn.1 hzL).frequently
 
 /-- **One common almost-sure event for all Gaussian rationals.** The countably many versions `ratVersion P c 𝒜 t z`,
-`z ∈ gaussRat`, agree simultaneously almost surely with the membership events of `L` (steps2-r3:3158-3161). -/
+`z ∈ gaussRat`, agree simultaneously almost surely with the membership events of `L`. -/
 theorem ae_forall_gaussRat_ratVersion_iff {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
     {c : Ω → PosCircleFns} (hc : Measurable c) (hP : PrestonAnalyticUniversallyMeasurableStmt)
     {𝒜 : ∀ n : ℕ, Set (PosCircleFns × BallFns ((n : ℝ) + 1))} (h𝒜 : ∀ n : ℕ, MeasurableSet (𝒜 n)) {t : ℝ}
@@ -163,7 +162,7 @@ theorem ae_forall_gaussRat_ratVersion_iff {Ω : Type*} [MeasurableSpace Ω] (P :
 /-- **Raw eventual identity at an outcome.** Let `Λ` be a cone harmonic-ball family for `μ`, and let the section `𝒜 n`
 satisfy the supersolution-trace identity at the circle outcome `c` for every integer radius `n + 1`. Then for every `z`,
 the truth of `z ∈ Λ_t` is eventually in `n` the truth of the rational-ball code at `z`. The threshold depends only on a
-bound `Λ_t ⊆ B_r` (steps2-r3:1088-1091): for `R > r`, `Λ_t = int closure K_R` (`eq:familyobstacle`). -/
+bound `Λ_t ⊆ B_r`: for `R > r`, `Λ_t = int closure K_R`. -/
 theorem eventually_mem_iff_ratBallCode {μ : Measure ℂ} {Λ : ℝ → Set ℂ} (hfam : IsConeHarmonicBallFamily μ Λ)
     {t : ℝ} (ht : 0 < t) (c : PosCircleFns) (𝒜 : ∀ n : ℕ, Set (PosCircleFns × BallFns ((n : ℝ) + 1)))
     (hsec : ∀ (n : ℕ) (w : BallFns ((n : ℝ) + 1)), (c, w) ∈ 𝒜 n ↔ w ∈ superTraces μ ((n : ℝ) + 1) t)

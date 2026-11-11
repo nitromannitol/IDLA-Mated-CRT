@@ -2,9 +2,9 @@ import MatedCRT.Proofs.Sec5.StoppedActualSurplus
 import MatedCRT.Proofs.Sec5.StoppedMarginContinuousDecoder
 
 /-!
-# Borel versions of the stopped actual surplus values and their continuous decoder (steps2-r3:3374-3388)
+# Borel versions of the stopped actual surplus values and their continuous decoder
 
-Source: `notes/wpn-steps2/steps2-r3.tex`, lines 3374-3388 (sha256 `88dfb1f9…`). For each point `a n` of a fixed countable
+For each point `a n` of a fixed countable
 dense subset of the margin domain `A = marginDomain s (ρ/2)`, the actual surplus `v_ρ(μ,t)(a n) + tG_ρ(0,a n)` is the real
 infimum of the evaluations at `a n` of the traces of the supersolutions of the obstacle problem, shifted by `tG_ρ(0,a n)`
 (`hId_marginEval`; `G_ρ(0,·)` is the Green function of the disk, in the sense of Armitage-Gardiner). The source takes this
@@ -140,7 +140,7 @@ theorem exists_actualSurplus_borel_values (hCantor : PrestonAnalyticCantorStmt) 
 
 /-! ### The continuous decoder -/
 
-/-- **Continuous decoder of the actual surplus (steps2-r3:3374-3388).** Decoding the shifted Borel values along the dense
+/-- **Continuous decoder of the actual surplus.** Decoding the shifted Borel values along the dense
 sequence `a` with `denseDecoder` gives a Borel map `D` from the state space to `C(A, ℝ)`, `A = marginDomain s (ρ/2)`. Almost
 surely on the event `F = {t < clusterExitTime Λ ρ}`, its pullback `D ∘ c` equals `x ↦ v_ρ(μ,t)(x) + tG_ρ(0,x)` on `A`. The
 only continuity input is the almost-sure cone-family hypothesis `hfam`, which gives the continuity of the actual surplus on

@@ -5,8 +5,7 @@ import MatedCRT.Proofs.Sec5.StoppedMarginStepAssembly
 /-!
 # The stopped margin from the checked producers of the actual code
 
-Task `z5-stopped-margin-producer-integration`. Source: `notes/wpn-steps2/steps2-r3.tex`, lines 3386-3435 (audited,
-sha256 `88dfb1f9`): the erosion minimum `M̂ = m(K, f)` of the actual code, the everywhere positive choice
+The erosion minimum `M̂ = m(K, f)` of the actual code, the everywhere positive choice
 `c_pos = M̂` where `M̂ > 0` and `1` otherwise, and the almost-sure identity `t < T → M̂ = M` on the good event.
 
 The two residual producers of `StoppedMarginStepAssembly`, `CodeSectionStmt` and `FieldCircleVersionStmt`, are no longer
@@ -24,11 +23,11 @@ literature inputs (`MatedCRT/Proposed/PrestonAnalytic2008.lean`, lines 43, 35, 6
   `MepsScalingInput` stay hypotheses at their present scope.
 
 Geometric consumers that remain named hypotheses. None is proved here, and no measurability of a degree is assumed:
-* `StoppedInteriorGeometryStep` (`StoppedInterior.lean:156`) requires WPN-51-geometry
-  (`docs/campaign/GAPS-TAKEOVER-20261108.md`, section WPN-51-geometry).
-* `StoppedSurplusPoleStep` (`StoppedInterior.lean:137`) requires WPN-51-pole. Its inner-degree lintegral route needs the
-  measurability of `gmsInnerDegree ∘ η`, which is WPN-51-canonical-inner-degree-measurability
-  (`GAPS-TAKEOVER-20261108.md`, line 656). The hypothesis is `hMeas` of
+* `StoppedInteriorGeometryStep` (`StoppedInterior.lean:156`) requires the geometry gap
+  (`docs/campaign/GAPS-TAKEOVER-20261108.md`, geometry section).
+* `StoppedSurplusPoleStep` (`StoppedInterior.lean:137`) requires the pole gap. Its inner-degree lintegral route needs the
+  measurability of `gmsInnerDegree ∘ η`, which is the canonical inner-degree measurability gap
+  (`docs/campaign/GAPS-TAKEOVER-20261108.md`, line 656). The hypothesis is `hMeas` of
   `StoppedPoleInnerDegreeMoments.canonical_innerDegree_lintegral_lt_top` (line 875). The outer-moment form
   `canonical_innerDegree_outer_lt_top` (line 888) has no such hypothesis.
 
@@ -40,7 +39,7 @@ namespace MatedCRT.StoppedMarginProducerAssembly
 open MeasureTheory Filter Topology Set Metric
 open MatedCRT.StoppedMarginStepAssembly (cPos rawMargin)
 
-/-- **The environment-measurable positive margin under the Preston inputs** (steps2-r3 lines 3386-3435). The producers of
+/-- **The environment-measurable positive margin under the Preston inputs**. The producers of
 the actual code give `StoppedMarginCodeStep`, and `cPos_margin_spec` then yields an `S.envSigma`-measurable everywhere
 positive `c` with `c = c_pos(M)` almost surely on `{t < T}`, where `M = rawMargin` is the continuum margin. No
 `CodeSectionStmt` or `FieldCircleVersionStmt` hypothesis is assumed. The family `Λ` is arbitrary, with its almost-sure
@@ -62,7 +61,7 @@ theorem cPos_margin_of_preston (𝒮 : SpaceFillingSLEModel)
 `StoppedInterior.stoppedSurplusInterior_of_gap` receives its margin from
 `stoppedInteriorMeasurableStep_of_preston`, so no measurability of the margin is assumed. The strict obstacle gap `hgap`,
 the pole `hpoleS`, the geometry `hgeo` and the scaling input `hmeps` are the consumer's named hypotheses, unchanged in
-scope. `hgeo` and `hpoleS` are WPN-51 items (see the module docstring). -/
+scope. `hgeo` and `hpoleS` are gap items (see the module docstring). -/
 theorem stoppedSurplusInteriorStep_of_preston (𝒮 : SpaceFillingSLEModel)
     (hgap : MatedCRT.HarmonicBallStrictObstacleGapStep 𝒮)
     (hpoleS : MatedCRT.StoppedInterior.StoppedSurplusPoleStep 𝒮)

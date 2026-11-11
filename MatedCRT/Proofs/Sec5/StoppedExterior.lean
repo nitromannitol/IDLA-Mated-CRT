@@ -4,7 +4,7 @@ import MatedCRT.Proofs.Sec4.DivSandpileLowerBound.SourceVertex
 import MatedCRT.Proofs.Infra.MatingOfTrees
 
 /-!
-# The exterior bound off `V^ε(Λ_t)`: the deterministic core (E-c1-5, `StoppedSurplusExteriorStep`)
+# The exterior bound off `V^ε(Λ_t)`: the deterministic core (`StoppedSurplusExteriorStep`)
 
 For one sample point and one mesh `ε`, write `w̃ = matedLeastSupersolution` and `G = ε⁻¹ g^ε_{B_ρ}(0, ·)`, so that
 `(t/ε) g^ε_{B_ρ}(0, ·) = t G` and the stopped surplus is `v = w̃ + t G`. Then:
@@ -16,7 +16,7 @@ For one sample point and one mesh `ε`, write `w̃ = matedLeastSupersolution` an
   `s ≤ |y| < ρ`, where `s` is a radius with `B_s(0) ⊆ Λ_t`) then give `m_ε⁻¹ v(a) ≤ δ + t δ'`.
 
 The probabilistic assembly (that `B_s(0) ⊆ Λ_t` for a deterministic `s` with probability close to one) is not here: it
-needs the origin input reported in ESCALATIONS E-c1-5.
+needs the origin input.
 -/
 
 namespace MatedCRT
@@ -240,8 +240,7 @@ theorem tendsToOneOn_of_pole_and_limits {Ω : Type} [MeasurableSpace Ω] (P : Me
     _ = η := by rw [add_zero, ENNReal.add_thirds]
 
 /-- **`StoppedSurplusExteriorStep` from the origin hypothesis.** The explicit hypothesis `hpole` (the origin
-neighbourhood: for each `η > 0` there is `s > 0` with `P[t < T, B_s(0) ⊄ Λ_t] ≤ η`) is the input reported in
-ESCALATIONS E-c1-5 (b); `hmeps` is the External input `MepsScalingInput` (eq:meps-scaling). -/
+neighbourhood: for each `η > 0` there is `s > 0` with `P[t < T, B_s(0) ⊄ Λ_t] ≤ η`) is the origin input; `hmeps` is the External input `MepsScalingInput` (eq:meps-scaling). -/
 theorem stoppedSurplusExterior_of_origin (𝒮 : SpaceFillingSLEModel) (hmeps : MepsScalingInput 𝒮)
     (hpole : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
       ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
@@ -364,9 +363,9 @@ theorem stoppedSurplusExterior_of_origin (𝒮 : SpaceFillingSLEModel) (hmeps : 
 
 end StoppedExterior
 
-/-! ### Origin measurability and the exterior step (ESCALATIONS E-c1-5 (b)) -/
+/-! ### Origin measurability and the exterior step -/
 
-/-- **Origin measurability (named input, E-c1-5 (b)).** For `t > 0` and `s > 0` the inclusion event
+/-- **Origin measurability (named input).** For `t > 0` and `s > 0` the inclusion event
 `{ω | ¬ B_s(0) ⊆ Λ_t(ω)}` is null-measurable for `S.P`. Almost surely `Λ_t` is open and contains the pole `0`
 (`IsHarmonicBall`), so these events decrease to a null set as `s ↓ 0`, and continuity from above needs their
 measurability. The paper does not state it, and `ConeFamilyAEMeasurableStep` (`Steps/Sec2/ConeHarmonicBalls.lean`)
@@ -417,7 +416,7 @@ theorem origin_of_nullMeasurable (𝒮 : SpaceFillingSLEModel) (hmeas : ConeOrig
   obtain ⟨n, hn⟩ := ((tendsto_order.1 hlim).2 η hlt).exists
   exact ⟨1 / ((n : ℝ) + 1), by positivity, (measure_mono Set.inter_subset_right).trans hn.le⟩
 
-/-- **`StoppedSurplusExteriorStep` from the origin measurability input** (E-c1-5 (b)). The remaining explicit
+/-- **`StoppedSurplusExteriorStep` from the origin measurability input**. The remaining explicit
 hypothesis is the External input `MepsScalingInput` (eq:meps-scaling). -/
 theorem stoppedSurplusExterior_of_nullMeasurableOrigin (𝒮 : SpaceFillingSLEModel) (hmeps : MepsScalingInput 𝒮)
     (hmeas : ConeOriginNullMeasurableStep 𝒮) : StoppedSurplusExteriorStep 𝒮 :=

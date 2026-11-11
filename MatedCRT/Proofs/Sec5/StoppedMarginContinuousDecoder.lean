@@ -11,8 +11,7 @@ import Mathlib.Topology.Separation.Hausdorff
 /-!
 # Countable Borel decoder of a continuous function from its dense values
 
-Steps2 section 5, lines 1784-1805 (the annular continuum-surplus decoder), in the repaired form of
-`AUDIT-steps2.md` target 8. Let `A` be a metric space and `a : ℕ → A` a dense sequence. A real
+The annular continuum-surplus decoder, in the repaired form. Let `A` be a metric space and `a : ℕ → A` a dense sequence. A real
 sequence `v` is the sequence of values `(f (a n))ₙ` of a continuous `f : C(A, ℝ)` exactly when it
 passes countably many uniform-continuity tests (`DenseUniformTests`). The decoder `denseDecoder a`
 returns the unique continuous extension of such `v` and returns `0` for every other `v`.
@@ -28,7 +27,7 @@ Proved here, for a compact metric `A` unless noted:
 * `marginDomain_denseDecoder`, `marginDomain_continuous_subsingleton`: the margin domain
   `marginDomain s R` with a dense sequence, and the empty case.
 
-Not in this file: the Borel versions of the countably many random values (steps2 1784-1805,
+Not in this file: the Borel versions of the countably many random values (
 "universally measurable on the good field set") and the identity almost surely on `{t < T}`.
 They enter only as hypotheses of `denseDecoder_ae_eq`.
 -/
@@ -188,7 +187,7 @@ theorem measurableSet_denseExtLocus [CompactSpace A] {a : ℕ → A} (ha : Dense
 /-! ### The decoder -/
 
 open scoped Classical in
-/-- **Borel decoder (steps2 sec. 5, lines 1784-1805).** The unique continuous extension of the
+/-- **Borel decoder.** The unique continuous extension of the
 dense values `v` when `v` extends continuously, and the zero function otherwise. -/
 noncomputable def denseDecoder (a : ℕ → A) (v : ℕ → ℝ) : C(A, ℝ) :=
   if h : ∃ f : C(A, ℝ), ∀ n, f (a n) = v n then h.choose else ContinuousMap.const A 0
@@ -327,10 +326,10 @@ theorem continuousMap_subsingleton_of_isEmpty {B : Type*} [TopologicalSpace B] [
     (f g : C(B, ℝ)) : f = g :=
   ContinuousMap.ext fun x => isEmptyElim x
 
-/-! ### The margin domain (steps2 sec. 5) -/
+/-! ### The margin domain -/
 
 open MatedCRT.StoppedInteriorMargin in
-/-- **Borel decoder on the margin domain `marginDomain s R` (steps2 sec. 5, lines 1784-1805).**
+/-- **Borel decoder on the margin domain `marginDomain s R`.**
 If the domain is nonempty it has a dense sequence `a`; `denseDecoder a` is Borel from `ℕ → ℝ` to
 `C(marginDomain s R, ℝ)` and recovers every continuous function from its values on `a`. -/
 theorem marginDomain_denseDecoder (s R : ℝ) (hne : (marginDomain s R).Nonempty) :

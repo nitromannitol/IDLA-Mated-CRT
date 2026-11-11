@@ -4,7 +4,7 @@ import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.HarmonicPathExit
 import MatedCRT.Proofs.Sec5.StoppedInteriorMarginProof
 
 /-!
-# The interior lower bound of the stopped surplus: deterministic core (E-c1-5, `StoppedSurplusInteriorStep`)
+# The interior lower bound of the stopped surplus: deterministic core (`StoppedSurplusInteriorStep`)
 
 For one sample point and one mesh `ε`, write `w̃ = matedLeastSupersolution`, `G = greenFunction (ball 0 ρ) 0` and
 `w̄ = leastSupersolution`, so that the stopped surplus is `v(a) = w̃(a) + (t/ε) g^ε_{B_ρ}(0, a)`.
@@ -14,7 +14,7 @@ For one sample point and one mesh `ε`, write `w̃ = matedLeastSupersolution`, `
 * `interior_vertex_bound`: the same at the vertex `a = vertexOf x` of a point `x` of the annulus `s ≤ |x|`, given the
   two convergence bounds (Theorem 4.1 on `B_ρ`, Lemma 3.3 on the annulus) at this sample point.
 * `exists_pos_lower_surplus`: if `Λ` is open and `Λ ⊆ 𝒞` (the cluster, which is the content of the strict obstacle gap
-  `HarmonicBallStrictObstacleGapStep`, E-x3-1), then on the compact set of points of `Λ` at distance at least `δ'` from
+  `HarmonicBallStrictObstacleGapStep`), then on the compact set of points of `Λ` at distance at least `δ'` from
   `Λᶜ` and at least `s` from the pole, `w̄ + t G(0,·)` has a positive lower bound `c₁` (compactness and continuity off the
   pole, `HarmonicBalls.continuousOn_greenFunction_ball`).
 -/
@@ -75,7 +75,7 @@ theorem interior_vertex_bound {μ : Measure ℂ} {η : ℝ → ℂ} {m : ℤ →
 
 /-- **Positive continuum margin from the strict obstacle gap (deterministic).** Let `Λ` be open with `Λ ⊆ 𝒞_t`, the
 unregularized cluster of `HarmonicBalls` in `B_ρ` with source `0` (this is the conclusion of
-`HarmonicBallStrictObstacleGapStep`, E-x3-1). Let `w̄` be continuous on `cl B_ρ`. Then for `s, δ' > 0` there is
+`HarmonicBallStrictObstacleGapStep`). Let `w̄` be continuous on `cl B_ρ`. Then for `s, δ' > 0` there is
 `c₁ > 0` with `c₁ ≤ w̄(x) + t G_{B_ρ}(0, x)` for all `x ∈ Λ` with `s ≤ |x|` and `δ' ≤ dist(x, Λᶜ)`. The points of
 `Λ` at distance at least `s` from the pole form a compact set on which the surplus is continuous and positive. -/
 theorem exists_pos_lower_surplus {μ : Measure ℂ} {ρ t s δ' : ℝ} {Λ : Set ℂ} (hρ : 0 < ρ) (hs : 0 < s)
@@ -127,9 +127,9 @@ theorem exists_pos_lower_surplus {μ : Measure ℂ} {ρ t s δ' : ℝ} {Λ : Set
     exact ⟨F x0, hKpos x0 hx0K, fun x hxΛ hsx hδx => isMinOn_iff.1 hmin x (hmemK x hxΛ hsx hδx)⟩
   · exact ⟨1, one_pos, fun x hxΛ hsx hδx => absurd ⟨x, hmemK x hxΛ hsx hδx⟩ hne⟩
 
-/-! ### Named inputs of the interior step (ESCALATIONS E-c1-5 (c), (d), (e)) -/
+/-! ### Named inputs of the interior step -/
 
-/-- **Pole lower bound (named input, E-c1-5 (c)).** For `δ < ρ` and `t > 0` there are a radius `s > 0` and a
+/-- **Pole lower bound (named input).** For `δ < ρ` and `t > 0` there are a radius `s > 0` and a
 `σ(h,η)`-measurable `c > 0` such that, on `{t < T}`, with probability tending to one, `c/ε ≤ v^ε_t(a)` for every
 `a ∈ V^ε(Λ_t)` in the `δ`-interior with `|η(a)| < s`, where `v^ε_t = w̃^ε_t + (t/ε) g^ε_{B_ρ}(0, ·)`. Theorem 4.1 and
 Lemma 3.3 are used in the paper only on the annulus `{s ≤ |y|}`; the paper does not treat the discrete surplus at the
@@ -148,7 +148,7 @@ def StoppedSurplusPoleStep (𝒮 : SpaceFillingSLEModel) : Prop :=
           c ω / ε ≤ matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t a +
             t / ε * greenKernel (S.mult ε ω) (ballInterior ε (S.η ω) ρ) 0 a}
 
-/-- **Discrete-to-continuum geometry (named input, E-c1-5 (d)).** For `r > 0`, with probability tending to one, every
+/-- **Discrete-to-continuum geometry (named input).** For `r > 0`, with probability tending to one, every
 `δ`-interior vertex `a` of `V^ε(Λ_t)` has all points of its cell within `r` of the vertex point and at distance at least
 `δ/2` from the complement of `Λ_t`. For fixed `ω` this follows from the cell diameters tending to zero (uniform
 continuity of `η` on compacta, as in `cell_diam_small_of_proper`) and from `Λ_t = int cl 𝒞_t` (regularity), by a
@@ -164,11 +164,11 @@ def StoppedInteriorGeometryStep (𝒮 : SpaceFillingSLEModel) : Prop :=
           (frontier (fillCells ε (S.η ω) (cellVertices ε (S.η ω) (Λ ω t)))) →
         ∀ x ∈ cell ε (S.η ω) a, δ / 2 ≤ infDist x (Λ ω t)ᶜ ∧ dist x (vertexPoint ε (S.η ω) a) < r}
 
-/-- **Measurability of the continuum margin, repaired form (named input, E-c1-5 (e); steps2 sec. 5, lines 1660-1858).**
+/-- **Measurability of the continuum margin, repaired form (named input).**
 For `δ, s, t > 0` let `M(ω)` be the infimum over the random compact set
 `K(ω) = {x ∈ Λ_t(ω) : s ≤ |x|, δ ≤ dist(x, Λ_t(ω)ᶜ)}` of the continuum surplus `w̄_t + t G_{B_ρ}(0, ·)`; the infimum
 over the empty set is `0`, as is an unbounded-below real infimum. The raw function `M` is not `σ(h,η)`-measurable on the
-whole sample space in general (steps2 1660-1703: a null-copy extension refutes it), so this step asserts only the repaired
+whole sample space in general (a null-copy extension refutes it), so this step asserts only the repaired
 statement: there is an `S.envSigma`-measurable `Mhat` with `Mhat = M` almost surely on `{t < T}`, `T = clusterExitTime Λ ρ`.
 Nothing is prescribed on the exceptional outcomes. -/
 def StoppedInteriorMeasurableStep (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -184,11 +184,11 @@ def StoppedInteriorMeasurableStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 
 open StoppedInteriorMargin
 
-/-- **Residual random-code construction (named input; steps2 sec. 5, lines 1747-1805).** For `δ, s, t > 0` there are a
+/-- **Residual random-code construction (named input).** For `δ, s, t > 0` there are a
 random nonempty compact `K` and a random continuous function `f` on the margin domain `A = closedBall 0 (ρ/2) ∩ {s ≤ |x|}`,
 jointly `S.envSigma`-measurable, such that almost surely on `{t < T}`, `K = closure Λ_t` and
 `f = w̄_t + t G_{B_ρ}(0, ·)` on `A`. The compact set is the field-measurable random compact set of the Borel-version
-construction (steps2 1772-1782), and `f` is the Borel decoder of the surplus on `A` (steps2 1784-1805). Neither is
+construction, and `f` is the Borel decoder of the surplus on `A`. Neither is
 formalized in the repository yet; this is the residual of `StoppedInteriorMeasurableStep`. -/
 def StoppedMarginCodeStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
@@ -312,7 +312,7 @@ theorem tendsToOneOn_of_levels {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω)
         rw [add_zero, ← ENNReal.add_div, ← ENNReal.add_div, ← ENNReal.add_div, ← ENNReal.add_div]
         exact ENNReal.div_le_of_le_mul (le_of_eq (by ring))
 
-/-- **`StoppedSurplusInteriorStep` from the strict obstacle gap and three named inputs** (E-c1-5 (c)-(e)). -/
+/-- **`StoppedSurplusInteriorStep` from the strict obstacle gap and three named inputs**. -/
 theorem stoppedSurplusInterior_of_gap (𝒮 : SpaceFillingSLEModel) (hgap : HarmonicBallStrictObstacleGapStep 𝒮)
     (hpoleS : StoppedSurplusPoleStep 𝒮) (hgeo : StoppedInteriorGeometryStep 𝒮)
     (hmeas : StoppedInteriorMeasurableStep 𝒮) (hmeps : MepsScalingInput 𝒮) :

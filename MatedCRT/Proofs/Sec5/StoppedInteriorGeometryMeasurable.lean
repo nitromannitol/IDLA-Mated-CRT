@@ -10,8 +10,7 @@ import Mathlib.MeasureTheory.Measure.NullMeasurable
 /-!
 # Borel obstruction matrix and analytic projection of the stopped interior geometry
 
-Source: `notes/wpn-steps2/steps2.tex` lines 1588–1619 (sha256 `8ec75074…`), audited CORRECT in
-`notes/wpn-steps2/AUDIT-steps2.md`, target 7. Notation of the paper: `K^d = cthickening d K`, `L = int K`,
+Notation of the paper: `K^d = cthickening d K`, `L = int K`,
 `B_δ(z)` the open ball. The paper's countable set `Q` of rational points is any dense sequence `q : ℕ → ℂ`
 (`DenseRange q`) in this file.
 
@@ -20,7 +19,7 @@ Contents:
   `|z - q n|` over the test points `q n ∉ K` (`(int K)^c = closure K^c`). `measurable_infDist_interior_compl`: this is
   a Borel function of `(K, z)` on `NonemptyCompacts ℂ × ℂ`.
 * `ball_subset_iff_of_closed`: inclusion of an open ball in a closed set is decided by countably many test points.
-* `geoBadMatrix`: the obstruction of steps2 eq:geobad as a subset of `NonemptyCompacts ℂ × ℂ` (see
+* `geoBadMatrix`: the obstruction as a subset of `NonemptyCompacts ℂ × ℂ` (see
   `measurableSet_geoBadMatrix`).
 * `geoBad_iff_exists_mem_geoBadMatrix`: for regular closed `K` (`closure (int K) = K`), the existential projection of
   the matrix is exactly `StoppedInteriorGeometry.GeoBad (int K) δ d` of `StoppedInteriorGeometryProof.lean`.
@@ -28,7 +27,7 @@ Contents:
 * `nullMeasurableSet_geoBadEvent`: given the Polish form of Preston's theorem, the event `B_d` of a measurable random
   compact set `K` is null-measurable. `nullMeasurableSet_geoBadEvent_of_cantor` invokes the proved transfer
   `prestonAnalyticUniversallyMeasurable_of_cantor` from the two printed Preston statements.
-* `tendsto_measure_geoBadEvent_zero`: `P(B_{1/(n+1)}) → 0` (steps2 eq:geobadlimit), for a random compact set `K`
+* `tendsto_measure_geoBadEvent_zero`: `P(B_{1/(n+1)}) → 0`, for a random compact set `K`
   that is almost surely regular closed.
 
 Topology: `NonemptyCompacts ℂ` carries Mathlib's default topology instance. Joint measurability of
@@ -39,7 +38,7 @@ its instance comparison (Vietoris topology against the Hausdorff metric topology
 Literature inputs are explicit hypotheses only: `PrestonAnalyticCantorStmt` and `PrestonTheorem61Stmt`
 (`MatedCRT/Proposed/PrestonAnalytic2008.lean`; Preston, arXiv:0809.3066v1, Theorem 7.1 and Theorem 6.1(1)).
 Residual inputs not formalized here: the measurable random compact set `K` (hypothesis `hK`) and its almost sure
-regularity (hypothesis `hreg`), both produced by the origin code of steps2 lines 1564–1586.
+regularity (hypothesis `hreg`), both produced by the origin code.
 -/
 
 namespace MatedCRT
@@ -78,7 +77,7 @@ theorem measurable_geoTerm [MeasurableSpace (NonemptyCompacts ℂ)] [BorelSpace 
   refine Measurable.ite ?_ (continuous_snd.edist continuous_const).measurable measurable_const
   exact measurableSet_lt measurable_const (measurable_infDist_fst_const (q n))
 
-/-- The countable matrix for the extended distance to the complement of the interior (steps2 1588–1609): for every
+/-- The countable matrix for the extended distance to the complement of the interior: for every
 nonempty compact `K` and every `z`, `edist(z, (int K)^c)` is the infimum over the test points outside `K`. The
 proof uses that `K` is closed, so that `q n ∉ K` iff `d(q n, K) > 0`, and that `Q` is dense in the open set `K^c`,
 whose closure is `(int K)^c`. -/
@@ -116,7 +115,7 @@ theorem infDist_interior_compl_eq (q : ℕ → ℂ) (hq : DenseRange q) (K : Non
     infDist z (interior (K : Set ℂ))ᶜ = (⨅ n, geoTerm q n (K, z)).toReal := by
   rw [Metric.infDist, infEDist_interior_compl_eq q hq K z]
 
-/-- The distance to the complement of the interior is Borel on `NonemptyCompacts ℂ × ℂ` (steps2 1588–1609, the
+/-- The distance to the complement of the interior is Borel on `NonemptyCompacts ℂ × ℂ` (the
 Borel matrix). -/
 theorem measurable_infDist_interior_compl [MeasurableSpace (NonemptyCompacts ℂ)]
     [BorelSpace (NonemptyCompacts ℂ)] (q : ℕ → ℂ) (hq : DenseRange q) :
@@ -135,7 +134,7 @@ theorem mem_cthickening_iff_infDist_le (K : NonemptyCompacts ℂ) {z : ℂ} {d :
     ENNReal.le_ofReal_iff_toReal_le (infEDist_ne_top K.nonempty) hd]
 
 /-- Inclusion of an open ball in a closed set is decided by the countably many test points `q n`, which are dense
-(steps2 1588–1609, "open-ball inclusion by countable tests"). -/
+("open-ball inclusion by countable tests"). -/
 theorem ball_subset_iff_of_closed (q : ℕ → ℂ) (hq : DenseRange q) {T : Set ℂ} (hT : IsClosed T)
     {z : ℂ} {δ : ℝ} : ball z δ ⊆ T ↔ ∀ n, dist (q n) z < δ → q n ∈ T := by
   constructor
@@ -148,7 +147,7 @@ theorem ball_subset_iff_of_closed (q : ℕ → ℂ) (hq : DenseRange q) {T : Set
     rintro x ⟨hx, n, rfl⟩
     exact h n (mem_ball.1 hx)
 
-/-- The Borel obstruction matrix of steps2 eq:geobad on `NonemptyCompacts ℂ × ℂ`: the pairs `(K, z)` with `z ∈ K^d`,
+/-- The Borel obstruction matrix on `NonemptyCompacts ℂ × ℂ`: the pairs `(K, z)` with `z ∈ K^d`,
 `B_δ(z) ⊆ K^d` (the inclusion tested on the points `q n`) and `d(z, (int K)^c) < 3δ/4`. Here `z ∈ K^d` is written
 `d(z, K) ≤ d`, which is the paper's thickening for `d ≥ 0`; the paper only uses `d = 1/(n+1) > 0`. -/
 def geoBadMatrix (q : ℕ → ℂ) (δ d : ℝ) : Set (NonemptyCompacts ℂ × ℂ) :=
@@ -178,8 +177,7 @@ theorem measurableSet_test [MeasurableSpace (NonemptyCompacts ℂ)] [BorelSpace 
   rw [heq]
   exact hA.union hB
 
-/-- The Borel obstruction matrix of steps2 eq:geobad is a Borel subset of `NonemptyCompacts ℂ × ℂ` (steps2
-1588–1609). -/
+/-- The Borel obstruction matrix is a Borel subset of `NonemptyCompacts ℂ × ℂ`. -/
 theorem measurableSet_geoBadMatrix [MeasurableSpace (NonemptyCompacts ℂ)]
     [BorelSpace (NonemptyCompacts ℂ)] (q : ℕ → ℂ) (hq : DenseRange q) (δ d : ℝ) :
     MeasurableSet (geoBadMatrix q δ d) := by
@@ -195,7 +193,7 @@ theorem measurableSet_geoBadMatrix [MeasurableSpace (NonemptyCompacts ℂ)]
   exact h1.inter (h2.inter h3)
 
 /-- Relation to the deterministic obstruction: for a regular closed compact `K` (`closure (int K) = K`), the
-existential projection of the Borel matrix is exactly `GeoBad (int K) δ d` (steps2 eq:geobad with `K = closure L`,
+existential projection of the Borel matrix is exactly `GeoBad (int K) δ d` (with `K = closure L`,
 `L = int K`, `d ≥ 0`). -/
 theorem geoBad_iff_exists_mem_geoBadMatrix (K : NonemptyCompacts ℂ) (hreg : closure (interior (K : Set ℂ)) = K)
     (q : ℕ → ℂ) (hq : DenseRange q) {δ d : ℝ} (hd : 0 ≤ d) :
@@ -221,12 +219,12 @@ theorem analyticSet_fst_geoBadMatrix [MeasurableSpace (NonemptyCompacts ℂ)]
   AnalyticSet.image_of_continuous
     (measurableSet_geoBadMatrix (δ := δ) (d := d) q hq).analyticSet continuous_fst
 
-/-- The event `B_d` of steps2 eq:geobad for a random compact set `K`: some `z` with `(K ω, z)` in the matrix. -/
+/-- The event `B_d` for a random compact set `K`: some `z` with `(K ω, z)` in the matrix. -/
 def geoBadEvent {Ω : Type*} (K : Ω → NonemptyCompacts ℂ) (q : ℕ → ℂ) (δ d : ℝ) : Set Ω :=
   {ω | ∃ z, (K ω, z) ∈ geoBadMatrix q δ d}
 
 /-- Given the Polish form `hP` of Preston's theorem (analytic sets are universally measurable), the event `B_d` is
-null-measurable for a measurable random compact set `K` (steps2 1611–1619, "Preston and the pullback sandwiches").
+null-measurable for a measurable random compact set `K`.
 The projection is analytic (`analyticSet_fst_geoBadMatrix`) and the event is the preimage of it under `K`. -/
 theorem nullMeasurableSet_geoBadEvent [MeasurableSpace (NonemptyCompacts ℂ)]
     [BorelSpace (NonemptyCompacts ℂ)] (hP : PrestonAnalyticUniversallyMeasurableStmt)
@@ -258,7 +256,7 @@ theorem nullMeasurableSet_geoBadEvent_of_cantor [MeasurableSpace (NonemptyCompac
     NullMeasurableSet (geoBadEvent K q δ d) P :=
   nullMeasurableSet_geoBadEvent (prestonAnalyticUniversallyMeasurable_of_cantor hCantor hT61) P K hK q hq δ d
 
-/-- Steps2 eq:geobadlimit: `P(B_{1/(n+1)}) → 0`, for a measurable random compact set `K` that is almost surely regular
+/-- `P(B_{1/(n+1)}) → 0`, for a measurable random compact set `K` that is almost surely regular
 closed, `K = closure (int K)`. The events decrease in `n`; their intersection is null, since on a regular closed `K`
 the obstructions at meshes `1/(n+1)` eventually vanish (`StoppedInteriorGeometry.eventually_not_geoBad`). -/
 theorem tendsto_measure_geoBadEvent_zero [MeasurableSpace (NonemptyCompacts ℂ)]

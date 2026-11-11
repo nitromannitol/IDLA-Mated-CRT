@@ -2,11 +2,10 @@ import Mathlib
 import MatedCRT.Proposed.StoppedPoleCanonicalMoments2026
 
 /-!
-# Inner-degree tail and moment component (steps2-r3, r3:2674-2753)
+# Inner-degree tail and moment component
 
 Internal component of the moment proof for the inner degree `D = deg_in(H₀)` of GMS arXiv:1705.11161v5,
-Definition 4.5 (pp. 32-33). It formalizes the written Chebyshev split and tail-to-moment integration of
-`steps2-r3.tex` lines 2690-2753 on a probability space, for `ℝ≥0∞`-valued `D` and normalized masses `Y_C`.
+Definition 4.5 (pp. 32-33). It formalizes the written Chebyshev split and tail-to-moment integration on a probability space, for `ℝ≥0∞`-valued `D` and normalized masses `Y_C`.
 No independence between the exceptional events `E_C` and the masses `Y_C` is used.
 
 Proved here (no tail bound and no moment bound is assumed):
@@ -16,7 +15,7 @@ Proved here (no tail bound and no moment bound is assumed):
 * `lintegral_pow_le_of_tail`: tail-to-moment by the layer-cake formula (Mathlib
   `MeasureTheory.lintegral_comp_eq_lintegral_meas_lt_mul`) with `q = β(1-ζ) > p` and `N > p`:
   `E[D^p] ≤ C₀^p + p M C₀^{p-q}/(q-p) + p K C₀^{p-N}/(N-p)`. This needs `AEMeasurable D P`
-  (the WPN-51 residual), used only for the Tonelli identity;
+  (the measurability residual), used only for the Tonelli identity;
 * `outer_pow_lt_top_of_split`: the same finiteness for the outer expectation `E*[D^p]`, with no measurability
   (through `tail_moment_outer`, in this file);
 * `lintegral_pow_lt_top_of_split`: the combined finiteness from the named premises below (`hD` is not needed for this
@@ -29,7 +28,7 @@ Proved here (no tail bound and no moment bound is assumed):
   inner-degree bound (4.20));
 * `canonical_premises`, `canonical_innerDegree_lintegral_lt_top`, `canonical_innerDegree_outer_lt_top`: the canonical
   zero-cone model. Continuity of `η` comes from `IsAreaParametrized`; the layer-cake form has the single premise
-  `AEMeasurable (deg_in ∘ η) P` (WPN-51), the outer form has none.
+  `AEMeasurable (deg_in ∘ η) P`, the outer form has none.
 
 Moved here from `MatedCRT/Proposed/StoppedPoleCanonicalMoments2026.lean`, with names and namespace
 `MatedCRT.StoppedCanonicalMoments` unchanged: `outer_markov`, `dyadic_identity`, `dyadic_tail_series_lt_top`,
@@ -40,7 +39,7 @@ file), so the moment is proved once.
 Named premises, hypothesis shapes and not literature Props: `CoverOnEvent`, `UniformMassMoment`,
 `ExceptionalInversePoly`. The printed inputs are the Props of `StoppedPoleCanonicalMoments2026.lean`
 (read-only here). The malformed printed range (4.22) and the sign of the last bound in (4.25) are not used.
-Exponent ranges (r3:2674-2690): `1 ≤ p`, `p < β < 4/γ²`, `ζ < 1 - p/β` (so `q = β(1-ζ) > p`), `N > p`.
+Exponent ranges: `1 ≤ p`, `p < β < 4/γ²`, `ζ < 1 - p/β` (so `q = β(1-ζ) > p`), `N > p`.
 The generic component uses no sign of `ζ`; `0 < ζ` enters only through the reparametrization `N ↦ N/ζ` of
 Lemma 4.3 (4.6) and the printed mass-β range `0 < ζ < 1`.
 -/
@@ -49,7 +48,7 @@ open MeasureTheory Set Filter Topology HarmonicBalls
 open scoped ENNReal
 
 noncomputable section
-/-! ## Internal consequences moved from `MatedCRT/Proposed/StoppedPoleCanonicalMoments2026.lean` (r3:2674-2753)
+/-! ## Internal consequences moved from `MatedCRT/Proposed/StoppedPoleCanonicalMoments2026.lean`
 
 The Chebyshev, dyadic-tail and moment proofs staged in the Proposed file (commit 9ec52ac) are moved here with their
 statements and names unchanged, into the namespace `MatedCRT.StoppedCanonicalMoments`. The Proposed file keeps the
@@ -133,7 +132,7 @@ theorem dyadic_tail_series_lt_top {p q N C₀ M K : ℝ} (hpq : p < q) (hpN : p 
   rw [← ENNReal.ofReal_tsum_of_nonneg p1 s1, ← ENNReal.ofReal_tsum_of_nonneg p2 s2]
   exact ENNReal.add_lt_top.2 ⟨ENNReal.ofReal_lt_top, ENNReal.ofReal_lt_top⟩
 
-/-- Tail-to-moment lemma (r3:2674-2753, the Chebyshev and tail-integration step). If `P[X > C] ≤ M C^{-q} + K C^{-N}`
+/-- Tail-to-moment lemma (the Chebyshev and tail-integration step). If `P[X > C] ≤ M C^{-q} + K C^{-N}`
 for all `C ≥ C₀`, with `p < q` and `p < N`, then the outer `p`-th moment of `X` is finite. The majorant uses measurable
 supersets of the dyadic level sets `{X > C₀ 2^k}`, so no measurability of `X` is assumed. -/
 theorem tail_moment_outer {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
@@ -261,7 +260,7 @@ theorem tail_moment_outer {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [Is
     _ = ENNReal.ofReal (C₀ ^ p) + ∑' j : ℕ, ENNReal.ofReal ((C₀ * 2 ^ (j + 1)) ^ p) * P (A j) := hint
     _ < ⊤ := hfin
 
-/-! ## Consequences of the published inputs: the inner-degree moment (r3:2674-2753) -/
+/-! ## Consequences of the published inputs: the inner-degree moment -/
 
 /-- Geometry of the good event: if `η([-1,1]) ⊂ B_{R/8}(0)` and `η` is continuous, then `R > 0` and the closed ball
 `B̄₀` of (4.19) lies in the open ball `B_R(0)`. A point `x₀` of maximal norm on the compact `η([-1,1])` gives
@@ -334,7 +333,7 @@ theorem pointwise_tail_bound {η : ℝ → ℂ} (hη : Continuous η) {R C ζ : 
   exact ENNReal.mul_lt_mul_left hpos.ne' hfin hlt
 
 /-- The Markov step for the normalized masses: if `E*[Y^β] ≤ M < ∞`, then `P[t < Y] ≤ M · t^{-β}` (outer
-probability, `t > 0`). This is the Chebyshev inequality of r3:2674-2753. -/
+probability, `t > 0`). This is the Chebyshev inequality. -/
 theorem markov_power_bound {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (Y : Ω → ℝ≥0∞) {β t : ℝ} (hβ : 0 < β)
     (ht : 0 < t) {M : ℝ≥0∞} (hMfin : M < ⊤) (hbd : MatedCRT.outerLIntegral P (fun ω => Y ω ^ β) ≤ M) :
     P {ω | ENNReal.ofReal t < Y ω} ≤ ENNReal.ofReal (M.toReal * t ^ (-β)) := by
@@ -422,7 +421,7 @@ section Generic
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
-/-- Named covering premise (r3:2690-2741): for every level `C > 1`, almost surely, on the event `E C`,
+/-- Named covering premise: for every level `C > 1`, almost surely, on the event `E C`,
 `D ≤ C^ζ · Y_C`. An internal hypothesis shape, not a literature Prop. -/
 def CoverOnEvent (P : Measure Ω) (D : Ω → ℝ≥0∞) (Y : ℝ → Ω → ℝ≥0∞) (E : ℝ → Set Ω) (ζ : ℝ) : Prop :=
   ∀ C : ℝ, 1 < C → ∀ᵐ ω ∂P, ω ∈ E C → D ω ≤ ENNReal.ofReal (C ^ ζ) * Y C ω
@@ -436,7 +435,7 @@ def UniformMassMoment (P : Measure Ω) (Y : ℝ → Ω → ℝ≥0∞) (β M : �
 def ExceptionalInversePoly (P : Measure Ω) (E : ℝ → Set Ω) : Prop :=
   ∀ N : ℝ, 0 < N → ∃ K C₁ : ℝ, 0 ≤ K ∧ ∀ C : ℝ, C₁ ≤ C → P (E C)ᶜ ≤ ENNReal.ofReal (K * C ^ (-N))
 
-/-- **Chebyshev split** (r3:2733-2741). With outer integrals, so no measurability of `D`, `Y` or `E` is needed,
+/-- **Chebyshev split**. With outer integrals, so no measurability of `D`, `Y` or `E` is needed,
 and with no independence: if `D ≤ C^ζ · Y` on `E` almost surely, then
 `P(D > C) ≤ P(Eᶜ) + C^{-β(1-ζ)} · E*[Y^β]`. The exponent `β(1-ζ)` is the one written in r3, with a negative sign. -/
 theorem chebyshev_split {P : Measure Ω} {D Y : Ω → ℝ≥0∞} {E : Set Ω} {β ζ C : ℝ}
@@ -491,7 +490,7 @@ theorem chebyshev_split {P : Measure Ω} {D Y : Ω → ℝ≥0∞} {E : Set Ω} 
     _ ≤ P Eᶜ + ENNReal.ofReal (C ^ (-(β * (1 - ζ)))) * MatedCRT.outerLIntegral P (fun ω => Y ω ^ β) :=
           add_le_add le_rfl hY
 
-/-- **Single-level tail bound** (r3:2741-2742): with the uniform β-moment `M` and the exceptional bound
+/-- **Single-level tail bound**: with the uniform β-moment `M` and the exceptional bound
 `K C^{-N}`, `P(D > C) ≤ M C^{-β(1-ζ)} + K C^{-N}` at one level `C > 0`. -/
 theorem tail_le_of_split {P : Measure Ω} {D Y : Ω → ℝ≥0∞} {E : Set Ω} {β ζ C M K N : ℝ}
     (hβ : 0 < β) (hC : 0 < C) (hM : 0 ≤ M)
@@ -513,9 +512,9 @@ theorem tail_le_of_split {P : Measure Ω} {D Y : Ω → ℝ≥0∞} {E : Set Ω}
     _ ≤ ENNReal.ofReal (K * C ^ (-N)) + ENNReal.ofReal (M * C ^ (-(β * (1 - ζ)))) := add_le_add hexc hw
     _ = ENNReal.ofReal (M * C ^ (-(β * (1 - ζ)))) + ENNReal.ofReal (K * C ^ (-N)) := add_comm _ _
 
-/-- **Tail-to-moment by the layer-cake formula** (r3:2741-2753). If `P(D > C) ≤ M C^{-q} + K C^{-N}` for all
+/-- **Tail-to-moment by the layer-cake formula**. If `P(D > C) ≤ M C^{-q} + K C^{-N}` for all
 `C ≥ C₀`, with `p < q` and `p < N`, then `E[D^p] ≤ C₀^p + p M C₀^{p-q}/(q-p) + p K C₀^{p-N}/(N-p)`.
-The premise `hD : AEMeasurable D P` is used only for the Tonelli identity (the WPN-51 residual). -/
+The premise `hD : AEMeasurable D P` is used only for the Tonelli identity (the measurability residual). -/
 theorem lintegral_pow_le_of_tail {P : Measure Ω} [IsProbabilityMeasure P] {D : Ω → ℝ≥0∞}
     (hD : AEMeasurable D P) {p q N C₀ M K : ℝ} (hp : 1 ≤ p) (hpq : p < q) (hpN : p < N) (hC₀ : 0 < C₀)
     (hM : 0 ≤ M) (hK : 0 ≤ K)
@@ -668,7 +667,7 @@ theorem lintegral_pow_le_of_tail {P : Measure Ω} [IsProbabilityMeasure P] {D : 
     _ = ENNReal.ofReal (C₀ ^ p) + ENNReal.ofReal (p * M * C₀ ^ (p - q) / (q - p)) +
           ENNReal.ofReal (p * K * C₀ ^ (p - N) / (N - p)) := (add_assoc _ _ _).symm
 
-/-- The exponent gap of r3:2674-2690: `ζ < 1 - p/β` gives `q = β(1-ζ) > p`. -/
+/-- The exponent gap: `ζ < 1 - p/β` gives `q = β(1-ζ) > p`. -/
 theorem exponent_gap {β ζ p : ℝ} (hp1 : 1 ≤ p) (hpβ : p < β) (hζ1 : ζ < 1 - p / β) :
     p < β * (1 - ζ) := by
   have hβ0 : 0 < β := by linarith
@@ -690,10 +689,10 @@ theorem tail_bound_of_premises {P : Measure Ω} {D : Ω → ℝ≥0∞} {Y : ℝ
   have hCC₁ : C₁ ≤ C := by linarith [le_max_left C₁ 1]
   exact tail_le_of_split hβ (by linarith) hmom.1 (hcov C hC1) (hmom.2 C hC1) (hexc C hCC₁)
 
-/-- **Tail-to-moment, layer-cake form** (r3:2741-2753, with the premises named). From the covering on the events
+/-- **Tail-to-moment, layer-cake form** (with the premises named). From the covering on the events
 `E_C`, the uniform β-moment `M`, and the inverse-polynomial exceptional bound `K C^{-N}`, with the exponent ranges
 `1 ≤ p`, `p < β`, `ζ < 1 - p/β` and `p < N`, the `p`-th moment of `D` is finite. The only measurability premise is
-`hD : AEMeasurable D P` (the WPN-51 residual), used only through `lintegral_pow_le_of_tail`; the conclusion does not need
+`hD : AEMeasurable D P` (the measurability residual), used only through `lintegral_pow_le_of_tail`; the conclusion does not need
 it (see `lintegral_pow_lt_top_of_outer`). No independence of `E_C` and `Y_C` is used. -/
 theorem lintegral_pow_lt_top_of_split {P : Measure Ω} [IsProbabilityMeasure P] {D : Ω → ℝ≥0∞}
     (hD : AEMeasurable D P) {Y : ℝ → Ω → ℝ≥0∞} {E : ℝ → Set Ω} {β ζ M K N C₁ p : ℝ}
@@ -733,9 +732,9 @@ theorem lintegral_le_outerLIntegral {P : Measure Ω} (f : Ω → ℝ≥0∞) :
   unfold MatedCRT.outerLIntegral
   exact le_iInf fun g => le_iInf fun _ => le_iInf fun hfg => lintegral_mono hfg
 
-/-- **Tail-to-moment, finiteness without measurability** (r3:2741-2753). The premises of
+/-- **Tail-to-moment, finiteness without measurability**. The premises of
 `lintegral_pow_lt_top_of_split` without `hD : AEMeasurable D P`: `∫⁻ D^p ∂P < ∞` follows from
-`outer_pow_lt_top_of_split` and `lintegral_le_outerLIntegral`. The WPN-51 premise `hD` is needed for the layer-cake
+`outer_pow_lt_top_of_split` and `lintegral_le_outerLIntegral`. The measurability premise `hD` is needed for the layer-cake
 bound `lintegral_pow_le_of_tail` and for the Tonelli identity, not for this conclusion. -/
 theorem lintegral_pow_lt_top_of_outer {P : Measure Ω} [IsProbabilityMeasure P] {D : Ω → ℝ≥0∞}
     {Y : ℝ → Ω → ℝ≥0∞} {E : ℝ → Set Ω} {β ζ M K N C₁ p : ℝ}
@@ -746,7 +745,7 @@ theorem lintegral_pow_lt_top_of_outer {P : Measure Ω} [IsProbabilityMeasure P] 
   (lintegral_le_outerLIntegral (fun ω => D ω ^ p)).trans_lt
     (outer_pow_lt_top_of_split hp1 hpβ hζ1 hpN hcov hmom hK hexc)
 
-/-- **Lemma 4.3 (4.6) at the level `C^ζ`** (r3:2708-2716). An inverse-polynomial bound for the events `A c` at every
+/-- **Lemma 4.3 (4.6) at the level `C^ζ`**. An inverse-polynomial bound for the events `A c` at every
 level `c` gives `ExceptionalInversePoly` for `E C := A (C^ζ)`: with `c = C^ζ` and the exponent `N/ζ`, one has
 `(C^ζ)^{-N/ζ} = C^{-N}`. The hypothesis `0 < ζ` is used only here. -/
 theorem exceptional_of_eq46 {P : Measure Ω} {A : ℝ → Set Ω} {ζ : ℝ} (hζ0 : 0 < ζ)
@@ -782,7 +781,7 @@ theorem uniform_of_mass_beta {P : Measure Ω} {Y : ℝ → Ω → ℝ≥0∞} {�
   refine ⟨M.toReal, ENNReal.toReal_nonneg, fun C hC => (hM C hC).trans ?_⟩
   exact (ENNReal.ofReal_toReal hMt.ne).symm.le
 
-/-- **Covering on `E_C` from the printed inputs** (r3:2690-2741). If `D ≤ μ_h(B̄₀)` almost surely ((4.20)), `η` is
+/-- **Covering on `E_C` from the printed inputs**. If `D ≤ μ_h(B̄₀)` almost surely ((4.20)), `η` is
 almost surely continuous, and the coordinate change `μ_{h^{C^ζ}}(𝔻) = μ_h(B_{R_{C^ζ}}(0))` holds almost surely, then
 on `E_C = {η([-1,1]) ⊂ B_{R_{C^ζ}/8}(0)}` one has `D ≤ C^ζ · Y_C` with `Y_C = C^{-ζ} μ_{h^{C^ζ}}(𝔻)`.
 The inclusion `B̄₀ ⊂ B_{R_{C^ζ}}(0)` on `E_C` is `gmsB0_subset_ball`. -/
@@ -810,7 +809,7 @@ end Generic
 
 section Canonical
 
-/-- **Canonical premises** (r3:2690-2741 with the printed inputs). For a canonical zero-cone model, the printed GMS
+/-- **Canonical premises** (with the printed inputs). For a canonical zero-cone model, the printed GMS
 inputs give, for the exceptional events `E_C = {η([-1,1]) ⊂ B_{R_{C^ζ}/8}(0)}` and the normalized masses
 `Y_C = C^{-ζ} μ_{h^{C^ζ}}(𝔻)`: the covering `D ≤ C^ζ · Y_C` on `E_C` (from the printed (4.20), the coordinate change
 and `gmsB0_subset_ball`), the uniform β-moment `M` (GMS p. 33), and the exceptional bound `K C^{-N}` (Lemma 4.3 (4.6)
@@ -858,9 +857,9 @@ theorem canonical_premises {𝒮 : SpaceFillingSLEModel}
       (hInner γ hγ0 hγ2 Ω P hC hcirc μ η hM) hcont (hcoordC.mono fun ω h => h _ measurableSet_ball)
   exact ⟨M', K, C₁, hmom, hK, hcov, hexcK⟩
 
-/-- **Canonical inner-degree moment, layer-cake form** (r3:2741-2753 with the printed inputs). Under the printed GMS
+/-- **Canonical inner-degree moment, layer-cake form** (with the printed inputs). Under the printed GMS
 inputs and the exponent ranges `1 ≤ p < β < 4/γ²`, `0 < ζ < 1 - p/β`, `p < N`, the `p`-th moment of the canonical inner
-degree is finite, given one named premise: the measurability `AEMeasurable (deg_in ∘ η) P` (the WPN-51 residual).
+degree is finite, given one named premise: the measurability `AEMeasurable (deg_in ∘ η) P` (the measurability residual).
 The premise enters only through the layer-cake bound `lintegral_pow_le_of_tail`; the conclusion does not need it
 (see `canonical_innerDegree_lintegral_lt_top_of_outer`). -/
 theorem canonical_innerDegree_lintegral_lt_top {𝒮 : SpaceFillingSLEModel}
@@ -883,7 +882,7 @@ theorem canonical_innerDegree_lintegral_lt_top {𝒮 : SpaceFillingSLEModel}
 
 /-- **Canonical inner-degree moment, outer-expectation form** (no measurability): under the same printed inputs and
 exponent ranges, `E*[deg_in^p] < ∞`, through `outer_pow_lt_top_of_split`. This is the inner-degree moment that
-r3:2741-2753 derives (it is not a printed (4.14) or (4.23)); it is the claim of `gms_innerDegree_moment` in the staged
+the tail-to-moment integration derives (it is not a printed (4.14) or (4.23)); it is the claim of `gms_innerDegree_moment` in the staged
 file, obtained here through the generic component. -/
 theorem canonical_innerDegree_outer_lt_top {𝒮 : SpaceFillingSLEModel}
     (hLem : GMSLemma43Eq46Stmt 𝒮) (hBeta : GMSMassBetaMomentStmt 𝒮)
@@ -902,8 +901,8 @@ theorem canonical_innerDegree_outer_lt_top {𝒮 : SpaceFillingSLEModel}
     canonical_premises hLem hBeta hCoord hInner hγ0 hγ2 hM μb hμb hp1 hpβ hβ2 hζ0 hζ1 hpN
   exact outer_pow_lt_top_of_split hp1 hpβ hζ1 hpN hcov hmom hK hexc
 
-/-- **Canonical inner-degree moment, plain finiteness without measurability** (r3:2741-2753). The conclusion of
-`canonical_innerDegree_lintegral_lt_top` without its premise `AEMeasurable (deg_in ∘ η) P` (WPN-51), through
+/-- **Canonical inner-degree moment, plain finiteness without measurability**. The conclusion of
+`canonical_innerDegree_lintegral_lt_top` without its premise `AEMeasurable (deg_in ∘ η) P`, through
 `lintegral_le_outerLIntegral` and `canonical_innerDegree_outer_lt_top`. -/
 theorem canonical_innerDegree_lintegral_lt_top_of_outer {𝒮 : SpaceFillingSLEModel}
     (hLem : GMSLemma43Eq46Stmt 𝒮) (hBeta : GMSMassBetaMomentStmt 𝒮)
@@ -928,7 +927,7 @@ namespace MatedCRT.StoppedCanonicalMoments
 
 open MatedCRT
 
-/-- **Inner-degree moment from the published inputs** (r3:2674-2753). For the canonical zero-cone model, given the
+/-- **Inner-degree moment from the published inputs**. For the canonical zero-cone model, given the
 staged Lemma 4.3 (4.6), the beta-moment paragraph, the coordinate change (2.3) and the inner-degree bound (4.20), the
 outer `p`-th moment of `deg_in(H₀)` is finite for `1 ≤ p < 4/γ²`. The printed (4.22) range `[1, 4/γ)^2` is not used;
 the conclusion is the range the written proof derives.

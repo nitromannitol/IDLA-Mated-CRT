@@ -2,7 +2,7 @@ import MatedCRT.Proofs.Sec5.MeanValueInequality.SurplusSteps
 import MatedCRT.Proofs.Sec5.StoppedLLowerBound
 
 /-!
-# Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5): reduction to the stopped surplus lower bound
+# Lemma 5.3 on `V^ε(Λ_t)`: reduction to the stopped surplus lower bound
 
 `StoppedMeanValueInequalityStep` (Proofs/Sec5/IDLALowerBound/Stopped.lean) is the mean value inequality of Lemma 5.3
 with the discrete cluster `Λ^ε_t` replaced by the vertex set `A = V^ε(Λ_t)` of the cells meeting the harmonic ball.
@@ -23,7 +23,7 @@ The stopped surplus `u^ε_t` is the discrete analogue of `t G_{Λ_t}(0, ·) - �
 the continuum odometer `t G_{B_ρ}(0, ·) + w̄_t` on `Λ_t` (both have Laplacian `μ_h|_{Λ_t} - t δ_0` on `Λ_t` and vanish on
 `∂Λ_t`). Its lower bound therefore rests on the strict obstacle gap in the interior of `Λ_t`
 (eq:strictly-above-in-interior, `HarmonicBallStrictObstacleGapStep`) and on the convergence of the rescaled Green
-function and Green potential of the random domain `V^ε(Λ_t)`; it is not in the paper (E-c1-5).
+function and Green potential of the random domain `V^ε(Λ_t)`; it is not in the paper.
 -/
 
 namespace MatedCRT
@@ -31,7 +31,7 @@ namespace MatedCRT
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric
 open scoped ENNReal NNReal
 
-/-- **Step (the stopped surplus lower bound; Lemma 5.3 on `V^ε(Λ_t)`, not in the paper, E-c1-5).** There is a
+/-- **Step (the stopped surplus lower bound; Lemma 5.3 on `V^ε(Λ_t)`, not in the paper).** There is a
 `σ(h, η)`-measurable `c > 0` such that, on `{t < T}`, with probability tending to one, for `A = V^ε(Λ_t)`,
 `c ε⁻¹ + q^ε_A(a) ≤ (t ε⁻¹) g^ε_A(a, 0)` for all `a ∈ A` with `dist(η(a), ∂ Ā) > δ`. The cited results available to
 the proof of Lemma 5.3 (Lemmas 4.4 (corrected), 2.13, 3.3, 2.18, Theorem 4.1) and Lemma 3.4 are premises. -/
@@ -152,7 +152,7 @@ theorem exists_stoppedSurplusFrame {𝒮 : SpaceFillingSLEModel} (h218 : ExitTim
       nlinarith
 
 open StoppedMeanValue in
-/-- **Lemma 5.3 on `V^ε(Λ_t)`** (`StoppedMeanValueInequalityStep`, E-c1-5) from the cited inputs of Lemma 5.3,
+/-- **Lemma 5.3 on `V^ε(Λ_t)`** (`StoppedMeanValueInequalityStep`) from the cited inputs of Lemma 5.3,
 Lemmas 3.4 and 2.17, `LQGMeasureFieldMeasurableStep` and the stopped surplus lower bound, with `𝔰 = c / C₁`. -/
 theorem stoppedMeanValueInequality_of_surplusLower (𝒮 : SpaceFillingSLEModel)
     (h44 : DiscreteLaplacianBoundCorrectedStmt 𝒮) (h213 : MaximumPrincipleStmt 𝒮)

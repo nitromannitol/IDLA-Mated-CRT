@@ -12,7 +12,7 @@ import Mathlib.Analysis.Normed.Module.RCLike.Real
 # Erosion index and Borel measurability of the random-compact infimum
 
 Component of the repaired measurability step `StoppedInteriorMeasurableStep`
-(`MatedCRT/Proofs/Sec5/StoppedInterior.lean`; source `notes/wpn-steps2/steps2.tex`, lines 1807-1858).
+(`MatedCRT/Proofs/Sec5/StoppedInterior.lean`).
 
 For a nonempty compact `K ⊆ ℂ` and a continuous `f : A → ℝ` on a compact set `A ⊆ ℂ`, the erosion index is
 `J_A(K) = {x ∈ A : closedBall x δ ⊆ K}` and the erosion minimum is `m(K, f) = inf_{x ∈ J_A(K)} f x`, with the real
@@ -26,7 +26,7 @@ source. The main results:
   `F_σ` strict sublevel sets.
 * `measurable_erodedMin_comp`: `ω ↦ m (K ω) (f ω)` is measurable whenever `ω ↦ (K ω, f ω)` is measurable.
 * `closedBall_subset_closure_iff`: the regular-open identity `closedBall x δ ⊆ closure Λ ↔ δ ≤ infDist x Λᶜ`
-  (Theorem 1.1(a) regularity, used at steps2 lines 1825-1837).
+  (Theorem 1.1(a) regularity).
 
 Nothing here assumes a probability space, a field, or a cited result.
 -/
@@ -80,11 +80,11 @@ theorem isClosed_closedBall_subset (δ : ℝ) :
 
 variable {A : Set ℂ}
 
-/-- The erosion index `J_A(K) = {x ∈ A : closedBall x δ ⊆ K}` (steps2 lines 1807-1823), as a subset of `A`. -/
+/-- The erosion index `J_A(K) = {x ∈ A : closedBall x δ ⊆ K}`, as a subset of `A`. -/
 def erosionIndex (A : Set ℂ) (δ : ℝ) (K : NonemptyCompacts ℂ) : Set A :=
   {x | closedBall (x : ℂ) δ ⊆ (K : Set ℂ)}
 
-/-- The erosion minimum `m(K, f) = inf_{x ∈ J_A(K)} f x` (steps2 lines 1807-1823). The real infimum over an empty
+/-- The erosion minimum `m(K, f) = inf_{x ∈ J_A(K)} f x`. The real infimum over an empty
 index set is `0`, which is the source's convention; for nonempty `J_A(K)` the infimum is attained, so it is the
 minimum. -/
 def erodedMin (A : Set ℂ) (δ : ℝ) (K : NonemptyCompacts ℂ) (f : C(↥A, ℝ)) : ℝ :=
@@ -178,8 +178,8 @@ theorem erosion_lt_eq_iUnion (δ b : ℝ) :
   · rintro ⟨q, ⟨x, hx1, hx2⟩, hqb⟩
     exact ⟨x, hx1, lt_of_le_of_lt hx2 hqb⟩
 
-/-- **Borel measurability of the erosion minimum** on `NonemptyCompacts ℂ × C(A, ℝ)` (steps2 lines 1807-1823: "a Borel
-function of `(K, f)`"). The codomain is `ℝ` with its Borel σ-algebra and the domain carries the Borel σ-algebra of the
+/-- **Borel measurability of the erosion minimum** on `NonemptyCompacts ℂ × C(A, ℝ)` (a Borel
+function of `(K, f)`). The codomain is `ℝ` with its Borel σ-algebra and the domain carries the Borel σ-algebra of the
 product topology. -/
 theorem measurable_erodedMin (hA : IsCompact A) (δ : ℝ) :
     @Measurable (NonemptyCompacts ℂ × C(↥A, ℝ)) ℝ (borel _) _ (fun p => erodedMin A δ p.1 p.2) := by
@@ -215,7 +215,7 @@ theorem measurable_erodedMin_comp {Ω : Type*} [MeasurableSpace Ω] (hA : IsComp
   have hc := (measurable_erodedMin hA δ).comp hKf
   exact hc
 
-/-- **Regular-open identity** (steps2 lines 1825-1837). For `Λ` regular open (`interior (closure Λ) = Λ`) with
+/-- **Regular-open identity**. For `Λ` regular open (`interior (closure Λ) = Λ`) with
 nonempty complement and `δ > 0`: `closedBall x δ ⊆ closure Λ ↔ δ ≤ infDist x Λᶜ`. The nonempty complement is needed,
 since `infDist x ∅ = 0`. -/
 theorem closedBall_subset_closure_iff {Λ : Set ℂ} (hreg : interior (closure Λ) = Λ) (hne : Λᶜ.Nonempty)
@@ -241,13 +241,13 @@ theorem closedBall_subset_closure_iff {Λ : Set ℂ} (hreg : interior (closure �
     calc closedBall x δ = closure (ball x δ) := (closure_ball x hδ.ne').symm
       _ ⊆ closure Λ := closure_mono hball
 
-/-- The margin domain `A = {x : s ≤ |x| ≤ R}`, as used with `R = ρ/2` (steps2 lines 1790-1806). -/
+/-- The margin domain `A = {x : s ≤ |x| ≤ R}`, as used with `R = ρ/2`. -/
 def marginDomain (s R : ℝ) : Set ℂ := closedBall 0 R ∩ {x : ℂ | s ≤ ‖x‖}
 
 theorem isCompact_marginDomain (s R : ℝ) : IsCompact (marginDomain s R) :=
   (isCompact_closedBall 0 R).inter_right (isClosed_le continuous_const continuous_norm)
 
-/-- If `U = interior (closure C)` then `U` is regular open (steps2 lines 1825-1837: `Λ_t` is regular open as the interior
+/-- If `U = interior (closure C)` then `U` is regular open (`Λ_t` is regular open as the interior
 of the closure of the cluster set, by the obstacle characterization). -/
 theorem interior_closure_eq_self_of_eq {U C : Set ℂ} (h : U = interior (closure C)) :
     interior (closure U) = U := by
@@ -261,7 +261,7 @@ theorem interior_closure_eq_self_of_eq {U C : Set ℂ} (h : U = interior (closur
   · rw [h]
     exact isOpen_interior
 
-/-- **Deterministic identity of the erosion minimum with the continuum margin** (steps2 lines 1807-1858). If `K` is the
+/-- **Deterministic identity of the erosion minimum with the continuum margin**. If `K` is the
 closure of a regular open set `Λ` with nonempty complement, `Λ ⊆ closedBall 0 R`, and `f` equals `g` on the margin
 domain, then `m(K, f)` is the raw continuum margin `inf_{x ∈ Λ, s ≤ |x|, δ ≤ dist(x, Λᶜ)} g x` (with the real
 convention `inf ∅ = 0`). -/

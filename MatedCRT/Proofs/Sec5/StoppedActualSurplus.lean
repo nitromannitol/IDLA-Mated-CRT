@@ -5,10 +5,10 @@ import MatedCRT.Proofs.Sec4.ConvergenceDivisible.ExitTime
 /-!
 # The actual obstacle-section infimum and the continuous surplus on `marginDomain s (ρ/2)`
 
-Source: `notes/wpn-steps2/steps2-r3.tex` (sha256 `88dfb1f9…`): lines 1039-1043 (on the masscode event the section of
+On the masscode event the section of
 `A_R` is exactly the set of supersolutions; it contains zero and is bounded below by `-tG_R(0,·)` at the nonzero points,
-so its real infimum is the actual finite infimum) and lines 3374-3388 (the continuous surplus
-`f(x) = v_ρ(μ,t)(x) + tG_ρ(0,x)` on `A = marginDomain s (ρ/2)`, decoded from a countable dense family of infima).
+so its real infimum is the actual finite infimum. The continuous surplus
+`f(x) = v_ρ(μ,t)(x) + tG_ρ(0,x)` on `A = marginDomain s (ρ/2)`, decoded from a countable dense family of infima.
 
 For a measure `μ` on `ℂ` and `0 ≤ t`:
 
@@ -24,8 +24,7 @@ For a measure `μ` on `ℂ` and `0 ≤ t`:
   (and of its `_ae` form) are exposed for the sections `relSection 𝒜 (c ω)` of the Borel obstacle code. The section
   identity is `CodeSectionStmt` (reused through `codeSectionStmt_holds`, not reproved).
 
-Not here: the pullback of these almost-sure statements to the law of the circle-array state `c`; that is the next task
-(`z5-stopped-actual-value-versions`).
+Not here: the pullback of these almost-sure statements to the law of the circle-array state `c`; that is a separate step.
 -/
 
 namespace MatedCRT.StoppedActualSurplus
@@ -173,8 +172,7 @@ theorem neg_mul_green_le_leastSupersolution_le_zero (μ : Measure ℂ) {R t : �
 
 /-! ### The actual surplus and its continuity on `marginDomain s (ρ/2)` -/
 
-/-- The actual surplus `v_ρ(μ,t)(x) + tG_ρ(0,x)` of the obstacle problem `(μ, ρ, t)`, the function of
-`steps2-r3.tex:3374-3388`. -/
+/-- The actual surplus `v_ρ(μ,t)(x) + tG_ρ(0,x)` of the obstacle problem `(μ, ρ, t)`. -/
 noncomputable def actualSurplus (μ : Measure ℂ) (ρ t : ℝ) (x : ℂ) : ℝ :=
   HarmonicBalls.leastSupersolution μ ρ 0 t x + t * HarmonicBalls.greenFunction (ball (0 : ℂ) ρ) 0 x
 

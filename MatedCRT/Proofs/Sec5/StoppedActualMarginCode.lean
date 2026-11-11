@@ -3,11 +3,11 @@ import MatedCRT.Proofs.Sec5.StoppedRationalMembership
 import MatedCRT.Proofs.Sec5.StoppedInterior
 
 /-!
-# Measurable margin code from the actual compact-code and surplus producers (steps2-r3:3390-3420)
+# Measurable margin code from the actual compact-code and surplus producers
 
-Source: `notes/wpn-steps2/steps2-r3.tex`, lines 3390-3420 (the erosion minimum `m(K, f)` of the random compact code
-`K = closure Λ_t` and the decoder `f` of the surplus on `A = {s ≤ |x| ≤ ρ/2}`, with the consumer changes), and the
-field-measurable circle version of lines 3326-3354.
+The construction uses the erosion minimum `m(K, f)` of the random compact code
+`K = closure Λ_t` and the decoder `f` of the surplus on `A = {s ≤ |x| ≤ ρ/2}`, with the consumer changes, and the
+field-measurable circle version.
 
 Construction, for `t > 0`, `δ > 0`, `s > 0`:
 
@@ -34,7 +34,7 @@ open MatedCRT.ConeOriginNull (BallFns superTraces gaussRat gaussRat_countable Co
 open MatedCRT.CircleProcessSpace (PosCircleFns PosCircleIndex)
 open MatedCRT.StoppedInteriorMargin (marginDomain)
 
-/-- **Field-measurable circle version (residual producer; steps2-r3:3326-3354).** For every valid environment there is a
+/-- **Field-measurable circle version (residual producer).** For every valid environment there is a
 Borel version `c : Ω → PosCircleFns` of the circle process which is measurable for the field σ-algebra `S.fieldSigma` alone
 and almost surely equal to `S.hcirc` at every index `(r, z) ∈ (0,∞) × ℂ`. The source obtains it from the countable dense family
 of circles, the convergence in probability of the mollified pairings and the countable continuous-extension decoder of
@@ -56,7 +56,7 @@ theorem fieldSigma_le_ambient {Ω : Type} [mΩ : MeasurableSpace Ω] {S : MatedC
   exact hm.comap_le
 
 /-- The limsup event of the rational-ball codes on the state space `PosCircleFns`: the code holds at infinitely many integer
-radii `n + 1` (the set-valued form of `ratLimsupEvent`, steps2-r3:3158-3160). -/
+radii `n + 1` (the set-valued form of `ratLimsupEvent`). -/
 def freqCodeSet (𝒜 : ∀ n : ℕ, Set (PosCircleFns × BallFns ((n : ℝ) + 1))) (t : ℝ) (z : ℂ) : Set PosCircleFns :=
   ⋂ N : ℕ, ⋃ n ∈ {n : ℕ | N ≤ n}, {x | ratBallCode (𝒜 n) t z x}
 
@@ -105,7 +105,7 @@ theorem measurable_pair_borel {Ω : Type} (m : MeasurableSpace Ω) {A : Set ℂ}
   rw [← e]
   exact hK.prodMk hf
 
-/-- **Composition of the actual producers into the margin code (steps2-r3:3390-3420).** Given the Preston inputs, the
+/-- **Composition of the actual producers into the margin code.** Given the Preston inputs, the
 section input `CodeSectionStmt` and the field-measurable circle version, the residual `StoppedMarginCodeStep` holds: the
 random compact code is the actual closure `closure Λ_t` almost surely and the decoder is the actual surplus almost surely on
 `{t < T}`, both `S.fieldSigma`-measurable (hence `S.envSigma`-measurable) as functions of the environment. -/

@@ -2,11 +2,11 @@ import MatedCRT.Proofs.Sec5.ConeOriginNullMeasurableProof
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.BallExtension
 
 /-!
-# The Borel supersolution relation (steps2.tex 885-926)
+# The Borel supersolution relation
 
-Target: the relation of steps2.tex 911-924 inside `ConeOriginNullMeasurableStep` (steps2 796-1009, the cone-origin
+Target: the relation inside `ConeOriginNullMeasurableStep` (the cone-origin
 obstacle code). For a countable family `φs : ℕ → ℂ → ℝ` of nonnegative smooth tests supported in `ball 0 R` and a
-sequence `ps : ℕ → ℂ` dense in the punctured closed disk, the relation of steps2 911-924
+sequence `ps : ℕ → ℂ` dense in the punctured closed disk, the relation
 
 * `∫ w̃ Δφ_j ≤ J_{φ_j}(c)` for all `j`, where `J_φ = massLimit γ φ` is the checked mass code,
 * `w(p_k) ≥ -t G_R(0,p_k)` for all `k`, the Green-obstacle inequalities at the dense points,
@@ -35,7 +35,7 @@ Proved here.
 * `mem_supersolutionRelation_iff_of_residuals`: the section of the relation is the set of traces of supersolutions,
   conditional on the two residuals below and on the mass identity `massLimit = ∫ dμ` for the family.
 
-Residuals (exact Props, not proved here; steps2 885-909 and 911-926):
+Residuals (exact Props, not proved here):
 * `CountableC2DenseStmt R φs`: the countable family is `C²`-dense among nonnegative tests in `ball 0 R`.
 * `LaplacianLESectionStmt μ hR φs`: for a measure `μ` with `μ (ball 0 R) < ∞` and a `C²`-dense nonnegative family, the countable mass
   inequalities hold for a trace `w` iff `LaplacianLE w̃ μ (ball 0 R)` (the final LaplacianLE section identification).
@@ -88,7 +88,7 @@ theorem laplacian_eq_zero_of_notMem_tsupport {φ : ℂ → ℝ} {z : ℂ} (hz : 
 
 /-! ### 2. The test integral of a trace on the closed disk -/
 
-/-- `∫ w̃ Δφ` for a trace `w ∈ C(closedBall 0 R, ℝ)` and a test `φ` (steps2 911-924). The extension `w̃` is the radial
+/-- `∫ w̃ Δφ` for a trace `w ∈ C(closedBall 0 R, ℝ)` and a test `φ`. The extension `w̃` is the radial
 retraction extension `extendClosedBall 0 R hR w` (`BallExtension.lean`). -/
 noncomputable def ballTestIntegral {R : ℝ} (hR : 0 < R) (φ : ℂ → ℝ) (w : BallFns R) : ℝ :=
   ∫ z, extendClosedBall 0 R hR w z * Laplacian.laplacian φ z
@@ -102,7 +102,7 @@ theorem integrable_extend_mul_laplacian {R : ℝ} (hR : 0 < R) (w : BallFns R) {
     ((continuous_extendClosedBall hR w).mul (continuous_laplacian_of_contDiff hφ))
     (hasCompactSupport_laplacian_of_hasCompactSupport hc).mul_left
 
-/-- **Lipschitz estimate (steps2 911-924).** For the sup norm on `C(closedBall 0 R, ℝ)`,
+/-- **Lipschitz estimate.** For the sup norm on `C(closedBall 0 R, ℝ)`,
 `|∫ w̃ Δφ - ∫ w̃' Δφ| ≤ (∫ |Δφ|) ‖w - w'‖`. -/
 theorem dist_ballTestIntegral_le {R : ℝ} (hR : 0 < R) {φ : ℂ → ℝ} (hφ : ContDiff ℝ ∞ φ)
     (hc : HasCompactSupport φ) (w w' : BallFns R) :
@@ -138,10 +138,10 @@ theorem measurable_ballTestIntegral_snd {R : ℝ} (hR : 0 < R) {φ : ℂ → ℝ
     Measurable fun p : PosCircleFns × BallFns R => ballTestIntegral hR φ p.2 :=
   ((continuous_ballTestIntegral hR hφ hc).comp continuous_snd).measurable
 
-/-! ### 3. The Borel relation of steps2 911-924 -/
+/-! ### 3. The Borel relation -/
 
 /-- The mass inequality `∫ w̃ Δφ ≤ J_φ(c)` for one test `φ`, as a subset of `PosCircleFns × BallFns R`. Here
-`J_φ = massLimit γ φ` is the checked mass code (`ConeOriginNullMeasurableProof.lean`, steps2 838-866). -/
+`J_φ = massLimit γ φ` is the checked mass code (`ConeOriginNullMeasurableProof.lean`). -/
 def massTestSet (γ : ℝ) {R : ℝ} (hR : 0 < R) (φ : ℂ → ℝ) : Set (PosCircleFns × BallFns R) :=
   {p | ballTestIntegral hR φ p.2 ≤ massLimit γ φ p.1}
 
@@ -168,7 +168,7 @@ theorem measurableSet_pointGreenSet (t : ℝ) {R : ℝ} (hR : 0 < R) (y : ℂ) :
   rw [ofPred_or]
   exact (MeasurableSet.const _).union (measurableSet_le measurable_const hev)
 
-/-- **The Borel supersolution relation (steps2 911-924).** For a countable family of tests `φs` and a sequence `ps`
+/-- **The Borel supersolution relation.** For a countable family of tests `φs` and a sequence `ps`
 dense in the punctured closed disk: the mass inequalities for all `j` and the Green-obstacle inequalities at all
 `ps k`. -/
 def supersolutionRelation (γ t : ℝ) {R : ℝ} (hR : 0 < R) (φs : ℕ → ℂ → ℝ) (ps : ℕ → ℂ) :
@@ -228,7 +228,7 @@ theorem continuousAt_neg_mul_greenFunction (t : ℝ) {R : ℝ} (hR : 0 < R) {x :
 
 /-! ### 5. Dense Green-obstacle inequalities -/
 
-/-- **Dense obstacle equivalence (steps2 911-924).** The Green-obstacle inequalities at a dense punctured-disk sequence
+/-- **Dense obstacle equivalence.** The Green-obstacle inequalities at a dense punctured-disk sequence
 are equivalent to all of them: the trace `w̃` and `-t G_R(0,·)` are continuous on the punctured closed disk, so the
 inequality, which holds on a dense set, holds on its closure. -/
 theorem forall_pointGreen_iff_of_dense (t : ℝ) {R : ℝ} (hR : 0 < R) {ps : ℕ → ℂ}
@@ -242,7 +242,7 @@ theorem forall_pointGreen_iff_of_dense (t : ℝ) {R : ℝ} (hR : 0 < R) {ps : �
     (continuous_extendClosedBall hR w).continuousWithinAt
     (by rintro _ ⟨k, rfl⟩; exact h k)
 
-/-- **Section formula for the relation (steps2 911-924).** At a circle process `c` and a trace `w`, the pair lies in the
+/-- **Section formula for the relation.** At a circle process `c` and a trace `w`, the pair lies in the
 relation iff the mass inequalities against `J_φ(c)` hold for all `j` and the Green-obstacle inequalities hold on all of
 the punctured closed disk. -/
 theorem mem_supersolutionRelation_iff (γ t : ℝ) {R : ℝ} (hR : 0 < R) {φs : ℕ → ℂ → ℝ} {ps : ℕ → ℂ}
@@ -294,7 +294,7 @@ theorem mem_superTraces_iff {μ : Measure ℂ} {R t : ℝ} (hR : 0 < R) (w : Bal
 
 /-! ### 7. Residuals (exact types; not proved in this file) -/
 
-/-- **Residual A: countable `C²` approximation (steps2 885-909).** Every nonnegative test `φ` supported in `ball 0 R`
+/-- **Residual A: countable `C²` approximation.** Every nonnegative test `φ` supported in `ball 0 R`
 is approximated, together with its Laplacian, uniformly by members of the family `φs`. This is the density of the
 countable family in the `C²` topology on nonnegative tests; it is the input that passes from the countable
 inequalities to all tests, given `μ (ball 0 R) < ∞` (residual B). -/
@@ -303,14 +303,14 @@ def CountableC2DenseStmt (R : ℝ) (φs : ℕ → ℂ → ℝ) : Prop :=
     ∃ j : ℕ, (∀ z, |φs j z - φ z| ≤ ε) ∧
       ∀ z, |Laplacian.laplacian (φs j) z - Laplacian.laplacian φ z| ≤ ε
 
-/-- **Residual A′: existence of a countable `C²`-dense family (steps2 885-909).** For every radius `R > 0` some countable
+/-- **Residual A′: existence of a countable `C²`-dense family.** For every radius `R > 0` some countable
 family of nonnegative tests in `ball 0 R` is `C²`-dense (`CountableC2DenseStmt`). `CodeSectionStmt` needs this, for each
 radius, to choose the family in the relation; it is stated here and not proved. -/
 def CountableC2FamilyStmt : Prop :=
   ∀ R : ℝ, 0 < R → ∃ φs : ℕ → ℂ → ℝ,
     (∀ j, IsTestFunction (ball 0 R) (φs j) ∧ ∀ z, 0 ≤ φs j z) ∧ CountableC2DenseStmt R φs
 
-/-- **Residual B: final LaplacianLE section identification (steps2 911-926).** Let `μ` be a measure with
+/-- **Residual B: final LaplacianLE section identification.** Let `μ` be a measure with
 `μ (ball 0 R) < ∞`, and let `φs` be a `C²`-dense family of nonnegative tests in `ball 0 R`. Then for every trace `w`,
 the countable mass inequalities `∫ w̃ Δφ_j ≤ ∫ φ_j dμ` hold iff `Δ w̃ ≤ μ` in `ball 0 R` (`LaplacianLE`). -/
 def LaplacianLESectionStmt (μ : Measure ℂ) {R : ℝ} (hR : 0 < R) (φs : ℕ → ℂ → ℝ) : Prop :=

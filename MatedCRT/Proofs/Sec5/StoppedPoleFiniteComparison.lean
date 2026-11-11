@@ -7,15 +7,14 @@ import MatedCRT.Proofs.Infra.RandomWalk
 /-!
 # Finite-domain comparison at the source pole
 
-Finite-domain lemmas behind the source-pole step of the steps2-r3 note (Section 6, lines 1192-1262 of
-`notes/wpn-steps2/steps2-r3.tex`, sha256 `88dfb1f9...`). They are not the pole target
+Finite-domain lemmas behind the source-pole step. They are not the pole target
 `StoppedInterior.StoppedSurplusPoleStep`, and no numbered result is claimed here.
 
 Setting: an edge multiplicity `m : ℤ → ℤ → ℕ`, symmetric (undirected), locally finite
-(`IsLocallyFiniteMult m`), with consecutive adjacency `m k (k + 1) ≠ 0` (steps2-r3 line 629: consecutive cells
+(`IsLocallyFiniteMult m`), with consecutive adjacency `m k (k + 1) ≠ 0` (consecutive cells
 share an endpoint). The consecutive adjacency is the connectedness input of the simple random walk on `ℤ`, as in
 `WalkPotential.GreenFirstStep`; it gives the escape property of finite sets (`escape_of_adjacent_succ`). The killed
-domain `A` is finite (the finite killed domain of steps2-r3 line 1199); from this the killed Green kernels are finite
+domain `A` is finite (the finite killed domain); from this the killed Green kernels are finite
 (inside `WalkPotential.mLaplacian_greenFn`), so finiteness of the kernels is not a separate hypothesis.
 
 Notation (Armitage-Gardiner, Lawler-Limic): `greenKernel m S a b = g_S(a,b) = G_S(a,b)/deg(b)` is the
@@ -28,10 +27,10 @@ Results:
 * `greenKernel_symm_pole`: `g_S(a,b) = g_S(b,a)` for finite `S` (the paper reverses finite walk paths; the Lean
   route is the discrete Green identity, `greenKernel_symm_of_firstStep`).
 * `lapSum_poleQ`: `Δ_m q_D(a) = -1` in the `lapSum` normalization, i.e. `Δ_m q_D(a) = -1/deg(a)`, for `a ∈ D`.
-* `poleComparison` (eq:polecomparison): if `V = w + (t/ε) g_A(0,·)` with `Δ_m w ≤ 1/deg` on `D` and `V ≥ L` on the
+* `poleComparison`: if `V = w + (t/ε) g_A(0,·)` with `Δ_m w ≤ 1/deg` on `D` and `V ≥ L` on the
   exterior vertex boundary of `D`, then `V(a) ≥ L - q_D(a)` for every `a ∈ D`, including `a = 0`.
 * `sourceCapacity_pointwise`, `greenKernel_le_source_pole`, `poleQ_zero_le`, `sourceCapacity_inf`
-  (eq:source-capacity-bound): for the real infimum over admissible supersolutions,
+  for the real infimum over admissible supersolutions,
   `ε · V_t^ε(0) ≥ (t - ε #D) g_D(0,0)`, with the infimum nonempty and bounded below.
 -/
 
@@ -114,11 +113,11 @@ theorem lapSum_greenKernel_source_pole {m : ℤ → ℤ → ℕ} (hsymm : ∀ a 
 
 /-! ### The killed potential `q_D` -/
 
-/-- The killed potential `q_D(a) = ∑_{b ∈ D} g_D(a, b)` of the finite set `D` (steps2-r3, line 1199). -/
+/-- The killed potential `q_D(a) = ∑_{b ∈ D} g_D(a, b)` of the finite set `D`. -/
 noncomputable def poleQ (m : ℤ → ℤ → ℕ) (D : Finset ℤ) (a : ℤ) : ℝ :=
   ∑ b ∈ D, greenKernel m (D : Set ℤ) a b
 
-/-- `Δ_m q_D(a) = -1/deg(a)` for `a ∈ D` (steps2-r3, line 1200), in the `lapSum` normalization `-1`. -/
+/-- `Δ_m q_D(a) = -1/deg(a)` for `a ∈ D`, in the `lapSum` normalization `-1`. -/
 theorem lapSum_poleQ {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0)
     {D : Finset ℤ} {a : ℤ} (ha : a ∈ D) :
     lapSum hlf (poleQ m D) a = -1 := by
@@ -130,9 +129,9 @@ theorem lapSum_poleQ {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m) (hc
   have hd := mdeg_cast_ne_zero_pole hlf hcons a
   simp [hd]
 
-/-! ### The comparison (eq:polecomparison) -/
+/-! ### The comparison -/
 
-/-- **Finite-domain comparison** (steps2-r3 eq:polecomparison, lines 1202-1212). If `V = w + (t/ε) g_A(0,·)` with
+/-- **Finite-domain comparison**. If `V = w + (t/ε) g_A(0,·)` with
 `Δ_m w ≤ 1/deg` on the finite set `D ⊆ A`, and `V ≥ L` on the exterior vertex boundary of `D`, then
 `V(a) ≥ L - q_D(a)` for all `a ∈ D`, including the source vertex `a = 0`. -/
 theorem poleComparison {m : ℤ → ℤ → ℕ} (hsymm : ∀ a b, m a b = m b a) (hlf : IsLocallyFiniteMult m)
@@ -180,7 +179,7 @@ theorem poleComparison {m : ℤ → ℤ → ℕ} (hsymm : ∀ a b, m a b = m b a
     key a (Finset.mem_coe.2 ha)
   linarith
 
-/-- The "in particular" consequence of the comparison (steps2-r3, line 1216): a boundary bound `V ≥ 2c/ε` and a
+/-- The "in particular" consequence of the comparison: a boundary bound `V ≥ 2c/ε` and a
 bound `sup_D q_D ≤ c/ε` give `V ≥ c/ε` throughout `D`, including at the source vertex `0 ∈ D`. -/
 theorem poleComparison_lower_bound {m : ℤ → ℤ → ℕ} (hsymm : ∀ a b, m a b = m b a) (hlf : IsLocallyFiniteMult m)
     (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {A : Set ℤ} (hA : A.Finite) {D : Finset ℤ}
@@ -194,9 +193,9 @@ theorem poleComparison_lower_bound {m : ℤ → ℤ → ℕ} (hsymm : ∀ a b, m
   have h2 : 2 * c / ε = 2 * (c / ε) := by ring
   linarith [hq a ha, h2]
 
-/-! ### The source capacity bound (eq:source-capacity-bound) -/
+/-! ### The source capacity bound -/
 
-/-- `g_D(0,b) ≤ g_D(0,0)` for `b ∈ D`: the killed kernel from `0` is maximal at the source (steps2-r3, line 1236). -/
+/-- `g_D(0,b) ≤ g_D(0,0)` for `b ∈ D`: the killed kernel from `0` is maximal at the source. -/
 theorem greenKernel_le_source_pole {m : ℤ → ℤ → ℕ} (hsymm : ∀ a b, m a b = m b a)
     (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {D : Finset ℤ} {b : ℤ} (hb : b ∈ D) :
     greenKernel m (D : Set ℤ) 0 b ≤ greenKernel m (D : Set ℤ) 0 0 := by
@@ -240,7 +239,7 @@ theorem poleQ_zero_le {m : ℤ → ℤ → ℕ} (hsymm : ∀ a b, m a b = m b a)
     _ = (D.card : ℝ) * greenKernel m (D : Set ℤ) 0 0 := by
         rw [Finset.sum_const, nsmul_eq_mul]
 
-/-- **Pointwise source-capacity comparison** (steps2-r3, lines 1238-1250): for every admissible `w`,
+/-- **Pointwise source-capacity comparison**: for every admissible `w`,
 `w(a) + (t/ε) g_A(0,a) ≥ (t/ε) g_D(0,a) - q_D(a)` for all `a ∈ D`. -/
 theorem sourceCapacity_pointwise {m : ℤ → ℤ → ℕ} (hsymm : ∀ a b, m a b = m b a)
     (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {A : Set ℤ} (hA : A.Finite)
@@ -284,7 +283,7 @@ theorem sourceCapacity_pointwise {m : ℤ → ℤ → ℕ} (hsymm : ∀ a b, m a
     key a (Finset.mem_coe.2 ha)
   linarith
 
-/-- **Source-capacity lower bound** (steps2-r3 eq:source-capacity-bound, lines 1252-1257). For the real infimum
+/-- **Source-capacity lower bound**. For the real infimum
 `sInf` over the admissible supersolutions `w` (`Δ_m w ≤ 1/deg` on `A`, `w ≥ -(t/ε) g_A(0,·)` on `W`), which is
 nonempty (`w = 0` is admissible) and bounded below, `ε · V_t^ε(0) ≥ (t - ε #D) g_D(0,0)`, where
 `V_t^ε(0) = sInf {w(0)} + (t/ε) g_A(0,0)`. -/

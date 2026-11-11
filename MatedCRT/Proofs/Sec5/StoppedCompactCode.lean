@@ -4,21 +4,17 @@ import Mathlib.Topology.MetricSpace.Closeds
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 
 /-!
-# Random compact code from measurable rational-point events (steps2-r3:3150-3169)
+# Random compact code from measurable rational-point events
 
-Formalizes the paragraph "The random closed set and the outer-probability passage" of
-`notes/wpn-steps2/steps2-r3.tex`, lines 3150-3169 (final audited draft, sha256 88dfb1f9;
-audit `notes/wpn-steps2/AUDIT-steps2-r3.md`, verdict CORRECT).
+Formalizes the paragraph "The random closed set and the outer-probability passage".
 
 Setting. `gaussRat` is the countable dense set `Q` of Gaussian rationals (`ConeOriginNull.gaussRat`).
 For `z ∈ gaussRat`, `E z` is a measurable event of an arbitrary measurable space `Ω` (no completeness
-is assumed). The event `ω ∈ E z` is the selection of `z`; in the paper it is the membership `z ∈ Λ_t`
-(steps2-r3:3158-3161). The selected rationals of `ω` are `selectedRats E ω`.
+is assumed). The event `ω ∈ E z` is the selection of `z`; in the paper it is the membership `z ∈ Λ_t`. The selected rationals of `ω` are `selectedRats E ω`.
 
-* `codeClosure E ω` is their closure (steps2-r3:3162-3163).
+* `codeClosure E ω` is their closure.
 * `CodeAdmissible E ω`: the selected rationals are nonempty and bounded.
-* `codeCompact E ω : NonemptyCompacts ℂ` is the closure when admissible and `{0}` otherwise
-  (steps2-r3:3166-3168).
+* `codeCompact E ω : NonemptyCompacts ℂ` is the closure when admissible and `{0}` otherwise.
 
 Results. Open-hit events of the code are countable unions of the events `E z`
 (`measurableSet_selectedRats_hit`, `measurableSet_codeClosure_hit`); admissibility is a countable
@@ -29,7 +25,7 @@ its almost-sure form `ae_codeCompact_eq_closure` (random `Λ ω`, as for `Λ_t`)
 events agree with rational membership.
 
 Not proved here: the measurable versions of the membership events. The paper obtains them from the origin
-code of Section 5 (`eq:clusterpointcode`, steps2-r3:3150-3157). They enter only as the hypotheses `hE`
+code of Section 5. They enter only as the hypotheses `hE`
 and `hae` below.
 -/
 
@@ -47,16 +43,16 @@ variable {Ω : Type*} [MeasurableSpace Ω]
 def selectedRats (E : ℂ → Set Ω) (ω : Ω) : Set ℂ :=
   {z | z ∈ gaussRat ∧ ω ∈ E z}
 
-/-- The random closed set: the closure of the selected Gaussian rationals (steps2-r3:3162-3163). -/
+/-- The random closed set: the closure of the selected Gaussian rationals. -/
 def codeClosure (E : ℂ → Set Ω) (ω : Ω) : Set ℂ :=
   closure (selectedRats E ω)
 
-/-- Admissibility: the selected rationals are nonempty and bounded (steps2-r3:3166-3168). -/
+/-- Admissibility: the selected rationals are nonempty and bounded. -/
 def CodeAdmissible (E : ℂ → Set Ω) (ω : Ω) : Prop :=
   (selectedRats E ω).Nonempty ∧ Bornology.IsBounded (selectedRats E ω)
 
 /-- Open-hit events of the selected rationals: `ω` selects a point of `O`. This is the countable
-union of the events `E z` over `z ∈ gaussRat ∩ O` (steps2-r3:3164-3165). -/
+union of the events `E z` over `z ∈ gaussRat ∩ O`. -/
 theorem measurableSet_selectedRats_hit {E : ℂ → Set Ω} (hE : ∀ z ∈ gaussRat, MeasurableSet (E z))
     (O : Set ℂ) : MeasurableSet {ω | (selectedRats E ω ∩ O).Nonempty} := by
   have hset : {ω | (selectedRats E ω ∩ O).Nonempty} = ⋃ z ∈ gaussRat ∩ O, E z := by
@@ -87,8 +83,7 @@ theorem measurableSet_selectedRats_nonempty {E : ℂ → Set Ω}
   simpa only [inter_univ] using measurableSet_selectedRats_hit hE univ
 
 /-- Boundedness of the selected rationals is a countable Borel test: the bounded outcomes are exactly
-`⋃ n, ⋂ z ∈ gaussRat ∩ {‖z‖ > n}, (E z)ᶜ`, i.e. no selected rational lies outside some ball
-(steps2-r3:3166-3168). -/
+`⋃ n, ⋂ z ∈ gaussRat ∩ {‖z‖ > n}, (E z)ᶜ`, i.e. no selected rational lies outside some ball. -/
 theorem measurableSet_selectedRats_bounded {E : ℂ → Set Ω}
     (hE : ∀ z ∈ gaussRat, MeasurableSet (E z)) :
     MeasurableSet {ω | Bornology.IsBounded (selectedRats E ω)} := by
@@ -114,7 +109,7 @@ theorem measurableSet_selectedRats_bounded {E : ℂ → Set Ω}
     MeasurableSet.biInter (gaussRat_countable.mono inter_subset_left) fun z hz => (hE z hz.1).compl
 
 /-- Admissibility of the code is a countable Borel test: it defines the exceptional set on which
-the code is replaced by `{0}` (steps2-r3:3166-3168). -/
+the code is replaced by `{0}`. -/
 theorem measurableSet_codeAdmissible {E : ℂ → Set Ω} (hE : ∀ z ∈ gaussRat, MeasurableSet (E z)) :
     MeasurableSet {ω | CodeAdmissible E ω} :=
   (measurableSet_selectedRats_nonempty hE).inter (measurableSet_selectedRats_bounded hE)
@@ -127,7 +122,7 @@ theorem isCompact_codeClosure {E : ℂ → Set Ω} {ω : Ω} (h : CodeAdmissible
 
 open Classical in
 /-- The compact code as an element of `NonemptyCompacts ℂ`: the closure of the selected Gaussian
-rationals when admissible, and `{0}` on the exceptional set (steps2-r3:3166-3168). -/
+rationals when admissible, and `{0}` on the exceptional set. -/
 noncomputable def codeCompact (E : ℂ → Set Ω) (ω : Ω) : NonemptyCompacts ℂ :=
   if h : CodeAdmissible E ω then
     ⟨⟨codeClosure E ω, isCompact_codeClosure h⟩, h.1.closure⟩
@@ -350,7 +345,7 @@ theorem measurableSet_codeCompact_preimage_ballCover {E : ℂ → Set Ω}
     exact MeasurableSet.empty
 
 /-- The random compact code is Borel: `codeCompact E : Ω → NonemptyCompacts ℂ` is measurable for the Borel
-σ-algebra of the Hausdorff (Vietoris) topology (steps2-r3:3166-3169). -/
+σ-algebra of the Hausdorff (Vietoris) topology. -/
 theorem measurable_codeCompact [MeasurableSpace (NonemptyCompacts ℂ)]
     [BorelSpace (NonemptyCompacts ℂ)] {E : ℂ → Set Ω}
     (hE : ∀ z ∈ gaussRat, MeasurableSet (E z)) : Measurable (codeCompact E) := by
@@ -364,7 +359,7 @@ theorem measurable_codeCompact [MeasurableSpace (NonemptyCompacts ℂ)]
 
 omit [MeasurableSpace Ω] in
 /-- Recovery: if the membership events agree with rational membership in a bounded nonempty open `Λ`,
-the code is admissible and equals `closure Λ` (steps2-r3:3162-3163). -/
+the code is admissible and equals `closure Λ`. -/
 theorem codeCompact_eq_closure_of_membership {E : ℂ → Set Ω} {Λ : Set ℂ} (hΛo : IsOpen Λ)
     (hΛb : Bornology.IsBounded Λ) (hΛne : Λ.Nonempty) {ω : Ω}
     (hω : ∀ z ∈ gaussRat, ω ∈ E z ↔ z ∈ Λ) :
@@ -390,8 +385,8 @@ theorem codeCompact_eq_closure_of_membership {E : ℂ → Set Ω} {Λ : Set ℂ}
 
 /-- Almost-sure recovery of `closure (Λ ω)` for a random set `Λ : Ω → Set ℂ`, as for the random
 `Λ_t` of the paper. Almost surely `Λ ω` is open, bounded and nonempty (in the family assumptions:
-`Λ_t = int closure Λ_t`, boundedness, `0 ∈ Λ_t`; steps2-r3:936-943), and the countably many membership
-events agree with rational membership (steps2-r3:3158-3161). Then the code is `closure (Λ ω)` a.s. -/
+`Λ_t = int closure Λ_t`, boundedness, `0 ∈ Λ_t`), and the countably many membership
+events agree with rational membership. Then the code is `closure (Λ ω)` a.s. -/
 theorem ae_codeCompact_eq_closure {μ : Measure Ω} {E : ℂ → Set Ω} {Λ : Ω → Set ℂ}
     (hΛo : ∀ᵐ ω ∂μ, IsOpen (Λ ω)) (hΛb : ∀ᵐ ω ∂μ, Bornology.IsBounded (Λ ω))
     (hΛne : ∀ᵐ ω ∂μ, (Λ ω).Nonempty)

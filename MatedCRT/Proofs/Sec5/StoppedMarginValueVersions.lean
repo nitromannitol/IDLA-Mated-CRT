@@ -4,9 +4,9 @@ import MatedCRT.Proposed.PrestonAnalytic2008
 import MatedCRT.Proofs.Sec5.StoppedMarginContinuousDecoder
 
 /-!
-# Borel versions of finite real infima on a Borel relation (steps2-r3:3374-3388)
+# Borel versions of finite real infima on a Borel relation
 
-Source: `notes/wpn-steps2/steps2-r3.tex`, lines 3374-3388 (sha256 `88dfb1f9…`), the countable Borel-version passage that
+The countable Borel-version passage that
 produces the continuous surplus `f(x) = v_ρ(μ,t)(x) + tG_ρ(0,x)` on `A = marginDomain s (ρ/2)`.
 
 Let `S ⊆ X × Y` be a measurable relation between Polish spaces (`X` the circle-array state, `Y` the continuous-function
@@ -65,7 +65,7 @@ theorem nullMeasurable_of_nullMeasurableSet_preimage_Iio {Z : Type} [MeasurableS
   intro B hB
   exact hle B hB
 
-/-- The compactness of `marginDomain s R = closedBall 0 R ∩ {x | s ≤ |x|}` (the domain `A` of steps2-r3 has `R = ρ/2`). -/
+/-- The compactness of `marginDomain s R = closedBall 0 R ∩ {x | s ≤ |x|}` (the domain `A` has `R = ρ/2`). -/
 theorem marginDomain_compactSpace (s R : ℝ) : CompactSpace (marginDomain s R) := by
   have hc : IsCompact (marginDomain s R) :=
     (isCompact_closedBall (0 : ℂ) R).inter_right (isClosed_le continuous_const continuous_norm)

@@ -3,7 +3,7 @@ import MatedCRT.Proofs.Sec5.StoppedSurplusComparison
 import MatedCRT.Proofs.Measurability.EnvSigma
 
 /-!
-# Lemma 5.3 on `V^ε(Λ_t)` (E-c1-5): the stopped surplus lower bound from three estimates on the obstacle surplus
+# Lemma 5.3 on `V^ε(Λ_t)`: the stopped surplus lower bound from three estimates on the obstacle surplus
 
 Let `A = V^ε(Λ_t)`, `D = Λ^ε_t`, `B = V^ε(B_ρ) \ V^ε(∂B_ρ)` and let `v^ε_t = w̃^ε_t + (t ε⁻¹) g^ε_B(0, ·)` be the obstacle
 surplus (the stopped odometer, eq:stopped-odometer-de) of Section 4. By Lemma 4.4 (corrected), `Δ w̃^ε_t = (deg)⁻¹` on
@@ -18,7 +18,7 @@ Hence `StoppedMeanValueSurplusLowerStep` (with constant `c/2`) follows from:
 Heuristically, `ε v^ε_t` converges uniformly to the continuum odometer `t G_{B_ρ}(0, ·) + w̄_t` (Theorem 4.1 and
 Lemma 3.3), which vanishes off `Λ_t` and is positive on `Λ_t` (eq:strictly-above-in-interior); and `A \ D` is contained
 in a thin neighbourhood of `∂Λ_t`, whose Green potential is small (Lemma 3.4). These three estimates are not in the
-paper (E-c1-5).
+paper.
 
 * `stoppedMeanValueSurplusLower_of_steps : StoppedMeanValueSurplusLowerStep 𝒮` from the three steps.
 -/
@@ -30,7 +30,7 @@ open scoped ENNReal NNReal
 
 /-- **Step (Lemma 5.3 on `V^ε(Λ_t)`, interior).** There is a `σ(h, η)`-measurable `c > 0` such that, on `{t < T}`,
 with probability tending to one, `v^ε_t(a) = w̃^ε_t(a) + (t ε⁻¹) g^ε_{B_ρ}(0, a) ≥ c ε⁻¹` for all `a ∈ V^ε(Λ_t)` with
-`dist(η(a), ∂ V̄^ε(Λ_t)) > δ`. Not in the paper (E-c1-5). -/
+`dist(η(a), ∂ V̄^ε(Λ_t)) > δ`. Not in the paper. -/
 def StoppedSurplusInteriorStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   DiscreteLaplacianBoundCorrectedStmt 𝒮 → MaximumPrincipleStmt 𝒮 →
   ConvergenceDivisibleStmt 𝒮 → UniformConvergenceGreenKernelStmt 𝒮 → ExitTimeUpperBoundStmt 𝒮 →
@@ -48,7 +48,7 @@ def StoppedSurplusInteriorStep (𝒮 : SpaceFillingSLEModel) : Prop :=
           t / ε * greenKernel (S.mult ε ω) (ballInterior ε (S.η ω) ρ) 0 a}
 
 /-- **Step (Lemma 5.3 on `V^ε(Λ_t)`, exterior).** For every `κ > 0`, on `{t < T}`, with probability tending to one,
-`v^ε_t(x) = w̃^ε_t(x) + (t ε⁻¹) g^ε_{B_ρ}(0, x) ≤ κ ε⁻¹` for all `x ∉ V^ε(Λ_t)`. Not in the paper (E-c1-5). -/
+`v^ε_t(x) = w̃^ε_t(x) + (t ε⁻¹) g^ε_{B_ρ}(0, x) ≤ κ ε⁻¹` for all `x ∉ V^ε(Λ_t)`. Not in the paper. -/
 def StoppedSurplusExteriorStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   DiscreteLaplacianBoundCorrectedStmt 𝒮 → MaximumPrincipleStmt 𝒮 →
   ConvergenceDivisibleStmt 𝒮 → UniformConvergenceGreenKernelStmt 𝒮 → ExitTimeUpperBoundStmt 𝒮 →
@@ -64,7 +64,7 @@ def StoppedSurplusExteriorStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 
 /-- **Step (Lemma 5.3 on `V^ε(Λ_t)`, boundary layer).** For every `κ > 0`, on `{t < T}`, with probability tending to
 one, the Green potential in `A = V^ε(Λ_t)` of the vertices of `A` outside the discrete cluster `Λ^ε_t` is at most
-`κ ε⁻¹`: `∑_{b ∈ A \ Λ^ε_t} g^ε_A(a, b) / deg(b) ≤ κ ε⁻¹` for all `a ∈ A`. Not in the paper (E-c1-5). -/
+`κ ε⁻¹`: `∑_{b ∈ A \ Λ^ε_t} g^ε_A(a, b) / deg(b) ≤ κ ε⁻¹` for all `a ∈ A`. Not in the paper. -/
 def StoppedLayerPotentialStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   DiscreteLaplacianBoundCorrectedStmt 𝒮 → MaximumPrincipleStmt 𝒮 →
   ConvergenceDivisibleStmt 𝒮 → UniformConvergenceGreenKernelStmt 𝒮 → ExitTimeUpperBoundStmt 𝒮 →

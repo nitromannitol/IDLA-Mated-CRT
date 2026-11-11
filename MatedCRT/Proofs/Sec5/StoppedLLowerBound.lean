@@ -2,9 +2,9 @@ import MatedCRT.Proofs.Sec5.LLowerBound.OfInputs
 import MatedCRT.Proofs.Sec5.IDLALowerBound.Stopped
 
 /-!
-# Lemma 5.4 on `V^ε(Λ_t)` (E-c1-5)
+# Lemma 5.4 on `V^ε(Λ_t)`
 
-The proof of Lemma 5.4 (corrected.tex, proof of Lemma 5.4; formalized by x1 as `lLowerBound_of_adjacentCellsMeet`,
+The proof of Lemma 5.4 (corrected.tex, proof of Lemma 5.4; formalized as `lLowerBound_of_adjacentCellsMeet`,
 Proofs/Sec5/LLowerBound) uses only three properties of the domain `A = Λ^ε_t`: `A` is a finite subset of
 `V^ε(B_ρ) \ V^ε(∂B_ρ)`, it lies in `V^ε(B_ρ)`, and the marked points `η(a)`, `a ∈ A`, lie in `B_ρ`. On the event
 `{t < T}` the vertex set `V^ε(Λ_t)` of the cells meeting the harmonic ball has the same three properties as soon as
@@ -48,7 +48,7 @@ theorem mem_ballInterior_of_cell_subset {ε : ℝ} {η : ℝ → ℂ} {ρ : ℝ}
 end StoppedLLowerBound
 
 open StoppedLLowerBound in
-/-- **Lemma 5.4 on `V^ε(Λ_t)`** (`StoppedLLowerBoundStep`, E-c1-5) from the cited Lemmas 2.9, 2.15 and 2.16, with
+/-- **Lemma 5.4 on `V^ε(Λ_t)`** (`StoppedLLowerBoundStep`) from the cited Lemmas 2.9, 2.15 and 2.16, with
 `q = 1/4`: the proof of Lemma 5.4 applied to the domain `V^ε(Λ_t) ⊆ V^ε(B_ρ) \ V^ε(∂B_ρ)`. -/
 theorem stoppedLLowerBound_of_inputs (𝒮 : SpaceFillingSLEModel)
     (h215 : GreenFunctionCrudeBoundStmt 𝒮) (h216 : GreenKernelLowerBoundStmt 𝒮)

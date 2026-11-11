@@ -3,10 +3,9 @@ import MatedCRT.Proofs.Sec5.StoppedSurplusSteps
 import MatedCRT.Proofs.Sec7.OdometerBoundMass.Laplacian
 
 /-!
-# Layer-potential reduction for `StoppedLayerPotentialStep` (steps2-r2, Section 9)
+# Layer-potential reduction for `StoppedLayerPotentialStep`
 
-Source: `notes/wpn-steps2/steps2-r2.tex`, target proof lines 3617-3744 (finite-potential domination and the
-outer-probability reduction), with its inputs at 3371-3615. The declaration reduced here is
+The target is the finite-potential domination and the outer-probability reduction, with its inputs as named hypotheses. The declaration reduced here is
 `MatedCRT.StoppedLayerPotentialStep` (`Proofs/Sec5/StoppedSurplusSteps.lean:68`). Its layer sum is
 `∑ᶠ b ∈ A \ D, greenKernel m A a b` with `greenKernel = greenFn / mdeg`: there is no further division by degree.
 
@@ -14,12 +13,11 @@ Proved here, with no hypothesis beyond those displayed:
 
 * Part 1 (`sum_greenKernel_le_four_mul_potential`, `finsum_greenKernel_le_four_mul_potential`): the finite Green
   comparison `∑_{b ∈ E} g_A(a,b) ≤ 4 ∑_{b ∈ S} f(b) G_D(a,b)` for finite `A ⊆ D`, `E ⊆ S`, when the uncovered-cell
-  cutoff satisfies `f ≥ 1/4` on `E` (steps2-r2 eq:layercutoff). It uses domain monotonicity of the kernel
+  cutoff satisfies `f ≥ 1/4` on `E`. It uses domain monotonicity of the kernel
   (`greenKernel_mono_of_finite`), positive degree (`greenKernel ≤ greenFn`) and `greenFn ≥ 0`.
-* Part 2 (`tendsToOneOn_layer_of_domination`): the `r`-then-`n`-then-`ε` outer-probability argument (steps2-r2
-  3700-3744), with the cutoff, core, Harnack and fixed-center inputs entering only as named hypotheses.
+* Part 2 (`tendsToOneOn_layer_of_domination`): the `r`-then-`n`-then-`ε` outer-probability argument, with the cutoff, core, Harnack and fixed-center inputs entering only as named hypotheses.
 
-Part 3 defines the discrete potential `layerPotential` (`H_{ε,n}` of steps2-r2 3617-3625, in the normalization and
+Part 3 defines the discrete potential `layerPotential` (`H_{ε,n}`, in the normalization and
 sum set of `IntegralConvergenceGreenFunctionStmt`) and four residual Steps: `LayerCutoffCoreStep`,
 `LayerFiniteCenterHarnackStep`, `LayerExitMassSmallStep`, `LayerFixedCenterStep`. Each is stated with the six
 antecedents of `StoppedLayerPotentialStep` as premises, as in `StoppedSurplusSteps.lean`. None is proved here.
@@ -33,7 +31,7 @@ open scoped ENNReal
 /-! ### Part 1: finite Green comparison -/
 
 /-- **Part 1 (finite Green comparison, `Finset` form).** For finite domains `A ⊆ D` and finite vertex sets `E ⊆ S`,
-with `f ≥ 0` on `S` and `f ≥ 1/4` on `E` (the uncovered-cell cutoff, steps2-r2 eq:layercutoff),
+with `f ≥ 0` on `S` and `f ≥ 1/4` on `E` (the uncovered-cell cutoff),
 `∑_{b ∈ E} g_A(a,b) ≤ 4 ∑_{b ∈ S} f(b) G_D(a,b)`, where `g = G / mdeg` is the degree-normalized kernel.
 Positive degree gives `g_D ≤ G_D`; domain monotonicity gives `g_A ≤ g_D`; `G_D ≥ 0`. -/
 theorem sum_greenKernel_le_four_mul_potential {m : ℤ → ℤ → ℕ} {A D : Set ℤ}
@@ -83,7 +81,7 @@ theorem finsum_greenKernel_le_four_mul_potential {m : ℤ → ℤ → ℕ} {A D 
 
 /-- **Part 2 (outer-probability reduction, `r`-then-`n`-then-`ε`).** Notation: `A ε ω` is the vertex set
 `V^ε(Λ_t)`, `L ε ω a` the layer sum `∑_{b ∈ E} g_A(a,b)`, `G ε n r` the good event of the cutoff, core, Harnack and
-exit-time components at level `(n, r)`, `Z r ω` the small local potential (the first term of steps2-r2 3700-3712,
+exit-time components at level `(n, r)`, `Z r ω` the small local potential (the first term,
 in `ℝ≥0∞` since the exit-time bound is an `ℝ≥0∞` inequality) and `Q ε n r ω` the finite-center potential.
 
 Named hypotheses (none is the target estimate):
@@ -155,7 +153,7 @@ theorem tendsToOneOn_layer_of_domination {Ω : Type*} [MeasurableSpace Ω] (P : 
 
 /-! ### Part 3: the discrete potential and the residual Steps -/
 
-/-- The discrete potential `H^ε_f(a) = ε ∑_{x ∈ V^ε(B_ρ)} G_{B_ε}(a, x) f(z_x)` of steps2-r2 3617-3625 (`H_{ε,n}`
+/-- The discrete potential `H^ε_f(a) = ε ∑_{x ∈ V^ε(B_ρ)} G_{B_ε}(a, x) f(z_x)` (`H_{ε,n}`
 with `f = f_n`). It uses the sum set and the Green domain of `IntegralConvergenceGreenFunctionStmt` (with `z = 0`,
 `r = ρ`): the domain `interiorCellVertices ε η (ball 0 ρ) = ballInterior ε η ρ` is `B_ε`, and `greenFn` is the
 unnormalized expected number of visits (it vanishes off the domain). -/
@@ -164,11 +162,10 @@ noncomputable def layerPotential {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTE
   ε * ∑' x : cellVertices ε (S.η ω) (ball 0 ρ),
     greenFn (S.mult ε ω) (interiorCellVertices ε (S.η ω) (ball 0 ρ)) a x * f ω (vertexPoint ε (S.η ω) x)
 
-/-- **Residual Step (cutoffs and core; steps2-r2 3469-3586).** Under the six antecedents of
+/-- **Residual Step (cutoffs and core).** Under the six antecedents of
 `StoppedLayerPotentialStep`, there are cutoffs `f_n : Ω → ℂ → ℝ` with values in `[0, 1]`, measurable in the
 environment `σ`-algebra, Hölder on `B_ρ`, with `f_n → 0` `μ_ω`-almost everywhere for `ω ∈ {t < T}`; and for each
-`η > 0` some `N` gives, for `n ≥ N`, `P(F ∩ {∃ b ∈ E^ε_t, f_n(z_b) < 1/4}) < η` for all small `ε` (eq:layercutoff:
-uncovered cells lie where the cutoff is at least `1/4`). Not proved: the earlier-time full-mass core and the
+`η > 0` some `N` gives, for `n ≥ N`, `P(F ∩ {∃ b ∈ E^ε_t, f_n(z_b) < 1/4}) < η` for all small `ε` (uncovered cells lie where the cutoff is at least `1/4`). Not proved: the earlier-time full-mass core and the
 measurable cutoffs are an unimplemented component. -/
 def LayerCutoffCoreStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   DiscreteLaplacianBoundCorrectedStmt 𝒮 → MaximumPrincipleStmt 𝒮 →
@@ -189,7 +186,7 @@ def LayerCutoffCoreStep (𝒮 : SpaceFillingSLEModel) : Prop :=
         {ω | ∃ b ∈ cellVertices ε (S.η ω) (Λ ω t) \ matedDiscreteCluster (S.mult ε ω) ε (S.η ω) ρ t,
           f n ω (vertexPoint ε (S.η ω) b) < 1 / 4}) < η
 
-/-- **Residual Step (finite-center Harnack; steps2-r2 3635-3698, eq:potentialharnack 3650-3680).** Under the six
+/-- **Residual Step (finite-center Harnack).** Under the six
 antecedents, for each small deterministic `r` there are finitely many centers `Y ⊆ B_{ρ/2}` whose `r/4`-balls cover
 `B̄_{2ρ/5}`, a constant `p ∈ (0, 1/2]`, and good events `G_ε` with `P(F ∩ G_εᶜ) → 0`, such that on `F ∩ G_ε` every
 layer vertex `a` has a centre `y ∈ Y` with `|z_a - y| < r/4`, `a ∈ V^ε(B_{3r}(y))`, and for every cutoff-type
@@ -217,7 +214,7 @@ def LayerFiniteCenterHarnackStep (𝒮 : SpaceFillingSLEModel) : Prop :=
                   expectedExitTime (S.mult ε ω) (interiorCellVertices ε (S.η ω) (ball y (3 * r))) a +
                 ENNReal.ofReal p⁻¹ * ENNReal.ofReal (layerPotential S ρ ε g ω (vertexOf ε (S.η ω) y))
 
-/-- **Residual Step (logarithmic potential of the exit masses; steps2-r2 3588-3615, eq:logsmall).** Under the six
+/-- **Residual Step (logarithmic potential of the exit masses).** Under the six
 antecedents, the exit-time mass `𝓜(B_{4r}(z))` (`largestExitTimeRV`) is uniformly small over the centres `z ∈ B_ρ`
 in probability as `r → 0`: for every finite `K ≠ ∞`, `c > 0`, `η > 0`, `s > 0` there is `r < s` with
 `P(F ∩ {c < K · sup_{z ∈ B_ρ} 𝓜(B_{4r}(z))}) < η`. Not proved: the cone ball-mass input is not yet an `External`
@@ -234,7 +231,7 @@ def LayerExitMassSmallStep (𝒮 : SpaceFillingSLEModel) : Prop :=
     S.P ({ω | t < clusterExitTime (Λ ω) ρ} ∩
       {ω | c < K * ⨆ z ∈ ball (0 : ℂ) ρ, largestExitTimeRV (S.μ ω) (ball z (4 * r))}) < η
 
-/-- **Residual Step (fixed-centre convergence and continuum limit; steps2-r2 3688-3744, eq:integralhyp).** Under the
+/-- **Residual Step (fixed-centre convergence and continuum limit).** Under the
 six antecedents and `MepsScalingInput`, for cutoffs `f_n` as in `LayerCutoffCoreStep` and finitely many fixed centres
 `Y ⊆ B_ρ`, the finite-centre potential `∑_{y ∈ Y} H_{f_n}(a^ε_y)` is small in probability for large `n` and small
 `ε`: for every `K ≠ ∞`, `c > 0`, `η > 0` there is `N` with `P(F ∩ {c < K ∑_{y ∈ Y} H_{f_n}(a^ε_y)}) < η` for
@@ -300,7 +297,7 @@ theorem tendsto_ofReal_const_mul_rpow (C p : ℝ) (hp : 0 < p) :
   exact h2
 
 /-- The exit-time clause of `ExitTimeUpperBoundStmt` (clause 2) at mesh `ε`: for every disk `D ⊆ B_ρ` and every vertex
-`a` of its cells, `E_a[τ_{int V^ε(D)}] ≤ C ε⁻¹ 𝓜(B_{ε^α}(D))` (steps2-r2 eq:exithyp). -/
+`a` of its cells, `E_a[τ_{int V^ε(D)}] ≤ C ε⁻¹ 𝓜(B_{ε^α}(D))`. -/
 def layerExitGood {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ρ α C ε : ℝ) : Set Ω :=
   {ω | ∀ D : Set ℂ, D ⊆ ball 0 ρ → ∀ a ∈ cellVertices ε (S.η ω) D,
     expectedExitTime (S.mult ε ω) (interiorCellVertices ε (S.η ω) D) a ≤

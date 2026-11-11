@@ -7,24 +7,21 @@ import Mathlib.MeasureTheory.Measure.Continuity
 import Mathlib.MeasureTheory.Measure.NullMeasurable
 
 /-!
-# Deterministic core of the stopped interior geometry (steps2 §5, `StoppedInteriorGeometryStep`)
+# Deterministic core of the stopped interior geometry (`StoppedInteriorGeometryStep`)
 
-Source: `notes/wpn-steps2/steps2.tex` lines 1509–1658 (Astra written proof); independent audit
-`notes/wpn-steps2/AUDIT-steps2.md`, target 7 (CORRECT as declared).
 Notation of the paper: `K = closure L`, `K^d = cthickening d K = {x | d(x, K) ≤ d}`, `B_δ(z)` the open ball,
 `L^c` the complement; all distances are the real `infDist`.
 
 Contents (proved; no hypotheses beyond those displayed):
-* `exists_regularOpen_core` (steps2 eq:regularcore): the compact core of a bounded regular open set.
+* `exists_regularOpen_core`: the compact core of a bounded regular open set.
 * `smallCells_geometry`: the small-cell consequence for the cell union `fillCells ε η (cellVertices ε η L)`.
-* `GeoBad`, `geoBad_of_bad_vertex` (eq:geobad): failure of the conclusion forces the obstruction `GeoBad`.
+* `GeoBad`, `geoBad_of_bad_vertex`: failure of the conclusion forces the obstruction `GeoBad`.
 * `eventually_not_geoBad`: on a regular open core the obstructions at meshes `1/(n+1)` eventually vanish.
 * `geoBad_mono`: monotonicity of the obstruction in the thickening radius.
 * `tendsToOneOn_of_bad_null`: the outer-probability passage (`TendsToOneOn`) from a decreasing family of
   null-measurable obstructions with null intersection, a containment, and the cell-size probability input.
 
-`smallCells_geometry` uses only the cell-diameter hypothesis `hdist`; continuity, properness and surjectivity of `η`
-(steps2 lines 1542–1562) enter only through the cell-size input that produces `hdist`.
+`smallCells_geometry` uses only the cell-diameter hypothesis `hdist`; continuity, properness and surjectivity of `η` enter only through the cell-size input that produces `hdist`.
 -/
 
 namespace MatedCRT
@@ -32,7 +29,7 @@ namespace StoppedInteriorGeometry
 
 open Metric Set Filter Topology MeasureTheory
 
-/-- The obstruction of steps2 (eq:geobad) for `K = closure L` at thickening `d` and fixed `δ`: some `z ∈ K^d` has
+/-- The obstruction for `K = closure L` at thickening `d` and fixed `δ`: some `z ∈ K^d` has
 `B_δ(z) ⊆ K^d` and `d(z, L^c) < 3δ/4`. -/
 def GeoBad (L : Set ℂ) (δ d : ℝ) : Prop :=
   ∃ z : ℂ, z ∈ cthickening d (closure L) ∧ ball z δ ⊆ cthickening d (closure L) ∧ infDist z Lᶜ < 3 * δ / 4
@@ -43,7 +40,7 @@ theorem infDist_le_of_mem_cthickening {E : Set ℂ} {x : ℂ} {d : ℝ} (hd : 0 
   rw [Metric.mem_cthickening_iff] at h
   exact ENNReal.toReal_le_of_le_ofReal hd h
 
-/-- **Regular-open compact core** (steps2 eq:regularcore). Let `L ⊆ ℂ` be a nonempty bounded regular open set and
+/-- **Regular-open compact core**. Let `L ⊆ ℂ` be a nonempty bounded regular open set and
 `K = closure L`. For `δ > 0` there is `d₀ > 0` such that `z ∈ K^d`, `B_δ(z) ⊆ K^d` and `0 < d < d₀` imply
 `d(z, L^c) ≥ 3δ/4`. Proof: a failing sequence has a convergent subsequence; the δ-ball of the limit lies in `K`,
 hence in `int K = L`, which forces `d(·, L^c) ≥ δ` at the limit, contradicting the bounds along the sequence. -/
@@ -119,7 +116,7 @@ theorem dist_le_of_diam_le {η : ℝ → ℂ} (hη : Continuous η) {ε d : ℝ}
   exact (dist_le_diam_of_mem hb hx hy).trans hk
 
 /-- A ball around `z ∈ U` of radius `δ` whose centre lies at distance `> δ` from `∂U` lies in `U`
-(steps2 lines 1549–1551: a segment from `z` to `U^c` would first cross `∂U`). -/
+(a segment from `z` to `U^c` would first cross `∂U`). -/
 theorem ball_subset_of_infDist_frontier {U : Set ℂ} {z : ℂ} {δ : ℝ} (hδ : 0 < δ) (hz : z ∈ U)
     (hfr : δ < infDist z (frontier U)) : ball z δ ⊆ U := by
   have hz_int : z ∈ interior U := by
@@ -148,7 +145,7 @@ theorem ball_subset_of_infDist_frontier {U : Set ℂ} {z : ℂ} {δ : ℝ} (hδ 
   exact hsub'.trans interior_subset
 
 /-- Every point of a cell meeting `L` lies within `d` of that cell's meeting point, so `U = fillCells` lies in `K^d`
-(steps2 lines 1542–1562, the inclusion `U ⊆ K^d`). -/
+(the inclusion `U ⊆ K^d`). -/
 theorem fillCells_subset_cthickening {η : ℝ → ℂ} {ε d : ℝ} {L : Set ℂ}
     (hdist : ∀ k ∈ cellVertices ε η L, ∀ x ∈ cell ε η k, ∀ y ∈ cell ε η k, dist x y ≤ d) :
     fillCells ε η (cellVertices ε η L) ⊆ cthickening d (closure L) := by
@@ -158,7 +155,7 @@ theorem fillCells_subset_cthickening {η : ℝ → ℂ} {ε d : ℝ} {L : Set �
   obtain ⟨x, hxc, hxL⟩ := id hk
   exact mem_cthickening_of_dist_le y x d (closure L) (subset_closure hxL) (hdist k hk y hyk x hxc)
 
-/-- **Small-cell geometry** (steps2 lines 1542–1562, deterministic). Let `L` be a bounded regular open set and `ε`,
+/-- **Small-cell geometry** (deterministic). Let `L` be a bounded regular open set and `ε`,
 `δ`, `r` positive reals. There is `d₀ > 0` such that for `0 < d < min(d₀, δ/4, r)`, provided every cell meeting `L`
 has pointwise diameter at most `d`, each selected vertex `a` (cell meets `L`) whose point `z_a = η(εa)` satisfies
 `d(z_a, ∂U) > δ`, where `U = ⋃_{k ∈ V^ε(L)} H_k`, has `d(x, L^c) ≥ δ/2` and `|x − z_a| < r` for every `x ∈ H_a`. -/
@@ -187,7 +184,7 @@ theorem smallCells_geometry {η : ℝ → ℂ} {ε : ℝ} {L : Set ℂ} (hε : 0
     rw [dist_comm] at htri
     exact ⟨by linarith, lt_of_le_of_lt hdistz hdr⟩
 
-/-- **Failure forces the obstruction** (steps2 lines 1631–1647, the deterministic containment). If the conclusion of
+/-- **Failure forces the obstruction** (the deterministic containment). If the conclusion of
 `smallCells_geometry` fails at a selected vertex `a` and a point `x ∈ H_a`, then `GeoBad L δ d` holds, provided
 `d < δ/4`, `d < r` and the cell-diameter bound at `d`. -/
 theorem geoBad_of_bad_vertex {η : ℝ → ℂ} {ε : ℝ} {L : Set ℂ} (hε : 0 < ε) {δ r d : ℝ} (hδ : 0 < δ)
@@ -220,7 +217,7 @@ theorem geoBad_mono {L : Set ℂ} {δ d d' : ℝ} (hdd : d ≤ d') (h : GeoBad L
   obtain ⟨z, hz, hball, hlt⟩ := h
   exact ⟨z, cthickening_mono hdd _ hz, hball.trans (cthickening_mono hdd _), hlt⟩
 
-/-- **Null intersection on a regular open core** (steps2 lines 1611–1619). For a bounded regular open `L` and
+/-- **Null intersection on a regular open core**. For a bounded regular open `L` and
 `δ > 0`, the obstructions at meshes `1/(n+1)` eventually fail: this is the compact-core lemma read at `d = 1/(n+1)`. -/
 theorem eventually_not_geoBad {L : Set ℂ} (hreg : interior (closure L) = L)
     (hbdd : Bornology.IsBounded L) {δ : ℝ} (hδ : 0 < δ) :
