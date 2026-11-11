@@ -2,10 +2,10 @@ import MatedCRT.FirstPass.S4S6c.Uniform68Point
 import MatedCRT.FirstPass.S4S6c.Uniform68Local
 
 /-!
-# The local test `hloc` at one sphere-band start vertex, from the probabilistic events (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# The local test `hloc` at one sphere-band start vertex, from the probabilistic events
 
 `hloc_band_point_events` is `Uniform68Point.hloc_band_point` with its two event inputs supplied by the Draft event forms
-that the worker q1 proves uniform in scale and vertex (`Uniform68Point` inputs `hGreenLow`, `hdraft`):
+that is proved uniform in scale and vertex (`Uniform68Point` inputs `hGreenLow`, `hdraft`):
 
 * `hG`: the Green event of Draft Lemma 2.16 at one `ω` (the event `G` of `FirstPass/S6f.lean`, `draft68_events_probTendsToOne`),
   turned into `hGreenLow` by `Uniform68Local.greenLow_of_event` at the radius `R/8`;

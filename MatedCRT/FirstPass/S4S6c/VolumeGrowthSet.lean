@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.RescaledVolumeGrowth
 
 /-!
-# Measurability of the volume-growth event of measures (q2, task fp-S4S6c, cone-scaling repair)
+# Measurability of the volume-growth event of measures (cone-scaling repair)
 
 For each radius `R`, the set `{ν : Measure ℂ | ∃ βminus βplus, VolumeGrowth ν R βminus βplus}` is measurable for the
 σ-algebra of `Measure ℂ`. The proof is a countable reduction: radii are rational, centres run over a countable dense

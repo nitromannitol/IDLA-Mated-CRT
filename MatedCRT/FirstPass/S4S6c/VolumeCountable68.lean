@@ -1,7 +1,7 @@
 import MatedCRT.Defs.Notation
 
 /-!
-# Countable reduction of the uniform volume lower bound (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# Countable reduction of the uniform volume lower bound
 
 The uniform lower bound of `VolumeGrowthStmt` (Draft Lemma 2.8-type input, `Draft/Section2.lean:121`) says that at scale `δ`,
 for all centres `z ∈ B_{1-δ}`, the LQG mass of the ball is at least `δ^{βm}` (with polynomially high probability). The

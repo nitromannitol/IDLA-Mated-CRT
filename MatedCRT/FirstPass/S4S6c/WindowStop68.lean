@@ -2,14 +2,14 @@ import MatedCRT.FirstPass.S4S6c.SuccessiveExitStop
 import MatedCRT.Proofs.WalkPotential.ExitBeforeHit
 
 /-!
-# Window induction for the printed Lemma 6.8 (q2, task fp-S4S6c; LEMMA68 C3, the windows stay in `U`)
+# Window induction for the printed Lemma 6.8 (the windows stay in `U`)
 
 The successive exit-time tests are `τ (N+1) x = τ N x + vExitTime (W (x (τ N x))) (pathShift (τ N x) x)`.
 Pure induction on the test index, with no probability: if the test starts of the walk `x` (on a set `Good`) are finite,
 each test centre `x k` is available (`x k ∈ Y`), and every available window lies in `U` (`W y ⊆ U` for `y ∈ Y`), then
 the walk stays in `U` at every time before the end of the `j`-th test, and before the exit of `U` after the `j`-th test
 window. This is the availability-and-containment conclusion `hwin` of `TailBound68.printed68_tail_bound`, derived from
-geometric inputs that are only needed on `Good` (the legal trajectories of quenched probability one, LEMMA68 C2).
+geometric inputs that are only needed on `Good` (the legal trajectories of quenched probability one).
 -/
 
 open MeasureTheory Set Function

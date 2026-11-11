@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S4S6c.Uniform68Env
 import MatedCRT.FirstPass.S4S6c.WindowStart68
 
 /-!
-# The edge-multiplicity hypothesis of the window route of Lemma 6.8 (z10, fp-S4S6c-window-hmult)
+# The edge-multiplicity hypothesis of the window route of Lemma 6.8
 
 `exitQ_core_ae_window` (ShellOrderWindow68.lean:71) takes the binder `hmult`: almost surely, for the given `ε`, the edge
 multiplicity `S.mult ε ω` is locally finite and has consecutive adjacency `m k (k+1) ≠ 0`. This file discharges that
@@ -15,7 +15,7 @@ binder for a valid environment:
 * `exitQ_core_ae_window_noMult`: `exitQ_core_ae_window` with `hmult` removed from the binders.
 
 The explicit `0 < γ < 2` hypotheses are those of the valid environment statements (ae_envInputs, ae_adjacent); they are
-not fields of `MatedCRTEnv.IsValid`, see the report. Terminology: edge multiplicity of the mated-CRT map (Duplantier-
+not fields of `MatedCRTEnv.IsValid`. Terminology: edge multiplicity of the mated-CRT map (Duplantier-
 Sheffield mating of trees), local finiteness (Armitage-Gardiner).
 -/
 
@@ -28,7 +28,7 @@ namespace Lemma68WindowMult
 
 open MatedCRT.Lemma68WindowRf MatedCRT.Lemma68ShellOrderWindow
 
-/-- **The `hmult` binder of the window route, discharged (fp-S4S6c-window-hmult).** For a valid environment `S` and
+/-- **The `hmult` binder of the window route, discharged.** For a valid environment `S` and
 `ε > 0`, almost surely the edge multiplicity `S.mult ε ω` is locally finite and has consecutive adjacency. The
 conjunct on consecutive adjacency holds for every `ω` (field `mult_succ_ne_zero`); local finiteness uses the
 almost-sure properness and cell-adjacency of `Uniform68Env.ae_envInputs`. -/
@@ -40,7 +40,7 @@ theorem hmult_of_valid68 {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0 < γ
   obtain ⟨hlf, hsucc, -⟩ := Uniform68Env.envAt S hε ω hω.1 hω.2.1 hω.2.2
   exact ⟨hlf, hsucc⟩
 
-/-- **`exitQ_core_ae_window` without the `hmult` binder (fp-S4S6c-window-hmult).** The binder `hmult` is discharged
+/-- **`exitQ_core_ae_window` without the `hmult` binder.** The binder `hmult` is discharged
 by `hmult_of_valid68`; every other binder and the conclusion are those of `exitQ_core_ae_window`
 (ShellOrderWindow68.lean:71-94), unchanged. -/
 theorem exitQ_core_ae_window_noMult {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
@@ -68,7 +68,7 @@ theorem exitQ_core_ae_window_noMult {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (h�
   exitQ_core_ae_window hγ0 hγ2 S hS ε ρ s₀ ζ q0 r c₀ C hε hs₀ i E hζ hζ1 hq0 hq1 hr hr1 hrz hrρ hRA
     hmesh hstart htest hone (hmult_of_valid68 hγ0 hγ2 S hS hε)
 
-/-- **`exitQ_core_ae_window_noMult` with the guarded start cell discharged (fp-S4S6c-windowmult-guard).** The binder
+/-- **`exitQ_core_ae_window_noMult` with the guarded start cell discharged.** The binder
 `hstart` is discharged by `Lemma68WindowStart.hstart_fullAdm_ae` (WindowStart68.lean:58), the FullAdm-guarded start-cell
 fact proved from the continuity of `η` and `cell_meets_frontier_thickening`. Every other binder and the conclusion are
 those of `exitQ_core_ae_window_noMult`, unchanged. -/

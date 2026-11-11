@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.Uniform68Local
 
 /-!
-# The selected good radius of a band centre (q2, task fp-S4S6c-envscaling-6-7-6-8, config-level assembly)
+# The selected good radius of a band centre (config-level assembly)
 
 The config-level test `Uniform68.config_exit_lower_bound` takes a radius `rad y` for each band centre `ctr y`, with
 `rad y` a good seven-adic radius (`IsGoodAnnulusEvent`, Defs/Setting.lean:333). The good-annulus cover event

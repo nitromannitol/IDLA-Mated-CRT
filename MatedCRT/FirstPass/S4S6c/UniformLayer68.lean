@@ -3,13 +3,13 @@ import MatedCRT.FirstPass.S4S6c.WindowStop68
 import MatedCRT.FirstPass.S4S6c.GreenTest68
 
 /-!
-# From the sup form to the uniform form of the printed Lemma 6.7 (q2, task fp-S4S6c; LEMMA68.md "Proof of Lemma 6.7")
+# From the sup form to the uniform form of the printed Lemma 6.7 ("Proof of Lemma 6.7")
 
-LEMMA68 (2) bounds the walker that starts on the layer `V(∂(K+B_{r/2}))`: it stays in `A` until it leaves `U = V \ Θ`
+The layer estimate bounds the walker that starts on the layer `V(∂(K+B_{r/2}))`: it stays in `A` until it leaves `U = V \ Θ`
 with probability at most `1/2`. The uniform target starts anywhere in `cl Θ` and asks for a visit of `W \ (S ∪ Θ)` before
-the exit of `W`. The reduction (LEMMA68.md, "Proof of Lemma 6.7"): the walker from `cl Θ` first hits the layer `L` at a
+the exit of `W`. The reduction (printed "Proof of Lemma 6.7"): the walker from `cl Θ` first hits the layer `L` at a
 time `T` before leaving `W` (geometric crossing, the input `hcross` below), and the strong Markov property at `T` applied
-to LEMMA68 (2) (the input `hLayer`, with `A = S \ Θ`) bounds the probability that the walk stays in `S ∪ Θ` before leaving
+to the layer estimate (the input `hLayer`, with `A = S \ Θ`) bounds the probability that the walk stays in `S ∪ Θ` before leaving
 `W`. This file proves the abstract reduction; the geometric crossing and the layer bound are its inputs.
 
 Here `layerHit L` is the first visit time of a path to `L` (`∞` if never), and the strong Markov step is
@@ -28,7 +28,7 @@ open MatedCRT.SuccessiveExitStop MatedCRT.WindowStop68
 
 open Classical in
 /-- The first visit time `inf {n ≥ 0 : x n ∈ L}` of a path to the set `L` of cell vertices (`∞` if never). For the
-layer `L = V(∂(K+B_{r/2}))` it is the first-passage time `T` of LEMMA68 "Proof of Lemma 6.7". -/
+layer `L = V(∂(K+B_{r/2}))` it is the first-passage time `T` of the printed proof of Lemma 6.7. -/
 noncomputable def layerHit (L : Set ℤ) (x : ℕ → ℤ) : ℕ∞ :=
   if h : ∃ n, x n ∈ L then (Nat.find h : ℕ∞) else ⊤
 
@@ -91,10 +91,10 @@ theorem layerHit_stop_eq (L : Set ℤ) (k : ℕ) :
   simp only [univ_inter, mem_ofPred_eq]
   exact layerHit_stop_iff L k x
 
-/-- **The visit bound before the exit of `W`** (LEMMA68.md, "Proof of Lemma 6.7", the strong Markov step). If
+/-- **The visit bound before the exit of `W`** (printed "Proof of Lemma 6.7", the strong Markov step). If
 (i) the walk from `a` lies in `Good` with probability one, (ii) on `Good` the walk hits the layer `L` before it leaves
 `W`, and (iii) the walk from every layer point stays in `S \ Θ` until it leaves `W \ Θ` with probability at most `c`
-(LEMMA68 (2) with `A = S \ Θ`, `U = W \ Θ`), then the walk from `a` stays in `S ∪ Θ` before it leaves `W` with
+(with `A = S \ Θ`, `U = W \ Θ`), then the walk from `a` stays in `S ∪ Θ` before it leaves `W` with
 probability at most `c`. -/
 theorem srwLaw_stay_le_of_layer (m : ℤ → ℤ → ℕ) (a : ℤ) (W Θ S L : Set ℤ) (Good : Set (ℕ → ℤ)) {c : ℝ≥0∞}
     (hGood : srwLaw m a Goodᶜ = 0)
@@ -155,9 +155,9 @@ theorem srwLaw_stay_le_of_layer (m : ℤ → ℤ → ℕ) (a : ℤ) (W Θ S L : 
     _ ≤ c * 1 := mul_le_mul_of_nonneg_left hone (by simp)
     _ = c := mul_one c
 
-/-- **The uniform visit bound** (LEMMA68.md, "Proof of Lemma 6.7"): under the same hypotheses, the walk from `a`
+/-- **The uniform visit bound** (printed "Proof of Lemma 6.7"): under the same hypotheses, the walk from `a`
 visits `W \ (S ∪ Θ)` before it leaves `W` with probability at least `1 - c`. With `c = 1/2` this is the uniform
-`s₂ = 1/2` of the target `UniformConstantOrderLowerBoundStmt` (`q4`'s `MatedCRT/FirstPass/S6d.lean:90`). -/
+`s₂ = 1/2` of the target `UniformConstantOrderLowerBoundStmt`. -/
 theorem srwLaw_visit_ge_of_layer (m : ℤ → ℤ → ℕ) (a : ℤ) (W Θ S L : Set ℤ) (Good : Set (ℕ → ℤ)) {c : ℝ≥0∞}
     (hGood : srwLaw m a Goodᶜ = 0)
     (hcross : ∀ x ∈ Good, ∃ k : ℕ, layerHit L x = (k : ℕ∞) ∧ (k : ℕ∞) < vExitTime W x)

@@ -9,7 +9,7 @@ import MatedCRT.FirstPass.S4S6c.TraceInputs68
 import MatedCRT.FirstPass.S4S6c.CellBoundary
 
 /-!
-# Walk-level inputs of `Uniform68.config_exit_lower_bound` discharged (q2, task fp-S4S6c-envscaling-6-7-6-8, file `Uniform68Walk.lean`)
+# Walk-level inputs of `Uniform68.config_exit_lower_bound` discharged (file `Uniform68Walk.lean`)
 
 `config_exit_lower_bound_walk` is the per-configuration Lemma 6.8 with the walk-level hypotheses of the configuration
 proved from existing lemmas:
@@ -17,7 +17,7 @@ proved from existing lemmas:
 * `hexit` (a.s. finite exit from the thickened filled set): `ExitAe68.ae_exit_ne_top_of_bounded` (properness of `η`,
   local finiteness and consecutive adjacency of `m` as inputs), with `Uniform68.meetVerts_eq_cellVertices`;
 * `hW`, `hfinBS` (finite inner windows): `ExitNull68.exit_null_of_finite`, finiteness of `innerVertices` of a bounded set;
-* `hGood`, `hGoodPath` (the good event of LEMMA68 C1-C2): `GoodEvent68.ae_good` with the frontier start distance
+* `hGood`, `hGoodPath`: `GoodEvent68.ae_good` with the frontier start distance
   `FrontierStart68.start_dist_of_frontier`;
 * `τ`, `S`: `Tau68.tauSeq` and `Tau68.staySeq` (their recursions are the definitions).
 
@@ -26,7 +26,7 @@ finiteness `IsLocallyFiniteMult m` and `m k (k+1) ≠ 0`, and the local test `hl
 start vertex from the event inputs).
 
 Terminology: Markov property of the walk at fixed times (Norris), good event (Berestycki-Gwynne killing on leaving V(D)),
-inner vertices `I(D)` (LEMMA68 notation), Green function and exit times (Armitage-Gardiner).
+inner vertices `I(D)`, Green function and exit times (Armitage-Gardiner).
 -/
 
 open MeasureTheory Set Filter Topology Metric
@@ -40,7 +40,7 @@ theorem innerVertices_finite {ε : ℝ} {η : ℝ → ℂ} (hε : 0 < ε) (hp : 
     {D : Set ℂ} (hD : Bornology.IsBounded D) : (innerVertices (cell ε η) D).Finite :=
   (TraceInputs68.cellVertices_finite_of_tendsto hε hp hD).subset fun _ hv => hv.1
 
-/-- The good event of LEMMA68 C1-C2 for the filled set `F`, centre data `ctr, rad` and scales `r, d`: the start lies at
+/-- The good event for the filled set `F`, centre data `ctr, rad` and scales `r, d`: the start lies at
 distance `r/2 ± d` from `F`, the steps are stays or edges, and every window exit along the path is finite. -/
 def walkGood (ε : ℝ) (η : ℝ → ℂ) (m : ℤ → ℤ → ℕ) (ctr : ℤ → ℂ) (rad : ℤ → ℝ) (F : Set ℂ) (r d : ℝ) :
     Set (ℕ → ℤ) :=

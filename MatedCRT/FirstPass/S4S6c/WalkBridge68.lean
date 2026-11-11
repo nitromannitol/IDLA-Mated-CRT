@@ -8,7 +8,7 @@ import MatedCRT.FirstPass.S4S6c.ExitNull68
 import MatedCRT.FirstPass.S6r.OneTest.Count
 
 /-!
-# Lemma 6.8, walk bridge (q2, S10 item (b))
+# Lemma 6.8, walk bridge
 
 The quenched exit probability `Lemma68Config.exitQ S ε ω r i` is the `srwLaw` probability of
 `Lemma68Walk.exitEvent U A` with `U = killed ε η Θ F0 r` and `A = i.A` (S6h/Core.lean). The event is the
@@ -16,9 +16,9 @@ no-escape event `{X n ∈ A for all n < τ_U}` of `prefix_bad_bound` (S6r/Amplif
 `X n x = x n`, killing time `τ_U = vExitTime U` (Defs/RandomWalk.lean) and the natural filtration
 `coordFiltration` of the coordinates. Hence the strong-Markov chain bound of `prefix_bad_bound` transfers to `exitQ`.
 
-Named hypotheses, not proved here: the one-test bound `hone` (strong Markov at `T k`; z8, S6r/OneTest.lean),
-the stopping times `T k`, `L k` (z9, S6r/ShellWiring.lean) and the pathwise shell inequalities `hTT`, `hLT`,
-`hcross`, `hend` (z9). Nothing here uses the environment.
+Named hypotheses, not proved here: the one-test bound `hone` (strong Markov at `T k`; S6r/OneTest.lean),
+the stopping times `T k`, `L k` (S6r/ShellWiring.lean) and the pathwise shell inequalities `hTT`, `hLT`,
+`hcross`, `hend`. Nothing here uses the environment.
 -/
 
 open MeasureTheory

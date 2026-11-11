@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.S6f.UniformEvents
 import MatedCRT.FirstPass.S4S6c.Uniform68Local
 
 /-!
-# Monotonicity of the Lemma 6.8 events in the exponent `ω₀` (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# Monotonicity of the Lemma 6.8 events in the exponent `ω₀`
 
-The uniform event sets of q1 (`MatedCRT.FirstPass.S6f.UniformEvents`) are indexed by an exponent `ω₀`: the Green event
+The uniform event sets (`MatedCRT.FirstPass.S6f.UniformEvents`) are indexed by an exponent `ω₀`: the Green event
 `greenLowEvent68 S ω₀ ρ CG ε` quantifies over vertices `a ∈ B_{ρ - ε^{ω₀}}` and scales `r ≥ ε^{ω₀}`. Decreasing `ω₀`
 enlarges the scale range `[ε^{ω₀}, ...)` only from above and shrinks the vertex ball, so the event for the larger exponent
 implies the event for the smaller one. This is what lets the target `UniformConstantOrderLowerBoundStmt` choose `ω₀` small

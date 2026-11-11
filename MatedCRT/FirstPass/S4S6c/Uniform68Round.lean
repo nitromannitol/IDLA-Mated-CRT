@@ -1,13 +1,13 @@
 import Mathlib
 
 /-!
-# Grid rounding of LEMMA68 (`Q_δ`, eq (C2)) (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# Grid rounding (`Q_δ`)
 
-The write-up (`notes/fp-gaps/CHATGPT-lemma68-open-parts.md`, line 674) uses the Borel rounding map
+The printed argument uses the Borel rounding map
 `Q_δ(x₁, x₂) = g (⌊x₁/g + 1/2⌋, ⌊x₂/g + 1/2⌋)` with the grid spacing `g = g_δ = δ/100`, and states
 `|Q_δ(x) - x| ≤ g/√2 < g` (eq (C2)). The Lean statement below proves the weaker bound `≤ g`, which is
 what the trace bound `hctr : dist (ctr v) (vertexPoint v) ≤ g` of `Uniform68.config_exit_lower_bound` needs.
-The grid centre `z_j = Q_δ(η(X_{T_j}))` of the good radii (write-up line 697) is `gridRound`.
+The grid centre `z_j = Q_δ(η(X_{T_j}))` of the good radii is `gridRound`.
 
 Terminology: Gwynne-Miller annulus iteration (grid of centres); the centres are deterministic functions of the
 embedding point, so the rounding carries no probability.
@@ -19,7 +19,7 @@ namespace Uniform68Round
 /-- The Borel rounding of one real coordinate to the grid `g ℤ`: `g ⌊t/g + 1/2⌋`. -/
 noncomputable def gridRound1 (g t : ℝ) : ℝ := g * (⌊t / g + 1 / 2⌋ : ℝ)
 
-/-- The grid rounding `Q_δ` of a point of the plane, with grid spacing `g` (LEMMA68 line 674). -/
+/-- The grid rounding `Q_δ` of a point of the plane, with grid spacing `g`. -/
 noncomputable def gridRound (g : ℝ) (x : ℂ) : ℂ := ⟨gridRound1 g x.re, gridRound1 g x.im⟩
 
 /-- One coordinate is moved by at most `g/2`: `|g ⌊t/g + 1/2⌋ - t| ≤ g/2` for `g > 0`. -/
@@ -37,7 +37,7 @@ theorem abs_gridRound1_sub_le {g : ℝ} (hg : 0 < g) (t : ℝ) : |gridRound1 g t
   have := mul_le_mul_of_nonneg_left hk hg.le
   linarith
 
-/-- **The grid rounding moves a point by at most `g`** (LEMMA68 eq (C2), with the weaker constant `g`
+/-- **The grid rounding moves a point by at most `g`** (with the weaker constant `g`
 used by the trace bound `hctr`). -/
 theorem dist_gridRound_le {g : ℝ} (hg : 0 < g) (x : ℂ) : dist (gridRound g x) x ≤ g := by
   have hre := abs_gridRound1_sub_le hg x.re

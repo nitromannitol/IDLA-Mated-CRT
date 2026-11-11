@@ -1,14 +1,14 @@
 import Mathlib
 
 /-!
-# First pass, Lemma 6.8: numerical cutoffs of the trace bound (q2, fp-S4S6c-envscaling-6-7-6-8)
+# First pass, Lemma 6.8: numerical cutoffs of the trace bound
 
-Pure real arithmetic behind the cutoffs of the write-up (`notes/fp-gaps/CHATGPT-lemma68-open-parts.md`, C1 and D1-D3)
-and of the good radii (`notes/fp-gaps/LEMMA68.md`, eq. (9): `R_z ∈ [δ, √δ]`, `s = √δ`, `g_δ = δ/100`).
+Pure real arithmetic behind the cutoffs
+and of the good radii (`R_z ∈ [δ, √δ]`, `s = √δ`, `g_δ = δ/100`).
 
 Notation: `ζ = p/2 - 1 ∈ (0, 1/2)`, so `r^p = (r * r^ζ)^2`; the field scale `δ` is dyadic in `(r^p/2, r^p]`
 (`dyadicBelow`); the test step is `s = √δ`; the centre tolerance is `g = δ/100`; the cell tolerance `d` satisfies
-`d ≤ min(δ/100, r/1000)`; the test count is `N = ⌊r/(100 s)⌋₊` (write-up D1).
+`d ≤ min(δ/100, r/1000)`; the test count is `N = ⌊r/(100 s)⌋₊`.
 
 Terminology: the scale `δ` is a dyadic radius of the Armitage-Gardiner / Gwynne-Miller annulus iteration; the
 numerical facts here carry no probability.
@@ -19,7 +19,7 @@ open Real
 namespace MatedCRT
 namespace Uniform68Params
 
-/-- The dyadic scale `2^{⌊log₂ x⌋}` (write-up line 393: `δ` dyadic with `r^p/2 < δ ≤ r^p`). -/
+/-- The dyadic scale `2^{⌊log₂ x⌋}`. -/
 noncomputable def dyadicBelow (x : ℝ) : ℝ := (2 : ℝ) ^ (⌊Real.logb 2 x⌋)
 
 /-- `dyadicBelow x` lies in `(x/2, x]` for `x > 0`. -/
@@ -45,9 +45,9 @@ theorem half_le_floor {x : ℝ} (hx : 2 ≤ x) : x / 2 ≤ (⌊x⌋₊ : ℝ) :=
   linarith
 
 /-- The numerical cutoffs of one test scale. Let `q = r * r^ζ` (so `q^2 = r^p`), `δ ∈ (0, q^2]`, `s = √δ`, and
-`0 ≤ d ≤ min(δ/100, r/1000)`. Then: `s ≤ r/1000` (write-up C1), `s ≤ r^{p/2}`, `g + d < s` for `g = δ/100`
-(write-up C1: `g_δ + d < s`), `d < r/2`, and the test count `N = ⌊r/(100 s)⌋₊` satisfies `N s ≤ r/100` and
-`r^{-ζ}/200 ≤ N` (write-up D1). -/
+`0 ≤ d ≤ min(δ/100, r/1000)`. Then: `s ≤ r/1000`, `s ≤ r^{p/2}`, `g + d < s` for `g = δ/100`
+, `d < r/2`, and the test count `N = ⌊r/(100 s)⌋₊` satisfies `N s ≤ r/100` and
+`r^{-ζ}/200 ≤ N`. -/
 theorem trace_numerics {r ζ δ d : ℝ} (hr : 0 < r) (hcut : r ^ ζ ≤ 1 / 1000) (hr1 : r ≤ 1)
     (hδ0 : 0 < δ) (hδle : δ ≤ (r * r ^ ζ) ^ 2) (hdδ : d ≤ δ / 100) :
     0 < √δ ∧ √δ ≤ r / 1000 ∧ √δ ≤ r * r ^ ζ ∧ δ / 100 + d < √δ ∧ d < r / 2 ∧
@@ -91,7 +91,7 @@ theorem trace_numerics {r ζ δ d : ℝ} (hr : 0 < r) (hcut : r ^ ζ ≤ 1 / 100
         _ = r / (100 * √δ) / 2 := by rw [div_div, show (100 : ℝ) * √δ * 2 = 200 * √δ by ring]
     linarith
 
-/-- The radius bounds of the good radii `R_z ∈ [δ, √δ]` (LEMMA68.md eq. (9)) against the cell tolerance `d ≤ δ/100`:
+/-- The radius bounds of the good radii `R_z ∈ [δ, √δ]` (eq. (9)) against the cell tolerance `d ≤ δ/100`:
 the inequalities required of `rad` in `BandInduction68` / `HcPrinted68.hc_band_var` (`hρ`, `hgeo`, `hlt`). -/
 theorem radius_facts {δ R d g : ℝ} (hδ0 : 0 < δ) (hR1 : δ ≤ R)
     (hdδ : d ≤ δ / 100) (hg : g = δ / 100) :

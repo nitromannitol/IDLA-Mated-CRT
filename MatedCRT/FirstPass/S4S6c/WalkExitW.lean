@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.FrontierSeparation
 
 /-!
-# The walk exits the window `V(U)` almost surely (q2, task fp-S4S6c-envscaling-6-7-6-8; LEMMA68 6.7, written argument C2)
+# The walk exits the window `V(U)` almost surely
 
 Input (walk-law form of the Step `WalkExitsStep`, `Proofs/Sec6/ConstantOrderLowerBound/Model.lean`): for an open set `O`,
 `srwLaw m a {vExitTime (interiorCellVertices ε η O) = ⊤} = 0`, i.e. the walk leaves the interior cell vertices of `O`.

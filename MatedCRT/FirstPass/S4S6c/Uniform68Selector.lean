@@ -1,16 +1,16 @@
 import Mathlib
 
 /-!
-# Radius selector of LEMMA68 (eq (9), A5 and line 685) (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# Radius selector
 
 For a scale `0 < δ < 1` the seven-adic candidates are the radii `7^{-n}` with `n` in
 `[n₋, n₊]`, where `L = log (1/δ)`, `n₋ = ⌈L / (2 log 7)⌉`, `n₊ = ⌊L / log 7⌋`
-(write-up `CHATGPT-lemma68-open-parts.md`, the block after the definition of `K`). The selector
+(the block after the definition of `K`). The selector
 `R_δ(z)` takes the least candidate exponent `n` whose good predicate holds at `z`, and the default
-`δ` when there is none (write-up line 685: "give it the default `R_z = δ` if the point is inadmissible
+`δ` when there is none (line 685: "give it the default `R_z = δ` if the point is inadmissible
 or no good radius exists"). The probabilistic content (which candidates are good) enters only
-through the predicate `good`; the range `δ ≤ R_δ(z) ≤ √δ` is deterministic (the operator note
-of 01:24 UTC: `R_j ≥ δ` is a lemma about the selector, `CHATGPT-q2-z5-audit.md` Q1).
+through the predicate `good`; the range `δ ≤ R_δ(z) ≤ √δ` is deterministic
+`R_j ≥ δ` is a lemma about the selector.
 
 Terminology: Armitage-Gardiner (potential theory) for the radii; Gwynne-Miller annulus iteration for
 the seven-adic scales.
@@ -21,10 +21,10 @@ open scoped Classical
 namespace MatedCRT
 namespace Uniform68Selector
 
-/-- The lower candidate exponent `n₋ = ⌈log(1/δ) / (2 log 7)⌉` (LEMMA68 eq (9) block). -/
+/-- The lower candidate exponent `n₋ = ⌈log(1/δ) / (2 log 7)⌉`. -/
 noncomputable def nLo (δ : ℝ) : ℤ := ⌈Real.log (1 / δ) / (2 * Real.log 7)⌉
 
-/-- The upper candidate exponent `n₊ = ⌊log(1/δ) / log 7⌋` (LEMMA68 eq (9) block). -/
+/-- The upper candidate exponent `n₊ = ⌊log(1/δ) / log 7⌋`. -/
 noncomputable def nHi (δ : ℝ) : ℤ := ⌊Real.log (1 / δ) / Real.log 7⌋
 
 /-- The candidate exponents `n ∈ [n₋, n₊]`; the candidate radii are `7^{-n}`. -/
@@ -32,13 +32,13 @@ noncomputable def candidates (δ : ℝ) : Finset ℤ := Finset.Icc (nLo δ) (nHi
 
 /-- The radius selector `R_δ(z)` for a grid point `z`, given the predicate `good n` ("the candidate
 radius `7^{-n}` is a good radius at `z`"): the radius `7^{-n}` for the least good candidate exponent
-`n`, and the default `δ` if no candidate is good (LEMMA68 A5 and line 685). -/
+`n`, and the default `δ` if no candidate is good. -/
 noncomputable def selectRadius (δ : ℝ) (good : ℤ → Prop) : ℝ :=
   if h : ((candidates δ).filter good).Nonempty then
     (1 / 7 : ℝ) ^ ((candidates δ).filter good).min' h
   else δ
 
-/-- A candidate exponent `n ∈ [n₋, n₊]` gives a seven-adic radius in `[δ, √δ]` (LEMMA68 eq (9)). -/
+/-- A candidate exponent `n ∈ [n₋, n₊]` gives a seven-adic radius in `[δ, √δ]`. -/
 theorem seven_zpow_mem_Icc {δ : ℝ} (hδ0 : 0 < δ) {n : ℤ} (hlo : nLo δ ≤ n) (hhi : n ≤ nHi δ) :
     δ ≤ (1 / 7 : ℝ) ^ n ∧ (1 / 7 : ℝ) ^ n ≤ Real.sqrt δ := by
   set L : ℝ := Real.log (1 / δ) with hL
@@ -75,7 +75,7 @@ theorem seven_zpow_mem_Icc {δ : ℝ} (hδ0 : 0 < δ) {n : ℤ} (hlo : nLo δ �
   · apply Real.exp_le_exp.2
     linarith
 
-/-- **The selector range** (`R_j ≥ δ`, the operator note of 01:24 UTC): for every good predicate,
+/-- **The selector range** (`R_j ≥ δ`): for every good predicate,
 `δ ≤ R_δ(z) ≤ √δ`, including the default branch. -/
 theorem selectRadius_mem {δ : ℝ} (hδ0 : 0 < δ) (hδ1 : δ < 1) (good : ℤ → Prop) :
     δ ≤ selectRadius δ good ∧ selectRadius δ good ≤ Real.sqrt δ := by
@@ -89,7 +89,7 @@ theorem selectRadius_mem {δ : ℝ} (hδ0 : 0 < δ) (hδ1 : δ < 1) (good : ℤ 
   · refine ⟨le_rfl, ?_⟩
     exact (Real.le_sqrt hδ0.le hδ0.le).2 (by nlinarith)
 
-/-- The selector is at least `δ` (LEMMA68 line 855, `R_j ≥ δ`). -/
+/-- The selector is at least `δ` (`R_j ≥ δ`). -/
 theorem selectRadius_ge {δ : ℝ} (hδ0 : 0 < δ) (hδ1 : δ < 1) (good : ℤ → Prop) :
     δ ≤ selectRadius δ good :=
   (selectRadius_mem hδ0 hδ1 good).1

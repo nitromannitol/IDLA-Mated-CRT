@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.S4S6c.Uniform68Inputs
 import MatedCRT.Proofs.Infra.LocallyFinite
 
 /-!
-# The local test `hloc` at one sphere-band start vertex, from the band and good-annulus inputs (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# The local test `hloc` at one sphere-band start vertex, from the band and good-annulus inputs
 
 `hloc_band_point` is `Uniform68Events.hloc_point` with its geometric and finiteness inputs discharged:
 
