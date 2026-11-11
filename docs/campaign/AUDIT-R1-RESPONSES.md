@@ -1,6 +1,6 @@
 # Audit round 1: responses
 
-Responses to the independent audit of the corrected IDLA paper, round 1. Source: notes/fp-gaps/OPUS-AUDIT-R1.md (items A7 to A10, the IDLA email table at its lines 210 to 232, verdict at line 260). Line numbers refer to paper/idla_mated_crt-corrected.tex after the edits of 2026-11-11.
+Responses to the independent audit of the corrected IDLA paper, round 1. Source: the audit round 1 report (fleet notes, not in the repository) (items A7 to A10, the IDLA email table at its lines 210 to 232, verdict at line 260). Line numbers refer to paper/idla_mated_crt-corrected.tex after the edits of 2026-11-11.
 
 ## IDLA (A)
 
