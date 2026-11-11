@@ -5,7 +5,7 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ContinuumIdentifica
 # Lemma 3.4: assembly from its steps
 
 `integralConvergenceGreenFunction_of_steps` derives `IntegralConvergenceGreenFunctionStmt` from the
-Revuz identity `LBMGreenOccupationStep` (IR-m2-1, pending with the operator) and four named steps:
+Revuz identity `LBMGreenOccupationStep` (open) and four named steps:
 
 * `TruncatedOccupationFixedTimeStep`: fixed-time convergence of the truncated occupation sums;
 * `LBMExitTimeIntegrableStep`: the LBM exit time from a ball is integrable for almost every environment;
@@ -24,9 +24,9 @@ open scoped ENNReal NNReal
 /-- **Fixed-time convergence** of the truncated occupation sums: the hypothesis `hfixed` of
 `integralConvergenceGreenFunction_of_fixed_and_ae_continuum`. OPEN. Source: Theorem 2.11 applied to
 the environment-dependent functional `φ^{f(ω)}_T`. The Draft encoding of Theorem 2.11
-(`RandomWalkToLBMStmt`) covers only deterministic functionals (E-c2-9, ruling pending). The discrete
+(`RandomWalkToLBMStmt`) covers only deterministic functionals (the encoding question is open). The discrete
 Riemann sum must also be compared with the interpolated occupation at the window of the discrete exit
-(the E-c2-8 route). -/
+(this comparison is open). -/
 def TruncatedOccupationFixedTimeStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
