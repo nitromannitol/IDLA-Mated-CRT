@@ -312,4 +312,137 @@ lemma integral_circle_mul_circleAverage (h : IsWholePlaneGFF P hC hcirc) [IsProb
 
 end
 
+/-! ## Covariances of the radial circle averages with the lateral observables -/
+
+section RadialLateralCov
+
+variable {Ω : Type*} [MeasurableSpace Ω]
+variable {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+
+/-- Admissible observables of a whole-plane GFF are square integrable. -/
+lemma memLp_two_observable (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    (o : GFFObservable) (ho : o.IsAdmissible) :
+    MemLp (fun ω => o.eval (hC ω) (hcirc ω)) 2 P :=
+  (h.isGaussianProcess.hasGaussianLaw_eval ⟨o, ho⟩).memLp_two
+
+/-- The covariance of two admissible observables, as the expectation of their product. -/
+lemma integral_mul_observable (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    (o o' : GFFObservable) (ho : o.IsAdmissible) (ho' : o'.IsAdmissible) :
+    ∫ ω, o.eval (hC ω) (hcirc ω) * o'.eval (hC ω) (hcirc ω) ∂P = wholePlaneGFFCov o o' := by
+  have hX := memLp_two_observable h o ho
+  have hY := memLp_two_observable h o' ho'
+  rw [← h.covariance_eq o o' ho ho']
+  exact (covariance_eq_integral_of_mean_zero (h.integral_eq_zero o' ho') (hY.integrable one_le_two)
+    (hX.integrable_mul hY)).symm
+
+lemma integral_pairing_mul_circle_cW (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    {φ : ℂ → ℝ} (hφ : IsTestFunction Set.univ φ) {s : ℝ} (hs : 0 < s) :
+    ∫ ω, hC ω φ * hcirc ω s 0 ∂P = ∫ x, φ x * cW x s :=
+  (integral_mul_observable h (GFFObservable.pairing φ) (GFFObservable.circle s 0) hφ hs).trans
+    (wholePlaneGFFCov_pairing_circle_eq φ hs)
+
+lemma integral_circle_mul_circle_centre (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    {r s : ℝ} (hr : 0 < r) (hs : 0 < s) (z : ℂ) :
+    ∫ ω, hcirc ω r z * hcirc ω s 0 ∂P = Real.circleAverage (fun x : ℂ => cW x s) z r :=
+  (integral_mul_observable h (GFFObservable.circle r z) (GFFObservable.circle s 0) hr hs).trans
+    (wholePlaneGFFCov_circle_circle_centre_eq z hs)
+
+lemma integrable_circle_mul_radialIntegral (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    {F : Ω → C(CircleParameter, ℝ)} (hF : Measurable F)
+    (hFae : ∀ᵐ ω ∂P, ∀ p : CircleParameter, F ω p = hcirc ω (p.1 : ℝ) p.2)
+    {φ : ℂ → ℝ} (hφ : IsTestFunction Set.univ φ) {s : ℝ} (hs : 0 < s) :
+    Integrable (fun ω => hcirc ω s 0 * ∫ x, φ x * hcirc ω ‖x‖ 0) P := by
+  have hZm : Measurable (fun ω => hcirc ω s 0) := h.measurable_circle s 0 hs
+  have hZ : MemLp (fun ω => hcirc ω s 0) 2 P :=
+    memLp_two_observable h (GFFObservable.circle s 0) hs
+  have hint := MatedCRT.WholePlaneGFFLateral.integrable_radial_mul h hF hFae hφ hZm hZ rfl
+  refine hint.integral_prod_left.congr ?_
+  filter_upwards [MatedCRT.WholePlaneGFFLateral.ae_radialIntegral_eq hFae φ] with ω hω
+  rw [integral_mul_const, ← hω]
+  ring
+
+lemma integrable_circle_mul_circleAverage (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    {F : Ω → C(CircleParameter, ℝ)} (hF : Measurable F)
+    (hFae : ∀ᵐ ω ∂P, ∀ p : CircleParameter, F ω p = hcirc ω (p.1 : ℝ) p.2)
+    {z : ℂ} {r : ℝ} (hr : 0 < r) {s : ℝ} (hs : 0 < s) :
+    Integrable (fun ω => hcirc ω s 0 * Real.circleAverage (fun x => hcirc ω ‖x‖ 0) z r) P := by
+  have hZm : Measurable (fun ω => hcirc ω s 0) := h.measurable_circle s 0 hs
+  have hZ : MemLp (fun ω => hcirc ω s 0) 2 P :=
+    memLp_two_observable h (GFFObservable.circle s 0) hs
+  have hint := integrable_mul_radialPoint_circle h hF hFae hZm hZ z hr
+  refine (hint.integral_prod_left.const_mul (2 * π)⁻¹).congr ?_
+  filter_upwards [hFae] with ω hω
+  have step1 : ∫ θ in Set.Ioc (0 : ℝ) (2 * π), hcirc ω ‖circleMap z r θ‖ 0 =
+      ∫ θ in Set.Ioc (0 : ℝ) (2 * π),
+        F ω (MatedCRT.WholePlaneGFFLateral.radialPoint (circleMap z r θ)) := by
+    apply integral_congr_ae
+    filter_upwards [circleMap_ne_zero_ae hr] with θ hθ
+    rw [hω, radialPoint_fst_of_ne hθ, radialPoint_snd]
+  simp only [Real.circleAverage, smul_eq_mul,
+    intervalIntegral.integral_of_le (by positivity : (0 : ℝ) ≤ 2 * π)]
+  rw [integral_const_mul, ← step1]
+  ring
+
+lemma covariance_circle_pairing_lateral (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    {F : Ω → C(CircleParameter, ℝ)} (hF : Measurable F)
+    (hFae : ∀ᵐ ω ∂P, ∀ p : CircleParameter, F ω p = hcirc ω (p.1 : ℝ) p.2)
+    {φ : ℂ → ℝ} (hφ : IsTestFunction Set.univ φ) {s : ℝ} (hs : 0 < s) :
+    covariance (fun ω => hcirc ω s 0) (fun ω => hC ω φ - ∫ x, φ x * hcirc ω ‖x‖ 0) P = 0 := by
+  have hX : MemLp (fun ω => hcirc ω s 0) 2 P :=
+    memLp_two_observable h (GFFObservable.circle s 0) hs
+  have hmean : ∫ ω, hcirc ω s 0 ∂P = 0 := h.integral_eq_zero (GFFObservable.circle s 0) hs
+  have hA : MemLp (fun ω => hC ω φ) 2 P := memLp_two_observable h (GFFObservable.pairing φ) hφ
+  have hB := integrable_circle_mul_radialIntegral h hF hFae hφ hs
+  have hAX : Integrable (fun ω => hC ω φ * hcirc ω s 0) P := hA.integrable_mul hX
+  have hfun : (fun ω => (hC ω φ - ∫ x, φ x * hcirc ω ‖x‖ 0) * hcirc ω s 0) =
+      fun ω => hC ω φ * hcirc ω s 0 - hcirc ω s 0 * ∫ x, φ x * hcirc ω ‖x‖ 0 := by
+    funext ω
+    ring
+  have hint : Integrable (fun ω => (hC ω φ - ∫ x, φ x * hcirc ω ‖x‖ 0) * hcirc ω s 0) P := by
+    rw [hfun]
+    exact hAX.sub hB
+  rw [covariance_symm', covariance_eq_integral_of_mean_zero hmean (hX.integrable one_le_two) hint,
+    hfun, integral_sub hAX hB, integral_pairing_mul_circle_cW h hφ hs,
+    integral_circle_mul_radialIntegral h hF hFae hφ hs, sub_self]
+
+lemma covariance_circle_circle_lateral (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    {F : Ω → C(CircleParameter, ℝ)} (hF : Measurable F)
+    (hFae : ∀ᵐ ω ∂P, ∀ p : CircleParameter, F ω p = hcirc ω (p.1 : ℝ) p.2)
+    {r : ℝ} (hr : 0 < r) {s : ℝ} (hs : 0 < s) (z : ℂ) :
+    covariance (fun ω => hcirc ω s 0)
+      (fun ω => hcirc ω r z - Real.circleAverage (fun x => hcirc ω ‖x‖ 0) z r) P = 0 := by
+  have hX : MemLp (fun ω => hcirc ω s 0) 2 P :=
+    memLp_two_observable h (GFFObservable.circle s 0) hs
+  have hmean : ∫ ω, hcirc ω s 0 ∂P = 0 := h.integral_eq_zero (GFFObservable.circle s 0) hs
+  have hC' : MemLp (fun ω => hcirc ω r z) 2 P :=
+    memLp_two_observable h (GFFObservable.circle r z) hr
+  have hCX : Integrable (fun ω => hcirc ω r z * hcirc ω s 0) P := hC'.integrable_mul hX
+  have hAX := integrable_circle_mul_circleAverage h hF hFae hr hs (z := z)
+  have hfun : (fun ω => (hcirc ω r z - Real.circleAverage (fun x => hcirc ω ‖x‖ 0) z r) *
+      hcirc ω s 0) = fun ω => hcirc ω r z * hcirc ω s 0 -
+        hcirc ω s 0 * Real.circleAverage (fun x => hcirc ω ‖x‖ 0) z r := by
+    funext ω
+    ring
+  have hint : Integrable (fun ω => (hcirc ω r z - Real.circleAverage (fun x => hcirc ω ‖x‖ 0) z r) *
+      hcirc ω s 0) P := by
+    rw [hfun]
+    exact hCX.sub hAX
+  rw [covariance_symm', covariance_eq_integral_of_mean_zero hmean (hX.integrable one_le_two) hint,
+    hfun, integral_sub hCX hAX, integral_circle_mul_circle_centre h hr hs z,
+    integral_circle_mul_circleAverage h hF hFae hr hs, sub_self]
+
+/-- The covariance of a radial circle average `h_s(0)` with every admissible lateral observable vanishes:
+the radial and lateral parts of a whole-plane GFF are uncorrelated (Duplantier-Sheffield, Section 3). -/
+lemma covariance_circle_lateralEval (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    {F : Ω → C(CircleParameter, ℝ)} (hF : Measurable F)
+    (hFae : ∀ᵐ ω ∂P, ∀ p : CircleParameter, F ω p = hcirc ω (p.1 : ℝ) p.2)
+    {s : ℝ} (hs : 0 < s) (o : GFFObservable.Admissible) :
+    covariance (fun ω => hcirc ω s 0) (fun ω => lateralEval (hC ω) (hcirc ω) o.1) P = 0 := by
+  obtain ⟨o, ho⟩ := o
+  cases o with
+  | pairing φ => exact covariance_circle_pairing_lateral h hF hFae ho hs
+  | circle r z => exact covariance_circle_circle_lateral h hF hFae ho hs z
+
+end RadialLateralCov
+
 end MatedCRT.ConeMeanZeroRestriction
