@@ -6,7 +6,7 @@ import MatedCRT.Steps.Sec6.GoodAnnulusPrevalence
 # Lemma 6.4 with a constant depending only on `γ` and `c₀` (correction [C18])
 
 The printed Lemma 6.4 (`lemma:good-prevalance`, corrected tex line 2664) says "a constant `C` depending only on `γ`".
-The correction [C18] (author-approved 2026-11-09) replaces it by "depending only on `γ` and `c₀`": the proof gives
+The correction [C18] (author-approved) replaces it by "depending only on `γ` and `c₀`": the proof gives
 `C(γ, c₀)` and `c₀ = c₀(ρ, γ)` is fixed once `ρ` is. The Draft statement `GoodAnnulusPrevalenceStmt`
 (Draft/Section6.lean:56) quantifies `∀ ρ` before `∃ C`, which does not record this. This file gives:
 

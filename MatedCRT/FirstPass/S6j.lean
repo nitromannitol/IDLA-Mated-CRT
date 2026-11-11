@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.S4S6c.StrongMarkovState
 /-!
 # FirstPass S6j: the conditional step of LEMMA68 for simple random walk
 
-Source: , lines 836-860 (C15): at an almost surely finite stopping time `T`
+Source: write-up lines 836-860 (C15): at an almost surely finite stopping time `T`
 of the walk, the conditional law of the future given `F_T` is the walk started at `X_T` (discrete strong Markov property,
 Norris, *Markov Chains*, Theorem 1.4.2); the tower property then gives the conditional test probability given `F_T`.
 

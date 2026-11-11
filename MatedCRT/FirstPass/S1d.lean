@@ -20,7 +20,7 @@ rest on retired inputs. Changes:
 
 * Theorem 2.3 (`ConeHarmonicBallsStmt`) is a hypothesis (Draft). The corrected canonical
   Lemmas 2.4 and 2.5 (`ConeHarmonicBallsUpToFixedTimeCanonicalStmt`, `ConeScaleInvarianceUpToFixedTimeCanonicalStmt`,
-  FirstPass/S2g.lean) and `LQGMeasurePropertiesStmt` are hypotheses too (decision (3)), so that the composition does not
+  FirstPass/S2g.lean) and `LQGMeasurePropertiesStmt` are hypotheses too, so that the composition does not
   wait on the open `ConeCanonicalFactorStep`. Since 2.3 is taken directly, the hypotheses for `LQGMeasurePropertiesStmt`,
   `ConeHarmonicBallsUpToFixedTimeCanonicalStmt` and `ConeScaleInvarianceUpToFixedTimeCanonicalStmt` were unused and are removed
   (fewer hypotheses).

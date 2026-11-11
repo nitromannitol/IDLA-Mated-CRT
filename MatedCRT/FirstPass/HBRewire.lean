@@ -7,7 +7,7 @@ import MatedCRT.FirstPass.S2g.Assembly2456
 import MatedCRT.FirstPass.S4d.Final42
 
 /-!
-# HB rewire of the counted IDLA theorems (task p2-hb-rewire-lean)
+# Harmonic Balls rewire of the counted IDLA theorems
 
 Namespace `MatedCRT.HBRewire`. The Harmonic-Balls inputs that HB proves unconditionally and that the counted IDLA
 theorems bind are discharged here. Each counted theorem `T` gets a `T_hb` with the same conclusion and the remaining

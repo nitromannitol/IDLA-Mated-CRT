@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.S4S6c.Uniform68Round
 /-!
 # Lemma 6.8: the deterministic geometry behind C12 (write-up (C1)–(C11))
 
-Source: , lines 660–805 (tags (C1)–(C11)).
+Source: write-up lines 660–805 (tags (C1)–(C11)).
 The deterministic statements are proved here, as statements about real numbers, points of `ℂ`,
 the grid rounding `Q_δ` (`Uniform68Round.gridRound`) and the schedule's centres and radii
 (`Lemma68Concrete.cfgCentre`, `cfgRadius`).

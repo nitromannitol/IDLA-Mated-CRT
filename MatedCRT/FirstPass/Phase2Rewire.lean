@@ -9,7 +9,7 @@ import MatedCRT.FirstPass.LPBridge.PairingLawIG4
 import MatedCRT.FirstPass.LPBridge.BrownianOutwardExcursion
 
 /-!
-# Phase 2 rewire of the counted IDLA theorems (task p2-rewire-counted)
+# Rewire of the counted IDLA theorems
 
 Namespace `MatedCRT.Phase2`. For each counted first-pass theorem that binds a frozen input now discharged by a bridge,
 the theorem `<countedName>_p2` has the same conclusion and the remaining binders. It applies the `_hb` wrapper of

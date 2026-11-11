@@ -14,7 +14,7 @@ It follows the exit-time argument: for `D ⊆ B_ρ` the
 BG20 estimate is applied to the open thickening `thickening (ε^(2α)) D`, whose mass is bounded below by
 `VolumeGrowthStmt` at the centres of `D`; the interior cell set is monotone in the domain for open supersets
 (`interiorCellVertices_mono_of_subset`, continuous `η`); `expectedExitTime` is monotone in the domain; and the
-potential is monotone in the domain. This file only re-exports that proof under the task's name, so the assembly
+potential is monotone in the domain. This file only re-exports that proof under the name the assembly uses, so the assembly
 has one entry point.
 -/
 

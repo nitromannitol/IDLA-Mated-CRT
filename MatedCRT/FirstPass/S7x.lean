@@ -5,8 +5,7 @@ import MatedCRT.Steps.Sec7.CrudeUpperBound
 /-!
 # Lemma 7.4 in the positive-support form, with one event in `t`
 
-Operator audit (, section "The neighboring Lemma 7.4" and item 4 of the
-minimal correction list): the printed Lemma 7.4 starts at `a ∈ D_ε(t/ε) \ {0}`, the unstopped sandpile cluster, while
+Audit item 4 of the minimal correction list (section "The neighboring Lemma 7.4"): the printed Lemma 7.4 starts at `a ∈ D_ε(t/ε) \ {0}`, the unstopped sandpile cluster, while
 the stopped odometer `u^ε_t` vanishes at far points of that cluster. The correct starting set and path set are the
 positive stopped support `Λ^ε_t = {u^ε_t > 0}`, which is `matedDiscreteCluster` (MatedCRT/Defs/Sandpile.lean:87).
 The audit also requires `∀ t > 0` inside the `PolyHighProb` event, since the degree-bound event does not depend on `t`.
@@ -25,8 +24,7 @@ namespace MatedCRT
 
 open MeasureTheory Set Metric
 
-/-- **Lemma 7.4, positive-support form** (lemma:crude-upper-bound, line 3058; Levine-Peres 2009, Lemma 4.2; operator
-audit item 4). For all `t > 0` simultaneously, with polynomially high probability as `ε → 0`: for every
+/-- **Lemma 7.4, positive-support form** (lemma:crude-upper-bound, line 3058; Levine-Peres 2009, Lemma 4.2; audit item 4). For all `t > 0` simultaneously, with polynomially high probability as `ε → 0`: for every
 `a ∈ Λ^ε_t \ {0}`, where `Λ^ε_t = {u^ε_t > 0}` is the positive stopped support (`matedDiscreteCluster`), there is a
 path `a = a₀ ∼ a₁ ∼ ⋯ ∼ a_m = 0` in `Λ^ε_t` with `u^ε_t(a_{i+1}) ≥ u^ε_t(a_i) + log(ε⁻¹)⁻²`. -/
 def CrudeUpperBoundSupportStmt (𝒮 : SpaceFillingSLEModel) : Prop :=

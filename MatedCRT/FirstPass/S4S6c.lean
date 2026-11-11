@@ -7,7 +7,7 @@ import MatedCRT.Proofs.Sec4.ConvergenceDivisible.PreparedConeScaling
 # First pass, Section 4: Theorem 4.1 with the frozen cone-scaling law
 
 `firstPass_4_1_coneLaw` is the repair of `firstPass_4_1` (FirstPass/S3S4.lean, RETIRED). The hypothesis
-`FrozenConeEnvironmentScaling` (FALSE, truth check 2026-11-09) is replaced by `FrozenConeScalingLaw`
+`FrozenConeEnvironmentScaling` (FALSE, truth-checked) is replaced by `FrozenConeScalingLaw`
 (Frozen/S4S6c.lean). The chain below is the prepared-estimate route of `PreparedConeScaling.lean`, with the
 event-measurability step taken from `FirstPass/S4S6c/ConeScalingLaw.lean`.
 -/
@@ -41,7 +41,7 @@ theorem convergenceDivisible_of_prepared_discrete_coneScalingLaw
 
 /-- **Theorem 4.1** (theorem:convergence-divisible), repaired. Hypotheses as in the RETIRED `firstPass_4_1`
 (FirstPass/S3S4.lean), except the cone environment scaling, which is the frozen cone-scaling law
-`FrozenConeScalingLaw` (DMS14 Prop 4.13(i) in law; truth check 2026-11-09). -/
+`FrozenConeScalingLaw` (DMS14 Prop 4.13(i) in law; truth-checked). -/
 theorem firstPass_4_1_coneLaw {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingInput 𝒮)
     (h210 : DegreeMeasureConvergenceStmt 𝒮) (h34 : IntegralConvergenceGreenFunctionStmt 𝒮)
     (h214 : GreenKernelUpperBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
