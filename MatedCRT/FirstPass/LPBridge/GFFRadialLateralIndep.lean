@@ -1,4 +1,5 @@
 import MatedCRT.FirstPass.LPBridge.ConeMeanZeroRestriction
+import MatedCRT.LPStaging.Bonanno.WholePlaneLateral
 import MatedCRT.FirstPass.LPBridge.WholePlaneGFFLateral
 import MatedCRT.FirstPass.LPBridge.LateralGaussian
 import MatedCRT.Proofs.Field.ConeGaussianClosure
@@ -98,18 +99,22 @@ lemma covariance_symm' (X Y : Ω → ℝ) (P : Measure Ω) :
 lemma integral_circle_mul_circle_centred (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
     {t s : ℝ} (ht : 0 < t) (hs : 0 < s) :
     ∫ ω, hcirc ω s 0 * hcirc ω t 0 ∂P = Real.circleAverage (fun x : ℂ => cW x s) 0 t := by
-  have hX : MemLp (fun ω => hcirc ω s 0) 2 P := memLp_two_circle h hs 0
-  have hY : MemLp (fun ω => hcirc ω t 0) 2 P := memLp_two_circle h ht 0
-  have hYc : ∫ ω, hcirc ω t 0 ∂P = 0 := h.integral_eq_zero (.circle t 0) ht
-  have hcov : covariance (fun ω => hcirc ω s 0) (fun ω => hcirc ω t 0) P =
-      ∫ ω, hcirc ω s 0 * hcirc ω t 0 ∂P :=
-    covariance_eq_integral_of_mean_zero hYc (hY.integrable one_le_two) (hX.integrable_mul hY)
-  rw [← hcov, covariance_symm', covariance_radial_radial h ht hs]
+  calc ∫ ω, hcirc ω s 0 * hcirc ω t 0 ∂P = ∫ ω, hcirc ω t 0 * hcirc ω s 0 ∂P := by
+        congr 1
+        funext ω
+        exact mul_comm _ _
+    _ = Real.circleAverage (fun z : ℂ => Real.circleAverage (fun w : ℂ => wholePlaneCov z w) 0 s) 0 t :=
+        MatedCRT.WholePlaneGFFLateral.integral_circle_mul_circle h ht hs
+    _ = Real.circleAverage (fun x : ℂ => cW x s) 0 t := by
+        congr 1
+        funext x
+        exact circleAverage_wholePlaneCov' hs x
 
-lemma radialPoint_fst_of_ne {x : ℂ} (hx : x ≠ 0) : ((radialPoint x).1 : ℝ) = ‖x‖ := by
-  simp [MatedCRT.WholePlaneGFFLateral.radialPoint, hx]
+lemma radialPoint_fst_of_ne {x : ℂ} (hx : x ≠ 0) : ((radialPoint x).1 : ℝ) = ‖x‖ :=
+  LatticeProb.radialPoint_fst_of_ne hx
 
-lemma radialPoint_snd (x : ℂ) : (radialPoint x).2 = 0 := rfl
+lemma radialPoint_snd (x : ℂ) : (radialPoint x).2 = 0 :=
+  LatticeProb.radialPoint_snd x
 
 /-- Pointwise covariance of a radial circle average with the radial part at `x ≠ 0`. -/
 lemma integral_mul_radialPoint (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
@@ -173,15 +178,8 @@ lemma integral_sq_radialPoint (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMea
     {x : ℂ} (hx : x ≠ 0) :
     ∫ ω, F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x) ^ 2 ∂P = |Real.log ‖x‖| := by
   have hpos : 0 < ‖x‖ := norm_pos_iff.2 hx
-  have hae : (fun ω => F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x) ^ 2) =ᵐ[P]
-      (fun ω => hcirc ω ‖x‖ 0 * hcirc ω ‖x‖ 0) := by
-    filter_upwards [hFae] with ω hω
-    rw [hω (MatedCRT.WholePlaneGFFLateral.radialPoint x), radialPoint_fst_of_ne hx, radialPoint_snd, sq]
-  rw [integral_congr_ae hae, integral_circle_mul_circle_centred h hpos hpos,
-    circleAverage_cW_sphere hpos x ‖x‖ rfl]
-  unfold cW
-  rw [max_self]
-  linarith [two_log_max_sub_log hpos]
+  rw [MatedCRT.WholePlaneGFFLateral.integral_sq_radialPoint h hFae hx]
+  exact two_log_max_sub_log hpos
 
 /-- The zero set of `θ ↦ z + r e^{iθ}` is countable, hence null for Lebesgue measure. -/
 lemma circleMap_ne_zero_ae {z : ℂ} {r : ℝ} (hr : 0 < r) :
@@ -338,9 +336,11 @@ lemma integral_mul_observable (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMea
 
 lemma integral_pairing_mul_circle_cW (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
     {φ : ℂ → ℝ} (hφ : IsTestFunction Set.univ φ) {s : ℝ} (hs : 0 < s) :
-    ∫ ω, hC ω φ * hcirc ω s 0 ∂P = ∫ x, φ x * cW x s :=
-  (integral_mul_observable h (GFFObservable.pairing φ) (GFFObservable.circle s 0) hφ hs).trans
-    (wholePlaneGFFCov_pairing_circle_eq φ hs)
+    ∫ ω, hC ω φ * hcirc ω s 0 ∂P = ∫ x, φ x * cW x s := by
+  rw [MatedCRT.WholePlaneGFFLateral.integral_pairing_mul_circle h hφ hs]
+  congr 1
+  funext x
+  rw [circleAverage_wholePlaneCov' hs x]
 
 lemma integral_circle_mul_circle_centre (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
     {r s : ℝ} (hr : 0 < r) (hs : 0 < s) (z : ℂ) :
@@ -852,16 +852,8 @@ lemma lateralEvalF_eq {F : Ω → C(CircleParameter, ℝ)} {ω : Ω}
 
 lemma measurable_radialIntegralF {F : Ω → C(CircleParameter, ℝ)} (hF : Measurable F)
     {φ : ℂ → ℝ} (hφ : IsTestFunction Set.univ φ) :
-    Measurable (fun ω => ∫ x, φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) := by
-  have hjoint : Measurable (fun q : Ω × ℂ =>
-      F q.1 (MatedCRT.WholePlaneGFFLateral.radialPoint q.2)) :=
-    (measurable_circle_version_joint hF).comp (measurable_fst.prodMk
-      (MatedCRT.WholePlaneGFFLateral.measurable_radialPoint.comp measurable_snd))
-  have hmeas : Measurable (fun q : Ω × ℂ =>
-      φ q.2 * F q.1 (MatedCRT.WholePlaneGFFLateral.radialPoint q.2)) :=
-    (hφ.1.continuous.measurable.comp measurable_snd).mul hjoint
-  exact (hmeas.stronglyMeasurable.integral_prod_right (ν := volume)
-    (f := fun ω x => φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x))).measurable
+    Measurable (fun ω => ∫ x, φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) :=
+  MatedCRT.WholePlaneGFFLateral.measurable_radialIntegral_version hF hφ.1.continuous.measurable
 
 lemma measurable_circleAverageF {F : Ω → C(CircleParameter, ℝ)} (hF : Measurable F) (z : ℂ) (r : ℝ) :
     Measurable (fun ω => Real.circleAverage (fun x => F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) z r) := by
