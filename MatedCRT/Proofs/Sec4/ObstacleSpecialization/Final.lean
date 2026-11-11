@@ -6,11 +6,11 @@ import MatedCRT.Steps.Sec2.BoundedExitTimeRV
 /-!
 # Section 4: Lemmas 4.3, 4.4 (corrected), 4.5 (corrected) and 4.7, final forms
 
-* `discreteBasicProperties` (**Lemma 4.3**), `discreteLaplacianBoundCorrected` (**Lemma 4.4**, corrected, E-c1-1) and
-  `discreteConservationOfMassCorrected` (**Lemma 4.5**, corrected, E-c1-1) have no hypotheses. The route of
+* `discreteBasicProperties` (**Lemma 4.3**), `discreteLaplacianBoundCorrected` (**Lemma 4.4**, corrected) and
+  `discreteConservationOfMassCorrected` (**Lemma 4.5**, corrected) have no hypotheses. The route of
   MatedCRT/Proofs/Sec4/ObstacleSpecialization/Statements.lean applies Appendix A to the connected component of the
   origin in `V^ε(B_ρ) \ V^ε(∂B_ρ)` and needs only `AdjacentCellsMeetAeStep`, which `adjacentCellsMeetAeStep`
-  (MatedCRT/Proofs/MatingOfTrees/AdjacentCells.lean) proves. Neither `BallInteriorConnectedStep` (E-c1-2) nor
+  (MatedCRT/Proofs/MatingOfTrees/AdjacentCells.lean) proves. Neither `BallInteriorConnectedStep` nor
   `MatedObstacleSettingStep` is used.
 * `equibounded_of_inputs` (**Lemma 4.7**) has only cited hypotheses:
   - `VolumeGrowthStmt` (Draft, Lemma 2.7; BG20 Lemma A.1), which gives Lemma 2.17 (`BoundedExitTimeRVStmt`) through
@@ -28,12 +28,12 @@ namespace MatedCRT
 theorem discreteBasicProperties (𝒮 : SpaceFillingSLEModel) : DiscreteBasicPropertiesStmt 𝒮 :=
   discreteBasicProperties_of_escape (adjacentCellsMeetAeStep 𝒮)
 
-/-- **Lemma 4.4** (lemma:discrete-laplacian-bound, line 1708), corrected (E-c1-1: the origin claim needs
+/-- **Lemma 4.4** (lemma:discrete-laplacian-bound, line 1708), corrected (the origin claim needs
 `0 ∈ V^ε(B_ρ) \ V^ε(∂B_ρ)`). -/
 theorem discreteLaplacianBoundCorrected (𝒮 : SpaceFillingSLEModel) : DiscreteLaplacianBoundCorrectedStmt 𝒮 :=
   discreteLaplacianBoundCorrected_of_escape (adjacentCellsMeetAeStep 𝒮)
 
-/-- **Lemma 4.5** (lemma:discrete-conservation-of-mass, line 1716), corrected (E-c1-1: the mass identity needs
+/-- **Lemma 4.5** (lemma:discrete-conservation-of-mass, line 1716), corrected (the mass identity needs
 `0 ∈ V^ε(B_ρ) \ V^ε(∂B_ρ)`). -/
 theorem discreteConservationOfMassCorrected (𝒮 : SpaceFillingSLEModel) :
     DiscreteConservationOfMassCorrectedStmt 𝒮 :=
