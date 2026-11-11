@@ -6,10 +6,10 @@ import MatedCRT.Proofs.Sec3.DiscretePotentialTightness.Final
 # Lemma 4.6 from the corrected Lemmas 3.1 and 4.4
 
 `subsequentialConvergence_of_steps` (MatedCRT/Steps/Sec4/SubsequentialConvergence.lean) passes the Draft Lemma 4.4
-(`DiscreteLaplacianBoundStmt`, false in Lean: `not_discreteLaplacianBoundStmt`, E-c1-1) and the Draft Lemma 3.1
-(`DiscretePotentialTightnessStmt`, false for non-open `D`: E-c1-4) to its steps. This file reroutes Lemma 4.6:
+(`DiscreteLaplacianBoundStmt`, false in Lean: `not_discreteLaplacianBoundStmt`) and the Draft Lemma 3.1
+(`DiscretePotentialTightnessStmt`, false for non-open `D`) to its steps. This file reroutes Lemma 4.6:
 
-* `OdometerLocalCompactnessCorrectedStep` and `OdometerBoundaryUpgradeCorrectedStep` are x3's steps with the corrected
+* `OdometerLocalCompactnessCorrectedStep` and `OdometerBoundaryUpgradeCorrectedStep` are the odometer steps with the corrected
   Lemma 3.1 (`DiscretePotentialTightnessCorrectedStmt`) and the corrected Lemma 4.4
   (`DiscreteLaplacianBoundCorrectedStmt`) in place of the Draft ones. The proof of Lemma 4.6
   (paper/idla_mated_crt-corrected.tex, l.1762-1765) uses Lemma 3.1 with `D = B_ρ`, which is open, and the conjunct
@@ -20,7 +20,7 @@ import MatedCRT.Proofs.Sec3.DiscretePotentialTightness.Final
   (`discretePotentialTightnessCorrected_of_inputs`) discharged from their cited inputs.
 
 The local compactness step keeps the quantifier order of the Draft Lemma 4.6 (i): one almost sure event for all times
-and all deterministic sequences. Lemmas 4.7 and 3.1 give an event for each sequence only (E-x3-2), so this step is an
+and all deterministic sequences. Lemmas 4.7 and 3.1 give an event for each sequence only, so this step is an
 additional input, not a consequence of the cited estimates.
 -/
 
@@ -30,7 +30,7 @@ open MeasureTheory Filter Topology Set Metric HarmonicBalls
 
 /-- `OdometerLocalCompactnessStep` with the corrected Lemmas 4.4 and 3.1: local compactness simultaneously for positive
 times and mesh sequences. The almost sure event has stronger quantifiers than an event chosen separately for each
-sequence (E-x3-2). -/
+sequence. -/
 def OdometerLocalCompactnessCorrectedStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   EquiboundedStmt 𝒮 → DiscreteLaplacianBoundCorrectedStmt 𝒮 →
   DiscretePotentialTightnessCorrectedStmt 𝒮 →
