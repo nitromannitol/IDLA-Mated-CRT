@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.Frozen.S3S4
 import MatedCRT.LPStaging.Prob.BrownianOutwardExcursion
+import MatedCRT.LPStaging.Prob.PlanarBrownianGermZeroOne
 import HarmonicBalls.Proofs.Sec6.CompactHittingStopping
 
 /-!
@@ -71,5 +72,36 @@ theorem frozenBrownianOutwardExcursionAtExit_of_inputs
     exact hpos.ne hfr
   exact LatticeProb.PlanarBrownian.ae_frequently_excursion (hW := hW)
     (hBlum := fun A hA => hGerm _ _ _ hW A hA) (hBτ := hBτ) (hind := hind) (hz := hz)
+
+/-- The germ zero-one law of the frozen excursion statement is discharged by the ported Blumenthal
+law: the coordinate germ laws of a planar Brownian motion are trivial (`isTrivialSigma_iInf_bmPast`),
+so the planar germ σ-algebra is trivial (`isTrivialSigma_iInf_pathSigmaTo_planar`). Only the strong
+Markov restart at the exit time remains an explicit input. -/
+theorem frozenBrownianOutwardExcursionAtExit_of_restart
+    (hRestart : ∀ (y z : ℂ) (r : ℝ), y ∈ Metric.ball z r →
+      LatticeProb.PlanarBrownian.IsPlanarBrownian
+          (fun (s : ℝ≥0) (b : MarkovProcess.ContinuousPath ℂ) =>
+            b ((MarkovProcess.ContinuousPath.exitTime (Metric.ball z r) b).toNNReal + s) -
+              b ((MarkovProcess.ContinuousPath.exitTime (Metric.ball z r) b).toNNReal))
+          (planarBrownianMotion y) ∧
+        IndepFun
+          (fun b : MarkovProcess.ContinuousPath ℂ =>
+            b ((MarkovProcess.ContinuousPath.exitTime (Metric.ball z r) b).toNNReal))
+          (fun (b : MarkovProcess.ContinuousPath ℂ) (s : ℝ≥0) =>
+            b ((MarkovProcess.ContinuousPath.exitTime (Metric.ball z r) b).toNNReal + s) -
+              b ((MarkovProcess.ContinuousPath.exitTime (Metric.ball z r) b).toNNReal))
+          (planarBrownianMotion y) ∧
+        AEMeasurable
+          (fun b : MarkovProcess.ContinuousPath ℂ =>
+            b ((MarkovProcess.ContinuousPath.exitTime (Metric.ball z r) b).toNNReal))
+          (planarBrownianMotion y)) :
+    FrozenBrownianOutwardExcursionAtExit :=
+  frozenBrownianOutwardExcursionAtExit_of_inputs
+    (fun _ _ _ _ _ hW A hA =>
+      LatticeProb.PlanarBrownian.isTrivialSigma_iInf_pathSigmaTo_planar hW
+        (LatticeProb.isTrivialSigma_iInf_bmPast hW.re fun t => Complex.measurable_re.comp (hW.measurable t))
+        (LatticeProb.isTrivialSigma_iInf_bmPast hW.im fun t => Complex.measurable_im.comp (hW.measurable t))
+        A hA)
+    hRestart
 
 end MatedCRT
