@@ -1,5 +1,10 @@
 # LP staging sync check: MatedCRT/LPStaging against LatticeProb
 
+> **Superseded 2026-11-11.** The in-repository copies were archived (HB 2478ebc4: `archive/HarmonicBalls/LPStage`; IDLA 741a5360:
+> `archive/MatedCRT/LPStaging`). Both papers import `LatticeProb.*` from the pinned Lattice-Probability revision 8fcf846.
+> The text below records the state before the archive move.
+
+
 Task p2-lpstaging-sync-check (lead, 2026-11-11). Read-only on both trees: no Lean file edited, nothing built.
 
 Snapshots checked on 2026-11-11:
