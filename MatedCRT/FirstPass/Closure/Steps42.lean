@@ -5,6 +5,8 @@ import MatedCRT.FirstPass.S4d.ScaleBridge
 import MatedCRT.FirstPass.S4d.HorizonUnique
 import MatedCRT.FirstPass.S2j
 import MatedCRT.FirstPass.Frozen.S4d2
+import MatedCRT.FirstPass.S5r.ClosureInside
+import MatedCRT.FirstPass.Closure.HSCDerived
 
 /-!
 # The paper-own steps of Proposition 4.2 (task p2-clean-5-1-5-4-then-steps-4-2)
@@ -22,8 +24,10 @@ The three steps of `firstPass_4_2_final` (COUNTED.md:124-126) and their status:
   chain is `strictGapFixedTimeUnionStep_of_provider` (FirstPass/S4d/FixedTimeFinal.lean:51); the chain uses the
   Lemma 2.5 and 2.6 forms and `ConeHalfBallClosureInsideStep` (hcl). Proved here conditionally on the named hypothesis
   `hcl`; see the report for the gap in the printed sentence at tex:1920.
-* `hcl` = `ConeHalfBallClosureInsideStep` (Proofs/Sec2/ConeFamilyMeasurable/StoppedClosure.lean:18): no printed
-  argument (its docstring says "Not stated in the paper"). Not proved here; reported.
+* `hcl` = `ConeHalfBallClosureInsideStep` (Proofs/Sec2/ConeFamilyMeasurable/StoppedClosure.lean:18): derived by
+  `coneHalfBallClosureInsideStep_proof` from `MatedCRT.S5r.coneHalfBallClosureInsideStep_corrected`
+  (FirstPass/S5r/ClosureInside.lean:24), by the lead's ruling of 2026-11-11 that a Lean derivation from acceptable
+  inputs needs no printed argument. With it, `strictGapFixedTimeUnionStep_proof_unconditional` removes `hcl`.
 -/
 
 open MeasureTheory
@@ -94,5 +98,43 @@ theorem strictGapFixedTimeUnionStep_proof {𝒮 : SpaceFillingSLEModel}
     MatedCRT.firstPass_2_6_ownBinders hstd hCentre hOpen hSup hCons hMono hCompat hBdry hExist hThm11 hProp56 hconf
       hI2 hK hloc hSC hE hFL hBG hE1 hE2 hscale hND
   exact strictGapFixedTimeUnionStep_of_provider 𝒮 hprov h25 hfam h26 hscale
+
+/-- **`hcl` (`ConeHalfBallClosureInsideStep`), derived from the Harmonic-Balls inputs.** The closure-containment step is
+the Lean derivation `MatedCRT.S5r.coneHalfBallClosureInsideStep_corrected` (FirstPass/S5r/ClosureInside.lean:24, a copy of
+FirstPass/S2g/Corrected24.lean:33). Its strong-compatibility input is `frozenClusterStrongCompatibility_of_volumeGrowth hI2`
+(Closure/HSCDerived.lean:19), and its volume-growth input is `volumeGrowthStmt_of_berestyckiGwynne hBG`. -/
+theorem coneHalfBallClosureInsideStep_proof
+    (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
+    (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
+    (hloc : HarmonicBallLocalSetStmt.{0}) (hEx : ExistenceHarmonicBallsStmt.{0})
+    (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion)
+    (hFL : FPConeWholePlaneFieldLaw) (hBG : FrozenBerestyckiGwynneConeBallMass) :
+    ConeHalfBallClosureInsideStep :=
+  MatedCRT.S5r.coneHalfBallClosureInsideStep_corrected hI2 hK hloc hEx
+    (MatedCRT.frozenClusterStrongCompatibility_of_volumeGrowth hI2) (volumeGrowthStmt_of_berestyckiGwynne hBG) hE hFL
+
+/-- **`hnj` (`StrictGapFixedTimeUnionStep`), unconditional.** This is the committed conditional
+`strictGapFixedTimeUnionStep_proof` with `hcl` given by `coneHalfBallClosureInsideStep_proof` and `hSC` given by
+`frozenClusterStrongCompatibility_of_volumeGrowth hI2`. The committed theorem is unchanged; the name is new because
+`strictGapFixedTimeUnionStep_proof` is already taken. -/
+theorem strictGapFixedTimeUnionStep_proof_unconditional {𝒮 : SpaceFillingSLEModel}
+    (hstd : FrozenConeLogLocalCodeLawStd) (hCentre : FrozenGreenBallCentre)
+    (hOpen : ClusterOpenLaplacianStmt.{0}) (hSup : LeastSupersolutionMemStmt.{0})
+    (hCons : ClusterConservationOfMassStmt.{0}) (hMono : ClusterMonotoneStmt.{0})
+    (hCompat : ClusterCompatibilityStmt.{0}) (hBdry : ClusterBoundaryMeasureZeroStmt.{0})
+    (hExist : ExistenceHarmonicBallsStmt.{0}) (hThm11 : ExistenceUniquenessHarmonicBallsStmt.{0})
+    (hProp56 : UniquenessHarmonicBallsStmt.{0}) (hconf : FrozenHBInitialConfinement)
+    (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
+    (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
+    (hloc : HarmonicBallLocalSetStmt.{0})
+    (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion)
+    (hFL : FPConeWholePlaneFieldLaw) (hBG : FrozenBerestyckiGwynneConeBallMass)
+    (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
+    (hscale : QuantumConeScalingInput) (hND : LQGMeasureNonDyadicDilationPart)
+    (hrescale : ConeRescaledMeasureIsConeFieldInput) :
+    StrictGapFixedTimeUnionStep 𝒮 :=
+  strictGapFixedTimeUnionStep_proof hstd hCentre hOpen hSup hCons hMono hCompat hBdry hExist hThm11 hProp56 hconf
+    hI2 hK hloc (MatedCRT.frozenClusterStrongCompatibility_of_volumeGrowth hI2) hE hFL hBG hE1 hE2 hscale hND hrescale
+    (coneHalfBallClosureInsideStep_proof hI2 hK hloc hExist hE hFL hBG)
 
 end MatedCRT.FirstPassClosure
