@@ -5156,32 +5156,81 @@ environment-dependent tests in that lemma.
 \input{appendix-lemma36-C13.tex}
 
 \subsection{Uses of Lemma 3.6 in the paper}
-The definition of Lemma~\ref{lemma:convergence-of-harmonic-functions} is followed by one invocation, in the proof of Lemma~\ref{lemma:discrete-dirichlet-problem}. Each use is checked below.
+Line numbers in this section refer to the supplied corrected source.
+A literal search for \texttt{lemma:convergence-of-harmonic-functions}
+finds its definition at line 1390 and just one invocation, at
+line 1453 in the proof of the Dirichlet lemma.
 \begin{enumerate}[label=(\arabic*)]
-\item \textbf{Discrete Dirichlet problem (Lemma~\ref{lemma:discrete-dirichlet-problem}).}
+\item \textbf{Dirichlet lemma, lines 1434--1528.}
 Its harmonic part satisfies, exactly,
 \[
- m_\varepsilon^{-1}f_1^\varepsilon(a_y^\varepsilon)
- =\E[\bar\phi(Y^\varepsilon_{\sigma_D^\varepsilon})\mid\mathcal F].
+ m_\eps^{-1}f_1^\eps(a_y^\eps)
+ =\E[\bar\phi(Y^\eps_{\sigma_D^\eps})\mid\mathcal{F}].
 \]
-Theorem~\ref{thm:l36-A} gives the required convergence at every fixed rational point. A deterministic diagonal subsequence gives the almost-sure simultaneous statement for all rational points. The uniform conclusion of Theorem~\ref{thm:l36-A} supplies the harmonic-part compactness and the boundary convergence. The boundary datum in that lemma must also be extended to a neighbourhood of $\overline D$ (or evaluated after $\pi_D$). No convergence rate is used in this invocation.
+Theorem~\ref{thm:l36-A} gives the required convergence at every fixed
+rational point. A deterministic diagonal subsequence gives the
+almost-sure simultaneous statement for all rational points.
+The uniform conclusion proved above directly supplies its
+harmonic-part compactness and boundary convergence.
+The boundary datum in that lemma must also be extended to a
+neighborhood (or evaluated after $\pi_D$). No convergence rate
+is used anywhere in this invocation.
 
-The inhomogeneous part uses the separate occupation-convergence lemma, Lemma~\ref{lemma:integral-convergence-of-greens-function}. Its correct limit is $-\lambda_0\int_D G_D(\cdot,w)\psi(w)\,\mu_h(dw)$, where $\lambda_0=2/m_0$. The displayed residual $m_0$ in Step 1 of the same computation must be read as $\lambda_0$. Likewise the limit of $m_\varepsilon^{-1}\mathfrak Q_D^\varepsilon$ has Laplacian $-\lambda_0\mu_h$, not the displayed $-1$ in Step 3 of the corresponding computation. The needed zero-boundary control is supplied by the lens comparison in the tightness argument of Section~\ref{sec:dirichlet-problem}; one cannot justify it by a harmonic maximum principle for the superharmonic exit-time function alone. These corrections do not require a stronger version of Lemma~\ref{lemma:convergence-of-harmonic-functions}.
+The inhomogeneous part uses the separate occupation-convergence
+lemma. Its correct limit is
+$-\lambda_0\int_D G_D(\cdot,w)\psi(w)\mu_h(dw)$,
+where $\lambda_0=2/m_0$ as in approved correction \textup{[C1]}.
+The displayed residual $m_0$ in Step 1 must be read as $\lambda_0$.
+Likewise the limit of $m_\eps^{-1}\mathfrak Q_D^\eps$ has
+Laplacian $-\lambda_0\mu_h$, not the displayed $-1$ in Step 3.
+The needed zero-boundary control is already supplied by the
+lens comparison in the corrected tightness proof, lines
+1144--1172; one cannot justify it by a harmonic maximum
+principle for the superharmonic exit-time function alone.
+These corrections do not require a stronger version of Lemma 3.6.
 
-\item \textbf{Normalized exit time (Lemma~\ref{lemma:convergence-of-the-normalized-exit-time}).}
-These uses apply Lemma~\ref{lemma:discrete-dirichlet-problem} only with zero boundary data and a countable family of deterministic smooth sources. The harmonic part is identically zero. Deterministic diagonal preparation as in Lemma~\ref{lemma:discrete-potential-tightness} suffices. There is no demand for uncountably many simultaneous applications, or for a rate.
+\item \textbf{Normalized-exit-time argument, lines 1565 and 1674.}
+These use the Dirichlet lemma only with zero boundary data and
+a countable family of deterministic smooth sources.
+The harmonic part is identically zero. Deterministic diagonal
+preparation as in \textup{[C11]} suffices. There is no demand
+for uncountably simultaneous applications or a rate.
 
-\item \textbf{Odometer compactness (Subsection ``Convergence of the odometer along subsequences'').}
-This cites the zero-boundary barrier of the proof of Lemma~\ref{lemma:discrete-dirichlet-problem}. Use the lens barrier identified in item (1). It is a bounded-Laplacian estimate, not an extra consequence of pointwise harmonic convergence.
+\item \textbf{Odometer compactness, line 1948.}
+This cites the Dirichlet proof's zero-boundary barrier.
+Use the corrected tightness proof's lens barrier just identified.
+It is a bounded-Laplacian estimate, not an extra consequence of
+pointwise harmonic convergence.
 
-\item \textbf{Subsequential properties (Lemma~\ref{lemma:subsequential-properties}).}
-The prepared family consists of rational balls and rational polynomial boundary data, hence is countable. A polynomial chosen after observing the limiting odometer is permissible because convergence has already been prepared for every member of that countable family. Polynomials have canonical extensions outside the disk. In the proof, the boundary condition must be
+\item \textbf{Subsequential properties, lines 1981 and 2031.}
+The prepared family consists of rational balls and rational
+polynomial boundary data, hence is countable. A polynomial
+chosen after observing the limiting odometer is permissible
+because convergence has already been prepared for every member
+of that countable family. Polynomials have canonical extensions
+outside the disk. There is, however, an additional scaling typo:
+the boundary condition at about line 2010 must be
 \[
- f_\delta^\varepsilon(b)=m_\varepsilon\bigl(\phi^\delta(\eta(b))+\delta\bigr),
+ f_\delta^\eps(b)=m_\eps\bigl(\phi^\delta(\eta(b))+\delta\bigr),
 \]
-not $m_\varepsilon\phi^\delta(\eta(b))+\delta$. The latter has limit $\phi^\delta$ and cannot imply the displayed limit $\phi^\delta+\delta$ or the claimed domination. With this boundary value, uniform convergence of the odometer and $\|\phi^\delta-\bar w_t^*\|_{\overline D}<\delta/4$ give boundary domination for small $\varepsilon$; the small overshoot outside $D$ is handled by continuity on its collar. The discrete maximum principle and Theorem~\ref{thm:l36-A} then give the asserted harmonic comparison. It is enough to take rational $\delta\downarrow0$, keeping the family countable.
+not $m_\eps\phi^\delta(\eta(b))+\delta$.
+The latter has limit $\phi^\delta$ and cannot imply the displayed
+limit $\phi^\delta+\delta$ or the claimed domination.
+With the corrected boundary value, uniform convergence of the
+odometer and $\|\phi^\delta-\bar w_t^*\|_{\overline D}<\delta/4$
+give boundary domination for small $\eps$; the small overshoot
+outside $D$ is handled by continuity on its collar.
+The discrete maximum principle and Theorem~\ref{thm:l36-A} then
+give the asserted harmonic comparison. It is enough to take
+rational $\delta\downarrow0$, keeping the family countable.
 \end{enumerate}
-The introduction and the sentence preceding Lemma~\ref{lemma:convergence-of-the-normalized-exit-time} only announce or discuss the Dirichlet result. There are no other invocations of Lemma~\ref{lemma:convergence-of-harmonic-functions}, and no downstream invocation uses its printed quantitative comparison. This list concerns the uses of harmonic convergence only; it does not cover other Green-kernel or obstacle calculations in the paper.
+The introduction and the explanatory sentence preceding the
+normalized-exit-time lemma only announce or discuss the
+Dirichlet result. There are no other invocations of Lemma 3.6,
+and no downstream invocation uses its printed quantitative
+comparison. This audit certifies the uses of harmonic convergence;
+it is not a blanket verification of unrelated Green-kernel or
+obstacle calculations elsewhere in the paper.
 
 \bibliographystyle{alpha}
 \bibliography{refs.bib}

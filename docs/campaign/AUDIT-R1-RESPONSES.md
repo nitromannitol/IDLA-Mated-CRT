@@ -95,3 +95,61 @@ Decisions:
 
 - Bibliography: Berestycki, 'An elementary approach to Gaussian multiplicative chaos' (arXiv:1506.09113), cited in Appendix B (three places) with key `berestycki2017elementary`. The key is not in the paper's bibliography (paper/idla_mated_crt-corrected.bbl), and refs.bib is not in the repository. The scratch compile reports the citation as undefined. The entry must be added to refs.bib.
 - Notation (follow-up item 3): the limit constant 2/m_0 is written lambda_0; kappa_0 was renamed to avoid the clash with the SLE parameter kappa (tex:191).
+
+## IDLA status table
+
+Scope: the IDLA findings of the audit round 1 report (fleet notes, not in the repository): sections A (lines 96-126), B (149-172), the IDLA email table (210-232) and the IDLA Lean minor list (242-249). Audit line numbers are in the "audit" column.
+Rule: Fixed = a commit and file:line evidence; Responded = a response line in this file that is not pending; Pending = no commit and no such response, with the owner and request id.
+Counts: Fixed 39, Responded 0, Pending 9 (total 48).
+Pending rows: B4 counted Theorems 1.4/1.6 take paper-owned steps; B6 firstPassMain_1_4 and _1_6 should not be counted; MINOR m1 hcell duplicates adjacentCellsMeetAeStep; MINOR m2 FrozenLeastSupersolutionMemCone is a paper-side transfer; MINOR m3 closed_3_1 is the weak form; MINOR m4 Lemma 7.4 has no counted theorem; CrudeUpperBoundStmt vs [C25]; MINOR m5 beta minus pinned to (2+gamma)^2/2 + 1; MINOR m6 FrozenVeryGoodAnnulusHarnackType uses "for every C_3"; MINOR m7 non-vacuity rests on IsMatingOfTreesCoupling (absent from snapshot).
+
+| Finding | Audit line | Status | Evidence (commit; file:line or response) |
+|---|---|---|---|
+| A7 appendices B and C (occupation; Lemma 3.6) | 98 | Fixed | 1d7c3cd, 5c6854f; tex:4531 (Appendix B), tex:5156 (`\input` of Appendix C) |
+| A8 overloaded c_0 | 106 | Fixed | 1d7c3cd, 5c6854f; tex:724 (`\lambda_0 := 2/m_0`), tex:908-910 (c_{BG,0}, c_{BG,1}) |
+| A9 [C29] misattributed; Lemma 6.4 printed gap | 114 | Fixed | 1d7c3cd; tex:2808 ([C32]), tex:2809 (K with delta^{-1/2}); CORRECTIONS.md:123 |
+| A10 [C9] wrong locator | 123 | Fixed | 1d7c3cd; tex:1976 (eq:cluster-and-lambdat), tex:3898 (eq:cluster-contained-in) |
+| B4 counted Theorems 1.4/1.6 take paper-owned steps | 151 | Pending | owner z5, request "z5 B4"; FirstPass/Phase2Rewire.lean:35 (`closed_1_4_derived_p2`); FirstPass/Closure/AuditRewire14.lean (untracked, nothing committed) |
+| B5 [C16] step hidden in a literature bundle | 159 | Fixed | 5f3fb57, aebb815; FirstPass/SLERef/CertifiedCore.lean:22, FirstPass/Closure/AuditCore.lean:26 (14 `_certCore` declarations; originals unchanged); residual input Steps/Sec3/ConvergenceHarmonicFunctions.lean:38 is an operator decision |
+| B6 firstPassMain_1_4 and _1_6 should not be counted | 163 | Pending | operator, requests 95b-95e; FirstPass/Main.lean:46 |
+| B7 Lemma 3.6 only half proved | 167 | Fixed | 8759946; FirstPass/Closure/Lemma36Rate.lean:39 (`closed_3_6_full`) |
+| C1 (email table) | 214 | Fixed | 12219de; tex:504 (marker); CORRECTIONS.md:7 |
+| C2 (email table) | 215 | Fixed | 12219de; tex:829 (marker); CORRECTIONS.md:31; moved to Minor in 1d7c3cd, ERRATA-for-Ewain.md:61 |
+| C3 (email table) | 215 | Fixed | 12219de; tex:990 (marker); CORRECTIONS.md:37 |
+| C4 (email table) | 215 | Fixed | 12219de; tex:2338 (marker); CORRECTIONS.md:42 |
+| C5 (email table) | 223 | Fixed | 12219de; tex:2673 (marker); CORRECTIONS.md:49; ledger CONFIRMED in 1d7c3cd |
+| C6 (email table) | 216 | Fixed | 15e23b5; tex:1019 (marker); CORRECTIONS.md:56; TAB typo fixed in 1d7c3cd (tex:1021, 1025) |
+| C7 (email table) | 215 | Fixed | ca0f323; tex:1983 (marker); CORRECTIONS.md:61; moved to Minor in 1d7c3cd, ERRATA-for-Ewain.md:61 |
+| C8 (email table) | 215 | Fixed | ca0f323; tex:3941 (marker); CORRECTIONS.md:64 |
+| C9 (email table) | 220 | Fixed | ca0f323; tex:1812 (marker); CORRECTIONS.md:67; locator fixed in 1d7c3cd (tex:1976, 3898) |
+| C10 (email table) | 215 | Fixed | ca0f323; tex:980 (marker); CORRECTIONS.md:70 |
+| C11 (email table) | 217 | Fixed | 0ba290f; tex:979 (marker); CORRECTIONS.md:73; email list fixed in 1d7c3cd |
+| C12 (email table) | 215 | Fixed | 0ba290f; tex:2006 (marker); CORRECTIONS.md:76 |
+| C13 (email table) | 218 | Fixed | 1c181f9; tex:1396 (marker); CORRECTIONS.md:79; unmarked consequence marked at tex:2135 in 1d7c3cd; audit note on strengthening not acted on |
+| C14 (email table) | 215 | Fixed | 1c181f9; tex:2110 (marker); CORRECTIONS.md:83 |
+| C15 (email table) | 215 | Fixed | db7762c; tex:719 (marker); CORRECTIONS.md:21 |
+| C16 (email table) | 219 | Fixed | db7762c; tex:1246 (marker); CORRECTIONS.md:24; deferred file replaced by Appendices (1d7c3cd; tex:4531, 5156) |
+| C17 (email table) | 214 | Fixed | db7762c; tex:1366 (marker); CORRECTIONS.md:28 |
+| C18 (email table) | 221 | Fixed | 11ec135; tex:2679 (marker); CORRECTIONS.md:86; stale C at tex:2816 fixed in 1d7c3cd |
+| C19 (email table) | 215 | Fixed | dd17ff9; tex:3619 (marker); CORRECTIONS.md:90 |
+| C20 (email table) | 222 | Fixed | 968ce64; tex:1915 (marker); CORRECTIONS.md:93 |
+| C21 (email table) | 222 | Fixed | 968ce64; tex:2330 (marker); CORRECTIONS.md:96 |
+| C23 (email table) | 224 | Fixed | 3515643; tex:2335 (marker); CORRECTIONS.md:104; relabelled as clarification in 1d7c3cd |
+| C24 (email table) | 224 | Fixed | 3515643; tex:3987 (marker); CORRECTIONS.md:108; relabelled as clarification in 1d7c3cd |
+| C25 (email table) | 215 | Fixed | 3515643; tex:4028 (marker); CORRECTIONS.md:111 |
+| C26 (email table) | 222 | Fixed | 89ba440; tex:2914 (marker); CORRECTIONS.md:114; email entry rewritten in 1d7c3cd |
+| C27 (email table) | 215 | Fixed | 79b1b1c; tex:2675 (marker); CORRECTIONS.md:117; split and moved to Minor in 1d7c3cd |
+| C28 (email table) | 222 | Fixed | 79b1b1c; tex:2698 (marker); CORRECTIONS.md:120; 'Wrong' texts marked in 1d7c3cd |
+| C29 (email table) | 225 | Fixed | 79b1b1c; tex:3003 (marker); CORRECTIONS.md:123; ledger corrected in 1d7c3cd |
+| C30 (email table) | 215 | Fixed | 79b1b1c; tex:2862 (marker); CORRECTIONS.md:126 |
+| C31 (email table) | 215 | Fixed | 79b1b1c; tex:2628 (marker); CORRECTIONS.md:129 |
+| E-c1-2 missing item (connectedness of V, Appendix A) | 227 | Fixed | 1d7c3cd; tex:4305-4313 (C33 marker at tex:4307); ERRATA-for-Ewain.md:61 (Minor) |
+| Wording: 'Green's function for standard Brownian motion' | 228 | Fixed | 1d7c3cd; tex:504 and tex:1227 (C1 markers) |
+| INTERNAL section of the email | 229 | Fixed | 1d7c3cd (moved out of the email); docs/campaign/ERRATA-INTERNAL.md:1 |
+| MINOR m1 hcell duplicates adjacentCellsMeetAeStep | 243 | Pending | operator, requests 95b-95e |
+| MINOR m2 FrozenLeastSupersolutionMemCone is a paper-side transfer | 244 | Pending | operator, requests 95b-95e; used at FirstPass/S5k.lean:54 |
+| MINOR m3 closed_3_1 is the weak form | 245 | Pending | operator, requests 95b-95e |
+| MINOR m4 Lemma 7.4 has no counted theorem; CrudeUpperBoundStmt vs [C25] | 246 | Pending | operator, requests 95b-95e; Draft/Section7.lean:67 |
+| MINOR m5 beta minus pinned to (2+gamma)^2/2 + 1 | 247 | Pending | operator, requests 95b-95e; FirstPass/S6d.lean (audit location :30) |
+| MINOR m6 FrozenVeryGoodAnnulusHarnackType uses "for every C_3" | 248 | Pending | operator, requests 95b-95e |
+| MINOR m7 non-vacuity rests on IsMatingOfTreesCoupling (absent from snapshot) | 249 | Pending | no request id located in the fleet files (97a, 97b not found); operator to assign |

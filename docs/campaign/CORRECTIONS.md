@@ -154,7 +154,7 @@ Printed: a_1, ..., a_k in Theta (Definition 6.2, lemma:abelian-IDLA "subset Thet
 - Reason: the success probability of Lemma 6.7 may depend on s_0. Email item: Lemma 6.9 (new minor item).
 ## Readings (not corrections of the paper; line numbers of the corrected draft)
 
-### (R1) The origin vertex `0` and `a^eps_0` (ESCALATIONS E-x3-3, worker A, 2026-11-04)
+### (R1) The origin vertex `0` and `a^eps_0` (ESCALATIONS E-x3-3, the formalization, 2026-11-04)
 - Where: the paper writes `0` for the point `eta(0) = 0` of `C` and for the vertex `0` of `eps Z`, whose cell
   `H^eps_0 = eta([-eps, 0])` contains it. The vertex `0` is the source of IDLA and of the divisible sandpile (l.246,
   l.1537-1557), of the obstacle `-(t eps^{-1}) g^eps_{B_rho}(0, .)` (eq:discrete-least-supersolution, l.1570-1571) and
@@ -167,7 +167,7 @@ Printed: a_1, ..., a_k in Theta (Definition 6.2, lemma:abelian-IDLA "subset Thet
   `MatedCRTEnv.mε` (Defs/Setting.lean:205, the reading `z = 0`); `vertexOf ε η y`: Drafts 2.11, 3.3, 3.4, 3.6.
 - Why this is consistent: `a^eps_0 = 0` iff `eta` does not visit `0` before time `-eps`, and almost surely `eta` has no
   negative-time visit to `0`, simultaneously for all `eps > 0`: `MatedCRTEnv.IsValid.ae_vertexOf_zero_eq_zero`
-  (MatedCRT/Proofs/Sec4/DivSandpileLowerBound/SourceVertex.lean:125, worker x3, commit 1326986), from the identity case
+  (MatedCRT/Proofs/Sec4/DivSandpileLowerBound/SourceVertex.lean:125, the formalization, commit 1326986), from the identity case
   of the coordinate-change rule of the mating-of-trees coupling (`igMap`: the curve is rooted at its first visit to `0`)
   and transience. All statements concerned conclude almost surely or in probability, so the two sources are
   interchangeable there. Caveat: the proof rests on the `igMap` field of the bundle (stated in whole-plane form for a
@@ -187,3 +187,8 @@ nearest-point projection of exit-cell representatives, with uniform convergence 
 (S3) Lemma 4.8 item 1 off the pole; (S4) Lemma 7.4 for the stopped odometer on its own
 cluster; (S5) one annealed-probability convention (outer integral / outer measure); (S6) Lemma 3.1: `u^eps` are
 `sigma(h, eta)`-measurable; (S7) MatedCRT/External (SLE-model inputs, quantum cone scaling).
+
+## Transcription notes (appendix audit section)
+
+- T1 (Lemma 3.6 audit of every use). The audit section of docs/campaign/LEMMA36-REPLACEMENT.md (lines 629-703) is transcribed into the audit subsection of Appendix C (paper/idla_mated_crt-corrected.tex, subsection "Uses of Lemma 3.6 in the paper"), with the item labels and text of the source. Two notation points: the constant written c_0 in the source is written lambda_0 (renamed, see the [C1] entry and the notation line of AUDIT-R1-RESPONSES.md); Theorem~\ref{thm:A} is repointed to the label thm:l36-A of the Appendix C theorem; \F is written \mathcal{F}.
+- T2 (boundary datum at "about line 2010" of the audited source). The source states that the boundary condition must be f_delta^eps(b) = m_eps(phi^delta(eta(b)) + delta), not m_eps phi^delta(eta(b)) + delta. The corrected paper already displays the corrected form at paper/idla_mated_crt-corrected.tex:2111 (lemma on the convergence of the odometer, proof of the subsequential limits). Line 2010 of the current file lies in a different lemma, so the audit line number refers to an earlier numbering. The transcription keeps the corrected display; no main-text change was made.
