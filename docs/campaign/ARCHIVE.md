@@ -207,3 +207,15 @@ Moved back with git mv from archive/ to MatedCRT/ (the batch B12 row above gives
 | archive/MatedCRT/FirstPass/S2y/LateralL2Limit250.lean | MatedCRT/FirstPass/S2y/LateralL2Limit250.lean | R1 |
 | archive/MatedCRT/FirstPass/S2y/RadialProcCont250.lean | MatedCRT/FirstPass/S2y/RadialProcCont250.lean | R1 |
 | archive/MatedCRT/FirstPass/S2y/RadialProcL4Ae250.lean | MatedCRT/FirstPass/S2y/RadialProcL4Ae250.lean | R1 |
+
+## Batch F (build failures)
+
+Moved with git mv from MatedCRT/ to archive/ (same relative path). Each file is a tracked module that fails to build at HEAD in the whole-library build `lb MatedCRT` (log logs/lb/051401-2018640.log), and none of the three is in the import closure of a root. The roots are the 22 MatedCRT/FirstPass/Closure/*.lean files, every live file containing `closed_`, MatedCRT/FirstPass/Main.lean, MatedCRT/FirstPass/LIClosed68Y.lean, and the module paths named in README.md and docs/campaign/PHASE2-INVENTORY.md. No live module imports any of the three except S5s.lean, which is itself moved.
+
+| old path | new path | first error (lb MatedCRT) | reason unreachable |
+|---|---|---|---|
+| MatedCRT/FirstPass/S5c/ClusterInclusion.lean | archive/MatedCRT/FirstPass/S5c/ClusterInclusion.lean | :45:56 application type mismatch: `hmeas` has type `Measurable` where `AEMeasurable` is expected | not reached from any root; no live module imports it (EntryTimes.lean:14 names one of its lemmas in a comment) |
+| MatedCRT/FirstPass/S5s/Copies.lean | archive/MatedCRT/FirstPass/S5s/Copies.lean | :1803:42 unknown identifier `subset_ball_of_lt_clusterExitTime` | not reached from any root; imported only by S5s.lean |
+| MatedCRT/FirstPass/S5s.lean | archive/MatedCRT/FirstPass/S5s.lean | no own error; it imports MatedCRT.FirstPass.S5s.Copies, which fails | not reached from any root; imports only Copies |
+
+Other entries of the same whole-library build are not tracked modules: 16 are untracked probe or axiom-check files (for example MatedCRT/Audit/RefutationsProbe.lean, MatedCRT/Proofs/IDLA/NamesY2.lean); 11 name modules that are archived or have no file, and are imported by untracked IntegralConvergenceGreenFunction/*AxiomsY5.lean files (for example JointL1AxiomsY5.lean imports ...JointL1Convergence and ...ConditionalMassBound, which are archived). Those untracked files are left in place.
