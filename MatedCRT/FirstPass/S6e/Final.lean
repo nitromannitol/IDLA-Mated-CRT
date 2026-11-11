@@ -4,12 +4,12 @@ import MatedCRT.FirstPass.S6e.Cutoff
 import MatedCRT.FirstPass.S6e.Admissible
 
 /-!
-# FIRST PASS: the final event of LEMMA68 (D2, bridge §2) (task fp-S6e-lemma68-D123 and fp-S6h, z9)
+# FIRST PASS: the final event of LEMMA68 (D2, bridge §2)
 
-Source: `notes/fp-gaps/CHATGPT-lemma68-open-parts.md` D2 (lines 957-989), and the bridge answer
-`notes/fp-gaps/CHATGPT-z9-6-8-bridge.md` §2.1 (admissibility guard, lines 95-135) and §2.2 (mesh argument,
+Sources: the D2 step of the Lemma 6.8 open parts (lines 957-989 of that write-up), and the bridge argument
+§2.1 (admissibility guard, lines 95-135) and §2.2 (mesh argument,
 lines 136-177). The configuration quantity `exitF ε ω r i` (the quenched exit probability `exitQ` of bridge §1) and
-its admissibility guard `Adm ε ω r i` are parameters: z8 instantiates them in `FirstPass/S6h.lean`.
+its admissibility guard `Adm ε ω r i` are parameters: they are instantiated in `FirstPass/S6h.lean`.
 
 The quantifier order of D2 is kept: first `ε`, then every `r ∈ [α ε, dd ω]` and every configuration `i`, on
 `E ε ∩ G`. The scalar `Q` depends on the mesh `ε` (bridge §2.2). Outside the guard `Adm` the scalar is `0`

@@ -37,7 +37,7 @@ structure Lemma68MeasurableInputs {Ω : Type} [MeasurableSpace Ω] (S : MatedCRT
   transition_measurable : ∀ u v : ℤ, Measurable (fun ω => p ω u v)
   eta_escapes : ∀ᵐ ω ∂S.P, CurveEscapesBothEnds (S.η ω)
 
-/-- (OPEN 4 of the round-6 notes) A valid environment gives the almost-sure continuity of the curve `η`: this is the
+/-- A valid environment gives the almost-sure continuity of the curve `η`: this is the
 first clause of `IsAreaParametrized` (`Defs/Setting.lean:126`), carried by the field `isAreaParametrized`
 (`Defs/Setting.lean:152`). The continuity hypothesis of `ae_cellDist_eq_iInf_cell` is therefore available for every
 valid environment. -/
