@@ -95,7 +95,13 @@ Defs field `IsObstacleSetting.locallyFinite` (Defs/Sandpile.lean) keeps the unfo
 ## D10. LP-form aliases and superseded wrappers (2026-11-11, lead li 10:20)
 - `MatedCRT.closed_2_13_lp` (FirstPass/Closure/CleanSec23LP.lean:31) and `MatedCRT.closed_2_13_cellRewire` (FirstPass/Closure/CellRewire.lean:21) have the same body `closed_2_13 (adjacentCellsMeetAeStep 𝒮)` and the same statement `MaximumPrincipleStmt 𝒮`. Same statement. CANONICAL: `closed_2_13_cellRewire` (COUNTED row 2.13).
 - Superseded, not duplicates: `closed_3_5_ownBinders` (FirstPass/Closure/OwnBinderRewire.lean:57), `firstPass_3_6_ownBinders` (:197) and `firstPass_3_7_ownBinders` (:103) differ from `closed_3_5_lp`, `closed_3_6_lp`, `closed_3_7_lp` (CleanSec23LP.lean:45, :53, :61) by the hexc binder, which is discharged there. COUNTED counts the _lp forms; the wrappers stay in place.
+- Superseded bases, not duplicates (rule 1, p2-ledger-lp-counted-status): each _lp form is a strict sub-list of its base, and the base stays in place: `firstPass_2_4_ownBinders`, `firstPass_2_5_ownBinders`, `firstPass_2_6_ownBinders`, `firstPass_4_1_coneLaw_ownBinders`, `closed_4_8_corrected_ownBinders`, `closed_6_10_ownBinders`, `firstPass_6_4_uniform`, `closed_1_4_full`, `closed_1_4_lp`, `closed_1_6_full`, `closed_1_6_lp`, `closed_2_3_lit`, `closed_2_3_lit_noSC`, `closed_4_2_clean`, `closed_5_1_clean`, `closed_6_1_clean`, `closed_7_1_clean`, `closed_8_1_full`. `firstPass_3_6_closed` (S3i/LensClosed.lean:31) is not a base of `closed_3_6_lp`: it binds `ν` and `hC` only in the lp form, and h211, h28, hexc only in its own form.
 - Not an alias: `closed_3_1_lp` (CleanSec23LP.lean:37) replaces the Draft h27 and h218 by hBG and hC, so its hypotheses are stronger than those of `firstPass_3_1_faithful`. It is not counted (COUNTED row 3.1 note).
+
+## D11. LP forms identical to their base (rule 1, p2-ledger-lp-counted-status, 2026-11-11)
+- `MatedCRT.closed_5_3_lp` (FirstPass/Closure/Clean42And5LP.lean:108) and `MatedCRT.closed_5_3_clean` (FirstPass/Closure/HLsRewire53.lean:109): same binder list (27 binders, names and types) and same conclusion; no binder discharged. CANONICAL: `closed_5_3_clean` (COUNTED row 5.3).
+- `MatedCRT.closed_5_4_lp` (FirstPass/Closure/Clean42And5LP.lean:130) and `MatedCRT.closed_5_4_clean` (FirstPass/Closure/Clean51And54.lean:73): same binder list (4 binders) and same conclusion. CANONICAL: `closed_5_4_clean` (COUNTED row 5.4).
+- `closed_2_13_lp` and `closed_2_13_cellRewire`: see D10.
 
 ## Related, not duplicates (checked)
 - `greenFn_eq_zero_of_not_mem` (Proofs/Infra/RandomWalk.lean:44, start outside `A`) vs
