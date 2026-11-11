@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.S2g.GoodSet
 import MatedCRT.FirstPass.Frozen.S2g
+import MatedCRT.LPStaging.Analysis.LaplacianCalculus
 
 /-! # All-disks obstacle clause from the radius-3/4 clause (H7)
 
@@ -73,11 +74,8 @@ theorem allDisksPotential_eq_zero_of_not_mem {W : ℂ → ℝ} {t : ℝ} {A : Se
 
 /-- Laplacian of a function vanishes off the support. -/
 theorem laplacian_eq_zero_off_tsupport {φ : ℂ → ℝ} {x : ℂ} (hx : x ∉ tsupport φ) :
-    Laplacian.laplacian φ x = 0 := by
-  have hev : φ =ᶠ[𝓝 x] (fun _ => (0 : ℝ)) := notMem_tsupport_iff_eventuallyEq.mp hx
-  have h := (InnerProductSpace.laplacian_congr_nhds hev).self_of_nhds
-  rw [h]
-  simp
+    Laplacian.laplacian φ x = 0 :=
+  LatticeProb.LaplacianCalculus.laplacian_eq_zero_off_tsupport hx
 
 /-- The test function `φ` on `U` has `Δφ` continuous with compact support in `U`; a locally integrable `w` on `U`
 gives `w Δφ` integrable. -/

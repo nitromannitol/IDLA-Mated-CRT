@@ -1,5 +1,6 @@
 import MatedCRT.Proofs.Sec3.UniformConvergenceGreenKernel.ContinuumBoundary
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.HarmonicTranslation
+import MatedCRT.LPStaging.Analysis.LaplacianCalculus
 
 /-! # Translation of harmonic functions
 
@@ -14,10 +15,8 @@ namespace MatedCRT
 
 /-- The Laplacian commutes with translation of the argument. -/
 theorem laplacian_comp_add_const (f : ℂ → ℝ) (a x : ℂ) :
-    Δ (fun z => f (z + a)) x = Δ f (x + a) := by
-  rw [laplacian_eq_iteratedFDeriv_stdOrthonormalBasis,
-    laplacian_eq_iteratedFDeriv_stdOrthonormalBasis]
-  simp only [iteratedFDeriv_comp_add_right]
+    Δ (fun z => f (z + a)) x = Δ f (x + a) :=
+  LatticeProb.LaplacianCalculus.laplacian_comp_add_right f a x
 
 /-- Translating a harmonic minorant preserves the minorant relation. -/
 theorem isHarmonicMinorant_comp_add_const {O : Set ℂ} {u : ℂ → EReal} {h : ℂ → ℝ}

@@ -1,5 +1,6 @@
 import HarmonicBalls.Defs.Laplacian
 import Mathlib.Analysis.InnerProductSpace.Laplacian
+import MatedCRT.LPStaging.Analysis.LaplacianCalculus
 
 /-!
 # Local facts about the Laplacian of test functions (Lemma 1 analytic layer)
@@ -16,14 +17,8 @@ open Set Filter Topology
 
 /-- The Laplacian of a `C²` function on the complex plane is continuous. -/
 theorem continuous_laplacian_of_contDiff {φ : ℂ → ℝ} (h : ContDiff ℝ 2 φ) :
-    Continuous (Laplacian.laplacian φ) := by
-  have hc : Continuous fun x => iteratedFDeriv ℝ 2 φ x := h.continuous_iteratedFDeriv le_rfl
-  have h1 : Continuous fun x => iteratedFDeriv ℝ 2 φ x ![1, 1] :=
-    (ContinuousMultilinearMap.apply ℝ (fun _ : Fin 2 => ℂ) ℝ ![1, 1]).continuous.comp hc
-  have h2 : Continuous fun x => iteratedFDeriv ℝ 2 φ x ![Complex.I, Complex.I] :=
-    (ContinuousMultilinearMap.apply ℝ (fun _ : Fin 2 => ℂ) ℝ ![Complex.I, Complex.I]).continuous.comp hc
-  rw [InnerProductSpace.laplacian_eq_iteratedFDeriv_complexPlane φ]
-  exact h1.add h2
+    Continuous (Laplacian.laplacian φ) :=
+  LatticeProb.LaplacianCalculus.continuous_laplacian_of_contDiff h
 
 /-- The Laplacian of a function vanishing near `x` vanishes at `x`. -/
 theorem laplacian_eq_zero_of_eventually_zero {φ : ℂ → ℝ} {x : ℂ} (h : φ =ᶠ[𝓝 x] 0) :

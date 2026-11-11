@@ -1,4 +1,5 @@
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.CenteredNormalizedPotential
+import MatedCRT.LPStaging.Analysis.LaplacianCalculus
 
 /-! Translation of test functions and the planar Laplacian. -/
 
@@ -8,9 +9,8 @@ open MeasureTheory Metric Filter Topology Set Laplacian _root_.HarmonicBalls
 
 /-- The planar Laplacian commutes with translation. -/
 theorem laplacian_comp_add_right (f : ℂ → ℝ) (z x : ℂ) :
-    Δ (fun w => f (w + z)) x = Δ f (x + z) := by
-  simp [InnerProductSpace.laplacian_eq_iteratedFDeriv_complexPlane,
-    iteratedFDeriv_comp_add_right]
+    Δ (fun w => f (w + z)) x = Δ f (x + z) :=
+  LatticeProb.LaplacianCalculus.laplacian_comp_add_right f z x
 
 /-- Translating a test function on a ball yields a test function on the
 corresponding centered ball. -/

@@ -1,5 +1,6 @@
 import MatedCRT.Proofs.Sec5.ConeOriginNullMeasurableProof
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.BallExtension
+import MatedCRT.LPStaging.Analysis.LaplacianCalculus
 
 /-!
 # The Borel supersolution relation
@@ -61,12 +62,8 @@ instance closedBall_zero_compactSpace (R : ℝ) : CompactSpace (closedBall (0 : 
 /-- The Laplacian of a `C^∞` function on `ℂ` is continuous (Mathlib's `Laplacian.laplacian` is the sum of the second
 derivatives along an orthonormal basis, `InnerProductSpace.laplacian_eq_iteratedFDeriv_complexPlane`). -/
 theorem continuous_laplacian_of_contDiff {φ : ℂ → ℝ} (hφ : ContDiff ℝ ∞ φ) :
-    Continuous (Laplacian.laplacian φ) := by
-  have h2 : ContDiff ℝ 2 φ := hφ.of_le (by norm_num)
-  have hc : Continuous (iteratedFDeriv ℝ 2 φ) := h2.continuous_iteratedFDeriv (by norm_num)
-  rw [InnerProductSpace.laplacian_eq_iteratedFDeriv_complexPlane]
-  exact ((continuous_eval_const (![1, 1] : Fin 2 → ℂ)).comp hc).add
-    ((continuous_eval_const (![Complex.I, Complex.I] : Fin 2 → ℂ)).comp hc)
+    Continuous (Laplacian.laplacian φ) :=
+  LatticeProb.LaplacianCalculus.continuous_laplacian_of_contDiff (hφ.of_le (by norm_num))
 
 /-- The Laplacian of a compactly supported `C^∞` function has compact support. -/
 theorem hasCompactSupport_laplacian_of_hasCompactSupport {φ : ℂ → ℝ} (hc : HasCompactSupport φ) :
