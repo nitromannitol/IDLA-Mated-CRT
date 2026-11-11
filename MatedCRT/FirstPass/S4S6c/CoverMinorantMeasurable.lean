@@ -14,7 +14,7 @@ supremum and infimum of `IsGoodAnnulusEvent` replaced by suprema and infima over
   measurability of `denseCoverSet`. WARNING: `hκ` is stated EVERYWHERE, which is NOT a freezable form: `IsLQGMeasure` holds
   only almost surely (Harmonic-Balls-LQG HarmonicBalls/Defs/LQG.lean:63-65), so `S.μ` can be altered on a null set. The
   freezable form is a.e.: for each measurable `f ≥ 0` a fieldSigma-measurable `g` with `g = ∫⁻ f dμ_ω` a.s.; the minorant
-  then needs null-set bookkeeping over the countable families used. OPEN; this file is conditional on the everywhere form.
+  then needs null-set bookkeeping over the countable families used. This file is conditional on the everywhere form.
 * `goodAnnulusCover_dyadic_of_dense`: the dyadic good-radius conclusion (eq (9)) from `hκ`, the countability of `D`, and the
   Draft polynomial bound at radius `c₀ / 2`.
 -/

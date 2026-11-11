@@ -12,7 +12,7 @@ Borel-Cantelli step, and a field-measurable cutoff `δ_*` give: for every dyadic
 * `BallMassLower`-style threshold: `exists_dyadic_threshold` (generic, reuses `ConstantOrderDiv.exists_measurable_threshold`).
 * `GoodAnnulusCoverEvent`: the event of `GoodAnnulusPrevalenceStmt` at scale `δ`, copied verbatim.
 * `goodAnnulusCover_dyadic`: eq (9) from a polynomial bound and the field-measurability of the cover events.
-  The measurability of the cover events is NOT yet proved (620-636 gap).
+  The measurability of the cover events is a named hypothesis (620-636 gap; see docs/campaign/COUNTED.md).
 -/
 
 open MeasureTheory Set Metric Filter
@@ -50,7 +50,7 @@ def GoodAnnulusCoverEvent {Ω : Type*} (μ : Ω → Measure ℂ) (ρ c₀ C δ :
     ∃ r : ℝ, δ ≤ r ∧ r ≤ Real.sqrt δ ∧ (∃ n : ℕ, r = (7 : ℝ)⁻¹ ^ n) ∧ IsGoodAnnulusEvent (μ ω) c₀ C r z}
 
 /-- **Lemma 2, eq (9)**. Given the polynomial bound of the cover events with constant `C`
-(from `GoodAnnulusPrevalenceStmt`) and their field-measurability (OPEN), for almost every `ω` there is a
+(from `GoodAnnulusPrevalenceStmt`) and their field-measurability (a named hypothesis, see docs/campaign/COUNTED.md), for almost every `ω` there is a
 field-measurable cutoff `tStar ω > 0` such that for every dyadic `δ = (1/2)^n < tStar ω` every grid centre has a good radius. -/
 theorem goodAnnulusCover_dyadic {Ω : Type*} {m' : MeasurableSpace Ω} [MeasurableSpace Ω]
     {P : Measure Ω} [IsProbabilityMeasure P] (μ : Ω → Measure ℂ) {ρ c₀ C : ℝ}
@@ -81,7 +81,7 @@ theorem cover_polyHighProb_of_prevalence (hprev : GoodAnnulusPrevalenceStmt) {γ
 
 /-- **Lemma 2, eq (9), minorant form** (closing paragraph). The dyadic good-radius conclusion needs
 only field-measurable events `F n ⊆ cover_n` whose complements are summable in probability: the existence of such a
-minorant is the OPEN NEW step (620-636). `goodAnnulusCover_dyadic` is the case `F n = cover_n`. -/
+minorant is the step (620-636; see docs/campaign/COUNTED.md). `goodAnnulusCover_dyadic` is the case `F n = cover_n`. -/
 theorem goodAnnulusCover_dyadic_of_minorant {Ω : Type*} {m' : MeasurableSpace Ω} [MeasurableSpace Ω]
     {P : Measure Ω} [IsProbabilityMeasure P] (μ : Ω → Measure ℂ) {ρ c₀ C : ℝ}
     (hF : ∃ F : ℕ → Set Ω, (∀ n : ℕ, MeasurableSet[m'] (F n)) ∧

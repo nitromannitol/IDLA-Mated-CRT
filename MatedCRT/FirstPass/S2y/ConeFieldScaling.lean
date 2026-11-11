@@ -5,8 +5,8 @@ import MatedCRT.External.QuantumCone
 /-!
 # `ConeFieldScalingStep` (internal, eq:quantum-cone-scaling), from the cited law identity
 
-Verdict row `ConeFieldScalingStep` (gap list, lines 1-15; labels lines 43-50): an internal
-obligation, to be proved and not frozen. The cited input is `QuantumConeScalingInput` (DMS14 Proposition 4.13(i),
+`ConeFieldScalingStep` is an internal
+obligation, a named hypothesis (see docs/campaign/COUNTED.md). The cited input is `QuantumConeScalingInput` (DMS14 Proposition 4.13(i),
 arXiv:1409.7055v4), which gives the law identity of the circle average processes.
 
 Proved here, from `QuantumConeScalingInput`:

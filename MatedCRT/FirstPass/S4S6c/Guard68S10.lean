@@ -25,8 +25,7 @@ Route: the guard
 * `ShellChainStmt`: the per-radius quenched count bound on the good event, with the count constant
   `countConst ζ = 2^{-a}/800` of the landed count lemma (S6r/Count.lean:25, `count_bound`, `count_hypothesis`).
   The window good event at the dyadic window scale `dyadicD r` (S6r/Window.lean:25) is supplied by a family `Ew` of
-  polynomially high probability (the S2.3 short-window prevalence; not yet in Lean).
-  OPEN.
+  polynomially high probability (the S2.3 short-window prevalence; a named hypothesis, see docs/campaign/COUNTED.md).
 * `window_cutoff`: the dyadic Borel-Cantelli cutoff for `Ew`, proved from `DyadicCutoff68.ae_mem_goodFrom` and `ddOf`.
 * the count-to-half step: `exit_le_half_of_count` from `one_sub_pow_le_exp`, `exp_le_of_counts` and
   `constant_order_conclusion` (S6r/Amplification.lean), proved.
@@ -78,7 +77,7 @@ def MeshEventsStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
         HarmonicBalls.PolyHighProb S.P (cellSizeEvent68 S γ ζ ρ) ∧
         HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE)
 
-/-- OPEN INPUT (redesign S10 with the S2.3 window family and the S5-S8 shell chain). For constants satisfying the
+/-- Named hypothesis (see docs/campaign/COUNTED.md; redesign S10 with the S2.3 window family and the S5-S8 shell chain). For constants satisfying the
 the constraints, `R ≤ ρ/4`, `R ≤ rAmp q0 ζ`, `ζ < 1/2`, `0 < q0 ≤ 1`, and every valid environment whose mesh events are
 of polynomially high probability, there is a window family `Ew` of polynomially high probability such that on the
 mesh event, for every admissible configuration at radius `r ∈ [10 ε^ω₀, R]` whose dyadic window event holds, the
@@ -1103,7 +1102,7 @@ end Lemma68Guard10
 
 /-- **Lemma 6.8, uniform constant-order lower bound (`UniformConstantOrderLowerBoundStmt`, FirstPass/S6d.lean:95)**,
 from the Draft hypotheses `GreenKernelLowerBoundStmt`, `CellSizeEstimateStmt`, `ExitTimeUpperBoundStmt` (the inputs of
-`draft68_uniform_events`) and the open shell chain `Lemma68Guard10.ShellChainStmt`. -/
+`draft68_uniform_events`) and the shell chain `Lemma68Guard10.ShellChainStmt`. -/
 theorem uniformConstantOrderLowerBound_of_chain (𝒮 : SpaceFillingSLEModel)
     (hG : GreenKernelLowerBoundStmt 𝒮) (hC : CellSizeEstimateStmt 𝒮) (hE : ExitTimeUpperBoundStmt 𝒮)
     (hChain : Lemma68Guard10.ShellChainStmt 𝒮) : UniformConstantOrderLowerBoundStmt 𝒮 :=

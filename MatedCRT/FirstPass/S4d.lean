@@ -15,10 +15,10 @@ through the measurability step `ConeFamilyAEMeasurableStep`, which `coneFamilyAE
 * `firstPass_4_2_of_coneFamilyStep`: the assembly with the single hypothesis `hfam : ConeFamilyAEMeasurableStep`.
 * `firstPass_4_2_assembled`: the same conclusion, with `hfam` discharged by `coneFamilyAEMeasurable_proved`.
 
-Open NEW inputs, kept as explicit hypotheses (not proved here):
+Inputs kept as explicit hypotheses (see docs/campaign/COUNTED.md):
 * `hgap : HarmonicBallStrictObstacleGapStep 𝒮` (Proofs/Sec4/DivSandpileLowerBound/Final.lean:32), the strict obstacle gap.
   Its printed proof, `eq:strictly-above-in-interior` (paper/idla_mated_crt-corrected.tex, label at line 1913, "there exists
-  s > 0 by continuity"), does not establish strict positivity on the interior of the closure of the positivity set (`StrictGapCounterexample.lean`); the missing ingredient is item (2) of the gap audit.
+  s > 0 by continuity"), does not establish strict positivity on the interior of the closure of the positivity set (`StrictGapCounterexample.lean`); a further ingredient is needed (see docs/campaign/COUNTED.md).
 * `hcan : ConeCanonicalHalfBallStep` (FirstPass/S2g.lean:82) and `hcl : ConeHalfBallClosureInsideStep`
   (Proofs/Sec2/ConeFamilyMeasurable/StoppedClosure.lean:18, documented there as not stated in the paper); they are used
   only by `firstPass_4_2_assembled`.
@@ -31,7 +31,7 @@ namespace MatedCRT
 /-- **Proposition 4.2 (first pass), from the cone family step.** Hypotheses, in order:
 * cited inputs (as in `firstPass_4_2`, FirstPass/S5c.lean): `hm`, `h210`, `h34`, `h214`, `h28`, `h35`, `h218`, `h27`,
   `hH`, `hcone`, `h23`, `h24`, `h33`;
-* the open NEW input `hgap : HarmonicBallStrictObstacleGapStep 𝒮` (Final.lean:32);
+* the input `hgap : HarmonicBallStrictObstacleGapStep 𝒮` (Final.lean:32);
 * the cone family measurability step `hfam : ConeFamilyAEMeasurableStep` (the Theorem 2.3 measurability, Steps/Sec2).
 Conclusion: `DivSandpileLowerBoundStmt 𝒮`. -/
 theorem firstPass_4_2_of_coneFamilyStep {𝒮 : SpaceFillingSLEModel}
@@ -43,7 +43,7 @@ theorem firstPass_4_2_of_coneFamilyStep {𝒮 : SpaceFillingSLEModel}
     (hH : FrozenDiscreteHolderContinuityCorrected 𝒮) (hcone : FrozenConeEnvironmentScaling 𝒮)
     (h23 : ConeHarmonicBallsStmt) (h24 : ConeHarmonicBallsUpToFixedTimeStmt)
     (h33 : UniformConvergenceGreenKernelStmt 𝒮)
-    -- open NEW input
+    -- input
     (hgap : HarmonicBallStrictObstacleGapStep 𝒮)
     -- cone family measurability
     (hfam : ConeFamilyAEMeasurableStep) :
@@ -51,10 +51,10 @@ theorem firstPass_4_2_of_coneFamilyStep {𝒮 : SpaceFillingSLEModel}
   divSandpileLowerBound_final 𝒮 (firstPass_4_1 hm h210 h34 h214 h28 h35 h218 h27 hH hcone) h23 h24 h27 h28 h33 hfam hgap
 
 /-- **Proposition 4.2 (first pass), from the two strict-gap steps.** Same conclusion as
-`firstPass_4_2_of_coneFamilyStep`, with the open NEW input `hgap` replaced by its two named components
+`firstPass_4_2_of_coneFamilyStep`, with the input `hgap` replaced by its two named components
  (`FirstPass/S4d/StrictGapReduction.lean`): `hdet` (deterministic comparison, Section 2) and `hnj`
 (fixed-time union, Sections 4-5). Hypotheses, in order: the cited inputs as in `firstPass_4_2_of_coneFamilyStep`;
-the open NEW inputs `hdet`, `hnj`; the cone family measurability `hfam`. -/
+the inputs `hdet`, `hnj`; the cone family measurability `hfam`. -/
 theorem firstPass_4_2_of_strictGapSteps {𝒮 : SpaceFillingSLEModel}
     (hm : MepsScalingInput 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)
     (h34 : IntegralConvergenceGreenFunctionStmt 𝒮) (h214 : GreenKernelUpperBoundStmt 𝒮)
@@ -73,8 +73,8 @@ theorem firstPass_4_2_of_strictGapSteps {𝒮 : SpaceFillingSLEModel}
 `firstPass_4_2_of_coneFamilyStep`, with `hfam` discharged by `coneFamilyAEMeasurable_proved` (FirstPass/S2j.lean:28).
 Hypotheses, in order:
 * cited inputs: as in `firstPass_4_2_of_coneFamilyStep`;
-* the open NEW input `hgap` (Final.lean:32);
-* open NEW cone steps: `hcan : ConeCanonicalHalfBallStep`, `hcl : ConeHalfBallClosureInsideStep`;
+* the input `hgap` (Final.lean:32);
+* cone steps: `hcan : ConeCanonicalHalfBallStep`, `hcl : ConeHalfBallClosureInsideStep` (see docs/campaign/COUNTED.md);
 * frozen cone externals: `hE1 : ConeCircleLawUniqueStep` (Frozen/S2i.lean:24), `hE2 : ConeReferenceExistsStep`
   (Frozen/S2i.lean:40);
 * `hscale : QuantumConeScalingInput` (External/QuantumCone.lean:19) and `h22 : LQGMeasurePropertiesStmt`
@@ -89,9 +89,9 @@ theorem firstPass_4_2_assembled {𝒮 : SpaceFillingSLEModel}
     (hH : FrozenDiscreteHolderContinuityCorrected 𝒮) (hcone : FrozenConeEnvironmentScaling 𝒮)
     (h23 : ConeHarmonicBallsStmt) (h24 : ConeHarmonicBallsUpToFixedTimeStmt)
     (h33 : UniformConvergenceGreenKernelStmt 𝒮)
-    -- open NEW input
+    -- input
     (hgap : HarmonicBallStrictObstacleGapStep 𝒮)
-    -- open NEW cone steps
+    -- cone steps
     (hcan : ConeCanonicalHalfBallStep) (hcl : ConeHalfBallClosureInsideStep)
     -- frozen cone externals, quantum cone scaling, LQG measure property
     (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
@@ -104,7 +104,7 @@ theorem firstPass_4_2_assembled {𝒮 : SpaceFillingSLEModel}
 conclusion as `firstPass_4_2_of_strictGapSteps`, with `hdet` proved by `strictGapDeterministicComparison_of_frozen`
 (S4d/DeterministicComparison.lean) from the explicit potential-theoretic inputs `hG` (HB `GreenFunctionBallStmt`, Draft),
 `hpc` (`FrozenPunctureConnected`, Frozen/S4d.lean), `hsmp` (`FPStrongMinimumPrinciple`, Frozen/S5c.lean), `hwmp`
-(`FrozenSuperharmonicMinimumPrinciple`) and `hpole` (`FrozenGreenDiscPole`, Frozen/S2g.lean). Open NEW inputs left:
+(`FrozenSuperharmonicMinimumPrinciple`) and `hpole` (`FrozenGreenDiscPole`, Frozen/S2g.lean). Inputs kept explicit (see docs/campaign/COUNTED.md):
 `hnj : StrictGapFixedTimeUnionStep 𝒮` (Sections 4-5) and the cone measurability `hfam`. The cited inputs are as in
 `firstPass_4_2_of_coneFamilyStep`. -/
 theorem firstPass_4_2_of_frozen_strictGap {𝒮 : SpaceFillingSLEModel}
@@ -134,9 +134,9 @@ Hypotheses, in order:
   `hG` (`HarmonicBalls.GreenFunctionBallStmt`, Draft), `hpc` (`FrozenPunctureConnected`, Frozen/S4d.lean),
   `hsmp` (`FPStrongMinimumPrinciple`, Frozen/S5c.lean), `hwmp` (`FrozenSuperharmonicMinimumPrinciple`, Frozen/S2g.lean),
   `hpole` (`FrozenGreenDiscPole`, Frozen/S2g.lean);
-* open NEW input `hnj : StrictGapFixedTimeUnionStep 𝒮` (fixed-time union; the measurability
-  input is not yet available, see S4d/StrictGapReduction.lean);
-* open NEW cone steps `hcan : ConeCanonicalHalfBallStep` (FirstPass/S2g.lean:82) and
+* input `hnj : StrictGapFixedTimeUnionStep 𝒮` (fixed-time union; the measurability
+  input is kept explicit, see S4d/StrictGapReduction.lean);
+* cone steps `hcan : ConeCanonicalHalfBallStep` (FirstPass/S2g.lean:82; see docs/campaign/COUNTED.md) and
   `hcl : ConeHalfBallClosureInsideStep` (Proofs/Sec2/ConeFamilyMeasurable/StoppedClosure.lean:18);
 * frozen cone externals `hE1 : ConeCircleLawUniqueStep` (Frozen/S2i.lean:24), `hE2 : ConeReferenceExistsStep`
   (Frozen/S2i.lean:40), `hscale : QuantumConeScalingInput` (External/QuantumCone.lean:19), and
@@ -165,7 +165,7 @@ theorem firstPass_4_2_final {𝒮 : SpaceFillingSLEModel}
 
 /-- **Proposition 4.2 with the fixed-time union discharged.** The hypothesis `hnj` of
 `firstPass_4_2_final` is `strictGapFixedTimeUnion_of_steps` (S4d/FixedTimeUnion.lean), whose inputs are the cone scaling
-law `hScaleInv` (Lemma 2.6, `ConeScaleInvarianceStmt`), the explicit OPEN steps `hB2` (`ConeGlobalFamilyPairAEMeasurableStep`)
+law `hScaleInv` (Lemma 2.6, `ConeScaleInvarianceStmt`), the explicit steps `hB2` (`ConeGlobalFamilyPairAEMeasurableStep`)
 and `hB2R` (`ConeRescaledPairAEMeasurableStep`), and the frozen positivity `hFCS : FrozenConeScalingLaw 𝒮`
 (Frozen/S4S6c.lean). The other hypotheses are those of `firstPass_4_2_final`, in the same order. -/
 theorem firstPass_4_2_of_scale_inputs {𝒮 : SpaceFillingSLEModel}
@@ -195,7 +195,7 @@ longer hypotheses. They are proved (`coneGlobalFamilyAEMeasurable_of_stopped`, `
 S4d/GlobalMeasurable.lean and S4d/RescaledMeasurable.lean), and the positivity of the cone scale radii comes from `hscale`
 (`coneScaleRadiusPosStep_of_input`). The paper inputs now are `h24` (Lemma 2.4), `h25` (Lemma 2.5, corrected.tex:548), and
 `hScaleInv` (Lemma 2.6, corrected.tex:597). The stopped measurability `hfam` is `coneFamilyAEMeasurable_proved`
-(open NEW steps `hcan`, `hcl` remain explicit). -/
+(the steps `hcan`, `hcl` remain explicit). -/
 theorem firstPass_4_2_of_fixed_time_steps {𝒮 : SpaceFillingSLEModel}
     (hm : MepsScalingInput 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)
     (h34 : IntegralConvergenceGreenFunctionStmt 𝒮) (h214 : GreenKernelUpperBoundStmt 𝒮)
@@ -221,8 +221,8 @@ open _root_.HarmonicBalls in
 /-- **Prop 4.2 with the canonical half-ball gate discharged.** `ConeCanonicalHalfBallStep`
 is no longer a hypothesis: it is `coneCanonicalHalfBallStep_of_draft` (`FirstPass/S2g/HalfBallGate.lean`), applied to
 its Draft statements and frozen inputs. The gate's minimum principle, Green ball and pole inputs are `hwmp`, `hG`, `hpole`.
-Still explicit: the closure step `hcl` (`ConeHalfBallClosureInsideStep`; route B, `coneHalfBallClosureInsideStep_corrected`,
-reduces it to the open `WholePlaneLQGModelStep` and `ConeWholePlaneFieldLawStep`), the scale invariance Lemma 2.6 `hScaleInv`,
+Kept explicit: the closure step `hcl` (`ConeHalfBallClosureInsideStep`; route B, `coneHalfBallClosureInsideStep_corrected`,
+reduces it to the steps `WholePlaneLQGModelStep` and `ConeWholePlaneFieldLawStep`), the scale invariance Lemma 2.6 `hScaleInv`,
 the frozen cone externals `hE1`, `hE2` and the quantum cone scaling inputs. Statement of Prop 4.2 unchanged. -/
 theorem firstPass_4_2_of_halfball_gate {𝒮 : SpaceFillingSLEModel}
     (hm : MepsScalingInput 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)

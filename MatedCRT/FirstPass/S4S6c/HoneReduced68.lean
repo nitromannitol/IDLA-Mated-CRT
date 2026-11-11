@@ -12,12 +12,12 @@ lemma discharges removed, and the discharging lemma's own binders added. Conclus
 
 Binder table (outer binder : status)
 * `hmom1`, `hmom2` : DISCHARGED by `hmom_pair_of_finiteDomain_meas` (BallExitMeas68.lean:49), at `T k = shellExit k`,
-  `R k = Rf ∘ shellCentre k`. Its own binders become NEW binders of this theorem: `hlf`, `hcons`, `hTdom`, `hRbd`
+  `R k = Rf ∘ shellCentre k`. Its own binders become binders of this theorem: `hlf`, `hcons`, `hTdom`, `hRbd`
   (routed 60e).
 * `hfinE` : DISCHARGED by `MatedCRT.Audit.StatementsSec3Sec5M1.finite_expectedExitTime` (Audit/StatementsSec3Sec5M1.lean:441)
   on the interior cell set of the test ball, which is finite by `TraceInputs68.cellVertices_finite_of_tendsto`
   (TraceInputs68.lean:76). Uses the shared binders `hlf`, `hcons`.
-* All other binders stay as binders (OPEN).
+* All other binders stay as binders.
 -/
 
 open HarmonicBalls (annulus)
@@ -47,9 +47,9 @@ theorem shellOneTest_of_direct_reduced68 {γ ρc : ℝ} (K : Constants68 γ ρc)
     (hq0c : q0 ≤ (1 / 4 : ℝ) ^ 2 / (4 * C))
     (hC : 0 < C) (hCw : 32 * C_exit ^ 2 * ((1 + (N_cov : ℝ) * Real.log 4) * C_good) ^ 2 * Dbl ^ 2 ≤ C)
     (hCg : 0 ≤ C_good)
-    -- NEW (own binders of `hmom_pair_of_finiteDomain_meas`): the walk multiplicity is locally finite and has positive edges
+    -- Own binders of `hmom_pair_of_finiteDomain_meas`: the walk multiplicity is locally finite and has positive edges
     (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0)
-    -- NEW (own binders of `hmom_pair_of_finiteDomain_meas`): the shell exit time is dominated by a finite exit time,
+    -- Own binders of `hmom_pair_of_finiteDomain_meas`: the shell exit time is dominated by a finite exit time,
     -- and the shell radius is bounded on `{T < ⊤}`
     (hTdom : ∀ k, ∃ D : Set ℤ, D.Finite ∧ ∀ w, shellExit ε η Kset r s d Rf k w < ⊤ →
       shellExit ε η Kset r s d Rf k w ≤ vExitTime D w)

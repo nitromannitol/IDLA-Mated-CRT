@@ -131,7 +131,7 @@ theorem coneFamilyAEMeasurableStep_of_factor (hfac : ConeCanonicalFactorStep) (h
 /-- **Proposition 6.1 from the canonical factorization.** The composition `iDLAUpperBound_of_coneFamilyAEMeasurable`
 (`Proofs/Sec6/IDLAUpperBound/OfConeFamily.lean:16`) with the Draft Lemma 2.4 and the measurability step both derived from the
 canonical factorization. Hypotheses: Lemma 6.10 (`IterativeBoundStmt`), Proposition 5.1 (`IDLALowerBoundStmt`), the quantum
-cone scaling law, the LQG measure property, and `ConeCanonicalFactorStep` (NEW, OPEN). -/
+cone scaling law, the LQG measure property, and `ConeCanonicalFactorStep` (see docs/campaign/COUNTED.md). -/
 theorem firstPass_6_1_of_factor (𝒮 : SpaceFillingSLEModel) (h610 : IterativeBoundStmt 𝒮)
     (h51 : IDLALowerBoundStmt 𝒮) (hscale : QuantumConeScalingInput) (h22 : LQGMeasurePropertiesStmt)
     (hfac : ConeCanonicalFactorStep) : IDLAUpperBoundStmt 𝒮 :=

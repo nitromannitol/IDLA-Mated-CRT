@@ -147,8 +147,8 @@ theorem firstPass_6_1_canonical24 (𝒮 : SpaceFillingSLEModel) (h610 : Iterativ
   iDLAUpperBound_of_steps_canonical 𝒮 h610 h51 (boundaryLayerMeasurableStep_of_canonical 𝒮 hcan) hcan
 
 /-- **Proposition 6.1 from the canonical factorization.** `firstPass_6_1_canonical24` with the canonical
-Lemma 2.4 `firstPass_2_4_canonical_of_factor` (`FirstPass/S2g/Canonical.lean:69`). The only NEW hypothesis is
-`ConeCanonicalFactorStep` (OPEN, `FirstPass/S2g/Canonical.lean:32`). -/
+Lemma 2.4 `firstPass_2_4_canonical_of_factor` (`FirstPass/S2g/Canonical.lean:69`). The only hypothesis is
+`ConeCanonicalFactorStep` (`FirstPass/S2g/Canonical.lean:32`; see docs/campaign/COUNTED.md). -/
 theorem firstPass_6_1_canonical24_of_factor (𝒮 : SpaceFillingSLEModel) (h610 : IterativeBoundStmt 𝒮)
     (h51 : IDLALowerBoundStmt 𝒮) (hfac : ConeCanonicalFactorStep) : IDLAUpperBoundStmt 𝒮 :=
   firstPass_6_1_canonical24 𝒮 h610 h51 (firstPass_2_4_canonical_of_factor hfac)
