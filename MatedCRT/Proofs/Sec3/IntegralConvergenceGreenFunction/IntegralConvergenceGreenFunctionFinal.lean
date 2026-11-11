@@ -8,13 +8,13 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.FinalPathStepProved
 open, stated as explicit hypotheses:
 * `hscale`, `h17`, `h18`, `h211`, `hcell`: the cited scaling, exit-time and random-walk inputs of the Draft (as in
   `integralConvergenceGreenFunction_of_inputs_pathStepProved`);
-* `hrevuz`: the Revuz identity `LBMGreenOccupationStep` (IR-m2-1, pending with the operator);
+* `hrevuz`: the Revuz identity `LBMGreenOccupationStep`;
 * `hdet`: the deterministic fixed-time step `TruncatedDetFixedTimeStep` (D1, route PROOF-REPAIRS-G §G4; open);
-* `hexc`: `BrownianOutwardExcursionAtExitStep` (queued for a worker; carried as a hypothesis).
+* `hexc`: `BrownianOutwardExcursionAtExitStep` (carried as a hypothesis).
 
 Proved in this directory and used here: the environment-dependent truncated path integrals are measurable
-(`lbmTruncatedOccupationMeasurableStep_holds`, item 3) and their fixed-time integrability
-(`truncatedFixedTimeIntegrableStep_holds`, item 2-H2); the Green integral measurability and the path-functional steps
+(`lbmTruncatedOccupationMeasurableStep_holds`) and their fixed-time integrability
+(`truncatedFixedTimeIntegrableStep_holds`); the Green integral measurability and the path-functional steps
 are proved as in the assembly.
 -/
 

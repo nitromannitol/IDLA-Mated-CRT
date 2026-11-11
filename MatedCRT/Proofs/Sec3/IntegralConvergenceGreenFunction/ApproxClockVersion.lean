@@ -2,7 +2,7 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ApproxClockMeasurab
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.ClockMeasurable
 
 /-!
-# Lemma 3.4 (item 4): a jointly measurable version of the approximate clock in `(ω, b, t)`
+# Lemma 3.4: a jointly measurable version of the approximate clock in `(ω, b, t)`
 
 For a quantum cone field, each dyadic approximate Liouville clock `t ↦ lqgClockApprox γ (hcirc ω) (dyadicScale k) b t`
 has a version that is jointly measurable in the environment `ω`, the Brownian path `b` and the time `t`, which agrees with

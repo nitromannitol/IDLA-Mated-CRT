@@ -4,9 +4,9 @@ import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.WalkMeasurability
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.PathEnvelope
 
 /-!
-# Lemma 3.4 (item 4): cutoff approximate paths converge in the local uniform distance
+# Lemma 3.4: cutoff approximate paths converge in the local uniform distance
 
-Deterministic core of `LBMPathFunctionalMeasurableStep` (paper argument, `docs/campaign/GAPS-SEC3.md`, item 4). Let `G` be a
+Deterministic core of `LBMPathFunctionalMeasurableStep` (paper argument). Let `G` be a
 time change clock and `F n` strictly increasing approximate clocks converging to `G` uniformly on compact time intervals.
 The cutoff approximate inverses `cutInv (F n) (c n)`, for any cutoff sequence `c` tending to infinity, time-change a
 continuous path `b` into paths that converge to `b ∘ clockInverse G` in the local uniform distance `localUniformDist`, which

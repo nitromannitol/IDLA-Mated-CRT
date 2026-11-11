@@ -4,10 +4,10 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ApproxPathLimit
 import MatedCRT.Steps.Sec3.ConvergenceHarmonicFunctions
 
 /-!
-# Lemma 3.4 (item 4): the step `LBMPathFunctionalMeasurableStep` holds
+# Lemma 3.4: the step `LBMPathFunctionalMeasurableStep` holds
 
 Both clauses of `LBMPathFunctionalMeasurableStep` (`Steps/Sec3/ConvergenceHarmonicFunctions.lean`) hold for every valid mated-CRT
-environment (paper argument, `docs/campaign/GAPS-SEC3.md` item 4):
+environment (paper argument):
 
 * the first clause (almost sure strong measurability in the Brownian path) is `lbmPathFunctional_aestronglyMeasurable`;
 * the second clause: the expectations of the approximate path functionals `E k` are measurable in the environment (Fubini,

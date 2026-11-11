@@ -1,13 +1,13 @@
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.CutoffMeasurable
 
 /-!
-# Lemma 3.4 (item 4): almost sure subsequences of approximate Liouville clocks
+# Lemma 3.4: almost sure subsequences of approximate Liouville clocks
 
 Borel–Cantelli extraction that passes from convergence in probability of the approximate clocks to almost sure convergence
 along a subsequence, uniformly on compact time intervals for almost every path. The hypothesis is the form in which
 `IsLQGClock` is stated: for every `T` and `η > 0`, the probability of the event that the approximate clock deviates from
 the clock by at least `η` on `[0, T]` tends to zero. This is the subsequence step of `LBMPathFunctionalMeasurableStep`
-(paper argument, `docs/campaign/GAPS-SEC3.md`, item 4).
+(paper argument).
 -/
 
 open MeasureTheory Filter Topology

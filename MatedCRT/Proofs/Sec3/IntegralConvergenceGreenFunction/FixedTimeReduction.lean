@@ -7,7 +7,7 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.EnvTestCover
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.LBMExitTimeIntegrableTruncated
 
 /-!
-# Lemma 3.4: reduction of the truncated fixed-time step (E-c2-9)
+# Lemma 3.4: reduction of the truncated fixed-time step
 
 `truncatedOccupationFixedTimeStep_of_det` proves `TruncatedOccupationFixedTimeStep 𝒮` (the step of Lemma 3.4 for
 environment-dependent test functions) from two named steps:
@@ -16,7 +16,7 @@ environment-dependent test functions) from two named steps:
   PROOF-REPAIRS-G §G4: sandwich of the discrete exit between exits from the disks of radii `r ± δ`); open;
 * `TruncatedFixedTimeIntegrableStep 𝒮` (H2): for environment-dependent Hölder test functions, the truncated path
   functionals of the rescaled Liouville Brownian path are almost surely strongly measurable in the Brownian variable
-  and integrable in time; the real-truncation form of `LBMTruncatedOccupationMeasurableStep` (item 3); open.
+  and integrable in time; the real-truncation form of `LBMTruncatedOccupationMeasurableStep`; open.
 
 The proof is a finite net over one countable family of Hölder test functions (`exists_holder_family_ball`, levels
 `m` and indices `j`, enumerated by `Nat.unpair`), null-measurable events from the environment σ-algebra, continuity
@@ -57,7 +57,7 @@ def TruncatedDetFixedTimeStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 
 /-- **Integrability of the truncated path functionals (H2)**: for environment-dependent test functions that are
 measurable in the environment, bounded and Hölder on the ball, the truncated path functionals are a.s. strongly
-measurable in the Brownian variable and integrable in time. Open (item 3 with the real truncation `T`). -/
+measurable in the Brownian variable and integrable in time. Open (with the real truncation `T`). -/
 def TruncatedFixedTimeIntegrableStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →

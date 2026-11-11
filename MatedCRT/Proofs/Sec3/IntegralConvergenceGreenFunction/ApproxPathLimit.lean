@@ -5,10 +5,10 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.GridStepApprox
 import MatedCRT.Defs.Setting
 
 /-!
-# Lemma 3.4 (item 4): the bounded Lipschitz functional of the approximate and of the Liouville Brownian paths
+# Lemma 3.4: the bounded Lipschitz functional of the approximate and of the Liouville Brownian paths
 
 Measurability in the Brownian path of a bounded Lipschitz functional `F` of the time-changed path, for an environment with
-continuous circle averages (paper argument, `docs/campaign/GAPS-SEC3.md` item 4):
+continuous circle averages (paper argument):
 
 * for the approximate time-changed path `t ↦ b (cutInv (clock b) n (m t))`, the functional is measurable in `b`: it is the
   pointwise limit of the functionals of grid step paths, which depend measurably on finitely many evaluations of `b`;
@@ -104,7 +104,7 @@ theorem aestronglyMeasurable_boundedLipschitz_limitPath {F : (ℝ≥0 → ℂ) �
 
 /-- **First clause of `LBMPathFunctionalMeasurableStep`.** For a valid mated-CRT environment and a bounded Lipschitz path
 functional `F`, `F` of the Liouville Brownian path is almost surely strongly measurable in the Brownian path, for the Brownian law
-of every starting point. (Paper argument, `docs/campaign/GAPS-SEC3.md` item 4.) -/
+of every starting point. (Paper argument.) -/
 theorem lbmPathFunctional_aestronglyMeasurable {Ω : Type} [MeasurableSpace Ω] (𝒮 : SpaceFillingSLEModel) (γ : ℝ)
     (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ) (y : ℂ) (F : (ℝ≥0 → ℂ) → ℝ)
     (hF : IsBoundedLipschitzPathFunctional F) :

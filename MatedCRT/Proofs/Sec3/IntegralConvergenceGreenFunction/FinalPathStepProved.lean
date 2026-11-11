@@ -7,7 +7,7 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.PathFunctionalStep
 
 `integralConvergenceGreenFunction_of_inputs_green` and `lbmExitTimeIntegrableStep_of_inputs` take the step
 `LBMPathFunctionalMeasurableStep 𝒮` as a hypothesis. That step holds for every space-filling model
-(`lbmPathFunctionalMeasurableStep_holds`, `PathFunctionalStep.lean`, GAPS-SEC3 item 4), so both are restated without it.
+(`lbmPathFunctionalMeasurableStep_holds`, `PathFunctionalStep.lean`), so both are restated without it.
 The hypotheses that remain are the Section 3 inputs and steps still open: `hrevuz` (`LBMGreenOccupationStep`, owned by m1/y5),
 `hfixedStep` (`TruncatedOccupationFixedTimeStep`, which needs the deterministic input H1 still open), `hmeasStep`
 (`LBMTruncatedOccupationMeasurableStep`, open: the environment-dependent extension of the path-functional step), and `hexc`

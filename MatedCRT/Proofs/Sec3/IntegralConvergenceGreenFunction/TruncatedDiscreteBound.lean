@@ -6,7 +6,7 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.Truncation
 For two test functions `F`, `G` that are `δ`-close on the ball `B = ball z r`, the discrete truncated occupations
 `truncatedDiscreteOccupation S B y F N ε ω` and `… G N ε ω` (the walk killed on leaving the interior cells
 `V^ε(B) \ V^ε(∂B)`) differ by at most `(mε)⁻¹ N δ`. This is the discrete half of the finite-net argument for the
-environment-dependent fixed-time step (E-c2-9).
+environment-dependent fixed-time step.
 
 The geometric input: an interior vertex has its marked point in the ball, because its cell is the image of an
 interval under the continuous curve `η`, hence connected; it meets the ball and does not meet the boundary, so it

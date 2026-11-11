@@ -2,9 +2,9 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ApproxPathLimit
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ApproxClockVersion
 
 /-!
-# Lemma 3.4 (item 4): joint measurability of the approximate path functional, and the expectations in the environment
+# Lemma 3.4: joint measurability of the approximate path functional, and the expectations in the environment
 
-Second clause of `LBMPathFunctionalMeasurableStep` (paper argument, `docs/campaign/GAPS-SEC3.md` item 4):
+Second clause of `LBMPathFunctionalMeasurableStep` (paper argument):
 
 * a bounded Lipschitz functional of a continuous path depending measurably on a parameter is measurable in the parameter, when the
   evaluations are measurable in the parameter (grid approximation, `measurable_boundedLipschitz_comp`);

@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ClockInverseUniform
 
 /-!
-# Lemma 3.4 (item 4): locally uniform convergence of the time-changed paths
+# Lemma 3.4: locally uniform convergence of the time-changed paths
 
 If the clocks `F i` converge uniformly on compact time intervals to a time-change clock `G`, then for every continuous
 path `b` the time-changed paths `t ↦ b (clockInverse (F i) t)` converge uniformly on compact time intervals to

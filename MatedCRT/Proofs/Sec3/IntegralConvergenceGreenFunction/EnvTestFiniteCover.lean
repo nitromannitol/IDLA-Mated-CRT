@@ -1,9 +1,9 @@
 import MatedCRT.Defs.Notation
 
 /-!
-# Finite-cover reduction for environment-dependent test functions (E-c2-9)
+# Finite-cover reduction for environment-dependent test functions
 
-Probabilistic core of the argument of `docs/campaign/GAPS-SEC3.md`, section E-c2-9. A functional whose
+Probabilistic core of the argument for environment-dependent test functions. A functional whose
 test function depends on the environment is approximated, for every accuracy, by finitely many
 deterministic tests on events whose union has probability close to one. Convergence in probability
 then transfers from the deterministic tests (Theorem 2.11) to the random test.

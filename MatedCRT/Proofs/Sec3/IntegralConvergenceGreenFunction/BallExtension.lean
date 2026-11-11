@@ -3,7 +3,7 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.EnvTestHolderApprox
 /-!
 # Lemma 3.4: extension of closed-ball test functions to `ℂ`
 
-The environment-dependent fixed-time step (E-c2-9) approximates a Hölder test function on the ball `B(z, r)` by
+The environment-dependent fixed-time step approximates a Hölder test function on the ball `B(z, r)` by
 a member of a countable family of Hölder functions on the closed ball (`exists_countable_holderWith_approx_ball`).
 The deterministic walk-to-LBM convergence needs globally continuous, bounded test functions on `ℂ`. This file
 transports the family to `ℂ` by the radial retraction `closedBallRetraction z r : ℂ → cl B(z, r)`, the identity on the

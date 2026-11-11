@@ -1,13 +1,13 @@
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.EnvTestFiniteCover
 
 /-!
-# Measurable covers by a countable family of tests (E-c2-9)
+# Measurable covers by a countable family of tests
 
 For a countable family of deterministic tests `g j` and a countable set `Q` of points in the ball, the
 events `{ω | ∀ q ∈ Q, |f ω q - g j q| < δ}` are measurable, and if every environment is `δ`-close to some
 test on `Q`, finitely many of them cover all but any prescribed probability. Together with
 `abs_sub_le_of_forall_lt_on_dense` (a bound on the whole ball from the bound on a dense countable set) and
-`tendstoInProbability_of_finite_cover`, this is the approximation layer of E-c2-9 in `GAPS-SEC3.md`.
+`tendstoInProbability_of_finite_cover`, this is the approximation layer.
 -/
 
 namespace MatedCRT

@@ -2,7 +2,7 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.JointCauchySubseque
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ApproxPathJoint
 
 /-!
-# Lemma 3.4 (item 3): a jointly measurable limit of the approximate Liouville clocks
+# Lemma 3.4: a jointly measurable limit of the approximate Liouville clocks
 
 For a valid environment `S` and a starting point `y`, the approximate clocks `lqgClockApprox` at dyadic scales have
 jointly measurable versions in `((ω, b), t)` (`exists_measurable_clockApprox_modification`). Along an

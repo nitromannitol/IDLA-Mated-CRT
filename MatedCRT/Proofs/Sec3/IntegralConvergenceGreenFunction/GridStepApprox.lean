@@ -1,13 +1,13 @@
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.CutoffPathUniform
 
 /-!
-# Lemma 3.4 (item 4): grid step approximations of bounded Lipschitz path functionals
+# Lemma 3.4: grid step approximations of bounded Lipschitz path functionals
 
 For a bounded Lipschitz path functional `F` (for the local uniform distance), the map `v ↦ F (stepPath m v)` is continuous on
 grid sequences `v : ℕ → ℂ`, where `stepPath m v` is the step path `t ↦ v ⌊m t⌋` of mesh `1/m`; and the grid step
 approximations of a continuous path converge to it in the local uniform distance. Consequently the measurability of `F` along
 approximate Liouville paths reduces to the measurability of finitely many evaluations, without any measurable structure on the
-path space (paper argument for `LBMPathFunctionalMeasurableStep`, `docs/campaign/GAPS-SEC3.md` item 4).
+path space (paper argument for `LBMPathFunctionalMeasurableStep`).
 -/
 
 namespace MatedCRT

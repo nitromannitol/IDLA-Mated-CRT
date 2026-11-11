@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ClockInverseUniform
 
 /-!
-# Lemma 3.4 (item 4): cutoff inverse clocks
+# Lemma 3.4: cutoff inverse clocks
 
 The approximate clocks `F_n` of the Liouville clock need not diverge, so their right-continuous inverses may not be
 defined on all levels. As in the paper's proof of `LBMPathFunctionalMeasurableStep`, the approximate inverse is cut off

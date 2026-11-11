@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ClockJointLimit
 
 /-!
-# Lemma 3.4 (item 3): the inverse of a clock sampled at rational times
+# Lemma 3.4: the inverse of a clock sampled at rational times
 
 `ratClockInv L u = inf {q ∈ ℚ≥0 : u < L q}` (in `ℝ≥0∞`) is the inverse of a clock `L` known at rational times. It is
 jointly measurable in `(p, u)` whenever `p ↦ L p q` is measurable for each rational `q` (no continuity needed), and for

@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ClockInverseConvergence
 
 /-!
-# Lemma 3.4 (item 4): locally uniform convergence of inverse clocks
+# Lemma 3.4: locally uniform convergence of inverse clocks
 
 Deterministic core of `LBMPathFunctionalMeasurableStep`: if strictly increasing clocks `F i` converge to a time-change
 clock `G` uniformly on compact time intervals, then their right-continuous inverses `clockInverse (F i)` converge to

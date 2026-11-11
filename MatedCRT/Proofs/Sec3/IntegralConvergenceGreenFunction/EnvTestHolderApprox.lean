@@ -2,12 +2,12 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.EnvTestHolderExtens
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.EnvTestHolderFamily
 
 /-!
-# Countable approximation of Hölder tests on a ball (E-c2-9)
+# Countable approximation of Hölder tests on a ball
 
 Combining the Hölder extension to the closed ball with the countable dense family of Hölder tests on the
 compact closed ball: for fixed Hölder constants there is a countable family of Hölder tests on
 `closedBall z r` which approximates every `(C, χ)`-Hölder function on `ball z r` uniformly on the ball,
-to any accuracy. This is the approximation property used in the cover argument of E-c2-9.
+to any accuracy. This is the approximation property used in the cover argument.
 -/
 
 namespace MatedCRT

@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.TruncatedJointAE
 
 /-!
-# Lemma 3.4 (item 3 and E-c2-9 H2): the environment-dependent truncated path integrals are measurable
+# Lemma 3.4: the environment-dependent truncated path integrals are measurable
 
 `lbmTruncatedOccupationMeasurableStep_holds` proves `LBMTruncatedOccupationMeasurableStep 𝒮` (Final.lean) and
 `truncatedFixedTimeIntegrableStep_holds` proves `TruncatedFixedTimeIntegrableStep 𝒮` (FixedTimeReduction.lean), from the
@@ -48,7 +48,7 @@ theorem lbmTruncatedOccupationMeasurableStep_holds (𝒮 : SpaceFillingSLEModel)
     filter_upwards [hA'] with ω hω
     exact integral_congr_ae (hω n)
 
-/-- **E-c2-9 H2 (proved):** for environment-dependent Hölder test functions, the truncated path functionals are almost
+/-- **Proved:** for environment-dependent Hölder test functions, the truncated path functionals are almost
 surely strongly measurable in the Brownian variable and integrable in time. -/
 theorem truncatedFixedTimeIntegrableStep_holds (𝒮 : SpaceFillingSLEModel) :
     TruncatedFixedTimeIntegrableStep 𝒮 := by

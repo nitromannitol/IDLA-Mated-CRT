@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.CutoffMeasurable
 
 /-!
-# Lemma 3.4 (item 4): joint measurability of the approximate Liouville clock
+# Lemma 3.4: joint measurability of the approximate Liouville clock
 
 For a field `H` of circle averages that is jointly measurable in the environment and the spatial point, the approximate
 clock `((ω, b), t) ↦ ∫_0^t ε^{γ²/2} exp(γ H ω (b s)) ds` is jointly measurable in the environment, the continuous path

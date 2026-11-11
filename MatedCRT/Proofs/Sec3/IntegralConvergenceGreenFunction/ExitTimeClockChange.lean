@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.RatClockInverse
 
 /-!
-# Lemma 3.4 (item 3): exit times of time-changed paths
+# Lemma 3.4: exit times of time-changed paths
 
 For a continuous, strictly increasing, unbounded clock `C` with `C 0 = 0`, the clock inverse `clockInverse C` (the
 right-continuous inverse `inf {s | u < C s}`) satisfies the threshold rules `clockInverse C u ≤ σ ↔ u ≤ C σ` and

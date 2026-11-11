@@ -5,7 +5,7 @@ import MatedCRT.Proofs.LBM.BrownianExitBall
 import MatedCRT.Proofs.LBM.TimeChangeContinuity
 
 /-!
-# Killed per-test convergence of the walk (E-c2-9)
+# Killed per-test convergence of the walk
 
 For a continuous test `g : ℂ → ℝ` that is bounded and Hölder on the ball `ball z r`, the killed occupation functional
 `truncatedOccupationFunctional (ball z r) g T` of the interpolated walk converges in probability to its value on the

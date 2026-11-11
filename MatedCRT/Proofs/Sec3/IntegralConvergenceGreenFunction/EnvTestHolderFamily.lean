@@ -2,11 +2,11 @@ import MatedCRT.Defs.Notation
 import Mathlib.Topology.ContinuousMap.SecondCountableSpace
 
 /-!
-# Countable dense families of Hölder tests (E-c2-9)
+# Countable dense families of Hölder tests
 
 On a compact set `K` the continuous real functions form a second countable space in the sup norm. Hence,
 for fixed Hölder constants, the Hölder functions form a subset with a countable dense subset consisting
-of Hölder functions. This is the countable family of test functions used in E-c2-9 (GAPS-SEC3.md) to
+of Hölder functions. This is the countable family of test functions used to
 approximate an environment-dependent Hölder test, once it has been extended to the closed ball.
 -/
 

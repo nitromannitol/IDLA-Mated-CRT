@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.BallHolderFamily
 
 /-!
-# Lemma 3.4 (E-c2-9): finite covers by null-measurable events, and density in a ball
+# Lemma 3.4: finite covers by null-measurable events, and density in a ball
 
 The environment-dependent events `{ω | ∀ q ∈ Q, |f ω q - G j q| < δ}` are measurable for the environment
 σ-algebra `σ(h, η)`, hence null-measurable for the probability measure (`nullMeasurableSet_of_envSigma`), but not

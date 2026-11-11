@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.CutoffMeasurable
 
 /-!
-# Lemma 3.4 (item 4): continuity of the cutoff approximate inverse
+# Lemma 3.4: continuity of the cutoff approximate inverse
 
 For a strictly increasing continuous approximate Liouville clock `C` (the time integral of a positive continuous density along
 a Brownian path, Garban–Rhodes–Vargas, Section 2), the cutoff inverse `t ↦ cutInv C n t` is continuous. Its upper level sets

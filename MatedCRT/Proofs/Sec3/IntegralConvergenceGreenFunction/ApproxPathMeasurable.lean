@@ -2,7 +2,7 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ApproxClockVersion
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.CutoffInverseContinuous
 
 /-!
-# Lemma 3.4 (item 4): measurability of the approximate Liouville paths
+# Lemma 3.4: measurability of the approximate Liouville paths
 
 For a continuous circle-average field `hε ε` at a fixed radius `ε > 0`, the approximate Liouville clock
 `t ↦ lqgClockApprox γ hε ε b t` of a continuous Brownian path `b` has the continuous positive density
@@ -10,8 +10,7 @@ For a continuous circle-average field `hε ε` at a fixed radius `ε > 0`, the a
 `(b, t)` by the Carathéodory lemma (continuous in `t`, measurable in `b`). Consequently the cutoff approximate inverse
 `b ↦ cutInv (clock b) n u` is measurable for each time `u`, the evaluations `b ↦ b (cutInv (clock b) n u)` of the time-changed
 approximate path are measurable, and the approximate path `t ↦ b (cutInv (clock b) n (m t))` is continuous. These are the
-ingredients of the grid approximation of the bounded Lipschitz functional of the approximate Liouville path (paper argument,
-`docs/campaign/GAPS-SEC3.md` item 4).
+ingredients of the grid approximation of the bounded Lipschitz functional of the approximate Liouville path (paper argument).
 -/
 
 namespace MatedCRT

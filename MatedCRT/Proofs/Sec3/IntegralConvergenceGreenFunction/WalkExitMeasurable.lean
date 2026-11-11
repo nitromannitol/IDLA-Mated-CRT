@@ -2,7 +2,7 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.TruncatedFunctional
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.WalkContinuity
 
 /-!
-# Walk-side measurability of the killed occupation functional (E-c2-9)
+# Walk-side measurability of the killed occupation functional
 
 For a continuous test `g : ℂ → ℝ` and the ball `U = ball z r`, the killed occupation functional
 `truncatedOccupationFunctional U g T` of the interpolated walk `interpolatedWalk ε η mε x` is measurable in the

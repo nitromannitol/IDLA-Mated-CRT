@@ -11,8 +11,8 @@ step discharged; its named inputs are those of `lbmExitTimeIntegrableStep_of_inp
 
 Hypotheses of Lemma 3.4 that remain after this file, besides the cited Draft and External statements
 (`BoundedExitTimeRVStmt`, `ExitTimeUpperBoundStmt`, `MepsScalingInput`, `RandomWalkToLBMStmt`, `CellSizeEstimateStmt`):
-* `LBMGreenOccupationStep 𝒮` (the Revuz identity, IR-m2-1, awaiting the operator);
-* `TruncatedOccupationFixedTimeStep 𝒮` (fixed-time convergence for environment-dependent test functions, E-c2-9);
+* `LBMGreenOccupationStep 𝒮` (the Revuz identity);
+* `TruncatedOccupationFixedTimeStep 𝒮` (fixed-time convergence for environment-dependent test functions);
 * `LBMTruncatedOccupationMeasurableStep 𝒮` (measurability of the truncated occupations);
 * in the `_of_inputs_green` form also `LBMPathFunctionalMeasurableStep 𝒮` and `BrownianOutwardExcursionAtExitStep`.
 -/

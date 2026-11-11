@@ -1,9 +1,9 @@
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ApproxPathLimit
 
 /-!
-# Lemma 3.4 (item 4): convergence of the expectations of the approximate path functionals
+# Lemma 3.4: convergence of the expectations of the approximate path functionals
 
-Paper argument (`docs/campaign/GAPS-SEC3.md` item 4: "bounded convergence in probability gives convergence of its expectations").
+Paper argument ("bounded convergence in probability gives convergence of its expectations").
 Under the in-probability convergence of the approximate clocks uniformly on compact time intervals (the form of `IsLQGClock`), the
 expectations `∫ F (approximate path at scale k) dμ` converge to `∫ F (Liouville path) dμ` for every bounded Lipschitz functional `F`.
 Proof: every subsequence has a further subsequence along which the functionals converge almost surely (Borel–Cantelli,

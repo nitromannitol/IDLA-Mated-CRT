@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ApproxClockSubsequence
 
 /-!
-# Lemma 3.4 (item 3): a joint Borel–Cantelli subsequence of approximate clocks
+# Lemma 3.4: a joint Borel–Cantelli subsequence of approximate clocks
 
 `exists_strictMono_joint_cauchy` extracts a strictly increasing subsequence `φ` that is **independent of the point**
 of the measure space: for `μ`-almost every point `p` the approximations `G (φ j) p` converge at every rational time.

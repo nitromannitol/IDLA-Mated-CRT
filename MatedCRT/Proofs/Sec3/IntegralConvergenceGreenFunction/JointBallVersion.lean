@@ -2,7 +2,7 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ExitTimeClockChange
 import MatedCRT.Proofs.Measurability.EnvSigmaCore
 
 /-!
-# Lemma 3.4 (item 3): a jointly measurable version of an environment-measurable family on a ball
+# Lemma 3.4: a jointly measurable version of an environment-measurable family on a ball
 
 For a family `f ω x` that is measurable in the environment (for each `x`, with respect to `S.envSigma`) and continuous
 in `x` on a ball, there is a jointly measurable `F (ω, x)` equal to `f ω x` for almost every environment and every

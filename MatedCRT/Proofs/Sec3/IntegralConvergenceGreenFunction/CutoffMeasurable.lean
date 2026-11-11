@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.CutoffInverse
 
 /-!
-# Lemma 3.4 (item 4): measurability of the cutoff inverse
+# Lemma 3.4: measurability of the cutoff inverse
 
 For a family of monotone clocks `C p` depending jointly measurably on the parameter `p` and the time, the cutoff inverse
 `(p, t) ↦ cutInv (C p) n t` is jointly measurable. The proof uses the level sets: for a level `x ≤ n`, the event

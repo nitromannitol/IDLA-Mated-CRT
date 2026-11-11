@@ -2,7 +2,7 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.BallExtension
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.EnvTestHolderApprox
 
 /-!
-# Lemma 3.4 (E-c2-9): a countable Hölder family on a ball
+# Lemma 3.4: a countable Hölder family on a ball
 
 For the environment-dependent fixed-time step, a test function that is Hölder on the ball `B(z, r)`, with constants
 depending on the environment, must be approximated uniformly on `B(z, r)` by one member of a single sequence of

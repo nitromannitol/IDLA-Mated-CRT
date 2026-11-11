@@ -2,7 +2,7 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.JointBallVersion
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.FixedTimeReduction
 
 /-!
-# Lemma 3.4 (item 3): a jointly measurable version of the truncated LBM occupations
+# Lemma 3.4: a jointly measurable version of the truncated LBM occupations
 
 For a valid environment, a starting point `y`, a ball `B = ball z r` and an environment-measurable family of
 continuous functions `f ω`, the truncated path integrals `∫_{(0, min T τ]} f ω (X_t) dt` of the rescaled LBM path

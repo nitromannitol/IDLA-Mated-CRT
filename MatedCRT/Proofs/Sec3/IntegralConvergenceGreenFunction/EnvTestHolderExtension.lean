@@ -2,7 +2,7 @@ import MatedCRT.Defs.Notation
 import Mathlib.Topology.ExtendFrom
 
 /-!
-# Hölder extension to the closed ball (E-c2-9)
+# Hölder extension to the closed ball
 
 A function that is Hölder on the open ball `ball z r` extends to a continuous function on the closed
 ball, with the same Hölder constant and exponent. The extension is the continuous extension

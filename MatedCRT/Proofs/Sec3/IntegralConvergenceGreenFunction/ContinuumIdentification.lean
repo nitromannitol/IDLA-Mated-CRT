@@ -6,7 +6,7 @@ import MatedCRT.Proofs.LBM.ExitTimeChange
 # Lemma 3.4: identification of the continuum occupation integral
 
 The rescaled LBM is `X_t = LBM_{m₀ t}`; its exit time is `τ/m₀` and its occupation integral
-is `m₀⁻¹` times that of LBM. By the Revuz identity (`LBMGreenOccupationStep`, IR-m2-1) the
+is `m₀⁻¹` times that of LBM. By the Revuz identity (`LBMGreenOccupationStep`) the
 latter is `2 ∫ G f dμ_h`, so the occupation integral of `X` is `c₀ ∫ G f dμ_h`, `c₀ = 2/m₀`
 (CORRECTION [C1], line 1172).
 -/
