@@ -53,14 +53,14 @@ Each verdict has a status line under its heading (2026-11-11).
 
 ## IDLA (B)
 
-Source: OPUS-AUDIT-R1.md, IDLA (B) items B4 to B7 and the MINOR (B) list. Commit hashes and declaration names checked with git log and grep on the repository.
+Source: the audit round 1 report (fleet notes, not in the repository), IDLA (B) items B4 to B7 and the MINOR (B) list. Commit hashes and declaration names checked with git log and grep on the repository.
 
 | Item | Status | Evidence (file:line) |
 |---|---|---|
 | B4: strongest counted Theorems 1.4/1.6 take paper-owned steps (`closed_1_4_derived_p2`, `closed_1_6_derived_p2`) | Pending (z5) | MatedCRT/FirstPass/Closure/AuditRewire14.lean; the file is untracked, nothing committed. |
 | B5: the [C16] step is hidden inside a literature bundle | Fixed: 5f3fb57, aebb815 (z9) | MatedCRT/FirstPass/SLERef/CertifiedCore.lean (`certifiedReferenceModel_of_core`); MatedCRT/FirstPass/Closure/AuditCore.lean (14 `_certCore` declarations). Residual input `BrownianOutwardExcursionAtExitStep`, MatedCRT/Steps/Sec3/ConvergenceHarmonicFunctions.lean:38: a classical Brownian exit fact sitting in Steps/; operator decision. |
 | B6: `firstPassMain_1_4` and `firstPassMain_1_6` should not be counted | Pending operator (requests 95b to 95e) | MatedCRT/FirstPass/Main.lean. |
-| MINOR (B) items | Pending operator (requests 95b to 95e) | OPUS-AUDIT-R1.md, MINOR (B) section. |
+| MINOR (B) items | Pending operator (requests 95b to 95e) | Audit round 1 report, MINOR (B) section. |
 | B7: Lemma 3.6 is only half proved | Fixed: 8759946 (z8) | MatedCRT.closed_3_6_full, MatedCRT/FirstPass/Closure/Lemma36Rate.lean:39; binds the cited FrozenOneSidedBoundaryContinuity (Gwynne-Miller-Sheffield, arXiv:1807.07511, Theorem 3.9), defined at MatedCRT/FirstPass/S3i/Frozen.lean:44. |
 
 ### Appendix consolidation (follow-up item 1)
@@ -82,7 +82,7 @@ One text per appendix in the corrected tex. Coverage of each source section of t
 | LEMMA36-REPLACEMENT.md 6, audit of every use (628-690) | paper/idla_mated_crt-corrected.tex:5158 (condensed: the four items and the closing paragraph; the detailed source wording is NOT transcribed; open) |
 
 Decisions:
-- Appendix B stays inline (tex 4531-5155). paper/appendix-occupation-C16.tex is not \input: it still writes the constant as c_0 (appendix-occupation-C16.tex:485), which the [C1] renaming retired, and this worker may not edit it. It is kept in the repository, unused, because nothing may be deleted here; operator decision.
+- Appendix B stays inline (tex 4531-5155). paper/appendix-occupation-C16.tex is not \input: it still writes the constant as c_0 (appendix-occupation-C16.tex:485), which the [C1] renaming retired, and it is not edited here, since another file owner holds it. It is kept in the repository, unused, because nothing may be deleted here; operator decision.
 - Appendix C uses paper/appendix-lemma36-C13.tex (\input at tex:5156), which covers sections 1 to 5 of the source more fully than the former inline text. The audit subsection of the former inline text is kept after it (tex:5158).
 - The constant of the occupation identity is renamed lambda_0 (follow-up item 3); see the notation line in the list below.
 
