@@ -444,3 +444,5 @@ Each batch is `git mv`ed from `MatedCRT/` to `archive/MatedCRT/` in import order
 | MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/GMSAnnulusSurvival.lean | archive/MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/GMSAnnulusSurvival.lean | B17 |
 | MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/SafeRadialWalk.lean | archive/MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/SafeRadialWalk.lean | B17 |
 | MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/AnnulusPolynomialBound.lean | archive/MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/AnnulusPolynomialBound.lean | B17 |
+| MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/AnnulusPowerDecay.lean | archive/MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/AnnulusPowerDecay.lean | B18 |
+| MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/MesoscopicCutoff.lean | archive/MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/MesoscopicCutoff.lean | B18 |
