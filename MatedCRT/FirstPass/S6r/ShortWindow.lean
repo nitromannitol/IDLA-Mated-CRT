@@ -22,8 +22,8 @@ and rate changed:
 * grid: `|Z_d| ≤ (201/d)²`, union bound over `Z_d`, giving `C' d⁶`.
 
 Named inputs (hypotheses, as in S6p): the annulus-iteration statement `AnnulusIterateStmt` (Draft/Section6), the
-one-annulus hit bound `AnnulusHitUniformStmt` (S6p; the chat's "choose `C_G` so that the one-annulus probability exceeds
-`p(α_mix)`"), the cone transfer `AnnulusIterateConeTransferStep` and the locality `GoodAnnulusEventLocalityStep`.
+one-annulus hit bound `AnnulusHitUniformStmt` (with `C_G` chosen so that the one-annulus probability exceeds
+`p(α_mix)`), the cone transfer `AnnulusIterateConeTransferStep` and the locality `GoodAnnulusEventLocalityStep`.
 Borel-Cantelli (the random cutoff `d_*(h)` ) is in `shortWindow_borel_cantelli`.
 
 Terminology: Armstrong-Kuusi-Mourrat (good annuli, annulus iteration), Berestycki-Powell and Duplantier-Sheffield (LQG

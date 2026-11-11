@@ -18,7 +18,7 @@ Route. For `γ ∈ (0,2)`:
   are the field itself (`fieldCircleAverage 0 h = h`).
 
 The route through `IsQuantumCone.lateral_law` is not needed: no quantum cone is assumed.
-The theorem keeps the name requested by the task, `wholePlaneLQGExistenceStep_of_lateral`.
+The theorem keeps the name `wholePlaneLQGExistenceStep_of_lateral`.
 
 Terminology: Duplantier-Sheffield (2011) for the whole-plane GFF and the LQG measure; Berestycki-Powell for the
 insertion-`γ` measure; the circle averages `h_r(z)` in the sense of Duplantier-Sheffield.
