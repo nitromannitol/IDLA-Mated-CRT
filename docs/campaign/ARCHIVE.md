@@ -146,3 +146,10 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/Proofs/Sec3/UniformConvergenceGreenKernel/LocalCompactness.lean | archive/MatedCRT/Proofs/Sec3/UniformConvergenceGreenKernel/LocalCompactness.lean | B40 |
 | MatedCRT/Proofs/Sec3/UniformConvergenceGreenKernel/PreparedLocalCompactness.lean | archive/MatedCRT/Proofs/Sec3/UniformConvergenceGreenKernel/PreparedLocalCompactness.lean | B40 |
 | MatedCRT/Proofs/Sec3/UniformConvergenceGreenKernel/PreparedRandomCompactness.lean | archive/MatedCRT/Proofs/Sec3/UniformConvergenceGreenKernel/PreparedRandomCompactness.lean | B40 |
+| MatedCRT/Proofs/Sec4/ConvergenceDivisible/CorrectedPreparedLocalExit.lean | archive/MatedCRT/Proofs/Sec4/ConvergenceDivisible/CorrectedPreparedLocalExit.lean | B42 |
+| MatedCRT/Proofs/Sec4/ConvergenceDivisible/LocalClusterMonotone.lean | archive/MatedCRT/Proofs/Sec4/ConvergenceDivisible/LocalClusterMonotone.lean | B42 |
+| MatedCRT/Proofs/Sec4/ConvergenceDivisible/LocalExitCompatibility.lean | archive/MatedCRT/Proofs/Sec4/ConvergenceDivisible/LocalExitCompatibility.lean | B42 |
+| MatedCRT/Proofs/Sec4/ConvergenceDivisible/PreparedEventMeasurability.lean | archive/MatedCRT/Proofs/Sec4/ConvergenceDivisible/PreparedEventMeasurability.lean | B42 |
+| MatedCRT/Proofs/Sec4/ConvergenceDivisible/PreparedIdentification.lean | archive/MatedCRT/Proofs/Sec4/ConvergenceDivisible/PreparedIdentification.lean | B42 |
+| MatedCRT/Proofs/Sec4/ConvergenceDivisible/PreparedPathwiseMeasurability.lean | archive/MatedCRT/Proofs/Sec4/ConvergenceDivisible/PreparedPathwiseMeasurability.lean | B42 |
+| MatedCRT/Proofs/Sec4/ConvergenceDivisible/PreparedPropertiesEventMeasurability.lean | archive/MatedCRT/Proofs/Sec4/ConvergenceDivisible/PreparedPropertiesEventMeasurability.lean | B42 |
