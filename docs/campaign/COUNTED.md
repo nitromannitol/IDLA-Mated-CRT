@@ -273,6 +273,8 @@ The Appendix B occupation identity (`frozenLBMGreenOccupationRescaled_*`, `Mated
 | `frozenLBMGreenOccupationRescaled_closed3` | MatedCRT/Proofs/Sec3/KilledOccupation/OccupationClosure3.lean:68 | 23f4c7e6 | 15 = 𝒮, ν, dA + the 12 hypotheses of closed2 | hS0 (cited, MQ-li-8e) | not in the lead's list; committed after closed2 |
 | `frozenLBMGreenOccupationRescaled_closed4` | MatedCRT/Proofs/Sec3/KilledOccupation/OccupationClosure4.lean:76 | d90cbe4e | 17 = 𝒮, ν, dA + 14 hypotheses: hm0 hWeight hMeas hlaw hE hKern hBG hS0 hw hVar hνmeas hconvB1 hLjoint hLpath | hlaw : `ConeUnitDiskGFFLaw` (MQ-li-12); hS0 (cited, MQ-li-8e) | not in the lead's list; committed. hS6 is replaced by `hS6_cone`, with the origin tail moment from `coneOriginTailMoment_of_law` applied to hlaw |
 | `frozenLBMGreenOccupationRescaled_closed5` | MatedCRT/Proofs/Sec3/KilledOccupation/OccupationClosure5.lean:19 | d51a926b | 16 = 𝒮, ν, dA + 13 hypotheses: hWeight hMeas hlaw hE hKern hBG hS0 hw hVar hνmeas hconvB1 hLjoint hLpath | hlaw : `ConeUnitDiskGFFLaw` (MQ-li-12); hS0 (cited, MQ-li-8e) | hm0 discharged by MatedCRTEnv.IsValid.m₀_pos (eq:mo; HarmonicPathExit.lean:114; alias MatedCRTEnv.m₀_pos in M0Positive.lean, 793bf5b4) |
+| `frozenLBMGreenOccupationRescaled_of_coneGFFLaw` | MatedCRT/Proofs/Sec3/KilledOccupation/OccupationClosureCone.lean:48 | ac2932c7 | 3 = 𝒮 + 2 hypotheses: hlaw hGFF | hlaw : `ConeUnitDiskGFFLaw` (MQ-li-12); hGFF (inline `∀` Prop, not classed; TRUE as typed, MQ-fp-1, confirmed by the independent check) | No binder for the weight identity, the mass bound, hS0 or the GMC clock inputs of closed5. The clock route of MQ-li-17: limit clock along a subsequence with summable gaps (LimClockIdentification.lean, LimClockKernel.lean), chaos limit weighted by the Green function (GmcGreenMeasure.lean), occupation measure of the limit clock (ClockOccupationMeasure.lean), transfer along eq:gff (ConeOccupationTransfer.lean), rescaling (RescaledClockOccupation.lean). hGFF is the occupation identity of the clock of `h^ℂ - γ log|·|`, `h^ℂ` a whole-plane GFF, with an independent planar Brownian motion, for every whole-plane GFF model. |
+| `frozenLBMGreenOccupationRescaled_of_fieldLaw` | MatedCRT/FirstPass/Closure/AppendixBRewire.lean:124 | 56d06e72 | 3 = 𝒮 + 2 hypotheses: hFL hGFF | hFL : `FPConeWholePlaneFieldLaw` (Frozen; already a binder of the counted forms of 1.4, 1.6 and 5.1); hGFF as in the row above | hlaw by `coneUnitDiskGFFLaw_of_fieldLaw hFL` (AppendixBRewire.lean:55). This is the form used by `CertifiedReferenceModelCoreNoOccupation.toCore_of_fieldLaw` and `.toModel_of_fieldLaw` (AppendixBRewire.lean:131, :140). |
 
 Binder classification of `frozenLBMGreenOccupationRescaled_closed4` by z11 (reports/z11.md, BINDER LIST; lead li 10:20, item (d)). data 3: 𝒮 (`SpaceFillingSLEModel`), ν and dA (families). Proof? 6: hlaw `ConeUnitDiskGFFLaw` (ConeGFFTransfer.lean:40; TRUE as typed, HIGH, MQ-li-12 (a); the law identity is no longer PENDING TRUTH CHECK), hS0 `KilledBrownianOccupationOnBall` (Potential.lean:275; cited, MQ-li-8e), hBG `BGMassUpperBoundDyadic` (WeightIdentity.lean; eq:occ-BGmass), hWeight `OccWeightIdentity` (MQ-li-10b), hw `circleWeight`, hLpath `clockGapMean` (conditional GMC clock input, as in closure3). Step 8: hE (chi_a-parts convergence, kept named, G1), hKern, hMeas, hVar, hνmeas, hLjoint, hconvB1 (measurability and data class, MQ-li-8g), hm0 (0 < S.m0, eq:mo). Discharged inside, not binders: hGreen (greenDiskFormula), hExit (planar_exit_ae_lt_top), hτ hτmeas hGint hσint (BaseClockBinders textbook binders), hS6 (hS6_cone, ConeClockTransfer.lean:454), hT0cone (coneOriginTailMoment_of_law, ConeOriginTails.lean:284), and the hS0 bridge (brownianOccupationOnBall_of_killed, OccupationClosure4.lean:41). Lead rulings needed on the flagged Step inputs hE, hKern, hMeas, hm0. closed5 (d51a926b) = closed4 with hm0 discharged; the other 13 binders keep the classification above.
 
@@ -326,3 +328,29 @@ Derived forms (binders of `T` -> binders of `T_derivedInputs`):
 | 6.1 | `closed_6_1_lp_noSup` | 33 -> 25 | centre formula; the five Section 3 statements, 1.1 and 6.11 |
 | 7.1 | `closed_7_1_lp` | 29 -> 22 | centre formula; the five Section 3 statements and 1.1 |
 | 8.1 | `closed_8_1_lp_noSup` | 46 -> 38 | centre formula; the five Section 3 statements, 1.1 and 6.11 |
+
+## Appendix B path: forms with the occupation identity or the strong compatibility derived (2026-11-11)
+
+The counted declarations of the Table are unchanged. The forms below have the same conclusions as the counted forms of
+their rows. Axioms: `MatedCRT/Audit/AppendixBAxioms.lean` (3c1fada4; 14 lines, each prints `propext`,
+`Classical.choice`, `Quot.sound`).
+
+| result | form | file:line | commit | binders | relation to the counted form of the Table |
+|---|---|---|---|---|---|
+| 5.1 | `closed_5_1_lp_noSup_noSC` | MatedCRT/FirstPass/Closure/Clean51NoSC.lean:24 | 488d5bf2 | 30: data 2 core 1 External 1 Step 1 HB 13 Frozen 11 DRAFT 1 | Strict sub-list of `closed_5_1_lp_noSup` (31 binders), same order: `hSC : ClusterStrongCompatibilityStmt` is supplied by `frozenClusterStrongCompatibility_of_volumeGrowth hI2` (Closure/HSCDerived.lean:19), as in rows 1.4n and 1.6n. Rule 1 applies. The Table row 5.1 is not switched here, because `closed_5_1_lp_noSup_derivedInputs` (previous section) is stated over the Table form. |
+| 1.4 | `closed_1_4_derivedOccupation` | MatedCRT/FirstPass/Closure/AppendixBRewire.lean:156 | c4e59c78 | 35 | Not a sub-list of `closed_1_4_lp_noSC_noSup` (36 binders). hF3 and hGBC are supplied (`frozenDiskGreenNonnegCont_holds`, `frozenGreenBallCentre_holds`). `hcore : CertifiedReferenceModelCore ν 𝒮` is replaced by `hcoreB : CertifiedReferenceModelCoreNoOccupation ν 𝒮` (AppendixBRewire.lean:65: the conjuncts of the core other than `FrozenLBMGreenOccupationRescaled 𝒮`; a sub-conjunction, not a new frozen Prop). One binder is added, hGFF. The other 32 binders are those of the counted form. |
+| 1.6 | `closed_1_6_derivedOccupation` | MatedCRT/FirstPass/Closure/AppendixBRewire.lean:206 | c4e59c78 | 35 | As row 1.4, over `closed_1_6_lp_noSC_noSup`. |
+
+- **hGFF** is an inline `∀` Prop, written once per file (OccupationClosureCone.lean:49, AppendixBRewire.lean:103); no
+  file defines it and it is not printed verbatim in the paper. Statement: for every whole-plane GFF model, every
+  strictly increasing sequence of dyadic scales along which the gaps of the regularized clocks of `h^ℂ - γ log|·|`
+  satisfy the summable bounds, and every countable family of measurable subsets of the disc `B_r(z)`, almost surely
+  the expected occupation measure of the limit clock up to the exit time of the disc is finite and agrees on the
+  family with the chaos limit weighted by twice the Green function of the disc. Math desk: TRUE as typed (MQ-fp-1,
+  confirmed by the independent check; notes/fp-gaps/MATH-ANSWERS.md); its written reduction uses the convergence of
+  the chaos (Berestycki 2017, Theorem 1.1), the occupation formula of killed Brownian motion on a disc and the
+  polarity of points. It is a cited input.
+- **Whether `closed_1_4_derivedOccupation` and `closed_1_6_derivedOccupation` replace the counted forms of 1.4 and 1.6
+  is an operator decision** (rule 1 does not apply: one binder is added).
+- The other counted theorems that bind `hC : CertifiedReferenceModel ν 𝒮` lose the Appendix B conjunct in the same way,
+  by `hC := hcoreB.toModel_of_fieldLaw hFL hGFF hT` (AppendixBRewire.lean:140); no wrapper is committed for them.
