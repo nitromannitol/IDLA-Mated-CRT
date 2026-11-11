@@ -1,4 +1,5 @@
 import MatedCRT.Proofs.Sec4.Prop42Closure.LQGMeasureFunctional
+import MatedCRT.LPStaging.Analysis.DyadicMeshGeometry
 
 /-!
 # Local-measure functional: a proof of `LQGMeasureLocalityFunctionalStep`
@@ -77,31 +78,8 @@ lemma one_lt_of_lqCutoff_ne_zero {U : Set ℂ} {j : ℕ} {z : ℂ} (h : lqCutoff
 
 /-- Distance from `z` to the complement of `U ⊆ B_1` is at most `1 − |z|` (the unit sphere lies in `Uᶜ`). -/
 lemma infDist_compl_le_one_sub_norm {U : Set ℂ} (hUsub : U ⊆ ball (0 : ℂ) 1) {z : ℂ} (hz : ‖z‖ < 1) :
-    infDist z Uᶜ ≤ 1 - ‖z‖ := by
-  have hw : ∀ w : ℂ, 1 ≤ ‖w‖ → infDist z Uᶜ ≤ dist z w := by
-    intro w hw1
-    apply infDist_le_dist_of_mem
-    rw [Set.mem_compl_iff]
-    intro hwU
-    have h2 := mem_ball_zero_iff.mp (hUsub hwU)
-    linarith
-  rcases eq_or_ne z 0 with h0 | h0
-  · subst h0
-    have h1 := hw 1 (by simp)
-    simpa using h1
-  · have hpos : 0 < ‖z‖ := norm_pos_iff.mpr h0
-    have hnorm : ‖(‖z‖⁻¹ : ℝ) • z‖ = 1 := by
-      rw [norm_smul, Real.norm_eq_abs, abs_of_pos (inv_pos.mpr hpos), inv_mul_cancel₀ hpos.ne']
-    have hdist : dist z ((‖z‖⁻¹ : ℝ) • z) ≤ 1 - ‖z‖ := by
-      rw [dist_eq_norm, show z - (‖z‖⁻¹ : ℝ) • z = (1 - ‖z‖⁻¹ : ℝ) • z by
-        rw [sub_smul, one_smul], norm_smul, Real.norm_eq_abs]
-      have hinv : 1 < ‖z‖⁻¹ := (one_lt_inv₀ hpos).mpr hz
-      rw [abs_of_neg (show 1 - ‖z‖⁻¹ < 0 by linarith)]
-      have key : -(1 - ‖z‖⁻¹) * ‖z‖ = 1 - ‖z‖ := by
-        rw [neg_mul, sub_mul, inv_mul_cancel₀ hpos.ne']
-        ring
-      exact key.le
-    exact (hw _ hnorm.ge).trans hdist
+    infDist z Uᶜ ≤ 1 - ‖z‖ :=
+  LatticeProb.DyadicMeshGeometry.infDist_compl_le_one_sub_norm hUsub hz
 
 /-- If `f_j(z) ≠ 0` and `j·r ≤ 1`, then `r + |z| < 1` (the cutoff is supported in `B_{1-1/j}`). -/
 lemma admissible_of_lqCutoff_ne_zero {U : Set ℂ} (hUsub : U ⊆ ball (0 : ℂ) 1) {j : ℕ} {r : ℝ}
@@ -166,7 +144,8 @@ lemma lqGx_succ_sub (k a : ℕ) : lqGx k (a + 1) - lqGx k a = 4 / 2 ^ k := by
   push_cast
   ring
 
-lemma mesh_pos (k : ℕ) : (0 : ℝ) < 4 / 2 ^ k := by positivity
+lemma mesh_pos (k : ℕ) : (0 : ℝ) < 4 / 2 ^ k :=
+  LatticeProb.DyadicMeshGeometry.mesh_pos k
 
 lemma volume_lqGridCell (k a b : ℕ) :
     volume (lqCell (lqGx k a) (lqGx k (a + 1)) (lqGx k b) (lqGx k (b + 1))) =
@@ -174,11 +153,8 @@ lemma volume_lqGridCell (k a b : ℕ) :
   rw [volume_lqCell, lqGx_succ_sub, lqGx_succ_sub]
 
 lemma ofReal_sixteen (k : ℕ) :
-    ENNReal.ofReal (16 / 4 ^ k) = ENNReal.ofReal (4 / 2 ^ k) * ENNReal.ofReal (4 / 2 ^ k) := by
-  rw [← ENNReal.ofReal_mul (mesh_pos k).le]
-  congr 1
-  rw [div_mul_div_comm, ← mul_pow]
-  norm_num
+    ENNReal.ofReal (16 / 4 ^ k) = ENNReal.ofReal (4 / 2 ^ k) * ENNReal.ofReal (4 / 2 ^ k) :=
+  LatticeProb.DyadicMeshGeometry.ofReal_sixteen k
 
 lemma lqGx_ge_neg_two (k a : ℕ) : -2 ≤ lqGx k a := by
   rw [lqGx_eq]
@@ -211,13 +187,8 @@ lemma mem_Ico_lqGx_iff {k a : ℕ} {t : ℝ} (ht : -2 ≤ t) :
     exact ⟨by linarith, by linarith⟩
 
 lemma lt_two_pow_of_floor {k : ℕ} {t : ℝ} (ht : t < 2) (ht' : -2 ≤ t) :
-    ⌊(t + 2) / (4 / 2 ^ k)⌋₊ < 2 ^ k := by
-  have hh := mesh_pos k
-  have hx : (0 : ℝ) ≤ (t + 2) / (4 / 2 ^ k) := div_nonneg (by linarith) hh.le
-  rw [Nat.floor_lt hx, div_lt_iff₀ hh]
-  have h4 : (2 : ℝ) ^ k * (4 / 2 ^ k) = 4 := by field_simp
-  push_cast
-  linarith [h4]
+    ⌊(t + 2) / (4 / 2 ^ k)⌋₊ < 2 ^ k :=
+  LatticeProb.DyadicMeshGeometry.lt_two_pow_of_floor ht ht'
 
 lemma abs_lqGx_floor_sub_le {k : ℕ} {t : ℝ} (ht : -2 ≤ t) :
     |lqGx k ⌊(t + 2) / (4 / 2 ^ k)⌋₊ - t| ≤ 4 / 2 ^ k := by
@@ -386,14 +357,8 @@ theorem tendsto_lqRiemann_grid (G : ℂ → ℝ) (hG : Continuous G)
 
 /-- A circle `(r,z)` with `r > 0` and `r + |z| < 1` has closed disc in `B_1`. -/
 lemma closedBall_subset_ball_of_add_norm_lt {r : ℝ} {z : ℂ} (h : r + ‖z‖ < 1) :
-    closedBall z r ⊆ ball (0 : ℂ) 1 := by
-  intro w hw
-  rw [mem_closedBall, dist_eq_norm] at hw
-  rw [mem_ball_zero_iff]
-  have h1 : ‖w‖ ≤ ‖w - z‖ + ‖z‖ := by
-    calc ‖w‖ = ‖(w - z) + z‖ := by rw [sub_add_cancel]
-      _ ≤ ‖w - z‖ + ‖z‖ := norm_add_le _ _
-  linarith
+    closedBall z r ⊆ ball (0 : ℂ) 1 :=
+  LatticeProb.DyadicMeshGeometry.closedBall_subset_ball_of_add_norm_lt h
 
 /-- The value of an array on `CircleB1` at an admissible circle `(r,z)`. -/
 abbrev lqCircleVal (cc : CircleB1 → ℝ) (r : ℝ) (z : ℂ) (hr : 0 < r) (h : r + ‖z‖ < 1) : ℝ :=
@@ -599,10 +564,8 @@ theorem lqFunctional_eq {U : Set ℂ} (hU : IsOpen U) (hUsub : U ⊆ ball (0 : �
 /-- A joint circle function continuous on `(0,∞) × ℂ` is continuous in `z` at each positive radius. -/
 lemma slice_continuous_of_continuousOn {c : ℝ → ℂ → ℝ}
     (hcont : ContinuousOn (fun p : ℝ × ℂ => c p.1 p.2) (Ioi 0 ×ˢ univ)) :
-    ∀ r : ℝ, 0 < r → Continuous fun z => c r z := by
-  intro r hr
-  have h1 : Continuous fun z : ℂ => ((r, z) : ℝ × ℂ) := continuous_const.prodMk continuous_id
-  exact hcont.comp_continuous h1 (fun z => ⟨hr, mem_univ z⟩)
+    ∀ r : ℝ, 0 < r → Continuous fun z => c r z :=
+  LatticeProb.DyadicMeshGeometry.slice_continuous_of_continuousOn hcont
 
 /-- The whole-plane circle average `h_r(z) − γ·avg_{∂B_r(z)} log|·|` is continuous in `z` at each radius `r > 0`,
 by the closed form `avg_{∂B_r(z)} log|·| = log r + log⁺(|z|/r)` (Mathlib `circleAverage_log_norm_sub_const_eq_log_radius_add_posLog`). -/
