@@ -1274,5 +1274,79 @@ theorem occMeasure_eq_nuWeighted_ae {Ω : Type*} [MeasurableSpace Ω] (P : Measu
     ⟨by rw [hω univ hCuniv, hu]; exact lt_top_iff_ne_top.2 hfω⟩
   exact MeasureTheory.ext_of_generate_finite C hCgen hCpi (fun s hs => hω s hs) (hω univ hCuniv)
 
+theorem lintegral_occMeasure_eq {Ω : Type*} (PB : Measure (ContinuousPath ℂ))
+    (dA : Ω → ContinuousPath ℂ → Measure ℝ≥0) (z : ℂ) (r : ℝ) (ω : Ω)
+    (hκ : AEMeasurable (occKernel dA z r ω) PB) {q : ℂ → ℝ≥0∞} (hq : Measurable q) :
+    ∫⁻ x, q x ∂(occMeasure PB dA z r ω) = ∫⁻ b, limitClockFun dA z r ω b q ∂PB := by
+  unfold occMeasure
+  rw [Measure.lintegral_bind hκ hq.aemeasurable]
+  refine lintegral_congr fun b => ?_
+  unfold occKernel limitClockFun
+  rw [lintegral_map hq b.continuous.measurable]
+
+theorem lintegral_nuWeighted_eq {Ω : Type*} (ν : Ω → Measure ℂ) (D : Set ℂ) (y : ℂ) (ω : Ω)
+    (hG : Measurable (greenWeight D y)) {q : ℂ → ℝ≥0∞} (hq : Measurable q) :
+    ∫⁻ x, q x ∂(nuWeighted ν D y ω) = ∫⁻ x in D, greenWeight D y x * q x ∂(ν ω) := by
+  unfold nuWeighted
+  rw [lintegral_withDensity_eq_lintegral_mul _ hG hq]
+  rfl
+
+/-- **Lemma lem:occ-base** (paper tex:140-151, eq:occ-base), as the quenched identity `BaseOccupationIdentity`
+(BaseClock.lean), for the base clock `dA` and the GMC measure `ν` of the environment, with the Brownian
+motion `planarBrownianMotion y` and `D = ball z r ⊆ ball 0 1`. The literature inputs are binders:
+* `hLpath` : per-path conditional GMC convergence of the clocks (Berestycki 2017 Thm 1.1 p. 3 with the finite
+  energy premise tex:153-164, and the Dirichlet-clock transfer tex:178-201, gap G1 (MQ-li-8a));
+* `hconvB1` : `L¹(P)` convergence of the circle GMC measures on bounded weights supported in `B_1`
+  (Berestycki 2017 Thm 1.1 p. 3; tex:218-233);
+* `hVar` : eq:occ-var (tex:27-33); `hS0` : the ordinary Brownian occupation identity S0 (tex:48-52, MQ-li-8e);
+* `hmeasKernel`, `hLjoint`, `hνmeas`, `hw`, `hσint`, `hτ`, `hτmeas`, `hGmeas`, `hGint`: measurability and
+  integrability of the GMC objects and of the exit time. -/
+theorem baseOccupationIdentity_of_GMC {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
+    (γ : ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (z : ℂ) (r : ℝ) {y : ℂ} (hy : y ∈ ball z r)
+    (hDB : ball z r ⊆ ball 0 1)
+    (hS0 : KilledBrownianOccupationOnBall z r)
+    (hτ : Integrable (fun b : ContinuousPath ℂ => (pathExitTime (ball z r) b).toReal)
+      (planarBrownianMotion y))
+    (hτmeas : Measurable fun b : ContinuousPath ℂ => pathExitTime (ball z r) b)
+    (hGmeas : Measurable fun x => greenFunction (ball z r) y x)
+    (hGint : IntegrableOn (fun x => greenFunction (ball z r) y x) (ball z r))
+    (hw : ∀ k, Measurable fun p : Ω × ℂ => circleWeight γ hcirc p.1 k p.2)
+    (hVar : ∀ᶠ k in atTop, ∀ x ∈ ball z r, ∫⁻ ω, ENNReal.ofReal (circleWeight γ hcirc ω k x) ∂P = 1)
+    (ν : Ω → Measure ℂ) (dA : Ω → ContinuousPath ℂ → Measure ℝ≥0)
+    (hνmeas : ∀ ρ : ℂ → ℝ≥0∞, Measurable ρ → Measurable fun ω => ∫⁻ x, ρ x ∂(ν ω))
+    (hconvB1 : ∀ ρ : ℂ → ℝ≥0∞, Measurable ρ → (∃ N : ℝ≥0∞, N ≠ ⊤ ∧ ∀ x, ρ x ≤ N) →
+      (∀ x ∉ ball 0 1, ρ x = 0) →
+      Tendsto (fun k => ∫⁻ ω, ediffE (∫⁻ x, ρ x ∂(circleMeasure γ hcirc ω k)) (∫⁻ x, ρ x ∂(ν ω)) ∂P)
+        atTop (𝓝 0))
+    (hLjoint : ∀ q : ℂ → ℝ≥0∞, Measurable q →
+      Measurable fun p : Ω × ContinuousPath ℂ => limitClockFun dA z r p.1 p.2 q)
+    (hmeasKernel : ∀ᵐ ω ∂P, ∀ q : ℂ → ℝ≥0∞, Measurable q →
+      Measurable fun b : ContinuousPath ℂ => ∫⁻ u in Icc (0 : ℝ≥0) (pathExitTime (ball z r) b).toNNReal,
+        q (b u) ∂(dA ω b))
+    (hLpath : ∀ q : ℂ → ℝ≥0∞, Measurable q → (∃ M : ℝ≥0∞, M ≠ ⊤ ∧ ∀ x, q x ≤ M) →
+      ∀ᵐ b ∂planarBrownianMotion y, Tendsto (fun k => clockGapMean P γ hcirc dA z r k q b) atTop (𝓝 0))
+    (hσint : ∫⁻ b, ((pathExitTime (ball z r) b).toNNReal : ℝ≥0∞) ∂planarBrownianMotion y ≠ ⊤) :
+    BaseOccupationIdentity P (planarBrownianMotion y) (ball z r) (greenFunction (ball z r) y) ν dA
+      (fun b => (pathExitTime (ball z r) b).toNNReal) := by
+  have hconv : ∀ ρ : ℂ → ℝ≥0∞, Measurable ρ → (∃ N : ℝ≥0∞, N ≠ ⊤ ∧ ∀ x, ρ x ≤ N) →
+      (∀ x ∉ ball z r, ρ x = 0) →
+      Tendsto (fun k => ∫⁻ ω, ediffE (∫⁻ x, ρ x ∂(circleMeasure γ hcirc ω k)) (∫⁻ x, ρ x ∂(ν ω)) ∂P)
+        atTop (𝓝 0) :=
+    fun ρ hρ hb hz => hconvB1 ρ hρ hb (fun x hx => hz x (fun h => hx (hDB h)))
+  have hG'm : Measurable (greenWeight (ball z r) y) :=
+    ENNReal.measurable_ofReal.comp (measurable_const.mul hGmeas)
+  unfold BaseOccupationIdentity
+  filter_upwards [occMeasure_eq_nuWeighted_ae P γ hcirc z r hy hS0 hτ hτmeas hGmeas hGint hw hVar ν dA
+    hνmeas hconv hLjoint hmeasKernel hLpath hσint, hmeasKernel] with ω hμ hk
+  intro q hq _
+  have hκ := occKernel_aemeasurable (planarBrownianMotion y) dA z r ω hk
+  calc ∫⁻ b, (∫⁻ u in Icc (0 : ℝ≥0) (pathExitTime (ball z r) b).toNNReal, q (b u) ∂(dA ω b))
+        ∂(planarBrownianMotion y)
+      = ∫⁻ x, q x ∂(occMeasure (planarBrownianMotion y) dA z r ω) :=
+        (lintegral_occMeasure_eq (planarBrownianMotion y) dA z r ω hκ hq).symm
+    _ = ∫⁻ x, q x ∂(nuWeighted ν (ball z r) y ω) := by rw [hμ]
+    _ = ∫⁻ x in ball z r, ENNReal.ofReal (2 * greenFunction (ball z r) y x) * q x ∂(ν ω) :=
+        lintegral_nuWeighted_eq ν (ball z r) y ω hG'm hq
+
 end MatedCRT.KilledOccupation
 
