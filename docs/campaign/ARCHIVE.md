@@ -55,3 +55,4 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/FirstPass/S3t/PathContinuity.lean | archive/MatedCRT/FirstPass/S3t/PathContinuity.lean | B14 |
 | MatedCRT/FirstPass/S4S5b/Axioms.lean | archive/MatedCRT/FirstPass/S4S5b/Axioms.lean | B15 |
 | MatedCRT/FirstPass/S4S5b/AxiomsWeyl.lean | archive/MatedCRT/FirstPass/S4S5b/AxiomsWeyl.lean | B15 |
+| MatedCRT/FirstPass/S5S6S7/Axioms.lean | archive/MatedCRT/FirstPass/S5S6S7/Axioms.lean | B17 |
