@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S3S4
 import MatedCRT.Steps.Sec4.SubsequentialPropertiesPrepared
 import MatedCRT.Proofs.Sec4.SubsequentialProperties.PreparedIdentification
 
-/-! Lemma 4.8 (lemma:subsequential-properties), corrected form (audit PRO, Patch D; fp-S4x-4-8-corrected).
+/-! Lemma 4.8 (lemma:subsequential-properties), corrected form.
 
 The printed `firstPass_4_8` (FirstPass/S3S4.lean) proves the legacy `SubsequentialPropertiesStmt`, in which one
 deterministic subsequence `φ` is chosen before `t` (`∀ εs, ∃ φ, StrictMono φ ∧ ∀ᵐ ω, ∀ t > 0, ...`), and it does

@@ -6,8 +6,7 @@ import MatedCRT.FirstPass.SLERef.Extended
 import MatedCRT.FirstPass.SLERef.Certified
 
 /-!
-# First pass: consumers of the reference law of whole-plane space-filling SLE (task fp-SLERef-reference-law, worker z10;
-extended by task fp-SLERef2-certify)
+# First pass: consumers of the reference law of whole-plane space-filling SLE
 
 Projections from the reference certificates to the numbered results they cite and to the two unresolved frozen inputs.
 Nothing here constructs an SLE law. The frozen existence input is `SLEReferenceExistsInput`
@@ -44,7 +43,7 @@ theorem exists_reference_of_referenceExists (hE : SLEReferenceExistsInput) :
   obtain ⟨ν, hν⟩ := hE
   exact ⟨ν, fun 𝒮 hLaw => ⟨hν.1.2 𝒮 hLaw, (hν.2 𝒮 hLaw).1, (hν.2 𝒮 hLaw).2⟩⟩
 
-/-- From the frozen existence input: the minimal frozen package of `notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md` §8 for the
+/-- From the frozen existence input: the minimal frozen package of the frozen package for the
 same law `ν` as the reference certificate. -/
 theorem exists_frozenReference_of_referenceExists (hE : SLEReferenceExistsInput) :
     ∃ ν : ℝ → Measure SLEPathCode, SLEFrozenReferenceInput ν := by

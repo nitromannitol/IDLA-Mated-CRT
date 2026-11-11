@@ -5,10 +5,10 @@ import MatedCRT.FirstPass.Frozen.S1cDivergence
 import MatedCRT.FirstPass.S1c.RadialDivergence
 
 /-!
-# First pass: `ScaledClusterExitTimeStep` (eq:btb-converge-to-inf, line 3330) by the route of fleet note G-hT (q4)
+# First pass: `ScaledClusterExitTimeStep` (eq:btb-converge-to-inf, line 3330) by the fixed-time measurable-radius route
 
 The target `ScaledClusterExitTimeStep` (Steps/Sec1/Convergence.lean:92) asserts `P[b T^b ≤ t] → 0` for
-`T^b = sup {s > 0 : R_b⁻¹ Λ_{bs} ⊆ B_{ρ/3}}`. The printed equality-in-law argument is replaced (notes/fp-gaps/G-hT.md)
+`T^b = sup {s > 0 : R_b⁻¹ Λ_{bs} ⊆ B_{ρ/3}}`. The printed equality-in-law argument is replaced
 by three lemmas, all formalized here except the first:
 * `clusterExitTime_rescaled_gt` (Lemma A, deterministic): if `Λ_{2t} ⊆ B_{Rρ/3}` then `t < b T^b`.
 * `coneScaleRadius_lowerTail` (Lemma B): `P[R_b ≤ A] → 0` as `b → ∞`, from the frozen radial divergence
@@ -23,7 +23,7 @@ namespace MatedCRT
 open MeasureTheory Filter Topology Set HarmonicBalls MarkovProcess Metric
 open scoped NNReal ENNReal
 
-/-- NEW step (fleet note G-hT, Lemma 1: measurable radius at one fixed time). For every `u > 0` there is a measurable
+/-- Lemma 1 (measurable radius at one fixed time). For every `u > 0` there is a measurable
 `M : Ω → ℝ` with `Λ_u ⊆ B̄_{M}` almost surely, for the harmonic-ball family of the cone field. The written argument
 (analytic projections of the obstacle problem, Borel decoding of the LQG measure, rational points of the open set
 `int cl K_{R,u}`) is not yet formalized. -/
@@ -347,7 +347,7 @@ theorem scaledClusterExitTimeStep_of_radius (hdiv : FrozenConeRadialDivergenceCo
     _ = ε := ENNReal.add_halves ε
 
 
-/-- FIRST-PASS (fleet note G-hT, Lemma 1): `FixedTimeRadiusStep` from the three frozen external inputs
+/-- Lemma 1 (fixed-time radius): `FixedTimeRadiusStep` from the three frozen external inputs
 `FrozenUniversalMeasurabilityOfAnalytic` (Lusin), `FrozenLQGTestIntegralMeasurable` (field-level measurability of the
 LQG measure) and `FrozenDiskGreenNonnegCont` (disc Green function). Proof: `fixedTimeRadiusBody_of_frozen`
 (FirstPass/S1c/Containment.lean). -/

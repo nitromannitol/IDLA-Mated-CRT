@@ -2,7 +2,7 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.PlateauScalingAssembly
 import MatedCRT.FirstPass.S2k.PlateauHBFree
 import MatedCRT.FirstPass.Frozen.S2k
 
-/-! # FIRST PASS S2k: the closure route of Proposition 4.2 (task fp-S2k-closure-inside)
+/-! # FIRST PASS S2k: the closure route of Proposition 4.2
 
 * `wholePlaneVolumeGrowthAeStep_fp`: `WholePlaneVolumeGrowthAeStep` (B1, `ConeWholePlaneSteps.lean:47`) from the EXTERNAL
   Harmonic-Balls Draft `LQGVolumeGrowthAllScalesStmt` (I2, `HarmonicBalls/Draft/Section2.lean:122`). PROVED-FP.
@@ -33,8 +33,8 @@ theorem plateauScaleInvarianceStep_fp (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
   MatedCRT.FirstPass.S2k.plateauScaleInvarianceStep_HBfree hI2 (insertionLQGScalingLawStep_of_coordinateRule hK)
 
 /-- **`ConeHalfBallClosureInsideStep` (conditional on the Harmonic-Balls inputs).** The plateau fact (1) (H-free) and B1
-feed the half-ball reduction `coneHalfBallClosureInsideStep_of_fieldLaw`. Operator decision pending between this
-reduction and the cycle route section 4.2 (see `notes/z2.md`). -/
+feed the half-ball reduction `coneHalfBallClosureInsideStep_of_fieldLaw`. The choice between this
+reduction and the cycle route section 4.2. -/
 theorem coneHalfBallClosureInsideStep_fp (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
     (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
     (hloc : HarmonicBallLocalSetStmt.{0}) (hEx : ExistenceHarmonicBallsStmt.{0})

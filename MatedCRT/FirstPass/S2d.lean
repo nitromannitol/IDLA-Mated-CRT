@@ -6,7 +6,7 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.BoundedRepresentatives
 /-! # FIRST PASS S2d: no two rational touching times
 
 `ConeNoTwoTouchStep` (`FirstPass/S2c.lean`, NEW) is the almost-sure absence of two rational touching times of a stopped
-cone family. Written argument: `notes/prop42-proof/prop42-proof.tex:230-289`.
+cone family.
 
 Route (all Lean pieces already in `Proofs/Sec4/Prop42Closure`, re-used here):
 * `ConePrematureContactNullStep` (`HalfBallClosure.lean`): a.s. the raw `3/4`-clusters of the cone measure have no
@@ -14,7 +14,7 @@ Route (all Lean pieces already in `Proofs/Sec4/Prop42Closure`, re-used here):
   (`ConePrematureNull.lean`).
 * The plateau input `PlateauScaleInvarianceStep` is `plateauScaleInvarianceStep_assembled` (`PlateauScalingAssembly.lean`),
   fed with the bounded-set repair `scaledBoundedRepresentativesStep_of_localization_and_smoothing`
-  (`BoundedRepresentatives.lean`; written repair `notes/wpn-steps3/steps3.tex` Section 1, operator ruling).
+  (`BoundedRepresentatives.lean`).
 * This file: the deterministic link premature contact `⇒` no two rational touches of a stopped family, then the
   closure step `ConeHalfBallClosureInsideStep` through `coneHalfBallClosureInsideStep_of_noTwoTouch` (`S2c.lean`).
 
@@ -78,7 +78,7 @@ Inputs and status:
 * `hDS : DS11CoordinateRuleFixedAffine` (`Proposed/DuplantierSheffieldCoordinate2011`): EXTERNAL, the Duplantier-Sheffield
   coordinate rule for the LQG measure under affine maps.
 * `hJG : JensenGreenLocalizationStmt`, `hJS : JensenSmoothingStmt` (`BoundedRepresentatives.lean`): EXTERNAL, Riesz
-  localization (Saff 2010 Thm 2.4) and superharmonic smoothing; frozen by the operator ruling.
+  localization (Saff 2010 Thm 2.4) and superharmonic smoothing.
 * `hloc : HarmonicBallLocalSetStmt`, `hEx : ExistenceHarmonicBallsStmt`, `hSC : ClusterStrongCompatibilityStmt`:
   Draft statements of Harmonic-Balls-LQG (cited).
 * `hVG : VolumeGrowthStmt` (`Draft/Section2.lean`, inventory row 2.7, BG20 Lemma A.1): cited, EXTERNAL.

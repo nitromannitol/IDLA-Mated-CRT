@@ -11,7 +11,7 @@ import MatedCRT.Proofs.Sec1.HarmonicBallScaling
 import MatedCRT.Proofs.Sec1.ConeScaleRadius
 
 /-!
-# First pass: composition of Theorems 1.4 and 1.6 (q4, fp-IDLA-main-composition)
+# First pass: composition of Theorems 1.4 and 1.6
 
 Each main theorem is obtained from the reduction of its scaling argument (`convergenceOfIDLA_of_steps`,
 `convergenceOfDivSandpile_of_steps`, Steps/Sec1/Convergence.lean) by instantiating the Draft statements of the

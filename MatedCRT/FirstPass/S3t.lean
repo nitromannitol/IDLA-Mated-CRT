@@ -12,9 +12,9 @@ import MatedCRT.Proofs.Sec6.ConstantOrderLowerBound.Walk
 import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 
 /-!
-# Truncated quenched laws: the staged assembly (fp-S3t, z8; answer section 4)
+# Truncated quenched laws: the staged assembly
 
-Source: `notes/fp-gaps/CHATGPT-idla-3-4-truncated-laws.md`, Steps 5–12 and section 4 (the replacement theorem).
+Steps 5–12 and section 4 (the replacement theorem).
 
 `truncatedQuenchedLawsFixedTime_of_steps` assembles Steps 11 and 12 with the outputs of Steps 5–8 and 10, taken as
 hypotheses with the answer's Lean types. Concrete now: the disk `D = B_r(z)`, the exhaustion `D_n = ballExhaustion z r a n`
@@ -153,7 +153,7 @@ theorem truncatedQuenchedLawsFixedTime_of_steps {Ω : Type} [MeasurableSpace Ω]
   exact hsum
 
 
-/-! ## Step 10 discharged: the walk estimate on the mesh-good event (fp-S3t, z8)
+/-! ## Step 10 discharged: the walk estimate on the mesh-good event
 
 The walk inputs are proved, not assumed. The walk starts at `vertexOf ε η y` (`srwLaw_ae_start`); each step is
 stationary or along an edge of positive multiplicity (`srwLaw_nonadjacent_null`); adjacent cells meet
@@ -263,7 +263,7 @@ theorem truncatedQuenchedLawsFixedTime_of_walk {Ω : Type} [MeasurableSpace Ω] 
     (hShellLimit : ∀ᵐ ω ∂S.P,
       Tendsto (fun n => ∫ b, shellTime (ballExhaustion z r a n) (Metric.ball z r) T
         (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y) atTop (𝓝 0))
-    -- G1 (named measurability input, see reports/z8.md).
+    -- G1 (named measurability input).
     (hShellMeas : ∀ n, AEMeasurable (fun ω => ∫ b, shellTime (ballExhaustion z r a n) (Metric.ball z r) T
         (rescaledLBMPath (S.clock ω) S.m₀ b) ∂planarBrownianMotion y) S.P) :
     TendstoInProbability S.P
@@ -317,11 +317,11 @@ theorem truncatedQuenchedLawsFixedTime_of_walk {Ω : Type} [MeasurableSpace Ω] 
     (Good := fun ε ω => MeshGood S γ ζ ρ ε ω ∧ WalkEnvAe S ω) hOcc hShell hShellLimit hShellMeas hMesh hMInv hmpos
     hpath
 
-/-! ## The four-binder target, staged (fp-S3t-staged-inputs, z8)
+/-! ## The four-binder target, staged
 
 `FrozenTruncatedQuenchedLawsFixedTime 𝒮` (`Frozen/S3S4b.lean:102`) from the four binders `h211 h28 hm hexit`. The continuity
-of the limit at the regular exits is derived by z10 (`stoppedOccupation_tendsto_discrete`, `ContinuumUnderDiscrete.lean`,
-and `shell_tendsto_discrete`, `BoundaryShells.lean`). The two Brownian measurability facts still routed to ChatGPT are
+of the limit at the regular exits is derived (`stoppedOccupation_tendsto_discrete`, `ContinuumUnderDiscrete.lean`,
+and `shell_tendsto_discrete`, `BoundaryShells.lean`). The two Brownian measurability facts that remain open are
 the only extra binders: `hmeas` (Step 6, for the indicator of the Brownian stopped occupation of every disk) and
 `hShellMeas` (G1, measurability in `ω` of the Brownian shell functional with the exhaustion radius `(r - dist y z)/2`). -/
 
@@ -347,9 +347,9 @@ theorem truncatedQuenchedLawsFixedTime_of_inputs_staged {𝒮 : SpaceFillingSLEM
   have hya : dist y z < r - (r - dist y z) / 2 := by
     have := Metric.mem_ball.1 hy
     linarith
-  -- Step 5 (z10): quenched convergence of the stopped occupation, continuity derived.
+  -- Step 5: quenched convergence of the stopped occupation, continuity derived.
   have hOcc := stoppedOccupation_tendsto_discrete h211 hγ0 hγ2 Ω S hS hy hT.le hgc hgb0 hexit
-  -- Step 6 (z10): shell functionals, convergence in probability and a.s. limit.
+  -- Step 6: shell functionals, convergence in probability and a.s. limit.
   have hsh := shell_tendsto_discrete h211 hγ0 hγ2 Ω S hS (a := (r - dist y z) / 2) ha.le hya hT.le hexit
     (fun s => hmeas γ hγ0 hγ2 Ω S hS y z s T hT.le)
   -- Steps 7, 8, 10, 11, 12 (walk theorem, proved).
@@ -375,9 +375,9 @@ theorem truncatedQuenchedLawsFixedTime_of_inputs_closure {𝒮 : SpaceFillingSLE
   have hya : dist y z < r - (r - dist y z) / 2 := by
     have := Metric.mem_ball.1 hy
     linarith
-  -- Step 5 (z10): quenched convergence of the stopped occupation, continuity derived.
+  -- Step 5: quenched convergence of the stopped occupation, continuity derived.
   have hOcc := stoppedOccupation_tendsto_discrete h211 hγ0 hγ2 Ω S hS hy hT.le hgc hgb0 hexit
-  -- Step 6 (z10): shell functionals, with the Brownian measurability derived from `hcl`.
+  -- Step 6: shell functionals, with the Brownian measurability derived from `hcl`.
   have hsh := shell_tendsto_discrete_of_closure h211 hγ0 hγ2 Ω S hS (a := (r - dist y z) / 2) ha.le hya hT.le
     hexit hcl
   -- Steps 7, 8, 10, 11, 12 (walk theorem, proved); the Step 12 measurability is derived from `hcl`.

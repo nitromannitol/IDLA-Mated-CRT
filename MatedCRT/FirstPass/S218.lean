@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S3c.ExitTimeCore
 
 /-!
-# FIRST PASS 2.18: exit-time upper bound from BG20 Proposition 5.1 (task fp-S218-exit-time-derivation)
+# FIRST PASS 2.18: exit-time upper bound from BG20 Proposition 5.1
 
 `exitTimeUpperBound_of_bg20Prop51_volumeGrowth` derives `ExitTimeUpperBoundStmt 𝒮` (Draft Lemma 2.18,
 `lemma:exit-time-upper-bound`) from the mass-restricted first moment `BG20Prop51 𝒮` (BG20 Proposition 5.1,
@@ -10,7 +10,7 @@ FIRST-PASS FROZEN, `MatedCRT/FirstPass/Frozen/S3c.lean`) and the volume growth `
 
 The derivation is already in the repository: `MatedCRT.exitTimeUpperBoundStmt_core`
 (`MatedCRT/FirstPass/S3c/ExitTimeCore.lean`, commit d442da2) has exactly these hypotheses and this conclusion.
-It follows the route of `notes/fp-gaps/CHATGPT-idla-2-18-exit-time.md` (sections 1 and 3A): for `D ⊆ B_ρ` the
+It follows the exit-time argument: for `D ⊆ B_ρ` the
 BG20 estimate is applied to the open thickening `thickening (ε^(2α)) D`, whose mass is bounded below by
 `VolumeGrowthStmt` at the centres of `D`; the interior cell set is monotone in the domain for open supersets
 (`interiorCellVertices_mono_of_subset`, continuous `η`); `expectedExitTime` is monotone in the domain; and the

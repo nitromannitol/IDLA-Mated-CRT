@@ -3,15 +3,15 @@ import MatedCRT.FirstPass.S3t
 import MatedCRT.FirstPass.Closure.Section3
 
 /-!
-# Consumers of `FrozenTruncatedQuenchedLawsFixedTime` fed by the closure derivation (fp-hT-consumer-map)
+# Consumers of `FrozenTruncatedQuenchedLawsFixedTime` fed by the closure derivation
 
 The frozen input `hdet : FrozenTruncatedQuenchedLawsFixedTime 𝒮` (`FirstPass/Frozen/S3S4b.lean:102`) is replaced,
 in each counted consumer that has no derived variant in `FirstPass/S34d.lean` (Lemma 3.4), `FirstPass/S5qd.lean`
 (Proposition 5.1) or `FirstPass/Closure/Theorem14d.lean` (Theorems 1.4 and 1.6), by its derivation
-`MatedCRT.TruncatedLaws.truncatedQuenchedLawsFixedTime_of_inputs_closure` (`FirstPass/S3t.lean:365`, z8, commit d275a53).
+`MatedCRT.TruncatedLaws.truncatedQuenchedLawsFixedTime_of_inputs_closure` (`FirstPass/S3t.lean:365`, commit d275a53).
 That derivation takes the named inputs `h211 h28 hmeps hexit hcl`. Each variant keeps the binders of its original, with
 `hdet` replaced by these inputs; a binder already present in the original (`hm`, `h28`) is reused. The conclusions are
-unchanged. When z8 commits the four-binder theorem `truncatedQuenchedLawsFixedTime_of_inputs` (`h211 h28 hm hexit`),
+unchanged. When the four-binder theorem `truncatedQuenchedLawsFixedTime_of_inputs` (`h211 h28 hm hexit`),
 the binder `hcl` is dropped from each variant and the derivation argument is replaced by that theorem.
 -/
 

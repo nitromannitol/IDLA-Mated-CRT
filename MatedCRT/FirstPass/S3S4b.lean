@@ -5,7 +5,7 @@ import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.CorrectedHarmonicInputs
 import MatedCRT.Steps.Sec2.BoundedExitTimeRV
 
 /-!
-# First pass: paper-owned results 3.4 and 3.5 (task fp-S3S4b, q2)
+# First pass: paper-owned results 3.4 and 3.5
 
 Each `firstPass_<section>_<number>` takes as hypotheses only Draft statements of numbered results, the frozen external
 inputs of `MatedCRT/FirstPass/Frozen/S3S4b.lean` and `MatedCRT/FirstPass/Frozen/S3S4.lean`, and the External input
@@ -23,7 +23,7 @@ namespace MatedCRT
 Hypotheses: Lemma 2.7 (`VolumeGrowthStmt`, which gives Lemma 2.17 `BoundedExitTimeRVStmt` through `boundedExitTimeRV_of_steps`),
 Lemma 2.18 (`ExitTimeUpperBoundStmt`), `MepsScalingInput` (External), Lemma 2.11 (`RandomWalkToLBMStmt`, cited), Lemma 2.8
 (`CellSizeEstimateStmt`, cited), and the frozen inputs: the Revuz occupation identity `FrozenLBMGreenOccupation`, the truncated
-random-walk-to-LBM convergence `FrozenTruncatedDetFixedTime` (both operator rulings), and the frozen planar Brownian outward
+random-walk-to-LBM convergence `FrozenTruncatedDetFixedTime`, and the frozen planar Brownian outward
 excursion `FrozenBrownianOutwardExcursionAtExit`. Proof: the committed reduction `integralConvergenceGreenFunction_final`. -/
 theorem firstPass_3_4 {𝒮 : SpaceFillingSLEModel} (h27 : VolumeGrowthStmt) (h18 : ExitTimeUpperBoundStmt 𝒮)
     (hscale : MepsScalingInput 𝒮) (h211 : RandomWalkToLBMStmt 𝒮) (hcell : CellSizeEstimateStmt 𝒮)

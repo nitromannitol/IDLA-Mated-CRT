@@ -2,10 +2,9 @@ import MatedCRT.FirstPass.S2e
 import MatedCRT.Proofs.Sec2.ConeFamily
 import MatedCRT.FirstPass.S2g.HalfBallFamily
 
-/-! # First pass, wave 7: Lemmas 2.4 and 2.5 in their canonical form (q1, fp-S2g)
+/-! # First pass, wave 7: Lemmas 2.4 and 2.5 in their canonical form
 
-Statements (corrected, canonical stopping time): `notes/fp-gaps/CHATGPT-2-4-2-5-statements.md`, checked FAITHFUL in
-`notes/fp-gaps/CHATGPT-2-4-2-5-fidelity.md` (operator, 2026-11-09 19:45 and 20:25).
+Statements (corrected, canonical stopping time) checked FAITHFUL to the printed statements.
 
 * `halfBallTime μ = sup {t > 0 : regularizedCluster μ (3/4) 0 t ⊆ B_{1/2}}`: the printed maximal containment time
   `T = sup {t > 0 : Λ_t ⊂ B_{1/2}}` (paper lines 533-537), read through the local obstacle continuation in `B_{3/4}`.
@@ -74,10 +73,10 @@ theorem uniqueConeFamilyOn_of_family {μ : Measure ℂ} {Λ : ℝ → Set ℂ} {
   have heq := h.eqOn hΛ'
   rwa [min_self] at heq
 
-/-- **OPEN NEW step (q1, fp-S2g; neither proved nor frozen).** Pathwise canonical stopped family: almost surely the
+/-- **OPEN step (neither proved nor frozen).** Pathwise canonical stopped family: almost surely the
 half-ball time `halfBallTime (μ ω)` is positive and some family of harmonic balls on `(0, halfBallTime (μ ω))` is stopped
 at `∂B_{1/2}` at that time. This is the existence half of Lemma 2.4 at the canonical `T`. Its replacement for the retired
-`FrozenConeHarmonicBallLocality` is the measurable good event of `notes/fp-gaps/G-S2-measurable.md` Section 3 (local
+`FrozenConeHarmonicBallLocality` is the measurable good event (local
 obstacle locality in `B_{3/4}`, Hausdorff continuity of the closed clusters, and the first-exit identity at `T`). -/
 def ConeCanonicalHalfBallStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
@@ -85,7 +84,7 @@ def ConeCanonicalHalfBallStep : Prop :=
     ∀ᵐ ω ∂P, ∃ Λ : ℝ → Set ℂ, 0 < halfBallTime (μ ω) ∧
       IsConeHarmonicBallFamilyOn (μ ω) Λ (halfBallTime (μ ω)) ∧ IsStoppedAtHalfBall Λ (halfBallTime (μ ω))
 
-/-- **Corrected Lemma 2.4, canonical form, from the pathwise canonical family and the closure step (q1, fp-S2g).**
+/-- **Corrected Lemma 2.4, canonical form, from the pathwise canonical family and the closure step.**
 Measurability of the canonical time and of the joint process follows from `ConeHalfBallClosureInsideStep` (closure
 containment of the stopped families, `FirstPass/S2d.lean`) through `S2e`; uniqueness on `(0, T)` is deterministic. -/
 theorem firstPass_2_4_canonical_of_steps (hcan : ConeCanonicalHalfBallStep)
@@ -109,7 +108,7 @@ theorem firstPass_2_4_canonical_of_steps (hcan : ConeCanonicalHalfBallStep)
   filter_upwards [hx] with ω hω
   exact ⟨hω.1, uniqueConeFamilyOn_of_family hω.2.1, hω.2.2⟩
 
-/-- **Reduction of `ConeCanonicalHalfBallStep` to the pathwise inputs (q1, fp-S2g).** If for every cone field the cone measures
+/-- **Reduction of `ConeCanonicalHalfBallStep` to the pathwise inputs.** If for every cone field the cone measures
 almost surely satisfy `ConePathwiseHalfBallInputs` (NEW open pathwise statement, `FirstPass/S2g/HalfBallFamily.lean`), then
 the pathwise canonical stopped family exists. The frozen potential-theory inputs are explicit hypotheses. -/
 theorem coneCanonicalHalfBallStep_of_pathwise (hmin : FrozenSuperharmonicMinimumPrinciple)

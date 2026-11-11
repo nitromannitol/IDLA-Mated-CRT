@@ -5,12 +5,12 @@ import MatedCRT.Draft.Section3DirichletCorrected
 import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 import MatedCRT.Steps.Sec2.MaximumPrinciple
 
-/-! # fp-S3g: corrected Lemma 3.5 implies the printed Lemma 3.5 (boundary-stability bridge)
+/-! # Corrected Lemma 3.5 implies the printed Lemma 3.5 (boundary-stability bridge)
 
 Printed Lemma 3.5 (`DiscreteDirichletProblemStmt`, Draft/Section3.lean:132) prescribes the boundary data
 `mε φ(η(b))` at the cells `b` meeting `∂B_r(z)`; corrected Lemma 3.5 (`DiscreteDirichletProblemCorrectedStmt`,
 Draft/Section3DirichletCorrected.lean:13) prescribes `mε φ(π η(b))`, with `π` the radial retraction onto
-`cl B_r(z)`. The bridge (CHATGPT-idla-printed-3-5.md, "Relation to the corrected statement"):
+`cl B_r(z)`. The bridge, as in the relation to the corrected statement:
 
 * `G` solves the corrected problem with the same interior datum `ψ` (`exists_discrete_dirichlet_extension`,
   from the discrete maximum principle `MaximumPrincipleStmt`);
@@ -43,7 +43,7 @@ theorem interior_finite {ε : ℝ} {η : ℝ → ℂ} {z : ℂ} {r : ℝ} (hη :
   (cellVertices_finite_of_isCompact hη hp hε (isCompact_closedBall z r)).subset fun _ ha =>
     Set.Nonempty.mono (inter_subset_inter_right _ ball_subset_closedBall) ha.1
 
-/-- **Bridge (fp-S3g).** Corrected Lemma 3.5 together with the cell-size estimate and the discrete maximum principle
+/-- **Bridge .** Corrected Lemma 3.5 together with the cell-size estimate and the discrete maximum principle
 gives the printed Lemma 3.5 (`DiscreteDirichletProblemStmt`). The conclusion `fbar` is the one of the corrected
 statement for the projected problem `G`. -/
 theorem discreteDirichletProblem_of_corrected {𝒮 : SpaceFillingSLEModel}
@@ -159,7 +159,7 @@ theorem discreteDirichletProblem_of_corrected {𝒮 : SpaceFillingSLEModel}
     exact rescale_sub_bound hε hcontG hsurjG hcocG hr hlfε (hadjG ε hε)
       (fun u hu a ha => hmaxG ε hε _ hfin u hu a ha) (F ε ω) (Gf ε ω) hK₀ hHarm hD x hx
 
-/-- **Corollary (fp-S3g).** The printed Lemma 3.5 from the corrected one and the cell-size estimate; the discrete
+/-- **Corollary .** The printed Lemma 3.5 from the corrected one and the cell-size estimate; the discrete
 maximum principle is the proved `maximumPrinciple_of_steps (adjacentCellsMeetAeStep 𝒮)`. -/
 theorem discreteDirichletProblem_of_corrected_of_steps {𝒮 : SpaceFillingSLEModel}
     (h28 : CellSizeEstimateStmt 𝒮) (h35c : DiscreteDirichletProblemCorrectedStmt 𝒮) :

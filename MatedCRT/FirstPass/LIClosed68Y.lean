@@ -4,11 +4,11 @@ import MatedCRT.Proofs.Sec3.ConeBallMass
 import MatedCRT.FirstPass.S4S6c.ShellChainCGRCYSqHalf68
 
 /-!
-# Lead glue (lead li): volume cutoff of the Y route from Berestycki--Gwynne
+# Volume cutoff of the Y route from Berestycki--Gwynne
 
 The named input `Lemma68CGRCY.FieldVolCutoffStmt` of `firstPass_6_7/8/9_of_hOneY` (Closed6x68Y.lean) is discharged from the
 frozen Berestycki--Gwynne ball-mass input `FrozenBerestyckiGwynneConeBallMass` through Lemma 2.7
-(`volumeGrowthStmt_of_berestyckiGwynne`, ConeBallMass.lean:17) and q2's field-measurable cutoff
+(`volumeGrowthStmt_of_berestyckiGwynne`, ConeBallMass.lean:17) and the field-measurable cutoff
 (`VolCutoffField68.volume_lower_cutoff_fieldMeasurable_vr`, VolCutoffField68.lean:171). The remaining non-frozen input is
 the one-test producer `hOneY : LICGRCY68.ShellOneTestOrderAeCGRCYStmt 𝒮`.
 -/
@@ -25,7 +25,7 @@ theorem fieldVolCutoffStmt_of_berestyckiGwynne (𝒮 : SpaceFillingSLEModel)
   intro γ hγ hγ2 Ω _ S hS
   exact VolCutoffField68.volume_lower_cutoff_fieldMeasurable_vr hγ hγ2 hVG S hS
 
-/-- **Lemma 6.7, first pass (lead glue, round 88).** `Lemma68CGRCYSqHalf.firstPass_6_7_sq` (q3, 9d9809c) with the volume
+/-- **Lemma 6.7, first pass.** `Lemma68CGRCYSqHalf.firstPass_6_7_sq` with the volume
 growth input from the frozen Berestycki--Gwynne ball mass (Lemma 2.7, `volumeGrowthStmt_of_berestyckiGwynne`). -/
 theorem firstPass_6_7 {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLEModel}
     (hCRM : CertifiedReferenceModel ν 𝒮)
@@ -36,7 +36,7 @@ theorem firstPass_6_7 {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLE
     FaithfulConstantOrderLowerBoundStmt 𝒮 :=
   Lemma68CGRCYSqHalf.firstPass_6_7_sq hCRM hLit hBM hCC hB1 hμ (volumeGrowthStmt_of_berestyckiGwynne hBG)
 
-/-- **Lemma 6.8, first pass (lead glue, round 88).** `Lemma68CGRCYSqHalf.firstPass_6_8_sq` (q3, 9d9809c). -/
+/-- **Lemma 6.8, first pass.** `Lemma68CGRCYSqHalf.firstPass_6_8_sq`. -/
 theorem firstPass_6_8 {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLEModel}
     (hCRM : CertifiedReferenceModel ν 𝒮)
     (hLit : MatedCRT.S2VG.LitExistence) (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
@@ -46,7 +46,7 @@ theorem firstPass_6_8 {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLE
     FaithfulConstantOrderLowerBoundDivStmt 𝒮 :=
   Lemma68CGRCYSqHalf.firstPass_6_8_sq hCRM hLit hBM hCC hB1 hμ hBG
 
-/-- **Lemma 6.9, first pass (lead glue, round 88).** `Lemma68CGRCYSqHalf.firstPass_6_9_sq` (q3, 9d9809c) with the volume
+/-- **Lemma 6.9, first pass.** `Lemma68CGRCYSqHalf.firstPass_6_9_sq` with the volume
 growth input from the frozen Berestycki--Gwynne ball mass. -/
 theorem firstPass_6_9 {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLEModel}
     (hCRM : CertifiedReferenceModel ν 𝒮)

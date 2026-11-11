@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S6p
 
 /-!
-# Lemma 6.5, corrected uniform form: `firstPass_6_5_uniform` (task fp-S6q-6-5-uniform-wrapper, worker q3)
+# Lemma 6.5, corrected uniform form: `firstPass_6_5_uniform`
 
 `AnnulusHitStmt` (Draft/Section6.lean:72) quantifies `∀ ρ` before `∃ C`, so its constant may depend on `ρ`.
 The printed Lemma 6.5 (`lemma:annulus-hit`, corrected tex line 2682) says `C = C(p)`. The uniform form

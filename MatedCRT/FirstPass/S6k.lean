@@ -252,7 +252,7 @@ theorem start_frontier_before_exit {η : ℝ → ℂ} {m : ℤ → ℤ → ℕ} 
 
 /-! ## Admissibility of a middle-boundary start
 
-`killed_eq_W` (equality `killed ε η Θ F0 r = W \ Θ` under `W ⊆ F0`) is already proved by z9 as
+`killed_eq_W` (equality `killed ε η Θ F0 r = W \ Θ` under `W ⊆ F0`) is already proved as
 `Lemma68Relation.killed_eq_W` (`FirstPass/S6e/Relation.lean:121`, commit 4010091); it is not restated here. Only the
 inclusion needed for admissibility is proved in this file. -/
 

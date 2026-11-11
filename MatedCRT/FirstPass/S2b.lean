@@ -10,18 +10,18 @@ import MatedCRT.External.QuantumCone
 import MatedCRT.FirstPass.Frozen.S2b
 
 /-!
-# First pass, wave 2: Lemmas 2.4 and 2.5 in their printed form (q1)
+# First pass, wave 2: Lemmas 2.4 and 2.5 in their printed form
 
 * `ConeHarmonicBallsUpToFixedTimeCorrectedStmt`: corrected Lemma 2.4 (paper line 533). Existence of `T > 0` and a family
   `{Λ_t}_{0<t<T}` with the properties of Theorem 2.3 stopped at `∂B_{1/2}`, and uniqueness of the family on `(0, T)`.
   The Draft clause `T' = T` (Draft `ConeHarmonicBallsUpToFixedTimeStmt`, Section2.lean:66-72) is NOT in the corrected
   statement: it asserts that the stopping time is unique among all stopped families, which needs strict growth of the
-  harmonic balls (`ConeHarmonicBallStrictGrowthStep`, an open problem, REDUCTIONS F14; operator ruling 2026-11-09 17:00).
+  harmonic balls (`ConeHarmonicBallStrictGrowthStep`, an open problem).
   The printed proof (line 533-541) only gives uniqueness of the family on the fixed interval (Prop 5.6 of HB22).
 * `ConeScaleInvarianceUpToFixedTimeCorrectedStmt`: Lemma 2.5 (paper line 548), existence and uniqueness on `(0, bT^b)`
   of the rescaled family. The Draft clause `T' = Tb ∧ EqOn ...` is dropped for the same reason. The joint law of the
   printed statement (second display, line 552-553) is NOT in this file: it needs a measurable functional of the field
-  for the stopped family, which needs uniqueness of the stopping time (closure route, OPEN; see reports/q1.md).
+  for the stopped family, which needs uniqueness of the stopping time (closure route, OPEN).
 * `firstPass_2_4_corrected`, `firstPass_2_5_corrected`: the first-pass theorems. Hypotheses: Draft statements of the
   Harmonic-Balls numbered results cited by the paper (HB22 Theorems 1.1, 5.5, Lemma 3.2 and their listed inputs) and the
   frozen EXTERNAL inputs of `MatedCRT/FirstPass/Frozen/S2b.lean`, plus `QuantumConeScalingInput` and `LQGMeasurePropertiesStmt`
@@ -190,8 +190,7 @@ theorem firstPass_2_5_corrected (hscale : QuantumConeScalingInput) (h22 : LQGMea
 /-! ### Closure route: uniqueness of the stopping time (the replacement for strict growth)
 
 The Draft clause `T' = T ∧ EqOn` of Draft 2.4 is recovered from the closure input `cl Λ_t ⊆ B_{1/2}` for `t < T`
-(`ConeHalfBallClosureInsideStep`, `Proofs/Sec2/ConeFamilyMeasurable/StoppedClosure.lean:18`, audited written proof
-`notes/prop42-proof/prop42-proof.tex:263-302`, NOT yet proved in Lean). The two lemmas below are deterministic. -/
+(`ConeHalfBallClosureInsideStep`, `Proofs/Sec2/ConeFamilyMeasurable/StoppedClosure.lean:18`, written proof, NOT yet proved in Lean). The two lemmas below are deterministic. -/
 
 /-- **Closure route, one inequality.** If `Λ` is stopped at `∂B_{1/2}` at `T`, and `Λ'` is monotone on `(0, T')`, agrees with
 `Λ` on `(0, min T T')` and has `cl Λ'_s ⊆ B_{1/2}` for `s ∈ (0, T')`, then `T' ≤ T`. Proof: if `T < T'`, the radii of

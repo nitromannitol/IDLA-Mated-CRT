@@ -8,7 +8,7 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.ContinuumTailAssemb
 import MatedCRT.Steps.Sec2.BoundedExitTimeRV
 
 /-!
-# First pass: paper-owned result 3.4 on the quenched route (task fp-S3S4c-3-4-quenched, q4)
+# First pass: paper-owned result 3.4 on the quenched route
 
 `MatedCRT.S3S4c.firstPass_3_4` proves `IntegralConvergenceGreenFunctionStmt` (Draft Lemma 3.4, corrected [C1, C16]) from
 
@@ -113,7 +113,7 @@ theorem truncatedDetFixedTimeStep_of_quenched {𝒮 : SpaceFillingSLEModel}
 `MepsScalingInput` (External), and the two FIRST-PASS FROZEN quenched inputs `FrozenLBMGreenOccupationRescaled` and
 `FrozenTruncatedQuenchedLawsFixedTime`.
 
-Route: the quenched proof of `notes/fp-gaps/CHATGPT-3-4-quenched-proof.md` (operator note 2026-11-09 20:02 UTC), steps 1-10,
+Route: the quenched proof, steps 1-10,
 each realised by a declaration already proved in `MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/`:
 * step 1 (parameters, normalisation `c₀ = 2/m₀`, `MepsScalingInput` = eq:meps-scaling, the lower bound of (2.20)): `MatedCRTEnv.c₀`
   (Defs/Setting.lean:188), `MepsScalingInput` (External/SLE.lean:63);

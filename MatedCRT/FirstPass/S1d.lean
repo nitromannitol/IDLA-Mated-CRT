@@ -13,17 +13,17 @@ import MatedCRT.Proofs.Sec1.HarmonicBallScaling
 import MatedCRT.Proofs.Sec1.ConeScaleRadius
 
 /-!
-# First pass: Theorems 1.4 and 1.6 recomposed without retired inputs (q4, fp-S1d and fp-S1d2)
+# First pass: Theorems 1.4 and 1.6 recomposed without retired inputs
 
 `firstPass_1_4` and `firstPass_1_6` replace `firstPass_1_4` / `firstPass_1_6` of FirstPass/S1c/Composition.lean, which
 rest on retired inputs. Changes:
 
-* Theorem 2.3 (`ConeHarmonicBallsStmt`) is a hypothesis (Draft; operator decision fp-S1d2 (2)). The corrected canonical
+* Theorem 2.3 (`ConeHarmonicBallsStmt`) is a hypothesis (Draft). The corrected canonical
   Lemmas 2.4 and 2.5 (`ConeHarmonicBallsUpToFixedTimeCanonicalStmt`, `ConeScaleInvarianceUpToFixedTimeCanonicalStmt`,
   FirstPass/S2g.lean) and `LQGMeasurePropertiesStmt` are hypotheses too (decision (3)), so that the composition does not
-  wait on the open `ConeCanonicalFactorStep` of q1. Since 2.3 is taken directly, the hypotheses for `LQGMeasurePropertiesStmt`,
+  wait on the open `ConeCanonicalFactorStep`. Since 2.3 is taken directly, the hypotheses for `LQGMeasurePropertiesStmt`,
   `ConeHarmonicBallsUpToFixedTimeCanonicalStmt` and `ConeScaleInvarianceUpToFixedTimeCanonicalStmt` were unused and are removed
-  (fewer hypotheses; fp-S6d-6-9-faithful, q4).
+  (fewer hypotheses).
 * Lemma 3.4 is `MatedCRT.S3S4c.firstPass_3_4` (quenched route; the sample-path inputs are retired).
 * Lemma 4.1 is `firstPass_4_1_coneLaw` (FirstPass/S4S6c.lean) with `FrozenConeScalingLaw`.
 * The environment scaling enters as the frozen EXTERNAL `ConeEnvironmentScalingUnderSLE 𝒮` (Frozen/S1d.lean), with the

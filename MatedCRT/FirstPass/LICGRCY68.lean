@@ -1,18 +1,17 @@
 import MatedCRT.FirstPass.LICGRCX68
 
 /-!
-# The counting one-test order input, split-constant successor (lead li, round 80; Codex 19:56 UTC)
+# The counting one-test order input, split-constant successor
 
-`ShellOneTestOrderAeCGRCYStmt` is `LICGRCX68.ShellOneTestOrderAeCGRCXStmt` with three changes, following
-notes/fp-gaps/CODEX-idla-hOne-residuals-sol-20261110.md:
+`ShellOneTestOrderAeCGRCYStmt` is `LICGRCX68.ShellOneTestOrderAeCGRCXStmt` with three changes:
 
-* (77a, Q2a steps 1-2) the radius clause carries the volume guard `VolReady68 S γ ζ r ω` after `ω ∈ Ew (dyadicD r)`;
+* The radius clause carries the volume guard `VolReady68 S γ ζ r ω` after `ω ∈ Ew (dyadicD r)`;
   the chain supplies it from the final random cutoff (field-measurable volume cutoff `tVol`).
 * (75a) the lower Green bound is also available at a Green exponent `ωG` independent of the shell exponent `ω₀`, with
   `2 * ω₀ < ωG`: a `PolyHighProb` hypothesis for `greenLowEvent68 S ωG ρ CG` and the almost sure premise
   `ω ∈ greenLowEvent68 S ωG ρ CG ε`; the conclusion may shrink the mesh range by a constant `εG > 0` (`ε ≤ εG`).
 * The good-annulus constant `C` stays free (split constants, Q4): no comparison of `C` with the Green constant `CG`.
-  The route `LICGRCXLe68` (premise `C ≤ CG`) is retired: its witness `WindowPrevLeCGStmt` is false (Codex Q4).
+  The route `LICGRCXLe68` (premise `C ≤ CG`) is retired: its witness `WindowPrevLeCGStmt` is false.
 -/
 
 open HarmonicBalls (annulus)
@@ -30,7 +29,7 @@ open MatedCRT.Lemma68ConstOrder
 open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68WalkBridge MatedCRT.Lemma68ChainAe
 open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 
-/-- **Volume readiness of a shell radius (Codex Q2a step 1).** Some cutoff radius `t > 0` carries the volume lower bound
+/-- **Volume readiness of a shell radius.** Some cutoff radius `t > 0` carries the volume lower bound
 `δ^((2+γ)²/2+1) ≤ μ(B(z,δ))` for `δ < t`, `z ∈ B(0,1-δ)`, and the shell radius `r` is below the cap
 `(t/(8·2^{shortExp ζ}))^{1/(1+ζ)}`. Same body as the conclusion of `ShellCGResG2Rad` (CGRCXG2Core68.lean:41). -/
 def VolReady68 {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (γ ζ r : ℝ) (ω : Ω) : Prop :=
@@ -39,7 +38,7 @@ def VolReady68 {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (γ ζ r : 
       ENNReal.ofReal (δ ^ ((2 + γ) ^ 2 / 2 + 1)) ≤ S.μ ω (ball z δ)) ∧
     r ≤ (t / (8 * 2 ^ shortExp ζ)) ^ (1 / (1 + ζ))
 
-/-- **The counting one-test order input, split-constant successor (lead li, round 80).** Copy of
+/-- **The counting one-test order input, split-constant successor.** Copy of
 `LICGRCX68.ShellOneTestOrderAeCGRCXStmt` with the Green exponent `ωG` (`2 * ω₀ < ωG`, its `PolyHighProb` hypothesis
 and almost sure premise, mesh range `ε ≤ εG`) and the volume guard `VolReady68 S γ ζ r ω`. -/
 def ShellOneTestOrderAeCGRCYStmt (𝒮 : SpaceFillingSLEModel) : Prop :=

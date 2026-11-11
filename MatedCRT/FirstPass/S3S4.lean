@@ -18,7 +18,7 @@ import MatedCRT.FirstPass.Frozen.S3c
 import MatedCRT.FirstPass.S3c.ExitTimeCore
 
 /-!
-# First pass: paper-owned results of Sections 3 and 4 (task fp-S3S4, q2)
+# First pass: paper-owned results of Sections 3 and 4
 
 Each `firstPass_<section>_<number>` takes as hypotheses only Draft statements of numbered results used by the printed
 (or corrected) proof, the frozen external inputs of `MatedCRT/FirstPass/Frozen/S3S4.lean` and the existing External
@@ -30,7 +30,7 @@ namespace MatedCRT
 /-- **Lemma 3.1** (lemma:discrete-potential-tightness), corrected form (C3, C11; `DiscretePotentialTightnessCorrectedStmt`,
 since the printed Draft is false). Hypotheses: `MepsScalingInput` (External, eq:meps-scaling), Lemma 2.7
 (`VolumeGrowthStmt`), the first clause of Lemma 2.18 in the per-model form `BG20Prop51 𝒮` (frozen, BG20 Proposition 5.1,
-`FirstPass/Frozen/S3c.lean`; task fp-S3c2-3-1-per-model, replacing `ExitTimeUpperBoundStmt 𝒮`) and the frozen corrected
+`FirstPass/Frozen/S3c.lean`, replacing `ExitTimeUpperBoundStmt 𝒮`) and the frozen corrected
 Lemma 3.2. The second clause of Lemma 2.18 is derived by `exitTimeUpperBoundStmt_core` (FirstPass/S3c/ExitTimeCore.lean). -/
 theorem firstPass_3_1_corrected {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingInput 𝒮) (h27 : VolumeGrowthStmt)
     (hBG : BG20Prop51 𝒮) (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) :
@@ -94,7 +94,7 @@ theorem firstPass_3_6 {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkToLBMStmt 
 
 /-- **Lemma 4.6** (lemma:subsequential-convergence), corrected fixed-sequence form [C12]: `SubsequentialConvergencePreparedStmt`
 (Draft/Section4Prepared.lean; the fixed time and deterministic sequence precede the deterministic thinning and its almost sure
-event). The printed quantifier order is not established (docs/campaign/GAPS-SEC2567A.md, E-x3-2); the printed Draft
+event). The printed quantifier order is not established; the printed Draft
 `SubsequentialConvergenceStmt` is not proved here. Hypotheses: Lemma 2.7, Lemma 2.18, Draft Lemmas 3.5 and 3.7 (numbered results,
 as hypotheses), `MepsScalingInput` (External) and the frozen corrected Lemma 3.2. Lemma 4.7 and Lemma 4.4 (corrected) are
 `firstPass_4_7` and `firstPass_4_4_corrected`; Lemma 2.17 is `boundedExitTimeRV_of_steps`. Proof: the prepared estimates
@@ -106,8 +106,7 @@ theorem firstPass_4_6_corrected {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingI
   subsequentialConvergencePrepared_of_estimates 𝒮 hm (firstPass_4_7 h27 h218 hm) (firstPass_4_4_corrected 𝒮) h35 h218 hH
     h37 (boundedExitTimeRV_of_steps h27) h27
 
-/-- RETIRED (FALSE, truth check 2026-11-09; the hypothesis `FrozenConeEnvironmentScaling` is FALSE, see
-notes/fp-gaps/TRUTH-CHECK-2.md:50). The repaired statement, with `FrozenConeScalingLaw`, is `firstPass_4_1_coneLaw`
+/-- RETIRED (FALSE: the hypothesis `FrozenConeEnvironmentScaling` is FALSE). The repaired statement, with `FrozenConeScalingLaw`, is `firstPass_4_1_coneLaw`
 (FirstPass/S4S6c.lean). Kept for the record; do not delete.
 **Theorem 4.1** (theorem:convergence-divisible), Draft form `ConvergenceDivisibleStmt`, through the prepared discrete
 estimates (corrected fixed-time proof, C11/C12). Hypotheses: Draft Lemmas 2.10, 3.4, 2.14, 2.8, 3.5 and 2.18, 2.7 (numbered

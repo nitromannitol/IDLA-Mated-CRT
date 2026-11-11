@@ -4,7 +4,7 @@ import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.CorrectedPreparedCompa
 import MatedCRT.Steps.Sec2.BoundedExitTimeRV
 
 /-!
-# First pass: Lemma 3.7 with the corrected discrete Dirichlet input (task fp-S3f-3-7-corrected-and-closure, worker z1)
+# First pass: Lemma 3.7 with the corrected discrete Dirichlet input
 
 `firstPass_3_7` (MatedCRT/FirstPass/S3S4.lean) takes the printed Lemma 3.5 `DiscreteDirichletProblemStmt`, which is
 obsolete after the correction [C13] (boundary datum evaluated at the projected cell representative `π_D(η(b))`, Hölder

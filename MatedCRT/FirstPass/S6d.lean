@@ -6,13 +6,13 @@ import MatedCRT.Proofs.Sec6.ConstantOrderLowerBound.Model
 import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 
 /-!
-# FIRST PASS: faithful statements of Lemmas 6.7, 6.8, 6.9 (task fp-S6d-6-9-faithful, q4)
+# FIRST PASS: faithful statements of Lemmas 6.7, 6.8, 6.9
 
 Printed quantifier order (paper/idla_mated_crt-corrected.tex: `lemma:constant-order-lower-bound` at line 2743,
 `lemma:constant-order-lower-bound-div` at line 2771, `lemma:chance-of-being-absorbed` at line 2959):
 * the exponent `ω = ω(γ) > 0` of Lemmas 6.7, 6.8, 6.9 is deterministic and depends only on `γ`, so it is chosen
   before `ρ` (Lemma 6.9 also: `s₃` is chosen after `ρ` and before `s₀`);
-* `β⁻` is the fixed exponent `chosenBetaMinus γ` (CHATGPT-s6-constants.md §1, the 21:27 UTC ruling).
+* `β⁻` is the fixed exponent `chosenBetaMinus γ`.
 
 The bodies (the event, `dd`, the probability bounds) are those of the Draft statements `ConstantOrderLowerBoundStmt`,
 `ConstantOrderLowerBoundDivStmt` and `ChanceOfBeingAbsorbedStmt` (MatedCRT/Draft/Section6.lean), unchanged. Only the
@@ -25,11 +25,11 @@ namespace MatedCRT
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric
 open scoped ENNReal NNReal
 
-/-- The fixed exponent `β⁻ = B(γ) = (2+γ)²/2 + 1` (CHATGPT-s6-constants.md §1; the paper fixes `β⁻` depending only on
+/-- The fixed exponent `β⁻ = B(γ) = (2+γ)²/2 + 1` (the paper fixes `β⁻` depending only on
 `γ` after Lemma 2.7). -/
 noncomputable def chosenBetaMinus (γ : ℝ) : ℝ := (2 + γ) ^ 2 / 2 + 1
 
-/-- The standing constant `c₀ = min{1/200, e^{-2C_G}/16}` (CHATGPT-s6-constants.md §2), with `C_G` the Green constant
+/-- The standing constant `c₀ = min{1/200, e^{-2C_G}/16}`, with `C_G` the Green constant
 of the reference radius. Taking `C_G` as an argument keeps the definition free of an undefined constant. Lemma 6.4 is
 not restated here ([C18] keeps its header), so this definition is not yet used by a statement. -/
 noncomputable def chosenC0 (CG : ℝ) : ℝ := min (1 / 200) (Real.exp (-2 * CG) / 16)
@@ -88,9 +88,9 @@ def FaithfulChanceOfBeingAbsorbedStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
 /-- **Uniform-in-`s₀` strengthening of the Lemma 6.7 escape estimate; common core of Lemmas 6.7, 6.8 and 6.9; not a
 printed statement.** The printed Lemmas 6.7 and 6.8 choose `s₁, s₂` after `s₀`
 (`FaithfulConstantOrderLowerBoundStmt`, `FaithfulConstantOrderLowerBoundDivStmt`). The printed Lemma 6.9 proof uses one
-`s₂` for all walkers and all `s₀` (CHATGPT-6-9-printed-proof.md, "Inputs used"). Here `s₁, s₂` are chosen after `ρ` and
+`s₂` for all walkers and all `s₀`. Here `s₁, s₂` are chosen after `ρ` and
 before `s₀`, and the body is that of `FaithfulConstantOrderLowerBoundStmt`; `s₁ = s₁(ρ,γ)` and `s₂ = 1/2` are the
-constants of correction [C26] (the earlier `s₁ = 1/4` is withdrawn: chat 183, the [C22] covering repair). A rate `s₃` uniform in `s₀` needs this form: the walker absorption bound
+constants of correction [C26] (the earlier `s₁ = 1/4` is withdrawn, by the [C22] covering repair). A rate `s₃` uniform in `s₀` needs this form: the walker absorption bound
 `s₂(s₀)` of the printed 6.7/6.8 only gives the rate `s₂(s₀)/4` (`AbsorptionChernoffStep`). Input of
 `firstPass_6_9_faithful`. -/
 def UniformConstantOrderLowerBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -186,8 +186,8 @@ theorem cellSizeExponent_pos {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) : 0 < 2 
     nlinarith
   linarith
 
-/-- **Lemma 6.8, faithful header, from the uniform Lemma 6.7** (`firstPass_6_8_faithful`, task fp-S6e-6-7-6-8-from-uniform).
-Localization (CHATGPT-6-9-claims-referee.md, "Do faithful 6.7 and 6.8 follow?"): the starting vertex `a` of the walk
+/-- **Lemma 6.8, faithful header, from the uniform Lemma 6.7** (`firstPass_6_8_faithful`).
+Localization: the starting vertex `a` of the walk
 lies on the frontier of `Θ + B_{r/2}`; the localized sets `W₁ = V(B_{r/8}(cell a))` and `W₀ = V(B_{r/8}(Θ̄))` are not
 joined by an edge; the uniform Lemma 6.7 applied to `Θ ∪ {a}` at radius `r/8` with `S' = A ∩ W₁` and the constant
 `s₁ = s₁'/8^{2β⁻}` gives the bound. Inputs beyond `UniformConstantOrderLowerBoundStmt`: `VolumeGrowthStmt` and
