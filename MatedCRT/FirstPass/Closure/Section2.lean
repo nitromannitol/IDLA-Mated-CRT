@@ -3,11 +3,11 @@ import MatedCRT.FirstPass.S2g.Assembly2456
 import MatedCRT.FirstPass.SLERef.Certified
 
 /-!
-# Closed results, Section 2 (task fp-Closure-counted-results, fp-Closure-round3, worker z1)
+# Closed results, Section 2
 
 Closed: 2.4 (`closed_2_4`), 2.5 (`closed_2_5`), 2.6 (`closed_2_6`), 2.17 (`closed_2_17`) are aliases: they quantify over
 no SLE model. 2.13 (`closed_2_13`) takes only its per-model input `FrozenAdjacentCellsMeetAe 𝒮` (no SLE package needed).
-2.19 (`closed_2_19`) is stated for a model `𝒮` with certified reference model `hC : CertifiedReferenceModel ν 𝒮` (chat 186);
+2.19 (`closed_2_19`) is stated for a model `𝒮` with certified reference model `hC : CertifiedReferenceModel ν 𝒮`;
 its input `ExitTimeUpperBoundStmt 𝒮` is `hC.exitTimeUpperBound`.
 Not closed here: 2.3 (gaps G1, G2 of the report).
 -/

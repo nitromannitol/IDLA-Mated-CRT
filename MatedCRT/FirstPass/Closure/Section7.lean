@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.S5S6S7
 import MatedCRT.FirstPass.SLERef.Certified
 
 /-!
-# Closed results, Section 7 (task fp-Closure-counted-results, fp-Closure-round3, worker z1)
+# Closed results, Section 7
 
-Closed for a model `𝒮` with certified reference model `hC : CertifiedReferenceModel ν 𝒮` (chat 186): 7.2 (`closed_7_2`,
+Closed for a model `𝒮` with certified reference model `hC : CertifiedReferenceModel ν 𝒮`: 7.2 (`closed_7_2`,
 corrected form; inputs `hC.greenKernelLowerBound` and `hC.cellSizeEstimate`) and 7.3 (`closed_7_3`, no inputs).
 Not closed: 7.1 (needs Lemma 2.3 and Lemma 4.1).
 -/

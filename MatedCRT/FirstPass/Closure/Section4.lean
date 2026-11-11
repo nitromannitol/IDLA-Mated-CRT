@@ -2,10 +2,10 @@ import MatedCRT.FirstPass.S3S4
 import MatedCRT.FirstPass.SLERef.Certified
 
 /-!
-# Closed results, Section 4 (task fp-Closure-counted-results, fp-Closure-round3, worker z1)
+# Closed results, Section 4
 
 Closed: 4.3 (`closed_4_3`), 4.4 (`closed_4_4`, corrected form), 4.5 (`closed_4_5`, corrected form) take no SLE input.
-4.7 (`closed_4_7`) is stated for a model `𝒮` with certified reference model `hC : CertifiedReferenceModel ν 𝒮` (chat 186);
+4.7 (`closed_4_7`) is stated for a model `𝒮` with certified reference model `hC : CertifiedReferenceModel ν 𝒮`;
 its inputs `ExitTimeUpperBoundStmt 𝒮` and `MepsScalingInput 𝒮` are `hC.exitTimeUpperBound` and `hC.mepsScaling`.
 Not closed: 4.1 (gap G3), 4.6 and 4.8 (gap G3 and 3.7).
 -/

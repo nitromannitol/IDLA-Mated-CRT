@@ -11,7 +11,7 @@ import MatedCRT.FirstPass.Closure.Section6
 import MatedCRT.FirstPass.Closure.Prop51Cited
 
 /-!
-# Theorems 1.4 and 1.6 with the counted providers wired in (fp-main-1-4-1-6-wiring, z5)
+# Theorems 1.4 and 1.6 with the counted providers wired in
 
 `closed_1_4_wired` and `closed_1_6_wired` have the conclusions of `firstPass_1_4` and `firstPass_1_6`
 (`MatedCRT/FirstPass/S1d.lean`). They take no raw numbered-result parameter for the four numbered inputs that

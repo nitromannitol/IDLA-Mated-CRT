@@ -14,14 +14,14 @@ import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 # Audit: corrected and relaxed forms versus the Draft statements
 
 For every numbered result which a worker proved (or reduced) in a corrected or relaxed form instead of its Draft
-statement, this file records the logical relation between the two forms as Lean facts, so that the operator can rule
+statement, this file records the logical relation between the two forms as Lean facts, so that the relation can be checked
 with them in hand. The table, the escalations and the authors are in `docs/campaign/CORRECTED-FORMS.md`.
 
 * `corrected ⇒ Draft`: 5.2 (`GeneralIDLALowerBoundRelaxedStep`), 6.3 (`AbelianIDLAAnyStartStep`, proved).
 * `Draft ⇒ corrected`: 3.2, 4.4, 4.5, 6.7 (b), 6.8 (b), 6.9 (local rate and (b)), 7.2 (above scale).
 * neither: 3.1 (`D` open and polynomially summable scales weaken it; the `ε⁻¹`-scaled Hölder data (N1) strengthen
   it). Both forms imply their common part `DiscretePotentialTightnessOnOpenStmt`.
-* False as drafted, proved here: Lemmas 4.4 and 4.5 (ESCALATIONS E-c1-1). Each forces `μ_h(B_ρ) = ∞` almost surely
+* False as drafted, proved here: Lemmas 4.4 and 4.5. Each forces `μ_h(B_ρ) = ∞` almost surely
   (`discreteLaplacianBound_ae_measure_ball_eq_top`, `discreteConservationOfMass_ae_measure_ball_eq_top`), which
   contradicts the local finiteness of the LQG measure (Fact 2.2 I, `LQGMeasurePropertiesStmt`), for any valid
   environment (`not_discreteLaplacianBoundStmt`, `not_discreteConservationOfMassStmt`).
@@ -50,7 +50,7 @@ theorem polyHighProb_mono_lt_one {Ω : Type*} [MeasurableSpace Ω] {P : Measure 
 /-! ## Lemma 3.1: neither form implies the other; both imply their common part -/
 
 /-- **Lemma 3.1, common part** of `DiscretePotentialTightnessStmt` (Draft) and `DiscretePotentialTightnessCorrectedStmt`
-(c1): the hypotheses of the corrected form (`D` open, scales in a polynomially summable deterministic sequence `e`)
+The hypotheses of the corrected form (`D` open, scales in a polynomially summable deterministic sequence `e`)
 with the conclusion of the Draft form (unscaled Hölder data `C' (ε ∨ |η(a) - η(b)|)^χ` in the "moreover" part). -/
 def DiscretePotentialTightnessOnOpenStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
@@ -120,7 +120,7 @@ theorem discreteHolderContinuityCorrected_of_draft (h : DiscreteHolderContinuity
   obtain ⟨C, hC, h⟩ := h C' hC'
   exact ⟨ξ', C, hξ', hξ'1, hC, h⟩
 
-/-! ## Lemmas 4.4 and 4.5: Draft ⇒ corrected; the Draft forms are false (E-c1-1) -/
+/-! ## Lemmas 4.4 and 4.5: Draft ⇒ corrected; the Draft forms are false -/
 
 /-- The Draft Lemma 4.4 implies its corrected form (the corrected origin claim has one more hypothesis). -/
 theorem discreteLaplacianBoundCorrected_of_draft (h : DiscreteLaplacianBoundStmt 𝒮) :
@@ -219,7 +219,7 @@ theorem not_discreteConservationOfMassStmt {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ 
 /-! ## Lemmas 7.2-7.4 from the corrected Lemma 4.4 (only its first conjunct is used) -/
 
 /-- `StoppedOdometerLaplacianStep` (eq:laplacian-of-uteps away from the origin) from the **corrected** Lemma 4.4: the
-proof of `stoppedOdometerLaplacianStep_of_steps` (MatedCRT/Steps/Sec7/OdometerBoundMass.lean, c3) uses only the
+proof of `stoppedOdometerLaplacianStep_of_steps` (MatedCRT/Steps/Sec7/OdometerBoundMass.lean) uses only the
 first conjunct, `Δ^ε w̃^ε_t = (deg^ε)⁻¹` on `Λ^ε_t`, which the corrected form keeps verbatim. -/
 theorem stoppedOdometerLaplacianStep_of_corrected (h44 : DiscreteLaplacianBoundCorrectedStmt 𝒮)
     (hcell : AdjacentCellsMeetAeStep 𝒮) : StoppedOdometerLaplacianStep 𝒮 := by
@@ -244,7 +244,7 @@ theorem stoppedOdometerLaplacianStep_of_corrected (h44 : DiscreteLaplacianBoundC
   show mLaplacian (S.mult ε ω) (stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t) a = ((mdeg (S.mult ε ω) a : ℕ) : ℝ)⁻¹
   rw [Sec7.mLaplacian_stoppedOdometer hε ht hlf, hw, hgr, mul_zero, add_zero]
 
-/-- **Lemma 7.2 (corrected, E-c3-2)** from Lemmas 2.16, 2.8 and the **corrected** Lemma 4.4 (in place of the false
+/-- **Lemma 7.2 (corrected)** from Lemmas 2.16, 2.8 and the **corrected** Lemma 4.4 (in place of the false
 Draft 4.4 of `massBoundOdometerAboveScale_of_draft`). -/
 theorem massBoundOdometerAboveScale_of_corrected (h216 : GreenKernelLowerBoundStmt 𝒮)
     (h28 : CellSizeEstimateStmt 𝒮) (h44 : DiscreteLaplacianBoundCorrectedStmt 𝒮) :
@@ -258,19 +258,19 @@ theorem odometerBoundMass_of_corrected (h44 : DiscreteLaplacianBoundCorrectedStm
   odometerBoundMass_of_steps 𝒮 (matedMapStructureStep_of_adjacentCellsMeet 𝒮 (adjacentCellsMeetAeStep 𝒮))
     (stoppedOdometerLaplacianStep_of_corrected h44 (adjacentCellsMeetAeStep 𝒮))
 
-/-- **Lemma 7.4** (Draft, the Λ-version of review-S (S4), E-c3-1) from the **corrected** Lemma 4.4 and the degree
+/-- **Lemma 7.4** (Draft statement, Λ-version) from the **corrected** Lemma 4.4 and the degree
 bound (GMS19 Lemma 2.6), in place of the false Draft 4.4 of `crudeUpperBound_of_draft`. -/
 theorem crudeUpperBound_of_corrected (h44 : DiscreteLaplacianBoundCorrectedStmt 𝒮) (hdeg : DegreeBoundInput 𝒮) :
     CrudeUpperBoundStmt 𝒮 :=
   crudeUpperBound_of_mapSteps 𝒮 (matedMapStructureStep_of_adjacentCellsMeet 𝒮 (adjacentCellsMeetAeStep 𝒮))
     (stoppedOdometerLaplacianStep_of_corrected h44 (adjacentCellsMeetAeStep 𝒮)) hdeg
 
-/-! ## Lemma 5.2: relaxed ⇒ Draft (c2) -/
+/-! ## Lemma 5.2: relaxed ⇒ Draft -/
 
 example (h : GeneralIDLALowerBoundRelaxedStep 𝒮) : GeneralIDLALowerBoundStmt 𝒮 :=
   generalIDLALowerBound_of_relaxed 𝒮 h
 
-/-! ## Lemma 6.3: any start ⇒ Draft; both proved (c5) -/
+/-! ## Lemma 6.3: any start ⇒ Draft; both proved -/
 
 example : AbelianIDLAAnyStartStep 𝒮 := AbelianIDLA.abelianIDLAAnyStartStep 𝒮
 
@@ -278,12 +278,12 @@ example (h : AbelianIDLAAnyStartStep 𝒮) : AbelianIDLAStmt 𝒮 := h.abelianID
 
 example : AbelianIDLAStmt 𝒮 := AbelianIDLA.abelianIDLA 𝒮
 
-/-! ## Lemmas 6.7-6.9: Draft ⇒ route (b) of E-A10; Lemma 6.9: Draft ⇒ local rate (E-c5-1) ⇒ route (b) -/
+/-! ## Lemmas 6.7-6.9: Draft ⇒ route (b); Lemma 6.9: Draft ⇒ local rate ⇒ route (b) -/
 
 example (h : ConstantOrderLowerBoundStmt 𝒮) : ConstantOrderLowerBoundLogStmt 𝒮 := h.logLoss
 
 /-- The Draft Lemma 6.8 implies its route (b) form (the bound `1 - s₂` only increases to `1 - s₂ (1 + |log r|)⁻²`).
-Same statement as `Sec7.constantOrderLowerBoundDivLog_of_fixed` (x2, Proofs/Sec7/DivSandpileUpperBound/LogSurvival
+Same statement as `Sec7.constantOrderLowerBoundDivLog_of_fixed` (Proofs/Sec7/DivSandpileUpperBound/LogSurvival
 .lean), restated here without its import of Proofs/Sec6/ConstantOrderLowerBound/OfSteps. -/
 theorem constantOrderLowerBoundDivLog_of_draft (h : ConstantOrderLowerBoundDivStmt 𝒮) :
     ConstantOrderLowerBoundDivLogStmt 𝒮 := by
@@ -305,7 +305,7 @@ example (h : ChanceOfBeingAbsorbedLocalRateStmt 𝒮) : ChanceOfBeingAbsorbedLog
 
 example (h : ChanceOfBeingAbsorbedStmt 𝒮) : ChanceOfBeingAbsorbedLogLossStmt 𝒮 := h.logLoss
 
-/-! ## Lemma 7.2: Draft ⇒ above scale (E-c3-2); the Draft is false (argument in E-c3-2) -/
+/-! ## Lemma 7.2: Draft ⇒ above scale; the Draft is false -/
 
 /-- The Draft Lemma 7.2 implies its corrected form (`β = 1`; the corrected conclusion is asked only for `s ≥ ε^β`). -/
 theorem massBoundOdometerAboveScale_of_massBoundOdometer (h : MassBoundOdometerStmt 𝒮) :

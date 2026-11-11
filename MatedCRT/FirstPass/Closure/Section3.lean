@@ -7,15 +7,15 @@ import MatedCRT.FirstPass.S3f.FiniteDomainRepresentation
 import MatedCRT.FirstPass.SLERef.Certified
 
 /-!
-# Closed results, Section 3 (task fp-Closure-counted-results, fp-S3f-3-7-corrected-and-closure, fp-Closure-round3; worker z1)
+# Closed results, Section 3
 
 Closed for a model `𝒮` with normalized law `ν` and a certified reference model `hC : CertifiedReferenceModel ν 𝒮`
-(operator chat 186; `MatedCRT/FirstPass/SLERef/Certified.lean`). Every per-model input below is a projection of `hC`
+(`MatedCRT/FirstPass/SLERef/Certified.lean`). Every per-model input below is a projection of `hC`
 (`CertifiedReferenceModel.mepsScaling`, `.exitTimeUpperBound`, ...).
 
 Remaining hypotheses: the cited Lemma 2.7 `h27 : VolumeGrowthStmt` where used, and the frozen external
 `hexc : FrozenBrownianOutwardExcursionAtExit` in 3.6, 3.5 and 3.7 (the corrected Lemma 3.6 `h36` is no longer an input:
-it is `closed_3_6_corrected`, from z10's `firstPass_3_6_convergence_corrected`, S3e.lean).
+it is `closed_3_6_corrected`, from `firstPass_3_6_convergence_corrected`, S3e.lean).
 
 Closed: 3.1 (`closed_3_1`, S3S4 corrected form, input `hC.bg20Prop51`), 3.3 (`closed_3_3`), 3.4 (`closed_3_4`, module `S3S4c`),
 3.6 (`closed_3_6`, printed form `ConvergenceHarmonicFunctionsStmt`; `closed_3_6_corrected`, corrected form
@@ -51,7 +51,7 @@ theorem closed_3_6 {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCo
     (hexc : FrozenBrownianOutwardExcursionAtExit) : ConvergenceHarmonicFunctionsStmt 𝒮 :=
   firstPass_3_6 (𝒮 := 𝒮) hC.randomWalkToLBM hC.cellSizeEstimate hC.mepsScaling hexc
 
-/-- Lemma 3.6, corrected form (convergence conjunct): `CorrectedHarmonicConvergenceStmt`, from z10's
+/-- Lemma 3.6, corrected form (convergence conjunct): `CorrectedHarmonicConvergenceStmt`, from
 `MatedCRT.FirstPass36.firstPass_3_6_convergence_corrected` (S3e.lean), with the corrected Hölder input
 `hC.frozenDiscreteHolderContinuityCorrected`. The rate conjunct (`CorrectedHarmonicSameWalkRateStmt`) is not included. -/
 theorem closed_3_6_corrected {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)

@@ -10,7 +10,7 @@ cited Harmonic-Balls and BG20 gap hypotheses are typed by their FIRST-PASS FROZE
 A frozen name is definitionally its Stmt, so the proof is `closed_5_1` itself.
 
 Still plain Stmt gaps (not frozen by this file): `h27 : VolumeGrowthStmt` (its provider
-`volumeGrowthStmt_of_berestyckiGwynne` needs `FrozenBerestyckiGwynneConeBallMass`; wiring it is still pending),
+`volumeGrowthStmt_of_berestyckiGwynne` needs `FrozenBerestyckiGwynneConeBallMass`; the wiring is not in this file),
 `h22`, `h24c`, `h32`, `hSup`, `hCons`, `hMono`, `hCompat`, `hThm11`.
 -/
 

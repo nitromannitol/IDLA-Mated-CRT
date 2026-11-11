@@ -6,15 +6,15 @@ import Mathlib.Analysis.Convex.Contractible
 /-!
 # Audit: Lean refutations of Draft statements which are false as drafted
 
-`MatedCRT/Audit/CorrectedForms.lean` refutes the Draft Lemmas 4.4 and 4.5 (ESCALATIONS E-c1-1). This file was
+`MatedCRT/Audit/CorrectedForms.lean` refutes the Draft Lemmas 4.4 and 4.5. This file was
 planned (worker A) to refute the three other Drafts that were known to be false only by a written argument
-(`docs/campaign/CORRECTED-FORMS.md`). Status (c1, 2026-11-05): only the refutation of **Lemma 3.1** is in this file;
-the refutations of Lemmas 3.2 and 7.2 below are PLANNED (their written arguments: review-L32 F1, ESCALATIONS E-c3-2)
+(`docs/campaign/CORRECTED-FORMS.md`). Status (2026-11-05): only the refutation of **Lemma 3.1** is in this file;
+the refutations of Lemmas 3.2 and 7.2 below are PLANNED (their written arguments are still to be recorded)
 and not yet formalized.
 Each refutation holds for every valid environment `S` (`S.IsValid 𝒮 γ`, some `γ ∈ (0, 2)`) and uses one cited input,
 taken as an explicit hypothesis:
 
-* **Lemma 3.1** (`DiscretePotentialTightnessStmt`, ESCALATIONS E-c1-4: `D` not open) from the `m_ε` scaling
+* **Lemma 3.1** (`DiscretePotentialTightnessStmt`: `D` not open) from the `m_ε` scaling
   (`MepsScalingInput`, eq:meps-scaling, BG20 eq. (1.8)): `not_discretePotentialTightnessStmt`. The set `D` is the
   closed real segment `[0, 1/4]`. It has empty interior, so `V^ε(D) \ V^ε(∂D) = ∅` and the Laplacian hypothesis is
   vacuous. The data `u^ε(a) = m_ε 1{Re η(a) > 1/8}` satisfy `|u^ε| ≤ C ε⁻¹` by the scaling of `m_ε`. Their rescalings
@@ -22,7 +22,7 @@ taken as an explicit hypothesis:
   because the cells shrink uniformly on `D` (continuity and transience of `η`).
 * **Lemma 3.2 (printed form)** (review-L32 F1): its boundary exponent cannot be chosen independently of `χ`.
   The adopted Draft statement is corrected [C6]; the counterexample concerns the earlier printed form.
-* **Lemma 7.2** (`MassBoundOdometerStmt`, ESCALATIONS E-c3-2: radii below the cell scale) from Lemma 2.8:
+* **Lemma 7.2** (`MassBoundOdometerStmt`: radii below the cell scale) from Lemma 2.8:
   `not_massBoundOdometerStmt`. Take `Θ = {0}` and the first grid time `t = jθ` at which `Λ^ε_t` has a vertex
   `x ≠ 0`. Such a time exists: `1 ∈ Λ^ε_t` for large `t`, by lower bounds over all admissible functions
   (`one_mem_matedDiscreteCluster`). The stopped odometer grows at most linearly in `t`
@@ -213,7 +213,7 @@ theorem exists_vertexPoint_vertexOf_near {η : ℝ → ℂ} (hc : Continuous η)
     _ = dist (η s) (η (ε * (vertexOf ε η x : ℝ))) := dist_comm _ _
     _ < δ := hdist
 
-/-! ## Lemma 3.1: false for the closed segment `[0, 1/4]` (E-c1-4) -/
+/-! ## Lemma 3.1: false for the closed segment `[0, 1/4]` -/
 
 /-- The closed real segment `[0, 1/4] ⊆ ℂ`: connected, compact, not open, inside `B_{1/2}`. -/
 def realSegment : Set ℂ := (fun t : ℝ => (t : ℂ)) '' Icc 0 (1 / 4)
@@ -311,7 +311,7 @@ theorem not_continuousOn_of_reStep {ubar : ℂ → ℝ} {F : ℕ → ℂ → ℝ
   obtain ⟨-, h₂'u⟩ := abs_lt.1 h₂'
   linarith
 
-/-- **The Draft Lemma 3.1 is false** (E-c1-4), for every valid environment, given the scaling of `m_ε`
+/-- **The Draft Lemma 3.1 is false**, for every valid environment, given the scaling of `m_ε`
 (`MepsScalingInput`, eq:meps-scaling). The set `D` is the closed segment `[0, 1/4]` and `O = D`, with the data
 `u^ε(a) = m_ε 1{Re η(a) > 1/8}` along a deterministic sequence `ε_n ↓ 0`. -/
 theorem not_discretePotentialTightnessStmt (hm : MepsScalingInput 𝒮) {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)

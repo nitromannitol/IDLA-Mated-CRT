@@ -6,7 +6,6 @@ import MatedCRT.FirstPass.S3t.BLEnvelopeClosure
 
 /-!
 # Theorems 1.4 and 1.6 with the exit-time bound, the volume growth and the truncated laws derived
-(fp-1-4-1-6-derived-closure, z12)
 
 `closed_1_4_derived` and `closed_1_6_derived` have the conclusions of `closed_1_4_wired` and `closed_1_6_wired`
 (`Closure/Theorem14.lean`, not edited here). Three of their inputs are replaced.
@@ -19,7 +18,7 @@ import MatedCRT.FirstPass.S3t.BLEnvelopeClosure
   `volumeGrowth_of_coneBallMass` of the task note does not occur in the repository; `FirstPass/S5u.lean` only
   documents this provider.
 * (iii) `hdet : FrozenTruncatedQuenchedLawsFixedTime 𝒮` is derived: `MatedCRT.TruncatedLaws.truncatedQuenchedLawsFixedTime_of_inputs`
-  (`FirstPass/S3t/BLEnvelopeClosure.lean`, z8, committed 4c8c580) applied to
+  (`FirstPass/S3t/BLEnvelopeClosure.lean`, committed 4c8c580) applied to
   `h211 := MatedCRT.CertifiedReferenceModel.randomWalkToLBM hC` (Theorem 2.11 from the certified model), `h28`, `hm`
   and `hexc`. The former binder `hT` (same convention as `FirstPass/S5qd.lean`) is removed.
 
