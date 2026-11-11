@@ -332,7 +332,7 @@ theorem S5_at_shell_boundary {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
     {𝓖 : MeasurableSpace Ω} {F P G : Set Ω} {q : ℝ} (hPG : P ⊆ G)
     (hS5 : ∀ᵐ ω ∂μ, ω ∈ G → μ[F.indicator (fun _ => (1 : ℝ)) | 𝓖] ω ≤ 1 - q) :
     ∀ᵐ ω ∂μ, ω ∈ P → μ[F.indicator (fun _ => (1 : ℝ)) | 𝓖] ω ≤ 1 - q :=
-  hS5.mono fun _ h hω => h (hPG hω)
+  LatticeProb.ShellGeometry.ae_condExp_indicator_le_of_subset hPG hS5
 
 #print axioms MatedCRT.Lemma68Window.S5_geometry_at_shell_test
 #print axioms MatedCRT.Lemma68Window.S5_at_shell_boundary
