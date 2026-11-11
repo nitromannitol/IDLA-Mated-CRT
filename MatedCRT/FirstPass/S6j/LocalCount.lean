@@ -1,10 +1,10 @@
 import MatedCRT.Defs.Map
 
 /-!
-# Local count of the `A`-vertices in a `c₀R`-ball (fp-S6j; `hA_local` of `printed_test_bound`)
+# Local count of the `A`-vertices in a `c₀R`-ball (`hA_local` of `printed_test_bound`)
 
 Write-up [C22] (Lemma 6.8, Step 3, corrected). The printed count of `A ∩ V^ε(B_{c₀R}(x))` by the sparsity of one
-radius-`r` ball needs `c₀R ≤ r`, which the radius selection does not give (`CHATGPT-idla-6-8-hRr.md`). The corrected
+radius-`r` ball needs `c₀R ≤ r`, which the radius selection does not give. The corrected
 count covers `B_{c₀R}(x)` by at most `(3 + 2c₀R/r)²` balls of radius `r` (`exists_grid_cover`), sums the global
 sparsity `|A ∩ V^ε(B_r(z))| < s₁ r^{2β} ε⁻¹` over the cover (`ncard_cellVertices_ball_le`), and uses `r² ≤ R ≤ 1`
 (`cover_mul_rpow_le`) to bound the count by `11 s₁ R^β ε⁻¹`. The volume growth `μ(B_δ(z)) ≥ δ^β` (paper Lemma

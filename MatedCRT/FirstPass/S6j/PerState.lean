@@ -4,10 +4,9 @@ import MatedCRT.FirstPass.S6h.Successive
 import MatedCRT.FirstPass.S4S6c.PerTest68
 
 /-!
-# The per-state outer test bound by a local test at the first hitting vertex (fp-S6j, input `hpt`)
+# The per-state outer test bound by a local test at the first hitting vertex (input `hpt`)
 
-Written argument: `notes/fp-gaps/CHATGPT-z9-6-8-bridge.md` Step C eq. (5) and `notes/fp-gaps/CHATGPT-lemma68-open-parts.md`
-lines 600-631 (B18) and 836-860 (C15): the walk started at the state `y0 = X_{T_j}` leaves `A` inside its window
+The walk started at the state `y0 = X_{T_j}` leaves `A` inside its window
 `W y0` with probability at least `q/(1+log(1/R))²`, obtained from the local test at the first hitting time `τ` of the
 middle sphere `M`: strong Markov at `τ`, the local bound at `X_τ` (`printed_test_bound`, PerTest68.lean:82), and the
 inclusion of the local windows in `W y0`.
@@ -15,7 +14,7 @@ inclusion of the local windows in `W y0`.
 * `hit_isWalkRandomTime`: the first hitting time `vHitTime M` of a set `M ⊆ ℤ` is a walk random time.
 * `stayIn_le_of_hit`: the abstract per-state bound. Hypotheses: `hincl` (the local windows of the vertices of `M` lie in
   `W y0`), `hloc` (the local bound at each vertex of `M`), `hS2` (almost surely the hitting time precedes the exit from
-  `W y0`; write-up C15, z12's S2).
+  `W y0`; write-up C15).
 -/
 
 namespace MatedCRT
@@ -193,7 +192,7 @@ lemma interiorCellVertices_vertex_ball_sub {η : ℝ → ℂ} (hη : Continuous 
 /-- **Per-state outer test bound (the concrete window).** For the state `y0` with centre `z` and radius `R`, the
 walk from `y0` leaves `A` before its exit from `I(B_{2R}(z))` with probability at least `min q0 1/(1+log(1/R))²`.
 Inputs: the local bound `hloc` at the middle-sphere vertices (printed_test_bound at the local window `I(B_{R/4}(v))`
-with scale `r := R`), the local diameter inputs `hdy`, `hdiam` (write-up B11, C3), and `hS2` (z12's S2). -/
+with scale `r := R`), the local diameter inputs `hdy`, `hdiam` (write-up B11, C3), and `hS2`. -/
 theorem perState_stayIn_le {η : ℝ → ℂ} (hη : Continuous η) {ε R c0 q0 : ℝ} {z : ℂ} (m : ℤ → ℤ → ℕ) (y0 : ℤ)
     (A : Set ℤ) (hε : 0 < ε) (hR : 0 < R) (hR1 : R ≤ 1) (hc0 : c0 < 1 / 8) (hq0 : 0 < q0)
     (hloc : ∀ v ∈ middleVertices ε η z R,
@@ -224,7 +223,7 @@ theorem perState_stayIn_le {η : ℝ → ℂ} (hη : Continuous η) {ε R c0 q0 
 map `Z` and a radius map `Rs` (instantiated at `cfgCentre`, `cfgStateRadius`), and a predicate `Good` on the states
 (the good event of the configuration), the almost-sure per-state bound at the state `X_{T_j}` holds. The hypotheses are
 per state: `hloc` (printed_test_bound at the local windows of the middle vertices), `hdy`, `hdiam` (cell diameters) and
-`hS2` (z12's S2), and `hgood` is the almost-sure statement that the exit state is good. -/
+`hS2`, and `hgood` is the almost-sure statement that the exit state is good. -/
 theorem hpt_of_state (m : ℤ → ℤ → ℕ) (a : ℤ) (η : ℝ → ℂ) (hη : Continuous η) {ε c0 q0 : ℝ} (A : Set ℤ)
     (T : ℕ → (ℕ → ℤ) → ℕ∞) (Z : ℤ → ℂ) (Rs : ℤ → ℝ) (Good : ℤ → Prop)
     (hε : 0 < ε) (hc0 : c0 < 1 / 8) (hq0 : 0 < q0)

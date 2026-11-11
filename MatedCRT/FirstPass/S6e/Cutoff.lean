@@ -2,13 +2,13 @@ import Mathlib
 import MatedCRT.FirstPass.S4S6c.AmplCutoff
 
 /-!
-# FIRST PASS: the explicit cutoffs of LEMMA68 section D (D1, D3, D4) (task fp-S6e-lemma68-D123, z9)
+# FIRST PASS: the explicit cutoffs of LEMMA68 section D (D1, D3, D4)
 
-Source: `notes/fp-gaps/CHATGPT-lemma68-open-parts.md`, section D (lines 887-955), with the parameters of its
+Section D of the lemma, with the parameters of its
 section 1 (`ζ = p/2 - 1`, `λ = 2β⁻ - p b`, `c_v = 4^(-b)`, `c_0`), `q0 = q_*/9` (C16), `c = q0/200` (D1),
 `s = √δ` and `N = ⌊r/(100 s)⌋` (C1, C3). Pure real analysis: the probability enters only through
 `(1 - q(r))^N` (C17), which is `D1_real`. The amplification estimate `exp(-c r^(-ζ)/(1+log(1/r))²) ≤ 1/2` is
-`MatedCRT.AmplCutoff.amplification_cutoff` (q2, FirstPass/S4S6c/AmplCutoff.lean).
+`MatedCRT.AmplCutoff.amplification_cutoff` (FirstPass/S4S6c/AmplCutoff.lean).
 
 Hypothesis not stated in the write-up: `q0 ≤ 1` (needed for `1 - q(r) ≥ 0` in (C17)); it is an explicit
 argument of `D1_real` and `D1_le_half`.
@@ -82,7 +82,7 @@ theorem r0Min_le_rAmp : r0Min ρ s₀ p b lam cv c0 q0 ζ ≤ rAmp q0 ζ := by
   unfold r0Min
   exact min_le_right _ _
 
-/-- (D3, for the dd-bound `dd ≤ ρ/100` of the choice of `dd`, q2's item O6) -/
+/-- (D3, for the dd-bound `dd ≤ ρ/100` of the choice of `dd`) -/
 theorem r0_le_rho_div (hρ : 0 < ρ) (hs₀ : 0 < s₀) (hcv : 0 < cv) (hc0 : 0 < c0) (hq0 : 0 < q0)
     (hζ : 0 < ζ) : r0 ρ s₀ p b lam cv c0 q0 ζ ≤ ρ / 100 :=
   (r0_le_r0Min hρ hs₀ hcv hc0 hq0 hζ).trans r0Min_le_rho

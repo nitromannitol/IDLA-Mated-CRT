@@ -4,9 +4,9 @@ import MatedCRT.FirstPass.S4S6c.DyadicCutoff68
 import MatedCRT.FirstPass.S4S6c.GoodRadiusCover
 
 /-!
-# FIRST PASS: the Lean sources of the boxed radius `dd` of LEMMA68 (D4) (task fp-S6e-lemma68-C17, z9)
+# FIRST PASS: the Lean sources of the boxed radius `dd` of LEMMA68 (D4)
 
-Write-up: `δ* = 2^(-J_A)` (A-section, `notes/fp-gaps/CHATGPT-lemma68-open-parts.md` line 362) is field measurable,
+`δ* = 2^(-J_A)` (A-section) is field measurable,
 with a positive deterministic default on `{J_A = ∞}`; `t* = min {2^(-(J_V+3)), (ρ₁-ρ)/8, 1/16}` (line 110) with a
 positive default on `{J_V = ∞}`. Their Lean sources: `DyadicCutoff68.exists_dyadic_cutoff` (positive and
 `F`-measurable everywhere, for `δ*`) and `GoodRadiusCover.exists_dyadic_threshold` (positive only almost surely,

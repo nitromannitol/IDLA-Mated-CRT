@@ -5,9 +5,9 @@ import MatedCRT.FirstPass.S6e.Final
 import MatedCRT.FirstPass.S4S6c.Uniform68Env
 
 /-!
-# FIRST PASS: the guarded exit bound of Lemma 6.8 from the concrete configuration lemma (task fp-S6e-lemma68-C17, z9)
+# FIRST PASS: the guarded exit bound of Lemma 6.8 from the concrete configuration lemma
 
-`Lemma68Concrete.configuration_le_pow_concrete` (z8, `FirstPass/S6h/Schedule.lean`) gives the configuration bound
+`Lemma68Concrete.configuration_le_pow_concrete` (`FirstPass/S6h/Schedule.lean`) gives the configuration bound
 `∃ N, r^(-ζ)/200 ≤ N ∧ exitQ ≤ (1 - q₀/(1+log(1/r))²)^N` on the admissible configurations, from the per-state
 inputs `StateTestInputs` (write-up C4) and the containment `ConcreteC12` (write-up C12), both on `E ε ∩ G`.
 This file turns that bound into the probability statement `probTendsToOne_guard_concrete` (write-up (17)), with

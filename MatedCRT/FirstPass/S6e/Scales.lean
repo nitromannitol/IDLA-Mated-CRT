@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# FIRST PASS: the dyadic scale and the constant q₀ of LEMMA68 (N1, N2) (task fp-S6e-lemma68-C17, z9)
+# FIRST PASS: the dyadic scale and the constant q₀ of LEMMA68 (N1, N2)
 
-Source: `notes/fp-gaps/CHATGPT-z9-lemma68-B1B2.md` §7 (N1: `q₀ ≤ 1` from the definition of `q*`) and §8 (N2: the
+Parts N1 ( `q₀ ≤ 1` from the definition of `q*`) and N2 ( the
 dyadic scale `Δ(r) = 2^{-n(r)}`, `n(r) = min {n : 2^{-n} ≤ r^p}`, with `r^p/2 < Δ(r) ≤ r^p` and
 `s(r) = √Δ(r) ≤ r^{1+ζ}`, `ζ = p/2 - 1`; equations (19)-(20)). The name `Δ(r)` replaces the overloaded `δ` of the
 write-up (C1 uses `s = √δ`, D4 the boxed `δ`); the final cutoff of §8.3 is `r_cut`, not defined here.

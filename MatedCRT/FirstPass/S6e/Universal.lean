@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# FIRST PASS: the universal event over the radii (LEMMA68 D3) (task fp-S6e-lemma68-D123, z9)
+# FIRST PASS: the universal event over the radii (LEMMA68 D3)
 
-Source: `notes/fp-gaps/CHATGPT-lemma68-open-parts.md`, D3 (lines 992-1034). Two parts.
+Two parts.
 (i) Deterministic: a property `Φ` of the radius that is constant on every closed interval free of a finite set `C`
 of critical radii holds on `[α, β]` as soon as it holds at the rational radii of `[α, β]` and at the points of `C`
 (the write-up: "a violation occurs either at a critical radius or on an interval containing a rational violation").

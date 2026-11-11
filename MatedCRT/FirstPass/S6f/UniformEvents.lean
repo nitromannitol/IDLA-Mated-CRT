@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S6f
 
 /-!
-# Events of Lemma 6.8, uniform in scale and vertex (fp-S6f, round 2, q1)
+# Events of Lemma 6.8, uniform in scale and vertex
 
 The walk-level inputs of `Uniform68Local.greenLow_of_event`, `Uniform68Local.exitMoment_of_event`, `hdiam` of
 `Uniform68Point.hloc_band_point` and `hlow` of `EnvInputs68.ballMass_lower_env` are, in the Draft, the following

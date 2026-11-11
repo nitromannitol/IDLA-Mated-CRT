@@ -8,7 +8,7 @@ import MatedCRT.Proofs.Infra.LocallyFinite
 import MatedCRT.Proofs.Infra.RandomWalk
 
 /-!
-# Lemma 6.8, write-up C13-C14: the per-state fields of the concrete test schedule (fp-S6m, owner z10)
+# Lemma 6.8, write-up C13-C14: the per-state fields of the concrete test schedule
 
 The per-state geometric fields `hS2`, `hdy`, `hdiam` of `Lemma68Concrete.StateTestInputs` (S6h/Schedule.lean), for the
 concrete centres `cfgCentre` and radii `cfgStateRadius`.
@@ -201,7 +201,7 @@ lemma cfgStateRadius_bounds (ε : ℝ) (η : ℝ → ℂ) {p r : ℝ} (hp : 0 < 
   have hΔ1 : Delta p r ≤ 1 := (Delta_le_rpow hp hr0 hr1).trans (Real.rpow_le_one hr0.le hr1.le hp.le)
   exact selectable_bounds hΔ hΔ1 (firstGood_cand_mem hΔ (good (cfgCentre ε η p r y)))
 
-/-- **Field `hS2` of `StateTestInputs`** (write-up C13, C14; z12's S2), at the concrete centres `cfgCentre` and radii
+/-- **Field `hS2` of `StateTestInputs`** (write-up C13, C14), at the concrete centres `cfgCentre` and radii
 `cfgStateRadius`. The region hypothesis `hreg` is on the good states. -/
 theorem stateHS2 {ε ρ d p r : ℝ} {η : ℝ → ℂ} {m : ℤ → ℤ → ℕ} (good : ℂ → ℕ → Prop) {Good : ℤ → Prop}
     (hε : 0 < ε) (hη : Continuous η) (hproper : Tendsto η (cocompact ℝ) (cocompact ℂ))

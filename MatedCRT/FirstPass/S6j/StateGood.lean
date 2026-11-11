@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S6j.PerState
 import MatedCRT.FirstPass.S4S6c.HcGreen68
 
 /-!
-# The good-state inputs of the local test at the middle vertices (fp-S6j; `hloc` of `StateTestInputs`)
+# The good-state inputs of the local test at the middle vertices (`hloc` of `StateTestInputs`)
 
 Written argument: `printed_test_bound` (PerTest68.lean:82) at each middle vertex `v` of `∂B_{4R/3}(z)`, with the local
 scale `R`, the sparsity scale `r`, the mass `mr = μ(B_{c₀R}(v)).toReal` and the window `I(B_{R/4}(v))`.

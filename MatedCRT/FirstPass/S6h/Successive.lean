@@ -4,14 +4,13 @@ import MatedCRT.FirstPass.S6e.Walk
 import MatedCRT.Proofs.IDLA.Measurable
 
 /-!
-# FIRST PASS: the successive-exit route to the configuration bound of Lemma 6.8 (fp-S6h, z8)
+# FIRST PASS: the successive-exit route to the configuration bound of Lemma 6.8
 
-Bridge note `notes/fp-gaps/CHATGPT-z9-6-8-bridge.md` §3 (Steps B–F) and the test schedule of the write-up C3
-(`notes/fp-gaps/CHATGPT-lemma68-open-parts.md`, lines 695–741): the successive exit times
+Steps B–F of the bridge (§3) and the test schedule of the write-up C3: the successive exit times
 `τ_{N+1} = nextExit W τ_N` are the test times `T_j` of (C3) when the window `W (X_{T_j})` is the cell interval of the
 test disk. The passing events `S_N` of `SuccessiveExitStop` are the complements of the failure events `H_N`.
 
-This route uses `SuccessiveExitStop.srwLaw_successive_exit_le_pow` (q2, proved), which applies the strong Markov property
+This route uses `SuccessiveExitStop.srwLaw_successive_exit_le_pow` (proved), which applies the strong Markov property
 at the outer exit times `τ_N` only. The window at `τ_N` is a function of the vertex `X_{τ_N}`, as C3 requires.
 Its inputs are: the per-state outer test bound `hc` (the write-up C15/B18 bound for the outer window `W y`, uniform
 constant), the start-state invariant `hSY` (C6), and the almost-sure containment `hC12` (C12: `T_N < τ_U` a.s.).

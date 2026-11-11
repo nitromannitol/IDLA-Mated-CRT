@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# FIRST PASS: measurability of the quenched exit probability by cylinders (LEMMA68 B1) (task fp-S6e-lemma68-C17, z9)
+# FIRST PASS: measurability of the quenched exit probability by cylinders (LEMMA68 B1)
 
-Source: `notes/fp-gaps/CHATGPT-z9-lemma68-B1B2.md` §3 (B1.1-B1.6), the cylinder argument for the hypothesis `hΦ`
+The cylinder argument (B1.1-B1.6) for the hypothesis `hΦ`
 of `S6e/Universal.lean`. Paths are `ℕ → ℤ`; `p ω u v : ℝ≥0∞` are the transition weights of the quenched walk
 (measurable in `ω` by `Lemma68MeasurableInputs.transition_measurable`, a named hypothesis); `U ω, A ω ⊆ ℤ` are the
 admissible and target vertex sets, with measurable memberships `{ω | v ∈ U ω}`. Nothing is assumed about the

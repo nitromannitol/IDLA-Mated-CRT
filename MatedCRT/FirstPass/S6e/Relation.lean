@@ -6,7 +6,7 @@ import MatedCRT.Steps.Sec6.ConstantOrderLowerBound
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBound.OfSteps
 
 /-!
-# Lemma 6.8 bridge, section 5 (fp-S6e, z9): local sparsity gives the sparsity clause (15)
+# Lemma 6.8 bridge, section 5: local sparsity gives the sparsity clause (15)
 
 Write-up (14)-(15) of Lemma 6.8 (Admissible, clause (15)): for every nonempty `B ⊆ A`, `x ≤ c_B` or `t_B < x`.
 The printed Lemma 6.8 hypothesis is the local sparsity `|A ∩ V^ε(B_r(z))| < s₁ r^{2β⁻} ε⁻¹` for all `z ∈ ℂ`
@@ -154,7 +154,7 @@ theorem measure_le_ofReal_of_real_le {Ω : Type*} [MeasurableSpace Ω] {P : Meas
   rw [← ENNReal.ofReal_toReal (measure_ne_top P s)]
   exact ENNReal.ofReal_le_ofReal h
 
-/-- **Named covering smallness of `s₁` (write-up, chat answer CHATGPT-idla-6-8-state-inputs §3, [C22]).** The
+/-- **Named covering smallness of `s₁` ([C22]).** The
 covering repair needs `10 s₁ ≤ (1/4) (c₀/2)^{β⁻}` with the covering constant `c₀` (`c₀ < 1/8`) and `β⁻ = chosenBetaMinus γ`
 (`S6d.lean:30`); `s₁ = 1/4` is not justified. The Relation and Uniform lemmas take `s₁` as a parameter; this Prop names the
 inequality that the choice of `s₁` must satisfy. -/

@@ -2,10 +2,10 @@ import MatedCRT.FirstPass.S6e.Admissible
 import MatedCRT.FirstPass.S6e.Universal
 
 /-!
-# FIRST PASS: the measurable universal event over the radii (LEMMA68 §6 Steps 1-3, D3) (task fp-S6e-lemma68-C17, z9)
+# FIRST PASS: the measurable universal event over the radii (LEMMA68 §6 Steps 1-3, D3)
 
-Sources: `notes/fp-gaps/CHATGPT-z9-lemma68-B1B2.md` §5.3 (critical set (16)), §6 (Steps 1-3: the stronger interface at a
-measurable radius; the rational and critical checks); `notes/fp-gaps/CHATGPT-lemma68-open-parts.md` D3.
+The critical set (16) (§5.3) and steps 1-3 (§6: the stronger interface at a
+measurable radius; the rational and critical checks).
 
 Statement proved: for a measurable upper cutoff `β` and the guarded predicate `PhiG` (write-up (17)), the event
 `{ω | ∀ x ∈ [α, β ω], Phi x}` is measurable. Proof: per `ω`, the universal assertion on `[α, β ω]` is equivalent to the

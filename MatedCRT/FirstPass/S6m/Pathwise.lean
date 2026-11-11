@@ -2,7 +2,7 @@ import Mathlib
 import MatedCRT.FirstPass.S6m.Path
 
 /-!
-# The pathwise containment `T_N < τ_U` (Lemma 6.8, write-up C6-C12; fp-S6m, owner z10)
+# The pathwise containment `T_N < τ_U` (Lemma 6.8, write-up C6-C12)
 
 Induction on `j ≤ N` for a fixed legal path `x` started at `a` (write-up C3, C6-C11). With `s = √δ`, `g = δ/100`,
 `K = fillCells Θ`, `U = killed ε η Θ F0 r`, the invariants are

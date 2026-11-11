@@ -4,9 +4,9 @@ import MatedCRT.FirstPass.S4S6c.TraceInputs68
 import MatedCRT.FirstPass.S6e.Inputs
 
 /-!
-# FIRST PASS: the geometric quantities of LEMMA68 (B2) (task fp-S6e-lemma68-C17, z9)
+# FIRST PASS: the geometric quantities of LEMMA68 (B2)
 
-Source: `notes/fp-gaps/CHATGPT-z9-lemma68-B1B2.md` §4 (B2.1-B2.4, formulas (2)-(6)) and §5.1 (formula (9)).
+Formulas (2)-(6) (B2.1-B2.4) and (9).
 Fixed mesh `ε > 0`; a vertex is an integer `k`, its cell is `H_k = cell ε η k = η([ε(k-1), εk])` (`MatedCRT.cell`),
 and `D_k = I_k ∩ ℚ` (`ratInt`). The quantities of the write-up are given by their countable formulas (3)-(6), with
 values in `ℝ≥0∞` (an empty infimum is `⊤`, an empty supremum `0`):

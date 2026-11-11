@@ -4,9 +4,9 @@ import MatedCRT.FirstPass.S4S6c.SuccessiveExitStop
 import MatedCRT.FirstPass.S4S6c.ExitNull68
 
 /-!
-# Almost sure finiteness of the successive window exits (fp-S6j, input `hfin` of `hstep_concrete`)
+# Almost sure finiteness of the successive window exits (input `hfin` of `hstep_concrete`)
 
-Written argument: `notes/fp-gaps/CHATGPT-lemma68-open-parts.md` lines 733-737 (for a finite set `W`, the path-out
+For a finite set `W`, the path-out
 bound `P_v(τ_W > kL) ≤ (1-q)^k`, so the finite-set exit times are almost surely finite) and line 845 (the successive
 exit times are almost surely finite stopping times).
 

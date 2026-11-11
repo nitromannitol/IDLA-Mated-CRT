@@ -4,9 +4,9 @@ import MatedCRT.FirstPass.S6e.Walk
 import MatedCRT.FirstPass.S6e.Universal
 
 /-!
-# FIRST PASS: admissibility, the critical radii and `hconst` (LEMMA68 B2) (task fp-S6e-lemma68-C17, z9)
+# FIRST PASS: admissibility, the critical radii and `hconst` (LEMMA68 B2)
 
-Source: `notes/fp-gaps/CHATGPT-z9-lemma68-B1B2.md` §5.1-5.5 and §6. For a configuration `(Θ, F0, A, a)` (finite
+For a configuration `(Θ, F0, A, a)` (finite
 vertex sets `Θ` (the filled set), `F0 = F` (the branch), `A` (the target set), a vertex `a`) and constants `s1, βm`
 of (14)-(15), the radius-dependent predicate is
 `Φ x := Admissible x → P(exit event of U_x, A) ≤ 1/2` (B1 probability), with `U_x = killed x = {v ∈ F0 : d_v < x} \ Θ`

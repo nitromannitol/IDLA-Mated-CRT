@@ -2,9 +2,8 @@ import Mathlib
 import MatedCRT.FirstPass.S6e.Cutoff
 
 /-!
-# FIRST PASS: the induction of LEMMA68 (C17): `P(H_N) ≤ (1 - q(r))^N` (task fp-S6e-lemma68-C17, z9)
+# FIRST PASS: the induction of LEMMA68 (C17): `P(H_N) ≤ (1 - q(r))^N`
 
-Source: `notes/fp-gaps/CHATGPT-lemma68-open-parts.md`, C15-C17 (lines 848-884) and the induction there.
 The walk is abstract here: `G j` is the exit event of the `j`-th test (`F_j = (G j)ᶜ`), `m j` is the
 σ-algebra `F_{T_j}` (monotone in `j`), `H j = ∩_{i<j} F_i` with `H j ∈ m j`. The conditional lower bound of
 the exit probability (C15) is the hypothesis `hstep`, with `R j` the random radius of the `j`-th test. It is needed only on `H j`, where `R j` is a good radius

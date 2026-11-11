@@ -3,15 +3,15 @@ import MatedCRT.FirstPass.S6e.Scales
 import MatedCRT.FirstPass.S6e.C17Induction
 
 /-!
-# FIRST PASS: the selected radii `R_j` of LEMMA68 (N2 selection, hR of C17; task fp-S6e-lemma68-C17, z9)
+# FIRST PASS: the selected radii `R_j` of LEMMA68 (N2 selection, hR of C17)
 
 Sources (repository notes; no Lean credit before this file):
-* `notes/fp-gaps/CHATGPT-lemma68-open-parts.md` A4 (lines 249-301): for `0 < δ` with `L = log(1/δ)`,
+* for `0 < δ` with `L = log(1/δ)`,
   `n_- = ⌈L/(2 log 7)⌉`, `n_+ = ⌊L/log 7⌋`, `K = n_+ - n_- + 1`, the radii `R_k = 7^{-(n_- + k - 1)}`, `1 ≤ k ≤ K`,
   are the seven-adic radii in `[δ, √δ]` (the statement there assumes `δ ≤ 7^{-4}`; only the membership is used here).
-* `notes/fp-gaps/CHATGPT-lemma68-open-parts.md` C1 (line 685) and A5 (lines 302-372): `R_z` is the first good radius among
+* `R_z` is the first good radius among
   the candidates, with the default `R_z = δ` when the point is inadmissible or no candidate is good.
-* `notes/fp-gaps/CHATGPT-z9-lemma68-B1B2.md` §8.1-8.2 (lines 819-890, equations (19)-(21)): `Δ(r) = 2^{-n(r)}`,
+* Equations (19)-(21): `Δ(r) = 2^{-n(r)}`,
   every selected radius lies in `[Δ(r), √Δ(r)]`, hence `r^p/2 < R_j ≤ r^{p/2}`. This is the `hR` of `C17_le_pow`
   (`Lemma68Induction`, `C17Induction.lean`).
 -/

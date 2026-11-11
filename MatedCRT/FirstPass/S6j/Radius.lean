@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S6e.RadiusSelect
 import MatedCRT.FirstPass.S6j.StateGood
 
 /-!
-# The radius inputs of the state test from the selection bound (fp-S6j; `hRs`, `hLR` of `hloc_of_goodState`)
+# The radius inputs of the state test from the selection bound (`hRs`, `hLR` of `hloc_of_goodState`)
 
 The state radius is selected in `selectable (Delta p r)` (`Lemma68Radius.firstGood_cand_mem`, default `Δ(r)`).
 Write-up (20) (`Lemma68Scales`): `Δ(r) ≤ r^p`, `r^p/2 < Δ(r)` and `√Δ(r) ≤ r^{p/2}`. Hence for a selectable `ρ`:

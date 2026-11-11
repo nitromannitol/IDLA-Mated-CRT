@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S6h.Successive
 import MatedCRT.FirstPass.S6e.Relation
 
 /-!
-# The pathwise containment `T_N < τ_U` (Lemma 6.8, write-up C3, C10-C12; fp-S6m, owner z10)
+# The pathwise containment `T_N < τ_U` (Lemma 6.8, write-up C3, C10-C12)
 
 For a fixed legal path `x` of the cell walk, started at `a`, with the successive exit times `T_j = exitSchedule W j`
 of the windows `W y = I(B_{2R(z y)}(z y))` (write-up C1-C3), the induction below proves, for `j ≤ N`:

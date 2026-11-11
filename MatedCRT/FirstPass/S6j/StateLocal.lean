@@ -9,16 +9,16 @@ import MatedCRT.FirstPass.S4S6c.OpenAnnulus68
 import MatedCRT.FirstPass.S4S6c.PerTest68
 
 /-!
-# The per-state local test bound at a middle vertex (fp-S6j; the state inputs of chat 183)
+# The per-state local test bound at a middle vertex
 
 Written argument: the printed test at a middle vertex `v` of `∂B_{4R/3}(z)`, with the local scale `R` (the state
 radius, the denominator `(1 + log(1/R))²`), the sparsity scale `r`, the mass `mr = μ(B_{c₀R}(v)).toReal`, and the window
 `I(B_{R/4}(v))`. The local sparsity count `hA_local` is `hA_local_of_sparse` (S6j/LocalCount.lean); the bound itself is
-`stayIn_le_printed_local` (S4S6c/PrintedTestLocal68.lean, q2).
+`stayIn_le_printed_local` (S4S6c/PrintedTestLocal68.lean).
 
-Named hypotheses (the per-state form of the chat 183 inputs):
+Named hypotheses (the per-state form of the inputs):
 * `hsp`: the Lemma 6.8 hypothesis on `A` (corrected tex l.2792), at every centre, radius `r`;
-* `hr2 : r ^ 2 ≤ R`: the explicit scale hypothesis (routed to the operator, request 30c);
+* `hr2 : r ^ 2 ≤ R`: the explicit scale hypothesis;
 * `hs1small : 44 s₁ ≤ c₀^β`: the smallness of `s₁`, depending only on `γ` through `c₀` and `β` (not `s₁ = 1/4`);
 * `hvol`: the volume lower bound `(c₀R)^β ≤ μ(B_{c₀R}(v))` (Lemma 2.7, `VolumeGrowthStmt`, exponent `β = β⁻`);
 * `hdy`, `hdiam`: the cell-size estimates (Lemma 2.8, `cellSize`);
@@ -65,7 +65,7 @@ theorem perState_local_bound_of_count {μ : Measure ℂ} [SFinite μ] [IsFiniteM
     -- the local count of A-vertices in V(B_{c0 R}(v)) (hA_local_of_sparse, or the ball-inclusion count of S6r)
     (hloc : ((A ∩ cellVertices ε η (ball (vertexPoint ε η v) (c0 * R))).ncard : ℝ)
       ≤ (μ (ball (vertexPoint ε η v) (c0 * R))).toReal / (4 * ε))
-    -- chat 183 inputs (named)
+    -- inputs (named)
     (hvol : (c0 * R) ^ β ≤ (μ (ball (vertexPoint ε η v) (c0 * R))).toReal)
     (hdy : diam (cell ε η v) ≤ R / 100)
     (hdiam : ∀ k : ℤ, (cell ε η k ∩ ball (vertexPoint ε η v) (R / 4)).Nonempty → diam (cell ε η k) ≤ c0 * R)
@@ -193,7 +193,7 @@ theorem perState_local_bound_of_count {μ : Measure ℂ} [SFinite μ] [IsFiniteM
           rw [← ENNReal.ofReal_pow hKLm, ← ENNReal.ofReal_mul hA0]
           congr 1
           rw [hεp, hfac, hCC]
-  -- the printed test bound with the local denominator (q2, stayIn_le_printed_local)
+  -- the printed test bound with the local denominator (stayIn_le_printed_local)
   have hres := MatedCRT.PrintedTestLocal68.stayIn_le_printed_local (μ := μ) (η := η) (m := m) (y := v)
     (A := A) (W := fun u => interiorCellVertices ε η (ball (vertexPoint ε η u) (R / 4)))
     (z := vertexPoint ε η v) (ε := ε) (R := c0 * R) (r := R)

@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S6e.Geometry
 
 /-!
-# FIRST PASS: geometric identification of the countable cell formulas (LEMMA68 B2.1 (1)-(2), formula (9)) (task fp-S6e-lemma68-C17, z9)
+# FIRST PASS: geometric identification of the countable cell formulas (LEMMA68 B2.1 (1)-(2), formula (9))
 
 The countable formulas of `Geometry.lean` are identified with the geometric quantities of the write-up, for a
 continuous curve `η : ℝ → ℂ` and `ε > 0`:

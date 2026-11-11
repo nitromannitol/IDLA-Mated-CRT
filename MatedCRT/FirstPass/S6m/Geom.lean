@@ -3,9 +3,9 @@ import MatedCRT.FirstPass.S6k
 import MatedCRT.FirstPass.S6e.Relation
 
 /-!
-# Geometry of the Lemma 6.8 test windows (fp-S6m, owner z10)
+# Geometry of the Lemma 6.8 test windows
 
-Deterministic cell and distance facts used by the containment argument C12 (write-up C5, C7-C11; open-parts note
+Deterministic cell and distance facts used by the containment argument C12 (write-up C5, C7-C11
 section C3). A cell is `cell ε η k = η '' Icc (ε (k-1)) (ε k)`, `K = fillCells ε η Θ` is the filled set of `Θ`, and the
 distance of a point to `K` is `Metric.infDist` (potential-theoretic distance, Armitage-Gardiner terminology).
 -/

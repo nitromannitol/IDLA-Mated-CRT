@@ -9,19 +9,18 @@ import MatedCRT.FirstPass.S6e.Cutoff
 import MatedCRT.FirstPass.S4S6c.Uniform68Round
 
 /-!
-# The concrete test schedule of Lemma 6.8 (fp-S6h, owner z8)
+# The concrete test schedule of Lemma 6.8
 
-Write-up C1-C3 (`notes/fp-gaps/CHATGPT-lemma68-open-parts.md` lines 659-805) and bridge note §3, Steps B-F
-(`notes/fp-gaps/CHATGPT-z9-6-8-bridge.md` lines 218-408): the grid centre `z_j = Q_δ(η(X_{T_j}))`, the first-good radius
+Write-up C1-C3 and bridge note §3, Steps B-F: the grid centre `z_j = Q_δ(η(X_{T_j}))`, the first-good radius
 `R_j = R_{z_j}` (A5, `Lemma68Radius.firstGoodRadius`, default `δ`), the window `W(y) = I(B_{2R}(z))` at the state `y`, the
 successive exit times `T_{j+1} = nextExit W T_j` (`cfgExit`, equal to `Lemma68Successive.exitSchedule` by
 `cfgExit_eq_exitSchedule`), the count `N = ⌊r/(100 s)⌋`, `s = √δ`.
 
 Proved here: the structural fields of `TestSchedule.Valid` (monotone σ-algebras `F_{T_j}`, measurability of the test events
 `G_j = testHit`, `G_j ∈ F_{T_{j+1}}`, radius bounds, the count bound), the finiteness of the windows from properness of `η`,
-and `hstep` from `S6j.hstep_of_schedule` (z5), which discharges the a.s. finiteness of the exits.
-Named inputs (NEW steps, not proved here): `OuterTestBound` (write-up C4, per-state outer bound; z5, `S6j/PerState.lean`)
-and `ConcreteC12` (write-up C12; z10, `S6m.lean`). Environment inputs: `η` continuous and proper, local finiteness of the
+and `hstep` from `S6j.hstep_of_schedule`, which discharges the a.s. finiteness of the exits.
+Named inputs (NEW steps, not proved here): `OuterTestBound` (write-up C4, per-state outer bound; `S6j/PerState.lean`)
+and `ConcreteC12` (write-up C12; `S6m.lean`). Environment inputs: `η` continuous and proper, local finiteness of the
 walk law. Cutoff: `r ^ ζ ≤ 1/1000`, from `R ≤ 1000^(-1/ζ)` (write-up D1).
 -/
 
@@ -279,7 +278,7 @@ lemma cfgCount_lower {p r ζ : ℝ} (hp : 0 < p) (hr0 : 0 < r) (hr1 : r < 1) (hp
 
 /-- The per-state outer test bound of write-up C4 for the concrete schedule, in the form taken by
 `S6j.hstep_of_schedule` (input `hpt`): from `X_{T_j}`, the walk stays in `A` until it leaves the window `I(B_{2R}(z))`
-with probability at most `1 - q/(1+log(1/R))²`. A NEW step (C4), named input; z5 proves it in `S6j/PerState.lean`. -/
+with probability at most `1 - q/(1+log(1/R))²`. A NEW step (C4), named input; its proof is in `S6j/PerState.lean`. -/
 def OuterTestBound (m : ℤ → ℤ → ℕ) (a : ℤ) (ε : ℝ) (η : ℝ → ℂ) (p r : ℝ) (good : ℂ → ℕ → Prop) (A : Set ℤ)
     (qStar : ℝ) : Prop :=
   ∀ j, ∀ᵐ x ∂srwLaw m a, x ∈ Lemma68Config.testFail A (cfgExit ε η p r good) j →
@@ -290,14 +289,14 @@ def OuterTestBound (m : ℤ → ℤ → ℕ) (a : ℤ) (ε : ℝ) (η : ℝ → 
         (x (cfgExit ε η p r good j x).toNat))) ^ 2)
 
 /-- The containment of write-up C12 for the concrete schedule, in the form of `TestSchedule.Valid.hC12`: `T_N < τ_U`
-almost surely. A NEW step (C12), named input; z10 proves it in `S6m.lean`. -/
+almost surely. A NEW step (C12), named input; its proof is in `S6m.lean`. -/
 def ConcreteC12 (m : ℤ → ℤ → ℕ) (a : ℤ) (ε : ℝ) (η : ℝ → ℂ) (p r : ℝ) (good : ℂ → ℕ → Prop) (U : Set ℤ) : Prop :=
   ∀ᵐ x ∂srwLaw m a, cfgExit ε η p r good (cfgCount p r) x < vExitTime U x
 
 /-- The per-state inputs of write-up C4 for the concrete schedule, in the form of `S6j.hpt_of_state` with the centres
 `Z = cfgCentre`, the radii `Rs = cfgStateRadius` and a good-state predicate `Good` (NEW inputs, named). `hloc`: the
 local printed test bound at the middle sphere of `B_R(z)`; `hdy`, `hdiam`: the cell geometry; `hS2`: the walk from
-`X_{T_j}` hits the middle sphere before leaving `I(B_{2R}(z))` (write-up z12 S2); `hgood`: the state `X_{T_j}` is good
+`X_{T_j}` hits the middle sphere before leaving `I(B_{2R}(z))` (write-up S2); `hgood`: the state `X_{T_j}` is good
 almost surely (the first-good radius selection). `Good` is existentially quantified in `configuration_le_pow_concrete`. -/
 structure StateTestInputs (m : ℤ → ℤ → ℕ) (a : ℤ) (ε : ℝ) (η : ℝ → ℂ) (p r : ℝ) (good : ℂ → ℕ → Prop) (A : Set ℤ)
     (qStar c0 : ℝ) (Good : ℤ → Prop) : Prop where
