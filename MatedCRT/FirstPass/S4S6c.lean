@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S4S6c.ConeScalingLaw
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.PreparedConeScaling
 
 /-!
-# First pass, Section 4: Theorem 4.1 with the frozen cone-scaling law (q2, task fp-S4S6c)
+# First pass, Section 4: Theorem 4.1 with the frozen cone-scaling law
 
 `firstPass_4_1_coneLaw` is the repair of `firstPass_4_1` (FirstPass/S3S4.lean, RETIRED). The hypothesis
 `FrozenConeEnvironmentScaling` (FALSE, truth check 2026-11-09) is replaced by `FrozenConeScalingLaw`

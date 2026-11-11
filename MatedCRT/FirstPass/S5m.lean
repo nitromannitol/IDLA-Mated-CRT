@@ -3,14 +3,13 @@ import MatedCRT.FirstPass.S5j
 import MatedCRT.Proofs.Sec1.EnvironmentScaling.IGCurveScaling
 
 /-!
-# The pole cell of Proposition 5.1 (fp-S5m, z8)
+# The pole cell of Proposition 5.1
 
 `StoppedPoleCellStep` (FirstPass/S5f/Steps.lean:39) asks that, for all small mesh sizes, almost surely the vertex of the
 pole `0` is the vertex `0`: `a^ε_0 = 0`. This file proves it from the mating-of-trees coupling of the environment
 (`S.IsValid`, Defs/Setting.lean), and assembles Proposition 5.1 with it.
 
-Written source: `notes/fp-gaps/CHATGPT-z5-floor.md`, Step 3.2 (lines 132-154), with the cell computation of
-`notes/fp-gaps/CHATGPT-li-pole-cell.md` §9. The clauses it uses are fields of the bundle `IsMatingOfTreesCoupling`
+The clauses it uses are fields of the bundle `IsMatingOfTreesCoupling`
 (`.lake/packages/lattice-probability/LatticeProb/Bonanno/MatedCRTHarmonic/Frozen/IsMatingOfTreesCoupling.lean`), reached
 through `S.IsValid.matingOfTrees`:
 * `igMap` (line 84): the affine covariance of the IG witness `Φ` at the identity map; with `spaceFilling` it gives
@@ -32,7 +31,7 @@ open scoped ENNReal
 
 namespace MatedCRT
 
-/-- **Pole vertex (NEW, fp-S5m).** Almost surely, for every mesh size `ε > 0`, the smallest vertex whose cell contains the
+/-- **Pole vertex (NEW).** Almost surely, for every mesh size `ε > 0`, the smallest vertex whose cell contains the
 pole `0` is the vertex `0`: `a^ε_0 = 0`. Proof: `firstHit (ηL ω) 0 = 0` (`igMap_witness_period`), transience and
 `ηL ω 0 = 0` (`spaceFilling`), and the order isomorphism `φ` fixing `0` (`areaParam`). -/
 theorem vertexOf_zero_ae (𝒮 : SpaceFillingSLEModel) {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
@@ -90,13 +89,13 @@ theorem vertexOf_zero_ae (𝒮 : SpaceFillingSLEModel) {γ : ℝ} {Ω : Type} [M
       exact hneg s (by linarith) hs
   exact hlist.csInf_eq
 
-/-- **Step (2), the pole cell (fp-S5m).** `StoppedPoleCellStep 𝒮` holds: it is `vertexOf_zero_ae` for every mesh size. -/
+/-- **Step (2), the pole cell.** `StoppedPoleCellStep 𝒮` holds: it is `vertexOf_zero_ae` for every mesh size. -/
 theorem stoppedPoleCell_proved (𝒮 : SpaceFillingSLEModel) : StoppedPoleCellStep 𝒮 := by
   intro γ _ _ ρ _ _ Ω _ S hS
   have hae := vertexOf_zero_ae 𝒮 hS
   exact eventually_nhdsWithin_of_forall fun ε hε => hae.mono fun ω hω => hω ε hε
 
-/-- **Proposition 5.1 (fp-S5m).** `firstPass_5_1_of_floorCell_pole` with the pole input discharged by
+/-- **Proposition 5.1.** `firstPass_5_1_of_floorCell_pole` with the pole input discharged by
 `stoppedPoleCell_proved`; the remaining hypotheses are those of `firstPass_5_1_of_floorCell_pole` (S5j.lean) minus `hpole`. -/
 theorem firstPass_5_1_of_floorCell (𝒮 : SpaceFillingSLEModel)
     (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)

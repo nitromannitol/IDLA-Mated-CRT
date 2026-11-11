@@ -10,7 +10,7 @@ namespace MatedCRT
 
 namespace Lemma68Config
 
-/-- (Lemma 6.8, the hypothesis `hpt` of `Lemma68Final.probTendsToOne_uniform_half_guarded`, bridge note §4, z9's form)
+/-- (Lemma 6.8, the hypothesis `hpt` of `Lemma68Final.probTendsToOne_uniform_half_guarded`, bridge note §4)
 On `E ε ∩ G`, for every admissible radius `r ∈ [α ε, dd ω]` and every configuration with the guard `FullAdm`, the exit
 probability `exitQ` satisfies `(1 - q0/(1+log(1/r))²)^N` for a count `N ≥ r^(-ζ)/200`. This is `configuration_le_pow`
 with `ι := Config68`, `Adm := FullAdm`, `exitF := exitQ`; the non-admissible configurations are handled by the guard. -/
@@ -51,7 +51,7 @@ lemma cellVertices_mono_c12 {ε : ℝ} {η : ℝ → ℂ} {D D' : Set ℂ} (h : 
 /-- (Lemma 6.8, the concrete bridge: the guarded probability statement with the concrete test schedule `cfgSchedule`.)
 The guarded uniform exit bound `probTendsToOne_lemma68_guarded` with the schedule chosen as in
 `configuration_le_pow_concrete`. The containment `hC12` (write-up C12) is DISCHARGED here by `Lemma68C12.concreteC12_killed`
-(z10, `S6m.lean`). Named inputs: the environment `hEnv` (η continuous and proper), the local finiteness `hlf`, the cell
+ (`S6m.lean`). Named inputs: the environment `hEnv` (η continuous and proper), the local finiteness `hlf`, the cell
 adjacency `hadj` of the multiplicity, the cell-size input `hmesh` (the diameters of the cells meeting `B_ρ` are at most
 `min (Δ(p,r)/100) (c0 Δ(p,r))` for `r ∈ [α ε, dd ω]`, the scale `c0 Δ` being the one of `stateHdiam`; the cell-size estimate Draft `CellSizeEstimateStmt`, Draft/Section2.lean:131, with
 the exponent comparison on `ω₀`), the per-state inputs `hstate` (write-up C4, `StateTestInputs`), the cutoffs `hRρ`

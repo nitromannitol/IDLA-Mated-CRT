@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S2j
 import MatedCRT.Proofs.Sec4.DivSandpileLowerBound.Final
 
 /-!
-# FIRST PASS, Proposition 4.2 (prop:div-sandpile-lower-bound): assembly (q3)
+# FIRST PASS, Proposition 4.2 (prop:div-sandpile-lower-bound): assembly
 
 `firstPass_4_2` is the first-pass form of Proposition 4.2 (`DivSandpileLowerBoundStmt`, Draft/Section4.lean:50). It
 composes the proved first-pass Section 4 steps (`firstPass_4_1`, Theorem 4.1, in FirstPass/S3S4.lean; the

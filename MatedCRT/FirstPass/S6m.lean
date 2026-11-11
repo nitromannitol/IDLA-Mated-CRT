@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.S4S6c.FrontierSeparation
 import MatedCRT.Proofs.Infra.RandomWalk
 
 /-!
-# Lemma 6.8, write-up C12 for the concrete test schedule (fp-S6m, owner z10)
+# Lemma 6.8, write-up C12 for the concrete test schedule
 
 `concreteC12_killed` proves `Lemma68Concrete.ConcreteC12 m a ε η p r good (killed ε η Θ F0 r)`: almost surely, the
 concrete exit time `T_N` of the test schedule `cfgExit` (with `N = cfgCount p r`) is strictly smaller than the exit time

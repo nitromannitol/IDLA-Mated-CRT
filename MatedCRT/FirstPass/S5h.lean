@@ -3,10 +3,10 @@ import MatedCRT.FirstPass.S5c.HExclusive
 import MatedCRT.Proofs.Sec5.StoppedExterior
 
 /-!
-# First pass: the ceiling of Proposition 5.1, `stoppedMaxOutside_proved` (task fp-S5h-5-1-max-outside, z1)
+# First pass: the ceiling of Proposition 5.1, `stoppedMaxOutside_proved`
 
 **Theorem `stoppedMaxOutside_proved`.** `StoppedMaxOutsideStep 𝒮` (`ε M^ε → 0` in probability on `{t < T}`, Proposition 5.1,
-corrected tex 2355-2360, [C21]) from `stoppedMaxOutside_of_steps` (FirstPass/S5f.lean, z10), with two of its three NEW steps
+corrected tex 2355-2360, [C21]) from `stoppedMaxOutside_of_steps` (FirstPass/S5f.lean), with two of its three NEW steps
 discharged here:
 
 * `stoppedCellRepresentative_proved`: `StoppedCellRepresentativeStep 𝒮` (FirstPass/S5f/Steps.lean) is PROVED, with no
@@ -18,7 +18,7 @@ discharged here:
   null-measurability step `ConeOriginNullMeasurableStep 𝒮` (Proofs/Sec5/StoppedExterior.lean), by continuity from above along
   `s = 1/(n+1)` (as in `StoppedExterior.origin_of_nullMeasurable`).
 
-Still hypotheses of `stoppedMaxOutside_proved` (BLOCKED, see reports/z1.md):
+Still hypotheses of `stoppedMaxOutside_proved` (BLOCKED, see):
 * `StoppedPoleCellStep 𝒮` (FirstPass/S5f/Steps.lean): `a^ε_0 = 0` for small `ε`, a.s.; no written argument.
 * `ConeOriginNullMeasurableStep 𝒮` (Proofs/Sec5/StoppedExterior.lean): NEW; it reduces to `CodeSectionStmt 𝒮`
   (Proofs/Sec5/ConeOriginNullMeasurableProof.lean:575) and `PrestonAnalyticUniversallyMeasurableStmt`

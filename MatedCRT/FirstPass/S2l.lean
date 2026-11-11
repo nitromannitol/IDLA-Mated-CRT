@@ -2,13 +2,13 @@ import MatedCRT.FirstPass.Frozen.S2h
 import MatedCRT.FirstPass.Frozen.S2k
 import MatedCRT.Proofs.Sec4.Prop42Closure.InsertionScalingLaw
 
-/-! # FIRST PASS S2l: the whole-plane LQG scaling law from the insertion coordinate rule (task fp-S2l-wholeplane-scaling-derive)
+/-! # FIRST PASS S2l: the whole-plane LQG scaling law from the insertion coordinate rule
 
 `firstPass_wholePlaneLQGScaling_of_coordinateRule` proves the frozen `MatedCRT.FrozenWholePlaneLQGScaling`
 (`FirstPass/Frozen/S2h.lean`) from the frozen insertion coordinate rule `FrozenInsertionCoordinateRule`
 (`FirstPass/Frozen/S2k.lean`, input K). No other external input is used.
 
-Route: truth note `notes/fp-gaps/CHATGPT-idla-K-S2h-S2k-truth.md` §2, "Short proof from (1)". The three ingredients of that
+Route: the short proof from (1). The three ingredients of that
 argument are already proved in the repository, and this file re-runs the proof of
 `insertionLQGScalingLawStep_of_coordinateRule` (`Proofs/Sec4/Prop42Closure/InsertionScalingLaw.lean`) at `α = γ`, `a = s`,
 keeping the explicit constant `c_s = h_s(0) + Q log s` (the Step there only asserts an existential constant):
@@ -24,7 +24,7 @@ namespace MatedCRT.FirstPass.S2l
 open MeasureTheory Filter Topology Set Metric ProbabilityTheory HarmonicBalls
 open scoped ENNReal
 
-/-- **Derived: `FrozenWholePlaneLQGScaling` (FIRST-PASS, fp-S2l).** From the frozen insertion coordinate rule
+/-- **Derived: `FrozenWholePlaneLQGScaling` (FIRST-PASS).** From the frozen insertion coordinate rule
 `FrozenInsertionCoordinateRule` (`FirstPass/Frozen/S2k.lean`), the whole-plane LQG scaling law holds: for `0 < γ < 2`, a
 whole-plane GFF `h^ℂ` with `γ`-insertion LQG measure `μ` and `s > 0`, the random measure `A_s^{-1} · μ(s^{-1} ·)` with
 `A_s = e^{γ H_s(0)} s^{2-γ²/2}` has the law of `μ`. -/

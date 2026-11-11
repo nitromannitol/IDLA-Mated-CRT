@@ -7,7 +7,7 @@ import MatedCRT.Proofs.Sec6.ChanceOfBeingAbsorbed.Chernoff
 # FIRST PASS: Lemma 6.9 (lemma:chance-of-being-absorbed, line 2643) of arXiv:2211.04891 (corrected draft)
 
 The printed Draft `ChanceOfBeingAbsorbedStmt` (Draft/Section6.lean:140) chooses the rate `s₃` before `s₀`. Its proof
-supports only the rate chosen after `s₀` (ESCALATION E-c5-1, `docs/campaign/GAPS-SEC2567A.md`). The two corrected forms
+supports only the rate chosen after `s₀` (`docs/campaign/GAPS-SEC2567A.md`). The two corrected forms
 are proved here:
 * `firstPass_6_9_corrected`: `ChanceOfBeingAbsorbedLocalRateStmt` (`s₃` after `s₀`), from the Draft Lemma 6.7;
 * `firstPass_6_9_b_corrected`: `ChanceOfBeingAbsorbedLogLossStmt` (route (b) of E-A10, rates `∝ (1 + |log r|)⁻²`),
@@ -18,7 +18,7 @@ below uniformly in `s₀`; the printed Lemma 6.7 gives `s₂ = s₂(s₀)` only 
 
 namespace MatedCRT
 
-/-- **Lemma 6.9, local-rate form** (`firstPass_6_9_corrected`; E-c5-1: `s₃` chosen after `s₀`). Uses the Draft
+/-- **Lemma 6.9, local-rate form** (`firstPass_6_9_corrected`). Uses the Draft
 Lemma 6.7 (`ConstantOrderLowerBoundStmt`); the Chernoff-type iteration (`Absorption.absorptionChernoffStep`) is proved. -/
 theorem firstPass_6_9_corrected (𝒮 : SpaceFillingSLEModel) (h67 : ConstantOrderLowerBoundStmt 𝒮) :
     ChanceOfBeingAbsorbedLocalRateStmt 𝒮 :=

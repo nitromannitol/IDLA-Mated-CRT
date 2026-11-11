@@ -8,14 +8,13 @@ import MatedCRT.FirstPass.S2h.MeasurableIntegral
 import Mathlib.MeasureTheory.Constructions.Polish.Basic
 
 /-!
-# Cone bad null hull: reduction to two measurable null hulls (fp-S2h, z1)
+# Cone bad null hull: reduction to two measurable null hulls
 
-Owner: z1 (task fp-S2h-cone-bad-null-hull). Target: `ConeBadNullHullStep` (FirstPass/S2g/Family.lean) and
+Target: `ConeBadNullHullStep` (FirstPass/S2g/Family.lean) and
 `ConeClosureGoodMeasureLawStep` (FirstPass/S2f.lean).
 
 The bad set of `BadMeasureNullHull` is the union of two sets of measures:
-* `{ν | HasRatPlateauCert ν}` (certificate part; written argument: notes/fp-gaps/CHATGPT-cone-good-set.md
-  Sections 1-3, 5, 6);
+* `{ν | HasRatPlateauCert ν}` (certificate part);
 * `{ν | ¬ LeastSuperOK ν}` (least-supersolution part; NO measure-level written argument, see
   `ConeLeastSuperNullHullStep`).
 
@@ -40,7 +39,7 @@ theorem nullHull_union {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (μ : �
   rw [Set.preimage_union]
   exact measure_union_null h₀₁ h₀₂
 
-/-- **Code bridge (fp-S2h).** Let `f` be a measurable code of measures with values in `ℕ → ℝ`, and let `A` be a set
+/-- **Code bridge.** Let `f` be a measurable code of measures with values in `ℕ → ℝ`, and let `A` be a set
 of measures whose codes lie in an analytic set `B` of codes. Suppose the code event `{ω | f (μ ω) ∈ B}` lies in a
 measurable `P`-null set `M`. Then `A` has a measurable null hull on `Measure ℂ`. The proof uses Lusin's theorem
 (`FrozenUniversalMeasurabilityOfAnalytic`: an analytic set is null-measurable for every finite measure) for the law
@@ -78,28 +77,26 @@ theorem nullHull_of_analytic_code {Ω : Type} [MeasurableSpace Ω] (P : Measure 
       · exact subset_toMeasurable _ _ (show f (μ ω) ∈ {x | ¬ (x ∈ B ↔ x ∈ S)} from fun hiff => hB (hiff.mpr h))
       · exact h
 
-/-- **OPEN (NEW; z1, fp-S2h).** The certificate part of the bad set has a measurable null hull for every cone field:
+/-- **OPEN (NEW).** The certificate part of the bad set has a measurable null hull for every cone field:
 the measures with a rational plateau pair of certificates are covered by a measurable set of `Measure ℂ` whose
-preimage under the field is `P`-null. Written argument: notes/fp-gaps/CHATGPT-cone-good-set.md Sections 1-3 (Borel
-relation of certificate codes, analytic projection), 5 (plateau radii, Tonelli, scaling, zero law), 5.4 (transfer to
-the cone), 6 (null hull). Not proved here. -/
+preimage under the field is `P`-null (Borel relation of certificate codes, analytic projection; plateau radii, Tonelli, scaling, zero law; transfer to the cone; null hull). Not proved here. -/
 def ConeCertificateNullHullStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
     ∃ N : Set (Measure ℂ), MeasurableSet N ∧ {ν | HasRatPlateauCert ν} ⊆ N ∧ P (μ ⁻¹' N) = 0
 
-/-- **OPEN (NEW, NO WRITTEN MEASURE-LEVEL ARGUMENT; z1, fp-S2h).** The least-supersolution part of the bad set has a
+/-- **OPEN (NEW; NO WRITTEN MEASURE-LEVEL ARGUMENT).** The least-supersolution part of the bad set has a
 measurable null hull for every cone field: the measures `ν` for which `leastSupersolution ν (3/4) 0 s` is not a
 supersolution for some `s > 0` are covered by a measurable set of `Measure ℂ` with `P`-null preimage. The source
 (HB Draft `LeastSupersolutionMemStmt`, harmonic-balls-lqg `HarmonicBalls/Draft/Section3.lean:47`) is only an
 almost-sure statement `∀ᵐ ω, ...` for the LQG measure; an almost-sure property of `μ ω` does not give a measurable
-superset in `Measure ℂ` (CHATGPT-cone-good-set.md Section 8, bullet "almost-sure closure theorem alone"). Not proved. -/
+superset in `Measure ℂ`. Not proved. -/
 def ConeLeastSuperNullHullStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →
     ∃ N : Set (Measure ℂ), MeasurableSet N ∧ {ν | ¬ LeastSuperOK ν} ⊆ N ∧ P (μ ⁻¹' N) = 0
 
-/-- **Reduction (fp-S2h).** The two open parts give the bad null hull `ConeBadNullHullStep`. -/
+/-- **Reduction.** The two open parts give the bad null hull `ConeBadNullHullStep`. -/
 theorem coneBadNullHull_of_parts (hc : ConeCertificateNullHullStep) (hl : ConeLeastSuperNullHullStep) :
     ConeBadNullHullStep := by
   intro γ hγ hγ2 Ω _ P hC hcirc μ hcone
@@ -108,18 +105,18 @@ theorem coneBadNullHull_of_parts (hc : ConeCertificateNullHullStep) (hl : ConeLe
   rw [Set.ofPred_or]
   exact h
 
-/-- **Reduction (fp-S2h).** `ConeClosureGoodMeasureLawStep` (FirstPass/S2f.lean) from the two open parts. -/
+/-- **Reduction.** `ConeClosureGoodMeasureLawStep` (FirstPass/S2f.lean) from the two open parts. -/
 theorem coneClosureGoodMeasureLawStep_of_parts (hpole : FrozenGreenDiscPole) (hc : ConeCertificateNullHullStep)
     (hl : ConeLeastSuperNullHullStep) : ConeClosureGoodMeasureLawStep :=
   coneClosureGoodMeasureLawStep_of_badNullHull hpole (coneBadNullHull_of_parts hc hl)
 
-/-- The moment code is Giry-measurable for continuous test functions (fp-S2h; the measurability of `ν ↦ ∫ φ dν`
+/-- The moment code is Giry-measurable for continuous test functions (the measurability of `ν ↦ ∫ φ dν`
 is `measurable_integral_measure_real`, FirstPass/S2h/MeasurableIntegral.lean). -/
 theorem measurable_localCode {φs : ℕ → ℂ → ℝ} (hcont : ∀ k, Continuous (φs k)) :
     Measurable (localCode φs) :=
   Measurable.of_eval fun k => measurable_integral_measure_real (hcont k).measurable
 
-/-- Code bridge against a law (fp-S2h): if the code law of `μ` gives the code set `B` null mass, and the certificate
+/-- Code bridge against a law: if the code law of `μ` gives the code set `B` null mass, and the certificate
 measures with finite mass have codes in `B`, then the certificate measures have a measurable null hull. No measurability
 of `B` is needed: `toMeasurable` gives the measurable superset with the same outer mass. -/
 theorem nullHull_of_code_law {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (μ : Ω → Measure ℂ) {X : Type}
@@ -136,25 +133,21 @@ theorem nullHull_of_code_law {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (
 field lies in this class almost surely, `IsLQGLimit.isLocallyFiniteMeasure`). -/
 def LocFinMeasure (ν : Measure ℂ) : Prop := ∀ n : ℕ, ν (closedBall (0 : ℂ) n) < ⊤
 
-/-- Admissible test family of the certificate code: each `φs k` is continuous and nonnegative (the restricted moments of
-CHATGPT (12) are suprema of nonnegative moments; signed tests are recovered by linearity), with compact support in `B(0,1)`. -/
+/-- Admissible test family of the certificate code: each `φs k` is continuous and nonnegative (the restricted moments are
+suprema of nonnegative moments; signed tests are recovered by linearity), with compact support in `B(0,1)`. -/
 def CertTestFamily (φs : ℕ → ℂ → ℝ) : Prop :=
   ∀ k, Continuous (φs k) ∧ HasCompactSupport (φs k) ∧ tsupport (φs k) ⊆ Metric.ball 0 1 ∧ ∀ x, 0 ≤ φs k x
 
-/-- **OPEN (NEW; z1, fp-S2h).** The certificate code set for the family `φs`: an analytic set `B` of moment codes such
+/-- **OPEN (NEW).** The certificate code set for the family `φs`: an analytic set `B` of moment codes such
 that, for every locally finite measure `ν`, having a rational plateau pair of certificates is equivalent to the moment code
-`localCode φs ν` lying in `B`. Repaired in round 6 (the earlier form quantified over all `ν` of finite mass on `B̄_{3/4}`
-with an arbitrary `φs`, which fails for `φs = 0`; the family must also carry the cutoff coordinates of CHATGPT (12), and
-the iff needs local finiteness). The family is chosen in `CertCodeNullStep`. Written argument:
-notes/fp-gaps/CHATGPT-cone-good-set.md Sections 1-3 (countable tests, restricted moments (12), the Borel relation of
-Section 3, analytic projection). Not proved. -/
+`localCode φs ν` lying in `B`. The earlier form quantified over all `ν` of finite mass on `B̄_{3/4}`
+with an arbitrary `φs`, which fails for `φs = 0`; the family must also carry the cutoff coordinates, and the iff needs local finiteness. The family is chosen in `CertCodeNullStep` (countable tests, restricted moments, Borel relation, analytic projection). Not proved. -/
 def CertCodeExactStep (φs : ℕ → ℂ → ℝ) (B : Set (ℕ → ℝ)) : Prop :=
   AnalyticSet B ∧ ∀ ν : Measure ℂ, LocFinMeasure ν → (HasRatPlateauCert ν ↔ localCode φs ν ∈ B)
 
-/-- **OPEN (NEW; z1, fp-S2h).** The log-GFF zero law for the code set: for every whole-plane log field `h^ℂ − γ log|·|`
+/-- **OPEN (NEW).** The log-GFF zero law for the code set: for every whole-plane log field `h^ℂ − γ log|·|`
 (`IsWholePlaneGFF`, `IsLQGMeasureOfField P γ γ`), the code law of its LQG measure gives the code set `B` mass zero.
-Written argument: notes/fp-gaps/CHATGPT-cone-good-set.md Section 5 (plateau radii countable (37), Tonelli (39), scaling
-(41)-(44), zero law (45)) with Transfer.lean:82 (1/2-plateau from a certificate pair, which needs the HB Lemma 3.5
+(plateau radii countable, Tonelli, scaling, zero law) with Transfer.lean:82 (1/2-plateau from a certificate pair, which needs the HB Lemma 3.5
 compatibility `ClusterCompatibilityStmt`, `harmonic-balls-lqg/HarmonicBalls/Draft/Section3.lean:119`, and the Radon
 property of the LQG measure). The zero law still needs the measurability of the plateau event on `Ω × ℝ`
 (PlateauZero.lean:95 hypothesis `hmeas`) and the scale covariance of the log-GFF (hypothesis `hscale`). Not proved. -/
@@ -163,13 +156,13 @@ def LogCertCodeNullStep (φs : ℕ → ℂ → ℝ) (B : Set (ℕ → ℝ)) : Pr
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsProbabilityMeasure P → IsWholePlaneGFF P hC hcirc →
     IsLQGMeasureOfField P γ γ hcirc μ → (P.map fun ω => localCode φs (μ ω)) B = 0
 
-/-- **OPEN (NEW; z1, fp-S2h): the certificate code step.** Some admissible test family `φs` and some set `B` satisfy the
+/-- **OPEN (NEW): the certificate code step.** Some admissible test family `φs` and some set `B` satisfy the
 exact code relation `CertCodeExactStep φs B` (analytic `B`, iff for locally finite measures) and the log-GFF zero law
 `LogCertCodeNullStep φs B`. This is the single open input of the certificate null hull. Not proved. -/
 def CertCodeNullStep : Prop :=
   ∃ (φs : ℕ → ℂ → ℝ) (B : Set (ℕ → ℝ)), CertTestFamily φs ∧ CertCodeExactStep φs B ∧ LogCertCodeNullStep φs B
 
-/-- **Cone certificate null hull from its steps (fp-S2h).** The certificate part of the bad set has a measurable null
+/-- **Cone certificate null hull from its steps.** The certificate part of the bad set has a measurable null
 hull for every cone field, given the frozen local-law equality, the frozen measurability of test integrals and the
 certificate code step `CertCodeNullStep` (NEW). The infinite-mass part is handled by the Radon property of `IsLQGMeasure`
 (`IsLQGLimit.isLocallyFiniteMeasure`), which makes almost every LQG measure locally finite. -/
@@ -214,13 +207,12 @@ theorem coneCertificateNullHull_of_steps (hlaw : FrozenConeLogLocalCodeLaw)
   · exact hNs (Or.inl ⟨hν, hK⟩)
   · exact hNs (Or.inr hK)
 
-/-! ## The least-supersolution null hull (fp-S2h, round 3): proved from the volume-growth input -/
+/-! ## The least-supersolution null hull: proved from the volume-growth input -/
 
-/-- **Proved (fp-S2h, z1).** The least-supersolution part of the bad set has a measurable null hull, namely the
+/-- **Proved.** The least-supersolution part of the bad set has a measurable null hull, namely the
 complement of `lsoClass γ` (the measures with finite mass on `B̄_{7/8}` and countably many two-sided dyadic bounds).
 Inputs: `VolumeGrowthStmt` (Draft, Lemma 2.7) for the cone measure, and the frozen deterministic input
-`LeastSupersolutionMemOfVolumeGrowthStmt` (HB Appendix A, Lemma A.1). Written argument:
-notes/fp-gaps/CHATGPT-cone-leastsuper-null-hull.md, Sections 2-7. Lemmas: FirstPass/S2h/LeastSuper.lean. -/
+`LeastSupersolutionMemOfVolumeGrowthStmt` (HB Appendix A, Lemma A.1). Lemmas: FirstPass/S2h/LeastSuper.lean. -/
 theorem coneLeastSuperNullHull_proved (hV : VolumeGrowthStmt) (hL : LeastSupersolutionMemOfVolumeGrowthStmt) :
     ConeLeastSuperNullHullStep := by
   intro γ hγ hγ2 Ω _ P hC hcirc μ hcone
@@ -229,21 +221,21 @@ theorem coneLeastSuperNullHull_proved (hV : VolumeGrowthStmt) (hL : LeastSuperso
     exact hν (lsoClass_leastSuperOK hL hγ2 hmem)
   · exact ae_iff.1 (ae_mem_lsoClass hV hγ hγ2 Ω P hC hcirc μ hcone)
 
-/-- **Reduction (fp-S2h, z1).** `ConeBadNullHullStep` (FirstPass/S2g/Family.lean) from the certificate part, taken as
+/-- **Reduction.** `ConeBadNullHullStep` (FirstPass/S2g/Family.lean) from the certificate part, taken as
 the explicit open hypothesis `hc` (`ConeCertificateNullHullStep`, NEW, still open), and the proved
 least-supersolution part. -/
 theorem coneBadNullHull_proved (hc : ConeCertificateNullHullStep) (hV : VolumeGrowthStmt)
     (hL : LeastSupersolutionMemOfVolumeGrowthStmt) : ConeBadNullHullStep :=
   coneBadNullHull_of_parts hc (coneLeastSuperNullHull_proved hV hL)
 
-/-- **Reduction (fp-S2h, z1).** `ConeClosureGoodMeasureLawStep` (FirstPass/S2f.lean) from the same inputs as
+/-- **Reduction.** `ConeClosureGoodMeasureLawStep` (FirstPass/S2f.lean) from the same inputs as
 `coneBadNullHull_proved`, with the frozen pole input `FrozenGreenDiscPole` (FirstPass/Frozen/S2g.lean). -/
 theorem coneClosureGoodMeasureLaw_proved (hpole : FrozenGreenDiscPole) (hc : ConeCertificateNullHullStep)
     (hV : VolumeGrowthStmt) (hL : LeastSupersolutionMemOfVolumeGrowthStmt) :
     ConeClosureGoodMeasureLawStep :=
   coneClosureGoodMeasureLawStep_of_parts hpole hc (coneLeastSuperNullHull_proved hV hL)
 
-/-! ### The certificate code is admissible and exact (fp-S2h, z1) -/
+/-! ### The certificate code is admissible and exact -/
 
 /-- The test family of the certificate code is admissible: each coordinate is continuous, nonnegative, with compact
 support in `B(0,1)` (`D k` is supported in `B_{3/4}`, and the cutoffs are continuous and nonnegative). -/
@@ -260,7 +252,7 @@ theorem certTestFamily_certPhi {D : ℕ → ℂ → ℝ} (hD : ∀ k, D k ∈ no
       fun x => mul_nonneg (hk.2 x) (cutoffBall_nonneg _ _ x)⟩
     exact tsupport_mul_subset_left.trans (hk.1.2.2.trans (ball_subset_ball (by norm_num)))
 
-/-- **The certificate code exists (fp-S2h, z1).** Under the frozen pole continuity `FrozenGreenDiscPole`, the family
+/-- **The certificate code exists.** Under the frozen pole continuity `FrozenGreenDiscPole`, the family
 `certPhi D U` and the analytic set `B` of the relation witnesses satisfy `CertCodeExactStep`: the forward half from
 `localCode_mem_of_plateau`, the backward half from `certSuper_of_certRel` (with `B` the set of `analyticSet_certCodes`). -/
 theorem certCodeExact_exists (hpole : FrozenGreenDiscPole) :
@@ -287,9 +279,9 @@ theorem certCodeExact_exists (hpole : FrozenGreenDiscPole) :
       ⟨extW w', certSuper_of_certRel hpole (lt_trans hp hpq) hz hzd hb hbd hopen hne hreg hD hD0 hDmem hdense
       (m := localCode (certPhi D U) ν) (idx := certIdx) (fun k J n => localCode_certIdx D U ν k J n) hw'⟩⟩
 
-/-! ### Reduction to the log-GFF zero law (fp-S2h, z1) -/
+/-! ### Reduction to the log-GFF zero law -/
 
-/-- **Certificate null step from the zero law (fp-S2h, z1).** The exact code pair of `certCodeExact_exists` is admissible,
+/-- **Certificate null step from the zero law.** The exact code pair of `certCodeExact_exists` is admissible,
 so `CertCodeNullStep` follows from the log-GFF zero law `LogCertCodeNullStep` for every exact code pair. -/
 theorem certCodeNullStep_of_log (hpole : FrozenGreenDiscPole)
     (hlog : ∀ (φs : ℕ → ℂ → ℝ) (B : Set (ℕ → ℝ)), CertTestFamily φs → CertCodeExactStep φs B →
@@ -297,15 +289,15 @@ theorem certCodeNullStep_of_log (hpole : FrozenGreenDiscPole)
   obtain ⟨φs, B, hT, hE⟩ := certCodeExact_exists hpole
   exact ⟨φs, B, hT, hE, hlog φs B hT hE⟩
 
-/-- **Certificate null hull from the zero law (fp-S2h, z1).** -/
+/-- **Certificate null hull from the zero law.** -/
 theorem coneCertificateNullHull_of_log (hpole : FrozenGreenDiscPole) (hlaw : FrozenConeLogLocalCodeLaw)
     (hmeasF : FrozenLQGTestIntegralMeasurable)
     (hlog : ∀ (φs : ℕ → ℂ → ℝ) (B : Set (ℕ → ℝ)), CertTestFamily φs → CertCodeExactStep φs B →
       LogCertCodeNullStep φs B) : ConeCertificateNullHullStep :=
   coneCertificateNullHull_of_steps hlaw hmeasF (certCodeNullStep_of_log hpole hlog)
 
-/-- **`ConeBadNullHullStep` from the zero law (fp-S2h, z1).** The remaining open input is the log-GFF zero law for
-every exact code pair (`LogCertCodeNullStep`, CHATGPT Section 5); everything else is proved or frozen. -/
+/-- **`ConeBadNullHullStep` from the zero law.** The remaining open input is the log-GFF zero law for
+every exact code pair (`LogCertCodeNullStep`); everything else is proved or frozen. -/
 theorem coneBadNullHull_of_log (hpole : FrozenGreenDiscPole) (hlaw : FrozenConeLogLocalCodeLaw)
     (hmeasF : FrozenLQGTestIntegralMeasurable) (hV : VolumeGrowthStmt)
     (hL : LeastSupersolutionMemOfVolumeGrowthStmt)
@@ -313,7 +305,7 @@ theorem coneBadNullHull_of_log (hpole : FrozenGreenDiscPole) (hlaw : FrozenConeL
       LogCertCodeNullStep φs B) : ConeBadNullHullStep :=
   coneBadNullHull_proved (coneCertificateNullHull_of_log hpole hlaw hmeasF hlog) hV hL
 
-/-- **`ConeClosureGoodMeasureLawStep` from the zero law (fp-S2h, z1).** -/
+/-- **`ConeClosureGoodMeasureLawStep` from the zero law.** -/
 theorem coneClosureGoodMeasureLaw_of_log (hpole : FrozenGreenDiscPole) (hlaw : FrozenConeLogLocalCodeLaw)
     (hmeasF : FrozenLQGTestIntegralMeasurable) (hV : VolumeGrowthStmt)
     (hL : LeastSupersolutionMemOfVolumeGrowthStmt)

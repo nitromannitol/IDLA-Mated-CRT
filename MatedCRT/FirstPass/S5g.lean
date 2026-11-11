@@ -5,11 +5,11 @@ import MatedCRT.Proofs.Sec5.LLowerBound.Mass
 import MatedCRT.Proofs.Measurability.EnvSigmaCore
 
 /-!
-# Uniform positive mass of the stopped targets (Proposition 5.1, correction [C21]; fp-S5g, z8)
+# Uniform positive mass of the stopped targets (Proposition 5.1; correction [C21])
 
 Written source: `paper/idla_mated_crt-corrected.tex`, proof of Proposition 5.1, lines 2368-2372 (`% CORRECTION [C21]`):
 "The full support of `μ_h` and a finite cover of the possible centers give a uniform positive random lower bound for the
-masses of these smaller balls." Referee check: `notes/fp-gaps/CHATGPT-idla-C20-C21-referee.md`.
+masses of these smaller balls."
 
 `stoppedTargetMass_tendsToOne` is the uniform mass bound of the stopped clause: there is a positive `envSigma`-measurable
 random level `mr` such that, with probability tending to one on `{t < T_ρ}` (the cluster exit time), `ε^{1/4} ≤ mr` and every

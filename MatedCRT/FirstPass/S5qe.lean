@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.Closure.Section3
 import MatedCRT.FirstPass.S3i.LensClosed
 
 /-!
-# Proposition 5.1 with the certified reference model without its frozen truncated-laws conjunct (fp-S5-certified-core, z5)
+# Proposition 5.1 with the certified reference model without its frozen truncated-laws conjunct
 
 `CertifiedReferenceModel ν 𝒮` (`FirstPass/SLERef/Certified.lean:54`) has eighteen conjuncts; conjunct 17 is the frozen
 Prop `FrozenTruncatedQuenchedLawsFixedTime 𝒮` (line 71). The chain of Proposition 5.1 (`closed_5_1_canon_noCell_derived_closed`,
@@ -173,7 +173,7 @@ theorem closed_5_1_canon_noCell_core {𝒮 : SpaceFillingSLEModel} (ν : ℝ →
     (hGBC : FrozenGreenBallCentre) (hconf : FrozenHBInitialConfinement)
     (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
     (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion)
-    -- TRUE steps (chat 180 §3)
+    -- TRUE steps
     (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
     -- External input
     (hscale : QuantumConeScalingInput)

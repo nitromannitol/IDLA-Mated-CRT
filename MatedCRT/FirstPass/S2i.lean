@@ -8,6 +8,6 @@ import MatedCRT.FirstPass.S2i.CanonicalFactor
 import MatedCRT.FirstPass.S2i.ContinuousDecoder
 import MatedCRT.FirstPass.S2i.GlobalFactor
 
-/-! # FirstPass S2i (z2): canonical cone factorization and the global family factor (fp-S2i-cone-canonical-global-factor)
+/-! # FirstPass S2i: canonical cone factorization and the global family factor
 
 Aggregates the modules of MatedCRT/FirstPass/S2i/. coneCanonicalFactor_proved (S2i/CanonicalFactor.lean) proves ConeCanonicalFactorStep (FirstPass/S2g/Canonical.lean); coneGlobalFamilyFactor_proved (S2i/GlobalFactor.lean) proves ConeGlobalFamilyFactorStep (FirstPass/S2g/ScaleInvariance.lean). Externals: FirstPass/Frozen/S2i.lean. -/

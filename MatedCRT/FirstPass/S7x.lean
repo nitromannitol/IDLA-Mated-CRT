@@ -3,9 +3,9 @@ import MatedCRT.Proofs.Sec7.OdometerBoundMass.Corrected
 import MatedCRT.Steps.Sec7.CrudeUpperBound
 
 /-!
-# Lemma 7.4 in the positive-support form, with one event in `t` (fp-S7x-7-4-support)
+# Lemma 7.4 in the positive-support form, with one event in `t`
 
-Operator audit (`notes/fp-gaps/CHATGPT-idla-7-8-audit-PRO.md`, section "The neighboring Lemma 7.4" and item 4 of the
+Operator audit (, section "The neighboring Lemma 7.4" and item 4 of the
 minimal correction list): the printed Lemma 7.4 starts at `a ∈ D_ε(t/ε) \ {0}`, the unstopped sandpile cluster, while
 the stopped odometer `u^ε_t` vanishes at far points of that cluster. The correct starting set and path set are the
 positive stopped support `Λ^ε_t = {u^ε_t > 0}`, which is `matedDiscreteCluster` (MatedCRT/Defs/Sandpile.lean:87).

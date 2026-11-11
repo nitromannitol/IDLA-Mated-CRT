@@ -8,7 +8,7 @@ import Mathlib.Topology.Order.OrderClosed
 /-!
 # FirstPass S5l: the everywhere-positive measurable floor constant (Prop 5.1, Part I §5)
 
-Generic form of §5 of the floor argument (`notes/fp-gaps/CHATGPT-z5-floor.md`, §5, equations (8), (9), (10), (11), (13)).
+Generic form of the floor argument.
 Let `What : Ω → ℂ → ℝ` be the continuum surplus `Ŵ(ω, ·)` and `G : ℂ → ℝ` the Green function `G_{B_ρ}(0, ·)`.
 
 * `floorPhi` is the clamped function `φ_ω` of (8);

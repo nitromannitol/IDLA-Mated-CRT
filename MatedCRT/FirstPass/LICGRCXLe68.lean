@@ -1,20 +1,19 @@
 import MatedCRT.FirstPass.LICGRCX68
 
 /-!
-# The counting one-test order input under the constant order `C ≤ CG` (lead li, round 78, request 80a)
+# The counting one-test order input under the constant order `C ≤ CG`
 
-**RETIRED (route wrong; operator note 19:56 UTC, Codex Q4 in notes/fp-gaps/CODEX-idla-hOne-residuals-sol-20261110.md):**
+**RETIRED (route wrong):**
 its call-site witness `WindowPrevLeCGStmt` is false (`CG = 1` forces `C ≥ 4(1 - log 2) > 1`). Successor interface:
 `LICGRCY68.ShellOneTestOrderAeCGRCYStmt` (split constants, `C` free).
 
 `ShellOneTestOrderAeCGRCXLeStmt` is `ShellOneTestOrderAeCGRCXStmt` (LICGRCX68.lean) with one extra premise `C ≤ CG`
 right after `WindowPrevAt γ (shortExp ζ) (shellC0 CG) C C'`. Nothing else changes.
 
-Why (round 78 of lead li): the `_g2` producer (z5, CGRCXG2Core68.lean) needs `C ≤ CG` at its `hCCG` binder. The pointwise
+Why: the `_g2` producer (CGRCXG2Core68.lean) needs `C ≤ CG` at its `hCCG` binder. The pointwise
 residual `ShellCGResG2CLe` asks it for every window constant `C` admitted by the premises, but `WindowPrevAt` is
-monotone in `C` (q3's trace, reports/q3.md 19:30 UTC), so that residual cannot hold for all such `C`. The constant order
-belongs at the call site of the chain, where `C` is chosen: there it is the existential input of request 80a (window
-prevalence with a constant `C ≤ CG`). This file only states the weaker interface; producer and chain variants are tasks.
+monotone in `C`, so that residual cannot hold for all such `C`. The constant order
+belongs at the call site of the chain, where `C` is chosen: there it is the existential input (window prevalence with a constant `C ≤ CG`). This file only states the weaker interface; producer and chain variants are not part of this file.
 -/
 
 open HarmonicBalls (annulus)
@@ -32,7 +31,7 @@ open MatedCRT.Lemma68ConstOrder
 open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68WalkBridge MatedCRT.Lemma68ChainAe
 open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 
-/-- **The counting one-test order input under `C ≤ CG` (lead li, request 80a).** Copy of
+/-- **The counting one-test order input under `C ≤ CG`.** Copy of
 `LICGRCX68.ShellOneTestOrderAeCGRCXStmt` with the extra premise `C ≤ CG` after `WindowPrevAt`. -/
 def ShellOneTestOrderAeCGRCXLeStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE β : ℝ,

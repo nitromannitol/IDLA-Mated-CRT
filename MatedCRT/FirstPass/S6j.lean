@@ -3,14 +3,14 @@ import MatedCRT.Proofs.IDLA.Measurable
 import MatedCRT.FirstPass.S4S6c.StrongMarkovState
 
 /-!
-# FirstPass S6j: the conditional step of LEMMA68 for simple random walk (task fp-S6j-6-8-conditional-step)
+# FirstPass S6j: the conditional step of LEMMA68 for simple random walk
 
-Source: `notes/fp-gaps/CHATGPT-lemma68-open-parts.md`, lines 836-860 (C15): at an almost surely finite stopping time `T`
+Source: , lines 836-860 (C15): at an almost surely finite stopping time `T`
 of the walk, the conditional law of the future given `F_T` is the walk started at `X_T` (discrete strong Markov property,
 Norris, *Markov Chains*, Theorem 1.4.2); the tower property then gives the conditional test probability given `F_T`.
 
 The walk is `srwLaw m a` (S4S6c/StrongMarkovState.lean uses `srwLaw` and `pathHist`/`pathShift` of WalkPotential).
-This file turns the integrated form of the strong Markov property `srwLaw_strong_markov_state` (q2) into the
+This file turns the integrated form of the strong Markov property `srwLaw_strong_markov_state` into the
 conditional-expectation form that `C17_le_pow` (S6e/C17Induction.lean) consumes:
 
 * `stoppedSigma τ hτ` is the σ-algebra `F_τ` of a walk random time `τ` (`IsWalkRandomTime`);
@@ -183,7 +183,7 @@ lemma setIntegral_atRandomTime_eq_tsum (m : ℤ → ℤ → ℕ) (a : ℤ) (G : 
       exact hx.2 (Set.mem_iUnion.2 ⟨n, hx.1, hn.symm⟩)
     simp [atRandomTime, htop]
 
-/-- **Strong Markov property at a walk random time, conditional form (C15 of LEMMA68, fp-S6j).**
+/-- **Strong Markov property at a walk random time, conditional form.**
 Under `srwLaw m a`, `E[1_B | F_τ] = φ(X_τ)` almost surely, where `B = walkTestEvent τ G` (the walk shifted at `τ`
 lies in `G (X_τ)`) and `φ(y) = P^y(G y)` (`atRandomTime`). Discrete strong Markov property: Norris, *Markov Chains*,
 Thm 1.4.2, in the form `srwLaw_strong_markov_state` (S4S6c/StrongMarkovState.lean). -/
@@ -249,14 +249,14 @@ lemma measurableSet_testEvent (W : ℤ → Set ℤ) (A : Set ℤ) (y : ℤ) : Me
       (measurable_pi_apply j) MeasurableSet.of_discrete
   · exact (measurable_pi_apply i) MeasurableSet.of_discrete
 
-/-- **The conditional step of LEMMA68 for the concrete test events (C15, fp-S6j step 2).** For the random times `τ j`
+/-- **The conditional step of LEMMA68 for the concrete test events (C15).** For the random times `τ j`
 (the stopping times `T_j` of C3) and the test events `G_j = walkTestEvent (τ j) (testEvent (W j) A)`, the conditional
 test probability given `F_{τ j}` is at least `qStar / (1 + log(1/R_j))²` on `H_j`, almost surely.
 
 Inputs:
 * `hpt` is the per-test bound `srwLaw_y (stayIn) ≤ 1 - q(R_j)` at the state `y = X_{τ j}`: the conclusion of
   `printed_test_bound` (S4S6c/PerTest68.lean:82, the quenched B18/C15 bound) with the test radius `r := R j x`; its
-  geometric hypotheses hold for `x ∈ H j` by the configuration (z8, S6h.lean), and are not repeated here.
+  geometric hypotheses hold for `x ∈ H j` by the configuration (S6h.lean), and are not repeated here.
 * `hfin` is the almost sure finiteness of `T_j` on `H_j`. The written argument (open-parts C15, "almost surely finite
   stopping time") states it but does not prove it; it is an input here (see the report).
 * `hR` are the radius bounds of C3, `hq0`, `hq1` the constant bounds (`qStar = 1/(288 C_d² K²)` of `printed_test_bound`). -/

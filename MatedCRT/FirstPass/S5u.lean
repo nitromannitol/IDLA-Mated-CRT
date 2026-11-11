@@ -8,7 +8,7 @@ import MatedCRT.FirstPass.Frozen.S5BG56
 
 /-!
 # Section 5, first pass: from the canonical Berestycki–Gwynne Lemma 5.6 to the IDLA Lemma 2.15
-(fp-S5-G2-canonical-and-2-7, z10)
+
 
 * `greenInterior_le_greenCellVertices` (Armitage–Gardiner domain monotonicity of the killed Green function): the walk
   killed on the interior vertex set `V^ε(D) \ V^ε(∂D)` has no more visits than the walk killed on `V^ε(D)`, since it

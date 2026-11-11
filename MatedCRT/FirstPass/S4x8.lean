@@ -4,10 +4,10 @@ import MatedCRT.FirstPass.S3g
 import MatedCRT.FirstPass.Closure.Section3
 
 /-!
-# Lemma 4.8, corrected, from the corrected Lemma 3.5 and the BG20 exit-time input (task fp-S4x-4-8-corrected-inputs)
+# Lemma 4.8, corrected, from the corrected Lemma 3.5 and the BG20 exit-time input
 
 `firstPass_4_8_corrected_of_closedInputs` is the counted form of Lemma 4.8 (`lemma:subsequential-properties`, corrected
-form `SubsequentialPropertiesCorrectedStmt`; chat 220, section on Lemma 4.8). It has the conclusion of
+form `SubsequentialPropertiesCorrectedStmt`). It has the conclusion of
 `firstPass_4_8_corrected_of_inputs` (FirstPass/S4x.lean) and the following binders:
 
 * the exit-time input `ExitTimeUpperBoundStmt 𝒮` is replaced by the exact mass-restricted BG20 statement `h51 : BG20Prop51 𝒮`

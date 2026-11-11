@@ -11,9 +11,7 @@ paper (`Steps/Sec2/ConeHarmonicBallsUpToFixedTime.lean:109`). Its only use in th
 `halfBallTest_iff_lt` is the containment `closure (Λ q) ⊆ B_{1/2}` for `0 < q < T`, which
 `ConeHalfBallClosureInsideStep` (`FirstPass/S2d.lean`, NEW, proved from EXTERNAL inputs) supplies directly.
 
-This file re-proves the first conjunct of `ConeFamilyAEMeasurableStep` with that closure input in place of strict growth.
-Written argument: `notes/fp-gaps/G-S2-measurable.md` Sections 4 (the endpoint identity `T = τ(μ)`) and the stopping
-time reduction; the Lean reduction is the one of `StoppingTime.lean`, with the hypotheses changed as stated. -/
+This file re-proves the first conjunct of `ConeFamilyAEMeasurableStep` with that closure input in place of strict growth, with the endpoint identity `T = τ(μ)` and the stopping time reduction; the Lean reduction is the one of `StoppingTime.lean`, with the hypotheses changed as stated. -/
 
 namespace MatedCRT
 
@@ -135,10 +133,10 @@ theorem aemeasurable_coneHalfBallPair_closureInside
     exact hcone.2.1.measurable_circle p.1 p.2 p.1.property
   exact hc.aemeasurable.prodMk hΛ
 
-/-- **OPEN (NEW, not proved, not frozen; q1).** Closure containment for the rescaled cone families: the statement
+/-- **OPEN (NEW; not proved; not frozen).** Closure containment for the rescaled cone families: the statement
 `ConeHalfBallClosureInsideStep` for the rescaled measures `b⁻¹ μ_h(R_b ·)`, which by `ConeLQGScalingStep` and
 `QuantumConeScalingInput` have the cone law. Its only use is the named hypothesis `hclR` of
-`firstPass_coneFamilyAEMeasurableStep_of_rescaledClosure`. Written argument: `notes/fp-gaps/G-S2-measurable.md` Section 5
+`firstPass_coneFamilyAEMeasurableStep_of_rescaledClosure`.
 (law transfer of the good event). The rescaled `IsConeField` needed to instantiate `ConeHalfBallClosureInsideStep`
 directly is not available: `IsQuantumCone` needs a rescaled pairing functional `hC'`, which the repository does not define. -/
 def ConeRescaledHalfBallClosureInsideStep : Prop :=
@@ -214,7 +212,7 @@ theorem aemeasurable_rescaledHalfBallPair_of_closureInside
   have hH := coneHarmonicBallFamilyOnScalingStep (μ ω) (Λ ω) _ b (T ω) hRω hb hω.2.1
   exact ⟨hω.1, hH, hω.2.2, hcl (T ω) _ hH hω.2.2⟩
 
-/-- **Conditional reduction (q1).** `ConeFamilyAEMeasurableStep` (Theorem 2.3 measurability) follows from the
+/-- **Conditional reduction.** `ConeFamilyAEMeasurableStep` (Theorem 2.3 measurability) follows from the
 volume-growth input `VolumeGrowthStmt`, cone scaling (`QuantumConeScalingInput`, `ConeLQGScalingStep`), the
 volume growth of the rescaled measures (`hvgood`, as in `coneFamilyAEMeasurableStep_of_rescaledVolumeGrowth`), the
 unscaled closure containment `ConeHalfBallClosureInsideStep` (`firstPass_closureInside`, `FirstPass/S2d.lean`) and the

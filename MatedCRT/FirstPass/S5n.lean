@@ -3,8 +3,8 @@ import Mathlib.MeasureTheory.Constructions.Polish.Basic
 /-!
 # The Borel graph theorem between standard Borel spaces
 
-General measure theory, not specific to the paper (task fp-S5n-graph-measurable, z1). It is the measurability input of the
-measurable decoder in Prop 5.1 (the floor), Step R4 of z10 (fp-S5k).
+General measure theory, not specific to the paper. It is the measurability input of the
+measurable decoder in Prop 5.1 (the floor).
 
 A function between standard Borel spaces with Borel graph is Borel (Kechris, *Classical Descriptive Set Theory*, Theorem 14.12).
 Proof (Kechris 14.12, from the Lusin–Souslin theorem Kechris 15.1): for a Borel set `B ⊆ Y`, `f⁻¹' B` is the image of the Borel

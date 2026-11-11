@@ -6,12 +6,11 @@ import MatedCRT.FirstPass.S4d.FixedTimeFinal
 import MatedCRT.FirstPass.S2g.HalfBallGate
 
 /-!
-# FIRST PASS, Proposition 4.2 (prop:div-sandpile-lower-bound): assembly with the cone family (q4)
+# FIRST PASS, Proposition 4.2 (prop:div-sandpile-lower-bound): assembly with the cone family
 
-Task fp-S4d-4-2-assembly. `firstPass_4_2` (FirstPass/S5c.lean, q3) assembles `firstPass_4_1` (Theorem 4.1), the cited
+`firstPass_4_2` (FirstPass/S5c.lean) assembles `firstPass_4_1` (Theorem 4.1), the cited
 inputs and `divSandpileLowerBound_final` (Proofs/Sec4/DivSandpileLowerBound/Final.lean). Its cone hypotheses enter only
-through the measurability step `ConeFamilyAEMeasurableStep`, which `coneFamilyAEMeasurable_proved` (FirstPass/S2j.lean,
-q4, commit 7b51af3) discharges from explicit cone hypotheses.
+through the measurability step `ConeFamilyAEMeasurableStep`, which `coneFamilyAEMeasurable_proved` (FirstPass/S2j.lean) discharges from explicit cone hypotheses.
 
 * `firstPass_4_2_of_coneFamilyStep`: the assembly with the single hypothesis `hfam : ConeFamilyAEMeasurableStep`.
 * `firstPass_4_2_assembled`: the same conclusion, with `hfam` discharged by `coneFamilyAEMeasurable_proved`.
@@ -19,8 +18,7 @@ q4, commit 7b51af3) discharges from explicit cone hypotheses.
 Open NEW inputs, kept as explicit hypotheses (not proved here):
 * `hgap : HarmonicBallStrictObstacleGapStep 𝒮` (Proofs/Sec4/DivSandpileLowerBound/Final.lean:32), the strict obstacle gap.
   Its printed proof, `eq:strictly-above-in-interior` (paper/idla_mated_crt-corrected.tex, label at line 1913, "there exists
-  s > 0 by continuity"), does not establish strict positivity on the interior of the closure of the positivity set (audit
-  E-x3-1, `StrictGapCounterexample.lean`); the missing ingredient is (2) of audit E-c2-5. With ChatGPT (operator note 23:56).
+  s > 0 by continuity"), does not establish strict positivity on the interior of the closure of the positivity set (`StrictGapCounterexample.lean`); the missing ingredient is item (2) of the gap audit.
 * `hcan : ConeCanonicalHalfBallStep` (FirstPass/S2g.lean:82) and `hcl : ConeHalfBallClosureInsideStep`
   (Proofs/Sec2/ConeFamilyMeasurable/StoppedClosure.lean:18, documented there as not stated in the paper); they are used
   only by `firstPass_4_2_assembled`.
@@ -30,7 +28,7 @@ Both theorems are conditional on `hgap`. The full hypothesis lists are in the do
 
 namespace MatedCRT
 
-/-- **Proposition 4.2 (first pass), from the cone family step (q4).** Hypotheses, in order:
+/-- **Proposition 4.2 (first pass), from the cone family step.** Hypotheses, in order:
 * cited inputs (as in `firstPass_4_2`, FirstPass/S5c.lean): `hm`, `h210`, `h34`, `h214`, `h28`, `h35`, `h218`, `h27`,
   `hH`, `hcone`, `h23`, `h24`, `h33`;
 * the open NEW input `hgap : HarmonicBallStrictObstacleGapStep 𝒮` (Final.lean:32);
@@ -52,9 +50,9 @@ theorem firstPass_4_2_of_coneFamilyStep {𝒮 : SpaceFillingSLEModel}
     DivSandpileLowerBoundStmt 𝒮 :=
   divSandpileLowerBound_final 𝒮 (firstPass_4_1 hm h210 h34 h214 h28 h35 h218 h27 hH hcone) h23 h24 h27 h28 h33 hfam hgap
 
-/-- **Proposition 4.2 (first pass), from the two strict-gap steps (q4, fp-S4d-4-2-assembly).** Same conclusion as
+/-- **Proposition 4.2 (first pass), from the two strict-gap steps.** Same conclusion as
 `firstPass_4_2_of_coneFamilyStep`, with the open NEW input `hgap` replaced by its two named components
-(`FirstPass/S4d/StrictGapReduction.lean`, ChatGPT Section 5): `hdet` (deterministic comparison, Section 2) and `hnj`
+ (`FirstPass/S4d/StrictGapReduction.lean`): `hdet` (deterministic comparison, Section 2) and `hnj`
 (fixed-time union, Sections 4-5). Hypotheses, in order: the cited inputs as in `firstPass_4_2_of_coneFamilyStep`;
 the open NEW inputs `hdet`, `hnj`; the cone family measurability `hfam`. -/
 theorem firstPass_4_2_of_strictGapSteps {𝒮 : SpaceFillingSLEModel}
@@ -71,7 +69,7 @@ theorem firstPass_4_2_of_strictGapSteps {𝒮 : SpaceFillingSLEModel}
   firstPass_4_2_of_coneFamilyStep hm h210 h34 h214 h28 h35 h218 h27 hH hcone h23 h24 h33
     (harmonicBallStrictObstacleGapStep_of_steps 𝒮 hdet hnj) hfam
 
-/-- **Proposition 4.2 (first pass), assembled (q4, fp-S4d-4-2-assembly).** Same conclusion as
+/-- **Proposition 4.2 (first pass), assembled.** Same conclusion as
 `firstPass_4_2_of_coneFamilyStep`, with `hfam` discharged by `coneFamilyAEMeasurable_proved` (FirstPass/S2j.lean:28).
 Hypotheses, in order:
 * cited inputs: as in `firstPass_4_2_of_coneFamilyStep`;
@@ -102,7 +100,7 @@ theorem firstPass_4_2_assembled {𝒮 : SpaceFillingSLEModel}
   firstPass_4_2_of_coneFamilyStep hm h210 h34 h214 h28 h35 h218 h27 hH hcone h23 h24 h33 hgap
     (coneFamilyAEMeasurable_proved hcan hcl h27 hE1 hE2 hscale h22)
 
-/-- **Proposition 4.2 (first pass), with the deterministic comparison discharged (q4, fp-S4d-4-2-assembly).** Same
+/-- **Proposition 4.2 (first pass), with the deterministic comparison discharged.** Same
 conclusion as `firstPass_4_2_of_strictGapSteps`, with `hdet` proved by `strictGapDeterministicComparison_of_frozen`
 (S4d/DeterministicComparison.lean) from the explicit potential-theoretic inputs `hG` (HB `GreenFunctionBallStmt`, Draft),
 `hpc` (`FrozenPunctureConnected`, Frozen/S4d.lean), `hsmp` (`FPStrongMinimumPrinciple`, Frozen/S5c.lean), `hwmp`
@@ -126,9 +124,9 @@ theorem firstPass_4_2_of_frozen_strictGap {𝒮 : SpaceFillingSLEModel}
   firstPass_4_2_of_strictGapSteps hm h210 h34 h214 h28 h35 h218 h27 hH hcone h23 h24 h33
     (strictGapDeterministicComparison_of_frozen hG hpc hsmp hwmp hpole) hnj hfam
 
-/-- **Proposition 4.2 (first pass), final assembly (q4, fp-S4d-4-2-assembly).** The conclusion `DivSandpileLowerBoundStmt 𝒮`
+/-- **Proposition 4.2 (first pass), final assembly.** The conclusion `DivSandpileLowerBoundStmt 𝒮`
 (Draft Proposition 4.2, `Draft/Section4.lean:50`) with every route-level input made explicit. The name `firstPass_4_2`
-is taken by FirstPass/S5c.lean (q3's conditional version, with `hgap`), so this is `firstPass_4_2_final`.
+is taken by FirstPass/S5c.lean (with `hgap`), so this is `firstPass_4_2_final`.
 Hypotheses, in order:
 * cited inputs, as in `firstPass_4_2_of_coneFamilyStep`: `hm`, `h210`, `h34`, `h214`, `h28`, `h35`, `h218`, `h27`, `hH`,
   `hcone`, `h23`, `h24`, `h33`;
@@ -136,7 +134,7 @@ Hypotheses, in order:
   `hG` (`HarmonicBalls.GreenFunctionBallStmt`, Draft), `hpc` (`FrozenPunctureConnected`, Frozen/S4d.lean),
   `hsmp` (`FPStrongMinimumPrinciple`, Frozen/S5c.lean), `hwmp` (`FrozenSuperharmonicMinimumPrinciple`, Frozen/S2g.lean),
   `hpole` (`FrozenGreenDiscPole`, Frozen/S2g.lean);
-* open NEW input `hnj : StrictGapFixedTimeUnionStep 𝒮` (fixed-time union, ChatGPT Sections 4-5; the measurability
+* open NEW input `hnj : StrictGapFixedTimeUnionStep 𝒮` (fixed-time union; the measurability
   input is not yet available, see S4d/StrictGapReduction.lean);
 * open NEW cone steps `hcan : ConeCanonicalHalfBallStep` (FirstPass/S2g.lean:82) and
   `hcl : ConeHalfBallClosureInsideStep` (Proofs/Sec2/ConeFamilyMeasurable/StoppedClosure.lean:18);
@@ -165,7 +163,7 @@ theorem firstPass_4_2_final {𝒮 : SpaceFillingSLEModel}
     (coneFamilyAEMeasurable_proved hcan hcl h27 hE1 hE2 hscale h22)
 
 
-/-- **Proposition 4.2 with the fixed-time union discharged (q4, fp-S4d-4-2-assembly).** The hypothesis `hnj` of
+/-- **Proposition 4.2 with the fixed-time union discharged.** The hypothesis `hnj` of
 `firstPass_4_2_final` is `strictGapFixedTimeUnion_of_steps` (S4d/FixedTimeUnion.lean), whose inputs are the cone scaling
 law `hScaleInv` (Lemma 2.6, `ConeScaleInvarianceStmt`), the explicit OPEN steps `hB2` (`ConeGlobalFamilyPairAEMeasurableStep`)
 and `hB2R` (`ConeRescaledPairAEMeasurableStep`), and the frozen positivity `hFCS : FrozenConeScalingLaw 𝒮`
@@ -191,7 +189,7 @@ theorem firstPass_4_2_of_scale_inputs {𝒮 : SpaceFillingSLEModel}
     (strictGapFixedTimeUnion_of_steps 𝒮 hScaleInv hB2 hB2R hFCS) hcan hcl hE1 hE2 hscale h22
 
 
-/-- **Proposition 4.2 with the fixed-time union from the dependencies (q4, round 9).** This supersedes
+/-- **Proposition 4.2 with the fixed-time union from the dependencies.** This supersedes
 `firstPass_4_2_of_scale_inputs`: the explicit measurability steps `hB2`, `hB2R` and the positivity input `hFCS` are no
 longer hypotheses. They are proved (`coneGlobalFamilyAEMeasurable_of_stopped`, `coneRescaledGlobalFamilyAEMeasurable_of_stopped`,
 S4d/GlobalMeasurable.lean and S4d/RescaledMeasurable.lean), and the positivity of the cone scale radii comes from `hscale`
@@ -220,8 +218,8 @@ theorem firstPass_4_2_of_fixed_time_steps {𝒮 : SpaceFillingSLEModel}
     hcan hcl hE1 hE2 hscale h22
 
 open _root_.HarmonicBalls in
-/-- **Prop 4.2 with the canonical half-ball gate discharged (q4, fp-S4d-4-2-assembly).** `ConeCanonicalHalfBallStep`
-is no longer a hypothesis: it is `coneCanonicalHalfBallStep_of_draft` (`FirstPass/S2g/HalfBallGate.lean`, q1), applied to
+/-- **Prop 4.2 with the canonical half-ball gate discharged.** `ConeCanonicalHalfBallStep`
+is no longer a hypothesis: it is `coneCanonicalHalfBallStep_of_draft` (`FirstPass/S2g/HalfBallGate.lean`), applied to
 its Draft statements and frozen inputs. The gate's minimum principle, Green ball and pole inputs are `hwmp`, `hG`, `hpole`.
 Still explicit: the closure step `hcl` (`ConeHalfBallClosureInsideStep`; route B, `coneHalfBallClosureInsideStep_corrected`,
 reduces it to the open `WholePlaneLQGModelStep` and `ConeWholePlaneFieldLawStep`), the scale invariance Lemma 2.6 `hScaleInv`,

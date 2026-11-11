@@ -19,13 +19,13 @@ import MatedCRT.FirstPass.S5e.SecondGreenStep
 import MatedCRT.FirstPass.S5d.FloorCellStep
 
 /-!
-# Proposition 5.1 (`firstPass_5_1`, task fp-S5d-5-1-stopped-repair)
+# Proposition 5.1 (`firstPass_5_1`)
 
 `IDLALowerBoundStmt` (Draft/Section5.lean:27) is assembled from:
 * the relaxed Lemma 5.2 (no origin or connectivity condition on the target; proved in the repository by
   `generalIDLALowerBoundRelaxed_of_volumeGrowth_cellSize` from Lemma 2.7 and Lemma 2.8);
 * Lemma 5.3 (`MeanValueInequalityStmt`) and Lemma 5.4 (`LLowerBoundStmt`), Draft statements used as hypotheses;
-* NEW steps that are not yet proved (referee notes/fp-gaps/CHATGPT-5-1-gaps-referee.md):
+* NEW steps that are not yet proved (referee):
   - `StrictStoppedOdometerPositivityStep` (referee §3.2-3.3, §5.2: the stopped odometer is strictly positive on `B⁻_σ(Λ_t)`
     w.h.p. on `{t < T}`). It gives `StrictClusterCompactContainmentStep` (G1c, referee §3 eq. (3.1); `S5d/ClusterFromOdometer.lean`),
     which gives `DiscreteClusterInnerBoundStep` with Lemma 2.8 (`S5d/ClusterInner.lean`);
@@ -58,7 +58,7 @@ theorem firstPass_5_1_of_steps (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrowth
       (stoppedFirstGreenStep_of_steps 𝒮 (stoppedFirstGreenInputsStep_of_floorCeiling 𝒮 (stoppedFloorStep_of_cellFloor hfl) hmax h218 h217 hμ hcell hlap)
         hcell hlap) hG2)
 
-/-- **Proposition 5.1 with the proved inputs plugged in (task fp-S5d, operator note 02:37 UTC).** Compared with
+/-- **Proposition 5.1 with the proved inputs plugged in.** Compared with
 `firstPass_5_1_of_steps`: `hμ` is `LQGMeasureField.lqgMeasureFieldMeasurableStep` (Proofs/Measurability/LQGMeasureField.lean:75),
 `hcell` is `adjacentCellsMeetAeStep` (Proofs/MatingOfTrees/AdjacentCells.lean:17), `hlap` is `firstPass_4_4_corrected`
 (FirstPass/S3S4.lean:42), `h217` is `firstPass_2_17 h27` (FirstPass/S1S2S8SA.lean:53); the cone-family input `hfam` is replaced by

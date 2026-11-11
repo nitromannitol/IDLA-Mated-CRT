@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.S4S6c.CellSize68
 import MatedCRT.FirstPass.S4S6c.BandInduction68
 
 /-!
-# Sphere-band start cells satisfy the cell-size hypothesis `hsm` (q3, task fp-S6g-6-8-sphere-band-cell)
+# Sphere-band start cells satisfy the cell-size hypothesis `hsm`
 
-Item 2 of q2's uniform Lemma 6.8 (`FirstPass/S4S6c/Uniform68*.lean`, reports/q2.md): a start cell `cell ε η b` whose
+Item 2 of the uniform Lemma 6.8 (`FirstPass/S4S6c/Uniform68*.lean`): a start cell `cell ε η b` whose
 closure meets the sphere `sphere c (4R/3)` (the sphere-band condition `hband` of `Uniform68Band` and `Uniform68Point`)
 satisfies the pairwise bound `hsm : ∀ u ∈ closure (cell ε η b), ∀ u' ∈ closure (cell ε η b), dist u u' ≤ d`.
 
@@ -63,7 +63,7 @@ theorem centre_add_radius_lt_of_band {P : ℤ → ℂ} {F : Set ℂ} {r d g R ρ
     linarith
   linarith
 
-/-- **`hsm` for a sphere-band start cell, from the band.** The form consumed by q2's `Uniform68Point`: the sphere-band
+/-- **`hsm` for a sphere-band start cell, from the band.** The form consumed by `Uniform68Point`: the sphere-band
 hypothesis `hband` about the centre `c` of a band vertex `v` gives `hsm` for the start cell `b`, with the cell-size
 hypothesis `hsm0` and the band geometry of `centre_add_radius_lt_of_band`. -/
 theorem sphere_band_hsm_of_band {ε ρ d R g r : ℝ} {η : ℝ → ℂ} {P : ℤ → ℂ} {F : Set ℂ} {c : ℂ} {b v : ℤ}

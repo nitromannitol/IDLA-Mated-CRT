@@ -17,7 +17,7 @@ Helper facts for the instantiation of the generic constant of `FirstPass/S5l.lea
   `floorBound_bound` shows `|α Ŵ(ω,x)| ≤ M(ω)` for every `x ∈ B̄_ρ` (density of `ℚ+iℚ` and continuity of `Ŵ(ω)` on `B̄_ρ`).
 
 The Green-function facts are proved from `HarmonicBalls.greenFunction_ball` (Harmonic-Balls-LQG). The only hypotheses of
-`floorConstantStep_proved` are the measurable obstacle version `StoppedFloorObstacleVersion` (§4, z10) and the strict
+`floorConstantStep_proved` are the measurable obstacle version `StoppedFloorObstacleVersion` (§4) and the strict
 obstacle gap `HarmonicBallStrictObstacleGapStep` ([C20]; proved as `firstPass_strictObstacleGap`, `S4S5b.lean:25`, under
 its frozen inputs). No new frozen statement is introduced here.
 -/

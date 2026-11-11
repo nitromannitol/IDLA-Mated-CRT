@@ -2,14 +2,14 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.ConeWholePlaneSteps
 import MatedCRT.Proofs.Field.WholePlaneExistence
 import MatedCRT.FirstPass.Frozen.S2m
 
-/-! # FIRST PASS S2m: the whole-plane LQG model exists (task fp-S2m-wholeplane-model-exists, z8)
+/-! # FIRST PASS S2m: the whole-plane LQG model exists
 
 `firstPass_wholePlaneLQGModel_of_existence` proves `WholePlaneLQGModelStep` (`ConeWholePlaneSteps.lean:57`): for every
 `γ ∈ (0,2)` there are a probability space, a whole-plane GFF and its `γ`-insertion LQG measure. The whole-plane GFF is
 the proved `MatedCRT.Field.wholePlaneGFF_exists` (`Proofs/Field/WholePlaneExistence.lean:46`); the LQG measure is the
 single frozen input `FrozenLQGMeasureExistenceInsertion` (`FirstPass/Frozen/S2m.lean`), applied on that space.
 
-Checked against the other frozen Props (operator note 02:03 UTC):
+Checked against the other frozen Props:
 * `FPWholePlaneLQGModel` (`FirstPass/Frozen/S4S5b.lean:34`) is by definition `WholePlaneLQGModelStep` itself, so it is the
   target frozen, not a route to it.
 * `FPWholePlaneLQGExistence` (`FirstPass/Frozen/S5S6S7.lean:17`) is `WholePlaneLQGExistenceStep`
@@ -20,7 +20,7 @@ namespace MatedCRT.FirstPass.S2m
 
 open MeasureTheory HarmonicBalls
 
-/-- **Derived: `WholePlaneLQGModelStep` (FIRST-PASS, fp-S2m).** From the frozen insertion-`γ` LQG existence
+/-- **Derived: `WholePlaneLQGModelStep` (FIRST-PASS).** From the frozen insertion-`γ` LQG existence
 `FrozenLQGMeasureExistenceInsertion` and the proved whole-plane GFF existence, for each `γ ∈ (0,2)` there are a probability
 space `(Ω, P)`, a whole-plane GFF `(hC, hcirc)` and a random measure `μ` with `IsLQGMeasureOfField P γ γ hcirc μ`. -/
 theorem firstPass_wholePlaneLQGModel_of_existence

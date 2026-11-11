@@ -4,10 +4,10 @@ import MatedCRT.FirstPass.S6e.GeometryId
 import MatedCRT.FirstPass.S6e.Admissible
 
 /-!
-# FIRST PASS: Lemma 6.8 reduction, steps 2 and 3 (task fp-S6k-6-8-reduction-start-sparsity, z12)
+# FIRST PASS: Lemma 6.8 reduction, steps 2 and 3
 
 Relation of the printed Lemma 6.8 to `UniformConstantOrderLowerBoundStmt` (`FirstPass/S6d.lean:95`). Written source:
-`notes/fp-gaps/CHATGPT-z9-6-8-bridge.md` lines 498-512 (steps 1-4) and the reduction paragraph after the printed
+ lines 498-512 (steps 1-4) and the reduction paragraph after the printed
 Lemma 6.8 (corrected paper `lemma:constant-order-lower-bound`, proof, lines 2798-2810: the trace of the walk from
 `a ∈ cl(Θ)` contains the trace from a boundary site `b ∈ V(∂(Θ̄ + B_{r/2}))` by the strong Markov property and the
 cell-size estimate `lemma:cell-size-estimate`).
@@ -250,7 +250,7 @@ theorem start_frontier_before_exit {η : ℝ → ℂ} {m : ℤ → ℤ → ℕ} 
   · exact Nat.find_min hP hj ⟨lt_trans (ENat.natCast_lt_natCast.2 hj) (Nat.find_spec hP).1, hmem⟩
   · exact clause12_of_frontier hη hε hr (Nat.find_spec hP).2
 
-/-! ## Admissibility of a middle-boundary start (operator note 04:27 UTC)
+/-! ## Admissibility of a middle-boundary start
 
 `killed_eq_W` (equality `killed ε η Θ F0 r = W \ Θ` under `W ⊆ F0`) is already proved by z9 as
 `Lemma68Relation.killed_eq_W` (`FirstPass/S6e/Relation.lean:121`, commit 4010091); it is not restated here. Only the

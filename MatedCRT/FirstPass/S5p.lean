@@ -8,16 +8,14 @@ import MatedCRT.FirstPass.Frozen.S4S6c
 import MatedCRT.FirstPass.Frozen.S2g
 
 /-!
-# First pass: the measurable floor obstacle, main theorem (task fp-S5p-5-1-obstacle-version-main, worker z1)
+# First pass: the measurable floor obstacle, main theorem
 
-`stoppedFloorObstacleVersion_of_graph` proves `StoppedFloorObstacleVersion 𝒮` (S5k.lean, Part I §4 of
-`notes/fp-gaps/CHATGPT-z5-floor.md`, step R5) from the following inputs:
+`stoppedFloorObstacleVersion_of_graph` proves `StoppedFloorObstacleVersion 𝒮` (S5k.lean) from the following inputs:
 * `hμae` (`FrozenLQGMeasureFieldMeasurable`): a `S.fieldSigma`-measurable version `g` of the LQG measure `S.μ`;
 * `hsup` (`FrozenLeastSupersolutionMemCone`): the continuum least supersolution lies in `supersolutions`, a.s.;
 * `hstd` (`FrozenFiniteMeasureDiskStandardBorel`): the finite measures on each closed disk form a standard Borel space;
 * `hG` (`FrozenGreenDiscPole`): the disc Green function is continuous off its pole (used by `Identify.lean`);
-* `hgraph`: the graph `floorObstacleGraph ρ t` of the obstacle conditions (6) is Borel. This is z10's R3
-  (S5k/Graph); it is carried with the exact type below (the unconditional version is `stoppedFloorObstacleVersion_proved`, S5k.lean).
+* `hgraph`: the graph `floorObstacleGraph ρ t` of the obstacle conditions (6) is Borel. It is carried with the exact type below (the unconditional version is `stoppedFloorObstacleVersion_proved`, S5k.lean).
 
 Route (Step 4.2 and equation (7) of the floor note):
 1. `diskPart ρ μ`: the restriction of `μ` to `B̄_ρ`, replaced by `0` when its mass on `B̄_ρ` is infinite. It is
@@ -161,13 +159,12 @@ theorem exists_obstacleDecoder (ρ t : ℝ) [StandardBorelSpace (FinMeasDisk ρ)
     have hmem : (ν, F ν) ∈ floorObstacleGraph ρ t := hFsec ν ⟨y, hy⟩
     exact hmem
 
-/-- **Measurable version of the continuum floor obstacle, proved** (task fp-S5p-5-1-obstacle-version-main; Part I, Step 4
-and equation (7) of `notes/fp-gaps/CHATGPT-z5-floor.md`). The conclusion is `StoppedFloorObstacleVersion 𝒮`.
+/-- **Measurable version of the continuum floor obstacle, proved.** The conclusion is `StoppedFloorObstacleVersion 𝒮`.
 
 Hypotheses: `hμae` (field-measurable version of the LQG measure), `hsup` (least-supersolution membership a.s.),
 `hstd` (standard Borel structure of finite measures on closed disks), `hG` (continuity of the disc Green function off
 its pole), and `hgraph`: for `ρ > 0`, `t > 0`, the graph `floorObstacleGraph ρ t` of the obstacle conditions (6) is
-Borel. `hgraph` is z10's R3 and is carried as a hypothesis here. The unconditional version is `stoppedFloorObstacleVersion_proved` (S5k.lean, z10). -/
+Borel. `hgraph` is carried as a hypothesis here. The unconditional version is `stoppedFloorObstacleVersion_proved` (S5k.lean). -/
 theorem stoppedFloorObstacleVersion_of_graph (𝒮 : SpaceFillingSLEModel)
     (hμae : FrozenLQGMeasureFieldMeasurable 𝒮) (hsup : FrozenLeastSupersolutionMemCone 𝒮)
     (hstd : FrozenFiniteMeasureDiskStandardBorel) (hG : FrozenGreenDiscPole)

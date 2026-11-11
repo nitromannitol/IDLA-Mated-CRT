@@ -1,9 +1,9 @@
 import MatedCRT.FirstPass.S2g.LawCoded
 import MatedCRT.FirstPass.S4d.RescaledMeasurable
 
-/-! # Lemma 2.6 in coded law from the raw law (FirstPass G9, z9)
+/-! # Lemma 2.6 in coded law from the raw law (FirstPass G9)
 
-Closure gap G9 (z1): `firstPass_5_3_final` (FirstPass/S5c/FinalSurplus.lean:229) takes the coded form
+Closure gap G9: `firstPass_5_3_final` (FirstPass/S5c/FinalSurplus.lean:229) takes the coded form
 `ConeScaleInvarianceCodedStmt` (FirstPass/S2g/LawCoded.lean:20) as `hLs`. The Draft statement `ConeScaleInvarianceStmt`
 (Draft/Section2.lean, Lemma 2.6) equates the raw laws `P.map` of the pairs (circle average process, global family
 process). The coded form asks for an `IdentDistrib` of the pairs (circle average process, global code). Besides the raw

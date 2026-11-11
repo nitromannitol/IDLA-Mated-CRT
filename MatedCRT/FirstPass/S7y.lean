@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.S7x
 import MatedCRT.FirstPass.S7y.Final
 
 /-!
-# Proposition 7.1 with the Borel form of the Lemma 2.9 hypothesis (fp-S7y-h29-measurable)
+# Proposition 7.1 with the Borel form of the Lemma 2.9 hypothesis
 
-Operator audit (`notes/fp-gaps/CHATGPT-idla-7-8-audit-PRO.md`, the `h29` row and item 2 of the minimal correction list):
+Operator audit (, the `h29` row and item 2 of the minimal correction list):
 `CountingMeasureConvergenceStmt 𝒮` (MatedCRT/Draft/Section2.lean:143, BG20 Lemma A.4, FROZEN) quantifies over arbitrary
 `D ⊆ B_ρ`, while BG20 states the result for Borel `D`. The Borel form `CountingMeasureConvergenceMeasurableStmt` is
 defined in `MatedCRT/FirstPass/S7y/Stmt.lean`, with `countingMeasureConvergenceMeasurable_of_stmt` (the Draft statement

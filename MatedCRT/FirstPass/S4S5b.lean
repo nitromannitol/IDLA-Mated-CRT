@@ -18,7 +18,7 @@ open MeasureTheory _root_.HarmonicBalls
 
 /-- **Strict obstacle gap** (eq:strictly-above-in-interior, corrected.tex 1913-1925): for `t > 0`, almost surely on
 `{t < T}`, the harmonic ball `Λ_t` lies in the unregularized obstacle cluster `HarmonicBalls.cluster (μ) ρ 0 t`.
-Proof: the Cameron-Martin route of notes/prop42-proof (countably many regularization defects; a local shift removes a
+Proof: the Cameron-Martin route of (countably many regularization defects; a local shift removes a
 fixed time), through the conditional assembly `harmonicBallStrictObstacleGapStep_of_restrictedLaw_and_pairingLaws`
 (Proofs/Sec4/DivSandpileLowerBound/StrictGapConeAssembly.lean:15), whose restricted-law input is derived from the field
 law and the locality functional by `coneWholePlaneRestrictedLQGLawStep_of_inputs`. -/

@@ -3,9 +3,9 @@ import MatedCRT.FirstPass.S4S6c.ExitNull68
 import MatedCRT.FirstPass.S4S6c.Uniform68Env
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBound.Model
 
-/-! # Probabilistic events of Lemma 6.8, uniform in scale and vertex (fp-S6f, q1)
+/-! # Probabilistic events of Lemma 6.8, uniform in scale and vertex
 
-Lemmas consumed by the assembly of `UniformConstantOrderLowerBoundStmt` (`FirstPass/S6d.lean:90`, task fp-S6f).
+Lemmas consumed by the assembly of `UniformConstantOrderLowerBoundStmt` (`FirstPass/S6d.lean:90`).
 
 * `draft68_events_probTendsToOne`: the three Draft events with polynomially high probability, intersected. The Green lower
   bound (Draft Lemma 2.16, `GreenKernelLowerBoundStmt`), the cell-size estimate (Draft Lemma 2.8, `CellSizeEstimateStmt`) and
@@ -25,7 +25,7 @@ namespace MatedCRT
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal NNReal
 
-/-- **Draft events of Lemma 6.8, uniform in scale and vertex (fp-S6f, q1).** Fix `γ ∈ (0,2)` and `ζ ∈ (0,1)`. There are
+/-- **Draft events of Lemma 6.8, uniform in scale and vertex.** Fix `γ ∈ (0,2)` and `ζ ∈ (0,1)`. There are
 `ω₀ > 0` (Draft Lemma 2.16) and `α > 0` (Draft Lemma 2.18) such that, for each `ρ ∈ (0,1)`, there are constants `CG`, `CE`
 with: for every valid environment `S`, the set of `ε` at which the Green lower bound on the vertices `a` of `B_{ρ-ε^{ω₀}}`
 and all scales `r ∈ [ε^{ω₀}, dist(a, ∂B_ρ)]`, the cell-size estimate on every cell meeting `B_ρ`, and the exit-time bound
@@ -68,7 +68,7 @@ theorem draft68_events_probTendsToOne {𝒮 : SpaceFillingSLEModel}
   have h := ((hGS Ω S hS).inter (hC γ hγ hγ2 ζ ρ hζ0 hζ1 hρ0 hρ1 Ω S hS)).inter (hES Ω S hS)
   exact HarmonicBalls.PolyHighProb.probTendsToOne h
 
-/-- **Finiteness on the Good event (fp-S6f, q1).** For a valid environment, almost surely: for every `ε > 0`, every finite
+/-- **Finiteness on the Good event.** For a valid environment, almost surely: for every `ε > 0`, every finite
 set `A ⊆ ℤ` and every start `y`, the exit from `A` is almost surely finite (`srwLaw (S.mult ε ω) y {exit from A = ⊤} = 0`).
 This is `hfin` of `Uniform68Walk.config_exit_lower_bound_walk`, via `ExitNull68.exit_null_of_finite` and the environment
 inputs `Uniform68Env.ae_envInputs` (continuity, `η → ∞`, adjacency of cells) and `Uniform68Env.envAt` (local finiteness). -/

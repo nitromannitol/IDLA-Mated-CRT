@@ -6,7 +6,7 @@ import MatedCRT.Draft.Section4
 import MatedCRT.External.SLE
 
 /-!
-# First pass: the surplus maximum outside the killing set, `StoppedMaxOutsideStep` (task fp-S5f-5-1-max-outside, z10)
+# First pass: the surplus maximum outside the killing set, `StoppedMaxOutsideStep`
 
 **Theorem `stoppedMaxOutside_of_steps`.** `StoppedMaxOutsideStep 𝒮` (the open input `ε M^ε → 0` in probability on `{t < T}` of
 Proposition 5.1, corrected tex 2355-2372, [C21]; defined in FirstPass/S5d/StoppedExitInput.lean) follows from:
@@ -19,7 +19,7 @@ Proposition 5.1, corrected tex 2355-2372, [C21]; defined in FirstPass/S5d/Stoppe
 * NEW steps (paper-owned, taken as hypotheses, FirstPass/S5f/Steps.lean): `StoppedCellRepresentativeStep`,
   `StoppedPoleCellStep`, `StoppedOriginRadiusStep`.
 
-Proof route (written source: tex 2360 and notes/fp-gaps/CHATGPT-idla-C20-C21-referee.md 177-202). For `ε` small, on the
+Proof route (written source: tex 2360 and 177-202). For `ε` small, on the
 event `{t < T}`, a vertex `b` outside the killing set with `u^ε(b) > κ/(2ε)` has a cell disjoint from `Λ_t` and positive
 surplus, so a point `x ∈ B_ρ \ Λ_t` with `a^ε_x = b` exists. There `v + tG` vanishes (`odometer_eq_zero_of_notMem_stopped_Lambda`),
 and the two rescaled convergences give `|R u(x)| ≤ δ (1 + t)`, while `R u(x) = m_ε⁻¹ u(b) > κ / (2C)`; with `δ = κ/(2C(1+t))`

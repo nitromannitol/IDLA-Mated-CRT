@@ -3,10 +3,9 @@ import MatedCRT.FirstPass.S5k.Assembly
 import MatedCRT.FirstPass.Frozen.S4S6c
 
 /-!
-# First pass: measurable version of the continuum floor obstacle (task fp-S5k-5-1-floor-obstacle-version, worker z10)
+# First pass: measurable version of the continuum floor obstacle
 
-`StoppedFloorObstacleVersion 𝒮` is the conclusion of Part I, §4 of `notes/fp-gaps/CHATGPT-z5-floor.md` (end of Step 4.2,
-equation (7)): a measurable version `Ŵ` of the continuum least supersolution `W_t = leastSupersolution (S.μ ω) ρ 0 t` of
+`StoppedFloorObstacleVersion 𝒮` is the conclusion of the floor argument: a measurable version `Ŵ` of the continuum least supersolution `W_t = leastSupersolution (S.μ ω) ρ 0 t` of
 the obstacle problem, on the event `{t < clusterExitTime (Λ ω) ρ}`, with every evaluation `ω ↦ Ŵ ω x` measurable for the
 field σ-algebra `S.fieldSigma`, continuous on the closed disk `B̄_ρ`, and vanishing on its boundary for every `ω`.
 
@@ -19,7 +18,7 @@ namespace MatedCRT
 
 open MeasureTheory Filter Topology Set Metric
 
-/-- **Measurable version of the continuum floor obstacle** (the conclusion of §4 of `notes/fp-gaps/CHATGPT-z5-floor.md`).
+/-- **Measurable version of the continuum floor obstacle**.
 For `γ ∈ (0,2)`, `ρ ∈ (0,1)`, a valid mated-CRT environment `S` on `Ω`, a family `Λ` of cone harmonic balls a.s. and
 `t > 0`, there is `Ŵ : Ω → ℂ → ℝ` such that: each evaluation `ω ↦ Ŵ ω x` is `S.fieldSigma`-measurable; for every `ω`, the map
 `Ŵ ω` is continuous on `B̄_ρ` and vanishes on `∂B_ρ`; and for `P`-a.e. `ω` on the event `{t < clusterExitTime (Λ ω) ρ}`,
@@ -42,8 +41,7 @@ def StoppedFloorObstacleVersion (𝒮 : SpaceFillingSLEModel) : Prop :=
           What ω x = _root_.HarmonicBalls.leastSupersolution (S.μ ω) ρ 0 t x)
 
 open MeasureTheory Metric Set Filter Topology HarmonicBalls in
-/-- **Measurable version of the continuum floor obstacle** (task fp-S5k-5-1-floor-obstacle-version; Part I, Step 4.2 and
-equation (7) of `notes/fp-gaps/CHATGPT-z5-floor.md`). The measurable version `Ŵ` is the Lusin-Souslin decoder of the
+/-- **Measurable version of the continuum floor obstacle.** The measurable version `Ŵ` is the Lusin-Souslin decoder of the
 Borel graph of (6) (`Graph/Main.lean`) applied to the zero-replaced restriction of `μ` to `B̄_ρ`
 (`Assembly.lean`); it equals the continuum least supersolution `W_t` on `B̄_ρ` for almost every `ω` on
 `{t < clusterExitTime (Λ ω) ρ}`. The hypotheses are the frozen external inputs: the measurability of the LQG measure

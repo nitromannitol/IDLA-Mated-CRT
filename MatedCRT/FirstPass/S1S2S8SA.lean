@@ -14,7 +14,7 @@ import MatedCRT.External.QuantumCone
 import MatedCRT.FirstPass.Frozen.S1S2S8SA
 
 /-!
-# First pass: paper-owned results of Sections 1, 2, 8 and Appendix A (q1)
+# First pass: paper-owned results of Sections 1, 2, 8 and Appendix A
 
 Each `firstPass_<section>_<number>` has as hypotheses only Draft statements of numbered results used by the printed
 proof and the frozen external inputs of `MatedCRT/FirstPass/Frozen/S1S2S8SA.lean`. Cited results (Sections 2.2, 2.7-2.11,

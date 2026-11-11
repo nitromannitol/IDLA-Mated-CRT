@@ -1,9 +1,9 @@
 import MatedCRT.FirstPass.S2z
 import MatedCRT.FirstPass.S2j
 
-/-! # Closure gap G9: the coded Lemma 2.6 from the printed Lemma 2.6 (FirstPass S2y, z8, fp-S2y-G9-closed)
+/-! # Closure gap G9: the coded Lemma 2.6 from the printed Lemma 2.6 (FirstPass S2y)
 
-Closure gap G9 (z1; needed by `firstPass_5_3_final`, FirstPass/S5c/FinalSurplus.lean:229, as `hLs`): the coded form
+Closure gap G9 (needed by `firstPass_5_3_final`; FirstPass/S5c/FinalSurplus.lean:229; as `hLs`): the coded form
 `ConeScaleInvarianceCodedStmt` (FirstPass/S2g/LawCoded.lean:20) is obtained from the Draft statement
 `ConeScaleInvarianceStmt` (Draft/Section2.lean:108). The almost sure measurability of the stopped cone families is
 `coneFamilyAEMeasurable_proved` (FirstPass/S2j.lean:28), and the stopped route is
@@ -20,19 +20,19 @@ Hypotheses of `coneScaleInvarianceCoded_of_stmt`, with their classes:
   It is kept in the Draft form, because `coneScaleInvarianceCoded_of_stmt_stopped` takes this form and not the corrected
   form `ConeHarmonicBallsUpToFixedTimeCorrectedStmt` (FirstPass/S2b.lean:43).
 * `h25 : ConeScaleInvarianceUpToFixedTimeStmt`: Draft, Lemma 2.5 (Draft/Section2.lean:88).
-* `hcan : ConeCanonicalHalfBallStep`: Step (FirstPass/S2g.lean:82), checked TRUE (CHATGPT-q1-open-steps.md §3).
+* `hcan : ConeCanonicalHalfBallStep`: Step (FirstPass/S2g.lean:82), checked TRUE (§3).
 * `hcl : ConeHalfBallClosureInsideStep`: Step (Proofs/Sec2/ConeFamilyMeasurable/StoppedClosure.lean:18), checked TRUE
-  (CHATGPT-closure-inside-cycle.md §4).
+  (§4).
 * `h27 : VolumeGrowthStmt`: Draft (Draft/Section2.lean:121).
-* `hE1 : ConeCircleLawUniqueStep`: frozen Step (FirstPass/Frozen/S2i.lean:27), checked TRUE (chat 180 §3).
-* `hE2 : ConeReferenceExistsStep`: frozen Step (FirstPass/Frozen/S2i.lean:46), checked TRUE (chat 180 §3).
+* `hE1 : ConeCircleLawUniqueStep`: frozen Step (FirstPass/Frozen/S2i.lean:27), checked TRUE.
+* `hE2 : ConeReferenceExistsStep`: frozen Step (FirstPass/Frozen/S2i.lean:46), checked TRUE.
 * `hscale : QuantumConeScalingInput`: literature input (External/QuantumCone.lean:19; DMS14 Proposition 4.13(i)).
 * `h22 : LQGMeasurePropertiesStmt`: Draft, Fact 2.2 (Draft/Section2.lean:39).
 -/
 
 namespace MatedCRT.FirstPassG9Closed
 
-/-- **Closure gap G9 (z8, fp-S2y-G9-closed).** The coded law of Lemma 2.6 (`ConeScaleInvarianceCodedStmt`) follows from
+/-- **Closure gap G9.** The coded law of Lemma 2.6 (`ConeScaleInvarianceCodedStmt`) follows from
 the printed Lemma 2.6 (`ConeScaleInvarianceStmt`) and the hypotheses listed in the file header. The measurability of the
 stopped cone families is supplied by `coneFamilyAEMeasurable_proved` from the Steps `hcan` and `hcl` and the frozen
 Steps `hE1` and `hE2`; the stopped route `coneScaleInvarianceCoded_of_stmt_stopped` then gives the coded form. -/

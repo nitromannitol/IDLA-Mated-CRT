@@ -1,18 +1,17 @@
 import MatedCRT.FirstPass.S4S6c.ShellHoneInst68
 
 /-!
-# The counting one-test order input with the exit clause at the cell radius (lead li, request 77b)
+# The counting one-test order input with the exit clause at the cell radius
 
 `ShellOneTestOrderAeCGRCXStmt` is `ShellOneTestOrderAeCGRCStmt` (ShellHoneInst68.lean:414) with the exit-time event
 `exitTimeEvent68 S α (rhoCell68 ρ) CE` at the cell radius `rhoCell68 ρ = (1 + ρ) / 2` added twice: once as a
 `PolyHighProb` hypothesis (after the one at radius `ρ`) and once as an almost sure premise (after the membership in
 `countingMeshEventR`). Nothing else changes.
 
-Why (round 75 of lead li): the moment residual `ShellCGResMomS` (ShellCoreCG68.lean) is stated for test sets
-`D ⊆ ball 0 (rhoCell68 ρ)`, and its only instance (SecondRho68.lean:65) uses a ball that need not lie in `ball 0 ρ`
-(q3's trace, reports/q3.md, 18:44 UTC). Its pointwise producer `resMomS_pt` (CGResX1MomS68.lean:97) takes
+Why: the moment residual `ShellCGResMomS` (ShellCoreCG68.lean) is stated for test sets
+`D ⊆ ball 0 (rhoCell68 ρ)`, and its only instance (SecondRho68.lean:65) uses a ball that need not lie in `ball 0 ρ`. Its pointwise producer `resMomS_pt` (CGResX1MomS68.lean:97) takes
 `ω ∈ exitTimeEvent68 S α (rhoCell68 ρ) CE ε`. The `PolyHighProb` hypothesis at that radius, with one constant `CE` for
-the radii `ρ` and `rhoCell68 ρ`, is `polyHighProb_exitTimeEvent68_common_CE` (z10, ExitRhoCell68.lean, from the frozen
+the radii `ρ` and `rhoCell68 ρ`, is `polyHighProb_exitTimeEvent68_common_CE` (ExitRhoCell68.lean, from the frozen
 Lemma 2.18 `ExitTimeUpperBoundStmt`), so the closures of Lemmas 6.7-6.9 can supply it.
 -/
 
@@ -31,7 +30,7 @@ open MatedCRT.Lemma68ConstOrder
 open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68WalkBridge MatedCRT.Lemma68ChainAe
 open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 
-/-- **The counting one-test order input with the exit clause at the cell radius (lead li, request 77b).** Copy of
+/-- **The counting one-test order input with the exit clause at the cell radius.** Copy of
 `ShellOneTestOrderAeCGRCStmt` (ShellHoneInst68.lean:414) with the extra hypothesis
 `PolyHighProb S.P (exitTimeEvent68 S α (rhoCell68 ρ) CE)` and the extra almost sure premise
 `ω ∈ exitTimeEvent68 S α (rhoCell68 ρ) CE ε`. -/
