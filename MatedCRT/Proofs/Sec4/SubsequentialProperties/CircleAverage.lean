@@ -20,20 +20,20 @@ namespace MatedCRT
 open MeasureTheory Filter Topology Set Metric HarmonicBalls Real
 
 /-- The point `q₁ + q₂ i` with rational coordinates. -/
-noncomputable def ratPoint (q₁ q₂ : ℚ) : ℂ := ⟨q₁, q₂⟩
+noncomputable def rationalGridPoint (q₁ q₂ : ℚ) : ℂ := ⟨q₁, q₂⟩
 
 /-- Points with rational coordinates are dense. -/
-theorem exists_ratPoint_dist_lt (x : ℂ) {δ : ℝ} (hδ : 0 < δ) : ∃ q₁ q₂ : ℚ, dist (ratPoint q₁ q₂) x < δ := by
+theorem exists_ratPoint_dist_lt (x : ℂ) {δ : ℝ} (hδ : 0 < δ) : ∃ q₁ q₂ : ℚ, dist (rationalGridPoint q₁ q₂) x < δ := by
   obtain ⟨q₁, hq₁⟩ := exists_rat_btwn (show x.re - δ / 2 < x.re + δ / 2 by linarith)
   obtain ⟨q₂, hq₂⟩ := exists_rat_btwn (show x.im - δ / 2 < x.im + δ / 2 by linarith)
   refine ⟨q₁, q₂, ?_⟩
   rw [dist_eq_norm]
   refine (Complex.norm_le_abs_re_add_abs_im _).trans_lt ?_
-  have h1 : |(ratPoint q₁ q₂ - x).re| < δ / 2 := by
-    simp only [ratPoint, Complex.sub_re]
+  have h1 : |(rationalGridPoint q₁ q₂ - x).re| < δ / 2 := by
+    simp only [rationalGridPoint, Complex.sub_re]
     rw [abs_lt]; constructor <;> linarith [hq₁.1, hq₁.2]
-  have h2 : |(ratPoint q₁ q₂ - x).im| < δ / 2 := by
-    simp only [ratPoint, Complex.sub_im]
+  have h2 : |(rationalGridPoint q₁ q₂ - x).im| < δ / 2 := by
+    simp only [rationalGridPoint, Complex.sub_im]
     rw [abs_lt]; constructor <;> linarith [hq₂.1, hq₂.2]
   linarith
 
@@ -99,12 +99,12 @@ theorem tendsto_circleAverage {g : ℂ → ℝ} {x : ℂ} {r : ℝ} (hr : 0 ≤ 
 `⨍_{∂B_s(z)} g ≤ g(z)` for every `z` with rational coordinates and rational `s > 0` such that `cl(B_s(z)) ⊆ U`, is
 superharmonic on `U`. -/
 theorem isSuperharmonicOn_of_ratCircles {U : Set ℂ} (hU : IsOpen U) {g : ℂ → ℝ} (hg : ContinuousOn g U)
-    (hmean : ∀ q₁ q₂ s : ℚ, (0 : ℝ) < s → closedBall (ratPoint q₁ q₂) s ⊆ U →
-      circleAverage g (ratPoint q₁ q₂) s ≤ g (ratPoint q₁ q₂)) :
+    (hmean : ∀ q₁ q₂ s : ℚ, (0 : ℝ) < s → closedBall (rationalGridPoint q₁ q₂) s ⊆ U →
+      circleAverage g (rationalGridPoint q₁ q₂) s ≤ g (rationalGridPoint q₁ q₂)) :
     IsSuperharmonicOn U g := by
   refine ⟨hg.lowerSemicontinuousOn, fun x hx r hr hxr => ⟨?_, ?_⟩⟩
   · exact (hg.mono ((sphere_subset_closedBall).trans hxr)).circleIntegrable hr.le
-  · have hpt : ∀ n : ℕ, ∃ q₁ q₂ : ℚ, dist (ratPoint q₁ q₂) x < 1 / ((n : ℝ) + 1) := fun n =>
+  · have hpt : ∀ n : ℕ, ∃ q₁ q₂ : ℚ, dist (rationalGridPoint q₁ q₂) x < 1 / ((n : ℝ) + 1) := fun n =>
       exists_ratPoint_dist_lt x (by positivity)
     choose q₁ q₂ hq using hpt
     have hrad : ∀ n : ℕ, ∃ s : ℚ, r - 3 / ((n : ℝ) + 1) < s ∧ (s : ℝ) < r - 2 / ((n : ℝ) + 1) := by
@@ -117,7 +117,7 @@ theorem isSuperharmonicOn_of_ratCircles {U : Set ℂ} (hU : IsOpen U) {g : ℂ �
       linarith
     choose s hs using hrad
     have hinv : Tendsto (fun n : ℕ => 1 / ((n : ℝ) + 1)) atTop (𝓝 0) := tendsto_one_div_add_atTop_nhds_zero_nat
-    have hc : Tendsto (fun n => ratPoint (q₁ n) (q₂ n)) atTop (𝓝 x) :=
+    have hc : Tendsto (fun n => rationalGridPoint (q₁ n) (q₂ n)) atTop (𝓝 x) :=
       tendsto_iff_dist_tendsto_zero.2 (squeeze_zero (fun n => dist_nonneg) (fun n => (hq n).le) hinv)
     have hR : Tendsto (fun n => ((s n : ℚ) : ℝ)) atTop (𝓝 r) := by
       have h3 : Tendsto (fun n : ℕ => r - 3 * (1 / ((n : ℝ) + 1))) atTop (𝓝 r) := by
@@ -131,20 +131,20 @@ theorem isSuperharmonicOn_of_ratCircles {U : Set ℂ} (hU : IsOpen U) {g : ℂ �
         linarith [(hs n).2]
     have hspos : ∀ᶠ n in atTop, (0 : ℝ) < s n := hR.eventually (lt_mem_nhds hr)
     -- the rational discs lie in `cl(B_r(x))`
-    have hdisc : ∀ n, closedBall (ratPoint (q₁ n) (q₂ n)) (s n) ⊆ closedBall x r := by
+    have hdisc : ∀ n, closedBall (rationalGridPoint (q₁ n) (q₂ n)) (s n) ⊆ closedBall x r := by
       intro n y hy
       rw [mem_closedBall] at hy ⊢
       have h1 := hq n
       have h2 := (hs n).2
       have h0 : (0 : ℝ) < 1 / ((n : ℝ) + 1) := by positivity
       have h2' : 2 / ((n : ℝ) + 1) = 2 * (1 / ((n : ℝ) + 1)) := by ring
-      linarith [dist_triangle y (ratPoint (q₁ n) (q₂ n)) x]
-    have hsph : ∀ᶠ n in atTop, sphere (ratPoint (q₁ n) (q₂ n)) |((s n : ℚ) : ℝ)| ⊆ closedBall x r := by
+      linarith [dist_triangle y (rationalGridPoint (q₁ n) (q₂ n)) x]
+    have hsph : ∀ᶠ n in atTop, sphere (rationalGridPoint (q₁ n) (q₂ n)) |((s n : ℚ) : ℝ)| ⊆ closedBall x r := by
       filter_upwards [hspos] with n hn
       rw [abs_of_pos hn]
       exact sphere_subset_closedBall.trans (hdisc n)
     have hlim := tendsto_circleAverage hr.le (hg.mono hxr) hc hR hsph
-    have hgx : Tendsto (fun n => g (ratPoint (q₁ n) (q₂ n))) atTop (𝓝 (g x)) :=
+    have hgx : Tendsto (fun n => g (rationalGridPoint (q₁ n) (q₂ n))) atTop (𝓝 (g x)) :=
       ((hg.continuousAt (hU.mem_nhds hx)).tendsto).comp hc
     refine le_of_tendsto_of_tendsto hlim hgx ?_
     filter_upwards [hspos] with n hn

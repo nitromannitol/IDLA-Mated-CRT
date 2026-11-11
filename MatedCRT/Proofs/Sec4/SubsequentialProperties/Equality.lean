@@ -73,9 +73,9 @@ theorem odometer_hasLaplacian_noncoincidence {Ω : Type} [MeasurableSpace Ω] (S
     (hmax : ∀ ε, 0 < ε → ∀ A : Set ℤ, A.Nonempty → A.Finite → ∀ u : ℤ → ℝ, IsSubharmonicOn (S.mult ε ω) u A →
       ∀ a ∈ A, ∃ b ∈ vBoundary (S.mult ε ω) A, u a ≤ u b)
     {εk : ℕ → ℝ} (hεk : ∀ k, 0 < εk k) (hεk0 : Tendsto εk atTop (𝓝 0))
-    (hdir : ∀ (q₁ q₂ s : ℚ) (n : ℕ) (j l : ℤ), (0 : ℝ) < s → ‖ratPoint q₁ q₂‖ + s < ρ →
-      Tendsto (fun k => hatDirichletAtCentre S (ratPoint q₁ q₂) s n j l (εk k) ω) atTop
-        (𝓝 (circleAverage (hat n j l) (ratPoint q₁ q₂) s)))
+    (hdir : ∀ (q₁ q₂ s : ℚ) (n : ℕ) (j l : ℤ), (0 : ℝ) < s → ‖rationalGridPoint q₁ q₂‖ + s < ρ →
+      Tendsto (fun k => hatDirichletAtCentre S (rationalGridPoint q₁ q₂) s n j l (εk k) ω) atTop
+        (𝓝 (circleAverage (hat n j l) (rationalGridPoint q₁ q₂) s)))
     (hv0 : ∀ ε, 0 < ε → vertexOf ε (S.η ω) 0 = 0)
     (hg : ∀ j : ℕ, ∀ᶠ k in atTop, ∀ x ∈ closedBall (0 : ℂ) ρ \ ball 0 (ρ / ((j : ℝ) + 2)),
       |rescaledGreenKernel S ρ (εk k) ω x - S.c₀ / 6 * greenFunction (ball 0 ρ) 0 x| ≤ 1 / ((j : ℝ) + 1))

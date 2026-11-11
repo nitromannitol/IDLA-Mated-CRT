@@ -57,9 +57,9 @@ theorem odometerDistributionalLimitProjectedStep_of_greenKernel (𝒮 : SpaceFil
   have hεk : ∀ k, 0 < εs (φ₁ (φ₂ (φ₃ (ψ k)))) := fun k => hε _
   have hεk0 : Tendsto (fun k => εs (φ₁ (φ₂ (φ₃ (ψ k))))) atTop (𝓝 0) :=
     hε0.comp (hφ₁.comp hmono).tendsto_atTop
-  have hdirk : ∀ (q₁ q₂ s : ℚ) (n : ℕ) (j l : ℤ), (0 : ℝ) < s → ‖ratPoint q₁ q₂‖ + s < ρ →
-      Tendsto (fun k => hatDirichletAtCentre S (ratPoint q₁ q₂) s n j l (εs (φ₁ (φ₂ (φ₃ (ψ k))))) ω) atTop
-        (𝓝 (circleAverage (hat n j l) (ratPoint q₁ q₂) s)) :=
+  have hdirk : ∀ (q₁ q₂ s : ℚ) (n : ℕ) (j l : ℤ), (0 : ℝ) < s → ‖rationalGridPoint q₁ q₂‖ + s < ρ →
+      Tendsto (fun k => hatDirichletAtCentre S (rationalGridPoint q₁ q₂) s n j l (εs (φ₁ (φ₂ (φ₃ (ψ k))))) ω) atTop
+        (𝓝 (circleAverage (hat n j l) (rationalGridPoint q₁ q₂) s)) :=
     fun q₁ q₂ s n j l hs hzr => (hdir q₁ q₂ s n j l hs hzr).comp hmono.tendsto_atTop
   have hgk : ∀ j : ℕ, ∀ᶠ k in atTop, ∀ x ∈ closedBall (0 : ℂ) ρ \ ball 0 (ρ / ((j : ℝ) + 2)),
       |rescaledGreenKernel S ρ (εs (φ₁ (φ₂ (φ₃ (ψ k))))) ω x - S.c₀ / 6 * greenFunction (ball 0 ρ) 0 x| ≤
