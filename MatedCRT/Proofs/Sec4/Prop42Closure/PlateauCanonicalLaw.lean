@@ -2,9 +2,9 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.GlobalRadiusMeasurable
 import MatedCRT.Proofs.Sec4.Prop42Closure.PlateauScaleLaw
 import HarmonicBalls.Steps.Sec3.Basic
 
-/-! # Conditional closure of `PlateauScaleInvarianceStep` on the canonical plateau event (Proposition 4.2, z5)
+/-! # Conditional closure of `PlateauScaleInvarianceStep` on the canonical plateau event (Proposition 4.2)
 
-Task `z5-plateau-canonical-law-assembly`. Written argument: `notes/prop42-proof/prop42-proof.tex`, lines 245-268: the
+The
 scaling of lines 245-256 (inputs K and H, `PlateauScaleLaw.lean`) and the probability identity of line 265, whose
 measurability is the canonical event of lines 263-268 (`GlobalRadiusMeasurable.lean`).
 

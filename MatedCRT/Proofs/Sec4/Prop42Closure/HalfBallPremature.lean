@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Sec4.Prop42Closure.HalfBallPlateau
 import MatedCRT.Proofs.Sec2.ConeFamilyMeasurable.HorizonContact
 
-/-! # Premature contact forces a half-ball plateau (closure of Proposition 4.2, z5)
+/-! # Premature contact forces a half-ball plateau (closure of Proposition 4.2)
 
 Pointwise (deterministic) part of the whole-plane side of `t:closure` (draft lines 275-289): if the raw `3/4`-clusters
 `C_t = interior (closure (cluster ν (3/4) 0 t))` of a measure `ν` have premature half-ball contact

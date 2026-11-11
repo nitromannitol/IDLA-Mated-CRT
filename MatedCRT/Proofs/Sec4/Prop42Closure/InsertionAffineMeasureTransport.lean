@@ -1,20 +1,20 @@
 import MatedCRT.Proofs.Sec4.Prop42Closure.InsertionAffineCircleLaw
 
 /-!
-# Fixed-affine measure identification (steps3:649-675)
+# Fixed-affine measure identification
 
 Internal module; it cites no literature input. It formalizes the written component "Identification for the fixed
-affine map" of `notes/wpn-steps3/steps3.tex` (lines 649-675, sha256 `d34cf930...`). For `a ≠ 0`, `R = |a|` and the
+affine map". For `a ≠ 0`, `R = |a|` and the
 normalizing constant `C_a = e^{γ h_∘(R,0)} R^{γ(Q-α)}` (`affineFactor`):
 
-* `lqgApprox_normalized_eq` (steps3 eq:fixed-factor-approx): for every `r > 0`,
+* `lqgApprox_normalized_eq`: for every `r > 0`,
   `M^a_r = C_a⁻¹ (x ↦ x/a)_* M_{|a| r}`, with the Jacobian `|a|²` of `z ↦ z/a` (`volume_map_divEquiv`) and the
   normalization `C_a`. Its density identity is the proved export `affineCircleArray_eq_normalized`
   (`InsertionAffineCircleLaw`, the deterministic circle identity at `b = 0`).
 * `measure_eq_of_avoid_zero`: two locally finite measures on `ℂ` that agree on the test functions vanishing near `0`
   and give no mass to `{0}` are equal. Agreement away from `0` alone does not fix the atom; the hypotheses
   `ν {0} = 0` are supplied by the no-atom export in the next statement.
-* `insertion_affine_dilation_measure_ae` (steps3 eq:affine-dilation-measure): on a full-probability event,
+* `insertion_affine_dilation_measure_ae`: on a full-probability event,
   `C_a μ^a = (x ↦ x/a)_* μ` on `ℂ`. Away from `0` the convergence comes from the checked punctured all-scale consumer
   `punctured_allScales_of_steps_interior`; its explicit hypotheses `SheffieldWangCircleAverageAllScaleInteriorStmt`
   and `LocalDirichletHarmonicDecompositionStep` are kept as they are. The atoms of `μ` and of `μ^a` vanish by the
@@ -22,11 +22,10 @@ normalizing constant `C_a = e^{γ h_∘(R,0)} R^{γ(Q-α)}` (`affineFactor`):
 
 The no-atom export needs the normalized field `h^a_∘` (`normalizedCircleProc a (hcirc ω)`) to be the circle process
 of a whole-plane GFF. For real `a = R > 0` this is `normalized_isWholePlaneGFF_ofReal` (from
-`Field.isWholePlaneGFF_affine`). For complex `a` it is the rotation invariance of the whole-plane GFF
-(steps3:520-531, "This also proves the assertion for complex rotations"), taken as the explicit hypothesis `hRot` of
+`Field.isWholePlaneGFF_affine`). For complex `a` it is the rotation invariance of the whole-plane GFF, taken as the explicit hypothesis `hRot` of
 `normalized_isWholePlaneGFF_of_rotation`; it is not proved in this file.
 
-The existence of the dyadic limit `μ^a` (steps3 `μ^a := 𝓜(h^a)`, eq:normalized-measure-law) is an input hypothesis
+The existence of the dyadic limit `μ^a` (`μ^a := 𝓜(h^a)`) is an input hypothesis
 `hμa`; the law transfer that produces it is outside this file.
 -/
 
@@ -37,7 +36,7 @@ namespace MatedCRT
 
 noncomputable section
 
-/-- The normalizing constant `C_a = e^{γ h_∘(R,0)} R^{γ(Q-α)}` of steps3 eq:fixed-factor-approx, with `R = |a|` and
+/-- The normalizing constant `C_a = e^{γ h_∘(R,0)} R^{γ(Q-α)}`, with `R = |a|` and
 `Q = lqgQ γ`, in exponential form `exp (γ (h_∘(R,0) + (Q-α) log R))`. -/
 def affineFactor (γ α : ℝ) (a : ℂ) (h : ℝ → ℂ → ℝ) : ℝ :=
   Real.exp (γ * (h ‖a‖ 0 + (lqgQ γ - α) * Real.log ‖a‖))
@@ -67,7 +66,7 @@ def unitOf (a : ℂ) (ha : a ≠ 0) : Circle :=
   ⟨a / (‖a‖ : ℂ), mem_sphere_zero_iff_norm.2 (by
     rw [norm_div, Complex.norm_real, Real.norm_of_nonneg (norm_nonneg a), div_self (norm_pos_iff.2 ha).ne'])⟩
 
-/-- **Jacobian of the dilation** (steps3:653): `volume.map (z ↦ z/a) = |a|² • volume`. -/
+/-- **Jacobian of the dilation**: `volume.map (z ↦ z/a) = |a|² • volume`. -/
 theorem volume_map_divEquiv {a : ℂ} (ha : a ≠ 0) :
     Measure.map (divEquiv a ha) volume = ENNReal.ofReal (‖a‖ ^ 2) • volume := by
   have hR : 0 < ‖a‖ := norm_pos_iff.2 ha
@@ -135,7 +134,7 @@ theorem affine_density_identity {γ α : ℝ} (hγ : 0 < γ) {R r A Ha p : ℝ} 
   congr 1
   linear_combination (-γ) * hA + Real.log R * hQ
 
-/-- **Fixed-factor approximation identity** (steps3 eq:fixed-factor-approx). For `a ≠ 0`, `h` a circle-average
+/-- **Fixed-factor approximation identity**. For `a ≠ 0`, `h` a circle-average
 process, `r > 0`, the normalized approximation `M^a_r` of the field `H^a = fieldCircleAverage α (normalizedCircleProc a h)`
 is `C_a⁻¹ (x ↦ x/a)_*` of the approximation `M_{|a| r}` of `H = fieldCircleAverage α h`. -/
 theorem lqgApprox_normalized_eq {γ α : ℝ} (hγ : 0 < γ) {a : ℂ} (ha : a ≠ 0) (h : ℝ → ℂ → ℝ) {r : ℝ}
@@ -270,7 +269,7 @@ theorem measure_eq_of_avoid_zero {ν₁ ν₂ : Measure ℂ} [IsFiniteMeasureOnC
     hD.congr' (hev.mono fun ε hε => (hdec ε hε).symm)
   exact sub_eq_zero.1 (tendsto_nhds_unique tendsto_const_nhds hconst)
 
-/-- **Fixed-affine measure identification** (steps3:649-675, eq:affine-dilation-measure). For a fixed `a ≠ 0`, on a
+/-- **Fixed-affine measure identification** (eq:affine-dilation-measure). For a fixed `a ≠ 0`, on a
 full-probability event, `C_a μ^a = (x ↦ x/a)_* μ` as measures on `ℂ`, where `μ^a` is the dyadic insertion limit of the
 normalized field `H^a` (hypothesis `hμa`) and `μ` that of `H` (hypothesis `hμ`). The convergence away from `0` uses the
 checked punctured all-scale consumer; the atoms at `0` are null by the unconditional no-atom export. The normalized
@@ -389,7 +388,7 @@ theorem normalized_isWholePlaneGFF_ofReal {Ω : Type} [MeasurableSpace Ω] {P : 
   exact MatedCRT.Field.isWholePlaneGFF_affine hWP hR 0
 
 /-- The complex case `a ≠ 0`, granted the rotation invariance `hRot` of the whole-plane GFF at the unit
-`u = a / |a|` (steps3:520-531: the rotated pairings `h ↦ h(u⁻¹ ·)` and rotated circles `h_r(u ·)`). Then the
+`u = a / |a|` (the rotated pairings `h ↦ h(u⁻¹ ·)` and rotated circles `h_r(u ·)`). Then the
 normalized field `h^a_∘` is a whole-plane GFF. This residual is not proved in this file. -/
 theorem normalized_isWholePlaneGFF_of_rotation {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
     [IsProbabilityMeasure P] {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} {a : ℂ} (ha : a ≠ 0)
@@ -422,8 +421,8 @@ theorem transEquiv_symm_apply (p z : ℂ) : (transEquiv p).symm z = z + p := rfl
 theorem transEquiv_map_volume (p : ℂ) : Measure.map (transEquiv p) volume = volume :=
   (measurePreserving_sub_right volume p).map_eq
 
-/-- **Translated approximation identity** (steps3:673-675). For `a ≠ 0`, `b ∈ ℂ` and `r > 0`, the approximating measure of
-the affine circle array `affineCircleArray α Q a b h` (steps3 eq:affine-circle-array, with `Q = lqgQ γ`) is
+/-- **Translated approximation identity**. For `a ≠ 0`, `b ∈ ℂ` and `r > 0`, the approximating measure of
+the affine circle array `affineCircleArray α Q a b h` (eq:affine-circle-array, with `Q = lqgQ γ`) is
 `C_a (z ↦ z - b/a)_* M^a_r`, where `M^a_r = lqgApprox γ (fieldCircleAverage α (normalizedCircleProc a h)) r`. -/
 theorem lqgApprox_affineArray_eq {γ α : ℝ} {a b : ℂ} (ha : a ≠ 0) (h : ℝ → ℂ → ℝ) {r : ℝ}
     (hr : 0 < r) :

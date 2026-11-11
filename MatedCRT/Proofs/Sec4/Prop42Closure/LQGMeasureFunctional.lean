@@ -2,10 +2,9 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.ConeWholePlaneSteps
 
 /-! # Locality of the LQG measure as a functional of the restricted field: the input (A) of gap G1 (now proved)
 
-Operator ruling (2026-11-08, `tasks/z5.md`, item (A)): the locality input of the restricted-law derivation is a named
+The locality input of the restricted-law derivation is a named
 Step Prop with exactly the type of `LQGMeasureLocalityFunctionalStep` below. It was an open input. It is now proved, with
-no literature hypothesis, by `LQGMeasureLocalityFunctionalStep_proof` (`LQGMeasureLocalityProof.lean`; steps2:651-794,
-audited CORRECT as declared, `notes/wpn-steps2/AUDIT-steps2.md` target 4; commit 48b2c75). It is not a staged literature
+no literature hypothesis, by `LQGMeasureLocalityFunctionalStep_proof` (`LQGMeasureLocalityProof.lean`, commit 48b2c75). It is not a staged literature
 statement: it is not in `MatedCRT/External` or `MatedCRT/Proposed`, and it is not weakened anywhere. The reduced-input
 consumer `coneWholePlaneRestrictedLQGLawStep_of_fieldLaw` (`ConeWholePlaneRestrictedLaw.lean`) and the reduced-input
 consumers `conePrematureContactNullStep_of_fieldLaw` and `coneHalfBallClosureInsideStep_of_fieldLaw` (`ConePrematureNull.lean`)

@@ -1,6 +1,6 @@
 import MatedCRT.Proofs.Sec2.ConeFamilyMeasurable.ContactEvent
 
-/-! # Locality of the `3/4`-clusters and of volume growth under restriction to `B_1` (closure of Proposition 4.2, z5)
+/-! # Locality of the `3/4`-clusters and of volume growth under restriction to `B_1` (closure of Proposition 4.2)
 
 The raw `3/4`-clusters of a measure `ν` depend only on `ν|_{B_1}`: the supersolutions on `B_{3/4}` test the Laplacian
 only against test functions supported in `B_{3/4} ⊆ B_1` (`LaplacianLE`), and the Green function does not involve `ν`.

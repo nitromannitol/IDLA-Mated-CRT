@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Sec4.Prop42Closure.ConeWholePlaneSteps
 import MatedCRT.Draft.Section2
 
-/-! # The cone volume-growth input (B1, cone side) from IDLA Lemma 2.7 (closure of Proposition 4.2, z5)
+/-! # The cone volume-growth input (B1, cone side) from IDLA Lemma 2.7 (closure of Proposition 4.2)
 
 IDLA Lemma 2.7 (`VolumeGrowthStmt`, `MatedCRT/Draft/Section2.lean:121`; [BG20] Lemma A.1) bounds `μ(B_δ(z))` between
 `δ^{β_m}` and `δ^{β_p}` for all `z ∈ B_{1-δ}`, with polynomially high probability in `δ` (`PolyHighProb`). This file

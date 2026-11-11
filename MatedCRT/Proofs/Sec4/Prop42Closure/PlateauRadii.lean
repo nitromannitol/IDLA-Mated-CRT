@@ -2,7 +2,7 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.PlateauAE
 import MatedCRT.Proofs.Sec2.ConeFamilyMeasurable.WholePlaneLocality
 import HarmonicBalls.Proofs.Sec5.RegularizedFamilyHarmonicBridge
 
-/-! # A.e. measurability of the radii of the whole-plane global family (open item (f), closure of Proposition 4.2, z5)
+/-! # A.e. measurability of the radii of the whole-plane global family (open item (f), closure of Proposition 4.2)
 
 The radius of a family set is `familyRadius U = sSup {‖x‖ : x ∈ U}` (draft line 232). For an open bounded set `U`, this
 supremum is the supremum over a dense sequence `(d_n)` of the norms of the points `d_n ∈ U`

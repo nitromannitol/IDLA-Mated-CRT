@@ -4,12 +4,10 @@ import MatedCRT.Proofs.Field.WholePlaneAffine
 import MatedCRT.Proofs.Field.GaussianLaw
 
 /-!
-# Normalized complex-affine circle law, circle-only proof (steps3:473-499)
+# Normalized complex-affine circle law, circle-only proof
 
-Internal module; it cites no literature input. It formalizes the written circle-law calculation of steps3
-("Circle law, measurable limits, and absence of an atom", lines 473-499), including its sentence "This also proves
-the assertion for complex rotations, not just positive real dilations". For `a ≠ 0`, `R = |a|` and `u = a / R`
-(so `‖u‖ = 1`), the normalized circle process of steps3 eq:normalized-circle-dilation is
+Internal module; it cites no literature input. It formalizes the circle-law calculation (measurable limits, absence of an atom), including the assertion for complex rotations, not just positive real dilations. For `a ≠ 0`, `R = |a|` and `u = a / R`
+(so `‖u‖ = 1`), the normalized circle process is
 `h^a(r, z) = h(R r, a z) - h(R, 0) = h(R r, R u z) - h(R, 0)`, i.e. `normalizedCircleProc a`.
 
 The smeared observables are the whole-plane circle averages `circle s w` (the `GFFObservable.circle` of
@@ -18,7 +16,7 @@ The smeared observables are the whole-plane circle averages `circle s w` (the `G
 * `circleAverage_comp_unit_mul`: rotation invariance of circle averages, `avg_{∂B(c,s)} f(u ·) = avg_{∂B(u c,s)} f`.
 * `wholePlaneCov_unit_mul`, `wGC_circle_unit_mul`: the kernel and the circle covariance are invariant under a common
   rotation of both arguments.
-* `normalized_wGC_affine_cc`: the cross-term and variance cancellation of steps3:486-489, read off from
+* `normalized_wGC_affine_cc`: the cross-term and variance cancellation of , read off from
   `Field.affine_cc` (real dilation `R`, complex centres).
 * `cov_normalized_circle`: covariance of two normalized circle observables, by bilinearity of the Gaussian observables
   (`Field.cov_comb_four`) and `IsWholePlaneGFF.covariance_eq`.
@@ -32,7 +30,7 @@ open MeasureTheory ProbabilityTheory Filter Set HarmonicBalls
 
 namespace MatedCRT
 
-/-- Rotation invariance of circle averages (steps3:473-499, complex rotations). For `‖u‖ = 1`,
+/-- Rotation invariance of circle averages (complex rotations). For `‖u‖ = 1`,
 `avg_{x ∈ ∂B(c,s)} f(u x) = avg_{x ∈ ∂B(u c, s)} f(x)`. -/
 theorem circleAverage_comp_unit_mul (f : ℂ → ℝ) {u : ℂ} (hu : ‖u‖ = 1) (c : ℂ) (s : ℝ) :
     Real.circleAverage (fun x => f (u * x)) c s = Real.circleAverage f (u * c) s := by
@@ -81,7 +79,7 @@ theorem wGC_circle_unit_mul {u : ℂ} (hu : ‖u‖ = 1) (s t : ℝ) (w v : ℂ)
   rw [← circleAverage_comp_unit_mul (fun y => wholePlaneCov (u * x) y) hu v t]
   simp only [wholePlaneCov_unit_mul hu]
 
-/-- The cross-term and variance cancellation of steps3:486-489 for the smeared circle covariances: with `R > 0`,
+/-- The cross-term and variance cancellation of  for the smeared circle covariances: with `R > 0`,
 `Γ(A,C) - Γ(A,B) - Γ(C,B) + Γ(B,B) = Γ(circle s w, circle t v)`, where `A = circle (R s) (R w + z)`,
 `C = circle (R t) (R v + z)` and `B = circle R z`. Read off from `Field.affine_cc`. -/
 theorem normalized_wGC_affine_cc {R : ℝ} (hR : 0 < R) (z : ℂ) {s t : ℝ} (hs : 0 < s) (ht : 0 < t)
@@ -198,7 +196,7 @@ theorem normalized_circle_law_of_unit {Ω : Type} [MeasurableSpace Ω] {P : Meas
   rw [hfun]
   exact hmain
 
-/-- **Normalized complex-affine circle law** (steps3:473-499, complex rotations included). For a whole-plane GFF
+/-- **Normalized complex-affine circle law** (complex rotations included). For a whole-plane GFF
 `h` and `a ≠ 0`, the normalized circle process `(r, z) ↦ h(|a| r, a z) - h(|a|, 0)` has the same law as the circle
 process `(r, z) ↦ h(r, z)`, on the product σ-algebra of `(0, ∞) × ℂ → ℝ`. Only `IsWholePlaneGFF` of `h` is used. -/
 theorem normalized_circle_law_complex {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]

@@ -1,9 +1,8 @@
 import MatedCRT.Proofs.Sec2.ConeFamilyMeasurable.ContactEvent
 
-/-! # Named Step Props for the transfer of the premature-contact event (closure of Proposition 4.2, z5)
+/-! # Named Step Props for the transfer of the premature-contact event (closure of Proposition 4.2)
 
-Written argument: `notes/prop42-proof/prop42-proof.tex`, draft lines 275-289 ("equality of local cone and `h^γ` laws
-excludes the same event for the cone"). Operator ruling (2026-11-08): the volume-growth inputs (B1) and the whole-plane
+Equality of local cone and `h^γ` laws excludes the same event for the cone. The volume-growth inputs (B1) and the whole-plane
 model (B2) are named Step Props, and fact (2) is stated for the fields exactly as IDLA eq. (2.4) states it
 (`eq:gff`, paper line 443: `h|_{B_1} =_d (h^ℂ - γ log|·|)|_{B_1}`).
 
@@ -43,7 +42,7 @@ def ConeVolumeGrowthAeStep : Prop :=
     ∀ᵐ ω ∂P, ∃ βm βp : ℝ, VolumeGrowth (μ ω) (3 / 4) βm βp
 
 /-- **B1, whole-plane side: almost surely the whole-plane LQG measure `μ_{h^ℂ - γ log|·|}` has volume growth at radius
-`3/4`.** Stated as its own Step (operator ruling (a)); no statement of the repository proves it. -/
+`3/4`.** Stated as its own Step; no statement of the repository proves it. -/
 def WholePlaneVolumeGrowthAeStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ),

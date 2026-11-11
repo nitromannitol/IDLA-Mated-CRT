@@ -1,10 +1,9 @@
 import MatedCRT.Proofs.Sec4.Prop42Closure.HalfBallPlateau
 
-/-! # Plateau probabilities under almost-everywhere measurable radii (closure of Proposition 4.2, z5)
+/-! # Plateau probabilities under almost-everywhere measurable radii (closure of Proposition 4.2)
 
 `plateau_measure_zero` (`HalfBallPlateau.lean`) needs the radii at positive rational times to be measurable for every
-outcome. This file proves the almost-everywhere version (the open item "a.e. version of plateau_measure_zero" of
-`reports/z5.md`): if the radii `R_q` (`q` a positive rational) are almost everywhere measurable and the scale invariance
+outcome. This file proves the almost-everywhere version of `plateau_measure_zero`: if the radii `R_q` (`q` a positive rational) are almost everywhere measurable and the scale invariance
 of fact (1) holds, then `P[r ∈ plateau] = 0` for every `r > 0`.
 
 Proof: replace each radius by a measurable version `R'_q =ᵐ R_q` (countably many `q`, `ae_all_iff`); the plateau sets

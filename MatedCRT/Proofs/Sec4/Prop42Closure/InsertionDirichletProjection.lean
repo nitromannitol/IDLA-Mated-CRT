@@ -3,9 +3,9 @@ import Mathlib.Analysis.InnerProductSpace.Projection.Basic
 import Mathlib.Probability.Distributions.Gaussian.IsGaussianProcess.Basic
 
 /-!
-# Covariance of the Gaussian Dirichlet projection of the pairing observations (steps3:603-613)
+# Covariance of the Gaussian Dirichlet projection of the pairing observations
 
-Task `z1-steps3-dirichlet-projection-covariance`. A bounded covariance component for the producer
+A bounded covariance component for the producer
 `LocalDirichletCoordinatewiseStep` (`InsertionLocalCircleRecovery.lean:114-123`). It is not that producer.
 
 The objects are an isonormal Gaussian process `X` on a real inner product space `E` (the energy space of the whole-plane
@@ -16,7 +16,7 @@ No field is constructed here: `X` is an arbitrary isonormal process.
   (isonormal Gaussian process, Nualart's name for a Gaussian Hilbert space).
 * `IsIsonormalProcess.gaussian_projection`, `.covariance_projection`, `.covariance_projection_residual`: the projected
   family `X (K.starProjection u)` is a centered Gaussian family with covariance `⟪K.starProjection u, K.starProjection v⟫`,
-  and it is uncorrelated with the residual `u - K.starProjection u` (the orthogonality of steps3:605-606).
+  and it is uncorrelated with the residual `u - K.starProjection u` (the orthogonality of).
 * `dirichletPairing_projection_gaussian_covariance`: for test functions `φ, ψ` admissible on `D`, the observations
   `X (K.starProjection (rep φ))` form a centered Gaussian family with covariance `dirichletGFFCovariance D (pairing φ)
   (pairing ψ)`, the kernel `2π G_D` of `Defs/DirichletGFF.lean`. The covariance is derived from the orthogonal projection,
@@ -29,11 +29,11 @@ Two named deterministic inputs are used, and no others:
   integration by parts is not written here.
 * `DirichletProjectionGreenRealization D ev rep K` (projection-realization premise): the orthogonal projection of `rep ψ`
   onto `K` has Dirichlet function `x ↦ ∫ G_D(x,y) ψ(y) dy` almost everywhere on `D`. It identifies the projection onto
-  `H_0^1(D)` with the Green operator. steps3:605-608 asserts that orthogonality gives covariance `2πG_D` but does not
+  `H_0^1(D)` with the Green operator. The source asserts that orthogonality gives covariance `2πG_D` but does not
   write this identification; it is not proved here.
 
 Neither premise is a Gaussian-law premise: the covariance of the projected observations is derived from them.
-Still open (recorded in `reports/z1.md`): the realization of `X` from the whole-plane GFF on the same probability space,
+Still open: the realization of `X` from the whole-plane GFF on the same probability space,
 a function-valued version of the projected field, the circle observables, the harmonicity of the remainder, and the
 coordinatewise circle identity.
 -/
@@ -70,7 +70,7 @@ theorem IsIsonormalProcess.covariance_projection {Ω E : Type*} [MeasurableSpace
   hX.covariance _ _
 
 /-- The projected observation is uncorrelated with the residual `u - K.starProjection u`: the orthogonality of the
-projection (steps3:605-606). -/
+projection. -/
 theorem IsIsonormalProcess.covariance_projection_residual {Ω E : Type*} [MeasurableSpace Ω] [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] {P : Measure Ω} {X : E → Ω → ℝ} (K : Submodule ℝ E) [K.HasOrthogonalProjection]
     (hX : IsIsonormalProcess P X) (u : E) :

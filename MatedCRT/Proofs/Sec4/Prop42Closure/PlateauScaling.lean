@@ -1,8 +1,8 @@
 import MatedCRT.Proofs.Sec4.Prop42Closure.HalfBallPlateau
 
-/-! # Deterministic scaling of the plateau values (closure of Proposition 4.2, z5)
+/-! # Deterministic scaling of the plateau values (closure of Proposition 4.2)
 
-Written argument: `notes/prop42-proof/prop42-proof.tex`, lemma `l:plateau` (draft lines 230-268), in particular the
+In particular the
 paragraph "The random positive change of time preserves the set of plateau values ... Consequently `P(h_a) = a⁻¹ P(h)`"
 (draft lines 252-256). With `R_Λ(t) = familyRadius (Λ t)` (`R_h` of draft line 232) this file proves the deterministic
 content, with no field-law input:

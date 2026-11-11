@@ -8,18 +8,18 @@ import MatedCRT.Proposed.DuplantierSheffieldCoordinate2011
 
 /-! # Input K of Proposition 4.2: the insertion-`α` LQG scaling law (`InsertionLQGScalingLawStep`)
 
-Task `z5-insertion-lqg-scaling-law`. Target: `InsertionLQGScalingLawStep` (`PlateauScaleLaw.lean:106`).
+Target: `InsertionLQGScalingLawStep` (`PlateauScaleLaw.lean:106`).
 
 Statement K: for `γ ∈ (0,2)`, `α < Q`, a whole-plane GFF `h^ℂ` with insertion-`α` LQG measure `μ`, and `a > 0`, there are
 a whole-plane GFF `h''` (the affine transform `h^ℂ(a ·) - h^ℂ_a(0)`, i.e. `affHC a 0`, `affHcirc a 0`), its insertion-`α`
 LQG measure `μ''`, and a random constant `c > 0` with `μ.map (· / a) = c • μ''` a.s. and `μ'' =_d μ`.
 
-Route (written argument: `notes/prop42-proof/prop42-proof.tex` lines 245-256; `c = e^{γ c_a}`, `c_a = g_a(0) + (Q-α) log a`):
+Route (`c = e^{γ c_a}`, `c_a = g_a(0) + (Q-α) log a`):
 * field law: `MatedCRT.Field.isWholePlaneGFF_affine` (`Proofs/Field/WholePlaneAffine.lean`);
 * circle averages: for `s > 0`, `fieldCircleAverage α (affHcirc a 0 h ω) s v = H(a s, a v) - H(a, 0)` with `H = fieldCircleAverage α (h ω)`
   (`insCircleAverage_log_scaled`: `circleAverage (log‖·‖) (a v) (a s) = log a + circleAverage (log‖·‖) v s`);
 * LQG limit: the non-dyadic coordinate rule `MatedCRT.Proposed.InsertionCoordinateExtensionStep` (an OPEN INTERNAL
-  EXTENSION, WPN-42-insertion-coordinate-extension, staged in `MatedCRT/Proposed/DuplantierSheffieldCoordinate2011.lean`;
+  EXTENSION, staged in `MatedCRT/Proposed/DuplantierSheffieldCoordinate2011.lean`;
   not a DS11 citation; the only open input here), then the constant shift
   `MatedCRT.LQGMeasure.isLQGLimit_addCircleAverage` (`Proofs/Sec2/LQGMeasureProperties/Approx.lean`);
 * law: `identDistrib_lqgMeasure_of_circleProcess` (`Proofs/Sec2/ConeFamilyMeasurable/MeasureLaw.lean`, the Borel recovery) with
@@ -149,7 +149,7 @@ theorem isLQGLimit_insertion_shift {γ α a : ℝ} {hc : ℝ → ℂ → ℝ} {m
 /-! ### 4. Input K from the open insertion-coordinate extension -/
 
 /-- **Input K from the open insertion-coordinate extension.** `InsertionLQGScalingLawStep` (`PlateauScaleLaw.lean:106`)
-follows from the fixed-map coordinate rule `InsertionCoordinateExtensionStep` (WPN-42-insertion-coordinate-extension). That
+follows from the fixed-map coordinate rule `InsertionCoordinateExtensionStep`. That
 hypothesis is an OPEN INTERNAL EXTENSION and NOT a DS11 citation: DS11 Prop. 2.1 (p. 13) does not print its whole-plane
 insertion field or its non-dyadic scales (see `MatedCRT/Proposed/DuplantierSheffieldCoordinate2011.lean`). Together with the
 existing whole-plane field law, circle-average measurability and Borel recovery, the field law and the Borel recovery are

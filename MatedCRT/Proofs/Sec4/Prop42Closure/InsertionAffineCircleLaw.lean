@@ -2,11 +2,11 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.InsertionCoordinate
 import MatedCRT.Proofs.Sec4.Prop42Closure.InsertionDyadicDecoder
 
 /-!
-# Complex-affine transport of the insertion circle array (steps3:626-668)
+# Complex-affine transport of the insertion circle array
 
 Internal module; it cites no literature input. It formalizes one written component of "Identification for the fixed
-affine map" (steps3 Section 2, lines 626-668, sha256 `d34cf930...`): for a complex-affine map `z ↦ a z + b`, `a ≠ 0`,
-the insertion circle array `(r, z) ↦ H(|a| r, a z + b) + Q log |a|` (steps3 eq:affine-circle-array) is the normalized
+affine map": for a complex-affine map `z ↦ a z + b`, `a ≠ 0`,
+the insertion circle array `(r, z) ↦ H(|a| r, a z + b) + Q log |a|` is the normalized
 array `H^a(r, z + b/a)` of eq:normalized-circle-dilation up to the random constant `h(|a|, 0)` and a deterministic
 constant.
 
@@ -25,14 +25,13 @@ constant.
 * `normalized_circle_law_ofReal`: the real case `a = R > 0`, `b = 0` of the random law, read off from
   `circleProc_affine_law`.
 
-Not proved here (exact residual of the random law equality for complex `a`, steps3 "This also proves the assertion for
-complex rotations"): for `u ∈ ℂ` with `‖u‖ = 1`, the rotated field `hcirc' ω r z := hcirc ω r (u * z)` is a
+Not proved here (exact residual of the random law equality for complex `a`): for `u ∈ ℂ` with `‖u‖ = 1`, the rotated field `hcirc' ω r z := hcirc ω r (u * z)` is a
 whole-plane GFF for the rotated pairings `hC' ω φ := hC ω (fun y ↦ φ (u⁻¹ * y))`. Granting this residual,
 `IsWholePlaneGFF P hC' hcirc'`, the random law `P.map (circleProc ∘ normalizedCircleProc a ∘ hcirc)
 = P.map (circleProc ∘ hcirc)` follows for `a = |a| u`, since `normalizedCircleProc a (hcirc ω)
 = normalizedCircleProc |a| (hcirc' ω)`, `circleProc_affine_law` applies to `hcirc'`, and
 `Field.wholePlane_circle_law` identifies `hcirc'` with `hcirc` in law. The measure-level identity
-`M^a_r = C_a⁻¹ (x ↦ x / a)_* M_{|a| r}` (steps3 eq:fixed-factor-approx) is not part of this file.
+`M^a_r = C_a⁻¹ (x ↦ x / a)_* M_{|a| r}` is not part of this file.
 -/
 
 open MeasureTheory Filter Topology Set ProbabilityTheory HarmonicBalls
@@ -40,13 +39,12 @@ open scoped ENNReal NNReal
 
 namespace MatedCRT
 
-/-- The normalized complex-affine circle process of steps3 eq:normalized-circle-dilation:
+/-- The normalized complex-affine circle process:
 `h^a(r, z) = h(|a| r, a z) - h(|a|, 0)`. For `a = R > 0` real it is `Field.affHcirc R 0` (`normalized_circle_law_ofReal`). -/
 noncomputable def normalizedCircleProc (a : ℂ) (h : ℝ → ℂ → ℝ) : ℝ → ℂ → ℝ :=
   fun r z => h (‖a‖ * r) (a * z) - h ‖a‖ 0
 
-/-- The insertion circle array of the target, `(r, z) ↦ H(|a| r, a z + b) + Q log |a|` with `H = fieldCircleAverage α`
-(steps3 eq:affine-circle-array). -/
+/-- The insertion circle array of the target, `(r, z) ↦ H(|a| r, a z + b) + Q log |a|` with `H = fieldCircleAverage α`. -/
 noncomputable def affineCircleArray (α Q : ℝ) (a b : ℂ) (h : ℝ → ℂ → ℝ) : ℝ → ℂ → ℝ :=
   fun r z => fieldCircleAverage α h (‖a‖ * r) (a * z + b) + Q * Real.log ‖a‖
 
@@ -73,7 +71,7 @@ theorem circleAverage_log_complexAffine {a b : ℂ} (ha : a ≠ 0) {s : ℝ} (hs
   rw [key]
   ring
 
-/-- **Deterministic circle-average identity** (steps3:649-668). For `a ≠ 0`, every realization `h`, every `s > 0` and
+/-- **Deterministic circle-average identity**. For `a ≠ 0`, every realization `h`, every `s > 0` and
 `v ∈ ℂ`:
 `affineCircleArray α Q a b h s v = fieldCircleAverage α (normalizedCircleProc a h) s (v + b / a) + h |a| 0 + (Q - α) log |a|`.
 The identity holds pointwise in `h`, for all positive radii and all centres at once, with no regularity assumption. -/
@@ -86,7 +84,7 @@ theorem affineCircleArray_eq_normalized {α Q : ℝ} {a b : ℂ} (ha : a ≠ 0) 
   rw [hc, circleAverage_log_complexAffine ha hs v]
   ring
 
-/-- **Measurable circle-array transport** (steps3:649-668, measurable part). For a whole-plane GFF `(hC, hcirc)`,
+/-- **Measurable circle-array transport** (measurable part). For a whole-plane GFF `(hC, hcirc)`,
 `a ≠ 0` and `b ∈ ℂ`, the transported positive-radius process `ω ↦ circleProc (affineCircleArray α Q a b (hcirc ω))` is a
 random variable into the product space `Set.Ioi 0 × ℂ → ℝ`. -/
 theorem measurable_circleProc_affineCircleArray {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
@@ -98,7 +96,7 @@ theorem measurable_circleProc_affineCircleArray {Ω : Type} [MeasurableSpace Ω]
   unfold circleProc affineCircleArray fieldCircleAverage
   exact (hm.sub_const _).add_const _
 
-/-- Joint continuity of the transported array on the positive-radius domain (steps3:649-668, continuity part): if `h` is
+/-- Joint continuity of the transported array on the positive-radius domain (continuity part): if `h` is
 continuous on `(0,∞) × ℂ`, so is `(r, z) ↦ affineCircleArray α Q a b h r z`. -/
 theorem continuousOn_affineCircleArray {α Q : ℝ} {a b : ℂ} (ha : a ≠ 0) {h : ℝ → ℂ → ℝ}
     (hh : ContinuousOn (fun p : ℝ × ℂ => h p.1 p.2) (Ioi 0 ×ˢ univ)) :
@@ -131,7 +129,7 @@ theorem continuousOn_affineCircleArray {α Q : ℝ} {a b : ℂ} (ha : a ≠ 0) {
   simp only [affineCircleArray, fieldCircleAverage]
   rw [circleAverage_log_closed (mul_pos hna hr)]
 
-/-- Almost-sure continuity of the transported circle process, simultaneously in `a ≠ 0` and `b ∈ ℂ` (steps3:649-668).
+/-- Almost-sure continuity of the transported circle process, simultaneously in `a ≠ 0` and `b ∈ ℂ`.
 The exceptional event is that of `IsWholePlaneGFF.ae_continuousOn_circle`, so it does not depend on `(a, b)`. -/
 theorem ae_forall_continuous_circleProc_affineCircleArray {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc) (α Q : ℝ) :
@@ -141,7 +139,7 @@ theorem ae_forall_continuous_circleProc_affineCircleArray {Ω : Type} [Measurabl
   intro a ha b
   exact continuous_circleProc_of_continuousOn (continuousOn_affineCircleArray ha hω)
 
-/-- The real case of the random law (steps3:649-668 with `a = R > 0`, `b = 0`): the normalized circle process of `R`
+/-- The real case of the random law (with `a = R > 0`, `b = 0`): the normalized circle process of `R`
 has the law of the circle process. This is `circleProc_affine_law` read through `normalizedCircleProc`. The complex
 case is the residual described in the module docstring. -/
 theorem normalized_circle_law_ofReal {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
@@ -157,7 +155,7 @@ theorem normalized_circle_law_ofReal {Ω : Type} [MeasurableSpace Ω] {P : Measu
   rw [e]
   exact circleProc_affine_law hGFF hR
 
-/-- **Measurable continuous-domain transport** (steps3:649-668, the random element consumed by the decoder). For fixed
+/-- **Measurable continuous-domain transport** (the random element consumed by the decoder). For fixed
 `a ≠ 0` and `b ∈ ℂ` there is a measurable map `X : Ω → ContCircle` into the continuous positive-radius processes of
 `InsertionDyadicDecoder` that agrees almost surely with `circleProc (affineCircleArray α Q a b (hcirc ω))`. The
 modification on a measurable null superset of the exceptional event is the constant `0`. -/

@@ -1,9 +1,9 @@
 import MatedCRT.Audit.LocalDirichletProjectionComponents
 
 /-!
-# Harmonic remainder of one Dirichlet projection realization (steps3:603-625; steps2-r3 Section 6)
+# Harmonic remainder of one Dirichlet projection realization
 
-Task `z1-steps3-dirichlet-harmonic-remainder`. The harmonic-remainder component of clause (g) of
+The harmonic-remainder component of clause (g) of
 `DirichletProjectionRealization`, for one whole-plane GFF `(hC, hcirc)` and one disk `D = ball c ρ`.
 
 Proved here, from the realization carriers (`IsWholePlaneGFF`, the Dirichlet subspaces `K D`, the observables `repO`,
@@ -11,15 +11,15 @@ the isonormal process `X`):
 
 * `representedRemainder`: the represented difference `z ↦ hcirc o (δ z) z − X(P_D rep(circle (δ z) z)) o`, read at the
   radius `δ z = (ρ − |z − c|)/2`, which is admissible for every `z ∈ D`. It is a continuous modification of the
-  remainder: one radius per point replaces the countable family of circles of steps3:612-615.
+  remainder: one radius per point replaces the countable family of circles of .
 * `identity_representedRemainder`, `representedRemainder_eq_ae`: the circle identity of (g) on every admissible circle,
   and agreement with the given remainder `H` at each point, almost surely.
 * `ae_continuousOn_representedRemainder`: almost surely the represented remainder is continuous on `D`.
 * `harmonicRemainder_of_annihilation`: if the represented remainder annihilates planar Laplacians of tests supported in
-  `D` (`RemainderAnnihilationStep`, unwritten: steps3:607-609), then it is almost surely harmonic on `D`, by the
+  `D` (`RemainderAnnihilationStep`, unwritten), then it is almost surely harmonic on `D`, by the
   unverified named Step `WeylLemmaContinuousStmt` (source status in its docstring).
 * `isHarmonicOnDisk_add_const`, `ae_isHarmonicOnDisk_add_const`: harmonicity survives adding a random constant, so the
-  unit-circle random-constant normalization (steps3:609-611) preserves it. No independence of normalized pieces is used.
+  unit-circle random-constant normalization preserves it. No independence of normalized pieces is used.
 
 Named premises, not proved here: `RemainderAnnihilationStep` (unwritten) and `WeylLemmaContinuousStmt`, an unverified
 named Step retained as an explicit hypothesis (docstrings give the exact types and source status), the a.s. continuity of
@@ -69,7 +69,7 @@ Source status (unverified; R2 source hold of `docs/campaign/MATH-OPEN-20261109.m
   This file writes neither a bridge from (i) to (ii) nor a printed locator for that bridge.
 
 Accepting the conditional components that use this Prop does not require moving it into `MatedCRT/External`; source
-admission is a separate operator decision. -/
+admission is a separate decision. -/
 def WeylLemmaContinuousStmt : Prop :=
   ∀ (D : Set ℂ) (u : ℂ → ℝ), IsOpen D → ContinuousOn u D → LaplacianAnnihilatesOn D u → IsHarmonicOnDisk D u
 
@@ -118,7 +118,7 @@ def representedRemainder {E : Type*} [NormedAddCommGroup E] [InnerProductSpace �
     (repO : GFFObservable → E) (X : E → Ω → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (c : ℂ) (ρ : ℝ) (o : Ω) : ℂ → ℝ :=
   representedDifference c ρ (hcirc o) (projCircleFun K repO X (Metric.ball c ρ) o)
 
-/-- **Unwritten step (steps3:607-609).** The represented remainder annihilates planar Laplacians of test functions supported
+/-- **Unwritten step.** The represented remainder annihilates planar Laplacians of test functions supported
 in `ball c ρ`, almost surely. The paper asserts this ("the remainder annihilates Δφ for tests supported in D, so is
 harmonic") without a written argument. The expected source is the orthogonality of the harmonic part to the zero-boundary
 Dirichlet subspace (the Riesz identity), which is not formalized here. It is stated pathwise, for almost every `o` and all
@@ -162,7 +162,7 @@ lemma representedRemainder_eq_ae {E : Type*} [NormedAddCommGroup E] [InnerProduc
 
 /-- Almost surely the represented remainder is continuous on `ball c ρ`, from the a.s. continuity of the field on
 circles (`IsWholePlaneGFF`) and of the projected circle averages on admissible circles (the realization's continuity
-clause). This is the continuity extension of steps3:612-615, here at one radius per point. -/
+clause). This is the continuity extension of , here at one radius per point. -/
 lemma ae_continuousOn_representedRemainder {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] {Ω : Type}
     [MeasurableSpace Ω] {P : Measure Ω} (K : Set ℂ → Submodule ℝ E)
     [∀ D : Set ℂ, (K D).HasOrthogonalProjection] (repO : GFFObservable → E) (X : E → Ω → ℝ)
@@ -185,7 +185,7 @@ lemma isHarmonicOnDisk_of_laplacian_annihilation (hWeyl : WeylLemmaContinuousStm
   hWeyl (Metric.ball c ρ) u Metric.isOpen_ball hu hann
 
 /-- Harmonicity on `D` survives adding a constant: continuity is preserved, and the circle averages of `H + k` are those
-of `H` plus `k` (the unit-circle random-constant normalization, steps3:609-611). -/
+of `H` plus `k` (the unit-circle random-constant normalization). -/
 lemma isHarmonicOnDisk_add_const {D : Set ℂ} {H : ℂ → ℝ} (hH : IsHarmonicOnDisk D H) (k : ℝ) :
     IsHarmonicOnDisk D (fun z => H z + k) := by
   obtain ⟨hcont, hmvp⟩ := hH

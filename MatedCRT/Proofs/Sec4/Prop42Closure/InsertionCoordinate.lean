@@ -12,11 +12,11 @@ import MatedCRT.Proposed.SheffieldWang2016
 
 Internal module. It is not a literature input and cites no source for the whole-plane statement.
 
-* `InsertionCoordinateExtensionStep` is the exact Step (steps3 Section 2, lines 405-712, sha256 `d34cf930...`). It was
+* `InsertionCoordinateExtensionStep` is the exact Step. It was
   previously declared in `MatedCRT/Proposed/DuplantierSheffieldCoordinate2011.lean`, which now keeps a
   backwards-compatible abbreviation of it.
-* `insertion_no_atom_zero_ae` is the first component of the written proof (steps3 "Circle law, measurable limits, and
-  absence of an atom", Lemma `lem:insertion-no-atom`). It assumes the measurable-decoder premise
+* `insertion_no_atom_zero_ae` is the first component of the written proof ("Circle law, measurable limits, and
+  absence of an atom"). It assumes the measurable-decoder premise
   `MeasurableDyadicDecoder` (its written constructor is not yet formalized). The Gaussian marginal is derived from
   `Field.map_radial_eq_brownian`; the affine change of variables is `Field.isLQGLimit_affine_iff`.
 
@@ -29,7 +29,7 @@ open scoped ENNReal NNReal
 
 namespace MatedCRT
 
-/-- **The exact Step `InsertionCoordinateExtensionStep`** (steps3 Section 2, lines 405-712). For `0 < γ < 2`,
+/-- **The exact Step `InsertionCoordinateExtensionStep`**. For `0 < γ < 2`,
 `α < Q = lqgQ γ`, a whole-plane GFF `(hC, hcirc)` on a probability space whose insertion-`α` LQG measure is `μ`, and
 every complex affine map `z ↦ a z + b` with `a ≠ 0`: almost surely the circle averages
 `(ε, z) ↦ h_{|a| ε}(a z + b) + Q log |a|` converge vaguely to `μ ∘ φ⁻¹` along the dyadic scales. The quantifier over
@@ -183,7 +183,7 @@ theorem isLQGLimit_circleProc_iff {γ α : ℝ} {x : ℝ → ℂ → ℝ} {m : M
 
 /-- **Premise: measurable dyadic decoder (written constructor pending).** There is a product-measurable map `dec` from
 positive-radius processes to measures on `ℂ` which is the dyadic insertion limit on every continuous process that has
-one. This is the measurable version `𝓜` of the dyadic limit in the written proof (steps3, paragraph "We need a measurable
+one. This is the measurable version `𝓜` of the dyadic limit in the written proof (paragraph "We need a measurable
 way of taking the given dyadic limit"). Only this existence statement is used. Its construction (restriction to a
 countable dense set of points, and the Borel convergence set on continuous representatives) is not formalized, so
 this is a hypothesis, not a proved object. The premise does not require the decoded set to lie in the continuous
@@ -197,15 +197,14 @@ def MeasurableDyadicDecoder (γ α : ℝ) : Prop :=
 /-! ## Normalized circle law and the decoded scaling identity -/
 
 /-- The circle process of the normalized field `affHcirc R 0 hcirc` has the law of the circle process of `hcirc`, for
-`R > 0` (steps3:520-531, from `Field.wholePlane_circle_law`). -/
+`R > 0` (from `Field.wholePlane_circle_law`). -/
 theorem circleProc_affine_law {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc) {R : ℝ} (hR : 0 < R) :
     P.map (fun ω => circleProc (Field.affHcirc R 0 hcirc ω)) = P.map (fun ω => circleProc (hcirc ω)) :=
   (Field.wholePlane_circle_law hGFF (Field.isWholePlaneGFF_affine hGFF hR 0)).symm
 
 /-- Decoded normalized measures: a.s. the decoded measure of the normalized dyadic circle process is the rescaled
-decoded limit, `dec(circ(affHcirc R_n 0 hcirc)) = c_n⁻¹ • (·/R_n)_* μ` (steps3:551-556, eq. dyadic-measure-exact,
-here via `Field.isLQGLimit_affine_iff`, with the shift `R_n · 2^{-k} = 2^{-(k+n)}`). -/
+decoded limit, `dec(circ(affHcirc R_n 0 hcirc)) = c_n⁻¹ • (·/R_n)_* μ` (here via `Field.isLQGLimit_affine_iff`, with the shift `R_n · 2^{-k} = 2^{-(k+n)}`). -/
 theorem dec_affine_ae {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
     {γ α : ℝ} {μ : Ω → Measure ℂ} (hμ : IsLQGMeasureOfField P γ α hcirc μ)
@@ -248,7 +247,7 @@ theorem smul_map_div_singleton (c : ℝ≥0∞) (ν : Measure ℂ) {R : ℝ} (hR
     simp [hR]
   rw [Measure.smul_apply, smul_eq_mul, Measure.map_apply (by fun_prop) (measurableSet_singleton 0), hpre]
 
-/-! ## The dyadic constant and its Gaussian estimate (steps3:557-562) -/
+/-! ## The dyadic constant and its Gaussian estimate -/
 
 theorem dyadicScale_eq_exp (n : ℕ) : dyadicScale n = Real.exp (-(n * Real.log 2)) := by
   unfold dyadicScale
@@ -271,7 +270,7 @@ theorem coordConst_dyadic_eq {γ α : ℝ} (hγ : 0 < γ) (n : ℕ) (H : ℝ →
   ring
 
 /-- The one-dimensional law of the circle average at `(2^{-n}, 0)` is `N(0, n log 2)`: the radial process of a
-whole-plane GFF is a Brownian motion in `-log r` (`Field.map_radial_eq_brownian`; steps3:557-560). -/
+whole-plane GFF is a Brownian motion in `-log r` (`Field.map_radial_eq_brownian`). -/
 theorem map_circle_dyadic {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc) (n : ℕ) :
     P.map (fun ω => hcirc ω (dyadicScale n) 0) = gaussianReal 0 (Real.toNNReal (n * Real.log 2)) := by
@@ -300,7 +299,7 @@ theorem map_circle_dyadic {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsP
     _ = gaussianReal 0 (Real.toNNReal (n * Real.log 2)) := brownianMotion_map_eval _ 0
 
 /-- **Chernoff and Borel-Cantelli.** Almost surely, `h_{2^{-n}}(0) < ct · n` for all large `n`, for every `ct > 0`
-(steps3:557-562: the Gaussian exponential bound, summed over `n`). -/
+(the Gaussian exponential bound, summed over `n`). -/
 theorem ae_eventually_circle_dyadic_lt {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
     {ct : ℝ} (hct : 0 < ct) :
@@ -353,7 +352,7 @@ theorem ae_eventually_circle_dyadic_lt {Ω : Type} [MeasurableSpace Ω] {P : Mea
     with ω hω
   exact hω.mono fun n hn => not_le.1 hn
 
-/-- **Dyadic constant tends to zero.** Almost surely `c_n = coordConst γ 2^{-n} h 0 → 0` (steps3:557-562, the
+/-- **Dyadic constant tends to zero.** Almost surely `c_n = coordConst γ 2^{-n} h 0 → 0` (the
 exponent `γ h(2^{-n},0) - n log 2 · γ(Q - α)` with `α < Q`). -/
 theorem ae_tendsto_coordConst_zero {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hGFF : IsWholePlaneGFF P hC hcirc)
@@ -379,7 +378,7 @@ theorem ae_tendsto_coordConst_zero {Ω : Type} [MeasurableSpace Ω] {P : Measure
       = -((γ * Real.log 2 * (lqgQ γ - α) / 2) * n) := by ring
   linarith [mul_lt_mul_of_pos_left hn hγ]
 
-/-! ## The Fatou argument (steps3:563-585) -/
+/-! ## The Fatou argument -/
 
 /-- **Fatou argument.** Let `a` be the atom mass and `b n` the atom masses of the rescaled decoded measures. They have
 the same laws as `a`, and `b n = c_n⁻¹ a` with `c_n → 0`, `c_n > 0` almost surely. Then `a = 0` almost surely. -/
@@ -448,7 +447,7 @@ theorem atom_vanishing_of_scaling {Ω : Type} [MeasurableSpace Ω] {P : Measure 
 
 /-! ## The no-insertion-atom component -/
 
-/-- **No insertion atom at the origin** (steps3:538-585, Lemma `lem:insertion-no-atom`). Under `0 < γ`, `α < Q`, a
+/-- **No insertion atom at the origin** (the no-atom lemma). Under `0 < γ`, `α < Q`, a
 whole-plane GFF `(hC, hcirc)` whose insertion-`α` LQG measure is `μ`, and the measurable-decoder premise
 `MeasurableDyadicDecoder γ α`, `μ{0} = 0` almost surely. -/
 theorem insertion_no_atom_zero_ae {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
@@ -519,7 +518,7 @@ functions this is the classical characterization of `Δ H = 0` on `D`. -/
 def IsHarmonicOnDisk (D : Set ℂ) (H : ℂ → ℝ) : Prop :=
   ContinuousOn H D ∧ ∀ z : ℂ, ∀ r : ℝ, 0 < r → Metric.closedBall z r ⊆ D → H z = Real.circleAverage H z r
 
-/-- The insertion remainder `H(z) - α log |z|` of the harmonic part `H` (steps3:609-621: adding `-α log|z|` to the
+/-- The insertion remainder `H(z) - α log |z|` of the harmonic part `H` (adding `-α log|z|` to the
 harmonic remainder). -/
 noncomputable def insertionRemainder (α : ℝ) (H : ℂ → ℝ) (z : ℂ) : ℝ :=
   H z - α * Real.log ‖z‖
@@ -653,13 +652,13 @@ theorem integral_withDensity_restrict_insertion {D : Set ℂ} (hD : IsOpen D) (�
   exact setIntegral_eq_integral_of_forall_compl_eq_zero (fun z hz => by simp [hf z hz])
 
 
-/-- **Local Dirichlet/harmonic decomposition: producer residual** (steps3:609-621, the written paragraph; not a published
+/-- **Local Dirichlet/harmonic decomposition: producer residual** (not a published
 result). For a disk `B(c, ρ)` with `closedBall c ρ ⊆ ℂ \ {0}` and a whole-plane GFF `(hC, hcirc)` on `Ω`, there are a
 zero-boundary Dirichlet GFF `(h0, hcirc0)` on the disk, vanishing on non-admissible circles (the representative
 convention of `SheffieldWangCircleAverageAllScaleStmt`), and a random function `H` such that almost surely `H` is
 harmonic on the disk (`IsHarmonicOnDisk`, which contains the continuity used for the multiplier) and
 `hcirc ω r z = hcirc0 ω r z + H ω z` for every admissible circle. The Gaussian Dirichlet projection gives this on an
-arbitrary probability space (steps3:609-621). It is not formalized and enters only as this named hypothesis. -/
+arbitrary probability space. It is not formalized and enters only as this named hypothesis. -/
 def LocalDirichletHarmonicDecompositionStep : Prop :=
   ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ), IsWholePlaneGFF P hC hcirc →
@@ -670,7 +669,7 @@ def LocalDirichletHarmonicDecompositionStep : Prop :=
       ∀ᵐ ω ∂P, IsHarmonicOnDisk (Metric.ball c ρ) (H ω) ∧
         ∀ r z, 0 < r → Metric.closedBall z r ⊆ Metric.ball c ρ → hcirc ω r z = hcirc0 ω r z + H ω z
 
-/-- **Local finiteness of the zero-boundary limit: unwritten residual (GAP).** steps3:603-625 applies Sheffield--Wang
+/-- **Local finiteness of the zero-boundary limit: unwritten residual (GAP).** The argument applies Sheffield--Wang
 Theorem 1.1 to the zero-boundary field on `D = B(c, ρ)`, whose limit is `exp(-γ · remainder) · μ|_D`. The staged
 statement `SheffieldWangCircleAverageAllScaleStmt` (Proposed/SheffieldWang2016.lean) requires `IsLocallyFiniteMeasure`
 of its supplied limit on all of `ℂ`, i.e. `∫_D exp(-γ (H - α log|·|)) dμ < ∞`, the total mass of the zero-boundary
@@ -695,7 +694,7 @@ def ZeroBoundaryLimitLocallyFiniteStep : Prop :=
       ∀ᵐ ω ∂P, IsLocallyFiniteMeasure (((μ ω).restrict (Metric.ball c ρ)).withDensity
         fun z => ENNReal.ofReal (Real.exp (-(γ * insertionRemainder α (H ω) z))))
 
-/-- Density identity on an admissible circle (steps3:609-621, deterministic part): where the whole-plane circle
+/-- Density identity on an admissible circle (deterministic part): where the whole-plane circle
 averages split as zero-boundary ones plus `H` on the admissible circles of radius `ε`, the insertion approximation of
 `f` equals the zero-boundary approximation of `f · exp(γ · remainder)`. -/
 theorem integral_insertion_eq_zeroBoundary {D : Set ℂ} (hD0 : D ⊆ ({0}ᶜ : Set ℂ)) {α γ ε : ℝ} (hε : 0 < ε)
@@ -754,7 +753,7 @@ theorem integral_finset_compactSupport {ν : Measure ℂ} [IsFiniteMeasureOnComp
 theorem exp_neg_mul_exp_self (x : ℝ) : Real.exp (-x) * Real.exp x = 1 := by
   rw [← Real.exp_add, neg_add_cancel, Real.exp_zero]
 
-/-- **Punctured all-scale convergence on one disk** (steps3:603-625, the written argument). Given the zero-boundary
+/-- **Punctured all-scale convergence on one disk**. Given the zero-boundary
 decomposition of the insertion field on `D = B(c, ρ)` (the producer residual, as data), the staged Sheffield--Wang
 statement applied to the zero-boundary field, and the local finiteness of the zero-boundary limit (`hfin`, named
 residual), the insertion approximations converge along all scales on every test function supported in `D`, to `μ`. -/
@@ -856,7 +855,7 @@ theorem punctured_disk_allScales {Ω : Type} [MeasurableSpace Ω] {P : Measure �
   rw [← hgμ]
   exact Tendsto.congr' heq.symm hlim
 
-/-! ## Rational disks covering `ℂ \ {0}` (steps3:603-625: "a countable cover of `ℂ \ {0}`") -/
+/-! ## Rational disks covering `ℂ \ {0}` ("a countable cover of `ℂ \ {0}`") -/
 
 /-- Centre `a + b i` of the rational disk indexed by `p = (a, b, r)`. -/
 def ratCenter (p : ℚ × ℚ × ℚ) : ℂ := ⟨(p.1 : ℝ), (p.2.1 : ℝ)⟩
@@ -904,7 +903,7 @@ theorem exists_ratDisk_mem {z : ℂ} (hz : z ≠ 0) :
   rw [Metric.mem_ball, dist_eq_norm]
   linarith
 
-/-- **Punctured all-scale convergence (steps3:603-625).** Assuming the staged Sheffield--Wang statement (read-only),
+/-- **Punctured all-scale convergence.** Assuming the staged Sheffield--Wang statement (read-only),
 the local Dirichlet/harmonic decomposition (producer residual `LocalDirichletHarmonicDecompositionStep`), and the local
 finiteness of the zero-boundary limit (named gap residual `ZeroBoundaryLimitLocallyFiniteStep`), almost surely the
 insertion approximations converge along all scales on every continuous compactly supported test function on `ℂ \ {0}`,
@@ -982,7 +981,7 @@ theorem punctured_allScales_of_steps {Ω : Type} [MeasurableSpace Ω] {P : Measu
   filter_upwards [self_mem_nhdsWithin] with ε hε
   exact (integral_lqgApprox_finset (γ := γ) hε (hcontω ε hε) φ hφc hφs f hfsum).symm
 
-/-! ## Compact-interior form of the zero-boundary limit (steps3:603-625)
+/-! ## Compact-interior form of the zero-boundary limit
 
 The zero-boundary limit `ν = (μ|_D).withDensity (exp(-γ · remainder))` on `D = B(c, ρ)` is finite on compact subsets
 of `D`: the density is continuous on `D`, hence bounded on each compact subset, and `μ` is locally finite. It is not
@@ -1027,8 +1026,7 @@ theorem ae_zeroBoundaryLimit_compact_lt_top {Ω : Type} [MeasurableSpace Ω] {P 
     simpa only [neg_mul] using continuousOn_exp_mul_insertionRemainder (t := -γ) hHω hD0
   exact withDensity_restrict_compact_lt_top hK hKD hc hK.measure_lt_top
 
-/-- Dyadic compact-test limit of the zero-boundary limit `ν` on `D = B(c, ρ)` (steps3:603-625, the written
-multiplication argument): almost surely, `∫ f d(lqgApprox γ hcirc0 (dyadicScale n)) → ∫ f dν` for every continuous
+/-- Dyadic compact-test limit of the zero-boundary limit `ν` on `D = B(c, ρ)` (the multiplication argument): almost surely, `∫ f d(lqgApprox γ hcirc0 (dyadicScale n)) → ∫ f dν` for every continuous
 compactly supported `f` with support in `D`. It uses the insertion limit, the admissible-circle identity and the
 harmonicity of `H`; no finiteness beyond that of the insertion measure is assumed. -/
 theorem ae_zeroBoundary_dyadic_compactTest {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
@@ -1075,8 +1073,7 @@ theorem ae_zeroBoundary_dyadic_compactTest {Ω : Type} [MeasurableSpace Ω] {P :
   show f z * Real.exp (-(γ * insertionRemainder α (H ω) z)) * Real.exp (γ * insertionRemainder α (H ω) z) = f z
   rw [mul_assoc, exp_neg_mul_exp_self, mul_one]
 
-/-- Transfer of the zero-boundary convergence to the insertion field on `D = B(c, ρ)` (steps3:603-625, the written
-argument): on the event of the zero-boundary convergence, the insertion approximation of `f` equals the zero-boundary
+/-- Transfer of the zero-boundary convergence to the insertion field on `D = B(c, ρ)` (the argument): on the event of the zero-boundary convergence, the insertion approximation of `f` equals the zero-boundary
 approximation of `f · exp(γ · remainder)` along admissible circles, and the continuous positive factor
 `exp(±γ · remainder)` preserves convergence for test functions supported in `D`. -/
 theorem ae_insertion_conv_of_zeroBoundary {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
@@ -1131,7 +1128,7 @@ theorem ae_insertion_conv_of_zeroBoundary {Ω : Type} [MeasurableSpace Ω] {P : 
   rw [← hgμ]
   exact Tendsto.congr' heq.symm hlim
 
-/-- **Punctured all-scale convergence on one disk, compact-interior form (steps3:603-625).** Assuming the
+/-- **Punctured all-scale convergence on one disk, compact-interior form.** Assuming the
 compact-interior Sheffield--Wang statement `SheffieldWangCircleAverageAllScaleInteriorStmt` (staged in Proposed/,
 read-only here), the zero-boundary decomposition of the insertion field on `D = B(c, ρ)` as data, and the insertion
 limit `μ`, the insertion approximations converge along all scales on every test function supported in `D`. The
@@ -1174,7 +1171,7 @@ theorem punctured_disk_allScales_interior {Ω : Type} [MeasurableSpace Ω] {P : 
     γ hD hDne inferInstance Metric.isBounded_ball hDir hγ.le hγ2 hzero hSWhyp
   exact ae_insertion_conv_of_zeroBoundary hD hD0 hDir hzero hdec hμ hcont hSWall
 
-/-- **Punctured all-scale convergence, compact-interior form (steps3:603-625).** Given the compact-interior
+/-- **Punctured all-scale convergence, compact-interior form.** Given the compact-interior
 Sheffield--Wang statement `SheffieldWangCircleAverageAllScaleInteriorStmt` (read-only) and the local Dirichlet/harmonic
 decomposition `LocalDirichletHarmonicDecompositionStep` (producer residual, carried explicitly), almost surely the
 insertion approximations converge along all scales on every continuous compactly supported test function on `ℂ \ {0}`,

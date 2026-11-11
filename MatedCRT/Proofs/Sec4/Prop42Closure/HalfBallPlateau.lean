@@ -1,9 +1,9 @@
 import MatedCRT.Proofs.Sec2.ConeFamilyMeasurable.ContactEvent
 import MatedCRT.Steps.Sec2.ConeHarmonicBallsUpToFixedTime
 
-/-! # Plateau radii of the whole-plane harmonic-ball family (closure of Proposition 4.2, z5)
+/-! # Plateau radii of the whole-plane harmonic-ball family (closure of Proposition 4.2)
 
-Written argument: `notes/prop42-proof/prop42-proof.tex`, lemma `l:plateau` (draft lines 230-268). This file
+This file
 
 * states fact (1), used at draft lines 245-256, as the named Step Prop `PlateauScaleInvarianceStep` (fact (2) is
   `ConeWholePlaneFieldLawStep` in `ConeWholePlaneSteps.lean`);
@@ -38,9 +38,9 @@ theorem plateauValues_countable (Λ : ℝ → Set ℂ) : (plateauValues Λ).Coun
 
 /-- **Fact (1): scale invariance of the plateau probabilities of the whole-plane family.**
 
-Written argument: draft lines 245-256 (the scaling `h_a` of the whole-plane field, `h_a =_d h^α`, and the identity
-`Λ^{h_a}_t = a⁻¹ Λ^h_{e^{γ c_a} t}`), which give `p(r) = p(ar)` at draft line 265, where `p(r) = P[r ∈ P(h)]`.
-Source of the scaling: the proof of [HB] Lemma 5.7 (Harmonic-Balls-LQG corrected tex lines 905-938), stated as
+The scaling `h_a` of the whole-plane field, `h_a =_d h^α`, and the identity
+`Λ^{h_a}_t = a⁻¹ Λ^h_{e^{γ c_a} t}` give `p(r) = p(ar)`, where `p(r) = P[r ∈ P(h)]`.
+Source of the scaling: the proof of [HB] Lemma 5.7, stated as
 `ClusterScaleInvarianceStmt` (`Harmonic-Balls-LQG/HarmonicBalls/Draft/Section5.lean:226`).
 
 Data: a whole-plane GFF `h^α` (`IsWholePlaneGFF`, insertion parameter `α < lqgQ γ`), its `γ`-LQG measure `μ`

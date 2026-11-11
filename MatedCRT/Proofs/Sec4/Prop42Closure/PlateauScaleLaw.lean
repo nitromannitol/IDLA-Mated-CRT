@@ -1,9 +1,8 @@
 import MatedCRT.Proofs.Sec4.Prop42Closure.PlateauScaling
 
-/-! # Scaling inputs and deterministic scaling for `PlateauScaleInvarianceStep` (Proposition 4.2, z5)
+/-! # Scaling inputs and deterministic scaling for `PlateauScaleInvarianceStep` (Proposition 4.2)
 
-Task `z5-plateau-scale-law-from-cited-family-scaling`; the consumer is task `z5-plateau-canonical-law-assembly`.
-Written argument: `notes/prop42-proof/prop42-proof.tex`, lemma `l:plateau` (draft lines 230-268): the scaling of draft
+The scaling of draft
 lines 245-256 and the probability identity of draft line 265.
 
 With `c = e^{γ c_a}` as in the paper:
@@ -116,7 +115,7 @@ def InsertionLQGScalingLawStep : Prop :=
 
 /-- **Input H: the dilated regularized family (deterministic scaling).** For every measure `μ` and `a, c > 0`, if `Λ` is a
 regularized cluster family at `0` for `μ`, then `t ↦ a⁻¹ Λ(c t)` is one for `μ_a = c⁻¹ μ(a ·)` at `0`.
-Written argument: the scaling of the mean-value property, mass parameter and family conditions (draft lines 252-256); the
+The scaling of the mean-value property, mass parameter and family conditions; the
 identity of the regularized clusters under the dilation, `cluster μ_a 1 0 t = a⁻¹ • cluster μ a 0 (c t)`, which is the
 pathwise content of [HB] Lemma 5.7 (`ClusterScaleInvarianceStmt`, `HarmonicBalls/Draft/Section5.lean:226`; proof at
 Harmonic-Balls-LQG corrected TeX lines 905-938), and the scaling of `IsSubharmonicBall`. The clauses (a)-(b) of

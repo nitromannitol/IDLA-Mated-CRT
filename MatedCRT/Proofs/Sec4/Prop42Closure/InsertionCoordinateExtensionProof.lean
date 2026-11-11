@@ -3,28 +3,28 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.InsertionNormalizedCircleLaw
 import MatedCRT.Proofs.Sec4.Prop42Closure.InsertionDyadicDecoder
 
 /-!
-# Insertion-coordinate extension: assembly of the exact Step (steps3:649-702)
+# Insertion-coordinate extension: assembly of the exact Step
 
 Internal module; it cites no literature input of its own. It proves the exact Step `InsertionCoordinateExtensionStep`
-(`InsertionCoordinate.lean`, steps3 Section 2, lines 405-712) from two displayed residual hypotheses:
+(`InsertionCoordinate.lean`) from two displayed residual hypotheses:
 
 * `hSWI : SheffieldWangCircleAverageAllScaleInteriorStmt` (Sheffield-Wang, arXiv:1605.06171v2, Theorem 1.1, p. 3;
   staged literature input, compact-interior form), used only for the punctured all-scale convergence away from the
-  insertion point (steps3:630);
-* `hDec : LocalDirichletHarmonicDecompositionStep` (steps3:609-621, producer residual, not formalized), the local
+  insertion point;
+* `hDec : LocalDirichletHarmonicDecompositionStep` (producer residual, not formalized), the local
   Dirichlet/harmonic decomposition.
 
 Everything else is proved here.
 
 * The normalized circle process `(r, z) ↦ h(|a| r, a z) - h(|a|, 0)` is measurable and a.s. continuous, and has the same
-  law as the original circle process (`normalized_circle_law_complex`, steps3:473-499).
+  law as the original circle process (`normalized_circle_law_complex`).
 * Its measurable continuous modification `Gn` and the constructed decoder give the normalized insertion limit
-  `μ^a = dyadicDecoder (Gn ·)` (steps3 `μ^a = 𝓜(h^a_∘)`, eq:normalized-measure-law). Equality in law of the modifications
-  transfers both the dyadic convergence and the absence of an atom at `0` (steps3 lem:insertion-no-atom); no
+  `μ^a = dyadicDecoder (Gn ·)` (`μ^a = 𝓜(h^a_∘)`). Equality in law of the modifications
+  transfers both the dyadic convergence and the absence of an atom at `0`; no
   whole-plane GFF property of the normalized field is used.
-* The fixed-affine identity `C_a μ^a = (x ↦ x/a)_* μ` (steps3 eq:affine-dilation-measure) follows as in
+* The fixed-affine identity `C_a μ^a = (x ↦ x/a)_* μ` follows as in
   `insertion_affine_dilation_measure_ae`, with the atom of `μ^a` supplied by that law transfer.
-* The translation `p = b/a` is carried by `lqgApprox_affineArray_eq` (steps3:673-675) and the pushforward of the dyadic
+* The translation `p = b/a` is carried by `lqgApprox_affineArray_eq` and the pushforward of the dyadic
   approximations by `z ↦ z - p`.
 
 Terminology: vague convergence of Radon measures and the dyadic insertion limit (Duplantier-Sheffield 2011, Prop. 1.1;
@@ -66,7 +66,7 @@ theorem ae_continuous_normalizedCircleProc {Ω : Type} [MeasurableSpace Ω] {P :
   have h2 : ContinuousOn (fun _ : ℝ × ℂ => hcirc ω ‖a‖ 0) (Set.Ioi 0 ×ˢ Set.univ) := continuousOn_const
   exact h1.sub h2
 
-/-- **Normalized insertion limit (steps3 eq:normalized-measure-law).** For `a ≠ 0` there is a random measure `μ^a`
+/-- **Normalized insertion limit.** For `a ≠ 0` there is a random measure `μ^a`
 which is a.s. the insertion-`α` LQG limit of the normalized field `h^a_∘ = normalizedCircleProc a (hcirc ω)` and has no
 atom at `0` a.s. It is `μ^a = dyadicDecoder (Gn ·)` for a measurable continuous modification `Gn` of the normalized circle
 process; `Gn` and the modification `G` of the original field have the same law, so the dyadic convergence set and the
@@ -119,7 +119,7 @@ theorem normalized_insertion_limit_ae {Ω : Type} [MeasurableSpace Ω] {P : Meas
     rw [← hlaw] at hG0'
     exact (ae_map_iff hGn.aemeasurable (p := fun u => dyadicDecoder γ α u {0} = 0) hset).1 hG0'
 
-/-- **Fixed-affine dilation identity (steps3 eq:affine-dilation-measure).** Let `a ≠ 0`. Suppose that the punctured all-scale
+/-- **Fixed-affine dilation identity.** Let `a ≠ 0`. Suppose that the punctured all-scale
 convergence of `μ` holds away from `0` (the conclusion of `punctured_allScales_of_steps_interior`), that `μ` and `μ^a` have
 no atom at `0`, and that `μ^a` is the insertion limit of the normalized field. Then almost surely
 `C_a μ^a = (x ↦ x/a)_* μ`, where `C_a = affineFactor`. This is `insertion_affine_dilation_measure_ae` with its
@@ -214,7 +214,7 @@ theorem affine_dilation_ae_of_atoms {Ω : Type} [MeasurableSpace Ω] {P : Measur
     integral_map hdc.aemeasurable hg.aestronglyMeasurable, htest g hg hgc hgs,
     ← mul_assoc, mul_inv_cancel₀ hC0, one_mul]
 
-/-- **Translated fixed-affine limit (steps3:673-675).** If `μa` is the insertion limit of the normalized field and
+/-- **Translated fixed-affine limit.** If `μa` is the insertion limit of the normalized field and
 `C_a μa = (x ↦ x/a)_* μ`, then the affine circle array `(r, z) ↦ H(|a| r, a z + b) + Q log |a|` has the vague limit
 `(x ↦ (x - b)/a)_* μ`, with `p = b/a`. The approximating measures are `C_a (z ↦ z - p)_*` of the normalized ones
 (`lqgApprox_affineArray_eq`). -/
@@ -275,7 +275,7 @@ theorem isLQGLimit_affineCircleArray_of_dilation {γ α : ℝ} {a b : ℂ} (ha :
 
 /-- **The exact Step `InsertionCoordinateExtensionStep`, assembled.** It is proved from the two displayed residuals
 `hSWI` (Sheffield-Wang compact-interior all-scale input, Proposed literature input) and `hDec` (the local Dirichlet/harmonic
-decomposition, steps3:609-621, producer residual). The translation parameter is `b`, with `p = b/a` as in steps3:673-675.
+decomposition, , producer residual). The translation parameter is `b`, with `p = b/a` as in .
 No other hypothesis is assumed. -/
 theorem insertionCoordinateExtensionStep_of_components
     (hSWI : SheffieldWangCircleAverageAllScaleInteriorStmt.{0})

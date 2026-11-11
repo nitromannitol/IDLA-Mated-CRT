@@ -3,9 +3,9 @@ import MatedCRT.Proofs.Sec2.ConeFamilyMeasurable.ClusterDecoder
 import HarmonicBalls.Proofs.Sec5.ClusterMeasurability
 import HarmonicBalls.Proofs.Sec5.RegularizedGeometry
 
-/-! # Measurability of the global radii from canonical bounded-disk raw-cluster codes (Proposition 4.2, z5)
+/-! # Measurability of the global radii from canonical bounded-disk raw-cluster codes (Proposition 4.2)
 
-Source: `notes/prop42-proof/prop42-proof.tex`, lines 263-268 (the route for `R_h(q)` and `(h,r) ↦ 1{r ∈ P(h)}`).
+The route for `R_h(q)` and `(h,r) ↦ 1{r ∈ P(h)}`.
 Here `Λ t` is the global regularized family of Theorem 5.5 (`IsRegularizedClusterFamily`, HB Section5.lean:88), the raw
 cluster in the disk `B_R` is `cluster μ R 0 t` (HB Defs/Obstacle.lean:69, eq:non-co-set, line 592) and the regularized
 cluster is `regularizedCluster μ R 0 t = interior (closure (cluster μ R 0 t))` (HB Section5.lean:56, eq:regular-cluster,

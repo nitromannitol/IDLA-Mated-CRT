@@ -6,9 +6,9 @@ import Mathlib.Topology.ContinuousMap.SecondCountableSpace
 import Mathlib.MeasureTheory.PiSystem
 
 /-!
-# Measurable dyadic decoder on continuous circle processes (steps3:501-528)
+# Measurable dyadic decoder on continuous circle processes
 
-The written constructor (steps3:501-528) takes the dyadic vague limit of the approximations
+The written constructor takes the dyadic vague limit of the approximations
 `2^{-kγ²/2} exp{γ[u(2^{-k},z) - α log max(2^{-k},|z|)]} dz` on the continuous positive-radius processes
 `u ∈ 𝒞`, uses only countably many compactly supported tests, and sets the decoder to the vague limit on the
 Borel convergence set and to `0` off it. This file formalizes that constructor on `ContCircle`, the continuous
@@ -23,11 +23,11 @@ open scoped ENNReal NNReal
 
 namespace MatedCRT
 
-/-- The continuous positive-radius processes `𝒞` of steps3:501-528: the domain of the measurable decoder. Its
+/-- The continuous positive-radius processes `𝒞` of: the domain of the measurable decoder. Its
 measurable structure is the subtype σ-algebra of the product σ-algebra, i.e. the evaluation σ-algebra. -/
 abbrev ContCircle := {u : Set.Ioi (0 : ℝ) × ℂ → ℝ // Continuous u}
 
-/-- Dyadic density of the insertion-`α` approximation at scale `2^{-k}` (steps3:501-506):
+/-- Dyadic density of the insertion-`α` approximation at scale `2^{-k}`:
 `2^{-kγ²/2} exp{γ[u(2^{-k},z) - α log max(2^{-k},|z|)]}`, written with the positive part `log⁺` of `|z|/2^{-k}`. -/
 noncomputable def dyadicDens (γ α : ℝ) (k : ℕ) (u : ContCircle) (z : ℂ) : ℝ :=
   dyadicScale k ^ (γ ^ 2 / 2) *
@@ -229,8 +229,7 @@ theorem levelDense_countable (m : ℕ) : (levelDense m).Countable :=
 theorem levelDense_dense (m : ℕ) : Dense (levelDense m) :=
   (TopologicalSpace.exists_countable_dense C(Metric.closedBall (0 : ℂ) ((m : ℝ) + 2), ℝ)).choose_spec.2
 
-/-- The countable family of compactly supported tests (steps3:501-528, "countable dense collection of compact
-tests together with cutoff tests on a compact exhaustion"). -/
+/-- The countable family of compactly supported tests. -/
 noncomputable def testFamily : Set (CompactlySupportedContinuousMap ℂ ℝ) :=
   ⋃ m : ℕ, (extendTest m) '' (levelDense m)
 
@@ -302,12 +301,12 @@ def DyadicConvergent (γ α : ℝ) (f : ℂ → ℝ) (u : ContCircle) : Prop :=
 def DyadicMassBounded (γ α : ℝ) (u : ContCircle) : Prop :=
   ∀ ρ : ℕ, ∃ N : ℕ, ∀ k : ℕ, dyadicApprox γ α u k (Metric.closedBall (0 : ℂ) ρ) ≤ (N : ℝ≥0∞)
 
-/-- The convergence set of the decoder (steps3:501-528): convergence on the countable test family together with
+/-- The convergence set of the decoder: convergence on the countable test family together with
 uniform local mass bounds. -/
 def DyadicConvSet (γ α : ℝ) : Set ContCircle :=
   {u | (∀ f ∈ testFamily, DyadicConvergent γ α f u) ∧ DyadicMassBounded γ α u}
 
-/-- Density of the countable test family (steps3:501-528): every compactly supported test supported in
+/-- Density of the countable test family: every compactly supported test supported in
 `closedBall 0 m` is uniformly approximated, within `δ`, by a member of `testFamily` vanishing beyond radius `m+3`. -/
 theorem exists_testFamily_approx (f : CompactlySupportedContinuousMap ℂ ℝ) {m : ℕ}
     (hm : tsupport f ⊆ Metric.closedBall (0 : ℂ) m) {δ : ℝ} (hδ : 0 < δ) :
@@ -404,7 +403,7 @@ theorem dyadicMassBounded_of_tendsto {γ α : ℝ} {u : ContCircle} {m : Measure
     _ = (N : ℝ≥0∞) := ENNReal.ofReal_natCast N
 
 /-- **Convergence for all tests from the countable family.** A point of the convergence set has convergent test
-integrals for every compactly supported continuous test (steps3:501-528: "convergence for a countable dense collection
+integrals for every compactly supported continuous test ("convergence for a countable dense collection
 of compact tests, together with cutoff tests on a compact exhaustion, is equivalent to vague convergence"). -/
 theorem dyadicConvergent_of_mem {γ α : ℝ} {u : ContCircle} (hu : u ∈ DyadicConvSet γ α)
     (f : CompactlySupportedContinuousMap ℂ ℝ) : DyadicConvergent γ α f u := by
@@ -497,7 +496,7 @@ theorem measurable_dyadicApprox_ball (γ α : ℝ) (k : ℕ) {B : Set ℂ} (hB :
   exact Measurable.lintegral_prod_right (ν := volume) hF
 
 /-- The convergence set is Borel: countably many measurable convergence conditions and countably many mass
-conditions (steps3:501-528, "the set where the sequence converges is Borel"). -/
+conditions. -/
 theorem measurableSet_dyadicConvSet (γ α : ℝ) : MeasurableSet (DyadicConvSet γ α) := by
   have h1 : MeasurableSet {u : ContCircle | ∀ f ∈ testFamily, DyadicConvergent γ α f u} := by
     have heq : {u : ContCircle | ∀ f ∈ testFamily, DyadicConvergent γ α f u} =
@@ -576,7 +575,7 @@ theorem dyadicLimit_mono {γ α : ℝ} {u : ContCircle} (hu : u ∈ DyadicConvSe
   exact integral_mono (hfc.integrable_of_hasCompactSupport hfs) (hgc.integrable_of_hasCompactSupport hgs)
     (fun z => hfg z)
 
-/-- The positive linear functional `f ↦ lim_k ∫ f dν_k` on the convergence set (steps3:501-528). -/
+/-- The positive linear functional `f ↦ lim_k ∫ f dν_k` on the convergence set. -/
 noncomputable def dyadicFunctional (γ α : ℝ) (u : ContCircle) (hu : u ∈ DyadicConvSet γ α) :
     CompactlySupportedContinuousMap ℂ ℝ →ₚ[ℝ] ℝ where
   toFun f := dyadicLimit γ α (⇑f) u
@@ -584,7 +583,7 @@ noncomputable def dyadicFunctional (γ α : ℝ) (u : ContCircle) (hu : u ∈ Dy
   map_smul' c f := (dyadicLimit_const_mul hu c f).trans (by simp)
   monotone' f g hfg := dyadicLimit_mono hu f g (fun z => hfg z)
 
-/-- The Riesz–Markov–Kakutani Radon measure of the limit functional (steps3:501-528, "the limit taken there"). -/
+/-- The Riesz–Markov–Kakutani Radon measure of the limit functional. -/
 noncomputable def dyadicLimitMeasure (γ α : ℝ) (u : ContCircle) (hu : u ∈ DyadicConvSet γ α) : Measure ℂ :=
   RealRMK.rieszMeasure (dyadicFunctional γ α u hu)
 
@@ -677,7 +676,7 @@ instance isFiniteMeasureOnCompacts_dyadicLimitMeasure (γ α : ℝ) (u : ContCir
   infer_instance
 
 open scoped Classical in
-/-- **The measurable dyadic decoder** (steps3:501-528, the constructor of `𝓜`): on the Borel convergence set
+/-- **The measurable dyadic decoder** (the constructor of `𝓜`): on the Borel convergence set
 `DyadicConvSet`, the Radon measure of the limit functional (the vague limit of the dyadic approximations); zero off
 the convergence set. -/
 noncomputable def dyadicDecoder (γ α : ℝ) (u : ContCircle) : Measure ℂ :=
@@ -746,7 +745,7 @@ theorem measurable_dyadicDecoder_of_isOpen (γ α : ℝ) {K : Set ℂ} {ρ : ℝ
   exact Measurable.iSup fun j => ENNReal.measurable_ofReal.comp (measurable_indicator_innerLimit γ α hK j)
 
 /-- **Borel measurability of the decoder on Borel sets** (Dynkin induction over the open sets, the π-system of
-steps3:501-528; the countable union/limit steps are the continuity of the measure from below). -/
+; the countable union/limit steps are the continuity of the measure from below). -/
 theorem measurable_dyadicDecoder_apply (γ α : ℝ) (s : Set ℂ) (hs : MeasurableSet s) :
     Measurable (fun u : ContCircle => dyadicDecoder γ α u s) := by
   have hBorel : (inferInstance : MeasurableSpace ℂ) = MeasurableSpace.generateFrom {t : Set ℂ | IsOpen t} :=
@@ -800,7 +799,7 @@ theorem measurable_dyadicDecoder_apply (γ α : ℝ) (s : Set ℂ) (hs : Measura
   rw [heq]
   exact Measurable.iSup fun n => key s hs n
 
-/-- **The measurable dyadic decoder is Borel** (steps3:501-528). -/
+/-- **The measurable dyadic decoder is Borel**. -/
 theorem measurable_dyadicDecoder (γ α : ℝ) : Measurable (dyadicDecoder γ α) :=
   Measure.measurable_of_measurable_coe _ fun s hs => measurable_dyadicDecoder_apply γ α s hs
 
@@ -814,7 +813,7 @@ theorem isLQGLimit_dyadicDecoder {γ α : ℝ} {u : ContCircle} (hu : u ∈ Dyad
     integral_dyadicLimitMeasure hu (ccOfCont f hf hcs)]
   exact h
 
-/-- **Measurable dyadic decoder, constructed** (steps3:501-528): for all `γ, α`, a Borel map `dec` on the continuous
+/-- **Measurable dyadic decoder, constructed**: for all `γ, α`, a Borel map `dec` on the continuous
 positive-radius processes whose value is the dyadic insertion limit at every continuous process that has one. This is
 the constructor of the premise `MeasurableDyadicDecoder`, here with domain `ContCircle`. -/
 theorem exists_measurableDyadicDecoder_contCircle (γ α : ℝ) :
@@ -830,10 +829,10 @@ theorem exists_measurableDyadicDecoder_contCircle (γ α : ℝ) :
     exact ⟨∫ z, f z ∂m, hm.tendsto_integral (fun z => f z) hfc hfs⟩
   exact isLQGLimit_dyadicDecoder hu
 
-/-! ## Identification of the supplied measure with the decoded measure (steps3:501-528) -/
+/-! ## Identification of the supplied measure with the decoded measure -/
 
 /-- The continuous modification of an a.s. continuous measurable process: a measurable `ContCircle`-valued map equal
-to it almost surely (steps3:501-528, "give it any fixed continuous value outside that subset"). -/
+to it almost surely. -/
 theorem exists_contModification {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
     (F : Ω → Set.Ioi (0 : ℝ) × ℂ → ℝ) (hF : Measurable F) (hcont : ∀ᵐ ω ∂P, Continuous (F ω)) :
     ∃ G : Ω → ContCircle, Measurable G ∧ ∀ᵐ ω ∂P, (G ω).1 = F ω := by
@@ -879,7 +878,7 @@ theorem dyadicDecoderFull_spec (γ α : ℝ) (v : Set.Ioi (0 : ℝ) × ℂ → �
   obtain ⟨m, hm⟩ := hm
   exact isLQGLimit_dyadicDecoder (mem_dyadicConvSet_of_isLQGLimit (u := ⟨v, h⟩) hm)
 
-/-- **Identification (steps3:501-528).** For a whole-plane GFF whose insertion-`α` LQG measure is the supplied `μ`
+/-- **Identification.** For a whole-plane GFF whose insertion-`α` LQG measure is the supplied `μ`
 (not assumed measurable), there is a measurable continuous modification `G` of the circle array with `μ = dec(G)` almost
 surely, where `dec` is the constructed decoder. The supplied `μ` is never used as a measurable map. -/
 theorem insertion_identification_ae {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
@@ -912,7 +911,7 @@ theorem map_contModification_eq {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω
     measure_congr (by filter_upwards [hG'F'] with ω hω; simp [hω])
   rw [e1, e2, ← Measure.map_apply hF hB, ← Measure.map_apply hF' hB, hFF']
 
-/-- **No insertion atom at the origin, unconditional** (steps3:538-585, Lemma `lem:insertion-no-atom`). Under `0 < γ`,
+/-- **No insertion atom at the origin, unconditional** (the no-atom lemma). Under `0 < γ`,
 `α < Q`, a whole-plane GFF `(hC, hcirc)` whose insertion-`α` LQG measure is `μ`, `μ{0} = 0` almost surely. This is
 `insertion_no_atom_zero_ae` with the measurable-decoder premise replaced by the constructed decoder. -/
 theorem insertion_no_atom_zero_ae_unconditional {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
@@ -983,8 +982,7 @@ theorem insertion_no_atom_zero_ae_unconditional {Ω : Type} [MeasurableSpace Ω]
 
 /-! ## The Borel carrier: approximations and decoder values are Radon measures -/
 
-/-- The approximating map `u ↦ ν_k(u)` is Borel into the measures on `ℂ` (steps3:501-528, "the map sending `u` to the
-dyadic density is Borel into the positive Radon measures"). -/
+/-- The approximating map `u ↦ ν_k(u)` is Borel into the measures on `ℂ`. -/
 theorem measurable_dyadicApprox (γ α : ℝ) (k : ℕ) :
     Measurable (fun u : ContCircle => dyadicApprox γ α u k) :=
   Measure.measurable_of_measurable_coe _ fun _ hB => measurable_dyadicApprox_ball γ α k hB

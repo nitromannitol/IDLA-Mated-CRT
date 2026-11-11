@@ -1,9 +1,9 @@
 import MatedCRT.Proofs.Sec2.ConeFamilyMeasurable.ContactEvent
 import MatedCRT.Proofs.Sec2.ConeFamilyMeasurable.StoppedClosure
 
-/-! # Closure containment before the stopping time (written argument, draft lines 275-304)
+/-! # Closure containment before the stopping time 
 
-Written argument: `notes/prop42-proof/prop42-proof.tex`, theorem `t:closure` (lines 275-304). Its probabilistic input is
+Its probabilistic input is
 the plateau lemma `l:plateau` (lines 230-274). The rational form of the excluded event is `halfBallPrematureContact`
 (`HorizonContact.lean`): an earlier rational cluster reaches the half circle while a later rational cluster lies in
 the closed half disk.

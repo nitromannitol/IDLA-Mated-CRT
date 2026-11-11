@@ -11,7 +11,7 @@ input (A) `LQGMeasureLocalityFunctionalStep` (`LQGMeasureFunctional.lean`; prove
 measurability of the LQG measures (cone: `IsConeField.aemeasurable_lqgMeasure`; whole-plane: (B),
 `aemeasurable_wholePlaneLQGMeasure`). Measure passage: `identDistrib_restrict_of_finiteDim` (`RestrictedLaw.lean`).
 
-Input (A) is no longer an open input: `LQGMeasureLocalityFunctionalStep_proof` (`LQGMeasureLocalityProof.lean`, steps2:651-794,
+Input (A) is no longer an open input: `LQGMeasureLocalityFunctionalStep_proof` (`LQGMeasureLocalityProof.lean`, ,
 commit 48b2c75) proves it with no hypothesis. The reduced-input consumer `coneWholePlaneRestrictedLQGLawStep_of_fieldLaw`
 (end of this file) supplies it internally; `coneWholePlaneRestrictedLQGLawStep_of_inputs` keeps (A) as an explicit
 hypothesis, for compatibility.
@@ -130,7 +130,7 @@ theorem coneWholePlaneRestrictedLQGLawStep_of_inputs (hFL : ConeWholePlaneFieldL
     (fun Q hQ' => ⟨(hQ Q hQ').1.measurableSet, (hQ Q hQ').2⟩) hSQ hgen hXm hXm' hXS hX'S hXfin hX'fin hfd
 
 /-- **`ConeWholePlaneRestrictedLQGLawStep`, reduced inputs.** The restricted-law consumer with the locality input (A)
-supplied internally by the proof `LQGMeasureLocalityFunctionalStep_proof` (steps2:651-794, commit 48b2c75). Its only
+supplied internally by the proof `LQGMeasureLocalityFunctionalStep_proof` (commit 48b2c75). Its only
 remaining input is fact (2) for the fields, `ConeWholePlaneFieldLawStep`; the conclusion is that of
 `coneWholePlaneRestrictedLQGLawStep_of_inputs`, which it specializes at the proved locality Step. -/
 theorem coneWholePlaneRestrictedLQGLawStep_of_fieldLaw (hFL : ConeWholePlaneFieldLawStep) :

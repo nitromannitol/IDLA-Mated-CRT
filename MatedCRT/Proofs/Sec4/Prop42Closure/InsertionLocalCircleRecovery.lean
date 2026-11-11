@@ -1,10 +1,10 @@
 import MatedCRT.Proofs.Sec4.Prop42Closure.InsertionCoordinate
 
 /-!
-# Simultaneous circle recovery from countably many circles (steps3:603-625)
+# Simultaneous circle recovery from countably many circles
 
 Internal module; it cites no literature input of its own. It formalizes the countable-to-continuous passage written in
-`notes/wpn-steps3/steps3.tex` (lines 603-625): Gaussian covariances identify the joint circle law, and continuity
+Gaussian covariances identify the joint circle law, and continuity
 extends countably many circle identities to every circle contained in the disk. The result is the circle-identity
 clause of `LocalDirichletHarmonicDecompositionStep` (`InsertionCoordinate.lean:663-674`; the clause is at line 671),
 derived from identities that hold almost surely on each fixed admissible circle.
@@ -39,14 +39,14 @@ set of the circle-average continuity clause of `IsDirichletGFF` and of the circl
 abbrev admissibleCircles (D : Set ℂ) : Set (ℝ × ℂ) :=
   {p | 0 < p.1 ∧ Metric.closedBall p.2 p.1 ⊆ D}
 
-/-- A countable dense family of admissible circles, from separability of `ℝ × ℂ` (steps3:603-625). No hypothesis on
+/-- A countable dense family of admissible circles, from separability of `ℝ × ℂ`. No hypothesis on
 `D` is needed. -/
 theorem exists_countable_dense_admissibleCircles (D : Set ℂ) :
     ∃ S : Set (ℝ × ℂ), S.Countable ∧ S ⊆ admissibleCircles D ∧ admissibleCircles D ⊆ closure S := by
   obtain ⟨S, hSc, hSA, hdense⟩ := TopologicalSpace.exists_countable_dense_subset (admissibleCircles D)
   exact ⟨S, hSc, hSA, hdense⟩
 
-/-- **Deterministic simultaneous-circle recovery** (steps3:603-625: continuity extends countably many circle identities
+/-- **Deterministic simultaneous-circle recovery** (continuity extends countably many circle identities
 to every circle contained in `D`). Let `hc` and `hc0` be continuous on the admissible circles of `D`, and `H` continuous
 on `D`. If `hc r z = hc0 r z + H z` holds on a subset `S` of the admissible circles that is dense in them, then it holds
 on every circle `closedBall z r ⊆ D` with `0 < r`. -/
@@ -65,7 +65,7 @@ theorem circle_identity_of_countable_subset {D : Set ℂ} {hc hc0 : ℝ → ℂ 
   intro r z hr hball
   exact hEq (show (r, z) ∈ admissibleCircles D from ⟨hr, hball⟩)
 
-/-- **Almost sure simultaneous-circle recovery** (steps3:603-625). Suppose that almost surely `hc` and `hc0` are
+/-- **Almost sure simultaneous-circle recovery**. Suppose that almost surely `hc` and `hc0` are
 continuous on the admissible circles of `D` and `H` is continuous on `D`, and that for each admissible circle the
 identity holds almost surely (a coordinatewise statement). Then almost surely the identity holds on every admissible
 circle simultaneously. The full-measure event is the intersection over a countable dense family of admissible circles;
@@ -108,7 +108,7 @@ theorem ae_localDirichlet_circle_clause {Ω : Type*} [MeasurableSpace Ω] {P : M
   filter_upwards [hHarm, hsim] with ω h1 h2
   exact ⟨h1, h2⟩
 
-/-- **Coordinatewise producer premise** for `LocalDirichletHarmonicDecompositionStep` (steps3:609-625). It is the same
+/-- **Coordinatewise producer premise** for `LocalDirichletHarmonicDecompositionStep`. It is the same
 existence statement, except that the circle identity is required only on each fixed admissible circle, almost surely.
 The Gaussian Dirichlet projection that would produce `(h0, hcirc0, H)` is not formalized and enters as this premise. -/
 def LocalDirichletCoordinatewiseStep : Prop :=

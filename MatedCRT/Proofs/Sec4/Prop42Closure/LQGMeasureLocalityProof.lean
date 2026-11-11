@@ -3,10 +3,9 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.LQGMeasureFunctional
 /-!
 # Local-measure functional: a proof of `LQGMeasureLocalityFunctionalStep`
 
-Source: `notes/wpn-steps2/steps2.tex`, lines 651-794 (sha256 8ec75074), audited as target 4 (CORRECT as declared) in
-`notes/wpn-steps2/AUDIT-steps2.md`. The Step is the open input (A) of `LQGMeasureFunctional.lean:42`.
+The Step is the open input (A) of `LQGMeasureFunctional.lean:42`.
 
-Route (the written proof):
+Route:
 * dyadic cutoffs `f_j(z) = min {1, max {0, j·dist(z, Uᶜ) − 1}}`: continuous, `[0,1]`-valued, increasing in `j`, with
   `f_j ↑ 1_U` (`lqCutoff`);
 * grid Riemann sums `R_{j,n,k}` over the `2^k × 2^k` grid of `[-2,2)²`, weights `16/4^k`, sample points the lower-left
@@ -31,7 +30,7 @@ open scoped ENNReal
 
 /-! ### 1. Dyadic cutoffs -/
 
-/-- The cutoff `f_j(z) = min {1, max {0, j·dist(z, Uᶜ) − 1}}` (steps2:704-714). -/
+/-- The cutoff `f_j(z) = min {1, max {0, j·dist(z, Uᶜ) − 1}}`. -/
 noncomputable def lqCutoff (U : Set ℂ) (j : ℕ) (z : ℂ) : ℝ :=
   min 1 (max 0 ((j : ℝ) * infDist z Uᶜ - 1))
 
@@ -130,7 +129,7 @@ lemma admissible_of_lqCutoff_ne_zero {U : Set ℂ} (hUsub : U ⊆ ball (0 : ℂ)
 /-- The left edge of the `a`-th column of the `2^k`-grid on `[-2, 2)`. -/
 noncomputable def lqGx (k a : ℕ) : ℝ := -2 + 4 * (a : ℝ) / 2 ^ k
 
-/-- The lower-left corner `z_Q` of the cell `Q = (a,b)` of the `2^k × 2^k` grid (steps2:716-720). -/
+/-- The lower-left corner `z_Q` of the cell `Q = (a,b)` of the `2^k × 2^k` grid. -/
 noncomputable def lqGridPoint (k a b : ℕ) : ℂ := ⟨lqGx k a, lqGx k b⟩
 
 lemma lqGridPoint_re (k a b : ℕ) : (lqGridPoint k a b).re = lqGx k a := rfl
@@ -275,7 +274,7 @@ lemma lqCell_subset_lqSquare {k a b : ℕ} (ha : a < 2 ^ k) (hb : b < 2 ^ k) :
   exact mem_lqCell.mpr ⟨⟨(lqGx_ge_neg_two k a).trans hre.1, hre.2.trans_le (lqGx_succ_le_two ha)⟩,
     ⟨(lqGx_ge_neg_two k b).trans him.1, him.2.trans_le (lqGx_succ_le_two hb)⟩⟩
 
-/-- The step function `Σ_Q G(z_Q) 1_Q` of the grid; its integral is the Riemann sum (steps2:716-720). -/
+/-- The step function `Σ_Q G(z_Q) 1_Q` of the grid; its integral is the Riemann sum. -/
 noncomputable def lqStep (G : ℂ → ℝ) (k : ℕ) (z : ℂ) : ℝ≥0∞ :=
   ∑ a ∈ Finset.range (2 ^ k), ∑ b ∈ Finset.range (2 ^ k),
     (lqCell (lqGx k a) (lqGx k (a + 1)) (lqGx k b) (lqGx k (b + 1))).indicator
@@ -400,8 +399,7 @@ lemma closedBall_subset_ball_of_add_norm_lt {r : ℝ} {z : ℂ} (h : r + ‖z‖
 abbrev lqCircleVal (cc : CircleB1 → ℝ) (r : ℝ) (z : ℂ) (hr : 0 < r) (h : r + ‖z‖ < 1) : ℝ :=
   cc ⟨(r, z), hr, closedBall_subset_ball_of_add_norm_lt h⟩
 
-/-- The grid Riemann sum `R_{j,n,k}(c) = (16/4^k) Σ_{Q : r_n + |z_Q| < 1} f_j(z_Q) r_n^{γ²/2} e^{γ c(r_n, z_Q)}`
-(steps2:716-720), with `r_n = 2^{-n}`. Only admissible circle coordinates are read. -/
+/-- The grid Riemann sum `R_{j,n,k}(c) = (16/4^k) Σ_{Q : r_n + |z_Q| < 1} f_j(z_Q) r_n^{γ²/2} e^{γ c(r_n, z_Q)}`, with `r_n = 2^{-n}`. Only admissible circle coordinates are read. -/
 noncomputable def lqRiemann (U : Set ℂ) (γ : ℝ) (j n k : ℕ) (cc : CircleB1 → ℝ) : ℝ≥0∞ :=
   ENNReal.ofReal (16 / 4 ^ k) * ∑ a ∈ Finset.range (2 ^ k), ∑ b ∈ Finset.range (2 ^ k),
     if h : dyadicScale n + ‖lqGridPoint k a b‖ < 1 then
@@ -409,11 +407,11 @@ noncomputable def lqRiemann (U : Set ℂ) (γ : ℝ) (j n k : ℕ) (cc : CircleB
         Real.exp (γ * lqCircleVal cc (dyadicScale n) (lqGridPoint k a b) (dyadicScale_pos n) h))
     else 0
 
-/-- `I_{j,n}(c) = liminf_k R_{j,n,k}(c)` (steps2:723-728). -/
+/-- `I_{j,n}(c) = liminf_k R_{j,n,k}(c)`. -/
 noncomputable def lqInner (U : Set ℂ) (γ : ℝ) (j n : ℕ) (cc : CircleB1 → ℝ) : ℝ≥0∞ :=
   liminf (fun k => lqRiemann U γ j n k cc) atTop
 
-/-- The local-measure functional `Λ_{γ,U}(c) = sup_j liminf_n I_{j,n}(c)` (steps2:729-737). It is an everywhere
+/-- The local-measure functional `Λ_{γ,U}(c) = sup_j liminf_n I_{j,n}(c)`. It is an everywhere
 defined map on the raw array space; it ignores the test-pairing coordinate. -/
 noncomputable def lqFunctional (U : Set ℂ) (γ : ℝ) (cc : CircleB1 → ℝ) : ℝ≥0∞ :=
   ⨆ j : ℕ, liminf (fun n => lqInner U γ j n cc) atTop
@@ -444,7 +442,7 @@ lemma measurable_lqFunctional (U : Set ℂ) (γ : ℝ) : Measurable (lqFunctiona
 
 /-! ### 4. The deterministic identity `Λ = μ(U)` -/
 
-/-- The integrand `f_j(z) r_n^{γ²/2} e^{γ c(r_n, z)}` of the `n`-th approximation (steps2:739-745). -/
+/-- The integrand `f_j(z) r_n^{γ²/2} e^{γ c(r_n, z)}` of the `n`-th approximation. -/
 noncomputable def lqIntegrand (U : Set ℂ) (γ : ℝ) (j n : ℕ) (c : ℝ → ℂ → ℝ) (z : ℂ) : ℝ :=
   lqCutoff U j z * dyadicScale n ^ (γ ^ 2 / 2) * Real.exp (γ * c (dyadicScale n) z)
 
@@ -537,7 +535,7 @@ lemma tendsto_lintegral_lqCutoff {U : Set ℂ} (hUsub : U ⊆ ball (0 : ℂ) 1) 
   simp only [← e_n]
   exact ENNReal.tendsto_ofReal hT
 
-/-- Pointwise: the supremum over `j` of the cutoffs is the indicator of `U` (`f_j ↑ 1_U`, steps2:704-714). -/
+/-- Pointwise: the supremum over `j` of the cutoffs is the indicator of `U` (`f_j ↑ 1_U`). -/
 lemma iSup_ofReal_lqCutoff {U : Set ℂ} (hU : IsOpen U) (hUsub : U ⊆ ball (0 : ℂ) 1) (z : ℂ) :
     (⨆ j : ℕ, ENNReal.ofReal (lqCutoff U j z)) = U.indicator 1 z := by
   by_cases hzU : z ∈ U
@@ -631,7 +629,7 @@ lemma fieldCircleAverage_slice_continuous (γ : ℝ) {h : ℝ → ℂ → ℝ}
 end LQGLocality
 
 open LQGLocality HarmonicBalls MeasureTheory Filter Set in
-/-- **Proof of the locality input `LQGMeasureLocalityFunctionalStep`** (steps2:651-794; open input (A) of
+/-- **Proof of the locality input `LQGMeasureLocalityFunctionalStep`** (open input (A) of
 `LQGMeasureFunctional.lean`). For `γ > 0` and open `U ⊆ B_1` one measurable functional `Λ` of the restricted field
 gives `μ(U)` almost surely, for the cone field and for the whole-plane field with its `γ`-LQG measure. -/
 theorem LQGMeasureLocalityFunctionalStep_proof : LQGMeasureLocalityFunctionalStep := by

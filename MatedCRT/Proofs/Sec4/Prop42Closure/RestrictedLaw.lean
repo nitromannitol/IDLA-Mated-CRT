@@ -6,9 +6,9 @@ import Mathlib.MeasureTheory.PiSystem
 import Mathlib.Probability.IdentDistrib
 
 /-!
-# From open-set masses to the law of a restricted random measure (item (ii) of the restricted LQG law, z5)
+# From open-set masses to the law of a restricted random measure (item (ii) of the restricted LQG law)
 
-Operator ruling (task `z5-prop42-restricted-lqg-law`, item (ii)): passing from the masses of a random measure on a
+Passing from the masses of a random measure on a
 family of sets to the law of the measure restricted to `S = B_1` is pure measure theory.
 
 A family `𝒬` is an admissible *trace π-system* for `S` when it is a π-system of measurable subsets of `S`, contains `S`,
