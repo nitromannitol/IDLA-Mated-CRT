@@ -275,3 +275,35 @@ The Appendix B occupation identity (`frozenLBMGreenOccupationRescaled_*`, `Mated
 | `frozenLBMGreenOccupationRescaled_closed5` | MatedCRT/Proofs/Sec3/KilledOccupation/OccupationClosure5.lean:19 | d51a926b | 16 = 𝒮, ν, dA + 13 hypotheses: hWeight hMeas hlaw hE hKern hBG hS0 hw hVar hνmeas hconvB1 hLjoint hLpath | hlaw : `ConeUnitDiskGFFLaw` (MQ-li-12); hS0 (cited, MQ-li-8e) | hm0 discharged by MatedCRTEnv.IsValid.m₀_pos (eq:mo; HarmonicPathExit.lean:114; alias MatedCRTEnv.m₀_pos in M0Positive.lean, 793bf5b4) |
 
 Binder classification of `frozenLBMGreenOccupationRescaled_closed4` by z11 (reports/z11.md, BINDER LIST; lead li 10:20, item (d)). data 3: 𝒮 (`SpaceFillingSLEModel`), ν and dA (families). Proof? 6: hlaw `ConeUnitDiskGFFLaw` (ConeGFFTransfer.lean:40; TRUE as typed, HIGH, MQ-li-12 (a); the law identity is no longer PENDING TRUTH CHECK), hS0 `KilledBrownianOccupationOnBall` (Potential.lean:275; cited, MQ-li-8e), hBG `BGMassUpperBoundDyadic` (WeightIdentity.lean; eq:occ-BGmass), hWeight `OccWeightIdentity` (MQ-li-10b), hw `circleWeight`, hLpath `clockGapMean` (conditional GMC clock input, as in closure3). Step 8: hE (chi_a-parts convergence, kept named, G1), hKern, hMeas, hVar, hνmeas, hLjoint, hconvB1 (measurability and data class, MQ-li-8g), hm0 (0 < S.m0, eq:mo). Discharged inside, not binders: hGreen (greenDiskFormula), hExit (planar_exit_ae_lt_top), hτ hτmeas hGint hσint (BaseClockBinders textbook binders), hS6 (hS6_cone, ConeClockTransfer.lean:454), hT0cone (coneOriginTailMoment_of_law, ConeOriginTails.lean:284), and the hS0 bridge (brownianOccupationOnBall_of_killed, OccupationClosure4.lean:41). Lead rulings needed on the flagged Step inputs hE, hKern, hMeas, hm0. closed5 (d51a926b) = closed4 with hm0 discharged; the other 13 binders keep the classification above.
+
+## Derived-input forms (proved inputs supplied; 2026-11-11)
+
+Inputs of the counted theorems that are now theorems are supplied in `MatedCRT/FirstPass/Derived/Counted.lean`: for each
+counted declaration `T` that binds such an input, `T_derivedInputs` has the same conclusion and the remaining binders
+(copied from the signature of `T`). The counted declarations of the Table are unchanged; the binder counts below replace
+theirs for the purpose of "what is still an input". Axioms: `MatedCRT/Audit/DerivedCountedAxioms.lean` (each line prints
+`propext`, `Classical.choice`, `Quot.sound`).
+
+Proved inputs:
+
+| input | Prop | theorem | proof |
+|---|---|---|---|
+| disc Green function, centre formula | `FrozenGreenBallCentre` (FirstPass/Frozen/S2g.lean:45) | `frozenGreenBallCentre_holds` (FirstPass/Derived/DiscGreenCentre.lean) | `HarmonicBalls.greenFunction_ball` at the centre |
+| disc Green function, nonnegative and continuous off the centre | `FrozenDiskGreenNonnegCont` (FirstPass/Frozen/S1c.lean:38) | `frozenDiskGreenNonnegCont_holds` (same file) | centre formula; `HarmonicBalls.continuousOn_greenFunction_ball` |
+
+Derived forms (binders of `T` -> binders of `T_derivedInputs`):
+
+| result | counted `T` | binders | supplied |
+|---|---|---|---|
+| 1.4 | `closed_1_4_lp_noSC_noSup` | 36 -> 34 | hF3, hGBC |
+| 1.6 | `closed_1_6_lp_noSC_noSup` | 36 -> 34 | hF3, hGBC |
+| 2.3 | `closed_2_3_lp` | 23 -> 22 | centre formula |
+| 2.4 | `closed_2_4_lp` | 18 -> 17 | hCentre |
+| 2.5 | `closed_2_5_lp` | 22 -> 21 | centre formula |
+| 2.6 | `closed_2_6_lp` | 22 -> 21 | centre formula |
+| 4.2 | `closed_4_2_lp` | 36 -> 35 | hCentre |
+| 5.1 | `closed_5_1_lp_noSup` | 31 -> 30 | centre formula |
+| 5.3 | `closed_5_3_clean` | 27 -> 25 | hF3, hCentre |
+| 6.1 | `closed_6_1_lp_noSup` | 33 -> 32 | centre formula |
+| 7.1 | `closed_7_1_lp` | 29 -> 28 | centre formula |
+| 8.1 | `closed_8_1_lp_noSup` | 46 -> 45 | centre formula |

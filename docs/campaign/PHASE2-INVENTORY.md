@@ -226,3 +226,7 @@ SLEReferenceExistsInput (defined MatedCRT/FirstPass/Frozen/SLERef.lean), SLERefe
 8. Still unlocated: the Draft Lemma 3.2 Prop name (HB Draft/Section3.lean:56 docstring; ClusterOpenLaplacianStmt is at :66); HB Props 5.1-5.2 (FrozenHBInitialConfinement, #29).
 9. (a) and (a-cond) were checked by signature, variable and include lines, and by the proof bodies of the binder-bearing routes. A full dependency audit of the HB proofs was not made.
 10. Truth column copied for all rows; no verdict was re-checked.
+
+## Inputs proved after this inventory (2026-11-11)
+
+- #19 `FrozenGreenBallCentre` and #51 `FrozenDiskGreenNonnegCont` (classical potential theory: Green function of a disc with pole at the centre) are theorems: `frozenGreenBallCentre_holds` and `frozenDiskGreenNonnegCont_holds` (MatedCRT/FirstPass/Derived/DiscGreenCentre.lean), from the explicit disc formula `HarmonicBalls.greenFunction_ball`. The counted theorems that bind them have derived forms in MatedCRT/FirstPass/Derived/Counted.lean (docs/campaign/COUNTED.md, section "Derived-input forms").
