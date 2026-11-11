@@ -1,0 +1,633 @@
+\section{The disk occupation identity for the clock}\label{app:occupation-C16}
+
+This appendix gives the full argument for the killed occupation identity
+used in the proof of Lemma~\ref{lemma:integral-convergence-of-greens-function}.
+For the circle-average clock of a $\gamma$-quantum cone, we prove the
+killed occupation identity at each deterministic starting point,
+including the logarithmic singularity $0$, for all $\gamma\in(0,2)$.
+The coefficient is $2$ for unscaled Liouville Brownian motion and
+$2/m_0$ for the process $X$ of the main text.
+The latter is already the coefficient of the corrected form of
+Lemma~\ref{lemma:integral-convergence-of-greens-function}.
+We also give a precise killed-process version of the argument in
+Lemma~\ref{lemma:integral-convergence-of-greens-function}.
+
+\subsection{Statement, normalization, and exact inputs}
+
+Write $B_a=B_a(0)$. Fix $\gamma\in(0,2)$, $\rho\in(0,1)$,
+a deterministic disk $D=B_r(z)\subset B_\rho$, and a deterministic
+$y\in D$. In particular, $\cl(D)$ is a compact subset of $B_1$.
+Let $h$ be the circle-average embedding of a $\gamma$-quantum cone.
+We use exactly the field and area normalization of the main text:
+\begin{equation}\label{eq:occ-field}
+ h|_{B_1}\overset{d}{=}(g-\gamma\log|\cdot|)|_{B_1},
+ \qquad
+ \mathbb{E}[g(x)g(w)]=\log\frac1{|x-w|}\quad(x,w\in B_1),
+\end{equation}
+where $g$ is the whole-plane GFF with $g_1(0)=0$, and
+$\mu_h=\lim_{\eps\to0}\eps^{\gamma^2/2}e^{\gamma h_\eps(x)}\,dx$.
+The first identity is \eqref{eq:gff} and follows directly from the
+definition of the cone. In arguments
+inside $B_1$ we couple the two sides of \eqref{eq:occ-field}.
+
+Conditionally on $\mathcal F=\sigma(h,\eta)$, sample standard planar Brownian
+motion $B^y$, independently of this environment. Its generator is
+$\tfrac12\Delta$. Put
+\begin{equation}\label{eq:occ-clock}
+ \sigma=\inf\{s\geq0:B^y_s\notin D\},\qquad
+ \phi_\eps(s)=\int_0^{s\wedge\sigma}
+       \eps^{\gamma^2/2}e^{\gamma h_\eps(B^y_u)}\,du .
+\end{equation}
+Here and below the continuum Dirichlet Green function has normalization
+$\Delta G_D(y,\cdot)=-\delta_y$. In a disk, if
+$a=(y-z)/r$ and $b=(x-z)/r$, it is
+\begin{equation}\label{eq:occ-green}
+ G_D(y,x)=\frac1{2\pi}
+     \log\left|\frac{1-\overline a b}{a-b}\right|.
+\end{equation}
+Consequently the ordinary Brownian occupation kernel is $2G_D$.
+For example, this follows by applying It\^o's formula to the
+zero-boundary solution of $-\tfrac12\Delta u=f$, first for smooth $f$,
+and then by approximation and monotone convergence.
+
+\begin{theorem}\label{thm:occ-main}
+The clocks in \eqref{eq:occ-clock} converge, uniformly in $s\geq0$ in joint
+probability over the field and Brownian motion, to a clock $\phi$.
+Almost surely in the environment, $\phi$ is Brownian-almost surely
+continuous, starts at $0$, is strictly increasing before $\sigma$,
+and has $0<\phi(\sigma)<\infty$.
+
+Define the unscaled process $Y_t^y=B^y_{\phi^{-1}(t)}$ before its exit
+time $\tau_D^Y=\phi(\sigma)$, and the process $X$ of the main text by
+$X_t^y=Y^y_{m_0t}$, with $\tau_D^X=\phi(\sigma)/m_0$.
+Here $m_0$ is the unique deterministic annealed median of the raw exit time
+of $Y^0$ from $B_{1/2}$, so $0<m_0<\infty$.
+Almost surely in the environment, simultaneously for every bounded
+Borel function $f:D\to\R$,
+\begin{align}
+ \mathbb{E}\left[\int_0^{\tau_D^Y}f(Y_t^y)\,dt\,\middle|\,h,\eta\right]
+   &=2\int_DG_D(y,x)f(x)\,\mu_h(dx), \label{eq:occ-raw}\\
+ \mathbb{E}\left[\int_0^{\tau_D^X}f(X_t^y)\,dt\,\middle|\,h,\eta\right]
+   &=\frac2{m_0}\int_DG_D(y,x)f(x)\,\mu_h(dx).
+       \label{eq:occ-scaled}
+\end{align}
+Both lifetimes have finite quenched mean. The event in this statement
+may depend on the fixed parameters $\gamma,\rho,D,y$; it does not
+depend on $f$. In particular the conclusion applies to every bounded
+H\"older function which is measurable with respect to $(h,\eta)$.
+\end{theorem}
+
+\begin{remark}[What is, and is not, an approximation claim]\label{rem:occ-mode}
+The display defining $\phi$ in the main text does not specify a mode of
+convergence. Theorem~\ref{thm:occ-main} constructs its precise
+circle-average approximants in the full-$\eps$ probability sense.
+Every almost sure version of that displayed limit has the same value;
+an almost surely convergent deterministic subsequence also exists.
+We do not claim almost sure convergence along every real
+$\eps\downarrow0$ at the singular start. This precision does not change
+the resulting clock or its quenched occupation identity.
+\end{remark}
+
+For clarity, the exact non-elementary inputs to the proof are listed
+here. Page numbers refer to the versions specified in the bibliography.
+\begin{enumerate}[label=(\roman*)]
+\item Berestycki \cite[Theorem 1.1, p.~3; hypotheses (1.2)--(1.5),
+pp.~2--3]{berestycki2017elementary}: for covariance
+$\log|x-w|^{-1}$ plus a continuous function, and a finite reference
+measure of finite $(d-\delta)$-energy for every $\delta>0$, the
+variance-normalized GMC approximants converge in $L^1$ and probability
+when $\gamma<\sqrt{2d}$, and weakly in probability as measures.
+The uniform circle mollifier is explicitly admissible on p.~3.
+\item Berestycki \cite[Theorem 1.2, p.~949, and its proof, p.~959;
+Remark 3.5, p.~959]{berestycki2015diffusion}: the circle-average construction for a
+zero-boundary GFF converges along dyadic scales and its pre-exit clock
+is continuous and strictly increasing. Strict increase is proved in
+the paragraph immediately preceding Remark 3.5; that remark proves
+the absence of clock jumps. We use these precise clock conclusions.
+\item Berestycki--Gwynne \cite[Lemma A.1, p.~66, equation (A.1)]{berestycki2020random}:
+for the circle-average $\gamma$-cone and any small $\zeta>0$, with
+polynomially high probability as $\delta\downarrow0$,
+\begin{equation}\label{eq:occ-BGmass}
+ \delta^{(2+\gamma)^2/2+\zeta}
+ \leq\mu_h(B_\delta(v))
+ \leq\delta^{(2-\gamma)^2/2-\zeta},
+ \qquad v\in B_{1-\delta}.
+\end{equation}
+\end{enumerate}
+The additional exact inputs used only for Lemma~\ref{lemma:integral-convergence-of-greens-function} are recorded in
+Section~\ref{sec:occ-use}. In particular we do not use the assertion of the
+singular-start Green formula in \cite[footnote 2, p.~9]{berestycki2020random} as a proof
+of that formula.
+
+\subsection{The nonsingular circle-average clock}
+
+Let
+\[
+ \nu_\eps(dx)=\eps^{\gamma^2/2}e^{\gamma g_\eps(x)}\,dx,
+ \qquad \nu=\mu_g,\qquad
+ A_\eps(s)=\int_0^{s\wedge\sigma}
+                \eps^{\gamma^2/2}e^{\gamma g_\eps(B^y_u)}\,du.
+\]
+For sufficiently small $\eps$, all averaging circles centered in
+$\cl(D)$ lie in $B_1$. Averaging the logarithmic covariance twice gives
+\begin{equation}\label{eq:occ-var}
+ \operatorname{Var}(g_\eps(x))=\log(1/\eps),\qquad
+ \mathbb{E}\,\nu_\eps(dx)=dx.
+\end{equation}
+Thus there is no missing conformal-radius multiplier in this
+normalization.
+
+\begin{lemma}\label{lem:occ-base}
+The clocks $A_\eps$ converge uniformly in $s\geq0$ in probability to a
+continuous clock $A$, strictly increasing before $\sigma$.
+For this specified deterministic $y$, on one event of full field
+probability,
+\begin{equation}\label{eq:occ-base}
+ \mathbb{E}_y\left[\int_0^\sigma q(B^y_s)\,dA(s)\,\middle|\,g\right]
+       =2\int_DG_D(y,x)q(x)\,\nu(dx)
+\end{equation}
+simultaneously for every bounded Borel $q$.
+\end{lemma}
+
+\begin{proof}
+First verify the hypothesis needed to apply \cite[Theorem 1.1,
+p.~3]{berestycki2017elementary} conditionally on a Brownian path. For $0<a<2$ and an
+integer $n$, Brownian Gaussian increments give
+\[
+ \mathbb{E}_y\int_0^n\int_0^n |B^y_s-B^y_t|^{-a}\,ds\,dt
+   =C_a\int_0^n\int_0^n |s-t|^{-a/2}\,ds\,dt<\infty.
+\]
+Intersecting over integers $n$ and a countable sequence of exponents
+tending to $2$, and using $\sigma<\infty$ almost surely, proves that
+the Brownian occupation measure
+$\lambda_B(E)=\int_0^\sigma\ones_{\{B^y_s\in E\}}\,ds$
+has finite $a$-energy for every $a<2$. Its support is in $\cl(D)$,
+strictly inside a larger disk in $B_1$.
+
+For this reference measure, the theorem and \eqref{eq:occ-var} give
+convergence of $A_\eps(\sigma)$ in $L^1$ in the field, conditionally
+on almost every Brownian path. The same applies with $\sigma$ replaced
+by $t\wedge\sigma$ and with bounded nonnegative continuous spatial
+weights. Each conditional $L^1$ error is bounded by twice the reference
+mass, because the approximants and limit have that mass as their
+field expectation. Since
+$\mathbb{E}_y\sigma=(r^2-|y-z|^2)/2<\infty$, dominated convergence over Brownian
+paths gives joint $L^1$ convergence. Signed bounded weights follow by
+splitting positive and negative parts.
+
+Here is an explicit transfer of clock regularity from the precise
+Dirichlet-field statement in \cite[Theorem 1.2, p.~949, proof and
+Remark 3.5, p.~959]{berestycki2015diffusion}. Choose $\rho<R<1$. On $B_R$, the
+logarithmic covariance is the sum of the zero-boundary disk GFF
+covariance
+\[
+ \log\frac{R|1-x\overline w/R^2|}{|x-w|}
+\]
+and the covariance
+\[
+ K_H(x,w)=-\log R-\log|1-x\overline w/R^2|
+   =-\log R+
+       \operatorname{Re}\sum_{n\geq1}\frac{(x\overline w/R^2)^n}{n}.
+\]
+The latter is positive definite: it is the covariance of an independent
+real Gaussian constant of variance $-\log R$ plus a harmonic Gaussian
+power series. The series converges locally uniformly almost surely.
+Thus $g$ has the law of $g^{\,0}+H$ there, with independent
+zero-boundary GFF $g^{\,0}$ and harmonic continuous $H$.
+On $\cl(D)$, $H$ is bounded and its sufficiently small circle averages
+equal $H$. The clocks are therefore related by the continuous positive
+multiplier $e^{\gamma H(B^y_s)}$. The cited Dirichlet clock is continuous
+and strictly increasing, and its dyadic limit agrees with the
+probability limit just obtained. This constructs $A$ with those
+properties. Convergence at finitely many time points, monotonicity of
+$A_\eps$, and continuity of $A$ imply uniform convergence in probability
+on each bounded time interval. Finally $\mathbb{P}_y(\sigma>n)\to0$ gives the
+asserted uniform convergence on $s\geq0$.
+
+For $q\in C(\cl(D))$, the ordinary Brownian Green identity gives
+\begin{equation}\label{eq:occ-baseapprox}
+ \mathbb{E}_y\left[\int_0^\sigma q(B^y_s)\,dA_\eps(s)\,\middle|\,g\right]
+   =2\int_DG_D(y,x)q(x)\,\nu_\eps(dx).
+\end{equation}
+The weighted clocks on the left converge in joint $L^1$ by the preceding
+conditional-GMC argument. Their probability limit is the Stieltjes
+integral against $A$, by its continuity and uniform clock convergence.
+Conditional expectation is an $L^1$ contraction.
+
+The right side of \eqref{eq:occ-baseapprox} converges in $L^1$ in the field.
+Indeed, first replace $G_D(y,\cdot)$ by its minimum with $M$ and apply
+\cite[Theorem 1.1, p.~3]{berestycki2017elementary} with a bounded weighted Lebesgue
+reference measure. The expected error, for both $\nu_\eps$ and $\nu$,
+is at most
+\[
+ 2\|q\|_\infty
+       \int_{\{G_D(y,x)>M\}}G_D(y,x)\,dx\longrightarrow0.
+\]
+Here $\mathbb{E}\nu(dx)=dx$ follows from the same $L^1$ theorem; the logarithmic
+singularity is Lebesgue integrable. This proves \eqref{eq:occ-base}
+for each fixed continuous $q$.
+
+Take a countable uniformly dense collection in $C(\cl(D))$ containing
+$1$, for example the rational polynomials in the two coordinates.
+On one field event, both sides define finite Borel measures on
+$\cl(D)$ with identical integrals against this collection. Their
+integrals agree for all continuous functions by uniform approximation,
+so the measures agree. Both give zero mass to $\partial D$:
+$A$ has no terminal atom and $G_D$ vanishes there.
+Equality of the measures proves the assertion for every bounded Borel
+$q$. This construction fixed $y$ at the outset and therefore has no
+exceptional starting-point issue.
+\end{proof}
+
+\subsection{The logarithmic insertion and its actual regularization}
+
+Choose a buffered radius $\rho<\rho_1<1$ and any
+$b\in(0,(2-\gamma)^2/2)$. Apply \eqref{eq:occ-BGmass} at dyadic radii and
+use Borel--Cantelli and monotonicity. Almost surely there are finite
+random constants $C$ and $r_0>0$ such that
+\begin{equation}\label{eq:occ-mass}
+ \mu_h(B_a(v))\leq C a^b,\qquad
+ v\in B_{\rho_1},\quad 0<a<r_0.
+\end{equation}
+On this event $\mu_h(\{0\})=0$. Off $0$, the circle average of
+$-\log|\cdot|$ is $-\log|x|$ for $\eps<|x|$. Local convergence of
+the area measures on compact subsets away from $0$, followed by a
+countable exhaustion, therefore gives
+\begin{equation}\label{eq:occ-weight}
+ \mu_h(dx)=|x|^{-\gamma^2}\nu(dx)\quad\text{on }B_1.
+\end{equation}
+The value of the weight at $0$ is immaterial: $\nu(\{0\})=0$ follows
+from $\mathbb{E}\nu(dx)=dx$, and $\mu_h(\{0\})=0$ was just proved.
+
+Since \eqref{eq:occ-green} implies
+$2G_D(v,x)\leq C_D(1+\log^+(1/|v-x|))$, a dyadic annulus sum using
+\eqref{eq:occ-mass} gives
+\begin{equation}\label{eq:occ-potential}
+ \sup_{v\in D}\int_DG_D(v,x)\,\mu_h(dx)<\infty .
+\end{equation}
+For the small-distance contribution the summable upper bound is a
+constant times $\sum_{j\geq0}(j+1)2^{-jb}$; the remaining contribution
+is bounded by local finiteness.
+
+Using bounded truncations of $|x|^{-\gamma^2}$ in Lemma~\ref{lem:occ-base},
+define
+\begin{equation}\label{eq:occ-weightedclock}
+ \Phi(s)=\int_0^{s\wedge\sigma}|B^y_u|^{-\gamma^2}\,dA(u).
+\end{equation}
+Monotone convergence and \eqref{eq:occ-weight}--\eqref{eq:occ-potential} give
+\begin{equation}\label{eq:occ-weightedmean}
+ \mathbb{E}_y[\Phi(\sigma)\mid g]
+       =2\int_DG_D(y,x)\,\mu_h(dx)<\infty .
+\end{equation}
+In particular $\Phi(\sigma)<\infty$ Brownian-almost surely.
+Lemma~\ref{lem:occ-base} with $q=\ones_{\{0\}}$ shows that
+$dA$ gives no mass to $\{s:B^y_s=0\}$, even when $y=0$.
+One may set the weight to any positive finite value at $0$.
+The finite measure defining $d\Phi$ is absolutely continuous with
+respect to the atomless measure $dA$. Thus $\Phi$ is continuous,
+$\Phi(0)=0$, and it is strictly increasing before $\sigma$.
+In particular there is no initial holding interval or clock atom at $0$.
+
+It remains essential to identify \eqref{eq:occ-weightedclock} with
+\emph{the circle-average regularization in the main text}. Finite potentials
+or a generic additive-functional correspondence alone would not do this.
+We provide that identification next.
+
+\begin{lemma}[Regularized origin tails]\label{lem:occ-tails}
+Put
+\[
+ \mu_\eps(dx)=\eps^{\gamma^2/2}e^{\gamma h_\eps(x)}\,dx,\qquad
+ 0<p<\min\{1,4/\gamma^2-1\},\qquad
+ \kappa=(2-\gamma^2/2)p-\gamma^2p^2/2>0 .
+\]
+For all sufficiently small $a,\eps>0$, uniformly in $\eps$,
+\begin{equation}\label{eq:occ-tail}
+ \mathbb{E}\left[\left(\int_{B_a}
+          (1+\log(1/|x|))\,\mu_\eps(dx)\right)^p\right]
+     \leq C a^\kappa(1+\log(1/a))^p .
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+The circle mean-value formula, including at $x=0$, gives exactly
+\begin{equation}\label{eq:occ-regweight}
+ \mu_\eps(dx)=(|x|\vee\eps)^{-\gamma^2}\nu_\eps(dx).
+\end{equation}
+For $R<1$, the covariance in \eqref{eq:occ-field} gives on $B_1$
+\[
+ g(Ru)=N_R+g^R(u),\qquad
+ \operatorname{Var}(N_R)=\log(1/R),
+\]
+where $N_R=g_R(0)$ is independent of $g^R$ and
+$g^R|_{B_1}\overset{d}{=}g|_{B_1}$.
+For example $\operatorname{Cov}(g(Ru),g_R(0))=\log(1/R)$ for
+$|u|<1$, and subtracting this covariance gives the claim.
+Whenever the averaging circles lie in $B_R$, \eqref{eq:occ-regweight}
+therefore yields
+\begin{equation}\label{eq:occ-scale}
+ \mu_\eps(R\,du)
+   =R^{2-\gamma^2/2}e^{\gamma N_R}
+       (|u|\vee(\eps/R))^{-\gamma^2}\nu^R_{\eps/R}(du),
+\end{equation}
+where $\nu^R_\delta$ is the nonsingular regularization for $g^R$.
+It has expectation $du$ on the sets used below, by \eqref{eq:occ-var}.
+
+First let $A_s=\{s/2<|x|\leq s\}$ and $\eps\leq s/4$, and take
+$R=2s$. In rescaled coordinates, $1/4<|u|\leq1/2$ and
+$\eps/R\leq1/8$. The insertion weight is bounded, while the
+logarithmic factor is at most $C(1+\log(1/s))$.
+Independence in \eqref{eq:occ-scale}, followed by
+$\mathbb{E}[V^p]\leq(\mathbb{E} V)^p$, gives
+\[
+ \mathbb{E}\left[\left(\int_{A_s}(1+\log(1/|x|))\,\mu_\eps(dx)\right)^p\right]
+  \leq C s^\kappa(1+\log(1/s))^p,
+\]
+since $\mathbb{E} e^{p\gamma N_R}=R^{-\gamma^2p^2/2}$.
+
+For the regularization core $B_c$ with $c\leq4\eps$, instead take
+$R=8\eps<1$. Then $\eps/R=1/8$ and $c/R\leq1/2$.
+The expected rescaled log-weighted integral is bounded by
+$C(c/R)^2(1+\log(1/c))$, as follows by integrating the logarithm
+against $du$; the insertion is bounded at this fixed rescaled
+regularization. Thus
+\[
+ \mathbb{E}\left[\left(\int_{B_c}(1+\log(1/|x|))\,\mu_\eps(dx)\right)^p\right]
+ \leq C R^\kappa(c/R)^{2p}(1+\log(1/c))^p
+ \leq C c^\kappa(1+\log(1/c))^p,
+\]
+where the last inequality uses $\kappa<2p$ and $c\leq R$.
+This also covers $a\leq4\eps$. Otherwise split $B_a$ into dyadic
+annuli until the remaining core has radius at most $4\eps$.
+Use $(\sum_j v_j)^p\leq\sum_j v_j^p$ and
+\[
+ \sum_{j\geq0}(2^{-j}a)^\kappa
+       (1+\log(1/a)+j\log2)^p
+       \leq C a^\kappa(1+\log(1/a))^p
+\]
+to obtain \eqref{eq:occ-tail}.
+\end{proof}
+
+\begin{proof}[Identification of the clock of the main text]
+Let $0\leq\chi_a\leq1$ be continuous, equal to $0$ on $B_a$ and $1$
+off $B_{2a}$.
+For $\eps<a$, \eqref{eq:occ-regweight} implies
+\[
+ \int_0^{s\wedge\sigma}\chi_a(B^y_u)
+       \eps^{\gamma^2/2}e^{\gamma h_\eps(B^y_u)}\,du
+   =\int_0^{s\wedge\sigma}
+        \chi_a(B^y_u)|B^y_u|^{-\gamma^2}\,dA_\eps(u).
+\]
+For fixed $a$ these integrals converge uniformly in $s$ in probability
+to the corresponding integral against $A$. To justify this
+Stieltjes continuity assertion directly, restrict first to
+$\{\sigma\leq n\}$, approximate the continuous time function
+$\chi_a(B^y_u)|B^y_u|^{-\gamma^2}$ uniformly by step functions,
+and use uniform convergence of the integrators and their total masses.
+Then let $n\to\infty$.
+
+The removed nonnegative part is bounded, uniformly in $s$, by
+\[
+ R_{\eps,a}=\int_0^\sigma\ones_{\{|B^y_u|<2a\}}
+                  \eps^{\gamma^2/2}e^{\gamma h_\eps(B^y_u)}\,du.
+\]
+Ordinary Brownian occupation gives
+\[
+ U_{\eps,a}(g):=\mathbb{E}_y[R_{\eps,a}\mid g]
+       =2\int_{D\cap B_{2a}}G_D(y,x)\,\mu_\eps(dx).
+\]
+For $y=0$, $G_D(0,x)\leq C_D(1+\log(1/|x|))$ near $0$.
+For $y\ne0$, the kernel is bounded there if $2a<|y|/2$.
+Consequently Lemma~\ref{lem:occ-tails} and conditional Markov inequality
+give, for every $u>0$,
+\begin{align*}
+ \mathbb{P}(R_{\eps,a}>u)
+ &\leq\mathbb{E}\min\{1,U_{\eps,a}/u\}\\
+ &\leq u^{-p}\mathbb{E}[U_{\eps,a}^p]
+ \leq C_{D,y}u^{-p}a^\kappa(1+\log(1/a))^p\longrightarrow0 ,
+\end{align*}
+uniformly in sufficiently small $\eps$. The removed part for $\Phi$
+tends to zero almost surely: its total mass is finite by
+\eqref{eq:occ-weightedmean}, and the limiting set $\{B^y_u=0\}$ has
+zero clock mass. First let $\eps\to0$ with $a$ fixed, and then
+$a\to0$. We conclude that
+\[
+ \sup_{s\geq0}|\phi_\eps(s)-\Phi(s)|\longrightarrow0
+       \quad\text{in probability}.
+\]
+This proves the required identification $\phi=\Phi$, including
+at $y=0$, throughout $\gamma\in(0,2)$.
+No annealed first moment of the inserted clock was used.
+These constructions agree on nested disks up to the smaller Brownian
+exit time: their stopped approximants are identical, so uniqueness
+of the probability limit gives the same stopped clock. Thus this
+identification also supplies the restriction of the clock of the main text
+when a larger ambient disk is used.
+\end{proof}
+
+\subsection{Occupation, simultaneity, and the coefficient}
+
+\begin{proof}[Proof of Theorem~\ref{thm:occ-main}]
+The clock construction and its regularity have been proved above.
+For a fixed environment, extend \eqref{eq:occ-base} by monotone convergence
+to nonnegative Borel functions. Equations \eqref{eq:occ-weight} and
+\eqref{eq:occ-weightedclock} then identify, as finite Borel measures,
+\[
+ \mathbb{E}_y\left[\int_0^\sigma\ones_{\{B^y_s\in dx\}}\,d\phi(s)
+                 \,\middle|\,g\right]
+     =2G_D(y,x)\,\mu_h(dx).
+\]
+The equality holds on the same event as in Lemma~\ref{lem:occ-base}
+and \eqref{eq:occ-potential}, simultaneously for all Borel sets.
+In particular its integral against any bounded Borel $f$ is legitimate
+and absolutely integrable.
+
+A continuous strictly increasing clock maps $[0,\sigma]$ onto
+$[0,\phi(\sigma)]$. The change of variables for its Stieltjes measure
+therefore gives, pathwise,
+\[
+ \int_0^{\tau_D^Y}f(Y_t^y)\,dt
+       =\int_0^\sigma f(B^y_s)\,d\phi(s).
+\]
+This proves \eqref{eq:occ-raw}. Strict positivity and finiteness of the
+raw exit time also show that its annealed median from $0$ in $B_{1/2}$
+is deterministic, positive, and finite. To check uniqueness, take
+$1/2<R<1$ in the Gaussian decomposition used in
+\eqref{eq:occ-scale}. The raw exit time $L$ has the representation
+$L=e^{\gamma N_R}L'$, with $N_R$ a nondegenerate Gaussian independent
+of $0<L'<\infty$. Hence $\log L$ has a strictly positive continuous
+density, obtained by convolving the law of $\log L'$ with a Gaussian
+density. Its median is unique. Finally $X_t=Y_{m_0t}$,
+so changing variables $s=m_0t$ proves \eqref{eq:occ-scaled}.
+
+The argument is local in $h|_{B_1}$, so the law identity
+\eqref{eq:occ-field} transfers it to the cone. Conditional Brownian
+sampling is independent of the entire pair $(h,\eta)$; all kernels
+used above are functions of $h$ alone. Conditioning additionally on
+$\eta$ therefore leaves them unchanged. The finite-measure identity
+holds before choosing $f$, which proves the claimed simultaneity and
+allows environment-measurable $f$. Complex-valued tests follow by
+treating their real and imaginary parts separately.
+\end{proof}
+
+The assertion with coefficient $2$ for the named process $X$ in the
+original version is actually false, and not just potentially inconsistent notation.
+For a concrete parameter choice take $\gamma=1/2$ and let
+$L=\tau_{B_R}^{Y,0}$ with $R=1/2$. By \eqref{eq:occ-weight},
+$\mathbb{E}\nu(dx)=dx$, \eqref{eq:occ-raw}, and Tonelli,
+\[
+ \mathbb{E} L
+   =2\int_0^R s^{1-\gamma^2}\log(R/s)\,ds
+   =\frac{2R^{2-\gamma^2}}{(2-\gamma^2)^2}<0.195 .
+\]
+Thus $\mathbb{P}(L\geq1)<1/2$, so every median $m_0$ is less than $1$.
+For $f=1$, the positive Green integral in \eqref{eq:occ-scaled} then
+rules out coefficient $2$. The minimal coefficient correction is
+$2/m_0=c_0$, which is the coefficient of the corrected statements in the main text.
+Alternatively, coefficient $2$ is correct if the named process is
+changed from $X$ to the raw process $Y$.
+
+\begin{remark}\label{rem:occ-m0}
+Here $m_0$ must be defined with the starting point $0$:
+\[
+ m_0=\operatorname{median}
+       \left(\inf\{t\geq0:|Y_t^0|\geq1/2\}\right).
+\]
+It cannot define a different $m_0$ for each displayed $z$:
+the discrete median in \eqref{eq:meps} is taken from $0$,
+and a start outside $B_{1/2}$ would give median zero.
+\end{remark}
+
+\subsection{The use in Lemma~\ref{lemma:integral-convergence-of-greens-function}}\label{sec:occ-use}
+
+The conclusion of Lemma~\ref{lemma:integral-convergence-of-greens-function}
+needs no change of coefficient or quantifiers. Its proof should explicitly
+use killed occupation in $D=B_r(z)$. A path frozen at its boundary point
+has infinite occupation of $f=1$ over $[0,\infty)$; stopping only on
+leaving $B_\rho$ does not give the Green function of $D$.
+
+The following argument gives the convergence-to-occupation step of the
+proof of Lemma~\ref{lemma:integral-convergence-of-greens-function}.
+For the embedded walk, put
+\[
+ I_\eps=\VGeps(D)\setminus\VGeps(\partial D),\qquad
+ K_\eps=\inf\{k\geq0:X_k^{y,\eps}\notin I_\eps\},\qquad
+ W^\eps(t)=\eta(X^{y,\eps}_{\meps t}),
+\]
+with linear interpolation in the last expression. Use full walks,
+or walks observed until leaving a larger buffered disk.
+Let $\tau=\tau_D^X$ for the accelerated continuum process.
+
+The exact external inputs here are
+\cite[Theorem 1.2, p.~10]{berestycki2020random}, giving quenched convergence in
+probability in the topology of local uniform convergence of paths;
+\cite[Remark 1.3, equation (1.8), p.~10]{berestycki2020random}, giving
+$m_\eps\asymp\eps^{-1}$; \cite[Lemma 2.4, equation (2.8),
+p.~17]{berestycki2020random}, giving vanishing maximal cell diameter on buffered
+compact disks with polynomially high probability; and
+\cite[Proposition 5.1, equation (5.1), p.~28]{berestycki2020random}, giving,
+on an event of polynomially high probability, the bounds
+\begin{equation}\label{eq:occ-discretemom}
+ \mathbb{E}[(\tau^\eps_U)^N\mid h,\eta]
+ \leq N!C^N\eps^{-N}
+  \left(\sup_{v\in U}
+       \int_{B_{\eps^\alpha}(U)}
+         \left(\log\frac1{|v-w|}+1\right)\mu_h(dw)\right)^N
+\end{equation}
+for all positive integers $N$ and admissible Borel
+$U\subset B_{\rho_1}$ with $\mu_h(U)\geq\eps^\alpha$.
+Its $\tau_U^\eps$ is exit from the cells intersecting $U$;
+$K_\eps$ kills no later, so it satisfies the same upper bound.
+
+Start with any deterministic sequence $\eps\downarrow0$.
+Pass to a deterministic subsequence on
+which the quenched path laws converge almost surely, the maximal
+relevant cell diameter $d_\eps$ tends to zero almost surely, and
+\eqref{eq:occ-discretemom} holds eventually. The mass condition for the
+fixed disk holds eventually because $\mu_h(D)>0$ almost surely.
+The logarithmic integral in \eqref{eq:occ-discretemom} is bounded uniformly
+on its tail by the same annulus argument as \eqref{eq:occ-potential},
+using the buffered radius and \eqref{eq:occ-mass}. Taking $N=2$ yields
+a finite random $M$ with
+\begin{equation}\label{eq:occ-UI}
+ \mathbb{E}[(K_\eps/m_\eps)^2\mid h,\eta]\leq M,\qquad
+ \mathbb{E}[(K_\eps/m_\eps-T)_+\mid h,\eta]\leq M/T .
+\end{equation}
+
+Fix an environment in this event and in the event of
+Theorem~\ref{thm:occ-main}, also applied in a buffered disk. Couple its
+quenched path laws by the Skorokhod representation, so that
+$W^\eps\to X$ locally uniformly almost surely. Then
+\begin{equation}\label{eq:occ-exitconv}
+ K_\eps/m_\eps\longrightarrow\tau
+       \quad\text{almost surely under the coupling}.
+\end{equation}
+We give the pathwise detail since exit time is not continuous at
+every continuous path. If $t<\tau$, the compact path $X([0,t])$
+has positive distance from $D^c$. Uniform convergence and shrinking
+cells imply that every visited cell before time $m_\eps t$ lies
+inside $D$ and misses $\partial D$. This proves the lower bound
+in \eqref{eq:occ-exitconv}.
+
+At ordinary Brownian exit from a disk, the projection of subsequent
+increments onto the outward normal is one-dimensional Brownian
+motion by the strong Markov property. The reflection principle
+shows it has positive values arbitrarily soon. Thus Brownian motion
+visits the strict exterior of the closed disk arbitrarily soon after
+exit. The continuous strictly increasing clock in the buffered disk
+transfers these visits to $X$ at times arbitrarily close after
+$\tau$. At any such time, the exterior point is at positive distance
+from $\cl(D)$, and this persists under uniform convergence.
+A linear segment with a point outside the convex closed disk has
+an endpoint outside it; that endpoint's cell cannot belong to
+$I_\eps$. The corresponding mesh time differs by at most
+$m_\eps^{-1}\to0$. This proves the upper bound and hence
+\eqref{eq:occ-exitconv}.
+
+Let $f$ be any bounded H\"older function on $D$, measurable with
+respect to the environment. It has a unique continuous extension
+to $\cl(D)$. Compose that extension with nearest-point projection
+onto the closed disk to obtain a bounded H\"older extension
+$\widetilde f$ to $\C$. After the environment is fixed this is
+an ordinary fixed function, of some exponent $\theta>0$ and
+constant $H<\infty$. The coupling gives, for each fixed $T$,
+\[
+ \int_0^{T\wedge(K_\eps/m_\eps)}
+             \widetilde f(W^\eps(t))\,dt
+       \longrightarrow \int_0^{T\wedge\tau}f(X_t)\,dt .
+\]
+The bound $T\|f\|_\infty$ permits passage to quenched expectations.
+Adjacent cells intersect, so the relevant interpolation segments
+have length at most $2d_\eps$. The difference from the discrete
+Riemann sum over $0\leq k<K_\eps$, $k<m_\eps T$, divided by
+$m_\eps$, is at most
+\[
+ T H(2d_\eps)^\theta+2\|f\|_\infty/m_\eps .
+\]
+The time horizon is fixed here; a uniform error independent of all
+$T>0$ is unnecessary.
+
+By \eqref{eq:occ-UI}, the expected discarded discrete tail is at most
+$\|f\|_\infty(M/T+m_\eps^{-1})$. The continuum tail tends to zero
+because $\mathbb{E}[\tau\mid h,\eta]<\infty$ by
+Theorem~\ref{thm:occ-main}. Letting first $\eps\to0$ and then $T\to\infty$
+proves
+\begin{align*}
+ m_\eps^{-1}\sum_{b\in I_\eps}
+       \Gr{{\eps}}{D}(a_y^{{\eps}},b)f(\eta(b))
+ &=m_\eps^{-1}\mathbb{E}\left[\sum_{k<K_\eps}
+             f(\eta(X_k^{y,\eps}))\,\middle|\,h,\eta\right]\\
+ &\longrightarrow
+   \mathbb{E}\left[\int_0^\tau f(X_t^y)\,dt\,\middle|\,h,\eta\right]\\
+ &=\frac2{m_0}\int_DG_D(y,x)f(x)\,\mu_h(dx).
+\end{align*}
+The sum may equivalently range over all cells intersecting $D$
+if one uses $\widetilde f$: their killed Green function is zero
+outside $I_\eps$. This avoids evaluating $f$ at a representative
+outside its domain.
+
+Every deterministic input sequence has a deterministic subsequence
+with this almost sure conclusion. The subsequence criterion gives
+convergence in probability along all meshes, as required in
+Lemma~\ref{lemma:integral-convergence-of-greens-function}. The fixed-environment argument works for all bounded
+H\"older tests on the same event, so it also justifies the
+environment-dependent tests in that lemma.
