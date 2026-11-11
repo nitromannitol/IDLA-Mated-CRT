@@ -9,7 +9,7 @@ import MatedCRT.Proofs.Sec6.ChanceOfBeingAbsorbed.Chernoff
 (absorption region `U`), which hit `a` before exiting `O` but not before leaving the current aggregate
 (`IsLateVisit`). It is the `lateVisitCount` of the walker sequence (`lateVisitCount_eq_lateCount`), it splits off
 the first walker (`lateCount_cons`, by definition), and it is a measurable function of the walkers
-(`measurable_lateCount`). The aggregates are c5's `Absorption.aggRun`/`Absorption.aggStep`
+(`measurable_lateCount`). The aggregates are `Absorption.aggRun`/`Absorption.aggStep`
 (MatedCRT/Proofs/Sec6/ChanceOfBeingAbsorbed/Chernoff.lean).
 -/
 

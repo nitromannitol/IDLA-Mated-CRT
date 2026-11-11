@@ -7,9 +7,9 @@ import MatedCRT.Proofs.Sec6.ConstantOrderLowerBound.Model
 From Lemma 2.8 (the cells meeting `B_ρ` have diameter `≤ ε^{1/(2+γ)²}`, so they lie in `B_R`, `R = (1 + ρ)/2`),
 Lemma 2.7 at scale `δ = ε^{1/4}` (`μ_h(B_δ(z)) ≤ δ^{β⁺} ≤ 1` for `z ∈ B_{1-δ}`), a cover of `cl B_R` by
 `(2⌈2/δ⌉ + 1)²` balls of radius `δ` centered on the grid `(δ/2)(ℤ + iℤ)` (`measure_closedBall_le_grid`), and the area
-parametrization (the cells have mass `ε` and overlap in null sets; c5's `ConstantOrder.cell_inter_null`):
+parametrization (the cells have mass `ε` and overlap in null sets; `ConstantOrder.cell_inter_null`):
 `|F| ε ≤ μ_h(B_R) ≤ 25 δ^{-2}` for every finite `F ⊆ V^ε(B_ρ)`, hence `|V^ε(B_ρ)| ≤ 25 ε^{-3/2} ≤ ε^{-2}`.
-The probability bookkeeping follows c5's `cellVerticesBallFiniteStep` (Proofs/Sec6/ConstantOrderLowerBound/Model.lean).
+The probability bookkeeping follows `cellVerticesBallFiniteStep` (Proofs/Sec6/ConstantOrderLowerBound/Model.lean).
 -/
 
 namespace MatedCRT

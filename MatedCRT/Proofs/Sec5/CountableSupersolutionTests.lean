@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Sec5.SupersolutionBorelCode
 
 /-!
-# Countable `C²`-dense families of nonnegative tests and the LaplacianLE bridge (steps2-r3, lines 1016-1026)
+# Countable `C²`-dense families of nonnegative tests and the LaplacianLE bridge
 
 The Borel supersolution relation of `SupersolutionBorelCode.lean` takes two residuals as Props. This file proves them.
 
@@ -17,8 +17,7 @@ The Borel supersolution relation of `SupersolutionBorelCode.lean` takes two resi
   countable distributional inequalities `∫ w̃ Δφ_j ≤ ∫ φ_j dμ` hold for a continuous trace `w` iff `LaplacianLE w̃ μ (ball 0 R)`,
   i.e. `Δw̃ ≤ μ` in `ball 0 R` in the sense of Armitage-Gardiner (distributional Laplacian on the disk).
 
-No literature input is used. Mathematical source: steps2-r3.tex 1016-1026 (relation eq:supersolutionrelation at 957-961,
-LaplacianLE identification at 962-966).
+No literature input is used.
 -/
 
 open HarmonicBalls
@@ -137,7 +136,7 @@ theorem exists_countable_dense_nonnegTestsOn (r : ℝ) :
 
 /-! ### 3. The countable `C²`-dense family on `ball 0 R` (residuals A and A′) -/
 
-/-- **Countable `C²`-dense family (steps2-r3 1016-1026; residual A′ and A).** For every `R > 0` there is a countable
+/-- **Countable `C²`-dense family.** For every `R > 0` there is a countable
 family of nonnegative smooth tests supported in `ball 0 R`, which approximates every nonnegative smooth test supported
 in `ball 0 R`, uniformly on `ℂ` for the function and for its Laplacian. -/
 theorem exists_countable_c2DenseFamily {R : ℝ} (hR : 0 < R) :
@@ -161,7 +160,7 @@ theorem exists_countable_c2DenseFamily {R : ℝ} (hR : 0 < R) :
   obtain ⟨j, rfl⟩ := hψS
   exact ⟨j, hψ1, hψ2⟩
 
-/-- Residual A′ (steps2-r3 1016-1026): the countable `C²`-dense family exists for every radius. -/
+/-- The countable `C²`-dense family exists for every radius. -/
 theorem countableC2FamilyStmt_holds : CountableC2FamilyStmt :=
   fun _ hR => exists_countable_c2DenseFamily hR
 
@@ -174,7 +173,7 @@ theorem integrable_of_isTestFunction_ball {μ : Measure ℂ} {R : ℝ} (hμ : μ
   rw [← integrableOn_iff_integrable_of_support_subset ((subset_tsupport ψ).trans hψ.2.2)]
   exact Continuous.integrable_of_hasCompactSupport hψ.1.continuous hψ.2.1
 
-/-- **LaplacianLE bridge (steps2-r3 1016-1026; residual B).** Let `μ (ball 0 R) < ∞` and let `φs` be a countable family
+/-- **LaplacianLE bridge.** Let `μ (ball 0 R) < ∞` and let `φs` be a countable family
 of nonnegative smooth tests in `ball 0 R` which is `C²`-dense (`CountableC2DenseStmt`). Then for every continuous trace
 `w` the countable distributional inequalities `∫ w̃ Δφ_j ≤ ∫ φ_j dμ` hold iff `Δw̃ ≤ μ` in `ball 0 R`
 (`LaplacianLE`). The forward direction passes from the countable family to all nonnegative tests by uniform

@@ -4,7 +4,7 @@ import MatedCRT.Proofs.Sec5.StoppedActualMarginCode
 /-!
 # Field-measurable circle versions and the stopped margin
 
-The reconstruction in audited `steps2-r3.tex:3326-3354` is already implemented by
+The reconstruction is already implemented by
 `Sec1.exists_fieldMeasurable_distribution_with_circles`. A countable continuous-function decoder
 discharges the residual producer of `StoppedActualMarginCode`; the proved
 supersolution section identity removes the other internal input. The three

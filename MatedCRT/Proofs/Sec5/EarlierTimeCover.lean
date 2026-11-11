@@ -2,9 +2,9 @@ import HarmonicBalls.Proofs.Sec5.CountableTimeMeasurability
 import MatedCRT.Defs.Setting
 
 /-!
-# Earlier-time compact covers of the cluster family (E-c1-5, Section 5.1 route)
+# Earlier-time compact covers of the cluster family
 
-Formalizes the written conditional argument of `docs/campaign/GAPS-SEC2567A.md`, entry `E-c1-5`, paragraph at line 257
+Formalizes the written conditional argument of `docs/campaign/GAPS-SEC2567A.md`, paragraph at line 257
 ("One such property is exactly the strict obstacle gap ..."): if the raw cluster `C_t = cluster μ ρ 0 t` contains
 `Λ_t` at one fixed target time `t`, then every compact `K ⊆ Λ_t` lies in `Λ_q` for a single rational `q ∈ (0, t)`.
 

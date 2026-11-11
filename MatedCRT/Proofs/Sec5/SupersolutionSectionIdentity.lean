@@ -1,14 +1,14 @@
 import MatedCRT.Proofs.Sec5.CountableSupersolutionTests
 
 /-!
-# The Borel code section and its almost-sure identity (steps2-r3, lines 1016-1046)
+# The Borel code section and its almost-sure identity
 
 Target: `CodeSectionStmt 𝒮` (`ConeOriginNullMeasurableProof.lean`), the residual Borel obstacle code that
 `coneOriginNullMeasurableStep_of_inputs` takes as a hypothesis. For every radius `R > 0` and time `t > 0` it asks for a
 measurable set `𝒜 ⊆ PosCircleFns × BallFns R` whose section at almost every outcome is the set of traces of the
 supersolutions of the obstacle problem for `(S.μ ω, R, t)`.
 
-Route (steps2-r3 1016-1046; no mathematics beyond the written proof):
+Route (no mathematics beyond the written proof):
 * countable family: `φs` is the countable nonnegative `C²`-dense family of `countableC2FamilyStmt_holds`
   (residual A′, proved in `CountableSupersolutionTests`);
 * punctured-disk sequence: `ps` is dense in the punctured closed disk (`exists_puncturedDisk_dense_seq`, this file);
@@ -35,7 +35,7 @@ open MeasureTheory Filter Topology Set Metric
 
 /-! ### 1. A punctured-disk dense sequence -/
 
-/-- **Punctured-disk dense sequence (steps2-r3 1036-1046).** For `R > 0` some sequence `ps` of points of the punctured
+/-- **Punctured-disk dense sequence.** For `R > 0` some sequence `ps` of points of the punctured
 closed disk has dense range in it. The punctured closed disk is a subset of `ℂ`, hence separable, so it has a dense
 sequence. -/
 theorem exists_puncturedDisk_dense_seq {R : ℝ} (hR : 0 < R) :
@@ -61,7 +61,7 @@ theorem exists_puncturedDisk_dense_seq {R : ℝ} (hR : 0 < R) :
 
 /-! ### 2. The Borel code section -/
 
-/-- **The Borel obstacle code from a countable `C²`-dense family (steps2-r3 1016-1046).** For every space-filling SLE
+/-- **The Borel obstacle code from a countable `C²`-dense family.** For every space-filling SLE
 model, given the countable nonnegative `C²`-dense families of residual A′ (`hfam`), the section of a measurable
 relation is, at almost every outcome, the set of traces of supersolutions of the obstacle problem for the LQG measure.
 The relation uses the countable family and a punctured-disk dense sequence; the mass identity holds on one almost-sure
@@ -92,7 +92,7 @@ theorem codeSectionStmt_of_countableC2Family (𝒮 : SpaceFillingSLEModel) (hfam
 theorem codeSectionStmt_holds (𝒮 : SpaceFillingSLEModel) : CodeSectionStmt 𝒮 :=
   codeSectionStmt_of_countableC2Family 𝒮 countableC2FamilyStmt_holds
 
-/-- **Origin null-measurability, conditional on the Preston input only (steps2-r3 992-1009 consumer).** With the
+/-- **Origin null-measurability, conditional on the Preston input only.** With the
 Borel code section proved, `ConeOriginNullMeasurableStep 𝒮` is reduced to the explicit Preston input
 `PrestonAnalyticUniversallyMeasurableStmt`. This is a conditional statement, not an unconditional claim of the origin
 Step. -/
