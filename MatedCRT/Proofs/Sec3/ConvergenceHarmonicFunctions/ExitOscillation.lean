@@ -7,7 +7,7 @@ If a continuous path `p` started in `B_r(z)` leaves `cl(B_r(z))` immediately aft
 exit time, then every path `g` close to `p` in the local uniform distance moves little
 on the window `[τ_{B_{r-d}(z)}(g), τ_{B_r(z)}(g) + h]` for small `d, h`: on that window
 `g` stays near its exit position. This is the deterministic input of the repaired
-cell comparison (E-c2-8).
+cell comparison.
 -/
 
 namespace MatedCRT

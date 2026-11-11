@@ -7,7 +7,7 @@ import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.CellWindow
 For a fixed environment with cells of diameter `≤ d` meeting `B_r(z)` and a walk moving
 along edges (adjacent cells meet), the boundary value at the discrete exit vertex and at
 the (retracted) exit position of the interpolated walk differ by at most
-`C (2η + d)^χ + 2K · exitWindowBad z r d h η X̂` (repair of E-c2-8).
+`C (2η + d)^χ + 2K · exitWindowBad z r d h η X̂`.
 -/
 
 namespace MatedCRT

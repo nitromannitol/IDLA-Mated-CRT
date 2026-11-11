@@ -5,7 +5,7 @@ import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 import MatedCRT.External.SLE
 
 /-!
-# Lemma 3.6: the exit-cell comparison (repair of E-c2-8)
+# Lemma 3.6: the exit-cell comparison
 
 `HarmonicExitCellStep` from Theorem 2.11, the scaling of `m_ε` (`MepsScalingInput`), the
 Brownian regular-exit input and measurability of LBM path functionals. For a diagonal index

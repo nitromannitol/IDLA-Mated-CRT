@@ -4,7 +4,7 @@ import MatedCRT.Proofs.Sec7.MassBoundOdometer.Count
 /-!
 # Lemma 3.6: the discrete exit lies in a window of the interpolated walk
 
-Repair of E-c2-8. Let `N` be the first step at which the walk leaves
+Let `N` be the first step at which the walk leaves
 `A = V^ε(B_r(z)) \ V^ε(∂B_r(z))`. Before step `N` the marked points lie in the convex
 ball `B_r(z)`, so the interpolated walk `X̂` stays in `B_r(z)` up to time `(N - 1)/m_ε`.
 The cell of `x_N` meets `∂B_r(z)`; if it has diameter `≤ d`, then `η(x_N) = X̂(N/m_ε)` lies
