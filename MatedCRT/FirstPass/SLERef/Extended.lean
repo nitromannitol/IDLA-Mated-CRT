@@ -180,7 +180,7 @@ seven analytic clauses `MepsScalingClause`, `DegreeBoundClause`, `CellSizeEstima
 `CountingMeasureConvergenceClause`, `DegreeMeasureConvergenceClause`, `FrozenConeScalingClause`,
 `FrozenLBMGreenOccupationClause`. No closure clause. Truth-checked: UNSURE, model-dependent: removing the closure clause repairs the contradiction, and realizability depends on the chosen `ν` and the reference-environment witness. Not verified as TRUE as a whole: `SLEReferenceInput` carries the
 unrestricted-`D` exit-time clause and `CountingMeasureConvergenceClause` is not source-exact; both are
-report-only in this round. -/
+report-only. -/
 def SLEReferenceExtendedCorrectedInput (ν : ℝ → Measure SLEPathCode) : Prop :=
   SLEReferenceInput ν ∧ MepsScalingClause ν ∧ DegreeBoundClause ν ∧ CellSizeEstimateClause ν ∧
     CountingMeasureConvergenceClause ν ∧ DegreeMeasureConvergenceClause ν ∧
