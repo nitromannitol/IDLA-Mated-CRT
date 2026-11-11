@@ -59,7 +59,7 @@ Source: the audit round 1 report (fleet notes, not in the repository), IDLA (B) 
 |---|---|---|
 | B4: strongest counted Theorems 1.4/1.6 take paper-owned steps (`closed_1_4_derived_p2`, `closed_1_6_derived_p2`) | Fixed: fcd79e5 (z5) | MatedCRT/FirstPass/Closure/AuditRewire14.lean:53 (`closed_1_4_p3`) and :143 (`closed_1_6_p3`): the counted conclusions without the six paper-step binders, which are derived. |
 | B5: the [C16] step is hidden inside a literature bundle | Fixed: 5f3fb57, aebb815 (z9); a118241 (z10) for the residual input | MatedCRT/FirstPass/SLERef/CertifiedCore.lean (`certifiedReferenceModel_of_core`); MatedCRT/FirstPass/Closure/AuditCore.lean (14 `_certCore` declarations). Residual input `BrownianOutwardExcursionAtExitStep`, MatedCRT/Steps/Sec3/ConvergenceHarmonicFunctions.lean:38: discharged in the 14 `_certCore_bm` wrappers (MatedCRT/FirstPass/Closure/Rewire53.lean:58, :73, :87, :100, :114, :129, :211, :293, :374, :456, :536, :616, :687, :756), which apply `frozenBrownianOutwardExcursionAtExit_holds`. The unwrapped originals still take the input (FirstPass/HdetSwap.lean:35, FirstPass/S3t.lean:331, FirstPass/SLERef/CertifiedCore.lean:23, FirstPass/S3S4b/TruncatedLawsBridge.lean:49): operator decision on those. |
-| B6: `firstPassMain_1_4` and `firstPassMain_1_6` should not be counted | Pending operator (requests 95b to 95e) | MatedCRT/FirstPass/Main.lean:46 (`firstPassMain_1_4`); audit B6 at the audit report line 163. |
+| B6: `firstPassMain_1_4` and `firstPassMain_1_6` should not be counted | In progress: owner z1; decision: the counted declarations switch from `firstPassMain_1_4_full`/`_1_6_full` (Main.lean:114, :174) to `closed_1_4_full`/`closed_1_6_full` (Closure/Final14Full.lean:21, :89); ledger docs/campaign/COUNTED.md | MatedCRT/FirstPass/Main.lean:46 (`firstPassMain_1_4`); audit B6 at the audit report line 163. |
 | MINOR (B) items | Pending operator (requests 95b to 95e) | Audit round 1 report, MINOR (B) section at line 233. |
 | B7: Lemma 3.6 is only half proved | Fixed: 8759946 (z8) | MatedCRT.closed_3_6_full, MatedCRT/FirstPass/Closure/Lemma36Rate.lean:39; binds the cited FrozenOneSidedBoundaryContinuity (Gwynne-Miller-Sheffield, arXiv:1807.07511, Theorem 3.9), defined at MatedCRT/FirstPass/S3i/Frozen.lean:44. |
 
@@ -99,9 +99,9 @@ Decisions:
 ## IDLA status table
 
 Scope: the IDLA findings of the audit round 1 report (fleet notes, not in the repository): sections A (lines 96-126), B (149-172), the IDLA email table (210-232) and the IDLA Lean minor list (242-249). Audit line numbers are in the "audit" column.
-Rule: Fixed = a commit and file:line evidence; Responded = a response line in this file that is not pending; Pending = no commit and no such response, with the owner and request id.
-Counts: Fixed 40, Responded 0, Pending 8 (total 48).
-Pending rows: B6 firstPassMain_1_4 and _1_6 should not be counted; MINOR m1 hcell duplicates adjacentCellsMeetAeStep; MINOR m2 FrozenLeastSupersolutionMemCone is a paper-side transfer; MINOR m3 closed_3_1 is the weak form; MINOR m4 Lemma 7.4 has no counted theorem; CrudeUpperBoundStmt vs [C25]; MINOR m5 beta minus pinned to (2+gamma)^2/2 + 1; MINOR m6 FrozenVeryGoodAnnulusHarnackType uses "for every C_3"; MINOR m7 non-vacuity rests on IsMatingOfTreesCoupling (absent from snapshot).
+Rule: Fixed = a commit and file:line evidence; Responded = a response line in this file that is not pending; In progress = a named owner and a recorded decision, no commit yet (counted separately); Pending = no commit, no response and no decision, with the owner and request id.
+Counts: Fixed 40, Responded 0, Pending 0, In progress 8 (total 48).
+In progress rows (owner; decision): B6 firstPassMain_1_4 and _1_6 should not be counted (z1; counted declarations switch to closed_1_4_full/_1_6_full, ledger COUNTED.md); MINOR m1 hcell duplicates adjacentCellsMeetAeStep (z1; check hcell against adjacentCellsMeetAeStep); MINOR m2 FrozenLeastSupersolutionMemCone is a paper-side transfer (z5; operator 95e: HB Lemma 3.1 cited verbatim as a Proposed input, transfer proved in Lean at MatedCRT/FirstPass/S5kLemma31.lean, not yet present); MINOR m3 closed_3_1 is the weak form (z1; COUNTED.md counts closed_3_1_faithful and closed_3_1_countable, not closed_3_1); MINOR m4 Lemma 7.4 has no counted theorem; CrudeUpperBoundStmt vs [C25] (lead; new CrudeUpperBoundCorrectedStmt per [C25], Draft/Section7.lean:67 untouched, proof carved next); MINOR m5 beta minus pinned to (2+gamma)^2/2 + 1 (z5; check whether beta minus is existential in the counted 6.x statements); MINOR m6 FrozenVeryGoodAnnulusHarnackType uses "for every C_3" (lead; truth check queued as MQ-li-1 in the fleet queue notes/fp-gaps/MATH-QUEUE.md; the Prop is HarmonicBalls/Draft/Section6.lean:415 `VeryGoodAnnulusHarnackTypeStmt`, reached via FirstPass/Frozen/S5Cited.lean:44); MINOR m7 non-vacuity rests on IsMatingOfTreesCoupling (operator adds the LP snapshot to audit round 2; section "LP files for audit round 2" below).
 
 | Finding | Audit line | Status | Evidence (commit; file:line or response) |
 |---|---|---|---|
@@ -111,7 +111,7 @@ Pending rows: B6 firstPassMain_1_4 and _1_6 should not be counted; MINOR m1 hcel
 | A10 [C9] wrong locator | 123 | Fixed | 1d7c3cd; tex:1976 (eq:cluster-and-lambdat), tex:3898 (eq:cluster-contained-in) |
 | B4 counted Theorems 1.4/1.6 take paper-owned steps | 151 | Fixed | fcd79e5 (z5); FirstPass/Closure/AuditRewire14.lean:53 (`closed_1_4_p3`), :143 (`closed_1_6_p3`) |
 | B5 [C16] step hidden in a literature bundle | 159 | Fixed | 5f3fb57, aebb815; FirstPass/SLERef/CertifiedCore.lean:22, FirstPass/Closure/AuditCore.lean:26 (14 `_certCore` declarations; originals unchanged); a118241 (z10): the residual input Steps/Sec3/ConvergenceHarmonicFunctions.lean:38 is discharged in the 14 `_certCore_bm` wrappers, FirstPass/Closure/Rewire53.lean:58-756; the unwrapped originals still take it (operator decision) |
-| B6 firstPassMain_1_4 and _1_6 should not be counted | 163 | Pending | operator, requests 95b-95e; FirstPass/Main.lean:46 |
+| B6 firstPassMain_1_4 and _1_6 should not be counted | 163 | In progress | owner z1; decision: counted declarations switch from `firstPassMain_1_4_full`/`_1_6_full` to `closed_1_4_full`/`closed_1_6_full`; ledger docs/campaign/COUNTED.md; FirstPass/Main.lean:46 |
 | B7 Lemma 3.6 only half proved | 167 | Fixed | 8759946; FirstPass/Closure/Lemma36Rate.lean:39 (`closed_3_6_full`) |
 | C1 (email table) | 214 | Fixed | 12219de; tex:504 (marker); CORRECTIONS.md:7 |
 | C2 (email table) | 215 | Fixed | 12219de; tex:829 (marker); CORRECTIONS.md:31; moved to Minor in 1d7c3cd, ERRATA-for-Ewain.md:61 |
@@ -146,10 +146,30 @@ Pending rows: B6 firstPassMain_1_4 and _1_6 should not be counted; MINOR m1 hcel
 | E-c1-2 missing item (connectedness of V, Appendix A) | 227 | Fixed | 1d7c3cd; tex:4305-4313 (C33 marker at tex:4307); ERRATA-for-Ewain.md:61 (Minor) |
 | Wording: 'Green's function for standard Brownian motion' | 228 | Fixed | 1d7c3cd; tex:504 and tex:1227 (C1 markers) |
 | INTERNAL section of the email | 229 | Fixed | 1d7c3cd (moved out of the email); docs/campaign/ERRATA-INTERNAL.md:1 |
-| MINOR m1 hcell duplicates adjacentCellsMeetAeStep | 243 | Pending | operator, requests 95b-95e |
-| MINOR m2 FrozenLeastSupersolutionMemCone is a paper-side transfer | 244 | Pending | operator, requests 95b-95e; used at FirstPass/S5k.lean:54 |
-| MINOR m3 closed_3_1 is the weak form | 245 | Pending | operator, requests 95b-95e |
-| MINOR m4 Lemma 7.4 has no counted theorem; CrudeUpperBoundStmt vs [C25] | 246 | Pending | operator, requests 95b-95e; Draft/Section7.lean:67 |
-| MINOR m5 beta minus pinned to (2+gamma)^2/2 + 1 | 247 | Pending | operator, requests 95b-95e; FirstPass/S6d.lean (audit location :30) |
-| MINOR m6 FrozenVeryGoodAnnulusHarnackType uses "for every C_3" | 248 | Pending | operator, requests 95b-95e |
-| MINOR m7 non-vacuity rests on IsMatingOfTreesCoupling (absent from snapshot) | 249 | Pending | no request id located in the fleet files (97a, 97b not found); operator to assign |
+| MINOR m1 hcell duplicates adjacentCellsMeetAeStep | 243 | In progress | owner z1; decision: check hcell against adjacentCellsMeetAeStep |
+| MINOR m2 FrozenLeastSupersolutionMemCone is a paper-side transfer | 244 | In progress | owner z5; decision (operator 95e): HB Lemma 3.1 cited verbatim as a Proposed input; transfer to FrozenLeastSupersolutionMemCone proved in Lean at MatedCRT/FirstPass/S5kLemma31.lean (not yet present); used at FirstPass/S5k.lean:54 |
+| MINOR m3 closed_3_1 is the weak form | 245 | In progress | owner z1; decision: COUNTED.md counts closed_3_1_faithful and closed_3_1_countable, not closed_3_1 |
+| MINOR m4 Lemma 7.4 has no counted theorem; CrudeUpperBoundStmt vs [C25] | 246 | In progress | owner lead; decision: new CrudeUpperBoundCorrectedStmt per [C25]; Draft/Section7.lean:67 untouched; proof carved next |
+| MINOR m5 beta minus pinned to (2+gamma)^2/2 + 1 | 247 | In progress | owner z5; decision: check whether beta minus is existential in the counted 6.x statements; FirstPass/S6d.lean (audit location :30) |
+| MINOR m6 FrozenVeryGoodAnnulusHarnackType uses "for every C_3" | 248 | In progress | owner lead; decision: truth check queued as MQ-li-1 (notes/fp-gaps/MATH-QUEUE.md, fleet queue); the Prop is HarmonicBalls/Draft/Section6.lean:415 `VeryGoodAnnulusHarnackTypeStmt`, reached via FirstPass/Frozen/S5Cited.lean:44 |
+| MINOR m7 non-vacuity rests on IsMatingOfTreesCoupling (absent from snapshot) | 249 | In progress | owner operator (adds the LP snapshot to audit round 2); decision: LP declarations and IDLA consumers in section "LP files for audit round 2" |
+
+## LP files for audit round 2
+
+Snapshot trees. Both trees hold the same file paths and line numbers for the rows below.
+- Pinned: `.lake/packages/lattice-probability` (LatticeProb at rev 3912597, "Port Birkhoff ergodic theorem to Lean 4.35").
+- Branch `idla/phase2`: `/home/nitro/lean/LP-idla-phase2` (HEAD 61f74b6).
+
+| LP declaration | LP file (both trees) | Use in IDLA |
+|---|---|---|
+| `MatedCRTHarmonic.MatedCRT.IsMatingOfTreesCoupling` (structure, 24 fields) | LatticeProb/Bonanno/MatedCRTHarmonic/Frozen/IsMatingOfTreesCoupling.lean:61 | coupling clause of `MatedCRTEnv.IsValid` (MatedCRT/Defs/Setting.lean:157-165) |
+| field `igMap` (existential witness `Φ : (ℝ → ℂ → ℝ) → C(ℝ, ℂ)`, measurable) | IsMatingOfTreesCoupling.lean:84 (informal description :35) | imaginary-geometry map of `spaceFilling` (MatedCRT/Defs/Setting.lean:34, :43) |
+| `coneField` | LatticeProb/Bonanno/MatedCRTHarmonic/Frozen/MatedCRTConeField.lean:28 | used in IsMatingOfTreesCoupling.lean:114, :120, :144 |
+| `coneRadial` | LatticeProb/Bonanno/MatedCRTHarmonic/Frozen/MatedCRTConeRadial.lean:28 | used in IsMatingOfTreesCoupling.lean:114, :120, :144 |
+
+IDLA consumers (grep over MatedCRT; several hits are docstring mentions):
+- `MatedCRTEnv.IsValid` (MatedCRT/Defs/Setting.lean:141), the structure that carries the coupling clause at :157-165.
+- `HasReferenceEnvironments` (MatedCRT/FirstPass/SLERef/Reference.lean:42-44): `∃ S : MatedCRTEnv ℝ, S.IsValid 𝒮 γ` for every γ in (0, 2). It is the non-vacuity statement. It is a conjunct of `CertifiedReferenceModel` (MatedCRT/FirstPass/SLERef/Certified.lean:64; projection :119). Whether `CertifiedReferenceModel` is discharged or assumed is NOT checked in this section.
+- `MatedCRTEnv.IsValid.ae_no_earlier_origin_visit` (MatedCRT/Proofs/Sec4/DivSandpileLowerBound/SourceVertex.lean:103).
+- `RescaledEnvironmentInput` (MatedCRT/Proofs/Sec1/EnvironmentScaling.lean:103) and `RescaledMatingOfTreesStep` (:149).
+- Mentions of `IsMatingOfTreesCoupling` or `igMap`: MatedCRT/FirstPass/S5m.lean:12-13; MatedCRT/Proofs/Infra/MatingOfTrees.lean:7-8; MatedCRT/Proofs/MatingOfTrees/AdjacentContactWitnesses.lean:4, :24; MatedCRT/Proofs/Sec1/EnvironmentScaling/IGCurveScaling.lean:1, :7; MatedCRT/Proposed/StoppedPoleCanonicalMoments2026.lean:227 (`GMSCoordinateChangeStmt`).
