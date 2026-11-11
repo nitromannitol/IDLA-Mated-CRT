@@ -5,9 +5,9 @@ import MatedCRT.FirstPass.S4S6c.HoneExitGeom68
 import MatedCRT.FirstPass.S4S6c.HoneCellGoodSelPw68
 
 /-!
-# `shellOneTest_at_of_goodEnv_loc_splitG`: the split-constant one-test leaf, walk first conjunct at `ωG` (fp-S4S6c-goodenv-split, q4)
+# `shellOneTest_at_of_goodEnv_loc_splitG`: the split-constant one-test leaf, walk first conjunct at `ωG`
 
-Codex Q4 (notes/fp-gaps/CODEX-idla-hOne-residuals-sol-20261110.md l.257-347): the good-annulus constant of the
+The good-annulus constant of the
 selector is the prevalence witness `C`, not `CG`; the Green constant `K.C = CG` and `K.c0 = shellC0 CG` are kept.
 Changes from `shellOneTest_at_of_goodEnv_loc_g2` (B1GoodEnvLoc68.lean:360):
 
@@ -26,7 +26,7 @@ Changes from `shellOneTest_at_of_goodEnv_loc_g2` (B1GoodEnvLoc68.lean:360):
 `hdbl_of_exit_geom_path_gexpG` (below) is the copy of `hdbl_of_exit_geom_path_split` (HoneExitGeom68.lean:556) with the
 walk first conjunct on `ball 0 (ρc - ε ^ ωG)`; its proof uses that conjunct only through `ball 0 (ρc - ε ^ ωG) ⊆ ball 0 ρ'`.
 
-NAMED INPUT `hWalkK` (request 83a, option (b) of z11): the leaf `Lemma68LeafAe.shellOneTest_of_direct_ae_rcell_stopFin_rho_gexp`
+NAMED INPUT `hWalkK`: the leaf `Lemma68LeafAe.shellOneTest_of_direct_ae_rcell_stopFin_rho_gexp`
 (HoneLeafGexp68.lean:561) takes its walk first conjunct on `ball 0 (ρc - ε ^ K.ω)` (binders :66, :195, :375, :602), applies it
 to the exit vertex (:137, `hGreen`) and in `hdiam_test_ball_of_walk (e := K.ω)` (:255, which needs `e ≤ κ`, HoneCellGood68.lean:110).
 The `ωG`-ball conjunct is weaker (`ε ^ ωG ≤ ε ^ K.ω`, `ε ≤ 1`), so it does not supply the leaf's conjunct.
@@ -49,7 +49,7 @@ open MatedCRT.Lemma68ShellHoneInst MatedCRT.Lemma68WindowRf MatedCRT.Lemma68Shel
 open MeasureTheory Set Filter Metric
 open scoped ENNReal Topology
 
-/-- **The one-test doubling bound, walk first conjunct at `ωG` (fp-S4S6c-goodenv-split, q4).**
+/-- **The one-test doubling bound, walk first conjunct at `ωG`.**
 Copy of `hdbl_of_exit_geom_path_split` (HoneExitGeom68.lean:556); the walk first conjunct is on `ball 0 (ρc - ε ^ ωG)`,
 the second is `ε ^ ωG ≤ R/8`. -/
 theorem hdbl_of_exit_geom_path_gexpG {γ ρc ζc ωG : ℝ} (K : Constants68 γ ρc) {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η)
@@ -161,10 +161,10 @@ theorem hdbl_of_exit_geom_path_gexpG {γ ρc ζc ωG : ℝ} (K : Constants68 γ 
 
 
 
-/-- **`shellOneTest_at_of_goodEnv_loc_splitG` (fp-S4S6c-goodenv-split, q4).** The one-test leaf for the CG route with the
-good-annulus constant `C` split from the Green constant `CG` (Codex Q4), walk first conjunct at `ωG` (option (b)).
+/-- **`shellOneTest_at_of_goodEnv_loc_splitG`.** The one-test leaf for the CG route with the
+good-annulus constant `C` split from the Green constant `CG`, walk first conjunct at `ωG`.
 Named inputs (producers not landed): `hTest` (test-end finiteness, `ShellCGTestEndLoc`), `hc` (74a), `hWalk` (both conjuncts
-at the free exponent `ωG`), `hWalkK` (the leaf's first conjunct at `K.ω`, blocker), `hCountGood`, `hcutR`, and the radius cap
+at the free exponent `ωG`), `hWalkK` (the leaf's first conjunct at `K.ω`), `hCountGood`, `hcutR`, and the radius cap
 `t ht hrt hcut`. The exit membership `hωX` replaces the moment premise `hmomS`. -/
 theorem shellOneTest_at_of_goodEnv_loc_splitG {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (c0W : ℝ)
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
@@ -225,7 +225,7 @@ theorem shellOneTest_at_of_goodEnv_loc_splitG {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ
               (dyadicD r ^ shortExp ζ) (dyadicD r) k x) / 8 ≤
               infDist (vertexPoint ε (S.η ω) (x (shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
                 (dyadicD r ^ shortExp ζ) (dyadicD r) ((windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω)) k x).toNat)) (sphere 0 ρ))
-    -- NAMED INPUT `hWalkK` (blocker, request 83a): the leaf's walk first conjunct at the shell exponent `K.ω`
+    -- NAMED INPUT `hWalkK`: the leaf's walk first conjunct at the shell exponent `K.ω`
     (hWalkK : Lemma68Config.FullAdmAt (shellS1CG γ CG) S ρ s₀ γ ε ω r i →
       ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1, ∀ᵐ x ∂srwLaw (S.mult ε ω) i.a,
         x ∈ leafPre ε (S.η ω) i.Θ i.F0 i.A r (dyadicD r ^ shortExp ζ) (dyadicD r)
@@ -321,7 +321,7 @@ theorem shellOneTest_at_of_goodEnv_loc_splitG {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ
     (ρmesh := Lemma68HoneCellGood.rhoCell68 ρ) (s1 := shellS1CG γ CG) (c0W := c0W) S hreg hρ1 hζ0 hζ1
     hε hs₀ hr0 hrρ hrz (by unfold Lemma68HoneCellGood.rhoCell68; linarith)
     (by linarith [hds, hcutR, hd0]) hmesh i
-  -- the moment premise from the exit membership at the cell radius (q3, `hmomS_pointwise_rhoMom_s1_g`)
+  -- the moment premise from the exit membership at the cell radius (`hmomS_pointwise_rhoMom_s1_g`)
   have hmomS := MatedCRT.HoneMomSPw68.hmomS_pointwise_rhoMom_s1_g (γ := γ) (ρ := ρ) (s₀ := s₀) (α := α)
     (CE := CE) (ε := ε) (ρmom := Lemma68HoneCellGood.rhoCell68 ρ) (C := C) (ζ := ζ) (r := r)
     (s1 := shellS1CG γ CG) (c0W := c0W) S hωX i

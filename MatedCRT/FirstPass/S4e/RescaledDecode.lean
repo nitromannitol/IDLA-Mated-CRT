@@ -1,11 +1,10 @@
 import MatedCRT.FirstPass.S4d.RescaledMeasurable
 
 /-!
-# B2R from B2: the decoded rescaled global family is a.e. measurable (FIRST PASS, S4e)
+# The decoded rescaled global family is a.e. measurable
 
-Operator task fp-S4e-4-2-rescaled-pair-measurable (ChatGPT answer `CHATGPT-q4-hnj-B1-B2.md` §5).
 This is the argument of `coneRescaledGlobalFamilyAEMeasurable_of_stopped` (S4d/RescaledMeasurable.lean), with its
-input "the global family process is a.e. measurable" (B2) taken as the hypothesis `hgs`, instead of being derived from
+input "the global family process is a.e. measurable" taken as the hypothesis `hgs`, instead of being derived from
 the stopped inputs `h24 h25 hfam hpos`. The decoding uses `rescaledProc` (S4d/RescaledMeasurable),
 `measurableSet_exists_proxy` and `mem_iff_proxy_of_regular` (S4d/RegDecode), `famOf_globalFamilyProcess` and
 `goodFamily_of_isConeHarmonicBallFamily` (S4d/RescaleGap), `aemeasurable_coneScaleRadius` (Proofs/Measurability).
@@ -16,7 +15,7 @@ open MeasureTheory Set Filter Topology Metric
 namespace MatedCRT.FirstPass.S4e
 
 /-- **Rescaled global family process is a.e. measurable.** For `b > 0`, if `ω ↦ globalFamilyProcess (Λ ω)` is a.e.
-measurable (B2), then so is `ω ↦ globalFamilyProcess (rescaledFamily (Λ ω) R_b b)`, where `R_b = coneScaleRadius γ (hcirc ω) b`.
+measurable, then so is `ω ↦ globalFamilyProcess (rescaledFamily (Λ ω) R_b b)`, where `R_b = coneScaleRadius γ (hcirc ω) b`.
 The random spatial scaling is decoded at the point `R_b ω * p.2`, using a countable dense set of centres and radii. -/
 theorem aemeasurable_rescaledGlobalFamilyProcess {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hQC : IsQuantumCone γ P hC hcirc)

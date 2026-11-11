@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.S4S6c.CellBoundary
 In the printed proof of Lemma 6.8 a walk leaving the outer test disk `B_{4R/3}(z)` at a cell `b` meeting its sphere
 starts a local test in the disk `B_ρ(p)` with `p ∈ H b` (the local test disk `B_{R/4}(η b)`). The local test window
 `I(B_ρ(p))` (Armitage-Gardiner style inner vertices, `CellBoundary.innerVertices`) and its exit cells lie in the
-outer window `I(B_{2R}(z))`. This file proves that deterministic containment (eq (C14): `4R/3 + d + R/4 + 2d < 2R`):
+outer window `I(B_{2R}(z))`. This file proves that deterministic containment (`4R/3 + d + R/4 + 2d < 2R`):
 
 * `local_window_mem_outer`: every cell of `I(B_ρ(p))`, and every cell adjacent to one of them, is a cell of
   `I(B_{2R}(z))`. Cells are connected, `d`-small in their closures (`hsm`), and adjacent cells have intersecting closures
@@ -73,5 +73,5 @@ end LocalWindow68
 
 end MatedCRT
 
-/-! ## Audit -/
+/-! ## Axioms -/
 #print axioms MatedCRT.LocalWindow68.local_window_mem_outer

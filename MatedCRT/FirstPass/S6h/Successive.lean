@@ -6,19 +6,19 @@ import MatedCRT.Proofs.IDLA.Measurable
 /-!
 # FIRST PASS: the successive-exit route to the configuration bound of Lemma 6.8
 
-Steps B–F of the bridge (§3) and the test schedule of the write-up C3: the successive exit times
-`τ_{N+1} = nextExit W τ_N` are the test times `T_j` of (C3) when the window `W (X_{T_j})` is the cell interval of the
+The test schedule: the successive exit times
+`τ_{N+1} = nextExit W τ_N` are the test times `T_j` when the window `W (X_{T_j})` is the cell interval of the
 test disk. The passing events `S_N` of `SuccessiveExitStop` are the complements of the failure events `H_N`.
 
 This route uses `SuccessiveExitStop.srwLaw_successive_exit_le_pow` (proved), which applies the strong Markov property
-at the outer exit times `τ_N` only. The window at `τ_N` is a function of the vertex `X_{τ_N}`, as C3 requires.
-Its inputs are: the per-state outer test bound `hc` (the write-up C15/B18 bound for the outer window `W y`, uniform
-constant), the start-state invariant `hSY` (C6), and the almost-sure containment `hC12` (C12: `T_N < τ_U` a.s.).
+at the outer exit times `τ_N` only. The window at `τ_N` is a function of the vertex `X_{τ_N}`, as required.
+Its inputs are: the per-state outer test bound `hc` (the per-test bound for the outer window `W y`, uniform
+constant), the start-state invariant `hSY`, and the almost-sure containment `hC12` (`T_N < τ_U` a.s.).
 
-CAVEAT (checked against write-up C4, lines 810–830): `printed_test_bound` (`FirstPass/S4S6c/PerTest68.lean`) is NOT the
+CAVEAT: `printed_test_bound` (`FirstPass/S4S6c/PerTest68.lean`) is NOT the
 outer per-state bound. It bounds the local test from `b_j = X_{S_j}`, where `S_j` is the exit from `I(B_{4R_j/3}(z_j))`,
 with window `I(B_{R_j/4}(η(b_j)))`. Deriving `hc` for the outer window needs the strong Markov property at `S_j` (the
-tower step of write-up lines 836–860), which is the same content as the conditional step `hstep` of `S6h.lean`. So this
+tower step), which is the same content as the conditional step `hstep` of `S6h.lean`. So this
 route does not remove that step; it only replaces the conditional-expectation form by a per-state form. -/
 
 open MeasureTheory Set
@@ -29,7 +29,7 @@ namespace MatedCRT
 namespace Lemma68Successive
 
 /-- The successive exit times of the test chain: `τ_0 = 0` and `τ_{N+1} = nextExit W τ_N`, the next exit time after
-`τ_N` from the window `W (X_{τ_N})` (write-up C3, (C3)). -/
+`τ_N` from the window `W (X_{τ_N})`. -/
 noncomputable def exitSchedule (W : ℤ → Set ℤ) : ℕ → (ℕ → ℤ) → ℕ∞
   | 0 => fun _ => 0
   | N + 1 => SuccessiveExitStop.nextExit W (exitSchedule W N)
@@ -90,9 +90,9 @@ theorem exitEvent_ae_le_passSet {ν : Measure (ℕ → ℤ)} (W : ℤ → Set �
   filter_upwards [hC12] with x hx
   exact fun hB => exitEvent_subset_passSet W A U N x hx hB
 
-/-- **The configuration bound in ENNReal form** (write-up C12 with the successive-exit product bound): the quenched exit
+/-- **The configuration bound in ENNReal form** (the successive-exit product bound): the quenched exit
 probability of `U` for the walk from `a` is at most `c^N` when every state of the start set `Y` passes one test with
-probability at most `c`, the start states of passed tests lie in `Y`, and C12 holds. -/
+probability at most `c`, the start states of passed tests lie in `Y`, and `T_N < τ_U` almost surely. -/
 theorem srwLaw_exitEvent_le_pow (m : ℤ → ℤ → ℕ) (a : ℤ) (W : ℤ → Set ℤ) (A U : Set ℤ) (N : ℕ)
     (hC12 : ∀ᵐ x ∂srwLaw m a, exitSchedule W N x < vExitTime U x)
     {Y : Set ℤ} {c : ℝ≥0∞} (hc : ∀ y ∈ Y, srwLaw m y (SuccessiveExitStop.stayInRegion W A y) ≤ c)
@@ -103,7 +103,7 @@ theorem srwLaw_exitEvent_le_pow (m : ℤ → ℤ → ℕ) (a : ℤ) (W : ℤ →
     rfl (fun N => rfl) hc hSY N
   exact (measure_mono_ae (exitEvent_ae_le_passSet W A U N hC12)).trans h1
 
-/-- **The configuration bound in real form** (bridge argument §3, display (10)): with the uniform per-test constant
+/-- **The configuration bound in real form**: with the uniform per-test constant
 `x0 = 1 - q0/(1+log(1/r))²`, the real quenched exit probability is at most `x0^N`. -/
 theorem exitEvent_real_le_pow (m : ℤ → ℤ → ℕ) (a : ℤ) (W : ℤ → Set ℤ) (A U : Set ℤ) (N : ℕ) {x0 : ℝ}
     (hx0 : 0 ≤ x0) (hC12 : ∀ᵐ x ∂srwLaw m a, exitSchedule W N x < vExitTime U x)

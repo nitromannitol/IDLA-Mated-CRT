@@ -6,7 +6,7 @@ import Mathlib.Topology.Order.Compact
 import Mathlib.Topology.Order.OrderClosed
 
 /-!
-# FirstPass S5l: the everywhere-positive measurable floor constant (Prop 5.1, Part I §5)
+# FirstPass S5l: the everywhere-positive measurable floor constant (Prop 5.1)
 
 Generic form of the floor argument.
 Let `What : Ω → ℂ → ℝ` be the continuum surplus `Ŵ(ω, ·)` and `G : ℂ → ℝ` the Green function `G_{B_ρ}(0, ·)`.

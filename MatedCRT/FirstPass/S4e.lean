@@ -3,12 +3,11 @@ import MatedCRT.FirstPass.S4d.ConeScaleConstancy
 import MatedCRT.Proofs.Sec1.ConeScaleRadius
 
 /-!
-# hB2R from the global-pair step: the rescaled pair is a.e. measurable (FIRST PASS, S4e)
+# hB2R from the global-pair step: the rescaled pair is a.e. measurable
 
-Operator task fp-S4e-4-2-rescaled-pair-measurable, for q4 (`reports/q4.md`, hB2R of `firstPass_4_2_of_scale_inputs`,
-S4d.lean:183-184). The exact type `ConeRescaledPairAEMeasurableStep` is S4d/ConeScaleConstancy.lean:38.
+This is hB2R of `firstPass_4_2_of_scale_inputs` (S4d.lean:183-184). The exact type `ConeRescaledPairAEMeasurableStep` is S4d/ConeScaleConstancy.lean:38.
 
-The theorem below proves hB2R from the named global-pair step `hB2` (q4 §4) and the scale-radius positivity `hpos`
+The theorem below proves hB2R from the named global-pair step `hB2` and the scale-radius positivity `hpos`
 (`ConeScaleRadiusPosStep`, Steps/Sec2/ConeScaleInvarianceUpToFixedTime.lean:51), which the rescaled circle part needs.
 -/
 

@@ -2,15 +2,15 @@ import MatedCRT.FirstPass.S4S6c.TestBound68
 import MatedCRT.FirstPass.S5c.GreenCount
 
 /-!
-# Printed geometry for the per-test bound of Lemma 6.8 (C4)
+# Printed geometry for the per-test bound of Lemma 6.8
 
 `TestBound68.stayIn_le_log` takes four environment inputs hS (counting), hT (sparsity), hD (target set inside the
 window, outside `A`) and hG, hmom (Green lower bound and second moment). This file discharges the first three from the
 printed objects:
 * hS from the ball-mass lower bound `ofReal mr ≤ μ (ball z R)` and `S5c.card_ge_mass_div` (cell count, eq. (16));
 * hT from the printed sparsity `|A ∩ V^ε(B_r(z))| < s₁ r^{2β} ε⁻¹` (Lemma 6.8 hypothesis), via `V^ε(B_R(z)) ⊆ V^ε(B_r(z))`;
-* hD from `V^ε(B_R(z)) ⊆ W y` (window inclusion, C14) and the definition of the sparse set `Aset = A ∩ V^ε(B_R(z))`.
-hG and hmom stay explicit hypotheses (B4, B5).
+* hD from `V^ε(B_R(z)) ⊆ W y` (window inclusion) and the definition of the sparse set `Aset = A ∩ V^ε(B_R(z))`.
+hG and hmom stay explicit hypotheses.
 -/
 
 open MeasureTheory Set Metric Function
@@ -68,7 +68,7 @@ theorem hD_of_window {η : ℝ → ℂ} {ε R : ℝ} {z : ℂ} {A W : Set ℤ} {
 /-- **Per-test bound of Lemma 6.8 on the printed geometry.** The probability that the
 walk from `y` stays in `A` until it exits the window `W y` is at most `1 - q₀ (1 + log(1/r))⁻²`, where the test ball
 `B_R(z)` has area mass at least `mr`, the printed sparsity bounds `|A ∩ V^ε(B_r(z))|`, and the window contains
-`V^ε(B_R(z))`. The Green lower bound `hG` (B4) and the second moment `hmom` (B5) are the remaining inputs. -/
+`V^ε(B_R(z))`. The Green lower bound `hG` and the second moment `hmom` are the remaining inputs. -/
 theorem stayIn_le_printed {μ : Measure ℂ} {η : ℝ → ℂ} {m : ℤ → ℤ → ℕ} {y : ℤ} {A : Set ℤ}
     {W : ℤ → Set ℤ} {z : ℂ} {ε R r mr s1 β C0 C1 L Sr : ℝ} {Aset : Finset ℤ}
     (hap : IsAreaParametrized μ η) (hε : 0 < ε) (hmr : 0 < mr) (hmu : ENNReal.ofReal mr ≤ μ (ball z R))

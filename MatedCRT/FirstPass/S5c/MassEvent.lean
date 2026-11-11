@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S5c.GreenCount
 
 /-!
-# FIRST PASS, GAP 2 Step (b): the event `ε^{1/4} ≤ m_r` of target (4) has probability tending to one
+# The event `ε^{1/4} ≤ m_r` has probability tending to one
 
 Target (4) of GAP 2 (`green_ratio_target`, `GreenTarget.lean`) needs a real `m_r > 0` with `m_r ≤ μ_h(B_{cr}(z))` on the
 relevant centres and the event `ε^{1/4} ≤ m_r`. Here `m_r` is the truncated least mass of a FIXED finite net (the net is
@@ -102,7 +102,7 @@ theorem ofReal_netMass_le_mass_ball {Ω : Type*} {g : Ω → Measure ℂ} {t s :
     exact ofReal_netMass_le hx
   exact mass_ball_ge_of_net (hcov z hz) hnet
 
-/-- **Step (b) of GAP 2: the event `ε^{1/4} ≤ m_r` has probability tending to one.** With `g` a measurable version of the
+/-- **The event `ε^{1/4} ≤ m_r` has probability tending to one.** With `g` a measurable version of the
 LQG measure and `g_ω(B_δ(x)) > 0` on the net almost surely, `P(m_r < ε^{1/4}) → 0` as `ε ↓ 0`. -/
 theorem tendsto_netMass_bad {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
     {g : Ω → Measure ℂ} (hg : Measurable g) {t : Set ℂ} (ht : t.Finite) {δ : ℝ}

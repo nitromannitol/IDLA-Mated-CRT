@@ -100,7 +100,7 @@ theorem not_mem_entryEvent_of_mono {Ω : Type} {Λ : Ω → ℝ → Set ℂ} {ω
 
 /-- **Entry-free times.** Let `Λ ω t` be, almost surely, open and monotone in `t > 0`, with the disc-inclusion events
 null-measurable (`hmeas`). Then for some `t₀ ∈ (1, 2)`, almost surely no point of `Λ_{t₀}` is new, i.e.
-`Λ_{t₀} ⊆ ⋃_{0 < s < t₀} Λ_s` (A1-A3 of the three-inputs note, section 3; the countable-atoms choice of `t₀`). -/
+`Λ_{t₀} ⊆ ⋃_{0 < s < t₀} Λ_s` (the countable-atoms choice of `t₀`). -/
 theorem exists_entry_free_time {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     (Λ : Ω → ℝ → Set ℂ)
     (hgood : ∀ᵐ ω ∂P, (∀ t : ℝ, 0 < t → IsOpen (Λ ω t)) ∧ MonotoneOn (Λ ω) (Ioi 0))

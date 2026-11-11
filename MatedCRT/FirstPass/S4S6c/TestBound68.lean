@@ -10,8 +10,8 @@ bound on the probability that the walk visits the target `D0 \ Aset` before exit
 `W y \ A`, so such a visit is a failure of `stayIn W A y`; the complement of the target event is therefore
 an upper bound for `stayIn`.
 
-The environment-level hypotheses are NOT proved here: the counting bounds `hS`, `hT` (C4), the
-Green lower bound `hG` (B4, the interior-ball Green bound), and the second moment `hmom` (B5, Lemma 1 potential
+The environment-level hypotheses are NOT proved here: the counting bounds `hS`, `hT`, the
+Green lower bound `hG` (the interior-ball Green bound), and the second moment `hmom` (Lemma 1 potential
 bound with its logarithmic loss). The second-moment constant is `C0 (1 + log(1/r))`.
 
 `stayIn W A y` is the set `stayInRegion W A y` of `SuccessiveExitStop.lean:24` (same definition, restated here so
