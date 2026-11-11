@@ -70,3 +70,4 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/FirstPass/S5c/Superharmonic.lean | archive/MatedCRT/FirstPass/S5c/Superharmonic.lean | B18 |
 | MatedCRT/FirstPass/S5d/CellInterior.lean | archive/MatedCRT/FirstPass/S5d/CellInterior.lean | B19 |
 | MatedCRT/FirstPass/S6b/Axioms.lean | archive/MatedCRT/FirstPass/S6b/Axioms.lean | B20 |
+| MatedCRT/FirstPass/S6h/StateInputs.lean | archive/MatedCRT/FirstPass/S6h/StateInputs.lean | B21 |
