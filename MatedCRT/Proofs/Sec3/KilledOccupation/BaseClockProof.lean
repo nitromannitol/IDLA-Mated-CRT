@@ -1102,4 +1102,81 @@ theorem limitClock_eq_nu_ae {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [
   filter_upwards [(lintegral_eq_zero_iff (measurable_ediffE hFm hRm)).1 hzero] with ω hω
   exact ediffE_eq_zero hω
 
+/-! ## Step C: measure determination (paper tex:234-237), by a countable π-system -/
+
+/-- The occupation kernel of the limit clock at a path: the image of `dA(ω, b)` restricted to `[0, σ(b)]`
+under the path (paper tex:234-237). -/
+noncomputable def occKernel {Ω : Type*} (dA : Ω → ContinuousPath ℂ → Measure ℝ≥0) (z : ℂ) (r : ℝ)
+    (ω : Ω) (b : ContinuousPath ℂ) : Measure ℂ :=
+  ((dA ω b).restrict (Icc (0 : ℝ≥0) (pathExitTime (ball z r) b).toNNReal)).map (fun u => b u)
+
+theorem occKernel_apply {Ω : Type*} (dA : Ω → ContinuousPath ℂ → Measure ℝ≥0) (z : ℂ) (r : ℝ)
+    (ω : Ω) (b : ContinuousPath ℂ) {s : Set ℂ} (hs : MeasurableSet s) :
+    occKernel dA z r ω b s = limitClockFun dA z r ω b (s.indicator 1) := by
+  have hb : Measurable fun u : ℝ≥0 => b u := b.continuous.measurable
+  unfold occKernel limitClockFun
+  rw [Measure.map_apply hb hs, ← lintegral_indicator_one (hb hs)]
+  rfl
+
+/-- The limit occupation measure of an environment: `μ_L(ω)(B) = ∫ dP_y(b) ∫_{[0,σ]} 1_B(b_u) dA(ω, b)(u)`
+(the left side of tex:234-237). -/
+noncomputable def occMeasure {Ω : Type*} (PB : Measure (ContinuousPath ℂ))
+    (dA : Ω → ContinuousPath ℂ → Measure ℝ≥0) (z : ℂ) (r : ℝ) (ω : Ω) : Measure ℂ :=
+  PB.bind (occKernel dA z r ω)
+
+/-- The weighted GMC measure of the Green weight on `D` (the right side of tex:234-237). -/
+noncomputable def nuWeighted {Ω : Type*} (ν : Ω → Measure ℂ) (D : Set ℂ) (y : ℂ) (ω : Ω) : Measure ℂ :=
+  ((ν ω).restrict D).withDensity (greenWeight D y)
+
+theorem nuWeighted_apply {Ω : Type*} (ν : Ω → Measure ℂ) (D : Set ℂ) (y : ℂ)
+    (ω : Ω) {s : Set ℂ} (hs : MeasurableSet s) :
+    nuWeighted ν D y ω s = ∫⁻ x in D, greenWeight D y x * s.indicator 1 x ∂(ν ω) := by
+  unfold nuWeighted
+  rw [withDensity_apply _ hs]
+  calc ∫⁻ a in s, greenWeight D y a ∂((ν ω).restrict D)
+      = ∫⁻ x, s.indicator (greenWeight D y) x ∂((ν ω).restrict D) := (lintegral_indicator hs _).symm
+    _ = ∫⁻ x in D, s.indicator (greenWeight D y) x ∂(ν ω) := rfl
+    _ = ∫⁻ x in D, greenWeight D y x * s.indicator 1 x ∂(ν ω) :=
+        lintegral_congr fun x => by
+          by_cases hx : x ∈ s
+          · simp [hx]
+          · simp [hx]
+
+/-- A countable π-system of sets generating the Borel σ-algebra of `ℂ`, containing `univ`: the finite
+intersections of a countable basis (the Borel σ-algebra is second countable). -/
+theorem exists_countable_pi_generator :
+    ∃ C : Set (Set ℂ), C.Countable ∧ IsPiSystem C ∧ Set.univ ∈ C ∧
+      (∀ s ∈ C, MeasurableSet s) ∧ (inferInstance : MeasurableSpace ℂ) = MeasurableSpace.generateFrom C := by
+  obtain ⟨b, hbc, -, hbb⟩ := TopologicalSpace.exists_countable_basis ℂ
+  have hb'c : (insert Set.univ b).Countable := hbc.insert _
+  obtain ⟨e, he⟩ := hb'c.exists_eq_range ⟨Set.univ, Set.mem_insert _ _⟩
+  have heOpen : ∀ i, IsOpen (e i) := fun i => by
+    have hmem : e i ∈ insert Set.univ b := by rw [he]; exact ⟨i, rfl⟩
+    rcases hmem with h | h
+    · rw [h]; exact isOpen_univ
+    · exact hbb.isOpen h
+  have hCmem : ∀ i, e i ∈ Set.range fun F : Finset ℕ => ⋂ i ∈ F, e i := fun i =>
+    ⟨{i}, by simp⟩
+  refine ⟨Set.range fun F : Finset ℕ => ⋂ i ∈ F, e i, Set.countable_range _, ?_, ⟨∅, by simp⟩, ?_, ?_⟩
+  · rintro _ ⟨F, rfl⟩ _ ⟨G, rfl⟩ _
+    exact ⟨F ∪ G, by ext x; simp only [Set.mem_inter_iff, Set.mem_iInter, Finset.mem_union, or_imp, forall_and]⟩
+  · rintro _ ⟨F, rfl⟩
+    exact MeasurableSet.iInter fun i => MeasurableSet.iInter fun _ => (heOpen i).measurableSet
+  · have hbC : b ⊆ Set.range fun F : Finset ℕ => ⋂ i ∈ F, e i := fun s hs => by
+      have hs' : s ∈ insert Set.univ b := Set.mem_insert_of_mem _ hs
+      rw [he] at hs'
+      obtain ⟨i, rfl⟩ := hs'
+      exact hCmem i
+    refine le_antisymm ?_ (MeasurableSpace.generateFrom_le fun s hs => ?_)
+    · have hb : (inferInstance : MeasurableSpace ℂ) = borel ℂ := BorelSpace.measurable_eq
+      rw [hb]
+      refine MeasurableSpace.generateFrom_le fun U hU => ?_
+      obtain ⟨S, hSb, hUS⟩ := hbb.open_eq_sUnion hU
+      rw [hUS]
+      exact MeasurableSet.sUnion (hbc.mono hSb) fun s hs =>
+        MeasurableSpace.measurableSet_generateFrom (hbC (hSb hs))
+    · obtain ⟨F, rfl⟩ := hs
+      exact MeasurableSet.iInter fun i => MeasurableSet.iInter fun _ => (heOpen i).measurableSet
+
 end MatedCRT.KilledOccupation
+
