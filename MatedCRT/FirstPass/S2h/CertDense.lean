@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S2h.CertBack
 import MatedCRT.FirstPass.S1c.TestDense
 
 /-!
-# Density of the Laplacian identity of a certificate (fp-S2h, z1; CHATGPT-cone-good-set.md Section 3.1)
+# Density of the Laplacian identity of a certificate
 
 The moment identity `∫ W Δ D_k = ∫_A D_k dν` is known on a family `D_k` of nonnegative test functions which approximates
 every nonnegative test function on `B_{3/4}`, together with its Laplacian, uniformly on `B̄_{3/4}`
@@ -28,7 +28,7 @@ theorem eq_of_forall_pos_le_mul {a b K : ℝ} (hK : 0 ≤ K) (h : ∀ ε : ℝ, 
     field_simp
   linarith
 
-/-- **The Laplacian identity on all nonnegative test functions (fp-S2h, z1).** -/
+/-- **The Laplacian identity on all nonnegative test functions.** -/
 theorem lap_identity_nonneg {ν : Measure ℂ} [IsFiniteMeasureOnCompacts ν] {W : ℂ → ℝ}
     (hW : ContinuousOn W (closedBall (0 : ℂ) (3 / 4))) (hW0 : ∀ x, x ∉ closedBall (0 : ℂ) (3 / 4) → W x = 0)
     {A : Set ℂ} (hAm : MeasurableSet A) (hA : A ⊆ closedBall (0 : ℂ) (3 / 4))
@@ -98,7 +98,7 @@ theorem exists_bump_one_on {K : Set ℂ} (hK : IsCompact K) (hKb : K ⊆ ball (0
   rw [f.tsupport_eq]
   exact closedBall_subset_ball (by show (max r (1 / 4) + 3 / 4) / 2 < 3 / 4; linarith)
 
-/-- **The Laplacian identity on all test functions (fp-S2h, z1).** A signed test function `φ` is reduced to the nonnegative
+/-- **The Laplacian identity on all test functions.** A signed test function `φ` is reduced to the nonnegative
 ones by adding `c χ`, with `χ` a bump equal to one on the support of `φ` and `c ≥ sup |φ|`. -/
 theorem lap_identity_test {ν : Measure ℂ} [IsFiniteMeasureOnCompacts ν] {W : ℂ → ℝ}
     (hW : ContinuousOn W (closedBall (0 : ℂ) (3 / 4))) (hW0 : ∀ x, x ∉ closedBall (0 : ℂ) (3 / 4) → W x = 0)

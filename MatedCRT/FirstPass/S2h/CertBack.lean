@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S2h.CertCode
 
 /-!
-# The backward direction of the certificate code (fp-S2h, z1; CHATGPT-cone-good-set.md Sections 3-4)
+# The backward direction of the certificate code
 
 A code in the analytic set `B` gives certificates for the measure: the moments `certI` of a witness are lintegrals of
 the test functions over the interior of the closure of its contact set (`certI_eq_lintegral`), so the Laplacian of the
@@ -14,7 +14,7 @@ namespace MatedCRT
 open MeasureTheory Set Metric HarmonicBalls
 open scoped ENNReal
 
-/-- **Restricted moments of a witness (fp-S2h, z1; CHATGPT (12)).** For a witness `w` of `CertRel` with code `m` of a
+/-- **Restricted moments of a witness.** For a witness `w` of `CertRel` with code `m` of a
 locally finite measure, the restricted moment `certI k` is the lintegral of `D k` over the interior of the closure of the
 contact set of `w`. -/
 theorem certI_eq_lintegral {ν : Measure ℂ} [IsFiniteMeasureOnCompacts ν] (hpole : FrozenGreenDiscPole) {t : ℝ}
@@ -39,7 +39,7 @@ theorem certI_eq_lintegral {ν : Measure ℂ} [IsFiniteMeasureOnCompacts ν] (hp
   rw [hmom, iUnion_certD_eq_interior hpole ht hopen hne hreg hz hzd w,
     closure_certCluster_sdiff_zero hpole (by norm_num) ht (extW_continuousOn w)]
 
-/-- **Dense boundary data on the circle (fp-S2h, z1).** There are points `b j` of norm `3/4`, dense on the sphere
+/-- **Dense boundary data on the circle.** There are points `b j` of norm `3/4`, dense on the sphere
 `∂B_{3/4}`: every open set meeting the sphere contains some `b j`. -/
 theorem exists_sphere_dense_data :
     ∃ b : ℕ → closedBall (0 : ℂ) (3 / 4), (∀ j, ‖(b j : ℂ)‖ = 3 / 4) ∧

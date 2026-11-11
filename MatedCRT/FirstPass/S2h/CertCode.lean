@@ -1,10 +1,10 @@
 import MatedCRT.FirstPass.S2h.CertForward2
 
 /-!
-# The certificate code: test family and the forward direction (fp-S2h, z1; CHATGPT-cone-good-set.md (12), Section 3)
+# The certificate code: test family and the forward direction
 
 The moment code `localCode φs ν` of a locally finite measure against the countable test family `φs` of the certificate.
-Coordinate `certIdx k J n` carries the restricted moment `D_k θ_{J,n}` of CHATGPT (12): `D_k` times the cutoff of the
+Coordinate `certIdx k J n` carries the restricted moment `D_k θ_{J,n}`: `D_k` times the cutoff of the
 union of the charged balls `U i`, `i ∈ J`. The forward direction: a certificate of `CertReal` gives a witness of
 `CertRel` for its code (clauses C1-C4 of `certRel_clauses_C1_C3` and `certC4_of_cert`), so a plateau pair of
 certificates puts the code in the analytic set `B` of `analyticSet_certCodes`.
@@ -28,7 +28,7 @@ theorem isFiniteMeasureOnCompacts_of_locFin {ν : Measure ℂ} (h : ∀ n : ℕ,
 /-- The coordinates of the certificate code: `(k, J, n)` is coded by `Encodable.encode`. -/
 noncomputable def certIdx : ℕ → Finset ℕ → ℕ → ℕ := fun k J n => Encodable.encode (k, J, n)
 
-/-- The test family of the certificate code (CHATGPT (12)): the coordinate `p` decodes to `(k, J, n)` and carries
+/-- The test family of the certificate code: the coordinate `p` decodes to `(k, J, n)` and carries
 `D k` times the cutoff `θ_{J,n}` of the charged balls `⋃ i ∈ J, U i ∩ B_1`; the other coordinates vanish. -/
 noncomputable def certPhi (D : ℕ → ℂ → ℝ) (U : ℕ → Set ℂ) (p : ℕ) : ℂ → ℝ :=
   match (Encodable.decode p : Option (ℕ × Finset ℕ × ℕ)) with
@@ -48,7 +48,7 @@ theorem certL_continuous {D : ℕ → ℂ → ℝ} (hD : ∀ k, IsTestFunction (
     Continuous (certL D k) :=
   continuous_laplacian_pairing (hD k)
 
-/-- **Forward direction (fp-S2h, z1).** A certificate `v` of `CertReal ν t` at a positive time gives a witness of
+/-- **Forward direction.** A certificate `v` of `CertReal ν t` at a positive time gives a witness of
 `CertRel` for the code of `ν`, with witness `discOfCert` of `v` on `B̄_{3/4}`. -/
 theorem certRel_of_certReal {ν : Measure ℂ} [IsFiniteMeasureOnCompacts ν] (hpole : FrozenGreenDiscPole)
     {z : ℕ → closedBall (0 : ℂ) (3 / 4)} (hz : ∀ j, (z j : ℂ) ∈ ball (0 : ℂ) (3 / 4) \ {0})
@@ -67,7 +67,7 @@ theorem certRel_of_certReal {ν : Measure ℂ} [IsFiniteMeasureOnCompacts ν] (h
   exact ⟨c1, c2, c3, c4, fun k => certC4_of_cert (idx := certIdx) (m := localCode (certPhi D U) ν) hpole ht hv
     hz hzd hopen hne hreg hD hD0 hm (fun _ => rfl) k⟩
 
-/-- **Plateau pairs give the code set (fp-S2h, z1; the forward half of `CertCodeExactStep`).** If `ν` carries a
+/-- **Plateau pairs give the code set.** If `ν` carries a
 rational plateau pair of certificates, its code lies in the set `B` of the relation witnesses of `analyticSet_certCodes`. -/
 theorem localCode_mem_of_plateau {ν : Measure ℂ} [IsFiniteMeasureOnCompacts ν] (hpole : FrozenGreenDiscPole)
     {z : ℕ → closedBall (0 : ℂ) (3 / 4)} (hz : ∀ j, (z j : ℂ) ∈ ball (0 : ℂ) (3 / 4) \ {0})

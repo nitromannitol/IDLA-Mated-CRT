@@ -2,10 +2,9 @@ import MatedCRT.FirstPass.S2h.CertForward
 import MatedCRT.FirstPass.S2h.CertMoment
 
 /-!
-# The Laplacian clause C4 of the witness (fp-S2h, z1; CHATGPT-cone-good-set.md (12) and (20))
+# The Laplacian clause C4 of the witness
 
-For a certificate `w` of `CertReal ν t` with witness `w'` (`discOfCert`, extended by `extW`), the charged balls of
-CHATGPT (9) are exactly the balls inside the interior of the closure of the punctured contact set. Hence the restricted
+For a certificate `w` of `CertReal ν t` with witness `w'` (`discOfCert`, extended by `extW`), the charged balls are exactly the balls inside the interior of the closure of the punctured contact set. Hence the restricted
 moments `certI` of `CertRel` are `ν`-integrals of the test function `D k` over `A = interior (closure (certCluster 3/4 t w))`,
 and the Laplacian pairing `L k w'` equals `∫_A D_k dν`, by the Laplacian clause of `CertReal` (HasLaplacian with negative
 part `0`, Armitage-Gardiner / Duplantier-Sheffield Laplacian of a measure).
@@ -73,7 +72,7 @@ theorem interior_closure_extW_eq (hpole : FrozenGreenDiscPole) {t : ℝ} (ht : 0
   have hwc : ContinuousOn (extW w') (closedBall (0 : ℂ) (3 / 4)) := extW_continuousOn w'
   rw [closure_certCluster_sdiff_zero hpole (by norm_num) ht hwc, certCluster_extW_eq t hw']
 
-/-- The charged balls of CHATGPT (9) for the extended witness exhaust the interior of the closure of the punctured
+/-- The charged balls for the extended witness exhaust the interior of the closure of the punctured
 contact set (`certD_iff_subset_closure_cluster` and `interior_closure_eq_iUnion`). -/
 theorem iUnion_certD_eq_interior (hpole : FrozenGreenDiscPole) {t : ℝ} (ht : 0 < t)
     {U : ℕ → Set ℂ} (hopen : ∀ V, IsOpen (U V)) (hne : ∀ V, (U V).Nonempty)
@@ -87,9 +86,9 @@ theorem iUnion_certD_eq_interior (hpole : FrozenGreenDiscPole) {t : ℝ} (ht : 0
   ext x
   simp only [mem_iUnion, exists_prop, certD_iff_subset_closure_cluster hpole ht hopen hne hreg hz hzd]
 
-/-- **Clause C4 of the witness (fp-S2h, z1; CHATGPT (12), (20)).** Let `w` be a certificate of `CertReal ν t` and let
+/-- **Clause C4 of the witness.** Let `w` be a certificate of `CertReal ν t` and let
 `w'` be its witness on `B̄_{3/4}`. For a family `D k` of nonnegative test functions on `B_{3/4}` and moments `m` with
-the cutoff form of CHATGPT (12), the restricted moment `certI k` is finite and equals `∫_A D_k dν` on
+the cutoff form, the restricted moment `certI k` is finite and equals `∫_A D_k dν` on
 `A = interior (closure (certCluster 3/4 t w))`, and the Laplacian pairing `L k w'` equals the same integral. -/
 theorem certC4_of_cert {ν : Measure ℂ} [IsFiniteMeasureOnCompacts ν] (hpole : FrozenGreenDiscPole) {t : ℝ}
     (ht : 0 < t) {w : ℂ → ℝ} (hw : CertReal ν t w)

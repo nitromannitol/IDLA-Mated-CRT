@@ -3,12 +3,11 @@ import MatedCRT.FirstPass.S2h.CertRel
 import MatedCRT.FirstPass.S2h.CertSets
 
 /-!
-# Charged balls of a certificate: the punctured contact set (fp-S2h, z1)
+# Charged balls of a certificate: the punctured contact set
 
-The charged-ball predicate `certD` of `CertRel.lean` (CHATGPT-cone-good-set.md (9)) is the generic predicate of
+The charged-ball predicate `certD` of `CertRel.lean` is the generic predicate of
 `CertSets.lean` for the raw positivity `0 < certRaw t w` at the data points `z j`, which lie in the punctured disc
 `B_{3/4} \ {0}` and are dense there. The contact set is `certCluster (3/4) t w` (GoodSet.lean) minus the pole.
-Written argument: CHATGPT-cone-good-set.md Section 3, identities (9)-(11).
 -/
 
 namespace MatedCRT
@@ -31,7 +30,7 @@ theorem extW_continuousOn (w : DiscW) : ContinuousOn (extW w) (closedBall (0 : �
   exact w.continuous
 
 /-- On the punctured disc, the contact set of `w` (the cluster minus the pole) is the set where the raw field
-`w + t G_{B_{3/4}}(0,·)` is positive (CHATGPT (7), (9)). -/
+`w + t G_{B_{3/4}}(0,·)` is positive. -/
 theorem mem_punct_cluster_iff (t : ℝ) (w : DiscW) (y : closedBall (0 : ℂ) (3 / 4))
     (hy : (y : ℂ) ∈ ball (0 : ℂ) (3 / 4) \ {0}) :
     (y : ℂ) ∈ certCluster (3 / 4) t (extW w) \ {0} ↔ 0 < certRaw t w y := by
@@ -56,7 +55,7 @@ theorem isOpen_punct_cluster (hpole : FrozenGreenDiscPole) {t : ℝ} (ht : 0 < t
     IsOpen (certCluster (3 / 4) t (extW w) \ {0}) :=
   (isOpen_certCluster hpole (by norm_num) ht (extW_continuousOn w)).sdiff isClosed_singleton
 
-/-- **Dense data in the punctured disc (fp-S2h, z1).** There are data points `z j` of `B̄_{3/4}`, lying in the punctured
+/-- **Dense data in the punctured disc.** There are data points `z j` of `B̄_{3/4}`, lying in the punctured
 open disc, such that every open set meeting the punctured disc contains some `z j`. -/
 theorem exists_punct_dense_data :
     ∃ z : ℕ → closedBall (0 : ℂ) (3 / 4), (∀ j, (z j : ℂ) ∈ ball (0 : ℂ) (3 / 4) \ {0}) ∧
@@ -72,7 +71,7 @@ theorem exists_punct_dense_data :
   obtain ⟨j, hj⟩ := hu.exists_mem_open hO' ⟨⟨x, hxp⟩, hxO⟩
   exact ⟨j, hj⟩
 
-/-- **Charged balls of a certificate (fp-S2h, z1; CHATGPT (9)-(10)).** For dense data `z` in the punctured disc, the
+/-- **Charged balls of a certificate.** For dense data `z` in the punctured disc, the
 predicate `certD z U t w i` (every basis ball `V` with closure in `U i` has a data point of positive raw field) holds iff
 the basis ball `U i` lies in the closure of the punctured contact set. -/
 theorem certD_iff_subset_closure_cluster (hpole : FrozenGreenDiscPole) {t : ℝ} (ht : 0 < t)

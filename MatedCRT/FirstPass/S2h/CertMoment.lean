@@ -3,10 +3,9 @@ import MatedCRT.FirstPass.S2h.CutoffUnion
 import MatedCRT.FirstPass.S2h.MeasurableIntegral
 
 /-!
-# Certificate moments: the pairing `w ↦ ∫ w Δφ` and the restricted moments (fp-S2h, z1)
+# Certificate moments: the pairing `w ↦ ∫ w Δφ` and the restricted moments
 
-Two facts used by the code relation `CertRel` (CHATGPT-cone-good-set.md Section 3, C4 (20), and the restricted moments
-(12)):
+Two facts used by the code relation `CertRel` (clause C4 and the restricted moments):
 * `continuous_laplacian_pairing`: for a test function `φ` on `B_{3/4}`, the map `w ↦ ∫ w Δφ` is continuous on the
   witness space `C(B̄_{3/4})` (the `L k` of `CertRel`);
 * `sup_charged_moment_eq`: the supremum over finite charged families and cutoff levels of the restricted moments is the
@@ -30,7 +29,7 @@ theorem abs_extW_sub_le (w w' : DiscW) (x : ℂ) : |extW w x - extW w' x| ≤ di
     rw [h1, h2, sub_self, abs_zero]
     exact dist_nonneg
 
-/-- **Continuity of the Laplacian pairing (fp-S2h, z1).** For a test function `φ` on `B_{3/4}`, the map
+/-- **Continuity of the Laplacian pairing.** For a test function `φ` on `B_{3/4}`, the map
 `w ↦ ∫ w Δφ` (with `w` read through `extW`) is continuous on the witness space `C(B̄_{3/4}, ℝ)`. -/
 theorem continuous_laplacian_pairing {φ : ℂ → ℝ} (hφ : IsTestFunction (ball (0 : ℂ) (3 / 4)) φ) :
     Continuous fun w : DiscW => ∫ x, extW w x * Laplacian.laplacian φ x := by
@@ -59,7 +58,7 @@ theorem continuous_laplacian_pairing {φ : ℂ → ℝ} (hφ : IsTestFunction (b
       _ < ε := (lt_div_iff₀ hC1).1 hw'
 
 open scoped Classical in
-/-- **Restricted moments of a certificate (fp-S2h, z1; CHATGPT (12)).** For a locally finite measure `ν`, a nonnegative
+/-- **Restricted moments of a certificate.** For a locally finite measure `ν`, a nonnegative
 continuous test function `D` with compact support, and a predicate `P` on the basis indices such that `U i ⊆ B_1` when
 `P i`, the supremum over finite charged families `J` and cutoff levels `n` of the moments `∫ D · θ_{J,n} dν` (on the charged
 indices, zero otherwise) is the integral of `D` over the union of the charged balls. -/

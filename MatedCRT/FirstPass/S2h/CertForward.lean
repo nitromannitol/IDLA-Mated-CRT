@@ -1,9 +1,9 @@
 import MatedCRT.FirstPass.S2h.CertMoment
 
 /-!
-# Forward certificate relation: the clauses C1-C3 and the witness (fp-S2h, z1)
+# Forward certificate relation: the clauses C1-C3 and the witness
 
-The forward direction of the code relation (CHATGPT-cone-good-set.md Section 3, C1-C3 (15)-(18)): a certificate `w` of
+The forward direction of the code relation: a certificate `w` of
 `CertReal` (Family.lean) restricted to `B̄_{3/4}` gives the witness of `CertRel` for the data `z` (punctured dense) and `b`
 (on the circle). Clause C4 (the Laplacian identity against the restricted moments) is the next step (CertForward2).
 -/
@@ -17,7 +17,7 @@ open scoped ENNReal
 noncomputable def discOfCert {w : ℂ → ℝ} (hw : ContinuousOn w (closedBall (0 : ℂ) (3 / 4))) : DiscW :=
   ⟨(closedBall (0 : ℂ) (3 / 4)).domRestrict w, continuousOn_iff_continuous_domRestrict.1 hw⟩
 
-/-- **Clauses C1-C3 of the relation (fp-S2h, z1).** For a certificate `w` of `CertReal`, with witness `w'` agreeing with
+/-- **Clauses C1-C3 of the relation.** For a certificate `w` of `CertReal`, with witness `w'` agreeing with
 `w` on `B̄_{3/4}`: the raw field is nonnegative at the data points (C1), the boundary values vanish at the circle data
 (C2), positive raw data lie in `B̄_{1/2}` (C3), and positive raw data approach the circle `|x| = 1/2` (C3, second part). -/
 theorem certRel_clauses_C1_C3 {ν : Measure ℂ} {t : ℝ} (hpole : FrozenGreenDiscPole) (ht : 0 < t) {w : ℂ → ℝ}

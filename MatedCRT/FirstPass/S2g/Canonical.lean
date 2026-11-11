@@ -23,7 +23,7 @@ namespace MatedCRT
 
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric HarmonicBalls
 
-/-- **OPEN NEW step (neither proved nor frozen): canonical factorization on the cone-law support.** There are
+/-- **OPEN step (neither proved nor frozen): canonical factorization on the cone-law support.** There are
 measurable maps `ΨT` (canonical time) and `Ψ` (space-time process) of circle average processes and a measurable set `G` of
 full cone law such that, for every continuous `c` with `circleProcess c ∈ G` and every LQG limit `ν` of `c`:
 (i) `halfBallTime ν = ΨT (circleProcess c)`; (ii) there is a canonical stopped family for `ν`, with positive time;
@@ -45,8 +45,7 @@ def ConeCanonicalFactorStep : Prop :=
       AEMeasurable ΨT (P.map fun ω => circleProcess (hcirc ω)) ∧
       AEMeasurable Ψ (P.map fun ω => circleProcess (hcirc ω)) ∧ ∀ᵐ ω ∂P, circleProcess (hcirc ω) ∈ G
 
-/-- Copy of `rescaledFamily_transfer` (`FirstPass/S2b.lean:68`), which is not imported here because of an import clash
-with the Section 6 modules. Rescaling a stopped family for `rescaledMeasure μ R b` gives a family for `μ` on `(0, bT)`. -/
+/-- Rescaling a stopped family for `rescaledMeasure μ R b` gives a family for `μ` on `(0, bT)`. -/
 theorem rescaledFamily_transfer_fp {μ : Measure ℂ} {R b T : ℝ} {Λ : ℝ → Set ℂ} (hR : 0 < R) (hb : 0 < b)
     (h : IsConeHarmonicBallFamilyOn (rescaledMeasure μ R b) Λ T) (hst : IsStoppedAtHalfBall Λ T) :
     IsConeHarmonicBallFamilyOn μ (rescaledFamily Λ R⁻¹ b⁻¹) (b * T) ∧

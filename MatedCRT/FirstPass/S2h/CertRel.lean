@@ -1,10 +1,7 @@
 import MatedCRT.FirstPass.S2g.Family
 
 /-!
-# The certificate relation is Borel and its code projection is analytic (fp-S2h, z1)
-
-Written argument: notes/fp-gaps/CHATGPT-cone-good-set.md, Section 2.1 (the sets `D_B`, (9)-(10)), Section 2.2 (the
-restricted coordinates `I_k`, (12)), Section 3 (the relation `Cert(m,t,w)`, conditions C1-C4, (15)-(20)).
+# The certificate relation is Borel and its code projection is analytic
 
 For fixed countable data (dense points `z j` of `B_{3/4} \ {0}`, boundary points `b j`, rational balls `U V`, the
 coordinate index `idx k J n` of the cutoff moments and the countably many Laplacian functionals `L k`), the relation
@@ -19,7 +16,7 @@ open MeasureTheory Set Metric HarmonicBalls
 open scoped ENNReal
 open Classical
 
-/-- The witness space `W = C(B̄_{3/4}, ℝ)` of CHATGPT-cone-good-set.md Section 3.2. -/
+/-- The witness space `W = C(B̄_{3/4}, ℝ)` -/
 abbrev DiscW : Type := ContinuousMap (closedBall (0 : ℂ) (3 / 4)) ℝ
 
 /-! ### Measurability combinators (countable quantifiers) -/
@@ -57,21 +54,21 @@ theorem cr_and {X : Type} [MeasurableSpace X] {P Q : X → Prop} (hP : Measurabl
 variable (z : ℕ → closedBall (0 : ℂ) (3 / 4)) (b : ℕ → closedBall (0 : ℂ) (3 / 4))
   (U : ℕ → Set ℂ) (idx : ℕ → Finset ℕ → ℕ → ℕ) (L : ℕ → DiscW → ℝ)
 
-/-- The raw field `u_{t,w}(x) = w(x) + t G_{B_{3/4}}(0,x)` (CHATGPT (7)); only used at non-pole points `x`. -/
+/-- The raw field `u_{t,w}(x) = w(x) + t G_{B_{3/4}}(0,x)`; only used at non-pole points `x`. -/
 noncomputable def certRaw (t : ℝ) (w : DiscW) (x : closedBall (0 : ℂ) (3 / 4)) : ℝ :=
   w x + t * greenFunction (ball (0 : ℂ) (3 / 4)) 0 (x : ℂ)
 
-/-- The predicate `D_B(t,w)` of CHATGPT (9) for the ball `U i`: every rational ball `U V` whose closure lies in
+/-- The predicate `D_B(t,w)` for the ball `U i`: every rational ball `U V` whose closure lies in
 `U i` meets the raw cluster at some dense point. -/
 def certD (t : ℝ) (w : DiscW) (i : ℕ) : Prop :=
   ∀ V : ℕ, closure (U V) ⊆ U i → ∃ j, (z j : ℂ) ∈ U V ∧ 0 < certRaw t w (z j)
 
-/-- The cutoff coordinate supremum `I_k(m,t,w)` of CHATGPT (12). -/
+/-- The cutoff coordinate supremum `I_k(m,t,w)`. -/
 noncomputable def certI (m : ℕ → ℝ) (t : ℝ) (w : DiscW) (k : ℕ) : ℝ≥0∞ :=
   ⨆ (J : Finset ℕ) (n : ℕ),
     if (∀ i ∈ J, certD z U t w i) then ENNReal.ofReal (m (idx k J n)) else 0
 
-/-- The Borel relation `Cert(m,t,w)` of CHATGPT Section 3, conditions C1 (15), C2 (16), C3 (17)-(18), C4 (20). -/
+/-- The Borel relation `Cert(m,t,w)`, conditions C1 (15), C2 (16), C3 (17)-(18), C4 (20). -/
 def CertRel (m : ℕ → ℝ) (t : ℝ) (w : DiscW) : Prop :=
   (∀ j, 0 ≤ certRaw t w (z j)) ∧
   (∀ j, w (b j) = 0) ∧
@@ -112,9 +109,8 @@ theorem cr_measurable_I (t : ℝ) (k : ℕ) :
   refine Measurable.ite hcond ?_ measurable_const
   exact ENNReal.measurable_ofReal.comp ((measurable_pi_apply (idx k J n)).comp measurable_fst)
 
-/-- **The relation is Borel (fp-S2h, z1).** For fixed `t`, the set of pairs `(m, w)` with `Cert(m,t,w)` is measurable
-in the product `(ℕ → ℝ) × C(B̄_{3/4}, ℝ)`, provided each `L k` is continuous (CHATGPT Section 3: "All tests in C1–C4
-are countable Borel tests"). -/
+/-- **The relation is Borel.** For fixed `t`, the set of pairs `(m, w)` with `Cert(m,t,w)` is measurable
+in the product `(ℕ → ℝ) × C(B̄_{3/4}, ℝ)`, provided each `L k` is continuous (all tests in C1–C4 are countable Borel tests). -/
 theorem measurableSet_certRel (hL : ∀ k, Continuous (L k)) (t : ℝ) :
     MeasurableSet {p : (ℕ → ℝ) × DiscW | CertRel z b U idx L p.1 t p.2} := by
   unfold CertRel
@@ -137,9 +133,8 @@ theorem measurableSet_certRel (hL : ∀ k, Continuous (L k)) (t : ℝ) :
         (ENNReal.measurable_toReal.comp (cr_measurable_I t k)))
   exact h1.inter (h2.inter (h3.inter (h4.inter h5)))
 
-/-- **The code projection is analytic (fp-S2h, z1).** The set of moment codes `m` for which some rational pair
-`0 < p < q` carries two relation witnesses `Cert(m,p,·)` and `Cert(m,q,·)` is analytic (CHATGPT Section 3.2; Lusin,
-Kechris 14.3). -/
+/-- **The code projection is analytic.** The set of moment codes `m` for which some rational pair
+`0 < p < q` carries two relation witnesses `Cert(m,p,·)` and `Cert(m,q,·)` is analytic (Lusin, Kechris 14.3). -/
 theorem analyticSet_certCodes (hL : ∀ k, Continuous (L k)) :
     AnalyticSet {m : ℕ → ℝ | ∃ p q : ℚ, 0 < (p : ℝ) ∧ (p : ℝ) < (q : ℝ) ∧
       ∃ w : DiscW, CertRel z b U idx L m (p : ℝ) w ∧ ∃ w' : DiscW, CertRel z b U idx L m (q : ℝ) w'} := by

@@ -7,7 +7,7 @@ The Section 6 chain (`Proofs/Sec6/IDLAUpperBound/OfConeFamily.lean:16`) takes th
 `ConeHarmonicBallsUpToFixedTimeStmt` (`Draft/Section2.lean:66-72`), whose clause `T' = T` says that the stopping time is
 unique among all stopped families. That clause is derived here, not assumed: with the closure containment of every stopped
 family (`ConeHalfBallClosureInsideStep`, a.s., `Proofs/Sec2/ConeFamilyMeasurable/StoppedClosure.lean:18`), two stopped
-families on the same measure have the same stopping time (`stopped_unique_of_closureInside_fp` below, a copy of the S2b lemma), and
+families on the same measure have the same stopping time (`stopped_unique_of_closureInside_fp` below), and
 the fixed-time uniqueness gives the family. The existence part is the canonical step `ConeCanonicalHalfBallStep`
 (OPEN, `FirstPass/S2g.lean`). -/
 
@@ -15,8 +15,7 @@ namespace MatedCRT
 
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric
 
-/-- Closure route, one inequality (copy of `stopped_le_of_closureInside`, `FirstPass/S2b.lean`, under a new name so that
-this module does not import `FirstPass/S2b.lean`, whose import clashes with the Section 6 chain). -/
+/-- Closure route, one inequality (`stopped_le_of_closureInside`, `FirstPass/S2b.lean`). -/
 theorem stopped_le_of_closureInside_fp {Λ Λ' : ℝ → Set ℂ} {T T' : ℝ} (hT : 0 < T)
     (h : IsStoppedAtHalfBall Λ T) (hmono : MonotoneOn Λ' (Ioo 0 T'))
     (heq : EqOn Λ Λ' (Ioo 0 (min T T'))) (hcl : ∀ s ∈ Ioo 0 T', closure (Λ' s) ⊆ ball (0 : ℂ) (1 / 2)) :
@@ -48,7 +47,7 @@ theorem stopped_le_of_closureInside_fp {Λ Λ' : ℝ → Set ℂ} {T T' : ℝ} (
   have h1 : ‖x‖ ≤ ‖x0‖ := isMaxOn_iff.1 hmax x (subset_closure hx)
   linarith
 
-/-- Closure route, uniqueness of the stopping time (copy of `stopped_unique_of_closureInside`, `FirstPass/S2b.lean`). -/
+/-- Closure route, uniqueness of the stopping time (`stopped_unique_of_closureInside`, `FirstPass/S2b.lean`). -/
 theorem stopped_unique_of_closureInside_fp {Λ Λ' : ℝ → Set ℂ} {T T' : ℝ} (hT : 0 < T) (hT' : 0 < T')
     (h : IsStoppedAtHalfBall Λ T) (h' : IsStoppedAtHalfBall Λ' T')
     (hmono : MonotoneOn Λ (Ioo 0 T)) (hmono' : MonotoneOn Λ' (Ioo 0 T'))
