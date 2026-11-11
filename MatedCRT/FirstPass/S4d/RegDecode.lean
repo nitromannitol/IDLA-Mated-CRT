@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4d.JumpProxy
 
 /-!
-# Decoding regular open sets from countably many coordinates (FIRST PASS, S4d, B2 part I)
+# Decoding regular open sets from countably many coordinates (FIRST PASS, S4d)
 
 For an open regular open set `U ⊆ ℂ` (`interior (closure U) = U`, Armitage-Gardiner Section 1.3) membership is
 decided by countably many coordinates: `w ∈ U` iff some closed ball `closedBall p r`, `p ∈ D` (a countable dense set)

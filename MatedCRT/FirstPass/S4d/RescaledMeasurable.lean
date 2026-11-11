@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S4d.RegDecode
 import MatedCRT.Proofs.Measurability.ConeRescaledCircle
 
 /-!
-# B2R: measurability of the rescaled whole process (FIRST PASS, S4d)
+# Measurability of the rescaled whole process (FIRST PASS, S4d)
 
 The rescaled pair of Lemma 2.6, `(circleProcess (rescaledCircle … R_b …), globalFamilyProcess (rescaledFamily (Λ ω) R_b b))`,
 is a.e. measurable. The rescaled family is decoded from a measurable version of the global family at the random point

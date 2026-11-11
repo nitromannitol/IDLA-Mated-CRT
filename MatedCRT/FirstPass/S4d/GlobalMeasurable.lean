@@ -7,7 +7,7 @@ import MatedCRT.Steps.Sec2.ConeScaleInvarianceUpToFixedTime
 import MatedCRT.Proofs.Measurability.ConeRescaledCircle
 
 /-!
-# B2: measurability of the whole global family process (FIRST PASS, S4d)
+# Measurability of the whole global family process (FIRST PASS, S4d)
 
 `ConeGlobalFamilyAEMeasurableStep`: the pair `(circleProcess (hcirc ω), globalFamilyProcess
 (Λ ω))` is a.e. measurable. Proved from the stopped measurability theorem `ConeFamilyAEMeasurableStep` (conj 1 and conj 2),

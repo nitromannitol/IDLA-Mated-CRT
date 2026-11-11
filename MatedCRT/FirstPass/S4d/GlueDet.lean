@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4d.RescaleGap
 import MatedCRT.FirstPass.S4d.RegDecode
 
 /-!
-# Glueing stopped families into the global family (FIRST PASS, S4d, B2 part II, deterministic)
+# Glueing stopped families into the global family (FIRST PASS, S4d, deterministic)
 
 Deterministic content of the B2 argument. For a global cone family `Λg` and
 stopped families `Λs n` (horizons `b n * Ts n`, rescalings `x ↦ R n x`, `R n > 0`) on the same measure `μ`:

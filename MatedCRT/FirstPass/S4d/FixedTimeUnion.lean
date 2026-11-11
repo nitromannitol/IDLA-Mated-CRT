@@ -5,7 +5,7 @@ import MatedCRT.Draft.Section2
 import MatedCRT.FirstPass.Frozen.S4S6c
 
 /-!
-# Fixed-time union `Λ_t = ⋃_{0<s<t} Λ_s` almost surely (FIRST PASS, S4d, B1 assembly)
+# Fixed-time union `Λ_t = ⋃_{0<s<t} Λ_s` almost surely (FIRST PASS, S4d)
 
 Proves `StrictGapFixedTimeUnionStep 𝒮` (`StrictGapReduction.lean`) from three inputs, all explicit:
 * `ConeScaleInvarianceStmt` (Lemma 2.6 of arXiv:2211.04891, law invariance of the pair under cone scaling);

@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4d.RescaleGap
 
 /-!
-# Constancy of the strict-gap probability under cone scaling (FIRST PASS, S4d, B1)
+# Constancy of the strict-gap probability under cone scaling (FIRST PASS, S4d)
 
 Probabilistic part of the fixed-time union `Λ_t = ⋃_{0<s<t} Λ_s` a.s. (`StrictGapFixedTimeUnionStep`). For a cone family `Λ` and `t > 0`, `E_t = {Λ_t ≠ ⋃_{0<s<t} Λ_s}`.
 

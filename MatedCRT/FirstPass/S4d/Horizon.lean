@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-# Unbounded stopping horizons almost surely (FIRST PASS, S4d, B2 part II, probabilistic)
+# Unbounded stopping horizons almost surely (FIRST PASS, S4d, probabilistic)
 
 Base horizon `T0` and rescaled horizons `Tn n` (weights `b n = n + 1`)
 are related by the law equality of Lemma 2.5 (`ConeScaleInvarianceUpToFixedTimeStmt`), evaluated on the event

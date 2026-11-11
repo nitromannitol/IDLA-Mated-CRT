@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-# FIRST PASS, Proposition 4.2: countable proxies for the strict-gap jump event (B3)
+# FIRST PASS, Proposition 4.2: countable proxies for the strict-gap jump event
 
 For open sets `U s`, increasing in `s` and regular
 (`interior (closure (U s)) = U s`, the regular openness of harmonic balls; Armitage-Gardiner, Sec. 1), the jump event

@@ -2,7 +2,7 @@ import MatedCRT.Defs.Setting
 import MatedCRT.FirstPass.S4d.JumpProxy
 
 /-!
-# Strict gap of a good family: proxy form and cone rescaling (FIRST PASS, S4d, deterministic part of B1)
+# Strict gap of a good family: proxy form and cone rescaling (FIRST PASS, S4d, deterministic part)
 
 Helper for `StrictGapFixedTimeUnionStep` (`StrictGapReduction.lean`). A family `U : ℝ → Set ℂ` is *good* when it is
 increasing on `(0, ∞)` and each `U s`, `s > 0`, is a regular open set (Armitage-Gardiner, Section 1.3; conditions
