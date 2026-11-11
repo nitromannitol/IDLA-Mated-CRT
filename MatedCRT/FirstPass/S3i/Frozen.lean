@@ -36,7 +36,7 @@ For `γ ∈ (0,2)` and `ρ ∈ (0,1)`, every valid environment `S` (`S.IsValid �
 (`PolyHighProb`), every simply connected domain `D ⊆ B_ρ` and every discrete function `f` which is mated-harmonic on the
 interior cells of `D`, and every vertex `x ∈ V^ε(D)` and `t > 0`,
 `f(x) ≤ max_{V^ε(∂D ∩ B_t(η x))} f + A ‖f‖_{∞, V^ε(D)} (t / dist(η x, ∂D))^{-ν}`.
-Truth check (2026-11-10): TRUE. The existential over `κ, ν, A, b` sits after `S.IsValid 𝒮 γ`, per coupling. The estimate
+FALSE as typed (audit R2 K1: no floor on the boundary distance); superseded by FrozenOneSidedBoundaryContinuityFloored. The existential over `κ, ν, A, b` sits after `S.IsValid 𝒮 γ`, per coupling. The estimate
 permits every `t > 0`. The supremum over an empty local boundary set is `0` (`boundarySupNear`); this convention is harmless,
 since it only weakens the upper estimate. At zero distance the vertex itself belongs to the local boundary set. `κ` and `b`
 are unused existential witnesses; `ν` and `A` enter the estimate. Frozen with `𝒮` as a parameter; used only as a
