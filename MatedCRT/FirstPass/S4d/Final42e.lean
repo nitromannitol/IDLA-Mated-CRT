@@ -9,7 +9,7 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling
 premises `hEnvS` is exactly `ConeEnvironmentScalingStep 𝒮` (`coneEnvironmentScalingUnderSLE_iff`,
 `FirstPass/SLERef/Extended.lean:162`).
 
-Audit claim checked (`notes/fp-gaps/CHATGPT-209-idla-3-1-4-2-5-3-audit-PRO.md`, §(b) and item 5: "prove `hEnvS` from `hsc`,
+Audit claim checked (item 5: "prove `hEnvS` from `hsc`,
 `hrp`, `hind` and remove it"). In Lean it is not a removal:
 * `ConeEnvironmentScalingStep 𝒮` is proved in the repo only by `coneEnvironmentScalingStep_of_inputs`
   (`Proofs/Sec1/EnvironmentScaling.lean:273`). That lemma also needs `hscale`, `h22` and three named steps:
@@ -17,7 +17,7 @@ Audit claim checked (`notes/fp-gaps/CHATGPT-209-idla-3-1-4-2-5-3-audit-PRO.md`, 
 * `RescaledMatingOfTreesStep 𝒮` has no proof anywhere in the repo. `RescaledConeFieldStep` and `RescaledConeClockStep`
   are proved only from further named steps (`Proofs/Sec1/EnvironmentScaling/FieldAssembly.lean:276`, `Field.lean:1242`,
   `AllStartsClock.lean:1594`).
-* The audit's written argument (`notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md` §2) uses the cone/GMC covariance construction
+* The audit's written argument uses the cone/GMC covariance construction
   and the auxiliary-witness reconstruction; neither is formalized in the repo.
 
 So the three steps stay named hypotheses in `firstPass_4_2_of_wholeplane_model_noEnvS`. Together with `hscale`, `h22`,

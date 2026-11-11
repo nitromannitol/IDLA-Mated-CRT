@@ -9,10 +9,10 @@ import HarmonicBalls.Proofs.Sec3.ClusterCompatibility
 /-!
 # FIRST PASS, Proposition 4.2: the deterministic comparison `Λ_s ⊆ 𝒞_t`
 
-Task fp-S4d-4-2-assembly. For one realization of the cone family and `0 < s < t` with `t < T_ρ`, the earlier harmonic
+For one realization of the cone family and `0 < s < t` with `t < T_ρ`, the earlier harmonic
 ball lies in the unregularized obstacle cluster at time `t` (`StrictGapDeterministicComparisonStep`).
 
-Argument (notes/fp-gaps/CHATGPT-4-2-strict-gap-proof.md, Section 2), with `w_u` the least supersolution, `G` the disc
+Argument, with `w_u` the least supersolution, `G` the disc
 Green function `G_{B_ρ}(0,·)`, `W = Λ_s \ {0}`, and `f = v_t - v_s = (w_t - w_s) + (t - s) G`, `v_u = w_u + u G`:
 * `v_u ≥ 0` off the pole (`leastSupersolution_ge_obstacle`, from the infimum over supersolutions);
 * `v_s ≤ 0` off `Λ_s` (`odometer_nonpos_of_not_mem`, from `Λ_s = int cl C_s`);

@@ -3,7 +3,7 @@ import MatedCRT.Defs.Setting
 /-!
 # FIRST PASS, Proposition 4.2: the stopped family lies in the stopping ball
 
-Task fp-S4d-4-2-assembly. For a realization `Λ` of the cone family and `t > 0`, the condition `t < clusterExitTime Λ ρ`
+For a realization `Λ` of the cone family and `t > 0`, the condition `t < clusterExitTime Λ ρ`
 (`T_ρ = sup {u > 0 : Λ_u ⊆ B_{ρ/3}}`, eq:cluster-stopping-time) gives `Λ_t ⊆ B_{ρ/3}`: some later time `u > t` has
 `Λ_u ⊆ B_{ρ/3}`, and `Λ_t ⊆ Λ_u` by monotonicity (`SatisfiesHarmonicBallConditions.monotoneOn`). This is the first
 reduction and is needed by the deterministic comparison `StrictGapDeterministicComparisonStep`.
