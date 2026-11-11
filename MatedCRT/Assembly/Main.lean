@@ -58,31 +58,43 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.Assembly
 import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.Limit
 
 /-!
-# Theorems 1.4 and 1.6, conditional on the remaining hypotheses
+# Assembly of Theorems 1.4 and 1.6 from the numbered results
 
-`convergenceOfIDLA_conditional` and `convergenceOfDivSandpile_conditional` compose, by application only, the committed
-reductions of the numbered results of "Internal DLA on mated-CRT maps" (arXiv:2211.04891) into Theorems 1.4 and 1.6,
-under `MainHypotheses 𝒮` (MatedCRT/Assembly/Hypotheses.lean). Each numbered result on the way is one theorem
-`MainHypotheses.<result>` below, proved by its reduction applied to the earlier results, to fields of `MainHypotheses`
-and to proved steps; MatedCRT/Audit/Main.lean checks that every reduction is indeed used, and that no field of
-`MainHypotheses` is a Draft statement refuted in Lean.
+This module assembles the numbered results of "Internal DLA on mated-CRT maps" (arXiv:2211.04891), stated by label in
+`paper/idla_mated_crt-corrected.tex`, into Theorem 1.4 (`theorem:convergence-of-IDLA`, `convergenceOfIDLA_conditional`)
+and Theorem 1.6 (`theorem:convergence-of-div-sandpile`, `convergenceOfDivSandpile_conditional`). Each numbered result
+listed below, other than Theorems 1.4 and 1.6, is a declaration `MainHypotheses.<result>` in this file, proved by applying
+its reduction to fields of `MainHypotheses` (MatedCRT/Assembly/Hypotheses.lean), to proved steps and to the earlier
+results. Where the corrected paper differs from the printed one (the `% CORRECTION` markers of the corrected tex, listed in
+docs/campaign/CORRECTIONS.md), the corrected statement is the one stated here.
 
-The main line: Theorems 1.4, 1.6 ← Proposition 8.1 (`iDLAConstrainedConvergence_of_steps`) ← Propositions 4.2, 5.1,
-6.1, 7.1, with the scaling argument of Section 8.1 (`convergenceOfIDLA_of_coneSteps`). Proved results and steps
-discharged here: Lemmas 2.13, 4.3, 4.4 (corrected), 7.3 (from 4.4 corrected), 6.6 (inside 6.4),
-`adjacentCellsMeetAeStep`, `obstacleLimitUniqueness`, `odometerObstacleApproximationStep`,
-`coneScaleRadiusPosStep_of_input`, `Absorption.absorptionChernoffStep`, `LQGMeasureField.lqgMeasureFieldMeasurableStep`,
-`Field.ConeCircle.circleAverageModConstStep`, the two steps of Lemma 3.3 (`uniformConvergenceGreenKernel_final`),
-`HarmonicPathExitStep` and `HarmonicExitCellStep` of Lemma 3.6 (`convergenceHarmonicFunctions_of_inputs`),
-`OdometerDistributionalLimitCorrectedStep` of Lemma 4.8 (`subsequentialProperties_of_inputs`),
-`StoppedLLowerBoundStep` (`stoppedLLowerBound_of_inputs`); `StoppedMeanValueInequalityStep` is reduced to three
-obstacle-surplus steps (`stoppedMeanValueInequality_of_steps`).
+Theorems 1.4 and 1.6 take `H : MainHypotheses 𝒮` as their hypothesis. The fields of `MainHypotheses` include the results
+the paper cites (Draft statements, among them the [BG22] statements of the harmonic-balls formalization), the literature
+inputs `MepsScalingInput`, `DegreeBoundInput` and `QuantumConeScalingInput` (MatedCRT/External), and the named steps
+(`...Step`) of the reductions. These appear as explicit hypotheses; this module does not prove them.
 
-Corrected forms used where the Draft is false or open: 3.1 corrected (by 3.5, 4.6), 3.1 almost-sure corrected (by 3.3, 3.7), 4.4 corrected (by 5.1, 5.3, 7.2-7.4), the [C5] log-loss forms of 6.7, 6.8, 6.9 (by 6.10, 7.1),
-7.2 corrected (above scale, by 7.1). No Draft form reported false is consumed: the Draft 3.1, refuted in Lean
-(Audit/Refutations.lean), is not a field of `MainHypotheses`.
+Numbered results, by label:
+* Section 2: Theorem 2.3 (`theorem:harmonic-balls`), Lemma 2.4 (`lemma:existence-up-to-fixed-time`), Lemma 2.5
+  (`lemma:scale-invariance-up-to-fixed-time`), Lemma 2.13 (`lemma:maximum-principle`), Lemma 2.17
+  (`lemma:bounded-exit-time`), Lemma 2.19 (`lemma:expected-exit-time-explicit-bound`).
+* Section 3: Lemma 3.1 (`lemma:discrete-potential-tightness`, corrected and almost-sure forms), Lemma 3.3
+  (`lemma:uniform-convergence-of-greens-function`), Lemma 3.5 (`lemma:discrete-dirichlet-problem`), Lemma 3.6
+  (`lemma:convergence-of-harmonic-functions`), Lemma 3.7 (`lemma:convergence-of-the-normalized-exit-time`).
+* Section 4: Lemma 4.6 (`lemma:subsequential-convergence`), Lemma 4.7 (`lemma:equibounded`), Lemma 4.8
+  (`lemma:subsequential-properties`), Theorem 4.1 (`theorem:convergence-divisible`), Proposition 4.2
+  (`prop:div-sandpile-lower-bound`).
+* Section 5: Proposition 5.1 (`prop:IDLA-lower-bound`), Lemma 5.3 (`lemma:mean-value-ineq`), Lemma 5.4
+  (`lemma:L-lower-bound`).
+* Section 6: Proposition 6.1 (`prop:IDLA-upper-bound`), Lemma 6.4 (`lemma:good-prevalance`), Lemma 6.5
+  (`lemma:annulus-hit`), Lemma 6.7 (`lemma:constant-order-lower-bound`, log-loss form), Lemma 6.8
+  (`lemma:constant-order-lower-bound-div`, log-loss form), Lemma 6.9 (`lemma:chance-of-being-absorbed`, log-loss form),
+  Lemma 6.10 (`lemma:iterative-bound`).
+* Section 7: Proposition 7.1 (`prop:div-sandpile-upper-bound`), Lemma 7.2 (`lemma:mass-bound-odometer`), Lemma 7.3
+  (`lemma:odometer-bound-mass`), Lemma 7.4 (`lemma:crude-upper-bound`).
+* Section 8: Proposition 8.1 (`prop:IDLA-constrained-convergence`).
 
-This file is regenerated as steps close; keep it mechanical.
+The counted closures of these results are listed in docs/campaign/COUNTED.md; the main results are stated in README.md
+("Main results").
 -/
 
 namespace MatedCRT
