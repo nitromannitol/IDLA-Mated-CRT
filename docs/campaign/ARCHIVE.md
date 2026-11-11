@@ -229,3 +229,58 @@ Moved with git mv from MatedCRT/ to archive/ (same relative path), task p2-clean
 | MatedCRT/FirstPass/S4S6c/TestBridge.lean | archive/MatedCRT/FirstPass/S4S6c/TestBridge.lean | none | none | no |
 | MatedCRT/FirstPass/S4S6c/TestProduct.lean | archive/MatedCRT/FirstPass/S4S6c/TestProduct.lean | none | none | no |
 | MatedCRT/FirstPass/S6r/OneTest/ExitQHone.lean | archive/MatedCRT/FirstPass/S6r/OneTest/ExitQHone.lean | none | none | no; its path is named in a docstring of MatedCRT/FirstPass/S6r/Shells/ChoiceStopped.lean (lines 8, 130), not an import |
+
+## Rule R2 (2026-11-11), batches B13 onward
+
+Decision of lead li (standing delegation, task p2-archive-batches-2). The date condition of the rule above (not committed after 2026-11-11 00:05:14 UTC) is replaced by the following. A tracked `MatedCRT/**/*.lean` file outside the import closure of the roots of `docs/campaign/ARCHIVE-RECHECK.md` may move if:
+
+(a) every commit touching it after 2026-11-11 00:05:14 UTC is comment-only for that file: every line changed by `git diff -U0 <c>^ <c> -- <file>` lies inside a comment or docstring;
+(b) it is not named in a `tasks/*.md` file modified on 2026-11-11;
+(c) it has no uncommitted edits;
+(d) no file that stays under `MatedCRT/` imports it (iterated: a file moves once its importers have moved);
+(e) it is not listed in `notes/hyg-A.txt`, `hyg-B.txt`, `hyg-C.txt`, `stale-1.txt` or `stale-1b.txt` while z9, z10 or z11 report IN_PROGRESS. Such files form a final batch once all three read DONE (bounded wait 40 min, then left in place and reported).
+
+Each batch is `git mv`ed from `MatedCRT/` to `archive/MatedCRT/` in import order (importers first, at most 40 files), checked for imports of its own modules from files under `MatedCRT/`, and committed alone with its rows below.
+
+| old path | new path | batch |
+|---|---|---|
+| MatedCRT/Audit/Main.lean | archive/MatedCRT/Audit/Main.lean | B13 |
+| MatedCRT/Audit/Sec3PointwiseRates.lean | archive/MatedCRT/Audit/Sec3PointwiseRates.lean | B13 |
+| MatedCRT/FirstPass/S2i.lean | archive/MatedCRT/FirstPass/S2i.lean | B13 |
+| MatedCRT/FirstPass/S2l.lean | archive/MatedCRT/FirstPass/S2l.lean | B13 |
+| MatedCRT/FirstPass/S2y.lean | archive/MatedCRT/FirstPass/S2y.lean | B13 |
+| MatedCRT/FirstPass/S3h.lean | archive/MatedCRT/FirstPass/S3h.lean | B13 |
+| MatedCRT/FirstPass/S5e.lean | archive/MatedCRT/FirstPass/S5e.lean | B13 |
+| MatedCRT/FirstPass/S5n.lean | archive/MatedCRT/FirstPass/S5n.lean | B13 |
+| MatedCRT/FirstPass/S5p.lean | archive/MatedCRT/FirstPass/S5p.lean | B13 |
+| MatedCRT/FirstPass/S6b.lean | archive/MatedCRT/FirstPass/S6b.lean | B13 |
+| MatedCRT/FirstPass/S6e.lean | archive/MatedCRT/FirstPass/S6e.lean | B13 |
+| MatedCRT/FirstPass/S6g.lean | archive/MatedCRT/FirstPass/S6g.lean | B13 |
+| MatedCRT/FirstPass/LPBridge/LQGExistence.lean | archive/MatedCRT/FirstPass/LPBridge/LQGExistence.lean | B13 |
+| MatedCRT/FirstPass/S2g/Assembly24.lean | archive/MatedCRT/FirstPass/S2g/Assembly24.lean | B13 |
+| MatedCRT/FirstPass/S2g/FamilyLocal.lean | archive/MatedCRT/FirstPass/S2g/FamilyLocal.lean | B13 |
+| MatedCRT/FirstPass/S2g/HVGood.lean | archive/MatedCRT/FirstPass/S2g/HVGood.lean | B13 |
+| MatedCRT/FirstPass/S2g/LawCoded25.lean | archive/MatedCRT/FirstPass/S2g/LawCoded25.lean | B13 |
+| MatedCRT/FirstPass/S2g/Locality.lean | archive/MatedCRT/FirstPass/S2g/Locality.lean | B13 |
+| MatedCRT/FirstPass/S2g/Section6CanonicalAxioms.lean | archive/MatedCRT/FirstPass/S2g/Section6CanonicalAxioms.lean | B13 |
+| MatedCRT/FirstPass/S2g/Transfer.lean | archive/MatedCRT/FirstPass/S2g/Transfer.lean | B13 |
+| MatedCRT/FirstPass/S2x/ConeScaleRadiusPos.lean | archive/MatedCRT/FirstPass/S2x/ConeScaleRadiusPos.lean | B13 |
+| MatedCRT/FirstPass/S3S4b/TruncatedLawsBridge.lean | archive/MatedCRT/FirstPass/S3S4b/TruncatedLawsBridge.lean | B13 |
+| MatedCRT/FirstPass/S4S6c/AbsorbedChernoffTail.lean | archive/MatedCRT/FirstPass/S4S6c/AbsorbedChernoffTail.lean | B13 |
+| MatedCRT/FirstPass/S4S6c/Amplification68.lean | archive/MatedCRT/FirstPass/S4S6c/Amplification68.lean | B13 |
+| MatedCRT/FirstPass/S4S6c/CGRCYInst68.lean | archive/MatedCRT/FirstPass/S4S6c/CGRCYInst68.lean | B13 |
+| MatedCRT/FirstPass/S4S6c/CGRCYK2Inst68.lean | archive/MatedCRT/FirstPass/S4S6c/CGRCYK2Inst68.lean | B13 |
+| MatedCRT/FirstPass/S4S6c/CGResVol68.lean | archive/MatedCRT/FirstPass/S4S6c/CGResVol68.lean | B13 |
+| MatedCRT/FirstPass/S4S6c/Closed6x68Le.lean | archive/MatedCRT/FirstPass/S4S6c/Closed6x68Le.lean | B13 |
+| MatedCRT/FirstPass/S4S6c/CountingExitAlphaCore68.lean | archive/MatedCRT/FirstPass/S4S6c/CountingExitAlphaCore68.lean | B13 |
+| MatedCRT/FirstPass/S4S6c/CoverMinorantAE.lean | archive/MatedCRT/FirstPass/S4S6c/CoverMinorantAE.lean | B13 |
+| MatedCRT/FirstPass/S4S6c/Exponents.lean | archive/MatedCRT/FirstPass/S4S6c/Exponents.lean | B13 |
+| MatedCRT/FirstPass/S4S6c/GoodRadii.lean | archive/MatedCRT/FirstPass/S4S6c/GoodRadii.lean | B13 |
+| MatedCRT/FirstPass/S4S6c/HoneCover68.lean | archive/MatedCRT/FirstPass/S4S6c/HoneCover68.lean | B13 |
+| MatedCRT/FirstPass/S4S6c/LayerCrossing68.lean | archive/MatedCRT/FirstPass/S4S6c/LayerCrossing68.lean | B13 |
+| MatedCRT/FirstPass/S4S6c/MeshExitPw68.lean | archive/MatedCRT/FirstPass/S4S6c/MeshExitPw68.lean | B13 |
+| MatedCRT/FirstPass/S4S6c/NextExitTime.lean | archive/MatedCRT/FirstPass/S4S6c/NextExitTime.lean | B13 |
+| MatedCRT/FirstPass/S4S6c/Redesign68S9.lean | archive/MatedCRT/FirstPass/S4S6c/Redesign68S9.lean | B13 |
+| MatedCRT/FirstPass/S4S6c/ShellOrderLoc68.lean | archive/MatedCRT/FirstPass/S4S6c/ShellOrderLoc68.lean | B13 |
+| MatedCRT/FirstPass/S4S6c/ShellSmallR68.lean | archive/MatedCRT/FirstPass/S4S6c/ShellSmallR68.lean | B13 |
+| MatedCRT/FirstPass/S4S6c/Uniform68LogRadius2.lean | archive/MatedCRT/FirstPass/S4S6c/Uniform68LogRadius2.lean | B13 |
