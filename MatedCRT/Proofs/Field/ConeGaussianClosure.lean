@@ -1,4 +1,5 @@
 import Mathlib
+import MatedCRT.LPStaging.Gauss.GaussianClosure
 
 /-!
 # Centred Gaussian spaces are closed under almost sure limits
@@ -11,10 +12,13 @@ GFF (whose observables are almost sure limits of Riemann sums of circle averages
 * `exists_map_eq_gaussianReal_of_tendsto_ae`: an almost sure limit of centred Gaussians is a centred Gaussian. No
   hypothesis on the variances is needed: the characteristic functions `exp(-σ_n t²/2)` converge, and a limit `0` at
   `t = 1` would make the characteristic function of the limit vanish on `{1/(m+1)}`, against its continuity at `0`.
-  The case of convergent variances is `map_eq_gaussianReal_of_tendsto_variance` (the argument of
-  `LatticeProb.map_eq_gaussianReal_of_tendsto_ae`, LatticeProb/Gauss/Limit.lean, restated through `cf`).
+  The case of convergent variances is `map_eq_gaussianReal_of_tendsto_variance` (a citation of
+  `LatticeProb.map_eq_gaussianReal_of_tendsto_ae`, LatticeProb/Gauss/Limit.lean).
 * `isCentredGaussianSpace_sup_span`, `isCentredGaussianSpace_sup_span_finset`: adjoining almost sure limits of
   elements of a centred Gaussian linear space keeps it a centred Gaussian linear space.
+
+The definitions and the proofs of this file are those of `LatticeProb.GaussianClosure`
+(MatedCRT/LPStaging/Gauss/GaussianClosure.lean); the statements here are unchanged.
 -/
 
 namespace MatedCRT.Field.GaussClosure
@@ -28,42 +32,28 @@ variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
 noncomputable def cf (P : Measure Ω) (Z : Ω → ℝ) (t : ℝ) : ℂ :=
   ∫ ω, Complex.exp ((t : ℂ) * (Z ω : ℂ) * Complex.I) ∂P
 
-lemma norm_exp_mul_I (t u : ℝ) : ‖Complex.exp ((t : ℂ) * (u : ℂ) * Complex.I)‖ = 1 := by
-  rw [show (t : ℂ) * (u : ℂ) * Complex.I = ((t * u : ℝ) : ℂ) * Complex.I by push_cast; ring]
-  exact Complex.norm_exp_ofReal_mul_I _
+/-- The characteristic function is the library one, `LatticeProb.GaussianClosure.cf`. -/
+theorem cf_eq_lp (P : Measure Ω) (Z : Ω → ℝ) (t : ℝ) :
+    cf P Z t = LatticeProb.GaussianClosure.cf P Z t := rfl
+
+lemma norm_exp_mul_I (t u : ℝ) : ‖Complex.exp ((t : ℂ) * (u : ℂ) * Complex.I)‖ = 1 :=
+  LatticeProb.GaussianClosure.norm_exp_mul_I t u
 
 lemma tendsto_cf_of_tendsto_ae [IsFiniteMeasure P] {X : ℕ → Ω → ℝ} {Y : Ω → ℝ} (hXm : ∀ n, Measurable (X n))
     (hae : ∀ᵐ ω ∂P, Tendsto (fun n => X n ω) atTop (𝓝 (Y ω))) (t : ℝ) :
-    Tendsto (fun n => cf P (X n) t) atTop (𝓝 (cf P Y t)) := by
-  refine tendsto_integral_of_dominated_convergence (fun _ => 1) (fun n => ?_) (integrable_const 1)
-    (fun n => Eventually.of_forall fun ω => le_of_eq (norm_exp_mul_I _ _)) ?_
-  · exact (Complex.measurable_exp.comp
-      ((Complex.measurable_ofReal.comp (hXm n)).const_mul _ |>.mul_const _)).aestronglyMeasurable
-  · filter_upwards [hae] with ω hω
-    exact (Complex.continuous_exp.tendsto _).comp
-      (((Complex.continuous_ofReal.tendsto _).comp hω).const_mul _ |>.mul_const _)
+    Tendsto (fun n => cf P (X n) t) atTop (𝓝 (cf P Y t)) :=
+  LatticeProb.GaussianClosure.tendsto_cf_of_tendsto_ae hXm hae t
 
 lemma tendsto_cf_param [IsFiniteMeasure P] {Y : Ω → ℝ} (hYm : Measurable Y) {τ : ℕ → ℝ} {t : ℝ}
-    (hτ : Tendsto τ atTop (𝓝 t)) : Tendsto (fun m => cf P Y (τ m)) atTop (𝓝 (cf P Y t)) := by
-  refine tendsto_integral_of_dominated_convergence (fun _ => 1) (fun m => ?_) (integrable_const 1)
-    (fun m => Eventually.of_forall fun ω => le_of_eq (norm_exp_mul_I _ _)) (Eventually.of_forall fun ω => ?_)
-  · exact (Complex.measurable_exp.comp
-      ((Complex.measurable_ofReal.comp hYm).const_mul _ |>.mul_const _)).aestronglyMeasurable
-  · exact (Complex.continuous_exp.tendsto _).comp
-      ((((Complex.continuous_ofReal.tendsto _).comp hτ).mul_const _).mul_const _)
+    (hτ : Tendsto τ atTop (𝓝 t)) : Tendsto (fun m => cf P Y (τ m)) atTop (𝓝 (cf P Y t)) :=
+  LatticeProb.GaussianClosure.tendsto_cf_param hYm hτ
 
-lemma cf_zero [IsProbabilityMeasure P] (Y : Ω → ℝ) : cf P Y 0 = 1 := by
-  simp [cf]
+lemma cf_zero [IsProbabilityMeasure P] (Y : Ω → ℝ) : cf P Y 0 = 1 :=
+  LatticeProb.GaussianClosure.cf_zero Y
 
 lemma cf_eq_of_map_eq {Z : Ω → ℝ} (hZ : Measurable Z) {v : ℝ≥0} (h : P.map Z = gaussianReal 0 v) (t : ℝ) :
-    cf P Z t = ((Real.exp (-(v : ℝ) * t ^ 2 / 2) : ℝ) : ℂ) := by
-  have h1 : charFun (P.map Z) t = cf P Z t := by
-    rw [charFun_apply_real, integral_map hZ.aemeasurable]
-    · rfl
-    exact (Complex.measurable_exp.comp (Complex.measurable_ofReal.const_mul _ |>.mul_const _)).aestronglyMeasurable
-  rw [← h1, h, charFun_gaussianReal]
-  push_cast
-  ring_nf
+    cf P Z t = ((Real.exp (-(v : ℝ) * t ^ 2 / 2) : ℝ) : ℂ) :=
+  LatticeProb.GaussianClosure.cf_eq_of_map_eq hZ h t
 
 /-- An almost sure limit of centred Gaussians with convergent variances is a centred Gaussian (as
 `LatticeProb.map_eq_gaussianReal_of_tendsto_ae`). -/
@@ -71,60 +61,15 @@ theorem map_eq_gaussianReal_of_tendsto_variance [IsProbabilityMeasure P] {X : �
     {σ : ℕ → ℝ≥0} {s : ℝ≥0} (hXm : ∀ n, Measurable (X n)) (hYm : Measurable Y)
     (hX : ∀ n, P.map (X n) = gaussianReal 0 (σ n)) (hae : ∀ᵐ ω ∂P, Tendsto (fun n => X n ω) atTop (𝓝 (Y ω)))
     (hσ : Tendsto (fun n => ((σ n : ℝ≥0) : ℝ)) atTop (𝓝 ((s : ℝ≥0) : ℝ))) :
-    P.map Y = gaussianReal 0 s := by
-  have : IsProbabilityMeasure (P.map Y) :=
-    ⟨by rw [Measure.map_apply hYm MeasurableSet.univ, Set.preimage_univ, measure_univ]⟩
-  refine Measure.ext_of_charFun (funext fun t => ?_)
-  have hY : cf P Y t = ((Real.exp (-(s : ℝ) * t ^ 2 / 2) : ℝ) : ℂ) := by
-    refine tendsto_nhds_unique (tendsto_cf_of_tendsto_ae hXm hae t) ?_
-    have hc : Tendsto (fun n => ((Real.exp (-(σ n : ℝ) * t ^ 2 / 2) : ℝ) : ℂ)) atTop
-        (𝓝 ((Real.exp (-(s : ℝ) * t ^ 2 / 2) : ℝ) : ℂ)) :=
-      (Complex.continuous_ofReal.tendsto _).comp ((Real.continuous_exp.tendsto _).comp
-        (((hσ.neg).mul_const _).div_const _))
-    exact hc.congr fun n => (cf_eq_of_map_eq (hXm n) (hX n) t).symm
-  have h1 : charFun (P.map Y) t = cf P Y t := by
-    rw [charFun_apply_real, integral_map hYm.aemeasurable]
-    · rfl
-    exact (Complex.measurable_exp.comp (Complex.measurable_ofReal.const_mul _ |>.mul_const _)).aestronglyMeasurable
-  rw [h1, hY, charFun_gaussianReal]
-  push_cast
-  ring_nf
+    P.map Y = gaussianReal 0 s :=
+  LatticeProb.map_eq_gaussianReal_of_tendsto_ae hXm hYm hX hae hσ
 
 /-- **An almost sure limit of centred Gaussians is a centred Gaussian.** -/
 theorem exists_map_eq_gaussianReal_of_tendsto_ae [IsProbabilityMeasure P] {X : ℕ → Ω → ℝ} {Y : Ω → ℝ}
     (hXm : ∀ n, Measurable (X n)) (hYm : Measurable Y) (hX : ∀ n, ∃ v : ℝ≥0, P.map (X n) = gaussianReal 0 v)
     (hae : ∀ᵐ ω ∂P, Tendsto (fun n => X n ω) atTop (𝓝 (Y ω))) :
-    ∃ v : ℝ≥0, P.map Y = gaussianReal 0 v := by
-  choose σ hσ using hX
-  have hre : ∀ t, Tendsto (fun n => Real.exp (-(σ n : ℝ) * t ^ 2 / 2)) atTop (𝓝 (cf P Y t).re) := by
-    intro t
-    refine ((Complex.continuous_re.tendsto _).comp (tendsto_cf_of_tendsto_ae hXm hae t)).congr fun n => ?_
-    simp only [Function.comp_apply, cf_eq_of_map_eq (hXm n) (hσ n) t, Complex.ofReal_re]
-  have hL0 : 0 ≤ (cf P Y 1).re := ge_of_tendsto' (hre 1) fun n => (Real.exp_pos _).le
-  rcases hL0.lt_or_eq with hL | hL
-  · have hlog : Tendsto (fun n => (σ n : ℝ)) atTop (𝓝 (-2 * Real.log (cf P Y 1).re)) := by
-      refine (((Real.continuousAt_log hL.ne').tendsto.comp (hre 1)).const_mul (-2)).congr fun n => ?_
-      simp only [Function.comp_apply, Real.log_exp]
-      ring
-    have hL1 : (cf P Y 1).re ≤ 1 := le_of_tendsto' (hre 1) fun n =>
-      Real.exp_le_one_iff.2 (by have := (σ n).2; nlinarith)
-    have hv : 0 ≤ -2 * Real.log (cf P Y 1).re := by nlinarith [Real.log_nonpos hL0 hL1]
-    exact ⟨⟨_, hv⟩, map_eq_gaussianReal_of_tendsto_variance hXm hYm hσ hae hlog⟩
-  · exfalso
-    have hzero : ∀ m : ℕ, (cf P Y (1 / ((m : ℝ) + 1))).re = 0 := by
-      intro m
-      have hq : 0 < (1 / ((m : ℝ) + 1)) ^ 2 := by positivity
-      have h1 := ((Real.continuous_rpow_const hq.le).tendsto _).comp (hre 1)
-      rw [← hL, Real.zero_rpow hq.ne'] at h1
-      refine tendsto_nhds_unique (hre _) (h1.congr fun n => ?_)
-      rw [Function.comp_apply, ← Real.exp_mul]
-      congr 1
-      ring
-    have hlim := (Complex.continuous_re.tendsto _).comp (tendsto_cf_param (P := P) hYm
-      tendsto_one_div_add_atTop_nhds_zero_nat)
-    rw [cf_zero, Complex.one_re] at hlim
-    have h0 : Tendsto (fun m : ℕ => (0 : ℝ)) atTop (𝓝 1) := hlim.congr fun m => hzero m
-    exact zero_ne_one (tendsto_nhds_unique tendsto_const_nhds h0)
+    ∃ v : ℝ≥0, P.map Y = gaussianReal 0 v :=
+  LatticeProb.GaussianClosure.exists_map_eq_gaussianReal_of_tendsto_ae hXm hYm hX hae
 
 /-! ## Centred Gaussian spaces -/
 
@@ -136,91 +81,43 @@ def IsCentredGaussianSpace (P : Measure Ω) (M : Set (Ω → ℝ)) : Prop :=
 def IsAeLimitOf (P : Measure Ω) (M : Set (Ω → ℝ)) (Z : Ω → ℝ) : Prop :=
   ∃ Y : ℕ → Ω → ℝ, (∀ n, Y n ∈ M) ∧ ∀ᵐ ω ∂P, Tendsto (fun n => Y n ω) atTop (𝓝 (Z ω))
 
+theorem isCentredGaussianSpace_eq_lp (P : Measure Ω) (M : Set (Ω → ℝ)) :
+    IsCentredGaussianSpace P M = LatticeProb.GaussianClosure.IsCentredGaussianSpace P M := rfl
+
+theorem isAeLimitOf_eq_lp (P : Measure Ω) (M : Set (Ω → ℝ)) (Z : Ω → ℝ) :
+    IsAeLimitOf P M Z = LatticeProb.GaussianClosure.IsAeLimitOf P M Z := rfl
+
 lemma IsAeLimitOf.mono {M M' : Set (Ω → ℝ)} (h : M ⊆ M') {Z : Ω → ℝ} (hZ : IsAeLimitOf P M Z) :
-    IsAeLimitOf P M' Z := by
-  obtain ⟨Y, hY, hlim⟩ := hZ
-  exact ⟨Y, fun n => h (hY n), hlim⟩
+    IsAeLimitOf P M' Z :=
+  LatticeProb.GaussianClosure.IsAeLimitOf.mono h hZ
 
 lemma isAeLimitOf_of_mem {M : Set (Ω → ℝ)} {Z : Ω → ℝ} (hZ : Z ∈ M) : IsAeLimitOf P M Z :=
-  ⟨fun _ => Z, fun _ => hZ, Eventually.of_forall fun _ => tendsto_const_nhds⟩
+  LatticeProb.GaussianClosure.isAeLimitOf_of_mem hZ
 
 /-- Adjoining an almost sure limit to a centred Gaussian linear space. -/
 theorem isCentredGaussianSpace_sup_span [IsProbabilityMeasure P] {M : Submodule ℝ (Ω → ℝ)}
     (hM : IsCentredGaussianSpace P M) {Z : Ω → ℝ} (hZm : Measurable Z) (hZ : IsAeLimitOf P M Z) :
-    IsCentredGaussianSpace P (M ⊔ Submodule.span ℝ {Z} : Submodule ℝ (Ω → ℝ)) := by
-  intro W hW
-  obtain ⟨Y, hY, U, hU, rfl⟩ := Submodule.mem_sup.1 hW
-  obtain ⟨c, rfl⟩ := Submodule.mem_span_singleton.1 hU
-  obtain ⟨Yn, hYn, hlim⟩ := hZ
-  have hm : Measurable (Y + c • Z) := (hM Y hY).1.add (hZm.const_smul c)
-  have hmem : ∀ n, Y + c • Yn n ∈ M := fun n => M.add_mem hY (M.smul_mem c (hYn n))
-  refine ⟨hm, exists_map_eq_gaussianReal_of_tendsto_ae (X := fun n => Y + c • Yn n)
-    (fun n => (hM _ (hmem n)).1) hm (fun n => (hM _ (hmem n)).2) ?_⟩
-  filter_upwards [hlim] with ω hω
-  exact tendsto_const_nhds.add (hω.const_smul c)
+    IsCentredGaussianSpace P (M ⊔ Submodule.span ℝ {Z} : Submodule ℝ (Ω → ℝ)) :=
+  LatticeProb.GaussianClosure.isCentredGaussianSpace_sup_span hM hZm hZ
 
 /-- Adjoining finitely many almost sure limits to a centred Gaussian linear space. -/
 theorem isCentredGaussianSpace_sup_span_finset [IsProbabilityMeasure P] {M : Submodule ℝ (Ω → ℝ)}
     (hM : IsCentredGaussianSpace P M) (T : Finset (Ω → ℝ)) (hTm : ∀ Z ∈ T, Measurable Z)
     (hT : ∀ Z ∈ T, IsAeLimitOf P M Z) :
-    IsCentredGaussianSpace P (M ⊔ Submodule.span ℝ (T : Set (Ω → ℝ)) : Submodule ℝ (Ω → ℝ)) := by
-  classical
-  induction T using Finset.induction_on with
-  | empty => simpa using hM
-  | insert Z T hZT ih =>
-    have hT' := ih (fun Z' h => hTm Z' (Finset.mem_insert_of_mem h))
-      (fun Z' h => hT Z' (Finset.mem_insert_of_mem h))
-    have heq : M ⊔ Submodule.span ℝ ((insert Z T : Finset (Ω → ℝ)) : Set (Ω → ℝ)) =
-        (M ⊔ Submodule.span ℝ (T : Set (Ω → ℝ))) ⊔ Submodule.span ℝ {Z} := by
-      rw [Finset.coe_insert, Submodule.span_insert, sup_comm (Submodule.span ℝ {Z}), sup_assoc]
-    rw [heq]
-    exact isCentredGaussianSpace_sup_span hT' (hTm Z (Finset.mem_insert_self Z T))
-      ((hT Z (Finset.mem_insert_self Z T)).mono
-        (SetLike.coe_subset_coe.2 (le_sup_left : M ≤ M ⊔ Submodule.span ℝ (T : Set (Ω → ℝ)))))
+    IsCentredGaussianSpace P (M ⊔ Submodule.span ℝ (T : Set (Ω → ℝ)) : Submodule ℝ (Ω → ℝ)) :=
+  LatticeProb.GaussianClosure.isCentredGaussianSpace_sup_span_finset hM T hTm hT
 
 /-- Adjoining a countable family of almost sure limits to a centred Gaussian linear space. -/
 theorem isCentredGaussianSpace_sup_span_range [IsProbabilityMeasure P] {M : Submodule ℝ (Ω → ℝ)}
     (hM : IsCentredGaussianSpace P M) {ι : Type*} (Z : ι → Ω → ℝ) (hZm : ∀ i, Measurable (Z i))
     (hZ : ∀ i, IsAeLimitOf P M (Z i)) :
-    IsCentredGaussianSpace P (M ⊔ Submodule.span ℝ (Set.range Z) : Submodule ℝ (Ω → ℝ)) := by
-  intro W hW
-  obtain ⟨Y, hY, U, hU, rfl⟩ := Submodule.mem_sup.1 hW
-  obtain ⟨T, hTsub, hUT⟩ := Submodule.mem_span_finite_of_mem_span hU
-  have hgood := isCentredGaussianSpace_sup_span_finset hM T
-    (fun Z' h => by obtain ⟨i, rfl⟩ := hTsub h; exact hZm i)
-    (fun Z' h => by obtain ⟨i, rfl⟩ := hTsub h; exact hZ i)
-  exact hgood _ (Submodule.add_mem_sup hY hUT)
+    IsCentredGaussianSpace P (M ⊔ Submodule.span ℝ (Set.range Z) : Submodule ℝ (Ω → ℝ)) :=
+  LatticeProb.GaussianClosure.isCentredGaussianSpace_sup_span_range hM Z hZm hZ
 
 /-- **Joint Gaussianity.** A family of elements of a centred Gaussian linear space is a Gaussian process. -/
 theorem isGaussianProcess_of_isCentredGaussianSpace [IsProbabilityMeasure P] {M : Submodule ℝ (Ω → ℝ)}
     (hM : IsCentredGaussianSpace P M) {T : Type*} {W : T → Ω → ℝ} (hW : ∀ t, W t ∈ M) :
-    IsGaussianProcess W P := by
-  classical
-  refine ⟨fun I => ?_⟩
-  have hmeas : Measurable fun ω => I.restrict fun x => W x ω :=
-    measurable_pi_iff.2 fun i => (hM _ (hW i)).1
-  refine ⟨hmeas.aemeasurable, IsGaussian.mk fun L => ?_⟩
-  set μ := P.map fun ω => I.restrict fun x => W x ω
-  have hcomb : (fun ω => L (I.restrict fun x => W x ω)) =
-      ∑ i : I, L (fun j => if i = j then 1 else 0) • W i := by
-    funext ω
-    rw [show L (I.restrict fun x => W x ω) = (L : (I → ℝ) →ₗ[ℝ] ℝ) (I.restrict fun x => W x ω) from rfl,
-      LinearMap.pi_apply_eq_sum_univ]
-    simp [Finset.sum_apply, mul_comm]
-  have hmem : (fun ω => L (I.restrict fun x => W x ω)) ∈ M := by
-    rw [hcomb]
-    exact Submodule.sum_mem _ fun i _ => M.smul_mem _ (hW i)
-  obtain ⟨-, v, hv⟩ := hM _ hmem
-  have hL : μ.map L = gaussianReal 0 v := by
-    rw [Measure.map_map L.continuous.measurable hmeas]
-    exact hv
-  have hint : ∫ x, L x ∂μ = 0 := by
-    have h := integral_map (μ := μ) L.continuous.measurable.aemeasurable
-      (aestronglyMeasurable_id (μ := μ.map L))
-    simp only [id_eq] at h
-    rw [← h, hL, integral_id_gaussianReal]
-  have hvar : Var[⇑L; μ] = v := by
-    rw [← variance_id_map L.continuous.measurable.aemeasurable, hL, variance_id_gaussianReal]
-  rw [hL, hint, hvar, Real.toNNReal_coe]
+    IsGaussianProcess W P :=
+  LatticeProb.GaussianClosure.isGaussianProcess_of_isCentredGaussianSpace hM hW
 
 end MatedCRT.Field.GaussClosure

@@ -1,5 +1,6 @@
 import MatedCRT.Proofs.Field.ConeRadialSums
 import MatedCRT.Proofs.Field.ConeGaussianClosure
+import MatedCRT.LPStaging.Gauss.GaussianClosure
 
 /-!
 # Level integrals of a Gaussian process (eq:gff, `ConeMeanZeroRestrictionStep`)
@@ -24,58 +25,34 @@ open scoped NNReal
 variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
 
 lemma memLp_two_of_map_eq {Z : Ω → ℝ} (hZ : Measurable Z) {v : ℝ≥0} (h : P.map Z = gaussianReal 0 v) :
-    MemLp Z 2 P := by
-  have hG : HasGaussianLaw Z P := ⟨hZ.aemeasurable, by rw [h]; infer_instance⟩
-  exact hG.memLp_two
+    MemLp Z 2 P :=
+  LatticeProb.GaussianClosure.memLp_two_of_map_eq hZ h
 
 lemma variance_of_map_eq {Z : Ω → ℝ} (hZ : Measurable Z) {v : ℝ≥0} (h : P.map Z = gaussianReal 0 v) :
-    Var[Z; P] = v := by
-  rw [← variance_id_map hZ.aemeasurable, h, variance_id_gaussianReal]
+    Var[Z; P] = v :=
+  LatticeProb.GaussianClosure.variance_of_map_eq hZ h
 
 lemma IsCentredGaussianSpace.memLp {M : Set (Ω → ℝ)} (hM : IsCentredGaussianSpace P M) {Z : Ω → ℝ} (hZ : Z ∈ M) :
     MemLp Z 2 P :=
-  memLp_two_of_map_eq (hM Z hZ).1 (hM Z hZ).2.choose_spec
+  LatticeProb.GaussianClosure.IsCentredGaussianSpace.memLp hM hZ
 
 /-- Variances of centred Gaussians are continuous along almost sure limits. -/
 lemma tendsto_variance_of_tendsto_ae [IsProbabilityMeasure P] {X : ℕ → Ω → ℝ} {Y : Ω → ℝ}
     (hXm : ∀ n, Measurable (X n)) (hYm : Measurable Y) (hX : ∀ n, ∃ v : ℝ≥0, P.map (X n) = gaussianReal 0 v)
     (hY : ∃ v : ℝ≥0, P.map Y = gaussianReal 0 v) (hae : ∀ᵐ ω ∂P, Tendsto (fun n => X n ω) atTop (𝓝 (Y ω))) :
-    Tendsto (fun n => Var[X n; P]) atTop (𝓝 Var[Y; P]) := by
-  choose σ hσ using hX
-  obtain ⟨v, hv⟩ := hY
-  have hre : Tendsto (fun n => Real.exp (-(σ n : ℝ) * 1 ^ 2 / 2)) atTop
-      (𝓝 (Real.exp (-(v : ℝ) * 1 ^ 2 / 2))) := by
-    have h := (Complex.continuous_re.tendsto _).comp (tendsto_cf_of_tendsto_ae hXm hae 1)
-    rw [cf_eq_of_map_eq hYm hv, Complex.ofReal_re] at h
-    refine h.congr fun n => ?_
-    simp only [Function.comp_apply, cf_eq_of_map_eq (hXm n) (hσ n), Complex.ofReal_re]
-  have hlog := ((Real.continuousAt_log (Real.exp_pos _).ne').tendsto.comp hre).const_mul (-2)
-  have e : ∀ a : ℝ, -2 * (-a * 1 ^ 2 / 2) = a := fun a => by ring
-  simp only [Function.comp_def, Real.log_exp, e] at hlog
-  rw [variance_of_map_eq hYm hv]
-  exact hlog.congr fun n => (variance_of_map_eq (hXm n) (hσ n)).symm
+    Tendsto (fun n => Var[X n; P]) atTop (𝓝 Var[Y; P]) :=
+  LatticeProb.GaussianClosure.tendsto_variance_of_tendsto_ae hXm hYm hX hY hae
 
 lemma covariance_eq_polar [IsFiniteMeasure P] {X Y : Ω → ℝ} (hX : MemLp X 2 P) (hY : MemLp Y 2 P) :
-    cov[X, Y; P] = (Var[X + Y; P] - Var[X - Y; P]) / 4 := by
-  rw [variance_add hX hY, variance_sub hX hY]
-  ring
+    cov[X, Y; P] = (Var[X + Y; P] - Var[X - Y; P]) / 4 :=
+  LatticeProb.GaussianClosure.covariance_eq_polar hX hY
 
 /-- **Covariances are continuous along almost sure limits in a centred Gaussian linear space.** -/
 theorem tendsto_covariance_of_tendsto_ae [IsProbabilityMeasure P] {M : Submodule ℝ (Ω → ℝ)}
     (hM : IsCentredGaussianSpace P M) {X : Ω → ℝ} (hX : X ∈ M) {Z : ℕ → Ω → ℝ} (hZ : ∀ n, Z n ∈ M)
     {Y : Ω → ℝ} (hY : Y ∈ M) (hae : ∀ᵐ ω ∂P, Tendsto (fun n => Z n ω) atTop (𝓝 (Y ω))) :
-    Tendsto (fun n => cov[X, Z n; P]) atTop (𝓝 cov[X, Y; P]) := by
-  have hadd := tendsto_variance_of_tendsto_ae (X := fun n => X + Z n) (Y := X + Y)
-    (fun n => (hM _ (M.add_mem hX (hZ n))).1) (hM _ (M.add_mem hX hY)).1
-    (fun n => (hM _ (M.add_mem hX (hZ n))).2) (hM _ (M.add_mem hX hY)).2
-    (by filter_upwards [hae] with ω hω; exact tendsto_const_nhds.add hω)
-  have hsub := tendsto_variance_of_tendsto_ae (X := fun n => X - Z n) (Y := X - Y)
-    (fun n => (hM _ (M.sub_mem hX (hZ n))).1) (hM _ (M.sub_mem hX hY)).1
-    (fun n => (hM _ (M.sub_mem hX (hZ n))).2) (hM _ (M.sub_mem hX hY)).2
-    (by filter_upwards [hae] with ω hω; exact tendsto_const_nhds.sub hω)
-  rw [covariance_eq_polar (hM.memLp hX) (hM.memLp hY)]
-  exact ((hadd.sub hsub).div_const 4).congr fun n =>
-    (covariance_eq_polar (hM.memLp hX) (hM.memLp (hZ n))).symm
+    Tendsto (fun n => cov[X, Z n; P]) atTop (𝓝 cov[X, Y; P]) :=
+  LatticeProb.GaussianClosure.tendsto_covariance_of_tendsto_ae hM hX hZ hY hae
 
 variable {α : Type*} [MeasurableSpace α]
 
