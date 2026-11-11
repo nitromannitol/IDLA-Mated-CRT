@@ -9,7 +9,7 @@ unique among all stopped families. That clause is derived here, not assumed: wit
 family (`ConeHalfBallClosureInsideStep`, a.s., `Proofs/Sec2/ConeFamilyMeasurable/StoppedClosure.lean:18`), two stopped
 families on the same measure have the same stopping time (`stopped_unique_of_closureInside_fp` below), and
 the fixed-time uniqueness gives the family. The existence part is the canonical step `ConeCanonicalHalfBallStep`
-(OPEN, `FirstPass/S2g.lean`). -/
+(`FirstPass/S2g.lean`; see docs/campaign/COUNTED.md). -/
 
 namespace MatedCRT
 
@@ -79,7 +79,7 @@ theorem coneHarmonicBallsUpToFixedTimeStmt_of_canonical (hcan : ConeCanonicalHal
 /-- **Proposition 6.1 from the canonical step, the closure step and the Section 6 inputs.** The composition
 `iDLAUpperBound_of_coneFamilyAEMeasurable` with the Draft Lemma 2.4 of `coneHarmonicBallsUpToFixedTimeStmt_of_canonical`
 in place of the Draft statement. Hypotheses: Lemma 6.10 (`IterativeBoundStmt`), Proposition 5.1 (`IDLALowerBoundStmt`),
-the measurability step `ConeFamilyAEMeasurableStep` (its rescaled conjunct is OPEN), and the two steps above. -/
+the measurability step `ConeFamilyAEMeasurableStep` (its rescaled conjunct is a named hypothesis, see docs/campaign/COUNTED.md), and the two steps above. -/
 theorem firstPass_6_1_of_canonical (𝒮 : SpaceFillingSLEModel) (h610 : IterativeBoundStmt 𝒮)
     (h51 : IDLALowerBoundStmt 𝒮) (hfam : ConeFamilyAEMeasurableStep) (hcan : ConeCanonicalHalfBallStep)
     (hcl : ConeHalfBallClosureInsideStep) : IDLAUpperBoundStmt 𝒮 :=

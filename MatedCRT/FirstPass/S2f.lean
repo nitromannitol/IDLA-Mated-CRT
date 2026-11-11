@@ -5,9 +5,8 @@ import MatedCRT.FirstPass.S2e
 # First pass: the measurable good set of the cone families
 
 Reduction of `ConeFamilyAEMeasurableStep` (Theorem 2.3 measurability) and of its rescaled conjunct
-`ConeRescaledHalfBallClosureInsideStep` to ONE named NEW step, `ConeClosureGoodMeasureLawStep`: a measurable set of
-measures of full law on which the closure containment holds for every stopped family. The NEW step is not proved here
-and not frozen (it is a statement about this paper's harmonic balls).
+`ConeRescaledHalfBallClosureInsideStep` to ONE named step, `ConeClosureGoodMeasureLawStep`: a measurable set of
+measures of full law on which the closure containment holds for every stopped family. The step is a named hypothesis (see docs/campaign/COUNTED.md); it is a statement about this paper's harmonic balls.
 -/
 
 namespace MatedCRT
@@ -15,7 +14,7 @@ namespace MatedCRT
 open MeasureTheory Filter Topology Set Metric HarmonicBalls ProbabilityTheory
 open scoped ENNReal
 
-/-- **OPEN (NEW; neither proved nor frozen).** Closure containment of the cone families on a measurable
+/-- **Named hypothesis (see docs/campaign/COUNTED.md).** Closure containment of the cone families on a measurable
 set of full law: for every cone field there is a measurable set `G` of measures such that every `ν ∈ G` has the closure
 property of `ConeHalfBallClosureInsideStep` (every family on `ν` stopped at `T` has `closure (Λ t) ⊆ B_{1/2}` for
 `0 < t < T`), and `μ ω ∈ G` almost surely. `ConeHalfBallClosureInsideStep` (proved, `FirstPass/S2d.lean`) gives only the
@@ -59,7 +58,7 @@ theorem coneRescaledHalfBallClosureInsideStep_of_goodMeasureLaw
   exact hGgood _ hω T Γ hΓ hst t ht
 
 /-- **Conditional reduction of `ConeFamilyAEMeasurableStep`.** Both conjuncts follow from the volume growth
-inputs of `firstPass_coneFamilyAEMeasurableStep_of_rescaledClosure` and the single NEW step
+inputs of `firstPass_coneFamilyAEMeasurableStep_of_rescaledClosure` and the single step
 `ConeClosureGoodMeasureLawStep`; the closure containments (unrescaled and rescaled) are derived from it. -/
 theorem firstPass_coneFamilyAEMeasurableStep_of_goodMeasureLaw
     (h27 : VolumeGrowthStmt) (hscale : QuantumConeScalingInput) (hlqg : ConeLQGScalingStep)

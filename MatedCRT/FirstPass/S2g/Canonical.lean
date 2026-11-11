@@ -9,12 +9,12 @@ import MatedCRT.Proofs.Measurability.ConeRescaledCircle
 /-! # Corrected Lemmas 2.4 and 2.5 from the canonical factorization
 
 The canonical statements `ConeHarmonicBallsUpToFixedTimeCanonicalStmt` (2.4) and
-`ConeScaleInvarianceUpToFixedTimeCanonicalStmt` (2.5) of `FirstPass/S2g.lean` are proved here from one NEW hypothesis,
+`ConeScaleInvarianceUpToFixedTimeCanonicalStmt` (2.5) of `FirstPass/S2g.lean` are proved here from one hypothesis,
 `ConeCanonicalFactorStep`: on a measurable set `G` of circle average processes of full cone law, the canonical half-ball
 time, its stopped family and the space-time process of every stopped family are measurable functionals of the circle
 process (the stopped analogue of `ConeGlobalFamilyFactorStep`, `FirstPass/S2g/ScaleInvariance.lean`).
 
-Argument for the new step (Theorem 1, formulas (4), (7), (8)), with the
+Argument for the step (Theorem 1, formulas (4), (7), (8)), with the
 good local support: Theorem 1 identifies the stopping time of an
 arbitrary stopped family with the closure-based first time `τ(c)`; equality with the open-containment `halfBallTime` needs
 the no-plateau property at `1/2` (the closure route, `ConeHalfBallClosureInsideStep`). -/
@@ -23,7 +23,7 @@ namespace MatedCRT
 
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric HarmonicBalls
 
-/-- **OPEN step (neither proved nor frozen): canonical factorization on the cone-law support.** There are
+/-- **Named hypothesis (see docs/campaign/COUNTED.md): canonical factorization on the cone-law support.** There are
 measurable maps `ΨT` (canonical time) and `Ψ` (space-time process) of circle average processes and a measurable set `G` of
 full cone law such that, for every continuous `c` with `circleProcess c ∈ G` and every LQG limit `ν` of `c`:
 (i) `halfBallTime ν = ΨT (circleProcess c)`; (ii) there is a canonical stopped family for `ν`, with positive time;

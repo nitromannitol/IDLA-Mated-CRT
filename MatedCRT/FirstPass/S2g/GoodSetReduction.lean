@@ -8,13 +8,13 @@ import MatedCRT.FirstPass.S2g.GoodSetMoments
 `ConeHalfBallGoodMeasureLawStep` (`S2g/HalfBallGood.lean`) asks for a measurable set `G` of measures, contained in the
 pathwise half-ball inputs, with `μ ω ∈ G` almost surely for a quantum cone field. This file reduces it to three inputs:
 
-* `SourceHalfBallPathwiseStep` (NEW, open): almost surely the pathwise inputs hold for the whole-plane source
+* `SourceHalfBallPathwiseStep` (named hypothesis): almost surely the pathwise inputs hold for the whole-plane source
   (harmonic balls of Armstrong-Kuusi-Mourrat, Thm 1.1 and Thm 5.5 of the HB paper, Duplantier-Sheffield LQG measure).
-* `CandidateConeLogLocalCodeLawStd` (EXTERNAL candidate, not frozen): the moment law of a quantum cone agrees with the
+* `CandidateConeLogLocalCodeLawStd` (EXTERNAL candidate; see docs/campaign/FROZEN.md): the moment law of a quantum cone agrees with the
   moment law of a whole-plane source realized on a standard Borel space with measurable measure map. This strengthens
   `FrozenConeLogLocalCodeLaw` (`FirstPass/Frozen/S2h.lean:29`) by the standard-Borel and measurability clauses that the
   Lusin-type full-image lemma `exists_measurable_subset_image_full_law` needs.
-* `CandidateMomentSeparation` (EXTERNAL candidate, not frozen): a countable family of test functions on `B_1` determines
+* `CandidateMomentSeparation` (EXTERNAL candidate; see docs/campaign/FROZEN.md): a countable family of test functions on `B_1` determines
   locally finite measures on `B_{3/4}`.
 
 The frozen inputs `FrozenUniversalMeasurabilityOfAnalytic` (`FirstPass/Frozen/S1c.lean:40`) and
@@ -27,7 +27,7 @@ namespace MatedCRT
 
 open MeasureTheory Set Filter Topology Metric HarmonicBalls
 
-/-- **OPEN NEW step (not frozen).** Almost surely the pathwise half-ball inputs hold for the whole-plane source
+/-- **Named hypothesis (see docs/campaign/COUNTED.md).** Almost surely the pathwise half-ball inputs hold for the whole-plane source
 `μ ω` of the LQG measure `IsLQGMeasureOfField P γ γ hcirc μ` on the whole-plane GFF `IsWholePlaneGFF P hC hcirc`, with
 `α₀ = γ < Q`. H1, H3-H6 of from
 `ExistenceHarmonicBallsStmt` (HB Draft/Section5.lean:192) and `IsRegularizedClusterFamily` (Draft/Section5.lean:88). -/
@@ -36,14 +36,14 @@ def SourceHalfBallPathwiseStep : Prop :=
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsProbabilityMeasure P → IsWholePlaneGFF P hC hcirc →
     IsLQGMeasureOfField P γ γ hcirc μ → ∀ᵐ ω ∂P, ConePathwiseHalfBallInputs (μ ω)
 
-/-- **Frozen as `FrozenConeLogLocalCodeLawStd` (`Frozen/S2g.lean`; PENDING TRUTH CHECK).** Moment law of a quantum cone
+/-- **Frozen as `FrozenConeLogLocalCodeLawStd` (`Frozen/S2g.lean`; see docs/campaign/FROZEN-PROVENANCE.md).** Moment law of a quantum cone
 against a whole-plane source on a standard Borel space with a measurable measure map (Duplantier-Sheffield 2011,
 arXiv:0808.1560; the cone restriction identity of Fact 2.2 in arXiv:2211.04891). The name is kept for the consumers of
 this file; the Prop is exactly the frozen statement. -/
 def CandidateConeLogLocalCodeLawStd : Prop :=
   FrozenConeLogLocalCodeLawStd
 
-/-- **CANDIDATE EXTERNAL (NOT frozen).** Countable determination of locally finite measures
+/-- **CANDIDATE EXTERNAL (see docs/campaign/FROZEN.md).** Countable determination of locally finite measures
 on `B_{3/4}` by test functions supported in `B_1`: finite Radon measures on the open set `B_1` are determined by their
 integrals against a countable dense subset of `C_c(B_1)` (Riesz uniqueness plus separability of each `C_c(K_n)`;
 standard, e.g. Parthasarathy 1967, Thm II.6.6). -/

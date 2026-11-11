@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.S2g.HalfBallLocal
 
 `ConeCanonicalHalfBallStep` (S2g.lean) reduces, deterministically, to the almost sure pathwise inputs of the cone measures
 (`ae_canonical_family_of_pathwise`, HalfBallFamily.lean). Passing from the whole-plane source model to a cone field is the
-transfer H2 of ; it is packaged here as one NEW step.
+transfer H2 of ; it is packaged here as one named step.
 
 Terminology: quantum cone and LQG measure (Duplantier-Miller-Sheffield), harmonic balls and the canonical half-ball time
 (Armstrong-Kuusi-Mourrat), Green functions and superharmonic minimum principle (Armitage-Gardiner).
@@ -16,7 +16,7 @@ namespace MatedCRT
 
 open MeasureTheory Set Filter Topology Metric HarmonicBalls
 
-/-- **OPEN NEW step (neither proved nor frozen).** Good set of measures for the pathwise half-ball inputs of
+/-- **Named hypothesis (see docs/campaign/COUNTED.md).** Good set of measures for the pathwise half-ball inputs of
 a quantum cone field: there is a measurable set `G` of measures on `ℂ` such that every `ν ∈ G` satisfies
 `ConePathwiseHalfBallInputs ν`, and `μ ω ∈ G` almost surely. H1-H2 (the source model from `FrozenConeLogLocalCodeLaw`, `MatedCRT/FirstPass/Frozen/S2h.lean:29`; the full-image
 set of `FullImage.lean`; the transfer `pathwiseInputs_of_restrict_eq` of `HalfBallLocal.lean`). Measurability of the

@@ -9,7 +9,7 @@ The Sec2 chain (`Proofs/Sec2/ConeFamilyMeasurable/StoppingTime.lean`) proves the
 stopping time from `ConeHarmonicBallStrictGrowthStep`, through `IsStrictlyGrowingOn`. That input is not a result of the
 paper (`Steps/Sec2/ConeHarmonicBallsUpToFixedTime.lean:109`). Its only use in the reverse direction of
 `halfBallTest_iff_lt` is the containment `closure (Λ q) ⊆ B_{1/2}` for `0 < q < T`, which
-`ConeHalfBallClosureInsideStep` (`FirstPass/S2d.lean`, NEW, proved from EXTERNAL inputs) supplies directly.
+`ConeHalfBallClosureInsideStep` (`FirstPass/S2d.lean`, proved from EXTERNAL inputs) supplies directly.
 
 This file re-proves the first conjunct of `ConeFamilyAEMeasurableStep` with that closure input in place of strict growth, with the endpoint identity `T = τ(μ)` and the stopping time reduction; the Lean reduction is the one of `StoppingTime.lean`, with the hypotheses changed as stated. -/
 
@@ -133,12 +133,12 @@ theorem aemeasurable_coneHalfBallPair_closureInside
     exact hcone.2.1.measurable_circle p.1 p.2 p.1.property
   exact hc.aemeasurable.prodMk hΛ
 
-/-- **OPEN (NEW; not proved; not frozen).** Closure containment for the rescaled cone families: the statement
+/-- **Named hypothesis (see docs/campaign/COUNTED.md).** Closure containment for the rescaled cone families: the statement
 `ConeHalfBallClosureInsideStep` for the rescaled measures `b⁻¹ μ_h(R_b ·)`, which by `ConeLQGScalingStep` and
 `QuantumConeScalingInput` have the cone law. Its only use is the named hypothesis `hclR` of
 `firstPass_coneFamilyAEMeasurableStep_of_rescaledClosure`.
 (law transfer of the good event). The rescaled `IsConeField` needed to instantiate `ConeHalfBallClosureInsideStep`
-directly is not available: `IsQuantumCone` needs a rescaled pairing functional `hC'`, which the repository does not define. -/
+directly needs a rescaled pairing functional `hC'` for `IsQuantumCone`. -/
 def ConeRescaledHalfBallClosureInsideStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ → ∀ b : ℝ, 0 < b →
@@ -216,7 +216,7 @@ theorem aemeasurable_rescaledHalfBallPair_of_closureInside
 volume-growth input `VolumeGrowthStmt`, cone scaling (`QuantumConeScalingInput`, `ConeLQGScalingStep`), the
 volume growth of the rescaled measures (`hvgood`, as in `coneFamilyAEMeasurableStep_of_rescaledVolumeGrowth`), the
 unscaled closure containment `ConeHalfBallClosureInsideStep` (`firstPass_closureInside`, `FirstPass/S2d.lean`) and the
-OPEN rescaled closure containment `ConeRescaledHalfBallClosureInsideStep`. Strict growth
+Rescaled closure containment `ConeRescaledHalfBallClosureInsideStep` (see docs/campaign/COUNTED.md). Strict growth
 (`ConeHarmonicBallStrictGrowthStep`) is not used. -/
 theorem firstPass_coneFamilyAEMeasurableStep_of_rescaledClosure
     (h27 : VolumeGrowthStmt) (hscale : QuantumConeScalingInput) (hlqg : ConeLQGScalingStep)

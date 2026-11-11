@@ -13,14 +13,14 @@ admissible. Its proof, `coneScaleInvariance_core` (`Steps/Sec2/ConeScaleInvarian
 along a.e. `ω`, for the field and for its rescaled version. This file replaces the input by an almost-sure factorization on
 a measurable set of circle processes of full cone law (`ConeGlobalFamilyFactorStep`), and proves Lemma 2.6 from it.
 
-Argument for the new step (formulas (9)–(10)), which uses Theorem 1
+Argument for the step (formulas (9)–(10)), which uses Theorem 1
 (stopped code) and the good support -/
 
 namespace MatedCRT
 
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric HarmonicBalls
 
-/-- **OPEN NEW step (neither proved nor frozen): the global family is a measurable functional of the circle
+/-- **Named hypothesis (see docs/campaign/COUNTED.md): the global family is a measurable functional of the circle
 process on the cone-law support.** There are a map `Φ` from circle average processes to space-time processes and a
 measurable set `G` of circle average processes such that: (i) on `G`, for every continuous circle average process `c` with
 `circleProcess c ∈ G`, every LQG limit `ν` of `c` and every global family `Λ` for `ν`, the process `globalFamilyProcess Λ`
@@ -71,8 +71,8 @@ theorem coneScaleInvariance_of_globalFamilyFactor (hfac : ConeGlobalFamilyFactor
     exact hchar _ hg (continuousOn_rescaledCircle hc hs.1) _ hs.2 _
       (hω.rescaledFamily coneHarmonicBallFamilyOnScalingStep hs.1 hb)
 
-/-- **Lemma 2.6** (`ConeScaleInvarianceStmt`, Draft `Section2.lean:108`), first-pass form, conditional on the one OPEN
-step `ConeGlobalFamilyFactorStep`. Replaces `firstPass_2_6` of `FirstPass/S1S2S8SA.lean:83` (retired input). -/
+/-- **Lemma 2.6** (`ConeScaleInvarianceStmt`, Draft `Section2.lean:108`), first-pass form, conditional on the one named hypothesis
+`ConeGlobalFamilyFactorStep`. Replaces `firstPass_2_6` of `FirstPass/S1S2S8SA.lean:83` (retired input). -/
 theorem firstPass_2_6_of_globalFamilyFactor (hfac : ConeGlobalFamilyFactorStep)
     (hscale : QuantumConeScalingInput) (h22 : LQGMeasurePropertiesStmt) : ConeScaleInvarianceStmt :=
   coneScaleInvariance_of_globalFamilyFactor hfac hscale h22 (coneScaleRadiusPosStep_of_input hscale)

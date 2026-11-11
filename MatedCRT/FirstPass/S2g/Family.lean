@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.S2g.GoodSet
 Deterministic part of `ConeClosureGoodMeasureLawStep` (`FirstPass/S2f.lean`).
  (conditions C1-C4 of a certificate; a family
 counterexample produces a certificate pair). In the real-variable form used here, a certificate needs no countable
-coding; the coding and the zero cone law (Sections 1-3, 5-6) are the open probabilistic step `ConeBadNullHullStep`.
+coding; the coding and the zero cone law (Sections 1-3, 5-6) are the probabilistic step `ConeBadNullHullStep` (see docs/campaign/COUNTED.md).
 
 A closure failure at time `t` forces the raw radius to equal `1/2` at every time in `(t, T)` (monotonicity), so the
 family gives a plateau pair of rational times `p < q` in `(t, T)`, each carrying a certificate.
@@ -135,7 +135,7 @@ def BadMeasureNullHull {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) (μ : �
   ∃ N : Set (Measure ℂ), MeasurableSet N ∧ {ν | HasRatPlateauCert ν ∨ ¬ LeastSuperOK ν} ⊆ N ∧
     P (μ ⁻¹' N) = 0
 
-/-- The reduction of `ConeClosureGoodMeasureLawStep` to the bad null hull for every cone field. OPEN (NEW): the zero
+/-- The reduction of `ConeClosureGoodMeasureLawStep` to the bad null hull for every cone field. Named hypothesis (see docs/campaign/COUNTED.md): the zero
 cone law, (coding, Borel relation, analytic projection), 5 (plateau radii,
 Tonelli, scaling, zero law) and 6 (null hull). -/
 def ConeBadNullHullStep : Prop :=
@@ -161,7 +161,7 @@ theorem coneGoodMeasureLaw_of_badNullHull (hpole : FrozenGreenDiscPole) {Ω : Ty
   rw [ae_iff, hset]
   exact hnull
 
-/-- `ConeClosureGoodMeasureLawStep` (FirstPass/S2f.lean) follows from the open step `ConeBadNullHullStep`. -/
+/-- `ConeClosureGoodMeasureLawStep` (FirstPass/S2f.lean) follows from the step `ConeBadNullHullStep` (see docs/campaign/COUNTED.md). -/
 theorem coneClosureGoodMeasureLawStep_of_badNullHull (hpole : FrozenGreenDiscPole)
     (hN : ConeBadNullHullStep) : ConeClosureGoodMeasureLawStep := by
   intro γ hγ hγ2 Ω _ P hC hcirc μ hcone

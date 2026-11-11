@@ -14,7 +14,7 @@ Statements (corrected, canonical stopping time) checked FAITHFUL to the printed 
 * Lemma 2.5 joint law: `P.map J = P.map Jb` for the cone process `J` of `Λ` and the rescaled process `Jb` of `Λb`.
 
 This file lands the statements and proves the deterministic and conditional parts. The pathwise existence of the canonical
-family is the OPEN step `ConeCanonicalHalfBallStep` (not frozen, not proved). -/
+family is the step `ConeCanonicalHalfBallStep` (see docs/campaign/COUNTED.md). -/
 
 namespace MatedCRT
 
@@ -73,7 +73,7 @@ theorem uniqueConeFamilyOn_of_family {μ : Measure ℂ} {Λ : ℝ → Set ℂ} {
   have heq := h.eqOn hΛ'
   rwa [min_self] at heq
 
-/-- **OPEN step (neither proved nor frozen).** Pathwise canonical stopped family: almost surely the
+/-- **Named hypothesis (see docs/campaign/COUNTED.md).** Pathwise canonical stopped family: almost surely the
 half-ball time `halfBallTime (μ ω)` is positive and some family of harmonic balls on `(0, halfBallTime (μ ω))` is stopped
 at `∂B_{1/2}` at that time. This is the existence half of Lemma 2.4 at the canonical `T`. Its replacement for the retired
 `FrozenConeHarmonicBallLocality` is the measurable good event (local
@@ -109,7 +109,7 @@ theorem firstPass_2_4_canonical_of_steps (hcan : ConeCanonicalHalfBallStep)
   exact ⟨hω.1, uniqueConeFamilyOn_of_family hω.2.1, hω.2.2⟩
 
 /-- **Reduction of `ConeCanonicalHalfBallStep` to the pathwise inputs.** If for every cone field the cone measures
-almost surely satisfy `ConePathwiseHalfBallInputs` (NEW open pathwise statement, `FirstPass/S2g/HalfBallFamily.lean`), then
+almost surely satisfy `ConePathwiseHalfBallInputs` (pathwise statement, `FirstPass/S2g/HalfBallFamily.lean`), then
 the pathwise canonical stopped family exists. The frozen potential-theory inputs are explicit hypotheses. -/
 theorem coneCanonicalHalfBallStep_of_pathwise (hmin : FrozenSuperharmonicMinimumPrinciple)
     (hcentre : FrozenGreenBallCentre) (hGB : HarmonicBalls.GreenFunctionBallStmt) (hpole : FrozenGreenDiscPole)
