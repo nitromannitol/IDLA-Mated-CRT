@@ -12,6 +12,8 @@ Each line must print only `propext`, `Classical.choice` and `Quot.sound`.
 #print axioms MatedCRT.closed_2_4_lp_derivedInputs
 #print axioms MatedCRT.closed_2_5_lp_derivedInputs
 #print axioms MatedCRT.closed_2_6_lp_derivedInputs
+#print axioms MatedCRT.closed_3_6_lp_uniform_derivedInputs
+#print axioms MatedCRT.closed_3_7_lp_derivedInputs
 #print axioms MatedCRT.FirstPassClosure.closed_4_2_lp_derivedInputs
 #print axioms MatedCRT.FirstPassClosure.closed_5_1_lp_noSup_derivedInputs
 #print axioms MatedCRT.closed_5_3_clean_derivedInputs

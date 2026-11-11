@@ -310,24 +310,45 @@ inputs are the binders of types `ExistenceHarmonicBallsStmt.{0}` and `Uniqueness
 | very good annuli, Harnack-type estimate (6.11) | `VeryGoodAnnulusHarnackTypeStmt.{0}`, `FrozenVeryGoodAnnulusHarnackType` | `HarmonicBalls.Section6.veryGoodAnnulusHarnackTypeStmt_of_volumeGrowth_only` (Proofs/Sec6/VolumeGrowthConsequences.lean:19) | volume growth |
 | existence and uniqueness (1.1) | `ExistenceUniquenessHarmonicBallsStmt.{0}` | `HarmonicBalls.existenceUniquenessHarmonicBallsStmt_of_sec5` (Assembly/ExistenceUniqueness.lean:39) | existence (5.5) and uniqueness (5.6) |
 
-Input binders of the counted 1.4 and 1.6 forms after this: 25 (27 minus the data `𝒮`, `ν`).
+Third pass (2026-11-11): the search is mechanical. For each counted theorem a Lean script lists the hypotheses which
+follow from the other hypotheses of the same theorem by theorems of this repository and of the Harmonic-Balls package
+(forward chaining on the statements; the generated file `MatedCRT/FirstPass/Derived/Counted.lean` is the check, each
+`have` line there is one theorem applied to remaining binders and to earlier lines). Besides the rows above, this
+supplies, wherever the needed hypotheses are bound:
 
-Derived forms (binders of `T` -> binders of `T_derivedInputs`):
+* Lemma 2.7 `VolumeGrowthStmt` from the Berestycki-Gwynne cone ball-mass input (`volumeGrowthStmt_of_berestyckiGwynne`);
+* the whole-plane model step `WholePlaneLQGModelStep` from the measure-existence input with insertion
+  (`FirstPass.S2m.firstPass_wholePlaneLQGModel_of_existence`);
+* HB strong compatibility `ClusterStrongCompatibilityStmt` from volume growth
+  (`frozenClusterStrongCompatibility_of_volumeGrowth`);
+* own results bound as hypotheses, from the hypotheses of their counted proofs: 2.3 `ConeHarmonicBallsStmt`, 2.4
+  (corrected) `ConeHarmonicBallsUpToFixedTimeCorrectedStmt`, 3.3 `UniformConvergenceGreenKernelStmt`, 3.4
+  `IntegralConvergenceGreenFunctionStmt`, 3.5 (corrected) `DiscreteDirichletProblemCorrectedStmt`;
+* consequences of the certified reference model, from the model hypothesis itself: `CellSizeEstimateStmt`,
+  `DegreeMeasureConvergenceStmt`, `GreenKernelUpperBoundStmt`, `ExitTimeUpperBoundStmt`, `MepsScalingInput`,
+  `FrozenConeScalingLaw`, `DiscreteHolderContinuityCorrectedStep`.
 
-| result | counted `T` | binders | supplied |
-|---|---|---|---|
-| 1.4 | `closed_1_4_lp_noSC_noSup` | 36 -> 27 | hF3, hGBC; h32, h611, hSup, hCons, hMono, hCompat, hThm11 |
-| 1.6 | `closed_1_6_lp_noSC_noSup` | 36 -> 27 | hF3, hGBC; h32, h611, hSup, hCons, hMono, hCompat, hThm11 |
-| 2.3 | `closed_2_3_lp` | 23 -> 16 | centre formula; the five Section 3 statements and 1.1 |
-| 2.4 | `closed_2_4_lp` | 18 -> 11 | hCentre; the five Section 3 statements and 1.1 |
-| 2.5 | `closed_2_5_lp` | 22 -> 15 | centre formula; the five Section 3 statements and 1.1 |
-| 2.6 | `closed_2_6_lp` | 22 -> 15 | centre formula; the five Section 3 statements and 1.1 |
-| 4.2 | `closed_4_2_lp` | 36 -> 29 | hCentre; the five Section 3 statements and 1.1 |
-| 5.1 | `closed_5_1_lp_noSup` | 31 -> 23 | centre formula; the five Section 3 statements, 1.1 and 6.11 |
-| 5.3 | `closed_5_3_clean` | 27 -> 19 | hF3, hCentre; the five Section 3 statements and 1.1 |
-| 6.1 | `closed_6_1_lp_noSup` | 33 -> 25 | centre formula; the five Section 3 statements, 1.1 and 6.11 |
-| 7.1 | `closed_7_1_lp` | 29 -> 22 | centre formula; the five Section 3 statements and 1.1 |
-| 8.1 | `closed_8_1_lp_noSup` | 46 -> 38 | centre formula; the five Section 3 statements, 1.1 and 6.11 |
+Input binders of the counted 1.4 and 1.6 forms after this: 22 (24 minus the data `𝒮`, `ν`): 5.5 (existence), 2.4
+(volume growth) and 1.3 (local set) are the Harmonic-Balls statements still bound.
+
+Derived forms (binders of `T` -> binders of `T_derivedInputs`; 14 forms; binder names as in `T`):
+
+| counted `T` | binders | supplied |
+|---|---|---|
+| `closed_1_4_lp_noSC_noSup` | 36 -> 24 | hF3, h27, hGBC, h32, h611, hSup, hCons, hMono, hCompat, hThm11, hBdryHB, hProp56HB |
+| `closed_1_6_lp_noSC_noSup` | 36 -> 24 | hF3, h27, hGBC, h32, h611, hSup, hCons, hMono, hCompat, hThm11, hBdryHB, hProp56HB |
+| `closed_2_3_lp` | 23 -> 15 | hGBC, h32, hSup, hCons, hMono, hCompat, hThm11, hProp56HB |
+| `closed_2_4_lp` | 18 -> 10 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56 |
+| `closed_2_5_lp` | 22 -> 14 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56 |
+| `closed_2_6_lp` | 22 -> 14 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56 |
+| `closed_3_6_lp_uniform` | 6 -> 4 | _hm, _h32 |
+| `closed_3_7_lp` | 6 -> 4 | hm, h32 |
+| `closed_4_2_lp` | 36 -> 25 | h23, h24c, h33, hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56 |
+| `closed_5_1_lp_noSup` | 31 -> 18 | h27, hmodel, hGBC, h32, h611, hSup, hCons, hMono, hCompat, hBdry, hThm11, hProp56, hSC |
+| `closed_5_3_clean` | 27 -> 18 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56, hF3 |
+| `closed_6_1_lp_noSup` | 33 -> 21 | h27, hmodel, hCentre, hOpen, h611, hSup, hCons, hMono, hCompat, hBdry, hThm11, hProp56 |
+| `closed_7_1_lp` | 29 -> 21 | hGBC, h32, hSup, hCons, hMono, hCompat, hThm11, hProp56HB |
+| `closed_8_1_lp_noSup` | 46 -> 22 | hm, h210, h34, h214, h28, h35c, h218, hH, hcone, h23, h24c, h33, hCentre, hOpen, hSup, hCons, hMono, hCompat, hBdry, hThm11, hProp56, h27, hmodel, h611 |
 
 ## Appendix B path: forms with the occupation identity or the strong compatibility derived (2026-11-11)
 
