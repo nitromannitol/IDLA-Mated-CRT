@@ -4,6 +4,9 @@ Moved with git mv from MatedCRT/ to archive/ (repository root, not built by the 
 Rule: a file moves only if no counted closure or README route imports it, it is not named in a file of tasks/, it is tracked, it is not under MatedCRT/FirstPass/Frozen or MatedCRT/External, and it was not modified or committed after 2026-11-11 00:05:14 UTC.
 Each batch was followed by lb of every counted closure module; a batch that failed was moved back and not committed.
 
+Restore R1 (2026-11-11): the batch B12 had archived nine files that the closure modules MatedCRT.FirstPass.Closure.Final22, Final23 and Final14Full import, directly or transitively (Final22 imports S2y/LateralAssembly250 and S2y/ConeCircleAbsApprox; the other seven are imported by those). They were moved back with git mv to their MatedCRT/ paths and are listed in the section "Restored (R1)" below. The batch table keeps the historical moves.
+Root rule, recomputed at HEAD before any further move: the roots are every MatedCRT/FirstPass/Closure/*.lean file and every file containing `closed_`; a file may move only if it is outside the import closure of these roots. At HEAD after R1 the closure of the 22 Closure files is 1455 files, and every tracked MatedCRT .lean file has all its MatedCRT imports present (0 dangling imports).
+
 | old path | new path | batch |
 |---|---|---|
 | MatedCRT/Audit/ActualAnnulusBarrierComponents.lean | archive/MatedCRT/Audit/ActualAnnulusBarrierComponents.lean | B02 |
@@ -188,3 +191,19 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/Proofs/Sec7/DivSandpileUpperBound/ShiftedBootstrap.lean | archive/MatedCRT/Proofs/Sec7/DivSandpileUpperBound/ShiftedBootstrap.lean | B53 |
 | MatedCRT/Proofs/Sec7/DivSandpileUpperBound/TotalBudgetLimit.lean | archive/MatedCRT/Proofs/Sec7/DivSandpileUpperBound/TotalBudgetLimit.lean | B53 |
 | MatedCRT/Proposed/Berestycki2017.lean | archive/MatedCRT/Proposed/Berestycki2017.lean | B55 |
+
+## Restored (R1)
+
+Moved back with git mv from archive/ to MatedCRT/ (the batch B12 row above gives the old path). Each is imported by MatedCRT.FirstPass.Closure.Final22, Final23 or Final14Full, directly or transitively.
+
+| archive path (before R1) | MatedCRT path (after R1) | restored by |
+|---|---|---|
+| archive/MatedCRT/FirstPass/S2y/CircleAvgRadialCont250.lean | MatedCRT/FirstPass/S2y/CircleAvgRadialCont250.lean | R1 |
+| archive/MatedCRT/FirstPass/S2y/ConeCircleAbsApprox.lean | MatedCRT/FirstPass/S2y/ConeCircleAbsApprox.lean | R1 |
+| archive/MatedCRT/FirstPass/S2y/ConeCircleAverage.lean | MatedCRT/FirstPass/S2y/ConeCircleAverage.lean | R1 |
+| archive/MatedCRT/FirstPass/S2y/LateralAssembly250.lean | MatedCRT/FirstPass/S2y/LateralAssembly250.lean | R1 |
+| archive/MatedCRT/FirstPass/S2y/LateralInMeasure250.lean | MatedCRT/FirstPass/S2y/LateralInMeasure250.lean | R1 |
+| archive/MatedCRT/FirstPass/S2y/LateralL1Limit250.lean | MatedCRT/FirstPass/S2y/LateralL1Limit250.lean | R1 |
+| archive/MatedCRT/FirstPass/S2y/LateralL2Limit250.lean | MatedCRT/FirstPass/S2y/LateralL2Limit250.lean | R1 |
+| archive/MatedCRT/FirstPass/S2y/RadialProcCont250.lean | MatedCRT/FirstPass/S2y/RadialProcCont250.lean | R1 |
+| archive/MatedCRT/FirstPass/S2y/RadialProcL4Ae250.lean | MatedCRT/FirstPass/S2y/RadialProcL4Ae250.lean | R1 |
