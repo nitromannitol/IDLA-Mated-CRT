@@ -74,3 +74,4 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/FirstPass/S6r/MeshPrep.lean | archive/MatedCRT/FirstPass/S6r/MeshPrep.lean | B23 |
 | MatedCRT/FirstPass/S6r/MeshPrepFirst.lean | archive/MatedCRT/FirstPass/S6r/MeshPrepFirst.lean | B23 |
 | MatedCRT/FirstPass/S6r/MeshPrepSecond.lean | archive/MatedCRT/FirstPass/S6r/MeshPrepSecond.lean | B23 |
+| MatedCRT/Proofs/Defs/JointMeasureCharacterization.lean | archive/MatedCRT/Proofs/Defs/JointMeasureCharacterization.lean | B24 |
