@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S2y.ConeFieldPairing
 import MatedCRT.FirstPass.S2y.ConeRadialCodes
 
 /-!
-# The generic lateral-transfer theorem (fp-S2y-cone-lateral, sections 5-7 of notes/fp-gaps/CHATGPT-231)
+# The generic lateral-transfer theorem
 
 `jointLateralLaw_of_circleLaw` transfers the joint law of (circle process, lateral process) from a circle process
 `c` to a quantum cone `hcirc` whenever the circle processes have the same law and the pairing decoder `D` recovers
@@ -10,7 +10,7 @@ the pairings from the circle averages. The lateral observables are the pairings 
 the circle averages `h_r(z) - ⨍_{∂B_r(z)} h_{|·|}(0)` (Duplantier-Sheffield, arXiv:1409.7055, Section 4.1).
 
 The two radial codes are binders of exact type: `rp φ q` plays the role of `radialPairingCode φ q` and `rs r z q` of
-`radialSphereCode r z q` (z11, `S2y/ConeRadialCodes.lean`, not yet committed), and their a.s. identities are the
+`radialSphereCode r z q` (`S2y/ConeRadialCodes.lean`), and their a.s. identities are the
 conclusions of `radialPairingCode_ae_eq` and `radialSphereCode_ae_eq`.
 
 The proof is by finite-dimensional projections: the joint vector `ω ↦ (j ↦ value of observable j)` on the countable
@@ -137,7 +137,7 @@ theorem ae_restrict_coneJoint {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
   funext i
   exact hω i
 
-/-- **Generic lateral transfer** (chat 231 §5, `jointLateralLaw_of_circleLaw`). If the circle processes of `c` and
+/-- **Generic lateral transfer** (`jointLateralLaw_of_circleLaw`). If the circle processes of `c` and
 `hcirc` have the same law, `D` is a measurable decoder of the pairings of the cone `hC` from the circle process of
 `hcirc`, and the radial codes `rp, rs` have the a.s. identities of `radialPairingCode_ae_eq` and
 `radialSphereCode_ae_eq` for `c` and `hcirc`, then the joint laws of (circle process, lateral process) agree. The
@@ -244,8 +244,8 @@ theorem jointLateralLaw_of_circleLaw {γ : ℝ} {Ω : Type} [MeasurableSpace Ω]
     _ = P.map (fun ω => (circleProcess (hcirc ω), lateralProcess (hC ω) (hcirc ω))) :=
         measurable_splitConeJoint.aemeasurable.map_map_of_aemeasurable hVH
 
-/-- **Provider for `ConeLateralTransferStep` (chat 231 §6), with the radial codes as binders.** The radial pairing code
-`rp` and the radial sphere code `rs` are z11's `radialPairingCode` and `radialSphereCode` (`S2y/ConeRadialCodes.lean`,
+/-- **Provider for `ConeLateralTransferStep`, with the radial codes as binders.** The radial pairing code
+`rp` and the radial sphere code `rs` are `radialPairingCode` and `radialSphereCode` (`S2y/ConeRadialCodes.lean`,
 not yet committed). The binders `hpairAE` and `hsphereAE` are the a.s. identities of `radialPairingCode_ae_eq` and
 `radialSphereCode_ae_eq`, for a field with the radial law. The rescaling uses the scaling input `hscale`; the circle
 law equality is `hscale` applied to the rescaled circle process. -/
@@ -304,8 +304,8 @@ theorem coneLateralTransferStep_of_radialCodes
     (hpairAE Ω P γ c hcm hcont hradC) (hpairAE Ω P γ hcirc hQ.measurable_circle hQ.ae_continuousOn_circle hQ.radial_law)
     (hsphereAE Ω P γ c hcm hcont hradC) (hsphereAE Ω P γ hcirc hQ.measurable_circle hQ.ae_continuousOn_circle hQ.radial_law)
 
-/-- **`ConeFieldScalingStep` without `hpair` (chat 231 §7), with the circle decoder as a binder.** `hdec` is
-`ConeCircleDecoderStep` (z1, `coneCircleDecoderStep_proved`, not yet committed); the lateral transfer is
+/-- **`ConeFieldScalingStep` without `hpair`, with the circle decoder as a binder.** `hdec` is
+`ConeCircleDecoderStep` (`coneCircleDecoderStep_proved`); the lateral transfer is
 `coneLateralTransferStep_of_radialCodes`. -/
 theorem coneFieldScalingStep_proved_no_hpair
     (hscale : QuantumConeScalingInput) (hdec : ConeCircleDecoderStep)
@@ -330,12 +330,12 @@ theorem coneFieldScalingStep_proved_no_hpair
   coneFieldScalingStep_of_decoder hscale hdec
     (coneLateralTransferStep_of_radialCodes hscale rp rs hrp_m hrs_m hpairAE hsphereAE)
 
-/-- **Provider for `ConeLateralTransferStep` (chat 231 §6), with the radial codes concrete.** The radial pairing code
-`radialPairingCode` and the radial sphere code `radialSphereCode` are z11's (`S2y/ConeRadialCodes.lean`, sections 3a–3c:
-`radialPairingCode_ae_eq` a.s. correct, committed 0c9e804; `radialSphereCode_ae_eq` committed 996e267, conditional on its
+/-- **Provider for `ConeLateralTransferStep`, with the radial codes concrete.** The radial pairing code
+`radialPairingCode` and the radial sphere code `radialSphereCode` are defined in (`S2y/ConeRadialCodes.lean`, sections 3a–3c:
+`radialPairingCode_ae_eq` a.s. correct; `radialSphereCode_ae_eq` is conditional on its
 named input `hcircInt`). The one named input left is `hcircInt`: for every field with the radial law, the circle
 integrand `θ ↦ |c(|z + r e^{iθ}|, 0)|` is a.s. interval integrable on `[0, 2π]`. It is not derived in the paper
-(chat 231 §3.2 uses it without argument). -/
+(§3.2 of the decoder write-up uses it without argument). -/
 theorem coneLateralTransferStep_proved (hscale : QuantumConeScalingInput)
     (hcircInt : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (c : Ω → ℝ → ℂ → ℝ),
       (∀ r z, 0 < r → Measurable fun ω => c ω r z) →
@@ -351,8 +351,8 @@ theorem coneLateralTransferStep_proved (hscale : QuantumConeScalingInput)
     (fun Ω _ P γ c hcm hcont hrad _r z hr =>
       radialSphereCode_ae_eq_of_circInt hcm hcont hrad (hcircInt Ω P γ c hcm hcont hrad) hr z)
 
-/-- **`ConeFieldScalingStep` without `hpair`, with the radial codes concrete (chat 231 §7).** Two named inputs remain:
-the circle decoder `hdec : ConeCircleDecoderStep` (z1, `coneCircleDecoderStep_proved`, blocked on G1/G2, request 59a) and
+/-- **`ConeFieldScalingStep` without `hpair`, with the radial codes concrete.** Two named inputs remain:
+the circle decoder `hdec : ConeCircleDecoderStep` (`coneCircleDecoderStep_proved`, with the open inputs G1 and G2) and
 the sphere-integrability input `hcircInt` of `coneLateralTransferStep_proved`. -/
 theorem coneFieldScalingStep_proved_no_hpair_radial (hscale : QuantumConeScalingInput) (hdec : ConeCircleDecoderStep)
     (hcircInt : ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ : ℝ) (c : Ω → ℝ → ℂ → ℝ),

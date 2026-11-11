@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S2y.ConeCircleDecoder
 import MatedCRT.FirstPass.S2y.ConeRadialCodes
 
 /-!
-# Pairing approximations of a quantum cone (chat 240, §2; fp-S2y-lateral-240, z8)
+# Pairing approximations of a quantum cone
 
 The measurable approximants of the pairing `hC · φ` from the circle average process (the input of
 `coneCircleDecoderStep_of_pairingApprox`, `S2y/ConeCircleDecoder.lean`):
@@ -32,12 +32,12 @@ lemma pairingRadius_tendsto : Tendsto pairingRadius atTop (𝓝 0) := by
   have h := tendsto_pow_atTop_nhds_zero_of_lt_one (r := (2 : ℝ)⁻¹) (by norm_num) (by norm_num)
   exact h.comp (tendsto_add_atTop_nat 1)
 
-/-- **Circle smear code** (chat 240, §2): the limit superior of the midpoint Riemann sums of
+/-- **Circle smear code**: the limit superior of the midpoint Riemann sums of
 `z ↦ φ(z) q(ε, z)`; a Borel function of the circle process `q` (`ConeCircleCode`). -/
 noncomputable def circleSmearCode (φ : ℂ → ℝ) (ε : ℝ) (hε : 0 < ε) (q : ConeCircleCode) : ℝ :=
   limsup (fun k => planeQuad k (fun z => φ z * q (⟨ε, hε⟩, z))) atTop
 
-/-- **Pairing approximant** at level `n` (chat 240, §2): the circle smear at radius `pairingRadius n`. -/
+/-- **Pairing approximant** at level `n`: the circle smear at radius `pairingRadius n`. -/
 noncomputable def pairingApprox (φ : ℂ → ℝ) (n : ℕ) : ConeCircleCode → ℝ :=
   circleSmearCode φ (pairingRadius n) (pairingRadius_pos n)
 

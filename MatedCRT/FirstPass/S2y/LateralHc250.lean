@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S2y.LateralBilin250
 import MatedCRT.FirstPass.S2y.LateralL2250
 
 /-!
-# The whole-plane pairing kernel and the L² limit of the pairing (fp-S2y-decoder-250, z8; chat 250 §1.2)
+# The whole-plane pairing kernel and the L² limit of the pairing
 
 For test functions `ψ, φ`: `E[(h(ψ) - h(φ))²] = ∬ (ψ-φ)(x)(ψ-φ)(y) wholePlaneCov x y dx dy` (Duplantier-Sheffield, Section
 2.1, covariance `wholePlaneCov`), and this tends to `0` under the dominated convergence of `LateralL2250`.

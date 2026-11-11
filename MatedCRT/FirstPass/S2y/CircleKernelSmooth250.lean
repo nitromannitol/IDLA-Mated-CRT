@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S2y.ConeDecoder250
 import LatticeProb.Bonanno.QuantumZipper.Proofs.GFF.K3.GreenLower1
 
 /-!
-# Smoothness of the circle kernel (fp-S2y-decoder-250, z8; chat 250 §1.2)
+# Smoothness of the circle kernel
 
 The circle kernel `circleKernel φ ε x = (2π)⁻¹ ∫₀^{2π} φ(x - ε e^{iθ}) dθ` of a test function is again a test function.
 This is needed because the whole-plane GFF pairs only with test functions (`IsWholePlaneGFF.covariance_eq`). The

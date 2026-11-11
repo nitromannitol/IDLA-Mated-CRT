@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S2y.LateralBilin250
 
 /-!
 # FIRST PASS S2y, RadialProcL4Ae250: almost sure fourth-moment integrability of the radial version
-(task fp-S2y-radial-l4, worker q2; chat 250 sec. 1.3; the second almost sure input of z8's R5)
+(the second almost sure radial input)
 
 For a whole-plane GFF `(hC, hcirc)` (`IsWholePlaneGFF`) under a probability measure `P`, almost surely
 `s ↦ |radialVersion hcirc ω s| ^ 4` is integrable on `(0, n]` for every `n : ℕ`.

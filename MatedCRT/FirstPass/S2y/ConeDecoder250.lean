@@ -3,9 +3,9 @@ import MatedCRT.FirstPass.S2y.ConeCircleDecoder
 import MatedCRT.Proofs.Measurability.ConePairing
 
 /-!
-# The pairing decoder of a quantum cone without H2 and M (fp-S2y-decoder-250, z8; chat 250)
+# The pairing decoder of a quantum cone without H2 and M
 
-Chat 250 (`notes/fp-gaps/CHATGPT-250-idla-z8-decoder-H1-H2-M-PRO.md`, §5) replaces the decoder of
+Section 5 of the decoder write-up replaces the decoder of
 `S2y/ConeDecoder240.lean` by the approximant
 
 * `conePairingApprox φ n = lateralPairingApprox φ n + radialPairingCode φ` on the circle process,
@@ -21,7 +21,7 @@ lateral circle observable. The radial part enters through the Borel radial code 
   which agrees with `h_{|x|}(0)` on the continuity event (Duplantier-Sheffield, arXiv:1409.7055, Section 3.1;
   Armitage-Gardiner, circle averages).
 
-The one remaining analytic input is the lateral smear limit `ConeLateralSmearStep250` (H1, chat 250 §1), stated in the
+The one remaining analytic input is the lateral smear limit `ConeLateralSmearStep250` (H1), stated in the
 form of `quantumCone_lateralSmear_tendstoInMeasure`. It is a named hypothesis of the reduction below, not proved here.
 `ConeDecoder240.lean` is unchanged.
 -/
@@ -52,7 +52,7 @@ noncomputable def lateralCircleFamily (q : ConeCircleCode) : ConeCircleCode :=
 noncomputable def lateralPairingApprox (φ : ℂ → ℝ) (n : ℕ) (q : ConeCircleCode) : ℝ :=
   pairingApprox φ n (lateralCircleFamily q)
 
-/-- **The cone pairing approximant** (chat 250 §5, step 6): the lateral approximant plus the radial pairing code. -/
+/-- **The cone pairing approximant**: the lateral approximant plus the radial pairing code. -/
 noncomputable def conePairingApprox (φ : ℂ → ℝ) (n : ℕ) (q : ConeCircleCode) : ℝ :=
   lateralPairingApprox φ n q + radialPairingCode φ q
 
@@ -140,7 +140,7 @@ lemma measurable_circleProcess_comp {Ω : Type*} [MeasurableSpace Ω] {hcirc : �
   refine Measurable.of_eval fun p => ?_
   exact hmc p.1.1 p.2 p.1.2
 
-/-- **The lateral smear input H1** (chat 250 §1, `quantumCone_lateralSmear_tendstoInMeasure`): for a quantum cone and a
+/-- **The lateral smear input H1** (`quantumCone_lateralSmear_tendstoInMeasure`): for a quantum cone and a
 test function `φ`, the circle smears at radius `pairingRadius n` of the lateral circle observables converge in probability
 to the lateral pairing `lateralEval (.pairing φ)`. A named hypothesis of the reduction below; not proved in this file. -/
 def ConeLateralSmearStep250 : Prop :=
@@ -152,7 +152,7 @@ def ConeLateralSmearStep250 : Prop :=
           (fun p => lateralEval (hC ω) (hcirc ω) (.circle p.1.1 p.2)))
         atTop (fun ω => lateralEval (hC ω) (hcirc ω) (.pairing φ))
 
-/-- **The cone pairing approximants converge in probability** (chat 250 §5, Stage E), from the lateral smear input H1
+/-- **The cone pairing approximants converge in probability**, from the lateral smear input H1
 and the a.s. radial identity `radialPairingCode_ae_eq`. No H2 and no M. -/
 theorem quantumCone_conePairingApprox_tendstoInMeasure250 (H1 : ConeLateralSmearStep250)
     {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
@@ -189,21 +189,21 @@ theorem quantumCone_conePairingApprox_tendstoInMeasure250 (H1 : ConeLateralSmear
     ring
   exact hsum.congr_right hfin
 
-/-- **`ConeCircleDecoderStep` from the lateral smear input H1 alone** (chat 250 §5, Stage F; no H2, no M). -/
+/-- **`ConeCircleDecoderStep` from the lateral smear input H1 alone** (no H2, no M). -/
 theorem coneCircleDecoderStep_of_lateralSmear250 (H1 : ConeLateralSmearStep250) : ConeCircleDecoderStep :=
   coneCircleDecoderStep_of_pairingApprox conePairingApprox
     (fun φ n => measurable_conePairingApprox φ n)
     (fun _ hγ hγ2 _ _ _ _ _ hP hQ φ hφ =>
       quantumCone_conePairingApprox_tendstoInMeasure250 H1 hγ hγ2 hP hQ φ hφ)
 
-/-- **`ConeFieldScalingStep` from the lateral smear input H1 alone** (chat 250 §5, the downstream call). The lateral
+/-- **`ConeFieldScalingStep` from the lateral smear input H1 alone**. The lateral
 transfer `coneLateralTransferStep_proved240` is unconditional. -/
 theorem coneFieldScalingStep_proved250 (hscale : QuantumConeScalingInput) (H1 : ConeLateralSmearStep250) :
     ConeFieldScalingStep :=
   coneFieldScalingStep_of_decoder hscale (coneCircleDecoderStep_of_lateralSmear250 H1)
     (coneLateralTransferStep_proved240 hscale)
 
-/-! ### Transfer of the lateral smear from the whole-plane GFF to the quantum cone (chat 250 §1.4) -/
+/-! ### Transfer of the lateral smear from the whole-plane GFF to the quantum cone -/
 
 /-- The circle smear at radius `ε` of a lateral process `ℓ : Admissible → ℝ`: the `limsup` of the midpoint Riemann
 sums of `z ↦ φ(z) ℓ(.circle ε z)`. A measurable function of the lateral process. -/
@@ -230,7 +230,7 @@ lemma tendstoInMeasure_of_lawEq {Ω Ω' E : Type*} [MeasurableSpace Ω] [Measura
   show P' (Λ' ⁻¹' {ℓ : E | ε ≤ edist (F i ℓ) (L ℓ)}) = P (Λ ⁻¹' {ℓ : E | ε ≤ edist (F i ℓ) (L ℓ)})
   rw [← Measure.map_apply_of_aemeasurable hΛ' hS, ← Measure.map_apply_of_aemeasurable hΛ hS, hlaw]
 
-/-- **The whole-plane lateral smear input** (chat 250 §1, the reference theorem `wholePlaneGFF_lateralSmear_tendstoInMeasure`):
+/-- **The whole-plane lateral smear input** (the reference theorem `wholePlaneGFF_lateralSmear_tendstoInMeasure`):
 for every whole-plane GFF and every test function, the lateral circle smears converge in probability to the lateral
 pairing. Named, not proved here. -/
 def WholePlaneLateralSmear250 : Prop :=
@@ -241,7 +241,7 @@ def WholePlaneLateralSmear250 : Prop :=
         (fun n ω => lateralSmearOf φ (pairingRadius n) (pairingRadius_pos n) (lateralProcess (hC ω) (hcirc ω)))
         atTop (fun ω => lateralProcess (hC ω) (hcirc ω) ⟨.pairing φ, hφ⟩)
 
-/-- **The cone lateral smear from the whole-plane one** (chat 250 §1.4): the transfer through `IsQuantumCone.lateral_law`,
+/-- **The cone lateral smear from the whole-plane one**: the transfer through `IsQuantumCone.lateral_law`,
 with the a.e. measurability of the lateral process (`aemeasurable_lateralProcess_of_isQuantumCone`, and the whole-plane
 version `CirclePairing.aemeasurable_lateralProcess`). -/
 theorem coneLateralSmear_of_wholePlane (hW : WholePlaneLateralSmear250) {γ : ℝ} {Ω : Type} [MeasurableSpace Ω]
@@ -261,7 +261,7 @@ theorem coneLateralSmear_of_wholePlane (hW : WholePlaneLateralSmear250) {γ : �
     hlaw (fun n => measurable_lateralSmearOf φ (pairingRadius n) (pairingRadius_pos n))
     (measurable_pi_apply _) (hW Ω' P' hC' hcirc' hP' hG φ hφ)
 
-/-- **`ConeLateralSmearStep250` from the whole-plane input** `WholePlaneLateralSmear250` (chat 250 §1.4). -/
+/-- **`ConeLateralSmearStep250` from the whole-plane input** `WholePlaneLateralSmear250`. -/
 theorem coneLateralSmearStep250_of_wholePlane (hW : WholePlaneLateralSmear250) : ConeLateralSmearStep250 := by
   intro _ _ _ Ω _ P hC hcirc _ hQ φ hφ
   exact coneLateralSmear_of_wholePlane hW hQ φ hφ

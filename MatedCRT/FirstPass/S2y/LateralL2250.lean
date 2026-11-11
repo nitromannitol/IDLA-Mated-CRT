@@ -1,9 +1,9 @@
 import MatedCRT.FirstPass.S2y.ConeApproxIdentity
 
 /-!
-# L² limit of the lateral smear: dominated convergence for the lateral kernel (fp-S2y-decoder-250, z8)
+# L² limit of the lateral smear: dominated convergence for the lateral kernel
 
-Chat 250 §1.2: for a whole-plane GFF, the variance of `∫ g(x) L(x) dx` is the double integral of the lateral kernel
+For a whole-plane GFF, the variance of `∫ g(x) L(x) dx` is the double integral of the lateral kernel
 `K_L(x,y) = wholePlaneCov x y - radialCov ‖x‖ ‖y‖` against `g(x) g(y)`. The L² limit of the lateral smear follows from
 dominated convergence on a compact square, once the kernel is integrable there and the mollified test functions
 `g_n = circleKernel φ ε_n - φ` are uniformly bounded, supported in a fixed ball and tend to `0` pointwise.

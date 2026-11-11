@@ -7,7 +7,7 @@ import MatedCRT.Proofs.Sec1.EnvironmentScaling.IntegrableReferenceObservables
 import MatedCRT.Proofs.Measurability.ConePairing
 
 /-!
-# Absolute approximation of cone circle averages (fp-S2y-hAbs, z10)
+# Absolute approximation of cone circle averages
 
 Proof of the absolute approximation `hAbs` of `coneCircleAverageLocalityStep_of_absApprox`
 (MatedCRT/FirstPass/S2y/ConeCircleAverage.lean:52). For `closedBall x ε ⊆ U`, the circle average `h_ε(x)` of a cone

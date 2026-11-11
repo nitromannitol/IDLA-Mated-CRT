@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S2y.LateralHc250
 
 /-!
-# L² convergence of the whole-plane pairings along an approximating sequence (fp-S2y-decoder-250, z8; chat 250 §1.2)
+# L² convergence of the whole-plane pairings along an approximating sequence
 
 If test functions `ψ n` tend to a test function `φ` pointwise, are uniformly bounded and vanish off a fixed ball, then
 `E[(h(ψ n) - h(φ))²] → 0` (dominated convergence for the whole-plane kernel `wholePlaneCov`, `LateralL2250`).

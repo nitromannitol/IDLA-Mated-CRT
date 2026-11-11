@@ -5,7 +5,7 @@ import MatedCRT.External.QuantumCone
 /-!
 # `ConeFieldScalingStep` (internal, eq:quantum-cone-scaling), from the cited law identity
 
-Verdict row `ConeFieldScalingStep` (notes/fp-gaps/CHATGPT-idla-5-1-gaps.md l.1-15; labels l.43-50): an internal
+Verdict row `ConeFieldScalingStep` (gap list, lines 1-15; labels lines 43-50): an internal
 obligation, to be proved and not frozen. The cited input is `QuantumConeScalingInput` (DMS14 Proposition 4.13(i),
 arXiv:1409.7055v4), which gives the law identity of the circle average processes.
 

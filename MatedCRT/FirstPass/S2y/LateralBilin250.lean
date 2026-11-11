@@ -3,7 +3,7 @@ import MatedCRT.Proofs.Field.WholePlaneLateralCov
 import MatedCRT.Proofs.Field.ConeRadialCov
 
 /-!
-# GFF facts for the lateral pairing (fp-S2y-decoder-250, z8; chat 250 §1.2)
+# GFF facts for the lateral pairing
 
 For a whole-plane GFF `(hC, hcirc)`: the jointly measurable radial version `radialVersion` agrees almost surely with the
 circle average `h_r(0)` at each radius `r > 0`; circle averages at `0` are square integrable with variance

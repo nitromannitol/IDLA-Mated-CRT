@@ -2,11 +2,11 @@ import MatedCRT.FirstPass.S2y.ConeFieldScaling
 import MatedCRT.Proofs.Sec1.EnvironmentScaling.IntegrableReferenceObservables
 
 /-!
-# `ConeFieldScalingStep` without the pairing realization `hpair` (fp-S2y-hpair, owner z1)
+# `ConeFieldScalingStep` without the pairing realization `hpair`
 
 `coneFieldScalingStep_proved` (ConeFieldScaling.lean) takes the same-carrier pairing realization `hpair` as a
 binder. Here the pairings of the rescaled cone are built from the circle average process (Duplantier-Sheffield,
-arXiv:1409.7055, Proposition 4.13(i); answer notes/fp-gaps/CHATGPT-212-idla-cone-hAbs-hpair-PRO.md, section B):
+arXiv:1409.7055, Proposition 4.13(i); the hpair write-up, section B):
 `hC' ω φ := D φ (circleProcess (c ω))` with `D φ` a measurable decoder of the pairing `φ` from the circle average
 process of the cone.
 

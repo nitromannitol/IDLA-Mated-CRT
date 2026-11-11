@@ -3,9 +3,9 @@ import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Order
 
 /-!
-# `ConeCircleDecoderStep`: Borel decoder from in-probability pairing approximants (fp-S2y-cone-decoder, z1)
+# `ConeCircleDecoderStep`: Borel decoder from in-probability pairing approximants
 
-Section 4 of the chat-231 answer (`notes/fp-gaps/CHATGPT-231-idla-z1-decoder-lateral-PRO.md`, l.362-578) proves that
+Section 4 of the decoder write-up (lines 362–578) proves that
 every pairing of a quantum cone is almost surely a measurable function of its circle average process, in three steps:
 4.1 a measurable approximant of each pairing from countably many circle coordinates (Riemann sums over the plane);
 4.2 convergence in probability of the approximants to the pairing;
@@ -14,8 +14,7 @@ every pairing of a quantum cone is almost surely a measurable function of its ci
 This file proves 4.3 in general (`exists_borel_decoder_of_tendstoInMeasure`) and the reduction
 `coneCircleDecoderStep_of_pairingApprox`: `ConeCircleDecoderStep` follows from approximants `A φ n` that are
 measurable (4.1, named binder `hA`) and converge in probability to every pairing of every quantum cone (4.2, named
-binder `hconv`). Not yet proved here: `hA` (section 1 `measurable_planeQuad_eval` of `S2y/ConeRadialCodes.lean`,
-z11, not committed) and `hconv` (chat 231 §4.2: the whole-plane GFF L² computation and the radial approximate identity).
+binder `hconv`). Not yet proved here: `hA` (section 1 `measurable_planeQuad_eval` of `S2y/ConeRadialCodes.lean`) and `hconv` (the whole-plane GFF L² computation and the radial approximate identity).
 -/
 
 namespace MatedCRT.LQGMeasure
@@ -23,7 +22,7 @@ namespace MatedCRT.LQGMeasure
 open MeasureTheory Filter Topology Set Metric HarmonicBalls
 open scoped NNReal ENNReal
 
-/-- **Borel decoder extraction (chat 231 §4.3).** An in-probability limit of measurable functionals `F n` of an
+/-- **Borel decoder extraction.** An in-probability limit of measurable functionals `F n` of an
 observable `X` is almost surely equal to a measurable functional of `X`: take an almost surely convergent subsequence
 and the pointwise `limsup` of the subsequence. -/
 theorem exists_borel_decoder_of_tendstoInMeasure {Ω E : Type*} [MeasurableSpace Ω] [MeasurableSpace E]
@@ -35,7 +34,7 @@ theorem exists_borel_decoder_of_tendstoInMeasure {Ω E : Type*} [MeasurableSpace
   filter_upwards [hae] with ω hω
   exact hω.limsup_eq
 
-/-- **Reduction of `ConeCircleDecoderStep` to pairing approximants (chat 231 §4.3).** Named binders: `hA` is the
+/-- **Reduction of `ConeCircleDecoderStep` to pairing approximants.** Named binders: `hA` is the
 measurability of the approximants as functionals of the circle average process (§4.1); `hconv` is the convergence in
 probability of the approximants to the pairings of every quantum cone (§4.2). -/
 theorem coneCircleDecoderStep_of_pairingApprox

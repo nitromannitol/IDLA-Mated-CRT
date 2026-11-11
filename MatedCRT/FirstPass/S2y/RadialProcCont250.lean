@@ -2,7 +2,7 @@ import MatedCRT.Proofs.Measurability.ConePairing
 import HarmonicBalls.Defs.GFF
 
 /-!
-# FIRST PASS S2y, RadialProcCont250: almost sure continuity of the radial version (task fp-S2y-radial-cont, worker z9)
+# FIRST PASS S2y, RadialProcCont250: almost sure continuity of the radial version
 
 For a whole-plane GFF `(hC, hcirc)` the jointly measurable radial version `radialVersion hcirc ω` of the circle-average
 process `s ↦ h_s(0)` (Duplantier–Sheffield, circle averages of the whole-plane GFF) is almost surely continuous on

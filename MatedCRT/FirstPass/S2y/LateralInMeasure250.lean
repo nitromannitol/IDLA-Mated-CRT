@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-# Convergence in probability from `L¹` and `L²` convergence (fp-S2y-decoder-250, z8)
+# Convergence in probability from `L¹` and `L²` convergence
 
 Markov's inequality for `|Y_n|` and for `Y_n²` turns `∫|Y_n| → 0` and `∫Y_n² → 0` into `Y_n → 0` in probability.
 These are the transfer steps of the H1 assembly (`tendstoInMeasure` of the pairing and of the lateral integral).

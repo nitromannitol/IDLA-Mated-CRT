@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S2y.LateralBilin250
 
 /-!
-# L¹ convergence of the radial part of the lateral pairing (fp-S2y-decoder-250, z8; chat 250 §1.2)
+# L¹ convergence of the radial part of the lateral pairing
 
 For `I_g(ω) = ∫ g(y) h_{|y|}(0) dy` with `g` bounded, measurable, supported in a fixed ball and tending to `0`
 pointwise: `E|I_g| ≤ ∫ |g(y)| (1 + 3|log|y||) dy → 0` (Tonelli-type Fubini, `E|h_r(0)| ≤ 1 + 3|log r|`).

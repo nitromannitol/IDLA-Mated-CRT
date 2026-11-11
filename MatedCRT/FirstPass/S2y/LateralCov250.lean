@@ -5,7 +5,7 @@ import HarmonicBalls.FirstPass.S11i.LogPotentialFubini
 import HarmonicBalls.FirstPass.S11i.DilationMixing
 
 /-!
-# The lateral covariance kernel and Fubini for the lateral pairing (fp-S2y-decoder-250, z8; chat 250 §1.2)
+# The lateral covariance kernel and Fubini for the lateral pairing
 
 The lateral covariance kernel is `K_L(x,y) = wholePlaneCov x y - radialCov ‖x‖ ‖y‖`, which equals
 `log (max ‖x‖ ‖y‖) - log ‖x - y‖` off the diagonal (Duplantier-Sheffield, arXiv:1409.7055, Section 3.1). This file
@@ -19,7 +19,7 @@ namespace MatedCRT.LQGMeasure
 
 section Kernel
 
-/-- The lateral covariance kernel `K_L(x,y) = wholePlaneCov x y - radialCov ‖x‖ ‖y‖` (chat 250 §1.2). -/
+/-- The lateral covariance kernel `K_L(x,y) = wholePlaneCov x y - radialCov ‖x‖ ‖y‖`. -/
 noncomputable def latKernel (x y : ℂ) : ℝ :=
   wholePlaneCov x y - MatedCRT.Field.ConeRadial.radialCov ‖x‖ ‖y‖
 

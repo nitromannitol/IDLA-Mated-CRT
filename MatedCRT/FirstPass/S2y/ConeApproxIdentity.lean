@@ -7,7 +7,7 @@ import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 import Mathlib.Topology.Algebra.Support
 
 /-!
-# Approximate identity for circle averages (chat 240, §2.2; fp-S2y-lateral-240, z8)
+# Approximate identity for circle averages
 
 For a measurable, locally integrable `a : ℂ → ℝ` and a test function `φ`, the pairing of `φ` with the
 circle averages of `a` converges to the pairing with `a` as the radius tends to `0`:
@@ -50,7 +50,7 @@ lemma integrable_indicator_norm {a : ℂ → ℝ} (hloc : LocallyIntegrable a vo
   rw [integrable_indicator_iff measurableSet_closedBall]
   exact (hloc.integrableOn_isCompact (isCompact_closedBall (0 : ℂ) R)).norm
 
-/-- **Approximate identity for circle averages** (chat 240, §2.2). For `ε ∈ (0, 1]`, the pairing of `φ`
+/-- **Approximate identity for circle averages**. For `ε ∈ (0, 1]`, the pairing of `φ`
 with the circle average of `a` at radius `ε` equals the pairing of `a` with the adjoint kernel. -/
 theorem integral_mul_circleAverage_eq {a φ : ℂ → ℝ} (ha : Measurable a)
     (hloc : LocallyIntegrable a volume) (hφ : Continuous φ) (hφc : HasCompactSupport φ)
@@ -185,7 +185,7 @@ lemma tendsto_circleKernel {φ : ℂ → ℝ} (hφ : Continuous φ) (hφc : HasC
     _ = δ / 2 := by field_simp
     _ < δ := by linarith
 
-/-- **Approximate identity for circle averages of a locally integrable function** (chat 240, §2.2). For a
+/-- **Approximate identity for circle averages of a locally integrable function**. For a
 measurable, locally integrable `a` and a test function `φ`, `∫ φ(z) circleAverage a z ε dz → ∫ φ a` as
 `ε → 0⁺`: the radial approximate identity used for the radial part of a cone's pairing approximants. -/
 theorem tendsto_integral_mul_circleAverage {a φ : ℂ → ℝ} (ha : Measurable a)

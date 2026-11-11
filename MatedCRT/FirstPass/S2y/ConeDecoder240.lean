@@ -6,16 +6,16 @@ import MatedCRT.FirstPass.S2y.ConeCircInt240
 import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
 
 /-!
-# The pairing decoder of a quantum cone from the named inputs H1, H2, M (chat 240 §2 and §4; fp-S2y-decoder-assembly, z8)
+# The pairing decoder of a quantum cone from the named inputs H1, H2, M
 
 `ConeCircleDecoderStep` (`S2y/ConeFieldPairing.lean`) is proved from three explicit named binders, in the
-convergence-in-probability route of chat 240 §2:
+convergence-in-probability route:
 
-* `H1` (lateral smear, chat 240 §2.1): the circle smears at radius `pairingRadius n` of the lateral observables
+* `H1` (lateral smear): the circle smears at radius `pairingRadius n` of the lateral observables
   `lateralEval (.circle ·)` converge in probability to the lateral pairing `lateralEval (.pairing φ)`;
-* `H2` (radial Riemann convergence, chat 240 §2.3): for almost every `ω`, the Riemann sums of
+* `H2` (radial Riemann convergence): for almost every `ω`, the Riemann sums of
   `z ↦ φ(z) · circleAverage (x ↦ h_{|x|}(0)) z ε_n` converge to their integral;
-* `M` (measurability, chat 240 §2.3): the radial parts `ω ↦ ∫ φ(z) · circleAverage(a_ω)(z, ε_n) dz` are
+* `M` (measurability): the radial parts `ω ↦ ∫ φ(z) · circleAverage(a_ω)(z, ε_n) dz` are
   almost everywhere strongly measurable (joint measurability of `(ω, z, θ) ↦ h_{‖z + ε e^{iθ}‖}(0)`).
 
 The local integrability of the radial part `a_ω(x) = h_{|x|}(0)` is proved here (`ae_measurable_locallyIntegrable_radial`,
@@ -116,9 +116,9 @@ lemma tendstoInMeasure_add_real {Ω : Type*} [MeasurableSpace Ω] {P : Measure �
     _ = ε := ENNReal.add_halves ε
   exact absurd hx (not_le.mpr hlt)
 
-/-- **Pairing convergence from H1, H2, M (chat 240 §2).** Named binders:
-* `H1` (lateral smear in probability, chat 240 §2.1), for every quantum cone and every test function;
-* `H2` (a.s. Riemann convergence of the radial circle smear, chat 240 §2.3), for every `n`;
+/-- **Pairing convergence from H1, H2, M.** Named binders:
+* `H1` (lateral smear in probability), for every quantum cone and every test function;
+* `H2` (a.s. Riemann convergence of the radial circle smear), for every `n`;
 * `M` (a.e. strong measurability in `ω` of the radial parts at each level `n`).
 Conclusion: the circle-smear approximants of `hC · φ` converge in probability to `hC · φ`, for every quantum cone. -/
 theorem quantumCone_pairingApprox_tendstoInMeasure_of_H1_H2_M
@@ -180,7 +180,7 @@ theorem quantumCone_pairingApprox_tendstoInMeasure_of_H1_H2_M
   refine TendstoInMeasure.congr' (Eventually.of_forall fun n => EventuallyEq.symm (hsplit n)) ?_ hsum
   exact ae_of_all P fun ω => by simp only [lateralEval]; ring
 
-/-- **`ConeCircleDecoderStep` from H1, H2, M** (chat 240 §2, `coneCircleDecoderStep_proved` of §4 with the three
+/-- **`ConeCircleDecoderStep` from H1, H2, M** (`coneCircleDecoderStep_proved` with the three
 named inputs as binders). The decoder is the `limsup` extraction of `coneCircleDecoderStep_of_pairingApprox`. -/
 theorem coneCircleDecoderStep_of_H1_H2_M
     (H1 : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
@@ -206,7 +206,7 @@ theorem coneCircleDecoderStep_of_H1_H2_M
     (fun _ hγ hγ2 _ _ _ _ _ hP hQ φ hφ =>
       quantumCone_pairingApprox_tendstoInMeasure_of_H1_H2_M H1 H2 M hγ hγ2 hP hQ φ hφ)
 
-/-- **`ConeLateralTransferStep` with no sphere-integrability binder** (chat 240 §3–§4). The radial pairing code and the
+/-- **`ConeLateralTransferStep` with no sphere-integrability binder**. The radial pairing code and the
 radial sphere code are concrete (`radialPairingCode_ae_eq`, and the unconditional `radialSphereCode_ae_eq` of
 `S2y/ConeCircInt240.lean`). -/
 theorem coneLateralTransferStep_proved240 (hscale : QuantumConeScalingInput) : ConeLateralTransferStep :=
@@ -215,7 +215,7 @@ theorem coneLateralTransferStep_proved240 (hscale : QuantumConeScalingInput) : C
     (fun _ _ _ _ _ hcm hcont hrad φ hφ => radialPairingCode_ae_eq hcm hcont hrad φ hφ)
     (fun _ _ _ _ _ hcm hcont hrad _ z hr => radialSphereCode_ae_eq hcm hcont hrad hr z)
 
-/-- **`ConeFieldScalingStep` without `hpair`, from H1, H2, M** (chat 240 §4, `coneFieldScalingStep_proved_no_hpair`
+/-- **`ConeFieldScalingStep` without `hpair`, from H1, H2, M** (`coneFieldScalingStep_proved_no_hpair`
 with the named binders). The inputs: the scaling input `hscale` and the three named inputs H1, H2, M of
 `coneCircleDecoderStep_of_H1_H2_M`. -/
 theorem coneFieldScalingStep_proved240 (hscale : QuantumConeScalingInput)

@@ -4,7 +4,7 @@ import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Order
 
 /-!
-# Cone circle averages are local (fp-S2y-cone-circle-average, z10)
+# Cone circle averages are local
 
 Reduction of `ConeCircleAverageLocalityStep` (MatedCRT/Steps/Sec2/LQGMeasureProperties.lean:58) to an
 absolute approximation of the circle average by pairings with test functions supported in `U`
