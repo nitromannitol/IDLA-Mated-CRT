@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.S3t.BLEnvelopeClosure
 import MatedCRT.FirstPass.HdetSwap
 
 /-!
-# Proposition 5.1 with the truncated quenched laws derived (fp-S3t-consumers, z5)
+# Proposition 5.1 with the truncated quenched laws derived
 
 `firstPass_5_1_derived` is `firstPass_5_1` (`FirstPass/S5q.lean:98`) with the frozen hypothesis
 `hdet : FrozenTruncatedQuenchedLawsFixedTime 𝒮` removed (it was at `S5q.lean:55` in `firstPass_5_1_of_obstacleVersion`
@@ -132,7 +132,7 @@ theorem closed_5_1_canon_noCell_derived {𝒮 : SpaceFillingSLEModel} (ν : ℝ 
     (hGBC : FrozenGreenBallCentre) (hconf : FrozenHBInitialConfinement)
     (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
     (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion)
-    -- TRUE steps (chat 180 §3)
+    -- TRUE steps
     (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
     -- External input
     (hscale : QuantumConeScalingInput)
@@ -201,7 +201,7 @@ theorem closed_5_1_canon_noCell_derived_closed {𝒮 : SpaceFillingSLEModel} (ν
     (hGBC : FrozenGreenBallCentre) (hconf : FrozenHBInitialConfinement)
     (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
     (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion)
-    -- TRUE steps (chat 180 §3)
+    -- TRUE steps
     (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
     -- External input
     (hscale : QuantumConeScalingInput)

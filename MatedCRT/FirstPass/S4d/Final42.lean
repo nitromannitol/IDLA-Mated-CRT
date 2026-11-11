@@ -17,21 +17,21 @@ import MatedCRT.FirstPass.S3g
 import MatedCRT.FirstPass.S3f.FiniteDomainRepresentation
 
 /-!
-# FIRST PASS, Proposition 4.2 (prop:div-sandpile-lower-bound): the assembly (q4, fp-S4d-4-2-assembly)
+# FIRST PASS, Proposition 4.2 (prop:div-sandpile-lower-bound): the assembly
 
 `firstPass_4_2_of_halfball_gate` (`FirstPass/S4d.lean`) takes the Draft and NEW steps as explicit hypotheses. In
 `firstPass_4_2_of_wholeplane_model` they are supplied as follows.
 
-* `hcl` := `coneHalfBallClosureInsideStep_corrected` (`FirstPass/S2g/Corrected24.lean`, route B, q1), with the
+* `hcl` := `coneHalfBallClosureInsideStep_corrected` (`FirstPass/S2g/Corrected24.lean`, route B), with the
   whole-plane field law `FPConeWholePlaneFieldLaw` (`Frozen/S4S5b.lean`) and `FrozenLQGMeasureExistenceInsertion`
   (`Frozen/S2m.lean`).
-* `hScaleInv` (Draft Lemma 2.6) := `firstPass_2_6_corrected` (`FirstPass/S2g/Assembly2456.lean`, q1), same inputs.
-* `h24` (Draft Lemma 2.4) := `coneHarmonicBallsUpToFixedTimeStmt_of_provider` (`FirstPass/S4d/Provider24.lean`, q4) applied to the
-  provider form `coneHarmonicBallsProviderFP4_of_canonical (firstPass_2_4_canonical ...)` (operator note chat 174). The Draft clause
+* `hScaleInv` (Draft Lemma 2.6) := `firstPass_2_6_corrected` (`FirstPass/S2g/Assembly2456.lean`), same inputs.
+* `h24` (Draft Lemma 2.4) := `coneHarmonicBallsUpToFixedTimeStmt_of_provider` (`FirstPass/S4d/Provider24.lean`) applied to the
+  provider form `coneHarmonicBallsProviderFP4_of_canonical (firstPass_2_4_canonical ...)`. The Draft clause
   `T' = T` is derived there from the closure step `hcl`, not read off Lemma 2.4.
-* `h25` (Draft Lemma 2.5) := `coneScaleInvarianceUpToFixedTimeStmt_of_canonical` (`FirstPass/S4d/ScaleBridge.lean`, q4),
+* `h25` (Draft Lemma 2.5) := `coneScaleInvarianceUpToFixedTimeStmt_of_canonical` (`FirstPass/S4d/ScaleBridge.lean`),
   from the canonical form `firstPass_2_5_canonical` and the step `hRU` (`coneRescaledHalfBallHorizonUnique_fp`,
-  `FirstPass/S4d/HorizonUnique.lean`, q4), which is proved from the frozen input `hrescale`.
+  `FirstPass/S4d/HorizonUnique.lean`), which is proved from the frozen input `hrescale`.
 * `h23` (Draft Lemma 2.3, `ConeHarmonicBallsStmt`) := `firstPass_2_3` (`FirstPass/S1S2S8SA.lean`) from `h24`, `h25`, `h27`,
   `hscale`, `h22`; no new hypothesis.
 * `h34` (Draft Lemma 3.4, `IntegralConvergenceGreenFunctionStmt`) := `MatedCRT.S3S4c.firstPass_3_4`
@@ -40,19 +40,19 @@ import MatedCRT.FirstPass.S3f.FiniteDomainRepresentation
   `h214`, `h28`, `h27`, `h218`, `hm`, `hH`; no new hypothesis.
 
 * `h35` (Draft Lemma 3.5, `DiscreteDirichletProblemStmt`) := `MatedCRT.FirstPass35Bridge.discreteDirichletProblem_of_corrected_of_steps`
-  (`FirstPass/S3g.lean`, z8) from `firstPass_3_5_corrected` (`FirstPass/S3S4b.lean`), with `hfinite` :=
+  (`FirstPass/S3g.lean`) from `firstPass_3_5_corrected` (`FirstPass/S3S4b.lean`), with `hfinite` :=
   `MatedCRT.FirstPass37.frozenFiniteDomainDirichletRepresentation_proved` (`FirstPass/S3f/FiniteDomainRepresentation.lean`, proved).
   The corrected Lemma 3.6 convergence conjunct `h36` (`CorrectedHarmonicConvergenceStmt`) is the explicit input replacing `h35`.
 
 The remaining explicit input replacing `hRU` is the frozen `hrescale : ConeRescaledMeasureIsConeFieldInput`
-(`FirstPass/Frozen/S4d2.lean`, truth check TRUE, chat 153); `hRU` is derived from it in the proof.
+(`FirstPass/Frozen/S4d2.lean`); `hRU` is derived from it in the proof.
 The cone externals `hE1`, `hE2` stay explicit (`FirstPass/Frozen/S2i.lean`).
 -/
 
 namespace MatedCRT
 
 open _root_.HarmonicBalls in
-/-- **Proposition 4.2 (`DivSandpileLowerBoundStmt`), assembled (q4, fp-S4d-4-2-assembly).**
+/-- **Proposition 4.2 (`DivSandpileLowerBoundStmt`), assembled.**
 The Draft hypotheses `h23`, `h33`, `h34`, `h24`, `h25` and the closure and Lemma 2.6 steps are derived in the proof (see the
 module docstring); the explicit inputs are the frozen `hrevuz`, `hdet` (for `h34`), the frozen `hrescale` (for `hRU`), the conditional environment scaling `hEnvS` with the three SLE closure inputs `hsc`, `hrp`, `hind`
 (replacing the retired `FrozenConeEnvironmentScaling`; `hEnvS hsc hrp hind` is used where `hcone` was), and the frozen and
