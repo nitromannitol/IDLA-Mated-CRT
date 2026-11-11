@@ -1,6 +1,6 @@
 # First-pass frozen inputs: provenance table
 
-Campaign-internal. Scope: every `Prop` defined in `MatedCRT/FirstPass/Frozen/*.lean` (25 files) and in `MatedCRT/External/*.lean` (2 files), one row each, in file order: 80 rows.
+Campaign-internal. Scope: every `Prop` defined in `MatedCRT/FirstPass/Frozen/*.lean` (25 files) and in `MatedCRT/External/*.lean` (2 files), one row each, in file order: 80 rows. Rows 81 and 82 are the two one-sided boundary Props of Lemma 3.6, defined in `MatedCRT/FirstPass/S3i/Frozen.lean` and `S3i/FrozenFloored.lean` (outside the scope above); added 2026-11-11 (p2-ledger-rows-and-inventory-refresh). Total: 82 rows.
 
 Not rows: three non-Prop defs (`rescaledLBMOccupation` `FirstPass/Frozen/S3S4b.lean:64`, `quenchedDiscreteOccupation` `S3S4b.lean:72`, `FPScaledMeasure` `S5cSimilarity.lean:22`) and three theorems (`SLERef.lean:51`, `:57`, `:64`). Rows 65 and 66 are Prop-valued definitions with no verdict.
 
@@ -13,7 +13,7 @@ Columns:
 - **Verdict source**: the docstring's own attribution, as written (chat number, time, notes path).
 - **Discharge**: the declaration in `MatedCRT/FirstPass/LPBridge/*.lean` or `MatedCRT/FirstPass/HBRewire.lean` that proves the Prop (grep, snapshot). A binder `(h : Prop)` in HBRewire.lean is a consumer, not a discharge; it is shown as `consumer HBRewire.lean:N`.
 
-Summary (80 rows): TRUE 47, FALSE 4, UNSURE 3, RETIRED 8, none 18. Discharged in LPBridge or HBRewire: 9 (rows 4, 5, 13, 14, 39, 41, 43, 64, 73); a discharge is a declaration of that type, not a checked compilation. Proved elsewhere, as the docstring states and grep confirms: 2 (rows 42, 57).
+Summary (82 rows): TRUE 47, FALSE 5, UNSURE 3, RETIRED 8, none 19. Discharged in LPBridge or HBRewire: 9 (rows 4, 5, 13, 14, 39, 41, 43, 64, 73); a discharge is a declaration of that type, not a checked compilation. Proved elsewhere, as the docstring states and grep confirms: 2 (rows 42, 57).
 
 Paths are relative to the repository root.
 
@@ -99,6 +99,8 @@ Paths are relative to the repository root.
 | 78 | SLEIndepMonoInput | MatedCRT/External/SLE.lean:56 | paper line 192 (meaning of the model) | none | none in docstring | not applicable (External literature input) |
 | 79 | MepsScalingInput | MatedCRT/External/SLE.lean:63 | eq:meps-scaling, line 733; BG20 eq. (1.8) | none | none in docstring | not applicable (External literature input) |
 | 80 | DegreeBoundInput | MatedCRT/External/SLE.lean:70 | eq:degree-bound, line 3071; GMS19 Lemma 2.6, as quoted in the proof of Lemma 7.4 | none | none in docstring | not applicable (External literature input) |
+| 81 | FrozenOneSidedBoundaryContinuity | MatedCRT/FirstPass/S3i/Frozen.lean:44 | Gwynne–Miller–Sheffield, *Harmonic functions on mated-CRT maps*, arXiv:1807.07511v3, Theorem 3.9, eq. (3.31) (upper half, as the docstring states); locator pending | FALSE | "FALSE as typed (audit R2 K1: no floor on the boundary distance); superseded by FrozenOneSidedBoundaryContinuityFloored" (docstring, S3i/Frozen.lean:44-55; audit R2 K1) | none |
+| 82 | FrozenOneSidedBoundaryContinuityFloored | MatedCRT/FirstPass/S3i/FrozenFloored.lean:34 | GMS arXiv:1807.07511v3, Theorem 3.9, eqs. (3.30)–(3.31), pp. 30–31; the floored statement is not yet quoted verbatim from the source (MQ-li-7a; source not on the sandbox, notes/fp-gaps/MQ-li-7a-source.md) | none (PENDING TRUTH CHECK, MQ-li-7a) | "PENDING TRUTH CHECK (MQ-li-7a)" (docstring, S3i/FrozenFloored.lean) | none |
 
 Notes:
 - Row 22 is TRUE with a caveat quoted from its docstring: it needs an explicit canonical standard-Borel realization argument in addition to the cited numbered statements.
@@ -108,3 +110,4 @@ Notes:
 - Discharge checks cover `MatedCRT/FirstPass/LPBridge/*.lean` and `MatedCRT/FirstPass/HBRewire.lean` only. Proofs elsewhere (rows 42, 57) are noted from the docstring and confirmed by grep.
 - Rows 4 and 5 rest on bridge files that were untracked on 2026-11-10 (`LPBridge/UniversalMeasurability.lean`, `LPBridge/LQGTestIntegralMeasurable.lean`); they are not in git until committed by their owners.
 - The `_inRepo` theorems in `LPBridge/InRepoProofs.lean` were added by other workers during this round; rows 5, 13, 39, 41, 43, 64, 73 now cite them as well.
+- Rows 81 and 82 (Lemma 3.6) have no LPBridge discharge. Row 81 is FALSE as typed; the rows in COUNTED.md that bind it (3.6, `closed_3_6_full`, `firstPass_3_6_closed`) are conditional. Row 82 is the floored replacement, PENDING TRUTH CHECK (MQ-li-7a).

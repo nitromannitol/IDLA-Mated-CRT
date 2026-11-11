@@ -157,26 +157,28 @@ Merged "used by" of the content rows: #25, #26, #28, #31, #32 each take 4.2,1.4,
 ## Section: (b) in order of use count (all 18 (b) rows)
 | prop | uses (n) | truth | status | proposed LP module |
 |---|---|---|---|---|
-| FrozenSuperharmonicMinimumPrinciple (#14) | 4.2,1.4,1.6,2.4,2.5,2.6 (6) | TRUE (idla-frozen-batch.md:10) | (B) in progress, z8, z10 | LatticeProb/Analysis/SuperharmonicMinimumPrinciple.lean |
-| FrozenUniversalMeasurabilityOfAnalytic (#16) | 4.2,1.4,1.6,2.4,2.5,2.6 (6) | TRUE (idla-frozen-batch.md:4) | (B) in progress, z5 | LatticeProb/Prob/AnalyticUniversalMeasurable.lean |
-| FrozenLQGTestIntegralMeasurable (#17) | 4.2,1.4,1.6,2.4,2.5,2.6 (6) | TRUE (idla-frozen-batch.md:5) | not started | LatticeProb/LQG/TestIntegralMeasurable.lean |
-| FrozenInsertionCoordinateRule (#33) | 4.2,1.4,1.6,2.4,2.5,2.6 (6) | TRUE (idla-frozen-batch.md:16) | not started | LatticeProb/LQG/CoordinateChangeInsertion.lean |
-| FrozenLQGMeasureExistenceInsertion (#34) | 4.2,1.4,1.6,2.4,2.5,2.6 (6) | none found | not started | LatticeProb/LQG/MeasureExistence.lean |
-| LQGVolumeGrowthAllScalesStmt (#30, with #63) | 4.2,1.4,1.6,2.4,2.5,2.6 (6) | none found | not started; HB route conditional (open question 2) | LatticeProb/LQG/VolumeGrowthAllScales.lean |
-| FrozenBrownianOutwardExcursionAtExit (#53) | 1.4,1.6,3.5,3.6,3.7 (5) | TRUE (TRUTH-CHECK-2.md) | not started | LatticeProb/Prob/BrownianOutwardExcursion.lean |
-| FPStrongMinimumPrinciple (#13) | 4.2,1.4,1.6 (3) | TRUE (idla-new-frozen-truth-2306.md:14) | (B) in progress, z8, z10 | LatticeProb/Analysis/StrongMinimumPrinciple.lean |
-| FrozenPunctureConnected (#12) | 4.2,1.4,1.6 (3) | TRUE (frozen-truth-S4d-S11g.md:3) | not started | LatticeProb/Analysis/PuncturedPlaneConnected.lean |
-| FPWholePlaneLQGExistence (#46) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | not started | LatticeProb/LQG/WholePlaneExistence.lean |
-| FPWholePlaneLQGCoordinateChange (#47) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | not started | LatticeProb/LQG/CoordinateChange.lean |
-| FPWholePlaneUpperVolumeTail (#48) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | not started | LatticeProb/LQG/UpperVolumeTail.lean |
-| FPConeMeanZeroRestriction (#49) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | not started | LatticeProb/Gauss/MeanZeroCircleRestriction.lean |
+| FrozenSuperharmonicMinimumPrinciple (#14) | 4.2,1.4,1.6,2.4,2.5,2.6 (6) | TRUE (idla-frozen-batch.md:10) | discharged in-repo: `frozenSuperharmonicMinimumPrinciple_holds` (LPBridge/MinimumPrinciples.lean:22; `_inRepo` InRepoProofs.lean:50); LP file tracked in LP branch | LatticeProb/Analysis/SuperharmonicMinimumPrinciple.lean |
+| FrozenUniversalMeasurabilityOfAnalytic (#16) | 4.2,1.4,1.6,2.4,2.5,2.6 (6) | TRUE (idla-frozen-batch.md:4) | discharged in-repo: `frozenUniversalMeasurabilityOfAnalytic_holds` (LPBridge/UniversalMeasurability.lean:18; `_inRepo` InRepoProofs.lean:80); LP file tracked in LP branch | LatticeProb/Prob/AnalyticUniversalMeasurable.lean |
+| FrozenLQGTestIntegralMeasurable (#17) | 4.2,1.4,1.6,2.4,2.5,2.6 (6) | TRUE (idla-frozen-batch.md:5) | discharged in-repo: `frozenLQGTestIntegralMeasurable_holds` (LPBridge/LQGTestIntegralMeasurable.lean:49; `_inRepo` InRepoProofs.lean:60); LP file missing | LatticeProb/LQG/TestIntegralMeasurable.lean |
+| FrozenInsertionCoordinateRule (#33) | 4.2,1.4,1.6,2.4,2.5,2.6 (6) | TRUE (idla-frozen-batch.md:16) | not started: no `_holds`/`_inRepo` concluder in LPBridge or HBRewire; LP file missing | LatticeProb/LQG/CoordinateChangeInsertion.lean |
+| FrozenLQGMeasureExistenceInsertion (#34) | 4.2,1.4,1.6,2.4,2.5,2.6 (6) | none found | not started: no concluder in LPBridge or HBRewire; LP file missing | LatticeProb/LQG/MeasureExistence.lean |
+| LQGVolumeGrowthAllScalesStmt (#30, with #63) | 4.2,1.4,1.6,2.4,2.5,2.6 (6) | none found | not started: no concluder in LPBridge or HBRewire; LP file missing; HB route conditional (open question 2) | LatticeProb/LQG/VolumeGrowthAllScales.lean |
+| FrozenBrownianOutwardExcursionAtExit (#53) | 1.4,1.6,3.5,3.6,3.7 (5) | TRUE (TRUTH-CHECK-2.md) | discharged in-repo: `frozenBrownianOutwardExcursionAtExit_holds` (LPBridge/BrownianOutwardExcursion.lean:113); LP file tracked in LP branch | LatticeProb/Prob/BrownianOutwardExcursion.lean |
+| FPStrongMinimumPrinciple (#13) | 4.2,1.4,1.6 (3) | TRUE (idla-new-frozen-truth-2306.md:14) | discharged in-repo: `fpStrongMinimumPrinciple_holds` (LPBridge/MinimumPrinciples.lean:30; `_inRepo` InRepoProofs.lean:55); LP file missing | LatticeProb/Analysis/StrongMinimumPrinciple.lean |
+| FrozenPunctureConnected (#12) | 4.2,1.4,1.6 (3) | TRUE (frozen-truth-S4d-S11g.md:3) | discharged in-repo: `frozenPunctureConnected_holds` (LPBridge/PunctureConnected.lean:15; `_inRepo` InRepoProofs.lean:65); LP file tracked in LP branch | LatticeProb/Analysis/PuncturedPlaneConnected.lean |
+| FPWholePlaneLQGExistence (#46) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | not started: no concluder in LPBridge or HBRewire; LP file missing | LatticeProb/LQG/WholePlaneExistence.lean |
+| FPWholePlaneLQGCoordinateChange (#47) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | not started: no concluder in LPBridge or HBRewire; LP file missing | LatticeProb/LQG/CoordinateChange.lean |
+| FPWholePlaneUpperVolumeTail (#48) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | not started: no concluder in LPBridge or HBRewire; LP file missing | LatticeProb/LQG/UpperVolumeTail.lean |
+| FPConeMeanZeroRestriction (#49) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | discharged in-repo: `fpConeMeanZeroRestriction_holds` (LPBridge/ConeMeanZeroRestrictionFinal.lean:144); LP file missing | LatticeProb/Gauss/MeanZeroCircleRestriction.lean |
 | FrozenLQGMeasureFieldMeasurable (#54) | 1.4,1.6 (2) | TRUE (frozen-truth-2030.md) | discharged in-repo (FirstPass/LPBridge/InRepoProofs.lean:35, frozenLQGMeasureFieldMeasurable_holds) | LatticeProb/LQG/MeasureFieldMeasurable.lean |
-| FrozenFiniteMeasureDiskStandardBorel (#55) | 1.4,1.6 (2) | TRUE (z10-S5k-frozen.md) | not started | LatticeProb/Prob/FiniteMeasureStandardBorel.lean |
-| FPWholePlaneLQGModel (#57) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | not started | LatticeProb/LQG/WholePlaneModel.lean |
+| FrozenFiniteMeasureDiskStandardBorel (#55) | 1.4,1.6 (2) | TRUE (z10-S5k-frozen.md) | discharged in-repo: `frozenFiniteMeasureDiskStandardBorel_holds` (LPBridge/FiniteMeasureStandardBorel.lean:18; `_inRepo` InRepoProofs.lean:70); LP file tracked in LP branch | LatticeProb/Prob/FiniteMeasureStandardBorel.lean |
+| FPWholePlaneLQGModel (#57) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | not started: no concluder in LPBridge or HBRewire; LP file missing | LatticeProb/LQG/WholePlaneModel.lean |
 | FPLQGMeasureLocality (#58) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | discharged in-repo (FirstPass/LPBridge/InRepoProofs.lean:45, fpLQGMeasureLocality_holds) | LatticeProb/LQG/MeasureLocality.lean |
-| FPPairingLawIG4 (#59) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | not started | LatticeProb/Prob/CameronMartinEquivalence.lean |
+| FPPairingLawIG4 (#59) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | discharged in-repo: `fpPairingLawIG4_holds` (LPBridge/PairingLawIG4.lean:81); LP file tracked in LP branch | LatticeProb/Prob/CameronMartinEquivalence.lean |
 
-(B) = in progress elsewhere (lead note 22:52). Staging: MatedCRT/LPStaging/ until the LP branch exists. The LP area LatticeProb/LQG/ does not exist yet; the lead approved it (decision 1).
+Status refreshed 2026-11-11 (p2-ledger-rows-and-inventory-refresh): 11 of the 18 rows are discharged in-repo by LPBridge concluders (grep of `_holds` and `_inRepo` in MatedCRT/FirstPass/LPBridge and HBRewire.lean); 7 are not started (no concluder in that scope). The LP-file column is checked against the tracked files of /home/nitro/lean/LP-idla-phase2.
+
+(B) = in progress elsewhere (lead note 22:52; superseded where a concluder is listed above). Staging: MatedCRT/LPStaging/ until the LP branch exists. The LP area LatticeProb/LQG/ does not exist yet; the lead approved it (decision 1).
 
 ## Section: UNSURE inputs bound via CertifiedReferenceModel
 The structure is the definition CertifiedReferenceModel (MatedCRT/FirstPass/SLERef/Certified.lean:54), a conjunction of 18 conjuncts (lines 54-72); its fields are expanded once in the next section.
