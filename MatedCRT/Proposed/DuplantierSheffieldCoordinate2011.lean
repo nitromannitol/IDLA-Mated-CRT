@@ -6,7 +6,7 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.InsertionCoordinate
 # Staged cited inputs: Duplantier-Sheffield 2011 (arXiv:0808.1560v2), zero-boundary GFF measure and coordinate rule
 
 STAGING FILE (`MatedCRT/Proposed/`). Nothing here is proved, promoted or postulated. Each cited result is a `Prop`-valued
-definition, used only as an explicit hypothesis. The operator source-checks the printed statement before any move to
+definition, used only as an explicit hypothesis. The printed statement is source-checked before any move to
 `MatedCRT/External`.
 
 ## Printed sources (PDF page numbers of arXiv:0808.1560v2, re-checked 2026-11-08 against the PDF)
@@ -29,7 +29,7 @@ definition, used only as an explicit hypothesis. The operator source-checks the 
 ## Source-status corrections
 
 * The former declaration `DS11CoordinateRuleFixedAffine` (commit 9e51e0c) was presented as DS11 Prop. 2.1. It is NOT that
-  statement. It is the open internal extension `InsertionCoordinateExtensionStep` (WPN-42-insertion-coordinate-extension); the old
+  statement. It is the open internal extension `InsertionCoordinateExtensionStep`; the old
   name is kept only as an abbreviation so that existing consumers still compile.
 * DS11 Prop. 2.1 is NOT staged as a Prop here. Its conclusion needs the circle averages of the pulled-back field `h ∘ ψ`, which the
   repository carriers cannot express (see the block "Not staged" at the end). A Prop without that coupling is false in general.
@@ -93,7 +93,7 @@ def DS11Prop11ZeroBoundaryMeasure : Prop :=
 
 /-- **Backwards-compatible alias of the exact internal Step `MatedCRT.InsertionCoordinateExtensionStep`**
 (`MatedCRT/Proofs/Sec4/Prop42Closure/InsertionCoordinate.lean`, the former declaration of this file). It is the open internal
-extension `WPN-42-insertion-coordinate-extension` (not a DS11 citation); its statement is unchanged and it is not proved.
+extension (not a DS11 citation); its statement is unchanged and it is not proved.
 
 For `γ ∈ (0,2)` and `α < Q`, every whole-plane GFF `h^ℂ` (`hC`, `hcirc`) on a probability space whose insertion-`α` LQG measure
 is `μ` (`IsLQGMeasureOfField`), and every complex affine map `φ(z) = a z + b` with `a ≠ 0`: almost surely the circle averages
@@ -126,7 +126,7 @@ Prop. 2.1 is a faithful Prop only with the following repository objects. None ex
   normalized arc length on `∂B_r(z)`. That image is a measure on a curve, not a test function. The carrier
   `HarmonicBalls.GFFObservable` (HarmonicBalls/Defs/GFF.lean:44-48) has only the constructors `pairing φ` (test functions) and
   `circle r z`, and `MatedCRT.IsDirichletGFF` carries only test-function pairings `hD : Ω → (ℂ → ℝ) → ℝ` and circle averages
-  `hcirc`. Required interface (Lean-level, to be specified by the operator):
+  `hcirc`. Required interface (Lean-level, to be specified):
   - `hν : Ω → (finite signed measure ν on ℂ with finite Dirichlet energy and support in D) → ℝ`, extending `hD` on test functions;
   - (i) `hν ω (φ · volume) = hD ω φ` for test functions `φ` in `D`;
   - (ii) `hν ω σ_{z,r} = hcirc ω r z` a.s. for `closedBall z r ⊆ D`;
@@ -144,7 +144,7 @@ Prop. 2.1 is a faithful Prop only with the following repository objects. None ex
   is in `HarmonicBalls/Defs/Green.lean`.
 * (S1) Prop. 1.1 for an unbounded simply connected `D̃` (SCOPE-D). DS11 does not print it. SW Thm 1.4 (p. 3) asserts that the
   measures `μ_{h̃_φ}` are well-defined for every planar `D̃` in `Λ`, but with SW's mollifier correspondence, not DS11's circle
-  averages. Closing S1 for the DS11 measure depends on the normalization flag N1: an operator decision.
+  averages. Closing S1 for the DS11 measure depends on the normalization flag N1: a pending decision.
 -/
 
 end MatedCRT.Proposed

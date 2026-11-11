@@ -4,7 +4,7 @@ import MatedCRT.Draft.Section3
 import MatedCRT.Draft.Section4
 
 /-!
-# Canonical published moment inputs of steps2-r3 (GMS arXiv:1705.11161v5, Section 4)
+# Canonical published moment inputs (GMS arXiv:1705.11161v5, Section 4)
 
 Source: Gwynne, Miller and Sheffield, *The Tutte embedding of the mated-CRT map converges to Liouville quantum
 gravity*, arXiv:1705.11161v5 (retained printed text; PDF page index = printed page number).
@@ -21,7 +21,7 @@ Locators used here:
 * BG arXiv:2211.04891v2 (Bou-Rabee and Gwynne): Lemma 3.3, pp. 23-24, and Theorem 4.1, p. 32, in canonical scope
   (below); the SLE/LQG embedding paragraph (corrected tex lines 189-195) and the Lemma 8.8 identification (lines 207-209).
 
-Not staged, with reasons (see the fleet report):
+Not staged, with reasons:
 * (4.5) of Lemma 4.3: not consumed by the moment route.
 * (4.22) of Proposition 4.6: its printed range `p ∈ [1, 4/γ)^2` is malformed; the route derives the inner-degree
   moment from the beta-moment paragraph and (4.6) (r3:2674-2753), never from (4.22).
@@ -148,7 +148,7 @@ noncomputable def gmsRescaledCircle (γ : ℝ) (hcirc : ℝ → ℂ → ℝ) (R 
 
 /-- **Lemma 4.3, (4.6)**, GMS arXiv:1705.11161v5 p. 30: `P[η([-1,1]) ⊂ B_{R_C/8}(0)] = 1 - o_C^∞(C)` as `C → ∞`,
 i.e. for every `N > 0` there are `K, C₀` with `P[η([-1,1]) ⊄ B_{R_C/8}(0)] ≤ K C^{-N}` for `C ≥ C₀`. The range `N > 0`
-is the printed one (steps2-r3.tex:2701, "for every $N>0$"); no `N ≤ 0` case is asserted. The radii are the cone scale
+is the printed one ("for every $N>0$"); no `N ≤ 0` case is asserted. The radii are the cone scale
 radii `R_C = coneScaleRadius γ h C` of (2.4). Lemma 4.3's other display (4.5) is not staged. -/
 def GMSLemma43Eq46Stmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
@@ -194,7 +194,7 @@ def GMSMassBetaMomentStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
 /-- **Definition 4.5, (4.20)**, GMS arXiv:1705.11161v5 p. 32: `deg_in(H₀) ≤ μ_h(B̄₀)`, almost surely, for the canonical
 zero-cone model. The printed text gives its justification in one sentence ("We note that"): the unit-mass segments
 `η([a_j, b_j])` have pairwise `μ_h`-null overlaps. The key input, that distinct segments of the curve have `μ_h`-null
-intersection, is the area-null-overlap argument written for mesh cells at steps2-r3.tex 1789-1812. The bound is cited
+intersection, is the area-null-overlap argument written for mesh cells. The bound is cited
 as printed; its background proof is not re-opened here. -/
 def GMSInnerDegreeBoundStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
@@ -226,7 +226,7 @@ law of that environment, carried by `IsCanonicalSLEDecoratedCone`. They do not a
 environment, whose coupling clause is existential (an abstract mating-of-trees coupling with an abstract
 imaginary-geometry map `igMap`). They are not statements about the canonical law and are not used here.
 
-Missing carrier (not staged). The canonical comparison realization of steps2-r3 (r3:1912-1945) is a measurable function
+Missing carrier (not staged). The canonical comparison realization is a measurable function
 of the Brownian pair (DMS14 Theorem 1.9, pp. 26-27, and Theorem 1.11, p. 29; GHMS Theorem 1.1, p. 5, for `γ < √2`). The
 canonical inputs apply to it only once `IsCanonicalSLEDecoratedCone 𝒮 γ` holds for that realization, which is not
 established here. Exact missing type: a measurable reconstruction `Φ : Path2 → (ℝ → ℂ → ℝ) × C(ℝ, ℂ)` of the circle
@@ -264,7 +264,7 @@ structure IsCanonicalSLEDecoratedCone (𝒮 : SpaceFillingSLEModel) (γ : ℝ) {
   /-- The boundary-length pair `bm` of Definition 1.1 is a two-sided correlated Brownian motion. -/
   isBrownianBoundaryPair : MatedCRTHarmonic.MatedCRT.IsCorrelatedBM2 γ (S.P.map S.bm)
   /-- The Brownian mated-CRT multigraph is the SLE/LQG cell multigraph, almost surely, for each cell size
-  (DMS14 Lemma 8.8; corrected tex 207-209; INPUT-REQUESTS IR-A2). -/
+  (DMS14 Lemma 8.8). -/
   isCellIdentity : ∀ ε : ℝ, 0 < ε → ∀ᵐ ω ∂S.P, S.mult ε ω = cellMult ε (S.η ω)
 
 /-- **BG Lemma 3.3, canonical scope** (arXiv:2211.04891v2, Lemma 3.3, pp. 23-24; corrected tex

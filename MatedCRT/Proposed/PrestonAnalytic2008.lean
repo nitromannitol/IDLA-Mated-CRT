@@ -4,7 +4,7 @@ import Mathlib.MeasureTheory.Measure.NullMeasurable
 /-!
 # Staged literature inputs: analytic sets are universally measurable (Preston 2008)
 
-Staged for independent source audit; the operator source-checks this file before any promotion to
+Staged for independent source audit; this file is source-checked before any promotion to
 `MatedCRT/External`. This file states three propositions. Each is an explicit hypothesis, not a proof of the cited statement.
 
 * `PrestonAnalyticCantorStmt` is the printed statement: Preston, arXiv:0809.3066v1, Theorem 7.1 (printed p. 39, PDF p. 40),

@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-# Published inputs of steps2-r3 Section 6: GMS invariance principle, cell configurations (carrier layer)
+# Published inputs: GMS invariance principle, cell configurations (carrier layer)
 
 Source: Gwynne, Miller and Sheffield, *An invariance principle for ergodic scale-free random environments*,
 arXiv:1807.07515v3 (retained printed text; printed page numbers below). Locators used here:
@@ -27,8 +27,8 @@ Printed-source notes, recorded and not silently corrected:
 * Corollary 3.11 (p. 44): the printed conclusion is `ε f^ε(ε^{-1}·) → f` uniformly, with boundary data `f^ε(H) = f(z)` for
   `z ∈ H ∩ D̄`. The maximum principle gives `|f^ε| ≤ sup|f|`, so the factor `ε` forces the limit `0` unless `f ≡ 0`; the
   boundary data also mixes scales (`H` is an unscaled cell of `𝓗(ε^{-1}∂D)`). Not staged. Proposed minimal correction
-  (operator decision): `f^ε(ε^{-1}·) → f` uniformly on `D̄` with `f^ε(H) = f(εz)` for some `z ∈ H ∩ ε^{-1}D̄`.
-* Carrier obstructions (exact declarations and missing carriers are in `reports/z5.md`): GHMS 1510.04687v2 Theorem 1.1 needs
+  `f^ε(ε^{-1}·) → f` uniformly on `D̄` with `f^ε(H) = f(εz)` for some `z ∈ H ∩ ε^{-1}D̄`.
+* Carrier obstructions: GHMS 1510.04687v2 Theorem 1.1 needs
   the unnormalised boundary-length pair of `η̃` relative to the cone, which Lean does not define; DMS 1409.7055v4 Theorems
   1.9, 1.11, 8.18, 9.1, 9.4, Corollary 9.3 and Lemmas 8.8, 8.13, 8.14 need curves, the quotient `C/~` and merge relations,
   which Lean does not define.
@@ -176,7 +176,7 @@ noncomputable def phi0Literal (H : Set ℂ) : ℂ :=
   ∫ z in H, z
 
 /-- The Euclidean centre `(1/Area(H)) ∫_H z dz` (the reading that the words "Euclidean center" on GMS p. 15 indicate).
-Staged as an alternative; the choice is for the operator. -/
+Staged as an alternative. -/
 noncomputable def phi0Centroid (H : Set ℂ) : ℂ :=
   ((volume H).toReal)⁻¹ • ∫ z in H, z
 
@@ -197,7 +197,7 @@ def GMSHarmonicCentreStmt (φ₀ : Set ℂ → ℂ) : Prop :=
 
 /-! ### The quenched walk, the time change and the planar Brownian limit (GMS Theorem 1.16, p. 15)
 
-Carrier decisions, recorded for the operator:
+Carrier decisions:
 * (D1) The printed walk `X̂` is piecewise constant and is kept as printed, on the all-functions path space `ℝ≥0 → ℂ`.
   Its local uniform convergence is formalised by outer integrals (Hoffmann-Jørgensen) of bounded, locally uniformly
   continuous `ℝ≥0∞`-valued functionals (`IsLocUnifTest`), with no measurability required of the test functionals. No
@@ -304,7 +304,7 @@ def GMSTheorem116RecurrenceStmt : Prop :=
 
 /-- GMS Theorem 1.16 (p. 15), all three printed conclusions for the centre `φ₀` of (1.17): (i) `GMSTheorem116BrownianStmt`,
 (ii) `GMSTheorem116RecurrenceStmt`, (iii) `GMSHarmonicCentreStmt φ₀`. The centre is a parameter; `phi0Literal` and
-`phi0Centroid` are distinct readings, neither operator-promoted. -/
+`phi0Centroid` are distinct readings, neither promoted. -/
 def GMSTheorem116Stmt (φ₀ : Set ℂ → ℂ) : Prop :=
   GMSTheorem116BrownianStmt ∧ GMSTheorem116RecurrenceStmt ∧ GMSHarmonicCentreStmt φ₀
 
