@@ -116,7 +116,12 @@ with each `κ a (Iic t)` finite and measurable in `a`. Then `a ↦ ∫⁻ u, F (
 measurable for every measurable `F : α × ℝ≥0 → ℝ≥0∞`. Proof: write the integral as the increasing
 limit over `n` of the integrals against the finite measures `(κ a).restrict (Iic n)`
 (monotone convergence along the indicators of `Iic n`), and apply
-`measurable_lintegral_of_finite_family` to each. -/
+`measurable_lintegral_of_finite_family` to each.
+
+Locator: Kallenberg, *Foundations of Modern Probability*, 2nd ed. (Springer 2002), Lemma 1.40
+(iii)⇒(i), p. 20, and Lemma 1.41 (i), p. 21, stated for probability kernels. The locally finite
+case: restrict to `Iic n`, normalise, and take the monotone limit (Mathlib:
+`Measurable.measure_of_isPiSystem`, `Kernel.measurable_kernel_prodMk_left_of_finite`). -/
 theorem measurable_lintegral_of_measurable_Iic {α : Type*} [MeasurableSpace α]
     (κ : α → Measure ℝ≥0) (hfin : ∀ a t, κ a (Set.Iic t) ≠ ∞)
     (hIic : ∀ t : ℝ≥0, Measurable fun a => κ a (Set.Iic t))
