@@ -2,6 +2,7 @@ import MatedCRT.FirstPass.Frozen.S3S4
 import MatedCRT.LPStaging.Prob.BrownianOutwardExcursion
 import MatedCRT.LPStaging.Prob.PlanarBrownianGermZeroOne
 import HarmonicBalls.Proofs.Sec6.CompactHittingStopping
+import MatedCRT.FirstPass.LPBridge.ExitRestartLimit
 
 /-!
 # Bridge: the frozen planar outward excursion at the exit time of a disk (#53)
@@ -17,7 +18,9 @@ Two literature inputs are explicit hypotheses of `frozenBrownianOutwardExcursion
   independent of `B_τ`, and `B_τ` is measurable (strong Markov property at `τ`,
   Mörters–Peres, Theorem 2.16).
 
-The unconditional statement needs these inputs as Props in `MatedCRT/External`.
+Both inputs are discharged below: `hGerm` by the ported Blumenthal law, and `hRestart` by
+`MatedCRT.ExitRestart.exit_restart_planar` (FirstPass/LPBridge/ExitRestartLimit.lean), so
+`frozenBrownianOutwardExcursionAtExit_holds` is unconditional.
 -/
 
 open MeasureTheory ProbabilityTheory Filter Set Metric HarmonicBalls
@@ -103,5 +106,14 @@ theorem frozenBrownianOutwardExcursionAtExit_of_restart
         (LatticeProb.isTrivialSigma_iInf_bmPast hW.im fun t => Complex.measurable_im.comp (hW.measurable t))
         A hA)
     hRestart
+
+/-- **The frozen planar outward excursion at the exit time of a disk (Mörters–Peres, Theorems 2.7
+and 2.16), unconditionally.** The germ zero-one law and the strong Markov restart at the exit time
+are both proved (ported Blumenthal law; `MatedCRT.ExitRestart.exit_restart_planar`). -/
+theorem frozenBrownianOutwardExcursionAtExit_holds : FrozenBrownianOutwardExcursionAtExit :=
+  frozenBrownianOutwardExcursionAtExit_of_restart fun y z r _ =>
+    ExitRestart.exit_restart_planar Metric.isOpen_ball y
+      ((HarmonicBalls.Section6.ae_planarBrownian_exitTime_bounded_lt_top y
+        (Metric.isBounded_ball (x := z) (r := r))).mono fun _ hb => hb.ne)
 
 end MatedCRT
