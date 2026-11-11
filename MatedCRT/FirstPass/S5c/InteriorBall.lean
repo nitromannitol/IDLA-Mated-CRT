@@ -1,7 +1,7 @@
 import MatedCRT.Defs.Map
 
 /-!
-# FIRST PASS, interior-ball repair (GAP 2): cell geometry of the killing domains
+# FIRST PASS, interior-ball repair: cell geometry of the killing domains
 
 The repair of the stopped surplus lower bound, IDLA Lemma 5.4 extended to `I_ε`. If every cell meeting the ball `B_{r/2}(z)` has diameter at most `d < r/2`, then every such cell lies in
 `B_r(z)`, so its vertex is an interior vertex of `B_r(z)` in the IDLA convention `K_ε(B) = V^ε(B) \ V^ε(∂B)`

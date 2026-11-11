@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.Frozen.S1c
 import MatedCRT.FirstPass.Frozen.S2g
 
 /-!
-# FIRST PASS, Lemma 5.3 (three-inputs §2.4): the hmeas input of the entry-time argument
+# FIRST PASS, Lemma 5.3: the hmeas input of the entry-time argument
 
 `hmeas : ∀ x t, 0 < t → NullMeasurableSet {ω | ratDisc x ⊆ Λ ω t}` of `exists_entry_free_time` (EntryTimes.lean:104),
 for a family `Λ` satisfying `IsConeHarmonicBallFamily` almost surely, is derived here with no openness of the cluster

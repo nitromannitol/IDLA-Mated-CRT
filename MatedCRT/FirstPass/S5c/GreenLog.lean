@@ -1,7 +1,7 @@
 import HarmonicBalls.Proofs.Potential.GreenPositivity
 
 /-!
-# FIRST PASS, Lemma 5.3: logarithmic lower bound of the disk Green function near the pole (G-5-3 Section 1, S1.d)
+# FIRST PASS, Lemma 5.3: logarithmic lower bound of the disk Green function near the pole
 
 `G_{B_ρ}(0, x) ≥ (2π)⁻¹ log((ρ/2)/|x|)` for `0 < |x| < ρ/2`. This is `log_div_le_greenFunction` (Harmonic-Balls
 Green positivity, normalization `Δ G = -δ`) applied with the pole `0` as the first argument and the point `x` as the

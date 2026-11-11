@@ -1,7 +1,7 @@
 import MatedCRT.Defs.Map
 
 /-!
-# FIRST PASS, Lemma 5.3: quantum mass of the filled discrete cluster (G-5-3 Section 2, eq. (7))
+# FIRST PASS, Lemma 5.3: quantum mass of the filled discrete cluster
 
 The filled cluster `U_ε = fillCells D_ε` is a finite union of cells. Each cell has quantum mass at most `ε` (area
 parametrization; `measure_cell_of_area_parametrized`, Proofs/Sec3/ConvergenceNormalizedExitTime/CellIntegral.lean:19),

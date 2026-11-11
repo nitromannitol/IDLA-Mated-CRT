@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S1c.Cluster
 import MatedCRT.FirstPass.Frozen.S2g
 
 /-!
-# FIRST PASS, Lemma 5.3 (three-inputs section 3, A5/A1 prerequisite): openness of the stopped cluster
+# FIRST PASS, Lemma 5.3: openness of the stopped cluster
 
 The obstacle cluster `cluster μ ρ 0 t = {x ∈ B_ρ | x = 0 ∨ -t G_{B_ρ}(0,x) < v(x)}` (Harmonic-Balls-LQG
 Defs/Obstacle.lean:69) is open whenever the least supersolution `v` is continuous on the closed disc and the disc Green

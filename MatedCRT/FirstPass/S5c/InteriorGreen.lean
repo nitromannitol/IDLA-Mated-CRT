@@ -3,7 +3,7 @@ import MatedCRT.Proofs.Sec3.UniformConvergenceGreenKernel.KernelMonotonicity
 import MatedCRT.Proofs.WalkPotential.GreenFirstStep
 
 /-!
-# FIRST PASS, interior-ball Green bound (GAP 2)
+# FIRST PASS, interior-ball Green bound
 
 Step 3 (eqs. (10)-(12)) of the repair of the stopped surplus lower bound (IDLA Lemma 5.4 extended to `I_ε`).
 Let `z = η(a)`, `J = K_ε(B_{r/2}(z))`, `I = K_ε(B_r(z))`. The Draft lower bound `GreenKernelLowerBoundStmt`

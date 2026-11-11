@@ -3,7 +3,7 @@ import Mathlib.MeasureTheory.Measure.Continuity
 import Mathlib.Topology.Compactness.Compact
 
 /-!
-# FIRST PASS, Lemma 5.3 (three-inputs §2): measurable inclusion codes for the cluster
+# FIRST PASS, Lemma 5.3: measurable inclusion codes for the cluster
 
 For a countable dense set `D ⊆ ℂ` and an open set `S ⊆ ℂ` (the cluster `cluster μ ρ 0 t`,
 Harmonic-Balls-LQG Defs/Obstacle.lean:69), the cluster family is `Λ = interior (closure S)`

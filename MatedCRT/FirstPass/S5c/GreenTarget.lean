@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S5c.GreenRatio
 import MatedCRT.FirstPass.S5c.MassPositive
 
 /-!
-# FIRST PASS, target (4) of GAP 2, pathwise
+# FIRST PASS, target (4), pathwise
 
 For a vertex `a` with `z = η(a)`, `I = K_ε(B_r(z))`, `|z| ≤ ρ`, and the event of Step 6 (`ε^{1/4} ≤ m_r`), the ratio
 `∑_{b∈I} G_I(b,a) / G_I(a,a)` is at least `ε^{-1/4}` (eq. (4)). The pathwise chain is: the net lower bound
@@ -32,7 +32,7 @@ theorem mass_net_lower_bound {μ : Measure ℂ} {η : ℝ → ℂ} (hap : IsArea
     (fun x _ => mass_ball_pos hap x (half_pos hR))
   exact ⟨mr, hmr0, fun z hz => mass_ball_ge_of_net (hcov z hz) hnet⟩
 
-/-- **Target (4) of GAP 2, pathwise** (§1.4 Steps 1-6, eq. (4)). -/
+/-- **Target (4), pathwise** (§1.4 Steps 1-6, eq. (4)). -/
 theorem green_ratio_target {μ : Measure ℂ} {m : ℤ → ℤ → ℕ} {η : ℝ → ℂ} {ε d C c r mr : ℝ} {a : ℤ}
     (hap : IsAreaParametrized μ η)
     (hr : 0 < r) (hε : 0 < ε) (hc6 : c ≤ 1 / 6) (hd : d ≤ c * r) (hC : 0 < C)

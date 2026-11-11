@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.S5c.ScaleEntry
 import MatedCRT.FirstPass.Frozen.S4S6c
 
 /-!
-# FIRST PASS, Lemma 5.3 (three-inputs sections 2.4, 3 A1-A9): the environment inputs of the 5.3 route
+# FIRST PASS, Lemma 5.3: the environment inputs of the 5.3 route
 
 For a valid environment `S` (`MatedCRTEnv.IsValid`) this file derives from the structure fields the inputs that the
 fixed-index margin (`fixedIndexMargin_compact_ae`, ScaleEntry.lean) and the family null-measurability

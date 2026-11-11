@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S5c.StrictComparison
 import MatedCRT.FirstPass.S5c.CompactMinimum
 
 /-!
-# FIRST PASS, Lemma 5.3 (three-inputs section 3, A8 and (a)): the fixed-index gap and full compact margins
+# FIRST PASS, Lemma 5.3: the fixed-index gap and full compact margins
 
 Deterministic core, for one outcome. Let `Λ` be a cone family (`IsConeHarmonicBallFamily`) with
 `t < T = clusterExitTime Λ ρ` and `0 < t`. The cover hypothesis `hcover : ∀ x ∈ Λ_t, ∃ s, 0 < s ∧ s < t ∧ x ∈ Λ_s`

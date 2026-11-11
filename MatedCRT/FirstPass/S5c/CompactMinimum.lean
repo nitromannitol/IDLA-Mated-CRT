@@ -2,7 +2,7 @@ import Mathlib.Analysis.Normed.Group.Basic
 import Mathlib.Topology.Order.Compact
 
 /-!
-# FIRST PASS, Lemma 5.3 (three-inputs section 3, A9): compact minima of a positive continuous function
+# FIRST PASS, Lemma 5.3: compact minima of a positive continuous function
 
 Deterministic (extreme value theorem, Mathlib `IsCompact.exists_isMinOn`). If `f` is continuous on a compact set `K`
 and `f > 0` on `K`, then `f` has a positive uniform lower bound on `K`. Used for the margin `A_1` of the full G1

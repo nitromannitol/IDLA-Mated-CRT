@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S1c.Threshold
 import MatedCRT.FirstPass.Frozen.S1c
 
 /-!
-# FIRST PASS, Lemma 5.3: rational threshold characterization of the least supersolution (B1b, deterministic part)
+# FIRST PASS, Lemma 5.3: rational threshold characterization of the least supersolution (deterministic part)
 
 The S1c threshold lemma (`neg_mul_green_lt_leastSupersolution_iff`, `threshold_iff_moments`) is stated for the single
 constant `-uG(0,p)`. Its proof uses only that the supersolution values at `p` are nonempty and bounded below. So for an

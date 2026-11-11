@@ -4,7 +4,7 @@ import MatedCRT.Proofs.Infra.LocallyFinite
 import MatedCRT.Proofs.Infra.MatingOfTrees
 
 /-!
-# FIRST PASS, GAP 2 Step (a): the upper bound (19), pathwise
+# FIRST PASS, Step (a): the upper bound (19), pathwise
 
 Eq. (19): `G_I(a,a) ≤ G_{V^ε(B_ρ)}(a,a) ≤ ε^{-1/2}` for `I = K_ε(B_r(z))` with `B_r(z) ⊆ B_ρ` and `a ∈ I`. The first
 inequality is domain monotonicity of the killed Green function on finite domains (`greenFn_mono_of_firstStep`); the second

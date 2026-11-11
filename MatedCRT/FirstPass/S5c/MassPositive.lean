@@ -1,7 +1,7 @@
 import MatedCRT.Defs.Setting
 
 /-!
-# FIRST PASS, positivity of the quantum mass of balls (GAP 2 Step 4, eq. (14)) and finite nets (eq. (13))
+# FIRST PASS, positivity of the quantum mass of balls (eq. (14)) and finite nets (eq. (13))
 
 Eq. (14): `0 < m_r` where `m_r = min_j μ_h(B_{cr/2}(z_j))` over a finite net. Its
 positivity is read off from the area parametrization, as the text says (continuity, surjectivity and the mass of

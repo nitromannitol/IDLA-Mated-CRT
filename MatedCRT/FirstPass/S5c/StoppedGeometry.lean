@@ -2,7 +2,7 @@ import MatedCRT.Defs.Setting
 import MatedCRT.FirstPass.S5c.MassComparison
 
 /-!
-# FIRST PASS, Lemma 5.3 (three-inputs section 3, A5): the stopped geometry, and (3.4) on the stopped event
+# FIRST PASS, Lemma 5.3: the stopped geometry, and (3.4) on the stopped event
 
 Deterministic. Let `T = clusterExitTime Λ ρ = sup {u > 0 : Λ_u ⊆ B_{ρ/3}}` (paper eq:cluster-stopping-time, line 1589).
 If `t < T` then for every `0 < s ≤ t` the set `Λ_s` lies in `B_{ρ/3}`: some `u > t` in the qualifying set exists, and

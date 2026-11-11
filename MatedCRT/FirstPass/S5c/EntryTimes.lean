@@ -1,7 +1,7 @@
 import MatedCRT.Defs.Setting
 
 /-!
-# FIRST PASS, Lemma 5.3 (three-inputs section 3, A1-A3): a deterministic time with no new entrance
+# FIRST PASS, Lemma 5.3: a deterministic time with no new entrance
 
 For a random family `Λ ω t` of open sets, monotone in `t > 0` (`Λ_t` is the interior of the closure of the obstacle
 cluster, Harmonic-Balls-LQG Defs/Obstacle.lean:69; monotone by `SatisfiesHarmonicBallConditions.monotoneOn`), the

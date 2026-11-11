@@ -1,7 +1,7 @@
 import MatedCRT.Defs.Setting
 
 /-!
-# FIRST PASS, Lemma 5.3 (three-inputs section 3, A6): comparison of least supersolutions at two masses
+# FIRST PASS, Lemma 5.3: comparison of least supersolutions at two masses
 
 Deterministic, no new frozen input. For `0 < s ≤ u` and a supersolution `w` at mass `u` (HB `supersolutions μ r 0 u`),
 the function `(s/u) w` is a supersolution at mass `s`: it is continuous, `Δ((s/u) w) ≤ (s/u) μ ≤ μ` in the sense of

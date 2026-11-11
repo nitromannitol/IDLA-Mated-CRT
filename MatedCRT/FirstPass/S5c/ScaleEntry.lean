@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S5c.EntryTimes
 import MatedCRT.FirstPass.S5c.FixedIndexGap
 
 /-!
-# FIRST PASS, Lemma 5.3 (three-inputs section 3, A2-A4 and statement (a) almost surely): the cover (3.1) at every time
+# FIRST PASS, Lemma 5.3 (statement (a) almost surely): the cover (3.1) at every time
 
 For a random family `Λ ω t` of open sets, monotone in `t > 0`, the new-entrance event at time `t`
 `E(t) = {∃ y ∈ Λ_t, ∀ s ∈ (0, t), y ∉ Λ_s}` (three-inputs A2) is the complement of the outcome-wise cover

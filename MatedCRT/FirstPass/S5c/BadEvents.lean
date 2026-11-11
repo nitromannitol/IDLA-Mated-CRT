@@ -1,7 +1,7 @@
 import MatedCRT.Draft.Section4
 
 /-!
-# FIRST PASS, Lemma 5.3: generic bad-event probabilities (B2, probability plumbing)
+# FIRST PASS, Lemma 5.3: generic bad-event probabilities
 
 Two facts for the Borel-Cantelli step: (1) an event family whose complements have polynomially
 small probability (`HarmonicBalls.PolyHighProb`, Harmonic-Balls-LQG HarmonicBalls/Defs/Notation.lean:27) has complement

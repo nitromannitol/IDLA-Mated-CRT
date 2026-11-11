@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S5c.InclusionCode
 
 /-!
-# FIRST PASS, Lemma 5.3 (three-inputs §2.4): inclusion events along an eventually-large radius
+# FIRST PASS, Lemma 5.3: inclusion events along an eventually-large radius
 
 For a family of open sets `S n ω` (the clusters `cluster (μ ω) n 0 t` at radius `n : ℕ`) whose interior closures
 eventually equal the target set `Λ ω` (Theorem 2.3(c) at radius `n`, for `n` larger than a bound of `Λ ω`), the

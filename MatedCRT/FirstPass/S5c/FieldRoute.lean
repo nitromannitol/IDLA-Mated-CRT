@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S5c.B1bThreshold
 import MatedCRT.FirstPass.S5c.TestIntegralAE
 
 /-!
-# FIRST PASS, Lemma 5.3 (B1b): the least supersolution is AE-measurable on the field route
+# FIRST PASS, Lemma 5.3: the least supersolution is AE-measurable on the field route
 
 Steps: (1) the field σ-algebra `fieldSigmaAlgebra 0 hC univ` (the σ-algebra of the field,
 HarmonicBalls.Defs.GFF) is contained in the ambient σ-algebra when the pairings `ω ↦ hC ω φ` are measurable (the content of

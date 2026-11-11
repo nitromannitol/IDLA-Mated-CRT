@@ -1,7 +1,7 @@
 import MatedCRT.Defs.Setting
 
 /-!
-# FIRST PASS, Lemma 5.3 (three-inputs A7, positive test function)
+# FIRST PASS, Lemma 5.3 (positive test function)
 
 Deterministic (measure theory and smooth bump functions), no frozen input. If `U ⊆ ℂ` is open with `0 < μ U < ∞`, then
 some test function `φ` in `U` (`HarmonicBalls.IsTestFunction`, smooth with compact support in `U`) is nonnegative and

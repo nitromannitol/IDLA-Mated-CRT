@@ -4,7 +4,7 @@ import MatedCRT.Proofs.WalkPotential.GreenFirstStep
 import MatedCRT.Proofs.WalkPotential.MaximumPrinciple
 
 /-!
-# FIRST PASS, interior-ball Green ratio (GAP 2)
+# FIRST PASS, interior-ball Green ratio
 
 Step 5 (eq. (18)): reversibility gives the sum identity `∑_{b∈I} G_I(b,a) = deg(a) ∑_{b∈I} g_I(a,b)`.
 Step 6: with the mass bound `q_I(a) ≥ m_r ε⁻¹` (eq. (17)), the event `m_r ≥ ε^{1/4}` and `G_I(a,a) ≤ ε^{-1/2}` (eq. (19)),
