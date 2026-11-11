@@ -1,12 +1,9 @@
 import MatedCRT.Defs.Setting
 
 /-!
-# Literature input: scale invariance of the quantum cone (review-S (S7); INPUT-REQUESTS.md IR-A3)
+# Literature input: scale invariance of the quantum cone
 
-`QuantumConeScalingInput`: DMS14 Proposition 4.13(i), eq:quantum-cone-scaling (line 458),
-`h(R_b ·) + Q log R_b - γ⁻¹ log b =d h` for the cone scale radius `R_b` (eq:cone-scale-radius, line 454). Used in the
-proofs of Lemmas 2.5 and 2.6. The field enters through its circle average process (`circleProcess`), which is
-pathwise, so the random radius `R_b` is evaluated pathwise (review-S (S1)).
+`QuantumConeScalingInput`: DMS14 Proposition 4.13(i), eq:quantum-cone-scaling (line 458), `h(R_b ·) + Q log R_b - γ⁻¹ log b =d h` for the cone scale radius `R_b` (eq:cone-scale-radius, line 454). Used in the proofs of Lemmas 2.5 and 2.6 of the paper. The field enters through its circle average process (`circleProcess`), which is pathwise, so the random radius `R_b` is evaluated pathwise.
 -/
 
 namespace MatedCRT

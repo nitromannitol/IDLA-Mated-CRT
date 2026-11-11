@@ -1,27 +1,14 @@
 import MatedCRT.Defs.Setting
 
 /-!
-# Literature inputs: whole-plane space-filling SLE and the mated-CRT map (ESCALATIONS E-A1, review-S (S7))
+# Literature inputs: whole-plane space-filling SLE and the mated-CRT map
 
-The space-filling SLE is the abstract model `𝒮 : SpaceFillingSLEModel` (MatedCRT/Defs/Setting.lean), whose predicate
-`𝒮.IsSLE P 𝓕 κ η` stands for "under `P`, `η` viewed modulo increasing reparametrization is a whole-plane
-space-filling SLE_κ from `∞` to `∞`, independent of `𝓕`". Every SLE-specific fact used by the proofs, beyond the
-numbered cited results (drafted as Stmts in MatedCRT/Draft), enters only as one of the following hypotheses over the
-model. Each is a true statement for the model whose predicate is the true one, with the source given. Listed in
-INPUT-REQUESTS.md (IR-A3).
-
+The space-filling SLE is the abstract model `𝒮 : SpaceFillingSLEModel` (`MatedCRT/Defs/Setting.lean`), whose predicate `𝒮.IsSLE P 𝓕 κ η` stands for "under `P`, `η` viewed modulo increasing reparametrization is a whole-plane space-filling SLE_κ from `∞` to `∞`, independent of `𝓕`". Every SLE-specific fact used by the proofs, beyond the numbered cited results (stated as Stmts in `MatedCRT/Draft`), enters only as one of the following hypotheses over the model. Each is a true statement for the model whose predicate is the true one, with the source given.
 * `SLEScaleInvarianceInput`: `r η =d η` modulo parametrization (eq:eta-scale-invariant, line 619).
-* `SLEReparametrizationInput`, `SLEIndepMonoInput`: the predicate is about `η` modulo increasing reparametrization,
-  up to null sets, independent of `𝓕` (meaning of the model, lines 192-193, 621).
+* `SLEReparametrizationInput`, `SLEIndepMonoInput`: the predicate is about `η` modulo increasing reparametrization, up to null sets, independent of `𝓕` (meaning of the model, lines 192-193, 621).
 * `MepsScalingInput`: `m_ε ≍ ε⁻¹` (eq:meps-scaling, line 733; BG20 (1.8)).
 * `DegreeBoundInput`: `max_{V^ε(B_ρ)} deg^ε ≤ (log ε⁻¹)²` (eq:degree-bound, line 3071; GMS19 Lemma 2.6).
-
-Dropped after the graph switch (L1): `SpaceFillingSLEPathInput` (a.s. `|η(t)| → ∞`, and `a ∼ a + 1` in `𝒢^ε`). Both are
-now theorems (MatedCRT/Proofs/Infra/MatingOfTrees.lean): `MatedCRTEnv.IsValid.ae_tendsto_cocompact` from the
-mating-of-trees coupling of `MatedCRTEnv.IsValid` (fields `spaceFilling`, `areaParam`), and
-`MatedCRTEnv.mult_succ_ne_zero` from Definition 1.1 for the continuous pair `bm` (deterministic). Local finiteness of
-`𝒢^ε` follows from these and `AdjacentCellsMeetAeStep` (MatedCRT/Steps/Infra/MatingOfTrees.lean), a consequence of the
-coupling (DMS14 Lemma 8.8, field `merge`), not an input.
+Removed from the inputs: `SpaceFillingSLEPathInput` (a.s. `|η(t)| → ∞`, and `a ∼ a + 1` in `𝒢^ε`). Both are now theorems (`MatedCRT/Proofs/Infra/MatingOfTrees.lean`): `MatedCRTEnv.IsValid.ae_tendsto_cocompact` from the mating-of-trees coupling of `MatedCRTEnv.IsValid` (fields `spaceFilling`, `areaParam`), and `MatedCRTEnv.mult_succ_ne_zero` from Definition 1.1 for the continuous pair `bm` (deterministic). Local finiteness of `𝒢^ε` follows from these and from the adjacent-cells fact (DMS14 Lemma 8.8, field `merge`), which is a consequence of the coupling, not an input.
 -/
 
 namespace MatedCRT
