@@ -7,8 +7,7 @@ import MatedCRT.Defs.Sandpile
 Convergence of the divisible sandpile odometer. Conventions: see `MatedCRT/Draft/Section1.lean` and
 `MatedCRT/Draft/Section3.lean`. `ρ ∈ (0, 1)` is fixed (line 1536) and universally quantified.
 
-Objects (MatedCRT/Defs/Sandpile.lean), for the map `𝒢^ε` with edge multiplicity `m = S.mult ε ω` (Definition 1.1,
-operator decision (L1)) and the cells of `η = S.η ω`:
+Objects, for the map `𝒢^ε` with edge multiplicity `m = S.mult ε ω` (Definition 1.1) and the cells of `η = S.η ω`:
 * `w̃^ε_t` = `matedLeastSupersolution m ε η ρ t` (eq:discrete-least-supersolution), its rescaling
   `w̄^ε_t = rescale (S.mε ε) ε η w̃^ε_t`;
 * `Λ^ε_t` = `matedDiscreteCluster m ε η ρ t` (eq:discrete-cluster);

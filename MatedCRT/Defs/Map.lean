@@ -156,8 +156,8 @@ def cell (ε : ℝ) (η : ℝ → ℂ) (k : ℤ) : Set ℂ :=
 `j ≠ k`, the number of connected components of `H^ε_{εj} ∩ H^ε_{εk}` which are not singletons (`Set.ncard`, junk `0`
 if there are infinitely many); `0` for `j = k`.
 Not the map of the statements: the map is Definition 1.1 (`bmEdgeCount` of the boundary-length pair,
-`MatedCRTEnv.mult`; operator decision (L1)). `cellMult` is a documented equivalent: a.s. equal to it under the
-mating-of-trees coupling by DMS14 Theorem 1.9 / Lemma 8.8 (line 207), an optional DMS input (INPUT-REQUESTS IR-A2). -/
+`MatedCRTEnv.mult`). `cellMult` is a documented equivalent: a.s. equal to it under the mating-of-trees coupling by
+Duplantier–Miller–Sheffield (2014), Theorem 1.9 and Lemma 8.8; this equivalence is an optional literature input. -/
 noncomputable def cellMult (ε : ℝ) (η : ℝ → ℂ) (j k : ℤ) : ℕ :=
   open Classical in
   if j = k then 0

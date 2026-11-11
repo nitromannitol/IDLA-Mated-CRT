@@ -111,3 +111,12 @@ Notes:
 - Rows 4 and 5 rest on bridge files that were untracked on 2026-11-10 (`LPBridge/UniversalMeasurability.lean`, `LPBridge/LQGTestIntegralMeasurable.lean`); they are not in git until committed by their owners.
 - The `_inRepo` theorems in `LPBridge/InRepoProofs.lean` were added by other workers during this round; rows 5, 13, 39, 41, 43, 64, 73 now cite them as well.
 - Rows 81 and 82 (Lemma 3.6) have no LPBridge discharge. Row 81 is FALSE as typed; the rows in COUNTED.md that bind it (3.6, `closed_3_6_full`, `firstPass_3_6_closed`) are conditional. Row 82 is the floored replacement, PENDING TRUTH CHECK (MQ-li-7a).
+
+## Comment provenance: frozen Defs and Draft files (2026-11-11)
+
+- MatedCRT/Defs/Map.lean:159 (docstring of `cellMult`): removed "operator decision (L1)", the locator "(line 207)" and the tag "INPUT-REQUESTS IR-A2"; kept Duplantier-Miller-Sheffield (2014) Theorem 1.9 and Lemma 8.8 and "optional literature input".
+- MatedCRT/Defs/Setting.lean:19 (section header): removed "operator decision (L1), inbox 2026-11-03 16:20 UTC".
+- MatedCRT/Defs/Setting.lean:157 (`matingOfTrees` field docstring): removed "operator decision (L1)", "Leo's IsMatingOfTreesCoupling", "REUSE-LEO.md 1.5" and "module docstring".
+- MatedCRT/Defs/Setting.lean:171 (docstring of `MatedCRTEnv.mult`): removed "operator decision (L1)", "line 207" and "INPUT-REQUESTS IR-A2".
+- MatedCRT/Draft/Section1.lean:23: removed the pointer "Defs/Setting.lean:216-218", "review-S (S5)" and the note that the S5 bridge item was cancelled by the operator (21:32 UTC); the claim that the statements quantify over the joint law is kept.
+- MatedCRT/Draft/Section4.lean:10-11: removed the pointer "MatedCRT/Defs/Sandpile.lean" and "operator decision (L1)".

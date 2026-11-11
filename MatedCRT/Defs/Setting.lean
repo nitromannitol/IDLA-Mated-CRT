@@ -16,7 +16,7 @@ Leonardo Bonanno's lean-formalizations, MatedCRTHarmonic, commit 31e7483): `Mate
 `...Frozen.MatedCRTConeField`, `...Frozen.MatedCRTConeRadial`), `Field` and `Path2`, and Leo's test functions
 `LQGMetric.TestC` (module `LatticeProb.Bonanno.LQGMetric.Statement.Field`).
 
-## The map: Definition 1.1 (operator decision (L1), inbox 2026-11-03 16:20 UTC)
+## The map: Definition 1.1
 
 The paper defines the mated-CRT map by Definition 1.1, from the boundary-length Brownian pair `(L, R)`. So the
 environment carries this pair, `bm`, and the edge multiplicity of the map with cell size `ε` is
@@ -154,8 +154,7 @@ structure MatedCRTEnv.IsValid {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv 
   Brownian path) a time change clock. -/
   isLQGClock : ∀ᵐ ω ∂S.P, ∀ z : ℂ, IsLQGClock planarBrownianMotion γ (S.hcirc ω) z (S.clock ω) ∧
     ∀ᵐ b ∂planarBrownianMotion z, IsTimeChangeClock (S.clock ω b)
-  /-- **The mating-of-trees coupling** (operator decision (L1); Leo's `IsMatingOfTreesCoupling`, REUSE-LEO.md 1.5;
-  module docstring): there are a whole-plane GFF `X` and Brownian motions `B, B'` (the `γ`-quantum cone
+  /-- **The mating-of-trees coupling**: there are a whole-plane GFF `X` and Brownian motions `B, B'` (the `γ`-quantum cone
   `coneField X (coneRadial γ γ B B')`, DMS14 Definition 4.10), the data `X₀, B₀, B₀'` of the `0`-quantum cone, the
   imaginary-geometry field `hIG₀ + U`, the whole-plane space-filling SLE_{16/γ²} `ηL` and its reparametrizations
   `η'`, `η₀` by LQG area, forming a mating-of-trees coupling with boundary-length pair `bm`, such that a.s. the curve
@@ -168,9 +167,9 @@ structure MatedCRTEnv.IsValid {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv 
           (MatedCRTHarmonic.MatedCRT.coneRadial γ γ (fun u => B u ω) (fun u => B' u ω)) φ
 
 /-- The `γ`-mated-CRT map with cell size `ε` of the environment, as an edge multiplicity on `ℤ`: Definition 1.1 for
-the boundary-length pair `(L_t, R_t) = bm ω t` (`bmEdgeCount`; operator decision (L1)). Under the mating-of-trees
-coupling it is a.s. the SLE/LQG description `cellMult ε (S.η ω)` of Definition 1.2 (DMS14 Theorem 1.9 / Lemma 8.8,
-line 207; optional input, INPUT-REQUESTS IR-A2). -/
+the boundary-length pair `(L_t, R_t) = bm ω t` (`bmEdgeCount`). Under the mating-of-trees
+coupling it is a.s. the SLE/LQG description `cellMult ε (S.η ω)` of Definition 1.2 (Duplantier–Miller–Sheffield (2014),
+Theorem 1.9 and Lemma 8.8; an optional literature input). -/
 noncomputable def MatedCRTEnv.mult {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ε : ℝ) (ω : Ω) :
     ℤ → ℤ → ℕ :=
   bmEdgeCount ε (fun t => (S.bm ω t).1) (fun t => (S.bm ω t).2)
