@@ -83,3 +83,9 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/Proofs/Sandpile/ClusterIdentityCorrected.lean | archive/MatedCRT/Proofs/Sandpile/ClusterIdentityCorrected.lean | B30 |
 | MatedCRT/Proofs/Sandpile/Properties.lean | archive/MatedCRT/Proofs/Sandpile/Properties.lean | B30 |
 | MatedCRT/Proofs/Sandpile/StoppedEquation.lean | archive/MatedCRT/Proofs/Sandpile/StoppedEquation.lean | B30 |
+| MatedCRT/Proofs/Sec2/ConeFamilyMeasurable/CitedInputs.lean | archive/MatedCRT/Proofs/Sec2/ConeFamilyMeasurable/CitedInputs.lean | B32 |
+| MatedCRT/Proofs/Sec2/ConeFamilyMeasurable/ContactTransfer.lean | archive/MatedCRT/Proofs/Sec2/ConeFamilyMeasurable/ContactTransfer.lean | B32 |
+| MatedCRT/Proofs/Sec2/ConeFamilyMeasurable/GlobalCompatibility.lean | archive/MatedCRT/Proofs/Sec2/ConeFamilyMeasurable/GlobalCompatibility.lean | B32 |
+| MatedCRT/Proofs/Sec2/ConeFamilyMeasurable/GlobalFamily.lean | archive/MatedCRT/Proofs/Sec2/ConeFamilyMeasurable/GlobalFamily.lean | B32 |
+| MatedCRT/Proofs/Sec2/ConeFamilyMeasurable/JointRadialLaw.lean | archive/MatedCRT/Proofs/Sec2/ConeFamilyMeasurable/JointRadialLaw.lean | B32 |
+| MatedCRT/Proofs/Sec2/ConeFamilyMeasurable/WholePlaneFamily.lean | archive/MatedCRT/Proofs/Sec2/ConeFamilyMeasurable/WholePlaneFamily.lean | B32 |
