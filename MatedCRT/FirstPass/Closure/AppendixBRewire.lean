@@ -2,6 +2,8 @@ import MatedCRT.Proofs.Sec3.KilledOccupation.OccupationClosureCone
 import MatedCRT.FirstPass.LPBridge.GFFExistence
 import MatedCRT.FirstPass.Frozen.S4S5b
 import MatedCRT.FirstPass.S5qe
+import MatedCRT.FirstPass.Closure.LssDerived
+import MatedCRT.FirstPass.Derived.DiscGreenCentre
 
 /-!
 # The certified core without the occupation identity of Appendix B
@@ -21,6 +23,17 @@ on exiting a disc (Appendix B of the paper). This file derives it, so that it ne
 * `CertifiedReferenceModelCoreNoOccupation ν 𝒮`: the sixteen other conjuncts of the certified core, in the same order;
 * `CertifiedReferenceModelCoreNoOccupation.toCore_of_fieldLaw`: the certified core from its sixteen other conjuncts,
   `FPConeWholePlaneFieldLaw` and `hGFF`.
+* `CertifiedReferenceModelCoreNoOccupation.toModel_of_fieldLaw`: the same for the full certified reference model;
+* `closed_1_4_derivedOccupation`, `closed_1_6_derivedOccupation`: Theorems 1.4 and 1.6 in their counted forms, with the
+  certified core replaced by its sixteen other conjuncts and `hGFF`.
+
+The binder `hGFF` is the Revuz correspondence of the Liouville clock: for a fixed start `y` in the disc, almost surely
+the occupation measure of the limit clock along a good dyadic subsequence is the Gaussian multiplicative chaos measure
+weighted by twice the Green function of the disc. Sources: Garban, Rhodes and Vargas, *Liouville Brownian motion*,
+Ann. Probab. 44 (2016), Theorem 2.7 (1) ("the Revuz measure of F is M"); Berestycki, *Diffusion in planar Liouville
+quantum gravity*, Ann. Inst. Henri Poincaré Probab. Stat. 51 (2015), Sections 2 and 3 (circle averages, dyadic scales,
+uniform integrability). The typed form differs from print in the regularization and in the logarithmic singularity at
+the origin, which is handled by localization away from the origin.
 
 No new frozen statement: `CertifiedReferenceModelCoreNoOccupation` has fewer conjuncts than the core, and `hGFF` is the
 binder of `KilledOccupation.frozenLBMGreenOccupationRescaled_of_coneGFFLaw`, unchanged.
@@ -119,6 +132,119 @@ theorem CertifiedReferenceModelCoreNoOccupation.toCore_of_fieldLaw {ν : ℝ →
     {𝒮 : SpaceFillingSLEModel} (h : CertifiedReferenceModelCoreNoOccupation ν 𝒮) :
     CertifiedReferenceModelCore ν 𝒮 :=
   h.toCore (frozenLBMGreenOccupationRescaled_of_fieldLaw hFL hGFF 𝒮)
+
+/-- The certified reference model from the sixteen conjuncts of its core other than the occupation identity of
+Appendix B, its conjunct `FrozenTruncatedQuenchedLawsFixedTime 𝒮`, the field-level law identity eq:gff on the unit
+disk and the occupation identity of the clock of the whole-plane GFF with the logarithmic singularity. A theorem that
+takes `hC : CertifiedReferenceModel ν 𝒮` follows from these inputs by this substitution. -/
+theorem CertifiedReferenceModelCoreNoOccupation.toModel_of_fieldLaw {ν : ℝ → Measure SLEPathCode}
+    {𝒮 : SpaceFillingSLEModel} (h : CertifiedReferenceModelCoreNoOccupation ν 𝒮)
+    (hT : FrozenTruncatedQuenchedLawsFixedTime 𝒮) : CertifiedReferenceModel ν 𝒮 := by
+  have hc := h.toCore_of_fieldLaw hFL hGFF
+  unfold CertifiedReferenceModelCore at hc
+  unfold CertifiedReferenceModel
+  obtain ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12, h13, h14, h15, h16, h18⟩ := hc
+  exact ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12, h13, h14, h15, h16, hT, h18⟩
+
+/-- **Theorem 1.4 (convergence of internal DLA on the mated-CRT map)** without the occupation
+identity of Appendix B among its inputs: the counted form
+`closed_1_4_lp_noSC_noSup` (`MatedCRT/FirstPass/Closure/LssDerived.lean`) with the certified core `hcore` replaced
+by its sixteen conjuncts other than `FrozenLBMGreenOccupationRescaled 𝒮` (`hcoreB`) and by the occupation identity
+`hGFF` of the clock of the whole-plane GFF with the logarithmic singularity; `hFL` is an input of the counted form
+already. The proved inputs `FrozenDiskGreenNonnegCont` and `FrozenGreenBallCentre` are supplied
+(`frozenDiskGreenNonnegCont_holds`, `frozenGreenBallCentre_holds`). -/
+theorem closed_1_4_derivedOccupation
+    {𝒮 : SpaceFillingSLEModel}
+    (ν : ℝ → Measure SLEPathCode)
+    (hcoreB : CertifiedReferenceModelCoreNoOccupation ν 𝒮)
+    (hscale : QuantumConeScalingInput)
+    (hEnvS : ConeEnvironmentScalingUnderSLE 𝒮)
+    (hBG : FrozenBerestyckiGwynneConeBallMass)
+    (h0 : FPWholePlaneLQGExistence)
+    (h2 : FPWholePlaneLQGCoordinateChange)
+    (hV : FPWholePlaneUpperVolumeTail)
+    (hdiv : FrozenConeRadialDivergenceCorrected)
+    (h27 : VolumeGrowthStmt)
+    (hstd : FrozenConeLogLocalCodeLawStd)
+    (hconf : FrozenHBInitialConfinement)
+    (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
+    (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion)
+    (hE1 : ConeCircleLawUniqueStep)
+    (hE2 : ConeReferenceExistsStep)
+    (hG15 : FrozenGreenFunctionCrudeBound 𝒮)
+    (h32 : ClusterOpenLaplacianStmt.{0})
+    (h611 : FrozenVeryGoodAnnulusHarnackType)
+    (h82 : FrozenTypicalPointManyGoodScales)
+    (hSup : LeastSupersolutionMemStmt.{0})
+    (hCons : ClusterConservationOfMassStmt.{0})
+    (hMono : ClusterMonotoneStmt.{0})
+    (hCompat : ClusterCompatibilityStmt.{0})
+    (hThm11 : ExistenceUniquenessHarmonicBallsStmt.{0})
+    (hrescale : ConeRescaledMeasureIsConeFieldInput)
+    (hND : LQGMeasureNonDyadicDilationPart)
+    (hBdryHB : ClusterBoundaryMeasureZeroStmt.{0})
+    (hExistHB : ExistenceHarmonicBallsStmt.{0})
+    (hProp56HB : UniquenessHarmonicBallsStmt.{0})
+    (hI2HB : LQGVolumeGrowthAllScalesStmt.{0})
+    (hlocHB : HarmonicBallLocalSetStmt.{0}) :
+    ConvergenceOfIDLAStmt 𝒮 :=
+  closed_1_4_lp_noSC_noSup (𝒮 := 𝒮) (ν := ν) (hcore := hcoreB.toCore_of_fieldLaw hFL hGFF) (hFL := hFL)
+    (hF3 := frozenDiskGreenNonnegCont_holds) (hGBC := frozenGreenBallCentre_holds)
+    (hscale := hscale) (hEnvS := hEnvS) (hBG := hBG) (h0 := h0) (h2 := h2) (hV := hV) (hdiv := hdiv) (h27 := h27)
+    (hstd := hstd) (hconf := hconf) (hK := hK) (hE := hE) (hE1 := hE1) (hE2 := hE2) (hG15 := hG15) (h32 := h32)
+    (h611 := h611) (h82 := h82) (hSup := hSup) (hCons := hCons) (hMono := hMono) (hCompat := hCompat)
+    (hThm11 := hThm11) (hrescale := hrescale) (hND := hND) (hBdryHB := hBdryHB) (hExistHB := hExistHB)
+    (hProp56HB := hProp56HB) (hI2HB := hI2HB) (hlocHB := hlocHB)
+
+/-- **Theorem 1.6 (convergence of the divisible sandpile on the mated-CRT map)** without the occupation
+identity of Appendix B among its inputs: the counted form
+`closed_1_6_lp_noSC_noSup` (`MatedCRT/FirstPass/Closure/LssDerived.lean`) with the certified core `hcore` replaced
+by its sixteen conjuncts other than `FrozenLBMGreenOccupationRescaled 𝒮` (`hcoreB`) and by the occupation identity
+`hGFF` of the clock of the whole-plane GFF with the logarithmic singularity; `hFL` is an input of the counted form
+already. The proved inputs `FrozenDiskGreenNonnegCont` and `FrozenGreenBallCentre` are supplied
+(`frozenDiskGreenNonnegCont_holds`, `frozenGreenBallCentre_holds`). -/
+theorem closed_1_6_derivedOccupation
+    {𝒮 : SpaceFillingSLEModel}
+    (ν : ℝ → Measure SLEPathCode)
+    (hcoreB : CertifiedReferenceModelCoreNoOccupation ν 𝒮)
+    (hscale : QuantumConeScalingInput)
+    (hEnvS : ConeEnvironmentScalingUnderSLE 𝒮)
+    (hBG : FrozenBerestyckiGwynneConeBallMass)
+    (h0 : FPWholePlaneLQGExistence)
+    (h2 : FPWholePlaneLQGCoordinateChange)
+    (hV : FPWholePlaneUpperVolumeTail)
+    (hdiv : FrozenConeRadialDivergenceCorrected)
+    (h27 : VolumeGrowthStmt)
+    (hstd : FrozenConeLogLocalCodeLawStd)
+    (hconf : FrozenHBInitialConfinement)
+    (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
+    (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion)
+    (hE1 : ConeCircleLawUniqueStep)
+    (hE2 : ConeReferenceExistsStep)
+    (hG15 : FrozenGreenFunctionCrudeBound 𝒮)
+    (h32 : ClusterOpenLaplacianStmt.{0})
+    (h611 : FrozenVeryGoodAnnulusHarnackType)
+    (h82 : FrozenTypicalPointManyGoodScales)
+    (hSup : LeastSupersolutionMemStmt.{0})
+    (hCons : ClusterConservationOfMassStmt.{0})
+    (hMono : ClusterMonotoneStmt.{0})
+    (hCompat : ClusterCompatibilityStmt.{0})
+    (hThm11 : ExistenceUniquenessHarmonicBallsStmt.{0})
+    (hrescale : ConeRescaledMeasureIsConeFieldInput)
+    (hND : LQGMeasureNonDyadicDilationPart)
+    (hBdryHB : ClusterBoundaryMeasureZeroStmt.{0})
+    (hExistHB : ExistenceHarmonicBallsStmt.{0})
+    (hProp56HB : UniquenessHarmonicBallsStmt.{0})
+    (hI2HB : LQGVolumeGrowthAllScalesStmt.{0})
+    (hlocHB : HarmonicBallLocalSetStmt.{0}) :
+    ConvergenceOfDivSandpileStmt 𝒮 :=
+  closed_1_6_lp_noSC_noSup (𝒮 := 𝒮) (ν := ν) (hcore := hcoreB.toCore_of_fieldLaw hFL hGFF) (hFL := hFL)
+    (hF3 := frozenDiskGreenNonnegCont_holds) (hGBC := frozenGreenBallCentre_holds)
+    (hscale := hscale) (hEnvS := hEnvS) (hBG := hBG) (h0 := h0) (h2 := h2) (hV := hV) (hdiv := hdiv) (h27 := h27)
+    (hstd := hstd) (hconf := hconf) (hK := hK) (hE := hE) (hE1 := hE1) (hE2 := hE2) (hG15 := hG15) (h32 := h32)
+    (h611 := h611) (h82 := h82) (hSup := hSup) (hCons := hCons) (hMono := hMono) (hCompat := hCompat)
+    (hThm11 := hThm11) (hrescale := hrescale) (hND := hND) (hBdryHB := hBdryHB) (hExistHB := hExistHB)
+    (hProp56HB := hProp56HB) (hI2HB := hI2HB) (hlocHB := hlocHB)
 
 end FieldLaw
 
