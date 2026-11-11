@@ -1,9 +1,9 @@
 import MatedCRT.Defs.Notation
 
 /-!
-# Dyadic Borel-Cantelli cutoff for polynomially high probability events (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# Dyadic Borel-Cantelli cutoff for polynomially high probability events
 
-Source: LEMMA68.md / CHATGPT-lemma68-open-parts.md, section D2: the random scale `dd(ω)` of the uniform Lemma 6.7/6.8
+The random scale `dd(ω)` of the uniform Lemma 6.7/6.8
 is a measurable cutoff below which the scale-indexed events hold *simultaneously for every scale* (not one scale at a
 time). Mechanism: a family `E δ` of events with `P[(E δ)ᶜ] ≤ C δ^p` (`PolyHighProb`) at dyadic scales `δ = 2^{-j}` is
 summable, so by Borel-Cantelli almost surely `ω ∈ E (2^{-j})` for all large `j`; the first such index `K(ω)` gives the
@@ -117,7 +117,7 @@ lemma ae_mem_goodFrom [m : MeasurableSpace Ω] (P : Measure Ω) (E : ℝ → Set
   refine mem_iUnion.2 ⟨k, mem_goodFrom.2 fun j hj => ?_⟩
   exact not_not.1 (hk j hj)
 
-/-- **Dyadic cutoff** (LEMMA68 D2, the random scale `dd`). For a family of events with polynomially high probability
+/-- **Dyadic cutoff** (the random scale `dd`). For a family of events with polynomially high probability
 (`PolyHighProb`), there is a positive `F`-measurable `dd` such that almost surely, every scale `δ ∈ (0, dd ω]` is
 witnessed by a dyadic scale `δ' ∈ [δ/2, δ]` at which `ω ∈ E δ'`. -/
 theorem exists_dyadic_cutoff {F : MeasurableSpace Ω} (P : Measure Ω)

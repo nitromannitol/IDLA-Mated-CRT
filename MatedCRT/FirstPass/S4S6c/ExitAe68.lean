@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S4S6c.TraceInputs68
 import MatedCRT.FirstPass.S4S6c.FrontierSeparation
 
 /-!
-# Almost sure finite exit from a bounded region (q2, task fp-S4S6c-envscaling-6-7-6-8; LEMMA68 C2, the input `hexit`)
+# Almost sure finite exit from a bounded region (the input `hexit`)
 
 For a configuration `ω` with `η` continuous and proper, a multiplicity `m` that is locally finite with consecutive
 edges, and a bounded open-or-not region `U`, the walk from any start leaves the set of vertices `V(U) = meetVerts`

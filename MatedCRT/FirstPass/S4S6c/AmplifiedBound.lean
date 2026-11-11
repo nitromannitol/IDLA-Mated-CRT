@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# Amplification arithmetic for the printed Lemma 6.8 (q2, task fp-S4S6c; LEMMA68 "Proof of Lemma 6.8", eqs (23)-(27), (3))
+# Amplification arithmetic for the printed Lemma 6.8
 
-Pure real analysis used at the end of the multi-test argument of `notes/fp-gaps/LEMMA68.md`. If a per-test failure
+Pure real analysis used at the end of the multi-test argument. If a per-test failure
 probability `c/(1+|log r|)²` holds for `N ≥ κ r^{-ζ}` successive tests, then the probability that all of them succeed
 is at most `(1 - c/(1+|log r|)²)^N ≤ exp(-cκ r^{-ζ}/(1+|log r|)²)`, which is at most `1/2` for all small `r`.
 

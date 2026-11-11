@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4S6c.CoverMinorantMeasurable
 import MatedCRT.FirstPass.Frozen.S4S6c
 
 /-!
-# Lemma 2, eq (9): the dense minorant for an almost-everywhere random measure (q2, task fp-S4S6c; LEMMA68 gap G9)
+# Lemma 2, eq (9): the dense minorant for an almost-everywhere random measure
 
 The everywhere hypothesis `hκ` of `CoverMinorantMeasurable.goodAnnulusCover_dyadic_of_dense` is replaced by the freezable
 almost-everywhere form: `μ` agrees almost surely with a `m'`-measurable random measure `g`. Then the dense cover of `g`
@@ -28,7 +28,7 @@ theorem mem_denseCoverSet_congr {Ω : Type*} {μ g : Ω → Measure ℂ} {ω : �
     ω ∈ CoverMinorantMeasurable.denseCoverSet D μ ρ c₀ C δ ↔ ω ∈ CoverMinorantMeasurable.denseCoverSet D g ρ c₀ C δ := by
   simp only [CoverMinorantMeasurable.denseCoverSet, CoverMinorantMeasurable.denseGoodSet, Set.mem_ofPred_eq, h]
 
-/-- **Lemma 2, eq (9), almost-everywhere form** (LEMMA68 Lemma 2 item 2). Given that `μ` agrees almost surely with an
+/-- **Lemma 2, eq (9), almost-everywhere form**. Given that `μ` agrees almost surely with an
 `m'`-measurable random measure `g`, and the Draft polynomial bound at radius `c₀/2`, the dyadic good-radius conclusion holds on
 an `m'`-measurable cutoff. -/
 theorem goodAnnulusCover_dyadic_of_ae {Ω : Type*} {m' : MeasurableSpace Ω} [MeasurableSpace Ω]

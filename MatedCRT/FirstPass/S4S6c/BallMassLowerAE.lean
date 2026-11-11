@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4S6c.BallMassLower
 import MatedCRT.FirstPass.Frozen.S4S6c
 
 /-!
-# Lemma 2, eq (8), almost-everywhere form (q2, task fp-S4S6c; LEMMA68)
+# Lemma 2, eq (8), almost-everywhere form
 
 `BallMassLower.ballMass_lower_of_polyHighProb` assumes the everywhere measurability `hμ` of the ball masses. Here the
 measure family is only assumed to agree almost surely with an `m'`-measurable random measure `g` (the freezable form

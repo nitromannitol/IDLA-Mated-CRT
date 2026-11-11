@@ -2,15 +2,15 @@ import MatedCRT.FirstPass.S4S6c.AmplifiedBound
 import MatedCRT.FirstPass.S4S6c.SuccessiveTests
 
 /-!
-# LEMMA68 eqs (30)-(31): amplification from successive local tests (q2, task fp-S4S6c)
+# Amplification from successive local tests
 
-LEMMA68.md (lines 510-530, "Combining (29)-(32) proves (3)"): `N` successive local tests, each with conditional passing
-probability at least `q(r) = c/(1+|log r|)²` from every state of the set `Y` (eq (30)), give probability at most `(1-q(r))^N`
+ (lines 510-530, "Combining (29)-(32) proves (3)"): `N` successive local tests, each with conditional passing
+probability at least `q(r) = c/(1+|log r|)²` from every state of the set `Y`, give probability at most `(1-q(r))^N`
 that all tests are passed (eq (31), `srwLaw_successive_tests_le_pow`). With `N ≥ κ r^{-ζ}` (eq (32)) and the eventual
 estimate `eventually_amplified_le_half`, this is at most `1/2` for all sufficiently small `r`.
 
-The stopping and state conditions are the abstract ones of `srwLaw_successive_tests_le_pow`; the concrete tests of LEMMA68
-(eqs (27)-(29)) remain to be instantiated (see the report). The per-test bound is taken for every radius, so that the
+The stopping and state conditions are the abstract ones of `srwLaw_successive_tests_le_pow`; the concrete tests
+(eqs (27)-(29)) remain to be instantiated. The per-test bound is taken for every radius, so that the
 eventual statement is uniform in `N`.
 -/
 
@@ -21,7 +21,7 @@ namespace MatedCRT
 
 open WalkPotential
 
-/-- **Amplification from successive tests** (LEMMA68 eqs (30)-(32)): with the per-test bound `1 - c/(1+|log r|)²` (eq (30)),
+/-- **Amplification from successive tests**: with the per-test bound `1 - c/(1+|log r|)²`,
 for all small `r` and all `N ≥ κ r^{-ζ}`, the probability that the first `N` successive tests are all passed is at most `1/2`. -/
 theorem srwLaw_successive_tests_le_half {c κ ζ : ℝ} (hc : 0 < c) (hκ : 0 < κ) (hζ : 0 < ζ)
     (m : ℤ → ℤ → ℕ) (a : ℤ) (τ : ℕ → (ℕ → ℤ) → ℕ∞)

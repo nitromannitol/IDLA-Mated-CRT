@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4S6c.CoverMinorant
 import MatedCRT.FirstPass.S4S6c.GoodRadiusCover
 
 /-!
-# Lemma 2, eq (9): field-measurability of the dense good-annulus minorant (q2, task fp-S4S6c; LEMMA68 gap G9)
+# Lemma 2, eq (9): field-measurability of the dense good-annulus minorant
 
 The dense cover `denseCoverSet` at scale `δ` is the grid form of `GoodAnnulusCoverEvent` (GoodRadiusCover.lean) with the
 supremum and infimum of `IsGoodAnnulusEvent` replaced by suprema and infima over a countable dense set `D ∩ 𝔸` (CoverMinorant.lean).
@@ -139,7 +139,7 @@ theorem measurableSet_denseCoverSet (μ : Ω → Measure ℂ)
 
 end Measurability
 
-/-- **Lemma 2, eq (9), from the dense minorant** (LEMMA68 Lemma 2 item 2, gap G9 closed except for the random-measure
+/-- **Lemma 2 from the dense minorant** (gap G9 closed except for the random-measure
 hypothesis `hκ`). Given the Draft polynomial bound at constant `c₀ / 2` (`hpoly`, from `GoodAnnulusPrevalenceStmt`), the dense
 cover at constant `C` is a field-measurable minorant of the printed cover at radius `c₀`, so the dyadic good-radius
 conclusion holds on a field-measurable cutoff. -/

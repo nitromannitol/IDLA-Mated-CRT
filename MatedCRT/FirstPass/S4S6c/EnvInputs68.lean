@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S4S6c.BallMassLowerAE
 import MatedCRT.Proofs.Measurability.LQGMeasureField
 
 /-!
-# Environment-level inputs of LEMMA68 Lemmas 2 (eqs (8), (9)) for a valid environment (q2, round 64)
+# Environment-level inputs for a valid environment
 
 For a valid environment `S : MatedCRTEnv Ω` (`S.IsValid 𝒮 γ`, Defs/Setting.lean:141) the LQG measure `S.μ` is almost surely
 equal to a `S.fieldSigma`-measurable random measure. This removes the frozen input `FrozenLQGMeasureFieldMeasurable`

@@ -1,9 +1,9 @@
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.Threshold
 
 /-!
-# Lemma 2, eq (8): the ball-mass lower bound with a field-measurable scale (q2, task fp-S4S6c; LEMMA68)
+# Lemma 2, eq (8): the ball-mass lower bound with a field-measurable scale
 
-Written argument: notes/fp-gaps/LEMMA68.md, Lemma 2 (lines 186-200). Eq (8): `μ_h(B_t(y)) ≥ c_v t^b` for `y ∈ cl B_ρ` and
+, Lemma 2 (lines 186-200). Eq (8): `μ_h(B_t(y)) ≥ c_v t^b` for `y ∈ cl B_ρ` and
 `0 < t < t_*`, with `c_v = 4^{-b}` and a field-measurable `t_*`.
 
 * `BallMassLower.ballMass_lower_of_polyHighProb`: the lower bound at all centres of the dyadic-scale events (hypothesis
@@ -20,7 +20,7 @@ namespace MatedCRT
 
 namespace BallMassLower
 
-/-- **Lemma 2, eq (8)** (LEMMA68, Lemma 2 item 1): lower ball-mass bound at a field-measurable scale, `c_v = 4^{-b}`. -/
+/-- **Lemma 2, eq (8)** (Lemma 2 item 1): lower ball-mass bound at a field-measurable scale, `c_v = 4^{-b}`. -/
 theorem ballMass_lower_of_polyHighProb {Ω : Type*} {m' : MeasurableSpace Ω} [MeasurableSpace Ω]
     {P : Measure Ω} [IsProbabilityMeasure P]
     (μ : Ω → Measure ℂ) {ρ ρ₁ b : ℝ} (hρ : 0 < ρ) (hρρ₁ : ρ < ρ₁) (hρ₁ : ρ₁ < 1) (hb : 0 < b)

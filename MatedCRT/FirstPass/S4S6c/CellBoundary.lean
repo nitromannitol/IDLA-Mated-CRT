@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# Boundary crossing of the cell walk (q2, task fp-S4S6c; LEMMA68 "Notation and elementary geometric facts", lines 59-89)
+# Boundary crossing of the cell walk (lines 59-89)
 
-For a family of connected cells `H v ⊆ ℂ` (`v : ℤ`) with adjacent cells intersecting, and an open set `D`, LEMMA68 writes
+For a family of connected cells `H v ⊆ ℂ` (`v : ℤ`) with adjacent cells intersecting, and an open set `D`, the printed argument writes
 `V(D) = {v : H v ∩ D ≠ ∅}` and `I(D) = V(D) \ V(∂D)`, where `V(∂D) = {v : H v ∩ ∂D ≠ ∅}`. The deterministic facts are:
 * a cell of `I(D)` lies entirely in `D` (connectedness of the cell, and the cell does not meet `∂D`);
 * a walk that leaves `I(D)` first visits a cell meeting `∂D` (its previous vertex is in `I(D)`, and adjacent cells meet).
@@ -14,13 +14,13 @@ open Set Topology
 
 namespace MatedCRT
 
-/-- `V(D) = {v : H v ∩ D ≠ ∅}` (LEMMA68 notation). -/
+/-- `V(D) = {v : H v ∩ D ≠ ∅}`. -/
 def vertsMeet (H : ℤ → Set ℂ) (D : Set ℂ) : Set ℤ := {v | (H v ∩ D).Nonempty}
 
-/-- `V(∂D) = {v : H v ∩ ∂D ≠ ∅}` (LEMMA68 notation, `∂D` the topological frontier). -/
+/-- `V(∂D) = {v : H v ∩ ∂D ≠ ∅}` (`∂D` the topological frontier). -/
 def vertsFrontier (H : ℤ → Set ℂ) (D : Set ℂ) : Set ℤ := {v | (H v ∩ frontier D).Nonempty}
 
-/-- `I(D) = V(D) \ V(∂D)` (LEMMA68 notation). -/
+/-- `I(D) = V(D) \ V(∂D)`. -/
 def innerVertices (H : ℤ → Set ℂ) (D : Set ℂ) : Set ℤ := vertsMeet H D \ vertsFrontier H D
 
 /-- **A cell of `I(D)` lies in `D`.** It meets `D` and not `∂D`, and it is connected. -/

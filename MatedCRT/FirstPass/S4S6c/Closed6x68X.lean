@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4S6c.Closed6x68
 import MatedCRT.FirstPass.S4S6c.ShellChainCGRCX68
 
 /-!
-# Closed Lemmas 6.7, 6.8, 6.9 and 6.x from the X counting CG one-test input (fp-S4S6c-cgrcx-closures, lead li 77b)
+# Closed Lemmas 6.7, 6.8, 6.9 and 6.x from the X counting CG one-test input
 
 Copies of `closed_6_7_hU_cgRC`, `closed_6_8_hU_cgRC`, `closed_6_9_hU_cgRC`, `closed_6_x_hU_cgRC` (Closed6x68.lean:306-360)
 and of `firstPass_6_7/8/9_of_hOne` (Closed6x68.lean:365-400), with the producer `hOne : ShellOneTestOrderAeCGRCStmt 𝒮`
@@ -68,7 +68,7 @@ theorem closed_6_x_hU_cgRCX {𝒮 : SpaceFillingSLEModel}
     UniformConstantOrderLowerBoundStmt 𝒮 :=
   Lemma68ShellTopCGRCX.hU_top_cgRCX hG h28 hK hLit hBM hCC hB1 hμ hOneX
 
-/-! ### First-pass forms from the certified reference model, X counting CG route (fp-S4S6c-cgrcx-closures). -/
+/-! ### First-pass forms from the certified reference model, X counting CG route. -/
 
 /-- **Lemma 6.7, first-pass form of the X counting CG route.** As `firstPass_6_7_of_hOne` with `hOneX`. -/
 theorem firstPass_6_7_of_hOneX {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLEModel}

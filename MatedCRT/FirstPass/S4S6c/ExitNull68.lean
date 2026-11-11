@@ -2,7 +2,7 @@ import MatedCRT.Audit.StatementsSec3Sec5M1
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.OccupationGreen
 
 /-!
-# Almost surely finite exit from a finite set (q2, task fp-S4S6c-envscaling-6-7-6-8; LEMMA68 C2)
+# Almost surely finite exit from a finite set
 
 The start-level input of the good event `GoodEvent68`: for a finite set `A` of vertices and every start `y`, the walk
 leaves `A` almost surely, `srwLaw m y {vExitTime A = ⊤} = 0`. It follows from the finiteness of the expected exit time
@@ -10,7 +10,7 @@ leaves `A` almost surely, `srwLaw m y {vExitTime A = ⊤} = 0`. It follows from 
 edges `m k (k+1) ≠ 0`) and `ae_vExitTime_ne_top_of_expectedExitTime_ne_top` (OccupationGreen).
 
 This file imports the Audit chain (`IDLA.StrongMarkov`). The root names of `MarkovFixedTime` were renamed
-`walk_measurable_pathShift` and `walk_pathShift_zero` (operator 22:25 UTC, clash with `IDLA.StrongMarkov`), so the two
+`walk_measurable_pathShift` and `walk_pathShift_zero` (clash with `IDLA.StrongMarkov`), so the two
 chains can now be imported together.
 -/
 

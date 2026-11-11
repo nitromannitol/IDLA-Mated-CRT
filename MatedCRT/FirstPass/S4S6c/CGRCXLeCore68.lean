@@ -2,13 +2,13 @@ import MatedCRT.FirstPass.LICGRCXLe68
 import MatedCRT.FirstPass.S4S6c.CGRCXG2Core68
 
 /-!
-# CG-R counting swap under the constant order `C ≤ CG` (fp-S4S6c-cgrcx-le, z5)
+# CG-R counting swap under the constant order `C ≤ CG`
 
 Copy of `Lemma68CGRCXG2Core` (CGRCXG2Core68.lean) with the residual `ShellCGResG2CLe` (73a, `C ≤ CG` as a function of the
 premises) removed. Its role is taken by the premise `C ≤ CG` of the statement
-`LICGRCXLe68.ShellOneTestOrderAeCGRCXLeStmt` (lead li, decision after q3's trace: `WindowPrevAt` is monotone in `C`, so the
+`LICGRCXLe68.ShellOneTestOrderAeCGRCXLeStmt` (`WindowPrevAt` is monotone in `C`, so the
 pointwise residual `ShellCGResG2CLe` cannot hold for every `C` allowed by the premises; the existential source of `C ≤ CG`
-is request 80a, a chain-level input).
+is a chain-level input).
 
 * `ShellOneTestPointwiseCGRXLeStmt 𝒮`: `ShellOneTestPointwiseCGRXStmt` (ShellOneCGRCX68.lean) with the premise `C ≤ CG`
   after `WindowPrevAt γ (shortExp ζ) (shellC0 CG) C C'`.
@@ -38,7 +38,7 @@ open MatedCRT.Lemma68B1Assembly MatedCRT.Lemma68ShellCoreCG
 open MatedCRT.Lemma68ShellOneCGRCX
 open MatedCRT.Lemma68CGRCXG2Core
 
-/-- The CG-R pointwise one-test statement under the constant order `C ≤ CG` (fp-S4S6c-cgrcx-le, z5). Copy of
+/-- The CG-R pointwise one-test statement under the constant order `C ≤ CG`. Copy of
 `ShellOneTestPointwiseCGRXStmt` (ShellOneCGRCX68.lean) with the premise `C ≤ CG` after `WindowPrevAt`. -/
 def ShellOneTestPointwiseCGRXLeStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE β : ℝ,
@@ -78,7 +78,7 @@ def ShellOneTestPointwiseCGRXLeStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
               Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf
                 (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a
 
-/-- **The CG-R pointwise producer under `C ≤ CG` through `_g2` (fp-S4S6c-cgrcx-le, z5).** Copy of
+/-- **The CG-R pointwise producer under `C ≤ CG` through `_g2`.** Copy of
 `shellOneTestPointwiseCGRX_of_g2` (CGRCXG2Core68.lean) without the residual `hCLe`: the constant order is the premise
 `hCCG : C ≤ CG` of the statement, passed to `shellOneTest_at_of_goodEnv_loc_g2` as its `C ≤ CG` argument. -/
 theorem shellOneTestPointwiseCGRXLe_of_g2 {𝒮 : SpaceFillingSLEModel}
@@ -138,7 +138,7 @@ theorem shellOneTestPointwiseCGRXLe_of_g2 {𝒮 : SpaceFillingSLEModel}
 
 #print axioms MatedCRT.Lemma68CGRCXLeCore.shellOneTestPointwiseCGRXLe_of_g2
 
-/-- **The CG-R counting swap under `C ≤ CG` (fp-S4S6c-cgrcx-le, z5).** `LICGRCXLe68.ShellOneTestOrderAeCGRCXLeStmt` from
+/-- **The CG-R counting swap under `C ≤ CG`.** `LICGRCXLe68.ShellOneTestOrderAeCGRCXLeStmt` from
 `shellOneTestPointwiseCGRXLe_of_g2` by the almost sure swap of `shellOneTestOrderAeCGRCX_of_open2`
 (CGRCXG2Core68.lean), with the premise `C ≤ CG` passed through. Binders: `hVG` (Lemma 2.7, frozen) and the residuals
 `hTest` (79a), `hGreen` (75a), `hWalk` (75a G1), `hRad` (77a), `hCtr` (74a). -/

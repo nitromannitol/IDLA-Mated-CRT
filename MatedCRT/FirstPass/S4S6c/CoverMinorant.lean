@@ -1,7 +1,7 @@
 import MatedCRT.Draft.Section6
 
 /-!
-# Lemma 2, eq (9): a dense-centre minorant of the good-annulus cover (q2, task fp-S4S6c; LEMMA68 gap G9)
+# Lemma 2, eq (9): a dense-centre minorant of the good-annulus cover
 
 `IsGoodAnnulusEvent μ c r z` (Defs/Setting.lean:333) compares the supremum over the open annulus `A = HarmonicBalls.annulus z r (2r)` of the
 log potential `v ↦ ∫⁻_A (log (r/|u-v|) + 1)^+ dμ(u)` with `C` times the infimum over `A` of the ball masses `μ(B(w, c r))`.

@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.TraceInputs68
 
 /-!
-# Cell-size input of the uniform Lemma 6.8 (q2, task fp-S4S6c-envscaling-6-7-6-8; LEMMA68 B1, Draft 2.8)
+# Cell-size input of the uniform Lemma 6.8 (Draft 2.8)
 
 The diameter bound of the cell-size estimate (`CellSizeEstimateStmt`, Draft/Section2.lean:131), read on one
 configuration `η`: if every cell meeting `ball 0 ρ` has diameter at most `d`, then the diameter hypothesis `hsm0` of

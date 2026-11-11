@@ -1,14 +1,14 @@
 import MatedCRT.FirstPass.S4S6c.FrontierSeparation
 
 /-!
-# Deterministic chain from the cluster to the trace bound (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# Deterministic chain from the cluster to the trace bound
 
 The cluster is a set `F` of the plane which contains the cells of the vertices of `Θ`; `U1 = thickening (r/2) F` and
 `U2 = thickening r F` are the two regions of `FrontierSeparation.trace_bound_of_frontier`. This file proves, with no
 probability input beyond the exit-time finiteness `hexit` and the frontier bound `hfront`:
 
 * `meetVerts_eq_of_isOpen`: for an open region the vertices of closed cells meeting it are the vertices of open cells
-  meeting it (`cellVertices` of the printed proof, eq (LEMMA68) `V^ε(D)`);
+  meeting it (`cellVertices` of the printed proof, eq `V^ε(D)`);
 * `closure_cell_subset_thickening_of_vClosure`: the closed cell of a vertex of the vertex closure `vClosure m Θ` lies in
   `thickening (r/2) F` when the cell diameter of that vertex is below `r/2` (Euclidean cell geometry, Armitage-Gardiner
   style closure of a connected cell meeting a neighbouring cell);

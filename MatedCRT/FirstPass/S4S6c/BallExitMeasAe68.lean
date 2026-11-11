@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.BallExitMeas68
 
 /-!
-# Finite-domain exit moments under almost-sure exit bounds (fp-S4S6c-leaf-rcell-tdom, q1)
+# Finite-domain exit moments under almost-sure exit bounds
 
 `hmom_pair_ae` is `FiniteExitMomentHoneMain68.hmom_pair_of_finiteDomain` at one index `k`, with the pointwise
 bounds `hTdom` (exit domination) and `hRbd` (radius bound) replaced by their almost-sure form under `srwLaw m a`
@@ -117,10 +117,10 @@ theorem hmom_pair_ae {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m)
 
 
 set_option linter.unusedVariables false in
-/-- **Finite-domain exit moments under a finite stopped-range localization (one index `k`; chat 246 Q1, item 4).**
+/-- **Finite-domain exit moments under a finite stopped-range localization (one index `k`; item 4).**
 Same conclusion as `hmom_pair_ae`, with the pointwise-finite exit domination `hTdom` replaced by `hstopFin`: the stopped
 vertex `w (T k w).toNat` lies a.s. in a finite set `F`. The domination `T k w ≤ vExitTime D w` is false as typed for
-shell times (chat 246 Q1, item 1), so it is not assumed. Only `hRbd` (the a.s. radius bound) is used besides `hstopFin`.
+shell times (item 1), so it is not assumed. Only `hRbd` (the a.s. radius bound) is used besides `hstopFin`.
 The cells of the test balls are finite on `F` (`MatedCRT.S5c.cellVertices_ball_finite`), so `G` is finite. -/
 theorem hmom_pair_stopFin_ae {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m)
     (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0)

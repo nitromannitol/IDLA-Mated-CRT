@@ -1,9 +1,9 @@
 import MatedCRT.FirstPass.S4S6c.PrintedGreen68
 
 /-!
-# LEMMA68 annulus geometry of the test disk (q2, task fp-S4S6c-envscaling-6-7-6-8; write-up B5, B6)
+# Annulus geometry of the test disk
 
-The closed annulus `A_{R,2R}(z) = {u : R ≤ |u - z| ≤ 2R}` (Terminology: the annulus of Lemma 1 of LEMMA68, eq (4)).
+The closed annulus `A_{R,2R}(z) = {u : R ≤ |u - z| ≤ 2R}`.
 Write-up B5-B6: with `x` at distance `4R/3 ± d` from `z`, `d ≤ R/100` (cell-size bound), the test disk
 `D = B_{R/4}(x)` and its `δ`-thickening `E = B_δ(D)` with `δ ≤ R/100` lie in `A_{R,2R}(z)`. Consequently the
 potential supremum of `draft_sup_le_of_annulus` (PrintedGreen68.lean) applies with `A = A_{R,2R}(z)`, and only the
@@ -17,7 +17,7 @@ open scoped ENNReal
 
 namespace MatedCRT
 
-/-- The closed annulus `A_{R,2R}(z) = {u : R ≤ |u - z| ≤ 2R}` (LEMMA68 Lemma 1 domain, write-up B6). -/
+/-- The closed annulus `A_{R,2R}(z) = {u : R ≤ |u - z| ≤ 2R}`. -/
 def closedAnnulus (z : ℂ) (R : ℝ) : Set ℂ := {u | R ≤ ‖u - z‖ ∧ ‖u - z‖ ≤ 2 * R}
 
 theorem isClosed_closedAnnulus (z : ℂ) (R : ℝ) : IsClosed (closedAnnulus z R) := by
@@ -63,7 +63,7 @@ theorem mem_closedAnnulus_of_norm_sub_le {x z u : ℂ} {R e : ℝ} (hR : 0 < R)
   · linarith [hx.1]
   · linarith [hx.2]
 
-/-- The test disk `D = B_{R/4}(x)` lies in the annulus `A_{R,2R}(z)` (write-up B6). -/
+/-- The test disk `D = B_{R/4}(x)` lies in the annulus `A_{R,2R}(z)`. -/
 theorem ball_subset_closedAnnulus {x z : ℂ} {R : ℝ} (hR : 0 < R)
     (hx : 4 * R / 3 - R / 100 ≤ ‖x - z‖ ∧ ‖x - z‖ ≤ 4 * R / 3 + R / 100) :
     ball x (R / 4) ⊆ closedAnnulus z R := by
@@ -73,7 +73,7 @@ theorem ball_subset_closedAnnulus {x z : ℂ} {R : ℝ} (hR : 0 < R)
     exact hu.le
   exact mem_closedAnnulus_of_norm_sub_le hR hx h (by linarith)
 
-/-- The `δ`-thickening `E = B_δ(B_{R/4}(x))` lies in the annulus `A_{R,2R}(z)` when `δ ≤ R/100` (write-up B6,
+/-- The `δ`-thickening `E = B_δ(B_{R/4}(x))` lies in the annulus `A_{R,2R}(z)` when `δ ≤ R/100` (
 `E ⊂ A_{R,2R}(z)`). -/
 theorem thickening_ball_subset_closedAnnulus {x z : ℂ} {R δ : ℝ} (hR : 0 < R)
     (hx : 4 * R / 3 - R / 100 ≤ ‖x - z‖ ∧ ‖x - z‖ ≤ 4 * R / 3 + R / 100) (hδ : δ ≤ R / 100) :
@@ -90,7 +90,7 @@ theorem thickening_ball_subset_closedAnnulus {x z : ℂ} {R δ : ℝ} (hR : 0 < 
     linarith
   exact mem_closedAnnulus_of_norm_sub_le hR hx h3 le_rfl
 
-/-- **Potential supremum on a test disk** (LEMMA68 eq (21), write-up B5-B6): for the test disk `D = B_{R/4}(x)` with
+/-- **Potential supremum on a test disk**: for the test disk `D = B_{R/4}(x)` with
 `|x - z| ∈ [4R/3 ± R/100]` and thickening `δ ≤ R/100`, the supremum of the Draft Lemma 2.18 kernel integral over
 `E = B_δ(D)` is at most the Lemma 1 bound, with `A = A_{R,2R}(z)`. The inputs are the good-annulus bound `hF`, the
 integrability `hint` and the finiteness `μ A ≠ ⊤`; the geometry is discharged here. -/

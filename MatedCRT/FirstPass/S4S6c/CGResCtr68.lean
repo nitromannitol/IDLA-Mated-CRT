@@ -2,13 +2,13 @@ import MatedCRT.FirstPass.S4S6c.CGRCXG2Core68
 import MatedCRT.FirstPass.S4S6c.CGResX1MomS68
 
 /-!
-# The exit-vertex centre bound of the CG-R residual (fp-S4S6c-ctr, z9)
+# The exit-vertex centre bound of the CG-R residual
 
 `CGRCXG2Core68.ShellCGResG2Ctr` (residual `74a`, the `hc` binder of `shellOneTest_at_of_goodEnv_loc_g2`) asks that at a
 `FullAdmAt` point of `ShellPtPremCG`, the exit vertex of every leaf path lies in
 `B(0, 1 - windowRf(centre) / 4)`.
 
-Route (Codex answer Q1, step "shorter discharge"; notes/fp-gaps/CODEX-idla-hOne-residuals-sol-20261110.md):
+Route (step "shorter discharge"):
 the stronger bound `‖vertexPoint b‖ < rhoCell68 ρ - windowRf(centre) / 4` is already proved by
 `CGResX1MomS68.resX1_pt` (the residual `hx1`, which contains the exit-cell and annulus computation). Since `ρ < 1`
 gives `rhoCell68 ρ < 1` (`Lemma68HoneCellGood.rhoCell68_lt_one`), the bound with `1` in place of `rhoCell68 ρ` follows
@@ -35,7 +35,7 @@ open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 open MatedCRT.Lemma68ShellHoneInst MatedCRT.Lemma68WindowRf MatedCRT.Lemma68ShellOrderWindow
 open MatedCRT.Lemma68B1Assembly
 
-/-- **The exit-vertex centre bound at one point (fp-S4S6c-ctr, z9; pointwise form of `ShellCGResG2Ctr`).** Same explicit
+/-- **The exit-vertex centre bound at one point (pointwise form of `ShellCGResG2Ctr`).** Same explicit
 premises as `CGResX1MomS68.resX1_pt`. The exit vertex of each leaf path satisfies
 `‖vertexPoint b‖ < 1 - windowRf(centre) / 4`, from `resX1_pt` and `rhoCell68 ρ < 1`. -/
 theorem shellCGResCtr_pt {γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ} {Ω : Type} [MeasurableSpace Ω]
@@ -66,7 +66,7 @@ theorem shellCGResCtr_pt {γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ} {Ω : 
     hε hεe hr10 hmeshω hgap hcurve hmult hcont hμN hμF hdeg hadj hadjAll hFA k hk] with x hx hleaf
   exact lt_trans (hx hleaf) (sub_lt_sub_right (Lemma68HoneCellGood.rhoCell68_lt_one hρ1) _)
 
-/-- **The exit-vertex centre bound holds (fp-S4S6c-ctr, z9; residual `74a`).** Destructures `ShellPtPremCG`
+/-- **The exit-vertex centre bound holds (residual `74a`).** Destructures `ShellPtPremCG`
 (ShellCoreCG68.lean:287) as `CGResX1MomS68.shellCGResX1_holds` does, and applies `shellCGResCtr_pt`; the mesh event is
 `countingMeshEventR_meshR`. No hypothesis. -/
 theorem shellCGResG2Ctr_holds (𝒮 : SpaceFillingSLEModel) : Lemma68CGRCXG2Core.ShellCGResG2Ctr 𝒮 := by

@@ -2,13 +2,13 @@ import MatedCRT.FirstPass.S4S6c.Chain68
 import MatedCRT.FirstPass.S4S6c.TailWindow68
 
 /-!
-# One window configuration of the printed Lemma 6.8 (q2, task fp-S4S6c-envscaling-6-7-6-8; LEMMA68 C3, D1-D2)
+# One window configuration of the printed Lemma 6.8 (D1-D2)
 
 For one configuration (a cluster `F = fillCells Θ` in the plane, cells of diameter `d < r/2`, the test windows `Wt y`
 and regions `Aof y` of the successive tests, the good event `Good` of legal trajectories) this file proves the
 deterministic bound
 
-  `1/2 ≤ P_a( the walk hits V(U₂) \ (S' ∪ Θ) before exiting V(U₂) )`, `a ∈ vClosure Θ`, `U₂ = thickening r F`,
+  `1/2 ≤ P_a(the walk hits V(U₂) \ (S' ∪ Θ) before exiting V(U₂))`, `a ∈ vClosure Θ`, `U₂ = thickening r F`,
 
 from the one-test bound `hc` for every centre, the finiteness and availability of the test starts on `Good`, and the
 window containment `Wt y ⊆ V(U₂) \ Θ`, `Aof y = S' \ Θ` on the band `Y`. The probabilistic inputs (`hc`, the good event)
@@ -67,7 +67,7 @@ theorem frontier_half {cell : ℤ → Set ℂ} {F : Set ℂ} {Θ S' : Set ℤ} {
 /-- **Trace bound of one configuration (deterministic core of the printed Lemma 6.8).** Under the hypotheses of
 `Chain68.trace_bound_cluster_open` (cluster geometry, `a ∈ vClosure Θ`, exit almost surely finite) and the window
 hypotheses of `frontier_half`, the walk from `a` visits `V(U₂) \ (S' ∪ Θ)` before exiting `V(U₂)` with probability at
-least `1/2`. The constant `1/2` is the uniform `s₂` of the write-up (D1-D2). -/
+least `1/2`. The constant `1/2` is the uniform `s₂`. -/
 theorem trace_half {m : ℤ → ℤ → ℕ} {cell : ℤ → Set ℂ} {F : Set ℂ} {Θ S' : Set ℤ} {a : ℤ} {r d : ℝ}
     (hr : 0 < r) (hd : d < r / 2)
     (hbdd : ∀ v, Bornology.IsBounded (cell v)) (hdiamA : Metric.diam (cell a) ≤ d)

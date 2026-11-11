@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# Lemma 1 of the Lemma 6.8 argument: Fubini over the good annulus and the circle (q2, task fp-S4S6c)
+# Lemma 1 of the Lemma 6.8 argument: Fubini over the good annulus and the circle
 
-LEMMA68.md, "Lemma 1", proof, eq. (6): `M ≤ κ₀⁻¹ C_A m` comes from averaging `F(v) = ∫_A K(u,v) dμ(u)` over the circle
+, "Lemma 1", proof, eq. (6): `M ≤ κ₀⁻¹ C_A m` comes from averaging `F(v) = ∫_A K(u,v) dμ(u)` over the circle
 `v = z + t e^{iθ}`, `t = 3R/2`, and interchanging the integrals in `u` (over `A`) and `θ` (over `(0, 2π]`).
 This file proves the interchange `∫_A (circle average of K(u,·)) dμ(u) = circle average of F` for a jointly measurable
 kernel with joint integrability. The joint integrability is a SEPARATE step (OPEN, see the round report): it follows from

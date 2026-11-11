@@ -1,9 +1,9 @@
 import MatedCRT.FirstPass.S4S6c.ShellConstants68
 
 /-!
-# Bounded check of the doubled shell exponent `K.ω = 2 * ω₀` (fp-S4S6c-cgrcy-k2, z5)
+# Bounded check of the doubled shell exponent `K.ω = 2 * ω₀`
 
-Lead pointer (q3, reports/q3.md): take the leaf's shell exponent `K.ω := 2 * ω₀` (the mesh exponent stays `ω₀`), so that the
+Pointer: take the leaf's shell exponent `K.ω := 2 * ω₀` (the mesh exponent stays `ω₀`), so that the
 square premise `4 * ε ^ K.ω ≤ r ^ 2` of `CGResWalkG68.walkG_pt_sq` (CGResWalkG68.lean:117) follows from `10 * ε ^ ω₀ ≤ r`.
 
 This file records the checks. The algebra of the pointer holds: `four_rpow_double_le_sq` (the walk square premise at `2 * ω₀`)

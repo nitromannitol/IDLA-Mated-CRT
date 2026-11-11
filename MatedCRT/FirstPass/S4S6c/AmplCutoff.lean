@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# The numerical amplification cutoff (q2, task fp-S4S6c; LEMMA68 D1-D2)
+# The numerical amplification cutoff
 
-Pure real analysis behind the explicit cutoff (D2) of the write-up of LEMMA68: for `0 < ζ < 1/2`, `c > 0` and
+Pure real analysis behind the explicit cutoff: for `0 < ζ < 1/2`, `c > 0` and
 `0 < r ≤ 1` with `r ≤ (c ζ² / (16 log 2))^(2/ζ)`, the exponent `c r^(-ζ) / (1 + log (1/r))²` is at least `log 2`, so
 `exp (-(c r^(-ζ) / (1 + log (1/r))²)) ≤ 1/2`. The argument: `1 + t ≤ (4/ζ) exp (ζ t / 4)` for `t ≥ 0` (from
 `1 + u ≤ exp u`), hence `(1 + t)² ≤ (16/ζ²) exp (ζ t / 2)`, and the cutoff gives `exp (ζ t / 2) ≥ 16 log 2 / (c ζ²)`
@@ -46,7 +46,7 @@ theorem sq_le_exp_half {ζ t : ℝ} (hζ : 0 < ζ) (hζ' : ζ < 1 / 2) (ht : 0 �
       rw [mul_pow, hE]
       ring
 
-/-- **The amplification cutoff** (LEMMA68 D2): below the radius `(c ζ² / (16 log 2))^(2/ζ)` the exponent
+/-- **The amplification cutoff**: below the radius `(c ζ² / (16 log 2))^(2/ζ)` the exponent
 `c r^(-ζ) / (1 + log (1/r))²` is at least `log 2`, so the exponential of its negative is at most `1/2`. -/
 theorem amplification_cutoff {c ζ r : ℝ} (hc : 0 < c) (hζ : 0 < ζ) (hζ' : ζ < 1 / 2)
     (hr : 0 < r) (hr1 : r ≤ 1) (hrA : r ≤ (c * ζ ^ 2 / (16 * Real.log 2)) ^ (2 / ζ)) :

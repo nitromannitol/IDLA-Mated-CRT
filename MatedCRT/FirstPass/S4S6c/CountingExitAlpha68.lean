@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S6f.UniformEvents
 import MatedCRT.FirstPass.SLERef.Certified
 
 /-!
-# One exponent for the exit-time event and the counting good event (fp-S4S6c-counting-alpha, q1)
+# One exponent for the exit-time event and the counting good event
 
 `CountingAtExitAlphaStmt 𝒮` (Guard68S10) asks for one pair `(α, β)` such that the exit-time event
 `exitTimeEvent68 S α ρ CE` (Draft Lemma 2.18, `ExitTimeUpperBoundStmt`) and the counting good event
@@ -146,7 +146,7 @@ theorem countingAtExitAlphaStmt_of_counting_exit {𝒮 : SpaceFillingSLEModel}
     · intro ε h0 h1 ω hω
       exact countingGoodEvent_mem_of_le S h0 h1.le (min_le_left _ _) hω.2 hω.1
 
-/-- **Counting exponent at the exit exponent (q2 producer, fp-S4S6c-counting-alpha).** The first-pass input is the
+/-- **Counting exponent at the exit exponent.** The first-pass input is the
 certified reference model, as for the projections `CertifiedReferenceModel.countingMeasureConvergence` and
 `CertifiedReferenceModel.exitTimeUpperBound`. -/
 theorem countingAtExitAlphaStmt_of_firstPass {ν : ℝ → Measure SLEPathCode} {𝒮 : SpaceFillingSLEModel}

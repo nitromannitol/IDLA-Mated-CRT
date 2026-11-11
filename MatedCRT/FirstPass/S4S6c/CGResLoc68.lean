@@ -7,7 +7,7 @@ import MatedCRT.FirstPass.S4S6c.ShellConstOrder68
 import MatedCRT.FirstPass.S6r.KilledExitAe
 
 /-!
-# The residual `ShellCGResLoc`, pointwise (fp-S4S6c-cgres-loc, z1)
+# The residual `ShellCGResLoc`, pointwise
 
 Step A: at ONE environment point `ω`, the body of `ShellCGResLoc` (`ShellCoreCG68.lean`) after its two premises
 (`CellDiamLe` on `ball 0 (rhoCell68 ρ)` and `FullAdmAt`) follows from individual clauses of `ShellPtPremCG` and from

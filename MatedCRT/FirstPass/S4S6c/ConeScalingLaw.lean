@@ -7,7 +7,7 @@ import MatedCRT.Proofs.Sec4.ConvergenceDivisible.VolumeGrowthInsideUnit
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.FromInputs
 
 /-!
-# Cone scaling in law: the volume-growth chain of Theorem 4.1 (q2, task fp-S4S6c)
+# Cone scaling in law: the volume-growth chain of Theorem 4.1
 
 These are the repaired versions of `ConeScalingPositivity.lean` (`ae_coneScaleRadius_pos_of_scaling`,
 `ae_coneScaleRadius_exhaustion_of_scaling`, `ae_volumeGrowth_of_scaling`, `convergenceDivisibleEventMeasurable_of_scaling`)

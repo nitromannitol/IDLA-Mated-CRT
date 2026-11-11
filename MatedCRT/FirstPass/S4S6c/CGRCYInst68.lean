@@ -5,13 +5,13 @@ import MatedCRT.FirstPass.S4S6c.CGResTestEnd68
 import MatedCRT.FirstPass.S4S6c.CGResCtr68
 
 /-!
-# The CG-R split constants instantiated; one named input for the walk (fp-S4S6c-cgrcy-inst, z5)
+# The CG-R split constants instantiated; one named input for the walk
 
 Instantiates the named binders of `Lemma68CGRCYCore.shellOneTestOrderAeCGRCY_of_split` with landed theorems:
 
-* `epsG := shellEpsG68` and `hεG := shellEpsG68_pos` (z11, CGResGreenY68.lean);
-* `hTest := shellCGTestEndLoc_holds 𝒮` (z1, CGResTestEnd68.lean);
-* `hCtr := shellCGResG2Ctr_holds 𝒮` (z9, CGResCtr68.lean);
+* `epsG := shellEpsG68` and `hεG := shellEpsG68_pos` (CGResGreenY68.lean);
+* `hTest := shellCGTestEndLoc_holds 𝒮` (CGResTestEnd68.lean);
+* `hCtr := shellCGResG2Ctr_holds 𝒮` (CGResCtr68.lean);
 * `hWalk`: `ShellCGResWalkY 𝒮 shellEpsG68`, from the single named input `ShellWalkFirstCGStmt 𝒮`.
 
 `ShellWalkFirstCGStmt 𝒮` is the named input of `CGResWalkG68.walkG_pt` (its `hFirst` at `K.ω = ω₀`), closed over the binders
@@ -38,7 +38,7 @@ open MatedCRT.Lemma68CGRCXG2Core
 open MatedCRT.LICGRCY68
 open MatedCRT.Lemma68CGRCYCore
 
-/-- **Named input, request 83a (walk exit vertex in ball 0 (ρ - ε ^ ω₀)); not a frozen Prop.** The first conjunct of the
+/-- **Named input (walk exit vertex in ball 0 (ρ - ε ^ ω₀)); not a frozen Prop.** The first conjunct of the
 walk binder `hWalk` of the split leaf (`B1GoodEnvSplit68.shellOneTest_at_of_goodEnv_loc_split`, B1GoodEnvSplit68.lean:212),
 at the shell exponent `K.ω = ω₀`: the walk exit vertex lies in the cell ball `ball 0 (ρ - ε ^ ω₀)`. Closed over the binders
 of `ShellCGResWalkY` (`ShellPtPremCG`, `2 * ω₀ < ωG`, `ε ≤ shellEpsG68`, the Green event at `ωG`, the full admissibility
@@ -57,7 +57,7 @@ def ShellWalkFirstCGStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
               (windowRfT S.μ ρ (shortExp ζ) (shellC0 CG) C (dyadicD r) ω) k x).toNat ∈
               cellVertices ε (S.η ω) (ball 0 (ρ - ε ^ ω₀))
 
-/-- **The residual `ShellCGResWalkY` from the walk first conjunct (fp-S4S6c-cgrcy-inst, z5).** The second conjunct
+/-- **The residual `ShellCGResWalkY` from the walk first conjunct.** The second conjunct
 `ε ^ ωG ≤ winRf / 8` and the gap come from `CGResWalkG68.walkG_pt` (`walkG_full_pt`, no named input); the first conjunct is
 `h`. The premises `ShellPtPremCG` supply the positivity, `r ≤ ρ / 4`, `countThreshold`, `RegularEnvAt68`, the cell-diameter
 bound (`cellDiamLe_rhoCell_of_meshEventR`) and the gap, exactly as in `CGRCYCore68.shellOneTestPointwiseCGRY_of_split`. -/
@@ -96,9 +96,9 @@ theorem shellEpsGPos_shellEpsG68 :
   intros
   exact MatedCRT.Lemma68CGResGreenY.shellEpsG68_pos γ α ω₀ ζ CG
 
-/-- **The CG-R counting swap under the split constants, from the walk first conjunct (fp-S4S6c-cgrcy-inst, z5).**
-`LICGRCY68.ShellOneTestOrderAeCGRCYStmt` from the single named input `ShellWalkFirstCGStmt 𝒮` (request 83a), the landed
-test-end (z1) and centre-bound (z9) theorems, and the landed positivity of `shellEpsG68` (z11). -/
+/-- **The CG-R counting swap under the split constants, from the walk first conjunct.**
+`LICGRCY68.ShellOneTestOrderAeCGRCYStmt` from the single named input `ShellWalkFirstCGStmt 𝒮`, the landed
+test-end and centre-bound theorems, and the landed positivity of `shellEpsG68`. -/
 theorem shellOneTestOrderAeCGRCY_of_walkFirst {𝒮 : SpaceFillingSLEModel} (h : ShellWalkFirstCGStmt 𝒮) :
     LICGRCY68.ShellOneTestOrderAeCGRCYStmt 𝒮 :=
   shellOneTestOrderAeCGRCY_of_split

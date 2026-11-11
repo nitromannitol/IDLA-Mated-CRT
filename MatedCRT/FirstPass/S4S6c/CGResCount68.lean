@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4S6c.ShellCoreCG68
 import MatedCRT.FirstPass.S4S6c.B1EnvPwG68
 
 /-!
-# The counting residual `ShellCGResCountGood` (q2, fp-S4S6c-cgres-count)
+# The counting residual `ShellCGResCountGood`
 
 STEP A (`resCountGood_pt`): the pointwise counting lower bound on the cells of `D ⊆ B(0, ρ)` at one environment `ω`. Its
 counting membership is the component `ω ∈ countingMeshEventR` (`countingMeshEventR_counting`, Guard68S10.lean); the bound is

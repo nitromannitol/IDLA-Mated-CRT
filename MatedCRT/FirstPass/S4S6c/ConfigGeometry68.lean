@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.S4S6c.CellBoundary
 import MatedCRT.FirstPass.S4S6c.FrontierSeparation
 
 /-!
-# Window containment of the test windows of the printed Lemma 6.8 (q2, task fp-S4S6c-envscaling-6-7-6-8; LEMMA68 C3)
+# Window containment of the test windows of the printed Lemma 6.8
 
-A test started at a vertex `y` of the walk uses the window `Wt y = I(B_{2R}(z))` (LEMMA68 eq (C3)), where `z` is the test
+A test started at a vertex `y` of the walk uses the window `Wt y = I(B_{2R}(z))`, where `z` is the test
 centre and `R` the good radius at `z`. This file proves the deterministic containment `Wt y ⊆ V(U₂) \ Θ` of
 `ConfigBound68.trace_half` (hypothesis `hWU`), for a window whose closed disk lies in the `r`-thickening of the cluster
 `F` at a positive distance from `F`:
@@ -21,7 +21,7 @@ namespace MatedCRT
 
 namespace ConfigGeometry68
 
-/-- **Window containment (LEMMA68 `Wt y ⊆ V(U₂) \ Θ`, C3).** Let `H v` be the connected, nonempty cells, `F` the cluster
+/-- **Window containment (`Wt y ⊆ V(U₂) \ Θ`).** Let `H v` be the connected, nonempty cells, `F` the cluster
 (`H k ⊆ F` for `k ∈ Θ`), and suppose the open disk `B_{2R}(z)` lies in `thickening r F` (witnessed by a point `f ∈ F`
 with `dist z f < r - 2R`) and misses `F` (`2R ≤ dist z f` for `f ∈ F`). Then the window `I(B_{2R}(z))` is contained in
 `V(U₂) \ Θ`, `U₂ = thickening r F`. -/

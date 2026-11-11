@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.S4S6c.StopFinPw68
 import MatedCRT.FirstPass.S4S6c.HoneCellGoodSelPw68
 
 /-!
-# The CG-residual pointwise premises: `resEl_pt`, `resStopFin_pt`, `resSel_pt` (fp-S4S6c-cgres-el-sel, z10)
+# The CG-residual pointwise premises: `resEl_pt`, `resStopFin_pt`, `resSel_pt`
 
 Step A. For one environment `ω`, one radius `r` and one scale `ε`, each residual of `ShellPtPremCG` (ShellCoreCG68.lean
 l.337-509) holds from the individual ω-level clauses it uses, given as named binders with the exact types of

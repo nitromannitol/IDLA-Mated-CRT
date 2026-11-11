@@ -4,9 +4,9 @@ import MatedCRT.FirstPass.S4S6c.ExitPath68
 import MatedCRT.FirstPass.S4S6c.NextExitStop
 
 /-!
-# Band induction of the printed Lemma 6.8 (q2, task fp-S4S6c-envscaling-6-7-6-8; LEMMA68 C3)
+# Band induction of the printed Lemma 6.8
 
-Deterministic core of the test sequence of LEMMA68 (C1)-(C3) (write-up `CHATGPT-lemma68-open-parts.md`, section C3).
+Deterministic core of the test sequence.
 For a legal walk `x` started at a frontier vertex `b`: `P v` is the vertex point of the cell `H v`, `ctr v` the test
 centre (`z_j = Q_δ(x_j)`, within `g` of `P v`), `rad v` the test radius (`R_j`), `Wt v = I(B_{2 rad v}(ctr v))` the inner
 test window, and `T_{j+1} = T_j + (first exit time of Wt (x_{T_j}) from the shifted path)`.
@@ -28,7 +28,7 @@ namespace MatedCRT
 
 namespace BandInduction68
 
-/-- The band `Y` of LEMMA68 (C7), (C11): the vertices whose vertex point lies within `3r/100 + 2d` of the sphere
+/-- The band `Y`: the vertices whose vertex point lies within `3r/100 + 2d` of the sphere
 `{dist(·, F) = r/2}`. -/
 def band (P : ℤ → ℂ) (F : Set ℂ) (r d : ℝ) : Set ℤ :=
   {v | |infDist (P v) F - r / 2| ≤ 3 * r / 100 + 2 * d}
@@ -70,7 +70,7 @@ theorem js_bound {j N : ℕ} {s r : ℝ} (hs : 0 < s) (hj : j ≤ N) (hNs : (N :
   have := mul_le_mul_of_nonneg_right hjN hs.le
   linarith
 
-/-- Band membership from the distance of a vertex point to the start point (LEMMA68 (C5), (C7)). -/
+/-- Band membership from the distance of a vertex point to the start point. -/
 theorem mem_band_of_dist {P : ℤ → ℂ} {F : Set ℂ} {r d : ℝ} {v b : ℤ} (hd : 0 ≤ d)
     (hstart : |infDist (P b) F - r / 2| ≤ d) (hv : dist (P v) (P b) ≤ 3 * r / 100) :
     v ∈ band P F r d := by
@@ -80,7 +80,7 @@ theorem mem_band_of_dist {P : ℤ → ℂ} {F : Set ℂ} {r d : ℝ} {v b : ℤ}
   rw [abs_le]
   constructor <;> linarith [h1.1, h1.2, h2.1, h2.2]
 
-/-- One test of the walk (LEMMA68 C3, one window). Let `w` be a legal path (`hlegal`) whose vertex `w 0` has cell point
+/-- One test of the walk (one window). Let `w` be a legal path (`hlegal`) whose vertex `w 0` has cell point
 within `g` of the centre `c`, and let the inner window `I(B_{2R}(c))` have exit time `e` (`hE`). Then the position of the
 exit vertex lies within `2R + d + g` of `P (w 0)`. The exit cell has closure meeting the sphere `∂B_{2R}(c)`
 (`ExitPath68.exit_closure_meets_sphere`), and that sphere lies in `B_ρ`, so the cell-size bound `hsm` applies to it. -/
@@ -121,7 +121,7 @@ theorem test_step {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {P : ℤ → �
     have h3 := dist_comm c (P (w 0))
     linarith
 
-/-- **Band induction (LEMMA68 C3, C6).** On a legal path `x` from the frontier vertex `b`, with the window exits finite
+/-- **Band induction (C6).** On a legal path `x` from the frontier vertex `b`, with the window exits finite
 on the band (`hfinW`), the test times satisfy `dist(P(x_{T_j}), P b) ≤ 3 j s` for `j ≤ N`, and `T_j` is finite. -/
 theorem band_induction {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {F : Set ℂ} {P ctr : ℤ → ℂ} {rad : ℤ → ℝ}
     {Wt : ℤ → Set ℤ} {r ρ s d g : ℝ} {N : ℕ} {b : ℤ} {x : ℕ → ℤ} {τ : ℕ → (ℕ → ℤ) → ℕ∞}
@@ -227,7 +227,7 @@ theorem band_facts {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {F : Set ℂ}
     subst hik
     exact mem_band_of_dist hd hstart (le_trans hdist (js_bound hs (by omega) hNs))
 
-/-- **Window containment (LEMMA68 `Wt y ⊆ V(U₂) \ Θ`, `hWU`).** For a vertex `y` of the band, the inner test window
+/-- **Window containment (`Wt y ⊆ V(U₂) \ Θ`, `hWU`).** For a vertex `y` of the band, the inner test window
 `I(B_{2R_y}(z_y))` lies in `V(U₂) \ Θ`, `U₂ = thickening r F`: the centre is at infimal distance `r/2 ± (3r/100 + 2d + g)`
 from `F`, which places the disk strictly between `2R` and `r - 2R` from `F` (`ConfigGeometry68.innerWindow_subset_meetVerts`). -/
 theorem window_sub {H : ℤ → Set ℂ} {F : Set ℂ} {Θ : Set ℤ} {P ctr : ℤ → ℂ} {rad : ℤ → ℝ} {Wt : ℤ → Set ℤ}

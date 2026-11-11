@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S4S6c.NextExitStop
 import MatedCRT.FirstPass.S4S6c.TestBound68
 
 /-!
-# Path lemma for the per-test bound of the printed Lemma 6.8 (q2, task fp-S4S6c-envscaling-6-7-6-8; LEMMA68 C4, (C13)-(C14))
+# Path lemma for the per-test bound of the printed Lemma 6.8
 
 For a walk `w` of cells, with `τ = vExitTime I(B_{4R/3}(z))` finite and equal to `k₀ + 1`, the exit cell `w (k₀+1)` is
 adjacent to an inner cell of `B_{4R/3}(z)`, and its closure meets the sphere `∂B_{4R/3}(z)` (`exit_closure_meets_sphere`).
@@ -12,8 +12,8 @@ If the walk stays in the outer window `I(B_{2R}(z))` until its outer exit, then 
 window `I(B_ρ(P b))`, `b = w (k₀+1)`, until the local exit: `stayIn_shift_of_outer`. This is the path-level input of the
 one-test bound `TestBound68.stayIn` at a random time (`RandomTimeTestBound.srwLaw_test_bound_random_time`).
 
-No probability input is used. Terminology: inner vertices `I(D)` (Armitage-Gardiner, LEMMA68 notation), outer and local
-test windows as in LEMMA68 (C3)-(C4).
+No probability input is used. Terminology: inner vertices `I(D)` (Armitage-Gardiner), outer and local
+test windows as in the printed proof.
 -/
 
 open Set Metric
@@ -23,7 +23,7 @@ namespace MatedCRT
 namespace ExitPath68
 
 /-- **Exit cell meets the sphere.** If an inner cell `H k'` of `B_ρ(c)` is adjacent to `H k` and `H k` is not inner, then
-the closure of `H k` meets the sphere `∂B_ρ(c)` (LEMMA68 (C13): `X_{S_j}` is on the sphere). -/
+the closure of `H k` meets the sphere `∂B_ρ(c)` (`X_{S_j}` is on the sphere). -/
 theorem exit_closure_meets_sphere {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {c : ℂ} {ρ : ℝ} {k' k : ℤ}
     (hconn : ∀ v, IsPreconnected (H v))
     (hadj : ∀ u v, m u v ≠ 0 → (closure (H u) ∩ closure (H v)).Nonempty)
@@ -87,7 +87,7 @@ theorem near_of_inner_or_adj {H : ℤ → Set ℂ} {m : ℤ → ℤ → ℕ} {c 
     have h4 := dist_triangle x q c
     linarith
 
-/-- **Path lemma (LEMMA68 (C13)-(C14)).** Let `τ = vExitTime I(B_{4R/3}(z)) w = k₀ + 1` (the walk leaves the sphere window
+/-- **Path lemma.** Let `τ = vExitTime I(B_{4R/3}(z)) w = k₀ + 1` (the walk leaves the sphere window
 at step `k₀ + 1`), let `w` stay in the outer window `I(B_{2R}(z))` until its outer exit (`hstay`), and let the local disks
 `B_ρ(P b)` (with `P b ∈ H b`) satisfy `4R/3 + d + ρ + d < 2R`. Then the shifted walk from `τ` stays in the local window
 `I(B_ρ(P b))` of its start `b = w (k₀+1)` until the local exit. -/

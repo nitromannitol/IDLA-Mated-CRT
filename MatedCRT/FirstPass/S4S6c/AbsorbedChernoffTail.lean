@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.AbsorbedChernoff69
 
 /-!
-# LEMMA68 printed 6.9: the induction and the Markov tail (q2, task fp-S4S6c; write-up Section 3)
+# Printed Lemma 6.9: the induction and the Markov tail
 
 Setting. `Y j : Ω → ℕ` with `Y j ≤ 1` is the absorption indicator of walker `j`. The history weight is
 `W_j = 3^{-N_j}` with `N_j = ∑_{i<j} Y_i`. The one-step hypothesis `hstep j` states, for the history weight, the integrated
@@ -44,7 +44,7 @@ theorem wgt_measurable [MeasurableSpace Ω] (Y : ℕ → Ω → ℕ) (hYm : ∀ 
     Finset.measurable_sum (range j) fun i _ => hYm i
   exact (measurable_from_nat (f := fun n : ℕ => (3⁻¹ : ℝ≥0∞) ^ n)).comp hs
 
-/-- **Induction** (write-up Section 3): `E[W_k] ≤ (2/3)^k` under the integrated one-step bound for the history weights. -/
+/-- **Induction**: `E[W_k] ≤ (2/3)^k` under the integrated one-step bound for the history weights. -/
 theorem weight_integral_le [MeasurableSpace Ω] (P : Measure Ω) (hP : P Set.univ = 1) (Y : ℕ → Ω → ℕ)
     (hYm : ∀ j, Measurable (Y j)) (hY : ∀ j ω, Y j ω ≤ 1)
     (hstep : ∀ j, 2⁻¹ * ∫⁻ ω, wgt Y j ω ∂P ≤ ∫⁻ ω, wgt Y j ω * (if Y j ω = 1 then 1 else 0) ∂P)
@@ -69,7 +69,7 @@ theorem two_mul_three_inv_eq_ofReal : (2 * 3⁻¹ : ℝ≥0∞) = ENNReal.ofReal
   rw [ENNReal.ofReal_div_of_pos (by norm_num)]
   simp [div_eq_mul_inv]
 
-/-- **Markov tail** (write-up Section 3): `P(4 ∑_{i<k} Y_i ≤ k) ≤ e^{-s₃ k}`, with `s₃ = ¾ log 3 − log 2`. -/
+/-- **Markov tail**: `P(4 ∑_{i<k} Y_i ≤ k) ≤ e^{-s₃ k}`, with `s₃ = ¾ log 3 − log 2`. -/
 theorem absorbed_tail_le [MeasurableSpace Ω] (P : Measure Ω) (hP : P Set.univ = 1) (Y : ℕ → Ω → ℕ)
     (hYm : ∀ j, Measurable (Y j)) (hY : ∀ j ω, Y j ω ≤ 1)
     (hstep : ∀ j, 2⁻¹ * ∫⁻ ω, wgt Y j ω ∂P ≤ ∫⁻ ω, wgt Y j ω * (if Y j ω = 1 then 1 else 0) ∂P)

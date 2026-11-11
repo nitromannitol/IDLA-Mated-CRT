@@ -1,9 +1,9 @@
 import MatedCRT.FirstPass.S4S6c.GoodAnnulusKernel
 
 /-!
-# Integrability of the corrected kernel on the good annulus times the circle (q2, task fp-S4S6c)
+# Integrability of the corrected kernel on the good annulus times the circle
 
-Ingredients of the joint integrability needed for the Fubini interchange in `CircleSwap.lean` (LEMMA68 Lemma 1, eq (6)):
+Ingredients of the joint integrability needed for the Fubini interchange in `CircleSwap.lean`:
 * `ae_circleMap_ne`: for a fixed point `u`, almost every parameter `θ ∈ (0, 2π]` has `circleMap z t θ ≠ u`;
 * `intervalIntegrable_kernel_slice`: for fixed `u`, `θ ↦ log(R/|u - circleMap z t θ|) + 1` is interval integrable;
 * `measurable_kernel_circle`: `(u, θ) ↦ log(R/|u - circleMap z t θ|) + 1` is measurable on `ℂ × ℝ`.

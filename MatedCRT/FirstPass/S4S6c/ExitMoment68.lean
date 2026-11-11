@@ -1,9 +1,9 @@
 import MatedCRT.FirstPass.S4S6c.TestBound68
 
 /-!
-# LEMMA68 second moment: the N = 2 exit-time bound as the `hmom` of `stayIn_le_log` (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# Second moment: the N = 2 exit-time bound as the `hmom` of `stayIn_le_log`
 
-Write-up B5 (notes/fp-gaps/CHATGPT-lemma68-open-parts.md, eqs (B15)-(B17)); printed Lemma 2.18 with `N = 2`
+Printed Lemma 2.18 with `N = 2`
 (Draft `ExitTimeUpperBoundStmt`, Draft/Section2.lean:239, BG20 Prop 5.1, EXTERNAL):
 `E[τ²] ≤ 2! C² ε⁻² Sup²`, where `Sup` is the supremum over the centre of the log-potential integral over
 `thickening (ε^α) D`. Here `τ = vExitTime W` for the window `W = I(D)` (Draft 2.18 uses `I(D)` itself as the window).
@@ -30,7 +30,7 @@ theorem rpow_neg_two_eq_inv_sq {ε : ℝ} (hε : 0 < ε) :
     ε ^ (-((2 : ℕ) : ℝ)) = ε⁻¹ ^ 2 := by
   rw [Nat.cast_ofNat, Real.rpow_neg hε.le, Real.rpow_two, inv_pow]
 
-/-- **Second moment from the Draft exit-time bound** (write-up B5, eq (B17) with `C2 := 2 C² C1²` absorbed into `Sr`).
+/-- **Second moment from the Draft exit-time bound** (with `C2 := 2 C² C1²` absorbed into `Sr`).
 The `N = 2` instance of Draft Lemma 2.18 at the vertex `a` and window `W`, with the potential supremum `S` bounded by
 `ofReal Sr`, gives the `hmom` bound of `TestBound68.stayIn_le_log`. -/
 theorem hmom_of_exitTime_two {m : ℤ → ℤ → ℕ} {W : Set ℤ} {a : ℤ} {ε C C0 Sr r : ℝ} {S : ℝ≥0∞}

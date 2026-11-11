@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S6f.UniformEvents
 import MatedCRT.FirstPass.S4S6c.HoneCellGood68
 
 /-!
-# The exit-time event at the cell radius `rhoCell68 ρ = (1 + ρ)/2` (fp-S4S6c-exit-rhocell, z10)
+# The exit-time event at the cell radius `rhoCell68 ρ = (1 + ρ)/2`
 
 The hOne closures take `HarmonicBalls.PolyHighProb S.P (exitTimeEvent68 S α ρ CE)` as an input, and its source is the
 Draft Lemma 2.18 `ExitTimeUpperBoundStmt` (Draft/Section2.lean:239), used by `meshEventsStmt_of_draft`

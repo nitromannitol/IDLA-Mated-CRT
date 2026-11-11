@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.S4S6c.ShellCoreCG68
 import MatedCRT.FirstPass.S4S6c.HoneRrLocal68
 
 /-!
-# The residual `hRr` of the CG shell producer (fp-S4S6c-cgres-rr, z12)
+# The residual `hRr` of the CG shell producer
 
-Owner: z12. This file discharges the residual `ShellCGResRr` of `ShellCoreCG68.lean` (the window lies in
+This file discharges the residual `ShellCGResRr` of `ShellCoreCG68.lean` (the window lies in
 `[r², 1]` on the leaf of the shell walk) from the individual `ω`-level clauses of `ShellPtPremCG` that the
 argument uses, and from the full-admissibility premise `FullAdmAt`.
 
@@ -26,7 +26,7 @@ open MatedCRT.Lemma68ShellCoreCG
 open MatedCRT.Lemma68ShellHoneInst MatedCRT.Lemma68WindowRf MatedCRT.Lemma68ShellOrderWindow
 open MatedCRT.Lemma68B1Assembly MatedCRT.Lemma68Omega
 
-/-- **STEP A of `ShellCGResRr` (z12).** The body of the residual `ShellCGResRr` (ShellCoreCG68.lean:374) at one
+/-- **STEP A of `ShellCGResRr`.** The body of the residual `ShellCGResRr` (ShellCoreCG68.lean:374) at one
 scale `ε`, one radius `r`, one environment `ω` and one leaf `i`, from the clauses of `ShellPtPremCG` used here and
 the premise `FullAdmAt`. -/
 theorem resRr_pt {γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ} {Ω : Type} [MeasurableSpace Ω]
@@ -61,8 +61,8 @@ theorem resRr_pt {γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ} {Ω : Type} [M
     hρ1 hζ0 hζ1 hq0 hq0c hs₀ hε hr0 hrρ hrA i ω hmesh hcont
     (Lemma68Geometry.tendsto_cocompact_of_escapes hcurve) (fun j k hjk => hadjAll ε hε j k hjk) (hmult ε hε) hFA
 
-/-- **STEP B: the residual `ShellCGResRr` holds for every `𝒮` (z12, fp-S4S6c-cgres-rr).** Destructures the
-43 clauses of the current `ShellPtPremCG` (ShellCoreCG68.lean, after z5's commit b51e0dc) by position, takes the
+/-- **STEP B: the residual `ShellCGResRr` holds for every `𝒮`.** Destructures the
+43 clauses of the current `ShellPtPremCG` (ShellCoreCG68.lean) by position, takes the
 mesh membership from `countingMeshEventR` (`countingMeshEventR_meshR`, Guard68S10.lean) and applies `resRr_pt`.
 No hypothesis beyond the residual's own binders. -/
 theorem shellCGResRr_holds (𝒮 : SpaceFillingSLEModel) : ShellCGResRr 𝒮 := by

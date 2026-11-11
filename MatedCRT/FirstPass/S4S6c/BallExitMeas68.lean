@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S4S6c.HoneWalk
 import MatedCRT.FirstPass.S6r.OneTest.Concrete
 
 /-!
-# Measurability of the walk-centred test count (fp-S4S6c-hmeasBall)
+# Measurability of the walk-centred test count
 
 This file discharges the named binder `hmeasBall` of
 `FiniteExitMomentHoneMain68.hmom_pair_of_finiteDomain`. The test count of the walk-centred test ball is
@@ -44,7 +44,7 @@ theorem measurable_ballExitSigma_walkParam (ε : ℝ) (η : ℝ → ℂ) (hη : 
   exact hcomp
 
 /-- **Hone binders `hmom1`, `hmom2` on finite test domains, with `hmeasBall` discharged
-(fp-S4S6c-hmeasBall).** Same statement as `FiniteExitMomentHoneMain68.hmom_pair_of_finiteDomain` without the
+.** Same statement as `FiniteExitMomentHoneMain68.hmom_pair_of_finiteDomain` without the
 binder `hmeasBall`; the measurability of the test count is `measurable_ballExitSigma_walkParam`. -/
 theorem hmom_pair_of_finiteDomain_meas {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m)
     (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0)

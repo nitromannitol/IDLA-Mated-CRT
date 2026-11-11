@@ -1,9 +1,9 @@
 import Mathlib.MeasureTheory.Integral.MeanInequalities
 
 /-!
-# LEMMA68 printed 6.9: the one-step contraction and the exponential identity (q2, task fp-S4S6c)
+# Printed Lemma 6.9: the one-step contraction and the exponential identity
 
-Source: notes/fp-gaps/CHATGPT-lemma68-open-parts.md, Section 3 (uniformity for the printed Lemma 6.9). With the uniform
+Uniformity for the printed Lemma 6.9. With the uniform
 one-step bound `P(Y_i = 1 | history) ≥ 1/2` (from the uniform Lemma 6.7 with `s₂ = 1/2`), the absorbed count satisfies
 `P(∑_{i≤k} Y_i ≤ k/4) ≤ 3^{k/4} (2/3)^k = e^{-s₃ k}` with `s₃ = ¾ log 3 − log 2 > 0`.
 
@@ -58,7 +58,7 @@ theorem pointwise_identity {Y : ℕ} (hY : Y ≤ 1) (w : ℝ≥0∞) :
     calc w * 3⁻¹ + 2 * 3⁻¹ * w = w * (3⁻¹ + 2 * 3⁻¹) := by ring
       _ = w := by rw [hsum, mul_one]
 
-/-- **One-step contraction** (write-up Section 3). If `E[w · 1_{Y=1}] ≥ ½ E[w]` for a `{0,1}`-valued `Y` and `E[w] < ∞`, then
+/-- **One-step contraction**. If `E[w · 1_{Y=1}] ≥ ½ E[w]` for a `{0,1}`-valued `Y` and `E[w] < ∞`, then
 `E[w · 3^{-Y}] ≤ (2/3) E[w]`. -/
 theorem one_step {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) {w : Ω → ℝ≥0∞} {Y : Ω → ℕ}
     (hwm : Measurable w) (hYm : Measurable Y) (hY : ∀ ω, Y ω ≤ 1) (hfin : ∫⁻ ω, w ω ∂P ≠ ⊤)
