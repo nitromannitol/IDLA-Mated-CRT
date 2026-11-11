@@ -9,7 +9,7 @@ Status values: FIXED <commit> (text or Lean change landed); IN PROGRESS (<worker
 | Row | Finding | Status |
 |---|---|---|
 | K1 | `FrozenOneSidedBoundaryContinuity` is false as typed (`FirstPass/S3i/Frozen.lean:44`) | IN PROGRESS (z9) |
-| M5 | Campaign and audit voice in the paper body (subsection "Uses of Lemma 3.6", bracketed tags, Appendices B and C) | FIXED 9c18ae6, 21d373b |
+| M5 | Campaign and audit voice in the paper body (subsection "Uses of Lemma 3.6", bracketed tags, Appendices B and C) | FIXED 9c18ae6, 0204400, 21d373b |
 | M6 | Email locators for C4 and C34 (proofs of Lemmas 5.3 and 5.4) | FIXED 453b2ec, ed7f547 |
 | M7 | Lemma 3.5 Step 3: limit Laplacian displayed as -1 (new mathematics: [C17] edit) | Responded (routed MQ-li-7b-d; awaiting math answer; truth check pending) |
 | M8 | Proposition 7.1 Steps 1 and 2 defects (GAPS E-x2-1) omitted from the email | FIXED 453b2ec (email item, flagged open), ed7f547 (GAPS status) |
@@ -80,7 +80,7 @@ Status values: FIXED <commit> (text or Lean change landed); IN PROGRESS (<worker
 
 ## Evidence for the text rows
 
-- paper/idla_mated_crt-corrected.tex: 9c18ae6. Compiled with `pdflatex` twice in a scratch copy: 94 pages, no undefined references or citations. No build script exists in the repository; the .aux, .log and .pdf files in the repository were not touched.
+- paper/idla_mated_crt-corrected.tex: 9c18ae6, then 0204400 (sentence fix). Compiled with `pdflatex` twice in a scratch copy: 94 pages, no undefined references or citations. No build script exists in the repository; the .aux, .log and .pdf files in the repository were not touched.
 - paper/appendix-lemma36-C13.tex, paper/appendix-occupation-C16.tex: 21d373b.
 - docs/campaign/ERRATA-for-Ewain.md: 453b2ec.
 - docs/campaign/ERRATA-INTERNAL.md, docs/campaign/CORRECTIONS.md, docs/campaign/GAPS-SEC2567A.md: ed7f547.
