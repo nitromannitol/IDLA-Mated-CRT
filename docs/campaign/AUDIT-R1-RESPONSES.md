@@ -11,7 +11,7 @@ No IDLA (A) finding was judged wrong. Every finding is either applied, or (for t
 | Item | Status | Evidence (file:line) |
 |---|---|---|
 | A7: [C16] and [C13] arguments into the paper | Applied | Appendix B (occupation identity for Lemma 3.4, label app:occupation-proof) and Appendix C (replacement proof of Lemma 3.6, label app:lemma36), after Appendix A. The citations at tex:1308 and tex:1511 are now `Appendix~\ref{...}`. Transcribed from docs/campaign/OCCUPATION-PROOF.md and docs/campaign/LEMMA36-REPLACEMENT.md; campaign wording and the author-attribution lines removed. The Lemma 3.6 'audit of every use' subsection is rewritten with labels, because its line numbers referred to a superseded draft. Email: ERRATA item for Lemmas 3.4 and 3.6 cites Appendices B and C. |
-| A8: c_0 overloaded | Applied | Limit constant renamed kappa_0 := 2/m_0 (tex:724 and every use, 45 lines; email). Lemma A.3 constants renamed c_{BG,0}, c_{BG,1} (tex:908-910). Bold radius constant unchanged (boldsymbol c_0); the comment at tex:2680 and the email use the bold symbol. |
+| A8: c_0 overloaded | Applied | Limit constant renamed lambda_0 (was kappa_0 until follow-up item 3) := 2/m_0 (tex:724 and every use, 45 lines; email). Lemma A.3 constants renamed c_{BG,0}, c_{BG,1} (tex:908-910). Bold radius constant unchanged (boldsymbol c_0); the comment at tex:2680 and the email use the bold symbol. |
 | A9: Lemma 6.4 and the translation | Applied | Printed proof of Lemma 6.4: K = floor(log_7 delta^{-1/2}) (tex:2809; was epsilon^{-1/2}). Translation sentence with marker [C32] before the application of lemma:annulus-iterate (tex:2808). The phi_z justification is written in the corrected tex at tex:2993-3006 (translation step, h(z+.) = h~ + phi_z), so it is cited, not new. C(gamma) corrected to C(gamma, boldsymbol c_0) (tex:2816, marker [C18]). Email: translation sentence removed from the Lemma 6.8 item; new Lemma 6.4 (proof) item. C29 attribution: the phrase 'after translating by z' is absent from paper/idla_mated_crt.tex (grep, no match); it occurs only in the [C26] replacement proof. The audit's finding is confirmed; the C29 ledger entry and the tex comment at tex:2993 now say so. |
 | A10: [C9] locator | Applied | Email, Section 4 item: eq:cluster-and-lambdat (tex:1976) and eq:cluster-contained-in (tex:3898). |
 
@@ -28,7 +28,7 @@ No IDLA (A) finding was judged wrong. Every finding is either applied, or (for t
 | [C5] 'PROVISIONAL' in ledger and marker | Applied | CORRECTIONS.md [C5] heading now CONFIRMED; tex:2673 comment no longer says provisional. The route question (Lemma 2.18 versus r-dependent s_2) is recorded in the [C5] ledger entry as still to be checked against the [C26] replacement. |
 | C23, C24 relabelled | Applied | Email: 'Lemma 7.3 (clarification)' and the C23 remark inside the Lemmas 5.3 and 5.4 minor item. |
 | C2, C7, C27 to a minor group | Applied | Email, Minor section: Lemma 2.13 (C2), Lemmas 4.4 and 4.5 (C7), good-annulus minimum to infimum (C27, split from the C5 item). |
-| Wording at tex:504 and tex:1227 | Applied | Both now state the normalisation Delta G = -delta, with occupation density 2G; consistent with the kappa_0 definition at tex:724. Email, minor item 'Normalisation of the Green's function' (C1). |
+| Wording at tex:504 and tex:1227 | Applied | Both now state the normalisation Delta G = -delta, with occupation density 2G; consistent with the lambda_0 definition at tex:724. Email, minor item 'Normalisation of the Green's function' (C1). |
 | Missing item E-c1-2 (GAPS-SEC2567A.md) | Applied | tex:4305 (hypothesis line), tex:4307-4313 (remark, marker [C33]); email, Minor section 'Appendix A (connectedness)'. |
 | INTERNAL section | Moved | docs/campaign/ERRATA-INTERNAL.md (new). Removed from the email. |
 
@@ -51,7 +51,47 @@ Each verdict has a status line under its heading (2026-11-11).
 | E-c2-7 (Proposition 5.1, relaxed Lemma 5.2) | NOT applied | Needs a new statement (relaxed Lemma 5.2 with a null-measurable O_2 and an envelope G) and the discrete-cluster inner estimate, which is conditional on E-c2-5 (open). A new lemma is not transcribed without an operator decision. |
 | E-x2-1 (shell iteration, Proposition 7.1) | NOT applied | Conditional verdict. Its replacement is defined by reference to other Lean files and to inputs E-c3-2 and E-A10 (open). |
 
+## IDLA (B)
+
+Source: OPUS-AUDIT-R1.md, IDLA (B) items B4 to B7 and the MINOR (B) list. Commit hashes and declaration names checked with git log and grep on the repository.
+
+| Item | Status | Evidence (file:line) |
+|---|---|---|
+| B4: strongest counted Theorems 1.4/1.6 take paper-owned steps (`closed_1_4_derived_p2`, `closed_1_6_derived_p2`) | Pending (z5) | MatedCRT/FirstPass/Closure/AuditRewire14.lean; the file is untracked, nothing committed. |
+| B5: the [C16] step is hidden inside a literature bundle | Fixed: 5f3fb57, aebb815 (z9) | MatedCRT/FirstPass/SLERef/CertifiedCore.lean (`certifiedReferenceModel_of_core`); MatedCRT/FirstPass/Closure/AuditCore.lean (14 `_certCore` declarations). Residual input `BrownianOutwardExcursionAtExitStep`, MatedCRT/Steps/Sec3/ConvergenceHarmonicFunctions.lean:38: a classical Brownian exit fact sitting in Steps/; operator decision. |
+| B6: `firstPassMain_1_4` and `firstPassMain_1_6` should not be counted | Pending operator (requests 95b to 95e) | MatedCRT/FirstPass/Main.lean. |
+| MINOR (B) items | Pending operator (requests 95b to 95e) | OPUS-AUDIT-R1.md, MINOR (B) section. |
+| B7: Lemma 3.6 is only half proved | Fixed: 8759946 (z8) | MatedCRT.closed_3_6_full, MatedCRT/FirstPass/Closure/Lemma36Rate.lean:39; binds the cited FrozenOneSidedBoundaryContinuity (Gwynne-Miller-Sheffield, arXiv:1807.07511, Theorem 3.9), defined at MatedCRT/FirstPass/S3i/Frozen.lean:44. |
+
+### Appendix consolidation (follow-up item 1)
+
+One text per appendix in the corrected tex. Coverage of each source section of the two appendix sources (docs/campaign/OCCUPATION-PROOF.md, docs/campaign/LEMMA36-REPLACEMENT.md) by the kept text:
+
+| Source section | Kept text (file:line) |
+|---|---|
+| OCCUPATION-PROOF.md 1, statement, normalization, inputs (lines 45-151) | paper/idla_mated_crt-corrected.tex:4534 |
+| OCCUPATION-PROOF.md 2, nonsingular clock (152-271) | paper/idla_mated_crt-corrected.tex:4641 |
+| OCCUPATION-PROOF.md 3, logarithmic insertion (272-456) | paper/idla_mated_crt-corrected.tex:4761 |
+| OCCUPATION-PROOF.md 4, occupation and coefficient (457-528) | paper/idla_mated_crt-corrected.tex:4946 |
+| OCCUPATION-PROOF.md 5, use in Lemma 3.4 (529-667) | paper/idla_mated_crt-corrected.tex:5018 |
+| LEMMA36-REPLACEMENT.md 1, definitions and defects (28-121) | paper/appendix-lemma36-C13.tex:7 |
+| LEMMA36-REPLACEMENT.md 2, precisely stated inputs (122-181) | paper/appendix-lemma36-C13.tex:101 |
+| LEMMA36-REPLACEMENT.md 3, boundary-excursion estimate (182-414) | paper/appendix-lemma36-C13.tex:159 |
+| LEMMA36-REPLACEMENT.md 4, continuity at the limiting paths (415-590) | paper/appendix-lemma36-C13.tex:392 |
+| LEMMA36-REPLACEMENT.md 5, outer-stopped interpolation (591-627) | paper/appendix-lemma36-C13.tex:568 |
+| LEMMA36-REPLACEMENT.md 6, audit of every use (628-690) | paper/idla_mated_crt-corrected.tex:5158 (condensed: the four items and the closing paragraph; the detailed source wording is NOT transcribed; open) |
+
+Decisions:
+- Appendix B stays inline (tex 4531-5155). paper/appendix-occupation-C16.tex is not \input: it still writes the constant as c_0 (appendix-occupation-C16.tex:485), which the [C1] renaming retired, and this worker may not edit it. It is kept in the repository, unused, because nothing may be deleted here; operator decision.
+- Appendix C uses paper/appendix-lemma36-C13.tex (\input at tex:5156), which covers sections 1 to 5 of the source more fully than the former inline text. The audit subsection of the former inline text is kept after it (tex:5158).
+- The constant of the occupation identity is renamed lambda_0 (follow-up item 3); see the notation line in the list below.
+
+### Follow-up items (round 2)
+
+- Bibliography: berestycki2017elementary added as \bibitem[Ber17] in paper/idla_mated_crt-corrected.bbl (arXiv:1506.09113). The .bbl is the bibliography actually used (refs.bib is absent); the file is now tracked.
+- Notation: the limit constant 2/m_0 is renamed lambda_0 (no occurrence of \lambda in the corrected tex or in the appendix sources before the rename). kappa stays the SLE parameter (tex:191).
+
 ## Reported missing items
 
 - Bibliography: Berestycki, 'An elementary approach to Gaussian multiplicative chaos' (arXiv:1506.09113), cited in Appendix B (three places) with key `berestycki2017elementary`. The key is not in the paper's bibliography (paper/idla_mated_crt-corrected.bbl), and refs.bib is not in the repository. The scratch compile reports the citation as undefined. The entry must be added to refs.bib.
-- Notation: kappa_0 is the symbol the task requested. The paper also uses kappa for the SLE parameter (tex:191, 607). The subscript keeps them apart, but the operator may prefer another symbol.
+- Notation (follow-up item 3): the limit constant 2/m_0 is written lambda_0; kappa_0 was renamed to avoid the clash with the SLE parameter kappa (tex:191).

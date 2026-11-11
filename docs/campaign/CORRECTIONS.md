@@ -4,7 +4,7 @@ Surgical corrections to arXiv:2211.04891, each marked `% CORRECTION [Cn]` in the
 the corrected text and the reason. Evidence: the refute-first check `review-C.md` (fleet directory, 2026-11-03; operator
 verdicts in the inbox entry of 13:55 UTC). Line numbers refer to the published source `paper/idla_mated_crt.tex`.
 
-## [C1] The limit constant is kappa_0 = 2/m_0 (written c_0 before 2026-11-11) (ESCALATIONS E-A3, CONFIRMED)
+## [C1] The limit constant is lambda_0 = 2/m_0 (written c_0 before 2026-11-11) (ESCALATIONS E-A3, CONFIRMED)
 - Where: new definition after eq:mo (l.720); Lemma 3.3, eq:green-uniform (l.1112); Lemma 3.4 (l.1123); proof of
   Lemma 3.4, last display (l.1172); Lemma 3.5 (l.1246); Lemma 3.7 and the same PDE restated in its proof
   (lemma:convergence-of-the-normalized-exit-time); Theorem 4.1 and the remark after it (theorem:convergence-divisible);
@@ -17,14 +17,14 @@ verdicts in the inbox entry of 13:55 UTC). Line numbers refer to the published s
   Sections 5, 7, Theorems 1.4, 1.6) uses the constant only qualitatively. Lean: `MatedCRTEnv.c₀` (Defs/Setting.lean).
 - Remaining proof-level uses are corrected in [C17].
 
-- Notation and normalisation (2026-11-11): the limit constant is written kappa_0 := 2/m_0 everywhere it means 2/m_0 (tex and email); the bold radius constant boldsymbol c_0 of Sections 6-7 is unchanged. The constants of Lemma A.3 of [BG20] (proof of the Step 1 bound in Section 3) are renamed c_{BG,0}, c_{BG,1}. The Green's function wording at the two places printed as 'Green's function for standard Brownian motion' (l.504, l.1225) now states the normalisation Delta G = -delta and the occupation density 2G.
+- Notation and normalisation (2026-11-11): the limit constant is written lambda_0 := 2/m_0 everywhere it means 2/m_0 (tex and email); the bold radius constant boldsymbol c_0 of Sections 6-7 is unchanged. The constants of Lemma A.3 of [BG20] (proof of the Step 1 bound in Section 3) are renamed c_{BG,0}, c_{BG,1}. The Green's function wording at the two places printed as 'Green's function for standard Brownian motion' (l.504, l.1225) now states the normalisation Delta G = -delta and the occupation density 2G.
 ## [C15] Median start in eq:mo (proof-consistent typo repair)
 - The single deterministic `m_0` is the annealed median of the unscaled LBM exit time from `B_{1/2}` started at `0`, not at a free `z`. This agrees with the discrete median in eq:meps.
 
 ## [C16] Killed occupation proof in Lemma 3.4 (proof repair)
 - Replace the unstopped functional and unjustified interchange by a buffered killed-path argument, convergence of exit times, a second-moment tail estimate, and the audited clock occupation identity. The identity has coefficient `2` for the unscaled clock and `c_0 = 2/m_0` for the paper's process, consistently with [C1]. The complete audited proof and exact citations are in `docs/campaign/OCCUPATION-PROOF.md`; deterministic thinning follows [C11].
 
-- Appendix B (transcribed from docs/campaign/OCCUPATION-PROOF.md, 2026-11-11) contains the written proof of the occupation identity used in Lemma 3.4 (coefficient 2 for the unscaled clock, kappa_0 for X). Section 3 cites it as Appendix B.
+- Appendix B (transcribed from docs/campaign/OCCUPATION-PROOF.md, 2026-11-11) contains the written proof of the occupation identity used in Lemma 3.4 (coefficient 2 for the unscaled clock, lambda_0 for X). Section 3 cites it as Appendix B.
 ## [C17] Remaining proof coefficients (proof repair consistent with [C1])
 - Propagate `c_0` for `m_0` and `6/c_0` for `6/m_0` in the proofs of Lemmas 3.3, 3.5, 3.7 and the Section 4 consequences, without changing the time-rescaling definition or the median.
 

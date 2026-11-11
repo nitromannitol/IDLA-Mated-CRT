@@ -1,0 +1,439 @@
+\begin{thebibliography}{DCLYY13}
+
+\bibitem[AG13a]{asselah2013logarithmic}
+Amine Asselah and Alexandre Gaudilli\`ere.
+\newblock From logarithmic to subdiffusive polynomial fluctuations for internal
+  {DLA} and related growth models.
+\newblock {\em Ann. Probab.}, 41(3A):1115--1159, 2013.
+
+\bibitem[AG13b]{asselah2013sublogarithmic}
+Amine Asselah and Alexandre Gaudilli\`ere.
+\newblock Sublogarithmic fluctuations for internal {DLA}.
+\newblock {\em Ann. Probab.}, 41(3A):1160--1179, 2013.
+
+\bibitem[Ang03]{angel-peeling}
+O.~Angel.
+\newblock Growth and percolation on the uniform infinite planar triangulation.
+\newblock {\em Geom. Funct. Anal.}, 13(5):935--974, 2003.
+
+\bibitem[AR16]{asselah2016fluctuations}
+Amine Asselah and Houda Rahmani.
+\newblock Fluctuations for internal {DLA} on the comb.
+\newblock {\em Ann. Inst. Henri Poincar\'{e} Probab. Stat.}, 52(1):58--83,
+  2016.
+
+\bibitem[BB07]{blachere2007internal}
+S\'{e}bastien Blach\`ere and Sara Brofferio.
+\newblock Internal diffusion limited aggregation on discrete groups having
+  exponential growth.
+\newblock {\em Probab. Theory Related Fields}, 137(3-4):323--343, 2007.
+
+\bibitem[BDCKL20]{idla-uniform-starting-points}
+Itai Benjamini, Hugo Duminil-Copin, Gady Kozma, and Cyrille Lucas.
+\newblock Internal diffusion-limited aggregation with uniform starting points.
+\newblock {\em Ann. Inst. Henri Poincar\'{e} Probab. Stat.}, 56(1):391--404,
+  2020.
+
+\bibitem[Ber07]{bernardi-maps}
+Olivier Bernardi.
+\newblock Bijective counting of tree-rooted maps and shuffles of parenthesis
+  systems.
+\newblock {\em Electron. J. Combin.}, 14(1):Research Paper 9, 36 pp.
+  (electronic), 2007.
+
+\bibitem[Ber15]{berestycki2015diffusion}
+Nathana\"{e}l Berestycki.
+\newblock Diffusion in planar {L}iouville quantum gravity.
+\newblock {\em Ann. Inst. Henri Poincar\'{e} Probab. Stat.}, 51(3):947--964,
+  2015.
+
+\bibitem[Ber17]{berestycki2017elementary}
+Nathana\"{e}l Berestycki.
+\newblock An elementary approach to {G}aussian multiplicative chaos.
+\newblock {\em Electron. Commun. Probab.}, 22, 2017.
+\newblock arXiv:1506.09113.
+
+\bibitem[BG20]{berestycki2020random}
+Nathana{\"e}l {Berestycki} and Ewain {Gwynne}.
+\newblock {Random walks on mated-CRT planar maps and Liouville Brownian
+  motion}.
+\newblock {\em {C}ommunications in {M}athematical {P}hysics}, to appear, 2020.
+
+\bibitem[Bla04]{blachere2001internal}
+S\'{e}bastien Blach\`ere.
+\newblock Internal diffusion limited aggregation on discrete groups of
+  polynomial growth.
+\newblock In {\em Random walks and geometry}, pages 377--391. Walter de
+  Gruyter, Berlin, 2004.
+
+\bibitem[BP21]{berestycki2021gaussian}
+Nathana{\"e}l Berestycki and Ellen Powell.
+\newblock Gaussian free field, {L}iouville quantum gravity and {G}aussian
+  multiplicative chaos.
+\newblock {\em Lecture notes}, 2021.
+
+\bibitem[BR21]{bourabee-sandpile-2021}
+Ahmed Bou-Rabee.
+\newblock Convergence of the random {A}belian sandpile.
+\newblock {\em Ann. Probab.}, 49(6):3168--3196, 2021.
+
+\bibitem[BRG22]{bou2022harmonic}
+Ahmed Bou-Rabee and Ewain Gwynne.
+\newblock Harmonic balls in {L}iouville quantum gravity.
+\newblock {\em arXiv preprint arXiv:2208.11795}, 2022.
+
+\bibitem[BS91]{barles-souganidis-convergence-1991}
+G.~Barles and P.~E. Souganidis.
+\newblock Convergence of approximation schemes for fully nonlinear second order
+  equations.
+\newblock {\em Asymptotic Anal.}, 4(3):271--283, 1991.
+
+\bibitem[CHSHT20]{chen2017internal}
+Joe~P. Chen, Wilfried Huss, Ecaterina Sava-Huss, and Alexander Teplyaev.
+\newblock Internal {DLA} on {S}ierpinski gasket graphs.
+\newblock In {\em Analysis and geometry on graphs and manifolds}, volume 461 of
+  {\em London Math. Soc. Lecture Note Ser.}, pages 126--155. Cambridge Univ.
+  Press, Cambridge, 2020.
+
+\bibitem[CLG17]{curien-legall-peeling}
+Nicolas Curien and Jean-Fran\c{c}ois Le~Gall.
+\newblock Scaling limits for the peeling process on random maps.
+\newblock {\em Ann. Inst. Henri Poincar\'e Probab. Stat.}, 53(1):322--357,
+  2017.
+
+\bibitem[Cur16]{curien-peeling-notes}
+Nicolas Curien.
+\newblock Peeling random planar maps. {N}otes du cours {P}eccot.
+\newblock Available at
+  \url{https://www.math.u-psud.fr/~curien/cours/peccot.pdf}, 2016.
+
+\bibitem[Dar20a]{darrow2020convergence}
+David Darrow.
+\newblock A convergence rate for extended-source internal {DLA} in the plane.
+\newblock {\em arXiv preprint arXiv:2009.09159}, 2020.
+
+\bibitem[Dar20b]{darrow2020scaling}
+David Darrow.
+\newblock Scaling limits of fluctuations of extended-source internal {DLA}.
+\newblock {\em arXiv preprint arXiv:2010.08166}, 2020.
+
+\bibitem[DCLYY13]{duminil2013containing}
+Hugo Duminil-Copin, Cyrille Lucas, Ariel Yadin, and Amir Yehudayoff.
+\newblock Containing internal diffusion limited aggregation.
+\newblock {\em Electron. Commun. Probab.}, 18:no. 50, 8, 2013.
+
+\bibitem[DDDF20]{ding2020tightness}
+Jian Ding, Julien Dub\'{e}dat, Alexander Dunlap, and Hugo Falconet.
+\newblock Tightness of {L}iouville first passage percolation for {$\gamma \in
+  (0,2)$}.
+\newblock {\em Publ. Math. Inst. Hautes \'{E}tudes Sci.}, 132:353--403, 2020.
+
+\bibitem[DF91]{diaconis1991growth}
+P.~Diaconis and W.~Fulton.
+\newblock A growth model, a game, an algebra, {L}agrange inversion, and
+  characteristic classes.
+\newblock {\em Rend. Sem. Mat. Univ. Politec. Torino}, 49(1):95--119 (1993),
+  1991.
+\newblock Commutative algebra and algebraic geometry, II (Italian) (Turin,
+  1990).
+
+\bibitem[DMS21]{duplantier2014liouville}
+Bertrand Duplantier, Jason Miller, and Scott Sheffield.
+\newblock Liouville quantum gravity as a mating of trees.
+\newblock {\em Ast\'{e}risque}, (427):viii+257, 2021.
+
+\bibitem[DS11]{duplantier2011liouville}
+Bertrand Duplantier and Scott Sheffield.
+\newblock Liouville quantum gravity and {KPZ}.
+\newblock {\em Invent. Math.}, 185:333--393, 2011.
+
+\bibitem[GHS19]{ghs-mating-survey}
+Ewain {Gwynne}, Nina {Holden}, and Xin {Sun}.
+\newblock {Mating of trees for random planar maps and Liouville quantum
+  gravity: a survey}.
+\newblock {\em {Panoramas et Syntheses}}, to appear, 2019.
+
+\bibitem[GM20]{gwynne2020local}
+Ewain Gwynne and Jason Miller.
+\newblock Local metrics of the {G}aussian free field.
+\newblock {\em Ann. Inst. Fourier (Grenoble)}, 70(5):2049--2075, 2020.
+
+\bibitem[GM21]{gm-uniqueness}
+Ewain Gwynne and Jason Miller.
+\newblock Existence and uniqueness of the {L}iouville quantum gravity metric
+  for {$\gamma\in(0,2)$}.
+\newblock {\em Invent. Math.}, 223(1):213--333, 2021.
+
+\bibitem[GMS19a]{gms-harmonic}
+E.~{Gwynne}, J.~{Miller}, and S.~{Sheffield}.
+\newblock {Harmonic functions on mated-{CRT} maps}.
+\newblock {\em Electron. J. Probab.}, 24:no. 58, 55, 2019.
+
+\bibitem[GMS19b]{gwynne2019harmonic}
+Ewain Gwynne, Jason Miller, and Scott Sheffield.
+\newblock Harmonic functions on mated-{CRT} maps.
+\newblock {\em Electron. J. Probab.}, 24:Paper No. 58, 55, 2019.
+
+\bibitem[GMS21]{gms-tutte}
+Ewain Gwynne, Jason Miller, and Scott Sheffield.
+\newblock The {T}utte embedding of the mated-crt map converges to {L}iouville
+  quantum gravity.
+\newblock {\em Ann. Probab.}, 49(4):1677--1717, 2021.
+
+\bibitem[GMS22]{gms-random-walk}
+Ewain Gwynne, Jason Miller, and Scott Sheffield.
+\newblock An invariance principle for ergodic scale-free random environments.
+\newblock {\em Acta Math.}, 228(2):303--384, 2022.
+
+\bibitem[GRV16]{garban2016liouville}
+Christophe Garban, R\'{e}mi Rhodes, and Vincent Vargas.
+\newblock Liouville {B}rownian motion.
+\newblock {\em Ann. Probab.}, 44(4):3076--3110, 2016.
+
+\bibitem[GVL13]{golub-matrix-computations}
+Gene~H. Golub and Charles~F. Van~Loan.
+\newblock {\em Matrix computations}.
+\newblock Johns Hopkins Studies in the Mathematical Sciences. Johns Hopkins
+  University Press, Baltimore, MD, fourth edition, 2013.
+
+\bibitem[Gwy20]{gwynne2020random}
+Ewain Gwynne.
+\newblock Random surfaces and {L}iouville quantum gravity.
+\newblock {\em Notices Amer. Math. Soc.}, 67(4):484--491, 2020.
+
+\bibitem[HRV18]{hrv-disk}
+Yichao Huang, R\'{e}mi Rhodes, and Vincent Vargas.
+\newblock Liouville quantum gravity on the unit disk.
+\newblock {\em Ann. Inst. Henri Poincar\'{e} Probab. Stat.}, 54(3):1694--1730,
+  2018.
+
+\bibitem[HS12]{huss-sava-comb}
+Wilfried Huss and Ecaterina Sava.
+\newblock Internal aggregation models on comb lattices.
+\newblock {\em Electron. J. Probab.}, 17:no. 30, 21, 2012.
+
+\bibitem[HS19]{hs-cardy-embedding}
+Nina {Holden} and Xin {Sun}.
+\newblock {Convergence of uniform triangulations under the Cardy embedding}.
+\newblock {\em {Acta Mathematica}}, to appear, 2019.
+
+\bibitem[HSH19]{MR3957187}
+Wilfried Huss and Ecaterina Sava-Huss.
+\newblock Divisible sandpile on {S}ierpinski gasket graphs.
+\newblock {\em Fractals}, 27(3):1950032, 14, 2019.
+
+\bibitem[Hus08]{huss2008internal}
+Wilfried Huss.
+\newblock Internal diffusion-limited aggregation on non-amenable graphs.
+\newblock {\em Electron. Commun. Probab.}, 13:272--279, 2008.
+
+\bibitem[JLS12]{jerison2012logarithmic}
+David Jerison, Lionel Levine, and Scott Sheffield.
+\newblock Logarithmic fluctuations for internal {DLA}.
+\newblock {\em J. Amer. Math. Soc.}, 25(1):271--301, 2012.
+
+\bibitem[JLS13]{jerison2013internal}
+David Jerison, Lionel Levine, and Scott Sheffield.
+\newblock Internal {DLA} in higher dimensions.
+\newblock {\em Electron. J. Probab.}, 18:No. 98, 14, 2013.
+
+\bibitem[JLS14a]{jerison2014internal}
+David Jerison, Lionel Levine, and Scott Sheffield.
+\newblock Internal {DLA} and the {G}aussian free field.
+\newblock {\em Duke Math. J.}, 163(2):267--308, 2014.
+
+\bibitem[JLS14b]{jerison2014chapter}
+David Jerison, Lionel Levine, and Scott Sheffield.
+\newblock Internal {DLA} for cylinders.
+\newblock In {\em Advances in analysis: the legacy of {E}lias {M}. {S}tein},
+  volume~50 of {\em Princeton Math. Ser.}, pages 189--214. Princeton Univ.
+  Press, Princeton, NJ, 2014.
+
+\bibitem[Kah85]{kahane1985chaos}
+Jean-Pierre Kahane.
+\newblock Sur le chaos multiplicatif.
+\newblock {\em Ann. Sci. Math. Qu\'{e}bec}, 9(2):105--150, 1985.
+
+\bibitem[Law95]{lawler1995subdiffusive}
+Gregory~F. Lawler.
+\newblock Subdiffusive fluctuations for internal diffusion limited aggregation.
+\newblock {\em Ann. Probab.}, 23(1):71--86, 1995.
+
+\bibitem[Law05]{lawler-book}
+Gregory~F. Lawler.
+\newblock {\em Conformally invariant processes in the plane}, volume 114 of
+  {\em Mathematical Surveys and Monographs}.
+\newblock American Mathematical Society, Providence, RI, 2005.
+
+\bibitem[LBG92]{lawler1992internal}
+Gregory~F. Lawler, Maury Bramson, and David Griffeath.
+\newblock Internal diffusion limited aggregation.
+\newblock {\em Ann. Probab.}, 20(4):2117--2140, 1992.
+
+\bibitem[{Le }13]{legall-uniqueness}
+Jean-Fran{\c{c}}ois {Le Gall}.
+\newblock Uniqueness and universality of the {B}rownian map.
+\newblock {\em Ann. Probab.}, 41(4):2880--2960, 2013.
+
+\bibitem[Lev07]{levine-thesis}
+Lionel~Timothy Levine.
+\newblock {\em Limit theorems for internal aggregation models}.
+\newblock ProQuest LLC, Ann Arbor, MI, 2007.
+\newblock Thesis (Ph.D.)--University of California, Berkeley.
+
+\bibitem[LL10]{lawler-limic-walks}
+Gregory~F. Lawler and Vlada Limic.
+\newblock {\em Random walk: a modern introduction}, volume 123 of {\em
+  Cambridge Studies in Advanced Mathematics}.
+\newblock Cambridge University Press, Cambridge, 2010.
+
+\bibitem[LMPU16]{levine2016divisible}
+Lionel Levine, Mathav Murugan, Yuval Peres, and Baris~Evren Ugurcan.
+\newblock The divisible sandpile at critical density.
+\newblock {\em Ann. Henri Poincar\'{e}}, 17(7):1677--1711, 2016.
+
+\bibitem[LP09]{levine2009strong}
+Lionel Levine and Yuval Peres.
+\newblock Strong spherical asymptotics for rotor-router aggregation and the
+  divisible sandpile.
+\newblock {\em Potential Anal.}, 30(1):1--27, 2009.
+
+\bibitem[LP10]{levine2010scaling}
+Lionel Levine and Yuval Peres.
+\newblock Scaling limits for internal aggregation models with multiple sources.
+\newblock {\em J. Anal. Math.}, 111:151--219, 2010.
+
+\bibitem[LP16]{lyons-peres}
+Russell Lyons and Yuval Peres.
+\newblock {\em Probability on Trees and Networks}, volume~42 of {\em Cambridge
+  Series in Statistical and Probabilistic Mathematics}.
+\newblock Cambridge University Press, New York, 2016.
+\newblock Available at \url{http://pages.iu.edu/~rdlyons/}.
+
+\bibitem[LS19]{levine2019long}
+Lionel Levine and Vittoria Silvestri.
+\newblock How long does it take for internal {DLA} to forget its initial
+  profile?
+\newblock {\em Probab. Theory Related Fields}, 174(3-4):1219--1271, 2019.
+
+\bibitem[Luc14]{lucas2014limiting}
+Cyrille Lucas.
+\newblock The limiting shape for drifted internal diffusion limited aggregation
+  is a true heat ball.
+\newblock {\em Probab. Theory Related Fields}, 159(1-2):197--235, 2014.
+
+\bibitem[MD86]{meakin1986formation}
+Paul Meakin and John~M Deutch.
+\newblock The formation of surfaces by diffusion limited annihilation.
+\newblock {\em The Journal of chemical physics}, 85(4):2320--2325, 1986.
+
+\bibitem[Mie13]{miermont-brownian-map}
+Gr{\'e}gory Miermont.
+\newblock The {B}rownian map is the scaling limit of uniform random plane
+  quadrangulations.
+\newblock {\em Acta Math.}, 210(2):319--401, 2013.
+
+\bibitem[MS17]{miller2017imaginary}
+Jason Miller and Scott Sheffield.
+\newblock Imaginary geometry {IV}: interior rays, whole-plane reversibility,
+  and space-filling trees.
+\newblock {\em Probab. Theory Related Fields}, 169(3-4):729--869, 2017.
+
+\bibitem[MS20]{lqg-tbm1}
+Jason Miller and Scott Sheffield.
+\newblock Liouville quantum gravity and the {B}rownian map {I}: the {${\mathrm
+  QLE}(8/3,0)$} metric.
+\newblock {\em Invent. Math.}, 219(1):75--152, 2020.
+
+\bibitem[MS21]{lqg-tbm2}
+Jason Miller and Scott Sheffield.
+\newblock Liouville quantum gravity and the {B}rownian map {II}: {G}eodesics
+  and continuity of the embedding.
+\newblock {\em Ann. Probab.}, 49(6):2732--2829, 2021.
+
+\bibitem[Mul67]{mullin-maps}
+R.~C. Mullin.
+\newblock On the enumeration of tree-rooted maps.
+\newblock {\em Canad. J. Math.}, 19:174--183, 1967.
+
+\bibitem[Pol81]{polyakov-qg1}
+A.~M. Polyakov.
+\newblock Quantum geometry of bosonic strings.
+\newblock {\em Phys. Lett. B}, 103(3):207--210, 1981.
+
+\bibitem[PS13]{pegden-smart-sandpile-2013}
+Wesley Pegden and Charles~K. Smart.
+\newblock Convergence of the {A}belian sandpile.
+\newblock {\em Duke Math. J.}, 162(4):627--642, 2013.
+
+\bibitem[RS05]{schramm-sle}
+Steffen Rohde and Oded Schramm.
+\newblock Basic properties of {SLE}.
+\newblock {\em Ann. of Math. (2)}, 161(2):883--924, 2005.
+
+\bibitem[Rus20]{ruszel-divisible}
+Wioletta~M. Ruszel.
+\newblock Odometers of divisible sandpile models: scaling limits, i{DLA} and
+  obstacle problems. {A} survey.
+\newblock {\em Markov Process. Related Fields}, 26(1):125--165, 2020.
+
+\bibitem[RV11]{rhodes-vargas-log-kpz}
+R{\'e}mi Rhodes and Vincent Vargas.
+\newblock K{PZ} formula for log-infinitely divisible multifractal random
+  measures.
+\newblock {\em ESAIM Probab. Stat.}, 15:358--371, 2011.
+
+\bibitem[Sak85]{sakai1984solutions}
+Makoto Sakai.
+\newblock Solutions to the obstacle problem as {G}reen potentials.
+\newblock {\em J. Analyse Math.}, 44:97--116, 1984/85.
+
+\bibitem[She10]{shellef2010idla}
+Eric Shellef.
+\newblock I{DLA} on the supercritical percolation cluster.
+\newblock {\em Electron. J. Probab.}, 15:no. 24, 723--740, 2010.
+
+\bibitem[She16]{shef-burger}
+Scott Sheffield.
+\newblock Quantum gravity and inventory accumulation.
+\newblock {\em Ann. Probab.}, 44(6):3804--3848, 2016.
+
+\bibitem[{She}22]{sheffield-icm}
+Scott {Sheffield}.
+\newblock {What is a random surface?}
+\newblock {\em ArXiv e-prints}, March 2022.
+
+\bibitem[Sil20]{silvestri2020internal}
+Vittoria Silvestri.
+\newblock Internal {DLA} on cylinder graphs: fluctuations and mixing.
+\newblock {\em Electron. Commun. Probab.}, 25:Paper No. 61, 14, 2020.
+
+\bibitem[SW16]{sheffield2016field}
+Scott Sheffield and Menglu Wang.
+\newblock Field-measure correspondence in {L}iouville quantum gravity almost
+  surely commutes with all conformal maps simultaneously.
+\newblock {\em arXiv preprint arXiv:1605.06171}, 2016.
+
+\bibitem[Tel06]{telcs2006}
+Andr\'{a}s Telcs.
+\newblock {\em The art of random walks}, volume 1885 of {\em Lecture Notes in
+  Mathematics}.
+\newblock Springer-Verlag, Berlin, 2006.
+
+\bibitem[Var17]{vargas2017lecture}
+Vincent Vargas.
+\newblock Lecture notes on {L}iouville theory and the {DOZZ} formula.
+\newblock {\em arXiv preprint arXiv:1712.00829}, 2017.
+
+\bibitem[Wer04]{werner-notes}
+Wendelin Werner.
+\newblock Random planar curves and {S}chramm-{L}oewner evolutions.
+\newblock In {\em Lectures on probability theory and statistics}, volume 1840
+  of {\em Lecture Notes in Math.}, pages 107--195. Springer, Berlin, 2004.
+
+\bibitem[Zid90]{zidarov1990inverse}
+Dimitur~Petkov Zidarov.
+\newblock Inverse gravimetric problem in geoprospecting and geodesy.
+\newblock {\em Amsterdam; New York: Elsevier; New York}, 1990.
+
+\end{thebibliography}
