@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S5d.StoppedSteps
 import MatedCRT.Proofs.Sec7.OdometerBoundMass.StoppedOdometer
 
 /-!
-# First pass: deterministic steps of the surplus maximum outside the killing set (task fp-S5f-5-1-max-outside, z10)
+# First pass: deterministic steps of the surplus maximum outside the killing set
 
 Pointwise facts used by `stoppedMaxOutside_of_steps` (MatedCRT/FirstPass/S5f.lean):
 

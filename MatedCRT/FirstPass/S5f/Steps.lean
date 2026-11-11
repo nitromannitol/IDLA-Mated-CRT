@@ -2,7 +2,7 @@ import MatedCRT.Defs.Setting
 import MatedCRT.Defs.Map
 
 /-!
-# First pass: the three NEW steps of the surplus maximum outside the killing set (task fp-S5f-5-1-max-outside, z10)
+# First pass: the three NEW steps of the surplus maximum outside the killing set
 
 `stoppedMaxOutside_of_steps` (MatedCRT/FirstPass/S5f.lean) proves `StoppedMaxOutsideStep 𝒮` from the Draft statements
 of Theorems 4.1 and Lemma 3.3 and the External input `MepsScalingInput`, and from the three NEW steps below. These are
