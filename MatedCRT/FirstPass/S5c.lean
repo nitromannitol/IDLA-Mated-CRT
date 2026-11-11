@@ -9,7 +9,7 @@ import MatedCRT.Proofs.Sec4.DivSandpileLowerBound.Final
 composes the proved first-pass Section 4 steps (`firstPass_4_1`, Theorem 4.1, in FirstPass/S3S4.lean; the
 measurability of the cone family, `coneFamilyAEMeasurable_proved`, FirstPass/S2j.lean) with the proof
 `divSandpileLowerBound_final` (Proofs/Sec4/DivSandpileLowerBound/Final.lean). No step of Proposition 4.2 itself is
-assumed; the hypotheses are the cited inputs and the open first-pass steps listed in the report.
+assumed; the hypotheses are the cited inputs and the open first-pass steps.
 -/
 
 namespace MatedCRT
