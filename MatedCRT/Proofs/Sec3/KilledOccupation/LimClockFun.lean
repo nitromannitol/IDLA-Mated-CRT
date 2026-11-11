@@ -6,8 +6,8 @@ import MatedCRT.Proofs.Sec3.KilledOccupation.RegClockFun
 For a sequence of regularization parameters `ε = (ε_k)_{k ∈ ℕ}`, a family `ψ` of circle averages and a path `b`,
 the regularized occupation clock `Ψ_{ε_k}(ψ, b)(q)` of `regClockFun` is defined for every rational time `q ≥ 0`.
 The limit clock is obtained by taking, at each time `s`, the infimum over rational `q > s` of the limit superior
-along `k` of `Ψ_{ε_k}(ψ, b)(q)`: this is the right-continuous regularization in the time variable, as in the
-occupation-time identities of Duplantier-Sheffield and Berestycki-Powell for the LQG measure.
+along `k` of `Ψ_{ε_k}(ψ, b)(q)`. Each regularized clock is nondecreasing in `s`, so this infimum is the
+right-continuous version of the limit superior in the time variable.
 
 The lemma of this file gives joint measurability of `(ψ, b) ↦ Ψ(ψ, b)(s)` for a measurable exit time `σ`, from
 the joint measurability of each `regClockFun` (`measurable_regClockFun`), `Measurable.limsup` over `ℕ` and
