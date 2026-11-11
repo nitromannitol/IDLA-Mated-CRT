@@ -107,3 +107,16 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/Proofs/Sec3/ConvergenceNormalizedExitTime/CenteredBoundaryProbability.lean | archive/MatedCRT/Proofs/Sec3/ConvergenceNormalizedExitTime/CenteredBoundaryProbability.lean | B36 |
 | MatedCRT/Proofs/Sec3/ConvergenceNormalizedExitTime/RemoveSingularity.lean | archive/MatedCRT/Proofs/Sec3/ConvergenceNormalizedExitTime/RemoveSingularity.lean | B36 |
 | MatedCRT/Proofs/Sec3/ConvergenceNormalizedExitTime/WeightedPotentialHolder.lean | archive/MatedCRT/Proofs/Sec3/ConvergenceNormalizedExitTime/WeightedPotentialHolder.lean | B36 |
+| MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/BoundaryDecayMeasurable.lean | archive/MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/BoundaryDecayMeasurable.lean | B37 |
+| MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/BoundaryDecayProbability.lean | archive/MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/BoundaryDecayProbability.lean | B37 |
+| MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/BoundaryPairMeasurable.lean | archive/MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/BoundaryPairMeasurable.lean | B37 |
+| MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/CorrectedFromFrozen.lean | archive/MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/CorrectedFromFrozen.lean | B37 |
+| MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/CorrectedHarmonicPrepared.lean | archive/MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/CorrectedHarmonicPrepared.lean | B37 |
+| MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/ExitBoundaryUniformLimit.lean | archive/MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/ExitBoundaryUniformLimit.lean | B37 |
+| MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/HarmonicBoundaryReduction.lean | archive/MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/HarmonicBoundaryReduction.lean | B37 |
+| MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/ModulusFromBounds.lean | archive/MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/ModulusFromBounds.lean | B37 |
+| MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/PreparedBarrierAssembly.lean | archive/MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/PreparedBarrierAssembly.lean | B37 |
+| MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/PreparedBoundedLaplacian.lean | archive/MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/PreparedBoundedLaplacian.lean | B37 |
+| MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/ProjectedBoundaryDecay.lean | archive/MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/ProjectedBoundaryDecay.lean | B37 |
+| MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/ProjectedBoundaryReduction.lean | archive/MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/ProjectedBoundaryReduction.lean | B37 |
+| MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/ProjectedInteriorVersion.lean | archive/MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/ProjectedInteriorVersion.lean | B37 |
