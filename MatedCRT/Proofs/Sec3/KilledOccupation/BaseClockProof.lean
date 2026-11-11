@@ -825,4 +825,185 @@ theorem tendsto_tsub_natCast_zero {a : ℝ≥0∞} (ha : a ≠ ⊤) :
   rw [tsub_eq_zero_of_le (hn.le.trans hm')]
   exact zero_le
 
+theorem measurable_circleMeasure_setLIntegral {Ω : Type*} [MeasurableSpace Ω] (γ : ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (k : ℕ)
+    (hw : Measurable fun p : Ω × ℂ => circleWeight γ hcirc p.1 k p.2)
+    {S : Set ℂ} (hS : MeasurableSet S) {ρ : ℂ → ℝ≥0∞} (hρ : Measurable ρ) :
+    Measurable fun ω => ∫⁻ x in S, ρ x ∂(circleMeasure γ hcirc ω k) := by
+  have h := measurable_circleMeasure_lintegral γ hcirc k hw (ρ := S.indicator ρ) (hρ.indicator hS)
+  simp only [lintegral_indicator hS] at h
+  exact h
+
+theorem measurable_nu_setLIntegral {Ω : Type*} [MeasurableSpace Ω] (ν : Ω → Measure ℂ)
+    (hνmeas : ∀ ρ : ℂ → ℝ≥0∞, Measurable ρ → Measurable fun ω => ∫⁻ x, ρ x ∂(ν ω))
+    {S : Set ℂ} (hS : MeasurableSet S) {ρ : ℂ → ℝ≥0∞} (hρ : Measurable ρ) :
+    Measurable fun ω => ∫⁻ x in S, ρ x ∂(ν ω) := by
+  have h := hνmeas (S.indicator ρ) (hρ.indicator hS)
+  simp only [lintegral_indicator hS] at h
+  exact h
+
+/-- The sandwich of the truncation (paper tex:221-225): `min(G',N) q ≤ G' q ≤ min(G',N) q + (G'-N) C`
+on `S`, integrated against any measure `μ`. -/
+theorem truncWeight_sandwich (μ : Measure ℂ) {S : Set ℂ}
+    {G' q : ℂ → ℝ≥0∞} (hG' : Measurable G') (hq : Measurable q) {C : ℝ≥0∞} (hqC : ∀ x, q x ≤ C)
+    (N : ℕ) :
+    ∫⁻ x in S, truncWeight G' q N x ∂μ ≤ ∫⁻ x in S, G' x * q x ∂μ ∧
+      ∫⁻ x in S, G' x * q x ∂μ
+        ≤ ∫⁻ x in S, truncWeight G' q N x ∂μ + ∫⁻ x in S, tailWeight G' C N x ∂μ := by
+  have hT : Measurable (truncWeight G' q N) :=
+    (hG'.min measurable_const).mul hq
+  constructor
+  · refine lintegral_mono fun x => ?_
+    unfold truncWeight
+    gcongr
+    exact min_le_left _ _
+  · calc ∫⁻ x in S, G' x * q x ∂μ
+        ≤ ∫⁻ x in S, (truncWeight G' q N x + tailWeight G' C N x) ∂μ :=
+          lintegral_mono fun x => by
+            unfold truncWeight tailWeight
+            exact mul_le_truncWeight_add (hqC x)
+      _ = (∫⁻ x in S, truncWeight G' q N x ∂μ) + ∫⁻ x in S, tailWeight G' C N x ∂μ :=
+          lintegral_add_left hT _
+
+/-- Fixed truncation level `N` (paper tex:221-233): eventually in `k`, the `P`-mean `L¹` gap of the
+weighted integrals `∫_S G' q dν_ε` is at most the gap of the truncated integrals plus `2 ∫_S (G'-N)C dx`.
+The `E ν_ε = dx` identity is eq:occ-var (`hVar`); the truncated gap is `hconv` for bounded weights. -/
+theorem radon_side_fixedN {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
+    (γ : ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (ν : Ω → Measure ℂ) {S : Set ℂ} (hS : MeasurableSet S)
+    (hw : ∀ k, Measurable fun p : Ω × ℂ => circleWeight γ hcirc p.1 k p.2)
+    (hVar : ∀ᶠ k in atTop, ∀ x ∈ S, ∫⁻ ω, ENNReal.ofReal (circleWeight γ hcirc ω k x) ∂P = 1)
+    (hνmeas : ∀ ρ : ℂ → ℝ≥0∞, Measurable ρ → Measurable fun ω => ∫⁻ x, ρ x ∂(ν ω))
+    (hconv : ∀ ρ : ℂ → ℝ≥0∞, Measurable ρ → (∃ N : ℝ≥0∞, N ≠ ⊤ ∧ ∀ x, ρ x ≤ N) → (∀ x ∉ S, ρ x = 0) →
+      Tendsto (fun k => ∫⁻ ω, ediffE (∫⁻ x, ρ x ∂(circleMeasure γ hcirc ω k)) (∫⁻ x, ρ x ∂(ν ω)) ∂P)
+        atTop (𝓝 0))
+    {G' q : ℂ → ℝ≥0∞} (hG' : Measurable G') (hq : Measurable q) {C : ℝ≥0∞} (hqC : ∀ x, q x ≤ C)
+    (N : ℕ) :
+    ∀ᶠ k in atTop, ∫⁻ ω, ediffE (∫⁻ x in S, G' x * q x ∂(circleMeasure γ hcirc ω k))
+        (∫⁻ x in S, G' x * q x ∂(ν ω)) ∂P
+      ≤ ∫⁻ ω, ediffE (∫⁻ x in S, truncWeight G' q N x ∂(circleMeasure γ hcirc ω k))
+          (∫⁻ x in S, truncWeight G' q N x ∂(ν ω)) ∂P
+        + ((∫⁻ x in S, tailWeight G' C N x) + ∫⁻ x in S, tailWeight G' C N x) := by
+  have hT : Measurable (truncWeight G' q N) := (hG'.min measurable_const).mul hq
+  have hTl : Measurable (tailWeight G' C N) := (hG'.sub measurable_const).mul measurable_const
+  filter_upwards [hVar] with k hk
+  -- the pieces at level `k` and on the limit measure
+  have hsk := fun ω => truncWeight_sandwich (circleMeasure γ hcirc ω k) (S := S) hG' hq hqC N
+  have hsν := fun ω => truncWeight_sandwich (ν ω) (S := S) hG' hq hqC N
+  have hpt : ∀ ω, ediffE (∫⁻ x in S, G' x * q x ∂(circleMeasure γ hcirc ω k))
+        (∫⁻ x in S, G' x * q x ∂(ν ω))
+      ≤ (∫⁻ x in S, tailWeight G' C N x ∂(circleMeasure γ hcirc ω k))
+        + (ediffE (∫⁻ x in S, truncWeight G' q N x ∂(circleMeasure γ hcirc ω k))
+            (∫⁻ x in S, truncWeight G' q N x ∂(ν ω))
+          + ∫⁻ x in S, tailWeight G' C N x ∂(ν ω)) := by
+    intro ω
+    have h1 : ediffE (∫⁻ x in S, G' x * q x ∂(circleMeasure γ hcirc ω k))
+          (∫⁻ x in S, truncWeight G' q N x ∂(circleMeasure γ hcirc ω k))
+        ≤ ∫⁻ x in S, tailWeight G' C N x ∂(circleMeasure γ hcirc ω k) :=
+      ediffE_le_of_le_add (hsk ω).1 (hsk ω).2
+    have h2 : ediffE (∫⁻ x in S, truncWeight G' q N x ∂(ν ω))
+          (∫⁻ x in S, G' x * q x ∂(ν ω))
+        ≤ ∫⁻ x in S, tailWeight G' C N x ∂(ν ω) := by
+      rw [ediffE_comm]
+      exact ediffE_le_of_le_add (hsν ω).1 (hsν ω).2
+    calc ediffE (∫⁻ x in S, G' x * q x ∂(circleMeasure γ hcirc ω k))
+          (∫⁻ x in S, G' x * q x ∂(ν ω))
+        ≤ ediffE (∫⁻ x in S, G' x * q x ∂(circleMeasure γ hcirc ω k))
+            (∫⁻ x in S, truncWeight G' q N x ∂(circleMeasure γ hcirc ω k))
+          + ediffE (∫⁻ x in S, truncWeight G' q N x ∂(circleMeasure γ hcirc ω k))
+            (∫⁻ x in S, G' x * q x ∂(ν ω)) := ediffE_triangle _ _ _
+      _ ≤ _ := by
+          refine add_le_add h1 (le_trans (ediffE_triangle _ (∫⁻ x in S, truncWeight G' q N x ∂(ν ω)) _) ?_)
+          exact add_le_add le_rfl h2
+  -- integrate in `ω`
+  have hTK : Measurable fun ω => ∫⁻ x in S, tailWeight G' C N x ∂(circleMeasure γ hcirc ω k) :=
+    measurable_circleMeasure_setLIntegral γ hcirc k (hw k) hS hTl
+  have hTν : Measurable fun ω => ∫⁻ x in S, tailWeight G' C N x ∂(ν ω) :=
+    measurable_nu_setLIntegral ν hνmeas hS hTl
+  have hE : Measurable fun ω => ediffE (∫⁻ x in S, truncWeight G' q N x ∂(circleMeasure γ hcirc ω k))
+      (∫⁻ x in S, truncWeight G' q N x ∂(ν ω)) :=
+    measurable_ediffE (measurable_circleMeasure_setLIntegral γ hcirc k (hw k) hS hT)
+      (measurable_nu_setLIntegral ν hνmeas hS hT)
+  have hTKeq := lintegral_circleMeasure_expect_set P γ hcirc k (hw k) hS hk hTl
+  have hTν' : ∫⁻ ω, (∫⁻ x in S, tailWeight G' C N x ∂(ν ω)) ∂P ≤ ∫⁻ x in S, tailWeight G' C N x := by
+    have h := lintegral_nu_expect_le P γ hcirc ν hS hw hVar hνmeas hconv
+      (g := S.indicator (tailWeight G' C N)) (hTl.indicator hS)
+      (fun x hx => Set.indicator_of_notMem hx _)
+    simp only [lintegral_indicator hS, Measure.restrict_restrict hS, Set.inter_self] at h
+    exact h
+  calc ∫⁻ ω, ediffE (∫⁻ x in S, G' x * q x ∂(circleMeasure γ hcirc ω k))
+        (∫⁻ x in S, G' x * q x ∂(ν ω)) ∂P
+      ≤ ∫⁻ ω, ((∫⁻ x in S, tailWeight G' C N x ∂(circleMeasure γ hcirc ω k))
+          + (ediffE (∫⁻ x in S, truncWeight G' q N x ∂(circleMeasure γ hcirc ω k))
+              (∫⁻ x in S, truncWeight G' q N x ∂(ν ω))
+            + ∫⁻ x in S, tailWeight G' C N x ∂(ν ω))) ∂P := lintegral_mono hpt
+    _ = (∫⁻ ω, (∫⁻ x in S, tailWeight G' C N x ∂(circleMeasure γ hcirc ω k)) ∂P)
+          + ∫⁻ ω, ((ediffE (∫⁻ x in S, truncWeight G' q N x ∂(circleMeasure γ hcirc ω k))
+              (∫⁻ x in S, truncWeight G' q N x ∂(ν ω)))
+            + ∫⁻ x in S, tailWeight G' C N x ∂(ν ω)) ∂P := lintegral_add_left hTK _
+    _ = (∫⁻ ω, (∫⁻ x in S, tailWeight G' C N x ∂(circleMeasure γ hcirc ω k)) ∂P)
+          + ((∫⁻ ω, ediffE (∫⁻ x in S, truncWeight G' q N x ∂(circleMeasure γ hcirc ω k))
+              (∫⁻ x in S, truncWeight G' q N x ∂(ν ω)) ∂P)
+            + ∫⁻ ω, (∫⁻ x in S, tailWeight G' C N x ∂(ν ω)) ∂P) := by
+        rw [lintegral_add_left hE]
+    _ ≤ (∫⁻ x in S, tailWeight G' C N x) + ((∫⁻ ω, ediffE (∫⁻ x in S, truncWeight G' q N x ∂(circleMeasure γ hcirc ω k))
+              (∫⁻ x in S, truncWeight G' q N x ∂(ν ω)) ∂P)
+            + (∫⁻ x in S, tailWeight G' C N x)) := by
+        rw [hTKeq]
+        exact add_le_add le_rfl (add_le_add le_rfl hTν')
+    _ = _ := by ring
+
+/-- Step B, field side (paper tex:221-233): for a bounded weight `q` on `S` and the finite-mass weight
+`G'` (here `G' = ofReal (2 G_D(y, ·))`), the `L¹(P)` gap of `∫_S G' q dν_ε` tends to `0`. The three inputs:
+`hVar` (eq:occ-var), `hconv` (the GMC convergence of bounded weights, Berestycki 2017 Thm 1.1 p. 3), and
+`hνmeas` (measurability of the GMC measure, a standard property of the random measure `ν`). -/
+theorem radon_side_tendsto {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
+    (γ : ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (ν : Ω → Measure ℂ) {S : Set ℂ} (hS : MeasurableSet S)
+    (hw : ∀ k, Measurable fun p : Ω × ℂ => circleWeight γ hcirc p.1 k p.2)
+    (hVar : ∀ᶠ k in atTop, ∀ x ∈ S, ∫⁻ ω, ENNReal.ofReal (circleWeight γ hcirc ω k x) ∂P = 1)
+    (hνmeas : ∀ ρ : ℂ → ℝ≥0∞, Measurable ρ → Measurable fun ω => ∫⁻ x, ρ x ∂(ν ω))
+    (hconv : ∀ ρ : ℂ → ℝ≥0∞, Measurable ρ → (∃ N : ℝ≥0∞, N ≠ ⊤ ∧ ∀ x, ρ x ≤ N) → (∀ x ∉ S, ρ x = 0) →
+      Tendsto (fun k => ∫⁻ ω, ediffE (∫⁻ x, ρ x ∂(circleMeasure γ hcirc ω k)) (∫⁻ x, ρ x ∂(ν ω)) ∂P)
+        atTop (𝓝 0))
+    {G' q : ℂ → ℝ≥0∞} (hG' : Measurable G') (hG'fin : ∀ x, G' x ≠ ⊤) (hGint : ∫⁻ x in S, G' x ≠ ⊤)
+    (hq : Measurable q) {C : ℝ≥0∞} (hC : C ≠ ⊤) (hqC : ∀ x, q x ≤ C) :
+    Tendsto (fun k => ∫⁻ ω, ediffE (∫⁻ x in S, G' x * q x ∂(circleMeasure γ hcirc ω k))
+      (∫⁻ x in S, G' x * q x ∂(ν ω)) ∂P) atTop (𝓝 0) := by
+  have hTl : ∀ N : ℕ, Measurable (tailWeight G' C N) :=
+    fun N => (hG'.sub measurable_const).mul measurable_const
+  have hL : Tendsto (fun N : ℕ => ∫⁻ x in S, tailWeight G' C N x) atTop (𝓝 0) := by
+    have := tendsto_lintegral_filter_of_dominated_convergence (μ := volume.restrict S) (l := atTop)
+      (f := fun _ => (0 : ℝ≥0∞)) (fun x => G' x * C)
+      (Eventually.of_forall fun N => hTl N)
+      (Eventually.of_forall fun N => Eventually.of_forall fun x => by
+        unfold tailWeight
+        gcongr
+        exact tsub_le_self)
+      (by rw [lintegral_mul_const' C G' hC]; exact ENNReal.mul_ne_top hGint hC)
+      (Eventually.of_forall fun x => by
+        have h := ENNReal.Tendsto.mul_const (tendsto_tsub_natCast_zero (hG'fin x)) (Or.inr hC)
+        unfold tailWeight
+        simpa only [zero_mul] using h)
+    simpa only [lintegral_zero] using this
+  refine ENNReal.tendsto_nhds_zero.2 fun ε hε => ?_
+  have hε2 : 0 < ε / 2 := ENNReal.half_pos hε.ne'
+  have hη : 0 < ε / 2 / 2 := ENNReal.half_pos hε2.ne'
+  obtain ⟨N₀, hN₀⟩ := (ENNReal.tendsto_nhds_zero.1 hL (ε / 2 / 2) hη).exists
+  have hT0 : Measurable (S.indicator (truncWeight G' q N₀)) :=
+    ((hG'.min measurable_const).mul hq).indicator hS
+  have hTb : ∀ x, S.indicator (truncWeight G' q N₀) x ≤ (N₀ : ℝ≥0∞) * C := fun x => by
+    by_cases hx : x ∈ S
+    · rw [Set.indicator_of_mem hx]
+      unfold truncWeight
+      exact mul_le_mul' (min_le_right _ _) (hqC x)
+    · rw [Set.indicator_of_notMem hx]
+      exact zero_le
+  have hconvN := hconv _ hT0 ⟨(N₀ : ℝ≥0∞) * C, ENNReal.mul_ne_top (ENNReal.natCast_ne_top N₀) hC, hTb⟩
+    (fun x hx => Set.indicator_of_notMem hx _)
+  have hA := ENNReal.tendsto_nhds_zero.1 hconvN (ε / 2) hε2
+  filter_upwards [hA, radon_side_fixedN P γ hcirc ν hS hw hVar hνmeas hconv hG' hq hqC N₀] with k hk1 hk2
+  simp only [lintegral_indicator hS] at hk1
+  calc _ ≤ _ := hk2
+    _ ≤ ε / 2 + (ε / 2 / 2 + ε / 2 / 2) := add_le_add hk1 (add_le_add hN₀ hN₀)
+    _ = ε := by rw [ENNReal.add_halves (ε / 2), ENNReal.add_halves ε]
+
 end MatedCRT.KilledOccupation
