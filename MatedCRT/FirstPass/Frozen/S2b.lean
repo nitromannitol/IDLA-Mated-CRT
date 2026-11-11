@@ -2,58 +2,30 @@ import MatedCRT.Steps.Sec2.ConeHarmonicBallsUpToFixedTime
 import MatedCRT.Steps.Sec2.ConeScaleInvarianceUpToFixedTime
 
 /-!
-# First-pass frozen external inputs for IDLA paper Lemmas 2.4 and 2.5 (q1, wave 2)
+# Frozen external inputs for IDLA paper Lemmas 2.4 and 2.5
 
-Each `def` below is an EXTERNAL input of the first-pass formalization (operator note 2026-11-09 17:00 UTC: freeze the
-external inputs, prove the new steps). A frozen `Prop` is used only as an explicit hypothesis of a `firstPass_…`
-theorem in `MatedCRT/FirstPass/S2b.lean`. Nothing here is proved, and no strict growth of harmonic balls is assumed.
+Each `def` below is an external input of the formalization. A frozen `Prop` is used only as an explicit hypothesis of a theorem of the formalization. Nothing here is proved, and no strict growth of harmonic balls is assumed.
 -/
 
 namespace MatedCRT
 
 open MeasureTheory ProbabilityTheory Set HarmonicBalls
 
-/-- FIRST-PASS FROZEN. Existence of a whole-plane GFF `h^ℂ` (normalized by `h^ℂ_1(0) = 0`) on a probability space whose
-LQG measure is the `γ`-LQG measure of `h^ℂ - γ log |·|`. Source: Sheffield 2007 (whole-plane GFF); Duplantier-Sheffield
-2011 Proposition 1.1 and Weyl scaling (the setting of HB22, line 531); standard; locator pending.
-Same statement as the Step `WholePlaneLogLQGExistenceStep` (Steps/Sec2/ConeHarmonicBallsUpToFixedTime.lean:50).
-Truth check TRUE (ChatGPT, batch follow-up turn 2, notes/fp-gaps/CHATGPT-idla-frozen-batch.md, "Follow-up (turn 2)" table, row WholePlaneLogLQGExistenceStep; supersedes the turn-1 UNCLEAR of 02:54 UTC, §2, whose body was then recovered).
-Used by: firstPass_2_4_corrected, firstPass_2_5_corrected. -/
+/-- Existence of a whole-plane GFF `h^ℂ` (normalized by `h^ℂ_1(0) = 0`) on a probability space whose LQG measure is the `γ`-LQG measure of `h^ℂ - γ log |·|`. Source: Sheffield 2007 (whole-plane GFF); Duplantier-Sheffield 2011 Proposition 1.1 and Weyl scaling (the setting of HB22, line 531); standard; locator not yet pinned.
+Truth check: TRUE. -/
 def FrozenWholePlaneLogLQGExistence : Prop := WholePlaneLogLQGExistenceStep
 
-/-- FIRST-PASS FROZEN. The restrictions to `B_1` of the `γ`-quantum cone field and of `h^ℂ - γ log |·|` agree in law
-through their circle average processes over the circles in `B_1` (eq:gff, paper line 444, stated after Definition 2.1 as
-immediate from the definitions). Source: standard GFF restriction fact, stated in the paper as immediate from
-Definition 2.1; locator pending. Same statement as the Step `ConeRestrictionStep`
-(Steps/Sec2/ConeHarmonicBallsUpToFixedTime.lean:79).
-Truth check TRUE (ChatGPT, batch follow-up turn 3, notes/fp-gaps/CHATGPT-idla-frozen-batch.md, "Follow-up (turn 3)" table, row ConeRestrictionStep; supersedes the turn-1 UNCLEAR of 02:54 UTC, §3): `UnitBallCircle` admits only radii whose closed disk lies inside B_1.
-Used by: firstPass_2_4_corrected, firstPass_2_5_corrected. -/
+/-- The restrictions to `B_1` of the `γ`-quantum cone field and of `h^ℂ - γ log |·|` agree in law through their circle average processes over the circles in `B_1` (eq:gff, paper line 444, stated after Definition 2.1 as immediate from the definitions). Source: standard GFF restriction fact, stated in the paper as immediate from Definition 2.1; locator not yet pinned.
+Truth check: TRUE. `UnitBallCircle` admits only radii whose closed disk lies inside `B_1`. -/
 def FrozenConeRestriction : Prop := ConeRestrictionStep
 
-/-- FIRST-PASS FROZEN. Locality of harmonic balls: for `γ ∈ (0, 2)` there is one measurable set `S` of restrictions to
-`B_1` such that, for the quantum cone and for `h^ℂ - γ log |·|`, a.s. the event of Lemma 2.4 holds iff the restriction of
-the circle average process to `B_1` lies in `S`. Source: HB22 = [bou2022harmonic], Proposition 1.3 (harmonic balls depend
-locally on the field), cited at the paper's line 542 (proof of Lemma 2.4); operator ruling 2026-11-09 17:00 (EXTERNAL,
-freeze). Same statement as the Step `ConeHarmonicBallLocalityStep` (Steps/Sec2/ConeHarmonicBallsUpToFixedTime.lean:94).
-Truth check TRUE (ChatGPT, batch follow-up turn 3, notes/fp-gaps/CHATGPT-idla-frozen-batch.md, "Follow-up (turn 3)" table, row ConeHarmonicBallLocalityStep; supersedes the turn-1 UNCLEAR of 02:54 UTC, §4): `HasConeHarmonicBallsUpToHalfBall` is ordinary stopped-family existence, which holds almost surely for both specified models.
-Used by: firstPass_2_4_corrected, firstPass_2_5_corrected. -/
+/-- Locality of harmonic balls: for `γ ∈ (0, 2)` there is one measurable set `S` of restrictions to `B_1` such that, for the quantum cone and for `h^ℂ - γ log |·|`, a.s. the event of Lemma 2.4 holds iff the restriction of the circle average process to `B_1` lies in `S`. Source: HB22 = [bou2022harmonic], Proposition 1.3 (harmonic balls depend locally on the field), cited at the paper's line 542 (proof of Lemma 2.4). Literature input, frozen.
+Truth check: TRUE. `HasConeHarmonicBallsUpToHalfBall` is ordinary stopped-family existence, which holds almost surely for both specified models. -/
 def FrozenConeHarmonicBallLocality : Prop := ConeHarmonicBallLocalityStep
 
-/-- FIRST-PASS FROZEN. Measurability of the event of Lemma 2.4 in the circle average process, in the stopped form.
-For `γ ∈ (0, 2)` there is a set `G` of circle average processes such that, for every quantum cone field `(P, hC, hcirc, μ)`,
-`G` is null-measurable for the law of the circle average process `P.map (circleProcess ∘ hcirc)`; and for every
-continuous circle average process `c` with LQG measure `ν` (circle average limit), `circleProcess c ∈ G` iff there is a
-family of harmonic balls `{Λ_t}_{0 < t < T}` for `ν` with the properties of Theorem 2.3 on `(0, T)`, stopped at `∂B_{1/2}`
-(`IsStoppedAtHalfBall`, Lemma 2.4).
-Source: HB22 Proposition 1.3 (locality), as the first conjunct of the Step `ConeHalfBallFamilyFunctionalStep`
-(Steps/Sec2/ConeScaleInvarianceUpToFixedTime.lean:72), restated: (i) the strict growth clause `IsStrictHalfBallFamily` is
-removed (`ConeHarmonicBallStrictGrowthStep` is not assumed; the paper does not assert it), and (ii) the functional `Φ` with
-`familyProcess Λ T = Φ (circleProcess c)` is omitted (it needs uniqueness of the stopping time, not used by the existence
-and fixed-domain uniqueness of firstPass_2_5_corrected). Standard HB22 input; locator pending.
-RETIRED (NOT-EXTERNAL, truth check 2026-11-09): the functional `G` with the equivalence to the existence of a stopped
-family asserts more than any printed HB22 result, so it is not an admissible hypothesis. Kept for the record, not deleted.
-Its former consumer firstPass_2_5_corrected is no longer FirstPass-admissible until the measurability is proved
-(ConeFamilyAEMeasurableStep, FirstPass/S2c.lean task). Former use: firstPass_2_5_corrected. -/
+/-- Measurability of the event of Lemma 2.4 in the circle average process, in the stopped form. For `γ ∈ (0, 2)` there is a set `G` of circle average processes such that, for every quantum cone field `(P, hC, hcirc, μ)`, `G` is null-measurable for the law of the circle average process `P.map (circleProcess ∘ hcirc)`; and for every continuous circle average process `c` with LQG measure `ν` (circle average limit), `circleProcess c ∈ G` iff there is a family of harmonic balls `{Λ_t}_{0 < t < T}` for `ν` with the properties of Theorem 2.3 on `(0, T)`, stopped at `∂B_{1/2}` (`IsStoppedAtHalfBall`, Lemma 2.4).
+Source: HB22 Proposition 1.3 (locality), restated: (i) the strict growth clause `IsStrictHalfBallFamily` is removed (the paper does not assert it), and (ii) the functional `Φ` with `familyProcess Λ T = Φ (circleProcess c)` is omitted (it needs uniqueness of the stopping time, which the existence and fixed-domain uniqueness statements do not use). Standard HB22 input; locator not yet pinned.
+Retired: the functional `G`, with the equivalence to the existence of a stopped family, asserts more than any printed HB22 result, so it is not an admissible hypothesis. Its measurability is to be proved before its consumer is admissible again. -/
 def FrozenConeHalfBallFamilyMeasurable : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ G : Set (Set.Ioi (0 : ℝ) × ℂ → ℝ),
     (∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ)
