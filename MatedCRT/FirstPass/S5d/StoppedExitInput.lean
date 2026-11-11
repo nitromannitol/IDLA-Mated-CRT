@@ -162,7 +162,7 @@ def StoppedFloorCeilingStep (𝒮 : SpaceFillingSLEModel) : Prop :=
       (∀ b ∉ stoppedKillSet S Λ ρ t ε ω, stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t b ≤ c ω / (2 * ε))}
 
 /-- **The ceiling from the surplus maximum.** `StoppedFloorCeilingStep` follows from the floor `StoppedFloorStep` and the
-open maximum `StoppedMaxOutsideStep`: the constant `c` of the floor serves for the ceiling, by `tendsToOneOn_randomLevel`
+maximum outside the killing set `StoppedMaxOutsideStep`: the constant `c` of the floor serves for the ceiling, by `tendsToOneOn_randomLevel`
 (`S5d/RandomLevel.lean`) for the level `x ↦ ∀ b ∉ I^ε_t, u^ε(b) ≤ x`, which is monotone in `x`. -/
 theorem stoppedFloorCeiling_of_floor_max (𝒮 : SpaceFillingSLEModel) (hfl : StoppedFloorStep 𝒮)
     (hmax : StoppedMaxOutsideStep 𝒮) : StoppedFloorCeilingStep 𝒮 := by

@@ -6,7 +6,7 @@ import MatedCRT.Proofs.Sec6.GoodAnnulusPrevalence.Main
 import MatedCRT.Proofs.Sec6.IterativeBound.Statement
 
 /-!
-# Lemma 6.8, route (b) of E-A10, and the chain 6.7 (b), 6.9 (b), 6.10: final reductions
+# Lemma 6.8, route (b), and the chain 6.7 (b), 6.9 (b), 6.10: final reductions
 
 `constantOrderLowerBoundDiv_of_aeSteps` (`OfSteps.lean`) with its proved inputs discharged:
 * Lemma 2.19 (`ExpectedExitTimeExplicitBoundStmt`) from Lemma 2.17 (`boundedExitTimeRV_of_steps`, from Lemma 2.7) and
@@ -38,7 +38,7 @@ Lemmas 6.7 (b), 6.9 (b) and 6.10 add no hypothesis to those of Lemma 6.8 (b): th
 
 namespace MatedCRT
 
-/-- **Lemma 6.8, route (b) of E-A10** (lemma:constant-order-lower-bound-div, line 2455), from the cited Lemmas 2.7,
+/-- **Lemma 6.8, route (b)** (lemma:constant-order-lower-bound-div, line 2455), from the cited Lemmas 2.7,
 2.8, 2.9, 2.16, 2.18, Lemma 6.4 and the `σ(h)`-measurability of the LQG measure (eq:measure-lim, line 470). -/
 theorem constantOrderLowerBoundDiv_of_inputs (𝒮 : SpaceFillingSLEModel)
     (h216 : GreenKernelLowerBoundStmt 𝒮) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
@@ -49,7 +49,7 @@ theorem constantOrderLowerBoundDiv_of_inputs (𝒮 : SpaceFillingSLEModel)
     (expectedExitTimeExplicitBound_of_steps (boundedExitTimeRV_of_steps h27) h218)
     (goodScaleEventMeasurableAEStep_of_lqgMeasure 𝒮 hμ) (adjacentCellsMeetAeStep 𝒮)
 
-/-- **Lemma 6.8, route (b) of E-A10** (lemma:constant-order-lower-bound-div, line 2455), from the cited Lemmas 2.7,
+/-- **Lemma 6.8, route (b)** (lemma:constant-order-lower-bound-div, line 2455), from the cited Lemmas 2.7,
 2.8, 2.9, 2.16, 2.18, the `σ(h)`-measurability of the LQG measure and the field inputs of Lemmas 6.4 and 6.5
 (`goodAnnulusPrevalence_of_fieldInputs`). -/
 theorem constantOrderLowerBoundDiv_of_fieldInputs (𝒮 : SpaceFillingSLEModel)
@@ -62,7 +62,7 @@ theorem constantOrderLowerBoundDiv_of_fieldInputs (𝒮 : SpaceFillingSLEModel)
   constantOrderLowerBoundDiv_of_inputs 𝒮 h216 h27 h28 h29 h218
     (goodAnnulusPrevalence_of_fieldInputs h0 h1 h2 hV hR hD) hμ
 
-/-- **Lemma 6.8, route (b) of E-A10, final form** (lemma:constant-order-lower-bound-div, line 2455). Hypotheses: the
+/-- **Lemma 6.8, route (b), final form** (lemma:constant-order-lower-bound-div, line 2455). Hypotheses: the
 cited Lemmas 2.16, 2.7, 2.8, 2.9, 2.18; the six field steps of Lemmas 6.4 and 6.5 (`goodAnnulusPrevalence_final`);
 the step `LQGMeasureFieldMeasurableStep` (eq:measure-lim, line 470). -/
 theorem constantOrderLowerBoundDivLog_final (𝒮 : SpaceFillingSLEModel)
@@ -74,7 +74,7 @@ theorem constantOrderLowerBoundDivLog_final (𝒮 : SpaceFillingSLEModel)
     ConstantOrderLowerBoundDivLogStmt 𝒮 :=
   constantOrderLowerBoundDiv_of_inputs 𝒮 h216 h27 h28 h29 h218 (goodAnnulusPrevalence_final h0 h1 h2 hV hR hD) hμ
 
-/-- **Lemma 6.7, route (b) of E-A10, final form** (lemma:constant-order-lower-bound, line 2427, absorption probability
+/-- **Lemma 6.7, route (b), final form** (lemma:constant-order-lower-bound, line 2427, absorption probability
 `s₂/(1+|log r|)²`), with the hypotheses of `constantOrderLowerBoundDivLog_final`. Lemma 2.19 is discharged by
 Lemmas 2.17 and 2.18, the intersection of adjacent cells by `adjacentCellsMeetAeStep`. -/
 theorem constantOrderLowerBoundLog_final (𝒮 : SpaceFillingSLEModel)

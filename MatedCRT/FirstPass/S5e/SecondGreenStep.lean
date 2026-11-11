@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S5c.BadEvents
 import MatedCRT.Draft.Section2
 
 /-!
-# The stopped second Green inequality from its probabilistic inputs (FIRST PASS, S5e)
+# The stopped second Green inequality from its probabilistic inputs (S5e)
 
 Reduces `StoppedSecondGreenStep` (FirstPass/S5d/StoppedSteps.lean:73, the second Green inequality (5.7) of the stopped
 clause, correction [C21]) to two probabilistic inputs, `StoppedFloorHalfStep` and `StoppedMassLowerStep`, and to the

@@ -14,8 +14,9 @@ Its inputs are now:
   differences by the field modulo additive constant, `goodAnnulusEventLocality` (`CircleAverageModConstStep`);
 * Lemma 6.5 (`AnnulusHitStmt`): `annulusHit_of_volumeTail` (`MatedCRT/Proofs/Sec6/AnnulusHit/Main.lean`).
 
-Remaining inputs of Lemma 6.4: those of Lemma 6.5 and the two field steps `ConeMeanZeroRestrictionStep`
-(eq:gff, line 444) and `CircleAverageModConstStep`.
+Hypotheses of Lemma 6.4: those of Lemma 6.5 and the field step `ConeMeanZeroRestrictionStep`
+(eq:gff, line 444). `CircleAverageModConstStep` is proved by `circleAverageModConstStep`
+(`MatedCRT/Proofs/Field/ConeCircleModConst.lean:367`) and passed as `hD`.
 -/
 
 namespace MatedCRT
@@ -58,7 +59,8 @@ theorem annulusHit_final (h0 : WholePlaneLQGExistenceStep) (h1 : ConeWholePlaneW
 * `ConeMeanZeroRestrictionStep` (eq:gff on the mean-zero pairings, line 444; input of IR-c4-5,
   `MatedCRT/Steps/Sec6/GoodAnnulusPrevalence.lean`);
 * `CircleAverageModConstStep` (circle-average differences are determined by the field modulo additive constant; input
-  of IR-c4-6, same file). -/
+  of IR-c4-6, same file; proved as `circleAverageModConstStep`, `MatedCRT/Proofs/Field/ConeCircleModConst.lean:367`,
+  and passed here as `hD`). -/
 theorem goodAnnulusPrevalence_final (h0 : WholePlaneLQGExistenceStep) (h1 : ConeWholePlaneWeylComparisonStep)
     (h2 : WholePlaneLQGCoordinateChangeStep) (hV : WholePlaneUpperVolumeTailStep)
     (hR : ConeMeanZeroRestrictionStep) (hD : CircleAverageModConstStep) : GoodAnnulusPrevalenceStmt :=

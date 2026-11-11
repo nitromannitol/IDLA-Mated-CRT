@@ -151,8 +151,8 @@ theorem map_distribution_radius_eq_of_distribution_law
     P'.map ((fun d => (d, distributionEmbeddingRadius γ b d)) ∘ H')
   rw [← Measure.map_map hf hH, ← Measure.map_map hf hH', hlaw]
 
-/-- The remaining canonical field-law identification and reference-radius
-recovery, before forming any joint law. This is an internal proof obligation. -/
+/-- The canonical field-law identification and reference-radius recovery,
+before forming any joint law. It is kept as a hypothesis (see docs/campaign/COUNTED.md). -/
 def CanonicalConeDistributionLawStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω]
     (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ → ∀ b : ℝ, 0 < b →
@@ -172,8 +172,9 @@ def CanonicalConeDistributionLawStep (𝒮 : SpaceFillingSLEModel) : Prop :=
           (fun t => B t ω) (fun t => B' t ω) = distributionEmbeddingRadius γ b (H' ω)
 
 /-- The canonical joint distribution and embedding-radius identification.
-This is the remaining internal identification,
-not a literature input or the conclusion of the scaling theorem. -/
+It is kept as a hypothesis (see docs/campaign/COUNTED.md), reduced to `CanonicalConeDistributionLawStep`
+by `canonicalConeDistributionRadiusLawStep_of_distribution` (this file); not a literature input or the conclusion
+of the scaling theorem. -/
 def CanonicalConeDistributionRadiusLawStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω]
     (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ → ∀ b : ℝ, 0 < b →
@@ -271,7 +272,7 @@ theorem rescaledConeDistributionLawStep_of_canonical
     _ = S.P.map H := Measure.map_map measurable_fst hpair
 
 /-- Conditional field assembly.  The canonical joint law and the fixed-grid
-circle identities remain independent proof obligations. -/
+circle identities are kept as hypotheses (see docs/campaign/COUNTED.md). -/
 theorem rescaledConeFieldStep_of_canonical_and_grid
     (𝒮 : SpaceFillingSLEModel) (hscale : QuantumConeScalingInput)
     (hdms : Proposed.DMS14ConeScaling)

@@ -11,7 +11,7 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.PathFunctionalStep
 The hypotheses that remain are the Section 3 inputs and steps (see docs/campaign/COUNTED.md): `hrevuz` (`LBMGreenOccupationStep`),
 `hfixedStep` (`TruncatedOccupationFixedTimeStep`, which needs the deterministic input H1), `hmeasStep`
 (`LBMTruncatedOccupationMeasurableStep`: the environment-dependent extension of the path-functional step), and `hexc`
-(`BrownianOutwardExcursionAtExitStep`, no Lean statement yet).
+(`BrownianOutwardExcursionAtExitStep`, `MatedCRT/Steps/Sec3/ConvergenceHarmonicFunctions.lean:38`; see docs/campaign/COUNTED.md).
 -/
 
 namespace MatedCRT

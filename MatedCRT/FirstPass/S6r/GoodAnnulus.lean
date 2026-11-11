@@ -20,9 +20,9 @@ Proved here (deterministic):
 * `measure_annulus_le_covN`, `scaleCov_annulus_mass_le`: `μ(𝔸) ≤ N_R ≤ C m_R^φ` on the event;
 * `printedL_le_of_event_unit`: `L_R(z) ≤ C (1 + log 4)(1 + log(1/R)) m_R^φ` for `0 < R ≤ 1`.
 
-Not in this file (see docs/campaign/COUNTED.md):
-* the measurability of the event: the countable reduction of `covN` and `massBumpR` as functions of
-  `μ` is not in this file;
+Elsewhere (see docs/campaign/COUNTED.md):
+* the measurability of the event on the locally finite part, `measurableSet_scaleCovGoodAnnulusEvent_finite`
+  (`FirstPass/S6r/GoodAnnulusMeas.lean:232`, with the countable reduction of `covN` and `massBumpR`);
 * the uniform one-annulus probability, kept as the named hypothesis `ScaleCovUniformPrevalenceStmt`.
 
 Terminology: LQG measure (Duplantier-Sheffield), good annuli (Berestycki-Powell, Armstrong-Kuusi-Mourrat),
