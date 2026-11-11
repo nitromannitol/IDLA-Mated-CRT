@@ -56,3 +56,15 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/FirstPass/S4S5b/Axioms.lean | archive/MatedCRT/FirstPass/S4S5b/Axioms.lean | B15 |
 | MatedCRT/FirstPass/S4S5b/AxiomsWeyl.lean | archive/MatedCRT/FirstPass/S4S5b/AxiomsWeyl.lean | B15 |
 | MatedCRT/FirstPass/S5S6S7/Axioms.lean | archive/MatedCRT/FirstPass/S5S6S7/Axioms.lean | B17 |
+| MatedCRT/FirstPass/S5c/B2Family.lean | archive/MatedCRT/FirstPass/S5c/B2Family.lean | B18 |
+| MatedCRT/FirstPass/S5c/Compact.lean | archive/MatedCRT/FirstPass/S5c/Compact.lean | B18 |
+| MatedCRT/FirstPass/S5c/Continuum.lean | archive/MatedCRT/FirstPass/S5c/Continuum.lean | B18 |
+| MatedCRT/FirstPass/S5c/Floor.lean | archive/MatedCRT/FirstPass/S5c/Floor.lean | B18 |
+| MatedCRT/FirstPass/S5c/FloorFamily.lean | archive/MatedCRT/FirstPass/S5c/FloorFamily.lean | B18 |
+| MatedCRT/FirstPass/S5c/GreenGood.lean | archive/MatedCRT/FirstPass/S5c/GreenGood.lean | B18 |
+| MatedCRT/FirstPass/S5c/InfDistRat.lean | archive/MatedCRT/FirstPass/S5c/InfDistRat.lean | B18 |
+| MatedCRT/FirstPass/S5c/OuterCriterion.lean | archive/MatedCRT/FirstPass/S5c/OuterCriterion.lean | B18 |
+| MatedCRT/FirstPass/S5c/Pole.lean | archive/MatedCRT/FirstPass/S5c/Pole.lean | B18 |
+| MatedCRT/FirstPass/S5c/ProbFamily.lean | archive/MatedCRT/FirstPass/S5c/ProbFamily.lean | B18 |
+| MatedCRT/FirstPass/S5c/ProfileCoding.lean | archive/MatedCRT/FirstPass/S5c/ProfileCoding.lean | B18 |
+| MatedCRT/FirstPass/S5c/Superharmonic.lean | archive/MatedCRT/FirstPass/S5c/Superharmonic.lean | B18 |
