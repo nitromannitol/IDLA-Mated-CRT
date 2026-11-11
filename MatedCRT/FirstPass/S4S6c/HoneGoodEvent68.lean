@@ -275,7 +275,7 @@ theorem shellCentre_eligible_of_walk {ε : ℝ} {η : ℝ → ℂ} (hη : Contin
 /-- **`hEl` on the shells `k ≤ n` from the walk-level path inputs.** The binder `hEl` of `hgood_of_selector_le` follows from
 `shellCentre_eligible_of_walk` once every prefix path `ω` satisfies the walk inputs `hPath`: consecutive cells meet, the
 start cell meets the frontier of the `r/2`-thickening, and the killed exit is finite. Each of the three is an almost sure
-property of the simple random walk, not a pointwise property of the prefix set (see report): `hPath` is the named input. -/
+property of the simple random walk, not a pointwise property of the prefix set: `hPath` is the named input. -/
 theorem hEl_le_of_walkPath {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (hε : 0 < ε)
     {Θ F0 : Finset ℤ} {ρ r d a s : ℝ} {Rf : ℂ → ℝ} {A : Set ℤ} {τU : (ℕ → ℤ) → ℕ∞} {n : ℕ}
     (hr : 0 < r) (hrρ : r ≤ ρ / 4) (hd : 0 < d)
