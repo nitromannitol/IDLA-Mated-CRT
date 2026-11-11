@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.S6e.C17Induction
 /-!
 # FIRST PASS: the selected radii `R_j` of LEMMA68 (N2 selection, hR of C17)
 
-Sources (repository notes; no Lean credit before this file):
+Sources:
 * for `0 < δ` with `L = log(1/δ)`,
   `n_- = ⌈L/(2 log 7)⌉`, `n_+ = ⌊L/log 7⌋`, `K = n_+ - n_- + 1`, the radii `R_k = 7^{-(n_- + k - 1)}`, `1 ≤ k ≤ K`,
   are the seven-adic radii in `[δ, √δ]` (the statement there assumes `δ ≤ 7^{-4}`; only the membership is used here).
