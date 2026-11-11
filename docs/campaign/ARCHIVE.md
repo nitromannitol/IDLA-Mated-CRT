@@ -78,3 +78,5 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/Proofs/Field/WholePlaneLQGCont.lean | archive/MatedCRT/Proofs/Field/WholePlaneLQGCont.lean | B25 |
 | MatedCRT/Proofs/Field/WholePlaneWeyl.lean | archive/MatedCRT/Proofs/Field/WholePlaneWeyl.lean | B25 |
 | MatedCRT/Proofs/IDLA/JointConvergence.lean | archive/MatedCRT/Proofs/IDLA/JointConvergence.lean | B26 |
+| MatedCRT/Proofs/LBM/BrownianPositiveExcursion.lean | archive/MatedCRT/Proofs/LBM/BrownianPositiveExcursion.lean | B28 |
+| MatedCRT/Proofs/LBM/GaussianSign.lean | archive/MatedCRT/Proofs/LBM/GaussianSign.lean | B28 |
