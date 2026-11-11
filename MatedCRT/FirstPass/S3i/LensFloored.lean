@@ -35,7 +35,7 @@ if `β(γ)` is uniform in `ρ`, which the extraction supports by notation alone.
 namespace MatedCRT
 namespace FirstPass36
 
-open MeasureTheory Filter Topology Set Metric HarmonicBalls
+open MeasureTheory Filter Topology Set Metric _root_.HarmonicBalls
 open scoped ENNReal NNReal
 
 /-- **(BE-floored-uniform)**, the floored one-sided boundary continuity estimate with the floor exponent `β`
