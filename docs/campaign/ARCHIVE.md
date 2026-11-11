@@ -41,3 +41,13 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/FirstPass/S2x/ConeHarmonicBallLocalityL.lean | archive/MatedCRT/FirstPass/S2x/ConeHarmonicBallLocalityL.lean | B11 |
 | MatedCRT/FirstPass/S2x/ConeHarmonicBallLocalityUniv.lean | archive/MatedCRT/FirstPass/S2x/ConeHarmonicBallLocalityUniv.lean | B11 |
 | MatedCRT/FirstPass/S2x/ConeScaleRadiusPosLimit.lean | archive/MatedCRT/FirstPass/S2x/ConeScaleRadiusPosLimit.lean | B11 |
+| MatedCRT/FirstPass/S2y/CircleAvgRadialCont250.lean | archive/MatedCRT/FirstPass/S2y/CircleAvgRadialCont250.lean | B12 |
+| MatedCRT/FirstPass/S2y/CirclePointVersion250.lean | archive/MatedCRT/FirstPass/S2y/CirclePointVersion250.lean | B12 |
+| MatedCRT/FirstPass/S2y/ConeCircleAbsApprox.lean | archive/MatedCRT/FirstPass/S2y/ConeCircleAbsApprox.lean | B12 |
+| MatedCRT/FirstPass/S2y/ConeCircleAverage.lean | archive/MatedCRT/FirstPass/S2y/ConeCircleAverage.lean | B12 |
+| MatedCRT/FirstPass/S2y/LateralAssembly250.lean | archive/MatedCRT/FirstPass/S2y/LateralAssembly250.lean | B12 |
+| MatedCRT/FirstPass/S2y/LateralInMeasure250.lean | archive/MatedCRT/FirstPass/S2y/LateralInMeasure250.lean | B12 |
+| MatedCRT/FirstPass/S2y/LateralL1Limit250.lean | archive/MatedCRT/FirstPass/S2y/LateralL1Limit250.lean | B12 |
+| MatedCRT/FirstPass/S2y/LateralL2Limit250.lean | archive/MatedCRT/FirstPass/S2y/LateralL2Limit250.lean | B12 |
+| MatedCRT/FirstPass/S2y/RadialProcCont250.lean | archive/MatedCRT/FirstPass/S2y/RadialProcCont250.lean | B12 |
+| MatedCRT/FirstPass/S2y/RadialProcL4Ae250.lean | archive/MatedCRT/FirstPass/S2y/RadialProcL4Ae250.lean | B12 |
