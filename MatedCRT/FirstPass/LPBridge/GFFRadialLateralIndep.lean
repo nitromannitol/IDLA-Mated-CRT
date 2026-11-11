@@ -627,4 +627,176 @@ lemma isAeLimitOf_radialIntegral (h : IsWholePlaneGFF P hC hcirc) [IsProbability
 
 end RadialIntegralGaussian
 
+/-! ## The circle averages `avg_{∂B_r(z)} h_{|·|}(0)` are square integrable Gaussian limits -/
+
+section CircleAverageL2
+
+open MatedCRT.Field.GaussClosure
+
+/-- Cauchy-Schwarz for a finite measure: `(∫ f)² ≤ μ(T) ∫ f²`. -/
+lemma sq_integral_le_measureReal_mul_integral_sq {T : Type*} [MeasurableSpace T] (μ : Measure T)
+    [IsFiniteMeasure μ] {f : T → ℝ} (hf1 : Integrable f μ) (hf2 : Integrable (fun t => f t ^ 2) μ) :
+    (∫ t, f t ∂μ) ^ 2 ≤ μ.real Set.univ * ∫ t, f t ^ 2 ∂μ := by
+  rcases eq_or_ne μ 0 with rfl | hμ
+  · simp
+  have hm : 0 < μ.real Set.univ := by
+    have hu : μ Set.univ ≠ 0 := by rwa [Ne, Measure.measure_univ_eq_zero]
+    rw [Measure.real]
+    exact ENNReal.toReal_pos hu (measure_ne_top _ _)
+  set m := μ.real Set.univ with hmdef
+  set a := ∫ t, f t ∂μ with ha
+  set S := ∫ t, f t ^ 2 ∂μ with hS
+  set c := a / m with hc
+  have hcm : c * m = a := by rw [hc, div_mul_cancel₀ a hm.ne']
+  have hnonneg : 0 ≤ ∫ t, (f t - c) ^ 2 ∂μ := integral_nonneg fun t => sq_nonneg _
+  have hA : Integrable (fun t => f t ^ 2 - 2 * c * f t) μ := hf2.sub (hf1.const_mul (2 * c))
+  have hC2 : Integrable (fun _ : T => c ^ 2) μ := integrable_const _
+  have hexp : ∫ t, (f t - c) ^ 2 ∂μ = S - 2 * c * a + c ^ 2 * m := by
+    have e : (fun t => (f t - c) ^ 2) = fun t => (f t ^ 2 - 2 * c * f t) + c ^ 2 := by
+      funext t
+      ring
+    rw [e, integral_add hA hC2, integral_sub hf2 (hf1.const_mul (2 * c)), integral_const_mul,
+      integral_const, smul_eq_mul]
+    ring
+  have hc2 : c ^ 2 * m = c * a := by linear_combination c * hcm
+  have h1 : 0 ≤ S - c * a := by linarith [hnonneg, hexp, hc2]
+  have key : a ^ 2 = m * (c * a) := by linear_combination (-a) * hcm
+  nlinarith [mul_nonneg hm.le h1, key]
+
+/-- A jointly measurable family whose squares are jointly integrable: the integral against a finite measure is
+square integrable (Cauchy-Schwarz and Fubini). -/
+lemma memLp_two_integral_of_sq {Ω T : Type*} [MeasurableSpace Ω] [MeasurableSpace T] {P : Measure Ω}
+    [IsProbabilityMeasure P] (μ : Measure T) [IsFiniteMeasure μ] {G : Ω → T → ℝ}
+    (hG : Measurable (fun q : Ω × T => G q.1 q.2))
+    (hsq : Integrable (fun q : Ω × T => G q.1 q.2 ^ 2) (P.prod μ)) :
+    MemLp (fun ω => ∫ t, G ω t ∂μ) 2 P := by
+  have hfm : AEStronglyMeasurable (fun ω => ∫ t, G ω t ∂μ) P :=
+    (hG.stronglyMeasurable.integral_prod_right (ν := μ) (f := fun ω t => G ω t)).aestronglyMeasurable
+  have hint2 : Integrable (fun ω => ∫ t, G ω t ^ 2 ∂μ) P := hsq.integral_prod_left
+  rw [memLp_two_iff_integrable_sq hfm]
+  refine Integrable.mono' (hint2.const_mul (μ.real Set.univ)) (hfm.pow 2) ?_
+  filter_upwards [hsq.prod_right_ae] with ω hω
+  have hG1 : Integrable (G ω) μ := by
+    have hmeas : AEStronglyMeasurable (G ω) μ :=
+      (hG.comp measurable_prodMk_left).aestronglyMeasurable
+    exact ((memLp_two_iff_integrable_sq hmeas).2 hω).integrable one_le_two
+  show ‖(∫ t, G ω t ∂μ) ^ 2‖ ≤ μ.real Set.univ * ∫ t, G ω t ^ 2 ∂μ
+  rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
+  exact sq_integral_le_measureReal_mul_integral_sq μ (f := G ω) hG1 hω
+
+end CircleAverageL2
+
+section CircleAverageGaussian
+
+open MatedCRT.Field.GaussClosure
+
+variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
+
+/-- The circle average `avg_{∂B_r(z)} h_{|·|}(0)` of the radial process is square integrable. -/
+lemma memLp_two_circleAverage (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    {F : Ω → C(CircleParameter, ℝ)} (hF : Measurable F)
+    (hFae : ∀ᵐ ω ∂P, ∀ p : CircleParameter, F ω p = hcirc ω (p.1 : ℝ) p.2)
+    {z : ℂ} {r : ℝ} (hr : 0 < r) :
+    MemLp (fun ω => Real.circleAverage (fun x => hcirc ω ‖x‖ 0) z r) 2 P := by
+  set μ : Measure ℝ := (volume : Measure ℝ).restrict (Set.Ioc (0 : ℝ) (2 * π)) with hμ
+  have hjoint : Measurable (fun q : Ω × ℝ =>
+      F q.1 (MatedCRT.WholePlaneGFFLateral.radialPoint (circleMap z r q.2))) :=
+    (measurable_circle_version_joint hF).comp (measurable_fst.prodMk
+      (MatedCRT.WholePlaneGFFLateral.measurable_radialPoint.comp
+        ((continuous_circleMap z r).measurable.comp measurable_snd)))
+  have hsq : Integrable (fun q : Ω × ℝ =>
+      F q.1 (MatedCRT.WholePlaneGFFLateral.radialPoint (circleMap z r q.2)) ^ 2) (P.prod μ) := by
+    refine (integrable_prod_iff' (hjoint.pow_const 2).aestronglyMeasurable).2 ⟨ae_of_all _ fun θ => ?_, ?_⟩
+    · exact (MatedCRT.WholePlaneGFFLateral.memLp_two_radialPoint h hFae (circleMap z r θ)).integrable_sq
+    · refine (integrable_abs_log_circleMap z r).congr ?_
+      filter_upwards [circleMap_ne_zero_ae hr] with θ hθ
+      rw [← integral_sq_radialPoint h hFae hθ]
+      congr 1
+      funext ω
+      rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
+  have key := memLp_two_integral_of_sq (P := P) μ (G := fun ω θ =>
+    F ω (MatedCRT.WholePlaneGFFLateral.radialPoint (circleMap z r θ))) hjoint hsq
+  refine (key.const_mul (2 * π)⁻¹).ae_eq ?_
+  filter_upwards [hFae] with ω hω
+  simp only [Real.circleAverage, smul_eq_mul,
+    intervalIntegral.integral_of_le (by positivity : (0 : ℝ) ≤ 2 * π)]
+  congr 1
+  refine integral_congr_ae ?_
+  filter_upwards [circleMap_ne_zero_ae hr] with θ hθ
+  rw [hω, radialPoint_fst_of_ne hθ, radialPoint_snd]
+
+/-- Orthogonality of the circle average: if `Z ∈ L²(P)` is orthogonal to `h_{|x|}(0)` for `x ≠ 0`, then
+`E[Z avg_{∂B_r(z)} h_{|·|}(0)] = 0`. -/
+lemma integral_mul_circleAverage_eq_zero (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    {F : Ω → C(CircleParameter, ℝ)} (hF : Measurable F)
+    (hFae : ∀ᵐ ω ∂P, ∀ p : CircleParameter, F ω p = hcirc ω (p.1 : ℝ) p.2)
+    {z : ℂ} {r : ℝ} (hr : 0 < r) {Z : Ω → ℝ} (hZ : MemLp Z 2 P)
+    (horth : ∀ x : ℂ, x ≠ 0 → ∫ ω, Z ω * hcirc ω ‖x‖ 0 ∂P = 0) :
+    ∫ ω, Z ω * Real.circleAverage (fun x => hcirc ω ‖x‖ 0) z r ∂P = 0 := by
+  obtain ⟨Z', hZ'm, hZZ'⟩ : ∃ Z' : Ω → ℝ, Measurable Z' ∧ Z =ᵐ[P] Z' :=
+    ⟨hZ.aestronglyMeasurable.mk Z, hZ.aestronglyMeasurable.stronglyMeasurable_mk.measurable,
+      hZ.aestronglyMeasurable.ae_eq_mk⟩
+  have hZ' : MemLp Z' 2 P := hZ.ae_eq hZZ'
+  have horth' : ∀ x : ℂ, x ≠ 0 → ∫ ω, Z' ω * hcirc ω ‖x‖ 0 ∂P = 0 := fun x hx => by
+    rw [← horth x hx]
+    refine integral_congr_ae ?_
+    filter_upwards [hZZ'] with ω hω
+    rw [hω]
+  have hint := integrable_mul_radialPoint_circle h hF hFae hZ'm hZ' z hr
+  have hae0 : ∀ᵐ θ ∂((volume : Measure ℝ).restrict (Set.Ioc (0 : ℝ) (2 * π))),
+      ∫ ω, Z' ω * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint (circleMap z r θ)) ∂P = 0 := by
+    filter_upwards [circleMap_ne_zero_ae hr] with θ hθ
+    calc ∫ ω, Z' ω * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint (circleMap z r θ)) ∂P
+        = ∫ ω, Z' ω * hcirc ω ‖circleMap z r θ‖ 0 ∂P := by
+          refine integral_congr_ae ?_
+          filter_upwards [hFae] with ω hω
+          rw [hω, radialPoint_fst_of_ne hθ, radialPoint_snd]
+      _ = 0 := horth' _ hθ
+  have hswap := integral_integral_swap (μ := P) (ν := (volume : Measure ℝ).restrict (Set.Ioc (0 : ℝ) (2 * π)))
+    (f := fun ω θ => Z' ω * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint (circleMap z r θ))) hint
+  have step1 : ∀ᵐ ω ∂P, Z' ω * Real.circleAverage (fun x => hcirc ω ‖x‖ 0) z r =
+      (2 * π)⁻¹ * ∫ θ in Set.Ioc (0 : ℝ) (2 * π),
+        Z' ω * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint (circleMap z r θ)) := by
+    filter_upwards [hFae] with ω hω
+    have e2 : ∫ θ in Set.Ioc (0 : ℝ) (2 * π), F ω (MatedCRT.WholePlaneGFFLateral.radialPoint (circleMap z r θ))
+        = ∫ θ in Set.Ioc (0 : ℝ) (2 * π), hcirc ω ‖circleMap z r θ‖ 0 := by
+      refine integral_congr_ae ?_
+      filter_upwards [circleMap_ne_zero_ae hr] with θ hθ
+      rw [hω, radialPoint_fst_of_ne hθ, radialPoint_snd]
+    simp only [Real.circleAverage, smul_eq_mul,
+      intervalIntegral.integral_of_le (by positivity : (0 : ℝ) ≤ 2 * π), integral_const_mul]
+    rw [e2]
+    ring
+  calc ∫ ω, Z ω * Real.circleAverage (fun x => hcirc ω ‖x‖ 0) z r ∂P
+      = ∫ ω, Z' ω * Real.circleAverage (fun x => hcirc ω ‖x‖ 0) z r ∂P :=
+        integral_congr_ae (hZZ'.mono fun ω hω => by simp only [hω])
+    _ = ∫ ω, ((2 * π)⁻¹ * ∫ θ in Set.Ioc (0 : ℝ) (2 * π),
+          Z' ω * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint (circleMap z r θ))) ∂P :=
+        integral_congr_ae step1
+    _ = (2 * π)⁻¹ * ∫ ω, (∫ θ in Set.Ioc (0 : ℝ) (2 * π),
+          Z' ω * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint (circleMap z r θ))) ∂P := by
+        rw [integral_const_mul]
+    _ = (2 * π)⁻¹ * ∫ θ in Set.Ioc (0 : ℝ) (2 * π), ∫ ω,
+          Z' ω * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint (circleMap z r θ)) ∂P := by
+        rw [hswap]
+    _ = 0 := by
+        rw [integral_congr_ae hae0]
+        simp
+
+/-- The circle average `avg_{∂B_r(z)} h_{|·|}(0)` is an almost sure limit of observables. -/
+lemma isAeLimitOf_circleAverage (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    {F : Ω → C(CircleParameter, ℝ)} (hF : Measurable F)
+    (hFae : ∀ᵐ ω ∂P, ∀ p : CircleParameter, F ω p = hcirc ω (p.1 : ℝ) p.2)
+    {z : ℂ} {r : ℝ} (hr : 0 < r) :
+    IsAeLimitOf P (Submodule.span ℝ (Set.range fun o : GFFObservable.Admissible =>
+      fun ω => o.1.eval (hC ω) (hcirc ω)) : Set (Ω → ℝ))
+      (fun ω => Real.circleAverage (fun x => hcirc ω ‖x‖ 0) z r) :=
+  isAeLimitOf_span_of_orthogonal (fun o : GFFObservable.Admissible =>
+      fun ω => o.1.eval (hC ω) (hcirc ω)) (fun o => memLp_two_observable h o.1 o.2) _
+    (memLp_two_circleAverage h hF hFae hr) fun _ hZ hperp =>
+      integral_mul_circleAverage_eq_zero h hF hFae hr hZ fun x hx =>
+        hperp ⟨GFFObservable.circle ‖x‖ 0, norm_pos_iff.2 hx⟩
+
+end CircleAverageGaussian
+
 end MatedCRT.ConeMeanZeroRestriction
