@@ -654,4 +654,175 @@ theorem approxClock_tendsto_L1 {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω
   exact tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hDCT (fun k => zero_le)
     (fun k => hred k)
 
+/-! ## Step B, the field side (paper tex:218-233): the GMC measures `ν_ε → ν` -/
+
+theorem measurable_circleMeasure_lintegral {Ω : Type*} [MeasurableSpace Ω] (γ : ℝ)
+    (hcirc : Ω → ℝ → ℂ → ℝ) (k : ℕ)
+    (hw : Measurable fun p : Ω × ℂ => circleWeight γ hcirc p.1 k p.2)
+    {ρ : ℂ → ℝ≥0∞} (hρ : Measurable ρ) :
+    Measurable fun ω => ∫⁻ x, ρ x ∂(circleMeasure γ hcirc ω k) := by
+  have hF : Measurable fun p : Ω × ℂ => ENNReal.ofReal (circleWeight γ hcirc p.1 k p.2) * ρ p.2 := by
+    have h1 : Measurable fun p : Ω × ℂ => ENNReal.ofReal (circleWeight γ hcirc p.1 k p.2) :=
+      ENNReal.measurable_ofReal.comp hw
+    exact h1.mul (hρ.comp measurable_snd)
+  have heq : ∀ ω : Ω, ∫⁻ x, ρ x ∂(circleMeasure γ hcirc ω k)
+      = ∫⁻ x, ENNReal.ofReal (circleWeight γ hcirc ω k x) * ρ x := by
+    intro ω
+    have hp : Measurable fun x : ℂ => (ω, x) := measurable_const.prodMk measurable_id
+    have hwω : Measurable fun x : ℂ => ENNReal.ofReal (circleWeight γ hcirc ω k x) := by
+      have h := ENNReal.measurable_ofReal.comp (hw.comp hp)
+      exact h
+    unfold circleMeasure
+    rw [lintegral_withDensity_eq_lintegral_mul volume hwω hρ]
+    rfl
+  simp only [heq]
+  exact hF.lintegral_prod_right'
+
+theorem lintegral_eq_setLIntegral_of_zero {μ : Measure ℂ} {S : Set ℂ} (hS : MeasurableSet S)
+    {ρ : ℂ → ℝ≥0∞} (hρS : ∀ x ∉ S, ρ x = 0) :
+    ∫⁻ x, ρ x ∂μ = ∫⁻ x in S, ρ x ∂μ := by
+  rw [← lintegral_indicator hS]
+  congr 1
+  funext x
+  by_cases hx : x ∈ S
+  · rw [Set.indicator_of_mem hx]
+  · rw [Set.indicator_of_notMem hx, hρS x hx]
+
+/-- The circle measures integrate to Lebesgue measure on `S` once the weight has mean one there
+(eq:occ-var, tex:27-33): `E_P ν_ε(ρ; S) = ∫_S ρ dx`. -/
+theorem lintegral_circleMeasure_expect_set {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    [IsFiniteMeasure P] (γ : ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (k : ℕ)
+    (hw : Measurable fun p : Ω × ℂ => circleWeight γ hcirc p.1 k p.2)
+    {S : Set ℂ} (hS : MeasurableSet S)
+    (hVarS : ∀ x ∈ S, ∫⁻ ω, ENNReal.ofReal (circleWeight γ hcirc ω k x) ∂P = 1)
+    {ρ : ℂ → ℝ≥0∞} (hρ : Measurable ρ) :
+    ∫⁻ ω, (∫⁻ x in S, ρ x ∂(circleMeasure γ hcirc ω k)) ∂P = ∫⁻ x in S, ρ x := by
+  have hwx : ∀ ω : Ω, Measurable fun x : ℂ => ENNReal.ofReal (circleWeight γ hcirc ω k x) := by
+    intro ω
+    have hp : Measurable fun x : ℂ => (ω, x) := measurable_const.prodMk measurable_id
+    have h := ENNReal.measurable_ofReal.comp (hw.comp hp)
+    exact h
+  have hwm : ∀ x : ℂ, Measurable fun ω : Ω => ENNReal.ofReal (circleWeight γ hcirc ω k x) := by
+    intro x
+    have hp : Measurable fun ω : Ω => (ω, x) := measurable_id.prodMk measurable_const
+    have h := ENNReal.measurable_ofReal.comp (hw.comp hp)
+    exact h
+  have hF : Measurable fun p : Ω × ℂ => ENNReal.ofReal (circleWeight γ hcirc p.1 k p.2) * ρ p.2 := by
+    have h1 : Measurable fun p : Ω × ℂ => ENNReal.ofReal (circleWeight γ hcirc p.1 k p.2) :=
+      ENNReal.measurable_ofReal.comp hw
+    exact h1.mul (hρ.comp measurable_snd)
+  have step : ∀ ω : Ω, ∫⁻ x in S, ρ x ∂(circleMeasure γ hcirc ω k)
+      = ∫⁻ x, ENNReal.ofReal (circleWeight γ hcirc ω k x) * ρ x ∂(volume.restrict S) := by
+    intro ω
+    unfold circleMeasure
+    rw [setLIntegral_withDensity_eq_setLIntegral_mul volume (hwx ω) hρ hS]
+    rfl
+  calc ∫⁻ ω, (∫⁻ x in S, ρ x ∂(circleMeasure γ hcirc ω k)) ∂P
+      = ∫⁻ ω, ∫⁻ x, ENNReal.ofReal (circleWeight γ hcirc ω k x) * ρ x ∂(volume.restrict S) ∂P :=
+        lintegral_congr fun ω => step ω
+    _ = ∫⁻ x, ∫⁻ ω, ENNReal.ofReal (circleWeight γ hcirc ω k x) * ρ x ∂P ∂(volume.restrict S) :=
+        lintegral_lintegral_swap hF.aemeasurable
+    _ = ∫⁻ x in S, ρ x := by
+        refine lintegral_congr_ae ((ae_restrict_iff' hS).mpr (Eventually.of_forall fun x hx => ?_))
+        dsimp only
+        rw [lintegral_mul_const _ (hwm x), hVarS x hx, one_mul]
+
+/-- The bounded GMC expectation bound: for `ρ` bounded and vanishing off `S`, the `P`-mean of the limit
+measure integral is at most the Lebesgue integral over `S`. The `L¹` convergence `hconv` of the GMC
+measures on bounded weights is the input (Berestycki 2017, Thm 1.1, p. 3; tex:218-233). -/
+theorem lintegral_nu_expect_le_bdd {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
+    (γ : ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (ν : Ω → Measure ℂ) {S : Set ℂ} (hS : MeasurableSet S)
+    (hw : ∀ k, Measurable fun p : Ω × ℂ => circleWeight γ hcirc p.1 k p.2)
+    (hVar : ∀ᶠ k in atTop, ∀ x ∈ S, ∫⁻ ω, ENNReal.ofReal (circleWeight γ hcirc ω k x) ∂P = 1)
+    {ρ : ℂ → ℝ≥0∞} (hρ : Measurable ρ) (hρS : ∀ x ∉ S, ρ x = 0)
+    (hconv : Tendsto (fun k => ∫⁻ ω, ediffE (∫⁻ x, ρ x ∂(circleMeasure γ hcirc ω k))
+      (∫⁻ x, ρ x ∂(ν ω)) ∂P) atTop (𝓝 0)) :
+    ∫⁻ ω, (∫⁻ x, ρ x ∂(ν ω)) ∂P ≤ ∫⁻ x in S, ρ x := by
+  have hbd : ∀ᶠ k in atTop, ∫⁻ ω, (∫⁻ x, ρ x ∂(ν ω)) ∂P
+      ≤ (∫⁻ x in S, ρ x) + ∫⁻ ω, ediffE (∫⁻ x, ρ x ∂(circleMeasure γ hcirc ω k))
+          (∫⁻ x, ρ x ∂(ν ω)) ∂P := by
+    filter_upwards [hVar] with k hk
+    calc ∫⁻ ω, (∫⁻ x, ρ x ∂(ν ω)) ∂P
+        ≤ ∫⁻ ω, ((∫⁻ x, ρ x ∂(circleMeasure γ hcirc ω k))
+            + ediffE (∫⁻ x, ρ x ∂(circleMeasure γ hcirc ω k)) (∫⁻ x, ρ x ∂(ν ω))) ∂P :=
+          lintegral_mono fun ω => limit_le_approx_add_gap
+      _ = (∫⁻ ω, ∫⁻ x, ρ x ∂(circleMeasure γ hcirc ω k) ∂P)
+            + ∫⁻ ω, ediffE (∫⁻ x, ρ x ∂(circleMeasure γ hcirc ω k)) (∫⁻ x, ρ x ∂(ν ω)) ∂P :=
+          lintegral_add_left (measurable_circleMeasure_lintegral γ hcirc k (hw k) hρ) _
+      _ = (∫⁻ x in S, ρ x) + ∫⁻ ω, ediffE (∫⁻ x, ρ x ∂(circleMeasure γ hcirc ω k))
+            (∫⁻ x, ρ x ∂(ν ω)) ∂P := by
+          rw [lintegral_congr (fun ω => lintegral_eq_setLIntegral_of_zero hS hρS),
+            lintegral_circleMeasure_expect_set P γ hcirc k (hw k) hS hk hρ]
+  have hlim := (tendsto_const_nhds (x := ∫⁻ x in S, ρ x)).add hconv
+  rw [add_zero] at hlim
+  exact ge_of_tendsto hlim hbd
+
+/-- Monotone truncation of a weight: `min(g, N)`, with the bounded-case field bound
+`E_P ∫_S min(g,N) dν ≤ ∫_S min(g,N) dx` of `lintegral_nu_expect_le_bdd`. -/
+theorem lintegral_nu_expect_le {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
+    (γ : ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (ν : Ω → Measure ℂ) {S : Set ℂ} (hS : MeasurableSet S)
+    (hw : ∀ k, Measurable fun p : Ω × ℂ => circleWeight γ hcirc p.1 k p.2)
+    (hVar : ∀ᶠ k in atTop, ∀ x ∈ S, ∫⁻ ω, ENNReal.ofReal (circleWeight γ hcirc ω k x) ∂P = 1)
+    (hνmeas : ∀ ρ : ℂ → ℝ≥0∞, Measurable ρ → Measurable fun ω => ∫⁻ x, ρ x ∂(ν ω))
+    (hconv : ∀ ρ : ℂ → ℝ≥0∞, Measurable ρ → (∃ N : ℝ≥0∞, N ≠ ⊤ ∧ ∀ x, ρ x ≤ N) → (∀ x ∉ S, ρ x = 0) →
+      Tendsto (fun k => ∫⁻ ω, ediffE (∫⁻ x, ρ x ∂(circleMeasure γ hcirc ω k)) (∫⁻ x, ρ x ∂(ν ω)) ∂P)
+        atTop (𝓝 0))
+    {g : ℂ → ℝ≥0∞} (hg : Measurable g) (hgS : ∀ x ∉ S, g x = 0) :
+    ∫⁻ ω, (∫⁻ x, g x ∂(ν ω)) ∂P ≤ ∫⁻ x in S, g x := by
+  have hmeasN : ∀ N : ℕ, Measurable fun x => min (g x) (N : ℝ≥0∞) := fun N => hg.min measurable_const
+  have hbdd : ∀ N : ℕ, ∫⁻ ω, (∫⁻ x, min (g x) (N : ℝ≥0∞) ∂(ν ω)) ∂P
+      ≤ ∫⁻ x in S, min (g x) (N : ℝ≥0∞) := fun N =>
+    lintegral_nu_expect_le_bdd P γ hcirc ν hS hw hVar (hmeasN N)
+      (fun x hx => by simp [hgS x hx])
+      (hconv _ (hmeasN N) ⟨(N : ℝ≥0∞), ENNReal.natCast_ne_top N, fun x => min_le_right _ _⟩
+        (fun x hx => by simp [hgS x hx]))
+  have hmono : Monotone fun N : ℕ => fun x => min (g x) (N : ℝ≥0∞) := fun m n hmn x =>
+    min_le_min_left _ (by exact_mod_cast hmn)
+  have hsup : ∀ x, (⨆ N : ℕ, min (g x) (N : ℝ≥0∞)) = g x := fun x => iSup_min_natCast (g x)
+  have hω : ∀ ω : Ω, ∫⁻ x, g x ∂(ν ω) = ⨆ N : ℕ, ∫⁻ x, min (g x) (N : ℝ≥0∞) ∂(ν ω) := fun ω => by
+    rw [← lintegral_iSup (fun N => hmeasN N) hmono]
+    exact lintegral_congr fun x => (hsup x).symm
+  calc ∫⁻ ω, (∫⁻ x, g x ∂(ν ω)) ∂P
+      = ∫⁻ ω, ⨆ N : ℕ, ∫⁻ x, min (g x) (N : ℝ≥0∞) ∂(ν ω) ∂P := lintegral_congr hω
+    _ = ⨆ N : ℕ, ∫⁻ ω, (∫⁻ x, min (g x) (N : ℝ≥0∞) ∂(ν ω)) ∂P :=
+        lintegral_iSup (fun N => hνmeas _ (hmeasN N))
+          (fun m n hmn ω => lintegral_mono fun x => min_le_min_left _ (by exact_mod_cast hmn))
+    _ ≤ ⨆ N : ℕ, ∫⁻ x in S, min (g x) (N : ℝ≥0∞) := iSup_mono hbdd
+    _ = ∫⁻ x in S, g x := by
+        rw [← lintegral_iSup (fun N => hmeasN N) hmono]
+        exact lintegral_congr fun x => hsup x
+
+/-- Truncated field weight `min(G', N) · q` (paper tex:221-225, the truncation of `G_D` at `M`). -/
+noncomputable def truncWeight (G' q : ℂ → ℝ≥0∞) (N : ℕ) (x : ℂ) : ℝ≥0∞ :=
+  min (G' x) (N : ℝ≥0∞) * q x
+
+/-- Tail weight `(G' - N) · C`, the error of the truncation (paper tex:221-225). -/
+noncomputable def tailWeight (G' : ℂ → ℝ≥0∞) (C : ℝ≥0∞) (N : ℕ) (x : ℂ) : ℝ≥0∞ :=
+  (G' x - (N : ℝ≥0∞)) * C
+
+theorem mul_le_truncWeight_add {a q C M : ℝ≥0∞} (hq : q ≤ C) :
+    a * q ≤ min a M * q + (a - M) * C := by
+  rcases le_total a M with h | h
+  · simp [min_eq_left h, tsub_eq_zero_of_le h]
+  · rw [min_eq_right h]
+    calc a * q ≤ ((a - M) + M) * q := by gcongr; exact le_tsub_add
+      _ = (a - M) * q + M * q := add_mul _ _ _
+      _ ≤ (a - M) * C + M * q := by gcongr
+      _ = M * q + (a - M) * C := by ring
+
+theorem ediffE_le_of_le_add {a a' t : ℝ≥0∞} (h1 : a' ≤ a) (h2 : a ≤ a' + t) : ediffE a a' ≤ t := by
+  unfold ediffE
+  rw [tsub_eq_zero_of_le h1, add_zero]
+  exact tsub_le_iff_right.mpr (by rw [add_comm]; exact h2)
+
+theorem tendsto_tsub_natCast_zero {a : ℝ≥0∞} (ha : a ≠ ⊤) :
+    Tendsto (fun N : ℕ => a - (N : ℝ≥0∞)) atTop (𝓝 0) := by
+  rw [ENNReal.tendsto_nhds_zero]
+  intro ε _
+  obtain ⟨n, hn⟩ := ENNReal.exists_nat_gt ha
+  filter_upwards [Filter.eventually_ge_atTop n] with m hm
+  have hm' : (n : ℝ≥0∞) ≤ (m : ℝ≥0∞) := by exact_mod_cast hm
+  rw [tsub_eq_zero_of_le (hn.le.trans hm')]
+  exact zero_le
+
 end MatedCRT.KilledOccupation
