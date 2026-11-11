@@ -478,6 +478,61 @@ theorem lintegral_clockMeasure_Ioc_eq {F : ℝ≥0 → ℝ} (hm : Monotone F) (h
   simp only [Real.toNNReal_coe]
   exact mul_comm _ _
 
+/-! ## 6. The base occupation identity for measurable weights (monotone class, Armitage-Gardiner) -/
+
+section BaseExtend
+
+/-- The base occupation identity `E[∫_{[0,σ]} q(B_u) dA(u)] = 2 ∫_D G_D(y,·) q dν` (lem:occ-base, cone
+transfer of tex:462-468), assumed for bounded measurable weights, holds for every measurable weight
+`q : ℂ → ℝ≥0∞`: truncate `q` at `n`, then pass to the limit by monotone convergence on both sides. -/
+theorem lintegral_base_of_measurable {PB : Measure (ContinuousPath ℂ)} {dA : ContinuousPath ℂ → Measure ℝ≥0}
+    {σ : ContinuousPath ℂ → ℝ≥0} {D : Set ℂ} {G : ℂ → ℝ} {ν : Measure ℂ} (hG : Measurable G)
+    (hbase : ∀ q : ℂ → ℝ≥0∞, Measurable q → (∃ M : ℝ≥0∞, M ≠ ⊤ ∧ ∀ x, q x ≤ M) →
+      ∫⁻ b, ∫⁻ u in Icc (0 : ℝ≥0) (σ b), q (b u) ∂(dA b) ∂PB =
+        ∫⁻ x in D, ENNReal.ofReal (2 * G x) * q x ∂ν)
+    (hmeas : ∀ q : ℂ → ℝ≥0∞, Measurable q →
+      Measurable fun b => ∫⁻ u in Icc (0 : ℝ≥0) (σ b), q (b u) ∂(dA b))
+    (q : ℂ → ℝ≥0∞) (hq : Measurable q) :
+    ∫⁻ b, ∫⁻ u in Icc (0 : ℝ≥0) (σ b), q (b u) ∂(dA b) ∂PB =
+      ∫⁻ x in D, ENNReal.ofReal (2 * G x) * q x ∂ν := by
+  have hQm : ∀ n : ℕ, Measurable fun x => min (q x) (n : ℝ≥0∞) := fun n => hq.min measurable_const
+  have hQb : ∀ n : ℕ, ∃ M : ℝ≥0∞, M ≠ ⊤ ∧ ∀ x, min (q x) (n : ℝ≥0∞) ≤ M :=
+    fun n => ⟨n, ENNReal.natCast_ne_top n, fun x => min_le_right _ _⟩
+  have hQsup : ∀ x, ⨆ n : ℕ, min (q x) (n : ℝ≥0∞) = q x := by
+    intro x
+    apply le_antisymm
+    · exact iSup_le fun n => min_le_left _ _
+    · rcases eq_or_ne (q x) ⊤ with h | h
+      · rw [h]
+        simp [ENNReal.iSup_natCast]
+      · obtain ⟨n, hn⟩ := ENNReal.exists_nat_gt h
+        exact le_iSup_of_le n (le_min le_rfl hn.le)
+  have hmono : ∀ m n : ℕ, m ≤ n → ∀ x, min (q x) (m : ℝ≥0∞) ≤ min (q x) (n : ℝ≥0∞) :=
+    fun m n hmn x => min_le_min le_rfl (Nat.cast_le.2 hmn)
+  have hinner : ∀ b : ContinuousPath ℂ, ∫⁻ u in Icc (0 : ℝ≥0) (σ b), q (b u) ∂(dA b) =
+      ⨆ n : ℕ, ∫⁻ u in Icc (0 : ℝ≥0) (σ b), min (q (b u)) (n : ℝ≥0∞) ∂(dA b) := by
+    intro b
+    have hbm : Measurable fun u : ℝ≥0 => b u := b.continuous.measurable
+    rw [← lintegral_iSup (f := fun n u => min (q (b u)) (n : ℝ≥0∞))
+      (fun n => (hQm n).comp hbm) (fun m n hmn u => hmono m n hmn (b u))]
+    exact lintegral_congr fun u => (hQsup (b u)).symm
+  calc ∫⁻ b, ∫⁻ u in Icc (0 : ℝ≥0) (σ b), q (b u) ∂(dA b) ∂PB
+      = ∫⁻ b, ⨆ n : ℕ, ∫⁻ u in Icc (0 : ℝ≥0) (σ b), min (q (b u)) (n : ℝ≥0∞) ∂(dA b) ∂PB :=
+        lintegral_congr fun b => hinner b
+    _ = ⨆ n : ℕ, ∫⁻ b, ∫⁻ u in Icc (0 : ℝ≥0) (σ b), min (q (b u)) (n : ℝ≥0∞) ∂(dA b) ∂PB :=
+        lintegral_iSup (f := fun n b => ∫⁻ u in Icc (0 : ℝ≥0) (σ b), min (q (b u)) (n : ℝ≥0∞) ∂(dA b))
+          (fun n => hmeas _ (hQm n))
+          (fun m n hmn b => lintegral_mono fun u => hmono m n hmn (b u))
+    _ = ⨆ n : ℕ, ∫⁻ x in D, ENNReal.ofReal (2 * G x) * min (q x) (n : ℝ≥0∞) ∂ν :=
+        congrArg (fun F => ⨆ n : ℕ, F n) (funext fun n => hbase _ (hQm n) (hQb n))
+    _ = ∫⁻ x in D, ENNReal.ofReal (2 * G x) * q x ∂ν := by
+        rw [← lintegral_iSup (f := fun n x => ENNReal.ofReal (2 * G x) * min (q x) (n : ℝ≥0∞))
+          (fun n => ((measurable_const.mul hG).ennreal_ofReal).mul (hQm n))
+          (fun m n hmn x => by dsimp only; gcongr)]
+        exact lintegral_congr fun x => by rw [← ENNReal.mul_iSup, hQsup x]
+
+end BaseExtend
+
 end NNRealBase
 
 end
