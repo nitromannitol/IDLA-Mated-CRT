@@ -1,5 +1,9 @@
 import Mathlib
 import MatedCRT.Defs.Setting
+import MatedCRT.Proofs.Sec3.KilledOccupation.BaseClock
+import MatedCRT.Proofs.Sec3.KilledOccupation.WeightedClock
+import HarmonicBalls.Defs.Green
+import HarmonicBalls.Proofs.Sec4.GreenAwayFromPole
 
 /-!
 # Appendix B, Theorem B.1: the occupation identity of the median-rescaled LBM (step S7)
@@ -534,6 +538,384 @@ theorem lintegral_base_of_measurable {PB : Measure (ContinuousPath ℂ)} {dA : C
 end BaseExtend
 
 end NNRealBase
+
+/-! ## 7. The pathwise identity of S7 -/
+
+section Pathwise
+
+lemma weightedClock_eq_of_le {dA : Measure ℝ≥0} {w : ℝ≥0 → ℝ≥0∞} {σ s : ℝ≥0} (h : s ≤ σ) :
+    weightedClock dA w σ s = ∫⁻ u in Icc (0 : ℝ≥0) s, w u ∂dA := by
+  unfold weightedClock
+  rw [min_eq_left h]
+
+/-- Pathwise change of variables of S7 (`paper/appendix-occupation-C16.tex:441-449`, scaling `:459-461`).
+If the path `b` lies in `D` on `[0, σ)` and leaves `D` at `σ`, then the occupation of the rescaled path
+`t ↦ b (F⁻¹(c t))` up to its exit from `D` is `c⁻¹` times the Stieltjes integral of `g ∘ b` over `(0, σ]`.
+The integrands `f` and `g` agree on `D`, which the path visits before its exit; the exit time `F(σ)/c` is a
+single point, hence Lebesgue-null. -/
+theorem rescaled_occupation_eq_stieltjes {F : ℝ≥0 → ℝ} {D : Set ℂ} {b : ℝ≥0 → ℂ} {σ c : ℝ≥0}
+    (hc0 : 0 < c) (hF : Continuous F) (hm : StrictMono F) (h0 : F 0 = 0) (ht : Tendsto F atTop atTop)
+    (hin : ∀ s < σ, b s ∈ D) (hout : b σ ∉ D) (f g : ℂ → ℝ) (hfg : ∀ x ∈ D, f x = g x)
+    (hgm : Measurable fun x : ℝ => g (b x.toNNReal)) :
+    ∫ t in Ioc (0 : ℝ) (min ⊤ (pathExitTime D (fun t : ℝ≥0 => b (clockInverse F (c * t))))).toReal,
+      f (b (clockInverse F (c * t.toNNReal))) =
+      (c : ℝ)⁻¹ * ∫ s in Ioc (0 : ℝ) (σ : ℝ), g (b s.toNNReal) ∂(clockMeasure hm.monotone) := by
+  have hFσ : 0 ≤ F σ := by
+    rw [← h0]
+    exact hm.monotone (by positivity)
+  have hcpos : (0 : ℝ) < c := NNReal.coe_pos.mpr hc0
+  have hτ : (min ⊤ (pathExitTime D (fun t : ℝ≥0 => b (clockInverse F (c * t))))).toReal = F σ / c := by
+    rw [pathExitTime_clockInverse_comp hc0 hF hm h0 ht hin hout, min_eq_right le_top,
+      ENNReal.toReal_ofReal (div_nonneg hFσ hcpos.le)]
+  rw [hτ]
+  have hcongr : ∫ t in Ioc (0 : ℝ) (F σ / c), f (b (clockInverse F (c * t.toNNReal))) =
+      ∫ t in Ioc (0 : ℝ) (F σ / c), g (b (clockInverse F (c * t.toNNReal))) := by
+    have hpt : EqOn (fun t : ℝ => f (b (clockInverse F (c * t.toNNReal))))
+        (fun t : ℝ => g (b (clockInverse F (c * t.toNNReal)))) (Ioo (0 : ℝ) (F σ / c)) := by
+      intro t htI
+      have hlt : t * c < F σ := (lt_div_iff₀ hcpos).mp htI.2
+      have hu : ((c * t.toNNReal : ℝ≥0) : ℝ) < F σ := by
+        rw [NNReal.coe_mul, Real.coe_toNNReal _ htI.1.le, mul_comm]
+        exact hlt
+      exact hfg _ (hin _ (clockInverse_lt_of_lt hF hm h0 ht hu))
+    calc ∫ t in Ioc (0 : ℝ) (F σ / c), f (b (clockInverse F (c * t.toNNReal)))
+        = ∫ t in Ioo (0 : ℝ) (F σ / c), f (b (clockInverse F (c * t.toNNReal))) :=
+          setIntegral_congr_set Ioo_ae_eq_Ioc.symm
+      _ = ∫ t in Ioo (0 : ℝ) (F σ / c), g (b (clockInverse F (c * t.toNNReal))) :=
+          setIntegral_congr_fun measurableSet_Ioo hpt
+      _ = ∫ t in Ioc (0 : ℝ) (F σ / c), g (b (clockInverse F (c * t.toNNReal))) :=
+          setIntegral_congr_set Ioo_ae_eq_Ioc
+  rw [hcongr]
+  exact integral_rescaled_eq_stieltjes hc0 hF hm h0 ht g hgm
+
+/-- Nonnegative integrands: the Stieltjes integral over `(0, σ]` of a nonnegative measurable `h` equals the
+weighted lintegral over `[0, σ]` (S7, `:430-441`, via `lintegral_clockMeasure_Ioc_eq`). -/
+theorem integral_clockMeasure_Ioc_eq_toReal {F : ℝ≥0 → ℝ} (hm : Monotone F) (hc : Continuous F)
+    (h0 : F 0 = 0) {dA : Measure ℝ≥0} {w : ℝ≥0 → ℝ≥0∞} (hw : Measurable w) {σ : ℝ≥0}
+    (hF : ∀ s : ℝ≥0, s ≤ σ → F s = (∫⁻ u in Icc (0 : ℝ≥0) s, w u ∂dA).toReal)
+    (hfin : ∫⁻ u in Icc (0 : ℝ≥0) σ, w u ∂dA ≠ ⊤) {h : ℝ → ℝ} (hh : Measurable h)
+    (h0h : ∀ x, 0 ≤ h x) :
+    ∫ s in Ioc (0 : ℝ) (σ : ℝ), h s ∂(clockMeasure hm) =
+      (∫⁻ u in Icc (0 : ℝ≥0) σ, ENNReal.ofReal (h (u : ℝ)) * w u ∂dA).toReal := by
+  have hnn : 0 ≤ᵐ[(clockMeasure hm).restrict (Ioc (0 : ℝ) (σ : ℝ))] h := ae_of_all _ h0h
+  rw [integral_eq_lintegral_of_nonneg_ae hnn hh.aestronglyMeasurable]
+  congr 1
+  exact lintegral_clockMeasure_Ioc_eq hm hc h0 hw hF hfin (fun s => ENNReal.ofReal (h s))
+    (ENNReal.measurable_ofReal.comp hh)
+
+/-- Signed version: for a measurable bounded `h`, the Stieltjes integral over `(0, σ]` is the difference of the
+two weighted lintegrals of the positive and negative parts. -/
+theorem integral_clockMeasure_Ioc_eq_sub {F : ℝ≥0 → ℝ} (hm : Monotone F) (hc : Continuous F)
+    (h0 : F 0 = 0) {dA : Measure ℝ≥0} {w : ℝ≥0 → ℝ≥0∞} (hw : Measurable w) {σ : ℝ≥0}
+    (hF : ∀ s : ℝ≥0, s ≤ σ → F s = (∫⁻ u in Icc (0 : ℝ≥0) s, w u ∂dA).toReal)
+    (hfin : ∫⁻ u in Icc (0 : ℝ≥0) σ, w u ∂dA ≠ ⊤) {h : ℝ → ℝ} (hh : Measurable h) {M : ℝ}
+    (hM : ∀ x, |h x| ≤ M) :
+    ∫ s in Ioc (0 : ℝ) (σ : ℝ), h s ∂(clockMeasure hm) =
+      (∫⁻ u in Icc (0 : ℝ≥0) σ, ENNReal.ofReal (max (h (u : ℝ)) 0) * w u ∂dA).toReal -
+        (∫⁻ u in Icc (0 : ℝ≥0) σ, ENNReal.ofReal (max (-h (u : ℝ)) 0) * w u ∂dA).toReal := by
+  have hM0 : 0 ≤ M := (abs_nonneg _).trans (hM 0)
+  have hkey : ∀ a : ℝ, |a| ≤ M → |max a 0| ≤ M := fun a ha =>
+    abs_le.mpr ⟨by linarith [le_max_right a 0], max_le (abs_le.mp ha).2 hM0⟩
+  have hfinite : clockMeasure hm (Ioc (0 : ℝ) (σ : ℝ)) ≠ ⊤ := by
+    rw [clockMeasure_Ioc hm hc]
+    exact ENNReal.ofReal_ne_top
+  have hint : ∀ k : ℝ → ℝ, Measurable k → (∀ x, |k x| ≤ M) →
+      IntegrableOn k (Ioc (0 : ℝ) (σ : ℝ)) (clockMeasure hm) := fun k hk hkM =>
+    Measure.integrableOn_of_bounded hfinite hk.aestronglyMeasurable
+      (ae_of_all _ fun x => by rw [Real.norm_eq_abs]; exact hkM x)
+  have hpos : Measurable fun s : ℝ => max (h s) 0 := hh.max measurable_const
+  have hneg : Measurable fun s : ℝ => max (-h s) 0 := hh.neg.max measurable_const
+  have e : ∫ s in Ioc (0 : ℝ) (σ : ℝ), h s ∂(clockMeasure hm) =
+      ∫ s in Ioc (0 : ℝ) (σ : ℝ), (max (h s) 0 - max (-h s) 0) ∂(clockMeasure hm) :=
+    setIntegral_congr_fun measurableSet_Ioc (fun s _ => (max_zero_sub_max_neg_zero_eq_self (h s)).symm)
+  rw [e, integral_sub (hint _ hpos (fun x => hkey (h x) (hM x)))
+      (hint _ hneg (fun x => hkey (-h x) (by rw [abs_neg]; exact hM x))),
+    integral_clockMeasure_Ioc_eq_toReal hm hc h0 hw hF hfin hpos (fun x => le_max_right _ _),
+    integral_clockMeasure_Ioc_eq_toReal hm hc h0 hw hF hfin hneg (fun x => le_max_right _ _)]
+
+/-- Pathwise occupation identity of S7 for one path (`paper/appendix-occupation-C16.tex:429-470`, pathwise part):
+for a continuous path `b`, a clock `F` of `IsTimeChangeClock` type, exit time `σ` from `D`, and `c > 0`, the
+occupation `∫_{(0, τ]} f(X_t) dt` of the rescaled path `X_t = b (F⁻¹(c t))` up to its exit time `τ` from `D`
+equals `c⁻¹` times the difference of the two weighted lintegrals over `[0, σ]` of the positive and negative parts
+of `g ∘ b`, with weight `gammaWeight γ ∘ b` and clock measure `dA` (the weighted clock `Φ` of `WeightedClock.lean`). -/
+theorem rescaled_occupation_eq_weighted {F : ℝ≥0 → ℝ} {D : Set ℂ} {b : ℝ≥0 → ℂ} (hb : Continuous b)
+    {σ c : ℝ≥0} (hc0 : 0 < c) (hcl : IsTimeChangeClock F) (hin : ∀ s < σ, b s ∈ D) (hout : b σ ∉ D)
+    {dA : Measure ℝ≥0} {γ : ℝ}
+    (hF : ∀ s : ℝ≥0, s ≤ σ → F s = (∫⁻ u in Icc (0 : ℝ≥0) s, gammaWeight γ (b u) ∂dA).toReal)
+    (hfin : ∫⁻ u in Icc (0 : ℝ≥0) σ, gammaWeight γ (b u) ∂dA ≠ ⊤)
+    (f g : ℂ → ℝ) (hfg : ∀ x ∈ D, f x = g x) (hgm : Measurable g) {M : ℝ} (hM : ∀ x, |g x| ≤ M) :
+    ∫ t in Ioc (0 : ℝ) (min ⊤ (pathExitTime D (fun t : ℝ≥0 => b (clockInverse F (c * t))))).toReal,
+        f (b (clockInverse F (c * t.toNNReal))) =
+      (c : ℝ)⁻¹ * ((∫⁻ u in Icc (0 : ℝ≥0) σ, ENNReal.ofReal (max (g (b u)) 0) * gammaWeight γ (b u) ∂dA).toReal -
+        (∫⁻ u in Icc (0 : ℝ≥0) σ, ENNReal.ofReal (max (-g (b u)) 0) * gammaWeight γ (b u) ∂dA).toReal) := by
+  have hw : Measurable fun u : ℝ≥0 => gammaWeight γ (b u) :=
+    (measurable_gammaWeight γ).comp hb.measurable
+  have hgb : Measurable fun x : ℝ => g (b x.toNNReal) :=
+    hgm.comp (hb.measurable.comp measurable_real_toNNReal)
+  rw [rescaled_occupation_eq_stieltjes hc0 hcl.continuous hcl.strictMono hcl.map_zero hcl.tendsto_atTop
+    hin hout f g hfg hgb,
+    integral_clockMeasure_Ioc_eq_sub hcl.strictMono.monotone hcl.continuous hcl.map_zero
+      (w := fun u => gammaWeight γ (b u)) hw hF hfin hgb (fun x => hM _)]
+  simp only [Real.toNNReal_coe]
+
+end Pathwise
+
+/-! ## 8. Assembly: the body of `FrozenLBMGreenOccupationRescaled` -/
+
+section Assembly
+
+/-- A finite Green lintegral against a bounded factor: if `ofReal (2 G)` has finite mass on `D`, then
+`ofReal (2 G) · ofReal (k)` has finite mass when `ofReal (k)` is bounded by `ofReal K` (Armitage-Gardiner, Ch. 4). -/
+lemma lintegral_green_mul_ne_top {μ : Measure ℂ} {D : Set ℂ} {G k : ℂ → ℝ} {K : ℝ}
+    (hfin : ∫⁻ x in D, ENNReal.ofReal (2 * G x) ∂μ ≠ ⊤) (hk : ∀ x, ENNReal.ofReal (k x) ≤ ENNReal.ofReal K) :
+    ∫⁻ x in D, ENNReal.ofReal (2 * G x) * ENNReal.ofReal (k x) ∂μ ≠ ⊤ :=
+  ne_top_of_le_ne_top (ENNReal.mul_ne_top hfin ENNReal.ofReal_ne_top)
+    (le_of_le_of_eq (lintegral_mono fun x => mul_le_mul' le_rfl (hk x))
+      (lintegral_mul_const' _ _ ENNReal.ofReal_ne_top))
+
+/-- A nonnegative measurable function whose `ofReal`-lintegral is finite is integrable. -/
+lemma integrable_of_lintegral_ofReal_ne_top {μ : Measure ℂ} {f : ℂ → ℝ} (hf : Measurable f)
+    (hnn : ∀ x, 0 ≤ f x) (h : ∫⁻ x, ENNReal.ofReal (f x) ∂μ ≠ ⊤) : Integrable f μ :=
+  (integrable_toReal_of_lintegral_ne_top hf.ennreal_ofReal.aemeasurable h).congr
+    (ae_of_all _ fun x => ENNReal.toReal_ofReal (hnn x))
+
+/-- **Appendix B, Theorem B.1 (occupation identity of the median-rescaled LBM), for given data.**
+The conclusion is the body of `FrozenLBMGreenOccupationRescaled` (`MatedCRT/FirstPass/Frozen/S3S4b.lean:51-62`)
+for the given `γ ρ`, model `S`, disc `ball z r` and pole `y`, with `rescaledLBMOccupation S ω (ball z r) ⊤ f b`
+unfolded to its definition (`S3S4b.lean:37-39`). Hypotheses (binders, not proved here):
+* `hm0` : `0 < m₀` (S7 positivity, `paper/appendix-occupation-C16.tex:450-458`).
+* `hclock` : the LQG clock is a time-change clock, a.s. (Garban-Rhodes-Vargas 2016, Thm 2.7(3)-(4), as in
+  `HarmonicBalls.IsTimeChangeClock`; not a field of `MatedCRTEnv.IsValid`).
+* `hσexit` : `σ b` is the first exit time of `ball z r` by `b`, a.s. under planar Brownian motion.
+* `hbase` : `BaseOccupationIdentity` (`lem:occ-base`, `tex:145-147`, with the cone transfer `:462-468`, MQ-li-8b).
+* `hmeas`, `hweight` : measurability of the inner occupation and the weight identity (`eq:occ-weight`, `:256-258`).
+* `hS6` : identification `φ = Φ` on `[0, σ]` (Task C, `:370-425`).
+* `hS3` : finiteness of the Green potential mass (`eq:occ-potential`, `:265-270`, Task A). -/
+theorem rescaled_occupation_green_identity {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
+    (γ ρ : ℝ) (_hγ0 : 0 < γ) (_hγ2 : γ < 2) (_hρ0 : 0 < ρ) (hρ1 : ρ < 1) (𝒮 : SpaceFillingSLEModel)
+    (_hS : S.IsValid 𝒮 γ) (r : ℝ) (z y : ℂ) (_hr : 0 < r) (hball : ball z r ⊆ ball (0 : ℂ) ρ)
+    (_hy : y ∈ ball z r)
+    (ν : Ω → Measure ℂ) (dA : Ω → ContinuousPath ℂ → Measure ℝ≥0) (σ : ContinuousPath ℂ → ℝ≥0)
+    (hm0 : 0 < S.m₀)
+    (hclock : ∀ᵐ ω ∂S.P, ∀ᵐ b ∂planarBrownianMotion y, IsTimeChangeClock (S.clock ω b))
+    (hσexit : ∀ᵐ b ∂planarBrownianMotion y, (∀ s < σ b, b s ∈ ball z r) ∧ b (σ b) ∉ ball z r)
+    (hbase : BaseOccupationIdentity S.P (planarBrownianMotion y) (ball z r)
+      (greenFunction (ball z r) y) ν dA σ)
+    (hmeas : ∀ᵐ ω ∂S.P, ∀ q : ℂ → ℝ≥0∞, Measurable q →
+      Measurable fun b => ∫⁻ u in Icc (0 : ℝ≥0) (σ b), q (b u) ∂(dA ω b))
+    (hweight : ∀ᵐ ω ∂S.P, ∀ A : Set ℂ, MeasurableSet A → A ⊆ ball 0 1 →
+      ∀ g : ℂ → ℝ≥0∞, Measurable g →
+        ∫⁻ x in A, g x ∂(S.μ ω) = ∫⁻ x in A, g x * gammaWeight γ x ∂(ν ω))
+    (hS6 : ∀ᵐ ω ∂S.P, ∀ᵐ b ∂planarBrownianMotion y, ∀ s ≤ σ b,
+      S.clock ω b s = (weightedClock (dA ω b) (fun u => gammaWeight γ (b u)) (σ b) s).toReal)
+    (hS3 : ∀ᵐ ω ∂S.P, ∫⁻ x in ball z r, ENNReal.ofReal (greenFunction (ball z r) y x) ∂(S.μ ω) < ⊤) :
+    ∀ᵐ ω ∂S.P,
+      (∀ᵐ b ∂planarBrownianMotion y,
+        pathExitTime (ball z r) (rescaledLBMPath (S.clock ω) S.m₀ b) < ⊤) ∧
+      Integrable (fun b => (pathExitTime (ball z r) (rescaledLBMPath (S.clock ω) S.m₀ b)).toReal)
+        (planarBrownianMotion y) ∧
+      ∀ f : ℂ → ℝ, (∃ M : ℝ, ∀ x ∈ ball z r, |f x| ≤ M) → IsHolderContinuousOn f (ball z r) →
+        (∫ b, (∫ t in Ioc (0 : ℝ) (min ⊤ (pathExitTime (ball z r) (rescaledLBMPath (S.clock ω) S.m₀ b))).toReal,
+            f (rescaledLBMPath (S.clock ω) S.m₀ b t.toNNReal)) ∂planarBrownianMotion y) =
+          (2 / S.m₀) * ∫ x in ball z r, greenFunction (ball z r) y x * f x ∂S.μ ω := by
+  classical
+  unfold BaseOccupationIdentity at hbase
+  set G : ℂ → ℝ := greenFunction (ball z r) y with hG_def
+  have hDm : MeasurableSet (ball z r) := measurableSet_ball
+  have hDball : ball z r ⊆ ball (0 : ℂ) 1 := hball.trans (Metric.ball_subset_ball hρ1.le)
+  have hGm : Measurable G := measurable_greenFunction Metric.isOpen_ball y
+  have hGnn : ∀ x, 0 ≤ G x := fun x => greenFunction_nonneg Metric.isBounded_ball y x
+  have hc0 : 0 < S.m₀.toNNReal := Real.toNNReal_pos.mpr hm0
+  have hcR : ((S.m₀.toNNReal : ℝ≥0) : ℝ) = S.m₀ := Real.coe_toNNReal _ hm0.le
+  have hQmean := weightedClock_quenchedMean S.P (planarBrownianMotion y) γ (ball z r) hDm hDball G hGm
+    S.μ ν dA σ hbase hmeas hweight
+  filter_upwards [hclock, hS6, hS3, hQmean, hmeas, hweight, hbase] with
+    ω hclω hS6ω hS3ω hQω hmω hwω hbω
+  have h2G : ∀ x, 0 ≤ 2 * G x := fun x => mul_nonneg (by norm_num) (hGnn x)
+  have hQfin : ∫⁻ x in ball z r, ENNReal.ofReal (2 * G x) ∂(S.μ ω) ≠ ⊤ := by
+    have h2 : ∫⁻ x in ball z r, ENNReal.ofReal (2 * G x) ∂(S.μ ω) =
+        ENNReal.ofReal 2 * ∫⁻ x in ball z r, ENNReal.ofReal (G x) ∂(S.μ ω) := by
+      rw [← lintegral_const_mul' (ENNReal.ofReal 2) _ ENNReal.ofReal_ne_top]
+      exact lintegral_congr fun x => ENNReal.ofReal_mul (by norm_num)
+    rw [h2]
+    exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top hS3ω.ne
+  have hΦm : Measurable fun b : ContinuousPath ℂ =>
+      weightedClock (dA ω b) (fun u => gammaWeight γ (b u)) (σ b) (σ b) := by
+    have e : (fun b : ContinuousPath ℂ =>
+        weightedClock (dA ω b) (fun u => gammaWeight γ (b u)) (σ b) (σ b)) =
+        fun b => ∫⁻ u in Icc (0 : ℝ≥0) (σ b), gammaWeight γ (b u) ∂(dA ω b) :=
+      funext fun b => weightedClock_eq_of_le le_rfl
+    rw [e]
+    exact hmω (gammaWeight γ) (measurable_gammaWeight γ)
+  have hΦint : ∫⁻ b, weightedClock (dA ω b) (fun u => gammaWeight γ (b u)) (σ b) (σ b)
+      ∂(planarBrownianMotion y) ≠ ⊤ := by
+    rw [hQω]
+    exact hQfin
+  have hΦae : ∀ᵐ b ∂planarBrownianMotion y,
+      weightedClock (dA ω b) (fun u => gammaWeight γ (b u)) (σ b) (σ b) < ⊤ :=
+    ae_lt_top hΦm hΦint
+  have hae : ∀ᵐ b ∂planarBrownianMotion y, IsTimeChangeClock (S.clock ω b) ∧
+      (∀ s < σ b, b s ∈ ball z r) ∧ b (σ b) ∉ ball z r ∧
+      (∀ s ≤ σ b, S.clock ω b s = (weightedClock (dA ω b) (fun u => gammaWeight γ (b u)) (σ b) s).toReal) ∧
+      weightedClock (dA ω b) (fun u => gammaWeight γ (b u)) (σ b) (σ b) < ⊤ := by
+    filter_upwards [hclω, hσexit, hS6ω, hΦae] with b h1 h2 h3 h4
+    exact ⟨h1, h2.1, h2.2, h3, h4⟩
+  have hτ : ∀ᵐ b ∂planarBrownianMotion y,
+      pathExitTime (ball z r) (rescaledLBMPath (S.clock ω) S.m₀ b) =
+        ENNReal.ofReal (S.clock ω b (σ b) / S.m₀) := by
+    filter_upwards [hae] with b hb
+    have h := pathExitTime_clockInverse_comp hc0 hb.1.continuous hb.1.strictMono hb.1.map_zero
+      hb.1.tendsto_atTop hb.2.1 hb.2.2.1
+    rw [hcR] at h
+    exact h
+  have hC1 : ∀ᵐ b ∂planarBrownianMotion y,
+      pathExitTime (ball z r) (rescaledLBMPath (S.clock ω) S.m₀ b) < ⊤ :=
+    hτ.mono fun b hb => by rw [hb]; exact ENNReal.ofReal_lt_top
+  have hC2 : Integrable (fun b => (pathExitTime (ball z r) (rescaledLBMPath (S.clock ω) S.m₀ b)).toReal)
+      (planarBrownianMotion y) := by
+    refine ((integrable_toReal_of_lintegral_ne_top hΦm.aemeasurable hΦint).const_mul S.m₀⁻¹).congr ?_
+    filter_upwards [hae, hτ] with b hb hτb
+    rw [hτb, hb.2.2.2.1 (σ b) le_rfl, ENNReal.toReal_ofReal (div_nonneg ENNReal.toReal_nonneg hm0.le)]
+    ring
+  refine ⟨hC1, hC2, ?_⟩
+  intro f hfM hfH
+  obtain ⟨M, hM⟩ := hfM
+  obtain ⟨C, χ, hχ0, -, hHol⟩ := hfH
+  have hfcont : ContinuousOn f (ball z r) := hHol.continuousOn hχ0
+  set g : ℂ → ℝ := (ball z r).piecewise f 0 with hg_def
+  have hgm : Measurable g :=
+    ContinuousOn.measurable_piecewise hfcont continuousOn_const measurableSet_ball
+  have hgM : ∀ x, |g x| ≤ max M 0 := by
+    intro x
+    by_cases hx : x ∈ ball z r
+    · rw [hg_def, Set.piecewise_eq_of_mem _ _ _ hx]
+      exact (hM x hx).trans (le_max_left _ _)
+    · rw [hg_def, Set.piecewise_eq_of_notMem _ _ _ hx, Pi.zero_apply, abs_zero]
+      exact le_max_right _ _
+  have hfg : ∀ x ∈ ball z r, f x = g x := fun x hx => by
+    rw [hg_def, Set.piecewise_eq_of_mem _ _ _ hx]
+  have hocc : ∀ᵐ b ∂planarBrownianMotion y,
+      (∫ t in Ioc (0 : ℝ) (min ⊤ (pathExitTime (ball z r) (rescaledLBMPath (S.clock ω) S.m₀ b))).toReal,
+        f (rescaledLBMPath (S.clock ω) S.m₀ b t.toNNReal)) =
+      S.m₀⁻¹ * ((∫⁻ u in Icc (0 : ℝ≥0) (σ b),
+          ENNReal.ofReal (max (g (b u)) 0) * gammaWeight γ (b u) ∂(dA ω b)).toReal -
+        (∫⁻ u in Icc (0 : ℝ≥0) (σ b),
+          ENNReal.ofReal (max (-g (b u)) 0) * gammaWeight γ (b u) ∂(dA ω b)).toReal) := by
+    filter_upwards [hae, hΦae] with b hb hΦb
+    have hfinb : ∫⁻ u in Icc (0 : ℝ≥0) (σ b), gammaWeight γ (b u) ∂(dA ω b) ≠ ⊤ := by
+      rw [← weightedClock_eq_of_le (dA := dA ω b) (w := fun u => gammaWeight γ (b u))
+        (le_refl (σ b))]
+      exact hΦb.ne
+    have hFb : ∀ s : ℝ≥0, s ≤ σ b → S.clock ω b s =
+        (∫⁻ u in Icc (0 : ℝ≥0) s, gammaWeight γ (b u) ∂(dA ω b)).toReal := by
+      intro s hs
+      rw [hb.2.2.2.1 s hs, weightedClock_eq_of_le (dA := dA ω b) (w := fun u => gammaWeight γ (b u)) hs]
+    have h := rescaled_occupation_eq_weighted (F := S.clock ω b) (D := ball z r) (b := ⇑b)
+      b.continuous (c := S.m₀.toNNReal) hc0 hb.1 hb.2.1 hb.2.2.1 hFb hfinb f g hfg hgm
+      (M := max M 0) hgM
+    rw [hcR] at h
+    exact h
+  set qp : ℂ → ℝ≥0∞ := fun x => ENNReal.ofReal (max (g x) 0) * gammaWeight γ x with hqp_def
+  set qm : ℂ → ℝ≥0∞ := fun x => ENNReal.ofReal (max (-g x) 0) * gammaWeight γ x with hqm_def
+  have hqpm : Measurable qp :=
+    (ENNReal.measurable_ofReal.comp (hgm.max measurable_const)).mul (measurable_gammaWeight γ)
+  have hqmm : Measurable qm :=
+    (ENNReal.measurable_ofReal.comp (hgm.neg.max measurable_const)).mul (measurable_gammaWeight γ)
+  have hbdp : ∀ x, ENNReal.ofReal (max (g x) 0) ≤ ENNReal.ofReal (max M 0) := fun x =>
+    ENNReal.ofReal_le_ofReal (max_le ((le_abs_self _).trans (hgM x)) (le_max_right _ _))
+  have hbdm : ∀ x, ENNReal.ofReal (max (-g x) 0) ≤ ENNReal.ofReal (max M 0) := fun x =>
+    ENNReal.ofReal_le_ofReal (max_le ((neg_le_abs _).trans (hgM x)) (le_max_right _ _))
+  have hg2 : Measurable fun x => ENNReal.ofReal (2 * G x) :=
+    ENNReal.measurable_ofReal.comp (measurable_const.mul hGm)
+  have hAp : ∫⁻ b, ∫⁻ u in Icc (0 : ℝ≥0) (σ b), qp (b u) ∂(dA ω b) ∂(planarBrownianMotion y) =
+      ∫⁻ x in ball z r, ENNReal.ofReal (2 * G x) * qp x ∂(ν ω) :=
+    lintegral_base_of_measurable hGm hbω hmω qp hqpm
+  have hAm : ∫⁻ b, ∫⁻ u in Icc (0 : ℝ≥0) (σ b), qm (b u) ∂(dA ω b) ∂(planarBrownianMotion y) =
+      ∫⁻ x in ball z r, ENNReal.ofReal (2 * G x) * qm x ∂(ν ω) :=
+    lintegral_base_of_measurable hGm hbω hmω qm hqmm
+  have hconvp : ∫⁻ x in ball z r, ENNReal.ofReal (2 * G x) * qp x ∂(ν ω) =
+      ∫⁻ x in ball z r, ENNReal.ofReal (2 * G x) * ENNReal.ofReal (max (g x) 0) ∂(S.μ ω) := by
+    calc ∫⁻ x in ball z r, ENNReal.ofReal (2 * G x) * qp x ∂(ν ω)
+        = ∫⁻ x in ball z r, (ENNReal.ofReal (2 * G x) * ENNReal.ofReal (max (g x) 0)) *
+            gammaWeight γ x ∂(ν ω) :=
+          lintegral_congr fun x => by simp only [hqp_def]; ring
+      _ = ∫⁻ x in ball z r, ENNReal.ofReal (2 * G x) * ENNReal.ofReal (max (g x) 0) ∂(S.μ ω) :=
+          (hwω (ball z r) hDm hDball (fun x => ENNReal.ofReal (2 * G x) * ENNReal.ofReal (max (g x) 0))
+            (hg2.mul (ENNReal.measurable_ofReal.comp (hgm.max measurable_const)))).symm
+  have hconvm : ∫⁻ x in ball z r, ENNReal.ofReal (2 * G x) * qm x ∂(ν ω) =
+      ∫⁻ x in ball z r, ENNReal.ofReal (2 * G x) * ENNReal.ofReal (max (-g x) 0) ∂(S.μ ω) := by
+    calc ∫⁻ x in ball z r, ENNReal.ofReal (2 * G x) * qm x ∂(ν ω)
+        = ∫⁻ x in ball z r, (ENNReal.ofReal (2 * G x) * ENNReal.ofReal (max (-g x) 0)) *
+            gammaWeight γ x ∂(ν ω) :=
+          lintegral_congr fun x => by simp only [hqm_def]; ring
+      _ = ∫⁻ x in ball z r, ENNReal.ofReal (2 * G x) * ENNReal.ofReal (max (-g x) 0) ∂(S.μ ω) :=
+          (hwω (ball z r) hDm hDball (fun x => ENNReal.ofReal (2 * G x) * ENNReal.ofReal (max (-g x) 0))
+            (hg2.mul (ENNReal.measurable_ofReal.comp (hgm.neg.max measurable_const)))).symm
+  have hfin_p : ∫⁻ b, ∫⁻ u in Icc (0 : ℝ≥0) (σ b), qp (b u) ∂(dA ω b) ∂(planarBrownianMotion y) ≠ ⊤ := by
+    rw [hAp, hconvp]
+    exact lintegral_green_mul_ne_top hQfin (k := fun x => max (g x) 0) (K := max M 0) hbdp
+  have hfin_m : ∫⁻ b, ∫⁻ u in Icc (0 : ℝ≥0) (σ b), qm (b u) ∂(dA ω b) ∂(planarBrownianMotion y) ≠ ⊤ := by
+    rw [hAm, hconvm]
+    exact lintegral_green_mul_ne_top hQfin (k := fun x => max (-g x) 0) (K := max M 0) hbdm
+  have hPp : (∫⁻ b, ∫⁻ u in Icc (0 : ℝ≥0) (σ b), qp (b u) ∂(dA ω b) ∂(planarBrownianMotion y)).toReal =
+      ∫ x in ball z r, 2 * G x * max (g x) 0 ∂(S.μ ω) := by
+    rw [hAp, hconvp, integral_eq_lintegral_of_nonneg_ae
+      (ae_of_all _ fun x => mul_nonneg (h2G x) (le_max_right _ _))
+      ((measurable_const.mul hGm).mul (hgm.max measurable_const)).aestronglyMeasurable]
+    congr 1
+    exact lintegral_congr fun x => (ENNReal.ofReal_mul (h2G x)).symm
+  have hmneg : Measurable fun x => 2 * G x * max (-g x) 0 :=
+    (measurable_const.mul hGm).mul (hgm.neg.max measurable_const)
+  have hPm : (∫⁻ b, ∫⁻ u in Icc (0 : ℝ≥0) (σ b), qm (b u) ∂(dA ω b) ∂(planarBrownianMotion y)).toReal =
+      ∫ x in ball z r, 2 * G x * max (-g x) 0 ∂(S.μ ω) := by
+    rw [hAm, hconvm, integral_eq_lintegral_of_nonneg_ae
+      (ae_of_all _ fun x => mul_nonneg (h2G x) (le_max_right _ _)) hmneg.aestronglyMeasurable]
+    congr 1
+    exact lintegral_congr fun x => (ENNReal.ofReal_mul (h2G x)).symm
+  have hposE : ∫ b, (∫⁻ u in Icc (0 : ℝ≥0) (σ b), qp (b u) ∂(dA ω b)).toReal ∂(planarBrownianMotion y) =
+      ∫ x in ball z r, 2 * G x * max (g x) 0 ∂(S.μ ω) := by
+    rw [integral_toReal (hmω qp hqpm).aemeasurable (ae_lt_top (hmω qp hqpm) hfin_p), hPp]
+  have hnegE : ∫ b, (∫⁻ u in Icc (0 : ℝ≥0) (σ b), qm (b u) ∂(dA ω b)).toReal ∂(planarBrownianMotion y) =
+      ∫ x in ball z r, 2 * G x * max (-g x) 0 ∂(S.μ ω) := by
+    rw [integral_toReal (hmω qm hqmm).aemeasurable (ae_lt_top (hmω qm hqmm) hfin_m), hPm]
+  have hintp : Integrable (fun b => (∫⁻ u in Icc (0 : ℝ≥0) (σ b), qp (b u) ∂(dA ω b)).toReal)
+      (planarBrownianMotion y) :=
+    integrable_toReal_of_lintegral_ne_top (hmω qp hqpm).aemeasurable hfin_p
+  have hintm : Integrable (fun b => (∫⁻ u in Icc (0 : ℝ≥0) (σ b), qm (b u) ∂(dA ω b)).toReal)
+      (planarBrownianMotion y) :=
+    integrable_toReal_of_lintegral_ne_top (hmω qm hqmm).aemeasurable hfin_m
+  have hmain : ∫ b, (∫ t in Ioc (0 : ℝ)
+        (min ⊤ (pathExitTime (ball z r) (rescaledLBMPath (S.clock ω) S.m₀ b))).toReal,
+        f (rescaledLBMPath (S.clock ω) S.m₀ b t.toNNReal)) ∂(planarBrownianMotion y) =
+      S.m₀⁻¹ * ((∫ b, (∫⁻ u in Icc (0 : ℝ≥0) (σ b), qp (b u) ∂(dA ω b)).toReal ∂(planarBrownianMotion y)) -
+        ∫ b, (∫⁻ u in Icc (0 : ℝ≥0) (σ b), qm (b u) ∂(dA ω b)).toReal ∂(planarBrownianMotion y)) := by
+    rw [← integral_sub hintp hintm, ← integral_const_mul]
+    exact integral_congr_ae hocc
+  have hIp_ne : ∫⁻ x in ball z r, ENNReal.ofReal (2 * G x * max (g x) 0) ∂(S.μ ω) ≠ ⊤ := by
+    rw [lintegral_congr fun x => ENNReal.ofReal_mul (h2G x) (q := max (g x) 0)]
+    exact lintegral_green_mul_ne_top hQfin (k := fun x => max (g x) 0) (K := max M 0) hbdp
+  have hIm_ne : ∫⁻ x in ball z r, ENNReal.ofReal (2 * G x * max (-g x) 0) ∂(S.μ ω) ≠ ⊤ := by
+    rw [lintegral_congr fun x => ENNReal.ofReal_mul (h2G x) (q := max (-g x) 0)]
+    exact lintegral_green_mul_ne_top hQfin (k := fun x => max (-g x) 0) (K := max M 0) hbdm
+  have hIp : Integrable (fun x => 2 * G x * max (g x) 0) ((S.μ ω).restrict (ball z r)) :=
+    integrable_of_lintegral_ofReal_ne_top ((measurable_const.mul hGm).mul (hgm.max measurable_const))
+      (fun x => mul_nonneg (h2G x) (le_max_right _ _)) hIp_ne
+  have hIm : Integrable (fun x => 2 * G x * max (-g x) 0) ((S.μ ω).restrict (ball z r)) :=
+    integrable_of_lintegral_ofReal_ne_top ((measurable_const.mul hGm).mul (hgm.neg.max measurable_const))
+      (fun x => mul_nonneg (h2G x) (le_max_right _ _)) hIm_ne
+  have hdiff : (∫ x in ball z r, 2 * G x * max (g x) 0 ∂(S.μ ω)) -
+      (∫ x in ball z r, 2 * G x * max (-g x) 0 ∂(S.μ ω)) =
+      2 * ∫ x in ball z r, G x * f x ∂(S.μ ω) := by
+    rw [← integral_sub hIp hIm, ← integral_const_mul]
+    refine setIntegral_congr_fun measurableSet_ball (fun x hx => ?_)
+    have hfx : g x = f x := (hfg x hx).symm
+    have hmx := max_zero_sub_max_neg_zero_eq_self (f x)
+    simp only [hfx]
+    linear_combination (2 * G x) * hmx
+  rw [hmain, hposE, hnegE, hdiff]
+  ring
+
+end Assembly
 
 end
 
