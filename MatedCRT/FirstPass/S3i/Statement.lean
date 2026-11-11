@@ -1,12 +1,12 @@
 import MatedCRT.Draft.Section3HarmonicCorrected
 
 /-!
-# Corrected Lemma 3.6: the fixed-start annealed same-walk clause (fp-S3-6-annealed-route)
+# Corrected Lemma 3.6: the fixed-start annealed same-walk clause
 
-Source: `notes/fp-gaps/CHATGPT-idla-3-6-sameWalk-PRO.md` §1.4 (lines 162-205), the paper-faithful replacement of
+The paper-faithful replacement of
 the pointwise clause `CorrectedHarmonicSameWalkRateStmt` (Draft/Section3HarmonicCorrected.lean:68). That Draft clause
-is FALSE as typed (PRO §1.1, null-copy counterexample l.54-137; operator note 2026-11-10 07:53 in tasks/li.md) and is
-retired by the operator, not here.
+is FALSE as typed (null-copy counterexample) and is
+retired outside this file.
 
 The corrected numbered Lemma 3.6 asserts only the fixed-start ANNEALED comparison, at threshold `q = b χ / 2`, with
 both exit locations computed from the same unrestricted walk: no pointwise or quenched clause, no mean estimate, and no

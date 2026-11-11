@@ -7,7 +7,7 @@ import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.CellIntegral
 import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.ExitValue
 
 /-!
-# Finite-domain exit probability: the discrete harmonic measure (plan 3.6, Lemma 1; z10, fp-S3i-H1-exit-probability)
+# Finite-domain exit probability: the discrete harmonic measure
 
 For a finite set `A` of vertices and a set `B` of vertices, `exitHitProb m A B a` is the probability that simple random
 walk from `a` leaves `A` at a vertex of `B` (Armitage-Gardiner: the discrete harmonic measure of `B` seen from `a` in

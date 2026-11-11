@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S3i.LensDefs
 import MatedCRT.Steps.Sec3.ConvergenceHarmonicFunctions
 
 /-!
-# Geometry of a graph-boundary vertex of a lens (plan `CHATGPT-221-idla-3-6-QuenchedLensStep-plan-PRO`, §4, worker H4)
+# Geometry of a graph-boundary vertex of a lens
 
 Deterministic (no probability). Plan Lemma 4, `boundaryVertexGeometry_fp36`, proved as
 `boundaryVertexGeometry_fp36_of_ball`.
@@ -18,7 +18,7 @@ The first conjunct `v ∈ cellVertices ε η (frontier (ball z r))` needs no len
 unconditionally as `boundaryVertex_mem_sphere_cells_fp36`.
 
 The definitions `FiniteExitData`, `FP36OneSidedBEAt`, `FP36GoodEnv` are imported from
-`MatedCRT/FirstPass/S3i/LensDefs.lean` (the plan's "Minimal internal definitions", committed by z1).
+`MatedCRT/FirstPass/S3i/LensDefs.lean`.
 -/
 
 namespace MatedCRT

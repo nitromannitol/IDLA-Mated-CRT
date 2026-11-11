@@ -1,11 +1,11 @@
 import MatedCRT.Draft.Section3HarmonicCorrected
 
 /-!
-# The one-sided boundary continuity estimate (BE), a FIRST-PASS FROZEN cited input (fp-S3-6-annealed-route)
+# The one-sided boundary continuity estimate (BE), a frozen cited input
 
 Source: Gwynne–Miller–Sheffield, *Harmonic functions on mated-CRT maps*, arXiv:1807.07511,
 Theorem 3.9, equation (3.31) (the one-sided boundary estimate; GMS Lemma 3.11 is the annealed input of its proof).
-Interface: `notes/fp-gaps/CHATGPT-idla-3-6-sameWalk-PRO.md` §2.2 (lines 221-285). The estimate is not a consequence of
+Interface: the estimate is not a consequence of
 Lemma 2.16 or Lemma 2.18 (PRO §2.3): it needs annular disconnection and dyadic strong-Markov iteration.
 
 Truth check (2026-11-10): TRUE for the repaired form, in which the exponents and the constant are chosen per valid

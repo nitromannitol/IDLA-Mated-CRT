@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S3e
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.WalkContinuity
 
 /-!
-# Corrected Lemma 3.6, annealed clause: the eight steps (fp-S3-6-annealed-route; PRO sameWalk §2.4, l.302-490)
+# Corrected Lemma 3.6, annealed clause: the eight steps
 
 Status of the steps (PRO numbering):
 * Step 1 (common good event): NAMED in `QuenchedLensStep` (the good set `G ε`, its complement `O(ε^κ)`, the
