@@ -10,6 +10,10 @@ import MatedCRT.FirstPass.S4x8
 import MatedCRT.FirstPass.SLERef.Certified
 import MatedCRT.FirstPass.Frozen.S5Cited
 import MatedCRT.Proofs.Sec3.ConeBallMass
+import MatedCRT.FirstPass.Closure.Final22
+import MatedCRT.FirstPass.Phase2Rewire
+import MatedCRT.FirstPass.S3i.LensClosed
+import MatedCRT.FirstPass.S3S4
 
 /-!
 # Counted forms with their own binders rewired
@@ -28,6 +32,7 @@ counted form, unchanged.
 namespace MatedCRT
 
 open MeasureTheory
+open _root_.HarmonicBalls
 
 /-- Lemma 2.19 (expected exit time, explicit bound) with the volume-growth binder `h27` (Lemma 2.7,
 cited from Berestycki-Gwynne, Lemma A.1) supplied by `volumeGrowthStmt_of_berestyckiGwynne`. -/
@@ -105,5 +110,115 @@ theorem firstPass_3_7_ownBinders (𝒮 : SpaceFillingSLEModel) (ν : ℝ → Mea
     (h218 := CertifiedReferenceModel.exitTimeUpperBound hC) (hm := hm) (h32 := h32)
     (h33 := closed_3_3_ownBinders 𝒮 ν hC hBG)
     (h35c := closed_3_5_ownBinders 𝒮 ν hC hBG hexc)
+
+/-- Leaf for `LQGMeasurePropertiesStmt` (Lemma 2.2, cited from DS11 and SW16): the counted form
+`closed_2_2_lit` with its binders `hscale`, `hBG` (Frozen) and `hND` (operator-kept). -/
+theorem closed_2_2_ownBinders (hscale : QuantumConeScalingInput)
+    (hBG : FrozenBerestyckiGwynneConeBallMass) (hND : LQGMeasureNonDyadicDilationPart) :
+    LQGMeasurePropertiesStmt :=
+  closed_2_2_lit hscale hBG hND
+
+/-- Lemma 6.10 (iterative bound) with `h27` supplied as above; the Frozen binders `h0`, `h2`,
+`hV`, `hR` stay. -/
+theorem closed_6_10_ownBinders (𝒮 : SpaceFillingSLEModel) (ν : ℝ → Measure SLEPathCode)
+    (hC : CertifiedReferenceModel ν 𝒮) (hBG : FrozenBerestyckiGwynneConeBallMass)
+    (h0 : FPWholePlaneLQGExistence) (h2 : FPWholePlaneLQGCoordinateChange)
+    (hV : FPWholePlaneUpperVolumeTail) (hR : FPConeMeanZeroRestriction) :
+    IterativeBoundStmt 𝒮 :=
+  closed_6_10 (𝒮 := 𝒮) (ν := ν) (hC := hC) (h27 := volumeGrowthStmt_of_berestyckiGwynne hBG)
+    (h0 := h0) (h2 := h2) (hV := hV) (hR := hR)
+
+/-- Lemma 2.4 (cone harmonic balls up to a fixed time, canonical form) with `h27` supplied as above;
+the other binders are those of `firstPass_2_4_canonical_p2` (Phase2Rewire.lean:199). -/
+theorem firstPass_2_4_ownBinders
+    (hstd : FrozenConeLogLocalCodeLawStd) (hCentre : FrozenGreenBallCentre)
+    (hOpen : ClusterOpenLaplacianStmt.{0}) (hSup : LeastSupersolutionMemStmt.{0})
+    (hCons : ClusterConservationOfMassStmt.{0}) (hMono : ClusterMonotoneStmt.{0})
+    (hCompat : ClusterCompatibilityStmt.{0}) (hBdry : ClusterBoundaryMeasureZeroStmt.{0})
+    (hExist : ExistenceHarmonicBallsStmt.{0}) (hThm11 : ExistenceUniquenessHarmonicBallsStmt.{0})
+    (hProp56 : UniquenessHarmonicBallsStmt.{0}) (hconf : FrozenHBInitialConfinement)
+    (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
+    (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
+    (hloc : HarmonicBallLocalSetStmt.{0}) (hSC : ClusterStrongCompatibilityStmt.{0})
+    (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion)
+    (hFL : FPConeWholePlaneFieldLaw) (hBG : FrozenBerestyckiGwynneConeBallMass) :
+    ConeHarmonicBallsUpToFixedTimeCanonicalStmt :=
+  MatedCRT.Phase2.firstPass_2_4_canonical_p2 hstd hCentre hOpen hSup hCons hMono hCompat hBdry
+    hExist hThm11 hProp56 hconf hI2 hK hloc hSC hE hFL
+    (h27 := volumeGrowthStmt_of_berestyckiGwynne hBG)
+
+/-- Lemma 2.5 (scale invariance up to a fixed time, canonical form) with `h27` supplied as above and
+`h22` (`LQGMeasurePropertiesStmt`) supplied by `closed_2_2_ownBinders`. The Step-named binders
+`hE1`, `hE2` stay as in `firstPass_2_5_canonical_p2` (Phase2Rewire.lean:229). -/
+theorem firstPass_2_5_ownBinders
+    (hstd : FrozenConeLogLocalCodeLawStd) (hCentre : FrozenGreenBallCentre)
+    (hOpen : ClusterOpenLaplacianStmt.{0}) (hSup : LeastSupersolutionMemStmt.{0})
+    (hCons : ClusterConservationOfMassStmt.{0}) (hMono : ClusterMonotoneStmt.{0})
+    (hCompat : ClusterCompatibilityStmt.{0}) (hBdry : ClusterBoundaryMeasureZeroStmt.{0})
+    (hExist : ExistenceHarmonicBallsStmt.{0}) (hThm11 : ExistenceUniquenessHarmonicBallsStmt.{0})
+    (hProp56 : UniquenessHarmonicBallsStmt.{0}) (hconf : FrozenHBInitialConfinement)
+    (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
+    (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
+    (hloc : HarmonicBallLocalSetStmt.{0}) (hSC : ClusterStrongCompatibilityStmt.{0})
+    (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion)
+    (hFL : FPConeWholePlaneFieldLaw) (hBG : FrozenBerestyckiGwynneConeBallMass)
+    (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
+    (hscale : QuantumConeScalingInput) (hND : LQGMeasureNonDyadicDilationPart) :
+    ConeScaleInvarianceUpToFixedTimeCanonicalStmt :=
+  MatedCRT.Phase2.firstPass_2_5_canonical_p2 hstd hCentre hOpen hSup hCons hMono hCompat hBdry
+    hExist hThm11 hProp56 hconf hI2 hK hloc hSC hE hFL hE1 hE2 hscale
+    (h27 := volumeGrowthStmt_of_berestyckiGwynne hBG) (h22 := closed_2_2_ownBinders hscale hBG hND)
+
+/-- Lemma 2.6 (scale invariance, corrected form) with `h27` and `h22` supplied as in
+`firstPass_2_5_ownBinders` (Phase2Rewire.lean:264). -/
+theorem firstPass_2_6_ownBinders
+    (hstd : FrozenConeLogLocalCodeLawStd) (hCentre : FrozenGreenBallCentre)
+    (hOpen : ClusterOpenLaplacianStmt.{0}) (hSup : LeastSupersolutionMemStmt.{0})
+    (hCons : ClusterConservationOfMassStmt.{0}) (hMono : ClusterMonotoneStmt.{0})
+    (hCompat : ClusterCompatibilityStmt.{0}) (hBdry : ClusterBoundaryMeasureZeroStmt.{0})
+    (hExist : ExistenceHarmonicBallsStmt.{0}) (hThm11 : ExistenceUniquenessHarmonicBallsStmt.{0})
+    (hProp56 : UniquenessHarmonicBallsStmt.{0}) (hconf : FrozenHBInitialConfinement)
+    (hI2 : LQGVolumeGrowthAllScalesStmt.{0})
+    (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule)
+    (hloc : HarmonicBallLocalSetStmt.{0}) (hSC : ClusterStrongCompatibilityStmt.{0})
+    (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion)
+    (hFL : FPConeWholePlaneFieldLaw) (hBG : FrozenBerestyckiGwynneConeBallMass)
+    (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
+    (hscale : QuantumConeScalingInput) (hND : LQGMeasureNonDyadicDilationPart) :
+    ConeScaleInvarianceStmt :=
+  MatedCRT.Phase2.firstPass_2_6_corrected_p2 hstd hCentre hOpen hSup hCons hMono hCompat hBdry
+    hExist hThm11 hProp56 hconf hI2 hK hloc hSC hE hFL hE1 hE2 hscale
+    (h27 := volumeGrowthStmt_of_berestyckiGwynne hBG) (h22 := closed_2_2_ownBinders hscale hBG hND)
+
+open MatedCRT.FirstPass36 in
+/-- Lemma 3.6 (corrected harmonic convergence) with `h211` and `h28` supplied by the
+`CertifiedReferenceModel` projections `randomWalkToLBM` and `cellSizeEstimate`. The binder `hBE`
+(`FrozenOneSidedBoundaryContinuity`, FirstPass/S3i/Frozen.lean:44) stays; the ledger classes it Proof?. -/
+theorem firstPass_3_6_ownBinders (𝒮 : SpaceFillingSLEModel) (ν : ℝ → Measure SLEPathCode)
+    (hC : CertifiedReferenceModel ν 𝒮) (hm : MepsScalingInput 𝒮)
+    (hexc : FrozenBrownianOutwardExcursionAtExit) (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮)
+    (hBE : FrozenOneSidedBoundaryContinuity 𝒮) :
+    CorrectedHarmonicConvergenceStmt 𝒮 ∧ CorrectedHarmonicSameWalkAnnealedStmt 𝒮 :=
+  MatedCRT.FirstPass36.firstPass_3_6_closed (𝒮 := 𝒮)
+    (h211 := CertifiedReferenceModel.randomWalkToLBM hC)
+    (h28 := CertifiedReferenceModel.cellSizeEstimate hC)
+    (hm := hm) (hexc := hexc) (h32 := h32) (hBE := hBE)
+
+/-- Lemma 4.1 (convergence of the divisible sandpile, `ConvergenceDivisibleStmt`) with `h210`, `h34`,
+`h214`, `h28`, `h218` and `h27` supplied from the reference-model wrappers. The binder `h35`
+(`DiscreteDirichletProblemStmt`, the uncorrected form of Lemma 3.5) stays: no counted theorem
+concludes it. -/
+theorem firstPass_4_1_ownBinders (𝒮 : SpaceFillingSLEModel) (ν : ℝ → Measure SLEPathCode)
+    (hC : CertifiedReferenceModel ν 𝒮) (hBG : FrozenBerestyckiGwynneConeBallMass)
+    (hm : MepsScalingInput 𝒮) (h35 : DiscreteDirichletProblemStmt 𝒮)
+    (hH : FrozenDiscreteHolderContinuityCorrected 𝒮) (hcone : FrozenConeEnvironmentScaling 𝒮) :
+    ConvergenceDivisibleStmt 𝒮 :=
+  firstPass_4_1 (𝒮 := 𝒮) (hm := hm)
+    (h210 := CertifiedReferenceModel.degreeMeasureConvergence hC)
+    (h34 := closed_3_4_ownBinders 𝒮 ν hC hBG)
+    (h214 := CertifiedReferenceModel.greenKernelUpperBound hC)
+    (h28 := CertifiedReferenceModel.cellSizeEstimate hC) (h35 := h35)
+    (h218 := CertifiedReferenceModel.exitTimeUpperBound hC)
+    (h27 := volumeGrowthStmt_of_berestyckiGwynne hBG) (hH := hH) (hcone := hcone)
 
 end MatedCRT
