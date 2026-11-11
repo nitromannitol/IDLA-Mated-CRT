@@ -6,6 +6,8 @@ import Mathlib.Probability.Moments.Basic
 import Mathlib.Analysis.SpecialFunctions.Integrals.PosLogEqCircleAverage
 import Mathlib.Analysis.SpecialFunctions.Log.PosLog
 import MatedCRT.Proposed.SheffieldWang2016
+import MatedCRT.LPStaging.Analysis.CircleAverageLog
+import MatedCRT.LPStaging.Analysis.CompactSupportMeasure
 
 /-!
 # The insertion-`α` coordinate rule: the exact Step and its no-insertion-atom component
@@ -64,12 +66,8 @@ theorem measurable_circleProc {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
 /-- A slice `z ↦ h ε z` at a positive radius is continuous when `h` is continuous on `(0,∞) × ℂ`. -/
 theorem continuous_slice {h : ℝ → ℂ → ℝ}
     (hh : ContinuousOn (fun p : ℝ × ℂ => h p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ)) {ε : ℝ} (hε : 0 < ε) :
-    Continuous (h ε) := by
-  have h1 : ContinuousOn (fun z : ℂ => (ε, z)) Set.univ :=
-    (continuous_const.prodMk continuous_id).continuousOn
-  have h2 : ContinuousOn (fun z : ℂ => h ε z) Set.univ :=
-    hh.comp h1 fun z _ => ⟨hε, Set.mem_univ z⟩
-  exact continuousOn_univ.mp h2
+    Continuous (h ε) :=
+  LatticeProb.CompactSupportMeasure.continuous_slice hh hε
 
 /-- A positive-radius process that is continuous on `(0,∞) × ℂ` is continuous as a function on the product. -/
 theorem continuous_circleProc_of_continuousOn {h : ℝ → ℂ → ℝ}
@@ -90,24 +88,13 @@ theorem ae_continuous_circleProc {Ω : Type} [MeasurableSpace Ω] {P : Measure �
 /-- Scaling of the logarithmic circle average: `cavg(log|·|)(R v, R s) = log R + cavg(log|·|)(v, s)`. -/
 theorem circleAverage_log_scale {R s : ℝ} (hR : 0 < R) (hs : 0 < s) (v : ℂ) :
     Real.circleAverage (fun x => Real.log ‖x‖) ((R : ℂ) * v) (R * s)
-      = Real.log R + Real.circleAverage (fun x => Real.log ‖x‖) v s := by
-  have h1 := circleAverage_log_norm_sub_const_eq_log_radius_add_posLog (a := (0 : ℂ)) (c := (R : ℂ) * v)
-    (R := R * s) (mul_pos hR hs).ne'
-  have h2 := circleAverage_log_norm_sub_const_eq_log_radius_add_posLog (a := (0 : ℂ)) (c := v) (R := s)
-    hs.ne'
-  simp only [sub_zero] at h1 h2
-  have hn : (R * s)⁻¹ * ‖(R : ℂ) * v‖ = s⁻¹ * ‖v‖ := by
-    rw [norm_mul, Complex.norm_real, Real.norm_of_nonneg hR.le]
-    field_simp
-  rw [h1, h2, hn, Real.log_mul hR.ne' hs.ne']
-  ring
+      = Real.log R + Real.circleAverage (fun x => Real.log ‖x‖) v s :=
+  LatticeProb.CircleAverageLog.circleAverage_log_scale hR hs v
 
 /-- The logarithmic circle average at the origin: `cavg(log|·|)(0, R) = log R`. -/
 theorem circleAverage_log_zero {R : ℝ} (hR : 0 < R) :
-    Real.circleAverage (fun x => Real.log ‖x‖) 0 R = Real.log R := by
-  have h := circleAverage_log_norm_sub_const_eq_log_radius_add_posLog (a := (0 : ℂ)) (c := 0) (R := R) hR.ne'
-  simp only [sub_zero, norm_zero, mul_zero, Real.posLog_zero, add_zero] at h
-  exact h
+    Real.circleAverage (fun x => Real.log ‖x‖) 0 R = Real.log R :=
+  LatticeProb.CircleAverageLog.circleAverage_log_zero hR
 
 /-- The circle averages of the affine transform `affH R 0 h` of a field are the affine transform of its
 `α`-circle averages, at positive radii. -/
@@ -241,11 +228,8 @@ theorem dec_affine_ae {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProba
 
 /-- The rescaled decoded measure has atom mass `c⁻¹ · μ{0}` at the origin, because `(·/R)` fixes `0`. -/
 theorem smul_map_div_singleton (c : ℝ≥0∞) (ν : Measure ℂ) {R : ℝ} (hR : R ≠ 0) :
-    (c • ν.map (fun x => (x - 0) / ((R : ℝ) : ℂ))) {0} = c * ν {0} := by
-  have hpre : (fun x : ℂ => (x - 0) / ((R : ℝ) : ℂ)) ⁻¹' {0} = {0} := by
-    ext x
-    simp [hR]
-  rw [Measure.smul_apply, smul_eq_mul, Measure.map_apply (by fun_prop) (measurableSet_singleton 0), hpre]
+    (c • ν.map (fun x => (x - 0) / ((R : ℝ) : ℂ))) {0} = c * ν {0} :=
+  LatticeProb.CompactSupportMeasure.smul_map_div_singleton c ν hR
 
 /-! ## The dyadic constant and its Gaussian estimate -/
 
@@ -390,60 +374,8 @@ theorem atom_vanishing_of_scaling {Ω : Type} [MeasurableSpace Ω] {P : Measure 
     (hscale : ∀ᵐ ω ∂P, ∀ n, b n ω = ENNReal.ofReal (c n ω)⁻¹ * a ω)
     (hc0 : ∀ᵐ ω ∂P, Tendsto (fun n => c n ω) atTop (𝓝 0))
     (hcpos : ∀ (n : ℕ) (ω : Ω), 0 < c n ω) :
-    ∀ᵐ ω ∂P, a ω = 0 := by
-  have key : ∀ L : ℕ, P (a ⁻¹' Set.Ioi 0) ≤ P (a ⁻¹' Set.Ioi (L : ℝ≥0∞)) := by
-    intro L
-    let T : ℕ → Set Ω := fun N => ⋂ n, ⋂ (_ : N ≤ n), b n ⁻¹' Set.Ioi (L : ℝ≥0∞)
-    have hTmono : Monotone T := by
-      intro N M hNM ω hω
-      simp only [T, Set.mem_iInter] at hω ⊢
-      intro n hn
-      exact hω n (hNM.trans hn)
-    have hcover : a ⁻¹' Set.Ioi 0 ≤ᵐ[P] ⋃ N, T N := by
-      filter_upwards [hfin, hscale, hc0] with ω hfω hsω hcω
-      intro hpos
-      have hpos' : (0 : ℝ≥0∞) < a ω := hpos
-      have h1 : Tendsto (fun n => ENNReal.ofReal (c n ω)⁻¹) atTop (𝓝 ⊤) := by
-        have hinv : Tendsto (fun n => (c n ω)⁻¹) atTop atTop :=
-          tendsto_inv_nhdsGT_zero.comp (tendsto_nhdsWithin_iff.2 ⟨hcω, Eventually.of_forall fun n => hcpos n ω⟩)
-        exact ENNReal.tendsto_ofReal_atTop.comp hinv
-      have h2 : Tendsto (fun n => b n ω) atTop (𝓝 ⊤) := by
-        have hfun : (fun n => b n ω) = fun n => ENNReal.ofReal (c n ω)⁻¹ * a ω := funext hsω
-        rw [hfun]
-        have h3 := ENNReal.Tendsto.mul_const (b := a ω) h1 (Or.inl ENNReal.top_ne_zero)
-        rwa [ENNReal.top_mul hpos'.ne'] at h3
-      have h4 : ∀ᶠ n in atTop, (L : ℝ≥0∞) < b n ω :=
-        h2.eventually_const_lt (ENNReal.natCast_ne_top L).lt_top
-      obtain ⟨N, hN⟩ := Filter.eventually_atTop.1 h4
-      exact Set.mem_iUnion.2 ⟨N, Set.mem_iInter.2 fun n => Set.mem_iInter.2 fun hn => hN n hn⟩
-    have h1 : P (a ⁻¹' Set.Ioi 0) ≤ P (⋃ N, T N) := measure_mono_ae hcover
-    have h2 : Tendsto (fun N => P (T N)) atTop (𝓝 (P (⋃ N, T N))) :=
-      tendsto_measure_iUnion_atTop (fun N M hNM => hTmono hNM)
-    have h3 : ∀ N, P (T N) ≤ P (a ⁻¹' Set.Ioi (L : ℝ≥0∞)) := fun N =>
-      (measure_mono (fun ω hω => Set.mem_iInter.1 (Set.mem_iInter.1 hω N) le_rfl)).trans (hlaw N L).le
-    have h4 : P (⋃ N, T N) ≤ P (a ⁻¹' Set.Ioi (L : ℝ≥0∞)) := le_of_tendsto h2 (Eventually.of_forall h3)
-    exact h1.trans h4
-  have hS : Antitone (fun L : ℕ => a ⁻¹' Set.Ioi (L : ℝ≥0∞)) := by
-    intro L M hLM
-    exact Set.preimage_mono (Set.Ioi_subset_Ioi (by exact_mod_cast hLM))
-  have hlim := tendsto_measure_iInter_atTop (μ := P) (s := fun L : ℕ => a ⁻¹' Set.Ioi (L : ℝ≥0∞))
-    (fun L : ℕ => (ha measurableSet_Ioi).nullMeasurableSet) hS ⟨0, measure_ne_top P _⟩
-  have hinter : P (⋂ L : ℕ, a ⁻¹' Set.Ioi (L : ℝ≥0∞)) = 0 := by
-    apply measure_mono_null (t := {ω | ¬ a ω ≠ ⊤})
-    · intro ω hω
-      rw [Set.mem_iInter] at hω
-      show ¬ a ω ≠ ⊤
-      intro hne
-      obtain ⟨L, hL⟩ := ENNReal.exists_nat_gt hne
-      exact absurd (hω L) (not_lt.2 hL.le)
-    · exact ae_iff.1 hfin
-  have hzero : P (a ⁻¹' Set.Ioi 0) = 0 := by
-    have hle := ge_of_tendsto hlim (Eventually.of_forall key)
-    rw [hinter] at hle
-    exact nonpos_iff_eq_zero.1 hle
-  have hz : P {ω | ¬ a ω = 0} = 0 :=
-    measure_mono_null (fun ω hω => pos_iff_ne_zero.2 hω) hzero
-  exact ae_iff.2 hz
+    ∀ᵐ ω ∂P, a ω = 0 :=
+  LatticeProb.CompactSupportMeasure.atom_vanishing_of_scaling a b c ha hlaw hfin hscale hc0 hcpos
 
 /-! ## The no-insertion-atom component -/
 
@@ -553,46 +485,21 @@ theorem fieldCircleAverage_eq_sub_log_of_closedBall {α r : ℝ} {h : ℝ → �
 
 /-- The set of centres whose closed `ε`-ball lies in the open set `D` is open. -/
 theorem isOpen_setOf_closedBall_subset {D : Set ℂ} (hD : IsOpen D) {ε : ℝ} (hε : 0 ≤ ε) :
-    IsOpen {z : ℂ | Metric.closedBall z ε ⊆ D} := by
-  rw [Metric.isOpen_iff]
-  intro z hz
-  obtain ⟨δ, hδ, hsub⟩ := (isCompact_closedBall z ε).exists_cthickening_subset_open hD hz
-  rw [cthickening_closedBall hδ.le hε] at hsub
-  refine ⟨δ, hδ, fun z' hz' w hw => hsub ?_⟩
-  rw [Metric.mem_closedBall]
-  have h1 : dist w z' ≤ ε := Metric.mem_closedBall.mp hw
-  have h2 : dist z' z < δ := Metric.mem_ball.mp hz'
-  calc dist w z ≤ dist w z' + dist z' z := dist_triangle _ _ _
-    _ ≤ δ + ε := by linarith
+    IsOpen {z : ℂ | Metric.closedBall z ε ⊆ D} :=
+  LatticeProb.CompactSupportMeasure.isOpen_setOf_closedBall_subset hD hε
 
 /-- Uniform admissibility on a compact set: for `K ⊆ D` compact, `D` open, small closed balls around `K` lie in `D`. -/
 theorem exists_closedBall_subset_of_compact {D K : Set ℂ} (hD : IsOpen D) (hK : IsCompact K) (hKD : K ⊆ D) :
-    ∃ δ : ℝ, 0 < δ ∧ ∀ z ∈ K, ∀ ε : ℝ, 0 ≤ ε → ε < δ → Metric.closedBall z ε ⊆ D := by
-  obtain ⟨δ, hδ, hsub⟩ := hK.exists_cthickening_subset_open hD hKD
-  refine ⟨δ, hδ, fun z hz ε hε hεδ w hw => hsub ?_⟩
-  exact Metric.mem_cthickening_of_dist_le w z δ K hz (by
-    have := Metric.mem_closedBall.mp hw
-    linarith)
+    ∃ δ : ℝ, 0 < δ ∧ ∀ z ∈ K, ∀ ε : ℝ, 0 ≤ ε → ε < δ → Metric.closedBall z ε ⊆ D :=
+  LatticeProb.CompactSupportMeasure.exists_closedBall_subset_of_compact hD hK hKD
 
 /-- Measurability in `z` of a zero-boundary circle average, from its continuity on admissible circles and its
 vanishing on non-admissible ones (`IsDirichletGFF.continuous_circle` plus the zero-outside convention). -/
 theorem measurable_zeroBoundary_circle {D : Set ℂ} (hD : IsOpen D) {ε : ℝ} (hε : 0 < ε)
     {g : ℝ → ℂ → ℝ} (hzero : ∀ r z, ¬ Metric.closedBall z r ⊆ D → g r z = 0)
     (hcont : ContinuousOn (fun p : ℝ × ℂ => g p.1 p.2) {p | 0 < p.1 ∧ Metric.closedBall p.2 p.1 ⊆ D}) :
-    Measurable (g ε) := by
-  classical
-  have hAo := isOpen_setOf_closedBall_subset hD hε.le
-  have hmap : Continuous fun z : ℂ => ((ε, z) : ℝ × ℂ) := continuous_const.prodMk continuous_id
-  have hcA : ContinuousOn (g ε) {z : ℂ | Metric.closedBall z ε ⊆ D} :=
-    hcont.comp hmap.continuousOn (fun z hz => ⟨hε, hz⟩)
-  have hfun : g ε = {z : ℂ | Metric.closedBall z ε ⊆ D}.piecewise (g ε) (fun _ => 0) := by
-    funext z
-    by_cases hz : z ∈ {z : ℂ | Metric.closedBall z ε ⊆ D}
-    · rw [Set.piecewise_eq_of_mem _ _ _ hz]
-    · rw [Set.piecewise_eq_of_notMem _ _ _ hz]
-      exact hzero ε z hz
-  rw [hfun]
-  exact ContinuousOn.measurable_piecewise hcA continuousOn_const hAo.measurableSet
+    Measurable (g ε) :=
+  LatticeProb.CompactSupportMeasure.measurable_zeroBoundary_circle hD hε hzero hcont
 
 /-- Integral against an LQG approximation as a Lebesgue integral with continuous-type density. -/
 theorem integral_lqgApprox_eq {γ ε : ℝ} (hε : 0 < ε) {g : ℝ → ℂ → ℝ} (hgm : Measurable (g ε)) (f : ℂ → ℝ) :
@@ -621,16 +528,8 @@ theorem continuousOn_exp_mul_insertionRemainder {D : Set ℂ} {α t : ℝ} {H : 
 /-- Multiplying a continuous compactly supported function by a function continuous on an open set `D` that contains
 its support gives a continuous function on the whole plane. -/
 theorem continuous_mul_of_tsupport_subset {D : Set ℂ} (hD : IsOpen D) {f g : ℂ → ℝ} (hf : Continuous f)
-    (hfD : tsupport f ⊆ D) (hg : ContinuousOn g D) : Continuous fun z => f z * g z := by
-  rw [continuous_iff_continuousAt]
-  intro z
-  by_cases hz : z ∈ D
-  · exact (hf.continuousAt).mul (hg.continuousAt (hD.mem_nhds hz))
-  · have hzf : z ∉ tsupport f := fun h => hz (hfD h)
-    have hev : (fun z => f z * g z) =ᶠ[𝓝 z] (fun _ => (0 : ℝ)) := by
-      filter_upwards [(isClosed_tsupport f).isOpen_compl.mem_nhds hzf] with w hw
-      simp [image_eq_zero_of_notMem_tsupport hw]
-    exact continuousAt_const.congr hev.symm
+    (hfD : tsupport f ⊆ D) (hg : ContinuousOn g D) : Continuous fun z => f z * g z :=
+  LatticeProb.CompactSupportMeasure.continuous_mul_of_tsupport_subset hD hf hfD hg
 
 /-- Pushing `μ|_D` through the density `exp(-γ · (H - α log|·|))` and integrating a test function `f` vanishing off
 `D` gives the whole-plane integral of `f · exp(-γ · remainder)` against `μ`. -/
@@ -744,14 +643,12 @@ theorem integral_lqgApprox_finset {γ ε : ℝ} (hε : 0 < ε) {g : ℝ → ℂ 
 supported pieces. -/
 theorem integral_finset_compactSupport {ν : Measure ℂ} [IsFiniteMeasureOnCompacts ν] {ι : Type} [Fintype ι]
     (φ : ι → ℂ → ℝ) (hφc : ∀ i, Continuous (φ i)) (hφs : ∀ i, HasCompactSupport (φ i)) (f : ℂ → ℝ)
-    (hf : ∀ z, f z = ∑ i, φ i z) : ∫ z, f z ∂ν = ∑ i, ∫ z, φ i z ∂ν := by
-  have hfe : f = fun z => ∑ i, φ i z := funext hf
-  rw [hfe]
-  exact integral_finsetSum _ (fun i _ => (hφc i).integrable_of_hasCompactSupport (hφs i))
+    (hf : ∀ z, f z = ∑ i, φ i z) : ∫ z, f z ∂ν = ∑ i, ∫ z, φ i z ∂ν :=
+  LatticeProb.CompactSupportMeasure.integral_finset_compactSupport φ hφc hφs f hf
 
 /-- For `x : ℝ`, `exp(-x) · exp(x) = 1`. -/
-theorem exp_neg_mul_exp_self (x : ℝ) : Real.exp (-x) * Real.exp x = 1 := by
-  rw [← Real.exp_add, neg_add_cancel, Real.exp_zero]
+theorem exp_neg_mul_exp_self (x : ℝ) : Real.exp (-x) * Real.exp x = 1 :=
+  LatticeProb.CircleAverageLog.exp_neg_mul_exp_self x
 
 /-- **Punctured all-scale convergence on one disk**. Given the zero-boundary
 decomposition of the insertion field on `D = B(c, ρ)` (the producer residual, as data), the staged Sheffield--Wang
@@ -993,20 +890,8 @@ compact `K ⊆ D` the density is bounded by `ofReal M`, `M = sup_K |φ|`, so `(�
 `K` with at most `ofReal M * μ K`. No finiteness near `∂D` is claimed. -/
 theorem withDensity_restrict_compact_lt_top {D K : Set ℂ} {μ : Measure ℂ} {φ : ℂ → ℝ}
     (hK : IsCompact K) (hKD : K ⊆ D) (hφ : ContinuousOn φ D) (hμK : μ K < ⊤) :
-    ((μ.restrict D).withDensity fun z => ENNReal.ofReal (φ z)) K < ⊤ := by
-  obtain ⟨M, hM⟩ := hK.exists_bound_of_continuousOn (hφ.mono hKD)
-  have hbound : ∀ x ∈ K, ENNReal.ofReal (φ x) ≤ ENNReal.ofReal M := fun x hx => by
-    have h := hM x hx
-    rw [Real.norm_eq_abs] at h
-    exact ENNReal.ofReal_le_ofReal ((le_abs_self _).trans h)
-  rw [withDensity_apply _ hK.isClosed.measurableSet]
-  calc ∫⁻ z in K, ENNReal.ofReal (φ z) ∂(μ.restrict D)
-      ≤ ∫⁻ _ in K, ENNReal.ofReal M ∂(μ.restrict D) :=
-        setLIntegral_mono' hK.isClosed.measurableSet hbound
-    _ = ENNReal.ofReal M * μ K := by
-        rw [setLIntegral_const, Measure.restrict_apply hK.isClosed.measurableSet,
-          Set.inter_eq_left.2 hKD]
-    _ < ⊤ := ENNReal.mul_lt_top ENNReal.ofReal_lt_top hμK
+    ((μ.restrict D).withDensity fun z => ENNReal.ofReal (φ z)) K < ⊤ :=
+  LatticeProb.CompactSupportMeasure.withDensity_restrict_compact_lt_top hK hKD hφ hμK
 
 /-- Almost surely, the zero-boundary limit `(μ|_D).withDensity (exp(-γ · remainder))` is finite on every compact
 subset of `D`. Source: the insertion measure is locally finite (`IsLQGLimit.isLocallyFiniteMeasure`) and the harmonic
