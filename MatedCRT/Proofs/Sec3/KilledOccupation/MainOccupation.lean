@@ -14,7 +14,7 @@ Source: Bou-Rabee and Gwynne, arXiv:2211.04891, Appendix B. Printed statement `t
 
 This file proves the deterministic and measure-theoretic pieces of the proof of step S7 and
 assembles them into the body of `FrozenLBMGreenOccupationRescaled`
-(`MatedCRT/FirstPass/Frozen/S3S4b.lean:51-62`). The inputs of Tasks A-C (the potential bound, the
+(`MatedCRT/FirstPass/Frozen/S3S4b.lean:51-62`). The inputs (the potential bound, the
 weight identity, the base identity, the identification `φ = Φ`, the weighted mean) and the cone
 transfer step are explicit hypothesis binders of exact type.
 
@@ -687,10 +687,10 @@ unfolded to its definition (`S3S4b.lean:37-39`). Hypotheses (binders, not proved
 * `hclock` : the LQG clock is a time-change clock, a.s. (Garban-Rhodes-Vargas 2016, Thm 2.7(3)-(4), as in
   `HarmonicBalls.IsTimeChangeClock`; not a field of `MatedCRTEnv.IsValid`).
 * `hσexit` : `σ b` is the first exit time of `ball z r` by `b`, a.s. under planar Brownian motion.
-* `hbase` : `BaseOccupationIdentity` (`lem:occ-base`, `tex:145-147`, with the cone transfer `:462-468`, MQ-li-8b).
+* `hbase` : `BaseOccupationIdentity` (`lem:occ-base`, `tex:145-147`, with the cone transfer `:462-468`).
 * `hmeas`, `hweight` : measurability of the inner occupation and the weight identity (`eq:occ-weight`, `:256-258`).
-* `hS6` : identification `φ = Φ` on `[0, σ]` (Task C, `:370-425`).
-* `hS3` : finiteness of the Green potential mass (`eq:occ-potential`, `:265-270`, Task A). -/
+* `hS6` : identification `φ = Φ` on `[0, σ]` (`:370-425`).
+* `hS3` : finiteness of the Green potential mass (`eq:occ-potential`, `:265-270`). -/
 theorem rescaled_occupation_green_identity {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (γ ρ : ℝ) (_hγ0 : 0 < γ) (_hγ2 : γ < 2) (_hρ0 : 0 < ρ) (hρ1 : ρ < 1) (𝒮 : SpaceFillingSLEModel)
     (_hS : S.IsValid 𝒮 γ) (r : ℝ) (z y : ℂ) (_hr : 0 < r) (hball : ball z r ⊆ ball (0 : ℂ) ρ)

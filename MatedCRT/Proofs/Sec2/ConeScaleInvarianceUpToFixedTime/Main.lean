@@ -7,7 +7,7 @@ import MatedCRT.Steps.Sec2.ConeHarmonicBalls
 
 * `coneScaleInvarianceUpToFixedTime_of_inputs`: Lemma 2.5 with the deterministic scaling step proved
   (`coneHarmonicBallFamilyOnScalingStep`) and `ConeLQGScalingStep` derived from Fact 2.2 and `R_b > 0`.
-* `coneFamilyAEMeasurableStep_of_steps`: worker A's `ConeFamilyAEMeasurableStep` (Theorem 2.3: the families of
+* `coneFamilyAEMeasurableStep_of_steps`: `ConeFamilyAEMeasurableStep` (Theorem 2.3: the families of
   Lemmas 2.4, 2.5 are random variables) follows from the functional step, strict growth and the scaling of the field.
 * `coneHarmonicBalls_of_inputs`: Theorem 2.3 from the named steps of Lemmas 2.4 and 2.5.
 -/
@@ -25,7 +25,7 @@ theorem coneScaleInvarianceUpToFixedTime_of_inputs (hscale : QuantumConeScalingI
   coneScaleInvarianceUpToFixedTime_of_steps hscale hgrow (coneLQGScalingStep_of_steps h22 hpos) hmeasb hfun
     coneHarmonicBallFamilyOnScalingStep
 
-/-- **The families of Lemmas 2.4 and 2.5 are random variables** (worker A's `ConeFamilyAEMeasurableStep`, used for
+/-- **The families of Lemmas 2.4 and 2.5 are random variables** (`ConeFamilyAEMeasurableStep`, used for
 Theorem 2.3): a.s. their family processes are `Φ` of the circle average processes of `h`, resp. `h^b`. -/
 theorem coneFamilyAEMeasurableStep_of_steps (hscale : QuantumConeScalingInput)
     (hgrow : ConeHarmonicBallStrictGrowthStep) (hlqg : ConeLQGScalingStep)
@@ -57,7 +57,7 @@ theorem coneFamilyAEMeasurableStep_of_steps (hscale : QuantumConeScalingInput)
       ⟨hω.1, hfam, hω.2.2, (hg _ _ hω.2.1).rescaledFamily hb⟩
     exact Prod.ext rfl ((hchar _ (continuousOn_rescaledCircle hc hs.1) _ hs.2).2 _ _ hstrict).symm
 
-/-- **Theorem 2.3** from the named steps of Lemmas 2.4 and 2.5 (through worker A's `coneHarmonicBalls_of_steps`). -/
+/-- **Theorem 2.3** from the named steps of Lemmas 2.4 and 2.5 (through `coneHarmonicBalls_of_steps`). -/
 theorem coneHarmonicBalls_of_inputs (h0 : WholePlaneLogLQGExistenceStep) (h1 : WholePlaneConeHarmonicBallsStep)
     (h2 : WholePlaneHarmonicBallsSmallTimeStep) (h3 : ConeRestrictionStep) (h4 : ConeHarmonicBallLocalityStep)
     (hgrow : ConeHarmonicBallStrictGrowthStep) (hscale : QuantumConeScalingInput) (h22 : LQGMeasurePropertiesStmt)

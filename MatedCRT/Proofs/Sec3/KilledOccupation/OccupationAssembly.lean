@@ -165,12 +165,12 @@ Named inputs (all quantified as in the Frozen Prop: `γ ∈ (0,2)`, `ρ ∈ (0,1
 * `ν`, `dA` : the regularized field measure `ν` (eq:occ-weight; `ν ω` the nonsingular regularization of the
   circle-average clock, tex:122-140) and the base clock `dA ω b` (lem:occ-base, tex:140-151). Data families,
   not constrained except through the inputs below.
-* `hm0` : `0 < S.m₀` (positivity of the median exit time `m₀`, tex:450-458, eq:mo tex:727). MQ gap.
+* `hm0` : `0 < S.m₀` (positivity of the median exit time `m₀`, tex:450-458, eq:mo tex:727). Open gap.
 * `hBase` : `BaseOccupationIdentity` with base exit time `exitNN z r` (lem:occ-base, tex:140-151, with the cone
-  transfer tex:462-468). MQ-li-8 gap.
-* `hWeight` : `OccWeightIdentity S.P S.μ (ν γ Ω S) γ` (eq:occ-weight, tex:256-258). MQ-li-10b gap.
-* `hMeas` : measurability of the inner occupation `b ↦ ∫_{[0,σ b]} q(b u) dA_b` (no written argument). MQ gap.
-* `hS6` : the identification `S.clock = weightedClock dA ... ` on `[0, σ]` (identification `φ = Φ`, tex:370-425). MQ gap.
+  transfer tex:462-468). Open gap.
+* `hWeight` : `OccWeightIdentity S.P S.μ (ν γ Ω S) γ` (eq:occ-weight, tex:256-258). Open gap.
+* `hMeas` : measurability of the inner occupation `b ↦ ∫_{[0,σ b]} q(b u) dA_b` (no written argument). Open gap.
+* `hS6` : the identification `S.clock = weightedClock dA ... ` on `[0, σ]` (identification `φ = Φ`, tex:370-425). Open gap.
 * `hBG` : the dyadic mass bound `BGMassUpperBoundDyadic` for some exponent `e > 0` (eq:occ-BGmass, tex:110-115). Literature.
 * `hGreen` : the Green disc formula `GreenDiskFormula z r` for `ball z r ⊆ ball 0 ρ` (eq:occ-green, tex:44-47). Literature.
 * `hExit` : planar Brownian motion from `y` leaves the disc `ball z r` in finite time, a.s. (standard). Literature.

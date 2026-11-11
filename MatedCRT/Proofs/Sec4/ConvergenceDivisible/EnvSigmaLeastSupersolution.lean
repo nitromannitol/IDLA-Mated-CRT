@@ -8,8 +8,7 @@ import MatedCRT.Proofs.Sec3.UniformConvergenceGreenKernel.EnvironmentGreen
 
 The σ-algebra-generic measurability chain of `SupersolutionMeasurable.lean` and `FiniteApproximation.lean`,
 with the multigraph given by measurable data `M : Ω → ℤ → ℤ → ℕ`, and the `σ(h, η)`-measurable version
-`MatedCRTEnv.IsValid.exists_envSigma_measurable_matedLeastSupersolution` of the rescaled obstacle problem
-(input E-m4-1). The envSigma inputs are the edge multiplicities and cell and obstacle data of
+`MatedCRTEnv.IsValid.exists_envSigma_measurable_matedLeastSupersolution` of the rescaled obstacle problem. The envSigma inputs are the edge multiplicities and cell and obstacle data of
 `EnvSigmaEdge.lean`, `EnvironmentCells.lean` and `EnvironmentGreen.lean`. -/
 
 namespace MatedCRT
@@ -195,7 +194,7 @@ theorem ls_measurable_of_good {Ω : Type} [MeasurableSpace Ω]
     (hWa.compl.inter (MeasurableSet.const _))
 
 
-/-- **Environmental least supersolution (input E-m4-1).** For each vertex `a` and `t > 0`, the discrete least
+/-- **Environmental least supersolution.** For each vertex `a` and `t > 0`, the discrete least
 supersolution of the mated map has a `σ(h, η)`-measurable version, equal to
 `matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t a` almost surely. -/
 theorem MatedCRTEnv.IsValid.exists_envSigma_measurable_matedLeastSupersolution

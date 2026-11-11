@@ -9,13 +9,13 @@ import MatedCRT.Proofs.Sec4.SubsequentialConvergence.PreparedSelection
 /-!
 # Theorem 4.1: final form
 
-`convergenceDivisible_final` proves `ConvergenceDivisibleStmt` from m4's corrected route
+`convergenceDivisible_final` proves `ConvergenceDivisibleStmt` from the corrected route
 (`convergenceDivisible_of_corrected_reductions`, CorrectedInputs.lean) with the corrected distributional limit step of
 Lemma 4.8 proved (`odometerDistributionalLimitCorrectedStep_of_greenKernel`, from Lemma 3.3) and Lemma 2.13 proved.
 
 Remaining hypotheses: Lemmas 2.7, 2.18 (cited), `MepsScalingInput` (External); Lemmas 3.3, 3.5, 3.7 (Draft, reduced
-elsewhere); the open steps `ConeEnvironmentScalingStep` (m1), `DiscreteHolderContinuityCorrectedStep` (corrected
-Lemma 3.1), `OdometerLocalCompactnessCorrectedStep`, `OdometerBoundaryUpgradeCorrectedStep` (Lemma 4.6; E-x3-2).
+elsewhere); the open steps `ConeEnvironmentScalingStep`, `DiscreteHolderContinuityCorrectedStep` (corrected
+Lemma 3.1), `OdometerLocalCompactnessCorrectedStep`, `OdometerBoundaryUpgradeCorrectedStep` (Lemma 4.6).
 `OdometerMeasurableSelectionStep` is proved (`odometerMeasurableSelection_holds`, OdometerSelection.lean); the two
 forms above keep it as a hypothesis because `Audit/Reductions.lean` checks their exact signatures.
 `convergenceDivisible_final_prepared` (corrected route, [C12]) does not take it nor the strong-quantifier steps.

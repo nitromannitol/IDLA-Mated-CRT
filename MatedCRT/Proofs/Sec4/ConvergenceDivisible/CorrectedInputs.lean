@@ -7,8 +7,7 @@ import MatedCRT.Proofs.Sec4.SubsequentialProperties.ObstacleApproximation
 # Theorem 4.1 from corrected subsequential reductions
 
 This combines the corrected routes for Lemmas 4.6 and 4.8 with the cone-scaling
-route for event measurability. The simultaneous compactness assumption remains
-explicit (E-x3-2).
+route for event measurability. The simultaneous compactness assumption remains explicit.
 -/
 
 namespace MatedCRT

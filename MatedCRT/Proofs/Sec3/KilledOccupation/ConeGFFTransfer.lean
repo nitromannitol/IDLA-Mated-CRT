@@ -15,7 +15,7 @@ unit disk, indexed by the circles `closedBall z r ⊆ B_1`, with the circle aver
 `hc` (`HarmonicBalls.IsWholePlaneGFF`, normalized by `h^ℂ_1(0) = 0`) shifted by `-γ · (average of log|·|)`
 (`HarmonicBalls.fieldCircleAverage`). It is an equality in law (`IdentDistrib`), not a pathwise identity.
 
-PENDING TRUTH CHECK (operator to file in the math queue): the printed `eq:gff` is a law identity for the
+PENDING TRUTH CHECK (see docs/campaign/FROZEN-PROVENANCE.md): the printed `eq:gff` is a law identity for the
 restriction `h|_{B_1}` alone. It does not carry the base clock `dA` of the occupation identity
 (`lem:occ-base`, tex:140-151), which the killed-occupation reduction `frozenLBMGreenOccupationRescaled_of_appendixB`
 (OccupationAssembly.lean:178) leaves as a free family. The S6 chain (`hS6`) therefore needs in addition a

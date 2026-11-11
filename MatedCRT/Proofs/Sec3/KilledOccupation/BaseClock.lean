@@ -19,10 +19,8 @@ What is NOT formalized (the proof of lem:occ-base, lines 152-240, is not in Lean
 * the GMC convergence of the clocks (Berestycki 2017, Theorem 1.1, p. 3, hypotheses (1.2)-(1.5);
   Berestycki 2015, Theorem 1.2, p. 949, with proof p. 959 and Remark 3.5, p. 959): literature input
   (i) and (ii) of tex:113-124; not a Prop in `MatedCRT/External`;
-* the Dirichlet-clock to clock transfer with multiplier `e^{γH}` (tex:199-201): no written argument,
-  gap G1, filed as math request MQ-li-8;
-* the ordinary Brownian occupation identity `E_y ∫_0^τ f(B) dt = 2 ∫_D G_D f` (step S0, Potential.lean,
-  another worker's file).
+* the Dirichlet-clock to clock transfer with multiplier `e^{γH}` (tex:199-201): no written argument;
+* the ordinary Brownian occupation identity `E_y ∫_0^τ f(B) dt = 2 ∫_D G_D f` (step S0, Potential.lean).
 -/
 
 namespace MatedCRT.KilledOccupation

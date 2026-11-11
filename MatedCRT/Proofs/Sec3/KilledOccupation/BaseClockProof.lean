@@ -90,7 +90,7 @@ theorem measurable_occ_inner {z : ℂ} {r : ℝ}
 /-- Step A, lintegral form of the ordinary Brownian Green identity (paper tex:48-52, applied at tex:208-212):
 for a bounded measurable `f ≥ 0` on `ℂ`, the expected occupation of `f` by the planar Brownian motion from `y`
 killed on exiting `ball z r` equals `∫_D 2 G_D(y,x) f(x) dx`. Input: the Prop `KilledBrownianOccupationOnBall`
-(S0, MQ-li-8e); integrability of the exit time (tex:169-170) and of the Green function (tex:226-227). -/
+(S0); integrability of the exit time (tex:169-170) and of the Green function (tex:226-227). -/
 theorem lintegral_brownian_occupation {z : ℂ} {r : ℝ} {y : ℂ} (hy : y ∈ ball z r)
     (hS0 : KilledBrownianOccupationOnBall z r)
     (hτ : Integrable (fun b : ContinuousPath ℂ => (pathExitTime (ball z r) b).toReal)
@@ -1295,10 +1295,10 @@ theorem lintegral_nuWeighted_eq {Ω : Type*} (ν : Ω → Measure ℂ) (D : Set 
 (BaseClock.lean), for the base clock `dA` and the GMC measure `ν` of the environment, with the Brownian
 motion `planarBrownianMotion y` and `D = ball z r ⊆ ball 0 1`. The literature inputs are binders:
 * `hLpath` : per-path conditional GMC convergence of the clocks (Berestycki 2017 Thm 1.1 p. 3 with the finite
-  energy premise tex:153-164, and the Dirichlet-clock transfer tex:178-201, gap G1 (MQ-li-8a));
+  energy premise tex:153-164, and the Dirichlet-clock transfer tex:178-201, which has no written argument);
 * `hconvB1` : `L¹(P)` convergence of the circle GMC measures on bounded weights supported in `B_1`
   (Berestycki 2017 Thm 1.1 p. 3; tex:218-233);
-* `hVar` : eq:occ-var (tex:27-33); `hS0` : the ordinary Brownian occupation identity S0 (tex:48-52, MQ-li-8e);
+* `hVar` : eq:occ-var (tex:27-33); `hS0` : the ordinary Brownian occupation identity S0 (tex:48-52);
 * `hmeasKernel`, `hLjoint`, `hνmeas`, `hw`, `hσint`, `hτ`, `hτmeas`, `hGmeas`, `hGint`: measurability and
   integrability of the GMC objects and of the exit time. -/
 theorem baseOccupationIdentity_of_GMC {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]

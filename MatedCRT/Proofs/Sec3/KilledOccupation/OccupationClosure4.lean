@@ -8,10 +8,10 @@ import MatedCRT.Proofs.Sec3.KilledOccupation.ConeOriginTails
 `frozenLBMGreenOccupationRescaled_closed4` is `frozenLBMGreenOccupationRescaled_closed3` (OccupationClosure3.lean:68)
 with its hypothesis `hS6` (identification `S.clock = φ` on `[0, σ]`, tex:370-425) supplied by `hS6_cone`
 (ConeClockTransfer.lean), whose origin tail moment `hT0cone` is supplied by `coneOriginTailMoment_of_law`
-(ConeOriginTails.lean) from the printed law `ConeUnitDiskGFFLaw` (eq:gff, tex:427-445, PENDING TRUTH CHECK MQ-li-12).
+(ConeOriginTails.lean) from the printed law `ConeUnitDiskGFFLaw` (eq:gff, tex:427-445, PENDING TRUTH CHECK, see docs/campaign/FROZEN-PROVENANCE.md).
 
 The ordinary Brownian occupation identity is taken in its killed form `KilledBrownianOccupationOnBall` (Step S0,
-tex:48-52, cited classical input, MQ-li-8e). The lintegral form `BrownianOccupationOnBall`, which `hS6_cone` consumes,
+tex:48-52, cited classical input). The lintegral form `BrownianOccupationOnBall`, which `hS6_cone` consumes,
 is obtained from it by `brownianOccupationOnBall_of_killed`, using `lintegral_brownian_occupation_all`
 (BaseClockProof.lean) for all measurable nonnegative integrands; no further input is used.
 -/
@@ -68,10 +68,10 @@ It is `frozenLBMGreenOccupationRescaled_closed3` with the hypothesis `hS6` repla
 and the origin tail moment of `hS6_cone` supplied by `coneOriginTailMoment_of_law` from `hlaw`.
 
 Named inputs (the binders of closure3 except `hS6`, plus three):
-* `hlaw : ConeUnitDiskGFFLaw`: the printed law eq:gff (tex:427-445), PENDING TRUTH CHECK (MQ-li-12).
-* `hE`: the χ_a-parts converge in probability (tex:373-376, the cut form of lem:occ-base, tex:140-141; G1).
-* `hKern`: the base clock `dA` is the kernel `K` of its measurability (MQ-li-8g class, as `hMeas`).
-* `hS0` (killed Brownian occupation identity, Step S0, tex:48-52; cited, MQ-li-8e), `hBG`, `hWeight`, `hMeas`,
+* `hlaw : ConeUnitDiskGFFLaw`: the printed law eq:gff (tex:427-445), PENDING TRUTH CHECK (see docs/campaign/FROZEN-PROVENANCE.md).
+* `hE`: the χ_a-parts converge in probability (tex:373-376, the cut form of lem:occ-base, tex:140-141; open gap).
+* `hKern`: the base clock `dA` is the kernel `K` of its measurability (same class as `hMeas`).
+* `hS0` (killed Brownian occupation identity, Step S0, tex:48-52; cited), `hBG`, `hWeight`, `hMeas`,
   `hm0`, `hw`, `hVar`, `hνmeas`, `hconvB1`, `hLjoint`, `hLpath`: as in closure3. -/
 theorem frozenLBMGreenOccupationRescaled_closed4 (𝒮 : SpaceFillingSLEModel)
     (ν : (γ : ℝ) → (Ω : Type) → [MeasurableSpace Ω] → MatedCRTEnv Ω → Ω → Measure ℂ)
