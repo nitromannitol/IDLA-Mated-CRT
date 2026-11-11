@@ -5,7 +5,7 @@ import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
 import Mathlib.MeasureTheory.MeasurableSpace.Constructions
 
 /-!
-# Measurable radius from null-measurable containment events (selection step of Lemma 1, fleet note G-hT)
+# Measurable radius from null-measurable containment events (selection step of Lemma 1)
 
 Pure measure theory, no paper-specific input. This is the last step of `FixedTimeRadiusStep`
 (`MatedCRT/FirstPass/S1c.lean`): once the events `{ω | Λ_u(ω) ⊆ B̄_n}` are null-measurable for every integer `n`

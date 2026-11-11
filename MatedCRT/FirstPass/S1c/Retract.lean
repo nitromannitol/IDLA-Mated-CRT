@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S1c.TestDense
 
 /-!
-# Radial retraction and continuous extension from the closed disc (Lemma 1 analytic layer, fleet note G-hT)
+# Radial retraction and continuous extension from the closed disc (Lemma 1 analytic layer)
 
 A supersolution is only required to be continuous on the closed disc `B̄_R`, while the Laplacian pairing is
 integrated over `ℂ`. To work with globally continuous functions we extend `g ∈ C(B̄_R)` by composition with the

@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.Frozen.S1cDivergence
 
 /-!
-# First pass: transfer of the radial divergence to the cone (task fp-S1c-divergence-repair, z1)
+# First pass: transfer of the radial divergence to the cone
 
 The corrected radial input `FrozenConeRadialDivergenceCorrected` (Frozen/S1cDivergence.lean) is a statement on the
 continuous-path carrier of `ν`. The cone argument needs real-time divergence of the radial path `s ↦ h_{e^s}(0)` for almost

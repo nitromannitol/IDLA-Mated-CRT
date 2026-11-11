@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S1c.Selection
 import MatedCRT.FirstPass.Frozen.S1c
 
 /-!
-# The containment event of the fixed-time radius (Lemma 1, fleet note G-hT)
+# The containment event of the fixed-time radius (Lemma 1)
 
 For a family of harmonic balls `Λ` of the cone field, `Λ_u ⊆ B̄_n` (integer `n`) is decided by the cluster identity
 `Λ_u = int cl Λ_{B_R;0}(u)` at all integer radii `R` beyond the (finite) bound of `Λ_u`, as a countable Boolean

@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S1c.Equiv
 import MatedCRT.FirstPass.S1c.Cluster
 
 /-!
-# Membership in the obstacle cluster as a countable moment event (Lemma 1, fleet note G-hT)
+# Membership in the obstacle cluster as a countable moment event (Lemma 1)
 
 Deterministic part of the containment event of `FixedTimeRadiusStep`. For `p ≠ 0` in the closed disc, membership of
 `p` in the Armitage-Gardiner cluster `Λ_{B_R;0}(u)` (`HarmonicBalls.cluster`) is the strict inequality

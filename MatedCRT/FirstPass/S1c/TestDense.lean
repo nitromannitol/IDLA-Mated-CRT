@@ -5,7 +5,7 @@ import Mathlib.Topology.MetricSpace.Pseudo.Defs
 import MatedCRT.FirstPass.S1c.TestLocal
 
 /-!
-# A countable dense family of nonnegative test functions (Lemma 1 analytic layer, fleet note G-hT)
+# A countable dense family of nonnegative test functions (Lemma 1 analytic layer)
 
 For the radius `R`, the nonnegative test functions of `HarmonicBalls.LaplacianLE` on the ball `B_R` are approximated,
 in the sup norm of the function and of its Laplacian on the closed ball, by a countable family of such test functions.

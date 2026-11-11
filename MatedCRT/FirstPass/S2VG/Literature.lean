@@ -1,7 +1,7 @@
 import HarmonicBalls.Proofs.Sec2.Assembly
 import HarmonicBalls.Proofs.Sec9.AffineInvarianceAssembly
 
-/-! # FIRST PASS S2VG, Literature: the all-scales volume-growth input I2 (task fp-S2-hI2-literature-2)
+/-! # FIRST PASS S2VG, Literature: the all-scales volume-growth input I2
 
 `LQGVolumeGrowthAllScalesStmt` (I2, `HarmonicBalls/Draft/Section2.lean:122`) is one constant in both repositories:
 IDLA has no local definition and reaches `HarmonicBalls.LQGVolumeGrowthAllScalesStmt` through `open HarmonicBalls`.
@@ -51,7 +51,7 @@ abbrev LitNonatomic : Prop :=
   ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (γ α₀ : ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
     LQGMeasureNonatomic P γ α₀ hC hcirc
 
-/-- **I2 from the literature (fp-S2-hI2-literature-2).** `LQGVolumeGrowthAllScalesStmt` (eq:volume-growth) from the five
+/-- **I2 from the literature.** `LQGVolumeGrowthAllScalesStmt` (eq:volume-growth) from the five
 cited inputs above. The affine invariance of the whole-plane GFF is the proved theorem `wholePlaneGFFAffineInvariance_proved`. -/
 theorem lqgVolumeGrowthAllScalesStmt_litI2
     (hDG : LitWholePlaneBallMass) (hCC : LitCoordChange) (hW : LitWeylScaling) (hE : LitExistence)

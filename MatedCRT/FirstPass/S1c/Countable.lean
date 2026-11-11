@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S1c.Moments
 
 /-!
-# The supersolution inequality from a countable family (Lemma 1 analytic layer, fleet note G-hT)
+# The supersolution inequality from a countable family (Lemma 1 analytic layer)
 
 If the pairings of a continuous extension `extendCM g` of `g ∈ C(B̄_R)` with the countable family `φs k` satisfy
 `∫ w Δφs k ≤ ∫ φs k dν` for every `k`, then `extendCM g` satisfies `LaplacianLE` on `B_R` against `ν`: an arbitrary

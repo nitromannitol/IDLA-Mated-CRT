@@ -1,12 +1,12 @@
 import MatedCRT.FirstPass.S1c.Analytic
 
 /-!
-# Supersolutions with prescribed moments (Lemma 1 analytic layer, fleet note G-hT)
+# Supersolutions with prescribed moments (Lemma 1 analytic layer)
 
 For a locally finite `ν` with `ν(B̄_R) < ∞` and the moment vector `m k = ∫ φs k dν`, a supersolution
 `w ∈ HarmonicBalls.supersolutions ν R 0 u` with `w(z₀) < q` exists if and only if `m` lies in the projection of the
 supersolution pairs (`supersolutionPairs`). This is the identification used to write the sublevel sets of the least
-supersolution as analytic sets (fleet note G-hT, Lemma 1). Classical; no paper-specific input.
+supersolution as analytic sets (Lemma 1). Classical; no paper-specific input.
 -/
 
 namespace MatedCRT

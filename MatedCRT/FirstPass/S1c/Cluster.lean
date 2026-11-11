@@ -1,7 +1,7 @@
 import HarmonicBalls.Defs.Obstacle
 
 /-!
-# The cluster identity behind `FixedTimeRadiusStep` (fleet note G-hT, Lemma 1, eqs. (5)-(6))
+# The cluster identity behind `FixedTimeRadiusStep` (Lemma 1, eqs. (5)-(6))
 
 Pure topology plus the obstacle definitions of `HarmonicBalls.Defs.Obstacle`. For a set `K ⊆ ℂ` with `K \ {0}` open
 and `Λ = int cl K`, the containment `Λ ⊆ B̄_n` (integer `n ≥ 0`) is decided by the Gaussian rational points of `K`

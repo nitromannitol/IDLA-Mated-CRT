@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S1c.Retract
 
 /-!
-# Supersolutions tested on a countable family (Lemma 1 analytic layer, fleet note G-hT)
+# Supersolutions tested on a countable family (Lemma 1 analytic layer)
 
 For a locally finite measure `ν` with `ν(B̄_R) < ∞`, a function `w` continuous on `B̄_R` satisfies the
 `LaplacianLE` inequality on `B_R` (test class `IsTestFunction (ball 0 R)`, `0 ≤ φ`) if and only if its

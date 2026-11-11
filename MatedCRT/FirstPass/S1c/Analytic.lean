@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S1c.Countable
 import MatedCRT.FirstPass.S1c.Cluster
 
 /-!
-# The analytic set of moment vectors of supersolutions (Lemma 1 analytic layer, fleet note G-hT)
+# The analytic set of moment vectors of supersolutions (Lemma 1 analytic layer)
 
 For a locally finite `ν` with `ν(B̄_R) < ∞`, the least-supersolution sublevel sets of `HarmonicBalls.supersolutions`
 are described through countably many pairings: a supersolution `w` is the continuous extension of its restriction

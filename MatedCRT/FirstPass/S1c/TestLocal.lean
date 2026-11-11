@@ -2,7 +2,7 @@ import HarmonicBalls.Defs.Laplacian
 import Mathlib.Analysis.InnerProductSpace.Laplacian
 
 /-!
-# Local facts about the Laplacian of test functions (Lemma 1 analytic layer, fleet note G-hT)
+# Local facts about the Laplacian of test functions (Lemma 1 analytic layer)
 
 Classical calculus, no paper-specific input: the Laplacian `Laplacian.laplacian` (the class field used by
 `HarmonicBalls.LaplacianLE`, instance of `InnerProductSpace.Laplacian`) of a `C²` function on `ℂ` is continuous,
