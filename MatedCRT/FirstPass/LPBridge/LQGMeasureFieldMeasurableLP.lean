@@ -1,4 +1,4 @@
-import MatedCRT.LPStaging.Bonanno.LQGMeasureFieldMeasurable
+import MatedCRT.LPStaging.Bonanno.LQGMeasureFieldMeasurableAmbient
 import MatedCRT.FirstPass.Frozen.S4S6c
 import MatedCRT.Proofs.Measurability.FieldCircle
 
@@ -7,7 +7,7 @@ import MatedCRT.Proofs.Measurability.FieldCircle
 
 `FrozenLQGMeasureFieldMeasurable 𝒮` asserts that for every valid environment `S` the γ-LQG measure `S.μ` agrees
 almost surely with a `σ(h)`-measurable random measure. The general statement is
-`LatticeProb.exists_measurable_version_of_lqgArea` (mirror `MatedCRT.LPStaging.Bonanno.LQGMeasureFieldMeasurable`;
+`LatticeProb.exists_measurable_version_of_lqgArea_ambient` (mirror `MatedCRT.LPStaging.Bonanno.LQGMeasureFieldMeasurableAmbient`;
 Duplantier–Sheffield 2011, arXiv:0808.1560v2, Proposition 1.1): for circle averages `H r z ω` whose dyadic restrictions
 are jointly measurable and a.s. continuous in `z`, the γ-LQG area measure `μ` (`IsLQGAreaOf`: the a.s. vague limit of
 `ε^{γ²/2} e^{γ H ε z} dz` along `ε = 2^{-k}`) agrees a.s. with an `m`-measurable random measure.
@@ -25,10 +25,10 @@ We apply it with `m := S.fieldSigma`, `P := S.P`, `μ := S.μ` and `H := fieldVe
   `LatticeProb.lqgApprox` with `HarmonicBalls.lqgApprox` at `dyadicScale k = 2⁻ᵏ`, and so `IsLQGAreaOf` from the
   `IsLQGLimit` of `IsValid.isLQGMeasure`.
 
-Every bridge is proved from the fields of `MatedCRTEnv.IsValid`; no hypothesis is introduced. The application of
-`LatticeProb.exists_measurable_version_of_lqgArea` to these bridges is not in this file: its probability measure
-`P : Measure Ω` is elaborated on the sub-σ-algebra `m` (the explicit binder `(m : MeasurableSpace Ω)` becomes the
-local instance), while `MatedCRTEnv.P` lives on the ambient σ-algebra.
+Every bridge is proved from the fields of `MatedCRTEnv.IsValid`; no hypothesis is introduced. The ambient form
+`LatticeProb.exists_measurable_version_of_lqgArea_ambient` keeps the probability measure `S.P` on the ambient
+σ-algebra and the sub-σ-algebra `m := S.fieldSigma` separate, so it applies to `MatedCRTEnv.P` directly; the
+application is `frozenLQGMeasureFieldMeasurable_viaLP`.
 -/
 
 open MeasureTheory Filter Topology Set
@@ -122,5 +122,18 @@ lemma isLQGAreaOf_fieldVersion {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (S : Mat
   exact h2.tendsto_integral f hf hfc
 
 end LQGMeasureFieldLP
+
+/-- **Measurability of the LQG measure in the field, from the Lattice-Probability theorem.** For every valid
+environment `S`, the γ-LQG measure `S.μ` agrees almost surely with an `S.fieldSigma`-measurable random measure. The
+proof applies `LatticeProb.exists_measurable_version_of_lqgArea_ambient` to the dyadic circle averages
+`LQGMeasureFieldLP.fieldVersion S`: they are jointly measurable for `S.fieldSigma`, almost surely continuous in `z`,
+and `S.μ` is their almost sure γ-LQG area measure (`LQGMeasureFieldLP.isLQGAreaOf_fieldVersion`). Source:
+Duplantier–Sheffield (2011, arXiv:0808.1560v2), Proposition 1.1. -/
+theorem frozenLQGMeasureFieldMeasurable_viaLP (𝒮 : SpaceFillingSLEModel) : FrozenLQGMeasureFieldMeasurable 𝒮 := by
+  intro γ _ _ Ω hΩ S hS
+  obtain ⟨μ', hμ', hae⟩ := @LatticeProb.exists_measurable_version_of_lqgArea_ambient Ω hΩ S.fieldSigma S.P γ
+    (LQGMeasureFieldLP.fieldVersion S) S.μ (fun k => LQGMeasureFieldLP.measurable_uncurry_fieldVersion S k)
+    (LQGMeasureFieldLP.ae_continuous_fieldVersion S hS) (LQGMeasureFieldLP.isLQGAreaOf_fieldVersion S hS)
+  exact ⟨μ', hμ', hae.mono fun _ h => h.symm⟩
 
 end MatedCRT
