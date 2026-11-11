@@ -3,7 +3,7 @@ import Mathlib
 /-!
 # Borel–Cantelli extraction of an almost surely controlled subsequence
 
-Two facts that pass from convergence in probability to an almost sure, eventually controlled
+Three facts that pass from convergence in probability to an almost sure, eventually controlled
 subsequence on an arbitrary measure space `(X, μ)`:
 
 * `LatticeProb.exists_seq_prob_le_of_cauchy`: if the distances `d s t` tend to `0` in `μ`-measure
@@ -12,6 +12,8 @@ subsequence on an arbitrary measure space `(X, μ)`:
 * `LatticeProb.ae_eventually_le_of_prob_le`: if nonnegative extended-real functions `D k` satisfy
   `μ {2^{-k} < D k} ≤ 2^{-k}` for all `k`, then `μ`-almost every `x` satisfies `D k x ≤ 2^{-k}` for
   all large `k` (the first Borel–Cantelli lemma, `MeasureTheory.ae_eventually_notMem`).
+* `LatticeProb.exists_strictMono_prob_le_of_cauchy`: the sequence version of the first fact, with
+  a strictly increasing index sequence `n : ℕ → ℕ` in place of the null sequence `ε`.
 
 In the first fact, each level `k` has a radius `δ k` such that every pair with both entries in
 `(0, δ k)` is good at level `k`. The sequence `ε` is `halvingSeq δ`, which satisfies
@@ -109,6 +111,40 @@ theorem exists_seq_prob_le_of_cauchy {X : Type*} [MeasurableSpace X] (μ : Measu
     tendsto_halvingSeq hδpos, fun k => ?_⟩
   exact hδgood k _ _ (halvingSeq_pos hδpos k) (halvingSeq_lt hδpos k)
     (halvingSeq_pos hδpos (k + 1)) (halvingSeq_succ_lt hδpos k)
+
+/-- **Sequence form of the Borel–Cantelli extraction.** If `d a b` tends to `0` in `μ`-measure as
+`(a, b) → (∞, ∞)` in `ℕ × ℕ`, then for every `n₀` there is a strictly increasing sequence `n` with
+`n₀ ≤ n 0` whose consecutive pairs satisfy the geometric bounds
+`μ {2^{-k} < d (n k) (n (k + 1))} ≤ 2^{-k}` for all `k`. The proof takes, for each level `k`, a
+threshold `N k` beyond which the level-`k` bound holds on the whole quadrant, and spaces the indices
+so that `n k ≥ N k` and `n (k + 1) ≥ N k`. Literature locator: standard measure theory (extraction of
+an almost surely controlled subsequence from convergence in measure, via the first Borel–Cantelli
+lemma); the continuous-parameter version is `exists_seq_prob_le_of_cauchy`. -/
+theorem exists_strictMono_prob_le_of_cauchy {X : Type*} [MeasurableSpace X] (μ : Measure X)
+    (d : ℕ → ℕ → X → ℝ≥0∞)
+    (h : ∀ η : ℝ, 0 < η → Tendsto (fun p : ℕ × ℕ => μ {x | ENNReal.ofReal η < d p.1 p.2 x})
+      atTop (𝓝 0))
+    (n₀ : ℕ) :
+    ∃ n : ℕ → ℕ, StrictMono n ∧ n₀ ≤ n 0 ∧
+      ∀ k, μ {x | ENNReal.ofReal ((1 / 2) ^ k) < d (n k) (n (k + 1)) x} ≤
+        ENNReal.ofReal ((1 / 2) ^ k) := by
+  -- Level `k`: a threshold `N k` such that every pair in `[N k, ∞)²` is good at level `k`.
+  have hscale : ∀ k : ℕ, ∃ N : ℕ, ∀ a b : ℕ, N ≤ a → N ≤ b →
+      μ {x | ENNReal.ofReal ((1 / 2) ^ k) < d a b x} ≤ ENNReal.ofReal ((1 / 2) ^ k) := by
+    intro k
+    have hη : (0 : ℝ) < (1 / 2) ^ k := by positivity
+    have hev := (h _ hη).eventually (Iio_mem_nhds (ENNReal.ofReal_pos.2 hη))
+    obtain ⟨N, hN⟩ := Filter.eventually_atTop_prod_self'.1 hev
+    exact ⟨N, fun a b ha hb => le_of_lt (Set.mem_Iio.1 (hN a ha b hb))⟩
+  choose N hN using hscale
+  refine ⟨fun k => n₀ + k + ∑ j ∈ Finset.range (k + 1), N j, ?_, ?_, fun k => ?_⟩
+  · refine strictMono_nat_of_lt_succ fun k => ?_
+    simp only [Finset.sum_range_succ]
+    omega
+  · simp only [Finset.sum_range_succ, Finset.sum_range_zero]
+    omega
+  · dsimp only
+    refine hN k _ _ ?_ ?_ <;> simp only [Finset.sum_range_succ] <;> omega
 
 /-- **First Borel–Cantelli lemma for geometric thresholds.** If `μ {2^{-k} < D k} ≤ 2^{-k}` for all
 `k`, then for `μ`-almost every `x` the inequality `D k x ≤ 2^{-k}` holds for all sufficiently large
