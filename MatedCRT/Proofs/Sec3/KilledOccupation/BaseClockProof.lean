@@ -1178,5 +1178,101 @@ theorem exists_countable_pi_generator :
     · obtain ⟨F, rfl⟩ := hs
       exact MeasurableSet.iInter fun i => MeasurableSet.iInter fun _ => (heOpen i).measurableSet
 
+theorem occMeasure_apply {Ω : Type*} (PB : Measure (ContinuousPath ℂ))
+    (dA : Ω → ContinuousPath ℂ → Measure ℝ≥0) (z : ℂ) (r : ℝ) (ω : Ω)
+    (hf : AEMeasurable (occKernel dA z r ω) PB) {s : Set ℂ} (hs : MeasurableSet s) :
+    occMeasure PB dA z r ω s = ∫⁻ b, occKernel dA z r ω b s ∂PB := by
+  unfold occMeasure
+  exact Measure.bind_apply hs hf
+
+theorem indicator_one_measurable {s : Set ℂ} (hs : MeasurableSet s) :
+    Measurable (s.indicator (1 : ℂ → ℝ≥0∞)) :=
+  (measurable_const (a := (1 : ℝ≥0∞))).indicator hs
+
+theorem indicator_one_le_one (s : Set ℂ) (x : ℂ) : s.indicator (1 : ℂ → ℝ≥0∞) x ≤ 1 := by
+  by_cases hx : x ∈ s
+  · simp [hx]
+  · simp [hx]
+
+/-- The kernel `b ↦ occKernel ω b` is measurable as a `Measure`-valued map when the limit clock functional is
+measurable in the path for indicator weights. -/
+theorem occKernel_aemeasurable {Ω : Type*} (PB : Measure (ContinuousPath ℂ))
+    (dA : Ω → ContinuousPath ℂ → Measure ℝ≥0) (z : ℂ) (r : ℝ) (ω : Ω)
+    (hk : ∀ q : ℂ → ℝ≥0∞, Measurable q →
+      Measurable fun b : ContinuousPath ℂ => ∫⁻ u in Icc (0 : ℝ≥0) (pathExitTime (ball z r) b).toNNReal,
+        q (b u) ∂(dA ω b)) :
+    AEMeasurable (occKernel dA z r ω) PB := by
+  refine Measurable.aemeasurable (Measure.measurable_of_measurable_coe _ fun t ht => ?_)
+  have hfun : (fun b : ContinuousPath ℂ => occKernel dA z r ω b t)
+      = fun b => ∫⁻ u in Icc (0 : ℝ≥0) (pathExitTime (ball z r) b).toNNReal,
+          (t.indicator (1 : ℂ → ℝ≥0∞)) (b u) ∂(dA ω b) :=
+    funext fun b => occKernel_apply dA z r ω b ht
+  rw [hfun]
+  exact hk _ (indicator_one_measurable ht)
+
+/-- Step C (paper tex:234-237): for `P`-a.e. environment the two sides `μ_L(ω)` and `μ_R(ω)` of the occupation
+identity agree as measures on `ℂ`. Proof: a countable π-system generating the Borel sets
+(`exists_countable_pi_generator`); on each of its members the identity of `limitClock_eq_nu_ae` holds a.s.
+(countably many); both measures are finite a.s.; the π-λ uniqueness (`ext_of_generate_finite`) concludes. -/
+theorem occMeasure_eq_nuWeighted_ae {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
+    (γ : ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (z : ℂ) (r : ℝ) {y : ℂ} (hy : y ∈ ball z r)
+    (hS0 : KilledBrownianOccupationOnBall z r)
+    (hτ : Integrable (fun b : ContinuousPath ℂ => (pathExitTime (ball z r) b).toReal)
+      (planarBrownianMotion y))
+    (hτmeas : Measurable fun b : ContinuousPath ℂ => pathExitTime (ball z r) b)
+    (hGmeas : Measurable fun x => greenFunction (ball z r) y x)
+    (hGint : IntegrableOn (fun x => greenFunction (ball z r) y x) (ball z r))
+    (hw : ∀ k, Measurable fun p : Ω × ℂ => circleWeight γ hcirc p.1 k p.2)
+    (hVar : ∀ᶠ k in atTop, ∀ x ∈ ball z r, ∫⁻ ω, ENNReal.ofReal (circleWeight γ hcirc ω k x) ∂P = 1)
+    (ν : Ω → Measure ℂ) (dA : Ω → ContinuousPath ℂ → Measure ℝ≥0)
+    (hνmeas : ∀ ρ : ℂ → ℝ≥0∞, Measurable ρ → Measurable fun ω => ∫⁻ x, ρ x ∂(ν ω))
+    (hconv : ∀ ρ : ℂ → ℝ≥0∞, Measurable ρ → (∃ N : ℝ≥0∞, N ≠ ⊤ ∧ ∀ x, ρ x ≤ N) →
+      (∀ x ∉ ball z r, ρ x = 0) →
+      Tendsto (fun k => ∫⁻ ω, ediffE (∫⁻ x, ρ x ∂(circleMeasure γ hcirc ω k)) (∫⁻ x, ρ x ∂(ν ω)) ∂P)
+        atTop (𝓝 0))
+    (hLjoint : ∀ q : ℂ → ℝ≥0∞, Measurable q →
+      Measurable fun p : Ω × ContinuousPath ℂ => limitClockFun dA z r p.1 p.2 q)
+    (hmeasKernel : ∀ᵐ ω ∂P, ∀ q : ℂ → ℝ≥0∞, Measurable q →
+      Measurable fun b : ContinuousPath ℂ => ∫⁻ u in Icc (0 : ℝ≥0) (pathExitTime (ball z r) b).toNNReal,
+        q (b u) ∂(dA ω b))
+    (hLpath : ∀ q : ℂ → ℝ≥0∞, Measurable q → (∃ M : ℝ≥0∞, M ≠ ⊤ ∧ ∀ x, q x ≤ M) →
+      ∀ᵐ b ∂planarBrownianMotion y, Tendsto (fun k => clockGapMean P γ hcirc dA z r k q b) atTop (𝓝 0))
+    (hσint : ∫⁻ b, ((pathExitTime (ball z r) b).toNNReal : ℝ≥0∞) ∂planarBrownianMotion y ≠ ⊤) :
+    ∀ᵐ ω ∂P, occMeasure (planarBrownianMotion y) dA z r ω = nuWeighted ν (ball z r) y ω := by
+  obtain ⟨C, hCc, hCpi, hCuniv, hCmeas, hCgen⟩ := exists_countable_pi_generator
+  have hgen : ∀ᵐ ω ∂P, ∀ s ∈ C, occMeasure (planarBrownianMotion y) dA z r ω s
+      = nuWeighted ν (ball z r) y ω s := by
+    refine (ae_ball_iff hCc).2 fun s hs => ?_
+    have hsm := hCmeas s hs
+    have hid := limitClock_eq_nu_ae P γ hcirc z r hy hS0 hτ hτmeas hGmeas hGint hw hVar ν dA hνmeas
+      hconv hLjoint (indicator_one_measurable hsm) ENNReal.one_ne_top (indicator_one_le_one s)
+      (hLpath _ (indicator_one_measurable hsm) ⟨1, ENNReal.one_ne_top, indicator_one_le_one s⟩) hσint
+    filter_upwards [hid, hmeasKernel] with ω hω hk
+    rw [occMeasure_apply _ dA z r ω (occKernel_aemeasurable _ dA z r ω hk) hsm,
+      nuWeighted_apply ν (ball z r) y ω hsm, ← hω]
+    exact lintegral_congr fun b => occKernel_apply dA z r ω b hsm
+  have hfin : ∀ᵐ ω ∂P, ∫⁻ x in ball z r, greenWeight (ball z r) y x ∂(ν ω) ≠ ⊤ := by
+    have hG'm : Measurable (greenWeight (ball z r) y) :=
+      ENNReal.measurable_ofReal.comp (measurable_const.mul hGmeas)
+    have hR := measurable_nu_setLIntegral ν hνmeas (S := ball z r) measurableSet_ball hG'm
+    have hGfin : ∫⁻ x in ball z r, greenWeight (ball z r) y x ≠ ⊤ :=
+      ((hGint.const_mul 2).lintegral_lt_top).ne
+    have hint : ∫⁻ ω, (∫⁻ x in ball z r, greenWeight (ball z r) y x ∂(ν ω)) ∂P ≠ ⊤ := by
+      have h := lintegral_nu_expect_le P γ hcirc ν measurableSet_ball hw hVar hνmeas hconv
+        (g := (ball z r).indicator (greenWeight (ball z r) y)) (hG'm.indicator measurableSet_ball)
+        (fun x hx => Set.indicator_of_notMem hx _)
+      simp only [lintegral_indicator measurableSet_ball, Measure.restrict_restrict measurableSet_ball,
+        Set.inter_self] at h
+      exact ne_top_of_le_ne_top hGfin h
+    filter_upwards [ae_lt_top hR hint] with ω hω
+    exact hω.ne
+  filter_upwards [hgen, hfin] with ω hω hfω
+  have hu : nuWeighted ν (ball z r) y ω univ = ∫⁻ x in ball z r, greenWeight (ball z r) y x ∂(ν ω) := by
+    rw [nuWeighted_apply ν (ball z r) y ω MeasurableSet.univ]
+    simp
+  have : IsFiniteMeasure (occMeasure (planarBrownianMotion y) dA z r ω) :=
+    ⟨by rw [hω univ hCuniv, hu]; exact lt_top_iff_ne_top.2 hfω⟩
+  exact MeasureTheory.ext_of_generate_finite C hCgen hCpi (fun s hs => hω s hs) (hω univ hCuniv)
+
 end MatedCRT.KilledOccupation
 
