@@ -95,8 +95,45 @@ theorem tendsto_of_subseq_of_gap_le_geometric_two {x : ℕ → ℝ} {L : ℝ} {k
     exact tendsto_nhds_of_cauchySeq_of_subseq hcauchy hf ha
   exact (tendsto_add_atTop_iff_nat N).1 hlim
 
+/-- The real value of the nonnegative rational `q.toNNRat` for a nonnegative rational `q`. -/
+lemma toNNRat_cast_eq_real (q : ℚ) (hq : 0 ≤ q) : (((q.toNNRat : ℚ≥0) : ℝ≥0) : ℝ) = (q : ℝ) := by
+  have hn : (0 : ℝ) ≤ (q.num : ℝ) := by exact_mod_cast Rat.num_nonneg.2 hq
+  rw [NNRat.cast_def]
+  simp [Rat.toNNRat, hq]
+  rw [Rat.cast_def, abs_of_nonneg hn]
+
+/-- Density of the nonnegative rationals in `ℝ≥0`, from `exists_rat_btwn`. -/
+lemma exists_nnrat_btwn_nnreal {s t : ℝ≥0} (h : s < t) : ∃ q : ℚ≥0, s < (q : ℝ≥0) ∧ (q : ℝ≥0) < t := by
+  obtain ⟨q, h1, h2⟩ := exists_rat_btwn (show (s : ℝ) < (t : ℝ) from NNReal.coe_lt_coe.2 h)
+  have hq : (0 : ℚ) ≤ q := by
+    have : (0 : ℝ) ≤ (s : ℝ) := s.2
+    exact_mod_cast (le_trans this h1.le)
+  refine ⟨q.toNNRat, ?_, ?_⟩
+  · rw [← NNReal.coe_lt_coe, toNNRat_cast_eq_real q hq]; exact h1
+  · rw [← NNReal.coe_lt_coe, toNNRat_cast_eq_real q hq]; exact h2
+
+/-- The infimum over the rational times `q > s` of the value `F (min q c)` of a continuous nondecreasing clock is the
+value at `min s c`: monotonicity gives `≥`, and right continuity together with the density of `ℚ≥0` gives `≤`. This is
+the pointwise identity behind `limClockFun = F (min s σ)` for the limit clock. -/
+theorem iInf_rat_gt_ofReal_eq {F : ℝ≥0 → ℝ} (hmono : Monotone F) (hcont : Continuous F) (c s : ℝ≥0) :
+    (⨅ q : {q : ℚ≥0 // s < (q : ℝ≥0)}, ENNReal.ofReal (F (min (q.1 : ℝ≥0) c))) = ENNReal.ofReal (F (min s c)) := by
+  apply le_antisymm
+  · have hgt : ∀ t : ℝ≥0, s < t →
+        (⨅ q : {q : ℚ≥0 // s < (q : ℝ≥0)}, ENNReal.ofReal (F (min (q.1 : ℝ≥0) c))) ≤
+          ENNReal.ofReal (F (min t c)) := by
+      intro t ht
+      obtain ⟨q, hsq, hqt⟩ := exists_nnrat_btwn_nnreal ht
+      exact (iInf_le _ ⟨q, hsq⟩).trans (ENNReal.ofReal_le_ofReal (hmono (min_le_min hqt.le le_rfl)))
+    have hlim : Tendsto (fun t : ℝ≥0 => ENNReal.ofReal (F (min t c))) (𝓝[>] s)
+        (𝓝 (ENNReal.ofReal (F (min s c)))) :=
+      ((ENNReal.continuous_ofReal.comp (hcont.comp (continuous_id.min continuous_const))).tendsto s).mono_left
+        nhdsWithin_le_nhds
+    exact ge_of_tendsto hlim (eventually_nhdsWithin_of_forall fun t ht => hgt t ht)
+  · exact le_iInf fun q => ENNReal.ofReal_le_ofReal (hmono (min_le_min q.2.le le_rfl))
+
 end MatedCRT.KilledOccupation
 
 #print axioms MatedCRT.KilledOccupation.ae_ae_eventually_le_of_map_prob_le
+#print axioms MatedCRT.KilledOccupation.iInf_rat_gt_ofReal_eq
 #print axioms MatedCRT.KilledOccupation.exists_strictMono_ae_eventually_notMem
 #print axioms MatedCRT.KilledOccupation.tendsto_of_subseq_of_gap_le_geometric_two
