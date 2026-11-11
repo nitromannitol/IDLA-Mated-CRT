@@ -3,9 +3,9 @@ import MatedCRT.Steps.Sec3.ConvergenceHarmonicFunctions
 import MatedCRT.FirstPass.S3t.Defs
 
 /-!
-# Truncated quenched laws, Step 4: almost-sure regular exit of the limiting LBM (fp-S3t, z2)
+# Truncated quenched laws, Step 4: almost-sure regular exit of the limiting LBM
 
-Step 4 of `notes/fp-gaps/CHATGPT-idla-3-4-truncated-laws.md` (section 3). For almost every environment and almost every
+Step 4 of the truncated-laws argument (section 3). For almost every environment and almost every
 Brownian path `b` from `y`, the rescaled Liouville Brownian motion `rescaledLBMPath (S.clock ω) S.m₀ b` exits the disk
 `ball z r` regularly. The proof is the existing transfer of Brownian radial excursions to LBM regular exits
 (`MatedCRTEnv.IsValid.ae_rescaledLBM_ball_regular_of_brownian_outward_radial_excursion`,

@@ -2,9 +2,9 @@ import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.PathEnvelopeOn
 import MatedCRT.FirstPass.S3t.Defs
 
 /-!
-# Truncated quenched laws, Step 2: bounded-Lipschitz extension to continuous functionals (fp-S3t, z2)
+# Truncated quenched laws, Step 2: bounded-Lipschitz extension to continuous functionals
 
-Step 2 of `notes/fp-gaps/CHATGPT-idla-3-4-truncated-laws.md` (section 3). Convergence in probability of the quenched
+Step 2 of the truncated-laws argument (section 3). Convergence in probability of the quenched
 integrals of bounded-Lipschitz path functionals (Theorem 2.11 of the paper, Berestycki–Gwynne Theorem 1.2) extends to
 bounded path functionals `H` that are continuous at almost every limiting path for the local uniform distance. The
 argument is the Pasch–Hausdorff envelope argument of `MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/PathEnvelopeOn.lean`

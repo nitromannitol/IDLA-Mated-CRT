@@ -3,9 +3,9 @@ import MatedCRT.FirstPass.S3t.BoundaryShells
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.WalkExitMeasurable
 
 /-!
-# Truncated quenched laws, Step 11: integrating the pathwise estimate (fp-S3t, z8)
+# Truncated quenched laws, Step 11: integrating the pathwise estimate
 
-Source: `notes/fp-gaps/CHATGPT-idla-3-4-truncated-laws.md`, Step 11 (`## Step 11. Integrate the pathwise estimate`).
+Step 11 of the truncated-laws argument.
 
 For a fixed environment `ω` and a fixed mesh scale `ε` with `m_ε > 0`, the quenched discrete occupation `A ε ω` and the
 stopped occupation `C ε ω` are integrals against the quenched simple-random-walk law `ν`. Step 10 gives a pathwise bound

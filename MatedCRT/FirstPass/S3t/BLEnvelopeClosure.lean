@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S3t
 
 /-!
-# Brownian envelope closure for every valid environment (fp-S3t-bl-envelope-closure)
+# Brownian envelope closure for every valid environment
 
 `blEnvelopeClosureInput_holds` proves the named input `BLEnvelopeClosureInput 𝒮` (`BoundaryShells.lean:221`) for every
 fixed model `𝒮`. It is the measurable closure of a scalar LBM observable `lbm_scalar_measurable_of_bl_envelopes`
