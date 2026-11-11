@@ -291,19 +291,38 @@ Proved inputs:
 | disc Green function, centre formula | `FrozenGreenBallCentre` (FirstPass/Frozen/S2g.lean:45) | `frozenGreenBallCentre_holds` (FirstPass/Derived/DiscGreenCentre.lean) | `HarmonicBalls.greenFunction_ball` at the centre |
 | disc Green function, nonnegative and continuous off the centre | `FrozenDiskGreenNonnegCont` (FirstPass/Frozen/S1c.lean:38) | `frozenDiskGreenNonnegCont_holds` (same file) | centre formula; `HarmonicBalls.continuousOn_greenFunction_ball` |
 
+Inputs supplied from other inputs of the same counted theorem (2026-11-11). Seven statements of the Harmonic-Balls paper
+(arXiv:2208.11795) that the counted theorems bind are, in the Harmonic-Balls package, theorems whose only hypotheses are
+other Harmonic-Balls statements which the same counted theorems bind as well. They are supplied by those theorems, so
+the binders disappear and none is added. In every counted theorem concerned, the volume-growth input is the binder of
+type `LQGVolumeGrowthAllScalesStmt.{0}` (or its copy `FrozenLQGVolumeGrowthAllScales`), and the existence and uniqueness
+inputs are the binders of types `ExistenceHarmonicBallsStmt.{0}` and `UniquenessHarmonicBallsStmt.{0}`.
+
+| input (HB result) | Prop | Harmonic-Balls theorem | from |
+|---|---|---|---|
+| least supersolution (3.1) | `LeastSupersolutionMemStmt.{0}` | `HarmonicBalls.leastSupersolutionMem_proved` (Proofs/Sec3/Basic.lean:204) | volume growth (I2) |
+| open cluster, Laplacian (3.2) | `ClusterOpenLaplacianStmt.{0}` | `HarmonicBalls.clusterOpenLaplacian_proved` (Proofs/Sec3/OpenLaplacian.lean:25) | volume growth |
+| monotonicity (3.3) | `ClusterMonotoneStmt.{0}` | `HarmonicBalls.clusterMonotone_proved` (Proofs/Sec3/Basic.lean:209) | volume growth |
+| conservation of mass (3.4) | `ClusterConservationOfMassStmt.{0}` | `HarmonicBalls.clusterConservationOfMass_proved` (Proofs/Sec3/ConservationOfMassLemma.lean:30) | volume growth |
+| compatibility (3.5) | `ClusterCompatibilityStmt.{0}` | `HarmonicBalls.clusterCompatibility_proved` (Proofs/Sec3/ClusterCompatibility.lean:360) | volume growth |
+| very good annuli, Harnack-type estimate (6.11) | `VeryGoodAnnulusHarnackTypeStmt.{0}`, `FrozenVeryGoodAnnulusHarnackType` | `HarmonicBalls.Section6.veryGoodAnnulusHarnackTypeStmt_of_volumeGrowth_only` (Proofs/Sec6/VolumeGrowthConsequences.lean:19) | volume growth |
+| existence and uniqueness (1.1) | `ExistenceUniquenessHarmonicBallsStmt.{0}` | `HarmonicBalls.existenceUniquenessHarmonicBallsStmt_of_sec5` (Assembly/ExistenceUniqueness.lean:39) | existence (5.5) and uniqueness (5.6) |
+
+Input binders of the counted 1.4 and 1.6 forms after this: 25 (27 minus the data `𝒮`, `ν`).
+
 Derived forms (binders of `T` -> binders of `T_derivedInputs`):
 
 | result | counted `T` | binders | supplied |
 |---|---|---|---|
-| 1.4 | `closed_1_4_lp_noSC_noSup` | 36 -> 34 | hF3, hGBC |
-| 1.6 | `closed_1_6_lp_noSC_noSup` | 36 -> 34 | hF3, hGBC |
-| 2.3 | `closed_2_3_lp` | 23 -> 22 | centre formula |
-| 2.4 | `closed_2_4_lp` | 18 -> 17 | hCentre |
-| 2.5 | `closed_2_5_lp` | 22 -> 21 | centre formula |
-| 2.6 | `closed_2_6_lp` | 22 -> 21 | centre formula |
-| 4.2 | `closed_4_2_lp` | 36 -> 35 | hCentre |
-| 5.1 | `closed_5_1_lp_noSup` | 31 -> 30 | centre formula |
-| 5.3 | `closed_5_3_clean` | 27 -> 25 | hF3, hCentre |
-| 6.1 | `closed_6_1_lp_noSup` | 33 -> 32 | centre formula |
-| 7.1 | `closed_7_1_lp` | 29 -> 28 | centre formula |
-| 8.1 | `closed_8_1_lp_noSup` | 46 -> 45 | centre formula |
+| 1.4 | `closed_1_4_lp_noSC_noSup` | 36 -> 27 | hF3, hGBC; h32, h611, hSup, hCons, hMono, hCompat, hThm11 |
+| 1.6 | `closed_1_6_lp_noSC_noSup` | 36 -> 27 | hF3, hGBC; h32, h611, hSup, hCons, hMono, hCompat, hThm11 |
+| 2.3 | `closed_2_3_lp` | 23 -> 16 | centre formula; the five Section 3 statements and 1.1 |
+| 2.4 | `closed_2_4_lp` | 18 -> 11 | hCentre; the five Section 3 statements and 1.1 |
+| 2.5 | `closed_2_5_lp` | 22 -> 15 | centre formula; the five Section 3 statements and 1.1 |
+| 2.6 | `closed_2_6_lp` | 22 -> 15 | centre formula; the five Section 3 statements and 1.1 |
+| 4.2 | `closed_4_2_lp` | 36 -> 29 | hCentre; the five Section 3 statements and 1.1 |
+| 5.1 | `closed_5_1_lp_noSup` | 31 -> 23 | centre formula; the five Section 3 statements, 1.1 and 6.11 |
+| 5.3 | `closed_5_3_clean` | 27 -> 19 | hF3, hCentre; the five Section 3 statements and 1.1 |
+| 6.1 | `closed_6_1_lp_noSup` | 33 -> 25 | centre formula; the five Section 3 statements, 1.1 and 6.11 |
+| 7.1 | `closed_7_1_lp` | 29 -> 22 | centre formula; the five Section 3 statements and 1.1 |
+| 8.1 | `closed_8_1_lp_noSup` | 46 -> 38 | centre formula; the five Section 3 statements, 1.1 and 6.11 |
