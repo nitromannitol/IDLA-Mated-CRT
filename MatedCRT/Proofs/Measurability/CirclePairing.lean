@@ -1,5 +1,6 @@
 import MatedCRT.Defs.Setting
 import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgRate
+import MatedCRT.LPStaging.Bonanno.CirclePairing
 
 /-!
 # Circle averages of the whole-plane GFF are limits of pairings
@@ -40,66 +41,30 @@ lemma wholePlaneCov_eq {x y : ℂ} (h : x ≠ y) :
   rfl
 
 lemma circleIntegrable_of_continuous {f : ℂ → ℝ} (hf : Continuous f) (c : ℂ) (R : ℝ) : CircleIntegrable f c R :=
-  (hf.comp (continuous_circleMap c R)).intervalIntegrable _ _
+  LatticeProb.CirclePairing.circleIntegrable_of_continuous hf c R
 
 /-- A circle average of a function which is constant on the circle. -/
 lemma circleAverage_eq_of_eqOn_sphere {f : ℂ → ℝ} {c : ℂ} {R v : ℝ} (hf : CircleIntegrable f c R)
-    (h : ∀ x ∈ sphere c |R|, f x = v) : Real.circleAverage f c R = v := by
-  have hc : CircleIntegrable (fun _ : ℂ => v) c R := circleIntegrable_of_continuous continuous_const c R
-  refine le_antisymm ?_ ?_
-  · calc Real.circleAverage f c R ≤ Real.circleAverage (fun _ => v) c R :=
-          Real.circleAverage_mono hf hc fun x hx => (h x hx).le
-      _ = v := Real.circleAverage_const v c R
-  · calc v = Real.circleAverage (fun _ => v) c R := (Real.circleAverage_const v c R).symm
-      _ ≤ Real.circleAverage f c R := Real.circleAverage_mono hc hf fun x hx => (h x hx).ge
+    (h : ∀ x ∈ sphere c |R|, f x = v) : Real.circleAverage f c R = v :=
+  LatticeProb.CirclePairing.circleAverage_eq_of_eqOn_sphere hf h
 
 /-- Two functions which agree off one point agree codiscretely on any set. -/
 lemma eventuallyEq_codiscreteWithin_of_ne {f g : ℂ → ℝ} (S : Set ℂ) (x : ℂ) (h : ∀ y, y ≠ x → f y = g y) :
-    f =ᶠ[codiscreteWithin S] g := by
-  have hmem : ({x}ᶜ : Set ℂ) ∈ codiscreteWithin S := by
-    rw [mem_codiscreteWithin]
-    intro y _
-    rw [disjoint_principal_right]
-    have hx : ({x}ᶜ : Set ℂ) ∈ 𝓝[≠] y := by
-      by_cases hyx : y = x
-      · subst hyx
-        exact self_mem_nhdsWithin
-      · exact mem_nhdsWithin_of_mem_nhds (isOpen_compl_singleton.mem_nhds hyx)
-    exact Filter.mem_of_superset hx fun w hw hw' => hw'.2 hw
-  exact Filter.mem_of_superset hmem fun y hy => h y hy
+    f =ᶠ[codiscreteWithin S] g :=
+  LatticeProb.CirclePairing.eventuallyEq_codiscreteWithin_of_ne S x h
 
 /-- The logarithmic potential of `circBump k z r` is within `2^{-k}/r` of `-g_{z,r}`. -/
 lemma abs_logPot_circBump_add_circLog_le {r : ℝ} (hr : 0 < r) (k : ℕ) (z x : ℂ) :
-    |logPot (circBump k z r) x + circLog z r x| ≤ (2 : ℝ)⁻¹ ^ k / r := by
-  rw [logPot_circBump]
-  have h := abs_integral_bump_circLog_sub_le hr k z x
-  rw [abs_sub_comm] at h
-  convert h using 2
-  ring
+    |logPot (circBump k z r) x + circLog z r x| ≤ (2 : ℝ)⁻¹ ^ k / r :=
+  LatticeProb.CirclePairing.abs_logPot_circBump_add_circLog_le hr k z x
 
 lemma abs_logPot_circBump_sub_le {r : ℝ} (hr : 0 < r) (k : ℕ) (z x y : ℂ) :
-    |logPot (circBump k z r) x - logPot (circBump k z r) y| ≤ ‖x - y‖ / r := by
-  have hi : ∀ u, Integrable fun t => bumpTest k 0 t * circLog z r (u - t) := fun u =>
-    ((bumpTest k 0).continuous.mul ((continuous_circLog hr.ne' z).comp
-      (continuous_const.sub continuous_id))).integrable_of_hasCompactSupport
-      (bumpTest k 0).hasCompactSupport.mul_right
-  rw [logPot_circBump, logPot_circBump, neg_sub_neg, ← integral_sub (hi y) (hi x), ← Real.norm_eq_abs]
-  have hb : ∀ t, ‖bumpTest k 0 t * circLog z r (y - t) - bumpTest k 0 t * circLog z r (x - t)‖ ≤
-      bumpTest k 0 t * (‖x - y‖ / r) := by
-    intro t
-    rw [← mul_sub, norm_mul, Real.norm_of_nonneg (bumpTest_nonneg k 0 t), Real.norm_eq_abs]
-    refine mul_le_mul_of_nonneg_left ?_ (bumpTest_nonneg k 0 t)
-    refine (abs_circLog_sub_le hr z _ _).trans (le_of_eq ?_)
-    rw [sub_sub_sub_cancel_right, norm_sub_rev]
-  refine (norm_integral_le_of_norm_le ((integrable_testC _).mul_const _) (Eventually.of_forall hb)).trans
-    (le_of_eq ?_)
-  rw [integral_mul_const, integral_bumpTest', one_mul]
+    |logPot (circBump k z r) x - logPot (circBump k z r) y| ≤ ‖x - y‖ / r :=
+  LatticeProb.CirclePairing.abs_logPot_circBump_sub_le hr k z x y
 
 lemma continuous_logPot_circBump {r : ℝ} (hr : 0 < r) (k : ℕ) (z : ℂ) :
-    Continuous (logPot (circBump k z r)) := by
-  refine LipschitzWith.continuous (K := Real.toNNReal r⁻¹) (LipschitzWith.of_dist_le_mul fun x y => ?_)
-  rw [Real.dist_eq, dist_eq_norm, Real.coe_toNNReal _ (inv_nonneg.2 hr.le), ← div_eq_inv_mul]
-  exact abs_logPot_circBump_sub_le hr k z x y
+    Continuous (logPot (circBump k z r)) :=
+  LatticeProb.CirclePairing.continuous_logPot_circBump hr k z
 
 /-- `circBump k z r` is a test function in the sense of the harmonic-balls formalization. -/
 lemma isTestFunction_circBump (k : ℕ) (z : ℂ) (r : ℝ) :
@@ -132,8 +97,7 @@ lemma integral_circBump_mul_wholePlaneCov (x : ℂ) :
 
 lemma integrable_circBump_mul_logPot (hr : 0 < r) :
     Integrable fun x => circBump k z r x * logPot (circBump k z r) x :=
-  ((circBump k z r).continuous.mul (continuous_logPot_circBump hr k z)).integrable_of_hasCompactSupport
-    (circBump k z r).hasCompactSupport.mul_right
+  LatticeProb.CirclePairing.integrable_circBump_mul_logPot hr
 
 lemma wholePlaneGFFCov_circle_pairing (hr : 0 < r) :
     HarmonicBalls.wholePlaneGFFCov (.circle r z) (.pairing (circBump k z r)) =
@@ -196,9 +160,8 @@ lemma wholePlaneGFFCov_circle_circle (hr : 0 < r) :
     rw [← dist_eq_norm, dist_comm, hx, inv_mul_cancel₀ hr.ne', Real.posLog_one, add_zero]
 
 /-- `g_{z,r} ≥ log r`. -/
-lemma log_le_circLog (hr : 0 < r) (x : ℂ) : Real.log r ≤ circLog z r x := by
-  rw [circLog_eq hr.ne']
-  exact le_add_of_nonneg_right Real.posLog_nonneg
+lemma log_le_circLog (hr : 0 < r) (x : ℂ) : Real.log r ≤ circLog z r x :=
+  LatticeProb.CirclePairing.log_le_circLog hr x
 
 end Covariance
 
