@@ -57,7 +57,7 @@ Source: the audit round 1 report (fleet notes, not in the repository), IDLA (B) 
 
 | Item | Status | Evidence (file:line) |
 |---|---|---|
-| B4: strongest counted Theorems 1.4/1.6 take paper-owned steps (`closed_1_4_derived_p2`, `closed_1_6_derived_p2`) | Pending (z5) | MatedCRT/FirstPass/Closure/AuditRewire14.lean:43 (first declaration; file untracked, nothing committed). |
+| B4: strongest counted Theorems 1.4/1.6 take paper-owned steps (`closed_1_4_derived_p2`, `closed_1_6_derived_p2`) | Fixed: fcd79e5 (z5) | MatedCRT/FirstPass/Closure/AuditRewire14.lean:53 (`closed_1_4_p3`) and :143 (`closed_1_6_p3`): the counted conclusions without the six paper-step binders, which are derived. |
 | B5: the [C16] step is hidden inside a literature bundle | Fixed: 5f3fb57, aebb815 (z9) | MatedCRT/FirstPass/SLERef/CertifiedCore.lean (`certifiedReferenceModel_of_core`); MatedCRT/FirstPass/Closure/AuditCore.lean (14 `_certCore` declarations). Residual input `BrownianOutwardExcursionAtExitStep`, MatedCRT/Steps/Sec3/ConvergenceHarmonicFunctions.lean:38: a classical Brownian exit fact sitting in Steps/; operator decision. |
 | B6: `firstPassMain_1_4` and `firstPassMain_1_6` should not be counted | Pending operator (requests 95b to 95e) | MatedCRT/FirstPass/Main.lean:46 (`firstPassMain_1_4`); audit B6 at the audit report line 163. |
 | MINOR (B) items | Pending operator (requests 95b to 95e) | Audit round 1 report, MINOR (B) section at line 233. |
@@ -100,8 +100,8 @@ Decisions:
 
 Scope: the IDLA findings of the audit round 1 report (fleet notes, not in the repository): sections A (lines 96-126), B (149-172), the IDLA email table (210-232) and the IDLA Lean minor list (242-249). Audit line numbers are in the "audit" column.
 Rule: Fixed = a commit and file:line evidence; Responded = a response line in this file that is not pending; Pending = no commit and no such response, with the owner and request id.
-Counts: Fixed 39, Responded 0, Pending 9 (total 48).
-Pending rows: B4 counted Theorems 1.4/1.6 take paper-owned steps; B6 firstPassMain_1_4 and _1_6 should not be counted; MINOR m1 hcell duplicates adjacentCellsMeetAeStep; MINOR m2 FrozenLeastSupersolutionMemCone is a paper-side transfer; MINOR m3 closed_3_1 is the weak form; MINOR m4 Lemma 7.4 has no counted theorem; CrudeUpperBoundStmt vs [C25]; MINOR m5 beta minus pinned to (2+gamma)^2/2 + 1; MINOR m6 FrozenVeryGoodAnnulusHarnackType uses "for every C_3"; MINOR m7 non-vacuity rests on IsMatingOfTreesCoupling (absent from snapshot).
+Counts: Fixed 40, Responded 0, Pending 8 (total 48).
+Pending rows: B6 firstPassMain_1_4 and _1_6 should not be counted; MINOR m1 hcell duplicates adjacentCellsMeetAeStep; MINOR m2 FrozenLeastSupersolutionMemCone is a paper-side transfer; MINOR m3 closed_3_1 is the weak form; MINOR m4 Lemma 7.4 has no counted theorem; CrudeUpperBoundStmt vs [C25]; MINOR m5 beta minus pinned to (2+gamma)^2/2 + 1; MINOR m6 FrozenVeryGoodAnnulusHarnackType uses "for every C_3"; MINOR m7 non-vacuity rests on IsMatingOfTreesCoupling (absent from snapshot).
 
 | Finding | Audit line | Status | Evidence (commit; file:line or response) |
 |---|---|---|---|
@@ -109,7 +109,7 @@ Pending rows: B4 counted Theorems 1.4/1.6 take paper-owned steps; B6 firstPassMa
 | A8 overloaded c_0 | 106 | Fixed | 1d7c3cd, 5c6854f; tex:724 (`\lambda_0 := 2/m_0`), tex:908-910 (c_{BG,0}, c_{BG,1}) |
 | A9 [C29] misattributed; Lemma 6.4 printed gap | 114 | Fixed | 1d7c3cd; tex:2808 ([C32]), tex:2809 (K with delta^{-1/2}); CORRECTIONS.md:123 |
 | A10 [C9] wrong locator | 123 | Fixed | 1d7c3cd; tex:1976 (eq:cluster-and-lambdat), tex:3898 (eq:cluster-contained-in) |
-| B4 counted Theorems 1.4/1.6 take paper-owned steps | 151 | Pending | owner z5, request "z5 B4"; FirstPass/Phase2Rewire.lean:35 (`closed_1_4_derived_p2`); FirstPass/Closure/AuditRewire14.lean (untracked, nothing committed) |
+| B4 counted Theorems 1.4/1.6 take paper-owned steps | 151 | Fixed | fcd79e5 (z5); FirstPass/Closure/AuditRewire14.lean:53 (`closed_1_4_p3`), :143 (`closed_1_6_p3`) |
 | B5 [C16] step hidden in a literature bundle | 159 | Fixed | 5f3fb57, aebb815; FirstPass/SLERef/CertifiedCore.lean:22, FirstPass/Closure/AuditCore.lean:26 (14 `_certCore` declarations; originals unchanged); residual input Steps/Sec3/ConvergenceHarmonicFunctions.lean:38 is an operator decision |
 | B6 firstPassMain_1_4 and _1_6 should not be counted | 163 | Pending | operator, requests 95b-95e; FirstPass/Main.lean:46 |
 | B7 Lemma 3.6 only half proved | 167 | Fixed | 8759946; FirstPass/Closure/Lemma36Rate.lean:39 (`closed_3_6_full`) |
