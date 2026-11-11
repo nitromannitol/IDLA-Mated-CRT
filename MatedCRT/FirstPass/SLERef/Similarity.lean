@@ -11,7 +11,7 @@ import MatedCRT.FirstPass.SLERef.Code
 and the quantum-area-parametrized curve `η`; both triples are equal in law after the similarity, and the scaling
 `η(b ·)` is taken with the quantum-area clock.
 
-Truth check (2026-11-10): UNSURE for a fixed model (see the docstring of `FPSimilarityTransferCorrected`); its universal
+Truth-checked: UNSURE for a fixed model (see the docstring of `FPSimilarityTransferCorrected`); its universal
 closure over all models is FALSE. Its external content enters only through `SLEReferenceExistsInput`
 (`MatedCRT/FirstPass/Frozen/SLERef.lean`).
 -/
@@ -29,7 +29,7 @@ the rescaled circle process, the rescaled quantum area measure and the scaled cu
 
 Independence concerns `ηL`, and the conclusion is an identity in law of the triples built from `η`.
 
-Truth check (2026-11-10). For a fixed model `𝒮` the statement is UNSURE: it is valid for a genuinely calibrated SLE model (or
+Truth-checked: for a fixed model `𝒮` the statement is UNSURE: it is valid for a genuinely calibrated SLE model (or
 a model calibrated to its normalized law), and is not automatically discharged for an arbitrary `SpaceFillingSLEModel`, since
 the unrestricted model parameter alone supplies no such fact. Its universal closure over arbitrary models is FALSE. Take an
 always-true predicate and an independent deterministic proper area-parametrized Peano curve whose negative-time trace is a
