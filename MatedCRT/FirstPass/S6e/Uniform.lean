@@ -9,7 +9,7 @@ import MatedCRT.Proofs.Sec6.ConstantOrderLowerBound.Walk
 import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 
 /-!
-# FIRST PASS: the uniform constant-order lower bound of Lemma 6.8 (task fp-S6e-lemma68-C17, bridge step 6, z9)
+# FIRST PASS: the uniform constant-order lower bound of Lemma 6.8
 
 Assembly of `UniformConstantOrderLowerBoundStmt` (`FirstPass/S6d.lean`) from
 * `Lemma68Relation.relation_of_phi` (`S6e/Relation.lean`; the instance of `constantOrderLowerBound_core`), and
@@ -18,7 +18,7 @@ Assembly of `UniformConstantOrderLowerBoundStmt` (`FirstPass/S6d.lean`) from
 Constants: `s₁` (a parameter, see `Lemma68Relation.S1CoveringSmall`; the guard still fixes `1/4`, see uniform_of_guard), `s₂ = 1/2` (independent of `s₀`), `dd` the guard's radius, `ω₀` and `(ζ, p, q⋆, q₀, R)` from the guard.
 
 Named inputs (Props below; none is proved here):
-* `GuardProbStmt 𝒮`: the guarded exit bound holds with probability tending to one (the output of z8's
+* `GuardProbStmt 𝒮`: the guarded exit bound holds with probability tending to one (the output of
   `probTendsToOne_lemma68_guarded`, whose schedule input `hsch` is not yet discharged);
 * `EscapeAeStmt 𝒮`: almost surely `η` escapes both ends (the field `eta_escapes` of `Lemma68MeasurableInputs`);
 * `FiniteExitAeStmt 𝒮`: almost surely, for every `ε > 0`, `S.mult ε ω` is locally finite with `m k (k+1) ≠ 0`.
@@ -162,7 +162,7 @@ theorem uniform_of_guard (𝒮 : SpaceFillingSLEModel) (hG : GuardProbStmt 𝒮)
   refine ⟨ω₀, hω₀, fun ρ hρ0 hρ1 => ?_⟩
   obtain ⟨R, ζ, p, qStar, q0, hR0, hRρ, hRz, hζ0, hζ1, hq00, hq01, hq0d, hq0', hq9, hp, s₁, hs₁0, hs₁1, hG2⟩ :=
     hG' ρ hρ0 hρ1
-  -- the witness `s₁` is the sparsity coefficient of the guard (CHATGPT-237 §1: `s₁ ≤ K.s1`), `s₂ = 1/2`
+  -- the witness `s₁` is the sparsity coefficient of the guard (`s₁ ≤ K.s1`), `s₂ = 1/2`
   refine ⟨s₁, 1 / 2, hs₁0, hs₁1, by norm_num, by norm_num, fun s₀ hs₀0 hs₀1 Ω _ S hS => ?_⟩
   obtain ⟨dd, hdm, hdpos, hddR, hP⟩ := hG2 s₀ hs₀0 hs₀1 Ω S hS
   refine ⟨dd, hdm, hdpos, ?_⟩

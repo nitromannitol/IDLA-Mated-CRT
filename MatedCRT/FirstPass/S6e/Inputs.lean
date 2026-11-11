@@ -2,9 +2,9 @@ import Mathlib
 import MatedCRT.Defs.Setting
 
 /-!
-# FIRST PASS: the measurable-environment hypothesis of LEMMA68 (task fp-S6e-lemma68-C17, z9)
+# FIRST PASS: the measurable-environment hypothesis of LEMMA68
 
-Source: `notes/fp-gaps/CHATGPT-z9-lemma68-B1B2.md` §1.2 (the operator's answer of 02:16 UTC). `MatedCRTEnv`
+`MatedCRTEnv`
 (`Defs/Setting.lean:105`) and `MatedCRTEnv.IsValid` (`Defs/Setting.lean:141`) carry no measurability of the
 curve `η` at rational times, of the transition weights, or of the escape of `η` from `∞`. The measurable
 realization of the SLE/LQG environment (Bou-Rabee-Gwynne §1.1.4, §2.4; Miller-Sheffield IG IV) supplies these facts.
