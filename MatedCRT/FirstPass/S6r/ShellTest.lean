@@ -1,6 +1,7 @@
 import MatedCRT.Defs.Map
 import MatedCRT.Defs.RandomWalk
 import MatedCRT.FirstPass.S6r.LocalBudget
+import MatedCRT.LPStaging.Analysis.ShellGeometry
 
 /-!
 # First-pass 6.8, redesign: the successive two-sided shell test, steps 6-9
@@ -46,22 +47,7 @@ lemma vertexPoint_mem_cell_nonneg {ε : ℝ} (hε : 0 ≤ ε) (η : ℝ → ℂ)
 /-- A preconnected set that meets `D` and misses `∂D` lies in `D` (the connectedness step behind `(7.28)`:
 a connected cell meeting the ball `B` and not its boundary sphere is wholly inside `B`). -/
 lemma subset_of_isPreconnected_of_disjoint_frontier {D S : Set ℂ} (hS : IsPreconnected S)
-    (hfr : Disjoint S (frontier D)) (hSD : (S ∩ D).Nonempty) : S ⊆ D := by
-  have hcov : S ⊆ interior D ∪ (closure D)ᶜ := by
-    intro p hp
-    by_cases hc : p ∈ closure D
-    · refine Or.inl ?_
-      by_contra hi
-      exact (Set.disjoint_left.1 hfr hp) (show p ∈ closure D \ interior D from ⟨hc, hi⟩)
-    · exact Or.inr hc
-  have hdisj : Disjoint (interior D) (closure D)ᶜ :=
-    Set.disjoint_left.2 fun p hp hp' => hp' (subset_closure (interior_subset hp))
-  obtain ⟨p, hpS, hpD⟩ := hSD
-  have hpint : p ∈ interior D := by
-    by_contra hi
-    exact (Set.disjoint_left.1 hfr hpS) (show p ∈ closure D \ interior D from ⟨subset_closure hpD, hi⟩)
-  exact (hS.subset_left_of_subset_union isOpen_interior isClosed_closure.isOpen_compl hdisj hcov
-    ⟨p, hpS, hpint⟩).trans interior_subset
+    (hfr : Disjoint S (frontier D)) (hSD : (S ∩ D).Nonempty) : S ⊆ D := LatticeProb.ShellGeometry.subset_of_isPreconnected_of_disjoint_frontier hS hfr hSD
 
 /-- Membership in the walk-side interior `I(D) = V(D) \ V(∂D)`, unfolded. -/
 lemma mem_interiorCellVertices_iff {ε : ℝ} {η : ℝ → ℂ} {D : Set ℂ} {k : ℤ} :
@@ -107,49 +93,25 @@ theorem exit_vertex_radius {ε : ℝ} {η : ℝ → ℂ} (hε : 0 ≤ ε) {h : �
 
 /-- `|f - c|` moves by at most `dist` when `f = dist(·, K)` is 1-Lipschitz. -/
 lemma abs_level_sub_le (K : Set ℂ) (r : ℝ) (u v : ℂ) :
-    |(|infDist u K - r / 2| - |infDist v K - r / 2|)| ≤ dist u v := by
-  have a1 : infDist u K ≤ infDist v K + dist u v := infDist_le_infDist_add_dist
-  have a2 : infDist v K ≤ infDist u K + dist v u := infDist_le_infDist_add_dist
-  rw [dist_comm v u] at a2
-  have h1 : |infDist u K - infDist v K| ≤ dist u v := by
-    rw [abs_sub_le_iff]
-    constructor <;> linarith
-  calc |(|infDist u K - r / 2| - |infDist v K - r / 2|)|
-      ≤ |(infDist u K - r / 2) - (infDist v K - r / 2)| := abs_abs_sub_abs_le_abs_sub _ _
-    _ = |infDist u K - infDist v K| := by congr 1; ring
-    _ ≤ dist u v := h1
+    |(|infDist u K - r / 2| - |infDist v K - r / 2|)| ≤ dist u v := LatticeProb.ShellGeometry.abs_level_sub_le K r u v
 
 /-- `(7.30)`: if `Σ(λ) = {|f - r/2| = λ}` passes within `R/50` of `z`, then on `B_{2R}(z)` the level `|f - r/2|`
 is within `3s` of `λ`. Uses `R ≤ s`. -/
 theorem level_near_centre {K : Set ℂ} {r lam s R : ℝ} {z y : ℂ} (hy : |infDist y K - r / 2| = lam)
     (hzy : dist z y ≤ R / 50) (hRs : R ≤ s) (hs : 0 < s) {u : ℂ} (hu : dist u z < 2 * R) :
-    |(|infDist u K - r / 2| - lam)| < 3 * s := by
-  subst hy
-  have h2 : dist u y ≤ dist u z + dist z y := dist_triangle u z y
-  have h3 : dist u y < 3 * s := by linarith
-  exact lt_of_le_of_lt (abs_level_sub_le K r u y) h3
+    |(|infDist u K - r / 2| - lam)| < 3 * s := LatticeProb.ShellGeometry.level_near_centre hy hzy hRs hs hu
 
 /-- `(7.31)`: a point `p` of a cell of diameter `≤ h` that contains a point `q ∈ B_{2R}(z)` has `|f - r/2|` within
 `3s + h` of `λ`. -/
 theorem cell_level_within {K : Set ℂ} {r lam s R h : ℝ} {z y : ℂ} (hy : |infDist y K - r / 2| = lam)
     (hzy : dist z y ≤ R / 50) (hRs : R ≤ s) (hs : 0 < s) {q p : ℂ} (hq : dist q z < 2 * R)
-    (hpq : dist p q ≤ h) : |(|infDist p K - r / 2| - lam)| < 3 * s + h := by
-  have A := level_near_centre hy hzy hRs hs hq
-  have B := abs_level_sub_le K r p q
-  have C := abs_sub_le (|infDist p K - r / 2|) (|infDist q K - r / 2|) lam
-  linarith [B, C, A, hpq]
+    (hpq : dist p q ≤ h) : |(|infDist p K - r / 2| - lam)| < 3 * s + h := LatticeProb.ShellGeometry.cell_level_within hy hzy hRs hs hq hpq
 
 /-- `(7.32)` with `(7.31)`: no cell meeting `B_{2R}(z)` meets the next shell `{|f - r/2| = λ + 20s}`, since
 `h ≤ s` and `20s > 3s + h`. -/
 theorem cell_misses_next_shell {K : Set ℂ} {r lam s R h : ℝ} {z y : ℂ} (hy : |infDist y K - r / 2| = lam)
     (hzy : dist z y ≤ R / 50) (hRs : R ≤ s) (hs : 0 < s) (hhs : h ≤ s) {q p : ℂ}
-    (hq : dist q z < 2 * R) (hpq : dist p q ≤ h) : |infDist p K - r / 2| ≠ lam + 20 * s := by
-  intro hp
-  have A := cell_level_within (K := K) (r := r) hy hzy hRs hs hq hpq
-  rw [hp] at A
-  have e : lam + 20 * s - lam = 20 * s := by ring
-  rw [e, abs_of_pos (by linarith : (0:ℝ) < 20 * s)] at A
-  linarith
+    (hq : dist q z < 2 * R) (hpq : dist p q ≤ h) : |infDist p K - r / 2| ≠ lam + 20 * s := LatticeProb.ShellGeometry.cell_misses_next_shell hy hzy hRs hs hhs hq hpq
 
 /-- Step 7, `(7.38)`: the local test on `D' = B_{R/4}(η(X_T))` ends before the next shell, `T_j < L_j < C_{j+1}`.
 Here `x T ∈ I(D')` (so `L ≠ T`), `D' ⊆ B_{2R}(z)`, and `hsep` is `(7.32)`. If `C_{j+1} < L_j` then `X_{C_{j+1}}`
@@ -261,16 +223,11 @@ theorem exit_cell_test_ball {ε : ℝ} {η : ℝ → ℂ} {b : ℤ} {h R : ℝ} 
 
 /-- `λ_j = 20 j s ≤ r/20` for `j ≤ N` when `N·400s ≤ r` (the shell count of step 1). -/
 theorem shell_level_le {r s : ℝ} {N j : ℕ} (hs : 0 ≤ s) (hN : (N : ℝ) * (400 * s) ≤ r) (hj : j ≤ N) :
-    20 * (j : ℝ) * s ≤ r / 20 := by
-  have hjN : (j : ℝ) ≤ N := by exact_mod_cast hj
-  have := mul_le_mul_of_nonneg_right hjN hs
-  linarith
+    20 * (j : ℝ) * s ≤ r / 20 := LatticeProb.ShellGeometry.shell_level_le hs hN hj
 
 /-- `(7.40)`: a level `x` with `|x - r/2| < λ + 4s`, `λ ≤ r/20`, `s ≤ r/4000` satisfies `0 < x < r`. -/
 theorem level_window {r s lam x : ℝ} (hlam : lam ≤ r / 20) (hs4 : s ≤ r / 4000)
-    (hx : |x - r / 2| < lam + 4 * s) : 0 < x ∧ x < r := by
-  obtain ⟨h1, h2⟩ := abs_lt.1 hx
-  constructor <;> linarith
+    (hx : |x - r / 2| < lam + 4 * s) : 0 < x ∧ x < r := LatticeProb.ShellGeometry.level_window hlam hs4 hx
 
 /-- `(7.41)`: a vertex whose cell lies in `(K + B_r) \ K` (with `K + B_r = {f < r}`, `f = dist(·, K)`) lies in
 `U = V(K+B_r) \ Θ`, when the cells of `Θ` lie in `K`. -/
@@ -298,22 +255,13 @@ theorem mem_of_lt_vExitTime {A : Set ℤ} {x : ℕ → ℤ} {k : ℕ} (h : (k : 
 
 /-- `(7.44)-(7.45)`: `r² ≤ d ≤ R ≤ s ≤ r/4000`, so `r² ≤ R < r`. -/
 theorem shell_radius_bounds {r d R s : ℝ} (hd : r ^ 2 ≤ d) (hdR : d ≤ R) (hRs : R ≤ s) (hs4 : s ≤ r / 4000)
-    (hr : 0 < r) : r ^ 2 ≤ R ∧ R ≤ s ∧ R < r :=
-  ⟨le_trans hd hdR, hRs, by linarith⟩
+    (hr : 0 < r) : r ^ 2 ≤ R ∧ R ≤ s ∧ R < r := LatticeProb.ShellGeometry.shell_radius_bounds hd hdR hRs hs4 hr
 
 /-- `(7.49)`: with `|dist x' z - 4R/3| ≤ h` and `h + e ≤ R/12`, the enlarged ball `B_{R/4+e}(x')` lies in the good
 annulus `{R < |· - z| < 2R}`. -/
 theorem enlarged_ball_in_annulus {x' z : ℂ} {R h e : ℝ} (hR : 0 < R) (hrad : |dist x' z - 4 * R / 3| ≤ h)
     (hhe : h + e ≤ R / 12) :
-    ball x' (R / 4 + e) ⊆ {p | R < dist p z ∧ dist p z < 2 * R} := by
-  intro w hw
-  have hwd := mem_ball.1 hw
-  have hab := abs_le.1 hrad
-  have t1 := dist_triangle x' w z
-  have t2 := dist_triangle w x' z
-  rw [dist_comm x' w] at t1
-  show R < dist w z ∧ dist w z < 2 * R
-  constructor <;> linarith [hab.1, hab.2]
+    ball x' (R / 4 + e) ⊆ {p | R < dist p z ∧ dist p z < 2 * R} := LatticeProb.ShellGeometry.enlarged_ball_in_annulus hR hrad hhe
 
 /-- The one-test lower bound `q(r) = q₀ / (1 + log(1/r))²` of (7.51). -/
 noncomputable def shellTestQ (q0 r : ℝ) : ℝ := q0 / (1 + Real.log (1 / r)) ^ 2
@@ -322,14 +270,7 @@ noncomputable def shellTestQ (q0 r : ℝ) : ℝ := q0 / (1 + Real.log (1 / r)) ^
 `μ(B_{c₀R}) ≥ c_v c₀^β R^β` with `4 s₁ ≤ c_v c₀^β`, the first-moment bound `ε·|A ∩ V| ≤ μ/4` holds. -/
 theorem first_moment_of_sparsity {cnt m ε s1 cv c0 β R r : ℝ} (hβ : 0 ≤ β) (hr : 0 ≤ r) (hR : 0 ≤ R)
     (hs1 : 0 ≤ s1) (hr2 : r ^ 2 ≤ R) (hcnt : ε * cnt ≤ s1 * r ^ (2 * β))
-    (hvol : cv * c0 ^ β * R ^ β ≤ m) (hcs : 4 * s1 ≤ cv * c0 ^ β) : ε * cnt ≤ m / 4 := by
-  have hpow : r ^ (2 * β) ≤ R ^ β := by
-    rw [Real.rpow_mul hr, Real.rpow_two]
-    exact Real.rpow_le_rpow (sq_nonneg r) hr2 hβ
-  have hRb : 0 ≤ R ^ β := Real.rpow_nonneg hR β
-  have h1 : s1 * r ^ (2 * β) ≤ s1 * R ^ β := mul_le_mul_of_nonneg_left hpow hs1
-  have h2 : 4 * s1 * R ^ β ≤ cv * c0 ^ β * R ^ β := mul_le_mul_of_nonneg_right hcs hRb
-  linarith
+    (hvol : cv * c0 ^ β * R ^ β ≤ m) (hcs : 4 * s1 ≤ cv * c0 ^ β) : ε * cnt ≤ m / 4 := LatticeProb.ShellGeometry.first_moment_of_sparsity hβ hr hR hs1 hr2 hcnt hvol hcs
 
 /-! ## Step 9, S5 at the shell boundary: the geometric hypotheses of the one-test bound -/
 
