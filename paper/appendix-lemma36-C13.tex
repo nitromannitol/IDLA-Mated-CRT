@@ -4,7 +4,7 @@ This appendix gives the full replacement argument for
 Lemma~\ref{lemma:convergence-of-harmonic-functions}, the convergence of
 discrete harmonic functions and the stopping-location comparison.
 
-\subsection{Definitions and defects in the printed formulation}
+\subsection{Definitions and the replacement argument}
 
 Throughout, the reference is the main text.
 Fix $\gamma\in(0,2)$, $\rho<1$, and a
@@ -39,25 +39,8 @@ For a path that starts outside $D$ we project its initial point onto
 $\overline D$; this harmless convention is irrelevant eventually for
 each fixed $y\in D$.
 
-There are three distinct issues in the printed proof of the original version.
-\begin{enumerate}[label=(\roman*)]
-\item A boundary cell need not have its representative $\eta(a)$ in
-$\overline D$. Therefore $\psi(\eta(X^\eps_{\sigma^\eps_D}))$ is
-not defined if $\psi$ is specified only on $\overline D$.
-\item The exit functional is not an everywhere-defined continuous
-functional on the printed path space. A constant path in $D$ never
-exits. Uniform convergence of paths need not preserve exit locations
-at a path that touches the boundary and returns without crossing.
-Moreover the interpolated paths in the proof live in the outer
-domain, not necessarily in $\overline D$.
-\item The walk denoted $\widehat X^{y,\eps}$ there is stopped on
-boundary \emph{cells} of $B_\rho$. In particular, for $D=B_\rho$
-it can be frozen at a representative inside $D$, so its Euclidean
-exit time can be infinite. Small cell size alone also does not
-control the excursion after first visiting a boundary cell.
-\end{enumerate}
-The last display of the printed proof additionally mixes the notation for
-LBM and the discrete walk. Both discrete expressions must use $X^{y,\eps}$.
+All discrete expressions below are written in terms of the unrestricted walk $X^{y,\eps}$,
+and paths that start outside $D$ are projected onto $\overline D$ as above.
 
 For an explicit discontinuity example, take $D=B_1(0)$ and a
 real-valued continuous path which runs from $0$ to $1$ in time
@@ -78,7 +61,7 @@ the nearest-point projection onto the closed disk.
 It is $1$-Lipschitz, so a $\chi$-H\"older constant of $\psi$ is also
 one for $\bar\psi$. The minimal path convention for the proof is to
 use the unrestricted interpolation $W^\eps$. A precise convention
-which also works for the printed outer-stopped interpolation is
+which also works for the outer-stopped interpolation is
 given in Section~\ref{sec:l36-outer}.
 
 \begin{theorem}[Lemma~\ref{lemma:convergence-of-harmonic-functions}, corrected form]\label{thm:l36-A}
@@ -347,7 +330,7 @@ In particular, choosing $a=(2+\gamma)^{-2}$ permits
 \[
  q=\frac{\chi}{2}\min\{(2+\gamma)^{-2},b_{\rm ann}(\gamma)\},
 \]
-with exactly the dependence requested in the original printed comparison.
+so that $q$ depends only on $\chi$ and $\gamma$.
 More generally, by choosing $a$ close enough to its upper
 endpoint, every
 \begin{equation}\label{eq:l36-full-q-range}
@@ -567,7 +550,7 @@ This proves Theorem~\ref{thm:l36-A}.
 
 \subsection{The actual outer-stopped interpolation}\label{sec:l36-outer}
 Here is a precise repair if one wants to retain
-$\widehat X^{y,\eps}$ from the original printed proof. For an eventually
+$\widehat X^{y,\eps}$, the walk stopped on outer boundary cells. For an eventually
 constant path $w$ which starts in $D$, set
 \[
  \Phi^\psi_{\rm stop}(w)=
@@ -589,7 +572,7 @@ Projection can only decrease the relevant distance.
 
 If $\overline D\subset B_\rho$, the outer-stopped path does exit
 $D$ on the cell-size event for small $\eps$, and this convention
-agrees with the original printed functional. Without such a separation,
+agrees with the functional $Z^\eps$ defined above. Without such a separation,
 one must supply a convention or use the unrestricted walk.
 For the proof of harmonic convergence, the unrestricted walk
 avoids any need to apply a continuity theorem to this extended
@@ -599,5 +582,4 @@ For any two fixed H\"older extensions of the same $\psi$, their
 values at a boundary-cell representative differ by $O(d^\chi)$:
 compare each to a point of $\partial D$ in that cell.
 Thus the limiting lemma is independent of the chosen extension.
-The defects above are defects of definition and proof; after
-these repairs the polynomial comparison itself is valid.
+With the conventions above, the polynomial comparison holds for the unrestricted walk.
