@@ -17,6 +17,7 @@ Scope: 80 Props in `Frozen/` and `External/`, plus two provenance rows (81, 82) 
 * Verdict mismatches: none.
 * External Props (`QuantumConeScalingInput`, `SLEScaleInvarianceInput`, `SLEReparametrizationInput`, `SLEIndepMonoInput`, `MepsScalingInput`, `DegreeBoundInput`): docstring status `none`, provenance `none`, all MATCH. No External file was edited.
 * Props with no provenance row: none.
+* Line numbers: the file:line column of FROZEN-PROVENANCE.md differs from the current declaration line for 79 of the 82 rows (it was checked at an earlier HEAD). The table gives current lines; the provenance file was not edited.
 * Wording fixed by this check (docstring only; canonical status word plus pointer to the provenance file): FrozenDiscreteHolderContinuityCorrected (docstring said UNRESOLVED); FrozenTruncatedQuenchedLawsFixedTime (docstring said UNRESOLVED); FrozenBerestyckiGwynneConeBallMass (docstring said lowercase pending).
 
 ## Table
