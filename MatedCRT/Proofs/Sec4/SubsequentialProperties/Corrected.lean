@@ -5,8 +5,8 @@ import MatedCRT.Proofs.Sec4.ObstacleSpecialization.Final
 # Lemma 4.8 from the corrected Lemma 4.4, without Lemma 4.6
 
 `subsequentialProperties_of_steps` (MatedCRT/Steps/Sec4/SubsequentialProperties.lean) passes the Draft Lemma 4.4
-(`DiscreteLaplacianBoundStmt`, false in Lean: `not_discreteLaplacianBoundStmt`, E-c1-1) and the Draft Lemma 4.6
-(`SubsequentialConvergenceStmt`, whose all-sequences event is not justified: E-x3-2) to the step
+(`DiscreteLaplacianBoundStmt`, false in Lean: `not_discreteLaplacianBoundStmt`) and the Draft Lemma 4.6
+(`SubsequentialConvergenceStmt`, whose all-sequences event is not justified) to the step
 `OdometerDistributionalLimitStep`. This file reroutes Lemma 4.8:
 
 * `OdometerDistributionalLimitCorrectedStep` is `OdometerDistributionalLimitStep` with the corrected Lemma 4.4
@@ -17,7 +17,7 @@ import MatedCRT.Proofs.Sec4.ObstacleSpecialization.Final
 * `subsequentialProperties_of_corrected`: **Lemma 4.8** from Lemmas 3.3, 3.5, 3.7 and 2.13 (Draft) and the two steps,
   with Lemma 4.3 (`discreteBasicProperties`) and the corrected Lemma 4.4 (`discreteLaplacianBoundCorrected`)
   discharged.
-* `odometerDistributionalLimitStep_of_corrected`: the corrected step implies x3's step.
+* `odometerDistributionalLimitStep_of_corrected`: the corrected step implies `OdometerDistributionalLimitStep`.
 -/
 
 namespace MatedCRT
@@ -48,7 +48,7 @@ def OdometerDistributionalLimitCorrectedStep (𝒮 : SpaceFillingSLEModel) : Pro
       Integrable f (ENNReal.ofReal (S.c₀ / 6) • S.μ ω) ∧
       ∫ x, w x * Δ f x = ∫ x, f x ∂(ENNReal.ofReal (S.c₀ / 6) • S.μ ω))
 
-/-- The corrected step implies x3's `OdometerDistributionalLimitStep` (its Lemma 4.6 and Draft 4.4 antecedents are
+/-- The corrected step implies `OdometerDistributionalLimitStep` (its Lemma 4.6 and Draft 4.4 antecedents are
 unused). -/
 theorem odometerDistributionalLimitStep_of_corrected {𝒮 : SpaceFillingSLEModel}
     (hlap : OdometerDistributionalLimitCorrectedStep 𝒮) : OdometerDistributionalLimitStep 𝒮 :=

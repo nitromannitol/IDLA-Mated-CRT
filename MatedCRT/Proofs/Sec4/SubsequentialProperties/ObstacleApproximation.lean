@@ -13,7 +13,7 @@ SubsequentialProperties.lean), Step 1 of the proof of Lemma 4.8 (paper/idla_mate
   contains `x` (`Tightness.mem_cell_vertexOf`), and from `m_ε ≥ 0` (`MatedCRTEnv.mε_nonneg`);
 * the convergence of the rescaled obstacle at each `x ∈ cl(B_ρ) \ {0}` follows from Lemma 3.3 with `y = 0`,
   `B_r(z) = B_ρ`, on the annuli `cl(B_ρ) \ B_{ρ/(j+2)}` with accuracy `1/(j+1)`. The source vertex `a^ε_0` of Lemma 3.3
-  is `0` almost surely (`MatedCRTEnv.IsValid.ae_vertexOf_zero_eq_zero`, E-x3-3). Lemma 3.3 holds in probability; a
+  is `0` almost surely (`MatedCRTEnv.IsValid.ae_vertexOf_zero_eq_zero`). Lemma 3.3 holds in probability; a
   diagonal deterministic subsequence along which the failure probabilities of the first `n` annuli are at most `2^{-n}`
   makes it hold almost surely, eventually, for every annulus (Borel-Cantelli,
   `exists_strictMono_ae_eventually_mem_all`).
