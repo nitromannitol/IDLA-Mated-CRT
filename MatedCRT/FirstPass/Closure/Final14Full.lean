@@ -9,7 +9,7 @@ import MatedCRT.FirstPass.Closure.Final23
 `closed_2_3_lit` (`MatedCRT/FirstPass/Closure/Final23.lean`). The binders of the two theorems are literature inputs:
 Frozen statements, External statements, Proposed statements, Harmonic Balls Draft statements cited in the paper, and
 the reference-model core `CertifiedReferenceModelCore`. The hypothesis `h22 : LQGMeasurePropertiesStmt` (Lemma 2.2) is
-still a binder; it is to be replaced by `closed_2_2_lit` when that closure is committed.
+discharged by `closed_2_2_lit` from `hscale`, `hBG` and the binder `hND : LQGMeasureNonDyadicDilationPart`.
 -/
 
 namespace MatedCRT
@@ -43,7 +43,6 @@ theorem closed_1_4_full
     (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion)
     (hE1 : ConeCircleLawUniqueStep)
     (hE2 : ConeReferenceExistsStep)
-    (h22 : LQGMeasurePropertiesStmt)
     (hG15 : FrozenGreenFunctionCrudeBound 𝒮)
     (h32 : ClusterOpenLaplacianStmt.{0})
     (h611 : FrozenVeryGoodAnnulusHarnackType)
@@ -60,6 +59,7 @@ theorem closed_1_4_full
     (hloc : FrozenHarmonicBallLocalSet)
     (hSC : FrozenClusterStrongCompatibility)
     (hrescale : ConeRescaledMeasureIsConeFieldInput)
+    (hND : LQGMeasureNonDyadicDilationPart)
     (hBdryHB : ClusterBoundaryMeasureZeroStmt.{0})
     (hExistHB : ExistenceHarmonicBallsStmt.{0})
     (hProp56HB : UniquenessHarmonicBallsStmt.{0})
@@ -75,13 +75,14 @@ theorem closed_1_4_full
    : ConvergenceOfIDLAStmt 𝒮 :=
   MatedCRT.closed_1_4_composed (ν := ν) (hcore := hcore) (hscale := hscale) (hsc := hsc)
     (hrp := hrp) (hind := hind) (hEnvS := hEnvS) (hBG := hBG) (h0 := h0) (h2 := h2) (hV := hV)
-    (h23 := closed_2_3_lit hBG hscale h22 hstd hGBC h32 hSup hCons hMono hCompat hBdryHB hExistHB
+    (h23 := closed_2_3_lit hBG hscale hND hstd hGBC h32 hSup hCons hMono hCompat hBdryHB hExistHB
     hThm11 hProp56HB hconf hI2HB hK hlocHB hSCHB hE hFL hE1 hE2 hU hmeasT hmin hGB hpole hrescale)
     (hdiv := hdiv) (hF3 := hF3) (hsup := hsup) (hmodel := hmodel) (hFL := hFL) (hstd := hstd)
-    (hGBC := hGBC) (hconf := hconf) (hK := hK) (hE := hE) (hE1 := hE1) (hE2 := hE2) (h22 := h22)
-    (hG15 := hG15) (h32 := h32) (h611 := h611) (h82 := h82) (hI2 := hI2) (hSup := hSup)
-    (hCons := hCons) (hMono := hMono) (hCompat := hCompat) (hBdry := hBdry) (hEx := hEx)
-    (hThm11 := hThm11) (hProp56 := hProp56) (hloc := hloc) (hSC := hSC) (hrescale := hrescale)
+    (hGBC := hGBC) (hconf := hconf) (hK := hK) (hE := hE) (hE1 := hE1) (hE2 := hE2)
+    (h22 := closed_2_2_lit hscale hBG hND) (hG15 := hG15) (h32 := h32) (h611 := h611) (h82 := h82)
+    (hI2 := hI2) (hSup := hSup) (hCons := hCons) (hMono := hMono) (hCompat := hCompat)
+    (hBdry := hBdry) (hEx := hEx) (hThm11 := hThm11) (hProp56 := hProp56) (hloc := hloc)
+    (hSC := hSC) (hrescale := hrescale)
 
 /-- **Divisible sandpile on mated-CRT maps, convergence (1.6), from literature inputs.** The conclusion is
 `ConvergenceOfDivSandpileStmt 𝒮`, as for `closed_1_6_composed`. -/
@@ -110,7 +111,6 @@ theorem closed_1_6_full
     (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion)
     (hE1 : ConeCircleLawUniqueStep)
     (hE2 : ConeReferenceExistsStep)
-    (h22 : LQGMeasurePropertiesStmt)
     (hG15 : FrozenGreenFunctionCrudeBound 𝒮)
     (h32 : ClusterOpenLaplacianStmt.{0})
     (h611 : FrozenVeryGoodAnnulusHarnackType)
@@ -127,6 +127,7 @@ theorem closed_1_6_full
     (hloc : FrozenHarmonicBallLocalSet)
     (hSC : FrozenClusterStrongCompatibility)
     (hrescale : ConeRescaledMeasureIsConeFieldInput)
+    (hND : LQGMeasureNonDyadicDilationPart)
     (hBdryHB : ClusterBoundaryMeasureZeroStmt.{0})
     (hExistHB : ExistenceHarmonicBallsStmt.{0})
     (hProp56HB : UniquenessHarmonicBallsStmt.{0})
@@ -142,12 +143,13 @@ theorem closed_1_6_full
    : ConvergenceOfDivSandpileStmt 𝒮 :=
   MatedCRT.closed_1_6_composed (ν := ν) (hcore := hcore) (hscale := hscale) (hsc := hsc)
     (hrp := hrp) (hind := hind) (hEnvS := hEnvS) (hBG := hBG) (h0 := h0) (h2 := h2) (hV := hV)
-    (h23 := closed_2_3_lit hBG hscale h22 hstd hGBC h32 hSup hCons hMono hCompat hBdryHB hExistHB
+    (h23 := closed_2_3_lit hBG hscale hND hstd hGBC h32 hSup hCons hMono hCompat hBdryHB hExistHB
     hThm11 hProp56HB hconf hI2HB hK hlocHB hSCHB hE hFL hE1 hE2 hU hmeasT hmin hGB hpole hrescale)
     (hdiv := hdiv) (hF3 := hF3) (hsup := hsup) (hmodel := hmodel) (hFL := hFL) (hstd := hstd)
-    (hGBC := hGBC) (hconf := hconf) (hK := hK) (hE := hE) (hE1 := hE1) (hE2 := hE2) (h22 := h22)
-    (hG15 := hG15) (h32 := h32) (h611 := h611) (h82 := h82) (hI2 := hI2) (hSup := hSup)
-    (hCons := hCons) (hMono := hMono) (hCompat := hCompat) (hBdry := hBdry) (hEx := hEx)
-    (hThm11 := hThm11) (hProp56 := hProp56) (hloc := hloc) (hSC := hSC) (hrescale := hrescale)
+    (hGBC := hGBC) (hconf := hconf) (hK := hK) (hE := hE) (hE1 := hE1) (hE2 := hE2)
+    (h22 := closed_2_2_lit hscale hBG hND) (hG15 := hG15) (h32 := h32) (h611 := h611) (h82 := h82)
+    (hI2 := hI2) (hSup := hSup) (hCons := hCons) (hMono := hMono) (hCompat := hCompat)
+    (hBdry := hBdry) (hEx := hEx) (hThm11 := hThm11) (hProp56 := hProp56) (hloc := hloc)
+    (hSC := hSC) (hrescale := hrescale)
 
 end MatedCRT

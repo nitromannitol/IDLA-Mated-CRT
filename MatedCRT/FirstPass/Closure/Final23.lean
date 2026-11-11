@@ -1,3 +1,4 @@
+import MatedCRT.FirstPass.Closure.Final22
 import MatedCRT.FirstPass.S1S2S8SA
 import MatedCRT.FirstPass.Phase2Rewire
 import MatedCRT.FirstPass.S5r.ClosureInside
@@ -15,6 +16,9 @@ import MatedCRT.Proofs.Sec3.ConeBallMass
 (`ConeScaleInvarianceUpToFixedTimeStmt`), Lemma 2.7 (`VolumeGrowthStmt`), the quantum cone scaling input and
 Lemma 2.2 (`LQGMeasurePropertiesStmt`). Each paper hypothesis is discharged by an existing theorem, recursively:
 
+* Lemma 2.2 from `closed_2_2_lit` (`MatedCRT/FirstPass/Closure/Final22.lean`), with the single remaining input
+  `hND : LQGMeasureNonDyadicDilationPart` (`MatedCRT/Steps/Sec2/LQGMeasureProperties.lean`).
+
 * Lemma 2.7 from the Berestycki-Gwynne cone ball mass estimate (`volumeGrowthStmt_of_berestyckiGwynne`).
 * Lemma 2.4 from the provider form of the canonical half-ball family (`coneHarmonicBallsProviderFP4_of_canonical`,
   fed by `MatedCRT.Phase2.firstPass_2_4_canonical_p2`) and the closure-inside step
@@ -25,8 +29,8 @@ Lemma 2.2 (`LQGMeasurePropertiesStmt`). Each paper hypothesis is discharged by a
 
 The binders of `closed_2_3_lit` are literature inputs only: Frozen statements (`MatedCRT/FirstPass/Frozen/*`), a
 Proposed statement (`MatedCRT/Proposed/*`, through the frozen alias `FrozenBerestyckiGwynneConeBallMass`), External
-statements, and the Draft statements of Harmonic Balls cited in the paper. The binder `h22` (Lemma 2.2) is kept until
-the corresponding closure is available.
+statements, the Draft statements of Harmonic Balls cited in the paper, and the cited non-dyadic dilation input
+`hND` of Lemma 2.2.
 -/
 
 namespace MatedCRT
@@ -34,12 +38,12 @@ open MeasureTheory Set Filter Topology Metric
 open _root_.HarmonicBalls
 
 /-- **Theorem 2.3 (cone harmonic balls) from literature inputs.** The conclusion is `ConeHarmonicBallsStmt`, as for
-`firstPass_2_3`. The hypotheses of `firstPass_2_3` other than `hscale` and `h22` are discharged by the existing
+`firstPass_2_3`. The hypotheses of `firstPass_2_3` other than `hscale` are discharged (`h22` by `closed_2_2_lit`) by the existing
 theorems listed in the module docstring; the Lemma 2.7 hypothesis is discharged from `hBG`. -/
 theorem closed_2_3_lit
     (hBG : FrozenBerestyckiGwynneConeBallMass)
     (hscale : QuantumConeScalingInput)
-    (h22 : LQGMeasurePropertiesStmt)
+    (hND : LQGMeasureNonDyadicDilationPart)
     (hstd : FrozenConeLogLocalCodeLawStd)
     (hGBC : FrozenGreenBallCentre)
     (h32 : ClusterOpenLaplacianStmt.{0})
@@ -67,6 +71,7 @@ theorem closed_2_3_lit
     (hpole : FrozenGreenDiscPole)
     (hrescale : ConeRescaledMeasureIsConeFieldInput) :
     ConeHarmonicBallsStmt := by
+  have h22 : LQGMeasurePropertiesStmt := closed_2_2_lit hscale hBG hND
   have hVG : VolumeGrowthStmt := volumeGrowthStmt_of_berestyckiGwynne hBG
   have hcan : ConeCanonicalHalfBallStep :=
     coneCanonicalHalfBallStep_of_draft hU hmeasT hstd hmin hGBC hGB hpole h32 hSup hCons hMono hCompat hBdryHB
