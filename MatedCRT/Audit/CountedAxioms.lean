@@ -18,6 +18,7 @@ import MatedCRT.FirstPass.Closure.Final23
 import MatedCRT.FirstPass.Closure.H35CorrectedRewire
 import MatedCRT.FirstPass.Closure.HLsRewire53
 import MatedCRT.FirstPass.Closure.HSCRewire
+import MatedCRT.FirstPass.Closure.LssDerived
 import MatedCRT.FirstPass.Closure.OwnBinderRewire
 import MatedCRT.FirstPass.Closure.Prop51
 import MatedCRT.FirstPass.Closure.Section2
@@ -163,3 +164,11 @@ import MatedCRT.Proofs.SecA.Statements
 #print axioms MatedCRT.FirstPass64.firstPass_6_4_uniform
 #print axioms MatedCRT.firstPass_7_1
 #print axioms MatedCRT.volumeGrowthStmt_of_berestyckiGwynne
+#print axioms MatedCRT.closed_1_4_lp_noSC_noSup
+#print axioms MatedCRT.closed_1_6_lp_noSC_noSup
+#print axioms MatedCRT.firstPassMain_1_4_full_noSup
+#print axioms MatedCRT.firstPassMain_1_6_full_noSup
+#print axioms MatedCRT.closed_6_1_lp_noSup
+#print axioms MatedCRT.closed_8_1_lp_noSup
+#print axioms MatedCRT.FirstPassClosure.closed_5_1_lp_noSup
+#print axioms MatedCRT.FirstPassClosure.closed_5_1_cellRewire_noSup
