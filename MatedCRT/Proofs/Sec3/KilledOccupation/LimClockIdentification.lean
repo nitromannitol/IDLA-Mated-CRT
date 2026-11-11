@@ -1,4 +1,5 @@
 import MatedCRT.LPStaging.Prob.CauchyInProbabilitySubseq
+import MatedCRT.Proofs.Sec3.KilledOccupation.RegClockApprox
 
 /-!
 # Identification of the limit clock: Borel-Cantelli transfer from a product measure
@@ -12,6 +13,7 @@ statement for `P`-almost every `ω` and `Q`-almost every `b`.
 
 open MeasureTheory Filter Topology Set
 open scoped ENNReal NNReal
+open _root_.HarmonicBalls MarkovProcess
 
 namespace MatedCRT.KilledOccupation
 
@@ -131,8 +133,23 @@ theorem iInf_rat_gt_ofReal_eq {F : ℝ≥0 → ℝ} (hmono : Monotone F) (hcont 
     exact ge_of_tendsto hlim (eventually_nhdsWithin_of_forall fun t ht => hgt t ht)
   · exact le_iInf fun q => ENNReal.ofReal_le_ofReal (hmono (min_le_min q.2.le le_rfl))
 
+/-- Borel-Cantelli for the clock gap (Step L6 of the limit-clock identification). Under the hypothesis `hbd` that the
+image `M` of `P ⊗ planarBrownianMotion y` under `(ω, b) ↦ (ψ ω, b)` gives the events `{ofReal ((1/2)^k) < gap k}` mass at
+most `(1/2)^k`, for `P`-almost every `ω` and `planarBrownianMotion y`-almost every `b` the clock gap at the scales
+`ε k`, `ε (k+1)` is eventually at most `(1/2)^k`. -/
+theorem ae_ae_eventually_clockGap_le {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (y : ℂ) (γ : ℝ)
+    (σ : ContinuousPath ℂ → ℝ≥0) (ε : ℕ → ℝ) (ψ : Ω → UnitDiskCircleIndex → ℝ) (hψ : Measurable ψ)
+    (hbd : ∀ k : ℕ, ((P.prod (planarBrownianMotion y)).map fun p : Ω × ContinuousPath ℂ => (ψ p.1, p.2))
+        {x | ENNReal.ofReal ((1 / 2 : ℝ) ^ k) < clockGapFun γ σ (ε k) (ε (k + 1)) x}
+          ≤ ENNReal.ofReal ((1 / 2 : ℝ) ^ k)) :
+    ∀ᵐ ω ∂P, ∀ᵐ b ∂planarBrownianMotion y, ∀ᶠ k in atTop,
+      clockGapFun γ σ (ε k) (ε (k + 1)) (ψ ω, b) ≤ ENNReal.ofReal ((1 / 2 : ℝ) ^ k) :=
+  ae_ae_eventually_le_of_map_prob_le P (planarBrownianMotion y) ψ hψ
+    (fun k => clockGapFun γ σ (ε k) (ε (k + 1))) hbd
+
 end MatedCRT.KilledOccupation
 
+#print axioms MatedCRT.KilledOccupation.ae_ae_eventually_clockGap_le
 #print axioms MatedCRT.KilledOccupation.ae_ae_eventually_le_of_map_prob_le
 #print axioms MatedCRT.KilledOccupation.iInf_rat_gt_ofReal_eq
 #print axioms MatedCRT.KilledOccupation.exists_strictMono_ae_eventually_notMem
