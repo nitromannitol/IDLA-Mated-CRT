@@ -17,7 +17,7 @@ Snapshots checked on 2026-11-11:
 Not blockers:
 - Four Bonanno mirror files are MISSING IN LP at the mirror path. None is imported by IDLA. In LP they moved to LatticeProb/Bonanno/LQGMetric/Field/ with identical declarations.
 - Seven z8Probe files are untracked and MISSING IN LP. None is imported by IDLA.
-- The 20 DIFFERS files differ only in proof text and comments. Their declaration names and types are identical.
+- The 20 DIFFERS files were synced by the content task (see the sync record in part 1): IDENTICAL after the sync.
 
 ## Method
 
@@ -48,37 +48,37 @@ Status: IDENTICAL = no differing line after import rewrite. DIFFERS = proof or c
 | 13 | Bonanno/CircleParameter | yes | none at mirror path; moved to LatticeProb/Bonanno/LQGMetric/Field/CircleParameter.lean | MISSING IN LP (moved, declarations identical) | 2 | none | MISSING |
 | 14 | Bonanno/LQGMeasureFieldMeasurable | yes | none at mirror path; moved to LatticeProb/Bonanno/LQGMetric/Field/LQGMeasureFieldMeasurable.lean | MISSING IN LP (moved, declarations identical) | 24 | none | MISSING |
 | 15 | Bonanno/WholePlaneCov | yes | none at mirror path; moved to LatticeProb/Bonanno/LQGMetric/Field/WholePlaneCov.lean | MISSING IN LP (moved, declarations identical) | 9 | none | MISSING |
-| 16 | Gauss/Brownian | yes | LatticeProb/Gauss/Brownian.lean | DIFFERS (6) | 9 | none | ok |
-| 17 | Gauss/BrownianCont | yes | LatticeProb/Gauss/BrownianCont.lean | DIFFERS (2) | 11 | none | ok |
-| 18 | Gauss/Coords | yes | LatticeProb/Gauss/Coords.lean | DIFFERS (2) | 6 | none | ok |
+| 16 | Gauss/Brownian | yes | LatticeProb/Gauss/Brownian.lean | IDENTICAL | 9 | none | ok |
+| 17 | Gauss/BrownianCont | yes | LatticeProb/Gauss/BrownianCont.lean | IDENTICAL | 11 | none | ok |
+| 18 | Gauss/Coords | yes | LatticeProb/Gauss/Coords.lean | IDENTICAL | 6 | none | ok |
 | 19 | Gauss/GaussianProcessLawExt | yes | LatticeProb/Gauss/GaussianProcessLawExt.lean | IDENTICAL | 6 | ConeMeanZeroRestrictionFinal | MISSING |
-| 20 | Gauss/Isonormal | yes | LatticeProb/Gauss/Isonormal.lean | DIFFERS (2) | 17 | none | ok |
-| 21 | Gauss/Limit | yes | LatticeProb/Gauss/Limit.lean | DIFFERS (2) | 1 | none | ok |
-| 22 | Gauss/Process | yes | LatticeProb/Gauss/Process.lean | DIFFERS (2) | 10 | none | ok |
-| 23 | Gauss/WhiteNoise | yes | LatticeProb/Gauss/WhiteNoise.lean | DIFFERS (11) | 28 | none | ok |
+| 20 | Gauss/Isonormal | yes | LatticeProb/Gauss/Isonormal.lean | IDENTICAL | 17 | none | ok |
+| 21 | Gauss/Limit | yes | LatticeProb/Gauss/Limit.lean | IDENTICAL | 1 | none | ok |
+| 22 | Gauss/Process | yes | LatticeProb/Gauss/Process.lean | IDENTICAL | 10 | none | ok |
+| 23 | Gauss/WhiteNoise | yes | LatticeProb/Gauss/WhiteNoise.lean | IDENTICAL | 28 | none | ok |
 | 24 | Prob/AeLimitLaw | yes | LatticeProb/Prob/AeLimitLaw.lean | IDENTICAL | 3 | none | MISSING |
 | 25 | Prob/AnalyticUniversalMeasurable | yes | LatticeProb/Prob/AnalyticUniversalMeasurable.lean | IDENTICAL | 5 | UniversalMeasurability | MISSING |
-| 26 | Prob/BrownianContAll | yes | LatticeProb/Prob/BrownianContAll.lean | DIFFERS (2) | 6 | none | ok |
-| 27 | Prob/BrownianExit | yes | LatticeProb/Prob/BrownianExit.lean | DIFFERS (2) | 12 | none | ok |
+| 26 | Prob/BrownianContAll | yes | LatticeProb/Prob/BrownianContAll.lean | IDENTICAL | 6 | none | ok |
+| 27 | Prob/BrownianExit | yes | LatticeProb/Prob/BrownianExit.lean | IDENTICAL | 12 | none | ok |
 | 28 | Prob/BrownianFrequentPositivity | yes | LatticeProb/Prob/BrownianFrequentPositivity.lean | IDENTICAL | 16 | none | MISSING |
-| 29 | Prob/BrownianGermZeroOne | yes | LatticeProb/Prob/BrownianGermZeroOne.lean | DIFFERS (6) | 14 | none | ok |
-| 30 | Prob/BrownianMarkov | yes | LatticeProb/Prob/BrownianMarkov.lean | DIFFERS (2) | 9 | none | ok |
-| 31 | Prob/BrownianMax | yes | LatticeProb/Prob/BrownianMax.lean | DIFFERS (18) | 9 | none | ok |
-| 32 | Prob/BrownianOpenExitFinite | yes | LatticeProb/Prob/BrownianOpenExitFinite.lean | DIFFERS (8) | 10 | none | ok |
-| 33 | Prob/BrownianOpenExitStopping | yes | LatticeProb/Prob/BrownianOpenExitStopping.lean | DIFFERS (14) | 9 | none | ok |
+| 29 | Prob/BrownianGermZeroOne | yes | LatticeProb/Prob/BrownianGermZeroOne.lean | IDENTICAL | 14 | none | ok |
+| 30 | Prob/BrownianMarkov | yes | LatticeProb/Prob/BrownianMarkov.lean | IDENTICAL | 9 | none | ok |
+| 31 | Prob/BrownianMax | yes | LatticeProb/Prob/BrownianMax.lean | IDENTICAL | 9 | none | ok |
+| 32 | Prob/BrownianOpenExitFinite | yes | LatticeProb/Prob/BrownianOpenExitFinite.lean | IDENTICAL | 10 | none | ok |
+| 33 | Prob/BrownianOpenExitStopping | yes | LatticeProb/Prob/BrownianOpenExitStopping.lean | IDENTICAL | 9 | none | ok |
 | 34 | Prob/BrownianOutwardExcursion | yes | LatticeProb/Prob/BrownianOutwardExcursion.lean | IDENTICAL | 35 | ExitRestartLimit, BrownianOutwardExcursion | MISSING |
-| 35 | Prob/BrownianPathLaw | yes | LatticeProb/Prob/BrownianPathLaw.lean | DIFFERS (2) | 3 | ExitRestartCanonical | ok |
-| 36 | Prob/BrownianStrongMarkov | yes | LatticeProb/Prob/BrownianStrongMarkov.lean | DIFFERS (2) | 12 | none | ok |
-| 37 | Prob/BrownianTail | yes | LatticeProb/Prob/BrownianTail.lean | DIFFERS (2) | 1 | none | ok |
+| 35 | Prob/BrownianPathLaw | yes | LatticeProb/Prob/BrownianPathLaw.lean | IDENTICAL | 3 | ExitRestartCanonical | ok |
+| 36 | Prob/BrownianStrongMarkov | yes | LatticeProb/Prob/BrownianStrongMarkov.lean | IDENTICAL | 12 | none | ok |
+| 37 | Prob/BrownianTail | yes | LatticeProb/Prob/BrownianTail.lean | IDENTICAL | 1 | none | ok |
 | 38 | Prob/CameronMartinEquivalence | yes | LatticeProb/Prob/CameronMartinEquivalence.lean | IDENTICAL | 2 | PairingLawIG4 | MISSING |
-| 39 | Prob/FiniteMarginal | yes | LatticeProb/Prob/FiniteMarginal.lean | DIFFERS (2) | 6 | none | ok |
+| 39 | Prob/FiniteMarginal | yes | LatticeProb/Prob/FiniteMarginal.lean | IDENTICAL | 6 | none | ok |
 | 40 | Prob/FiniteMeasureStandardBorel | yes | LatticeProb/Prob/FiniteMeasureStandardBorel.lean | IDENTICAL | 31 | FiniteMeasureStandardBorel | MISSING |
 | 41 | Prob/PlanarBrownianGermZeroOne | yes | LatticeProb/Prob/PlanarBrownianGermZeroOne.lean | IDENTICAL | 7 | BrownianOutwardExcursion | MISSING |
-| 42 | Prob/TrivialSigma | yes | LatticeProb/Prob/TrivialSigma.lean | DIFFERS (2) | 9 | none | ok |
-| 43 | Prob/TrivialSigmaJoin | yes | LatticeProb/Prob/TrivialSigmaJoin.lean | DIFFERS (2) | 9 | none | ok |
+| 42 | Prob/TrivialSigma | yes | LatticeProb/Prob/TrivialSigma.lean | IDENTICAL | 9 | none | ok |
+| 43 | Prob/TrivialSigmaJoin | yes | LatticeProb/Prob/TrivialSigmaJoin.lean | IDENTICAL | 9 | none | ok |
 | 44 | Prob/VagueLimitMeasurable | yes | LatticeProb/Prob/VagueLimitMeasurable.lean | IDENTICAL | 2 | LQGTestIntegralMeasurable | MISSING |
 
-Totals: IDENTICAL 13; DIFFERS 20 (proof or comment only, 0 structural lines); MISSING IN LP 11 (4 tracked Bonanno files moved in LP, 7 untracked probes). Total 44.
+Totals after the content sync (p2-lpstaging-sync-content): IDENTICAL 33; DIFFERS 0; MISSING IN LP 11 (4 tracked Bonanno files moved in LP, 7 untracked probes). Total 44.
 
 Probe notes: the seven z8Probe files are untracked. Analysis/z8ProbeAxioms imports Analysis/DistributionalLaplacian, which is inside LPStaging. No file outside LPStaging imports any probe.
 
@@ -134,10 +134,50 @@ Blockers (named):
 - **B2** LP 8354077 is not on a remote-tracking ref of the LP clone (origin git@github.com:nitromannitol/Lattice-Probability.git). Fix: operator pushes idla/phase2 (or another revision with the modules) before the pin moves.
 - **B3** Content of the bump is unverified: 139 commits between 3912597 and 8354077. Fix: an IDLA build after the bump (operator).
 
-Not blockers: the 4 Bonanno files and the 7 probes (no importer); the 20 DIFFERS files (proof or comment text only, declaration names and types identical; a rebuild after the switch confirms it).
+Not blockers: the 4 Bonanno files and the 7 probes (no importer). The former DIFFERS files are now IDENTICAL (content sync, part 5).
 
 ## 4. Flags
 
 - The 7 z8Probe files in MatedCRT/LPStaging/Analysis are untracked working-tree files (about 78 declarations in total). They are not imported. Any removal of the LPStaging directory would delete them, and the operator should decide that. Not deleted here.
 - scratch-z11/AxAL.lean mentions LPStaging. It is outside the MatedCRT library root and was not examined further.
 - The LP worktree carries an untracked LatticeProbAudit/IDLAMirrorCheck.lean. It is outside LatticeProb/ and was not read.
+
+## 5. Content sync (p2-lpstaging-sync-content)
+
+Rule: for each of the 20 DIFFERS files, the copy with the later last commit on its side is canonical; the other side takes its content, with only the import module paths differing. Declaration names and statements were not changed (checked before the sync: names and header text identical in all 20).
+
+- IDLA-canonical (later commit on the IDLA side): Gauss/Brownian, Gauss/WhiteNoise, Prob/BrownianExit, Prob/BrownianGermZeroOne, Prob/BrownianMax, Prob/BrownianOpenExitFinite, Prob/BrownianOpenExitStopping, Prob/TrivialSigmaJoin.
+- LP-canonical (later commit on the LP side): Gauss/BrownianCont, Gauss/Coords, Gauss/Isonormal, Gauss/Limit, Gauss/Process, Prob/BrownianContAll, Prob/BrownianMarkov, Prob/BrownianPathLaw, Prob/BrownianStrongMarkov, Prob/BrownianTail, Prob/FiniteMarginal, Prob/TrivialSigma.
+- Proof-text differences (LP side takes the IDLA version, LP commit 0a02cd6): Gauss/Brownian, Gauss/WhiteNoise, Prob/BrownianGermZeroOne, Prob/BrownianMax, Prob/BrownianOpenExitFinite, Prob/BrownianOpenExitStopping. The LP version used Mathlib spellings `mem_setOf_eq`, `have`, `let`, `split_ifs`; the mirror used `mem_ofPred_eq`, `haveI`, `letI`, `dif_pos`. Both compile in the same Mathlib.
+- Provenance-only differences (the "Port of LatticeProb.X (Lattice-Probability 3912597) to Mathlib v4.35.0-rc2" line, with its blank separator, removed from the IDLA copy): the 14 remaining files. Reason: the line is development metacommentary about the port, and it is self-referential inside the LP repository. The "Source: BouRabeeGwynne/..." lines are kept on both sides (provenance of the source file, identical on both sides before the sync).
+
+Verification:
+- lc strict (warnings as errors) OK on all 20 IDLA copies.
+- lb OK (IDLA commit ab755b1c): the 20 modules and MatedCRT.FirstPass.LPBridge.ExitRestartCanonical.
+- LP lake build OK for the six changed modules (LP commit 0a02cd6; build log /tmp/z12w/lp-build.log on the sandbox, rc 0).
+- Normalized hash (import prefix rewritten to LatticeProb) equals the LP file hash for all 20 files.
+
+| file | IDLA raw sha256 (12) | common content sha256 (12) | LP sha256 (12) |
+|---|---|---|---|
+| Gauss/Brownian | 9033a185defc | 449bd11d2842 | 449bd11d2842 |
+| Gauss/BrownianCont | 86a41e8e439e | f81166816e53 | f81166816e53 |
+| Gauss/Coords | 05ac46ef8cde | 0584372f7113 | 0584372f7113 |
+| Gauss/Isonormal | 05c37094b61c | b88c6422ff9c | b88c6422ff9c |
+| Gauss/Limit | b8fea98a59ce | b8fea98a59ce | b8fea98a59ce |
+| Gauss/Process | 60ad5e05d493 | 07f9a1f88be8 | 07f9a1f88be8 |
+| Gauss/WhiteNoise | 90a75541c24d | 57d65ea0c19f | 57d65ea0c19f |
+| Prob/BrownianContAll | b8559836c377 | a32ac6cedefa | a32ac6cedefa |
+| Prob/BrownianExit | ba4c925e772b | d5d173fbe5ed | d5d173fbe5ed |
+| Prob/BrownianGermZeroOne | 491c880cb850 | 6ee3ee5da112 | 6ee3ee5da112 |
+| Prob/BrownianMarkov | 94bacb3c2a1e | 6ec1606577a0 | 6ec1606577a0 |
+| Prob/BrownianMax | ea13ba418799 | 8015d66481a5 | 8015d66481a5 |
+| Prob/BrownianOpenExitFinite | bf5d2ba12019 | f4147fa40693 | f4147fa40693 |
+| Prob/BrownianOpenExitStopping | adc68301fef9 | a1eb374056a8 | a1eb374056a8 |
+| Prob/BrownianPathLaw | 33a1dba695d9 | e521f4f90bee | e521f4f90bee |
+| Prob/BrownianStrongMarkov | 1e59995ff24c | f71d762edbe4 | f71d762edbe4 |
+| Prob/BrownianTail | a55e038350b7 | a55e038350b7 | a55e038350b7 |
+| Prob/FiniteMarginal | 12e4cdad96ca | 12e4cdad96ca | 12e4cdad96ca |
+| Prob/TrivialSigma | 43681e5adf5b | 43681e5adf5b | 43681e5adf5b |
+| Prob/TrivialSigmaJoin | c07522371523 | ca7de2069b19 | ca7de2069b19 |
+
+Commits: IDLA ab755b1c (20 LPStaging files); LP idla/phase2 0a02cd6 (6 LatticeProb files). Counts after the sync: IDENTICAL 33, DIFFERS 0, MISSING IN LP 11. Blockers B1-B3 of part 3 are unchanged: the pin is not moved by this task.
