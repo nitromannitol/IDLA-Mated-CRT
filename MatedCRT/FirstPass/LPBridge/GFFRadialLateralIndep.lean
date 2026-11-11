@@ -104,3 +104,59 @@ lemma integral_circle_mul_circle_centred (h : IsWholePlaneGFF P hC hcirc) [IsPro
       ∫ ω, hcirc ω s 0 * hcirc ω t 0 ∂P :=
     covariance_eq_integral_of_mean_zero hYc (hY.integrable one_le_two) (hX.integrable_mul hY)
   rw [← hcov, covariance_symm', covariance_radial_radial h ht hs]
+
+lemma radialPoint_fst_of_ne {x : ℂ} (hx : x ≠ 0) : ((radialPoint x).1 : ℝ) = ‖x‖ := by
+  simp [MatedCRT.WholePlaneGFFLateral.radialPoint, hx]
+
+lemma radialPoint_snd (x : ℂ) : (radialPoint x).2 = 0 := rfl
+
+/-- Pointwise covariance of a radial circle average with the radial part at `x ≠ 0`. -/
+lemma integral_mul_radialPoint (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    {F : Ω → C(CircleParameter, ℝ)}
+    (hFae : ∀ᵐ ω ∂P, ∀ p : CircleParameter, F ω p = hcirc ω (p.1 : ℝ) p.2)
+    {x : ℂ} (hx : x ≠ 0) {s : ℝ} (hs : 0 < s) :
+    ∫ ω, hcirc ω s 0 * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x) ∂P = cW x s := by
+  have hae : (fun ω => hcirc ω s 0 * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) =ᵐ[P]
+      (fun ω => hcirc ω s 0 * hcirc ω ‖x‖ 0) := by
+    filter_upwards [hFae] with ω hω
+    rw [hω (MatedCRT.WholePlaneGFFLateral.radialPoint x), radialPoint_fst_of_ne hx, radialPoint_snd]
+  have hpos : 0 < ‖x‖ := norm_pos_iff.2 hx
+  rw [integral_congr_ae hae, integral_circle_mul_circle_centred h hpos hs,
+    circleAverage_cW_sphere hpos x s rfl]
+
+/-- Fubini for the radial pairing: `E[h_s(0) ∫ φ(x) h_{|x|}(0) dx] = ∫ φ(x) cW x s dx`. -/
+lemma integral_circle_mul_radialIntegral (h : IsWholePlaneGFF P hC hcirc) [IsProbabilityMeasure P]
+    {F : Ω → C(CircleParameter, ℝ)} (hF : Measurable F)
+    (hFae : ∀ᵐ ω ∂P, ∀ p : CircleParameter, F ω p = hcirc ω (p.1 : ℝ) p.2)
+    {φ : ℂ → ℝ} (hφ : IsTestFunction Set.univ φ) {s : ℝ} (hs : 0 < s) :
+    ∫ ω, hcirc ω s 0 * (∫ x, φ x * hcirc ω ‖x‖ 0) ∂P = ∫ x, φ x * cW x s := by
+  have hZm : Measurable (fun ω => hcirc ω s 0) := h.measurable_circle s 0 hs
+  have hZ : MemLp (fun ω => hcirc ω s 0) 2 P := memLp_two_circle h hs 0
+  have hint := MatedCRT.WholePlaneGFFLateral.integrable_radial_mul h hF hFae hφ hZm hZ rfl
+  have step1 : (fun ω => hcirc ω s 0 * ∫ x, φ x * hcirc ω ‖x‖ 0) =ᵐ[P]
+      (fun ω => hcirc ω s 0 * ∫ x, φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) := by
+    filter_upwards [MatedCRT.WholePlaneGFFLateral.ae_radialIntegral_eq hFae φ] with ω hω
+    rw [hω]
+  rw [integral_congr_ae step1]
+  have hI : Integrable (Function.uncurry fun (ω : Ω) (x : ℂ) =>
+      hcirc ω s 0 * (φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x))) (P.prod volume) := by
+    refine hint.congr (ae_of_all _ fun q => ?_)
+    simp only [Function.uncurry]
+    ring
+  have hconst : ∀ ω, hcirc ω s 0 * ∫ x, φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x) =
+      ∫ x, hcirc ω s 0 * (φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) := fun ω =>
+    (integral_const_mul _ _).symm
+  simp_rw [hconst]
+  rw [integral_integral_swap hI]
+  have hae0 : ({(0 : ℂ)}ᶜ : Set ℂ) ∈ ae (volume : Measure ℂ) := compl_mem_ae_iff.2 (measure_singleton 0)
+  refine integral_congr_ae ?_
+  filter_upwards [hae0] with x hx
+  have hx0 : x ≠ 0 := Set.mem_compl_singleton_iff.1 hx
+  have hmul : ∀ ω, hcirc ω s 0 * (φ x * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) =
+      φ x * (hcirc ω s 0 * F ω (MatedCRT.WholePlaneGFFLateral.radialPoint x)) := fun ω => by ring
+  simp_rw [hmul]
+  rw [integral_const_mul, integral_mul_radialPoint h hFae hx0 hs]
+
+end
+
+end MatedCRT.ConeMeanZeroRestriction
