@@ -187,3 +187,4 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/Proofs/Sec7/DivSandpileUpperBound/ShellIterationOfScaling.lean | archive/MatedCRT/Proofs/Sec7/DivSandpileUpperBound/ShellIterationOfScaling.lean | B53 |
 | MatedCRT/Proofs/Sec7/DivSandpileUpperBound/ShiftedBootstrap.lean | archive/MatedCRT/Proofs/Sec7/DivSandpileUpperBound/ShiftedBootstrap.lean | B53 |
 | MatedCRT/Proofs/Sec7/DivSandpileUpperBound/TotalBudgetLimit.lean | archive/MatedCRT/Proofs/Sec7/DivSandpileUpperBound/TotalBudgetLimit.lean | B53 |
+| MatedCRT/Proposed/Berestycki2017.lean | archive/MatedCRT/Proposed/Berestycki2017.lean | B55 |
