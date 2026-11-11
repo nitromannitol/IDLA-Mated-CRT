@@ -150,7 +150,7 @@ Paper-owned steps, bound by the counted theorem listed. Not literature citations
 | #65 FrozenExistenceHarmonicBalls (1.4,1.6) | #26 | MatedCRT/FirstPass/Frozen/S5Cited.lean:87 | row 17, exact to firstPass_5_5 (S5S7S8.lean:161) |
 | #66 FrozenUniquenessHarmonicBalls (1.4,1.6) | #28 | MatedCRT/FirstPass/Frozen/S5Cited.lean:93 | row 19, exact to firstPass_5_6 (S5S7S8.lean:173) |
 | #67 FrozenHarmonicBallLocalSet (1.4,1.6) | #31 | MatedCRT/FirstPass/Frozen/S5Cited.lean:100 | row 20, exact to firstPass_1_3 (S1S10.lean:53) |
-| #68 FrozenClusterStrongCompatibility (1.4,1.6) | #32 | MatedCRT/FirstPass/Frozen/S5Cited.lean:107 | row 21, exact to firstPass_5_8 (S5S7S8.lean:195) |
+| #68 FrozenClusterStrongCompatibility (1.4,1.6) | #32 | MatedCRT/FirstPass/Frozen/S5Cited.lean:74 | row 21, exact to firstPass_5_8 (S5S7S8.lean:195) |
 
 Merged "used by" of the content rows: #25, #26, #28, #31, #32 each take 4.2,1.4,1.6,2.4,2.5,2.6 (6); #30 takes 4.2,1.4,1.6,2.4,2.5,2.6 (6).
 
@@ -170,10 +170,10 @@ Merged "used by" of the content rows: #25, #26, #28, #31, #32 each take 4.2,1.4,
 | FPWholePlaneLQGCoordinateChange (#47) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | not started | LatticeProb/LQG/CoordinateChange.lean |
 | FPWholePlaneUpperVolumeTail (#48) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | not started | LatticeProb/LQG/UpperVolumeTail.lean |
 | FPConeMeanZeroRestriction (#49) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | not started | LatticeProb/Gauss/MeanZeroCircleRestriction.lean |
-| FrozenLQGMeasureFieldMeasurable (#54) | 1.4,1.6 (2) | TRUE (frozen-truth-2030.md) | not started | LatticeProb/LQG/MeasureFieldMeasurable.lean |
+| FrozenLQGMeasureFieldMeasurable (#54) | 1.4,1.6 (2) | TRUE (frozen-truth-2030.md) | discharged in-repo (FirstPass/LPBridge/InRepoProofs.lean:35, frozenLQGMeasureFieldMeasurable_holds) | LatticeProb/LQG/MeasureFieldMeasurable.lean |
 | FrozenFiniteMeasureDiskStandardBorel (#55) | 1.4,1.6 (2) | TRUE (z10-S5k-frozen.md) | not started | LatticeProb/Prob/FiniteMeasureStandardBorel.lean |
 | FPWholePlaneLQGModel (#57) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | not started | LatticeProb/LQG/WholePlaneModel.lean |
-| FPLQGMeasureLocality (#58) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | not started | LatticeProb/LQG/MeasureLocality.lean |
+| FPLQGMeasureLocality (#58) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | discharged in-repo (FirstPass/LPBridge/InRepoProofs.lean:45, fpLQGMeasureLocality_holds) | LatticeProb/LQG/MeasureLocality.lean |
 | FPPairingLawIG4 (#59) | 1.4,1.6 (2) | TRUE (TRUTH-CHECK-2.md) | not started | LatticeProb/Prob/CameronMartinEquivalence.lean |
 
 (B) = in progress elsewhere (lead note 22:52). Staging: MatedCRT/LPStaging/ until the LP branch exists. The LP area LatticeProb/LQG/ does not exist yet; the lead approved it (decision 1).
