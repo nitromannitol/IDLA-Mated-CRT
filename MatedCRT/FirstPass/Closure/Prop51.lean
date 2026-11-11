@@ -21,7 +21,7 @@ Kept as explicit hypotheses:
 * FIRST-PASS FROZEN inputs (`Frozen/`), `hcell : FrozenAdjacentCellsMeetAe 𝒮` is the input of `closed_2_13`;
 * the two TRUE steps `hE1`, `hE2`;
 * `hscale` (External, `QuantumConeScalingInput`);
-* GAPS, not discharged here (every one is a real gap; see the report):
+* GAPS, not discharged here (every one is a real gap):
   - `h27 : VolumeGrowthStmt`: provider `volumeGrowthStmt_of_berestyckiGwynne` needs `BerestyckiGwynneConeBallMassStmt`
     (`MatedCRT/Proposed/BerestyckiGwynne.lean:23`, Proposed, not External);
   - `h22 : LQGMeasurePropertiesStmt`: provider `lqgMeasureProperties_of_volumeGrowth` needs `h27` and the Steps
