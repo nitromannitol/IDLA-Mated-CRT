@@ -8,11 +8,9 @@ interval `Iic t`, and `a ↦ κ a (Iic t)` is measurable for every `t`. Then `a 
 measurable for every Borel set `S`, and `a ↦ ∫⁻ u, F (a, u) ∂(κ a)` is measurable for every
 jointly measurable `F : α × ℝ≥0 → ℝ≥0∞`.
 
-This is the measurability of kernel integrals: a family of measures on a standard Borel space
-which is measurable on a generating π-system of finite-mass sets is a measurable kernel, and its
-integrals of jointly measurable functions are measurable (textbook locator: Kallenberg,
-*Foundations of Modern Probability*, 2nd ed., the section on measurable kernels in Chapter 1;
-to be confirmed against the book). The Mathlib analogue is
+This is the measurability of kernel integrals: a family of measures on `ℝ≥0` which is measurable
+on the generating π-system of intervals `Iic t` is a measurable kernel, and its integrals of
+jointly measurable functions are measurable. The Mathlib analogue is
 `Measurable.lintegral_kernel_prod_right` (`Mathlib/Probability/Kernel/MeasurableLIntegral.lean`),
 which assumes s-finiteness of the kernel. Here the family is only finite at each point: the
 restrictions `(κ a).restrict (Iic n)` are finite for every `a`, which is all that Dynkin's
