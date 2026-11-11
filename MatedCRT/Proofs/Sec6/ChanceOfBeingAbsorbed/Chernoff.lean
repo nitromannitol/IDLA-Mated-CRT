@@ -383,7 +383,7 @@ theorem absorptionChernoffStep : AbsorptionChernoffStep := by
 
 end Absorption
 
-/-- **Lemma 6.9** (local-rate reading, ESCALATION E-c5-1) from Lemma 6.7. -/
+/-- **Lemma 6.9** (local-rate reading) from Lemma 6.7. -/
 theorem chanceOfBeingAbsorbedLocalRate (𝒮 : SpaceFillingSLEModel) (h67 : ConstantOrderLowerBoundStmt 𝒮) :
     ChanceOfBeingAbsorbedLocalRateStmt 𝒮 :=
   chanceOfBeingAbsorbedLocalRate_of_steps 𝒮 h67 Absorption.absorptionChernoffStep

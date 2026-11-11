@@ -9,7 +9,7 @@ diameter at most `𝐜₀R/100`, `B_{R/4 + R/100}(y)` lies in the annulus `𝔸_
 * `V^ε(B_{𝐜₀R}(y)) ⊆ W` and `G_W(b, b') ≥ 1/2` there (Lemma 2.16, eq:choice-of-constant-annulus);
 * `|V^ε(B_{𝐜₀R}(y))| ≥ ε⁻¹ M - ε^{-1+α}` with `M = μ_h(B_{𝐜₀R}(y))` (Lemma 2.9, `f ≡ 1`);
 * `M ≥ δ₂^{β⁻}` for a dyadic `δ₂ ∈ (𝐜₀R/2, 𝐜₀R]` (Lemma 2.7), which absorbs `ε^α` and `s₁ r^{2β⁻}`
-  (eq:use-of-assumption-on-omega, with `R ≥ r²/128`);
+  (with `R ≥ r²/128`);
 * `E[τ_W²] ≤ 2 C₁² (1 + log (4/R))² C² ε⁻² M²` (Step 4, route (b): `LogLossAt`, `exitTimeLogLoss_le` and the good
   annulus event);
 and `stay_le_at_vertex` with `1 + log (4/R) ≤ 9 (1 + |log r|)` gives the bound `1 - s₂ (1 + |log r|)⁻²`.

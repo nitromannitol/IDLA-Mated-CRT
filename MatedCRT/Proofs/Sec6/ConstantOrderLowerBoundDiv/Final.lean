@@ -26,10 +26,10 @@ used. The hypotheses, in this order:
 * cited (Draft statements of results the paper quotes): Lemma 2.16 `GreenKernelLowerBoundStmt`, Lemma 2.7
   `VolumeGrowthStmt`, Lemma 2.8 `CellSizeEstimateStmt`, Lemma 2.9 `CountingMeasureConvergenceStmt`, Lemma 2.18
   `ExitTimeUpperBoundStmt` (all five for each result here);
-* open steps of Lemmas 6.4 and 6.5 (owner c4; `goodAnnulusPrevalence_final`): `WholePlaneLQGExistenceStep`,
+* open steps of Lemmas 6.4 and 6.5 (`goodAnnulusPrevalence_final`): `WholePlaneLQGExistenceStep`,
   `ConeWholePlaneWeylComparisonStep`, `WholePlaneLQGCoordinateChangeStep`, `WholePlaneUpperVolumeTailStep`,
   `ConeMeanZeroRestrictionStep`, `CircleAverageModConstStep`;
-* open step of Lemma 6.8 (b) (owner c4, `MatedCRT/Proofs/Measurability/GoodScale.lean`):
+* open step of Lemma 6.8 (b) (`MatedCRT/Proofs/Measurability/GoodScale.lean`):
   `LQGMeasureFieldMeasurableStep` (eq:measure-lim, line 470).
 
 Lemmas 6.7 (b), 6.9 (b) and 6.10 add no hypothesis to those of Lemma 6.8 (b): their remaining inputs (Lemma 2.19,
@@ -88,8 +88,7 @@ theorem constantOrderLowerBoundLog_final (𝒮 : SpaceFillingSLEModel)
     (constantOrderLowerBoundDivLog_final 𝒮 h216 h27 h28 h29 h218 h0 h1 h2 hV hR hD hμ) h27 h28
     (expectedExitTimeExplicitBound_of_steps (boundedExitTimeRV_of_steps h27) h218) (adjacentCellsMeetAeStep 𝒮)
 
-/-- **Lemma 6.9, route (b) of E-A10, final form** (lemma:chance-of-being-absorbed, line 2643, with `s₃` chosen after `s₀`,
-E-c5-1), with the hypotheses of `constantOrderLowerBoundDivLog_final`, through Lemma 6.7 (b). -/
+/-- **Lemma 6.9, route (b), final form** (lemma:chance-of-being-absorbed, with `s₃` chosen after `s₀`), with the hypotheses of `constantOrderLowerBoundDivLog_final`, through Lemma 6.7 (b). -/
 theorem chanceOfBeingAbsorbedLogLoss_final (𝒮 : SpaceFillingSLEModel)
     (h216 : GreenKernelLowerBoundStmt 𝒮) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
     (h29 : CountingMeasureConvergenceStmt 𝒮) (h218 : ExitTimeUpperBoundStmt 𝒮)

@@ -4,7 +4,7 @@ import MatedCRT.Steps.Sec6.ConstantOrderLowerBoundDiv
 # Lemma 6.8: geometry of the cover by good annuli (lines 2509-2524, with the scale fix of E-A10 for line 2506)
 
 * `exists_half_pow_mem`: dyadic scales `2^{-n} ∈ (x/2, x]` (the choice of `δ` with `√δ ∈ (r/(8√2), r/8]`).
-* `exists_grid_near`: every point is within `δ/100` of the grid `(δ/100) ℤ²` (the centre `z` of eq:cover-continuous).
+* `exists_grid_near`: every point is within `δ/100` of the grid `(δ/100) ℤ²` (the centre `z`).
 * The safe region: if `p ∈ ∂(Θ̄ + B_{r/2})` then `dist(p, Θ̄) = r/2`, so every `w` with `|w - p| < 3r/8` lies in
   `(Θ̄ + B_r) \ cl Θ̄` at distance more than `r/8` from `∂(Θ̄ + B_r)`. The balls of Steps 1-4 (`B_{(4/3)𝐫_z}(z)`,
   `B_{𝐫_z/4}(η(b))` and its `ε^α`-neighbourhood, `B_{2𝐫_z}(z)`) all lie in this region.

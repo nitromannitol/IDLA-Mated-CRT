@@ -9,7 +9,7 @@ The proof of Lemma 6.9 (lines 2637-2666) applies Lemma 6.7 at one radius `r` and
 (`AbsorptionChernoffStep`, proved as `Absorption.absorptionChernoffStep`), which holds for every absorption
 probability `s₂ ∈ (0, 1)`. With Lemma 6.7 in its route (b) form (absorption probability `s₂ / (1 + |log r|)²`), it
 gives the rates `s₃ = s₄ = (s₂ / 4) / (1 + |log r|)²`, i.e. `ChanceOfBeingAbsorbedLogLossStmt` (the form of Lemma 6.9
-used by Lemma 6.10, with `s₃` chosen after `s₀`, ESCALATION E-c5-1).
+used by Lemma 6.10, with `s₃` chosen after `s₀`).
 -/
 
 namespace MatedCRT

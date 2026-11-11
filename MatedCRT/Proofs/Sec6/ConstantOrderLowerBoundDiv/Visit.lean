@@ -16,7 +16,7 @@ open scoped ENNReal
 namespace ConstantOrderDiv
 
 open Classical in
-/-- `n < τ_W(y)` iff `y` stays in `W` up to time `n` (as in worker c5's `ConstantOrder.lt_vExitTime_iff`). -/
+/-- `n < τ_W(y)` iff `y` stays in `W` up to time `n` (as in `ConstantOrder.lt_vExitTime_iff`). -/
 theorem lt_vExitTime_iff' {W : Set ℤ} {y : ℕ → ℤ} {i : ℕ} :
     (i : ℕ∞) < vExitTime W y ↔ ∀ j ≤ i, y j ∈ W := by
   unfold vExitTime

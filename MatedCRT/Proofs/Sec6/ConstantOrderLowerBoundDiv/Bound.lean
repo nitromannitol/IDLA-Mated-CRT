@@ -4,7 +4,7 @@ import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.AtAnnulus
 # Lemma 6.8: the bound at a vertex `b ∈ V^ε(∂B_{(4/3)𝐫_z}(z)) ∩ A` (Steps 2-4, lines 2537-2620)
 
 * `stay_le_at_vertex`: Step 3 (the count `|V^ε(B_{𝐜₀𝐫_z}(η(b))) \ A| ≥ ε⁻¹ μ_h(B_{𝐜₀𝐫_z}(η(b)))/2`, from Lemma 2.9 and
-  the assumption on `A`, eq:use-of-assumption-on-omega) and Step 4 (`E[τ²] ≤ K ε⁻² μ_h(B_{𝐜₀𝐫_z}(η(b)))²`) give
+  the assumption on `A`) and Step 4 (`E[τ²] ≤ K ε⁻² μ_h(B_{𝐜₀𝐫_z}(η(b)))²`) give
   `P[the walk from b stays in A until it exits U] ≤ 1 - 1/(16 K)`.
 * `exitTimeMoment_le_of_logLoss`: Step 4, route (b): `ExitTimeLogLossStep` with `N = 2` and
   `Q ≤ (1 + log (4/𝐫_z)) C μ_h(B_{𝐜₀𝐫_z}(η(b)))` give `K = 2 C₁² (1 + log (4/𝐫_z))² C²`.

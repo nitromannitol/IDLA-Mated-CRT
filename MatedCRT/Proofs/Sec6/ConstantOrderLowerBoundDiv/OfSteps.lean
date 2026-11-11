@@ -19,7 +19,7 @@ import MatedCRT.Proofs.Measurability.GoodScale
   the almost-sure `GoodScaleEventMeasurableAEStep` for the `σ(h)`-measurability of `𝛅`: the `σ(h)`-measurable
   approximations are contained in the good-scale events outside one null set), the events of Lemmas 2.8, 2.9, 2.16,
   2.18 at `ε`,
-  the finiteness of `V^ε(B_ρ)` and the exit of the walk (worker c5's `cellVerticesBallFiniteStep`, `walkExitsStep`),
+  the finiteness of `V^ε(B_ρ)` and the exit of the walk (`cellVerticesBallFiniteStep`, `walkExitsStep`),
   and the deterministic smallness of `ε` (line 2506: "`ε < 𝛑`").
 Constants: `𝐜₀ = e^{-3C₂/2}/12` (eq:choice-of-constant-annulus, `C₂` of Lemma 2.16), `s₁ = (𝐜₀/256)^{β⁻}/4`,
 `s₂ = 1/2 ∧ (2592 C₁² C²)⁻¹` (`C₁` of Lemma 2.18, `C` of Lemma 6.4), `ω₀ = (κ ∧ ω ∧ α₁ ∧ α₉)/(4β⁻)` with

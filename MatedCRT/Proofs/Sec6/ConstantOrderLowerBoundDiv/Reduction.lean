@@ -20,7 +20,7 @@ open scoped ENNReal
 
 namespace ConstantOrderDiv
 
-/-- A preconnected set meeting the open set `O` and its complement meets `∂O` (as in worker c5's
+/-- A preconnected set meeting the open set `O` and its complement meets `∂O` (as in
 `ConstantOrder.IsPreconnected.inter_frontier_nonempty_of_isOpen`). -/
 theorem preconnected_inter_frontier_nonempty {α : Type*} [TopologicalSpace α] {s O : Set α}
     (hs : IsPreconnected s) (hO : IsOpen O) (h1 : (s ∩ O).Nonempty) (h2 : (s \ O).Nonempty) :

@@ -1,7 +1,7 @@
 import MatedCRT.Steps.Sec6.ConstantOrderLowerBoundDiv
 
 /-!
-# Lemma 6.8, Step 4 at a good annulus, route (b) (lines 2612-2620; ESCALATIONS E-A10 "(b) STEP 4 PROOF")
+# Lemma 6.8, Step 4 at a good annulus, route (b)
 
 `ExitTimeLogLossStep` bounds the second moment of the exit time from `B' = B_{s}(y)`, `s = 𝐫_z/4`, by
 `Q² = (sup_{v ∈ B'} ∫_{B_{ε^α}(B')} (log (s/|u - v|) + 1) dμ_h(u) + log (1/s) μ_h(B_{ε^α}(B')))²`. When `B'` and its
