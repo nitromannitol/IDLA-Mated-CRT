@@ -120,3 +120,4 @@ Notes:
 - MatedCRT/Defs/Setting.lean:171 (docstring of `MatedCRTEnv.mult`): removed "operator decision (L1)", "line 207" and "INPUT-REQUESTS IR-A2".
 - MatedCRT/Draft/Section1.lean:23: removed the pointer "Defs/Setting.lean:216-218", "review-S (S5)" and the note that the S5 bridge item was cancelled by the operator (21:32 UTC); the claim that the statements quantify over the joint law is kept.
 - MatedCRT/Draft/Section4.lean:10-11: removed the pointer "MatedCRT/Defs/Sandpile.lean" and "operator decision (L1)".
+- MatedCRT/Proofs/Sec4/ObstacleSpecialization.lean:89-90 (docstring of `etaProperStep_holds`, committed with the working-tree edit): removed "it replaces the former input SpaceFillingSLEPathInput, operator decision (L1)" and the internal path MatedCRT/Proofs/Infra/MatingOfTrees.lean. The same phrase remains at line 95 (not in scope of this commit).

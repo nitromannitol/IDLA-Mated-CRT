@@ -54,6 +54,16 @@ theorem cellMult_locallyFinite (hη : Continuous η) (hp : Tendsto η (cocompact
   obtain ⟨z, hza, hzb⟩ := cell_inter_nonempty_of_cellMult_ne_zero hb
   exact ⟨z, hzb, hza⟩
 
+/-- A map `m` whose adjacent vertices have intersecting cells is locally finite (continuous proper curve). For the map
+of Definition 1.1 the hypothesis is `AdjacentCellsMeetAeStep` (MatedCRT/Steps/Infra/MatingOfTrees.lean). -/
+theorem locallyFinite_of_cells_meet {m : ℤ → ℤ → ℕ} (hη : Continuous η)
+    (hp : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε)
+    (hcell : ∀ j k, m j k ≠ 0 → (cell ε η j ∩ cell ε η k).Nonempty) (a : ℤ) : {b | m a b ≠ 0}.Finite := by
+  have hK : Bornology.IsBounded (cell ε η a) := (isCompact_Icc.image hη).isBounded
+  refine (cellVertices_finite_of_isBounded hη hp hε hK).subset fun b hb => ?_
+  obtain ⟨z, hza, hzb⟩ := hcell a b hb
+  exact ⟨z, hzb, hza⟩
+
 /-- `V^ε(B_ρ) \ V^ε(∂B_ρ)` is finite (continuous proper curve). -/
 theorem ballInterior_finite (hη : Continuous η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε) :
     (ballInterior ε η ρ).Finite :=
@@ -64,60 +74,49 @@ end Deterministic
 /-- `MatedObstacleSettingStep` from the inputs, given the connectivity `BallInteriorConnectedStep` required by
 `IsObstacleSetting.connected` (ESCALATIONS E-c1-2). -/
 theorem matedObstacleSettingStep_of {𝒮 : SpaceFillingSLEModel} (hp : EtaProperStep 𝒮)
-    (hcons : ConsecutiveCellsAdjacentStep 𝒮) (hG : GreenKernelLaplacianStep) (hconn : BallInteriorConnectedStep 𝒮) :
-    MatedObstacleSettingStep 𝒮 := by
+    (hcons : ConsecutiveCellsAdjacentStep 𝒮) (hG : GreenKernelLaplacianStep) (hconn : BallInteriorConnectedStep 𝒮)
+    (hcell : AdjacentCellsMeetAeStep 𝒮) : MatedObstacleSettingStep 𝒮 := by
   intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS
   filter_upwards [hp γ hγ hγ2 Ω S hS, hcons γ hγ hγ2 Ω S hS, hS.isAreaParametrized,
-    hconn γ hγ hγ2 ρ hρ hρ1 Ω S hS] with ω hpω hc hη hcω
+    hconn γ hγ hγ2 ρ hρ hρ1 Ω S hS, hcell γ hγ hγ2 Ω S hS] with ω hpω hc hη hcω hmeet
   intro t ε ht hε h0
-  have hlf := cellMult_locallyFinite hη.1 hpω hε
+  have hlf := locallyFinite_of_cells_meet hη.1 hpω hε (hmeet ε hε)
   have hfin : (ballInterior ε (S.η ω) ρ).Finite := ballInterior_finite hη.1 hpω hε
-  exact matedObstacle_isObstacleSetting ht hε hlf hfin (hc ε hε) (hcω ε hε h0) h0
-    (hG _ _ (cellMult_symm ε (S.η ω)) hlf (hc ε hε) hfin 0 h0)
+  exact matedObstacle_isObstacleSetting ht hε (S.mult_symm ε ω) (S.mult_self ε ω) hlf hfin (hc ε hε) (hcω ε hε h0) h0
+    (hG _ _ (S.mult_symm ε ω) hlf (hc ε hε) hfin 0 h0)
 
-/-- `EtaProperStep` from the literature input `SpaceFillingSLEPathInput` (MatedCRT/External/SLE.lean). -/
-theorem etaProperStep_of_pathInput {𝒮 : SpaceFillingSLEModel} (h : SpaceFillingSLEPathInput 𝒮) :
-    EtaProperStep 𝒮 := by
-  intro γ hγ hγ2 Ω _ S hS
-  filter_upwards [h γ hγ hγ2 Ω S hS] with ω hω
-  refine tendsto_def.2 fun s hs => ?_
-  obtain ⟨K, hK, hKs⟩ := Filter.mem_cocompact.1 hs
-  obtain ⟨R, hR⟩ := hK.isBounded.subset_closedBall 0
-  refine (hω.1.eventually (eventually_gt_atTop R)).mono fun t ht => hKs fun hmem => ?_
-  have := hR hmem
-  rw [mem_closedBall_zero_iff] at this
-  exact absurd this (not_le.2 ht)
+/-- `EtaProperStep` holds: under the mating-of-trees coupling of `MatedCRTEnv.IsValid`, a.s. `η(t) → ∞` as `|t| → ∞`
+(`MatedCRTEnv.IsValid.ae_tendsto_cocompact`). -/
+theorem etaProperStep_holds (𝒮 : SpaceFillingSLEModel) : EtaProperStep 𝒮 :=
+  fun _ _ _ _ _ _ hS => hS.ae_tendsto_cocompact
 
-/-- `ConsecutiveCellsAdjacentStep` from the literature input `SpaceFillingSLEPathInput`. -/
-theorem consecutiveCellsAdjacentStep_of_pathInput {𝒮 : SpaceFillingSLEModel} (h : SpaceFillingSLEPathInput 𝒮) :
-    ConsecutiveCellsAdjacentStep 𝒮 := by
-  intro γ hγ hγ2 Ω _ S hS
-  filter_upwards [h γ hγ hγ2 Ω S hS] with ω hω
-  exact fun ε hε k => (hω.2 ε hε k).ne'
+/-- `ConsecutiveCellsAdjacentStep` holds: consecutive vertices are adjacent in the map of Definition 1.1, for every `ω`
+(`MatedCRTEnv.mult_succ_ne_zero`; it replaces the former input `SpaceFillingSLEPathInput`). -/
+theorem consecutiveCellsAdjacentStep_holds (𝒮 : SpaceFillingSLEModel) : ConsecutiveCellsAdjacentStep 𝒮 :=
+  fun _ _ _ _ _ S _ => Filter.Eventually.of_forall fun ω _ hε k => S.mult_succ_ne_zero hε.le ω k
 
-/-- **Lemma 4.3** (lemma:discrete-basic-properties, line 1679) from the literature input `SpaceFillingSLEPathInput`,
-the steps `GreenKernelLaplacianStep`, `NormExitTimeLaplacianStep` (deterministic) and `BallInteriorConnectedStep`
-(E-c1-2). -/
-theorem discreteBasicProperties_of_inputs {𝒮 : SpaceFillingSLEModel} (hpath : SpaceFillingSLEPathInput 𝒮)
-    (hG : GreenKernelLaplacianStep) (hq : NormExitTimeLaplacianStep) (hconn : BallInteriorConnectedStep 𝒮) :
-    DiscreteBasicPropertiesStmt 𝒮 :=
+/-- **Lemma 4.3** (lemma:discrete-basic-properties, line 1679) from the steps `GreenKernelLaplacianStep`,
+`NormExitTimeLaplacianStep` (deterministic), `BallInteriorConnectedStep` (E-c1-2) and `AdjacentCellsMeetAeStep`
+(consequence of the mating-of-trees coupling, MatedCRT/Steps/Infra/MatingOfTrees.lean). -/
+theorem discreteBasicProperties_of_inputs {𝒮 : SpaceFillingSLEModel}
+    (hG : GreenKernelLaplacianStep) (hq : NormExitTimeLaplacianStep) (hconn : BallInteriorConnectedStep 𝒮)
+    (hcell : AdjacentCellsMeetAeStep 𝒮) : DiscreteBasicPropertiesStmt 𝒮 :=
   discreteBasicProperties_of_steps
-    (matedObstacleSettingStep_of (etaProperStep_of_pathInput hpath) (consecutiveCellsAdjacentStep_of_pathInput hpath)
-      hG hconn) (consecutiveCellsAdjacentStep_of_pathInput hpath) hq
+    (matedObstacleSettingStep_of (etaProperStep_holds 𝒮) (consecutiveCellsAdjacentStep_holds 𝒮) hG hconn hcell)
+    (consecutiveCellsAdjacentStep_holds 𝒮) hq hcell
 
-/-- **Lemma 4.4**, corrected (E-c1-1), from the inputs. -/
-theorem discreteLaplacianBoundCorrected_of_inputs {𝒮 : SpaceFillingSLEModel} (hpath : SpaceFillingSLEPathInput 𝒮)
-    (hG : GreenKernelLaplacianStep) (hconn : BallInteriorConnectedStep 𝒮) : DiscreteLaplacianBoundCorrectedStmt 𝒮 :=
+/-- **Lemma 4.4**, corrected (E-c1-1), from the steps. -/
+theorem discreteLaplacianBoundCorrected_of_inputs {𝒮 : SpaceFillingSLEModel}
+    (hG : GreenKernelLaplacianStep) (hconn : BallInteriorConnectedStep 𝒮) (hcell : AdjacentCellsMeetAeStep 𝒮) :
+    DiscreteLaplacianBoundCorrectedStmt 𝒮 :=
   discreteLaplacianBoundCorrected_of_steps
-    (matedObstacleSettingStep_of (etaProperStep_of_pathInput hpath) (consecutiveCellsAdjacentStep_of_pathInput hpath)
-      hG hconn)
+    (matedObstacleSettingStep_of (etaProperStep_holds 𝒮) (consecutiveCellsAdjacentStep_holds 𝒮) hG hconn hcell) hcell
 
-/-- **Lemma 4.5**, corrected (E-c1-1), from the inputs. -/
+/-- **Lemma 4.5**, corrected (E-c1-1), from the steps. -/
 theorem discreteConservationOfMassCorrected_of_inputs {𝒮 : SpaceFillingSLEModel}
-    (hpath : SpaceFillingSLEPathInput 𝒮) (hG : GreenKernelLaplacianStep) (hconn : BallInteriorConnectedStep 𝒮) :
+    (hG : GreenKernelLaplacianStep) (hconn : BallInteriorConnectedStep 𝒮) (hcell : AdjacentCellsMeetAeStep 𝒮) :
     DiscreteConservationOfMassCorrectedStmt 𝒮 :=
   discreteConservationOfMassCorrected_of_steps
-    (matedObstacleSettingStep_of (etaProperStep_of_pathInput hpath) (consecutiveCellsAdjacentStep_of_pathInput hpath)
-      hG hconn)
+    (matedObstacleSettingStep_of (etaProperStep_holds 𝒮) (consecutiveCellsAdjacentStep_holds 𝒮) hG hconn hcell) hcell
 
 end MatedCRT
