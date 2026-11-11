@@ -4,7 +4,7 @@ import MatedCRT.Proofs.Measurability.BoundaryLayer
 /-!
 # `ConvergenceDivisibleEventMeasurableStep` of Theorem 4.1 (finding F8)
 
-x3 reduced `ConvergenceDivisibleEventMeasurableStep` to Lemma 2.7 and the null measurability of the exit events
+`ConvergenceDivisibleEventMeasurableStep` reduces to Lemma 2.7 and the null measurability of the exit events
 `{t < T_ρ}` of the harmonic ball family (`convergenceDivisibleEventMeasurable_of_local_exit_inputs`,
 MatedCRT/Proofs/Sec4/ConvergenceDivisible/FromInputs.lean). The latter follows from `ConeFamilyAEMeasurableStep` and
 Lemma 2.4 (`MatedCRTEnv.IsValid.nullMeasurableSet_lt_clusterExitTime`, MatedCRT/Proofs/Measurability/BoundaryLayer.lean).

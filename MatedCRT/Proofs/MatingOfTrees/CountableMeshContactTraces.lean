@@ -8,9 +8,9 @@ import MatedCRT.Proofs.MatingOfTrees.ConnectedCellTraces
 /-!
 # Countable-mesh and dyadic-mesh events for connected cell traces
 
-Source: `notes/wpn-steps2/steps2-r3.tex` lines 637-652 (the labels of the cells meeting a connected path form a connected
-graph) and the fixed-mesh restriction at lines 602-630 (common contact times for countably many label pairs at one
-mesh). The barrier consumer at lines 652-690 is written for one fixed mesh `ε`, and its almost-sure input
+The labels of the cells meeting a connected path form a connected
+graph, and the fixed-mesh restriction gives common contact times for countably many label pairs at one
+mesh. The barrier consumer is written for one fixed mesh `ε`, and its almost-sure input
 (`eq:ae-envelope`, lines 379-384) has a null set that may depend on `ε`. The dyadic family below is a countable joint
 version of the fixed-mesh event, provided as the requested dyadic specialization; the printed text does not itself fix a
 set of dyadic meshes.

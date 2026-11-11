@@ -8,7 +8,7 @@ import MatedCRT.Proofs.MatingOfTrees.AdjacentContactWitnesses
 /-!
 # Connected and compact traces of cell paths
 
-Source: `notes/wpn-steps2/steps2-r3.tex` (sha256 88dfb1f9...), lines 637-652: the labels of the cells meeting a
+The labels of the cells meeting a
 connected path form a connected graph; the union of the cells along a chain of pairwise meeting cells is connected.
 A *vertex path* is `IsVPathIn m A p a b` (Defs/Map.lean): a list `p` from `a` to `b` in `A` whose successive vertices
 are joined by edges `m c d ≠ 0`. Its trace is `pathCells ε η p = ⋃_{c ∈ p} H^ε_c`, the union of the cells

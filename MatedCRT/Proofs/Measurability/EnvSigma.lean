@@ -2,7 +2,7 @@ import MatedCRT.Proofs.Sec5.IDLALowerBound.Statement
 import MatedCRT.Proofs.Measurability.EnvSigmaCore
 
 /-!
-# The environment is a random variable up to null sets (ESCALATIONS E-c2-1)
+# The environment is a random variable up to null sets
 
 `EnvSigmaMeasurableStep 𝒮` (`σ(h, η) ≤ 𝓕`, MatedCRT/Steps/Sec5/GeneralIDLALowerBound.lean) does not follow from
 `MatedCRTEnv.IsValid`: the curve `η` is only almost surely equal to the measurable curve `η'` of the mating-of-trees

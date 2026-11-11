@@ -11,7 +11,7 @@ import MatedCRT.Proofs.MatingOfTrees.BrownianAdjacencyExcursions
 /-!
 # Common cell-contact times of adjacent mated-CRT cells (witness form)
 
-Source: `notes/wpn-steps2/steps2-r3.tex` lines 602-630 (audited, sha256 88dfb1f9...), the argument that adjacent
+The argument that adjacent
 graph cells intersect. For a fixed mesh `ε > 0` and a mating-of-trees environment `S`, almost surely, for every pair
 of integers `j, k` with nonzero edge multiplicity `S.mult ε ω j k`, there are times `u` in the closed time cell
 `[ε(j-1), εj]` and `v` in the closed time cell `[ε(k-1), εk]` with `S.η ω u = S.η ω v`.
