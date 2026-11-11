@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.LPBridge.WholePlaneGFFLateral
 import MatedCRT.FirstPass.LPBridge.RotationalAverage
+import MatedCRT.LPStaging.Analysis.TestFunctionLogIntegrable
 import MatedCRT.LPStaging.Bonanno.RadialPointRotation
 
 /-!
@@ -24,36 +25,12 @@ open MatedCRT.RotationalAverage
 variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
 
 /-- The maximum of `‖z‖` and `1` is positive, so that the logarithms in `wholePlaneCov` are defined. -/
-lemma max_pos_one (z : ℂ) : 0 < max ‖z‖ 1 := lt_of_lt_of_le one_pos (le_max_right _ _)
+lemma max_pos_one (z : ℂ) : 0 < max ‖z‖ 1 := LatticeProb.max_norm_pos z
 
 /-- Against a test function the logarithmic kernel is integrable: `y ↦ ψ y · wholePlaneCov x y` is integrable. -/
 lemma integrable_test_mul_wholePlaneCov {ψ : ℂ → ℝ} (hψ : IsTestFunction Set.univ ψ) (x : ℂ) :
     Integrable (fun y : ℂ => ψ y * wholePlaneCov x y) := by
-  have hψc : Integrable ψ := hψ.1.continuous.integrable_of_hasCompactSupport hψ.2.1
-  have hlogM : Integrable (fun y : ℂ => ψ y * Real.log (max ‖y‖ 1)) := by
-    refine Continuous.integrable_of_hasCompactSupport (hψ.1.continuous.mul
-      (Continuous.log (continuous_norm.max continuous_const) fun y => (max_pos_one y).ne')) ?_
-    exact hψ.2.1.mul_right
-  have hlog : Integrable (fun y : ℂ => ψ y * Real.log ‖x - y‖) := by
-    have hψx : IsTestFunction Set.univ (fun v : ℂ => ψ (x - v)) :=
-      ⟨hψ.1.comp (contDiff_const.sub contDiff_id), hψ.2.1.comp_homeomorph (Homeomorph.subLeft x),
-        Set.subset_univ _⟩
-    have h := (integrable_test_mul_log_norm hψx).comp_sub_left x
-    refine h.congr (ae_of_all _ fun y => ?_)
-    simp
-  have hsum : Integrable (fun y : ℂ => Real.log (max ‖x‖ 1) * ψ y + ψ y * Real.log (max ‖y‖ 1)
-      - ψ y * Real.log ‖x - y‖) :=
-    ((hψc.const_mul _).add hlogM).sub hlog
-  have hne : ∀ᵐ y ∂(volume : Measure ℂ), y ≠ x := by
-    rw [ae_iff]
-    simp
-  refine hsum.congr ?_
-  filter_upwards [hne] with y hy
-  have hxy : x - y ≠ 0 := sub_ne_zero.mpr (Ne.symm hy)
-  unfold wholePlaneCov
-  rw [Real.log_div (mul_pos (max_pos_one x) (max_pos_one y)).ne' (norm_ne_zero_iff.mpr hxy),
-    Real.log_mul (max_pos_one x).ne' (max_pos_one y).ne']
-  ring
+  exact LatticeProb.integrable_test_mul_wholePlaneCov hψ x
 
 /-- Rotational averaging of the logarithmic kernel: for a radial test function `ψ` and every `x`,
 `∫ ψ(y) wholePlaneCov(x,y) dy = ∫ ψ(y) (log max(|x|,1) + log max(|y|,1) - log max(|x|,|y|)) dy`. -/
@@ -61,23 +38,7 @@ lemma integral_test_mul_wholePlaneCov {ψ : ℂ → ℝ} (hψ : IsTestFunction S
     (hψr : ∀ (θ : ℝ) (x : ℂ), ψ (rot θ x) = ψ x) (x : ℂ) :
     ∫ y, ψ y * wholePlaneCov x y = ∫ y, ψ y *
       (Real.log (max ‖x‖ 1) + Real.log (max ‖y‖ 1) - Real.log (max ‖x‖ ‖y‖)) := by
-  have hm : Measurable (fun y : ℂ => wholePlaneCov x y) := by
-    unfold wholePlaneCov
-    fun_prop
-  have h := integral_avgRot_mul (Φ := fun y => wholePlaneCov x y) (g := ψ) hm
-    hψ.1.continuous.measurable hψr
-    (by simpa only [mul_comm] using integrable_test_mul_wholePlaneCov hψ x)
-  have hne0 : ∀ᵐ y ∂(volume : Measure ℂ), y ≠ 0 := by
-    rw [ae_iff]
-    simp
-  calc ∫ y, ψ y * wholePlaneCov x y = ∫ y, wholePlaneCov x y * ψ y := by
-        simp only [mul_comm]
-    _ = ∫ y, avgRot (fun w => wholePlaneCov x w) y * ψ y := h.symm
-    _ = ∫ y, ψ y * (Real.log (max ‖x‖ 1) + Real.log (max ‖y‖ 1) - Real.log (max ‖x‖ ‖y‖)) := by
-        refine integral_congr_ae ?_
-        filter_upwards [hne0] with y hy
-        rw [avgRot_eq_circleAverage, circleAverage_wholePlaneCov (norm_pos_iff.mpr hy), mul_comm,
-          max_comm ‖y‖ ‖x‖]
+  exact LatticeProb.integral_test_mul_wholePlaneCov hψ hψr x
 
 /-- The radial point of a rotated point is the radial point of the point. -/
 lemma radialPoint_rot (θ : ℝ) (x : ℂ) : radialPoint (rot θ x) = radialPoint x := by
