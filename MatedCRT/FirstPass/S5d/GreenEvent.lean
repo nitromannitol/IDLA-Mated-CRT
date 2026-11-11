@@ -4,7 +4,7 @@ import MatedCRT.Proofs.WalkPotential.MaximumPrinciple
 import MatedCRT.Proofs.Infra.RandomWalk
 
 /-!
-# The Green event of the stopped clause, pathwise (z5, fp-S5d-5-1-stopped-repair)
+# The Green event of the stopped clause, pathwise
 
 Deterministic content of the Green event of Lemma 5.2 (`GeneralIDLALowerBoundRelaxedStep`,
 Steps/Sec5/IDLALowerBound.lean:40) for a finite killing set `I ⊆ ℤ` (referee notes/fp-gaps/CHATGPT-5-1-gaps-referee.md

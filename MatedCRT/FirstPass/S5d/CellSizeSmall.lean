@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S5d.CoverEvent
 
 /-!
-# The cell-size event on `{t < T}` (task fp-S5d-5-1, operator note 03:06 UTC)
+# The cell-size event on `{t < T}`
 
 Reuses `cellSizeEvent` (S5d/CoverEvent.lean:31) and the polynomial tail of `CellSizeEstimateStmt` (Lemma 2.8, Draft/Section2.lean:131),
 as in the proof of `tendsToOneOn_cover_vertexThresholdSet` (S5d/CoverEvent.lean:78). The exponent is `ζ = 1/(2+γ)²`, so the upper

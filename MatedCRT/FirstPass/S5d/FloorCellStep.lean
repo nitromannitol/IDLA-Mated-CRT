@@ -3,11 +3,11 @@ import MatedCRT.FirstPass.S5d.FloorCells
 import MatedCRT.FirstPass.S5e.SecondGreenStep
 
 /-!
-# The single floor input of the stopped clause: `StoppedFloorCellStep` (task fp-S5d-5-1, operator note 02:51 UTC)
+# The single floor input of the stopped clause: `StoppedFloorCellStep`
 
 `StoppedFloorCellStep 𝒮` is the floor on every cell meeting `B⁻_{δ/2}(Λ_t)` (corrected tex 2362; the expanded argument
 `notes/fp-gaps/CHATGPT-z5-floor.md`, Part I, proves this cell form). It is the ONE floor input of Proposition 5.1 and of the
-second Green step (z2's `StoppedFloorHalfStep`, S5e/SecondGreenStep.lean:29). Here it is derived:
+second Green step (`StoppedFloorHalfStep`, S5e/SecondGreenStep.lean:29). Here it is derived:
 * `stoppedFloorStep_of_cellFloor`: `StoppedFloorStep` (the floor on the vertices `V^ε(B⁻_δ(Λ_t))`, S5d/StoppedExitInput.lean:129),
   since every target vertex `a` has its cell meeting `B⁻_δ(Λ_t) ⊆ B⁻_{δ/2}(Λ_t)`;
 * `stoppedFloorHalfStep_of_cellFloor`: `StoppedFloorHalfStep` (positivity of the odometer on the cells meeting `B⁻_{δ/2}`).
@@ -52,7 +52,7 @@ theorem stoppedFloorStep_of_cellFloor {𝒮 : SpaceFillingSLEModel} (h : Stopped
   obtain ⟨y, hy1, hy2⟩ := ha
   exact hcell' a ⟨y, hy1, innerNbhd_half_of_innerNbhd hδ _ hy2⟩
 
-/-- The cell floor implies the positivity `StoppedFloorHalfStep` used by the second Green inequality (z2, S5e/SecondGreenStep.lean:29):
+/-- The cell floor implies the positivity `StoppedFloorHalfStep` used by the second Green inequality (S5e/SecondGreenStep.lean:29):
 `c/ε > 0` for `ε > 0`. -/
 theorem stoppedFloorHalfStep_of_cellFloor {𝒮 : SpaceFillingSLEModel} (h : StoppedFloorCellStep 𝒮) :
     S5e.StoppedFloorHalfStep 𝒮 := by

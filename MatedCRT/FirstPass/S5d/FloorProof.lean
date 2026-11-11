@@ -24,7 +24,7 @@ import MatedCRT.Proofs.Sec6.IterativeBound.FieldSigma
 `stoppedFloorCell_proved` proves the single floor input `StoppedFloorCellStep 𝒮` (S5d/FloorCellStep.lean) from the named
 inputs of floor note Part I, Section 1 (`h41`, `h33`, `h28`, `hm`, `hcell`) and the floor constant `FloorConstantStep` (the
 output of Steps 4-5, i.e. §4 `StoppedFloorObstacleVersion` (S5k.lean) and §5 with the [C20] gap `HarmonicBallStrictObstacleGapStep`,
-supplied by z2 in S5l.lean; it is taken as a named hypothesis here, with the form fixed in its docstring).
+supplied in S5l.lean; it is taken as a named hypothesis here, with the form fixed in its docstring).
 
 Proof (Sections 6-9 of the note): fix `N = n + 1` (localization `L_n = {s ≥ 1/N, M ≤ N}`, (16)-(17)), the radius `r_N`
 (`floorRadius`, (18)), `e_N = 1/(4N(1+t))`, `d = min(δ/8, r_N/4)`; on the event `{t < T}` outside the good events

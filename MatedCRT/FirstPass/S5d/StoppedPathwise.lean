@@ -20,7 +20,7 @@ This file discharges `hdet` from the standing facts of the environment and from 
 * `0 ∈ V^ε(Λ_t)`: `0 ∈ Λ_t` (an open harmonic ball contains its centre) and `η 0 = 0 ∈ cell 0`.
 
 The origin floor `c/ε ≤ u^ε(0)` is NOT part of this file: it stays inside the open input
-`StoppedFirstGreenInputsStep` (open question (a) to the lead).
+`StoppedFirstGreenInputsStep`.
 -/
 
 namespace MatedCRT

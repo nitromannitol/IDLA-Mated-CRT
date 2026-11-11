@@ -30,7 +30,7 @@ noncomputable def stoppedKillSet {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTE
     a ∈ cellVertices ε (S.η ω) (Λ ω t)}
 
 /-- The target set `Z^ε_t = O^ε_1 = V^ε(B⁻_δ(Λ_t))` of the stopped clause (corrected tex 2350-2392, [C21]: `O_1^ε = V^ε(B⁻_δ(Λ_t))`).
-Here `B⁻_δ(Λ_t) = innerNbhd δ (Λ_t)` (Defs/Notation.lean:30). The origin is NOT a target (round 15): the relaxed Lemma 5.2
+Here `B⁻_δ(Λ_t) = innerNbhd δ (Λ_t)` (Defs/Notation.lean:30). The origin is NOT a target: the relaxed Lemma 5.2
 (`GeneralIDLALowerBoundRelaxedStep`) needs no origin in its target set, and the floor of [C21] is stated on `V^ε(B⁻_δ(Λ_t))` only. -/
 def stoppedTargetSet {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (Λ : Ω → ℝ → Set ℂ) (δ t ε : ℝ)
     (ω : Ω) : Set ℤ :=

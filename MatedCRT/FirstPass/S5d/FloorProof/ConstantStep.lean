@@ -8,7 +8,7 @@ import HarmonicBalls.Defs.Green
 
 `FloorConstantStep 𝒮` is the single input of `stoppedFloorCell_proved` (S5d/FloorProof.lean) that is not proved there:
 the floor constant `s`, the bound `M` and their measurability for `S.fieldSigma`, with the floor on `B⁻_{δ/4}(Λ_t) \ {0}`
-and the sup bound on `cl B_ρ`. It is kept in its own small file so that its discharge (FirstPass/S5o.lean, z2) can be
+and the sup bound on `cl B_ρ`. It is kept in its own small file so that its discharge (FirstPass/S5o.lean) can be
 developed without importing the floor proof. Its docstring fixes the form that the discharge must prove.
 -/
 
@@ -25,7 +25,7 @@ with `γ ∈ (0,2)`, `ρ ∈ (0,1)`, a family `Λ` of cone harmonic balls a.s., 
 `W_t = leastSupersolution (S.μ ω) ρ 0 t` and `G = greenFunction (B_ρ) 0`. Source: the measurable obstacle version
 `StoppedFloorObstacleVersion` (FirstPass/S5k.lean, §4) and the strict gap `HarmonicBallStrictObstacleGapStep` ([C20]) feed
 Steps 5.1-5.2 (`s` from `φ_ω`, (8)-(9); `M` from (12)), generic in FirstPass/S5l.lean; the discharge of this Prop is
-FirstPass/S5o.lean (`floorConstantStep_proved`, fp-S5o, z2). Taken here as a named hypothesis. -/
+FirstPass/S5o.lean (`floorConstantStep_proved`). Taken here as a named hypothesis. -/
 def FloorConstantStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →

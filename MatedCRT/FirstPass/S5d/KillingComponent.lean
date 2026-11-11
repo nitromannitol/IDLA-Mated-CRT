@@ -3,7 +3,7 @@ import MatedCRT.Proofs.WalkPotential.MaximumPrinciple
 import MatedCRT.Proofs.Infra.RandomWalk
 
 /-!
-# Vanishing of the killed Green function across components (z5, fp-S5d-5-1-stopped-repair)
+# Vanishing of the killed Green function across components
 
 Referee notes/fp-gaps/CHATGPT-5-1-gaps-referee.md §5.4: for a finite killing set `I ⊆ ℤ` and `a ∈ I` not joined to `0`
 by a path inside `I`, the Green function vanishes: `G_I(a,0) = 0`. Proof: the maximum principle on the set `U` of

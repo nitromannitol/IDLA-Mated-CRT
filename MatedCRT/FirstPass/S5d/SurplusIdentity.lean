@@ -5,7 +5,7 @@ import MatedCRT.Proofs.WalkPotential.GreenFirstStep
 import MatedCRT.Proofs.Sec3.DiscretePotentialTightness.EquicontinuityLemmas
 
 /-!
-# The surplus identity on the discrete cluster (z5, fp-S5d-5-1-stopped-repair)
+# The surplus identity on the discrete cluster
 
 The surplus `v_ε = u^ε_t = w̃^ε_t + (t/ε) g^ε_{B_ρ}(0,·)` (`stoppedOdometer`, Defs/Sandpile.lean:93; referee §5.2)
 satisfies `Δ v_ε = 1/deg - (t/(ε deg 0)) 1_{a=0}` on the discrete cluster `Λ̃^ε_t`, given the Laplacian identity

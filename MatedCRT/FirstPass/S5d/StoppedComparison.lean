@@ -6,7 +6,7 @@ import MatedCRT.Proofs.Sec3.DiscretePotentialTightness.EquicontinuityLemmas
 import MatedCRT.Proofs.Infra.RandomWalk
 
 /-!
-# Deterministic comparison for the stopped clause of Proposition 5.1 (z5, fp-S5d-5-1-stopped-repair)
+# Deterministic comparison for the stopped clause of Proposition 5.1
 
 Referee notes/fp-gaps/CHATGPT-5-1-gaps-referee.md §5.2 (maximum-principle comparison (5.3)), §5.2 (5.5).
 For a finite killing set `I ⊆ ℤ` (the intersection `S_ε ∩ V^ε(Λ_t)` of the referee) and the Green combination
