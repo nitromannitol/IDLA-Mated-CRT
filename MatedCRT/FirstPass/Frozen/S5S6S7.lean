@@ -23,7 +23,8 @@ Truth check: TRUE. The GFF normalization is fixed, and the constants are existen
 def FPWholePlaneUpperVolumeTail : Prop := WholePlaneUpperVolumeTailStep
 
 /-- Restriction of eq:gff to mean-zero pairings on circles (the input of the cone-field transfer of Lemma 6.6). Source: paper eq:gff, line 444; standard; locator not yet pinned.
-Truth check: TRUE. The admissible local test subtype is explicit. -/
+Truth check: TRUE. The admissible local test subtype is explicit.
+Discharged: `MatedCRT.ConeMeanZeroRestriction.fpConeMeanZeroRestriction_of_radialLateralIndep` (`MatedCRT/FirstPass/LPBridge/ConeMeanZeroRestrictionFinal.lean:136`) applied to `MatedCRT.ConeMeanZeroRestriction.gffRadialLateralIndep_holds` (`MatedCRT/FirstPass/LPBridge/GFFRadialLateralIndep.lean:1029`) proves it. -/
 def FPConeMeanZeroRestriction : Prop := ConeMeanZeroRestrictionStep
 
 end MatedCRT

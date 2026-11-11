@@ -28,7 +28,8 @@ def FPGreenBallPoleLimit : Prop :=
       (nhdsWithin (0 : ℂ) {0}ᶜ) Filter.atTop
 
 /-- Strong minimum principle for superharmonic functions (Armitage-Gardiner, Classical Potential Theory, minimum principle: a superharmonic function on a connected open set attaining its infimum at an interior point is constant). Distributional form: for an open connected `U ⊆ ℂ`, a function `f` continuous on `U` with `Δf ≤ 0` in `U` in the sense of distributions (`HarmonicBalls.LaplacianLE f 0 U`; a continuous distributionally superharmonic function is superharmonic), `f ≥ 0` on `U`, and `f x₀ = 0` at one point `x₀ ∈ U`, then `f = 0` on `U`. Source: Axler-Bourdon-Ramey, Harmonic Function Theory, 2nd ed., Theorem 11.2 (p. 224), applied to `-f`, after the distributional-to-superharmonic step described there.
-Truth check: TRUE. -/
+Truth check: TRUE.
+Discharged: `MatedCRT.fpStrongMinimumPrinciple_inRepo` (`MatedCRT/FirstPass/LPBridge/InRepoProofs.lean:55`) proves it. -/
 def FPStrongMinimumPrinciple : Prop :=
   ∀ (U : Set ℂ) (f : ℂ → ℝ), IsOpen U → IsConnected U → ContinuousOn f U →
     HarmonicBalls.LaplacianLE f 0 U → (∀ x ∈ U, 0 ≤ f x) → ∀ x₀ ∈ U, f x₀ = 0 → ∀ x ∈ U, f x = 0

@@ -13,7 +13,8 @@ namespace MatedCRT
 open MeasureTheory ProbabilityTheory Set Metric _root_.HarmonicBalls
 
 /-- Mutual absolute continuity of the laws of the whole-plane pairings (modulo constants) under a smooth test-function shift of the whole-plane GFF: the Cameron-Martin shift used in the strict obstacle gap. Source: Miller-Sheffield, Imaginary Geometry IV, Proposition 2.9 (arXiv:1302.4738v2, p. 49). The source-exact form (RN density, fields modulo `r Z`) has no concrete Lean carrier yet; this is the form stated in `harmonicBallStrictObstacleGapStep_of_restrictedLaw_and_pairingLaws`.
-Truth check: TRUE. Miller-Sheffield arXiv:1302.4738v2, p. 49, Proposition 2.9, equation (2.8). -/
+Truth check: TRUE. Miller-Sheffield arXiv:1302.4738v2, p. 49, Proposition 2.9, equation (2.8).
+Discharged: `MatedCRT.fpPairingLawIG4_holds` (`MatedCRT/FirstPass/LPBridge/PairingLawIG4.lean:81`) proves it. -/
 def FPPairingLawIG4 : Prop :=
   ∀ (Ω : Type) [MeasurableSpace Ω] (Q : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ),
@@ -32,7 +33,8 @@ Truth check: TRUE. `TestB1` and `CircleB1` contain exactly the admissible local 
 def FPConeWholePlaneFieldLaw : Prop := ConeWholePlaneFieldLawStep
 
 /-- Locality of the `γ`-LQG measure: for each open `U ⊆ B_1`, the mass `μ(U)` is a measurable functional of the restricted field, the same functional for the cone field and for the whole-plane field. Source: Duplantier-Sheffield 2011 (LQG measure as a limit of circle-average approximations). Locator: Duplantier-Sheffield, arXiv:0808.1560v2, Proposition 1.1 with local approximations.
-Truth check: TRUE. One deterministic measurable decoder of the local circle coordinates is fixed before either model is chosen. -/
+Truth check: TRUE. One deterministic measurable decoder of the local circle coordinates is fixed before either model is chosen.
+Discharged: `MatedCRT.fpLQGMeasureLocality_holds` (`MatedCRT/FirstPass/LPBridge/InRepoProofs.lean:45`) proves it. -/
 def FPLQGMeasureLocality : Prop := LQGMeasureLocalityFunctionalStep
 
 end MatedCRT

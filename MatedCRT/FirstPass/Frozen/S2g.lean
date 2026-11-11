@@ -22,7 +22,8 @@ def FrozenSuperharmonicMinimumPrinciple : Prop :=
 
 /-- Green function of a disc with pole at the centre (literature input: classical potential theory). For `R > 0`, `x ↦ G_{B_R}(0, x)` is continuous on `closedBall 0 R \ {0}` and tends to `+∞` at the pole, since the Newton kernel `-(2π)⁻¹ log ‖x‖` dominates and the harmonic correction is locally bounded (explicitly `G = (2π)⁻¹ log (R/‖x‖)`).
 Source: standard; locator not yet pinned (Armitage and Gardiner, *Classical Potential Theory*, Green function of a ball). HB `continuousOn_greenFunction_ball_of_stmt` gives the continuity part conditionally on `GreenFunctionBallStmt`.
-Truth check: TRUE. Doob (1984), Ch. II §1, p. 14, equation (1.1), divided by 2π; HB arXiv:2208.11795v3, p. 10, Proposition 2.3. -/
+Truth check: TRUE. Doob (1984), Ch. II §1, p. 14, equation (1.1), divided by 2π; HB arXiv:2208.11795v3, p. 10, Proposition 2.3.
+Discharged: `MatedCRT.HBRewire.FrozenGreenDiscPole_of_hb` (`MatedCRT/FirstPass/HBRewire.lean:41`) proves it. -/
 def FrozenGreenDiscPole : Prop :=
   ∀ R : ℝ, 0 < R → ContinuousOn (greenFunction (ball 0 R) 0) (closedBall 0 R \ {0}) ∧
     Tendsto (greenFunction (ball 0 R) 0) (𝓝[≠] 0) atTop
