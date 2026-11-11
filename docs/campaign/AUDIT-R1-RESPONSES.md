@@ -47,11 +47,11 @@ Each verdict has a status line under its heading (2026-11-11).
 | E-c5-1 (Lemma 6.9 local rate) | Closed: statement order applied [C35]; printed+[C19] proof kept (MQ-li-5b) | tex:3588 (s_3 chosen after s_0). The written replacement proof of the local-rate deduction replaces the author-approved [C19] tail argument (tex:3594-3630). Operator decision needed. |
 | E-x3-2 (sequence quantifier, Lemmas 4.6 and 4.7) | Already applied [C12] | tex:2006 and nearby (ledger [C12]). |
 | E-c3-3 (exit-time argument, T^b = T in distribution) | Open, conditional on E-c5-3 (MQ-li-5c); no tex change | The written argument makes the strict growth closure(Lambda_s) in Lambda_t (open issue E-c5-3) an explicit prerequisite. Adding an open hypothesis to the paper would change its conclusion, so it needs an operator decision. |
-| E-c2-3 (Proposition 6.1, measurable stopped family) | PENDING CODEX (MQ-li-5d: erratum candidate, refute-first check before the errata) | Conditional on the measurable family and on Lean-level inputs (ConeFamilyAEMeasurableStep, Lemma 2.4). The verdict names Lean declarations; no paper-level replacement text is written. |
+| E-c2-3 (Proposition 6.1, measurable stopped family) | Gap confirmed (MQ-li-5d: Codex PARTIAL; the corrected text with cell allowances 2d_eps and deterministic parameters is CONFIRMED); errata entry routed to the operator; item D2 dropped; Lean unaffected (the Lean route uses deterministic parameters) | Conditional on the measurable family and on Lean-level inputs (ConeFamilyAEMeasurableStep, Lemma 2.4). The verdict names Lean declarations; no paper-level replacement text is written. |
 | E-c2-7 (Proposition 5.1, relaxed Lemma 5.2) | Closed: superseded by [C20]+[C21] (MQ-li-5e); Lean keeps its relaxed form | Needs a new statement (relaxed Lemma 5.2 with a null-measurable O_2 and an envelope G) and the discrete-cluster inner estimate, which is conditional on E-c2-5 (open). A new lemma is not transcribed without an operator decision. |
 | E-x2-1 (shell iteration, Proposition 7.1) | PENDING CODEX (MQ-li-5f: erratum candidate, refute-first check before the errata) | Conditional verdict. Its replacement is defined by reference to other Lean files and to inputs E-c3-2 and E-A10 (open). |
 
-Counts (this table, 12 rows; statuses of the MQ-li-5 items): Applied or already applied 6; Closed (MQ-li-5) 3 (E-c5-1, E-c2-7, E-c5-2); Open (MQ-li-5c) 1 (E-c3-3); PENDING CODEX 2 (E-c2-3, E-x2-1; MQ-li-5d/5f).
+Counts (this table, 12 rows; statuses of the MQ-li-5 items): Applied or already applied 6; Closed (MQ-li-5) 3 (E-c5-1, E-c2-7, E-c5-2); Open (MQ-li-5c) 1 (E-c3-3); Gap confirmed (MQ-li-5d) 1 (E-c2-3); PENDING CODEX 1 (E-x2-1; MQ-li-5f).
 
 ## IDLA (B)
 
