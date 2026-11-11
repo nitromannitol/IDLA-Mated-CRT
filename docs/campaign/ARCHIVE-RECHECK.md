@@ -345,3 +345,17 @@ Columns: importers = all tracked importers; in closure = importers inside the cl
 - The date condition is the binding constraint: 171 of 272 candidates were committed after 2026-11-11 00:05:14 UTC, the most recent at 2026-11-11T11:14:36+00:00 (HEAD 689539f8).
 - No candidate has uncommitted edits (`git diff --name-only HEAD` does not list any candidate).
 
+
+## Update after rule R2 (2026-11-11)
+
+Rule R2 (`docs/campaign/ARCHIVE.md`, section "Rule R2 (2026-11-11), batches B13 onward") replaces the 00:05:14 UTC condition used for the table above. The closure and the roots are unchanged; the moved modules were not reachable from them.
+
+- Moved under R2: 202 modules in six batches: B13 `46f75d04` (40), B14 `fbd1f17d` (40), B15 `5c48639e` (40), B16 `b005d22e` (40), B17 `21dc7c40` (40), B18 `1ae21b45` (2). Each batch: 0 imports of its own modules from files under `MatedCRT/`.
+- Still in `MatedCRT/` (70 candidates, at the last batch):
+  - e: 38, listed in `notes/hyg-A.txt`, `hyg-B.txt`, `hyg-C.txt`, `stale-1.txt` or `stale-1b.txt` while z9 and z10 report IN_PROGRESS (`MatedCRT/FirstPass/S4e.lean` is also named, see b);
+  - d: 30, imported by a file that stays under `MatedCRT/`;
+  - b: 1, `MatedCRT/FirstPass/S1c/Composition.lean` (named in a tasks file modified on 2026-11-11);
+  - a: 1, `MatedCRT/FirstPass/LPBridge/GFFInterface.lean` (its commit f5419921, after the cutoff, adds code);
+  - uncommitted edits: 0.
+- If z9 and z10 read DONE, 66 of the 70 are movable (two batches, 40 and 26); the 4 still held would be `S1c/Composition.lean`, `S4e.lean`, `LPBridge/GFFInterface.lean` and `S4e/RescaledDecode.lean` (imported by `S4e.lean`).
+- Not from these batches: 11 dangling imports from 8 untracked files under `MatedCRT/Proofs/Sec3/IntegralConvergenceGreenFunction/` (e.g. `JointL1AxiomsY5.lean`) import modules archived earlier. Their owner must act before those files are committed.
