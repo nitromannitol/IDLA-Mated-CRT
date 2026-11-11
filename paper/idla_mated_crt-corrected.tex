@@ -1912,7 +1912,7 @@ are given in Appendix~\ref{app:lemma36-C13}.
 		$\olwteps$  converges uniformly in $B_{\rho}$ to $\frac{\lambda_0}{6} \overline w_t^{B_\rho}$.
 		Further, by Lemma \ref{lemma:uniform-convergence-of-greens-function} we may arrange so that, a.s.\ along $\mathcal{E}$,
 		% CORRECTION [C17]: propagate [C1] in the proof.
-% CORRECTION [C20] (author-approved 2026-11-10): the printed proof inferred the strict interior gap from continuity.
+% CORRECTION [C20]: the printed proof inferred the strict interior gap from continuity.
 % Use the scaling law to exclude fixed deterministic jump times, then apply
 % the obstacle equation and the strong minimum principle.
 $\overline{g}^{{\eps}}$ converges uniformly in $\A_{r, \rho}$ to $\frac{\lambda_0}{6} \times G_{B_\rho}(0 , \cdot)$.
@@ -2354,7 +2354,7 @@ On this probability-one event and on $\{t<\TT\}$, put $v_u=\overline w_u^{B_\rho
 	% CORRECTION [C21] (editorial): printed 'These lemmas imply Proposition \ref{prop:IDLA-lower-bound}.'
 	We now prove Proposition~\ref{prop:IDLA-lower-bound} directly using the vertexwise argument of Lemma~\ref{lemma:general-idla-lower-bound}.
 	
-% CORRECTION [C21] (author-approved 2026-11-10): the printed application did not verify the target hypotheses,
+% CORRECTION [C21]: the printed application did not verify the target hypotheses,
 % coverage by the strict positivity set, or the stated stopping domain.
 % Apply the vertexwise argument inside the intersection with the continuum ball.
 \begin{proof}[Proof of Proposition~\ref{prop:IDLA-lower-bound}]
@@ -2394,13 +2394,13 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		Therefore, it suffices to show that there exists a deterministic constant $C > 0$ independent of ${\eps}$ such that
 		\begin{equation} \label{eq:lower-bound-exit}
 		\sum_{b \in \Lambdateps} \Gr{{\eps}}{\Lambdateps}(b,a) \geq C \delta {\eps}^{-1}, \quad \forall 
-		% CORRECTION [C4]: the cell-union boundary replaces the boundary of the finite point set (E-A8; four proof occurrences).
+		% CORRECTION [C4]: the cell-union boundary replaces the boundary of the finite point set.
 		a \in \Lambdateps:\dist(\eta(a), \partial \overline{\Lambdateps}) > \delta 
 		\end{equation}
 		except on an event of probability going to zero as ${\eps} \to 0$. Indeed, we just need the desired estimate for ${\eps}$ small
 		and we may absorb the factor of $C \delta$ into ${\eps}^{1/2}$ for ${\eps}$ small enough, depending on $C$ and $\delta$. 
 		
-		% CORRECTION [C4]: the cell-union boundary replaces the boundary of the finite point set (E-A8; four proof occurrences).
+		% CORRECTION [C4]: the cell-union boundary replaces the boundary of the finite point set.
 		Let $a \in \Lambdateps$ such that $\dist(\eta(a), \partial \overline{\Lambdateps}) > \delta$ be given 
 		and observe that
 		\[
@@ -2429,10 +2429,10 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		By the definitions in Section \ref{subsec:discrete-potential-definitions} and Remark \ref{remark:overload-notation-potential}, this shows that it suffices to establish 
 		\begin{equation} \label{eq:mean-value-ineq-verify-changed}
 		(t \eps^{-1})  \gr{{\eps}}{\Lambdateps}(a, 0) \geq (1 + \mathfrak{s}) \qeps{\Lambdateps}(a) , \quad \forall 
-		% CORRECTION [C4]: the cell-union boundary replaces the boundary of the finite point set (E-A8; four proof occurrences).
+		% CORRECTION [C4]: the cell-union boundary replaces the boundary of the finite point set.
 		a \in \Lambdateps:\dist(\eta(a), \partial \overline{\Lambdateps}) > \delta,
 		\end{equation}
-		% CORRECTION [C23]: the surplus variable depends on t as well (E-m1-2).
+		% CORRECTION [C23]: the surplus variable depends on t as well.
 		for some finite $\sigma(h,\eta)$-measurable random variable $\mathfrak{s} = \mathfrak{s}(\rho, \gamma, \delta, t)> 0$ not depending on ${\eps}$,
 		except on an event of probability going to zero as ${\eps} \to 0$. 
 		Define 
@@ -2452,7 +2452,7 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		&\quad \mbox{(by \eqref{eq:discrete-normalized-green-laplacian} and \eqref{eq:discrete-normalized-exit-laplacian})} \\
 		&= 0 \, . 
 		\end{align*}
-		% CORRECTION [C34]: the ambient Green function does not vanish on the cluster boundary by itself; the obstacle contact gives the vanishing of w + (t/eps) g (E-x1-1).
+		% CORRECTION [C34]: the ambient Green function does not vanish on the cluster boundary by itself; the obstacle contact gives the vanishing of w + (t/eps) g.
 		Since $\wteps + (t{\eps}^{-1})\gr{{\eps}}{B_{\rho}}(\cdot, 0)$ vanishes on $\partial \Lambdateps$ by obstacle contact, while $\gr{{\eps}}{\Lambdateps}$ and $\qeps{\Lambdateps}$ vanish there by killing,
 		this implies that 
 		\[
@@ -2469,7 +2469,7 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		which comes from Theorem \ref{theorem:convergence-divisible} and Lemma \ref{lemma:uniform-convergence-of-greens-function}, for some finite
 		$\sigma(h,\eta)$-measurable random variable $C = C(\delta) > 0$, we have that
 		\[
-		% CORRECTION [C4]: the cell-union boundary replaces the boundary of the finite point set (E-A8; four proof occurrences).
+		% CORRECTION [C4]: the cell-union boundary replaces the boundary of the finite point set.
 		\tilde v_t^{{\eps}}(a) \geq	v_t^{{\eps}}(a) > C {\eps}^{-1} , \quad \forall  a \in \Lambdateps:\dist(\eta(a), \partial \overline{\Lambdateps}) > \delta,
 		\]
 		except on an event of probability going to zero as ${\eps} \to 0$. 
@@ -2670,13 +2670,13 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 	For $z \in \C$, $r > 0$, and parameter $C >0$, let $E_r(z) := E_r(z; C)$ be the event that the following
 	is true:
 	\begin{equation} \label{eq:good-annulus-event}
-	% CORRECTION [C5] (E-A10): printed \log \frac{1}{|u-v|}, not scale invariant (E_r(z) a.s. empty for r < e^{1-C}/4, contradicting Lemmas 6.4-6.5).
+	% CORRECTION [C5]: printed \log \frac{1}{|u-v|}, not scale invariant (E_r(z) a.s. empty for r < e^{1-C}/4, contradicting Lemmas 6.4-6.5).
 \sup_{v \in \A_{r, 2r}(z)} \int_{\A_{r,2r}(z)} \left(\log \frac{r}{|u-v|} + 1 \right) d \mu_h(u) \leq C \inf_{w \in \A_{r, 2 r}(z)} \mu_h(B_{\boldsymbol{c_0} r}(w)).
 	% CORRECTION [C27]: the annulus is open; use an infimum, as in the proof of Lemma 6.8 (printed: \min).
 	\end{equation}
 	An annulus $\A_{r, 2 r}(z)$ for which $E_r(z)$ holds it said to be {\it good}. In this subsection we prove that there are many good annuli in $B_{\rho}$. 
 	\begin{lemma} \label{lemma:good-prevalance}
-		% CORRECTION [C18] (author-approved 2026-11-09) Printed: a constant C depending only on gamma. The proof (Lemma 6.5's quantile of the
+		% CORRECTION [C18] Printed: a constant C depending only on gamma. The proof (Lemma 6.5's quantile of the
 		% annulus ratio) gives C = C(gamma, \boldsymbol c_0), and a good annulus forces C >= (1 - log 2)/(16 \boldsymbol c_0^2) by packing, while \boldsymbol c_0 = \boldsymbol c_0(rho, gamma)
 		% is fixed in eq:choice-of-constant-annulus; every later use keeps rho fixed, so the dependence on \boldsymbol c_0 is harmless.
 		There exists a constant $C$ depending only on $\gamma$ and $\boldsymbol{c_0}$ such that the following holds with polynomially high 
@@ -3091,7 +3091,7 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 	$\log(1/R)\mu_h(F)$ and again using
 	\eqref{eq:c26-annulus-mass} proves
 	\eqref{eq:c26-absolute-potential}.  This is the point at which the
-	scale-invariant kernel from correction \textup{[C5]} is used.
+	scale-invariant kernel is used.
 
 	We now specify the high-probability event for the map.  Put
 	\[
@@ -3144,7 +3144,7 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 	\[
 		D:=B_{R/4}(x),
 		\qquad D_0:=B_{\boldsymbol{c_0}R}(x),
-		\qquad m_0:=\mu_h(D_0).
+		\qquad \varpi_0:=\mu_h(D_0).
 	\]
 	We also suppose that $d^\vartheta\leq r/4000$ and that all the
 	radii in this display are below $\boldsymbol t_*$.  Let
@@ -3175,12 +3175,12 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 	\begin{align}
 		|\VGeps(D_0)\setminus A|
 		&\geq \eps^{-1}
-		\left(m_0-\eps^{\alpha_{\rm c}}-s_1r^{2\beta}\right)
+		\left(\varpi_0-\eps^{\alpha_{\rm c}}-s_1r^{2\beta}\right)
 		\notag\\
-		&\geq \frac12\eps^{-1}m_0.
+		&\geq \frac12\eps^{-1}\varpi_0.
 		\label{eq:c26-target-count}
 	\end{align}
-	Indeed, $m_0\geq c_{\rm v}\boldsymbol{c_0}^\beta R^\beta$,
+	Indeed, $\varpi_0\geq c_{\rm v}\boldsymbol{c_0}^\beta R^\beta$,
 	$r^{2\beta}\leq R^\beta$, and the first line is Lemma
 	\ref{lemma:mu_h-convergence} with the function equal to one.
 
@@ -3219,7 +3219,7 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 	Consequently, by the exact pre-exit Green-function identity,
 	\begin{equation} \label{eq:c26-first-moment}
 		\E[V\mid h,\eta]
-		\geq\frac14\eps^{-1}m_0.
+		\geq\frac14\eps^{-1}\varpi_0.
 	\end{equation}
 
 	Since the cell of $b$ meets $\partial B_{4R/3}(z)$,
@@ -3236,7 +3236,7 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 	$(4/3+1/4+2/100)R=481R/300<2R$.
 	The same estimates put $D$ in this annulus, and if $u$ belongs to
 	the left side of \eqref{eq:c26-ball-in-annulus} and $v\in D$, then
-	$|u-v|<R$.  Also $x\in\A_{R,2R}(z)$, so $m_R(z)\leq m_0$.
+	$|u-v|<R$.  Also $x\in\A_{R,2R}(z)$, so $m_R(z)\leq \varpi_0$.
 	The mass hypothesis in Lemma \ref{lemma:exit-time-upper-bound} holds
 	because
 	\[
@@ -3250,7 +3250,7 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		\E[V^2\mid h,\eta]
 		\leq\E[\tau_D^2\mid h,\eta]
 		\leq C_5\eps^{-2}
-		\left(1+\log\frac1R\right)^2m_0^2.
+		\left(1+\log\frac1R\right)^2\varpi_0^2.
 	\end{equation}
 	The second moment method, \eqref{eq:c26-first-moment}, and
 	\eqref{eq:c26-second-moment} imply
@@ -3585,7 +3585,7 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 	but that stronger statement is not needed to complete the proof of the IDLA upper bound. For the statement, we recall the definition of the modified IDLA aggregate from Definition~\ref{def:stopped-idla}.
 	
 	\begin{lemma} \label{lemma:chance-of-being-absorbed}		
-				% CORRECTION [C35]: the choice of $s_3$ follows $s_0$, as in Lemma 6.7 (E-c5-1); the proof below is unchanged.
+				% CORRECTION [C35]: the choice of $s_3$ follows $s_0$, as in Lemma 6.7; the proof below is unchanged.
 		There exists deterministic $\omega = \omega(\gamma) > 0$ so that for each $s_0 \in (0,1)$, there exist $s_3 > 0$ and $s_4, s_5 \in (0,1)$ 
 		and a random $\sigma(h)$-measurable $\boldsymbol{\delta} >0$ such that with probability approaching one as ${\eps}$ goes to zero, the following holds for $r \in [10 {\eps}^{\omega}, \boldsymbol{\delta}]$ 
 		for all sets $\Theta \subset {\VGeps}$ 
@@ -3616,7 +3616,7 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		\]
 		where $\mathrm{NegBinom}(k_1,s_2)$ denotes a random variable drawn from a negative binomial distribution with $n = k_1$ and $p = s_2$, sampled independently from $(h,\eta)$. 
 		Therefore, by a concentration inequality for negative binomial random variables, for each $k_1 \leq s_1 r^{2 \beta^-} {\eps}^{-1}$, 
-		% CORRECTION [C19] (author-approved 2026-11-10) Printed: \mathcal{N}(k_1) \leq (s_2^{-1}+C)k_1 here and \mathcal{N}(\cdot) \leq k in the next display.
+		% CORRECTION [C19] Printed: \mathcal{N}(k_1) \leq (s_2^{-1}+C)k_1 here and \mathcal{N}(\cdot) \leq k in the next display.
 		% Both tail events were reversed: the negative-binomial domination bounds the probability of needing too many walkers (with certain
 		% absorption \mathcal{N}(m)=m, so the printed left side equals 1). The inclusive threshold in the conclusion is routine rounding.
 		\begin{equation} \label{eq:number-of-walkers-nb-bound}
@@ -4040,6 +4040,7 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		\begin{equation} \label{eq:degree-bound}
 		\max_{a \in {\VGeps}(B_{\rho})} \deg^{{\eps}}(a) \leq (\log {\eps}^{-1})^2.
 		\end{equation}
+		% CORRECTION [C25]: the path starts at a nonzero point of \Lambdateps, and the increment bound holds on the single event (eq:degree-bound) for all t > 0.
 		On this event, fix $t > 0$ and $a \in \Lambdateps \setminus \{0\}$, and let $a_0 = a$. Inductively, assume that $i\geq 0$ and $a_i \in \Lambdateps$ has been defined. If $a_i = \{0\}$, set $m=i$ and conclude the induction. If $a_i \not=0$, let $a_{i+1}$ be a neighbor of $a_i$ maximizing $u^{{\eps}}_t(a_{i+1})$.
 		Since $a_i \in \Lambdateps \setminus \{0\}$, \eqref{eq:laplacian-of-uteps} gives $\Delta^{{\eps}} u^{{\eps}}_t(a_i) = \deg^{{\eps}}(a_i)^{-1}$, so
 		\begin{align*}
@@ -4116,6 +4117,7 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		O_k \leq (1-s_2) O_{k-1},
 		\end{equation}
 		except on an event of probability tending to 0 as ${\eps} \to 0$.
+		% CORRECTION [C8]: the mass bound is used only at cell scale, $s \geq \eps^{\beta}$.
 		By Lemma \ref{lemma:mass-bound-odometer}, for all $z \in \C$ and $s \geq \eps^{\beta}$ such that $B_{s}(z) \subset B_{\rho} \setminus \overline{\Theta_{k-1}}$:
 		\begin{equation} \label{eq:mass-bound-in-proof}
 		\left| {\VGeps}(B_{\boldsymbol c_0 s}(z)) \cap \Lambdateps \right| \leq C \times \sup_{\partial \Theta_{k-1}} u_{t}^{{\eps}},
@@ -4203,6 +4205,7 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 		{\it Step 3: $k \geq \tau_{{\eps},2}$.} \\
 		We control the size of the odometer by Lemma \ref{lemma:crude-upper-bound}
 		and the upper bound on the Euclidean diameter of cells in the mated-CRT map. 
+		% CORRECTION [C25]: the paths start in \Lambdateps \setminus \Theta_{\tau_{\varepsilon,2}} and are stopped on first reaching \partial \Theta_{\tau_{\varepsilon,2}}.
 		By Lemma \ref{lemma:crude-upper-bound},  w.p.\ tending to 1 as ${\eps} \to 0$, for every $a \in \Lambdateps \setminus \Theta_{\tau_{{\eps},2}}$, there is a path
 		of at most $\log({\eps}^{-1})^2 {\eps}^{-\omega_0}$ cells from $a$
 		to $\partial \Theta_{\tau_{{\eps},2}}$ along which the odometer increases by at most ${\eps}^{-\omega_0}$.
@@ -4304,7 +4307,7 @@ Every target lies in the origin component of $I_\eps$: otherwise $\gr{{\eps}}{I_
 	\appendix	
 	\section{Discrete obstacle problem} \label{sec:obstacle-appendix}
 We provide the proofs which were omitted in Section \ref{subsec:basic-properties} in the general setting of an undirected, locally finite, connected, and infinite graph $G$. We consider a finite set of vertices of $G$, denoted by $V$, which contain a marked vertex which we call the {\it origin}, denoted by $0$.  
-	% CORRECTION [C33]: the hypotheses are weakened on V and strengthened on G (E-c1-2); connectedness of V is not used.
+	% CORRECTION [C33]: the hypotheses are weakened on V and strengthened on G; connectedness of V is not used.
 	\begin{remark}
 	Connectedness of $V$ is not needed. Since $G$ is connected and infinite, every vertex of the finite set $V$ has a path in $G$ to $V^c$. Hence the finite maximum principle holds on every connected component of $V$, and the zero-boundary Dirichlet problem on $V$ has a unique solution: the homogeneous problem vanishes by the maximum principle applied to both signs, and existence follows from invertibility of the finite matrix. On a component of $V$ not containing $0$ the obstacle is harmonic and vanishes on the exterior boundary, hence vanishes; so the least supersolution vanishes there. The perturbation argument for $\Delta w=\mathfrak r$ on $\{w>\phi\}$ and $\Delta w\geq 0$ on $V$ is componentwise, and the exclusion of a component of $\{w>\phi\}$ away from $0$ uses the finite maximum principle on that component; hence the cluster is connected when nonempty. The upper and lower bounds and the mass identities sum over all of $V$ and do not use connectedness of $V$.
 	\end{remark}
@@ -4988,31 +4991,14 @@ allows environment-measurable $f$. Complex-valued tests follow by
 treating their real and imaginary parts separately.
 \end{proof}
 
-The assertion with coefficient $2$ for the process $X$ is
-false, and not merely inconsistent notation.
-For a concrete parameter choice take $\gamma=1/2$ and let
-$L=\tau_{B_R}^{Y,0}$ with $R=1/2$. By \eqref{eq:weight},
-$\E\nu(dx)=dx$, \eqref{eq:raw}, and Tonelli,
-\[
- \E L
-   =2\int_0^R s^{1-\gamma^2}\log(R/s)\,ds
-   =\frac{2R^{2-\gamma^2}}{(2-\gamma^2)^2}<0.195 .
-\]
-Thus $\P(L\geq1)<1/2$, so every median $m_0$ is less than $1$.
-For $f=1$, the positive Green integral in \eqref{eq:scaled} then
-rules out coefficient $2$. The minimal coefficient correction is
-$\lambda_0=2/m_0$, the constant defined after \eqref{eq:mo}.
-Alternatively, coefficient $2$ is correct if the named process is
-changed from $X$ to the raw process $Y$.
+The coefficient of the process $X$ is therefore $2/m_0=\lambda_0$, the constant defined after \eqref{eq:mo};
+coefficient $2$ is the coefficient of the raw process $Y$.
 
-A remark on the median: equation
-\eqref{eq:mo} must use the starting point $0$, i.e.
+The median in \eqref{eq:mo} is taken from the starting point $0$, as in \eqref{eq:meps}:
 \[
  m_0=\operatorname{median}
        \left(\inf\{t\geq0:|Y_t^0|\geq1/2\}\right).
 \]
-It cannot define a different $m_0$ for each displayed $z$:
-the discrete median in \eqref{eq:meps} is taken from $0$,
 and a start outside $B_{1/2}$ would give median zero.
 
 \subsection{The use in Lemma 3.4}\label{sec:use}
@@ -5155,82 +5141,9 @@ environment-dependent tests in that lemma.
 
 \input{appendix-lemma36-C13.tex}
 
-\subsection{Uses of Lemma 3.6 in the paper}
-Line numbers in this section refer to the supplied corrected source.
-A literal search for \texttt{lemma:convergence-of-harmonic-functions}
-finds its definition at line 1390 and just one invocation, at
-line 1453 in the proof of the Dirichlet lemma.
-\begin{enumerate}[label=(\arabic*)]
-\item \textbf{Dirichlet lemma, lines 1434--1528.}
-Its harmonic part satisfies, exactly,
-\[
- m_\eps^{-1}f_1^\eps(a_y^\eps)
- =\E[\bar\phi(Y^\eps_{\sigma_D^\eps})\mid\mathcal{F}].
-\]
-Theorem~\ref{thm:l36-A} gives the required convergence at every fixed
-rational point. A deterministic diagonal subsequence gives the
-almost-sure simultaneous statement for all rational points.
-The uniform conclusion proved above directly supplies its
-harmonic-part compactness and boundary convergence.
-The boundary datum in that lemma must also be extended to a
-neighborhood (or evaluated after $\pi_D$). No convergence rate
-is used anywhere in this invocation.
-
-The inhomogeneous part uses the separate occupation-convergence
-lemma. Its correct limit is
-$-\lambda_0\int_D G_D(\cdot,w)\psi(w)\mu_h(dw)$,
-where $\lambda_0=2/m_0$ as in approved correction \textup{[C1]}.
-The displayed residual $m_0$ in Step 1 must be read as $\lambda_0$.
-Likewise the limit of $m_\eps^{-1}\mathfrak Q_D^\eps$ has
-Laplacian $-\lambda_0\mu_h$, not the displayed $-1$ in Step 3.
-The needed zero-boundary control is already supplied by the
-lens comparison in the corrected tightness proof, lines
-1144--1172; one cannot justify it by a harmonic maximum
-principle for the superharmonic exit-time function alone.
-These corrections do not require a stronger version of Lemma 3.6.
-
-\item \textbf{Normalized-exit-time argument, lines 1565 and 1674.}
-These use the Dirichlet lemma only with zero boundary data and
-a countable family of deterministic smooth sources.
-The harmonic part is identically zero. Deterministic diagonal
-preparation as in \textup{[C11]} suffices. There is no demand
-for uncountably simultaneous applications or a rate.
-
-\item \textbf{Odometer compactness, line 1948.}
-This cites the Dirichlet proof's zero-boundary barrier.
-Use the corrected tightness proof's lens barrier just identified.
-It is a bounded-Laplacian estimate, not an extra consequence of
-pointwise harmonic convergence.
-
-\item \textbf{Subsequential properties, lines 1981 and 2031.}
-The prepared family consists of rational balls and rational
-polynomial boundary data, hence is countable. A polynomial
-chosen after observing the limiting odometer is permissible
-because convergence has already been prepared for every member
-of that countable family. Polynomials have canonical extensions
-outside the disk. There is, however, an additional scaling typo:
-the boundary condition at about line 2010 must be
-\[
- f_\delta^\eps(b)=m_\eps\bigl(\phi^\delta(\eta(b))+\delta\bigr),
-\]
-not $m_\eps\phi^\delta(\eta(b))+\delta$.
-The latter has limit $\phi^\delta$ and cannot imply the displayed
-limit $\phi^\delta+\delta$ or the claimed domination.
-With the corrected boundary value, uniform convergence of the
-odometer and $\|\phi^\delta-\bar w_t^*\|_{\overline D}<\delta/4$
-give boundary domination for small $\eps$; the small overshoot
-outside $D$ is handled by continuity on its collar.
-The discrete maximum principle and Theorem~\ref{thm:l36-A} then
-give the asserted harmonic comparison. It is enough to take
-rational $\delta\downarrow0$, keeping the family countable.
-\end{enumerate}
-The introduction and the explanatory sentence preceding the
-normalized-exit-time lemma only announce or discuss the
-Dirichlet result. There are no other invocations of Lemma 3.6,
-and no downstream invocation uses its printed quantitative
-comparison. This audit certifies the uses of harmonic convergence;
-it is not a blanket verification of unrelated Green-kernel or
-obstacle calculations elsewhere in the paper.
+\subsection{Uses of Lemma 3.6}
+The only invocation of Lemma~\ref{lemma:convergence-of-harmonic-functions} is in the proof of Lemma~\ref{lemma:discrete-dirichlet-problem}.
+No other result of the paper uses its quantitative comparison.
 
 \bibliographystyle{alpha}
 \bibliography{refs.bib}
