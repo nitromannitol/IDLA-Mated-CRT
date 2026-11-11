@@ -104,3 +104,6 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/StartingCellInterior.lean | archive/MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/StartingCellInterior.lean | B35 |
 | MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/UniformCellSizeProof.lean | archive/MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/UniformCellSizeProof.lean | B35 |
 | MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/VertexModulus.lean | archive/MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/VertexModulus.lean | B35 |
+| MatedCRT/Proofs/Sec3/ConvergenceNormalizedExitTime/CenteredBoundaryProbability.lean | archive/MatedCRT/Proofs/Sec3/ConvergenceNormalizedExitTime/CenteredBoundaryProbability.lean | B36 |
+| MatedCRT/Proofs/Sec3/ConvergenceNormalizedExitTime/RemoveSingularity.lean | archive/MatedCRT/Proofs/Sec3/ConvergenceNormalizedExitTime/RemoveSingularity.lean | B36 |
+| MatedCRT/Proofs/Sec3/ConvergenceNormalizedExitTime/WeightedPotentialHolder.lean | archive/MatedCRT/Proofs/Sec3/ConvergenceNormalizedExitTime/WeightedPotentialHolder.lean | B36 |
