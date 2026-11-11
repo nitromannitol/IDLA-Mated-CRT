@@ -4,9 +4,9 @@ import MatedCRT.Proofs.LBM.TimeChangeContinuity
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.HarmonicPathExit
 
 /-!
-# Truncated quenched laws, Step 6 (pathwise part): boundary shells (fp-S3t-truncated-continuum, z10)
+# Truncated quenched laws, Step 6 (pathwise part): boundary shells
 
-Source: notes/fp-gaps/CHATGPT-idla-3-4-truncated-laws.md, Step 6. The disk `D = B_r(z)` is exhausted by the
+The disk `D = B_r(z)` is exhausted by the
 concentric disks `D_n = B_{r - a/(n+1)}(z)`, which increase to `D`. The shell functional
 `shellTime D_n D T w = min(T, τ_D w) - min(T, τ_{D_n} w)` is the time in `[0, T]` that the path `w` spends before
 exiting `D` but after leaving `D_n`. This file proves the pathwise statements: exit times from an increasing open
@@ -212,8 +212,7 @@ theorem integrable_of_ae_bound {α : Type*} [MeasurableSpace α] {μ : Measure �
     {C : ℝ} (hf : AEStronglyMeasurable f μ) (hC : ∀ᵐ x ∂μ, ‖f x‖ ≤ C) : Integrable f μ :=
   Integrable.mono' (integrable_const C) hf hC
 
-/-- **Named input, to be replaced by the BL-envelope closure lemma of `BLExtension.lean`** (z2; answer 216, 46(a2)
-section 1, `lbm_scalar_measurable_of_bl_envelopes`). For every valid environment `S` and every starting point `y`: a
+/-- **Named input, to be replaced by the BL-envelope closure lemma of `BLExtension.lean`** (`lbm_scalar_measurable_of_bl_envelopes`). For every valid environment `S` and every starting point `y`: a
 bounded path functional `H` that is continuous within the continuous paths `𝒞 = {v | Continuous v}` at almost every
 rescaled LBM path has almost surely strongly measurable Brownian values `b ↦ H (rescaledLBMPath (S.clock ω) S.m₀ b)`,
 and an `AEMeasurable` Brownian integral in `ω`. Its proof: bounded-Lipschitz envelopes of `H` over `𝒞`, the

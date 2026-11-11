@@ -4,9 +4,9 @@ import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.PathEnvelope
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.PathEnvelopeOn
 
 /-!
-# Truncated quenched laws, Step 3: continuity of the exit time and of the stopped occupation (fp-S3t, z2)
+# Truncated quenched laws, Step 3: continuity of the exit time and of the stopped occupation
 
-Step 3 of `notes/fp-gaps/CHATGPT-idla-3-4-truncated-laws.md` (section 3). For a continuous path `w` which exits the disk
+For a continuous path `w` which exits the disk
 `ball z r` regularly (`RegularExit`, `MatedCRT/FirstPass/S3t/LBMRegular.lean`), the truncated exit time
 `v ↦ min (T, τ_D(v))` is continuous at `w` for the local uniform distance (`PathFunctionalContinuousAt`, the continuity
 notion of `MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/PathEnvelope.lean`).

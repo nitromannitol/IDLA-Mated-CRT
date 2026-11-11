@@ -1,9 +1,9 @@
 import MatedCRT.Draft.Section2
 
 /-!
-# Truncated quenched laws, Step 7: vanishing cell mesh (fp-S3t-truncated-continuum, z10)
+# Truncated quenched laws, Step 7: vanishing cell mesh
 
-Source: notes/fp-gaps/CHATGPT-idla-3-4-truncated-laws.md, Step 7. Only the upper cell-diameter half of Lemma 2.8
+Only the upper cell-diameter half of Lemma 2.8
 (`CellSizeEstimateStmt`, BG20 Lemma 2.4) is used, at the enlarged inner radius `ρ₁ = (1 + ρ)/2`: with polynomially
 high probability every cell of the mated-CRT map that meets `B_{ρ₁}(0)` has diameter at most `ε^α`,
 `α = 2/(2+γ)² - ζ`. The event `MeshGood` is the one used by the walk-cell estimates of Step 9.

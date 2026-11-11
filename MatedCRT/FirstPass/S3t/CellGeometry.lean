@@ -4,10 +4,10 @@ import MatedCRT.FirstPass.S3t.VanishingMesh
 import MatedCRT.FirstPass.S5c.CellFirstHit
 
 /-!
-# Internal cell geometry for the truncated quenched laws (Steps 9a-9d, fp-S3t, owner z1)
+# Internal cell geometry for the truncated quenched laws (Steps 9a-9d)
 
 Deterministic facts about the cells `H^ε_a = η([ε(a-1), εa])` (`MatedCRT.cell`) used by the Riemann-sum comparison
-of Step 10 (`RiemannSum.lean`). Source: `notes/fp-gaps/CHATGPT-idla-3-4-truncated-laws.md`, Step 9 (chat 199).
+of Step 10 (`RiemannSum.lean`).
 
 Terminology: frontier `∂D = frontier D` (Armitage-Gardiner, potential theory on the disk `D = ball z r`).
 -/
@@ -165,7 +165,7 @@ theorem vertexOf_mem_interiorCellVertices_of_mesh {η : ℝ → ℂ} {ε ρ α :
     exact Metric.ball_subset_ball (by linarith : ρ ≤ (1 + ρ) / 2) (hball hy)
   exact vertexOf_mem_interiorCellVertices hη hycell hdiam hmarg
 
-/-- **Step 9c, corrected good-event form** (`notes/fp-gaps/CHATGPT-216-idla-hdet-truncated-gaps-PRO.md`, section 2).
+/-- **Step 9c, corrected good-event form**.
 For a fixed point `y` of the disk `ball z r`, eventually as `ε ↓ 0`, almost surely on the mesh-good event `MeshGood`
 together with the almost-sure properties of `η ω` used by the walk (continuous, surjective and proper; these are the
 first three conjuncts of `WalkEnvAe S ω`), the vertex `vertexOf ε (S.η ω) y` is an interior cell vertex of
@@ -198,7 +198,7 @@ theorem eventually_ae_vertexOf_mem_interiorCellVertices {Ω : Type} [MeasurableS
 
 /-- **Step 9c, unconditioned form.** If the almost-sure walk properties hold, then eventually as `ε ↓ 0` the mesh-good
 event alone implies that the vertex of `y` is an interior cell vertex of `ball z r` (almost surely). This is the exact
-form of `notes/fp-gaps/CHATGPT-216-idla-hdet-truncated-gaps-PRO.md`, section 2, given the a.s. event `hWae`. -/
+form given the a.s. event `hWae`. -/
 theorem eventually_ae_vertexOf_mem_interiorCellVertices_of_ae {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     {γ ζ ρ : ℝ} {z y : ℂ} {r : ℝ} (hζγ : ζ < 2 / (2 + γ) ^ 2) (hball : ball z r ⊆ ball 0 ρ) (hρ1 : ρ < 1)
     (hy : y ∈ ball z r)

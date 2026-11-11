@@ -2,10 +2,9 @@ import MatedCRT.FirstPass.S3t.Defs
 import MatedCRT.Defs.Notation
 
 /-!
-# Truncated quenched laws, Step 12: epsilon-first, shell-width-second (fp-S3t, z8)
+# Truncated quenched laws, Step 12: epsilon-first, shell-width-second
 
-Source: `notes/fp-gaps/CHATGPT-idla-3-4-truncated-laws.md`, Step 12 (`## Step 12. Epsilon-first, shell-width-second
-argument`). Probability lemmas only: no environment structure is used.
+Probability lemmas only: no environment structure is used.
 
 Input shape. `A ε ω`, `C ε ω` are the quenched discrete and stopped occupations; `R n ε ω` is the quenched shell
 functional at boundary shell `n` (Step 6); `Rlim n ω` its LBM limit. Step 11 gives, for each `n`, eventually in `ε`,

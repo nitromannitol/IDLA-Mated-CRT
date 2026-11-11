@@ -4,12 +4,11 @@ import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.WalkContinuity
 import MatedCRT.FirstPass.S3t.CellGeometry
 
 /-!
-# Pathwise Riemann-sum estimate for the truncated quenched occupation (Step 10, fp-S3t, owner z1)
+# Pathwise Riemann-sum estimate for the truncated quenched occupation (Step 10)
 
 Deterministic comparison of the discrete quenched occupation `m⁻¹ ∑_{k<⌊Tm⌋} 1{q_0..q_k ∈ I_ε(D)} g(η(εq_k))` with the
 continuum stopped occupation `∫_{(0, T ∧ τ_D]} g(W_t) dt` of the interpolated walk `W = interpolatedWalk ε η m q`
-(`τ_D` the exit time of `D = ball z r`, Armitage-Gardiner terminology). Source:
-`notes/fp-gaps/CHATGPT-idla-3-4-truncated-laws.md`, Step 10 (chat 199). The bound proved is
+(`τ_D` the exit time of `D = ball z r`, Armitage-Gardiner terminology). The bound proved is
 `T C (2d)^χ + M/m + M · shellTime`, which implies the stated `T C (2d)^χ + 4 M/m + M · shellTime`.
 -/
 

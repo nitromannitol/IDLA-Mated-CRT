@@ -10,9 +10,8 @@ import MatedCRT.Draft.Section2
 
 /-!
 # Truncated quenched laws, Step 5: convergence of the continuum stopped functional under the discrete law
-(fp-S3t-truncated-continuum, z10)
 
-Source: notes/fp-gaps/CHATGPT-idla-3-4-truncated-laws.md, Step 5 (l.308-338). Step 2 (`quenched_integral_tendsto_of_bl_of_ae_continuous`,
+Step 2 (`quenched_integral_tendsto_of_bl_of_ae_continuous`,
 `BLExtension.lean`) with the bounded-Lipschitz input `RandomWalkToLBMStmt 𝒮` (Theorem 2.11), applied to the path
 functional `H = stoppedOccupation (ball z r) T g`. Its measurability inputs are discharged by existing lemmas:
 `interpolatedWalkMeasurableStep` (quenched side), `lbmPathFunctionalMeasurableStep_holds` (Brownian side), and

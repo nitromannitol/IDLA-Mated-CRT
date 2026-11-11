@@ -1,10 +1,10 @@
 import HarmonicBalls.Defs.LBM
 
 /-!
-# Truncated quenched laws: deterministic definitions (fp-S3t, z2)
+# Truncated quenched laws: deterministic definitions
 
-Shared definitions for the four-worker derivation of `truncatedQuenchedLawsFixedTime_of_inputs` (namespace
-`MatedCRT.TruncatedLaws`; source notes/fp-gaps/CHATGPT-idla-3-4-truncated-laws.md, section 3). This file is the common
+Shared definitions for the derivation of `truncatedQuenchedLawsFixedTime_of_inputs` (namespace
+`MatedCRT.TruncatedLaws`). This file is the common
 base: the other `S3t` modules import it.
 -/
 

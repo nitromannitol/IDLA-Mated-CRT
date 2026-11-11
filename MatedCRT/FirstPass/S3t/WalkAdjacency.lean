@@ -5,7 +5,7 @@ import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 import MatedCRT.FirstPass.S3t.CellGeometry
 
 /-!
-# Consecutive walk cells meet (input `hadj` of Step 10; fp-S3t-walk-adjacency, owner z1)
+# Consecutive walk cells meet (input `hadj` of Step 10)
 
 The hypothesis `hadj` of `MatedCRT.TruncatedLaws.quenched_sub_stopped_le` (`FirstPass/S3t/RiemannSum.lean`) asks that,
 for consecutive vertices `q j`, `q (j + 1)` of the walk, the cells `cell ε η _` intersect. Here the walk is a sample

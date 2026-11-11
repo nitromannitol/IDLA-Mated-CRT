@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.S3t.Defs
 import MatedCRT.FirstPass.Frozen.S3S4b
 
 /-!
-# Truncated quenched laws, Step 1: uniform deterministic bounds (fp-S3t, z2)
+# Truncated quenched laws, Step 1: uniform deterministic bounds
 
-Step 1 of `notes/fp-gaps/CHATGPT-idla-3-4-truncated-laws.md` (section 3). If `|g| ≤ M`, then the stopped occupation
+If `|g| ≤ M`, then the stopped occupation
 satisfies `|stoppedOccupation D T g w| ≤ T * M`, and the quenched discrete occupation satisfies
 `|quenchedDiscreteOccupation S ω D g T ε q| ≤ T * M` for `m_ε > 0`. Both bounds are deterministic, so bad mesh events are
 discarded through their environment probabilities alone.

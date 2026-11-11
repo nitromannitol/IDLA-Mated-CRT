@@ -2,9 +2,9 @@ import MatedCRT.Draft.Section2
 import MatedCRT.External.SLE
 
 /-!
-# Truncated quenched laws, Step 8: normalization error (fp-S3t-truncated-continuum, z10)
+# Truncated quenched laws, Step 8: normalization error
 
-Source: notes/fp-gaps/CHATGPT-idla-3-4-truncated-laws.md, Step 8. Only the lower half of `MepsScalingInput` (the
+Only the lower half of `MepsScalingInput` (the
 Berestycki–Gwynne normalization (1.8)) is used: `m_ε ≥ C⁻¹ ε⁻¹`, hence `m_ε⁻¹ ≤ C ε → 0`.
 -/
 
