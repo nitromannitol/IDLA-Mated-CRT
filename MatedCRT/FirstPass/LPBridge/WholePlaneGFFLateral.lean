@@ -180,23 +180,23 @@ end Covariances
 /-- `|log t| ≤ 2 (1 + R) t^{-1/2}` on `(0, R]` (elementary: `log u ≤ u - 1`). -/
 lemma abs_log_le_rpow_neg_half {t R : ℝ} (ht : 0 < t) (htR : t ≤ R) :
     |Real.log t| ≤ 2 * (1 + R) * t ^ (-(1 / 2 : ℝ)) := by
-  exact LatticeProb.abs_log_le_rpow_neg_half ht htR
+  exact LatticeProb.TestFunctionLogIntegrable.abs_log_le_rpow_neg_half ht htR
 
 /-- `x ↦ φ x * log ‖x‖` is integrable for a test function `φ` (logarithmic singularity at `0`). -/
 lemma integrable_test_mul_log_norm {φ : ℂ → ℝ} (hφ : IsTestFunction Set.univ φ) :
     Integrable (fun x : ℂ => φ x * Real.log ‖x‖) := by
-  exact LatticeProb.integrable_test_mul_log_norm hφ
+  exact LatticeProb.TestFunctionLogIntegrable.integrable_test_mul_log_norm hφ
 
 /-! ### Joint integrability of the radial integral against a circle average -/
 
 /-- The diagonal circle-circle covariance `2 log max(|x|,1) - log |x|` is nonnegative. -/
 lemma diag_nonneg (x : ℂ) : 0 ≤ 2 * Real.log (max ‖x‖ 1) - Real.log ‖x‖ := by
-  exact LatticeProb.diag_nonneg x
+  exact LatticeProb.TestFunctionLogIntegrable.diag_nonneg x
 
 /-- `|φ(x)| (2 log max(|x|,1) - log |x|)` is integrable for a test function `φ`. -/
 lemma integrable_abs_test_mul_diag {φ : ℂ → ℝ} (hφ : IsTestFunction Set.univ φ) :
     Integrable (fun x : ℂ => |φ x| * (2 * Real.log (max ‖x‖ 1) - Real.log ‖x‖)) := by
-  exact LatticeProb.integrable_abs_test_mul_diag hφ
+  exact LatticeProb.TestFunctionLogIntegrable.integrable_abs_test_mul_diag hφ
 
 section Radial
 

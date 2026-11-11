@@ -19,7 +19,7 @@ and KPZ*, Invent. Math. 185 (2011), arXiv:0808.1560, Section 3.1).
 
 noncomputable section
 
-namespace LatticeProb
+namespace LatticeProb.TestFunctionLogIntegrable
 
 open MeasureTheory Filter Topology Set Metric
 
@@ -174,6 +174,6 @@ lemma integral_test_mul_wholePlaneCov {ψ : ℂ → ℝ} (hψ : IsTestFunction S
           LatticeProb.LogPotentialCircle.circleAverage_wholePlaneCov (norm_pos_iff.mpr hy), mul_comm,
           max_comm ‖y‖ ‖x‖]
 
-end LatticeProb
+end LatticeProb.TestFunctionLogIntegrable
 
 end

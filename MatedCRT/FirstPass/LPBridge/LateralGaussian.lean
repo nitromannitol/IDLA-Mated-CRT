@@ -30,7 +30,7 @@ lemma max_pos_one (z : ℂ) : 0 < max ‖z‖ 1 := LatticeProb.max_norm_pos z
 /-- Against a test function the logarithmic kernel is integrable: `y ↦ ψ y · wholePlaneCov x y` is integrable. -/
 lemma integrable_test_mul_wholePlaneCov {ψ : ℂ → ℝ} (hψ : IsTestFunction Set.univ ψ) (x : ℂ) :
     Integrable (fun y : ℂ => ψ y * wholePlaneCov x y) := by
-  exact LatticeProb.integrable_test_mul_wholePlaneCov hψ x
+  exact LatticeProb.TestFunctionLogIntegrable.integrable_test_mul_wholePlaneCov hψ x
 
 /-- Rotational averaging of the logarithmic kernel: for a radial test function `ψ` and every `x`,
 `∫ ψ(y) wholePlaneCov(x,y) dy = ∫ ψ(y) (log max(|x|,1) + log max(|y|,1) - log max(|x|,|y|)) dy`. -/
@@ -38,7 +38,7 @@ lemma integral_test_mul_wholePlaneCov {ψ : ℂ → ℝ} (hψ : IsTestFunction S
     (hψr : ∀ (θ : ℝ) (x : ℂ), ψ (rot θ x) = ψ x) (x : ℂ) :
     ∫ y, ψ y * wholePlaneCov x y = ∫ y, ψ y *
       (Real.log (max ‖x‖ 1) + Real.log (max ‖y‖ 1) - Real.log (max ‖x‖ ‖y‖)) := by
-  exact LatticeProb.integral_test_mul_wholePlaneCov hψ hψr x
+  exact LatticeProb.TestFunctionLogIntegrable.integral_test_mul_wholePlaneCov hψ hψr x
 
 /-- The radial point of a rotated point is the radial point of the point. -/
 lemma radialPoint_rot (θ : ℝ) (x : ℂ) : radialPoint (rot θ x) = radialPoint x := by
