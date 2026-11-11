@@ -10,6 +10,7 @@ import MatedCRT.FirstPass.HBRewire
 import MatedCRT.FirstPass.LPBridge.MinimumPrinciples
 import MatedCRT.FirstPass.LPBridge.UniversalMeasurability
 import MatedCRT.FirstPass.LPBridge.BrownianOutwardExcursion
+import MatedCRT.FirstPass.LPBridge.InRepoProofs
 
 /-! # Lemma 5.3 in counted form, with the paper-own binder `hLs` discharged
 
@@ -97,13 +98,13 @@ theorem closed_5_3_ownBinders {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measur
   compatibility input `hSC` of both is `frozenClusterStrongCompatibility_of_volumeGrowth hI2` (Closure/HSCDerived.lean:19).
 * `hM`, `hcone` (the Lemma 4.1 cone-scaling input) by the projections `hC.mepsScaling` and `hC.frozenConeScaling` of the
   certified reference model.
-* `hmin`, `hF1`, `hG`, `hexc` (Frozen binders with unconditional committed proofs): `fpStrongMinimumPrinciple_holds`
+* `hF`, `hmin`, `hF1`, `hG`, `hexc` (Frozen binders with unconditional committed proofs): `frozenLQGMeasureFieldMeasurable_holds` (LPBridge/InRepoProofs.lean:35), `fpStrongMinimumPrinciple_holds`
   (LPBridge/MinimumPrinciples.lean:30), `frozenUniversalMeasurabilityOfAnalytic_holds` (LPBridge/UniversalMeasurability.lean:18),
   `MatedCRT.HBRewire.FrozenGreenDiscPole_of_hb` (HBRewire.lean:40), `frozenBrownianOutwardExcursionAtExit_holds`
   (LPBridge/BrownianOutwardExcursion.lean:113).
 
 Remaining binders, by class. Core: `hC`. Data: `𝒮`, `ν`. Step: `hND` (kept by operator ruling). Frozen: `hBG`, `hE1`, `hE2`,
-`hF`, `hF3`, `hfirst`, and the inputs of the two Steps42 proofs: `hstd`, `hCentre`, `hconf`, `hK`, `hE`, `hFL`.
+`hF3`, `hfirst`, and the inputs of the two Steps42 proofs: `hstd`, `hCentre`, `hconf`, `hK`, `hE`, `hFL`.
 HB (Harmonic-Balls Draft statements, class HB): `hOpen`, `hSup`, `hCons`, `hMono`, `hCompat`, `hBdry`, `hExist`, `hThm11`,
 `hProp56`, `hloc`, `hI2`. External: `hscale`. -/
 theorem closed_5_3_clean {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
@@ -119,7 +120,7 @@ theorem closed_5_3_clean {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLE
     (hK : MatedCRT.FirstPass.S2k.FrozenInsertionCoordinateRule) (hloc : HarmonicBallLocalSetStmt.{0})
     (hE : MatedCRT.FirstPass.S2m.FrozenLQGMeasureExistenceInsertion) (hFL : FPConeWholePlaneFieldLaw)
     (hE1 : ConeCircleLawUniqueStep) (hE2 : ConeReferenceExistsStep)
-    (hF : FrozenLQGMeasureFieldMeasurable 𝒮) (hF3 : FrozenDiskGreenNonnegCont)
+    (hF3 : FrozenDiskGreenNonnegCont)
     (hscale : QuantumConeScalingInput) (hfirst : FPFirstHitVisits 𝒮) :
     MeanValueInequalityStmt 𝒮 :=
   have hcan : ConeCanonicalHalfBallStep :=
@@ -127,7 +128,7 @@ theorem closed_5_3_clean {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLE
       hExist hThm11 hProp56 hconf hI2 hK hloc (frozenClusterStrongCompatibility_of_volumeGrowth hI2) hE hFL hBG
   have hcl : ConeHalfBallClosureInsideStep :=
     MatedCRT.FirstPassClosure.coneHalfBallClosureInsideStep_proof hI2 hK hloc hExist hE hFL hBG
-  firstPass_5_3_final hF frozenUniversalMeasurabilityOfAnalytic_holds hF3 HBRewire.FrozenGreenDiscPole_of_hb
+  firstPass_5_3_final (frozenLQGMeasureFieldMeasurable_holds 𝒮) frozenUniversalMeasurabilityOfAnalytic_holds hF3 HBRewire.FrozenGreenDiscPole_of_hb
     fpStrongMinimumPrinciple_holds (coneScaleInvarianceCoded_ownBinders hBG hND hscale hcan hcl hE1 hE2) hscale hfirst
     hC.mepsScaling closed_4_4 closed_2_13_cellRewire
     (firstPass_4_1_coneLaw_ownBinders ν hC hBG frozenBrownianOutwardExcursionAtExit_holds hC.frozenConeScaling)
