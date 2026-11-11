@@ -49,6 +49,6 @@ end PrintedTestLocal68
 
 end MatedCRT
 
-/-! ## Audit -/
+/-! ## Axioms -/
 
 #print axioms MatedCRT.PrintedTestLocal68.stayIn_le_printed_local

@@ -2,16 +2,16 @@ import MatedCRT.FirstPass.S5qe
 import MatedCRT.FirstPass.Closure.Lemma36RateFloored
 
 /-!
-# Floored consumers of the one-sided boundary estimate (audit R2 K1, part (e))
+# Floored consumers of the one-sided boundary estimate
 
-Audit R2, item K1 (`notes/fp-gaps/OPUS-AUDIT-R2.md:33-45`): `FrozenOneSidedBoundaryContinuity` (S3i/Frozen.lean:44)
-is false as typed, since its boundary distance has no floor. Its floored form
-`FrozenOneSidedBoundaryContinuityFloored` (S3i/FrozenFloored.lean) is pending truth check (MQ-li-7a).
+`FrozenOneSidedBoundaryContinuity` (S3i/Frozen.lean:44)
+is FALSE as typed, since its boundary distance has no floor (see docs/campaign/FROZEN-PROVENANCE.md). Its floored form
+`FrozenOneSidedBoundaryContinuityFloored` (S3i/FrozenFloored.lean) is PENDING TRUTH CHECK (see docs/campaign/FROZEN-PROVENANCE.md).
 
 The floored consumers below are the original declarations with the binder `hBE : FrozenOneSidedBoundaryContinuity 𝒮`
 replaced by `hBEFl : FrozenOneSidedBoundaryContinuityFloored 𝒮`, and with the named hypothesis
 `hLensFl : FrozenOneSidedBoundaryContinuityFloored 𝒮 → QuenchedLensStep 𝒮` added. `hLensFl` is the floored quenched
-lens step. It is NOT a paper result (its truth and the uniform floor exponent are filed as MQ-li-9). The lemma `Lemma 7`
+lens step. It is NOT a paper result (its truth and the uniform floor exponent are PENDING TRUTH CHECK; see docs/campaign/FROZEN-PROVENANCE.md, row 82). The lemma `Lemma 7`
 binder `hQB : QuenchedBoundsOnGoodStmt` of the original chain is not a binder here, because `hLensFl` takes the whole
 quenched lens step as one input. Conclusions are unchanged.
 
@@ -51,8 +51,7 @@ theorem firstPass_3_6_annealed_closed_floored {𝒮 : SpaceFillingSLEModel} (h21
     CorrectedHarmonicConvergenceStmt 𝒮 ∧ CorrectedHarmonicSameWalkAnnealedStmt 𝒮 :=
   firstPass_3_6_annealed_floored h211 h28 hm hexc h32 hBEFl hLensFl
 
-/-- Corrected Lemma 3.6 (both clauses), floored form of `firstPass_3_6_closed` (S3i/LensClosed.lean:31), the counted
-row 3.6 of `docs/campaign/COUNTED.md`. Same conclusion as `firstPass_3_6_closed`. -/
+/-- Corrected Lemma 3.6 (both clauses), floored form of `firstPass_3_6_closed` (S3i/LensClosed.lean:31). Same conclusion as `firstPass_3_6_closed`. -/
 theorem firstPass_3_6_closed_floored {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkToLBMStmt 𝒮)
     (h28 : CellSizeEstimateStmt 𝒮) (hm : MepsScalingInput 𝒮) (hexc : FrozenBrownianOutwardExcursionAtExit)
     (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) (hBEFl : FrozenOneSidedBoundaryContinuityFloored 𝒮)

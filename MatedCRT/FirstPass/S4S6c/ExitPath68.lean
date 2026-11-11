@@ -144,5 +144,5 @@ end ExitPath68
 
 end MatedCRT
 
-/-! ## Audit -/
+/-! ## Axioms -/
 #print axioms MatedCRT.ExitPath68.stayIn_shift_of_outer

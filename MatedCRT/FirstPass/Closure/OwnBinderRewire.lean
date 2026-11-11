@@ -112,7 +112,7 @@ theorem firstPass_3_7_ownBinders (𝒮 : SpaceFillingSLEModel) (ν : ℝ → Mea
     (h35c := closed_3_5_ownBinders 𝒮 ν hC hBG hexc)
 
 /-- Leaf for `LQGMeasurePropertiesStmt` (Lemma 2.2, cited from DS11 and SW16): the counted form
-`closed_2_2_lit` with its binders `hscale`, `hBG` (Frozen) and `hND` (operator-kept). -/
+`closed_2_2_lit` with its binders `hscale`, `hBG` (Frozen) and `hND`. -/
 theorem closed_2_2_ownBinders (hscale : QuantumConeScalingInput)
     (hBG : FrozenBerestyckiGwynneConeBallMass) (hND : LQGMeasureNonDyadicDilationPart) :
     LQGMeasurePropertiesStmt :=
@@ -193,7 +193,7 @@ theorem firstPass_2_6_ownBinders
 open MatedCRT.FirstPass36 in
 /-- Lemma 3.6 (corrected harmonic convergence) with `h211` and `h28` supplied by the
 `CertifiedReferenceModel` projections `randomWalkToLBM` and `cellSizeEstimate`. The binder `hBE`
-(`FrozenOneSidedBoundaryContinuity`, FirstPass/S3i/Frozen.lean:44) stays; the ledger classes it Proof?. -/
+(`FrozenOneSidedBoundaryContinuity`, FirstPass/S3i/Frozen.lean:44) stays (FALSE as typed, see docs/campaign/FROZEN-PROVENANCE.md). -/
 theorem firstPass_3_6_ownBinders (𝒮 : SpaceFillingSLEModel) (ν : ℝ → Measure SLEPathCode)
     (hC : CertifiedReferenceModel ν 𝒮) (hm : MepsScalingInput 𝒮)
     (hexc : FrozenBrownianOutwardExcursionAtExit) (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮)

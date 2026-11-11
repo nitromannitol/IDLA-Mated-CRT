@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.Closure.Prop51
 import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 
 /-!
-# Counted forms without the duplicate cell-adjacency binder (audit R1 m1)
+# Counted forms without the duplicate cell-adjacency binder
 
 The binder `hcell : FrozenAdjacentCellsMeetAe 𝒮` (the mating-of-trees fact that cells of adjacent vertices meet almost
 surely, Frozen/S1S2S8SA.lean:16) has the same body as `AdjacentCellsMeetAeStep 𝒮` (Steps/Infra/MatingOfTrees.lean:30),
@@ -17,7 +17,7 @@ open _root_.HarmonicBalls
 
 namespace MatedCRT
 
-/-- **Lemma 2.13** (lemma:maximum-principle), counted form without the binder `hcell` (audit R1 m1). -/
+/-- **Lemma 2.13** (lemma:maximum-principle), counted form without the binder `hcell`. -/
 theorem closed_2_13_cellRewire {𝒮 : SpaceFillingSLEModel} : MaximumPrincipleStmt 𝒮 :=
   closed_2_13 (adjacentCellsMeetAeStep 𝒮)
 
@@ -25,7 +25,7 @@ end MatedCRT
 
 namespace MatedCRT.FirstPassClosure
 
-/-- **Proposition 5.1** (prop:IDLA-lower-bound), counted form without the binder `hcell` (audit R1 m1). The binders are
+/-- **Proposition 5.1** (prop:IDLA-lower-bound), counted form without the binder `hcell`. The binders are
 those of `closed_5_1` (Closure/Prop51.lean:44) minus `hcell`. -/
 theorem closed_5_1_cellRewire {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
     (hC : CertifiedReferenceModel ν 𝒮)

@@ -121,7 +121,7 @@ theorem firstMoment_occCount_fm_loc {γ ρ : ℝ} (K : Constants68 γ ρ) {μ : 
     rw [hS] at hb
     exact hb.2
   have hSfin : S.Finite := hfinD.subset hSV
-  -- (B10): `|S| ≥ ε⁻¹ m₀ / 2`
+  -- `|S| ≥ ε⁻¹ m₀ / 2`
   have hcardSum : ((V \ A).ncard : ℝ) + ((V ∩ A).ncard : ℝ) = V.ncard := by
     have h := Set.ncard_inter_add_ncard_sdiff_eq_ncard V A hfinD
     have h2 : (V \ A).ncard + (V ∩ A).ncard = V.ncard := by rw [add_comm]; exact h
@@ -139,13 +139,13 @@ theorem firstMoment_occCount_fm_loc {γ ρ : ℝ} (K : Constants68 γ ρ) {μ : 
     rw [hrpow] at hL29
     rw [hS]
     linarith [e1, e2, hL29, hloc', hcardSum]
-  -- (B13): the Green lower bound `1/2 ≤ G_{I(D)}(y, b)` for `b ∈ S`
+  -- the Green lower bound `1/2 ≤ G_{I(D)}(y, b)` for `b ∈ S`
   have hG : ∀ b ∈ S, ENNReal.ofReal (1 / 2) ≤ ∫⁻ w, visitsBeforeExit ID b w ∂srwLaw m y := by
     intro b hb
     have hbV : b ∈ V := hSV hb
     rw [GreenTest68.lintegral_visits_eq_tsum, hID]
     exact GreenTest68.hG_of_green hη hε hR K.hC K.hc0 K.c0_lt_eighth K.hc0C hεc hdiam hbV (hGr b hbV)
-  -- (B14): Tonelli, `∫⁻ visitCount ID S = ∑_{b∈S} ∫⁻ visits_b`
+  -- Tonelli, `∫⁻ visitCount ID S = ∑_{b∈S} ∫⁻ visits_b`
   have hsum : ∫⁻ w, ConstantOrderDiv.visitCount ID S w ∂srwLaw m y
       = ∑' b : S, ∫⁻ w, visitsBeforeExit ID (b : ℤ) w ∂srwLaw m y := by
     calc ∫⁻ w, ConstantOrderDiv.visitCount ID S w ∂srwLaw m y
@@ -586,7 +586,7 @@ theorem hone_exitQ_walk_of_env_repaired_rho {ρmom : ℝ} {γ ρc : ℝ} (K : Co
     (fun k ω _ => (measure_ball_lt_top (μ := μ)).ne) (fun k ω _ v _ => hμNull v)
     (fun k ω _ => (measure_ball_lt_top (μ := μ)).ne) hdbl
 
--- Repaired copy of `hone_exitQ_walk_of_env` (HoneInputs.lean:39), P1 of the consumer patch: hsp
+-- Repaired copy of `hone_exitQ_walk_of_env` (HoneInputs.lean:39): hsp
 -- mass-relative; hVol replaced by hVolC, hVolY; hvol, hvol2 from hvol_of_direct68.
 /-- **The hone of `exitQ_le_pow` at the walk-centred test end, with the discharged environment inputs removed.**
 Same conclusion as `hone_exitQ_walk_massRel`. The finiteness, null-singleton, `ρS`, `hvol`, `hvol2` and `hGrLow` inputs are derived
@@ -825,7 +825,7 @@ theorem hone_exitQ_walk_of_env_direct_repaired_rho {ρmom : ℝ} {γ ρc : ℝ} 
     hRr hdiam hsp rmin hRmin hVolC hVolY hGreen hWalk hfinE hL29' hsc hεα hεmass hb (H := fun _ _ => ε ^ (2 / (2 + γ) ^ 2 - ζc))
     (fun k ω hω p hp q hq => hcellD k ω hω p hp q hq) (fun k ω hω => hsmallAll k ω hω) hx1 hmomS hgood hN hpos hdbl
 
--- Repaired copy of `hone_exitQ_walk_of_env_direct` (HoneInputsDirect.lean:83): P1-P3 of the consumer patch
+-- Repaired copy of `hone_exitQ_walk_of_env_direct` (HoneInputsDirect.lean:83)
 -- with the mass-relative hsp. hdiam is derived (hdiam_of_rmin68, route B); hCellGood is the
 -- mesh bound on B_{ρc+3/8}; hVol is hVolC, hVolY.
 /-- **The hone of `exitQ_le_pow` at the walk-centred test end, direct inputs discharged from good events.**

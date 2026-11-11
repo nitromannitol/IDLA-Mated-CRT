@@ -3,10 +3,9 @@ import MatedCRT.FirstPass.S3i.FrozenFloored
 import MatedCRT.FirstPass.LPBridge.BrownianOutwardExcursion
 
 /-!
-# Corrected Lemma 3.6 from the floored one-sided boundary estimate (audit R2 K1)
+# Corrected Lemma 3.6 from the floored one-sided boundary estimate
 
-Audit R2, item K1 (`notes/fp-gaps/OPUS-AUDIT-R2.md`): `FrozenOneSidedBoundaryContinuity` (S3i/Frozen.lean:44) is false as
-typed, so `closed_3_6_full` and `closed_3_6_rate` (Closure/Lemma36Rate.lean:30,39) are proved from a false premise. This
+`FrozenOneSidedBoundaryContinuity` (S3i/Frozen.lean:44) is FALSE as typed (see docs/campaign/FROZEN-PROVENANCE.md), so `closed_3_6_full` and `closed_3_6_rate` (Closure/Lemma36Rate.lean:30,39) are proved from a false premise. This
 file gives their floored versions, with the input `FrozenOneSidedBoundaryContinuityFloored 𝒮` (S3i/FrozenFloored.lean) in
 place of the false binder.
 
@@ -23,7 +22,7 @@ floored form as typed, for two reasons:
 at the radius `ε ^ (b / 2) / 16` to the vertex with `0 < infDist ≤ 6 * ε ^ b` (LensBE.lean:37–38), and the floored bound gives
 the rate `ε ^ (ν * (β - b / 2))`, which is `ε ^ (ν * b / 2)` only when `β ≥ b`.
 Since a valid floor exponent `β` remains valid when decreased, the existential does not supply `β ≥ b`.
-PENDING TRUTH CHECK (MQ-li-7a).
+PENDING TRUTH CHECK (see docs/campaign/FROZEN-PROVENANCE.md).
 -/
 
 open MeasureTheory

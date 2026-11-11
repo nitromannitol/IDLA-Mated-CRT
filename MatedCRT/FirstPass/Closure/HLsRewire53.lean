@@ -19,14 +19,14 @@ binder. This file supplies it: the coded Lemma 2.6 is `firstPass_2_6_coded_of_gl
 whose input is the global family factor `ConeGlobalFamilyFactorStep`, and that factor is
 `coneGlobalFamilyFactor_proved` (S2i/GlobalFactor.lean) applied to the canonical half-ball step `hcan`, the closure step
 `hcl`, the volume growth of Lemma 2.7, the cone-circle law and reference binders, the cone scaling in law, and the LQG
-measure properties of Lemma 2.2 (`closed_2_2_ownBinders`, which keeps the operator-ruled `hND`).
+measure properties of Lemma 2.2 (`closed_2_2_ownBinders`).
 
 The other Draft binders of Lemma 5.3 are supplied by the counted or own-binder forms of this paper: Lemma 4.4 by
 `closed_4_4`, Lemma 2.13 by `closed_2_13_cellRewire`, Lemma 3.3 by `closed_3_3_ownBinders`, Lemma 2.17 by
 `firstPass_2_17_ownBinders`, Lemma 2.18 by the field `hC.exitTimeUpperBound` of the core reference model, and
 Lemma 4.1 (`ConvergenceDivisibleStmt`) by `firstPass_4_1_coneLaw_ownBinders`, the cone-law form of Lemma 4.1 on the
 corrected Lemma 3.5. The remaining binders are the paper steps `hcan` and `hcl` (`ConeCanonicalHalfBallStep`,
-`ConeHalfBallClosureInsideStep`), the operator-ruled `hND`, the Frozen inputs, and the Frozen binders `hexc` (Lemma 3.5
+`ConeHalfBallClosureInsideStep`), the Step `hND`, the Frozen inputs, and the Frozen binders `hexc` (Lemma 3.5
 route) and `hcone` (the repaired cone-scaling law of Lemma 4.1, `FrozenConeScalingLaw`). -/
 
 namespace MatedCRT
@@ -74,8 +74,7 @@ theorem firstPass_4_1_coneLaw_ownBinders {𝒮 : SpaceFillingSLEModel} (ν : ℝ
 
 /-- **Lemma 5.3 (mean value inequality), counted form with its own binders.** `firstPass_5_3_final` with the binder
 `hLs` supplied by `coneScaleInvarianceCoded_ownBinders`, the Draft binders `h44`, `h213`, `h41`, `h33`, `h218`, `h217`
-supplied as in the module documentation, and the remaining binders the paper steps `hcan`, `hcl`, the operator-ruled
-`hND`, the Frozen inputs, and the Frozen binders `hexc` and `hcone`. -/
+supplied as in the module documentation, and the remaining binders the paper steps `hcan`, `hcl`, the Step `hND`, the Frozen inputs, and the Frozen binders `hexc` and `hcone`. -/
 theorem closed_5_3_ownBinders {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
     (hC : CertifiedReferenceModel ν 𝒮) (hBG : FrozenBerestyckiGwynneConeBallMass)
     (hND : LQGMeasureNonDyadicDilationPart) (hcan : ConeCanonicalHalfBallStep)
@@ -103,7 +102,7 @@ theorem closed_5_3_ownBinders {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measur
   `MatedCRT.HBRewire.FrozenGreenDiscPole_of_hb` (HBRewire.lean:40), `frozenBrownianOutwardExcursionAtExit_holds`
   (LPBridge/BrownianOutwardExcursion.lean:113).
 
-Remaining binders, by class. Core: `hC`. Data: `𝒮`, `ν`. Step: `hND` (kept by operator ruling). Frozen: `hBG`, `hE1`, `hE2`,
+Remaining binders, by class. Core: `hC`. Data: `𝒮`, `ν`. Step: `hND`. Frozen: `hBG`, `hE1`, `hE2`,
 `hF3`, `hfirst`, and the inputs of the two Steps42 proofs: `hstd`, `hCentre`, `hconf`, `hK`, `hE`, `hFL`.
 HB (Harmonic-Balls Draft statements, class HB): `hOpen`, `hSup`, `hCons`, `hMono`, `hCompat`, `hBdry`, `hExist`, `hThm11`,
 `hProp56`, `hloc`, `hI2`. External: `hscale`. -/

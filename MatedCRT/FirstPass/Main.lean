@@ -26,19 +26,18 @@ numbered results with the committed first-pass theorems, recursively:
 
 The hypotheses of the two theorems are therefore (i) EXTERNAL Props (general mathematics, cited Draft statements,
 frozen first-pass inputs), (ii) Draft statements of numbered results not yet PROVED-FP, and (iii) the open NEW step
-`ScaledClusterExitTimeStep` (eq:btb-converge-to-inf). The full classification with locators is in
-docs/campaign/FIRST-PASS-INPUTS.md. No new frozen Prop is introduced here.
+`ScaledClusterExitTimeStep` (eq:btb-converge-to-inf). No new frozen Prop is introduced here.
 -/
 
 namespace MatedCRT
 
 /-- **Theorem 1.4** (theorem:convergence-of-IDLA, line 251), first-pass composition.
 
-Not counted (audit R1 B6): the counted form is `closed_1_4_full` (Closure/Final14Full.lean:21), see
+The version with closure binders discharged is `closed_1_4_full` (Closure/Final14Full.lean:21), see
 `firstPassMain_1_4_full`. This form binds the RETIRED `FrozenConeEnvironmentScaling` and the paper step
 `ScaledClusterExitTimeStep`.
 
-Hypotheses, grouped as in docs/campaign/FIRST-PASS-INPUTS.md:
+Hypotheses, by class:
 * EXTERNAL: `hscale` (DMS14 Proposition 4.13(i)), `hm` (eq:meps-scaling), `hdeg` (eq:degree-bound), `h22` (Fact 2.2),
   `h27`, `h28`, `h29`, `h210`, `h214`, `h216`, `h218` (cited Lemmas 2.7-2.18), `hH` (Lemma 3.2 corrected, GMS19),
   `hEnv` (environment scaling, DMS14 and mating of trees; frozen as `FrozenConeEnvironmentScaling`), `h0`-`hR` (the
@@ -76,7 +75,7 @@ theorem firstPassMain_1_4 (𝒮 : SpaceFillingSLEModel)
 
 /-- **Theorem 1.6** (theorem:convergence-of-div-sandpile, line 283), first-pass composition: Theorem 1.4 for the
 divisible sandpile cluster. The hypotheses are those of `firstPassMain_1_4`, with the same classification.
-Not counted (audit R1 B6): the counted form is `closed_1_6_full` (Closure/Final14Full.lean:89), see
+The version with closure binders discharged is `closed_1_6_full` (Closure/Final14Full.lean:89), see
 `firstPassMain_1_6_full`. -/
 theorem firstPassMain_1_6 (𝒮 : SpaceFillingSLEModel)
     (hscale : QuantumConeScalingInput) (hm : MepsScalingInput 𝒮) (hdeg : DegreeBoundInput 𝒮)
@@ -108,9 +107,8 @@ section Counted
 open MeasureTheory Set Filter Topology Metric
 open _root_.HarmonicBalls
 
-/-- **Theorem 1.4** (theorem:convergence-of-IDLA, line 251), counted form (audit R1 B6). The binders are those of
-`closed_1_4_full` (Closure/Final14Full.lean:21), which this theorem applies unchanged. Its binder classes are listed
-in reports/z1-residual-full.txt; the only paper-step binder is `hND` (operator-staged literature, req 104a). -/
+/-- **Theorem 1.4** (theorem:convergence-of-IDLA, line 251). The binders are those of
+`closed_1_4_full` (Closure/Final14Full.lean:21), which this theorem applies unchanged. The only paper-step binder is `hND`. -/
 theorem firstPassMain_1_4_full
     {𝒮 : SpaceFillingSLEModel}
     (ν : ℝ → Measure SLEPathCode)
@@ -169,7 +167,7 @@ theorem firstPassMain_1_4_full
     hK hE hE1 hE2 hG15 h32 h611 h82 hI2 hSup hCons hMono hCompat hBdry hEx hThm11 hProp56 hloc hSC hrescale hND
     hBdryHB hExistHB hProp56HB hI2HB hlocHB hSCHB hU hmeasT hmin hGB hpole
 
-/-- **Theorem 1.6** (theorem:convergence-of-div-sandpile, line 283), counted form (audit R1 B6). The binders are those
+/-- **Theorem 1.6** (theorem:convergence-of-div-sandpile, line 283). The binders are those
 of `closed_1_6_full` (Closure/Final14Full.lean:89), which this theorem applies unchanged; see `firstPassMain_1_4_full`. -/
 theorem firstPassMain_1_6_full
     {𝒮 : SpaceFillingSLEModel}
