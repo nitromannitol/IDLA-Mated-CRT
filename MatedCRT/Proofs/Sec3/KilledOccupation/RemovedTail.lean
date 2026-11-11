@@ -266,19 +266,12 @@ lemma removed_tail_bound {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsP
         lintegral_const_mul' _ _ (ENNReal.rpow_ne_top_of_nonneg hp0.le hcfin)
 
 /-- **hR, derived** (printed tex:386-400): for fixed `y ∈ D = ball z r` the removed `φ`-part `R_{ε,a}` is small in
-probability, uniformly in small `ε`, as `a → 0`. Inputs: `origin_tail_moment` (its binders `h_annulus`, `h_core`,
-`hjoint` and the GFF structure), S0 (`hS0`), the Green bound (from `GreenDiskFormula`), and the measurability `hRm`. -/
+probability, uniformly in small `ε`, as `a → 0`. Inputs: `origin_tail_moment` (proved from the GFF structure `hGFF`),
+S0 (`hS0`), the Green bound (from `GreenDiskFormula`), and the measurability `hRm`. -/
 theorem removed_tail_small {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
     {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {p κ : ℝ} (hp0 : 0 < p) (hp1 : p < min 1 (4 / γ ^ 2 - 1))
     (hκ : κ = (2 - γ ^ 2 / 2) * p - γ ^ 2 * p ^ 2 / 2)
     (hc : Ω → ℝ → ℂ → ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hGFF : HarmonicBalls.IsWholePlaneGFF P hC hc)
-    (hjoint : ∀ ε : ℝ, 0 < ε → Measurable fun q : Ω × ℂ => HarmonicBalls.fieldCircleAverage γ (hc q.1) ε q.2)
-    (h_annulus : ∃ C : ℝ, ∀ s ε : ℝ, 0 < s → s ≤ 1 / 8 → 0 < ε → 4 * ε ≤ s →
-      ∫⁻ ω, weightedMass γ ε (hc ω) (annulus s) ^ p ∂P ≤
-        ENNReal.ofReal (C * s ^ κ * (1 + Real.log (1 / s)) ^ p))
-    (h_core : ∃ C : ℝ, ∀ c ε : ℝ, 0 < c → 0 < ε → ε ≤ 1 / 8 → c ≤ 4 * ε →
-      ∫⁻ ω, weightedMass γ ε (hc ω) (ball 0 c) ^ p ∂P ≤
-        ENNReal.ofReal (C * c ^ κ * (1 + Real.log (1 / c)) ^ p))
     {z : ℂ} {r : ℝ} (hr : 0 < r) (hr2 : r ≤ 2) (hG : GreenDiskFormula z r) {y : ℂ} (hy : y ∈ ball z r)
     [IsProbabilityMeasure (HarmonicBalls.planarBrownianMotion y)] (hS0 : BrownianOccupationOnBall z r)
     (hreg : ∀ ω, ∀ ε : ℝ, 0 < ε → Measurable (regDensity γ ε (hc ω)))
@@ -297,7 +290,7 @@ theorem removed_tail_small {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [I
     rw [hfac]
     have : 0 < 4 - γ ^ 2 * (p + 1) := by linarith
     exact mul_pos (by linarith) this
-  obtain ⟨C, a₀, ha₀, hT⟩ := origin_tail_moment P hC hc hGFF hγ0 hγ2 hp0 hp1 hκ hjoint h_annulus h_core
+  obtain ⟨C, a₀, ha₀, hT⟩ := origin_tail_moment P hC hc hGFF hγ0 hγ2 hp0 hp1 hκ
   set c : ℝ≥0∞ := 2 * ENNReal.ofReal K / ENNReal.ofReal η with hc_def
   have hηne : ENNReal.ofReal η ≠ 0 := (ENNReal.ofReal_pos.2 hη).ne'
   have hcfin : c ≠ ⊤ := ENNReal.div_ne_top (ENNReal.mul_ne_top (by norm_num) ENNReal.ofReal_ne_top) hηne
@@ -358,13 +351,6 @@ theorem regClock_identification_of_GFF {Ω : Type*} [MeasurableSpace Ω] (P : Me
     {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {p κ : ℝ} (hp0 : 0 < p) (hp1 : p < min 1 (4 / γ ^ 2 - 1))
     (hκ : κ = (2 - γ ^ 2 / 2) * p - γ ^ 2 * p ^ 2 / 2)
     (hc : Ω → ℝ → ℂ → ℝ) (hC : Ω → (ℂ → ℝ) → ℝ) (hGFF : HarmonicBalls.IsWholePlaneGFF P hC hc)
-    (hjoint : ∀ ε : ℝ, 0 < ε → Measurable fun q : Ω × ℂ => HarmonicBalls.fieldCircleAverage γ (hc q.1) ε q.2)
-    (h_annulus : ∃ C : ℝ, ∀ s ε : ℝ, 0 < s → s ≤ 1 / 8 → 0 < ε → 4 * ε ≤ s →
-      ∫⁻ ω, weightedMass γ ε (hc ω) (annulus s) ^ p ∂P ≤
-        ENNReal.ofReal (C * s ^ κ * (1 + Real.log (1 / s)) ^ p))
-    (h_core : ∃ C : ℝ, ∀ c ε : ℝ, 0 < c → 0 < ε → ε ≤ 1 / 8 → c ≤ 4 * ε →
-      ∫⁻ ω, weightedMass γ ε (hc ω) (ball 0 c) ^ p ∂P ≤
-        ENNReal.ofReal (C * c ^ κ * (1 + Real.log (1 / c)) ^ p))
     (dA : Ω → ContinuousPath ℂ → Measure ℝ≥0)
     {z : ℂ} {r : ℝ} (hr : 0 < r) (hr2 : r ≤ 2) (hG : GreenDiskFormula z r) {y : ℂ} (hy : y ∈ ball z r)
     [IsProbabilityMeasure (HarmonicBalls.planarBrownianMotion y)] (hS0 : BrownianOccupationOnBall z r)
@@ -381,6 +367,6 @@ theorem regClock_identification_of_GFF {Ω : Type*} [MeasurableSpace Ω] (P : Me
       Tendsto (fun ε => (P.prod (HarmonicBalls.planarBrownianMotion y))
         {x | ENNReal.ofReal η < clockDistD γ hc dA (exitNN z r) ε x}) (𝓝[>] (0 : ℝ)) (𝓝 0) :=
   regClock_identification P (HarmonicBalls.planarBrownianMotion y) hγ0.ne' hc dA (exitNN z r) hreg hνm hQm
-    hfin hE (removed_tail_small P hγ0 hγ2 hp0 hp1 hκ hc hC hGFF hjoint h_annulus h_core hr hr2 hG hy hS0 hreg hRm)
+    hfin hE (removed_tail_small P hγ0 hγ2 hp0 hp1 hκ hc hC hGFF hr hr2 hG hy hS0 hreg hRm)
 
 end MatedCRT.KilledOccupation
