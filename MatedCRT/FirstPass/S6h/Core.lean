@@ -6,11 +6,11 @@ import MatedCRT.FirstPass.S6e.Cutoff
 import MatedCRT.Proofs.IDLA.Measurable
 
 /-!
-# FIRST PASS: the configuration bound of Lemma 6.8 (fp-S6h-6-8-bridge-configuration, z8)
+# FIRST PASS: the configuration bound of Lemma 6.8
 
-Sources: `notes/fp-gaps/CHATGPT-z9-6-8-bridge.md` §1 (`exitQ`), §2.1 (`FullAdm`; the zero extension is `Lemma68Final.guardedExit`), §3 Steps A–F
+Sources: the bridge argument §1 (`exitQ`), §2.1 (`FullAdm`; the zero extension is `Lemma68Final.guardedExit`), §3 Steps A–F
 (`configuration_le_pow`), §4 (`hpt`); the test schedule of Steps B–C is the write-up's C1–C3
-(`notes/fp-gaps/CHATGPT-lemma68-open-parts.md`, lines 657–741).
+(the Lemma 6.8 open-parts write-up, lines 657–741).
 
 The quenched exit probability `exitQ` is `P^a(exitEvent U A)` for the walk killed off `U` (Walk.lean's `exitEvent`).
 The configuration bound is the composition (C12) ∘ (C17): `exitEvent U A ⊆ᵐ H_N` (C12, Step D) and
@@ -41,7 +41,7 @@ def ConfigOK {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ρ s₀ ε :
     closure (fillCells ε (S.η ω) (↑i.Θ : Set ℤ)) ⊆ Metric.ball 0 (ρ / 2) ∧
     Metric.ball 0 s₀ ⊆ fillCells ε (S.η ω) (↑i.Θ : Set ℤ)
 
-/-- The sparsity coefficient of the shell-chain constants (ruling CHATGPT-237 §1, `s_guard = K.s1`): `K.s1 = c0^βm/44`
+/-- The sparsity coefficient of the shell-chain constants (`s_guard = K.s1`): `K.s1 = c0^βm/44`
 with `c0 = exp(-2)/32` and `βm = (2+γ)²/2 + 1` (ShellConstants68.lean `shellK68`, `shellK68_s1`). It depends on `γ` only. -/
 noncomputable def sparsityS1 (γ : ℝ) : ℝ := (Real.exp (-2) / 32) ^ ((2 + γ) ^ 2 / 2 + 1) / 44
 
@@ -60,7 +60,7 @@ theorem sparsityS1_lt_one (γ : ℝ) : sparsityS1 γ < 1 := by
   rw [div_lt_one (by norm_num : (0 : ℝ) < 44)]
   linarith
 
-/-- The full admissibility guard `FullAdmAt s₁` at radius `r` (ruling CHATGPT-237 §2, preferred repair): `ConfigOK` and
+/-- The full admissibility guard `FullAdmAt s₁` at radius `r` (preferred repair): `ConfigOK` and
 `Lemma68Admissible.Admissible` with the sparsity coefficient `s₁` (the witness of `UniformConstantOrderLowerBoundStmt`)
 and `chosenBetaMinus γ`. The shell chain uses `s₁ = sparsityS1 γ`. -/
 def FullAdmAt (s₁ : ℝ) {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ρ s₀ γ ε : ℝ) (ω : Ω) (r : ℝ)
