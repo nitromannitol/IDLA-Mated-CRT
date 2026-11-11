@@ -1,6 +1,6 @@
 import HarmonicBalls.Defs.Laplacian
 import Mathlib.Analysis.InnerProductSpace.Laplacian
-import MatedCRT.LPStaging.Analysis.LaplacianCalculus
+import LatticeProb.Analysis.LaplacianCalculus
 
 /-!
 # Local facts about the Laplacian of test functions (Lemma 1 analytic layer)

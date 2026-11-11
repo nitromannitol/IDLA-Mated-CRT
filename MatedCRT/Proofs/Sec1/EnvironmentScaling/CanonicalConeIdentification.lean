@@ -1,6 +1,6 @@
 import MatedCRT.Proofs.Sec1.EnvironmentScaling.FieldAssembly
 import MatedCRT.Proposed.DuplantierMillerSheffieldCone2014
-import MatedCRT.LPStaging.Prob.ContinuousPathLaw
+import LatticeProb.Prob.ContinuousPathLaw
 import Mathlib.Analysis.Calculus.Deriv.Slope
 
 /-!

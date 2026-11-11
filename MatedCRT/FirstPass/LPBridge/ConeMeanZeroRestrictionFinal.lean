@@ -1,6 +1,6 @@
 import MatedCRT.FirstPass.LPBridge.ConeMeanZeroRestriction
 import MatedCRT.FirstPass.LPBridge.LateralGaussian
-import MatedCRT.LPStaging.Gauss.GaussianProcessLawExt
+import LatticeProb.Gauss.GaussianProcessLawExt
 import MatedCRT.FirstPass.LPBridge.GFFRadialBrownian
 import MatedCRT.FirstPass.LPBridge.LateralProcessAEMeasurable
 import MatedCRT.FirstPass.LPBridge.ConeRadialAbsIntegrable

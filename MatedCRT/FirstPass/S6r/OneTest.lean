@@ -1,5 +1,5 @@
 import Mathlib
-import MatedCRT.LPStaging.Prob.SecondMomentMethod
+import LatticeProb.Prob.SecondMomentMethod
 
 /-!
 # One-test estimate (§3 `S5_oneTest`): the deterministic part

@@ -1,6 +1,6 @@
 import MatedCRT.Proofs.Sec3.UniformConvergenceGreenKernel.ContinuumBoundary
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.HarmonicTranslation
-import MatedCRT.LPStaging.Analysis.LaplacianCalculus
+import LatticeProb.Analysis.LaplacianCalculus
 
 /-! # Translation of harmonic functions
 

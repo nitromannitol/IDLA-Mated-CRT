@@ -1,7 +1,7 @@
 import MatedCRT.Defs.Map
 import MatedCRT.Defs.RandomWalk
 import MatedCRT.FirstPass.S6r.LocalBudget
-import MatedCRT.LPStaging.Analysis.ShellGeometry
+import LatticeProb.Analysis.ShellGeometry
 
 /-!
 # First-pass 6.8, redesign: the successive two-sided shell test, steps 6-9

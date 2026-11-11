@@ -1,5 +1,5 @@
 import MatedCRT.FirstPass.Frozen.S1c
-import MatedCRT.LPStaging.Prob.VagueLimitMeasurable
+import LatticeProb.Prob.VagueLimitMeasurable
 import HarmonicBalls.Proofs.Sec5.LQGApproxDecoder
 
 /-!

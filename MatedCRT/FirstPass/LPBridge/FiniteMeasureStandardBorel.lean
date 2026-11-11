@@ -1,5 +1,5 @@
 import MatedCRT.FirstPass.Frozen.S5k
-import MatedCRT.LPStaging.Prob.FiniteMeasureStandardBorel
+import LatticeProb.Prob.FiniteMeasureStandardBorel
 
 /-!
 # Bridge: finite measures on a closed disk form a standard Borel space

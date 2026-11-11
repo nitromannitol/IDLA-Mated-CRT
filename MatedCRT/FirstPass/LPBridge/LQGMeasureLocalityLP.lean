@@ -1,4 +1,4 @@
-import HarmonicBalls.LPStage.LQGMeasureLocality2
+import LatticeProb.LQG.LQGMeasureLocality2
 import MatedCRT.FirstPass.Frozen.S4S5b
 
 /-!

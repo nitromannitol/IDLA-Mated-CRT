@@ -1,5 +1,5 @@
 import MatedCRT.FirstPass.LPBridge.ConeMeanZeroRestriction
-import MatedCRT.LPStaging.Prob.GaussianShiftMoment
+import LatticeProb.Prob.GaussianShiftMoment
 import MarkovProcess.Examples.BrownianMotion
 
 /-!

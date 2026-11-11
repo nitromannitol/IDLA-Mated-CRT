@@ -1,5 +1,5 @@
 import HarmonicBalls.Defs.Laplacian
-import MatedCRT.LPStaging.Analysis.DistributionalLaplacian
+import LatticeProb.Analysis.DistributionalLaplacian
 
 /-!
 # Bridge: the distributional Laplacian of HarmonicBalls and of the lattice-probability staging

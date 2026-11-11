@@ -1,6 +1,6 @@
 import MatedCRT.Proofs.Sec3.KilledOccupation.CircleAverageRepAgree
 import MatedCRT.Proofs.Measurability.VagueMeasurable
-import MatedCRT.LPStaging.Prob.VagueLimitMeasurable
+import LatticeProb.Prob.VagueLimitMeasurable
 import MatedCRT.Defs.Setting
 
 /-!

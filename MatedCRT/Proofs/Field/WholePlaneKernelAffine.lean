@@ -4,7 +4,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.PosLog
 import Mathlib.Analysis.SpecialFunctions.Integrals.PosLogEqCircleAverage
 import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 import Mathlib.Topology.DiscreteSubset
-import MatedCRT.LPStaging.Analysis.CircleLogIntegrals
+import LatticeProb.Analysis.CircleLogIntegrals
 
 /-!
 # The whole-plane covariance kernel under real affine maps

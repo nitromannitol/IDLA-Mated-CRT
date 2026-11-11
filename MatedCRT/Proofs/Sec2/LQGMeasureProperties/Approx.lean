@@ -1,5 +1,5 @@
 import MatedCRT.Steps.Sec2.LQGMeasureProperties
-import MatedCRT.LPStaging.Analysis.CircleAverageUniformLimit
+import LatticeProb.Analysis.CircleAverageUniformLimit
 
 /-!
 # Fact 2.2 III (Weyl scaling) and the circle average approximations of the LQG measure

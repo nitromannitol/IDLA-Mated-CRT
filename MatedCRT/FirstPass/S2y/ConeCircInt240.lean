@@ -1,5 +1,5 @@
 import MatedCRT.FirstPass.S2y.ConeRadialCodes
-import MatedCRT.LPStaging.Analysis.CircleLogIntegrals
+import LatticeProb.Analysis.CircleLogIntegrals
 
 /-!
 # Internal angular integrability on the circles of a quantum cone

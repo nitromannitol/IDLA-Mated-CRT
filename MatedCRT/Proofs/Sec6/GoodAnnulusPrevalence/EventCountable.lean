@@ -1,5 +1,5 @@
 import MatedCRT.Defs.Setting
-import MatedCRT.LPStaging.Prob.MeasureLiminfTails
+import LatticeProb.Prob.MeasureLiminfTails
 
 /-!
 # The good annulus event through countably many integrals (proof of IR-c4-6, deterministic part)

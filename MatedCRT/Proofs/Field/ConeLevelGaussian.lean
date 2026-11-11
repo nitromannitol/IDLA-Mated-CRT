@@ -1,6 +1,6 @@
 import MatedCRT.Proofs.Field.ConeRadialSums
 import MatedCRT.Proofs.Field.ConeGaussianClosure
-import MatedCRT.LPStaging.Gauss.GaussianClosure
+import LatticeProb.Gauss.GaussianClosure
 
 /-!
 # Level integrals of a Gaussian process (eq:gff, `ConeMeanZeroRestrictionStep`)

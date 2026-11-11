@@ -1,5 +1,5 @@
 import MatedCRT.FirstPass.Frozen.S4d
-import MatedCRT.LPStaging.Analysis.PuncturedPlaneConnected
+import LatticeProb.Analysis.PuncturedPlaneConnected
 
 /-!
 # Bridge: the frozen punctured-plane input `FrozenPunctureConnected`

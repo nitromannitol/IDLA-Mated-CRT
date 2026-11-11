@@ -1,8 +1,8 @@
 import MatedCRT.FirstPass.Frozen.S2g
 import MatedCRT.FirstPass.Frozen.S5c
 import MatedCRT.FirstPass.LPBridge.DistributionalLaplacian
-import MatedCRT.LPStaging.Analysis.DistributionalLaplacian
-import MatedCRT.LPStaging.Analysis.SuperharmonicMinimumPrinciple
+import LatticeProb.Analysis.DistributionalLaplacian
+import LatticeProb.Analysis.SuperharmonicMinimumPrinciple
 
 /-!
 # Bridge: the frozen minimum principles from the super-mean-value minimum principles

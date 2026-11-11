@@ -1,6 +1,6 @@
 import MatedCRT.Defs.Setting
 import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgRate
-import MatedCRT.LPStaging.Bonanno.CirclePairing
+import LatticeProb.Bonanno.LQGMetric.Field.CirclePairing
 
 /-!
 # Circle averages of the whole-plane GFF are limits of pairings

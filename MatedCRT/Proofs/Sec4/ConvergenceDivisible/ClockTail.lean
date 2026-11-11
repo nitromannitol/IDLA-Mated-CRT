@@ -1,5 +1,5 @@
 import MatedCRT.Proofs.Sec4.ConvergenceDivisible.ClockMeasurable
-import MatedCRT.LPStaging.Prob.MeasureLiminfTails
+import LatticeProb.Prob.MeasureLiminfTails
 
 /-! Quenched tail bounds for deterministic-time Liouville clock values. -/
 

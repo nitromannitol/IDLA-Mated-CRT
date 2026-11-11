@@ -1,6 +1,6 @@
 import MatedCRT.FirstPass.S2g.GoodSet
 import MatedCRT.FirstPass.Frozen.S2g
-import MatedCRT.LPStaging.Analysis.LaplacianCalculus
+import LatticeProb.Analysis.LaplacianCalculus
 
 /-! # All-disks obstacle clause from the radius-3/4 clause (H7)
 

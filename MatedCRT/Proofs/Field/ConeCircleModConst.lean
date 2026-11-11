@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Measurability.ConePairing
 import MatedCRT.Steps.Sec6.GoodAnnulusPrevalence
 import LatticeProb.Bonanno.LQGMetric.Field.MarkovGermVerPot
-import MatedCRT.LPStaging.Bonanno.CircleBumpRadial
+import LatticeProb.Bonanno.LQGMetric.Field.CircleBumpRadial
 
 /-!
 # Circle-average differences of the quantum cone are determined by the field modulo additive constant

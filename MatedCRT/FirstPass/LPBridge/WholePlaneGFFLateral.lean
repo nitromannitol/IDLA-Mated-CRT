@@ -1,8 +1,8 @@
 import MatedCRT.Defs.QuantumCone
 import HarmonicBalls.Proofs.GFF.MeasurableContinuousCircleVersion
-import MatedCRT.LPStaging.Analysis.LogPotentialCircle
-import MatedCRT.LPStaging.Analysis.TestFunctionLogIntegrable
-import MatedCRT.LPStaging.Bonanno.WholePlaneLateral
+import LatticeProb.Analysis.LogPotentialCircle
+import LatticeProb.Analysis.TestFunctionLogIntegrable
+import LatticeProb.Bonanno.LQGMetric.Field.WholePlaneLateral
 
 /-!
 # Radial integrals and lateral pairings of the whole-plane GFF

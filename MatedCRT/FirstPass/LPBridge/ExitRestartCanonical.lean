@@ -1,5 +1,5 @@
 import Mathlib
-import MatedCRT.LPStaging.Prob.BrownianPathLaw
+import LatticeProb.Prob.BrownianPathLaw
 import HarmonicBalls.Proofs.Brownian.PlanarBrownianMotion
 import HarmonicBalls.Proofs.Brownian.PlanarHeatFeller
 import MarkovProcess.Main

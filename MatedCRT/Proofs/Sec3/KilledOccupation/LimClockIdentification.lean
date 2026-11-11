@@ -1,4 +1,4 @@
-import MatedCRT.LPStaging.Prob.CauchyInProbabilitySubseq
+import LatticeProb.Prob.CauchyInProbabilitySubseq
 import MatedCRT.Proofs.Sec3.KilledOccupation.RegClockApprox
 import MatedCRT.Proofs.Sec3.KilledOccupation.LimClockFun
 import MatedCRT.Proofs.Sec3.KilledOccupation.ClockAnnealedCauchy

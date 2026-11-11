@@ -2,7 +2,7 @@ import Mathlib
 import MatedCRT.FirstPass.S6h.Schedule
 import MatedCRT.FirstPass.S6e.Admissible
 import MatedCRT.FirstPass.S4S6c.Uniform68Round
-import MatedCRT.LPStaging.Analysis.ShellGeometry
+import LatticeProb.Analysis.ShellGeometry
 
 /-!
 # Lemma 6.8: the deterministic geometry behind the strict bound

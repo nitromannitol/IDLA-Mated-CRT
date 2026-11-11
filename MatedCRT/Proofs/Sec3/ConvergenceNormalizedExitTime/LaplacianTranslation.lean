@@ -1,5 +1,5 @@
 import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.CenteredNormalizedPotential
-import MatedCRT.LPStaging.Analysis.LaplacianCalculus
+import LatticeProb.Analysis.LaplacianCalculus
 
 /-! Translation of test functions and the planar Laplacian. -/
 

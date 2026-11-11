@@ -1,6 +1,6 @@
 import MatedCRT.Defs.Setting
 import MatedCRT.Proofs.Infra.Setting
-import MatedCRT.LPStaging.Analysis.LogKernel
+import LatticeProb.Analysis.LogKernel
 
 /-!
 # The logarithmic kernel under a dyadic volume bound

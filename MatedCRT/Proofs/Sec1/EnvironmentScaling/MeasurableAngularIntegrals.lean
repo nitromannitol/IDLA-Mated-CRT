@@ -1,7 +1,7 @@
 import MatedCRT.Proofs.Sec1.EnvironmentScaling.AngularLogIntegrability
 import MatedCRT.Proofs.Sec1.EnvironmentScaling.GaussianBandProof
 import Mathlib.MeasureTheory.Integral.Prod
-import MatedCRT.LPStaging.Analysis.AngularIntegralMeasurable
+import LatticeProb.Analysis.AngularIntegralMeasurable
 
 /-!
 # Measurable circle averages of random radial families

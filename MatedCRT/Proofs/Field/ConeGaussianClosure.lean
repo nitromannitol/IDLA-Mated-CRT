@@ -1,5 +1,5 @@
 import Mathlib
-import MatedCRT.LPStaging.Gauss.GaussianClosure
+import LatticeProb.Gauss.GaussianClosure
 
 /-!
 # Centred Gaussian spaces are closed under almost sure limits

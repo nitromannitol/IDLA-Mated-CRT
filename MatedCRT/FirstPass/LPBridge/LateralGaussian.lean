@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.LPBridge.WholePlaneGFFLateral
 import MatedCRT.FirstPass.LPBridge.RotationalAverage
-import MatedCRT.LPStaging.Analysis.TestFunctionLogIntegrable
-import MatedCRT.LPStaging.Bonanno.RadialPointRotation
+import LatticeProb.Analysis.TestFunctionLogIntegrable
+import LatticeProb.Bonanno.LQGMetric.Field.RadialPointRotation
 
 /-!
 # Gaussianity of the lateral family of the whole-plane GFF (N2)

@@ -3,7 +3,7 @@ import Mathlib.MeasureTheory.Function.LocallyIntegrable
 import Mathlib.MeasureTheory.Measure.Lebesgue.Complex
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.LinearAlgebra.Complex.FiniteDimensional
-import MatedCRT.LPStaging.Analysis.RadialLocalIntegrability
+import LatticeProb.Analysis.RadialLocalIntegrability
 
 /-!
 # Local integrability of radial functions with logarithmic growth at zero

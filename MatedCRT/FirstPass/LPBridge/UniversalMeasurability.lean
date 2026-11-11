@@ -1,5 +1,5 @@
 import MatedCRT.FirstPass.Frozen.S1c
-import MatedCRT.LPStaging.Prob.AnalyticUniversalMeasurable
+import LatticeProb.Prob.AnalyticUniversalMeasurable
 
 /-!
 # Bridge: analytic subsets of Polish spaces are null-measurable

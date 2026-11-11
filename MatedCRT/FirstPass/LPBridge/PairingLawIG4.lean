@@ -1,5 +1,5 @@
 import MatedCRT.FirstPass.Frozen.S4S5b
-import MatedCRT.LPStaging.Prob.CameronMartinEquivalence
+import LatticeProb.Prob.CameronMartinEquivalence
 import HarmonicBalls.Proofs.Sec11.ModConstPairingLaw
 import HarmonicBalls.Proofs.Sec8.ExteriorLaplacianIndependence
 import HarmonicBalls.Proofs.Sec8.OriginGermZeroOne

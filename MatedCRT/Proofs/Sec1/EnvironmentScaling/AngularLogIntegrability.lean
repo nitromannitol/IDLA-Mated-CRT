@@ -7,8 +7,8 @@ import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
 import Mathlib.MeasureTheory.Measure.Typeclasses.NullSingletonClass
 import MatedCRT.Proofs.Sec1.EnvironmentScaling.RadialLocalIntegrability
-import MatedCRT.LPStaging.Analysis.AngularIntegralMeasurable
-import MatedCRT.LPStaging.Analysis.AngularLogIntegrability
+import LatticeProb.Analysis.AngularIntegralMeasurable
+import LatticeProb.Analysis.AngularLogIntegrability
 
 /-!
 # Angular integrability of logarithmic radial singularities on circles through zero

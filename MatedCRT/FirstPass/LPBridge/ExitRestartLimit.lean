@@ -1,5 +1,5 @@
 import MatedCRT.FirstPass.LPBridge.ExitRestartCanonical
-import MatedCRT.LPStaging.Prob.BrownianOutwardExcursion
+import LatticeProb.Prob.BrownianOutwardExcursion
 
 /-!
 # Post-exit increments of planar Brownian motion are planar Brownian motion

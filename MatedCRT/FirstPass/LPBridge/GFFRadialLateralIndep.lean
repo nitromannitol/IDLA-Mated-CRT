@@ -1,6 +1,6 @@
 import MatedCRT.FirstPass.LPBridge.ConeMeanZeroRestriction
-import MatedCRT.LPStaging.Bonanno.WholePlaneLateral
-import MatedCRT.LPStaging.Bonanno.RadialPointIntegrals
+import LatticeProb.Bonanno.LQGMetric.Field.WholePlaneLateral
+import LatticeProb.Bonanno.LQGMetric.Field.RadialPointIntegrals
 import MatedCRT.FirstPass.LPBridge.WholePlaneGFFLateral
 import MatedCRT.FirstPass.LPBridge.LateralGaussian
 import MatedCRT.Proofs.Field.ConeGaussianClosure

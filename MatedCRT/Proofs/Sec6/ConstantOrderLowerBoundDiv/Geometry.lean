@@ -1,4 +1,4 @@
-import MatedCRT.LPStaging.Analysis.ThickeningGeometry
+import LatticeProb.Analysis.ThickeningGeometry
 import MatedCRT.Steps.Sec6.ConstantOrderLowerBoundDiv
 
 /-!

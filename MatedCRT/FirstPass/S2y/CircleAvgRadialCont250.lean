@@ -1,5 +1,5 @@
 import Mathlib
-import MatedCRT.LPStaging.Analysis.CircleAverageRadialContinuity
+import LatticeProb.Analysis.CircleAverageRadialContinuity
 
 /-!
 # Continuity of the circle average of a radial function

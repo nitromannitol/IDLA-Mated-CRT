@@ -6,8 +6,8 @@ import Mathlib.Probability.Moments.Basic
 import Mathlib.Analysis.SpecialFunctions.Integrals.PosLogEqCircleAverage
 import Mathlib.Analysis.SpecialFunctions.Log.PosLog
 import MatedCRT.Proposed.SheffieldWang2016
-import MatedCRT.LPStaging.Analysis.CircleAverageLog
-import MatedCRT.LPStaging.Analysis.CompactSupportMeasure
+import LatticeProb.Analysis.CircleAverageLog
+import LatticeProb.Analysis.CompactSupportMeasure
 
 /-!
 # The insertion-`α` coordinate rule: the exact Step and its no-insertion-atom component

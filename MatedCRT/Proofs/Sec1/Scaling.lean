@@ -1,5 +1,5 @@
 import MatedCRT.Draft.Section1
-import MatedCRT.LPStaging.Analysis.MetricRescaling
+import LatticeProb.Analysis.MetricRescaling
 
 /-!
 # Deterministic scaling covariance for the proof of Theorems 1.4 and 1.6 (lines 3284-3336)

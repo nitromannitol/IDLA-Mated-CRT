@@ -4,7 +4,7 @@ import Mathlib.MeasureTheory.Measure.Lebesgue.Complex
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Analysis.SpecificLimits.Normed
 import MarkovProcess.Examples.BrownianMotion
-import MatedCRT.LPStaging.Analysis.ConeRadialIntegrals
+import LatticeProb.Analysis.ConeRadialIntegrals
 
 /-!
 # Radial and sphere-average codes of a quantum cone

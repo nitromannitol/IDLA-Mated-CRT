@@ -1,4 +1,4 @@
-import MatedCRT.LPStaging.Bonanno.LQGMeasureFieldMeasurableAmbient
+import LatticeProb.Bonanno.LQGMetric.Field.LQGMeasureFieldMeasurableAmbient
 import MatedCRT.FirstPass.Frozen.S4S6c
 import MatedCRT.Proofs.Measurability.FieldCircle
 

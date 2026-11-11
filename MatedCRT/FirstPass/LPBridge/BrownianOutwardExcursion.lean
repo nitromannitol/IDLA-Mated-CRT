@@ -1,6 +1,6 @@
 import MatedCRT.FirstPass.Frozen.S3S4
-import MatedCRT.LPStaging.Prob.BrownianOutwardExcursion
-import MatedCRT.LPStaging.Prob.PlanarBrownianGermZeroOne
+import LatticeProb.Prob.BrownianOutwardExcursion
+import LatticeProb.Prob.PlanarBrownianGermZeroOne
 import HarmonicBalls.Proofs.Sec6.CompactHittingStopping
 import MatedCRT.FirstPass.LPBridge.ExitRestartLimit
 

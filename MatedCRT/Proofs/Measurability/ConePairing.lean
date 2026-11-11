@@ -1,4 +1,4 @@
-import MatedCRT.LPStaging.Bonanno.CirclePairing
+import LatticeProb.Bonanno.LQGMetric.Field.CirclePairing
 import MatedCRT.Proofs.Measurability.CirclePairing
 import MatedCRT.Defs.QuantumCone
 

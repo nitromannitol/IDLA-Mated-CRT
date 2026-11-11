@@ -1,5 +1,5 @@
 import MatedCRT.Steps.Sec6.ConstantOrderLowerBoundDiv
-import MatedCRT.LPStaging.Analysis.LogKernelMeasurable
+import LatticeProb.Analysis.LogKernelMeasurable
 
 /-!
 # Measurability of the good-scale events of Lemmas 6.4 and 2.7 (`GoodScaleEventMeasurableStep`, line 2505)

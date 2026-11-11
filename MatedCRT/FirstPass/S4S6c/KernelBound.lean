@@ -1,5 +1,5 @@
 import MatedCRT.FirstPass.S4S6c.CircleIntegrability
-import MatedCRT.LPStaging.Analysis.CircleKernelBounds
+import LatticeProb.Analysis.CircleKernelBounds
 
 /-!
 # Uniform bound on the corrected kernel over the good annulus

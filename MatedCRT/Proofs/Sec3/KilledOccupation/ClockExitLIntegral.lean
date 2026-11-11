@@ -1,6 +1,6 @@
 import MatedCRT.Proofs.Sec3.KilledOccupation.RemovedTail
 import MatedCRT.Proofs.Sec3.KilledOccupation.BaseClockBinders
-import MatedCRT.LPStaging.Prob.MeasurableLIntegralIic
+import LatticeProb.Prob.MeasurableLIntegralIic
 
 /-!
 # Measurability of the clock integral over `[0, σ]`

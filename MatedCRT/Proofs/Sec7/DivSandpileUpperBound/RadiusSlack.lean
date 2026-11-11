@@ -1,4 +1,4 @@
-import MatedCRT.LPStaging.Analysis.ShellRadiusMargins
+import LatticeProb.Analysis.ShellRadiusMargins
 import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.LocalMass
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 

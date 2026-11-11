@@ -1,6 +1,6 @@
 import MatedCRT.Proofs.Sec5.ConeOriginNullMeasurableProof
 import MatedCRT.Proofs.Sec3.IntegralConvergenceGreenFunction.BallExtension
-import MatedCRT.LPStaging.Analysis.LaplacianCalculus
+import LatticeProb.Analysis.LaplacianCalculus
 
 /-!
 # The Borel supersolution relation

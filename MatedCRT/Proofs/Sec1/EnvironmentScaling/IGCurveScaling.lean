@@ -1,5 +1,5 @@
 import LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.IsMatingOfTreesCoupling
-import MatedCRT.LPStaging.Analysis.AffineScaleRotation
+import LatticeProb.Analysis.AffineScaleRotation
 
 /-!
 # Deterministic no-period and integer-rotation component of the IG curve scaling

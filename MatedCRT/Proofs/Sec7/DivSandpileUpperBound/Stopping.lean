@@ -1,5 +1,5 @@
 import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.Iteration
-import MatedCRT.LPStaging.Analysis.GeometricShellSums
+import LatticeProb.Analysis.GeometricShellSums
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 import Mathlib.Analysis.SpecialFunctions.Pow.Continuity

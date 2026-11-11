@@ -1,5 +1,5 @@
 import MatedCRT.Proofs.Sec4.Prop42Closure.LQGMeasureFunctional
-import MatedCRT.LPStaging.Analysis.DyadicMeshGeometry
+import LatticeProb.Analysis.DyadicMeshGeometry
 
 /-!
 # Local-measure functional: a proof of `LQGMeasureLocalityFunctionalStep`
