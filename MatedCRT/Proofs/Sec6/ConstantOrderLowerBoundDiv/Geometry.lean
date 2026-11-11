@@ -1,7 +1,7 @@
 import MatedCRT.Steps.Sec6.ConstantOrderLowerBoundDiv
 
 /-!
-# Lemma 6.8: geometry of the cover by good annuli (lines 2509-2524, with the scale fix of E-A10 for line 2506)
+# Lemma 6.8: geometry of the cover by good annuli (lines 2509-2524; scale fix at line 2506)
 
 * `exists_half_pow_mem`: dyadic scales `2^{-n} ∈ (x/2, x]` (the choice of `δ` with `√δ ∈ (r/(8√2), r/8]`).
 * `exists_grid_near`: every point is within `δ/100` of the grid `(δ/100) ℤ²` (the centre `z`).
