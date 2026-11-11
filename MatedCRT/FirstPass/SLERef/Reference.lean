@@ -5,8 +5,7 @@ import MatedCRT.Steps.Sec3.DiscretePotentialTightness
 import MatedCRT.FirstPass.Frozen.S3S4b
 
 /-!
-# First pass: reference propositions for the space-filling SLE law (task fp-SLERef-reference-law, worker z10;
-certificate corrected by task fp-SLERef2-certify)
+# First pass: reference propositions for the space-filling SLE law
 
 The five numbered results of the paper that are cited from the literature and whose statements quantify over valid
 environments through the abstract predicate `SpaceFillingSLEModel.IsSLE`: Theorem 2.11 (`RandomWalkToLBMStmt`),
@@ -18,7 +17,7 @@ This module is not imported by the Draft modules, so there is no cycle.
 `SLEReferenceInput ν` says that `ν` is a reference law: it is the normalized law of some model with valid reference
 environments on `ℝ`, and every model with that normalized law satisfies the five cited statements.
 `SLEReferenceWithSimilarityInput ν` adds, for the same `ν`, the corrected similarity transfer and the truncated quenched
-laws. `SLEFrozenReferenceInput ν` is the minimal package of `notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md` §8 for the two
+laws. `SLEFrozenReferenceInput ν` is the minimal package for the two
 unresolved frozen inputs. The frozen existence proposition `SLEReferenceExistsInput` is in
 `MatedCRT/FirstPass/Frozen/SLERef.lean`. Nothing here asserts that a family `ν` is realized by an SLE; that is the
 frozen input. Analytic transfer (the universal clauses) is kept apart from reference-model non-vacuity (a model with
@@ -45,7 +44,7 @@ def HasReferenceEnvironments (𝒮 : SpaceFillingSLEModel) : Prop :=
     ∃ S : MatedCRTEnv ℝ, S.IsValid 𝒮 γ
 
 /-- `ν` is a reference law for the five cited results: some model with the normalized law `ν` has valid reference
-environments, and every model with the normalized law `ν` satisfies the five cited statements. SUPERSEDED (chat 186). The earlier FALSE label rested on the universal quantification of `SLECitedInputs` over the `IsSLE` semantics, field and graph of every model with normalized law `ν`; universal model quantification alone is not a refutation (truth check 2026-11-10). Non-vacuity of the reference model is the separate frozen input `SLEReferenceExistsInput` (UNSURE). Superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`); kept unchanged. -/
+environments, and every model with the normalized law `ν` satisfies the five cited statements. SUPERSEDED. The earlier FALSE label rested on the universal quantification of `SLECitedInputs` over the `IsSLE` semantics, field and graph of every model with normalized law `ν`; universal model quantification alone is not a refutation (truth check 2026-11-10). Non-vacuity of the reference model is the separate frozen input `SLEReferenceExistsInput` (UNSURE). Superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`); kept unchanged. -/
 def SLEReferenceInput (ν : ℝ → Measure SLEPathCode) : Prop :=
   (∃ 𝒮ref : SpaceFillingSLEModel,
     HasNormalizedSLELaw 𝒮ref ν ∧ HasReferenceEnvironments 𝒮ref) ∧
@@ -53,8 +52,7 @@ def SLEReferenceInput (ν : ℝ → Measure SLEPathCode) : Prop :=
 
 /-- `ν` is a reference law with the similarity and truncated-laws clauses, for the same `ν`: every model with normalized
 law `ν` satisfies the corrected similarity transfer `FPSimilarityTransferCorrected` and the fixed-time truncated quenched
-laws `FrozenTruncatedQuenchedLawsFixedTime`. Source: `notes/fp-gaps/CHATGPT-sleref-truth.md` §2.1 and
-`notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md` §4. SUPERSEDED (chat 186). The second conjunct quantifies `FPSimilarityTransferCorrected` and `FrozenTruncatedQuenchedLawsFixedTime` over all models with normalized law `ν` and over valid environments `S : MatedCRTEnv Ω` with `S.IsValid 𝒮 γ`. The universal closure of `FPSimilarityTransferCorrected` over all space-filling models is FALSE (truth check 2026-11-10); whether the restriction to normalized law `ν` suffices is not decided here. Superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`); kept unchanged. -/
+laws `FrozenTruncatedQuenchedLawsFixedTime`. SUPERSEDED. The second conjunct quantifies `FPSimilarityTransferCorrected` and `FrozenTruncatedQuenchedLawsFixedTime` over all models with normalized law `ν` and over valid environments `S : MatedCRTEnv Ω` with `S.IsValid 𝒮 γ`. The universal closure of `FPSimilarityTransferCorrected` over all space-filling models is FALSE (truth check 2026-11-10); whether the restriction to normalized law `ν` suffices is not decided here. Superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`); kept unchanged. -/
 def SLEReferenceWithSimilarityInput (ν : ℝ → Measure SLEPathCode) : Prop :=
   SLEReferenceInput ν ∧
   ∀ 𝒮 : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮 ν →
@@ -65,10 +63,10 @@ of `FrozenDiscreteHolderContinuityCorrected`) and the fixed-time truncated quenc
 def SLEFrozenEstimates (𝒮 : SpaceFillingSLEModel) : Prop :=
   DiscreteHolderContinuityCorrectedStep 𝒮 ∧ FrozenTruncatedQuenchedLawsFixedTime 𝒮
 
-/-- The minimal reference package of `notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md` §8, for one law family `ν`: some model
+/-- The minimal reference package, for one law family `ν`: some model
 with normalized law `ν` has valid reference environments, and every model with normalized law `ν` satisfies
 `SLEFrozenEstimates`. The consumers `FrozenDiscreteHolderContinuityCorrected` and `FrozenTruncatedQuenchedLawsFixedTime`
-are derived from it in `MatedCRT/FirstPass/Frozen/SLERef.lean`. SUPERSEDED (chat 186). The second conjunct `SLEFrozenEstimates` quantifies `DiscreteHolderContinuityCorrectedStep` and `FrozenTruncatedQuenchedLawsFixedTime` over the `IsSLE` semantics of every model with normalized law `ν`; universal model quantification alone is not a refutation (truth check 2026-11-10). Superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`); kept unchanged. -/
+are derived from it in `MatedCRT/FirstPass/Frozen/SLERef.lean`. SUPERSEDED. The second conjunct `SLEFrozenEstimates` quantifies `DiscreteHolderContinuityCorrectedStep` and `FrozenTruncatedQuenchedLawsFixedTime` over the `IsSLE` semantics of every model with normalized law `ν`; universal model quantification alone is not a refutation (truth check 2026-11-10). Superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`); kept unchanged. -/
 def SLEFrozenReferenceInput (ν : ℝ → Measure SLEPathCode) : Prop :=
   (∃ 𝒮ref : SpaceFillingSLEModel,
     HasNormalizedSLELaw 𝒮ref ν ∧ HasReferenceEnvironments 𝒮ref) ∧

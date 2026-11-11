@@ -4,9 +4,9 @@ import MatedCRT.FirstPass.Frozen.S3c
 import MatedCRT.FirstPass.Frozen.S3S4
 
 /-!
-# Certified reference model of whole-plane space-filling SLE (task fp-SLERef-certified-model, worker z10)
+# Certified reference model of whole-plane space-filling SLE
 
-Chat 186 (`notes/fp-gaps/CHATGPT-idla-new-frozen-SLERef-BG20.md`, section "Minimal correction"): every clause of the form
+Minimal correction: every clause of the form
 `∀ 𝒮, HasNormalizedSLELaw 𝒮 ν → X 𝒮` is FALSE as typed when `X` depends on the raw predicate `IsSLE`, the field, the graph or
 the clock of `𝒮`, because the normalized SLE code law does not constrain these. The repair is a predicate on the individual
 model `𝒮`: `CertifiedReferenceModel ν 𝒮` is quantified per model, not over all models with normalized law `ν`.
@@ -16,14 +16,14 @@ projections below select one conjunct each, for the closure consumer `MatedCRT/F
 
 `ConeEnvironmentScalingUnderSLE 𝒮` (`MatedCRT/FirstPass/Frozen/S1d.lean:38`) is NOT a conjunct. Under the closure input
 `SLEModelClosureInput 𝒮` it is equivalent to the retired `ConeEnvironmentScalingStep 𝒮`
-(`coneEnvironmentScalingUnderSLE_iff`, `MatedCRT/FirstPass/SLERef/Extended.lean`); that reduction is left to the operator.
+(`coneEnvironmentScalingUnderSLE_iff`, `MatedCRT/FirstPass/SLERef/Extended.lean`); that reduction is left open.
 -/
 
 namespace MatedCRT
 
 open MeasureTheory
 
-/-- The certified reference model for the law `ν` (FIRST-PASS, task fp-SLERef-certified-model). The model `𝒮` has normalized law
+/-- The certified reference model for the law `ν`. The model `𝒮` has normalized law
 `ν` and satisfies, jointly, the following conjuncts, in this order:
 
 1. `HasNormalizedSLELaw 𝒮 ν` (`MatedCRT/FirstPass/SLERef/Code.lean:53`);
@@ -49,7 +49,7 @@ open MeasureTheory
 18. `FPSimilarityTransferCorrected 𝒮` (`MatedCRT/FirstPass/SLERef/Similarity.lean:33`).
 
 Conjuncts 2 to 18 are the per-model content of the existing package `SLEReferenceWithSimilarityInput` and of
-`SLEReferenceExtendedCorrectedInput` (closure removed, operator note 07:50 UTC; conjunct 2, `SLEModelClosureInput 𝒮`, supplies the closure per model), together with `HasReferenceEnvironments` of its reference witness. The closure conjunct
+`SLEReferenceExtendedCorrectedInput` (closure removed; conjunct 2, `SLEModelClosureInput 𝒮`, supplies the closure per model), together with `HasReferenceEnvironments` of its reference witness. The closure conjunct
 `ConeEnvironmentScalingUnderSLE 𝒮` is excluded (see the module docstring). -/
 def CertifiedReferenceModel (ν : ℝ → Measure SLEPathCode) (𝒮 : SpaceFillingSLEModel) : Prop :=
   HasNormalizedSLELaw 𝒮 ν ∧
@@ -71,11 +71,11 @@ def CertifiedReferenceModel (ν : ℝ → Measure SLEPathCode) (𝒮 : SpaceFill
   FrozenTruncatedQuenchedLawsFixedTime 𝒮 ∧
   FPSimilarityTransferCorrected 𝒮
 
-/-- FIRST-PASS FROZEN (task fp-SLERef-certified-model). Some law `ν` and some space-filling SLE model `𝒮` carry the
+/-- FIRST-PASS FROZEN. Some law `ν` and some space-filling SLE model `𝒮` carry the
 certified reference model `CertifiedReferenceModel ν 𝒮`.
 
-Truth check: TRUE per the operator's chat 186 ruling (`notes/fp-gaps/CHATGPT-idla-new-frozen-SLERef-BG20.md`): the canonical
-mated-CRT SLE/LQG model realizes all component facts jointly. This file does not re-check that ruling.
+The canonical
+mated-CRT SLE/LQG model realizes all component facts jointly. This file does not re-check the claim.
 Sources: the component sources listed in `CertifiedReferenceModel`. -/
 def FrozenCertifiedReferenceModelExists : Prop :=
   ∃ (ν : ℝ → Measure SLEPathCode) (𝒮 : SpaceFillingSLEModel), CertifiedReferenceModel ν 𝒮

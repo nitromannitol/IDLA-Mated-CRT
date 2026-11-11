@@ -7,7 +7,7 @@ import MatedCRT.FirstPass.Frozen.S4S6c
 import MatedCRT.Steps.Sec1.Convergence
 
 /-!
-# Extended SLE reference package (task fp-SLERef-extend-package)
+# Extended SLE reference package
 
 `SLEReferenceExtendedInput ν` extends the certified reference package `SLEReferenceInput ν` by eight clauses:
 
@@ -22,11 +22,10 @@ import MatedCRT.Steps.Sec1.Convergence
 Every clause has the form `∀ 𝒮, HasNormalizedSLELaw 𝒮 ν → X 𝒮`, as the existing clauses of `SLEReferenceInput`.
 `SLEReferenceInput` itself is not changed, since `SLEReferenceExistsInput` (frozen) is stated through it.
 
-REPAIR (fp-SLERef-closure-repair, operator note 07:50 UTC; Pro chat 186 re-run, item 1). `SLEModelClosureClause` is FALSE (`HasNormalizedSLELaw` does not give closure of the raw predicate `IsSLE`), so `SLEReferenceExtendedExistsInput` is FALSE as typed and is RETIRED. The corrected package `SLEReferenceExtendedCorrectedInput` drops the closure clause; closure is the per-model hypothesis `SLEModelClosureInput 𝒮`, taken explicitly. The seven analytic clauses are kept. Truth check (2026-11-10): the seven analytic clauses are TRUE; the earlier FALSE label is withdrawn, since `IsValid` already imposes the cone, GMC measure, clock and mating-of-trees coupling. The clauses are kept unchanged; `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`) is the per-model alternative.
+REPAIR. `SLEModelClosureClause` is FALSE (`HasNormalizedSLELaw` does not give closure of the raw predicate `IsSLE`), so `SLEReferenceExtendedExistsInput` is FALSE as typed and is RETIRED. The corrected package `SLEReferenceExtendedCorrectedInput` drops the closure clause; closure is the per-model hypothesis `SLEModelClosureInput 𝒮`, taken explicitly. The seven analytic clauses are kept. Truth check (2026-11-10): the seven analytic clauses are TRUE; the earlier FALSE label is withdrawn, since `IsValid` already imposes the cone, GMC measure, clock and mating-of-trees coupling. The clauses are kept unchanged; `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`) is the per-model alternative.
 
 `ConeEnvironmentScalingUnderSLE 𝒮` is NOT derived here: under the closure clause it is equivalent to
-`ConeEnvironmentScalingStep 𝒮`, which the fleet retired as FALSE (`FrozenConeEnvironmentScaling`, `Frozen/S3S4.lean`;
-`notes/fp-gaps/TRUTH-CHECK-2.md`, entry `FrozenConeEnvironmentScaling — FALSE`). See `coneEnvironmentScalingUnderSLE_iff`.
+`ConeEnvironmentScalingStep 𝒮`, which is FALSE (`FrozenConeEnvironmentScaling`, `Frozen/S3S4.lean`). See `coneEnvironmentScalingUnderSLE_iff`.
 -/
 
 namespace MatedCRT
@@ -40,7 +39,7 @@ and monotonicity of independence (`SLEIndepMonoInput`). Source: Miller–Sheffie
 def SLEModelClosureInput (𝒮 : SpaceFillingSLEModel) : Prop :=
   SLEScaleInvarianceInput 𝒮 ∧ SLEReparametrizationInput 𝒮 ∧ SLEIndepMonoInput 𝒮
 
-/-- RETIRED (FALSE, Codex 2026-11-10; vacuous helper, not used by counted closures). Uniform closure clause of the reference
+/-- RETIRED (FALSE, vacuous helper, not used by counted closures). Uniform closure clause of the reference
 package: every model with normalized law `ν` satisfies `SLEModelClosureInput`. Source: Miller–Sheffield, *Imaginary Geometry
 IV*, §§1.2.3, 4.3. Counterexample (constant-curve predicate): let `𝒮.IsSLE … η` mean that `η` is constantly `1`. No accepted
 curve has an `IsLebesgueRepresentative`, since such a representative would force `η 0 = 0`; hence `HasNormalizedSLELaw 𝒮 ν`
@@ -94,14 +93,14 @@ def FrozenLBMGreenOccupationClause (ν : ℝ → Measure SLEPathCode) : Prop :=
 
 /-- The extended certified reference package for one law family `ν`: the existing `SLEReferenceInput ν` and the eight
 clauses above. Every clause uses the same `ν` as `HasNormalizedSLELaw`.
-RETIRED (FALSE, Codex 2026-11-10; vacuous helper, not used by counted closures): unsatisfiable, because it contains the false `SLEModelClosureClause`, so its projections are vacuous. Kept unchanged (its consumers keep their hypotheses). Use `SLEReferenceExtendedCorrectedInput`. -/
+RETIRED (FALSE, vacuous helper, not used by counted closures): unsatisfiable, because it contains the false `SLEModelClosureClause`, so its projections are vacuous. Kept unchanged (its consumers keep their hypotheses). Use `SLEReferenceExtendedCorrectedInput`. -/
 def SLEReferenceExtendedInput (ν : ℝ → Measure SLEPathCode) : Prop :=
   SLEReferenceInput ν ∧ SLEModelClosureClause ν ∧ MepsScalingClause ν ∧ DegreeBoundClause ν ∧
     CellSizeEstimateClause ν ∧ CountingMeasureConvergenceClause ν ∧ DegreeMeasureConvergenceClause ν ∧
     FrozenConeScalingClause ν ∧ FrozenLBMGreenOccupationClause ν
 
-/-- RETIRED (FALSE, Codex 2026-11-10; vacuous helper, not used by counted closures): its closure clause makes it false for every `ν`. Never deleted; the corrected package is `SLEReferenceExtendedCorrectedInput`. FIRST-PASS FROZEN. Some law family `ν` carries the extended
-reference package. Analogue of `SLEReferenceExistsInput` (`MatedCRT/FirstPass/Frozen/SLERef.lean`) for the new clauses. SUPERSEDED (chat 186): it inherits the eight clauses above, hence the false closure clause; superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`). -/
+/-- RETIRED (FALSE, vacuous helper, not used by counted closures): its closure clause makes it false for every `ν`. Never deleted; the corrected package is `SLEReferenceExtendedCorrectedInput`. FIRST-PASS FROZEN. Some law family `ν` carries the extended
+reference package. Analogue of `SLEReferenceExistsInput` (`MatedCRT/FirstPass/Frozen/SLERef.lean`) for the new clauses. SUPERSEDED: it inherits the eight clauses above, hence the false closure clause; superseded by `CertifiedReferenceModel` (`MatedCRT/FirstPass/SLERef/Certified.lean`). -/
 def SLEReferenceExtendedExistsInput : Prop :=
   ∃ ν : ℝ → Measure SLEPathCode, SLEReferenceExtendedInput ν
 
@@ -163,12 +162,12 @@ theorem frozenLBMGreenOccupation_of_extended {ν : ℝ → Measure SLEPathCode} 
 /-- Reduction, not a derivation: under the closure clause, `ConeEnvironmentScalingUnderSLE 𝒮` (three SLE premises, then
 `ConeEnvironmentScalingStep 𝒮`) is equivalent to `ConeEnvironmentScalingStep 𝒮`. The conclusion is not supplied by the
 package. `ConeEnvironmentScalingStep` is the statement retired as FALSE in `MatedCRT/FirstPass/Frozen/S3S4.lean`
-(`FrozenConeEnvironmentScaling`) and `notes/fp-gaps/TRUTH-CHECK-2.md`. -/
+(`FrozenConeEnvironmentScaling`). -/
 theorem coneEnvironmentScalingUnderSLE_iff {𝒮 : SpaceFillingSLEModel} (hcl : SLEModelClosureInput 𝒮) :
     ConeEnvironmentScalingUnderSLE 𝒮 ↔ ConeEnvironmentScalingStep 𝒮 :=
   ⟨fun h => h hcl.1 hcl.2.1 hcl.2.2, fun h _ _ _ => h⟩
 
-/-! ### Corrected extended package (fp-SLERef-closure-repair, operator note 07:50 UTC, Pro item 1)
+/-! ### Corrected extended package
 
 `SLEReferenceExtendedInput` is left unchanged: its closure clause is false, so it is unsatisfiable, and changing its body
 would silently change the hypotheses of the counted statements that take it. The corrected package is
@@ -180,7 +179,7 @@ taken explicitly by the consumers that rescale `IsSLE`, or supplied by `Certifie
 seven analytic clauses `MepsScalingClause`, `DegreeBoundClause`, `CellSizeEstimateClause`,
 `CountingMeasureConvergenceClause`, `DegreeMeasureConvergenceClause`, `FrozenConeScalingClause`,
 `FrozenLBMGreenOccupationClause`. No closure clause. Truth check (2026-11-10): UNSURE, model-dependent: removing the closure clause repairs the contradiction, and realizability depends on the chosen `ν` and the reference-environment witness. Not verified as TRUE as a whole: `SLEReferenceInput` carries the
-unrestricted-`D` exit-time clause (item 4) and `CountingMeasureConvergenceClause` is not source-exact (item 2); both are
+unrestricted-`D` exit-time clause and `CountingMeasureConvergenceClause` is not source-exact; both are
 report-only in this round. -/
 def SLEReferenceExtendedCorrectedInput (ν : ℝ → Measure SLEPathCode) : Prop :=
   SLEReferenceInput ν ∧ MepsScalingClause ν ∧ DegreeBoundClause ν ∧ CellSizeEstimateClause ν ∧
@@ -207,7 +206,7 @@ theorem cellSizeEstimate_of_corrected {ν : ℝ → Measure SLEPathCode} (hν : 
     {𝒮 : SpaceFillingSLEModel} (h : HasNormalizedSLELaw 𝒮 ν) : CellSizeEstimateStmt 𝒮 :=
   hν.2.2.2.1 𝒮 h
 
-/-- Projection: `CountingMeasureConvergenceStmt 𝒮` for every model with normalized law `ν` (corrected package; item 2). -/
+/-- Projection: `CountingMeasureConvergenceStmt 𝒮` for every model with normalized law `ν` (corrected package). -/
 theorem countingMeasureConvergence_of_corrected {ν : ℝ → Measure SLEPathCode}
     (hν : SLEReferenceExtendedCorrectedInput ν) {𝒮 : SpaceFillingSLEModel} (h : HasNormalizedSLELaw 𝒮 ν) :
     CountingMeasureConvergenceStmt 𝒮 :=

@@ -3,18 +3,18 @@ import MatedCRT.FirstPass.S6r.OneTest
 
 /-!
 # The one-test estimate at the stopping times `T_j` (PRO notes step 8 `one_test_from_boundary`,
-step 14 `conditional_one_test`; chat (7.50))
+step 14 `conditional_one_test`; (7.50))
 
 The one-test variable is the occupation count of the sites outside `A` visited before the exit time `σ` of the
-discrete interior of the test ball (PRO step 8: `V_occ = ∑_{n < σ_D} 1{X_n ∉ A}`). It is started at the stopping
+discrete interior of the test ball (`V_occ = ∑_{n < σ_D} 1{X_n ∉ A}`). It is started at the stopping
 time `T_j`. Its conditional moments given `𝓕_{T_j}` are the fixed-start moments at `X_{T_j}`, by the strong Markov
-property at `T_j` (PRO step 14). The test-success event `{V = 0}` contains the no-escape event of the test window
+property at `T_j`. The test-success event `{V = 0}` contains the no-escape event of the test window
 `[T_j, L_j)`, `L_j = T_j + σ`, so the test-failure set of `prefix_bad_bound` is the event `{V = 0}`.
 
 Named inputs (hypotheses of the statements that use them, not proved here):
-* `StrongMarkovAt`: the strong Markov property at `T` for the post-`T` functionals (PRO step 14); the path laws
+* `StrongMarkovAt`: the strong Markov property at `T` for the post-`T` functionals; the path laws
   `Pb ω b` are the walk law started at `b` in the environment `ω` (conditioning on `(h, η)`);
-* `hstep1`, `hstep2`: the fixed-start one-test moment bounds (PRO step 8, printed Steps 2-4 with the corrected
+* `hstep1`, `hstep2`: the fixed-start one-test moment bounds (printed Steps 2-4 with the corrected
   good event) at the starts `X_{T_j}` on the prefix event `P_j`, with the scales `m = μ_h(B_{c₀R}(x))`, `r² ≤ R ≤ 1`;
 * `hLst`: the test end `L_j = T_j + σ` is a stopping time; `hV1`, `hV2`: integrability of the count and its square;
 * `σ` is an abstract path functional: the exit time of the discrete interior `I(D)` (its definition is not
@@ -35,7 +35,7 @@ variable {Ω : Type*} [mΩ : MeasurableSpace Ω] {E : Type*} [MeasurableSpace E]
 def postTimePath (X : ℕ → Ω → E) (T : Ω → ℕ∞) (ω : Ω) : ℕ → E :=
   fun n => X ((T ω).toNat + n) ω
 
-/-- Occupation count of the test (PRO step 8): `V_occ(w) = ∑_{n < σ(w)} 1{w_n ∉ A}`. -/
+/-- Occupation count of the test: `V_occ(w) = ∑_{n < σ(w)} 1{w_n ∉ A}`. -/
 noncomputable def occCount (A : Set E) (σ : (ℕ → E) → ℕ) (w : ℕ → E) : ℝ :=
   ∑ n ∈ Finset.range (σ w), Aᶜ.indicator (fun _ => (1 : ℝ)) (w n)
 
@@ -48,7 +48,7 @@ noncomputable def testCount (A : Set E) (σ : (ℕ → E) → ℕ) (X : ℕ → 
 noncomputable def testEnd (σ : (ℕ → E) → ℕ) (X : ℕ → Ω → E) (T : Ω → ℕ∞) (ω : Ω) : ℕ∞ :=
   T ω + ((σ (postTimePath X T ω) : ℕ) : ℕ∞)
 
-/-- Named input: the strong Markov property at `T` for the post-`T` functional `G` (PRO step 14).
+/-- Named input: the strong Markov property at `T` for the post-`T` functional `G`.
 On `{T < ∞}`, `E[G(post-T path) | 𝓕_T] = ∫ G dP_{X_T}`, with `P_b = Pb ω b` the walk law from `b`. -/
 def StrongMarkovAt (μ : Measure Ω) {𝓕 : Filtration ℕ mΩ} {T : Ω → ℕ∞} (hT : IsStoppingTime 𝓕 T)
     (X : ℕ → Ω → E) (Pb : Ω → E → Measure (ℕ → E)) (G : (ℕ → E) → ℝ) : Prop :=
@@ -88,7 +88,7 @@ theorem testCount_sq_eq (A : Set E) (σ : (ℕ → E) → ℕ) (X : ℕ → Ω �
   simp only [Set.indicator_apply]
   split_ifs <;> simp
 
-/-- The one-test estimate (PRO step 14, chat (7.50)) at the stopping time `T` for the prefix event `P`: the
+/-- The one-test estimate (equation (7.50)) at the stopping time `T` for the prefix event `P`: the
 conditional probability given `𝓕_T` of the test failure `F` is at most `1 - q0/(1 + log(1/r))²` a.s. on `P`.
 This is `hone` of `prefix_bad_bound`, with the strong Markov transport `hSM1`, `hSM2` and the fixed-start
 moments `hstep1`, `hstep2` at the starts `X_T` (the one-test lemma is applied only at `T`). -/
@@ -144,7 +144,7 @@ theorem conditional_one_test {μ : Measure Ω} [IsProbabilityMeasure μ]
     (measurableSet_testFailSet 𝓕 hX hA hT hLst) (fun _ hω => testCount_eq_zero_of_testFail hω)
     hV1 hV2 hc hC hε hr hr1 hq0c hm hRr hfirst hsecond
 
-/-- The shell bad-event bound (PRO step 14 at every `T_j`, then `prefix_bad_bound`):
+/-- The shell bad-event bound (at every `T_j`, then `prefix_bad_bound`):
 `μ(B) ≤ (1 - q0/(1 + log(1/r))²)^(n+1)`, the input of `shell_product_le_half`. -/
 theorem shell_bad_bound {μ : Measure Ω} [IsProbabilityMeasure μ]
     (𝓕 : Filtration ℕ mΩ) {X : ℕ → Ω → E} (hX : ∀ n, Measurable[𝓕 n] (X n)) {A : Set E}

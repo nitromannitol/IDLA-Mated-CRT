@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.Frozen.S3c
 /-!
 # BG20 Proposition 5.1 and the reference package
 
-Operator note 07:50 UTC (Pro item 3): `BG20Prop51Ref ν` (`MatedCRT/FirstPass/Frozen/S3c.lean:54`) is circular. Its premise
+`BG20Prop51Ref ν` (`MatedCRT/FirstPass/Frozen/S3c.lean:54`) is circular. Its premise
 is `SLEReferenceInput ν`, which already contains `ExitTimeUpperBoundStmt 𝒮` (Lemma 2.18), whose first clause is the
 mass-restricted Proposition 5.1 statement. So `BG20Prop51Ref` adds nothing that the reference package does not already
 give, and it cannot serve as an independent BG20 input for Lemma 2.18.
@@ -18,7 +18,7 @@ What this file proves (no new hypotheses):
 Consequence for the consumers (report only, files not owned here): an independent BG20 input for Lemma 2.18 is the per-model
 `BG20Prop51 𝒮`, not `BG20Prop51Ref ν`; the existing per-model consumers are `firstPass_3_1_faithful_of_bg20Model` and
 `firstPass_3_1_countable_of_bg20Model` (`MatedCRT/FirstPass/S3c.lean:154`, `:161`). The second clause of
-`ExitTimeUpperBoundStmt` (unrestricted `D`, item 4) is not used here.
+`ExitTimeUpperBoundStmt` (unrestricted `D`) is not used here.
 -/
 
 namespace MatedCRT

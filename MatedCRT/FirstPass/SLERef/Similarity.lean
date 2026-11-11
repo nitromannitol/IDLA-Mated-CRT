@@ -4,12 +4,10 @@ import MatedCRT.FirstPass.Frozen.S5cSimilarity
 import MatedCRT.FirstPass.SLERef.Code
 
 /-!
-# First pass: corrected similarity transfer for the reference law (task fp-SLERef2-certify, worker z10)
+# First pass: corrected similarity transfer for the reference law
 
 `FPSimilarityTransferCorrected 𝒮` is the corrected body of the similarity transfer. It replaces the body of the frozen
-`FPSimilarityTransfer` (`MatedCRT/FirstPass/Frozen/S5cSimilarity.lean`), which is refuted by the counterexamples of
-`notes/fp-gaps/CHATGPT-fpsimilarity-truth.md` §1–§3 (the old file is left unchanged). The corrected body is §5 of that
-note: independence is imposed between the cone data and the Lebesgue-area representative `ηL`, not between the cone data
+`FPSimilarityTransfer` (`MatedCRT/FirstPass/Frozen/S5cSimilarity.lean`), which is refuted by explicit counterexamples. The corrected body: independence is imposed between the cone data and the Lebesgue-area representative `ηL`, not between the cone data
 and the quantum-area-parametrized curve `η`; both triples are equal in law after the similarity, and the scaling
 `η(b ·)` is taken with the quantum-area clock.
 
@@ -29,8 +27,7 @@ a space-filling SLE `η` of parameter `κ = 16 / γ²` (`IsSLE`) and a measurabl
 the rescaled circle process, the rescaled quantum area measure and the scaled curve `s ↦ r⁻¹ η(b s)` with
 `r = coneScaleRadius γ (hcirc ω) b` has the same law as the unscaled triple `(circleProcess (hcirc ω), μ ω, η ω)`.
 
-Independence concerns `ηL`, and the conclusion is an identity in law of the triples built from `η`, as in
-`CHATGPT-fpsimilarity-truth.md` §5.
+Independence concerns `ηL`, and the conclusion is an identity in law of the triples built from `η`.
 
 Truth check (2026-11-10). For a fixed model `𝒮` the statement is UNSURE: it is valid for a genuinely calibrated SLE model (or
 a model calibrated to its normalized law), and is not automatically discharged for an arbitrary `SpaceFillingSLEModel`, since
