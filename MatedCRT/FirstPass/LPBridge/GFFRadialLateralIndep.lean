@@ -445,4 +445,78 @@ lemma covariance_circle_lateralEval (h : IsWholePlaneGFF P hC hcirc) [IsProbabil
 
 end RadialLateralCov
 
+/-! ## Gaussian closure: an orthogonality criterion in `L²(P)` -/
+
+section HilbertClosure
+
+open MatedCRT.Field.GaussClosure
+
+variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+
+/-- **Orthogonal projection criterion.** Let `G i` and `g` be square integrable. If `E[Z g] = 0` for every
+square integrable `Z` with `E[Z G i] = 0` for all `i`, then `g` is an almost sure limit of elements of the linear
+span of the family `G` (projection in the Hilbert space `L²(P)` onto the closed span of `G`). -/
+lemma isAeLimitOf_span_of_orthogonal [IsProbabilityMeasure P] {ι : Type*} (G : ι → Ω → ℝ)
+    (hG : ∀ i, MemLp (G i) 2 P) (g : Ω → ℝ) (hg : MemLp g 2 P)
+    (horth : ∀ Z : Ω → ℝ, MemLp Z 2 P → (∀ i, ∫ ω, Z ω * G i ω ∂P = 0) → ∫ ω, Z ω * g ω ∂P = 0) :
+    IsAeLimitOf P (Submodule.span ℝ (Set.range G) : Set (Ω → ℝ)) g := by
+  classical
+  let V : Submodule ℝ (Lp ℝ 2 P) := Submodule.span ℝ (Set.range fun i => (hG i).toLp (G i))
+  have hgen : ∀ i, (hG i).toLp (G i) ∈ V := fun i => Submodule.subset_span ⟨i, rfl⟩
+  -- representatives of the elements of `V` by genuine functions in the span
+  have hrep : ∀ u ∈ V, ∃ w ∈ Submodule.span ℝ (Set.range G), w =ᵐ[P] (u : Ω → ℝ) := by
+    intro u hu
+    induction hu using Submodule.span_induction with
+    | mem x hx =>
+      obtain ⟨i, rfl⟩ := hx
+      exact ⟨G i, Submodule.subset_span ⟨i, rfl⟩, (hG i).coeFn_toLp.symm⟩
+    | zero => exact ⟨0, Submodule.zero_mem _, by filter_upwards with ω; simp⟩
+    | add x y _ _ hx hy =>
+      obtain ⟨w₁, hw₁, e₁⟩ := hx
+      obtain ⟨w₂, hw₂, e₂⟩ := hy
+      exact ⟨w₁ + w₂, Submodule.add_mem _ hw₁ hw₂, by
+        filter_upwards [e₁, e₂, Lp.coeFn_add x y] with ω h1 h2 h3
+        simp only [Pi.add_apply, h1, h2, h3]⟩
+    | smul c x _ hx =>
+      obtain ⟨w, hw, e⟩ := hx
+      exact ⟨c • w, Submodule.smul_mem _ c hw, by
+        filter_upwards [e, Lp.coeFn_smul c x] with ω h1 h2
+        simp only [Pi.smul_apply, smul_eq_mul, h1, h2]⟩
+  -- a test element `u` of `V^⊥` annihilates `g`
+  have hperp : ∀ u ∈ Vᗮ, ∫ ω, (u : Ω → ℝ) ω * g ω ∂P = 0 := by
+    intro u hu
+    refine horth u (Lp.memLp u) fun i => ?_
+    have h1 := (Submodule.mem_orthogonal _ _).1 hu _ (hgen i)
+    rw [MeasureTheory.L2.inner_def] at h1
+    rw [← h1]
+    refine integral_congr_ae ?_
+    filter_upwards [(hG i).coeFn_toLp] with ω hω
+    simp [hω, mul_comm]
+  -- `g` lies in the double orthogonal complement, that is in the closure of `V`
+  have hgL : hg.toLp g ∈ Vᗮᗮ := by
+    rw [Submodule.mem_orthogonal]
+    intro u hu
+    rw [MeasureTheory.L2.inner_def]
+    have hE : ∫ a, inner ℝ (u a) (hg.toLp g a) ∂P = ∫ ω, (u : Ω → ℝ) ω * g ω ∂P := by
+      refine integral_congr_ae ?_
+      filter_upwards [hg.coeFn_toLp] with ω hω
+      simp [hω, mul_comm]
+    rw [hE]
+    exact hperp u hu
+  rw [Submodule.orthogonal_orthogonal_eq_closure] at hgL
+  have hcl : hg.toLp g ∈ closure (V : Set (Lp ℝ 2 P)) := by
+    rw [← Submodule.topologicalClosure_coe]
+    exact hgL
+  obtain ⟨u, hu, hlim⟩ := mem_closure_iff_seq_limit.1 hcl
+  obtain ⟨ns, -, hae⟩ := (tendstoInMeasure_of_tendsto_Lp hlim).exists_seq_tendsto_ae
+  choose w hw he using fun n => hrep (u n) (hu n)
+  refine ⟨fun i => w (ns i), fun i => hw (ns i), ?_⟩
+  have hall : ∀ᵐ ω ∂P, ∀ i, w (ns i) ω = (u (ns i) : Ω → ℝ) ω := ae_all_iff.2 fun i => he (ns i)
+  filter_upwards [hae, hall, hg.coeFn_toLp] with ω h1 h2 h3
+  have hfun : (fun n => w (ns n) ω) = fun n => (u (ns n) : Ω → ℝ) ω := funext fun n => h2 n
+  rw [hfun, ← h3]
+  exact h1
+
+end HilbertClosure
+
 end MatedCRT.ConeMeanZeroRestriction
