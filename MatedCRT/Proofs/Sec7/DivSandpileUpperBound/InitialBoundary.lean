@@ -2,7 +2,7 @@ import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.ShellContraction
 import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.InitialOdometer
 
 /-! The initial graph boundary lies near the continuum frontier.
-The cell/frontier separation is from worker x2's shell contraction. -/
+-/
 
 namespace MatedCRT.Sec7
 

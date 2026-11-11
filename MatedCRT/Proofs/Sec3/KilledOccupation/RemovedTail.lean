@@ -33,7 +33,7 @@ def exitNN (z : ℂ) (r : ℝ) (b : ContinuousPath ℂ) : ℝ≥0 :=
 Brownian motion killed on exiting `D = ball z r`: for `y ∈ D` and every measurable `f ≥ 0`,
 `E_y ∫_0^σ f(B_t) dt = 2 ∫_D G_D(y,x) f(x) dx` (generator `½Δ`, Green function `ΔG = -δ`). This is the
 nonnegative-integrand form of `KilledBrownianOccupationOnBall` (`Potential.lean:275`, bounded `f`); the passage
-from bounded to nonnegative integrands is not written here and is an explicit hypothesis. -/
+from bounded to nonnegative integrands is written in `brownianOccupationOnBall_of_killed` (`MatedCRT/Proofs/Sec3/KilledOccupation/OccupationClosure4.lean:41`), with no further input. -/
 def BrownianOccupationOnBall (z : ℂ) (r : ℝ) : Prop :=
   ∀ y ∈ ball z r, ∀ f : ℂ → ℝ≥0∞, Measurable f →
     ∫⁻ b, (∫⁻ u in Icc 0 (exitNN z r b), f (b u) ∂timeLeb) ∂(HarmonicBalls.planarBrownianMotion y) =

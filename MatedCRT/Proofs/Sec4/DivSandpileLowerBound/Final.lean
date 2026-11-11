@@ -9,10 +9,9 @@ import MatedCRT.Steps.Sec2.MaximumPrinciple
 * `HarmonicBallStrictObstacleGapStep`: before the exit time, the harmonic ball `Λ_t` lies in the (unregularized)
   obstacle cluster `{x : x = 0 ∨ obstacle < least supersolution}`, i.e. the obstacle gap is strictly positive on
   `Λ_t`. This is `eq:strictly-above-in-interior` (corrected.tex:1913), whose printed proof (continuity) is invalid
-  in general (E-x3-1, `StrictGapCounterexample.lean`), and the missing ingredient (2) of E-c2-5.
+  in general (`StrictGapCounterexample.lean`).
 * `obstacleClusterInnerApproximation_of_strictGap`: the step `ObstacleClusterInnerApproximationStep` of Proposition 4.2
-  from the strict gap, Lemma 2.7, cone-family measurability and Lemma 2.4 (through m4's
-  `innerNbhd_coverage_of_subset_cluster`, ClusterCriterion.lean).
+  from the strict gap, Lemma 2.7, cone-family measurability and Lemma 2.4 (through `innerNbhd_coverage_of_subset_cluster`, ClusterCriterion.lean).
 * `divSandpileLowerBound_of_discreteClusterInnerBound`: the `Λ^ε_t` form of Proposition 4.2
   (`DiscreteClusterInnerBoundStep`, used by Proposition 5.1) implies `DivSandpileLowerBoundStmt` (the odometer
   comparison `Λ^ε_t ⊆ D_ε(t ε⁻¹)` is proved). The converse does not hold in general (Steps/Sec5/IDLALowerBound.lean,
@@ -26,7 +25,7 @@ namespace MatedCRT
 open MeasureTheory Filter Topology Set Metric
 
 /-- **Strict positivity of the obstacle gap on the harmonic ball** (eq:strictly-above-in-interior, corrected.tex
-1913; E-x3-1, E-c2-5 (2)): for `t > 0`, almost surely, on `{t < T}`, `Λ_t ⊆ 𝒞_t`, where `𝒞_t` is the
+1913): for `t > 0`, almost surely, on `{t < T}`, `Λ_t ⊆ 𝒞_t`, where `𝒞_t` is the
 unregularized obstacle cluster of `μ_h` in `B_ρ` with source `0` (`HarmonicBalls.cluster`): the least supersolution
 is strictly above the obstacle on `Λ_t \ {0}`. -/
 def HarmonicBallStrictObstacleGapStep (𝒮 : SpaceFillingSLEModel) : Prop :=
