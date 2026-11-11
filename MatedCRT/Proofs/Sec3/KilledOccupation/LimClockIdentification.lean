@@ -133,6 +133,51 @@ theorem iInf_rat_gt_ofReal_eq {F : ℝ≥0 → ℝ} (hmono : Monotone F) (hcont 
     exact ge_of_tendsto hlim (eventually_nhdsWithin_of_forall fun t ht => hgt t ht)
   · exact le_iInf fun q => ENNReal.ofReal_le_ofReal (hmono (min_le_min q.2.le le_rfl))
 
+/-- Almost sure subsequential convergence from convergence in measure, uniformly on bounded time intervals: if for every
+`T` and `η > 0` the `μ`-mass of `{∃ t ≤ T, η ≤ |a m b t - F b t|}` tends to `0` along `m`, then along a strictly increasing
+subsequence `k` of `n`, for `μ`-almost every `b`, `a (n (k j)) b t → F b t` for every `t`. This is the step (a) of the
+identification of the limit clock (the quenched convergence in probability of `IsLQGClock` gives the hypothesis). -/
+theorem ae_tendsto_subseq_of_tendsto_measure {X : Type*} [MeasurableSpace X] (μ : Measure X)
+    (a : ℕ → X → ℝ≥0 → ℝ) (F : X → ℝ≥0 → ℝ) (n : ℕ → ℕ) (hn : StrictMono n)
+    (h : ∀ (T : ℝ≥0) (η : ℝ), 0 < η →
+      Tendsto (fun m => μ {b | ∃ t ≤ T, η ≤ |a m b t - F b t|}) atTop (𝓝 0)) :
+    ∃ k : ℕ → ℕ, StrictMono k ∧
+      ∀ᵐ b ∂μ, ∀ t : ℝ≥0, Tendsto (fun j => a (n (k j)) b t) atTop (𝓝 (F b t)) := by
+  have hE : ∀ j : ℕ, Tendsto (fun k => μ {b | ∃ t ≤ (j : ℝ≥0), (1 / 2 : ℝ) ^ j ≤ |a (n k) b t - F b t|})
+      atTop (𝓝 0) := fun j =>
+    (h (j : ℝ≥0) ((1 / 2 : ℝ) ^ j) (by positivity)).comp hn.tendsto_atTop
+  obtain ⟨k, hk, hae⟩ := exists_strictMono_ae_eventually_notMem μ
+    (fun k j => {b | ∃ t ≤ (j : ℝ≥0), (1 / 2 : ℝ) ^ j ≤ |a (n k) b t - F b t|}) hE
+  refine ⟨k, hk, ?_⟩
+  filter_upwards [hae] with b hb
+  intro t
+  have hev : ∀ᶠ j in atTop, |a (n (k j)) b t - F b t| ≤ (1 / 2 : ℝ) ^ j := by
+    filter_upwards [hb, eventually_ge_atTop ⌈t⌉₊] with j hj hjt
+    have htj : t ≤ (j : ℝ≥0) := le_trans (Nat.le_ceil t) (by exact_mod_cast hjt)
+    by_contra hc
+    exact hj ⟨t, htj, (not_le.1 hc).le⟩
+  have h0 : Tendsto (fun j : ℕ => (1 / 2 : ℝ) ^ j) atTop (𝓝 0) :=
+    tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num) (by norm_num)
+  have h1 : Tendsto (fun j => a (n (k j)) b t - F b t) atTop (𝓝 0) :=
+    squeeze_zero_norm' (by filter_upwards [hev] with j hj; rwa [Real.norm_eq_abs]) h0
+  exact tendsto_sub_nhds_zero_iff.1 h1
+
+/-- If the consecutive ennDist-gaps of the nonnegative sequence `ofReal (x m)` are eventually at most `(1/2)^m` and
+a subsequence converges to `L`, the `limsup` of `ofReal (x m)` is `ofReal L`. This is the form of Step L7(b) that
+uses the Borel-Cantelli gap bound of L6 (`clockGapFun` dominates `ennDist` at each rational time). -/
+theorem limsup_ofReal_eq_of_gap {x : ℕ → ℝ} {L : ℝ} {k : ℕ → ℕ} (hk : StrictMono k) (hx : ∀ m, 0 ≤ x m)
+    (hgap : ∀ᶠ m in atTop,
+      ennDist (ENNReal.ofReal (x m)) (ENNReal.ofReal (x (m + 1))) ≤ ENNReal.ofReal ((1 / 2 : ℝ) ^ m))
+    (hsub : Tendsto (fun j => x (k j)) atTop (𝓝 L)) :
+    Filter.limsup (fun m => ENNReal.ofReal (x m)) atTop = ENNReal.ofReal L := by
+  have hgap' : ∀ᶠ m in atTop, |x m - x (m + 1)| ≤ (1 / 2 : ℝ) ^ m := by
+    filter_upwards [hgap] with m hm
+    have h1 : ENNReal.ofReal |x m - x (m + 1)| ≤ ENNReal.ofReal ((1 / 2 : ℝ) ^ m) :=
+      (ofReal_le_ennDist_ofReal (η := |x m - x (m + 1)|) (hx m) (hx (m + 1)) le_rfl).trans hm
+    exact (ENNReal.ofReal_le_ofReal_iff (by positivity)).1 h1
+  have hT : Tendsto x atTop (𝓝 L) := tendsto_of_subseq_of_gap_le_geometric_two hk hgap' hsub
+  exact ((ENNReal.continuous_ofReal.tendsto L).comp hT).limsup_eq
+
 /-- Borel-Cantelli for the clock gap (Step L6 of the limit-clock identification). Under the hypothesis `hbd` that the
 image `M` of `P ⊗ planarBrownianMotion y` under `(ω, b) ↦ (ψ ω, b)` gives the events `{ofReal ((1/2)^k) < gap k}` mass at
 most `(1/2)^k`, for `P`-almost every `ω` and `planarBrownianMotion y`-almost every `b` the clock gap at the scales
