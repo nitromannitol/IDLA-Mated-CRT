@@ -11,7 +11,7 @@ kind `cited` are not counted here. Two extra rows (B6) give the counted forms th
 - **Kind**: `COUNTED (proof)` if the body is a tactic proof or a multi-step term. `DERIVED (file)` if the body is a
   one-line application of another theorem, located in `file`; the proof of the row is there.
 - **Binder classes**: each explicit or implicit binder is classed by the file that defines its Prop:
-  External, Frozen, Proposed, HB (HarmonicBalls/Draft), HBdef (other HarmonicBalls), model core
+  External, Frozen, Proposed, HB (Harmonic-Balls-LQG/HarmonicBalls/Draft), HBdef (other HarmonicBalls), model core
   (CertifiedReferenceModel and CertifiedReferenceModelCore, SLERef/Certified.lean:54 and FirstPass/S5qe.lean:33; class `model core`, lead li 2026-11-11 08:20), data (SpaceFillingSLEModel, `ν`), Def (MatedCRT/Defs), Step (a paper step outside
   Frozen, External and Proposed), DRAFT (MatedCRT/Draft, a Draft statement of this paper), Proof? (defined in a
   non-Frozen FirstPass or Proofs file, to be examined), std (Mathlib types). A binder whose Prop is an alias (its
@@ -102,7 +102,7 @@ Status: **PENDING TRUTH CHECK**. Existence is not proved in this repository; it 
 the valid environments `MatedCRTEnv.IsValid 𝒮 γ` (MatedCRT/Defs/Setting.lean:141).
 
 - **Literature inputs named.** `IsMatingOfTreesCoupling` (LatticeProb module
-  `LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.IsMatingOfTreesCoupling` (Lattice-Probability/LatticeProb/Bonanno/MatedCRTHarmonic/Frozen/IsMatingOfTreesCoupling.lean:61); Setting.lean:7, :14, :157-165) is the coupling
+  `LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.IsMatingOfTreesCoupling` (Lattice-Probability/LatticeProb/Bonanno/MatedCRTHarmonic/Frozen/IsMatingOfTreesCoupling.lean:61); MatedCRT/Defs/Setting.lean:7, MatedCRT/Defs/Setting.lean:14, MatedCRT/Defs/Setting.lean:157-165) is the coupling
   conjunct of `IsValid`. `MatedCRTEnv.IsValid` (Setting.lean:141) has the fields `isQuantumCone`, `isLQGMeasure`,
   `isSLE` and the coupling. `HasReferenceEnvironments 𝒮` (MatedCRT/FirstPass/SLERef/Reference.lean:42) gives valid
   environments for every γ ∈ (0,2); it is a conjunct of `CertifiedReferenceModel ν 𝒮` (SLERef/Certified.lean:54, :54).
@@ -179,9 +179,9 @@ theorem that concludes it, and the reason it is not wrapped.
 | Binder | Prop (location) | Class | Source | Status |
 |---|---|---|---|---|
 | hND | `LQGMeasureNonDyadicDilationPart` | Step | cited input, not staged | kept by operator ruling (tasks/li.md:196; req 104a) |
-| hLit | `MatedCRT.S2VG.LitExistence` (FirstPass/S2VG/Literature.lean:44) | HB Proposed (lead li 2026-11-11 08:20) | HarmonicBalls Proposed/LQG.lean (abbrev) | not staged in External: FOR OPERATOR |
-| hBM | `LitWholePlaneBallMass` (FirstPass/S2VG/Literature.lean:25) | HB Proposed (lead li 2026-11-11 08:20) | HarmonicBalls Proposed/LQG.lean:154; Ding-Gwynne arXiv:1807.01072 Lemma 3.8 | not staged in External: FOR OPERATOR |
-| hCC | `LitCoordChange` (FirstPass/S2VG/Literature.lean:32) | HB Proposed (lead li 2026-11-11 08:20) | HarmonicBalls Proposed/LQG.lean (abbrev) | not staged in External: FOR OPERATOR |
+| hLit | `MatedCRT.S2VG.LitExistence` (FirstPass/S2VG/Literature.lean:44) | HB Proposed (lead li 2026-11-11 08:20) | HarmonicBalls Harmonic-Balls-LQG/HarmonicBalls/Proposed/LQG.lean (abbrev) | not staged in External: FOR OPERATOR |
+| hBM | `LitWholePlaneBallMass` (FirstPass/S2VG/Literature.lean:25) | HB Proposed (lead li 2026-11-11 08:20) | Harmonic-Balls-LQG/HarmonicBalls/Proposed/LQG.lean:154; Ding-Gwynne arXiv:1807.01072 Lemma 3.8 | not staged in External: FOR OPERATOR |
+| hCC | `LitCoordChange` (FirstPass/S2VG/Literature.lean:32) | HB Proposed (lead li 2026-11-11 08:20) | HarmonicBalls Harmonic-Balls-LQG/HarmonicBalls/Proposed/LQG.lean (abbrev) | not staged in External: FOR OPERATOR |
 | hμ | `LitQuantumConeLQGMeasureExistence` (FirstPass/S4S6c/LitConeLQG68.lean:26) | HB Proposed (lead li 2026-11-11 08:20) | not checked this round | not staged in External: FOR OPERATOR |
 | hBE | `FrozenOneSidedBoundaryContinuity 𝒮` (FirstPass/S3i/Frozen.lean:44) | Proof? | FALSE as typed (audit R2 K1; FROZEN-PROVENANCE row 81) | blocks 3.6: row 3.6 is conditional. Floored replacement `FrozenOneSidedBoundaryContinuityFloored` (FirstPass/S3i/FrozenFloored.lean:34; FROZEN-PROVENANCE row 82) is PENDING TRUTH CHECK (MQ-li-7a) |
 | hnj | `StrictGapFixedTimeUnionStep 𝒮` (FirstPass/S4d/StrictGapReduction.lean:35) | Step | paper-own step | needs proof (4.2) |
