@@ -4,6 +4,7 @@ import Mathlib.MeasureTheory.Measure.Lebesgue.Complex
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Analysis.SpecificLimits.Normed
 import MarkovProcess.Examples.BrownianMotion
+import MatedCRT.LPStaging.Analysis.ConeRadialIntegrals
 
 /-!
 # Radial and sphere-average codes of a quantum cone
@@ -106,13 +107,8 @@ lemma planeLine_monotone (n : ℕ) : Monotone (planeLine n) := by
 /-- Distinct cells are disjoint in each coordinate: a point of `Ico (L k) (L (k+1))` is not in `Ico (L i) (L (i+1))` for
 `i ≠ k`, when `L` is monotone. -/
 lemma not_mem_Ico_of_ne {L : ℕ → ℝ} (hL : Monotone L) {i k : ℕ} (hik : i ≠ k) {x : ℝ}
-    (hx : x ∈ Ico (L k) (L (k + 1))) : x ∉ Ico (L i) (L (i + 1)) := by
-  intro h
-  rcases lt_or_gt_of_ne hik with h1 | h1
-  · have : L (i + 1) ≤ L k := hL (Nat.succ_le_of_lt h1)
-    linarith [h.2, hx.1]
-  · have : L (k + 1) ≤ L i := hL (Nat.succ_le_of_lt h1)
-    linarith [h.1, hx.2]
+    (hx : x ∈ Ico (L k) (L (k + 1))) : x ∉ Ico (L i) (L (i + 1)) :=
+  fun h => (Set.disjoint_left.1 (Monotone.pairwise_disjoint_on_Ico_succ hL hik) h) hx
 
 /-! ### Cells: measure and measurability -/
 
@@ -722,11 +718,8 @@ is measurable, has null complement, and `c` is continuous on `(0,∞) × ℂ` fo
 lemma exists_measurable_good_set {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {c : Ω → ℝ → ℂ → ℝ}
     (hcont : ∀ᵐ ω ∂P, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ)) :
     ∃ T : Set Ω, MeasurableSet T ∧ P Tᶜ = 0 ∧
-      ∀ ω ∈ T, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ) := by
-  obtain ⟨t, hBt, hmt, hPt⟩ := exists_measurable_superset_of_null (ae_iff.1 hcont)
-  refine ⟨tᶜ, hmt.compl, by rw [compl_compl]; exact hPt, fun ω hω => ?_⟩
-  by_contra h
-  exact hω (hBt h)
+      ∀ ω ∈ T, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ) :=
+  LatticeProb.ConeRadialIntegrals.exists_measurable_good_set hcont
 
 /-- **Joint measurability of the modified radial process.** For the good set `T`, the map `(t, ω) ↦
 1_T(ω) c_{e^{-t}}(0)(ω)` is measurable on `ℝ × Ω`: it is continuous in `t` for every `ω` and measurable in `ω` for every
@@ -734,51 +727,14 @@ lemma exists_measurable_good_set {Ω : Type*} [MeasurableSpace Ω] {P : Measure 
 lemma measurable_uncurry_radial {Ω : Type*} [MeasurableSpace Ω] {c : Ω → ℝ → ℂ → ℝ} {T : Set Ω}
     (hcm : ∀ r z, 0 < r → Measurable fun ω => c ω r z) (hT : MeasurableSet T)
     (hgood : ∀ ω ∈ T, ContinuousOn (fun p : ℝ × ℂ => c ω p.1 p.2) (Set.Ioi 0 ×ˢ Set.univ)) :
-    Measurable (Function.uncurry fun (t : ℝ) (ω : Ω) => T.indicator (fun ω => c ω (Real.exp (-t)) 0) ω) := by
-  refine measurable_uncurry_of_continuous_of_measurable (fun ω => ?_) (fun t => ?_)
-  · by_cases hω : ω ∈ T
-    · simp only [Set.indicator_of_mem hω]
-      have hc := hgood ω hω
-      exact hc.comp_continuous (f := fun t : ℝ => ((Real.exp (-t)), (0 : ℂ)))
-        (by fun_prop) (fun t => ⟨Real.exp_pos _, Set.mem_univ _⟩)
-    · simp only [Set.indicator_of_notMem hω]
-      exact continuous_const
-  · exact (hcm (Real.exp (-t)) 0 (Real.exp_pos _)).indicator hT
+    Measurable (Function.uncurry fun (t : ℝ) (ω : Ω) => T.indicator (fun ω => c ω (Real.exp (-t)) 0) ω) :=
+  LatticeProb.ConeRadialIntegrals.measurable_uncurry_radial hcm hT hgood
 
 /-- **Change of variables `y = e^{-t}` on `(0,1]`**. -/
 lemma lintegral_Ioc_eq_radial (g : ℝ → ℝ) :
     ∫⁻ y in Set.Ioc (0 : ℝ) 1, ENNReal.ofReal (y * |g y|) =
-      ∫⁻ t in Set.Ici (0 : ℝ), ENNReal.ofReal (Real.exp (-2 * t)) * ENNReal.ofReal |g (Real.exp (-t))| := by
-  have himg : (fun t : ℝ => Real.exp (-t)) '' Set.Ici 0 = Set.Ioc 0 1 := by
-    ext y
-    constructor
-    · rintro ⟨t, ht, rfl⟩
-      exact ⟨Real.exp_pos _, Real.exp_le_one_iff.2 (by simp only [Set.mem_Ici] at ht; linarith)⟩
-    · rintro ⟨hy0, hy1⟩
-      refine ⟨-Real.log y, ?_, ?_⟩
-      · simp only [Set.mem_Ici, neg_nonneg]
-        exact Real.log_nonpos hy0.le hy1
-      · simp only [neg_neg]
-        exact Real.exp_log hy0
-  have hderiv : ∀ x ∈ Set.Ici (0 : ℝ),
-      HasDerivWithinAt (fun t : ℝ => Real.exp (-t)) (-Real.exp (-x)) (Set.Ici 0) x := by
-    intro x _
-    have := ((hasDerivAt_id x).neg.exp).hasDerivWithinAt (s := Set.Ici 0)
-    simpa using this
-  have hinj : Set.InjOn (fun t : ℝ => Real.exp (-t)) (Set.Ici 0) := by
-    intro a _ b _ hab
-    have := Real.exp_injective hab
-    linarith
-  have key := lintegral_image_eq_lintegral_abs_deriv_mul measurableSet_Ici hderiv hinj
-    (fun y => ENNReal.ofReal (y * |g y|))
-  rw [himg] at key
-  rw [key]
-  refine setLIntegral_congr_fun measurableSet_Ici fun t _ => ?_
-  rw [← ENNReal.ofReal_mul (abs_nonneg _), ← ENNReal.ofReal_mul (Real.exp_pos _).le,
-    abs_neg, abs_of_pos (Real.exp_pos _)]
-  congr 1
-  rw [show -2 * t = -t + -t by ring, Real.exp_add]
-  ring
+      ∫⁻ t in Set.Ici (0 : ℝ), ENNReal.ofReal (Real.exp (-2 * t)) * ENNReal.ofReal |g (Real.exp (-t))| :=
+  LatticeProb.ConeRadialIntegrals.lintegral_Ioc_eq_radial g
 
 /-- **One-time bound for the good modification.** For `t ≥ 0`, the `P`-integral of `|1_T c_{e^{-t}}(0)|` is at most
 `1 + t + |γ| t` (`lintegral_ofReal_radial_eq` and `lintegral_ofReal_abs_add_le`). -/
@@ -879,33 +835,15 @@ lemma ae_lintegral_radial_lt_top {γ : ℝ} {Ω : Type*} [MeasurableSpace Ω] {P
 /-- A continuous `g` on `(0,∞)` with `∫_{(0,1]} y |g y| dy < ∞` has `∫_{(0,R0]} y |g y| dy < ∞` for `R0 ≥ 1`. -/
 lemma integrableOn_Ioc_mul_abs {g : ℝ → ℝ} (hg : ContinuousOn g (Set.Ioi 0)) {R0 : ℝ} (hR0 : 1 ≤ R0)
     (hfin : ∫⁻ y in Set.Ioc (0 : ℝ) 1, ENNReal.ofReal (y * |g y|) < ⊤) :
-    IntegrableOn (fun y => y * |g y|) (Set.Ioc 0 R0) := by
-  have hc : ContinuousOn (fun y => y * |g y|) (Set.Ioi 0) := continuousOn_id.mul hg.abs
-  rw [← Set.Ioc_union_Ioc_eq_Ioc zero_le_one hR0]
-  refine IntegrableOn.union ?_ ?_
-  · refine ⟨(hc.mono Set.Ioc_subset_Ioi_self).aestronglyMeasurable measurableSet_Ioc, ?_⟩
-    have h1 : ∫⁻ y in Set.Ioc (0 : ℝ) 1, ‖y * |g y|‖ₑ = ∫⁻ y in Set.Ioc (0 : ℝ) 1, ENNReal.ofReal (y * |g y|) :=
-      setLIntegral_congr_fun measurableSet_Ioc fun y hy => by
-        rw [Real.enorm_eq_ofReal (mul_nonneg hy.1.le (abs_nonneg _))]
-    exact h1.trans_lt hfin
-  · have hcI : ContinuousOn (fun y => y * |g y|) (Set.Icc 1 R0) :=
-      hc.mono fun y hy => Set.mem_Ioi.2 (lt_of_lt_of_le one_pos hy.1)
-    exact (hcI.integrableOn_compact isCompact_Icc).mono_set Set.Ioc_subset_Icc_self
+    IntegrableOn (fun y => y * |g y|) (Set.Ioc 0 R0) :=
+  LatticeProb.ConeRadialIntegrals.integrableOn_Ioc_mul_abs hg hR0 hfin
 
 /-- The radial integral on `ℂ`: `x ↦ 1_{|x| ≤ R0} |g(|x|)|` is integrable when `∫_{(0,R0]} y |g y| dy < ∞` (polar
 coordinates, `integrable_fun_norm_addHaar`, `dim ℂ = 2`). -/
 lemma integrable_radial_indicator {g : ℝ → ℝ} {R0 : ℝ}
     (hg : IntegrableOn (fun y => y * |g y|) (Set.Ioc 0 R0)) :
-    Integrable (fun x : ℂ => (Set.Iic R0).indicator (fun y => |g y|) ‖x‖) := by
-  have hdim : Module.finrank ℝ ℂ - 1 = 1 := by simp [Complex.finrank_real_complex]
-  refine (integrable_fun_norm_addHaar (μ := volume) (f := (Set.Iic R0).indicator (fun y => |g y|))).2 ?_
-  have h1 : IntegrableOn (fun y => (Set.Ioc 0 R0).indicator (fun y => y * |g y|) y) (Set.Ioi 0) :=
-    ((integrable_indicator_iff measurableSet_Ioc).2 hg).integrableOn
-  refine h1.congr_fun (fun y hy => ?_) measurableSet_Ioi
-  have hy0 : 0 < y := hy
-  by_cases h : y ≤ R0
-  · simp [Set.indicator, h, hy0]
-  · simp [Set.indicator, h]
+    Integrable (fun x : ℂ => (Set.Iic R0).indicator (fun y => |g y|) ‖x‖) :=
+  LatticeProb.ConeRadialIntegrals.integrable_radial_indicator hg
 
 /-- **Pointwise domination of the radial term.** If `|φ| ≤ M`, `φ = 0` off `B(0,R0)`, the cutoff is in `[0,1]` and vanishes
 at radii `≤ δ_m`, then `|φ(x) χ_m(|x|) g(max(|x|, δ_m))| ≤ M 1_{|x| ≤ R0} |g(|x|)|`. -/
@@ -1034,43 +972,8 @@ theorem radialPairingCode_ae_eq {γ : ℝ} {Ω : Type*} [MeasurableSpace Ω] {P 
 /-- **The circle meets the origin in at most one angle on `(0, 2π]`.** Hence the set of angles with `circleMap z r θ = 0`
 is null for Lebesgue measure on `(0, 2π]` (the zero set of `circleMap` is discrete). -/
 lemma ae_circleMap_ne_zero {z : ℂ} {r : ℝ} (hr : 0 < r) :
-    ∀ᵐ θ ∂(volume.restrict (Set.Ioc (0 : ℝ) (2 * π))), circleMap z r θ ≠ 0 := by
-  have hsub : {θ : ℝ | θ ∈ Set.Ioc (0 : ℝ) (2 * π) ∧ circleMap z r θ = 0}.Subsingleton := by
-    rintro a ⟨⟨ha0, ha1⟩, ha⟩ b ⟨⟨hb0, hb1⟩, hb⟩
-    have hexp : Complex.exp (a * Complex.I) = Complex.exp (b * Complex.I) := by
-      have h1 : (r : ℂ) * Complex.exp (a * Complex.I) = (r : ℂ) * Complex.exp (b * Complex.I) := by
-        unfold circleMap at ha hb
-        linear_combination ha - hb
-      exact mul_left_cancel₀ (by exact_mod_cast hr.ne') h1
-    have hdiff : Complex.exp ((a - b : ℝ) * Complex.I) = 1 := by
-      rw [Complex.ofReal_sub, sub_mul, Complex.exp_sub, hexp, div_self (Complex.exp_ne_zero _)]
-    obtain ⟨n, hn⟩ := Complex.exp_eq_one_iff.1 hdiff
-    have hn' : (a - b : ℝ) = n * (2 * π) := by
-      have h2 : ((a - b : ℝ) : ℂ) = ((n * (2 * π) : ℝ) : ℂ) := by
-        have := hn
-        push_cast at this ⊢
-        apply mul_right_cancel₀ Complex.I_ne_zero
-        linear_combination this
-      exact_mod_cast h2
-    have hn1 : (n : ℝ) < 1 := by
-      have : (n : ℝ) * (2 * π) < 2 * π := by linarith
-      nlinarith [Real.pi_pos]
-    have hn2 : (-1 : ℝ) < n := by
-      have : (-(2 * π)) < (n : ℝ) * (2 * π) := by linarith
-      nlinarith [Real.pi_pos]
-    have hnz : n = 0 := by
-      have h1 : n < 1 := by exact_mod_cast hn1
-      have h2 : -1 < n := by exact_mod_cast hn2
-      omega
-    rw [hnz] at hn'
-    simp at hn'
-    linarith
-  have hcount : {θ : ℝ | θ ∈ Set.Ioc (0 : ℝ) (2 * π) ∧ circleMap z r θ = 0}.Countable := hsub.countable
-  rw [ae_restrict_iff' measurableSet_Ioc]
-  have hnull : volume {θ : ℝ | θ ∈ Set.Ioc (0 : ℝ) (2 * π) ∧ circleMap z r θ = 0} = 0 :=
-    hcount.measure_zero volume
-  filter_upwards [measure_eq_zero_iff_ae_notMem.1 hnull] with θ hθ hIoc hzero
-  exact hθ ⟨hIoc, hzero⟩
+    ∀ᵐ θ ∂(volume.restrict (Set.Ioc (0 : ℝ) (2 * π))), circleMap z r θ ≠ 0 :=
+  LatticeProb.ConeRadialIntegrals.ae_circleMap_ne_zero hr
 
 /-- The cutoff term is dominated by the unscaled value: `|χ_m(|x|) g(max(|x|, δ_m))| ≤ |g(|x|)|`. -/
 lemma abs_radialCutoff_mul_le (m : ℕ) (x : ℂ) (g : ℝ → ℝ) :
