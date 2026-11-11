@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4d.ScaleBridge
 import MatedCRT.FirstPass.Frozen.S4d2
 
 /-!
-# FIRST PASS, rescaled half-ball horizon uniqueness `hRU` (fp-S4d-4-2-assembly-b, q4)
+# FIRST PASS, rescaled half-ball horizon uniqueness `hRU`
 
 `ConeRescaledHalfBallHorizonUniqueFPStep` (`FirstPass/S4d/ScaleBridge.lean`) is proved from the canonical half-ball
 step `ConeCanonicalHalfBallStep`, the closure step `ConeHalfBallClosureInsideStep`, and the frozen cone-rescaling input
@@ -17,9 +17,9 @@ namespace MatedCRT
 
 open MeasureTheory
 
-/-- **Rescaled half-ball horizon uniqueness (`hRU`, q4, fp-S4d-4-2-assembly-b).** Proof of
+/-- **Rescaled half-ball horizon uniqueness (`hRU`).** Proof of
 `ConeRescaledHalfBallHorizonUniqueFPStep` from the canonical half-ball step, the closure step and the frozen input
-`ConeRescaledMeasureIsConeFieldInput` (route A of notes/fp-gaps/CHATGPT-q4-hRU.md, section 6). -/
+`ConeRescaledMeasureIsConeFieldInput` (route A). -/
 theorem coneRescaledHalfBallHorizonUnique_fp (hcan : ConeCanonicalHalfBallStep) (hcl : ConeHalfBallClosureInsideStep)
     (hrescale : ConeRescaledMeasureIsConeFieldInput) : ConeRescaledHalfBallHorizonUniqueFPStep := by
   intro γ hγ0 hγ2 Ω _ P hC hcirc μ hcone b hb

@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S2g.Draft24
 
 /-!
-# FIRST PASS, Draft Lemma 2.5 from its corrected canonical form (q4, fp-S4d-4-2-assembly)
+# FIRST PASS, Draft Lemma 2.5 from its corrected canonical form
 
 `ConeScaleInvarianceUpToFixedTimeStmt` (Draft `Section2.lean:88`; paper `lemma:scale-invariance-up-to-fixed-time`,
 `idla_mated_crt-corrected.tex:548`) is stated for an arbitrary stopping time `T` and adds the uniqueness of the rescaled
@@ -24,9 +24,9 @@ namespace MatedCRT
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- **Rescaled half-ball horizon uniqueness (NEW step, OPEN; q4, fp-S4d-4-2-assembly).** Copy of the statement of
+/-- **Rescaled half-ball horizon uniqueness (open).** Copy of the statement of
 `ConeRescaledHalfBallHorizonUniqueStep` (`Proofs/Sec2/ConeFamilyMeasurable/ScaledUniqueness.lean:13`), restated here
-because that file is outside the fleet build closure. For a cone field and `b > 0`, almost surely, two families `Λ`, `Γ`
+because that file is outside the build closure. For a cone field and `b > 0`, almost surely, two families `Λ`, `Γ`
 for `μ(ω)` on `(0, b T)` and `(0, b S)` whose rescalings by the cone scale radius `R_b` are stopped at `∂B_{1/2}` at `T`
 and `S` satisfy `S = T` (paper `lemma:scale-invariance-up-to-fixed-time`, line 548: `T^b = sup{t : R_b^{-1} Λ_{bt} ⊂ B_{1/2}}`
 is determined by the family). No proof is given here. -/
@@ -42,7 +42,7 @@ def ConeRescaledHalfBallHorizonUniqueFPStep : Prop :=
       0 < S → IsConeHarmonicBallFamilyOn (μ ω) Γ (b * S) →
       IsStoppedAtHalfBall (rescaledFamily Γ (coneScaleRadius γ (hcirc ω) b) b) S → S = T
 
-/-- **Stopping time of every stopped family is the canonical half-ball time (q4, fp-S4d-4-2-assembly).** For a cone field,
+/-- **Stopping time of every stopped family is the canonical half-ball time.** For a cone field,
 almost surely every family `Λ'` of harmonic balls on `(0, T')` which is stopped at `∂B_{1/2}` at `T'` has
 `T' = halfBallTime (μ ω)`. The proof is the uniqueness clause of `coneHarmonicBallsUpToFixedTimeStmt_of_canonical`
 (`S2g/Draft24.lean`, `hTT`), with the canonical family of Lemma 2.4 as reference family. -/
@@ -57,7 +57,7 @@ theorem halfBallTime_eq_of_stopped_fp (hcan : ConeCanonicalHalfBallStep) (hcl : 
   exact stopped_unique_of_closureInside_fp hT hT' hst hst' hΛ.2.1.monotoneOn hΛ'.2.1.monotoneOn (hΛ.eqOn hΛ')
     (hcl' _ _ hΛ hst) (hcl' _ _ hΛ' hst')
 
-/-- **Draft Lemma 2.5 (`ConeScaleInvarianceUpToFixedTimeStmt`) from the corrected canonical form (q4, fp-S4d-4-2-assembly).**
+/-- **Draft Lemma 2.5 (`ConeScaleInvarianceUpToFixedTimeStmt`) from the corrected canonical form.**
 The stopping time of the given family is `halfBallTime` almost surely (`halfBallTime_eq_of_stopped_fp`), so the canonical
 form applies to the given family. Its time `Tb` is `halfBallTime` of the rescaled measure `ENNReal.ofReal (b⁻¹) • μ(R_b ·)`,
 and the uniqueness clause of the Draft statement is `ConeRescaledHalfBallHorizonUniqueStep` applied to the canonical family
