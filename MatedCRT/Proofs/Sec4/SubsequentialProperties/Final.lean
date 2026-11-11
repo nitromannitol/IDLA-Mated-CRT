@@ -9,7 +9,7 @@ import MatedCRT.Proofs.Sec4.ConvergenceDivisible.ExitCDF
   extractions: Lemma 3.5 with hat data on rational discs (`ae_tendsto_hatDirichletAtCentre`), Lemma 3.3 uniformly on
   annuli (`ae_greenKernel_unif_annuli`) and Lemma 3.7 on `B_ρ` (`exists_strictMono_ae_tendstoUniformlyOn`). The three
   items are `odometer_integral_mul_laplacian_nonneg`, `odometer_integral_mul_laplacian_le` and
-  `odometer_hasLaplacian_noncoincidence`; `0 < c₀/6` is `matedCRTScalingConstantPositive` (x3).
+  `odometer_hasLaplacian_noncoincidence`; `0 < c₀/6` is `matedCRTScalingConstantPositive`.
 * `subsequentialProperties_of_inputs`: **Lemma 4.8** from Lemmas 3.3, 3.5, 3.7 and 2.13 (Draft statements; 3.3, 3.5,
   3.7 are proved elsewhere from their inputs, 2.13 is the corrected maximum principle). Lemma 4.3, the corrected
   Lemma 4.4 and both steps are discharged; neither the Draft Lemma 4.4 nor Lemma 4.6 is used.
@@ -73,7 +73,7 @@ theorem odometerDistributionalLimitCorrectedStep_of_greenKernel (𝒮 : SpaceFil
       (fun ε hε' a ha => (h44ω t ε ht hε').1 a ha) (fun ε hε' a ha => ((h44ω t ε ht hε').2.1 a ha).2)
       hqc hqlap hqk hwc hconv'⟩
 
-/-- x3's `OdometerDistributionalLimitStep` from Lemma 3.3. -/
+/-- `OdometerDistributionalLimitStep` from Lemma 3.3. -/
 theorem odometerDistributionalLimitStep_of_greenKernel (𝒮 : SpaceFillingSLEModel)
     (h33 : UniformConvergenceGreenKernelStmt 𝒮) : OdometerDistributionalLimitStep 𝒮 :=
   odometerDistributionalLimitStep_of_corrected (odometerDistributionalLimitCorrectedStep_of_greenKernel 𝒮 h33)
