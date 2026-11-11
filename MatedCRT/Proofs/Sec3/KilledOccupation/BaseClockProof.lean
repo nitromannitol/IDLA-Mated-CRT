@@ -1006,4 +1006,100 @@ theorem radon_side_tendsto {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [I
     _ ≤ ε / 2 + (ε / 2 / 2 + ε / 2 / 2) := add_le_add hk1 (add_le_add hN₀ hN₀)
     _ = ε := by rw [ENNReal.add_halves (ε / 2), ENNReal.add_halves ε]
 
+/-- The Green weight `2 G_D(y, ·)` of the ordinary Brownian occupation kernel (paper tex:48-52), as `ℝ≥0∞`. -/
+noncomputable def greenWeight (D : Set ℂ) (y x : ℂ) : ℝ≥0∞ :=
+  ENNReal.ofReal (2 * greenFunction D y x)
+
+/-- The limit identity for one bounded measurable weight `q` (paper tex:208-237): for `P`-a.e. environment the
+`PB`-integral of the limit clock functional equals the Green pairing with the GMC measure. Proof: `F_k = R_k`
+for every `k` (Step A, `circle_occupation_identity`), so the `L¹(P)` gap of `F` and `R` is at most the sum of
+the two gaps, which tend to `0` (`approxClock_tendsto_L1`, `radon_side_tendsto`); a `P`-null gap is zero. -/
+theorem limitClock_eq_nu_ae {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
+    (γ : ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (z : ℂ) (r : ℝ) {y : ℂ} (hy : y ∈ ball z r)
+    (hS0 : KilledBrownianOccupationOnBall z r)
+    (hτ : Integrable (fun b : ContinuousPath ℂ => (pathExitTime (ball z r) b).toReal)
+      (planarBrownianMotion y))
+    (hτmeas : Measurable fun b : ContinuousPath ℂ => pathExitTime (ball z r) b)
+    (hGmeas : Measurable fun x => greenFunction (ball z r) y x)
+    (hGint : IntegrableOn (fun x => greenFunction (ball z r) y x) (ball z r))
+    (hw : ∀ k, Measurable fun p : Ω × ℂ => circleWeight γ hcirc p.1 k p.2)
+    (hVar : ∀ᶠ k in atTop, ∀ x ∈ ball z r, ∫⁻ ω, ENNReal.ofReal (circleWeight γ hcirc ω k x) ∂P = 1)
+    (ν : Ω → Measure ℂ) (dA : Ω → ContinuousPath ℂ → Measure ℝ≥0)
+    (hνmeas : ∀ ρ : ℂ → ℝ≥0∞, Measurable ρ → Measurable fun ω => ∫⁻ x, ρ x ∂(ν ω))
+    (hconv : ∀ ρ : ℂ → ℝ≥0∞, Measurable ρ → (∃ N : ℝ≥0∞, N ≠ ⊤ ∧ ∀ x, ρ x ≤ N) →
+      (∀ x ∉ ball z r, ρ x = 0) →
+      Tendsto (fun k => ∫⁻ ω, ediffE (∫⁻ x, ρ x ∂(circleMeasure γ hcirc ω k)) (∫⁻ x, ρ x ∂(ν ω)) ∂P)
+        atTop (𝓝 0))
+    (hLjoint : ∀ q : ℂ → ℝ≥0∞, Measurable q →
+      Measurable fun p : Ω × ContinuousPath ℂ => limitClockFun dA z r p.1 p.2 q)
+    {q : ℂ → ℝ≥0∞} (hq : Measurable q) {M : ℝ≥0∞} (hMtop : M ≠ ⊤) (hM : ∀ x, q x ≤ M)
+    (hLpath : ∀ᵐ b ∂planarBrownianMotion y,
+      Tendsto (fun k => clockGapMean P γ hcirc dA z r k q b) atTop (𝓝 0))
+    (hσint : ∫⁻ b, ((pathExitTime (ball z r) b).toNNReal : ℝ≥0∞) ∂planarBrownianMotion y ≠ ⊤) :
+    ∀ᵐ ω ∂P, ∫⁻ b, limitClockFun dA z r ω b q ∂planarBrownianMotion y
+      = ∫⁻ x in ball z r, greenWeight (ball z r) y x * q x ∂(ν ω) := by
+  have hG'm : Measurable (greenWeight (ball z r) y) :=
+    ENNReal.measurable_ofReal.comp (measurable_const.mul hGmeas)
+  have hG'fin : ∀ x, greenWeight (ball z r) y x ≠ ⊤ := fun x => ENNReal.ofReal_ne_top
+  have hGint' : ∫⁻ x in ball z r, greenWeight (ball z r) y x ≠ ⊤ :=
+    ((hGint.const_mul 2).lintegral_lt_top).ne
+  have hwω : ∀ k (ω : Ω), Measurable fun x : ℂ => circleWeight γ hcirc ω k x := fun k ω => by
+    have hp : Measurable fun x : ℂ => (ω, x) := measurable_const.prodMk measurable_id
+    have h := (hw k).comp hp
+    exact h
+  -- Step A (paper tex:208-212): the identity for every environment and every scale
+  have hA : ∀ k (ω : Ω), ∫⁻ b, approxClockFun γ hcirc k z r ω b q ∂planarBrownianMotion y
+      = ∫⁻ x in ball z r, greenWeight (ball z r) y x * q x ∂(circleMeasure γ hcirc ω k) := fun k ω =>
+    circle_occupation_identity hy hS0 hτ hτmeas hGmeas hGint γ hcirc ω k (hwω k ω) hq
+  have hFm : Measurable fun ω => ∫⁻ b, limitClockFun dA z r ω b q ∂planarBrownianMotion y :=
+    (hLjoint q hq).lintegral_prod_right'
+  have hRm : Measurable fun ω => ∫⁻ x in ball z r, greenWeight (ball z r) y x * q x ∂(ν ω) :=
+    measurable_nu_setLIntegral ν hνmeas measurableSet_ball (hG'm.mul hq)
+  have hFkm : ∀ k, Measurable fun ω => ∫⁻ b, approxClockFun γ hcirc k z r ω b q ∂planarBrownianMotion y :=
+    fun k => (measurable_approxClockFun γ hcirc k z r (hw k) hq hτmeas).lintegral_prod_right'
+  have hLim := approxClock_tendsto_L1 P (planarBrownianMotion y) γ hcirc z r hw hτmeas dA hq hMtop hM
+    hVar (hLjoint q hq) hLpath hσint
+  have hRad := radon_side_tendsto P γ hcirc ν measurableSet_ball hw hVar hνmeas hconv hG'm hG'fin hGint'
+    hq hMtop hM
+  have hle : ∀ k, ∫⁻ ω, ediffE (∫⁻ b, limitClockFun dA z r ω b q ∂planarBrownianMotion y)
+        (∫⁻ x in ball z r, greenWeight (ball z r) y x * q x ∂(ν ω)) ∂P
+      ≤ (∫⁻ ω, ediffE (∫⁻ b, approxClockFun γ hcirc k z r ω b q ∂planarBrownianMotion y)
+          (∫⁻ b, limitClockFun dA z r ω b q ∂planarBrownianMotion y) ∂P)
+        + ∫⁻ ω, ediffE (∫⁻ x in ball z r, greenWeight (ball z r) y x * q x ∂(circleMeasure γ hcirc ω k))
+            (∫⁻ x in ball z r, greenWeight (ball z r) y x * q x ∂(ν ω)) ∂P := by
+    intro k
+    calc ∫⁻ ω, ediffE (∫⁻ b, limitClockFun dA z r ω b q ∂planarBrownianMotion y)
+          (∫⁻ x in ball z r, greenWeight (ball z r) y x * q x ∂(ν ω)) ∂P
+        ≤ ∫⁻ ω, (ediffE (∫⁻ b, approxClockFun γ hcirc k z r ω b q ∂planarBrownianMotion y)
+            (∫⁻ b, limitClockFun dA z r ω b q ∂planarBrownianMotion y)
+          + ediffE (∫⁻ x in ball z r, greenWeight (ball z r) y x * q x ∂(circleMeasure γ hcirc ω k))
+            (∫⁻ x in ball z r, greenWeight (ball z r) y x * q x ∂(ν ω))) ∂P := by
+          refine lintegral_mono fun ω => ?_
+          have htri : ediffE (∫⁻ b, limitClockFun dA z r ω b q ∂planarBrownianMotion y)
+              (∫⁻ x in ball z r, greenWeight (ball z r) y x * q x ∂(ν ω))
+              ≤ ediffE (∫⁻ b, approxClockFun γ hcirc k z r ω b q ∂planarBrownianMotion y)
+                  (∫⁻ b, limitClockFun dA z r ω b q ∂planarBrownianMotion y)
+                + ediffE (∫⁻ b, approxClockFun γ hcirc k z r ω b q ∂planarBrownianMotion y)
+                  (∫⁻ x in ball z r, greenWeight (ball z r) y x * q x ∂(ν ω)) := by
+            have h := ediffE_triangle (∫⁻ b, limitClockFun dA z r ω b q ∂planarBrownianMotion y)
+              (∫⁻ b, approxClockFun γ hcirc k z r ω b q ∂planarBrownianMotion y)
+              (∫⁻ x in ball z r, greenWeight (ball z r) y x * q x ∂(ν ω))
+            rwa [ediffE_comm (∫⁻ b, limitClockFun dA z r ω b q ∂planarBrownianMotion y)
+              (∫⁻ b, approxClockFun γ hcirc k z r ω b q ∂planarBrownianMotion y)] at h
+          have hk : ediffE (∫⁻ b, approxClockFun γ hcirc k z r ω b q ∂planarBrownianMotion y)
+              (∫⁻ x in ball z r, greenWeight (ball z r) y x * q x ∂(ν ω))
+              = ediffE (∫⁻ x in ball z r, greenWeight (ball z r) y x * q x ∂(circleMeasure γ hcirc ω k))
+                (∫⁻ x in ball z r, greenWeight (ball z r) y x * q x ∂(ν ω)) := by
+            rw [hA k ω]
+          rw [hk] at htri
+          exact htri
+      _ = _ := lintegral_add_left (measurable_ediffE (hFkm k) hFm) _
+  have hsum := hLim.add hRad
+  rw [add_zero] at hsum
+  have hzero : ∫⁻ ω, ediffE (∫⁻ b, limitClockFun dA z r ω b q ∂planarBrownianMotion y)
+      (∫⁻ x in ball z r, greenWeight (ball z r) y x * q x ∂(ν ω)) ∂P = 0 :=
+    le_antisymm (ge_of_tendsto hsum (Eventually.of_forall hle)) zero_le
+  filter_upwards [(lintegral_eq_zero_iff (measurable_ediffE hFm hRm)).1 hzero] with ω hω
+  exact ediffE_eq_zero hω
+
 end MatedCRT.KilledOccupation
