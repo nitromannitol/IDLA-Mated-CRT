@@ -3,8 +3,7 @@ import MatedCRT.FirstPass.S5d.StoppedSteps
 /-!
 # The killing domain contains the cells of a small ball around a target (FIRST PASS, S5e)
 
-Deterministic input of the second Green inequality of the stopped clause (correction [C21], proof of Proposition 5.1;
-referee notes/fp-gaps/CHATGPT-5-1-gaps-referee.md §5.3, equation (5.6): `V^ε(B_{δ/4}(η(a))) ⊆ I_ε`). For a target `a`
+Deterministic input of the second Green inequality of the stopped clause (correction [C21], proof of Proposition 5.1; `V^ε(B_{δ/4}(η(a))) ⊆ I_ε`). For a target `a`
 whose cell meets `B⁻_δ(Λ_t)` (`stoppedTargetSet`), every cell meeting `B_r(η(a))` lies in the killing domain
 `stoppedKillSet` as soon as `r + d ≤ δ/2`, where `d` bounds the diameters of the cells near `η(a)`, and the floor holds
 at level `δ/2`. A label of the killing domain is one whose cell meets `Λ_t` and whose odometer is positive, which puts it

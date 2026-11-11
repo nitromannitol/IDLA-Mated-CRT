@@ -9,7 +9,7 @@ import MatedCRT.Proofs.Sec5.LLowerBound.Mass
 
 Written source: `paper/idla_mated_crt-corrected.tex`, proof of Proposition 5.1, lines 2368-2372 (`% CORRECTION [C21]`):
 "The full support of `μ_h` and a finite cover of the possible centers give a uniform positive random lower bound for the
-masses of these smaller balls." Referee check: `notes/fp-gaps/CHATGPT-idla-C20-C21-referee.md`, lines 252-300.
+masses of these smaller balls."
 
 `stoppedMassLower_proved` proves the probabilistic input `StoppedMassLowerStep` (FirstPass/S5e/SecondGreenStep.lean:43),
 which `stoppedSecondGreenStep_of_inputs` consumes. It takes no hypothesis beyond the statement: every valid environment

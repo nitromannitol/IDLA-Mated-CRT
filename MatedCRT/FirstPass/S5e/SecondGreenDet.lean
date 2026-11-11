@@ -7,8 +7,7 @@ import MatedCRT.Proofs.Sec5.LLowerBound.GreenMonotonicity
 /-!
 # The deterministic second Green inequality of the stopped clause (FIRST PASS, S5e)
 
-Pathwise core of the second Green inequality (correction [C21], proof of Proposition 5.1, tex 2368-2372; referee notes
-§5.3 and CHATGPT-idla-C20-C21-referee.md lines 252-300). For one scale `ε`, one outcome `ω` and one target `a` of the
+Pathwise core of the second Green inequality (correction [C21], proof of Proposition 5.1, tex 2368-2372). For one scale `ε`, one outcome `ω` and one target `a` of the
 stopped clause (`stoppedTargetSet`), with the killing set `I = stoppedKillSet`:
 
 * `G_I(a,a) ≤ ε^{-1/2}`: domain monotonicity from `I ⊆ V^ε(B_ρ) \ V^ε(∂B_ρ)` and the crude bound (Draft 2.15);

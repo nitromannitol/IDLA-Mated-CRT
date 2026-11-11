@@ -22,7 +22,7 @@ open scoped ENNReal NNReal
 `B_ρ` contains a point of `B_ρ` which belongs to no other cell with a smaller index, i.e. a point `x` with
 `vertexOf ε η x = k` (`a^ε_x = k`, eq:plane-to-embedding). Source: corrected tex 2360 (proof of Proposition 5.1, [C21]): "quantum-area
 parametrization makes distinct-cell overlaps `μ_h`-null, so each cell contains a point belonging to no other cell; evaluate the
-rescaled convergence there", and notes/fp-gaps/CHATGPT-idla-C20-C21-referee.md (Line 2360). The written source does not
+rescaled convergence there". The written source does not
 prove the overlap nullity for non-adjacent cells, nor that the representative lies in `B_ρ`; it is a gap to be filled. -/
 def StoppedCellRepresentativeStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
