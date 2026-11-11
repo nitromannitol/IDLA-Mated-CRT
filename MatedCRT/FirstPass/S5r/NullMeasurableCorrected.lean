@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S5r.ExistsCorrected
 import MatedCRT.FirstPass.S2b
 
 /-!
-# Null-measurability of cell vertices for the corrected Lemma 2.4 (fp-S5r)
+# Null-measurability of cell vertices for the corrected Lemma 2.4
 
 Copy of `MatedCRTEnv.IsValid.nullMeasurableSet_cellVertices_coneFamily` (Proofs/IDLA/RandomOpenCell.lean:53) with `h24`
 retyped to `ConeHarmonicBallsUpToFixedTimeCorrectedStmt` (FirstPass/S2b.lean:43) and the family process taken from

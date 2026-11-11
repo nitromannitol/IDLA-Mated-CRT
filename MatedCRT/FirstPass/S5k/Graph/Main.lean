@@ -5,9 +5,9 @@ import MatedCRT.FirstPass.S5k.Decoder
 import MatedCRT.FirstPass.Frozen.S5k
 
 /-!
-# First pass: the Borel graph of (6) and its measurable decoder (task fp-S5k-5-1-floor-obstacle-version, worker z10)
+# First pass: the Borel graph of (6) and its measurable decoder
 
-Step 4.1 and Step 4.2 of `notes/fp-gaps/CHATGPT-z5-floor.md` (Part I). The set of pairs `(ν, f) ∈ M_f(K) × C(K)` for which
+The set of pairs `(ν, f) ∈ M_f(K) × C(K)` for which
 `f` solves (6) for `ν` (`IsObstacleSolutionOn`, pole `0`) is a Borel set (`measurableSet_isObstacle_graph`), by a countable
 presentation of each condition; it projects injectively (uniqueness, `IsObstacleSolutionOn.eqOn_closedBall`). The
 Lusin-Souslin decoder (`Decoder.lean`) then gives a measurable map `F : M_f(K) → C(K)`, which is the solution of (6) on

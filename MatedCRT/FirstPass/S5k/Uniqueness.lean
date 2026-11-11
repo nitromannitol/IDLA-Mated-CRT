@@ -3,9 +3,9 @@ import HarmonicBalls.Proofs.Sec6.DiscPotentialComparison
 import HarmonicBalls.Steps.Sec3.Basic
 
 /-!
-# First pass: uniqueness of the obstacle solution (task fp-S5k-5-1-floor-obstacle-version, worker z10)
+# First pass: uniqueness of the obstacle solution
 
-Steps 4.1 and 4.2 of Part I of `notes/fp-gaps/CHATGPT-z5-floor.md`. For a measure `ν` and a level `t`, the conditions (6)
+For a measure `ν` and a level `t`, the conditions (6)
 of Step 4.1 (`IsObstacleSolutionOn`, pole `0`, obstacle `-t G_{B_ρ}(0,·)`) admit at most one solution on the closed disk.
 Proof (Step 4.2): on `D = B_ρ ∩ {w₁ > w₂}` the function `w₁ - w₂` satisfies `Δ(w₁-w₂) = ν - Δw₂ ≥ 0`, because
 `D ⊆ U_{w₁}`; it is continuous and vanishes on `∂B_ρ`, so the maximum principle `maximum_principle_of_frontier`

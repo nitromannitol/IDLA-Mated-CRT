@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.S5k.Graph.LapCount
 import Mathlib.Geometry.Manifold.PartitionOfUnity
 
 /-!
-# First pass: localization of the distributional identity (task fp-S5k-5-1-floor-obstacle-version, worker z10)
+# First pass: localization of the distributional identity
 
-Step 4.1 of `notes/fp-gaps/CHATGPT-z5-floor.md` (Part I): the condition `Δw = ν` on the cluster `U_w` in (6) is a
+The condition `Δw = ν` on the cluster `U_w` in (6) is a
 distributional identity on the open set `U_w`. It is tested on countably many disks; passing from disks to `U_w` is the
 localization principle: a linear identity valid for test functions supported in each member of an open cover of `U`
 holds for test functions supported in `U`, by a finite smooth partition of unity (`SmoothPartitionOfUnity`).

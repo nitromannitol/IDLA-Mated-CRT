@@ -3,9 +3,9 @@ import MatedCRT.FirstPass.S5k.Graph.LapCount
 
 /-!
 # First pass: the cover of the cluster by admissible disks and the countable presentation of `Δw = ν`
-(task fp-S5k-5-1-floor-obstacle-version, worker z10)
 
-Step 4.1 of `notes/fp-gaps/CHATGPT-z5-floor.md` (Part I), the last condition of (6). Every point of the cluster
+
+The last condition of (6). Every point of the cluster
 `U_w` lies in an admissible rational disk on which `w + tG > c` at the rational points (`exists_disk_cover`); conversely
 such a disk lies in `U_w` (`ball_subset_obstacleCluster`). With the localization `vanish_of_local`, the identity
 `Δw = ν` on `U_w` is equivalent to its countable form on the disks (`hasLaplacian_extDisk_iff`), and the set of `(ν, f)`

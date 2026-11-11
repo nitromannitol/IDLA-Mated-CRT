@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.S5k.Graph.Basic
 import HarmonicBalls.Steps.Sec3.Basic
 
 /-!
-# First pass: countable presentation of `Δw ≤ ν` in the Borel graph (task fp-S5k-5-1-floor-obstacle-version, worker z10)
+# First pass: countable presentation of `Δw ≤ ν` in the Borel graph
 
-Step 4.1 of `notes/fp-gaps/CHATGPT-z5-floor.md` (Part I), the condition `Δw ≤ ν` on `B_ρ` of (6): it is equivalent to
+The condition `Δw ≤ ν` on `B_ρ` of (6): it is equivalent to
 `∫ w Δφ ≤ ∫ φ dν` for the nonnegative test functions `φ` on `B_ρ`, and it suffices to test a countable family of them,
 dense in the topology of `(φ|_K, Δφ|_K) ∈ C(K) × C(K)`. The functional `Lf` below is Lipschitz in that topology, so the
 inequality for the dense family implies it for all test functions.

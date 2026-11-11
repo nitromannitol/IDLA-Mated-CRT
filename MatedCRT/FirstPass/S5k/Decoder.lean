@@ -1,9 +1,9 @@
 import Mathlib.MeasureTheory.Constructions.Polish.Basic
 
 /-!
-# First pass: measurable decoder of an injective Borel graph (task fp-S5k-5-1-floor-obstacle-version, worker z10)
+# First pass: measurable decoder of an injective Borel graph
 
-Step 4.2 of `notes/fp-gaps/CHATGPT-z5-floor.md` (Part I): "The Borel injective-projection theorem therefore gives a Borel
+The Borel injective-projection theorem therefore gives a Borel
 decoder on the set of measures admitting such a `w`. Extend it by the zero function outside that Borel set." This file is
 the abstract form of that step (Lusin-Souslin, Kechris 15.1-15.2): a measurable graph whose first projection is injective
 has a measurable section, defined on the projection, and equal to a fixed default value off the projection.

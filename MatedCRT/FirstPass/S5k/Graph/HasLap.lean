@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.S5k.Graph.Local
 import MatedCRT.FirstPass.S5k.Graph.Obstacle
 
 /-!
-# First pass: countable presentation of `Δw = ν` on the cluster (task fp-S5k-5-1-floor-obstacle-version, worker z10)
+# First pass: countable presentation of `Δw = ν` on the cluster
 
-Step 4.1 of `notes/fp-gaps/CHATGPT-z5-floor.md` (Part I), the last condition of (6): `Δw = ν` on the cluster
+The last condition of (6): `Δw = ν` on the cluster
 `U_w = {x ∈ B_ρ : x = 0 ∨ -tG(0,x) < w(x)}` (`floorObstacleCluster`). It is tested on countably many disks `B(q₀, r)` with
 rational data, each admitted when `w + tG > c` at the rational points of the disk (a countable test of the open condition).
 The cover of `U_w` by such disks, and the localization `vanish_of_local`, give the equivalence with `HasLaplacian`.

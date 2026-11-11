@@ -3,9 +3,9 @@ import MatedCRT.FirstPass.Frozen.S2g
 import MatedCRT.FirstPass.Frozen.S5k
 
 /-!
-# First pass: the continuum least supersolution solves (6) (task fp-S5k-5-1-floor-obstacle-version, worker z10)
+# First pass: the continuum least supersolution solves (6)
 
-Identification step (7) of Part I, Step 4.2 of `notes/fp-gaps/CHATGPT-z5-floor.md`: for `0 < t < clusterExitTime Λ ρ`
+Identification step (7): for `0 < t < clusterExitTime Λ ρ`
 the continuum least supersolution `W_t = leastSupersolution μ ρ 0 t` solves (6) of Step 4.1 for the measure `μ|_{B̄_ρ}`
 (`IsObstacleSolutionOn`). Inputs: the obstacle characterization of the harmonic-ball family (`IsConeHarmonicBallFamily`,
 Setting.lean), the supersolution membership of `W_t` (`FrozenLeastSupersolutionMemCone`, `Frozen/S5k.lean`) and the disc

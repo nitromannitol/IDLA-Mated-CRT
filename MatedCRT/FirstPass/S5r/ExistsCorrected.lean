@@ -2,11 +2,11 @@ import MatedCRT.Proofs.Measurability.BoundaryLayer
 import MatedCRT.FirstPass.S2b
 
 /-!
-# Family process for the corrected Lemma 2.4 (fp-S5r)
+# Family process for the corrected Lemma 2.4
 
 Copy of `MatedCRTEnv.IsValid.exists_measurable_familyProcess` (Proofs/Measurability/BoundaryLayer.lean:369) with the
 hypothesis `h24` retyped to `ConeHarmonicBallsUpToFixedTimeCorrectedStmt` (FirstPass/S2b.lean:43), the provider form of
-Lemma 2.4 (operator note 05:30 UTC; notes/fp-gaps/CHATGPT-idla-h24-T.md). The proof uses only the existence part of
+Lemma 2.4. The proof uses only the existence part of
 Lemma 2.4 (`⟨T, hT, Λ', hΛ', hstop, -⟩`), so the body is unchanged. The original file is not edited.
 -/
 

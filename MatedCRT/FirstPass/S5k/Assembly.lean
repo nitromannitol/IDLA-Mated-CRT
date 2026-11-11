@@ -3,9 +3,9 @@ import MatedCRT.FirstPass.S5k.Identify
 import MatedCRT.FirstPass.Frozen.S5k
 
 /-!
-# First pass: assembly of the measurable obstacle (task fp-S5k-5-1-floor-obstacle-version, worker z10)
+# First pass: assembly of the measurable obstacle
 
-Step 4.2 of `notes/fp-gaps/CHATGPT-z5-floor.md` (Part I), the final assembly: the measurable version `Ŵ` of the continuum
+The final assembly: the measurable version `Ŵ` of the continuum
 least supersolution is the decoder of (6) applied to the measure `μ|_{B̄_ρ}` (zero-replaced when it is not finite).
 This file gives the two ingredients: the congruence of (6) under changes of the values outside the closed disk, and the
 measurable zero-replacement of the restriction of a measure to the closed disk.

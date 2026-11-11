@@ -2,9 +2,9 @@ import MatedCRT.Defs.Setting
 import HarmonicBalls.Steps.Sec11.SubharmonicMaximum
 
 /-!
-# First pass: maximum principle on a bounded open set (task fp-S5k-5-1-floor-obstacle-version, worker z10)
+# First pass: maximum principle on a bounded open set
 
-Step 4.2 of `notes/fp-gaps/CHATGPT-z5-floor.md` (Part I) proves uniqueness of the obstacle solution by the maximum
+The maximum principle proves uniqueness of the obstacle solution by the maximum
 principle for `u = w₁ - w₂` on `D = {w₁ > w₂}`, a bounded open set on whose frontier `u ≤ 0`. Harmonic-Balls gives the
 strong maximum principle only on a connected open set (`IsSubharmonicOn.eqOn_of_attains_upper_bound`,
 `HarmonicBalls/Steps/Sec11/SubharmonicMaximum.lean:74`). This file derives the frontier form by passing to the connected

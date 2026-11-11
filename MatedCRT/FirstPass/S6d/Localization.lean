@@ -3,11 +3,10 @@ import MatedCRT.Proofs.Sec6.ConstantOrderLowerBound.Walk
 import MatedCRT.Proofs.Infra.RandomWalk
 
 /-!
-# FIRST PASS: walk and measurability lemmas for the localization of Lemma 6.8 (task fp-S6e-6-7-6-8-from-uniform, q4)
+# FIRST PASS: walk and measurability lemmas for the localization of Lemma 6.8
 
 Deterministic and measure-theoretic facts used to derive the faithful Lemma 6.8 (`firstPass_6_8_faithful`, FirstPass/S6d.lean)
-from the uniform Lemma 6.7 (`UniformConstantOrderLowerBoundStmt`) by localization (operator note 22:52 UTC; the argument of
-`notes/fp-gaps/CHATGPT-6-9-claims-referee.md`, section "Do faithful 6.7 and 6.8 follow?"). No new probabilistic input here.
+from the uniform Lemma 6.7 (`UniformConstantOrderLowerBoundStmt`) by localization. No new probabilistic input here.
 -/
 
 namespace MatedCRT
@@ -84,7 +83,7 @@ theorem walk_stays_in_W1 {m : ℤ → ℤ → ℕ} {x : ℕ → ℤ} {W0 W1 : Se
 /-- **Localized walk bound** (the last step of `firstPass_6_8_faithful`). Let `W₀, W₁` be vertex sets with `a ∈ W₁`, no
 edge from `W₁` to `W₀` (`hno`), and `W₁ ⊆ A'` (`hA'`). If the walk from `a` hits `W₁ \ A` before its exit from `W₀ ∪ W₁`
 with probability `≥ s`, then the walk stays in `A` before its exit from `A'` with probability `≤ 1 - s`. Walk-level
-counterpart of the localization in `CHATGPT-6-9-claims-referee.md`; the law is a probability measure, the target event
+counterpart of the localization; the law is a probability measure, the target event
 is measurable (`measurableSet_stay_target`), and the inclusion holds on the almost sure set of paths with `x 0 = a` and
 nearest-neighbour steps. -/
 theorem srw_localized_bound (m : ℤ → ℤ → ℕ) (a : ℤ) (A A' W0 W1 Θ' : Set ℤ) {s : ℝ} (hs : 0 ≤ s)

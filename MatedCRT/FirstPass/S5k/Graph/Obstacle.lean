@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.S5k.Graph.Lap
 import MatedCRT.FirstPass.Frozen.S2g
 
 /-!
-# First pass: countable presentation of the boundary and obstacle conditions (task fp-S5k-5-1-floor-obstacle-version, worker z10)
+# First pass: countable presentation of the boundary and obstacle conditions
 
-Step 4.1 of `notes/fp-gaps/CHATGPT-z5-floor.md` (Part I), the conditions of (6) that are not differential: `w = 0` on
+The conditions of (6) that are not differential: `w = 0` on
 `∂B_ρ` and `w ≥ -tG` on `B̄_ρ ∖ {0}`. Each is a closed condition in `w`, so it is tested on a countable dense subset:
 the sphere for the boundary values, and the punctured open disk for the obstacle (the sphere case of the obstacle follows
 from the boundary values, because `G_{B_ρ}(0,·) = 0` off the open disk). The disc Green function is continuous off its pole

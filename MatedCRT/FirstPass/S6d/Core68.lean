@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S6d.Localization
 
 /-!
-# FIRST PASS: deterministic core of the localization of Lemma 6.8 (task fp-S6e-6-7-6-8-from-uniform, q4)
+# FIRST PASS: deterministic core of the localization of Lemma 6.8
 
 Notation: `E = fillCells Θ` (the cluster), `C = cell a` (the cell of the starting vertex `a`), `t = r/8` (the
 localization radius), `W₀ = V(thickening t E)`, `W₁ = V(thickening t C)`. The cell diameters are bounded by `d < r/100`
@@ -30,8 +30,7 @@ theorem vertexPoint_mem_cell_of_nonneg {ε : ℝ} (hε : 0 ≤ ε) (η : ℝ →
     vertexPoint ε η a ∈ cell ε η a :=
   ⟨ε * a, ⟨mul_le_mul_of_nonneg_left (by linarith) hε, le_rfl⟩, rfl⟩
 
-/-- **Deterministic core of the localization** (the argument of `CHATGPT-6-9-claims-referee.md`, section
-"Do faithful 6.7 and 6.8 follow?", written out). Hypotheses: the start `a` lies on the frontier of `Θ + B_{r/2}`
+/-- **Deterministic core of the localization** (written out). Hypotheses: the start `a` lies on the frontier of `Θ + B_{r/2}`
 (`ha`), the cluster is in `B_{ρ/2}` (`hΘ`), every cell meeting `B_{(1+ρ)/2}` has diameter `≤ d` (`hdiam`), and the edges
 join vertices with intersecting cells (`hadj`). Conclusions: (c1) the augmented cluster `Θ ∪ {a}` lies in `B_{(1+ρ)/4}`;
 (c2) `a` is in the localized vertex set `W₁`; (c3) `W₁` lies in `V(B_r(E)) \ Θ`; (c4) no edge from `W₁` to `W₀`;

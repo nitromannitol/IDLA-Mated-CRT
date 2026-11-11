@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S6d.Core68
 
 /-!
-# FIRST PASS: probability and cell helpers for the localization of Lemma 6.8 (task fp-S6e-6-7-6-8-from-uniform, q4)
+# FIRST PASS: probability and cell helpers for the localization of Lemma 6.8
 
 `ProbTendsToOne` bookkeeping (eventual inclusion, intersection, almost sure sets), the eventual smallness of powers
 `ε^c` as `ε → 0⁺`, and the cell facts used by `firstPass_6_8_faithful` (FirstPass/S6d.lean).

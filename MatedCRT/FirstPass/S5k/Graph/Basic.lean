@@ -1,9 +1,9 @@
 import MatedCRT.FirstPass.S5k.Uniqueness
 
 /-!
-# First pass: basic objects of the Borel graph of (6) (task fp-S5k-5-1-floor-obstacle-version, worker z10)
+# First pass: basic objects of the Borel graph of (6)
 
-Step 4.1 of `notes/fp-gaps/CHATGPT-z5-floor.md` (Part I) presents the conditions (6) as a Borel subset of `M_f(K) × C(K)`,
+The conditions (6) are presented as a Borel subset of `M_f(K) × C(K)`,
 with `K = B̄_ρ`. This file fixes the spaces: `DiskFun ρ = C(B̄_ρ, ℝ)`, its extension by zero `extDisk`, the space
 `FinMeasDisk ρ` of finite measures concentrated on `B̄_ρ`, and generic facts: a countable dense family for a separable
 image (used for the countable presentations), and measurability of `ν ↦ ∫ a dν` on finite measures.

@@ -1,9 +1,9 @@
 import MatedCRT.FirstPass.S5k.Graph.Lap
 
 /-!
-# First pass: the countable presentation of `Δw ≤ ν` (task fp-S5k-5-1-floor-obstacle-version, worker z10)
+# First pass: the countable presentation of `Δw ≤ ν`
 
-Step 4.1 of `notes/fp-gaps/CHATGPT-z5-floor.md` (Part I): the condition `Δw ≤ ν` on `B_ρ` in (6) holds iff
+The condition `Δw ≤ ν` on `B_ρ` in (6) holds iff
 `Lf ν f (psiTest a) ≤ 0` for all `a` in a countable family `Φ` of nonnegative test functions dense in the image of
 `psiTest`. The set of `(ν, f)` satisfying the countable family of inequalities is measurable (Borel).
 -/
