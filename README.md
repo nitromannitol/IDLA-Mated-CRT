@@ -10,8 +10,8 @@ The table gives, for each numbered result, its Lean statement and the declaratio
 
 | Result | Lean statement | Declaration or hypothesis field in the main route | First-pass closure |
 |---|---|---|---|
-| Theorem 1.4 | `ConvergenceOfIDLAStmt` (Draft/Section1.lean:45) | `convergenceOfIDLA_conditional` (Assembly/Main.lean:342) | `closed_1_4_lp_noSC_noSup` (FirstPass/Closure/LssDerived.lean:54; applies `closed_1_4_lp_noSC`, Clean14And16LPNoSC.lean:24) |
-| Theorem 1.6 | `ConvergenceOfDivSandpileStmt` (Draft/Section1.lean:56) | `convergenceOfDivSandpile_conditional` (Assembly/Main.lean:349) | `closed_1_6_lp_noSC_noSup` (FirstPass/Closure/LssDerived.lean:95; applies `closed_1_6_lp_noSC`, Clean14And16LPNoSC.lean:73) |
+| Theorem 1.4 | `ConvergenceOfIDLAStmt` (Draft/Section1.lean:44) | `convergenceOfIDLA_conditional` (Assembly/Main.lean:342) | `closed_1_4_lp_noSC_noSup` (FirstPass/Closure/LssDerived.lean:54; applies `closed_1_4_lp_noSC`, Clean14And16LPNoSC.lean:24) |
+| Theorem 1.6 | `ConvergenceOfDivSandpileStmt` (Draft/Section1.lean:55) | `convergenceOfDivSandpile_conditional` (Assembly/Main.lean:349) | `closed_1_6_lp_noSC_noSup` (FirstPass/Closure/LssDerived.lean:95; applies `closed_1_6_lp_noSC`, Clean14And16LPNoSC.lean:73) |
 | Fact 2.2 | `LQGMeasurePropertiesStmt` (Draft/Section2.lean:39) | hypothesis `lqgMeasureProperties` (Assembly/Hypotheses.lean:65) | not counted (cited result) |
 | Theorem 2.3 | `ConeHarmonicBallsStmt` (Draft/Section2.lean:56) | `coneHarmonicBalls` (Assembly/Main.lean:112) | `closed_2_3_lp` (FirstPass/Closure/Clean2xLP.lean:37) |
 | Lemma 2.4 | `ConeHarmonicBallsUpToFixedTimeStmt` (Draft/Section2.lean:66) | `coneHarmonicBallsUpToFixedTime` (Assembly/Main.lean:97) | `closed_2_4_lp` (FirstPass/Closure/Clean2xLP.lean:77) |
@@ -36,14 +36,14 @@ The table gives, for each numbered result, its Lean statement and the declaratio
 | Lemma 3.5 | `DiscreteDirichletProblemStmt` (Draft/Section3.lean:132) | `discreteDirichletProblem` (Assembly/Main.lean:155) | `closed_3_5_lp` (FirstPass/Closure/CleanSec23LP.lean:45) |
 | Lemma 3.6 | `ConvergenceHarmonicFunctionsStmt` (Draft/Section3.lean:157) | `convergenceHarmonicFunctions` (Assembly/Main.lean:143) | `closed_3_6_lp` (FirstPass/Closure/CleanSec23LP.lean:53); conditional on `FrozenOneSidedBoundaryContinuity` (false as typed; a corrected replacement is pending a truth check) |
 | Lemma 3.7 | `ConvergenceNormalizedExitTimeStmt` (Draft/Section3.lean:173) | `convergenceNormalizedExitTime` (Assembly/Main.lean:163) | `closed_3_7_lp` (FirstPass/Closure/CleanSec23LP.lean:61) |
-| Theorem 4.1 | `ConvergenceDivisibleStmt` (Draft/Section4.lean:39) | `convergenceDivisible` (Assembly/Main.lean:194) | `closed_4_1_lp` (FirstPass/Closure/CleanSec456LP.lean:30) |
-| Proposition 4.2 | `DivSandpileLowerBoundStmt` (Draft/Section4.lean:50) | `divSandpileLowerBound` (Assembly/Main.lean:200) | `closed_4_2_lp` (FirstPass/Closure/Clean42And5LP.lean:47) |
-| Lemma 4.3 | `DiscreteBasicPropertiesStmt` (Draft/Section4.lean:61) | `discreteBasicProperties` (Proofs/Sec4/ObstacleSpecialization/Final.lean:28) | `closed_4_3` (FirstPass/Closure/Section4.lean:18) |
-| Lemma 4.4 (corrected) | `DiscreteLaplacianBoundCorrectedStmt` (Draft/Section4.lean:162) | `discreteLaplacianBoundCorrected` (Proofs/Sec4/ObstacleSpecialization/Final.lean:33) | `closed_4_4` (FirstPass/Closure/Section4.lean:22) |
-| Lemma 4.5 | `DiscreteConservationOfMassStmt` (Draft/Section4.lean:94) | `discreteConservationOfMassCorrected` (Proofs/Sec4/ObstacleSpecialization/Final.lean:38); not referenced in Assembly/Main.lean | `closed_4_5` (FirstPass/Closure/Section4.lean:27) |
-| Lemma 4.6 | `SubsequentialConvergenceStmt` (Draft/Section4.lean:110) | `subsequentialConvergence` (Assembly/Main.lean:174) | `firstPass_4_6_h35c` (FirstPass/Closure/H35CorrectedRewire.lean:74); open DRAFT binders: h27, h218, h28, h35c, h37 |
-| Lemma 4.7 | `EquiboundedStmt` (Draft/Section4.lean:127) | `equibounded` (Assembly/Main.lean:170) | `closed_4_7_ownBinders` (FirstPass/Closure/OwnBinderRewire.lean:65) |
-| Lemma 4.8 | `SubsequentialPropertiesStmt` (Draft/Section4.lean:145) | `subsequentialProperties` (Assembly/Main.lean:181) | `closed_4_8_lp` (FirstPass/Closure/CleanSec456LP.lean:38) |
+| Theorem 4.1 | `ConvergenceDivisibleStmt` (Draft/Section4.lean:38) | `convergenceDivisible` (Assembly/Main.lean:194) | `closed_4_1_lp` (FirstPass/Closure/CleanSec456LP.lean:30) |
+| Proposition 4.2 | `DivSandpileLowerBoundStmt` (Draft/Section4.lean:49) | `divSandpileLowerBound` (Assembly/Main.lean:200) | `closed_4_2_lp` (FirstPass/Closure/Clean42And5LP.lean:47) |
+| Lemma 4.3 | `DiscreteBasicPropertiesStmt` (Draft/Section4.lean:60) | `discreteBasicProperties` (Proofs/Sec4/ObstacleSpecialization/Final.lean:28) | `closed_4_3` (FirstPass/Closure/Section4.lean:18) |
+| Lemma 4.4 (corrected) | `DiscreteLaplacianBoundCorrectedStmt` (Draft/Section4.lean:161) | `discreteLaplacianBoundCorrected` (Proofs/Sec4/ObstacleSpecialization/Final.lean:33) | `closed_4_4` (FirstPass/Closure/Section4.lean:22) |
+| Lemma 4.5 | `DiscreteConservationOfMassStmt` (Draft/Section4.lean:93) | `discreteConservationOfMassCorrected` (Proofs/Sec4/ObstacleSpecialization/Final.lean:38); not referenced in Assembly/Main.lean | `closed_4_5` (FirstPass/Closure/Section4.lean:27) |
+| Lemma 4.6 | `SubsequentialConvergenceStmt` (Draft/Section4.lean:109) | `subsequentialConvergence` (Assembly/Main.lean:174) | `firstPass_4_6_h35c` (FirstPass/Closure/H35CorrectedRewire.lean:74); open DRAFT binders: h27, h218, h28, h35c, h37 |
+| Lemma 4.7 | `EquiboundedStmt` (Draft/Section4.lean:126) | `equibounded` (Assembly/Main.lean:170) | `closed_4_7_ownBinders` (FirstPass/Closure/OwnBinderRewire.lean:65) |
+| Lemma 4.8 | `SubsequentialPropertiesStmt` (Draft/Section4.lean:144) | `subsequentialProperties` (Assembly/Main.lean:181) | `closed_4_8_lp` (FirstPass/Closure/CleanSec456LP.lean:38) |
 | Proposition 5.1 | `IDLALowerBoundStmt` (Draft/Section5.lean:27) | `iDLALowerBound` (Assembly/Main.lean:252) | `closed_5_1_lp_noSup` (FirstPass/Closure/LssDerived.lean:353; applies `closed_5_1_lp`, Clean42And5LP.lean:79) |
 | Lemma 5.2 | `GeneralIDLALowerBoundStmt` (Draft/Section5.lean:47) | none in Assembly/Main.lean | `closed_5_2_ownBinders` (FirstPass/Closure/OwnBinderRewire.lean:79) |
 | Lemma 5.3 | `MeanValueInequalityStmt` (Draft/Section5.lean:67) | `meanValueInequality` (Assembly/Main.lean:213) | `closed_5_3_clean` (FirstPass/Closure/HLsRewire53.lean:109) |
