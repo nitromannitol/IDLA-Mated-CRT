@@ -1,4 +1,5 @@
 import MatedCRT.Proofs.Sec7.DivSandpileUpperBound.Iteration
+import MatedCRT.LPStaging.Analysis.GeometricShellSums
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
@@ -14,16 +15,8 @@ that threshold in finitely many steps. -/
 theorem exists_shell_maximum_le_threshold (O : ℕ → ℝ) (q B : ℝ)
     (hq : 0 ≤ q) (hq1 : q < 1) (hB : 0 < B)
     (hstep : ∀ k, B < O k → O (k + 1) ≤ q * O k) :
-    ∃ n, O n ≤ B := by
-  by_contra h
-  have hall : ∀ n, B < O n := by simpa only [not_exists, not_le] using h
-  have hgeom : ∀ n, O n ≤ O 0 * q ^ n :=
-    shell_maximum_le_geometric O q hq (fun k => hstep k (hall k))
-  have hlim : Tendsto (fun n : ℕ => O 0 * q ^ n) atTop (𝓝 0) := by
-    simpa only [mul_zero] using
-      (tendsto_const_nhds.mul (tendsto_pow_atTop_nhds_zero_of_lt_one hq hq1))
-  obtain ⟨N, hN⟩ := eventually_atTop.1 ((tendsto_order.1 hlim).2 B hB)
-  exact (not_lt_of_ge (hgeom N)) ((hN N le_rfl).trans (hall N))
+    ∃ n, O n ≤ B :=
+  LatticeProb.GeometricShellSums.exists_shell_maximum_le_threshold O q B hq hq1 hB hstep
 
 /-- Before the first threshold crossing, the number of shell steps is bounded
 by the logarithm of the initial-to-threshold odometer ratio. -/
@@ -31,25 +24,8 @@ theorem shell_steps_lt_log_ratio (O : ℕ → ℝ) (q B : ℝ)
     (hq : 0 < q) (hq1 : q < 1) (hB : 0 < B) (n : ℕ)
     (hbefore : B < O n)
     (hstep : ∀ k < n, O (k + 1) ≤ q * O k) :
-    (n : ℝ) < Real.log (O 0 / B) / (-Real.log q) := by
-  have hgeom : ∀ k ≤ n, O k ≤ O 0 * q ^ k := by
-    intro k hk
-    induction k with
-    | zero => simp
-    | succ k ih =>
-      calc
-        O (k + 1) ≤ q * O k := hstep k (by omega)
-        _ ≤ q * (O 0 * q ^ k) := mul_le_mul_of_nonneg_left (ih (by omega)) hq.le
-        _ = O 0 * q ^ (k + 1) := by rw [pow_succ]; ring
-  have hprod : B < O 0 * q ^ n := lt_of_lt_of_le hbefore (hgeom n le_rfl)
-  have hO : 0 < O 0 := by
-    have : 0 < O 0 * q ^ n := lt_trans hB hprod
-    exact pos_of_mul_pos_left this (pow_nonneg hq.le n)
-  have hlog := Real.log_lt_log hB hprod
-  rw [Real.log_mul hO.ne' (pow_ne_zero _ hq.ne'), Real.log_pow] at hlog
-  have hqlog : 0 < -Real.log q := neg_pos.mpr (Real.log_neg hq hq1)
-  rw [lt_div_iff₀ hqlog, Real.log_div hO.ne' hB.ne']
-  nlinarith
+    (n : ℝ) < Real.log (O 0 / B) / (-Real.log q) :=
+  LatticeProb.GeometricShellSums.shell_steps_lt_log_ratio O q B hq hq1 hB n hbefore hstep
 
 /-- The first crossing exists and is at most one more than the logarithmic bound
 for the previous shell. The contraction is only required before crossing. -/
@@ -57,32 +33,15 @@ theorem exists_first_shell_threshold_with_log_bound (O : ℕ → ℝ) (q B : ℝ
     (hq : 0 < q) (hq1 : q < 1) (hB : 0 < B) (hinitial : B < O 0)
     (hstep : ∀ k, B < O k → O (k + 1) ≤ q * O k) :
     ∃ τ : ℕ, O τ ≤ B ∧ (∀ k < τ, B < O k) ∧
-      (τ : ℝ) < Real.log (O 0 / B) / (-Real.log q) + 1 := by
-  have hex := exists_shell_maximum_le_threshold O q B hq.le hq1 hB hstep
-  let τ := Nat.find hex
-  have hτ : O τ ≤ B := Nat.find_spec hex
-  have hprev : ∀ k < τ, B < O k := by
-    intro k hk
-    exact lt_of_not_ge (Nat.find_min hex hk)
-  have hτpos : 0 < τ := by
-    by_contra hn
-    have hτ0 : τ = 0 := Nat.eq_zero_of_not_pos hn
-    rw [hτ0] at hτ
-    exact (not_le_of_gt hinitial) hτ
-  obtain ⟨n, hn⟩ := Nat.exists_eq_succ_of_ne_zero (Nat.ne_of_gt hτpos)
-  have hbound := shell_steps_lt_log_ratio O q B hq hq1 hB n
-    (hprev n (by omega)) (fun k hk => hstep k (hprev k (by omega)))
-  refine ⟨τ, hτ, hprev, ?_⟩
-  rw [hn, Nat.cast_succ]
-  linarith
+      (τ : ℝ) < Real.log (O 0 / B) / (-Real.log q) + 1 :=
+  LatticeProb.GeometricShellSums.exists_first_shell_threshold_with_log_bound
+    O q B hq hq1 hB hinitial hstep
 
 /-- The logarithmic odometer ratio in the second phase of the iteration. -/
 theorem log_initial_to_threshold (C ε ω : ℝ) (hC : 0 < C) (hε : 0 < ε) :
     Real.log ((C / ε) / ε ^ (-ω)) =
-      Real.log C + (1 - ω) * Real.log ε⁻¹ := by
-  rw [Real.log_div (div_ne_zero hC.ne' hε.ne') (Real.rpow_pos_of_pos hε _).ne',
-    Real.log_div hC.ne' hε.ne', Real.log_rpow hε, Real.log_inv]
-  ring
+      Real.log C + (1 - ω) * Real.log ε⁻¹ :=
+  LatticeProb.GeometricShellSums.log_initial_to_threshold C ε ω hC hε
 
 /-- For an initial maximum at most `C / ε` and threshold `ε ^ (-ω)`, the
 first threshold crossing has the logarithmic bound used in Step 2. -/
@@ -91,34 +50,20 @@ theorem exists_first_shell_threshold_log_scale (O : ℕ → ℝ) (q C ε ω : �
     (hinitial : ε ^ (-ω) < O 0) (hupper : O 0 ≤ C / ε)
     (hstep : ∀ k, ε ^ (-ω) < O k → O (k + 1) ≤ q * O k) :
     ∃ τ : ℕ, O τ ≤ ε ^ (-ω) ∧ (∀ k < τ, ε ^ (-ω) < O k) ∧
-      (τ : ℝ) < (Real.log C + (1 - ω) * Real.log ε⁻¹) / (-Real.log q) + 1 := by
-  have hB : 0 < ε ^ (-ω) := Real.rpow_pos_of_pos hε _
-  obtain ⟨τ, hτ, hbefore, hbound⟩ :=
-    exists_first_shell_threshold_with_log_bound O q (ε ^ (-ω)) hq hq1 hB hinitial hstep
-  refine ⟨τ, hτ, hbefore, ?_⟩
-  have hlog : Real.log (O 0 / ε ^ (-ω)) ≤ Real.log ((C / ε) / ε ^ (-ω)) :=
-    Real.log_le_log (div_pos (lt_trans hB hinitial) hB) (div_le_div_of_nonneg_right hupper hB.le)
-  rw [log_initial_to_threshold C ε ω hC hε] at hlog
-  have hden : 0 < -Real.log q := neg_pos.mpr (Real.log_neg hq hq1)
-  have hdiv := div_le_div_of_nonneg_right hlog hden.le
-  linarith
+      (τ : ℝ) < (Real.log C + (1 - ω) * Real.log ε⁻¹) / (-Real.log q) + 1 :=
+  LatticeProb.GeometricShellSums.exists_first_shell_threshold_log_scale
+    O q C ε ω hq hq1 hC hε hinitial hupper hstep
 
 /-- A maximum-based radius reduces to its geometric branch while it is strictly
 above the floor. This uses an inequality, not equality for the maximum. -/
 theorem shell_radius_le_geometric_above_floor {r A q R : ℝ} {k : ℕ}
-    (hr : r ≤ max (A * q ^ k) R) (hfloor : R < r) : r ≤ A * q ^ k := by
-  rcases le_total (A * q ^ k) R with h | h
-  · rw [max_eq_right h] at hr
-    linarith
-  · rwa [max_eq_left h] at hr
+    (hr : r ≤ max (A * q ^ k) R) (hfloor : R < r) : r ≤ A * q ^ k :=
+  LatticeProb.GeometricShellSums.shell_radius_le_geometric_above_floor hr hfloor
 
 /-- A uniformly bounded tail contributes at most its length times the floor. -/
 theorem shell_radius_tail_sum_le (r : ℕ → ℝ) (R : ℝ) (n : ℕ)
-    (hr : ∀ k < n, r k ≤ R) : ∑ k ∈ Finset.range n, r k ≤ (n : ℝ) * R := by
-  calc
-    ∑ k ∈ Finset.range n, r k ≤ ∑ _k ∈ Finset.range n, R :=
-      Finset.sum_le_sum fun k hk => hr k (Finset.mem_range.mp hk)
-    _ = (n : ℝ) * R := by simp
+    (hr : ∀ k < n, r k ≤ R) : ∑ k ∈ Finset.range n, r k ≤ (n : ℝ) * R :=
+  LatticeProb.GeometricShellSums.shell_radius_tail_sum_le r R n hr
 
 /-- The radius at the next shell inherits geometric decay from the current
 odometer maximum, up to the prescribed floor. The exponent retains the index
@@ -129,43 +74,17 @@ theorem shell_radius_from_odometer_contraction
     (hO : ∀ k ≤ n, 0 ≤ O k)
     (hstep : ∀ k < n, O (k + 1) ≤ q * O k)
     (hr : ∀ k < n, r (k + 1) ≤ max ((O k * K) ^ α) R) :
-    ∀ k < n, r (k + 1) ≤ max (((O 0 * K) ^ α) * (q ^ α) ^ k) R := by
-  have hgeom : ∀ k ≤ n, O k ≤ O 0 * q ^ k := by
-    intro k hk
-    induction k with
-    | zero => simp
-    | succ k ih =>
-      calc
-        O (k + 1) ≤ q * O k := hstep k (by omega)
-        _ ≤ q * (O 0 * q ^ k) := mul_le_mul_of_nonneg_left (ih (by omega)) hq
-        _ = O 0 * q ^ (k + 1) := by rw [pow_succ]; ring
-  intro k hk
-  apply (hr k hk).trans
-  apply max_le_max_right
-  calc
-    (O k * K) ^ α ≤ ((O 0 * q ^ k) * K) ^ α :=
-      Real.rpow_le_rpow (mul_nonneg (hO k (by omega)) hK)
-        (mul_le_mul_of_nonneg_right (hgeom k (by omega)) hK) hα
-    _ = ((O 0 * K) ^ α) * (q ^ α) ^ k := by
-      rw [show O 0 * q ^ k * K = (O 0 * K) * q ^ k by ring,
-        Real.mul_rpow (mul_nonneg (hO 0 (by omega)) hK) (pow_nonneg hq k),
-        ← Real.rpow_natCast_mul hq k α, mul_comm (k : ℝ) α,
-        Real.rpow_mul_natCast hq α k]
+    ∀ k < n, r (k + 1) ≤ max (((O 0 * K) ^ α) * (q ^ α) ^ k) R :=
+  LatticeProb.GeometricShellSums.shell_radius_from_odometer_contraction
+    O r q K α R n hq hK hα hO hstep hr
 
 /-- A maximum of a geometric radius and a nonnegative floor is bounded in
 total by the geometric series plus the accumulated floor. -/
 theorem shell_radii_max_sum_le (r : ℕ → ℝ) (A q R : ℝ)
     (hA : 0 ≤ A) (hq : 0 ≤ q) (hq1 : q < 1) (hR : 0 ≤ R) (n : ℕ)
     (hr : ∀ k < n, r k ≤ max (A * q ^ k) R) :
-    ∑ k ∈ Finset.range n, r k ≤ A / (1 - q) + (n : ℝ) * R := by
-  have hgeom : ∀ k, 0 ≤ A * q ^ k := fun k => mul_nonneg hA (pow_nonneg hq k)
-  have hsum := shell_radii_sum_le (fun k => r k - R) A q hA hq hq1 n
-    (fun k hk => by
-      have hmax : max (A * q ^ k) R ≤ A * q ^ k + R := max_le (by linarith) (by linarith [hgeom k])
-      linarith [hr k hk])
-  rw [Finset.sum_sub_distrib] at hsum
-  simp only [Finset.sum_const, Finset.card_range, nsmul_eq_mul] at hsum
-  linarith
+    ∑ k ∈ Finset.range n, r k ≤ A / (1 - q) + (n : ℝ) * R :=
+  LatticeProb.GeometricShellSums.shell_radii_max_sum_le r A q R hA hq hq1 hR n hr
 
 /-- For the paper's shifted radius definition, a contracting odometer gives a
 geometric-series bound plus the radius floor and the initial radius. -/
@@ -176,13 +95,9 @@ theorem shell_radii_sum_from_odometer_contraction
     (hstep : ∀ k < n, O (k + 1) ≤ q * O k)
     (hr : ∀ k < n, r (k + 1) ≤ max ((O k * K) ^ α) R) :
     ∑ k ∈ Finset.range (n + 1), r k ≤
-      r 0 + (O 0 * K) ^ α / (1 - q ^ α) + (n : ℝ) * R := by
-  have hdecay := shell_radius_from_odometer_contraction O r q K α R n hq hK hα.le hO hstep hr
-  have hsum := shell_radii_max_sum_le (fun k => r (k + 1)) ((O 0 * K) ^ α) (q ^ α) R
-    (Real.rpow_nonneg (mul_nonneg (hO 0 (Nat.zero_le n)) hK) α)
-    (Real.rpow_nonneg hq α) (Real.rpow_lt_one hq hq1 hα) hR n hdecay
-  rw [Finset.sum_range_succ']
-  linarith
+      r 0 + (O 0 * K) ^ α / (1 - q ^ α) + (n : ℝ) * R :=
+  LatticeProb.GeometricShellSums.shell_radii_sum_from_odometer_contraction
+    O r q K α R n hq hq1 hK hα hR hO hstep hr
 
 /-- First threshold crossing with the radius indexed by the previous maximum.
 This combines the stopping-time estimate with the radius formula, including the
@@ -197,24 +112,9 @@ theorem exists_shell_threshold_with_shifted_radius_budget
     (hbudget : let L := (Real.log C + (1 - ω) * Real.log ε⁻¹) / (-Real.log q) + 1
       r 0 + (O 0 * K) ^ α / (1 - q ^ α) + L * R + (L + 1) * (2 * D) ≤ δ) :
     ∃ n : ℕ, O n ≤ ε ^ (-ω) ∧
-      (∑ k ∈ Finset.range n, r k) + ((n : ℝ) + 1) * (2 * D) ≤ δ := by
-  obtain ⟨n, hn, hbefore, hlog⟩ :=
-    exists_first_shell_threshold_log_scale O q C ε ω hq hq1 hC hε hinitial hupper hstep
-  have hnpos : 0 < n := by
-    by_contra hn'
-    have : n = 0 := Nat.eq_zero_of_not_pos hn'
-    subst n
-    exact (not_le_of_gt hinitial) hn
-  obtain ⟨m, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (Nat.ne_of_gt hnpos)
-  refine ⟨m + 1, hn, ?_⟩
-  have hsum := shell_radii_sum_from_odometer_contraction O r q K α R m
-    hq.le hq1 hK hα hR (fun k _ => hO k)
-    (fun k hk => hstep k (hbefore k (by omega))) (fun k _ => hr k)
-  have hm : (m : ℝ) ≤ (m + 1 : ℕ) := by exact_mod_cast Nat.le_succ m
-  have hfloor := mul_le_mul_of_nonneg_right (hm.trans hlog.le) hR
-  have hdiam := mul_le_mul_of_nonneg_right (add_le_add_right hlog.le 1) (by linarith : 0 ≤ 2 * D)
-  dsimp only at hbudget
-  linarith
+      (∑ k ∈ Finset.range n, r k) + ((n : ℝ) + 1) * (2 * D) ≤ δ :=
+  LatticeProb.GeometricShellSums.exists_shell_threshold_with_shifted_radius_budget
+    O r q K α R D C ε ω δ hq hq1 hK hα hR hD hC hε hO hinitial hupper hstep hr hbudget
 
 /-- The geometric, floor, and cell-diameter contributions fit a common
 iteration budget when the stopping index has a deterministic upper bound. -/
@@ -223,11 +123,8 @@ theorem shell_iteration_budget_le (r : ℕ → ℝ) (A q R D L : ℝ)
     (n : ℕ) (hn : (n : ℝ) ≤ L)
     (hr : ∀ k < n, r k ≤ max (A * q ^ k) R) :
     (∑ k ∈ Finset.range n, r k) + ((n : ℝ) + 1) * (2 * D) ≤
-      A / (1 - q) + L * R + (L + 1) * (2 * D) := by
-  have hsum := shell_radii_max_sum_le r A q R hA hq hq1 hR n hr
-  have hfloor := mul_le_mul_of_nonneg_right hn hR
-  have hdiam := mul_le_mul_of_nonneg_right (add_le_add_right hn 1) (by linarith : 0 ≤ 2 * D)
-  linarith
+      A / (1 - q) + L * R + (L + 1) * (2 * D) :=
+  LatticeProb.GeometricShellSums.shell_iteration_budget_le r A q R D L hA hq hq1 hR hD n hn hr
 
 /-- Fixed-factor odometer contraction and a logarithmic radius budget give a
 stopping shell with both a small boundary maximum and controlled total growth. -/
@@ -241,47 +138,25 @@ theorem exists_shell_threshold_with_iteration_budget
     (hbudget : let L := (Real.log C + (1 - ω) * Real.log ε⁻¹) / (-Real.log q) + 1
       A / (1 - p) + L * R + (L + 1) * (2 * D) ≤ δ) :
     ∃ n : ℕ, O n ≤ ε ^ (-ω) ∧
-      (∑ k ∈ Finset.range n, r k) + ((n : ℝ) + 1) * (2 * D) ≤ δ := by
-  obtain ⟨n, hn, hbefore, hbound⟩ :=
-    exists_first_shell_threshold_log_scale O q C ε ω hq hq1 hC hε hinitial hupper hstep
-  refine ⟨n, hn, ?_⟩
-  apply (shell_iteration_budget_le r A p R D _ hA hp hp1 hR hD n hbound.le ?_).trans hbudget
-  intro k hk
-  apply hr k
-  intro j hj
-  exact hbefore j (lt_trans hj hk)
+      (∑ k ∈ Finset.range n, r k) + ((n : ℝ) + 1) * (2 * D) ≤ δ :=
+  LatticeProb.GeometricShellSums.exists_shell_threshold_with_iteration_budget
+    O r q p C ε ω A R D δ hq hq1 hp hp1 hC hε hA hR hD hinitial hupper hstep hr hbudget
 
 /-- The floor-scale contribution to the total radius vanishes, even with a
 logarithmic number of shell steps. -/
 theorem tendsto_shell_floor_log_bound (A B ω : ℝ) (hω : 0 < ω) :
-    Tendsto (fun ε : ℝ => (A + B * Real.log ε⁻¹) * ε ^ ω) (𝓝[>] 0) (𝓝 0) := by
-  have hp : Tendsto (fun ε : ℝ => ε ^ ω) (𝓝[>] 0) (𝓝 0) := by
-    have hi : Tendsto (fun ε : ℝ => ε) (𝓝[>] 0) (𝓝 0) := tendsto_id.mono_left nhdsWithin_le_nhds
-    simpa [Real.zero_rpow hω.ne'] using hi.rpow_const (Or.inr hω.le)
-  have hlog := tendsto_log_mul_rpow_nhdsGT_zero hω
-  have hlim := (hp.const_mul A).add (hlog.neg.const_mul B)
-  simp only [mul_zero, neg_zero, add_zero] at hlim
-  apply hlim.congr'
-  filter_upwards [] with ε
-  rw [Real.log_inv]
-  ring
+    Tendsto (fun ε : ℝ => (A + B * Real.log ε⁻¹) * ε ^ ω) (𝓝[>] 0) (𝓝 0) :=
+  LatticeProb.GeometricShellSums.tendsto_shell_floor_log_bound A B ω hω
 
-/-- With logarithmically many shells, power-law radius floors and cell
-diameters do not contribute to the limiting spatial budget. -/
+/-- With logarithmically many shells, power-law radius floors and cell diameters do not
+contribute to the limiting spatial budget. -/
 theorem tendsto_shell_iteration_budget
     (A p a b R D ω ζ : ℝ) (hω : 0 < ω) (hζ : 0 < ζ) :
     Tendsto (fun ε : ℝ => A / (1 - p) +
       (a + b * Real.log ε⁻¹) * (R * ε ^ ω) +
       (a + b * Real.log ε⁻¹ + 1) * (2 * (D * ε ^ ζ)))
-      (𝓝[>] 0) (𝓝 (A / (1 - p))) := by
-  have hf := (tendsto_shell_floor_log_bound a b ω hω).const_mul R
-  have hd := (tendsto_shell_floor_log_bound (a + 1) b ζ hζ).const_mul (2 * D)
-  simp only [mul_zero] at hf hd
-  have hsum := ((tendsto_const_nhds (x := A / (1 - p))).add hf).add hd
-  simp only [add_zero] at hsum
-  apply hsum.congr'
-  filter_upwards [] with ε
-  ring
+      (𝓝[>] 0) (𝓝 (A / (1 - p))) :=
+  LatticeProb.GeometricShellSums.tendsto_shell_iteration_budget A p a b R D ω ζ hω hζ
 
 /-- Any strict margin above the geometric contribution eventually covers the
 floor and cell-diameter terms in the shell budget. -/
@@ -291,7 +166,8 @@ theorem eventually_shell_iteration_budget_lt
     ∀ᶠ ε : ℝ in 𝓝[>] 0,
       A / (1 - p) + (a + b * Real.log ε⁻¹) * (R * ε ^ ω) +
         (a + b * Real.log ε⁻¹ + 1) * (2 * (D * ε ^ ζ)) < δ :=
-  (tendsto_order.1 (tendsto_shell_iteration_budget A p a b R D ω ζ hω hζ)).2 δ hδ
+  LatticeProb.GeometricShellSums.eventually_shell_iteration_budget_lt
+    A p a b R D ω ζ δ hω hζ hδ
 
 /-- The logarithmic first-crossing bound yields an admissible shell budget at
 all sufficiently small scales whenever the geometric contribution has a strict
@@ -301,13 +177,9 @@ theorem eventually_first_crossing_budget_lt
     (hδ : A / (1 - p) < δ) :
     ∀ᶠ ε : ℝ in 𝓝[>] 0,
       let L := (Real.log C + (1 - ω) * Real.log ε⁻¹) / (-Real.log q) + 1
-      A / (1 - p) + L * (R * ε ^ α) + (L + 1) * (2 * (D * ε ^ β)) < δ := by
-  have h := eventually_shell_iteration_budget_lt A p
-    (Real.log C / (-Real.log q) + 1) ((1 - ω) / (-Real.log q)) R D α β δ hα hβ hδ
-  filter_upwards [h] with ε hε
-  convert hε using 1
-  simp only [div_eq_mul_inv]
-  ring
+      A / (1 - p) + L * (R * ε ^ α) + (L + 1) * (2 * (D * ε ^ β)) < δ :=
+  LatticeProb.GeometricShellSums.eventually_first_crossing_budget_lt
+    A p q C ω R D α β δ hα hβ hδ
 
 /-- At sufficiently small scales, every fixed-factor shell iteration satisfying
 the stated odometer and radius bounds reaches its threshold within the target
@@ -323,13 +195,8 @@ theorem eventually_exists_shell_threshold_with_budget
       (∀ k, (∀ j < k, ε ^ (-ω) < O j) →
         r k ≤ max (A * p ^ k) (R * ε ^ α)) →
       ∃ n : ℕ, O n ≤ ε ^ (-ω) ∧
-        (∑ k ∈ Finset.range n, r k) + ((n : ℝ) + 1) * (2 * (D * ε ^ β)) ≤ δ := by
-  filter_upwards [eventually_first_crossing_budget_lt A p q C ω R D α β δ hα hβ hδ,
-    self_mem_nhdsWithin] with ε hbudget hε O r hinitial hupper hstep hr
-  exact exists_shell_threshold_with_iteration_budget O r q p C ε ω A (R * ε ^ α)
-    (D * ε ^ β) δ hq hq1 hp hp1 hC hε hA
-    (mul_nonneg hR (Real.rpow_pos_of_pos hε α).le)
-    (mul_nonneg hD (Real.rpow_pos_of_pos hε β).le)
-    hinitial hupper hstep hr hbudget.le
+        (∑ k ∈ Finset.range n, r k) + ((n : ℝ) + 1) * (2 * (D * ε ^ β)) ≤ δ :=
+  LatticeProb.GeometricShellSums.eventually_exists_shell_threshold_with_budget
+    q p C ω A R D α β δ hq hq1 hp hp1 hC hA hR hD hα hβ hδ
 
 end MatedCRT.Sec7
