@@ -40,7 +40,7 @@ Each verdict has a status line under its heading (2026-11-11).
 |---|---|---|
 | E-x1-1 (Proposition 5.1 boundary) | Applied [C34] | tex:2455-2456; email minor item. |
 | E-A8 (four proof occurrences of the boundary predicate) | Applied [C4] | tex:2397, 2403, 2432, 2472 (now the cell-union boundary). |
-| E-c5-2 (arbitrary starting vertices in Definition 6.2) | PENDING CODEX (MQ-li-5a: erratum candidate, refute-first check before the errata) | Conflicts with the author-approved [C31], which takes the starting sites in Theta'. Operator decision needed: the verdict would take the starting sites in V^eps. |
+| E-c5-2 (arbitrary starting vertices in Definition 6.2) | Closed: covered by [C31]; multiset reading of P is editorial (MQ-li-5a revision); no erratum | Covered by the author-approved [C31], which takes the starting sites in Theta'. Revised: no operator decision needed; the MQ-li-5a erratum candidate is withdrawn (MATH-ANSWERS.md:310). |
 | E-c3-1 (Lemma 7.4 path in Lambda_t^eps) | Already applied [C25] | tex:4028-4031 (statement uses Lambda_t^eps \ {0}). |
 | E-c1-2 (Appendix A connectedness) | Applied [C33] | tex:4305-4313; email minor item. |
 | E-m1-2 (dependence of s on t) | Applied [C23] | tex:2336 (statement) and tex:2436 (display in the proof of Proposition 5.1, s(rho,gamma,delta,t)). The GAPS displays at old lines 2096 and 2130 correspond to the single display found at tex:2432; mapping judged from content. |
@@ -51,7 +51,7 @@ Each verdict has a status line under its heading (2026-11-11).
 | E-c2-7 (Proposition 5.1, relaxed Lemma 5.2) | Closed: superseded by [C20]+[C21] (MQ-li-5e); Lean keeps its relaxed form | Needs a new statement (relaxed Lemma 5.2 with a null-measurable O_2 and an envelope G) and the discrete-cluster inner estimate, which is conditional on E-c2-5 (open). A new lemma is not transcribed without an operator decision. |
 | E-x2-1 (shell iteration, Proposition 7.1) | PENDING CODEX (MQ-li-5f: erratum candidate, refute-first check before the errata) | Conditional verdict. Its replacement is defined by reference to other Lean files and to inputs E-c3-2 and E-A10 (open). |
 
-Counts (this table, 12 rows; statuses of the MQ-li-5 items): Applied or already applied 6; Closed (MQ-li-5) 2 (E-c5-1, E-c2-7); Open (MQ-li-5c) 1 (E-c3-3); PENDING CODEX 3 (E-c5-2, E-c2-3, E-x2-1; MQ-li-5a/5d/5f).
+Counts (this table, 12 rows; statuses of the MQ-li-5 items): Applied or already applied 6; Closed (MQ-li-5) 3 (E-c5-1, E-c2-7, E-c5-2); Open (MQ-li-5c) 1 (E-c3-3); PENDING CODEX 2 (E-c2-3, E-x2-1; MQ-li-5d/5f).
 
 ## IDLA (B)
 
