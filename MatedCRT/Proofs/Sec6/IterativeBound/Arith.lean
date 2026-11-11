@@ -4,7 +4,7 @@ import MatedCRT.Steps.Sec6.IterativeBound
 # Lemma 6.10: real inequalities for the radius and failure budgets (Steps 1, 2, 4)
 
 * `one_add_abs_log_sq_le`: `(1 + |log r|)² ≤ 64 r^{-1/4}` on `(0, 1]`, so the absorption rate
-  `s₄ (1 + |log r|)⁻²` of Lemma 6.9 (E-A10 (b)) is at least `(s₄/64) r^{1/4}`.
+  `s₄ (1 + |log r|)⁻²` of Lemma 6.9 is at least `(s₄/64) r^{1/4}`.
 * `potential_step`: one round with `x₁ ≤ (1 - p)^a x` and `p ≥ c₄ x^{1/4}` lowers `A x^{1/2}` by `2x`, for
   `A = 8/(a c₄)`.
 * `exp_neg_le_factorial_div`: `e^{-y} ≤ k!/y^k`.
