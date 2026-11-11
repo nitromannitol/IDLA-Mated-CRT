@@ -120,3 +120,4 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/ProjectedBoundaryDecay.lean | archive/MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/ProjectedBoundaryDecay.lean | B37 |
 | MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/ProjectedBoundaryReduction.lean | archive/MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/ProjectedBoundaryReduction.lean | B37 |
 | MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/ProjectedInteriorVersion.lean | archive/MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/ProjectedInteriorVersion.lean | B37 |
+| MatedCRT/Proofs/Sec3/DiscretePotentialTightness/PreparedLocalSelection.lean | archive/MatedCRT/Proofs/Sec3/DiscretePotentialTightness/PreparedLocalSelection.lean | B38 |
