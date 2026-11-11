@@ -113,7 +113,13 @@ The development used AI-assisted proof writing under human direction.
 
 ## Authors and citation
 
+The Lean formalization is by Ahmed Bou-Rabee. The mathematics is due to the authors of the paper, A. Bou-Rabee and E. Gwynne.
+
 Cite the paper: A. Bou-Rabee and E. Gwynne, *Internal DLA on mated-CRT maps*, arXiv:2211.04891.
+
+## License
+
+Copyright 2026 Ahmed Bou-Rabee. Licensed under the Apache License, Version 2.0; see [LICENSE](LICENSE).
 
 ## Acknowledgements
 
