@@ -4,8 +4,7 @@ import MatedCRT.Proofs.Sec4.ObstacleSpecialization.Statements
 
 /-! Proposition 7.1 using the obstacle problem on the origin component.
 
-The shell reduction is due to worker x2. The adjacent-cell contact input uses
-the mating-of-trees formalization of Leonardo Bonanno. -/
+The adjacent-cell contact input uses the mating-of-trees formalization of Leonardo Bonanno. -/
 
 namespace MatedCRT
 
