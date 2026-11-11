@@ -13,3 +13,4 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/Defs/GaussianMultiplicativeChaos.lean | archive/MatedCRT/Defs/GaussianMultiplicativeChaos.lean | B03 |
 | MatedCRT/Defs/LogCorrelatedField.lean | archive/MatedCRT/Defs/LogCorrelatedField.lean | B03 |
 | MatedCRT/Defs/RandomMeasureConvergence.lean | archive/MatedCRT/Defs/RandomMeasureConvergence.lean | B03 |
+| MatedCRT/FirstPass/Main/Axioms.lean | archive/MatedCRT/FirstPass/Main/Axioms.lean | B04 |
