@@ -5,7 +5,7 @@ import MatedCRT.Proofs.Sec6.IterativeBound.Bounds
 # Lemma 6.10: the quenched iteration (`QuenchedIterationStep`)
 
 Parameters (`ω₂ = ω ∧ κ`, `a = 1/(2β⁻)`): exponent `β = (a/4) ∧ (ω₂/8)`; round radius
-`r_n = max((n ε/s₅)^a, 10 ε^{ω₂})` (eq:iterate-stop-time, with `10 ε^{ω₂} ≥ 10 ε^ω` in place of `10 ε^{ω₀}`);
+`r_n = max((n ε/s₅)^a, 10 ε^{ω₂})` (with `10 ε^{ω₂} ≥ 10 ε^ω` in place of `10 ε^{ω₀}`);
 Step 3 threshold `N = ε^{-ω₂/2}` (eq:iterate-stop-time2); radius budget `Ψ(n) = (n-1)ε^κ` for `n ≤ N` and
 `A x_n^{1/2} + B log n + N ε^κ` otherwise; failure budget `G(n) = n e` with
 `e = exp(-(s₃/64) r_min^{1/4} N)` (eqn:use-absorb). `core_induction` gives the failure probability `≤ G(j) ≤ M ε`

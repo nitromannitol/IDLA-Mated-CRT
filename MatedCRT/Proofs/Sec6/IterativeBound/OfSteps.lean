@@ -53,8 +53,7 @@ theorem probTendsToOne_of_ae {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} 
   exact tendsto_const_nhds
 
 /-- If `f ε ≤ 1` and, for each `τ > 0`, eventually `f ε ≤ θ ε → 0` on `E ε ∩ {s ≥ τ}`, where `P[(E ε)ᶜ] → 0` and
-`s > 0` is measurable, then the outer integral `∫* f ε dP → 0`. (Worker c2's
-`tendsto_outerLIntegral_of_eventually_le` of MatedCRT/Steps/Sec5/GeneralIDLALowerBound.lean, repeated here because
+`s > 0` is measurable, then the outer integral `∫* f ε dP → 0`. (`tendsto_outerLIntegral_of_eventually_le` of MatedCRT/Steps/Sec5/GeneralIDLALowerBound.lean, repeated here because
 that module imports MatedCRT/Draft/Section5.lean, which does not build in the current working tree.) -/
 theorem tendsto_outerLIntegral_of_eventually_le {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
     [IsProbabilityMeasure P] (f : ℝ → Ω → ℝ≥0∞) (hf : ∀ ε ω, f ε ω ≤ 1) (s : Ω → ℝ)
@@ -115,8 +114,8 @@ theorem tendsto_outerLIntegral_of_eventually_le {Ω : Type*} [MeasurableSpace Ω
 end IterativeBound
 
 open IterativeBound in
-/-- **Lemma 6.10** from Lemma 6.9 (E-A10 (b) form), Lemma 6.3 for arbitrary starting sites (E-c5-2), Lemma 2.8, the
-adjacency of cells (IR-A2), the walk path property, the measurability of the environment and the quenched
+/-- **Lemma 6.10** from Lemma 6.9, Lemma 6.3 for arbitrary starting sites, Lemma 2.8, the
+adjacency of cells, the walk path property, the measurability of the environment and the quenched
 iteration. -/
 theorem iterativeBound_of_steps (𝒮 : SpaceFillingSLEModel) (h69 : ChanceOfBeingAbsorbedLogLossStmt 𝒮)
     (h63 : AbelianIDLAAnyStartStep 𝒮) (h28 : CellSizeEstimateStmt 𝒮) (hadj : AdjacentCellsMeetStep 𝒮)

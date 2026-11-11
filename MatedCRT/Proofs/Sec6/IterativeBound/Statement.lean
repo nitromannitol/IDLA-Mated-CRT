@@ -10,8 +10,7 @@ import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.OfSteps
 # Lemma 6.10 (lemma:iterative-bound, line 2694)
 
 `iterativeBound`: Lemma 6.10 from Lemma 6.9 (in the E-A10 (b) form, `ChanceOfBeingAbsorbedLogLossStmt`), Lemma 2.8 and
-the intersection of the cells of adjacent vertices (`AdjacentCellsMeetStep`, Definitions 1.1 = 1.2, INPUT-REQUESTS
-IR-A2). The other steps are proved: Lemma 6.3 for arbitrary starting sites (`AbelianIDLA.abelianIDLAAnyStartStep`),
+the intersection of the cells of adjacent vertices (`AdjacentCellsMeetStep`, Definitions 1.1 = 1.2). The other steps are proved: Lemma 6.3 for arbitrary starting sites (`AbelianIDLA.abelianIDLAAnyStartStep`),
 the walk path property (`srwPathStep`), the measurability of the field (`fieldSigmaMeasurableStep`, from
 `IsQuantumCone.measurable_pairing`) and the quenched iteration (`IterativeBound.quenchedIterationStep`).
 
@@ -52,7 +51,7 @@ theorem iterativeBound_of_div (𝒮 : SpaceFillingSLEModel) (h68 : ConstantOrder
 
 /-- **Lemma 6.10** from the inputs of Lemma 6.8, route (b) (`constantOrderLowerBoundDiv_of_steps`): Lemmas 2.16,
 2.7, 2.8, 2.9, 6.4, 2.18, 2.19, and the steps `GoodScaleEventMeasurableStep` (line 2505) and `AdjacentCellsMeetAeStep`
-(Definitions 1.1 = 1.2, IR-A2). -/
+(Definitions 1.1 = 1.2). -/
 theorem iterativeBound_of_inputs (𝒮 : SpaceFillingSLEModel)
     (h216 : GreenKernelLowerBoundStmt 𝒮) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
     (h29 : CountingMeasureConvergenceStmt 𝒮) (h64 : GoodAnnulusPrevalenceStmt)

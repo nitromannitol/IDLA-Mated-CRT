@@ -6,13 +6,12 @@ import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 /-!
 # Lemmas 7.2 (corrected), 7.3 and 7.4 from the corrected Lemma 4.4
 
-The Draft Lemma 4.4 (`DiscreteLaplacianBoundStmt`) is false (ESCALATIONS E-c1-1;
-`Audit.CorrectedForms.not_discreteLaplacianBoundStmt`). Lemmas 7.2 (above the cell scale, E-c3-2), 7.3 and 7.4 use
+The Draft Lemma 4.4 (`DiscreteLaplacianBoundStmt`) is false (`Audit.CorrectedForms.not_discreteLaplacianBoundStmt`). Lemmas 7.2 (above the cell scale), 7.3 and 7.4 use
 only its first conjunct, `Δ^ε w̃^ε_t = (deg^ε)⁻¹` on `Λ^ε_t` (eq:laplacian-of-uteps away from the origin), which the
 corrected form `DiscreteLaplacianBoundCorrectedStmt` keeps verbatim. This file reroutes them through the corrected
 form: `stoppedOdometerLaplacianStep_of_corrected` is the proof of `stoppedOdometerLaplacianStep_of_steps`
 (MatedCRT/Steps/Sec7/OdometerBoundMass.lean) with the corrected Lemma 4.4 in place of the Draft; the three results then
-follow from the step reductions of MatedCRT/Steps/Sec7. The same derivations are recorded by worker A in
+follow from the step reductions of MatedCRT/Steps/Sec7. The same derivations are recorded in
 MatedCRT/Audit/CorrectedForms.lean (namespace `MatedCRT.Audit.CorrectedForms`); these are the owned copies that the
 assembly (MatedCRT/Assembly/Main.lean) uses.
 -/
@@ -50,7 +49,7 @@ theorem stoppedOdometerLaplacianStep_of_corrected (h44 : DiscreteLaplacianBoundC
   show mLaplacian (S.mult ε ω) (stoppedOdometer (S.mult ε ω) ε (S.η ω) ρ t) a = ((mdeg (S.mult ε ω) a : ℕ) : ℝ)⁻¹
   rw [Sec7.mLaplacian_stoppedOdometer hε ht hlf, hw, hgr, mul_zero, add_zero]
 
-/-- **Lemma 7.2 (corrected, E-c3-2: `s ≥ ε^β`)** from Lemmas 2.16, 2.8 (cited) and the **corrected** Lemma 4.4. -/
+/-- **Lemma 7.2 (corrected: `s ≥ ε^β`)** from Lemmas 2.16, 2.8 (cited) and the **corrected** Lemma 4.4. -/
 theorem massBoundOdometerAboveScale_of_corrected (h216 : GreenKernelLowerBoundStmt 𝒮)
     (h28 : CellSizeEstimateStmt 𝒮) (h44 : DiscreteLaplacianBoundCorrectedStmt 𝒮) :
     MassBoundOdometerAboveScaleStmt 𝒮 :=
@@ -63,7 +62,7 @@ theorem odometerBoundMass_of_corrected (h44 : DiscreteLaplacianBoundCorrectedStm
   odometerBoundMass_of_steps 𝒮 (matedMapStructureStep_of_adjacentCellsMeet 𝒮 (adjacentCellsMeetAeStep 𝒮))
     (stoppedOdometerLaplacianStep_of_corrected h44 (adjacentCellsMeetAeStep 𝒮))
 
-/-- **Lemma 7.4** (the Λ-version of review-S (S4), E-c3-1) from the **corrected** Lemma 4.4 and the degree bound
+/-- **Lemma 7.4** (the Λ-version) from the **corrected** Lemma 4.4 and the degree bound
 (`DegreeBoundInput`, GMS19 Lemma 2.6). -/
 theorem crudeUpperBound_of_corrected (h44 : DiscreteLaplacianBoundCorrectedStmt 𝒮) (hdeg : DegreeBoundInput 𝒮) :
     CrudeUpperBoundStmt 𝒮 :=
