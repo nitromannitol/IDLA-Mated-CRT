@@ -153,3 +153,13 @@ Each batch was followed by lb of every counted closure module; a batch that fail
 | MatedCRT/Proofs/Sec4/ConvergenceDivisible/PreparedIdentification.lean | archive/MatedCRT/Proofs/Sec4/ConvergenceDivisible/PreparedIdentification.lean | B42 |
 | MatedCRT/Proofs/Sec4/ConvergenceDivisible/PreparedPathwiseMeasurability.lean | archive/MatedCRT/Proofs/Sec4/ConvergenceDivisible/PreparedPathwiseMeasurability.lean | B42 |
 | MatedCRT/Proofs/Sec4/ConvergenceDivisible/PreparedPropertiesEventMeasurability.lean | archive/MatedCRT/Proofs/Sec4/ConvergenceDivisible/PreparedPropertiesEventMeasurability.lean | B42 |
+| MatedCRT/Proofs/Sec4/DivSandpileLowerBound/ApproximateCoverage.lean | archive/MatedCRT/Proofs/Sec4/DivSandpileLowerBound/ApproximateCoverage.lean | B43 |
+| MatedCRT/Proofs/Sec4/DivSandpileLowerBound/ClusterJumpTimes.lean | archive/MatedCRT/Proofs/Sec4/DivSandpileLowerBound/ClusterJumpTimes.lean | B43 |
+| MatedCRT/Proofs/Sec4/DivSandpileLowerBound/CorrectedClusterComparison.lean | archive/MatedCRT/Proofs/Sec4/DivSandpileLowerBound/CorrectedClusterComparison.lean | B43 |
+| MatedCRT/Proofs/Sec4/DivSandpileLowerBound/CorrectedClusterProbability.lean | archive/MatedCRT/Proofs/Sec4/DivSandpileLowerBound/CorrectedClusterProbability.lean | B43 |
+| MatedCRT/Proofs/Sec4/DivSandpileLowerBound/CorrectedClusterRegular.lean | archive/MatedCRT/Proofs/Sec4/DivSandpileLowerBound/CorrectedClusterRegular.lean | B43 |
+| MatedCRT/Proofs/Sec4/DivSandpileLowerBound/CorrectedOdometerConsistency.lean | archive/MatedCRT/Proofs/Sec4/DivSandpileLowerBound/CorrectedOdometerConsistency.lean | B43 |
+| MatedCRT/Proofs/Sec4/DivSandpileLowerBound/StrictGapCounterexample.lean | archive/MatedCRT/Proofs/Sec4/DivSandpileLowerBound/StrictGapCounterexample.lean | B43 |
+| MatedCRT/Proofs/Sec4/DivSandpileLowerBound/StrictGapDirichletCoordinates.lean | archive/MatedCRT/Proofs/Sec4/DivSandpileLowerBound/StrictGapDirichletCoordinates.lean | B43 |
+| MatedCRT/Proofs/Sec4/DivSandpileLowerBound/StrictGapLocalLaw.lean | archive/MatedCRT/Proofs/Sec4/DivSandpileLowerBound/StrictGapLocalLaw.lean | B43 |
+| MatedCRT/Proofs/Sec4/DivSandpileLowerBound/StrictGapPairingTransport.lean | archive/MatedCRT/Proofs/Sec4/DivSandpileLowerBound/StrictGapPairingTransport.lean | B43 |
