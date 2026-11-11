@@ -10,7 +10,7 @@ import MatedCRT.FirstPass.Frozen.S4S6c
 For a valid environment `S` (`MatedCRTEnv.IsValid`) this file derives from the structure fields the inputs that the
 fixed-index margin (`fixedIndexMargin_compact_ae`, ScaleEntry.lean) and the family null-measurability
 (`nullMeasurableSet_subset_family`, HmeasFamily.lean) need. No new frozen input is introduced; the only frozen
-input is `FrozenLQGMeasureFieldMeasurable` (q2, Frozen/S4S6c.lean), used for the AE form of the test integrals.
+input is `FrozenLQGMeasureFieldMeasurable` (Frozen/S4S6c.lean), used for the AE form of the test integrals.
 
 * `env_fieldSigma_le`: the field σ-algebra lies in the ambient σ-algebra (`IsQuantumCone.measurable_pairing`).
 * `env_ae_mass_finite`: almost surely `μ_h(B̄_R) < ∞` for each real `R` (the γ-LQG measure is Radon, `IsLQGLimit`,

@@ -7,7 +7,7 @@ A lower bound `b ≤ f q` holding on the points `q ∈ D ∩ S` of a dense set `
 `x ∈ closure S`, when `f` is continuous on `closure S`. For an open `S` this needs only `D` dense. This is the step that
 lets an infimum over countably many points replace an infimum over a closed set (B1 of reports/q3.md).
 
-Note (q3 round 17): the naive reduction "inf over the compact core = inf over rational points of {infDist > δ/2}" is false in
+Note: the naive reduction "inf over the compact core = inf over rational points of {infDist > δ/2}" is false in
 general (counterexample `L = ball 0 r`, `δ/2 = r`: the core is `{0}` and `{infDist > δ/2}` is empty). The reduction goes
 through open sets `S_s = {x ∈ ball 0 ρ | s < infDist x Lᶜ}` with rational `0 < s < δ/2`, whose closures lie in `L`.
 -/

@@ -4,7 +4,7 @@ import MatedCRT.Defs.Map
 /-!
 # FIRST PASS, 5.3 (MeanValueSurplusLowerStep), hmemcell: local first-hit cell membership
 
-Source: notes/fp-gaps/CHATGPT-5-3-remaining.md §2.1 (PROVED there), operator note 21:08 UTC. The deterministic helper:
+The deterministic helper:
 if every cell meeting `B_ρ` has diameter at most `ρ/2`, then every point `x ∈ B_{ρ/3}` lies in the cell of its
 smallest-label vertex `vertexOf ε η x` (the paper's `eq:plane-to-embedding` convention), and that vertex lies in
 `ballInterior ε η ρ`. The proof: the set of labels whose cell contains `x` is nonempty (the cell of `⌈u/ε⌉` contains `η(u)`

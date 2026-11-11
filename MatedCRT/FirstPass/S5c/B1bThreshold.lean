@@ -7,7 +7,7 @@ import MatedCRT.FirstPass.Frozen.S1c
 The S1c threshold lemma (`neg_mul_green_lt_leastSupersolution_iff`, `threshold_iff_moments`) is stated for the single
 constant `-uG(0,p)`. Its proof uses only that the supersolution values at `p` are nonempty and bounded below. So for an
 arbitrary real `c` and a lower bound `hbdd`, `c < v(u)(p)` iff some rational `q > c` is below no supersolution value at `p`.
-This generic form gives the superlevel sets `{c < v(μ_ω)(p)}` that B1b needs (operator ruling 19:46 UTC, q3 route).
+This generic form gives the superlevel sets `{c < v(μ_ω)(p)}` that B1b needs.
 -/
 
 namespace MatedCRT.S5c
@@ -129,7 +129,7 @@ theorem nullMeasurable_of_superlevel_null {Ω : Type} [MeasurableSpace Ω] {P : 
   intro s hs
   exact hgen s hs
 
-/-- **B1b, AE form** (operator ruling 19:46 UTC, q3 route): for a random measure `μ_ω` with a.s. finite mass on the disc and
+/-- **B1b, AE form**: for a random measure `μ_ω` with a.s. finite mass on the disc and
 a.s. bounded-below supersolution values at `p`, the least supersolution value `ω ↦ v(u)(p)(μ_ω)` is `AEMeasurable`, from the
 Lusin theorem (`FrozenUniversalMeasurabilityOfAnalytic`) and the AE-form test-integral measurability `hmeas`. -/
 theorem aemeasurable_leastSupersolution_of_moments {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}

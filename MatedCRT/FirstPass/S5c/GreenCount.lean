@@ -4,7 +4,7 @@ import MatedCRT.Proofs.Sec3.ConvergenceNormalizedExitTime.CellIntegral
 import MatedCRT.Proofs.Sec5.LLowerBound.GreenMonotonicity
 
 /-!
-# FIRST PASS, mass count of the interior ball (GAP 2, operator note 20:31): Step 4 of CHATGPT-q3-questions §1.4
+# FIRST PASS, mass count of the interior ball (GAP 2)
 
 Step 4 (eqs. (15)-(17)). The quantum mass of a ball `B_R(z)` is at most the number of cells indexed by `V^ε(B_R(z))`
 times `ε`, because these cells cover the ball (every point lies in a cell, by surjectivity of `η`, Lemma

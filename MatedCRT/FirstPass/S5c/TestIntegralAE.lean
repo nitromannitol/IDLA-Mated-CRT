@@ -3,8 +3,7 @@ import Mathlib
 /-!
 # FIRST PASS, Lemma 5.3 (B1b): AE-form test-integral measurability from a measurable version of the LQG measure
 
-Operator ruling 2026-11-09 20:12 UTC (item (e)): the AE form of the test-integral measurability of B1b is obtained from q2's
-`FrozenLQGMeasureFieldMeasurable` (FirstPass/Frozen/S4S6c.lean:44): a version `g` of the measure `μ` that is measurable for the
+The AE form of the test-integral measurability of B1b is obtained from `FrozenLQGMeasureFieldMeasurable` (FirstPass/Frozen/S4S6c.lean:44): a version `g` of the measure `μ` that is measurable for the
 field σ-algebra, equal to `μ` almost surely. Here: for a continuous `φ` supported in `B_R`, `ω ↦ ∫ φ dμ_ω` is AE-measurable,
 using `Measure.measurable_lintegral` and the positive/negative part decomposition of the integral (needs `μ_ω(B_R) < ∞` a.s.).
 The σ-algebra `m` is the field σ-algebra `S.fieldSigma`; the hypothesis `m ≤ mΩ` is the one ingredient not stated in the repository.

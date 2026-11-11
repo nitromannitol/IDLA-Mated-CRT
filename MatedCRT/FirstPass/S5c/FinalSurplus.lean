@@ -19,7 +19,7 @@ import MatedCRT.Proofs.Sec1.ConeScaleRadius
 /-!
 # FIRST PASS, Lemma 5.3: `MeanValueSurplusLowerStep` (task fp-S5c-5-3-5-1)
 
-Assembly following `notes/fp-gaps/CHATGPT-q3-5-3-route.md` section 4 and the operator ruling (01:43 UTC).
+Assembly:
 * Output constant `c ω = (c₀/6) * b0 ω / (2 * C)`; `b0` is the measurable positive margin at the fixed depth `δ`
   (`marginExact_proved`), and `C` is the mesh constant of `mesh_scale_eventually`.
 * Cover margins: `marginExact_countable` at the deterministic depths `coverDepth j`.

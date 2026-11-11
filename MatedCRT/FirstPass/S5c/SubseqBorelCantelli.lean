@@ -3,8 +3,7 @@ import Mathlib
 /-!
 # FIRST PASS, Lemma 5.3 and E-c1-5: deterministic subsequence and Borel-Cantelli (B2)
 
-Source: `notes/fp-gaps/CHATGPT-5-1-B2-Ec15.md` §1 (independent referee CORRECT, CHATGPT-5-1-B2-Ec15-referee.md; operator ruling
-21:50 and 22:25 UTC: no measurable selection of the threshold `τ` is needed). From convergence to zero of the level-`k` failure
+No measurable selection of the threshold `τ` is needed. From convergence to zero of the level-`k` failure
 probabilities along `ε → 0`, a deterministic sequence `ε_k → 0` with summable failure bounds `P(Bad_k(ε_k)) ≤ 2^{-k}` is chosen;
 Borel-Cantelli then gives, almost surely, `ω ∉ Bad_k(ε_k)` for all large `k`. Pure probability: the failure events need no
 measurability, since `P` is an outer measure.

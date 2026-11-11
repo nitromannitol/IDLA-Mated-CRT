@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S5c.GreenRatio
 import MatedCRT.FirstPass.S5c.MassPositive
 
 /-!
-# FIRST PASS, target (4) of GAP 2 (operator note 20:31; CHATGPT-q3-questions §1.4 Steps 1-6), pathwise
+# FIRST PASS, target (4) of GAP 2, pathwise
 
 For a vertex `a` with `z = η(a)`, `I = K_ε(B_r(z))`, `|z| ≤ ρ`, and the event of Step 6 (`ε^{1/4} ≤ m_r`), the ratio
 `∑_{b∈I} G_I(b,a) / G_I(a,a)` is at least `ε^{-1/4}` (eq. (4)). The pathwise chain is: the net lower bound

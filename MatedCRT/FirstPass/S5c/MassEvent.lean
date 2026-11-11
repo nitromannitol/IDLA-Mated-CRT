@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.S5c.GreenCount
 Target (4) of GAP 2 (`green_ratio_target`, `GreenTarget.lean`) needs a real `m_r > 0` with `m_r ≤ μ_h(B_{cr}(z))` on the
 relevant centres and the event `ε^{1/4} ≤ m_r`. Here `m_r` is the truncated least mass of a FIXED finite net (the net is
 chosen once, independent of `ω`, from the compact set and the radius), a measurable function of `ω` through a measurable
-version `g` of the LQG measure (the Frozen input `FrozenLQGMeasureFieldMeasurable`, q2; taken as a hypothesis here).
+version `g` of the LQG measure (the Frozen input `FrozenLQGMeasureFieldMeasurable`; taken as a hypothesis here).
 
 `TendsToOneOn P F E` uses the outer measure `P`, so only the upper bound of the bad event `{m_r < ε^{1/4}}` is needed:
 it is a decreasing (as `ε ↓ 0`) family of measurable sets with null limit, by continuity from above.

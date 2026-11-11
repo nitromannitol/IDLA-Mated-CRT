@@ -4,8 +4,7 @@ import MatedCRT.FirstPass.S5c.TestIntegralAE
 /-!
 # FIRST PASS, Lemma 5.3 (B1b): the least supersolution is AE-measurable on the field route
 
-Operator rulings 2026-11-09 20:12 UTC (item (e)) and 20:16 UTC (truth check of q2's `FrozenLQGMeasureFieldMeasurable`: TRUE; q3 may use
-it for the AE form of the test integrals). Here: (1) the field σ-algebra `fieldSigmaAlgebra 0 hC univ` (the σ-algebra of the field,
+Steps: (1) the field σ-algebra `fieldSigmaAlgebra 0 hC univ` (the σ-algebra of the field,
 HarmonicBalls.Defs.GFF) is contained in the ambient σ-algebra when the pairings `ω ↦ hC ω φ` are measurable (the content of
 `IsQuantumCone.measurable_pairing`, Defs/QuantumCone.lean:84); (2) a field-measurable version `g` of `μ` gives the AE-form test
 integrals (TestIntegralAE.lean); (3) B1b (B1bThreshold.lean) then makes `ω ↦ leastSupersolution (μ ω) R 0 u p` AE-measurable.
