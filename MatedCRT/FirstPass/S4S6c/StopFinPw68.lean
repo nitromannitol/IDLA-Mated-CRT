@@ -6,13 +6,13 @@ import MatedCRT.FirstPass.S6r.ShellOmega
 import MatedCRT.FirstPass.S6r.Shells.Parameters
 
 /-!
-# The stopped shell vertex lies in a finite set (binder `hstopFin`, fp-S4S6c-stopfin, z10)
+# The stopped shell vertex lies in a finite set (binder `hstopFin`)
 
 The binder `hstopFin` of `shellOneTest_at_of_goodEnv_loc_g` (B1Assembly68.lean:1247) asks, at one environment `ω`
 under `FullAdmAt`, that for each shell `k` there is a finite set `F` of vertices such that almost surely, on the event
 that the shell exit `T_k` is finite, the exit vertex `X_{T_k}` lies in `F`. This is the finite stopped-range localisation
-of chat 246 Q1, item 3 (notes/fp-gaps/CHATGPT-246-idla-hU-tdom-rbd-hpos-counting-PRO.md), which replaces the prefix
-domination `hTdom`; chat 246 showed `hTdom` false as typed, but the stopped vertex itself is controlled.
+which replaces the prefix
+domination `hTdom`; a check showed `hTdom` false as typed, but the stopped vertex itself is controlled.
 
 Route (pointwise at `ω`, with `η = S.η ω` and `m = S.mult ε ω`).
 * `K = fillCells ε η Θ` is nonempty and bounded (`ConfigOK`: `closure K ⊆ B(0, ρ/2)`, `B(0, s₀) ⊆ K`, `0 < s₀`).
@@ -76,7 +76,7 @@ lemma not_pred_of_lt_firstTime {P : ℕ → Prop} {n m : ℕ} (h : firstTime P =
   have : n ≤ m := by exact_mod_cast hle
   omega
 
-/-- **The stopped shell vertex is a.s. in a finite set (fp-S4S6c-stopfin, z10).** This is the binder `hstopFin` of
+/-- **The stopped shell vertex is a.s. in a finite set.** This is the binder `hstopFin` of
 `shellOneTest_at_of_goodEnv_loc_g` (B1Assembly68.lean:1247), stated for a free sparsity exponent `s1` (the caller takes
 `s1 := shellS1CG γ CG`) and a free window constant `c0W` (the caller takes `c0W := shellC0 CG`). The hypotheses at `ω`:
 `0 < ε`, `0 < s₀` (for the nonemptiness of `K`), `η` proper, `m` locally finite, and the degree positivity `hdeg`. -/

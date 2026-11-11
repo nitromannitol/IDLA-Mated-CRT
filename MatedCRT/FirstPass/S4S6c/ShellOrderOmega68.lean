@@ -1,9 +1,9 @@
 import MatedCRT.FirstPass.S4S6c.ShellOrderFullAdm
 
 /-!
-# The shell order from the full guard with an environment-dependent radius (q2, fp-S4S6c-shell-order-omega)
+# The shell order from the full guard with an environment-dependent radius
 
-`shellOrder_fullAdm_ae` (S4S6c/ShellOrderFullAdm.lean:63, z9) takes the radius function `Rf : ℂ → ℝ` and the eligibility
+`shellOrder_fullAdm_ae` (S4S6c/ShellOrderFullAdm.lean:63) takes the radius function `Rf : ℂ → ℝ` and the eligibility
 predicate `Elig : ℂ → Prop` as FIXED parameters. The radius of the shell chain is a good seven-adic radius of the
 window (`windowRf`, S4S6c/ShellWindowRf68.lean), which depends on the environment `ω` through the good-annulus event
 `IsGoodAnnulusEvent (μ ω)`. So this file states the same almost-sure shell order with `Rf : Ω → ℂ → ℝ` and
@@ -11,7 +11,7 @@ window (`windowRf`, S4S6c/ShellWindowRf68.lean), which depends on the environmen
 
 The proof is the pointwise proof of `shellOrder_fullAdm_ae` (ShellOrderFullAdm.lean:96-141), copied with `Rf` and `Elig`
 replaced by their values at `ω`. The only use of `Rf` and `Elig` is through `hR` and `hde` at `ω`, so nothing else changes.
-The helper `dd_lt_mem_cellVertices_thickening` is reused from ShellOrderFullAdm.lean:48. z9's file is not edited.
+The helper `dd_lt_mem_cellVertices_thickening` is reused from ShellOrderFullAdm.lean:48.
 
 Terminology: cell distance and cell diameter (Duplantier-Sheffield); shells and good annuli (Armstrong-Kuusi-Mourrat).
 -/
@@ -32,10 +32,10 @@ theorem shellOrder_fullAdm_ae_omega {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (h�
     {Rf : Ω → ℂ → ℝ} {Elig : Ω → ℂ → Prop}
     (hR : ∀ᵐ ω ∂S.P, ∀ w, Elig ω w → dyadicD r ≤ Rf ω w ∧ Rf ω w ≤ dyadicD r ^ shortExp ζ)
     (hmesh : ∀ᵐ ω ∂S.P, CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ)
-    -- guarded by `FullAdm` (the start cell meets the frontier only for a full admissible configuration, see reports/q4.md)
+    -- guarded by `FullAdm` (the start cell meets the frontier only for a full admissible configuration, see)
     (hstart : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty)
-    -- guarded by `FullAdm` (the z11 deviation: the unguarded form is not provable, reports/z11.md l.25-32)
+    -- guarded by `FullAdm` (l.25-32)
     (hde : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),
         (∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,

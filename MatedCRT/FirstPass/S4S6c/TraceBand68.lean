@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S4S6c.HcPrinted68
 import MatedCRT.FirstPass.S4S6c.StartBand68
 
 /-!
-# First pass, Lemma 6.8: the trace bound on the test band (q2, fp-S4S6c-envscaling-6-7-6-8)
+# First pass, Lemma 6.8: the trace bound on the test band
 
 Deterministic wrapper of `ConfigBound68.trace_half` for the sphere band. The test band is
 `Y = testBand = band ∩ bandSet` (`BandInduction68.band`, `HcPrinted68.bandSet`), the window family is `testWt`

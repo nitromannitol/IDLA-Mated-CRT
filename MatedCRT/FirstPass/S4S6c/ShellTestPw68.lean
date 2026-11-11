@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.S6r.ShellOmegaStop
 import MatedCRT.FirstPass.S6r.ShellPathAe
 
 /-!
-# The test-end event at one environment point (htest of `shellOneTest_at_of_goodEnv'`, fp-S4S6c-htest-pw, z1)
+# The test-end event at one environment point (htest of `shellOneTest_at_of_goodEnv'`)
 
 The pointwise form of the named input `htest` of `shellHde68_full_omega` (S4S6c/ShellHdeOmega68.lean:104) and of
 `shellOneTest_at_of_goodEnv'` (S4S6c/B1Assembly68.lean:823). At ONE environment point `ω` the test ends
@@ -234,7 +234,7 @@ theorem shellTest_pw68 {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRT
   filter_upwards [ae_all_iff.2 hk] with x hx
   exact hx
 
-/-- **The sparsity-parameter form of `shellTest_pw68` (fp-S4S6c-s1, z1).** The guard `FullAdmAt` is taken at the
+/-- **The sparsity-parameter form of `shellTest_pw68`.** The guard `FullAdmAt` is taken at the
 exponent `s1` in place of `sparsityS1 γ`; the shell finiteness is `shellHde_pw68_s1` at the same `s1`. -/
 theorem shellTest_pw68_s1 {γ : ℝ} (s1 : ℝ) {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     {ε ρ s₀ ζ r : ℝ} (hε : 0 < ε) (hs₀ : 0 < s₀) (hζ : 0 < ζ) (hζ1 : ζ < 1 / 2) (hr : 0 < r)

@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.ConfigBound68
 
 /-!
-# The successive test times and stay sets of the printed Lemma 6.8 (q2, task fp-S4S6c-envscaling-6-7-6-8; LEMMA68 C3)
+# The successive test times and stay sets of the printed Lemma 6.8
 
 `ConfigBound68.trace_half` takes the successive exit times `τ` and the stay sets `S` as parameters with the recursions
 `τ 0 = 0`, `τ (N+1) x = i + vExitTime (Wt (x i)) (pathShift i x)` when `τ N x = i` is finite, `τ (N+1) x = ⊤` after `⊤`,
@@ -18,7 +18,7 @@ open WalkPotential SuccessiveExitStop
 
 namespace Tau68
 
-/-- The successive exit times of the windows `Wt` along a path (the recursion of LEMMA68 C3). -/
+/-- The successive exit times of the windows `Wt` along a path. -/
 noncomputable def tauSeq (Wt : ℤ → Set ℤ) : ℕ → (ℕ → ℤ) → ℕ∞
   | 0, _ => 0
   | N + 1, x => if tauSeq Wt N x = ⊤ then ⊤ else

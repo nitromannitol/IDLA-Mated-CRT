@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S4S6c.GreenTest68
 import MatedCRT.FirstPass.S4S6c.Uniform68Selector
 
 /-!
-# Event inputs of the local test `hloc` (q2, task fp-S4S6c-envscaling-6-7-6-8, file `Uniform68Local.lean`)
+# Event inputs of the local test `hloc` (file `Uniform68Local.lean`)
 
 `Uniform68Events.hloc_point` (the local test of Lemma 6.8 at one start vertex `b` and radius `R`) takes two probabilistic
 inputs, `hGreenLow` and `hdraft`. This file extracts them, at one fixed environment `ω` and one fixed `ε`, from the

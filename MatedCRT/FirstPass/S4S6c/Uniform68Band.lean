@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4S6c.Uniform68Inputs
 import MatedCRT.Proofs.Sec6.ConstantOrderLowerBoundDiv.Geometry
 
 /-!
-# The sphere-band geometry of a start vertex (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# The sphere-band geometry of a start vertex
 
 For a start cell `b` of the sphere band `{b | (closure (cell b) ∩ sphere c (4R/3)).Nonempty}` of the printed Lemma 6.8
 (`Uniform68.config_exit_lower_bound`, `hloc`), with cell diameter bounded by `d ≤ R/100`, the vertex `η(b)` of the cell

@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.S6r.OneTest.WalkStateFirst
 import MatedCRT.FirstPass.S6r.Shells.ChoiceStopped
 
 /-!
-# Identification of the shell test end with the walk-centred test end (q2, fp-S4S6c-6-8-identification)
+# Identification of the shell test end with the walk-centred test end
 
 For the shell exit `T_k = shellExit k` and the radius `R(z_k)` at the grid centre `z_k = shellCentre k`, the shell test
 end `L_k = testEnd k` of ShellOmega (notes (7.35): the first exit of the disk `B_{R/4}(η(ε X_{T_k}))` at or after `T_k`)

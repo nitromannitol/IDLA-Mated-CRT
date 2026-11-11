@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.ShellHdeOmega68
 
 /-!
-# The pointwise shell hypothesis `hde` with a localized mesh bound (fp-S4S6c-hde-pointwise, z1)
+# The pointwise shell hypothesis `hde` with a localized mesh bound
 
 The pointwise form of `shellHde68_full_omega` (S4S6c/ShellHdeOmega68.lean:94): the same conclusion at ONE environment
 point `ω`, with each environment fact that the almost-sure proof filters over given as a hypothesis at `ω`:
@@ -14,7 +14,7 @@ Localized mesh. `shell_fin_of_path` (S4S6c/ShellHde68.lean:209) uses its mesh hy
 cell `x C` of the shell hit. That cell meets the two-sided shell `twoSidedShell (fillCells …) r λ` with `λ ≤ r/20`
 (`hlam1`). The shell lies in `Metric.ball 0 ρ` when `fillCells ⊆ ball 0 (ρ/2)` and `r ≤ ρ/4`
 (`twoSidedShell_mem_ball`). So the mesh bound is needed only on the cells meeting `Metric.ball 0 ρ`, the localized form of
-chat 239 (`notes/fp-gaps/CHATGPT-239-idla-hU-named-inputs-PRO.md` l.269-291). `shell_fin_of_path_loc` is a copy of
+`shell_fin_of_path_loc` is a copy of
 `shell_fin_of_path` that differs only in that hypothesis and in that one application (ShellHde68.lean is not edited).
 
 Terminology: shells and cell distance (Duplantier-Sheffield); good annuli and the shell chain (Armstrong-Kuusi-Mourrat).
@@ -232,7 +232,7 @@ theorem shellHde68_full_pw {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : Mate
   filter_upwards [h1, htest hadm] with x ha hb
   exact ⟨fun k hk => ⟨ha.1 k hk, hb k hk⟩, ha.2⟩
 
-/-- **The sparsity-parameter form of `shellHde_pw68` (fp-S4S6c-s1, z1).** The guard `FullAdmAt` is taken at the
+/-- **The sparsity-parameter form of `shellHde_pw68`.** The guard `FullAdmAt` is taken at the
 exponent `s1` in place of `sparsityS1 γ`; the proof is that of `shellHde_pw68`, which uses `s1` only through `FullAdmAt`. -/
 theorem shellHde_pw68_s1 {γ : ℝ} (s1 : ℝ) {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     {ε ρ s₀ ζ r : ℝ} (hε : 0 < ε) (hs₀ : 0 < s₀) (hζ : 0 < ζ) (hζ1 : ζ < 1 / 2) (hr : 0 < r)

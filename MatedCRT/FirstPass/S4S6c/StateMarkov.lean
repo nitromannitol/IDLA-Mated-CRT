@@ -1,9 +1,9 @@
 import MatedCRT.Proofs.WalkPotential.MarkovFixedTime
 
 /-!
-# State-dependent Markov property at a fixed time (q2, task fp-S4S6c; LEMMA68 tests (23)-(27))
+# State-dependent Markov property at a fixed time
 
-The tests of LEMMA68 are events about the future of the walk whose law depends on the current state `x_n`: from the state
+The tests are events about the future of the walk whose law depends on the current state `x_n`: from the state
 `y`, the test event is `G y`. `srwLaw_markov_state` extends `srwLaw_markov` (fixed future set) to state-dependent future
 sets: `P^a(history ∈ F, future ∈ G(x_n)) = ∫_{history ∈ F} P^{x_n}(G(x_n)) dP^a`. The proof decomposes by the state
 `y = x_n` (a countable disjoint union over `y ∈ ℤ`) and applies `srwLaw_markov` to each fibre. It is the input that the

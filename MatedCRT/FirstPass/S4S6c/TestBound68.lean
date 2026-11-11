@@ -1,16 +1,16 @@
 import MatedCRT.FirstPass.S4S6c.Lemma3Walk
 
 /-!
-# The per-test bound `hc` of printed Lemma 6.8 from Lemma 3, equation (15) (q2, task fp-S4S6c)
+# The per-test bound `hc` of printed Lemma 6.8 from Lemma 3, equation (15)
 
-LEMMA68 per-test bound (notes/fp-gaps/CHATGPT-lemma68-open-parts.md, C4 and C15-C16): the walk started at `y`
+Per-test bound: the walk started at `y`
 stays in `A` until it exits the test window `W y` with probability at most `1 - q(r)`, where
 `q(r) = q0 / (1 + log(1/r))²`. The walk-level input is Lemma 3, equation (15) (`Eq15Walk.eq15_walk`), a lower
 bound on the probability that the walk visits the target `D0 \ Aset` before exiting `W y`. The target lies in
 `W y \ A`, so such a visit is a failure of `stayIn W A y`; the complement of the target event is therefore
 an upper bound for `stayIn`.
 
-The environment-level hypotheses are NOT proved here: the counting bounds `hS`, `hT` (write-up B3, C4), the
+The environment-level hypotheses are NOT proved here: the counting bounds `hS`, `hT` (C4), the
 Green lower bound `hG` (B4, the interior-ball Green bound), and the second moment `hmom` (B5, Lemma 1 potential
 bound with its logarithmic loss). The second-moment constant is `C0 (1 + log(1/r))`.
 
@@ -68,7 +68,7 @@ theorem stayIn_le_of_eq15 {m : ℤ → ℤ → ℕ} {y : ℤ} {W : ℤ → Set �
         prob_compl_eq_one_sub hmeas
     _ ≤ 1 - ENNReal.ofReal (1 / (16 * (2 * C ^ 2 * C1 ^ 2) * L ^ 2)) := tsub_le_tsub_left h15 1
 
-/-- **The printed per-test bound `hc` (LEMMA68 C15-C16), with the logarithmic loss.** With `q0 = 1 / (32 C0² C1² L²)`
+/-- **The printed per-test bound `hc`, with the logarithmic loss.** With `q0 = 1 / (32 C0² C1² L²)`
 the walk started at `y` stays in `A` until exiting `W y` with probability at most `1 - q0 / (1 + log(1/r))²`,
 given the second moment bound with constant `C0 (1 + log(1/r))`. This is the shape of the hypothesis `hc` of
 `TailBound68.printed68_tail_bound`. -/

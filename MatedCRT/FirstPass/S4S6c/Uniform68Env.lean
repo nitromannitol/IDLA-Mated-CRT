@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S4S6c.TraceInputs68
 import MatedCRT.Proofs.Infra.LocallyFinite
 
 /-!
-# Environment inputs of the walk-level Lemma 6.8 (q2, task fp-S4S6c-envscaling-6-7-6-8, file `Uniform68Env.lean`)
+# Environment inputs of the walk-level Lemma 6.8 (file `Uniform68Env.lean`)
 
 `Uniform68Walk.config_exit_lower_bound_walk` takes four environment inputs for the embedding `η` and the edge
 multiplicity `m` of the map `𝒢^ε`: properness of `η`, local finiteness of `m`, consecutive adjacency

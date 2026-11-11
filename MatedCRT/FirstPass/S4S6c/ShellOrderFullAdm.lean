@@ -8,7 +8,7 @@ import MatedCRT.FirstPass.S6r.Count
 import MatedCRT.FirstPass.S6r.Window
 
 /-!
-# The shell order `hShell` of `exitQ_core_step` from the full admissibility guard (fp-S4S6c-shell-order-fulladm)
+# The shell order `hShell` of `exitQ_core_step` from the full admissibility guard
 
 `exitQ_core_step` (S4S6c/ShellChainGlue68.lean) takes the shell order `hShell : ShellOrderAe ..` as a binder, for the
 parameters `s = dyadicD r ^ shortExp ζ`, `d = dyadicD r`, `R = Rf`, `n = shellCount r s - 1`. This file proves it almost
@@ -54,7 +54,7 @@ theorem dd_lt_mem_cellVertices_thickening {η : ℝ → ℂ} (hη : Continuous �
   rw [← ENNReal.ofReal_toReal hne]
   exact (ENNReal.ofReal_lt_ofReal_iff hr).2 hv
 
-/-- **The shell order from the full guard, almost surely (fp-S4S6c-shell-order-fulladm).** For the configuration
+/-- **The shell order from the full guard, almost surely.** For the configuration
 `i : Config68` at radius `r`, with the shell parameters `s = dyadicD r ^ shortExp ζ`, `d = dyadicD r`, `n = shellCount r s - 1`
 and the eligibility predicate `Elig` of the caller: for `S.P`-almost every environment `ω`, if the full guard
 `FullAdm S ρ s₀ γ ε ω r i` holds, then `ShellOrderAe` holds for the walk on `S.mult ε ω` from `i.a`, with the exact

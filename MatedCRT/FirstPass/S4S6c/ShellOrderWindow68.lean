@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S4S6c.ShellWindowRf68
 import MatedCRT.FirstPass.S4S6c.ShellHoneInst68
 
 /-!
-# The shell order and the core step at the window radius (q2, fp-S4S6c-hU-wiring)
+# The shell order and the core step at the window radius
 
 * `shellOrderAe_window`: the almost-sure shell order `ShellOrderAe` (ShellWire68) with the total window radius
   `windowRfT` (ShellWindowRf68.lean). It is `shellOrder_fullAdm_ae_omega` (ShellOrderOmega68.lean) with `Rf = windowRfT`
@@ -15,7 +15,7 @@ import MatedCRT.FirstPass.S4S6c.ShellHoneInst68
   supplied by `shellOrderAe_window` (no `hShell` binder); its one-test binder `hone` is the named input `ShellOneTestAt`
   (ShellHoneInst68.lean:39), assumed almost surely on the window event `E`.
 
-Named inputs kept (routed, not discharged here): `hmesh`, `hstart`, `htest` (the q3 testEnd finite-domain lemma), the
+Named inputs kept (routed, not discharged here): `hmesh`, `hstart`, `htest`, the
 one-test bound `hone`, and the mult facts `hmult`. Terminology: good annuli (Armstrong-Kuusi-Mourrat), shells and cell
 distance (Duplantier-Sheffield).
 -/

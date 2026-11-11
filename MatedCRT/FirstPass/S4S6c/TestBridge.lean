@@ -1,14 +1,14 @@
 import MatedCRT.Proofs.WalkPotential.MarkovFixedTime
 
 /-!
-# Bridge from the fixed-time Markov property to the test product (q2, task fp-S4S6c; LEMMA68 eqs (23)-(27))
+# Bridge from the fixed-time Markov property to the test product
 
 `srwLaw_markov` (Proofs/WalkPotential/MarkovFixedTime.lean) is the Markov property of simple random walk at a fixed time
 `n`: `P^a(history up to n ∈ F, future ∈ E) = ∫_{history ∈ F} P^{x_n}(E) dP^a`.
 `srwLaw_test_bound` turns it into the set-form conditional bound that `TestProduct.lean` takes as hypothesis: if the
 conditional probability of the future event `E` is at most `c` from every state `y ∈ Y` reached by the events `S`, then
 `P^a(S ∩ {future ∈ E}) ≤ c P^a(S)` for every `S` determined by the history up to `n` with `x_n ∈ Y` on `S`.
-It is the one-test step of the product bound at a fixed time. The tests of LEMMA68 start at random times (stopping times
+It is the one-test step of the product bound at a fixed time. The tests start at random times (stopping times
 `T_j`), which needs the hitting-time form (`IDLA/StrongMarkov.lean`, `lintegral_hitTime_eq`, for fixed sets only); that
 generalization is the open step N3a of the round report.
 -/

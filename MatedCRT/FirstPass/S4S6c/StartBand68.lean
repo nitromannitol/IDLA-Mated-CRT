@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4S6c.HcPrinted68
 import MatedCRT.FirstPass.S4S6c.BandInduction68
 
 /-!
-# Test starts lie in the sphere band (q2, task fp-S4S6c-envscaling-6-7-6-8; LEMMA68 C3, C11)
+# Test starts lie in the sphere band (C11)
 
 The trace argument of the printed Lemma 6.8 needs its test-start vertices `x_j = X_{T_j}` to satisfy two memberships:
 `x_j ∈ I(B_{4R_j/3}(z_j))` (the one-test bound `HcPrinted68.hc_band_var` applies there) and `x_j ∈ band` (the window

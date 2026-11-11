@@ -3,7 +3,7 @@ import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 import MatedCRT.Defs.Map
 
 /-!
-# Geometric inputs of the trace bound of the printed Lemma 6.8 (q2, task fp-S4S6c-envscaling-6-7-6-8; LEMMA68 C1, D)
+# Geometric inputs of the trace bound of the printed Lemma 6.8 (D)
 
 The hypotheses of `ConfigBound68.trace_half` about the cells `cell ε η k = η '' Icc (ε (k-1)) (ε k)`:
 
@@ -14,7 +14,7 @@ The hypotheses of `ConfigBound68.trace_half` about the cells `cell ε η k = η 
 * `cellVertices_finite_of_tendsto`: a bounded set meets finitely many cells when `η` is proper
   (`IsValid.ae_tendsto_cocompact`, proved; this replaces the frozen `FrozenProperEta`).
 
-Source of the geometry: LEMMA68 (cells are nonempty compact connected sets; adjacent cells intersect; `η(t) → ∞`).
+Geometric assumptions (cells are nonempty compact connected sets; adjacent cells intersect; `η(t) → ∞`).
 -/
 
 open MeasureTheory Set Filter Topology Metric

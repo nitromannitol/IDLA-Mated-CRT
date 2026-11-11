@@ -5,19 +5,19 @@ import MatedCRT.FirstPass.S4S6c.HoneExitGeom68
 import MatedCRT.FirstPass.S4S6c.ShellBallLoc68
 
 /-!
-# The shell order with the mesh localized to a ball (fp-S4S6c-shellorder-loc, z1)
+# The shell order with the mesh localized to a ball
 
 `shellOrder_fullAdm_ae_omega` (S4S6c/ShellOrderOmega68.lean:28) uses the global mesh bound `CellDiamLe ε (S.η ω) (dyadicD r / 100)
 Set.univ`. Here the same statement is given with the mesh localized to the ball `B(0, ρmesh)`, with the gap
-`dyadicD r / 100 ≤ ρmesh - ρ` (chat 252, notes/fp-gaps/CHATGPT-252-idla-z12-mesh-radius-PRO.md §3 and §6).
+`dyadicD r / 100 ≤ ρmesh - ρ` .
 
 The path-level inputs are discharged here:
-* the walk diameter bound is `PathMesh68.diam_upto_vExitTime` (q4, chat 252 §3), applied at each `ω` with the walk
+* the walk diameter bound is `PathMesh68.diam_upto_vExitTime`, applied at each `ω` with the walk
   adjacency `srwLaw_step_ae_adjacent`, the start `srwLaw_ae_start`, and the start cell from `hstart`;
-* the shell chain is `ShellPathLoc68.shell_ineqs_ae_meshBall` (z8, chat 252 §5–6).
-The one remaining named input is `hShellBall` (z12, chat 252 §4 and §2): the shell-centre balls `B(zc k, 2 R(zc k))`
+* the shell chain is `ShellPathLoc68.shell_ineqs_ae_meshBall`.
+The one remaining named input is `hShellBall`: the shell-centre balls `B(zc k, 2 R(zc k))`
 carry the cell-diameter bound `dyadicD r / 100`. It is not obtained from the ball mesh by inclusion under `hgap` alone
-(reports/z1.md).
+
 -/
 
 open MeasureTheory Set Filter
@@ -46,7 +46,7 @@ theorem shellOrder_fullAdm_ae_omega_loc {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
     (ρmesh : ℝ) (hgap : dyadicD r / 100 ≤ ρmesh - ρ)
     (hR : ∀ᵐ ω ∂S.P, ∀ w, Elig ω w → dyadicD r ≤ Rf ω w ∧ Rf ω w ≤ dyadicD r ^ shortExp ζ)
     (hmesh : ∀ᵐ ω ∂S.P, CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) ρmesh))
-    -- z12 (chat 252 §4, §2): the shell-centre balls carry the cell-diameter bound `dyadicD r / 100`; the centre is
+    -- The shell-centre balls carry the cell-diameter bound `dyadicD r / 100`; the centre is
     -- the hitting-time centre `gridRound (vertexPoint (x (hitTime …)))` consumed by `shell_ineqs_ae_meshBall`
     (hShellBall : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a), ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
@@ -58,7 +58,7 @@ theorem shellOrder_fullAdm_ae_omega_loc {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
     -- guarded by `FullAdm` (the start cell meets the frontier only for a full admissible configuration)
     (hstart : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty)
-    -- guarded by `FullAdm` (the z11 deviation: the unguarded form is not provable, reports/z11.md l.25-32)
+    -- guarded by `FullAdm` (l.25-32)
     (hde : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),
         (∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
@@ -158,10 +158,10 @@ theorem shellOrder_fullAdm_ae_omega_loc {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
   exact MatedCRT.Lemma68ShellPathLoc68.shell_ineqs_ae_meshBall hη hε hr hs hs4 hd le_rfl hds hΘ hRω hF0 hdiam
     hShellA hNs hstA (hmap ε hε) (hkill.and hdeA)
 
-/-- **The sparsity-parameter form of `shellOrder_fullAdm_ae_omega_loc` (fp-S4S6c-s1, z1).** The guard `FullAdmAt` is taken
+/-- **The sparsity-parameter form of `shellOrder_fullAdm_ae_omega_loc`.** The guard `FullAdmAt` is taken
 at the exponent `s1` in place of `sparsityS1 γ`; the proof uses `s1` only through `FullAdmAt` (it unfolds `FullAdmAt` and keeps
-`ConfigOK`), so no property of `s1` is assumed. The shell-centre bound `hShellBall` is the z12 producer (ShellBallLoc68), given
-under the deterministic gap `hgapShell` (a named binder, to be discharged at `ρmesh := rhoCell68 ρ` by z5). -/
+`ConfigOK`), so no property of `s1` is assumed. The shell-centre bound `hShellBall` is produced in ShellBallLoc68, given
+under the deterministic gap `hgapShell` (a named binder). -/
 theorem shellOrder_fullAdm_ae_omega_loc_s1 {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (s1 : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2)
     {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
     {ε ρ s₀ ζ r : ℝ} (hε : 0 < ε) (hs₀ : 0 < s₀) (hζ : 0 < ζ) (hζ1 : ζ < 1 / 2) (hr : 0 < r)
@@ -171,7 +171,7 @@ theorem shellOrder_fullAdm_ae_omega_loc_s1 {𝒮 : SpaceFillingSLEModel} {γ : �
     (hgapShell : 2 * (dyadicD r / 100) + 2 * dyadicD r ^ shortExp ζ ≤ ρmesh - ρ)
     (hR : ∀ᵐ ω ∂S.P, ∀ w, Elig ω w → dyadicD r ≤ Rf ω w ∧ Rf ω w ≤ dyadicD r ^ shortExp ζ)
     (hmesh : ∀ᵐ ω ∂S.P, CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) ρmesh))
-    -- z12 (chat 252 §4, §2): the shell-centre balls carry the cell-diameter bound `dyadicD r / 100`; the centre is
+    -- The shell-centre balls carry the cell-diameter bound `dyadicD r / 100`; the centre is
     -- the hitting-time centre `gridRound (vertexPoint (x (hitTime …)))` consumed by `shell_ineqs_ae_meshBall`
     (hShellBall : 2 * (dyadicD r / 100) + 2 * dyadicD r ^ shortExp ζ ≤ ρmesh - ρ → ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt (s1) S ρ s₀ γ ε ω r i →
       ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a), ∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
@@ -183,7 +183,7 @@ theorem shellOrder_fullAdm_ae_omega_loc_s1 {𝒮 : SpaceFillingSLEModel} {γ : �
     -- guarded by `FullAdm` (the start cell meets the frontier only for a full admissible configuration)
     (hstart : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt (s1) S ρ s₀ γ ε ω r i →
       (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty)
-    -- guarded by `FullAdm` (the z11 deviation: the unguarded form is not provable, reports/z11.md l.25-32)
+    -- guarded by `FullAdm` (l.25-32)
     (hde : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt (s1) S ρ s₀ γ ε ω r i →
       ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),
         (∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
@@ -325,7 +325,7 @@ theorem hShellBall_loc_s1 {γ ζ ρ s₀ ε r ρmesh : ℝ} (s1 : ℝ) {Ω : Typ
   exact hkey
 
 /-- **The shell order with the mesh localized to a ball and the shell-centre bound discharged, at a free `s1`.**
-`shellOrder_fullAdm_ae_omega_loc_s1` with the named input `hShellBall` (z12, chat 252 §4) replaced by
+`shellOrder_fullAdm_ae_omega_loc_s1` with the named input `hShellBall` replaced by
 `hShellBall_loc_s1`. Two changes against `_s1`, both forced by `hShellBall_loc_s1`:
 * `Elig` is specialised to `shortEligible ρ (dyadicD r) (shortExp ζ)`, the set that contains the hitting-time
   centres; the `Elig` clause of `hde` becomes the centre clause, and `hR` is stated on `shortEligible`;
@@ -342,7 +342,7 @@ theorem shellOrder_fullAdm_ae_omega_loc_hb_s1 {𝒮 : SpaceFillingSLEModel} {γ 
     -- guarded by `FullAdm` (the start cell meets the frontier only for a full admissible configuration)
     (hstart : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
       (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty)
-    -- guarded by `FullAdm` (the z11 deviation: the unguarded form is not provable, reports/z11.md l.25-32)
+    -- guarded by `FullAdm` (l.25-32)
     (hde : ∀ᵐ ω ∂S.P, Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
       ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),
         (∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,

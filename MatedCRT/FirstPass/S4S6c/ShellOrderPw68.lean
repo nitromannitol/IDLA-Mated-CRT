@@ -7,11 +7,11 @@ import MatedCRT.FirstPass.S4S6c.HoneRadii68
 import MatedCRT.FirstPass.S4S6c.HoneCellGood68
 
 /-!
-# The pointwise shell order with the window radius (fp-S4S6c-shellloc-pw, z1)
+# The pointwise shell order with the window radius
 
 The pointwise form, at a fixed environment `ω`, of the localized shell order `shellOrder_fullAdm_ae_omega_loc_hb_s1`
 (ShellOrderLoc68.lean), with the radius `windowRfT` (ShellWindowRf68.lean) and a free sparsity `s1`. Its conclusion
-is the input `hShellLoc` of `shellOne_at_of_goodEnv_loc_g`-type consumers (B1Assembly68.lean, goodEnv_loc_g, q4),
+is the input `hShellLoc` of `shellOne_at_of_goodEnv_loc_g`-type consumers (B1Assembly68.lean, goodEnv_loc_g),
 namely `hShellLoc_pw_g`. Chat 252 §2–§6, as in ShellOrderLoc68.
 
 Against the a.s. `_hb` form every `∀ᵐ ω` input is taken at the fixed `ω`:
@@ -113,8 +113,8 @@ theorem shellBall_pt {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ω :
 /-- **The pointwise shell order, for a general radius `Rf` and a free sparsity `s1`.** At a fixed environment `ω`:
 if the mesh `CellDiamLe` holds on `B(0, ρmesh)` and the full admissibility `FullAdmAt s1` holds at `ω`, then the
 four shell-order inequalities `ShellOrderAe` hold for the walk on `S.mult ε ω` from `i.a`. The walk diameter bound
-is `PathMesh68.diam_upto_vExitTime` (chat 252 §3); the shell chain is `ShellPathLoc68.shell_ineqs_ae_meshBall`
-(chat 252 §5–6); the shell-centre balls are `shellBall_pt`. -/
+is `PathMesh68.diam_upto_vExitTime`; the shell chain is `ShellPathLoc68.shell_ineqs_ae_meshBall`
+; the shell-centre balls are `shellBall_pt`. -/
 theorem shellOrder_pw {γ : ℝ} (s1 : ℝ) {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ω : Ω)
     {ε ρ s₀ ζ r : ℝ} (hε : 0 < ε) (hs₀ : 0 < s₀) (hζ : 0 < ζ) (hζ1 : ζ < 1 / 2) (hr : 0 < r)
     (hrz : r ≤ countThreshold ζ) (hrρ : r ≤ ρ / 4) (i : Lemma68Config.Config68) {Rf : ℂ → ℝ}
@@ -127,7 +127,7 @@ theorem shellOrder_pw {γ : ℝ} (s1 : ℝ) {Ω : Type} [MeasurableSpace Ω] (S 
     -- guarded by `FullAdm` (the start cell meets the frontier only for a full admissible configuration)
     (hstart : Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
       (cell ε (S.η ω) i.a ∩ frontier (Metric.thickening (r / 2) (fillCells ε (S.η ω) ↑i.Θ))).Nonempty)
-    -- guarded by `FullAdm` (the z11 deviation: the unguarded form is not provable, reports/z11.md l.25-32)
+    -- guarded by `FullAdm` (l.25-32)
     (hde : Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i →
       ∀ᵐ x ∂(srwLaw (S.mult ε ω) i.a),
         (∀ k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1,
@@ -228,9 +228,9 @@ theorem shellOrder_pw {γ : ℝ} (s1 : ℝ) {Ω : Type} [MeasurableSpace Ω] (S 
   exact MatedCRT.Lemma68ShellPathLoc68.shell_ineqs_ae_meshBall hη hε hr hs hs4 hd le_rfl hds hΘ hR hF0 hdiam
     hShellA hNs hstA hmap (hkill.and hdeA)
 
-/-- **The pointwise shell order with the window radius: the input `hShellLoc` of `goodEnv_loc_g`** (q4,
+/-- **The pointwise shell order with the window radius: the input `hShellLoc` of `goodEnv_loc_g`** (
 B1Assembly68.lean). At a fixed environment `ω`, with the radius `windowRfT S.μ ρ (shortExp ζ) c0W C (dyadicD r) ω`
-and a free sparsity `s1` (q4 takes `s1 := shellS1CG γ CG`): if `CellDiamLe` holds on `B(0, rhoCell68 ρ)` and
+and a free sparsity `s1`: if `CellDiamLe` holds on `B(0, rhoCell68 ρ)` and
 `FullAdmAt s1` holds at `ω`, then `ShellOrderAe` holds. The radius bound on `shortEligible` is
 `Lemma68HoneRadii.windowRfT_rangeShortEligible`; the deterministic gap is the named binder `hgap`. -/
 theorem hShellLoc_pw_g {γ : ℝ} (s1 : ℝ) {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ω : Ω)

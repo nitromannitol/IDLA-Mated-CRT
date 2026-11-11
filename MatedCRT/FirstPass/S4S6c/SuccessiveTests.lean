@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.RandomTimeTestBound
 
 /-!
-# Successive random tests: the product bound at random times (q2, task fp-S4S6c; LEMMA68 N3c)
+# Successive random tests: the product bound at random times
 
 The random-time analogue of `TestProduct.lean`. The `N`-th test starts at the random time `τ N` and is passed when the
 future event `G N (x (τ N))` occurs. Let `S N` be the event that the first `N` tests are all passed (`S 0 = univ`,
@@ -17,7 +17,7 @@ namespace MatedCRT
 
 open WalkPotential
 
-/-- **The first `N` successive random tests are all passed with probability at most `c^N`** (LEMMA68 N3c). -/
+/-- **The first `N` successive random tests are all passed with probability at most `c^N`**. -/
 theorem srwLaw_successive_tests_le_pow (m : ℤ → ℤ → ℕ) (a : ℤ) (τ : ℕ → (ℕ → ℤ) → ℕ∞)
     (G : ℕ → ℤ → Set (ℕ → ℤ)) (hG : ∀ N y, MeasurableSet (G N y))
     {Y : Set ℤ} {c : ℝ≥0∞} (hc : ∀ N, ∀ y ∈ Y, srwLaw m y (G N y) ≤ c)

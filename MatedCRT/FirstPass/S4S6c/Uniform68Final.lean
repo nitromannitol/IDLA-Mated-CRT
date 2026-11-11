@@ -4,13 +4,13 @@ import MatedCRT.FirstPass.S6e.Guard
 import MatedCRT.FirstPass.S4S6c.ExitNull68
 
 /-!
-# Lemma 6.8, uniform constant-order lower bound: the final assembly of the redesign (q2, S10 and final)
+# Lemma 6.8, uniform constant-order lower bound: the final assembly of the redesign (S10 and final)
 
 Target: `MatedCRT.UniformConstantOrderLowerBoundStmt` (FirstPass/S6d.lean:95), in the stronger quantifier order
-(`ω₀`, `s₁`, `s₂` chosen before `s₀`), as required for Lemma 6.9 (operator 04:34).
+(`ω₀`, `s₁`, `s₂` chosen before `s₀`), as required for Lemma 6.9.
 
-Route (operator 06:52; notes/fp-gaps/CHATGPT-idla-6-8-shells.md section 13; redesign S0-S10,
-notes/fp-gaps/CHATGPT-idla-6-8-redesign.md section 12):
+Route (section 13; redesign S0-S10,
+ section 12):
 the uniform statement follows from the guard input `Lemma68Uniform.GuardProbStmt` (S6e/Uniform.lean:132) by
 `Lemma68Uniform.uniform_of_guard`. The three non-guard inputs are discharged here by existing providers:
 * the curve escapes both ends almost surely: `Lemma68Guard.ae_escapes_of_valid` (S6e/Guard.lean:176);

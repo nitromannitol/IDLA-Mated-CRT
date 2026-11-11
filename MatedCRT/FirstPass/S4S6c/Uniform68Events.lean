@@ -4,14 +4,14 @@ import MatedCRT.FirstPass.S4S6c.AnnulusGeometry68
 import MatedCRT.FirstPass.S4S6c.OpenAnnulus68
 
 /-!
-# The local test `hloc` of the per-configuration Lemma 6.8, from the event inputs (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# The local test `hloc` of the per-configuration Lemma 6.8, from the event inputs
 
 `hloc_point` instantiates `HcGreen68.stayIn_le_printed_interior` at one start vertex `b` of the sphere band, with the
 disk radius `R` (`R = rad y` in `Uniform68.config_exit_lower_bound`). Its inputs are named by their event:
 
 * `hGreenLow`: the Green lower bound of Draft Lemma 2.16 (`GreenKernelLowerBoundStmt`) at the radius `r = R/8`;
 * `hdraft`: the second moment of Draft Lemma 2.18 (`ExitTimeUpperBoundStmt`, `N = 2`) for `D = B_{R/4}(η(b))`;
-* `hF`: the good-annulus bound (eq. (9) of LEMMA68; corrected event `E_R(z)` of the printed Lemma 6.4 family) on the
+* `hF`: the good-annulus bound(corrected event `E_R(z)` of the printed Lemma 6.4 family) on the
   annulus `A_{R,2R}(z)`, `z = ctr y`, with the mass `mr = μ(B_{c₀R}(η(b)))`;
 * `hmr_eq`, `hs`, `hsp`, `hdiam`: the mass, sparsity and cell-size inputs; `hDA`, `hEA`, `hint`, `hμA`: the geometry.
 

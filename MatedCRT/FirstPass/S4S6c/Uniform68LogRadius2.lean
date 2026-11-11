@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.Uniform68LogRadius
 
 /-!
-# The logarithmic relation with a dyadic loss (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# The logarithmic relation with a dyadic loss
 
 The walk radius `δ` of the uniform statement is the dyadic number below `(r · r^ζ)²` (`Uniform68Params.dyadicBelow_bounds`),
 so `(r · r^ζ)²/2 ≤ δ ≤ R` only, and the relation of `Uniform68LogRadius.logRadius_le_of_delta` loses a factor `2`:

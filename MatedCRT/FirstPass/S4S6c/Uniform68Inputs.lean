@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.OpenAnnulus68
 
 /-!
-# Finiteness and sparsity inputs of the local test `hloc` (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# Finiteness and sparsity inputs of the local test `hloc`
 
 * `ncard_inter_lt_of_ncard_lt`: the sparsity input `hsp` of `Uniform68Events.hloc_point`,
   `(A ∩ X).ncard < s₁ r^(2β)/ε`, follows from the configuration sparsity `(A).ncard < s₁ r^(2β)/ε` of the

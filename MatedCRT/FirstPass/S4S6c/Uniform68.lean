@@ -6,7 +6,7 @@ import MatedCRT.Defs.Map
 import MatedCRT.Defs.RandomWalk
 
 /-!
-# Lemma 6.8 for one configuration (q2, task fp-S4S6c-envscaling-6-7-6-8, file `Uniform68.lean`)
+# Lemma 6.8 for one configuration (file `Uniform68.lean`)
 
 Per-configuration form of `UniformConstantOrderLowerBoundStmt` (`FirstPass/S6d.lean:90`): for a fixed
 embedding `η`, a fixed edge multiplicity `m` and fixed `r, ρ, s, d, g, N` the bound
@@ -16,7 +16,7 @@ is `TraceBand68.trace_band` with the cell cover `H v := cell ε η v`, the fille
 
 The cell-level inputs of `trace_band` are discharged here from the cell lemmas of `TraceInputs68`
 (continuity of `η` gives boundedness and preconnectedness of the cells; `vertexPoint` lies in its cell).
-The remaining inputs are the probabilistic and cell-size inputs of LEMMA68 (hypotheses here, see the report).
+The remaining inputs are the probabilistic and cell-size inputs (hypotheses here).
 
 Terminology: harmonic-measure and Green-function language of Armitage-Gardiner; the walk is the simple
 random walk on the mated-CRT map (Duplantier-Sheffield, Berestycki-Powell, Gwynne-Miller annulus iteration).
@@ -41,7 +41,7 @@ theorem meetVerts_eq_cellVertices {ε : ℝ} {η : ℝ → ℂ} {U : Set ℂ} (h
   · rintro ⟨z, hzC, hzU⟩
     exact ⟨z, subset_closure hzC, hzU⟩
 
-/-- **Per-configuration lower bound (LEMMA68 Lemma 6.8, uniform form, one configuration).** `trace_band`
+/-- **Per-configuration lower bound (uniform form, one configuration).** `trace_band`
 specialized to the cells `cell ε η`, the filled set `fillCells ε η Θ` and the vertex points `vertexPoint ε η`. -/
 theorem config_exit_lower_bound
     {ε : ℝ} {η : ℝ → ℂ} {m : ℤ → ℤ → ℕ} {Θ S' : Set ℤ} {a : ℤ} {r ρ s d g s₀ : ℝ} {N : ℕ}

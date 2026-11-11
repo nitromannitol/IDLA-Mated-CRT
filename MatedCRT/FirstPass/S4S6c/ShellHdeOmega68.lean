@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.ShellHde68
 
 /-!
-# The shell hypothesis `hde` with an environment-dependent radius, almost surely (q2, fp-S4S6c-hU-wiring)
+# The shell hypothesis `hde` with an environment-dependent radius, almost surely
 
 `shellHde_ae68` and `shellHde68_full` (S4S6c/ShellHde68.lean:304, :367) take the radius `Rf : ℂ → ℝ` and the eligibility
 predicate `Elig : ℂ → Prop` as FIXED parameters. The window radius `windowRfT S.μ ρ a c₀ C d ω` (S4S6c/ShellWindowRf68.lean:56)
@@ -9,7 +9,7 @@ depends on the environment `ω`, so those two lemmas cannot be applied to it. Th
 `Rf ω` and `Elig ω` evaluated at the environment `ω`. They give the guarded binder `hde` of `shellOrder_fullAdm_ae_omega`
 (S4S6c/ShellOrderOmega68.lean). The proofs are the pointwise proofs of ShellHde68.lean (lines 305-362 and 364-374), with
 `Rf`, `Elig`, `hR`, `hElig` taken at `ω`; the environment facts used are the same almost-sure facts. ShellHde68.lean is not
-edited. The testEnd conjunct stays the named almost-sure input `htest` (the q3 finite-domain exit lemma, not yet committed).
+edited. The testEnd conjunct stays the named almost-sure input `htest` (not yet committed).
 
 Terminology: shells and cell distance (Duplantier-Sheffield); good annuli and the shell chain (Armstrong-Kuusi-Mourrat).
 -/

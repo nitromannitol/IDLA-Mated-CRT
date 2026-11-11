@@ -2,14 +2,14 @@ import MatedCRT.FirstPass.S4S6c.ShellHde68
 import MatedCRT.FirstPass.S6r.ShellPathAe
 
 /-!
-# Localized mesh copies of the shell path lemmas (chat 252 §5, §6; fp-S4S6c-shellpath-loc, z8)
+# Localized mesh copies of the shell path lemmas
 
 The shell path lemmas use a mesh bound on all cells, `CellDiamLe ε η h Set.univ`, but the crossing argument needs it
-only along the walk up to its killed exit time and on the shell balls (chat 252, `notes/fp-gaps/CHATGPT-252-idla-z12-mesh-radius-PRO.md`).
+only along the walk up to its killed exit time and on the shell balls.
 This file holds localized copies, with suffix `_meshBall`, of
-* `shell_fin_of_path` (`S4S6c/ShellHde68.lean:209`), with the pathwise bound `hdiam` (chat 252 §5);
+* `shell_fin_of_path` (`S4S6c/ShellHde68.lean:209`), with the pathwise bound `hdiam`;
 * `shell_ineqs_path` (`S6r/ShellPath.lean:136`) and `shell_ineqs_ae` (`S6r/ShellPathAe.lean:40`), with the pair
-  `hdiam` (pathwise, chat 252 §6) and `hmeshShell` (the per-shell-ball mesh consumed by `shell_chain_pathwise`).
+  `hdiam` (pathwise) and `hmeshShell` (the per-shell-ball mesh consumed by `shell_chain_pathwise`).
 
 The originals are unchanged. The copies differ from the originals only in the mesh hypotheses and in the sites where
 they are consumed; the proofs are otherwise the same. The almost-sure version takes `hdiam` and `hmeshShell` as
@@ -34,7 +34,7 @@ variable {ε : ℝ} {η : ℝ → ℂ}
 `T k = shellExit k`, `L k = testEnd k` on one path `x` with intersecting consecutive cells `hadj` and finite exits (`hfin`), the
 hitting shells found by `bad_path_crosses_all_shells`, and the shell chain `shell_chain_pathwise`.
 Named inputs: `hF0` (`F0 ⊇ {dd < r}`, B2), `hdiam` (mesh on the walk's cells up to its exit time) and `hmeshShell`
-(mesh on the shell balls), which replace the universal `hmesh` (chat 252 §6), `hstart`, `hfin`, `hzE` (eligibility). -/
+(mesh on the shell balls), which replace the universal `hmesh`, `hstart`, `hfin`, `hzE` (eligibility). -/
 theorem shell_ineqs_path_meshBall {Θ F0 : Finset ℤ} {r s d h : ℝ} {R : ℂ → ℝ} {Elig : ℂ → Prop} {n : ℕ} {x : ℕ → ℤ}
     (hη : Continuous η) (hε : 0 < ε) (hr : 0 < r) (hs : 0 < s) (hs4 : s ≤ r / 4000) (hd : 0 < d)
     (hh : h ≤ d / 100) (hds : d / 100 ≤ s / 100) (hΘne : Θ.Nonempty)
@@ -246,7 +246,7 @@ theorem shell_ineqs_ae_meshBall {ε : ℝ} {η : ℝ → ℂ} {Θ F0 : Finset �
 
 
 /-- **The shell hit, pathwise, with the pathwise mesh bound (deterministic).** Localized copy of `shell_fin_of_path`
-(ShellHde68.lean:209, chat 252 §5): the universal mesh `CellDiamLe ε η (d / 100) Set.univ` is replaced by `hdiam`;
+ (ShellHde68.lean:209): the universal mesh `CellDiamLe ε η (d / 100) Set.univ` is replaced by `hdiam`;
 the original is unchanged. For a path `x` whose consecutive cells meet, with the killed exit `τ = vExitTime
 (killed Θ F0 r) x` finite and the start cell meeting the frontier of the `r/2`-thickening, every shell index `k ≤ n` has
 `T_k = shellExit k x ≠ ⊤` and `z_k = shellCentre k x ∈ shortEligible ρ d s`. Here `s = d ^ a`. -/

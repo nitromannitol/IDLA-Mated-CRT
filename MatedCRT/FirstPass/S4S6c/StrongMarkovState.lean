@@ -1,15 +1,15 @@
 import MatedCRT.FirstPass.S4S6c.StateMarkov
 
 /-!
-# Strong Markov property at a random time with a state-dependent future event (q2, task fp-S4S6c; LEMMA68 N3a)
+# Strong Markov property at a random time with a state-dependent future event
 
 Let `τ` be a random time (values in `ℕ∞`) for the simple random walk, with the stopping property in the form that each
 event `S ∩ {τ = k}` is determined by the history up to time `k` (this is what `S ∈ F_τ` means for the events used by the
-tests of LEMMA68, eqs (23)-(27)). Then the probability that `S` occurs and the state-dependent future event `G(x_τ)` occurs
+tests). Then the probability that `S` occurs and the state-dependent future event `G(x_τ)` occurs
 after the finite random time `τ` is the sum over `k` of the fixed-time integrals:
 `P^a(S ∩ {τ < ∞, shift_τ ∈ G(x_τ)}) = ∑_k ∫_{S ∩ {τ = k}} P^{x_k}(G(x_k)) dP^a`.
 The proof decomposes `S ∩ {τ < ∞}` over the disjoint events `{τ = k}` and applies `srwLaw_markov_state` at each fixed time `k`.
-This is the one-step strong Markov property needed to iterate the tests of LEMMA68 at their random start times (N3a).
+This is the one-step strong Markov property needed to iterate the tests at their random start times (N3a).
 -/
 
 open MeasureTheory Set
@@ -42,7 +42,7 @@ theorem measurableSet_future_at_state (k : ℕ) {G : ℤ → Set (ℕ → ℤ)} 
     exact h1
   exact hstate.inter (walk_measurable_pathShift k (hG y))
 
-/-- **Strong Markov property at a random time with a state-dependent future event** (LEMMA68 N3a). -/
+/-- **Strong Markov property at a random time with a state-dependent future event**. -/
 theorem srwLaw_strong_markov_state (m : ℤ → ℤ → ℕ) (a : ℤ) (τ : (ℕ → ℤ) → ℕ∞)
     (G : ℤ → Set (ℕ → ℤ)) (hG : ∀ y, MeasurableSet (G y)) {S : Set (ℕ → ℤ)}
     (hS : ∀ k : ℕ, ∃ F : Set (Fin (k + 1) → ℤ), MeasurableSet F ∧

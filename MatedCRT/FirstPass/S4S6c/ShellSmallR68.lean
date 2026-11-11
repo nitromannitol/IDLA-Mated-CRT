@@ -4,14 +4,14 @@ import MatedCRT.FirstPass.S6r.Count
 import MatedCRT.FirstPass.S6e.Cutoff
 
 /-!
-# Deterministic small-radius binders of the CG shell composition (fp-S4S6c-small-r, z12)
+# Deterministic small-radius binders of the CG shell composition
 
 For fixed `0 < ρ < 1`, `0 < ζ < 1/2` and `0 < q0`, each deterministic binder of
 `shellOneTest_at_of_goodEnv_loc_g` (B1Assembly68.lean:1216) and of `hShellBall_loc_s1`
 (ShellBallLoc68.lean) that depends only on the radius `r` and the constants is satisfied for all
 radii below a positive threshold `r₀`. The binders are:
 
-* `hcutR : dyadicD r ^ shortExp ζ < rhoCell68 ρ - ρ` (goodEnv_loc_g; z11's `hcut`, B1EnvPw68),
+* `hcutR : dyadicD r ^ shortExp ζ < rhoCell68 ρ - ρ` (goodEnv_loc_g; B1EnvPw68),
 * `hgapShell : 2 * (dyadicD r / 100) + 2 * dyadicD r ^ shortExp ζ ≤ rhoCell68 ρ - ρ`
   (the antecedent of `hShellBall_loc_s1`, with `ρmesh := rhoCell68 ρ`),
 * `hrρ : r ≤ ρ / 4`, `hrz : r ≤ countThreshold ζ`, `_hRA : r ≤ rAmp q0 ζ`.

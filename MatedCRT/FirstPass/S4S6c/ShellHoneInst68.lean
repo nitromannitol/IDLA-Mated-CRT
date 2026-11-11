@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S4S6c.ShellChainGlue68
 import MatedCRT.FirstPass.S4S6c.ShellChainCore68
 
 /-!
-# The Lemma 6.8 one-test bound at the shell times, and the reduction of `ShellChainCoreStmt` (q2, fp-S4S6c-hU-chain)
+# The Lemma 6.8 one-test bound at the shell times, and the reduction of `ShellChainCoreStmt`
 
 * `ShellOneTestAt m a A η ε K τU r s d Rf n q`: the walk-centred one-test bound on the shells `k ≤ n`, i.e. the hypothesis
   `hone` of `exitQ_le_pow_shell_walk` (S4S6c/ShellWire68.lean:29). The test end of shell `k` is taken at the shell exit
@@ -13,7 +13,7 @@ import MatedCRT.FirstPass.S4S6c.ShellChainCore68
   shell stopping times. The binders `hT` and `hR` of the direct hone are discharged for shells (`isStoppingTime_shellExit`,
   `measurable_shellRadius_stopped`). Every other binder is kept as a named hypothesis with the exact type obtained by the
   substitution `T k := shellExit k`, `R k := Rf(shellCentre k)`.
-* `ShellOneTestOrderAeStmt 𝒮`: NAMED INPUT (the Q2 form, routed to the operator): the almost-sure, uniform-in-r pointwise
+* `ShellOneTestOrderAeStmt 𝒮`: NAMED INPUT (the Q2 form): the almost-sure, uniform-in-r pointwise
   statement of `ShellChainCoreStmt`, where for each good `(ω, r, i)` some radius configuration `Rf` gives the one-test
   bound and the shell order `ShellOrderAe` on the shells `k ≤ shellCount r s - 1`.
 * `shellChainCoreStmt_of_oneTestOrder`: `ShellChainCoreStmt 𝒮` from `ShellOneTestOrderAeStmt 𝒮`, through `exitQ_core_step`.
@@ -49,7 +49,7 @@ def ShellOneTestAt (m : ℤ → ℤ → ℕ) (a : ℤ) (A : Set ℤ) (η : ℝ �
 /-- **The one-test bound at the shell times, from the direct hone.** `hone_exitQ_walk_of_env_direct` at
 `T k = shellExit k` and `R k = Rf ∘ shellCentre k`. The stopping-time and measurability binders are discharged;
 the remaining binders are named with their exact substituted types (the source of each one is recorded in
-`HoneInputsDirect.lean` and in the operator's list of open inputs). -/
+`HoneInputsDirect.lean` and in the list of open inputs). -/
 theorem shellOneTest_of_direct {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ) (η : ℝ → ℂ) (hη : Continuous η)
     (hprop : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hε : 0 < ε) (hεc : ε ≤ 16 * K.c0)
     {μ : Measure ℂ} [IsFiniteMeasureOnCompacts μ] (hμNull : ∀ v : ℂ, μ {v} = 0)
@@ -151,7 +151,7 @@ theorem shellOneTest_of_direct {γ ρc : ℝ} (K : Constants68 γ ρc) (ε : ℝ
     (fun k => measurable_shellRadius_stopped ε η Kset r s d Rf k) hmom1 hmom2 hRr hL68 rmin hRmin hVolC hVolY hGreen
     hWalk hCountGood ζc hζc0 hζc1 hCellGood hεcell hfinE hsc hεα hεmass hb hx1 hmomS hgood hN hpos hdbl
 
-/-- **NAMED INPUT (Q2 form, routed to the operator): the almost-sure, uniform-in-r shell chain.** This is
+/-- **NAMED INPUT (Q2 form): the almost-sure, uniform-in-r shell chain.** This is
 `ShellChainCoreStmt 𝒮` (ShellChainCore68.lean) with its conclusion replaced by the two pointwise inputs of
 `exitQ_core_step`: the one-test bound `ShellOneTestAt` and the shell order `ShellOrderAe`, for some radius configuration
 `Rf` at each good `(ω, r, i)`. The uniformity in `r` inside the almost-sure quantifier is the open point Q2. -/
@@ -206,7 +206,7 @@ theorem shellChainCoreStmt_of_oneTestOrder {𝒮 : SpaceFillingSLEModel} (h : Sh
   exact Lemma68ChainGlue.exitQ_core_step S ε ω ζ q0 r Rf i hζ0 hζ1 hq0 hq1 hr0 hr1' (hr2.trans hRA) hone hsh
     (hmult ε hε).1 (hmult ε hε).2
 
-/-- **`hrle` is derived, not a new input (q2, fp-S4S6c-core-side-hyps, item (c)).** For `0 < q₀ ≤ 1`, `0 < ζ < 1/2` and
+/-- **`hrle` is derived, not a new input.** For `0 < q₀ ≤ 1`, `0 < ζ < 1/2` and
 `r ≤ R ≤ rAmp q₀ ζ`, the radius lies under the count threshold: `r ≤ countThreshold ζ`, by
 `Lemma68ChainGlue.rAmp_le_countThreshold` (ShellChainGlue68.lean:53). The output `q₀ ≤ (1/4)²/(4 shellChone68 CE C) ≤ 1` of
 `ShellOneTestOrderAeStmt` gives `q₀ ≤ 1`, so `ShellOneTestOrderAeStmt` needs no extra antecedent for it. -/
@@ -214,7 +214,7 @@ theorem radius_le_countThreshold_of_oneTest {q0 ζ R r : ℝ} (hq0 : 0 < q0) (hq
     (hζ1 : ζ < 1 / 2) (hRA : R ≤ Lemma68Cutoff.rAmp q0 ζ) (hr : r ≤ R) : r ≤ countThreshold ζ :=
   hr.trans (hRA.trans (Lemma68ChainGlue.rAmp_le_countThreshold hq0 hq1 hζ0 hζ1))
 
-/-- **The leaf constants at the B1 parameters (q2, fp-S4S6c-core-side-hyps, item (d)).** `K = shellK68 γ ρ ω₀ ζ` has
+/-- **The leaf constants at the B1 parameters.** `K = shellK68 γ ρ ω₀ ζ` has
 `K.s1 = sparsityS1 γ` (the coefficient of `FullAdmAt`), `K.βm = chosenBetaMinus γ = (2+γ)²/2+1`, `K.c0 = shellC068 = exp(-2)/32`
 and `K.ω = ω₀`. All four are definitional, so `K` is determined by the binders of `ShellOneTestOrderAeStmt`. -/
 theorem shellK68_params (γ ρ ω₀ ζ : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (hρ0 : 0 < ρ) (hρ1 : ρ < 1)
@@ -225,9 +225,9 @@ theorem shellK68_params (γ ρ ω₀ ζ : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2) (
     (Lemma68ShellConstants.shellK68 γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1).ω = ω₀ :=
   ⟨rfl, rfl, rfl, rfl⟩
 
-/-- **`ShellOneTestOrderAeStmt` with the Eps antecedents (q2, fp-S4S6c-eps-chain).** The body of `ShellOneTestOrderAeStmt`, plus
+/-- **`ShellOneTestOrderAeStmt` with the Eps antecedents.** The body of `ShellOneTestOrderAeStmt`, plus
 `2 ω₀ β⁻ < α` and `2 ω₀ < 2/(2+γ)² - ζ` next to the `ω₀` hypotheses; `ε ≤ shellEps0 γ α ω₀` in the ε-clause; and the radius
-cutoff `∀ r, 0 < r → r ≤ R → (dyadicD r)^{shortExp ζ} < rhoCell68 ρ - ρ` next to `R ≤ rAmp q0 ζ` (the cutoff of q1's hRcell).
+cutoff `∀ r, 0 < r → r ≤ R → (dyadicD r)^{shortExp ζ} < rhoCell68 ρ - ρ` next to `R ≤ rAmp q0 ζ`.
 The leaf binder `hωκ : K.ω ≤ 2/(2+γ)² - ζc` (HoneLeafAe68.lean:201) is `ω₀ ≤ 2/(2+γ)² - ζ` with `K.ω = ω₀`, `ζc = ζ`,
 which is the existing `ω₀ < 2/(2+γ)² - ζ`. -/
 def ShellOneTestOrderAeEpsStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -259,7 +259,7 @@ def ShellOneTestOrderAeEpsStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
               Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf
                 (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a
 
-/-- **`ShellOneTestOrderAeEpsStmt` at the Green constant `CG` (q2, fp-S4S6c-cg-param).** The body of
+/-- **`ShellOneTestOrderAeEpsStmt` at the Green constant `CG`.** The body of
 `ShellOneTestOrderAeEpsStmt` with the ball ratio `c₀(CG) = shellC0 CG` (the window constant of `WindowPrevAt` and
 `badWindowOf`), the threshold `shellEps0ZCG γ α ω₀ ζ CG` and the sparsity `shellS1CG γ CG`. The leaf constant of this
 statement is `shellKCG` (`K.C = CG`, `K.c0 = c₀(CG)`, `K.s1 = shellS1CG γ CG`). -/
@@ -292,7 +292,7 @@ def ShellOneTestOrderAeCGStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
               Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf
                 (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a
 
-/-- **Old implies Eps (q2, fp-S4S6c-eps-chain).** `ShellOneTestOrderAeStmt` specialises to `ShellOneTestOrderAeEpsStmt`: the
+/-- **Old implies Eps.** `ShellOneTestOrderAeStmt` specialises to `ShellOneTestOrderAeEpsStmt`: the
 Eps antecedents are ignored, and the ε-clause is used for `ε ≤ shellEps0`. -/
 theorem shellOneTestOrderAeEpsStmt_of_old {𝒮 : SpaceFillingSLEModel} (h : ShellOneTestOrderAeStmt 𝒮) :
     ShellOneTestOrderAeEpsStmt 𝒮 := by
@@ -303,7 +303,7 @@ theorem shellOneTestOrderAeEpsStmt_of_old {𝒮 : SpaceFillingSLEModel} (h : She
   intro R hR0 hRρ hRA _ s₀ hs₀ hs₁ Ω _ S hS hGp hCp hEp Ew hEwm hEwp hav ε hε _
   exact hcl R hR0 hRρ hRA s₀ hs₀ hs₁ Ω S hS hGp hCp hEp Ew hEwm hEwp hav ε hε
 
-/-- **`ShellChainCoreEpsStmt` from the Eps pointwise shell inputs (q2, fp-S4S6c-eps-chain).** Copy of
+/-- **`ShellChainCoreEpsStmt` from the Eps pointwise shell inputs.** Copy of
 `shellChainCoreStmt_of_oneTestOrder` through `exitQ_core_step`, with the Eps antecedents and the radius cutoff passed on. -/
 theorem shellChainCoreEpsStmt_of_oneTestOrderEps {𝒮 : SpaceFillingSLEModel} (h : ShellOneTestOrderAeEpsStmt 𝒮) :
     ShellChainCoreEpsStmt 𝒮 := by
@@ -326,7 +326,7 @@ theorem shellChainCoreEpsStmt_of_oneTestOrderEps {𝒮 : SpaceFillingSLEModel} (
   exact Lemma68ChainGlue.exitQ_core_step S ε ω ζ q0 r Rf i hζ0 hζ1 hq0 hq1 hr0 hr1' (hr2.trans hRA) hone hsh
     (hmult ε hε).1 (hmult ε hε).2
 
-/-- **`ShellChainCoreCGStmt` from the CG Eps one-test order input (q2, fp-S4S6c-cg-param).** Copy of
+/-- **`ShellChainCoreCGStmt` from the CG Eps one-test order input.** Copy of
 `shellChainCoreEpsStmt_of_oneTestOrderEps` at `c₀(CG)`: the same proof, with the CG statements. -/
 theorem shellChainCoreCGStmt_of_oneTestOrderCG {𝒮 : SpaceFillingSLEModel} (h : ShellOneTestOrderAeCGStmt 𝒮) :
     ShellChainCoreCGStmt 𝒮 := by
@@ -349,10 +349,10 @@ theorem shellChainCoreCGStmt_of_oneTestOrderCG {𝒮 : SpaceFillingSLEModel} (h 
   exact Lemma68ChainGlue.exitQ_core_step S ε ω ζ q0 r Rf i hζ0 hζ1 hq0 hq1 hr0 hr1' (hr2.trans hRA) hone hsh
     (hmult ε hε).1 (hmult ε hε).2
 
-/-- **`ShellOneTestOrderAeCGStmt` with the mesh-radius cell event (q2, fp-S4S6c-meshEventR; chat 252 §1).** The body of
+/-- **`ShellOneTestOrderAeCGStmt` with the mesh-radius cell event.** The body of
 `ShellOneTestOrderAeCGStmt`, with the cell-size hypothesis at the mesh radius `(1 + ρ)/2` (`rhoCell68 ρ`) and the almost sure
 mesh clause on `meshEventR` (cell component at `(1 + ρ)/2`; Green and exit components at `ρ`). The leaf constant is
-`shellKCG` as in `ShellOneTestOrderAeCGStmt`; its producer is open (q4 leaf, z5). -/
+`shellKCG` as in `ShellOneTestOrderAeCGStmt`; its producer is open. -/
 def ShellOneTestOrderAeCGRStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ω₀ α ζ ρ CG CE : ℝ,
     0 < ω₀ → ω₀ < α → 0 < α → ω₀ < 2 / (2 + γ) ^ 2 - ζ → 2 * ω₀ * chosenBetaMinus γ < α →
@@ -382,7 +382,7 @@ def ShellOneTestOrderAeCGRStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
               Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf
                 (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a
 
-/-- **`ShellChainCoreCGRStmt` from the CG mesh-radius one-test order input (q2, fp-S4S6c-meshEventR).** Copy of
+/-- **`ShellChainCoreCGRStmt` from the CG mesh-radius one-test order input.** Copy of
 `shellChainCoreCGStmt_of_oneTestOrderCG` with `ShellOneTestOrderAeCGRStmt` (cell at `(1+ρ)/2`, mesh clause `meshEventR`). -/
 theorem shellChainCoreCGRStmt_of_oneTestOrderCGR {𝒮 : SpaceFillingSLEModel} (h : ShellOneTestOrderAeCGRStmt 𝒮) :
     ShellChainCoreCGRStmt 𝒮 := by
@@ -405,7 +405,7 @@ theorem shellChainCoreCGRStmt_of_oneTestOrderCGR {𝒮 : SpaceFillingSLEModel} (
   exact Lemma68ChainGlue.exitQ_core_step S ε ω ζ q0 r Rf i hζ0 hζ1 hq0 hq1 hr0 hr1' (hr2.trans hRA) hone hsh
     (hmult ε hε).1 (hmult ε hε).2
 
-/-- **The one-test order input with the counting component (q2, fp-S4S6c-goodevents-cgr).** As
+/-- **The one-test order input with the counting component.** As
 `ShellOneTestOrderAeCGRStmt`, with the counting exponent `β > 0`, the counting hypothesis
 `PolyHighProb (countingGoodEvent S α β ρ)` at the exit exponent `α` (named input `CountingAtExitAlphaStmt`, Guard68S10), and
 the almost sure clause on `countingMeshEventR` (Green component `countingMeshEventR_green`, counting component
@@ -442,7 +442,7 @@ def ShellOneTestOrderAeCGRCStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
               Lemma68ShellOrder.ShellOrderAe ε (S.η ω) i.Θ i.F0 r (dyadicD r ^ shortExp ζ) (dyadicD r) Rf
                 (shellCount r (dyadicD r ^ shortExp ζ) - 1) (S.mult ε ω) i.a
 
-/-- **`ShellChainCoreCGRCStmt` from the counting one-test order input (q2, fp-S4S6c-goodevents-cgr).** Copy of
+/-- **`ShellChainCoreCGRCStmt` from the counting one-test order input.** Copy of
 `shellChainCoreCGRStmt_of_oneTestOrderCGR` with `ShellOneTestOrderAeCGRCStmt` (counting exponent `β`, counting hypothesis,
 mesh clause `countingMeshEventR`). -/
 theorem shellChainCoreCGRCStmt_of_oneTestOrderCGRC {𝒮 : SpaceFillingSLEModel} (h : ShellOneTestOrderAeCGRCStmt 𝒮) :

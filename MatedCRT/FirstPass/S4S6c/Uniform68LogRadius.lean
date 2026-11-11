@@ -1,13 +1,13 @@
 import MatedCRT.FirstPass.S4S6c.Uniform68Radius
 
 /-!
-# The logarithmic parameter relation `hLR` of the local test (q2, task fp-S4S6c-envscaling-6-7-6-8)
+# The logarithmic parameter relation `hLR` of the local test
 
 With the test radius `R` and the walk scale `r` satisfying `δ(r) := (r · r^ζ)² ≤ R` (the lower bound of the selected
 radius, `Uniform68Radius.radiusAt_good` and `Uniform68Params.trace_numerics`), the logarithmic relation of
 `Uniform68Events.hloc_point`, `1 + log(1/R) ≤ K_L (1 + log(1/r))`, holds with `K_L = 2 + 2ζ`.
 
-Terminology: Lemma 6.8 scale bookkeeping (LEMMA68 eq (23)); Armitage-Gardiner logarithmic potential.
+Terminology: Lemma 6.8 scale bookkeeping; Armitage-Gardiner logarithmic potential.
 -/
 
 open Real

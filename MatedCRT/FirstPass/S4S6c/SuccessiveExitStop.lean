@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4S6c.NextExitStop
 import MatedCRT.FirstPass.S4S6c.SuccessiveTests
 
 /-!
-# Stopping property of successive exit-time tests (q2, task fp-S4S6c; LEMMA68 N3c, hstop)
+# Stopping property of successive exit-time tests (hstop)
 
 `srwLaw_successive_tests_le_pow` needs, for every `N` and `k`, the shape `S N ∩ {τ N = k} = {pathHist k ∈ F}`.
 Here the `N`-th test starts at the random time `τ N`, the tests are successive exit times
@@ -159,7 +159,7 @@ theorem successive_stop_inv (W : ℤ → Set ℤ) (Aof : ℤ → Set ℤ) (τ : 
         fun h => ⟨fwdS j y x hxy.symm h.1 h.2, fwdT j y x hxy.symm h.2⟩⟩⟩
 
 /-- **The stopping property of the successive exit-time tests** (the `hstop` hypothesis of
-`srwLaw_successive_tests_le_pow`, LEMMA68 N3c). -/
+`srwLaw_successive_tests_le_pow`). -/
 theorem successive_stop_fin (W : ℤ → Set ℤ) (Aof : ℤ → Set ℤ) (τ : ℕ → (ℕ → ℤ) → ℕ∞) (S : ℕ → Set (ℕ → ℤ))
     (hτ0 : ∀ x, τ 0 x = 0)
     (hτsucc : ∀ N x (i : ℕ), τ N x = (i : ℕ∞) →
@@ -178,7 +178,7 @@ theorem successive_stop_fin (W : ℤ → Set ℤ) (Aof : ℤ → Set ℤ) (τ : 
   have hx := Set.ext_iff.1 hEq x
   simpa only [Set.mem_inter_iff, Set.mem_ofPred_eq] using hx
 
-/-- **The first `N` successive exit-time tests are all passed with probability at most `c ^ N`** (LEMMA68 N3c with the
+/-- **The first `N` successive exit-time tests are all passed with probability at most `c ^ N`** (with the
 concrete stopping property above). The hypotheses `hc` (one-test bound from every state in `Y`) and `hSY` (the state at
 the start of each test lies in `Y` on the event that the previous tests are passed) are the remaining inputs. -/
 theorem srwLaw_successive_exit_le_pow_Of (m : ℤ → ℤ → ℕ) (a : ℤ) (W : ℤ → Set ℤ) (Aof : ℤ → Set ℤ)

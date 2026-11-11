@@ -2,10 +2,10 @@ import MatedCRT.FirstPass.S4S6c.TailBound68
 import MatedCRT.FirstPass.S4S6c.WindowStop68
 
 /-!
-# The tail bound of the printed Lemma 6.8 with a centre gate (q2, task fp-S4S6c; LEMMA68 C3, D1-D2)
+# The tail bound of the printed Lemma 6.8 with a centre gate (D1-D2)
 
 `TailBound68.printed68_tail_bound` needs the availability `x k ∈ Y` on every state of `S N`, including walks that are
-not legal trajectories, where the geometry of LEMMA68 gives no information. Here the gate is built into the test region:
+not legal trajectories, where the geometry gives no information. Here the gate is built into the test region:
 `Wt y` and `Aof y` are the window and the region of the test at `y`, and the one-test bound is required for every centre
 `y`, so a non-available centre is given the empty test (`Aof y = ∅`, `Wt y = univ`, see `unavailable_test_empty`). The
 geometric inputs are needed only on `Good` (the legal trajectories of quenched probability one): finiteness of the test

@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.S4S6c.SuccessiveExitStop
 import MatedCRT.FirstPass.S4S6c.AmplCutoff
 
 /-!
-# The tail bound of the printed Lemma 6.8 from the test-level inputs (q2, task fp-S4S6c; LEMMA68 C15-C17, D1-D2)
+# The tail bound of the printed Lemma 6.8 from the test-level inputs (D1-D2)
 
-The write-up of LEMMA68 (notes/fp-gaps/CHATGPT-lemma68-open-parts.md, sections C4, C15-C17 and D1) bounds the
+The argument bounds the
 probability that the walk stays in `A` during every local test window `[T_j, T_{j+1})` by `(1 - q(r))^N`, with
 `q(r) = q₀ / (1 + log (1/r))²` (C16) and `N = ⌊r / (100 s)⌋ ≥ r^(-ζ) / 200` (D1), `ζ = p/2 - 1 ∈ (0, 1/2)`.
 This file proves the arithmetic and the event inclusion around that chain. The NEW inputs are *named hypotheses*:
@@ -28,13 +28,13 @@ open WalkPotential
 
 namespace TailBound68
 
-/-- `x / 2 ≤ ⌊x⌋` for `x ≥ 2` (LEMMA68 D1, `⌊x⌋ ≥ x/2`). -/
+/-- `x / 2 ≤ ⌊x⌋` for `x ≥ 2` (`⌊x⌋ ≥ x/2`). -/
 theorem floor_half_le {x : ℝ} (hx : 2 ≤ x) : x / 2 ≤ (⌊x⌋₊ : ℝ) := by
   have h1 := Nat.lt_floor_add_one x
   linarith
 
 /-- The number of tests `N = ⌊r / (100 s)⌋` is at least `r^(-ζ) / 200` with `ζ = p/2 - 1`, when `s ≤ r^(p/2)` and
-`r^(-ζ) ≥ 200` (LEMMA68 D1). -/
+`r^(-ζ) ≥ 200`. -/
 theorem count_ge_of_scale {r s p : ℝ} (hr : 0 < r) (hs : 0 < s) (hsr : s ≤ r ^ (p / 2))
     (hbig : 200 ≤ r ^ (-(p / 2 - 1))) :
     r ^ (-(p / 2 - 1)) / 200 ≤ (⌊r / (100 * s)⌋₊ : ℝ) := by
@@ -47,7 +47,7 @@ theorem count_ge_of_scale {r s p : ℝ} (hr : 0 < r) (hs : 0 < s) (hsr : s ≤ r
   have h := floor_half_le hx2
   linarith
 
-/-- `(1 - q)^N ≤ exp (-(q N))` for `0 ≤ q ≤ 1` (LEMMA68 C17). -/
+/-- `(1 - q)^N ≤ exp (-(q N))` for `0 ≤ q ≤ 1`. -/
 theorem one_sub_pow_le_exp_neg {q : ℝ} (hq1 : q ≤ 1) (N : ℕ) :
     (1 - q) ^ N ≤ Real.exp (-(q * N)) := by
   have h0 : 0 ≤ 1 - q := by linarith
@@ -60,7 +60,7 @@ theorem one_sub_pow_le_exp_neg {q : ℝ} (hq1 : q ≤ 1) (N : ℕ) :
       ring
 
 /-- The `N`-test tail with per-test probability `q₀ / (1 + log (1/r))²` is at most the cutoff exponential
-`exp (-((q₀/200) r^(-ζ) / (1 + log (1/r))²))` when `N ≥ r^(-ζ)/200` (LEMMA68 D1). -/
+`exp (-((q₀/200) r^(-ζ) / (1 + log (1/r))²))` when `N ≥ r^(-ζ)/200`. -/
 theorem exp_tail_le_cutoff {q0 ζ r : ℝ} (hq0 : 0 < q0) (hr : 0 < r) (hr1 : r ≤ 1) (N : ℕ)
     (hN : r ^ (-ζ) / 200 ≤ N) :
     Real.exp (-(q0 / (1 + Real.log (1 / r)) ^ 2 * N)) ≤
@@ -76,7 +76,7 @@ theorem exp_tail_le_cutoff {q0 ζ r : ℝ} (hq0 : 0 < q0) (hr : 0 < r) (hr1 : r 
       _ ≤ q0 / (1 + Real.log (1 / r)) ^ 2 * N := mul_le_mul_of_nonneg_left hN hqN
   linarith
 
-/-- **The tail bound of the printed Lemma 6.8** (LEMMA68 C15-C17, D1-D2): the walk started at `a` stays in `A` until
+/-- **The tail bound of the printed Lemma 6.8** (D1-D2): the walk started at `a` stays in `A` until
 it exits `U` with probability at most `1/2`, given the named test-level inputs `hc`, `hSY`, `hwin`, and the good event
 `Good` of quenched probability one. -/
 theorem printed68_tail_bound (m : ℤ → ℤ → ℕ) (a : ℤ) (W : ℤ → Set ℤ) (A U : Set ℤ)

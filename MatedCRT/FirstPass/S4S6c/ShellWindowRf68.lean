@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S4S6c.ShellChain68
 
 /-!
-# The window radius choice `Rf` of the shell chain (q2, fp-S4S6c-hU-chain; the `Rf` of `ShellOneTestOrderAeStmt`)
+# The window radius choice `Rf` of the shell chain (the `Rf` of `ShellOneTestOrderAeStmt`)
 
 If the window event does not occur at scale `d` (`ω ∉ badWindowOf μ ρ a c₀ C d`, ShellChain68.lean:33), every eligible
 centre `z ∈ shortEligible ρ d a` (S6r/ShortWindow.lean:54) has a good seven-adic radius `r ∈ shortWindowRadii d a`

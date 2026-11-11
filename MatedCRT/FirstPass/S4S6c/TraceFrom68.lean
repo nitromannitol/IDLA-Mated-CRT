@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S4S6c.SuccessiveExitStop
 import MatedCRT.Proofs.WalkPotential.GreenFirstStep
 
 /-!
-# Lemma 6.7 from Lemma 6.8 at the level of walk laws (q2, task fp-S4S6c; LEMMA68 6.7 proof)
+# Lemma 6.7 from Lemma 6.8 at the level of walk laws
 
 The printed proof of Lemma 6.7 (paper lemma:constant-order-lower-bound, the proof "assuming Lemma
 lemma:constant-order-lower-bound-div") runs as follows. The walk from `a ∈ cl Θ` reaches the frontier
@@ -25,7 +25,7 @@ open WalkPotential
 
 namespace TraceFrom68
 
-/-- The trace event: the walk visits `B` at a time before its exit from `V` (LEMMA68 6.7 event). -/
+/-- The trace event: the walk visits `B` at a time before its exit from `V`. -/
 abbrev traceSet (V B : Set ℤ) : Set (ℕ → ℤ) :=
   {x | ∃ n : ℕ, (n : ℕ∞) < vExitTime V x ∧ x n ∈ B}
 

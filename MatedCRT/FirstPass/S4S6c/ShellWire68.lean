@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S4S6c.ShellIdent68
 import MatedCRT.FirstPass.S4S6c.HoneWalk
 
 /-!
-# Wiring of the Lemma 6.8 shell exit bound (q2, fp-S4S6c-6-8-identification)
+# Wiring of the Lemma 6.8 shell exit bound
 
 * `exitQ_le_pow_shell_walk`: `exitQ_le_pow_shell` (S6r/ShellExitFinal) with its one-test hypothesis `hone` written in the
   walk-centred form `testEndExit (shellWalkParam k) (shellExit k)`, which is the conclusion of `hone_exitQ_walk`

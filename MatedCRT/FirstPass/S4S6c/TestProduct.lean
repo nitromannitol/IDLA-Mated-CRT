@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-# Successive tests: the product bound behind the amplification of Lemma 6.8 (q2, task fp-S4S6c; LEMMA68 eqs (23)-(27))
+# Successive tests: the product bound behind the amplification of Lemma 6.8
 
 Abstract probability. Let `G n` be the event that the `n`-th test is passed, with `G n ∈ ℱ (n+1)` for a filtration `ℱ`.
 If the conditional probability of passing test `n`, given the history `ℱ n`, is at most `c`, in set form
