@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S5c.Core
 
 /-!
-# FIRST PASS, Lemma 5.3 and E-c1-5: the exterior mass of the filled cluster tends to zero (B2 outcome, deterministic)
+# FIRST PASS, Lemma 5.3: the exterior mass of the filled cluster tends to zero (B2 outcome, deterministic)
 
 On a fixed outcome (CHATGPT-5-1-B2-Ec15.md §1, the step `M_k := μ_h(U_{ε_k} \ Λ_t) → 0`): let `L = Λ_t` be open and bounded
 with `μ L = t` and `U_k` the filled discrete clusters with `μ(U_k) ≤ t` (eq. (7)). If every compact core `K_δ` of `L`

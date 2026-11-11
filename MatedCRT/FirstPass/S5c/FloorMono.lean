@@ -5,8 +5,7 @@ import MatedCRT.FirstPass.S5c.Scaling
 
 For `0 < s ≤ u`, `leastSupersolution_le_scaled` gives `w_s ≤ (s/u) w_u`, i.e. `w_s/s ≤ w_u/u`. So along the scales
 `s_n = t (1/2)^n`, which decrease in `n`, the floor term `w_t + t(-w_{s_n}/s_n)` of Floor.lean is nondecreasing in `n`.
-This is the monotonicity that a Dini-type argument needs to make the floor index uniform on compact sets (B1c of
-reports/q3.md). Pure algebra on top of Scaling.lean; no new mathematics.
+This is the monotonicity that a Dini-type argument needs to make the floor index uniform on compact sets. Pure algebra on top of Scaling.lean; no new mathematics.
 -/
 
 namespace MatedCRT.S5c

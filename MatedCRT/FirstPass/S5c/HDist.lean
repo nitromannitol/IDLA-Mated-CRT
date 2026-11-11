@@ -8,7 +8,7 @@ import MatedCRT.Proofs.Infra.MatingOfTrees
 
 Proves the per-vertex distance event of `SuccessEvent.lean`, in the conditional form
 `{ω | a ∈ Λ ω → δ < infDist (vertexPoint ε (η ω) a) (frontier (fillCells ε (η ω) (Λ ω)))}`, where
-`Λ ω = matedDiscreteCluster (mult ε ω) ε (η ω) ρ t`. Route: CHATGPT-5-3-remaining.md §7 and its referee §5.4.
+`Λ ω = matedDiscreteCluster (mult ε ω) ε (η ω) ρ t`.
 
 * Almost surely `η` is continuous and proper (`ae_continuous_eta_of`, `IsValid.ae_tendsto_cocompact`), so the
   cluster is finite (`cellVertices_finite_of_isCompact`) and `fillCells ε η Λ` is compact.

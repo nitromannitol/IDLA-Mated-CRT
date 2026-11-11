@@ -1,12 +1,12 @@
 import MatedCRT.External.SLE
 
 /-!
-# FIRST PASS, Lemma 5.3 and E-c1-5: mesh scaling along a sequence (B2 plumbing)
+# FIRST PASS, Lemma 5.3: mesh scaling along a sequence (B2 plumbing)
 
 From the external input `MepsScalingInput` (External/SLE.lean:63; the median of the embedded exit time satisfies
 `C⁻¹ ε⁻¹ ≤ m_ε ≤ C ε⁻¹` for small `ε`), along any sequence of positive meshes `ε_k → 0` we get eventually
 `0 < m_{ε_k}` and `1 ≤ m_{ε_k} ε_k C`. These are the hypotheses `hmε` and `hCmε` of `surplus_bound_of_threshold`
-(PathwiseSurplus.lean:22) along the B2 subsequence (CHATGPT-5-1-B2-Ec15.md §1).
+(PathwiseSurplus.lean:22) along the B2 subsequence.
 -/
 
 namespace MatedCRT.S5c

@@ -2,7 +2,7 @@ import Mathlib.MeasureTheory.Measure.Continuity
 import MatedCRT.Defs.Notation
 
 /-!
-# FIRST PASS, 5.3: the sequence criterion for `TendsToOneOn` (CHATGPT-5-3-remaining §6.1)
+# FIRST PASS, 5.3: the sequence criterion for `TendsToOneOn`
 
 If the success events `E n` are null measurable and `ω ∈ F` implies that `ω` eventually lies in every `E n`, almost surely,
 then `P(F ∩ (E n)ᶜ) → 0`. The set `F` need not be measurable: `P` is an outer measure, and the proof uses only the
@@ -14,7 +14,7 @@ namespace MatedCRT.S5c
 
 open MeasureTheory Set Filter Topology
 
-/-- **Sequence criterion for `TendsToOneOn`** (CHATGPT-5-3-remaining §6.1): if `E n` are null measurable and almost surely
+/-- **Sequence criterion for `TendsToOneOn`**: if `E n` are null measurable and almost surely
 every point of `F` eventually lies in `E n`, then `P(F ∩ (E n)ᶜ) → 0`. -/
 theorem tendsto_measure_inter_compl_of_ae_eventually {Ω : Type*} [MeasurableSpace Ω]
     {P : Measure Ω} [IsFiniteMeasure P] {F : Set Ω} {E : ℕ → Set Ω}

@@ -3,9 +3,9 @@ import MatedCRT.FirstPass.S5c.ProbLimit
 import MatedCRT.FirstPass.S5c.SubseqCriterion
 
 /-!
-# FIRST PASS, Lemma 5.3 and E-c1-5: `TendsToOneOn` from subsequential almost-sure goodness (B2 assembly, pure probability)
+# FIRST PASS, Lemma 5.3: `TendsToOneOn` from subsequential almost-sure goodness (B2 assembly, pure probability)
 
-The B2 argument (CHATGPT-5-1-B2-Ec15.md §1) proves, along any mesh sequence `x_n ↓ 0`, a subsequence `φ` such that almost
+The B2 argument proves, along any mesh sequence `x_n ↓ 0`, a subsequence `φ` such that almost
 surely on the event `F`, the good event `E (x (φ k))` holds for all large `k`; the failure events `F ∩ (E ε)ᶜ` are assumed
 null measurable (the open fixed-mesh measurability of the failure events). Then the outer-measure failure probability
 `P[F ∩ (E ε)ᶜ]` tends to zero as `ε ↓ 0`, i.e. `TendsToOneOn P F E` (Defs/Notation.lean:40). This is the generic

@@ -4,9 +4,9 @@ import MatedCRT.FirstPass.S5c.MassThreshold
 import MatedCRT.FirstPass.S5c.ExteriorMass
 
 /-!
-# Outcome chain for `MeanValueSurplusLowerStep` (first pass, task fp-S5c-5-3-5-1)
+# Outcome chain for `MeanValueSurplusLowerStep`
 
-Deterministic chain at one outcome, following `notes/fp-gaps/CHATGPT-q3-5-3-route.md` section 4.
+Deterministic chain at one outcome.
 * The final floor `b0` is taken at the fixed target depth `δ` (Step 9); only `b0` enters the output constant.
 * The auxiliary cover uses margins `bj j` at the deterministic depths `coverDepth j = 1/(j+1)` (Steps 2, 6).
 * The auxiliary depth index `n` is chosen pathwise from the mass threshold (Steps 4-5); it is an ordinary

@@ -4,9 +4,9 @@ import MatedCRT.FirstPass.S5c.BadEvents
 import MatedCRT.FirstPass.S5c.SubseqBorelCantelli
 
 /-!
-# FIRST PASS, Lemma 5.3 and E-c1-5: B2 almost-sure errors and cells along a deterministic subsequence
+# FIRST PASS, Lemma 5.3: B2 almost-sure errors and cells along a deterministic subsequence
 
-CHATGPT-5-1-B2-Ec15.md §1 (referee CORRECT; operator 21:50 and 22:25 UTC): choose a deterministic `ε_k → 0` with summable
+Choose a deterministic `ε_k → 0` with summable
 failure bounds, then Borel-Cantelli. Here the failure events are: at each level `s_i = t 2^{-i}`, `i ≤ k`, the uniform error
 `sup_{B_ρ} |w̄^ε_{s_i} - (c₀/6) w_{s_i}|` exceeds `2^{-k}` on `{s_i < T}` (Theorem 4.1, `ConvergenceDivisibleStmt`, Section4.lean:39),
 and the cells meeting `B_ρ` have diameter above `ε^{β}`, `β = 1/(2+γ)^2`, with polynomially high probability
@@ -20,7 +20,7 @@ namespace MatedCRT.S5c
 open MeasureTheory Set Metric Filter Topology HarmonicBalls
 open scoped ENNReal
 
-/-- **B2 almost-sure errors and cells** (CHATGPT-5-1-B2-Ec15.md §1): see the module docstring. -/
+/-- **B2 almost-sure errors and cells**: see the module docstring. -/
 theorem exists_subseq_errors_cells_eventually {𝒮 : SpaceFillingSLEModel}
     (hConv : ConvergenceDivisibleStmt 𝒮) (hCell : CellSizeEstimateStmt 𝒮)
     {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1)

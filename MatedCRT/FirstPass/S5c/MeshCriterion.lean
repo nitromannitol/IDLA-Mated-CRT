@@ -2,7 +2,7 @@ import MatedCRT.Defs.Notation
 import MatedCRT.FirstPass.S5c.SeqCriterion
 
 /-!
-# FIRST PASS, Lemma 5.3: continuous-mesh criterion for `TendsToOneOn` (CHATGPT-5-3-remaining §6.2)
+# FIRST PASS, Lemma 5.3: continuous-mesh criterion for `TendsToOneOn`
 
 Along every sequence `e n → 0⁺` a subsequence `φ` gives, almost surely on `F`, eventual membership of
 `E (e (φ k))`; and the good events `E ε` are null measurable for all small `ε`. Then `P[F ∩ (E ε)ᶜ] → 0`
@@ -15,7 +15,7 @@ namespace MatedCRT.S5c
 
 open MeasureTheory Filter Topology Set
 
-/-- **Continuous-mesh criterion for `TendsToOneOn`** (CHATGPT-5-3-remaining §6.2): see the module docstring. -/
+/-- **Continuous-mesh criterion for `TendsToOneOn`**: see the module docstring. -/
 theorem tendsToOneOn_of_subsequence_ae_eventually {Ω : Type*} [MeasurableSpace Ω]
     {P : Measure Ω} [IsFiniteMeasure P] {F : Set Ω} {E : ℝ → Set Ω}
     (hnull : ∀ᶠ ε in 𝓝[>] (0 : ℝ), NullMeasurableSet (E ε) P)

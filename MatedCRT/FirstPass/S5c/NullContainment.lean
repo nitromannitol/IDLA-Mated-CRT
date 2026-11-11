@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S5c.EntranceLevel
 /-!
 # FIRST PASS, 5.1 stopped clause: null-measurable rational containment events (Gap 2 decoder, G1 reduction)
 
-Operator ruling 21:25 UTC: Gap 2 follows the compact-set decoder repair of CHATGPT-G-hT-G-stopped.md (Borel versions of the closed
+Gap 2 follows the compact-set decoder repair (Borel versions of the closed
 sets via eventual rational hitting tests); AE and null-measurable versions are acceptable. The repository lemma
 `nullMeasurableSet_lt_infDist_compl_of_trace` (InfDistTrace.lean) is that hitting-test argument: for a random regular-open set `U`
 with nonempty complement, the distance tests `{r < infDist x Uᶜ}` are null measurable from the point memberships at a countable

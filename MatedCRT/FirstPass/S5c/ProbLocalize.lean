@@ -7,7 +7,7 @@ Pathwise, on the event `F = {t < T}`, the surplus lower bound `E ε` fails only 
 uniform convergences, cell diameters, mass threshold: probability tending to zero) or on a localization event `Loc J`
 (the random floor index exceeds `J` or the random floor is small), with `P (Loc J)` uniformly small for large `J`.
 Then `P (F ∩ (E ε)ᶜ) → 0`. Outer-measure bookkeeping only: no measurability of `E ε` is needed (`TendsToOneOn`,
-Defs/Notation.lean:40). Measurability of the localization events is the open step B1 (reports/q3.md).
+Defs/Notation.lean:40). Measurability of the localization events is the open step B1.
 -/
 
 namespace MatedCRT.S5c

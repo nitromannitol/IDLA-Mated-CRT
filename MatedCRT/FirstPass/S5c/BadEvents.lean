@@ -1,9 +1,9 @@
 import MatedCRT.Draft.Section4
 
 /-!
-# FIRST PASS, Lemma 5.3 and E-c1-5: generic bad-event probabilities (B2, probability plumbing)
+# FIRST PASS, Lemma 5.3: generic bad-event probabilities (B2, probability plumbing)
 
-Two facts for the Borel-Cantelli step of CHATGPT-5-1-B2-Ec15.md §1: (1) an event family whose complements have polynomially
+Two facts for the Borel-Cantelli step: (1) an event family whose complements have polynomially
 small probability (`HarmonicBalls.PolyHighProb`, Harmonic-Balls-LQG HarmonicBalls/Defs/Notation.lean:27) has complement
 probabilities tending to zero along `ε ↓ 0`; (2) a finite union of events, each with probability tending to zero, has
 probability tending to zero. No measurability is used (`P` is an outer measure).

@@ -11,7 +11,7 @@ countable union of the positive atoms of the laws of the `τ_C` (Mathlib `counta
 scale invariance of the event probabilities (EXTERNAL: the printed scaling of the cone family, IDLA lines 597-602, plus law
 invariance; a named hypothesis `hscale` here), `null_of_scale_invariant` gives `P (NewMassAt Λ t) = 0` for every `t > 0`:
 `Λ_t = ⋃_{s<t} Λ_s` almost surely for each fixed deterministic `t`. The measurability of the entrance-time level sets is
-the compact-set decoder input (Gap 2 of CHATGPT-G-hT-G-stopped.md), a named hypothesis `hentr`.
+the compact-set decoder input, a named hypothesis `hentr`.
 -/
 
 namespace MatedCRT.S5c

@@ -26,7 +26,7 @@ theorem fieldSigma_le_of_pairing_measurable {Ω : Type*} {mΩ : MeasurableSpace 
     simpa [fieldPairing] using hmeas φ hφ
   exact h.comap_le
 
-/-- **B1b on the field route** (operator rulings 20:12 and 20:16 UTC): for a random measure `μ_ω` with a field-measurable version
+/-- **B1b on the field route**: for a random measure `μ_ω` with a field-measurable version
 `g` (`μ = g` a.s., measurable for the field σ-algebra `m ≤ mΩ`), finite mass on the disc and bounded-below supersolution values at
 `p ∈ B̄_R`, the least supersolution value `ω ↦ v(u)(p)(μ_ω)` is AE-measurable. The Lusin input and the test-function family are as in
 B1bThreshold.lean. -/

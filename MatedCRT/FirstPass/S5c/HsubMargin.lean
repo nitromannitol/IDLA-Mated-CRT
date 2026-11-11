@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S5c.MarginExact
 
 /-!
-# Countable family of margins for the auxiliary cover (task fp-S5c-5-3-5-1, route Step 2)
+# Countable family of margins for the auxiliary cover
 
 `marginExact_proved` gives, at each fixed depth `d`, a measurable positive margin on the core
 `{x ∈ B̄_ρ : d/2 ≤ dist(x, Λ_t(ω)ᶜ)}`. Taking one such margin for every depth `d n` of a deterministic

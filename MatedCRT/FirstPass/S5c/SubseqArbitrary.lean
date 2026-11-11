@@ -1,9 +1,9 @@
 import MatedCRT.FirstPass.S5c.SubseqBorelCantelli
 
 /-!
-# FIRST PASS, Lemma 5.3 and E-c1-5: subsequence along an arbitrary mesh sequence (B2 criterion, pure probability)
+# FIRST PASS, Lemma 5.3: subsequence along an arbitrary mesh sequence (B2 criterion, pure probability)
 
-CHATGPT-5-1-B2-Ec15.md §1 uses the criterion: from any deterministic mesh sequence tending to zero, one can select a
+The argument uses the criterion: from any deterministic mesh sequence tending to zero, one can select a
 subsequence along which the failure probabilities are summable (convergence in probability permits this). Here: given
 failure families `Bad ε k` with `P(Bad ε k) → 0` as `ε ↓ 0` for each level `k`, and any positive sequence `x_n → 0`, there is
 a strictly increasing `φ` with `P(Bad (x (φ k)) k) ≤ 2^{-k}`, hence almost surely `ω ∉ Bad (x (φ k)) k` for all large `k`.

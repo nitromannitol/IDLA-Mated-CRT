@@ -5,7 +5,7 @@ import Mathlib
 
 A lower bound `b ≤ f q` holding on the points `q ∈ D ∩ S` of a dense set `D` extends to `b ≤ f x` for all
 `x ∈ closure S`, when `f` is continuous on `closure S`. For an open `S` this needs only `D` dense. This is the step that
-lets an infimum over countably many points replace an infimum over a closed set (B1 of reports/q3.md).
+lets an infimum over countably many points replace an infimum over a closed set.
 
 Note: the naive reduction "inf over the compact core = inf over rational points of {infDist > δ/2}" is false in
 general (counterexample `L = ball 0 r`, `δ/2 = r`: the core is `{0}` and `{infDist > δ/2}` is empty). The reduction goes

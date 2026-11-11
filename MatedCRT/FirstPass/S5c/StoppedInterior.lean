@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S5c.DepthBound
 import MatedCRT.FirstPass.S5c.DepthCore
 
 /-!
-# FIRST PASS, 5.1 stopped clause: the interior estimate on `V^ε(Λ_t)` (E-c1-5; StoppedSurplusInteriorStep)
+# FIRST PASS, 5.1 stopped clause: the interior estimate on `V^ε(Λ_t)` (StoppedSurplusInteriorStep)
 
 The interior step of `Proofs/Sec5/StoppedSurplusSteps.lean` asks for `c ε⁻¹ ≤ w̃^ε_t(a) + (t ε⁻¹) g^ε_{B_ρ}(0, a)` for
 `a ∈ V^ε(Λ_t) = cellVertices (Λ_t)` at `δ`-depth from the frontier of `fillCells (V^ε(Λ_t))`. Pathwise this is the depth
@@ -18,7 +18,7 @@ open MeasureTheory Set Metric Filter Topology
 open scoped ENNReal
 open _root_.HarmonicBalls
 
-/-- **Stopped interior bound, pathwise** (E-c1-5; `StoppedSurplusInteriorStep`): the depth vertices of `V^ε(Λ_t)` satisfy
+/-- **Stopped interior bound, pathwise** (`StoppedSurplusInteriorStep`): the depth vertices of `V^ε(Λ_t)` satisfy
 `c ε⁻¹ ≤ V_t(a)` with `c = κ b / (2 C_m)`, given the exterior-mass threshold of the filled stopped cluster. -/
 theorem stopped_interior_bound_of_threshold {μ : Measure ℂ} {m : ℤ → ℤ → ℕ} {ε : ℝ} {η : ℝ → ℂ}
     {ρ t s mε κ e b Cm δ : ℝ} {τ : ℝ≥0∞} {L Q : Set ℂ} {a : ℤ}

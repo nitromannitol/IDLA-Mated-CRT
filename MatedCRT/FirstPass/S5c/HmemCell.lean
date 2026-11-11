@@ -16,7 +16,7 @@ namespace MatedCRT.S5c
 
 open MeasureTheory Set Metric Filter Topology
 
-/-- **Local first-hit cell membership** (CHATGPT-5-3-remaining §2.1): under the finiteness of `ballInterior` and the
+/-- **Local first-hit cell membership**: under the finiteness of `ballInterior` and the
 small-cell bound on `B_ρ`, each `x ∈ B_{ρ/3}` lies in the cell of `vertexOf ε η x`, and that label is in `ballInterior`. -/
 theorem mem_cell_vertexOf_of_small_cells {ε ρ : ℝ} {η : ℝ → ℂ}
     (hε : 0 < ε) (hρ : 0 < ρ) (hη : Continuous η) (hsurj : Function.Surjective η)

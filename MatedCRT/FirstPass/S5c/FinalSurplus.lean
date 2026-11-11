@@ -17,7 +17,7 @@ import MatedCRT.Proofs.Sec5.MeanValueInequality.SurplusSteps
 import MatedCRT.Proofs.Sec1.ConeScaleRadius
 
 /-!
-# FIRST PASS, Lemma 5.3: `MeanValueSurplusLowerStep` (task fp-S5c-5-3-5-1)
+# FIRST PASS, Lemma 5.3: `MeanValueSurplusLowerStep`
 
 Assembly:
 * Output constant `c ω = (c₀/6) * b0 ω / (2 * C)`; `b0` is the measurable positive margin at the fixed depth `δ`

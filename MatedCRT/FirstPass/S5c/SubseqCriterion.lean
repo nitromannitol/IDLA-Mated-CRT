@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# FIRST PASS, Lemma 5.3 and E-c1-5: subsequence criterion for limits along `ε ↓ 0` (B2, pure topology)
+# FIRST PASS, Lemma 5.3: subsequence criterion for limits along `ε ↓ 0` (B2, pure topology)
 
-CHATGPT-5-1-B2-Ec15.md §1 concludes the full limit `P[F ∩ (E ε)ᶜ] → 0` (as `ε ↓ 0`, the statement `TendsToOneOn`) from the
+The argument concludes the full limit `P[F ∩ (E ε)ᶜ] → 0` (as `ε ↓ 0`, the statement `TendsToOneOn`) from the
 subsequence property: every sequence `x_n ↓ 0` has a subsequence along which the failure probabilities vanish. This is the
 standard subsequence criterion, proved here for `ℝ≥0∞`-valued functions on `𝓝[>] 0`.
 -/

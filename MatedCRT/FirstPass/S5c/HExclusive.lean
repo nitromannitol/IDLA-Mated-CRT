@@ -4,7 +4,7 @@ import MatedCRT.Defs.Map
 /-!
 # FIRST PASS, 5.3 (MeanValueSurplusLowerStep): exclusive representatives of the cells
 
-Source: notes/fp-gaps/CHATGPT-5-3-remaining.md §3 (PROVED there). For an area parametrization `η` of `μ`, the cells
+For an area parametrization `η` of `μ`, the cells
 `H^ε_a = η([ε(a-1), εa])` of distinct labels meet in a `μ`-null set (their masses add up to the mass of the union), so every
 cell `H^ε_a` (of positive mass `ε`) contains a point `x` lying in no other cell. For such `x`, `vertexOf ε η x = a`.
 This avoids the false shortcut `vertexOf ε η (vertexPoint ε η a) = a` (the representative can lie in an earlier cell).
@@ -61,7 +61,7 @@ theorem cell_measure_pos {μ : Measure ℂ} {η : ℝ → ℂ} (hap : IsAreaPara
   rw [h]
   exact ENNReal.ofReal_pos.mpr hε
 
-/-- **Exclusive representative** (CHATGPT-5-3-remaining §3, eq. (3.1)): every cell `H^ε_a` contains a point lying in no
+/-- **Exclusive representative**: every cell `H^ε_a` contains a point lying in no
 other cell. -/
 theorem exists_exclusive_mem_cell {μ : Measure ℂ} {η : ℝ → ℂ} (hap : IsAreaParametrized μ η) {ε : ℝ} (hε : 0 < ε)
     (a : ℤ) : ∃ x ∈ cell ε η a, ∀ b : ℤ, x ∈ cell ε η b → b = a := by

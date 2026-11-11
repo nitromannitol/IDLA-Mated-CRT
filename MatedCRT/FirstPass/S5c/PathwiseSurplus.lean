@@ -9,7 +9,7 @@ the filled discrete cluster `U = fillCells D` has `μ U ≤ t` (eq. (7)); if the
 `U` and has exterior mass `μ(L \ K₁) < τ` for a threshold `τ` of the quantitative eq. (9), then the exterior mass of `U`
 is below `τ` (`μ(U \ L) ≤ μ(L \ U) ≤ μ(L \ K₁)`), so a depth vertex has a cell point in the depth core (eq. (10)), and the
 floor on that core gives `c ε⁻¹ ≤ V_t(a)` with `c = κ b/(2 C_m)` (eqs. (11)-(12)). Deterministic: the random quantities
-(the threshold `τ`, the floor `b`) enter only as hypotheses; their measurability is the open gate B1/B2 of reports/q3.md.
+(the threshold `τ`, the floor `b`) enter only as hypotheses; their measurability is the open gate B1/B2.
 -/
 
 namespace MatedCRT.S5c

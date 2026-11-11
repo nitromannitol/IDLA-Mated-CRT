@@ -4,7 +4,7 @@ import MatedCRT.Proofs.Infra.LocallyFinite
 import MatedCRT.Proofs.Infra.MatingOfTrees
 
 /-!
-# FIRST PASS, GAP 2 Step (a): the upper bound (19) of `CHATGPT-q3-questions` §1.4, pathwise
+# FIRST PASS, GAP 2 Step (a): the upper bound (19), pathwise
 
 Eq. (19): `G_I(a,a) ≤ G_{V^ε(B_ρ)}(a,a) ≤ ε^{-1/2}` for `I = K_ε(B_r(z))` with `B_r(z) ⊆ B_ρ` and `a ∈ I`. The first
 inequality is domain monotonicity of the killed Green function on finite domains (`greenFn_mono_of_firstStep`); the second
@@ -50,7 +50,7 @@ theorem interiorCellVertices_finite_of_ball {ε : ℝ} {η : ℝ → ℂ} (hη :
     (interiorCellVertices ε η (ball z r)).Finite :=
   (cellVertices_ball_finite hη hp hε z r).subset fun _ hk => hk.1
 
-/-- **Eq. (19) of CHATGPT-q3-questions §1.4, pathwise** (the hypothesis `hGup` of `green_ratio_target`). On the crude
+/-- **Eq. (19), pathwise** (the hypothesis `hGup` of `green_ratio_target`). On the crude
 bound `hcrude` (Lemma 2.15 at `ζ = 1/2`, on `V^ε(B_ρ)`), the diagonal Green function of `I = K_ε(B_r(z))` at `a ∈ I`
 is at most `ε^{-1/2}`, when `B_r(z) ⊆ B_ρ`. -/
 theorem greenFn_interior_diag_le_crude {ε r ρ : ℝ} {η : ℝ → ℂ} {m : ℤ → ℤ → ℕ} {z : ℂ} {a : ℤ}

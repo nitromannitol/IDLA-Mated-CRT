@@ -1,13 +1,13 @@
 import Mathlib
 
 /-!
-# FIRST PASS, Lemma 5.3 and E-c1-5: from almost-sure eventual absence to vanishing probability (B2 final step)
+# FIRST PASS, Lemma 5.3: from almost-sure eventual absence to vanishing probability (B2 final step)
 
-If the failure events `A k` (here `A k = F ∩ (E ε_k)ᶜ` along the B2 subsequence, CHATGPT-5-1-B2-Ec15.md §1) are null
+If the failure events `A k` (here `A k = F ∩ (E ε_k)ᶜ` along the B2 subsequence) are null
 measurable, and almost surely each `ω` lies in only finitely many `A k`, then `P (A k) → 0`. Proof: the tails
 `D M = ⋃_j A (M + j)` are decreasing with `P(⋂ D M) = 0` (the intersection is contained in the exceptional null set), so
 `P(D M) → 0` by continuity from above, and `P (A k) ≤ P (D k)`. The measurability hypothesis is exactly the open
-"fixed-mesh failure-event measurability" of CHATGPT-5-1-B2-Ec15.md §1; without it, continuity from above of outer measure
+"fixed-mesh failure-event measurability" ; without it, continuity from above of outer measure
 is not available.
 -/
 

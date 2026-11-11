@@ -7,7 +7,7 @@ Floor.lean (`surplus_floor_on_compact`) gives, for a compact set `K ⊆ Λ_t`, s
 `b ≤ w_t + t(-w_{s_n}/s_n)` on `K`. FloorMono.lean shows that this floor term is nondecreasing in the index `n`, so the
 same bound holds at every later index, uniformly on `K`. Hence the floor holds eventually in the scale index, with no Dini
 argument and no separate treatment of the pole: the pole is inside the existential floor already. This closes the
-index-selection gap of B1c (reports/q3.md); the random-index measurability is a separate step.
+index-selection gap of B1c; the random-index measurability is a separate step.
 -/
 
 namespace MatedCRT.S5c

@@ -1,9 +1,9 @@
 import MatedCRT.FirstPass.S5c.CoverCore
 
 /-!
-# FIRST PASS, Lemma 5.3 and E-c1-5: the filled discrete cluster eventually covers a compact core (B2 cover, pathwise)
+# FIRST PASS, Lemma 5.3: the filled discrete cluster eventually covers a compact core (B2 cover, pathwise)
 
-Along a sequence of meshes `ε_k` (the deterministic subsequence of CHATGPT-5-1-B2-Ec15.md §1), if a compact set `K` lies in
+Along a sequence of meshes `ε_k` (the deterministic subsequence), if a compact set `K` lies in
 `{surplus floor}` at one scale `s` with level `b > 0` (Floor.lean, eventually in the index), and the rescaled discrete least
 supersolutions at the levels `t` and `s` are within `e_k → 0` of `κ w_t`, `κ w_s` uniformly on `K`, then `K` lies in the
 filled discrete cluster for all large `k`. This is `mem_fillCells_of_floor` (CoverCore.lean) along the sequence: the
@@ -16,7 +16,7 @@ namespace MatedCRT.S5c
 open MeasureTheory Set Metric Filter Topology
 open _root_.HarmonicBalls
 
-/-- **Eventual cover of a compact floor set** (B2, CHATGPT-5-1-B2-Ec15.md §1): see the module docstring. -/
+/-- **Eventual cover of a compact floor set**: see the module docstring. -/
 theorem core_subset_fillCells_eventually {μ : Measure ℂ} {ρ t s κ b : ℝ} {K : Set ℂ}
     {ε mε : ℕ → ℝ} {η : ℕ → ℝ → ℂ} {m : ℕ → ℤ → ℤ → ℕ} {e : ℕ → ℝ}
     (hK : K ⊆ ball (0 : ℂ) ρ) (ht : 0 < t) (hs : 0 < s) (hκ : 0 < κ) (hb : 0 < b)

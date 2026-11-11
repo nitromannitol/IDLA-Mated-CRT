@@ -3,8 +3,7 @@ import Mathlib
 /-!
 # FIRST PASS, stopped clause of 5.1: the scale-invariance null argument (G-stopped Gap 1 repair)
 
-Pure real analysis for the fixed-deterministic-time assertion of the Gap 1 repair (CHATGPT-stopped-repair-check.md,
-item 1-4): if the probability `P (E t)` of the new-mass event is invariant under dilation of the time (the printed
+Pure real analysis for the fixed-deterministic-time assertion of the Gap 1 repair: if the probability `P (E t)` of the new-mass event is invariant under dilation of the time (the printed
 scaling of the cone family, IDLA lines 597-602, combined with law invariance: an external input) and only countably
 many times `t` have `P (E t) > 0` (the atoms of the entrance-time laws), then `P (E t) = 0` for every `t > 0`.
 No measurability of `E t` is used: the statement is about the values `P (E t) ∈ ℝ≥0∞` of the outer measure.

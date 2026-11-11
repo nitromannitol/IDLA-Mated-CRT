@@ -9,7 +9,7 @@ The obstacle cluster `cluster μ ρ 0 t = {x ∈ B_ρ | x = 0 ∨ -t G_{B_ρ}(0,
 Defs/Obstacle.lean:69) is open whenever the least supersolution `v` is continuous on the closed disc and the disc Green
 function is continuous off the pole and blows up at the pole (Armitage-Gardiner). `isOpen_cluster_diff_pole`
 (FirstPass/S1c/Cluster.lean) gives openness off the pole; here the pole is handled by the pole limit of `FrozenGreenDiscPole`
-(Frozen/S2g.lean; operator 22:43 UTC: this replaces the duplicate pair `FPGreenBallContinuousOffPole`, `FPGreenBallPoleLimit`).
+(Frozen/S2g.lean; this replaces the duplicate pair `FPGreenBallContinuousOffPole`, `FPGreenBallPoleLimit`).
 
 For a cone harmonic-ball family the continuity of `v` on `B̄_ρ` is part of `SatisfiesObstacleCharacterization`, and
 it holds at radius `ρ` as soon as `Λ_t ⊆ B_r` for some `r < ρ`. For `t < clusterExitTime Λ ρ` (sup of

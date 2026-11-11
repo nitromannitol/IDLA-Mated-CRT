@@ -91,7 +91,7 @@ theorem ofReal_netMass_le {Ω : Type*} {g : Ω → Measure ℂ} {t : Set ℂ} {�
   rw [ENNReal.ofReal_toReal hne]
   exact (min_le_left _ _).trans (iInf_le (fun y : t => g ω (ball (y : ℂ) δ)) ⟨x, hx⟩)
 
-/-- **The net bound with the explicit mass** (eqs. (13)-(15) of CHATGPT-q3-questions §1.4 with the probabilistic `m_r`):
+/-- **The net bound with the explicit mass** (eqs. (13)-(15) with the probabilistic `m_r`):
 if `μ = g_ω` and `t` is a finite net for the compact set `s` of radius `R/2`, then `ofReal (netMass) ≤ μ(B_R(z))` for
 every `z ∈ s`. -/
 theorem ofReal_netMass_le_mass_ball {Ω : Type*} {g : Ω → Measure ℂ} {t s : Set ℂ} {R : ℝ} {ω : Ω} {μ : Measure ℂ}

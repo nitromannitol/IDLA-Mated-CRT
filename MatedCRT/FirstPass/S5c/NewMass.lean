@@ -3,7 +3,7 @@ import Mathlib
 /-!
 # FIRST PASS, stopped clause of 5.1: countable representation of the new-mass event `E_t` (G-stopped Gap 1 repair)
 
-Operator ruling 2026-11-09 19:20 UTC: the Gap 1 repair of G-stopped (CHATGPT-stopped-repair-check.md, item 1) is correct
+The Gap 1 repair of G-stopped is correct
 after one measurability insertion: the event `E_t` that a monotone family of open sets gains a point at time `t` not
 in any earlier member has the countable representation
 
