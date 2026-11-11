@@ -424,7 +424,7 @@ rightBoundaryOf : (ℝ → ℂ) → ℝ → Set ℂ` (the boundaries of `η̃((�
 **DMS, arXiv:1409.7055v4 (Duplantier-Miller-Sheffield), printed statements used by r3 Section 6.**
 * Theorem 1.9 (pp. 26-27; text at line 1301 of the extraction): in the setting of a `γ`-quantum cone `C = (ℂ, h, 0, ∞)` with an
   independent whole-plane space-filling SLE_κ₀ `η′` from `∞` to `∞`, reparametrised by `γ`-LQG area, the boundary-length pair
-  `(L, R)` is a two-sided correlated Brownian motion. The displayed covariance is not transcribed in this round.
+  `(L, R)` is a two-sided correlated Brownian motion. The displayed covariance is not transcribed here.
 * Theorem 1.11 (p. 29; line 1424): in the setting of Theorem 1.9, `(L, R)` a.s. determines both `η′` and `h`, up to a rigid
   rotation of `ℂ` about the origin.
 * Lemma 8.8 (p. 143; line 8042): in the context of Section 8.1 (the topological mating `C/∼` of the trees `L`, `R`, with the

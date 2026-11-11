@@ -24,7 +24,7 @@ Locators used here:
 Not staged, with reasons:
 * (4.5) of Lemma 4.3: not consumed by the moment route.
 * (4.22) of Proposition 4.6: its printed range `p ∈ [1, 4/γ)^2` is malformed; the route derives the inner-degree
-  moment from the beta-moment paragraph and (4.6) (r3:2674-2753), never from (4.22).
+  moment from the beta-moment paragraph and (4.6), never from (4.22).
 * (4.25): its printed last bound carries the positive exponent `β(1-ζ)`; it is not imported.
 
 Outer-expectation account (source fidelity). The printed moments of the degree and mass functionals are read as
@@ -32,7 +32,7 @@ outer expectations `MatedCRT.outerLIntegral` (Defs/Notation.lean). For a measura
 Lebesgue integral (`outerLIntegral_eq_lintegral_of_measurable`, below), so the two readings agree whenever the printed
 quantity is measurable. The paper does not verify measurability of `deg_in`, `deg_out`, `DA` or of the normalized masses
 `C^{-ζ} μ_{h^{C^ζ}}(𝔻)`; no statement here assumes or proves it, and the outer forms need none. The printed (4.22) and
-(4.25) are not imported (see above); the moment route is r3:2674-2753.
+(4.25) are not imported (see above); the moment route is the Chebyshev and tail-integration step.
 
 Canonical laws. `IsCanonicalZeroConeModel` (GMS, zero cone) and `IsCanonicalSLEDecoratedCone` (BG, `γ`-cone) are
 predicates on the joint law of the environment, not hypotheses on an abstract environment. The α-cone predicate
@@ -301,7 +301,7 @@ def BGTheorem41CanonicalStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
 
 /-! ## Internal proved fact (not a published input)
 
-The Chebyshev, dyadic-tail and moment consequences of the Props above (r3:2674-2753) are not in this file: they are in
+The Chebyshev, dyadic-tail and moment consequences of the Props above are not in this file: they are in
 `MatedCRT/Proofs/Sec5/StoppedPoleInnerDegreeMoments.lean`, which imports this file. The lemma below is a fact about the
 outer integral. -/
 
