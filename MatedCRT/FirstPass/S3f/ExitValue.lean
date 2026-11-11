@@ -1,4 +1,4 @@
--- Renamed copy (z1, fp-Closure-round2 step 4) of the untracked draft MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/ExitValue.lean (owner c1, inactive since 2026-11-05); namespace MatedCRT.FirstPass37 so the names cannot clash.
+-- Renamed copy of the untracked draft MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/ExitValue.lean; namespace MatedCRT.FirstPass37 so the names cannot clash.
 import MatedCRT.Proofs.WalkPotential.GreenFirstStep
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.CellIntegral
 import MatedCRT.Proofs.IDLA.StrongMarkov
