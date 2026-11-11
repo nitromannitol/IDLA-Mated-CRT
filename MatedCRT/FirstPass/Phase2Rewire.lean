@@ -5,6 +5,7 @@ import MatedCRT.FirstPass.LPBridge.InRepoProofs
 import MatedCRT.FirstPass.LPBridge.MinimumPrinciples
 import MatedCRT.FirstPass.LPBridge.LQGTestIntegralMeasurable
 import MatedCRT.FirstPass.LPBridge.UniversalMeasurability
+import MatedCRT.FirstPass.LPBridge.PairingLawIG4
 
 /-!
 # Phase 2 rewire of the counted IDLA theorems (task p2-rewire-counted)
@@ -16,8 +17,10 @@ LP and LQG bridges as the discharged inputs:
 `MatedCRT.frozenPunctureConnected_holds`, `MatedCRT.frozenSuperharmonicMinimumPrinciple_holds`,
 `MatedCRT.fpStrongMinimumPrinciple_holds`, `MatedCRT.frozenFiniteMeasureDiskStandardBorel_holds`,
 `MatedCRT.frozenLQGMeasureFieldMeasurable_holds`, `MatedCRT.fpLQGMeasureLocality_holds`,
-`MatedCRT.frozenLQGTestIntegralMeasurable_holds`, `MatedCRT.frozenUniversalMeasurabilityOfAnalytic_holds`.
-Inputs not yet discharged stay binders: `FrozenBrownianOutwardExcursionAtExit`.
+`MatedCRT.frozenLQGTestIntegralMeasurable_holds`, `MatedCRT.frozenUniversalMeasurabilityOfAnalytic_holds`,
+`MatedCRT.fpPairingLawIG4_holds`.
+Inputs not yet discharged stay binders: `FPConeMeanZeroRestriction` and `FrozenBrownianOutwardExcursionAtExit`
+(their bridges are pending), together with the other frozen inputs of each wrapper.
 -/
 
 open MeasureTheory Set Filter Topology Metric
@@ -28,7 +31,7 @@ noncomputable section
 
 namespace MatedCRT.Phase2
 
-/-- IDLA result 1.4 (`closed_1_4_derived`, Closure/Theorem14d.lean) with the Phase-2 bridges applied to the wrapper `HBRewire.closed_1_4_derived_hb`: the inputs hF1, hF2, hμae, hSB, hLoc, hmin, hpc, hsmp are discharged. Binder hexc remains. -/
+/-- IDLA result 1.4 (`closed_1_4_derived`, Closure/Theorem14d.lean) with the Phase-2 bridges applied to the wrapper `HBRewire.closed_1_4_derived_hb`: the inputs hF1, hF2, hμae, hSB, hLoc, hmin, hpc, hsmp, hpair are discharged. Binders hR and hexc remain (bridges pending). -/
 theorem closed_1_4_derived_p2
     {𝒮 : SpaceFillingSLEModel}
     (ν : ℝ → Measure SLEPathCode)
@@ -62,7 +65,6 @@ theorem closed_1_4_derived_p2
     (hsup : FrozenLeastSupersolutionMemCone 𝒮)
     (hmodel : FPWholePlaneLQGModel)
     (hFL : FPConeWholePlaneFieldLaw)
-    (hpair : FPPairingLawIG4)
     (hstd : FrozenConeLogLocalCodeLawStd)
     (hGBC : FrozenGreenBallCentre)
     (hconf : FrozenHBInitialConfinement)
@@ -100,7 +102,7 @@ theorem closed_1_4_derived_p2
     (hF2 := MatedCRT.frozenLQGTestIntegralMeasurable_holds) (hF3 := hF3) (hcell := hcell)
     (hexc := hexc) (hμae := MatedCRT.frozenLQGMeasureFieldMeasurable_holds 𝒮)
     (hSB := MatedCRT.frozenFiniteMeasureDiskStandardBorel_holds) (hsup := hsup) (hmodel := hmodel)
-    (hFL := hFL) (hLoc := MatedCRT.fpLQGMeasureLocality_holds) (hpair := hpair) (hstd := hstd)
+    (hFL := hFL) (hLoc := MatedCRT.fpLQGMeasureLocality_holds) (hpair := MatedCRT.fpPairingLawIG4_holds) (hstd := hstd)
     (hmin := MatedCRT.frozenSuperharmonicMinimumPrinciple_holds) (hGBC := hGBC) (hconf := hconf)
     (hK := hK) (hE := hE) (hE1 := hE1) (hE2 := hE2) (h22 := h22) (h24c := h24c) (hG15 := hG15)
     (h32 := h32) (h611 := h611) (h82 := h82) (hI2 := hI2) (hSup := hSup) (hCons := hCons)
@@ -109,7 +111,7 @@ theorem closed_1_4_derived_p2
     (hsmp := MatedCRT.fpStrongMinimumPrinciple_holds) (hnj := hnj) (hcan := hcan) (hcl := hcl)
     (hcan6 := hcan6)
 
-/-- IDLA result 1.6 (`closed_1_6_derived`, Closure/Theorem14d.lean) with the Phase-2 bridges applied to the wrapper `HBRewire.closed_1_6_derived_hb`: the inputs hF1, hF2, hμae, hSB, hLoc, hmin, hpc, hsmp are discharged. Binder hexc remains. -/
+/-- IDLA result 1.6 (`closed_1_6_derived`, Closure/Theorem14d.lean) with the Phase-2 bridges applied to the wrapper `HBRewire.closed_1_6_derived_hb`: the inputs hF1, hF2, hμae, hSB, hLoc, hmin, hpc, hsmp, hpair are discharged. Binders hR and hexc remain (bridges pending). -/
 theorem closed_1_6_derived_p2
     {𝒮 : SpaceFillingSLEModel}
     (ν : ℝ → Measure SLEPathCode)
@@ -143,7 +145,6 @@ theorem closed_1_6_derived_p2
     (hsup : FrozenLeastSupersolutionMemCone 𝒮)
     (hmodel : FPWholePlaneLQGModel)
     (hFL : FPConeWholePlaneFieldLaw)
-    (hpair : FPPairingLawIG4)
     (hstd : FrozenConeLogLocalCodeLawStd)
     (hGBC : FrozenGreenBallCentre)
     (hconf : FrozenHBInitialConfinement)
@@ -181,7 +182,7 @@ theorem closed_1_6_derived_p2
     (hF2 := MatedCRT.frozenLQGTestIntegralMeasurable_holds) (hF3 := hF3) (hcell := hcell)
     (hexc := hexc) (hμae := MatedCRT.frozenLQGMeasureFieldMeasurable_holds 𝒮)
     (hSB := MatedCRT.frozenFiniteMeasureDiskStandardBorel_holds) (hsup := hsup) (hmodel := hmodel)
-    (hFL := hFL) (hLoc := MatedCRT.fpLQGMeasureLocality_holds) (hpair := hpair) (hstd := hstd)
+    (hFL := hFL) (hLoc := MatedCRT.fpLQGMeasureLocality_holds) (hpair := MatedCRT.fpPairingLawIG4_holds) (hstd := hstd)
     (hmin := MatedCRT.frozenSuperharmonicMinimumPrinciple_holds) (hGBC := hGBC) (hconf := hconf)
     (hK := hK) (hE := hE) (hE1 := hE1) (hE2 := hE2) (h22 := h22) (h24c := h24c) (hG15 := hG15)
     (h32 := h32) (h611 := h611) (h82 := h82) (hI2 := hI2) (hSup := hSup) (hCons := hCons)
