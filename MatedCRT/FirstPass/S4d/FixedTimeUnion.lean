@@ -9,7 +9,7 @@ import MatedCRT.FirstPass.Frozen.S4S6c
 
 Proves `StrictGapFixedTimeUnionStep 𝒮` (`StrictGapReduction.lean`) from three inputs, all explicit:
 * `ConeScaleInvarianceStmt` (Lemma 2.6 of arXiv:2211.04891, law invariance of the pair under cone scaling);
-* `ConeGlobalFamilyPairAEMeasurableStep` (B2, OPEN named step) and `ConeRescaledPairAEMeasurableStep` (B2R, OPEN);
+* `ConeGlobalFamilyPairAEMeasurableStep` (B2, named step) and `ConeRescaledPairAEMeasurableStep` (B2R);
 * `FrozenConeScalingLaw 𝒮` (FIRST-PASS FROZEN; positivity of `R_b`).
 
 Route: `P(E_t)` is constant in `t > 0` (`strictGapEvent_const`); a
@@ -181,7 +181,7 @@ theorem fixedTimeUnion_of_pair {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
   rw [ae_iff]
   exact hnull
 
-/-- **StrictGapFixedTimeUnionStep from the explicit inputs.** Lemma 2.6 (`ConeScaleInvarianceStmt`), the OPEN steps
+/-- **StrictGapFixedTimeUnionStep from the explicit inputs.** Lemma 2.6 (`ConeScaleInvarianceStmt`), the named steps
 B2 and B2R, and the frozen positivity of `R_b` (`FrozenConeScalingLaw 𝒮`) give the fixed-time union for every valid
 mated-CRT environment. -/
 theorem strictGapFixedTimeUnion_of_steps (𝒮 : SpaceFillingSLEModel)

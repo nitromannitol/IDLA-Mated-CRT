@@ -25,12 +25,12 @@ import MatedCRT.FirstPass.S5d.FloorCellStep
 * the relaxed Lemma 5.2 (no origin or connectivity condition on the target; proved in the repository by
   `generalIDLALowerBoundRelaxed_of_volumeGrowth_cellSize` from Lemma 2.7 and Lemma 2.8);
 * Lemma 5.3 (`MeanValueInequalityStmt`) and Lemma 5.4 (`LLowerBoundStmt`), Draft statements used as hypotheses;
-* NEW steps that are not yet proved (referee):
+* steps kept as hypotheses (referee; see docs/campaign/COUNTED.md):
   - `StrictStoppedOdometerPositivityStep` (referee §3.2-3.3, §5.2: the stopped odometer is strictly positive on `B⁻_σ(Λ_t)`
     w.h.p. on `{t < T}`). It gives `StrictClusterCompactContainmentStep` (G1c, referee §3 eq. (3.1); `S5d/ClusterFromOdometer.lean`),
     which gives `DiscreteClusterInnerBoundStep` with Lemma 2.8 (`S5d/ClusterInner.lean`);
-  - the stopped clause needs `StoppedSecondGreenStep` (open) and the first Green inequality, which is now reduced to the
-    single open input `StoppedFirstGreenInputsStep` (floor, ceiling, exit; `S5d/StoppedFirstGreenInputs.lean`, [C21]). The
+  - the stopped clause needs `StoppedSecondGreenStep` (see docs/campaign/COUNTED.md) and the first Green inequality, which is now reduced to the
+    single input `StoppedFirstGreenInputsStep` (floor, ceiling, exit; `S5d/StoppedFirstGreenInputs.lean`, [C21]). The
     deterministic package of that reduction is discharged in `S5d/StoppedPathwise.lean`
     (`stoppedFirstGreenStep_of_steps`), and `IDLALowerBoundStoppedStep` follows from the two Green steps
     (`MatedCRT/FirstPass/S5d/StoppedReduction.lean`).
@@ -40,7 +40,7 @@ Hence `firstPass_5_1_of_steps` is a conditional reduction, not a theorem proved 
 
 namespace MatedCRT
 
-/-- **Proposition 5.1 from its open steps.** The unstopped conjunct is the stopped conjunct by monotonicity in the stopping domain ([C21];
+/-- **Proposition 5.1 from its named steps.** The unstopped conjunct is the stopped conjunct by monotonicity in the stopping domain ([C21];
 `S5d/UnstoppedFromStopped.lean`), so neither Proposition 4.2 nor the strict-positivity input is used; the stopped conjunct is
 `iDLALowerBoundStopped_of_greenSteps` (killing set `V^ε(Λ_t) ∩ S^ε`, targets `V^ε(B⁻_δ(Λ_t)) ∪ {0}`), from the two
 open Green steps: the first one is `stoppedFirstGreenStep_of_steps` from `stoppedFirstGreenInputsStep_of_floorCeiling` (open surplus floor `hfl` and open surplus maximum `hmax`, whose ceiling is derived by `stoppedFloorCeiling_of_floor_max`; exit input proved in `S5d/StoppedExitInput.lean`) and the standing steps
@@ -64,9 +64,9 @@ theorem firstPass_5_1_of_steps (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrowth
 (FirstPass/S3S4.lean:42), `h217` is `firstPass_2_17 h27` (FirstPass/S1S2S8SA.lean:53); the cone-family input `hfam` is replaced by
 the hypotheses of `coneFamilyAEMeasurable_proved` (FirstPass/S2j.lean:32). The remaining hypotheses are the Draft statements
 `h27`, `h28`, `h24c`, `h218`, the cone inputs `hcan`, `hcl`, `hE1`, `hE2`, `hscale`, `h22`; the single floor input `hfl`
-(`StoppedFloorCellStep`, OPEN); the ceiling inputs of `stoppedMaxOutside_proved` (FirstPass/S5h.lean:139: `hconv`, `hgreen`, `hM`,
-`hG`, `hpole` (`StoppedPoleCellStep`, OPEN), `hmeas`); the second Green inputs of `stoppedSecondGreenStep_of_inputs`
-(S5e/SecondGreenStep.lean:142: `hG15`, `hG16`, `hmass` (`StoppedMassLowerStep`, OPEN)). -/
+(`StoppedFloorCellStep`, see docs/campaign/COUNTED.md); the ceiling inputs of `stoppedMaxOutside_proved` (FirstPass/S5h.lean:139: `hconv`, `hgreen`, `hM`,
+`hG`, `hpole` (`StoppedPoleCellStep`, see docs/campaign/COUNTED.md), `hmeas`); the second Green inputs of `stoppedSecondGreenStep_of_inputs`
+(S5e/SecondGreenStep.lean:142: `hG15`, `hG16`, `hmass` (`StoppedMassLowerStep`, see docs/campaign/COUNTED.md)). -/
 theorem firstPass_5_1_of_open_steps (𝒮 : SpaceFillingSLEModel) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
     (hcan : ConeCanonicalHalfBallStep) (hcl : ConeHalfBallClosureInsideStep) (hE1 : ConeCircleLawUniqueStep)
     (hE2 : ConeReferenceExistsStep) (hscale : QuantumConeScalingInput) (h22 : LQGMeasurePropertiesStmt)

@@ -70,7 +70,7 @@ theorem env_hmeas_ratDisc {Ω : Type} [MeasurableSpace Ω] {𝒮 : SpaceFillingS
 
 /-- **Statement (a) of three-inputs section 1, for a valid environment**: the fixed-index margin on compact subsets
 of `Λ_t`, from the frozen inputs `FrozenLQGMeasureFieldMeasurable`, `FPStrongMinimumPrinciple` and the frozen
-Lusin/Green inputs of HmeasFamily, and the scaling identity `hscale` (A4, still open: see the report). -/
+Lusin/Green inputs of HmeasFamily, and the scaling identity `hscale` (A4; see docs/campaign/COUNTED.md). -/
 theorem fixedIndexMargin_compact_env {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     (hF : FrozenLQGMeasureFieldMeasurable 𝒮) (hF1 : FrozenUniversalMeasurabilityOfAnalytic)
     (hF3 : FrozenDiskGreenNonnegCont) (hG : FrozenGreenDiscPole) (hmin : FPStrongMinimumPrinciple)

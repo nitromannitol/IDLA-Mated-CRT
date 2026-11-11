@@ -8,7 +8,7 @@ import MatedCRT.Steps.Sec5.IDLALowerBound
 The strict discrete cluster `matedDiscreteCluster`
 (the surplus set `S_ε = {v_ε > 0}`) covers the inner neighbourhood `K_s = B⁻_s(Λ_t)` by `fillCells` with probability tending
 to one on `{t < T}` (compact-containment statement (3.1)). This file reduces `DiscreteClusterInnerBoundStep`
-(Steps/Sec5/IDLALowerBound.lean:57) to (3.1), `StrictClusterCompactContainmentStep` (NEW, OPEN), and to the cell-size
+(Steps/Sec5/IDLALowerBound.lean:57) to (3.1), `StrictClusterCompactContainmentStep` (named hypothesis; see docs/campaign/COUNTED.md), and to the cell-size
 estimate `CellSizeEstimateStmt` (Lemma 2.8, Draft/Section2.lean:131), through `tendsToOneOn_cover_vertexThresholdSet`
 (CoverEvent.lean:78).
 -/
@@ -18,7 +18,7 @@ namespace MatedCRT
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal NNReal
 
-/-- **NEW, OPEN (probabilistic input; referee section 3, compact-containment statement (3.1)).** For deterministic `s > 0`
+/-- **Named hypothesis (see docs/campaign/COUNTED.md): probabilistic input; referee section 3, compact-containment statement (3.1).** For deterministic `s > 0`
 and `t > 0`, on `F = {t < T}`: `P*(F ∩ {∃ a : H^ε_a ∩ K_s ≠ ∅, a ∉ S^ε_t}) → 0`, where `K_s = B⁻_s(Λ_t) = innerNbhd s (Λ_t)`
 and `S^ε_t` is the strict discrete cluster `matedDiscreteCluster` (the surplus set `{v_ε > 0}`). Its written argument is
 referee section 3 (fixed-time strict positivity, convergence, decoding to every label), which uses the paper's convergence
@@ -39,7 +39,7 @@ theorem measure_le_of_subset_union_null_fp {Ω : Type} [MeasurableSpace Ω] {P :
     _ ≤ P B + P N := measure_union_le _ _
     _ = P B := by rw [hN, add_zero]
 
-/-- **G1c from the compact containment.** `DiscreteClusterInnerBoundStep` follows from the NEW step
+/-- **G1c from the compact containment.** `DiscreteClusterInnerBoundStep` follows from the step
 `StrictClusterCompactContainmentStep` (with `s = δ/2`) and the cell-size estimate `CellSizeEstimateStmt`. -/
 theorem discreteClusterInnerBound_of_compactContainment (𝒮 : SpaceFillingSLEModel) (h28 : CellSizeEstimateStmt 𝒮)
     (hK : StrictClusterCompactContainmentStep 𝒮) : DiscreteClusterInnerBoundStep 𝒮 := by

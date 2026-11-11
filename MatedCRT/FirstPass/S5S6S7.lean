@@ -60,7 +60,7 @@ theorem firstPass_6_4 (h0 : FPWholePlaneLQGExistence) (h2 : FPWholePlaneLQGCoord
     Field.ConeCircle.circleAverageModConstStep
 
 /-- **Lemma 6.7** (`firstPass_6_7`, lemma:constant-order-lower-bound), CONDITIONAL on the Draft Lemma 6.8 (`h68`), which
-the printed proof uses (Lemma 6.8 is OPEN). The exit-time input 2.19 is derived from 2.7 and 2.18,
+the printed proof uses (Lemma 6.8; see docs/campaign/COUNTED.md). The exit-time input 2.19 is derived from 2.7 and 2.18,
 and the adjacency of cells is proved. -/
 theorem firstPass_6_7 (𝒮 : SpaceFillingSLEModel) (h68 : ConstantOrderLowerBoundDivStmt 𝒮)
     (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮) (h218 : ExitTimeUpperBoundStmt 𝒮) :

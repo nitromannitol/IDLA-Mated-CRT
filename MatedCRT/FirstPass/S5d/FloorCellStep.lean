@@ -10,14 +10,14 @@ second Green step (`StoppedFloorHalfStep`, S5e/SecondGreenStep.lean:29). Here it
 * `stoppedFloorStep_of_cellFloor`: `StoppedFloorStep` (the floor on the vertices `V^ε(B⁻_δ(Λ_t))`, S5d/StoppedExitInput.lean:129),
   since every target vertex `a` has its cell meeting `B⁻_δ(Λ_t) ⊆ B⁻_{δ/2}(Λ_t)`;
 * `stoppedFloorHalfStep_of_cellFloor`: `StoppedFloorHalfStep` (positivity of the odometer on the cells meeting `B⁻_{δ/2}`).
-The Prop is OPEN; nothing in this file proves it.
+The Prop is a named hypothesis (see docs/campaign/COUNTED.md); nothing in this file proves it.
 -/
 
 open MeasureTheory Filter Topology Set
 
 namespace MatedCRT
 
-/-- **The floor on every cell meeting `B⁻_{δ/2}(Λ_t)` (the single floor input of Proposition 5.1, OPEN).** For `δ ∈ (0, ρ)` and `t > 0`
+/-- **The floor on every cell meeting `B⁻_{δ/2}(Λ_t)` (the single floor input of Proposition 5.1; see docs/campaign/COUNTED.md).** For `δ ∈ (0, ρ)` and `t > 0`
 there is a measurable random constant `c > 0` such that, on `{t < T}`, with probability tending to one as `ε → 0⁺`: every cell
 `cell ε (S.η ω) k` meeting `B⁻_{δ/2}(Λ_t)` satisfies `c/ε ≤ u^ε(k)` (`stoppedOdometer`). Source: corrected tex 2362 ([C21]) and the
 expanded argument (Steps 1-9; its inputs are h41, h33, h28, hm, hgap, hμae, hcell). -/

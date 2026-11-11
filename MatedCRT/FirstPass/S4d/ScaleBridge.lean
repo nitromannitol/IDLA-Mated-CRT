@@ -14,7 +14,7 @@ This file bridges the two statements with two inputs:
   (`S2g/Draft24.lean`);
 * `ConeRescaledHalfBallHorizonUniqueStep` (`Proofs/Sec2/ConeFamilyMeasurable/ScaledUniqueness.lean`): two families for the
   same measure, each stopped at `∂B_{1/2}` after rescaling by `R_b`, have the same rescaled horizon. It is an explicit
-  hypothesis of `coneScaleInvarianceUpToFixedTimeStmt_of_canonical` (NEW, OPEN; the paper's proof of Lemma 2.5 uses it
+  hypothesis of `coneScaleInvarianceUpToFixedTimeStmt_of_canonical` (named hypothesis, see docs/campaign/COUNTED.md; the paper's proof of Lemma 2.5 uses it
   implicitly through Lemma 2.4 for `μ_{h^b}`, "T^b = sup{t : R_b^{-1} Λ_{bt} ⊂ B_{1/2}}"). It is not derived from the Draft
   statement here, since `ConeRescaledHalfBallHorizonUniqueStep_of_lemmas` takes `ConeScaleInvarianceUpToFixedTimeStmt` as input.
 -/
@@ -24,7 +24,7 @@ namespace MatedCRT
 open MeasureTheory ProbabilityTheory Filter Topology Set Metric
 open scoped ENNReal
 
-/-- **Rescaled half-ball horizon uniqueness (open).** Copy of the statement of
+/-- **Rescaled half-ball horizon uniqueness (named hypothesis; see docs/campaign/COUNTED.md).** Copy of the statement of
 `ConeRescaledHalfBallHorizonUniqueStep` (`Proofs/Sec2/ConeFamilyMeasurable/ScaledUniqueness.lean:13`), restated here
 because that file is outside the build closure. For a cone field and `b > 0`, almost surely, two families `Λ`, `Γ`
 for `μ(ω)` on `(0, b T)` and `(0, b S)` whose rescalings by the cone scale radius `R_b` are stopped at `∂B_{1/2}` at `T`

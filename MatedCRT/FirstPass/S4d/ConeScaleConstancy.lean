@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.S4d.RescaleGap
 
 Probabilistic part of the fixed-time union `Λ_t = ⋃_{0<s<t} Λ_s` a.s. (`StrictGapFixedTimeUnionStep`). For a cone family `Λ` and `t > 0`, `E_t = {Λ_t ≠ ⋃_{0<s<t} Λ_s}`.
 
-Two explicit OPEN named steps, not frozen:
+Two explicit named steps (see docs/campaign/COUNTED.md):
 * `ConeGlobalFamilyPairAEMeasurableStep` (B2): the pair (circle averages, global family process) is
   a.e. measurable.
 * `ConeRescaledPairAEMeasurableStep` (B2R): the rescaled pair of Lemma 2.6 is a.e. measurable.
@@ -23,7 +23,7 @@ open MeasureTheory Set Filter Topology Metric
 
 namespace MatedCRT
 
-/-- **B2, explicit OPEN step (not frozen).** For every cone field and every family `Λ` that is a.s. a cone harmonic
+/-- **B2, explicit named step (see docs/campaign/COUNTED.md).** For every cone field and every family `Λ` that is a.s. a cone harmonic
 ball family, the pair `(circle averages, global family process)` is a.e. measurable. Quantified as the
 `ConeScaleInvarianceStmt` (Lemma 2.6) hypotheses. -/
 def ConeGlobalFamilyPairAEMeasurableStep : Prop :=
@@ -32,7 +32,7 @@ def ConeGlobalFamilyPairAEMeasurableStep : Prop :=
   ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂P, IsConeHarmonicBallFamily (μ ω) (Λ ω)) →
     AEMeasurable (fun ω => (circleProcess (hcirc ω), globalFamilyProcess (Λ ω))) P
 
-/-- **B2R, explicit OPEN step (not frozen).** The rescaled pair of Lemma 2.6 (random radius `R_b`, `b > 0`) is a.e.
+/-- **B2R, explicit named step (see docs/campaign/COUNTED.md).** The rescaled pair of Lemma 2.6 (random radius `R_b`, `b > 0`) is a.e.
 measurable; the law equality of `ConeScaleInvarianceStmt` presupposes this (`P.map` of a random element). -/
 def ConeRescaledPairAEMeasurableStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)

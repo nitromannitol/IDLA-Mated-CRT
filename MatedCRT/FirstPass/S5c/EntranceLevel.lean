@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S5c.EntranceAtoms
 /-!
 # FIRST PASS, 5.1 stopped clause: measurability of the entrance-time level sets (Gap 2 insertion, `hentr`)
 
-`hentr` is NEW, to be proved, never frozen. Pathwise, for a
+`hentr` is a named hypothesis (see docs/campaign/COUNTED.md). Pathwise, for a
 monotone family `Λ` of open sets and a rational closed disk `C`, the entrance time `τ_C = inf {s > 0 : C ⊆ Λ_s}` equals a
 positive time `t` iff no rational `q ∈ (0, t)` has `C ⊆ Λ_q` and every rational `s > t` has `C ⊆ Λ_s`. Hence the level set
 `{τ_C = t}` is a countable intersection of containment events at rational times, and it is measurable as soon as those

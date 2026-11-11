@@ -7,7 +7,7 @@ import MatedCRT.FirstPass.S5d.Decode
 # The compact containment (3.1) from strict positivity of the stopped odometer
 
 Compact-containment statement (3.1).
-The NEW probabilistic step `StrictClusterCompactContainmentStep` (ClusterInner.lean) is reduced to one NEW step,
+The probabilistic step `StrictClusterCompactContainmentStep` (ClusterInner.lean) is reduced to one step,
 `StrictStoppedOdometerPositivityStep`: on `{t < T}`, with probability tending to one, the stopped odometer
 `u^ε_t = w̃^ε_t + (t/ε) g^ε_{B_ρ}(0, ·)` (`stoppedOdometer`, Defs/Sandpile.lean:93) is strictly positive at the vertices
 of the cells of every point of the inner neighbourhood `B⁻_σ(Λ_t)`. The reduction uses the cell-size estimate
@@ -20,7 +20,7 @@ namespace MatedCRT
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal NNReal
 
-/-- **NEW, OPEN (probabilistic input; referee sections 3.2-3.3 and 5.2).** For deterministic `σ > 0` and `t > 0`, on
+/-- **Named hypothesis (see docs/campaign/COUNTED.md): probabilistic input; referee sections 3.2-3.3 and 5.2.** For deterministic `σ > 0` and `t > 0`, on
 `{t < T}` (`T` the cluster exit time), with probability tending to `1` as `ε → 0⁺`, the stopped odometer
 `stoppedOdometer` is strictly positive at the vertex `vertexOf ε η x` of every point `x` of `B⁻_σ(Λ_t)`. Its written argument
 is the uniform convergence of the rescaled least supersolution (Thm 4.1, `ConvergenceDivisibleStmt`) and of the annular Green
@@ -84,8 +84,8 @@ theorem tendsToOneOn_of_good_cover {Ω : Type*} [MeasurableSpace Ω] {P : Measur
     _ ≤ (P (F ∩ (E' ε)ᶜ) + P (Z ε)ᶜ) + P N := by gcongr; exact measure_union_le _ _
     _ = P (F ∩ (E' ε)ᶜ) + P (Z ε)ᶜ := by rw [hN, add_zero]
 
-/-- **The compact containment (3.1) from strict positivity of the stopped odometer.** The NEW step
-`StrictClusterCompactContainmentStep` follows from the NEW step `StrictStoppedOdometerPositivityStep` (with `σ = s/2`) and the
+/-- **The compact containment (3.1) from strict positivity of the stopped odometer.** The step
+`StrictClusterCompactContainmentStep` follows from the step `StrictStoppedOdometerPositivityStep` (with `σ = s/2`) and the
 cell-size estimate `CellSizeEstimateStmt` (Lemma 2.8). -/
 theorem strictClusterCompactContainmentStep_of_odometerPositivity (𝒮 : SpaceFillingSLEModel)
     (h28 : CellSizeEstimateStmt 𝒮) (hP : StrictStoppedOdometerPositivityStep 𝒮) :
