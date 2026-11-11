@@ -4,13 +4,13 @@ import MatedCRT.FirstPass.S2k
 import MatedCRT.FirstPass.Frozen.S4S5b
 import MatedCRT.FirstPass.S2m
 
-/-! # Corrected Lemma 2.4, canonical stopped family: assembly (fp-S2g, q1, round 42)
+/-! # Corrected Lemma 2.4, canonical stopped family: assembly
 
 `firstPass_2_4_canonical` is the statement `ConeHarmonicBallsUpToFixedTimeCanonicalStmt` (`S2g.lean`, corrected canonical
-stopping time `T = halfBallTime`, notes/fp-gaps/CHATGPT-2-4-2-5-statements.md). It is assembled from
+stopping time `T = halfBallTime`). It is assembled from
 
 * `coneCanonicalHalfBallStep_of_draft` (`HalfBallGate.lean`): the pathwise canonical half-ball existence, from the Draft
-  statements and the frozen interface `FrozenConeLogLocalCodeLawStd` (operator decision 01:40 UTC);
+  statements and the frozen interface `FrozenConeLogLocalCodeLawStd`;
 * `coneHalfBallClosureInsideStep_corrected` (this file): the closure containment step `ConeHalfBallClosureInsideStep`
   through the route-B reduction `coneHalfBallClosureInsideStep_fp` (`FirstPass/S2k.lean:38`);
 * `firstPass_2_4_canonical_of_steps` (`S2g.lean`): the measurability and uniqueness reduction, which uses the closure step
@@ -24,7 +24,7 @@ open MeasureTheory Set Filter Topology Metric HarmonicBalls
 
 namespace MatedCRT
 
-/-- **`ConeHalfBallClosureInsideStep` from the route-B inputs (q1, fp-S2g).** The whole-plane volume growth (B1) and the
+/-- **`ConeHalfBallClosureInsideStep` from the route-B inputs.** The whole-plane volume growth (B1) and the
 plateau scale invariance (fact (1)) are proved inside `coneHalfBallClosureInsideStep_fp` from `hI2` and the frozen coordinate
 rule `hK`. The remaining inputs are `hloc`, `hEx`, `hSC`, the volume growth `hVG` (`VolumeGrowthStmt`), and the two NEW
 steps `hE` (the frozen whole-plane existence input `FrozenLQGMeasureExistenceInsertion`, discharging `WholePlaneLQGModelStep`
@@ -40,7 +40,7 @@ theorem coneHalfBallClosureInsideStep_corrected
   coneHalfBallClosureInsideStep_fp hI2 hK hloc hEx hSC hVG
     (MatedCRT.FirstPass.S2m.firstPass_wholePlaneLQGModel_of_existence hE) hFL
 
-/-- **Corrected Lemma 2.4 (canonical stopped family, q1, fp-S2g).** The conditional assembly. -/
+/-- **Corrected Lemma 2.4 (canonical stopped family).** The conditional assembly. -/
 theorem firstPass_2_4_canonical
     (hU : FrozenUniversalMeasurabilityOfAnalytic) (hmeasT : FrozenLQGTestIntegralMeasurable)
     (hstd : FrozenConeLogLocalCodeLawStd)

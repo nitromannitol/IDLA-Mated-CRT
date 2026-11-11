@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S2g.Canonical
 import MatedCRT.Proofs.Sec6.IDLAUpperBound.OfConeFamily
 
-/-! # Lemma 2.4 (Draft form), measurability step and Proposition 6.1 from the canonical factorization (q1, fp-S2g)
+/-! # Lemma 2.4 (Draft form), measurability step and Proposition 6.1 from the canonical factorization
 
 The Section 6 chain (`Proofs/Sec6/IDLAUpperBound/OfConeFamily.lean:16`) takes two hypotheses: the Draft statement
 `ConeHarmonicBallsUpToFixedTimeStmt` (with the clause `T' = T`, `Draft/Section2.lean:66-72`) and the measurability step
@@ -51,7 +51,7 @@ theorem stopped_eq_of_familyProcess_eq {μ : Measure ℂ} {Λ Λ' : ℝ → Set 
   · intro hx
     exact (hiff.mp ⟨ht, hx⟩).2
 
-/-- **Draft Lemma 2.4 from the canonical factorization (q1, fp-S2g).** The stopping time is `halfBallTime`, the canonical
+/-- **Draft Lemma 2.4 from the canonical factorization.** The stopping time is `halfBallTime`, the canonical
 family is `x ω`, and any stopped family has the same stopping time and agrees with it on `(0, T)`, by the process equality of
 `ConeCanonicalFactorStep` (iii) and `stopped_eq_of_familyProcess_eq`. -/
 theorem coneHarmonicBallsUpToFixedTimeStmt_of_factor (hfac : ConeCanonicalFactorStep) :
@@ -84,7 +84,7 @@ theorem coneHarmonicBallsUpToFixedTimeStmt_of_factor (hfac : ConeCanonicalFactor
     (hω.2.2.2 _ _ hx'.1 hx'.2.1 hx'.2.2).trans (hω.2.2.2 T' Λ' hT' hΛ' hst').symm
   exact stopped_eq_of_familyProcess_eq hx'.2.1 hΛ' hx'.1 hT' hF
 
-/-- **Measurability step `ConeFamilyAEMeasurableStep` from the canonical factorization (q1, fp-S2g).** Both conjuncts
+/-- **Measurability step `ConeFamilyAEMeasurableStep` from the canonical factorization.** Both conjuncts
 (unscaled and rescaled families) are a.e. measurable: the space-time process of every stopped family is `Ψ` of the circle
 process, almost surely, and `Ψ` is measurable for the law of the circle process; the rescaled family has the rescaled circle
 process, whose law is the same (`QuantumConeScalingInput`). The rescaled stopped pair is a stopped pair for the rescaled
@@ -128,7 +128,7 @@ theorem coneFamilyAEMeasurableStep_of_factor (hfac : ConeCanonicalFactorStep) (h
       (hΨb.comp_aemeasurable hmeasb).congr (by filter_upwards [hkey] with ω h; exact h.symm)
     exact hmeasb.prodMk hF
 
-/-- **Proposition 6.1 from the canonical factorization (q1, fp-S2g).** The composition `iDLAUpperBound_of_coneFamilyAEMeasurable`
+/-- **Proposition 6.1 from the canonical factorization.** The composition `iDLAUpperBound_of_coneFamilyAEMeasurable`
 (`Proofs/Sec6/IDLAUpperBound/OfConeFamily.lean:16`) with the Draft Lemma 2.4 and the measurability step both derived from the
 canonical factorization. Hypotheses: Lemma 6.10 (`IterativeBoundStmt`), Proposition 5.1 (`IDLALowerBoundStmt`), the quantum
 cone scaling law, the LQG measure property, and `ConeCanonicalFactorStep` (NEW, OPEN). -/
