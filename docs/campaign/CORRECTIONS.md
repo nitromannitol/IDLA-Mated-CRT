@@ -4,7 +4,7 @@ Surgical corrections to arXiv:2211.04891, each marked `% CORRECTION [Cn]` in the
 the corrected text and the reason. Evidence: the refute-first check `review-C.md` (fleet directory, 2026-11-03; operator
 verdicts in the inbox entry of 13:55 UTC). Line numbers refer to the published source `paper/idla_mated_crt.tex`.
 
-## [C1] The limit constant is c_0 = 2/m_0 (ESCALATIONS E-A3, CONFIRMED)
+## [C1] The limit constant is kappa_0 = 2/m_0 (written c_0 before 2026-11-11) (ESCALATIONS E-A3, CONFIRMED)
 - Where: new definition after eq:mo (l.720); Lemma 3.3, eq:green-uniform (l.1112); Lemma 3.4 (l.1123); proof of
   Lemma 3.4, last display (l.1172); Lemma 3.5 (l.1246); Lemma 3.7 and the same PDE restated in its proof
   (lemma:convergence-of-the-normalized-exit-time); Theorem 4.1 and the remark after it (theorem:convergence-divisible);
@@ -17,12 +17,14 @@ verdicts in the inbox entry of 13:55 UTC). Line numbers refer to the published s
   Sections 5, 7, Theorems 1.4, 1.6) uses the constant only qualitatively. Lean: `MatedCRTEnv.c₀` (Defs/Setting.lean).
 - Remaining proof-level uses are corrected in [C17].
 
+- Notation and normalisation (2026-11-11): the limit constant is written kappa_0 := 2/m_0 everywhere it means 2/m_0 (tex and email); the bold radius constant boldsymbol c_0 of Sections 6-7 is unchanged. The constants of Lemma A.3 of [BG20] (proof of the Step 1 bound in Section 3) are renamed c_{BG,0}, c_{BG,1}. The Green's function wording at the two places printed as 'Green's function for standard Brownian motion' (l.504, l.1225) now states the normalisation Delta G = -delta and the occupation density 2G.
 ## [C15] Median start in eq:mo (proof-consistent typo repair)
 - The single deterministic `m_0` is the annealed median of the unscaled LBM exit time from `B_{1/2}` started at `0`, not at a free `z`. This agrees with the discrete median in eq:meps.
 
 ## [C16] Killed occupation proof in Lemma 3.4 (proof repair)
 - Replace the unstopped functional and unjustified interchange by a buffered killed-path argument, convergence of exit times, a second-moment tail estimate, and the audited clock occupation identity. The identity has coefficient `2` for the unscaled clock and `c_0 = 2/m_0` for the paper's process, consistently with [C1]. The complete audited proof and exact citations are in `docs/campaign/OCCUPATION-PROOF.md`; deterministic thinning follows [C11].
 
+- Appendix B (transcribed from docs/campaign/OCCUPATION-PROOF.md, 2026-11-11) contains the written proof of the occupation identity used in Lemma 3.4 (coefficient 2 for the unscaled clock, kappa_0 for X). Section 3 cites it as Appendix B.
 ## [C17] Remaining proof coefficients (proof repair consistent with [C1])
 - Propagate `c_0` for `m_0` and `6/c_0` for `6/m_0` in the proofs of Lemmas 3.3, 3.5, 3.7 and the Section 4 consequences, without changing the time-rescaling definition or the median.
 
@@ -43,14 +45,19 @@ verdicts in the inbox entry of 13:55 UTC). Line numbers refer to the published s
 - Reason: `eta(Lambda^eps_t)` is a finite point set, so the published condition never holds (the lemmas are vacuous and
   `O_1 = emptyset` in the proof of Prop 5.1); the proof of Prop 5.1 (l.2024) uses the cell union `overline{Lambda^eps_t}`.
 
-## [C5] Scale-invariant integrand in the good-annulus event (ESCALATIONS E-A10, PROVISIONAL)
+- Also (2026-11-11, GAPS-SEC2567A.md E-A8): the four proof occurrences of the boundary predicate in the proof of Proposition 5.1 (dist(eta(a), partial eta(Lambda)) > delta, in the displays after the strict-gap and surplus steps) are replaced by partial overline{Lambda}, the boundary of the cell union, marked [C4].
+## [C5] Scale-invariant integrand in the good-annulus event (ESCALATIONS E-A10, CONFIRMED)
 - Where: eq:good-annulus-event (l.2314).  Published: `log(1/|u-v|) + 1`.  Corrected: `log(r/|u-v|) + 1`.
 - Reason: for `u, v` in `A_{r,2r}(z)`, `|u - v| < 4r`, so the published left side is at least `(log(1/(4r)) + 1) mu_h(A)`
   while the right side is at most `C mu_h(A)`; the event is a.s. empty for `r < e^{1-C}/4`, contradicting Lemmas 6.4 and 6.5
   (faulty step l.2367: "the probability of E_r(z) does not depend on r or z"). The scale-invariant integrand makes that
-  step valid. Provisional: Step 4 of Lemma 6.8 (l.2600) bounds the event through Lemma 2.18 (absolute `log(1/|z-w|)`);
-  route (a) scale-invariant Lemma 2.18 vs (b) `r`-dependent `s_2` is open (E-A10). Lemmas 6.4-6.10 are not frozen.
+  step valid. The integrand correction is settled. Step 4 of the printed Lemma 6.8 proof (l.2600) bounded the event through Lemma 2.18 (absolute `log(1/|z-w|)`); that proof is replaced under [C26]. Whether the replacement uses Lemma 2.18 is checked in the [C26] entry (E-A10 route question still to be verified). Lemmas 6.4-6.10 are not frozen.
 
+## [C6] Lemma 3.2 (discrete Hoelder continuity): interior floor, starting vertex, boundary exponent (ledger entry written 2026-11-11)
+- Where: Lemma 3.2 (lemma:discrete-holder-continuity), first marker at the lemma's opening line.
+- Published: interior bound with factor (eps v |eta(a)-eta(b)|)^xi for all a, b in V(D); one exponent xi and a constant C for the boundary data.
+- Corrected: the floor eps^beta in place of eps; the starting vertex a off V(partial D); for each chi in (0,1] an exponent xi' <= chi and a constant C = C(rho,gamma,chi,C') for boundary data with |f(a)-f(b)| <= C'(eps v |eta(a)-eta(b)|)^chi on V(partial D). The typesetting error \eps<TAB>o0 in the two displays is restored to \to.
+- Reason: the interior estimate needs the floor eps^beta; the boundary exponent must depend on chi and the constant on C'. Email item: Lemma 3.2.
 ## [C7] Source in the killed domain (E-c1-1)
 The origin clause of Lemma 4.4 and the mass identity of Lemma 4.5 require `0 ∈ V^ε(Bρ) \ V^ε(∂Bρ)`. Continuity of η at 0 gives this for all sufficiently small ε. The old all-ε clauses fail when the source cell meets ∂Bρ. See AUDIT-C7-C10-USES.md.
 
@@ -72,12 +79,14 @@ Put the deterministic sequence, and in Lemma 4.6 fixed t, before a deterministic
 ## [C13] Harmonic convergence and boundary representatives (author-approved 2026-11-06)
 Lemma 3.6: replace the printed Hölder datum evaluated at the exit-cell representative by continuous datum on the closed disk, evaluated after nearest-point projection. Add uniform convergence and the polynomial same-walk comparison, with the corrected unrestricted-walk proof. Apply the projection convention to Lemma 3.5 boundary data as well. Boundary-cell representatives can lie outside the disk and the exit functional is not everywhere continuous. See `LEMMA36-REPLACEMENT.md` and `AUDIT-L36-USES.md`.
 
+- Also (2026-11-11): the unmarked boundary-stability consequence in the proof of Lemma 4.8 (polynomial boundary data differ from their projected values by o(m_eps)) carries this marker. Appendix C (the replacement argument for Lemma 3.6, transcribed from docs/campaign/LEMMA36-REPLACEMENT.md) is the written proof of this entry, and the uses in Section 4 are listed there.
 ## [C14] Normalized comparison boundary offset (author-approved 2026-11-06)
 In the proof of Lemma 4.8, replace `m_eps phi^delta(eta(b)) + delta` by `m_eps (phi^delta(eta(b)) + delta)`. Only the latter gives the stated limiting boundary value and the intended domination. This implements G3 of `PROOF-REPAIRS-G.md` in the paper.
 
 ## [C18] Lemma 6.4 constant dependency (author-approved 2026-11-09)
 Replace "a constant C depending only on gamma" by "depending only on gamma and c_0". The proof gives C(gamma, c_0); a good annulus forces C >= (1 - log 2)/(16 c_0^2) (packing), and c_0 = c_0(rho, gamma) is the standing choice, so C(gamma) is unjustified (false if inf_rho c_0 = 0). All later uses fix rho. See fleet notes fp-gaps/CHATGPT-s6-constants.md and CHATGPT-6-4-referee.md.
 
+- Also (2026-11-11): the stale C = C(gamma) in the proof of Lemma 6.4 (printed as C(gamma) at the annulus-hit display) is C(gamma, c_0), i.e. C(gamma, boldsymbol c_0) in the corrected draft.
 ## [C19] Lemma 6.8/6.9 negative-binomial tail events (author-approved 2026-11-10)
 In the proof of lemma:chance-of-being-absorbed, eq:number-of-walkers-nb-bound and the display after it bound P[N(.) <= ...]; both events are reversed and now read P[N(k_1) > (s_2^{-1}+C) k_1 | h, eta] <= exp(-c k_1) and P[N((s_2^{-1}+C)^{-1} k) > k | h, eta] <= exp(-c k). The stochastic domination by NegBinom(k_1, s_2) bounds the probability of needing too many walkers; with certain absorption N(m) = m and the printed left side equals 1. Typo-level; the inclusive threshold of the conclusion is routine rounding (the direct proof in notes/fp-gaps/CHATGPT-6-9-claims-referee.md gives s_3 = log(27/16)/4, s_4 = 1/4, s_5 = 1/8 from the uniform constants of LEMMA68). Source: notes/fp-gaps/CHATGPT-6-9-claims-referee.md (G2).
 
@@ -95,6 +104,7 @@ Independent referee check (notes/fp-gaps/CHATGPT-idla-C22-referee.md, chat 185):
 ## [C23] Lemma 5.3: dependence of the surplus random variable (applied 2026-11-10 under the author's standing approval)
 Printed: The statement wrote \mathfrak{s}=\mathfrak{s}(\delta), even though the existential quantifier comes after both \delta and t. Corrected: write \mathfrak{s}=\mathfrak{s}(\delta,t), so the notation matches the quantifier order; the quantifiers and proof are unchanged. Text: CHAT209-idla-3-1-4-2-5-3-audit-PRO.md, correction 7 (ChatGPT chat 209); exact LaTeX from ChatGPT chat 215.
 
+- Also (2026-11-11, GAPS-SEC2567A.md E-m1-2): the displayed surplus in the proof of the positive-surplus step is written s(rho, gamma, delta, t) (dependence on t, as in the statement).
 ## [C24] Lemma 7.3: almost-sure simultaneous scope (applied 2026-11-10 under the author's standing approval)
 Printed: The statement omitted its ambient probabilistic scope. Corrected: state that the comparison holds almost surely, simultaneously for every eps > 0. The quantifiers over t, B and b, the displayed inequality and the proof are unchanged. Text: CHAT163-idla-7-8-audit-PRO.md, section 4 (ChatGPT chat 163); exact LaTeX from ChatGPT chat 215.
 
@@ -111,7 +121,7 @@ Printed: C min over the open annulus A_{r,2r}(z) of mu_h(B_{c_0 r}(w)); no attai
 Printed: Step 1 compares the ratios L/R for h and h^C by bounded Weyl densities; after [C5] the kernel log(r/|u-v|) + 1 is negative for |u-v| > e r, so bounded densities do not give the multiplicative comparison. Corrected: write d mu_h = q d mu_{h^C} with a <= q <= b, b/a <= A_gamma on A_{r/3,3r}(z); average the h^C event over the circle of radius 3r/2 to bound the annulus mass, bound the positive part of the kernel, and get E_r(z; C) for h with C = A_gamma C_1 (1 + (log 4 - 1)/(1 - log 2)). The statement now records C = C(p, gamma, c_0) (c_0 = c_0(rho, gamma)), consistent with [C18]. Chat 244, Gap 2.
 
 ## [C29] Lemma 6.8 proof ([C26], short-window good radii): translated application of Lemma 6.6 (applied 2026-11-10 under the author's standing approval)
-Printed: "Apply Lemma 6.6, after translating by z"; the quantum-cone field is not translation invariant. Corrected: h(z + .) = h~^C + phi_z modulo constants with phi_z(w) = -gamma log|z + w| deterministic and continuous on the annuli (they avoid -z); adding phi_z is invertible on each annular sigma-field modulo constants, so Lemma 6.6 applies to the translated events with the same constants. Chat 244, Gap 3.
+Printed (in the [C26] replacement proof; the printed paper of arXiv:2211.04891 has no translation step, and the omission in Lemma 6.4 is [C32]): "Apply Lemma 6.6, after translating by z"; the quantum-cone field is not translation invariant. Corrected: h(z + .) = h~^C + phi_z modulo constants with phi_z(w) = -gamma log|z + w| deterministic and continuous on the annuli (they avoid -z); adding phi_z is invertible on each annular sigma-field modulo constants, so Lemma 6.6 applies to the translated events with the same constants. Chat 244, Gap 3.
 
 ## [C30] Lemma 6.8 statement: the event "exits ... through A" defined explicitly (applied 2026-11-10 under the author's standing approval)
 Printed: "X^{a,eps} exits V(Theta-bar + B_r) minus Theta through A" (A is a subset of the domain, not of its exit boundary). Corrected: with U = V(Theta-bar + B_r) minus Theta and tau the exit time of U, the event is {X_n in A for every 0 <= n < tau}, as the [C26] proof (eq:c26-bad-event) and Section 7 use it. Chat 244, Gap 4.
@@ -119,6 +129,29 @@ Printed: "X^{a,eps} exits V(Theta-bar + B_r) minus Theta through A" (A is a subs
 ## [C31] Definition 6.2 (def:stopped-idla), the Abelian-property lemma (lemma:abelian-IDLA) and the proof of Lemma 6.9: starting sites (applied 2026-11-10 under the author's standing approval)
 Printed: a_1, ..., a_k in Theta (Definition 6.2, lemma:abelian-IDLA "subset Theta", proof of Lemma 6.9), while the restarted aggregates start walkers on the boundary of the stopping set and Lemma 6.9 is stated for a_i in cl(Theta). Corrected: a_i in Theta' in Definition 6.2 and lemma:abelian-IDLA (a walker started at an unoccupied vertex is absorbed there at time zero), and a_i in cl(Theta) in the proof of Lemma 6.9. Not a defect of [C26]. Chat 244, Gap 5.
 
+## [C32] Lemma 6.4 proof: translation of the annuli and the number of radii (2026-11-11)
+- Where: proof of Lemma 6.4 (lemma:good-prevalance), the application of lemma:annulus-iterate and the choice of K.
+- Printed: lemma:annulus-iterate (stated for annuli centred at 0) is applied to the events E_r(z) with z != 0 without a translation step; K = floor(log_7 eps^{-1/2}).
+- Corrected: the translation step of Subsection comparison-estimates (h(z+.) = h~ + phi_z modulo constants, phi_z(w) = -gamma log|z+w|, the same argument as the translated application in Lemma 6.8) gives the hypotheses of lemma:annulus-iterate with the same marginal bounds and constants; K = floor(log_7 delta^{-1/2}).
+- Reason: the radii r_k lie in [delta, delta^{1/2}] and the number of them is of order log_7 delta^{-1/2}. Email item: Lemma 6.4 (new item, 2026-11-11).
+
+## [C33] Appendix A (obstacle problem): connectedness of V not assumed (E-c1-2, 2026-11-11)
+- Where: opening of Appendix A (sec:obstacle-appendix) and a remark after it.
+- Published: G undirected, locally finite and infinite; V a finite, connected set containing the origin.
+- Corrected: G undirected, locally finite, connected and infinite; V a finite set containing the origin. The remark gives the componentwise argument (paths in G to V^c; finite maximum principle on each component; obstacle zero on components not containing 0).
+- Reason: GAPS-SEC2567A.md E-c1-2 (MINIMAL-CORRECTION). The Section 4 reduction can give a disconnected ball-interior set. Email item: Appendix A (new item).
+
+## [C34] Proposition 5.1 proof: boundary vanishing (E-x1-1, 2026-11-11)
+- Where: proof of Proposition 5.1, the sentence 'Since w~ = gr_{B_rho}(., 0) = q = 0 on partial Lambda' (before the display for v - v~).
+- Printed: the ambient Green function and w~ vanish individually on the cluster boundary.
+- Corrected: w~ + (t/eps) gr_{B_rho}(., 0) vanishes on partial Lambda by obstacle contact (the obstacle is -(t/eps) gr_{B_rho}(., 0)); gr_Lambda and q_Lambda vanish there by killing. The statement is unchanged.
+- Reason: GAPS-SEC2567A.md E-x1-1 (MINIMAL-CORRECTION). Email item: Proposition 5.1 (new minor item).
+
+## [C35] Lemma 6.9: quantifier order of s_3 (E-c5-1, 2026-11-11)
+- Where: statement of lemma:chance-of-being-absorbed.
+- Printed: omega and s_3 chosen before s_0; s_4, s_5 after.
+- Corrected: omega chosen first; for each s_0 in (0,1) there exist s_3 > 0 and s_4, s_5 in (0,1). The proof is unchanged ([C19] proof kept). The replacement local-rate deduction in GAPS-SEC2567A.md E-c5-1 is NOT applied (see AUDIT-R1-RESPONSES.md, IDLA (A)).
+- Reason: the success probability of Lemma 6.7 may depend on s_0. Email item: Lemma 6.9 (new minor item).
 ## Readings (not corrections of the paper; line numbers of the corrected draft)
 
 ### (R1) The origin vertex `0` and `a^eps_0` (ESCALATIONS E-x3-3, worker A, 2026-11-04)

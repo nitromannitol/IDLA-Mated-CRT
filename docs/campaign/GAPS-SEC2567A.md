@@ -22,6 +22,8 @@ A candidate correction is to require 0 ∈ V for these two conclusions. Continui
 
 ## E-x1-1 — MINIMAL-CORRECTION to the boundary argument
 
+**Status (2026-11-11):** applied: paper [C34] (Proposition 5.1 proof); email item 'Proposition 5.1 (boundary vanishing)'.
+
 At corrected.tex:2117–2124 replace the assertion that the ambient Green function and w̃ vanish individually on ∂Λεt by: “w̃ + (t/ε) ḡBρ(·,0) vanishes on ∂Λεt by obstacle contact, while ḡΛεt and q̄Λεt vanish there by killing.” No change to the lemma statement is proposed by this item.
 
 Proof: the obstacle is φ = −(t/ε)ḡBρ(·,0), and the least supersolution w̃ satisfies w̃ ≥ φ. On vertices of the obstacle domain outside Λεt, the definition of Λεt excludes strict inequality, so w̃ = φ. On its exterior boundary both terms vanish under the obstacle boundary conditions, and outside the closure both are zero. Therefore v = w̃ − φ vanishes at every vertex outside the cluster, including ∂Λεt. The killed Green function and exit-time function defining ṽ vanish outside Λεt, so v − ṽ has zero boundary values. The displayed calculation in 2110–2116 gives Δ(v − ṽ) = 0 in the cluster. The finite-graph maximum principle applied to both signs gives v = ṽ there, hence the weaker comparison used at 2124. This contact calculation is checked in `mated_surplus_zero_off_cluster` (Proofs/Sec5/MeanValueInequality/BoundaryContact.lean:45).
@@ -48,6 +50,8 @@ The weaker condition P(F \ E) = 0 suffices for the countable Borel–Cantelli ap
 
 ## E-A8 — MINIMAL-CORRECTION to the remaining proof notation
 
+**Status (2026-11-11):** applied: paper [C4] (four proof occurrences replaced by the cell-union boundary); email item 'Lemmas 5.3 and 5.4'.
+
 The statements of Lemmas 5.3 and 5.4 and the definition of O₁ in Proposition 5.1 already use ∂Λ̄εt, with [C4] (corrected.tex:2011–2012, 2023–2024, 2032–2033). Four proof occurrences still use ∂η(Λεt), at 2062, 2067, 2095 and 2132. Proposed marked change: replace ∂η(Λεt) by ∂Λ̄εt at each of those four locations. This continues [C4]; it does not change either lemma's statement.
 
 The distinction matters. By local finiteness Λεt is finite; η(Λεt) is therefore a finite planar point set, whose boundary is itself. For a ∈ Λεt, η(a) lies in that boundary and its distance from it is zero. Thus the original positive-distance condition selects no vertices and cannot furnish the interior covering used at 2034–2045. The overline instead denotes the union of the cells, by the definition at `eq:vertex-scaling`. Replacing the four proof predicates makes them exactly the predicates in the corrected lemma statements, and the O₁ predicate at the Proposition 5.1 application agrees with those statements after replacing δ by δ/4. A search for the literal old boundary expression finds no other live occurrences beyond the four just listed (the remaining matches are [C4] comments).
@@ -55,6 +59,8 @@ The distinction matters. By local finiteness Λεt is finite; η(Λεt) is there
 This resolves the notational mismatch only. It does not supply the substantive estimates of Lemmas 5.3 and 5.4 or the other steps of Proposition 5.1; in particular, the surplus and stopped-domain issues E-c2-5 and E-c1-5 remain independent.
 
 ## E-c5-2 — MINIMAL-CORRECTION to Definition 6.2 and Lemma 6.3
+
+**Status (2026-11-11):** NOT applied. Conflicts with the author-approved [C31] (starting sites in Theta'); see AUDIT-R1-RESPONSES.md, IDLA (A).
 
 At corrected.tex:2290 and 2306, allow arbitrary starting vertices a₁,…,aₖ ∈ Vε in place of a₁,…,aₖ ∈ Θ. Interpret P as the list or multiset of stopped walkers, preserving multiplicity. In particular, a walker started outside Θ settles immediately if its site is available, or is stopped immediately if the site is outside Θ′. The original statement is a special case; the generalization is used because the first starts in Lemma 6.10 are in cl Θ and subsequent starts are on the exterior stopping boundary.
 
@@ -66,6 +72,8 @@ Downstream check: the initial starts and every restart in Lemma 6.10 are now cov
 
 ## E-c3-1 — MINIMAL-CORRECTION to Lemma 7.4
 
+**Status (2026-11-11):** already applied: paper [C25] (Lemma 7.4 statement uses Lambda_t^eps); email item 'Lemma 7.4'.
+
 At corrected.tex:3077–3082 replace “a ∈ Dε(t/ε) \ {0}” and “path … in Dε(t/ε)” by “a ∈ Λεt \ {0}” and “path … in Λεt”. Here Λεt is the positive set of the stopped odometer uεt. This removes the unsupported first step from a boundary site of the unstopped cluster, where the displayed equality Δu = 1/deg need not hold. The corrected Lean statement is `CrudeUpperBoundStmt` (Draft/Section7.lean); the printed paper still has the larger domain.
 
 Proof on the degree-bound event: for any a ∈ Λεt distinct from 0, Δu(a) = 1/deg(a), so a neighboring vertex b has u(b) ≥ u(a) + 1/deg(a) ≥ u(a) + log(ε⁻¹)⁻². In particular u(b) > 0, so b ∈ Λεt. Repeat. The discrete cluster is finite, and the strict increases rule out revisiting vertices; therefore the procedure must reach 0. The degree bound holds with polynomially high probability by the cited result used at corrected.tex:3090–3094. This argument is formalized by `crudeUpperBound_of_mapSteps` in Steps/Sec7/CrudeUpperBound.lean:47, using the finite-cluster and stopped-odometer Laplacian hypotheses explicitly.
@@ -73,6 +81,8 @@ Proof on the degree-bound event: for any a ∈ Λεt distinct from 0, Δu(a) = 1
 Downstream, the sole invocation is Proposition 7.1 Step 3 at 3253–3263. Starting from any positive-odometer vertex outside Θτ₂, follow the increasing path toward 0 ∈ Θτ₂ until it first reaches the boundary of Θτ₂. The odometer there is at most the boundary maximum Oτ₂ ≤ ε⁻ω₀, so there are at most log(ε⁻¹)² ε⁻ω₀ increments. The cell diameter bound converts this to the needed Euclidean distance. If “boundary of the support” is taken to mean the exterior boundary, add one adjacent cell; this changes the bound by only one cell diameter. The other iteration estimates and the equality between stopped and unstopped odometers are separate issues and are not established by this repair.
 
 ## E-c1-2 — MINIMAL-CORRECTION to Appendix A's domain hypothesis
+
+**Status (2026-11-11):** applied: paper [C33] (Appendix A hypotheses and remark); email item 'Appendix A (connectedness)'.
 
 At corrected.tex:3354, replace “an undirected, locally finite, and infinite graph G” and “a finite, connected set … V” by “an undirected, locally finite, connected, infinite graph G” and “a finite set … V”. Retain the hypothesis 0 ∈ V. This is enough for the application to the mated-CRT graph, which has all integer vertices and an edge between consecutive vertices. The change strengthens the ambient graph hypothesis while removing the unnecessary connectedness hypothesis on the domain.
 
@@ -98,6 +108,8 @@ A candidate correction is to impose s ≥ ε^β for a sufficiently small determi
 
 ## E-m1-2 — MINIMAL-CORRECTION to clarify the quantified dependence
 
+**Status (2026-11-11):** applied: paper [C23] (surplus s(rho,gamma,delta,t) in the proof of Proposition 5.1); email item 'Lemmas 5.3 and 5.4'.
+
 At corrected.tex:2008–2009 replace `𝔰 = 𝔰(δ)` by `𝔰 = 𝔰(δ,t)`; likewise include t among the arguments displayed at 2096 and 2130. The operative sentence fixes δ and t before asserting existence of 𝔰, and Proposition 5.1, the only application at 2029–2033, also fixes δ and t separately (see its statement at 1975–1980). This makes the dependence consistent with the actual quantifier order of Draft/Section5.lean:67 and with that application.
 
 In symbols the scope supplied by the sentence is ∀δ ∀t ∃𝔰 P(δ,t,𝔰). It does not yield ∀δ ∃𝔰 ∀t P(δ,t,𝔰): for the elementary predicate 0 < 𝔰 < t, the former holds for all t > 0 while the latter fails. Thus the displayed notation `𝔰(δ)` should not be used as evidence of a uniform-in-t result; if the authors intend such uniformity, it is a distinct stronger claim requiring a separate proof. The replacement preserves independence of ε, which the subsequent application needs.
@@ -105,6 +117,8 @@ In symbols the scope supplied by the sentence is ∀δ ∀t ∃𝔰 P(δ,t,𝔰)
 This is a scope clarification, not a proof of the positive-surplus estimate: that estimate has the separate strict-obstacle and geometric issues recorded under E-c2-5.
 
 ## E-c5-1 — MINIMAL-CORRECTION to the local-rate deduction
+
+**Status (2026-11-11):** statement order applied: paper [C35]; email item 'Lemma 6.9 (quantifier order)'. The replacement local-rate proof is NOT applied (it replaces the author-approved [C19] tail argument); see AUDIT-R1-RESPONSES.md.
 
 In Lemma 6.9 (corrected.tex:2641–2643), move the choice of s₃ > 0 after “for each s₀ ∈ (0,1)”, alongside s₄ and s₅. This is the order supplied by Lemma 6.7: its success probability p = s₂ may depend on s₀. The displayed negative-binomial tail at 2672 and the following display have their inequality directions reversed: they bound the probability of taking *at least* the indicated number of trials, not at most that number. The replacement below avoids rounding and these tail displays.
 
@@ -122,6 +136,8 @@ This also covers k = 0. Thus the local-rate conclusion holds with s₃ = s₄ = 
 The sole downstream application is Lemma 6.10, which fixes s₀ before choosing its parameters (corrected.tex:2710–2715), so the local order suffices for that application; its other estimates require independent checking. This proof is conditional on the printed scale-independent Lemma 6.7. E-A10 separately questions that input: if only p(r) = p/(1+|log r|)² is available, the same calculation gives the rate p(r)/4 rather than the displayed scale-independent conclusion. The change of quantifier order alone does not resolve E-A10.
 
 ## E-x3-2 — MINIMAL-CORRECTION to the sequence quantifier
+
+**Status (2026-11-11):** already applied: paper [C12] (Lemmas 4.6-4.7); email item 'Lemmas 4.6 and 4.7'.
 
 At corrected.tex:1731 replace “Almost surely, for each t > 0 and each deterministic sequence …” by “For each fixed t > 0 and each deterministic sequence …, there is a deterministic subsequence along which, almost surely, the following holds.” The following conclusion should say that the rescaled functions form a relatively compact family for uniform convergence on the closed ball, with Hölder-continuous limits, and that a measurable convergent subsequence can be selected. Apply the same fixed-sequence order to Lemma 4.7 at 1742–1743. This is a proposed repair of quantifier scope; the measurable-choice issue and the Hölder boundary upgrade must still be supplied by their own hypotheses or proofs.
 
@@ -163,6 +179,8 @@ Every Hₘ,ⱼ in the initial reduction is compact and has a countable dense sub
 
 ## E-c3-3 — MINIMAL-CORRECTION to the exit-time argument, with explicit inputs
 
+**Status (2026-11-11):** NOT applied. The written argument adds the open strict-growth prerequisite (E-c5-3) as an explicit hypothesis; see AUDIT-R1-RESPONSES.md, IDLA (A).
+
 At corrected.tex:3330–3332 replace the unexplained appeal to `T^b =d T` by the countable-event argument below, using the measurable stopped-family process and the joint-law equality of Lemma 2.5. Add as an explicit prerequisite the strict growth `closure(Λ_s) ⊆ Λ_t` for 0 < s < t (at least for small times). This last prerequisite is the independently assigned issue E-c5-3; the argument here does not prove it from the printed hypotheses. The measurable stopped-family process is `ConeFamilyAEMeasurableStep`; its construction also depends on the Section 2 inputs. Under those inputs the corrected conclusion is the exact limit required there, `b T^b → ∞` in probability, without asserting an unverified equality of laws for the exit-time functional.
 
 Let D be a fixed countable dense subset of the plane and write F(q,z) for membership in the family stopped at the half-ball exit, including the time-in-domain condition. For x ≥ 0 define the measurable event E_x that there is no rational q > x such that F(q,0) holds and every d ∈ D with F(q,d) satisfies |d| < ρ/4. The event is a countable Boolean combination of coordinates. If the scaled exit time T^b from B_{ρ/3} obeys b T^b ≤ t, its stopped process belongs to E_{t/b}: otherwise, openness and density put the entire q-ball in the closed ball of radius ρ/4, hence inside B_{ρ/3}, contradicting q > t/b ≥ T^b. The stopped-family uniqueness in Lemma 2.5 identifies the stopped scaled family with the global rescaled family on the interval where it is needed; this identification is essential to the implication.
@@ -175,6 +193,8 @@ The left side may be interpreted as outer probability; it is dominated by the me
 
 ## E-c2-3 — MINIMAL-CORRECTION, conditional on the measurable stopped family
 
+**Status (2026-11-11):** NOT applied. Conditional on the measurable stopped family; the replacement is stated through Lean declarations; see AUDIT-R1-RESPONSES.md, IDLA (A).
+
 In the proof of Proposition 6.1 at corrected.tex:2850–2875, fix t as in the proposition, use a deterministic inner-radius cutoff chosen after a probability tolerance is fixed, and explicitly invoke a measurable version of the family stopped at ∂B₁/₂. The required measurability is `ConeFamilyAEMeasurableStep` together with existence in Lemma 2.4; this is a necessary stated input to the proof, not something supplied by pathwise openness alone. `boundaryLayerMeasurableStep_of_coneFamilyAEMeasurable` (Proofs/Measurability/BoundaryLayer.lean:415) proves the exact Lean event-measurability conclusion from these inputs. The cited route for the family measurability itself depends on the separate strict-growth issue E-c5-3; this verdict does not settle it.
 
 Here is the fixed-time argument. Work on the full-measure event on which the global and stopped families agree before the half-ball exit. Let X(q,z) be the stopped family process, with measurable coordinates, and choose a countable dense set D. Each harmonic ball is regular open, so its trace on D determines it. For a regular open U, the layer U \ B⁻_r(U) is a countable union of deterministic intersections of balls: an inner-ball test says that all points of D in a slightly larger ball lie in U, while an exterior-ball test says that some ball about a point of D has no points of D in U. These tests are countable Boolean combinations of trace events. For any countable family of deterministic Borel sets with measurable selection events, the mass of their random union is measurable: first enumerate finite partial unions, partition according to their finitely many selection bits, and then take the increasing limit of their masses. This uses measurability of the LQG mass of each deterministic Borel set. Consequently the layer mass has a null-measurable version.
@@ -185,6 +205,8 @@ To make the choices deterministic, first fix an error tolerance, then choose a d
 
 ## E-c2-7 — MINIMAL-CORRECTION to the discrete-cluster part of the proof
 
+**Status (2026-11-11):** NOT applied. Requires a new relaxed statement of Lemma 5.2 and the inner estimate (E-c2-5, open); see AUDIT-R1-RESPONSES.md, IDLA (A).
+
 At corrected.tex:2031–2034 use the relaxed form of Lemma 5.2 below, and at 2043 cite the discrete-cluster inner estimate from the proof of Proposition 4.2, not Proposition 4.2's stated inclusion alone. Specifically, for the present application take O₂ = Λᵋ_t and O₁ equal to the δ/4-deep vertices of Λᵋ_t on {t < T} and empty otherwise. Lemma 5.2's conclusion for the ordinary aggregate and for stopping at O₂ remains valid when O₁ is an arbitrary subset of O₂, O₂ is a null-measurable random subset of Vᵋ(Bρ), and the two Green inequalities hold with probability tending to one on O₁. No connectedness or origin condition is imposed on O₁. The quenched statement in `generalIDLALowerBoundRelaxed_of_steps` (Steps/Sec5/IDLALowerBound.lean) and its joint-law transfer in `joint_relaxedIDLABounds` (Proofs/IDLA/JointRelaxedLowerBound.lean:13) give the precise formulation. As in Lemma 5.2, q is deterministic and positive and the positive surplus is environment-measurable and independent of ε.
 
 Proof of the relaxed application. The site estimate in the proof of Lemma 5.2 is pointwise in a ∈ O₂ and uses the two Green inequalities at that site, not a path joining it to the origin inside O₁. The union bound is over O₁ ⊆ O₂ ⊆ Vᵋ(Bρ); the cell-count estimate controls the number of terms. For a random positive surplus, first restrict to its being at least a fixed positive number, use the uniform tail estimate there, then let that lower cutoff decrease to zero. In the joint law, form the null-measurable envelope G of vertices of O₂ satisfying both Green inequalities. On the good event O₁ ⊆ G, and the pointwise estimate applies to every vertex of G. This removes any need for a measurable O₁ and avoids integrating a possibly nonmeasurable quenched failure probability; the probability of the exceptional event tends to zero. Set O₁ = ∅ off {t < T}, so Lemmas 5.3–5.4 give the necessary good event despite only being asserted on {t < T}.
@@ -193,6 +215,8 @@ The further input needed at 2043 is B⁻_{δ/2}(Λ_t) ⊆ fill(Λᵋ_t), with pr
 
 The resulting conclusion is the ordinary lower bound and the version stopped at Λᵋ_t; see `joint_iDLALowerBound_discrete_of_steps` (Proofs/IDLA/JointDiscreteLowerBound.lean:14). This checks the geometric use in Proposition 5.1 and the unstopped lower bound used in the main theorem. It does **not** establish the proposition's distinct claim for stopping at Vᵋ(Λ_t), which Proposition 6.1 uses; that remains E-c1-5 and cannot be obtained merely by the displayed correction. The inner estimate is likewise conditional on the independently assigned strict-obstacle input.
 ## E-x2-1 — MINIMAL-CORRECTION to the shell proof, conditional on corrected numbered inputs
+
+**Status (2026-11-11):** NOT applied. Conditional verdict; the replacement is defined by reference to Lean files and to separate inputs; see AUDIT-R1-RESPONSES.md, IDLA (A).
 
 The following geometric-radius calculation was the first partial finding; the complete conditional verdict is recorded below. Write `q = 1 - s₂ ∈ (0,1)` and `p = 1/(2β⁻) > 0`. Suppose the stated contraction `O_j ≤ q O_{j-1}` has been established for `1 ≤ j < τ₁`, and `0 ≤ ε O₀ < δ₀`. For `1 ≤ k < τ₁`, the definition of `τ₁` makes the maximum in the definition of `r_k` attain its first term, and hence
 
