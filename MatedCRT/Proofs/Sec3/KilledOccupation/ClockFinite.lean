@@ -363,4 +363,112 @@ lemma measure_prod_congr_of_fst_notMem {Ω : Type*} [MeasurableSpace Ω] {P : Me
   refine measure_congr (Filter.eventuallyEqSet_iff.2 ?_)
   filter_upwards [ae_fst_notMem_prod PB hN0] with x hx using h x hx
 
+/-!
+### Exit time of a ball under planar Brownian motion (hσexit of `rescaled_occupation_green_identity`)
+
+The exit time `τ` of `ball z r` is almost surely finite: `{τ = ∞}` lies in `{ω T ∈ ball z r}` for every
+`T`, and the real part of `ω T` is Gaussian with variance `T`, which gives mass at most
+`2r/√(2Real.piT) → 0` to an interval of length `2r`. Literature: Mörters-Peres, Brownian Motion, Ch. 2 (a.s. exit from
+bounded sets); Armitage-Gardiner for the potential-theoretic reading of the exit time.
+-/
+
+open HarmonicBalls in
+/-- The real part of planar Brownian motion at a fixed time `T` is the Gaussian `N(Re y, T)`. -/
+theorem planarBrownianMotion_re_eval_map (y : ℂ) (T : NNReal) :
+    (planarBrownianMotion y).map (fun ω : ContinuousPath ℂ => (ω T).re) = gaussianReal y.re T := by
+  have hre : Measurable (fun ω : ContinuousPath ℂ => (reImPath ω).1) :=
+    measurable_fst.comp measurable_reImPath
+  have hcomp : (fun ω : ContinuousPath ℂ => (ω T).re) =
+      (fun f : ContinuousPath ℝ => f T) ∘ (fun ω : ContinuousPath ℂ => (reImPath ω).1) := by
+    funext ω
+    simp [reImPath_fst_apply]
+  have hg : Measurable (fun f : ContinuousPath ℝ => f T) := ContinuousPath.measurable_coordinateProcess T
+  rw [hcomp, ← Measure.map_map hg hre, planarBrownianMotion_map_re]
+  exact brownianMotion_map_eval T y.re
+
+/-- A Gaussian `N(μ, T)` with `T ≠ 0` gives an interval `(a, b)` mass at most `(b - a) / √(2Real.piT)`
+(the density is bounded by `(√(2Real.piT))⁻¹`). -/
+theorem gaussianReal_Ioo_le_inv_sqrt (μ : ℝ) {T : NNReal} (hT : T ≠ 0) (a b : ℝ) :
+    gaussianReal μ T (Ioo a b) ≤ ENNReal.ofReal ((√(2 * Real.pi * (T : ℝ)))⁻¹ * (b - a)) := by
+  have hc0 : 0 ≤ (√(2 * Real.pi * (T : ℝ)))⁻¹ := by positivity
+  have hpt : ∀ x : ℝ, gaussianPDF μ T x ≤ ENNReal.ofReal (√(2 * Real.pi * (T : ℝ)))⁻¹ := by
+    intro x
+    simp only [gaussianPDF_def, gaussianPDFReal_def]
+    refine ENNReal.ofReal_le_ofReal (mul_le_of_le_one_right hc0 (Real.exp_le_one_iff.2 ?_))
+    have h1 : 0 ≤ (x - μ) ^ 2 / (2 * (T : ℝ)) := by positivity
+    have h2 : -(x - μ) ^ 2 / (2 * (T : ℝ)) = -((x - μ) ^ 2 / (2 * (T : ℝ))) := neg_div _ _
+    rw [h2]
+    linarith
+  calc gaussianReal μ T (Ioo a b) = ∫⁻ x in Ioo a b, gaussianPDF μ T x := gaussianReal_apply μ hT _
+    _ ≤ ∫⁻ _ in Ioo a b, ENNReal.ofReal (√(2 * Real.pi * (T : ℝ)))⁻¹ :=
+        setLIntegral_mono' measurableSet_Ioo (fun x _ => hpt x)
+    _ = ENNReal.ofReal (√(2 * Real.pi * (T : ℝ)))⁻¹ * volume (Ioo a b) := setLIntegral_const _ _
+    _ = ENNReal.ofReal ((√(2 * Real.pi * (T : ℝ)))⁻¹ * (b - a)) := by
+        rw [Real.volume_Ioo, ENNReal.ofReal_mul hc0]
+
+open HarmonicBalls in
+/-- **Almost sure finite exit time** (hσexit input): the first exit time of a ball by planar Brownian motion is
+almost surely finite, from every starting point. -/
+theorem planar_exit_ae_lt_top (y z : ℂ) (r : ℝ) :
+    ∀ᵐ b ∂planarBrownianMotion y, ContinuousPath.exitTime (ball z r) b < ⊤ := by
+  rw [ae_iff]
+  have hbound : ∀ n : ℕ, (planarBrownianMotion y) {b : ContinuousPath ℂ | ¬ ContinuousPath.exitTime (ball z r) b < ⊤}
+      ≤ ENNReal.ofReal ((√(2 * Real.pi * ((n : ℝ) + 1)))⁻¹ * (2 * r)) := by
+    intro n
+    set T : NNReal := (n : NNReal) + 1 with hT
+    have hT0 : T ≠ 0 := by rw [hT]; positivity
+    have hTr : (T : ℝ) = (n : ℝ) + 1 := by simp [hT]
+    have hmeas : Measurable (fun b : ContinuousPath ℂ => (b T).re) :=
+      Complex.measurable_re.comp (ContinuousPath.measurable_coordinateProcess T)
+    have hsub : {b : ContinuousPath ℂ | ¬ ContinuousPath.exitTime (ball z r) b < ⊤} ⊆
+        (fun b : ContinuousPath ℂ => (b T).re) ⁻¹' Ioo (z.re - r) (z.re + r) := by
+      intro b hb
+      have htop : ContinuousPath.exitTime (ball z r) b = ⊤ := top_le_iff.1 (not_lt.1 hb)
+      have hall : ∀ t : NNReal, b t ∈ ball z r := (ContinuousPath.exitTime_eq_top_iff _ _).1 htop
+      have h1 : dist (b T) z < r := mem_ball.1 (hall T)
+      rw [dist_eq_norm] at h1
+      have h2 : |(b T - z).re| ≤ ‖b T - z‖ := Complex.abs_re_le_norm _
+      have h3 : |(b T - z).re| < r := lt_of_le_of_lt h2 h1
+      rw [Complex.sub_re, abs_lt] at h3
+      simp only [Set.mem_preimage, Set.mem_Ioo]
+      constructor <;> linarith [h3.1, h3.2]
+    calc (planarBrownianMotion y) {b : ContinuousPath ℂ | ¬ ContinuousPath.exitTime (ball z r) b < ⊤}
+        ≤ (planarBrownianMotion y) ((fun b : ContinuousPath ℂ => (b T).re) ⁻¹' Ioo (z.re - r) (z.re + r)) :=
+          measure_mono hsub
+      _ = (planarBrownianMotion y).map (fun b : ContinuousPath ℂ => (b T).re) (Ioo (z.re - r) (z.re + r)) := by
+          rw [Measure.map_apply hmeas measurableSet_Ioo]
+      _ = gaussianReal y.re T (Ioo (z.re - r) (z.re + r)) := by
+          rw [planarBrownianMotion_re_eval_map]
+      _ ≤ ENNReal.ofReal ((√(2 * Real.pi * (T : ℝ)))⁻¹ * ((z.re + r) - (z.re - r))) :=
+          gaussianReal_Ioo_le_inv_sqrt _ hT0 _ _
+      _ = ENNReal.ofReal ((√(2 * Real.pi * ((n : ℝ) + 1)))⁻¹ * (2 * r)) := by
+          rw [hTr, show (z.re + r) - (z.re - r) = 2 * r by ring]
+  have hlim : Tendsto (fun n : ℕ => ENNReal.ofReal ((√(2 * Real.pi * ((n : ℝ) + 1)))⁻¹ * (2 * r)))
+      atTop (𝓝 0) := by
+    have hA : Tendsto (fun n : ℕ => 2 * Real.pi * ((n : ℝ) + 1)) atTop atTop :=
+      Tendsto.const_mul_atTop (by positivity)
+        (tendsto_atTop_add_const_right _ 1 tendsto_natCast_atTop_atTop)
+    have hR : Tendsto (fun n : ℕ => (√(2 * Real.pi * ((n : ℝ) + 1)))⁻¹ * (2 * r)) atTop (𝓝 (0 * (2 * r))) :=
+      (tendsto_inv_atTop_zero.comp (Real.tendsto_sqrt_atTop.comp hA)).mul_const (2 * r)
+    simpa [zero_mul, ENNReal.ofReal_zero] using ENNReal.tendsto_ofReal hR
+  exact le_antisymm (ge_of_tendsto' hlim hbound) zero_le
+
+open HarmonicBalls in
+/-- **hσexit, discharged** (`MainOccupation.lean`, `rescaled_occupation_green_identity`): for the first exit time
+`σ b = (exitTime (ball z r) b).toNNReal` of planar Brownian motion started in the ball, almost surely the path stays
+in the ball before `σ` and lies outside the ball at `σ`. -/
+theorem ae_planar_exit_spec (y z : ℂ) (r : ℝ) (hy : y ∈ ball z r) :
+    ∀ᵐ b ∂planarBrownianMotion y,
+      (∀ s < (ContinuousPath.exitTime (ball z r) b).toNNReal, b s ∈ ball z r) ∧
+        b ((ContinuousPath.exitTime (ball z r) b).toNNReal) ∉ ball z r := by
+  filter_upwards [planar_exit_ae_lt_top y z r, ae_planarBrownianMotion_eval_zero y] with b hfin h0
+  have hfin' : ContinuousPath.exitTime (ball z r) b ≠ ⊤ := ne_top_of_lt hfin
+  refine ⟨fun s hs => ContinuousPath.mem_of_lt_exitTime _ _ s ?_, ?_⟩
+  · rw [← ENNReal.coe_toNNReal hfin']
+    exact_mod_cast hs
+  · have hfr := ContinuousPath.coordinate_exitTime_mem_frontier (ball z r) isOpen_ball b
+      (by rw [h0]; exact hy) hfin'
+    rw [isOpen_ball.frontier_eq] at hfr
+    exact hfr.2
+
 end MatedCRT.KilledOccupation
