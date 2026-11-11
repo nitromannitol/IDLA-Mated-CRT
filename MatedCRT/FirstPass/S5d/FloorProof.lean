@@ -207,7 +207,7 @@ def floorBadG {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ρ t e N ε
 /-- The localization failure `L_N^c` of floor note (16), `L_N = {s ≥ 1/N, M ≤ N}`. -/
 def floorBadLoc {Ω : Type} (s M : Ω → ℝ) (N : ℝ) : Set Ω := {ω | ¬ (1 / N ≤ s ω ∧ M ω ≤ N)}
 
-/-- **Proposition 5.1 floor, the single floor input (floor note Part I; corrected tex 2362 [C21]).** Given the named inputs
+/-- **Proposition 5.1 floor, the single floor input (corrected tex 2362 [C21]).** Given the named inputs
 `h41` (Theorem `convergence-divisible`), `h33` (Lemma `uniform-convergence-of-greens-function`), `h28` (Lemma
 `cell-size-estimate`), `hm` (`eq:meps-scaling`), `hcell` (cell adjacency) and the floor constant `hconst`, the cell floor
 `StoppedFloorCellStep 𝒮` holds (Sections 6-9: the epsilon-n limit of Limit.lean over the good events). -/

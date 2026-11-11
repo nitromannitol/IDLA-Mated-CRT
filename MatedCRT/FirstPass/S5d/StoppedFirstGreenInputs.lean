@@ -60,7 +60,7 @@ def StoppedPathwiseInputs {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) 
       mLaplacian (S.mult ε ω) (matedLeastSupersolution (S.mult ε ω) ε (S.η ω) ρ t) a = (mdeg (S.mult ε ω) a : ℝ)⁻¹) ∧
   (0 : ℤ) ∈ cellVertices ε (S.η ω) (Λ ω t)
 
-/-- **NEW, OPEN (probabilistic input; [C21] of CORRECTIONS.md, referee 5.1-5.2 (5.1), (5.2), (5.4), (5.5)).** For `δ ∈ (0, ρ)`
+/-- **OPEN (probabilistic input; [C21] of CORRECTIONS.md, referee 5.1-5.2 (5.1), (5.2), (5.4), (5.5)).** For `δ ∈ (0, ρ)`
 and `t > 0`, there are measurable random constants `c, C > 0` such that on `{t < T}`, with probability tending to `1` as
 `ε → 0⁺`: the surplus floor on the targets `Z^ε_t = stoppedTargetSet`, the ceiling off the killing set `I^ε_t =
 stoppedKillSet`, and the exit bound `∑_{b∈I} G_I(b,a) ≤ C/ε` on the targets. -/
