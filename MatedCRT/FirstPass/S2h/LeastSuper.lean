@@ -3,16 +3,15 @@ import MatedCRT.FirstPass.S2g.Family
 import MatedCRT.Draft.Section2
 
 /-!
-# Least-supersolution null hull of the cone (fp-S2h, z1, round 3)
+# Least-supersolution null hull of the cone
 
-Written argument: `notes/fp-gaps/CHATGPT-cone-leastsuper-null-hull.md`, Sections 2-7 (operator note 23:02 UTC).
 
-* `lsoClass γ` (Section 2): finite mass on `closedBall 0 (7/8)` and, from some index `m ≥ 6` on, two-sided bounds
+* `lsoClass γ`: finite mass on `closedBall 0 (7/8)` and, from some index `m ≥ 6` on, two-sided bounds
   `r_n^{β⁻} ≤ ν(B_{r_n}(q)) ≤ r_n^{β⁺}` at all rational centres `q` of `B_{13/16}`, with `r_n = 2^{-n}`.
   It is Giry-measurable (`measurableSet_lsoClass`).
-* `ae_mem_lsoClass` (Section 3): cone measures lie in `lsoClass γ` almost surely, from `VolumeGrowthStmt`
+* `ae_mem_lsoClass`: cone measures lie in `lsoClass γ` almost surely, from `VolumeGrowthStmt`
   (Lemma 2.7) and the Radon property of the LQG measure, by Borel-Cantelli (`ae_eventually_notMem`).
-* `lsoClass_leastSuperOK` (Sections 4-5): every `ν ∈ lsoClass γ` satisfies `LeastSuperOK ν`. The restriction
+* `lsoClass_leastSuperOK`: every `ν ∈ lsoClass γ` satisfies `LeastSuperOK ν`. The restriction
   `ν.restrict (closedBall 0 (7/8))` has volume growth on `B_{3/4}` (`volumeGrowth_restrict_of_mem`, a dyadic
   comparison); the frozen deterministic input `LeastSupersolutionMemOfVolumeGrowthStmt` applies; the restriction
   does not change the supersolution class (`supersolutions_restrict`, `laplacianLE_restrict_iff`).
@@ -49,7 +48,7 @@ lemma lsoLowerExp_gt (γ : ℝ) : (2 + γ) ^ 2 / 2 < lsoLowerExp γ := by
   unfold lsoLowerExp
   linarith
 
-/-- The dyadic radius `r_n = 2^{-n}` (Section 2 of the written argument). -/
+/-- The dyadic radius `r_n = 2^{-n}`. -/
 noncomputable def dyadicRad (n : ℕ) : ℝ := (1 / 2 : ℝ) ^ n
 
 lemma dyadicRad_pos (n : ℕ) : 0 < dyadicRad n := pow_pos (by norm_num) n
@@ -94,7 +93,7 @@ lemma exists_dyadic_mem {u : ℝ} (hu : 0 < u) (hu1 : u ≤ 1) :
 /-- Rational centres: `ratCentre (p, q) = p + i q`. -/
 noncomputable def ratCentre (q : ℚ × ℚ) : ℂ := ⟨(q.1 : ℝ), (q.2 : ℝ)⟩
 
-/-- The countable index set `Q = (ℚ + iℚ) ∩ B_{13/16}` of rational centres (Section 2). -/
+/-- The countable index set `Q = (ℚ + iℚ) ∩ B_{13/16}` of rational centres. -/
 abbrev RatCentreIdx : Type := {q : ℚ × ℚ // ‖ratCentre q‖ < 13 / 16}
 
 /-- The two-sided bound at level `n`, centre `q`, in `[0, ∞]`: `r_n^{β⁻} ≤ ν(B_{r_n}(q)) ≤ r_n^{β⁺}`. -/
@@ -102,7 +101,7 @@ def lsoBound (γ : ℝ) (n : ℕ) (q : RatCentreIdx) (ν : Measure ℂ) : Prop :
   ENNReal.ofReal ((dyadicRad n) ^ lsoLowerExp γ) ≤ ν (ball (ratCentre q.1) (dyadicRad n)) ∧
     ν (ball (ratCentre q.1) (dyadicRad n)) ≤ ENNReal.ofReal ((dyadicRad n) ^ lsoUpperExp γ)
 
-/-- The class `R_γ` of Section 2 (CHATGPT-cone-leastsuper-null-hull.md, (1)): `ν(B̄_{7/8}) < ∞` and, for some
+/-- The class `R_γ`: `ν(B̄_{7/8}) < ∞` and, for some
 `m ≥ 6`, all levels `n ≥ m` and all rational centres satisfy the two-sided bounds. -/
 def lsoClass (γ : ℝ) : Set (Measure ℂ) :=
   {ν | ν (closedBall (0 : ℂ) (7 / 8)) < ⊤ ∧
@@ -114,7 +113,7 @@ lemma measurableSet_lsoBound (γ : ℝ) (n : ℕ) (q : RatCentreIdx) :
     Measure.measurable_coe measurableSet_ball
   exact (measurableSet_le measurable_const hm).inter (measurableSet_le hm measurable_const)
 
-/-- `lsoClass γ` is Giry-measurable: countably many evaluations `ν ↦ ν s` on Borel sets (Section 2). -/
+/-- `lsoClass γ` is Giry-measurable: countably many evaluations `ν ↦ ν s` on Borel sets. -/
 theorem measurableSet_lsoClass (γ : ℝ) : MeasurableSet (lsoClass γ) := by
   have h1 : MeasurableSet {ν : Measure ℂ | ν (closedBall (0 : ℂ) (7 / 8)) < ⊤} :=
     measurableSet_lt (Measure.measurable_coe measurableSet_closedBall) measurable_const
@@ -166,7 +165,7 @@ theorem leastSupersolution_restrict {ν : Measure ℂ} {K : Set ℂ} {r : ℝ} {
 /-! ## Volume growth of the restriction -/
 
 /-- The restriction `ν|B̄_{7/8}` of a measure of `lsoClass γ` has volume growth on `B_{3/4}` with exponents
-`(β⁻ + 1, β⁺/2)` (Section 4): the dyadic radii `δ₋ ∈ [r/4, r/2)` and `δ₊ ∈ [2r, 4r)` sandwich `B_r(z)` between
+`(β⁻ + 1, β⁺/2)`: the dyadic radii `δ₋ ∈ [r/4, r/2)` and `δ₊ ∈ [2r, 4r)` sandwich `B_r(z)` between
 two balls centred at a rational point `q` with `|q - z| < r/4`. -/
 theorem volumeGrowth_restrict_of_mem {γ : ℝ} (hγ2 : γ < 2) {ν : Measure ℂ} (hν : ν ∈ lsoClass γ) :
     VolumeGrowth (ν.restrict (closedBall (0 : ℂ) (7 / 8))) (3 / 4)
@@ -294,8 +293,8 @@ theorem volumeGrowth_restrict_of_mem {γ : ℝ} (hγ2 : γ < 2) {ν : Measure �
 
 /-! ## Deterministic membership: `lsoClass γ ⊆ {ν | LeastSuperOK ν}` -/
 
-/-- Every measure of `lsoClass γ` satisfies `LeastSuperOK` (Section 5), from the frozen deterministic input
-`LeastSupersolutionMemOfVolumeGrowthStmt` applied to the restriction `ν|B̄_{7/8}` (Section 4). -/
+/-- Every measure of `lsoClass γ` satisfies `LeastSuperOK`, from the frozen deterministic input
+`LeastSupersolutionMemOfVolumeGrowthStmt` applied to the restriction `ν|B̄_{7/8}`. -/
 theorem lsoClass_leastSuperOK (hL : LeastSupersolutionMemOfVolumeGrowthStmt) {γ : ℝ} (hγ2 : γ < 2)
     {ν : Measure ℂ} (hν : ν ∈ lsoClass γ) : LeastSuperOK ν := by
   unfold LeastSuperOK
@@ -310,7 +309,7 @@ theorem lsoClass_leastSuperOK (hL : LeastSupersolutionMemOfVolumeGrowthStmt) {γ
   rw [leastSupersolution_restrict hUK, supersolutions_restrict hUK] at hmem
   exact hmem
 
-/-! ## Cone measures lie in `lsoClass γ` almost surely (Section 3) -/
+/-! ## Cone measures lie in `lsoClass γ` almost surely -/
 
 /-- The good event at radius `δ` of `VolumeGrowthStmt` (Lemma 2.7) for the exponents of the class: every `z` of
 `B_{1-δ}` carries the two-sided bounds at radius `δ`. -/
@@ -318,7 +317,7 @@ def lsoRadiusGood {Ω : Type} (γ : ℝ) (μ : Ω → Measure ℂ) (δ : ℝ) : 
   {ω | ∀ z ∈ ball (0 : ℂ) (1 - δ), ENNReal.ofReal (δ ^ lsoLowerExp γ) ≤ μ ω (ball z δ) ∧
     μ ω (ball z δ) ≤ ENNReal.ofReal (δ ^ lsoUpperExp γ)}
 
-/-- A cone measure lies in `lsoClass γ` almost surely (Section 3): `VolumeGrowthStmt` gives polynomially high
+/-- A cone measure lies in `lsoClass γ` almost surely: `VolumeGrowthStmt` gives polynomially high
 probability of the radius-`2^{-n}` bounds, Borel-Cantelli (`ae_eventually_notMem`) gives them for all large `n`, and
 local finiteness gives `μ(B̄_{7/8}) < ∞` almost surely. -/
 theorem ae_mem_lsoClass (hV : VolumeGrowthStmt) {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)

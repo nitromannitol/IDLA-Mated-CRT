@@ -1,10 +1,9 @@
 import MatedCRT.FirstPass.S2h.Cutoff
 
 /-!
-# Restricted integrals over unions of balls as countable suprema (fp-S2h, z1)
+# Restricted integrals over unions of balls as countable suprema
 
-Written argument: notes/fp-gaps/CHATGPT-cone-good-set.md, Section 2.2, the sup over finite `J ⊂ 𝒰` in (12) and the
-monotone-convergence step of (13). For a family `B : ℕ → Set ℂ` of open sets contained in the unit ball and a set `S`
+For a family `B : ℕ → Set ℂ` of open sets contained in the unit ball and a set `S`
 of indices, the union `V = ⋃ i ∈ S, B i` is the increasing union of the finite unions `⋃ i ∈ J, B i`, `J ⊆ S` finite.
 Hence for a measurable nonnegative `f`, `∫_V f dν` is the supremum over finite `J ⊆ S` of `∫_{U_J} f dν`, and each
 of these is the supremum over `n` of the cutoff integrals of `Cutoff.lean`.
@@ -22,7 +21,7 @@ theorem compl_nonempty_of_subset_ball {U : Set ℂ} (hU : U ⊆ ball (0 : ℂ) 1
   rw [mem_ball_zero_iff] at h2
   norm_num at h2
 
-/-- Monotone convergence over finite subfamilies (CHATGPT-cone-good-set.md Section 2.2): the integral over the union
+/-- Monotone convergence over finite subfamilies: the integral over the union
 of the sets with index in `S` is the supremum of the integrals over the finite subunions. -/
 theorem lintegral_restrict_iUnion_eq_iSup {ν : Measure ℂ} (B : ℕ → Set ℂ) (hO : ∀ i, IsOpen (B i)) (S : Set ℕ)
     {f : ℂ → ℝ≥0∞} (hf : Measurable f) :
@@ -79,7 +78,7 @@ theorem lintegral_restrict_iUnion_eq_iSup {ν : Measure ℂ} (B : ℕ → Set �
         exact lintegral_indicator (hmeasU J) f
 
 /-- The restricted integral over a union of unit-ball subsets is the double supremum over finite subfamilies `J ⊆ S`
-and cutoff levels `n` (CHATGPT-cone-good-set.md (12)-(13)): the code coordinates `∫ θ_{J,n} f dν` suffice. -/
+and cutoff levels `n`: the code coordinates `∫ θ_{J,n} f dν` suffice. -/
 theorem lintegral_restrict_iUnion_eq_iSup_cutoff {ν : Measure ℂ} (B : ℕ → Set ℂ) (hO : ∀ i, IsOpen (B i))
     (hB : ∀ i, B i ⊆ ball (0 : ℂ) 1) (S : Set ℕ) {f : ℂ → ℝ≥0∞} (hf : Measurable f) :
     ∫⁻ x in (⋃ i ∈ S, B i), f x ∂ν =

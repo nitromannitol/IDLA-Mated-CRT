@@ -1,12 +1,12 @@
 import Mathlib
 
 /-!
-# Continuity of the circle average of a radial function (chat 250, sec. 1.3)
+# Continuity of the circle average of a radial function
 
 For `a : ℝ → ℝ` continuous on `(0,∞)` with `|a|^p` integrable on `(0,R]` for some `p > 2`, the circle
 average `z ↦ Real.circleAverage (fun x ↦ a ‖x‖) z ε` is continuous on the closed ball `B_{R-ε}`.
 
-Route (the near/far angular split of chat 250, written out):
+Route (the near/far angular split):
 
 * `radiusV ε t v = √((t-ε)² + 4tεv)` is the modulus of `t + ε e^{iθ}` when `v = (1 + cos θ)/2`. The
   circle average about `z` with `|z| = t` is `π⁻¹ ∫_0^1 a(radiusV ε t v) w(v) dv`, where
@@ -708,7 +708,7 @@ end MatedCRT.CircleAvgRadialCont250
 
 open MatedCRT.CircleAvgRadialCont250
 
-/-- **Continuity of the circle average of a radial function** (chat 250, sec. 1.3). For `a` continuous on
+/-- **Continuity of the circle average of a radial function**. For `a` continuous on
 `(0,∞)` with `|a|^p` integrable on `(0,R]`, `p > 2`, the circle average
 `z ↦ Real.circleAverage (fun x ↦ a ‖x‖) z ε` is continuous on the closed ball of radius `R - ε`. -/
 theorem continuous_circleAverage_radial_of_memLp

@@ -4,7 +4,7 @@ import Mathlib.Probability.Distributions.Gaussian.Real
 import Mathlib.Probability.Moments.Basic
 
 /-!
-# Ordinary Brownian motion has negative drift (fp-S2x-brownian-drift, z2)
+# Ordinary Brownian motion has negative drift
 
 For the standard Brownian motion `brownianMotion 0` of `MarkovProcess` and every `c > 0`, almost surely
 `B_t - c t → -∞` as `t → ∞` (Karatzas-Shreve, Chapter 2, Problem 9.3, the Brownian strong law `B_t / t → 0`).

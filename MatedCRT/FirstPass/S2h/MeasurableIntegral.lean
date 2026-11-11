@@ -2,7 +2,7 @@ import Mathlib.MeasureTheory.Measure.GiryMonad
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
-# Measurability of the integral in the measure (fp-S2h, z1)
+# Measurability of the integral in the measure
 
 For a measurable real function `φ` on `ℂ`, the map `ν ↦ ∫ φ dν` from `Measure ℂ` (Giry σ-algebra) is measurable.
 Standard formula: `∫ φ dν = (∫⁻ φ⁺ dν).toReal - (∫⁻ φ⁻ dν).toReal` on the set where both lower integrals are finite

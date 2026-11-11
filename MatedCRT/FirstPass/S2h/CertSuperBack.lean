@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S2h.CertDense
 
 /-!
-# The certificate of a code (fp-S2h, z1; CHATGPT-cone-good-set.md Section 4.1 hypotheses, Section 3)
+# The certificate of a code
 
 A relation witness `w` of `CertRel` for a locally finite measure gives a certificate `CertSuper` of `CertReal` for its
 extension `extW w`: the obstacle inequality off the pole (density of the data `z` and continuity of the Green function,
@@ -137,7 +137,7 @@ theorem exists_norm_half_mem_closure (hpole : FrozenGreenDiscPole) {t : ℝ} (ht
   have hj := hxmax' (z j) (subset_closure (hmemC j hjpos))
   linarith
 
-/-- **A code witness gives a certificate (fp-S2h, z1; CHATGPT Section 3).** A relation witness `w` of `CertRel` for a
+/-- **A code witness gives a certificate.** A relation witness `w` of `CertRel` for a
 locally finite measure gives a supersolution certificate `CertSuper ν t (extW w)`. -/
 theorem certSuper_of_certRel {ν : Measure ℂ} [IsFiniteMeasureOnCompacts ν] (hpole : FrozenGreenDiscPole) {t : ℝ}
     (ht : 0 < t) {z : ℕ → closedBall (0 : ℂ) (3 / 4)} (hz : ∀ j, (z j : ℂ) ∈ ball (0 : ℂ) (3 / 4) \ {0})

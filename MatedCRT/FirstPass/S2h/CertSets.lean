@@ -1,10 +1,9 @@
 import MatedCRT.FirstPass.S2h.CertRel
 
 /-!
-# Certificate sets: a regular rational basis and the charged balls (fp-S2h, z1)
+# Certificate sets: a regular rational basis and the charged balls
 
-Written argument: `notes/fp-gaps/CHATGPT-cone-good-set.md` Section 3 (the predicate `D_B` of (9) and its identification
-(10)-(11)): a basis ball `U i` is charged by the certificate exactly when it lies in the closure of the contact set, and
+A basis ball `U i` is charged by the certificate exactly when it lies in the closure of the contact set, and
 the union of the charged balls is the interior of that closure. Everything here is generic (no Green function, no
 measure): the contact set `C`, the dense sequence `z` and the predicate `R j` (raw positivity at `z j`) are parameters.
 -/
@@ -13,7 +12,7 @@ namespace MatedCRT
 
 open MeasureTheory Set Metric
 
-/-- A countable regular basis of `ℂ` (fp-S2h): nonempty open sets `U V`, indexed by `ℕ`, such that every open
+/-- A countable regular basis of `ℂ`: nonempty open sets `U V`, indexed by `ℕ`, such that every open
 neighbourhood `O` of a point `x` contains the closure of some `U V ∋ x`. It comes from a countable basis of `ℂ` with the
 nonempty members enumerated (Mathlib `TopologicalSpace.exists_countable_basis`, `IsTopologicalBasis.exists_closure_subset`). -/
 theorem exists_regular_basis_family :
@@ -33,7 +32,7 @@ theorem exists_regular_basis_family :
     obtain ⟨V, rfl⟩ := ht
     exact ⟨V, hxt, htO⟩
 
-/-- **Charged balls (fp-S2h, z1; CHATGPT (9)-(10)).** Let `C` be the contact set, and let the dense sequence `z` carry
+/-- **Charged balls.** Let `C` be the contact set, and let the dense sequence `z` carry
 the predicates `R j` so that a positive raw value at `z j` puts `z j` in `C` (`hRC`), and every open set meeting `C`
 contains some `z j` with `R j` (`hdense`). Then the charged-ball predicate of `U i` holds iff `U i ⊆ closure C`. -/
 theorem charged_iff_subset_closure {U : ℕ → Set ℂ} (hopen : ∀ V, IsOpen (U V)) (hne : ∀ V, (U V).Nonempty)
@@ -55,7 +54,7 @@ theorem charged_iff_subset_closure {U : ℕ → Set ℂ} (hopen : ∀ V, IsOpen 
     have hxC : x ∈ closure C := h (hV (subset_closure hx))
     exact hdense (U V) (hopen V) (mem_closure_iff.1 hxC (U V) (hopen V) hx)
 
-/-- **Open charged set (fp-S2h, z1; CHATGPT (11)).** The interior of the closure of the contact set `C` is the union of
+/-- **Open charged set.** The interior of the closure of the contact set `C` is the union of
 the basis balls `U i` contained in `closure C` (a regular basis: every point of the interior lies in such a ball). -/
 theorem interior_closure_eq_iUnion {U : ℕ → Set ℂ} (hopen : ∀ V, IsOpen (U V))
     (hreg : ∀ O : Set ℂ, IsOpen O → ∀ x ∈ O, ∃ V, x ∈ U V ∧ closure (U V) ⊆ O) (C : Set ℂ) :

@@ -3,13 +3,13 @@ import MatedCRT.FirstPass.S2y.CircleKernelSmooth250
 import MatedCRT.FirstPass.S2y.LateralHc250
 
 /-!
-# The circle-smear identity of the whole-plane field (fp-S2y-circle-smear-id, q1; chat 250 §1.2, z8 step R3)
+# The circle-smear identity of the whole-plane field
 
 For a test function `φ` and a radius `ε > 0`, the smeared circle average `∫ φ(z) h_ε(z) dz` of a whole-plane GFF equals
 the pairing `(h, K_ε φ)` with the circle kernel `K_ε φ = circleKernel φ ε`, almost surely (Duplantier-Sheffield 2011,
 Section 3.1; Armitage-Gardiner, Fubini for the adjoint of the circle average).
 
-The proof is the L² argument of z8's notes: `J := ∫ φ h_ε` is square integrable, and `E[(J - (h, K_ε φ))²] = 0`
+The proof is an L² argument: `J := ∫ φ h_ε` is square integrable, and `E[(J - (h, K_ε φ))²] = 0`
 by Fubini on the second moments `wholePlaneGFFCov`.
 
 This file contains the covariance identities of circle averages (`integral_mul_circle_circle`,
@@ -23,7 +23,7 @@ namespace MatedCRT.LQGMeasure
 
 variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ}
 
-/-- The a.s. circle-smear identity for the whole-plane field (chat 250 §1.2; z8 step R3): the smeared circle average
+/-- The a.s. circle-smear identity for the whole-plane field: the smeared circle average
 `∫ φ(z) h_ε(z) dz` is the pairing `(h, K_ε φ)` of the circle kernel `K_ε φ = circleKernel φ ε`. -/
 def CircleSmearIdentity (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ) (φ : ℂ → ℝ) (ε : ℝ) :
     Prop :=
@@ -112,7 +112,7 @@ lemma circleAverage_wholePlaneCov_of_mem_sphere {z x : ℂ} {ε : ℝ} (hε : 0 
     exact this
   rw [hs, hadd, circleAverage_log_norm_sub_of_mem_sphere hε hx]
 
-/-- **Sup bound for the circle averages** (z8 step R3, sub-step 1): for `‖z‖ ≤ R`, the second moment of the circle average
+/-- **Sup bound for the circle averages**: for `‖z‖ ≤ R`, the second moment of the circle average
 of radius `ε` is bounded uniformly, `E[h_ε(z)²] ≤ 2 log max(R + ε, 1) - log ε`. -/
 lemma integral_sq_circle_le [IsProbabilityMeasure P] (h : IsWholePlaneGFF P hC hcirc) {R ε : ℝ} (hε : 0 < ε)
     {z : ℂ} (hz : ‖z‖ ≤ R) :
@@ -151,7 +151,7 @@ lemma integral_sq_circle_le [IsProbabilityMeasure P] (h : IsWholePlaneGFF P hC h
     exact hx.le
   linarith [hLpt x hxz, hB]
 
-/-- **Joint measurability of the circle averages** (step 6 of z8's R3 route). For `ε > 0` there is a jointly measurable
+/-- **Joint measurability of the circle averages**. For `ε > 0` there is a jointly measurable
 version `g` of `(ω, z) ↦ hcirc ω ε z`, continuous in `z` for every `ω`, equal to it almost surely: the event of continuity
 of the circle average process (`IsWholePlaneGFF.ae_continuousOn_circle`) is enlarged to a measurable null set `S`, and
 `g = 0` off the complement of `S`. -/
@@ -518,7 +518,7 @@ lemma sq_integral_mul_le {φ : ℂ → ℝ} (hφ : IsTestFunction univ φ) {f : 
     nlinarith [sq_abs (∫ z, φ z * f z)]
   linarith [hsq, hc2]
 
-/-- **`L²` bound for the smeared circle average** (z8, R3 sub-step 1): `J ω := ∫ φ(z) g(ω,z) dz` is square integrable,
+/-- **`L²` bound for the smeared circle average**: `J ω := ∫ φ(z) g(ω,z) dz` is square integrable,
 by the pathwise Cauchy-Schwarz inequality and the integrability of `ω ↦ ∫ |φ| g²`. -/
 lemma memLp_smear_integral [IsProbabilityMeasure P] (h : IsWholePlaneGFF P hC hcirc) {ε : ℝ} (hε : 0 < ε)
     {g : Ω → ℂ → ℝ} (hgm : Measurable fun p : Ω × ℂ => g p.1 p.2) (hgc : ∀ ω, Continuous fun z => g ω z)
@@ -557,7 +557,7 @@ lemma isTestFunction_circleKernel {φ : ℂ → ℝ} (hφ : IsTestFunction univ 
     linarith
   simp [circleKernel, hφz]
 
-/-- **The circle-smear identity** (z8, step R3; chat 250 §1.2; Duplantier-Sheffield 2011 §3.1). For a whole-plane GFF
+/-- **The circle-smear identity** (Duplantier-Sheffield 2011 §3.1). For a whole-plane GFF
 `h`, a test function `φ` and `0 < ε ≤ 1`, almost surely `∫ φ(z) h_ε(z) dz = (h, K_ε φ)` with `K_ε φ = circleKernel φ ε`.
 Proof (L²): with `J := ∫ φ g`, `Y := hC(K_ε φ)` and `Z := J - Y`, `E[Z·g(z)] = 0` for every `z` (second adjoint
 `integral_mul_circleAverage_circleAverage_eq`), hence `E[Z·J] = 0`; `E[Z·Y] = 0` (first adjoint `adjoint_potential`);

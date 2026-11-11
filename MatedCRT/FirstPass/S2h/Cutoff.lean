@@ -4,9 +4,8 @@ import Mathlib.MeasureTheory.Integral.Lebesgue.Add
 import Mathlib.Topology.MetricSpace.HausdorffDistance
 
 /-!
-# Cutoff tests and restricted moments (fp-S2h, z1)
+# Cutoff tests and restricted moments
 
-Written argument: notes/fp-gaps/CHATGPT-cone-good-set.md, Section 1.2, (2)-(4) and Section 2.2, (13).
 For an open set `U ⊆ ℂ` with nonempty complement, the cutoffs `θₙ(x) = min {1, n · dist(x, ℂ \ U)}` are continuous,
 take values in `[0,1]`, increase in `n`, and converge pointwise to the indicator `1_U`. Hence, for a measurable
 nonnegative `f`, `∫_U f dν = supₙ ∫ θₙ f dν` (monotone convergence). This is the identity used to read restricted
@@ -18,7 +17,7 @@ namespace MatedCRT
 open MeasureTheory Metric Set Filter Topology
 open scoped ENNReal
 
-/-- The cutoff `x ↦ min {1, n · dist(x, ℂ \ U)}` (CHATGPT-cone-good-set.md (2)). -/
+/-- The cutoff `x ↦ min {1, n · dist(x, ℂ \ U)}`. -/
 noncomputable def cutoffBall (U : Set ℂ) (n : ℕ) (x : ℂ) : ℝ :=
   min 1 (n * infDist x Uᶜ)
 
@@ -72,8 +71,7 @@ theorem iSup_cutoff_mul_eq_indicator {U : Set ℂ} (hU : IsOpen U) (hUc : Uᶜ.N
       simp [cutoffBall_eq_zero_of_notMem hx n]
     simp [h0]
 
-/-- Restricted integrals as a supremum of countably many cutoff integrals (CHATGPT-cone-good-set.md (13), the
-monotone-convergence step): for an open `U` with nonempty complement and a measurable `f`,
+/-- Restricted integrals as a supremum of countably many cutoff integrals (the monotone-convergence step): for an open `U` with nonempty complement and a measurable `f`,
 `∫⁻ x in U, f x ∂ν = supₙ ∫⁻ x, ofReal (θₙ x) * f x ∂ν`. -/
 theorem lintegral_restrict_open_eq_iSup {ν : Measure ℂ} {U : Set ℂ} (hU : IsOpen U) (hUc : Uᶜ.Nonempty)
     {f : ℂ → ℝ≥0∞} (hf : Measurable f) :

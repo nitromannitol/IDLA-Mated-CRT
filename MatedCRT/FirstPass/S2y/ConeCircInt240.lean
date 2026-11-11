@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.S2y.ConeRadialCodes
 
 /-!
-# Internal angular integrability on the circles of a quantum cone (fp-S2y-hcircint-240, chat 240 §1)
+# Internal angular integrability on the circles of a quantum cone
 
 For a `γ`-quantum cone the circle average `h_r(z)` of the radial process is almost surely integrable in the angle along
 `∂B_r(z)`, also when the circle passes through the origin (Duplantier-Sheffield, arXiv:1409.7055, §4; Armstrong-Kuusi-Mourrat).
@@ -127,7 +127,7 @@ lemma integrableOn_log_small_tangent {r : ℝ} (hr : 0 < r) (α : ℝ) :
   · simp only [norm_zero]
     exact add_nonneg (abs_nonneg _) (norm_nonneg _)
 
-/-- **Deterministic integrability of the small-radius logarithm on a circle** (chat 240 §1). For `r > 0`,
+/-- **Deterministic integrability of the small-radius logarithm on a circle**. For `r > 0`,
 `θ ↦ 1_{‖circleMap z r θ‖ ≤ 1} (-log ‖circleMap z r θ‖)` is integrable on `(0, 2π]`. If `‖z‖ ≠ r` the circle keeps distance
 `|‖z‖ - r| > 0` from the origin; if `‖z‖ = r` this is `integrableOn_log_small_tangent`. -/
 lemma integrableOn_log_small_circleMap (z : ℂ) {r : ℝ} (hr : 0 < r) :
@@ -197,7 +197,7 @@ lemma measurable_smallCircleIntegrand {Ω : Type*} [MeasurableSpace Ω] {c : Ω 
     measurableSet_le (hρ.comp measurable_snd) measurable_const
   exact Measurable.ite hS (ENNReal.measurable_ofReal.comp (continuous_abs.measurable.comp hΦm)) measurable_const
 
-/-- **Almost sure finiteness of the small-radius angular integral** (chat 240 §1, Tonelli). For the good modification
+/-- **Almost sure finiteness of the small-radius angular integral**. For the good modification
 `T` of the circle averages, almost surely `∫_{(0,2π]} 1_{‖circleMap z r θ‖ ≤ 1} |c_ω(‖circleMap z r θ‖,0)| dθ < ∞`.
 Joint measurability is `measurable_smallCircleIntegrand`; the expectation at each angle is bounded by
 `lintegral_radial_le`; the majorant is `integrableOn_smallDominator`. -/
@@ -237,7 +237,7 @@ lemma ae_lintegral_smallCircleIntegrand_lt_top {γ : ℝ} {Ω : Type*} [Measurab
     exact lt_of_le_of_lt (lintegral_mono hbound) hfin
   exact ae_lt_top hFm.lintegral_prod_right' hI.ne
 
-/-- **Almost sure angular integrability of the circle averages of a quantum cone** (chat 240 §1). For every radius
+/-- **Almost sure angular integrability of the circle averages of a quantum cone**. For every radius
 `r > 0` and centre `z`, almost surely `θ ↦ |c_ω(‖circleMap z r θ‖, 0)|` is interval integrable on `[0, 2π]`, including
 when the circle passes through the origin (the tangent case `‖z‖ = r`). Internal: the hypotheses are `hcm`, `hcont` and
 `HasConeRadialLaw`. -/
@@ -321,7 +321,7 @@ theorem ae_intervalIntegrable_radial_circle {γ : ℝ} {Ω : Type*} [MeasurableS
   rw [intervalIntegrable_iff_integrableOn_Ioc_of_le (by positivity)]
   exact hcongr
 
-/-- **Radial sphere-average code is correct almost surely, with no named input** (chat 240 §4). This is
+/-- **Radial sphere-average code is correct almost surely, with no named input**. This is
 `radialSphereCode_ae_eq_of_circInt` with its angular-integrability hypothesis supplied by
 `ae_intervalIntegrable_radial_circle`: the sphere average `h_r(z)` is the a.s. limit of the sphere codes. -/
 theorem radialSphereCode_ae_eq {γ : ℝ} {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {c : Ω → ℝ → ℂ → ℝ}
