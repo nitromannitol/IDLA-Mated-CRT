@@ -13,7 +13,7 @@ Status values: FIXED <commit> (text or Lean change landed); IN PROGRESS (<worker
 | M6 | Email locators for C4 and C34 (proofs of Lemmas 5.3 and 5.4) | FIXED 453b2ec, ed7f547 |
 | M7 | Lemma 3.5 Step 3: limit Laplacian displayed as -1 (new mathematics: [C17] edit) | Responded (routed MQ-li-7b-d; awaiting math answer; truth check pending) |
 | M8 | Proposition 7.1 Steps 1 and 2 defects (GAPS E-x2-1) omitted from the email | FIXED 453b2ec (email item, flagged open), ed7f547 (GAPS status) |
-| M13 | B5: Appendix B theorem is a frozen conjunct of `CertifiedReferenceModelCore` | PENDING MATH (MQ-li-8a..8e) |
+| M13 | B5: Appendix B theorem is a frozen conjunct of `CertifiedReferenceModelCore` | FIXED 7b89591f, e5c2cbd4, ac2932c7, 56d06e72, c4e59c78 (route of MQ-li-8 (b), MQ-li-16, MQ-li-17): conjunct 9, `FrozenLBMGreenOccupationRescaled 𝒮`, is derived (`frozenLBMGreenOccupationRescaled_of_fieldLaw`, `MatedCRT/FirstPass/Closure/AppendixBRewire.lean`) from `hFL : FPConeWholePlaneFieldLaw` (already an input of Theorems 1.4 and 1.6) and one inline binder `hGFF`: the occupation identity of the clock of `h^ℂ - γ log|·|`, `h^ℂ` a whole-plane GFF, with an independent planar Brownian motion, along good dyadic subsequences (the Revuz correspondence of the Liouville clock; Garban-Rhodes-Vargas 2016, Theorem 2.7 (1); Berestycki 2015, Sections 2 and 3). `closed_1_4_derivedOccupation` and `closed_1_6_derivedOccupation` (same file) are the counted forms of Theorems 1.4 and 1.6 with the core replaced by its sixteen other conjuncts (`CertifiedReferenceModelCoreNoOccupation`); `CertifiedReferenceModelCoreNoOccupation.toModel_of_fieldLaw` does the same for a theorem that takes the full model. Axioms: propext, Classical.choice, Quot.sound. The frozen core and the counted theorems are unchanged. Still cited: `hGFF` (math desk MQ-fp-1: true as typed; the typed form differs from print in the regularization and at the origin; independent check pending). |
 | M14 | B6: COUNTED.md and `firstPassMain_1_4_full` / `_1_6_full` | FIXED 1f2548b (z1) |
 | M15 | Non-vacuity of the coupling: GFF part | PENDING MATH (MQ-li-8f) |
 
@@ -55,7 +55,7 @@ Status values: FIXED <commit> (text or Lean change landed); IN PROGRESS (<worker
 |---|---|---|
 | R1-A7 | IDLA A7 (Partial) | FIXED 9c18ae6, 21d373b (= M5) |
 | R1-C11 | IDLA C11 list (Partial) | FIXED 453b2ec (= A10) |
-| R1-B5 | IDLA B5 (Partial) | PENDING MATH (MQ-li-8a..8e) (= M13) |
+| R1-B5 | IDLA B5 (Partial) | FIXED 7b89591f, e5c2cbd4, ac2932c7, 56d06e72, c4e59c78 (= M13); still cited: `hGFF` |
 | R1-B6 | IDLA B6 (No) | FIXED 1f2548b (= M14) |
 | R1-B7 | IDLA B7 (No; the fix is vacuous) | PENDING MATH (MQ-li-7a, MQ-li-9) (= K1) |
 | R1-m2 | IDLA m2, `hsup` (No) | Responded (routed MQ-li-4) (= B1) |
