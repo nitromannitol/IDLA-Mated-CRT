@@ -1,4 +1,5 @@
 import LatticeProb.Bonanno.MatedCRTHarmonic.Frozen.IsMatingOfTreesCoupling
+import MatedCRT.LPStaging.Analysis.AffineScaleRotation
 
 /-!
 # Deterministic no-period and integer-rotation component of the IG curve scaling
@@ -21,6 +22,12 @@ Proved here:
   `Φ (A − a + V) = s⁻¹ L(s² ·)` almost surely, with `V = U + a − k p ∈ [0, p)`,
   `k = ⌊(U + a)/p⌋`; the random integer is removed by the simultaneous identity.
 
+The general statements behind the identities above (an arbitrary real constant `χ` in place
+of `igChi γ`, and an arbitrary witness map `Φ`) are proved in `LatticeProb.AffineScaleRotation`,
+mirrored in `MatedCRT.LPStaging.Analysis.AffineScaleRotation`. The declarations here are their
+specializations at `χ = igChi γ`; `exp_neg_two_pi_int_mul_I` and `floor_remainder_mem_Ico` are
+Mathlib facts stated for this file.
+
 Not proved here (exact residuals in the report): the law of `(I^{(s)}, V)`, i.e. the
 normalized whole-plane affine-GFF law of `I^{(s)} = I(s·) − a` and the independence and
 uniformity of `V`, which would give `s⁻¹ L(s² ·) =_d L`. Random-radius conditioning, area
@@ -41,46 +48,24 @@ open MatedCRTHarmonic.MatedCRT (affineReroot igPullback firstHit igChi)
 transience clause of `spaceFilling`), has no nonzero translation period. -/
 theorem no_nonzero_period_of_tendsto_cocompact (c : C(ℝ, ℂ))
     (hc : Tendsto c (cocompact ℝ) (cocompact ℂ)) (τ : ℝ) (hper : ∀ t, c (τ + t) = c t) :
-    τ = 0 := by
-  by_contra hτ
-  have hS : ({c 0}ᶜ : Set ℂ) ∈ cocompact ℂ :=
-    mem_cocompact.2 ⟨{c 0}, isCompact_singleton, subset_rfl⟩
-  obtain ⟨T, hT, hTsub⟩ := mem_cocompact.1 (hc hS)
-  obtain ⟨R, hR⟩ := isBounded_iff_forall_norm_le.1 hT.isBounded
-  have hrep : ∀ n : ℕ, c ((n : ℝ) * τ) = c 0 := by
-    intro n
-    induction n with
-    | zero => simp
-    | succ m ih =>
-      rw [show ((m + 1 : ℕ) : ℝ) * τ = τ + (m : ℝ) * τ by push_cast; ring, hper, ih]
-  obtain ⟨n, hn⟩ := exists_nat_gt (R / |τ|)
-  have hmem : (n : ℝ) * τ ∈ T := by
-    by_contra hnT
-    have h1 : c ((n : ℝ) * τ) ∈ ({c 0}ᶜ : Set ℂ) := hTsub hnT
-    exact (Set.mem_compl_iff _ _).1 h1 (Set.mem_singleton_iff.2 (hrep n))
-  have hle : ‖(n : ℝ) * τ‖ ≤ R := hR _ hmem
-  have habs : ‖(n : ℝ) * τ‖ = (n : ℝ) * |τ| := by
-    rw [norm_mul, Real.norm_natCast, Real.norm_eq_abs]
-  have hlt : R < (n : ℝ) * |τ| := (div_lt_iff₀ (abs_pos.2 hτ)).1 hn
-  linarith
+    τ = 0 :=
+  LatticeProb.AffineScaleRotation.no_nonzero_period_of_tendsto_cocompact c hc τ hper
 
 /-- At the affine map `(z₀, s, φ) = (0, 1, φ)`, `affineReroot` returns the curve itself
 once its first hit of `0` is `0` and `e^{iφ} = 1`. -/
 theorem affineReroot_zero_one_eq (c : C(ℝ, ℂ)) (φ : ℝ) (hfh : firstHit c 0 = 0)
-    (hφ : Complex.exp (φ * Complex.I) = 1) : affineReroot 0 1 φ c = c := by
-  ext t
-  simp [affineReroot, hfh, hφ]
+    (hφ : Complex.exp (φ * Complex.I) = 1) : affineReroot 0 1 φ c = c :=
+  LatticeProb.AffineScaleRotation.affineReroot_zero_one_eq c φ hfh hφ
 
 /-- At the identity affine map with `φ = 0`, `affineReroot` is the translation of the curve by
 its first hit of `0`: `R_{0,1,0} c (t) = c (q₀(c) + t)`. -/
 theorem affineReroot_zero_one_zero_apply (c : C(ℝ, ℂ)) (t : ℝ) :
-    affineReroot 0 1 0 c t = c (firstHit c 0 + t) := by
-  simp [affineReroot]
+    affineReroot 0 1 0 c t = c (firstHit c 0 + t) :=
+  LatticeProb.AffineScaleRotation.affineReroot_zero_one_zero_apply c t
 
 /-- The pullback `igPullback` at the identity affine map is the identity on arrays. -/
-theorem igPullback_zero_one_zero (γ : ℝ) (H : ℝ → ℂ → ℝ) : igPullback γ 0 1 0 H = H := by
-  funext ρ w
-  simp [igPullback]
+theorem igPullback_zero_one_zero (γ : ℝ) (H : ℝ → ℂ → ℝ) : igPullback γ 0 1 0 H = H :=
+  LatticeProb.AffineScaleRotation.affinePullback_zero_one_zero (igChi γ) H
 
 /-- `e^{-2π i k} = 1` for every integer `k`. -/
 theorem exp_neg_two_pi_int_mul_I (k : ℤ) :
@@ -93,16 +78,13 @@ theorem exp_neg_two_pi_int_mul_I (k : ℤ) :
 `p = 2π χ` and `χ = igChi γ`. -/
 theorem igPullback_rotation (γ : ℝ) (k : ℤ) (H : ℝ → ℂ → ℝ) :
     igPullback γ 0 1 (-(2 * Real.pi * k)) H
-      = fun ρ w => H ρ w + k * (2 * Real.pi * igChi γ) := by
-  have hexp := exp_neg_two_pi_int_mul_I k
-  funext ρ w
-  simp only [igPullback, Complex.ofReal_one, one_mul, zero_add, hexp]
-  ring
+      = fun ρ w => H ρ w + k * (2 * Real.pi * igChi γ) :=
+  LatticeProb.AffineScaleRotation.affinePullback_rotation (igChi γ) k H
 
 /-- The affine rerooting at an integer rotation fixes a curve whose first hit of `0` is `0`. -/
 theorem affineReroot_rotation_eq (c : C(ℝ, ℂ)) (k : ℤ) (hfh : firstHit c 0 = 0) :
     affineReroot 0 1 (-(2 * Real.pi * k)) c = c :=
-  affineReroot_zero_one_eq c _ hfh (exp_neg_two_pi_int_mul_I k)
+  LatticeProb.AffineScaleRotation.affineReroot_rotation_eq c k hfh
 
 /-- **Deterministic core of the first component of the main law.** `K ω` is the raw circle array, `Φ` is a witness with `L ω = Φ (K ω)` almost
 surely, the covariance clause holds at every deterministic `(z₀, s, φ)` with `s > 0`,
@@ -117,24 +99,8 @@ theorem igMap_period_identity {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
     (htr : ∀ᵐ ω ∂P, Tendsto (L ω) (cocompact ℝ) (cocompact ℂ)) :
     (∀ᵐ ω ∂P, firstHit (L ω) 0 = 0) ∧
       ∀ᵐ ω ∂P, ∀ k : ℤ,
-        Φ (fun ρ w => K ω ρ w + k * (2 * Real.pi * igChi γ)) = Φ (K ω) := by
-  have hid : ∀ᵐ ω ∂P, L ω = affineReroot 0 1 0 (L ω) := by
-    filter_upwards [hrep, hcov 0 1 0 one_pos] with ω h1 h2
-    rw [igPullback_zero_one_zero] at h2
-    exact h1.trans h2
-  have hfh : ∀ᵐ ω ∂P, firstHit (L ω) 0 = 0 := by
-    filter_upwards [hid, htr] with ω h1 h2
-    refine no_nonzero_period_of_tendsto_cocompact (L ω) h2 (firstHit (L ω) 0) fun t => ?_
-    have h3 := DFunLike.congr_fun h1 t
-    rw [affineReroot_zero_one_zero_apply] at h3
-    exact h3.symm
-  have hper : ∀ k : ℤ, ∀ᵐ ω ∂P,
-      Φ (fun ρ w => K ω ρ w + k * (2 * Real.pi * igChi γ)) = Φ (K ω) := by
-    intro k
-    filter_upwards [hcov 0 1 (-(2 * Real.pi * k)) one_pos, hfh, hrep] with ω h1 h2 h3
-    rw [igPullback_rotation, affineReroot_rotation_eq _ k h2] at h1
-    exact h1.trans h3
-  exact ⟨hfh, ae_all_iff.2 hper⟩
+        Φ (fun ρ w => K ω ρ w + k * (2 * Real.pi * igChi γ)) = Φ (K ω) :=
+  LatticeProb.AffineScaleRotation.witness_period_identity P (igChi γ) K L Φ hrep hcov htr
 
 /-- **The `igMap` witness satisfies the integer period identity.** For a mating-of-trees
 coupling `h`, the witness `Φ` of the frozen `igMap` clause (which ignores nonpositive
@@ -163,21 +129,15 @@ theorem igMap_witness_period {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {
 /-- The pullback at scale `s` and integer rotation `-2πk` sends `K` to `K(s·, s·) + k p`. -/
 theorem igPullback_scale_rotation (γ s : ℝ) (k : ℤ) (H : ℝ → ℂ → ℝ) :
     igPullback γ 0 s (-(2 * Real.pi * k)) H
-      = fun ρ w => H (s * ρ) ((s : ℂ) * w) + k * (2 * Real.pi * igChi γ) := by
-  have hexp := exp_neg_two_pi_int_mul_I k
-  funext ρ w
-  simp only [igPullback, hexp, mul_one, zero_add]
-  ring
+      = fun ρ w => H (s * ρ) ((s : ℂ) * w) + k * (2 * Real.pi * igChi γ) :=
+  LatticeProb.AffineScaleRotation.affinePullback_scale_rotation (igChi γ) s k H
 
 /-- At `(0, s, -2πk)` the rerooting agrees with the one at `(0, s, 0)`, once the first hit
 of `0` is `0`. -/
 theorem affineReroot_scale_rotation_eq (c : C(ℝ, ℂ)) (s : ℝ) (k : ℤ)
     (hfh : firstHit c 0 = 0) :
-    affineReroot 0 s (-(2 * Real.pi * k)) c = affineReroot 0 s 0 c := by
-  have hexp := exp_neg_two_pi_int_mul_I k
-  ext t
-  simp only [affineReroot, ContinuousMap.coe_mk, hexp, hfh, Complex.ofReal_zero, zero_mul,
-    Complex.exp_zero]
+    affineReroot 0 s (-(2 * Real.pi * k)) c = affineReroot 0 s 0 c :=
+  LatticeProb.AffineScaleRotation.affineReroot_scale_rotation_eq c s k hfh
 
 /-- **Deterministic scale-`s` identity.** For `s > 0`, almost
 surely and simultaneously for every `m : ℤ`, `Φ (K(s·, s·) + m p) = R_{0,s,0} L`, where
@@ -191,26 +151,13 @@ theorem igMap_scale_identity {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) 
     (s : ℝ) (hs : 0 < s) :
     ∀ᵐ ω ∂P, ∀ m : ℤ,
       Φ (fun ρ w => K ω (s * ρ) ((s : ℂ) * w) + m * (2 * Real.pi * igChi γ))
-        = affineReroot 0 s 0 (L ω) := by
-  obtain ⟨hfh, -⟩ := igMap_period_identity P γ K L Φ hrep hcov htr
-  have hm : ∀ m : ℤ, ∀ᵐ ω ∂P,
-      Φ (fun ρ w => K ω (s * ρ) ((s : ℂ) * w) + m * (2 * Real.pi * igChi γ))
-        = affineReroot 0 s 0 (L ω) := by
-    intro m
-    filter_upwards [hcov 0 s (-(2 * Real.pi * m)) hs, hfh] with ω h1 h2
-    rw [igPullback_scale_rotation, affineReroot_scale_rotation_eq _ s m h2] at h1
-    exact h1
-  exact ae_all_iff.2 hm
+        = affineReroot 0 s 0 (L ω) :=
+  LatticeProb.AffineScaleRotation.witness_scale_identity P (igChi γ) K L Φ hrep hcov htr s hs
 
 /-- The remainder of `x` modulo `p > 0` lies in `[0, p)`; this is the range of `V` below. -/
 theorem floor_remainder_mem_Ico (x p : ℝ) (hp : 0 < p) :
-    0 ≤ x - ⌊x / p⌋ * p ∧ x - ⌊x / p⌋ * p < p := by
-  have h1 : (⌊x / p⌋ : ℝ) ≤ x / p := Int.floor_le _
-  have h2 : x / p < (⌊x / p⌋ : ℝ) + 1 := Int.lt_floor_add_one _
-  have h1' : (⌊x / p⌋ : ℝ) * p ≤ x := (le_div_iff₀ hp).1 h1
-  have h2' : x < ((⌊x / p⌋ : ℝ) + 1) * p := (div_lt_iff₀ hp).1 h2
-  rw [add_mul, one_mul] at h2'
-  constructor <;> linarith
+    0 ≤ x - ⌊x / p⌋ * p ∧ x - ⌊x / p⌋ * p < p :=
+  ⟨Int.sub_floor_div_mul_nonneg x hp, Int.sub_floor_div_mul_lt x hp⟩
 
 /-- **Positive-scale identity with the random integer removed**
 (before the law step). Let `K(s r, s w) = A(r, w) + U` define the scaled array, `a` the
@@ -227,14 +174,9 @@ theorem igMap_scale_normalized_identity {Ω : Type*} [MeasurableSpace Ω] (P : M
     ∀ᵐ ω ∂P,
       Φ (fun r w => A ω r w - a ω + (U ω + a ω
           - ((⌊(U ω + a ω) / (2 * Real.pi * igChi γ)⌋ : ℤ) : ℝ) * (2 * Real.pi * igChi γ)))
-        = affineReroot 0 s 0 (L ω) := by
-  filter_upwards [igMap_scale_identity P γ K L Φ hrep hcov htr s hs] with ω hω
-  have h := hω (-⌊(U ω + a ω) / (2 * Real.pi * igChi γ)⌋)
-  convert h using 2
-  funext r w
-  rw [hKA]
-  push_cast
-  ring
+        = affineReroot 0 s 0 (L ω) :=
+  LatticeProb.AffineScaleRotation.witness_scale_normalized_identity P (igChi γ) K L Φ hrep hcov htr
+    s hs A a U hKA
 
 /-- **The normalized positive-scale identity for the `igMap` witness of a coupling `h`.** With
 `a = circleAvg (hIG₀) s 0` and `A (r, w) = circleAvg (hIG₀) (s r) (s w)`, the normalized field
