@@ -14,6 +14,11 @@ symmetric under the swap `L ↔ R`, so it depends on the boundary-length pair on
 * `ae_matingRel_eq_fibre_of_coupling`, `MatedCRTEnv.IsValid.ae_matingRel_eq_fibre`: the almost sure forms.
 * `bmEdgeCount_swap`, `bmEdgeCount_eq_of_eq_or_swap`, `MatedCRTEnv.mult_eq_of_eq_or_swap`: swap invariance of the
   edge count.
+* `MatingRigidOn G`: on the set `G` of pairs, equal mating relations force equal pairs up to the swap `L ↔ R`.
+  `ae_mem_of_correlatedBM2_null`, `MatedCRTEnv.IsValid.ae_mult_eq_of_matingRigidOn`: if `G` is null-complement for
+  every law of a `γ`-correlated two-sided Brownian motion and mating-rigid, then the edge multiplicity of a valid
+  environment is almost surely the edge count of any second pair in `G` whose mating relation is the fibre relation
+  of `η`.
 -/
 
 namespace MatedCRT
@@ -99,5 +104,53 @@ theorem MatedCRTEnv.mult_eq_of_eq_or_swap {Ω : Type} [MeasurableSpace Ω] (S : 
           MatedCRTHarmonic.MatedCRT.lrCoord 1 u (S.bm ω) = MatedCRTHarmonic.MatedCRT.lrCoord 0 u b)) :
     S.mult ε ω = bmEdgeCount ε (fun t => (b t).1) (fun t => (b t).2) :=
   bmEdgeCount_eq_of_eq_or_swap h ε
+
+
+/-- **Mating rigidity on a set of pairs**: for pairs `b, b' ∈ G`, equal mating relations force `b' = b` or `b'` equal
+to `b` after the swap `L ↔ R`. -/
+def MatingRigidOn (G : Set MatedCRTHarmonic.MatedCRT.Path2) : Prop :=
+  ∀ b ∈ G, ∀ b' ∈ G, matingRel b = matingRel b' →
+    (∀ u, MatedCRTHarmonic.MatedCRT.lrCoord 0 u b' = MatedCRTHarmonic.MatedCRT.lrCoord 0 u b ∧
+        MatedCRTHarmonic.MatedCRT.lrCoord 1 u b' = MatedCRTHarmonic.MatedCRT.lrCoord 1 u b) ∨
+    (∀ u, MatedCRTHarmonic.MatedCRT.lrCoord 0 u b' = MatedCRTHarmonic.MatedCRT.lrCoord 1 u b ∧
+        MatedCRTHarmonic.MatedCRT.lrCoord 1 u b' = MatedCRTHarmonic.MatedCRT.lrCoord 0 u b)
+
+/-- On a mating-rigid set, two pairs with the same mating relation have the same mated-CRT edge count. -/
+theorem MatingRigidOn.bmEdgeCount_eq {G : Set MatedCRTHarmonic.MatedCRT.Path2} (hG : MatingRigidOn G)
+    {b b' : MatedCRTHarmonic.MatedCRT.Path2} (hb : b ∈ G) (hb' : b' ∈ G) (h : matingRel b = matingRel b')
+    (ε : ℝ) :
+    bmEdgeCount ε (fun t => (b' t).1) (fun t => (b' t).2) =
+      bmEdgeCount ε (fun t => (b t).1) (fun t => (b t).2) :=
+  bmEdgeCount_eq_of_eq_or_swap (hG b hb b' hb' h) ε
+
+/-- Under a mating-of-trees coupling, the boundary-length pair lies almost surely in any set `G` whose complement is
+null (in outer measure; `G` need not be measurable) for every law of a `γ`-correlated two-sided Brownian motion. -/
+theorem ae_mem_of_correlatedBM2_null {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {X X₀ hIG₀ : Ω → MatedCRTHarmonic.MatedCRT.Field} {B B' B₀ B₀' : ℝ≥0 → Ω → ℝ} {U : Ω → ℝ}
+    {ηL η η₀ : Ω → C(ℝ, ℂ)} {bm : Ω → MatedCRTHarmonic.MatedCRT.Path2}
+    (hC : MatedCRTHarmonic.MatedCRT.IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm)
+    {G : Set MatedCRTHarmonic.MatedCRT.Path2}
+    (hGnull : ∀ μ : Measure MatedCRTHarmonic.MatedCRT.Path2, MatedCRTHarmonic.MatedCRT.IsCorrelatedBM2 γ μ →
+      μ Gᶜ = 0) :
+    ∀ᵐ ω ∂P, bm ω ∈ G := by
+  have h : ∀ᵐ b ∂P.map bm, b ∉ Gᶜ := measure_eq_zero_iff_ae_notMem.1 (hGnull _ hC.boundaryLawBM)
+  filter_upwards [ae_of_ae_map hC.measurable_curves.2.2.2.aemeasurable h] with ω hω
+  simpa using hω
+
+/-- **Rigidity transfer.** Let `G` be a mating-rigid set of pairs whose complement is null for every law of a
+`γ`-correlated two-sided Brownian motion. For a valid environment and a random pair `Y` that lies almost surely in
+`G` and whose mating relation is almost surely the fibre relation of `η`, the edge multiplicity is almost surely the
+mated-CRT edge count of `Y`. -/
+theorem MatedCRTEnv.IsValid.ae_mult_eq_of_matingRigidOn {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) {G : Set MatedCRTHarmonic.MatedCRT.Path2}
+    (hGnull : ∀ μ : Measure MatedCRTHarmonic.MatedCRT.Path2, MatedCRTHarmonic.MatedCRT.IsCorrelatedBM2 γ μ →
+      μ Gᶜ = 0)
+    (hG : MatingRigidOn G) {Y : Ω → MatedCRTHarmonic.MatedCRT.Path2} (hYG : ∀ᵐ ω ∂S.P, Y ω ∈ G)
+    (hY : ∀ᵐ ω ∂S.P, matingRel (Y ω) = fun s t => S.η ω s = S.η ω t) (ε : ℝ) :
+    ∀ᵐ ω ∂S.P, S.mult ε ω = bmEdgeCount ε (fun t => (Y ω t).1) (fun t => (Y ω t).2) := by
+  obtain ⟨X, X₀, hIG₀, B, B', B₀, B₀', U, ηL, η', η₀, hC, -⟩ := hS.matingOfTrees
+  filter_upwards [hS.ae_matingRel_eq_fibre, ae_mem_of_correlatedBM2_null hC hGnull, hYG, hY]
+    with ω h₁ h₂ h₃ h₄
+  exact hG.bmEdgeCount_eq h₃ h₂ (h₄.trans h₁.symm) ε
 
 end MatedCRT
