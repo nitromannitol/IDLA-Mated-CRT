@@ -2,6 +2,7 @@ import MatedCRT.Draft.Section2
 import MatedCRT.FirstPass.Derived.GreenUpperBoundOfInputs
 import MatedCRT.FirstPass.Derived.HarnackRingGeometry
 import MatedCRT.FirstPass.Derived.HarnackUnionBound
+import MatedCRT.FirstPass.Derived.GreenBallGridUnion
 import LatticeProb.Analysis.DyadicInverseSquareSum
 import LatticeProb.LQG.LQGMeasureNonatomicMassPoly
 
@@ -23,6 +24,8 @@ high probability, for every ball `B_r(z) ⊆ B_ρ'` of radius `r ≥ ε^β`, the
 * `MatedCRT.greenKernelUpperBoundStmt_of_ring_ball`: the crude Green kernel upper bound (BG20 Lemma 5.4)
   from the cell size estimate, the ring events of BG20 Lemma 3.10 (`hRing`), the ball bound (`hball`) and
   the segment paths of BG20 Lemma 5.3, Step 1 (`hpath`).
+* `MatedCRT.greenKernelUpperBoundStmt_of_ring_single`: the same with the ball bound replaced by its
+  single-ball form (`hsingle`, GMS19 Proposition 2.9 for one ball), through the grid union bound.
 -/
 
 set_option autoImplicit false
@@ -214,5 +217,40 @@ theorem greenKernelUpperBoundStmt_of_ring_ball {𝒮 : SpaceFillingSLEModel}
             interiorCellVertices ε (S.η ω) (ball 0 ((1 + ρ) / 2)))}) :
     GreenKernelUpperBoundStmt 𝒮 :=
   greenKernelUpperBoundStmt_of_ring hsize hRing (hsum_of_ball hsize hball) hpath
+
+/-- **The crude Green kernel upper bound** (Berestycki–Gwynne 2020, Lemma 5.4) from the cell size
+estimate, the ring events of Lemma 3.10 (`hRing`), the single-ball estimate of Gwynne–Miller–Sheffield (2019),
+Proposition 2.9 (`hsingle`: a fixed ball `B_r(z) ⊆ B_{ρ'}` of radius `r ≥ ε^{β₀}` has
+`∑ deg(k) (diam H_k)² ≤ A r²` except with probability `C ε^{α₀}`) and the segment paths of Lemma 5.3, Step 1
+(`hpath`). -/
+theorem greenKernelUpperBoundStmt_of_ring_single {𝒮 : SpaceFillingSLEModel}
+    (hsize : CellSizeEstimateStmt 𝒮)
+    (hRing : ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ β₀ α₀ : ℝ, 0 < β₀ ∧ 0 < α₀ ∧ ∀ ρ' : ℝ, 0 < ρ' → ρ' < 1 →
+      ∃ p : ℝ, 0 < p ∧ p ≤ 1 ∧ ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      ∃ C : ℝ, ∀ ε : ℝ, 0 < ε → ε < 1 → ∀ z' : ℂ, ‖z'‖ < ρ' → ∀ s' : ℝ, ε ^ β₀ ≤ s' →
+        2 * s' ≤ ρ' - ‖z'‖ →
+        S.P {ω | ¬ RingSeparates (S.mult ε ω) ε (S.η ω) p z' s'} ≤ ENNReal.ofReal (C * ε ^ α₀))
+    (hsingle : ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ β₀ α₀ : ℝ, 0 < β₀ ∧ 0 < α₀ ∧ ∀ ρ' : ℝ, 0 < ρ' → ρ' < 1 →
+      ∃ A : ℝ, 0 < A ∧ ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+        ∃ C : ℝ, ∀ ε : ℝ, 0 < ε → ε < 1 → ∀ (z : ℂ) (r : ℝ), ε ^ β₀ ≤ r → ball z r ⊆ ball 0 ρ' →
+          S.P {ω | ¬ ∀ T : Finset ℤ, (∀ k ∈ T, k ∈ cellVertices ε (S.η ω) (ball z r)) →
+            ∑ k ∈ T, (mdeg (S.mult ε ω) k : ℝ) * diam (cell ε (S.η ω) k) ^ 2 ≤ A * r ^ 2} ≤
+              ENNReal.ofReal (C * ε ^ α₀))
+    (hpath : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+      ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      PolyHighProb S.P fun ε => {ω | ∀ b ∈ interiorCellVertices ε (S.η ω) (ball 0 ((1 + ρ) / 2)),
+        ∃ (ℓ : ℝ) (Y : Finset ℤ) (F : Finset ℤ → List ℤ), (∀ T : Finset ℤ, ∀ a ∈ F T, a ∈ T) ∧
+        (∀ᵐ θ ∂uniformDirection,
+          (segmentPath (vertexPoint ε (S.η ω) b) ℓ (cell ε (S.η ω)) Y F θ).Nodup) ∧
+        (∀ᵐ θ ∂uniformDirection,
+          (segmentPath (vertexPoint ε (S.η ω) b) ℓ (cell ε (S.η ω)) Y F θ).IsChain
+            fun a c => S.mult ε ω a c ≠ 0) ∧
+        (∀ᵐ θ ∂uniformDirection, ∃ p,
+          segmentPath (vertexPoint ε (S.η ω) b) ℓ (cell ε (S.η ω)) Y F θ = b :: p ∧
+          (∀ v ∈ b :: p, v ∈ cellVertices ε (S.η ω) (ball 0 ((1 + ρ) / 2))) ∧
+          (b :: p).getLast (List.cons_ne_nil b p) ∉
+            interiorCellVertices ε (S.η ω) (ball 0 ((1 + ρ) / 2)))}) :
+    GreenKernelUpperBoundStmt 𝒮 :=
+  greenKernelUpperBoundStmt_of_ring_ball hsize hRing (hball_of_pointwise hsingle) hpath
 
 end MatedCRT
