@@ -131,7 +131,7 @@ Which binders each row has: rows #20-#24 take hDG, hAff, hCC, hW, hE, hN; rows #
 | # | prop | def | kind | used by | source | truth | class | evidence |
 |---|---|---|---|---|---|---|---|---|
 | 41 | SLEModelClosureInput | MatedCRT/FirstPass/SLERef/Extended.lean:39 | Other | 1.4,1.6,2.19,3.1,3.3,3.4,3.5,3.6,3.7 (9) | closure clause for the model (scale invariance, reparametrization, independence) | TRUE (idla-frozen-SLERef-BG20-PRO.md) | c? | CRM conjunct 2; packages #5-#7 for the model; see the UNSURE section |
-| 44 | FPSimilarityTransferCorrected | MatedCRT/FirstPass/SLERef/Similarity.lean:39 | Frozen | 1.4,1.6,2.19,3.1,3.3,3.4,3.5,3.6,3.7 (9) | corrected similarity transfer for a space-filling SLE model (a proposition) | none found (named in fpsimilarity-truth.md) | c? | CRM conjunct 18; a proposition about the paper's model; see the UNSURE section |
+| 44 | FPSimilarityTransferCorrected | MatedCRT/FirstPass/SLERef/Similarity.lean:39 | Frozen | 1.4,1.6,2.19,3.1,3.3,3.4,3.5,3.6,3.7 (9) | corrected similarity transfer for a space-filling SLE model (a proposition) | none found (named in fpsimilarity-truth.md) | c? | CRM conjunct 18; a proposition about the paper's model; DERIVED 2026-11-12: fpSimilarityTransferCorrected_of_law (FirstPass/Derived/SimilarityTransferDerived.lean) from HasNormalizedSLELaw 𝒮 ν and SLEScaleInvarianceInput 𝒮 (the normalized law of the Lebesgue-area representative and its scale invariance are the only SLE inputs); supplying it in the counted forms is the wiring step. |
 
 ### (p) reported to the operator (request 87a)
 Paper-owned steps, bound by the counted theorem listed. Not literature citations; not judged here.
