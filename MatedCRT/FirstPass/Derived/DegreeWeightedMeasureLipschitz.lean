@@ -18,7 +18,9 @@ functions bounded by `ε^{-b}` and `ε^{-b}`-Lipschitz), and the cell size estim
 * `tendstoInProbability_degreeWeightedMeasure_of_ball`: the convergence, from the deterministic estimate
   `IsAreaParametrized.abs_integral_degreeWeightedMeasure_sub_six_le_of_ball` on the event where the
   counting bound on `B_r` (`r = (max ρ 0 + 1)/2`), the cell size bound on `B_r` and the coverage
-  `B_1 ⊆ η([-ε⁻¹, ε⁻¹])` hold.
+  `B_1 ⊆ η([-ε⁻¹, ε⁻¹])` hold;
+* `tendstoInProbability_degreeWeightedMeasure_of_ball_random`: the same for a test function `f_ω` depending on `ω`
+  arbitrarily, with `K, L, ρ` uniform in `ω` (the estimate is pointwise in `ω`).
 -/
 
 open Set Metric MeasureTheory Filter Topology HarmonicBalls
@@ -92,13 +94,12 @@ theorem IsAreaParametrized.exists_finset_cellVertices_ball {μ : Measure ℂ} {�
   · have : k < (N : ℤ) + 1 := by exact_mod_cast h4
     omega
 
-/-- **Corollary A.6 for Lipschitz test functions on a ball, from Lemma A.5** (BG20). Let the cell size
-estimate hold for the model, and let the two-sided degree-weighted counting bound of BG20 Lemma A.5 hold on
-every ball `B_r`, `0 < r < 1`, with polynomially high probability, for all nonnegative test functions bounded
-by `ε^{-b}` and `ε^{-b}`-Lipschitz and all choices of points `w_k ∈ H^ε_k ∩ cl(B_r)`. Then for every continuous
-`f` with `|f| ≤ K`, `L`-Lipschitz and vanishing off `B_ρ`, `ρ < 1`, `∫ f dμ^ε_h → 6 ∫ f dμ_h` in
-probability. -/
-theorem tendstoInProbability_degreeWeightedMeasure_of_ball {𝒮 : SpaceFillingSLEModel}
+/-- **Corollary A.6 on a ball, uniformly in the test function** (BG20). Under the hypotheses of
+`tendstoInProbability_degreeWeightedMeasure_of_ball`, the convergence `∫ f_ω dμ^ε_h → 6 ∫ f_ω dμ_h` in probability
+holds for a test function `f_ω` depending on `ω` in an arbitrary way, provided every `f_ω` is continuous, bounded by
+`K`, `L`-Lipschitz and vanishes off `B_ρ`, `ρ < 1`, with `K, L, ρ` not depending on `ω` (the Lemma A.5 bound is
+uniform in the test function). This is the form used in the scaling step, where `f_ω = f(R_b(ω) ·)`. -/
+theorem tendstoInProbability_degreeWeightedMeasure_of_ball_random {𝒮 : SpaceFillingSLEModel}
     (hcell : CellSizeEstimateStmt 𝒮) {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) {Ω : Type}
     [MeasurableSpace Ω] {S : MatedCRTEnv Ω} (hS : S.IsValid 𝒮 γ) {α b : ℝ} (hα : 0 < α) (hb : 0 < b)
     (hA5 : ∀ r : ℝ, 0 < r → r < 1 → PolyHighProb S.P fun ε => {ω | ∀ g : ℂ → ℝ,
@@ -109,16 +110,16 @@ theorem tendstoInProbability_degreeWeightedMeasure_of_ball {𝒮 : SpaceFillingS
           ∑' k : cellVertices ε (S.η ω) (ball 0 r), (matedDeg (S.mult ε ω) k : ℝ) * g (w k) ∧
         ∑' k : cellVertices ε (S.η ω) (ball 0 r), (matedDeg (S.mult ε ω) k : ℝ) * g (w k) ≤
           6 * ε⁻¹ * ∫ x in thickening (ε ^ α) (ball 0 r), g x ∂S.μ ω + ε ^ (-1 + α)})
-    {f : ℂ → ℝ} (hf : Continuous f) {K L ρ : ℝ} (hρ : ρ < 1) (hfK : ∀ x, |f x| ≤ K)
-    (hfL : ∀ x y, |f x - f y| ≤ L * ‖x - y‖) (hfρ : ∀ x ∉ ball (0 : ℂ) ρ, f x = 0) :
+    {f : Ω → ℂ → ℝ} (hf : ∀ ω, Continuous (f ω)) {K L ρ : ℝ} (hρ : ρ < 1) (hfK : ∀ ω x, |f ω x| ≤ K)
+    (hfL : ∀ ω x y, |f ω x - f ω y| ≤ L * ‖x - y‖) (hfρ : ∀ ω, ∀ x ∉ ball (0 : ℂ) ρ, f ω x = 0) :
     TendstoInProbability S.P
-      (fun ε ω => ∫ x, f x ∂degreeWeightedMeasure (S.mult ε ω) ε (S.η ω) (S.μ ω))
-      (fun ω => 6 * ∫ x, f x ∂S.μ ω) := by
+      (fun ε ω => ∫ x, f ω x ∂degreeWeightedMeasure (S.mult ε ω) ε (S.η ω) (S.μ ω))
+      (fun ω => 6 * ∫ x, f ω x ∂S.μ ω) := by
   set ρ₀ : ℝ := max ρ 0 with hρ₀
   have hρ₀1 : ρ₀ < 1 := max_lt hρ one_pos
   have hρ₀0 : 0 ≤ ρ₀ := le_max_right _ _
-  have hfρ₀ : ∀ x ∉ ball (0 : ℂ) ρ₀, f x = 0 := fun x hx =>
-    hfρ x fun h => hx (ball_subset_ball (le_max_left _ _) h)
+  have hfρ₀ : ∀ ω, ∀ x ∉ ball (0 : ℂ) ρ₀, f ω x = 0 := fun ω x hx =>
+    hfρ ω x fun h => hx (ball_subset_ball (le_max_left _ _) h)
   set r : ℝ := (ρ₀ + 1) / 2 with hr
   have hr0 : 0 < r := by rw [hr]; linarith
   have hr1 : r < 1 := by rw [hr]; linarith
@@ -159,10 +160,35 @@ theorem tendstoInProbability_degreeWeightedMeasure_of_ball {𝒮 : SpaceFillingS
       rwa [hexp] at h
     obtain ⟨t, ht⟩ :=
       hpar.exists_finset_cellVertices_ball hε hM (show r + ε ^ q < 1 by linarith) hcω hdiam'
-    refine hpar.abs_integral_degreeWeightedMeasure_sub_six_le_of_ball hε hr0 (by linarith) t ht hf hfK
-      hfL hfρ₀ ?_
+    refine hpar.abs_integral_degreeWeightedMeasure_sub_six_le_of_ball hε hr0 (by linarith) t ht (hf ω) (hfK ω)
+      (hfL ω) (hfρ₀ ω) ?_
     intro g hg hgL w hw
     exact hAω g (fun x => ⟨(hg x).1, (hg x).2.trans hKb⟩)
       (fun x y => (hgL x y).trans (mul_le_mul_of_nonneg_right hLb (norm_nonneg _))) w hw
+
+/-- **Corollary A.6 for Lipschitz test functions on a ball, from Lemma A.5** (BG20). Let the cell size
+estimate hold for the model, and let the two-sided degree-weighted counting bound of BG20 Lemma A.5 hold on
+every ball `B_r`, `0 < r < 1`, with polynomially high probability, for all nonnegative test functions bounded
+by `ε^{-b}` and `ε^{-b}`-Lipschitz and all choices of points `w_k ∈ H^ε_k ∩ cl(B_r)`. Then for every continuous
+`f` with `|f| ≤ K`, `L`-Lipschitz and vanishing off `B_ρ`, `ρ < 1`, `∫ f dμ^ε_h → 6 ∫ f dμ_h` in
+probability. -/
+theorem tendstoInProbability_degreeWeightedMeasure_of_ball {𝒮 : SpaceFillingSLEModel}
+    (hcell : CellSizeEstimateStmt 𝒮) {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) {Ω : Type}
+    [MeasurableSpace Ω] {S : MatedCRTEnv Ω} (hS : S.IsValid 𝒮 γ) {α b : ℝ} (hα : 0 < α) (hb : 0 < b)
+    (hA5 : ∀ r : ℝ, 0 < r → r < 1 → PolyHighProb S.P fun ε => {ω | ∀ g : ℂ → ℝ,
+      (∀ x, 0 ≤ g x ∧ |g x| ≤ ε ^ (-b)) → (∀ x y, |g x - g y| ≤ ε ^ (-b) * ‖x - y‖) →
+      ∀ w : ℤ → ℂ,
+      (∀ k ∈ cellVertices ε (S.η ω) (ball 0 r), w k ∈ cell ε (S.η ω) k ∩ closure (ball 0 r)) →
+      6 * ε⁻¹ * ∫ x in ball 0 r \ thickening (ε ^ α) (frontier (ball 0 r)), g x ∂S.μ ω - ε ^ (-1 + α) ≤
+          ∑' k : cellVertices ε (S.η ω) (ball 0 r), (matedDeg (S.mult ε ω) k : ℝ) * g (w k) ∧
+        ∑' k : cellVertices ε (S.η ω) (ball 0 r), (matedDeg (S.mult ε ω) k : ℝ) * g (w k) ≤
+          6 * ε⁻¹ * ∫ x in thickening (ε ^ α) (ball 0 r), g x ∂S.μ ω + ε ^ (-1 + α)})
+    {f : ℂ → ℝ} (hf : Continuous f) {K L ρ : ℝ} (hρ : ρ < 1) (hfK : ∀ x, |f x| ≤ K)
+    (hfL : ∀ x y, |f x - f y| ≤ L * ‖x - y‖) (hfρ : ∀ x ∉ ball (0 : ℂ) ρ, f x = 0) :
+    TendstoInProbability S.P
+      (fun ε ω => ∫ x, f x ∂degreeWeightedMeasure (S.mult ε ω) ε (S.η ω) (S.μ ω))
+      (fun ω => 6 * ∫ x, f x ∂S.μ ω) :=
+  tendstoInProbability_degreeWeightedMeasure_of_ball_random hcell hγ hγ2 hS hα hb hA5 (f := fun _ => f)
+    (fun _ => hf) hρ (fun _ => hfK) (fun _ => hfL) (fun _ => hfρ)
 
 end MatedCRT
