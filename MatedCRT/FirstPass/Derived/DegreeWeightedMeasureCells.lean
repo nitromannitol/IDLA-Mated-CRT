@@ -13,7 +13,11 @@ Corollary A.6 from BG20 Lemma A.5.
 
 * `integrable_degreeWeightedMeasure`, `integral_degreeWeightedMeasure_eq_sum`;
 * `IsAreaParametrized.integrableOn_cell`, `IsAreaParametrized.abs_setIntegral_cell_sub_le`;
-* `IsAreaParametrized.abs_integral_degreeWeightedMeasure_sub_le`.
+* `IsAreaParametrized.abs_integral_degreeWeightedMeasure_sub_le`;
+* `IsAreaParametrized.abs_integral_degreeWeightedMeasure_sub_six_le`: the deterministic step from the
+  conclusion of BG20 Lemma A.5 to `|∫ f dμ^ε_h - 6 ∫ f dμ_h|` small;
+* `abs_mul_sub_six_integral_le_of_bounds`: the two-sided bound of Lemma A.5 for an `f` vanishing near
+  `∂D` gives `|ε ∑ deg^ε(k) f(w_k) - 6 ∫ f dμ_h| ≤ ε^α`.
 -/
 
 open Set Metric MeasureTheory Filter Topology
@@ -107,5 +111,69 @@ theorem IsAreaParametrized.abs_integral_degreeWeightedMeasure_sub_le
         rw [← abs_of_nonneg hd, ← abs_mul, abs_of_nonneg hd]; ring_nf
     _ ≤ (matedDeg m k : ℝ) * (ε * K k) := mul_le_mul_of_nonneg_left h hd
     _ = ε * ((matedDeg m k : ℝ) * K k) := by ring
+
+/-- A sum over the vertices `V^ε(D)` whose cells meet `D` is a finite sum when `V^ε(D)` is the finite
+set `t`. -/
+theorem tsum_cellVertices_eq_sum {D : Set ℂ} (t : Finset ℤ)
+    (ht : ∀ k, k ∈ t ↔ k ∈ cellVertices ε η D) (g : ℤ → ℝ) :
+    ∑' k : cellVertices ε η D, g k = ∑ k ∈ t, g k := by
+  classical
+  rw [tsum_subtype (cellVertices ε η D) g, tsum_eq_sum (s := t)]
+  · exact Finset.sum_congr rfl fun k hk => indicator_of_mem ((ht k).1 hk) _
+  · intro k hk
+    exact indicator_of_notMem (fun h => hk ((ht k).2 h)) _
+
+/-- **Deterministic core of BG20 Corollary A.6.** Let `f` be `L`-Lipschitz and vanish off `D`, let
+`t = V^ε(D)` be finite, with points `w_k ∈ H^ε_k`, cells of diameter at most `δ`, the degree-weighted
+counting sum within `e` of `6 ∫ f dμ_h` (the conclusion of BG20 Lemma A.5) and the degree sum
+`ε ∑_{k ∈ t} deg^ε(k)` at most `B`. Then `∫ f dμ^ε_h` is within `e + L δ B` of `6 ∫ f dμ_h`. -/
+theorem IsAreaParametrized.abs_integral_degreeWeightedMeasure_sub_six_le
+    (hpar : IsAreaParametrized μ η) (hε : 0 < ε) (hf : Continuous f) {D : Set ℂ}
+    (hDf : ∀ x ∉ D, f x = 0) (t : Finset ℤ) (ht : ∀ k, k ∈ t ↔ k ∈ cellVertices ε η D)
+    (w : ℤ → ℂ) (hw : ∀ k ∈ t, w k ∈ cell ε η k) {L δ B e : ℝ} (hL0 : 0 ≤ L) (hδ : 0 ≤ δ)
+    (hL : ∀ x y, |f x - f y| ≤ L * ‖x - y‖) (hdiam : ∀ k ∈ t, diam (cell ε η k) ≤ δ)
+    (hsum : |ε * ∑ k ∈ t, (matedDeg m k : ℝ) * f (w k) - 6 * ∫ x, f x ∂μ| ≤ e)
+    (hdeg : ε * ∑ k ∈ t, (matedDeg m k : ℝ) ≤ B) :
+    |∫ x, f x ∂degreeWeightedMeasure m ε η μ - 6 * ∫ x, f x ∂μ| ≤ e + L * δ * B := by
+  have hvan : ∀ k ∉ t, ∀ x ∈ cell ε η k, f x = 0 := by
+    intro k hk x hx
+    by_contra hfx
+    exact hk ((ht k).2 ⟨x, hx, by_contra fun hxD => hfx (hDf x hxD)⟩)
+  have hK : ∀ k ∈ t, ∀ x ∈ cell ε η k, |f x - f (w k)| ≤ L * δ := by
+    intro k hk x hx
+    have hb := (isCompact_cell hpar.1 ε k).isBounded
+    have h1 : ‖x - w k‖ ≤ δ := by
+      rw [← dist_eq_norm]
+      exact (dist_le_diam_of_mem hb hx (hw k hk)).trans (hdiam k hk)
+    exact (hL x (w k)).trans (mul_le_mul_of_nonneg_left h1 hL0)
+  have h1 := hpar.abs_integral_degreeWeightedMeasure_sub_le (m := m) hε hf t hvan w
+    (fun _ => L * δ) hK
+  have h2 : ε * ∑ k ∈ t, (matedDeg m k : ℝ) * (L * δ) ≤ L * δ * B := by
+    rw [← Finset.sum_mul, ← mul_assoc, mul_comm _ (L * δ)]
+    exact mul_le_mul_of_nonneg_left hdeg (mul_nonneg hL0 hδ)
+  have h3 := abs_sub_le (∫ x, f x ∂degreeWeightedMeasure m ε η μ)
+    (ε * ∑ k ∈ t, (matedDeg m k : ℝ) * f (w k)) (6 * ∫ x, f x ∂μ)
+  linarith
+
+/-- The two-sided bound of BG20 Lemma A.5,
+`6 ε⁻¹ ∫_{S₁} f dμ - ε^{-1+α} ≤ X ≤ 6 ε⁻¹ ∫_{S₂} f dμ + ε^{-1+α}`, for an `f` vanishing off `S₁` and
+off `S₂` (in Lemma A.5, `S₁ = D \ B_{ε^α}(∂D)` and `S₂ = B_{ε^α}(D)`), gives `|ε X - 6 ∫ f dμ| ≤ ε^α`. -/
+theorem abs_mul_sub_six_integral_le_of_bounds (hε : 0 < ε) {α X : ℝ} {S₁ S₂ : Set ℂ}
+    (hf₁ : ∀ x ∉ S₁, f x = 0) (hf₂ : ∀ x ∉ S₂, f x = 0)
+    (hlo : 6 * ε⁻¹ * ∫ x in S₁, f x ∂μ - ε ^ (-1 + α) ≤ X)
+    (hhi : X ≤ 6 * ε⁻¹ * ∫ x in S₂, f x ∂μ + ε ^ (-1 + α)) :
+    |ε * X - 6 * ∫ x, f x ∂μ| ≤ ε ^ α := by
+  rw [setIntegral_eq_integral_of_forall_compl_eq_zero hf₁] at hlo
+  rw [setIntegral_eq_integral_of_forall_compl_eq_zero hf₂] at hhi
+  have he : ε * ε ^ (-1 + α) = ε ^ α := by
+    rw [Real.rpow_add hε, Real.rpow_neg_one, ← mul_assoc, mul_inv_cancel₀ hε.ne', one_mul]
+  have hc : ε * (6 * ε⁻¹ * ∫ x, f x ∂μ) = 6 * ∫ x, f x ∂μ := by
+    field_simp
+  have h1 := mul_le_mul_of_nonneg_left hlo hε.le
+  have h2 := mul_le_mul_of_nonneg_left hhi hε.le
+  rw [mul_sub, hc, he] at h1
+  rw [mul_add, hc, he] at h2
+  rw [abs_le]
+  constructor <;> linarith
 
 end MatedCRT
