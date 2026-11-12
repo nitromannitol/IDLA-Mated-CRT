@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.Derived.GreenFlowEnergy
 import LatticeProb.Network.SegmentPathPoissonBound
+import LatticeProb.Analysis.FatInballFlowEnergy
 
 /-!
 # The killed Green function bounded by random segment paths through fat cells
@@ -22,6 +23,12 @@ function (`greenFn_le_mdeg_mul_flowEnergy`) then gives, for every `a`,
 
 The existence of the paths is a hypothesis of the lemma (the topological input of
 [BG20, lem-eff-res-upper], step 1).
+
+`greenFn_le_of_segmentPaths_of_inballs` is the same bound when the cells are only assumed to have
+pairwise disjoint inballs `ball (c a) (κ · diam (H a))` (`LatticeProb.sum_sum_sq_div_le_of_fatInballs`):
+the space-filling curve is parametrized by LQG area, which is singular to Lebesgue measure, so
+almost-disjointness of the cells for Lebesgue measure is not available, while disjointness of open
+sets inside distinct cells is.
 -/
 
 namespace MatedCRT
@@ -81,6 +88,52 @@ theorem greenFn_le_of_segmentPaths (hlf : ∀ a, {b | m a b ≠ 0}.Finite)
       rw [← Nat.cast_sum]
       exact (Nat.cast_le.2 (sum_le_mdeg hlf S a)).trans (hdeg a ha))
     hF hnd hchain'
+  exact mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hE (by norm_num))
+    (Nat.cast_nonneg _)
+
+/-- **Crude bound for the killed Green function by random segment paths, disjoint inballs.**
+The bound of `greenFn_le_of_segmentPaths` with the almost-disjointness and measurability of the
+cells replaced by pairwise disjointness of the inballs `ball (c a) (κ · diam (H a))`. -/
+theorem greenFn_le_of_segmentPaths_of_inballs (hlf : ∀ a, {b | m a b ≠ 0}.Finite)
+    (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) (hsymm : ∀ a b, m a b = m b a)
+    {A S Y : Finset ℤ} (hAS : A ⊆ S) (hS : ∀ a ∈ A, ∀ b, m a b ≠ 0 → b ∈ S) {x : ℤ}
+    (hx : x ∈ A) {H : ℤ → Set ℂ} {c : ℤ → ℂ} {u : ℂ} {ρ κ r M R Δ : ℝ} (hκ : 0 < κ)
+    (hr : 0 < r) (hrM : r ≤ M) (hrR : r ≤ R) (hΔ : 0 ≤ Δ)
+    (hdisj : (S : Set ℤ).PairwiseDisjoint fun a => ball (c a) (κ * diam (H a)))
+    (hHc : ∀ y ∈ Y, IsClosed (H y)) (hb : ∀ a ∈ S, Bornology.IsBounded (H a))
+    (hball : ∀ a ∈ S, ball (c a) (κ * diam (H a)) ⊆ H a)
+    (hlo : ∀ a ∈ S, r ≤ diam (H a)) (hhi : ∀ a ∈ S, diam (H a) ≤ M)
+    (hsub : ∀ a ∈ S, H a ⊆ closedBall u R)
+    (hdeg : ∀ a ∈ S, (mdeg m a : ℝ) ≤ Δ)
+    {F : Finset ℤ → List ℤ} (hF : ∀ T : Finset ℤ, ∀ a ∈ F T, a ∈ T)
+    (hnd : ∀ θ, (segmentPath u ρ H Y F θ).Nodup)
+    (hchain : ∀ θ, (segmentPath u ρ H Y F θ).IsChain fun a b => m a b ≠ 0)
+    (hpath : ∀ θ, ∃ p, segmentPath u ρ H Y F θ = x :: p ∧ (∀ v ∈ x :: p, v ∈ S) ∧
+      (x :: p).getLast (List.cons_ne_nil x p) ∉ A) (a : ℤ) :
+    greenFn m (A : Set ℤ) a x ≤ (mdeg m x : ℝ) * ((1 / 2) * (Δ *
+      ((Real.logb 2 (M / r) + 1) * (16 / κ ^ 2) + 8 * Real.log (R / r) / κ ^ 2))) := by
+  have hchain' : ∀ θ, (segmentPath u ρ H Y F θ).IsChain fun a b => (m a b : ℝ) ≠ 0 :=
+    fun θ => (hchain θ).imp fun ⦃_ _⦄ h => by exact_mod_cast h
+  have hR' : ∀ a b : ℤ, (m a b : ℝ) ≠ 0 → (m b a : ℝ) ≠ 0 := fun a b h => by
+    rwa [hsymm b a]
+  refine (greenFn_le_mdeg_mul_flowEnergy hlf hcons hsymm hAS hS hx
+    (θ := segmentPathFlow u ρ H Y F) (fun a b => segmentPathFlow_antisymm a b)
+    (fun a b h0 => segmentPathFlow_eq_zero_of_not_rel hR' hchain' (by simp [h0]))
+    (sum_segmentPathFlow_eq_ite_of_path hHc hpath) a).trans ?_
+  have hE := sum_sum_sq_div_le_of_fatInballs (θ := segmentPathFlow u ρ H Y F)
+    (w := fun a b => (m a b : ℝ)) hκ hr hrM hrR hΔ hdisj hb hball hlo hhi hsub
+    (fun _ _ => Nat.cast_nonneg _)
+    (fun a b h => by
+      have h' : m a b ≠ 0 := fun h0 =>
+        h (segmentPathFlow_eq_zero_of_not_rel hR' hchain' (by simp [h0]))
+      simpa using Nat.one_le_iff_ne_zero.2 h')
+    (fun a ha => show ∑ b ∈ S, (m a b : ℝ) ≤ Δ by
+      rw [← Nat.cast_sum]
+      exact (Nat.cast_le.2 (sum_le_mdeg hlf S a)).trans (hdeg a ha))
+    (fun a _ b _ => abs_segmentPathFlow_le_one hHc hnd a b)
+    (fun a ha hfar b _ => abs_segmentPathFlow_le_diam_div_infDist hHc hnd
+      (fun θ a h => mem_segmentDirections_of_mem_segmentPath hF h) (hb a ha)
+      (diam_nonneg.trans_lt hfar) b)
   exact mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hE (by norm_num))
     (Nat.cast_nonneg _)
 
