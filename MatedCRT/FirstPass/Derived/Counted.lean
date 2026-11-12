@@ -22,6 +22,7 @@ import MatedCRT.FirstPass.Closure.Steps42
 import MatedCRT.FirstPass.Derived.ConeCircleLawUnique
 import MatedCRT.FirstPass.Derived.ConeRadialDivergence
 import MatedCRT.FirstPass.Derived.ConeWholePlaneFieldLaw
+import MatedCRT.FirstPass.Derived.CoordChangeZero
 import MatedCRT.FirstPass.Derived.DiscGreenCentre
 import MatedCRT.FirstPass.Derived.HarmonicBallsVolumeGrowth
 import MatedCRT.FirstPass.Derived.InsertionCoordinateRule
@@ -756,19 +757,19 @@ namespace MatedCRT.LIClosed68Y
 
 open MeasureTheory
 
-/-- The counted theorem `MatedCRT.LIClosed68Y.firstPass_6_7` (MatedCRT/FirstPass/LIClosed68Y.lean) with the inputs supplied which follow from its other inputs: `hB1 : FPConeWholePlaneFieldLaw` by `MatedCRT.ConeWholePlaneFieldLaw.coneWholePlaneFieldLawStep_holds`. Same conclusion; the remaining binders are copied unchanged. -/
+/-- The counted theorem `MatedCRT.LIClosed68Y.firstPass_6_7` (MatedCRT/FirstPass/LIClosed68Y.lean) with the inputs supplied which follow from its other inputs: `hCC : S2VG.LitCoordChange` by `MatedCRT.FirstPass.Derived.litCoordChange_holds`, `hB1 : FPConeWholePlaneFieldLaw` by `MatedCRT.ConeWholePlaneFieldLaw.coneWholePlaneFieldLawStep_holds`. Same conclusion; the remaining binders are copied unchanged. -/
 theorem firstPass_6_7_derivedInputs
     {ν : ℝ → Measure SLEPathCode}
     {𝒮 : SpaceFillingSLEModel}
     (hCRM : CertifiedReferenceModel ν 𝒮)
     (hLit : MatedCRT.S2VG.LitExistence)
     (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
-    (hCC : MatedCRT.S2VG.LitCoordChange)
     (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
     (hBG : FrozenBerestyckiGwynneConeBallMass) :
     FaithfulConstantOrderLowerBoundStmt 𝒮 :=
   have d1 := MatedCRT.ConeWholePlaneFieldLaw.coneWholePlaneFieldLawStep_holds
-  firstPass_6_7 (ν := ν) (𝒮 := 𝒮) (hCRM := hCRM) (hLit := hLit) (hBM := hBM) (hCC := hCC) (hB1 := d1) (hμ := hμ)
+  have d2 := MatedCRT.FirstPass.Derived.litCoordChange_holds
+  firstPass_6_7 (ν := ν) (𝒮 := 𝒮) (hCRM := hCRM) (hLit := hLit) (hBM := hBM) (hCC := d2) (hB1 := d1) (hμ := hμ)
     (hBG := hBG)
 
 end MatedCRT.LIClosed68Y
@@ -777,19 +778,19 @@ namespace MatedCRT.LIClosed68Y
 
 open MeasureTheory
 
-/-- The counted theorem `MatedCRT.LIClosed68Y.firstPass_6_8` (MatedCRT/FirstPass/LIClosed68Y.lean) with the inputs supplied which follow from its other inputs: `hB1 : FPConeWholePlaneFieldLaw` by `MatedCRT.ConeWholePlaneFieldLaw.coneWholePlaneFieldLawStep_holds`. Same conclusion; the remaining binders are copied unchanged. -/
+/-- The counted theorem `MatedCRT.LIClosed68Y.firstPass_6_8` (MatedCRT/FirstPass/LIClosed68Y.lean) with the inputs supplied which follow from its other inputs: `hCC : S2VG.LitCoordChange` by `MatedCRT.FirstPass.Derived.litCoordChange_holds`, `hB1 : FPConeWholePlaneFieldLaw` by `MatedCRT.ConeWholePlaneFieldLaw.coneWholePlaneFieldLawStep_holds`. Same conclusion; the remaining binders are copied unchanged. -/
 theorem firstPass_6_8_derivedInputs
     {ν : ℝ → Measure SLEPathCode}
     {𝒮 : SpaceFillingSLEModel}
     (hCRM : CertifiedReferenceModel ν 𝒮)
     (hLit : MatedCRT.S2VG.LitExistence)
     (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
-    (hCC : MatedCRT.S2VG.LitCoordChange)
     (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
     (hBG : FrozenBerestyckiGwynneConeBallMass) :
     FaithfulConstantOrderLowerBoundDivStmt 𝒮 :=
   have d1 := MatedCRT.ConeWholePlaneFieldLaw.coneWholePlaneFieldLawStep_holds
-  firstPass_6_8 (ν := ν) (𝒮 := 𝒮) (hCRM := hCRM) (hLit := hLit) (hBM := hBM) (hCC := hCC) (hB1 := d1) (hμ := hμ)
+  have d2 := MatedCRT.FirstPass.Derived.litCoordChange_holds
+  firstPass_6_8 (ν := ν) (𝒮 := 𝒮) (hCRM := hCRM) (hLit := hLit) (hBM := hBM) (hCC := d2) (hB1 := d1) (hμ := hμ)
     (hBG := hBG)
 
 end MatedCRT.LIClosed68Y
@@ -798,19 +799,19 @@ namespace MatedCRT.LIClosed68Y
 
 open MeasureTheory
 
-/-- The counted theorem `MatedCRT.LIClosed68Y.firstPass_6_9` (MatedCRT/FirstPass/LIClosed68Y.lean) with the inputs supplied which follow from its other inputs: `hB1 : FPConeWholePlaneFieldLaw` by `MatedCRT.ConeWholePlaneFieldLaw.coneWholePlaneFieldLawStep_holds`. Same conclusion; the remaining binders are copied unchanged. -/
+/-- The counted theorem `MatedCRT.LIClosed68Y.firstPass_6_9` (MatedCRT/FirstPass/LIClosed68Y.lean) with the inputs supplied which follow from its other inputs: `hCC : S2VG.LitCoordChange` by `MatedCRT.FirstPass.Derived.litCoordChange_holds`, `hB1 : FPConeWholePlaneFieldLaw` by `MatedCRT.ConeWholePlaneFieldLaw.coneWholePlaneFieldLawStep_holds`. Same conclusion; the remaining binders are copied unchanged. -/
 theorem firstPass_6_9_derivedInputs
     {ν : ℝ → Measure SLEPathCode}
     {𝒮 : SpaceFillingSLEModel}
     (hCRM : CertifiedReferenceModel ν 𝒮)
     (hLit : MatedCRT.S2VG.LitExistence)
     (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
-    (hCC : MatedCRT.S2VG.LitCoordChange)
     (hμ : MatedCRT.S2VG.LitQuantumConeLQGMeasureExistence)
     (hBG : FrozenBerestyckiGwynneConeBallMass) :
     FaithfulChanceOfBeingAbsorbedStmt 𝒮 :=
   have d1 := MatedCRT.ConeWholePlaneFieldLaw.coneWholePlaneFieldLawStep_holds
-  firstPass_6_9 (ν := ν) (𝒮 := 𝒮) (hCRM := hCRM) (hLit := hLit) (hBM := hBM) (hCC := hCC) (hB1 := d1) (hμ := hμ)
+  have d2 := MatedCRT.FirstPass.Derived.litCoordChange_holds
+  firstPass_6_9 (ν := ν) (𝒮 := 𝒮) (hCRM := hCRM) (hLit := hLit) (hBM := hBM) (hCC := d2) (hB1 := d1) (hμ := hμ)
     (hBG := hBG)
 
 end MatedCRT.LIClosed68Y

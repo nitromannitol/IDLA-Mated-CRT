@@ -11,6 +11,7 @@ import MatedCRT.FirstPass.Closure.Section4
 import MatedCRT.FirstPass.Closure.Steps42
 import MatedCRT.FirstPass.Derived.ConeCircleLawUnique
 import MatedCRT.FirstPass.Derived.ConeWholePlaneFieldLaw
+import MatedCRT.FirstPass.Derived.CoordChangeZero
 import MatedCRT.FirstPass.Derived.Counted
 import MatedCRT.FirstPass.Derived.DiscGreenCentre
 import MatedCRT.FirstPass.Derived.HarmonicBallsVolumeGrowth
@@ -179,30 +180,30 @@ theorem firstPass_6_7_minimalInputs
     {𝒮 : SpaceFillingSLEModel}
     (hCRM : CertifiedReferenceModel ν 𝒮)
     (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
-    (hCC : MatedCRT.S2VG.LitCoordChange)
     (hBG : FrozenBerestyckiGwynneConeBallMass) :
     FaithfulConstantOrderLowerBoundStmt 𝒮 :=
   have d1 := MatedCRT.ConeMeanZeroRestriction.fpConeMeanZeroRestriction_holds
-  have d2 := MatedCRT.FirstPass.Derived.wholePlaneLQGCoordinateChangeStep_holds
-  have d3 := MatedCRT.FirstPass.Derived.wholePlaneLQGExistenceStep_holds
-  have d4 := MatedCRT.Lemma68Window.shortWindow_hL_proved
-  have d5 := MatedCRT.Lemma68CGRCYSqInst.shellOneTestOrderAeCGRCYSq_holds (𝒮 := 𝒮)
-  have d6 := MatedCRT.Lemma68Window.shortWindow_hT_of_meanZero (hR := d1)
-  have d7 := MatedCRT.LIClosed68Y.fieldVolCutoffStmt_of_berestyckiGwynne (𝒮 := 𝒮) (hBG := hBG)
-  have d8 := MatedCRT.ShortWindowHV.wholePlaneUpperVolumeTailStep_of_ballMass (hBM := hBM) (hCC := hCC)
-  have d9 := MatedCRT.CertifiedReferenceModel.cellSizeEstimate (h := hCRM)
-  have d10 := MatedCRT.CertifiedReferenceModel.countingMeasureConvergence (h := hCRM)
-  have d11 := MatedCRT.CertifiedReferenceModel.exitTimeUpperBound (h := hCRM)
-  have d12 := MatedCRT.CertifiedReferenceModel.greenKernelLowerBound (h := hCRM)
-  have d13 := MatedCRT.CountingExitAlpha68.countingAtExitAlphaStmt_of_counting_exit (hC := d10) (hE := d11)
-  have d14 := MatedCRT.FirstPass64.firstPass_6_5_uniform (h0 := d3) (h2 := d2) (hV := d8)
-  have d15 := MatedCRT.Lemma68Window.shortWindow_prevalence (h65 := d14) (hT := d6) (hL := d4)
-  have d16 := MatedCRT.Lemma68CGRCY.countingMeshEventsHi_of_draft (𝒮 := 𝒮) (hG := d12) (hC := d9) (hK := d13)
-  have d17 := MatedCRT.Lemma68CGRCYSq.shellChainCGRCYSq_of_oneTestOrderCGRCYSq (hprev := d15) (h := d5)
-  have d18 := MatedCRT.Lemma68CGRCYSqHalf.guardProbStmtCGRCYSq_of_chain (𝒮 := 𝒮) (hMesh := d16) (hVol := d7)
-    (hChain := d17)
-  have d19 := MatedCRT.uniformConstantOrderLowerBound_of_guard (𝒮 := 𝒮) (hG := d18)
-  MatedCRT.firstPass_6_7_faithful (𝒮 := 𝒮) (hU := d19)
+  have d2 := MatedCRT.FirstPass.Derived.litCoordChange_holds
+  have d3 := MatedCRT.FirstPass.Derived.wholePlaneLQGCoordinateChangeStep_holds
+  have d4 := MatedCRT.FirstPass.Derived.wholePlaneLQGExistenceStep_holds
+  have d5 := MatedCRT.Lemma68Window.shortWindow_hL_proved
+  have d6 := MatedCRT.Lemma68CGRCYSqInst.shellOneTestOrderAeCGRCYSq_holds (𝒮 := 𝒮)
+  have d7 := MatedCRT.Lemma68Window.shortWindow_hT_of_meanZero (hR := d1)
+  have d8 := MatedCRT.LIClosed68Y.fieldVolCutoffStmt_of_berestyckiGwynne (𝒮 := 𝒮) (hBG := hBG)
+  have d9 := MatedCRT.ShortWindowHV.wholePlaneUpperVolumeTailStep_of_ballMass (hBM := hBM) (hCC := d2)
+  have d10 := MatedCRT.CertifiedReferenceModel.cellSizeEstimate (h := hCRM)
+  have d11 := MatedCRT.CertifiedReferenceModel.countingMeasureConvergence (h := hCRM)
+  have d12 := MatedCRT.CertifiedReferenceModel.exitTimeUpperBound (h := hCRM)
+  have d13 := MatedCRT.CertifiedReferenceModel.greenKernelLowerBound (h := hCRM)
+  have d14 := MatedCRT.CountingExitAlpha68.countingAtExitAlphaStmt_of_counting_exit (hC := d11) (hE := d12)
+  have d15 := MatedCRT.FirstPass64.firstPass_6_5_uniform (h0 := d4) (h2 := d3) (hV := d9)
+  have d16 := MatedCRT.Lemma68Window.shortWindow_prevalence (h65 := d15) (hT := d7) (hL := d5)
+  have d17 := MatedCRT.Lemma68CGRCY.countingMeshEventsHi_of_draft (𝒮 := 𝒮) (hG := d13) (hC := d10) (hK := d14)
+  have d18 := MatedCRT.Lemma68CGRCYSq.shellChainCGRCYSq_of_oneTestOrderCGRCYSq (hprev := d16) (h := d6)
+  have d19 := MatedCRT.Lemma68CGRCYSqHalf.guardProbStmtCGRCYSq_of_chain (𝒮 := 𝒮) (hMesh := d17) (hVol := d8)
+    (hChain := d18)
+  have d20 := MatedCRT.uniformConstantOrderLowerBound_of_guard (𝒮 := 𝒮) (hG := d19)
+  MatedCRT.firstPass_6_7_faithful (𝒮 := 𝒮) (hU := d20)
 
 end MatedCRT.LIClosed68Y
 
@@ -216,31 +217,31 @@ theorem firstPass_6_8_minimalInputs
     {𝒮 : SpaceFillingSLEModel}
     (hCRM : CertifiedReferenceModel ν 𝒮)
     (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
-    (hCC : MatedCRT.S2VG.LitCoordChange)
     (hBG : FrozenBerestyckiGwynneConeBallMass) :
     FaithfulConstantOrderLowerBoundDivStmt 𝒮 :=
   have d1 := MatedCRT.ConeMeanZeroRestriction.fpConeMeanZeroRestriction_holds
-  have d2 := MatedCRT.FirstPass.Derived.wholePlaneLQGCoordinateChangeStep_holds
-  have d3 := MatedCRT.FirstPass.Derived.wholePlaneLQGExistenceStep_holds
-  have d4 := MatedCRT.Lemma68Window.shortWindow_hL_proved
-  have d5 := MatedCRT.Lemma68CGRCYSqInst.shellOneTestOrderAeCGRCYSq_holds (𝒮 := 𝒮)
-  have d6 := MatedCRT.Lemma68Window.shortWindow_hT_of_meanZero (hR := d1)
-  have d7 := MatedCRT.volumeGrowthStmt_of_berestyckiGwynne (hBG := hBG)
-  have d8 := MatedCRT.LIClosed68Y.fieldVolCutoffStmt_of_berestyckiGwynne (𝒮 := 𝒮) (hBG := hBG)
-  have d9 := MatedCRT.ShortWindowHV.wholePlaneUpperVolumeTailStep_of_ballMass (hBM := hBM) (hCC := hCC)
-  have d10 := MatedCRT.CertifiedReferenceModel.cellSizeEstimate (h := hCRM)
-  have d11 := MatedCRT.CertifiedReferenceModel.countingMeasureConvergence (h := hCRM)
-  have d12 := MatedCRT.CertifiedReferenceModel.exitTimeUpperBound (h := hCRM)
-  have d13 := MatedCRT.CertifiedReferenceModel.greenKernelLowerBound (h := hCRM)
-  have d14 := MatedCRT.CountingExitAlpha68.countingAtExitAlphaStmt_of_counting_exit (hC := d11) (hE := d12)
-  have d15 := MatedCRT.FirstPass64.firstPass_6_5_uniform (h0 := d3) (h2 := d2) (hV := d9)
-  have d16 := MatedCRT.Lemma68Window.shortWindow_prevalence (h65 := d15) (hT := d6) (hL := d4)
-  have d17 := MatedCRT.Lemma68CGRCY.countingMeshEventsHi_of_draft (𝒮 := 𝒮) (hG := d13) (hC := d10) (hK := d14)
-  have d18 := MatedCRT.Lemma68CGRCYSq.shellChainCGRCYSq_of_oneTestOrderCGRCYSq (hprev := d16) (h := d5)
-  have d19 := MatedCRT.Lemma68CGRCYSqHalf.guardProbStmtCGRCYSq_of_chain (𝒮 := 𝒮) (hMesh := d17) (hVol := d8)
-    (hChain := d18)
-  have d20 := MatedCRT.uniformConstantOrderLowerBound_of_guard (𝒮 := 𝒮) (hG := d19)
-  MatedCRT.firstPass_6_8_faithful (𝒮 := 𝒮) (hU := d20) (h27 := d7) (h28 := d10)
+  have d2 := MatedCRT.FirstPass.Derived.litCoordChange_holds
+  have d3 := MatedCRT.FirstPass.Derived.wholePlaneLQGCoordinateChangeStep_holds
+  have d4 := MatedCRT.FirstPass.Derived.wholePlaneLQGExistenceStep_holds
+  have d5 := MatedCRT.Lemma68Window.shortWindow_hL_proved
+  have d6 := MatedCRT.Lemma68CGRCYSqInst.shellOneTestOrderAeCGRCYSq_holds (𝒮 := 𝒮)
+  have d7 := MatedCRT.Lemma68Window.shortWindow_hT_of_meanZero (hR := d1)
+  have d8 := MatedCRT.volumeGrowthStmt_of_berestyckiGwynne (hBG := hBG)
+  have d9 := MatedCRT.LIClosed68Y.fieldVolCutoffStmt_of_berestyckiGwynne (𝒮 := 𝒮) (hBG := hBG)
+  have d10 := MatedCRT.ShortWindowHV.wholePlaneUpperVolumeTailStep_of_ballMass (hBM := hBM) (hCC := d2)
+  have d11 := MatedCRT.CertifiedReferenceModel.cellSizeEstimate (h := hCRM)
+  have d12 := MatedCRT.CertifiedReferenceModel.countingMeasureConvergence (h := hCRM)
+  have d13 := MatedCRT.CertifiedReferenceModel.exitTimeUpperBound (h := hCRM)
+  have d14 := MatedCRT.CertifiedReferenceModel.greenKernelLowerBound (h := hCRM)
+  have d15 := MatedCRT.CountingExitAlpha68.countingAtExitAlphaStmt_of_counting_exit (hC := d12) (hE := d13)
+  have d16 := MatedCRT.FirstPass64.firstPass_6_5_uniform (h0 := d4) (h2 := d3) (hV := d10)
+  have d17 := MatedCRT.Lemma68Window.shortWindow_prevalence (h65 := d16) (hT := d7) (hL := d5)
+  have d18 := MatedCRT.Lemma68CGRCY.countingMeshEventsHi_of_draft (𝒮 := 𝒮) (hG := d14) (hC := d11) (hK := d15)
+  have d19 := MatedCRT.Lemma68CGRCYSq.shellChainCGRCYSq_of_oneTestOrderCGRCYSq (hprev := d17) (h := d6)
+  have d20 := MatedCRT.Lemma68CGRCYSqHalf.guardProbStmtCGRCYSq_of_chain (𝒮 := 𝒮) (hMesh := d18) (hVol := d9)
+    (hChain := d19)
+  have d21 := MatedCRT.uniformConstantOrderLowerBound_of_guard (𝒮 := 𝒮) (hG := d20)
+  MatedCRT.firstPass_6_8_faithful (𝒮 := 𝒮) (hU := d21) (h27 := d8) (h28 := d11)
 
 end MatedCRT.LIClosed68Y
 
@@ -254,29 +255,29 @@ theorem firstPass_6_9_minimalInputs
     {𝒮 : SpaceFillingSLEModel}
     (hCRM : CertifiedReferenceModel ν 𝒮)
     (hBM : MatedCRT.S2VG.LitWholePlaneBallMass)
-    (hCC : MatedCRT.S2VG.LitCoordChange)
     (hBG : FrozenBerestyckiGwynneConeBallMass) :
     FaithfulChanceOfBeingAbsorbedStmt 𝒮 :=
   have d1 := MatedCRT.ConeMeanZeroRestriction.fpConeMeanZeroRestriction_holds
-  have d2 := MatedCRT.FirstPass.Derived.wholePlaneLQGCoordinateChangeStep_holds
-  have d3 := MatedCRT.FirstPass.Derived.wholePlaneLQGExistenceStep_holds
-  have d4 := MatedCRT.Lemma68Window.shortWindow_hL_proved
-  have d5 := MatedCRT.Lemma68CGRCYSqInst.shellOneTestOrderAeCGRCYSq_holds (𝒮 := 𝒮)
-  have d6 := MatedCRT.Lemma68Window.shortWindow_hT_of_meanZero (hR := d1)
-  have d7 := MatedCRT.LIClosed68Y.fieldVolCutoffStmt_of_berestyckiGwynne (𝒮 := 𝒮) (hBG := hBG)
-  have d8 := MatedCRT.ShortWindowHV.wholePlaneUpperVolumeTailStep_of_ballMass (hBM := hBM) (hCC := hCC)
-  have d9 := MatedCRT.CertifiedReferenceModel.cellSizeEstimate (h := hCRM)
-  have d10 := MatedCRT.CertifiedReferenceModel.countingMeasureConvergence (h := hCRM)
-  have d11 := MatedCRT.CertifiedReferenceModel.exitTimeUpperBound (h := hCRM)
-  have d12 := MatedCRT.CertifiedReferenceModel.greenKernelLowerBound (h := hCRM)
-  have d13 := MatedCRT.CountingExitAlpha68.countingAtExitAlphaStmt_of_counting_exit (hC := d10) (hE := d11)
-  have d14 := MatedCRT.FirstPass64.firstPass_6_5_uniform (h0 := d3) (h2 := d2) (hV := d8)
-  have d15 := MatedCRT.Lemma68Window.shortWindow_prevalence (h65 := d14) (hT := d6) (hL := d4)
-  have d16 := MatedCRT.Lemma68CGRCY.countingMeshEventsHi_of_draft (𝒮 := 𝒮) (hG := d12) (hC := d9) (hK := d13)
-  have d17 := MatedCRT.Lemma68CGRCYSq.shellChainCGRCYSq_of_oneTestOrderCGRCYSq (hprev := d15) (h := d5)
-  have d18 := MatedCRT.Lemma68CGRCYSqHalf.guardProbStmtCGRCYSq_of_chain (𝒮 := 𝒮) (hMesh := d16) (hVol := d7)
-    (hChain := d17)
-  have d19 := MatedCRT.uniformConstantOrderLowerBound_of_guard (𝒮 := 𝒮) (hG := d18)
-  MatedCRT.firstPass_6_9_faithful (𝒮 := 𝒮) (hU := d19)
+  have d2 := MatedCRT.FirstPass.Derived.litCoordChange_holds
+  have d3 := MatedCRT.FirstPass.Derived.wholePlaneLQGCoordinateChangeStep_holds
+  have d4 := MatedCRT.FirstPass.Derived.wholePlaneLQGExistenceStep_holds
+  have d5 := MatedCRT.Lemma68Window.shortWindow_hL_proved
+  have d6 := MatedCRT.Lemma68CGRCYSqInst.shellOneTestOrderAeCGRCYSq_holds (𝒮 := 𝒮)
+  have d7 := MatedCRT.Lemma68Window.shortWindow_hT_of_meanZero (hR := d1)
+  have d8 := MatedCRT.LIClosed68Y.fieldVolCutoffStmt_of_berestyckiGwynne (𝒮 := 𝒮) (hBG := hBG)
+  have d9 := MatedCRT.ShortWindowHV.wholePlaneUpperVolumeTailStep_of_ballMass (hBM := hBM) (hCC := d2)
+  have d10 := MatedCRT.CertifiedReferenceModel.cellSizeEstimate (h := hCRM)
+  have d11 := MatedCRT.CertifiedReferenceModel.countingMeasureConvergence (h := hCRM)
+  have d12 := MatedCRT.CertifiedReferenceModel.exitTimeUpperBound (h := hCRM)
+  have d13 := MatedCRT.CertifiedReferenceModel.greenKernelLowerBound (h := hCRM)
+  have d14 := MatedCRT.CountingExitAlpha68.countingAtExitAlphaStmt_of_counting_exit (hC := d11) (hE := d12)
+  have d15 := MatedCRT.FirstPass64.firstPass_6_5_uniform (h0 := d4) (h2 := d3) (hV := d9)
+  have d16 := MatedCRT.Lemma68Window.shortWindow_prevalence (h65 := d15) (hT := d7) (hL := d5)
+  have d17 := MatedCRT.Lemma68CGRCY.countingMeshEventsHi_of_draft (𝒮 := 𝒮) (hG := d13) (hC := d10) (hK := d14)
+  have d18 := MatedCRT.Lemma68CGRCYSq.shellChainCGRCYSq_of_oneTestOrderCGRCYSq (hprev := d16) (h := d6)
+  have d19 := MatedCRT.Lemma68CGRCYSqHalf.guardProbStmtCGRCYSq_of_chain (𝒮 := 𝒮) (hMesh := d17) (hVol := d8)
+    (hChain := d18)
+  have d20 := MatedCRT.uniformConstantOrderLowerBound_of_guard (𝒮 := 𝒮) (hG := d19)
+  MatedCRT.firstPass_6_9_faithful (𝒮 := 𝒮) (hU := d20)
 
 end MatedCRT.LIClosed68Y
