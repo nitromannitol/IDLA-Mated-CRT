@@ -58,7 +58,7 @@ theorem greenKernel_le_of_vBoundary_le (hlf : ∀ a, {b | m a b ≠ 0}.Finite)
   linarith [key y hy]
 
 /-- **A near-range logarithmic bound for the Green kernel gives a bound at all distances.**
-Let `p` assign a point to each vertex, adjacent vertices having points at distance at most
+Let `p` assign a point to each vertex, the neighbours of the vertices of `B` having points at distance at most
 `2 δ_c ≤ δ₀/2`, and `r₀ ≤ δ₀/2`. If `g_B(a, b) ≤ C log (1/‖p a - p b‖)` whenever
 `r₀ ≤ ‖p a - p b‖ ≤ δ₀` (`b` in a set `B'` of poles), then
 `g_B(a, b) ≤ C log (1/‖p a - p b‖) + C log (4/δ₀)` whenever `r₀ ≤ ‖p a - p b‖ ≤ 2`
@@ -67,7 +67,7 @@ theorem greenKernel_le_log_of_nearRange (hlf : ∀ a, {b | m a b ≠ 0}.Finite)
     (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {B B' : Set ℤ} (hB : B.Finite)
     (p : ℤ → ℂ) {r₀ δ₀ δc C : ℝ} (hC : 0 ≤ C) (hδ₀ : 0 < δ₀) (hδ₀1 : δ₀ ≤ 1)
     (hr₀ : r₀ ≤ δ₀ / 2) (hδc : 4 * δc ≤ δ₀)
-    (hstep : ∀ y y', m y y' ≠ 0 → ‖p y - p y'‖ ≤ 2 * δc)
+    (hstep : ∀ y ∈ B, ∀ y', m y y' ≠ 0 → ‖p y - p y'‖ ≤ 2 * δc)
     (hmain : ∀ a ∈ B, ∀ b ∈ B', r₀ ≤ ‖p a - p b‖ → ‖p a - p b‖ ≤ δ₀ →
       greenKernel m B a b ≤ C * Real.log (1 / ‖p a - p b‖)) :
     ∀ a ∈ B, ∀ b ∈ B', r₀ ≤ ‖p a - p b‖ → ‖p a - p b‖ ≤ 2 →
@@ -89,7 +89,7 @@ theorem greenKernel_le_log_of_nearRange (hlf : ∀ a, {b | m a b ≠ 0}.Finite)
       rintro b' ⟨hb'R, y, hyR, hyb'⟩
       by_cases hb'B : b' ∈ B
       · have hnR : ‖p b' - p b‖ ≤ δ₀ := not_lt.1 fun h => hb'R ⟨hb'B, h⟩
-        have h1 := hstep y b' hyb'
+        have h1 := hstep y (hRB hyR) b' hyb'
         have h2 : ‖p y - p b‖ ≤ ‖p y - p b'‖ + ‖p b' - p b‖ := norm_sub_le_norm_sub_add_norm_sub _ _ _
         have hy2 := hyR.2
         have hlow : δ₀ / 2 ≤ ‖p b' - p b‖ := by linarith
