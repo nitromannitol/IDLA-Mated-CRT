@@ -105,4 +105,37 @@ theorem identDistrib_circleProcess_lqgMeasure_curve_of_valid {𝒮 𝒮' : Space
   · filter_upwards [e2] with ω hω
     exact Prod.ext rfl (Prod.ext rfl hω)
 
+/-- The rational-time code of a continuous version of a curve is the restriction of the curve to rational times. -/
+theorem slePathCode_eq_restrict {c : C(ℝ, ℂ)} {η : ℝ → ℂ} (h : ⇑c = η) :
+    slePathCode c = fun q : ℚ => η (q : ℝ) := by
+  funext q
+  exact congrFun h (q : ℝ)
+
+/-- **The law of a continuous version of the curve is the same for all valid environments** of models with the same
+normalized space-filling SLE law and the same `0 < γ < 2`, on arbitrary carriers: if `η'` and `ζ'` are measurable
+families of continuous paths, almost surely equal to the curves of `S` and `S'`, then they are identically distributed
+in `C(ℝ, ℂ)`. This applies to the area-parametrized curve of the mating-of-trees coupling. -/
+theorem identDistrib_curveVersion_of_valid {𝒮 𝒮' : SpaceFillingSLEModel}
+    {ν : ℝ → Measure SLEPathCode} (hν : HasNormalizedSLELaw 𝒮 ν) (hν' : HasNormalizedSLELaw 𝒮' ν)
+    {Ω Ω' : Type} [MeasurableSpace Ω] [MeasurableSpace Ω'] {S : MatedCRTEnv Ω} {S' : MatedCRTEnv Ω'}
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (hS : S.IsValid 𝒮 γ) (hS' : S'.IsValid 𝒮' γ)
+    {η' : Ω → C(ℝ, ℂ)} (hη'm : Measurable η') (hη' : ∀ᵐ ω ∂S.P, ⇑(η' ω) = S.η ω)
+    {ζ' : Ω' → C(ℝ, ℂ)} (hζ'm : Measurable ζ') (hζ' : ∀ᵐ ω ∂S'.P, ⇑(ζ' ω) = S'.η ω) :
+    IdentDistrib η' ζ' S.P S'.P := by
+  have hres : Measurable fun f : ℝ → ℂ => fun q : ℚ => f (q : ℝ) :=
+    measurable_pi_iff.2 fun q => measurable_pi_apply (q : ℝ)
+  have hcurve := (identDistrib_circleProcess_lqgMeasure_curve_of_valid hν hν' hγ0 hγ2 hS hS').comp
+    (hres.comp (measurable_snd.comp measurable_snd))
+  have hcode : IdentDistrib (fun ω => slePathCode (η' ω)) (fun ω => slePathCode (ζ' ω)) S.P S'.P := by
+    refine (IdentDistrib.of_ae_eq (measurableEmbedding_slePathCode.measurable.comp hη'm).aemeasurable
+      ?_).trans (hcurve.trans (IdentDistrib.of_ae_eq hcurve.aemeasurable_snd ?_))
+    · filter_upwards [hη'] with ω hω
+      exact slePathCode_eq_restrict hω
+    · filter_upwards [hζ'] with ω hω
+      exact (slePathCode_eq_restrict hω).symm
+  refine ⟨hη'm.aemeasurable, hζ'm.aemeasurable, measurableEmbedding_slePathCode.map_injective ?_⟩
+  rw [Measure.map_map measurableEmbedding_slePathCode.measurable hη'm,
+    Measure.map_map measurableEmbedding_slePathCode.measurable hζ'm]
+  exact hcode.map_eq
+
 end MatedCRT.FirstPass.Derived
