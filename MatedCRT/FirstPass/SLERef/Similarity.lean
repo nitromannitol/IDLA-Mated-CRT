@@ -4,15 +4,14 @@ import MatedCRT.FirstPass.Frozen.S5cSimilarity
 import MatedCRT.FirstPass.SLERef.Code
 
 /-!
-# First pass: corrected similarity transfer for the reference law
+# First pass: similarity transfer for the reference law
 
-`FPSimilarityTransferCorrected 𝒮` is the corrected body of the similarity transfer. It replaces the body of the frozen
-`FPSimilarityTransfer` (`MatedCRT/FirstPass/Frozen/S5cSimilarity.lean`), which is refuted by explicit counterexamples. The corrected body: independence is imposed between the cone data and the Lebesgue-area representative `ηL`, not between the cone data
+`FPSimilarityTransferCorrected 𝒮` is the similarity transfer of the cone field and the space-filling SLE: independence is imposed between the cone data and the Lebesgue-area representative `ηL`, not between the cone data
 and the quantum-area-parametrized curve `η`; both triples are equal in law after the similarity, and the scaling
 `η(b ·)` is taken with the quantum-area clock.
 
 Truth-checked: UNSURE for a fixed model (see the docstring of `FPSimilarityTransferCorrected`); its universal
-closure over all models is FALSE. Its external content enters only through `SLEReferenceExistsInput`
+closure over all models does not hold, so it is a per-model hypothesis. Its external content enters only through `SLEReferenceExistsInput`
 (`MatedCRT/FirstPass/Frozen/SLERef.lean`).
 -/
 

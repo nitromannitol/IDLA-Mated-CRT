@@ -8,9 +8,9 @@ Method. The docstring status of a Prop is the word of the first "Truth check" or
 
 | Rows | MATCH | MISMATCH | no provenance row |
 |---:|---:|---:|---:|
-| 82 | 82 | 0 | 0 |
+| 80 | 80 | 0 | 0 |
 
-Scope: 80 Props in `Frozen/` and `External/`, plus two provenance rows (81, 82) whose Props are defined in `MatedCRT/FirstPass/S3i/` and are listed for completeness.
+Scope: 78 Props in `Frozen/` and `External/`, plus two provenance rows (81, 82) whose Props are defined in `MatedCRT/FirstPass/S3i/` and are listed for completeness.
 
 ## Mismatches and wording changes
 
@@ -25,7 +25,6 @@ Scope: 80 Props in `Frozen/` and `External/`, plus two provenance rows (81, 82) 
 |---:|---|---|---|---|---|
 | 1 | FrozenAdjacentCellsMeetAe | FirstPass/Frozen/S1S2S8SA.lean:16 | TRUE | TRUE | MATCH |
 | 2 | FrozenConeHarmonicBallFunctional | FirstPass/Frozen/S1S2S8SA.lean:23 | RETIRED | RETIRED | MATCH |
-| 3 | FrozenConeRadialDivergence | FirstPass/Frozen/S1c.lean:18 | FALSE | FALSE | MATCH |
 | 4 | FrozenUniversalMeasurabilityOfAnalytic | FirstPass/Frozen/S1c.lean:25 | TRUE | TRUE | MATCH |
 | 5 | FrozenLQGTestIntegralMeasurable | FirstPass/Frozen/S1c.lean:31 | TRUE | TRUE | MATCH |
 | 6 | FrozenDiskGreenNonnegCont | FirstPass/Frozen/S1c.lean:38 | TRUE | TRUE | MATCH |
@@ -93,7 +92,6 @@ Scope: 80 Props in `Frozen/` and `External/`, plus two provenance rows (81, 82) 
 | 68 | FPEmbeddedWalkExitTail | FirstPass/Frozen/S5cSec9.lean:34 | none | none | MATCH |
 | 69 | FPLogPotentialSmall | FirstPass/Frozen/S5cSec9.lean:42 | none | none | MATCH |
 | 70 | FPFiniteAnnulusDisconnection | FirstPass/Frozen/S5cSec9.lean:49 | none | none | MATCH |
-| 71 | FPSimilarityTransfer | FirstPass/Frozen/S5cSimilarity.lean:24 | FALSE | FALSE | MATCH |
 | 72 | FrozenLeastSupersolutionMemCone | FirstPass/Frozen/S5k.lean:15 | TRUE | TRUE | MATCH |
 | 73 | FrozenFiniteMeasureDiskStandardBorel | FirstPass/Frozen/S5k.lean:23 | TRUE | TRUE | MATCH |
 | 74 | SLEReferenceExistsInput | FirstPass/Frozen/SLERef.lean:22 | UNSURE | UNSURE | MATCH |

@@ -1,24 +1,15 @@
 import MatedCRT.Steps.Sec1.Convergence
 
 /-!
-# Frozen external input of the scaled cluster exit time
+# Frozen external inputs of the scaled cluster exit time
 
-`FrozenConeRadialDivergence` is the one general Brownian fact used by the lower-tail bound for the cone scale radius `R_b` in the proof of the scaled cluster exit time. It concerns only the radial part of the quantum cone (the conditioned Brownian motion `B̂` of Definition 2.1 and its quantum cone radial law `quantumConeRadialLaw`), not harmonic balls, clusters or IDLA processes.
+General facts used in the proof of the scaled cluster exit time: universal measurability of analytic sets, field-level measurability of the LQG measure against test functions, and the disc Green function with pole at the centre. The radial divergence of the conditioned Brownian motion is `FrozenConeRadialDivergenceCorrected` (`Frozen/S1cDivergence.lean`).
 -/
 
 namespace MatedCRT
 
 open MeasureTheory Filter Topology HarmonicBalls MarkovProcess
 open scoped NNReal
-
-/-- Radial divergence of the conditioned process. For `0 < γ < 2` and every probability `ν` on continuous paths which is the conditioned Brownian motion `B̂` of `IsBMConditionedPositive (Q - γ) ν` (drift `c = Q - γ = 2/γ - γ/2 > 0`), `ν`-almost surely `B̂_s + c s → ∞` as `s → ∞` on `ℝ≥0`. In the coordinates of the quantum cone radial law (`quantumConeRadialLaw γ ν`, second component `s ↦ B̂_s - γ s`), this reads: almost surely the second path `x.2` satisfies `x.2 s + Q s → ∞`, with `Q = lqgQ γ`.
-Source: the standard long-time behaviour of Brownian motion with positive drift conditioned to stay positive (Doob h-transform of drifted Brownian motion killed at `0`; `Y_s / s → c` a.s.), as used for the conditioned process of Duplantier-Miller-Sheffield (2014, *Mating of trees*, arXiv:1409.7055v4), Definition of the quantum cone; the identification of the weak limit `ν` of `IsBMConditionedPositive` with the h-transform is part of this standard fact. Locator: standard; locator not yet pinned.
-Truth check: FALSE. The almost-sure conclusion lives on an uncountable raw function space with the product sigma-algebra, where real-time divergence is not an almost-sure property. Counterexample: the complement has outer measure one.
-Retired and replaced by `FrozenConeRadialDivergenceCorrected`. -/
-def FrozenConeRadialDivergence : Prop :=
-  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ν : Measure (ContinuousPath ℝ), IsBMConditionedPositive (lqgQ γ - γ) ν →
-    ∀ᵐ x ∂(quantumConeRadialLaw γ ν),
-      Tendsto (fun s : ℝ≥0 => x.2 s + lqgQ γ * (s : ℝ)) atTop atTop
 
 /-- Universal measurability of analytic sets (Lusin). For every Polish space `X` with its Borel σ-algebra and every finite Borel measure `ν` on `X`, each analytic subset of `X` is `ν`-null-measurable (it is `ν`-measurable for the completion). Source: Lusin (1917); Kechris, *Classical Descriptive Set Theory* (1995), Theorem 21.10 (analytic sets are universally measurable). General measure theory, not specific to this paper. Locator: standard; locator not yet pinned.
 Truth check: TRUE. Kechris (1995), Theorem 21.10, p. 155. -/

@@ -1,6 +1,6 @@
 # First-pass frozen inputs: provenance table
 
-Campaign-internal. Scope: every `Prop` defined in `MatedCRT/FirstPass/Frozen/*.lean` (25 files) and in `MatedCRT/External/*.lean` (2 files), one row each, in file order: 80 rows. Rows 81 and 82 are the two one-sided boundary Props of Lemma 3.6, defined in `MatedCRT/FirstPass/S3i/Frozen.lean` and `S3i/FrozenFloored.lean` (outside the scope above); added 2026-11-11 (p2-ledger-rows-and-inventory-refresh). Total: 82 rows.
+Campaign-internal. Scope: every `Prop` defined in `MatedCRT/FirstPass/Frozen/*.lean` (25 files) and in `MatedCRT/External/*.lean` (2 files), one row each, in file order: 78 rows. Rows 81 and 82 are the two one-sided boundary Props of Lemma 3.6, defined in `MatedCRT/FirstPass/S3i/Frozen.lean` and `S3i/FrozenFloored.lean` (outside the scope above); added 2026-11-11 (p2-ledger-rows-and-inventory-refresh). Total: 80 rows.
 
 Not rows: three non-Prop defs (`rescaledLBMOccupation` `FirstPass/Frozen/S3S4b.lean:64`, `quenchedDiscreteOccupation` `S3S4b.lean:72`, `FPScaledMeasure` `S5cSimilarity.lean:22`) and three theorems (`SLERef.lean:27`, `:33`, `:40`). Rows 65 and 66 are Prop-valued definitions with no verdict.
 
@@ -13,7 +13,7 @@ Columns:
 - **Verdict source**: the docstring's own attribution, as written (chat number, time, notes path).
 - **Discharge**: the declaration in `MatedCRT/FirstPass/LPBridge/*.lean` or `MatedCRT/FirstPass/HBRewire.lean` that proves the Prop (grep, snapshot). A binder `(h : Prop)` in HBRewire.lean is a consumer, not a discharge; it is shown as `consumer HBRewire.lean:N`.
 
-Summary (83 rows): TRUE 47, FALSE 5, UNSURE 3, RETIRED 8, none 20. Discharged in LPBridge or HBRewire: 9 (rows 4, 5, 13, 14, 39, 41, 43, 64, 73); a discharge is a declaration of that type, not a checked compilation. Proved elsewhere, as the docstring states and grep confirms: 2 (rows 42, 57).
+Summary (81 rows): TRUE 47, FALSE 3, UNSURE 3, RETIRED 8, none 20. Discharged in LPBridge or HBRewire: 9 (rows 4, 5, 13, 14, 39, 41, 43, 64, 73); a discharge is a declaration of that type, not a checked compilation. Proved elsewhere, as the docstring states and grep confirms: 2 (rows 42, 57).
 
 Paths are relative to the repository root.
 
@@ -21,7 +21,6 @@ Paths are relative to the repository root.
 |---|---|---|---|---|---|---|
 | 1 | FrozenAdjacentCellsMeetAe | MatedCRT/FirstPass/Frozen/S1S2S8SA.lean:16 | DMS14 Lemma 8.8 with Definitions 1.1, 1.2; DMS14 Theorem 1.9; standard; locator pending | TRUE | "Truth check TRUE for every model (ChatGPT, 02:35 UTC; notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md §1)" | none; consumer HBRewire.lean:76 |
 | 2 | FrozenConeHarmonicBallFunctional | MatedCRT/FirstPass/Frozen/S1S2S8SA.lean:23 | HB22 = [bou2022harmonic], Proposition 1.3; paper line 542 (Lemma 2.4); Lemma 2.6; locator pending | RETIRED | "RETIRED (NOT-EXTERNAL, truth check 2026-11-09)" | none |
-| 3 | FrozenConeRadialDivergence | MatedCRT/FirstPass/Frozen/S1c.lean:18 | standard long-time behaviour of Brownian motion with positive drift conditioned to stay positive; DMS arXiv:1409.7055v4 (quantum cone); standard; locator pending | FALSE | "RETIRED (FALSE, ChatGPT 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md §1)"; "Truth check FALSE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md §1)" | none (replaced by row 7) |
 | 4 | FrozenUniversalMeasurabilityOfAnalytic | MatedCRT/FirstPass/Frozen/S1c.lean:25 | Lusin (1917); Kechris, Classical Descriptive Set Theory (1995), Theorem 21.10; locator pending | TRUE | "Truth check TRUE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md, table row): Kechris (1995) Theorem 21.10, p. 155" | LPBridge/UniversalMeasurability.lean:18 (frozenUniversalMeasurabilityOfAnalytic_holds; file untracked at the time of the grep); consumer HBRewire.lean:73 |
 | 5 | FrozenLQGTestIntegralMeasurable | MatedCRT/FirstPass/Frozen/S1c.lean:31 | Duplantier–Sheffield 2011, Prop. 1.1 (as cited in HarmonicBalls.Defs.LQG); DS arXiv:0808.1560v2 Props 1.1 and 3.1; locator pending | TRUE | "Truth check TRUE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md, table row)"; corrected after "ChatGPT 00:53 UTC, notes/fp-gaps/CHATGPT-z1-logcert-null.md §8.2" | LPBridge/LQGTestIntegralMeasurable.lean:49 (frozenLQGTestIntegralMeasurable_holds; file untracked at the time of the grep); LPBridge/InRepoProofs.lean:60 (frozenLQGTestIntegralMeasurable_inRepo); consumer HBRewire.lean:74 |
 | 6 | FrozenDiskGreenNonnegCont | MatedCRT/FirstPass/Frozen/S1c.lean:38 | Armitage–Gardiner, Classical Potential Theory (2001), §4.4; locator pending | TRUE | "Truth check TRUE (ChatGPT, 02:54 UTC; notes/fp-gaps/CHATGPT-idla-frozen-batch.md, table row): Doob (1984) Ch. II §1 p. 14, divided by 2π" | none; consumer HBRewire.lean:75 |
@@ -89,7 +88,6 @@ Paths are relative to the repository root.
 | 68 | FPEmbeddedWalkExitTail | MatedCRT/FirstPass/Frozen/S5cSec9.lean:34 | Berestycki–Gwynne, arXiv:2003.10320v2, Remark 1.3, (1.8); tightness from Theorem 1.2 | none | "Input (2), tightness of the embedded walk exit (steps2-r3 Section 9)" | none |
 | 69 | FPLogPotentialSmall | MatedCRT/FirstPass/Frozen/S5cSec9.lean:42 | Berestycki–Gwynne, arXiv:2003.10320v2, Lemma A.1, upper half of (A.1), with Borel–Cantelli and layer-cake integration | none | "Input (3), small logarithmic potentials (steps2-r3 Section 9)" | none |
 | 70 | FPFiniteAnnulusDisconnection | MatedCRT/FirstPass/Frozen/S5cSec9.lean:49 | Gwynne–Miller–Sheffield, arXiv:1807.07511v3, Lemma 3.11, (3.35) | none | "Input (4), finite-annulus disconnection (steps2-r3 Section 9)" | none |
-| 71 | FPSimilarityTransfer | MatedCRT/FirstPass/Frozen/S5cSimilarity.lean:24 | DMS arXiv:1409.7055v4, Proposition 4.13(i); Berestycki–Gwynne arXiv:2003.10320v2, Lemma 2.3 and §6.4, (6.52) | FALSE | "RETIRED (FALSE, ChatGPT 02:21 UTC; corrected form by lead li's team)"; "Truth check FALSE (ChatGPT, 02:21 UTC; notes/fp-gaps/CHATGPT-fpsimilarity-truth.md, opening verdict)" | none (corrected form FPSimilarityTransferCorrected, FirstPass/SLERef/Similarity.lean:39) |
 | 72 | FrozenLeastSupersolutionMemCone | MatedCRT/FirstPass/Frozen/S5k.lean:15 | Bou-Rabee and Gwynne arXiv:2208.11795v3, Lemma 3.1 (lemma:basic-properties, printed line 621), in the form LeastSupersolutionMemStmt; HB Appendix A, pp. 65–67, Lemma A.1; IDLA arXiv:2211.04891v2 (2.4), (2.8), Fact 2.2(II) | TRUE | "Truth check TRUE (chat 150; notes/fp-gaps/CHATGPT-z10-S5k-frozen.md)" | DERIVED (LssDerived.lean:29, from VolumeGrowthStmt; MQ-li-4) |
 | 73 | FrozenFiniteMeasureDiskStandardBorel | MatedCRT/FirstPass/Frozen/S5k.lean:23 | Kechris, Classical Descriptive Set Theory, Thm 17.23–17.24 and §17.E; Parthasarathy, Probability Measures on Metric Spaces, Thm II.6.2 | TRUE | "Truth check TRUE (chat 150; notes/fp-gaps/CHATGPT-z10-S5k-frozen.md)" | LPBridge/FiniteMeasureStandardBorel.lean:18 (frozenFiniteMeasureDiskStandardBorel_holds); LPBridge/InRepoProofs.lean:70 |
 | 74 | SLEReferenceExistsInput | MatedCRT/FirstPass/Frozen/SLERef.lean:22 | cited inputs: SLECitedInputs (Theorem 2.11, Lemmas 2.14, 2.16, 2.18, corrected Lemma 3.2); FPSimilarityTransferCorrected; FrozenTruncatedQuenchedLawsFixedTime | UNSURE | "Truth check (2026-11-10): UNSURE, model-dependent" (docstring); earlier records notes/fp-gaps/CHATGPT-idla-sle-frozen-7.md §4 and CHATGPT-fpsimilarity-truth.md §7 treated the certified reference law as TRUE | none |
@@ -105,7 +103,7 @@ Paths are relative to the repository root.
 
 Notes:
 - Row 22 is TRUE with a caveat quoted from its docstring: it needs an explicit canonical standard-Borel realization argument in addition to the cited numbered statements.
-- Row 35 is FALSE and row 28 is FALSE (retired); row 71 is FALSE and retired; row 3 is FALSE and retired (replaced by row 7).
+- Row 35 is FALSE and row 28 is FALSE (retired).
 - Row 42 has three docstring blocks (two of them RETIRED, one original); the plan file merges them.
 - Row 74: the docstring verdict is UNSURE, model-dependent; the exact non-vacuity question is flagged there for the operator.
 - Discharge checks cover `MatedCRT/FirstPass/LPBridge/*.lean` and `MatedCRT/FirstPass/HBRewire.lean` only. Proofs elsewhere (rows 42, 57) are noted from the docstring and confirmed by grep.

@@ -124,10 +124,12 @@ audit `fp-gaps-audit-1109` running, not yet read). File `MatedCRT/FirstPass/S1c.
 - `clusterExitTime_rescaled_gt` (Lemma A, deterministic): `Λ_{2t} ⊆ B_{Rρ/3}` implies `t < b · clusterExitTime(R⁻¹Λ_{b·}) ρ`. PROVED.
 - `coneScaleRadius_lowerTail` (Lemma B): `P[R_b ≤ A] → 0` as `b → ∞`. PROVED from the crossing lemma
   `le_of_sSup_le_crossing` and the frozen input below.
-- `scaledClusterExitTimeStep_of_radius (hdiv : FrozenConeRadialDivergence) (hR : FixedTimeRadiusStep) : ScaledClusterExitTimeStep`.
+- `scaledClusterExitTimeStep_of_radius (hdiv : FrozenConeRadialDivergenceCorrected) (hR : FixedTimeRadiusStep) : ScaledClusterExitTimeStep`.
   PROVED, conditional on `hR` and `hdiv`. Axioms: propext, Classical.choice, Quot.sound only (`MatedCRT/FirstPass/S1c/Axioms.lean`).
-- Frozen EXTERNAL (`MatedCRT/FirstPass/Frozen/S1c.lean`): `FrozenConeRadialDivergence`, the a.s. divergence
-  `x.2 s + Q s → ∞` for the quantum cone radial law of the conditioned Brownian motion (drift `Q - γ > 0`). Locator pending.
+- Frozen EXTERNAL (`MatedCRT/FirstPass/Frozen/S1cDivergence.lean`): `FrozenConeRadialDivergenceCorrected`, the a.s.
+  divergence of the conditioned Brownian motion (drift `Q - γ > 0`) on its continuous-path carrier; the transfer to the
+  quantum cone radial law is proved in `FirstPass/S1c/RadialDivergence.lean`. Source: Duplantier-Miller-Sheffield,
+  arXiv:1409.7055v4, Remark 4.4, pp. 74-75.
 - OPEN NEW: `FixedTimeRadiusStep` (`MatedCRT/FirstPass/S1c.lean`, Lemma 1 of G-hT): for each `u > 0` a measurable
   `M : Ω → ℝ` with `Λ_u ⊆ B̄_{M}` almost surely. NOT formalized. Its written argument needs (i) null-measurability of
   analytic sets for Borel probability laws on Polish spaces (Mathlib has `MeasurableSet.analyticSet_image` and
@@ -137,4 +139,4 @@ audit `fp-gaps-audit-1109` running, not yet read). File `MatedCRT/FirstPass/S1c.
 
 Consequence: `hT` is NOT discharged. `firstPassMain_1_4` and `firstPassMain_1_6` keep `hT` as their hypothesis (no
 weakening). The composition's other open items are unchanged (`h24`, `h25`, `h35`, `h42`, `h51`, `h61`). Once
-`FixedTimeRadiusStep` and `FrozenConeRadialDivergence` are accepted, `hT := scaledClusterExitTimeStep_of_radius hdiv hR`.
+`FixedTimeRadiusStep` and `FrozenConeRadialDivergenceCorrected` are accepted, `hT := scaledClusterExitTimeStep_of_radius hdiv hR`.
