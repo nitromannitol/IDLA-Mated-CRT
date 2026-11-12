@@ -341,26 +341,34 @@ inputs proved meanwhile in `Derived/ConeRadialDivergence.lean` (`FrozenConeRadia
 `Derived/ConeCircleLawUnique.lean` (`ConeCircleLawUniqueStep`) and `Derived/ConeWholePlaneFieldLaw.lean`
 (`FPConeWholePlaneFieldLaw`). Input binders of the 1.4 and 1.6 forms after this: 16 (18 minus the data `𝒮`, `ν`).
 
+Fifth pass (2026-11-12): `FrozenInsertionCoordinateRule` (#33, binder `hK`; the γ-LQG coordinate change rule for
+one fixed affine map, Duplantier-Sheffield 2011, Proposition 2.1) is a theorem,
+`MatedCRT/FirstPass/Derived/InsertionCoordinateRule.lean` (`frozenInsertionCoordinateRule_holds`; axioms propext,
+Classical.choice, Quot.sound), from the library theorem
+`LatticeProb.LQG.LQGSingularScaledLimit.ae_isLQGLimit_affine_fieldCircleAverage` through the bridges
+`isWholePlaneGFF_iff`, `isLQGMeasureOfField_iff` and `isLQGLimit_iff`. Input binders of the 1.4 and 1.6 forms after
+this: 15 (17 minus the data `𝒮`, `ν`).
+
 Derived forms (binders of `T` -> binders of `T_derivedInputs`; 20 forms; binder names as in `T`):
 
 | counted `T` | binders | supplied |
 |---|---|---|
-| `closed_1_4_lp_noSC_noSup` | 36 -> 18 | h0, h2, hdiv, hF3, h27, hFL, hGBC, hE, hE1, h32, h611, hSup, hCons, hMono, hCompat, hThm11, hBdryHB, hProp56HB |
-| `closed_1_6_lp_noSC_noSup` | 36 -> 18 | h0, h2, hdiv, hF3, h27, hFL, hGBC, hE, hE1, h32, h611, hSup, hCons, hMono, hCompat, hThm11, hBdryHB, hProp56HB |
-| `closed_2_3_lp` | 23 -> 12 | hGBC, h32, hSup, hCons, hMono, hCompat, hThm11, hProp56HB, hE, hFL, hE1 |
-| `closed_2_4_lp` | 18 -> 8 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56, hE, hFL |
-| `closed_2_5_lp` | 22 -> 11 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56, hE, hFL, hE1 |
-| `closed_2_6_lp` | 22 -> 11 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56, hE, hFL, hE1 |
+| `closed_1_4_lp_noSC_noSup` | 36 -> 17 | h0, h2, hdiv, hF3, h27, hFL, hGBC, hK, hE, hE1, h32, h611, hSup, hCons, hMono, hCompat, hThm11, hBdryHB, hProp56HB |
+| `closed_1_6_lp_noSC_noSup` | 36 -> 17 | h0, h2, hdiv, hF3, h27, hFL, hGBC, hK, hE, hE1, h32, h611, hSup, hCons, hMono, hCompat, hThm11, hBdryHB, hProp56HB |
+| `closed_2_3_lp` | 23 -> 11 | hGBC, h32, hSup, hCons, hMono, hCompat, hThm11, hProp56HB, hK, hE, hFL, hE1 |
+| `closed_2_4_lp` | 18 -> 7 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56, hK, hE, hFL |
+| `closed_2_5_lp` | 22 -> 10 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56, hK, hE, hFL, hE1 |
+| `closed_2_6_lp` | 22 -> 10 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56, hK, hE, hFL, hE1 |
 | `closed_3_6_lp_uniform` | 6 -> 4 | _hm, _h32 |
 | `closed_3_7_lp` | 6 -> 4 | hm, h32 |
-| `closed_4_2_lp` | 36 -> 22 | h23, h24c, h33, hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56, hE, hFL, hE1 |
-| `closed_5_1_lp_noSup` | 31 -> 15 | h27, hmodel, hFL, hGBC, hE, hE1, h32, h611, hSup, hCons, hMono, hCompat, hBdry, hThm11, hProp56, hSC |
-| `closed_5_3_clean` | 27 -> 15 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56, hE, hFL, hE1, hF3 |
-| `closed_6_1_lp_noSup` | 33 -> 16 | h27, hmodel, hFL, hCentre, hE, hE1, hOpen, h611, hSup, hCons, hMono, hCompat, hBdry, hThm11, hProp56, h0, h2 |
+| `closed_4_2_lp` | 36 -> 21 | h23, h24c, h33, hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56, hK, hE, hFL, hE1 |
+| `closed_5_1_lp_noSup` | 31 -> 14 | h27, hmodel, hFL, hGBC, hK, hE, hE1, h32, h611, hSup, hCons, hMono, hCompat, hBdry, hThm11, hProp56, hSC |
+| `closed_5_3_clean` | 27 -> 14 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56, hK, hE, hFL, hE1, hF3 |
+| `closed_6_1_lp_noSup` | 33 -> 15 | h27, hmodel, hFL, hCentre, hK, hE, hE1, hOpen, h611, hSup, hCons, hMono, hCompat, hBdry, hThm11, hProp56, h0, h2 |
 | `closed_6_4_lp` | 3 -> 1 | h0, h2 |
 | `closed_6_10_lp` | 7 -> 5 | h0, h2 |
-| `closed_7_1_lp` | 29 -> 16 | h0, h2, hGBC, h32, hSup, hCons, hMono, hCompat, hThm11, hProp56HB, hE, hFL, hE1 |
-| `closed_8_1_lp_noSup` | 46 -> 17 | hm, h210, h34, h214, h28, h35c, h218, hH, hcone, h23, h24c, h33, hCentre, hOpen, hSup, hCons, hMono, hCompat, hBdry, hThm11, hProp56, hE, hFL, hE1, h27, hmodel, h611, h0, h2 |
+| `closed_7_1_lp` | 29 -> 15 | h0, h2, hGBC, h32, hSup, hCons, hMono, hCompat, hThm11, hProp56HB, hK, hE, hFL, hE1 |
+| `closed_8_1_lp_noSup` | 46 -> 16 | hm, h210, h34, h214, h28, h35c, h218, hH, hcone, h23, h24c, h33, hCentre, hOpen, hSup, hCons, hMono, hCompat, hBdry, hThm11, hProp56, hK, hE, hFL, hE1, h27, hmodel, h611, h0, h2 |
 | `firstPass_6_5_uniform` | 3 -> 1 | h0, h2 |
 | `firstPass_6_7` | 9 -> 8 | hB1 |
 | `firstPass_6_8` | 9 -> 8 | hB1 |
@@ -373,11 +381,11 @@ propext, Classical.choice, Quot.sound). For a counted theorem `T` (in its form o
 `T_minimalInputs` states the same conclusion from a proper subset of the hypotheses: the conclusion follows without the
 others by theorems already in the repository (search over all compiled theorems of this repository and of the
 Harmonic-Balls package; the compiled file is the check). No binder is added and `T` is unchanged. The search finds no
-such reduction for the other counted theorems; in particular the forms of 1.4 and 1.6 keep their 18 binders.
+such reduction for the other counted theorems; in particular the forms of 1.4 and 1.6 keep their 17 binders.
 
 | counted `T` | binders | not needed |
 |---|---|---|
-| `closed_4_2_lp` | 22 -> 21 | hcone (`FrozenConeScalingLaw`) |
+| `closed_4_2_lp` | 21 -> 20 | hcone (`FrozenConeScalingLaw`) |
 | `firstPass_6_7` | 8 -> 6 | hLit, hμ (`LitQuantumConeLQGMeasureExistence`) |
 | `firstPass_6_8` | 8 -> 6 | hLit, hμ |
 | `firstPass_6_9` | 8 -> 6 | hLit, hμ |
