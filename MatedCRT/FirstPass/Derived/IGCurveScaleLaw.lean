@@ -4,6 +4,7 @@ import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgAffine
 import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgRate
 import LatticeProb.Bonanno.LQGMetric.Papers.GM.S1.Dilate
 import Mathlib.Probability.Process.FiniteDimensionalLaws
+import Mathlib.MeasureTheory.Constructions.BorelSpace.ContinuousMap
 
 /-!
 # Scale invariance in law of whole-plane space-filling SLE
@@ -33,7 +34,7 @@ open scoped NNReal
 
 namespace MatedCRT.Sec1
 
-open MatedCRTHarmonic.MatedCRT (affineReroot igChi)
+open MatedCRTHarmonic.MatedCRT (affineReroot igChi firstHit)
 
 /-- `χ = 2/γ − γ/2 > 0` for `γ ∈ (0, 2)`. -/
 theorem igChi_pos {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) : 0 < igChi γ := by
@@ -172,5 +173,93 @@ theorem map_affineReroot_igCurve {Ω : Type} [MeasurableSpace Ω] {P : Measure �
     _ = P.map (fun ω => Φ (Function.curry (H (hIG₀ ω, U' ω)))) :=
       Measure.map_map hΨm (hHm.comp (hIm.prodMk hU'm))
     _ = P.map ηL := Measure.map_congr hright
+
+/-! ### The Brownian rescaling of the curve and the joint law with independent data -/
+
+/-- The rescaling `t ↦ s⁻¹ c(s² t)` of a whole-plane curve (the space-filling SLE scaling, with
+the Lebesgue parametrization multiplied by `s²`). -/
+noncomputable def igDilate (s : ℝ) (c : C(ℝ, ℂ)) : C(ℝ, ℂ) :=
+  ⟨fun t => ((s : ℂ))⁻¹ * c (s ^ 2 * t), by fun_prop⟩
+
+@[simp]
+theorem igDilate_apply (s : ℝ) (c : C(ℝ, ℂ)) (t : ℝ) :
+    igDilate s c t = ((s : ℂ))⁻¹ * c (s ^ 2 * t) := rfl
+
+/-- If the curve first hits `0` at time `0`, re-rooting at `0` is the plain rescaling. -/
+theorem affineReroot_zero_eq_igDilate (s : ℝ) (c : C(ℝ, ℂ)) (hfh : firstHit c 0 = 0) :
+    affineReroot 0 s 0 c = igDilate s c := by
+  ext t
+  simp [affineReroot, hfh]
+
+/-- The rescaling is jointly Borel in the scale and the curve. -/
+theorem measurable_igDilate_uncurry :
+    Measurable fun p : ℝ × C(ℝ, ℂ) => igDilate p.1 p.2 := by
+  refine ContinuousMap.measurable_iff_eval.2 fun t => ?_
+  simp only [igDilate_apply]
+  have h1 : Measurable fun p : ℝ × C(ℝ, ℂ) => p.2 (p.1 ^ 2 * t) :=
+    (continuous_eval.comp
+      (continuous_snd.prodMk ((continuous_fst.pow 2).mul continuous_const))).measurable
+  exact ((Complex.measurable_ofReal.comp measurable_fst).inv).mul h1
+
+theorem measurable_igDilate (s : ℝ) : Measurable (igDilate s) :=
+  measurable_igDilate_uncurry.comp (measurable_const.prodMk measurable_id)
+
+/-- **Scale invariance in law, plain rescaling form.** For `s > 0`, `s⁻¹ ηL(s² ·)` has the law
+of `ηL` (`ηL` hits `0` first at time `0` almost surely). -/
+theorem map_igDilate_igCurve {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ : ℝ}
+    {X X₀ hIG₀ : Ω → MatedCRTHarmonic.MatedCRT.Field}
+    {B B' B₀ B₀' : ℝ≥0 → Ω → ℝ} {U : Ω → ℝ} {ηL η η₀ : Ω → C(ℝ, ℂ)}
+    {bm : Ω → MatedCRTHarmonic.MatedCRT.Path2}
+    (h : MatedCRTHarmonic.MatedCRT.IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm)
+    (hγ : 0 < γ) (hγ2 : γ < 2) (s : ℝ) (hs : 0 < s) :
+    P.map (fun ω => igDilate s (ηL ω)) = P.map ηL := by
+  obtain ⟨-, -, -, -, hfh, -⟩ := igMap_witness_period h
+  rw [← map_affineReroot_igCurve h hγ hγ2 s hs]
+  exact Measure.map_congr (hfh.mono fun ω hω => (affineReroot_zero_eq_igDilate s _ hω).symm)
+
+/-- **The curve is independent of the cone data.** `ηL` is almost surely a measurable function
+of `(hIG₀, U)`, which is independent of the field-and-Brownian-motion data of both cones. -/
+theorem indepFun_igCurve_cone {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ : ℝ}
+    {X X₀ hIG₀ : Ω → MatedCRTHarmonic.MatedCRT.Field}
+    {B B' B₀ B₀' : ℝ≥0 → Ω → ℝ} {U : Ω → ℝ} {ηL η η₀ : Ω → C(ℝ, ℂ)}
+    {bm : Ω → MatedCRTHarmonic.MatedCRT.Path2}
+    (h : MatedCRTHarmonic.MatedCRT.IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm) :
+    IndepFun ηL (fun ω => (X ω, (fun t => B t ω), (fun t => B' t ω), X₀ ω, (fun t => B₀ t ω),
+      (fun t => B₀' t ω))) P := by
+  obtain ⟨Φ, hΦm, -, hrep, -⟩ := h.igMap
+  have hF : Measurable fun q : MatedCRTHarmonic.MatedCRT.Field × ℝ =>
+      Φ (fun ρ w => LQGMetric.circleAvg q.1 ρ w + q.2) :=
+    hΦm.comp (measurable_pi_iff.2 fun ρ => measurable_pi_iff.2 fun w =>
+      ((LQGMetric.measurable_circleAvg_left ρ w).comp measurable_fst).add measurable_snd)
+  exact (h.indep_curve.comp hF measurable_id).congr (hrep.mono fun ω hω => hω.symm)
+    (ae_eq_refl _)
+
+/-- **Joint law of independent data and the curve rescaled by a data-dependent scale.**
+If `Z` is independent of `ηL` and `R(Z) > 0` almost surely, then
+`(Z, R(Z)⁻¹ ηL(R(Z)² ·))` has the law of `(Z, ηL)` (skew-product form of the scale invariance). -/
+theorem map_prod_igDilate_igCurve {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {γ : ℝ}
+    {X X₀ hIG₀ : Ω → MatedCRTHarmonic.MatedCRT.Field}
+    {B B' B₀ B₀' : ℝ≥0 → Ω → ℝ} {U : Ω → ℝ} {ηL η η₀ : Ω → C(ℝ, ℂ)}
+    {bm : Ω → MatedCRTHarmonic.MatedCRT.Path2}
+    (h : MatedCRTHarmonic.MatedCRT.IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm)
+    (hγ : 0 < γ) (hγ2 : γ < 2) {E : Type*} [MeasurableSpace E] {Z : Ω → E} (hZ : Measurable Z)
+    (hind : IndepFun Z ηL P) {R : E → ℝ} (hR : Measurable R) (hRpos : ∀ᵐ ω ∂P, 0 < R (Z ω)) :
+    P.map (fun ω => (Z ω, igDilate (R (Z ω)) (ηL ω))) = P.map (fun ω => (Z ω, ηL ω)) := by
+  have := h.isProbabilityMeasure
+  have hL : Measurable ηL := h.measurable_curves.1
+  have hpair := (indepFun_iff_map_prod_eq_prod_map_map hZ.aemeasurable hL.aemeasurable).1 hind
+  have hg : Measurable (Function.uncurry fun (x : E) (c : C(ℝ, ℂ)) => igDilate (R x) c) :=
+    measurable_igDilate_uncurry.comp ((hR.comp measurable_fst).prodMk measurable_snd)
+  have hRae : ∀ᵐ x ∂(P.map Z), 0 < R x :=
+    (ae_map_iff hZ.aemeasurable (measurableSet_lt measurable_const hR)).2 hRpos
+  have hsk := (MeasurePreserving.id (P.map Z)).skew_product hg
+    (hRae.mono fun x hx => by
+      rw [Measure.map_map (measurable_igDilate (R x)) hL]
+      exact map_igDilate_igCurve h hγ hγ2 (R x) hx)
+  calc P.map (fun ω => (Z ω, igDilate (R (Z ω)) (ηL ω)))
+      = (P.map (fun ω => (Z ω, ηL ω))).map
+          (fun p : E × C(ℝ, ℂ) => (id p.1, igDilate (R p.1) p.2)) :=
+        (Measure.map_map hsk.measurable (hZ.prodMk hL)).symm
+    _ = P.map (fun ω => (Z ω, ηL ω)) := by rw [hpair, hsk.map_eq]
 
 end MatedCRT.Sec1
