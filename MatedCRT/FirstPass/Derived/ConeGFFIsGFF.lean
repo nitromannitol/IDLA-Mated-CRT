@@ -165,4 +165,131 @@ theorem ae_ne_zero_complex : ∀ᵐ x : ℂ, x ≠ 0 :=
 
 end ConeVersion
 
+section CoupledField
+
+variable {Ω : Type*} [MeasurableSpace Ω] {K : Ω → ℝ → ℂ → ℝ} {Rad : Ω → ℂ → ℝ}
+
+/-- Evaluation of a continuous path at a time is jointly measurable in the time and the path. -/
+theorem measurable_continuousPath_eval : Measurable fun q : ℝ≥0 × ContinuousPath ℝ => q.2 q.1 :=
+  measurable_uncurry_of_continuous_of_measurable (u := fun (s : ℝ≥0) (w : ContinuousPath ℝ) => w s)
+    (fun w => w.continuous) (fun s => ContinuousPath.measurable_coordinateProcess (alpha := ℝ) s)
+
+/-- The remainder of the coupling is jointly measurable in the sample, the Brownian path and the point, given a jointly
+measurable radial function `Rad` with `Rad ω x = K ω |x| 0` off the origin. -/
+theorem measurable_coneCouplingRemainder (γ : ℝ) (hrad : Measurable fun q : Ω × ℂ => Rad q.1 q.2)
+    (hR : ∀ ω x, x ≠ 0 → Rad ω x = K ω ‖x‖ 0) (h1 : Measurable fun ω => K ω 1 0) :
+    Measurable fun q : (Ω × ContinuousPath ℝ) × ℂ =>
+      coneCouplingRemainder γ (K q.1.1) (fun t => q.1.2 t) q.2 := by
+  have heq : (fun q : (Ω × ContinuousPath ℝ) × ℂ =>
+      coneCouplingRemainder γ (K q.1.1) (fun t => q.1.2 t) q.2) = fun q =>
+        if ‖q.2‖ ≤ 1 then 0 else Rad q.1.1 q.2 - K q.1.1 1 0 -
+          (q.1.2 (Real.toNNReal (Real.log ‖q.2‖)) - q.1.2 0) + γ * Real.log ‖q.2‖ := by
+    funext q
+    unfold coneCouplingRemainder
+    split_ifs with h
+    · rfl
+    · rw [hR _ _ fun h0 => h (by rw [h0, norm_zero]; exact zero_le_one)]
+  rw [heq]
+  have hlog : Measurable fun q : (Ω × ContinuousPath ℝ) × ℂ => Real.log ‖q.2‖ :=
+    Real.measurable_log.comp (measurable_norm.comp measurable_snd)
+  have hev := measurable_continuousPath_eval
+  exact Measurable.ite (measurableSet_le (measurable_norm.comp measurable_snd) measurable_const) measurable_const
+    ((((hrad.comp ((measurable_fst.comp measurable_fst).prodMk measurable_snd)).sub
+      (h1.comp (measurable_fst.comp measurable_fst))).sub
+      ((hev.comp ((measurable_real_toNNReal.comp hlog).prodMk (measurable_snd.comp measurable_fst))).sub
+        (hev.comp (measurable_const.prodMk (measurable_snd.comp measurable_fst))))).add
+      (measurable_const.mul hlog))
+
+/-- Each circle average of the coupled field is a random variable on `Ω × (paths)`. -/
+theorem measurable_coneGFFCircle (γ : ℝ) (hrad : Measurable fun q : Ω × ℂ => Rad q.1 q.2)
+    (hR : ∀ ω x, x ≠ 0 → Rad ω x = K ω ‖x‖ 0) (h1 : Measurable fun ω => K ω 1 0) {r : ℝ} {z : ℂ}
+    (hK : Measurable fun ω => K ω r z) :
+    Measurable fun p : Ω × ContinuousPath ℝ => coneGFFCircle γ (K p.1) (fun t => p.2 t) r z := by
+  have hF : Measurable fun q : (Ω × ContinuousPath ℝ) × ℝ =>
+      coneCouplingRemainder γ (K q.1.1) (fun t => q.1.2 t) (circleMap z r q.2) :=
+    (measurable_coneCouplingRemainder γ hrad hR h1).comp
+      (measurable_fst.prodMk ((continuous_circleMap z r).measurable.comp measurable_snd))
+  have hI : Measurable fun p : Ω × ContinuousPath ℝ =>
+      ∫ θ in Ioc 0 (2 * Real.pi), coneCouplingRemainder γ (K p.1) (fun t => p.2 t) (circleMap z r θ) :=
+    (hF.stronglyMeasurable.integral_prod_right' (ν := volume.restrict (Ioc 0 (2 * Real.pi)))).measurable
+  have heq : (fun p : Ω × ContinuousPath ℝ => coneGFFCircle γ (K p.1) (fun t => p.2 t) r z) = fun p =>
+      K p.1 r z + γ * Real.circleAverage (fun x : ℂ => Real.log ‖x‖) z r -
+        (2 * Real.pi)⁻¹ * ∫ θ in Ioc 0 (2 * Real.pi), coneCouplingRemainder γ (K p.1) (fun t => p.2 t) (circleMap z r θ) := by
+    funext p
+    show _ - Real.circleAverage _ z r = _
+    congr 1
+    rw [Real.circleAverage_def, intervalIntegral.integral_of_le (by positivity), smul_eq_mul]
+  rw [heq]
+  exact ((hK.comp measurable_fst).add_const _).sub (hI.const_mul _)
+
+/-- Each pairing of the coupled field with a measurable `φ` is a random variable on `Ω × (paths)`. -/
+theorem measurable_coneCouplingPairing (γ : ℝ) {hC : Ω → (ℂ → ℝ) → ℝ}
+    (hrad : Measurable fun q : Ω × ℂ => Rad q.1 q.2) (hR : ∀ ω x, x ≠ 0 → Rad ω x = K ω ‖x‖ 0)
+    (h1 : Measurable fun ω => K ω 1 0) {φ : ℂ → ℝ} (hφ : Measurable φ) (hCφ : Measurable fun ω => hC ω φ) :
+    Measurable fun p : Ω × ContinuousPath ℝ => coneCouplingPairing γ (hC p.1) (K p.1) (fun t => p.2 t) φ := by
+  have h2 : ∀ p : Ω × ContinuousPath ℝ, ∫ x, φ x * K p.1 ‖x‖ 0 = ∫ x, φ x * Rad p.1 x := fun p =>
+    integral_congr_ae (ae_ne_zero_complex.mono fun x hx => by simp only [hR p.1 x hx])
+  have h3 : ∀ p : Ω × ContinuousPath ℝ, ∫ x, φ x * coneCouplingRadial γ (K p.1) (fun t => p.2 t) x =
+      ∫ x, φ x * (if ‖x‖ ≤ 1 then Rad p.1 x + γ * Real.log ‖x‖
+        else K p.1 1 0 + (p.2 (Real.toNNReal (Real.log ‖x‖)) - p.2 0)) := fun p =>
+    integral_congr_ae (ae_ne_zero_complex.mono fun x hx => by simp only [coneCouplingRadial, hR p.1 x hx])
+  have heq : (fun p : Ω × ContinuousPath ℝ => coneCouplingPairing γ (hC p.1) (K p.1) (fun t => p.2 t) φ) =
+      fun p => hC p.1 φ - (∫ x, φ x * Rad p.1 x) + ∫ x, φ x * (if ‖x‖ ≤ 1 then Rad p.1 x + γ * Real.log ‖x‖
+        else K p.1 1 0 + (p.2 (Real.toNNReal (Real.log ‖x‖)) - p.2 0)) := by
+    funext p
+    rw [coneCouplingPairing, h2 p, h3 p]
+  rw [heq]
+  have hlog : Measurable fun q : (Ω × ContinuousPath ℝ) × ℂ => Real.log ‖q.2‖ :=
+    Real.measurable_log.comp (measurable_norm.comp measurable_snd)
+  have hev := measurable_continuousPath_eval
+  have hRq : Measurable fun q : (Ω × ContinuousPath ℝ) × ℂ => Rad q.1.1 q.2 :=
+    hrad.comp ((measurable_fst.comp measurable_fst).prodMk measurable_snd)
+  have hA : Measurable fun q : (Ω × ContinuousPath ℝ) × ℂ => φ q.2 * Rad q.1.1 q.2 :=
+    (hφ.comp measurable_snd).mul hRq
+  have hB : Measurable fun q : (Ω × ContinuousPath ℝ) × ℂ => φ q.2 *
+      (if ‖q.2‖ ≤ 1 then Rad q.1.1 q.2 + γ * Real.log ‖q.2‖
+        else K q.1.1 1 0 + (q.1.2 (Real.toNNReal (Real.log ‖q.2‖)) - q.1.2 0)) :=
+    (hφ.comp measurable_snd).mul
+      (Measurable.ite (measurableSet_le (measurable_norm.comp measurable_snd) measurable_const)
+        (hRq.add (measurable_const.mul hlog))
+        ((h1.comp (measurable_fst.comp measurable_fst)).add
+          ((hev.comp ((measurable_real_toNNReal.comp hlog).prodMk (measurable_snd.comp measurable_fst))).sub
+            (hev.comp (measurable_const.prodMk (measurable_snd.comp measurable_fst))))))
+  exact ((hCφ.comp measurable_fst).sub (hA.stronglyMeasurable.integral_prod_right' (ν := volume)).measurable).add
+    (hB.stronglyMeasurable.integral_prod_right' (ν := volume)).measurable
+
+end CoupledField
+
+/-- **The coupled cone field is a whole-plane GFF** (step C4). Let `(hC, hcirc)` be the circle average embedding of a
+`γ`-quantum cone under `P`. There is a measurable `P`-null set `N` of samples (containing those whose circle averages
+are not continuous) such that the coupled field built from the cone with `N` removed and an independent standard
+Brownian motion `w`, with pairings `coneCouplingPairing` and circle averages `coneGFFCircle`, is a whole-plane GFF
+under `P ⊗ BM`. -/
+theorem isWholePlaneGFF_coneGFF {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hQ : IsQuantumCone γ P hC hcirc) :
+    ∃ N : Set Ω, MeasurableSet N ∧ P N = 0 ∧ IsWholePlaneGFF (P.prod (brownianMotion 0))
+      (fun p => coneCouplingPairing γ (hC p.1) (circleOff N hcirc p.1) (fun t => p.2 t))
+      (fun p => coneGFFCircle γ (circleOff N hcirc p.1) (fun t => p.2 t)) := by
+  have hbad : P {ω | ¬ ContinuousOn (fun q : ℝ × ℂ => hcirc ω q.1 q.2) (Ioi 0 ×ˢ univ)} = 0 :=
+    ae_iff.1 hQ.ae_continuousOn_circle
+  obtain ⟨N, hNsub, hNm, hN0⟩ := exists_measurable_superset_of_null hbad
+  have hcN : ∀ ω ∉ N, ContinuousOn (fun q : ℝ × ℂ => hcirc ω q.1 q.2) (Ioi 0 ×ˢ univ) :=
+    fun ω hω => by_contra fun h => hω (hNsub h)
+  have hrad := measurable_radialOff (measurable_circleOff_radial hNm hQ.measurable_circle hcN)
+  have hR : ∀ ω x, x ≠ 0 → radialOff N hcirc ω x = circleOff N hcirc ω ‖x‖ 0 :=
+    fun _ _ hx => radialOff_of_ne hx
+  have h1 := measurable_circleOff hNm (hQ.measurable_circle 1 0 one_pos)
+  obtain ⟨Ω'', _, P'', hC'', hcirc'', hP'', hgff'', -⟩ := hQ.lateral_law
+  have := hP''
+  refine ⟨N, hNm, hN0, isWholePlaneGFF_of_map_finset_eq hgff'' (fun φ hφ => ?_) (fun r z hr => ?_)
+    (Eventually.of_forall fun p => continuousOn_coneGFFCircle γ (continuousOn_circleOff hcN p.1) p.2.continuous)
+    (fun S => ?_)⟩
+  · exact measurable_coneCouplingPairing γ hrad hR h1 hφ.1.continuous.measurable
+      (hQ.measurable_pairing φ hφ)
+  · exact measurable_coneGFFCircle γ hrad hR h1 (measurable_circleOff hNm (hQ.measurable_circle r z hr))
+  · have hae : ∀ᵐ p ∂(P.prod (brownianMotion 0)), p.1 ∉ N :=
+      Measure.quasiMeasurePreserving_fst.ae (measure_eq_zero_iff_ae_notMem.1 hN0)
+    rw [← map_finset_coneGFF_eq hQ hgff'' S]
+    exact Measure.map_congr (hae.mono fun p hp => by simp only [circleOff_of_notMem hp])
+
 end MatedCRT.FirstPass.Derived
