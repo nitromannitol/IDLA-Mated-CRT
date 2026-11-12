@@ -1,4 +1,5 @@
 import MatedCRT.FirstPass.Derived.CellInballDisjoint
+import MatedCRT.FirstPass.S4S6c.TraceInputs68
 
 /-!
 # Location of the cells meeting a domain
@@ -14,7 +15,9 @@ curve `η`, for the hypotheses `hsub` and `hS` of the Green function bound throu
   `∂D`) lies in the interior of `D`, since cells are connected;
 * hence a cell meeting the cell of an interior vertex of `D` meets `D`. For an edge multiplicity
   whose edges join intersecting cells, the neighbours of the interior vertices are vertices of
-  `𝒢^ε(D)`.
+  `𝒢^ε(D)`. Almost surely the mated-CRT map has this property (`MatedCRT.adjacentCellsMeetAeStep`,
+  from the mating-of-trees coupling), so the neighbours of the interior vertices of `D` lie in
+  `𝒢^ε(D)` for all `ε > 0` and all `D` at once.
 
 ## Main statements
 
@@ -24,9 +27,10 @@ curve `η`, for the hypotheses `hsub` and `hS` of the Green function bound throu
 * `MatedCRT.cell_subset_interior_of_mem_interiorCellVertices`
 * `MatedCRT.mem_cellVertices_of_inter_cell`
 * `MatedCRT.mem_cellVertices_of_mult_ne_zero`
+* `MatedCRT.MatedCRTEnv.IsValid.ae_mem_cellVertices_of_mult_ne_zero`
 -/
 
-open Set Metric
+open MeasureTheory Set Metric
 
 namespace MatedCRT
 
@@ -87,5 +91,21 @@ theorem mem_cellVertices_of_mult_ne_zero {ε : ℝ} {η : ℝ → ℂ} (hη : Co
     {k : ℤ} (hk : k ∈ interiorCellVertices ε η D) {j : ℤ} (hm : m k j ≠ 0) :
     j ∈ cellVertices ε η D :=
   mem_cellVertices_of_inter_cell hη hk (hadj j k hm)
+
+/-- Almost surely, for every `ε > 0` and every domain `D`, the neighbours in the mated-CRT map
+`𝒢^ε` (edge multiplicity `S.mult ε ω`, Definition 1.1) of an interior vertex of `D` are vertices of
+`𝒢^ε(D)`: adjacent vertices have intersecting cells (`MatedCRT.adjacentCellsMeetAeStep`) and the
+curve is continuous. -/
+theorem MatedCRTEnv.IsValid.ae_mem_cellVertices_of_mult_ne_zero {𝒮 : SpaceFillingSLEModel}
+    {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
+    (hS : S.IsValid 𝒮 γ) :
+    ∀ᵐ ω ∂S.P, ∀ ε : ℝ, 0 < ε → ∀ (D : Set ℂ) (k j : ℤ), k ∈ interiorCellVertices ε (S.η ω) D →
+      S.mult ε ω k j ≠ 0 → j ∈ cellVertices ε (S.η ω) D := by
+  filter_upwards [TraceInputs68.ae_continuous_eta hS, adjacentCellsMeetAeStep 𝒮 γ hγ hγ2 Ω S hS]
+    with ω hη hadj
+  intro ε hε D k j hk hm
+  refine mem_cellVertices_of_mult_ne_zero hη (fun j' k' h => ?_) hk hm
+  rw [inter_comm]
+  exact hadj ε hε k' j' h
 
 end MatedCRT
