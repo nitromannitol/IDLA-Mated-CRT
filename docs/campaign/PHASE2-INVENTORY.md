@@ -64,7 +64,7 @@ Open-binder table for the (a-cond) rows (binder | HB Prop | IDLA counterpart | s
 |---|---|---|---|
 | hDG | WholePlaneLQGBallMassBounds (Harmonic-Balls-LQG/HarmonicBalls/Proposed/LQG.lean:172) | none identified by name | open |
 | hAff | WholePlaneGFFAffineInvariance (HB) | none identified by name | open |
-| hCC | LQGMeasureCoordChange (Harmonic-Balls-LQG/HarmonicBalls/Proposed/LQG.lean:131) | #33 FrozenInsertionCoordinateRule, TRUE (idla-frozen-batch.md:16); identity not confirmed | open until identity confirmed |
+| hCC | LQGMeasureCoordChange (Harmonic-Balls-LQG/HarmonicBalls/Proposed/LQG.lean:131); IDLA binder `LitCoordChange` (MatedCRT/FirstPass/S2VG/Literature.lean:32, alpha0 = 0) | #33 FrozenInsertionCoordinateRule, TRUE (idla-frozen-batch.md:16) | DERIVED (2026-11-12): MatedCRT.FirstPass.Derived.litCoordChange_holds (MatedCRT/FirstPass/Derived/CoordChangeZero.lean), from Lattice-Probability LatticeProb.LQG.lqgMeasureCoordChangeLP_zero; supplied in the counted forms of 6.7, 6.8, 6.9 (Derived/Counted.lean); all-alpha0 HB form still open (HB row 2) |
 | hW | LQGMeasureWeylScaling (HB) | none identified by name | open |
 | hE | LQGMeasureExistence (Harmonic-Balls-LQG/HarmonicBalls/Proposed/LQG.lean:74) | #34 FrozenLQGMeasureExistenceInsertion, "none found" | DERIVED (HB ab7192d5 lqgMeasureExistence_derived; IDLA 9edd6aa8) |
 | hN | LQGMeasureNonatomic (Harmonic-Balls-LQG/HarmonicBalls/Proposed/LQG.lean:86) | none identified by name | open |
