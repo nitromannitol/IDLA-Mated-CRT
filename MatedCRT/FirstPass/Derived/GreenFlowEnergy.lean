@@ -1,5 +1,7 @@
 import MatedCRT.Proofs.WalkPotential.GreenFirstStep
 import MatedCRT.Proofs.Infra.RandomWalk
+import MatedCRT.FirstPass.S5c.GreenDiagDomination
+import LatticeProb.Network.ConductanceThomsonBound
 
 /-!
 # The killed Green function as a Poisson solution in finite-sum form
@@ -13,6 +15,15 @@ Laplacian. Multiplying by the degree gives the unnormalized (conductance) form
 with the sum over any finite set `S` containing every neighbour of `A`, and `u = 0` off `A`.
 This is the form consumed by the Thomson bound for the effective resistance of a network with
 conductances `c(a,b) = m(a,b)`.
+
+Combined with the Thomson bound (`LatticeProb.le_mul_flowEnergy_of_poisson`), every entry of the
+killed Green function is bounded by the degree of the pole times the energy of any unit flow from
+the pole out of `A`:
+
+  `G_A(a, x) ≤ G_A(x, x) ≤ deg(x) · ½ ∑_{a,b} θ(a,b)² / m(a,b)`
+
+(the first inequality is the maximum principle `greenFn_le_greenFn_diag`). This is the effective
+resistance bound of [BG20, lem-eff-res-upper] in the form used for the crude Green function bound.
 -/
 
 namespace MatedCRT
@@ -51,5 +62,36 @@ theorem sum_mul_greenFn_sub_eq_ite (hlf : ∀ a, {b | m a b ≠ 0}.Finite)
 theorem greenFn_eq_zero_of_not_mem' {A : Set ℤ} (x : ℤ) :
     ∀ a, a ∉ A → greenFn m A a x = 0 :=
   fun _ ha => greenFn_eq_zero_of_not_mem m ha x
+
+/-- **Thomson bound for the diagonal of the killed Green function.** For a finite set `A`, a
+finite set `S ⊇ A` containing every neighbour of `A`, symmetric conductances `m`, and any unit flow
+`θ` from `x ∈ A` out of `A` carried by the edges, `G_A(x,x) ≤ deg(x) · ½ ∑_{a,b ∈ S} θ(a,b)²/m(a,b)`. -/
+theorem greenFn_diag_le_mdeg_mul_flowEnergy (hlf : ∀ a, {b | m a b ≠ 0}.Finite)
+    (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) (hsymm : ∀ a b, m a b = m b a)
+    {A S : Finset ℤ} (hAS : A ⊆ S) (hS : ∀ a ∈ A, ∀ b, m a b ≠ 0 → b ∈ S) {x : ℤ} (hx : x ∈ A)
+    {θ : ℤ → ℤ → ℝ} (hθ : ∀ a b, θ a b = -θ b a) (hθc : ∀ a b, m a b = 0 → θ a b = 0)
+    (hdiv : ∀ a ∈ A, ∑ b ∈ S, θ a b = if a = x then 1 else 0) :
+    greenFn m (A : Set ℤ) x x ≤
+      (mdeg m x : ℝ) * ((1 / 2) * ∑ a ∈ S, ∑ b ∈ S, θ a b ^ 2 / (m a b : ℝ)) :=
+  LatticeProb.le_mul_flowEnergy_of_poisson (c := fun a b => (m a b : ℝ))
+    (u := fun y => greenFn m (A : Set ℤ) y x) hAS
+    (fun a b => by show (m a b : ℝ) = m b a; rw [hsymm a b]) (fun _ _ => Nat.cast_nonneg _)
+    (fun a ha => greenFn_eq_zero_of_not_mem m (by simpa using ha) x) hx (Nat.cast_nonneg _)
+    (fun a ha => sum_mul_greenFn_sub_eq_ite hlf hcons A.finite_toSet x
+      (fun a' ha' b hb => hS a' (by simpa using ha') b hb) a (by simpa using ha))
+    hθ (fun a b h => hθc a b (by exact_mod_cast h)) hdiv
+
+/-- **Thomson bound for the killed Green function, every entry.** Under the hypotheses of
+`greenFn_diag_le_mdeg_mul_flowEnergy`, `G_A(a,x) ≤ deg(x) · ½ ∑_{a,b ∈ S} θ(a,b)²/m(a,b)` for every
+`a` (maximum principle `greenFn_le_greenFn_diag`). -/
+theorem greenFn_le_mdeg_mul_flowEnergy (hlf : ∀ a, {b | m a b ≠ 0}.Finite)
+    (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) (hsymm : ∀ a b, m a b = m b a)
+    {A S : Finset ℤ} (hAS : A ⊆ S) (hS : ∀ a ∈ A, ∀ b, m a b ≠ 0 → b ∈ S) {x : ℤ} (hx : x ∈ A)
+    {θ : ℤ → ℤ → ℝ} (hθ : ∀ a b, θ a b = -θ b a) (hθc : ∀ a b, m a b = 0 → θ a b = 0)
+    (hdiv : ∀ a ∈ A, ∑ b ∈ S, θ a b = if a = x then 1 else 0) (a : ℤ) :
+    greenFn m (A : Set ℤ) a x ≤
+      (mdeg m x : ℝ) * ((1 / 2) * ∑ a ∈ S, ∑ b ∈ S, θ a b ^ 2 / (m a b : ℝ)) :=
+  (greenFn_le_greenFn_diag hlf hcons A.finite_toSet a x).trans
+    (greenFn_diag_le_mdeg_mul_flowEnergy hlf hcons hsymm hAS hS hx hθ hθc hdiv)
 
 end MatedCRT
