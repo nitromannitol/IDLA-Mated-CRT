@@ -53,7 +53,7 @@ theorem norm_vertexPoint_lt_of_mem_cellVertices (hη : Continuous η) (hε : 0 �
 Let `ρ + 4 δ₀ ≤ ρ₀ ≤ 1`, `4 δ_c ≤ δ₀ ≤ 1`, `0 < r₀ ≤ δ₀/2`; let the cells of the vertices of
 `V^ε(B_{ρ₀})` have diameter at most `δ_c`, intersecting cells be those of adjacent vertices and
 `V^ε(B_{ρ₀})` be finite. If `g_B(a, b) ≤ C log (1/|η(a) - η(b)|)` for the walk killed outside
-`B = V^ε(B_{ρ₀}) \ V^ε(∂B_{ρ₀})` whenever `r₀ ≤ |η(a) - η(b)| ≤ dist(η(b), ∂B_{ρ₀})/3`, then for the walk
+`B = V^ε(B_{ρ₀}) \ V^ε(∂B_{ρ₀})` whenever `a ∈ B`, `b ∈ V^ε(B_ρ)` and `r₀ ≤ |η(a) - η(b)| ≤ δ₀`, then for the walk
 killed outside `V^ε(B_ρ) \ V^ε(∂B_ρ)`, for all vertices `a, b` of `V^ε(B_ρ)` with `|η(a) - η(b)| ≥ r₀`,
 `g(a, b) ≤ C' log (1/|η(a) - η(b)|) + C'` with `C' = 4 C (1 + log (4/δ₀))`. -/
 theorem greenKernel_interiorCellVertices_le_log (hη : Continuous η) (hε : 0 < ε)
@@ -63,9 +63,9 @@ theorem greenKernel_interiorCellVertices_le_log (hη : Continuous η) (hε : 0 <
     (hρρ₀ : ρ + 4 * δ₀ ≤ ρ₀) (hρ₀ : ρ₀ ≤ 1) (hC : 0 ≤ C) (hδ₀ : 0 < δ₀) (hδ₀1 : δ₀ ≤ 1)
     (hdc : 4 * dc ≤ δ₀) (hr₀0 : 0 < r₀) (hr₀ : r₀ ≤ δ₀ / 2)
     (hdiam : ∀ k ∈ cellVertices ε η (ball 0 ρ₀), diam (cell ε η k) ≤ dc)
-    (hmain : ∀ a ∈ cellVertices ε η (ball 0 ρ₀), ∀ b ∈ cellVertices ε η (ball 0 ρ₀),
+    (hmain : ∀ a ∈ interiorCellVertices ε η (ball 0 ρ₀), ∀ b ∈ cellVertices ε η (ball 0 ρ),
       r₀ ≤ ‖vertexPoint ε η a - vertexPoint ε η b‖ →
-      ‖vertexPoint ε η a - vertexPoint ε η b‖ ≤ (ρ₀ - ‖vertexPoint ε η b‖) / 3 →
+      ‖vertexPoint ε η a - vertexPoint ε η b‖ ≤ δ₀ →
       greenKernel m (interiorCellVertices ε η (ball 0 ρ₀)) a b ≤
         C * Real.log (1 / ‖vertexPoint ε η a - vertexPoint ε η b‖)) :
     ∀ a ∈ cellVertices ε η (ball 0 ρ), ∀ b ∈ cellVertices ε η (ball 0 ρ),
@@ -127,15 +127,8 @@ theorem greenKernel_interiorCellVertices_le_log (hη : Continuous η) (hε : 0 <
       have := norm_sub_le_norm_sub_add_norm_sub (vertexPoint ε η y) w (vertexPoint ε η y')
       rw [norm_sub_rev w] at this
       linarith
-    have hmain' : ∀ a' ∈ B, ∀ b' ∈ cellVertices ε η (ball 0 ρ), r₀ ≤ ‖vertexPoint ε η a' - vertexPoint ε η b'‖ →
-        ‖vertexPoint ε η a' - vertexPoint ε η b'‖ ≤ δ₀ →
-        greenKernel m B a' b' ≤ C * Real.log (1 / ‖vertexPoint ε η a' - vertexPoint ε η b'‖) := by
-      intro a' ha' b' hb' h1 h2
-      refine hmain a' (hBsub ha') b' (hρρ hb') h1 (h2.trans ?_)
-      have := hnorm b' hb'
-      linarith
     have key := greenKernel_le_log_of_nearRange hlf hcons hBfin
-      (fun k => vertexPoint ε η k) hC hδ₀ hδ₀1 hr₀ hdc hstep hmain' a haB b hb hr hr2
+      (fun k => vertexPoint ε η k) hC hδ₀ hδ₀1 hr₀ hdc hstep hmain a haB b hb hr hr2
     exact hfinal _ (hmono.trans key)
   · have h0 : greenKernel m (interiorCellVertices ε η (ball 0 ρ)) a b = 0 := by
       unfold greenKernel
