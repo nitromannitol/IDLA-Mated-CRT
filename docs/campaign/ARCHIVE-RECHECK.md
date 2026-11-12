@@ -67,10 +67,8 @@ Columns: importers = all tracked importers; in closure = importers inside the cl
 |---|---:|---:|---:|---|---|---|---|---|
 | `MatedCRT/Audit/LocalDirichletProjectionComponents.lean` | 1 | 0 | 0 | no | 2026-11-11T10:30:35+00:00 | no | HOLD date | B03 |
 | `MatedCRT/Audit/Main.lean` | 0 | 0 | 0 | yes | 2026-11-08T08:28:59+00:00 | no | EXCL named | EXCL named |
-| `MatedCRT/Audit/PlateauScalingResiduals.lean` | 0 | 0 | 0 | yes | 2026-11-11T10:24:18+00:00 | no | EXCL named | EXCL named |
 | `MatedCRT/Audit/Reductions.lean` | 0 | 0 | 0 | yes | 2026-11-11T10:30:35+00:00 | no | EXCL named | EXCL named |
 | `MatedCRT/Audit/Sec3PointwiseRates.lean` | 0 | 0 | 0 | yes | 2026-11-08T08:26:21+00:00 | no | EXCL named | EXCL named |
-| `MatedCRT/FirstPass/LICGRCXLe68.lean` | 2 | 0 | 0 | no | 2026-11-11T02:33:56+00:00 | no | HOLD date | B03 |
 | `MatedCRT/FirstPass/LPBridge/GFFInterface.lean` | 0 | 0 | 0 | no | 2026-11-11T06:03:06+00:00 | no | HOLD date | B01 |
 | `MatedCRT/FirstPass/LPBridge/LQGExistence.lean` | 0 | 0 | 0 | no | 2026-11-10T23:27:50+00:00 | no | MOVE B01 | B01 |
 | `MatedCRT/FirstPass/S1c/Composition.lean` | 1 | 0 | 1 | yes | 2026-11-10T03:30:34+00:00 | no | EXCL named | EXCL named |
@@ -105,7 +103,6 @@ Columns: importers = all tracked importers; in closure = importers inside the cl
 | `MatedCRT/FirstPass/S2z.lean` | 1 | 0 | 0 | no | 2026-11-11T02:33:56+00:00 | no | HOLD date | B03 |
 | `MatedCRT/FirstPass/S34d.lean` | 0 | 0 | 0 | no | 2026-11-11T10:31:53+00:00 | no | HOLD date | B01 |
 | `MatedCRT/FirstPass/S3S4b/TruncatedLawsBridge.lean` | 0 | 0 | 0 | no | 2026-11-10T08:13:58+00:00 | no | MOVE B01 | B01 |
-| `MatedCRT/FirstPass/S3h.lean` | 0 | 0 | 0 | no | 2026-11-11T02:33:56+00:00 | no | HOLD date | B01 |
 | `MatedCRT/FirstPass/S3t/PathMeasurability.lean` | 0 | 0 | 0 | no | 2026-11-11T10:31:53+00:00 | no | HOLD date | B01 |
 | `MatedCRT/FirstPass/S4S6c/AbsorbedChernoff69.lean` | 1 | 0 | 0 | no | 2026-11-11T04:20:37+00:00 | no | HOLD date | B03 |
 | `MatedCRT/FirstPass/S4S6c/AbsorbedChernoffTail.lean` | 0 | 0 | 0 | no | 2026-11-11T04:20:37+00:00 | no | HOLD date | B01 |
@@ -131,7 +128,6 @@ Columns: importers = all tracked importers; in closure = importers inside the cl
 | `MatedCRT/FirstPass/S4S6c/NextExitTime.lean` | 0 | 0 | 0 | no | 2026-11-11T04:23:31+00:00 | no | HOLD date | B01 |
 | `MatedCRT/FirstPass/S4S6c/Redesign68S9.lean` | 0 | 0 | 0 | no | 2026-11-11T04:23:31+00:00 | no | HOLD date | B02 |
 | `MatedCRT/FirstPass/S4S6c/ShellBallLoc68.lean` | 1 | 0 | 0 | no | 2026-11-11T04:30:59+00:00 | no | HOLD date | B03 |
-| `MatedCRT/FirstPass/S4S6c/ShellChainCGRCXLe68.lean` | 1 | 0 | 0 | no | 2026-11-11T04:23:31+00:00 | no | HOLD date | B03 |
 | `MatedCRT/FirstPass/S4S6c/ShellOrderLoc68.lean` | 0 | 0 | 0 | no | 2026-11-11T04:23:34+00:00 | no | HOLD date | B02 |
 | `MatedCRT/FirstPass/S4S6c/ShellSmallR68.lean` | 0 | 0 | 0 | no | 2026-11-11T04:23:34+00:00 | no | HOLD date | B02 |
 | `MatedCRT/FirstPass/S4S6c/Uniform68Band.lean` | 1 | 0 | 0 | no | 2026-11-11T04:23:34+00:00 | no | HOLD date | B03 |

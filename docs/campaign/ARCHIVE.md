@@ -40,9 +40,7 @@ Root rule, recomputed at HEAD before any further move: the roots are every Mated
 | MatedCRT/FirstPass/S2k/PlateauClosure.lean | archive/MatedCRT/FirstPass/S2k/PlateauClosure.lean | B10 |
 | MatedCRT/FirstPass/S2k/PlateauTonelli.lean | archive/MatedCRT/FirstPass/S2k/PlateauTonelli.lean | B10 |
 | MatedCRT/FirstPass/S2x/ConeHarmonicBallLocality.lean | archive/MatedCRT/FirstPass/S2x/ConeHarmonicBallLocality.lean | B11 |
-| MatedCRT/FirstPass/S2x/ConeHarmonicBallLocalityBorel.lean | archive/MatedCRT/FirstPass/S2x/ConeHarmonicBallLocalityBorel.lean | B11 |
 | MatedCRT/FirstPass/S2x/ConeHarmonicBallLocalityL.lean | archive/MatedCRT/FirstPass/S2x/ConeHarmonicBallLocalityL.lean | B11 |
-| MatedCRT/FirstPass/S2x/ConeHarmonicBallLocalityUniv.lean | archive/MatedCRT/FirstPass/S2x/ConeHarmonicBallLocalityUniv.lean | B11 |
 | MatedCRT/FirstPass/S2x/ConeScaleRadiusPosLimit.lean | archive/MatedCRT/FirstPass/S2x/ConeScaleRadiusPosLimit.lean | B11 |
 | MatedCRT/FirstPass/S2y/CircleAvgRadialCont250.lean | archive/MatedCRT/FirstPass/S2y/CircleAvgRadialCont250.lean | B12 |
 | MatedCRT/FirstPass/S2y/CirclePointVersion250.lean | archive/MatedCRT/FirstPass/S2y/CirclePointVersion250.lean | B12 |
@@ -251,7 +249,6 @@ Each batch is `git mv`ed from `MatedCRT/` to `archive/MatedCRT/` in import order
 | MatedCRT/FirstPass/S2i.lean | archive/MatedCRT/FirstPass/S2i.lean | R2-B13 |
 | MatedCRT/FirstPass/S2l.lean | archive/MatedCRT/FirstPass/S2l.lean | R2-B13 |
 | MatedCRT/FirstPass/S2y.lean | archive/MatedCRT/FirstPass/S2y.lean | R2-B13 |
-| MatedCRT/FirstPass/S3h.lean | archive/MatedCRT/FirstPass/S3h.lean | R2-B13 |
 | MatedCRT/FirstPass/S5e.lean | archive/MatedCRT/FirstPass/S5e.lean | R2-B13 |
 | MatedCRT/FirstPass/S5n.lean | archive/MatedCRT/FirstPass/S5n.lean | R2-B13 |
 | MatedCRT/FirstPass/S5p.lean | archive/MatedCRT/FirstPass/S5p.lean | R2-B13 |
@@ -293,7 +290,6 @@ Each batch is `git mv`ed from `MatedCRT/` to `archive/MatedCRT/` in import order
 | MatedCRT/FirstPass/S4S6c/CGRCXLeCore68.lean | archive/MatedCRT/FirstPass/S4S6c/CGRCXLeCore68.lean | R2-B14 |
 | MatedCRT/FirstPass/S4S6c/CellSize68.lean | archive/MatedCRT/FirstPass/S4S6c/CellSize68.lean | R2-B14 |
 | MatedCRT/FirstPass/S4S6c/ShellBallLoc68.lean | archive/MatedCRT/FirstPass/S4S6c/ShellBallLoc68.lean | R2-B14 |
-| MatedCRT/FirstPass/S4S6c/ShellChainCGRCXLe68.lean | archive/MatedCRT/FirstPass/S4S6c/ShellChainCGRCXLe68.lean | R2-B14 |
 | MatedCRT/FirstPass/S4S6c/Uniform68LogRadius.lean | archive/MatedCRT/FirstPass/S4S6c/Uniform68LogRadius.lean | R2-B14 |
 | MatedCRT/FirstPass/S4S6c/Uniform68Monotone.lean | archive/MatedCRT/FirstPass/S4S6c/Uniform68Monotone.lean | R2-B14 |
 | MatedCRT/FirstPass/S4S6c/Uniform68Params.lean | archive/MatedCRT/FirstPass/S4S6c/Uniform68Params.lean | R2-B14 |
@@ -326,7 +322,6 @@ Each batch is `git mv`ed from `MatedCRT/` to `archive/MatedCRT/` in import order
 | MatedCRT/Proofs/Sec1/EnvironmentScaling/CouplingLift.lean | archive/MatedCRT/Proofs/Sec1/EnvironmentScaling/CouplingLift.lean | R2-B14 |
 | MatedCRT/Proofs/Sec1/EnvironmentScaling/CurveAreaRecovery.lean | archive/MatedCRT/Proofs/Sec1/EnvironmentScaling/CurveAreaRecovery.lean | R2-B14 |
 | MatedCRT/Proofs/Sec1/EnvironmentScaling/FieldVersionTransport.lean | archive/MatedCRT/Proofs/Sec1/EnvironmentScaling/FieldVersionTransport.lean | R2-B14 |
-| MatedCRT/FirstPass/LICGRCXLe68.lean | archive/MatedCRT/FirstPass/LICGRCXLe68.lean | R2-B15 |
 | MatedCRT/FirstPass/S4S6c/Uniform68Point.lean | archive/MatedCRT/FirstPass/S4S6c/Uniform68Point.lean | R2-B15 |
 | MatedCRT/FirstPass/S4S6c/Uniform68Radius.lean | archive/MatedCRT/FirstPass/S4S6c/Uniform68Radius.lean | R2-B15 |
 | MatedCRT/FirstPass/S5c/FloorMono.lean | archive/MatedCRT/FirstPass/S5c/FloorMono.lean | R2-B15 |
@@ -448,7 +443,6 @@ Each batch is `git mv`ed from `MatedCRT/` to `archive/MatedCRT/` in import order
 | MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/AnnulusPolynomialBound.lean | archive/MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/AnnulusPolynomialBound.lean | R2-B17 |
 | MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/AnnulusPowerDecay.lean | archive/MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/AnnulusPowerDecay.lean | R2-B18 |
 | MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/MesoscopicCutoff.lean | archive/MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/MesoscopicCutoff.lean | R2-B18 |
-| MatedCRT/Audit/PlateauScalingResiduals.lean | archive/MatedCRT/Audit/PlateauScalingResiduals.lean | R2-B19 |
 | MatedCRT/Audit/Reductions.lean | archive/MatedCRT/Audit/Reductions.lean | R2-B19 |
 | MatedCRT/FirstPass/S2h.lean | archive/MatedCRT/FirstPass/S2h.lean | R2-B19 |
 | MatedCRT/FirstPass/S34d.lean | archive/MatedCRT/FirstPass/S34d.lean | R2-B19 |
@@ -575,5 +569,4 @@ Left in place (untracked, not moved): `MatedCRT/LPStaging/Analysis/z8ProbeAll.le
 | MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/Probe.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/Probe.lean | probe |
 | MatedCRT/Proofs/Sec4/SubsequentialProperties/Probe.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec4/SubsequentialProperties/Probe.lean | probe |
 | MatedCRT/Proofs/Sec5/MeanValueInequality/HBProbe.lean | archive/untracked-20261111/MatedCRT/Proofs/Sec5/MeanValueInequality/HBProbe.lean | probe |
-| scratch-z1-commit-msg.txt | archive/untracked-20261111/scratch-z1-commit-msg.txt | other |
 | docs/campaign/ESCALATIONS.md | archive/untracked-20261111/docs/campaign/ESCALATIONS.md | other |
