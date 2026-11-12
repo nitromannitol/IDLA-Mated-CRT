@@ -10,6 +10,8 @@ import MatedCRT.FirstPass.Closure.OwnBinderRewire
 import MatedCRT.FirstPass.Closure.Section4
 import MatedCRT.FirstPass.Closure.Steps42
 import MatedCRT.FirstPass.Derived.ConeCircleLawUnique
+import MatedCRT.FirstPass.Derived.ConeLogLocalCodeLawStdDerived
+import MatedCRT.FirstPass.Derived.ConeReferenceExistsDerived
 import MatedCRT.FirstPass.Derived.ConeWholePlaneFieldLaw
 import MatedCRT.FirstPass.Derived.CoordChangeZero
 import MatedCRT.FirstPass.Derived.Counted
@@ -87,86 +89,85 @@ theorem closed_4_2_lp_minimalInputs
     (h35c : DiscreteDirichletProblemCorrectedStmt 𝒮)
     (h218 : ExitTimeUpperBoundStmt 𝒮)
     (hH : FrozenDiscreteHolderContinuityCorrected 𝒮)
-    (hstd : FrozenConeLogLocalCodeLawStd)
     (hBdry : ClusterBoundaryMeasureZeroStmt.{0})
     (hExist : ExistenceHarmonicBallsStmt.{0})
     (hconf : FrozenHBInitialConfinement)
     (hI2 : FrozenLQGVolumeGrowthAllScales)
     (hloc : HarmonicBallLocalSetStmt.{0})
     (hBG : FrozenBerestyckiGwynneConeBallMass)
-    (hE2 : ConeReferenceExistsStep)
     (hscale : QuantumConeScalingInput)
     (hND : LQGMeasureNonDyadicDilationPart)
     (hrescale : ConeRescaledMeasureIsConeFieldInput) :
     DivSandpileLowerBoundStmt 𝒮 :=
   have d1 := HarmonicBalls.firstPass_2_3
   have d2 := MatedCRT.ConeWholePlaneFieldLaw.coneWholePlaneFieldLawStep_holds
-  have d3 := MatedCRT.FirstPass.Derived.frozenInsertionCoordinateRule_holds
-  have d4 := MatedCRT.FirstPass.Derived.frozenLQGMeasureExistenceInsertion_holds
-  have d5 := MatedCRT.HBRewire.FrozenGreenDiscPole_of_hb
-  have d6 := MatedCRT.coneCircleAverageLocalityStep_proved
-  have d7 := MatedCRT.coneCircleLawUniqueStep_holds
-  have d8 := MatedCRT.fpStrongMinimumPrinciple_holds
-  have d9 := MatedCRT.frozenGreenBallCentre_holds
-  have d10 := MatedCRT.frozenLQGTestIntegralMeasurable_holds
-  have d11 := MatedCRT.frozenPunctureConnected_holds
-  have d12 := MatedCRT.frozenSuperharmonicMinimumPrinciple_holds
-  have d13 := MatedCRT.frozenUniversalMeasurabilityOfAnalytic_holds
-  have d14 := HarmonicBalls.clusterCompatibility_proved (hI2 := hI2)
-  have d15 := HarmonicBalls.clusterConservationOfMass_proved (hI2 := hI2)
-  have d16 := HarmonicBalls.clusterMonotone_proved (hI2 := hI2)
-  have d17 := HarmonicBalls.clusterOpenLaplacian_proved (hI2 := hI2)
-  have d18 := HarmonicBalls.leastSupersolutionMem_proved (hI2 := hI2)
-  have d19 := MatedCRT.LQGMeasure.coneFieldScalingStep_proved_radial (hscale := hscale)
-  have d20 := MatedCRT.LQGMeasure.lqgMeasureDilationCovariancePart_of_nonDyadic (hND := hND)
-  have d21 := MatedCRT.MainHypotheses.maximumPrinciple (𝒮 := 𝒮)
-  have d22 := MatedCRT.closed_4_4
-  have d23 := MatedCRT.coneScaleRadiusPosStep_of_input (hscale := hscale)
-  have d24 := MatedCRT.firstPass_2_17_ownBinders (hBG := hBG)
-  have d25 := MatedCRT.obstacleLimitUniqueness (𝒮 := 𝒮)
-  have d26 := MatedCRT.uniquenessHarmonicBallsStmt_of_volumeGrowth (hI2 := hI2)
-  have d27 := MatedCRT.volumeGrowthStmt_of_berestyckiGwynne (hBG := hBG)
-  have d28 := HarmonicBalls.existenceUniquenessHarmonicBallsStmt_of_sec5 (h55 := hExist) (h56 := d26)
-  have d29 := MatedCRT.LQGMeasure.coneLQGScalingStep_of_dilation (hIV := d20) (hpos := d23)
-  have d30 := MatedCRT.FirstPass35Bridge.discreteDirichletProblem_of_corrected_of_steps (h28 := h28) (h35c := h35c)
-  have d31 := MatedCRT.LQGMeasure.lqgMeasureNonAtomicPart_of_scaling (h27 := d27) (hfield := d19) (hlqg := d29)
-  have d32 := MatedCRT.LQGMeasure.lqgMeasureProperties_of_citedInputs (hNA := d31) (hCL := d6) (hND := hND)
-  have d33 := MatedCRT.equibounded_of_boundedExitTime (h217 := d24) (h218 := h218) (hm := hm)
-  have d34 := MatedCRT.discretePotentialTightnessAeStep_of_inputs (hm := hm) (h217 := d24) (h218 := h218) (hH := hH)
-  have d35 := MatedCRT.strictGapDeterministicComparison_of_frozen (hG := d1) (hpc := d11) (hsmp := d8) (hwmp := d12)
-    (hpole := d5)
-  have d36 := MatedCRT.Audit.StatementsSec3Sec5M1.three_three_final_reduction (𝒮 := 𝒮) (h210 := h210) (h34 := h34)
-    (h214 := h214) (h28 := h28) (hAe := d34)
-  have d37 := MatedCRT.FirstPassClosure.coneHalfBallClosureInsideStep_proof (hI2 := hI2) (hK := d3) (hloc := hloc)
-    (hEx := hExist) (hE := d4) (hFL := d2) (hBG := hBG)
-  have d38 := MatedCRT.closed_2_5_lp_derivedInputs (hstd := hstd) (hBdry := hBdry) (hExist := hExist) (hconf := hconf)
-    (hI2 := hI2) (hloc := hloc) (hBG := hBG) (hE2 := hE2) (hscale := hscale) (hND := hND)
-  have d39 := MatedCRT.subsequentialPropertiesPrepared_of_identified_estimates (𝒮 := 𝒮) (hm := hm) (h47 := d33)
-    (h44 := d22) (h33 := d36) (h35 := d30) (h218 := h218) (hH := hH) (h217 := d24) (h27 := d27)
-  have d40 := MatedCRT.closed_2_3_lp_derivedInputs (hBG := hBG) (hscale := hscale) (hND := hND) (hstd := hstd)
-    (hBdryHB := hBdry) (hExistHB := hExist) (hconf := hconf) (hI2HB := hI2) (hlocHB := hloc) (hE2 := hE2)
-    (hrescale := hrescale)
-  have d41 := MatedCRT.coneCanonicalHalfBallStep_of_draft (hU := d13) (hmeasT := d10) (hstd := hstd) (hmin := d12)
-    (hC := d9) (hGB := d1) (hpole := d5) (hOpen := d17) (hSup := d18) (hCons := d15) (hMono := d16) (hCompat := d14)
-    (hBdry := hBdry) (hExist := hExist) (hThm11 := d28) (hProp56 := d26) (hconf := hconf)
-  have d42 := MatedCRT.FirstPassClosure.strictGapFixedTimeUnionStep_proof_unconditional (hstd := hstd) (hCentre := d9)
-    (hOpen := d17) (hSup := d18) (hCons := d15) (hMono := d16) (hCompat := d14) (hBdry := hBdry) (hExist := hExist)
-    (hThm11 := d28) (hProp56 := d26) (hconf := hconf) (hI2 := hI2) (hK := d3) (hloc := hloc) (hE := d4) (hFL := d2)
-    (hBG := hBG) (hE1 := d7) (hE2 := hE2) (hscale := hscale) (hND := hND) (hrescale := hrescale)
-  have d43 := MatedCRT.coneHarmonicBallsUpToFixedTimeStmt_of_canonical (hcan := d41) (hcl := d37)
-  have d44 := MatedCRT.coneRescaledHalfBallHorizonUnique_fp (hcan := d41) (hcl := d37) (hrescale := hrescale)
-  have d45 := MatedCRT.harmonicBallStrictObstacleGapStep_of_steps (𝒮 := 𝒮) (hdet := d35) (hnj := d42)
-  have d46 := MatedCRT.coneScaleInvarianceUpToFixedTimeStmt_of_canonical (hcan := d41) (hcl := d37) (hc25 := d38)
-    (hU := d44)
-  have d47 := MatedCRT.coneFamilyAEMeasurableStep_of_numbered_results (h24 := d43) (h25 := d46) (h27 := d27)
-    (hscale := hscale) (h22 := d32)
-  have d48 := MatedCRT.obstacleClusterInnerApproximation_of_strictGap (𝒮 := 𝒮) (h27 := d27) (hfam := d47) (h24 := d43)
-    (hgap := d45)
-  have d49 := MatedCRT.convergenceDivisibleEventMeasurableStep_of_coneFamilyAEMeasurable (𝒮 := 𝒮) (h27 := d27)
-    (hfam := d47) (h24 := d43)
-  have d50 := MatedCRT.convergenceDivisible_of_prepared_properties (𝒮 := 𝒮) (h48 := d39) (hu := d25) (hm := d49)
-  MatedCRT.divSandpileLowerBound_of_inputs (𝒮 := 𝒮) (h41 := d50) (h23 := d40) (h213 := d21) (h33 := d36) (h28 := h28)
-    (happrox := d48)
+  have d3 := MatedCRT.FirstPass.Derived.coneReferenceExistsStep_holds
+  have d4 := MatedCRT.FirstPass.Derived.frozenConeLogLocalCodeLawStd_holds
+  have d5 := MatedCRT.FirstPass.Derived.frozenInsertionCoordinateRule_holds
+  have d6 := MatedCRT.FirstPass.Derived.frozenLQGMeasureExistenceInsertion_holds
+  have d7 := MatedCRT.HBRewire.FrozenGreenDiscPole_of_hb
+  have d8 := MatedCRT.coneCircleAverageLocalityStep_proved
+  have d9 := MatedCRT.coneCircleLawUniqueStep_holds
+  have d10 := MatedCRT.fpStrongMinimumPrinciple_holds
+  have d11 := MatedCRT.frozenGreenBallCentre_holds
+  have d12 := MatedCRT.frozenLQGTestIntegralMeasurable_holds
+  have d13 := MatedCRT.frozenPunctureConnected_holds
+  have d14 := MatedCRT.frozenSuperharmonicMinimumPrinciple_holds
+  have d15 := MatedCRT.frozenUniversalMeasurabilityOfAnalytic_holds
+  have d16 := HarmonicBalls.clusterCompatibility_proved (hI2 := hI2)
+  have d17 := HarmonicBalls.clusterConservationOfMass_proved (hI2 := hI2)
+  have d18 := HarmonicBalls.clusterMonotone_proved (hI2 := hI2)
+  have d19 := HarmonicBalls.clusterOpenLaplacian_proved (hI2 := hI2)
+  have d20 := HarmonicBalls.leastSupersolutionMem_proved (hI2 := hI2)
+  have d21 := MatedCRT.LQGMeasure.coneFieldScalingStep_proved_radial (hscale := hscale)
+  have d22 := MatedCRT.LQGMeasure.lqgMeasureDilationCovariancePart_of_nonDyadic (hND := hND)
+  have d23 := MatedCRT.MainHypotheses.maximumPrinciple (𝒮 := 𝒮)
+  have d24 := MatedCRT.closed_4_4
+  have d25 := MatedCRT.coneScaleRadiusPosStep_of_input (hscale := hscale)
+  have d26 := MatedCRT.firstPass_2_17_ownBinders (hBG := hBG)
+  have d27 := MatedCRT.obstacleLimitUniqueness (𝒮 := 𝒮)
+  have d28 := MatedCRT.uniquenessHarmonicBallsStmt_of_volumeGrowth (hI2 := hI2)
+  have d29 := MatedCRT.volumeGrowthStmt_of_berestyckiGwynne (hBG := hBG)
+  have d30 := HarmonicBalls.existenceUniquenessHarmonicBallsStmt_of_sec5 (h55 := hExist) (h56 := d28)
+  have d31 := MatedCRT.LQGMeasure.coneLQGScalingStep_of_dilation (hIV := d22) (hpos := d25)
+  have d32 := MatedCRT.FirstPass35Bridge.discreteDirichletProblem_of_corrected_of_steps (h28 := h28) (h35c := h35c)
+  have d33 := MatedCRT.LQGMeasure.lqgMeasureNonAtomicPart_of_scaling (h27 := d29) (hfield := d21) (hlqg := d31)
+  have d34 := MatedCRT.LQGMeasure.lqgMeasureProperties_of_citedInputs (hNA := d33) (hCL := d8) (hND := hND)
+  have d35 := MatedCRT.equibounded_of_boundedExitTime (h217 := d26) (h218 := h218) (hm := hm)
+  have d36 := MatedCRT.discretePotentialTightnessAeStep_of_inputs (hm := hm) (h217 := d26) (h218 := h218) (hH := hH)
+  have d37 := MatedCRT.strictGapDeterministicComparison_of_frozen (hG := d1) (hpc := d13) (hsmp := d10) (hwmp := d14)
+    (hpole := d7)
+  have d38 := MatedCRT.Audit.StatementsSec3Sec5M1.three_three_final_reduction (𝒮 := 𝒮) (h210 := h210) (h34 := h34)
+    (h214 := h214) (h28 := h28) (hAe := d36)
+  have d39 := MatedCRT.FirstPassClosure.coneHalfBallClosureInsideStep_proof (hI2 := hI2) (hK := d5) (hloc := hloc)
+    (hEx := hExist) (hE := d6) (hFL := d2) (hBG := hBG)
+  have d40 := MatedCRT.closed_2_5_lp_derivedInputs (hBdry := hBdry) (hExist := hExist) (hconf := hconf) (hI2 := hI2)
+    (hloc := hloc) (hBG := hBG) (hscale := hscale) (hND := hND)
+  have d41 := MatedCRT.closed_2_3_lp_derivedInputs (hBG := hBG) (hscale := hscale) (hND := hND) (hBdryHB := hBdry)
+    (hExistHB := hExist) (hconf := hconf) (hI2HB := hI2) (hlocHB := hloc) (hrescale := hrescale)
+  have d42 := MatedCRT.subsequentialPropertiesPrepared_of_identified_estimates (𝒮 := 𝒮) (hm := hm) (h47 := d35)
+    (h44 := d24) (h33 := d38) (h35 := d32) (h218 := h218) (hH := hH) (h217 := d26) (h27 := d29)
+  have d43 := MatedCRT.coneCanonicalHalfBallStep_of_draft (hU := d15) (hmeasT := d12) (hstd := d4) (hmin := d14)
+    (hC := d11) (hGB := d1) (hpole := d7) (hOpen := d19) (hSup := d20) (hCons := d17) (hMono := d18) (hCompat := d16)
+    (hBdry := hBdry) (hExist := hExist) (hThm11 := d30) (hProp56 := d28) (hconf := hconf)
+  have d44 := MatedCRT.FirstPassClosure.strictGapFixedTimeUnionStep_proof_unconditional (hstd := d4) (hCentre := d11)
+    (hOpen := d19) (hSup := d20) (hCons := d17) (hMono := d18) (hCompat := d16) (hBdry := hBdry) (hExist := hExist)
+    (hThm11 := d30) (hProp56 := d28) (hconf := hconf) (hI2 := hI2) (hK := d5) (hloc := hloc) (hE := d6) (hFL := d2)
+    (hBG := hBG) (hE1 := d9) (hE2 := d3) (hscale := hscale) (hND := hND) (hrescale := hrescale)
+  have d45 := MatedCRT.coneHarmonicBallsUpToFixedTimeStmt_of_canonical (hcan := d43) (hcl := d39)
+  have d46 := MatedCRT.coneRescaledHalfBallHorizonUnique_fp (hcan := d43) (hcl := d39) (hrescale := hrescale)
+  have d47 := MatedCRT.harmonicBallStrictObstacleGapStep_of_steps (𝒮 := 𝒮) (hdet := d37) (hnj := d44)
+  have d48 := MatedCRT.coneScaleInvarianceUpToFixedTimeStmt_of_canonical (hcan := d43) (hcl := d39) (hc25 := d40)
+    (hU := d46)
+  have d49 := MatedCRT.coneFamilyAEMeasurableStep_of_numbered_results (h24 := d45) (h25 := d48) (h27 := d29)
+    (hscale := hscale) (h22 := d34)
+  have d50 := MatedCRT.obstacleClusterInnerApproximation_of_strictGap (𝒮 := 𝒮) (h27 := d29) (hfam := d49) (h24 := d45)
+    (hgap := d47)
+  have d51 := MatedCRT.convergenceDivisibleEventMeasurableStep_of_coneFamilyAEMeasurable (𝒮 := 𝒮) (h27 := d29)
+    (hfam := d49) (h24 := d45)
+  have d52 := MatedCRT.convergenceDivisible_of_prepared_properties (𝒮 := 𝒮) (h48 := d42) (hu := d27) (hm := d51)
+  MatedCRT.divSandpileLowerBound_of_inputs (𝒮 := 𝒮) (h41 := d52) (h23 := d41) (h213 := d23) (h33 := d38) (h28 := h28)
+    (happrox := d50)
 
 end MatedCRT.FirstPassClosure
 
