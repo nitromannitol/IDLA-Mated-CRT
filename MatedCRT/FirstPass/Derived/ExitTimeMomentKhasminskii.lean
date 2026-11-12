@@ -163,21 +163,6 @@ theorem tsum_stayIn_le (A : Set ℤ) (x : ℕ → ℤ) :
           rw [ite_eq_left (by exact_mod_cast hj)]
       _ = (t : ℝ≥0∞) := by simp
 
-/-- The expected exit time from `A` vanishes from a starting point outside `A`. -/
-theorem expectedExitTime_eq_zero_of_not_mem (m : ℤ → ℤ → ℕ) {A : Set ℤ} {a : ℤ} (ha : a ∉ A) :
-    expectedExitTime m A a = 0 := by
-  unfold expectedExitTime
-  rw [← lintegral_zero (μ := srwLaw m a)]
-  refine lintegral_congr_ae ?_
-  filter_upwards [srwLaw_ae_start m a] with x hx
-  have h0 : vExitTime A x = 0 := by
-    by_contra hne
-    have hpos : ((0 : ℕ) : ℕ∞) < vExitTime A x := by
-      rw [Nat.cast_zero]; exact pos_iff_ne_zero.mpr hne
-    rw [natCast_lt_vExitTime_iff] at hpos
-    exact ha (hx ▸ hpos 0 le_rfl)
-  simp [h0]
-
 end ExitTimeMoment
 
 open ExitTimeMoment in
