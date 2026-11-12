@@ -12,9 +12,11 @@ the vertices `a` with `|η(a) - η(b)| = s`. The unit flow is the expected flow 
 of almost every direction; some vertex `y` of the inner boundary of `V^ε(B_s(η(b)))`, which meets the
 circle, has `g_B(y, b)` at most the cell sum.
 
-## Main statement
+## Main statements
 
 * `MatedCRT.greenKernel_le_log_of_harnack_of_cellSum`.
+* `MatedCRT.greenKernel_interiorCellVertices_le_log_of_harnack_of_cellSum`: composed with the
+  removal of the boundary constraint, the bound `C log (1/|η(a) - η(b)|) + C` of [BG20, Lem. 5.4].
 -/
 
 namespace MatedCRT
@@ -142,5 +144,47 @@ theorem greenKernel_le_log_of_harnack_of_cellSum (hη : Continuous η) (hε : 0 
         rw [hsumeq]
         exact hsum b hb s hr hrδ
     _ = C₁ * C₂ * Real.log (1 / s) := by ring
+
+open Classical in
+/-- **[BG20, Lem. 5.4], deterministic part.** A Harnack inequality for the Green kernel `g_B(·, b)` on
+the vertices whose cells meet a circle `∂B_s(η(b))`, the segment paths of almost every direction and
+the bound `C₂ log (1/s)` of the cell sum, for `r₀ ≤ s ≤ δ₀` and `B = V^ε(B_{ρ₀}) \ V^ε(∂B_{ρ₀})`,
+give `g_{B_ρ}(a, b) ≤ C log (1/|η(a) - η(b)|) + C` for all `a, b ∈ V^ε(B_ρ)` with
+`|η(a) - η(b)| ≥ r₀`, where `C = 4 C₁ C₂ (1 + log (4/δ₀))`. -/
+theorem greenKernel_interiorCellVertices_le_log_of_harnack_of_cellSum (hη : Continuous η)
+    (hε : 0 < ε) (hlf : ∀ a, {b | m a b ≠ 0}.Finite) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0)
+    (hsymm : ∀ a b, m a b = m b a)
+    (hadj : ∀ j k, m k j ≠ 0 → (cell ε η j ∩ cell ε η k).Nonempty)
+    {ρ ρ₀ δ₀ dc r₀ C₁ C₂ : ℝ} (hfin : (cellVertices ε η (ball 0 ρ₀)).Finite)
+    (hρρ₀ : ρ + 4 * δ₀ ≤ ρ₀) (hρ₀ : ρ₀ ≤ 1) (hδ₀ : 0 < δ₀) (hδ₀1 : δ₀ ≤ 1) (hdc : 4 * dc ≤ δ₀)
+    (hr₀0 : 0 < r₀) (hr₀ : r₀ ≤ δ₀ / 2) (hC₁ : 0 ≤ C₁) (hC₂ : 0 ≤ C₂)
+    (hdiam : ∀ k ∈ cellVertices ε η (ball 0 ρ₀), diam (cell ε η k) ≤ dc)
+    (hHarn : ∀ b ∈ cellVertices ε η (ball 0 ρ), ∀ s : ℝ, r₀ ≤ s → s ≤ δ₀ →
+      ∀ a ∈ cellVertices ε η (frontier (ball (vertexPoint ε η b) s)),
+      ∀ y ∈ cellVertices ε η (frontier (ball (vertexPoint ε η b) s)),
+      greenKernel m (interiorCellVertices ε η (ball 0 ρ₀)) a b ≤
+        C₁ * greenKernel m (interiorCellVertices ε η (ball 0 ρ₀)) y b)
+    (hpath : ∀ b ∈ interiorCellVertices ε η (ball 0 ρ₀),
+      ∃ (ℓ : ℝ) (Y : Finset ℤ) (F : Finset ℤ → List ℤ), (∀ T : Finset ℤ, ∀ a ∈ F T, a ∈ T) ∧
+      (∀ᵐ θ ∂uniformDirection, (segmentPath (vertexPoint ε η b) ℓ (cell ε η) Y F θ).Nodup) ∧
+      (∀ᵐ θ ∂uniformDirection, (segmentPath (vertexPoint ε η b) ℓ (cell ε η) Y F θ).IsChain
+        fun a c => m a c ≠ 0) ∧
+      (∀ᵐ θ ∂uniformDirection, ∃ p, segmentPath (vertexPoint ε η b) ℓ (cell ε η) Y F θ = b :: p ∧
+        (∀ v ∈ b :: p, v ∈ cellVertices ε η (ball 0 ρ₀)) ∧
+        (b :: p).getLast (List.cons_ne_nil b p) ∉ interiorCellVertices ε η (ball 0 ρ₀)))
+    (hsum : ∀ b ∈ cellVertices ε η (ball 0 ρ), ∀ s : ℝ, r₀ ≤ s → s ≤ δ₀ →
+      ∑ k ∈ hfin.toFinset with k ∉ cellVertices ε η (ball (vertexPoint ε η b) s),
+        (mdeg m k : ℝ) * (diam (cell ε η k) / infDist (vertexPoint ε η b) (cell ε η k)) ^ 2 ≤
+          C₂ * Real.log (1 / s)) :
+    ∀ a ∈ cellVertices ε η (ball 0 ρ), ∀ b ∈ cellVertices ε η (ball 0 ρ),
+      r₀ ≤ ‖vertexPoint ε η a - vertexPoint ε η b‖ →
+      greenKernel m (interiorCellVertices ε η (ball 0 ρ)) a b ≤
+        4 * (C₁ * C₂) * (1 + Real.log (4 / δ₀)) *
+            Real.log (1 / ‖vertexPoint ε η a - vertexPoint ε η b‖) +
+          4 * (C₁ * C₂) * (1 + Real.log (4 / δ₀)) :=
+  greenKernel_interiorCellVertices_le_log hη hε hlf hcons hadj hfin hρρ₀ hρ₀ (mul_nonneg hC₁ hC₂)
+    hδ₀ hδ₀1 hdc hr₀0 hr₀ hdiam fun a ha b hb hr hrδ =>
+      greenKernel_le_log_of_harnack_of_cellSum hη hε hlf hcons hsymm hadj hfin hρρ₀ hδ₀ hdc hr₀0
+        hC₁ hdiam hHarn hpath hsum b hb a ha hr hrδ
 
 end MatedCRT
