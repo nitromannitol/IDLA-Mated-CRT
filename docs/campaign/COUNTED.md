@@ -374,6 +374,53 @@ Derived forms (binders of `T` -> binders of `T_derivedInputs`; 20 forms; binder 
 | `firstPass_6_8` | 9 -> 8 | hB1 |
 | `firstPass_6_9` | 9 -> 8 | hB1 |
 
+Sixth pass (2026-11-12): seven more inputs are theorems without hypotheses,
+`MatedCRT/FirstPass/Derived/HBBallMassHolds.lean` (axioms propext, Classical.choice, Quot.sound), all from the
+whole-plane LQG ball-mass bounds of Ding-Gwynne (library theorem `LatticeProb.LQG.wholePlaneLQGBallMassBoundsLP_holds`,
+Harmonic-Balls `wholePlaneLQGBallMassBounds_holds`): `hBG` (#45 `FrozenBerestyckiGwynneConeBallMass`,
+`frozenBerestyckiGwynneConeBallMass_holds`), `hconf` (#29 `FrozenHBInitialConfinement`, `frozenHBInitialConfinement_holds`),
+`hI2`/`hI2HB` (`frozenLQGVolumeGrowthAllScales_holds`), `h82` (`frozenTypicalPointManyGoodScales_holds`), `hBdry`/`hBdryHB`
+(`frozenClusterBoundaryMeasureZero_holds`), `hExist`/`hExistHB` (HB Theorem 1.1 existence, `existenceHarmonicBallsStmt_holds`)
+and `hloc`/`hlocHB` (`harmonicBallLocalSetStmt_holds`). Regenerated `Derived/Counted.lean`, `Derived/CountedMinimal.lean`
+and `Audit/DerivedCountedAxioms.lean`. The 1.4 and 1.6 forms now bind four inputs: `hcore : CertifiedReferenceModelCore ν 𝒮`,
+`hscale : QuantumConeScalingInput`, `hEnvS : ConeEnvironmentScalingUnderSLE 𝒮`, `hG15 : FrozenGreenFunctionCrudeBound 𝒮`.
+
+Derived forms after the sixth pass (binders of `T` -> binders of `T_derivedInputs`; 31 forms):
+
+| counted `T` | binders | supplied |
+|---|---|---|
+| `closed_1_4_lp_noSC_noSup` | 36 -> 6 | hBG, h0, h2, hV, hdiv, hF3, h27, hFL, hstd, hGBC, hconf, hK, hE, hE1, hE2, h32, h611, h82, hSup, hCons, hMono, hCompat, hThm11, hrescale, hND, hBdryHB, hExistHB, hProp56HB, hI2HB, hlocHB |
+| `closed_1_6_lp_noSC_noSup` | 36 -> 6 | hBG, h0, h2, hV, hdiv, hF3, h27, hFL, hstd, hGBC, hconf, hK, hE, hE1, hE2, h32, h611, h82, hSup, hCons, hMono, hCompat, hThm11, hrescale, hND, hBdryHB, hExistHB, hProp56HB, hI2HB, hlocHB |
+| `closed_2_3_lp` | 23 -> 1 | hBG, hND, hstd, hGBC, h32, hSup, hCons, hMono, hCompat, hBdryHB, hExistHB, hThm11, hProp56HB, hconf, hI2HB, hK, hlocHB, hE, hFL, hE1, hE2, hrescale |
+| `closed_2_4_lp` | 18 -> 0 | hstd, hCentre, hOpen, hSup, hCons, hMono, hCompat, hBdry, hExist, hThm11, hProp56, hconf, hI2, hK, hloc, hE, hFL, hBG |
+| `closed_2_5_lp` | 22 -> 1 | hstd, hCentre, hOpen, hSup, hCons, hMono, hCompat, hBdry, hExist, hThm11, hProp56, hconf, hI2, hK, hloc, hE, hFL, hBG, hE1, hE2, hND |
+| `closed_2_6_lp` | 22 -> 1 | hstd, hCentre, hOpen, hSup, hCons, hMono, hCompat, hBdry, hExist, hThm11, hProp56, hconf, hI2, hK, hloc, hE, hFL, hBG, hE1, hE2, hND |
+| `closed_2_19_ownBinders` | 4 -> 3 | hBG |
+| `closed_3_3_ownBinders` | 4 -> 3 | hBG |
+| `closed_3_4_ownBinders` | 4 -> 3 | hBG |
+| `closed_3_5_lp` | 4 -> 3 | hBG |
+| `closed_3_6_lp_uniform` | 6 -> 4 | _hm, _h32 |
+| `closed_3_7_lp` | 6 -> 3 | hBG, hm, h32 |
+| `closed_4_1_lp` | 4 -> 3 | hBG |
+| `closed_4_2_lp` | 36 -> 11 | h23, h24c, h33, hstd, hCentre, hOpen, hSup, hCons, hMono, hCompat, hBdry, hExist, hThm11, hProp56, hconf, hI2, hK, hloc, hE, hFL, hBG, hE1, hE2, hND, hrescale |
+| `closed_4_7_ownBinders` | 4 -> 3 | hBG |
+| `closed_4_8_lp` | 4 -> 3 | hBG |
+| `closed_5_1_lp_noSup` | 31 -> 5 | h27, hmodel, hFL, hstd, hGBC, hconf, hK, hE, hE1, hE2, hND, h32, h611, h82, hI2, hSup, hCons, hMono, hCompat, hBdry, hEx, hThm11, hProp56, hloc, hSC, hBG |
+| `closed_5_2_ownBinders` | 4 -> 3 | hBG |
+| `closed_5_3_clean` | 27 -> 5 | hBG, hND, hstd, hCentre, hOpen, hSup, hCons, hMono, hCompat, hBdry, hExist, hThm11, hProp56, hconf, hI2, hK, hloc, hE, hFL, hE1, hE2, hF3 |
+| `closed_6_1_lp_noSup` | 33 -> 5 | h27, hmodel, hFL, hstd, hCentre, hconf, hK, hE, hE1, hE2, hND, hOpen, h611, h82, hI2, hSup, hCons, hMono, hCompat, hBdry, hExist, hThm11, hProp56, hloc, hBG, h0, h2, hV |
+| `closed_6_4_lp` | 3 -> 0 | h0, h2, hV |
+| `closed_6_10_lp` | 7 -> 3 | hBG, h0, h2, hV |
+| `closed_7_1_lp` | 29 -> 4 | hBG, h0, h2, hV, hND, hstd, hGBC, h32, hSup, hCons, hMono, hCompat, hBdryHB, hExistHB, hThm11, hProp56HB, hconf, hI2HB, hK, hlocHB, hE, hFL, hE1, hE2, hrescale |
+| `closed_8_1_lp_noSup` | 46 -> 5 | hm, h210, h34, h214, h28, h35c, h218, hH, hcone, h23, h24c, h33, hstd, hCentre, hOpen, hSup, hCons, hMono, hCompat, hBdry, hExist, hThm11, hProp56, hconf, hI2, hK, hloc, hE, hFL, hBG, hE1, hE2, hND, hrescale, h27, hmodel, h611, h82, h0, h2, hV |
+| `firstPass_2_17_ownBinders` | 1 -> 0 | hBG |
+| `firstPass_3_1_faithful` | 5 -> 4 | h27 |
+| `firstPass_4_6_h35c` | 8 -> 7 | h27 |
+| `firstPass_6_5_uniform` | 3 -> 0 | h0, h2, hV |
+| `firstPass_6_7` | 9 -> 6 | hCC, hB1, hBG |
+| `firstPass_6_8` | 9 -> 6 | hCC, hB1, hBG |
+| `firstPass_6_9` | 9 -> 6 | hCC, hB1, hBG |
+
 ### Hypotheses the conclusions do not need (second stage; 2026-11-11)
 
 `MatedCRT/FirstPass/Derived/CountedMinimal.lean` (generated; axiom audit `MatedCRT/Audit/MinimalCountedAxioms.lean`:
