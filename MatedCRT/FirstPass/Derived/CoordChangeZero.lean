@@ -1,6 +1,8 @@
 import HarmonicBalls.FirstPass.LPBridge.M1
 import HarmonicBalls.FirstPass.LPBridge.M4
 import LatticeProb.LQG.LQGMeasureInputs
+import LatticeProb.LQG.GMCRatioLimitMeasure
+import MatedCRT.FirstPass.S2VG.Literature
 
 /-!
 # The coordinate change rule of the γ-LQG measure: transport from the library form
@@ -27,5 +29,12 @@ theorem lqgMeasureCoordChange_of_LP {Ω : Type*} [MeasurableSpace Ω] (P : Measu
   filter_upwards [h ((HarmonicBalls.LPBridge.isWholePlaneGFF_iff P hC hcirc).1 hG) hγ hγ2 hα μ
     ((HarmonicBalls.LPBridge.isLQGMeasureOfField_iff P γ α₀ hcirc μ).1 hμ)] with ω hω a ha b
   exact (HarmonicBalls.LPBridge.isLQGLimit_iff _ _ _).2 (hω a ha b)
+
+/-- The cited input `LitCoordChange` (the coordinate change rule of the γ-LQG measure of a whole-plane GFF, `α₀ = 0`;
+Duplantier-Sheffield 2011, Proposition 2.1) holds: it is the library theorem `lqgMeasureCoordChangeLP_zero`
+(the circle-average approximations along every ratio sequence `r 2^{-k}` converge to the same γ-LQG measure),
+transported to the paper form. -/
+theorem litCoordChange_holds : MatedCRT.S2VG.LitCoordChange := fun _ _ P γ hC hcirc =>
+  lqgMeasureCoordChange_of_LP P γ 0 hC hcirc (LatticeProb.LQG.lqgMeasureCoordChangeLP_zero P γ hC hcirc)
 
 end MatedCRT.FirstPass.Derived
