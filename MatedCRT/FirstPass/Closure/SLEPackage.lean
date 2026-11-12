@@ -5,13 +5,12 @@ import MatedCRT.FirstPass.Frozen.SLERef
 # Closure: per-model inputs from the certified SLE reference package
 
 The closed theorems for a model `𝒮` were stated with a
-reference law `ν`: `hνC : SLEReferenceInput ν`, `hνE : SLEReferenceExtendedInput ν`, `hνF`, `hLaw`.
+reference law `ν`: `hνC : SLEReferenceInput ν`, `hνF`, `hLaw`.
 The helpers below project the per-model inputs of those packages.
 
-SUPERSEDED: every `∀ 𝒮, HasNormalizedSLELaw 𝒮 ν → X 𝒮` clause of the reference packages is
-FALSE as typed. The closed theorems of Closure/ now take one hypothesis `hC : CertifiedReferenceModel ν 𝒮`
+SUPERSEDED: the closed theorems of Closure/ now take one hypothesis `hC : CertifiedReferenceModel ν 𝒮`
 (FirstPass/SLERef/Certified.lean) and use its projections (`hC.exitTimeUpperBound`, `hC.mepsScaling`, ...). Every `slePkg_*`
-helper below is superseded: kept, not deleted, and no longer called by Closure/.
+helper below is superseded and no longer called by Closure/.
 
 Of the eleven per-model inputs, only `ConeEnvironmentScalingUnderSLE` is not supplied by any package: under the
 closure clause it is equivalent to the retired statement `ConeEnvironmentScalingStep` (`coneEnvironmentScalingUnderSLE_iff`).
@@ -55,57 +54,5 @@ normalized law `ν`. -/
 theorem slePkg_truncated {ν : ℝ → Measure SLEPathCode} (hνF : SLEFrozenReferenceInput ν)
     {𝒮 : SpaceFillingSLEModel} (hLaw : HasNormalizedSLELaw 𝒮 ν) : FrozenTruncatedQuenchedLawsFixedTime 𝒮 :=
   frozenTruncatedQuenched_of_frozenReferenceLaw hνF hLaw
-
-/-! ### The extended package (`SLEReferenceExtendedInput`): ten derivable per-model inputs -/
-
-/-- SUPERSEDED. SLE closure input `SLEScaleInvarianceInput 𝒮` (Miller–Sheffield, IG IV §1.2.3). -/
-theorem slePkg_sleScaleInvariance {ν : ℝ → Measure SLEPathCode} (hνE : SLEReferenceExtendedInput ν)
-    {𝒮 : SpaceFillingSLEModel} (hLaw : HasNormalizedSLELaw 𝒮 ν) : SLEScaleInvarianceInput 𝒮 :=
-  scaleInvariance_of_extended hνE hLaw
-
-/-- SUPERSEDED. SLE closure input `SLEReparametrizationInput 𝒮` (Miller–Sheffield, IG IV §4.3). -/
-theorem slePkg_sleReparametrization {ν : ℝ → Measure SLEPathCode} (hνE : SLEReferenceExtendedInput ν)
-    {𝒮 : SpaceFillingSLEModel} (hLaw : HasNormalizedSLELaw 𝒮 ν) : SLEReparametrizationInput 𝒮 :=
-  reparametrization_of_extended hνE hLaw
-
-/-- SUPERSEDED. SLE closure input `SLEIndepMonoInput 𝒮` (Miller–Sheffield, IG IV §4.3). -/
-theorem slePkg_sleIndepMono {ν : ℝ → Measure SLEPathCode} (hνE : SLEReferenceExtendedInput ν)
-    {𝒮 : SpaceFillingSLEModel} (hLaw : HasNormalizedSLELaw 𝒮 ν) : SLEIndepMonoInput 𝒮 :=
-  indepMono_of_extended hνE hLaw
-
-/-- SUPERSEDED. `MepsScalingInput 𝒮` (BG20 eq. (1.8)). -/
-theorem slePkg_mepsScaling {ν : ℝ → Measure SLEPathCode} (hνE : SLEReferenceExtendedInput ν)
-    {𝒮 : SpaceFillingSLEModel} (hLaw : HasNormalizedSLELaw 𝒮 ν) : MepsScalingInput 𝒮 :=
-  mepsScaling_of_extended hνE hLaw
-
-/-- SUPERSEDED. `DegreeBoundInput 𝒮` (GMS19 Lemma 2.6). -/
-theorem slePkg_degreeBound {ν : ℝ → Measure SLEPathCode} (hνE : SLEReferenceExtendedInput ν)
-    {𝒮 : SpaceFillingSLEModel} (hLaw : HasNormalizedSLELaw 𝒮 ν) : DegreeBoundInput 𝒮 :=
-  degreeBound_of_extended hνE hLaw
-
-/-- SUPERSEDED. `CellSizeEstimateStmt 𝒮` (BG20 Lemma 2.4). -/
-theorem slePkg_cellSize {ν : ℝ → Measure SLEPathCode} (hνE : SLEReferenceExtendedInput ν)
-    {𝒮 : SpaceFillingSLEModel} (hLaw : HasNormalizedSLELaw 𝒮 ν) : CellSizeEstimateStmt 𝒮 :=
-  cellSizeEstimate_of_extended hνE hLaw
-
-/-- SUPERSEDED. `CountingMeasureConvergenceStmt 𝒮` (BG20 Lemma A.4). -/
-theorem slePkg_countingMeasure {ν : ℝ → Measure SLEPathCode} (hνE : SLEReferenceExtendedInput ν)
-    {𝒮 : SpaceFillingSLEModel} (hLaw : HasNormalizedSLELaw 𝒮 ν) : CountingMeasureConvergenceStmt 𝒮 :=
-  countingMeasureConvergence_of_extended hνE hLaw
-
-/-- SUPERSEDED. `DegreeMeasureConvergenceStmt 𝒮` (BG20 Corollary A.6). -/
-theorem slePkg_degreeMeasure {ν : ℝ → Measure SLEPathCode} (hνE : SLEReferenceExtendedInput ν)
-    {𝒮 : SpaceFillingSLEModel} (hLaw : HasNormalizedSLELaw 𝒮 ν) : DegreeMeasureConvergenceStmt 𝒮 :=
-  degreeMeasureConvergence_of_extended hνE hLaw
-
-/-- SUPERSEDED. `FrozenConeScalingLaw 𝒮` (Duplantier–Sheffield, Prop. 4.13(i)). -/
-theorem slePkg_frozenConeScaling {ν : ℝ → Measure SLEPathCode} (hνE : SLEReferenceExtendedInput ν)
-    {𝒮 : SpaceFillingSLEModel} (hLaw : HasNormalizedSLELaw 𝒮 ν) : FrozenConeScalingLaw 𝒮 :=
-  frozenConeScalingLaw_of_extended hνE hLaw
-
-/-- SUPERSEDED. `FrozenLBMGreenOccupationRescaled 𝒮` (Garban–Rhodes–Vargas with the coordinate change). -/
-theorem slePkg_frozenLBM {ν : ℝ → Measure SLEPathCode} (hνE : SLEReferenceExtendedInput ν)
-    {𝒮 : SpaceFillingSLEModel} (hLaw : HasNormalizedSLELaw 𝒮 ν) : FrozenLBMGreenOccupationRescaled 𝒮 :=
-  frozenLBMGreenOccupation_of_extended hνE hLaw
 
 end MatedCRT
