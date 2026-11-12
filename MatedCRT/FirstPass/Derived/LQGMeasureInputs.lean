@@ -1,8 +1,8 @@
 import HarmonicBalls.FirstPass.Phase2.LQGMeasureExistenceDerived
-import HarmonicBalls.FirstPass.Phase2.GFFExistsDerived2
 import HarmonicBalls.Steps.Sec11.ScalePowerBounds
 import LatticeProb.LQG.GMCScaleIncrement
 import MatedCRT.FirstPass.Frozen.S2m
+import MatedCRT.Proofs.Field.WholePlaneExistence
 import MatedCRT.Steps.Sec6.AnnulusHit
 
 /-!
@@ -13,7 +13,7 @@ import MatedCRT.Steps.Sec6.AnnulusHit
   Bou-Rabee-Gwynne arXiv:2208.11795v3, Section 2.2). From `HarmonicBalls.lqgMeasureExistence_derived` at `α₀ = γ`,
   with `γ < Q_γ` for `γ ∈ (0, 2)`.
 * `WholePlaneLQGExistenceStep` (`Steps/Sec6/AnnulusHit.lean`): a whole-plane GFF together with its γ-LQG measure
-  exists. The field from `HarmonicBalls.wholePlaneGFFExistsFrozen_derived'` and its measure from
+  exists. The field from `MatedCRT.Field.wholePlaneGFF_exists` and its measure from
   `lqgMeasureExistence_derived` at `α₀ = 0`.
 * `WholePlaneLQGCoordinateChangeStep` (`Steps/Sec6/AnnulusHit.lean`): the push-forward of the γ-LQG measure of a
   whole-plane GFF under `x ↦ (x - z)/r` is a.s. a positive finite multiple of the γ-LQG measure of another whole-plane
@@ -45,7 +45,7 @@ theorem frozenLQGMeasureExistenceInsertion_holds : S2m.FrozenLQGMeasureExistence
 /-- **A whole-plane GFF with its γ-LQG measure exists** (`WholePlaneLQGExistenceStep`) is a theorem. -/
 theorem wholePlaneLQGExistenceStep_holds : WholePlaneLQGExistenceStep := by
   intro γ hγ hγ2
-  obtain ⟨Ω, mΩ, P, hP, hC, hcirc, hG⟩ := wholePlaneGFFExistsFrozen_derived'.{0}
+  obtain ⟨Ω, mΩ, P, hC, hcirc, hP, hG⟩ := MatedCRT.Field.wholePlaneGFF_exists
   obtain ⟨μ, hμ⟩ := lqgMeasureExistence_derived P γ 0 hC hcirc hG hγ hγ2
     (lt_trans hγ (gamma_lt_lqgQ hγ hγ2))
   exact ⟨Ω, mΩ, P, hC, hcirc, μ, hP, hG, isLQGMeasure_of_isLQGMeasureOfField_zero hμ⟩

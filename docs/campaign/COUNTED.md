@@ -331,24 +331,40 @@ supplies, wherever the needed hypotheses are bound:
 Input binders of the counted 1.4 and 1.6 forms after this: 22 (24 minus the data `𝒮`, `ν`): 5.5 (existence), 2.4
 (volume growth) and 1.3 (local set) are the Harmonic-Balls statements still bound.
 
-Derived forms (binders of `T` -> binders of `T_derivedInputs`; 14 forms; binder names as in `T`):
+Fourth pass (2026-11-12): the library proves the existence of the γ-LQG measure of every whole-plane GFF (with an
+`α₀`-log singularity, `α₀ < Q`) and its coordinate change under `x ↦ (x - z)/r`. Three inputs are now theorems,
+`MatedCRT/FirstPass/Derived/LQGMeasureInputs.lean` (9edd6aa8; axioms propext, Classical.choice, Quot.sound):
+`FrozenLQGMeasureExistenceInsertion` (`frozenLQGMeasureExistenceInsertion_holds`), `WholePlaneLQGExistenceStep`
+(`wholePlaneLQGExistenceStep_holds`; alias `FPWholePlaneLQGExistence`) and `WholePlaneLQGCoordinateChangeStep`
+(`wholePlaneLQGCoordinateChangeStep_holds`; alias `FPWholePlaneLQGCoordinateChange`). The same pass also supplies the
+inputs proved meanwhile in `Derived/ConeRadialDivergence.lean` (`FrozenConeRadialDivergenceCorrected`),
+`Derived/ConeCircleLawUnique.lean` (`ConeCircleLawUniqueStep`) and `Derived/ConeWholePlaneFieldLaw.lean`
+(`FPConeWholePlaneFieldLaw`). Input binders of the 1.4 and 1.6 forms after this: 16 (18 minus the data `𝒮`, `ν`).
+
+Derived forms (binders of `T` -> binders of `T_derivedInputs`; 20 forms; binder names as in `T`):
 
 | counted `T` | binders | supplied |
 |---|---|---|
-| `closed_1_4_lp_noSC_noSup` | 36 -> 24 | hF3, h27, hGBC, h32, h611, hSup, hCons, hMono, hCompat, hThm11, hBdryHB, hProp56HB |
-| `closed_1_6_lp_noSC_noSup` | 36 -> 24 | hF3, h27, hGBC, h32, h611, hSup, hCons, hMono, hCompat, hThm11, hBdryHB, hProp56HB |
-| `closed_2_3_lp` | 23 -> 15 | hGBC, h32, hSup, hCons, hMono, hCompat, hThm11, hProp56HB |
-| `closed_2_4_lp` | 18 -> 10 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56 |
-| `closed_2_5_lp` | 22 -> 14 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56 |
-| `closed_2_6_lp` | 22 -> 14 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56 |
+| `closed_1_4_lp_noSC_noSup` | 36 -> 18 | h0, h2, hdiv, hF3, h27, hFL, hGBC, hE, hE1, h32, h611, hSup, hCons, hMono, hCompat, hThm11, hBdryHB, hProp56HB |
+| `closed_1_6_lp_noSC_noSup` | 36 -> 18 | h0, h2, hdiv, hF3, h27, hFL, hGBC, hE, hE1, h32, h611, hSup, hCons, hMono, hCompat, hThm11, hBdryHB, hProp56HB |
+| `closed_2_3_lp` | 23 -> 12 | hGBC, h32, hSup, hCons, hMono, hCompat, hThm11, hProp56HB, hE, hFL, hE1 |
+| `closed_2_4_lp` | 18 -> 8 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56, hE, hFL |
+| `closed_2_5_lp` | 22 -> 11 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56, hE, hFL, hE1 |
+| `closed_2_6_lp` | 22 -> 11 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56, hE, hFL, hE1 |
 | `closed_3_6_lp_uniform` | 6 -> 4 | _hm, _h32 |
 | `closed_3_7_lp` | 6 -> 4 | hm, h32 |
-| `closed_4_2_lp` | 36 -> 25 | h23, h24c, h33, hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56 |
-| `closed_5_1_lp_noSup` | 31 -> 18 | h27, hmodel, hGBC, h32, h611, hSup, hCons, hMono, hCompat, hBdry, hThm11, hProp56, hSC |
-| `closed_5_3_clean` | 27 -> 18 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56, hF3 |
-| `closed_6_1_lp_noSup` | 33 -> 21 | h27, hmodel, hCentre, hOpen, h611, hSup, hCons, hMono, hCompat, hBdry, hThm11, hProp56 |
-| `closed_7_1_lp` | 29 -> 21 | hGBC, h32, hSup, hCons, hMono, hCompat, hThm11, hProp56HB |
-| `closed_8_1_lp_noSup` | 46 -> 22 | hm, h210, h34, h214, h28, h35c, h218, hH, hcone, h23, h24c, h33, hCentre, hOpen, hSup, hCons, hMono, hCompat, hBdry, hThm11, hProp56, h27, hmodel, h611 |
+| `closed_4_2_lp` | 36 -> 22 | h23, h24c, h33, hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56, hE, hFL, hE1 |
+| `closed_5_1_lp_noSup` | 31 -> 15 | h27, hmodel, hFL, hGBC, hE, hE1, h32, h611, hSup, hCons, hMono, hCompat, hBdry, hThm11, hProp56, hSC |
+| `closed_5_3_clean` | 27 -> 15 | hCentre, hOpen, hSup, hCons, hMono, hCompat, hThm11, hProp56, hE, hFL, hE1, hF3 |
+| `closed_6_1_lp_noSup` | 33 -> 16 | h27, hmodel, hFL, hCentre, hE, hE1, hOpen, h611, hSup, hCons, hMono, hCompat, hBdry, hThm11, hProp56, h0, h2 |
+| `closed_6_4_lp` | 3 -> 1 | h0, h2 |
+| `closed_6_10_lp` | 7 -> 5 | h0, h2 |
+| `closed_7_1_lp` | 29 -> 16 | h0, h2, hGBC, h32, hSup, hCons, hMono, hCompat, hThm11, hProp56HB, hE, hFL, hE1 |
+| `closed_8_1_lp_noSup` | 46 -> 17 | hm, h210, h34, h214, h28, h35c, h218, hH, hcone, h23, h24c, h33, hCentre, hOpen, hSup, hCons, hMono, hCompat, hBdry, hThm11, hProp56, hE, hFL, hE1, h27, hmodel, h611, h0, h2 |
+| `firstPass_6_5_uniform` | 3 -> 1 | h0, h2 |
+| `firstPass_6_7` | 9 -> 8 | hB1 |
+| `firstPass_6_8` | 9 -> 8 | hB1 |
+| `firstPass_6_9` | 9 -> 8 | hB1 |
 
 ### Hypotheses the conclusions do not need (second stage; 2026-11-11)
 
@@ -357,14 +373,14 @@ propext, Classical.choice, Quot.sound). For a counted theorem `T` (in its form o
 `T_minimalInputs` states the same conclusion from a proper subset of the hypotheses: the conclusion follows without the
 others by theorems already in the repository (search over all compiled theorems of this repository and of the
 Harmonic-Balls package; the compiled file is the check). No binder is added and `T` is unchanged. The search finds no
-such reduction for the other counted theorems; in particular the forms of 1.4 and 1.6 keep their 24 binders.
+such reduction for the other counted theorems; in particular the forms of 1.4 and 1.6 keep their 18 binders.
 
 | counted `T` | binders | not needed |
 |---|---|---|
-| `closed_4_2_lp` | 25 -> 24 | hcone (`FrozenConeScalingLaw`) |
-| `firstPass_6_7` | 9 -> 7 | hB1 (`ConeWholePlaneFieldLawStep`), hμ (`LitQuantumConeLQGMeasureExistence`) |
-| `firstPass_6_8` | 9 -> 7 | hB1, hμ |
-| `firstPass_6_9` | 9 -> 7 | hB1, hμ |
+| `closed_4_2_lp` | 22 -> 21 | hcone (`FrozenConeScalingLaw`) |
+| `firstPass_6_7` | 8 -> 6 | hLit, hμ (`LitQuantumConeLQGMeasureExistence`) |
+| `firstPass_6_8` | 8 -> 6 | hLit, hμ |
+| `firstPass_6_9` | 8 -> 6 | hLit, hμ |
 
 ## Appendix B path: forms with the occupation identity or the strong compatibility derived (2026-11-11)
 
