@@ -13,7 +13,9 @@ exists `α₀ = α₀(β, γ) > 0` such that with polynomially high probability 
 * `MatedCRTEnv.IsValid.polyHighProb_card_cellVertices_ball_le`: the count (5.41) from the volume
   growth estimate (Lemma 2.7 = BG20 Lemma A.1, upper half) and the cell size estimate
   (Lemma 2.8 = BG20 Lemma 2.4, upper half). It is stated for every finite set of vertices whose cells
-  meet `B_{ε^β}(z)`, which is the form consumed by the near/typical split of the exit-time Green sum.
+  meet `B_{ε^β}(z)`, which is the form consumed by the near/typical split of the exit-time Green sum;
+* `MatedCRTEnv.IsValid.polyHighProb_card_cellVertices_ball_le_exponent`: the same count with the explicit
+  exponent `nearCountExponent γ β`, which depends neither on `ρ` nor on the environment.
 -/
 
 open Set Metric MeasureTheory Filter Topology HarmonicBalls
@@ -36,16 +38,29 @@ theorem IsAreaParametrized.ofReal_mul_card_le (hpar : IsAreaParametrized μ η) 
     _ = μ (⋃ k ∈ s, cell ε η k) := hunion.symm
     _ ≤ μ U := measure_mono (iUnion₂_subset hU)
 
-/-- **BG20 (5.41).** Let `0 < γ < 2`, `β > 0` and `0 < ρ < 1`. Under the volume growth estimate
-(Lemma 2.7) and the cell size estimate (Lemma 2.8) there is `α₀ > 0` such that with polynomially high
-probability as `ε → 0`, for every `z ∈ B_ρ`, every finite set of vertices whose cells meet
-`B_{ε^β}(z)` has at most `ε^{-1+α₀}` elements. -/
-theorem MatedCRTEnv.IsValid.polyHighProb_card_cellVertices_ball_le {𝒮 : SpaceFillingSLEModel}
+/-- The exponent `α₀(γ, β) = (min(β, (2 + γ)^{-2}) / 2) · (2 - γ)^2 / 4` of the near-vertex count (5.41);
+it depends on `γ` and `β` only. -/
+noncomputable def nearCountExponent (γ β : ℝ) : ℝ := min β (1 / (2 + γ) ^ 2) / 2 * ((2 - γ) ^ 2 / 4)
+
+theorem nearCountExponent_pos {γ β : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (hβ : 0 < β) :
+    0 < nearCountExponent γ β := by
+  have h2 : 0 < 2 - γ := by linarith
+  unfold nearCountExponent
+  exact mul_pos (half_pos (lt_min hβ (by positivity))) (by positivity)
+
+/-- **BG20 (5.41), explicit exponent.** Let `0 < γ < 2`, `β > 0` and `0 < ρ < 1`. Under the volume growth
+estimate (Lemma 2.7) and the cell size estimate (Lemma 2.8), with polynomially high probability as `ε → 0`,
+for every `z ∈ B_ρ`, every finite set of vertices whose cells meet `B_{ε^β}(z)` has at most
+`ε^{-1+α₀}` elements, where `α₀ = nearCountExponent γ β` does not depend on `ρ` or on the environment. -/
+theorem MatedCRTEnv.IsValid.polyHighProb_card_cellVertices_ball_le_exponent
+    {𝒮 : SpaceFillingSLEModel}
     {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} (h27 : VolumeGrowthStmt)
     (hcell : CellSizeEstimateStmt 𝒮) (hS : S.IsValid 𝒮 γ) (hγ : 0 < γ) (hγ2 : γ < 2) {β ρ : ℝ}
     (hβ : 0 < β) (hρ : 0 < ρ) (hρ1 : ρ < 1) :
-    ∃ α₀ : ℝ, 0 < α₀ ∧ PolyHighProb S.P fun ε => {ω | ∀ z ∈ ball (0 : ℂ) ρ, ∀ s : Finset ℤ,
-      (↑s : Set ℤ) ⊆ cellVertices ε (S.η ω) (ball z (ε ^ β)) → (s.card : ℝ) ≤ ε ^ (-1 + α₀)} := by
+    PolyHighProb S.P fun ε => {ω | ∀ z ∈ ball (0 : ℂ) ρ, ∀ s : Finset ℤ,
+      (↑s : Set ℤ) ⊆ cellVertices ε (S.η ω) (ball z (ε ^ β)) →
+        (s.card : ℝ) ≤ ε ^ (-1 + nearCountExponent γ β)} := by
+  unfold nearCountExponent
   set q : ℝ := 1 / (2 + γ) ^ 2 with hq_def
   have hq : 0 < q := by positivity
   have hq1 : q < 1 := by
@@ -61,7 +76,6 @@ theorem MatedCRTEnv.IsValid.polyHighProb_card_cellVertices_ball_le {𝒮 : Space
     have : 0 < 2 - γ := by linarith
     positivity
   have hβp2 : βp < (2 - γ) ^ 2 / 2 := by rw [hβp_def]; linarith
-  refine ⟨a * βp, mul_pos ha hβp, ?_⟩
   set ρ' : ℝ := (1 + ρ) / 2 with hρ'_def
   have hdiam := hcell γ hγ hγ2 q ρ' hq hq1 (by rw [hρ'_def]; linarith) (by rw [hρ'_def]; linarith)
     Ω S hS
@@ -122,5 +136,18 @@ theorem MatedCRTEnv.IsValid.polyHighProb_card_cellVertices_ball_le {𝒮 : Space
   rw [ENNReal.ofReal_le_ofReal_iff (by positivity), ← Real.rpow_mul hε.le] at hmass
   rw [Real.rpow_add hε, Real.rpow_neg_one, inv_mul_eq_div, le_div_iff₀ hε]
   linarith
+
+/-- **BG20 (5.41).** Let `0 < γ < 2`, `β > 0` and `0 < ρ < 1`. Under the volume growth estimate
+(Lemma 2.7) and the cell size estimate (Lemma 2.8) there is `α₀ > 0` such that with polynomially high
+probability as `ε → 0`, for every `z ∈ B_ρ`, every finite set of vertices whose cells meet
+`B_{ε^β}(z)` has at most `ε^{-1+α₀}` elements. -/
+theorem MatedCRTEnv.IsValid.polyHighProb_card_cellVertices_ball_le {𝒮 : SpaceFillingSLEModel}
+    {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} (h27 : VolumeGrowthStmt)
+    (hcell : CellSizeEstimateStmt 𝒮) (hS : S.IsValid 𝒮 γ) (hγ : 0 < γ) (hγ2 : γ < 2) {β ρ : ℝ}
+    (hβ : 0 < β) (hρ : 0 < ρ) (hρ1 : ρ < 1) :
+    ∃ α₀ : ℝ, 0 < α₀ ∧ PolyHighProb S.P fun ε => {ω | ∀ z ∈ ball (0 : ℂ) ρ, ∀ s : Finset ℤ,
+      (↑s : Set ℤ) ⊆ cellVertices ε (S.η ω) (ball z (ε ^ β)) → (s.card : ℝ) ≤ ε ^ (-1 + α₀)} :=
+  ⟨nearCountExponent γ β, nearCountExponent_pos hγ hγ2 hβ,
+    MatedCRTEnv.IsValid.polyHighProb_card_cellVertices_ball_le_exponent h27 hcell hS hγ hγ2 hβ hρ hρ1⟩
 
 end MatedCRT
