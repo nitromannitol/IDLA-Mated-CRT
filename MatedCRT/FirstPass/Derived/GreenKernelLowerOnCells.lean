@@ -20,6 +20,13 @@ Brownian motion*, Lemma 4.4, on the cell sets `V^ε(D) = {k | H^ε_k ∩ D ≠ �
   with `|p(·) - z| < s₀`.
 * `inv_mul_log_sub_one_le_greenKernel_of_shell`: the same with `τ = C⁻¹ log(r / (s₀ + δ)) - 1`, from the bound
   `C⁻¹ log(r / |p(b) - z|) - 1 ≤ g(b)` on the shell.
+* `cellVertices_ball_subset_interiorCellVertices`: cells of diameter at most `δ` meeting `B_ρ(z)` are interior to
+  `B_{ρ₀}(z)` when `ρ + δ < ρ₀`.
+* `inv_two_mul_log_sub_one_le_greenKernel_interior`: the bound (4.16) for the Green domain
+  `V^ε(B_r(z)) \ V^ε(∂B_r(z))`, from the resistance bound (4.15) of the annulus `B_{3r/4}(z) \ B̄_s(z)`, `s ≤ r/4`.
+* `inv_mul_log_min_sub_one_le_greenKernel_interior`: the bound (4.12) for one vertex `x` and one radius `r`, in all
+  cases `η(y) = η(x)`, `|η(y) - η(x)| < s₁`, `s₁ ≤ |η(y) - η(x)| ≤ r/4` and `|η(y) - η(x)| > r/4`, from the Harnack
+  bound (4.13) and the resistance bound (4.15) for all `s ∈ [s₁, r/4]`.
 -/
 
 namespace MatedCRT
@@ -113,13 +120,13 @@ theorem inv_mul_log_min_sub_one_le_greenKernel (hsymm : ∀ a b, m a b = m b a)
     _ ≤ greenKernel m ↑B x y := hmain
 
 /-- **The step (4.17) of Berestycki-Gwynne** (proof of Lemma 4.4), by the minimum principle. Let adjacent vertices
-have positions `p : ℤ → ℂ` at distance at most `δ`. Let `B ⊆ S` be finite, with `S` containing the neighbours of
+have positions `p : ℤ → ℂ` at distance at most `δ` when one of them lies in `B`. Let `B ⊆ S` be finite, with `S` containing the neighbours of
 every vertex of `B`, and let every vertex of `S` within distance `s₀` of `z` lie in `B`. Let `x ∈ S` with
 `|p(x) - z| < s₀`. If `τ ≤ g_B(x, b)` for every `b ∈ S` on the shell `s₀ ≤ |p(b) - z| < s₀ + δ`, then
 `τ ≤ g_B(x, y)` for every `y ∈ S` with `|p(y) - z| < s₀`: every edge leaving `{|p(·) - z| < s₀}` ends on the shell. -/
 theorem le_greenKernel_of_shell (hsymm : ∀ a b, m a b = m b a) (hlf : IsLocallyFiniteMult m)
-    (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {p : ℤ → ℂ} {δ : ℝ} (hadj : ∀ a b, m a b ≠ 0 → ‖p a - p b‖ ≤ δ)
-    {B S : Finset ℤ} (hS : ∀ a ∈ B, nbrs hlf a ⊆ S) {z : ℂ} {s₀ τ : ℝ}
+    (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {p : ℤ → ℂ} {δ : ℝ} {B S : Finset ℤ}
+    (hadj : ∀ a ∈ B, ∀ b, m a b ≠ 0 → ‖p a - p b‖ ≤ δ) (hS : ∀ a ∈ B, nbrs hlf a ⊆ S) {z : ℂ} {s₀ τ : ℝ}
     (hsub : ∀ k ∈ S, ‖p k - z‖ < s₀ → k ∈ B) {x : ℤ} (hxS : x ∈ S) (hx : ‖p x - z‖ < s₀)
     (hshell : ∀ b ∈ S, s₀ ≤ ‖p b - z‖ → ‖p b - z‖ < s₀ + δ → τ ≤ greenKernel m ↑B x b) :
     ∀ y ∈ S, ‖p y - z‖ < s₀ → τ ≤ greenKernel m ↑B x y := by
@@ -136,7 +143,7 @@ theorem le_greenKernel_of_shell (hsymm : ∀ a b, m a b = m b a) (hlf : IsLocall
         rwa [sub_add_sub_cancel] at this
       have h2 : ‖p b - p a‖ ≤ δ := by
         rw [norm_sub_rev]
-        exact hadj a b hab
+        exact hadj a (hAB ha) b hab
       exact hshell b hbS hb0 (by linarith)
   exact fun y hyS hy => key y (Finset.mem_filter.2 ⟨hyS, hy⟩)
 
@@ -146,7 +153,7 @@ shell `s₀ ≤ |p(b) - z| < s₀ + δ`, then `C⁻¹ log(r / (s₀ + δ)) - 1 �
 `|p(y) - z| < s₀`. -/
 theorem inv_mul_log_sub_one_le_greenKernel_of_shell (hsymm : ∀ a b, m a b = m b a)
     (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {p : ℤ → ℂ} {δ : ℝ}
-    (hadj : ∀ a b, m a b ≠ 0 → ‖p a - p b‖ ≤ δ) {B S : Finset ℤ} (hS : ∀ a ∈ B, nbrs hlf a ⊆ S) {z : ℂ}
+    {B S : Finset ℤ} (hadj : ∀ a ∈ B, ∀ b, m a b ≠ 0 → ‖p a - p b‖ ≤ δ) (hS : ∀ a ∈ B, nbrs hlf a ⊆ S) {z : ℂ}
     {s₀ r C : ℝ} (hs₀ : 0 < s₀) (hr : 0 < r) (hC : 0 < C) (hsub : ∀ k ∈ S, ‖p k - z‖ < s₀ → k ∈ B) {x : ℤ}
     (hxS : x ∈ S) (hx : ‖p x - z‖ < s₀)
     (hshell : ∀ b ∈ S, s₀ ≤ ‖p b - z‖ → ‖p b - z‖ < s₀ + δ →
@@ -159,5 +166,185 @@ theorem inv_mul_log_sub_one_le_greenKernel_of_shell (hsymm : ∀ a b, m a b = m 
       Real.log_le_log (div_pos hr (hpos.trans hb1)) hle
     have hCi : 0 ≤ C⁻¹ := inv_nonneg.2 hC.le
     exact (sub_le_sub_right (mul_le_mul_of_nonneg_left hlog hCi) 1).trans (hshell b hbS hb0 hb1)
+
+/-- **Small cells meeting `B_ρ(z)` are interior to `B_{ρ₀}(z)`**: if every cell meeting `B_ρ(z)` has diameter at most
+`δ` and `ρ + δ < ρ₀`, then `V^ε(B_ρ(z)) ⊆ V^ε(B_{ρ₀}(z)) \ V^ε(∂B_{ρ₀}(z))`. -/
+theorem cellVertices_ball_subset_interiorCellVertices {ε : ℝ} (η : ℝ → ℂ) {z : ℂ} {ρ ρ₀ δ : ℝ}
+    (hρρ₀ : ρ < ρ₀) (hδ : ρ + δ < ρ₀)
+    (hdiam : ∀ b ∈ cellVertices ε η (ball z ρ), ∀ w ∈ cell ε η b, ∀ w' ∈ cell ε η b, dist w w' ≤ δ) :
+    cellVertices ε η (ball z ρ) ⊆ interiorCellVertices ε η (ball z ρ₀) := by
+  intro b hb
+  obtain ⟨w0, hw0, hw0b⟩ := hb
+  have h3 : dist w0 z < ρ := mem_ball.1 hw0b
+  refine ⟨⟨w0, hw0, ball_subset_ball hρρ₀.le hw0b⟩, ?_⟩
+  rintro ⟨w, hw, hwf⟩
+  have hρ₀ : ρ₀ ≠ 0 := (lt_of_le_of_lt dist_nonneg (h3.trans hρρ₀)).ne'
+  rw [frontier_ball _ hρ₀, mem_sphere] at hwf
+  have h1 := dist_triangle w w0 z
+  have h2 := hdiam b ⟨w0, hw0, hw0b⟩ w hw w0 hw0
+  linarith
+
+/-- **The bound (4.16) of Berestycki-Gwynne for the Green domain `V^ε(B_r(z)) \ V^ε(∂B_r(z))`.** Let `B` be that
+domain, `B ⊆ S` with `S` containing the neighbours of every vertex of `B`, let the cells meeting `B_{3r/4}(z)` have
+diameter at most `δ` with `3r/4 + δ < r`, and let `η(x) = z`. Let `0 < s ≤ r/4`. Suppose the Harnack bound (4.13)
+`g_B(x, a) ≤ C₁ g_B(x, a')` holds on `V^ε(∂B_s(z))`, `C₁ ≥ 1`, and some `h` equal to `1` on `V^ε(B̄_s(z))` and `0`
+off `V^ε(B_{3r/4}(z))` has `log(3r/(4s)) E(h) ≤ C₂`, `C₂ > 0` (the resistance bound (4.15) of the annulus
+`B_{3r/4}(z) \ B̄_s(z)`). Then `(2 C₁ C₂)⁻¹ log(r/s) - 1 ≤ g_B(x, y)` for every `y ∈ V^ε(∂B_s(z))`. -/
+theorem inv_two_mul_log_sub_one_le_greenKernel_interior (hsymm : ∀ a b, m a b = m b a)
+    (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {ε : ℝ} (hε : 0 ≤ ε) {η : ℝ → ℂ}
+    (hη : Continuous η) (hadj : ∀ j k, m j k ≠ 0 → (cell ε η j ∩ cell ε η k).Nonempty) {z : ℂ} {r δ s : ℝ}
+    (hδ : 3 * r / 4 + δ < r)
+    (hdiam : ∀ b ∈ cellVertices ε η (ball z (3 * r / 4)), ∀ w ∈ cell ε η b, ∀ w' ∈ cell ε η b, dist w w' ≤ δ)
+    {B S : Finset ℤ} (hB : (B : Set ℤ) = interiorCellVertices ε η (ball z r)) (hBS : B ⊆ S)
+    (hS : ∀ a ∈ B, nbrs hlf a ⊆ S) {x : ℤ} (hx : vertexPoint ε η x = z) (hs : 0 < s) (hsr : s ≤ r / 4)
+    {C₁ C₂ : ℝ} (hC₁ : 1 ≤ C₁) (hC₂ : 0 < C₂)
+    (hharn : ∀ a ∈ cellVertices ε η (sphere z s), ∀ a' ∈ cellVertices ε η (sphere z s),
+      greenKernel m ↑B x a ≤ C₁ * greenKernel m ↑B x a')
+    {h : ℤ → ℝ} (h1 : ∀ a ∈ cellVertices ε η (closedBall z s), h a = 1)
+    (h0 : ∀ a, a ∉ cellVertices ε η (ball z (3 * r / 4)) → h a = 0)
+    (hE : Real.log (3 * r / 4 / s) * ((1 / 2) * ∑ a ∈ S, ∑ b ∈ S, (m a b : ℝ) * (h a - h b) ^ 2) ≤ C₂) :
+    ∀ y ∈ cellVertices ε η (sphere z s), (2 * C₁ * C₂)⁻¹ * Real.log (r / s) - 1 ≤ greenKernel m ↑B x y := by
+  have hr : 0 < r := by linarith
+  have hsub : cellVertices ε η (ball z (3 * r / 4)) ⊆ (B : Set ℤ) := by
+    rw [hB]
+    exact cellVertices_ball_subset_interiorCellVertices η (by linarith) hδ hdiam
+  have hcl : cellVertices ε η (closedBall z s) ⊆ cellVertices ε η (ball z (3 * r / 4)) :=
+    fun k ⟨w, hw, hwk⟩ => ⟨w, hw, closedBall_subset_ball (by linarith) hwk⟩
+  let A := B.filter (fun k => k ∈ cellVertices ε η (closedBall z s))
+  have hA : (A : Set ℤ) = cellVertices ε η (closedBall z s) := by
+    ext k
+    rw [Finset.coe_filter]
+    exact ⟨fun hk => hk.2, fun hk => ⟨Finset.mem_coe.1 (hsub (hcl hk)), hk⟩⟩
+  have hAB : A ⊆ B := Finset.filter_subset _ _
+  have hxA : x ∈ A := by
+    rw [← Finset.mem_coe, hA, ← hx]
+    exact mem_cellVertices_closedBall_vertexPoint hε η x hs.le
+  have hmain := le_greenKernel_of_harnack_sphere_of_energy_le hsymm hlf hcons hη hadj hA hAB hBS hS x hxA hC₁ hC₂
+    hharn (fun a ha => h1 a (by rw [← hA]; exact Finset.mem_coe.2 ha))
+    (fun a ha => h0 a fun hk => ha (Finset.mem_coe.1 (hsub hk))) hE
+  intro y hy
+  have hrs : 4 ≤ r / s := by rw [le_div_iff₀ hs]; linarith
+  have hpos : 0 < 3 * r / 4 / s := div_pos (by linarith) hs
+  have hhalf : Real.log (r / s) / 2 ≤ Real.log (3 * r / 4 / s) := by
+    have h2 : Real.log (r / s) ≤ 2 * Real.log (3 * r / 4 / s) := by
+      rw [two_mul, ← Real.log_mul hpos.ne' hpos.ne']
+      apply Real.log_le_log (div_pos hr hs)
+      rw [show 3 * r / 4 / s = 3 / 4 * (r / s) by ring]
+      nlinarith [hrs]
+    linarith
+  have hCC : 0 < C₁ * C₂ := mul_pos (by linarith) hC₂
+  have hCi : 0 ≤ (C₁ * C₂)⁻¹ := inv_nonneg.2 hCC.le
+  calc (2 * C₁ * C₂)⁻¹ * Real.log (r / s) - 1 = (C₁ * C₂)⁻¹ * (Real.log (r / s) / 2) - 1 := by ring
+    _ ≤ (C₁ * C₂)⁻¹ * Real.log (3 * r / 4 / s) - 1 :=
+        sub_le_sub_right (mul_le_mul_of_nonneg_left hhalf hCi) 1
+    _ = Real.log (3 * r / 4 / s) / (C₁ * C₂) - 1 := by ring
+    _ ≤ greenKernel m ↑B x y := hmain y hy
+
+/-- **The bound (4.12) of Berestycki-Gwynne for one vertex and one radius** (proof of Lemma 4.4, all cases). Let
+`η(x) = z`, let `B = V^ε(B_r(z)) \ V^ε(∂B_r(z))` be the Green domain, `B ⊆ S` with `S` containing the neighbours of
+every vertex of `B`; let the cells meeting `B_{3r/4}(z)` have diameter at most `δ`, `3r/4 + δ < r`, and adjacent
+vertices one of which lies in `B` have positions within `δ' ≥ 0`. Let `0 < s₁`, `s₁ + δ' ≤ r/4`, and suppose that
+for each `s ∈ [s₁, r/4]` the Harnack bound (4.13) holds on `V^ε(∂B_s(z))` with constant `C₁ ≥ 1`, and some `h`
+equal to `1` on `V^ε(B̄_s(z))` and `0` off `V^ε(B_{3r/4}(z))` has `log(3r/(4s)) E(h) ≤ C₂`, `C₂ ≥ 1` (the bound
+(4.15)). If `log ε⁻¹ ≤ K log(r/(s₁ + δ'))` with `K ≥ 1` (in ibid. `s₁ = ε^β`, `r ≥ ε^ω`, `ω < β`), then for every
+`y ∈ S`, `(2 K C₁ C₂)⁻¹ log((r/|η(x) - η(y)|) ∧ ε⁻¹) - 1 ≤ g_B(x, y)`, with `ε⁻¹` in place of the minimum when
+`η(y) = η(x)`. For `|η(y) - η(x)| < s₁` this is the step (4.17); for `|η(y) - η(x)| > r/4` the left side is
+negative. -/
+theorem inv_mul_log_min_sub_one_le_greenKernel_interior (hsymm : ∀ a b, m a b = m b a)
+    (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {ε : ℝ} (hε : 0 < ε) {η : ℝ → ℂ}
+    (hη : Continuous η) (hadj : ∀ j k, m j k ≠ 0 → (cell ε η j ∩ cell ε η k).Nonempty) {z : ℂ} {x : ℤ}
+    (hx : vertexPoint ε η x = z) {r δ δ' s₁ : ℝ} (hδ : 3 * r / 4 + δ < r)
+    (hdiam : ∀ b ∈ cellVertices ε η (ball z (3 * r / 4)), ∀ w ∈ cell ε η b, ∀ w' ∈ cell ε η b, dist w w' ≤ δ)
+    {B S : Finset ℤ} (hB : (B : Set ℤ) = interiorCellVertices ε η (ball z r)) (hBS : B ⊆ S)
+    (hS : ∀ a ∈ B, nbrs hlf a ⊆ S)
+    (hadjp : ∀ a ∈ B, ∀ b, m a b ≠ 0 → ‖vertexPoint ε η a - vertexPoint ε η b‖ ≤ δ') (hδ' : 0 ≤ δ')
+    (hs₁ : 0 < s₁) (hs₁r : s₁ + δ' ≤ r / 4) {C₁ C₂ K : ℝ} (hC₁ : 1 ≤ C₁) (hC₂ : 1 ≤ C₂) (hK : 1 ≤ K)
+    (hgap : Real.log ε⁻¹ ≤ K * Real.log (r / (s₁ + δ')))
+    (hharn : ∀ s, s₁ ≤ s → s ≤ r / 4 → ∀ a ∈ cellVertices ε η (sphere z s),
+      ∀ a' ∈ cellVertices ε η (sphere z s), greenKernel m ↑B x a ≤ C₁ * greenKernel m ↑B x a')
+    (henergy : ∀ s, s₁ ≤ s → s ≤ r / 4 → ∃ h : ℤ → ℝ,
+      (∀ a ∈ cellVertices ε η (closedBall z s), h a = 1) ∧
+      (∀ a, a ∉ cellVertices ε η (ball z (3 * r / 4)) → h a = 0) ∧
+      Real.log (3 * r / 4 / s) * ((1 / 2) * ∑ a ∈ S, ∑ b ∈ S, (m a b : ℝ) * (h a - h b) ^ 2) ≤ C₂) :
+    ∀ y ∈ S, (2 * K * C₁ * C₂)⁻¹ * Real.log (if z = vertexPoint ε η y then ε⁻¹
+        else min (r / ‖z - vertexPoint ε η y‖) ε⁻¹) - 1 ≤ greenKernel m ↑B x y := by
+  have hr : 0 < r := by linarith
+  have hK0 : K ≠ 0 := by linarith
+  have hC₁0 : C₁ ≠ 0 := by linarith
+  have hC₂0 : C₂ ≠ 0 := by linarith
+  have hCC : 1 ≤ C₁ * C₂ := one_le_mul_of_one_le_of_one_le hC₁ hC₂
+  have hKCC : 1 ≤ K * C₁ * C₂ := one_le_mul_of_one_le_of_one_le (one_le_mul_of_one_le_of_one_le hK hC₁) hC₂
+  have hN : 0 < 2 * C₁ * C₂ := by linarith
+  have hM : 0 < 2 * K * C₁ * C₂ := by linarith
+  have hCi : 0 ≤ (2 * K * C₁ * C₂)⁻¹ := inv_nonneg.2 hM.le
+  have hinv : (2 * K * C₁ * C₂)⁻¹ ≤ (2 * C₁ * C₂)⁻¹ :=
+    inv_anti₀ hN (by nlinarith [mul_nonneg (sub_nonneg.2 hK) (sub_nonneg.2 hCC)])
+  have hball : cellVertices ε η (ball z (3 * r / 4)) ⊆ (B : Set ℤ) := by
+    rw [hB]
+    exact cellVertices_ball_subset_interiorCellVertices η (by linarith) hδ hdiam
+  have hsub : ∀ k ∈ S, ‖vertexPoint ε η k - z‖ < s₁ → k ∈ B := fun k _ hk =>
+    Finset.mem_coe.1 (hball ⟨vertexPoint ε η k, vertexPoint_mem_cell hε.le η k,
+      mem_ball.2 (by rw [dist_eq_norm]; linarith)⟩)
+  have hxS : x ∈ S := hBS (Finset.mem_coe.1 (hball ⟨vertexPoint ε η x, vertexPoint_mem_cell hε.le η x,
+    mem_ball.2 (by rw [hx, dist_self]; linarith)⟩))
+  have hx0 : ‖vertexPoint ε η x - z‖ < s₁ := by rw [hx, sub_self, norm_zero]; exact hs₁
+  have core : ∀ b, s₁ ≤ ‖vertexPoint ε η b - z‖ → ‖vertexPoint ε η b - z‖ ≤ r / 4 →
+      (2 * C₁ * C₂)⁻¹ * Real.log (r / ‖vertexPoint ε η b - z‖) - 1 ≤ greenKernel m ↑B x b := by
+    intro b hb1 hb2
+    obtain ⟨h, h1, h0, hE⟩ := henergy _ hb1 hb2
+    exact inv_two_mul_log_sub_one_le_greenKernel_interior hsymm hlf hcons hε.le hη hadj hδ hdiam hB hBS hS hx
+      (hs₁.trans_le hb1) hb2 hC₁ (by linarith) (hharn _ hb1 hb2) h1 h0 hE b
+      (mem_cellVertices_sphere_of_dist_eq hε.le η (dist_eq_norm _ _))
+  intro y hyS
+  have hsmall : ∀ X : ℝ, 0 < X → X ≤ ε⁻¹ → ‖vertexPoint ε η y - z‖ < s₁ →
+      (2 * K * C₁ * C₂)⁻¹ * Real.log X - 1 ≤ greenKernel m ↑B x y := by
+    intro X hX hXe hy
+    have hsh := inv_mul_log_sub_one_le_greenKernel_of_shell hsymm hlf hcons (p := vertexPoint ε η) hadjp hS
+      hs₁ hr hN hsub hxS hx0 (fun b _ hb1 hb2 => core b hb1 (by linarith)) y hyS hy
+    calc (2 * K * C₁ * C₂)⁻¹ * Real.log X - 1
+        ≤ (2 * K * C₁ * C₂)⁻¹ * (K * Real.log (r / (s₁ + δ'))) - 1 :=
+          sub_le_sub_right (mul_le_mul_of_nonneg_left ((Real.log_le_log hX hXe).trans hgap) hCi) 1
+      _ = (2 * C₁ * C₂)⁻¹ * Real.log (r / (s₁ + δ')) - 1 := by
+          congr 1
+          field_simp
+      _ ≤ greenKernel m ↑B x y := hsh
+  by_cases hxy : z = vertexPoint ε η y
+  · have hif : (if z = vertexPoint ε η y then ε⁻¹ else min (r / ‖z - vertexPoint ε η y‖) ε⁻¹) = ε⁻¹ := by
+      simp only [hxy, ↓reduceIte]
+    rw [hif]
+    exact hsmall _ (inv_pos.2 hε) le_rfl (by rw [← hxy, sub_self, norm_zero]; exact hs₁)
+  have hif : (if z = vertexPoint ε η y then ε⁻¹ else min (r / ‖z - vertexPoint ε η y‖) ε⁻¹) =
+      min (r / ‖z - vertexPoint ε η y‖) ε⁻¹ := by
+    simp only [hxy, ↓reduceIte]
+  rw [hif]
+  have hd : 0 < ‖z - vertexPoint ε η y‖ := norm_pos_iff.2 (sub_ne_zero.2 hxy)
+  have hdy : ‖vertexPoint ε η y - z‖ = ‖z - vertexPoint ε η y‖ := norm_sub_rev _ _
+  have hMin : 0 < min (r / ‖z - vertexPoint ε η y‖) ε⁻¹ := lt_min (div_pos hr hd) (inv_pos.2 hε)
+  have hlogmin := Real.log_le_log hMin (min_le_left (r / ‖z - vertexPoint ε η y‖) ε⁻¹)
+  rcases lt_or_ge ‖z - vertexPoint ε η y‖ s₁ with h1 | h1
+  · exact hsmall _ hMin (min_le_right _ _) (by rw [hdy]; exact h1)
+  rcases le_or_gt ‖z - vertexPoint ε η y‖ (r / 4) with h2 | h2
+  · have hc := core y (by rw [hdy]; exact h1) (by rw [hdy]; exact h2)
+    rw [hdy] at hc
+    have hlog0 : 0 ≤ Real.log (r / ‖z - vertexPoint ε η y‖) :=
+      Real.log_nonneg (by rw [le_div_iff₀ hd]; linarith)
+    calc (2 * K * C₁ * C₂)⁻¹ * Real.log (min (r / ‖z - vertexPoint ε η y‖) ε⁻¹) - 1
+        ≤ (2 * K * C₁ * C₂)⁻¹ * Real.log (r / ‖z - vertexPoint ε η y‖) - 1 :=
+          sub_le_sub_right (mul_le_mul_of_nonneg_left hlogmin hCi) 1
+      _ ≤ (2 * C₁ * C₂)⁻¹ * Real.log (r / ‖z - vertexPoint ε η y‖) - 1 :=
+          sub_le_sub_right (mul_le_mul_of_nonneg_right hinv hlog0) 1
+      _ ≤ greenKernel m ↑B x y := hc
+  · have hl2 : Real.log 2 < 1 := Real.log_two_lt_d9.trans (by norm_num)
+    have hl4 : Real.log 4 = 2 * Real.log 2 := by
+      rw [show (4 : ℝ) = 2 * 2 by norm_num, Real.log_mul two_ne_zero two_ne_zero]
+      ring
+    have hle4 : Real.log (r / ‖z - vertexPoint ε η y‖) ≤ Real.log 4 :=
+      Real.log_le_log (div_pos hr hd) (by rw [div_le_iff₀ hd]; linarith)
+    have hle : (2 * K * C₁ * C₂)⁻¹ * Real.log (min (r / ‖z - vertexPoint ε η y‖) ε⁻¹) ≤ 1 :=
+      calc (2 * K * C₁ * C₂)⁻¹ * Real.log (min (r / ‖z - vertexPoint ε η y‖) ε⁻¹)
+          ≤ (2 * K * C₁ * C₂)⁻¹ * (2 * K * C₁ * C₂) :=
+            mul_le_mul_of_nonneg_left (by linarith) hCi
+        _ = 1 := inv_mul_cancel₀ hM.ne'
+    linarith [greenKernel_nonneg_pole m (↑B) x y]
 
 end MatedCRT
