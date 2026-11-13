@@ -399,6 +399,16 @@ reference environments, from one one-sided mating-rigid set `G` (`hG : MatingRig
 `closed_1_6_lp_noSC_noSup_derivedInputs_envScaling_rigidity` (Derived/EnvironmentScalingRigidity.lean) are the
 `_envScaling` forms with `h12`, `h13`, `h15` replaced by the pair `(hGnull, hG)`.
 
+Eleventh pass (2026-11-13): the pair `(hGnull, hG)` is supplied for `G := rigiditySet matingTriplePoints`.
+`matingRigidLEOn_rigiditySet` proves `hG` with no input (the triple-point straddle lemma for the mating relation), and
+`measure_compl_rigiditySet_matingTriplePoints_eq_zero` proves `hGnull` from four almost-sure properties of the
+`γ`-correlated two-sided Brownian law: descent on both sides of each rational time (`hdesc`), Lévy's excursion-count
+formula at each rational anchor in both time directions (`hexc`), no common weak contour pair (`hNC`), and the
+triple-point size bound (`hZ3`: countable or of Hausdorff dimension `< 1/2`). The forms
+`closed_1_4_lp_noSC_noSup_derivedInputs_envScaling_rigidityInputs` and
+`closed_1_6_lp_noSC_noSup_derivedInputs_envScaling_rigidityInputs` (Derived/MatingRigidityAssembly.lean) are the
+`_envScaling_rigidity` forms with `(hGnull, hG)` replaced by `(hdesc, hexc, hNC, hZ3)`.
+
 Eleventh pass (2026-11-13): the lower half `hlow` of (1.8) (`F_ε(c₁ ε⁻¹) < 1/2`, Berestycki-Gwynne (1.8)) follows from
 `h12`, `h13` and Berestycki-Gwynne Lemma 6.9 in its printed form (`h632`: `ψ₀` superpolynomial and independent of the
 environment; inline hypothesis, no new Prop): `mεCdf_lower_of_lemma69` (Derived/CoreGffLowerOfLemma69.lean), through
