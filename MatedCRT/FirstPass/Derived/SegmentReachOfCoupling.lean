@@ -43,33 +43,35 @@ theorem reflTransGen_of_reachable_induce {m : ℤ → ℤ → ℕ} (hm : ∀ a b
   · exact h1
   · rwa [hm]
 
-/-- **Segment reachability for a fixed curve.** Let `η` be continuous, proper and onto, `m`
-symmetric, and assume that the cells meeting any compact preconnected set `K` are mutually
-reachable in the subgraph of `adjGraph m` induced by any vertex set containing them. Then for
-every `x ∈ V^ε(B_ρ(0)) \ V^ε(∂B_ρ(0))` there are `u` with `‖u‖ ≤ 1`, a length `ℓ` and a
-finite set `Y` such that, for every direction `θ`, `x` is hit by the segment
-`[u, u + ℓ e^{iθ}]` and some vertex of `V^ε(∂B_ρ(0))` is reached from `x` by a chain of
-edges whose vertices are hit by the segment and meet `B_ρ(0)`. -/
-theorem segmentReach_of_safeCover {ε ρ : ℝ} (hε : 0 < ε) (hρ : 0 < ρ) (hρ1 : ρ < 1)
+/-- **Segment reachability from a given point of a cell.** Let `η` be continuous, proper and
+onto, and assume that the cells meeting any compact preconnected set `K` are mutually reachable
+in the subgraph of `adjGraph m` induced by any vertex set containing them. Let `x` be a vertex and
+`u ∈ H^ε_x ∩ B_ρ(0)`. Then there is a finite set `Y` such that, for every direction `θ`, `x` is hit
+by the segment `[u, u + 2 e^{iθ}]`, and some vertex `c ∉ V^ε(B_ρ(0)) \ V^ε(∂B_ρ(0))` is reachable
+from `x` in the subgraph induced by the vertices hit by the segment whose cells meet `B_ρ(0)`. -/
+theorem segmentReach_of_safeCover_from {ε ρ : ℝ} (hε : 0 < ε) (hρ : 0 < ρ) (hρ1 : ρ < 1)
     {η : ℝ → ℂ} (hη : Continuous η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ))
-    (hsurj : Function.Surjective η)
-    {m : ℤ → ℤ → ℕ} (hm : ∀ a b, m a b = m b a)
+    (hsurj : Function.Surjective η) {m : ℤ → ℤ → ℕ}
     (hcover : ∀ K : Set ℂ, IsPreconnected K → IsCompact K → ∀ U : Set ℤ,
       ∀ (hsafe : ∀ j, (K ∩ cell ε η j).Nonempty → j ∈ U), ∀ j k : ℤ,
       ∀ (hj : (K ∩ cell ε η j).Nonempty) (hk : (K ∩ cell ε η k).Nonempty),
       ((adjGraph m).induce U).Reachable ⟨j, hsafe j hj⟩ ⟨k, hsafe k hk⟩)
-    {x : ℤ} (hx : x ∈ interiorCellVertices ε η (ball 0 ρ)) :
-    ∃ (u : ℂ) (ℓ : ℝ) (Y : Finset ℤ), ‖u‖ ≤ 1 ∧ ∀ θ : ℝ,
-      x ∈ LatticeProb.hitFinset Y (fun y => LatticeProb.segmentDirections u ℓ (cell ε η y)) θ ∧
-      ∃ b ∉ interiorCellVertices ε η (ball 0 ρ), Relation.ReflTransGen
-        (fun a c => (c ∈ LatticeProb.hitFinset Y
-            (fun y => LatticeProb.segmentDirections u ℓ (cell ε η y)) θ ∧
-          c ∈ cellVertices ε η (ball 0 ρ)) ∧ m a c ≠ 0) x b := by
-  have hxV : x ∈ cellVertices ε η (ball 0 ρ) := hx.1
-  obtain ⟨u, hux, hub⟩ := hxV
+    {x : ℤ} {u : ℂ} (hux : u ∈ cell ε η x) (hub : u ∈ ball (0 : ℂ) ρ) :
+    ∃ Y : Finset ℤ, ∀ θ : ℝ,
+      x ∈ LatticeProb.hitFinset Y (fun y => LatticeProb.segmentDirections u 2 (cell ε η y)) θ ∧
+      ∃ c ∉ interiorCellVertices ε η (ball 0 ρ),
+        ∃ (hxU : x ∈ {v | v ∈ LatticeProb.hitFinset Y
+            (fun y => LatticeProb.segmentDirections u 2 (cell ε η y)) θ ∧
+              v ∈ cellVertices ε η (ball 0 ρ)})
+          (hcU : c ∈ {v | v ∈ LatticeProb.hitFinset Y
+            (fun y => LatticeProb.segmentDirections u 2 (cell ε η y)) θ ∧
+              v ∈ cellVertices ε η (ball 0 ρ)}),
+          ((adjGraph m).induce {v | v ∈ LatticeProb.hitFinset Y
+            (fun y => LatticeProb.segmentDirections u 2 (cell ε η y)) θ ∧
+              v ∈ cellVertices ε η (ball 0 ρ)}).Reachable ⟨x, hxU⟩ ⟨c, hcU⟩ := by
   have hu : ‖u‖ < ρ := mem_ball_zero_iff.1 hub
   let Y : Finset ℤ := (S5c.cellVertices_ball_finite hη hp hε (0 : ℂ) 3).toFinset
-  refine ⟨u, 2, Y, hu.le.trans hρ1.le, fun θ => ?_⟩
+  refine ⟨Y, fun θ => ?_⟩
   obtain ⟨σ, hσ⟩ : ∃ σ : ℝ → ℂ, σ = fun t : ℝ => u + (t : ℂ) * exp (θ * I) := ⟨_, rfl⟩
   have hσapp : ∀ t : ℝ, σ t = u + (t : ℂ) * exp (θ * I) := fun t => by rw [hσ]
   have hσc : Continuous σ := by rw [hσ]; fun_prop
@@ -141,9 +143,36 @@ theorem segmentReach_of_safeCover {ε ρ : ℝ} (hε : 0 < ε) (hρ : 0 < ρ) (h
       σ τ, hwj, mem_ball_zero_iff.2 hlt⟩
   have hj : (σ '' Icc 0 s ∩ cell ε η x).Nonempty := ⟨u, ⟨0, ⟨le_rfl, hs.1⟩, hσ0⟩, hux⟩
   have hk : (σ '' Icc 0 s ∩ cell ε η c).Nonempty := ⟨σ s, ⟨s, ⟨hs.1, le_rfl⟩, rfl⟩, hqc⟩
-  have hreach := hcover (σ '' Icc 0 s) (isPreconnected_Icc.image σ hσc.continuousOn)
-    (isCompact_Icc.image hσc) U' hsafe x c hj hk
-  exact reflTransGen_of_reachable_induce hm hreach
+  exact ⟨_, _, hcover (σ '' Icc 0 s) (isPreconnected_Icc.image σ hσc.continuousOn)
+    (isCompact_Icc.image hσc) U' hsafe x c hj hk⟩
+
+/-- **Segment reachability for a fixed curve.** Let `η` be continuous, proper and onto, `m`
+symmetric, and assume that the cells meeting any compact preconnected set `K` are mutually
+reachable in the subgraph of `adjGraph m` induced by any vertex set containing them. Then for
+every `x ∈ V^ε(B_ρ(0)) \ V^ε(∂B_ρ(0))` there are `u` with `‖u‖ ≤ 1`, a length `ℓ` and a
+finite set `Y` such that, for every direction `θ`, `x` is hit by the segment
+`[u, u + ℓ e^{iθ}]` and some vertex of `V^ε(∂B_ρ(0))` is reached from `x` by a chain of
+edges whose vertices are hit by the segment and meet `B_ρ(0)`. -/
+theorem segmentReach_of_safeCover {ε ρ : ℝ} (hε : 0 < ε) (hρ : 0 < ρ) (hρ1 : ρ < 1)
+    {η : ℝ → ℂ} (hη : Continuous η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ))
+    (hsurj : Function.Surjective η)
+    {m : ℤ → ℤ → ℕ} (hm : ∀ a b, m a b = m b a)
+    (hcover : ∀ K : Set ℂ, IsPreconnected K → IsCompact K → ∀ U : Set ℤ,
+      ∀ (hsafe : ∀ j, (K ∩ cell ε η j).Nonempty → j ∈ U), ∀ j k : ℤ,
+      ∀ (hj : (K ∩ cell ε η j).Nonempty) (hk : (K ∩ cell ε η k).Nonempty),
+      ((adjGraph m).induce U).Reachable ⟨j, hsafe j hj⟩ ⟨k, hsafe k hk⟩)
+    {x : ℤ} (hx : x ∈ interiorCellVertices ε η (ball 0 ρ)) :
+    ∃ (u : ℂ) (ℓ : ℝ) (Y : Finset ℤ), ‖u‖ ≤ 1 ∧ ∀ θ : ℝ,
+      x ∈ LatticeProb.hitFinset Y (fun y => LatticeProb.segmentDirections u ℓ (cell ε η y)) θ ∧
+      ∃ b ∉ interiorCellVertices ε η (ball 0 ρ), Relation.ReflTransGen
+        (fun a c => (c ∈ LatticeProb.hitFinset Y
+            (fun y => LatticeProb.segmentDirections u ℓ (cell ε η y)) θ ∧
+          c ∈ cellVertices ε η (ball 0 ρ)) ∧ m a c ≠ 0) x b := by
+  obtain ⟨u, hux, hub⟩ := hx.1
+  obtain ⟨Y, hY⟩ := segmentReach_of_safeCover_from hε hρ hρ1 hη hp hsurj hcover hux hub
+  refine ⟨u, 2, Y, (mem_ball_zero_iff.1 hub).le.trans hρ1.le, fun θ => ?_⟩
+  obtain ⟨hxθ, c, hc, _, _, hreach⟩ := hY θ
+  exact ⟨hxθ, c, hc, reflTransGen_of_reachable_induce hm hreach⟩
 
 /-- Almost surely, for every mesh `ε > 0`, the segment reachability event holds with radius `1`. -/
 theorem MatedCRTEnv.IsValid.ae_mem_segmentReachEvent {𝒮 : SpaceFillingSLEModel} {γ : ℝ}
