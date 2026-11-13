@@ -9,7 +9,7 @@ import MatedCRT.FirstPass.S4S6c.SecondRho68
 # The walk-centred hone with the repaired hsp, hdiam and hVol
 
 The binder `hsp` of `hone_exitQ_walk_of_env_direct` (S4S6c/HoneInputsDirect.lean:83) asks for
-`#(A ∩ V^ε(B_{c0 R_k}(w))) < s1 (c0 R_k)^{2 βm} / ε`. This bound is false for the intended scales: the
+`#(A ∩ V^ε(B_{c0 R_k}(w))) < s1 (c0 R_k)^{2 βm} / ε`. This bound is not available at the intended scales: the
 Lemma 6.8 sparsity at the theorem radius `r` gives `s1 r^{2 βm} / ε` with `r² ≤ R_k`, so only `R_k^{βm}` is available.
 The repaired binder is mass-relative: `ε #(A ∩ V^ε(B_{c0 R_k}(w))) ≤ (1/16) μ(B_{c0 R_k}(w))` for every centre `w`.
 

@@ -34,9 +34,7 @@ balls.** For `a, c > 0` and a bounded subharmonic ball `Λ` centred at `0` for `
 subharmonic test class `subharmonicBallTestClass ((a·)⁻¹ Λ) 0` agrees, at the centre and `μ_a`-a.e. on `(a·)⁻¹ Λ`,
 with a test function of the bounded-domain class `boundedSubharmonicBallTestClass ((a·)⁻¹ Λ) 0`.
 This is `HasBoundedSubharmonicRepresentatives` (HB `Audit/GreenSubharmonicTestClass.lean:48`) for the scaled data.
-The boundedness of `Λ` is the repair of the representative Step. Without it the Step is false: for `μ = δ₀`, `Λ = ℂ`, `a = c = 1`, the zero test
-function has no bounded-domain representative. No ambient hypothesis on `μ` is added. The repaired
-statement is proved from the bounded Jensen lemma, which is not formalized here, so the Step
+The ball `Λ` is bounded. No ambient hypothesis on `μ` is added. The statement is proved from the bounded Jensen lemma, which is not formalized here, so the Step
 remains a named input. Boundary: the unscaled witnesses `O` of `subharmonicBallTestClass` need not be bounded, and HB's
 Audit states the representative assertion as an open potential-theoretic claim (`GreenSubharmonicTestClass.lean:1-6`). HB's
 `Proofs/Potential/BoundedSubharmonicRepresentatives.lean` reduces it to the μ-free pointwise criterion

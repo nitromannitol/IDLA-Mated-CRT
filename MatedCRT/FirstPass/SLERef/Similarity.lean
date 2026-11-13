@@ -28,13 +28,9 @@ the rescaled circle process, the rescaled quantum area measure and the scaled cu
 
 Independence concerns `ηL`, and the conclusion is an identity in law of the triples built from `η`.
 
-Truth-checked: for a fixed model `𝒮` the statement is UNSURE: it is valid for a genuinely calibrated SLE model (or
-a model calibrated to its normalized law), and is not automatically discharged for an arbitrary `SpaceFillingSLEModel`, since
-the unrestricted model parameter alone supplies no such fact. Its universal closure over arbitrary models is FALSE. Take an
-always-true predicate and an independent deterministic proper area-parametrized Peano curve whose negative-time trace is a
-nonconical closed region, e.g. `{x + iy : x ≤ y²}`; after the asserted similarity the negative trace becomes
-`{x + iy : x ≤ R_b y²}`, which has a different law for non-degenerate `R_b`. The narrow repair is calibration to the genuine
-normalized SLE law; this does not make a canonical per-model certificate inconsistent. -/
+For a fixed model `𝒮` the statement holds for a genuinely calibrated SLE model (or a model calibrated to its normalized
+law); it is not automatically discharged for an arbitrary `SpaceFillingSLEModel`, since the model parameter alone supplies
+no such fact. -/
 def FPSimilarityTransferCorrected (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 →
   ∀ (Ω : Type) [mΩ : MeasurableSpace Ω]

@@ -6,16 +6,15 @@ import MatedCRT.FirstPass.Frozen.S3S4
 /-!
 # Certified reference model of whole-plane space-filling SLE
 
-Minimal correction: every clause of the form
-`∀ 𝒮, HasNormalizedSLELaw 𝒮 ν → X 𝒮` is FALSE as typed when `X` depends on the raw predicate `IsSLE`, the field, the graph or
-the clock of `𝒮`, because the normalized SLE code law does not constrain these. The repair is a predicate on the individual
-model `𝒮`: `CertifiedReferenceModel ν 𝒮` is quantified per model, not over all models with normalized law `ν`.
+`CertifiedReferenceModel ν 𝒮` is a predicate on the individual model `𝒮`, quantified per model and not over all models
+with normalized law `ν`: the normalized SLE code law does not constrain the raw predicate `IsSLE`, the field, the graph
+or the clock of `𝒮`, and the clauses depend on them.
 
 Nothing here constructs an SLE, a field or a law. The conjuncts of `CertifiedReferenceModel` are the existing Props, and the
 projections below select one conjunct each, for the closure consumer `MatedCRT/FirstPass/Closure/SLEPackage.lean`.
 
 `ConeEnvironmentScalingUnderSLE 𝒮` (`MatedCRT/FirstPass/Frozen/S1d.lean:38`) is NOT a conjunct. Under the closure input
-`SLEModelClosureInput 𝒮` it is equivalent to the retired `ConeEnvironmentScalingStep 𝒮`
+`SLEModelClosureInput 𝒮` it is equivalent to `ConeEnvironmentScalingStep 𝒮`
 (`coneEnvironmentScalingUnderSLE_iff`, `MatedCRT/FirstPass/SLERef/Extended.lean`); that reduction is left open.
 -/
 

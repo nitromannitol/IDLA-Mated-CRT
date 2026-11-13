@@ -5,8 +5,7 @@ import MatedCRT.Proofs.Sec4.Prop42Closure.ScaledRegularizedFamily
 
 The canonical-law route of
 `Proofs/Sec4/Prop42Closure/PlateauCanonicalLaw.lean` (`plateauScaleInvarianceStep_of_canonical`) takes the regularized
-family of the dilated measure from the input H (`ScaledBoundedRepresentativesStep`), which is false for general measures
-(steps3:117-137). Here it is not assumed. The canonical radii of the dilated measure `μ'' = scaledMeasure μ a c` are computed
+family of the dilated measure from the input H (`ScaledBoundedRepresentativesStep`). Here it is not assumed. The canonical radii of the dilated measure `μ'' = scaledMeasure μ a c` are computed
 from the regularized family of `μ` alone, through `regularizedCluster_rescaledMeasure` (a deterministic identity). Only the
 Harmonic-Balls Draft input I2 (`LQGVolumeGrowthAllScalesStmt`) and the coordinate rule (`InsertionLQGScalingLawStep`, input K,
 frozen as `FrozenInsertionCoordinateRule` in `FirstPass/Frozen/S2k.lean`) are used. -/

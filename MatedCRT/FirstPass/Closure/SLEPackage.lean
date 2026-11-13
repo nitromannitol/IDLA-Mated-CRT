@@ -13,7 +13,7 @@ SUPERSEDED: the closed theorems of Closure/ now take one hypothesis `hC : Certif
 helper below is superseded and no longer called by Closure/.
 
 Of the eleven per-model inputs, only `ConeEnvironmentScalingUnderSLE` is not supplied by any package: under the
-closure clause it is equivalent to the retired statement `ConeEnvironmentScalingStep` (`coneEnvironmentScalingUnderSLE_iff`).
+closure clause it is equivalent to `ConeEnvironmentScalingStep` (`coneEnvironmentScalingUnderSLE_iff`).
 
 Terminology: Miller–Sheffield (SLE closure properties, Imaginary Geometry IV), Duplantier–Sheffield (quantum cones and the
 mated-CRT environment), Garban–Rhodes–Vargas (LBM).

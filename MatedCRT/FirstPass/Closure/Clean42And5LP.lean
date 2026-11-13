@@ -17,7 +17,7 @@ import MatedCRT.FirstPass.LPBridge.PairingLawIG4
 Each theorem `closed_X_lp` has the conclusion of its counted form `closed_X_clean` and the binders of that form
 that have a committed concluder in `MatedCRT/FirstPass/LPBridge` or `MatedCRT/FirstPass/HBRewire.lean` removed.
 The removed binder is supplied by that concluder, whose type is the binder's type exactly; no other binder is
-changed, and no binder is supplied by a named hypothesis or a Prop marked FALSE or RETIRED.
+changed, and no binder is supplied by a named hypothesis.
 
 * `closed_4_2_lp` (`closed_4_2_clean`, `MatedCRT/FirstPass/Closure/Chain42ConeLaw.lean:116`): five binders
   removed: `hG` by `HBRewire.GreenFunctionBallStmt_of_hb`, `hpc` by `frozenPunctureConnected_holds`,

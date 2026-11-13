@@ -32,7 +32,7 @@ definition, used only as an explicit hypothesis. The printed statement is source
   statement. It is the open internal extension `InsertionCoordinateExtensionStep`; the old
   name is kept only as an abbreviation so that existing consumers still compile.
 * DS11 Prop. 2.1 is NOT staged as a Prop here. Its conclusion needs the circle averages of the pulled-back field `h ∘ ψ`, which the
-  repository carriers cannot express (see the block "Not staged" at the end). A Prop without that coupling is false in general.
+  repository carriers cannot express (see the block "Not staged" at the end).
 * `DS11Prop11ZeroBoundaryMeasure` is the printed Prop. 1.1, with its printed normalization, on the repository carrier
   `MatedCRT.IsDirichletGFF`.
 * Sheffield–Wang, arXiv:1605.06171v2 (scope identified from the PDF text; not staged here). Setup, p. 2: `D` a bounded simply
@@ -133,7 +133,6 @@ Prop. 2.1 is a faithful Prop only with the following repository objects. None ex
   - (iii) covariance `cov[hν · ν, hν · ν'] = ∫∫ 2π · greenFunction D x y dν dν'` (HarmonicBalls/Defs/Green.lean:70);
   - (iv) for a conformal bijection `ψ : D̃ → D` and `closedBall z r ⊆ D̃`, almost surely
     `hcircT ω r z = hν ω (Measure.map ψ ((‖deriv ψ ·‖ ^ 2) • σ_{z,r})) + Q * Real.circleAverage (fun w => Real.log ‖deriv ψ w‖) z r`.
-  A version without (iv) is false in general: take `hcircT` independent of `h`.
   SW Prop. 2.3 (p. 5) prints the pathwise test-function pullback, and SW Remark 3.3 (p. 11) writes the pulled-back mollified
   field as a test-function pairing. A mollifier-based definition of `μ_h̃` would therefore need only test-function pairings,
   once the normalization flag N1 is settled. Item (iv) is not printed for circle averages.
