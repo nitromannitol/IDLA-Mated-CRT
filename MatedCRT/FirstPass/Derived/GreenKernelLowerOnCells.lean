@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.Derived.GreenKernelHarnackLowerBound
 import MatedCRT.FirstPass.Derived.HarnackRingGeometry
+import MatedCRT.FirstPass.S4S6c.HcGreen68
 
 /-!
 # The bound (4.16) of Berestycki-Gwynne on the cells of the mated-CRT map
@@ -27,6 +28,9 @@ Brownian motion*, Lemma 4.4, on the cell sets `V^ε(D) = {k | H^ε_k ∩ D ≠ �
 * `inv_mul_log_min_sub_one_le_greenKernel_interior`: the bound (4.12) for one vertex `x` and one radius `r`, in all
   cases `η(y) = η(x)`, `|η(y) - η(x)| < s₁`, `s₁ ≤ |η(y) - η(x)| ≤ r/4` and `|η(y) - η(x)| > r/4`, from the Harnack
   bound (4.13) and the resistance bound (4.15) for all `s ∈ [s₁, r/4]`.
+* `greenKernelLowerBound_event_of_harnack_energy`: the event of Lemma 2.16 (ibid. Lemma 4.4) for a fixed
+  environment, for all `a ∈ V^ε(B_{ρ - ε^{ω₀}})`, `r ∈ [ε^{ω₀}, dist(η(a), ∂B_ρ)]`, `b ∈ V^ε(B_{r/3}(η(a)))`, with
+  `C = 2 K C₁ C₂`, from small cells on `B_ρ`, the Harnack bound (4.13) and the resistance bound (4.15).
 -/
 
 namespace MatedCRT
@@ -346,5 +350,126 @@ theorem inv_mul_log_min_sub_one_le_greenKernel_interior (hsymm : ∀ a b, m a b 
             mul_le_mul_of_nonneg_left (by linarith) hCi
         _ = 1 := inv_mul_cancel₀ hM.ne'
     linarith [greenKernel_nonneg_pole m (↑B) x y]
+
+/-- A point `x` of the closed disk `|x| ≤ ρ` is within `ρ - |x|` of the circle `∂B_ρ` (the radial point `ρ x/|x|`,
+or `ρ` when `x = 0`). -/
+private theorem infDist_sphere_zero_le_sub_norm {x : ℂ} {ρ : ℝ} (hρ : 0 ≤ ρ) (hx : ‖x‖ ≤ ρ) :
+    infDist x (sphere 0 ρ) ≤ ρ - ‖x‖ := by
+  rcases eq_or_ne x 0 with rfl | h0
+  · have hw : ((ρ : ℝ) : ℂ) ∈ sphere (0 : ℂ) ρ := by
+      rw [mem_sphere_zero_iff_norm, Complex.norm_real, Real.norm_of_nonneg hρ]
+    calc infDist 0 (sphere 0 ρ) ≤ dist (0 : ℂ) (ρ : ℂ) := infDist_le_dist_of_mem hw
+      _ = ρ - ‖(0 : ℂ)‖ := by
+        rw [dist_comm, dist_zero_right, Complex.norm_real, Real.norm_of_nonneg hρ, norm_zero, sub_zero]
+  · have hxpos : 0 < ‖x‖ := norm_pos_iff.2 h0
+    have hw : ((ρ / ‖x‖ : ℝ) : ℂ) * x ∈ sphere (0 : ℂ) ρ := by
+      rw [mem_sphere_zero_iff_norm, norm_mul, Complex.norm_real,
+        Real.norm_of_nonneg (div_nonneg hρ hxpos.le), div_mul_cancel₀ _ hxpos.ne']
+    have hneg : 1 - ρ / ‖x‖ ≤ 0 := by
+      rw [sub_nonpos, le_div_iff₀ hxpos, one_mul]
+      exact hx
+    calc infDist x (sphere 0 ρ) ≤ dist x (((ρ / ‖x‖ : ℝ) : ℂ) * x) := infDist_le_dist_of_mem hw
+      _ = ρ - ‖x‖ := by
+        rw [dist_eq_norm, show x - ((ρ / ‖x‖ : ℝ) : ℂ) * x = ((1 - ρ / ‖x‖ : ℝ) : ℂ) * x by
+          push_cast; ring, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_nonpos hneg,
+          neg_sub, sub_mul, div_mul_cancel₀ _ hxpos.ne', one_mul]
+
+/-- **The event of Lemma 2.16 (Berestycki-Gwynne, Lemma 4.4) for a fixed environment.** Let `ε > 0`, let finitely
+many cells meet each disk, let the cells meeting `B_ρ` have diameter at most `δ` with `4δ < ε^{ω₀}`, and let adjacent
+vertices one of which has its cell meeting `B_ρ` have positions within `δ' ≥ 0`, with `ε^β + δ' ≤ ε^{ω₀}/4` and
+`log ε⁻¹ ≤ K log(ε^{ω₀}/(ε^β + δ'))`, `K ≥ 1`. Suppose that for every `a ∈ V^ε(B_{ρ - ε^{ω₀}})`, every
+`r ∈ [ε^{ω₀}, dist(η(a), ∂B_ρ)]` and every `s ∈ [ε^β, r/4]`, the Green kernel `g = g_{B_r(η(a))}(a, ·)` of the
+domain `V^ε(B_r(η(a))) \ V^ε(∂B_r(η(a)))` satisfies the Harnack bound (4.13) `g(y) ≤ C₁ g(y')` on
+`V^ε(∂B_s(η(a)))`, and that some `h` equal to `1` on `V^ε(B̄_s(η(a)))` and `0` off `V^ε(B_{3r/4}(η(a)))` has
+`log(3r/(4s)) E_S(h) ≤ C₂` for every finite `S` (the resistance bound (4.15)), `C₁, C₂ ≥ 1`. Then for all such
+`a`, `r` and every `b ∈ V^ε(B_{r/3}(η(a)))`, `g ≤ G` and `C⁻¹ log((r/|η(a) - η(b)|) ∧ ε⁻¹) - 1 ≤ g(b)` with
+`C = 2 K C₁ C₂` (and `ε⁻¹` in place of the minimum when `η(a) = η(b)`). -/
+theorem greenKernelLowerBound_event_of_harnack_energy (hsymm : ∀ a b, m a b = m b a)
+    (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {ε : ℝ} (hε : 0 < ε) {η : ℝ → ℂ}
+    (hη : Continuous η) (hadj : ∀ j k, m j k ≠ 0 → (cell ε η j ∩ cell ε η k).Nonempty)
+    (hfin : ∀ (z : ℂ) (r : ℝ), (cellVertices ε η (ball z r)).Finite) {ρ ω₀ β δ δ' C₁ C₂ K : ℝ}
+    (hdiam : ∀ b ∈ cellVertices ε η (ball 0 ρ), ∀ w ∈ cell ε η b, ∀ w' ∈ cell ε η b, dist w w' ≤ δ)
+    (hadjp : ∀ a ∈ cellVertices ε η (ball 0 ρ), ∀ b, m a b ≠ 0 →
+      ‖vertexPoint ε η a - vertexPoint ε η b‖ ≤ δ')
+    (hδ : 4 * δ < ε ^ ω₀) (hδ' : 0 ≤ δ') (hβ : ε ^ β + δ' ≤ ε ^ ω₀ / 4)
+    (hC₁ : 1 ≤ C₁) (hC₂ : 1 ≤ C₂) (hK : 1 ≤ K) (hgap : Real.log ε⁻¹ ≤ K * Real.log (ε ^ ω₀ / (ε ^ β + δ')))
+    (hharn : ∀ a ∈ cellVertices ε η (ball 0 (ρ - ε ^ ω₀)), ∀ r : ℝ, ε ^ ω₀ ≤ r →
+      r ≤ infDist (vertexPoint ε η a) (sphere 0 ρ) → ∀ s, ε ^ β ≤ s → s ≤ r / 4 →
+      ∀ y ∈ cellVertices ε η (sphere (vertexPoint ε η a) s),
+      ∀ y' ∈ cellVertices ε η (sphere (vertexPoint ε η a) s),
+        greenKernel m (interiorCellVertices ε η (ball (vertexPoint ε η a) r)) a y ≤
+          C₁ * greenKernel m (interiorCellVertices ε η (ball (vertexPoint ε η a) r)) a y')
+    (henergy : ∀ a ∈ cellVertices ε η (ball 0 (ρ - ε ^ ω₀)), ∀ r : ℝ, ε ^ ω₀ ≤ r →
+      r ≤ infDist (vertexPoint ε η a) (sphere 0 ρ) → ∀ s, ε ^ β ≤ s → s ≤ r / 4 → ∃ h : ℤ → ℝ,
+      (∀ k ∈ cellVertices ε η (closedBall (vertexPoint ε η a) s), h k = 1) ∧
+      (∀ k, k ∉ cellVertices ε η (ball (vertexPoint ε η a) (3 * r / 4)) → h k = 0) ∧
+      ∀ S : Finset ℤ, Real.log (3 * r / 4 / s) *
+        ((1 / 2) * ∑ k ∈ S, ∑ l ∈ S, (m k l : ℝ) * (h k - h l) ^ 2) ≤ C₂) :
+    ∀ a ∈ cellVertices ε η (ball 0 (ρ - ε ^ ω₀)), ∀ r : ℝ,
+      ε ^ ω₀ ≤ r → r ≤ infDist (vertexPoint ε η a) (sphere 0 ρ) →
+      ∀ b ∈ cellVertices ε η (ball (vertexPoint ε η a) (r / 3)),
+        greenKernel m (interiorCellVertices ε η (ball (vertexPoint ε η a) r)) a b ≤
+          greenFn m (interiorCellVertices ε η (ball (vertexPoint ε η a) r)) a b ∧
+        (2 * K * C₁ * C₂)⁻¹ * Real.log (if vertexPoint ε η a = vertexPoint ε η b then ε⁻¹
+            else min (r / ‖vertexPoint ε η a - vertexPoint ε η b‖) ε⁻¹) - 1 ≤
+          greenKernel m (interiorCellVertices ε η (ball (vertexPoint ε η a) r)) a b := by
+  intro a ha r hr1 hr2 b hb
+  have hεω : 0 < ε ^ ω₀ := Real.rpow_pos_of_pos hε ω₀
+  have hεβ : 0 < ε ^ β := Real.rpow_pos_of_pos hε β
+  have hr : 0 < r := hεω.trans_le hr1
+  have hmono : ∀ {D D' : Set ℂ}, D ⊆ D' → cellVertices ε η D ⊆ cellVertices ε η D' :=
+    fun hDD' _ ⟨w, hw, hwD⟩ => ⟨w, hw, hDD' hwD⟩
+  have haρ : a ∈ cellVertices ε η (ball 0 ρ) := hmono (ball_subset_ball (by linarith)) ha
+  have hpa : ‖vertexPoint ε η a‖ < ρ := by
+    obtain ⟨w, hw, hwb⟩ := ha
+    have h1 := hdiam a haρ _ (vertexPoint_mem_cell hε.le η a) w hw
+    have h2 := norm_sub_norm_le (vertexPoint ε η a) w
+    have h3 : ‖w‖ < ρ - ε ^ ω₀ := mem_ball_zero_iff.1 hwb
+    rw [dist_eq_norm] at h1
+    linarith
+  have hrρ : r ≤ ρ - ‖vertexPoint ε η a‖ :=
+    hr2.trans (infDist_sphere_zero_le_sub_norm ((norm_nonneg _).trans hpa.le) hpa.le)
+  have hballρ : ∀ t ≤ r, ball (vertexPoint ε η a) t ⊆ ball 0 ρ := fun t ht w hw => by
+    rw [mem_ball, dist_eq_norm] at hw
+    rw [mem_ball_zero_iff]
+    have := norm_sub_norm_le w (vertexPoint ε η a)
+    linarith
+  have hBfin : (interiorCellVertices ε η (ball (vertexPoint ε η a) r)).Finite :=
+    (hfin (vertexPoint ε η a) r).subset sdiff_subset
+  set B := hBfin.toFinset with hBdef
+  have hB : (B : Set ℤ) = interiorCellVertices ε η (ball (vertexPoint ε η a) r) := hBfin.coe_toFinset
+  set S := B ∪ B.biUnion (fun k => nbrs hlf k) with hSdef
+  have hBS : B ⊆ S := Finset.subset_union_left
+  have hS : ∀ k ∈ B, nbrs hlf k ⊆ S := fun k hk =>
+    (Finset.subset_biUnion_of_mem (fun k => nbrs hlf k) hk).trans Finset.subset_union_right
+  have hδr : 3 * r / 4 + δ < r := by linarith
+  have hdiam' : ∀ k ∈ cellVertices ε η (ball (vertexPoint ε η a) (3 * r / 4)), ∀ w ∈ cell ε η k,
+      ∀ w' ∈ cell ε η k, dist w w' ≤ δ := fun k hk => hdiam k (hmono (hballρ _ (by linarith)) hk)
+  have hadjp' : ∀ k ∈ B, ∀ l, m k l ≠ 0 → ‖vertexPoint ε η k - vertexPoint ε η l‖ ≤ δ' := by
+    intro k hk
+    have hk' : k ∈ interiorCellVertices ε η (ball (vertexPoint ε η a) r) := by
+      rw [← hB]
+      exact Finset.mem_coe.2 hk
+    exact hadjp k (hmono (hballρ r le_rfl) hk'.1)
+  have hs₁r : ε ^ β + δ' ≤ r / 4 := by linarith
+  have hgap' : Real.log ε⁻¹ ≤ K * Real.log (r / (ε ^ β + δ')) :=
+    hgap.trans (mul_le_mul_of_nonneg_left (Real.log_le_log (div_pos hεω (by linarith))
+      (div_le_div_of_nonneg_right hr1 (by linarith))) (by linarith))
+  have hharn' : ∀ s, ε ^ β ≤ s → s ≤ r / 4 → ∀ y ∈ cellVertices ε η (sphere (vertexPoint ε η a) s),
+      ∀ y' ∈ cellVertices ε η (sphere (vertexPoint ε η a) s),
+        greenKernel m ↑B a y ≤ C₁ * greenKernel m ↑B a y' := by
+    rw [hB]
+    exact hharn a ha r hr1 hr2
+  have key := inv_mul_log_min_sub_one_le_greenKernel_interior hsymm hlf hcons hε hη hadj (x := a) rfl hδr
+    hdiam' hB hBS hS hadjp' hδ' hεβ hs₁r hC₁ hC₂ hK hgap' hharn' fun s hs1 hs2 => by
+      obtain ⟨h, h1, h0, hE⟩ := henergy a ha r hr1 hr2 s hs1 hs2
+      exact ⟨h, h1, h0, hE S⟩
+  have hbB : b ∈ B := by
+    rw [← Finset.mem_coe, hB]
+    exact cellVertices_ball_subset_interiorCellVertices η (by linarith) hδr hdiam'
+      (hmono (ball_subset_ball (by linarith)) hb)
+  refine ⟨HcGreen68.greenKernel_le_greenFn _ _ _ _, ?_⟩
+  have := key b (hBS hbB)
+  rwa [hB] at this
 
 end MatedCRT
