@@ -2,7 +2,9 @@ import MatedCRT.External.QuantumCone
 import MatedCRT.External.SLE
 import MatedCRT.FirstPass.Closure.AuditCore
 import MatedCRT.FirstPass.Closure.AuditRewire14
-import MatedCRT.FirstPass.Closure.Lemma36Rate
+import MatedCRT.FirstPass.S3i.LensStep
+import MatedCRT.FirstPass.S3i.ExitAlmostSure
+import MatedCRT.FirstPass.S3i.QuenchedBoundsCorrected
 import MatedCRT.FirstPass.Closure.Prop51
 import MatedCRT.FirstPass.Closure.Prop51Canon
 import MatedCRT.FirstPass.Closure.Section3
@@ -23,7 +25,6 @@ import MatedCRT.FirstPass.S2g.HalfBallGate
 import MatedCRT.FirstPass.S2j
 import MatedCRT.FirstPass.S3S4
 import MatedCRT.FirstPass.S3S4b
-import MatedCRT.FirstPass.S3i.LensClosed
 import MatedCRT.FirstPass.S4d.FixedTimeFinal
 import MatedCRT.FirstPass.S4d.HorizonUnique
 import MatedCRT.FirstPass.S4d.Provider24
@@ -903,29 +904,11 @@ end MatedCRT
 namespace MatedCRT
 open MeasureTheory
 
-/-- Wrapper of `closed_3_6_rate` (`MatedCRT/FirstPass/Closure/Lemma36Rate.lean:30`): the Brownian exit binder(s) `hexc` are removed and discharged by `MatedCRT.frozenBrownianOutwardExcursionAtExit_holds` (unconditional). Same conclusion; the other binders are unchanged. -/
-theorem closed_3_6_rate_bm
-    {𝒮 : SpaceFillingSLEModel}
-    (ν : ℝ → Measure SLEPathCode)
-    (hC : CertifiedReferenceModel ν 𝒮)
-    (hBE : MatedCRT.FirstPass36.FrozenOneSidedBoundaryContinuity 𝒮)
-   :
-    MatedCRT.FirstPass36.CorrectedHarmonicSameWalkAnnealedStmt 𝒮 :=
-    closed_3_6_rate (𝒮 := 𝒮) (ν := ν) (hC := hC) (hexc := MatedCRT.frozenBrownianOutwardExcursionAtExit_holds) (hBE := hBE)
 end MatedCRT
 
 namespace MatedCRT
 open MeasureTheory
 
-/-- Wrapper of `closed_3_6_full` (`MatedCRT/FirstPass/Closure/Lemma36Rate.lean:39`): the Brownian exit binder(s) `hexc` are removed and discharged by `MatedCRT.frozenBrownianOutwardExcursionAtExit_holds` (unconditional). Same conclusion; the other binders are unchanged. -/
-theorem closed_3_6_full_bm
-    {𝒮 : SpaceFillingSLEModel}
-    (ν : ℝ → Measure SLEPathCode)
-    (hC : CertifiedReferenceModel ν 𝒮)
-    (hBE : MatedCRT.FirstPass36.FrozenOneSidedBoundaryContinuity 𝒮)
-   :
-    CorrectedHarmonicConvergenceStmt 𝒮 ∧ MatedCRT.FirstPass36.CorrectedHarmonicSameWalkAnnealedStmt 𝒮 :=
-    closed_3_6_full (𝒮 := 𝒮) (ν := ν) (hC := hC) (hexc := MatedCRT.frozenBrownianOutwardExcursionAtExit_holds) (hBE := hBE)
 end MatedCRT
 
 namespace MatedCRT.FirstPassClosure
@@ -1018,39 +1001,6 @@ end MatedCRT
 
 namespace MatedCRT
 
-/-- Wrapper of `firstPassMain_1_6` (`MatedCRT/FirstPass/Main.lean:74`): the Brownian exit binder(s) `hexc` are removed and discharged by `MatedCRT.frozenBrownianOutwardExcursionAtExit_holds` (unconditional). Same conclusion; the other binders are unchanged. -/
-theorem firstPassMain_1_6_bm
-    (𝒮 : SpaceFillingSLEModel)
-    (hscale : QuantumConeScalingInput)
-    (hm : MepsScalingInput 𝒮)
-    (hdeg : DegreeBoundInput 𝒮)
-    (h22 : LQGMeasurePropertiesStmt)
-    (h27 : VolumeGrowthStmt)
-    (h28 : CellSizeEstimateStmt 𝒮)
-    (h29 : CountingMeasureConvergenceStmt 𝒮)
-    (h210 : DegreeMeasureConvergenceStmt 𝒮)
-    (h214 : GreenKernelUpperBoundStmt 𝒮)
-    (h216 : GreenKernelLowerBoundStmt 𝒮)
-    (h218 : ExitTimeUpperBoundStmt 𝒮)
-    (hH : FrozenDiscreteHolderContinuityCorrected 𝒮)
-    (hEnv : FrozenConeEnvironmentScaling 𝒮)
-    (h0 : FPWholePlaneLQGExistence)
-    (h2 : FPWholePlaneLQGCoordinateChange)
-    (hV : FPWholePlaneUpperVolumeTail)
-    (hR : FPConeMeanZeroRestriction)
-    (h24 : ConeHarmonicBallsUpToFixedTimeStmt)
-    (h25 : ConeScaleInvarianceUpToFixedTimeStmt)
-    (h211 : RandomWalkToLBMStmt 𝒮)
-    (hrevuz : FrozenLBMGreenOccupation 𝒮)
-    (hdet : FrozenTruncatedDetFixedTime 𝒮)
-    (h35 : DiscreteDirichletProblemStmt 𝒮)
-    (h42 : DivSandpileLowerBoundStmt 𝒮)
-    (h51 : IDLALowerBoundStmt 𝒮)
-    (h61 : IDLAUpperBoundStmt 𝒮)
-    (hT : ScaledClusterExitTimeStep)
-   :
-    ConvergenceOfDivSandpileStmt 𝒮 :=
-    firstPassMain_1_6 (𝒮 := 𝒮) (hscale := hscale) (hm := hm) (hdeg := hdeg) (h22 := h22) (h27 := h27) (h28 := h28) (h29 := h29) (h210 := h210) (h214 := h214) (h216 := h216) (h218 := h218) (hH := hH) (hEnv := hEnv) (h0 := h0) (h2 := h2) (hV := hV) (hR := hR) (h24 := h24) (h25 := h25) (h211 := h211) (hrevuz := hrevuz) (hdet := hdet) (hexc := MatedCRT.frozenBrownianOutwardExcursionAtExit_holds) (h35 := h35) (h42 := h42) (h51 := h51) (h61 := h61) (hT := hT)
 end MatedCRT
 
 #print axioms MatedCRT.closed_3_3_hdetSwap_certCore_bm
@@ -1069,8 +1019,5 @@ end MatedCRT
 #print axioms MatedCRT.closed_4_8_corrected_certCore_bm
 #print axioms MatedCRT.closed_1_4_p3_bm
 #print axioms MatedCRT.closed_1_6_p3_bm
-#print axioms MatedCRT.closed_3_6_rate_bm
-#print axioms MatedCRT.closed_3_6_full_bm
 #print axioms MatedCRT.FirstPassClosure.closed_5_1_canon_noCell_bm
 #print axioms MatedCRT.firstPassMain_1_4_bm
-#print axioms MatedCRT.firstPassMain_1_6_bm

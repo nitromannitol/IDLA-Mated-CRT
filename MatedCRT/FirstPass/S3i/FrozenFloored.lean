@@ -3,8 +3,7 @@ import MatedCRT.FirstPass.S3i.Frozen
 /-!
 # The floored one-sided boundary continuity estimate (BE), a frozen cited input
 
-`FrozenOneSidedBoundaryContinuity` (S3i/Frozen.lean:44) is false as
-typed (see docs/campaign/FROZEN-PROVENANCE.md), since its boundary distance `dist(η x, ∂D)` has no floor at the cell scale. This module states the floored form
+The boundary distance `dist(η x, ∂D)` of the estimate is floored at the cell scale. This module states the floored form
 `FrozenOneSidedBoundaryContinuityFloored`: the estimate is restricted to the interior cell vertices, and the distance is
 replaced by `max (dist (η x, ∂D)) (ε ^ β)` for an exponent `β` with `0 < β < 1`, placed as in correction [C6] of
 Lemma 3.2 (`DiscreteHolderContinuityStmt`, Draft/Section3.lean:67; docs/campaign/CORRECTIONS.md).
@@ -23,9 +22,8 @@ namespace FirstPass36
 open MeasureTheory Filter Topology Set Metric HarmonicBalls
 open scoped ENNReal NNReal
 
-/-- **(BE-floored)**, the floored one-sided boundary continuity estimate of discrete harmonic functions. It replaces
-`FrozenOneSidedBoundaryContinuity` (S3i/Frozen.lean:44), which is false as typed (see docs/campaign/FROZEN-PROVENANCE.md). Two changes, both in the
-statement of Frozen.lean:44–55:
+/-- **(BE-floored)**, the floored one-sided boundary continuity estimate of discrete harmonic functions. Two restrictions of the
+estimate as printed in GMS (3.31):
 the vertex `x` ranges over the interior cell vertices `interiorCellVertices ε (S.η ω) D`, and the distance
 `infDist (vertexPoint ε (S.η ω) x) (frontier D)` is replaced by its floor `max (infDist …) (ε ^ β)`.
 The exponents and the constant `κ, ν, A, b, β` are chosen after `S.IsValid 𝒮 γ`, per valid environment, as in the

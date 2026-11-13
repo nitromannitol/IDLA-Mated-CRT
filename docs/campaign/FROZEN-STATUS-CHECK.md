@@ -101,5 +101,4 @@ Scope: 78 Props in `Frozen/` and `External/`, plus two provenance rows (81, 82) 
 | 78 | SLEIndepMonoInput | External/SLE.lean:43 | none | none | MATCH |
 | 79 | MepsScalingInput | External/SLE.lean:50 | none | none | MATCH |
 | 80 | DegreeBoundInput | External/SLE.lean:57 | none | none | MATCH |
-| 81 | FrozenOneSidedBoundaryContinuity | FirstPass/S3i/Frozen.lean:44 (outside Frozen/) | FALSE | FALSE | MATCH |
 | 82 | FrozenOneSidedBoundaryContinuityFloored | FirstPass/S3i/FrozenFloored.lean:34 (outside Frozen/) | PENDING TRUTH CHECK | none | MATCH |

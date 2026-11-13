@@ -2,29 +2,17 @@ import MatedCRT.FirstPass.S5qe
 import MatedCRT.FirstPass.Closure.Lemma36RateFloored
 
 /-!
-# Floored consumers of the one-sided boundary estimate
+# Floored forms of the corrected Lemma 3.6
 
-`FrozenOneSidedBoundaryContinuity` (S3i/Frozen.lean:44)
-is FALSE as typed, since its boundary distance has no floor (see docs/campaign/FROZEN-PROVENANCE.md). Its floored form
-`FrozenOneSidedBoundaryContinuityFloored` (S3i/FrozenFloored.lean) is PENDING TRUTH CHECK (see docs/campaign/FROZEN-PROVENANCE.md).
+The declarations below state the corrected Lemma 3.6 under the floored boundary estimate
+`hBEFl : FrozenOneSidedBoundaryContinuityFloored 𝒮` (S3i/FrozenFloored.lean) and the named hypothesis
+`hLensFl : FrozenOneSidedBoundaryContinuityFloored 𝒮 → QuenchedLensStep 𝒮`, the floored quenched lens step. `hLensFl` is
+NOT a paper result (its truth and the uniform floor exponent are PENDING TRUTH CHECK; see docs/campaign/FROZEN-PROVENANCE.md,
+row 82). The quenched bounds `QuenchedBoundsOnGoodStmt` are not a binder here, because `hLensFl` takes the whole
+quenched lens step as one input.
 
-The floored consumers below are the original declarations with the binder `hBE : FrozenOneSidedBoundaryContinuity 𝒮`
-replaced by `hBEFl : FrozenOneSidedBoundaryContinuityFloored 𝒮`, and with the named hypothesis
-`hLensFl : FrozenOneSidedBoundaryContinuityFloored 𝒮 → QuenchedLensStep 𝒮` added. `hLensFl` is the floored quenched
-lens step. It is NOT a paper result (its truth and the uniform floor exponent are PENDING TRUTH CHECK; see docs/campaign/FROZEN-PROVENANCE.md, row 82). The lemma `Lemma 7`
-binder `hQB : QuenchedBoundsOnGoodStmt` of the original chain is not a binder here, because `hLensFl` takes the whole
-quenched lens step as one input. Conclusions are unchanged.
-
-Consumers not floored here, because the same conclusion cannot be kept:
-* `fp36_good_core` (S3i/GoodEvent.lean:223) and `commonGood_fp36` (S3i/GoodEvent.lean:336). Their conclusion
-  contains `FP36GoodEnv` (S3i/LensDefs.lean:70), whose last clause is the unfloored per-`ω` event
-  `FP36OneSidedBEAt` (S3i/LensDefs.lean:54, :90). The floor `max (infDist ..) (ε ^ β)` gives no bound for interior
-  vertices with `infDist < ε ^ β`, so the unfloored clause does not follow from the floored Prop.
-* `quenchedLensStep_of_BE` (S3i/LensStep.lean:42). It is built from `commonGood_fp36`, so its floored analogue is
-  `hLensFl` itself.
-
-Also not floored here: `lensProb_le_of_BE_fp36` (S3i/LensBE.lean:24) and its users. They take the per-`ω` event
-`FP36OneSidedBEAt`, not the Prop `FrozenOneSidedBoundaryContinuity`.
+The good event `FP36GoodEnv` (S3i/LensDefs.lean:70) and `lensProb_le_of_BE_fp36` (S3i/LensBE.lean:24) use the per-`ω`
+event `FP36OneSidedBEAt` (S3i/LensDefs.lean:54, :90); the floored good event is in S3i/LensFlooredGood.lean.
 -/
 
 open MeasureTheory
@@ -34,7 +22,7 @@ namespace MatedCRT.FirstPass36
 open Filter Topology Set Metric
 open scoped ENNReal NNReal
 
-/-- Corrected Lemma 3.6, annealed same-walk clause, floored form of `firstPass_3_6_annealed` (S3i/Proof.lean:262).
+/-- Corrected Lemma 3.6, annealed same-walk clause, under the floored boundary estimate.
 The body is `annealed_3_6_of_quenchedLensStep` (Closure/Lemma36RateFloored.lean) applied to `hLensFl hBEFl`. -/
 theorem firstPass_3_6_annealed_floored {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkToLBMStmt 𝒮)
     (h28 : CellSizeEstimateStmt 𝒮) (hm : MepsScalingInput 𝒮) (hexc : FrozenBrownianOutwardExcursionAtExit)
@@ -43,7 +31,7 @@ theorem firstPass_3_6_annealed_floored {𝒮 : SpaceFillingSLEModel} (h211 : Ran
     CorrectedHarmonicConvergenceStmt 𝒮 ∧ CorrectedHarmonicSameWalkAnnealedStmt 𝒮 :=
   annealed_3_6_of_quenchedLensStep h211 h28 hm hexc h32 (hLensFl hBEFl)
 
-/-- Floored form of `firstPass_3_6_annealed_closed` (S3i/LensStep.lean:60). -/
+/-- Corrected Lemma 3.6, annealed clause, floored form. -/
 theorem firstPass_3_6_annealed_closed_floored {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkToLBMStmt 𝒮)
     (h28 : CellSizeEstimateStmt 𝒮) (hm : MepsScalingInput 𝒮) (hexc : FrozenBrownianOutwardExcursionAtExit)
     (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) (hBEFl : FrozenOneSidedBoundaryContinuityFloored 𝒮)
@@ -51,7 +39,7 @@ theorem firstPass_3_6_annealed_closed_floored {𝒮 : SpaceFillingSLEModel} (h21
     CorrectedHarmonicConvergenceStmt 𝒮 ∧ CorrectedHarmonicSameWalkAnnealedStmt 𝒮 :=
   firstPass_3_6_annealed_floored h211 h28 hm hexc h32 hBEFl hLensFl
 
-/-- Corrected Lemma 3.6 (both clauses), floored form of `firstPass_3_6_closed` (S3i/LensClosed.lean:31). Same conclusion as `firstPass_3_6_closed`. -/
+/-- Corrected Lemma 3.6 (both clauses), floored form. -/
 theorem firstPass_3_6_closed_floored {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkToLBMStmt 𝒮)
     (h28 : CellSizeEstimateStmt 𝒮) (hm : MepsScalingInput 𝒮) (hexc : FrozenBrownianOutwardExcursionAtExit)
     (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) (hBEFl : FrozenOneSidedBoundaryContinuityFloored 𝒮)
@@ -63,7 +51,7 @@ end MatedCRT.FirstPass36
 
 namespace MatedCRT.FirstPassClosure
 
-/-- Floored form of `closed_3_6_annealed_core` (FirstPass/S5qe.lean:121), the core form of corrected Lemma 3.6 with the
+/-- Floored core form of corrected Lemma 3.6, with the
 certified reference model core `hC`. Same conclusion; `hBE` is replaced by `hBEFl` and `hLensFl` is added. -/
 theorem closed_3_6_annealed_core_floored {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
     (hC : CertifiedReferenceModelCore ν 𝒮) (hexc : FrozenBrownianOutwardExcursionAtExit)

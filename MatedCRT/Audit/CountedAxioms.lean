@@ -39,7 +39,9 @@ import MatedCRT.FirstPass.S2i.GlobalFactor
 import MatedCRT.FirstPass.S3S4
 import MatedCRT.FirstPass.S3c
 import MatedCRT.FirstPass.S3c.CountableFamilies
-import MatedCRT.FirstPass.S3i.LensClosed
+import MatedCRT.FirstPass.S3i.LensStep
+import MatedCRT.FirstPass.S3i.ExitAlmostSure
+import MatedCRT.FirstPass.S3i.QuenchedBoundsCorrected
 import MatedCRT.FirstPass.S4d
 import MatedCRT.FirstPass.S5S6S7
 import MatedCRT.FirstPass.S6p
@@ -72,7 +74,6 @@ import MatedCRT.Proofs.SecA.Statements
 #print axioms MatedCRT.closed_3_3_ownBinders
 #print axioms MatedCRT.closed_3_4_ownBinders
 #print axioms MatedCRT.closed_3_5_lp
-#print axioms MatedCRT.closed_3_6_lp
 #print axioms MatedCRT.closed_3_6_lp_uniform
 #print axioms MatedCRT.closed_3_7_lp
 #print axioms MatedCRT.closed_4_1_lp
@@ -151,8 +152,6 @@ import MatedCRT.Proofs.SecA.Statements
 #print axioms MatedCRT.firstPass_2_6_ownBinders
 #print axioms MatedCRT.S3c.firstPass_3_1_countable
 #print axioms MatedCRT.firstPass_3_1_ownBinders
-#print axioms MatedCRT.FirstPass36.firstPass_3_6_closed
-#print axioms MatedCRT.firstPass_3_6_ownBinders
 #print axioms MatedCRT.firstPass_3_7_ownBinders
 #print axioms MatedCRT.firstPass_4_1
 #print axioms MatedCRT.firstPass_4_1_coneLaw_h35c

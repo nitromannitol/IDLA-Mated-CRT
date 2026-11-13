@@ -221,7 +221,7 @@ theorem quenchedBoundsOnGood_fp36_of_exit
 
 /-! ## The consumer `QuenchedBoundsOnGoodStmt` (`S3i/LensStep.lean`) from the exit input -/
 
-/-- `QuenchedBoundsOnGoodStmt` (the input `hQB` of `firstPass_3_6_annealed_closed`), proved from the almost-sure
+/-- `QuenchedBoundsOnGoodStmt`, proved from the almost-sure
 exit input `hexit` alone. -/
 theorem quenchedBoundsOnGoodStmt_of_exit
     (hexit : ∀ {m : ℤ → ℤ → ℕ} {A' : Set ℤ}, FiniteExitData m A' →

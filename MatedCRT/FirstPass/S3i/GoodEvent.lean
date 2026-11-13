@@ -150,7 +150,7 @@ theorem polyHighProb_const_of_ae {Ω : Type*} [MeasurableSpace Ω] {P : Measure 
   have h0 : P Gᶜ = 0 := ae_iff.1 hG
   simp [h0]
 
-/-- The gamma-only exponent `b_γ = 1/(2+γ)^2` of the verdict (not the `b` returned by `FrozenOneSidedBoundaryContinuity`). -/
+/-- The gamma-only exponent `b_γ = 1/(2+γ)^2` of the verdict. -/
 theorem exponent_b_facts {γ : ℝ} (hγ : 0 < γ) :
     0 < 1 / (2 + γ) ^ 2 ∧ 1 / (2 + γ) ^ 2 < 1 ∧ 2 / (2 + γ) ^ 2 - 1 / (2 + γ) ^ 2 = 1 / (2 + γ) ^ 2 := by
   have h4 : (1 : ℝ) < (2 + γ) ^ 2 := by nlinarith
@@ -164,8 +164,7 @@ theorem scale_facts {ρ : ℝ} (hρ1 : ρ < 1) :
       (1 + (2 * ρ + 1) / 3) / 2 = (ρ + 2) / 3 := by
   refine ⟨by linarith, by linarith, by linarith, by ring⟩
 
-
-/-! ## Part B: Lemma 3, `commonGood_fp36` (plan section 3) -/
+/-! ## Part B: auxiliary estimates (plan section 3) -/
 
 /-- Smallness of a power: `ε^b < t` for all small `ε > 0`. -/
 theorem rpow_lt_of_small {b t : ℝ} (hb : 0 < b) (ht : 0 < t) :
@@ -217,155 +216,6 @@ theorem finiteExitData_of_finite {m : ℤ → ℤ → ℕ} (hsucc : ∀ k : ℤ,
   unfold FiniteExitData
   exact ⟨hA, fun a _ => mdeg_pos_of_edge hloc (hsucc a), fun a ha => exists_vPath_to_boundary hsucc hA ha⟩
 
-/-- **Lemma 3 core (plan section 3), at fixed `γ`, `b`, `ρ`, `ρ₀`, `ρ₁`.** The good event is the intersection of the
-cell-size event (`CellSizeEstimateStmt` at `ζ = b`, radius `ρ₁`), the one-sided boundary event (`FrozenOneSidedBoundaryContinuity`
-at radius `ρ₁`), the area-parametrization event and the regular-map event. -/
-theorem fp36_good_core {𝒮 : SpaceFillingSLEModel} (h28 : CellSizeEstimateStmt 𝒮)
-    (hm : MepsScalingInput 𝒮) (hBE : FrozenOneSidedBoundaryContinuity 𝒮)
-    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {b ρ ρ₀ ρ₁ : ℝ}
-    (hb : 0 < b) (hb1 : b < 1) (hbeq : 2 / (2 + γ) ^ 2 - b = b)
-    (hρ0 : 0 < ρ) (hρρ₀ : ρ < ρ₀) (hρ₀ρ₁ : ρ₀ < ρ₁) (hρ₁1 : ρ₁ < 1) (hmid : (1 + ρ₀) / 2 = ρ₁)
-    {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ)
-    (r : ℝ) (z y : ℂ) (hr : 0 < r) (hball : ball z r ⊆ ball 0 ρ) (hy : y ∈ ball z r) :
-    ∃ ν A κ C₁ ε₀ : ℝ, 0 < ν ∧ 0 < A ∧ 0 < κ ∧ 0 ≤ C₁ ∧ 0 < ε₀ ∧
-    ∃ G : ℝ → Set Ω, ∀ ε : ℝ, 0 < ε → ε < ε₀ →
-      0 < S.mε ε ∧ 8 * ε ^ b < r ∧ 64 * ε ^ b ≤ ε ^ (b / 2) ∧
-      closure (ball z (r + 4 * ε ^ b)) ⊆ ball 0 ρ₀ ∧
-      S.P (G ε)ᶜ ≤ ENNReal.ofReal (C₁ * ε ^ κ) ∧
-      ∀ ω ∈ G ε, FP36GoodEnv S ρ₀ ρ₁ b ν A r z y ε ω := by
-  have hρ₀0 : 0 < ρ₀ := by linarith
-  have hρ₁0 : 0 < ρ₁ := by linarith
-  have hρ₀1 : ρ₀ < 1 := by linarith
-  obtain ⟨-, ν, A, -, -, hν, hA, -, hBEP⟩ := hBE γ hγ0 hγ2 ρ₁ hρ₁0 hρ₁1 Ω S hS
-  let Ecell : ℝ → Set Ω := fun ε => {ω | ∀ k : ℤ, (cell ε (S.η ω) k ∩ ball 0 ρ₁).Nonempty →
-      ε ^ (2 / (2 - γ) ^ 2 + b) ≤ diam (cell ε (S.η ω) k) ∧
-        diam (cell ε (S.η ω) k) ≤ ε ^ (2 / (2 + γ) ^ 2 - b)}
-  let Ebe : ℝ → Set Ω := fun ε => {ω | FP36OneSidedBEAt (S.mult ε ω) ε (S.η ω) ρ₁ ν A}
-  let Area : Set Ω := {ω | IsAreaParametrized (S.μ ω) (S.η ω)}
-  let Reg : Set Ω := {ω | ∀ ε : ℝ, 0 < ε → IsRegularMatedMap (S.mult ε ω) ε (S.η ω)}
-  let G : ℝ → Set Ω := fun ε => (Ecell ε ∩ Ebe ε) ∩ (Area ∩ Reg)
-  have hcellP : PolyHighProb S.P Ecell := h28 γ hγ0 hγ2 b ρ₁ hb hb1 hρ₁0 hρ₁1 Ω S hS
-  have hbeP : PolyHighProb S.P Ebe := hBEP
-  have harea : ∀ᵐ ω ∂S.P, ω ∈ Area := hS.isAreaParametrized
-  have hreg : ∀ᵐ ω ∂S.P, ω ∈ Reg := ae_isRegularMatedMap (adjacentCellsMeetAeStep 𝒮) hγ0 hγ2 hS
-  have hgood : PolyHighProb S.P G :=
-    polyHighProb_inter (polyHighProb_inter hcellP hbeP)
-      (polyHighProb_inter (polyHighProb_const_of_ae harea) (polyHighProb_const_of_ae hreg))
-  obtain ⟨κ, hκ, C, r₀, hr₀, hPb⟩ := hgood
-  obtain ⟨Cm, hCm, hmev⟩ := hm γ hγ0 hγ2
-  obtain ⟨εm, hεm, hmS⟩ := hmev Ω S hS
-  obtain ⟨δ1, hδ1, h1⟩ := rpow_lt_of_small hb (div_pos hr (by norm_num : (0 : ℝ) < 8))
-  obtain ⟨δ2, hδ2, h2⟩ := rpow_lt_of_small (half_pos hb) (by norm_num : (0 : ℝ) < 1 / 64)
-  have hd0 : 0 < r - dist y z := by
-    rw [mem_ball] at hy
-    linarith
-  obtain ⟨δ3, hδ3, h3⟩ := rpow_lt_of_small hb hd0
-  obtain ⟨δ4, hδ4, h4⟩ := rpow_lt_of_small hb (by linarith : (0 : ℝ) < (ρ₀ - ρ) / 4)
-  have hnorm : ‖z‖ + r ≤ ρ := norm_add_le_of_ball_subset hr hball
-  have hε₀ : 0 < min r₀ (min εm (min δ1 (min δ2 (min δ3 δ4)))) :=
-    lt_min hr₀ (lt_min hεm (lt_min hδ1 (lt_min hδ2 (lt_min hδ3 hδ4))))
-  refine ⟨ν, A, κ, max C 0, min r₀ (min εm (min δ1 (min δ2 (min δ3 δ4)))), hν, hA, hκ,
-    le_max_right C 0, hε₀, G, ?_⟩
-  intro ε hε hεε₀
-  obtain ⟨hεr₀, hεrest⟩ := lt_min_iff.1 hεε₀
-  obtain ⟨hεm', hεrest⟩ := lt_min_iff.1 hεrest
-  obtain ⟨hε1, hεrest⟩ := lt_min_iff.1 hεrest
-  obtain ⟨hε2, hεrest⟩ := lt_min_iff.1 hεrest
-  obtain ⟨hε3, hε4⟩ := lt_min_iff.1 hεrest
-  have hmpos : 0 < S.mε ε :=
-    lt_of_lt_of_le (mul_pos (inv_pos.2 (by linarith)) (inv_pos.2 hε)) ((hmS ε hε hεm').1)
-  have hδ8 : 8 * ε ^ b < r := by linarith [h1 ε hε hε1]
-  have hsb : ε ^ b = ε ^ (b / 2) * ε ^ (b / 2) := by
-    rw [← Real.rpow_add hε]
-    congr 1
-    ring
-  have hs64 : 64 * ε ^ b ≤ ε ^ (b / 2) := by
-    have hsn : 0 ≤ ε ^ (b / 2) := Real.rpow_nonneg hε.le _
-    have hs1 : ε ^ (b / 2) < 1 / 64 := h2 ε hε hε2
-    calc 64 * ε ^ b = (64 * ε ^ (b / 2)) * ε ^ (b / 2) := by rw [hsb]; ring
-      _ ≤ 1 * ε ^ (b / 2) := mul_le_mul_of_nonneg_right (by linarith) hsn
-      _ = ε ^ (b / 2) := one_mul _
-  have hcl : closure (ball z (r + 4 * ε ^ b)) ⊆ ball 0 ρ₀ := by
-    have h4' : ε ^ b < (ρ₀ - ρ) / 4 := h4 ε hε hε4
-    refine (closure_ball_subset_closedBall).trans ?_
-    intro w hw
-    rw [mem_closedBall] at hw
-    rw [mem_ball]
-    have htri : dist w 0 ≤ dist w z + dist z 0 := dist_triangle w z 0
-    have hz0 : dist z 0 = ‖z‖ := dist_zero_right z
-    linarith
-  have hprob : S.P (G ε)ᶜ ≤ ENNReal.ofReal (max C 0 * ε ^ κ) :=
-    (hPb ε hε (lt_of_lt_of_le hεr₀ le_rfl)).trans (ENNReal.ofReal_le_ofReal
-      (mul_le_mul_of_nonneg_right (le_max_left C 0) (Real.rpow_nonneg hε.le κ)))
-  refine ⟨hmpos, hδ8, hs64, hcl, hprob, ?_⟩
-  intro ω hω
-  obtain ⟨⟨hcellω, hbeω⟩, ⟨hareaω, hregω⟩⟩ := hω
-  have hreg' : IsRegularMatedMap (S.mult ε ω) ε (S.η ω) := hregω ε hε
-  have hsurj : Function.Surjective (S.η ω) := hareaω.2.2.1
-  have hmesh : ∀ k : ℤ, (cell ε (S.η ω) k ∩ ball 0 ρ₁).Nonempty → diam (cell ε (S.η ω) k) ≤ ε ^ b := by
-    intro k hk
-    have := (hcellω k hk).2
-    rwa [hbeq] at this
-  have hmesh' : ∀ k : ℤ, (cell ε (S.η ω) k ∩ ball 0 ((1 + ρ₀) / 2)).Nonempty →
-      diam (cell ε (S.η ω) k) ≤ ε ^ b := by
-    rw [hmid]
-    exact hmesh
-  have hfe : ∀ U : Set ℂ, closure U ⊆ ball 0 ρ₀ →
-      FiniteExitData (S.mult ε ω) (cellVertices ε (S.η ω) U) ∧
-      FiniteExitData (S.mult ε ω) (interiorCellVertices ε (S.η ω) U) := by
-    intro U hU
-    have hUb : Bornology.IsBounded U := isBounded_ball.subset (subset_closure.trans hU)
-    have hfin : (cellVertices ε (S.η ω) U).Finite :=
-      cellVertices_finite_of_proper hreg'.continuous hreg'.proper hε hUb
-    have hint : (interiorCellVertices ε (S.η ω) U).Finite :=
-      hfin.subset (fun x hx => (show x ∈ cellVertices ε (S.η ω) U \ cellVertices ε (S.η ω) (frontier U) from hx).1)
-    exact ⟨finiteExitData_of_finite hreg'.succ hreg'.locallyFinite hfin,
-      finiteExitData_of_finite hreg'.succ hreg'.locallyFinite hint⟩
-  have hballρ₀ : ball z r ⊆ ball 0 ρ₀ := hball.trans (Metric.ball_subset_ball hρρ₀.le)
-  have hmarg : dist y z + ε ^ b < r := by linarith [h3 ε hε hε3]
-  have hint0 : vertexOf ε (S.η ω) y ∈ interiorCellVertices ε (S.η ω) (ball z r) :=
-    TruncatedLaws.vertexOf_mem_interiorCellVertices_of_mesh hreg'.continuous hsurj hreg'.proper hε
-      hballρ₀ hρ₀1 hy hmesh' hmarg
-  unfold FP36GoodEnv
-  dsimp only
-  exact ⟨hareaω, fun j k hjk => hreg'.cells_meet j k hjk, hmesh, hfe, hint0, hbeω⟩
-
-/-- **Lemma 3 (`commonGood_fp36`, plan section 3): the common polynomially good environment.** The exponent
-is the gamma-only `b = 1/(2+γ)^2` of the verdict (not the `b` of `FrozenOneSidedBoundaryContinuity`), and `CellSizeEstimateStmt`
-is used at `ζ = b`, so that its upper diameter exponent `2/(2+γ)^2 - ζ` equals `b`. -/
-theorem commonGood_fp36 {𝒮 : SpaceFillingSLEModel}
-    (h28 : CellSizeEstimateStmt 𝒮) (hm : MepsScalingInput 𝒮)
-    (hBE : FrozenOneSidedBoundaryContinuity 𝒮) :
-    ∀ γ : ℝ, 0 < γ → γ < 2 →
-    ∃ b : ℝ, 0 < b ∧
-    ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
-    ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
-    ∀ (r : ℝ) (z : ℂ), 0 < r → ball z r ⊆ ball 0 ρ →
-    ∀ y ∈ ball z r,
-    let ρ₀ := (2 * ρ + 1) / 3
-    let ρ₁ := (ρ + 2) / 3
-    ρ < ρ₀ ∧ ρ₀ < ρ₁ ∧ ρ₁ < 1 ∧
-    ∃ ν A κ C₁ ε₀ : ℝ,
-      0 < ν ∧ 0 < A ∧ 0 < κ ∧ 0 ≤ C₁ ∧ 0 < ε₀ ∧
-    ∃ G : ℝ → Set Ω,
-    ∀ ε : ℝ, 0 < ε → ε < ε₀ →
-      let δ := ε ^ b
-      let s := ε ^ (b / 2)
-      0 < S.mε ε ∧
-      8 * δ < r ∧
-      64 * δ ≤ s ∧
-      closure (ball z (r + 4 * δ)) ⊆ ball 0 ρ₀ ∧
-      S.P (G ε)ᶜ ≤ ENNReal.ofReal (C₁ * ε ^ κ) ∧
-      ∀ ω ∈ G ε,
-        FP36GoodEnv S ρ₀ ρ₁ b ν A r z y ε ω := by
-  intro γ hγ0 hγ2
-  obtain ⟨hb, hb1, hbeq⟩ := exponent_b_facts hγ0
-  refine ⟨1 / (2 + γ) ^ 2, hb, fun ρ hρ0 hρ1 Ω _ S hS r z hr hball y hy => ?_⟩
-  obtain ⟨s1, s2, s3, s4⟩ := scale_facts hρ1
-  exact ⟨s1, s2, s3, fp36_good_core h28 hm hBE hγ0 hγ2 hb hb1 hbeq hρ0 s1 s2 s3 s4 S hS r z y hr hball hy⟩
-
-
-#print axioms MatedCRT.FirstPass36.commonGood_fp36
 
 end FirstPass36
 end MatedCRT

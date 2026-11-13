@@ -36,8 +36,7 @@ geometric hypothesis `hgeom` of that lemma. The reduction `srwLaw_sameWalkExitDi
 event, so the `SameWalkGood` conjunct and the a.s. finiteness of the exit time are not needed.
 
 Status: STATEMENT ONLY in this file. The proof of `QuenchedLensExcursionStmt` is open (see the report).
-Note: the excursion proof of LEMMA36 l.259-339 does not invoke `FrozenOneSidedBoundaryContinuity` (hBE); it uses the
-annulus input (c) and the strong Markov property. hBE enters only at Step 5 of `QuenchedLensStep`.
+Note: the excursion proof of LEMMA36 l.259-339 uses the annulus input (c) and the strong Markov property.
 -/
 
 namespace MatedCRT

@@ -12,7 +12,9 @@ import MatedCRT.FirstPass.Frozen.S5Cited
 import MatedCRT.Proofs.Sec3.ConeBallMass
 import MatedCRT.FirstPass.Closure.Final22
 import MatedCRT.FirstPass.Phase2Rewire
-import MatedCRT.FirstPass.S3i.LensClosed
+import MatedCRT.FirstPass.S3i.LensStep
+import MatedCRT.FirstPass.S3i.ExitAlmostSure
+import MatedCRT.FirstPass.S3i.QuenchedBoundsCorrected
 import MatedCRT.FirstPass.S3S4
 
 /-!
@@ -191,18 +193,6 @@ theorem firstPass_2_6_ownBinders
     (h27 := volumeGrowthStmt_of_berestyckiGwynne hBG) (h22 := closed_2_2_ownBinders hscale hBG hND)
 
 open MatedCRT.FirstPass36 in
-/-- Lemma 3.6 (corrected harmonic convergence) with `h211` and `h28` supplied by the
-`CertifiedReferenceModel` projections `randomWalkToLBM` and `cellSizeEstimate`. The binder `hBE`
-(`FrozenOneSidedBoundaryContinuity`, FirstPass/S3i/Frozen.lean:44) stays (FALSE as typed, see docs/campaign/FROZEN-PROVENANCE.md). -/
-theorem firstPass_3_6_ownBinders (𝒮 : SpaceFillingSLEModel) (ν : ℝ → Measure SLEPathCode)
-    (hC : CertifiedReferenceModel ν 𝒮) (hm : MepsScalingInput 𝒮)
-    (hexc : FrozenBrownianOutwardExcursionAtExit) (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮)
-    (hBE : FrozenOneSidedBoundaryContinuity 𝒮) :
-    CorrectedHarmonicConvergenceStmt 𝒮 ∧ CorrectedHarmonicSameWalkAnnealedStmt 𝒮 :=
-  MatedCRT.FirstPass36.firstPass_3_6_closed (𝒮 := 𝒮)
-    (h211 := CertifiedReferenceModel.randomWalkToLBM hC)
-    (h28 := CertifiedReferenceModel.cellSizeEstimate hC)
-    (hm := hm) (hexc := hexc) (h32 := h32) (hBE := hBE)
 
 /-- Lemma 4.1 (convergence of the divisible sandpile, `ConvergenceDivisibleStmt`) with `h210`, `h34`,
 `h214`, `h28`, `h218` and `h27` supplied from the reference-model wrappers. The binder `h35`

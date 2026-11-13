@@ -4,9 +4,9 @@ import MatedCRT.FirstPass.S3i.LensFlooredQuenched
 /-!
 # The quenched lens step from the floored uniform boundary estimate (MQ-li-9)
 
-`quenchedLensStep_of_flooredUniform` is the floored analogue of `quenchedLensStep_of_BE` (S3i/LensStep.lean:42): from
-`FrozenOneSidedBoundaryContinuityFlooredUniform 𝒮` (S3i/LensFloored.lean), with the cell-size and scaling inputs of the
-original (`CellSizeEstimateStmt`, `MepsScalingInput`, as binders exactly as there), the exact `QuenchedLensStep 𝒮`.
+`quenchedLensStep_of_flooredUniform` derives, from
+`FrozenOneSidedBoundaryContinuityFlooredUniform 𝒮` (S3i/LensFloored.lean) and the cell-size and scaling inputs
+(`CellSizeEstimateStmt`, `MepsScalingInput`), the exact `QuenchedLensStep 𝒮`.
 The lens exponent is `b = min (1 / (2 + γ) ^ 2) β` (MQ-li-9 step 1), so `b ≤ β`; the quenched bounds are the closed
 floored form `quenchedBoundsOnGoodFlooredStmt_closed` (S3i/LensFlooredQuenched.lean), which takes `ε ≤ 1` and `b ≤ β`.
 The exit input is the theorem `srwLaw_vExitTime_lt_top_fp36` (as in `quenchedBoundsOnGoodStmt_closed`).
@@ -38,8 +38,7 @@ theorem quenchedBoundsOnGoodFlooredStmt_closed : QuenchedBoundsOnGoodFlooredStmt
   exact quenchedBoundsOnGood_fp36_of_exit_floored srwLaw_vExitTime_lt_top_fp36 hε hε1 hb hβb hν hA hr hρ
     hmpos hscale houter hgood
 
-/-- **The quenched lens step from the floored uniform boundary estimate** (floored analogue of
-`quenchedLensStep_of_BE`, S3i/LensStep.lean:42). -/
+/-- **The quenched lens step from the floored uniform boundary estimate**. -/
 theorem quenchedLensStep_of_flooredUniform {𝒮 : SpaceFillingSLEModel}
     (h28 : CellSizeEstimateStmt 𝒮) (hm : MepsScalingInput 𝒮)
     (hU : FrozenOneSidedBoundaryContinuityFlooredUniform 𝒮) :

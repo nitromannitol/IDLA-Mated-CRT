@@ -12,7 +12,7 @@ Status of the steps (PRO numbering):
 * Step 2 (first boundary cell) and Step 3 (geometry at `v`), Step 4 (lens domain), Step 6 (same-walk relation of `F` to
   the discrepancy): NAMED in `QuenchedLensStep`. Missing claims: the coupling of the killed and unrestricted walks
   through `σ` and the strong Markov property at `σ` (PRO l.343-400, 401-421: "must be formalized carefully").
-* Step 5 (apply (BE)): NAMED, through the hypothesis `hLens : FrozenOneSidedBoundaryContinuity 𝒮 → QuenchedLensStep 𝒮`.
+* Step 5 (apply (BE)): NAMED, as the input `QuenchedLensStep 𝒮`.
   The exponent algebra `(t/d)^{-ν} ≤ (cK)^ν ε^{νb/2}` is PROVED (`boundary_power_le_fp36`).
 * Step 7 (Hölder datum): PROVED (`holder_disc_le_fp36`, `sameWalk_disc_le_of_near_fp36`). The exit point lies in the
   closed disc on the good branch by `sameWalkExitPoint_mem_closedBall_fp36` (continuity of the interpolated walk,
@@ -235,8 +235,7 @@ lemma sectionwiseOuterProb_le_of_good_fp36 {Ω X : Type*} [MeasurableSpace Ω] [
   `O(ε^{νb/2})`.
 Steps 2-4 and 6 (the first boundary cell, the lens domain `U = D⁺ ∩ B_{s/4}(P)`, the harmonic function `F`, the
 strong Markov coupling of the killed and unrestricted walks) are NOT formalized: PRO l.343-421 sketches them, the
-coupling "must be formalized carefully". Step 5 applies the boundary estimate `(BE)` to `F`, which is why the input
-is an implication from `FrozenOneSidedBoundaryContinuity 𝒮`. The exact missing claims are reported in the report. -/
+coupling "must be formalized carefully". Step 5 applies the boundary estimate `(BE)` to `F`. -/
 def QuenchedLensStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ b : ℝ, 0 < b ∧
   ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
@@ -254,77 +253,6 @@ def QuenchedLensStep (𝒮 : SpaceFillingSLEModel) : Prop :=
         {x | SameWalkGood S r z ε ω x ∧
           ε ^ (b / 2) / 2 < dist (sameWalkExitPoint S r z ε ω x) (sameWalkProjected S r z ε ω x)}
         ≤ ENNReal.ofReal (C * ε ^ (ν * b / 2))
-
-/-- **Corrected Lemma 3.6, with the annealed same-walk clause.** The convergence conjunct is
-`firstPass_3_6_convergence_corrected` (S3e.lean:44). The annealed clause follows from the boundary estimate `hBE` (GMS
-(3.31), frozen) through the named Steps 1-6 `hLens`, by Step 7 (`sameWalk_disc_le_of_near_fp36`) and Step 8
-(`sectionwiseOuterProb_le_of_good_fp36`). -/
-theorem firstPass_3_6_annealed {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkToLBMStmt 𝒮)
-    (h28 : CellSizeEstimateStmt 𝒮) (hm : MepsScalingInput 𝒮) (hexc : FrozenBrownianOutwardExcursionAtExit)
-    (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) (hBE : FrozenOneSidedBoundaryContinuity 𝒮)
-    (hLens : FrozenOneSidedBoundaryContinuity 𝒮 → QuenchedLensStep 𝒮) :
-    CorrectedHarmonicConvergenceStmt 𝒮 ∧ CorrectedHarmonicSameWalkAnnealedStmt 𝒮 := by
-  refine ⟨firstPass_3_6_convergence_corrected h211 h28 hm hexc h32, ?_⟩
-  intro γ hγ0 hγ2
-  obtain ⟨b, hb, hlens⟩ := hLens hBE γ hγ0 hγ2
-  refine ⟨b, hb, fun ρ hρ0 hρ1 Ω _ S hS r z hr hball ψ H χ y hadm => ?_⟩
-  obtain ⟨κ, ν, C, ε₀, hκ, hν, hC, hε₀, G, C₁, hC₁, hG⟩ :=
-    hlens ρ hρ0 hρ1 Ω S hS r z hr hball ψ H χ y hadm
-  obtain ⟨-, -, hψ, -⟩ := hadm
-  refine ⟨κ, ν, C₁ + 2 * C, ε₀, hκ, hν, by linarith, hε₀, fun ε hε hεε₀ => ?_⟩
-  obtain ⟨hPG, hω⟩ := hG ε hε hεε₀
-  have := hS.isProbabilityMeasure
-  have hper : ∀ ω ∈ G ε,
-      srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y)
-        (Prod.mk ω ⁻¹' {p : Ω × (ℕ → ℤ) |
-          (1 + (H : ℝ)) * ε ^ (b * (χ : ℝ) / 2) < sameWalkExitDiscrepancy S r z ψ ε p.1 p.2})
-        ≤ ENNReal.ofReal (2 * C * ε ^ (ν * b / 2)) := by
-    intro ω hωG
-    obtain ⟨hbad, hfar⟩ := hω ω hωG
-    have hincl : Prod.mk ω ⁻¹' {p : Ω × (ℕ → ℤ) |
-          (1 + (H : ℝ)) * ε ^ (b * (χ : ℝ) / 2) < sameWalkExitDiscrepancy S r z ψ ε p.1 p.2}
-        ⊆ {x | ¬ SameWalkGood S r z ε ω x} ∪
-          {x | SameWalkGood S r z ε ω x ∧
-            ε ^ (b / 2) / 2 < dist (sameWalkExitPoint S r z ε ω x) (sameWalkProjected S r z ε ω x)} := by
-      intro x hx
-      by_cases hg : SameWalkGood S r z ε ω x
-      · right
-        refine ⟨hg, ?_⟩
-        by_contra hnf
-        have hnear : dist (sameWalkExitPoint S r z ε ω x) (sameWalkProjected S r z ε ω x)
-            ≤ ε ^ (b / 2) / 2 := not_lt.1 hnf
-        have hd := sameWalk_disc_le_of_near_fp36 hr hψ (Real.rpow_nonneg hε.le _) hg (sameWalkExitPoint_mem_closedBall_fp36 hg) hnear
-        have e : (ε ^ (b / 2)) ^ (χ : ℝ) = ε ^ (b * (χ : ℝ) / 2) := by
-          rw [← Real.rpow_mul hε.le]
-          ring_nf
-        rw [e] at hd
-        have hX : 0 ≤ ε ^ (b * (χ : ℝ) / 2) := Real.rpow_nonneg hε.le _
-        have hx' : (1 + (H : ℝ)) * ε ^ (b * (χ : ℝ) / 2) < sameWalkExitDiscrepancy S r z ψ ε ω x := hx
-        nlinarith [NNReal.coe_nonneg H]
-      · left
-        exact hg
-    have hsum : ENNReal.ofReal (C * ε ^ (ν * b / 2)) + ENNReal.ofReal (C * ε ^ (ν * b / 2))
-        = ENNReal.ofReal (2 * C * ε ^ (ν * b / 2)) := by
-      rw [← ENNReal.ofReal_add (mul_nonneg hC (Real.rpow_nonneg hε.le _))
-        (mul_nonneg hC (Real.rpow_nonneg hε.le _))]
-      congr 1
-      ring
-    exact (measure_mono hincl).trans ((measure_union_le _ _).trans ((add_le_add hbad hfar).trans hsum.le))
-  have hsplit := sectionwiseOuterProb_le_of_good_fp36 S.P (fun ω => srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y))
-    (fun ω => isProbabilityMeasure_srwLaw _ _)
-    {p : Ω × (ℕ → ℤ) | (1 + (H : ℝ)) * ε ^ (b * (χ : ℝ) / 2) < sameWalkExitDiscrepancy S r z ψ ε p.1 p.2}
-    (G ε) (ENNReal.ofReal (2 * C * ε ^ (ν * b / 2))) hper
-  refine hsplit.trans ?_
-  calc S.P (G ε)ᶜ + ENNReal.ofReal (2 * C * ε ^ (ν * b / 2))
-      ≤ ENNReal.ofReal (C₁ * ε ^ κ) + ENNReal.ofReal (2 * C * ε ^ (ν * b / 2)) := add_le_add hPG le_rfl
-    _ = ENNReal.ofReal (C₁ * ε ^ κ + 2 * C * ε ^ (ν * b / 2)) :=
-        (ENNReal.ofReal_add (mul_nonneg hC₁ (Real.rpow_nonneg hε.le _))
-          (mul_nonneg (mul_nonneg (by norm_num) hC) (Real.rpow_nonneg hε.le _))).symm
-    _ ≤ ENNReal.ofReal ((C₁ + 2 * C) * (ε ^ κ + ε ^ (ν * b / 2))) :=
-        ENNReal.ofReal_le_ofReal (by
-          nlinarith [mul_nonneg hC₁ (Real.rpow_nonneg hε.le (ν * b / 2)),
-            mul_nonneg hC (Real.rpow_nonneg hε.le κ), Real.rpow_nonneg hε.le κ,
-            Real.rpow_nonneg hε.le (ν * b / 2)])
 
 end FirstPass36
 end MatedCRT

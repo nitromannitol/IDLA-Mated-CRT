@@ -18,8 +18,8 @@ committed bridge:
   `volumeGrowthStmt_of_berestyckiGwynne` and the field `CertifiedReferenceModel.exitTimeUpperBound`, as in
   `MatedCRT/FirstPass/Closure/OwnBinderRewire.lean:92`.
 
-The binders `hBG : FrozenBerestyckiGwynneConeBallMass`, `h32 : FrozenDiscreteHolderContinuityCorrected 𝒮` and
-`hBE : FrozenOneSidedBoundaryContinuity 𝒮` have no concluder and are kept.
+The binders `hBG : FrozenBerestyckiGwynneConeBallMass` and `h32 : FrozenDiscreteHolderContinuityCorrected 𝒮` have no
+concluder and are kept.
 -/
 
 namespace MatedCRT
@@ -48,13 +48,6 @@ theorem closed_3_5_lp (𝒮 : SpaceFillingSLEModel) (ν : ℝ → Measure SLEPat
   closed_3_5_ownBinders 𝒮 ν hC hBG frozenBrownianOutwardExcursionAtExit_holds
 
 open MatedCRT.FirstPass36 in
-/-- Lemma 3.6 (harmonic convergence of the corrected discrete harmonic functions), with `hexc` discharged by
-`frozenBrownianOutwardExcursionAtExit_holds`. The binder `hBE : FrozenOneSidedBoundaryContinuity 𝒮` is kept. -/
-theorem closed_3_6_lp (𝒮 : SpaceFillingSLEModel) (ν : ℝ → Measure SLEPathCode)
-    (hC : CertifiedReferenceModel ν 𝒮) (hm : MepsScalingInput 𝒮)
-    (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) (hBE : FrozenOneSidedBoundaryContinuity 𝒮) :
-    CorrectedHarmonicConvergenceStmt 𝒮 ∧ CorrectedHarmonicSameWalkAnnealedStmt 𝒮 :=
-  firstPass_3_6_ownBinders 𝒮 ν hC hm frozenBrownianOutwardExcursionAtExit_holds h32 hBE
 
 /-- Lemma 3.7 (convergence of the normalized exit time, corrected), with `hexc` discharged by
 `frozenBrownianOutwardExcursionAtExit_holds` and the other binders as in `firstPass_3_7_ownBinders`. -/

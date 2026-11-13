@@ -8,7 +8,10 @@ import MatedCRT.FirstPass.Closure.Final14Composed
 import MatedCRT.FirstPass.Closure.Final14Full
 import MatedCRT.FirstPass.Closure.Final22
 import MatedCRT.FirstPass.Closure.Final23
-import MatedCRT.FirstPass.Closure.Lemma36Rate
+import MatedCRT.FirstPass.S3i.LensStep
+import MatedCRT.FirstPass.S3i.ExitAlmostSure
+import MatedCRT.FirstPass.S3i.QuenchedBoundsCorrected
+import MatedCRT.FirstPass.SLERef.Certified
 import MatedCRT.FirstPass.Closure.Prop51
 import MatedCRT.FirstPass.Closure.Prop51Canon
 import MatedCRT.FirstPass.Closure.Prop51Cited

@@ -1,20 +1,20 @@
-import MatedCRT.FirstPass.Closure.Lemma36Rate
+import MatedCRT.FirstPass.S3i.LensStep
+import MatedCRT.FirstPass.S3i.ExitAlmostSure
+import MatedCRT.FirstPass.S3i.QuenchedBoundsCorrected
+import MatedCRT.FirstPass.SLERef.Certified
 import MatedCRT.FirstPass.S3i.FrozenFloored
 import MatedCRT.FirstPass.LPBridge.BrownianOutwardExcursion
 
 /-!
 # Corrected Lemma 3.6 from the floored one-sided boundary estimate
 
-`FrozenOneSidedBoundaryContinuity` (S3i/Frozen.lean:44) is FALSE as typed (see docs/campaign/FROZEN-PROVENANCE.md), so `closed_3_6_full` and `closed_3_6_rate` (Closure/Lemma36Rate.lean:30,39) are proved from a false premise. This
-file gives their floored versions, with the input `FrozenOneSidedBoundaryContinuityFloored 𝒮` (S3i/FrozenFloored.lean) in
-place of the false binder.
+This file proves the corrected Lemma 3.6 from the floored boundary estimate
+`FrozenOneSidedBoundaryContinuityFloored 𝒮` (S3i/FrozenFloored.lean).
 
-The annealed clause is proved by `annealed_3_6_of_quenchedLensStep`, the body of `firstPass_3_6_annealed`
-(S3i/Proof.lean:262) with the BE input removed: that body used the BE input only through the lens step `hLens hBE`.
+The annealed clause is proved by `annealed_3_6_of_quenchedLensStep`, from the quenched lens step.
 
 NAMED HYPOTHESIS, NOT IN THE PAPER: `hLensFl : FrozenOneSidedBoundaryContinuityFloored 𝒮 → QuenchedLensStep 𝒮`
-(the floored analogue of the binder `hLens` of `firstPass_3_6_annealed`, Proof.lean:265). The consumer of the BE input
-(S3i/LensBE.lean:27–50, `lensProb_le_of_BE_fp36`, and `quenchedLensStep_of_BE`, S3i/LensStep.lean:42) cannot be fed by the
+(the floored quenched lens step). The lens bound `lensProb_le_of_BE_fp36` (S3i/LensBE.lean:27–50) cannot be fed by the
 floored form as typed, for two reasons:
 (i) the floor exponent `β` of `FrozenOneSidedBoundaryContinuityFloored` is chosen after `ρ`, `Ω` and `S`, while the exponent
 `b` of `QuenchedLensStep` (Proof.lean:240) is chosen before `∀ ρ Ω S`;
@@ -34,8 +34,7 @@ open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal NNReal
 
 /-- The annealed same-walk clause of corrected Lemma 3.6 (`CorrectedHarmonicSameWalkAnnealedStmt`), from the quenched
-lens step `hQLS` (`QuenchedLensStep`, S3i/Proof.lean:240) in place of the BE input. The body is that of
-`firstPass_3_6_annealed` (S3i/Proof.lean:262), with `hLens hBE` replaced by `hQLS`. -/
+lens step `hQLS` (`QuenchedLensStep`, S3i/Proof.lean:240). -/
 theorem annealed_3_6_of_quenchedLensStep {𝒮 : SpaceFillingSLEModel} (h211 : RandomWalkToLBMStmt 𝒮)
     (h28 : CellSizeEstimateStmt 𝒮) (hm : MepsScalingInput 𝒮) (hexc : FrozenBrownianOutwardExcursionAtExit)
     (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) (hQLS : QuenchedLensStep 𝒮) :
@@ -107,8 +106,7 @@ end FirstPass36
 
 /-- Corrected Lemma 3.6, rate conjunct (the fixed-start annealed same-walk clause, tex lines 1431-1441), from the floored
 one-sided boundary estimate `hBE` (`FrozenOneSidedBoundaryContinuityFloored`) and the named hypothesis `hLensFl`
-(the quenched lens step from the floored BE; NOT in the paper, see the header). Same conclusion as `closed_3_6_rate`
-(Closure/Lemma36Rate.lean:30). -/
+(the quenched lens step from the floored BE; NOT in the paper, see the header). -/
 theorem closed_3_6_rate_floored {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
     (hC : CertifiedReferenceModel ν 𝒮) (hexc : FrozenBrownianOutwardExcursionAtExit)
     (hBE : MatedCRT.FirstPass36.FrozenOneSidedBoundaryContinuityFloored 𝒮)
@@ -119,7 +117,7 @@ theorem closed_3_6_rate_floored {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Meas
 
 /-- Corrected Lemma 3.6, both clauses: the convergence clause `CorrectedHarmonicConvergenceStmt` and the annealed
 same-walk clause, from the floored one-sided boundary estimate `hBE` and the named hypothesis `hLensFl` (see
-`closed_3_6_rate_floored`). Same conclusion as `closed_3_6_full` (Closure/Lemma36Rate.lean:39). -/
+`closed_3_6_rate_floored`). -/
 theorem closed_3_6_full_floored {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
     (hC : CertifiedReferenceModel ν 𝒮) (hexc : FrozenBrownianOutwardExcursionAtExit)
     (hBE : MatedCRT.FirstPass36.FrozenOneSidedBoundaryContinuityFloored 𝒮)
@@ -129,8 +127,7 @@ theorem closed_3_6_full_floored {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Meas
     hC.frozenDiscreteHolderContinuityCorrected (hLensFl hBE)
 
 /-- Wrapper of `closed_3_6_rate_floored`: the Brownian exit binder `hexc` is discharged by
-`MatedCRT.frozenBrownianOutwardExcursionAtExit_holds` (LPBridge/BrownianOutwardExcursion.lean:113). Same conclusion as
-`closed_3_6_rate_bm` (Closure/Rewire53.lean:900). -/
+`MatedCRT.frozenBrownianOutwardExcursionAtExit_holds` (LPBridge/BrownianOutwardExcursion.lean:113). -/
 theorem closed_3_6_rate_floored_bm {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
     (hC : CertifiedReferenceModel ν 𝒮)
     (hBE : MatedCRT.FirstPass36.FrozenOneSidedBoundaryContinuityFloored 𝒮)
@@ -140,7 +137,7 @@ theorem closed_3_6_rate_floored_bm {𝒮 : SpaceFillingSLEModel} (ν : ℝ → M
     (hBE := hBE) (hLensFl := hLensFl)
 
 /-- Wrapper of `closed_3_6_full_floored`: the Brownian exit binder `hexc` is discharged by
-`MatedCRT.frozenBrownianOutwardExcursionAtExit_holds`. Same conclusion as `closed_3_6_full_bm` (Closure/Rewire53.lean:914). -/
+`MatedCRT.frozenBrownianOutwardExcursionAtExit_holds`. -/
 theorem closed_3_6_full_floored_bm {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
     (hC : CertifiedReferenceModel ν 𝒮)
     (hBE : MatedCRT.FirstPass36.FrozenOneSidedBoundaryContinuityFloored 𝒮)

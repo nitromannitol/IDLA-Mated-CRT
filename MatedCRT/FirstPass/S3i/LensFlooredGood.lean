@@ -4,9 +4,9 @@ import MatedCRT.FirstPass.S3i.LensFloored
 /-!
 # The floored common good event (MQ-li-9 steps 1 and 3)
 
-Floored copy of `fp36_good_core` and `commonGood_fp36` (S3i/GoodEvent.lean:223, :336). The one-sided boundary clause
+The good event of Lemma 3 (plan section 3) under the floored boundary estimate. The one-sided boundary clause
 is the floored one `FP36OneSidedBEFlooredAt` at the floor exponent `β`, and the cell exponent `b` is only required to
-satisfy `b ≤ β` and `b ≤ 2 / (2 + γ) ^ 2 - b` (instead of the equality `2 / (2 + γ) ^ 2 - b = b` of the original),
+satisfy `b ≤ β` and `b ≤ 2 / (2 + γ) ^ 2 - b`,
 so that `b := min (1 / (2 + γ) ^ 2) β` is admissible. The inequality replaces the equality only at the mesh bound
 `ε ^ (2 / (2 + γ) ^ 2 - b) ≤ ε ^ b`, which holds for `0 < ε ≤ 1`.
 -/
@@ -148,7 +148,7 @@ theorem fp36_good_core_floored {𝒮 : SpaceFillingSLEModel} (h28 : CellSizeEsti
   dsimp only
   exact ⟨hareaω, fun j k hjk => hreg'.cells_meet j k hjk, hmesh, hfe, hint0, hbeω⟩
 
-/-- **Lemma 3, floored (`commonGood_fp36`, S3i/GoodEvent.lean:336).** Under the uniform floored input, for each `γ`
+/-- **Lemma 3, floored.** Under the uniform floored input, for each `γ`
 there are a floor exponent `β` and a cell exponent `b ≤ β`, with `b := min (1 / (2 + γ) ^ 2) β`, such that the common
 good event is the floored good event `FP36GoodEnvFloored` for every `ρ`, `Ω`, `S`. -/
 theorem commonGood_fp36_floored {𝒮 : SpaceFillingSLEModel} (h28 : CellSizeEstimateStmt 𝒮)
