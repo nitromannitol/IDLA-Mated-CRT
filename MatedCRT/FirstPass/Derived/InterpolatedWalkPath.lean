@@ -142,7 +142,9 @@ theorem measurable_interpPathCM (v : ℤ → ℂ) {m : ℝ} (hm : 0 ≤ m) :
     Measurable (interpPathCM v hm) :=
   (continuous_interpPathCM v hm).measurable
 
-theorem measurable_interpolatedWalk_apply (ε : ℝ) (η : ℝ → ℂ) {m : ℝ} (hm : 0 ≤ m) (t : ℝ≥0) :
+/-- The interpolated walk at a fixed time is measurable in the discrete path (via the
+continuous-path coding, for speed `m ≥ 0`). -/
+theorem measurable_interpolatedWalk_apply_of_nonneg (ε : ℝ) (η : ℝ → ℂ) {m : ℝ} (hm : 0 ≤ m) (t : ℝ≥0) :
     Measurable (fun x : ℕ → ℤ => interpolatedWalk ε η m x t) :=
   (ContinuousPath.continuous_eval t).measurable.comp (measurable_interpPathCM (vertexPoint ε η) hm)
 
