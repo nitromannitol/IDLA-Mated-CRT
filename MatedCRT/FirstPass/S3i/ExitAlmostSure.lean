@@ -5,8 +5,8 @@ import MatedCRT.Proofs.WalkPotential.MarkovFixedTime
 # Almost-sure exit from a finite set (plan 3.6 Lemma 1, conjunct 1)
 
 For a finite set `A` with `FiniteExitData m A`, simple random walk started in `A` leaves `A` almost surely:
-`srwLaw m a {x | vExitTime A x < ⊤} = 1` for `a ∈ A` (`srwLaw_vExitTime_lt_top_fp36`). This is the corrected first
-conjunct of plan Lemma 1 (the printed `UsesEdges` conjunct is false at zero-degree boundary vertices).
+`srwLaw m a {x | vExitTime A x < ⊤} = 1` for `a ∈ A` (`srwLaw_vExitTime_lt_top_fp36`). This is the first conjunct
+of plan Lemma 1.
 The proof uses Armitage-Gardiner style geometric trials:
 
 * A. finite exit routes: a directed positive-edge path from `a ∈ A` to `vBoundary`, truncated at its first vertex outside `A`
@@ -268,7 +268,7 @@ theorem srwLaw_fpSurvives_mul_le {m : ℤ → ℤ → ℕ} {A : Set ℤ} {N : �
 
 /-! ### Almost-sure exit (final step) -/
 
-/-- **Almost-sure exit from a finite exit datum** (plan 3.6 Lemma 1, conjunct 1, corrected): for `a ∈ A`,
+/-- **Almost-sure exit from a finite exit datum** (plan 3.6 Lemma 1, conjunct 1): for `a ∈ A`,
 the walk started at `a` leaves `A` with probability one. -/
 theorem srwLaw_vExitTime_lt_top_fp36 {m : ℤ → ℤ → ℕ} {A : Set ℤ} (hA : FiniteExitData m A) :
     ∀ a ∈ A, srwLaw m a {x | vExitTime A x < ⊤} = 1 := by
@@ -290,7 +290,7 @@ theorem srwLaw_vExitTime_lt_top_fp36 {m : ℤ → ℤ → ℕ} {A : Set ℤ} (hA
   rw [hcompl]
   exact (prob_compl_eq_one_iff hmeas).2 hnever
 
-/-! ### The corrected interface of plan Lemma 1 -/
+/-! ### The interface of plan Lemma 1 -/
 
 open Classical in
 /-- The interface of plan Lemma 1: almost-sure exit from `A` and the three properties of the exit
@@ -309,7 +309,7 @@ def FP36LemmaOneCorrected : Prop :=
         exitHitProb m A B a =
           if a ∈ B then 1 else 0)
 
-/-- The corrected plan Lemma 1 holds: almost-sure exit (this file) and conjuncts 2-4 (ExitProbability.lean). -/
+/-- Plan Lemma 1 holds: almost-sure exit (this file) and conjuncts 2-4 (ExitProbability.lean). -/
 theorem fp36LemmaOneCorrected_holds : FP36LemmaOneCorrected := by
   intro m A B hA
   exact ⟨srwLaw_vExitTime_lt_top_fp36 hA, fun a => exitHitProb_nonneg_le_one m A B a,

@@ -26,8 +26,8 @@ open scoped ENNReal NNReal
 estimate as printed in GMS (3.31):
 the vertex `x` ranges over the interior cell vertices `interiorCellVertices ε (S.η ω) D`, and the distance
 `infDist (vertexPoint ε (S.η ω) x) (frontier D)` is replaced by its floor `max (infDist …) (ε ^ β)`.
-The exponents and the constant `κ, ν, A, b, β` are chosen after `S.IsValid 𝒮 γ`, per valid environment, as in the
-repaired form of Frozen.lean. The exponent `β` is encoded as in correction [C6] (`0 < β ∧ β < 1`).
+The exponents and the constant `κ, ν, A, b, β` are chosen after `S.IsValid 𝒮 γ`, per valid environment.
+The exponent `β` is encoded as in correction [C6] (`0 < β ∧ β < 1`).
 PENDING TRUTH CHECK (see docs/campaign/FROZEN-PROVENANCE.md). -/
 def FrozenOneSidedBoundaryContinuityFloored (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →

@@ -1,6 +1,6 @@
 # First-pass frozen inputs: provenance table
 
-Campaign-internal. Scope: every `Prop` defined in `MatedCRT/FirstPass/Frozen/*.lean` (25 files) and in `MatedCRT/External/*.lean` (2 files), one row each, in file order: 78 rows. Rows 81 and 82 are the two one-sided boundary Props of Lemma 3.6, defined in `MatedCRT/FirstPass/S3i/Frozen.lean` and `S3i/FrozenFloored.lean` (outside the scope above); added 2026-11-11 (p2-ledger-rows-and-inventory-refresh). Total: 80 rows.
+Campaign-internal. Scope: every `Prop` defined in `MatedCRT/FirstPass/Frozen/*.lean` (25 files) and in `MatedCRT/External/*.lean` (2 files), one row each, in file order: 78 rows. Rows 82 and 83 are the two floored one-sided boundary Props of Lemma 3.6, defined in `MatedCRT/FirstPass/S3i/FrozenFloored.lean` and `S3i/LensFloored.lean` (outside the scope above); added 2026-11-11 (p2-ledger-rows-and-inventory-refresh). Total: 80 rows.
 
 Not rows: three non-Prop defs (`rescaledLBMOccupation` `FirstPass/Frozen/S3S4b.lean:64`, `quenchedDiscreteOccupation` `S3S4b.lean:72`, `FPScaledMeasure` `S5cSimilarity.lean:22`) and three theorems (`SLERef.lean:27`, `:33`, `:40`). Rows 65 and 66 are Prop-valued definitions with no verdict.
 
@@ -9,11 +9,11 @@ Snapshot: declaration lines re-grepped at HEAD on 2026-11-11 (the commit that ad
 Columns:
 - **file:line**: the declaration line. The docstring sits directly above it.
 - **Literature locator**: the locator as the docstring gives it, shortened. `locator pending` and `standard` are kept as written.
-- **Truth verdict**: the word the docstring gives. `TRUE`, `FALSE`, `UNSURE` (docstring: UNRESOLVED or UNSURE), `RETIRED` (retired with no truth word), `none` (no verdict in the docstring; PENDING counts as none). Copied from the docstrings; this file does not judge truth.
+- **Truth verdict**: the word the docstring gives. `TRUE`, `UNSURE` (docstring: UNRESOLVED or UNSURE), `RETIRED` (retired with no truth word), `none` (no verdict in the docstring; PENDING counts as none). Copied from the docstrings; this file does not judge truth.
 - **Verdict source**: the docstring's own attribution, as written (chat number, time, notes path).
 - **Discharge**: the declaration in `MatedCRT/FirstPass/LPBridge/*.lean` or `MatedCRT/FirstPass/HBRewire.lean` that proves the Prop (grep, snapshot). A binder `(h : Prop)` in HBRewire.lean is a consumer, not a discharge; it is shown as `consumer HBRewire.lean:N`.
 
-Summary (81 rows): TRUE 47, FALSE 3, UNSURE 3, RETIRED 8, none 20. Discharged in LPBridge or HBRewire: 9 (rows 4, 5, 13, 14, 39, 41, 43, 64, 73); a discharge is a declaration of that type, not a checked compilation. Proved elsewhere, as the docstring states and grep confirms: 2 (rows 42, 57).
+Summary (80 rows): TRUE 49, UNSURE 3, RETIRED 8, none 20. Discharged in LPBridge or HBRewire: 9 (rows 4, 5, 13, 14, 39, 41, 43, 64, 73); a discharge is a declaration of that type, not a checked compilation. Proved elsewhere, as the docstring states and grep confirms: 2 (rows 42, 57).
 
 Paths are relative to the repository root.
 

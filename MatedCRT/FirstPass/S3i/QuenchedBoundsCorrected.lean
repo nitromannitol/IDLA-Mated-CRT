@@ -4,16 +4,15 @@ import MatedCRT.FirstPass.S3i.LensStep
 import MatedCRT.FirstPass.S3i.ExitAlmostSure
 
 /-!
-# Plan Lemma 7 with the corrected exit input
+# Plan Lemma 7 from the almost-sure exit input
 
 This file proves Lemma 7 from the almost-sure exit statement alone:
 
 * `hexit : ∀ {m} {A'}, FiniteExitData m A' → ∀ a ∈ A', srwLaw m a {x | vExitTime A' x < ⊤} = 1`
-  (part (a): true as typed; `srwLaw_vExitTime_lt_top_fp36` of `S3i/ExitAlmostSure.lean`, supplies it).
+  (`srwLaw_vExitTime_lt_top_fp36` of `S3i/ExitAlmostSure.lean` supplies it).
 * Lemma 6 is used in its closed form `lensProb_le_fp36_closed` (`S3i/LensBEClosed.lean`), which takes no exit input.
-* The far-exit clause replaces the all-time event `UsesEdges` by the almost-sure step property
-  `H2.ae_step_adjacent` (Lemma 2). Steps that stay put are allowed by that property and are harmless in the pathwise
-  core (`farExit_pathwise_step_fp36`).
+* The far-exit clause uses the almost-sure step property `H2.ae_step_adjacent` (Lemma 2). Steps that stay put are
+  allowed by that property and are harmless in the pathwise core (`farExit_pathwise_step_fp36`).
 
 Terminology: quenched law `srwLaw` and exit time (Armstrong-Kuusi-Mourrat); same-walk coupling and the one-sided
 boundary estimate (Gwynne-Miller-Sheffield, arXiv:1807.07511); Lawler-Limic for the strong Markov property; finite
@@ -29,7 +28,7 @@ open scoped ENNReal NNReal
 /-! ## Clause 1: the walk is good a.s., with the direct application of the exit input -/
 
 /-- **Plan Lemma 7, clause 1, with the almost-sure exit input `hexit`.** Almost surely the walk from the selected
-start vertex is a same-walk good path. The exit input is applied directly (no projection from `UsesEdges`). -/
+start vertex is a same-walk good path. The exit input is applied directly. -/
 theorem quenchedStart_null_of_exit_fp36
     {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
     {ρ₀ ρ₁ b ν A r ε : ℝ} {z y : ℂ} {ω : Ω}
@@ -106,9 +105,9 @@ lemma farExit_pathwise_step_fp36 {ε mε δ s r : ℝ} {η : ℝ → ℂ} {M : �
   exact farExit_pathwise_fp36 (M := fun j k => if j = k then 1 else M j k) hε hη hm hr hδ hscale hN0 hN1 hN2
     hedge' hadj' hdiam hq hent hvU hT hfar
 
-/-! ## Clause 2 and the theorem: Lemma 7 with the corrected exit input -/
+/-! ## Clause 2 and the theorem: Lemma 7 from the almost-sure exit input -/
 
-/-- **Plan Lemma 7 with the corrected exit input.** On a good environment, clause 1: the
+/-- **Plan Lemma 7 from the almost-sure exit input.** On a good environment, clause 1: the
 quenched law from the selected start vertex gives a.s. a same-walk good path; clause 2: the probability of the far-exit
 event is at most `A 96^ν ε^{νb/2}`, uniformly over the boundary vertices of Lemma 2, by the closed lens estimate
 `lensProb_le_fp36_closed`. The only exit input is `hexit` (almost-sure exit from a finite exit set). -/
@@ -231,7 +230,7 @@ theorem quenchedBoundsOnGoodStmt_of_exit
 /-! ## The unconditional consumer: the exit input is the theorem `srwLaw_vExitTime_lt_top_fp36` -/
 
 /-- **`QuenchedBoundsOnGoodStmt` with no binder.** The almost-sure exit input is `srwLaw_vExitTime_lt_top_fp36`
-(`S3i/ExitAlmostSure.lean`, almost-sure exit from a finite exit set, Lemma 1 conjunct 1 as corrected). -/
+(`S3i/ExitAlmostSure.lean`, almost-sure exit from a finite exit set, Lemma 1 conjunct 1). -/
 theorem quenchedBoundsOnGoodStmt_closed : QuenchedBoundsOnGoodStmt :=
   quenchedBoundsOnGoodStmt_of_exit srwLaw_vExitTime_lt_top_fp36
 

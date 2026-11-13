@@ -5,11 +5,10 @@ import MatedCRT.FirstPass.S3i.ExitProbability
 /-!
 # Lens hitting probability, closed form (S3i): plan Lemma 6 with Lemmas 1 and 5 discharged
 
-Closed form of `lensProb_le_fp36` (`MatedCRT/FirstPass/S3i/LensBE.lean`).
+Plan Lemma 6, `lensProb_le_fp36_closed`, from the deterministic core `lensProb_le_of_BE_fp36`
+(`MatedCRT/FirstPass/S3i/LensBE.lean`).
 
-* Lemma 5 is `H5.lensGeometry_fp36` (`MatedCRT/FirstPass/S3i/LensGeometry.lean`). Its
-  hypotheses and conclusion are the binder of `lensProb_le_fp36`, argument for argument, so it is
-  applied directly.
+* Lemma 5 is `H5.lensGeometry_fp36` (`MatedCRT/FirstPass/S3i/LensGeometry.lean`), applied directly.
 * Lemma 1 enters Lemma 6 only through its conjuncts 2-4 (range in `[0,1]`, discrete harmonicity on
   the exit set, boundary values `1_B` off the exit set), proved in `MatedCRT/FirstPass/S3i/ExitProbability.lean`
   Conjunct 1 (almost-sure exit from the exit set) is not used by Lemma 6 and is not
@@ -25,7 +24,7 @@ open scoped ENNReal NNReal
 open Classical in
 /-- Plan Lemma 1, conjuncts 2-4, for a finite exit set `A'` (`FiniteExitData m A'`): the exit-hit
 probability lies in `[0,1]`, is discretely harmonic on `A'`, and equals the indicator of `B'` off `A'`.
-Conjunct 1 of the printed Lemma 1 is not included. -/
+Conjunct 1 of plan Lemma 1 is `srwLaw_vExitTime_lt_top_fp36` (`S3i/ExitAlmostSure.lean`). -/
 theorem exitHitProb_basic_conj234 {m : ℤ → ℤ → ℕ} {A' B' : Set ℤ} (hfin : FiniteExitData m A') :
     (∀ a : ℤ, 0 ≤ exitHitProb m A' B' a ∧ exitHitProb m A' B' a ≤ 1) ∧
     (∀ a ∈ A', mLaplacian m (exitHitProb m A' B') a = 0) ∧
@@ -34,7 +33,8 @@ theorem exitHitProb_basic_conj234 {m : ℤ → ℤ → ℕ} {A' B' : Set ℤ} (h
     fun _ ha => exitHitProb_mLaplacian_eq_zero m hfin ha,
     fun _ ha => exitHitProb_of_not_mem m ha⟩
 
-/-- Plan Lemma 6 (`lensProb_le_fp36`) with Lemma 5 (`H5.lensGeometry_fp36`) and Lemma 1 conjuncts 2-4
+/-- Plan Lemma 6: the lens hitting probability of a boundary cell `v` of the disc `B_r(z)` is at most
+`A · 96^ν · ε^{νb/2}`, with Lemma 5 (`H5.lensGeometry_fp36`) and Lemma 1 conjuncts 2-4
 (`exitHitProb_basic_conj234`) discharged. The only hypotheses are those of the plan statement. -/
 theorem lensProb_le_fp36_closed
     {Ω : Type} [MeasurableSpace Ω]
