@@ -389,6 +389,16 @@ Ninth pass (2026-11-13): `hEnvS : ConeEnvironmentScalingUnderSLE 𝒮` follows f
 `closed_1_4_lp_noSC_noSup_derivedInputs_envScaling` and `closed_1_6_lp_noSC_noSup_derivedInputs_envScaling` are the
 `_reducedCore` forms (Derived/CoreGffLowerDerived.lean) without the binder `hEnvS`.
 
+Tenth pass (2026-11-13): the Green kernel bounds `h12 : GreenKernelUpperBoundStmt 𝒮` (Lemma 2.15),
+`h13 : GreenKernelLowerBoundStmt 𝒮` (Lemma 2.16) and the corrected discrete Hölder estimate
+`h15 : FrozenDiscreteHolderContinuityCorrected 𝒮` (Lemma 3.2) follow, for a model with normalized law `ν` and valid
+reference environments, from one one-sided mating-rigid set `G` (`hG : MatingRigidLEOn G`) that is full for every
+`γ`-correlated two-sided Brownian law (`hGnull`): `greenKernelUpperBoundStmt_of_reference`,
+`greenKernelLowerBoundStmt_of_reference`, `frozenDiscreteHolderContinuityCorrected_of_reference` (with
+`cellSizeEstimateStmt_holds`). The forms `closed_1_4_lp_noSC_noSup_derivedInputs_envScaling_rigidity` and
+`closed_1_6_lp_noSC_noSup_derivedInputs_envScaling_rigidity` (Derived/EnvironmentScalingRigidity.lean) are the
+`_envScaling` forms with `h12`, `h13`, `h15` replaced by the pair `(hGnull, hG)`.
+
 Derived forms after the sixth pass (binders of `T` -> binders of `T_derivedInputs`; 31 forms):
 
 | counted `T` | binders | supplied |
