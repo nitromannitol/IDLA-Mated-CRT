@@ -22,7 +22,7 @@ conclusion forces one of the five failure events.  This gives
   small `δ` and `ε`, in a negligible one;
 * `ae_regular`: the almost sure regularity of a valid environment;
 * `limLimSmall_levyProkhorovEDist_stoppedWalk`: for every `r > 0` the event that two walks started in
-  `V^ε(B_δ(z))`, `z ∈ B_ρ`, stopped at the exit of the interior vertices of `B_{ρ₀}`, have laws at
+  `V^ε(B_δ(z))`, `z ∈ B_{ρ₀ - √δ}`, stopped at the exit of the interior vertices of `B_{ρ₀}`, have laws at
   Lévy-Prokhorov distance `> r`, is negligible as `ε → 0` and then `δ → 0`.
 
 The estimate (6.36) (Lemma 6.10) enters as an explicit hypothesis in event form.
@@ -82,17 +82,18 @@ theorem ae_regular {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ : 0 < γ) (hγ2
   rw [inter_comm]
   exact hadj ε hε k j hjk
 
-/-- **Proposition 6.12 of Berestycki-Gwynne at the event level.**  Fix `0 < ρ < ρ₀ < ρ₁ < 1` and `r > 0`.  Given
+/-- **Proposition 6.12 of Berestycki-Gwynne at the event level, away from the sphere.**  Fix `0 < ρ₀ < ρ₁ < 1`
+and `r > 0`.  Given
 the cell size estimate, the corrected discrete Hölder estimate, the Green kernel lower bound, the exit time
 upper bound, the expected exit time bound of Lemma 2.19, the estimate (6.32) of Lemma 6.9 and the estimate
-(6.36) of Lemma 6.10 (in event form), for every valid environment the event that for some `z ∈ B_ρ` and
-`x, y ∈ V^ε(B_δ(z))` the laws of the walks from `x` and from `y` stopped at the exit of the interior vertices
+(6.36) of Lemma 6.10 (in event form), for every valid environment the event that for some `z ∈ B_{ρ₀ - √δ}` and
+`x, y ∈ V^ε(B_δ(z))`, the laws of the walks from `x` and from `y` stopped at the exit of the interior vertices
 of `B_{ρ₀}` are at Lévy-Prokhorov distance `> r` is negligible as `ε → 0` and then `δ → 0`. -/
 theorem limLimSmall_levyProkhorovEDist_stoppedWalk {𝒮 : SpaceFillingSLEModel}
     (h28 : CellSizeEstimateStmt 𝒮) (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮)
     (h213 : GreenKernelLowerBoundStmt 𝒮) (h214 : ExitTimeUpperBoundStmt 𝒮)
     (h219 : ExpectedExitTimeExplicitBoundStmt 𝒮) {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
-    {ρ ρ0 ρ1 : ℝ} (hρ : 0 < ρ) (hρρ0 : ρ < ρ0) (hρ0ρ1 : ρ0 < ρ1) (hρ1 : ρ1 < 1)
+    {ρ0 ρ1 : ℝ} (hρ0 : 0 < ρ0) (hρ0ρ1 : ρ0 < ρ1) (hρ1 : ρ1 < 1)
     (h632 : ∀ ℓ : ℝ, 1 < ℓ → ∀ ζ : ℝ, 0 < ζ → ζ < 1 → ∃ ψ₀ : ℝ → ℝ,
       ((∀ δ : ℝ, 0 ≤ δ → 0 ≤ ψ₀ δ) ∧ ψ₀ 0 = 0 ∧
         ∀ p : ℝ, 0 < p → Tendsto (fun δ => δ ^ (-p) * ψ₀ δ) (𝓝[>] 0) (𝓝 0)) ∧
@@ -113,7 +114,7 @@ theorem limLimSmall_levyProkhorovEDist_stoppedWalk {𝒮 : SpaceFillingSLEModel}
               succExit (fun w => interiorCellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) w) (2 * s)))
                 ⌊(2 * s) ^ (-3 : ℝ)⌋₊ X} ≤ ENNReal.ofReal (ψ₀ (2 * s))}))
     {r : ℝ} (hr : 0 < r) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (hS : S.IsValid 𝒮 γ) :
-    LimLimSmall S.P (fun δ ε => {ω | ∃ z ∈ ball (0 : ℂ) ρ, ∃ x ∈ cellVertices ε (S.η ω) (ball z δ),
+    LimLimSmall S.P (fun δ ε => {ω | ∃ z ∈ ball (0 : ℂ) (ρ0 - Real.sqrt δ), ∃ x ∈ cellVertices ε (S.η ω) (ball z δ),
       ∃ y ∈ cellVertices ε (S.η ω) (ball z δ),
       ENNReal.ofReal r < levyProkhorovEDist
         ((srwLaw (S.mult ε ω) x).map
@@ -143,7 +144,7 @@ theorem limLimSmall_levyProkhorovEDist_stoppedWalk {𝒮 : SpaceFillingSLEModel}
   obtain ⟨ψ, hψ, h611⟩ := ExitCouplingEventInputs.limLimSmall_exitTimeLower_611 h213 h214 hγ hγ2 hχ
     hρ1pos hρ1 h632
   obtain ⟨ψ₀, hψ₀, h636'⟩ := h636
-  obtain ⟨ξ, A, hξ, hA, hTV⟩ := HittingVertexTV.hittingVertex_tv_le 𝒮 h28 h32 γ hγ hγ2 ρ hρ (by linarith)
+  obtain ⟨ξ, A, hξ, hA, hTV⟩ := HittingVertexTV.hittingVertex_tv_le 𝒮 h28 h32 γ hγ hγ2 ρ0 hρ0 (by linarith)
   obtain ⟨T₀, δ₁, hδ₁, hnum⟩ := ExitCouplingNumerics.exists_small_parameters (A := A) ha0 ha4 he0 hξ
     hψ₀.2 hψ.2.2 (fun x hx => hψ.1 x hx.le) (κ := ρ1 - ρ0) (r := r) (by linarith) hr
   have hsqrt : Tendsto (fun δ : ℝ => Real.sqrt δ) (𝓝[>] (0 : ℝ)) (𝓝 0) := by
@@ -158,7 +159,7 @@ theorem limLimSmall_levyProkhorovEDist_stoppedWalk {𝒮 : SpaceFillingSLEModel}
   have h1 := CellDiameterEvent.limLimSmall_cellDiam hS hae ρ1
     (d := fun δ => Real.sqrt δ / 4) (fun δ hδ => by positivity)
   have h2 := LimLimSmall.of_polyHighProb (P := S.P)
-    (E := fun δ ε => {ω | ∀ z ∈ ball (0 : ℂ) ρ,
+    (E := fun δ ε => {ω | ∀ z ∈ ball (0 : ℂ) ρ0,
         ∀ x ∈ cellVertices ε (S.η ω) (ball z δ), ∀ y ∈ cellVertices ε (S.η ω) (ball z δ),
           ∀ T : Set ℤ,
           |(srwLaw (S.mult ε ω) x).real
@@ -167,7 +168,7 @@ theorem limLimSmall_levyProkhorovEDist_stoppedWalk {𝒮 : SpaceFillingSLEModel}
               {X | vExitPosition (interiorCellVertices ε (S.η ω) (ball z (Real.sqrt δ))) X ∈ T}| ≤
             A * δ ^ ξ})
     (fun δ hδ hδ1 => hTV δ hδ hδ1 Ω S hS)
-  have h3 := (h219' ρ0 (by linarith) (by linarith) Ω S hS).comp_delta (φ := Real.sqrt)
+  have h3 := (h219' ρ0 hρ0 (by linarith) Ω S hS).comp_delta (φ := Real.sqrt)
     (fun δ hδ => Real.sqrt_pos.2 hδ) hsqrt
   have h4 := (h611 Ω S hS).comp_delta (φ := fun δ : ℝ => δ ^ a)
     (fun δ hδ => Real.rpow_pos_of_pos hδ a) (ExitCouplingNumerics.tendsto_rpow_zero ha0)
@@ -175,7 +176,7 @@ theorem limLimSmall_levyProkhorovEDist_stoppedWalk {𝒮 : SpaceFillingSLEModel}
     (fun δ hδ => Real.rpow_pos_of_pos hδ a) (ExitCouplingNumerics.tendsto_rpow_zero ha0)
   have hG := ((((h1.union h2).union h3).union h4).union h5)
   have hreg := ae_regular hγ hγ2 hS
-  refine LimLimSmall.mono_of_small_ae hG ⟨min δ₁ ((ρ0 - ρ) ^ 2), lt_min hδ₁ (by nlinarith),
+  refine LimLimSmall.mono_of_small_ae hG ⟨δ₁, hδ₁,
     fun δ hδ hδlt => ⟨δ ^ (a * χ) / 6, by positivity, fun ε hε hεlt => ?_⟩⟩
   filter_upwards [hreg, hae] with ω hω hηω hfail
   obtain ⟨hη, hp, hlf, hadj, hcons⟩ := hω
@@ -183,16 +184,21 @@ theorem limLimSmall_levyProkhorovEDist_stoppedWalk {𝒮 : SpaceFillingSLEModel}
   simp only [Set.mem_union, Set.mem_ofPred_eq, Set.mem_compl_iff, not_or, not_not] at hGω
   obtain ⟨⟨⟨⟨hd1, hd2⟩, hd3⟩, hd4⟩, hd5⟩ := hGω
   rw [hηω] at hd1
-  obtain ⟨hδ41, hδaκ, hd, hr0, hT0, hfin⟩ := hnum δ hδ (lt_of_lt_of_le hδlt (min_le_left _ _))
-  have hδsq : δ < (ρ0 - ρ) ^ 2 := lt_of_lt_of_le hδlt (min_le_right _ _)
-  have hρ0' : ρ + Real.sqrt δ ≤ ρ0 := by
-    have : Real.sqrt δ ≤ ρ0 - ρ := Real.sqrt_le_iff.2 ⟨by linarith, hδsq.le⟩
-    linarith
+  obtain ⟨hδ41, hδaκ, hd, hr0, hT0, hfin⟩ := hnum δ hδ hδlt
+  have hsq0 := Real.sqrt_nonneg δ
+  have hd2' : ∀ z ∈ ball (0 : ℂ) (ρ0 - Real.sqrt δ), ∀ x ∈ cellVertices ε (S.η ω) (ball z δ),
+      ∀ y ∈ cellVertices ε (S.η ω) (ball z δ), ∀ T : Set ℤ,
+      |(srwLaw (S.mult ε ω) x).real
+          {X | vExitPosition (interiorCellVertices ε (S.η ω) (ball z (Real.sqrt δ))) X ∈ T} -
+        (srwLaw (S.mult ε ω) y).real
+          {X | vExitPosition (interiorCellVertices ε (S.η ω) (ball z (Real.sqrt δ))) X ∈ T}| ≤
+        A * δ ^ ξ :=
+    fun z hz => hd2 z (ball_subset_ball (by linarith) hz)
   obtain ⟨z, hz, x, hx, y, hy, hlt⟩ := hfail
   have hle := ExitCouplingParams.stoppedWalk_le_of_numerics (mult := S.mult ε ω) (ε := ε)
-    (η := S.η ω) hε hη hp (hlf ε hε) (hcons ε hε) (fun j k hkj => hadj ε hε j k hkj) hδ
-    (by linarith) hedef hρ0' (by linarith) hd hr0 hA.le (hψ.1 _ (Real.rpow_nonneg hδ.le a))
-    (hψ₀.1 _ (by positivity)) hT0 hfin hεlt.le hd1 hd2 hd3 hd4 hd5 z hz x hx y hy
+    (η := S.η ω) (ρ := ρ0 - Real.sqrt δ) hε hη hp (hlf ε hε) (hcons ε hε) (fun j k hkj => hadj ε hε j k hkj) hδ
+    (by linarith) hedef (by linarith) (by linarith) hd hr0 hA.le (hψ.1 _ (Real.rpow_nonneg hδ.le a))
+    (hψ₀.1 _ (by positivity)) hT0 hfin hεlt.le hd1 hd2' hd3 hd4 hd5 z hz x hx y hy
   exact absurd hlt (not_lt.2 hle)
 
 end ExitCouplingEvent
