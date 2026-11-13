@@ -7,18 +7,13 @@ import MatedCRT.FirstPass.S4S6c.HoneSetupAdapt68
 import MatedCRT.FirstPass.S4S6c.CGResGreenWalk68
 
 /-!
-# The CG walk residual with the ball-form mesh
+# The CG walk producers with the ball-form mesh
 
-(1) `hWalk_ae_of_walk_loc` and `hWalk_pw_g_loc`: copies of `HoneWalkAe68.hWalk_ae_of_walk` and of
+`hWalk_ae_of_walk_loc` and `hWalk_pw_g_loc`: copies of `HoneWalkAe68.hWalk_ae_of_walk` and of
 `B1EnvPwG68.hWalk_pw_g` whose univ-form mesh `CellDiamLe … Set.univ` is replaced by the ball form
 `CellDiamLe ε η (d/100) (ball 0 ρmesh)` with the gap `d/100 ≤ ρmesh - ρ`. The hit-cell interiority and the
 exit-cell bounds use the ball-form lemmas of WalkLoc68 (`shellHit_interior_of_mesh_loc`, `hb_ae_of_walk_loc`,
 `hEl_ae_of_walk_loc`); `exitVertex_mem_ball_of_sphere` only sees the cells meeting `ball 0 ρ`.
-
-(2) `shellCGResWalk_holds_loc : ShellCGResWalk 𝒮` with the `hMesh` binder removed: the mesh is
-`cellDiamLe_rhoCell_of_meshEventR` on the premise (with `c0 := 1`, whose `hεcell` is `eps_rpow_le_div_hundred`
-from `2ω₀ < e` and `10 ε^ω₀ ≤ r`), and the gap comes from premise clause `2(d/100) + 2d^a ≤ rhoCell68 ρ - ρ`.
-The Green-scale input stays the single named binder `hG1` (refuted as stated; see its docstring).
 -/
 
 namespace MatedCRT
@@ -180,59 +175,9 @@ theorem hWalk_pw_g_loc {γ ρ ζ C CG α CE s₀ ε r ω₀ ωm s1 c0W : ℝ} {�
   obtain ⟨hcv, hinf⟩ := MatedCRT.Lemma68B1EnvPw.walk_conclusion_of_ball hε hρ0 hv hR8 (Real.rpow_pos_of_pos hε _)
   exact ⟨hcv, hR8, hinf⟩
 
-/-- **`ShellCGResWalk` with the ball-form mesh and no `hMesh` binder (`shellCGResWalk_holds_loc`).**
-The premise `ShellPtPremCG` is destructured. The mesh is `cellDiamLe_rhoCell_of_meshEventR` (`c0 := 1`, `hεcell` from
-`eps_rpow_le_div_hundred`), the gap is clause `2(d/100) + 2d^a ≤ rhoCell68 ρ - ρ`, the exponent split is
-`ε^e ≤ ε^ω₀` (`ω₀ < e`).
-
-Named input (the Green-scale input), the exact type the walk producer's second conjunct needs:
-`hG1 : ∀ (…) premise → ∃ ωm, 2 * ωm < ω₀ ∧ 10 * ε ^ ωm ≤ r` (the hypotheses `hωm`, `hr10` of `hWalk_pw_g_loc`,
-read through `eps_pow_le_eighth_of_radius`, HoneWalkAe68.lean:77).
-**REFUTED as stated, do not instantiate:** for `0 < ε < 1` and `r = 10 ε^ω₀` (allowed by the premise), `10 ε^ωm ≤ r`
-forces `ωm ≥ ω₀`, which contradicts `2 ωm < ω₀`. The walk's first conjunct needs `ε^ω₀ ≤ winRf(centre)/8`, and
-`ε^e ≤ r²/100` on the premise does not give that. A sufficient scalar is `ε^ω₀ ≤ r²/8`, since `winRf ≥ dyadicD r ≥ r²`. -/
-theorem shellCGResWalk_holds_loc {𝒮 : SpaceFillingSLEModel}
-    (hG1 : ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
-      (Ew : ℝ → Set Ω) (ω : Ω) (_i : Lemma68Config.Config68),
-      ShellPtPremCG 𝒮 γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r S Ew ω →
-        ∃ ωm : ℝ, 2 * ωm < ω₀ ∧ 10 * ε ^ ωm ≤ r) :
-    ShellCGResWalk 𝒮 := by
-  intro γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω _ S Ew ω i hpre hFA
-  obtain ⟨ωm, hωm, hr10m⟩ := hG1 γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω S Ew ω i hpre
-  obtain ⟨hγ0, hγ2, hω0, -, -, hωe, -, hκ2, hCG, -, -, hζ0, hζ1, hρ0, hρ1, -, hq0, -, hq0c, -, hRρ, hRA,
-    -, hs0, -, -, hε0, -, hrε, hrR, -, hmeshR, hgapP, hcurve, hmult, hcont, hμN, hμF, hdeg, hadj, hadjAll,
-    -, -⟩ := hpre
-  have hr0 : 0 < r := by
-    have := Real.rpow_pos_of_pos hε0 ω₀
-    linarith
-  have hrρ : r ≤ ρ / 4 := le_trans hrR hRρ
-  have hε1 : ε ≤ 1 := Lemma68CGResGreenWalk.eps_le_one_of_ten_rpow hω0 hrε hrρ hρ1
-  have hεcell := eps_rpow_le_div_hundred hε0 hε1 hrε hκ2
-  have hmesh := Lemma68ShellCoreCG.cellDiamLe_rhoCell_of_meshEventR S ω
-    (countingMeshEventR_meshR hmeshR) hε0 hρ1 hr0 hrρ (le_refl (1 : ℝ)) hεcell
-  have hgapM : dyadicD r / 100 ≤ Lemma68HoneCellGood.rhoCell68 ρ - ρ := by
-    have h1 : 0 ≤ dyadicD r ^ shortExp ζ := Real.rpow_nonneg (dyadicD_pos r).le _
-    have h2 : 0 ≤ dyadicD r / 100 := div_nonneg (dyadicD_pos r).le (by norm_num)
-    linarith
-  have hrz := MatedCRT.Lemma68HoneSetupAdapt.hrz_of_rAmp hq0 hq0c hζ0 hζ1 (le_trans hrR hRA)
-  have hreg : RegularEnvAt68 S γ ω₀ ρ CG ζ α CE ε ω := by
-    unfold RegularEnvAt68
-    exact ⟨Lemma68CGResGreenWalk.meshEvent_of_meshEventR S hρ1 (countingMeshEventR_meshR hmeshR), hcurve, hmult,
-      hcont, hμN, hμF, hdeg,
-      hadj, hadjAll⟩
-  have hW := hWalk_pw_g_loc (C := C) (CG := CG) (α := α) (CE := CE)
-    (s1 := shellS1CG γ CG) (c0W := shellC0 CG) S
-    (shellKCG γ ρ ω₀ ζ CG hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1 hCG) ω i
-    hρ0 hρ1 hζ0 hζ1 hr0 hrρ hrz hε0 hε1 hs0 hreg hmesh hgapM hωm hr10m hFA
-  intro k hk
-  filter_upwards [hW k hk] with x hx hP
-  obtain ⟨h1, h2, h3⟩ := hx hP
-  exact ⟨h1, le_trans (Lemma68CGResGreenWalk.rpow_e_le_rpow_w0 hε0 hε1 hωe) h2, h3⟩
-
 end Lemma68CGResWalkLoc
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68CGResWalkLoc.eps_rpow_le_div_hundred
 #print axioms MatedCRT.Lemma68CGResWalkLoc.hWalk_ae_of_walk_loc
 #print axioms MatedCRT.Lemma68CGResWalkLoc.hWalk_pw_g_loc
-#print axioms MatedCRT.Lemma68CGResWalkLoc.shellCGResWalk_holds_loc

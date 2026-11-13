@@ -165,35 +165,9 @@ theorem shellCGResGreen_holds {𝒮 : SpaceFillingSLEModel}
     -, hs0, -, -, hε0, -, hrε, hrR, -, hmeshR, -, hcurve, hmult, hcont, hμN, hμF, hdeg, hadj, hadjAll, -, -⟩ := hpre
   exact resGreen_pt S ω i hω0 hωe hε0 hrε (le_trans hrR hRρ) hρ1 hGE hFA
 
-/-- **`ShellCGResWalk` (`shellCGResWalk_holds`), conditional on the named inputs G1 and `hMesh`.**
-G1 (`hG1`): the walk exponent `ωm` with `2ωm < ω₀` and `10 ε^ωm ≤ r` (unanswered).
-**REFUTED as stated, do not instantiate:** for `0 < ε < 1` and `r = 10 ε^ω₀` (allowed by the premise, whose only lower
-bound on `r` is `10 ε^ω₀ ≤ r`), `10 ε^ωm ≤ r` gives `ωm ≥ ω₀`, contradicting `2ωm < ω₀`. The split route
-(`ε^e ≤ ε^(2ω₀) ≤ (r/10)^2` from the premise clause `2ω₀ < e`) needs a lower bound `r^2/100 ≤ winRf/8` instead.
-`hMesh`: the univ mesh `CellDiamLe` of the walk producer (HoneWalkAe68.lean:111); the premise gives it only on the
-cells meeting `ball 0 ρmesh` (`cellDiamLe` of `meshEventR`). -/
-theorem shellCGResWalk_holds {𝒮 : SpaceFillingSLEModel}
-    (hG1 : ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
-      (Ew : ℝ → Set Ω) (ω : Ω) (_i : Lemma68Config.Config68),
-      ShellPtPremCG 𝒮 γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r S Ew ω →
-        ∃ ωm : ℝ, 2 * ωm < ω₀ ∧ 10 * ε ^ ωm ≤ r)
-    (hMesh : ∀ (γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
-      (Ew : ℝ → Set Ω) (ω : Ω) (_i : Lemma68Config.Config68),
-      ShellPtPremCG 𝒮 γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r S Ew ω →
-        CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ) :
-    ShellCGResWalk 𝒮 := by
-  intro γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω _ S Ew ω i hpre hFA
-  obtain ⟨ωm, hωm, hr10m⟩ := hG1 γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω S Ew ω i hpre
-  have hMe := hMesh γ ω₀ α ζ ρ CG CE β C q0 R s₀ ε r Ω S Ew ω i hpre
-  obtain ⟨hγ0, hγ2, hω0, -, -, hωe, -, -, hCG, -, -, hζ0, hζ1, hρ0, hρ1, -, hq0, -, hq0c, -, hRρ, hRA,
-    -, hs0, -, -, hε0, -, hrε, hrR, -, hmeshR, -, hcurve, hmult, hcont, hμN, hμF, hdeg, hadj, hadjAll, -, -⟩ := hpre
-  exact resWalk_pt S ω i hγ0 hγ2 hρ0 hρ1 hζ0 hζ1 hCG hω0 hωe hs0 hε0 hrε hrR hRρ hq0 hq0c hRA (countingMeshEventR_meshR hmeshR) hcurve hmult
-    hcont hμN hμF hdeg hadj hadjAll ωm hωm hr10m hMe hFA
-
 end Lemma68CGResGreenWalk
 end MatedCRT
 
 #print axioms MatedCRT.Lemma68CGResGreenWalk.resGreen_pt
 #print axioms MatedCRT.Lemma68CGResGreenWalk.resWalk_pt
 #print axioms MatedCRT.Lemma68CGResGreenWalk.shellCGResGreen_holds
-#print axioms MatedCRT.Lemma68CGResGreenWalk.shellCGResWalk_holds

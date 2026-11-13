@@ -149,7 +149,7 @@ theorem firstPass_3_1_countable_of_bg20 {𝒮 : SpaceFillingSLEModel} {ν : ℝ 
 
 /-- **Lemma 3.1, samplewise faithful form, per-model exit-time input**. As
 `firstPass_3_1_faithful_of_bg20`, but the exit-time input is the per-model frozen `BG20Prop51 𝒮` (BG20 Proposition 5.1,
-`FirstPass/Frozen/S3c.lean`) instead of the reference-package form `BG20Prop51Ref ν`, which is FALSE as typed (see docs/campaign/FROZEN-PROVENANCE.md).
+`FirstPass/Frozen/S3c.lean`) instead of the reference-package form `BG20Prop51Ref ν` (proved for every `ν` as `bg20Prop51Ref_of_reference`).
 The second clause of Lemma 2.18 is derived from `BG20Prop51 𝒮` and `VolumeGrowthStmt` by `exitTimeUpperBoundStmt_core`. -/
 theorem firstPass_3_1_faithful_of_bg20Model {𝒮 : SpaceFillingSLEModel} (hBG : BG20Prop51 𝒮)
     (hm : MepsScalingInput 𝒮) (h27 : VolumeGrowthStmt) (h32 : FrozenDiscreteHolderContinuityCorrected 𝒮) :
