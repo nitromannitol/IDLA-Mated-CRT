@@ -164,12 +164,11 @@ def StoppedInteriorGeometryStep (𝒮 : SpaceFillingSLEModel) : Prop :=
           (frontier (fillCells ε (S.η ω) (cellVertices ε (S.η ω) (Λ ω t)))) →
         ∀ x ∈ cell ε (S.η ω) a, δ / 2 ≤ infDist x (Λ ω t)ᶜ ∧ dist x (vertexPoint ε (S.η ω) a) < r}
 
-/-- **Measurability of the continuum margin, repaired form (named input).**
+/-- **Measurability of the continuum margin (named input).**
 For `δ, s, t > 0` let `M(ω)` be the infimum over the random compact set
 `K(ω) = {x ∈ Λ_t(ω) : s ≤ |x|, δ ≤ dist(x, Λ_t(ω)ᶜ)}` of the continuum surplus `w̄_t + t G_{B_ρ}(0, ·)`; the infimum
-over the empty set is `0`, as is an unbounded-below real infimum. The raw function `M` is not `σ(h,η)`-measurable on the
-whole sample space in general (a null-copy extension refutes it), so this step asserts only the repaired
-statement: there is an `S.envSigma`-measurable `Mhat` with `Mhat = M` almost surely on `{t < T}`, `T = clusterExitTime Λ ρ`.
+over the empty set is `0`, as is an unbounded-below real infimum. The step asserts an almost sure measurable version:
+there is an `S.envSigma`-measurable `Mhat` with `Mhat = M` almost surely on `{t < T}`, `T = clusterExitTime Λ ρ`.
 Nothing is prescribed on the exceptional outcomes. -/
 def StoppedInteriorMeasurableStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →

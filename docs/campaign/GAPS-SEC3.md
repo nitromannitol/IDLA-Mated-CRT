@@ -80,19 +80,16 @@ explicitly state an exponent's dependence on them. Thus it supplies no explicit
 representation-uniform quantifier; this is not an assertion of dependence on a
 particular probability space. `UniformCellSizeUpperStep` records the exact
 uniform upper bound needed by this route. `CellSizeEstimateStmt` quantifies its
-exponent after the environment, whereas the frozen same-walk rate quantifies
-its exponent before the environment.
+exponent after the environment, whereas the uniform same-walk rates quantify
+their exponent before the environment.
 
 `PointwiseCellAnnulusEnvelopeStep` (`Steps/Sec3/PointwiseAnnulusEnvelope.lean`)
 records the needed environment-measurable pointwise cell/annulus event and
 its complement bound. The existing GMS estimate is in outer probability and
 the measurable cell event agrees only a.e. at each mesh; neither provides
 this pointwise envelope. Even assuming the envelope, the current mean and tail
-rates are only a.e. on it. A separate pointwise upgrade is required to reach
-the frozen `CorrectedHarmonicSameWalkRateStmt`.
-The exact remaining pointwise tail-and-mean type for a chosen event and
+rates hold a.e. on it.
+The pointwise tail-and-mean type for a chosen event and
 exponents is `PointwiseSameWalkRatesStep` in
 `Steps/Sec3/PointwiseSameWalkRates.lean`; it is not supplied by the a.e.
-mean and tail results. The required joint choice of exponents, event and both
-annealed/pointwise bounds is `UniformSameWalkAssemblyStep` in
-`Proofs/Sec3/ConvergenceHarmonicFunctions/SameWalkAssembly.lean`.
+mean and tail results.

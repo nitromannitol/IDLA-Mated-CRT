@@ -41,11 +41,4 @@ theorem correctedHarmonicConvergence_of_uniform (𝒮 : SpaceFillingSLEModel)
     rw [rescaledLBMExitPosition_eq_brownianExitPosition isOpen_ball hclock
       (by rw [hstart]; exact hy) hfin hm₀, pathExitPosition_eq_eval_exitTime]
 
-/-- The corrected lemma follows from the uniform Poisson step and the
-separately stated quantitative same-walk comparison. -/
-theorem correctedLemma36_of_steps (𝒮 : SpaceFillingSLEModel)
-    (huniform : CorrectedPoissonUniformStep 𝒮) (hrate : CorrectedHarmonicSameWalkRateStmt 𝒮) :
-    CorrectedLemma36Stmt 𝒮 :=
-  ⟨correctedHarmonicConvergence_of_uniform 𝒮 huniform, hrate⟩
-
 end MatedCRT

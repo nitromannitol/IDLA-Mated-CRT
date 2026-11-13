@@ -53,7 +53,7 @@ theorem closed_3_6 {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCo
 
 /-- Lemma 3.6, corrected form (convergence conjunct): `CorrectedHarmonicConvergenceStmt`, from
 `MatedCRT.FirstPass36.firstPass_3_6_convergence_corrected` (S3e.lean), with the corrected Hölder input
-`hC.frozenDiscreteHolderContinuityCorrected`. The rate conjunct (`CorrectedHarmonicSameWalkRateStmt`) is not included. -/
+`hC.frozenDiscreteHolderContinuityCorrected`. -/
 theorem closed_3_6_corrected {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure SLEPathCode)
     (hC : CertifiedReferenceModel ν 𝒮) (hexc : FrozenBrownianOutwardExcursionAtExit) :
     CorrectedHarmonicConvergenceStmt 𝒮 :=

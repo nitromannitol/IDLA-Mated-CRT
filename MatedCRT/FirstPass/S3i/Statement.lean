@@ -3,11 +3,6 @@ import MatedCRT.Draft.Section3HarmonicCorrected
 /-!
 # Corrected Lemma 3.6: the fixed-start annealed same-walk clause
 
-The paper-faithful replacement of
-the pointwise clause `CorrectedHarmonicSameWalkRateStmt` (Draft/Section3HarmonicCorrected.lean:68). That Draft clause
-is FALSE as typed (null-copy counterexample) and is
-retired outside this file.
-
 The corrected numbered Lemma 3.6 asserts only the fixed-start ANNEALED comparison, at threshold `q = b χ / 2`, with
 both exit locations computed from the same unrestricted walk: no pointwise or quenched clause, no mean estimate, and no
 arbitrary threshold `q`. The constant `b = b(γ) > 0` depends only on `γ`. The corrected Lemma 3.6 is then

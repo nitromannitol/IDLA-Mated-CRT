@@ -8,7 +8,7 @@ import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.SameWalkRatesAe
 /-! # Assembly of the almost-everywhere same-walk rates (steps2-r2, Section 3)
 
 * `sameWalkAe_clause`: for one event, the annealed component and the a.e. pointwise component give the quantitative
-  clause of `CorrectedHarmonicSameWalkRateAeStmt`, the constants combined by the maximum as in the frozen assembly.
+  clause of `CorrectedHarmonicSameWalkRateAeStmt`, the constants combined by the maximum.
 * `correctedHarmonicSameWalkRateAe_of_assemblyAe`: the assembly from `UniformSameWalkAssemblyAeStep` (the annealed
   component is the frozen named step `AnnealedSameWalkRateStep`).
 * `annealedSameWalkRateStep_of_ae`: the annealed component from the a.e. quenched rate, the polynomial complement of
@@ -73,8 +73,8 @@ theorem sameWalkAe_clause {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} 
         split_ifs <;> positivity
       nlinarith [mul_le_mul_of_nonneg_right (le_max_right C₁ C₂) hscale]
 
-/-- Assembly input with exactly the frozen uniform exponent quantifiers. The event, its polynomial complement and the
-annealed component are those of `UniformSameWalkAssemblyStep`; the pointwise component is the a.e. successor. -/
+/-- Assembly input with the uniform exponent quantifiers of corrected Lemma 3.6: a common event with polynomial
+complement, the annealed component, and the almost-everywhere quenched component. -/
 def UniformSameWalkAssemblyAeStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ β : ℝ, 0 < β ∧
   ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ ν : ℝ, 0 < ν ∧

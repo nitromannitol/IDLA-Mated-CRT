@@ -483,7 +483,7 @@ e02c3cd supplies IGUniformShift's uniform translation-mod-period law and indepen
 
 33bdd99's continuous surplus decoder and e8620f7's locality consumer integrations also pass. The latter supplies the already proved locality functional internally, while all field/HB law hypotheses remain. Nine committed source snapshots and four axiom probes pass;12 exports have standard axioms only;79-source scan clean. Receipts lead/checks/20261108-1810.
 
-Operator inbox entry18:25 newly releases the same-walk a.e. rate repair and exact six-antecedent stopped layer potential, with CORRECT re-audit in steps2-r2 (sha f52fd76aafd942d26dce5515140993cd0c55f392d965a9d9476d39aa2182a734). z1/z5 fresh queues route bounded source-backed slices; pole is still held. The frozen corrected rate export needs the exact per-mesh a.e. delta recorded in SAMEWALK-RATE-AE-REPAIR-20261108.md; workers stage internal successors under the no-Draft rule. Earlier displaced compact/test briefs are preserved as following tasks. All four queues remain supplied; quota stops and paused tasks respected. No new mathematical WPN or numbered closure.
+Operator inbox entry18:25 newly releases the same-walk a.e. rates and exact six-antecedent stopped layer potential, with CORRECT re-audit in steps2-r2 (sha f52fd76aafd942d26dce5515140993cd0c55f392d965a9d9476d39aa2182a734). z1/z5 fresh queues route bounded source-backed slices; pole is still held. Earlier displaced compact/test briefs are preserved as following tasks. All four queues remain supplied; quota stops and paused tasks respected. No new mathematical WPN or numbered closure.
 
 
 ## Lead verification and routing, round2026-11-08 18:41

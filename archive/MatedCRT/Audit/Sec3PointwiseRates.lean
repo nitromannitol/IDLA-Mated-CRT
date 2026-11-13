@@ -4,7 +4,6 @@ import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.GMSJointGoodEvent
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.UniformCellSizeMeasurable
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.PointwiseEnvelopeMean
 import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.PointwiseEnvelopeTail
-import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.CorrectedFromAssembly
 import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.CorrectedHarmonicInputs
 import MatedCRT.Proofs.Sec1.EnvironmentScaling
 
@@ -54,32 +53,6 @@ theorem stopped_clock {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) [IsProba
           (ContinuousPath.exitTime U b) t).toNNReal)) atTop
           (𝓝 (liouvilleBrownianPath (F ω) b t)) :=
   berestycki_dirichlet_time_change_eq_lbm P D U h hcirc x γ F G hsource hD hU hb hc hx hgff hglobal
-
-/-- The Lemma 3.4 output feeds Lemmas 3.3 and corrected 3.5, while the
-same-walk rate and qualitative convergence remain distinct consumers. -/
-theorem final_reductions (𝒮 : SpaceFillingSLEModel)
-    (h27 : VolumeGrowthStmt) (h17 : BoundedExitTimeRVStmt)
-    (h18 : ExitTimeUpperBoundStmt 𝒮) (hscale : MepsScalingInput 𝒮)
-    (hrevuz : LBMGreenOccupationStep 𝒮) (hdet : TruncatedDetFixedTimeStep 𝒮)
-    (h211 : RandomWalkToLBMStmt 𝒮)
-    (h28 : CellSizeEstimateStmt 𝒮) (hexc : BrownianOutwardExcursionAtExitStep)
-    (h210 : DegreeMeasureConvergenceStmt 𝒮) (h214 : GreenKernelUpperBoundStmt 𝒮)
-    (hH : DiscreteHolderContinuityCorrectedStep 𝒮)
-    (hfinite : FiniteDomainDirichletRepresentation) (hmod : CorrectedHarmonicModulusStep 𝒮)
-    (hrate : UniformSameWalkAssemblyStep 𝒮) :
-    IntegralConvergenceGreenFunctionStmt 𝒮 ∧ UniformConvergenceGreenKernelStmt 𝒮 ∧
-    DiscreteDirichletProblemCorrectedStmt 𝒮 ∧ CorrectedLemma36Stmt 𝒮 := by
-  have h34 : IntegralConvergenceGreenFunctionStmt 𝒮 :=
-    integralConvergenceGreenFunction_final h17 h18 hscale hrevuz hdet h211 h28 hexc
-  have h33 : UniformConvergenceGreenKernelStmt 𝒮 :=
-    uniformConvergenceGreenKernel_of_prepared_inputs 𝒮 h210 h34 h214 h28 hscale h17 h18 hH
-  have h36 : CorrectedLemma36Stmt 𝒮 :=
-    correctedLemma36_of_modulus_assembly 𝒮 h211 hscale hexc
-      (lbmPathFunctionalMeasurableStep_holds 𝒮) h28 hmod hrate
-  have h35 : DiscreteDirichletProblemCorrectedStmt 𝒮 :=
-    discreteDirichletProblemCorrected_of_corrected_harmonic_estimates 𝒮 h27 hscale h210 h34
-      h214 h28 h18 hH hfinite h36.1
-  exact ⟨h34, h33, h35, h36⟩
 
 /-- Cone scaling retains the three representation obligations explicitly. -/
 theorem cone_scaling (𝒮 : SpaceFillingSLEModel) (hs : QuantumConeScalingInput)
@@ -140,17 +113,14 @@ end MatedCRT.Sec3PointwiseRatesAudit
 
 #print MatedCRT.Sec3PointwiseRatesAudit.cell_event
 #print MatedCRT.Sec3PointwiseRatesAudit.stopped_clock
-#print MatedCRT.Sec3PointwiseRatesAudit.final_reductions
 #print MatedCRT.Sec3PointwiseRatesAudit.cone_scaling
 #print MatedCRT.MatedCRTEnv.IsValid.mean_on_pointwise_cellAnnulus_envelope
 #print MatedCRT.MatedCRTEnv.IsValid.tail_on_pointwise_cellAnnulus_envelope
 #print MatedCRT.PointwiseCellAnnulusEnvelopeStep
 #print MatedCRT.PointwiseSameWalkRatesStep
 #print MatedCRT.AnnealedSameWalkRateStep
-#print MatedCRT.UniformSameWalkAssemblyStep
 #print axioms MatedCRT.Sec3PointwiseRatesAudit.cell_event
 #print axioms MatedCRT.Sec3PointwiseRatesAudit.stopped_clock
-#print axioms MatedCRT.Sec3PointwiseRatesAudit.final_reductions
 #print axioms MatedCRT.Sec3PointwiseRatesAudit.cone_scaling
 #print axioms MatedCRT.MatedCRTEnv.IsValid.mean_on_pointwise_cellAnnulus_envelope
 #print axioms MatedCRT.MatedCRTEnv.IsValid.tail_on_pointwise_cellAnnulus_envelope

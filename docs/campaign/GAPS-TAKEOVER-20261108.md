@@ -225,7 +225,7 @@ def PointwiseCellAnnulusEnvelopeStep {Ω : Type} [MeasurableSpace Ω]
 
 ## WPN-36-pointwise-rates: `MatedCRT.PointwiseSameWalkRatesStep`
 
-**WRITTEN-PROOF-AVAILABLE REPAIR / LEAN-PENDING (operator18:25).** steps2-r2:443-766 and its independent re-audit target3 are CORRECT. The original pointwise type below is false; use the per-mesh a.e. successor with the chosen geometric event/exponents. See [the exact proposed delta](SAMEWALK-RATE-AE-REPAIR-20261108.md); frozen Draft remains unchanged. Historical request: Corrected same-walk rate: the existing mean and tail estimates hold a.e. on the chosen event. They do not establish these estimates for every member of that event, simultaneously in the displayed parameters. Worker m1 r3, 2afd11a.
+**WRITTEN-PROOF-AVAILABLE / LEAN-PENDING (operator18:25).** steps2-r2:443-766 and its independent re-audit target3 are CORRECT; they give the rates almost everywhere on the chosen event at each mesh, with the chosen geometric event and exponents. Request: Corrected same-walk rate: the existing mean and tail estimates hold a.e. on the chosen event. They do not establish these estimates for every member of that event, simultaneously in the displayed parameters. Worker m1 r3, 2afd11a.
 
 Exact declaration: `MatedCRT/Steps/Sec3/PointwiseSameWalkRates.lean:13`.
 
@@ -247,22 +247,6 @@ def PointwiseSameWalkRatesStep {Ω : Type} [MeasurableSpace Ω]
             (if (χ : ℝ) < ν then ε ^ (min a β * χ)
              else if (χ : ℝ) = ν then ε ^ (min a β * ν) * (1 + |Real.log ε|)
              else ε ^ (min a β * ν))
-```
-
-## Consumption boundary: uniform same-walk assembly
-
-This interface collects the uniform joint choice of exponents, event and rate estimates; it is not an independent replacement for the preceding written-proof requests. `correctedHarmonicSameWalkRate_of_assembly` proves the frozen rate only conditional on it. Its component `AnnealedSameWalkRateStep` is defined immediately above it in the same source file. No closure of Lemma 3.6 is claimed from this wrapper.
-
-```lean
-def UniformSameWalkAssemblyStep (𝒮 : SpaceFillingSLEModel) : Prop :=
-  ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ β : ℝ, 0 < β ∧
-  ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ ν : ℝ, 0 < ν ∧
-  ∀ a : ℝ, 0 < a → a < 2 / (2 + γ) ^ (2 : ℕ) → ∃ κ : ℝ, 0 < κ ∧
-  ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
-  ∃ E : ℝ → Set Ω, (∀ ε, MeasurableSet[S.envSigma] (E ε)) ∧
-    (∃ C δ : ℝ, 0 ≤ C ∧ 0 < δ ∧ ∀ ε : ℝ, 0 < ε → ε < δ →
-      S.P (E ε)ᶜ ≤ ENNReal.ofReal (C * ε ^ κ)) ∧
-    AnnealedSameWalkRateStep S ρ a β ν κ ∧ PointwiseSameWalkRatesStep S E ρ a β ν
 ```
 
 ## Written arguments already available
@@ -483,9 +467,9 @@ Late b834645 mass-code return: the Borel massLimit functional and its exact IsLQ
 
 Pinned e8620f7 receipts in fleet lead/checks/20261108-1810:9 committed source checks,4 axiom probes/12 exports using only propext, Classical.choice and Quot.sound;79-source code-hole/axiom scan clean and19 paused-task hashes unchanged. This is implementation checking, not a new frozen-statement source approval.
 
-The new inbox entry labelled18:25 releases targets3 and9 from notes/wpn-steps2/steps2-r2.tex, sha256 f52fd76aafd942d26dce5515140993cd0c55f392d965a9d9476d39aa2182a734, with AUDIT-steps2-r2.md targets3/9 CORRECT. Use r2:443-766 for the rate repair and r2:3368-3744 for the layer proof (the entry's3346 locator precedes its section header). Sections1,2,4,5,7,8 retain the earlier proof unchanged. The pole proof remains GAPS and is not assigned; newer scaling WPN remain. The release resolves the prior missing Brownian-minimum/strict-adjacency and early-exit written arguments; implementing them is now source-backed work, not a new WPN.
+The new inbox entry labelled18:25 releases targets3 and9 from notes/wpn-steps2/steps2-r2.tex, sha256 f52fd76aafd942d26dce5515140993cd0c55f392d965a9d9476d39aa2182a734, with AUDIT-steps2-r2.md targets3/9 CORRECT. Use r2:443-766 for the a.e. same-walk rates and r2:3368-3744 for the layer proof (the entry's3346 locator precedes its section header). Sections1,2,4,5,7,8 retain the earlier proof unchanged. The pole proof remains GAPS and is not assigned; newer scaling WPN remain. The release resolves the prior missing Brownian-minimum/strict-adjacency and early-exit written arguments; implementing them is now source-backed work, not a new WPN.
 
-z1 has an a.e. rate-successor/assembly/outer-probability task queued after its current geometry task. Since the frozen corrected export remains pointwise in Draft/Section3HarmonicCorrected.lean:85, the worker stages exact repaired internal successors and preserves Draft; see E-SAMEWALK-RATE-AE-FROZEN-DELTA and the linked exact-type note. z5 has the layer-potential comparison and finite-center probability reduction queued after its current supersolution Borel matrix. Displaced compact-code and countable-test briefs are archived as bounded successors, not discarded. m1/m5 remain quota-stopped with their existing fresh queues supplied.
+z1 has an a.e. rate/assembly/outer-probability task queued after its current geometry task. z5 has the layer-potential comparison and finite-center probability reduction queued after its current supersolution Borel matrix. Displaced compact-code and countable-test briefs are archived as bounded successors, not discarded. m1/m5 remain quota-stopped with their existing fresh queues supplied.
 
 
 ## Final audited return and checked components (lead round18:41)

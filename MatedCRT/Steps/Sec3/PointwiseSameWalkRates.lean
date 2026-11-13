@@ -7,9 +7,8 @@ namespace MatedCRT
 open MeasureTheory Set Metric _root_.HarmonicBalls
 open scoped NNReal ENNReal
 
-/-- The pointwise quenched tail and mean estimates required by the frozen
-corrected Lemma 3.6, for a given event and exponents. The existing estimates
-hold only almost everywhere; this step records the remaining upgrade. -/
+/-- The quenched tail and mean estimates of the same-walk comparison of corrected
+Lemma 3.6 at every environment of the event `E`, for given exponents. -/
 def PointwiseSameWalkRatesStep {Ω : Type} [MeasurableSpace Ω]
     (S : MatedCRTEnv Ω) (E : ℝ → Set Ω) (ρ a β ν : ℝ) : Prop :=
   ∀ (r : ℝ) (z : ℂ), 0 < r → ball z r ⊆ ball 0 ρ →

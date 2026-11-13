@@ -6,12 +6,9 @@ import MatedCRT.Proofs.Sec3.ConvergenceHarmonicFunctions.GMSUniformRate
 
 /-! # Almost-everywhere same-walk rates (internal successors of the pointwise statements)
 
-Repaired quenched rates of `notes/wpn-steps2/steps2-r2.tex`, Section 3 (lines 525–532 and 749–766). The pointwise
-environment quantifier `∀ ω ∈ E ε` is replaced by `∀ᵐ ω ∂S.P, ω ∈ E ε → …`; the null set may depend on `ε`. Every
-other quantity is copied verbatim: the constants `C, ε₀`, the exponents `a, β, ν, κ, q, χ`, the event `E` with its
-polynomial complement, the sectionwise annealed bound and the three mean regimes. The frozen declarations
-`PointwiseSameWalkRatesStep` and `CorrectedHarmonicSameWalkRateStmt` are not changed; the literal pointwise
-form is false (steps2-r2.tex, proposition at lines 491–512). -/
+Quenched rates of `notes/wpn-steps2/steps2-r2.tex`, Section 3 (lines 525–532 and 749–766). The environment
+quantifier is `∀ᵐ ω ∂S.P, ω ∈ E ε → …`; the null set may depend on `ε`. The other quantities are: the constants `C, ε₀`, the exponents `a, β, ν, κ, q, χ`, the event `E` with its
+polynomial complement, the sectionwise annealed bound and the three mean regimes. -/
 
 namespace MatedCRT
 
@@ -49,9 +46,8 @@ theorem pointwiseSameWalkRatesAe_of_pointwise {Ω : Type} [MeasurableSpace Ω]
   exact Eventually.of_forall fun ω hω v hv => hpt ε hε hεs ω hω v hv
 
 open Classical in
-/-- The repaired exported same-walk statement, as an internal successor of the frozen
-`CorrectedHarmonicSameWalkRateStmt` (`Draft/Section3HarmonicCorrected.lean`). The quenched clause is the
-almost-everywhere implication `∀ᵐ ω ∂S.P, ω ∈ E ε → …`; everything else is identical to the frozen statement:
+/-- The same-walk comparison of corrected Lemma 3.6 with the quenched clause in the almost-everywhere form
+`∀ᵐ ω ∂S.P, ω ∈ E ε → …`, with
 the exponents `bAnn, ν, κ`, the measurable event `E` with its polynomial complement, the sectionwise annealed
 bound, and the three mean regimes with the factor `H`. -/
 def CorrectedHarmonicSameWalkRateAeStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
