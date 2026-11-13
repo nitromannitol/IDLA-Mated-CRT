@@ -46,7 +46,7 @@ Status values: FIXED <commit> (text or Lean change landed); IN PROGRESS (<worker
 | B4 | Wrong claim at `FirstPass/S1d.lean:30` | FIXED 1ef63ce (z5) |
 | B5 | Lemma 7.4: no counted theorem; `Draft/Section7.lean:67` still has ∀t | FIXED ff66f92 (`closed_7_4_corrected`) |
 | B6 | LP `areaParam`: conditional on a vague limit; "is proved" docstring | FIXED fbc6a0e (z5, LP) |
-| B7 | LP `RescaledEnvironmentInput` (self-labelled possibly false, unused): delete | Responded (1ef63ce): declaration kept, never deleted; docstring marked RETIRED at `MatedCRT/Proofs/Sec1/EnvironmentScaling.lean:76` |
+| B7 | LP `RescaledEnvironmentInput` (unused): delete | FIXED: the declaration is deleted from `MatedCRT/Proofs/Sec1/EnvironmentScaling.lean` |
 | B8 | Docstrings cite `exists_isCorrelatedBM2` | FIXED fbc6a0e (LP worktree `/home/nitro/lean/LP-idla-phase2`, branch idla/phase2): the name is absent at fbc6a0e and at worktree HEAD 8354077; the LP pin in IDLA still cites it at `LatticeProb/Bonanno/MatedCRTHarmonic/Frozen/IsCorrelatedBM2.lean:13` (pin update is the operator's) |
 
 ## Round-1 items still open in the tables (audit lines 230 to 268)

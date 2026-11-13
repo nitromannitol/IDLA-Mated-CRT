@@ -173,5 +173,5 @@ IDLA consumers (grep over MatedCRT; several hits are docstring mentions):
 - `MatedCRTEnv.IsValid` (MatedCRT/Defs/Setting.lean:141), the structure that carries the coupling clause at :157-165.
 - `HasReferenceEnvironments` (MatedCRT/FirstPass/SLERef/Reference.lean:42-44): `∃ S : MatedCRTEnv ℝ, S.IsValid 𝒮 γ` for every γ in (0, 2). It is the non-vacuity statement. It is a conjunct of `CertifiedReferenceModel` (MatedCRT/FirstPass/SLERef/Certified.lean:64; projection :119). Whether `CertifiedReferenceModel` is discharged or assumed is NOT checked in this section.
 - `MatedCRTEnv.IsValid.ae_no_earlier_origin_visit` (MatedCRT/Proofs/Sec4/DivSandpileLowerBound/SourceVertex.lean:103).
-- `RescaledEnvironmentInput` (MatedCRT/Proofs/Sec1/EnvironmentScaling.lean:103) and `RescaledMatingOfTreesStep` (:149).
+- `RescaledMatingOfTreesStep` (MatedCRT/Proofs/Sec1/EnvironmentScaling.lean:105).
 - Mentions of `IsMatingOfTreesCoupling` or `igMap`: MatedCRT/FirstPass/S5m.lean:12-13; MatedCRT/Proofs/Infra/MatingOfTrees.lean:7-8; MatedCRT/Proofs/MatingOfTrees/AdjacentContactWitnesses.lean:4, :24; MatedCRT/Proofs/Sec1/EnvironmentScaling/IGCurveScaling.lean:1, :7; MatedCRT/Proposed/StoppedPoleCanonicalMoments2026.lean:227 (`GMSCoordinateChangeStmt`).

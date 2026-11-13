@@ -53,8 +53,8 @@ from Section 2 inputs), CircleAverageModConstStep (Proofs/Field/ConeCircleModCon
 ## Reduced (final forms)
 1.4 ConvergenceOfIDLAStmt: convergenceOfIDLA_of_bounds_coneSteps (Proofs/Sec1/Main.lean:70) with
   coneEnvironmentScalingStep_of_inputs (Proofs/Sec1/EnvironmentScaling.lean:184) | Draft: 4.2, 5.1, 6.1, 7.1, 2.2 |
-  External: QuantumConeScalingInput, SLEScaleInvarianceInput, SLEReparametrizationInput, SLEIndepMonoInput; requested
-  RescaledEnvironmentInput (IR-c1-1, F16) | Steps: ConeHarmonicBallStrictGrowthStep (E-c5-3),
+  External: QuantumConeScalingInput, SLEScaleInvarianceInput, SLEReparametrizationInput, SLEIndepMonoInput |
+  Steps: ConeHarmonicBallStrictGrowthStep (E-c5-3),
   ConeHalfBallFamilyFunctionalStep (c5)
 1.6 ConvergenceOfDivSandpileStmt: convergenceOfDivSandpile_of_bounds_coneSteps (:77) | as 1.4
 8.1 IDLAConstrainedConvergenceStmt: iDLAConstrainedConvergence_of_steps (Steps/Sec8/IDLAConstrainedConvergence.lean:27)
@@ -176,8 +176,6 @@ F15. NEW: `MatedCRT.rescaledGreenKernel` is declared in Steps/Sec3/UniformConver
   Proofs/Sec4/ConvergenceDivisible/Final.lean). The reduction of 3.3 therefore cannot be imported with the final forms
   of 4.1, 4.2, 4.8 and 5.1, nor with those of 1.4/1.6. Its example is disabled. One owner must rename
   (DUPLICATES.md).
-F16. NEW: `RescaledEnvironmentInput` (Proofs/Sec1/EnvironmentScaling.lean:75, requested IR-c1-1) is a literature-type
-  input that is not in MatedCRT/External. It needs an operator ruling and A's move to External.
 
 ## Counts (2026-11-05 10:30Z)
 56 numbered results.
@@ -191,7 +189,7 @@ F16. NEW: `RescaledEnvironmentInput` (Proofs/Sec1/EnvironmentScaling.lean:75, re
 Remaining literature inputs:
 - External: MepsScalingInput (3.1c, 4.1, 4.6, 4.7, 7.1), DegreeBoundInput (7.4), QuantumConeScalingInput (2.2, 2.3,
   2.5, 2.6, 6.1, 1.4), and the SLE inputs (1.4).
-- Requested, not in External: RescaledEnvironmentInput (F16) and the cited part NonDyadicDilation (F11).
+- Requested, not in External: the cited part NonDyadicDilation (F11).
 - HB cited: GreenPotentialHolderStmt (3.5) and HarmonicBallsDraftInputs (2.3, 2.4, 6.1).
 - Corrected cited 3.2, pending (L2).
 Open steps on the route to Theorems 1.4/1.6:

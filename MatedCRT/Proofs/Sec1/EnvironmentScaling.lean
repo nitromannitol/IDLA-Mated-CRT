@@ -73,41 +73,6 @@ noncomputable def MatedCRTEnv.rescaleWithCircle {Ω : Type} [MeasurableSpace Ω]
     (hcirc' : Ω → ℝ → ℂ → ℝ) : MatedCRTEnv Ω :=
   { S.rescaleWith γ b hC' clock' with hcirc := hcirc' }
 
-/-- RETIRED (audit R2): possibly false as typed, unused.
-Legacy combined assumption. Its raw-circle measurability conjunct can fail:
-on a measurable null set let positive-radius averages equal `-Q log r` and let
-the zero-radius value encode a nonmeasurable subset of that null set. For `b = 2`
-the level set is empty there, so the rescaled value sees that nonmeasurable
-zero-radius value, although the original validity conditions remain unchanged.
-The conditional reduction below instead uses a jointly measurable version. -/
-def RescaledEnvironmentInput (𝒮 : SpaceFillingSLEModel) : Prop :=
-  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
-  ∀ b : ℝ, 0 < b → ∃ (hC' : Ω → (ℂ → ℝ) → ℝ) (clock' : Ω → ContinuousPath ℂ → ℝ≥0 → ℝ),
-    -- 1. Historical field and raw-circle requirements
-    (∀ φ, IsTestFunction Set.univ φ → Measurable fun ω => hC' ω φ) ∧
-    (∀ r z, 0 < r → Measurable fun ω => (S.rescaleWith γ b hC' clock').hcirc ω r z) ∧
-    IndepFun (fun ω => radialProcess ((S.rescaleWith γ b hC' clock').hcirc ω))
-      (fun ω => lateralProcess (hC' ω) ((S.rescaleWith γ b hC' clock').hcirc ω)) S.P ∧
-    (∃ (Ω' : Type) (_ : MeasurableSpace Ω') (P' : Measure Ω') (hC'' : Ω' → (ℂ → ℝ) → ℝ)
-        (hcirc'' : Ω' → ℝ → ℂ → ℝ), IsProbabilityMeasure P' ∧ IsWholePlaneGFF P' hC'' hcirc'' ∧
-      S.P.map (fun ω => lateralProcess (hC' ω) ((S.rescaleWith γ b hC' clock').hcirc ω)) =
-        P'.map (fun ω => lateralProcess (hC'' ω) (hcirc'' ω))) ∧
-    -- 2. `h^b` and `R_b` are functions of `h`
-    (S.rescaleWith γ b hC' clock').fieldSigma ≤ S.fieldSigma ∧
-    (∃ R : Ω → ℝ, Measurable[S.fieldSigma] R ∧ R =ᵐ[S.P] fun ω => coneScaleRadius γ (S.hcirc ω) b) ∧
-    -- 3. the LQG clock of `h^b`
-    (∀ᵐ ω ∂S.P, ∀ z : ℂ, IsLQGClock planarBrownianMotion γ ((S.rescaleWith γ b hC' clock').hcirc ω) z (clock' ω) ∧
-      ∀ᵐ B ∂planarBrownianMotion z, IsTimeChangeClock (clock' ω B)) ∧
-    -- 4. the mating-of-trees coupling of `(h^b, η^b, b^{-1/2} (L, R)(b ·))`
-    (∃ (X X₀ hIG₀ : Ω → MatedCRTHarmonic.MatedCRT.Field) (B B' B₀ B₀' : ℝ≥0 → Ω → ℝ) (U : Ω → ℝ)
-        (ηL η' η₀ : Ω → C(ℝ, ℂ)),
-      MatedCRTHarmonic.MatedCRT.IsMatingOfTreesCoupling γ S.P X X₀ hIG₀ B B' B₀ B₀' U ηL η' η₀
-          (S.rescaleWith γ b hC' clock').bm ∧
-        ∀ᵐ ω ∂S.P, ⇑(η' ω) = (S.rescaleWith γ b hC' clock').η ω ∧ ∀ φ : LQGMetric.TestC,
-          hC' ω ⇑φ = MatedCRTHarmonic.MatedCRT.coneField (X ω)
-            (MatedCRTHarmonic.MatedCRT.coneRadial γ γ (fun u => B u ω) (fun u => B' u ω)) φ)
-
-
 /-- The unresolved field representation and field-sigma bridge. The circle
 process supplied to this step has measurable positive-radius coordinates and
 is almost surely equal to the raw rescaled process. -/

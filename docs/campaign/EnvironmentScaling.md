@@ -49,9 +49,6 @@ requests. The new pinned DMS source is arXiv:1409.7055v4, as audited.
 
 The measurable circle modification and field-measurable version of the cone
 scale radius are proved in Lean; neither is an additional step hypothesis.
-`RescaledEnvironmentInput` is retained only as a legacy declaration: its exact
-raw-circle measurability requirement has the null-set defect explained in its
-docstring, and the new reduction does not use it.
 
 
 ## Operator19:35 final circle-recovery return
