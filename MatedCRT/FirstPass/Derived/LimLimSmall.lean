@@ -95,5 +95,32 @@ theorem of_tendsto_limsup
   rw [Real.dist_eq, sub_zero, abs_of_pos hε]
   exact hεlt
 
+/-- Failure events whose probability tends to `0` as `ε → 0` for every fixed `δ ∈ (0, 1)` are
+negligible. -/
+theorem of_tendsto_eps
+    (h : ∀ δ : ℝ, 0 < δ → δ < 1 → Tendsto (fun ε => P (F δ ε)) (𝓝[>] (0 : ℝ)) (𝓝 0)) :
+    LimLimSmall P F := by
+  intro θ hθ
+  refine ⟨1, one_pos, fun δ hδ hδ1 => ?_⟩
+  have hev : ∀ᶠ ε in 𝓝[>] (0 : ℝ), P (F δ ε) < ENNReal.ofReal θ :=
+    (h δ hδ hδ1).eventually (gt_mem_nhds (ENNReal.ofReal_pos.2 hθ))
+  rw [eventually_nhdsWithin_iff, Metric.eventually_nhds_iff] at hev
+  obtain ⟨ε₀, hε₀, hε'⟩ := hev
+  refine ⟨ε₀, hε₀, fun ε hε hεlt => (hε' (y := ε) ?_ hε).le⟩
+  rw [Real.dist_eq, sub_zero, abs_of_pos hε]
+  exact hεlt
+
+/-- Reparametrisation of the scale: if `φ δ > 0` tends to `0` as `δ → 0`, a negligible failure event
+stays negligible when `δ` is replaced by `φ δ`. -/
+theorem comp_delta (hF : LimLimSmall P F) {φ : ℝ → ℝ} (hφ0 : ∀ δ : ℝ, 0 < δ → 0 < φ δ)
+    (hφ : Tendsto φ (𝓝[>] (0 : ℝ)) (𝓝 0)) : LimLimSmall P (fun δ ε => F (φ δ) ε) := by
+  intro θ hθ
+  obtain ⟨δ₀, hδ₀, h⟩ := hF θ hθ
+  have hev : ∀ᶠ δ in 𝓝[>] (0 : ℝ), φ δ < δ₀ := hφ.eventually (gt_mem_nhds hδ₀)
+  rw [eventually_nhdsWithin_iff, Metric.eventually_nhds_iff] at hev
+  obtain ⟨δ₁, hδ₁, hδ₁'⟩ := hev
+  refine ⟨δ₁, hδ₁, fun δ hδ hδlt => h (φ δ) (hφ0 δ hδ) ?_⟩
+  exact hδ₁' (y := δ) (by rw [Real.dist_eq, sub_zero, abs_of_pos hδ]; exact hδlt) hδ
+
 end LimLimSmall
 end MatedCRT
