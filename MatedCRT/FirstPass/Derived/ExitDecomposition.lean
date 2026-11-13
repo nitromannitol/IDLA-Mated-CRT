@@ -266,5 +266,27 @@ lemma srwLaw_exitPosition_null {m : ℤ → ℤ → ℕ} {A : Set ℤ} (hA : Fin
   intro hxv
   exact vExitPosition_notMem hx (by rw [show vExitPosition A x = v from hxv]; exact hv)
 
+/-- A bound `|μ E - ν E| ≤ c` on real-valued measures of a set gives the one-sided bound `μ E ≤ ν E + c` in `ℝ≥0∞`
+(finite measures, `c` real). -/
+lemma le_add_ofReal_of_abs_real_le {α : Type*} {mα : MeasurableSpace α} (μ ν : Measure α)
+    [IsFiniteMeasure μ] [IsFiniteMeasure ν] {c : ℝ} {E : Set α}
+    (h : |μ.real E - ν.real E| ≤ c) : μ E ≤ ν E + ENNReal.ofReal c := by
+  have h1 : μ.real E ≤ ν.real E + c := by
+    have := (abs_le.1 h).2
+    linarith
+  calc μ E = ENNReal.ofReal (μ.real E) := (ofReal_measureReal (measure_ne_top μ E)).symm
+    _ ≤ ENNReal.ofReal (ν.real E + c) := ENNReal.ofReal_le_ofReal h1
+    _ ≤ ENNReal.ofReal (ν.real E) + ENNReal.ofReal c := ENNReal.ofReal_add_le
+    _ = ν E + ENNReal.ofReal c := by rw [ofReal_measureReal (measure_ne_top ν E)]
+
+/-- **Form of the total variation hypothesis of the exit coupling.**  If the exit-position laws of the walks from `x`
+and from `y` differ by at most `c` on every vertex set `T` in the real-valued sense of the Hölder-continuity bound, then
+`P_x(x_τ ∈ S) ≤ P_y(x_τ ∈ S) + c` in `ℝ≥0∞` for every `S`. -/
+lemma srwLaw_exitPosition_le_add_of_abs_le (m : ℤ → ℤ → ℕ) (A : Set ℤ) (x y : ℤ) {c : ℝ}
+    (h : ∀ T : Set ℤ, |(srwLaw m x).real {X | vExitPosition A X ∈ T} -
+      (srwLaw m y).real {X | vExitPosition A X ∈ T}| ≤ c) :
+    ∀ S : Set ℤ, srwLaw m x (vExitPosition A ⁻¹' S) ≤ srwLaw m y (vExitPosition A ⁻¹' S) + ENNReal.ofReal c :=
+  fun S => le_add_ofReal_of_abs_real_le (srwLaw m x) (srwLaw m y) (h S)
+
 end ExitDecomposition
 end MatedCRT
