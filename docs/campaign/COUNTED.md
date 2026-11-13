@@ -399,6 +399,16 @@ reference environments, from one one-sided mating-rigid set `G` (`hG : MatingRig
 `closed_1_6_lp_noSC_noSup_derivedInputs_envScaling_rigidity` (Derived/EnvironmentScalingRigidity.lean) are the
 `_envScaling` forms with `h12`, `h13`, `h15` replaced by the pair `(hGnull, hG)`.
 
+Eleventh pass (2026-11-13): the lower half `hlow` of (1.8) (`F_ε(c₁ ε⁻¹) < 1/2`, Berestycki-Gwynne (1.8)) follows from
+`h12`, `h13` and Berestycki-Gwynne Lemma 6.9 in its printed form (`h632`: `ψ₀` superpolynomial and independent of the
+environment; inline hypothesis, no new Prop): `mεCdf_lower_of_lemma69` (Derived/CoreGffLowerOfLemma69.lean), through
+the strong Lemma 6.11 (Derived/ExitTimeLowerLemma611Strong.lean) and `mεCdf_lower_of_exitTimeLowerTail`
+(Derived/MepsLowerAssembly.lean); Lemma 2.18 is supplied by `exitTimeUpperBoundStmt_of_greenKernelUpper` (from `h12`).
+The forms `closed_1_4_lp_noSC_noSup_derivedInputs_lemma69`, `closed_1_6_lp_noSC_noSup_derivedInputs_lemma69` are the
+`_envScaling` forms, and `closed_1_4_lp_noSC_noSup_derivedInputs_envScaling_rigidity_lemma69`,
+`closed_1_6_lp_noSC_noSup_derivedInputs_envScaling_rigidity_lemma69` (Derived/CoreGffLowerOfLemma69Rigidity.lean) the
+`_envScaling_rigidity` forms, with `hlow` replaced by `h632`. Axioms propext, Classical.choice, Quot.sound.
+
 Derived forms after the sixth pass (binders of `T` -> binders of `T_derivedInputs`; 31 forms):
 
 | counted `T` | binders | supplied |
