@@ -113,6 +113,30 @@ theorem greenKernel_le_inv_mul_of_pairEvents {ε : ℝ} (hε : 0 ≤ ε) {ω : M
         (interiorCellVertices ε η (ball (0 : ℂ) ((1 + ρ) / 2))) y b :=
         mul_le_mul_of_nonneg_left key (inv_nonneg.2 hp.le)
 
+/-- The disconnection event of Lemma 3.11 persists for a smaller radius, a larger floor and a smaller probability. -/
+theorem PairL311Good.mono {ε : ℝ} {ω : MatedCRTHarmonic.MatedCRT.Path2} {η : ℝ → ℂ} {ρ'' f p₁ ρ₂ f₂ p₂ : ℝ}
+    (h : PairL311Good ε ω η ρ'' f p₁) (hρ : ρ₂ ≤ ρ'') (hf : f ≤ f₂) (hp : p₂ ≤ p₁) :
+    PairL311Good ε ω η ρ₂ f₂ p₂ := by
+  obtain ⟨hlf, H, hH, h⟩ := h
+  refine ⟨hlf, H, hH, fun w r hfr hr hball y hy => ?_⟩
+  exact (ENNReal.ofReal_le_ofReal hp).trans
+    (h w r (hf.trans hfr) (hr.trans hρ) (hball.trans (ball_subset_ball hρ)) y hy)
+
+/-- The itinerary event at a circle persists for a smaller probability. -/
+theorem PairItinGood.mono {ε : ℝ} {ω : MatedCRTHarmonic.MatedCRT.Path2} {η : ℝ → ℂ} {p₀ p₀' : ℝ} {z : ℂ}
+    {r : ℝ} (h : PairItinGood ε ω η p₀ z r) (hp : p₀' ≤ p₀) : PairItinGood ε ω η p₀' z r := by
+  obtain ⟨hlf, H, hH, h⟩ := h
+  exact ⟨hlf, H, hH, fun y hy => (ENNReal.ofReal_le_ofReal hp).trans (h y hy)⟩
+
+/-- The failure set of the disconnection event shrinks when the radius shrinks, the floor grows and the probability
+shrinks, for a family of Brownian pairs and curves on any sample space. -/
+theorem compl_pairL311Good_subset {Ω : Type*} (bm : Ω → MatedCRTHarmonic.MatedCRT.Path2) (η : Ω → ℝ → ℂ)
+    {ε ρ'' f p₁ ρ₂ f₂ p₂ : ℝ} (hρ : ρ₂ ≤ ρ'') (hf : f ≤ f₂) (hp : p₂ ≤ p₁) :
+    {ω | ¬ PairL311Good ε (bm ω) (η ω) ρ₂ f₂ p₂} ⊆ {ω | ¬ PairL311Good ε (bm ω) (η ω) ρ'' f p₁} :=
+  fun _ hω h => hω (h.mono hρ hf hp)
+
 end MatedCRT
 
 #print axioms MatedCRT.greenKernel_le_inv_mul_of_pairEvents
+#print axioms MatedCRT.PairL311Good.mono
+#print axioms MatedCRT.compl_pairL311Good_subset
