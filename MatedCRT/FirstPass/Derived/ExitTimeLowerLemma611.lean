@@ -1,4 +1,5 @@
 import MatedCRT.FirstPass.Derived.ExitTimeLowerLemma67
+import MatedCRT.FirstPass.Derived.ExitTimeLowerLemma67Cone
 import MatedCRT.FirstPass.Derived.ExitTimeShortGaps
 import MatedCRT.FirstPass.S4S6c.FiniteExitMomentHone68
 import MatedCRT.FirstPass.S6n
@@ -363,5 +364,41 @@ theorem exitTimeLowerTail_611 {𝒮 : SpaceFillingSLEModel} (h213 : GreenKernelL
   simp only [hδ, ↓reduceIte]
   rw [ENNReal.ofReal_add (hψ₀0 δ hδ.le) (Real.exp_pos _).le]
   exact add_le_add le_rfl (ENNReal.ofReal_le_ofReal hpow)
+
+/-- **Berestycki-Gwynne, Lemma 6.11** (arXiv:2003.10320, p. 44), in the quantifier order of the printed
+statement, with the quantum cone ratio bound (Lemma A.2) proved. Let `0 < γ < 2`, `χ > 2(2 + γ)/(2 - γ)` and
+`ρ ∈ (0, 1)`. For a valid environment there is a superpolynomial function `ψ` (BG20 Definition 6.4) such that for
+every `θ > 0` there is `δ₀ > 0` such that for each `δ ∈ (0, δ₀)` there is `ε₀ > 0` with: for `ε ∈ (0, ε₀)`,
+outside an event of probability at most `θ`, every vertex `x ∈ V^ε(B_{ρ - δ})` satisfies
+`P_x[τ_{B_δ(η(x))} < ε⁻¹ δ^χ] ≤ ψ(δ)`, where `τ_{B_δ(η(x))}` is the exit time from `V^ε(B_δ(η(x)))`.
+
+Inputs: the Green kernel lower bound `h213` (Lemma 2.13), the exit time moment bound `h214` (Lemma 2.14, first
+conjunct) and the estimate `h632` (6.32), the conclusion of BG20 Lemma 6.9, as in `exitTimeLowerTail_611`. The
+concentric ball-mass ratio bound for the quantum cone measure (BG20 Lemma A.2) is `polyHighProb_coneBallRatio`,
+applied to the cone field of the valid environment. -/
+theorem exitTimeLowerTail_611_derived {𝒮 : SpaceFillingSLEModel} (h213 : GreenKernelLowerBoundStmt 𝒮)
+    (h214 : ExitTimeUpperBoundStmt 𝒮) {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) {χ : ℝ}
+    (hχ : 2 * (2 + γ) / (2 - γ) < χ) {ρ : ℝ} (hρ : 0 < ρ) (hρ1 : ρ < 1)
+    {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} (hS : S.IsValid 𝒮 γ)
+    (h632 : ∀ ℓ : ℝ, 1 < ℓ → ∀ ζ : ℝ, 0 < ζ → ζ < 1 → ∃ ψ₀ : ℝ → ℝ,
+      ((∀ δ : ℝ, 0 ≤ δ → 0 ≤ ψ₀ δ) ∧ ψ₀ 0 = 0 ∧
+        ∀ p : ℝ, 0 < p → Tendsto (fun δ => δ ^ (-p) * ψ₀ δ) (𝓝[>] 0) (𝓝 0)) ∧
+      ∀ δ : ℝ, 0 < δ → δ < 1 → ∀ θ : ℝ, 0 < θ → ∃ ε₀ : ℝ, 0 < ε₀ ∧ ∀ ε : ℝ, 0 < ε → ε < ε₀ →
+        S.P {ω | ∀ x ∈ cellVertices ε (S.η ω) (ball 0 (ρ - δ)),
+          srwLaw (S.mult ε ω) x {y |
+            vExitTime (cellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) x) δ)) y <
+              SuccessiveExitGaps.succExit
+                (fun z => cellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) z) (δ ^ ℓ)))
+                ⌊δ ^ (-((2 - ζ) * (ℓ - 1)))⌋₊ y} ≤ ENNReal.ofReal (ψ₀ δ)}ᶜ ≤ ENNReal.ofReal θ) :
+    ∃ ψ : ℝ → ℝ, ((∀ δ : ℝ, 0 ≤ δ → 0 ≤ ψ δ) ∧ ψ 0 = 0 ∧
+        ∀ p : ℝ, 0 < p → Tendsto (fun δ => δ ^ (-p) * ψ δ) (𝓝[>] 0) (𝓝 0)) ∧
+      ∀ θ : ℝ, 0 < θ → ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, 0 < δ → δ < δ₀ →
+        ∃ ε₀ : ℝ, 0 < ε₀ ∧ ∀ ε : ℝ, 0 < ε → ε < ε₀ →
+          S.P {ω | ∀ x ∈ cellVertices ε (S.η ω) (ball 0 (ρ - δ)),
+            srwLaw (S.mult ε ω) x {y |
+              (vExitTime (cellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) x) δ)) y : ℝ≥0∞) <
+                ENNReal.ofReal (ε⁻¹ * δ ^ χ)} ≤ ENNReal.ofReal (ψ δ)}ᶜ ≤ ENNReal.ofReal θ :=
+  exitTimeLowerTail_611 h213 h214 hγ hγ2 hχ hρ hρ1 hS
+    (fun _ hc0 hc1 _ hζ => polyHighProb_coneBallRatio hγ hγ2 hS.isConeField hc0 hc1 hζ) h632
 
 end MatedCRT.FirstPass.Derived
