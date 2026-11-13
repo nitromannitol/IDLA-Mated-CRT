@@ -1,6 +1,9 @@
 import MatedCRT.FirstPass.Derived.GreenKernelHarnackLowerBound
 import MatedCRT.FirstPass.Derived.HarnackRingGeometry
 import MatedCRT.FirstPass.S4S6c.HcGreen68
+import MatedCRT.FirstPass.Derived.GreenUpperBoundOfInputs
+import MatedCRT.FirstPass.S3t.CellGeometry
+import MatedCRT.Proofs.Infra.LocallyFinite
 
 /-!
 # The bound (4.16) of Berestycki-Gwynne on the cells of the mated-CRT map
@@ -31,6 +34,9 @@ Brownian motion*, Lemma 4.4, on the cell sets `V^ε(D) = {k | H^ε_k ∩ D ≠ �
 * `greenKernelLowerBound_event_of_harnack_energy`: the event of Lemma 2.16 (ibid. Lemma 4.4) for a fixed
   environment, for all `a ∈ V^ε(B_{ρ - ε^{ω₀}})`, `r ∈ [ε^{ω₀}, dist(η(a), ∂B_ρ)]`, `b ∈ V^ε(B_{r/3}(η(a)))`, with
   `C = 2 K C₁ C₂`, from small cells on `B_ρ`, the Harnack bound (4.13) and the resistance bound (4.15).
+* `greenKernelLowerBoundStmt_of_inputs`: Lemma 2.16 (ibid. Lemma 4.4) from the cell size estimate (ibid. Lemma 2.4)
+  and the Harnack bound (4.13) and the resistance bound (4.15), each with polynomially high probability; the
+  exponent is `ω₀ = β'/2` with `β' = min(β₁, β₂, (2+γ)^{-2})` and the constant is `C = 2 (4/β') C₁ C₂`.
 -/
 
 namespace MatedCRT
@@ -471,5 +477,169 @@ theorem greenKernelLowerBound_event_of_harnack_energy (hsymm : ∀ a b, m a b = 
   refine ⟨HcGreen68.greenKernel_le_greenFn _ _ _ _, ?_⟩
   have := key b (hBS hbB)
   rwa [hB] at this
+
+section Inputs
+
+open MeasureTheory Filter _root_.HarmonicBalls
+
+/-- **Lemma 2.16** (Berestycki-Gwynne Lemma 4.4) from its probabilistic inputs: the cell size estimate
+(`CellSizeEstimateStmt`, ibid. Lemma 2.4); the Harnack bound (4.13) `g(y) ≤ C₁ g(y')` on `V^ε(∂B_s(η(a)))` for the
+Green kernel `g = g_{B_r(η(a))}(a, ·)`, for all `a ∈ V^ε(B_ρ)`, `r ≤ dist(η(a), ∂B_ρ)` and `s ∈ [ε^{β₁}, r/4]`
+(ibid. Proposition 3.8); and the resistance bound (4.15): some `h` equal to `1` on `V^ε(B̄_s(η(a)))` and `0` off
+`V^ε(B_{3r/4}(η(a)))` has `log(3r/(4s)) E(h) ≤ C₂`, for all such `a`, `r` and `s ∈ [ε^{β₂}, r/4]`; each with
+polynomially high probability. The exponent is `ω₀ = β'/2` with `β' = min(β₁, β₂, (2+γ)^{-2})`, the constant is
+`C = 2 (4/β') C₁ C₂`. -/
+theorem greenKernelLowerBoundStmt_of_inputs {𝒮 : SpaceFillingSLEModel}
+    (hsize : CellSizeEstimateStmt 𝒮)
+    (hHarn : ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ β : ℝ, 0 < β ∧ ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+      ∃ C₁ : ℝ, 1 ≤ C₁ ∧ ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      PolyHighProb S.P fun ε => {ω | ∀ a ∈ cellVertices ε (S.η ω) (ball 0 ρ), ∀ r : ℝ,
+        r ≤ infDist (vertexPoint ε (S.η ω) a) (sphere 0 ρ) → ∀ s : ℝ, ε ^ β ≤ s → s ≤ r / 4 →
+        ∀ y ∈ cellVertices ε (S.η ω) (sphere (vertexPoint ε (S.η ω) a) s),
+        ∀ y' ∈ cellVertices ε (S.η ω) (sphere (vertexPoint ε (S.η ω) a) s),
+          greenKernel (S.mult ε ω) (interiorCellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) a) r)) a y ≤
+            C₁ * greenKernel (S.mult ε ω)
+              (interiorCellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) a) r)) a y'})
+    (hres : ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ β : ℝ, 0 < β ∧ ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+      ∃ C₂ : ℝ, 1 ≤ C₂ ∧ ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      PolyHighProb S.P fun ε => {ω | ∀ a ∈ cellVertices ε (S.η ω) (ball 0 ρ), ∀ r : ℝ,
+        r ≤ infDist (vertexPoint ε (S.η ω) a) (sphere 0 ρ) → ∀ s : ℝ, ε ^ β ≤ s → s ≤ r / 4 →
+        ∃ h : ℤ → ℝ, (∀ k ∈ cellVertices ε (S.η ω) (closedBall (vertexPoint ε (S.η ω) a) s), h k = 1) ∧
+          (∀ k, k ∉ cellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) a) (3 * r / 4)) → h k = 0) ∧
+          ∀ T : Finset ℤ, Real.log (3 * r / 4 / s) *
+            ((1 / 2) * ∑ k ∈ T, ∑ l ∈ T, (S.mult ε ω k l : ℝ) * (h k - h l) ^ 2) ≤ C₂}) :
+    GreenKernelLowerBoundStmt 𝒮 := by
+  intro γ hγ hγ2
+  obtain ⟨β₁, hβ₁, hH⟩ := hHarn γ hγ hγ2
+  obtain ⟨β₂, hβ₂, hR⟩ := hres γ hγ hγ2
+  have hq : 0 < 2 / (2 + γ) ^ 2 - 1 / (2 + γ) ^ 2 := by
+    have h : 0 < (2 + γ) ^ 2 := by positivity
+    have e : 2 / (2 + γ) ^ 2 - 1 / (2 + γ) ^ 2 = 1 / (2 + γ) ^ 2 := by ring
+    rw [e]; positivity
+  have hζ1 : 1 / (2 + γ) ^ 2 < 1 := by
+    rw [div_lt_one (by positivity)]; nlinarith
+  have hq1 : 2 / (2 + γ) ^ 2 - 1 / (2 + γ) ^ 2 ≤ 1 := by
+    have e : 2 / (2 + γ) ^ 2 - 1 / (2 + γ) ^ 2 = 1 / (2 + γ) ^ 2 := by ring
+    rw [e]; exact hζ1.le
+  set c : ℝ := 2 / (2 + γ) ^ 2 - 1 / (2 + γ) ^ 2 with hcdef
+  set β' : ℝ := min (min β₁ β₂) c with hβ'def
+  have hβ' : 0 < β' := lt_min (lt_min hβ₁ hβ₂) hq
+  have hβ'c : β' ≤ c := min_le_right _ _
+  have hβ'1 : β' ≤ β₁ := (min_le_left _ _).trans (min_le_left _ _)
+  have hβ'2 : β' ≤ β₂ := (min_le_left _ _).trans (min_le_right _ _)
+  refine ⟨β' / 2, half_pos hβ', fun ρ hρ0 hρ1 => ?_⟩
+  obtain ⟨C₁, hC₁, hHρ⟩ := hH ρ hρ0 hρ1
+  obtain ⟨C₂, hC₂, hRρ⟩ := hR ρ hρ0 hρ1
+  have hK0 : 0 < 4 / β' := div_pos four_pos hβ'
+  refine ⟨2 * (4 / β') * C₁ * C₂,
+    mul_pos (mul_pos (mul_pos two_pos hK0) (by linarith)) (by linarith), ?_⟩
+  intro Ω _ S hSv
+  classical
+  have hρ₁0 : 0 < (1 + ρ) / 2 := by linarith
+  have hρ₁1 : (1 + ρ) / 2 < 1 := by linarith
+  have hDE := hsize γ hγ hγ2 (1 / (2 + γ) ^ 2) ((1 + ρ) / 2) (by positivity) hζ1 hρ₁0 hρ₁1 Ω S hSv
+  obtain ⟨r₁, hr₁, hr₁h⟩ := exists_rpow_le_of_small (half_pos hβ') (show (0 : ℝ) < 1 / 12 by norm_num)
+  obtain ⟨r₂, hr₂, hr₂h⟩ := exists_rpow_le_of_small hq (show 0 < (1 - ρ) / 4 by linarith)
+  have hE := FirstPass36.polyHighProb_inter
+    (FirstPass36.polyHighProb_inter (hHρ Ω S hSv) (hRρ Ω S hSv)) hDE
+  have hae : ∀ᵐ ω ∂S.P, Continuous (S.η ω) ∧
+      Tendsto (S.η ω) (cocompact ℝ) (cocompact ℂ) ∧
+      ∀ ε : ℝ, 0 < ε → ∀ j k : ℤ, S.mult ε ω j k ≠ 0 →
+        (cell ε (S.η ω) j ∩ cell ε (S.η ω) k).Nonempty := by
+    filter_upwards [TraceInputs68.ae_continuous_eta hSv, hSv.ae_tendsto_cocompact,
+      TraceInputs68.ae_adjacent hγ hγ2 S hSv] with ω h1 h2 h3
+    exact ⟨h1, h2, h3⟩
+  refine S3cBridge.polyHighProb_mono_ae_small (r₁ := min (min r₁ r₂) 1)
+    (lt_min (lt_min hr₁ hr₂) one_pos) hE hae ?_
+  intro ε hε hεR ω hω hq'
+  obtain ⟨⟨hHω, hRω⟩, hDω⟩ := hω
+  obtain ⟨hη, hp, hmeet⟩ := hq'
+  have hε1 : ε < 1 := lt_of_lt_of_le hεR (min_le_right _ _)
+  have hεr₁ : ε < r₁ := lt_of_lt_of_le hεR ((min_le_left _ _).trans (min_le_left _ _))
+  have hεr₂ : ε < r₂ := lt_of_lt_of_le hεR ((min_le_left _ _).trans (min_le_right _ _))
+  set t : ℝ := ε ^ (β' / 2) with htdef
+  have ht0 : 0 < t := Real.rpow_pos_of_pos hε _
+  have ht12 : t ≤ 1 / 12 := hr₁h ε hε hεr₁
+  have htt : ε ^ β' = t * t := by
+    rw [htdef, ← Real.rpow_add hε]; ring_nf
+  have hcβ : ε ^ c ≤ ε ^ β' := Real.rpow_le_rpow_of_exponent_ge hε hε1.le hβ'c
+  have hcρ : ε ^ c ≤ (1 - ρ) / 4 := hr₂h ε hε hεr₂
+  have hc0 : 0 < ε ^ c := Real.rpow_pos_of_pos hε _
+  have hbdd : ∀ k, Bornology.IsBounded (cell ε (S.η ω) k) := fun k => (isCompact_Icc.image hη).isBounded
+  have hmono : ∀ {D D' : Set ℂ}, D ⊆ D' → cellVertices ε (S.η ω) D ⊆ cellVertices ε (S.η ω) D' :=
+    fun hDD' _ ⟨w, hw, hwD⟩ => ⟨w, hw, hDD' hwD⟩
+  have hρρ₁ : ρ ≤ (1 + ρ) / 2 := by linarith
+  have hdiamc : ∀ k ∈ cellVertices ε (S.η ω) (ball 0 ρ), diam (cell ε (S.η ω) k) ≤ ε ^ c := by
+    rintro k ⟨w, hw, hwD⟩
+    exact (hDω k ⟨w, hw, ball_subset_ball hρρ₁ hwD⟩).2
+  have hfin : ∀ (z : ℂ) (r : ℝ), (cellVertices ε (S.η ω) (ball z r)).Finite := fun z r =>
+    (cellVertices_finite_of_isCompact hη hp hε (isCompact_closedBall z r)).subset
+      (hmono ball_subset_closedBall)
+  have hlf := isLocallyFiniteMult_of_cells_meet hη hp hε (hmeet ε hε)
+  have hdiam : ∀ b ∈ cellVertices ε (S.η ω) (ball 0 ρ), ∀ w ∈ cell ε (S.η ω) b,
+      ∀ w' ∈ cell ε (S.η ω) b, dist w w' ≤ ε ^ c := fun b hb w hw w' hw' =>
+    (dist_le_diam_of_mem (hbdd b) hw hw').trans (hdiamc b hb)
+  have hadjp : ∀ a ∈ cellVertices ε (S.η ω) (ball 0 ρ), ∀ b, S.mult ε ω a b ≠ 0 →
+      ‖vertexPoint ε (S.η ω) a - vertexPoint ε (S.η ω) b‖ ≤ 2 * ε ^ c := by
+    intro a ha b hab
+    have hda := hdiamc a ha
+    obtain ⟨u, hu, hua⟩ := ha
+    obtain ⟨w, hwa, hwb⟩ := hmeet ε hε a b hab
+    have hwρ : w ∈ ball (0 : ℂ) ((1 + ρ) / 2) := by
+      have h1 := (dist_le_diam_of_mem (hbdd a) hu hwa).trans hda
+      have h2 := norm_le_norm_add_norm_sub' w u
+      rw [mem_ball_zero_iff] at hua ⊢
+      rw [dist_eq_norm, norm_sub_rev] at h1
+      linarith
+    have hdb := (hDω b ⟨w, hwb, hwρ⟩).2
+    have := TruncatedLaws.dist_vertexPoint_le_two_mul_of_cells_meet hε.le hη ⟨w, hwa, hwb⟩ hda hdb
+    rwa [dist_eq_norm] at this
+  have hδ : 4 * ε ^ c < ε ^ (β' / 2) := by
+    rw [← htdef]; nlinarith
+  have hβ : ε ^ β' + 2 * ε ^ c ≤ ε ^ (β' / 2) / 4 := by
+    rw [← htdef]; nlinarith
+  have hK : 1 ≤ 4 / β' := by
+    rw [le_div_iff₀ hβ']; linarith [hβ'c.trans hq1]
+  have hgap : Real.log ε⁻¹ ≤ 4 / β' * Real.log (ε ^ (β' / 2) / (ε ^ β' + 2 * ε ^ c)) := by
+    rw [← htdef]
+    have hA0 : 0 < ε ^ β' + 2 * ε ^ c := by positivity
+    have hA : ε ^ β' + 2 * ε ^ c ≤ 3 * (t * t) := by linarith
+    have h1 : Real.log (1 / (3 * t)) ≤ Real.log (t / (ε ^ β' + 2 * ε ^ c)) := by
+      apply Real.log_le_log (by positivity)
+      rw [div_le_div_iff₀ (by positivity) hA0]; nlinarith
+    have h2 : Real.log (1 / (3 * t)) = -(Real.log 3 + Real.log t) := by
+      rw [one_div, Real.log_inv, Real.log_mul (by norm_num) ht0.ne']
+    have h3 : Real.log t = β' / 2 * Real.log ε := Real.log_rpow hε _
+    have h4 : Real.log t ≤ -Real.log 12 := by
+      have := Real.log_le_log ht0 ht12
+      rwa [one_div, Real.log_inv] at this
+    have h5 : 2 * Real.log 3 ≤ Real.log 12 := by
+      have : Real.log ((3 : ℝ) ^ 2) ≤ Real.log 12 := Real.log_le_log (by norm_num) (by norm_num)
+      rwa [Real.log_pow, Nat.cast_ofNat] at this
+    have h6 : 4 / β' * (β' / 2) = 2 := by field_simp; ring
+    have e1 : 4 / β' * Real.log t = 2 * Real.log ε := by rw [h3, ← mul_assoc, h6]
+    have e2 : 4 / β' * Real.log t ≤ 4 / β' * -Real.log 12 := mul_le_mul_of_nonneg_left h4 hK0.le
+    have e3 : 4 / β' * (2 * Real.log 3) ≤ 4 / β' * Real.log 12 := mul_le_mul_of_nonneg_left h5 hK0.le
+    have e4 : 4 / β' * -(Real.log 3 + Real.log t) ≤
+        4 / β' * Real.log (t / (ε ^ β' + 2 * ε ^ c)) := by
+      rw [← h2]; exact mul_le_mul_of_nonneg_left h1 hK0.le
+    rw [Real.log_inv]
+    have e5 : 4 / β' * -(Real.log 3 + Real.log t) = -(4 / β' * Real.log 3) - 4 / β' * Real.log t := by ring
+    have e6 : 4 / β' * -Real.log 12 = -(4 / β' * Real.log 12) := by ring
+    have e7 : 4 / β' * (2 * Real.log 3) = 2 * (4 / β' * Real.log 3) := by ring
+    linarith
+  have key := greenKernelLowerBound_event_of_harnack_energy (m := S.mult ε ω) (S.mult_symm ε ω) hlf
+    (S.mult_succ_ne_zero hε.le ω) hε hη (hmeet ε hε) hfin (ρ := ρ) (ω₀ := β' / 2) (β := β')
+    (δ := ε ^ c) (δ' := 2 * ε ^ c) (C₁ := C₁) (C₂ := C₂) (K := 4 / β') hdiam hadjp hδ (by positivity)
+    hβ hC₁ hC₂ hK hgap
+    (fun a ha r _ hr2 s hs1 hs2 =>
+      hHω a (hmono (ball_subset_ball (by linarith [Real.rpow_pos_of_pos hε (β' / 2)])) ha) r hr2 s
+        ((Real.rpow_le_rpow_of_exponent_ge hε hε1.le hβ'1).trans hs1) hs2)
+    (fun a ha r _ hr2 s hs1 hs2 =>
+      hRω a (hmono (ball_subset_ball (by linarith [Real.rpow_pos_of_pos hε (β' / 2)])) ha) r hr2 s
+        ((Real.rpow_le_rpow_of_exponent_ge hε hε1.le hβ'2).trans hs1) hs2)
+  exact key
+
+end Inputs
 
 end MatedCRT
