@@ -384,6 +384,11 @@ and `hloc`/`hlocHB` (`harmonicBallLocalSetStmt_holds`). Regenerated `Derived/Cou
 and `Audit/DerivedCountedAxioms.lean`. The 1.4 and 1.6 forms now bind four inputs: `hcore : CertifiedReferenceModelCore ν 𝒮`,
 `hscale : QuantumConeScalingInput`, `hEnvS : ConeEnvironmentScalingUnderSLE 𝒮`, `hG15 : FrozenGreenFunctionCrudeBound 𝒮`.
 
+Ninth pass (2026-11-13): `hEnvS : ConeEnvironmentScalingUnderSLE 𝒮` follows from `hscale` for every model
+(Derived/EnvironmentScalingHolds.lean, `coneEnvironmentScalingUnderSLE_of_scaling`). The forms
+`closed_1_4_lp_noSC_noSup_derivedInputs_envScaling` and `closed_1_6_lp_noSC_noSup_derivedInputs_envScaling` are the
+`_reducedCore` forms (Derived/CoreGffLowerDerived.lean) without the binder `hEnvS`.
+
 Derived forms after the sixth pass (binders of `T` -> binders of `T_derivedInputs`; 31 forms):
 
 | counted `T` | binders | supplied |
