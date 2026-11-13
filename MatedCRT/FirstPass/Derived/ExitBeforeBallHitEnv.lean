@@ -32,8 +32,9 @@ open MatedCRTHarmonic MatedCRTHarmonic.GMSMain MatedCRTHarmonic.GMSMain.T15A
 the disconnection event of Lemma 3.11 with floor `ε^{β₀}` in every valid environment: for `γ ∈ (0,2)` and
 `ρ ∈ (0,1)` there are `ξ, A > 0` such that for every `δ ∈ (0,1)`, with polynomially high probability as `ε → 0`,
 from every `x ∈ V^ε(B_ρ \ B_{ρ-δ})` the walk exits `V^ε(B_ρ)` before hitting `V^ε(∂B_{√δ}(η x))` with probability at
-least `1 - A δ^ξ`. -/
-theorem exitBeforeBallHit_polyHighProb (𝒮 : SpaceFillingSLEModel) (h28 : CellSizeEstimateStmt 𝒮)
+least `1 - A δ^ξ`; moreover, with the same probability, every vertex visited up to the exit time has its cell inside
+`B_{√δ}(η x)`. -/
+theorem exitBeforeBallHit_polyHighProb_cells (𝒮 : SpaceFillingSLEModel) (h28 : CellSizeEstimateStmt 𝒮)
     (hL311 : ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ β₀ α₀ : ℝ, 0 < β₀ ∧ 0 < α₀ ∧ ∀ ρ' : ℝ, 0 < ρ' → ρ' < 1 →
       ∃ p₁ : ℝ, 0 < p₁ ∧ ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
         ∃ C : ℝ, ∀ ε : ℝ, 0 < ε → ε < 1 →
@@ -44,7 +45,9 @@ theorem exitBeforeBallHit_polyHighProb (𝒮 : SpaceFillingSLEModel) (h28 : Cell
       PolyHighProb S.P fun ε => {ω | ∀ x ∈ cellVertices ε (S.η ω) (ball (0 : ℂ) ρ \ ball (0 : ℂ) (ρ - δ)),
         ENNReal.ofReal (1 - A * δ ^ ξ) ≤
           srwLaw (S.mult ε ω) x {X | vExitTime (cellVertices ε (S.η ω) (ball (0 : ℂ) ρ)) X <
-            vHitTime (cellVertices ε (S.η ω) (frontier (ball (vertexPoint ε (S.η ω) x) (Real.sqrt δ)))) X}} := by
+            vHitTime (cellVertices ε (S.η ω) (frontier (ball (vertexPoint ε (S.η ω) x) (Real.sqrt δ)))) X ∧
+            ∀ n : ℕ, (n : ℕ∞) ≤ vExitTime (cellVertices ε (S.η ω) (ball (0 : ℂ) ρ)) X →
+              cell ε (S.η ω) (X n) ⊆ ball (vertexPoint ε (S.η ω) x) (Real.sqrt δ)}} := by
   intro γ hγ hγ2 ρ hρ hρ1
   obtain ⟨β, α, hβ, hα, hPγ⟩ := hL311 γ hγ hγ2
   obtain ⟨ρ', hρ'def⟩ : ∃ ρ' : ℝ, ρ' = (1 + ρ) / 2 := ⟨_, rfl⟩
@@ -142,7 +145,7 @@ theorem exitBeforeBallHit_polyHighProb (𝒮 : SpaceFillingSLEModel) (h28 : Cell
     have hLC : H.PointConnected :=
       MatedCRTHarmonic.RouteM.pointConnected_of_peanosphere_holds hωpeano H
         (funext fun k => (congrFun hHc k).trans (hωcell r k))
-    have hmain := ExitBeforeBallHit.srwLaw_exit_before_ballHit (ε := r) (ω := S.bm ω) (η := S.η ω) hlf H hHc
+    have hmain := ExitBeforeBallHit.srwLaw_exit_before_ballHit_cells (ε := r) (ω := S.bm ω) (η := S.η ω) hlf H hHc
       hconn hLC (β := β) (p := p) (ρ := ρ) (ρ' := ρ') hr hρ hρρ' hp0 hp1 h311 hδ0 hδmin hrβ.le hdiam hx
     rw [← hξ₀def, ← hA₀def] at hmain
     refine le_trans (ENNReal.ofReal_le_ofReal ?_) hmain
@@ -151,6 +154,28 @@ theorem exitBeforeBallHit_polyHighProb (𝒮 : SpaceFillingSLEModel) (h28 : Cell
     rw [add_mul]
     have := mul_nonneg hinv hpos
     linarith
+
+/-- **Berestycki–Gwynne (2020), Lemma 6.13, last assertion** (event without the localization of the walk):
+`exitBeforeBallHit_polyHighProb_cells` for the event `{exit time < hitting time}`. -/
+theorem exitBeforeBallHit_polyHighProb (𝒮 : SpaceFillingSLEModel) (h28 : CellSizeEstimateStmt 𝒮)
+    (hL311 : ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ β₀ α₀ : ℝ, 0 < β₀ ∧ 0 < α₀ ∧ ∀ ρ' : ℝ, 0 < ρ' → ρ' < 1 →
+      ∃ p₁ : ℝ, 0 < p₁ ∧ ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+        ∃ C : ℝ, ∀ ε : ℝ, 0 < ε → ε < 1 →
+          S.P {ω | ¬ PairL311Good ε (S.bm ω) (S.η ω) ρ' (ε ^ β₀) p₁} ≤ ENNReal.ofReal (C * ε ^ α₀)) :
+    ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 → ∃ ξ A : ℝ, 0 < ξ ∧ 0 < A ∧
+      ∀ δ : ℝ, 0 < δ → δ < 1 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω),
+      S.IsValid 𝒮 γ →
+      PolyHighProb S.P fun ε => {ω | ∀ x ∈ cellVertices ε (S.η ω) (ball (0 : ℂ) ρ \ ball (0 : ℂ) (ρ - δ)),
+        ENNReal.ofReal (1 - A * δ ^ ξ) ≤
+          srwLaw (S.mult ε ω) x {X | vExitTime (cellVertices ε (S.η ω) (ball (0 : ℂ) ρ)) X <
+            vHitTime (cellVertices ε (S.η ω) (frontier (ball (vertexPoint ε (S.η ω) x) (Real.sqrt δ)))) X}} := by
+  intro γ hγ hγ2 ρ hρ hρ1
+  obtain ⟨ξ, A, hξ, hA, h⟩ := exitBeforeBallHit_polyHighProb_cells 𝒮 h28 hL311 γ hγ hγ2 ρ hρ hρ1
+  refine ⟨ξ, A, hξ, hA, fun δ hδ0 hδ1 Ω _ S hS => ?_⟩
+  obtain ⟨p, hp, C, r₀, hr₀, hb⟩ := h δ hδ0 hδ1 Ω S hS
+  refine ⟨p, hp, C, r₀, hr₀, fun r hr hrr => (measure_mono ?_).trans (hb r hr hrr)⟩
+  intro ω hω hgood
+  exact hω fun x hx => (hgood x hx).trans (measure_mono fun _ hX => hX.1)
 
 end ExitBeforeBallHitEnv
 end MatedCRT

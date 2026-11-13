@@ -32,12 +32,13 @@ open WindowStop68
 open MatedCRTHarmonic MatedCRTHarmonic.HarmonicInfinity MatedCRTHarmonic.GMSMain MatedCRTHarmonic.GMSMain.T15A
 
 /-- A walk that stays in `Vd` until its first visit to `F` and whose first `F`-visit (at time `τ`) is outside `A` and
-`B` exits `A` strictly before it hits `B`. -/
-theorem vExitTime_lt_vHitTime_of_firstHit {X : ℕ → ℤ} {Vd F A B : Set ℤ} {τ : ℕ}
+`B` exits `A` strictly before it hits `B`; moreover, if the vertices of `Vd` not in `F` and the vertex `X τ` have the
+property `P`, then every `X n` with `n` at most the exit time has the property `P`. -/
+theorem vExitTime_lt_vHitTime_and_forall_of_firstHit {X : ℕ → ℤ} {Vd F A B : Set ℤ} {τ : ℕ} {P : ℤ → Prop}
     (hX0 : X 0 ∈ Vd) (hstep : ∀ n, X n ∈ Vd → X n ∉ F → X (n + 1) ∈ Vd)
     (hB : ∀ v ∈ Vd, v ∉ F → v ∉ B) (hτ : ∀ j < τ, X j ∉ F)
-    (hτA : X τ ∉ A) (hτB : X τ ∉ B) :
-    vExitTime A X < vHitTime B X := by
+    (hτA : X τ ∉ A) (hτB : X τ ∉ B) (hP : ∀ v ∈ Vd, v ∉ F → P v) (hPτ : P (X τ)) :
+    vExitTime A X < vHitTime B X ∧ ∀ n : ℕ, (n : ℕ∞) ≤ vExitTime A X → P (X n) := by
   have hinv : ∀ n ≤ τ, X n ∈ Vd := by
     intro n
     induction n with
@@ -53,7 +54,21 @@ theorem vExitTime_lt_vHitTime_of_firstHit {X : ℕ → ℤ} {Vd F A B : Set ℤ}
   have h2 : vExitTime A X ≤ τ := by
     by_contra h
     exact hτA (mem_of_lt_vExitTime (not_le.1 h))
-  exact lt_of_le_of_lt h2 h1
+  refine ⟨lt_of_le_of_lt h2 h1, fun n hn => ?_⟩
+  have hnτ : n ≤ τ := Nat.cast_le.1 (hn.trans h2)
+  rcases hnτ.lt_or_eq with hlt | rfl
+  · exact hP _ (hinv n hnτ) (hτ n hlt)
+  · exact hPτ
+
+/-- A walk that stays in `Vd` until its first visit to `F` and whose first `F`-visit (at time `τ`) is outside `A` and
+`B` exits `A` strictly before it hits `B`. -/
+theorem vExitTime_lt_vHitTime_of_firstHit {X : ℕ → ℤ} {Vd F A B : Set ℤ} {τ : ℕ}
+    (hX0 : X 0 ∈ Vd) (hstep : ∀ n, X n ∈ Vd → X n ∉ F → X (n + 1) ∈ Vd)
+    (hB : ∀ v ∈ Vd, v ∉ F → v ∉ B) (hτ : ∀ j < τ, X j ∉ F)
+    (hτA : X τ ∉ A) (hτB : X τ ∉ B) :
+    vExitTime A X < vHitTime B X :=
+  (vExitTime_lt_vHitTime_and_forall_of_firstHit (P := fun _ => True) hX0 hstep hB hτ hτA hτB
+    (fun _ _ _ => trivial) trivial).1
 
 /-- A connected set that meets an open set `D` but not its frontier lies in `D`. -/
 theorem subset_of_preconnected_of_inter_frontier_eq_empty {c D : Set ℂ} (hDo : IsOpen D) (hc : IsPreconnected c)
@@ -168,8 +183,9 @@ On an environment where the disconnection events of Lemma 3.11 hold at ambient r
 success probability `p`, the cells of the vertices meeting `B_{ρ'}` have diameter `≤ δ ≤ min(1/16, ρ/4, (ρ'-ρ)/2)`
 and `ε^β ≤ δ`: from every `x ∈ V^ε(B_ρ \ B_{ρ-δ})` the walk exits `V^ε(B_ρ)` before it hits
 `V^ε(∂B_{√δ}(η(x)))` with probability at least `1 - A δ^{ξ/2}`, where `ξ = t15cXi p` and
-`A = (6 · 8 (3ρ + 3 + ρ')/(ρ' - ρ))^ξ`. -/
-theorem walkLaw_exit_before_ballHit
+`A = (6 · 8 (3ρ + 3 + ρ')/(ρ' - ρ))^ξ`.  The event is strengthened by the localization of the walk: every visited
+vertex up to the exit time has its cell inside `B_{√δ}(η(x))`. -/
+theorem walkLaw_exit_before_ballHit_cells
     {ε : ℝ} {η : ℝ → ℂ} {E : Type*} {G : LFMultigraph ℤ E} [Countable G.State]
     (hloop : ∀ e : E, G.src e ≠ G.tgt e)
     (H : CellularEmbedding G (0 : ℤ)) (hHc : H.cell = cell ε η)
@@ -184,7 +200,9 @@ theorem walkLaw_exit_before_ballHit
       G.walkLaw x
         (G.vertexPath ⁻¹'
           {X | vExitTime (cellVertices ε η (ball (0 : ℂ) ρ)) X <
-            vHitTime (cellVertices ε η (frontier (ball (vertexPoint ε η x) (Real.sqrt δ)))) X}) := by
+            vHitTime (cellVertices ε η (frontier (ball (vertexPoint ε η x) (Real.sqrt δ)))) X ∧
+            ∀ n : ℕ, (n : ℕ∞) ≤ vExitTime (cellVertices ε η (ball (0 : ℂ) ρ)) X →
+              cell ε η (X n) ⊆ ball (vertexPoint ε η x) (Real.sqrt δ)}) := by
   classical
   have hδ1 : δ ≤ 1 / 16 := hδ.trans (min_le_left _ _)
   have hδρ : δ ≤ ρ / 4 := (hδ.trans (min_le_right _ _)).trans (min_le_left _ _)
@@ -306,8 +324,9 @@ theorem walkLaw_exit_before_ballHit
   have hqcell : q ∈ cell ε η (G.vertexPath ξ k) := by rw [← hcell]; exact hq1
   have hdq : ∀ y ∈ cell ε η (G.vertexPath ξ k), dist y q ≤ δ := fun y hy =>
     hdiam _ ⟨q, hqcell, mem_ball_zero_iff.2 (hqn ▸ hRρ')⟩ y hy q hqcell
-  refine vExitTime_lt_vHitTime_of_firstHit (Vd := verticesMeeting H.cell D) (F := I) (τ := k)
-    (by rw [hX0]; exact hxD) ?_ ?_ (fun j hj => hk2 j hj) ?_ ?_
+  refine vExitTime_lt_vHitTime_and_forall_of_firstHit (Vd := verticesMeeting H.cell D) (F := I) (τ := k)
+    (P := fun v => cell ε η v ⊆ ball z s)
+    (by rw [hX0]; exact hxD) ?_ ?_ (fun j hj => hk2 j hj) ?_ ?_ ?_ ?_
   · intro n hn hnI
     obtain ⟨w, hw1, hw2⟩ := H.inter_of_adj _ _ (hadj n)
     exact ⟨w, hw2, hint _ hn hnI hw1⟩
@@ -329,10 +348,66 @@ theorem walkLaw_exit_before_ballHit
     rw [frontier_ball _ hs0.ne', mem_sphere] at hy2
     have h2 := dist_triangle y q z
     linarith
+  · intro v hv hvI
+    show cell ε η v ⊆ ball z s
+    rw [← hcell v]
+    exact (hint v hv hvI).trans inter_subset_right
+  · intro y hy
+    have h1 := hdq y hy
+    have h2 := dist_triangle y q z
+    rw [mem_ball]
+    linarith
+
+/-- **Berestycki–Gwynne (2020), Lemma 6.13, last assertion** (deterministic form, event without the localization of
+the walk): the estimate `walkLaw_exit_before_ballHit_cells` for the event `{exit time < hitting time}`. -/
+theorem walkLaw_exit_before_ballHit
+    {ε : ℝ} {η : ℝ → ℂ} {E : Type*} {G : LFMultigraph ℤ E} [Countable G.State]
+    (hloop : ∀ e : E, G.src e ≠ G.tgt e)
+    (H : CellularEmbedding G (0 : ℤ)) (hHc : H.cell = cell ε η)
+    (hconn : G.adj.Connected) (hLC : H.PointConnected)
+    {β p ρ ρ' δ : ℝ} (hε : 0 < ε) (hρ : 0 < ρ) (hρρ' : ρ < ρ') (hp0 : 0 < p) (hp1 : p < 1)
+    (h311 : Lemma311Holds H ε ρ' β p) (hδ0 : 0 < δ)
+    (hδ : δ ≤ min (1 / 16) (min (ρ / 4) ((ρ' - ρ) / 2))) (hεβ : ε ^ β ≤ δ)
+    (hdiam : ∀ k, (cell ε η k ∩ ball (0 : ℂ) ρ').Nonempty →
+      ∀ a ∈ cell ε η k, ∀ b ∈ cell ε η k, dist a b ≤ δ)
+    {x : ℤ} (hx : x ∈ cellVertices ε η (ball (0 : ℂ) ρ \ ball (0 : ℂ) (ρ - δ))) :
+    ENNReal.ofReal (1 - (6 * (8 * (3 * ρ + 3 + ρ') / (ρ' - ρ))) ^ t15cXi p * δ ^ (t15cXi p / 2)) ≤
+      G.walkLaw x
+        (G.vertexPath ⁻¹'
+          {X | vExitTime (cellVertices ε η (ball (0 : ℂ) ρ)) X <
+            vHitTime (cellVertices ε η (frontier (ball (vertexPoint ε η x) (Real.sqrt δ)))) X}) :=
+  (walkLaw_exit_before_ballHit_cells hloop H hHc hconn hLC hε hρ hρρ' hp0 hp1 h311 hδ0 hδ hεβ hdiam hx).trans
+    (measure_mono (Set.preimage_mono fun _ hX => hX.1))
 
 /-- **Berestycki–Gwynne (2020), Lemma 6.13, last assertion, for simple random walk on the edge count** of the
-Brownian pair `ω`: the transfer of `walkLaw_exit_before_ballHit` through the vertex path
-(`walkLaw_vertexPath_preimage_le_srwLaw`). -/
+Brownian pair `ω`, with the localization of the walk: the transfer of `walkLaw_exit_before_ballHit_cells` through the
+vertex path (`walkLaw_vertexPath_preimage_le_srwLaw`). -/
+theorem srwLaw_exit_before_ballHit_cells
+    {ε : ℝ} {ω : MatedCRTHarmonic.MatedCRT.Path2} {η : ℝ → ℂ}
+    (hlf : MatedCRTHarmonic.MatedCRT.IsLocallyFinite ε ω)
+    (H : CellularEmbedding (MatedCRTHarmonic.MatedCRT.graph ε ω hlf) (0 : ℤ)) (hHc : H.cell = cell ε η)
+    (hconn : (MatedCRTHarmonic.MatedCRT.graph ε ω hlf).adj.Connected) (hLC : H.PointConnected)
+    {β p ρ ρ' δ : ℝ} (hε : 0 < ε) (hρ : 0 < ρ) (hρρ' : ρ < ρ') (hp0 : 0 < p) (hp1 : p < 1)
+    (h311 : Lemma311Holds H ε ρ' β p) (hδ0 : 0 < δ)
+    (hδ : δ ≤ min (1 / 16) (min (ρ / 4) ((ρ' - ρ) / 2))) (hεβ : ε ^ β ≤ δ)
+    (hdiam : ∀ k, (cell ε η k ∩ ball (0 : ℂ) ρ').Nonempty →
+      ∀ a ∈ cell ε η k, ∀ b ∈ cell ε η k, dist a b ≤ δ)
+    {x : ℤ} (hx : x ∈ cellVertices ε η (ball (0 : ℂ) ρ \ ball (0 : ℂ) (ρ - δ))) :
+    ENNReal.ofReal (1 - (6 * (8 * (3 * ρ + 3 + ρ') / (ρ' - ρ))) ^ t15cXi p * δ ^ (t15cXi p / 2)) ≤
+      srwLaw (bmEdgeCount ε (fun t => (ω t).1) (fun t => (ω t).2)) x
+        {X | vExitTime (cellVertices ε η (ball (0 : ℂ) ρ)) X <
+          vHitTime (cellVertices ε η (frontier (ball (vertexPoint ε η x) (Real.sqrt δ)))) X ∧
+          ∀ n : ℕ, (n : ℕ∞) ≤ vExitTime (cellVertices ε η (ball (0 : ℂ) ρ)) X →
+            cell ε η (X n) ⊆ ball (vertexPoint ε η x) (Real.sqrt δ)} :=
+  have : Countable (MatedCRTHarmonic.MatedCRT.Edge ε ω) := by
+    unfold MatedCRTHarmonic.MatedCRT.Edge
+    infer_instance
+  (walkLaw_exit_before_ballHit_cells (fun e => ne_of_lt e.2.1) H hHc hconn hLC hε hρ hρρ' hp0 hp1 h311 hδ0 hδ hεβ
+    hdiam hx).trans (walkLaw_vertexPath_preimage_le_srwLaw hlf hε.le x _)
+
+/-- **Berestycki–Gwynne (2020), Lemma 6.13, last assertion, for simple random walk on the edge count** of the
+Brownian pair `ω` (event without the localization of the walk): `srwLaw_exit_before_ballHit_cells` for the event
+`{exit time < hitting time}`. -/
 theorem srwLaw_exit_before_ballHit
     {ε : ℝ} {ω : MatedCRTHarmonic.MatedCRT.Path2} {η : ℝ → ℂ}
     (hlf : MatedCRTHarmonic.MatedCRT.IsLocallyFinite ε ω)
@@ -348,14 +423,12 @@ theorem srwLaw_exit_before_ballHit
       srwLaw (bmEdgeCount ε (fun t => (ω t).1) (fun t => (ω t).2)) x
         {X | vExitTime (cellVertices ε η (ball (0 : ℂ) ρ)) X <
           vHitTime (cellVertices ε η (frontier (ball (vertexPoint ε η x) (Real.sqrt δ)))) X} :=
-  have : Countable (MatedCRTHarmonic.MatedCRT.Edge ε ω) := by
-    unfold MatedCRTHarmonic.MatedCRT.Edge
-    infer_instance
-  (walkLaw_exit_before_ballHit (fun e => ne_of_lt e.2.1) H hHc hconn hLC hε hρ hρρ' hp0 hp1 h311 hδ0 hδ hεβ
-    hdiam hx).trans (walkLaw_vertexPath_preimage_le_srwLaw hlf hε.le x _)
+  (srwLaw_exit_before_ballHit_cells hlf H hHc hconn hLC hε hρ hρρ' hp0 hp1 h311 hδ0 hδ hεβ hdiam hx).trans
+    (measure_mono fun _ hX => hX.1)
 
 end ExitBeforeBallHit
 end MatedCRT
 
 /-! ## Audit -/
+#print axioms MatedCRT.ExitBeforeBallHit.srwLaw_exit_before_ballHit_cells
 #print axioms MatedCRT.ExitBeforeBallHit.srwLaw_exit_before_ballHit
