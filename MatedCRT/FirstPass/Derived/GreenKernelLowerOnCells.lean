@@ -15,6 +15,11 @@ Brownian motion*, Lemma 4.4, on the cell sets `V^ε(D) = {k | H^ε_k ∩ D ≠ �
   `L · E(h) ≤ C₂` (the resistance bound (4.15)), then `g ≥ L / (C₁ C₂) - 1` on `V^ε(∂B_s(z))`.
 * `inv_mul_log_min_sub_one_le_greenKernel`: the bound (4.12) for `η(y) ≠ η(x)`, with `z = η(x)`,
   `s = |η(x) - η(y)|`, `L = log(r/s)` and `C = C₁ C₂`.
+* `le_greenKernel_of_shell`: the step (4.17) of ibid., by the minimum principle. If adjacent vertices have positions
+  `p` at distance at most `δ` and `τ ≤ g` on the shell `s₀ ≤ |p(·) - z| < s₀ + δ`, then `τ ≤ g` at every vertex
+  with `|p(·) - z| < s₀`.
+* `inv_mul_log_sub_one_le_greenKernel_of_shell`: the same with `τ = C⁻¹ log(r / (s₀ + δ)) - 1`, from the bound
+  `C⁻¹ log(r / |p(b) - z|) - 1 ≤ g(b)` on the shell.
 -/
 
 namespace MatedCRT
@@ -106,5 +111,53 @@ theorem inv_mul_log_min_sub_one_le_greenKernel (hsymm : ∀ a b, m a b = m b a)
         gcongr
     _ = Real.log (r / d) / (C₁ * C₂) - 1 := by ring
     _ ≤ greenKernel m ↑B x y := hmain
+
+/-- **The step (4.17) of Berestycki-Gwynne** (proof of Lemma 4.4), by the minimum principle. Let adjacent vertices
+have positions `p : ℤ → ℂ` at distance at most `δ`. Let `B ⊆ S` be finite, with `S` containing the neighbours of
+every vertex of `B`, and let every vertex of `S` within distance `s₀` of `z` lie in `B`. Let `x ∈ S` with
+`|p(x) - z| < s₀`. If `τ ≤ g_B(x, b)` for every `b ∈ S` on the shell `s₀ ≤ |p(b) - z| < s₀ + δ`, then
+`τ ≤ g_B(x, y)` for every `y ∈ S` with `|p(y) - z| < s₀`: every edge leaving `{|p(·) - z| < s₀}` ends on the shell. -/
+theorem le_greenKernel_of_shell (hsymm : ∀ a b, m a b = m b a) (hlf : IsLocallyFiniteMult m)
+    (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {p : ℤ → ℂ} {δ : ℝ} (hadj : ∀ a b, m a b ≠ 0 → ‖p a - p b‖ ≤ δ)
+    {B S : Finset ℤ} (hS : ∀ a ∈ B, nbrs hlf a ⊆ S) {z : ℂ} {s₀ τ : ℝ}
+    (hsub : ∀ k ∈ S, ‖p k - z‖ < s₀ → k ∈ B) {x : ℤ} (hxS : x ∈ S) (hx : ‖p x - z‖ < s₀)
+    (hshell : ∀ b ∈ S, s₀ ≤ ‖p b - z‖ → ‖p b - z‖ < s₀ + δ → τ ≤ greenKernel m ↑B x b) :
+    ∀ y ∈ S, ‖p y - z‖ < s₀ → τ ≤ greenKernel m ↑B x y := by
+  have hAB : S.filter (fun k => ‖p k - z‖ < s₀) ⊆ B := fun k hk => by
+    rw [Finset.mem_filter] at hk
+    exact hsub k hk.1 hk.2
+  have key := le_greenKernel_of_outer_boundary hsymm hlf hcons hAB x (Finset.mem_filter.2 ⟨hxS, hx⟩)
+    (τ := τ) fun a ha b hbA hab => by
+      have has : ‖p a - z‖ < s₀ := (Finset.mem_filter.1 ha).2
+      have hbS : b ∈ S := hS a (hAB ha) ((mem_nbrs hlf).2 hab)
+      have hb0 : s₀ ≤ ‖p b - z‖ := not_lt.1 fun h => hbA (Finset.mem_filter.2 ⟨hbS, h⟩)
+      have h1 : ‖p b - z‖ ≤ ‖p b - p a‖ + ‖p a - z‖ := by
+        have := norm_add_le (p b - p a) (p a - z)
+        rwa [sub_add_sub_cancel] at this
+      have h2 : ‖p b - p a‖ ≤ δ := by
+        rw [norm_sub_rev]
+        exact hadj a b hab
+      exact hshell b hbS hb0 (by linarith)
+  exact fun y hyS hy => key y (Finset.mem_filter.2 ⟨hyS, hy⟩)
+
+/-- **The bound (4.17) of Berestycki-Gwynne** in logarithmic form. In the setting of `le_greenKernel_of_shell`, with
+`0 < s₀`, `0 < r`, `0 < C`: if `C⁻¹ log(r / |p(b) - z|) - 1 ≤ g_B(x, b)` (the bound (4.16)) for every `b ∈ S` on the
+shell `s₀ ≤ |p(b) - z| < s₀ + δ`, then `C⁻¹ log(r / (s₀ + δ)) - 1 ≤ g_B(x, y)` for every `y ∈ S` with
+`|p(y) - z| < s₀`. -/
+theorem inv_mul_log_sub_one_le_greenKernel_of_shell (hsymm : ∀ a b, m a b = m b a)
+    (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {p : ℤ → ℂ} {δ : ℝ}
+    (hadj : ∀ a b, m a b ≠ 0 → ‖p a - p b‖ ≤ δ) {B S : Finset ℤ} (hS : ∀ a ∈ B, nbrs hlf a ⊆ S) {z : ℂ}
+    {s₀ r C : ℝ} (hs₀ : 0 < s₀) (hr : 0 < r) (hC : 0 < C) (hsub : ∀ k ∈ S, ‖p k - z‖ < s₀ → k ∈ B) {x : ℤ}
+    (hxS : x ∈ S) (hx : ‖p x - z‖ < s₀)
+    (hshell : ∀ b ∈ S, s₀ ≤ ‖p b - z‖ → ‖p b - z‖ < s₀ + δ →
+      C⁻¹ * Real.log (r / ‖p b - z‖) - 1 ≤ greenKernel m ↑B x b) :
+    ∀ y ∈ S, ‖p y - z‖ < s₀ → C⁻¹ * Real.log (r / (s₀ + δ)) - 1 ≤ greenKernel m ↑B x y :=
+  le_greenKernel_of_shell hsymm hlf hcons hadj hS hsub hxS hx fun b hbS hb0 hb1 => by
+    have hpos : 0 < ‖p b - z‖ := hs₀.trans_le hb0
+    have hle : r / (s₀ + δ) ≤ r / ‖p b - z‖ := div_le_div_of_nonneg_left hr.le hpos hb1.le
+    have hlog : Real.log (r / (s₀ + δ)) ≤ Real.log (r / ‖p b - z‖) :=
+      Real.log_le_log (div_pos hr (hpos.trans hb1)) hle
+    have hCi : 0 ≤ C⁻¹ := inv_nonneg.2 hC.le
+    exact (sub_le_sub_right (mul_le_mul_of_nonneg_left hlog hCi) 1).trans (hshell b hbS hb0 hb1)
 
 end MatedCRT
