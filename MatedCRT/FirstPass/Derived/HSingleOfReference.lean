@@ -16,9 +16,11 @@ at most `C ε^{α₀}`.
 * `exists_cellDiam_le_rpow_uniform`: the upper half of the cell size estimate (GMS19 Lemma 2.7) with the exponents
   `q, p` depending on `γ` only: every cell meeting `B_ρ(0)` has diameter at most `ε^q`, except on an event of
   probability at most `C ε^p`, with `C` depending on `ρ` and the environment.
-* `hsingle_of_reference`: the single-ball bound in every valid environment of a model with normalized space-filling
-  SLE law `ν` and valid reference environments on `ℝ`, on a one-sided mating-rigid set `G` that is full for every
-  correlated Brownian law.
+* `hsingle_of_reference_at`: the single-ball bound at a fixed `γ` in every valid environment of a model with
+  normalized space-filling SLE law `ν` and valid reference environments on `ℝ`, on a one-sided mating-rigid set `G`
+  that is full for every `γ`-correlated Brownian law.
+* `hsingle_of_reference`: the same for every `γ`, with one set `G` for all `γ`.
+* `hsingle_of_reference_of_forall_gamma`: the same for every `γ`, with a set `G_γ` for each `γ`.
 
 Route. In the reference environment `S'` on the standard Borel space `ℝ`, the mating-of-trees coupling of `S'` gives
 the source-order Proposition 2.10 (`MatedCRTHarmonic.GMSMain.epsA_prop210Source`), hence the bound on the balls with
@@ -68,26 +70,25 @@ theorem exists_cellDiam_le_rpow_uniform (𝒮 : SpaceFillingSLEModel) {γ : ℝ}
   refine compl_subset_compl.mpr fun ω hω k hk => ?_
   exact hω _ _ (le_of_eq (by ring)) hk
 
-/-- **GMS19 Proposition 2.9 for one ball, in every valid environment** (the single-ball input of the grid union
-bound `MatedCRT.hball_of_pointwise`). Let `ν` be a normalized space-filling SLE law of the model `𝒮`, which has valid
-reference environments on `ℝ`, and `G` a one-sided mating-rigid set that is full for every `γ`-correlated two-sided
-Brownian law. For `γ ∈ (0, 2)` there are `β₀, α₀ > 0` such that for every `ρ' ∈ (0, 1)` there is `A > 0` with: in
-every valid environment `S` there is `C` such that for every `ε ∈ (0, 1)` and every ball `B_r(z) ⊆ B_{ρ'}(0)` with
-`r ≥ ε^{β₀}`, the event that some finite `T ⊆ V^ε(B_r(z))` has `∑_{k ∈ T} deg(k) diam(H_k)² > A r²` has outer
-probability at most `C ε^{α₀}`. -/
-theorem hsingle_of_reference {𝒮 : SpaceFillingSLEModel} {ν : ℝ → Measure SLEPathCode}
-    (hν : HasNormalizedSLELaw 𝒮 ν) (href : HasReferenceEnvironments 𝒮)
+/-- **GMS19 Proposition 2.9 for one ball, in every valid environment, at a fixed `γ`** (the single-ball input of
+the grid union bound `MatedCRT.hball_of_pointwise`). Let `ν` be a normalized space-filling SLE law of the model `𝒮`,
+which has valid reference environments on `ℝ`, let `γ ∈ (0, 2)` and let `G` be a one-sided mating-rigid set that is
+full for every `γ`-correlated two-sided Brownian law. There are `β₀, α₀ > 0` such that for every `ρ' ∈ (0, 1)` there
+is `A > 0` with: in every valid environment `S` of `γ` there is `C` such that for every `ε ∈ (0, 1)` and every ball
+`B_r(z) ⊆ B_{ρ'}(0)` with `r ≥ ε^{β₀}`, the event that some finite `T ⊆ V^ε(B_r(z))` has
+`∑_{k ∈ T} deg(k) diam(H_k)² > A r²` has outer probability at most `C ε^{α₀}`. -/
+theorem hsingle_of_reference_at {𝒮 : SpaceFillingSLEModel} {ν : ℝ → Measure SLEPathCode}
+    (hν : HasNormalizedSLELaw 𝒮 ν) (href : HasReferenceEnvironments 𝒮) {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
     {G : Set MatedCRTHarmonic.MatedCRT.Path2}
-    (hGnull : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ μ : Measure MatedCRTHarmonic.MatedCRT.Path2,
-      MatedCRTHarmonic.MatedCRT.IsCorrelatedBM2 γ μ → μ Gᶜ = 0)
+    (hGnull : ∀ μ : Measure MatedCRTHarmonic.MatedCRT.Path2, MatedCRTHarmonic.MatedCRT.IsCorrelatedBM2 γ μ →
+      μ Gᶜ = 0)
     (hG : MatingRigidLEOn G) :
-    ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ β₀ α₀ : ℝ, 0 < β₀ ∧ 0 < α₀ ∧ ∀ ρ' : ℝ, 0 < ρ' → ρ' < 1 →
+    ∃ β₀ α₀ : ℝ, 0 < β₀ ∧ 0 < α₀ ∧ ∀ ρ' : ℝ, 0 < ρ' → ρ' < 1 →
       ∃ A : ℝ, 0 < A ∧ ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
         ∃ C : ℝ, ∀ ε : ℝ, 0 < ε → ε < 1 → ∀ (z : ℂ) (r : ℝ), ε ^ β₀ ≤ r → ball z r ⊆ ball 0 ρ' →
           S.P {ω | ¬ ∀ T : Finset ℤ, (∀ k ∈ T, k ∈ cellVertices ε (S.η ω) (ball z r)) →
             ∑ k ∈ T, (mdeg (S.mult ε ω) k : ℝ) * diam (cell ε (S.η ω) k) ^ 2 ≤ A * r ^ 2} ≤
               ENNReal.ofReal (C * ε ^ α₀) := by
-  intro γ hγ hγ2
   -- the reference environment, its mating-of-trees coupling and the source-order Proposition 2.10
   obtain ⟨S', hS'⟩ := href γ hγ hγ2
   obtain ⟨_, _, _, _, _, _, _, _, _, η', _, hMoT, hae⟩ := hS'.matingOfTrees
@@ -240,7 +241,7 @@ theorem hsingle_of_reference {𝒮 : SpaceFillingSLEModel} {ν : ℝ → Measure
       linarith
   obtain ⟨Bad, hBad, hgood⟩ := key
   -- the transfer to `S` and the union bound in the reference environment
-  have htrans := measure_eta_mult_preimage_le_of_valid hν hν hγ hγ2 hS hS' (hGnull γ hγ hγ2) hG ε
+  have htrans := measure_eta_mult_preimage_le_of_valid hν hν hγ hγ2 hS hS' hGnull hG ε
     {pr : (ℝ → ℂ) × (ℤ → ℤ → ℕ) | ¬ ∀ T : Finset ℤ, (∀ k ∈ T, k ∈ cellVertices ε pr.1 (ball z r)) →
       ∑ k ∈ T, (mdeg pr.2 k : ℝ) * diam (cell ε pr.1 k) ^ 2 ≤ A' * r ^ 2}
   have hsubU : {ω | (S'.η ω, S'.mult ε ω) ∈ {pr : (ℝ → ℂ) × (ℤ → ℤ → ℕ) | ¬ ∀ T : Finset ℤ,
@@ -275,5 +276,43 @@ theorem hsingle_of_reference {𝒮 : SpaceFillingSLEModel} {ν : ℝ → Measure
         rw [add_zero, ENNReal.ofReal_add (mul_nonneg hCfail htol0)
           (mul_nonneg hCcell (Real.rpow_nonneg hε0.le _))]
     _ ≤ ENNReal.ofReal ((Cfail + Ccell + K) * ε ^ α₀) := ENNReal.ofReal_le_ofReal hfin
+
+/-- **GMS19 Proposition 2.9 for one ball, in every valid environment** (the single-ball input of the grid union
+bound `MatedCRT.hball_of_pointwise`). Let `ν` be a normalized space-filling SLE law of the model `𝒮`, which has valid
+reference environments on `ℝ`, and `G` a one-sided mating-rigid set that is full for every `γ`-correlated two-sided
+Brownian law. For `γ ∈ (0, 2)` there are `β₀, α₀ > 0` such that for every `ρ' ∈ (0, 1)` there is `A > 0` with: in
+every valid environment `S` there is `C` such that for every `ε ∈ (0, 1)` and every ball `B_r(z) ⊆ B_{ρ'}(0)` with
+`r ≥ ε^{β₀}`, the event that some finite `T ⊆ V^ε(B_r(z))` has `∑_{k ∈ T} deg(k) diam(H_k)² > A r²` has outer
+probability at most `C ε^{α₀}`. -/
+theorem hsingle_of_reference {𝒮 : SpaceFillingSLEModel} {ν : ℝ → Measure SLEPathCode}
+    (hν : HasNormalizedSLELaw 𝒮 ν) (href : HasReferenceEnvironments 𝒮)
+    {G : Set MatedCRTHarmonic.MatedCRT.Path2}
+    (hGnull : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ μ : Measure MatedCRTHarmonic.MatedCRT.Path2,
+      MatedCRTHarmonic.MatedCRT.IsCorrelatedBM2 γ μ → μ Gᶜ = 0)
+    (hG : MatingRigidLEOn G) :
+    ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ β₀ α₀ : ℝ, 0 < β₀ ∧ 0 < α₀ ∧ ∀ ρ' : ℝ, 0 < ρ' → ρ' < 1 →
+      ∃ A : ℝ, 0 < A ∧ ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+        ∃ C : ℝ, ∀ ε : ℝ, 0 < ε → ε < 1 → ∀ (z : ℂ) (r : ℝ), ε ^ β₀ ≤ r → ball z r ⊆ ball 0 ρ' →
+          S.P {ω | ¬ ∀ T : Finset ℤ, (∀ k ∈ T, k ∈ cellVertices ε (S.η ω) (ball z r)) →
+            ∑ k ∈ T, (mdeg (S.mult ε ω) k : ℝ) * diam (cell ε (S.η ω) k) ^ 2 ≤ A * r ^ 2} ≤
+              ENNReal.ofReal (C * ε ^ α₀) :=
+  fun γ hγ hγ2 => hsingle_of_reference_at hν href hγ hγ2 (hGnull γ hγ hγ2) hG
+
+/-- **GMS19 Proposition 2.9 for one ball, in every valid environment, with the mating-rigid set chosen for each `γ`**.
+The conclusion of `hsingle_of_reference`, when for every `γ ∈ (0, 2)` there is a one-sided mating-rigid set `G_γ`
+that is full for every `γ`-correlated two-sided Brownian law (the set may depend on `γ`). -/
+theorem hsingle_of_reference_of_forall_gamma {𝒮 : SpaceFillingSLEModel} {ν : ℝ → Measure SLEPathCode}
+    (hν : HasNormalizedSLELaw 𝒮 ν) (href : HasReferenceEnvironments 𝒮)
+    (hU : ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ G : Set MatedCRTHarmonic.MatedCRT.Path2,
+      (∀ μ : Measure MatedCRTHarmonic.MatedCRT.Path2, MatedCRTHarmonic.MatedCRT.IsCorrelatedBM2 γ μ →
+        μ Gᶜ = 0) ∧ MatingRigidLEOn G) :
+    ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ β₀ α₀ : ℝ, 0 < β₀ ∧ 0 < α₀ ∧ ∀ ρ' : ℝ, 0 < ρ' → ρ' < 1 →
+      ∃ A : ℝ, 0 < A ∧ ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+        ∃ C : ℝ, ∀ ε : ℝ, 0 < ε → ε < 1 → ∀ (z : ℂ) (r : ℝ), ε ^ β₀ ≤ r → ball z r ⊆ ball 0 ρ' →
+          S.P {ω | ¬ ∀ T : Finset ℤ, (∀ k ∈ T, k ∈ cellVertices ε (S.η ω) (ball z r)) →
+            ∑ k ∈ T, (mdeg (S.mult ε ω) k : ℝ) * diam (cell ε (S.η ω) k) ^ 2 ≤ A * r ^ 2} ≤
+              ENNReal.ofReal (C * ε ^ α₀) := fun γ hγ hγ2 =>
+  let ⟨_, hGnull, hG⟩ := hU γ hγ hγ2
+  hsingle_of_reference_at hν href hγ hγ2 hGnull hG
 
 end MatedCRT.FirstPass.Derived
