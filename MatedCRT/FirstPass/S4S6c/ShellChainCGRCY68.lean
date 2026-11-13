@@ -13,7 +13,7 @@ Copy of the X chain of `ShellChainCGRCX68.lean` consuming the one-test input
 * A second Green exponent `ωG` with `2 * ω₀ < ωG` (`LICGRCY68` (75a)). The mesh exponent `ω₀` of
   `CountingMeshEventsHiStmt` is chosen with `4 * ω₀ ≤ ωG`, so that `greenLowEvent68_polyHighProb` (UniformEvents.lean:74)
   gives `PolyHighProb (greenLowEvent68 S ωG ρ CG)` with the same `CG` as at `ω₀`.
-* The good-annulus constant `C` is free: no comparison with `CG` (`WindowPrevLeCGStmt` is false).
+* The good-annulus constant `C` is free: no comparison with `CG`.
 
 Terminology: Armstrong-Kuusi-Mourrat (good annuli, shell order), Duplantier-Sheffield (LQG measure), Armitage-Gardiner (balls).
 -/

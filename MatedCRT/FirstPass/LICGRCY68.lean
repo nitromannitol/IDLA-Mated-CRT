@@ -11,7 +11,6 @@ import MatedCRT.FirstPass.LICGRCX68
   `2 * ω₀ < ωG`: a `PolyHighProb` hypothesis for `greenLowEvent68 S ωG ρ CG` and the almost sure premise
   `ω ∈ greenLowEvent68 S ωG ρ CG ε`; the conclusion may shrink the mesh range by a constant `εG > 0` (`ε ≤ εG`).
 * The good-annulus constant `C` stays free (split constants, Q4): no comparison of `C` with the Green constant `CG`.
-  The route `LICGRCXLe68` (premise `C ≤ CG`) is retired: its witness `WindowPrevLeCGStmt` is false.
 -/
 
 open HarmonicBalls (annulus)
