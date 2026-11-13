@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.Derived.HarnackPairUnionBound
 import MatedCRT.FirstPass.Derived.HarnackRingBall
+import MatedCRT.FirstPass.Derived.GreenKernelLowerOnCells
 
 /-!
 # Harnack inequality on circles for the Green kernel of a disk centred at the pole, from the pair events
@@ -181,5 +182,190 @@ theorem greenKernel_le_inv_mul_of_pairEvents_ball {ε : ℝ} (hε : 0 ≤ ε) {�
         mul_le_mul_of_nonneg_left key (inv_nonneg.2 hp.le)
 
 end GreenBall
+
+
+section PairGlue
+
+open Filter Topology _root_.HarmonicBalls _root_.LatticeProb
+open _root_.LatticeProb.LQG.LQGMeasureNonatomicMass
+
+/-- If `r ≤ dist(x, ∂B_ρ)` then `|x| + r ≤ ρ` or `ρ + r ≤ |x|` (compare with the radial point `ρ x/|x|` of the
+circle, or with `ρ` when `x = 0`). -/
+private theorem norm_add_le_or_add_le_norm_of_le_infDist_sphere' {x : ℂ} {ρ r : ℝ} (hρ : 0 < ρ)
+    (hr : r ≤ infDist x (sphere 0 ρ)) : ‖x‖ + r ≤ ρ ∨ ρ + r ≤ ‖x‖ := by
+  rcases eq_or_ne x 0 with rfl | h0
+  · have hw : ((ρ : ℝ) : ℂ) ∈ sphere (0 : ℂ) ρ := by
+      rw [mem_sphere_zero_iff_norm, Complex.norm_real, Real.norm_of_nonneg hρ.le]
+    have h1 : infDist (0 : ℂ) (sphere 0 ρ) ≤ ρ := by
+      calc infDist 0 (sphere 0 ρ) ≤ dist (0 : ℂ) (ρ : ℂ) := infDist_le_dist_of_mem hw
+        _ = ρ := by rw [dist_comm, dist_zero_right, Complex.norm_real, Real.norm_of_nonneg hρ.le]
+    left
+    rw [norm_zero]
+    linarith
+  · have hxpos : 0 < ‖x‖ := norm_pos_iff.2 h0
+    have hw : ((ρ / ‖x‖ : ℝ) : ℂ) * x ∈ sphere (0 : ℂ) ρ := by
+      rw [mem_sphere_zero_iff_norm, norm_mul, Complex.norm_real,
+        Real.norm_of_nonneg (div_nonneg hρ.le hxpos.le), div_mul_cancel₀ _ hxpos.ne']
+    have e : (1 - ρ / ‖x‖) * ‖x‖ = ‖x‖ - ρ := by
+      rw [sub_mul, one_mul, div_mul_cancel₀ _ hxpos.ne']
+    have h1 : infDist x (sphere 0 ρ) ≤ |‖x‖ - ρ| := by
+      calc infDist x (sphere 0 ρ) ≤ dist x (((ρ / ‖x‖ : ℝ) : ℂ) * x) := infDist_le_dist_of_mem hw
+        _ = |1 - ρ / ‖x‖| * ‖x‖ := by
+          rw [dist_eq_norm, show x - ((ρ / ‖x‖ : ℝ) : ℂ) * x = ((1 - ρ / ‖x‖ : ℝ) : ℂ) * x by
+            push_cast; ring, norm_mul, Complex.norm_real, Real.norm_eq_abs]
+        _ = |1 - ρ / ‖x‖| * |‖x‖| := by rw [abs_of_pos hxpos]
+        _ = |‖x‖ - ρ| := by rw [← abs_mul, e]
+    rcases le_total ‖x‖ ρ with h | h
+    · left
+      rw [abs_of_nonpos (sub_nonpos.2 h)] at h1
+      linarith
+    · right
+      rw [abs_of_nonneg (sub_nonneg.2 h)] at h1
+      linarith
+
+/-- **The Harnack bound (4.13) for the Green kernel of `B_r(η(a))` from the pair events** (Berestycki–Gwynne 2020,
+proof of Lemma 4.4, with the events (3.21) and (3.35) of Lemma 3.9 in place of the ring events of Lemma 3.10): the
+hypothesis `hHarn` of `greenKernelLowerBoundStmt_of_inputs` from the cell size estimate and the per-circle failure
+bounds `hPair` of the itinerary and disconnection events, with `β = min(β₀/2, (2+γ)^{-2}/2, α₀/14)` and
+`C₁ = max(1, (p₀ p₁)⁻¹)`. -/
+theorem hHarn_ball_of_pair {𝒮 : SpaceFillingSLEModel} (hsize : CellSizeEstimateStmt 𝒮)
+    (hPair : ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ β₀ α₀ : ℝ, 0 < β₀ ∧ 0 < α₀ ∧ ∀ ρ' : ℝ, 0 < ρ' → ρ' < 1 →
+      ∃ p₀ p₁ : ℝ, 0 < p₀ ∧ 0 < p₁ ∧ ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      ∃ C : ℝ, ∀ ε : ℝ, 0 < ε → ε < 1 →
+        (∀ z : ℂ, ∀ r : ℝ, ε ^ β₀ ≤ r → ball z (2 * r) ⊆ ball (0 : ℂ) ρ' →
+          S.P {ω | ¬ PairItinGood ε (S.bm ω) (S.η ω) p₀ z r} ≤ ENNReal.ofReal (C * ε ^ α₀)) ∧
+        S.P {ω | ¬ PairL311Good ε (S.bm ω) (S.η ω) ρ' (ε ^ β₀) p₁} ≤ ENNReal.ofReal (C * ε ^ α₀)) :
+    ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ β : ℝ, 0 < β ∧ ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+      ∃ C₁ : ℝ, 1 ≤ C₁ ∧ ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      PolyHighProb S.P fun ε => {ω | ∀ a ∈ cellVertices ε (S.η ω) (ball 0 ρ), ∀ r : ℝ,
+        r ≤ infDist (vertexPoint ε (S.η ω) a) (sphere 0 ρ) → ∀ s : ℝ, ε ^ β ≤ s → s ≤ r / 4 →
+        ∀ y ∈ cellVertices ε (S.η ω) (sphere (vertexPoint ε (S.η ω) a) s),
+        ∀ y' ∈ cellVertices ε (S.η ω) (sphere (vertexPoint ε (S.η ω) a) s),
+          greenKernel (S.mult ε ω) (interiorCellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) a) r)) a y ≤
+            C₁ * greenKernel (S.mult ε ω)
+              (interiorCellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) a) r)) a y'} := by
+  intro γ hγ hγ2
+  obtain ⟨β₀, α₀, hβ₀, hα₀, hpair⟩ := hPair γ hγ hγ2
+  set e : ℝ := 1 / (2 + γ) ^ 2 with he
+  have he0 : 0 < e := by positivity
+  have he1 : e < 1 := by
+    rw [he, div_lt_one (by positivity)]
+    nlinarith
+  have h2e : 2 / (2 + γ) ^ 2 - e = e := by
+    rw [he]
+    ring
+  set β : ℝ := min (β₀ / 2) (min (e / 2) (α₀ / 14)) with hβdef
+  have hβ0 : 0 < β := lt_min (by positivity) (lt_min (by positivity) (by positivity))
+  have hββ₀ : 2 * β ≤ β₀ := by
+    have : β ≤ β₀ / 2 := min_le_left _ _
+    linarith
+  have hβe : β ≤ e / 2 := (min_le_right _ _).trans (min_le_left _ _)
+  have hβα : β ≤ α₀ / 14 := (min_le_right _ _).trans (min_le_right _ _)
+  refine ⟨β, hβ0, fun ρ hρ hρ1 => ?_⟩
+  obtain ⟨p₀, p₁, hp₀, hp₁, hpairp⟩ := hpair ((1 + ρ) / 2) (by linarith) (by linarith)
+  refine ⟨max 1 (p₀ * p₁)⁻¹, le_max_left _ _, fun Ω _ S hS => ?_⟩
+  obtain ⟨C, hC⟩ := hpairp Ω S hS
+  have hU : Gauss.PolyHighProb S.P _ := polyHighProb_pairItin (P := S.P) S.bm S.η (ρ'' := (1 + ρ) / 2)
+    (p₀ := p₀) (C := max C 0) hβ0 (by linarith) (le_max_right _ _)
+    (fun ε hε hε1 z r hr hball => ((hC ε hε hε1).1 z r hr hball).trans (ENNReal.ofReal_le_ofReal
+      (mul_le_mul_of_nonneg_right (le_max_left _ _) (Real.rpow_nonneg hε.le _))))
+  have hV : Gauss.PolyHighProb S.P fun ε => {ω | PairL311Good ε (S.bm ω) (S.η ω) ((1 + ρ) / 2) (ε ^ β₀) p₁} :=
+    ⟨α₀, hα₀, C, 1, one_pos, fun r hr hr1 => (hC r hr hr1).2⟩
+  have hsz : Gauss.PolyHighProb S.P _ :=
+    hsize γ hγ hγ2 e ((1 + ρ) / 2) he0 he1 (by linarith) (by linarith) Ω S hS
+  have hW : ∀ᵐ ω ∂S.P, ω ∈ {ω | HarnackQual S ω ∧ Tendsto (S.η ω) (cocompact ℝ) (cocompact ℂ)} := by
+    filter_upwards [hS.ae_harnack_inputs hγ hγ2, hS.ae_tendsto_cocompact] with ω h1 h2
+    exact ⟨h1, h2⟩
+  have h2 := polyHighProb_inter_ae (polyHighProb_inter (polyHighProb_inter hU hV) hsz) hW
+  obtain ⟨r₁, hr₁, hr₁t⟩ := exists_rpow_le_of_small hβ0 (show (0 : ℝ) < 1 / 300 by norm_num)
+  refine polyHighProb_mono_of_eventually h2 ?_
+  filter_upwards [Ioo_mem_nhdsGT (show (0 : ℝ) < min r₁ 1 from lt_min hr₁ one_pos)] with ε hε
+  rintro ω ⟨⟨⟨hUω, hVω⟩, hSzω⟩, ⟨hηc, hall⟩, hprop⟩
+  have hε0 : 0 < ε := hε.1
+  have hε1 : ε < 1 := lt_of_lt_of_le hε.2 (min_le_right _ _)
+  have hεr : ε < r₁ := lt_of_lt_of_le hε.2 (min_le_left _ _)
+  obtain ⟨hlf, hcons, -, -⟩ := hall ε hε0
+  have ht : ε ^ β ≤ 1 / 300 := hr₁t ε hε0 hεr
+  have ht0 : 0 < ε ^ β := Real.rpow_pos_of_pos hε0 _
+  have ht2 : ε ^ (2 * β) = (ε ^ β) ^ 2 := by
+    rw [show 2 * β = β * 2 by ring, Real.rpow_mul hε0.le, Real.rpow_two]
+  have hδ : ε ^ e ≤ (ε ^ β) ^ 2 := by
+    rw [← ht2]
+    exact Real.rpow_le_rpow_of_exponent_ge hε0 hε1.le (by linarith)
+  have hβ₀le : ε ^ β₀ ≤ (ε ^ β) ^ 2 := by
+    rw [← ht2]
+    exact Real.rpow_le_rpow_of_exponent_ge hε0 hε1.le hββ₀
+  have hh0 : 0 < ε ^ (2 * β) := Real.rpow_pos_of_pos hε0 _
+  have hsq : (ε ^ β) ^ 2 ≤ ε ^ β / 300 := by nlinarith
+  have hbdd : ∀ k : ℤ, Bornology.IsBounded (cell ε (S.η ω) k) := fun k =>
+    (isCompact_Icc.image hηc).isBounded
+  have hdiam : ∀ k, (cell ε (S.η ω) k ∩ ball (0 : ℂ) ((1 + ρ) / 2)).Nonempty →
+      ∀ x ∈ cell ε (S.η ω) k, ∀ x' ∈ cell ε (S.η ω) k, dist x x' ≤ ε ^ e := by
+    intro k hk x hx x' hx'
+    have hd := (hSzω k hk).2
+    rw [h2e] at hd
+    exact (Metric.dist_le_diam_of_mem (hbdd k) hx hx').trans hd
+  have hG := greenKernel_le_inv_mul_of_pairEvents_ball (ρ := ρ) (δ := ε ^ e) (h₀ := ε ^ (2 * β))
+    (s₀ := ε ^ β) (s₁ := ε ^ β₀) (s₂ := ε ^ β₀) (p₀ := p₀) (p₁ := p₁) hε0.le (ω := S.bm ω) (η := S.η ω)
+    hlf hcons hh0 (Real.rpow_pos_of_pos hε0 _).le (by rw [ht2]; exact hδ) hdiam (by rw [ht2]; nlinarith)
+    (by rw [ht2]; nlinarith) (by nlinarith) hp₀ hp₁
+    (fun m' n' l hl hball => hUω (m', n', l)
+      (mem_latticeTripleBox hh0 (Real.rpow_pos_of_pos hε0 _) (by linarith) ⟨hl, hball⟩) ⟨hl, hball⟩) hVω
+  intro a ha r hr s hs hsr y hy y' hy'
+  have hs0 : 0 < s := lt_of_lt_of_le ht0 hs
+  have hBfin : (interiorCellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) a) r)).Finite :=
+    (cellVertices_finite_of_isCompact hηc hprop hε0
+      (isCompact_closedBall (vertexPoint ε (S.η ω) a) r)).subset fun k hk => by
+        obtain ⟨x, hx1, hx2⟩ := interiorCellVertices_subset _ _ _ hk
+        exact ⟨x, hx1, ball_subset_closedBall hx2⟩
+  obtain ⟨x₀, hx₀c, hx₀b⟩ := ha
+  have h5 : ‖x₀‖ < ρ := mem_ball_zero_iff.1 hx₀b
+  have hva : ‖vertexPoint ε (S.η ω) a‖ ≤ ρ + ε ^ e := by
+    have h3 := norm_sub_norm_le (vertexPoint ε (S.η ω) a) x₀
+    rw [← dist_eq_norm] at h3
+    have h4 := hdiam a ⟨x₀, hx₀c, ball_subset_ball (by linarith : ρ ≤ (1 + ρ) / 2) hx₀b⟩ _
+      (vertexPoint_mem_cell hε0.le _ a) _ hx₀c
+    linarith
+  have hnr : ‖vertexPoint ε (S.η ω) a‖ + r ≤ ρ := by
+    rcases norm_add_le_or_add_le_norm_of_le_infDist_sphere' hρ hr with h1 | h1
+    · exact h1
+    · exfalso
+      linarith
+  have hbr : ball (vertexPoint ε (S.η ω) a) r ⊆ ball (0 : ℂ) ((1 + ρ) / 2) := by
+    intro q hq
+    rw [mem_ball] at hq
+    rw [mem_ball_zero_iff]
+    have h1 := norm_sub_norm_le q (vertexPoint ε (S.η ω) a)
+    rw [← dist_eq_norm] at h1
+    linarith
+  rw [← frontier_ball (vertexPoint ε (S.η ω) a) hs0.ne'] at hy hy'
+  have key := hG a r hbr hBfin s hs (by linarith) y hy y' hy'
+  rw [greenKernel_symm_pole (S.mult_symm ε ω) hlf hcons hBfin a y,
+    greenKernel_symm_pole (S.mult_symm ε ω) hlf hcons hBfin a y']
+  exact key.trans (mul_le_mul_of_nonneg_right (le_max_right _ _) (greenKernel_nonneg_pole _ _ _ _))
+
+/-- **Lemma 2.16** (Berestycki–Gwynne 2020, Lemma 4.4) from the cell size estimate, the pair events of ibid.
+Lemma 3.9 (`hPair`: the itinerary events (3.21) and the disconnection events (3.35) of Lemma 3.11, giving the
+Harnack bound (4.13) by `hHarn_ball_of_pair`) and the resistance bound (4.15) for the annuli
+`B_{3r/4}(η(a)) \ B̄_s(η(a))` (`hres`). -/
+theorem greenKernelLowerBoundStmt_of_pair {𝒮 : SpaceFillingSLEModel} (hsize : CellSizeEstimateStmt 𝒮)
+    (hPair : ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ β₀ α₀ : ℝ, 0 < β₀ ∧ 0 < α₀ ∧ ∀ ρ' : ℝ, 0 < ρ' → ρ' < 1 →
+      ∃ p₀ p₁ : ℝ, 0 < p₀ ∧ 0 < p₁ ∧ ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      ∃ C : ℝ, ∀ ε : ℝ, 0 < ε → ε < 1 →
+        (∀ z : ℂ, ∀ r : ℝ, ε ^ β₀ ≤ r → ball z (2 * r) ⊆ ball (0 : ℂ) ρ' →
+          S.P {ω | ¬ PairItinGood ε (S.bm ω) (S.η ω) p₀ z r} ≤ ENNReal.ofReal (C * ε ^ α₀)) ∧
+        S.P {ω | ¬ PairL311Good ε (S.bm ω) (S.η ω) ρ' (ε ^ β₀) p₁} ≤ ENNReal.ofReal (C * ε ^ α₀))
+    (hres : ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ β : ℝ, 0 < β ∧ ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+      ∃ C₂ : ℝ, 1 ≤ C₂ ∧ ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      PolyHighProb S.P fun ε => {ω | ∀ a ∈ cellVertices ε (S.η ω) (ball 0 ρ), ∀ r : ℝ,
+        r ≤ infDist (vertexPoint ε (S.η ω) a) (sphere 0 ρ) → ∀ s : ℝ, ε ^ β ≤ s → s ≤ r / 4 →
+        ∃ h : ℤ → ℝ, (∀ k ∈ cellVertices ε (S.η ω) (closedBall (vertexPoint ε (S.η ω) a) s), h k = 1) ∧
+          (∀ k, k ∉ cellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) a) (3 * r / 4)) → h k = 0) ∧
+          ∀ T : Finset ℤ, Real.log (3 * r / 4 / s) *
+            ((1 / 2) * ∑ k ∈ T, ∑ l ∈ T, (S.mult ε ω k l : ℝ) * (h k - h l) ^ 2) ≤ C₂}) :
+    GreenKernelLowerBoundStmt 𝒮 :=
+  greenKernelLowerBoundStmt_of_inputs hsize (hHarn_ball_of_pair hsize hPair) hres
+
+end PairGlue
 
 end MatedCRT
