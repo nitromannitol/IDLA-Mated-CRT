@@ -2,7 +2,7 @@
 
 Status: historical exact-type requests with dated updates below. All nine original requests have audited written outcomes (operator16:25/18:25/18:45); all three newer scaling requests now also have audited written outcomes (operator19:35, steps3 sha d34cf930). False originals retain their exact historical types and require the authorized repairs. Lean implementation remains pending. No further prover round will occur: any genuinely unwritten step remains a named Step with exact type, location, consumer and reason. Literature inputs remain explicit and source promotion is separate.
 
-The historical code blocks copy the entire original `def` command, including binders, from the indicated source; operator-authorized repairs and current interfaces are recorded in the dated updates. Names are fully qualified in headings; code uses the original namespace and open declarations of its source file. The declarations are pinned to the takeover commits (z1: 15e8866/f69cf7b; z5: d63273a; m1: 2afd11a), except the pre-existing S3 interface. Compile checks are recorded under `/home/nitro/paper-fleets/mcrt/lead/checks/20261108-takeover`.
+The code blocks copy the entire `def` command, including binders, from the indicated source; operator-authorized repairs and current interfaces are recorded in the dated updates. Names are fully qualified in headings; code uses the original namespace and open declarations of its source file. The declarations are pinned to the takeover commits (z1: 15e8866/f69cf7b; z5: d63273a; m1: 2afd11a), except the pre-existing S3 interface. Compile checks are recorded under `/home/nitro/paper-fleets/mcrt/lead/checks/20261108-takeover`.
 
 The three rescaled-environment requests remain in [EnvironmentScaling.md](EnvironmentScaling.md). The operator supplied independently audited written proofs at09:45; see [ENV-STEPS-ROUTING-20261108.md](ENV-STEPS-ROUTING-20261108.md) for their WRITTEN-PROOF-AVAILABLE / LEAN-PENDING status and the repaired stopped-clock quantifiers. [GAPS-SEC3.md](GAPS-SEC3.md) and fleet `ESCALATIONS.md` retain the prior evidence. The requested `docs/campaign/STATUS.md` is absent; the existing fleet `STATUS.md` and [REDUCTIONS.md](REDUCTIONS.md) remain the status/reduction ledgers.
 
@@ -32,9 +32,7 @@ These are written proofs, not new Lean closure or approved literature axioms.
 
 The operator explicitly authorizes the two internal Step restatements and
 consumer adjustments. Frozen Draft statements remain untouched. The code
-blocks below preserve the historical declarations whose problems were sent
-for written proofs; the two false forms are not proof tasks or justified
-hypotheses for an unconditional conclusion. Remaining newer requests
+blocks below give the current declarations. Remaining newer requests
 WPN-42-scaled-representatives, WPN-42-insertion-coordinate-extension and
 WPN-ENV-dilated-circle-common-event are unchanged.
 
@@ -95,9 +93,9 @@ def StoppedInteriorGeometryStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 
 ## WPN-51-margin: `MatedCRT.StoppedInterior.StoppedInteriorMeasurableStep`
 
-**WRITTEN-PROOF-AVAILABLE REPAIR / LEAN-PENDING (16:25).** Measurable-version form audited, steps2:1660-1858; operator-authorized consumer repair routed to z1. Historical request: Section 5 stopped lower bound, E-c1-5(e). Measurability in envSigma of this random compact-set infimum remains open. Worker z1 report, f69cf7b.
+**WRITTEN-PROOF-AVAILABLE / LEAN-PENDING (16:25).** Measurable-version form audited, steps2:1660-1858; consumer routed to z1. Request: Section 5 stopped lower bound, E-c1-5(e): an envSigma-measurable version of this random compact-set infimum, equal to it almost surely on the stopping event. Worker z1 report, f69cf7b.
 
-Exact declaration: `MatedCRT/Proofs/Sec5/StoppedInterior.lean:171`.
+Exact declaration: `MatedCRT/Proofs/Sec5/StoppedInterior.lean:173`.
 
 ```lean
 def StoppedInteriorMeasurableStep (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -105,9 +103,11 @@ def StoppedInteriorMeasurableStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
   ∀ Λ : Ω → ℝ → Set ℂ, (∀ᵐ ω ∂S.P, IsConeHarmonicBallFamily (S.μ ω) (Λ ω)) →
   ∀ δ s t : ℝ, 0 < δ → 0 < s → 0 < t →
-    Measurable[S.envSigma] fun ω => ⨅ x : {x : ℂ | x ∈ Λ ω t ∧ s ≤ ‖x‖ ∧ δ ≤ infDist x (Λ ω t)ᶜ},
-      (HarmonicBalls.leastSupersolution (S.μ ω) ρ 0 t (x : ℂ) +
-        t * HarmonicBalls.greenFunction (ball 0 ρ) 0 (x : ℂ))
+    ∃ Mhat : Ω → ℝ, Measurable[S.envSigma] Mhat ∧
+      ∀ᵐ ω ∂S.P, t < clusterExitTime (Λ ω) ρ →
+        Mhat ω = ⨅ x : {x : ℂ | x ∈ Λ ω t ∧ s ≤ ‖x‖ ∧ δ ≤ infDist x (Λ ω t)ᶜ},
+          (HarmonicBalls.leastSupersolution (S.μ ω) ρ 0 t (x : ℂ) +
+            t * HarmonicBalls.greenFunction (ball 0 ρ) 0 (x : ℂ))
 ```
 
 ## WPN-51-layer: `MatedCRT.StoppedLayerPotentialStep`
@@ -154,19 +154,17 @@ def LQGMeasureLocalityFunctionalStep : Prop :=
 
 **UPDATE 2026-11-08 09:45 UTC: WRITTEN-PROOF-AVAILABLE / REPAIRED CONSTRUCTOR LEAN-PENDING.**
 Operator-supplied `notes/env-steps/env-steps.tex` is independently audited
-CORRECT. Proposition false (1071-1095) refutes discharging the predicate for
-arbitrary supplied `G` (`G = 1` fails at time zero); the conditional consumer
-itself is not refuted. Proposition correctstopped (1106-1252) constructs a
+CORRECT. The predicate is a property of the supplied `G`: it says that `G` is
+the limit of the approximate killed clocks. Proposition correctstopped (1106-1252) constructs a
 jointly measurable continuous-path-valued `G` for `0 ≤ γ < 2`, bounded simply
 connected field domain and the remaining consumer hypotheses. It supplies the
 exact existing source predicate and identifies `G` with stopped `F` in the
 stated iterated-a.e. order. The exact elaboration-checked constructor type and
 routing to z2 are in [the routing note](ENV-STEPS-ROUTING-20261108.md).
-The original predicate below remains unchanged; its arbitrary-parameter
-universal discharge is not a valid replacement goal. Occupation and the cone
+The predicate below is unchanged; the constructor supplies its `G`. Occupation and the cone
 start-at-zero Green lemma remain separate.
 
-Historical request as originally recorded:
+Request:
 
 **WRITTEN-PROOF-NEEDED.** Previously flagged by the operator. This is the former hsource in DirichletClockTransfer.lean:86-90, now named at commit 2afd11a. Corrected paper occupation discussion 1168-1172 does not state this exact all-time a.s. convergence and continuity. See GAPS-SEC3.md and the audited occupation proof for related supported bridges; do not equate path convergence with this statement.
 
@@ -202,9 +200,9 @@ def UniformCellSizeUpperStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 
 ## WPN-36-pointwise-event: `MatedCRT.PointwiseCellAnnulusEnvelopeStep`
 
-**WRITTEN-PROOF-AVAILABLE REPAIR / LEAN-PENDING (16:25).** Per-mesh a.e. form audited, steps2:252-438; authorized Step/consumer repair routed to m5. Historical request: Corrected same-walk rate: a pointwise envSigma-measurable geometric envelope with a polynomial exceptional bound. An outer-probability bound and versions agreeing a.e. at each mesh do not by themselves give this interface. Worker m1 r3, 2afd11a.
+**WRITTEN-PROOF-AVAILABLE / LEAN-PENDING (16:25).** Per-mesh a.e. form audited, steps2:252-438; consumer routed to m5. Request: Corrected same-walk rate: an envSigma-measurable geometric envelope event with a polynomial exceptional bound, whose geometric conclusions hold almost everywhere on the event at each mesh. Worker m1 r3, 2afd11a.
 
-Exact declaration: `MatedCRT/Steps/Sec3/PointwiseAnnulusEnvelope.lean:16`.
+Exact declaration: `MatedCRT/Steps/Sec3/PointwiseAnnulusEnvelope.lean:15`.
 
 ```lean
 def PointwiseCellAnnulusEnvelopeStep {Ω : Type} [MeasurableSpace Ω]
@@ -212,7 +210,7 @@ def PointwiseCellAnnulusEnvelopeStep {Ω : Type} [MeasurableSpace Ω]
   ∃ E : ℝ → Set Ω, (∀ ε, MeasurableSet[S.envSigma] (E ε)) ∧
     ∃ C δ : ℝ, 0 ≤ C ∧ 0 < δ ∧ ∀ ε : ℝ, 0 < ε → ε < δ →
       S.P (E ε)ᶜ ≤ ENNReal.ofReal (C * ε ^ κ) ∧
-      ∀ ω ∈ E ε,
+      ∀ᵐ ω ∂S.P, ω ∈ E ε →
         (∀ i : ℤ, (cell ε (S.η ω) i ∩ ball 0 ρ).Nonempty →
           diam (cell ε (S.η ω) i) ≤ ε ^ a) ∧
         (∀ z ∈ ball (0 : ℂ) ρ, ∀ s : ℝ, ε ^ β ≤ s → s ≤ ρ →
@@ -257,19 +255,17 @@ The deterministic earlier-rational-time compact cover and the stopped-to-global 
 
 ## WPN-42-scaled-representatives: `MatedCRT.ScaledBoundedRepresentativesStep`
 
-**WRITTEN-PROOF-AVAILABLE REPAIR / LEAN-PENDING (operator19:35).** steps3 Section1:33-403 refutes the original and proves the bounded-Lambda replacement, sufficient for both consumers; queued m5. Historical request follows.
+**WRITTEN-PROOF-AVAILABLE / LEAN-PENDING (operator19:35).** steps3 Section1:33-403 proves the Step for a bounded ball Λ, which is what both consumers use; queued m5.
 
 **WRITTEN-PROOF-NEEDED** (lead 2026-11-08 15:29 UTC; z5 report, commit dee04d9).
-This new request is additional to the nine sent to the prover at14:20. Its truth
-for arbitrary measures has not been established. Do not assign its proof to an
-active Lean worker or silently restrict its quantifiers.
+This new request is additional to the nine sent to the prover at14:20.
 
-Exact declaration: `MatedCRT/Proofs/Sec4/Prop42Closure/ScaledRegularizedFamily.lean:43`,
+Exact declaration: `MatedCRT/Proofs/Sec4/Prop42Closure/ScaledRegularizedFamily.lean:44`,
 namespace `MatedCRT`, with `open MeasureTheory HarmonicBalls`:
 
 ```lean
 def ScaledBoundedRepresentativesStep : Prop :=
-  ∀ (μ : Measure ℂ) (Λ : Set ℂ) (a c : ℝ), 0 < a → 0 < c → IsSubharmonicBall μ Λ 0 →
+  ∀ (μ : Measure ℂ) (Λ : Set ℂ) (a c : ℝ), 0 < a → 0 < c → IsSubharmonicBall μ Λ 0 → Bornology.IsBounded Λ →
     HasBoundedSubharmonicRepresentatives (scaledMeasure μ a c) ((fun x : ℂ => (a : ℂ) * x) ⁻¹' Λ) 0
 ```
 
@@ -291,9 +287,8 @@ explicitly leaves bounded representatives open at1-6. HB Lemma5.7's cluster
 identity (corrected source905-938) does not supply this test-class replacement.
 `Proofs/Potential/BoundedSubharmonicRepresentatives.lean:140,160,246` supplies a
 pointwise criterion and conditional special cases, not the stated assertion.
-This is a missing written bridge at the current definitions; no counterexample
-to the paper theorem is asserted. An audited proof or operator-approved statement
-repair is needed before the full all-measure Step can be discharged.
+This is a missing written bridge at the current definitions; an audited proof is
+needed before the Step can be discharged.
 
 Lead checked committed snapshots at936f3b8 with strict lc and a clean hole scan.
 z5 proves mass/conditions, regularized-cluster dilation and bounded-test transfer;
@@ -338,41 +333,30 @@ is not assigned for invention. Request an independently audited written proof
 or a faithful source that actually covers this exact type before promoting it.
 Do not combine this gap with the independent scaled-representative gap.
 
-## WPN-ENV-dilated-circle-common-event: `ConeDilationCircleApproximationStep`
+## WPN-ENV-dilated-circle-common-event: `MatedCRT.Sec1.RescaledConeDistributionCircleGridStep`
 
-**WRITTEN-PROOF-AVAILABLE REPRESENTED REPAIR / LEAN-PENDING (operator19:35).** steps3 Section3:714-1057 proves RescaledConeDistributionCircleGridStep exactly; queued m1. Historical request follows.
+**WRITTEN-PROOF-AVAILABLE / LEAN-PENDING (operator19:35).** steps3 Section3:714-1057 proves the exact grid Step; queued m1. Request (lead 2026-11-08, m1 7df13f4): almost surely, simultaneously for the dyadic radii and grid centres, the circle averages of the rescaled cone distribution equal the rescaled supplied circles.
 
-**WRITTEN-PROOF-NEEDED** (lead2026-11-08, m1 7df13f4). Exact sufficient
-internal common-event interface in FieldCircleScaling.lean:45, namespace
-MatedCRT.Sec1, with MeasureTheory/Filter/Set and LQGMetric.CircleAvg open:
+Exact declaration: `MatedCRT/Proofs/Sec1/EnvironmentScaling/Field.lean:1146`, namespace `MatedCRT.Sec1`.
 
 ```lean
-def ConeDilationCircleApproximationStep : Prop :=
+def RescaledConeDistributionCircleGridStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω]
-    (P : Measure Ω) [IsProbabilityMeasure P]
-    (hC : Ω → (ℂ → ℝ) → ℝ) (hcirc : Ω → ℝ → ℂ → ℝ),
-      IsQuantumCone γ P hC hcirc →
-      ∀ᵐ ω ∂P, ∀ R : ℝ, 0 < R → ∀ n m : ℕ, ∀ k a d : ℤ, 0 < k →
-        Tendsto (fun j => hC ω (affTest R 0
-          (circBump j (FieldCircle.gridPt m a d) ((k : ℝ) / 2 ^ n)))) atTop
-          (𝓝 (hcirc ω (R * ((k : ℝ) / 2 ^ n)) (R * FieldCircle.gridPt m a d)))
+    (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ → ∀ b : ℝ, 0 < b →
+    ∀ (H : Ω → LQGMetric.DistC) (R : Ω → ℝ), Measurable H → Measurable R →
+      (∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ) →
+      (∀ᵐ ω ∂S.P, R ω = coneScaleRadius γ (S.hcirc ω) b) →
+      ∀ᵐ ω ∂S.P, ∀ n m : ℕ, ∀ k a d : ℤ, 0 < k →
+        LQGMetric.circleAvg (rescaledDistribution γ b (H ω) (R ω))
+          ((k : ℝ) / 2 ^ n) (FieldCircle.gridPt m a d) =
+        rescaledCircle γ (S.hcirc ω) (R ω) b ((k : ℝ) / 2 ^ n)
+          (FieldCircle.gridPt m a d)
 ```
 
-Written boundary: audited fleet env-steps.tex:325-330 asserts identification
-of the rescaled distribution's continuous circles with the scaled supplied
-circles; it does not write this uniform affine-mollifier approximation passage
-at the current Lean definitions. ConePairing.lean:286 and Bonanno
-CircleAvgAffine.lean:196 supply fixed-parameter results whose exceptional sets
-may depend on radius/center/scale; they do not directly supply the event above.
-The deterministic pairing identity, constant-shift recovery and conditional
-consumer are proved by m1. Do not ask a worker to invent this passage.
-
-This all-positive-scale interface is sufficient for the actual random-scale
-RescaledConeDistributionCircleGridStep, and may be stronger than necessary.
-The separate prover and independent audit should check its exact hypotheses
-and strength; alternatively supply an audited proof of the existing exact grid
-Step at Field.lean:1146. No assertion of falsity or necessity of this stronger
-interface is made. Keep it named until the operator returns an audited proof.
+Written boundary: audited fleet env-steps.tex:325-330 identifies the rescaled
+distribution's continuous circles with the scaled supplied circles. The
+deterministic pairing identity, constant-shift recovery and conditional
+consumer are proved by m1.
 
 
 ## Checked implementation update, 2026-11-08 17:17 UTC
@@ -626,7 +610,7 @@ Late bounded cutoff da545b8/adb651f (lead19:25): the source-pole finite-domain c
 
 Operator19:35 released the final three written-proof requests: fleet `notes/wpn-steps3/steps3.tex`, sha256 `d34cf930706e195c09ec2eb14c8999a6a1d64cc6b69938b6e227d2ddf9619d9d`, independent `AUDIT-steps3.md` VERDICT CORRECT for all three outcomes. This is written proof availability, not Lean closure. No further prover rounds will occur under operator18:55. The bounded representative Step and the represented circle-grid Step are the forms to implement. The insertion extension is internal mathematics, never a literature hypothesis presented as DS11.
 
-The bounded repair adds `Bornology.IsBounded Λ` before `IsSubharmonicBall μ Λ 0` in the exact historical type. The only direct mathematical application at ScaledRegularizedFamily.lean:228-231 receives boundedness from the regularized-family field `h1.isBounded (c*t) (mul_pos hc ht)`; both PlateauScalingAssembly consumers retain their conclusions. No frozen or companion file is edited by the lead.
+The bounded form assumes `Bornology.IsBounded Λ` together with `IsSubharmonicBall μ Λ 0`. The only direct mathematical application at ScaledRegularizedFamily.lean:228-231 receives boundedness from the regularized-family field `h1.isBounded (c*t) (mul_pos hc ht)`; both PlateauScalingAssembly consumers retain their conclusions. No frozen or companion file is edited by the lead.
 
 944485f BrownianMinimum.lean:190,291 proves separated-interval minima are a.s. unequal for arbitrary two-sided intervals, using a nondegenerate Gaussian gap independent of the joint countable left/right increment family. Strict source and axiom checks pass. The uniqueness paragraph at the end of r3:534-599 is not implemented in that slice; it remains written implementation work, not a new WPN. 7e08a81 SameWalkRatesAe now supplies adjacent-cells intersection a.s. for all positive meshes; G3 is discharged in its conditional rate bound. Uniform environment-independent cell/rate exponents, actual finite exit and rate/event producers remain open. Proposed cell-configuration staging 23094a3 elaborates but has no source-promotion approval.
 

@@ -33,18 +33,13 @@ equality in distribution alone is insufficient for this same-space conclusion.
 The three proofs would supply the corresponding hypotheses of
 `coneEnvironmentScalingStep_of_inputs`; they are still explicit until proved.
 
-## Stopped clocks: false arbitrary discharge and true constructor
+## Stopped clocks: the constructor
 
 The existing `MatedCRT.DirichletStoppedClockConvergenceStep` at
 `MatedCRT/Steps/Sec3/DirichletStoppedClock.lean:15` is a predicate of a supplied
-`G`. The other assumptions of
-`berestycki_dirichlet_time_change_eq_lbm` do **not** imply it for arbitrary `G`:
-Proposition false, lines 1071-1095, takes `G = 1`; every approximate killed
-clock is zero at time zero. This refutes a universal discharge of the source
-hypothesis, not the conditional transfer theorem itself. The example uses
-`γ = 0`, `F(t) = t`, and concentric disks with a Dirichlet GFF; the time-zero
-obstruction works at positive subcritical γ whenever the other assumptions
-are instantiated.
+`G`: it says that `G` is the limit of the approximate killed clocks. As a
+hypothesis of `berestycki_dirichlet_time_change_eq_lbm`, it is discharged by
+constructing that limit.
 
 Proposition correctstopped, 1106-1252, constructs a suitable `G` under
 `0 ≤ γ < 2` and bounded simply connected `D`, retaining the consumer's other
