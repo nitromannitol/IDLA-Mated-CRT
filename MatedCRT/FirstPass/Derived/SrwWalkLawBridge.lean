@@ -38,8 +38,16 @@ theorem srwLaw_bmEdgeCount_apply_eq_walkLaw (hε : 0 ≤ ε) (x : ℤ) {B : Set 
   exact (LatticeProb.LQG.walkLaw_vertexPath_preimage (MatedCRTHarmonic.MatedCRT.graph ε ω h) _
     (fun y => srwKernel_bmEdgeCount_eq h hε y) x hB).symm
 
+/-- Lower bounds transfer from the edge-end walk to `srwLaw` for every set of vertex paths, measurable or not. -/
+theorem walkLaw_vertexPath_preimage_le_srwLaw (hε : 0 ≤ ε) (x : ℤ) (B : Set (ℕ → ℤ)) :
+    (MatedCRTHarmonic.MatedCRT.graph ε ω h).walkLaw x ((MatedCRTHarmonic.MatedCRT.graph ε ω h).vertexPath ⁻¹' B) ≤
+      srwLaw (bmEdgeCount ε (fun t => (ω t).1) (fun t => (ω t).2)) x B := by
+  rw [srwLaw_bmEdgeCount_eq_map_walkLaw h hε]
+  exact Measure.le_map_apply (LatticeProb.LQG.measurable_vertexPath' _).aemeasurable B
+
 end MatedCRT
 
 /-! ## Audit -/
 #print axioms MatedCRT.srwLaw_bmEdgeCount_eq_map_walkLaw
 #print axioms MatedCRT.srwLaw_bmEdgeCount_apply_eq_walkLaw
+#print axioms MatedCRT.walkLaw_vertexPath_preimage_le_srwLaw
