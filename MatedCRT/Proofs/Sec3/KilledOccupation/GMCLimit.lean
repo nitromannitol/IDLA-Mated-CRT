@@ -164,15 +164,17 @@ lemma gmcCutDensity_eq_of_lt {γ ρ ρ₂ : ℝ} (hρ : ρ < ρ₂) {H : ℝ →
   · rw [circleAverageRep_eq_of_lt hψ hH (dyadicScale_pos k) hk hx]
   · simp [gmcCutoff_eq_zero hρ (not_lt.1 hx)]
 
-/-- **Cut-off GMC limit as the cut-off LQG measure.** If the field `H` has continuous circle averages on
+/-- **Vague convergence of the cut-off approximations.** If the field `H` has continuous circle averages on
 `(0, ∞) × ℂ`-restrictions to the index set `ψ`, and `μ` is its LQG measure (vague limit along the dyadic
-scales), then the measurable limit `gmcLimit γ ρ ρ₂ ψ` equals `μ.withDensity χ`. Steps B1–B6 of
-MQ-li-16 (3). -/
-theorem gmcLimit_eq_withDensity_of_continuous {γ ρ ρ₂ : ℝ} (hρρ₂ : ρ < ρ₂) (hρ₂ : ρ₂ < 1)
-    {H : ℝ → ℂ → ℝ} {ψ : UnitDiskCircleIndex → ℝ} (hψ : Continuous ψ)
+scales), then the cut-off approximations `gmcApproxCut γ ρ ρ₂ k ψ` are eventually finite on compact sets and
+converge vaguely to `μ.withDensity χ`. Steps B1–B5 of MQ-li-16 (3). -/
+theorem gmcApproxCut_finite_and_isVagueLimitOn_of_continuous {γ ρ ρ₂ : ℝ} (hρρ₂ : ρ < ρ₂)
+    (hρ₂ : ρ₂ < 1) {H : ℝ → ℂ → ℝ} {ψ : UnitDiskCircleIndex → ℝ} (hψ : Continuous ψ)
     (hH : ∀ q : UnitDiskCircleIndex, ψ q = H q.1.1 q.1.2) {μ : Measure ℂ} (hL : IsLQGLimit γ H μ)
     (hHc : ∀ ε : ℝ, 0 < ε → Continuous fun x => H ε x) :
-    gmcLimit γ ρ ρ₂ ψ = μ.withDensity fun x => ENNReal.ofReal (gmcCutoff ρ ρ₂ x) := by
+    (∀ K, IsCompact K → ∀ᶠ k in atTop, gmcApproxCut γ ρ ρ₂ k ψ K < ∞) ∧
+      QuantumZipper.IsVagueLimitOn univ (fun k => gmcApproxCut γ ρ ρ₂ k ψ)
+        (μ.withDensity fun x => ENNReal.ofReal (gmcCutoff ρ ρ₂ x)) := by
   have := hL.isLocallyFiniteMeasure
   -- B2: for all large `k`, the dyadic scale is below `1 - ρ₂`, and the density is the field's density.
   have ht : Tendsto (fun k : ℕ => dyadicScale k) atTop (𝓝 0) := by
@@ -245,8 +247,19 @@ theorem gmcLimit_eq_withDensity_of_continuous {γ ρ ρ₂ : ℝ} (hρρ₂ : ρ
       rw [hk x]
     rw [heq, withDensity_apply _ hK.measurableSet]
     exact (hg.continuousOn.integrableOn_compact hK).lintegral_lt_top
-  -- B6
-  exact gmcLimit_eq hfin hlim
+  exact ⟨hfin, hlim⟩
+
+/-- **Cut-off GMC limit as the cut-off LQG measure.** If the field `H` has continuous circle averages on
+`(0, ∞) × ℂ`-restrictions to the index set `ψ`, and `μ` is its LQG measure (vague limit along the dyadic
+scales), then the measurable limit `gmcLimit γ ρ ρ₂ ψ` equals `μ.withDensity χ`. Steps B1–B6 of
+MQ-li-16 (3). -/
+theorem gmcLimit_eq_withDensity_of_continuous {γ ρ ρ₂ : ℝ} (hρρ₂ : ρ < ρ₂) (hρ₂ : ρ₂ < 1)
+    {H : ℝ → ℂ → ℝ} {ψ : UnitDiskCircleIndex → ℝ} (hψ : Continuous ψ)
+    (hH : ∀ q : UnitDiskCircleIndex, ψ q = H q.1.1 q.1.2) {μ : Measure ℂ} (hL : IsLQGLimit γ H μ)
+    (hHc : ∀ ε : ℝ, 0 < ε → Continuous fun x => H ε x) :
+    gmcLimit γ ρ ρ₂ ψ = μ.withDensity fun x => ENNReal.ofReal (gmcCutoff ρ ρ₂ x) :=
+  have h := gmcApproxCut_finite_and_isVagueLimitOn_of_continuous hρρ₂ hρ₂ hψ hH hL hHc
+  gmcLimit_eq h.1 h.2
 
 /-- **BRIDGE.** Let `μ` be the γ-LQG measure of a random field `hε` (`IsLQGMeasure`) whose circle averages are
 almost surely continuous on `(0, ∞) × ℂ`. Then, almost surely, the measurable cut-off limit
