@@ -1,12 +1,12 @@
 # Final audited scaling repairs: bounded Lean routes
 
-Operator19:35 released the final three written-proof requests: fleet `notes/wpn-steps3/steps3.tex`, sha256 `d34cf930706e195c09ec2eb14c8999a6a1d64cc6b69938b6e227d2ddf9619d9d`, independent `AUDIT-steps3.md` VERDICT CORRECT for all three outcomes. This is written proof availability, not Lean closure. No further prover rounds will occur under operator18:55. The original representative and raw-circle Steps are false; only the specified bounded/represented repairs may be implemented. The insertion extension is internal mathematics, never a literature hypothesis presented as DS11.
+Operator19:35 released the final three written-proof requests: fleet `notes/wpn-steps3/steps3.tex`, sha256 `d34cf930706e195c09ec2eb14c8999a6a1d64cc6b69938b6e227d2ddf9619d9d`, independent `AUDIT-steps3.md` VERDICT CORRECT for all three outcomes. This is written proof availability, not Lean closure. No further prover rounds will occur under operator18:55. The bounded representative Step and the represented circle-grid Step are the forms to implement. The insertion extension is internal mathematics, never a literature hypothesis presented as DS11.
 
 | Target | Authorized result and source | Bounded assignment |
 | --- | --- | --- |
-| ScaledBoundedRepresentativesStep | Original false: Dirac0/whole-plane/a=c=1, steps3:118-136. Bounded repair proved:211-368; exact consumer supply:370-403. | m5 next: repair the internal Step/consumer/assembly/audit, then a substantive bounded-representative/dilation component. |
+| ScaledBoundedRepresentativesStep | Bounded form proved: 211-368; exact consumer supply:370-403. | m5 next: repair the internal Step/consumer/assembly/audit, then a substantive bounded-representative/dilation component. |
 | InsertionCoordinateExtensionStep | Exact type proved, steps3:405-712. Fixed a,b precede the a.s. quantifier; no supplied measure-map measurability. | z1 next after compact code: internal declaration/legacy alias and dyadic no-atom component:538-585, then the written decoder/punctured all-scale and affine transfer. |
-| ConeDilationCircleApproximationStep / RescaledConeDistributionCircleGridStep | Raw statement false:813-873. Supplied distribution simultaneously representing all tests gives the exact grid Step:875-1057. | m1 next after current canonical task: deterministic dilation/convolution/approximate identity:966-1044; retain named common-event identity until its written covariance/code producer is formalized. |
+| RescaledConeDistributionCircleGridStep | A supplied distribution simultaneously representing all tests gives the exact grid Step:875-1057. | m1 next after current canonical task: deterministic dilation/convolution/approximate identity:966-1044; retain named common-event identity until its written covariance/code producer is formalized. |
 
 The exact bounded replacement to implement in the current namespace is:
 

@@ -14,20 +14,20 @@ Operator update read 2026-11-08 14:24 UTC (inbox entry labelled 14:40): the nine
 Pinned source: fleet `notes/wpn-steps2/steps2.tex`, sha256
 `8ec75074beeb628d998a25dcc2a7a86b2a0b59a832899f7c78dd42a9ede27793`;
 independent audit `notes/wpn-steps2/AUDIT-steps2.md`. Overall verdict GAPS
-is per-target: four exact declarations are correct, two false declarations
-have sufficient audited repairs, and rates/pole/layer remain unreturned.
+is per-target: four exact declarations are correct, two declarations
+have audited a.e. and measurable-version forms, and rates/pole/layer remain unreturned.
 These are written proofs, not new Lean closure or approved literature axioms.
 
 | Request | Written status and exact source section | Lean routing |
 | --- | --- | --- |
 | WPN-36-uniform-cell | AVAILABLE, exact declaration correct, r3 Section1:36-254 | m5 deterministic cell/area and outer-union-bound components checked; uniform quantitative law remains |
-| WPN-36-pointwise-event | AVAILABLE REPAIR, original pointwise Step false, r3 Section2:255-442 | m5 e197e53 a.e. Step and tail/mean consumers checked; actual Borel state/walk construction remains |
+| WPN-36-pointwise-event | AVAILABLE, a.e. form, r3 Section2:255-442 | m5 e197e53 a.e. Step and tail/mean consumers checked; actual Borel state/walk construction remains |
 | WPN-36-pointwise-rates | AVAILABLE REPAIR, r3 Section3:443-766; per-mesh a.e. quenched implication, chosen annulus exponent | z1 c5305cb/ce894f6 a.e. successors/assembly, start-cell geometry and cell-target composition checked; uniform-cell/minimum/adjacency/early-exit producers remain; frozen Draft delta escalated |
 | WPN-42-locality | AVAILABLE, exact declaration correct, r3 Section4:768-911 | z5 48b2c75 exact internal Step and e8620f7 consumers checked; no Prop4.2 closure |
 | WPN-51-origin | AVAILABLE, exact declaration correct, r3 Section5:913-1126 | countable smooth tests, SupersolutionSectionIdentity.codeSectionStmt and FieldCircleVersionProof producers checked; 67000c0 assembles the stopped margin from three explicit Preston inputs; origin/pole/geometry consumers are not thereby closed |
 | WPN-51-pole | AVAILABLE, exact standalone declaration CORRECT, operator18:45; r3 Section6:1128-3090, no added convergence antecedent | finite-domain comparison and canonical published-input staging split into bounded z5 tasks; shared Brownian minimum assigned to z1; full Lean proof pending |
 | WPN-51-geometry | AVAILABLE, exact declaration correct, r3 Section7:3092-3241 | 62cfddb Borel obstruction and null-measurability/continuity-from-above checked; actual measurable compact K and uniform cell estimates remain |
-| WPN-51-margin | AVAILABLE REPAIR, raw exact measurability false, r3 Section8:3243-3441; use envSigma-measurable version agreeing a.s. on stopping event | repaired cinf/cpos/Good consumer and dense continuous decoder checked; StoppedMarginCodeStep remains |
+| WPN-51-margin | AVAILABLE, r3 Section8:3243-3441; envSigma-measurable version agreeing a.s. on stopping event | repaired cinf/cpos/Good consumer and dense continuous decoder checked; StoppedMarginCodeStep remains |
 | WPN-51-layer | AVAILABLE, exact six-antecedent target, r3 Section9:3443-3819 | z5 2c5f819 finite Green domination and r/n/mesh outer-probability components checked; cutoff/core/Harnack/fixed-center producers and exact Step assembly remain |
 
 The operator explicitly authorizes the two internal Step restatements and
@@ -95,7 +95,7 @@ def StoppedInteriorGeometryStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 
 ## WPN-51-margin: `MatedCRT.StoppedInterior.StoppedInteriorMeasurableStep`
 
-**WRITTEN-PROOF-AVAILABLE REPAIR / LEAN-PENDING (16:25).** Original raw declaration false; measurable-version repair audited, steps2:1660-1858; operator-authorized consumer repair routed to z1. Historical request: Section 5 stopped lower bound, E-c1-5(e). Measurability in envSigma of this random compact-set infimum remains open. Worker z1 report, f69cf7b.
+**WRITTEN-PROOF-AVAILABLE REPAIR / LEAN-PENDING (16:25).** Measurable-version form audited, steps2:1660-1858; operator-authorized consumer repair routed to z1. Historical request: Section 5 stopped lower bound, E-c1-5(e). Measurability in envSigma of this random compact-set infimum remains open. Worker z1 report, f69cf7b.
 
 Exact declaration: `MatedCRT/Proofs/Sec5/StoppedInterior.lean:171`.
 
@@ -202,7 +202,7 @@ def UniformCellSizeUpperStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 
 ## WPN-36-pointwise-event: `MatedCRT.PointwiseCellAnnulusEnvelopeStep`
 
-**WRITTEN-PROOF-AVAILABLE REPAIR / LEAN-PENDING (16:25).** Original pointwise declaration false; per-mesh a.e. repair audited, steps2:252-438; authorized Step/consumer repair routed to m5. Historical request: Corrected same-walk rate: a pointwise envSigma-measurable geometric envelope with a polynomial exceptional bound. An outer-probability bound and versions agreeing a.e. at each mesh do not by themselves give this interface. Worker m1 r3, 2afd11a.
+**WRITTEN-PROOF-AVAILABLE REPAIR / LEAN-PENDING (16:25).** Per-mesh a.e. form audited, steps2:252-438; authorized Step/consumer repair routed to m5. Historical request: Corrected same-walk rate: a pointwise envSigma-measurable geometric envelope with a polynomial exceptional bound. An outer-probability bound and versions agreeing a.e. at each mesh do not by themselves give this interface. Worker m1 r3, 2afd11a.
 
 Exact declaration: `MatedCRT/Steps/Sec3/PointwiseAnnulusEnvelope.lean:16`.
 
@@ -340,7 +340,7 @@ Do not combine this gap with the independent scaled-representative gap.
 
 ## WPN-ENV-dilated-circle-common-event: `ConeDilationCircleApproximationStep`
 
-**WRITTEN-PROOF-AVAILABLE REPRESENTED REPAIR / LEAN-PENDING (operator19:35).** steps3 Section3:714-1057 refutes the raw Step and proves RescaledConeDistributionCircleGridStep exactly; queued m1. Historical request follows.
+**WRITTEN-PROOF-AVAILABLE REPRESENTED REPAIR / LEAN-PENDING (operator19:35).** steps3 Section3:714-1057 proves RescaledConeDistributionCircleGridStep exactly; queued m1. Historical request follows.
 
 **WRITTEN-PROOF-NEEDED** (lead2026-11-08, m1 7df13f4). Exact sufficient
 internal common-event interface in FieldCircleScaling.lean:45, namespace
@@ -624,7 +624,7 @@ Late bounded cutoff da545b8/adb651f (lead19:25): the source-pole finite-domain c
 
 ## Final audited returns and checked components (lead19:46 round)
 
-Operator19:35 released the final three written-proof requests: fleet `notes/wpn-steps3/steps3.tex`, sha256 `d34cf930706e195c09ec2eb14c8999a6a1d64cc6b69938b6e227d2ddf9619d9d`, independent `AUDIT-steps3.md` VERDICT CORRECT for all three outcomes. This is written proof availability, not Lean closure. No further prover rounds will occur under operator18:55. The original representative and raw-circle Steps are false; only the specified bounded/represented repairs may be implemented. The insertion extension is internal mathematics, never a literature hypothesis presented as DS11.
+Operator19:35 released the final three written-proof requests: fleet `notes/wpn-steps3/steps3.tex`, sha256 `d34cf930706e195c09ec2eb14c8999a6a1d64cc6b69938b6e227d2ddf9619d9d`, independent `AUDIT-steps3.md` VERDICT CORRECT for all three outcomes. This is written proof availability, not Lean closure. No further prover rounds will occur under operator18:55. The bounded representative Step and the represented circle-grid Step are the forms to implement. The insertion extension is internal mathematics, never a literature hypothesis presented as DS11.
 
 The bounded repair adds `Bornology.IsBounded Λ` before `IsSubharmonicBall μ Λ 0` in the exact historical type. The only direct mathematical application at ScaledRegularizedFamily.lean:228-231 receives boundedness from the regularized-family field `h1.isBounded (c*t) (mul_pos hc ht)`; both PlateauScalingAssembly consumers retain their conclusions. No frozen or companion file is edited by the lead.
 

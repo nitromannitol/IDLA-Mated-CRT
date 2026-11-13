@@ -53,9 +53,9 @@ scale radius are proved in Lean; neither is an additional step hypothesis.
 
 ## Operator19:35 final circle-recovery return
 
-Operator19:35 released the final three written-proof requests: fleet `notes/wpn-steps3/steps3.tex`, sha256 `d34cf930706e195c09ec2eb14c8999a6a1d64cc6b69938b6e227d2ddf9619d9d`, independent `AUDIT-steps3.md` VERDICT CORRECT for all three outcomes. This is written proof availability, not Lean closure. No further prover rounds will occur under operator18:55. The original representative and raw-circle Steps are false; only the specified bounded/represented repairs may be implemented. The insertion extension is internal mathematics, never a literature hypothesis presented as DS11.
+Operator19:35 released the final three written-proof requests: fleet `notes/wpn-steps3/steps3.tex`, sha256 `d34cf930706e195c09ec2eb14c8999a6a1d64cc6b69938b6e227d2ddf9619d9d`, independent `AUDIT-steps3.md` VERDICT CORRECT for all three outcomes. This is written proof availability, not Lean closure. No further prover rounds will occur under operator18:55. The bounded representative Step and the represented circle-grid Step are the forms to implement. The insertion extension is internal mathematics, never a literature hypothesis presented as DS11.
 
-The raw ConeDilationCircleApproximationStep is refuted. Its represented replacement is exactly RescaledConeDistributionCircleGridStep, with the measurable simultaneous distribution representation already in that declaration. The current canonical m1 task is preserved and its successor implements this direct route; see [final audited routing](STEPS3-ROUTING-20261108.md). This does not close RescaledConeFieldStep, clock or mating.
+The circle-grid Step is RescaledConeDistributionCircleGridStep, with the measurable simultaneous distribution representation in that declaration. The current canonical m1 task is preserved and its successor implements this direct route; see [final audited routing](STEPS3-ROUTING-20261108.md). This does not close RescaledConeFieldStep, clock or mating.
 
 
 ## Lead21:28 checked canonical bridge and source boundary
