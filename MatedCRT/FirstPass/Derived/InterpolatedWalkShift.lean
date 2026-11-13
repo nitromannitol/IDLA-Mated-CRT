@@ -54,7 +54,3 @@ theorem interpPathCM_at_stepTime (v : ℤ → ℂ) {m : ℝ} (hm : 0 < m) (x : �
   simp [linInterp]
 
 end MatedCRT
-
-#print axioms MatedCRT.linInterp_natCast_add
-#print axioms MatedCRT.pathShift_interpPathCM
-#print axioms MatedCRT.interpPathCM_at_stepTime
