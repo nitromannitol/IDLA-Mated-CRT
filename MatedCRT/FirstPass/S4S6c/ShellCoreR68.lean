@@ -8,8 +8,7 @@ import MatedCRT.FirstPass.S4S6c.ShellHoneInst68
   move out with `∀ r`; the event `ω ∈ Ew (dyadicD r)`, the premise `FullAdm` and the conclusion `∃ Rf, ...` stay inside
   `∀ᵐ ω`.
 * `shellOneTestOrderAeRStmt_of_ae`: `ShellOneTestOrderAeStmt 𝒮 → ShellOneTestOrderAeRStmt 𝒮`. The radius-outside form is
-  the weaker input: a radius-by-radius almost-sure statement, which is the form the window route (B1Assembly68.lean,
-  `shellOneTest_ae_fixedR`) delivers for a fixed radius.
+  the weaker input: a radius-by-radius almost-sure statement, which is the form the window route (B1Assembly68.lean) delivers for a fixed radius.
 
 NOT PROVED here: `ShellOneTestOrderAeRStmt 𝒮 → ShellChainCoreStmt 𝒮`. The consumers use the radius inside the almost-sure
 quantifier, over an interval of reals and not over a countable family:

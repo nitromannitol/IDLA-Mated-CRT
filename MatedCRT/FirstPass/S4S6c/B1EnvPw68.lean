@@ -5,9 +5,9 @@ import MatedCRT.FirstPass.S4S6c.HoneRcell68
 import MatedCRT.FirstPass.S4S6c.ShellChainGlue68
 import MatedCRT.FirstPass.S6e.Geometry
 /-!
-# Pointwise environment adapters for the binders of `shellOneTest_at_of_goodEnv'`
+# Pointwise environment adapters for the binders of the one-radius assembly
 
-Each theorem here has as conclusion exactly one binder of `shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:803),
+Each theorem here has as conclusion exactly one binder of the one-radius assembly (B1Assembly68.lean),
 at one environment point `ω`: `hGreen` (l.874), `hCountGood` (l.881), `hRcell` (l.888) and `hWalk` (l.909). The
 almost-sure producers filter over the good events and the regularity of the environment; here each such fact is an
 explicit pointwise hypothesis at `ω`:
@@ -22,7 +22,7 @@ explicit pointwise hypothesis at `ω`:
   environment inputs (continuity, cocompact escape, local finiteness, cell adjacency, edge degrees) taken from
   `RegularEnvAt68` (B1Assembly68.lean:558), and the radius inputs from the dyadic and shell-count bounds.
 
-Named gaps (not derivable from the hypotheses of `shellOneTest_at_of_goodEnv'`; kept as explicit hypotheses):
+Named gaps (not derivable from the hypotheses of the one-radius assembly; kept as explicit hypotheses):
 * `hcut` in `hRcell_pw`: `dyadicD r ^ shortExp ζ < rhoCell68 ρ - ρ`. The target gives only `r ≤ ρ / 4`; the cutoff
   lemma `Guard68S10.lean:477-482` needs `r ≤ Rc(ρ)`.
 * `hωm`, `hr10` in `hWalk_pw`: the walk producer's second conjunct `ε ^ K.ω ≤ winRf/8` needs `10 * ε ^ ωm ≤ r` with
@@ -47,7 +47,7 @@ open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68WalkBridge MatedCRT.Lemma68ChainA
 open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 open MatedCRT.Lemma68ShellHoneInst MatedCRT.Lemma68WindowRf MatedCRT.Lemma68ShellOrderWindow
 
-/-- **Binder `hGreen` of `shellOneTest_at_of_goodEnv'` at one point `ω`.** The lower Green bound (Lemma 2.16,
+/-- **Binder `hGreen` of the one-radius assembly at one point `ω`.** The lower Green bound (Lemma 2.16,
 Berestycki-Powell) on the good event `greenLowerGoodEvent K.ω K.C ρ S ε` at `ω` (HoneEnvEvents68.hGreen_of_mem). -/
 theorem hGreen_pw {γ ρ s₀ ε r : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
     (K : Constants68 γ ρ) (ω : Ω) (i : Lemma68Config.Config68)
@@ -61,7 +61,7 @@ theorem hGreen_pw {γ ρ s₀ ε r : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : 
             ≤ greenKernel (S.mult ε ω) (interiorCellVertices ε (S.η ω) (ball (vertexPoint ε (S.η ω) a) r')) a b :=
   fun _ => HoneEnvEvents68.hGreen_of_mem hω
 
-/-- **Binder `hCountGood` of `shellOneTest_at_of_goodEnv'` at one point `ω`.** The counting bound (Lemma 2.9,
+/-- **Binder `hCountGood` of the one-radius assembly at one point `ω`.** The counting bound (Lemma 2.9,
 Berestycki-Gwynne) on the good event `countingGoodEvent S α β ρ ε` at `ω`, at the test function `f ≡ 1`. The bounds
 `0 ≤ 1` and `1 ≤ ε ^ (-β)` need `0 < ε ≤ 1` and `0 ≤ β`; the Lipschitz bound is trivial. -/
 theorem hCountGood_pw {γ ρ s₀ ε r α β : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
@@ -134,7 +134,7 @@ theorem walk_conclusion_of_ball {ε ρ R e : ℝ} {η : ℝ → ℂ} {k : ℤ} (
     rw [dist_comm, dist_eq_norm]
     linarith
 
-/-- **Binder `hWalk` of `shellOneTest_at_of_goodEnv'` at one point `ω`.** The walk producer
+/-- **Binder `hWalk` of the one-radius assembly at one point `ω`.** The walk producer
 `Lemma68HoneWalkAe.hWalk_ae_of_walk` at `ρmom := ρ`, with the environment inputs of `RegularEnvAt68` and the dyadic
 and shell-count bounds. Named gap: the second conjunct needs `hωm : 2 * ωm < K.ω` and `hr10 : 10 * ε ^ ωm ≤ r`. -/
 theorem hWalk_pw {γ ρ ζ C CG α CE s₀ ε r ω₀ ωm : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)

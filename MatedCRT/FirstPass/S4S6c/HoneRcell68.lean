@@ -3,7 +3,7 @@ import MatedCRT.FirstPass.S4S6c.HoneCellR68
 /-!
 # Discharge of the prefix binder `hRcell`
 
-The cell-control binder `hRcell` of `shellOneTest_of_direct_ae` (HoneLeafAe68.lean) asks that the shell radius
+The cell-control binder `hRcell` of `hone_exitQ_walk_of_env_direct_ae` (HoneLeafAe68.lean) asks that the shell radius
 satisfies `R_k / 4 < rhoCell - rho_c` on the prefix set, almost surely for `k ≤ n`. The argument
  (l.335-348) gives it from two facts:
 
@@ -47,7 +47,7 @@ theorem radius_le_of_eligible_ae {ε : ℝ} {η : ℝ → ℂ} {Kset : Set ℂ} 
         Rf (shellCentre ε η Kset r sc d k x) ≤ d ^ aW :=
   fun k hk => (hEl k hk).mono fun _ hx hP => hRf _ (hx hP)
 
-/-- **Binder `hRcell` of `shellOneTest_of_direct_ae`, discharged.** From the radius bound
+/-- **Binder `hRcell` of `hone_exitQ_walk_of_env_direct_ae`, discharged.** From the radius bound
 (`radius_le_of_eligible_ae`), `0 ≤ d ^ aW` (`0 < d`, `0 ≤ aW`) and the cutoff `d ^ aW < g` with
 `g = rhoCell - rho_c` (the hypothesis `hcut`). -/
 theorem hRcell_of_eligible {ε : ℝ} {η : ℝ → ℂ} {Kset : Set ℂ} {Rf : ℂ → ℝ} {A : Set ℤ}

@@ -2,17 +2,17 @@ import MatedCRT.FirstPass.S4S6c.B1Assembly68
 import MatedCRT.FirstPass.S4S6c.HVolCutoff239_68
 
 /-!
-# FIRST PASS S4S6c, HVolFullPw68: pointwise volume and full-support inputs of `shellOneTest_at_of_goodEnv'`
+# FIRST PASS S4S6c, HVolFullPw68: pointwise volume and full-support inputs of the one-radius assembly
 (residuals `ShellResVolC`, `ShellResVolY`, `ShellResFull` of
 ShellCorePw68.lean, l.17-19)
 
-* `hVolC_pw`, `hVolY_pw`: the binders `hVolC`, `hVolY` of `shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:803) at ONE
+* `hVolC_pw`, `hVolY_pw`: the binders `hVolC`, `hVolY` of the one-radius assembly (B1Assembly68.lean) at ONE
   environment `ω`. The environment fact is the value at `ω` of the measurable cutoff of `volume_bounds_measurable_ae`
   (HVolCutoff239_68.lean:206), given as the explicit pointwise hypothesis `hcut` with the cutoff `t`. The walk facts are the
   binders `hRr`, `hEl` of the same theorem and the exit-vertex centre bound `hc`.
 * `hVolY_ae_pw`: the a.s. form of the second volume input, from `volume_bounds_of_cutoff` with the centre `0`.
 * `fullSupport_ae`: the full support of `S.μ ω` almost surely (`MatedCRT.Field.wholePlane_lqg_full_support_ae`).
-* `hfull_pw`: the binder `hfull` of `shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:923) at one `ω`, from the pointwise
+* `hfull_pw`: the binder `hfull` of the one-radius assembly (B1Assembly68.lean) at one `ω`, from the pointwise
   full-support hypothesis `hFS`.
 -/
 
@@ -54,7 +54,7 @@ theorem fullSupport_ae {𝒮 : SpaceFillingSLEModel} {γ : ℝ} {Ω : Type} [Mea
     ∀ᵐ ω ∂S.P, ∀ w : ℂ, ∀ t : ℝ, 0 < t → 0 < S.μ ω (ball w t) :=
   MatedCRT.Field.wholePlane_lqg_full_support_ae hγ0 hγ2 hW hV.isLQGMeasure
 
-/-- **Pointwise `hfull` of `shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:923) at one environment `ω`.** The full
+/-- **Pointwise `hfull` of the one-radius assembly (B1Assembly68.lean) at one environment `ω`.** The full
 support of `S.μ ω` is the explicit pointwise hypothesis `hFS` (the value at `ω` of `fullSupport_ae`); the binder
 `hfull` is its constant in the walk-admissibility premise. -/
 theorem hfull_pw {γ ρ s₀ ε r : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ω : Ω)
@@ -65,7 +65,7 @@ theorem hfull_pw {γ ρ s₀ ε r : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : M
   fun _ => hFS
 
 
-/-- **Pointwise `hVolC` of `shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:856) at one environment `ω`.**
+/-- **Pointwise `hVolC` of the one-radius assembly (B1Assembly68.lean) at one environment `ω`.**
 Environment: the cutoff `t > 0` and the volume bound `hcut` at scales below `t` (the value at `ω` of
 `volume_bounds_measurable_ae`). Walk (almost surely on the leaf prefix, as in the binders of that theorem):
 `hRr` (`r² ≤ R ≤ 1`), `hEl` (shell-centre eligibility), and the exit-vertex centre bound `hc`. The radius cap
@@ -115,7 +115,7 @@ theorem hVolC_pw {γ ρ ζ C s₀ ε r t : ℝ} {Ω : Type} [MeasurableSpace Ω]
       (dyadicD_lt_two_mul_sq hr0 hr1) (hx hpre) hrt
   exact (Lemma68Cutoff239.hVolC_hVolY_ae_of_cutoff hc0 hc0' ht hcut hR0 hRt (hc hadm k hk)).1
 
-/-- **Pointwise `hVolY` of `shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:865) at one environment `ω`.**
+/-- **Pointwise `hVolY` of the one-radius assembly (B1Assembly68.lean) at one environment `ω`.**
 Same environment and walk inputs as `hVolC_pw`, except the exit-vertex centre bound `hc`, which the second volume input
 does not need (the centre is `0`, `hVolY_ae_pw`). The bound `R ≤ d^a ≤ 1` gives `R < 4`. -/
 theorem hVolY_pw {γ ρ ζ C s₀ ε r t : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)

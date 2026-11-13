@@ -7,7 +7,7 @@ import MatedCRT.FirstPass.S6e.Geometry
 import MatedCRT.FirstPass.S4S6c.HoneRrLocal68
 import MatedCRT.FirstPass.S4S6c.B1EnvPw68
 /-!
-# Generic adapters for the binders of `shellOneTest_at_of_goodEnv'`
+# Generic adapters for the binders of the one-radius assembly
 
 Generic copies, at one environment `ω`, of the pointwise adapters `hGreen_pw`, `hCountGood_pw`, `hRcell_pw` and
 `hWalk_pw` of B1EnvPw68.lean (e0cc869), which are left unchanged. The sparsity exponent is a parameter `s1`

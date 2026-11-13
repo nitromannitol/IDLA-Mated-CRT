@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.S4S6c.B1Assembly68
 /-!
 # The hRr chain with a localized mesh bound
 
-`hRr` of `shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:803; binder `hRr` at about l.844) at ONE environment point `ω`.
+`hRr` of the one-radius assembly (B1Assembly68.lean) at ONE environment point `ω`.
 The univ-form mesh `CellDiamLe ε (η ω) (dyadicD r / 100) Set.univ` of `hRr_fixedOmega'` (HoneSetup68.lean:152) is replaced
 by the ball form `CellDiamLe ε (η ω) (dyadicD r / 100) (Metric.ball 0 ρ)`.
 
@@ -18,7 +18,7 @@ lies in `Metric.ball 0 ρ` (`twoSidedShell_mem_ball`, ShellHdePw68.lean:33), so 
 
 This file gives the ball-form copies of the three wrappers (`shellCentre_mem_of_walk_loc`, `radius_bounds_of_walk_loc`,
 `radius_bounds_ae_loc`) and of the body of `hRr_fixedOmega`. Two changes to that body: the start input `hstω` is derived from
-`hstart_of_fullAdmAt` (HoneSetup239_68.lean:132), and the conclusion is the binder `hRr` of `shellOneTest_at_of_goodEnv'`,
+`hstart_of_fullAdmAt` (HoneSetup239_68.lean:132), and the conclusion is the binder `hRr` of the one-radius assembly,
 including the premise `x ∈ leafPre …`.
 
 Terminology: Armstrong-Kuusi-Mourrat (good annuli, cell-size event), Duplantier-Sheffield (cells, quantum balls),
@@ -115,7 +115,7 @@ theorem cellDiamLe_mono_set {ε : ℝ} {η : ℝ → ℂ} {h : ℝ} {E F : Set �
   fun k hk => hF k (by obtain ⟨p, hp1, hp2⟩ := hk; exact ⟨p, hp1, hEF hp2⟩)
 
 /-- **`hRr` at one environment point, with the ball mesh `CellDiamLe ε (η ω) (dyadicD r / 100) (ball 0 ρ)`.** The
-conclusion is the binder `hRr` of `shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:803): for `k ≤ shellCount - 1` and
+conclusion is the binder `hRr` of the one-radius assembly (B1Assembly68.lean): for `k ≤ shellCount - 1` and
 almost every walk `x` from `i.a`, if `x` is in `leafPre`, the radius at the shell centre lies in `[r ^ 2, 1]`. The start
 input is derived from `FullAdmAt` (`hstart_of_fullAdmAt`); the radius cutoff `r ≤ countThreshold ζ` from `r ≤ rAmp q0 ζ`. -/
 theorem hRr_fixedOmega_loc {γ ρ : ℝ}

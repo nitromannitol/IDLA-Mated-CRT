@@ -66,7 +66,7 @@ theorem q0_le_one_of_shellChone {q0 CE CG : ℝ}
     linarith
   exact hq0c.trans h5
 
-/-- **The almost-sure radius bound at one environment `ω` (setup of `shellOneTest_ae_fixedR`, fixed-`ω` form).**
+/-- **The almost-sure radius bound at one environment `ω` (fixed-`ω` form).**
 At `ω` with `ω ∈ E` and `FullAdm`, for every `k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1`, almost surely along the walk
 `srwLaw (S.mult ε ω) i.a`, the radius at the shell centre lies in `[r ^ 2, 1]`. The conclusion is the shape of
 `radius_bounds_ae` (HoneRadii68.lean). No almost-sure quantifier in `ω` remains: the environment facts at `ω` are the
@@ -172,7 +172,7 @@ theorem hRr_fixedOmega' {γ ρ : ℝ}
     (radius_le_countThreshold_of_oneTest hq0 (q0_le_one_of_shellChone hq0c) hζ0 hζ1 hRA le_rfl)
     E i ω hmω hstω hηω htendω hadjω hmultω
 
-/-- **The almost-sure radius bound (setup of `shellOneTest_ae_fixedR`, a.s.-in-`ω` form).** The binders `hmesh`,
+/-- **The almost-sure radius bound (a.s.-in-`ω` form).** The binders `hmesh`,
 `hstart`, `hηc` are those of the setting; the environment facts `hmult_ae_valid`, `ae_adjacent`, `ae_tendsto_cocompact`
 are almost sure in `ω` and independent of `r`. Each `ω` is then `hRr_fixedOmega`. -/
 theorem hRr_ae_setup {𝒮 : SpaceFillingSLEModel} {γ ρ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
@@ -257,8 +257,8 @@ theorem hL68_of_clause {γ ρc : ℝ} (K : Constants68 γ ρc) {η : ℝ → ℂ
 
 open scoped Classical in
 /-- **The leaf binder `hL68` at one environment `ω`, for every `r ∈ [10 ε^{K.ω}, R]`.** `K.ω` is the mesh exponent
-`ω₀` of Lemma 6.8 (`Constants68.ω`). For each such `r`, `FullAdmAt (sparsityS₁ γ)` at `ω` (the guard of `hL68` in
-`shellOneTest_ae_fixedR`, B1Assembly68.lean) gives the admissibility clause of `Admissible` at `(sparsityS₁ γ,
+`ω₀` of Lemma 6.8 (`Constants68.ω`). For each such `r`, `FullAdmAt (sparsityS₁ γ)` at `ω` (the guard of `hL68`)
+gives the admissibility clause of `Admissible` at `(sparsityS₁ γ,
 (2+γ)²/2+1)`; the rewrites `hK1`, `hK2` identify these with `(K.s1, K.βm)` (for `K = shellK68 …`, these are
 `shellK68_params`, ShellHoneInst68.lean). Then `hL68_of_clause` applies, with the cap-radius input `hcap` as a named
 hypothesis for every such `r` and `z`. The conclusion carries no almost-sure quantifier. -/

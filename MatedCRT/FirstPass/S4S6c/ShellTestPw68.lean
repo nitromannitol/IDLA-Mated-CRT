@@ -6,10 +6,10 @@ import MatedCRT.FirstPass.S6r.ShellOmegaStop
 import MatedCRT.FirstPass.S6r.ShellPathAe
 
 /-!
-# The test-end event at one environment point (htest of `shellOneTest_at_of_goodEnv'`)
+# The test-end event at one environment point (`htest`)
 
 The pointwise form of the named input `htest` of `shellHde68_full_omega` (S4S6c/ShellHdeOmega68.lean:104) and of
-`shellOneTest_at_of_goodEnv'` (S4S6c/B1Assembly68.lean:823). At ONE environment point `ω` the test ends
+`shellOrderAe_window` (S4S6c/ShellOrderWindow68.lean). At ONE environment point `ω` the test ends
 `L_k = testEnd k` of the shell chain are almost surely finite, from `FullAdmAt` and the environment facts at `ω`
 (continuity and properness of `η`, locally finite multiplicities with `m(k, k+1) ≠ 0`, cell adjacency, the cell diameter
 bound `CellDiamLe`, the killed exit `hkill`). No almost-sure quantifier over `ω` is used.

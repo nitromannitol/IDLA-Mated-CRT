@@ -4,7 +4,7 @@ import MatedCRT.FirstPass.S4S6c.HoneGoodEventAe68
 /-!
 # The eligibility binder `hEl` at one environment
 
-`shellOneTest_at_of_goodEnv` (B1Assembly68.lean:567) takes the eligibility of the shell centres as the binder `hEl`
+The one-radius assembly (B1Assembly68.lean) takes the eligibility of the shell centres as the binder `hEl`
 (B1Assembly68.lean:~600): at one environment `ω`, under `FullAdmAt`, for every shell `k ≤ shellCount - 1`, almost surely
 in the walk `x ∂srwLaw (S.mult ε ω) i.a`, if `x` lies in the leaf prefix set, then the shell centre is short-eligible
 `shellCentre … k x ∈ shortEligible ρ (dyadicD r) (shortExp ζ)`.
@@ -20,7 +20,7 @@ Discharged from the landed setup (not binders): `hs4`, `hNs`, `hds`, `hd` (`dyad
 and the walk inputs (`walk_inputs_ae`).
 
 Named inputs (exact types in the statement):
-* `hs₀ : 0 < s₀`. `shellOneTest_at_of_goodEnv` has no positivity of `s₀`; `h0 : 0 ∈ fillCells …` needs `ball 0 s₀ ≠ ∅`.
+* `hs₀ : 0 < s₀`. `h0 : 0 ∈ fillCells …` needs `ball 0 s₀ ≠ ∅`.
   The consumer must supply it (the setup `hRr_fixedOmega'` takes it as well).
 * The environment facts at `ω`, the fields of `RegularEnvAt68` (B1Assembly68.lean:553): continuity `hηω`,
   `CurveEscapesBothEnds` `hcurveω` (the cocompact limit follows by `tendsto_cocompact_of_escapes`, S6e/Geometry.lean:94),
@@ -50,7 +50,7 @@ open MatedCRT.Lemma68ShellHoneInst MatedCRT.Lemma68WindowRf
 open MatedCRT.Lemma68ChainGlue MatedCRT.Lemma68HoneRadii
 open MatedCRT.Lemma68HoneSetup
 
-/-- **The eligibility binder `hEl` of `shellOneTest_at_of_goodEnv`, at one environment.** Under `FullAdmAt`, for every
+/-- **The eligibility binder `hEl` of the one-radius assembly, at one environment.** Under `FullAdmAt`, for every
 shell `k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1`, almost surely in the walk `x` under `srwLaw (S.mult ε ω) i.a`,
 if `x` is in the leaf prefix set (`leafPre`, B1Assembly68.lean:63), then the shell centre is short-eligible.
 Proof: `hEl_ae_of_walk` (HoneGoodEventAe68.lean:196) with the walk inputs `walk_inputs_ae` (adjacency from `hadjω`, start

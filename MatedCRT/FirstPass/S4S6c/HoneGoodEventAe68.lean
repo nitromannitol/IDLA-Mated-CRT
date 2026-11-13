@@ -10,7 +10,7 @@ import MatedCRT.Proofs.Infra.RandomWalk
 `HoneGoodEvent68.lean` discharges the binders `hεα`, `hεmass`, `hsc`, `hgood`, `hpos` of `shellOneTest_of_direct`
 pointwise: the per-path inputs `hPath` (consecutive cells meet, the start cell meets the frontier, the killed exit is
 finite) are assumed for every path of the prefix set. Under the walk law `srwLaw m s0` these inputs hold only almost
-surely. This file gives the almost sure forms, in the shape of `shellOneTest_of_direct_ae` (HoneLeafAe68.lean:374):
+surely. This file gives the almost sure forms, in the shape of `hone_exitQ_walk_of_env_direct_ae` (HoneLeafAe68.lean):
 `∀ k ≤ n, ∀ᵐ x ∂srwLaw m s0, x ∈ prefixSet … → P k x`, with `k ≤ n` throughout.
 
 * `walk_inputs_ae`: the three per-path inputs hold almost surely under `srwLaw m s0`. Adjacency:

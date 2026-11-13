@@ -11,13 +11,12 @@ import MatedCRT.FirstPass.S4S6c.HoneRadii68
 /-!
 # The shell radius for the stopped coordinates, and `hmomS` at one point of the mesh event
 
-
-* `measurable_shellCentre_radius_stop` (hR of `HoneMomS239_68.Shell.shell_hmom_pair`): the radius
+* `measurable_shellCentre_radius_stop` (the radius measurability `hR` of the shell moments): the radius
   `Rf (shellCentre k)` is measurable for the σ-algebra of the stopped coordinates at the shell exit `shellExit k`.
   The centre is read at the shell hit `shellHit k ≤ shellExit k`, so `measurable_coord_toNat_stop`
   (ChoiceStopped.lean:82) applies with the arbitrary index map `j ↦ Rf (gridRound (d/100) (vertexPoint ε η j))`:
   no measurability of `Rf` is needed.
-* `hmomS_pointwise`: the binder `hmomS` of `shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:803), at one `ω`,
+* `hmomS_pointwise`: the binder `hmomS` of the one-radius assembly (B1Assembly68.lean), at one `ω`,
   from `ω ∈ meshEvent` (its exit-time component is the exit-moment clause at the radius `ρ` with constant `CE`,
   `exitTimeEvent68`, UniformEvents.lean:48) through `HoneMomS239.Shell.hmomS_rhoMom`.
   The radius of the test sets is `ρ`, not `1`.
@@ -52,12 +51,11 @@ theorem measurable_shellCentre_radius_stop (ε : ℝ) (η : ℝ → ℂ) (Kset :
       (fun w => shellHit_le_shellExit ε η Kset r s d Rf k w)
   exact h1.mono hle le_rfl
 
-/-- **The binder `hmomS` of `shellOneTest_at_of_goodEnv'` at one point `ω` of the mesh event.** Under
+/-- **The binder `hmomS` of the one-radius assembly at one point `ω` of the mesh event.** Under
 `ω ∈ meshEvent S γ ω₀ ρ CG ζ α CE ε`, the exit-time component `exitTimeEvent68 S α ρ CE ε` is the exit-moment clause
 `ExitMomentClause (S.mult ε ω) (S.μ ω) (S.η ω) ε α CE ρ`. Then `HoneMomS239.Shell.hmomS_rhoMom` gives the binder for
 every index `k ≤ shellCount r (dyadicD r ^ shortExp ζ) - 1`, `P`-almost every walk in `leafPre`, and the test sets
-`D ⊆ ball 0 ρ`. The conclusion is the binder with `ball 0 ρ` in place of `ball 0 1` (B1Assembly68.lean:905): the
-binder of `shellOneTest_at_of_goodEnv'` is not changed here. The margin binder `hx1` is not an input of this
+`D ⊆ ball 0 ρ`. The conclusion is the binder with `ball 0 ρ` in place of `ball 0 1`. The margin binder `hx1` is not an input of this
 conclusion. -/
 theorem hmomS_pointwise {γ ω₀ ρ CG ζ α CE ε C s₀ r : ℝ} {Ω : Type} [MeasurableSpace Ω]
     (S : MatedCRTEnv Ω) {ω : Ω} (hω : ω ∈ Lemma68Guard10.meshEvent S γ ω₀ ρ CG ζ α CE ε)
@@ -77,26 +75,6 @@ theorem hmomS_pointwise {γ ω₀ ρ CG ζ α CE ε C s₀ r : ℝ} {Ω : Type} 
   intro k hk
   exact HoneMomS239.Shell.hmomS_rhoMom hcl (i.A : Set ℤ) (shellCount r (dyadicD r ^ shortExp ζ) - 1)
     (fillCells ε (S.η ω) (i.Θ : Set ℤ)) (winRf S ρ ζ C r ω) r (dyadicD r ^ shortExp ζ) (dyadicD r) i.a k hk
-
-/-- **The leaf moments `hmom1`, `hmom2` with hR discharged.** `HoneMomS239.Shell.shell_hmom_pair` with its binder
-`hR` supplied by `measurable_shellCentre_radius_stop`; the named inputs left are `hTdom` and `hRbd`. -/
-theorem shell_hmom_pair_hR {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m)
-    (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0)
-    {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ))
-    (hε : 0 < ε) (a : ℤ) {Kset : Set ℂ} {Rf : ℂ → ℝ} {r s d : ℝ}
-    (hTdom : ∀ k : ℕ, ∃ D : Set ℤ, D.Finite ∧ ∀ w : ℕ → ℤ,
-      shellExit ε η Kset r s d Rf k w < ⊤ → shellExit ε η Kset r s d Rf k w ≤ vExitTime D w)
-    (hRbd : ∀ k : ℕ, ∃ t : ℝ, ∀ w : ℕ → ℤ,
-      shellExit ε η Kset r s d Rf k w < ⊤ → Rf (shellCentre ε η Kset r s d k w) ≤ t)
-    (k : ℕ) :
-    Integrable ({w : ℕ → ℤ | shellExit ε η Kset r s d Rf k w < ⊤}.indicator (fun w =>
-        ((ballExitSigma ε η (shellWalkParam ε η Kset r s d Rf k w)
-          (postTimePath (fun n w => w n) (shellExit ε η Kset r s d Rf k) w) : ℕ) : ℝ))) (srwLaw m a) ∧
-    Integrable ({w : ℕ → ℤ | shellExit ε η Kset r s d Rf k w < ⊤}.indicator (fun w =>
-        ((ballExitSigma ε η (shellWalkParam ε η Kset r s d Rf k w)
-          (postTimePath (fun n w => w n) (shellExit ε η Kset r s d Rf k) w) : ℕ) : ℝ) ^ 2)) (srwLaw m a) :=
-  HoneMomS239.Shell.shell_hmom_pair hlf hcons hη hp hε a
-    (fun k => measurable_shellCentre_radius_stop ε η Kset r s d Rf k) hTdom hRbd k
 
 /-- **The binder `hmomS` of `shellOneTest_of_direct_ae_rcell_rho` (HoneLeafAe68.lean:696) at one point `ω`, at the
 radius `ρmom`.** Under `ω ∈ exitTimeEvent68 S α ρmom CE ε` (the exit-moment clause at the deterministic radius `ρmom`,

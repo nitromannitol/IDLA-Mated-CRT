@@ -118,9 +118,9 @@ theorem hmom_pair_ae {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m)
 
 set_option linter.unusedVariables false in
 /-- **Finite-domain exit moments under a finite stopped-range localization (one index `k`; item 4).**
-Same conclusion as `hmom_pair_ae`, with the pointwise-finite exit domination `hTdom` replaced by `hstopFin`: the stopped
-vertex `w (T k w).toNat` lies a.s. in a finite set `F`. The domination `T k w ≤ vExitTime D w` is false as typed for
-shell times (item 1), so it is not assumed. Only `hRbd` (the a.s. radius bound) is used besides `hstopFin`.
+Same conclusion as `hmom_pair_ae`, with the finite stopped range `hstopFin` in place of the exit domination `hTdom`: the
+stopped vertex `w (T k w).toNat` lies a.s. in a finite set `F`. Only `hRbd` (the a.s. radius bound) is used besides
+`hstopFin`.
 The cells of the test balls are finite on `F` (`MatedCRT.S5c.cellVertices_ball_finite`), so `G` is finite. -/
 theorem hmom_pair_stopFin_ae {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m)
     (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0)

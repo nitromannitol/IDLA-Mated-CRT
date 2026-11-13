@@ -9,7 +9,6 @@ import MatedCRT.FirstPass.S4S6c.HVolCutoffAe68
 For the leaf constant `K = shellKCG γ ρ ω₀ ζ CG` (`K.C = CG`, `K.c0 = c₀(CG) = exp(-2CG)/32 = shellC0 CG`,
 `K.ω = ω₀`, `K.βm = (2+γ)²/2 + 1`), the threshold hypotheses of `shellOneTest_at_of_goodEnv_loc`
 (B1Assembly68.lean, `hεc`, `hεs`, `hε1`, `hεcell`) follow from `ε ≤ shellEps0ZCG γ α ω₀ ζ CG` (Guard68S10.lean).
-This is the CG version of the threshold facts of `shellOneTestPointwiseEps_of_goodEnv` (ShellCorePw68.lean).
 -/
 
 namespace MatedCRT
@@ -40,8 +39,7 @@ theorem shellKCG_eps_le {γ ρ : ℝ} (K : Constants68 γ ρ) (ω₀ α ζ CG : 
   · linarith
   · exact le_trans (le_trans hεe h1) h3
 
-/-- The cell entry at the CG leaf: `ε ^ (2/(2+γ)² - ζ) ≤ K.c0 r² / 100` from `ε ≤ shellEps0ZCG` and `10 ε^ω₀ ≤ r`
-(the CG version of `hεcell` in `shellOneTestPointwiseEps_of_goodEnv`). -/
+/-- The cell entry at the CG leaf: `ε ^ (2/(2+γ)² - ζ) ≤ K.c0 r² / 100` from `ε ≤ shellEps0ZCG` and `10 ε^ω₀ ≤ r`. -/
 theorem shellKCG_eps_cell {γ ρ : ℝ} (K : Constants68 γ ρ) (ω₀ α ζ CG : ℝ) (hγ0 : 0 < γ) (hγ2 : γ < 2)
     (hρ0 : 0 < ρ) (hρ1 : ρ < 1) (hω0 : 0 < ω₀) (hζ0 : 0 < ζ) (hζ1 : ζ < 1 / 2) (hCG : 0 < CG)
     (hK : K = shellKCG γ ρ ω₀ ζ CG hγ0 hγ2 hρ0 hρ1 hω0 hζ0 hζ1 hCG)

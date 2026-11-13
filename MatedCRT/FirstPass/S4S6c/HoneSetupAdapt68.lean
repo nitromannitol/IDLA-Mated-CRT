@@ -2,9 +2,9 @@ import MatedCRT.FirstPass.S4S6c.HoneSetup239_68
 import MatedCRT.FirstPass.S4S6c.B1Assembly68
 
 /-!
-# Adapters from the good event to the binders of `shellOneTest_at_of_goodEnv'`
+# Adapters from the good event to the binders of the one-radius assembly
 
-`B1Assembly68.shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:803) takes the binders `hrz`, `hcap`, `hmesh` and `hRr`
+The one-radius assembly (B1Assembly68.lean) takes the binders `hrz`, `hcap`, `hmesh` and `hRr`
 at one environment `ω`. This file gives pointwise adapters, at one `ω`, for
 
 * `hrz` (`r ≤ countThreshold ζ`) from the radius cutoff `r ≤ rAmp q₀ ζ` (`hrz_of_rAmp`);
@@ -31,7 +31,7 @@ open MatedCRT.Lemma68ConstOrder MatedCRT.Lemma68ShellConstants
 open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68WalkBridge MatedCRT.Lemma68ChainAe
 open MatedCRT.Lemma68OmegaStop MatedCRT.Lemma68ExitAe MatedCRT.Lemma68ShellIdent
 
-/-- **`hrz` at one radius.** The binder `hrz : r ≤ countThreshold ζ` of `shellOneTest_at_of_goodEnv'` follows from the
+/-- **`hrz` at one radius.** The binder `hrz : r ≤ countThreshold ζ` of the one-radius assembly follows from the
 radius cutoff `hRA : r ≤ rAmp q₀ ζ` and the B1 bound `hq0c` on `q₀`, by `radius_le_countThreshold_of_oneTest`
 (ShellHoneInst68.lean:213) with `R = r`; the bound `q₀ ≤ 1` is `q0_le_one_of_shellChone` (HoneSetup68.lean:59). -/
 theorem hrz_of_rAmp {q0 CE CG ζ r : ℝ} (hq0 : 0 < q0)
@@ -41,7 +41,7 @@ theorem hrz_of_rAmp {q0 CE CG ζ r : ℝ} (hq0 : 0 < q0)
     (MatedCRT.Lemma68HoneSetup.q0_le_one_of_shellChone hq0c) hζ0 hζ1 hRA le_rfl
 
 open Classical in
-/-- **`hcap` at one environment.** The binder `hcap` of `shellOneTest_at_of_goodEnv'`: for every centre `z`, the cap
+/-- **`hcap` at one environment.** The binder `hcap` of the one-radius assembly: for every centre `z`, the cap
 radius of the vertices of `i.A` whose cells meet `ball z r` is below `r`. It uses only the continuity of `η ω`
 (part of `RegularEnvAt68`, B1Assembly68.lean:561) and `0 < r`; the premise `FullAdmAt` is not used. -/
 theorem hcap_of_continuous {γ ρ s₀ ε r : ℝ} {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (ω : Ω)
@@ -71,7 +71,7 @@ theorem shellC068_le_one_adapt : shellC068 ≤ 1 := by
 /-- **`hmesh` in the ball form, from the mesh event.** Let `ω ∈ meshEvent S γ ω₀ ρ CG ζ α CE ε`. Its cell-size component is
 `cellSizeEvent68 S γ ζ ρ ε` (radius `ρ`, Guard68S10.lean:45), so every cell meeting `ball 0 ρ` has
 `diam ≤ ε^{2/(2+γ)² - ζ}` and is bounded (its diameter is positive by the lower bound of the event). With the binder
-`hεcell : ε^κ ≤ c₀ r²/100` of `shellOneTest_at_of_goodEnv'`, `c₀ ≤ 1`, `r ≤ ρ/4 < 1`, and `dyadicD r ≥ r²`
+`hεcell : ε^κ ≤ c₀ r²/100` of the one-radius assembly, `c₀ ≤ 1`, `r ≤ ρ/4 < 1`, and `dyadicD r ≥ r²`
 (`sq_le_dyadicD`), the diameter of each such cell is at most `dyadicD r / 100`.
 No cutoff in `ε` and no `2 ω₀ < κ` condition is used: the bound is the binder `hεcell`. The radius of the ball is `ρ`,
 the radius of the cell-size event of `meshEvent`; the mesh radius `(1+ρ)/2` of `hmesh_local_of_cellSize` is not needed here. -/

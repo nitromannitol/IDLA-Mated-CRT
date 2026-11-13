@@ -57,32 +57,6 @@ open MatedCRT.Lemma68ConstOrder
 open MatedCRT.Lemma68ShellPath MatedCRT.Lemma68WalkBridge MatedCRT.Lemma68ChainAe
 open MatedCRT.Lemma68ShellIdent MatedCRT.Lemma68OmegaStop
 
-/-- **The leaf moments `hmom1`, `hmom2` on the shell times (ShellHoneInst68.lean:63-68), conditional on the
-finite-domain domination and the radius bound.** The shell exit `shellExit k` and the centre radius
-`Rf ∘ shellCentre k` are inserted into `BallExitMeas68.hmom_pair_of_finiteDomain_meas`. The named inputs are
-`hR` (the radius is `𝓕_{shellExit k}`-measurable), `hTdom` (the shell exit is dominated by the exit time of a finite
-vertex set) and `hRbd` (the radius is bounded on `{shellExit k < ∞}`); `hTdom` and `hRbd` stay open. -/
-theorem shell_hmom_pair {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m)
-    (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0)
-    {ε : ℝ} {η : ℝ → ℂ} (hη : Continuous η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ))
-    (hε : 0 < ε) (a : ℤ) {Kset : Set ℂ} {Rf : ℂ → ℝ} {r s d : ℝ}
-    (hR : ∀ k : ℕ, Measurable[(isStoppingTime_shellExit ε η Kset r s d Rf k).measurableSpace]
-      (fun w : ℕ → ℤ => Rf (shellCentre ε η Kset r s d k w)))
-    (hTdom : ∀ k : ℕ, ∃ D : Set ℤ, D.Finite ∧ ∀ w : ℕ → ℤ,
-      shellExit ε η Kset r s d Rf k w < ⊤ → shellExit ε η Kset r s d Rf k w ≤ vExitTime D w)
-    (hRbd : ∀ k : ℕ, ∃ t : ℝ, ∀ w : ℕ → ℤ,
-      shellExit ε η Kset r s d Rf k w < ⊤ → Rf (shellCentre ε η Kset r s d k w) ≤ t)
-    (k : ℕ) :
-    Integrable ({w : ℕ → ℤ | shellExit ε η Kset r s d Rf k w < ⊤}.indicator (fun w =>
-        ((ballExitSigma ε η (shellWalkParam ε η Kset r s d Rf k w)
-          (postTimePath (fun n w => w n) (shellExit ε η Kset r s d Rf k) w) : ℕ) : ℝ))) (srwLaw m a) ∧
-    Integrable ({w : ℕ → ℤ | shellExit ε η Kset r s d Rf k w < ⊤}.indicator (fun w =>
-        ((ballExitSigma ε η (shellWalkParam ε η Kset r s d Rf k w)
-          (postTimePath (fun n w => w n) (shellExit ε η Kset r s d Rf k) w) : ℕ) : ℝ) ^ 2)) (srwLaw m a) :=
-  MatedCRT.BallExitMeas68.hmom_pair_of_finiteDomain_meas (T := fun k => shellExit ε η Kset r s d Rf k)
-    (R := fun k w => Rf (shellCentre ε η Kset r s d k w)) hlf hcons hη hp hε a
-    (fun k => isStoppingTime_shellExit ε η Kset r s d Rf k) hR hTdom hRbd k
-
 /-- **Test-ball containment at the exit vertex.** The margin `hx1` at the
 deterministic radius `ρmom` (ShellHoneInst68 `hx1` at `ρmom`) gives
 `ball (vertexPoint ε η v) (R/4) ⊆ ball 0 ρmom`, where `v` is the exit vertex and `R = Rf (shellCentre k)`. -/

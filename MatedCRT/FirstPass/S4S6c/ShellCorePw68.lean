@@ -18,10 +18,10 @@ one good-annulus test, pointwise (l.3033-3036).
 
 * `ae_forall_dyadicD`: a binder `P (dyadicD r) ω` that holds almost surely at each dyadic scale holds almost surely at
   all radii at once (countable swap over `k : ℕ`; `dyadicD r = (1/2)^k` for `k = Nat.log 2 ⌊1/r²⌋₊`, by definition).
-* `cellDiam_ae_dyadicD`: the mesh binder `hmesh` of `shellOneTest_ae_fixedR` (B1Assembly68.lean:81) through that swap.
-  Its dyadic a.s. premise is a named input here: the binder is stated with `Set.univ`, stronger than the paper's `h_ε`
+* `cellDiam_ae_dyadicD`: the cell-diameter bound at all radii, through that swap.
+  Its dyadic a.s. premise is a named input here: the bound is stated with `Set.univ`, stronger than the paper's `h_ε`
   (corrected l.2995-2996, the supremum over cells meeting `B_ρ`).
-* `eps_pow_le_of_small`: the deterministic binder `hεcell` of `shellOneTest_ae_fixedR` (B1Assembly68.lean:86) for every
+* `eps_pow_le_of_small`: the deterministic binder `hεcell` of the one-radius assembly (B1Assembly68.lean) for every
   `r ≥ 10 ε^{ω₀}`, for `ε` below a threshold `e0` (the Eps chain: `2 ω₀ < 2/(2+γ)² - ζ`, `ε ≤ e0`).
 * `ae_null_singleton_of_valid`, `ae_finite_on_compacts_of_valid`: the r-free environment facts (μ atomless, μ finite on
   compacts) almost surely for a valid environment; `ae_continuous_eta` (TraceInputs68) gives continuity of `η`.
@@ -58,8 +58,8 @@ theorem ae_forall_dyadicD {Ω : Type} [MeasurableSpace Ω] {μ : Measure Ω} {Ew
   filter_upwards [ae_all_iff.mpr h] with ω hω r hr
   exact hω (Nat.log 2 ⌊1 / r ^ 2⌋₊) hr
 
-/-- **The mesh binder through the dyadic swap.** `hmesh` of `shellOneTest_ae_fixedR` (B1Assembly68.lean:81), i.e.
-`CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ`, is almost surely true at all radii with `ω ∈ Ew (dyadicD r)` once its
+/-- **The mesh bound through the dyadic swap.** The bound
+`CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ` is almost surely true at all radii with `ω ∈ Ew (dyadicD r)` once its
 dyadic form holds almost surely at each scale `(1/2)^k`. The dyadic premise `h` is NOT derived here (report). -/
 theorem cellDiam_ae_dyadicD {Ω : Type} [MeasurableSpace Ω] {μ : Measure Ω} {Ew : ℝ → Set Ω} (ε : ℝ)
     (η : Ω → ℝ → ℂ)
@@ -69,7 +69,7 @@ theorem cellDiam_ae_dyadicD {Ω : Type} [MeasurableSpace Ω] {μ : Measure Ω} {
 
 /-- **The deterministic binder `hεcell` for all radii at once.** If `2 ω₀ < A` (the Eps chain condition
 `2 ω₀ < 2/(2+γ)² - ζ` with `A = 2/(2+γ)² - ζ`), there is a threshold `e0 > 0` such that for `0 < ε ≤ e0` and every
-`r ≥ 10 ε^{ω₀}`: `ε^A ≤ c0 r² / 100`. Here `c0 = K.c0` in `shellOneTest_ae_fixedR`. -/
+`r ≥ 10 ε^{ω₀}`: `ε^A ≤ c0 r² / 100`. Here `c0 = K.c0` in the one-radius assembly. -/
 theorem eps_pow_le_of_small {c0 A ω₀ : ℝ} (hc0 : 0 < c0) (hA : 2 * ω₀ < A) :
     ∃ e0 : ℝ, 0 < e0 ∧ ∀ ε : ℝ, 0 < ε → ε ≤ e0 → ∀ r : ℝ, 10 * ε ^ ω₀ ≤ r →
       ε ^ A ≤ c0 * r ^ 2 / 100 := by
@@ -123,8 +123,8 @@ theorem ae_finite_on_compacts_of_valid {𝒮 : SpaceFillingSLEModel} {γ : ℝ} 
 
 /-- **The pointwise one-test input with the r-free environment facts pointwise**.
 Weaker than `ShellOneTestPointwiseStmt` (ShellCoreR68.lean): at `ω` it also assumes that `η ω` is continuous, that
-`μ ω` has no atoms and that `μ ω` is finite on compacts (the binders `hηc`, `hμNull`, `hμFin` of
-`shellOneTest_ae_fixedR`, B1Assembly68.lean:88-93, taken pointwise). They hold almost surely for a valid environment
+`μ ω` has no atoms and that `μ ω` is finite on compacts (the environment facts `hηc`, `hμNull`, `hμFin`,
+taken pointwise). They hold almost surely for a valid environment
 (`ae_continuous_eta`, `ae_null_singleton_of_valid`, `ae_finite_on_compacts_of_valid`), so the swap below discharges them.
 Named input, not frozen. -/
 def ShellOneTestPointwiseEnvStmt (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -175,7 +175,7 @@ theorem shellOneTestOrderAeStmt_of_pointwiseEnv {𝒮 : SpaceFillingSLEModel} (h
 
 /-! ### The start cell meets the frontier of the thickened fill (`hstart`), from admissibility
 
-The start binder `hstart` of `shellOneTest_ae_fixedR` (B1Assembly68.lean:85) follows from the first conjunct of
+The start binder `hstart` of `shellOrderAe_window` (ShellOrderWindow68.lean) follows from the first conjunct of
 `Admissible` (`2 dd ≤ r ≤ 2 ddMax`, S6e/Admissible.lean:46): `dd`, `ddMax` are the infimum and supremum of
 `dist(η q, K)` over the rational parameters of the start cell (S6e/Geometry.lean:33-42), and `K` is the fill. -/
 
@@ -304,8 +304,8 @@ theorem start_frontier_of_admissible {η : ℝ → ℂ} (hη : Continuous η) {�
   exact hgs
 
 /-- **`hstart` at one environment, from the full admissibility guard.** For a continuous curve `η ω` (the a.s. fact
-`TraceInputs68.ae_continuous_eta`), `ε > 0`, `r > 0`, `s₀ > 0`: `FullAdmAt` at `ω` gives the start-cell condition of
-`shellOneTest_ae_fixedR` (B1Assembly68.lean:85-86). The fill is nonempty since `ball 0 s₀ ⊆ fillCells` (ConfigOK). -/
+`TraceInputs68.ae_continuous_eta`), `ε > 0`, `r > 0`, `s₀ > 0`: `FullAdmAt` at `ω` gives the start-cell condition `hstart` of
+`shellOrderAe_window` (ShellOrderWindow68.lean). The fill is nonempty since `ball 0 s₀ ⊆ fillCells` (ConfigOK). -/
 theorem hstart_of_fullAdmAt {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) {ρ s₀ γ ε r s1 : ℝ} (ω : Ω)
     (i : Lemma68Config.Config68) (hη : Continuous (S.η ω)) (hε : 0 < ε) (hr : 0 < r) (hs₀ : 0 < s₀)
     (h : Lemma68Config.FullAdmAt s1 S ρ s₀ γ ε ω r i) :
@@ -315,7 +315,7 @@ theorem hstart_of_fullAdmAt {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω
     ⟨0, hcfg.2.2 (Metric.mem_ball_self hs₀)⟩
   exact start_frontier_of_admissible hη hε hr i.Θ i.a hK hadm.1.1 hadm.1.2
 
-/-- **`hstart` almost surely, for every radius** (the binder of `shellOneTest_ae_fixedR`, B1Assembly68.lean:85): for a valid
+/-- **`hstart` almost surely, for every radius** (the binder `hstart` of `shellOrderAe_window`, ShellOrderWindow68.lean): for a valid
 environment the start-cell condition holds almost surely on the event `FullAdmAt`, with no further hypothesis. -/
 theorem hstart_ae_of_valid {𝒮 : SpaceFillingSLEModel} {γ : ℝ} {Ω : Type} [MeasurableSpace Ω]
     {S : MatedCRTEnv Ω} (hS : S.IsValid 𝒮 γ) {ρ s₀ ε r s1 : ℝ} (i : Lemma68Config.Config68)
@@ -389,13 +389,12 @@ theorem shellChainCoreEpsStmt_of_pointwiseEps {𝒮 : SpaceFillingSLEModel} (h :
     ShellChainCoreEpsStmt 𝒮 :=
   shellChainCoreEpsStmt_of_oneTestOrderEps (shellOneTestOrderAeEpsStmt_of_pointwiseEps h)
 
-/-! ### The r-uniform reduction to `shellOneTest_at_of_goodEnv`
+/-! ### Radius-uniform binder statements of the one-radius assembly
 
-`shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:803; the pointwise form of `shellOneTest_at_of_goodEnv`, B1Assembly68.lean:567)
-is the body at one environment `ω` and one radius `r`. Its binders `hεcell`, `hmesh`, `htest`, `hEl`, ... are statements at
-fixed `(ω, r, i)`. Here each binder that is not discharged is
-stated in r-uniform form: the `ShellRes…` below quantify over all parameters of `ShellOneTestPointwiseEpsStmt` and
-assume `ShellPtPrem`, which is exactly the premise list of that Stmt at `(ω, r)`. Every other binder is discharged. -/
+The one-radius assembly (B1Assembly68.lean) is the body at one environment `ω` and one radius `r`. Its binders `hεcell`,
+`hmesh`, `hEl`, ... are statements at fixed `(ω, r, i)`. The `ShellRes…` below state such binders in r-uniform form: they
+quantify over all parameters of `ShellOneTestPointwiseEpsStmt` and assume `ShellPtPrem`, which is exactly the premise
+list of that Stmt at `(ω, r)`. -/
 
 section GoodEnvReduction
 
@@ -431,19 +430,6 @@ def ShellResMesh (𝒮 : SpaceFillingSLEModel) : Prop :=
     ShellPtPrem 𝒮 γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r S Ew ω →
     CellDiamLe ε (S.η ω) (dyadicD r / 100) Set.univ
 
-
-/-- Residual `hTdom` (not dyadic-reducible): the exit time dominates the shell exit. -/
-def ShellResTdom (𝒮 : SpaceFillingSLEModel) : Prop :=
-  ∀ (γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
-    (Ew : ℝ → Set Ω) (ω : Ω) (i : Lemma68Config.Config68),
-    ShellPtPrem 𝒮 γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r S Ew ω →
-    Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
-      ∀ k : ℕ, ∃ D : Set ℤ, D.Finite ∧ ∀ w : ℕ → ℤ,
-        shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
-            (winRf S ρ ζ C r ω) k w < ⊤ →
-          shellExit ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) (dyadicD r)
-            (winRf S ρ ζ C r ω) k w ≤ vExitTime D w
-
 /-- Residual `hRbd`: the window radius is bounded on the shell exits. -/
 def ShellResRbd (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r : ℝ) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
@@ -469,7 +455,6 @@ def ShellResRr (𝒮 : SpaceFillingSLEModel) : Prop :=
               (dyadicD r ^ shortExp ζ) (dyadicD r) k x) ∧
             winRf S ρ ζ C r ω (shellCentre ε (S.η ω) (fillCells ε (S.η ω) ↑i.Θ) r
               (dyadicD r ^ shortExp ζ) (dyadicD r) k x) ≤ 1
-
 
 /-- Residual `hVolC` (`HVolFullPw68`, uncommitted): the volume lower bound on the shell exits (constants `c₀`, `β⁻`). -/
 def ShellResVolC (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -611,115 +596,7 @@ def ShellResFull (𝒮 : SpaceFillingSLEModel) : Prop :=
     Lemma68Config.FullAdmAt (Lemma68Config.sparsityS1 γ) S ρ s₀ γ ε ω r i →
       ∀ w : ℂ, ∀ t : ℝ, 0 < t → 0 < S.μ ω (ball w t)
 
-/-- **The Eps pointwise one-test input from the goodEnv body.** Every binder of
-`shellOneTest_at_of_goodEnv` is either discharged here (the parameter inequalities from `ShellPtPrem`, `hεc`, `hεs`,
-`hε1`, `hεcell` from `ShellResEpsThr`, `hωκ`, `hα`, `hrε`, and `RegularEnvAt68` from the Stmt premises) or is one of
-the residual `ShellRes…` inputs above. -/
-theorem shellOneTestPointwiseEps_of_goodEnv {𝒮 : SpaceFillingSLEModel}
-    (hmesh : ShellResMesh 𝒮)
-    (hTdom : ShellResTdom 𝒮)
-    (hVolC : ShellResVolC 𝒮) (hVolY : ShellResVolY 𝒮) (hGreen : ShellResGreen 𝒮)
-    (hCountGood : ShellResCountGood 𝒮) (hCellGood : ShellResCellGood 𝒮)
-    (hx1 : ShellResX1 𝒮) (hmomS : ShellResMomS 𝒮) (hWalk : ShellResWalk 𝒮) (hsel : ShellResSel 𝒮)
-    (hfull : ShellResFull 𝒮) : ShellOneTestPointwiseEpsStmt 𝒮 := by
-  intro γ hγ0 hγ2 ω₀ α ζ ρ CG CE hω₀ hωα hα0 hωζ hωβ hω2ζ hCG hCE hζ0 hζ1 hρ0 hρ1 C C' hC hC' hP
-  obtain ⟨q0, hq0, hq0A, hq0B⟩ : ∃ q0 : ℝ, 0 < q0 ∧ q0 ≤ (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE C) ∧
-      q0 ≤ (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE CG) := by
-    have h1 := one_le_shellChone68 CE C
-    have h2 := one_le_shellChone68 CE CG
-    have hA : (0 : ℝ) < (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE C) := div_pos (by norm_num) (by linarith)
-    have hB : (0 : ℝ) < (1 / 4 : ℝ) ^ 2 / (4 * shellChone68 CE CG) := div_pos (by norm_num) (by linarith)
-    exact ⟨min _ _, lt_min hA hB, min_le_left _ _, min_le_right _ _⟩
-  refine ⟨q0, hq0, hq0A, ?_⟩
-  intro R hR0 hRρ hRA hRcut s₀ hs₀ hs₁ Ω _ S hS hGp hCp hEp Ew hEwm hEwp ε hε hεe ω hmeshω hcurve hmult
-    hcont hμN hμF hdeg hadj hadjAll hav r hr10 hrR hωE i hadm
-  have hεpos : 0 < ε ^ ω₀ := Real.rpow_pos_of_pos hε _
-  have hr0 : 0 < r := by linarith
-  have hεE : ε ≤ shellEps0 γ α ω₀ := le_trans hεe (shellEps0Z_le γ α ω₀ ζ)
-  have hεc : ε ≤ 16 * shellC068 := by
-    have h1 : shellEps0 γ α ω₀ ≤ Real.exp (-2) / 2 := by unfold shellEps0; exact min_le_left _ _
-    have h2 : Real.exp (-2) ≤ 1 := Real.exp_le_one_iff.mpr (by norm_num)
-    unfold shellC068; linarith
-  have hε1 : ε ≤ 1 := by
-    have h1 : shellEps0 γ α ω₀ ≤ Real.exp (-2) / 2 := by unfold shellEps0; exact min_le_left _ _
-    have h2 : Real.exp (-2) ≤ 1 := Real.exp_le_one_iff.mpr (by norm_num)
-    linarith
-  have hεs : ε ≤ ((100 * shellC068) ^ chosenBetaMinus γ / 4) ^ (1 / (α - 2 * ω₀ * chosenBetaMinus γ)) :=
-    le_trans hεE (by unfold shellEps0; exact min_le_right _ _)
-  have hεcell : ε ^ (2 / (2 + γ) ^ 2 - ζ) ≤ shellC068 * r ^ 2 / 100 := by
-    have hthr := shellEps0Z_pow_le hε (by linarith) hεe
-    have h2 : ε ^ (2 * ω₀) = (ε ^ ω₀) ^ 2 := by
-      rw [show 2 * ω₀ = ω₀ * 2 by ring, Real.rpow_mul hε.le, Real.rpow_two]
-    have hsplit : ε ^ (2 / (2 + γ) ^ 2 - ζ) = ε ^ (2 / (2 + γ) ^ 2 - ζ - 2 * ω₀) * ε ^ (2 * ω₀) := by
-      rw [← Real.rpow_add hε]; congr 1; ring
-    have hsq : 100 * (ε ^ ω₀) ^ 2 ≤ r ^ 2 := by
-      have := mul_le_mul hr10 hr10 (by positivity) (by linarith)
-      nlinarith
-    have hc0 : 0 ≤ shellC068 := by unfold shellC068; positivity
-    calc ε ^ (2 / (2 + γ) ^ 2 - ζ) = ε ^ (2 / (2 + γ) ^ 2 - ζ - 2 * ω₀) * ε ^ (2 * ω₀) := hsplit
-      _ ≤ shellC068 * ε ^ (2 * ω₀) := mul_le_mul_of_nonneg_right hthr (Real.rpow_nonneg hε.le _)
-      _ = shellC068 * (ε ^ ω₀) ^ 2 := by rw [h2]
-      _ ≤ shellC068 * (r ^ 2 / 100) := by
-          apply mul_le_mul_of_nonneg_left _ hc0; linarith
-      _ = shellC068 * r ^ 2 / 100 := by ring
-  have hreg : RegularEnvAt68 S γ ω₀ ρ CG ζ α CE ε ω :=
-    ⟨hmeshω, hcurve, hmult, hcont, hμN, hμF, hdeg, hadj, hadjAll⟩
-  have hpre : ShellPtPrem 𝒮 γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r S Ew ω :=
-    ⟨hγ0, hγ2, hω₀, hωα, hα0, hωζ, hωβ, hω2ζ, hCG, hCE, hζ0, hζ1, hρ0, hρ1, hC, hq0, hq0B,
-      hR0, hRρ, hRA, hRcut, hs₀, hs₁, hS, hε, hεe, hr10, hrR, hωE, hreg⟩
-  have hrA : r ≤ Lemma68Cutoff.rAmp q0 ζ := le_trans hrR hRA
-  have hrz : r ≤ countThreshold ζ := MatedCRT.Lemma68HoneSetupAdapt.hrz_of_rAmp hq0 hq0B hζ0 hζ1 hrA
-  have hkillω := MatedCRT.Lemma68KilledExitAe.ae_killed_exit_ne_top (hmult ε hε).1 (hmult ε hε).2 i.a ε
-    (S.η ω) i.Θ i.F0 r
-  have hTest := MatedCRT.Lemma68ShellTestPw68.shellTest_pw68 (γ := γ) (Elig := fun w => w ∈ shortEligible ρ (dyadicD r) (shortExp ζ))
-    S hε hs₀ hζ0 hζ1 hr0 hrz (le_trans hrR hRρ) i hcont hcurve (hmult ε hε).1 (hmult ε hε).2 (hadjAll ε hε) hkillω
-    (fun w hw => windowRfT_bounds S.μ ρ (shortExp ζ) shellC068 C (dyadicD r) (dyadicD_pos r) (dyadicD_le_one r)
-      (by unfold shortExp; linarith) ω hw)
-    (fun _ hw => hw) (hmesh γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
-    (fun hFA => MatedCRT.Lemma68HoneSetup239.hstart_of_fullAdmAt S hε hs₀ ω hcont r hr0 i hFA)
-  -- pointwise producers of the hEl, hRr and hRcell binders (`hEl_fixedOmega`, `hRr_fixedOmega_loc`,
-  -- `hRcell_pw`); the ball-form mesh comes from the meshEvent at radius rho (cellDiamLe_ball_of_meshEvent)
-  have hmω : CellDiamLe ε (S.η ω) (dyadicD r / 100) (Metric.ball (0 : ℂ) ρ) :=
-    MatedCRT.Lemma68HoneSetupAdapt.cellDiamLe_ball_of_meshEvent (c0 := shellC068) S ω hmeshω hε hρ1 hr0
-      (le_trans hrR hRρ) MatedCRT.Lemma68HoneSetupAdapt.shellC068_le_one_adapt hεcell
-  have htendω : Filter.Tendsto (S.η ω) (Filter.cocompact ℝ) (Filter.cocompact ℂ) :=
-    MatedCRT.Lemma68Geometry.tendsto_cocompact_of_escapes hcurve
-  have hElω := MatedCRT.Lemma68HoneElAe.hEl_fixedOmega (γ := γ) (C := C) S hρ1 hζ0 hζ1 hq0 hq0B hs₀ hε hr0
-    (le_trans hrR hRρ) hrA i ω (hmesh γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre) hcont hcurve hadj
-    (hmult ε hε)
-  have hRrω := MatedCRT.Lemma68HoneRrLocal.hRr_fixedOmega_loc (γ := γ) (ρ := ρ) (C := C) S hρ1 hζ0 hζ1 hq0 hq0B hs₀ hε
-    hr0 (le_trans hrR hRρ) hrA i ω hmω hcont htendω (hadjAll ε hε) (hmult ε hε)
-  have hRcellω := MatedCRT.Lemma68B1EnvPw.hRcell_pw (γ := γ) (ρ := ρ) S ω i hζ0 hζ1 hElω (hRcut r hr0 hrR)
-  obtain ⟨Rf, h1, h2⟩ := shellOneTest_at_of_goodEnv' hγ0 hγ2 S hρ0 hρ1 hζ0 hζ1 hCG hq0 hq0B hε hs₀ hr0
-    (le_trans hrR hRρ) hrz hrA ω₀ hω₀ (shellK68 γ ρ ω₀ ζ hγ0 hγ2 hρ0 hρ1 hω₀ hζ0 hζ1) rfl ω hreg i
-    (ζ := ζ) (CG := CG) (CE := CE) (C := C) (α := α) (q0 := q0) (s₀ := s₀) (ε := ε) (r := r)
-    hεc hεcell (hωζ.le) hωβ hεs hr10 hε1
-    (hmesh γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
-    hTest
-    hadm
-    hElω
-    (hTdom γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
-    (fun _ k => MatedCRT.Lemma68WindowRfGlobal.windowRfT_hRbd_global S.μ ρ (shortExp ζ) shellC068 C (dyadicD r)
-      (dyadicD_pos r) (dyadicD_le_one r) (by unfold shortExp; linarith) ω ε (S.η ω)
-      (fillCells ε (S.η ω) ↑i.Θ) r (dyadicD r ^ shortExp ζ) k)
-    hRrω
-    (MatedCRT.Lemma68HoneSetupAdapt.hcap_of_continuous (γ := γ) (ρ := ρ) (s₀ := s₀) S ω hcont hε hr0 i)
-    (hVolC γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
-    (hVolY γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
-    (hGreen γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
-    (hCountGood γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
-    (hCellGood γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
-    hRcellω
-    (hx1 γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
-    (hmomS γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
-    (hWalk γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
-    (hsel γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
-    (hfull γ ω₀ α ζ ρ CG CE C q0 R s₀ ε r Ω S Ew ω i hpre)
-  exact ⟨Rf, h1, h2⟩
-
 end GoodEnvReduction
-
-#print axioms MatedCRT.Lemma68ShellCorePw.shellOneTestPointwiseEps_of_goodEnv
 
 
 #print axioms MatedCRT.Lemma68ShellCorePw.shellOneTestOrderAeEpsStmt_of_pointwiseEps

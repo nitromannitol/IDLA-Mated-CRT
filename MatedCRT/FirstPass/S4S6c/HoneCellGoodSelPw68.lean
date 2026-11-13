@@ -5,9 +5,9 @@ import MatedCRT.FirstPass.S4S6c.ShellWindowRf68
 import MatedCRT.Proofs.Sec6.AnnulusHit.EventInvariance
 
 /-!
-# Pointwise producers of the binders `hCellGood` and `hsel` of `shellOneTest_at_of_goodEnv'`
+# Pointwise producers of the binders `hCellGood` and `hsel` of the one-radius assembly
 
-`shellOneTest_at_of_goodEnv'` (B1Assembly68.lean:803) takes two binders that concern one environment `ω` only, under the
+The one-radius assembly (B1Assembly68.lean) takes two binders that concern one environment `ω` only, under the
 guard `FullAdmAt`:
 
 * `hCellGood` (B1Assembly68.lean:885): every cell of mesh `ε` meeting the ball `B(0, ρ_cell)`, `ρ_cell = rhoCell68 ρ`,
