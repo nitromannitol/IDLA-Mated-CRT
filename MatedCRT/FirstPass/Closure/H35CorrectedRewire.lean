@@ -43,7 +43,7 @@ theorem firstPass_4_1_ownBinders_h35c (𝒮 : SpaceFillingSLEModel) (ν : ℝ �
       closed_2_13_cellRewire h35c) hH hcone
 
 /-- Lemma 4.1 (`ConvergenceDivisibleStmt`), repaired form `firstPass_4_1_coneLaw` (FirstPass/S4S6c.lean:45, with the
-frozen input `FrozenConeScalingLaw` in place of the false `FrozenConeEnvironmentScaling`), with the binder `h35`
+frozen input `FrozenConeScalingLaw` in place of `FrozenConeEnvironmentScaling`), with the binder `h35`
 replaced by `DiscreteDirichletProblemCorrectedStmt`. -/
 theorem firstPass_4_1_coneLaw_h35c {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingInput 𝒮)
     (h210 : DegreeMeasureConvergenceStmt 𝒮) (h34 : IntegralConvergenceGreenFunctionStmt 𝒮)
@@ -212,8 +212,8 @@ end ChainH24c
 /-- Proposition 4.2 (`DivSandpileLowerBoundStmt`), final form `firstPass_4_2_final` (FirstPass/S4d.lean:146), with the
 binder `h35` replaced by the corrected Lemma 3.5 `DiscreteDirichletProblemCorrectedStmt` and the binder `h24` replaced by
 the corrected Lemma 2.4 `ConeHarmonicBallsUpToFixedTimeCorrectedStmt`. The bridge input is `h28`. The binder
-`hcone : FrozenConeEnvironmentScaling 𝒮` is kept from `firstPass_4_2_final`; it is documented FALSE (FirstPass/S3S4.lean:27,
-FirstPass/S4S6c.lean:7). All other binders and the conclusion are those of `firstPass_4_2_final`. -/
+`hcone : FrozenConeEnvironmentScaling 𝒮` is kept from `firstPass_4_2_final` (Frozen/S3S4.lean:27).
+All other binders and the conclusion are those of `firstPass_4_2_final`. -/
 theorem firstPass_4_2_final_h35c {𝒮 : SpaceFillingSLEModel}
     (hm : MepsScalingInput 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)
     (h34 : IntegralConvergenceGreenFunctionStmt 𝒮) (h214 : GreenKernelUpperBoundStmt 𝒮)

@@ -3,6 +3,7 @@ import MatedCRT.FirstPass.S218
 import MatedCRT.Proofs.Sec3.ConeBallMass
 import MatedCRT.FirstPass.Frozen.S5Cited
 import MatedCRT.FirstPass.S3t.BLEnvelopeClosure
+import MatedCRT.FirstPass.S4S6c
 
 /-!
 # Theorems 1.4 and 1.6 with the exit-time bound, the volume growth and the truncated laws derived
@@ -21,6 +22,9 @@ import MatedCRT.FirstPass.S3t.BLEnvelopeClosure
   (`FirstPass/S3t/BLEnvelopeClosure.lean`, committed 4c8c580) applied to
   `h211 := MatedCRT.CertifiedReferenceModel.randomWalkToLBM hC` (Theorem 2.11 from the certified model), `h28`, `hm`
   and `hexc`. The former binder `hT` (same convention as `FirstPass/S5qd.lean`) is removed.
+
+Proposition 4.2 (`h42`) is assembled as in `firstPass_4_2_final` (`FirstPass/S4d.lean`), with Theorem 4.1 in its
+cone-scaling-law form `firstPass_4_1_coneLaw` (`FirstPass/S4S6c.lean`, binder `hcone : FrozenConeScalingLaw 𝒮`).
 
 `hrevuz : FrozenLBMGreenOccupationRescaled 𝒮` (the Revuz occupation identity, source gap) is kept as in
 `closed_1_4_wired`. The other binders are the binders of `closed_1_4_wired` / `closed_1_6_wired`, deduplicated.
@@ -94,8 +98,10 @@ theorem closed_1_4_derived {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure S
     FirstPass35Bridge.discreteDirichletProblem_of_corrected h28 hmax h35c
   have h24 : ConeHarmonicBallsUpToFixedTimeStmt := coneHarmonicBallsUpToFixedTimeStmt_of_canonical hcan hcl
   have h42 : DivSandpileLowerBoundStmt 𝒮 :=
-    firstPass_4_2_final hm h210 h34 h214 h28 h35 h218 h27 hH (hEnvS hsc hrp hind) h23 h24 h33 hGBall hpc hsmp hmin
-      hpole hnj hcan hcl hE1 hE2 hscale h22
+    divSandpileLowerBound_final 𝒮 (firstPass_4_1_coneLaw hm h210 h34 h214 h28 h35 h218 h27 hH hcone) h23 h24 h27
+      h28 h33 (coneFamilyAEMeasurable_proved hcan hcl h27 hE1 hE2 hscale h22)
+      (harmonicBallStrictObstacleGapStep_of_steps 𝒮
+        (strictGapDeterministicComparison_of_frozen hGBall hpc hsmp hmin hpole) hnj)
   have hIDLA : IDLALowerBoundStmt 𝒮 :=
     closed_5_1_cited ν hC hμae hSB hsup hcell hF1 hexc hpole hmodel hFL hLoc hpair hF2 hstd hmin hGBC hconf hK hE
       hE1 hE2 hscale h27 h22 h24c hG15 h32 h611 h82 hI2 hSup hCons hMono hCompat hBdry hEx hThm11 hProp56 hloc hSC
@@ -164,8 +170,10 @@ theorem closed_1_6_derived {𝒮 : SpaceFillingSLEModel} (ν : ℝ → Measure S
     FirstPass35Bridge.discreteDirichletProblem_of_corrected h28 hmax h35c
   have h24 : ConeHarmonicBallsUpToFixedTimeStmt := coneHarmonicBallsUpToFixedTimeStmt_of_canonical hcan hcl
   have h42 : DivSandpileLowerBoundStmt 𝒮 :=
-    firstPass_4_2_final hm h210 h34 h214 h28 h35 h218 h27 hH (hEnvS hsc hrp hind) h23 h24 h33 hGBall hpc hsmp hmin
-      hpole hnj hcan hcl hE1 hE2 hscale h22
+    divSandpileLowerBound_final 𝒮 (firstPass_4_1_coneLaw hm h210 h34 h214 h28 h35 h218 h27 hH hcone) h23 h24 h27
+      h28 h33 (coneFamilyAEMeasurable_proved hcan hcl h27 hE1 hE2 hscale h22)
+      (harmonicBallStrictObstacleGapStep_of_steps 𝒮
+        (strictGapDeterministicComparison_of_frozen hGBall hpc hsmp hmin hpole) hnj)
   have hIDLA : IDLALowerBoundStmt 𝒮 :=
     closed_5_1_cited ν hC hμae hSB hsup hcell hF1 hexc hpole hmodel hFL hLoc hpair hF2 hstd hmin hGBC hconf hK hE
       hE1 hE2 hscale h27 h22 h24c hG15 h32 h611 h82 hI2 hSup hCons hMono hCompat hBdry hEx hThm11 hProp56 hloc hSC

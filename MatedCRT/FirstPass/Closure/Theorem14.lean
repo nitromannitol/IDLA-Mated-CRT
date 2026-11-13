@@ -23,7 +23,7 @@ Proposition 6.1 (`h61`). Those four are built inside the proof from providers an
   input `closed_3_6_corrected` (uses `hC`), the proved finite-domain representation
   `frozenFiniteDomainDirichletRepresentation_proved`, and the maximum principle `closed_2_13` (uses `hcell`).
 * `h42` (Proposition 4.2, `DivSandpileLowerBoundStmt`): `firstPass_4_2_final` (`S4d.lean:148`). Its input
-  `hcone : FrozenConeEnvironmentScaling 𝒮` is supplied by the repaired `hEnvS hsc hrp hind` (the retired frozen name
+  `hcone : FrozenConeEnvironmentScaling 𝒮` is supplied by `hEnvS hsc hrp hind` (the frozen name itself
   is not a binder). Its Lemma 2.5 input `h24` is `coneHarmonicBallsUpToFixedTimeStmt_of_canonical hcan hcl`
   (`S2g/Draft24.lean:65`), and its Lemma 3.3 input `h33` is `firstPass_3_3`.
 * `h51` (Proposition 5.1, `IDLALowerBoundStmt`): `closed_5_1_cited` (`Closure/Prop51Cited.lean`) with `hC`.

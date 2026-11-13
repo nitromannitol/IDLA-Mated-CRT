@@ -23,8 +23,8 @@ hypothesis `SLEModelClosureInput 𝒮`, taken explicitly. Truth-checked: the sev
 imposes the cone, GMC measure, clock and mating-of-trees coupling. `CertifiedReferenceModel`
 (`MatedCRT/FirstPass/SLERef/Certified.lean`) is the per-model alternative.
 
-`ConeEnvironmentScalingUnderSLE 𝒮` is NOT derived here: under the closure hypothesis it is equivalent to
-`ConeEnvironmentScalingStep 𝒮`, which is FALSE (`FrozenConeEnvironmentScaling`, `Frozen/S3S4.lean`). See `coneEnvironmentScalingUnderSLE_iff`.
+`ConeEnvironmentScalingUnderSLE 𝒮` is not derived here: under the closure hypothesis it is equivalent to
+`ConeEnvironmentScalingStep 𝒮`, the predicate on the model `FrozenConeEnvironmentScaling` (`Frozen/S3S4.lean`). See `coneEnvironmentScalingUnderSLE_iff`.
 -/
 
 namespace MatedCRT
@@ -82,8 +82,8 @@ def FrozenLBMGreenOccupationClause (ν : ℝ → Measure SLEPathCode) : Prop :=
 
 /-- Reduction, not a derivation: under the closure clause, `ConeEnvironmentScalingUnderSLE 𝒮` (three SLE premises, then
 `ConeEnvironmentScalingStep 𝒮`) is equivalent to `ConeEnvironmentScalingStep 𝒮`. The conclusion is not supplied by the
-package. `ConeEnvironmentScalingStep` is the statement retired as FALSE in `MatedCRT/FirstPass/Frozen/S3S4.lean`
-(`FrozenConeEnvironmentScaling`). -/
+package. `ConeEnvironmentScalingStep` is the predicate `FrozenConeEnvironmentScaling` of
+`MatedCRT/FirstPass/Frozen/S3S4.lean`. -/
 theorem coneEnvironmentScalingUnderSLE_iff {𝒮 : SpaceFillingSLEModel} (hcl : SLEModelClosureInput 𝒮) :
     ConeEnvironmentScalingUnderSLE 𝒮 ↔ ConeEnvironmentScalingStep 𝒮 :=
   ⟨fun h => h hcl.1 hcl.2.1 hcl.2.2, fun h _ _ _ => h⟩

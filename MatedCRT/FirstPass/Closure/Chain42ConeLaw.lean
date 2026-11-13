@@ -5,9 +5,9 @@ import MatedCRT.FirstPass.Closure.OwnBinderRewire
 import MatedCRT.FirstPass.S5r.ClosureInside
 import MatedCRT.Proofs.Sec3.ConeBallMass
 
-/-! # Proposition 4.2 along the repaired cone-scaling input
+/-! # Proposition 4.2 along the cone-scaling law
 
-The copies of `H35CorrectedRewire.lean` bind the false `FrozenConeEnvironmentScaling` (Frozen/S3S4.lean:27) through the
+The copies of `H35CorrectedRewire.lean` bind `FrozenConeEnvironmentScaling` (Frozen/S3S4.lean:27) through the
 chain `firstPass_4_2_of_coneFamilyStep` → `firstPass_4_1`. The copies below replace the cone-scaling input by
 `FrozenConeScalingLaw` (Frozen/S4S6c.lean:18) and the Lemma 4.1 call by `firstPass_4_1_coneLaw_h35c`
 (H35CorrectedRewire.lean). The Lemma 3.5 binder is the corrected form `DiscreteDirichletProblemCorrectedStmt`,
@@ -22,10 +22,10 @@ open _root_.HarmonicBalls
 
 section ChainConeLaw
 
-/-- Proposition 4.2 from the cone family step, with the repaired cone-scaling input `FrozenConeScalingLaw`. Copy of
+/-- Proposition 4.2 from the cone family step, with the cone-scaling law `FrozenConeScalingLaw`. Copy of
 `firstPass_4_2_of_coneFamilyStep_h24c` (H35CorrectedRewire.lean). Binder diff against that copy: `h35`
 (Draft `DiscreteDirichletProblemStmt`) becomes `h35c` (`DiscreteDirichletProblemCorrectedStmt`), and `hcone`
-(`FrozenConeEnvironmentScaling`, false) becomes `FrozenConeScalingLaw`. The conclusion is the same. -/
+(`FrozenConeEnvironmentScaling`) becomes `FrozenConeScalingLaw`. The conclusion is the same. -/
 theorem firstPass_4_2_of_coneFamilyStep_coneLaw {𝒮 : SpaceFillingSLEModel}
     (hm : MepsScalingInput 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)
     (h34 : IntegralConvergenceGreenFunctionStmt 𝒮) (h214 : GreenKernelUpperBoundStmt 𝒮)
@@ -98,7 +98,7 @@ theorem firstPass_4_2_final_coneLaw {𝒮 : SpaceFillingSLEModel}
   firstPass_4_2_of_frozen_strictGap_coneLaw hm h210 h34 h214 h28 h35c h218 h27 hH hcone h23 h24c h33 hG hpc hsmp
     hwmp hpole hnj (coneFamilyAEMeasurable_proved hcan hcl h27 hE1 hE2 hscale h22)
 
-/-- **Proposition 4.2, counted form without the false cone-scaling hypothesis.** `firstPass_4_2_final_coneLaw` with
+/-- **Proposition 4.2, counted form with the cone-scaling law.** `firstPass_4_2_final_coneLaw` with
 the paper-own steps of Proposition 4.2 discharged:
 * `hcan = ConeCanonicalHalfBallStep` (FirstPass/S2g.lean:81) by `coneCanonicalHalfBallStep_proof`
   (FirstPass/Closure/Steps42.lean:36), the projection of the canonical Lemma 2.4;

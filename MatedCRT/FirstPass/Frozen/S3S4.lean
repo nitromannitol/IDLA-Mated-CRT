@@ -22,7 +22,7 @@ Discharged: `MatedCRT.frozenBrownianOutwardExcursionAtExit_holds` (`MatedCRT/Fir
 def FrozenBrownianOutwardExcursionAtExit : Prop :=
   BrownianOutwardExcursionAtExitStep
 
-/-- Retired. Truth check: FALSE. Validity would need closure of an unrestricted SLE predicate under rescaling. It is replaced by `FrozenConeScalingLaw`, which the repaired cone-law step uses.
+/-- Truth check: TRUE for every model `𝒮` that satisfies the three SLE closure inputs (`SLEScaleInvarianceInput`, `SLEReparametrizationInput`, `SLEIndepMonoInput`): it is then given by `ConeEnvironmentScalingUnderSLE 𝒮` (Frozen/S1d.lean). The cone-law step uses `FrozenConeScalingLaw` (Frozen/S4S6c.lean) instead.
 Scaling of the quantum cone environment and of the mating-of-trees coupling: for `b > 0` there is a valid environment `S'` on the same probability space with `η^b = R_b⁻¹ η(b ·)`, `bm^b = b^{-1/2} bm(b ·)` and `μ^b = b⁻¹ μ_h(R_b ·)`, where `R_b` is the cone scale radius. Source: Duplantier-Miller-Sheffield (2014, *Mating of trees*; the arXiv identifier as cited in `MatedCRT/External/QuantumCone.lean`), Proposition 4.13(i) (quantum cone scaling, DMS14 eq:quantum-cone-scaling) together with the Brownian scaling of the mating-of-trees pair. It concerns the quantum cone environment only, not clusters, odometers, harmonic balls or IDLA processes. Locator: standard; locator not yet pinned. -/
 def FrozenConeEnvironmentScaling (𝒮 : SpaceFillingSLEModel) : Prop :=
   ConeEnvironmentScalingStep 𝒮

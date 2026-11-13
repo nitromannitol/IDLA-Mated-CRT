@@ -34,7 +34,7 @@ namespace MatedCRT
 /-- **Theorem 1.4** (theorem:convergence-of-IDLA, line 251), first-pass composition.
 
 The version with closure binders discharged is `closed_1_4_full` (Closure/Final14Full.lean:21), see
-`firstPassMain_1_4_full`. This form binds the RETIRED `FrozenConeEnvironmentScaling` and the paper step
+`firstPassMain_1_4_full`. This form binds `FrozenConeEnvironmentScaling` and the paper step
 `ScaledClusterExitTimeStep`.
 
 Hypotheses, by class:

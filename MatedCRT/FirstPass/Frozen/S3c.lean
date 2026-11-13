@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.SLERef.Reference
 
 `BG20Prop51` is the mass-restricted first-moment estimate for the exit times of the random walk on the mated-CRT map, which the paper cites from Berestycki-Gwynne (bib key `berestycki2020random`, paper line 916, Lemma 2.18). It is the first clause of `ExitTimeUpperBoundStmt` (Draft Lemma 2.18), without the unrestricted-domain second clause. The second clause is not frozen: it is proved from `BG20Prop51` in `MatedCRT/FirstPass/S3c/ExitTimeBridge.lean`.
 
-`BG20Prop51Ref ν` is FALSE as typed: its universal transfer over all space-filling SLE models `𝒮` with normalized code law `ν` is not justified, since `HasNormalizedSLELaw 𝒮 ν` does not constrain the IsSLE semantics of `𝒮`. Its statement is unchanged, and it is superseded by the per-model input `BG20Prop51 𝒮`, a component of `CertifiedReferenceModel ν 𝒮` (`MatedCRT/FirstPass/SLERef/Certified.lean`). The exit-time bounds take `BG20Prop51 𝒮` directly.
+`BG20Prop51Ref ν` is the estimate for every space-filling SLE model `𝒮` with normalized code law `ν`, under the certified reference package `SLEReferenceInput ν`. It is proved for every `ν` as `bg20Prop51Ref_of_reference` (`MatedCRT/FirstPass/SLERef/BG20.lean`). The exit-time bounds take the per-model input `BG20Prop51 𝒮`, a component of `CertifiedReferenceModel ν 𝒮` (`MatedCRT/FirstPass/SLERef/Certified.lean`), directly.
 -/
 
 namespace MatedCRT
@@ -28,7 +28,7 @@ def BG20Prop51 (𝒮 : SpaceFillingSLEModel) : Prop :=
             (⨆ z ∈ D, ∫⁻ w in thickening (ε ^ α) D, ENNReal.ofReal (Real.log (1 / ‖z - w‖) + 1) ∂S.μ ω) ^ N}
 
 /-- Literature input, restricted to the certified reference package: under `SLEReferenceInput ν`, the estimate `BG20Prop51` holds for every space-filling SLE model `𝒮` with normalized law `ν`. Same source as `BG20Prop51` (Proposition 5.1, equation (5.1)).
-Truth check: FALSE as typed: `HasNormalizedSLELaw 𝒮 ν` does not constrain the IsSLE semantics of `𝒮`, so the universal transfer is not justified. Superseded by the per-model input `BG20Prop51 𝒮` (a component of `CertifiedReferenceModel ν 𝒮`, `MatedCRT/FirstPass/SLERef/Certified.lean`). Its statement is unchanged. -/
+Truth check: TRUE. Proved for every `ν` as `bg20Prop51Ref_of_reference` (`MatedCRT/FirstPass/SLERef/BG20.lean`), from the exit-time component of `SLEReferenceInput ν`. The exit-time bounds take the per-model input `BG20Prop51 𝒮` (a component of `CertifiedReferenceModel ν 𝒮`, `MatedCRT/FirstPass/SLERef/Certified.lean`). -/
 def BG20Prop51Ref (ν : ℝ → Measure SLEPathCode) : Prop :=
   SLEReferenceInput ν → ∀ 𝒮 : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮 ν → BG20Prop51 𝒮
 

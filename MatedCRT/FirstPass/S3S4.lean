@@ -106,12 +106,11 @@ theorem firstPass_4_6_corrected {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingI
   subsequentialConvergencePrepared_of_estimates 𝒮 hm (firstPass_4_7 h27 h218 hm) (firstPass_4_4_corrected 𝒮) h35 h218 hH
     h37 (boundedExitTimeRV_of_steps h27) h27
 
-/-- RETIRED (FALSE: the hypothesis `FrozenConeEnvironmentScaling` is FALSE). The repaired statement, with `FrozenConeScalingLaw`, is `firstPass_4_1_coneLaw`
-(FirstPass/S4S6c.lean). Kept for the record; do not delete.
-**Theorem 4.1** (theorem:convergence-divisible), Draft form `ConvergenceDivisibleStmt`, through the prepared discrete
+/-- **Theorem 4.1** (theorem:convergence-divisible), Draft form `ConvergenceDivisibleStmt`, through the prepared discrete
 estimates (corrected fixed-time proof, C11/C12). Hypotheses: Draft Lemmas 2.10, 3.4, 2.14, 2.8, 3.5 and 2.18, 2.7 (numbered
 results, the first three cited); `MepsScalingInput` (External); the frozen corrected Lemma 3.2 and the frozen
-`ConeEnvironmentScalingStep`. -/
+`ConeEnvironmentScalingStep`. The form with the cone-scaling law `FrozenConeScalingLaw` is `firstPass_4_1_coneLaw`
+(FirstPass/S4S6c.lean). -/
 theorem firstPass_4_1 {𝒮 : SpaceFillingSLEModel} (hm : MepsScalingInput 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)
     (h34 : IntegralConvergenceGreenFunctionStmt 𝒮) (h214 : GreenKernelUpperBoundStmt 𝒮) (h28 : CellSizeEstimateStmt 𝒮)
     (h35 : DiscreteDirichletProblemStmt 𝒮) (h218 : ExitTimeUpperBoundStmt 𝒮) (h27 : VolumeGrowthStmt)

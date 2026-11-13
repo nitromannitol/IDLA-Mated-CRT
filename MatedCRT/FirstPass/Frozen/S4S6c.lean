@@ -2,9 +2,9 @@ import MatedCRT.Steps.Sec1.Convergence
 import MatedCRT.Steps.Sec2.ConeScaleInvarianceUpToFixedTime
 
 /-!
-# Frozen external input of the cone-scaling repair
+# Frozen external input: the cone-scaling law
 
-`FrozenConeScalingLaw` replaces `FrozenConeEnvironmentScaling` (Frozen/S3S4.lean), which is FALSE as stated. It keeps only the quantum-cone facts that the volume-growth transfer of Section 4 uses: the cone scale radius `R_b` is a.s. positive and measurable, and the rescaled LQG measure `b⁻¹ μ_h(R_b ·)` has the same law as `μ_h`. It asserts nothing about the SLE curve `η`, the Brownian pair `bm`, the clock, or the predicate `IsSLE`.
+`FrozenConeScalingLaw` is used in place of `FrozenConeEnvironmentScaling` (Frozen/S3S4.lean). It keeps only the quantum-cone facts that the volume-growth transfer of Section 4 uses: the cone scale radius `R_b` is a.s. positive and measurable, and the rescaled LQG measure `b⁻¹ μ_h(R_b ·)` has the same law as `μ_h`. It asserts nothing about the SLE curve `η`, the Brownian pair `bm`, the clock, or the predicate `IsSLE`.
 -/
 
 namespace MatedCRT

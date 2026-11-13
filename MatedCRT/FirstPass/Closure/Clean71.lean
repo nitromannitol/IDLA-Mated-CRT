@@ -14,7 +14,7 @@ unchanged.
 
 Discharges (Draft binder of `firstPass_7_1` ← committed form):
 * `hcone : ConeHarmonicBallsStmt` (Theorem 2.3, cone harmonic balls) ← `closed_2_3_lit_noSC`
-  (FirstPass/Closure/HSCRewire.lean). This binder is the cone harmonic-balls statement, not the retired
+  (FirstPass/Closure/HSCRewire.lean). This binder is the cone harmonic-balls statement, not the cone environment scaling
   `FrozenConeEnvironmentScaling`, so it is not replaced by `FrozenConeScalingLaw`.
 * `h216 : GreenKernelLowerBoundStmt 𝒮` (Lemma 2.16) ← `CertifiedReferenceModel.greenKernelLowerBound`.
 * `h27 : VolumeGrowthStmt` (Lemma 2.7, Berestycki-Gwynne, BG20 Lemma A.1) ← `volumeGrowthStmt_of_berestyckiGwynne hBG`.

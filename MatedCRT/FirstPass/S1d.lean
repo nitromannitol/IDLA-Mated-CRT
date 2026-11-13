@@ -13,10 +13,10 @@ import MatedCRT.Proofs.Sec1.HarmonicBallScaling
 import MatedCRT.Proofs.Sec1.ConeScaleRadius
 
 /-!
-# First pass: Theorems 1.4 and 1.6 recomposed without retired inputs
+# First pass: Theorems 1.4 and 1.6 recomposed
 
-`firstPass_1_4` and `firstPass_1_6` replace `firstPass_1_4` / `firstPass_1_6` of FirstPass/S1c/Composition.lean, which
-rest on retired inputs. Changes:
+`firstPass_1_4` and `firstPass_1_6` replace `firstPass_1_4` / `firstPass_1_6` of FirstPass/S1c/Composition.lean.
+Changes:
 
 * Theorem 2.3 (`ConeHarmonicBallsStmt`) is a hypothesis (Draft). The corrected canonical
   Lemmas 2.4 and 2.5 (`ConeHarmonicBallsUpToFixedTimeCanonicalStmt`, `ConeScaleInvarianceUpToFixedTimeCanonicalStmt`,
@@ -24,17 +24,17 @@ rest on retired inputs. Changes:
   wait on the open `ConeCanonicalFactorStep`. Since 2.3 is taken directly, the hypotheses for `LQGMeasurePropertiesStmt`,
   `ConeHarmonicBallsUpToFixedTimeCanonicalStmt` and `ConeScaleInvarianceUpToFixedTimeCanonicalStmt` were unused and are removed
   (fewer hypotheses).
-* Lemma 3.4 is `MatedCRT.S3S4c.firstPass_3_4` (quenched route; the sample-path inputs are retired).
+* Lemma 3.4 is `MatedCRT.S3S4c.firstPass_3_4` (quenched route; the sample-path inputs are not used).
 * Lemma 4.1 is `firstPass_4_1_coneLaw` (FirstPass/S4S6c.lean) with `FrozenConeScalingLaw`.
 * The environment scaling enters as the frozen EXTERNAL `ConeEnvironmentScalingUnderSLE 𝒮` (Frozen/S1d.lean), with the
-  three SLE closure inputs as hypotheses. The retired `FrozenConeEnvironmentScaling` is not a hypothesis of
-  `firstPass_1_4` or `firstPass_1_6`, but it is still the hypothesis `hcone` of `firstPass_4_2_final` (FirstPass/S4d.lean:151).
+  three SLE closure inputs as hypotheses. `FrozenConeEnvironmentScaling` (Frozen/S3S4.lean) is not a hypothesis of
+  `firstPass_1_4` or `firstPass_1_6`; it is the hypothesis `hcone` of `firstPass_4_2_final` (FirstPass/S4d.lean:151).
 * Lemma 3.1 (corrected, `MatedCRT.S3c.firstPass_3_1_corrected`) is not consumed by this chain.
 -/
 
 namespace MatedCRT
 
-/-- **Theorem 1.4**, first pass without retired inputs: `convergenceOfIDLA_of_steps` fed with the corrected chain. -/
+/-- **Theorem 1.4**, first pass: `convergenceOfIDLA_of_steps` fed with the corrected chain. -/
 theorem firstPass_1_4 (𝒮 : SpaceFillingSLEModel)
     (hscale : QuantumConeScalingInput) (hsc : SLEScaleInvarianceInput 𝒮) (hrp : SLEReparametrizationInput 𝒮)
     (hind : SLEIndepMonoInput 𝒮) (hEnvS : ConeEnvironmentScalingUnderSLE 𝒮)
@@ -63,7 +63,7 @@ theorem firstPass_1_4 (𝒮 : SpaceFillingSLEModel)
     harmonicBallFamilyScalingStep (coneScaleRadiusStep_of_input hscale)
     (scaledClusterExitTimeStep_fp hdiv hF1 hF2 hF3)
 
-/-- **Theorem 1.6**, first pass without retired inputs: the hypotheses of `firstPass_1_4`, conclusion for the divisible
+/-- **Theorem 1.6**, first pass: the hypotheses of `firstPass_1_4`, conclusion for the divisible
 sandpile cluster. -/
 theorem firstPass_1_6 (𝒮 : SpaceFillingSLEModel)
     (hscale : QuantumConeScalingInput) (hsc : SLEScaleInvarianceInput 𝒮) (hrp : SLEReparametrizationInput 𝒮)

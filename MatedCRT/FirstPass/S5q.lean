@@ -92,9 +92,9 @@ theorem firstPass_5_1_of_obstacleVersion (𝒮 : SpaceFillingSLEModel)
 without `hobs`, plus the three frozen inputs `hμae`, `hSB`, `hsup` of that theorem (`hG` is shared).
 Input forms: `h24c` is the provider form of Lemma 2.4 (existence of `T`, `Λ` with the uniqueness clause on
 `Ioo 0 T`, no `T' = T`; `ConeHarmonicBallsUpToFixedTimeCorrectedStmt`, the same proposition as `ConeHarmonicBallsProviderFP4`
-at `FirstPass/S4d/Provider24.lean:27`); `hrevuz`, `hdet` are `FrozenLBMGreenOccupationRescaled`, `FrozenTruncatedQuenchedLawsFixedTime`
-(the retired `FrozenLBMGreenOccupation`, `FrozenTruncatedDetFixedTime` are no longer used); `hcone` is `FrozenConeScalingLaw`
-(the retired `FrozenConeEnvironmentScaling` is no longer used). Truth tags: `hE1`, `hE2` TRUE. -/
+at `FirstPass/S4d/Provider24.lean:27`); `hrevuz`, `hdet` are `FrozenLBMGreenOccupationRescaled`, `FrozenTruncatedQuenchedLawsFixedTime`;
+`hcone` is `FrozenConeScalingLaw`.
+Truth tags: `hE1`, `hE2` TRUE. -/
 theorem firstPass_5_1 (𝒮 : SpaceFillingSLEModel)
     -- inputs of `stoppedFloorObstacleVersion_proved` (FIRST-PASS FROZEN, `FirstPass/Frozen/S4S6c.lean`, `Frozen/S5k.lean`)
     (hμae : FrozenLQGMeasureFieldMeasurable 𝒮) (hSB : FrozenFiniteMeasureDiskStandardBorel)

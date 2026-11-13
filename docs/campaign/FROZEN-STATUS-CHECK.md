@@ -49,14 +49,14 @@ Scope: 78 Props in `Frozen/` and `External/`, plus two provenance rows (81, 82) 
 | 25 | FrozenLQGMeasureExistenceInsertion | FirstPass/Frozen/S2m.lean:14 | TRUE | TRUE | MATCH |
 | 26 | FrozenDiscreteHolderContinuityCorrected | FirstPass/Frozen/S3S4.lean:16 | UNSURE (docstring said UNRESOLVED) | UNSURE | MATCH |
 | 27 | FrozenBrownianOutwardExcursionAtExit | FirstPass/Frozen/S3S4.lean:22 | TRUE | TRUE | MATCH |
-| 28 | FrozenConeEnvironmentScaling | FirstPass/Frozen/S3S4.lean:27 | FALSE | FALSE | MATCH |
+| 28 | FrozenConeEnvironmentScaling | FirstPass/Frozen/S3S4.lean:27 | TRUE | TRUE | MATCH |
 | 29 | FrozenLBMGreenOccupation | FirstPass/Frozen/S3S4b.lean:19 | RETIRED | RETIRED | MATCH |
 | 30 | FrozenTruncatedDetFixedTime | FirstPass/Frozen/S3S4b.lean:23 | RETIRED | RETIRED | MATCH |
 | 31 | FrozenFiniteDomainDirichletRepresentation | FirstPass/Frozen/S3S4b.lean:28 | TRUE | TRUE | MATCH |
 | 32 | FrozenLBMGreenOccupationRescaled | FirstPass/Frozen/S3S4b.lean:51 | none | none | MATCH |
 | 33 | FrozenTruncatedQuenchedLawsFixedTime | FirstPass/Frozen/S3S4b.lean:65 | UNSURE (docstring said UNRESOLVED) | UNSURE | MATCH |
 | 34 | BG20Prop51 | FirstPass/Frozen/S3c.lean:20 | TRUE | TRUE | MATCH |
-| 35 | BG20Prop51Ref | FirstPass/Frozen/S3c.lean:32 | FALSE | FALSE | MATCH |
+| 35 | BG20Prop51Ref | FirstPass/Frozen/S3c.lean:32 | TRUE | TRUE | MATCH |
 | 36 | FPPairingLawIG4 | FirstPass/Frozen/S4S5b.lean:18 | TRUE | TRUE | MATCH |
 | 37 | FPWholePlaneLQGModel | FirstPass/Frozen/S4S5b.lean:29 | TRUE | TRUE | MATCH |
 | 38 | FPConeWholePlaneFieldLaw | FirstPass/Frozen/S4S5b.lean:33 | TRUE | TRUE | MATCH |

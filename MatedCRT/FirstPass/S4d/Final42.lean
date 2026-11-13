@@ -55,7 +55,7 @@ open _root_.HarmonicBalls in
 /-- **Proposition 4.2 (`DivSandpileLowerBoundStmt`), assembled.**
 The Draft hypotheses `h23`, `h33`, `h34`, `h24`, `h25` and the closure and Lemma 2.6 steps are derived in the proof (see the
 module docstring); the explicit inputs are the frozen `hrevuz`, `hdet` (for `h34`), the frozen `hrescale` (for `hRU`), the conditional environment scaling `hEnvS` with the three SLE closure inputs `hsc`, `hrp`, `hind`
-(replacing the retired `FrozenConeEnvironmentScaling`; `hEnvS hsc hrp hind` is used where `hcone` was), and the frozen and
+(`hEnvS hsc hrp hind : FrozenConeEnvironmentScaling 𝒮` is used as `hcone`), and the frozen and
 external hypotheses listed in the signature. The statement of Proposition 4.2 is unchanged. -/
 theorem firstPass_4_2_of_wholeplane_model {𝒮 : SpaceFillingSLEModel}
     (hm : MepsScalingInput 𝒮) (h210 : DegreeMeasureConvergenceStmt 𝒮)

@@ -4,7 +4,7 @@ import MatedCRT.External.SLE
 /-!
 # Frozen external input of the recomposed Theorems 1.4 and 1.6
 
-One Prop is frozen here: `ConeEnvironmentScalingUnderSLE`, the closure-conditional form of the quantum-cone environment scaling. It replaces the retired `FrozenConeEnvironmentScaling` (Frozen/S3S4.lean), which is FALSE as stated: validity would need closure of an unrestricted SLE predicate under rescaling. It is frozen as an external input.
+One Prop is frozen here: `ConeEnvironmentScalingUnderSLE`, the closure-conditional form of the quantum-cone environment scaling. For a model with the three space-filling SLE closure properties it gives `FrozenConeEnvironmentScaling` (Frozen/S3S4.lean), a predicate on the model. It is frozen as an external input.
 -/
 
 namespace MatedCRT
