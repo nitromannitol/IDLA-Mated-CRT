@@ -173,4 +173,79 @@ theorem lintegral_lintegral_gmcLimit_le {Ω' : Type*} [MeasurableSpace Ω'] {P' 
     hx0 hR).trans (ENNReal.ofReal_le_ofReal (mul_le_mul_of_nonneg_left ?_ (Real.exp_pos _).le))
   exact Real.rpow_le_rpow_of_nonpos hs₀ hs (by nlinarith)
 
+
+/-- The continuous bump `max 0 (min 1 (2 - |x - y| / t))`: it equals `1` on `closedBall y t` and vanishes off
+`ball y (2 t)`. -/
+noncomputable def ballBump (y : ℂ) (t : ℝ) (x : ℂ) : ℝ :=
+  max 0 (min 1 (2 - dist x y / t))
+
+lemma continuous_ballBump (y : ℂ) (t : ℝ) : Continuous (ballBump y t) :=
+  continuous_const.max (continuous_const.min
+    (continuous_const.sub ((continuous_id.dist continuous_const).div_const t)))
+
+lemma ballBump_nonneg (y : ℂ) (t : ℝ) (x : ℂ) : 0 ≤ ballBump y t x :=
+  le_max_left _ _
+
+lemma ballBump_le_one (y : ℂ) (t : ℝ) (x : ℂ) : ballBump y t x ≤ 1 :=
+  max_le zero_le_one (min_le_left _ _)
+
+lemma ballBump_eq_one {y : ℂ} {t : ℝ} (ht : 0 < t) {x : ℂ} (hx : dist x y ≤ t) : ballBump y t x = 1 := by
+  have h1 : dist x y / t ≤ 1 := (div_le_one ht).2 hx
+  have h2 : min 1 (2 - dist x y / t) = 1 := min_eq_left (by linarith)
+  rw [ballBump, h2]
+  exact max_eq_right zero_le_one
+
+lemma dist_lt_of_ballBump_ne_zero {y : ℂ} {t : ℝ} (ht : 0 < t) {x : ℂ} (hx : ballBump y t x ≠ 0) :
+    dist x y < 2 * t := by
+  by_contra h
+  have h1 : 2 ≤ dist x y / t := (le_div_iff₀ ht).2 (by linarith)
+  have h2 : min 1 (2 - dist x y / t) ≤ 0 := (min_le_right _ _).trans (by linarith)
+  exact hx (max_eq_left h2)
+
+/-- **Ball masses of the γ-LQG measure of `h^ℂ - γ log |·|` away from the origin.** For a whole-plane GFF `h^ℂ`,
+`0 < γ < 2`, `ρ < ρ₂ < 1`, a ball `closedBall y t` with `s₀ + 2 t ≤ |y|` (`s₀, t > 0`) and `|y| + 2 t ≤ R`:
+`E Γ(closedBall y t) ≤ (R + 1)^{γ²} s₀^{-γ²} · |ball y (2 t)|`, where `Γ = gmcLimit γ ρ ρ₂ ψ`. -/
+theorem lintegral_gmcLimit_closedBall_le {Ω' : Type*} [MeasurableSpace Ω'] {P' : Measure Ω'} [SFinite P']
+    {hC' : Ω' → (ℂ → ℝ) → ℝ} {hc : Ω' → ℝ → ℂ → ℝ} (hG : HarmonicBalls.IsWholePlaneGFF P' hC' hc)
+    {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) {ρ ρ₂ : ℝ} (hρρ₂ : ρ < ρ₂) (hρ₂ : ρ₂ < 1)
+    {y : ℂ} {s₀ t R : ℝ} (hs₀ : 0 < s₀) (ht : 0 < t) (hyt : s₀ + 2 * t ≤ ‖y‖) (hR : ‖y‖ + 2 * t ≤ R) :
+    ∫⁻ ω', gmcLimit γ ρ ρ₂ (clockPsi (fun ω' => fieldCircleAverage γ (hc ω')) ω') (closedBall y t) ∂P' ≤
+      ENNReal.ofReal (Real.exp (γ ^ 2 * Real.log (R + 1)) * s₀ ^ (-γ ^ 2)) * volume (ball y (2 * t)) := by
+  have hsupp : ∀ x, ballBump y t x ≠ 0 → s₀ ≤ ‖x‖ ∧ ‖x‖ ≤ R := by
+    intro x hx
+    have hd := dist_lt_of_ballBump_ne_zero ht hx
+    rw [dist_eq_norm] at hd
+    have h1 := norm_sub_norm_le y x
+    have h2 := norm_sub_norm_le x y
+    rw [norm_sub_rev] at h1
+    constructor <;> linarith
+  have hlow : ∀ x, (closedBall y t).indicator 1 x ≤ ENNReal.ofReal (ballBump y t x) := by
+    intro x
+    by_cases hx : x ∈ closedBall y t
+    · rw [indicator_of_mem hx, ballBump_eq_one ht (mem_closedBall.1 hx), ENNReal.ofReal_one]
+      rfl
+    · rw [indicator_of_notMem hx]
+      exact zero_le
+  have hup : ∀ x, ENNReal.ofReal (ballBump y t x) ≤ (ball y (2 * t)).indicator 1 x := by
+    intro x
+    by_cases hx : ballBump y t x = 0
+    · rw [hx, ENNReal.ofReal_zero]
+      exact zero_le
+    · rw [indicator_of_mem (mem_ball.2 (dist_lt_of_ballBump_ne_zero ht hx))]
+      exact ENNReal.ofReal_le_one.2 (ballBump_le_one y t x)
+  calc ∫⁻ ω', gmcLimit γ ρ ρ₂ (clockPsi (fun ω' => fieldCircleAverage γ (hc ω')) ω') (closedBall y t) ∂P'
+      ≤ ∫⁻ ω', ∫⁻ x, ENNReal.ofReal (ballBump y t x)
+          ∂(gmcLimit γ ρ ρ₂ (clockPsi (fun ω' => fieldCircleAverage γ (hc ω')) ω')) ∂P' := by
+        refine lintegral_mono fun ω' => ?_
+        rw [← lintegral_indicator_one measurableSet_closedBall]
+        exact lintegral_mono hlow
+    _ ≤ ENNReal.ofReal (Real.exp (γ ^ 2 * Real.log (R + 1)) * s₀ ^ (-γ ^ 2)) *
+          ∫⁻ x, ENNReal.ofReal (ballBump y t x) :=
+        lintegral_lintegral_gmcLimit_le hG hγ hγ2 hρρ₂ hρ₂ (continuous_ballBump y t) (ballBump_nonneg y t) hs₀
+          hsupp
+    _ ≤ ENNReal.ofReal (Real.exp (γ ^ 2 * Real.log (R + 1)) * s₀ ^ (-γ ^ 2)) * volume (ball y (2 * t)) := by
+        gcongr
+        rw [← lintegral_indicator_one measurableSet_ball]
+        exact lintegral_mono hup
+
 end MatedCRT.KilledOccupation
