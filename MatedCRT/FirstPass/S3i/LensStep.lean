@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.S3i.GoodEvent
 /-!
 # The quenched bounds on the good event (plan section 7)
 
-* `QuenchedBoundsOnGoodStmt`: plan Lemma 7 (section 7, `quenchedBoundsOnGood_fp36`, `S3i/QuenchedBounds.lean`),
+* `QuenchedBoundsOnGoodStmt`: plan Lemma 7 (section 7; derived in `S3i/QuenchedBoundsCorrected.lean`),
   as a named input with the plan's exact type.
 
 Terminology: quenched law `srwLaw` and exit time (Armstrong-Kuusi-Mourrat).
@@ -17,7 +17,7 @@ namespace FirstPass36
 open MeasureTheory Filter Topology Set Metric
 open scoped ENNReal NNReal
 
-/-- **Lemma 7 of the plan (section 7), a named input until `quenchedBoundsOnGood_fp36` lands.** On a good environment
+/-- **Lemma 7 of the plan (section 7), as a statement (derived in `S3i/QuenchedBoundsCorrected.lean`).** On a good environment
 `FP36GoodEnv S ρ₀ ρ₁ b ν A r z y ε ω`, with `ε` small: the walk from the start vertex leaves the disc with probability one
 (first estimate: exactly zero), and the far-exit event has quenched mass at most `A 96^ν ε^{νb/2}`. -/
 def QuenchedBoundsOnGoodStmt : Prop :=

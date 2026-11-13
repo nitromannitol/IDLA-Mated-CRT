@@ -293,9 +293,8 @@ theorem srwLaw_vExitTime_lt_top_fp36 {m : ℤ → ℤ → ℕ} {A : Set ℤ} (hA
 /-! ### The corrected interface of plan Lemma 1 -/
 
 open Classical in
-/-- The corrected interface of plan Lemma 1: the first conjunct is almost-sure exit from `A`, in place of
-the `UsesEdges` conjunct of `FP36LemmaOne` (QuenchedBounds.lean:26), which is false at zero-degree boundary vertices.
-The old `FP36LemmaOne` is left untouched. -/
+/-- The interface of plan Lemma 1: almost-sure exit from `A` and the three properties of the exit
+hitting probability. -/
 def FP36LemmaOneCorrected : Prop :=
   ∀ {m : ℤ → ℤ → ℕ} {A B : Set ℤ},
     FiniteExitData m A →

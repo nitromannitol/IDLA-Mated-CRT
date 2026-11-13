@@ -6,9 +6,7 @@ import MatedCRT.FirstPass.S3i.ExitAlmostSure
 /-!
 # Plan Lemma 7 with the corrected exit input
 
-`S3i/QuenchedBounds.lean` (commit 6b13afa) takes the finite-domain package `FP36LemmaOne` as a binder `L1`.
-Its conjunct 1, `srwLaw m a {x | UsesEdges m a x ∧ vExitTime A x < ⊤} = 1`, is false as typed, so that theorem
-is vacuous. This file restates Lemma 7 with `L1` replaced by the almost-sure exit statement alone:
+This file proves Lemma 7 from the almost-sure exit statement alone:
 
 * `hexit : ∀ {m} {A'}, FiniteExitData m A' → ∀ a ∈ A', srwLaw m a {x | vExitTime A' x < ⊤} = 1`
   (part (a): true as typed; `srwLaw_vExitTime_lt_top_fp36` of `S3i/ExitAlmostSure.lean`, supplies it).
@@ -110,7 +108,7 @@ lemma farExit_pathwise_step_fp36 {ε mε δ s r : ℝ} {η : ℝ → ℂ} {M : �
 
 /-! ## Clause 2 and the theorem: Lemma 7 with the corrected exit input -/
 
-/-- **Plan Lemma 7 (`quenchedBoundsOnGood_fp36`) with the corrected exit input.** On a good environment, clause 1: the
+/-- **Plan Lemma 7 with the corrected exit input.** On a good environment, clause 1: the
 quenched law from the selected start vertex gives a.s. a same-walk good path; clause 2: the probability of the far-exit
 event is at most `A 96^ν ε^{νb/2}`, uniformly over the boundary vertices of Lemma 2, by the closed lens estimate
 `lensProb_le_fp36_closed`. The only exit input is `hexit` (almost-sure exit from a finite exit set). -/
