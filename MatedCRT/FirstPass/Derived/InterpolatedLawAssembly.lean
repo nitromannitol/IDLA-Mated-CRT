@@ -20,6 +20,7 @@ continuous map `ℂ → Prob(ContinuousPath ℂ)` (Lattice-Probability `interpLa
 -/
 
 open MeasureTheory ProbabilityTheory Filter Topology Set LatticeProb
+open MarkovProcess (ContinuousPath)
 open scoped NNReal ENNReal
 
 namespace MatedCRT
