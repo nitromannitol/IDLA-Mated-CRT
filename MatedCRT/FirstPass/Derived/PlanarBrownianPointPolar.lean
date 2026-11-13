@@ -1,12 +1,17 @@
 import HarmonicBalls.Proofs.Sec6.BoundedHarmonicExit
 import HarmonicBalls.Proofs.Sec6.CompactHittingStopping
 import Mathlib.Analysis.InnerProductSpace.Harmonic.Constructions
+import HarmonicBalls.Proofs.Brownian.PlanarBrownianMotion
+import HarmonicBalls.Proofs.Brownian.PlanarHeatFeller
+import MarkovProcess.Path.ExitTimeShift
+import MarkovProcess.Main
 
 /-!
 # Points other than the starting point are polar for planar Brownian motion
 
 For planar Brownian motion `B` started at `y` and a point `x₀ ≠ y`, almost surely `B_t ≠ x₀` for every `t ≥ 0`
-(`ae_planarBrownianMotion_ne_of_ne`).
+(`ae_planarBrownianMotion_ne_of_ne`), and almost surely `B_t ≠ y` for every `t > 0`
+(`ae_planarBrownianMotion_ne_self_of_pos`).
 
 The proof is the classical one (Mörters-Peres, *Brownian Motion*, Theorem 3.19 and Corollary 3.20). On the annulus
 `A = {ε < |x - x₀| < R}` the function `log |x - x₀|` is harmonic, so the exit identity for bounded harmonic
@@ -14,7 +19,9 @@ functions (`HarmonicBalls.Section6.harmonic_eq_integral_planarBrownian_exitTime`
 function `log (max ε (min R |x - x₀|))`, which agrees with `log |x - x₀|` on the closure of `A`) gives
 `P_y(B exits A through the inner circle) = (log R - log |y - x₀|) / (log R - log ε)`
 (`planarBrownianMotion_real_exit_inner_annulus`). A path that hits `x₀` before leaving `B_R(x₀)` exits `A` through
-the inner circle, for every `ε < |y - x₀|`; letting `ε → 0` and then `R → ∞` gives the claim.
+the inner circle, for every `ε < |y - x₀|`; letting `ε → 0` and then `R → ∞` gives the claim. For the starting
+point itself, the simple Markov property at the times `1/(m+1)` (`planarBrownianMotion_map_shift`) reduces to the
+first case, since the planar Gaussian law has no atoms (`planarGaussian_singleton`).
 -/
 
 open MeasureTheory ProbabilityTheory Set Filter Topology Metric MarkovProcess InnerProductSpace
@@ -233,5 +240,77 @@ theorem ae_planarBrownianMotion_ne_of_ne {x₀ y : ℂ} (hxy : x₀ ≠ y) :
     measure_mono_null hcover (measure_iUnion_null hHnull)
   refine ae_iff.2 ?_
   simpa only [ne_eq, not_forall, not_not] using hnull
+
+/-! ### The starting point is not revisited at positive times -/
+
+/-- The planar Gaussian law with positive variance has no atoms. -/
+theorem planarGaussian_singleton (z y : ℂ) {t : ℝ≥0} (ht : t ≠ 0) : planarGaussian z t {y} = 0 := by
+  have := nullSingletonClass_gaussianReal (μ := z.re) ht
+  rw [planarGaussian, Measure.map_apply Complex.measurableEquivRealProd.symm.measurable
+    (measurableSet_singleton y)]
+  refine measure_mono_null (t := ({y.re} : Set ℝ) ×ˢ (univ : Set ℝ)) (fun p hp => ?_) ?_
+  · have hp' : Complex.measurableEquivRealProd.symm p = y := hp
+    refine ⟨?_, mem_univ _⟩
+    rw [mem_singleton_iff, ← hp']
+    rfl
+  · rw [Measure.prod_prod, measure_singleton, zero_mul]
+
+/-- **Simple Markov property of planar Brownian motion at a deterministic time:** the law of the path shifted by
+`s` is the mixture of the laws of planar Brownian motion started from the time-`s` position, which has the law
+`planarGaussian y s`. -/
+theorem planarBrownianMotion_map_shift (y : ℂ) (s : ℝ≥0) :
+    (planarBrownianMotion y).map (ContinuousPath.shift s) = (planarGaussian y s).bind planarBrownianMotion := by
+  have h := SubMarkovKernelSemigroup.IsFellerKernelSemigroup.continuousProcess_map_shift planarHeatSemigroup
+    isConservative_planarHeatSemigroup isFellerKernelSemigroup_planarHeatSemigroup
+    kolmogorovRegular_planarHeatSemigroup s
+  rw [← planarBrownianMotion_eq_continuousProcess] at h
+  have h2 := DFunLike.congr_fun h y
+  rw [Kernel.map_apply _ (ContinuousPath.continuous_shift_fixed s).measurable, Kernel.comp_apply] at h2
+  rw [h2]
+  change (planarHeatKernel s y).bind planarBrownianMotion = _
+  rw [planarHeatKernel_apply]
+
+/-- The paths that visit a point form a measurable set: it is the event that the exit time of the complement of
+the point is finite. -/
+lemma measurableSet_exists_eq (x₀ : ℂ) : MeasurableSet {ω : ContinuousPath ℂ | ∃ t, ω t = x₀} := by
+  have h : {ω : ContinuousPath ℂ | ∃ t, ω t = x₀} = ContinuousPath.exitTime ({x₀}ᶜ) ⁻¹' Iio ⊤ := by
+    ext ω
+    simp [ContinuousPath.exitTime_lt_top_iff]
+  rw [h]
+  exact ContinuousPath.measurable_exitTime _ isClosed_singleton.isOpen_compl measurableSet_Iio
+
+/-- **The starting point is polar at positive times.** Planar Brownian motion started at `y` almost surely does
+not return to `y` at any positive time: by the simple Markov property at time `1/(m+1)`, the shifted path is planar
+Brownian motion started from a point which almost surely differs from `y` (the Gaussian law has no atoms), and such
+a path never visits `y` (`ae_planarBrownianMotion_ne_of_ne`). -/
+theorem ae_planarBrownianMotion_ne_self_of_pos (y : ℂ) :
+    ∀ᵐ ω ∂planarBrownianMotion y, ∀ t : ℝ≥0, 0 < t → ω t ≠ y := by
+  have hHm := measurableSet_exists_eq y
+  have hstep : ∀ m : ℕ, ∀ᵐ ω ∂planarBrownianMotion y,
+      ContinuousPath.shift ((m : ℝ≥0) + 1)⁻¹ ω ∉ {ω : ContinuousPath ℂ | ∃ t, ω t = y} := by
+    intro m
+    have hs : ((m : ℝ≥0) + 1)⁻¹ ≠ 0 := inv_ne_zero (by positivity)
+    have hshift : Measurable (ContinuousPath.shift ((m : ℝ≥0) + 1)⁻¹ : ContinuousPath ℂ → ContinuousPath ℂ) :=
+      (ContinuousPath.continuous_shift_fixed _).measurable
+    have hae : ∀ᵐ z ∂planarGaussian y ((m : ℝ≥0) + 1)⁻¹,
+        planarBrownianMotion z {ω : ContinuousPath ℂ | ∃ t, ω t = y} = 0 := by
+      have hz : ∀ᵐ z ∂planarGaussian y ((m : ℝ≥0) + 1)⁻¹, z ≠ y := by
+        rw [ae_iff]
+        simpa using planarGaussian_singleton y y hs
+      refine hz.mono fun z hzy => ?_
+      exact measure_eq_zero_iff_ae_notMem.2
+        ((ae_planarBrownianMotion_ne_of_ne hzy.symm).mono fun ω hω ⟨t, ht⟩ => hω t ht)
+    rw [ae_iff]
+    simp only [not_not]
+    change planarBrownianMotion y (ContinuousPath.shift ((m : ℝ≥0) + 1)⁻¹ ⁻¹'
+      {ω : ContinuousPath ℂ | ∃ t, ω t = y}) = 0
+    rw [← Measure.map_apply hshift hHm, planarBrownianMotion_map_shift,
+      Measure.bind_apply hHm planarBrownianMotion.aemeasurable, lintegral_congr_ae hae, lintegral_zero]
+  refine (ae_all_iff.2 hstep).mono fun ω hω t ht hty => ?_
+  obtain ⟨m, hm⟩ := exists_nat_one_div_lt ht
+  rw [one_div] at hm
+  refine hω m ⟨t - ((m : ℝ≥0) + 1)⁻¹, ?_⟩
+  rw [ContinuousPath.shift_apply, add_tsub_cancel_of_le hm.le]
+  exact hty
 
 end MatedCRT.KilledOccupation
