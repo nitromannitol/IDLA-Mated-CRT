@@ -14,7 +14,7 @@ the intersection of the cells of adjacent vertices (`AdjacentCellsMeetStep`, Def
 the walk path property (`srwPathStep`), the measurability of the field (`fieldSigmaMeasurableStep`, from
 `IsQuantumCone.measurable_pairing`) and the quenched iteration (`IterativeBound.quenchedIterationStep`).
 
-`iterativeBound_of_div` and `iterativeBound_of_inputs` connect Lemma 6.10 to Lemma 6.8 in its route (b) form
+`iterativeBound_of_div` connects Lemma 6.10 to Lemma 6.8 in its route (b) form
 (`ConstantOrderLowerBoundDivLogStmt`) through proved links only: 6.8 (b) gives 6.7 (b) (`constantOrderLowerBoundLog`),
 which gives 6.9 (b) (`chanceOfBeingAbsorbedLogLoss`); `AdjacentCellsMeetStep` follows from the almost sure form
 `AdjacentCellsMeetAeStep` (`AdjacentCellsMeetAeStep.probTendsToOne`).
@@ -48,16 +48,5 @@ theorem iterativeBound_of_div (𝒮 : SpaceFillingSLEModel) (h68 : ConstantOrder
     (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮) (h219 : ExpectedExitTimeExplicitBoundStmt 𝒮)
     (hcell : AdjacentCellsMeetAeStep 𝒮) : IterativeBoundStmt 𝒮 :=
   iterativeBound 𝒮 (chanceOfBeingAbsorbedLogLoss_of_div 𝒮 h68 h27 h28 h219 hcell) h28 hcell.probTendsToOne
-
-/-- **Lemma 6.10** from the inputs of Lemma 6.8, route (b) (`constantOrderLowerBoundDiv_of_steps`): Lemmas 2.16,
-2.7, 2.8, 2.9, 6.4, 2.18, 2.19, and the steps `GoodScaleEventMeasurableStep` (line 2505) and `AdjacentCellsMeetAeStep`
-(Definitions 1.1 = 1.2). -/
-theorem iterativeBound_of_inputs (𝒮 : SpaceFillingSLEModel)
-    (h216 : GreenKernelLowerBoundStmt 𝒮) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
-    (h29 : CountingMeasureConvergenceStmt 𝒮) (h64 : GoodAnnulusPrevalenceStmt)
-    (h218 : ExitTimeUpperBoundStmt 𝒮) (h219 : ExpectedExitTimeExplicitBoundStmt 𝒮)
-    (hmeas : GoodScaleEventMeasurableStep 𝒮) (hcell : AdjacentCellsMeetAeStep 𝒮) : IterativeBoundStmt 𝒮 :=
-  iterativeBound_of_div 𝒮
-    (constantOrderLowerBoundDiv_of_steps 𝒮 h216 h27 h28 h29 h64 h218 h219 hmeas hcell) h27 h28 h219 hcell
 
 end MatedCRT

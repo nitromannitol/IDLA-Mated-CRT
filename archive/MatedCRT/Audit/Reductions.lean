@@ -385,7 +385,7 @@ example (𝒮 : SpaceFillingSLEModel) (h68 : ConstantOrderLowerBoundDivStmt 𝒮
 
 /-- **Lemma 6.8**, [C5] log-loss form `ConstantOrderLowerBoundDivLogStmt` (`1 - s₂/(1+|log r|)²`), from Lemmas 2.16,
 2.7, 2.8, 2.9, 2.18, 6.4 and `LQGMeasureFieldMeasurableStep` (`constantOrderLowerBoundDiv_of_inputs`: the
-false-as-drafted `GoodScaleEventMeasurableStep` replaced by its a.s. form, proved from
+almost-sure step `GoodScaleEventMeasurableAEStep`, proved from
 `LQGMeasureFieldMeasurableStep`). The Draft `ConstantOrderLowerBoundDivStmt` has no reduction; Lemma 6.7 (Draft
 form), 6.9 (local rate) and Proposition 7.1 consume it. -/
 example (𝒮 : SpaceFillingSLEModel) (h216 : GreenKernelLowerBoundStmt 𝒮) (h27 : VolumeGrowthStmt)

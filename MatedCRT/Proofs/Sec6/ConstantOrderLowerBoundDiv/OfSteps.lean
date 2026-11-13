@@ -8,7 +8,7 @@ import MatedCRT.Proofs.Infra.Setting
 import MatedCRT.Proofs.Measurability.GoodScale
 
 /-!
-# Lemma 6.8, route (b) of E-A10: `constantOrderLowerBoundDiv_of_steps` (proof of lines 2493-2621)
+# Lemma 6.8, route (b) of E-A10: `constantOrderLowerBoundDiv_of_aeSteps` (proof of lines 2493-2621)
 
 * `div_core`: deterministic given the map `(m, η, μ)` and the conclusions at `ε` of the inputs. For
   `r ∈ [10 ε^{ω₀}, ρ/16 ∧ s₀/8 ∧ 2^{-N}]`: Step 1 with the scale fix of E-A10 — the dyadic `δ ∈ (r²/128, r²/64]`, the
@@ -200,12 +200,6 @@ theorem MatedCRTEnv.isFieldInnerMeasurableAE_of_isFieldInnerMeasurable {Ω : Typ
   obtain ⟨F, hF, hFE, hP⟩ := h
   exact ⟨F, hF, measure_mono_null (fun ω hω => absurd (hFE hω.1) hω.2) measure_empty, hP⟩
 
-/-- `GoodScaleEventMeasurableStep` implies its almost-sure form `GoodScaleEventMeasurableAEStep`. -/
-theorem goodScaleEventMeasurableAEStep_of_step {𝒮 : SpaceFillingSLEModel} (h : GoodScaleEventMeasurableStep 𝒮) :
-    GoodScaleEventMeasurableAEStep 𝒮 := fun γ hγ hγ2 Ω _ S hS ρ c₀ C βp βm δ =>
-  ⟨S.isFieldInnerMeasurableAE_of_isFieldInnerMeasurable (h γ hγ hγ2 Ω S hS ρ c₀ C βp βm δ).1,
-    S.isFieldInnerMeasurableAE_of_isFieldInnerMeasurable (h γ hγ hγ2 Ω S hS ρ c₀ C βp βm δ).2⟩
-
 open ConstantOrderDiv in
 set_option maxHeartbeats 400000 in
 /-- **Lemma 6.8, route (b) of E-A10** (lemma:constant-order-lower-bound-div, line 2455), from Lemmas 2.7, 2.8, 2.9,
@@ -363,16 +357,5 @@ theorem constantOrderLowerBoundDiv_of_aeSteps (𝒮 : SpaceFillingSLEModel)
       rw [hlamdef, rpow_lam hc₀pos.le (by norm_num) hε]
       linarith)
     hS6 hadj hexitω hdiam hfinω h216ω hLLω h29ω hN
-
-/-- **Lemma 6.8, route (b) of E-A10**, with the (non-almost-sure) `GoodScaleEventMeasurableStep`; a corollary of
-`constantOrderLowerBoundDiv_of_aeSteps` through `goodScaleEventMeasurableAEStep_of_step`. -/
-theorem constantOrderLowerBoundDiv_of_steps (𝒮 : SpaceFillingSLEModel)
-    (h216 : GreenKernelLowerBoundStmt 𝒮) (h27 : VolumeGrowthStmt) (h28 : CellSizeEstimateStmt 𝒮)
-    (h29 : CountingMeasureConvergenceStmt 𝒮) (h64 : GoodAnnulusPrevalenceStmt)
-    (h218 : ExitTimeUpperBoundStmt 𝒮) (h219 : ExpectedExitTimeExplicitBoundStmt 𝒮)
-    (hmeas : GoodScaleEventMeasurableStep 𝒮) (hcell : AdjacentCellsMeetAeStep 𝒮) :
-    ConstantOrderLowerBoundDivLogStmt 𝒮 :=
-  constantOrderLowerBoundDiv_of_aeSteps 𝒮 h216 h27 h28 h29 h64 h218 h219
-    (goodScaleEventMeasurableAEStep_of_step hmeas) hcell
 
 end MatedCRT

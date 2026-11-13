@@ -145,8 +145,8 @@ reduced to the Draft 6.8 (`constantOrderLowerBound`). The corrected form is redu
 (= x2's `Sec7.constantOrderLowerBoundDivLog_of_fixed`, Proofs/Sec7/DivSandpileUpperBound/LogSurvival.lean:13). Draft
 status: unproved. E-A10 shows that route (a) needs a new scale-invariant Green bound
 (`ExitTimeScaleInvariantStep`); there is no counterexample. The corrected form is reduced
-(`constantOrderLowerBoundDiv_of_steps`) modulo `GoodScaleEventMeasurableStep`. That step is false as drafted
-(E-c2-4); its a.s. form is in d248b7c.
+(`constantOrderLowerBoundDiv_of_aeSteps`) modulo the almost-sure measurability step
+`GoodScaleEventMeasurableAEStep` (E-c2-4, d248b7c).
 
 **6.9** Draft `ChanceOfBeingAbsorbedStmt` (Draft/Section6.lean:140). It has two corrected forms (c5; the log forms are in 746a5f1):
 - `ChanceOfBeingAbsorbedLocalRateStmt` (Steps/Sec6/ChanceOfBeingAbsorbed.lean:34): `s₃` is chosen after `s₀`

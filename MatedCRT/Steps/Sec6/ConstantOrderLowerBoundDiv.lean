@@ -8,14 +8,15 @@ import MatedCRT.Steps.Sec6.ExitTimeScaleInvariance
 the constant `s₂` of the printed statement is replaced by `s₂ / (1 + |log r|)²`. Everything else is the Draft
 statement `ConstantOrderLowerBoundDivStmt` verbatim (in particular the reading of "exits through `A`").
 
-The proof (`constantOrderLowerBoundDiv_of_steps`, MatedCRT/Proofs/Sec6/ConstantOrderLowerBoundDiv/OfSteps.lean)
+The proof (`constantOrderLowerBoundDiv_of_aeSteps`, MatedCRT/Proofs/Sec6/ConstantOrderLowerBoundDiv/OfSteps.lean)
 follows lines 2493-2621 with the scale fix for line 2506 (`δ` dyadic with `√δ ∈ (r/(8√2), r/8]`, the shell
 `(Θ̄ + B_{r/2+√δ}) \ (Θ̄ + B_{r/2})` in place of `(Θ̄ + B_{4√δ}) \ (Θ̄ + B_{3√δ})`), and Step 4 of route (b)
 (`ExitTimeLogLossStep`, a consequence of Lemma 2.18). Two facts which the printed proof uses without proof are
 isolated here:
-* `GoodScaleEventMeasurableStep`: the events of Lemmas 6.4 and 2.7 at a fixed scale `δ` are `σ(h)`-measurable up to
-  an inner approximation. Line 2505 ("by the Borel-Cantelli lemma, a.s. there exists a random `𝛅' > 0`") needs it for
-  the `σ(h)`-measurability of `𝛅'`, which the statement asserts for `𝛅`.
+* the `σ(h)`-measurability, up to an inner approximation (`IsFieldInnerMeasurable`), of the events of Lemmas 6.4
+  and 2.7 at a fixed scale `δ`. Line 2505 ("by the Borel-Cantelli lemma, a.s. there exists a random `𝛅' > 0`")
+  needs it for the `σ(h)`-measurability of `𝛅'`, which the statement asserts for `𝛅`. The proof uses its
+  almost-sure form `GoodScaleEventMeasurableAEStep` (MatedCRT/Proofs/Measurability/GoodScale.lean).
 * `SrwVisitSecondMomentStep`: the second moment method of line 2545 for the number `V` of visits to a set before the
   exit time, with `V ≤ τ` (line 2616). A general fact about simple random walk on a multigraph.
 -/
@@ -59,17 +60,6 @@ def VolumeGrowthAt (μ : Measure ℂ) (βp βm δ : ℝ) : Prop :=
 the outer measure). This holds if `E` is measurable for the completion of `σ(h)`. -/
 def IsFieldInnerMeasurable {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω) (E : Set Ω) : Prop :=
   ∃ F : Set Ω, MeasurableSet[S.fieldSigma] F ∧ F ⊆ E ∧ S.P Fᶜ ≤ S.P Eᶜ
-
-/-- **Step (measurability of the good-scale events, line 2505).** The events of Lemma 6.4 (`GoodAnnulusCover`) and of
-Lemma 2.7 (`VolumeGrowthAt`) at a fixed scale `δ` are `σ(h)`-measurable up to an inner approximation. Both are
-determined by `μ_h`, which is a measurable function of `h` (eq:measure-lim, line 470); the events involve suprema and
-infima over the points of annuli and balls, so their measurability is for the completed `σ`-algebra (measurable
-projection). Used for the Borel-Cantelli step of line 2505, which yields the `σ(h)`-measurable `𝛅`. -/
-def GoodScaleEventMeasurableStep (𝒮 : SpaceFillingSLEModel) : Prop :=
-  ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
-  ∀ ρ c₀ C βp βm δ : ℝ,
-    IsFieldInnerMeasurable S {ω | GoodAnnulusCover (S.μ ω) ρ c₀ C δ} ∧
-    IsFieldInnerMeasurable S {ω | VolumeGrowthAt (S.μ ω) βp βm δ}
 
 /-- **Step (second moment method for the visits before the exit time, lines 2543-2546 and 2616).** For simple random
 walk on any multigraph `m` on `ℤ`, started at `b`, the number `V = #{n < τ_W : X_n ∈ E}` of visits to `E` before the

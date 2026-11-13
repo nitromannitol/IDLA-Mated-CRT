@@ -167,8 +167,8 @@ F11. Fact 2.2 rests on `LQGMeasureNonDyadicDilationPart` (cited, DS11), defined 
   .lean:97 and not in MatedCRT/External. A literature input must be an External Prop admitted by the operator.
 F12. `MatedCRT.harmonicAt_comp_add_const` is declared twice (3.3's BoundaryStep chain and 3.7's chain;
   DUPLICATES.md).
-F13. RESOLVED: `LQGMeasureFieldMeasurableStep` is proved (e27e1bb). The false `GoodScaleEventMeasurableStep` is used
-  only by non-final theorems (`iterativeBound_of_inputs`, Statement.lean:53).
+F13. RESOLVED: `LQGMeasureFieldMeasurableStep` is proved (e27e1bb); it gives the almost-sure step
+  `GoodScaleEventMeasurableAEStep` used by Lemma 6.8.
 F14. Lemmas 2.4/2.5 (FROZEN) assert `T' = T`, which needs `ConeHarmonicBallStrictGrowthStep` (E-c5-3). Every route to
   2.3-2.5, 4.1, 4.2, 5.1, 6.1 and 1.4 carries it.
 F15. NEW: `MatedCRT.rescaledGreenKernel` is declared in Steps/Sec3/UniformConvergenceGreenKernel.lean:16 (Lemma 3.3,
