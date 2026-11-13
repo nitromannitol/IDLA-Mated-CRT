@@ -12,7 +12,8 @@ import MatedCRT.Proofs.Sec4.ConvergenceDivisible.FromInputs
 These are the repaired versions of `ConeScalingPositivity.lean` (`ae_coneScaleRadius_pos_of_scaling`,
 `ae_coneScaleRadius_exhaustion_of_scaling`, `ae_volumeGrowth_of_scaling`, `convergenceDivisibleEventMeasurable_of_scaling`)
 and of `VolumeGrowthFromConeScaling.lean` (`ae_volumeGrowth_of_coneScaling`). The environment-based hypothesis
-`ConeEnvironmentScalingStep` (FALSE, truth check 2026-11-09) is replaced by `FrozenConeScalingLaw`, which gives only:
+`ConeEnvironmentScalingStep` (a predicate on the model, obtained from `ConeEnvironmentScalingUnderSLE`) is replaced
+by `FrozenConeScalingLaw`, which gives only:
 `R_b > 0` almost surely and the law identity `b⁻¹ μ(R_b ·) ~ μ`. The volume transfer is the law transfer
 `ae_mem_of_law_map_eq` of the event `{ν | ∃ βm βp, VolumeGrowth ν (1/2) βm βp}` (measurable by
 `measurableSet_volumeGrowth_exists`). The validity of the rescaled environment is not used.
