@@ -106,16 +106,14 @@ private theorem not_pos_mul_sub_of_abs_le {d u h : ℝ} (hd : |d| = h) (hh : 0 <
     (hpos : 0 < d * (u - d)) : False := by
   rcases (abs_eq hh.le).1 hd with hd' | hd' <;> rcases abs_le.1 hu with ⟨h1, h2⟩ <;> subst hd' <;> nlinarith
 
-/-- **Regular exit from an open square.** Planar Brownian motion started in the open square of centre `c` and
-side `a` almost surely leaves it at a finite time and exits it regularly. -/
-theorem ae_regularExit_openSquare_planarBrownian {c x : ℂ} {a : ℝ}
-    (hx : x ∈ {z : ℂ | |z.re - c.re| < a / 2 ∧ |z.im - c.im| < a / 2}) :
-    ∀ᵐ (b : ContinuousPath ℂ) ∂planarBrownianMotion x,
-      pathExitTime {z : ℂ | |z.re - c.re| < a / 2 ∧ |z.im - c.im| < a / 2} ⇑b ≠ ⊤ ∧
-        MatedCRT.TruncatedLaws.RegularExit {z : ℂ | |z.re - c.re| < a / 2 ∧ |z.im - c.im| < a / 2} ⇑b := by
-  have ha : 0 < a / 2 := lt_of_le_of_lt (abs_nonneg _) hx.1
-  refine ae_regularExit_planarBrownian_of_exteriorNormal (isOpen_openSquare c a) (isBounded_openSquare c a)
-    (measurable_squareNormal c) (fun p hp => ?_) hx
+/-- **The outward normal of a square is an exterior normal field.** At each frontier point `p` of the open square
+of centre `c` and side `a > 0`, `squareNormal c p ≠ 0` and the open half-plane `{q | ⟪squareNormal c p, q - p⟫ > 0}`
+misses the closed square. -/
+theorem squareNormal_exteriorNormal {c : ℂ} {a : ℝ} (ha : 0 < a / 2) :
+    ∀ p ∈ frontier {z : ℂ | |z.re - c.re| < a / 2 ∧ |z.im - c.im| < a / 2}, squareNormal c p ≠ 0 ∧
+      ∀ q : ℂ, 0 < inner ℝ (squareNormal c p) (q - p) →
+        q ∉ closure {z : ℂ | |z.re - c.re| < a / 2 ∧ |z.im - c.im| < a / 2} := by
+  intro p hp
   have hpS := closure_openSquare_subset c a (frontier_subset_closure hp)
   have hpU : p ∉ {z : ℂ | |z.re - c.re| < a / 2 ∧ |z.im - c.im| < a / 2} := by
     have := hp.2
@@ -158,6 +156,16 @@ theorem ae_regularExit_openSquare_planarBrownian {c x : ℂ} {a : ℝ}
         simp [LatticeProb.PlanarBrownian.pairing]
       rw [hv, LatticeProb.PlanarBrownian.inner_eq_pairing, e] at hq
       exact not_pos_mul_sub_of_abs_le hd ha hqS'.2 hq
+
+/-- **Regular exit from an open square.** Planar Brownian motion started in the open square of centre `c` and
+side `a` almost surely leaves it at a finite time and exits it regularly. -/
+theorem ae_regularExit_openSquare_planarBrownian {c x : ℂ} {a : ℝ}
+    (hx : x ∈ {z : ℂ | |z.re - c.re| < a / 2 ∧ |z.im - c.im| < a / 2}) :
+    ∀ᵐ (b : ContinuousPath ℂ) ∂planarBrownianMotion x,
+      pathExitTime {z : ℂ | |z.re - c.re| < a / 2 ∧ |z.im - c.im| < a / 2} ⇑b ≠ ⊤ ∧
+        MatedCRT.TruncatedLaws.RegularExit {z : ℂ | |z.re - c.re| < a / 2 ∧ |z.im - c.im| < a / 2} ⇑b :=
+  ae_regularExit_planarBrownian_of_exteriorNormal (isOpen_openSquare c a) (isBounded_openSquare c a)
+    (measurable_squareNormal c) (squareNormal_exteriorNormal (lt_of_le_of_lt (abs_nonneg _) hx.1)) hx
 
 /-- For almost every planar Brownian path `b` started in an open square, stopping at the exit time of the square
 is continuous at `b` for the distance `cmpEDist` of curves modulo time parametrization. -/
