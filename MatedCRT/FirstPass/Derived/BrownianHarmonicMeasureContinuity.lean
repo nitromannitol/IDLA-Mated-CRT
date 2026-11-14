@@ -148,6 +148,61 @@ theorem abs_planarBrownian_exitPoint_sub_le {U : Set ℂ} (hU : IsOpen U)
   rw [← sub_mul, abs_mul]
   exact mul_le_of_le_one_right (abs_nonneg _) (by rw [abs_of_nonneg (hg0 ζ)]; exact hg1 ζ)
 
+/-- **Continuity of the Poisson kernel in the base point, in circle-average norm.** As `y' → y`
+inside `B_ρ(c)`, the circle average over `∂B_ρ(c)` of `|P(c, y, ·) - P(c, y', ·)|` tends to `0`.
+Proof: `(w, θ) ↦ P(c, w, c + ρ e^{iθ})` is jointly continuous on `B_ρ(c) × ℝ` (its denominator
+`|ρ e^{iθ} - (w - c)|²` does not vanish), so the parametric integral over `[0, 2π]` is continuous. -/
+theorem tendsto_circleAverage_abs_poissonKernel_sub {c y : ℂ} {ρ : ℝ} (hy : y ∈ ball c ρ) :
+    Tendsto (fun y' => Real.circleAverage
+      (fun ζ => |poissonKernel c y ζ - poissonKernel c y' ζ|) c ρ) (𝓝 y) (𝓝 0) := by
+  have hρ : 0 < ρ := pos_of_mem_ball hy
+  set g : ℂ → ℝ := fun y' => Real.circleAverage
+    (fun ζ => |poissonKernel c y ζ - poissonKernel c y' ζ|) c ρ with hg_def
+  have hz : Continuous fun p : ball c ρ × ℝ => circleMap c ρ p.2 :=
+    (continuous_circleMap c ρ).comp continuous_snd
+  have hw : Continuous fun p : ball c ρ × ℝ => (p.1 : ℂ) :=
+    continuous_subtype_val.comp continuous_fst
+  have hP : Continuous fun p : ball c ρ × ℝ =>
+      poissonKernel c (p.1 : ℂ) (circleMap c ρ p.2) := by
+    simp only [poissonKernel_def]
+    refine Continuous.div (((hz.sub continuous_const).norm.pow 2).sub
+      ((hw.sub continuous_const).norm.pow 2))
+      (((hz.sub continuous_const).sub (hw.sub continuous_const)).norm.pow 2) ?_
+    rintro ⟨⟨w, hwb⟩, θ⟩
+    have hw' : ‖w - c‖ < ρ := by simpa [dist_eq_norm] using hwb
+    have hzc : ‖circleMap c ρ θ - c‖ = ρ := by
+      rw [circleMap_sub_center, norm_circleMap_zero, abs_of_pos hρ]
+    have hne : (circleMap c ρ θ - c) - (w - c) ≠ 0 := by
+      intro h
+      have h' : ‖circleMap c ρ θ - c‖ = ‖w - c‖ := by rw [sub_eq_zero.mp h]
+      linarith
+    exact pow_ne_zero 2 (norm_ne_zero_iff.mpr hne)
+  have hF : Continuous (Function.uncurry fun (w : ball c ρ) (θ : ℝ) =>
+      |poissonKernel c y (circleMap c ρ θ) - poissonKernel c (w : ℂ) (circleMap c ρ θ)|) :=
+    (((continuous_poissonKernel_comp_circleMap hy).comp continuous_snd).sub hP).abs
+  have hcont : Continuous ((ball c ρ).domRestrict g) :=
+    (intervalIntegral.continuous_parametric_intervalIntegral_of_continuous' hF 0
+      (2 * Real.pi)).const_smul ((2 * Real.pi)⁻¹)
+  have hgc : ContinuousAt g y :=
+    (continuousOn_iff_continuous_domRestrict.mpr hcont).continuousAt (isOpen_ball.mem_nhds hy)
+  have h0 : g y = 0 := by simp [hg_def, Real.circleAverage_def]
+  simpa [h0] using hgc.tendsto
+
+/-- **Uniform continuity of harmonic measure in the base point.** For a bounded open
+`U ⊇ closedBall c ρ`, `y ∈ B_ρ(c)` and `ε > 0`, for all `y'` near `y` the exit distributions of
+planar Brownian motion from `U` started at `y` and at `y'` are within `ε` in total variation:
+`|P_y(B_{τ_U} ∈ A) - P_{y'}(B_{τ_U} ∈ A)| ≤ ε` for every Borel `A` simultaneously. -/
+theorem eventually_abs_planarBrownian_exitPoint_sub_le {U : Set ℂ} (hU : IsOpen U)
+    (hUb : Bornology.IsBounded U) {c y : ℂ} {ρ : ℝ} (hsub : closedBall c ρ ⊆ U)
+    (hy : y ∈ ball c ρ) {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ y' in 𝓝 y, ∀ A : Set ℂ, MeasurableSet A →
+      |(planarBrownianMotion y {ω | ω ((ContinuousPath.exitTime U ω).toNNReal) ∈ A}).toReal -
+        (planarBrownianMotion y' {ω | ω ((ContinuousPath.exitTime U ω).toNNReal) ∈ A}).toReal|
+          ≤ ε := by
+  filter_upwards [(tendsto_circleAverage_abs_poissonKernel_sub hy).eventually (gt_mem_nhds hε),
+    isOpen_ball.mem_nhds hy] with y' hy'ε hy'b A hA
+  exact (abs_planarBrownian_exitPoint_sub_le hU hUb hsub hy hy'b hA).trans hy'ε.le
+
 end MatedCRT
 
 /-! ## Audit -/
@@ -156,3 +211,5 @@ end MatedCRT
 #print axioms MatedCRT.planarBrownian_exitPoint_eq_lintegral_discHarmonicMeasure
 #print axioms MatedCRT.planarBrownian_exitPoint_toReal_eq_discPoissonIntegral
 #print axioms MatedCRT.abs_planarBrownian_exitPoint_sub_le
+#print axioms MatedCRT.tendsto_circleAverage_abs_poissonKernel_sub
+#print axioms MatedCRT.eventually_abs_planarBrownian_exitPoint_sub_le
