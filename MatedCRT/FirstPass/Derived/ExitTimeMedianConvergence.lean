@@ -1,11 +1,12 @@
 import MatedCRT.FirstPass.Derived.ExitTimeCdfConvergence
 import MatedCRT.FirstPass.Derived.MedianConvergence
+import MatedCRT.FirstPass.Derived.ExitTimeScaling
 
 /-!
 # Convergence of the median exit time under weak convergence of path laws
 
 Let `μₙ → μ` weakly on the path space `ContinuousPath ℂ`, let `U ⊆ ℂ` be open, and write
-`exitCdf U μ s = μ (pathExitTime U ≤ s)` for the distribution function of the exit time from `U`.
+`MatedCRT.exitCdf U μ s = μ (exitTime U ≤ s)` for the distribution function of the exit time from `U`.
 If `μ`-almost every path exits `U` regularly, then `exitCdf U μₙ s → exitCdf U μ s` at every `s` where the exit
 time of `μ` has no atom, and these are the points of a set meeting every open subinterval of `(0, ∞)`
 (`MatedCRT.ExitTimeCdf.exists_mem_Ioo_measure_pathExitTime_eq_zero`).  The stability of lower medians
@@ -22,13 +23,6 @@ namespace MatedCRT.ExitTimeCdf
 
 open MatedCRT.TruncatedLaws (RegularExit)
 
-/-- The distribution function of the exit time from `U` under the path law `μ`. -/
-noncomputable def exitCdf (U : Set ℂ) (μ : Measure (ContinuousPath ℂ)) (s : ℝ) : ℝ≥0∞ :=
-  μ {g : ContinuousPath ℂ | pathExitTime U ⇑g ≤ ENNReal.ofReal s}
-
-theorem monotone_exitCdf (U : Set ℂ) (μ : Measure (ContinuousPath ℂ)) : Monotone (exitCdf U μ) :=
-  fun _ _ hst => measure_mono fun _ hg => le_trans hg (ENNReal.ofReal_le_ofReal hst)
-
 /-- **Convergence of the median exit time.** Under weak convergence `μₙ → μ` of path laws with `μ`-almost sure
 regular exit from the open set `U`, the lower medians of the exit-time distribution functions converge, provided
 the limit distribution function is strictly above `1/2` to the right of its lower median. -/
@@ -39,7 +33,7 @@ theorem tendsto_medianOf_exitCdf {ι : Type*} {L : Filter ι}
     (hstrict : ∀ s, MatedCRT.medianOf (exitCdf U μ) < s → (1 / 2 : ℝ≥0∞) < exitCdf U μ s) :
     Tendsto (fun i => MatedCRT.medianOf (exitCdf U (μs i))) L
       (𝓝 (MatedCRT.medianOf (exitCdf U μ))) := by
-  refine MatedCRT.tendsto_medianOf_of_tendsto_cdf (fun i => monotone_exitCdf U (μs i))
+  refine MatedCRT.tendsto_medianOf_of_tendsto_cdf (fun i => exitCdf_mono U (μs i))
     (D := {s : ℝ | (μ : Measure (ContinuousPath ℂ))
       {g : ContinuousPath ℂ | pathExitTime U ⇑g = ENNReal.ofReal s} = 0}) ?_ ?_ hstrict
   · intro a b ha hab
