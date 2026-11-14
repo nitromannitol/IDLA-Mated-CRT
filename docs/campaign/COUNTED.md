@@ -437,6 +437,18 @@ Eleventh pass (2026-11-14): the two reductions combined. The forms
 `h1`, `h2`, `hN4`, `h10`, `h11`, `hdesc`, `hexc`, `hNC`, `hZ3`, `hGFF`, `hscale`. Axioms propext, Classical.choice,
 Quot.sound.
 
+Eleventh pass (2026-11-14): two of the four almost sure properties of correlated Brownian motion derived. `hdesc`
+(descent on both sides of each rational time) is supplied in
+`closed_1_4_lp_noSC_noSup_derivedInputs_envScaling_rigidityInputs_uniformStart_ratDescent`,
+`closed_1_6_lp_noSC_noSup_derivedInputs_envScaling_rigidityInputs_uniformStart_ratDescent`
+(Derived/CoreRigidityInputsRationalDescent.lean, 3b151695). `hexc` (Lévy's excursion-count formula at each rational
+anchor in both time directions) holds for every `γ`-correlated two-sided Brownian law: Lattice-Probability
+`LatticeProb.CorrelatedBM.ae_excursionCount_lrCoord` (Prob/CorrelatedBMExcursionCount.lean). The forms
+`closed_1_4_lp_noSC_noSup_derivedInputs_envScaling_rigidityInputs_uniformStart_ratDescent_excursionCount`,
+`closed_1_6_lp_noSC_noSup_derivedInputs_envScaling_rigidityInputs_uniformStart_ratDescent_excursionCount`
+(Derived/CoreRigidityInputsExcursionCount.lean) are the `_ratDescent` forms without `hexc`. Binders: `h1`, `h2`,
+`hN4`, `h10`, `h11`, `hNC`, `hZ3`, `hGFF`, `hscale`. Axioms propext, Classical.choice, Quot.sound.
+
 Derived forms after the sixth pass (binders of `T` -> binders of `T_derivedInputs`; 31 forms):
 
 | counted `T` | binders | supplied |
