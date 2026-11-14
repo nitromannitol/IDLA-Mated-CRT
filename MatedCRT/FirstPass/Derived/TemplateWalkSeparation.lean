@@ -111,4 +111,59 @@ theorem graphSeparates_traceBefore_sphere_of_isTemplateWalk {z : ℂ} {r ϑ R δ
     rw [mem_sphere.mp hwR]
     exact hR
 
+/-- **Endpoint cells.** Let `q m` be a point of the cell of `ξ m`, at distance `< ρ` from `z` for every `m ≤ b`
+(`b ≥ 0`), let consecutive cells of `ξ` meet up to time `N ≤ b + 1/2`, and let `d ≥ 0` bound the diameters of the
+bounded cells meeting `B_R(z)`, with `ρ + d ≤ R`. Then for every `j ≤ N` the cell of `ξ j` has diameter at most `d`
+and `dist (q j) z < ρ + 2d`: the only index `j ∈ (b, N]` is `⌊b⌋ + 1`, whose cell meets the cell of `ξ (j - 1)`,
+which lies in `B_{ρ+d}(z)`. -/
+theorem dist_lt_and_diam_le_of_meet {X : Type*} [PseudoMetricSpace X] {J : ℤ → Set X}
+    (hbdd : ∀ k, Bornology.IsBounded (J k)) {z : X} {R d ρ : ℝ}
+    (hdiam : ∀ k, (J k ∩ ball z R).Nonempty → diam (J k) ≤ d) (hd : 0 ≤ d) (hρ : ρ + d ≤ R)
+    {ξ : ℕ → ℤ} {q : ℕ → X} (hqJ : ∀ m, q m ∈ J (ξ m)) {N : ℕ}
+    (hmeet : ∀ m < N, (J (ξ m) ∩ J (ξ (m + 1))).Nonempty) {b : ℝ} (hb : 0 ≤ b)
+    (hqb : ∀ m : ℕ, (m : ℝ) ≤ b → dist (q m) z < ρ) (hN : (N : ℝ) ≤ b + 1 / 2) :
+    ∀ j ≤ N, dist (q j) z < ρ + 2 * d ∧ diam (J (ξ j)) ≤ d := by
+  intro j hj
+  rcases le_or_gt (j : ℝ) b with hjb | hjb
+  · have h1 := hqb j hjb
+    exact ⟨by linarith [hd], hdiam _ ⟨q j, hqJ j, mem_ball.mpr (by linarith [hd, hρ])⟩⟩
+  · obtain ⟨i, rfl⟩ : ∃ i, j = i + 1 := by
+      rcases j with _ | i
+      · exfalso
+        have h0 : ((0 : ℕ) : ℝ) = 0 := Nat.cast_zero
+        linarith [hb]
+      · exact ⟨i, rfl⟩
+    have hi : (i : ℝ) ≤ b := by
+      have h1 : ((i + 1 : ℕ) : ℝ) ≤ b + 1 / 2 := (Nat.cast_le.mpr hj).trans hN
+      push_cast at h1
+      linarith
+    have h1 := hqb i hi
+    have hdi : diam (J (ξ i)) ≤ d := hdiam _ ⟨q i, hqJ i, mem_ball.mpr (by linarith [hd, hρ])⟩
+    obtain ⟨p, hpi, hpj⟩ := hmeet i (by omega)
+    have h2 : dist p (q i) ≤ d := (dist_le_diam_of_mem (hbdd _) hpi (hqJ i)).trans hdi
+    have h3 := dist_triangle p (q i) z
+    have hdj : diam (J (ξ (i + 1))) ≤ d := hdiam _ ⟨p, hpj, mem_ball.mpr (by linarith [hρ])⟩
+    have h4 : dist (q (i + 1)) p ≤ d := (dist_le_diam_of_mem (hbdd _) (hqJ (i + 1)) hpj).trans hdj
+    have h5 := dist_triangle (q (i + 1)) p z
+    exact ⟨by linarith, hdj⟩
+
+/-- **Trace separation from the points of the walk.** The hypothesis on the visited cells of
+`graphSeparates_traceBefore_sphere_of_isTemplateWalk` holds when the cell of each `ξ m` contains a point `q m`,
+`dist (q m) z < ρ` for `m ≤ b` (`b ≥ 0`), consecutive cells meet up to time `m₀ + n ≤ b + 1/2`, and
+`ρ + 3d < R`. -/
+theorem graphSeparates_traceBefore_sphere_of_isTemplateWalk_of_points {z : ℂ} {r ϑ R δ d ρ b : ℝ}
+    (hr : 0 ≤ r) (hδ : δ ≤ 3 * r / 4) (hR : 5 * r / 4 ≤ R) (hd : 0 ≤ d) (hρ : ρ + 3 * d < R) (hb : 0 ≤ b)
+    (hdiam : ∀ k, (H.cell k ∩ ball z R).Nonempty → diam (H.cell k) ≤ d)
+    (hTS : H.TemplateSeparation z r) {ξ : ℕ → ℤ} {m₀ n : ℕ} {α β : ℕ → ℝ}
+    (hW : RouteM.IsTemplateWalk H z r ϑ n (fun j => ξ (m₀ + j)) α β) {q : ℕ → ℂ}
+    (hqJ : ∀ m, q m ∈ H.cell (ξ m)) (hmeet : ∀ m < m₀ + n, (H.cell (ξ m) ∩ H.cell (ξ (m + 1))).Nonempty)
+    (hqb : ∀ m : ℕ, (m : ℝ) ≤ b → dist (q m) z < ρ) (hN : ((m₀ + n : ℕ) : ℝ) ≤ b + 1 / 2) :
+    GraphSeparates G.adj (traceBefore (id : ℤ → ℤ) (verticesMeeting H.cell (sphere z R)) ξ)
+      {y | ∃ x ∈ H.cell y, dist x z ≤ δ} (verticesMeeting H.cell (sphere z R)) := by
+  refine graphSeparates_traceBefore_sphere_of_isTemplateWalk hr hδ hR hd hdiam hTS hW ?_
+  intro j hj
+  have h := (dist_lt_and_diam_le_of_meet (fun k => (H.isCompact_cell k).isBounded) hdiam hd
+    (by linarith [hd, hρ]) hqJ hmeet hb hqb hN j (by omega)).1
+  exact ⟨q j, hqJ j, by linarith [h, hρ]⟩
+
 end MatedCRT.TemplateWalkSeparation
