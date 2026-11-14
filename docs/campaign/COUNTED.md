@@ -429,6 +429,19 @@ parametrization and the Brownian displacement-time bound (6.29) (S6j/ExitTailCom
 are the `_rigidity_lemma69` forms with `h632` replaced by `hN4 : GMS21UniformStartInput 𝒮`. Axioms propext,
 Classical.choice, Quot.sound.
 
+Eleventh pass (2026-11-14): Berestycki-Gwynne Lemma 6.10 (`h636`, estimate (6.36), the binder of the scaling
+theorems `hEqLaw_of_scaling`, `hEqPath_of_scaling` and `isTightMeasureSet_data_interpWalkLaw_of_scaling`) follows from
+the same named input `GMS21UniformStartInput`: `ExitTimeUpperTail.exitTimeUpperTail_of_uniformStart`
+(S6j/ExitTimeUpperTail.lean). The walk side is the chain of successive exits of separation `δ - c`
+(S6j/ExitTailUpperWalk.lean), the per-environment step is S6j/ExitTailUpperStep.lean, the Brownian estimate (6.22) is
+S6j/ExitTailUpperBrownian.lean, with the displacement-time comparisons of Lattice-Probability
+(`ContinuousPathStepTimeChain`, `ContinuousPathStepTimeStay`, `BrownianStayScaled`). The forms
+`hEqLaw_of_uniformStart`, `hEqPath_of_uniformStart` and `isTightMeasureSet_data_interpWalkLaw_of_uniformStart`
+(Derived/ScalingOfUniformStart.lean) are the scaling theorems with `h632` and `h636` both replaced by
+`hN4 : GMS21UniformStartInput 𝒮`. The remaining binders of the scaling theorems are the Section 2 inputs
+`h32, h213, h214, h217, h219`, the cone scaling `hEnvS` and the Lemma 6.13 bound `hbd`. Axioms propext,
+Classical.choice, Quot.sound.
+
 Eleventh pass (2026-11-14): the two reductions combined. The forms
 `closed_1_4_lp_noSC_noSup_derivedInputs_envScaling_rigidityInputs_uniformStart`,
 `closed_1_6_lp_noSC_noSup_derivedInputs_envScaling_rigidityInputs_uniformStart`
