@@ -20,13 +20,13 @@ built from the increments of `y` after `τ` and the glued path of `y` and `z` ba
 theorem radialRescale_coneE_inverse {γ b a : ℝ} (_ha : 0 < a) (hab : γ⁻¹ * Real.log b = a)
     {y z : C(ℝ≥0, ℝ)} (hy0 : y 0 = 0) (hz0 : z 0 = 0) (hzpos : ∀ s : ℝ≥0, 0 < s → 0 < z s)
     (hT : LatticeProb.hitFrom (-a) 0 (y : ℝ≥0 → ℝ) ≠ ⊤) :
-    radialRescale γ b (coneE γ (LatticeProb.shiftPath (LatticeProb.glueTime a (y : ℝ≥0 → ℝ)) y)
+    radialRescale γ b (coneE γ (LatticeProb.restartAt (LatticeProb.glueTime a (y : ℝ≥0 → ℝ)) y)
         (LatticeProb.glueC a y z)) = coneE γ y z := by
   set τ := LatticeProb.glueTime a (y : ℝ≥0 → ℝ) with hτdef
   obtain ⟨s0, hs0, -, hys0, -⟩ := LatticeProb.exists_hitFrom_eq y.continuous hT
   have hτ : τ = s0 := by simp [hτdef, LatticeProb.glueTime, hs0]
   have hyτ : y τ = -a := by rw [hτ]; exact hys0
-  set y' := LatticeProb.shiftPath τ y with hy'
+  set y' := LatticeProb.restartAt τ y with hy'
   set z' := LatticeProb.glueC a y z with hz'
   set p : RadialPair := coneE γ y' z' with hp
   have hy'0 : y' 0 = 0 := by simp [hy']
@@ -111,7 +111,7 @@ theorem radialRescale_coneE_inverse {γ b a : ℝ} (_ha : 0 < a) (hab : γ⁻¹ 
         linarith
       have h2 : Real.toNNReal (-((τ : ℝ) - t)) = t - τ := by
         rw [neg_sub, ← NNReal.coe_sub ht'.le, Real.toNNReal_coe]
-      simp only [h1, ↓reduceIte, hp, coneE, h2, hy', LatticeProb.shiftPath_apply]
+      simp only [h1, ↓reduceIte, hp, coneE, h2, hy', LatticeProb.restartAt_apply]
       rw [add_tsub_cancel_of_le ht'.le, hyτ, NNReal.coe_sub ht'.le]
       ring
   · have lhs : (radialRescale γ b p).2 s =

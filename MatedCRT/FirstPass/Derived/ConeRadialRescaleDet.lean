@@ -139,7 +139,7 @@ theorem radialRescale_coneE_of_neg {γ b a : ℝ} (ha : 0 < a) (hab : γ⁻¹ * 
     {y z : C(ℝ≥0, ℝ)} (hy0 : y 0 = 0) (hz0 : z 0 = 0) (hz : ∀ s, 0 ≤ z s)
     (hT : LatticeProb.hitFrom (-a) 0 (y : ℝ≥0 → ℝ) ≠ ⊤) :
     radialRescale γ b (coneE γ y z) =
-      coneE γ (LatticeProb.shiftPath (LatticeProb.glueTime a (y : ℝ≥0 → ℝ)) y)
+      coneE γ (LatticeProb.restartAt (LatticeProb.glueTime a (y : ℝ≥0 → ℝ)) y)
         (LatticeProb.glueC a y z) := by
   set τ := LatticeProb.glueTime a (y : ℝ≥0 → ℝ) with hτdef
   obtain ⟨s0, hs0, -, hys0, hmin⟩ := LatticeProb.exists_hitFrom_eq y.continuous hT
@@ -228,7 +228,7 @@ theorem radialRescale_coneE_of_neg {γ b a : ℝ} (ha : 0 < a) (hab : γ⁻¹ * 
       linarith
     rw [lhs, hexp, radLevel_exp, hlogR]
     simp only [hneg, ↓reduceIte, hp, coneE, neg_neg, Real.toNNReal_coe,
-      LatticeProb.shiftPath_apply, hab, hyτ]
+      LatticeProb.restartAt_apply, hab, hyτ]
     push_cast
     ring
   · have lhs : (radialRescale γ b p).2 s =

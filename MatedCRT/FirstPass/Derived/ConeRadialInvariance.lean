@@ -12,7 +12,7 @@ import LatticeProb.Prob.UpcrossPieceFdd
 The radial pair of a `γ`-quantum cone has the law `quantumConeRadialLaw γ ν`, the image under
 `coneE γ (y, z) = (y t + Q t, z s - Q s)` of the product `driftLaw(-μ) ⊗ ν'`, where `μ = Q - γ`,
 `ν' = ν.map (driftMap μ)`. By the deterministic computation `radialRescale_coneE_of_neg` the rescaling to a level
-`γ⁻¹ log b = -a < 0` acts on `(y, z)` by `(shiftPath τ y, glueC a y z)`, which preserves `driftLaw(-μ) ⊗ ν'`
+`γ⁻¹ log b = -a < 0` acts on `(y, z)` by `(restartAt τ y, glueC a y z)`, which preserves `driftLaw(-μ) ⊗ ν'`
 (Williams gluing, `LatticeProb.map_shiftGlue_prod_eq`).
 
 * `map_radialRescale_coneE_prod_of_neg`: the invariance, for any `ν'` satisfying the hypotheses of the gluing.
@@ -53,7 +53,7 @@ theorem map_radialRescale_coneE_prod_of_neg {Ω : Type*} [MeasurableSpace Ω] {P
   have hae : (radialRescale γ b ∘ fun q : ContinuousPath ℝ × ContinuousPath ℝ => coneE γ q.1 q.2)
       =ᵐ[G] ((fun q : ContinuousPath ℝ × ContinuousPath ℝ => coneE γ q.1 q.2) ∘
         fun q : ContinuousPath ℝ × ContinuousPath ℝ =>
-          (LatticeProb.shiftPath (LatticeProb.glueTime a (q.1 : ℝ≥0 → ℝ)) q.1,
+          (LatticeProb.restartAt (LatticeProb.glueTime a (q.1 : ℝ≥0 → ℝ)) q.1,
             LatticeProb.glueC a q.1 q.2)) := by
     have h1 : ∀ᵐ q ∂G, q.1 0 = 0 ∧ LatticeProb.hitFrom (-a) 0 (q.1 : ℝ≥0 → ℝ) ≠ ⊤ :=
       Measure.quasiMeasurePreserving_fst.ae
