@@ -429,6 +429,14 @@ parametrization and the Brownian displacement-time bound (6.29) (S6j/ExitTailCom
 are the `_rigidity_lemma69` forms with `h632` replaced by `hN4 : GMS21UniformStartInput 𝒮`. Axioms propext,
 Classical.choice, Quot.sound.
 
+Eleventh pass (2026-11-14): the two reductions combined. The forms
+`closed_1_4_lp_noSC_noSup_derivedInputs_envScaling_rigidityInputs_uniformStart`,
+`closed_1_6_lp_noSC_noSup_derivedInputs_envScaling_rigidityInputs_uniformStart`
+(Derived/CoreRigidityInputsUniformStart.lean) are the `_rigidityInputs` forms with `hlow` replaced by `hN4`
+(equivalently, the `_rigidity_uniformStart` forms with `(hGnull, hG)` replaced by `(hdesc, hexc, hNC, hZ3)`). Binders:
+`h1`, `h2`, `hN4`, `h10`, `h11`, `hdesc`, `hexc`, `hNC`, `hZ3`, `hGFF`, `hscale`. Axioms propext, Classical.choice,
+Quot.sound.
+
 Derived forms after the sixth pass (binders of `T` -> binders of `T_derivedInputs`; 31 forms):
 
 | counted `T` | binders | supplied |
