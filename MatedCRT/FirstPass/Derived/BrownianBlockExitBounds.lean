@@ -16,6 +16,11 @@ principle (convergence of the walk on the cells to Brownian motion, uniformly in
 * **Lipschitz bound in the base point.** If `closedBall y ρ ⊆ U`, then for every `b` and every
   Borel set `A`, `|P_y(B_{τ_U} ∈ A) - P_b(B_{τ_U} ∈ A)| ≤ 12 |b - y| / ρ`. The proof bounds the
   circle average of `|P(y, y, ·) - P(y, b, ·)|` (Poisson kernel of the disc `B_ρ(y)`) pointwise.
+* **Square blocks.** For the open block `((a - 1) s, (a + 2) s) × ((b - 1) s, (b + 2) s)` of side
+  `3 s` around the closed grid cell `[a s, (a + 1) s] × [b s, (b + 1) s]` and a start point `y` in
+  the cell: the exit point is within distance `r ≤ s / 4` of the lattice `s ℤ + i s ℤ` with
+  probability at most `144 r / s` (half-plane comparison at the 16 lattice points on the boundary
+  of the block), and `|P_y(B_{τ} ∈ A) - P_x(B_{τ} ∈ A)| ≤ 24 |x - y| / s`.
 -/
 
 set_option autoImplicit false
@@ -315,6 +320,208 @@ theorem planarBrownian_exitPoint_le_add_dist {U : Set ℂ} (hU : IsOpen U)
       ← ENNReal.ofReal_toReal (measure_ne_top (planarBrownianMotion y) _),
       ← ENNReal.ofReal_add ENNReal.toReal_nonneg hC]
     exact ENNReal.ofReal_le_ofReal (by linarith [h.2])
+
+/-! ## Square blocks of the grid -/
+
+/-- The closed grid cell `[a s, (a + 1) s] × [b s, (b + 1) s]`. -/
+def closedCell (s : ℝ) (a b : ℤ) : Set ℂ :=
+  Icc ((a : ℝ) * s) (((a : ℝ) + 1) * s) ×ℂ Icc ((b : ℝ) * s) (((b : ℝ) + 1) * s)
+
+/-- The open block `((a - 1) s, (a + 2) s) × ((b - 1) s, (b + 2) s)` of side `3 s` around the
+closed grid cell `closedCell s a b`. -/
+def openBlock (s : ℝ) (a b : ℤ) : Set ℂ :=
+  Ioo (((a : ℝ) - 1) * s) (((a : ℝ) + 2) * s) ×ℂ Ioo (((b : ℝ) - 1) * s) (((b : ℝ) + 2) * s)
+
+theorem isOpen_openBlock (s : ℝ) (a b : ℤ) : IsOpen (openBlock s a b) :=
+  isOpen_Ioo.reProdIm isOpen_Ioo
+
+theorem isBounded_openBlock (s : ℝ) (a b : ℤ) : Bornology.IsBounded (openBlock s a b) :=
+  (Metric.isBounded_Ioo _ _).reProdIm (Metric.isBounded_Ioo _ _)
+
+/-- The closed ball of radius `s / 2` around a point of the cell lies in the block. -/
+theorem closedBall_subset_openBlock {s : ℝ} (hs : 0 < s) {a b : ℤ} {y : ℂ}
+    (hy : y ∈ closedCell s a b) : closedBall y (s / 2) ⊆ openBlock s a b := by
+  intro z hz
+  simp only [closedCell, Complex.mem_reProdIm, mem_Icc] at hy
+  rw [mem_closedBall, dist_eq_norm] at hz
+  have h1 := abs_le.1 ((Complex.abs_re_le_norm (z - y)).trans hz)
+  have h2 := abs_le.1 ((Complex.abs_im_le_norm (z - y)).trans hz)
+  rw [Complex.sub_re] at h1
+  rw [Complex.sub_im] at h2
+  simp only [openBlock, Complex.mem_reProdIm, mem_Ioo]
+  refine ⟨⟨?_, ?_⟩, ?_, ?_⟩ <;> linarith [h1.1, h1.2, h2.1, h2.2, hy.1.1, hy.1.2, hy.2.1, hy.2.2]
+
+/-- **Lipschitz bound on a block.** For `y` in the closed cell, every `x` and every Borel `A`,
+`|P_y(B_{τ} ∈ A) - P_x(B_{τ} ∈ A)| ≤ 24 |x - y| / s`, `τ` the exit time of the block. -/
+theorem abs_planarBrownian_exitPoint_openBlock_sub_le {s : ℝ} (hs : 0 < s) {a b : ℤ} {y : ℂ}
+    (hy : y ∈ closedCell s a b) (x : ℂ) {A : Set ℂ} (hA : MeasurableSet A) :
+    |(planarBrownianMotion y
+        {ω | ω ((ContinuousPath.exitTime (openBlock s a b) ω).toNNReal) ∈ A}).toReal -
+      (planarBrownianMotion x
+        {ω | ω ((ContinuousPath.exitTime (openBlock s a b) ω).toNNReal) ∈ A}).toReal| ≤
+      24 * dist x y / s := by
+  have h := abs_planarBrownian_exitPoint_sub_le_dist (isOpen_openBlock s a b)
+    (isBounded_openBlock s a b) (half_pos hs) (closedBall_subset_openBlock hs hy) x hA
+  calc _ ≤ 12 * dist x y / (s / 2) := h
+    _ = 24 * dist x y / s := by rw [div_div_eq_mul_div]; ring
+
+/-- The outward unit normals of the four sides of a block: left, right, bottom, top. -/
+noncomputable def blockNormal : Fin 4 → ℂ := ![-1, 1, -Complex.I, Complex.I]
+
+/-- Real part of the `j.2`-th lattice point on the side `j.1` of the block. -/
+noncomputable def blockVertexRe (s : ℝ) (a : ℤ) (j : Fin 4 × Fin 4) : ℝ :=
+  ![((a : ℝ) - 1) * s, ((a : ℝ) + 2) * s, ((a : ℝ) - 1 + j.2.val) * s,
+    ((a : ℝ) - 1 + j.2.val) * s] j.1
+
+/-- Imaginary part of the `j.2`-th lattice point on the side `j.1` of the block. -/
+noncomputable def blockVertexIm (s : ℝ) (b : ℤ) (j : Fin 4 × Fin 4) : ℝ :=
+  ![((b : ℝ) - 1 + j.2.val) * s, ((b : ℝ) - 1 + j.2.val) * s, ((b : ℝ) - 1) * s,
+    ((b : ℝ) + 2) * s] j.1
+
+/-- The lattice points on the boundary of the block, indexed by side and position (corners are
+listed twice). -/
+noncomputable def blockVertex (s : ℝ) (a b : ℤ) (j : Fin 4 × Fin 4) : ℂ :=
+  ⟨blockVertexRe s a j, blockVertexIm s b j⟩
+
+theorem norm_blockNormal (i : Fin 4) : ‖blockNormal i‖ = 1 := by
+  fin_cases i <;> simp [blockNormal]
+
+theorem inner_sub_blockVertex_nonpos {s : ℝ} {a b : ℤ} {x : ℂ} (hx : x ∈ openBlock s a b)
+    (j : Fin 4 × Fin 4) : ⟪x - blockVertex s a b j, blockNormal j.1⟫_ℝ ≤ 0 := by
+  simp only [openBlock, Complex.mem_reProdIm, mem_Ioo] at hx
+  obtain ⟨i, l⟩ := j
+  fin_cases i <;>
+    simp [blockNormal, blockVertex, blockVertexRe, blockVertexIm, Complex.inner] <;>
+    linarith [hx.1.1, hx.1.2, hx.2.1, hx.2.2]
+
+theorem le_inner_blockVertex_sub {s : ℝ} {a b : ℤ} {y : ℂ} (hy : y ∈ closedCell s a b)
+    (j : Fin 4 × Fin 4) : s ≤ ⟪blockVertex s a b j - y, blockNormal j.1⟫_ℝ := by
+  simp only [closedCell, Complex.mem_reProdIm, mem_Icc] at hy
+  obtain ⟨i, l⟩ := j
+  fin_cases i <;>
+    simp [blockNormal, blockVertex, blockVertexRe, blockVertexIm, Complex.inner] <;>
+    linarith [hy.1.1, hy.1.2, hy.2.1, hy.2.2]
+
+theorem int_eq_of_abs_sub_lt {s r t : ℝ} (hs : 0 < s) (hrs : r ≤ s / 4) {A m : ℤ}
+    (ht : t = (A : ℝ) * s) (hd : |t - (m : ℝ) * s| < r) : m = A := by
+  rw [abs_lt] at hd
+  have h1 : (m : ℝ) * s < ((A + 1 : ℤ) : ℝ) * s := by push_cast; linarith
+  have h2 : (A : ℝ) * s < ((m + 1 : ℤ) : ℝ) * s := by push_cast; linarith
+  have h1' : m < A + 1 := by exact_mod_cast lt_of_mul_lt_mul_right h1 hs.le
+  have h2' : A < m + 1 := by exact_mod_cast lt_of_mul_lt_mul_right h2 hs.le
+  omega
+
+theorem exists_fin_four_of_abs_sub_lt {s r t : ℝ} (hs : 0 < s) (hrs : r ≤ s / 4) {B k : ℤ}
+    (ht1 : (B : ℝ) * s ≤ t) (ht2 : t ≤ ((B : ℝ) + 3) * s) (hd : |t - (k : ℝ) * s| < r) :
+    ∃ i : Fin 4, (k : ℝ) = B + (i.val : ℝ) := by
+  rw [abs_lt] at hd
+  have h1 : ((B - 1 : ℤ) : ℝ) * s < (k : ℝ) * s := by push_cast; linarith
+  have h2 : (k : ℝ) * s < ((B + 4 : ℤ) : ℝ) * s := by push_cast; linarith
+  have h1' : B - 1 < k := by exact_mod_cast lt_of_mul_lt_mul_right h1 hs.le
+  have h2' : k < B + 4 := by exact_mod_cast lt_of_mul_lt_mul_right h2 hs.le
+  obtain ⟨i, hi⟩ : ∃ i : ℕ, k = B + i := ⟨(k - B).toNat, by omega⟩
+  refine ⟨⟨i, by omega⟩, ?_⟩
+  simp [hi]
+
+/-- A point of the boundary of the block within distance `r ≤ s / 4` of a lattice point
+`m s + i k s` lies within distance `r` of one of the 16 listed boundary lattice points. -/
+theorem exists_mem_ball_blockVertex {s : ℝ} (hs : 0 < s) {r : ℝ} (hrs : r ≤ s / 4) {a b : ℤ}
+    {x : ℂ} (hx : x ∈ frontier (openBlock s a b)) {m k : ℤ}
+    (hd : dist x ⟨(m : ℝ) * s, (k : ℝ) * s⟩ < r) :
+    ∃ j : Fin 4 × Fin 4, x ∈ ball (blockVertex s a b j) r := by
+  have hre : |x.re - (m : ℝ) * s| < r := by
+    have := Complex.abs_re_le_norm (x - ⟨(m : ℝ) * s, (k : ℝ) * s⟩)
+    rw [← dist_eq_norm] at this
+    simpa using this.trans_lt hd
+  have him : |x.im - (k : ℝ) * s| < r := by
+    have := Complex.abs_im_le_norm (x - ⟨(m : ℝ) * s, (k : ℝ) * s⟩)
+    rw [← dist_eq_norm] at this
+    simpa using this.trans_lt hd
+  have hlt : ∀ c : ℤ, ((c : ℝ) - 1) * s < ((c : ℝ) + 2) * s := fun c => by linarith
+  rw [openBlock, Complex.frontier_reProdIm, closure_Ioo (hlt a).ne, closure_Ioo (hlt b).ne,
+    frontier_Ioo (hlt a), frontier_Ioo (hlt b)] at hx
+  have hball : ∀ j, blockVertex s a b j = ⟨(m : ℝ) * s, (k : ℝ) * s⟩ →
+      x ∈ ball (blockVertex s a b j) r := by
+    intro j hj
+    rw [hj, mem_ball]
+    exact hd
+  simp only [mem_union, Complex.mem_reProdIm, mem_Icc, mem_insert_iff, mem_singleton_iff] at hx
+  rcases hx with ⟨hxre, hxim⟩ | ⟨hxre, hxim⟩
+  · obtain ⟨i, hi⟩ := exists_fin_four_of_abs_sub_lt (B := a - 1) hs hrs
+      (by push_cast; linarith [hxre.1]) (by push_cast; linarith [hxre.2]) hre
+    rcases hxim with hxim | hxim
+    · have hk := int_eq_of_abs_sub_lt (A := b - 1) hs hrs (by rw [hxim]; norm_num) him
+      refine ⟨(2, i), hball _ ?_⟩
+      apply Complex.ext <;> simp [blockVertex, blockVertexRe, blockVertexIm, hi, hk]
+    · have hk := int_eq_of_abs_sub_lt (A := b + 2) hs hrs (by rw [hxim]; norm_num) him
+      refine ⟨(3, i), hball _ ?_⟩
+      apply Complex.ext <;> simp [blockVertex, blockVertexRe, blockVertexIm, hi, hk]
+  · obtain ⟨i, hi⟩ := exists_fin_four_of_abs_sub_lt (B := b - 1) hs hrs
+      (by push_cast; linarith [hxim.1]) (by push_cast; linarith [hxim.2]) him
+    rcases hxre with hxre | hxre
+    · have hm := int_eq_of_abs_sub_lt (A := a - 1) hs hrs (by rw [hxre]; norm_num) hre
+      refine ⟨(0, i), hball _ ?_⟩
+      apply Complex.ext <;> simp [blockVertex, blockVertexRe, blockVertexIm, hi, hm]
+    · have hm := int_eq_of_abs_sub_lt (A := a + 2) hs hrs (by rw [hxre]; norm_num) hre
+      refine ⟨(1, i), hball _ ?_⟩
+      apply Complex.ext <;> simp [blockVertex, blockVertexRe, blockVertexIm, hi, hm]
+
+/-- **Mass near the lattice.** For `y` in the closed cell and `0 < r ≤ s / 4`, Brownian motion
+from `y` leaves the block within distance `r` of the lattice `s ℤ + i s ℤ` with probability at
+most `144 r / s`. -/
+theorem planarBrownian_exitPoint_near_lattice_le {s : ℝ} (hs : 0 < s) {a b : ℤ} {y : ℂ}
+    (hy : y ∈ closedCell s a b) {r : ℝ} (hr : 0 < r) (hrs : r ≤ s / 4) :
+    planarBrownianMotion y {ω | ∃ m k : ℤ,
+        dist (ω ((ContinuousPath.exitTime (openBlock s a b) ω).toNNReal))
+          ⟨(m : ℝ) * s, (k : ℝ) * s⟩ < r} ≤ ENNReal.ofReal (144 * r / s) := by
+  set U := openBlock s a b with hUdef
+  have hU : IsOpen U := isOpen_openBlock s a b
+  have hUb : Bornology.IsBounded U := isBounded_openBlock s a b
+  have hyU : y ∈ U := closedBall_subset_openBlock hs hy (mem_closedBall_self (by positivity))
+  have hfr : ∀ᵐ ω ∂(planarBrownianMotion y),
+      ω ((ContinuousPath.exitTime U ω).toNNReal) ∈ frontier U := by
+    obtain ⟨R, hR⟩ := hUb.subset_ball y
+    filter_upwards [ae_planarBrownianMotion_eval_zero y,
+      ae_planarBrownianMotion_exitTime_ball_lt_top y R] with ω h0 hfin
+    refine ContinuousPath.coordinate_exitTime_mem_frontier U hU ω (by rw [h0]; exact hyU) ?_
+    exact ((ContinuousPath.exitTime_mono hR ω).trans_lt hfin).ne
+  have hnull : planarBrownianMotion y
+      {ω | ω ((ContinuousPath.exitTime U ω).toNNReal) ∉ frontier U} = 0 := ae_iff.1 hfr
+  have hsub : {ω : ContinuousPath ℂ | ∃ m k : ℤ,
+      dist (ω ((ContinuousPath.exitTime U ω).toNNReal)) ⟨(m : ℝ) * s, (k : ℝ) * s⟩ < r} ⊆
+      {ω | ω ((ContinuousPath.exitTime U ω).toNNReal) ∉ frontier U} ∪
+        ⋃ j : Fin 4 × Fin 4,
+          {ω | ω ((ContinuousPath.exitTime U ω).toNNReal) ∈ ball (blockVertex s a b j) r} := by
+    rintro ω ⟨m, k, hd⟩
+    by_cases hx : ω ((ContinuousPath.exitTime U ω).toNNReal) ∈ frontier U
+    · obtain ⟨j, hj⟩ := exists_mem_ball_blockVertex hs hrs hx hd
+      exact Or.inr (mem_iUnion.2 ⟨j, hj⟩)
+    · exact Or.inl hx
+  have hterm : ∀ j : Fin 4 × Fin 4, planarBrownianMotion y
+      {ω | ω ((ContinuousPath.exitTime U ω).toNNReal) ∈ ball (blockVertex s a b j) r} ≤
+        ENNReal.ofReal (9 * r / s) := by
+    intro j
+    refine (planarBrownian_exitPoint_mem_ball_le hU hUb (norm_blockNormal j.1)
+      (fun x hx => inner_sub_blockVertex_nonpos hx j) hyU hr).trans ?_
+    refine ENNReal.ofReal_le_ofReal ?_
+    have := le_inner_blockVertex_sub hy j
+    exact div_le_div_of_nonneg_left (by positivity) hs (by linarith)
+  calc planarBrownianMotion y {ω | ∃ m k : ℤ,
+        dist (ω ((ContinuousPath.exitTime U ω).toNNReal)) ⟨(m : ℝ) * s, (k : ℝ) * s⟩ < r}
+      ≤ planarBrownianMotion y ({ω | ω ((ContinuousPath.exitTime U ω).toNNReal) ∉ frontier U} ∪
+        ⋃ j : Fin 4 × Fin 4,
+          {ω | ω ((ContinuousPath.exitTime U ω).toNNReal) ∈ ball (blockVertex s a b j) r}) :=
+        measure_mono hsub
+    _ ≤ ∑ j : Fin 4 × Fin 4, planarBrownianMotion y
+          {ω | ω ((ContinuousPath.exitTime U ω).toNNReal) ∈ ball (blockVertex s a b j) r} := by
+        refine (measure_union_le _ _).trans ?_
+        rw [hnull, zero_add]
+        exact measure_iUnion_fintype_le _ _
+    _ ≤ ∑ _j : Fin 4 × Fin 4, ENNReal.ofReal (9 * r / s) := Finset.sum_le_sum fun j _ => hterm j
+    _ = ENNReal.ofReal (144 * r / s) := by
+        rw [Finset.sum_const, Finset.card_univ, Fintype.card_prod, Fintype.card_fin, nsmul_eq_mul,
+          show 144 * r / s = 16 * (9 * r / s) by ring, ENNReal.ofReal_mul (by norm_num)]
+        norm_num
 
 end BlockExit
 
