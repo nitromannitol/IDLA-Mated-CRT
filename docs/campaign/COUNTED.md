@@ -570,3 +570,12 @@ their rows. Axioms: `MatedCRT/Audit/AppendixBAxioms.lean` (3c1fada4; 14 lines, e
   the library, U5c 6c52328d, U5d fbb148a5); summable L¹ increments give one integrable dominating function (library
   `UniformIntegrableDominated`, 0a7c271), hence uniform integrability along every subsequence. Axioms propext,
   Classical.choice, Quot.sound. No counted form changes.
+- `hGFF` is a theorem: `KilledOccupation.ae_mem_occupationAgreementEvent_holds`
+  (FirstPass/Derived/RevuzOccupationHolds.lean, 6afaa549), exactly the binder `hGFF` of the counted forms, from
+  `ae_mem_occupationAgreementEvent_of_killedOccupation` with its three inputs supplied (`killedBrownianOccupationOnBall`,
+  `uniformIntegrable_setLIntegral_regClockMeasure_dyadic`, `ae_gmcGreenMeasure_ball_lt_top_pole_zero`). Same file:
+  `coneUnitDiskGFFLaw_holds` (`hlaw` from `coneWholePlaneFieldLawStep_holds`), `frozenLBMGreenOccupationRescaled_holds`
+  (conjunct 9 of `CertifiedReferenceModelCore`, no hypothesis), and the counted forms
+  `closed_1_{4,6}_lp_noSC_noSup_derivedInputs_envScaling_rigidityInputs_uniformStart_ratDescent_excursionCount_cauchyGHM_revuz`
+  = the `_cauchyGHM` forms (CoreRigidityInputsNoContourTriple.lean) with `hGFF` supplied; same conclusions, binders
+  h1 h2 hN4 h10 h11 hCP hGHM hscale. Axioms propext, Classical.choice, Quot.sound; 0 warnings.
