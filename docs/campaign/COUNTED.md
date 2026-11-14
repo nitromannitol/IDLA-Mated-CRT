@@ -514,3 +514,16 @@ their rows. Axioms: `MatedCRT/Audit/AppendixBAxioms.lean` (3c1fada4; 14 lines, e
   is an operator decision** (rule 1 does not apply: one binder is added).
 - The other counted theorems that bind `hC : CertifiedReferenceModel ν 𝒮` lose the Appendix B conjunct in the same way,
   by `hC := hcoreB.toModel_of_fieldLaw hFL hGFF hT` (AppendixBRewire.lean:140); no wrapper is committed for them.
+
+### Appendix B input hGFF: killed occupation identity proved (2026-11-14)
+
+- `KilledBrownianOccupationOnBall z r` (Potential.lean:275; the binder `hS0` of the `closed`-`closed5` forms and the
+  binder `hK` of `frozenLBMGreenOccupationRescaled_of_coneGFFLaw_killedOccupation`, LimClockOccupationReduction.lean:130)
+  is now a theorem for every `z`, `r`: `killedBrownianOccupationOnBall` (FirstPass/Derived/KilledBrownianOccupationHolds.lean,
+  0de6b9d9). Route: Dynkin at the exit time, logarithmic potential, exit averages of the Newtonian kernel on a disc
+  (4e7df48f, 59a52c94, 84cb0edb, 8c25244f, 226277ea), smooth-test agreement of the killed occupation measure with
+  `2 G(y, x) dx` (8a541e55), and equality of finite measures from smooth compactly supported tests (Lattice-Probability
+  `measure_eq_of_forall_integral_contDiff_hasCompactSupport_eq`). Axioms propext, Classical.choice, Quot.sound.
+- Derived wrapper `frozenLBMGreenOccupationRescaled_of_coneGFFLaw_killedOccupation_derived` (same file): `hGFF` follows
+  from `hlaw` and the two remaining inputs `hU` (uniform integrability of the regularized clock integrals) and `hF0`
+  (finiteness of the Green-weighted chaos at the pole 0). No counted form changes.
