@@ -57,42 +57,50 @@ lemma integrable_occupation_of_continuous {f : ℂ → ℝ} (hf : Continuous f) 
   exact Measure.integrableOn_of_bounded (by rw [lebNN_Icc]; exact ENNReal.coe_ne_top)
     hfb.aestronglyMeasurable ((ae_restrict_iff' measurableSet_Icc).2 (ae_of_all _ hC))
 
-/-- **`L¹` bound for the dyadic increment of the regularized clock along a fixed path.** Let `h^ℂ` be a whole-plane
-GFF, `B_r(z) ⊆ B_ρ(0)`, `0 < ε < 1 - ρ`, `g ≥ 0` continuous, vanishing on `B_ε(0)` and outside `B_r(z)`, and let
-the path `b` stay in `B_r(z)` before `σ(b)`. Then for `γ ≤ α ≤ 2γ` and `t > 0`,
-`E |T_{ε/2} - T_ε| ≤ ε^{γ²/2} ((B I / t + t) / 2 + 2 (∫ |g̃| dν_b) e^{log(1/ε) (γ²/2 - (α - γ)²/2)})`, where
-`T_δ = ∫_{[0,σ(b)]} g(b_u) dF_δ(u)`, `g̃ = singularWeight γ g`, `B = (2^{γ²} - 1) e^{log(1/ε) (2γ² - (2γ - α)²/2)}`
-and `I = ∫_{|x - x'| < 2ε} |g̃(x)| |g̃(x')| d(ν_b ⊗ ν_b)`. -/
-theorem integral_abs_regClock_dyadic_increment_le {Ω' : Type*} [MeasurableSpace Ω'] {P' : Measure Ω'}
+/-- The right-hand side of the `L¹` rate of the dyadic chaos increment recentred at the unit circle,
+`ε^{γ²/2} (((2^{γ²} - 1) e^{log(1/ε) (2γ² - (2γ - α)²/2)} I / t + t) / 2 + 2 A e^{log(1/ε) (γ²/2 - (α - γ)²/2)})`,
+as a function of the near-diagonal mass `I` and the total mass `A` of the weight. -/
+noncomputable def dyadicIncrementRate (γ α ε t I A : ℝ) : ℝ :=
+  ε ^ (γ ^ 2 / 2) * (((Real.exp (γ ^ 2 * Real.log 2) - 1) *
+      Real.exp (Real.log (1 / ε) * (2 * γ ^ 2 - (2 * γ - α) ^ 2 / 2)) * I / t + t) / 2 +
+    2 * A * Real.exp (Real.log (1 / ε) * (γ ^ 2 / 2 - (α - γ) ^ 2 / 2)))
+
+/-- `dyadicIncrementRate` is monotone in the near-diagonal mass and in the total mass. -/
+lemma dyadicIncrementRate_mono {γ α ε t I I' A A' : ℝ} (hε : 0 < ε) (ht : 0 < t) (hI : I ≤ I')
+    (hA : A ≤ A') : dyadicIncrementRate γ α ε t I A ≤ dyadicIncrementRate γ α ε t I' A' := by
+  have hX : 0 ≤ Real.exp (γ ^ 2 * Real.log 2) - 1 := by
+    have : 0 ≤ γ ^ 2 * Real.log 2 := mul_nonneg (sq_nonneg γ) (Real.log_nonneg one_le_two)
+    linarith [Real.add_one_le_exp (γ ^ 2 * Real.log 2)]
+  have hε' : 0 ≤ ε ^ (γ ^ 2 / 2) := Real.rpow_nonneg hε.le _
+  unfold dyadicIncrementRate
+  gcongr
+
+/-- If `g` vanishes outside `B_r(z) ⊆ B_ρ(0)` and `ε < 1 - ρ`, the singular weight vanishes unless `‖x‖ + ε ≤ 1`. -/
+lemma norm_add_le_one_of_singularWeight_ne_zero (γ : ℝ) {ρ r ε : ℝ} {z : ℂ} (hball : ball z r ⊆ ball 0 ρ)
+    (hερ : ε < 1 - ρ) {g : ℂ → ℝ} (hgr : ∀ x, g x ≠ 0 → x ∈ ball z r) :
+    ∀ x, singularWeight γ g x ≠ 0 → ‖x‖ + ε ≤ 1 := fun x hx => by
+  have hgx : g x ≠ 0 := fun h => hx (by simp [singularWeight, h])
+  have := mem_ball_zero_iff.1 (hball (hgr x hgx))
+  linarith
+
+/-- **The dyadic increment of the regularized clock along a fixed path is a chaos increment.** Almost surely in the
+whole-plane GFF, `T_{ε/2} - T_ε = ∫ g̃(x) ((ε/2)^{γ²/2} e^{γ (h_{ε/2}(x) - h_1(0))} - ε^{γ²/2} e^{γ (h_ε(x) - h_1(0))})
+dν_b(x)`, with `g̃ = singularWeight γ g` and `ν_b` the occupation measure of `b` on `[0, σ(b)]`. -/
+theorem ae_regClock_dyadic_increment_eq {Ω' : Type*} [MeasurableSpace Ω'] {P' : Measure Ω'}
     {hC' : Ω' → (ℂ → ℝ) → ℝ} {hc : Ω' → ℝ → ℂ → ℝ} (hwp : HarmonicBalls.IsWholePlaneGFF P' hC' hc)
     (γ : ℝ) {ρ r ε : ℝ} {z : ℂ} (hball : ball z r ⊆ ball 0 ρ) (hε : 0 < ε) (hερ : ε < 1 - ρ)
     {g : ℂ → ℝ} (hg : Continuous g) (hg0 : ∀ x, 0 ≤ g x) (hgε : ∀ x, g x ≠ 0 → ε ≤ ‖x‖)
-    (hgr : ∀ x, g x ≠ 0 → x ∈ ball z r)
-    (σ : ContinuousPath ℂ → ℝ≥0) (b : ContinuousPath ℂ) (hb : ∀ s : ℝ≥0, s < σ b → b s ∈ ball z r)
-    {α t : ℝ} (hγα : γ ≤ α) (hα : α ≤ 2 * γ) (ht : 0 < t) :
-    ∫ ω', |(∫⁻ u in Icc 0 (σ b), ENNReal.ofReal (g (b u))
+    (σ : ContinuousPath ℂ → ℝ≥0) (b : ContinuousPath ℂ) (hb : ∀ s : ℝ≥0, s < σ b → b s ∈ ball z r) :
+    ∀ᵐ ω' ∂P', (∫⁻ u in Icc 0 (σ b), ENNReal.ofReal (g (b u))
           ∂regClockMeasure γ (ε / 2) (clockPsi (fun ω' => fieldCircleAverage γ (hc ω')) ω') σ b).toReal -
         (∫⁻ u in Icc 0 (σ b), ENNReal.ofReal (g (b u))
-          ∂regClockMeasure γ ε (clockPsi (fun ω' => fieldCircleAverage γ (hc ω')) ω') σ b).toReal| ∂P' ≤
-      ε ^ (γ ^ 2 / 2) * (((Real.exp (γ ^ 2 * Real.log 2) - 1) *
-          Real.exp (Real.log (1 / ε) * (2 * γ ^ 2 - (2 * γ - α) ^ 2 / 2)) *
-          (∫ p, {p : ℂ × ℂ | ‖p.1 - p.2‖ < 2 * ε}.indicator
-            (fun p => |singularWeight γ g p.1| * |singularWeight γ g p.2|) p
-            ∂(((lebNN.restrict (Icc 0 (σ b))).map fun u => b u).prod
-              ((lebNN.restrict (Icc 0 (σ b))).map fun u => b u))) / t + t) / 2 +
-        2 * (∫ x, |singularWeight γ g x| ∂((lebNN.restrict (Icc 0 (σ b))).map fun u => b u)) *
-          Real.exp (Real.log (1 / ε) * (γ ^ 2 / 2 - (α - γ) ^ 2 / 2))) := by
+          ∂regClockMeasure γ ε (clockPsi (fun ω' => fieldCircleAverage γ (hc ω')) ω') σ b).toReal =
+      ∫ x, singularWeight γ g x * ((ε / 2) ^ (γ ^ 2 / 2) * Real.exp (γ * (hc ω' (ε / 2) x - hc ω' 1 0)) -
+          ε ^ (γ ^ 2 / 2) * Real.exp (γ * (hc ω' ε x - hc ω' 1 0)))
+        ∂((lebNN.restrict (Icc 0 (σ b))).map fun u => b u) := by
   set ν : Measure ℂ := (lebNN.restrict (Icc 0 (σ b))).map fun u => b u with hν
-  have hνf : IsFiniteMeasure ν := isFiniteMeasure_occupation (σ b) b
   have hh := (LPBridge.isWholePlaneGFF_iff P' hC' hc).1 hwp
   have hswc := continuous_singularWeight γ hg hε hgε
-  have hgR : ∀ x, singularWeight γ g x ≠ 0 → ‖x‖ + ε ≤ 1 := fun x hx => by
-    have hgx : g x ≠ 0 := fun h => hx (by simp [singularWeight, h])
-    have := mem_ball_zero_iff.1 (hball (hgr x hgx))
-    linarith
-  have hLP := hh.integral_abs_integral_increment_le hε one_pos ν hswc.measurable
-    (integrable_occupation_of_continuous hswc (σ b) b) hgR hγα hα ht
-  refine (integral_congr_ae ?_).trans_le hLP
   filter_upwards [hwp.ae_continuousOn_circle, hh.ae_circleAverage_one_zero] with ω hcont h10
   have hε2 : 0 < ε / 2 := half_pos hε
   have hgε2 : ∀ x, g x ≠ 0 → ε / 2 ≤ ‖x‖ := fun x hx => by linarith [hgε x hx]
@@ -111,7 +119,71 @@ theorem integral_abs_regClock_dyadic_increment_le {Ω' : Type*} [MeasurableSpace
     setLIntegral_regClockMeasure_toReal_eq_integral_occupation γ hcont h10 hball hε hερ
       hg.measurable hg0 hgε σ b hb
   rw [e1, e2, ← integral_sub (hint _ hε2) (hint _ hε)]
-  congr 1
   exact integral_congr_ae (ae_of_all _ fun x => by ring)
+
+/-- **`L¹` bound for the dyadic increment of the regularized clock along a fixed path.** Let `h^ℂ` be a whole-plane
+GFF, `B_r(z) ⊆ B_ρ(0)`, `0 < ε < 1 - ρ`, `g ≥ 0` continuous, vanishing on `B_ε(0)` and outside `B_r(z)`, and let
+the path `b` stay in `B_r(z)` before `σ(b)`. Then for `γ ≤ α ≤ 2γ` and `t > 0`,
+`E |T_{ε/2} - T_ε| ≤ dyadicIncrementRate γ α ε t I A`, where `T_δ = ∫_{[0,σ(b)]} g(b_u) dF_δ(u)`,
+`g̃ = singularWeight γ g`, `I = ∫_{|x - x'| < 2ε} |g̃(x)| |g̃(x')| d(ν_b ⊗ ν_b)` and `A = ∫ |g̃| dν_b`. -/
+theorem integral_abs_regClock_dyadic_increment_le {Ω' : Type*} [MeasurableSpace Ω'] {P' : Measure Ω'}
+    {hC' : Ω' → (ℂ → ℝ) → ℝ} {hc : Ω' → ℝ → ℂ → ℝ} (hwp : HarmonicBalls.IsWholePlaneGFF P' hC' hc)
+    (γ : ℝ) {ρ r ε : ℝ} {z : ℂ} (hball : ball z r ⊆ ball 0 ρ) (hε : 0 < ε) (hερ : ε < 1 - ρ)
+    {g : ℂ → ℝ} (hg : Continuous g) (hg0 : ∀ x, 0 ≤ g x) (hgε : ∀ x, g x ≠ 0 → ε ≤ ‖x‖)
+    (hgr : ∀ x, g x ≠ 0 → x ∈ ball z r)
+    (σ : ContinuousPath ℂ → ℝ≥0) (b : ContinuousPath ℂ) (hb : ∀ s : ℝ≥0, s < σ b → b s ∈ ball z r)
+    {α t : ℝ} (hγα : γ ≤ α) (hα : α ≤ 2 * γ) (ht : 0 < t) :
+    ∫ ω', |(∫⁻ u in Icc 0 (σ b), ENNReal.ofReal (g (b u))
+          ∂regClockMeasure γ (ε / 2) (clockPsi (fun ω' => fieldCircleAverage γ (hc ω')) ω') σ b).toReal -
+        (∫⁻ u in Icc 0 (σ b), ENNReal.ofReal (g (b u))
+          ∂regClockMeasure γ ε (clockPsi (fun ω' => fieldCircleAverage γ (hc ω')) ω') σ b).toReal| ∂P' ≤
+      dyadicIncrementRate γ α ε t
+        (∫ p, {p : ℂ × ℂ | ‖p.1 - p.2‖ < 2 * ε}.indicator
+            (fun p => |singularWeight γ g p.1| * |singularWeight γ g p.2|) p
+          ∂(((lebNN.restrict (Icc 0 (σ b))).map fun u => b u).prod
+            ((lebNN.restrict (Icc 0 (σ b))).map fun u => b u)))
+        (∫ x, |singularWeight γ g x| ∂((lebNN.restrict (Icc 0 (σ b))).map fun u => b u)) := by
+  set ν : Measure ℂ := (lebNN.restrict (Icc 0 (σ b))).map fun u => b u with hν
+  have hνf : IsFiniteMeasure ν := isFiniteMeasure_occupation (σ b) b
+  have hh := (LPBridge.isWholePlaneGFF_iff P' hC' hc).1 hwp
+  have hswc := continuous_singularWeight γ hg hε hgε
+  have hLP := hh.integral_abs_integral_increment_le hε one_pos ν hswc.measurable
+    (integrable_occupation_of_continuous hswc (σ b) b)
+    (norm_add_le_one_of_singularWeight_ne_zero γ hball hερ hgr) hγα hα ht
+  exact (integral_congr_ae ((ae_regClock_dyadic_increment_eq hwp γ hball hε hερ hg hg0 hgε σ b hb).mono
+    fun ω h => congrArg abs h)).trans_le hLP
+
+/-- **Lower-integral form of the `L¹` bound for the dyadic increment along a fixed path.** Under the hypotheses of
+`integral_abs_regClock_dyadic_increment_le`, the increment is integrable in the field, so
+`∫⁻ |T_{ε/2} - T_ε| dP' ≤ dyadicIncrementRate γ α ε t I A`. -/
+theorem lintegral_abs_regClock_dyadic_increment_le {Ω' : Type*} [MeasurableSpace Ω'] {P' : Measure Ω'}
+    {hC' : Ω' → (ℂ → ℝ) → ℝ} {hc : Ω' → ℝ → ℂ → ℝ} (hwp : HarmonicBalls.IsWholePlaneGFF P' hC' hc)
+    (γ : ℝ) {ρ r ε : ℝ} {z : ℂ} (hball : ball z r ⊆ ball 0 ρ) (hε : 0 < ε) (hερ : ε < 1 - ρ)
+    {g : ℂ → ℝ} (hg : Continuous g) (hg0 : ∀ x, 0 ≤ g x) (hgε : ∀ x, g x ≠ 0 → ε ≤ ‖x‖)
+    (hgr : ∀ x, g x ≠ 0 → x ∈ ball z r)
+    (σ : ContinuousPath ℂ → ℝ≥0) (b : ContinuousPath ℂ) (hb : ∀ s : ℝ≥0, s < σ b → b s ∈ ball z r)
+    {α t : ℝ} (hγα : γ ≤ α) (hα : α ≤ 2 * γ) (ht : 0 < t) :
+    ∫⁻ ω', ENNReal.ofReal |(∫⁻ u in Icc 0 (σ b), ENNReal.ofReal (g (b u))
+          ∂regClockMeasure γ (ε / 2) (clockPsi (fun ω' => fieldCircleAverage γ (hc ω')) ω') σ b).toReal -
+        (∫⁻ u in Icc 0 (σ b), ENNReal.ofReal (g (b u))
+          ∂regClockMeasure γ ε (clockPsi (fun ω' => fieldCircleAverage γ (hc ω')) ω') σ b).toReal| ∂P' ≤
+      ENNReal.ofReal (dyadicIncrementRate γ α ε t
+        (∫ p, {p : ℂ × ℂ | ‖p.1 - p.2‖ < 2 * ε}.indicator
+            (fun p => |singularWeight γ g p.1| * |singularWeight γ g p.2|) p
+          ∂(((lebNN.restrict (Icc 0 (σ b))).map fun u => b u).prod
+            ((lebNN.restrict (Icc 0 (σ b))).map fun u => b u)))
+        (∫ x, |singularWeight γ g x| ∂((lebNN.restrict (Icc 0 (σ b))).map fun u => b u))) := by
+  set ν : Measure ℂ := (lebNN.restrict (Icc 0 (σ b))).map fun u => b u with hν
+  have hνf : IsFiniteMeasure ν := isFiniteMeasure_occupation (σ b) b
+  have hh := (LPBridge.isWholePlaneGFF_iff P' hC' hc).1 hwp
+  have hswc := continuous_singularWeight γ hg hε hgε
+  have hI := (hh.integrable_integral_increment hε one_pos ν hswc.measurable
+    (integrable_occupation_of_continuous hswc (σ b) b)
+    (norm_add_le_one_of_singularWeight_ne_zero γ hball hερ hgr) γ).abs.congr
+    ((ae_regClock_dyadic_increment_eq hwp γ hball hε hερ hg hg0 hgε σ b hb).mono
+      fun ω h => (congrArg abs h).symm)
+  rw [← ofReal_integral_eq_lintegral_ofReal hI (ae_of_all _ fun _ => abs_nonneg _)]
+  exact ENNReal.ofReal_le_ofReal
+    (integral_abs_regClock_dyadic_increment_le hwp γ hball hε hερ hg hg0 hgε hgr σ b hb hγα hα ht)
 
 end MatedCRT.KilledOccupation
