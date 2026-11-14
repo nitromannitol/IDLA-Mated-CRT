@@ -419,6 +419,16 @@ The forms `closed_1_4_lp_noSC_noSup_derivedInputs_lemma69`, `closed_1_6_lp_noSC_
 `closed_1_6_lp_noSC_noSup_derivedInputs_envScaling_rigidity_lemma69` (Derived/CoreGffLowerOfLemma69Rigidity.lean) the
 `_envScaling_rigidity` forms, with `hlow` replaced by `h632`. Axioms propext, Classical.choice, Quot.sound.
 
+Eleventh pass (2026-11-14): Berestycki-Gwynne Lemma 6.9 (`h632`, estimate (6.32)) follows from the uniform-start
+invariance principle for the walk on the mated-CRT map, the named literature input `GMS21UniformStartInput`
+([GMS21, Theorem 3.4], S6j/LitUniformStartInvariance.lean): `ExitTimeLowerTail.exitTimeLowerTail_of_uniformStart`
+(S6j/ExitTimeLowerTail.lean), through the transfer of the walk event to planar Brownian motion modulo time
+parametrization and the Brownian displacement-time bound (6.29) (S6j/ExitTailCombine.lean). The forms
+`closed_1_4_lp_noSC_noSup_derivedInputs_envScaling_rigidity_uniformStart`,
+`closed_1_6_lp_noSC_noSup_derivedInputs_envScaling_rigidity_uniformStart` (Derived/CoreGffLowerOfUniformStart.lean)
+are the `_rigidity_lemma69` forms with `h632` replaced by `hN4 : GMS21UniformStartInput 𝒮`. Axioms propext,
+Classical.choice, Quot.sound.
+
 Derived forms after the sixth pass (binders of `T` -> binders of `T_derivedInputs`; 31 forms):
 
 | counted `T` | binders | supplied |
