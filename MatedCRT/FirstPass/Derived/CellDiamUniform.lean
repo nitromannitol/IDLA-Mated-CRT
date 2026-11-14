@@ -112,4 +112,22 @@ theorem eventually_prob_cellDiamBig_le {𝒮 : SpaceFillingSLEModel} {γ : ℝ} 
   rintro ω ⟨-, hlt⟩
   simpa using hlt
 
+/-- For a proper onto curve, only finitely many vertices lie in a ball. -/
+theorem finite_vertices_in_ball {ε : ℝ} (hε : 0 < ε) {η : ℝ → ℂ}
+    (hη : Tendsto η (cocompact ℝ) (cocompact ℂ)) (hsurj : Function.Surjective η) (r : ℝ) :
+    {k : ℤ | vertexPoint ε η k ∈ ball (0 : ℂ) r}.Finite := by
+  obtain ⟨-, -, hfin⟩ := cell_cover_finite_of_proper_surjective hε hη hsurj
+  refine (hfin 0 r).subset fun k hk => ⟨vertexPoint ε η k, ?_, mem_ball.1 hk⟩
+  exact ⟨ε * k, ⟨mul_le_mul_of_nonneg_left (by linarith) hε.le, le_rfl⟩, rfl⟩
+
+/-- Finitely many quantities tending to `0` as the scale tends to `0⁺` are simultaneously below any
+positive bound at some positive scale. -/
+theorem exists_scale_lt_of_finite {ι : Type*} {J : Set ι} (hJ : J.Finite) (F : ι → ℝ → ℝ≥0∞)
+    (hF : ∀ j ∈ J, Tendsto (F j) (𝓝[>] (0 : ℝ)) (𝓝 0)) {a : ℝ≥0∞} (ha : 0 < a) :
+    ∃ δ : ℝ, 0 < δ ∧ ∀ j ∈ J, F j δ < a := by
+  have h : ∀ᶠ δ in 𝓝[>] (0 : ℝ), ∀ j ∈ J, F j δ < a :=
+    (Filter.eventually_all_finite hJ).2 fun j hj => (tendsto_order.1 (hF j hj)).2 a ha
+  obtain ⟨δ, hδ, hpos⟩ := (h.and self_mem_nhdsWithin).exists
+  exact ⟨δ, hpos, hδ⟩
+
 end MatedCRT.FirstPass.Derived
