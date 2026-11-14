@@ -65,16 +65,17 @@ theorem coe_apply_eq_one (φ : MatedCRTHarmonic.Topology.IncreasingParametrizati
 variable {E : Type*} {G : LFMultigraph ℤ E} {o : ℤ} {H : CellularEmbedding G o}
 
 /-- **Template piece ⇒ disconnection (one scale).** If the interpolation of the walk lies in the
-template piece event at scale `r`, then the trace of the walk before the cells meeting the unit circle
-separates the cells meeting `closedBall 0 δ` from them. -/
-theorem graphSeparates_traceBefore_of_mem_templatePieceEvent {v : ℤ → ℂ}
+template piece event at scale `r`, then the trace of the walk before the cells meeting the circle of radius `R`
+separates the cells meeting `closedBall 0 δ` from them, provided the circle encloses the template and the buffered path. -/
+theorem graphSeparates_traceBefore_sphere_of_mem_templatePieceEvent {v : ℤ → ℂ}
     (hv : ∀ k, v k ∈ H.cell k) {ξ : ℕ → ℤ} (hadj : ∀ m, G.adj.Adj (ξ m) (ξ (m + 1)))
     (hmeet : ∀ m, (H.cell (ξ m) ∩ H.cell (ξ (m + 1))).Nonempty) {m : ℝ} (hm : 0 < m)
-    {r δ d : ℝ} (hr : 0 < r) (hr1 : 5 * r / 4 ≤ 1) (hδ : δ ≤ 3 * r / 4) (hd : 0 ≤ d)
+    {r δ d R : ℝ} (hr : 0 < r) (hrR : 5 * r / 4 ≤ R)
+    (hR1 : R ≤ 1) (hρ : 1 / 2 + 3 * d < R) (hδ : δ ≤ 3 * r / 4) (hd : 0 ≤ d)
     (hdr : d ≤ r / 2000) (hdiam : ∀ k, (H.cell k ∩ ball 0 1).Nonempty → diam (H.cell k) ≤ d)
     (hTS : H.TemplateSeparation 0 r) (hf : interpPathCM v hm.le ξ ∈ templatePieceEvent r) :
-    GraphSeparates G.adj (traceBefore (id : ℤ → ℤ) (verticesMeeting H.cell (sphere 0 1)) ξ)
-      {y | ∃ x ∈ H.cell y, dist x 0 ≤ δ} (verticesMeeting H.cell (sphere 0 1)) := by
+    GraphSeparates G.adj (traceBefore (id : ℤ → ℤ) (verticesMeeting H.cell (sphere 0 R)) ξ)
+      {y | ∃ x ∈ H.cell y, dist x 0 ≤ δ} (verticesMeeting H.cell (sphere 0 R)) := by
   obtain ⟨ϑ, a, b, hab, hball, φ, htube⟩ := hf
   set q : ℕ → ℂ := fun k => v (ξ k) with hq_def
   have hqJ : ∀ k, q k ∈ H.cell (ξ k) := fun k => hv (ξ k)
@@ -130,7 +131,6 @@ theorem graphSeparates_traceBefore_of_mem_templatePieceEvent {v : ℤ → ℂ}
   -- itinerary indices and the template walk
   obtain ⟨m₀, n, ha₁, ha₂, hb₁, hb₂⟩ :=
     LatticeProb.PolarTemplate.exists_itinerary_indices hA0 hAB
-  have hρ : (1 / 2 : ℝ) + 3 * d < 1 := by linarith
   have hqb : ∀ M : ℕ, (M : ℝ) ≤ m * b → dist (q M) 0 < 1 / 2 := by
     intro M hM
     have hM0 : (0 : ℝ) ≤ (M : ℝ) / m := div_nonneg (Nat.cast_nonneg M) hm.le
@@ -169,8 +169,57 @@ theorem graphSeparates_traceBefore_of_mem_templatePieceEvent {v : ℤ → ℂ}
   have hW := LatticeProb.PolarTemplate.isTemplateWalk_of_uniform_approx H 0 hAB hφm hφc hφa hφb
     htube' (v := ξ) (q := q) ha₁ ha₂ hb₁ hb₂ (fun j _ => hadj (m₀ + j)) (fun j _ => hqJ (m₀ + j))
     (fun j hj => (hR3 (m₀ + j) (by omega)).2) hfq (by linarith) (by linarith)
-  exact graphSeparates_traceBefore_sphere_of_isTemplateWalk_of_points hr.le hδ (by linarith) hd hρ
-    (le_trans hA0 hAB) hdiam hTS hW hqJ (fun M _ => hmeet M) hqb hN
+  have hdiamR : ∀ k, (H.cell k ∩ ball 0 R).Nonempty → diam (H.cell k) ≤ d := by
+    intro k hk
+    exact hdiam k (hk.mono (inter_subset_inter_right _ (ball_subset_ball hR1)))
+  exact graphSeparates_traceBefore_sphere_of_isTemplateWalk_of_points hr.le hδ hrR hd hρ
+    (le_trans hA0 hAB) hdiamR hTS hW hqJ (fun M _ => hmeet M) hqb hN
+
+/-- **Template piece ⇒ disconnection (one scale).** If the interpolation of the walk lies in the
+template piece event at scale `r`, then the trace of the walk before the cells meeting the unit circle
+separates the cells meeting `closedBall 0 δ` from them. -/
+theorem graphSeparates_traceBefore_of_mem_templatePieceEvent {v : ℤ → ℂ}
+    (hv : ∀ k, v k ∈ H.cell k) {ξ : ℕ → ℤ} (hadj : ∀ m, G.adj.Adj (ξ m) (ξ (m + 1)))
+    (hmeet : ∀ m, (H.cell (ξ m) ∩ H.cell (ξ (m + 1))).Nonempty) {m : ℝ} (hm : 0 < m)
+    {r δ d : ℝ} (hr : 0 < r) (hr1 : 5 * r / 4 ≤ 1) (hδ : δ ≤ 3 * r / 4) (hd : 0 ≤ d)
+    (hdr : d ≤ r / 2000) (hdiam : ∀ k, (H.cell k ∩ ball 0 1).Nonempty → diam (H.cell k) ≤ d)
+    (hTS : H.TemplateSeparation 0 r) (hf : interpPathCM v hm.le ξ ∈ templatePieceEvent r) :
+    GraphSeparates G.adj (traceBefore (id : ℤ → ℤ) (verticesMeeting H.cell (sphere 0 1)) ξ)
+      {y | ∃ x ∈ H.cell y, dist x 0 ≤ δ} (verticesMeeting H.cell (sphere 0 1)) := by
+  exact graphSeparates_traceBefore_sphere_of_mem_templatePieceEvent hv hadj hmeet hm hr hr1 le_rfl
+    (by linarith) hδ hd hdr hdiam hTS hf
+
+/-- **Robust disconnection event ⇒ disconnection.** If the interpolation of the walk lies in
+`templateDisconnectionEvent δ` (`0 < δ`), every cell meeting the unit disc has diameter at most
+`d ≤ 4^{-K(δ)} / 2000`, and the template separation property holds at `(0, 4^{-k})` for
+`1 ≤ k ≤ K(δ)`, then the trace of the walk before the cells meeting the circle of radius `R` separates the
+cells meeting `closedBall 0 δ` from them. -/
+theorem graphSeparates_traceBefore_sphere_of_mem_templateDisconnectionEvent {v : ℤ → ℂ}
+    (hv : ∀ k, v k ∈ H.cell k) {ξ : ℕ → ℤ} (hadj : ∀ m, G.adj.Adj (ξ m) (ξ (m + 1)))
+    (hmeet : ∀ m, (H.cell (ξ m) ∩ H.cell (ξ (m + 1))).Nonempty) {m : ℝ} (hm : 0 < m)
+    {δ d R : ℝ} (hδ : 0 < δ) (hd : 0 ≤ d)
+    (hR1 : R ≤ 1) (hρ : 1 / 2 + 3 * d < R)
+    (hdK : d ≤ (templateRadius (templateScaleCount δ) : ℝ) / 2000)
+    (hdiam : ∀ k, (H.cell k ∩ ball 0 1).Nonempty → diam (H.cell k) ≤ d)
+    (hTS : ∀ k ∈ Finset.Icc 1 (templateScaleCount δ),
+      H.TemplateSeparation 0 (templateRadius k))
+    (hf : interpPathCM v hm.le ξ ∈ templateDisconnectionEvent δ) :
+    GraphSeparates G.adj (traceBefore (id : ℤ → ℤ) (verticesMeeting H.cell (sphere 0 R)) ξ)
+      {y | ∃ x ∈ H.cell y, dist x 0 ≤ δ} (verticesMeeting H.cell (sphere 0 R)) := by
+  simp only [templateDisconnectionEvent, mem_iUnion] at hf
+  obtain ⟨k, hk, hfk⟩ := hf
+  obtain ⟨hk1, hkK⟩ := Finset.mem_Icc.1 hk
+  have hr : (0 : ℝ) < templateRadius k := by exact_mod_cast templateRadius_pos k
+  have hrk : (templateRadius k : ℝ) ≤ 1 / 4 := by
+    rw [coe_templateRadius]
+    calc (1 / 4 : ℝ) ^ k ≤ (1 / 4) ^ 1 := pow_le_pow_of_le_one (by norm_num) (by norm_num) hk1
+      _ = 1 / 4 := pow_one _
+  have hKk : (templateRadius (templateScaleCount δ) : ℝ) ≤ templateRadius k := by
+    rw [coe_templateRadius, coe_templateRadius]
+    exact pow_le_pow_of_le_one (by norm_num) (by norm_num) hkK
+  have hδk := le_templateRadius_of_le_templateScaleCount hδ hk1 hkK
+  exact graphSeparates_traceBefore_sphere_of_mem_templatePieceEvent hv hadj hmeet hm hr (by linarith)
+    hR1 hρ (by linarith) hd (by linarith) hdiam (hTS k hk) hfk
 
 /-- **Robust disconnection event ⇒ disconnection.** If the interpolation of the walk lies in
 `templateDisconnectionEvent δ` (`0 < δ`), every cell meeting the unit disc has diameter at most
@@ -188,23 +237,16 @@ theorem graphSeparates_traceBefore_of_mem_templateDisconnectionEvent {v : ℤ �
     (hf : interpPathCM v hm.le ξ ∈ templateDisconnectionEvent δ) :
     GraphSeparates G.adj (traceBefore (id : ℤ → ℤ) (verticesMeeting H.cell (sphere 0 1)) ξ)
       {y | ∃ x ∈ H.cell y, dist x 0 ≤ δ} (verticesMeeting H.cell (sphere 0 1)) := by
-  simp only [templateDisconnectionEvent, mem_iUnion] at hf
-  obtain ⟨k, hk, hfk⟩ := hf
-  obtain ⟨hk1, hkK⟩ := Finset.mem_Icc.1 hk
-  have hr : (0 : ℝ) < templateRadius k := by exact_mod_cast templateRadius_pos k
-  have hrk : (templateRadius k : ℝ) ≤ 1 / 4 := by
+  have hrK : (templateRadius (templateScaleCount δ) : ℝ) ≤ 1 := by
     rw [coe_templateRadius]
-    calc (1 / 4 : ℝ) ^ k ≤ (1 / 4) ^ 1 := pow_le_pow_of_le_one (by norm_num) (by norm_num) hk1
-      _ = 1 / 4 := pow_one _
-  have hKk : (templateRadius (templateScaleCount δ) : ℝ) ≤ templateRadius k := by
-    rw [coe_templateRadius, coe_templateRadius]
-    exact pow_le_pow_of_le_one (by norm_num) (by norm_num) hkK
-  have hδk := le_templateRadius_of_le_templateScaleCount hδ hk1 hkK
-  exact graphSeparates_traceBefore_of_mem_templatePieceEvent hv hadj hmeet hm hr (by linarith)
-    (by linarith) hd (by linarith) hdiam (hTS k hk) hfk
+    exact pow_le_one₀ (by norm_num) (by norm_num)
+  exact graphSeparates_traceBefore_sphere_of_mem_templateDisconnectionEvent hv hadj hmeet hm hδ hd
+    le_rfl (by linarith) hdK hdiam hTS hf
 
 end MatedCRT.TemplateDisconnectionWalk
 
 /-! ## Audit -/
+#print axioms MatedCRT.TemplateDisconnectionWalk.graphSeparates_traceBefore_sphere_of_mem_templatePieceEvent
+#print axioms MatedCRT.TemplateDisconnectionWalk.graphSeparates_traceBefore_sphere_of_mem_templateDisconnectionEvent
 #print axioms MatedCRT.TemplateDisconnectionWalk.graphSeparates_traceBefore_of_mem_templatePieceEvent
 #print axioms MatedCRT.TemplateDisconnectionWalk.graphSeparates_traceBefore_of_mem_templateDisconnectionEvent
