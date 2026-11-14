@@ -27,6 +27,13 @@ for `k = j, ..., j + n - 1` with probability at most `(1 - p₀)^n`.
   smaller discs are events of the stopped σ-algebra at the exit time of a larger disc (step A5).
 * `planarBrownianMotion_iInter_templatePieceEvent_compl_le`: the template-piece events at the
   scales `r_1, ..., r_K` all fail with probability at most `(1 - p₀)^K` (step A4).
+
+Step (A7): with `K(δ) = ⌊log₄ (3 / (4δ))⌋` (`templateScaleCount δ`, at least `1` for
+`0 < δ < 3/16`, and `δ ≤ 3 r_k / 4` for `1 ≤ k ≤ K(δ)`), the robust disconnection event
+`templateDisconnectionEvent δ` (`E_δ`: a template piece at some scale `r_k`, `1 ≤ k ≤ K(δ)`)
+has probability at least `1 - (1 - p₀)^{K(δ)}` under planar Brownian motion from `0`
+(`one_sub_le_planarBrownianMotion_templateDisconnectionEvent`, no measurability of `E_δ` needed),
+which tends to `1` as `δ → 0⁺` (`tendsto_planarBrownianMotion_templateDisconnectionEvent`).
 -/
 
 set_option autoImplicit false
@@ -217,6 +224,76 @@ theorem planarBrownianMotion_iInter_templatePieceEvent_compl_le (K : ℕ) :
   rw [coe_templateRadius]
   exact pow_le_of_le_one (by norm_num) (by norm_num) (by omega)
 
+/-- **Number of template scales** for the inner radius `δ`: `K(δ) = ⌊log₄ (3 / (4δ))⌋`. -/
+noncomputable def templateScaleCount (δ : ℝ) : ℕ :=
+  ⌊Real.logb 4 (3 / (4 * δ))⌋₊
+
+/-- For `0 < δ < 3/16` there is at least one template scale. -/
+theorem one_le_templateScaleCount {δ : ℝ} (hδ : 0 < δ) (hδ' : δ < 3 / 16) :
+    1 ≤ templateScaleCount δ := by
+  apply Nat.le_floor
+  rw [Nat.cast_one, Real.le_logb_iff_rpow_le (by norm_num) (by positivity), Real.rpow_one,
+    le_div_iff₀ (by positivity)]
+  linarith
+
+/-- The template scales stay outside the inner disc: `δ ≤ 3 r_k / 4` for `1 ≤ k ≤ K(δ)`. -/
+theorem le_templateRadius_of_le_templateScaleCount {δ : ℝ} (hδ : 0 < δ) {k : ℕ} (hk1 : 1 ≤ k)
+    (hk : k ≤ templateScaleCount δ) : δ ≤ 3 / 4 * (templateRadius k : ℝ) := by
+  rw [templateScaleCount, Nat.le_floor_iff' (by omega),
+    Real.le_logb_iff_rpow_le (by norm_num) (by positivity), Real.rpow_natCast,
+    le_div_iff₀ (by positivity)] at hk
+  rw [coe_templateRadius, one_div_pow,
+    show (3 : ℝ) / 4 * (1 / 4 ^ k) = 3 / (4 * 4 ^ k) by ring, le_div_iff₀ (by positivity)]
+  calc δ * (4 * 4 ^ k) = 4 ^ k * (4 * δ) := by ring
+    _ ≤ 3 := hk
+
+/-- **The robust disconnection event** `E_δ`: at some scale `r_k`, `1 ≤ k ≤ K(δ)`, a piece of the
+path, before it leaves the disc of radius `1/2`, follows the polar template moved to radius `r_k`
+within Fréchet distance `r_k / 2000`. -/
+def templateDisconnectionEvent (δ : ℝ) : Set (ContinuousPath ℂ) :=
+  ⋃ k ∈ Finset.Icc 1 (templateScaleCount δ), templatePieceEvent (templateRadius k)
+
+/-- **(A7) Lower bound for the robust disconnection event.** Planar Brownian motion from `0` lies
+in `E_δ` with (outer) probability at least `1 - (1 - templateTubeConst)^{K(δ)}`. -/
+theorem one_sub_le_planarBrownianMotion_templateDisconnectionEvent (δ : ℝ) :
+    1 - (1 - templateTubeConst) ^ templateScaleCount δ ≤
+      planarBrownianMotion 0 (templateDisconnectionEvent δ) := by
+  set E := templateDisconnectionEvent δ with hE
+  have hc : Eᶜ = ⋂ k ∈ Finset.Icc 1 (templateScaleCount δ),
+      (templatePieceEvent (templateRadius k))ᶜ := by
+    simp only [hE, templateDisconnectionEvent, compl_iUnion]
+  have h1 : (1 : ℝ≥0∞) ≤ planarBrownianMotion 0 E + planarBrownianMotion 0 Eᶜ := by
+    calc (1 : ℝ≥0∞) = planarBrownianMotion 0 (E ∪ Eᶜ) := by rw [union_compl_self, measure_univ]
+      _ ≤ _ := measure_union_le _ _
+  rw [tsub_le_iff_right]
+  calc 1 ≤ planarBrownianMotion 0 E + planarBrownianMotion 0 Eᶜ := h1
+    _ ≤ planarBrownianMotion 0 E + (1 - templateTubeConst) ^ templateScaleCount δ := by
+      gcongr
+      rw [hc]
+      exact planarBrownianMotion_iInter_templatePieceEvent_compl_le _
+
+/-- **(A7) The robust disconnection event is almost sure in the limit**: its probability under
+planar Brownian motion from `0` tends to `1` as `δ → 0⁺`. -/
+theorem tendsto_planarBrownianMotion_templateDisconnectionEvent :
+    Filter.Tendsto (fun δ : ℝ => planarBrownianMotion 0 (templateDisconnectionEvent δ))
+      (nhdsWithin 0 (Ioi 0)) (nhds 1) := by
+  have hlt : 1 - templateTubeConst < 1 :=
+    ENNReal.sub_lt_self ENNReal.one_ne_top one_ne_zero templateTubeConst_pos.ne'
+  have h1 : Filter.Tendsto (fun δ : ℝ => 3 / (4 * δ)) (nhdsWithin 0 (Ioi 0)) Filter.atTop := by
+    refine ((tendsto_inv_nhdsGT_zero (𝕜 := ℝ)).const_mul_atTop
+      (show (0 : ℝ) < 3 / 4 by norm_num)).congr fun δ => ?_
+    ring
+  have hK : Filter.Tendsto templateScaleCount (nhdsWithin 0 (Ioi 0)) Filter.atTop :=
+    tendsto_nat_floor_atTop.comp ((Real.tendsto_logb_atTop (by norm_num)).comp h1)
+  have hpow : Filter.Tendsto (fun δ : ℝ => (1 - templateTubeConst) ^ templateScaleCount δ)
+      (nhdsWithin 0 (Ioi 0)) (nhds 0) :=
+    (ENNReal.tendsto_pow_atTop_nhds_zero_of_lt_one hlt).comp hK
+  have hlow : Filter.Tendsto (fun δ : ℝ => 1 - (1 - templateTubeConst) ^ templateScaleCount δ)
+      (nhdsWithin 0 (Ioi 0)) (nhds 1) := by
+    simpa using ENNReal.Tendsto.sub tendsto_const_nhds hpow (Or.inl ENNReal.one_ne_top)
+  exact tendsto_of_tendsto_of_tendsto_of_le_of_le hlow tendsto_const_nhds
+    (fun δ => one_sub_le_planarBrownianMotion_templateDisconnectionEvent δ) (fun _ => prob_le_one)
+
 end MatedCRT
 
 /-! ## Audit -/
@@ -227,3 +304,7 @@ end MatedCRT
 #print axioms MatedCRT.planarBrownianMotion_iInter_exitTemplateTube_compl_le
 #print axioms MatedCRT.planarBrownianMotion_iInter_Icc_exitTemplateTube_compl_le
 #print axioms MatedCRT.planarBrownianMotion_iInter_templatePieceEvent_compl_le
+#print axioms MatedCRT.one_le_templateScaleCount
+#print axioms MatedCRT.le_templateRadius_of_le_templateScaleCount
+#print axioms MatedCRT.one_sub_le_planarBrownianMotion_templateDisconnectionEvent
+#print axioms MatedCRT.tendsto_planarBrownianMotion_templateDisconnectionEvent
