@@ -15,6 +15,10 @@ The proof restarts Brownian motion at its exit from the disc (strong Markov prop
 that the exit point of the disc from `y` has the Poisson-kernel harmonic measure of the disc.
 This is the continuity of harmonic measure in the base point used in the proof of Lemma 3.14 of
 the Gwynne-Miller-Sheffield invariance principle.
+
+On a compact set `K ⊆ U` the modulus is uniform in the base point
+(`exists_forall_abs_planarBrownian_exitPoint_sub_le`), also for the Lévy–Prokhorov distance of the
+exit laws (`exists_forall_levyProkhorovDist_planarBrownian_exitLaw_le`).
 -/
 
 set_option autoImplicit false
@@ -203,6 +207,85 @@ theorem eventually_abs_planarBrownian_exitPoint_sub_le {U : Set ℂ} (hU : IsOpe
     isOpen_ball.mem_nhds hy] with y' hy'ε hy'b A hA
   exact (abs_planarBrownian_exitPoint_sub_le hU hUb hsub hy hy'b hA).trans hy'ε.le
 
+/-- **Uniform modulus of harmonic measure in the base point on compact sets.** For a bounded
+open `U`, a compact `K ⊆ U` and `ε > 0` there is `δ > 0` such that for every `y ∈ K` and every
+`y'` with `dist y y' < δ`, the harmonic measures of `U` seen from `y` and from `y'` are within `ε`
+in total variation: `|P_y(B_{τ_U} ∈ A) - P_{y'}(B_{τ_U} ∈ A)| ≤ ε` for every Borel `A`.
+Proof: the pointwise statement `eventually_abs_planarBrownian_exitPoint_sub_le` at each point of
+`K` and the Lebesgue number lemma. This is the base-point modulus of harmonic measure, uniform on
+the inner square, in the proof of Lemma 3.14 of Gwynne-Miller-Sheffield (arXiv 1807.07515). -/
+theorem exists_forall_abs_planarBrownian_exitPoint_sub_le {U : Set ℂ} (hU : IsOpen U)
+    (hUb : Bornology.IsBounded U) {K : Set ℂ} (hK : IsCompact K) (hKU : K ⊆ U) {ε : ℝ}
+    (hε : 0 < ε) :
+    ∃ δ > 0, ∀ y ∈ K, ∀ y' : ℂ, dist y y' < δ → ∀ A : Set ℂ, MeasurableSet A →
+      |(planarBrownianMotion y {ω | ω ((ContinuousPath.exitTime U ω).toNNReal) ∈ A}).toReal -
+        (planarBrownianMotion y' {ω | ω ((ContinuousPath.exitTime U ω).toNNReal) ∈ A}).toReal|
+          ≤ ε := by
+  set p : ℂ → Set ℂ → ℝ := fun y A =>
+    (planarBrownianMotion y {ω | ω ((ContinuousPath.exitTime U ω).toNNReal) ∈ A}).toReal
+  have hloc : ∀ y ∈ K, ∀ᶠ y' in 𝓝 y, ∀ A : Set ℂ, MeasurableSet A →
+      |p y A - p y' A| ≤ ε / 2 := by
+    intro y hy
+    obtain ⟨ρ, hρ, hρU⟩ := Metric.isOpen_iff.1 hU y (hKU hy)
+    exact eventually_abs_planarBrownian_exitPoint_sub_le hU hUb
+      ((closedBall_subset_ball (half_lt_self hρ)).trans hρU) (mem_ball_self (half_pos hρ))
+      (half_pos hε)
+  obtain ⟨δ, hδ, hδc⟩ := lebesgue_number_lemma_of_metric hK
+    (c := fun y : K => interior {y' | ∀ A : Set ℂ, MeasurableSet A → |p y A - p y' A| ≤ ε / 2})
+    (fun _ => isOpen_interior)
+    (fun y hy => mem_iUnion.2 ⟨⟨y, hy⟩, mem_interior_iff_mem_nhds.2 (hloc y hy)⟩)
+  refine ⟨δ, hδ, fun y hy y' hyy' A hA => ?_⟩
+  obtain ⟨i, hi⟩ := hδc y hy
+  have h1 : |p i A - p y A| ≤ ε / 2 := interior_subset (hi (mem_ball_self hδ)) A hA
+  have h2 : |p i A - p y' A| ≤ ε / 2 := interior_subset (hi (mem_ball'.2 hyy')) A hA
+  show |p y A - p y' A| ≤ ε
+  calc |p y A - p y' A| ≤ |p y A - p i A| + |p i A - p y' A| := abs_sub_le _ _ _
+    _ = |p i A - p y A| + |p i A - p y' A| := by rw [abs_sub_comm (p y A)]
+    _ ≤ ε / 2 + ε / 2 := add_le_add h1 h2
+    _ = ε := add_halves ε
+
+/-- **Lévy–Prokhorov form of the uniform modulus.** For a bounded open `U`, a compact `K ⊆ U`
+and `ε > 0` there is `δ > 0` such that for `y ∈ K` and `dist y y' < δ` the exit laws of planar
+Brownian motion from `U` started at `y` and at `y'` (the harmonic measures of `U`) are within `ε`
+in the Lévy–Prokhorov distance. -/
+theorem exists_forall_levyProkhorovDist_planarBrownian_exitLaw_le {U : Set ℂ} (hU : IsOpen U)
+    (hUb : Bornology.IsBounded U) {K : Set ℂ} (hK : IsCompact K) (hKU : K ⊆ U) {ε : ℝ}
+    (hε : 0 < ε) :
+    ∃ δ > 0, ∀ y ∈ K, ∀ y' : ℂ, dist y y' < δ →
+      levyProkhorovDist
+        ((planarBrownianMotion y).map fun ω => ω ((ContinuousPath.exitTime U ω).toNNReal))
+        ((planarBrownianMotion y').map fun ω => ω ((ContinuousPath.exitTime U ω).toNNReal))
+          ≤ ε := by
+  set f : ContinuousPath ℂ → ℂ := fun ω => ω ((ContinuousPath.exitTime U ω).toNNReal)
+  have hf : Measurable f := by
+    simpa using ContinuousPath.measurable_eval_untopD_stoppingTime
+      (ContinuousPath.exitTime U) (ContinuousPath.isStoppingTime_exitTime U hU)
+  obtain ⟨δ, hδ, h⟩ := exists_forall_abs_planarBrownian_exitPoint_sub_le hU hUb hK hKU hε
+  refine ⟨δ, hδ, fun y hy y' hyy' => ?_⟩
+  have : IsProbabilityMeasure ((planarBrownianMotion y).map f) :=
+    (Measure.isProbabilityMeasure_map_iff hf.aemeasurable).mpr inferInstance
+  have : IsProbabilityMeasure ((planarBrownianMotion y').map f) :=
+    (Measure.isProbabilityMeasure_map_iff hf.aemeasurable).mpr inferInstance
+  refine levyProkhorovDist_le_of_forall_le _ _ hε.le fun r B hr hB => ?_
+  have hr0 : 0 < r := hε.trans hr
+  rw [Measure.map_apply hf hB, Measure.map_apply hf isOpen_thickening.measurableSet]
+  have hB' : |(planarBrownianMotion y (f ⁻¹' B)).toReal -
+      (planarBrownianMotion y' (f ⁻¹' B)).toReal| ≤ ε := h y hy y' hyy' B hB
+  have hle : (planarBrownianMotion y (f ⁻¹' B)).toReal ≤
+      (planarBrownianMotion y' (f ⁻¹' B)).toReal + ε := by
+    linarith [(abs_le.1 hB').2]
+  calc planarBrownianMotion y (f ⁻¹' B)
+      = ENNReal.ofReal (planarBrownianMotion y (f ⁻¹' B)).toReal :=
+        (ENNReal.ofReal_toReal (measure_ne_top _ _)).symm
+    _ ≤ ENNReal.ofReal ((planarBrownianMotion y' (f ⁻¹' B)).toReal + ε) :=
+        ENNReal.ofReal_le_ofReal hle
+    _ = planarBrownianMotion y' (f ⁻¹' B) + ENNReal.ofReal ε := by
+        rw [ENNReal.ofReal_add ENNReal.toReal_nonneg hε.le,
+          ENNReal.ofReal_toReal (measure_ne_top _ _)]
+    _ ≤ planarBrownianMotion y' (f ⁻¹' thickening r B) + ENNReal.ofReal r :=
+        add_le_add (measure_mono (preimage_mono (self_subset_thickening hr0 B)))
+          (ENNReal.ofReal_le_ofReal hr.le)
+
 end MatedCRT
 
 /-! ## Audit -/
@@ -213,3 +296,5 @@ end MatedCRT
 #print axioms MatedCRT.abs_planarBrownian_exitPoint_sub_le
 #print axioms MatedCRT.tendsto_circleAverage_abs_poissonKernel_sub
 #print axioms MatedCRT.eventually_abs_planarBrownian_exitPoint_sub_le
+#print axioms MatedCRT.exists_forall_abs_planarBrownian_exitPoint_sub_le
+#print axioms MatedCRT.exists_forall_levyProkhorovDist_planarBrownian_exitLaw_le
