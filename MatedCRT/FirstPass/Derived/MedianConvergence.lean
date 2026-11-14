@@ -7,7 +7,7 @@ The normalisation of Berestycki-Gwynne (proof of Lemma 7.18 and the end of Secti
 the exit time of the rescaled walk is `1`, hence the median of the exit time of the subsequential limit is
 `1`.  Two elementary facts are needed.
 
-* `tendsto_medianOf_of_tendsto_cdf`: if distribution functions `G_n` converge to `G` on a dense set of times
+* `tendsto_medianOf_of_tendsto_cdf`: if distribution functions `G_n` converge to `G` at the times of a set meeting every open subinterval of `(0, ∞)`
   and `G` crosses `1/2` strictly to the right of its lower median (the exit-time law of the limit has full
   support near its median), then the lower medians converge: `medianOf G_n → medianOf G`.
 * `tendsto_div_one_of_abs_sub_le_one`: if `|a - b| ≤ 1` and `a → ∞`, then `b / a → 1`; with the comparison
@@ -26,18 +26,17 @@ private theorem medianOf_nonneg_aux (cdf : ℝ → ℝ≥0∞) : 0 ≤ medianOf 
   Real.sInf_nonneg fun _ hx => hx.1
 
 /-- **Stability of the lower median.** Let `G_n` be monotone distribution functions converging to `G` at the
-points of a dense set `D`, and suppose `G` is strictly above `1/2` to the right of its lower median. Then
+points of a set `D` meeting every nonempty open subinterval of `(0, ∞)`, and suppose `G` is strictly above `1/2` to the right of its lower median. Then
 `medianOf G_n → medianOf G`. -/
 theorem tendsto_medianOf_of_tendsto_cdf {ι : Type*} {l : Filter ι} {G : ℝ → ℝ≥0∞} {Gn : ι → ℝ → ℝ≥0∞}
-    (hmono : ∀ i, Monotone (Gn i)) {D : Set ℝ} (hD : Dense D)
+    (hmono : ∀ i, Monotone (Gn i)) {D : Set ℝ} (hD : ∀ a b : ℝ, 0 ≤ a → a < b → ∃ s ∈ D, a < s ∧ s < b)
     (hconv : ∀ s ∈ D, Tendsto (fun i => Gn i s) l (𝓝 (G s)))
     (hstrict : ∀ s, medianOf G < s → (1 / 2 : ℝ≥0∞) < G s) :
     Tendsto (fun i => medianOf (Gn i)) l (𝓝 (medianOf G)) := by
   rw [Metric.tendsto_nhds]
   intro ε hε
   have hm0 : 0 ≤ medianOf G := medianOf_nonneg_aux G
-  obtain ⟨s2, hs2D, hs2⟩ := hD.exists_mem_open (isOpen_Ioo (a := medianOf G) (b := medianOf G + ε))
-    ⟨medianOf G + ε / 2, by constructor <;> linarith⟩
+  obtain ⟨s2, hs2D, hs2⟩ := hD (medianOf G) (medianOf G + ε) hm0 (by linarith)
   have hup : ∀ᶠ i in l, (1 / 2 : ℝ≥0∞) < Gn i s2 :=
     (hconv s2 hs2D).eventually (lt_mem_nhds (hstrict s2 hs2.1))
   have hs20 : 0 ≤ s2 := by linarith [hs2.1]
@@ -45,9 +44,7 @@ theorem tendsto_medianOf_of_tendsto_cdf {ι : Type*} {l : Filter ι} {G : ℝ �
     filter_upwards [hup] with i hi
     exact medianOf_le_of_half_le hs20 hi.le
   rcases le_or_gt ε (medianOf G) with hεm | hεm
-  · obtain ⟨s1, hs1D, hs1⟩ := hD.exists_mem_open
-      (isOpen_Ioo (a := medianOf G - ε) (b := medianOf G))
-      ⟨medianOf G - ε / 2, by constructor <;> linarith⟩
+  · obtain ⟨s1, hs1D, hs1⟩ := hD (medianOf G - ε) (medianOf G) (by linarith) (by linarith)
     have hs10 : 0 ≤ s1 := by linarith [hs1.1]
     have hG1 : G s1 < 1 / 2 := by
       by_contra h
