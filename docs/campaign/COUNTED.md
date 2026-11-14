@@ -539,3 +539,12 @@ their rows. Axioms: `MatedCRT/Audit/AppendixBAxioms.lean` (3c1fada4; 14 lines, e
 - Derived wrapper `frozenLBMGreenOccupationRescaled_of_coneGFFLaw_killedOccupation_derived` (same file): `hGFF` follows
   from `hlaw` and the two remaining inputs `hU` (uniform integrability of the regularized clock integrals) and `hF0`
   (finiteness of the Green-weighted chaos at the pole 0). No counted form changes.
+- `hF0` is now a theorem: `ae_gmcGreenMeasure_ball_lt_top_pole_zero` (FirstPass/Derived/GmcGreenMassAtPole.lean, f1f4b60a):
+  for a whole-plane GFF, `0 < γ < 2`, `ρ < ρ₂ < 1` and a disc `B_r(z)` containing 0, almost surely the Green-weighted
+  cut-off γ-LQG mass of `B_r(z)` with pole 0 is finite. Route: first moments tilted by `exp(-γ h_τ(0))` on the
+  `e`-adic annuli about 0 (574b8b4c, 1aed8eee), Borel-Cantelli on the circle averages at 0 (55f50cda), the dyadic
+  Green bound at the pole, no atom at 0, and finiteness on compact sets away from 0. Axioms propext,
+  Classical.choice, Quot.sound.
+- Derived wrapper `frozenLBMGreenOccupationRescaled_of_coneGFFLaw_killedOccupation_F0_derived`
+  (FirstPass/Derived/KilledBrownianOccupationF0Holds.lean): `hGFF` follows from `hlaw` and `hU` alone. The remaining
+  input of hGFF is `hU`. No counted form changes.
