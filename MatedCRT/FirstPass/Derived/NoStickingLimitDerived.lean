@@ -1,6 +1,7 @@
 import MatedCRT.FirstPass.Derived.NoStickingLimit
 import MatedCRT.FirstPass.Derived.NoStickingEvent
 import MatedCRT.FirstPass.Derived.MepsSpeedLower
+import MatedCRT.FirstPass.S6j.ExitTimeUpperTailV
 
 /-!
 # No sticking for a subsequential limit: the packaged statement
@@ -11,7 +12,8 @@ takes the window estimate at radius `1/2` and the lower bound of the speed `ε m
 supplied from the named inputs of the proof:
 
 * the window estimate by `NoStickingEvent.limLimSmall_noSticking` at `ρ = 1/2`, from the explicit exit-time bound
-  `h219` (Lemma 2.19) and the event form `h610` of the estimate (6.50) of Lemma 6.10;
+  `h219` (Lemma 2.19) and the event form `h610` of the estimate (6.50) of Lemma 6.10 (which
+  `ExitTimeUpperTailV.exitTimeUpperTailV_of_uniformStart` derives from `hN4`, see the second theorem);
 * the speed bound by `MepsSpeedLower.exists_le_mul_mε_of_uniformStart`, from `h216`, `h218` (Lemmas 2.16, 2.18) and the
   uniform-start invariance principle `hN4` (Gamsa-Sheffield-Gwynne, Theorem 3.10).
 
@@ -60,6 +62,30 @@ theorem ae_forall_apply_constantOnInterval_eq_zero_of_tendsto_law_of_inputs {�
   exact NoStickingLimit.ae_forall_apply_constantOnInterval_eq_zero_of_tendsto_law hEnvS hγ hγ2 hS hη' hae
     hε0 hε hD hlaw hq hψ hLL
     (MepsSpeedLower.exists_le_mul_mε_of_uniformStart h216 h218 hN4 hγ hγ2 S hS)
+
+/-- **No sticking for a subsequential limit of the quenched walk laws**, from the proof inputs `h216`, `h218`,
+`h219`, `hN4` only: the event form of the estimate (6.50) of Lemma 6.10 is derived from the uniform-start
+invariance principle `hN4`. -/
+theorem ae_forall_apply_constantOnInterval_eq_zero_of_tendsto_law_of_uniformStart
+    {𝒮 : SpaceFillingSLEModel}
+    (hEnvS : ConeEnvironmentScalingStep 𝒮) (h216 : GreenKernelLowerBoundStmt 𝒮)
+    (h218 : ExitTimeUpperBoundStmt 𝒮) (h219 : ExpectedExitTimeExplicitBoundStmt 𝒮)
+    (hN4 : GMS21UniformStartInput 𝒮) {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
+    {Ω : Type}
+    [MeasurableSpace Ω] {S : MatedCRTEnv Ω} (hS : S.IsValid 𝒮 γ) {η' : Ω → C(ℝ, ℂ)}
+    (hη' : Measurable η') (hae : ∀ᵐ ω ∂S.P, ⇑(η' ω) = S.η ω)
+    {ε : ℕ → ℝ} (hε0 : ∀ n, 0 < ε n) (hε : Tendsto ε atTop (𝓝 0))
+    {X : Type*} [TopologicalSpace X] [TopologicalSpace.PseudoMetrizableSpace X]
+    [SecondCountableTopology X] [MeasurableSpace X] [BorelSpace X]
+    {D : ℕ → Ω → X} (hD : ∀ n, AEMeasurable (D n) S.P)
+    {ν : Measure (X × C(ℂ, ProbabilityMeasure (ContinuousPath ℂ)))}
+    (hlaw : ∀ F : (X × C(ℂ, ProbabilityMeasure (ContinuousPath ℂ))) →ᵇ ℝ,
+      Tendsto (fun n => ∫ ω, F (D n ω, interpWalkLaw S η' (ε n) ω) ∂S.P) atTop (𝓝 (∫ p, F p ∂ν))) :
+    ∀ᵐ p ∂ν, ∀ z : ℂ,
+      ((p.2 z : ProbabilityMeasure (ContinuousPath ℂ)) : Measure (ContinuousPath ℂ))
+        {f : C(ℝ≥0, ℂ) | ∃ s t : ℝ≥0, s < t ∧ ∀ u, s ≤ u → u ≤ t → f u = f s} = 0 :=
+  ae_forall_apply_constantOnInterval_eq_zero_of_tendsto_law_of_inputs hEnvS h216 h218 h219 hN4 hγ hγ2
+    (ExitTimeUpperTailV.exitTimeUpperTailV_of_uniformStart hN4 γ hγ hγ2) hS hη' hae hε0 hε hD hlaw
 
 end NoStickingLimitDerived
 end MatedCRT
