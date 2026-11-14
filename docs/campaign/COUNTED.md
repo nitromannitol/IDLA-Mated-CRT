@@ -579,3 +579,14 @@ their rows. Axioms: `MatedCRT/Audit/AppendixBAxioms.lean` (3c1fada4; 14 lines, e
   `closed_1_{4,6}_lp_noSC_noSup_derivedInputs_envScaling_rigidityInputs_uniformStart_ratDescent_excursionCount_cauchyGHM_revuz`
   = the `_cauchyGHM` forms (CoreRigidityInputsNoContourTriple.lean) with `hGFF` supplied; same conclusions, binders
   h1 h2 hN4 h10 h11 hCP hGHM hscale. Axioms propext, Classical.choice, Quot.sound; 0 warnings.
+
+### Cauchy point polarity supplied (2026-11-14)
+
+`LatticeProb.CorrelatedBM.cauchyPointPolarInput` (Lattice-Probability `Prob/CauchyPointPolar.lean`, 15c01bd) proves
+the input `hCP`. Its proof uses first-passage estimates and a grid first-hit decomposition to establish a polarity
+estimate, then passes to all levels using left continuity of the passage times.
+
+`FirstPass/Derived/RevuzOccupationCauchyPolar.lean` (5120259b) supplies this theorem in four derived forms of
+Theorems 1.4 and 1.6. The `_cauchyGHM_polar` forms retain `hGFF`; the `_cauchyGHM_revuz_polar` forms also supply
+`hGFF` via the occupation identity above. The latter forms have the same conclusions as the `_cauchyGHM_revuz`
+forms and retain the input hypotheses `h1`, `h2`, `hN4`, `h10`, `h11`, `hGHM`, and `hscale`.
