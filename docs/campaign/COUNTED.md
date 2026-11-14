@@ -561,3 +561,12 @@ their rows. Axioms: `MatedCRT/Audit/AppendixBAxioms.lean` (3c1fada4; 14 lines, e
 - Derived wrapper `frozenLBMGreenOccupationRescaled_of_coneGFFLaw_killedOccupation_F0_derived`
   (FirstPass/Derived/KilledBrownianOccupationF0Holds.lean): `hGFF` follows from `hlaw` and `hU` alone. The remaining
   input of hGFF is `hU`. No counted form changes.
+- `hU` is a theorem: `uniformIntegrable_setLIntegral_regClockMeasure_dyadic`
+  (FirstPass/Derived/RegClockUniformIntegrable.lean, 7307943d), with the derived wrapper
+  `frozenLBMGreenOccupationRescaled_of_coneGFFLaw_derived` (same file): `hGFF` follows from `hlaw` alone. Route
+  (GRV16 Thm 2.7(1), the L¹ Cauchy argument): finite first moments `E T_ε ≤ 2^{γ²} M E[σ]` from the first moment of
+  the circle-average density (`lintegral_prod_setLIntegral_regClockMeasure_le`); below the distance from 0 to
+  `tsupport g`, `E|T_{2^{-m-1}} - T_{2^{-m}}| ≤ K 2^{-κm}` (U4 near-diagonal occupation moment 804dde9..21aa9827 in
+  the library, U5c 6c52328d, U5d fbb148a5); summable L¹ increments give one integrable dominating function (library
+  `UniformIntegrableDominated`, 0a7c271), hence uniform integrability along every subsequence. Axioms propext,
+  Classical.choice, Quot.sound. No counted form changes.
