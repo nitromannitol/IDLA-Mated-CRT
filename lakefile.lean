@@ -9,7 +9,7 @@ require «harmonic-balls-lqg» from "../Harmonic-Balls-LQG"
 
 -- The lean-v4.35 line of Lattice-Probability (LQG, GFF and mated-CRT library adapted from Leonardo Bonanno's lean-formalizations).
 require «lattice-probability» from git
-  "https://github.com/nitromannitol/Lattice-Probability.git" @ "cdb08f5f6a7b5862d09a403dd05efd5e9a137e42"
+  "https://github.com/nitromannitol/Lattice-Probability.git" @ "c3a828cc8e895fcb33808b19156321aa3d5d1a46"
 
 @[default_target]
 lean_lib «MatedCRT» where
