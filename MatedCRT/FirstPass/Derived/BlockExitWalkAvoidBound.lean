@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.Derived.BrownianBlockExitWalkSeparated
 # The walk's block-exit chain reaches the frozen set
 
 Let the law of the first `N + 1` block-exit positions of the interpolated walk be a history chain
-started at `z` whose one-step laws charge only the grid lines and are within `(δ, δ)` of the frozen
+started at `z` whose one-step laws charge only the grid lines from histories ending at `z` or on the grid lines and are within `(δ, δ)` of the frozen
 grid-rectangle block-exit kernel in the one-sided Lévy-Prokhorov sense. Along the walk, consecutive
 block-exit positions off the frozen set `F` are more than `s / 2` apart almost surely
 (`BlockExitWalkUnbounded`), and the separated histories have small chain mass
@@ -34,7 +34,7 @@ are adjacent, `ε > 0`, `η` a continuous proper curve, `c > 0` a speed, `F` a m
 `z` a point of the open grid rectangle. Suppose every point off `F` lies at distance less than
 `a - 4 s - (N + 1) δ` from `z`, and that the law under `srwLaw m x₀` of the first `N + 1` block-exit
 positions of the interpolated walk is the history chain started at `z` with one-step laws `q n`
-charging only the grid lines and within `(δ, δ)` of the frozen grid-rectangle block-exit kernel.
+charging only the grid lines from histories ending at `z` or on the grid lines and within `(δ, δ)` of the frozen grid-rectangle block-exit kernel.
 Then the probability that the first `N = ⌊r ^ (-(2 + ζ))⌋` block-exit positions all avoid `F` is at
 most `C r ^ p + N δ + 60 N³ δ / s`. -/
 theorem srwLaw_blockExit_avoid_frozen_le_of_chain {ζ : ℝ} (hζ0 : 0 < ζ) (hζ1 : ζ < 1) (p : ℕ) :
@@ -47,7 +47,8 @@ theorem srwLaw_blockExit_avoid_frozen_le_of_chain {ζ : ℝ} (hζ0 : 0 < ζ) (h�
       (∀ y ∉ F, ‖y - z‖ + ((N : ℝ) + 1) * δ < a - 4 * s) →
       ∀ (q : ℕ → (Fin (N + 1) → ℂ) → Measure ℂ), (∀ n, Measurable (q n)) →
       (∀ n g, IsProbabilityMeasure (q n g)) →
-      (∀ n < N, ∀ g, q n g (gridLines s)ᶜ = 0) →
+      (∀ n < N, ∀ g, (g (Fin.last N) = z ∨ g (Fin.last N) ∈ gridLines s) →
+        q n g (gridLines s)ᶜ = 0) →
       (∀ n < N, ∀ g, ProkhorovLE (q n g)
         (gridRectBlockExitKernel s a₁ a₂ c₁ c₂ (g (Fin.last N))) δ δ) →
       (srwLaw m x₀).map

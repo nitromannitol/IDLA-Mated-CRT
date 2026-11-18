@@ -15,7 +15,7 @@ Brownian motion frozen off it:
   coincides with the law of the first `N + 1` block-exit positions of planar Brownian motion
   started at `z`, with `N = ⌊r ^ (-(2 + ζ))⌋₊`, then every history chain whose one-step laws are
   within `(ε, ε)` of the frozen block-exit kernel in the one-sided Lévy–Prokhorov sense and
-  charge only the grid lines gives mass at most `C r ^ p + N ε + 60 N ³ ε / s` to the histories
+  charge only the grid lines from histories ending at `z` or on the grid lines gives mass at most `C r ^ p + N ε + 60 N ³ ε / s` to the histories
   whose first `N` steps are `c`-separated and stay in `K`.
 
 * `law_blockExitPositions_eq_chainHistoryLaw`: the identification of the two laws, by the
@@ -57,7 +57,8 @@ theorem chainSeqLaw_separatedHistories_le_of_eq {ζ : ℝ} (hζ0 : 0 < ζ) (hζ1
       (∀ y ∈ K, ‖y - z‖ + ((N : ℝ) + 1) * ε < a - 4 * s) →
       ∀ (q : ℕ → (Fin (N + 1) → ℂ) → Measure ℂ), (∀ n, Measurable (q n)) →
       (∀ n g, IsProbabilityMeasure (q n g)) →
-      (∀ n < N, ∀ g, q n g (gridLines s)ᶜ = 0) →
+      (∀ n < N, ∀ g, (g (Fin.last N) = z ∨ g (Fin.last N) ∈ gridLines s) →
+        q n g (gridLines s)ᶜ = 0) →
       (∀ n < N, ∀ g, ProkhorovLE (q n g)
         (gridRectBlockExitKernel s a₁ a₂ c₁ c₂ (g (Fin.last N))) ε ε) →
       chainSeqLaw (fun m => paddedHistoryKernel m
@@ -93,7 +94,7 @@ theorem law_blockExitPositions_eq_chainHistoryLaw (s : ℝ) {F : Set ℂ} (hF : 
 
 /-- Separated histories of a chain compared with the Brownian block-exit chain frozen off the
 open grid rectangle: every history chain whose one-step laws are within `(ε, ε)` of the frozen
-block-exit kernel in the one-sided Lévy–Prokhorov sense and charge only the grid lines gives mass
+block-exit kernel in the one-sided Lévy–Prokhorov sense and charge only the grid lines from histories ending at `z` or on the grid lines gives mass
 at most `C r ^ p + N ε + 60 N ³ ε / s` to the histories whose first `N = ⌊r ^ (-(2 + ζ))⌋₊`
 steps are `c`-separated and stay in `K`. -/
 theorem chainSeqLaw_separatedHistories_le {ζ : ℝ} (hζ0 : 0 < ζ) (hζ1 : ζ < 1) (p : ℕ) :
@@ -104,7 +105,8 @@ theorem chainSeqLaw_separatedHistories_le {ζ : ℝ} (hζ0 : 0 < ζ) (hζ1 : ζ 
       (∀ y ∈ K, ‖y - z‖ + ((N : ℝ) + 1) * ε < a - 4 * s) →
       ∀ (q : ℕ → (Fin (N + 1) → ℂ) → Measure ℂ), (∀ n, Measurable (q n)) →
       (∀ n g, IsProbabilityMeasure (q n g)) →
-      (∀ n < N, ∀ g, q n g (gridLines s)ᶜ = 0) →
+      (∀ n < N, ∀ g, (g (Fin.last N) = z ∨ g (Fin.last N) ∈ gridLines s) →
+        q n g (gridLines s)ᶜ = 0) →
       (∀ n < N, ∀ g, ProkhorovLE (q n g)
         (gridRectBlockExitKernel s a₁ a₂ c₁ c₂ (g (Fin.last N))) ε ε) →
       chainSeqLaw (fun m => paddedHistoryKernel m (q m)) (Measure.dirac fun _ => z) N

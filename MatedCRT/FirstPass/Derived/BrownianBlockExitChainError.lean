@@ -92,7 +92,8 @@ theorem prokhorovLE_chainSeqLaw_gridRectBlockExit_cubic {s : ℝ} (hs : 0 < s) (
     (hεs : ((N : ℝ) + 1) * ε ≤ s / 4)
     {p : ℕ → (Fin (N + 1) → ℂ) → Measure ℂ} (hp : ∀ n, Measurable (p n))
     [∀ n g, IsProbabilityMeasure (p n g)]
-    (hpΓ : ∀ n < N, ∀ g, p n g (gridLines s)ᶜ = 0)
+    (hpΓ : ∀ n < N, ∀ g, (g (Fin.last N) = z ∨ g (Fin.last N) ∈ gridLines s) →
+      p n g (gridLines s)ᶜ = 0)
     (hK : ∀ n < N, ∀ g, ProkhorovLE (p n g)
       (gridRectBlockExitKernel s a₁ a₂ c₁ c₂ (g (Fin.last N))) ε ε) :
     ProkhorovLE (chainSeqLaw (fun m => paddedHistoryKernel m (p m)) (Measure.dirac fun _ => z) N)

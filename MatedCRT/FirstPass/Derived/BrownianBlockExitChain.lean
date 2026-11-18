@@ -21,7 +21,7 @@ coordinate, both started from the constant history at `z`.
   step has the law of the kernel.
 * `chainSeqLaw_congr_of_lt`: the `n`-step law only uses the kernels of the steps `m < n`.
 * `prokhorovLE_chainSeqLaw_gridRectBlockExit`: if the start `z` lies in the open rectangle, every
-  walk kernel `p n g` (`n < N`) is carried by the grid lines and is `(ε, ε)`-close to the frozen
+  walk kernel `p n g` (`n < N`) is carried by the grid lines from every history ending at `z` or on the grid lines and is `(ε, ε)`-close to the frozen
   block-exit kernel at the last coordinate of `g`, and `(N + 1) ε ≤ s / 4`, then the `N`-step
   history laws satisfy the one-sided Prokhorov bound at radius `(N + 1) ε` with error
   `∑_{m < N} (ε + 24 (m + 1) ε / s + m · 144 (m + 1) ε / s)`.
@@ -134,16 +134,21 @@ theorem chainSeqLaw_congr_of_lt {E : Type*} [MeasurableSpace E] {κ κ' : ℕ �
 
 /-- **Chaining the block exits.** Let the start `z` lie in the open grid rectangle, `0 < N`, and
 `(N + 1) ε ≤ s / 4`. Suppose that for every step `n < N` and history `g` the walk kernel `p n g` is
-carried by the grid lines and is `(ε, ε)`-close, in the one-sided Prokhorov sense, to the frozen
+carried by the grid lines from every history ending at `z` or on the grid lines and is `(ε, ε)`-close, in the one-sided Prokhorov sense, to the frozen
 block-exit kernel at the current position `g (Fin.last N)`. Then the laws of the `N`-step padded
 histories satisfy the one-sided Prokhorov bound with radius `(N + 1) ε` and error
-`∑_{m < N} (ε + 24 (m + 1) ε / s + m · 144 (m + 1) ε / s)`. -/
+`∑_{m < N} (ε + 24 (m + 1) ε / s + m · 144 (m + 1) ε / s)`.
+
+The grid-line hypothesis is only imposed on histories whose last position is `z` or lies on the
+grid lines: imposed on every history it would contradict the `(ε, ε)`-closeness to the Dirac mass
+of the frozen kernel at a frozen point at distance more than `ε` from the grid lines. -/
 theorem prokhorovLE_chainSeqLaw_gridRectBlockExit {s : ℝ} (hs : 0 < s) (a₁ a₂ c₁ c₂ : ℤ)
     {N : ℕ} (hN : 0 < N) {z : ℂ} (hz : z ∈ gridRectOpen s a₁ a₂ c₁ c₂) {ε : ℝ} (hε : 0 < ε)
     (hεs : ((N : ℝ) + 1) * ε ≤ s / 4)
     {p : ℕ → (Fin (N + 1) → ℂ) → Measure ℂ} (hp : ∀ n, Measurable (p n))
     [∀ n g, IsProbabilityMeasure (p n g)]
-    (hpΓ : ∀ n < N, ∀ g, p n g (gridLines s)ᶜ = 0)
+    (hpΓ : ∀ n < N, ∀ g, (g (Fin.last N) = z ∨ g (Fin.last N) ∈ gridLines s) →
+      p n g (gridLines s)ᶜ = 0)
     (hK : ∀ n < N, ∀ g, ProkhorovLE (p n g)
       (gridRectBlockExitKernel s a₁ a₂ c₁ c₂ (g (Fin.last N))) ε ε) :
     ProkhorovLE (chainSeqLaw (fun m => paddedHistoryKernel m (p m)) (Measure.dirac fun _ => z) N)
@@ -223,12 +228,17 @@ theorem prokhorovLE_chainSeqLaw_gridRectBlockExit {s : ℝ} (hs : 0 < s) (a₁ a
       calc _ ≤ ∑ _m ∈ Finset.range (n' + 1), (0 : ℝ≥0∞) := by
             refine chainSeqLaw_succ_apply_le_sum hκW hΓc' ?_ ?_
             · rw [chainSeqLaw_succ, chainSeqLaw_zero, Measure.dirac_bind (hκW 0),
-                paddedHistoryKernel_apply_last_of_lt hN _ hΓc, hp'lt 0 hN, hpΓ 0 hN]
+                paddedHistoryKernel_apply_last_of_lt hN _ hΓc, hp'lt 0 hN, hpΓ 0 hN _ (Or.inl rfl)]
             · intro m _ hm
               have hmN : m < N := by omega
               refine Eventually.of_forall fun g => ?_
-              rw [paddedHistoryKernel_apply_last_of_lt hmN _ hΓc, hp'lt m hmN, hpΓ m hmN]
-              exact zero_le
+              rw [paddedHistoryKernel_apply_last_of_lt hmN _ hΓc, hp'lt m hmN]
+              by_cases hg : g (Fin.last N) ∈ gridLines s
+              · rw [hpΓ m hmN g (Or.inr hg)]
+                exact zero_le
+              · have hgD : g ∈ {h : Fin (N + 1) → ℂ | h (Fin.last N) ∈ (gridLines s)ᶜ} := hg
+                rw [Set.indicator_of_mem hgD, Pi.one_apply]
+                exact le_add_right prob_le_one
         _ = 0 := by simp
     · simp [hHdef, hn0.ne', hnN]
   have hG : ∀ n, chainSeqLaw (fun m => paddedHistoryKernel m fun g : Fin (N + 1) → ℂ =>
