@@ -1,4 +1,6 @@
 import MarkovProcess.Path.RelativeHitting
+import MarkovProcess.Path.StoppedValueMeasurability
+import MarkovProcess.Trajectory.StoppingLtTop
 import MatedCRT.FirstPass.Derived.BrownianTemplateEvent
 
 /-!
@@ -23,6 +25,10 @@ divergence of an additive functional of a recurrent path.
 * `visitTime`, `isStoppingTime_visitTime`, `visitTime_add_one_le`,
   `monotone_visitTime_measurableSpace`, `mem_of_visitTime_lt_top`, `visitTime_lt_top`,
   `untopD_visitTime_add_one_le`.
+* `measurable_shift_untopD_stoppedSpace`: the path shifted at a stopping time `τ` is measurable
+  from the stopped sigma-algebra at `τ + s` to the canonical sigma-algebra at time `s`;
+  `measurableSet_shift_visitTime_preimage`: an event of the path shifted at the `j`-th visit
+  time, depending on its first unit of time, is measurable at the `(j + 1)`-st visit time.
 -/
 
 set_option autoImplicit false
@@ -219,5 +225,96 @@ theorem monotone_visitTime_measurableSpace {F : Set α} (hF : IsClosed F) :
     Monotone fun j : ℕ => (isStoppingTime_visitTime hF j).measurableSpace :=
   monotone_nat_of_le_succ fun j =>
     IsStoppingTime.measurableSpace_mono _ _ fun ω => visitTime_le_succ hF j ω
+
+/-! ### The path shifted at a stopping time -/
+
+/-- For `r ≤ s`, the state of the path at time `τ + r` (read as the state at time `r` on
+`{τ = ∞}`) is measurable for the stopped sigma-algebra at `τ + s`. On `{τ < ∞}` it is the
+stopped value at `τ + r` of the progressively measurable coordinate process; the event
+`{τ = ∞}` does not meet `{τ + s ≤ t}`. -/
+theorem measurable_eval_untopD_add {τ : ContinuousPath α → WithTop ℝ≥0}
+    (hτ : IsStoppingTime (ContinuousPath.canonicalFiltration (alpha := α)) τ) {r s : ℝ≥0}
+    (hrs : r ≤ s) :
+    Measurable[(MatedCRT.isStoppingTime_add_const_nnreal hτ s).measurableSpace]
+      (fun ω : ContinuousPath α => ω ((τ ω).untopD 0 + r)) := by
+  intro B hB
+  set hρ := MatedCRT.isStoppingTime_add_const_nnreal hτ s with hρ_def
+  have hρr := MatedCRT.isStoppingTime_add_const_nnreal hτ r
+  have hmono : hρr.measurableSpace ≤ hρ.measurableSpace :=
+    IsStoppingTime.measurableSpace_mono _ _ fun ω =>
+      add_le_add le_rfl (WithTop.coe_le_coe.2 hrs)
+  have hD : MeasurableSet[hρ.measurableSpace]
+      (stoppedValue (ContinuousPath.coordinateProcess (alpha := α))
+        (fun ω => τ ω + (r : WithTop ℝ≥0)) ⁻¹' B) :=
+    hmono _ (measurable_stoppedValue
+      (ContinuousPath.progMeasurable_coordinateProcess (alpha := α)) hρr hB)
+  have hlt : MeasurableSet[hρ.measurableSpace] {ω | τ ω < ⊤} := by
+    have h := StoppingTime.measurableSet_stoppingTime_lt_top hρ
+    have heq : {ω : ContinuousPath α | τ ω + (s : WithTop ℝ≥0) < ⊤} = {ω | τ ω < ⊤} := by
+      ext ω
+      simp only [mem_ofPred_eq, WithTop.add_lt_top, WithTop.coe_lt_top, and_true]
+    rwa [heq] at h
+  have htop : MeasurableSet[hρ.measurableSpace]
+      ((fun ω : ContinuousPath α => ω r) ⁻¹' B ∩ {ω | τ ω < ⊤}ᶜ) := by
+    refine ⟨MeasurableSet.inter ?_ hlt.1.compl, fun i => ?_⟩
+    · exact le_iSup (ContinuousPath.canonicalFiltration (alpha := α)) r _
+        (ContinuousPath.measurable_coordinateProcess_canonicalFiltration r hB)
+    · have hempty : (fun ω : ContinuousPath α => ω r) ⁻¹' B ∩ {ω | τ ω < ⊤}ᶜ ∩
+          {ω | τ ω + (s : WithTop ℝ≥0) ≤ i} = ∅ := by
+        refine Set.eq_empty_iff_forall_notMem.2 fun ω hω => hω.1.2 ?_
+        exact lt_of_le_of_lt le_self_add (lt_of_le_of_lt hω.2 (WithTop.coe_lt_top i))
+      rw [hempty]
+      exact @MeasurableSet.empty _ (ContinuousPath.canonicalFiltration (alpha := α) i)
+  have heq : (fun ω : ContinuousPath α => ω ((τ ω).untopD 0 + r)) ⁻¹' B =
+      (stoppedValue (ContinuousPath.coordinateProcess (alpha := α))
+          (fun ω => τ ω + (r : WithTop ℝ≥0)) ⁻¹' B ∩ {ω | τ ω < ⊤}) ∪
+        ((fun ω : ContinuousPath α => ω r) ⁻¹' B ∩ {ω | τ ω < ⊤}ᶜ) := by
+    ext ω
+    by_cases htop : τ ω = ⊤
+    · simp [htop]
+    · obtain ⟨a, ha⟩ := WithTop.ne_top_iff_exists.1 htop
+      have h3 : τ ω < ⊤ := lt_top_iff_ne_top.2 htop
+      have hval : stoppedValue (ContinuousPath.coordinateProcess (alpha := α))
+          (fun ω => τ ω + (r : WithTop ℝ≥0)) ω = ω ((τ ω).untopD 0 + r) := by
+        show ω ((τ ω + (r : WithTop ℝ≥0)).untopA) = ω ((τ ω).untopD 0 + r)
+        rw [← ha, ← WithTop.coe_add]
+        rfl
+      constructor
+      · intro h
+        exact Or.inl ⟨by rw [mem_preimage, hval]; exact h, h3⟩
+      · rintro (⟨h, -⟩ | ⟨-, h⟩)
+        · rw [mem_preimage, hval] at h
+          exact h
+        · exact absurd h3 h
+  rw [heq]
+  exact (hD.inter hlt).union htop
+
+/-- **The path shifted at a stopping time `τ` is measurable from the stopped sigma-algebra at
+`τ + s` to the canonical sigma-algebra at time `s`** (on `{τ = ∞}` the path is not shifted). -/
+theorem measurable_shift_untopD_stoppedSpace {τ : ContinuousPath α → WithTop ℝ≥0}
+    (hτ : IsStoppingTime (ContinuousPath.canonicalFiltration (alpha := α)) τ) (s : ℝ≥0) :
+    Measurable[(MatedCRT.isStoppingTime_add_const_nnreal hτ s).measurableSpace,
+      ContinuousPath.canonicalFiltration (alpha := α) s]
+      (fun ω => ContinuousPath.shift ((τ ω).untopD 0) ω) := by
+  rw [measurable_iff_comap_le]
+  change MeasurableSpace.comap _ (⨆ r : Iic s, MeasurableSpace.comap
+    (ContinuousPath.coordinateProcess (alpha := α) (r : ℝ≥0)) ‹MeasurableSpace α›) ≤ _
+  rw [MeasurableSpace.comap_iSup]
+  refine iSup_le fun r => ?_
+  rw [MeasurableSpace.comap_comp]
+  exact (measurable_eval_untopD_add hτ r.2).comap_le
+
+/-- **The trial events at the visit times are measurable at the next visit time**: for an event
+`Γ` of the canonical sigma-algebra at time `1`, the event that the path shifted at the `j`-th
+visit time lies in `Γ` belongs to the stopped sigma-algebra at the `(j + 1)`-st visit time. -/
+theorem measurableSet_shift_visitTime_preimage {F : Set α} (hF : IsClosed F) (j : ℕ)
+    {Γ : Set (ContinuousPath α)}
+    (hΓ : MeasurableSet[ContinuousPath.canonicalFiltration (alpha := α) 1] Γ) :
+    MeasurableSet[(isStoppingTime_visitTime hF (j + 1)).measurableSpace]
+      {ω | ContinuousPath.shift ((visitTime F j ω).untopD 0) ω ∈ Γ} :=
+  IsStoppingTime.measurableSpace_mono
+    (MatedCRT.isStoppingTime_add_const_nnreal (isStoppingTime_visitTime hF j) 1) _
+    (fun ω => visitTime_add_one_le hF j ω) _
+    (measurable_shift_untopD_stoppedSpace (isStoppingTime_visitTime hF j) 1 hΓ)
 
 end MatedCRT.KilledOccupation
