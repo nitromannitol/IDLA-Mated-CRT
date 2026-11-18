@@ -31,7 +31,7 @@ namespace MatedCRT.FirstPass.Derived
 
 open MeasureTheory ProbabilityTheory MarkovProcess Filter
 open _root_.HarmonicBalls
-open scoped NNReal
+open scoped NNReal Topology BoundedContinuousFunction
 
 /-- The path `y` delayed by the time `c`: `(T_c y)(t) = y ((t - c)⁺)`. -/
 def pathDelay (c : ℝ≥0) (y : ℝ≥0 → ℂ) : ℝ≥0 → ℂ := fun t => y (t - c)
@@ -129,6 +129,45 @@ theorem localUniformDist_lbmContinuousPath_lqgApproxClockPlus_pathDelay_le
         (lbmContinuousPath (lqgApproxClockPlus γ hε n) (ContinuousPath.shift δ b))) ≤ η :=
   localUniformDist_lbmContinuousPath_pathDelay_le (isTimeChangeClock_lqgApproxClockPlus hcont b)
     (lqgApproxClockPlus_shift_eq_sub hcont b δ) hosc
+
+/-- The value at a fixed time of the approximating LQG clock is continuous in the Brownian path
+(compact-open topology). -/
+theorem continuous_lqgApproxClockPlus_apply (hcont : Continuous (hε (dyadicScale n))) (t : ℝ≥0) :
+    Continuous fun b : ContinuousPath ℂ => lqgApproxClockPlus γ hε n b t :=
+  continuous_iff_continuousAt.2 fun b => Metric.tendsto_nhds.2 fun η hη =>
+    (eventually_abs_lqgApproxClockPlus_sub_lt hcont b t hη).mono fun _ hb' => by
+      rw [Real.dist_eq]
+      exact hb' t le_rfl
+
+/-- **Joint convergence of the approximate paths and clock values.** Let `F` be an LQG clock of
+planar Brownian motion from `z` (`IsLQGClock`) that is almost surely a time-change clock, for
+circle averages continuous at every dyadic radius. Then for every bounded continuous `H` on pairs
+(path, time) and every `δ ≥ 0`,
+`E^z[H(b ∘ A_n(b)⁻¹, A_n(b, δ))] → E^z[H(b ∘ F(b)⁻¹, F(b, δ))]`. -/
+theorem tendsto_integral_lbmContinuousPath_clockValue_lqgApproxClockPlus {z : ℂ}
+    {F : ContinuousPath ℂ → ℝ≥0 → ℝ} (hF : IsLQGClock planarBrownianMotion γ hε z F)
+    (hFc : ∀ᵐ b ∂planarBrownianMotion z, IsTimeChangeClock (F b))
+    (hcont : ∀ n : ℕ, Continuous (hε (dyadicScale n))) (δ : ℝ≥0)
+    (H : ContinuousPath ℂ × ℝ →ᵇ ℝ) :
+    Tendsto (fun n : ℕ => ∫ b, H (lbmContinuousPath (lqgApproxClockPlus γ hε n) b,
+        lqgApproxClockPlus γ hε n b δ) ∂planarBrownianMotion z)
+      atTop (𝓝 (∫ b, H (lbmContinuousPath F b, F b δ) ∂planarBrownianMotion z)) := by
+  refine tendsto_of_subseq_tendsto fun ns hns => ?_
+  obtain ⟨φ, -, hae⟩ := exists_strictMono_ae_forall_eventually_close (planarBrownianMotion z)
+    (fun k b t => lqgApproxClockPlus γ hε (ns k) b t) F
+    (fun T η hη => (IsLQGClock.tendsto_measure_lqgApproxClockPlus hF T hη).comp hns)
+  refine ⟨φ, ?_⟩
+  refine tendsto_integral_of_dominated_convergence (fun _ => ‖H‖)
+    (fun j => (H.continuous.comp
+      ((continuous_lbmContinuousPath_lqgApproxClockPlus (hcont (ns (φ j)))).prodMk
+        (continuous_lqgApproxClockPlus_apply (hcont (ns (φ j))) δ))).measurable.aestronglyMeasurable)
+    (integrable_const _) (fun j => ae_of_all _ fun b => H.norm_coe_le_norm _) ?_
+  filter_upwards [hae, hFc] with b hb hFb
+  refine (H.continuous.tendsto _).comp (Tendsto.prodMk_nhds ?_ ?_)
+  · exact tendsto_lbmContinuousPath_of_forall_eventually_close (ns := fun j => ns (φ j)) hcont hFb hb
+  · exact Metric.tendsto_nhds.2 fun η hη => (hb δ η hη).mono fun j hj => by
+      rw [Real.dist_eq]
+      exact hj δ le_rfl
 
 end ApproxClock
 
