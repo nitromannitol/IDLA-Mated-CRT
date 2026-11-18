@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.Derived.ConeReferenceClockLocalChain
 import MatedCRT.FirstPass.Derived.LQGLimitClockShiftAdditive
+import LatticeProb.Prob.LimitAfterPositiveTimesMeasurable
 
 /-!
 # The good set of the limit clock after positive times, from every start
@@ -26,6 +27,9 @@ On the good set the limit clock is nondecreasing and additive along the shift
   avoiding the origin, almost every path from every start lies in the good set.
 * `ae_coneRef_monotone_and_shift_of_local`: in the same situation, from every start, the limit clock
   is almost surely nondecreasing and satisfies `F(θ_s b)_t = F(b)_{s+t} - F(b)_s`.
+* `strictMono_of_monotone_of_rat_shift` (deterministic), `ae_strictMono_of_ae_start` and
+  `ae_coneRef_strictMono_of_local`: strict monotonicity of the clock from Lebesgue-almost every start
+  transfers to every start (simple Markov property at the times `δ_n` and shift additivity).
 -/
 
 open MeasureTheory ProbabilityTheory Set HarmonicBalls LQGMetric MarkovProcess
@@ -192,5 +196,112 @@ theorem ae_coneRef_monotone_and_shift_of_local
       (continuous_const.prodMk continuous_id)
       fun x => ⟨HarmonicBalls.dyadicScale_pos k, mem_univ _⟩
   exact LQGLimitClockShift.ae_monotone_and_shift_limitAfterPositiveTimes_dyadic hcontk (hω hloc z)
+
+/-- **Strict monotonicity from strict increase after the times `δ_n` at rational lags.** A
+nondecreasing `G : ℝ≥0 → ℝ` such that `G (δ_n + p) < G (δ_n + q)` for every `n` and all rationals
+`p, q` with `p⁺ < q⁺` (where `δ_n = (n + 1)⁻¹`) is strictly increasing. -/
+theorem strictMono_of_monotone_of_rat_shift {G : ℝ≥0 → ℝ} (hmono : Monotone G)
+    (h : ∀ (n : ℕ) (p q : ℚ), Real.toNNReal p < Real.toNNReal q →
+      G (LatticeProb.invSuccTime n + Real.toNNReal p) <
+        G (LatticeProb.invSuccTime n + Real.toNNReal q)) :
+    StrictMono G := by
+  have hpos : ∀ t₁ t₂ : ℝ≥0, 0 < t₁ → t₁ < t₂ → G t₁ < G t₂ := by
+    intro t₁ t₂ h₁ h₁₂
+    obtain ⟨n, hn⟩ := LatticeProb.exists_invSuccTime_le (half_pos h₁)
+    have hδ : LatticeProb.invSuccTime n < t₁ := hn.trans_lt (half_lt_self h₁)
+    have hu : ((t₁ - LatticeProb.invSuccTime n : ℝ≥0) : ℝ) <
+        ((t₂ - LatticeProb.invSuccTime n : ℝ≥0) : ℝ) :=
+      NNReal.coe_lt_coe.2 (tsub_lt_tsub_right_of_le hδ.le h₁₂)
+    obtain ⟨p, hp₁, hp₂⟩ := exists_rat_btwn hu
+    obtain ⟨q, hq₁, hq₂⟩ := exists_rat_btwn hp₂
+    have hp0 : (0 : ℝ) < p := lt_of_le_of_lt (NNReal.coe_nonneg _) hp₁
+    have hq0 : (0 : ℝ) < q := hp0.trans hq₁
+    have hpq : Real.toNNReal p < Real.toNNReal q := (Real.toNNReal_lt_toNNReal_iff hq0).2 hq₁
+    calc G t₁ = G (LatticeProb.invSuccTime n + (t₁ - LatticeProb.invSuccTime n)) := by
+            rw [add_tsub_cancel_of_le hδ.le]
+      _ ≤ G (LatticeProb.invSuccTime n + Real.toNNReal p) :=
+            hmono (add_le_add le_rfl (Real.lt_toNNReal_iff_coe_lt.2 hp₁).le)
+      _ < G (LatticeProb.invSuccTime n + Real.toNNReal q) := h n p q hpq
+      _ ≤ G (LatticeProb.invSuccTime n + (t₂ - LatticeProb.invSuccTime n)) :=
+            hmono (add_le_add le_rfl ((Real.toNNReal_lt_iff_lt_coe hq0.le).2 hq₂).le)
+      _ = G t₂ := by rw [add_tsub_cancel_of_le (hδ.trans h₁₂).le]
+  intro t₁ t₂ h₁₂
+  rcases eq_or_ne t₁ 0 with rfl | h₁
+  · exact (hmono zero_le).trans_lt (hpos _ _ (half_pos h₁₂) (half_lt_self h₁₂))
+  · exact hpos t₁ t₂ (pos_iff_ne_zero.2 h₁) h₁₂
+
+/-- **Strict monotonicity of an additive clock at every start, from almost every start.** Let
+`F : C([0, ∞), ℂ) → ℝ≥0 → ℝ` be measurable at each time. If, for planar Brownian motion from
+Lebesgue-almost every start, `F(b)` is almost surely strictly increasing, and from `z` the clock is
+almost surely nondecreasing and satisfies `F(θ_s b)_t = F(b)_{s+t} - F(b)_s`, then from `z` it is
+almost surely strictly increasing. -/
+theorem ae_strictMono_of_ae_start {F : ContinuousPath ℂ → ℝ≥0 → ℝ}
+    (hFm : ∀ t, Measurable fun b => F b t)
+    (hsm : ∀ᵐ w ∂(volume : Measure ℂ), ∀ᵐ b ∂(planarBrownianMotion w), StrictMono (F b))
+    (z : ℂ)
+    (hadd : ∀ᵐ b ∂(planarBrownianMotion z), Monotone (F b) ∧
+      ∀ s t, F (ContinuousPath.shift s b) t = F b (s + t) - F b s) :
+    ∀ᵐ b ∂(planarBrownianMotion z), StrictMono (F b) := by
+  set S : Set (ContinuousPath ℂ) := {b | ∀ p q : ℚ, Real.toNNReal p < Real.toNNReal q →
+    F b (Real.toNNReal p) < F b (Real.toNNReal q)} with hSdef
+  have hS : MeasurableSet S :=
+    measurableSet_setOfPred.2 (Measurable.forall fun p => Measurable.forall fun q =>
+      measurable_const.imp (measurableSet_setOfPred.1 (measurableSet_lt (hFm _) (hFm _))))
+  have hS0 : ∀ᵐ w ∂(volume : Measure ℂ), ∀ᵐ b ∂(planarBrownianMotion w), b ∈ S := by
+    filter_upwards [hsm] with w hw
+    filter_upwards [hw] with b hb
+    exact fun p q hpq => hb hpq
+  have hshift : ∀ᵐ b ∂(planarBrownianMotion z), ∀ n : ℕ,
+      ContinuousPath.shift (LatticeProb.invSuccTime n) b ∈ S :=
+    ae_all_iff.2 fun n => ae_planarBrownianMotion_shift_of_ae_start z
+      (LatticeProb.invSuccTime_pos n).ne' hS hS0
+  filter_upwards [hadd, hshift] with b hb hsb
+  refine strictMono_of_monotone_of_rat_shift hb.1 fun n p q hpq => ?_
+  have h := hsb n p q hpq
+  rw [hb.2, hb.2] at h
+  exact (sub_lt_sub_iff_right _).1 h
+
+/-- **Strict monotonicity of the reference cone clock from every start.** Almost surely, under the
+local uniform Cauchy property of `ae_coneRef_goodSet_of_local`, if the limit after positive times `F`
+of the dyadic approximating LQG clocks of the reference cone is almost surely strictly increasing
+for planar Brownian motion from Lebesgue-almost every start, then it is almost surely strictly
+increasing from every start. -/
+theorem ae_coneRef_strictMono_of_local
+    {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {Y : Ω → DistC} (hY : IsNormalizedWPGFF Y P)
+    {hC : DistC → (ℂ → ℝ) → ℝ} {c : DistC → ℝ → ℂ → ℝ}
+    (hp : ∀ x (φ : TestC), hC x φ = x φ)
+    (hc : ∀ r, 0 < r → ∀ z, ∀ᵐ ω ∂P, c (Y ω) r z = circleAvg (Y ω) r z)
+    (hcont : ∀ x, ContinuousOn (fun p : ℝ × ℂ => c x p.1 p.2) (Ioi 0 ×ˢ univ))
+    (hmeas : Measurable (fun q : (Ioi (0 : ℝ) × ℂ) × DistC => c q.2 q.1.1 q.1.2))
+    {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2) (w : Ω → ContinuousPath ℝ)
+    (hpolar : ∀ᵐ y ∂(volume : Measure ℂ), ∀ᵐ b ∂(planarBrownianMotion y), ∀ t, b t ≠ 0) :
+    ∀ᵐ ω ∂P,
+      (∀ (h : ℝ≥0) (a : ℂ) (r : ℝ), r < ‖a‖ →
+        ∀ᵐ y ∂(volume : Measure ℂ), ∀ᵐ b ∂(planarBrownianMotion y),
+          (∀ t ∈ Icc 0 h, b t ∈ closedBall a r) →
+          UniformCauchySeqOn
+            (fun k t => lqgClockApprox γ (coneRefCircle γ (c (Y ω)) (w ω))
+              (HarmonicBalls.dyadicScale k) b t)
+            atTop (Icc 0 h)) →
+      (∀ᵐ y ∂(volume : Measure ℂ), ∀ᵐ b ∂(planarBrownianMotion y),
+        StrictMono (LatticeProb.limitAfterPositiveTimes
+          fun k t => lqgClockApprox γ (coneRefCircle γ (c (Y ω)) (w ω))
+            (HarmonicBalls.dyadicScale k) b t)) →
+      ∀ z : ℂ, ∀ᵐ b ∂(planarBrownianMotion z),
+        StrictMono (LatticeProb.limitAfterPositiveTimes
+          fun k t => lqgClockApprox γ (coneRefCircle γ (c (Y ω)) (w ω))
+            (HarmonicBalls.dyadicScale k) b t) := by
+  filter_upwards [ae_coneRef_monotone_and_shift_of_local hY hp hc hcont hmeas hγ hγ2 w hpolar]
+    with ω hω hloc hsm z
+  have hcontk : ∀ k : ℕ,
+      Continuous (coneRefCircle γ (c (Y ω)) (w ω) (HarmonicBalls.dyadicScale k)) := fun k =>
+    (continuousOn_coneRefCircle γ (hcont (Y ω)) (w ω)).comp_continuous
+      (continuous_const.prodMk continuous_id)
+      fun x => ⟨HarmonicBalls.dyadicScale_pos k, mem_univ _⟩
+  exact ae_strictMono_of_ae_start
+    (fun t => LatticeProb.measurable_limitAfterPositiveTimes
+      (fun k t => MatedCRT.measurable_lqgClockApprox (hcontk k) t) t)
+    hsm z (hω hloc z)
 
 end MatedCRT.FirstPass.Derived
