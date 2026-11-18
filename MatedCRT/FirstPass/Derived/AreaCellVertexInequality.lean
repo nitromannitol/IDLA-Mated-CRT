@@ -120,4 +120,134 @@ theorem eventually_forall_vertex_walk_allSet_le {μ : Measure ℂ} {η : ℝ →
     (κ / 3) (by linarith) le_rfl hLPv A
   linarith
 
+/-- **The same with the Lévy-Prokhorov bound in the budget form of the covering package.**
+Let `α = 1`, `r = κ / 24`, `d ≤ κ / 48` and `ofReal τ ≤ r`. If eventually the stopped walk law started at every
+cell `v ∈ R n` with `q n v ∈ U` is within `4 α d + (r + τ)` of the stopped Brownian law started at `q n v`,
+then the conclusion of `eventually_forall_vertex_walk_allSet_le` holds, since the bound is at most
+`κ / 12 + κ / 12 < κ / 3`. -/
+theorem eventually_forall_vertex_walk_allSet_le_of_budget {μ : Measure ℂ} {η : ℝ → ℂ}
+    (h : IsAreaParametrized μ η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ))
+    {ε : ℕ → ℝ} (hε : ∀ n, 0 < ε n) (hε0 : Tendsto ε atTop (𝓝 0))
+    (mm : ℕ → ℤ → ℤ → ℕ) (hsucc : ∀ n k, mm n k (k + 1) ≠ 0)
+    {ρ R : ℝ} (hρR : ρ < R) {κ : ℝ} (hκ : 0 < κ)
+    {α m₀ : ℝ≥0} (hα : α = 1) (hm₀ : 0 < m₀) (hm₁ : m₀ = 1)
+    (hfin : ∀ n x, ∀ᵐ ξ ∂(srwLaw (mm n) x),
+      pathExitTime (ball (0 : ℂ) R) (interpolatedWalk (ε n) η 1 ξ) ≠ ⊤)
+    (U : Set (LatticeProb.Euc 2))
+    (hU : U = Complex.orthonormalBasisOneI.repr.symm ⁻¹' ball (0 : ℂ) R)
+    (μB : Measure (LatticeProb.BrownianPath 2)) (hμB : LatticeProb.IsStandardBrownianLaw μB)
+    (Rs : ∀ n, Set (areaCellConfig h (hε n) (mm n)).cells)
+    (hclose : ∀ n (v : (areaCellConfig h (hε n) (mm n)).cells),
+      areaCellRepresentative h (hε n) (mm n) v ∈ ball (0 : ReflectedGMS.Plane) R →
+        ∀ w, w ∉ Rs n → (areaCellConfig h (hε n) (mm n)).c v w = 0)
+    (q : ∀ n, Rs n → ReflectedGMS.Plane)
+    (hq : ∀ n (v : Rs n), q n v ∈ ((v.1.1 : Cell) : Set ReflectedGMS.Plane))
+    {r : ℝ≥0} (hr : (r : ℝ) = κ / 24) {d τ : ℝ} (hd : d ≤ κ / 48)
+    (hτ : ENNReal.ofReal τ ≤ (r : ℝ≥0∞))
+    (hLP : ∀ᶠ n in atTop, ∀ v : Rs n, q n v ∈ U →
+      levyProkhorovEDist
+        ((srwLaw (mm n) ((euclideanCellEquiv h (hε n)).symm v.1)).map
+          (fun w : ℕ → ℤ => isometryEquiv 2
+            (normalizedPrefixCurve
+              (complexToEuclideanPath ((α : ℝ) • interpPathCM (vertexPoint (ε n) η) hm₀.le w))
+              (pathExitTime (ball (0 : ℂ) R)
+                ⇑((α : ℝ) • interpPathCM (vertexPoint (ε n) η) hm₀.le w)).toNNReal)))
+        (BouRabeeGwynne.stoppedBrownianLaw U (q n v) μB) ≤
+          ENNReal.ofReal (4 * ((α : ℝ) * d)) + ((r : ℝ≥0∞) + ENNReal.ofReal τ)) :
+    ∀ᶠ n in atTop, ∀ x : ℤ, vertexPoint (ε n) η x ∈ closedBall (0 : ℂ) ρ →
+      ∀ A : Set (ℝ≥0 → ℂ),
+      srwLaw (mm n) x {ξ | stopAtExit (ball (0 : ℂ) R) (interpolatedWalk (ε n) η 1 ξ) ∈ A} ≤
+        planarBrownianMotion (vertexPoint (ε n) η x)
+          {b | ∃ f ∈ A, cmpEDist (stopAtExit (ball (0 : ℂ) R) ⇑b) f < ENNReal.ofReal κ} +
+        ENNReal.ofReal κ := by
+  have hbound : ENNReal.ofReal (4 * ((α : ℝ) * d)) + ((r : ℝ≥0∞) + ENNReal.ofReal τ) <
+      ENNReal.ofReal (κ / 3) := by
+    have hα1 : (α : ℝ) = 1 := by rw [hα]; simp
+    have hr' : (r : ℝ≥0∞) = ENNReal.ofReal (κ / 24) := by
+      rw [← hr, ENNReal.ofReal_coe_nnreal]
+    have h1 : ENNReal.ofReal (4 * ((α : ℝ) * d)) ≤ ENNReal.ofReal (κ / 12) :=
+      ENNReal.ofReal_le_ofReal (by rw [hα1]; linarith)
+    calc ENNReal.ofReal (4 * ((α : ℝ) * d)) + ((r : ℝ≥0∞) + ENNReal.ofReal τ)
+        ≤ ENNReal.ofReal (κ / 12) + ((r : ℝ≥0∞) + (r : ℝ≥0∞)) := by gcongr
+      _ = ENNReal.ofReal (κ / 12 + (κ / 24 + κ / 24)) := by
+          rw [hr', ← ENNReal.ofReal_add (by positivity) (by positivity),
+            ← ENNReal.ofReal_add (by positivity) (by positivity)]
+      _ < ENNReal.ofReal (κ / 3) := (ENNReal.ofReal_lt_ofReal_iff (by positivity)).2 (by linarith)
+  refine eventually_forall_vertex_walk_allSet_le h hp hε hε0 mm hsucc hρR hκ hα hm₀ hm₁ hfin U hU μB hμB
+    Rs hclose q hq ?_
+  filter_upwards [hLP] with n hn v hv
+  exact lt_of_le_of_lt (hn v hv) hbound
+
+/-- A property holding eventually along the shifted index `n + N` holds eventually. -/
+theorem eventually_atTop_of_eventually_add {P : ℕ → Prop} (N : ℕ)
+    (h : ∀ᶠ n in atTop, P (n + N)) : ∀ᶠ n in atTop, P n := by
+  obtain ⟨n₀, hn₀⟩ := eventually_atTop.1 h
+  refine eventually_atTop.2 ⟨n₀ + N, fun m hm => ?_⟩
+  have := hn₀ (m - N) (by omega)
+  rwa [Nat.sub_add_cancel (by omega)] at this
+
+/-- **The vertex inequality in the form delivered by the covering package.**
+Same as `eventually_forall_vertex_walk_allSet_le_of_budget`, with the data in the shape of the package
+output at the scale `α = 1`: finite cell sets `R (n + N)` (index shift `N`), points `q (n + N) v`
+equal to `α • x` for a point `x` of the cell `v`, closure of the conductances of the cells whose scaled
+representative lies in a set `Wb ⊇ ball 0 R`, and the budget bound at the cells `v ∈ R (n + N)`. The conclusion
+holds eventually along the unshifted sequence. -/
+theorem eventually_forall_vertex_walk_allSet_le_of_package {μ : Measure ℂ} {η : ℝ → ℂ}
+    (h : IsAreaParametrized μ η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ))
+    {ε : ℕ → ℝ} (hε : ∀ n, 0 < ε n) (hε0 : Tendsto ε atTop (𝓝 0))
+    (mm : ℕ → ℤ → ℤ → ℕ) (hsucc : ∀ n k, mm n k (k + 1) ≠ 0)
+    {ρ R : ℝ} (hρR : ρ < R) {κ : ℝ} (hκ : 0 < κ)
+    {α m₀ : ℝ≥0} (hα : α = 1) (hm₀ : 0 < m₀) (hm₁ : m₀ = 1)
+    (hfin : ∀ n x, ∀ᵐ ξ ∂(srwLaw (mm n) x),
+      pathExitTime (ball (0 : ℂ) R) (interpolatedWalk (ε n) η 1 ξ) ≠ ⊤)
+    (U : Set (LatticeProb.Euc 2))
+    (hU : U = Complex.orthonormalBasisOneI.repr.symm ⁻¹' ball (0 : ℂ) R)
+    (μB : Measure (LatticeProb.BrownianPath 2)) (hμB : LatticeProb.IsStandardBrownianLaw μB)
+    (Rs : ∀ n, Set (areaCellConfig h (hε n) (mm n)).cells) (N : ℕ)
+    (Wb : Set ReflectedGMS.Plane) (hWb : ball (0 : ReflectedGMS.Plane) R ⊆ Wb)
+    (hclose : ∀ n (v : (areaCellConfig h (hε (n + N)) (mm (n + N))).cells),
+      (α : ℝ) • areaCellRepresentative h (hε (n + N)) (mm (n + N)) v ∈ Wb →
+        ∀ w, w ∉ Rs (n + N) → (areaCellConfig h (hε (n + N)) (mm (n + N))).c v w = 0)
+    (q : ∀ n, Rs n → ReflectedGMS.Plane)
+    (hq : ∀ n (v : Rs (n + N)), ∃ x ∈ ((v.1.1 : Cell) : Set ReflectedGMS.Plane),
+      q (n + N) v = (α : ℝ) • x)
+    {r : ℝ≥0} (hr : (r : ℝ) = κ / 24) {d τ : ℝ} (hd : d ≤ κ / 48)
+    (hτ : ENNReal.ofReal τ ≤ (r : ℝ≥0∞))
+    (hLP : ∀ᶠ n in atTop, ∀ v : Rs (n + N), q (n + N) v ∈ U →
+      levyProkhorovEDist
+        ((srwLaw (mm (n + N)) ((euclideanCellEquiv h (hε (n + N))).symm v.1)).map
+          (fun w : ℕ → ℤ => isometryEquiv 2
+            (normalizedPrefixCurve
+              (complexToEuclideanPath ((α : ℝ) • interpPathCM (vertexPoint (ε (n + N)) η) hm₀.le w))
+              (pathExitTime (ball (0 : ℂ) R)
+                ⇑((α : ℝ) • interpPathCM (vertexPoint (ε (n + N)) η) hm₀.le w)).toNNReal)))
+        (BouRabeeGwynne.stoppedBrownianLaw U (q (n + N) v) μB) ≤
+          ENNReal.ofReal (4 * ((α : ℝ) * d)) + ((r : ℝ≥0∞) + ENNReal.ofReal τ)) :
+    ∀ᶠ n in atTop, ∀ x : ℤ, vertexPoint (ε n) η x ∈ closedBall (0 : ℂ) ρ →
+      ∀ A : Set (ℝ≥0 → ℂ),
+      srwLaw (mm n) x {ξ | stopAtExit (ball (0 : ℂ) R) (interpolatedWalk (ε n) η 1 ξ) ∈ A} ≤
+        planarBrownianMotion (vertexPoint (ε n) η x)
+          {b | ∃ f ∈ A, cmpEDist (stopAtExit (ball (0 : ℂ) R) ⇑b) f < ENNReal.ofReal κ} +
+        ENNReal.ofReal κ := by
+  have hα1 : (α : ℝ) = 1 := by rw [hα]; simp
+  refine eventually_atTop_of_eventually_add N
+    (P := fun n => ∀ x : ℤ, vertexPoint (ε n) η x ∈ closedBall (0 : ℂ) ρ →
+      ∀ A : Set (ℝ≥0 → ℂ),
+      srwLaw (mm n) x {ξ | stopAtExit (ball (0 : ℂ) R) (interpolatedWalk (ε n) η 1 ξ) ∈ A} ≤
+        planarBrownianMotion (vertexPoint (ε n) η x)
+          {b | ∃ f ∈ A, cmpEDist (stopAtExit (ball (0 : ℂ) R) ⇑b) f < ENNReal.ofReal κ} +
+        ENNReal.ofReal κ) ?_
+  refine eventually_forall_vertex_walk_allSet_le_of_budget (ε := fun n => ε (n + N))
+    h hp (fun n => hε (n + N)) (hε0.comp (tendsto_add_atTop_nat N)) (fun n => mm (n + N))
+    (fun n k => hsucc (n + N) k) hρR hκ hα hm₀ hm₁ (fun n x => hfin (n + N) x) U hU μB hμB
+    (fun n => Rs (n + N)) ?_ (fun n v => q (n + N) v) ?_ hr hd hτ hLP
+  · intro n v hv w hw
+    refine hclose n v ?_ w hw
+    rw [hα1, one_smul]
+    exact hWb hv
+  · intro n v
+    obtain ⟨x, hx, hqx⟩ := hq n v
+    rw [hqx, hα1, one_smul]
+    exact hx
+
 end MatedCRT.AreaCellVertexInequality
