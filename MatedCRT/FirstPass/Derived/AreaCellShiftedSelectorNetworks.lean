@@ -54,11 +54,16 @@ theorem MatedCRTEnv.exists_areaCell_shifted_selector_networks
         dist (φ ((a : ℝ) • areaCellRepresentative h (hε (n + N))
           (S.mult (ε (n + N)) ω) v)) (φ (q (n + N) v)) < δ) ∧
       (∀ P : ℕ → Prop, (∀ᶠ n in Filter.atTop, P n) →
-        ∀ᶠ n in Filter.atTop, P (n + N)) := by
-  obtain ⟨R, hR, q, hqi, hqc, _, _, _, _, _, hp, _, N, hball, hclose, hshift⟩ :=
+        ∀ᶠ n in Filter.atTop, P (n + N)) ∧
+      (∀ n (v : (areaCellConfig h (hε (n + N)) (S.mult (ε (n + N)) ω)).cells),
+        (a : ℝ) • areaCellRepresentative h (hε (n + N)) (S.mult (ε (n + N)) ω) v ∈ W →
+        ∀ w, w ∉ R (n + N) →
+          (areaCellConfig h (hε (n + N)) (S.mult (ε (n + N)) ω)).c v w = 0) := by
+  obtain ⟨R, hR, q, hqi, hqc, _, _, _, _, hr, hp, _, N, hball, hclose, hshift⟩ :=
     S.exists_areaCell_nested_ball_containment ω h ε hε hlf hlfg H hH ha hUW hW
       t ht ht0 φ hφ center radius hO hKO hOW
-  refine ⟨R, hR, q, N, (fun n => hqi (n + N)), (fun n => hqc (n + N)), ?_, hclose, hshift⟩
+  refine ⟨R, hR, q, N, (fun n => hqi (n + N)), (fun n => hqc (n + N)), ?_, hclose, hshift,
+    fun n v hv w hw => hr (n + N) v hv w hw⟩
   intro n
   exact ⟨(hp (n + N)).2.1, (hp (n + N)).2.2.2,
     (fun j v hv => (hball n j v).1 hv), (fun j v hv => (hball n j v).2 hv)⟩

@@ -233,6 +233,10 @@ theorem MatedCRTEnv.exists_covered_shifted_areaCell_actual_transfer_common_radiu
           (S.mult (ε (n + N)) ω) v)) (φ (q (n + N) v)) < δ) ∧
       (∀ P : ℕ → Prop, (∀ᶠ n in Filter.atTop, P n) →
         ∀ᶠ n in Filter.atTop, P (n + N)) ∧
+      (∀ n (v : (areaCellConfig h (hε (n + N)) (S.mult (ε (n + N)) ω)).cells),
+        (scale : ℝ) • areaCellRepresentative h (hε (n + N)) (S.mult (ε (n + N)) ω) v ∈ W →
+        ∀ w, w ∉ R (n + N) →
+          (areaCellConfig h (hε (n + N)) (S.mult (ε (n + N)) ω)).c v w = 0) ∧
       (let Rset := fun n => R (n + N)
        let : ∀ n, Fintype (Rset n) := fun n => (hR (n + N)).fintype
        let : ∀ n, MeasurableSpace (Rset n) := fun _ => ⊤
@@ -414,7 +418,7 @@ theorem MatedCRTEnv.exists_covered_shifted_areaCell_actual_transfer_common_radiu
       hL hU hUb μ hμ hη hτ)
   obtain ⟨L, hn⟩ := htc J a e δ (le_of_lt ha) he hae hδ hδc C hC.isBounded margin hmargin
   obtain ⟨b, hb, hbudget⟩ := hbudgetL L
-  obtain ⟨R, hR, q, N, hqi, hqc, hgeometry, hclose, hshift, hselect⟩ :=
+  obtain ⟨R, hR, q, N, hqi, hqc, hgeometry, hclose, hshift, hret, hselect⟩ :=
     S.exists_shifted_areaCell_planar_selectors_with_global_closeness ω h ε hε hlf hlfg H hH
       hscale hUW hW t ht ht0 φ hφ center rad hO hKO hOW Us Is Ks
       hUs hUsb hIs hIUs μ hμ hKs hKUs radius hradius hcollar
@@ -425,7 +429,7 @@ theorem MatedCRTEnv.exists_covered_shifted_areaCell_actual_transfer_common_radiu
   refine ⟨η, τ, MatedCRTEnv.collarConstant.{u} S ω h α hm₀ Uc d hL hU hUb μ hμ hη hτ, a, e, δ,
     mesh, C, hη, hτ, hc, ha, he, hδ, hmesh,
     hae, hδc, hbuffer, hsmall, hC, hUC, hcover, hballC, hpointE, L, b, ⟨hb, hbudget⟩, ?pa,
-    R, hR, q, N, hqi, hqc, hgeometry, hclose, hshift, ?pb⟩
+    R, hR, q, N, hqi, hqc, hgeometry, hclose, hshift, hret, ?pb⟩
   case pa =>
     intro ε hε V _ _ _ hH q hinj A hA hballA
     exact hn hε V hH q hinj center rad A hA hballA

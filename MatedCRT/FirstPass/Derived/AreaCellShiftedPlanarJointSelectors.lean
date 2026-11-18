@@ -62,6 +62,10 @@ theorem MatedCRTEnv.exists_shifted_areaCell_planar_joint_selectors_of_geometry
           (S.mult (ε (n + N)) ω) v)) (φ (q (n + N) v)) < δ) ∧
       (∀ P : ℕ → Prop, (∀ᶠ n in Filter.atTop, P n) →
         ∀ᶠ n in Filter.atTop, P (n + N)) ∧
+      (∀ n (v : (areaCellConfig h (hε (n + N)) (S.mult (ε (n + N)) ω)).cells),
+        (scale : ℝ) • areaCellRepresentative h (hε (n + N)) (S.mult (ε (n + N)) ω) v ∈ W →
+        ∀ w, w ∉ R (n + N) →
+          (areaCellConfig h (hε (n + N)) (S.mult (ε (n + N)) ω)).c v w = 0) ∧
       (let Rset := fun n => R (n + N)
        let : ∀ n, Fintype (Rset n) := fun n => (hR (n + N)).fintype
        let : ∀ n, MeasurableSpace (Rset n) := fun _ => ⊤
@@ -166,11 +170,11 @@ theorem MatedCRTEnv.exists_shifted_areaCell_planar_joint_selectors_of_geometry
         (((stoppedBrownianLaw (ball (center j) (rad j)) (q' n v) ρ).map
           BouRabeeGwynne.CurveSpace.endPoint) (E 0 k)).toReal| ≤ b / (m 0 + 1)))) := by
   classical
-  obtain ⟨R, hR, q, N, hqi, hqc, hgeom, hclose, hshift, hsel⟩ :=
+  obtain ⟨R, hR, q, N, hqi, hqc, hgeom, hclose, hshift, hret, hsel⟩ :=
     S.exists_shifted_areaCell_joint_selectors_of_geometry ω h ε hε hlf hlfg H hH
       hscale hUW hW t ht ht0 (by omega) φ hφ center rad hO hKO hOW U I K
       hU hUb hI hIU ρ hρ hK r hr hcollar
-  refine ⟨R, hR, q, N, hqi, hqc, hgeom, hclose, hshift, ?_⟩
+  refine ⟨R, hR, q, N, hqi, hqc, hgeom, hclose, hshift, hret, ?_⟩
   dsimp only at hsel ⊢
   obtain ⟨hA, hball, hsel⟩ := hsel
   refine ⟨hA, hball, ?_⟩

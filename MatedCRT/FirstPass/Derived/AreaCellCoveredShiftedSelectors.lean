@@ -319,7 +319,7 @@ theorem MatedCRTEnv.exists_covered_shifted_areaCell_selectors
   have hcover' : ∀ x ∈ thickening δ U, ∃ j, x ∈ ball (center j) (margin / 4) := by
     intro x hx
     simpa only [Set.mem_iUnion] using hcover hx
-  obtain ⟨R, hR, q, N, hqi, hqc, hgeometry, hclose, hshift, hselect⟩ :=
+  obtain ⟨R, hR, q, N, hqi, hqc, hgeometry, hclose, hshift, _, hselect⟩ :=
     S.exists_shifted_areaCell_planar_selectors_with_global_closeness ω h ε hε hlf hlfg H hH
       hscale hUW hW t ht ht0 φ hφ center rad hO hKO hOW Us Is Ks
       hUs hUsb hIs hIUs μ hμ hKs hKUs radius hradius hcollar
