@@ -128,4 +128,50 @@ theorem tendstoUniformlyOn_coneClockWeight_path {F : ℂ → ℝ} (hF : Continuo
   rw [← NNReal.coe_le_coe, Real.coe_toNNReal _ hs.1]
   exact hs.2
 
+/-! ### Time-index transfer and the whole-plane density along a path -/
+
+/-- **Time-index transfer.** For `G : ℕ → ℝ → ℝ`, the uniform Cauchy property on `[0, h]` of the restrictions to
+`ℝ≥0` is the uniform Cauchy property on the real interval `[0, h]`. -/
+theorem uniformCauchySeqOn_nnreal_Icc_iff {G : ℕ → ℝ → ℝ} {h : ℝ≥0} :
+    UniformCauchySeqOn (fun k (t : ℝ≥0) => G k t) atTop (Icc 0 h) ↔
+      UniformCauchySeqOn G atTop (Icc 0 (h : ℝ)) := by
+  constructor
+  · intro hG u hu
+    filter_upwards [hG u hu] with m hm x hx
+    have hx' : x.toNNReal ∈ Icc 0 h := by
+      refine ⟨zero_le, ?_⟩
+      rw [← NNReal.coe_le_coe, Real.coe_toNNReal _ hx.1]
+      exact hx.2
+    simpa only [Real.coe_toNNReal _ hx.1] using hm x.toNNReal hx'
+  · intro hG u hu
+    filter_upwards [hG u hu] with m hm t ht
+    exact hm t ⟨t.coe_nonneg, NNReal.coe_le_coe.2 ht.2⟩
+
+/-- Along a continuous path `b`, the whole-plane clock density `s ↦ ε^{γ²/2} e^{γ hcirc ε (b_s)}` at a positive
+scale `ε` is continuous when the circle averages are jointly continuous at positive radii. -/
+theorem continuous_lqgClockDensity_path (γ : ℝ) {hcirc : ℝ → ℂ → ℝ}
+    (hc : ContinuousOn (fun p : ℝ × ℂ => hcirc p.1 p.2) (Ioi 0 ×ˢ univ)) {ε : ℝ} (hε : 0 < ε)
+    (b : ContinuousPath ℂ) :
+    Continuous fun s : ℝ => ε ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc ε (b s.toNNReal)) := by
+  have h1 : Continuous fun z : ℂ => hcirc ε z :=
+    hc.comp_continuous (continuous_const.prodMk continuous_id) fun _ => ⟨hε, mem_univ _⟩
+  have hb : Continuous fun s : ℝ => b s.toNNReal := b.continuous.comp continuous_real_toNNReal
+  exact continuous_const.mul (Real.continuous_exp.comp (continuous_const.mul (h1.comp hb)))
+
+/-- The whole-plane clock density at a positive scale is nonnegative. -/
+theorem lqgClockDensity_nonneg (γ : ℝ) (hcirc : ℝ → ℂ → ℝ) {ε : ℝ} (hε : 0 < ε) (z : ℂ) :
+    0 ≤ ε ^ (γ ^ 2 / 2) * Real.exp (γ * hcirc ε z) :=
+  mul_nonneg (Real.rpow_nonneg hε.le _) (Real.exp_pos _).le
+
+/-- Along a continuous path, the cone weight at a positive scale and the limit weight (for `δ > 0`) are continuous
+functions of time. -/
+theorem continuous_coneClockWeight_path {F : ℂ → ℝ} (hF : Continuous F) (γ : ℝ) (b : ContinuousPath ℂ)
+    {ε δ : ℝ} (hε : 0 < ε) (hδ : 0 < δ) :
+    (Continuous fun s : ℝ => Real.exp (γ * (-γ * Real.log (max ‖b s.toNNReal‖ ε) +
+        Real.circleAverage F (b s.toNNReal) ε))) ∧
+      Continuous fun s : ℝ =>
+        Real.exp (γ * (-γ * Real.log (max ‖b s.toNNReal‖ δ) + F (b s.toNNReal))) := by
+  have hb : Continuous fun s : ℝ => b s.toNNReal := b.continuous.comp continuous_real_toNNReal
+  exact ⟨(continuous_coneClockWeight hF γ hε).comp hb, (continuous_coneClockWeightLimit hF γ hδ).comp hb⟩
+
 end MatedCRT.FirstPass.Derived
