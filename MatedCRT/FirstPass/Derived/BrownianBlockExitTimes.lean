@@ -21,6 +21,9 @@ Gwynne-Miller-Sheffield invariance principle.
   the closure of the open block around the cell of its starting point.
 * `mem_closure_openBlock_of_blockExitTimes_le`: for `σ_n ω ≤ t ≤ σ_{n+1} ω`, the point `ω t` lies
   in the closure of the open block around the cell of `ω (σ_n ω)`.
+* `norm_sub_le_of_blockExitTimes_le`: for `σ_n ω ≤ t ≤ σ_{n+1} ω`, `‖ω t - ω (σ_n ω)‖ ≤ 4 s`.
+* `exists_norm_sub_le_of_le_blockExitTimes`: for `t ≤ σ_N ω`, `N > 0`, the point `ω t` is within
+  `4 s` of some block-exit position `ω (σ_n ω)`, `n < N`.
 -/
 
 set_option autoImplicit false
@@ -144,6 +147,64 @@ theorem mem_closure_openBlock_of_blockExitTimes_le {s : ℝ} (hs : 0 < s) (F : S
     (ContinuousPath.shift (blockExitTimes s F n ω) ω) hu
   rwa [ContinuousPath.shift_apply, ContinuousPath.shift_apply, add_zero,
     add_tsub_cancel_of_le h1] at h
+
+/-- The closure of the open block lies in the closed block
+`[(a - 1) s, (a + 2) s] × [(b - 1) s, (b + 2) s]`. -/
+theorem closure_openBlock_subset (s : ℝ) (a b : ℤ) :
+    closure (openBlock s a b) ⊆
+      Icc (((a : ℝ) - 1) * s) (((a : ℝ) + 2) * s) ×ℂ
+        Icc (((b : ℝ) - 1) * s) (((b : ℝ) + 2) * s) :=
+  closure_minimal (fun x hx => by
+      simp only [openBlock, Complex.mem_reProdIm, mem_Ioo] at hx
+      simp only [Complex.mem_reProdIm, mem_Icc]
+      exact ⟨⟨hx.1.1.le, hx.1.2.le⟩, hx.2.1.le, hx.2.2.le⟩)
+    (isClosed_Icc.reProdIm isClosed_Icc)
+
+/-- A point of the closed cell and a point of the closure of the open block around it are at
+distance at most `4 s`. -/
+theorem norm_sub_le_of_mem_closedCell_of_mem_closure_openBlock {s : ℝ} {a b : ℤ} {x y : ℂ}
+    (hy : y ∈ closedCell s a b) (hx : x ∈ closure (openBlock s a b)) :
+    ‖x - y‖ ≤ 4 * s := by
+  have hx' := closure_openBlock_subset s a b hx
+  simp only [Complex.mem_reProdIm, mem_Icc] at hx'
+  simp only [closedCell, Complex.mem_reProdIm, mem_Icc] at hy
+  have hre : |(x - y).re| ≤ 2 * s := by
+    rw [Complex.sub_re, abs_le]
+    constructor <;> linarith [hx'.1.1, hx'.1.2, hy.1.1, hy.1.2]
+  have him : |(x - y).im| ≤ 2 * s := by
+    rw [Complex.sub_im, abs_le]
+    constructor <;> linarith [hx'.2.1, hx'.2.2, hy.2.1, hy.2.2]
+  linarith [Complex.norm_le_abs_re_add_abs_im (x - y)]
+
+/-- **Oscillation bound between consecutive block exits** (the Brownian half of step T3 of the
+chaining in the proof of Theorem 3.10 of the Gwynne-Miller-Sheffield invariance principle). For
+`σ_n ω ≤ t ≤ σ_{n+1} ω`, `‖ω t - ω (σ_n ω)‖ ≤ 4 s`. -/
+theorem norm_sub_le_of_blockExitTimes_le {s : ℝ} (hs : 0 < s) (F : Set ℂ) (n : ℕ)
+    (ω : ContinuousPath ℂ) {t : ℝ≥0} (h1 : blockExitTimes s F n ω ≤ t)
+    (h2 : t ≤ blockExitTimes s F (n + 1) ω) :
+    ‖ω t - ω (blockExitTimes s F n ω)‖ ≤ 4 * s :=
+  norm_sub_le_of_mem_closedCell_of_mem_closure_openBlock
+    (mem_closedCell_cellIndex hs _) (mem_closure_openBlock_of_blockExitTimes_le hs F n ω h1 h2)
+
+/-- **Oscillation bound up to the `N`-th block exit.** For `t ≤ σ_N ω`, the point `ω t` is within
+`4 s` of one of the block-exit positions `ω (σ_n ω)`, `n < N`. -/
+theorem exists_norm_sub_le_of_le_blockExitTimes {s : ℝ} (hs : 0 < s) (F : Set ℂ) (N : ℕ)
+    (ω : ContinuousPath ℂ) {t : ℝ≥0} (ht : t ≤ blockExitTimes s F N ω) (hN : 0 < N) :
+    ∃ n < N, ‖ω t - ω (blockExitTimes s F n ω)‖ ≤ 4 * s := by
+  induction N with
+  | zero => exact absurd hN (lt_irrefl 0)
+  | succ N ih =>
+    by_cases hlt : t ≤ blockExitTimes s F N ω
+    · rcases Nat.eq_zero_or_pos N with h0 | h0
+      · subst h0
+        refine ⟨0, Nat.zero_lt_one, ?_⟩
+        have ht0 : t = 0 := le_antisymm (hlt.trans_eq (blockExitTimes_zero s F ω)) bot_le
+        rw [ht0, blockExitTimes_zero, sub_self, norm_zero]
+        linarith
+      · obtain ⟨n, hn, h⟩ := ih hlt h0
+        exact ⟨n, hn.trans (Nat.lt_succ_self N), h⟩
+    · exact ⟨N, Nat.lt_succ_self N,
+        norm_sub_le_of_blockExitTimes_le hs F N ω (not_le.1 hlt).le ht⟩
 
 end BlockExit
 
