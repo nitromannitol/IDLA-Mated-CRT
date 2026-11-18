@@ -58,7 +58,7 @@ theorem exists_common_radius_parameters {X : Type*} [PseudoMetricSpace X] [Prope
         (margin ρ K a e δ mesh : ℝ) (C : Set X),
         0 < margin ∧ margin ≤ ρ ∧ 0 < K ∧ 0 < a ∧ 0 < e ∧ 0 < δ ∧ 0 < mesh ∧
         a + e ≤ c ∧ δ ≤ c ∧ a + e + mesh < δ ∧
-        ENNReal.ofReal (a + e + (r : ℝ) / 4) < (r : ℝ≥0∞) ∧
+        ENNReal.ofReal (a + e + η) < (r : ℝ≥0∞) ∧
         4 * ρ + 3 * a + 2 * K ≤ e ∧ IsCompact C ∧ thickening δ U ⊆ C ∧
         thickening δ U ⊆ ⋃ j, ball (center j) (margin / 4) ∧
         (∀ j, closure (ball (center j) ρ) ⊆ C) := by
