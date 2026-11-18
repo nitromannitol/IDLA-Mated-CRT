@@ -134,4 +134,20 @@ theorem exists_ball_collar_data {X : Type*} [PseudoMetricSpace X] [ProperSpace X
     have := dist_triangle y x (center j)
     linarith
 
+/-- A bounded open neighbourhood of the closed balls of the covering, whose preimage under every
+isometry is bounded. -/
+theorem exists_covering_neighbourhood {X : Type*} [PseudoMetricSpace X]
+    {J : Type*} [Finite J] (center : J → X) {ρ : ℝ} (hρ : 0 < ρ) :
+    ∃ O : Set X, IsOpen O ∧ Bornology.IsBounded O ∧ (∀ j, closedBall (center j) ρ ⊆ O) ∧
+      ∀ {Y : Type*} [PseudoMetricSpace Y] (φ : Y → X), Isometry φ →
+        Bornology.IsBounded (φ ⁻¹' O) := by
+  refine ⟨⋃ j, ball (center j) (2 * ρ), isOpen_iUnion fun _ => isOpen_ball,
+    Bornology.isBounded_iUnion.2 fun _ => isBounded_ball, fun j x hx => ?_, ?_⟩
+  · rw [mem_iUnion]
+    refine ⟨j, ?_⟩
+    rw [mem_ball]; rw [mem_closedBall] at hx; linarith
+  · intro Y _ φ hφ
+    exact hφ.antilipschitzWith.isBounded_preimage
+      (Bornology.isBounded_iUnion.2 fun _ => isBounded_ball)
+
 end MatedCRT
