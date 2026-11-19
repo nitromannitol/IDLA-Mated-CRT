@@ -25,6 +25,9 @@ hypothesis on the walk's increments.
 
 * `exists_chain_of_hclose`: the modified step laws.
 * `srwLaw_blockExit_avoid_frozen_le_of_hclose`: the bound with `hclose` as the walk hypothesis.
+* `prokhorovLE_srwLaw_blockExitPositions_of_hclose`: the law of the first `N + 1` block-exit
+  positions of the walk is within `((N + 1) δ, N δ + 60 N³ δ / s)` of that of planar Brownian
+  motion started at the embedded start, in the one-sided Lévy-Prokhorov sense.
 -/
 
 set_option autoImplicit false
@@ -265,6 +268,41 @@ theorem srwLaw_blockExit_avoid_frozen_le_of_hclose {ζ : ℝ} (hζ0 : 0 < ζ) (h
   exact hC m hlf hcons ε hε η hη hp c hc x₀ s hs a₁ a₂ c₁ c₂ _ hz _
     (isOpen_gridRectOpen s a₁ a₂ c₁ c₂).measurableSet.compl a r δ N hNr hN ha hr0 hr1 hδ hδs hac
     (fun y hy => hKz y (by simpa using hy)) q hq hqP hqΓ hqK hlaw
+
+/-- **Block-exit positions of the walk against planar Brownian motion, from the one-step
+closeness.** Freeze the block-exit chains off the open grid rectangle `R`, start the walk at `x₀`
+with `z = vertexPoint ε η x₀ ∈ R`, and assume the one-step closeness `hclose`. If `0 < N` and
+`(N + 1) δ ≤ s / 4`, the law under `srwLaw m x₀` of the first `N + 1` block-exit positions of the
+interpolated walk is within `((N + 1) δ, N δ + 60 N³ δ / s)` of the law of the first `N + 1`
+block-exit positions of planar Brownian motion started at `z`, in the one-sided Lévy-Prokhorov
+sense. -/
+theorem prokhorovLE_srwLaw_blockExitPositions_of_hclose {m : ℤ → ℤ → ℕ}
+    (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {ε : ℝ} (hε : 0 < ε)
+    {η : ℝ → ℂ} (hη : Continuous η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ)) {c : ℝ}
+    (hc : 0 < c) (x₀ : ℤ) {s : ℝ} (hs : 0 < s) {a₁ a₂ c₁ c₂ : ℤ}
+    (hz : vertexPoint ε η x₀ ∈ gridRectOpen s a₁ a₂ c₁ c₂)
+    (hM : ∀ b b' : ℤ, m b b' ≠ 0 →
+      (∃ z ∈ segment ℝ (vertexPoint ε η b) (vertexPoint ε η b'),
+        z ∉ (gridRectOpen s a₁ a₂ c₁ c₂)ᶜ) →
+      dist (vertexPoint ε η b) (vertexPoint ε η b') ≤ s / 2)
+    {δ : ℝ} (hδ : 0 < δ)
+    (hclose : ∀ y ∈ gridRectOpen s a₁ a₂ c₁ c₂, ∀ u : ℤ, dist (vertexPoint ε η u) y ≤ s / 2 →
+      ProkhorovLE
+        (walkNextBlockExitKernel m (vertexPoint ε η) hc.le s (gridRectOpen s a₁ a₂ c₁ c₂)ᶜ (y, u))
+        (gridRectBlockExitKernel s a₁ a₂ c₁ c₂ y) δ δ)
+    {N : ℕ} (hN : 0 < N) (hδs : ((N : ℝ) + 1) * δ ≤ s / 4) :
+    ProkhorovLE
+      ((srwLaw m x₀).map (fun x => blockExitPositions s (gridRectOpen s a₁ a₂ c₁ c₂)ᶜ N
+        (interpPathCM (vertexPoint ε η) hc.le x)))
+      ((planarBrownianMotion (vertexPoint ε η x₀)).map
+        (blockExitPositions s (gridRectOpen s a₁ a₂ c₁ c₂)ᶜ N))
+      (((N : ℝ) + 1) * δ) (N * δ + 60 * (N : ℝ) ^ 3 * δ / s) := by
+  obtain ⟨q, hq, hqP, hqΓ, hqK, hlaw⟩ :=
+    exists_chain_of_hclose hlf hcons hε hη hp hc x₀ hs hz hM hδ hclose N
+  have := hqP
+  rw [hlaw, law_blockExitPositions_eq_chainHistoryLaw s
+    (isOpen_gridRectOpen s a₁ a₂ c₁ c₂).measurableSet.compl N (vertexPoint ε η x₀)]
+  exact prokhorovLE_chainSeqLaw_gridRectBlockExit_cubic hs a₁ a₂ c₁ c₂ hN hz hδ hδs hq hqΓ hqK
 
 end BlockExit
 
