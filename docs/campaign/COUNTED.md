@@ -688,3 +688,19 @@ is kept as a second route.
   that every subsequential limit defines a time change of Brownian motion (the part of the argument of
   Berestycki-Gwynne (2020) resting on [GMS21, Theorem 3.4] and Propositions 6.1 and 6.14 and the Skorokhod
   representation theorem); no Lean statement of it is proved yet.
+
+#### Lemma 7.4, continued: no flat intervals, strict monotonicity of the time change (2026-11-19)
+
+- `FirstPass/Derived/NoFlatOfTendstoLaw.lean` (`ae_forall_apply_constantOnInterval_eq_zero_of_tendsto_law_interpWalkLaw`):
+  if the interpolated walk laws converge in law to `ν₂` then `ν₂`-almost surely, for every `z`, `P_z` gives mass zero
+  to the paths constant on an interval of positive length (Berestycki-Gwynne (2020), Proposition 6.1, last claim),
+  from `hEnvS`, `hN4`, `h1`, `h10`, `hU` (the inputs of the window estimate are supplied as in
+  `hEqLaw_of_uniformStart_holder`).
+- `FirstPass/Derived/HN5OfContinuousTimeChange.lean`: `definesTimeChangedBM_of_monotone_of_noFlat` (a continuous
+  nondecreasing time change whose law has no flat interval is strictly increasing) and
+  `hN5a_of_continuousTimeChange` (`hN5a` from `hN5b`, the same premises with `Monotone` in place of `StrictMono`).
+- `FirstPass/Derived/ConvergenceOfIDLAOfMarkovLimitHN5b.lean` (`randomWalkToLBMStmt_of_markovLimit_derived_hN5b`):
+  `randomWalkToLBMStmt_of_markovLimit_derived` with `hN5` replaced by `hN5b`. `hN5b` is implied by `hN5` (strictly
+  increasing implies nondecreasing), so it is no stronger. Remaining content of Lemma 7.4: that a subsequential limit
+  is a continuous nondecreasing time change of Brownian motion (equality of the laws of the stopped curve classes from
+  `hN4`, then a coupling); blueprint `notes/blueprints/d2-11-N5a.md` in the fleet directory.
