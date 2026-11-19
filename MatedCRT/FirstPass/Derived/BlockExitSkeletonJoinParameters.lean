@@ -8,7 +8,8 @@ import MatedCRT.FirstPass.Derived.BrownianBlockExitReachGoodStop
 block-exit skeletons (`measure_stopAtExit_le_of_prokhorovLE_of_transferLemma`) with the Brownian side
 (`exists_planarBrownianMotion_reach_and_goodStop_compl_le`, uniform in the start in `closedBall 0 ρ`).  For `0 ≤ ρ < R`
 and `κ > 0` it chooses, independently of the process `W`, the block size `s`, the far-set width `d'`, the closeness
-`δ₀` and the number of blocks `N` such that the following holds: if the law of the block-exit positions of `W` is
+`δ₀` and the number of blocks `N`, with Brownian motion started in `closedBall 0 ρ` reaching the far set within `N`
+blocks outside probability `κ / 16`, such that the following holds: if the law of the block-exit positions of `W` is
 `(δ, e)`-Prokhorov-close to that of planar Brownian motion started at `x₀ ∈ closedBall 0 ρ` with `δ ≤ δ₀`,
 `e ≤ κ / 4`, if `W` reaches the far set within `N` blocks outside an event of probability at most `κ / 8`, and if
 the general transfer lemma of the skeleton comparison holds (as the explicit hypothesis `hLP`), then the stopped path
@@ -32,6 +33,9 @@ universe u
 /-- **Choice of the block parameters for the stopped-path comparison.** -/
 theorem exists_blockExit_parameters_allSet_le {ρ R : ℝ} (hρ : 0 ≤ ρ) (hρR : ρ < R) {κ : ℝ} (hκ : 0 < κ) :
     ∃ (s d' δ₀ : ℝ) (N : ℕ), 0 < s ∧ 0 < d' ∧ 0 < δ₀ ∧
+      (∀ z ∈ closedBall (0 : ℂ) ρ, planarBrownianMotion z
+        {b : ContinuousPath ℂ | ∃ j ≤ N, b (blockExitTimes s (farSet (ball (0 : ℂ) R) d') j b) ∈
+          farSet (ball (0 : ℂ) R) d'}ᶜ ≤ ENNReal.ofReal (κ / 16)) ∧
       ∀ {Ω₁ : Type u} [MeasurableSpace Ω₁] (μ : Measure Ω₁) (W : Ω₁ → ContinuousPath ℂ), Measurable W →
         ∀ x₀ ∈ closedBall (0 : ℂ) ρ, ∀ {δ e : ℝ}, 0 ≤ δ → δ ≤ δ₀ → e ≤ κ / 4 →
         ProkhorovLE (μ.map fun ω => blockExitPositions s (farSet (ball (0 : ℂ) R) d') N (W ω))
@@ -85,7 +89,24 @@ theorem exists_blockExit_parameters_allSet_le {ρ R : ℝ} (hρ : 0 ≤ ρ) (hρ
         gcongr
         exact (div_le_one (by positivity)).2 (by linarith)
       _ = κ / 32 := mul_one _
-  refine ⟨s, d', m / 4, ⌊r ^ (-(2 + (1 / 2 : ℝ)))⌋₊, hs, hd', by positivity, ?_⟩
+  have hguard : ∀ z ∈ closedBall (0 : ℂ) ρ, planarBrownianMotion z
+        {b : ContinuousPath ℂ | ∃ j ≤ ⌊r ^ (-(2 + (1 / 2 : ℝ)))⌋₊,
+          b (blockExitTimes s (farSet (ball (0 : ℂ) R) d') j b) ∈ farSet (ball (0 : ℂ) R) d'}ᶜ ≤
+          ENNReal.ofReal (κ / 16) := by
+    intro z hz
+    have hB0 := hBM (d' := d') hd' z hz s hs r hr0 hr1 hars ⌊r ^ (-(2 + (1 / 2 : ℝ)))⌋₊ (Nat.le_succ _)
+    have hsub : {b : ContinuousPath ℂ | ∃ j ≤ ⌊r ^ (-(2 + (1 / 2 : ℝ)))⌋₊,
+          b (blockExitTimes s (farSet (ball (0 : ℂ) R) d') j b) ∈ farSet (ball (0 : ℂ) R) d'}ᶜ ⊆
+        {ω : ContinuousPath ℂ | (∃ n ≤ ⌊r ^ (-(2 + (1 / 2 : ℝ)))⌋₊,
+          ω (blockExitTimes s (farSet (ball (0 : ℂ) R) d') n ω) ∈ farSet (ball (0 : ℂ) R) d') ∧
+          GoodStop (ball (0 : ℂ) R) T η d (κ / 4) ω}ᶜ := fun b hb h => hb h.1
+    refine le_trans (le_trans (measure_mono hsub) hB0) ?_
+    calc ENNReal.ofReal (C * r ^ 1) + ENNReal.ofReal (κ / 32)
+        ≤ ENNReal.ofReal (κ / 32) + ENNReal.ofReal (κ / 32) := by gcongr
+      _ = ENNReal.ofReal (κ / 16) := by
+          rw [← ENNReal.ofReal_add (by positivity) (by positivity)]
+          congr 1; ring
+  refine ⟨s, d', m / 4, ⌊r ^ (-(2 + (1 / 2 : ℝ)))⌋₊, hs, hd', by positivity, hguard, ?_⟩
   intro Ω₁ _ μ W hW x₀ hx₀ δ e hδ0 hδ he hP hreach hLP A
   have hdd : 4 * s + d' ≤ d := by
     have : 4 * s ≤ d' / 8 := by rw [hsdef]; have := hmd; linarith

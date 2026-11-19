@@ -30,6 +30,9 @@ universe u
 theorem exists_blockExit_parameters_allSet_le_derived {ρ R : ℝ} (hρ : 0 ≤ ρ) (hρR : ρ < R) {κ : ℝ}
     (hκ : 0 < κ) :
     ∃ (s d' δ₀ : ℝ) (N : ℕ), 0 < s ∧ 0 < d' ∧ 0 < δ₀ ∧
+      (∀ z ∈ closedBall (0 : ℂ) ρ, planarBrownianMotion z
+        {b : ContinuousPath ℂ | ∃ j ≤ N, b (blockExitTimes s (farSet (ball (0 : ℂ) R) d') j b) ∈
+          farSet (ball (0 : ℂ) R) d'}ᶜ ≤ ENNReal.ofReal (κ / 16)) ∧
       ∀ {Ω₁ : Type u} [MeasurableSpace Ω₁] (μ : Measure Ω₁) (W : Ω₁ → ContinuousPath ℂ), Measurable W →
         ∀ x₀ ∈ closedBall (0 : ℂ) ρ, ∀ {δ e : ℝ}, 0 ≤ δ → δ ≤ δ₀ → e ≤ κ / 4 →
         ProkhorovLE (μ.map fun ω => blockExitPositions s (farSet (ball (0 : ℂ) R) d') N (W ω))
@@ -42,8 +45,8 @@ theorem exists_blockExit_parameters_allSet_le_derived {ρ R : ℝ} (hρ : 0 ≤ 
             planarBrownianMotion x₀
               {b | ∃ f ∈ A, cmpEDist (stopAtExit (ball (0 : ℂ) R) ⇑b) f < ENNReal.ofReal κ} +
               ENNReal.ofReal κ := by
-  obtain ⟨s, d', δ₀, N, hs, hd', hδ₀, H⟩ := exists_blockExit_parameters_allSet_le.{u} hρ hρR hκ
-  refine ⟨s, d', δ₀, N, hs, hd', hδ₀, ?_⟩
+  obtain ⟨s, d', δ₀, N, hs, hd', hδ₀, hguard, H⟩ := exists_blockExit_parameters_allSet_le.{u} hρ hρR hκ
+  refine ⟨s, d', δ₀, N, hs, hd', hδ₀, hguard, ?_⟩
   intro Ω₁ _ μ W hW x₀ hx₀ δ e hδ0 hδ he hP hreach A
   refine H μ W hW x₀ hx₀ hδ0 hδ he hP hreach ?_ A
   intro htri hlip H₁ H₂ hH₁ hH₂ δ' e' a a' ha ha' hδ' hP' P₁ P₂ G₁ G₂ hG₁ hG₂ A'
