@@ -590,3 +590,28 @@ estimate, then passes to all levels using left continuity of the passage times.
 Theorems 1.4 and 1.6. The `_cauchyGHM_polar` forms retain `hGFF`; the `_cauchyGHM_revuz_polar` forms also supply
 `hGFF` via the occupation identity above. The latter forms have the same conclusions as the `_cauchyGHM_revuz`
 forms and retain the input hypotheses `h1`, `h2`, `hN4`, `h10`, `h11`, `hGHM`, and `hscale`.
+
+### Uniform-start input: block-exit route (2026-11-19)
+
+Status of `hN4 : GMS21UniformStartInput 𝒮` (the named literature input of the forms above; not yet discharged).
+The input is reduced to walk-side block-exit data by new non-counted leaves, none of which removes a counted
+hypothesis:
+- `FirstPass/Derived/UniformStartGoodSandwich.lean:166` (`goodG`) is the event on which the stopped walk from every
+  vertex of the closed ball of radius `ρ` satisfies the all-set inequality against stopped planar Brownian motion.
+- `BlockExitSkeletonJoinParameters.lean` and `BlockExitSkeletonJoinParametersDerived.lean`
+  (`exists_blockExit_parameters_allSet_le_derived`, the latter with the transfer of a one-sided Prokhorov bound through
+  skeletons supplied by `LatticeProb.measure_preimage_le_of_prokhorovLE_of_approx`) choose the block parameters
+  `(s, d', δ₀, N)` from `(ρ, R, κ)`, independently of the environment and the mesh, and record the Brownian reach
+  bound (`κ/16`) within `N` blocks.
+- `BlockExitSkeletonGoodG.lean` (`exists_blockExit_parameters_mem_goodG`, `ae_eventually_mem_goodG_of_blockExit`,
+  `gms21UniformStartInput_of_blockExit`): `GMS21UniformStartInput 𝒮` follows from the single walk-side hypothesis
+  `hwalk`: for every valid environment, `0 < ρ < R`, `κ > 0`, null mesh `e` and all positive `(s, d', δ₀, N)` at which
+  Brownian motion from `closedBall 0 ρ` reaches the far set within `N` blocks outside probability `(κ/2)/16`: almost
+  surely eventually in the mesh, at every vertex in `closedBall 0 ρ`, the laws of the block-exit positions of the
+  interpolated walk and of planar Brownian motion satisfy `ProkhorovLE` at `(δ₀, (κ/2)/4)` and the walk misses the far
+  set within `N` blocks with probability at most `(κ/2)/8`.
+- The reach guard is essential: without it `hwalk` is false (`N = 0`, the walk cannot reach the far set).
+- Remaining for `hwalk`: the closeness of the one-step block-exit kernels (invariance principle input, `hclose`) and the
+  chain from the one-step bound to the `N`-block law (`BlockExitWalk*.lean`), and the walk reach bound.
+The alternative inner-ball cellwise chain (`UniformStartGoodPackageInner.lean`, `GMS21UniformStartOfCellwiseInner.lean`)
+is kept as a second route.
