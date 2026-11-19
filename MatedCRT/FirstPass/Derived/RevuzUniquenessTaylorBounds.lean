@@ -1,0 +1,164 @@
+import MatedCRT.FirstPass.Derived.RevuzWindowFormula
+import MatedCRT.FirstPass.Derived.RevuzPositive
+import MatedCRT.FirstPass.Derived.RevuzFormula
+
+/-!
+# Analytic ingredients of the Taylor argument for the uniqueness of the Revuz correspondence
+
+The difference `N_t = A^h_t - A'^h_t` of the window integrals of two positive continuous additive functionals with
+the same Revuz measure has centred increments.  To conclude that `N_t = 0` almost surely one expands
+`φ(N_t)`, `φ(y) = log(1 + y²)`, along a dyadic partition of `[0, t]` (Fukushima–Oshima–Takeda (2011), proof of
+Theorem 5.1.4; Revuz–Yor (1999), Chapter IV, Proposition 1.2 for the finite-variation case).  This file collects the
+deterministic ingredients:
+
+* `φ ≥ 0`, `φ y = 0 → y = 0`, `|φ'| ≤ 1`, `φ' 0 = 0`, `φ'` is `2`-Lipschitz, and the second-order Taylor bound
+  `|φ b - φ a - φ' a (b - a)| ≤ 2 |b - a| min(|b - a|, 1)`;
+* along a dyadic partition of `[0, T]`, the increments of a function continuous on `[0, T]` are eventually
+  uniformly small;
+* the Stieltjes measure of a continuous nondecreasing clock has no atoms, so the window integral
+  `r ↦ ∫_{(0,r]} h(ω_s) dA_s(ω)` is continuous on `[0, T]` as soon as it is finite at `T`.
+-/
+
+open MeasureTheory Set Filter Topology
+open scoped NNReal ENNReal
+
+namespace MatedCRT
+
+open MarkovProcess
+
+/-- The function `φ(y) = log(1 + y²)` of the Taylor argument. -/
+noncomputable def logOnePlusSq (y : ℝ) : ℝ := Real.log (1 + y ^ 2)
+
+/-- The derivative `φ'(y) = 2y / (1 + y²)` of `logOnePlusSq`. -/
+noncomputable def logOnePlusSqDeriv (y : ℝ) : ℝ := 2 * y / (1 + y ^ 2)
+
+theorem hasDerivAt_logOnePlusSq (y : ℝ) : HasDerivAt logOnePlusSq (logOnePlusSqDeriv y) y := by
+  have h1 : HasDerivAt (fun y : ℝ => 1 + y ^ 2) (2 * y) y := by
+    simpa using (hasDerivAt_pow 2 y).const_add 1
+  exact h1.log (by positivity)
+
+theorem logOnePlusSq_zero : logOnePlusSq 0 = 0 := by simp [logOnePlusSq]
+
+theorem logOnePlusSqDeriv_zero : logOnePlusSqDeriv 0 = 0 := by simp [logOnePlusSqDeriv]
+
+theorem logOnePlusSq_nonneg (y : ℝ) : 0 ≤ logOnePlusSq y :=
+  Real.log_nonneg (by nlinarith [sq_nonneg y])
+
+theorem eq_zero_of_logOnePlusSq_eq_zero {y : ℝ} (h : logOnePlusSq y = 0) : y = 0 := by
+  by_contra hy
+  have hy2 : 0 < y ^ 2 := lt_of_le_of_ne (sq_nonneg y) (Ne.symm (pow_ne_zero 2 hy))
+  have : 0 < logOnePlusSq y := Real.log_pos (by linarith)
+  linarith
+
+theorem abs_logOnePlusSqDeriv_le_one (y : ℝ) : |logOnePlusSqDeriv y| ≤ 1 := by
+  have hpos : (0 : ℝ) < 1 + y ^ 2 := by positivity
+  rw [logOnePlusSqDeriv, abs_div, abs_of_pos hpos, div_le_one₀ hpos]
+  exact abs_le.2 ⟨by nlinarith [sq_nonneg (y + 1)], by nlinarith [sq_nonneg (y - 1)]⟩
+
+/-- The derivative `φ'` is `2`-Lipschitz. -/
+theorem abs_logOnePlusSqDeriv_sub_le (u a : ℝ) :
+    |logOnePlusSqDeriv u - logOnePlusSqDeriv a| ≤ 2 * |u - a| := by
+  have hu : (0 : ℝ) < 1 + u ^ 2 := by positivity
+  have ha : (0 : ℝ) < 1 + a ^ 2 := by positivity
+  have key : logOnePlusSqDeriv u - logOnePlusSqDeriv a =
+      2 * (u - a) * (1 - u * a) / ((1 + u ^ 2) * (1 + a ^ 2)) := by
+    rw [logOnePlusSqDeriv, logOnePlusSqDeriv, div_sub_div _ _ hu.ne' ha.ne']
+    ring
+  have hb : |1 - u * a| ≤ (1 + u ^ 2) * (1 + a ^ 2) :=
+    abs_le.2 ⟨by nlinarith [sq_nonneg (u - a), sq_nonneg u, sq_nonneg a, sq_nonneg (u * a)],
+      by nlinarith [sq_nonneg (u + a), sq_nonneg u, sq_nonneg a, sq_nonneg (u * a)]⟩
+  rw [key, abs_div, abs_of_pos (mul_pos hu ha), div_le_iff₀ (mul_pos hu ha), abs_mul, abs_mul, abs_two]
+  exact mul_le_mul_of_nonneg_left hb (by positivity)
+
+/-- The second-order Taylor bound for `φ(y) = log(1 + y²)`:
+`|φ b - φ a - φ' a (b - a)| ≤ 2 |b - a| min(|b - a|, 1)`. -/
+theorem abs_logOnePlusSq_sub_sub_le (a b : ℝ) :
+    |logOnePlusSq b - logOnePlusSq a - logOnePlusSqDeriv a * (b - a)| ≤ 2 * |b - a| * min |b - a| 1 := by
+  set g : ℝ → ℝ := fun u => logOnePlusSq u - logOnePlusSq a - logOnePlusSqDeriv a * (u - a) with hg
+  have hgd : ∀ u, HasDerivAt g (logOnePlusSqDeriv u - logOnePlusSqDeriv a) u := by
+    intro u
+    exact (((hasDerivAt_logOnePlusSq u).sub_const (logOnePlusSq a)).sub
+      (((hasDerivAt_id' u).sub_const a).const_mul (logOnePlusSqDeriv a))).congr_deriv (by ring)
+  have hga : g a = 0 := by simp [hg]
+  have h1 : |g b| ≤ 2 * |b - a| := by
+    have := Convex.norm_image_sub_le_of_norm_hasDerivWithin_le (f := g) (s := univ) (x := a) (y := b)
+      (C := 2) (fun u _ => (hgd u).hasDerivWithinAt) (fun u _ => ?_) convex_univ (mem_univ _) (mem_univ _)
+    · simpa [hga, Real.norm_eq_abs] using this
+    · rw [Real.norm_eq_abs]
+      have h1 := abs_le.1 (abs_logOnePlusSqDeriv_le_one u)
+      have h2 := abs_le.1 (abs_logOnePlusSqDeriv_le_one a)
+      exact abs_le.2 ⟨by linarith [h1.1, h2.2], by linarith [h1.2, h2.1]⟩
+  have h2 : |g b| ≤ 2 * |b - a| * |b - a| := by
+    have := Convex.norm_image_sub_le_of_norm_hasDerivWithin_le (f := g) (s := uIcc a b) (x := a) (y := b)
+      (C := 2 * |b - a|) (fun u _ => (hgd u).hasDerivWithinAt) (fun u hu => ?_) (convex_uIcc a b)
+      left_mem_uIcc right_mem_uIcc
+    · simpa [hga, Real.norm_eq_abs] using this
+    · rw [Real.norm_eq_abs]
+      exact (abs_logOnePlusSqDeriv_sub_le u a).trans
+        (mul_le_mul_of_nonneg_left (abs_sub_left_of_mem_uIcc hu) (by norm_num))
+  rw [mul_min_of_nonneg _ _ (by positivity), mul_one]
+  exact le_min h2 h1
+
+/-- Along the dyadic partitions `k T / 2ⁿ` of `[0, T]`, the increments of a function continuous on `[0, T]` are
+eventually uniformly smaller than any `ε > 0`. -/
+theorem eventually_forall_abs_dyadic_increment_lt {F : ℝ → ℝ} {T : ℝ} (hT : 0 ≤ T)
+    (hF : ContinuousOn F (Icc 0 T)) {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ n : ℕ in atTop, ∀ k < 2 ^ n,
+      |F (((k + 1 : ℕ) : ℝ) * T / 2 ^ n) - F ((k : ℝ) * T / 2 ^ n)| < ε := by
+  obtain ⟨δ, hδ, hFδ⟩ := Metric.uniformContinuousOn_iff.1
+    (isCompact_Icc.uniformContinuousOn_of_continuous hF) ε hε
+  have hlim : Tendsto (fun n : ℕ => T * (1 / 2 : ℝ) ^ n) atTop (𝓝 (T * 0)) :=
+    (tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num) (by norm_num)).const_mul T
+  rw [mul_zero] at hlim
+  filter_upwards [hlim.eventually (gt_mem_nhds hδ)] with n hn k hk
+  have h2 : (0 : ℝ) < 2 ^ n := by positivity
+  have hk1 : ((k + 1 : ℕ) : ℝ) ≤ 2 ^ n := by exact_mod_cast Nat.succ_le_of_lt hk
+  have hk0 : (k : ℝ) ≤ 2 ^ n := by exact_mod_cast hk.le
+  have hmem1 : ((k + 1 : ℕ) : ℝ) * T / 2 ^ n ∈ Icc 0 T :=
+    ⟨by positivity, by rw [div_le_iff₀ h2]; nlinarith⟩
+  have hmem0 : (k : ℝ) * T / 2 ^ n ∈ Icc 0 T :=
+    ⟨by positivity, by rw [div_le_iff₀ h2]; nlinarith⟩
+  have hdiff : ((k + 1 : ℕ) : ℝ) * T / 2 ^ n - (k : ℝ) * T / 2 ^ n = T * (1 / 2 : ℝ) ^ n := by
+    rw [one_div_pow]
+    push_cast
+    field_simp
+    ring
+  have := hFδ _ hmem1 _ hmem0 (by rwa [Real.dist_eq, hdiff, abs_of_nonneg (by positivity)])
+  rwa [Real.dist_eq] at this
+
+/-- The Stieltjes measure of a continuous nondecreasing clock has no atoms. -/
+theorem nullSingletonClass_stieltjesOfNNReal {a : ℝ≥0 → ℝ≥0} (hm : Monotone a) (hc : Continuous a) :
+    NullSingletonClass (stieltjesOfNNReal a).measure := by
+  have hF : (⇑(stieltjesOfNNReal a) : ℝ → ℝ) = fun x => (a x.toNNReal : ℝ) :=
+    funext (stieltjesOfNNReal_apply_of_continuous hm hc)
+  have hcF : Continuous (stieltjesOfNNReal a) := by
+    rw [hF]
+    exact NNReal.continuous_coe.comp (hc.comp continuous_real_toNNReal)
+  refine ⟨fun x => ?_⟩
+  rw [StieltjesFunction.measure_singleton,
+    ((stieltjesOfNNReal a).mono.continuousWithinAt_Iio_iff_leftLim_eq).1 hcF.continuousWithinAt,
+    sub_self, ENNReal.ofReal_zero]
+
+/-- Along a path on which the clock is continuous and nondecreasing, the window integral
+`r ↦ ∫_{(0,r]} h(ω_s) dĀ_s(ω)` is continuous on `[0, T]` once it is finite at `T`. -/
+theorem continuousOn_clockWindowIntegral_toReal {A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0} {ω : ContinuousPath ℂ}
+    (hc : Continuous fun t => A t ω) (hm : Monotone fun t => A t ω) {h : ℂ → ℝ≥0∞} (hh : Measurable h)
+    {T : ℝ} (hT : clockWindowIntegral A h T ω ≠ ∞) :
+    ContinuousOn (fun r => (clockWindowIntegral A h r ω).toReal) (Icc 0 T) := by
+  have hreg : (fun u => regularize A u ω) = fun u => A u ω :=
+    funext (regularize_eq_of_continuous_monotone hc hm)
+  have : NullSingletonClass (stieltjesOfNNReal fun u => A u ω).measure :=
+    nullSingletonClass_stieltjesOfNNReal hm hc
+  simp only [clockWindowIntegral, hreg] at hT ⊢
+  set ν := (stieltjesOfNNReal fun u => A u ω).measure
+  have hgm : Measurable fun s : ℝ => h (ω s.toNNReal) :=
+    hh.comp (ω.continuous.comp continuous_real_toNNReal).measurable
+  have hae : ∀ᵐ s ∂ν.restrict (Ioc 0 T), h (ω s.toNNReal) < ∞ := ae_lt_top hgm hT
+  have hint : IntegrableOn (fun s : ℝ => (h (ω s.toNNReal)).toReal) (Icc 0 T) ν :=
+    (integrableOn_Icc_iff_integrableOn_Ioc (f := fun s : ℝ => (h (ω s.toNNReal)).toReal) (μ := ν)
+      enorm_ne_top).2 (integrable_toReal_of_lintegral_ne_top hgm.aemeasurable hT)
+  refine (intervalIntegral.continuousOn_primitive hint).congr (fun r hr => ?_)
+  exact (integral_toReal hgm.aemeasurable
+    (ae_restrict_of_ae_restrict_of_subset (Ioc_subset_Ioc_right hr.2) hae)).symm
+
+end MatedCRT
