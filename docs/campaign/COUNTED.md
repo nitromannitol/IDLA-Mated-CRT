@@ -610,6 +610,16 @@ hypothesis:
   surely eventually in the mesh, at every vertex in `closedBall 0 ρ`, the laws of the block-exit positions of the
   interpolated walk and of planar Brownian motion satisfy `ProkhorovLE` at `(δ₀, (κ/2)/4)` and the walk misses the far
   set within `N` blocks with probability at most `(κ/2)/8`.
+- `BlockExitSkeletonGoodGSandwich.lean` (`exists_blockExit_parameters_mem_goodG_sandwich`,
+  `ae_eventually_mem_goodG_of_blockExit_sandwich`, `gms21UniformStartInput_of_blockExit_sandwich`): the same with the
+  frozen set `farSet (ball 0 R) d'` replaced by `F = ballFrozenSet s (R + d')`
+  (`BlockExitGridCellFrozen.lean`: the union of the closed grid cells of mesh `s` missing `ball 0 (R + d')`; measurable,
+  grid compatible, and `farSet (ball 0 R) d₁ ⊆ F ⊆ farSet (ball 0 R) d'` for `d' + 2 s ≤ d₁`). The block parameters
+  `(s, d', d₁, δ₀, N)` are independent of `F` (`BlockExitSkeletonJoinParametersSandwichDerived.lean`). The walk-side
+  hypothesis `hwalk` is then stated for all positive `(s, d', δ₀, N)` and every `d₁ ≥ d' + 2 s`, with the Prokhorov
+  bound and the non-reach bound for the walk frozen on `F`, and the Brownian reach guard `(κ/2)/16` at `F`. Its chain
+  ingredients are the grid-compatible frozen kernels of `BrownianBlockExitChain.lean`
+  (`prokhorovLE_chainSeqLaw_frozenBlockExit_of_gridLineStable`); the walk-side adapter for `F` is not yet written.
 - The reach guard is essential: without it `hwalk` is false (`N = 0`, the walk cannot reach the far set).
 - Remaining for `hwalk`: the closeness of the one-step block-exit kernels (invariance principle input, `hclose`) and the
   chain from the one-step bound to the `N`-block law (`BlockExitWalk*.lean`), and the walk reach bound.
