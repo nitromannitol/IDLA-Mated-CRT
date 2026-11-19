@@ -1,6 +1,7 @@
 import MatedCRT.External.RevuzTimeChange
 import MatedCRT.FirstPass.Derived.UniformStartStoppedBM
 import MatedCRT.FirstPass.Derived.BrownianTubeMarkov
+import MatedCRT.FirstPass.Derived.RevuzPositive
 
 /-!
 # Lebesgue measure is invariant for planar Brownian motion
@@ -47,10 +48,6 @@ theorem lintegral_planarLaw_eval_mem (t : NNReal) {S : Set ℂ} (hS : Measurable
     exact lintegral_indicator_one hS
   simp_rw [hin]
   rw [lintegral_const, measure_univ, mul_one]
-
-/-- The planar Brownian laws form a measurable family of measures. -/
-theorem measurable_planarLaw : Measurable planarLaw :=
-  HarmonicBalls.planarBrownianMotion.measurable
 
 /-- Under the path measure `∫ P_z dz` started from Lebesgue measure, `B_t` has law Lebesgue measure. -/
 theorem map_eval_bind_planarLaw (t : NNReal) :
