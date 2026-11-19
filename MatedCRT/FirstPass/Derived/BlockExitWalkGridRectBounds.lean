@@ -78,8 +78,8 @@ theorem exitEdgesShort_of_localEdges {m : ℤ → ℤ → ℕ} {v : ℤ → ℂ}
 
 /-- **Both walk-side block-exit bounds at prescribed tolerances, frozen-set form.** Freeze the
 block-exit chains on a measurable grid-line stable set `F` whose complement has diameter at most
-`D`, and fix `δ₀ > 0`, `κ > 0`. There is `N₀ > 0` such that for every `N ≥ N₀` there is `δ₁ > 0`
-with the following property. For every `0 < δ ≤ δ₁`, every walk (locally finite multiplicities `m`
+`D`, and fix `κ > 0`. There is `N₀ > 0` such that for every `N ≥ N₀` and every `δ₀ > 0` there is
+`δ₁ > 0` with the following property. For every `0 < δ ≤ δ₁`, every walk (locally finite multiplicities `m`
 with consecutive vertices adjacent, embedding `vertexPoint ε η`, speed `c > 0`) started at a vertex
 `x₀` whose embedded position is off `F`, and every `0 ≤ θ ≤ s / 2` such that the walk steps carrying
 block-exit positions off `F` have length at most `θ` (`ExitEdgesShort`; see
@@ -89,11 +89,12 @@ against `frozenBlockExitKernel s hF` from the vertices within `θ` of points off
   `N + 1` block-exit positions of planar Brownian motion started at `vertexPoint ε η x₀`, in the
   one-sided Lévy-Prokhorov sense;
 * the probability that its first `N` block-exit positions all avoid `F` is at most `κ`.
-The numbers `N₀` and `δ₁` do not depend on `θ`; `N₀` depends only on `s`, `D` and `κ`. -/
+The numbers `N₀` and `δ₁` do not depend on `θ`; `N₀` depends only on `s`, `D` and `κ` (not on `δ₀`). -/
 theorem exists_blockExit_frozen_walk_bounds {s : ℝ} (hs : 0 < s) {F : Set ℂ}
     (hF : MeasurableSet F) (hFs : GridLineStable s F) {D : ℝ} (hD0 : 0 ≤ D)
-    (hFD : ∀ y ∉ F, ∀ z ∉ F, ‖y - z‖ ≤ D) {δ₀ κ : ℝ} (hδ₀ : 0 < δ₀) (hκ : 0 < κ) :
-    ∃ N₀ : ℕ, 0 < N₀ ∧ ∀ N : ℕ, N₀ ≤ N → ∃ δ₁ : ℝ, 0 < δ₁ ∧ ∀ δ : ℝ, 0 < δ → δ ≤ δ₁ →
+    (hFD : ∀ y ∉ F, ∀ z ∉ F, ‖y - z‖ ≤ D) {κ : ℝ} (hκ : 0 < κ) :
+    ∃ N₀ : ℕ, 0 < N₀ ∧ ∀ N : ℕ, N₀ ≤ N → ∀ δ₀ : ℝ, 0 < δ₀ →
+      ∃ δ₁ : ℝ, 0 < δ₁ ∧ ∀ δ : ℝ, 0 < δ → δ ≤ δ₁ →
       ∀ (m : ℤ → ℤ → ℕ), IsLocallyFiniteMult m → (∀ k : ℤ, m k (k + 1) ≠ 0) →
       ∀ (ε : ℝ), 0 < ε → ∀ (η : ℝ → ℂ), Continuous η → Tendsto η (cocompact ℝ) (cocompact ℂ) →
       ∀ (c : ℝ) (hc : 0 < c) (x₀ : ℤ), vertexPoint ε η x₀ ∉ F →
@@ -134,7 +135,7 @@ theorem exists_blockExit_frozen_walk_bounds {s : ℝ} (hs : 0 < s) {F : Set ℂ}
     exact (le_div_iff₀ (by linarith)).1 hr3
   have hN₀ : 0 < ⌊r ^ (-(2 + 1 / 2 : ℝ))⌋₊ :=
     Nat.floor_pos.2 (Real.one_le_rpow_of_pos_of_le_one_of_nonpos hr0 hr1.le (by norm_num))
-  refine ⟨⌊r ^ (-(2 + 1 / 2 : ℝ))⌋₊, hN₀, fun N hN => ?_⟩
+  refine ⟨⌊r ^ (-(2 + 1 / 2 : ℝ))⌋₊, hN₀, fun N hN δ₀ hδ₀ => ?_⟩
   have hN1 : (0 : ℝ) < N + 1 := by positivity
   have hE : 0 < (N : ℝ) + 60 * (N : ℝ) ^ 3 / s + 1 := by
     have := div_nonneg (by positivity : (0 : ℝ) ≤ 60 * (N : ℝ) ^ 3) hs.le
@@ -236,9 +237,9 @@ theorem exists_blockExit_gridRect_walk_bounds {s : ℝ} (hs : 0 < s) (a₁ a₂ 
     (gridLineStable_compl_gridRectOpen hs a₁ a₂ c₁ c₂)
     (mul_nonneg (by positivity) hs.le : (0 : ℝ) ≤ (|(a₂ : ℝ) - a₁| + |(c₂ : ℝ) - c₁|) * s)
     (fun y hy z hz => norm_sub_le_of_mem_gridRectOpen hs (by simpa using hy) (by simpa using hz))
-    hδ₀ hκ
+    hκ
   refine ⟨N₀, hN₀, fun N hN => ?_⟩
-  obtain ⟨δ₁, hδ₁, h'⟩ := h N hN
+  obtain ⟨δ₁, hδ₁, h'⟩ := h N hN δ₀ hδ₀
   exact ⟨δ₁, hδ₁, fun δ hδ hδδ₁ m hlf hcons ε hε η hη hp c hc x₀ hz hM hclose =>
     h' δ hδ hδδ₁ m hlf hcons ε hε η hη hp c hc x₀ (fun h => h hz) (s / 2)
       (div_nonneg hs.le zero_le_two) le_rfl (exitEdgesShort_of_forall hM)
