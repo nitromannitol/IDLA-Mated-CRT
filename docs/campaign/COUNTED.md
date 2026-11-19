@@ -639,3 +639,30 @@ hypothesis:
   inline hypotheses until the library pin contains them. `hdiagProb` is the remaining content of `GMS21UniformStartInput`.
 The alternative inner-ball cellwise chain (`UniformStartGoodPackageInner.lean`, `GMS21UniformStartOfCellwiseInner.lean`)
 is kept as a second route.
+
+### Brownian-limit input in reference form; time-change inputs proved (2026-11-19)
+
+- `FirstPass/Derived/BG20ReferenceOfEveryEnvironment.lean` (`bg20Reference_of_bg20`): the binder `hBG` of
+  `randomWalkToLBMStmt_of_bg20` (Berestycki-Gwynne (2020), Theorem 1.2, in every valid environment) implies, given
+  `h1` and `h10`, the binder `hBGref`: one valid environment of a model with law `ν`, with measurable versions of its
+  field and curve, along which the convergence holds. So `hBGref` is no stronger than `hBG`.
+- `FirstPass/Derived/RandomWalkToLBMStmtOfBG20Reference.lean` (`randomWalkToLBMStmt_of_bg20_reference`,
+  `closed_1_4_quantumConeScaling_coneDimension_bg20ref`, `closed_1_6_quantumConeScaling_coneDimension_bg20ref`):
+  Theorems 1.4 and 1.6 with binders `h1 h2 hN4 h10 hBGref`. The convergence is transferred from the reference
+  environment to every valid environment sharing `ν` (identical joint law of curve and multiplicities,
+  `IdentificationTransfer.lean`, `GoodCurveSet.lean`).
+- The three literature inputs of `External/RevuzTimeChange.lean`, ingredients of the identification of subsequential
+  limits as time-changed Brownian motion (Berestycki-Gwynne (2020), Proposition 7.10) inside `hBGref`, are proved;
+  none is a counted binder:
+  - `RevuzInvariantInput` (`:128`): `revuzInvariantInput_derived` (`FirstPass/Derived/RevuzInvariant.lean`);
+  - `TimeChangeInvariantUniqueInput` (`:136`): `timeChangeInvariantUniqueInput_derived`
+    (`FirstPass/Derived/TimeChangeInvariantUnique.lean`);
+  - `RevuzUniquenessInput` (`:120`): `revuzUniquenessInput_derived` (`FirstPass/Derived/RevuzUniqueness.lean`;
+    Fukushima-Oshima-Takeda (2011), Theorem 5.1.4, via localizers of the σ-finite Revuz measure and the dyadic Taylor
+    expansion of `log(1 + N²)` for the difference `N` of two window integrals).
+  `FirstPass/Derived/MarkovTimeChangeRevuzUniqueDerived.lean`
+  (`exists_pathLaw_time_scale_of_isMarkovTCBM_revuzUnique_derived`,
+  `exists_measurable_timeScale_of_isMarkovTCBM_revuzUnique_derived`) states the time-change identifications with no
+  Revuz hypothesis left. Remaining content of `hBGref`: the other parts of the proof of Berestycki-Gwynne (2020),
+  Theorem 1.2 (Markov property of subsequential limits, invariance of the LQG measure, the time-change constant being
+  deterministic) and the existence of a valid environment realizing the reference construction (`h1`, `h10`).
