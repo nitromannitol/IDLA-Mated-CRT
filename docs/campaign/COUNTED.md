@@ -623,5 +623,19 @@ hypothesis:
 - The reach guard is essential: without it `hwalk` is false (`N = 0`, the walk cannot reach the far set).
 - Remaining for `hwalk`: the closeness of the one-step block-exit kernels (invariance principle input, `hclose`) and the
   chain from the one-step bound to the `N`-block law (`BlockExitWalk*.lean`), and the walk reach bound.
+- `GMS21UniformStartOfHdiag.lean` (`gms21UniformStartInput_of_hdiag`): `GMS21UniformStartInput 𝒮` follows from the
+  single diagonal estimate `hdiag`, stated almost surely, eventually in the mesh, along every null sequence. This is the
+  form the literature does not give for the `γ`-quantum cone: the convergence of the walk (Gwynne-Miller-Sheffield,
+  Tutte embedding of the mated-CRT map, Theorem 3.4) is in probability.
+- `UniformStartSubsequence.lean` and `GMS21UniformStartOfHdiagProb.lean` (`gms21UniformStartInput_of_hdiagProb`):
+  `GMS21UniformStartInput 𝒮` follows from `hdiagProb`, the diagonal estimate in probability: for every valid
+  environment, `s > 0`, `ρ₀` and `δ > 0` there is a scale `θ ∈ (0, s / 2]` with `24 θ / s ≤ δ / 2` such that for every
+  `θ' > 0` there is `ε₀ > 0` with, for all `ε ∈ (0, ε₀)`, the outer measure of the set of environments in which some
+  point `y` off `ballFrozenSet s ρ₀` and some vertex `u` within `θ` of `y` have the one-step block-exit kernel of the
+  walk not `(δ, δ / 2)`-close to the planar Brownian exit law from `u` out of the block of `y`, at most `θ'`. The chain
+  of the previous items is rerun along a subsequence of each null sequence (`ae_eventually_mem_goodG_of_blockExit_sandwich_sub`,
+  `exists_eps_uniformStart_bound_sub`, `gms21UniformStartInput_of_blockExit_sandwich_sub`). Two general measure-theory
+  statements (first Borel-Cantelli along a subsequence for arbitrary sets, reverse Fatou along subsequences) are
+  inline hypotheses until the library pin contains them. `hdiagProb` is the remaining content of `GMS21UniformStartInput`.
 The alternative inner-ball cellwise chain (`UniformStartGoodPackageInner.lean`, `GMS21UniformStartOfCellwiseInner.lean`)
 is kept as a second route.
