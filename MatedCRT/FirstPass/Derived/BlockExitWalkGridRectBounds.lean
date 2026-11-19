@@ -65,14 +65,14 @@ block-exit chains on a measurable grid-line stable set `F` whose complement has 
 `D`, and fix `δ₀ > 0`, `κ > 0`. There is `N₀ > 0` such that for every `N ≥ N₀` there is `δ₁ > 0`
 with the following property. For every `0 < δ ≤ δ₁`, every walk (locally finite multiplicities `m`
 with consecutive vertices adjacent, embedding `vertexPoint ε η`, speed `c > 0`) started at a vertex
-`x₀` whose embedded position is off `F`, whose edges meeting the complement of `F` have length at
-most `s / 2`, and which satisfies the one-step closeness `hclose` at tolerance `δ` against
-`frozenBlockExitKernel s hF`, satisfies
+`x₀` whose embedded position is off `F`, and every `0 ≤ θ ≤ s / 2` such that the edges meeting the
+complement of `F` have length at most `θ` and the one-step closeness `hclose` holds at tolerance `δ`
+against `frozenBlockExitKernel s hF` from the vertices within `θ` of points off `F`, satisfies
 * the law of its first `N + 1` block-exit positions is within `(δ₀, κ)` of the law of the first
   `N + 1` block-exit positions of planar Brownian motion started at `vertexPoint ε η x₀`, in the
   one-sided Lévy-Prokhorov sense;
 * the probability that its first `N` block-exit positions all avoid `F` is at most `κ`.
-The number `N₀` depends only on `s`, `D` and `κ`. -/
+The numbers `N₀` and `δ₁` do not depend on `θ`; `N₀` depends only on `s`, `D` and `κ`. -/
 theorem exists_blockExit_frozen_walk_bounds {s : ℝ} (hs : 0 < s) {F : Set ℂ}
     (hF : MeasurableSet F) (hFs : GridLineStable s F) {D : ℝ} (hD0 : 0 ≤ D)
     (hFD : ∀ y ∉ F, ∀ z ∉ F, ‖y - z‖ ≤ D) {δ₀ κ : ℝ} (hδ₀ : 0 < δ₀) (hκ : 0 < κ) :
@@ -80,10 +80,11 @@ theorem exists_blockExit_frozen_walk_bounds {s : ℝ} (hs : 0 < s) {F : Set ℂ}
       ∀ (m : ℤ → ℤ → ℕ), IsLocallyFiniteMult m → (∀ k : ℤ, m k (k + 1) ≠ 0) →
       ∀ (ε : ℝ), 0 < ε → ∀ (η : ℝ → ℂ), Continuous η → Tendsto η (cocompact ℝ) (cocompact ℂ) →
       ∀ (c : ℝ) (hc : 0 < c) (x₀ : ℤ), vertexPoint ε η x₀ ∉ F →
+      ∀ θ : ℝ, 0 ≤ θ → θ ≤ s / 2 →
       (∀ b b' : ℤ, m b b' ≠ 0 →
         (∃ z ∈ segment ℝ (vertexPoint ε η b) (vertexPoint ε η b'), z ∉ F) →
-        dist (vertexPoint ε η b) (vertexPoint ε η b') ≤ s / 2) →
-      (∀ y ∉ F, ∀ u : ℤ, dist (vertexPoint ε η u) y ≤ s / 2 →
+        dist (vertexPoint ε η b) (vertexPoint ε η b') ≤ θ) →
+      (∀ y ∉ F, ∀ u : ℤ, dist (vertexPoint ε η u) y ≤ θ →
         ProkhorovLE (walkNextBlockExitKernel m (vertexPoint ε η) hc.le s F (y, u))
           (frozenBlockExitKernel s hF y) δ δ) →
       ProkhorovLE
@@ -127,7 +128,7 @@ theorem exists_blockExit_frozen_walk_bounds {s : ℝ} (hs : 0 < s) {F : Set ℂ}
       (min (1 / (2 * (N + 1))) (κ / (2 * ((N : ℝ) + 60 * (N : ℝ) ^ 3 / s + 1))))),
     lt_min (div_pos hδ₀ hN1) (lt_min (div_pos hs (by positivity))
       (lt_min (by positivity) (div_pos hκ (by positivity)))),
-    fun δ hδ hδ₁ m hlf hcons ε hε η hη hp c hc x₀ hz hM hclose => ?_⟩
+    fun δ hδ hδ₁ m hlf hcons ε hε η hη hp c hc x₀ hz θ hθ hθs hM hclose => ?_⟩
   have h1 : ((N : ℝ) + 1) * δ ≤ δ₀ := by
     rw [mul_comm]; exact (le_div_iff₀ hN1).1 (hδ₁.trans (min_le_left _ _))
   have h2 : ((N : ℝ) + 1) * δ ≤ s / 8 := by
@@ -146,7 +147,7 @@ theorem exists_blockExit_frozen_walk_bounds {s : ℝ} (hs : 0 < s) {F : Set ℂ}
     linarith
   have hNpos : 0 < N := hN₀.trans_le hN
   refine ⟨prokhorovLE_mono (prokhorovLE_srwLaw_blockExitPositions_of_hclose_frozen hlf hcons hε hη
-    hp hc x₀ hs hF hFs hz hM hδ hclose hNpos (by linarith)) h1 (by linarith), ?_⟩
+    hp hc x₀ hs hF hFs hz hθ hθs hM hδ hclose hNpos (by linarith)) h1 (by linarith), ?_⟩
   -- the avoidance bound at `N₀ = ⌊r ^ (-(2 + 1/2))⌋`, then monotonicity in the number of blocks
   have hN₀N : ((⌊r ^ (-(2 + 1 / 2 : ℝ))⌋₊ : ℕ) : ℝ) ≤ N := Nat.cast_le.2 hN
   have h5 : (((⌊r ^ (-(2 + 1 / 2 : ℝ))⌋₊ : ℕ) : ℝ) + 1) * δ ≤ ((N : ℝ) + 1) * δ :=
@@ -165,7 +166,7 @@ theorem exists_blockExit_frozen_walk_bounds {s : ℝ} (hs : 0 < s) {F : Set ℂ}
     intro y hy
     have := hFD y hy _ hz
     linarith
-  have hA := hC m hlf hcons ε hε η hη hp c hc x₀ s hs F hF hFs hz hM a r δ _ rfl hN₀ ha0 hr0
+  have hA := hC m hlf hcons ε hε η hη hp c hc x₀ s hs F hF hFs hz θ hθ hθs hM a r δ _ rfl hN₀ ha0 hr0
     hr1 hδ (by linarith) (by linarith) hK hclose
   calc _ ≤ srwLaw m x₀ {x | ∀ n < ⌊r ^ (-(2 + 1 / 2 : ℝ))⌋₊,
           interpPathCM (vertexPoint ε η) hc.le x
@@ -224,7 +225,8 @@ theorem exists_blockExit_gridRect_walk_bounds {s : ℝ} (hs : 0 < s) (a₁ a₂ 
   refine ⟨N₀, hN₀, fun N hN => ?_⟩
   obtain ⟨δ₁, hδ₁, h'⟩ := h N hN
   exact ⟨δ₁, hδ₁, fun δ hδ hδδ₁ m hlf hcons ε hε η hη hp c hc x₀ hz hM hclose =>
-    h' δ hδ hδδ₁ m hlf hcons ε hε η hη hp c hc x₀ (fun h => h hz) hM
+    h' δ hδ hδδ₁ m hlf hcons ε hε η hη hp c hc x₀ (fun h => h hz) (s / 2)
+      (div_nonneg hs.le zero_le_two) le_rfl hM
       (fun y hy => hclose y (by simpa using hy))⟩
 
 end BlockExit

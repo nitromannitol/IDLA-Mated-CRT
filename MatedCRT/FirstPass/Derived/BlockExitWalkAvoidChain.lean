@@ -126,32 +126,33 @@ theorem gridRectBlockExitKernel_gridLines_compl {s : ℝ} (hs : 0 < s) (a₁ a�
   frozenBlockExitKernel_gridLines_compl_of_notMem_or hs _ (hy.imp_left fun h h' => h' h)
 
 /-- **Frozen-set form for the walk embedded by a continuous proper curve.** With the reference
-kernel the Brownian block-exit kernel frozen on a measurable set `F`: per-vertex closeness for the
-vertices within `s / 2` of points off `F` gives
+kernel the Brownian block-exit kernel frozen on a measurable set `F`, and every edge meeting `Fᶜ`
+of length at most `θ`: per-vertex closeness for the vertices within `θ` of points off `F` gives
 `ProkhorovLE (κ_n g) (frozenBlockExitKernel s hF g_n) r e` for almost every block-exit history
 `g`. -/
 theorem ae_prokhorovLE_walkBlockExitStepKernel_frozen_of_proper {m : ℤ → ℤ → ℕ}
     (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {ε : ℝ} (hε : 0 < ε)
     {η : ℝ → ℂ} (hη : Continuous η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ)) {c : ℝ}
-    (hc : 0 < c) (a : ℤ) {s : ℝ} (hs : 0 ≤ s) {F : Set ℂ} (hF : MeasurableSet F)
+    (hc : 0 < c) (a : ℤ) {s : ℝ} {θ : ℝ} (hθ : 0 ≤ θ) {F : Set ℂ} (hF : MeasurableSet F)
     (hM : ∀ b b' : ℤ, m b b' ≠ 0 →
       (∃ z ∈ segment ℝ (vertexPoint ε η b) (vertexPoint ε η b'), z ∉ F) →
-      dist (vertexPoint ε η b) (vertexPoint ε η b') ≤ s / 2)
+      dist (vertexPoint ε η b) (vertexPoint ε η b') ≤ θ)
     (n : ℕ) {r e : ℝ} (hr : 0 < r)
-    (hclose : ∀ y ∉ F, ∀ u : ℤ, dist (vertexPoint ε η u) y ≤ s / 2 →
+    (hclose : ∀ y ∉ F, ∀ u : ℤ, dist (vertexPoint ε η u) y ≤ θ →
       ProkhorovLE (walkNextBlockExitKernel m (vertexPoint ε η) hc.le s F (y, u))
         (frozenBlockExitKernel s hF y) r e) :
     ∀ᵐ g ∂(srwLaw m a).map (walkBlockExitHistory (vertexPoint ε η) hc.le s F n),
       ProkhorovLE (walkBlockExitStepKernel m a (vertexPoint ε η) hc.le s F n g)
         (frozenBlockExitKernel s hF (g (Fin.last n))) r e :=
-  ae_prokhorovLE_walkBlockExitStepKernel m a (vertexPoint ε η) hc hs hF hM n
+  ae_prokhorovLE_walkBlockExitStepKernel m a (vertexPoint ε η) hc hθ hF hM n
     ((ae_walkBlockExitStepTime_ne_top hlf hcons hε hη hp hc a s _).mono fun _ hx => hx n)
     (fun y => frozenBlockExitKernel s hF y) hr (fun _ hy => frozenBlockExitKernel_of_mem s _ hy)
     hclose
 
 /-- **Step laws of the walk's block-exit chain from the one-step closeness.** Freeze the chain on
 a measurable set `F`, start the walk at `x₀` with `vertexPoint ε η x₀ ∉ F`, and assume the one-step
-closeness `hclose` of the next block-exit position to the block-exit kernel frozen on `F`.
+closeness `hclose` of the next block-exit position to the block-exit kernel frozen on `F`, from the
+vertices within `θ` of points off `F`, where `0 ≤ θ ≤ s / 2` bounds the edges meeting `Fᶜ`.
 Then there are step laws `q n` on padded histories of length `N + 1`, measurable and probability
 measures, charging only the grid lines from histories ending at the start or on the grid lines,
 `(δ, δ)`-close to the frozen kernel at the last entry at every history, and such that the law of the
@@ -161,13 +162,13 @@ theorem exists_chain_of_hclose_frozen {m : ℤ → ℤ → ℕ} (hlf : IsLocally
     (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {ε : ℝ} (hε : 0 < ε) {η : ℝ → ℂ} (hη : Continuous η)
     (hp : Tendsto η (cocompact ℝ) (cocompact ℂ)) {c : ℝ} (hc : 0 < c) (x₀ : ℤ) {s : ℝ}
     (hs : 0 < s) {F : Set ℂ} (hF : MeasurableSet F)
-    (hz : vertexPoint ε η x₀ ∉ F)
+    (hz : vertexPoint ε η x₀ ∉ F) {θ : ℝ} (hθ : 0 ≤ θ) (hθs : θ ≤ s / 2)
     (hM : ∀ b b' : ℤ, m b b' ≠ 0 →
       (∃ z ∈ segment ℝ (vertexPoint ε η b) (vertexPoint ε η b'),
         z ∉ F) →
-      dist (vertexPoint ε η b) (vertexPoint ε η b') ≤ s / 2)
+      dist (vertexPoint ε η b) (vertexPoint ε η b') ≤ θ)
     {δ : ℝ} (hδ : 0 < δ)
-    (hclose : ∀ y ∉ F, ∀ u : ℤ, dist (vertexPoint ε η u) y ≤ s / 2 →
+    (hclose : ∀ y ∉ F, ∀ u : ℤ, dist (vertexPoint ε η u) y ≤ θ →
       ProkhorovLE
         (walkNextBlockExitKernel m (vertexPoint ε η) hc.le s F (y, u))
         (frozenBlockExitKernel s hF y) δ δ)
@@ -183,6 +184,10 @@ theorem exists_chain_of_hclose_frozen {m : ℤ → ℤ → ℕ} (hlf : IsLocally
         chainSeqLaw (fun n => paddedHistoryKernel n (q n))
           (Measure.dirac fun _ => vertexPoint ε η x₀) N := by
   classical
+  have hM2 : ∀ b b' : ℤ, m b b' ≠ 0 →
+      (∃ z ∈ segment ℝ (vertexPoint ε η b) (vertexPoint ε η b'), z ∉ F) →
+      dist (vertexPoint ε η b) (vertexPoint ε η b') ≤ s / 2 :=
+    fun b b' hb hbz => (hM b b' hb hbz).trans hθs
   have hW := fun n => isMarkovKernel_walkPaddedStepKernel m x₀ (vertexPoint ε η) hc.le s hF N n
   -- measurable full-measure sets of padded histories where the walk's step kernel is good
   choose S hS hSp hSae using fun n => exists_measurableSet_forall_mem_of_ae
@@ -201,9 +206,9 @@ theorem exists_chain_of_hclose_frozen {m : ℤ → ℤ → ℕ} (hlf : IsLocally
     rw [map_paddedHistory_walkBlockExitPos_eq m x₀ (vertexPoint ε η) hc.le s hF N n]
     refine ae_map_historyEmbed hn ?_
     filter_upwards [ae_prokhorovLE_walkBlockExitStepKernel_frozen_of_proper hlf hcons hε hη hp
-        hc x₀ hs.le hF hM n hδ hclose,
+        hc x₀ hθ hF hM n hδ hclose,
       ae_walkBlockExitStepKernel_gridLines_compl hlf hcons hε hη hp hc x₀ hs hF
-        hz hM n] with g hg1 hg2
+        hz hM2 n] with g hg1 hg2
     rw [walkPaddedStepKernel_historyEmbed _ _ _ _ _ _ hn, historyEmbed_last hn]
     exact ⟨hg1, hg2⟩
   -- the step kernels modified on the null sets
@@ -246,7 +251,7 @@ theorem exists_chain_of_hclose_frozen {m : ℤ → ℤ → ℕ} (hlf : IsLocally
         (srwLaw m x₀).map (paddedHistory (N := N) (walkBlockExitPos (vertexPoint ε η) hc.le s
           F x₀) n) ⊗ₘ q n := by
       intro n hn
-      rw [map_walkPaddedHistory_next_eq_compProd hlf hcons hε hη hp hc x₀ hs hF hM hn.le]
+      rw [map_walkPaddedHistory_next_eq_compProd hlf hcons hε hη hp hc x₀ hs hF hM2 hn.le]
       refine Measure.compProd_congr ?_
       filter_upwards [hgood n hn.le] with h hh
       exact (hq_mem n h hh).symm
@@ -287,7 +292,7 @@ theorem exists_chain_of_hclose {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteM
         chainSeqLaw (fun n => paddedHistoryKernel n (q n))
           (Measure.dirac fun _ => vertexPoint ε η x₀) N :=
   exists_chain_of_hclose_frozen hlf hcons hε hη hp hc x₀ hs
-    (isOpen_gridRectOpen s a₁ a₂ c₁ c₂).measurableSet.compl (fun h => h hz) hM hδ
+    (isOpen_gridRectOpen s a₁ a₂ c₁ c₂).measurableSet.compl (fun h => h hz) (div_nonneg hs.le zero_le_two) le_rfl hM hδ
     (fun y hy => hclose y (by simpa using hy)) N
 
 
@@ -338,9 +343,9 @@ theorem srwLaw_blockExit_avoid_frozen_le_of_hclose {ζ : ℝ} (hζ0 : 0 < ζ) (h
 `0 < ζ < 1` and every `p` there is `C` such that the following holds. Let `m` be a locally finite
 multigraph whose consecutive vertices are adjacent, `ε > 0`, `η` a continuous proper curve, `c > 0`
 a speed, `F` a measurable grid-line stable set not containing the embedded start
-`vertexPoint ε η x₀`, with every edge meeting the complement of `F` of length at most `s / 2`.
+`vertexPoint ε η x₀`, with every edge meeting the complement of `F` of length at most `θ ≤ s / 2`.
 Suppose every point off `F` lies at distance less than `a - 4 s - (N + 1) δ` from the start, and
-that from every `y ∉ F` and every vertex `u` within `s / 2` of `y` the next block-exit position of
+that from every `y ∉ F` and every vertex `u` within `θ` of `y` the next block-exit position of
 the walk frozen on `F` is `(δ, δ)`-close to the block-exit kernel frozen on `F` at `y`. Then the
 probability that the first `N = ⌊r ^ (-(2 + ζ))⌋` block-exit positions all avoid `F` is at most
 `C r ^ p + N δ + 60 N³ δ / s`. -/
@@ -349,14 +354,14 @@ theorem srwLaw_blockExit_avoid_frozen_le_of_hclose_frozen {ζ : ℝ} (hζ0 : 0 <
     ∃ C : ℝ, ∀ (m : ℤ → ℤ → ℕ), IsLocallyFiniteMult m → (∀ k : ℤ, m k (k + 1) ≠ 0) →
       ∀ (ε : ℝ), 0 < ε → ∀ (η : ℝ → ℂ), Continuous η → Tendsto η (cocompact ℝ) (cocompact ℂ) →
       ∀ (c : ℝ) (hc : 0 < c) (x₀ : ℤ) (s : ℝ), 0 < s → ∀ (F : Set ℂ) (hF : MeasurableSet F),
-      GridLineStable s F → vertexPoint ε η x₀ ∉ F →
+      GridLineStable s F → vertexPoint ε η x₀ ∉ F → ∀ θ : ℝ, 0 ≤ θ → θ ≤ s / 2 →
       (∀ b b' : ℤ, m b b' ≠ 0 →
         (∃ z ∈ segment ℝ (vertexPoint ε η b) (vertexPoint ε η b'), z ∉ F) →
-        dist (vertexPoint ε η b) (vertexPoint ε η b') ≤ s / 2) →
+        dist (vertexPoint ε η b) (vertexPoint ε η b') ≤ θ) →
       ∀ (a r δ : ℝ) (N : ℕ), N = ⌊r ^ (-(2 + ζ))⌋₊ → 0 < N → 0 < a → 0 < r → r < 1 →
       0 < δ → ((N : ℝ) + 1) * δ ≤ s / 4 → 2 * (a * r) ≤ s / 2 - 2 * (((N : ℝ) + 1) * δ) →
       (∀ y ∉ F, ‖y - vertexPoint ε η x₀‖ + ((N : ℝ) + 1) * δ < a - 4 * s) →
-      (∀ y ∉ F, ∀ u : ℤ, dist (vertexPoint ε η u) y ≤ s / 2 →
+      (∀ y ∉ F, ∀ u : ℤ, dist (vertexPoint ε η u) y ≤ θ →
         ProkhorovLE (walkNextBlockExitKernel m (vertexPoint ε η) hc.le s F (y, u))
           (frozenBlockExitKernel s hF y) δ δ) →
       srwLaw m x₀ {x | ∀ n < N,
@@ -365,16 +370,17 @@ theorem srwLaw_blockExit_avoid_frozen_le_of_hclose_frozen {ζ : ℝ} (hζ0 : 0 <
         ENNReal.ofReal (C * r ^ p) +
           ENNReal.ofReal (N * δ + 60 * (N : ℝ) ^ 3 * δ / s) := by
   obtain ⟨C, hC⟩ := srwLaw_blockExit_avoid_frozen_le_of_chain_of_gridLineStable hζ0 hζ1 p
-  refine ⟨C, fun m hlf hcons ε hε η hη hp c hc x₀ s hs F hF hFs hz hM a r δ N hNr hN ha hr0
+  refine ⟨C, fun m hlf hcons ε hε η hη hp c hc x₀ s hs F hF hFs hz θ hθ hθs hM a r δ N hNr hN ha hr0
     hr1 hδ hδs hac hKz hclose => ?_⟩
   obtain ⟨q, hq, hqP, hqΓ, hqK, hlaw⟩ :=
-    exists_chain_of_hclose_frozen hlf hcons hε hη hp hc x₀ hs hF hz hM hδ hclose N
+    exists_chain_of_hclose_frozen hlf hcons hε hη hp hc x₀ hs hF hz hθ hθs hM hδ hclose N
   exact hC m hlf hcons ε hε η hη hp c hc x₀ s hs F hF hFs _ hz F hF a r δ N hNr hN ha hr0 hr1 hδ
     hδs hac hKz q hq hqP hqΓ hqK hlaw
 
 /-- **Block-exit positions of the walk against planar Brownian motion, frozen-set form.** Freeze
 the block-exit chains on a measurable grid-line stable set `F`, start the walk at `x₀` with
-`z = vertexPoint ε η x₀ ∉ F`, and assume the one-step closeness `hclose` to the block-exit kernel
+`z = vertexPoint ε η x₀ ∉ F`, bound the edges meeting `Fᶜ` by `θ ≤ s / 2`, and assume the one-step
+closeness `hclose` (from the vertices within `θ` of points off `F`) to the block-exit kernel
 frozen on `F`. If `0 < N` and `(N + 1) δ ≤ s / 4`, the law under `srwLaw m x₀` of the first `N + 1`
 block-exit positions of the interpolated walk is within `((N + 1) δ, N δ + 60 N³ δ / s)` of the law
 of the first `N + 1` block-exit positions of planar Brownian motion started at `z`, in the
@@ -383,12 +389,13 @@ theorem prokhorovLE_srwLaw_blockExitPositions_of_hclose_frozen {m : ℤ → ℤ 
     (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {ε : ℝ} (hε : 0 < ε)
     {η : ℝ → ℂ} (hη : Continuous η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ)) {c : ℝ}
     (hc : 0 < c) (x₀ : ℤ) {s : ℝ} (hs : 0 < s) {F : Set ℂ} (hF : MeasurableSet F)
-    (hFs : GridLineStable s F) (hz : vertexPoint ε η x₀ ∉ F)
+    (hFs : GridLineStable s F) (hz : vertexPoint ε η x₀ ∉ F) {θ : ℝ} (hθ : 0 ≤ θ)
+    (hθs : θ ≤ s / 2)
     (hM : ∀ b b' : ℤ, m b b' ≠ 0 →
       (∃ z ∈ segment ℝ (vertexPoint ε η b) (vertexPoint ε η b'), z ∉ F) →
-      dist (vertexPoint ε η b) (vertexPoint ε η b') ≤ s / 2)
+      dist (vertexPoint ε η b) (vertexPoint ε η b') ≤ θ)
     {δ : ℝ} (hδ : 0 < δ)
-    (hclose : ∀ y ∉ F, ∀ u : ℤ, dist (vertexPoint ε η u) y ≤ s / 2 →
+    (hclose : ∀ y ∉ F, ∀ u : ℤ, dist (vertexPoint ε η u) y ≤ θ →
       ProkhorovLE (walkNextBlockExitKernel m (vertexPoint ε η) hc.le s F (y, u))
         (frozenBlockExitKernel s hF y) δ δ)
     {N : ℕ} (hN : 0 < N) (hδs : ((N : ℝ) + 1) * δ ≤ s / 4) :
@@ -398,7 +405,7 @@ theorem prokhorovLE_srwLaw_blockExitPositions_of_hclose_frozen {m : ℤ → ℤ 
       ((planarBrownianMotion (vertexPoint ε η x₀)).map (blockExitPositions s F N))
       (((N : ℝ) + 1) * δ) (N * δ + 60 * (N : ℝ) ^ 3 * δ / s) := by
   obtain ⟨q, hq, hqP, hqΓ, hqK, hlaw⟩ :=
-    exists_chain_of_hclose_frozen hlf hcons hε hη hp hc x₀ hs hF hz hM hδ hclose N
+    exists_chain_of_hclose_frozen hlf hcons hε hη hp hc x₀ hs hF hz hθ hθs hM hδ hclose N
   have := hqP
   rw [hlaw, law_blockExitPositions_eq_chainHistoryLaw s hF N (vertexPoint ε η x₀)]
   exact prokhorovLE_chainSeqLaw_frozenBlockExit_of_gridLineStable_cubic hs hF hFs hN hz hδ hδs hq
@@ -435,7 +442,8 @@ theorem prokhorovLE_srwLaw_blockExitPositions_of_hclose {m : ℤ → ℤ → ℕ
   prokhorovLE_srwLaw_blockExitPositions_of_hclose_frozen hlf hcons hε hη hp hc x₀ hs
     (isOpen_gridRectOpen s a₁ a₂ c₁ c₂).measurableSet.compl
     (gridLineStable_compl_gridRectOpen hs a₁ a₂ c₁ c₂)
-    (fun h => h hz) hM hδ (fun y hy => hclose y (by simpa using hy)) hN hδs
+    (fun h => h hz) (div_nonneg hs.le zero_le_two) le_rfl hM hδ
+    (fun y hy => hclose y (by simpa using hy)) hN hδs
 
 end BlockExit
 
