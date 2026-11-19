@@ -704,3 +704,16 @@ is kept as a second route.
   increasing implies nondecreasing), so it is no stronger. Remaining content of Lemma 7.4: that a subsequential limit
   is a continuous nondecreasing time change of Brownian motion (equality of the laws of the stopped curve classes from
   `hN4`, then a coupling); blueprint `notes/blueprints/d2-11-N5a.md` in the fleet directory.
+
+### Lemma 7.4 (binder `hN5`): discharged (2026-11-19)
+
+- `FirstPass/Derived/HN5Discharged.lean` (`randomWalkToLBMStmt_of_markovLimit_derived_noHN5`):
+  `randomWalkToLBMStmt_of_markovLimit_derived_hN5c` with the premise `hN5c` proved. The counted theorems and the frozen
+  statements are unchanged. The remaining premises of this wrapper are `h1 h2 hN4 h10 hN8' hN9`; `hN5` and its
+  reductions `hN5a`, `hN5b`, `hN5c` no longer occur.
+- Chain (Berestycki-Gwynne 2020, proof of Lemma 7.4): finite exit of the limit from every ball, from `hN4`
+  (`ExitTailUniformStart`, `ExitTailAllRadii`, `ExitTailClock`, `ExitTailInterpWalkLaw`, `ExitTailLimit`,
+  `ExitTailAllRadiiLimit`); identification of the stopped class law at regular radii (`RegularExitMixture`,
+  `ClassLawLimitIdentification`, `RegularExitLimitLaws`); lowering of the radius (`ExitClassLowering`); extension from a
+  dense countable set of starting points to all `z` (`ClassLawAllStarts`: `ae_forall_map_stoppedExitCurve_eq_of_tendsto_law_interpWalkLaw`,
+  for every `z` and every `r > ‖z‖`, stronger than `hN5c`).
