@@ -654,7 +654,7 @@ is kept as a second route.
   `closed_1_4_quantumConeScaling_coneDimension_bg20ref`, `closed_1_6_quantumConeScaling_coneDimension_bg20ref`):
   Theorems 1.4 and 1.6 with binders `h1 h2 hN4 h10 hBGref`. The convergence is transferred from the reference
   environment to every valid environment sharing `ν` (identical joint law of curve and multiplicities,
-  `IdentificationTransfer.lean`, `GoodCurveSet.lean`).
+  `FirstPass/Derived/IdentificationTransfer.lean`).
 - The three literature inputs of `External/RevuzTimeChange.lean`, ingredients of the identification of subsequential
   limits as time-changed Brownian motion (Berestycki-Gwynne (2020), Proposition 7.10) inside `hBGref`, are proved;
   none is a counted binder:
@@ -667,6 +667,7 @@ is kept as a second route.
   `FirstPass/Derived/MarkovTimeChangeRevuzUniqueDerived.lean`
   (`exists_pathLaw_time_scale_of_isMarkovTCBM_revuzUnique_derived`,
   `exists_measurable_timeScale_of_isMarkovTCBM_revuzUnique_derived`) states the time-change identifications with no
-  Revuz hypothesis left. Remaining content of `hBGref`: the other parts of the proof of Berestycki-Gwynne (2020),
+  Revuz hypothesis left. Remaining content of `hBGref` (a description only: no Lean statement isolates these parts,
+  and no counted route imports the wrappers above yet): the other parts of the proof of Berestycki-Gwynne (2020),
   Theorem 1.2 (Markov property of subsequential limits, invariance of the LQG measure, the time-change constant being
   deterministic) and the existence of a valid environment realizing the reference construction (`h1`, `h10`).
