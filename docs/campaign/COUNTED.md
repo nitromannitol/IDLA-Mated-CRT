@@ -636,7 +636,11 @@ hypothesis:
   of the previous items is rerun along a subsequence of each null sequence (`ae_eventually_mem_goodG_of_blockExit_sandwich_sub`,
   `exists_eps_uniformStart_bound_sub`, `gms21UniformStartInput_of_blockExit_sandwich_sub`). Two general measure-theory
   statements (first Borel-Cantelli along a subsequence for arbitrary sets, reverse Fatou along subsequences) are
-  inline hypotheses until the library pin contains them. `hdiagProb` is the remaining content of `GMS21UniformStartInput`.
+  inline hypotheses of `gms21UniformStartInput_of_hdiagProb`; `gms21UniformStartInput_of_hdiagProb_derived`
+  (`GMS21UniformStartOfHdiagProbDerived.lean`) supplies both from the library
+  (`LatticeProb.exists_strictMono_ae_eventually_notMem_of_tendsto_measure`,
+  `LatticeProb.exists_eps_measure_compl_le_of_ae_eventually_subseq`). `hdiagProb` is the remaining content of
+  `GMS21UniformStartInput`.
 The alternative inner-ball cellwise chain (`UniformStartGoodPackageInner.lean`, `GMS21UniformStartOfCellwiseInner.lean`)
 is kept as a second route.
 
