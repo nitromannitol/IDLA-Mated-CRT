@@ -114,9 +114,7 @@ theorem ae_walkBlockExitStepKernel_gridLines_compl {m : ℤ → ℤ → ℕ}
     {η : ℝ → ℂ} (hη : Continuous η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ)) {c : ℝ}
     (hc : 0 < c) (a : ℤ) {s : ℝ} (hs : 0 < s) {F : Set ℂ} (hF : MeasurableSet F)
     (ha : vertexPoint ε η a ∉ F)
-    (hM : ∀ b b' : ℤ, m b b' ≠ 0 →
-      (∃ z ∈ segment ℝ (vertexPoint ε η b) (vertexPoint ε η b'), z ∉ F) →
-      dist (vertexPoint ε η b) (vertexPoint ε η b') ≤ s / 2)
+    (hE : ExitEdgesShort m (vertexPoint ε η) hc.le s F (s / 2))
     (n : ℕ) :
     ∀ᵐ g ∂(srwLaw m a).map (walkBlockExitHistory (vertexPoint ε η) hc.le s F n),
       walkBlockExitStepKernel m a (vertexPoint ε η) hc.le s F n g (gridLines s)ᶜ = 0 := by
@@ -141,7 +139,7 @@ theorem ae_walkBlockExitStepKernel_gridLines_compl {m : ℤ → ℤ → ℕ}
       (measurable_snd (measurableSet_gridLines s))]
     filter_upwards [ae_blockExitPositions_succ_mem_gridLines hlf hcons hε hη hp hc a hs ha]
       with x hx using hx n
-  rw [map_walkBlockExitHistory_next_eq_compProd_of_proper hlf hcons hε hη hp hc a hs hF hM n]
+  rw [map_walkBlockExitHistory_next_eq_compProd_of_proper hlf hcons hε hη hp hc a hs hF hE n]
     at hjoint
   have := isMarkovKernel_walkBlockExitStepKernel m a (vertexPoint ε η) hc.le s hF n
   filter_upwards [Measure.ae_ae_of_ae_compProd hjoint] with g hg

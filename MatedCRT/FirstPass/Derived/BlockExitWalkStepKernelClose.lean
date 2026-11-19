@@ -12,7 +12,7 @@ next block-exit position from `g_n` under the walk restarted at `U_n`. We show:
   almost every mixture component;
 * in the frozen set `F` the next-exit law of the walk is within any positive radius of the Dirac
   mass at the current position;
-* hence, if every edge meeting `Fᶜ` has length at most `θ` and every next-exit law of the walk
+* hence, if every walk step carrying a block-exit position off `F` has length at most `θ` and every next-exit law of the walk
   started at a vertex within `θ` of a point `y ∉ F`
   is `ProkhorovLE`-close to a reference kernel `L y` which is the Dirac mass on `F`, then
   `ProkhorovLE (κ_n g) (L g_n) r e` holds for almost every block-exit history `g`.
@@ -66,15 +66,14 @@ theorem prokhorovLE_walkNextBlockExitKernel_of_mem (m : ℤ → ℤ → ℕ) (v 
     exact bot_le
 
 /-- **The one-step kernel is close to a reference kernel for almost every history.** Let `L`
-be a reference family of laws equal to the Dirac mass on `F`. Assume every edge whose segment
-meets `Fᶜ` has length at most `θ`. If, for every `y ∉ F` and every
+be a reference family of laws equal to the Dirac mass on `F`. Assume every walk step carrying a
+block-exit position off `F` has length at most `θ`. If, for every `y ∉ F` and every
 vertex `u` with `dist (v u) y ≤ θ`, the next-exit law of the walk restarted at `u` from the
 position `y` satisfies `ProkhorovLE · (L y) r e` with `r > 0`, then for almost every block-exit
 history `g` (under the walk law from `a`), `ProkhorovLE (κ_n g) (L g_n) r e`. -/
 theorem ae_prokhorovLE_walkBlockExitStepKernel (m : ℤ → ℤ → ℕ) (a : ℤ) (v : ℤ → ℂ) {c : ℝ}
     (hc : 0 < c) {s : ℝ} {θ : ℝ} (hθ : 0 ≤ θ) {F : Set ℂ} (hF : MeasurableSet F)
-    (hM : ∀ b b' : ℤ, m b b' ≠ 0 → (∃ z ∈ segment ℝ (v b) (v b'), z ∉ F) →
-      dist (v b) (v b') ≤ θ)
+    (hE : ExitEdgesShort m v hc.le s F θ)
     (n : ℕ) (hτ : ∀ᵐ x ∂srwLaw m a, walkBlockExitStepTime v hc.le s F n x ≠ ⊤)
     (L : ℂ → Measure ℂ) {r e : ℝ} (hr : 0 < r) (hfrozen : ∀ y ∈ F, L y = Measure.dirac y)
     (hclose : ∀ y, y ∉ F → ∀ u : ℤ, dist (v u) y ≤ θ →
@@ -82,7 +81,7 @@ theorem ae_prokhorovLE_walkBlockExitStepKernel (m : ℤ → ℤ → ℕ) (a : �
     ∀ᵐ g ∂(srwLaw m a).map (walkBlockExitHistory v hc.le s F n),
       LatticeProb.ProkhorovLE (walkBlockExitStepKernel m a v hc.le s F n g)
         (L (g (Fin.last n))) r e := by
-  filter_upwards [ae_condDistrib_walkBlockExitStepPos_near m a v hc hθ hF hM n hτ] with g hg
+  filter_upwards [ae_condDistrib_walkBlockExitStepPos_near m a v hc hθ hF hE n hτ] with g hg
   refine prokhorovLE_walkBlockExitStepKernel_of_ae m a v hc.le s hF n g _ ?_
   by_cases hgF : g (Fin.last n) ∈ F
   · rw [hfrozen _ hgF]
@@ -114,7 +113,7 @@ theorem ae_prokhorovLE_walkBlockExitStepKernel_gridRect_of_proper {m : ℤ → �
         (walkBlockExitStepKernel m a (vertexPoint ε η) hc.le s (gridRectOpen s a₁ a₂ c₁ c₂)ᶜ n g)
         (gridRectBlockExitKernel s a₁ a₂ c₁ c₂ (g (Fin.last n))) r e :=
   ae_prokhorovLE_walkBlockExitStepKernel m a (vertexPoint ε η) hc (div_nonneg hs zero_le_two)
-    (isOpen_gridRectOpen s a₁ a₂ c₁ c₂).measurableSet.compl hM n
+    (isOpen_gridRectOpen s a₁ a₂ c₁ c₂).measurableSet.compl (exitEdgesShort_of_forall hM) n
     ((ae_walkBlockExitStepTime_ne_top hlf hcons hε hη hp hc a s _).mono fun _ hx => hx n)
     (fun y => gridRectBlockExitKernel s a₁ a₂ c₁ c₂ y) hr
     (fun _ hy => frozenBlockExitKernel_of_mem s _ hy)

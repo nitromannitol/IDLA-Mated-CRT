@@ -123,16 +123,48 @@ theorem measurable_walkNextBlockExit (v : ℤ → ℂ) {c : ℝ} (hc : 0 ≤ c) 
   unfold walkNextBlockExit
   exact Measurable.ite hS (hpos.comp hpair) measurable_fst
 
+/-- **Short exit edges.** Every walk step carrying a block-exit position off `F` is an edge of
+length at most `θ`: for every path `x` and every `n`, if the `n`-th block-exit position `Y_n` of the
+interpolation at speed `c` is off `F` and the step `j = ⌊c σ_n⌋` of `x` is an edge of `m`, then
+`dist (v x_j) (v x_{j+1}) ≤ θ`. This is the only use the block-exit chain makes of a bound on the
+edge lengths. -/
+def ExitEdgesShort (m : ℤ → ℤ → ℕ) (v : ℤ → ℂ) {c : ℝ} (hc : 0 ≤ c) (s : ℝ) (F : Set ℂ)
+    (θ : ℝ) : Prop :=
+  ∀ (x : ℕ → ℤ) (n : ℕ), interpPathCM v hc x (blockExitTimes s F n (interpPathCM v hc x)) ∉ F →
+    m (x ⌊c * (blockExitTimes s F n (interpPathCM v hc x) : ℝ)⌋₊)
+      (x (⌊c * (blockExitTimes s F n (interpPathCM v hc x) : ℝ)⌋₊ + 1)) ≠ 0 →
+    dist (v (x ⌊c * (blockExitTimes s F n (interpPathCM v hc x) : ℝ)⌋₊))
+      (v (x (⌊c * (blockExitTimes s F n (interpPathCM v hc x) : ℝ)⌋₊ + 1))) ≤ θ
+
+/-- Short exit edges from a bound on every edge whose segment meets `Fᶜ`. -/
+theorem exitEdgesShort_of_forall {m : ℤ → ℤ → ℕ} {v : ℤ → ℂ} {c : ℝ} {hc : 0 ≤ c} {s : ℝ}
+    {F : Set ℂ} {θ : ℝ}
+    (hM : ∀ b b' : ℤ, m b b' ≠ 0 → (∃ z ∈ segment ℝ (v b) (v b'), z ∉ F) →
+      dist (v b) (v b') ≤ θ) :
+    ExitEdgesShort m v hc s F θ := by
+  intro x n hYF hm
+  have hnn : 0 ≤ c * (blockExitTimes s F n (interpPathCM v hc x) : ℝ) :=
+    mul_nonneg hc (NNReal.coe_nonneg _)
+  exact hM _ _ hm
+    ⟨_, interpPathCM_mem_segment v hc x (Nat.floor_le hnn) (Nat.lt_floor_add_one _).le, hYF⟩
+
+/-- Short exit edges are monotone in the length bound. -/
+theorem ExitEdgesShort.mono {m : ℤ → ℤ → ℕ} {v : ℤ → ℂ} {c : ℝ} {hc : 0 ≤ c} {s : ℝ}
+    {F : Set ℂ} {θ θ' : ℝ} (h : ExitEdgesShort m v hc s F θ) (hθ : θ ≤ θ') :
+    ExitEdgesShort m v hc s F θ' :=
+  fun x n hYF hm => (h x n hYF hm).trans hθ
+
 /-- **The next block-exit position after the step following a block exit.** If the walk is at
-step `k = τ_n` just after the `n`-th block exit of its interpolation, and every walk edge whose
-segment meets the complement of `F` has length at most `s / 2`, then the `(n+1)`-th block-exit
+step `k = τ_n` just after the `n`-th block exit of its interpolation, `Y_n ∉ F`, and the step
+`j = ⌊c σ_n⌋` of `x` (the step carrying `Y_n`) has length at most `s / 2`, then the `(n+1)`-th block-exit
 position is `walkNextBlockExit (Y_n) (θ_k x)`: the interpolation runs from `Y_n` to `v (x k)` on
 the current edge inside the block around the grid cell of `Y_n`, and then continues as the
 interpolation of the restarted walk. -/
 theorem interpPathCM_blockExitTimes_succ_eq (v : ℤ → ℂ) {c : ℝ} (hc : 0 < c) {s : ℝ}
     (hs : 0 < s) (F : Set ℂ) {n k : ℕ} {x : ℕ → ℤ}
-    (hmesh : ∀ j, (∃ z ∈ segment ℝ (v (x j)) (v (x (j + 1))), z ∉ F) →
-      dist (v (x j)) (v (x (j + 1))) ≤ s / 2)
+    (hmesh : interpPathCM v hc.le x (blockExitTimes s F n (interpPathCM v hc.le x)) ∉ F →
+      dist (v (x ⌊c * (blockExitTimes s F n (interpPathCM v hc.le x) : ℝ)⌋₊))
+        (v (x (⌊c * (blockExitTimes s F n (interpPathCM v hc.le x) : ℝ)⌋₊ + 1))) ≤ s / 2)
     (hk : walkBlockExitStepTime v hc.le s F n x = k) :
     interpPathCM v hc.le x (blockExitTimes s F (n + 1) (interpPathCM v hc.le x)) =
       walkNextBlockExit v hc.le s F
@@ -170,7 +202,7 @@ theorem interpPathCM_blockExitTimes_succ_eq (v : ℤ → ℂ) {c : ℝ} (hc : 0 
   have hσt : σ + t = (k / c : ℝ).toNNReal := add_tsub_cancel_of_le hσk
   have hyseg : y ∈ segment ℝ (v (x j)) (v (x (j + 1))) :=
     interpPathCM_mem_segment v hc.le x hjσ hσj.le
-  have hlen := hmesh j ⟨y, hyseg, hyF⟩
+  have hlen := hmesh hyF
   have hin : ∀ u ≤ t, ω' u ∈ U := by
     intro u hu
     have hseg : ω' u ∈ segment ℝ (v (x j)) (v (x (j + 1))) := by
@@ -224,14 +256,13 @@ theorem interpPathCM_blockExitTimes_succ_eq (v : ℤ → ℂ) {c : ℝ} (hc : 0 
     simp only [hfirst, add_zero, hfin, and_false, ↓reduceIte]
     rfl
 
-/-- **Almost-sure form.** If every edge of the multigraph `m` whose embedded segment meets the
-complement of `F` has length at most `s / 2`, then almost surely under the walk law, for every
+/-- **Almost-sure form.** If the walk steps carrying block-exit positions off `F` have length at
+most `s / 2` (`ExitEdgesShort`), then almost surely under the walk law, for every
 `n` and `k`, on `{τ_n = k}` the `(n+1)`-th block-exit position of the interpolated walk is
 `walkNextBlockExit (Y_n) (θ_k x)`. -/
 theorem ae_interpPathCM_blockExitTimes_succ_eq (m : ℤ → ℤ → ℕ) (a : ℤ) (v : ℤ → ℂ) {c : ℝ}
     (hc : 0 < c) {s : ℝ} (hs : 0 < s) (F : Set ℂ)
-    (hM : ∀ b b' : ℤ, m b b' ≠ 0 → (∃ z ∈ segment ℝ (v b) (v b'), z ∉ F) →
-      dist (v b) (v b') ≤ s / 2) :
+    (hE : ExitEdgesShort m v hc.le s F (s / 2)) :
     ∀ᵐ x ∂srwLaw m a, ∀ n k : ℕ, walkBlockExitStepTime v hc.le s F n x = k →
       interpPathCM v hc.le x (blockExitTimes s F (n + 1) (interpPathCM v hc.le x)) =
         walkNextBlockExit v hc.le s F
@@ -241,11 +272,11 @@ theorem ae_interpPathCM_blockExitTimes_succ_eq (m : ℤ → ℤ → ℕ) (a : �
     ae_all_iff.2 fun j => ae_iff.2 (MatedCRT.WalkSteps.srwLaw_nonadjacent_null m j a)
   filter_upwards [hadj] with x hx
   intro n k hk
-  refine interpPathCM_blockExitTimes_succ_eq v hc hs F (fun j hj => ?_) hk
-  rcases hx j with h | h
+  refine interpPathCM_blockExitTimes_succ_eq v hc hs F (fun hYF => ?_) hk
+  rcases hx ⌊c * (blockExitTimes s F n (interpPathCM v hc.le x) : ℝ)⌋₊ with h | h
   · rw [h, dist_self]
     exact (half_pos hs).le
-  · exact hM _ _ h hj
+  · exact hE x n hYF h
 
 end BlockExit
 

@@ -132,9 +132,7 @@ theorem map_walkPaddedHistory_next_eq_compProd {m : ℤ → ℤ → ℕ} (hlf : 
     (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {ε : ℝ} (hε : 0 < ε) {η : ℝ → ℂ} (hη : Continuous η)
     (hp : Tendsto η (cocompact ℝ) (cocompact ℂ)) {c : ℝ} (hc : 0 < c) (x₀ : ℤ) {s : ℝ}
     (hs : 0 < s) {F : Set ℂ} (hF : MeasurableSet F)
-    (hM : ∀ b b' : ℤ, m b b' ≠ 0 →
-      (∃ z ∈ segment ℝ (vertexPoint ε η b) (vertexPoint ε η b'), z ∉ F) →
-      dist (vertexPoint ε η b) (vertexPoint ε η b') ≤ s / 2)
+    (hExit : ExitEdgesShort m (vertexPoint ε η) hc.le s F (s / 2))
     {N n : ℕ} (hn : n ≤ N) :
     (srwLaw m x₀).map (fun x =>
         ((paddedHistory (walkBlockExitPos (vertexPoint ε η) hc.le s F x₀) n x :
@@ -171,7 +169,7 @@ theorem map_walkPaddedHistory_next_eq_compProd {m : ℤ → ℤ → ℕ} (hlf : 
     rw [Measure.map_map (measurable_historyEmbed n N) hH]
     exact Measure.map_congr hae
   rw [h1, h2, map_walkBlockExitHistory_next_eq_compProd_of_proper hlf hcons hε hη hp hc x₀ hs hF
-    hM n]
+    hExit n]
   have := isMarkovKernel_walkPaddedStepKernel m x₀ (vertexPoint ε η) hc.le s hF N n
   exact compProd_map_dependent_of_kernel_map _ _ _ (historyEmbed n N) (fun _ b => b)
     (measurable_historyEmbed n N) measurable_snd fun g => by
@@ -186,9 +184,7 @@ theorem map_blockExitPositions_eq_chainSeqLaw {m : ℤ → ℤ → ℕ} (hlf : I
     (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {ε : ℝ} (hε : 0 < ε) {η : ℝ → ℂ} (hη : Continuous η)
     (hp : Tendsto η (cocompact ℝ) (cocompact ℂ)) {c : ℝ} (hc : 0 < c) (x₀ : ℤ) {s : ℝ}
     (hs : 0 < s) {F : Set ℂ} (hF : MeasurableSet F)
-    (hM : ∀ b b' : ℤ, m b b' ≠ 0 →
-      (∃ z ∈ segment ℝ (vertexPoint ε η b) (vertexPoint ε η b'), z ∉ F) →
-      dist (vertexPoint ε η b) (vertexPoint ε η b') ≤ s / 2)
+    (hE : ExitEdgesShort m (vertexPoint ε η) hc.le s F (s / 2))
     (N : ℕ) :
     (srwLaw m x₀).map
         (fun x => blockExitPositions s F N (interpPathCM (vertexPoint ε η) hc.le x)) =
@@ -199,7 +195,7 @@ theorem map_blockExitPositions_eq_chainSeqLaw {m : ℤ → ℤ → ℕ} (hlf : I
   have hlaw := map_history_eq_chainSeqLaw (μ := srwLaw m x₀)
     (measurable_walkBlockExitPos (vertexPoint ε η) hc.le s hF x₀) (z := vertexPoint ε η x₀)
     (fun _ => rfl) (fun n => walkPaddedStepKernel m x₀ (vertexPoint ε η) hc.le s F N n)
-    (fun n hn => map_walkPaddedHistory_next_eq_compProd hlf hcons hε hη hp hc x₀ hs hF hM hn.le)
+    (fun n hn => map_walkPaddedHistory_next_eq_compProd hlf hcons hε hη hp hc x₀ hs hF hE hn.le)
   rw [← hlaw]
   refine Measure.map_congr ?_
   filter_upwards [srwLaw_ae_start m x₀] with x hx

@@ -160,8 +160,7 @@ most `s / 2` and the step index `τ_n` is almost surely finite, then
 `P^a ∘ (H_n, Y_{n+1})⁻¹ = (P^a ∘ H_n⁻¹) ⊗ₘ κ_n`. -/
 theorem map_walkBlockExitHistory_next_eq_compProd (m : ℤ → ℤ → ℕ) (a : ℤ) (v : ℤ → ℂ) {c : ℝ}
     (hc : 0 < c) {s : ℝ} (hs : 0 < s) {F : Set ℂ} (hF : MeasurableSet F)
-    (hM : ∀ b b' : ℤ, m b b' ≠ 0 → (∃ z ∈ segment ℝ (v b) (v b'), z ∉ F) →
-      dist (v b) (v b') ≤ s / 2)
+    (hE : ExitEdgesShort m v hc.le s F (s / 2))
     (n : ℕ) (hτ : ∀ᵐ x ∂srwLaw m a, walkBlockExitStepTime v hc.le s F n x ≠ ⊤) :
     (srwLaw m a).map (fun x => (walkBlockExitHistory v hc.le s F n x,
         interpPathCM v hc.le x (blockExitTimes s F (n + 1) (interpPathCM v hc.le x)))) =
@@ -191,7 +190,7 @@ theorem map_walkBlockExitHistory_next_eq_compProd (m : ℤ → ℤ → ℕ) (a :
   refine Measure.ext_prod fun {B} {A} hB hA => ?_
   rw [Measure.map_apply (hH.prodMk hY) (hB.prod hA), mk_preimage_prod,
     Measure.compProd_apply_prod hB hA]
-  have hjoint := srwLaw_blockExitPositions_succ_mem_eq_setLIntegral m a v hc hs F hM n B hA hτ
+  have hjoint := srwLaw_blockExitPositions_succ_mem_eq_setLIntegral m a v hc hs F hE n B hA hτ
   refine hjoint.trans ?_
   have hκ : ∀ g : Fin (n + 1) → ℂ, walkBlockExitStepKernel m a v hc.le s F n g A =
       ∫⁻ u, walkNextBlockExitKernel m v hc.le s F (g (Fin.last n), u) A
@@ -213,22 +212,20 @@ theorem map_walkBlockExitHistory_next_eq_compProd (m : ℤ → ℤ → ℕ) (a :
 
 /-- **The composition-product form for the walk embedded by a proper curve.** For a locally finite
 multigraph whose consecutive vertices are adjacent, a continuous proper curve `η`, `ε > 0`,
-speed `c > 0`, block size `s > 0` and a measurable `F` such that every edge whose segment meets
-`Fᶜ` has length at most `s / 2`: `P^a ∘ (H_n, Y_{n+1})⁻¹ = (P^a ∘ H_n⁻¹) ⊗ₘ κ_n`. -/
+speed `c > 0`, block size `s > 0` and a measurable `F` such that every walk step carrying a
+block-exit position off `F` has length at most `s / 2`: `P^a ∘ (H_n, Y_{n+1})⁻¹ = (P^a ∘ H_n⁻¹) ⊗ₘ κ_n`. -/
 theorem map_walkBlockExitHistory_next_eq_compProd_of_proper {m : ℤ → ℤ → ℕ}
     (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {ε : ℝ} (hε : 0 < ε)
     {η : ℝ → ℂ} (hη : Continuous η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ)) {c : ℝ}
     (hc : 0 < c) (a : ℤ) {s : ℝ} (hs : 0 < s) {F : Set ℂ} (hF : MeasurableSet F)
-    (hM : ∀ b b' : ℤ, m b b' ≠ 0 →
-      (∃ z ∈ segment ℝ (vertexPoint ε η b) (vertexPoint ε η b'), z ∉ F) →
-      dist (vertexPoint ε η b) (vertexPoint ε η b') ≤ s / 2)
+    (hE : ExitEdgesShort m (vertexPoint ε η) hc.le s F (s / 2))
     (n : ℕ) :
     (srwLaw m a).map (fun x => (walkBlockExitHistory (vertexPoint ε η) hc.le s F n x,
         interpPathCM (vertexPoint ε η) hc.le x
           (blockExitTimes s F (n + 1) (interpPathCM (vertexPoint ε η) hc.le x)))) =
       (srwLaw m a).map (walkBlockExitHistory (vertexPoint ε η) hc.le s F n) ⊗ₘ
         walkBlockExitStepKernel m a (vertexPoint ε η) hc.le s F n :=
-  map_walkBlockExitHistory_next_eq_compProd m a (vertexPoint ε η) hc hs hF hM n
+  map_walkBlockExitHistory_next_eq_compProd m a (vertexPoint ε η) hc hs hF hE n
     ((ae_walkBlockExitStepTime_ne_top hlf hcons hε hη hp hc a s F).mono fun _ hx => hx n)
 
 end BlockExit

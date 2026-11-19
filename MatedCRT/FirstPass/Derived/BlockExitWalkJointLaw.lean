@@ -15,8 +15,8 @@ property at `τ_n` applies label by label.
 * `walkNextBlockExit_preimage_eq`: `{x' | walkNextBlockExit y x' ∈ A}` is the labelled event
   `nextBlockExitEvent (nextBlockExitLabel y)`, measurable for measurable `A`.
 * `srwLaw_blockExitPositions_succ_mem`: for every set `B` of position histories and every
-  measurable `A`, when `τ_n` is almost surely finite and every edge whose segment meets the
-  complement of `F` has length at most `s / 2`,
+  measurable `A`, when `τ_n` is almost surely finite and every walk step carrying a block-exit position off `F` has length at most
+  `s / 2`,
   `P^a((Y_0, …, Y_n) ∈ B, Y_{n+1} ∈ A) =
     ∑_k ∫_{{(Y_0, …, Y_n) ∈ B} ∩ {τ_n = k}} P^{x_k}(walkNextBlockExit (Y_n) · ∈ A) dP^a`.
 -/
@@ -150,14 +150,13 @@ theorem walkNextBlockExit_preimage_eq (v : ℤ → ℂ) {c : ℝ} (hc : 0 ≤ c)
 
 /-- **Joint law of a position history and the next block-exit position.** For every set `B` of
 block-exit position histories and every measurable `A ⊆ ℂ`, if the step index `τ_n` just after the
-`n`-th block exit is almost surely finite and every edge of `m` whose segment meets the complement
-of `F` has length at most `s / 2`, then
+`n`-th block exit is almost surely finite and every walk step carrying a block-exit position off `F` has length at most
+`s / 2` (`ExitEdgesShort`), then
 `P^a((Y_0, …, Y_n) ∈ B, Y_{n+1} ∈ A) =
   ∑_k ∫_{{(Y_0, …, Y_n) ∈ B} ∩ {τ_n = k}} P^{x_k}(walkNextBlockExit (Y_n) · ∈ A) dP^a`. -/
 theorem srwLaw_blockExitPositions_succ_mem (m : ℤ → ℤ → ℕ) (a : ℤ) (v : ℤ → ℂ) {c : ℝ}
     (hc : 0 < c) {s : ℝ} (hs : 0 < s) (F : Set ℂ)
-    (hM : ∀ b b' : ℤ, m b b' ≠ 0 → (∃ z ∈ segment ℝ (v b) (v b'), z ∉ F) →
-      dist (v b) (v b') ≤ s / 2)
+    (hE : ExitEdgesShort m v hc.le s F (s / 2))
     (n : ℕ) (B : Set (Fin (n + 1) → ℂ)) {A : Set ℂ} (hA : MeasurableSet A)
     (hτ : ∀ᵐ x ∂srwLaw m a, walkBlockExitStepTime v hc.le s F n x ≠ ⊤) :
     srwLaw m a ({x : ℕ → ℤ | blockExitPositions s F n (interpPathCM v hc.le x) ∈ B} ∩
@@ -191,7 +190,7 @@ theorem srwLaw_blockExitPositions_succ_mem (m : ℤ → ℤ → ℕ) (a : ℤ) (
       ({x : ℕ → ℤ | blockExitPositions s F n (interpPathCM v hc.le x) ∈ B} ∩
         {x | ∃ k : ℕ, walkBlockExitStepTime v hc.le s F n x = k ∧
           pathShift k x ∈ nextBlockExitEvent v hc.le s A (lab x)} : Set (ℕ → ℤ)) := by
-    filter_upwards [hτ, ae_interpPathCM_blockExitTimes_succ_eq m a v hc hs F hM] with x hx1 hx2
+    filter_upwards [hτ, ae_interpPathCM_blockExitTimes_succ_eq m a v hc hs F hE] with x hx1 hx2
     obtain ⟨k, hk⟩ := ENat.ne_top_iff_exists.1 hx1
     have hnext := hx2 n k hk.symm
     apply propext

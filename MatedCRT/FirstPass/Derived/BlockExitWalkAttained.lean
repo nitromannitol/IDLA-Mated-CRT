@@ -85,8 +85,7 @@ and measurable `A`,
   ∫_{(Y_0, …, Y_n) ∈ B} P^{x_{τ_n}}(walkNextBlockExit (Y_n) · ∈ A) dP^a`. -/
 theorem srwLaw_blockExitPositions_succ_mem_eq_setLIntegral (m : ℤ → ℤ → ℕ) (a : ℤ) (v : ℤ → ℂ)
     {c : ℝ} (hc : 0 < c) {s : ℝ} (hs : 0 < s) (F : Set ℂ)
-    (hM : ∀ b b' : ℤ, m b b' ≠ 0 → (∃ z ∈ segment ℝ (v b) (v b'), z ∉ F) →
-      dist (v b) (v b') ≤ s / 2)
+    (hE : ExitEdgesShort m v hc.le s F (s / 2))
     (n : ℕ) (B : Set (Fin (n + 1) → ℂ)) {A : Set ℂ} (hA : MeasurableSet A)
     (hτ : ∀ᵐ x ∂srwLaw m a, walkBlockExitStepTime v hc.le s F n x ≠ ⊤) :
     srwLaw m a ({x : ℕ → ℤ | blockExitPositions s F n (interpPathCM v hc.le x) ∈ B} ∩
@@ -95,7 +94,7 @@ theorem srwLaw_blockExitPositions_succ_mem_eq_setLIntegral (m : ℤ → ℤ → 
         srwLaw m (x (walkBlockExitStepTime v hc.le s F n x).toNat) {x' | walkNextBlockExit v hc.le
           s F (interpPathCM v hc.le x (blockExitTimes s F n (interpPathCM v hc.le x))) x' ∈ A}
           ∂srwLaw m a := by
-  rw [srwLaw_blockExitPositions_succ_mem m a v hc hs F hM n B hA hτ]
+  rw [srwLaw_blockExitPositions_succ_mem m a v hc hs F hE n B hA hτ]
   have hSm := measurableSet_blockExitPositions_mem_inter_stepTime_eq v hc s F n B
   have hSd : Pairwise (Disjoint on fun k : ℕ =>
       ({x : ℕ → ℤ | blockExitPositions s F n (interpPathCM v hc.le x) ∈ B} ∩
@@ -126,8 +125,8 @@ theorem srwLaw_blockExitPositions_succ_mem_eq_setLIntegral (m : ℤ → ℤ → 
 
 /-- **Joint law of a position history and the next block-exit position for the walk embedded by
 a proper curve.** For a locally finite multigraph whose consecutive vertices are adjacent, a
-continuous proper curve `η`, `ε > 0`, speed `c > 0` and block size `s > 0`, if every edge whose
-segment meets the complement of `F` has length at most `s / 2`, then for every set `B` of position
+continuous proper curve `η`, `ε > 0`, speed `c > 0` and block size `s > 0`, if every walk step
+carrying a block-exit position off `F` has length at most `s / 2`, then for every set `B` of position
 histories and every measurable `A`,
 `P^a((Y_0, …, Y_n) ∈ B, Y_{n+1} ∈ A) =
   ∫_{(Y_0, …, Y_n) ∈ B} P^{x_{τ_n}}(walkNextBlockExit (Y_n) · ∈ A) dP^a`. -/
@@ -135,9 +134,7 @@ theorem srwLaw_blockExitPositions_succ_mem_of_proper {m : ℤ → ℤ → ℕ}
     (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {ε : ℝ} (hε : 0 < ε)
     {η : ℝ → ℂ} (hη : Continuous η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ)) {c : ℝ}
     (hc : 0 < c) (a : ℤ) {s : ℝ} (hs : 0 < s) (F : Set ℂ)
-    (hM : ∀ b b' : ℤ, m b b' ≠ 0 →
-      (∃ z ∈ segment ℝ (vertexPoint ε η b) (vertexPoint ε η b'), z ∉ F) →
-      dist (vertexPoint ε η b) (vertexPoint ε η b') ≤ s / 2)
+    (hE : ExitEdgesShort m (vertexPoint ε η) hc.le s F (s / 2))
     (n : ℕ) (B : Set (Fin (n + 1) → ℂ)) {A : Set ℂ} (hA : MeasurableSet A) :
     srwLaw m a ({x : ℕ → ℤ |
           blockExitPositions s F n (interpPathCM (vertexPoint ε η) hc.le x) ∈ B} ∩
@@ -150,7 +147,7 @@ theorem srwLaw_blockExitPositions_succ_mem_of_proper {m : ℤ → ℤ → ℕ}
             (interpPathCM (vertexPoint ε η) hc.le x
               (blockExitTimes s F n (interpPathCM (vertexPoint ε η) hc.le x))) x' ∈ A}
           ∂srwLaw m a :=
-  srwLaw_blockExitPositions_succ_mem_eq_setLIntegral m a (vertexPoint ε η) hc hs F hM n B hA
+  srwLaw_blockExitPositions_succ_mem_eq_setLIntegral m a (vertexPoint ε η) hc hs F hE n B hA
     ((ae_walkBlockExitStepTime_ne_top hlf hcons hε hη hp hc a s F).mono fun _ hx => hx n)
 
 end BlockExit
