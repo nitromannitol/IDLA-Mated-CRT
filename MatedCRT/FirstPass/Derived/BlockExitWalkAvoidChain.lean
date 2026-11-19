@@ -25,7 +25,9 @@ hypothesis on the walk's increments.
 
 * `exists_chain_of_hclose_frozen`: the modified step laws, for a chain frozen on a measurable set
   `F` with the start off `F`; `exists_chain_of_hclose` is the grid-rectangle form.
-* `srwLaw_blockExit_avoid_frozen_le_of_hclose`: the bound with `hclose` as the walk hypothesis.
+* `srwLaw_blockExit_avoid_frozen_le_of_hclose`: the bound with `hclose` as the walk hypothesis;
+  `srwLaw_blockExit_avoid_frozen_le_of_hclose_frozen` is the same for a measurable grid-line stable
+  frozen set `F` not containing the start, every point off `F` being close to the start.
 * `prokhorovLE_srwLaw_blockExitPositions_of_hclose`: the law of the first `N + 1` block-exit
   positions of the walk is within `((N + 1) δ, N δ + 60 N³ δ / s)` of that of planar Brownian
   motion started at the embedded start, in the one-sided Lévy-Prokhorov sense;
@@ -331,6 +333,44 @@ theorem srwLaw_blockExit_avoid_frozen_le_of_hclose {ζ : ℝ} (hζ0 : 0 < ζ) (h
   exact hC m hlf hcons ε hε η hη hp c hc x₀ s hs a₁ a₂ c₁ c₂ _ hz _
     (isOpen_gridRectOpen s a₁ a₂ c₁ c₂).measurableSet.compl a r δ N hNr hN ha hr0 hr1 hδ hδs hac
     (fun y hy => hKz y (by simpa using hy)) q hq hqP hqΓ hqK hlaw
+
+/-- **The walk's block-exit chain reaches a frozen set, from the one-step closeness.** For
+`0 < ζ < 1` and every `p` there is `C` such that the following holds. Let `m` be a locally finite
+multigraph whose consecutive vertices are adjacent, `ε > 0`, `η` a continuous proper curve, `c > 0`
+a speed, `F` a measurable grid-line stable set not containing the embedded start
+`vertexPoint ε η x₀`, with every edge meeting the complement of `F` of length at most `s / 2`.
+Suppose every point off `F` lies at distance less than `a - 4 s - (N + 1) δ` from the start, and
+that from every `y ∉ F` and every vertex `u` within `s / 2` of `y` the next block-exit position of
+the walk frozen on `F` is `(δ, δ)`-close to the block-exit kernel frozen on `F` at `y`. Then the
+probability that the first `N = ⌊r ^ (-(2 + ζ))⌋` block-exit positions all avoid `F` is at most
+`C r ^ p + N δ + 60 N³ δ / s`. -/
+theorem srwLaw_blockExit_avoid_frozen_le_of_hclose_frozen {ζ : ℝ} (hζ0 : 0 < ζ) (hζ1 : ζ < 1)
+    (p : ℕ) :
+    ∃ C : ℝ, ∀ (m : ℤ → ℤ → ℕ), IsLocallyFiniteMult m → (∀ k : ℤ, m k (k + 1) ≠ 0) →
+      ∀ (ε : ℝ), 0 < ε → ∀ (η : ℝ → ℂ), Continuous η → Tendsto η (cocompact ℝ) (cocompact ℂ) →
+      ∀ (c : ℝ) (hc : 0 < c) (x₀ : ℤ) (s : ℝ), 0 < s → ∀ (F : Set ℂ) (hF : MeasurableSet F),
+      GridLineStable s F → vertexPoint ε η x₀ ∉ F →
+      (∀ b b' : ℤ, m b b' ≠ 0 →
+        (∃ z ∈ segment ℝ (vertexPoint ε η b) (vertexPoint ε η b'), z ∉ F) →
+        dist (vertexPoint ε η b) (vertexPoint ε η b') ≤ s / 2) →
+      ∀ (a r δ : ℝ) (N : ℕ), N = ⌊r ^ (-(2 + ζ))⌋₊ → 0 < N → 0 < a → 0 < r → r < 1 →
+      0 < δ → ((N : ℝ) + 1) * δ ≤ s / 4 → 2 * (a * r) ≤ s / 2 - 2 * (((N : ℝ) + 1) * δ) →
+      (∀ y ∉ F, ‖y - vertexPoint ε η x₀‖ + ((N : ℝ) + 1) * δ < a - 4 * s) →
+      (∀ y ∉ F, ∀ u : ℤ, dist (vertexPoint ε η u) y ≤ s / 2 →
+        ProkhorovLE (walkNextBlockExitKernel m (vertexPoint ε η) hc.le s F (y, u))
+          (frozenBlockExitKernel s hF y) δ δ) →
+      srwLaw m x₀ {x | ∀ n < N,
+          interpPathCM (vertexPoint ε η) hc.le x
+            (blockExitTimes s F n (interpPathCM (vertexPoint ε η) hc.le x)) ∉ F} ≤
+        ENNReal.ofReal (C * r ^ p) +
+          ENNReal.ofReal (N * δ + 60 * (N : ℝ) ^ 3 * δ / s) := by
+  obtain ⟨C, hC⟩ := srwLaw_blockExit_avoid_frozen_le_of_chain_of_gridLineStable hζ0 hζ1 p
+  refine ⟨C, fun m hlf hcons ε hε η hη hp c hc x₀ s hs F hF hFs hz hM a r δ N hNr hN ha hr0
+    hr1 hδ hδs hac hKz hclose => ?_⟩
+  obtain ⟨q, hq, hqP, hqΓ, hqK, hlaw⟩ :=
+    exists_chain_of_hclose_frozen hlf hcons hε hη hp hc x₀ hs hF hz hM hδ hclose N
+  exact hC m hlf hcons ε hε η hη hp c hc x₀ s hs F hF hFs _ hz F hF a r δ N hNr hN ha hr0 hr1 hδ
+    hδs hac hKz q hq hqP hqΓ hqK hlaw
 
 /-- **Block-exit positions of the walk against planar Brownian motion, frozen-set form.** Freeze
 the block-exit chains on a measurable grid-line stable set `F`, start the walk at `x₀` with
