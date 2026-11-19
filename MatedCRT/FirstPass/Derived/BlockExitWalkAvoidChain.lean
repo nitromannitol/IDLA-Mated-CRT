@@ -150,7 +150,8 @@ theorem ae_prokhorovLE_walkBlockExitStepKernel_frozen_of_proper {m : ℤ → ℤ
 /-- **Step laws of the walk's block-exit chain from the one-step closeness.** Freeze the chain on
 a measurable set `F`, start the walk at `x₀` with `vertexPoint ε η x₀ ∉ F`, and assume the one-step
 closeness `hclose` of the next block-exit position to the block-exit kernel frozen on `F`, from the
-vertices within `θ` of points off `F`, where `0 ≤ θ ≤ s / 2` bounds the edges meeting `Fᶜ`.
+vertices within `θ` of points off `F`, where `0 ≤ θ ≤ s / 2` and every walk step carrying a
+block-exit position off `F` has length at most `θ` (`ExitEdgesShort`).
 Then there are step laws `q n` on padded histories of length `N + 1`, measurable and probability
 measures, charging only the grid lines from histories ending at the start or on the grid lines,
 `(δ, δ)`-close to the frozen kernel at the last entry at every history, and such that the law of the
@@ -258,7 +259,12 @@ theorem exists_chain_of_hclose_frozen {m : ℤ → ℤ → ℕ} (hlf : IsLocally
 
 /-- **Step laws of the walk's block-exit chain, grid-rectangle form.**
 `exists_chain_of_hclose_frozen` with the frozen set the complement of the open grid rectangle
-`R`, the start in `R`. -/
+`R`, the start in `R`.
+
+Caveat: `hclose` is required from every vertex within `s / 2` of a point of `R`. Along walks
+converging to planar Brownian motion this fails for small `δ`, since the block-exit laws from `y`
+and from a vertex at distance `s / 4` from `y` differ at order `s`. Use the frozen-set form
+`exists_chain_of_hclose_frozen`, whose closeness scale `θ` is free. -/
 theorem exists_chain_of_hclose {m : ℤ → ℤ → ℕ} (hlf : IsLocallyFiniteMult m)
     (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {ε : ℝ} (hε : 0 < ε) {η : ℝ → ℂ} (hη : Continuous η)
     (hp : Tendsto η (cocompact ℝ) (cocompact ℂ)) {c : ℝ} (hc : 0 < c) (x₀ : ℤ) {s : ℝ}
@@ -298,7 +304,12 @@ curve, `c > 0` a speed, `R` an open grid rectangle containing the embedded start
 every vertex `u` within `s / 2` of `y` the next block-exit position of the walk frozen off `R` is
 `(δ, δ)`-close to the frozen grid-rectangle block-exit kernel at `y`. Then the probability that the
 first `N = ⌊r ^ (-(2 + ζ))⌋` block-exit positions all stay in `R` is at most
-`C r ^ p + N δ + 60 N³ δ / s`. -/
+`C r ^ p + N δ + 60 N³ δ / s`.
+
+Caveat: `hclose` is required from every vertex within `s / 2` of a point of `R`. Along walks
+converging to planar Brownian motion this fails for small `δ`, since the block-exit laws from `y`
+and from a vertex at distance `s / 4` from `y` differ at order `s`. Use the frozen-set form
+`srwLaw_blockExit_avoid_frozen_le_of_hclose_frozen`, whose closeness scale `θ` is free. -/
 theorem srwLaw_blockExit_avoid_frozen_le_of_hclose {ζ : ℝ} (hζ0 : 0 < ζ) (hζ1 : ζ < 1) (p : ℕ) :
     ∃ C : ℝ, ∀ (m : ℤ → ℤ → ℕ), IsLocallyFiniteMult m → (∀ k : ℤ, m k (k + 1) ≠ 0) →
       ∀ (ε : ℝ), 0 < ε → ∀ (η : ℝ → ℂ), Continuous η → Tendsto η (cocompact ℝ) (cocompact ℂ) →
@@ -371,7 +382,8 @@ theorem srwLaw_blockExit_avoid_frozen_le_of_hclose_frozen {ζ : ℝ} (hζ0 : 0 <
 
 /-- **Block-exit positions of the walk against planar Brownian motion, frozen-set form.** Freeze
 the block-exit chains on a measurable grid-line stable set `F`, start the walk at `x₀` with
-`z = vertexPoint ε η x₀ ∉ F`, bound the edges meeting `Fᶜ` by `θ ≤ s / 2`, and assume the one-step
+`z = vertexPoint ε η x₀ ∉ F`, take `0 ≤ θ ≤ s / 2` with every walk step carrying a block-exit
+position off `F` of length at most `θ` (`ExitEdgesShort`), and assume the one-step
 closeness `hclose` (from the vertices within `θ` of points off `F`) to the block-exit kernel
 frozen on `F`. If `0 < N` and `(N + 1) δ ≤ s / 4`, the law under `srwLaw m x₀` of the first `N + 1`
 block-exit positions of the interpolated walk is within `((N + 1) δ, N δ + 60 N³ δ / s)` of the law
@@ -407,7 +419,12 @@ with `z = vertexPoint ε η x₀ ∈ R`, and assume the one-step closeness `hclo
 `(N + 1) δ ≤ s / 4`, the law under `srwLaw m x₀` of the first `N + 1` block-exit positions of the
 interpolated walk is within `((N + 1) δ, N δ + 60 N³ δ / s)` of the law of the first `N + 1`
 block-exit positions of planar Brownian motion started at `z`, in the one-sided Lévy-Prokhorov
-sense. -/
+sense.
+
+Caveat: `hclose` is required from every vertex within `s / 2` of a point of `R`. Along walks
+converging to planar Brownian motion this fails for small `δ`, since the block-exit laws from `y`
+and from a vertex at distance `s / 4` from `y` differ at order `s`. Use the frozen-set form
+`prokhorovLE_srwLaw_blockExitPositions_of_hclose_frozen`, whose closeness scale `θ` is free. -/
 theorem prokhorovLE_srwLaw_blockExitPositions_of_hclose {m : ℤ → ℤ → ℕ}
     (hlf : IsLocallyFiniteMult m) (hcons : ∀ k : ℤ, m k (k + 1) ≠ 0) {ε : ℝ} (hε : 0 < ε)
     {η : ℝ → ℂ} (hη : Continuous η) (hp : Tendsto η (cocompact ℝ) (cocompact ℂ)) {c : ℝ}

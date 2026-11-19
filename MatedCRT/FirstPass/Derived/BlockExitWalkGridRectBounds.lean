@@ -206,7 +206,12 @@ embedding `vertexPoint ε η`, speed `c > 0`) started at a vertex `x₀` whose e
   of the law of the first `N + 1` block-exit positions of planar Brownian motion started at
   `vertexPoint ε η x₀`, in the one-sided Lévy-Prokhorov sense;
 * the probability that the first `N` block-exit positions of the walk all stay in `R` is at most
-  `κ`. -/
+  `κ`.
+
+Caveat: `hclose` is required from every vertex within `s / 2` of a point of `R`. Along walks
+converging to planar Brownian motion this fails for small `δ`, since the block-exit laws from `y`
+and from a vertex at distance `s / 4` from `y` differ at order `s`. Use the frozen-set form
+`exists_blockExit_frozen_walk_bounds`, whose closeness scale `θ` is free. -/
 theorem exists_blockExit_gridRect_walk_bounds {s : ℝ} (hs : 0 < s) (a₁ a₂ c₁ c₂ : ℤ)
     {δ₀ κ : ℝ} (hδ₀ : 0 < δ₀) (hκ : 0 < κ) :
     ∃ N₀ : ℕ, 0 < N₀ ∧ ∀ N : ℕ, N₀ ≤ N → ∃ δ₁ : ℝ, 0 < δ₁ ∧ ∀ δ : ℝ, 0 < δ → δ ≤ δ₁ →
