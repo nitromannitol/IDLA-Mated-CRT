@@ -20,6 +20,10 @@ coordinate, both started from the constant history at `z`.
 * `paddedHistoryKernel_apply_last_of_lt`: before the history is full, the last coordinate after one
   step has the law of the kernel.
 * `chainSeqLaw_congr_of_lt`: the `n`-step law only uses the kernels of the steps `m < n`.
+* `GridLineStable s F`: grid-line points on one edge, close together and away from the vertices,
+  are both in `F` or both outside it; `gridLineStable_compl_gridRectOpen` for rectangles.
+* `prokhorovLE_chainSeqLaw_frozenBlockExit_of_gridLineStable`: the comparison below for the kernel
+  frozen on any measurable grid-line stable set `F` not containing the start.
 * `prokhorovLE_chainSeqLaw_gridRectBlockExit`: if the start `z` lies in the open rectangle, every
   walk kernel `p n g` (`n < N`) is carried by the grid lines from every history ending at `z` or on the grid lines and is `(ε, ε)`-close to the frozen
   block-exit kernel at the last coordinate of `g`, and `(N + 1) ε ≤ s / 4`, then the `N`-step
@@ -132,34 +136,58 @@ theorem chainSeqLaw_congr_of_lt {E : Type*} [MeasurableSpace E] {κ κ' : ℕ �
 
 /-! ## The chain comparison -/
 
-/-- **Chaining the block exits.** Let the start `z` lie in the open grid rectangle, `0 < N`, and
-`(N + 1) ε ≤ s / 4`. Suppose that for every step `n < N` and history `g` the walk kernel `p n g` is
-carried by the grid lines from every history ending at `z` or on the grid lines and is `(ε, ε)`-close, in the one-sided Prokhorov sense, to the frozen
-block-exit kernel at the current position `g (Fin.last N)`. Then the laws of the `N`-step padded
-histories satisfy the one-sided Prokhorov bound with radius `(N + 1) ε` and error
-`∑_{m < N} (ε + 24 (m + 1) ε / s + m · 144 (m + 1) ε / s)`.
+/-- **Grid-line stability of a frozen set.** Two points `y`, `b` of the grid lines with
+`dist y b < r`, `r ≤ s` and `r ≤ infDist b (vertices s)` (hence on the same edge of the grid, away
+from its endpoints) are both in `F` or both outside `F`. The complement of an open grid rectangle has
+this property, and so does every set whose intersection with each open grid edge is empty or the
+whole edge. -/
+def GridLineStable (s : ℝ) (F : Set ℂ) : Prop :=
+  ∀ ⦃r : ℝ⦄ ⦃y b : ℂ⦄, r ≤ s → y ∈ gridLines s → b ∈ gridLines s → dist y b < r →
+    r ≤ infDist b (vertices s) → (y ∈ F ↔ b ∈ F)
 
-The grid-line hypothesis is only imposed on histories whose last position is `z` or lies on the
-grid lines: imposed on every history it would contradict the `(ε, ε)`-closeness to the Dirac mass
-of the frozen kernel at a frozen point at distance more than `ε` from the grid lines. -/
-theorem prokhorovLE_chainSeqLaw_gridRectBlockExit {s : ℝ} (hs : 0 < s) (a₁ a₂ c₁ c₂ : ℤ)
-    {N : ℕ} (hN : 0 < N) {z : ℂ} (hz : z ∈ gridRectOpen s a₁ a₂ c₁ c₂) {ε : ℝ} (hε : 0 < ε)
+/-- The complement of an open grid rectangle is grid-line stable. -/
+theorem gridLineStable_compl_gridRectOpen {s : ℝ} (hs : 0 < s) (a₁ a₂ c₁ c₂ : ℤ) :
+    GridLineStable s (gridRectOpen s a₁ a₂ c₁ c₂)ᶜ := fun _ _ _ hr hy hb hd hfar =>
+  not_congr (mem_gridRectOpen_iff_of_le_infDist hs hr hy hb hd hfar a₁ a₂ c₁ c₂)
+
+/-- **Continuity of a grid-line stable frozen kernel on the grid lines.** For two points `y`, `b`
+of the grid lines with `dist y b < R`, `R ≤ s` and `R ≤ infDist b (vertices s)`, both lie in the
+same cell and have the same freeze status. -/
+theorem frozenBlockExitKernel_le_thickening_add_of_gridLineStable {s : ℝ} (hs : 0 < s)
+    {F : Set ℂ} (hF : MeasurableSet F) (hFs : GridLineStable s F) {y b : ℂ}
+    (hy : y ∈ gridLines s) (hb : b ∈ gridLines s) {R r : ℝ} (hd : dist y b < R) (hRs : R ≤ s)
+    (hfar : R ≤ infDist b (vertices s)) (hRr : R ≤ r) {A : Set ℂ} (hA : MeasurableSet A) :
+    frozenBlockExitKernel s hF y A ≤
+      frozenBlockExitKernel s hF b (thickening r A) + ENNReal.ofReal (24 * R / s) :=
+  frozenBlockExitKernel_le_thickening_add hs hF
+    (cellIndex_eq_of_le_infDist_vertices hs hRs hy hb hd hfar) (hFs hRs hy hb hd hfar) hd hRr hA
+
+/-- **Chaining the block exits, frozen off a grid-line stable set.** Let `F` be a measurable
+grid-line stable set, the start `z` lie outside `F`, `0 < N`, and `(N + 1) ε ≤ s / 4`. Suppose that
+for every step `n < N` and history `g` the walk kernel `p n g` is carried by the grid lines from
+every history ending at `z` or on the grid lines and is `(ε, ε)`-close, in the one-sided Prokhorov
+sense, to the block-exit kernel frozen on `F` at the current position `g (Fin.last N)`. Then the
+laws of the `N`-step padded histories satisfy the one-sided Prokhorov bound with radius `(N + 1) ε`
+and error `∑_{m < N} (ε + 24 (m + 1) ε / s + m · 144 (m + 1) ε / s)`. -/
+theorem prokhorovLE_chainSeqLaw_frozenBlockExit_of_gridLineStable {s : ℝ} (hs : 0 < s)
+    {F : Set ℂ} (hF : MeasurableSet F) (hFs : GridLineStable s F)
+    {N : ℕ} (hN : 0 < N) {z : ℂ} (hz : z ∉ F) {ε : ℝ} (hε : 0 < ε)
     (hεs : ((N : ℝ) + 1) * ε ≤ s / 4)
     {p : ℕ → (Fin (N + 1) → ℂ) → Measure ℂ} (hp : ∀ n, Measurable (p n))
     [∀ n g, IsProbabilityMeasure (p n g)]
     (hpΓ : ∀ n < N, ∀ g, (g (Fin.last N) = z ∨ g (Fin.last N) ∈ gridLines s) →
       p n g (gridLines s)ᶜ = 0)
     (hK : ∀ n < N, ∀ g, ProkhorovLE (p n g)
-      (gridRectBlockExitKernel s a₁ a₂ c₁ c₂ (g (Fin.last N))) ε ε) :
+      (frozenBlockExitKernel s hF (g (Fin.last N))) ε ε) :
     ProkhorovLE (chainSeqLaw (fun m => paddedHistoryKernel m (p m)) (Measure.dirac fun _ => z) N)
       (chainSeqLaw (fun m => paddedHistoryKernel m
-          (fun g => gridRectBlockExitKernel s a₁ a₂ c₁ c₂ (g (Fin.last N))))
+          (fun g => frozenBlockExitKernel s hF (g (Fin.last N))))
         (Measure.dirac fun _ => z) N)
       (((N : ℝ) + 1) * ε)
       (∑ m ∈ Finset.range N, (ε + 24 * (((m : ℝ) + 1) * ε) / s +
         m * (144 * (((m : ℝ) + 1) * ε) / s))) := by
-  set κ := gridRectBlockExitKernel s a₁ a₂ c₁ c₂ with hκdef
-  have hzF : z ∉ (gridRectOpen s a₁ a₂ c₁ c₂)ᶜ := fun h => h hz
+  set κ := frozenBlockExitKernel s hF with hκdef
+  have hzF : z ∉ F := hz
   have hκz : κ z = cellBlockExitKernel s z := frozenBlockExitKernel_of_notMem s _ hzF
   have hRpos : ∀ n : ℕ, 0 < ((n : ℝ) + 1) * ε := fun n => mul_pos (by positivity) hε
   have hRs4 : ∀ n : ℕ, n < N → ((n : ℝ) + 1) * ε ≤ s / 4 := by
@@ -300,7 +328,7 @@ theorem prokhorovLE_chainSeqLaw_gridRectBlockExit {s : ℝ} (hs : 0 < s) (a₁ a
     by_cases hnN : n < N
     · simp only [hGdef, hHdef, hn0.ne', hnN, ↓reduceIte, mem_ofPred_eq] at hb hy
       have hRs : ((n : ℝ) + 1) * ε ≤ s := (hRs4 n hnN).trans (by linarith)
-      exact frozenBlockExitKernel_le_thickening_add_of_gridLines hs a₁ a₂ c₁ c₂ hy hb.1 hd hRs
+      exact frozenBlockExitKernel_le_thickening_add_of_gridLineStable hs hF hFs hy hb.1 hd hRs
         hb.2 le_rfl hA
     · simp [hGdef, hn0.ne', hnN] at hb
   have hK' : ∀ n (g : Fin (N + 1) → ℂ), ProkhorovLE (p' n g) (κ (g (Fin.last N))) ε ε := by
@@ -327,6 +355,36 @@ theorem prokhorovLE_chainSeqLaw_gridRectBlockExit {s : ℝ} (hs : 0 < s) (a₁ a
           (div_nonneg (mul_nonneg (by norm_num) (hRpos n).le) hs.le)
       · exact zero_le_one)
     (by simpa using hε) (fun n => by push_cast; ring) (fun _ => le_rfl) hK' hH hμH hG hcont N
+
+/-- **Chaining the block exits.** Let the start `z` lie in the open grid rectangle, `0 < N`, and
+`(N + 1) ε ≤ s / 4`. Suppose that for every step `n < N` and history `g` the walk kernel `p n g` is
+carried by the grid lines from every history ending at `z` or on the grid lines and is `(ε, ε)`-close, in the one-sided Prokhorov sense, to the frozen
+block-exit kernel at the current position `g (Fin.last N)`. Then the laws of the `N`-step padded
+histories satisfy the one-sided Prokhorov bound with radius `(N + 1) ε` and error
+`∑_{m < N} (ε + 24 (m + 1) ε / s + m · 144 (m + 1) ε / s)`.
+
+The grid-line hypothesis is only imposed on histories whose last position is `z` or lies on the
+grid lines: imposed on every history it would contradict the `(ε, ε)`-closeness to the Dirac mass
+of the frozen kernel at a frozen point at distance more than `ε` from the grid lines. -/
+theorem prokhorovLE_chainSeqLaw_gridRectBlockExit {s : ℝ} (hs : 0 < s) (a₁ a₂ c₁ c₂ : ℤ)
+    {N : ℕ} (hN : 0 < N) {z : ℂ} (hz : z ∈ gridRectOpen s a₁ a₂ c₁ c₂) {ε : ℝ} (hε : 0 < ε)
+    (hεs : ((N : ℝ) + 1) * ε ≤ s / 4)
+    {p : ℕ → (Fin (N + 1) → ℂ) → Measure ℂ} (hp : ∀ n, Measurable (p n))
+    [∀ n g, IsProbabilityMeasure (p n g)]
+    (hpΓ : ∀ n < N, ∀ g, (g (Fin.last N) = z ∨ g (Fin.last N) ∈ gridLines s) →
+      p n g (gridLines s)ᶜ = 0)
+    (hK : ∀ n < N, ∀ g, ProkhorovLE (p n g)
+      (gridRectBlockExitKernel s a₁ a₂ c₁ c₂ (g (Fin.last N))) ε ε) :
+    ProkhorovLE (chainSeqLaw (fun m => paddedHistoryKernel m (p m)) (Measure.dirac fun _ => z) N)
+      (chainSeqLaw (fun m => paddedHistoryKernel m
+          (fun g => gridRectBlockExitKernel s a₁ a₂ c₁ c₂ (g (Fin.last N))))
+        (Measure.dirac fun _ => z) N)
+      (((N : ℝ) + 1) * ε)
+      (∑ m ∈ Finset.range N, (ε + 24 * (((m : ℝ) + 1) * ε) / s +
+        m * (144 * (((m : ℝ) + 1) * ε) / s))) :=
+  prokhorovLE_chainSeqLaw_frozenBlockExit_of_gridLineStable hs
+    (isOpen_gridRectOpen s a₁ a₂ c₁ c₂).measurableSet.compl
+    (gridLineStable_compl_gridRectOpen hs a₁ a₂ c₁ c₂) hN (fun h => h hz) hε hεs hp hpΓ hK
 
 end BlockExit
 

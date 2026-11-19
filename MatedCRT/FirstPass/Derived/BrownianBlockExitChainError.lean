@@ -19,6 +19,8 @@ with step radii `R_m = (m + 1) ε`.
   the accumulated error tends to `0` as `ε → 0`.
 * `prokhorovLE_chainSeqLaw_gridRectBlockExit_cubic`: the chain comparison with the error
   `N ε + 60 N³ ε / s`.
+* `prokhorovLE_chainSeqLaw_frozenBlockExit_of_gridLineStable_cubic`: the same for the kernel frozen
+  on a measurable grid-line stable set.
 -/
 
 set_option autoImplicit false
@@ -102,6 +104,31 @@ theorem prokhorovLE_chainSeqLaw_gridRectBlockExit_cubic {s : ℝ} (hs : 0 < s) (
         (Measure.dirac fun _ => z) N)
       (((N : ℝ) + 1) * ε) (N * ε + 60 * (N : ℝ) ^ 3 * ε / s) := by
   have hP := prokhorovLE_chainSeqLaw_gridRectBlockExit hs a₁ a₂ c₁ c₂ hN hz hε hεs hp hpΓ hK
+  have hb := sum_blockExitChainError_le N hε.le hs
+  intro A hA
+  exact (hP A hA).trans (add_le_add_right (ENNReal.ofReal_le_ofReal hb) _)
+
+/-- **The chain comparison with a cubic error, frozen off a grid-line stable set.** Under the
+hypotheses of `prokhorovLE_chainSeqLaw_frozenBlockExit_of_gridLineStable`, the walk history law
+after `N` exits is within radius `(N + 1) ε` and error `N ε + 60 N³ ε / s`, in the one-sided
+Prokhorov sense, of the frozen Brownian block-exit history law. -/
+theorem prokhorovLE_chainSeqLaw_frozenBlockExit_of_gridLineStable_cubic {s : ℝ} (hs : 0 < s)
+    {F : Set ℂ} (hF : MeasurableSet F) (hFs : GridLineStable s F)
+    {N : ℕ} (hN : 0 < N) {z : ℂ} (hz : z ∉ F) {ε : ℝ} (hε : 0 < ε)
+    (hεs : ((N : ℝ) + 1) * ε ≤ s / 4)
+    {p : ℕ → (Fin (N + 1) → ℂ) → Measure ℂ} (hp : ∀ n, Measurable (p n))
+    [∀ n g, IsProbabilityMeasure (p n g)]
+    (hpΓ : ∀ n < N, ∀ g, (g (Fin.last N) = z ∨ g (Fin.last N) ∈ gridLines s) →
+      p n g (gridLines s)ᶜ = 0)
+    (hK : ∀ n < N, ∀ g, ProkhorovLE (p n g)
+      (frozenBlockExitKernel s hF (g (Fin.last N))) ε ε) :
+    ProkhorovLE (chainSeqLaw (fun m => paddedHistoryKernel m (p m)) (Measure.dirac fun _ => z) N)
+      (chainSeqLaw (fun m => paddedHistoryKernel m
+          (fun g => frozenBlockExitKernel s hF (g (Fin.last N))))
+        (Measure.dirac fun _ => z) N)
+      (((N : ℝ) + 1) * ε) (N * ε + 60 * (N : ℝ) ^ 3 * ε / s) := by
+  have hP :=
+    prokhorovLE_chainSeqLaw_frozenBlockExit_of_gridLineStable hs hF hFs hN hz hε hεs hp hpΓ hK
   have hb := sum_blockExitChainError_le N hε.le hs
   intro A hA
   exact (hP A hA).trans (add_le_add_right (ENNReal.ofReal_le_ofReal hb) _)
