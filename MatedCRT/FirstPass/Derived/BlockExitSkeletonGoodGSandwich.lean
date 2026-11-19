@@ -39,8 +39,8 @@ of the embedded walk from `x` are `(δ₀, κ / 4)`-Prokhorov-close to those of 
 embedded point, and the walk reaches `F` within `N` blocks outside probability `κ / 8`, then
 `ω ∈ goodG S ε R ρ κ`. -/
 theorem exists_blockExit_parameters_mem_goodG_sandwich {ρ R : ℝ} (hρ : 0 ≤ ρ) (hρR : ρ < R) {κ : ℝ}
-    (hκ : 0 < κ) :
-    ∃ (s d' d₁ δ₀ : ℝ) (N : ℕ), 0 < s ∧ 0 < d' ∧ d' + 2 * s ≤ d₁ ∧ 0 < δ₀ ∧
+    (hκ : 0 < κ) (g : ℝ → ℝ → ℕ) :
+    ∃ (s d' d₁ δ₀ : ℝ) (N : ℕ), 0 < s ∧ 0 < d' ∧ d' + 2 * s ≤ d₁ ∧ 0 < δ₀ ∧ g s d' ≤ N ∧
       ∀ {F : Set ℂ}, MeasurableSet F → farSet (ball (0 : ℂ) R) d₁ ⊆ F →
       F ⊆ farSet (ball (0 : ℂ) R) d' →
       (∀ z ∈ closedBall (0 : ℂ) ρ, planarBrownianMotion z
@@ -55,9 +55,9 @@ theorem exists_blockExit_parameters_mem_goodG_sandwich {ρ R : ℝ} (hρ : 0 ≤
               (blockExitTimes s F j (interpPathCM (vertexPoint ε (S.η ω)) zero_le_one ξ)) ∈ F}ᶜ ≤
             ENNReal.ofReal (κ / 8)) →
         ω ∈ goodG S ε R ρ κ := by
-  obtain ⟨s, d', d₁, δ₀, N, hs, hd', hd₁, hδ₀, H⟩ :=
-    exists_blockExit_parameters_allSet_le_sandwich_derived.{0} hρ hρR hκ
-  refine ⟨s, d', d₁, δ₀, N, hs, hd', hd₁, hδ₀, ?_⟩
+  obtain ⟨s, d', d₁, δ₀, N, hs, hd', hd₁, hδ₀, hgN, H⟩ :=
+    exists_blockExit_parameters_allSet_le_sandwich_derived.{0} hρ hρR hκ g
+  refine ⟨s, d', d₁, δ₀, N, hs, hd', hd₁, hδ₀, hgN, ?_⟩
   intro F hFm hF₁ hF₂
   obtain ⟨hguard, H'⟩ := H hFm hF₁ hF₂
   refine ⟨hguard, ?_⟩
@@ -71,8 +71,8 @@ cells.** If, for all block parameters with `d' + 2 s ≤ d₁`, almost surely an
 block-exit hypotheses for the frozen set `ballFrozenSet s (R + d')` hold at all the vertices in `closedBall 0 ρ` at
 mesh `e n`, then almost surely `ω ∈ goodG S (e n) R ρ κ` for all large `n`. -/
 theorem ae_eventually_mem_goodG_of_blockExit_sandwich {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)
-    {ρ R : ℝ} (hρ : 0 ≤ ρ) (hρR : ρ < R) {κ : ℝ} (hκ : 0 < κ) (e : ℕ → ℝ)
-    (hwalk : ∀ (s d' d₁ δ₀ : ℝ) (N : ℕ), 0 < s → 0 < d' → d' + 2 * s ≤ d₁ → 0 < δ₀ →
+    {ρ R : ℝ} (hρ : 0 ≤ ρ) (hρR : ρ < R) {κ : ℝ} (hκ : 0 < κ) (e : ℕ → ℝ) (g : ℝ → ℝ → ℕ)
+    (hwalk : ∀ (s d' d₁ δ₀ : ℝ) (N : ℕ), 0 < s → 0 < d' → d' + 2 * s ≤ d₁ → 0 < δ₀ → g s d' ≤ N →
       (∀ z ∈ closedBall (0 : ℂ) ρ, planarBrownianMotion z
         {b : ContinuousPath ℂ | ∃ j ≤ N, b (blockExitTimes s (ballFrozenSet s (R + d')) j b) ∈
           ballFrozenSet s (R + d')}ᶜ ≤ ENNReal.ofReal (κ / 16)) →
@@ -88,21 +88,24 @@ theorem ae_eventually_mem_goodG_of_blockExit_sandwich {Ω : Type} [MeasurableSpa
                 (interpPathCM (vertexPoint (e n) (S.η ω)) zero_le_one ξ)) ∈
               ballFrozenSet s (R + d')}ᶜ ≤ ENNReal.ofReal (κ / 8)) :
     ∀ᵐ ω ∂S.P, ∀ᶠ n in atTop, ω ∈ goodG S (e n) R ρ κ := by
-  obtain ⟨s, d', d₁, δ₀, N, hs, hd', hd₁, hδ₀, H⟩ :=
-    exists_blockExit_parameters_mem_goodG_sandwich hρ hρR hκ
+  obtain ⟨s, d', d₁, δ₀, N, hs, hd', hd₁, hδ₀, hgN, H⟩ :=
+    exists_blockExit_parameters_mem_goodG_sandwich hρ hρR hκ g
   have hR : 0 < R := lt_of_le_of_lt hρ hρR
   obtain ⟨hguard, H'⟩ := H (measurableSet_ballFrozenSet s (R + d'))
     (farSet_subset_ballFrozenSet hs hR hd' hd₁) (ballFrozenSet_subset_farSet s R d')
-  filter_upwards [hwalk s d' d₁ δ₀ N hs hd' hd₁ hδ₀ hguard] with ω hω
+  filter_upwards [hwalk s d' d₁ δ₀ N hs hd' hd₁ hδ₀ hgN hguard] with ω hω
   exact hω.mono fun n hn => H' S (e n) ω hn
 
 /-- **The uniform-start invariance principle from the walk-side block-exit hypotheses, frozen on a union of grid
-cells.** -/
+cells.** The walk-side hypotheses are required only for block numbers `N ≥ g R κ s d'`, where `g` is a
+fixed function of the parameters (a lower bound on the number of blocks that the walk-side estimates need). -/
 theorem gms21UniformStartInput_of_blockExit_sandwich {𝒮 : SpaceFillingSLEModel}
+    (g : ℝ → ℝ → ℝ → ℝ → ℕ)
     (hwalk : ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
       ∀ R ρ : ℝ, 0 < ρ → ρ < R → ∀ κ : ℝ, 0 < κ →
       ∀ (e : ℕ → ℝ), (∀ n, 0 < e n) → Tendsto e atTop (𝓝 0) →
       ∀ (s d' d₁ δ₀ : ℝ) (N : ℕ), 0 < s → 0 < d' → d' + 2 * s ≤ d₁ → 0 < δ₀ →
+      g R κ s d' ≤ N →
       (∀ z ∈ closedBall (0 : ℂ) ρ, planarBrownianMotion z
         {b : ContinuousPath ℂ | ∃ j ≤ N, b (blockExitTimes s (ballFrozenSet s (R + d')) j b) ∈
           ballFrozenSet s (R + d')}ᶜ ≤ ENNReal.ofReal ((κ / 2) / 16)) →
@@ -120,7 +123,7 @@ theorem gms21UniformStartInput_of_blockExit_sandwich {𝒮 : SpaceFillingSLEMode
     GMS21UniformStartInput 𝒮 := by
   intro γ hγ hγ2 Ω _ S hS R ρ hρ hρR κ hκ θ hθ
   exact exists_eps_uniformStart_bound_derived hγ hγ2 hS hκ
-    (fun e he he0 => ae_eventually_mem_goodG_of_blockExit_sandwich S hρ.le hρR (half_pos hκ) e
+    (fun e he he0 => ae_eventually_mem_goodG_of_blockExit_sandwich S hρ.le hρR (half_pos hκ) e (g R κ)
       (hwalk γ hγ hγ2 Ω S hS R ρ hρ hρR κ hκ e he he0)) hθ
 
 end UniformStartGood

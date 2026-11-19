@@ -28,8 +28,9 @@ universe u
 /-- **Choice of the block parameters for the stopped-path comparison, sandwiched frozen set.** The
 parameters `s, d', d₁, δ₀, N` do not depend on the frozen set `F`, which ranges over the measurable
 sets with `farSet (ball 0 R) d₁ ⊆ F ⊆ farSet (ball 0 R) d'`. -/
-theorem exists_blockExit_parameters_allSet_le_sandwich {ρ R : ℝ} (hρ : 0 ≤ ρ) (hρR : ρ < R) {κ : ℝ} (hκ : 0 < κ) :
-    ∃ (s d' d₁ δ₀ : ℝ) (N : ℕ), 0 < s ∧ 0 < d' ∧ d' + 2 * s ≤ d₁ ∧ 0 < δ₀ ∧
+theorem exists_blockExit_parameters_allSet_le_sandwich {ρ R : ℝ} (hρ : 0 ≤ ρ) (hρR : ρ < R) {κ : ℝ} (hκ : 0 < κ)
+    (g : ℝ → ℝ → ℕ) :
+    ∃ (s d' d₁ δ₀ : ℝ) (N : ℕ), 0 < s ∧ 0 < d' ∧ d' + 2 * s ≤ d₁ ∧ 0 < δ₀ ∧ g s d' ≤ N ∧
       ∀ {F : Set ℂ}, MeasurableSet F → farSet (ball (0 : ℂ) R) d₁ ⊆ F →
       F ⊆ farSet (ball (0 : ℂ) R) d' →
       (∀ z ∈ closedBall (0 : ℂ) ρ, planarBrownianMotion z
@@ -74,11 +75,27 @@ theorem exists_blockExit_parameters_allSet_le_sandwich {ρ R : ℝ} (hρ : 0 ≤
   have hd₁ : 0 < d₁ := by positivity
   set K : ℝ := 4 * (R + d₁ + ρ + 4 * s + 1) with hKdef
   have hK : 0 < K := by positivity
-  set r : ℝ := min (1 / 2) (min (s / K) (κ / (32 * (|C| + 1)))) with hrdef
-  have hr0 : 0 < r := lt_min (by norm_num) (lt_min (by positivity) (by positivity))
+  set r : ℝ := min (1 / 2) (min (s / K) (min (κ / (32 * (|C| + 1))) (1 / ((g s d' : ℝ) + 2)))) with hrdef
+  have hr0 : 0 < r :=
+    lt_min (by norm_num) (lt_min (by positivity) (lt_min (by positivity) (by positivity)))
   have hr1 : r < 1 := lt_of_le_of_lt (min_le_left _ _) (by norm_num)
   have hrs : r ≤ s / K := le_trans (min_le_right _ _) (min_le_left _ _)
-  have hrC : r ≤ κ / (32 * (|C| + 1)) := le_trans (min_le_right _ _) (min_le_right _ _)
+  have hrC : r ≤ κ / (32 * (|C| + 1)) :=
+    le_trans (min_le_right _ _) (le_trans (min_le_right _ _) (min_le_left _ _))
+  have hrg : r ≤ 1 / ((g s d' : ℝ) + 2) :=
+    le_trans (min_le_right _ _) (le_trans (min_le_right _ _) (min_le_right _ _))
+  have hgN : g s d' ≤ ⌊r ^ (-(2 + (1 / 2 : ℝ)))⌋₊ := by
+    refine Nat.le_floor ?_
+    have h1 : r ^ (2 + (1 / 2 : ℝ)) ≤ r ^ (1 : ℝ) :=
+      Real.rpow_le_rpow_of_exponent_ge hr0 hr1.le (by norm_num)
+    rw [Real.rpow_one] at h1
+    have h2 : r⁻¹ ≤ (r ^ (2 + (1 / 2 : ℝ)))⁻¹ := inv_anti₀ (Real.rpow_pos_of_pos hr0 _) h1
+    have h3 : (g s d' : ℝ) + 2 ≤ r⁻¹ := by
+      rw [← one_div, le_div_iff₀ hr0]
+      have h4 := (le_div_iff₀ (by positivity : (0 : ℝ) < (g s d' : ℝ) + 2)).1 hrg
+      linarith
+    rw [Real.rpow_neg hr0.le]
+    linarith
   have hars : 4 * ((R + d₁ + ρ + 4 * s + 1) * r) ≤ s := by
     have : r * K ≤ s := by rwa [le_div_iff₀ hK] at hrs
     nlinarith
@@ -91,7 +108,7 @@ theorem exists_blockExit_parameters_allSet_le_sandwich {ρ R : ℝ} (hρ : 0 ≤
         gcongr
         exact (div_le_one (by positivity)).2 (by linarith)
       _ = κ / 32 := mul_one _
-  refine ⟨s, d', d₁, m / 4, ⌊r ^ (-(2 + (1 / 2 : ℝ)))⌋₊, hs, hd', le_rfl, by positivity, ?_⟩
+  refine ⟨s, d', d₁, m / 4, ⌊r ^ (-(2 + (1 / 2 : ℝ)))⌋₊, hs, hd', le_rfl, by positivity, hgN, ?_⟩
   intro F hFm hF₁ hF₂
   have hguard : ∀ z ∈ closedBall (0 : ℂ) ρ, planarBrownianMotion z
         {b : ContinuousPath ℂ | ∃ j ≤ ⌊r ^ (-(2 + (1 / 2 : ℝ)))⌋₊,

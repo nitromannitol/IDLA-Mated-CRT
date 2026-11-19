@@ -29,8 +29,9 @@ universe u
 transfer lemma proved.** The
 parameters `s, d', d₁, δ₀, N` do not depend on the frozen set `F`, which ranges over the measurable
 sets with `farSet (ball 0 R) d₁ ⊆ F ⊆ farSet (ball 0 R) d'`. -/
-theorem exists_blockExit_parameters_allSet_le_sandwich_derived {ρ R : ℝ} (hρ : 0 ≤ ρ) (hρR : ρ < R) {κ : ℝ} (hκ : 0 < κ) :
-    ∃ (s d' d₁ δ₀ : ℝ) (N : ℕ), 0 < s ∧ 0 < d' ∧ d' + 2 * s ≤ d₁ ∧ 0 < δ₀ ∧
+theorem exists_blockExit_parameters_allSet_le_sandwich_derived {ρ R : ℝ} (hρ : 0 ≤ ρ) (hρR : ρ < R) {κ : ℝ} (hκ : 0 < κ)
+    (g : ℝ → ℝ → ℕ) :
+    ∃ (s d' d₁ δ₀ : ℝ) (N : ℕ), 0 < s ∧ 0 < d' ∧ d' + 2 * s ≤ d₁ ∧ 0 < δ₀ ∧ g s d' ≤ N ∧
       ∀ {F : Set ℂ}, MeasurableSet F → farSet (ball (0 : ℂ) R) d₁ ⊆ F →
       F ⊆ farSet (ball (0 : ℂ) R) d' →
       (∀ z ∈ closedBall (0 : ℂ) ρ, planarBrownianMotion z
@@ -48,9 +49,9 @@ theorem exists_blockExit_parameters_allSet_le_sandwich_derived {ρ R : ℝ} (hρ
             planarBrownianMotion x₀
               {b | ∃ f ∈ A, cmpEDist (stopAtExit (ball (0 : ℂ) R) ⇑b) f < ENNReal.ofReal κ} +
               ENNReal.ofReal κ := by
-  obtain ⟨s, d', d₁, δ₀, N, hs, hd', hd₁, hδ₀, H⟩ :=
-    exists_blockExit_parameters_allSet_le_sandwich.{u} hρ hρR hκ
-  refine ⟨s, d', d₁, δ₀, N, hs, hd', hd₁, hδ₀, ?_⟩
+  obtain ⟨s, d', d₁, δ₀, N, hs, hd', hd₁, hδ₀, hgN, H⟩ :=
+    exists_blockExit_parameters_allSet_le_sandwich.{u} hρ hρR hκ g
+  refine ⟨s, d', d₁, δ₀, N, hs, hd', hd₁, hδ₀, hgN, ?_⟩
   intro F hFm hF₁ hF₂
   obtain ⟨hguard, H'⟩ := H hFm hF₁ hF₂
   refine ⟨hguard, ?_⟩
