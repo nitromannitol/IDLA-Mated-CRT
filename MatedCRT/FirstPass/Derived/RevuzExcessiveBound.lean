@@ -43,7 +43,7 @@ theorem lintegral_Ioi_clockInverse_add_le {A : ℝ≥0 → ContinuousPath ℂ �
     intro r hr
     by_cases hτ : clockInverse A (r.toNNReal + u) ω ∈ Iic N
     · have hle : r.toNNReal + u ≤ A N ω :=
-        (clockInverse_le_iff h0 hc hs (hu.eventually_gt_atTop _).exists).1 hτ
+        (clockInverse_le_iff_le_clock h0 hc hs (hu.eventually_gt_atTop _).exists).1 hτ
       have hcoe : ((r.toNNReal + u : ℝ≥0) : ℝ) = r + u := by
         rw [NNReal.coe_add, Real.coe_toNNReal r (le_of_lt hr)]
       have hmem : r + (u : ℝ) ∈ Ioc (0 : ℝ) (A N ω) := by

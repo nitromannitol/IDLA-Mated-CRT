@@ -24,7 +24,7 @@ with the inverse of `A` almost surely, for every level.
 * `measurable_clockInverse_uncurry`: joint measurability of `(u, ω) ↦ τ_u ω` for a measurable
   clock nondecreasing along every path.
 * `ae_clockInverse_regularize_eq`: almost surely, `Ā` and `A` have the same right inverse.
-* `clockInverse_le_iff`: `τ_r ≤ t ↔ r ≤ A_t` for a good clock path.
+* `clockInverse_le_iff_le_clock`: `τ_r ≤ t ↔ r ≤ A_t` for a good clock path.
 * `lintegral_shift_clockInverse_eq`: the strong Markov property at `τ_r`.
 * `lintegral_lintegral_shift_clockInverse_eq`: its integrated form in the level `r`.
 -/
@@ -94,7 +94,7 @@ theorem ae_clockInverse_regularize_eq {A : ℝ≥0 → ContinuousPath ℂ → �
 
 /-- **The right inverse below a time.** Along a path where the clock is continuous, strictly
 increasing from `0` and exceeds `r`, `τ_r ≤ t ↔ r ≤ A_t`. -/
-theorem clockInverse_le_iff {A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0} {ω : ContinuousPath ℂ}
+theorem clockInverse_le_iff_le_clock {A : ℝ≥0 → ContinuousPath ℂ → ℝ≥0} {ω : ContinuousPath ℂ}
     {r t : ℝ≥0} (h0 : A 0 ω = 0) (hc : Continuous fun t => A t ω)
     (hs : StrictMono fun t => A t ω) (hne : ∃ t, r < A t ω) :
     clockInverse A r ω ≤ t ↔ r ≤ A t ω := by

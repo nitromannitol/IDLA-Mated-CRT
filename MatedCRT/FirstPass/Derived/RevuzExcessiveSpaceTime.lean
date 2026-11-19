@@ -83,7 +83,7 @@ theorem lintegral_Ioi_horizonExpectation_eq {A : ℝ≥0 → ContinuousPath ℂ 
       have hlt : A N ω < r.toNNReal := Real.lt_toNNReal_iff_coe_lt.2 (not_le.1 hr)
       have hne : ∃ t, r.toNNReal < A t ω := (hu.eventually_gt_atTop r.toNNReal).exists
       have hτ : N < clockInverse A r.toNNReal ω :=
-        not_le.1 fun h => absurd ((clockInverse_le_iff h0 hc hs hne).1 h) (not_le.2 hlt)
+        not_le.1 fun h => absurd ((clockInverse_le_iff_le_clock h0 hc hs hne).1 h) (not_le.2 hlt)
       exact horizonExpectation_eq_zero_of_lt S hτ _
   refine (lintegral_congr hind).trans ?_
   rw [setLIntegral_indicator measurableSet_Iic, Iic_inter_Ioi]

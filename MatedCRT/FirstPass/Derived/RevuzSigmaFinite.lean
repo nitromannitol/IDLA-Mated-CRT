@@ -162,7 +162,7 @@ theorem lintegral_occupationMeasure_goodPaths_le {A : ℝ≥0 → ContinuousPath
     rw [lintegral_const_mul _ (measurable_one.indicator hGm), lintegral_indicator_one hGm]
     have hne : ∃ t, r.toNNReal < A t ω := (hgc.2.eventually (eventually_gt_atTop _)).exists
     have hiff : r ∈ Iic (A 1 ω : ℝ) ↔ clockInverse A r.toNNReal ω ∈ Iic (1 : ℝ≥0) := by
-      rw [mem_Iic, mem_Iic, clockInverse_le_iff hp.1 hp.2.1 hgc.1 hne,
+      rw [mem_Iic, mem_Iic, clockInverse_le_iff_le_clock hp.1 hp.2.1 hgc.1 hne,
         Real.toNNReal_le_iff_le_coe]
     by_cases hmem : r ∈ Iic (A 1 ω : ℝ)
     · rw [indicator_of_mem hmem, indicator_of_mem (hiff.1 hmem), Pi.one_apply, one_mul]
@@ -197,7 +197,7 @@ theorem lintegral_occupationMeasure_goodPaths_le {A : ℝ≥0 → ContinuousPath
         obtain ⟨⟨h1, h2⟩, h3⟩ := hU0
         have h1' : clockInverse A r.toNNReal ω ≤ 1 := by rw [← hr]; exact h1
         have hne : ∃ t, r.toNNReal < A t ω := (hgc.2.eventually (eventually_gt_atTop _)).exists
-        have hle : r.toNNReal ≤ A 1 ω := (clockInverse_le_iff hp.1 hp.2.1 hgc.1 hne).1 h1'
+        have hle : r.toNNReal ≤ A 1 ω := (clockInverse_le_iff_le_clock hp.1 hp.2.1 hgc.1 hne).1 h1'
         have hE : ω ∈ E := by
           refine ⟨clockInverse A r.toNNReal ω, h1', ?_⟩
           have h2' : ‖ContinuousPath.shift (clockInverse (regularize A) r.toNNReal ω) ω 0‖ ≤ n := h2
