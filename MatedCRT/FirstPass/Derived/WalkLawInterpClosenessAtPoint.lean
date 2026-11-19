@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.Derived.ReversibilityPairingDiscrete
 `pathLevyProkhorovEDist_walkPathLaw_interpWalkLaw_le` compares the quenched walk law `Q^ε(x)` with the
 interpolated law `P̃^ε` at the vertex position `η(εx)`.  The embedded walk of Theorem 2.11 starts at the vertex
 `x` of a cell `H^ε_x` containing a fixed point `z`, so the comparison is needed at `z ∈ H^ε_x`:
-`pathLevyProkhorovEDist_walkPathLaw_interpWalkLaw_le_of_mem_cell`.
+`pathLevyProkhorovEDist_walkPathLaw_interpWalkLaw_le_of_mem_cell_of_nonneg`.
 -/
 
 namespace MatedCRT.FirstPass.Derived
@@ -23,7 +23,7 @@ variable {Ω : Type} [MeasurableSpace Ω]
 `z ∈ H^ε_x`): on the event where the interpolation is defined, if `z ∈ H^ε_x`, `|z| ≤ R`, the cells meeting
 `B_{R+1}` have diameter at most `d`, `ε + 2 d ≤ δ`, `ε + d < 1` and `ω^ε_R(δ) ≤ a`, then
 `LP(Q^ε(x), P̃^ε_z) ≤ a`. -/
-theorem pathLevyProkhorovEDist_walkPathLaw_interpWalkLaw_le_of_mem_cell (S : MatedCRTEnv Ω)
+theorem pathLevyProkhorovEDist_walkPathLaw_interpWalkLaw_le_of_mem_cell_of_nonneg (S : MatedCRTEnv Ω)
     (η' : Ω → C(ℝ, ℂ)) {ε : ℝ} (hε : 0 ≤ ε) {ω : Ω}
     (hloc : ∀ z, ∃ U ∈ 𝓝 z, {k : ℤ | ∃ y ∈ U, interpWeight (fun k => cell ε (⇑(η' ω)) k) ε k y ≠ 0}.Finite)
     (hpos : ∀ z, ∃ k : ℤ, interpWeight (fun k => cell ε (⇑(η' ω)) k) ε k z ≠ 0)

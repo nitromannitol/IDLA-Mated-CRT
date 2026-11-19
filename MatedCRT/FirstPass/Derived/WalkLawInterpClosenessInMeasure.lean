@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.Derived.InterpWalkLawJointConvergence
 # The walk law against the interpolated law at a point, in probability
 
 The embedded walk of Theorem 2.11 started at the vertex `k_n(ω)` of a cell `H^{ε_n}_{k_n(ω)}` containing a fixed
-point `z₀` has quenched law `Q^{ε_n}(k_n)`.  By `pathLevyProkhorovEDist_walkPathLaw_interpWalkLaw_le_of_mem_cell`
+point `z₀` has quenched law `Q^{ε_n}(k_n)`.  By `pathLevyProkhorovEDist_walkPathLaw_interpWalkLaw_le_of_mem_cell_of_nonneg`
 its Lévy–Prokhorov distance to the interpolated law `P̃^{ε_n}_{z₀}` at the point `z₀` is at most the modulus
 `ω^{ε_n}_R(δ)` as soon as the cells near `B_{R+1}` are small.  If the walk laws are equicontinuous in law
 (`hEqLaw`) and the cell diameters tend to `0` in probability (`hdiam`), the distance tends to `0` in probability.
@@ -73,7 +73,7 @@ theorem tendstoInMeasure_levyProkhorovDist_walkPathLaw_interpWalkLaw {𝒮 : Spa
     have h2 : ¬ ENNReal.ofReal a' < walkLawModulus S η' (ε n) ‖z₀‖ δ ω := fun h => hnot (Or.inl h)
     have h3 : ¬ ENNReal.ofReal (δ' / 4) < maxCellDiam (ε n) (⇑(η' ω)) ‖z₀‖ := fun h => hnot (Or.inr h)
     obtain ⟨hloc, hpos⟩ := hω n
-    have hLP := pathLevyProkhorovEDist_walkPathLaw_interpWalkLaw_le_of_mem_cell S η' (hε0 n).le hloc hpos
+    have hLP := pathLevyProkhorovEDist_walkPathLaw_interpWalkLaw_le_of_mem_cell_of_nonneg S η' (hε0 n).le hloc hpos
       (R := ‖z₀‖) (δ := δ) (d := δ' / 4) (a := a') (by linarith) (by linarith) (by linarith) ha'0.le
       (not_lt.1 h3) (not_lt.1 h2) (hz n) le_rfl
     rw [pathLevyProkhorovEDist_eq_ofReal_dist, ENNReal.ofReal_le_ofReal_iff ha'0.le,

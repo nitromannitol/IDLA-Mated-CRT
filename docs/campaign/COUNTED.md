@@ -671,3 +671,20 @@ is kept as a second route.
   and no counted route imports the wrappers above yet): the other parts of the proof of Berestycki-Gwynne (2020),
   Theorem 1.2 (Markov property of subsequential limits, invariance of the LQG measure, the time-change constant being
   deterministic) and the existence of a valid environment realizing the reference construction (`h1`, `h10`).
+
+### Lemma 7.4 (binder `hN5`): the Markov half is proved, the time-change half remains (2026-11-19)
+
+- `FirstPass/Derived/MarkovHalfOfHN5.lean` (`ae_markovAt_of_tendsto_law_interpWalkLaw`): if the interpolated walk
+  laws `P̃^{ε_n}` converge in law to `ν₂`, the quenched walk laws are equicontinuous in law and `m_{ε_n} → ∞`, then for
+  every `(z₀, t)` the limit `s` satisfies `MarkovAt s z₀ t` for `ν₂`-almost every `s`.
+- `FirstPass/Derived/HN5OfDefinesTimeChange.lean` (`hN5_of_defines`): the counted binder `hN5` (conclusion
+  `∀ᵐ P ∂ν₂, IsMarkovTCBM P`) follows from `hEnvS`, `hN4`, `h1`, `h10`, `hU` and a binder `hN5a` with the same premises
+  and the conclusion `∀ᵐ P ∂ν₂, DefinesTimeChangedBM P`. The equicontinuity in law comes from `hEqLaw_of_uniformStart_holder`
+  and `m_{ε_n} → ∞` from `tendsto_mε_atTop_of_uniformStart`, both from `hN4`; the sequence is shifted so that
+  `0 < m_{ε_n}` for every `n`.
+- `FirstPass/Derived/ConvergenceOfIDLAOfMarkovLimitHN5a.lean` (`randomWalkToLBMStmt_of_markovLimit_derived_hN5a`):
+  `randomWalkToLBMStmt_of_markovLimit_derived` with `hN5` replaced by `hN5a`. The counted theorems are unchanged.
+- `hN5a` is a conjunct of the conclusion of `hN5`, hence no stronger than `hN5`. Remaining content of Lemma 7.4:
+  that every subsequential limit defines a time change of Brownian motion (the part of the argument of
+  Berestycki-Gwynne (2020) resting on [GMS21, Theorem 3.4] and Propositions 6.1 and 6.14 and the Skorokhod
+  representation theorem); no Lean statement of it is proved yet.
