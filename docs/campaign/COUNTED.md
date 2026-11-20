@@ -721,9 +721,11 @@ is kept as a second route.
 ### Lemma 7.4 and the Markov limit (binder `hN8'`): discharged relative to `h10` (2026-11-20)
 
 - `FirstPass/Derived/HN8OfRevuzLintegralGlue.lean` (`hN8'_of_hasReferenceEnvironments`,
-  `randomWalkToLBMStmt_of_markovLimit_derived_noHN5_noHN8`): `hN8'` exactly as typed in
+  `randomWalkToLBMStmt_of_markovLimit_derived_noHN5_noHN8`, `closed_1_4_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8`,
+  `closed_1_6_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8`): `hN8'` exactly as typed in
   `randomWalkToLBMStmt_of_markovLimit_derived_noHN5` follows from `h10`. The counted theorems and the frozen statements
-  are unchanged. The remaining premises of the wrapper are `h1 h2 hN4 h10 hN9`.
+  are unchanged. The remaining premises of the wrappers (Theorems 1.4 and 1.6 in the Markov limit form, `hN5` and `hN8'`
+  both proved) are `h1 h2 hN4 h10 hN9`.
 - Chain (Revuz identification of the limiting Liouville clock, desk MQ-fs-22): for every valid environment, almost
   surely every PCAF version of the clock has `∫⁻ f d(revuz planarLaw G) = ∫⁻ f dμ` for each nonnegative continuous
   compactly supported `f` (`ae_lintegral_revuz_eq_of_isValid`, from `lintegral_ofReal_revuz_eq_of_lqgClock`:

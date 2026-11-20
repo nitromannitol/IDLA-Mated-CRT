@@ -101,4 +101,52 @@ theorem randomWalkToLBMStmt_of_markovLimit_derived_noHN5_noHN8 {𝒮 : SpaceFill
     RandomWalkToLBMStmt 𝒮 :=
   randomWalkToLBMStmt_of_markovLimit_derived_noHN5 h1 h2 hN4 h10 (hN8'_of_hasReferenceEnvironments h10) hN9
 
+/-- **Theorem 1.4** in the counted form `closed_1_4_quantumConeScaling_coneDimension`, with the convergence of the embedded random walk to Liouville
+Brownian motion (`h11`) supplied by `randomWalkToLBMStmt_of_markovLimit_derived_noHN5_noHN8`: the premises `hN8'`
+(Markov and invariance property of Liouville Brownian motion; proved from `h10`) and `hN5` (Berestycki-Gwynne (2020),
+Lemma 7.4; proved from `hN4`) of `closed_1_4_quantumConeScaling_coneDimension_markovLimit` no longer occur. The remaining premises are
+`h1 h2 hN4 h10 hN9`. Same conclusion. -/
+theorem closed_1_4_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8 {𝒮 : SpaceFillingSLEModel}
+    (ν : ℝ → Measure SLEPathCode)
+    (h1 : HasNormalizedSLELaw 𝒮 ν) (h2 : SLEModelClosureInput 𝒮)
+    (hN4 : GMS21UniformStartInput 𝒮)
+    (h10 : HasReferenceEnvironments 𝒮)
+    (hN9 : ∀ γ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      ∀ η' : Ω → C(ℝ, ℂ), Measurable η' → (∀ᵐ ω ∂S.P, ⇑(η' ω) = S.η ω) →
+      ∀ H : Ω → LQGMetric.DistC, Measurable H → (∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ) →
+      ∀ E : Ω → LQGData, Measurable E → ∀ ε : ℕ → ℝ, (∀ n, 0 < ε n) → Tendsto ε atTop (𝓝 0) →
+      ∀ ν' : Measure (((LQGMetric.CoordJ → ℝ) × LQGData) × PathLawFamily), IsProbabilityMeasure ν' →
+      (∀ f : (((LQGMetric.CoordJ → ℝ) × LQGData) × PathLawFamily) →ᵇ ℝ,
+        Tendsto (fun n => ∫ ω, f ((LQGMetric.pairJ ⊤ (H ω), E ω), interpWalkLaw S η' (ε n) ω) ∂S.P) atTop
+          (𝓝 (∫ p, f p ∂ν'))) →
+      (∀ᵐ p ∂ν', ∃ c : ℝ≥0, c ≠ 0 ∧ ∀ z, p.2 z = LatticeProb.timeScalePathKernel c (lbmPathLawField γ p.1.1) z) →
+      ∃ c₀ : ℝ≥0, c₀ ≠ 0 ∧ ∀ᵐ p ∂ν', ∀ z, p.2 z = LatticeProb.timeScalePathKernel c₀ (lbmPathLawField γ p.1.1) z) :
+    ConvergenceOfIDLAStmt 𝒮 :=
+  closed_1_4_quantumConeScaling_coneDimension ν h1 h2 hN4 h10
+    (randomWalkToLBMStmt_of_markovLimit_derived_noHN5_noHN8 h1 h2 hN4 h10 hN9)
+
+/-- **Theorem 1.6** in the counted form `closed_1_6_quantumConeScaling_coneDimension`, with the convergence of the embedded random walk to Liouville
+Brownian motion (`h11`) supplied by `randomWalkToLBMStmt_of_markovLimit_derived_noHN5_noHN8`: the premises `hN8'`
+(Markov and invariance property of Liouville Brownian motion; proved from `h10`) and `hN5` (Berestycki-Gwynne (2020),
+Lemma 7.4; proved from `hN4`) of `closed_1_6_quantumConeScaling_coneDimension_markovLimit` no longer occur. The remaining premises are
+`h1 h2 hN4 h10 hN9`. Same conclusion. -/
+theorem closed_1_6_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8 {𝒮 : SpaceFillingSLEModel}
+    (ν : ℝ → Measure SLEPathCode)
+    (h1 : HasNormalizedSLELaw 𝒮 ν) (h2 : SLEModelClosureInput 𝒮)
+    (hN4 : GMS21UniformStartInput 𝒮)
+    (h10 : HasReferenceEnvironments 𝒮)
+    (hN9 : ∀ γ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      ∀ η' : Ω → C(ℝ, ℂ), Measurable η' → (∀ᵐ ω ∂S.P, ⇑(η' ω) = S.η ω) →
+      ∀ H : Ω → LQGMetric.DistC, Measurable H → (∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ) →
+      ∀ E : Ω → LQGData, Measurable E → ∀ ε : ℕ → ℝ, (∀ n, 0 < ε n) → Tendsto ε atTop (𝓝 0) →
+      ∀ ν' : Measure (((LQGMetric.CoordJ → ℝ) × LQGData) × PathLawFamily), IsProbabilityMeasure ν' →
+      (∀ f : (((LQGMetric.CoordJ → ℝ) × LQGData) × PathLawFamily) →ᵇ ℝ,
+        Tendsto (fun n => ∫ ω, f ((LQGMetric.pairJ ⊤ (H ω), E ω), interpWalkLaw S η' (ε n) ω) ∂S.P) atTop
+          (𝓝 (∫ p, f p ∂ν'))) →
+      (∀ᵐ p ∂ν', ∃ c : ℝ≥0, c ≠ 0 ∧ ∀ z, p.2 z = LatticeProb.timeScalePathKernel c (lbmPathLawField γ p.1.1) z) →
+      ∃ c₀ : ℝ≥0, c₀ ≠ 0 ∧ ∀ᵐ p ∂ν', ∀ z, p.2 z = LatticeProb.timeScalePathKernel c₀ (lbmPathLawField γ p.1.1) z) :
+    ConvergenceOfDivSandpileStmt 𝒮 :=
+  closed_1_6_quantumConeScaling_coneDimension ν h1 h2 hN4 h10
+    (randomWalkToLBMStmt_of_markovLimit_derived_noHN5_noHN8 h1 h2 hN4 h10 hN9)
+
 end MatedCRT
