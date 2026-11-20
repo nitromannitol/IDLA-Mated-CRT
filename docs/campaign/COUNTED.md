@@ -717,3 +717,18 @@ is kept as a second route.
   `ClassLawLimitIdentification`, `RegularExitLimitLaws`); lowering of the radius (`ExitClassLowering`); extension from a
   dense countable set of starting points to all `z` (`ClassLawAllStarts`: `ae_forall_map_stoppedExitCurve_eq_of_tendsto_law_interpWalkLaw`,
   for every `z` and every `r > ‖z‖`, stronger than `hN5c`).
+
+### Lemma 7.4 and the Markov limit (binder `hN8'`): discharged relative to `h10` (2026-11-20)
+
+- `FirstPass/Derived/HN8OfRevuzLintegralGlue.lean` (`hN8'_of_hasReferenceEnvironments`,
+  `randomWalkToLBMStmt_of_markovLimit_derived_noHN5_noHN8`): `hN8'` exactly as typed in
+  `randomWalkToLBMStmt_of_markovLimit_derived_noHN5` follows from `h10`. The counted theorems and the frozen statements
+  are unchanged. The remaining premises of the wrapper are `h1 h2 hN4 h10 hN9`.
+- Chain (Revuz identification of the limiting Liouville clock, desk MQ-fs-22): for every valid environment, almost
+  surely every PCAF version of the clock has `∫⁻ f d(revuz planarLaw G) = ∫⁻ f dμ` for each nonnegative continuous
+  compactly supported `f` (`ae_lintegral_revuz_eq_of_isValid`, from `lintegral_ofReal_revuz_eq_of_lqgClock`:
+  `OccupationBallLaw*.lean` and the LP general leaves; ball-mass bound `ae_approximant_ballBound_of_isValid`);
+  rational rectangle tents then identify the Revuz measure with `S.μ ω` (`ae_forall_revuz_eq_of_ratRectTent`), and
+  invariance of the law field follows (`HN8OfRevuzTestIdentity.lean`, `HN8OfRevuzIdentification.lean`).
+- `hN8'` is discharged only relative to `h10` (the reference environments of the model), as the other premises of the
+  wrapper that use the reference environments.
