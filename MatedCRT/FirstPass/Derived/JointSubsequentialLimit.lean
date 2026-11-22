@@ -35,7 +35,7 @@ theorem isTightMeasureSet_range_of_tendsto_integral (μ : ℕ → Measure E) [�
     (ν : Measure E) [IsProbabilityMeasure ν]
     (h : ∀ f : E →ᵇ ℝ, Tendsto (fun n => ∫ x, f x ∂μ n) atTop (𝓝 (∫ x, f x ∂ν))) :
     IsTightMeasureSet (range μ) := by
-  letI := TopologicalSpace.upgradeIsCompletelyMetrizable E
+  let := TopologicalSpace.upgradeIsCompletelyMetrizable E
   let q : ℕ → ProbabilityMeasure E := fun n => ⟨μ n, inferInstance⟩
   let q₀ : ProbabilityMeasure E := ⟨ν, inferInstance⟩
   have hq : Tendsto q atTop (𝓝 q₀) := ProbabilityMeasure.tendsto_iff_forall_integral_tendsto.2 h
@@ -77,9 +77,11 @@ theorem exists_subseq_tendsto_integral_prod_of_tendsto_integral {D : Ω → A} (
     hDY.aemeasurable.prodMk (hW n)
   have hJ' : ∀ n, AEMeasurable (fun ω => (D ω, W n ω)) P := fun n => hD.aemeasurable.prodMk (hW n)
   let μ : ℕ → Measure ((A × B) × C) := fun n => P.map fun ω => ((D ω, Y ω), W n ω)
-  haveI : ∀ n, IsProbabilityMeasure (μ n) := fun n => isProbabilityMeasure_map (hJ n)
+  have : ∀ n, IsProbabilityMeasure (μ n) := fun n =>
+    (inferInstance : IsProbabilityMeasure (P.map fun ω => ((D ω, Y ω), W n ω)))
   let μ' : ℕ → Measure (A × C) := fun n => P.map fun ω => (D ω, W n ω)
-  haveI : ∀ n, IsProbabilityMeasure (μ' n) := fun n => isProbabilityMeasure_map (hJ' n)
+  have : ∀ n, IsProbabilityMeasure (μ' n) := fun n =>
+    (inferInstance : IsProbabilityMeasure (P.map fun ω => (D ω, W n ω)))
   have hint' : ∀ (f : (A × C) →ᵇ ℝ) (n : ℕ), ∫ p, f p ∂μ' n = ∫ ω, f (D ω, W n ω) ∂P := fun f n =>
     integral_map (hJ' n) f.continuous.aestronglyMeasurable
   have hint : ∀ (f : ((A × B) × C) →ᵇ ℝ) (n : ℕ), ∫ q, f q ∂μ n = ∫ ω, f ((D ω, Y ω), W n ω) ∂P :=
@@ -109,12 +111,11 @@ theorem exists_subseq_tendsto_integral_prod_of_tendsto_integral {D : Ω → A} (
   · simpa only [hint] using hlim f
   · have hpr : Continuous fun q : (A × B) × C => (q.1.1, q.2) :=
       (continuous_fst.comp continuous_fst).prodMk continuous_snd
-    haveI : IsProbabilityMeasure (ν₂.map fun q : (A × B) × C => (q.1.1, q.2)) :=
-      isProbabilityMeasure_map hpr.aemeasurable
     refine ext_of_forall_integral_eq_of_IsFiniteMeasure fun f => ?_
     rw [integral_map hpr.aemeasurable f.continuous.aestronglyMeasurable]
     have h₁ := hlim (f.compContinuous ⟨fun q : (A × B) × C => (q.1.1, q.2), hpr⟩)
-    simp only [hint, BoundedContinuousFunction.compContinuous_apply, ContinuousMap.coe_mk] at h₁
+    simp only [hint] at h₁
+    simp only [BoundedContinuousFunction.compContinuous_apply, ContinuousMap.coe_mk] at h₁
     exact tendsto_nhds_unique h₁ ((hconv f).comp hφ.tendsto_atTop)
 
 end Extraction

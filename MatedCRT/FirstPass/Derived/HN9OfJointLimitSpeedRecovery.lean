@@ -90,7 +90,7 @@ time-change premise from `ν'` to `ν''`, and take `Ω₂ = ν''` with the proje
 theorem bg20LocalSpeedRecoveryInput_of_jointLimit {𝒮 : SpaceFillingSLEModel}
     (hJoint : BG20JointLimitSpeedRecoveryInput 𝒮) : BG20LocalSpeedRecoveryInput 𝒮 := by
   intro γ hγ hγ2 Ω _ S hS η' hη' hae H hH hrep E hE ε hε0 hε ν' hν' hconv hspeed
-  haveI := hS.isProbabilityMeasure
+  have := hS.isProbabilityMeasure
   have : PolishSpace C(ℝ, ℂ) := LatticeProb.polishSpace_continuousMap ℝ ℂ
   have hDm : Measurable fun ω => (LQGMetric.pairJ ⊤ (H ω), E ω) := (measurable_pairJ_top.comp hH).prodMk hE
   obtain ⟨φ, hφ, ν₂, hν₂, hlim, hmap⟩ := exists_subseq_tendsto_integral_prod_of_tendsto_integral hDm hη'

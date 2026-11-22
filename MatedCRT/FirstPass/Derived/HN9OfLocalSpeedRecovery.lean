@@ -59,9 +59,10 @@ field at the field coordinates `p.1.1` is measurable. -/
 theorem measurableSet_forall_eq_timeScalePathKernel_lbmPathLawField (γ : ℝ) (c : ℝ≥0) :
     MeasurableSet {p : ((LQGMetric.CoordJ → ℝ) × LQGData) × PathLawFamily |
       ∀ z, p.2 z = LatticeProb.timeScalePathKernel c (lbmPathLawField γ p.1.1) z} := by
+  have hts : Continuous (LatticeProb.timeScalePath c : ContinuousPath ℂ → ContinuousPath ℂ) :=
+    ContinuousMap.continuous_precomp _
   let g : C(ProbabilityMeasure (ContinuousPath ℂ), ProbabilityMeasure (ContinuousPath ℂ)) :=
-    ⟨fun μ => μ.map (LatticeProb.timeScalePath c),
-      ProbabilityMeasure.continuous_map (ContinuousMap.continuous_precomp _)⟩
+    ⟨fun μ => μ.map (LatticeProb.timeScalePath c), ProbabilityMeasure.continuous_map hts⟩
   have hF : Measurable fun p : ((LQGMetric.CoordJ → ℝ) × LQGData) × PathLawFamily =>
       g.comp (lbmPathLawField γ p.1.1) :=
     (ContinuousMap.continuous_postcomp g).measurable.comp
@@ -174,7 +175,7 @@ theorem bg20LocalSpeedRecoveryInput_of_hN9 {𝒮 : SpaceFillingSLEModel}
       ∃ c₀ : ℝ≥0, c₀ ≠ 0 ∧ ∀ᵐ p ∂ν', ∀ z, p.2 z = LatticeProb.timeScalePathKernel c₀ (lbmPathLawField γ p.1.1) z) :
     BG20LocalSpeedRecoveryInput 𝒮 := by
   intro γ hγ hγ2 Ω _ S hS η' hη' hae H hH hrep E hE ε hε0 hε ν' hν' hconv hspeed
-  haveI := hS.isProbabilityMeasure
+  have := hS.isProbabilityMeasure
   obtain ⟨c₀, hc₀, hc₀ae⟩ :=
     hN9 γ hγ hγ2 Ω S hS η' hη' hae H hH hrep E hE ε hε0 hε ν' hν' hconv hspeed
   have hDm : Measurable fun ω => (LQGMetric.pairJ ⊤ (H ω), E ω) := (measurable_pairJ_top.comp hH).prodMk hE
