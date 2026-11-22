@@ -37,6 +37,8 @@ the input (`hN9_of_bg20LocalSpeedRecovery`).
 
 * `BG20LocalSpeedRecoveryInput`: the input (Berestycki–Gwynne (2020), Lemmas 7.20, 7.21 and 7.22).
 * `hN9_of_bg20LocalSpeedRecovery`: the premise `hN9` from `BG20LocalSpeedRecoveryInput`.
+* `bg20LocalSpeedRecoveryInput_of_hN9`: conversely, `hN9` implies `BG20LocalSpeedRecoveryInput`, so the input is
+  no stronger than `hN9`; it isolates the literature content of the proof of Lemma 7.18.
 * `randomWalkToLBMStmt_of_markovLimit_bg20LocalSpeedRecovery`,
   `closed_1_4_quantumConeScaling_coneDimension_markovLimit_bg20LocalSpeedRecovery`,
   `closed_1_6_quantumConeScaling_coneDimension_markovLimit_bg20LocalSpeedRecovery`: Theorem 2.11 and Theorems 1.4 and
@@ -150,6 +152,53 @@ theorem hN9_of_bg20LocalSpeedRecovery {𝒮 : SpaceFillingSLEModel}
   have hcc : c = c₀ := NNReal.coe_injective (hca.trans hc₀a.symm)
   rw [← hcc]
   exact hcz
+
+/-- **`BG20LocalSpeedRecoveryInput` is no stronger than `hN9`.** Conversely, `hN9` implies the input: take
+`Ω₂ = ν'`, the identity for `pr`, constant `X₁ = X₂` and `g₁ = g₂ = c₀`. Every admissible constant `c` equals `c₀`
+almost surely, since both are the ratio of the exit-time medians from `B_{1/2}` of the Liouville Brownian law field
+and of the limiting family at `0` (`coe_eq_medianOf_div_of_map_timeScalePath`), and the first median is nonzero for
+almost every value of the data (`ae_medianOf_exitCdf_lbmPathLawField_ne_zero`, transferred to `ν'` through its data
+marginal `map_fst_eq_map_of_tendsto_integral`). -/
+theorem bg20LocalSpeedRecoveryInput_of_hN9 {𝒮 : SpaceFillingSLEModel}
+    (hN9 : ∀ γ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      ∀ η' : Ω → C(ℝ, ℂ), Measurable η' → (∀ᵐ ω ∂S.P, ⇑(η' ω) = S.η ω) →
+      ∀ H : Ω → LQGMetric.DistC, Measurable H → (∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ) →
+      ∀ E : Ω → LQGData, Measurable E → ∀ ε : ℕ → ℝ, (∀ n, 0 < ε n) → Tendsto ε atTop (𝓝 0) →
+      ∀ ν' : Measure (((LQGMetric.CoordJ → ℝ) × LQGData) × PathLawFamily), IsProbabilityMeasure ν' →
+      (∀ f : (((LQGMetric.CoordJ → ℝ) × LQGData) × PathLawFamily) →ᵇ ℝ,
+        Tendsto (fun n => ∫ ω, f ((LQGMetric.pairJ ⊤ (H ω), E ω), interpWalkLaw S η' (ε n) ω) ∂S.P) atTop
+          (𝓝 (∫ p, f p ∂ν'))) →
+      (∀ᵐ p ∂ν', ∃ c : ℝ≥0, c ≠ 0 ∧ ∀ z, p.2 z = LatticeProb.timeScalePathKernel c (lbmPathLawField γ p.1.1) z) →
+      ∃ c₀ : ℝ≥0, c₀ ≠ 0 ∧ ∀ᵐ p ∂ν', ∀ z, p.2 z = LatticeProb.timeScalePathKernel c₀ (lbmPathLawField γ p.1.1) z) :
+    BG20LocalSpeedRecoveryInput 𝒮 := by
+  intro γ hγ hγ2 Ω _ S hS η' hη' hae H hH hrep E hE ε hε0 hε ν' hν' hconv hspeed
+  haveI := hS.isProbabilityMeasure
+  obtain ⟨c₀, hc₀, hc₀ae⟩ :=
+    hN9 γ hγ hγ2 Ω S hS η' hη' hae H hH hrep E hE ε hε0 hε ν' hν' hconv hspeed
+  have hDm : Measurable fun ω => (LQGMetric.pairJ ⊤ (H ω), E ω) := (measurable_pairJ_top.comp hH).prodMk hE
+  have hfst : ν'.map Prod.fst = S.P.map fun ω => (LQGMetric.pairJ ⊤ (H ω), E ω) :=
+    FirstPass.Derived.map_fst_eq_map_of_tendsto_integral hDm hconv
+  have hmed := FirstPass.Derived.ae_medianOf_exitCdf_lbmPathLawField_ne_zero hγ hγ2 hS hH hrep hE
+  rw [← hfst] at hmed
+  have hmed' : ∀ᵐ p ∂ν', medianOf (exitCdf (Metric.ball (0 : ℂ) (1 / 2))
+      (lbmPathLawField γ p.1.1 0 : Measure (ContinuousPath ℂ))) ≠ 0 :=
+    ae_of_ae_map measurable_fst.aemeasurable hmed
+  refine ⟨((LQGMetric.CoordJ → ℝ) × LQGData) × PathLawFamily, inferInstance, ν', hν', id, Unit, Unit,
+    inferInstance, inferInstance, fun _ => (), fun _ => (), fun _ => (c₀ : ℝ), fun _ => (c₀ : ℝ),
+    measurable_id, Measure.map_id, measurable_const, measurable_const, indepFun_const_left () _,
+    measurable_const, measurable_const, ?_⟩
+  filter_upwards [hc₀ae, hmed'] with p hp hm c hc hcz
+  have hlaw : ∀ a : ℝ≥0, (∀ z, p.2 z = LatticeProb.timeScalePathKernel a (lbmPathLawField γ p.1.1) z) →
+      (p.2 0 : Measure (ContinuousPath ℂ)) =
+        (lbmPathLawField γ p.1.1 0 : Measure (ContinuousPath ℂ)).map (timeScalePath a) := by
+    intro a ha
+    rw [ha 0]
+    rfl
+  have h1 := coe_eq_medianOf_div_of_map_timeScalePath (Metric.ball (0 : ℂ) (1 / 2)) Metric.isOpen_ball hc _ _
+    (hlaw c hcz) hm
+  have h2 := coe_eq_medianOf_div_of_map_timeScalePath (Metric.ball (0 : ℂ) (1 / 2)) Metric.isOpen_ball hc₀ _ _
+    (hlaw c₀ hp) hm
+  exact ⟨h1.trans h2.symm, h1.trans h2.symm⟩
 
 /-- **Theorem 2.11 (Berestycki–Gwynne (2020), Theorem 1.2) with Lemma 7.18 reduced to Lemmas 7.20–7.22.**
 `randomWalkToLBMStmt_of_markovLimit_derived_noHN5_noHN8` with the premise `hN9` supplied by
