@@ -45,11 +45,25 @@ time change of the Liouville Brownian law field. Then there are two independent 
 of the joint limit and measurable `g₁`, `g₂` such that almost surely every admissible time-change constant equals
 both `g₁ (X₁ q)` and `g₂ (X₂ q)`.
 
-In Berestycki–Gwynne, `X₁` and `X₂` are the triples `(h^D, η^D, P^D_0)` of two disjoint time windows of the curve,
-which are independent (Lemma 7.21), and `g₁`, `g₂` recover the constant from a triple (Lemma 7.20 and the mutual
-singularity of Lemma 7.22). Their walk runs at the raw speed `ε⁻¹`, while `interpWalkLaw` is normalized by the median
+This is the claim in the proof of Lemma 7.18 of Berestycki–Gwynne which they derive from Lemmas 7.20–7.22: "`c`
+can a.s. be expressed as a measurable function of either of the two triples `(h^D, η^D, P^D_0)` or
+`(h̃^D, η̃^D, P̃^D_0)`", and "by Lemma 7.21 these two triples are independent". The printed lemmas are:
+
+* Lemma 7.20: almost surely `P^D_0` is the law of Liouville Brownian motion with respect to `h^D` started from `0`
+  and stopped upon hitting `∂𝔻`, pre-composed with the time change `t ↦ c t`;
+* Lemma 7.21: for times `a < u < b < ã < ũ < b̃` the triples `(h^D, η^D, P^D_0)` and `(h̃^D, η̃^D, P̃^D_0)` are
+  independent;
+* Lemma 7.22: for a random distribution `h` on a domain whose law is locally absolutely continuous with respect to
+  the Gaussian free field, and the Liouville Brownian motion `X` with respect to `h` stopped at its exit, the laws
+  of `(h, X_{c₁ ·})` and `(h, X_{c₂ ·})` are mutually singular for `c₁ ≠ c₂`.
+
+Here `(h^D, η^D, P^D_0)` is the field, the curve and the stopped limiting path of the window `η([a, b])`, carried to
+the unit disk `𝔻` by the conformal map `φ : 𝔻 → U` with `φ(0) = η(u)`. The Riemann mapping theorem is not
+available in Mathlib, so the triples are not defined here: in the Lean form they are the measurable observables
+`X₁`, `X₂` of the joint limit, with values in arbitrary measurable spaces, and `g₁`, `g₂` are the functions which
+express the constant. Their walk runs at the raw speed `ε⁻¹`, while `interpWalkLaw` is normalized by the median
 `m_ε`; along a further subsequence `ε m_ε` tends to a deterministic positive limit (end of the proof of their
-Theorem 1.2), which multiplies both recovered constants by the same deterministic factor. -/
+Theorem 1.2), which multiplies both expressions of the constant by the same deterministic factor. -/
 def BG20JointLimitSpeedRecoveryInput (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
     ∀ η' : Ω → C(ℝ, ℂ), Measurable η' → (∀ᵐ ω ∂S.P, ⇑(η' ω) = S.η ω) →

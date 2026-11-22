@@ -81,11 +81,13 @@ and `g₂ (X₂ ω₂)`.
 
 In Berestycki–Gwynne, `Ω₂` carries the joint subsequential limit `(h, η, P)` and `pr` forgets the curve; `X₁` and
 `X₂` are the triples `(h^D, η^D, P^D_0)` of two disjoint time windows, which are independent (Lemma 7.21), and
-`g₁`, `g₂` recover the constant from a triple (Lemma 7.20 and the mutual singularity of Lemma 7.22, whose
-elementary part is `LatticeProb.mutuallySingular_map_graph_of_ae_ne`). Their walk runs at the raw speed
-`ε⁻¹`, while `interpWalkLaw` is normalized by the median `m_ε`; along a further subsequence `ε m_ε` tends to a
-deterministic positive limit (end of the proof of their Theorem 1.2), which multiplies both recovered constants by
-the same deterministic factor. -/
+`g₁`, `g₂` express the constant as a measurable function of a triple (Lemma 7.20 followed by Lemma 7.22; the
+elementary part of Lemma 7.22 is `LatticeProb.mutuallySingular_map_graph_of_ae_ne`). The printed statements and the
+form on the joint limit itself are in `BG20JointLimitSpeedRecoveryInput`, which implies this input
+(`bg20LocalSpeedRecoveryInput_of_jointLimit`). Their walk runs at the raw speed `ε⁻¹`, while `interpWalkLaw` is
+normalized by the median `m_ε`; along a further subsequence `ε m_ε` tends to a deterministic positive limit (end of
+the proof of their Theorem 1.2), which multiplies both expressions of the constant by the same deterministic
+factor. -/
 def BG20LocalSpeedRecoveryInput (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
     ∀ η' : Ω → C(ℝ, ℂ), Measurable η' → (∀ᵐ ω ∂S.P, ⇑(η' ω) = S.η ω) →
