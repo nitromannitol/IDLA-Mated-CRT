@@ -734,3 +734,112 @@ is kept as a second route.
   invariance of the law field follows (`HN8OfRevuzTestIdentity.lean`, `HN8OfRevuzIdentification.lean`).
 - `hN8'` is discharged only relative to `h10` (the reference environments of the model), as the other premises of the
   wrapper that use the reference environments.
+
+### Lemma 7.18 (binder `hN9`): reduced to the chart forms of Lemmas 7.20 and 7.21 (2026-11-23)
+
+Paths relative to `MatedCRT/FirstPass/Derived/`. Berestycki-Gwynne (2020) = BG20 (arXiv:2003.10320).
+- `HN9OfLocalSpeedRecovery.lean`: `BG20LocalSpeedRecoveryInput` (`:92`: on a probability space mapping onto the limit
+  law `ν'` of the binder, two independent random elements and measurable real functions of them which equal every
+  admissible time-change constant almost surely) implies `hN9` exactly as typed (`hN9_of_bg20LocalSpeedRecovery`,
+  `:117`; two independent almost surely equal random variables are almost surely constant), and conversely
+  (`bg20LocalSpeedRecoveryInput_of_hN9`, `:165`). Wrappers `..._markovLimit_bg20LocalSpeedRecovery` (`:221`).
+- `JointSubsequentialLimit.lean` (`exists_subseq_tendsto_integral_prod_of_tendsto_integral`, `:66`) and
+  `HN9OfJointLimitSpeedRecovery.lean`: along a subsequence the joint laws with the curve converge;
+  `BG20JointLimitSpeedRecoveryInput` (`:67`) implies `BG20LocalSpeedRecoveryInput` (`:90`).
+- `HN9OfChartLaws.lean`: stopping a path at its exit from an open set and then applying a continuous map commutes with
+  linear time changes and is Borel, so the chart image of a time-changed Liouville Brownian law is the time change of
+  the chart image (`chartLaw_eq_map_timeScalePath`, `:153`: the time-change part of BG20 Lemma 7.20). The time-change
+  constant is the ratio of the exit-time medians from the unit disc under the chart Liouville Brownian law and under
+  the chart law (`coe_eq_exitMedianRatio_chartLaw`, `:216`). `BG20ChartLawInput` (`:188`) implies
+  `BG20LocalSpeedRecoveryInput` (`bg20LocalSpeedRecoveryInput_of_chartLaws`, `:245`).
+- `HN9OfJointChartLaws.lean`: on the joint limit `ν''` of (field coordinates, `E`, curve, walk laws), the window of
+  times `a < u < b` has the point `η(u)` and the domain `windowDomain` (the connected component of the interior of
+  `η([a, b])` containing `η(u)`). `BG20JointChartLawInput` (`:84`) implies `BG20ChartLawInput` (`:112`).
+- `LBMPathLawFieldStartExit.lean` (`ae_forall_ae_lbmPathLawField_start_exit`, `:48`): for a valid environment, almost
+  surely, for every `z`, almost every path of the rescaled Liouville Brownian law from `z` starts at `z` and leaves
+  every ball; the same holds at `η(u)` on the joint limit.
+- `HN9OfWindowCharts.lean`: `IsInverseChart` (`:40`: `ψ(η(u)) = 0`, `ψ` injective on the closure of the domain,
+  holomorphic on it, onto the unit disc, frontier onto the unit circle). For inverse charts the chart image of the
+  Liouville Brownian law starts at `0` and leaves the unit disc almost surely (`ae_windowLBMChartLaw_start_exit`,
+  `:93`). `BG20WindowChartInput` (`:125`) implies `BG20JointChartLawInput` (`:152`).
+- `HN9OfChartField.lean`: the chart field `h ∘ φ + Q log |φ'|` (`φ = ψ⁻¹`) by its pairings with the test functions on
+  the unit disc, `f ↦ ⟨h, (f ∘ ψ) |ψ'|²⟩ + Q ∫ log |φ'| f` (`chartFieldPairing`, `:121`; the transported test function
+  is smooth with compact support in the domain, `contDiff_chartTestFun`, `:85`), for the field recovered from the
+  coordinates (`windowChartField`, `:129`). `BG20ChartFieldInput` (`:144`) implies `BG20WindowChartInput` (`:170`),
+  hence `hN9` (`hN9_of_bg20ChartField`, `:190`). Counted wrappers `randomWalkToLBMStmt_of_markovLimit_bg20ChartField`,
+  `closed_1_4_quantumConeScaling_coneDimension_markovLimit_bg20ChartField` (`:216`) and
+  `closed_1_6_quantumConeScaling_coneDimension_markovLimit_bg20ChartField`: premises `h1 h2 hN4 h10 hC`, same
+  conclusions. The wrappers with `BG20LocalSpeedRecoveryInput`, `BG20JointLimitSpeedRecoveryInput`,
+  `BG20ChartLawInput` and `BG20JointChartLawInput` remain; `BG20ChartFieldInput` implies `BG20JointChartLawInput`,
+  `BG20ChartLawInput` and `BG20LocalSpeedRecoveryInput` (`bg20LocalSpeedRecoveryInput_of_chartField`, `:181`).
+- `InverseChartOfJordan.lean`: a nonempty bounded preconnected open set whose frontier is a Jordan curve has every
+  component of its complement unbounded (Jordan curve theorem), and has an inverse chart at each of its points
+  (`exists_isInverseChart_of_isJordanCurve`, `:110`: Carathéodory's theorem for Jordan domains, Pommerenke (1992),
+  Theorem 2.6, the holomorphic inverse of a univalent map and Tietze's extension theorem, all from Mathlib and LP).
+  For windows: `exists_isInverseChart_windowDomain` (`:215`), when `η(u)` is in the interior of `η([a, b])` and the
+  frontier of the window domain is a Jordan curve.
+- Remaining content of `BG20ChartFieldInput`, for all `a < u < b < a' < u' < b'` on the joint limit:
+  (I1) almost surely `ψ` and `ψ'` are inverse charts of the two windows; (I2) the kernel `K`, the chart fields and the
+  window chart laws are Borel; (I3) the coordinate change of Liouville Brownian motion (Berestycki, arXiv:1301.3356,
+  the conformal invariance theorem of Section 1; cited in BG20 as [Ber15, Theorem 1.3]): almost surely the chart image
+  of the Liouville Brownian law from `η(u)`, stopped at the exit from the window domain, is `K` of the chart field;
+  (I4) BG20 Lemma 7.21: the pairs (chart field, window chart law) of the two windows are independent (BG20 derive it
+  from Duplantier-Miller-Sheffield, Theorem 1.9). For (I1), `η(u)` lies almost surely in the interior of `η([a, b])`
+  for the environment (`MatedCRTEnv.IsValid.ae_fixedTime_mem_interior_image`, `ValidCurveFixedTime.lean:25`); the
+  Jordan property of the frontier of the window domain (flow-line description of space-filling SLE) and a Borel choice
+  of the inverse chart are not formalized.
+- Departures from the printed proof of Lemma 7.18. (a) Lemma 7.22 is not used as printed: the constant is recovered as
+  the ratio of exit-time medians, a measurable function of (chart field, chart law); the mutual singularity of the two
+  laws for each pair `c₁ ≠ c₂` does not by itself give such a function. (b) Lemma 7.20 is split: the time change is
+  proved and the coordinate change (I3) is the input. (c) Lemma 7.21 is used for the pairs `(h^D, P^D_0)`; the chart
+  curve `η^D` is not needed. (d) The chart field is given by its pairings with test functions on the unit disc.
+  (e) The inverse chart is a continuous map of `ℂ` which extends `φ⁻¹` from the closure of the window domain.
+  (f) The walk of BG20 runs at the raw speed `ε⁻¹`, `interpWalkLaw` at the median normalization `m_ε`; along a further
+  subsequence `ε m_ε` tends to a deterministic positive limit (end of the proof of BG20 Theorem 1.2), and the chart laws
+  for the two normalizations differ by the corresponding deterministic time change.
+
+### The uniform-start input (binder `hN4`): reduced to the stopped-curve comparison of GMS21 Theorem 3.4 (2026-11-23)
+
+Paths relative to `MatedCRT/FirstPass/Derived/`. GMS21 = Gwynne-Miller-Sheffield, arXiv:1705.11161.
+- `GMS21UniformStartOfReference.lean`: valid environments of models with the same normalized law `ν` have the same law
+  of (curve version, edge multiplicities) (`map_curveVersion_mult_eq_of_valid`, from `ReferenceTripleLaw.lean:78`), so
+  the failure event of `hN4` is bounded by the mass of the bad data under that law
+  (`measure_compl_uniformStartGood_le_map`). `gms21UniformStartInput_of_reference` (`:104`): `hN4` from `h1` and a
+  law-level bound on one valid environment of a model with law `ν`.
+- `UniformStartDilation.lean` and `GMS21UniformStartOfReciprocalMesh.lean` (`gms21UniformStartInput_of_uniform_reciprocal`,
+  `:55`; `gms21UniformStartInput_of_reference_reciprocal`, `:316`): with `h2`, bounds at the cell masses `1/n` suffice.
+- `GMS21UniformStartOfSelectedCell.lean`: the walk from the smallest cell containing the start
+  (`uniformStartSelectedData`, `:47`) and its form with both paths stopped at the exit from the ball
+  (`uniformStartSelectedBallData`, `:168`; the comparison established in the proof of GMS21 Theorem 3.4, case 1);
+  `gms21UniformStartInput_of_selected_reference` (`:150`), `gms21UniformStartInput_of_selectedBall_reference` (`:255`).
+- `GMS21UniformStartOfSelectedProkhorov.lean`: the same with the Lévy-Prokhorov distance of the laws of the two stopped
+  curves (`uniformStartSelectedLPData`, `:43`; `gms21UniformStartInput_of_selectedLP_reference`, `:80`).
+- `HN4OfSelectedReferenceCounted.lean`: counted forms
+  `closed_1_4/closed_1_6_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8_tutte` (`:42`, `:71`; premises
+  `h1 h2 hTutte h10 hN9`), `..._tutteBall` (`:101`, `:131`) and `..._tutteProkhorov` (`:161`, `:191`; premises
+  `h1 h2 hTutteLP h10 hN9`), same conclusions. `hTutteLP`: for each `0 < γ < 2`, some model with law `ν` has a valid
+  environment with a measurable version of its curve such that, for all `0 < ρ < R` and `κ, θ > 0` and all large `n`,
+  the law of (curve, multiplicities at cell mass `1/n`) gives mass at most `θ` to the complement of
+  `uniformStartSelectedLPData (1/n) ρ R κ`.
+- `ZeroConeRootFiniteExpectation.lean` (`IsMatingOfTreesCoupling.lintegral_rootRatio_mul_conductance_lt_top`, `:310`):
+  the finite-expectation hypothesis (1.5) of the invariance principle of Gwynne-Miller-Sheffield (arXiv:1807.07515) for
+  the root cell of the shifted zero-cone configuration, from the cell moments of the coupling (the cells meeting the
+  root cell are bounded by the inner and outer degrees, `card_le_degInner_add_degOuter`, `:117`; Hölder with an
+  exponent below `4/γ²`, `lintegral_diamAreaSup_mul_deg_lt_top`, `:241`).
+- Remaining content of `hTutteLP`. For the genuine law (whole-plane space-filling SLE on a γ-quantum cone) it is the
+  stopped-curve comparison established in the proof of GMS21 Theorem 3.4, case 1. LP has the invariance principle of
+  arXiv:1807.07515, Theorem 1.16 (`LatticeProb/Bonanno/ReflectedGMS/GMS/Theorem116.lean:98`), for a single start, under
+  mass-transport, ergodicity modulo scaling, finite-expectation and connectedness hypotheses. For the shifted zero-cone
+  configuration only the root-cell finite expectation above is formalized; not formalized are the other hypotheses for
+  this configuration, the uniformity in the starting cell (arXiv:1807.07515, Theorem 3.10), the isotropy of the limiting
+  covariance, GMS21 Lemmas 3.3 and 3.5, and the transfer from the zero cone to the γ-cone.
+- The arbitrary model. In the counted forms `ν` is a parameter and `h1` only says that `𝒮` has the normalized law `ν`;
+  `hTutteLP` is a property of `ν`. For a law `ν` other than the genuine one which is realized by valid environments, it
+  is not known whether `hN4` holds, nor whether the clauses of `IsMatingOfTreesCoupling` force such a law to be the
+  genuine one. `hN4` for such a law would follow from the genuine case if, with the Brownian contour shared, the curve
+  were the image of the genuine curve under a fixed similarity of the plane (planar Brownian motion is preserved by
+  similarities up to a time change, and `hN4` quantifies over all radii and tolerances). No valid law other than the
+  genuine one is known; so `hTutteLP` is a premise and is not derived from `h1 h2 h10`.
+- The two reductions compose: `closed_1_4_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8 ν h1 h2
+  (gms21UniformStartInput_of_selectedLP_reference h1 h2 hTutteLP) h10 (hN9_of_bg20ChartField hC)` (and the same for
+  Theorem 1.6) has the premises `h1 h2 hTutteLP h10 hC`.
