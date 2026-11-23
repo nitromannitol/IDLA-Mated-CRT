@@ -901,13 +901,19 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
 - Build dependency. `CanonicalCountedFormsOfCoupling.lean` imports Harmonic-Balls-LQG modules
   (`LQGClockOneStartSubcritical`, `LQGClockExteriorClockConvergence`) through the path dependency
   `require «harmonic-balls-lqg» from "../Harmonic-Balls-LQG"` (`lakefile.lean:8`), which is not pinned. IDLA builds only
-  next to Harmonic-Balls-LQG at revision 921a1bb4 or later.
+  next to Harmonic-Balls-LQG at revision 56785bbe or later (`CanonicalCountedFormsOfCouplingClock.lean` imports
+  `LQGClockZeroInsertionConvergence`, added there).
+- `CanonicalCountedFormsOfCouplingClock.lean`. The locally uniform limit holds for every `0 < γ < 2` at the insertion
+  `0` (`HarmonicBalls.ae_exists_locally_uniform_limit_clock_zero`, `LQGClockZeroInsertionConvergence.lean:430`;
+  `gaussianClock_localLimit_of_lt_two`, `:36`), and `hlocHigh` is
+  `HarmonicBalls.forall_ae_exists_locally_uniform_limit_clock_zero_of_two_le_sq` (`:449` there). Counted forms
+  `closed_1_4/closed_1_6_quantumConeScaling_coneDimension_canonical_of_coupling_tutteLP_chartField` (`:54`, `:79`):
+  premises `hcpl hTutteLP hC` only, conclusions at the canonical model `ProbeMi.canonicalSLEModel ν`.
 - Remaining content. `hcpl`: the coupling of DMS14 Theorem 1.9 with the clauses of `IsMatingOfTreesCoupling` (sources in
   the record's comments). The clauses free of SLE are realized by LP (`exists_cone_ig_area_standardBorel`); the curves and
-  the boundary-length pair are not constructed. `hlocHigh`: for `√2 ≤ γ < 2`, the almost sure locally uniform limit,
-  from every start, of the dyadic clocks of the whole-plane GFF at the insertion `0`. Berestycki 2015, Section 2
-  (thick-point truncation) treats the Dirichlet GFF in a domain, with the Brownian motion stopped at its exit and a
-  fixed time; the whole-plane form (every start, locally uniform in time, continuous limit) also needs a localization
-  like the one in the proof for `γ² < 2` in Harmonic-Balls-LQG. Departures: none from the printed arguments for `h1`
+  the boundary-length pair are not constructed. `hTutteLP` and `hC` as in the sections on `hN4` and `hN9`. The clock
+  statements (`hloc`, `hone`, `hlocHigh`) are theorems of Harmonic-Balls-LQG; Berestycki 2015, Section 2, treats the
+  Dirichlet GFF in a domain with the Brownian motion stopped at its exit, and the whole-plane form (every start,
+  locally uniform in time, continuous limit) is proved there with a localization. Departures: none from the printed arguments for `h1`
   and `h2` (they are properties of the coupling record). The one-start event is used in place of the strict monotonicity of the limit clock, which follows from it
   (`Sec1.strictMono_limitAfterPositiveTimes_of_pos_increments`, `WholePlaneClockStrictMonoOfOneStart.lean:104`).
