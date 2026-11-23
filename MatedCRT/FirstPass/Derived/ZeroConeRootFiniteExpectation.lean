@@ -31,6 +31,8 @@ carried by intersecting cells (the boundary-arc conductances of the source are o
 * `exists_crossing_of_lt`: the crossing interval (deterministic).
 * `card_le_degInner_add_degOuter`: the number of cells meeting the root cell (deterministic).
 * `tsum_le_two_mul_degInner_add_degOuter`, `tsum_inv_le_degInner_add_degOuter`: the conductance bounds.
+* `lintegral_diamAreaSup_mul_deg_lt_top`: the Hölder bound from the cell moments.
+* `IsMatingOfTreesCoupling.ae_zeroCone_root_regular`: `η₀ 0 = 0` and `diam η₀([-1, 1]) > 0` almost surely.
 * `IsMatingOfTreesCoupling.lintegral_rootRatio_mul_conductance_lt_top`: the finite-expectation bound.
 -/
 
@@ -231,5 +233,112 @@ theorem tsum_inv_le_degInner_add_degOuter {c : C(ℝ, ℂ)} (hc0 : c 0 = 0)
     _ ≤ (degInner c : ℝ≥0∞) + (degOuter c : ℝ≥0∞) := by
         rw [← ENat.toENNReal_coe, ← ENat.toENNReal_add, ENat.toENNReal_le]
         exact card_le_degInner_add_degOuter hc0 hD hθ0 hθ1 _ fun k hk => hsupp k (Finset.mem_filter.1 hk).2
+
+/-- **Hölder bound for the degree-weighted cell ratio.** If `diamAreaSup η₀` has all moments of order `≥ 1`,
+`degInner η₀` the moments of order `p ∈ [1, 4/γ²)` and `degOuter η₀` all moments of order `≥ 1` (the clause
+`cellMoments` of a mating-of-trees coupling), with `0 < γ < 2`, then
+`diamAreaSup η₀ · (degInner η₀ + degOuter η₀)` is integrable. -/
+theorem lintegral_diamAreaSup_mul_deg_lt_top {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {Ω : Type}
+    [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P] {η₀ : Ω → C(ℝ, ℂ)} (hη₀ : Measurable η₀)
+    (hmom : (∀ p : ℝ, 1 ≤ p → ∫⁻ ω, diamAreaSup (η₀ ω) ^ p ∂P < ⊤) ∧
+      (∀ p : ℝ, 1 ≤ p → p < 4 / γ ^ 2 → ∫⁻ ω, ((degInner (η₀ ω) : ℝ≥0∞)) ^ p ∂P < ⊤) ∧
+      (∀ p : ℝ, 1 ≤ p → ∫⁻ ω, ((degOuter (η₀ ω) : ℝ≥0∞)) ^ p ∂P < ⊤)) :
+    ∫⁻ ω, diamAreaSup (η₀ ω) * ((degInner (η₀ ω) : ℝ≥0∞) + (degOuter (η₀ ω) : ℝ≥0∞)) ∂P < ⊤ := by
+  have hg4 : 1 < 4 / γ ^ 2 := by
+    rw [one_lt_div (by positivity)]
+    nlinarith
+  obtain ⟨p, hpdef⟩ : ∃ p : ℝ, p = (1 + 4 / γ ^ 2) / 2 := ⟨_, rfl⟩
+  have hp1 : 1 < p := by rw [hpdef]; linarith
+  have hp4 : p < 4 / γ ^ 2 := by rw [hpdef]; linarith
+  have hpq : (p / (p - 1)).HolderConjugate p :=
+    ((Real.holderConjugate_iff_eq_conjExponent hp1).2 rfl).symm
+  have hq1 : 1 ≤ p / (p - 1) := (one_le_div (by linarith)).2 (by linarith)
+  have hA : AEMeasurable (fun ω => diamAreaSup (η₀ ω)) P :=
+    (MatedCRTHarmonic.MatedCRT.aemeasurable_diamAreaSup (P.map η₀)).comp_measurable hη₀
+  have hI : AEMeasurable (fun ω => (degInner (η₀ ω) : ℝ≥0∞)) P :=
+    (MatedCRTHarmonic.MatedCRT.aemeasurable_degInner (P.map η₀)).comp_measurable hη₀
+  have hO : AEMeasurable (fun ω => (degOuter (η₀ ω) : ℝ≥0∞)) P :=
+    (MatedCRTHarmonic.MatedCRT.aemeasurable_degOuter (P.map η₀)).comp_measurable hη₀
+  have hH := ENNReal.lintegral_mul_le_Lp_mul_Lq P hpq hA (hI.add hO)
+  have hAq : ∫⁻ ω, diamAreaSup (η₀ ω) ^ (p / (p - 1)) ∂P < ⊤ := hmom.1 _ hq1
+  have hGp : ∫⁻ ω, ((degInner (η₀ ω) : ℝ≥0∞) + (degOuter (η₀ ω) : ℝ≥0∞)) ^ p ∂P < ⊤ := by
+    have h2 : (2 : ℝ≥0∞) ^ (p - 1) ≠ ⊤ := ENNReal.rpow_ne_top_of_nonneg (by linarith) ENNReal.ofNat_ne_top
+    calc ∫⁻ ω, ((degInner (η₀ ω) : ℝ≥0∞) + (degOuter (η₀ ω) : ℝ≥0∞)) ^ p ∂P
+        ≤ ∫⁻ ω, (2 : ℝ≥0∞) ^ (p - 1) *
+            ((degInner (η₀ ω) : ℝ≥0∞) ^ p + (degOuter (η₀ ω) : ℝ≥0∞) ^ p) ∂P :=
+          lintegral_mono fun ω => ENNReal.rpow_add_le_mul_rpow_add_rpow _ _ hp1.le
+      _ = (2 : ℝ≥0∞) ^ (p - 1) * (∫⁻ ω, (degInner (η₀ ω) : ℝ≥0∞) ^ p ∂P +
+            ∫⁻ ω, (degOuter (η₀ ω) : ℝ≥0∞) ^ p ∂P) := by
+          rw [lintegral_const_mul' _ _ h2, lintegral_add_left' (hI.pow_const p)]
+      _ < ⊤ := ENNReal.mul_lt_top (lt_top_iff_ne_top.2 h2)
+          (ENNReal.add_lt_top.2 ⟨hmom.2.1 p hp1.le hp4, hmom.2.2 p hp1.le⟩)
+  refine lt_of_le_of_lt hH (ENNReal.mul_lt_top ?_ ?_)
+  · exact ENNReal.rpow_lt_top_of_nonneg (by positivity) hAq.ne
+  · exact ENNReal.rpow_lt_top_of_nonneg (by positivity) hGp.ne
+
+/-- On a mating-of-trees coupling, almost surely the zero-cone curve starts at `0` and its window `η₀([-1, 1])` has
+positive diameter. -/
+theorem _root_.MatedCRTHarmonic.MatedCRT.IsMatingOfTreesCoupling.ae_zeroCone_root_regular {γ : ℝ} {Ω : Type}
+    [MeasurableSpace Ω] {P : Measure Ω} {X X₀ hIG₀ : Ω → MatedCRTHarmonic.MatedCRT.Field}
+    {B B' B₀ B₀' : ℝ≥0 → Ω → ℝ} {U : Ω → ℝ} {ηL η η₀ : Ω → C(ℝ, ℂ)} {bm : Ω → MatedCRTHarmonic.MatedCRT.Path2}
+    (hC : MatedCRTHarmonic.MatedCRT.IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm) :
+    ∀ᵐ ω ∂P, η₀ ω 0 = 0 ∧ 0 < diam (η₀ ω '' Icc (-1) 1) := by
+  filter_upwards [hC.areaParam₀, hC.spaceFilling] with ω h₀ hL
+  obtain ⟨⟨φ, hφ0, hφ⟩, -⟩ := h₀
+  obtain ⟨-, -, hL0, hvol⟩ := hL
+  refine ⟨by rw [hφ, hφ0, hL0], ?_⟩
+  have hcomp : (⇑(η₀ ω) : ℝ → ℂ) = ⇑(ηL ω) ∘ φ := funext hφ
+  have himg : η₀ ω '' Icc (-1) 1 = ηL ω '' Icc (φ (-1)) (φ 1) := by
+    rw [hcomp, Set.image_comp, OrderIso.image_Icc]
+  have hlt : φ (-1) < φ 1 := φ.strictMono (by norm_num)
+  have hpos : volume (η₀ ω '' Icc (-1) 1) ≠ 0 := by
+    rw [himg, hvol _ _ hlt.le]
+    exact (ENNReal.ofReal_pos.2 (by linarith)).ne'
+  have hnt : (η₀ ω '' Icc (-1) 1).Nontrivial :=
+    Set.not_subsingleton_iff.1 fun hs => hpos (hs.measure_zero volume)
+  obtain ⟨x, hx, y, hy, hxy⟩ := hnt
+  exact (dist_pos.2 hxy).trans_le
+    (dist_le_diam_of_mem (isCompact_Icc.image (η₀ ω).continuous).isBounded hx hy)
+
+/-- **The finite-expectation hypothesis for the root cell of the shifted zero-cone configuration.** Let
+`0 < γ < 2` and let `η₀` be the zero-cone curve of a mating-of-trees coupling. Let `θ` be a shift with values in
+`[0, 1]`, and let `m ω b ≤ 2` be conductances from the root cell `η₀([θ - 1, θ])` (the cell containing `η₀ 0 = 0`)
+to the cells `η₀([b - 1 + θ, b + θ])`, nonzero only for cells meeting the root cell. Then
+`diam(H₀)² / area(H₀) · π(H₀)` and `diam(H₀)² / area(H₀) · π*(H₀)` are integrable, with
+`π(H₀) = ∑ m(b)` and `π*(H₀) = ∑_{m(b) ≠ 0} 1 / m(b)` (Gwynne–Miller–Sheffield, arXiv:1807.07515, (1.5), as verified
+in arXiv:1705.11161, Proposition 3.1, from Propositions 4.4 and 4.6 there). -/
+theorem _root_.MatedCRTHarmonic.MatedCRT.IsMatingOfTreesCoupling.lintegral_rootRatio_mul_conductance_lt_top
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+    {X X₀ hIG₀ : Ω → MatedCRTHarmonic.MatedCRT.Field} {B B' B₀ B₀' : ℝ≥0 → Ω → ℝ} {U : Ω → ℝ}
+    {ηL η η₀ : Ω → C(ℝ, ℂ)} {bm : Ω → MatedCRTHarmonic.MatedCRT.Path2}
+    (hC : MatedCRTHarmonic.MatedCRT.IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm)
+    (θ : Ω → ℝ) (hθ : ∀ ω, θ ω ∈ Icc (0 : ℝ) 1) (m : Ω → ℤ → ℕ) (hm2 : ∀ ω b, m ω b ≤ 2)
+    (hsupp : ∀ᵐ ω ∂P, ∀ b, m ω b ≠ 0 →
+      (η₀ ω '' Icc ((b : ℝ) - 1 + θ ω) ((b : ℝ) - 1 + θ ω + 1) ∩ η₀ ω '' Icc (θ ω - 1) (θ ω)).Nonempty) :
+    ∫⁻ ω, ENNReal.ofReal (diam (η₀ ω '' Icc (θ ω - 1) (θ ω)) ^ 2) / volume (η₀ ω '' Icc (θ ω - 1) (θ ω)) *
+        ∑' b, (m ω b : ℝ≥0∞) ∂P < ⊤ ∧
+    ∫⁻ ω, ENNReal.ofReal (diam (η₀ ω '' Icc (θ ω - 1) (θ ω)) ^ 2) / volume (η₀ ω '' Icc (θ ω - 1) (θ ω)) *
+        ∑' b, (if m ω b = 0 then 0 else ((m ω b : ℝ≥0∞))⁻¹) ∂P < ⊤ := by
+  have := hC.isProbabilityMeasure
+  have hfin := lintegral_diamAreaSup_mul_deg_lt_top hγ0 hγ2 hC.measurable_curves.2.2.1 hC.cellMoments
+  have hratio : ∀ ω, ENNReal.ofReal (diam (η₀ ω '' Icc (θ ω - 1) (θ ω)) ^ 2) /
+      volume (η₀ ω '' Icc (θ ω - 1) (θ ω)) ≤ diamAreaSup (η₀ ω) := fun ω =>
+    le_iSup₂ (f := fun s (_ : s ∈ Icc (0 : ℝ) 1) =>
+      ENNReal.ofReal (diam (η₀ ω '' Icc (s - 1) s) ^ 2) / volume (η₀ ω '' Icc (s - 1) s)) (θ ω) (hθ ω)
+  have hreg := hC.ae_zeroCone_root_regular
+  constructor
+  · calc _ ≤ ∫⁻ ω, 2 * (diamAreaSup (η₀ ω) * ((degInner (η₀ ω) : ℝ≥0∞) + (degOuter (η₀ ω) : ℝ≥0∞))) ∂P := by
+          refine lintegral_mono_ae ?_
+          filter_upwards [hreg, hsupp] with ω ⟨h0, hD⟩ hs
+          calc _ ≤ diamAreaSup (η₀ ω) * (2 * ((degInner (η₀ ω) : ℝ≥0∞) + (degOuter (η₀ ω) : ℝ≥0∞))) :=
+                mul_le_mul' (hratio ω) (tsum_le_two_mul_degInner_add_degOuter h0 hD (hθ ω).1 (hθ ω).2
+                  (m ω) (hm2 ω) hs)
+            _ = _ := by ring
+      _ = 2 * ∫⁻ ω, diamAreaSup (η₀ ω) * ((degInner (η₀ ω) : ℝ≥0∞) + (degOuter (η₀ ω) : ℝ≥0∞)) ∂P :=
+          lintegral_const_mul' _ _ ENNReal.ofNat_ne_top
+      _ < ⊤ := ENNReal.mul_lt_top ENNReal.ofNat_lt_top hfin
+  · refine lt_of_le_of_lt (lintegral_mono_ae ?_) hfin
+    filter_upwards [hreg, hsupp] with ω ⟨h0, hD⟩ hs
+    exact mul_le_mul' (hratio ω) (tsum_inv_le_degInner_add_degOuter h0 hD (hθ ω).1 (hθ ω).2 (m ω) hs)
 
 end MatedCRT.ZeroConeRoot
