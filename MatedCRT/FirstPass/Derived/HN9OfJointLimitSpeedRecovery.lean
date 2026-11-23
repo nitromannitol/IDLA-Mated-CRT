@@ -49,7 +49,7 @@ This is the claim in the proof of Lemma 7.18 of Berestycki–Gwynne which they d
 can a.s. be expressed as a measurable function of either of the two triples `(h^D, η^D, P^D_0)` or
 `(h̃^D, η̃^D, P̃^D_0)`", and "by Lemma 7.21 these two triples are independent". The printed lemmas are:
 
-* Lemma 7.20: almost surely `P^D_0` is the law of Liouville Brownian motion with respect to `h^D` started from `0`
+* Lemma 7.20: almost surely `P^D_0` is the law of Liouville Brownian motion with respect to `h` started from `0`
   and stopped upon hitting `∂𝔻`, pre-composed with the time change `t ↦ c t`;
 * Lemma 7.21: for times `a < u < b < ã < ũ < b̃` the triples `(h^D, η^D, P^D_0)` and `(h̃^D, η̃^D, P̃^D_0)` are
   independent;
@@ -58,10 +58,11 @@ can a.s. be expressed as a measurable function of either of the two triples `(h^
   of `(h, X_{c₁ ·})` and `(h, X_{c₂ ·})` are mutually singular for `c₁ ≠ c₂`.
 
 Here `(h^D, η^D, P^D_0)` is the field, the curve and the stopped limiting path of the window `η([a, b])`, carried to
-the unit disk `𝔻` by the conformal map `φ : 𝔻 → U` with `φ(0) = η(u)`. The Riemann mapping theorem is not
-available in Mathlib, so the triples are not defined here: in the Lean form they are the measurable observables
-`X₁`, `X₂` of the joint limit, with values in arbitrary measurable spaces, and `g₁`, `g₂` are the functions which
-express the constant. Their walk runs at the raw speed `ε⁻¹`, while `interpWalkLaw` is normalized by the median
+the unit disk `𝔻` by the conformal map `φ : 𝔻 → U` with `φ(0) = η(u)`. In this input the triples are not used: the
+Lean form has the measurable observables `X₁`, `X₂` of the joint limit, with values in arbitrary measurable spaces,
+and `g₁`, `g₂` are the functions which express the constant. The chart field and the window chart law are defined
+in `HN9OfChartField.lean` (`windowChartField`) and `HN9OfJointChartLaws.lean` (`windowChartLaw`). The walk of
+Berestycki–Gwynne runs at the raw speed `ε⁻¹`, while `interpWalkLaw` is normalized by the median
 `m_ε`; along a further subsequence `ε m_ε` tends to a deterministic positive limit (end of the proof of their
 Theorem 1.2), which multiplies both expressions of the constant by the same deterministic factor. -/
 def BG20JointLimitSpeedRecoveryInput (𝒮 : SpaceFillingSLEModel) : Prop :=

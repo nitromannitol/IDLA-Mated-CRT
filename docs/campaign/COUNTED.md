@@ -788,6 +788,10 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. Berestycki-Gwynne (2020) = BG20
   for the environment (`MatedCRTEnv.IsValid.ae_fixedTime_mem_interior_image`, `ValidCurveFixedTime.lean:25`); the
   Jordan property of the frontier of the window domain (flow-line description of space-filling SLE) and a Borel choice
   of the inverse chart are not formalized.
+- Scope. `BG20ChartFieldInput 𝒮`, like `hN9`, quantifies over every valid environment of the model `𝒮`, and in the
+  counted forms `𝒮` is an arbitrary model of the law `ν`. Berestycki-Gwynne prove Lemmas 7.20 and 7.21 for the genuine
+  law (whole-plane space-filling SLE on a γ-quantum cone) only. For a law `ν` other than the genuine one which is
+  realized by valid environments, it is not known whether they hold (as for `hTutteLP`, below).
 - Departures from the printed proof of Lemma 7.18. (a) Lemma 7.22 is not used as printed: the constant is recovered as
   the ratio of exit-time medians, a measurable function of (chart field, chart law); the mutual singularity of the two
   laws for each pair `c₁ ≠ c₂` does not by itself give such a function. (b) Lemma 7.20 is split: the time change is
@@ -820,12 +824,16 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. GMS21 = Gwynne-Miller-Sheffield
   `h1 h2 hTutteLP h10 hN9`), same conclusions. `hTutteLP`: for each `0 < γ < 2`, some model with law `ν` has a valid
   environment with a measurable version of its curve such that, for all `0 < ρ < R` and `κ, θ > 0` and all large `n`,
   the law of (curve, multiplicities at cell mass `1/n`) gives mass at most `θ` to the complement of
-  `uniformStartSelectedLPData (1/n) ρ R κ`.
+  `uniformStartSelectedLPData (1/n) ρ R κ`. Besides the Prokhorov bound, `uniformStartSelectedLPData` asks that the
+  interpolated walk leave `B_R(0)` almost surely from every selected start (`GMS21UniformStartOfSelectedProkhorov.lean:45`);
+  GMS21 do not print this clause.
 - `ZeroConeRootFiniteExpectation.lean` (`IsMatingOfTreesCoupling.lintegral_rootRatio_mul_conductance_lt_top`, `:310`):
   the finite-expectation hypothesis (1.5) of the invariance principle of Gwynne-Miller-Sheffield (arXiv:1807.07515) for
   the root cell of the shifted zero-cone configuration, from the cell moments of the coupling (the cells meeting the
   root cell are bounded by the inner and outer degrees, `card_le_degInner_add_degOuter`, `:117`; Hölder with an
-  exponent below `4/γ²`, `lintegral_diamAreaSup_mul_deg_lt_top`, `:241`).
+  exponent below `4/γ²`, `lintegral_diamAreaSup_mul_deg_lt_top`, `:241`). The bound is proved for abstract conductances `m ≤ 2` carried by cells that
+  meet the root cell (`:310-317`). Not done: the identification of these conductances with those of the configuration,
+  and the encoding of the condition as the LP `FiniteExpectation` on `GMSSpace` (`Theorem116Statement.lean:203`).
 - Remaining content of `hTutteLP`. For the genuine law (whole-plane space-filling SLE on a γ-quantum cone) it is the
   stopped-curve comparison established in the proof of GMS21 Theorem 3.4, case 1. LP has the invariance principle of
   arXiv:1807.07515, Theorem 1.16 (`LatticeProb/Bonanno/ReflectedGMS/GMS/Theorem116.lean:98`), for a single start, under
@@ -843,3 +851,56 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. GMS21 = Gwynne-Miller-Sheffield
 - The two reductions compose: `closed_1_4_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8 ν h1 h2
   (gms21UniformStartInput_of_selectedLP_reference h1 h2 hTutteLP) h10 (hN9_of_bg20ChartField hC)` (and the same for
   Theorem 1.6) has the premises `h1 h2 hTutteLP h10 hC`.
+- The two reductions compose in named declarations: `closed_1_4_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8_tutteLP_chartField`
+  and `closed_1_6_..._tutteLP_chartField` (`CanonicalCountedFormsOfCoupling.lean:51`, `:70`), premises
+  `h1 h2 hTutteLP h10 hC`, same conclusions.
+
+### The model inputs `h1`, `h2` and the reference environments `h10` at the canonical model (2026-11-23)
+
+Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheffield, arXiv:1409.7055.
+- The counted forms keep a model `𝒮` and a law family `ν` as parameters. For an arbitrary model, `h10` is not a
+  consequence of anything about laws (it fails for the model whose SLE predicate is `False`). At the canonical model
+  `ProbeMi.canonicalSLEModel ν` (curve modulo increasing reparametrization, free Lebesgue-area representative) the
+  premises `h1`, `h2` and `h10` follow from mating-of-trees couplings whose Lebesgue-parametrized curve has code law
+  `ν (16/γ²)` (premise `hcpl`, the record `IsMatingOfTreesCoupling` of LP, sample space `ℝ`) and from the Liouville
+  clock of the whole-plane GFF.
+- `CanonicalInputsOfCoupling.lean`. `h1` (`hasNormalizedSLELaw_canonicalSLEModel_of_coupling`, `:186`): the
+  Lebesgue-parametrized curve of a coupling visits the origin only at time `0` (`ae_eq_zero_of_igCurve_eq_zero_of_coupling`,
+  `:71`), from the singleton fibre at a fixed time (LP `ae_fixedTime_singleton_fiber_of_coupling`, from the contour
+  relation of the boundary-length Brownian motion and the only-merge clause, DMS14 Lemmas 8.8, 8.9 and 8.14); then
+  `hasNormalizedSLELaw_canonicalSLEModel` (`CanonicalNormalizedLaw.lean:159`). `h2`
+  (`sleModelClosureInput_canonicalSLEModel_of_coupling`, `:198`): scale invariance of the code law
+  (`sleCodeScaleInvariant_of_coupling`, `:132`) from the law of `s⁻¹ ηL(s² ·)` (LP
+  `IsMatingOfTreesCoupling.map_curveRescale_sq_of_igMapPositiveRadii`, from the imaginary-geometry clause `igMap`);
+  the reparametrization and independence clauses hold for every canonical model. `h10` is
+  `Sec1.hasReferenceEnvironments_canonical_of_coupling_wholePlane_fixedStart` (`CanonicalHasReferenceEnvironments.lean:78`)
+  from `hcpl`, `hfix` and `hfixsm`. Counted forms `..._noHN5_noHN8_canonical_of_coupling` (`:300`, `:352`).
+- `MatingOfTreesCouplingReal.lean`: a coupling on a standard Borel probability space gives one on `ℝ` with the same law
+  of the Lebesgue-parametrized curve (`exists_isMatingOfTreesCoupling_real_of_standardBorel`, `:159`): transfer along a
+  measurable embedding into `ℝ`, the law clauses by equality of laws and the almost sure clauses, including only-merge,
+  pathwise (`isCouplingData_map_of_measurableEmbedding`, `:49`).
+- `WholePlaneClockFixedStartOfLocalLimit.lean` (`Sec1.wholePlane_fixedStart_uniformCauchy_of_localLimit`, `:92`):
+  `hfix` from the locally uniform limit of the dyadic clocks of the whole-plane GFF of `LatticeProb.Gauss` from every
+  start, through the Gaussian representation of the normalized field (`MatedCRT.exists_normalizedGFF_coordinates`) and
+  the almost sure agreement of two continuous versions of the circle averages (`Sec1.ae_forall_eq_of_continuousOn_of_ae_eq`,
+  `WholePlaneClockStrictMonoOfOneStart.lean:84`).
+- `WholePlaneClockStrictMonoOfOneStart.lean` (`Sec1.wholePlane_fixedStart_strictMono_of_oneStart`, `:282`): `hfixsm`
+  from `hfix` and the one-start event (positive increments of the dyadic clocks over `[a, b]`, `0 < a < b` rational,
+  from the origin; Berestycki 2015, arXiv:1301.3356, Theorem 1.2). The increments are events of the path after time
+  `a`; they pass from the origin to almost every start (simple Markov property, and Lebesgue measure is absolutely
+  continuous with respect to the heat kernel, `ae_start_of_ae_shift_start`, `:65`) and then to every start.
+- `CanonicalCountedFormsOfCoupling.lean`. The one-start event for every `0 < γ < 2` at the insertion `0`
+  (`gaussianClock_oneStart`, `:93`) is `HarmonicBalls.ae_forall_rat_ae_dyadicIncrementLiminf_pos_of_lt_two`
+  (Harmonic-Balls-LQG, `LQGClockOneStartSubcritical.lean:520`). The locally uniform limit (`gaussianClock_localLimit`,
+  `:107`) is `HarmonicBalls.ae_exists_locally_uniform_limit_clock_nonpositive` (`LQGClockExteriorClockConvergence.lean:213`)
+  for `γ² < 2`; that theorem assumes `γ² < 2` (its half-disc part uses second moments of pair energies), so for
+  `2 ≤ γ² < 4` it is the premise `hlocHigh`. Counted forms
+  `closed_1_4/closed_1_6_quantumConeScaling_coneDimension_markovLimit_canonical_of_coupling_tutteLP_chartField`
+  (`:144`, `:188`): premises `hcpl hlocHigh hTutteLP hC` (`hC : BG20ChartFieldInput (ProbeMi.canonicalSLEModel ν)`),
+  conclusions at the canonical model.
+- Remaining content. `hcpl`: the coupling of DMS14 Theorem 1.9 with the clauses of `IsMatingOfTreesCoupling` (sources in
+  the record's comments). The clauses free of SLE are realized by LP (`exists_cone_ig_area_standardBorel`); the curves and
+  the boundary-length pair are not constructed. `hlocHigh`: Berestycki 2015, Section 2, for `√2 ≤ γ < 2` (thick-point
+  truncation). Departures: none from the printed arguments for `h1` and `h2` (they are properties of the coupling
+  record). The one-start event is used in place of the strict monotonicity of the limit clock, which follows from it
+  (`Sec1.strictMono_limitAfterPositiveTimes_of_pos_increments`, `WholePlaneClockStrictMonoOfOneStart.lean:104`).
