@@ -15,7 +15,7 @@ environments of the canonical model (`CanonicalCountedFormsOneStart`), at the in
   Theorem 1.2), whose `dyadicIncrementLiminf` unfolds to the lower limit of the dyadic increments;
 * the locally uniform limit of the dyadic clocks from every start: for `γ² < 2` by
   `HarmonicBalls.ae_exists_locally_uniform_limit_clock_nonpositive`. That theorem needs `γ² < 2` (its half-disc part
-  rests on second moments of pair energies), so for `2 ≤ γ² < 4` the statement remains a premise
+  rests on second moments of pair energies), so for `√2 ≤ γ < 2` the statement remains a premise
   (`gaussianClock_localLimit`, `hlocHigh`).
 
 With the reductions of `hN4` to `hTutteLP` (`gms21UniformStartInput_of_selectedLP_reference`) and of `hN9` to
@@ -103,9 +103,9 @@ theorem gaussianClock_oneStart : ∀ γ : ℝ, 0 < γ → γ < 2 →
 
 /-- **The locally uniform limit of the dyadic Liouville clocks** at the insertion `0`, for every `0 < γ < 2`: proved
 for `γ² < 2` (`HarmonicBalls.ae_exists_locally_uniform_limit_clock_nonpositive`), and taken from `hlocHigh` for
-`2 ≤ γ² < 4`. -/
+`√2 ≤ γ < 2`. -/
 theorem gaussianClock_localLimit
-    (hlocHigh : ∀ γ : ℝ, 2 ≤ γ ^ 2 → γ < 2 →
+    (hlocHigh : ∀ γ : ℝ, 0 < γ → 2 ≤ γ ^ 2 → γ < 2 →
         ∀ {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
           {hcirc : Ω → ℝ → ℂ → ℝ}, LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc → ∀ x : ℂ,
           ∀ᵐ q ∂(P.prod (planarBrownianMotion x)),
@@ -126,7 +126,7 @@ theorem gaussianClock_localLimit
   intro γ hγ0 hγ2 Ω _ P hC hcirc hh x
   by_cases hsq : γ ^ 2 < 2
   · exact HarmonicBalls.ae_exists_locally_uniform_limit_clock_nonpositive hh hγ0 hsq le_rfl x
-  · exact hlocHigh γ (not_lt.1 hsq) hγ2 hh x
+  · exact hlocHigh γ hγ0 (not_lt.1 hsq) hγ2 hh x
 
 /-- **Theorem 1.4 at the canonical space-filling SLE model, from mating-of-trees couplings, `hTutteLP` and
 `BG20ChartFieldInput`.** The counted form `closed_1_4_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8` at
@@ -136,7 +136,7 @@ theorem gaussianClock_localLimit
 * `h10` from the couplings, `hfix` (`Sec1.wholePlane_fixedStart_uniformCauchy_of_localLimit`) and `hfixsm`
   (`Sec1.wholePlane_fixedStart_strictMono_of_oneStart`), these from the two Gaussian clock statements:
   the one-start event is `gaussianClock_oneStart` for every `γ ∈ (0, 2)`, the locally uniform limit is
-  `gaussianClock_localLimit`, proved for `γ² < 2` and taken from `hlocHigh` for `2 ≤ γ² < 4`;
+  `gaussianClock_localLimit`, proved for `γ² < 2` and taken from `hlocHigh` for `√2 ≤ γ < 2`;
 * `hN4` from `h1`, `h2` and `hTutteLP` (`gms21UniformStartInput_of_selectedLP_reference`);
 * `hN9` from `BG20ChartFieldInput` (`hN9_of_bg20ChartField`).
 Remaining premises: `hcpl` (couplings on `ℝ` with code law `ν (16/γ²)`), `hlocHigh` (the locally uniform limit of
@@ -148,7 +148,7 @@ theorem closed_1_4_quantumConeScaling_coneDimension_markovLimit_canonical_of_cou
         (ηL η η₀ : ℝ → C(ℝ, ℂ)) (bm : ℝ → Path2),
         IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm ∧
         P.map (fun ω => slePathCode (ηL ω)) = ν (16 / γ ^ 2))
-    (hlocHigh : ∀ γ : ℝ, 2 ≤ γ ^ 2 → γ < 2 →
+    (hlocHigh : ∀ γ : ℝ, 0 < γ → 2 ≤ γ ^ 2 → γ < 2 →
         ∀ {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
           {hcirc : Ω → ℝ → ℂ → ℝ}, LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc → ∀ x : ℂ,
           ∀ᵐ q ∂(P.prod (planarBrownianMotion x)),
@@ -180,7 +180,7 @@ theorem closed_1_4_quantumConeScaling_coneDimension_markovLimit_canonical_of_cou
 * `h10` from the couplings, `hfix` (`Sec1.wholePlane_fixedStart_uniformCauchy_of_localLimit`) and `hfixsm`
   (`Sec1.wholePlane_fixedStart_strictMono_of_oneStart`), these from the two Gaussian clock statements:
   the one-start event is `gaussianClock_oneStart` for every `γ ∈ (0, 2)`, the locally uniform limit is
-  `gaussianClock_localLimit`, proved for `γ² < 2` and taken from `hlocHigh` for `2 ≤ γ² < 4`;
+  `gaussianClock_localLimit`, proved for `γ² < 2` and taken from `hlocHigh` for `√2 ≤ γ < 2`;
 * `hN4` from `h1`, `h2` and `hTutteLP` (`gms21UniformStartInput_of_selectedLP_reference`);
 * `hN9` from `BG20ChartFieldInput` (`hN9_of_bg20ChartField`).
 Remaining premises: `hcpl` (couplings on `ℝ` with code law `ν (16/γ²)`), `hlocHigh` (the locally uniform limit of
@@ -192,7 +192,7 @@ theorem closed_1_6_quantumConeScaling_coneDimension_markovLimit_canonical_of_cou
         (ηL η η₀ : ℝ → C(ℝ, ℂ)) (bm : ℝ → Path2),
         IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm ∧
         P.map (fun ω => slePathCode (ηL ω)) = ν (16 / γ ^ 2))
-    (hlocHigh : ∀ γ : ℝ, 2 ≤ γ ^ 2 → γ < 2 →
+    (hlocHigh : ∀ γ : ℝ, 0 < γ → 2 ≤ γ ^ 2 → γ < 2 →
         ∀ {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω} {hC : Ω → (ℂ → ℝ) → ℝ}
           {hcirc : Ω → ℝ → ℂ → ℝ}, LatticeProb.Gauss.IsWholePlaneGFF P hC hcirc → ∀ x : ℂ,
           ∀ᵐ q ∂(P.prod (planarBrownianMotion x)),
