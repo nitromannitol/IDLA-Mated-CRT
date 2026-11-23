@@ -912,8 +912,10 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
 - Remaining content. `hcpl`: the coupling of DMS14 Theorem 1.9 with the clauses of `IsMatingOfTreesCoupling` (sources in
   the record's comments). The clauses free of SLE are realized by LP (`exists_cone_ig_area_standardBorel`); the curves and
   the boundary-length pair are not constructed. `hTutteLP` and `hC` as in the sections on `hN4` and `hN9`. The clock
-  statements (`hloc`, `hone`, `hlocHigh`) are theorems of Harmonic-Balls-LQG; Berestycki 2015, Section 2, treats the
-  Dirichlet GFF in a domain with the Brownian motion stopped at its exit, and the whole-plane form (every start,
-  locally uniform in time, continuous limit) is proved there with a localization. Departures: none from the printed arguments for `h1`
-  and `h2` (they are properties of the coupling record). The one-start event is used in place of the strict monotonicity of the limit clock, which follows from it
+  statements (`hloc`, `hone`, `hlocHigh`) are theorems of Harmonic-Balls-LQG. Berestycki 2015, Section 2, treats the
+  Dirichlet GFF in a domain with the Brownian motion stopped at its exit. The whole-plane form (every start, locally
+  uniform in time, continuous limit) is proved in Harmonic-Balls-LQG (`LQGClockZeroInsertionConvergence.lean`) by
+  splitting the clock into its half-disc and exterior parts; it is not a localization of Berestycki's proof.
+  Departures: none from the printed arguments for `h1` and `h2` (they are properties of the coupling record). The
+  one-start event is used in place of the strict monotonicity of the limit clock, which follows from it
   (`Sec1.strictMono_limitAfterPositiveTimes_of_pos_increments`, `WholePlaneClockStrictMonoOfOneStart.lean:104`).
