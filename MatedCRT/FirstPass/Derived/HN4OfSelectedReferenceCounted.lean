@@ -1,5 +1,5 @@
 import MatedCRT.FirstPass.Derived.HN8OfRevuzLintegralGlue
-import MatedCRT.FirstPass.Derived.GMS21UniformStartOfSelectedCell
+import MatedCRT.FirstPass.Derived.GMS21UniformStartOfSelectedProkhorov
 
 /-!
 # Theorems 1.4 and 1.6 with the uniform-start invariance principle from Gwynne–Miller–Sheffield Theorem 3.4
@@ -21,6 +21,9 @@ the premise `hTutte`: for each `0 < γ < 2`, one valid environment of a model wi
   `closed_1_6_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8_tutteBall`: the same with `hTutteBall`, the
   comparison of the walk and the Brownian motion stopped at their exits from the ball (`uniformStartSelectedBallData`)
   established in the proof of Gwynne–Miller–Sheffield, Theorem 3.4, case 1.
+* `closed_1_4_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8_tutteProkhorov`,
+  `closed_1_6_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8_tutteProkhorov`: the same with `hTutteLP`, the
+  Prokhorov distance of the two stopped curves (`uniformStartSelectedLPData`).
 -/
 
 set_option autoImplicit false
@@ -149,5 +152,65 @@ theorem closed_1_6_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8_tutt
     ConvergenceOfDivSandpileStmt 𝒮 :=
   closed_1_6_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8 ν h1 h2
     (gms21UniformStartInput_of_selectedBall_reference h1 h2 hTutteBall) h10 hN9
+
+/-- **Theorem 1.4** in the counted form `closed_1_4_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8`, with
+`hN4` supplied by `gms21UniformStartInput_of_selectedLP_reference` from `h1`, `h2` and `hTutteLP` (the Prokhorov
+distance of the stopped curves, proof of Gwynne–Miller–Sheffield, arXiv:1705.11161, Theorem 3.4, case 1, on one
+reference environment of the law `ν`). The premises are `h1 h2 hTutteLP h10 hN9`.
+Same conclusion. -/
+theorem closed_1_4_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8_tutteProkhorov {𝒮 : SpaceFillingSLEModel}
+    (ν : ℝ → Measure SLEPathCode)
+    (h1 : HasNormalizedSLELaw 𝒮 ν) (h2 : SLEModelClosureInput 𝒮)
+    (hTutteLP : ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ 𝒮₀ : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮₀ ν ∧
+      ∃ (Ω₀ : Type) (_ : MeasurableSpace Ω₀) (S₀ : MatedCRTEnv Ω₀), S₀.IsValid 𝒮₀ γ ∧
+      ∃ η₀ : Ω₀ → C(ℝ, ℂ), Measurable η₀ ∧ (∀ᵐ ω ∂S₀.P, ⇑(η₀ ω) = S₀.η ω) ∧
+      ∀ R ρ : ℝ, 0 < ρ → ρ < R → ∀ κ : ℝ, 0 < κ → ∀ θ : ℝ, 0 < θ →
+        ∃ N : ℕ, ∀ n : ℕ, N ≤ n →
+          S₀.P.map (fun ω => (η₀ ω, S₀.mult (1 / (n : ℝ)) ω))
+            (uniformStartSelectedLPData (1 / (n : ℝ)) ρ R κ)ᶜ ≤ ENNReal.ofReal θ)
+    (h10 : HasReferenceEnvironments 𝒮)
+    (hN9 : ∀ γ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      ∀ η' : Ω → C(ℝ, ℂ), Measurable η' → (∀ᵐ ω ∂S.P, ⇑(η' ω) = S.η ω) →
+      ∀ H : Ω → LQGMetric.DistC, Measurable H → (∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ) →
+      ∀ E : Ω → LQGData, Measurable E → ∀ ε : ℕ → ℝ, (∀ n, 0 < ε n) → Tendsto ε atTop (𝓝 0) →
+      ∀ ν' : Measure (((LQGMetric.CoordJ → ℝ) × LQGData) × PathLawFamily), IsProbabilityMeasure ν' →
+      (∀ f : (((LQGMetric.CoordJ → ℝ) × LQGData) × PathLawFamily) →ᵇ ℝ,
+        Tendsto (fun n => ∫ ω, f ((LQGMetric.pairJ ⊤ (H ω), E ω), interpWalkLaw S η' (ε n) ω) ∂S.P) atTop
+          (𝓝 (∫ p, f p ∂ν'))) →
+      (∀ᵐ p ∂ν', ∃ c : ℝ≥0, c ≠ 0 ∧ ∀ z, p.2 z = LatticeProb.timeScalePathKernel c (lbmPathLawField γ p.1.1) z) →
+      ∃ c₀ : ℝ≥0, c₀ ≠ 0 ∧ ∀ᵐ p ∂ν', ∀ z, p.2 z = LatticeProb.timeScalePathKernel c₀ (lbmPathLawField γ p.1.1) z) :
+    ConvergenceOfIDLAStmt 𝒮 :=
+  closed_1_4_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8 ν h1 h2
+    (gms21UniformStartInput_of_selectedLP_reference h1 h2 hTutteLP) h10 hN9
+
+/-- **Theorem 1.6** in the counted form `closed_1_6_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8`, with
+`hN4` supplied by `gms21UniformStartInput_of_selectedLP_reference` from `h1`, `h2` and `hTutteLP` (the Prokhorov
+distance of the stopped curves, proof of Gwynne–Miller–Sheffield, arXiv:1705.11161, Theorem 3.4, case 1, on one
+reference environment of the law `ν`). The premises are `h1 h2 hTutteLP h10 hN9`.
+Same conclusion. -/
+theorem closed_1_6_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8_tutteProkhorov {𝒮 : SpaceFillingSLEModel}
+    (ν : ℝ → Measure SLEPathCode)
+    (h1 : HasNormalizedSLELaw 𝒮 ν) (h2 : SLEModelClosureInput 𝒮)
+    (hTutteLP : ∀ γ : ℝ, 0 < γ → γ < 2 → ∃ 𝒮₀ : SpaceFillingSLEModel, HasNormalizedSLELaw 𝒮₀ ν ∧
+      ∃ (Ω₀ : Type) (_ : MeasurableSpace Ω₀) (S₀ : MatedCRTEnv Ω₀), S₀.IsValid 𝒮₀ γ ∧
+      ∃ η₀ : Ω₀ → C(ℝ, ℂ), Measurable η₀ ∧ (∀ᵐ ω ∂S₀.P, ⇑(η₀ ω) = S₀.η ω) ∧
+      ∀ R ρ : ℝ, 0 < ρ → ρ < R → ∀ κ : ℝ, 0 < κ → ∀ θ : ℝ, 0 < θ →
+        ∃ N : ℕ, ∀ n : ℕ, N ≤ n →
+          S₀.P.map (fun ω => (η₀ ω, S₀.mult (1 / (n : ℝ)) ω))
+            (uniformStartSelectedLPData (1 / (n : ℝ)) ρ R κ)ᶜ ≤ ENNReal.ofReal θ)
+    (h10 : HasReferenceEnvironments 𝒮)
+    (hN9 : ∀ γ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
+      ∀ η' : Ω → C(ℝ, ℂ), Measurable η' → (∀ᵐ ω ∂S.P, ⇑(η' ω) = S.η ω) →
+      ∀ H : Ω → LQGMetric.DistC, Measurable H → (∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ) →
+      ∀ E : Ω → LQGData, Measurable E → ∀ ε : ℕ → ℝ, (∀ n, 0 < ε n) → Tendsto ε atTop (𝓝 0) →
+      ∀ ν' : Measure (((LQGMetric.CoordJ → ℝ) × LQGData) × PathLawFamily), IsProbabilityMeasure ν' →
+      (∀ f : (((LQGMetric.CoordJ → ℝ) × LQGData) × PathLawFamily) →ᵇ ℝ,
+        Tendsto (fun n => ∫ ω, f ((LQGMetric.pairJ ⊤ (H ω), E ω), interpWalkLaw S η' (ε n) ω) ∂S.P) atTop
+          (𝓝 (∫ p, f p ∂ν'))) →
+      (∀ᵐ p ∂ν', ∃ c : ℝ≥0, c ≠ 0 ∧ ∀ z, p.2 z = LatticeProb.timeScalePathKernel c (lbmPathLawField γ p.1.1) z) →
+      ∃ c₀ : ℝ≥0, c₀ ≠ 0 ∧ ∀ᵐ p ∂ν', ∀ z, p.2 z = LatticeProb.timeScalePathKernel c₀ (lbmPathLawField γ p.1.1) z) :
+    ConvergenceOfDivSandpileStmt 𝒮 :=
+  closed_1_6_quantumConeScaling_coneDimension_markovLimit_noHN5_noHN8 ν h1 h2
+    (gms21UniformStartInput_of_selectedLP_reference h1 h2 hTutteLP) h10 hN9
 
 end MatedCRT
