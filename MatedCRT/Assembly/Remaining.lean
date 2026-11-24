@@ -17,13 +17,14 @@ import MatedCRT.Proofs.Sec5.SupersolutionSectionIdentity
 import MatedCRT.FirstPass.SLERef.Extended
 import MatedCRT.Proofs.Sec2.WholePlaneLogLQGExistence
 import MatedCRT.Proofs.Sec2.ConeRestriction
+import HarmonicBalls.FirstPass.Phase2.DerivedInputs43
 import MatedCRT.FirstPass.Derived.GreenFunctionCrudeBoundHolds
 import MatedCRT.FirstPass.Derived.CoreGffLowerOfLemma69
 
 /-!
 # Theorems 1.4 and 1.6 for every model from the fields of `MainHypotheses` that are not proved
 
-Eighteen of the 42 fields of `MainHypotheses 𝒮` are proved for every space-filling SLE model `𝒮`:
+Nineteen of the 42 fields of `MainHypotheses 𝒮` are proved for every space-filling SLE model `𝒮`:
 
 * Fact 2.2 (`lqgMeasureProperties`): `lqgMeasurePropertiesStmt_of_scaling` from the quantum cone scaling;
 * the existence and restriction steps of Lemma 2.4 (`wholePlaneLogLQGExistence`, `coneRestriction`: the cone field
@@ -35,6 +36,9 @@ Eighteen of the 42 fields of `MainHypotheses 𝒮` are proved for every space-fi
 * Lemma 2.15 (`greenFunctionCrudeBound`): `greenFunctionCrudeBoundStmt_holds`;
 * the [BG22] Hölder continuity of Green potentials (`greenPotentialHolder`):
   `HarmonicBalls.greenPotentialHolderStmt_holds` of Harmonic-Balls-LQG;
+* the [BG22] statements cited in Section 2 (`harmonicBallsDraftInputs`: Theorems 1.1 and 5.5, Proposition 5.6,
+  Lemmas 3.1-3.5, Propositions 5.2 and 5.3, Lemma 5.8): their hypothesis-free forms in Harmonic-Balls-LQG,
+  `HarmonicBalls.firstPass_1_1_derivedInputs43` and `HarmonicBalls.Closure.closure_*_derivedInputs43`;
 * `DegreeBoundInput` (`degreeBound`): `degreeBoundInput_holds`;
 * `QuantumConeScalingInput` (`quantumConeScaling`, Duplantier-Miller-Sheffield Proposition 4.13(i)):
   `FirstPass.Derived.quantumConeScalingInput_derived`;
@@ -55,8 +59,8 @@ Two more hold for every model that satisfies the SLE closure inputs: the rescale
 (`coneEnvironmentScaling`, through `coneEnvironmentScalingUnderSLE_of_scaling`) and Lemma 2.10
 (`degreeMeasureConvergence`, `FirstPass.Derived.degreeMeasureConvergenceStmt_of_envScaling_derived`); and Lemma 2.18
 (`exitTimeUpperBound`) follows from Lemma 2.14 (`FirstPass.Derived.exitTimeUpperBoundStmt_of_greenKernelUpper`).
-`RemainingHypotheses 𝒮` has these closure inputs and the other 21 fields, with the same names and types;
-`RemainingHypotheses.toMainHypotheses` supplies the twenty-one, and `convergenceOfIDLA_of_remaining` and
+`RemainingHypotheses 𝒮` has these closure inputs and the other 20 fields, with the same names and types;
+`RemainingHypotheses.toMainHypotheses` supplies the twenty-two, and `convergenceOfIDLA_of_remaining` and
 `convergenceOfDivSandpile_of_remaining` are Theorems 1.4 and 1.6 from `RemainingHypotheses 𝒮`. At the canonical model
 the first-pass route needs three premises only (`MatedCRT/Assembly/Canonical.lean`).
 -/
@@ -73,9 +77,6 @@ structure RemainingHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   greenKernelUpperBound : GreenKernelUpperBoundStmt 𝒮
   /-- **Lemma 2.16** (cited, lower bound for the Green kernel). Used by 5.1, 6.8 (b), 7.2 (corrected). -/
   greenKernelLowerBound : GreenKernelLowerBoundStmt 𝒮
-  /-- The [BG22] statements on harmonic balls cited in Section 2 (harmonic-balls Drafts: Theorem 1.1, Theorem 5.5,
-  Proposition 5.6, Lemmas 3.1-3.5, Propositions 5.2, 5.3, Lemma 5.8; `HarmonicBallsDraftInputs`). Used by 2.4. -/
-  harmonicBallsDraftInputs : HarmonicBallsDraftInputs
   -- (b) Literature inputs
   /-- `MepsScalingInput` (External/SLE.lean): scaling of the expected exit time, used by 3.1 (corrected), 4.7, 7.1. -/
   mepsScaling : MepsScalingInput 𝒮
@@ -126,7 +127,7 @@ structure RemainingHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   (not fields). Used by 3.3, 3.5 and the Section 5 stopped steps. -/
   integralConvergenceGreenFunction : IntegralConvergenceGreenFunctionStmt 𝒮
 
-/-- `MainHypotheses 𝒮` from `RemainingHypotheses 𝒮`, with the twenty-one fields proved from it supplied. -/
+/-- `MainHypotheses 𝒮` from `RemainingHypotheses 𝒮`, with the twenty-two fields proved from it supplied. -/
 theorem RemainingHypotheses.toMainHypotheses {𝒮 : SpaceFillingSLEModel} (H : RemainingHypotheses 𝒮) :
     MainHypotheses 𝒮 :=
   { lqgMeasureProperties := lqgMeasurePropertiesStmt_of_scaling FirstPass.Derived.quantumConeScalingInput_derived
@@ -143,7 +144,18 @@ theorem RemainingHypotheses.toMainHypotheses {𝒮 : SpaceFillingSLEModel} (H : 
     greenKernelLowerBound := H.greenKernelLowerBound
     exitTimeUpperBound := FirstPass.Derived.exitTimeUpperBoundStmt_of_greenKernelUpper H.greenKernelUpperBound
     greenPotentialHolder := _root_.HarmonicBalls.greenPotentialHolderStmt_holds.{0}
-    harmonicBallsDraftInputs := H.harmonicBallsDraftInputs
+    harmonicBallsDraftInputs :=
+      ⟨_root_.HarmonicBalls.firstPass_1_1_derivedInputs43.{0},
+        _root_.HarmonicBalls.Closure.closure_5_5_derivedInputs43.{0},
+        _root_.HarmonicBalls.Closure.closure_5_6_derivedInputs43.{0},
+        _root_.HarmonicBalls.Closure.closure_3_1_derivedInputs43.{0},
+        _root_.HarmonicBalls.Closure.closure_3_2_derivedInputs43.{0},
+        _root_.HarmonicBalls.Closure.closure_3_3_derivedInputs43.{0},
+        _root_.HarmonicBalls.Closure.closure_3_4_derivedInputs43.{0},
+        _root_.HarmonicBalls.Closure.closure_3_5_derivedInputs43.{0},
+        _root_.HarmonicBalls.Closure.closure_5_2_derivedInputs43.{0},
+        _root_.HarmonicBalls.Closure.closure_5_3_derivedInputs43.{0},
+        _root_.HarmonicBalls.Closure.closure_5_8_derivedInputs43.{0}⟩
     mepsScaling := H.mepsScaling
     degreeBound := degreeBoundInput_holds 𝒮
     quantumConeScaling := FirstPass.Derived.quantumConeScalingInput_derived
