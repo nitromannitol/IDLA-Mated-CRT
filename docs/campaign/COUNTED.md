@@ -928,3 +928,15 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   Departures: none from the printed arguments for `h1` and `h2` (they are properties of the coupling record). The
   one-start event is used in place of the strict monotonicity of the limit clock, which follows from it
   (`Sec1.strictMono_limitAfterPositiveTimes_of_pos_increments`, `WholePlaneClockStrictMonoOfOneStart.lean:104`).
+
+### Theorems 1.4 and 1.6 in the assembly at the canonical model (2026-11-24)
+
+- `MatedCRT/Assembly/Canonical.lean`: the structure `CanonicalHypotheses ν` has the three premises `hcpl`
+  (`matingOfTreesCoupling`), `hTutteLP` (`tutteLP`) and `hC` (`chartField`) of the counted forms
+  `closed_1_4/closed_1_6_quantumConeScaling_coneDimension_canonical_of_coupling_tutteLP_chartField`
+  (`CanonicalCountedFormsOfCouplingClock.lean:54`, `:79`), with the same types. `convergenceOfIDLA_canonical` (`:64`)
+  and `convergenceOfDivSandpile_canonical` (`:71`) apply those counted forms, so they have the same conclusions
+  `ConvergenceOfIDLAStmt (ProbeMi.canonicalSLEModel ν)` and `ConvergenceOfDivSandpileStmt (ProbeMi.canonicalSLEModel ν)`.
+  `MatedCRT/Audit/CanonicalAxioms.lean` prints the axioms of the four declarations.
+- The forms `convergenceOfIDLA_conditional` and `convergenceOfDivSandpile_conditional` (`Assembly/Main.lean:354`,
+  `:361`) from `MainHypotheses 𝒮` are unchanged; they hold for every model `𝒮`.
