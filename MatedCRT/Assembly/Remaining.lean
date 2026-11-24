@@ -16,17 +16,20 @@ import MatedCRT.Proofs.Measurability.AnalyticUniversallyMeasurable
 import MatedCRT.Proofs.Sec5.SupersolutionSectionIdentity
 import MatedCRT.FirstPass.SLERef.Extended
 import MatedCRT.Proofs.Sec2.WholePlaneLogLQGExistence
+import MatedCRT.FirstPass.Derived.GreenFunctionCrudeBoundHolds
+import MatedCRT.FirstPass.Derived.CoreGffLowerOfLemma69
 
 /-!
 # Theorems 1.4 and 1.6 for every model from the fields of `MainHypotheses` that are not proved
 
-Sixteen of the 42 fields of `MainHypotheses 𝒮` are proved for every space-filling SLE model `𝒮`:
+Seventeen of the 42 fields of `MainHypotheses 𝒮` are proved for every space-filling SLE model `𝒮`:
 
 * Fact 2.2 (`lqgMeasureProperties`): `lqgMeasurePropertiesStmt_of_scaling` from the quantum cone scaling;
 * the existence step of Lemma 2.4 (`wholePlaneLogLQGExistence`): `wholePlaneLogLQGExistenceStep_holds`;
 * Lemma 2.7 (`volumeGrowth`): `FirstPass.Derived.volumeGrowthStmt_holds`;
 * Lemma 2.8 (`cellSizeEstimate`): `FirstPass.Derived.cellSizeEstimateStmt_holds`;
 * Lemma 2.9 (`countingMeasureConvergence`): `countingMeasureConvergenceStmt_of_cellSize` from Lemma 2.8;
+* Lemma 2.15 (`greenFunctionCrudeBound`): `greenFunctionCrudeBoundStmt_holds`;
 * the [BG22] Hölder continuity of Green potentials (`greenPotentialHolder`):
   `HarmonicBalls.greenPotentialHolderStmt_holds` of Harmonic-Balls-LQG;
 * `DegreeBoundInput` (`degreeBound`): `degreeBoundInput_holds`;
@@ -45,12 +48,14 @@ Sixteen of the 42 fields of `MainHypotheses 𝒮` are proved for every space-fil
   `FirstPass.Derived.wholePlaneLQGExistenceStep_holds`, `FirstPass.Derived.wholePlaneLQGCoordinateChangeStep_holds`,
   `FirstPass.Derived.wholePlaneUpperVolumeTailStep_holds`.
 
-A seventeenth field, the rescaled environment of Theorems 1.4 and 1.6 (`coneEnvironmentScaling`), holds for every model
-that satisfies the SLE closure inputs (`coneEnvironmentScalingUnderSLE_of_scaling`). `RemainingHypotheses 𝒮` has these
-closure inputs and the other 25 fields, with the same names and types; `RemainingHypotheses.toMainHypotheses`
-supplies the seventeen, and `convergenceOfIDLA_of_remaining` and `convergenceOfDivSandpile_of_remaining` are Theorems
-1.4 and 1.6 from `RemainingHypotheses 𝒮`. At the canonical model the first-pass route needs three premises only
-(`MatedCRT/Assembly/Canonical.lean`).
+Two more hold for every model that satisfies the SLE closure inputs: the rescaled environment of Theorems 1.4 and 1.6
+(`coneEnvironmentScaling`, through `coneEnvironmentScalingUnderSLE_of_scaling`) and Lemma 2.10
+(`degreeMeasureConvergence`, `FirstPass.Derived.degreeMeasureConvergenceStmt_of_envScaling_derived`); and Lemma 2.18
+(`exitTimeUpperBound`) follows from Lemma 2.14 (`FirstPass.Derived.exitTimeUpperBoundStmt_of_greenKernelUpper`).
+`RemainingHypotheses 𝒮` has these closure inputs and the other 22 fields, with the same names and types;
+`RemainingHypotheses.toMainHypotheses` supplies the twenty, and `convergenceOfIDLA_of_remaining` and
+`convergenceOfDivSandpile_of_remaining` are Theorems 1.4 and 1.6 from `RemainingHypotheses 𝒮`. At the canonical model
+the first-pass route needs three premises only (`MatedCRT/Assembly/Canonical.lean`).
 -/
 
 namespace MatedCRT
@@ -59,18 +64,12 @@ namespace MatedCRT
 that are not proved for every model, with the same names and types. -/
 structure RemainingHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   -- (a) Cited results
-  /-- **Lemma 2.10** (cited, convergence of the degree measure). Used by 3.3. -/
-  degreeMeasureConvergence : DegreeMeasureConvergenceStmt 𝒮
   /-- **Theorem 2.11** (cited, random walk on the mated-CRT map converges to Liouville Brownian motion). Used by 3.6. -/
   randomWalkToLBM : RandomWalkToLBMStmt 𝒮
   /-- **Lemma 2.14** (cited, upper bound for the Green kernel). Used by 3.3. -/
   greenKernelUpperBound : GreenKernelUpperBoundStmt 𝒮
-  /-- **Lemma 2.15** (cited, crude bound for the Green function). Used by 5.1 (through 5.4). -/
-  greenFunctionCrudeBound : GreenFunctionCrudeBoundStmt 𝒮
   /-- **Lemma 2.16** (cited, lower bound for the Green kernel). Used by 5.1, 6.8 (b), 7.2 (corrected). -/
   greenKernelLowerBound : GreenKernelLowerBoundStmt 𝒮
-  /-- **Lemma 2.18** (cited, exit time upper bound). Used by 2.19, 3.1 (corrected), 3.7, 4.7, 5.1, 6.8 (b). -/
-  exitTimeUpperBound : ExitTimeUpperBoundStmt 𝒮
   /-- The [BG22] statements on harmonic balls cited in Section 2 (harmonic-balls Drafts: Theorem 1.1, Theorem 5.5,
   Proposition 5.6, Lemmas 3.1-3.5, Propositions 5.2, 5.3, Lemma 5.8; `HarmonicBallsDraftInputs`). Used by 2.4. -/
   harmonicBallsDraftInputs : HarmonicBallsDraftInputs
@@ -126,7 +125,7 @@ structure RemainingHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   (not fields). Used by 3.3, 3.5 and the Section 5 stopped steps. -/
   integralConvergenceGreenFunction : IntegralConvergenceGreenFunctionStmt 𝒮
 
-/-- `MainHypotheses 𝒮` from `RemainingHypotheses 𝒮`, with the seventeen fields proved from it supplied. -/
+/-- `MainHypotheses 𝒮` from `RemainingHypotheses 𝒮`, with the twenty fields proved from it supplied. -/
 theorem RemainingHypotheses.toMainHypotheses {𝒮 : SpaceFillingSLEModel} (H : RemainingHypotheses 𝒮) :
     MainHypotheses 𝒮 :=
   { lqgMeasureProperties := lqgMeasurePropertiesStmt_of_scaling FirstPass.Derived.quantumConeScalingInput_derived
@@ -134,12 +133,14 @@ theorem RemainingHypotheses.toMainHypotheses {𝒮 : SpaceFillingSLEModel} (H : 
     cellSizeEstimate := FirstPass.Derived.cellSizeEstimateStmt_holds 𝒮
     countingMeasureConvergence :=
       countingMeasureConvergenceStmt_of_cellSize (FirstPass.Derived.cellSizeEstimateStmt_holds 𝒮)
-    degreeMeasureConvergence := H.degreeMeasureConvergence
+    degreeMeasureConvergence := FirstPass.Derived.degreeMeasureConvergenceStmt_of_envScaling_derived
+      (coneEnvironmentScalingUnderSLE_of_scaling 𝒮 FirstPass.Derived.quantumConeScalingInput_derived
+        H.sleModelClosure.1 H.sleModelClosure.2.1 H.sleModelClosure.2.2)
     randomWalkToLBM := H.randomWalkToLBM
     greenKernelUpperBound := H.greenKernelUpperBound
-    greenFunctionCrudeBound := H.greenFunctionCrudeBound
+    greenFunctionCrudeBound := greenFunctionCrudeBoundStmt_holds 𝒮
     greenKernelLowerBound := H.greenKernelLowerBound
-    exitTimeUpperBound := H.exitTimeUpperBound
+    exitTimeUpperBound := FirstPass.Derived.exitTimeUpperBoundStmt_of_greenKernelUpper H.greenKernelUpperBound
     greenPotentialHolder := _root_.HarmonicBalls.greenPotentialHolderStmt_holds.{0}
     harmonicBallsDraftInputs := H.harmonicBallsDraftInputs
     mepsScaling := H.mepsScaling
