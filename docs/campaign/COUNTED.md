@@ -909,6 +909,15 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   `HarmonicBalls.forall_ae_exists_locally_uniform_limit_clock_zero_of_two_le_sq` (`:449` there). Counted forms
   `closed_1_4/closed_1_6_quantumConeScaling_coneDimension_canonical_of_coupling_tutteLP_chartField` (`:54`, `:79`):
   premises `hcpl hTutteLP hC` only, conclusions at the canonical model `ProbeMi.canonicalSLEModel ν`.
+- `CanonicalReferenceEnvironmentsOfCoupling.lean` (2026-11-24). The fixed-start clock statements are theorems for every
+  `0 < γ < 2`: `hfix` is `wholePlane_fixedStart_uniformCauchy` (`:51`) and `hfixsm` is
+  `wholePlane_fixedStart_strictMono` (`:69`). Hence `h10` at the canonical model has the single premise `hcpl`
+  (`hasReferenceEnvironments_canonicalSLEModel_of_coupling`, `:88`), and so do `h1`, `h2` and `h10` together
+  (`canonicalSLEModel_inputs_of_coupling`, `:102`). From couplings on standard Borel probability spaces with no law
+  prescribed for the curve, some family `ν` gives `h1`, `h2` and `h10` at the canonical model
+  (`exists_canonical_inputs_of_coupling_standardBorel`, `:163`). The reference model of `SLEReferenceInput ν` and
+  `SLEFrozenReferenceInput ν` is the canonical model (`exists_referenceModel_of_coupling`, `:119`;
+  `sleReferenceInput_of_coupling`, `:132`; `sleFrozenReferenceInput_of_coupling`, `:146`).
 - Remaining content. `hcpl`: the coupling of DMS14 Theorem 1.9 with the clauses of `IsMatingOfTreesCoupling` (sources in
   the record's comments). The clauses free of SLE are realized by LP (`exists_cone_ig_area_standardBorel`); the curves and
   the boundary-length pair are not constructed. `hTutteLP` and `hC` as in the sections on `hN4` and `hN9`. The clock
