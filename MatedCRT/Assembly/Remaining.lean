@@ -16,16 +16,19 @@ import MatedCRT.Proofs.Measurability.AnalyticUniversallyMeasurable
 import MatedCRT.Proofs.Sec5.SupersolutionSectionIdentity
 import MatedCRT.FirstPass.SLERef.Extended
 import MatedCRT.Proofs.Sec2.WholePlaneLogLQGExistence
+import MatedCRT.Proofs.Sec2.ConeRestriction
 import MatedCRT.FirstPass.Derived.GreenFunctionCrudeBoundHolds
 import MatedCRT.FirstPass.Derived.CoreGffLowerOfLemma69
 
 /-!
 # Theorems 1.4 and 1.6 for every model from the fields of `MainHypotheses` that are not proved
 
-Seventeen of the 42 fields of `MainHypotheses 𝒮` are proved for every space-filling SLE model `𝒮`:
+Eighteen of the 42 fields of `MainHypotheses 𝒮` are proved for every space-filling SLE model `𝒮`:
 
 * Fact 2.2 (`lqgMeasureProperties`): `lqgMeasurePropertiesStmt_of_scaling` from the quantum cone scaling;
-* the existence step of Lemma 2.4 (`wholePlaneLogLQGExistence`): `wholePlaneLogLQGExistenceStep_holds`;
+* the existence and restriction steps of Lemma 2.4 (`wholePlaneLogLQGExistence`, `coneRestriction`: the cone field
+  on the unit disk has the law of `h^ℂ - γ log |·|`): `wholePlaneLogLQGExistenceStep_holds`,
+  `ConeRestriction.coneRestrictionStep_holds`;
 * Lemma 2.7 (`volumeGrowth`): `FirstPass.Derived.volumeGrowthStmt_holds`;
 * Lemma 2.8 (`cellSizeEstimate`): `FirstPass.Derived.cellSizeEstimateStmt_holds`;
 * Lemma 2.9 (`countingMeasureConvergence`): `countingMeasureConvergenceStmt_of_cellSize` from Lemma 2.8;
@@ -52,8 +55,8 @@ Two more hold for every model that satisfies the SLE closure inputs: the rescale
 (`coneEnvironmentScaling`, through `coneEnvironmentScalingUnderSLE_of_scaling`) and Lemma 2.10
 (`degreeMeasureConvergence`, `FirstPass.Derived.degreeMeasureConvergenceStmt_of_envScaling_derived`); and Lemma 2.18
 (`exitTimeUpperBound`) follows from Lemma 2.14 (`FirstPass.Derived.exitTimeUpperBoundStmt_of_greenKernelUpper`).
-`RemainingHypotheses 𝒮` has these closure inputs and the other 22 fields, with the same names and types;
-`RemainingHypotheses.toMainHypotheses` supplies the twenty, and `convergenceOfIDLA_of_remaining` and
+`RemainingHypotheses 𝒮` has these closure inputs and the other 21 fields, with the same names and types;
+`RemainingHypotheses.toMainHypotheses` supplies the twenty-one, and `convergenceOfIDLA_of_remaining` and
 `convergenceOfDivSandpile_of_remaining` are Theorems 1.4 and 1.6 from `RemainingHypotheses 𝒮`. At the canonical model
 the first-pass route needs three premises only (`MatedCRT/Assembly/Canonical.lean`).
 -/
@@ -81,8 +84,6 @@ structure RemainingHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   σ-algebra (`SLEModelClosureInput`). With the quantum cone scaling they give the rescaled environment of Theorems 1.4
   and 1.6 (`ConeEnvironmentScalingStep`, through `coneEnvironmentScalingUnderSLE_of_scaling`). -/
   sleModelClosure : SLEModelClosureInput 𝒮
-  /-- Lemma 2.4: restriction to the cone. -/
-  coneRestriction : ConeRestrictionStep
   /-- Lemma 2.4: locality of the cone harmonic balls. -/
   coneHarmonicBallLocality : ConeHarmonicBallLocalityStep
   /-- Lemmas 2.4, 2.5, Theorems 1.4, 1.6: strict growth of the cone harmonic balls (`T' = T`, not in the
@@ -125,7 +126,7 @@ structure RemainingHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   (not fields). Used by 3.3, 3.5 and the Section 5 stopped steps. -/
   integralConvergenceGreenFunction : IntegralConvergenceGreenFunctionStmt 𝒮
 
-/-- `MainHypotheses 𝒮` from `RemainingHypotheses 𝒮`, with the twenty fields proved from it supplied. -/
+/-- `MainHypotheses 𝒮` from `RemainingHypotheses 𝒮`, with the twenty-one fields proved from it supplied. -/
 theorem RemainingHypotheses.toMainHypotheses {𝒮 : SpaceFillingSLEModel} (H : RemainingHypotheses 𝒮) :
     MainHypotheses 𝒮 :=
   { lqgMeasureProperties := lqgMeasurePropertiesStmt_of_scaling FirstPass.Derived.quantumConeScalingInput_derived
@@ -150,7 +151,7 @@ theorem RemainingHypotheses.toMainHypotheses {𝒮 : SpaceFillingSLEModel} (H : 
       coneEnvironmentScalingUnderSLE_of_scaling 𝒮 FirstPass.Derived.quantumConeScalingInput_derived
         H.sleModelClosure.1 H.sleModelClosure.2.1 H.sleModelClosure.2.2
     wholePlaneLogLQGExistence := wholePlaneLogLQGExistenceStep_holds
-    coneRestriction := H.coneRestriction
+    coneRestriction := ConeRestriction.coneRestrictionStep_holds
     coneHarmonicBallLocality := H.coneHarmonicBallLocality
     coneHarmonicBallStrictGrowth := H.coneHarmonicBallStrictGrowth
     coneHalfBallFamilyFunctional := H.coneHalfBallFamilyFunctional

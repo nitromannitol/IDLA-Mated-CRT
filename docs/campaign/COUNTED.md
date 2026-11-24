@@ -940,14 +940,15 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   `MatedCRT/Audit/CanonicalAxioms.lean` prints the axioms of the four declarations.
 - The forms `convergenceOfIDLA_conditional` and `convergenceOfDivSandpile_conditional` (`Assembly/Main.lean:354`,
   `:361`) from `MainHypotheses 𝒮` are unchanged; they hold for every model `𝒮`.
-- `MatedCRT/Assembly/Remaining.lean`: seventeen fields of `MainHypotheses 𝒮` are proved for every model `𝒮`
-  (`lqgMeasureProperties`, `wholePlaneLogLQGExistence` (`wholePlaneLogLQGExistenceStep_holds`), `volumeGrowth`, `cellSizeEstimate`, `countingMeasureConvergence`, `greenPotentialHolder`,
+- `MatedCRT/Assembly/Remaining.lean`: eighteen fields of `MainHypotheses 𝒮` are proved for every model `𝒮`
+  (`lqgMeasureProperties`, `wholePlaneLogLQGExistence` (`wholePlaneLogLQGExistenceStep_holds`), `coneRestriction`
+  (`ConeRestriction.coneRestrictionStep_holds`, Proofs/Sec2/ConeRestriction.lean), `volumeGrowth`, `cellSizeEstimate`, `countingMeasureConvergence`, `greenPotentialHolder`,
   `degreeBound`, `quantumConeScaling`, `brownianOutwardExcursionAtExit`, `lbmPathFunctionalMeasurable`,
   `coneOriginNullMeasurable` (universal measurability of analytic sets, `prestonAnalyticUniversallyMeasurableStmt_holds`
   from Lattice-Probability), `coneMeanZeroRestriction`, `coneWholePlaneWeylComparison`, `wholePlaneLQGExistence`,
   `wholePlaneLQGCoordinateChange`, `wholePlaneUpperVolumeTail`, `greenFunctionCrudeBound`), `coneEnvironmentScaling` and
   `degreeMeasureConvergence` for every model with the SLE closure inputs, and `exitTimeUpperBound` from
-  `greenKernelUpperBound`. `RemainingHypotheses 𝒮` has these closure inputs and the other 22 fields;
-  `RemainingHypotheses.toMainHypotheses` (`:129`) supplies the twenty, and `convergenceOfIDLA_of_remaining` (`:181`)
-  and `convergenceOfDivSandpile_of_remaining` (`:187`) apply the two conditional forms. `MatedCRT/Audit/MainAxioms.lean`
+  `greenKernelUpperBound`. `RemainingHypotheses 𝒮` has these closure inputs and the other 21 fields;
+  `RemainingHypotheses.toMainHypotheses` (`:130`) supplies the twenty-one, and `convergenceOfIDLA_of_remaining` (`:182`)
+  and `convergenceOfDivSandpile_of_remaining` (`:188`) apply the two conditional forms. `MatedCRT/Audit/MainAxioms.lean`
   prints their axioms.

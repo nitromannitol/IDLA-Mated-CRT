@@ -11,3 +11,6 @@ Each line must print only `propext`, `Classical.choice` and `Quot.sound`.
 #print axioms MatedCRT.RemainingHypotheses.toMainHypotheses
 #print axioms MatedCRT.convergenceOfIDLA_of_remaining
 #print axioms MatedCRT.convergenceOfDivSandpile_of_remaining
+#print axioms MatedCRT.ConeRestriction.coneRestrictionStep_holds
+#print axioms MatedCRT.wholePlaneLogLQGExistenceStep_holds
+#print axioms MatedCRT.prestonAnalyticUniversallyMeasurableStmt_holds
