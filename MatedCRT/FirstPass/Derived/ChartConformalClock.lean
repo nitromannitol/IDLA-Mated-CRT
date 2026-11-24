@@ -17,8 +17,9 @@ soon as the rate is locally integrable and the path leaves `U` (`isTimeChangeClo
 Lévy's theorem (Mörters–Peres, *Brownian motion*, Theorem 7.20): for `w ∈ U`, the process `ψ(B_t)`, `t ≤ τ_U`, is a
 planar Brownian motion `B̃` from `ψ(w)` run with the clock `A`, that is `ψ(B_t) = B̃(A_t)`. In terms of laws of paths:
 the chart image of the path `b` run with the clock `A_b` and stopped at its exit from `U` has the law of planar
-Brownian motion from `ψ(w)` stopped at its exit from the unit disc (`LevyConformalChartStmt`; the exit time of the
-time-changed path from `U` is `A_b(τ_U)`, and `|ψ| = 1` on the frontier of `U`). The printed proofs use stochastic
+Brownian motion from `ψ(w)` stopped at its exit from the unit disc, and `A_b(τ_U)` is finite (`LevyConformalChartStmt`;
+the exit time of the time-changed path from `U` is `A_b(τ_U)`, and `|ψ| = 1` on the frontier of `U`). The printed
+proofs use stochastic
 calculus, which the repository does not have; the statement is used as an explicit hypothesis.
 -/
 
@@ -122,17 +123,20 @@ theorem isTimeChangeClock_chartClock (hψ : IsInverseChart U z ψ) (hU : IsOpen 
 end InverseChart
 
 /-- **GAP (step R1): Lévy's conformal invariance of planar Brownian motion, for an inverse chart.** For a bounded open
-set `U`, an inverse chart `ψ` of `U` and a starting point `w ∈ U`: under planar Brownian motion from `w`, the chart
-image of the path run with its conformal clock and stopped at its exit from `U` is a measurable function of the path
-whose law is planar Brownian motion from `ψ(w)` stopped at its exit from the unit disc.
+set `U`, an inverse chart `ψ` of `U` and a starting point `w ∈ U`: under planar Brownian motion from `w`, almost
+surely the conformal rate is locally integrable (`∫_0^{τ_U} |ψ'(B_s)|² ds < ∞`), and the chart image of the path run
+with its conformal clock and stopped at its exit from `U` is a measurable function of the path whose law is planar
+Brownian motion from `ψ(w)` stopped at its exit from the unit disc.
 
 Source: Mörters–Peres, *Brownian motion* (2010), Theorem 7.20 (Lévy): `ψ(B_t) = B̃(∫_0^t |ψ'(B_s)|² ds)` for
 `t ≤ τ_U`, with `B̃` a planar Brownian motion from `ψ(w)`; since `ψ(B_t)` stays in the unit disc before `τ_U` and
-`|ψ(B_{τ_U})| = 1`, the time `A(τ_U)` is the exit time of `B̃` from the disc. The printed proof uses stochastic
-calculus (Itô's formula and Lévy's characterization), which the repository does not provide. -/
+`|ψ(B_{τ_U})| = 1`, the time `A(τ_U) = ∫_0^{τ_U} |ψ'(B_s)|² ds` is the exit time of `B̃` from the disc, which is
+almost surely finite. The printed proof uses stochastic calculus (Itô's formula and Lévy's characterization), which
+the repository does not provide. -/
 def LevyConformalChartStmt : Prop :=
   ∀ (U : Set ℂ) (z : ℂ) (ψ : C(ℂ, ℂ)), IsOpen U → Bornology.IsBounded U → IsInverseChart U z ψ →
     ∀ w ∈ U,
+      (∀ᵐ b ∂planarBrownianMotion w, ∀ T : ℝ, IntervalIntegrable (chartRate U ψ b) volume 0 T) ∧
       AEMeasurable (fun b => chartStopPath U ψ (lbmContinuousPath (chartClock U ψ) b))
         (planarBrownianMotion w) ∧
       (planarBrownianMotion w).map (fun b => chartStopPath U ψ (lbmContinuousPath (chartClock U ψ) b)) =
