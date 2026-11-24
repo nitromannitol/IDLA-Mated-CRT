@@ -32,7 +32,8 @@ are theorems: Theorem 2.11 (`randomWalkToLBM`), Lemmas 2.14 and 2.16 (`greenKern
 `greenKernelLowerBound`), the scaling of the expected exit time (`mepsScaling`), the corrected Lemma 3.2
 (`discreteHolderContinuityCorrected`), Lemma 3.4 (`integralConvergenceGreenFunction`) and the lower surplus estimate
 of Lemma 5.3 (`meanValueSurplusLower`), and so are the interior and boundary steps of Lemma 3.5
-(`dirichletInterior`, `dirichletBoundary`; see below):
+(`dirichletInterior`, `dirichletBoundary`) and the measurable selection of Lemma 4.6 (`odometerMeasurableSelection`;
+see below):
 
 * Theorem 2.11: `randomWalkToLBMStmt_of_markovLimit_bg20ChartField`;
 * Lemmas 2.14 and 2.16: `FirstPass.Derived.greenKernelUpperBoundStmt_of_reference` and
@@ -50,9 +51,11 @@ The same inputs give the certified reference model `CertifiedReferenceModel ν �
 docs/campaign/COUNTED.md (`ReferenceInputs.certifiedReferenceModel`), hence the corrected and the Draft Lemma 3.5
 (`ReferenceInputs.discreteDirichletProblem`), and with it the two steps of Lemma 3.5
 (`dirichletInteriorStep_of_draft`, `dirichletBoundaryStep_of_draft`,
-`MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/StepsOfDraft.lean`).
+`MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/StepsOfDraft.lean`), and the prepared Lemma 4.6
+(`ReferenceInputs.subsequentialConvergencePrepared`), and with it the measurable selection
+(`odometerMeasurableSelectionStep_of_prepared`).
 
-The remaining fields are the ten open steps collected in `OpenStepHypotheses 𝒮`. At the canonical model
+The remaining fields are the nine open steps collected in `OpenStepHypotheses 𝒮`. At the canonical model
 `ProbeMi.canonicalSLEModel ν`, `ReferenceInputs` follows from the premises `CanonicalHypotheses ν`
 (`MatedCRT/Assembly/Canonical.lean`), so the certified reference model holds there, and `MainHypotheses` holds there
 from `CanonicalHypotheses ν` and `OpenStepHypotheses`.
@@ -75,7 +78,7 @@ open MeasureTheory
 
 namespace MatedCRT
 
-/-- The ten fields of `MainHypotheses 𝒮` that are open steps, with the same names and types. -/
+/-- The nine fields of `MainHypotheses 𝒮` that are open steps, with the same names and types. -/
 structure OpenStepHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   /-- Lemma 2.4: locality of the cone harmonic balls. -/
   coneHarmonicBallLocality : ConeHarmonicBallLocalityStep
@@ -88,8 +91,6 @@ structure OpenStepHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   odometerLocalCompactnessCorrected : OdometerLocalCompactnessCorrectedStep 𝒮
   /-- Lemma 4.6 (corrected route): boundary upgrade. -/
   odometerBoundaryUpgradeCorrected : OdometerBoundaryUpgradeCorrectedStep 𝒮
-  /-- Lemma 4.6: measurable selection of the subsequence. -/
-  odometerMeasurableSelection : OdometerMeasurableSelectionStep 𝒮
   /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)`, interior lower bound of the obstacle surplus. Not a field: `StoppedSurplusInteriorStep` is supplied by `stoppedSurplusInterior_of_gap` from the strict obstacle gap
   `harmonicBallStrictObstacleGap`, `mepsScaling` and the three named inputs below. -/
   stoppedSurplusPole : StoppedInterior.StoppedSurplusPoleStep 𝒮
@@ -180,6 +181,14 @@ theorem discreteDirichletProblem (H : ReferenceInputs 𝒮 ν) : DiscreteDirichl
   FirstPass35Bridge.discreteDirichletProblem_of_corrected H.certifiedReferenceModel.cellSizeEstimate
     closed_2_13_cellRewire (closed_3_5_lp_derivedInputs 𝒮 ν H.certifiedReferenceModel)
 
+/-- **Lemma 4.6, prepared form** (`SubsequentialConvergencePreparedStmt`) from `ReferenceInputs`: the counted form
+`firstPass_4_6_h35c_derivedInputs` with its inputs from the certified reference model and Lemmas 3.5 (corrected)
+and 3.7 (`closed_3_5_lp_derivedInputs`, `closed_3_7_lp_derivedInputs`). -/
+theorem subsequentialConvergencePrepared (H : ReferenceInputs 𝒮 ν) : SubsequentialConvergencePreparedStmt 𝒮 :=
+  firstPass_4_6_h35c_derivedInputs H.certifiedReferenceModel.mepsScaling H.certifiedReferenceModel.exitTimeUpperBound
+    H.certifiedReferenceModel.frozenDiscreteHolderContinuityCorrected H.certifiedReferenceModel.cellSizeEstimate
+    (closed_3_5_lp_derivedInputs 𝒮 ν H.certifiedReferenceModel) (closed_3_7_lp_derivedInputs 𝒮 ν H.certifiedReferenceModel)
+
 end ReferenceInputs
 
 /-- `RemainingHypotheses 𝒮` from `ReferenceHypotheses 𝒮 ν`: the five cited fields are proved from the law, the
@@ -202,7 +211,8 @@ theorem ReferenceHypotheses.toRemainingHypotheses {𝒮 : SpaceFillingSLEModel} 
       FirstPass.Derived.volumeGrowthStmt_holds
     odometerLocalCompactnessCorrected := H.steps.odometerLocalCompactnessCorrected
     odometerBoundaryUpgradeCorrected := H.steps.odometerBoundaryUpgradeCorrected
-    odometerMeasurableSelection := H.steps.odometerMeasurableSelection
+    odometerMeasurableSelection :=
+      odometerMeasurableSelectionStep_of_prepared H.toReferenceInputs.subsequentialConvergencePrepared
     stoppedSurplusPole := H.steps.stoppedSurplusPole
     stoppedInteriorGeometry := H.steps.stoppedInteriorGeometry
     stoppedInteriorMeasurable := H.steps.stoppedInteriorMeasurable

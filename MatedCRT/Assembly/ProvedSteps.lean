@@ -31,6 +31,8 @@ import MatedCRT.FirstPass.S3c.ExitTimeBridge
 import MatedCRT.FirstPass.Derived.CellInballDisjoint
 import MatedCRT.FirstPass.Derived.GreenFunctionCrudeBoundHolds
 import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
+import MatedCRT.Draft.Section4Prepared
+import MatedCRT.Steps.Sec4.SubsequentialConvergence
 import HarmonicBalls.Proofs.Sec3.OpenLaplacian
 import HarmonicBalls.Proofs.Sec6.VolumeGrowthConsequences
 
@@ -49,6 +51,9 @@ proved on the first-pass route:
 * the canonical form of Berestycki-Gwynne, Lemma 5.6 (`FrozenBG20GreenCrudeCanonical`, the Green function killed on
   `V^ε(B_ρ)`), for every model: Lemma 2.15 at a larger radius `ρ' = (1 + ρ)/2` and domain monotonicity, since with
   polynomially high probability the cells meeting `B_ρ` have diameter less than `ρ' - ρ` (Lemma 2.8);
+* the measurable selection of a convergent subsequence in Lemma 4.6 (`OdometerMeasurableSelectionStep`), for every
+  model satisfying the prepared form of Lemma 4.6 (`SubsequentialConvergencePreparedStmt`), which selects such a
+  subsequence measurably for each time and deterministic sequence;
 * Lemma 3.4 (`IntegralConvergenceGreenFunctionStmt`), for every model satisfying Theorem 2.11, Lemma 2.18 and the
   scaling of the expected exit time: `S3S4c.firstPass_3_4`, with the occupation identity of Appendix B
   (`KilledOccupation.frozenLBMGreenOccupationRescaled_holds`) and the truncated quenched laws
@@ -61,6 +66,7 @@ proved on the first-pass route:
 * `coneCanonicalHalfBallStep_holds`, `coneHalfBallClosureInsideStep_holds`, `coneScaleInvarianceCodedStmt_holds`
 * `meanValueSurplusLowerStep_of_meps`
 * `frozenBG20GreenCrudeCanonical_holds`
+* `odometerMeasurableSelectionStep_of_prepared`
 * `integralConvergenceGreenFunction_of_walk`
 -/
 
@@ -197,5 +203,17 @@ theorem frozenBG20GreenCrudeCanonical_holds (𝒮 : SpaceFillingSLEModel) : Froz
   intro a ha b hb
   exact (greenFn_mono_of_firstStep hlf hcons hA hsub (fun c => WalkPotential.mLaplacian_greenFn hlf hcons hA c)
     (fun c => WalkPotential.mLaplacian_greenFn hlf hcons hB c) a b).trans (hωG a (hsub ha).1 b (hsub hb).1)
+
+/-- **Measurable selection of the subsequence in Lemma 4.6** from the prepared form of Lemma 4.6: for a time `t` and a
+deterministic sequence `ε_n → 0`, the prepared form gives a deterministic subsequence `φ` and an `σ(h, η)`-measurable
+subsequence `Φ` of it along which the rescaled odometers converge; `φ ∘ Φ` is the required selection. -/
+theorem odometerMeasurableSelectionStep_of_prepared {𝒮 : SpaceFillingSLEModel}
+    (h46 : SubsequentialConvergencePreparedStmt 𝒮) : OdometerMeasurableSelectionStep 𝒮 := by
+  intro γ hγ hγ2 ρ hρ hρ1 Ω _ S hS t ht εs hpos hlim _
+  obtain ⟨φ, hφ, -, Φ, hΦm, hΦ⟩ := h46 γ hγ hγ2 ρ hρ hρ1 Ω S hS t ht εs hpos hlim
+  refine ⟨fun ω k => φ (Φ ω k), fun k => measurable_from_nat.comp (hΦm k), ?_⟩
+  filter_upwards [hΦ] with ω hω
+  obtain ⟨hmono, w, hw1, hw2, hw3⟩ := hω
+  exact ⟨hφ.comp hmono, w, hw1, hw2, hw3⟩
 
 end MatedCRT

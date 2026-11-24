@@ -63,3 +63,5 @@ Each line must print only `propext`, `Classical.choice` and `Quot.sound`.
 #print axioms MatedCRT.dirichletInteriorStep_of_draft
 #print axioms MatedCRT.dirichletBoundaryStep_of_draft
 #print axioms MatedCRT.ReferenceInputs.discreteDirichletProblem
+#print axioms MatedCRT.odometerMeasurableSelectionStep_of_prepared
+#print axioms MatedCRT.ReferenceInputs.subsequentialConvergencePrepared
