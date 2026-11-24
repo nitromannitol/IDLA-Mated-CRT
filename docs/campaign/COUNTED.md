@@ -954,8 +954,8 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   `RemainingHypotheses.toMainHypotheses` (`:130`) supplies the twenty-three, and `convergenceOfIDLA_of_remaining` (`:193`)
   and `convergenceOfDivSandpile_of_remaining` (`:199`) apply the two conditional forms.
 - `MatedCRT/Assembly/Reference.lean`: `ReferenceHypotheses 𝒮 ν` has the law `ν`, the SLE closure inputs,
-  `GMS21UniformStartInput 𝒮`, `HasReferenceEnvironments 𝒮`, `BG20ChartFieldInput 𝒮` and the twelve open steps
-  (`OpenStepHypotheses 𝒮`). `ReferenceHypotheses.toRemainingHypotheses` (`:113`) proves seven fields of
+  `GMS21UniformStartInput 𝒮`, `HasReferenceEnvironments 𝒮`, `BG20ChartFieldInput 𝒮` and the ten open steps
+  (`OpenStepHypotheses 𝒮`). `ReferenceHypotheses.toRemainingHypotheses` (`:188`) proves nine fields of
   `RemainingHypotheses 𝒮`: `randomWalkToLBM` (`randomWalkToLBMStmt_of_markovLimit_bg20ChartField`),
   `greenKernelUpperBound` and `greenKernelLowerBound` (`greenKernelUpperBoundStmt_of_reference`,
   `greenKernelLowerBoundStmt_of_reference` with `exists_matingRigidLEOn_full_derived`), `mepsScaling`
@@ -963,10 +963,13 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   `discreteHolderContinuityCorrected` (`frozenDiscreteHolderContinuityCorrected_of_reference`),
   `integralConvergenceGreenFunction` (Lemma 3.4, `integralConvergenceGreenFunction_of_walk`: `S3S4c.firstPass_3_4` with
   `frozenLBMGreenOccupationRescaled_holds`) and `meanValueSurplusLower` (`meanValueSurplusLowerStep_of_meps`:
-  `firstPass_5_3_step` with the first-hit property `fpFirstHitVisits_holds` and `coneScaleInvarianceCodedStmt_holds`).
-  `referenceHypotheses_canonical` (`:165`) supplies the law, the closure inputs, the reference environments and the
-  uniform-start input at the canonical model from `CanonicalHypotheses ν`, and `mainHypotheses_canonical` (`:183`)
-  gives `MainHypotheses (ProbeMi.canonicalSLEModel ν)` from `CanonicalHypotheses ν` and the twelve open steps.
+  `firstPass_5_3_step` with the first-hit property `fpFirstHitVisits_holds` and `coneScaleInvarianceCodedStmt_holds`),
+  `dirichletInterior` and `dirichletBoundary` (`dirichletInteriorStep_of_draft`, `dirichletBoundaryStep_of_draft`,
+  Proofs/Sec3/DiscreteDirichletProblem/StepsOfDraft.lean, from the Draft Lemma 3.5 `ReferenceInputs.discreteDirichletProblem`
+  and the uniqueness `eqOn_closedBall_of_hasLaplacian` of the continuum Dirichlet problem).
+  `referenceInputs_canonical` (`:227`) supplies the law, the closure inputs, the reference environments and the
+  uniform-start input at the canonical model from `CanonicalHypotheses ν`, and `mainHypotheses_canonical` (`:254`)
+  gives `MainHypotheses (ProbeMi.canonicalSLEModel ν)` from `CanonicalHypotheses ν` and the ten open steps.
 - `MatedCRT/Assembly/Reference.lean`: `ReferenceInputs.certifiedReferenceModel` proves `CertifiedReferenceModel ν 𝒮`
   from `ReferenceInputs 𝒮 ν` (`CertifiedReferenceModelCore.of_runningMinTail_law_degree_derived` and
   `certifiedReferenceModel_of_core`), and `certifiedReferenceModel_canonical` at the canonical model from
@@ -987,4 +990,4 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   results are proved without the steps `coneHarmonicBallLocality`, `coneHarmonicBallStrictGrowth` and
   `coneHalfBallFamilyFunctional` of `MainHypotheses`; the last two are still used by the scaling argument of
   `convergenceOfIDLA_of_coneSteps` (Assembly/Main.lean:354).
-  `MatedCRT/Audit/MainAxioms.lean` prints the axioms of the declarations of the four files (53 lines).
+  `MatedCRT/Audit/MainAxioms.lean` prints the axioms of the declarations of the four files (57 lines).

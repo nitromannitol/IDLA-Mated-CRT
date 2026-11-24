@@ -18,6 +18,8 @@ import MatedCRT.FirstPass.Derived.CanonicalInputsOfCoupling
 import MatedCRT.FirstPass.Derived.GMS21UniformStartOfSelectedProkhorov
 import MatedCRT.FirstPass.Derived.DegreeBoundOfLemma25Tail
 import MatedCRT.FirstPass.SLERef.CertifiedCore
+import MatedCRT.FirstPass.Derived.Counted
+import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.StepsOfDraft
 
 /-!
 # The cited fields of `MainHypotheses` from reference environments
@@ -29,7 +31,8 @@ inputs, valid environments on `ℝ` (`HasReferenceEnvironments 𝒮`), the unifo
 are theorems: Theorem 2.11 (`randomWalkToLBM`), Lemmas 2.14 and 2.16 (`greenKernelUpperBound`,
 `greenKernelLowerBound`), the scaling of the expected exit time (`mepsScaling`), the corrected Lemma 3.2
 (`discreteHolderContinuityCorrected`), Lemma 3.4 (`integralConvergenceGreenFunction`) and the lower surplus estimate
-of Lemma 5.3 (`meanValueSurplusLower`):
+of Lemma 5.3 (`meanValueSurplusLower`), and so are the interior and boundary steps of Lemma 3.5
+(`dirichletInterior`, `dirichletBoundary`; see below):
 
 * Theorem 2.11: `randomWalkToLBMStmt_of_markovLimit_bg20ChartField`;
 * Lemmas 2.14 and 2.16: `FirstPass.Derived.greenKernelUpperBoundStmt_of_reference` and
@@ -44,9 +47,12 @@ of Lemma 5.3 (`meanValueSurplusLower`):
   `meanValueSurplusLowerStep_of_meps` (`MatedCRT/Assembly/ProvedSteps.lean`).
 
 The same inputs give the certified reference model `CertifiedReferenceModel ν 𝒮` of the counted forms of
-docs/campaign/COUNTED.md (`ReferenceInputs.certifiedReferenceModel`).
+docs/campaign/COUNTED.md (`ReferenceInputs.certifiedReferenceModel`), hence the corrected and the Draft Lemma 3.5
+(`ReferenceInputs.discreteDirichletProblem`), and with it the two steps of Lemma 3.5
+(`dirichletInteriorStep_of_draft`, `dirichletBoundaryStep_of_draft`,
+`MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/StepsOfDraft.lean`).
 
-The remaining fields are the twelve open steps collected in `OpenStepHypotheses 𝒮`. At the canonical model
+The remaining fields are the ten open steps collected in `OpenStepHypotheses 𝒮`. At the canonical model
 `ProbeMi.canonicalSLEModel ν`, `ReferenceInputs` follows from the premises `CanonicalHypotheses ν`
 (`MatedCRT/Assembly/Canonical.lean`), so the certified reference model holds there, and `MainHypotheses` holds there
 from `CanonicalHypotheses ν` and `OpenStepHypotheses`.
@@ -69,7 +75,7 @@ open MeasureTheory
 
 namespace MatedCRT
 
-/-- The twelve fields of `MainHypotheses 𝒮` that are open steps, with the same names and types. -/
+/-- The ten fields of `MainHypotheses 𝒮` that are open steps, with the same names and types. -/
 structure OpenStepHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   /-- Lemma 2.4: locality of the cone harmonic balls. -/
   coneHarmonicBallLocality : ConeHarmonicBallLocalityStep
@@ -78,11 +84,6 @@ structure OpenStepHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   coneHarmonicBallStrictGrowth : ConeHarmonicBallStrictGrowthStep
   /-- Lemma 2.5, Theorems 1.4, 1.6: the half-ball family is a functional of the field. -/
   coneHalfBallFamilyFunctional : ConeHalfBallFamilyFunctionalStep
-  /-- Lemma 3.5: interior estimate. Reduced (`dirichletInteriorStep_of_moduli`) to `DirichletPointwiseStep` and
-  `DirichletDiscreteModulusStep`, which are open and not fields. -/
-  dirichletInterior : DirichletInteriorStep 𝒮
-  /-- Lemma 3.5: boundary estimate. -/
-  dirichletBoundary : DirichletBoundaryStep 𝒮
   /-- Lemma 4.6 (corrected route): local compactness of the odometers. -/
   odometerLocalCompactnessCorrected : OdometerLocalCompactnessCorrectedStep 𝒮
   /-- Lemma 4.6 (corrected route): boundary upgrade. -/
@@ -173,6 +174,12 @@ theorem certifiedReferenceModel (H : ReferenceInputs 𝒮 ν) : CertifiedReferen
         H.sleModelClosure.1 H.sleModelClosure.2.1 H.sleModelClosure.2.2))
     frozenBrownianOutwardExcursionAtExit_holds
 
+/-- **The Draft Lemma 3.5** from `ReferenceInputs`: the corrected Lemma 3.5 of the certified reference model
+(`closed_3_5_lp_derivedInputs`) and `FirstPass35Bridge.discreteDirichletProblem_of_corrected`. -/
+theorem discreteDirichletProblem (H : ReferenceInputs 𝒮 ν) : DiscreteDirichletProblemStmt 𝒮 :=
+  FirstPass35Bridge.discreteDirichletProblem_of_corrected H.certifiedReferenceModel.cellSizeEstimate
+    closed_2_13_cellRewire (closed_3_5_lp_derivedInputs 𝒮 ν H.certifiedReferenceModel)
+
 end ReferenceInputs
 
 /-- `RemainingHypotheses 𝒮` from `ReferenceHypotheses 𝒮 ν`: the five cited fields are proved from the law, the
@@ -189,8 +196,10 @@ theorem ReferenceHypotheses.toRemainingHypotheses {𝒮 : SpaceFillingSLEModel} 
     coneHarmonicBallLocality := H.steps.coneHarmonicBallLocality
     coneHarmonicBallStrictGrowth := H.steps.coneHarmonicBallStrictGrowth
     coneHalfBallFamilyFunctional := H.steps.coneHalfBallFamilyFunctional
-    dirichletInterior := H.steps.dirichletInterior
-    dirichletBoundary := H.steps.dirichletBoundary
+    dirichletInterior := dirichletInteriorStep_of_draft H.toReferenceInputs.discreteDirichletProblem
+      FirstPass.Derived.volumeGrowthStmt_holds
+    dirichletBoundary := dirichletBoundaryStep_of_draft H.toReferenceInputs.discreteDirichletProblem
+      FirstPass.Derived.volumeGrowthStmt_holds
     odometerLocalCompactnessCorrected := H.steps.odometerLocalCompactnessCorrected
     odometerBoundaryUpgradeCorrected := H.steps.odometerBoundaryUpgradeCorrected
     odometerMeasurableSelection := H.steps.odometerMeasurableSelection

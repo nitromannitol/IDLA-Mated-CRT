@@ -59,3 +59,7 @@ Each line must print only `propext`, `Classical.choice` and `Quot.sound`.
 #print axioms MatedCRT.annulusHit_holds
 #print axioms MatedCRT.goodAnnulusPrevalence_holds
 #print axioms MatedCRT.discreteDirichletProblem_canonical
+#print axioms MatedCRT.eqOn_closedBall_of_hasLaplacian
+#print axioms MatedCRT.dirichletInteriorStep_of_draft
+#print axioms MatedCRT.dirichletBoundaryStep_of_draft
+#print axioms MatedCRT.ReferenceInputs.discreteDirichletProblem
