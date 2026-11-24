@@ -6,9 +6,9 @@ import MatedCRT.FirstPass.Derived.CanonicalCountedFormsOfCouplingClock
 `convergenceOfIDLA_conditional` and `convergenceOfDivSandpile_conditional` (`MatedCRT/Assembly/Main.lean`) prove
 Theorems 1.4 and 1.6 for every space-filling SLE model from the 42 fields of `MainHypotheses`. At the canonical model
 `ProbeMi.canonicalSLEModel ν` (the curve modulo increasing reparametrization, with its Lebesgue-area representative)
-every one of these fields, and every other input of the first-pass route, is proved in this repository, in
-Harmonic-Balls-LQG or in Lattice-Probability (`docs/campaign/COUNTED.md`), except for the three premises collected in
-`CanonicalHypotheses ν`:
+the first-pass route (`docs/campaign/COUNTED.md`) proves them from the three premises collected in
+`CanonicalHypotheses ν`; every other input of that route is proved in this repository, in Harmonic-Balls-LQG or in
+Lattice-Probability.  The premises are:
 
 * `matingOfTreesCoupling`: for every `0 < γ < 2`, a mating-of-trees coupling on `ℝ` (the record
   `IsMatingOfTreesCoupling` of Lattice-Probability; Duplantier-Miller-Sheffield, arXiv:1409.7055, Theorem 1.9) whose
