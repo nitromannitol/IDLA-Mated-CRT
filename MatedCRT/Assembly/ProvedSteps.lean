@@ -58,7 +58,7 @@ proved on the first-pass route:
 
 * `harmonicBallStrictObstacleGapStep_holds`
 * `fpFirstHitVisits_holds`
-* `coneScaleInvarianceCodedStmt_holds`
+* `coneCanonicalHalfBallStep_holds`, `coneHalfBallClosureInsideStep_holds`, `coneScaleInvarianceCodedStmt_holds`
 * `meanValueSurplusLowerStep_of_meps`
 * `frozenBG20GreenCrudeCanonical_holds`
 * `integralConvergenceGreenFunction_of_walk`
@@ -88,30 +88,37 @@ theorem fpFirstHitVisits_holds (𝒮 : SpaceFillingSLEModel) : FPFirstHitVisits 
   fun _ _ _ _ _ _ hS =>
     hS.ae_tendsto_cocompact.mono fun _ hp x => TruncatedLaws.cellGeom_bddBelow_preimage hp x
 
-/-- **Coded scale invariance of the cone harmonic balls** (Lemma 2.6, coded form), with no hypothesis. -/
-theorem coneScaleInvarianceCodedStmt_holds : ConeScaleInvarianceCodedStmt :=
+/-- **The canonical half-ball step of Lemma 2.4** (`ConeCanonicalHalfBallStep`), with no hypothesis:
+`FirstPassClosure.coneCanonicalHalfBallStep_proof` with its inputs supplied. -/
+theorem coneCanonicalHalfBallStep_holds : ConeCanonicalHalfBallStep :=
   have d10 := FirstPass.Derived.frozenLQGVolumeGrowthAllScales_holds
   have d3 := FirstPass.Derived.existenceHarmonicBallsStmt_holds
-  have d4 := FirstPass.Derived.frozenBerestyckiGwynneConeBallMass_holds
   have d21 := uniquenessHarmonicBallsStmt_of_volumeGrowth (hI2 := d10)
-  have hcan : ConeCanonicalHalfBallStep :=
-    FirstPassClosure.coneCanonicalHalfBallStep_proof FirstPass.Derived.frozenConeLogLocalCodeLawStd_holds
-      frozenGreenBallCentre_holds (HarmonicBalls.clusterOpenLaplacian_proved (hI2 := d10))
-      (HarmonicBalls.leastSupersolutionMem_proved (hI2 := d10))
-      (HarmonicBalls.clusterConservationOfMass_proved (hI2 := d10))
-      (HarmonicBalls.clusterMonotone_proved (hI2 := d10)) (HarmonicBalls.clusterCompatibility_proved (hI2 := d10))
-      FirstPass.Derived.frozenClusterBoundaryMeasureZero_holds d3
-      (HarmonicBalls.existenceUniquenessHarmonicBallsStmt_of_sec5 (h55 := d3) (h56 := d21)) d21
-      FirstPass.Derived.frozenHBInitialConfinement_holds d10 FirstPass.Derived.frozenInsertionCoordinateRule_holds
-      FirstPass.Derived.harmonicBallLocalSetStmt_holds (frozenClusterStrongCompatibility_of_volumeGrowth d10)
-      FirstPass.Derived.frozenLQGMeasureExistenceInsertion_holds
-      ConeWholePlaneFieldLaw.coneWholePlaneFieldLawStep_holds d4
-  have hcl : ConeHalfBallClosureInsideStep :=
-    FirstPassClosure.coneHalfBallClosureInsideStep_proof d10 FirstPass.Derived.frozenInsertionCoordinateRule_holds
-      FirstPass.Derived.harmonicBallLocalSetStmt_holds d3 FirstPass.Derived.frozenLQGMeasureExistenceInsertion_holds
-      ConeWholePlaneFieldLaw.coneWholePlaneFieldLawStep_holds d4
-  coneScaleInvarianceCoded_ownBinders d4 FirstPass.Derived.lqgMeasureNonDyadicDilationPart_holds
-    FirstPass.Derived.quantumConeScalingInput_derived hcan hcl coneCircleLawUniqueStep_holds
+  FirstPassClosure.coneCanonicalHalfBallStep_proof FirstPass.Derived.frozenConeLogLocalCodeLawStd_holds
+    frozenGreenBallCentre_holds (HarmonicBalls.clusterOpenLaplacian_proved (hI2 := d10))
+    (HarmonicBalls.leastSupersolutionMem_proved (hI2 := d10))
+    (HarmonicBalls.clusterConservationOfMass_proved (hI2 := d10))
+    (HarmonicBalls.clusterMonotone_proved (hI2 := d10)) (HarmonicBalls.clusterCompatibility_proved (hI2 := d10))
+    FirstPass.Derived.frozenClusterBoundaryMeasureZero_holds d3
+    (HarmonicBalls.existenceUniquenessHarmonicBallsStmt_of_sec5 (h55 := d3) (h56 := d21)) d21
+    FirstPass.Derived.frozenHBInitialConfinement_holds d10 FirstPass.Derived.frozenInsertionCoordinateRule_holds
+    FirstPass.Derived.harmonicBallLocalSetStmt_holds (frozenClusterStrongCompatibility_of_volumeGrowth d10)
+    FirstPass.Derived.frozenLQGMeasureExistenceInsertion_holds
+    ConeWholePlaneFieldLaw.coneWholePlaneFieldLawStep_holds FirstPass.Derived.frozenBerestyckiGwynneConeBallMass_holds
+
+/-- **The closure of the half-ball family lies inside** (`ConeHalfBallClosureInsideStep`), with no hypothesis:
+`FirstPassClosure.coneHalfBallClosureInsideStep_proof` with its inputs supplied. -/
+theorem coneHalfBallClosureInsideStep_holds : ConeHalfBallClosureInsideStep :=
+  FirstPassClosure.coneHalfBallClosureInsideStep_proof FirstPass.Derived.frozenLQGVolumeGrowthAllScales_holds
+    FirstPass.Derived.frozenInsertionCoordinateRule_holds FirstPass.Derived.harmonicBallLocalSetStmt_holds
+    FirstPass.Derived.existenceHarmonicBallsStmt_holds FirstPass.Derived.frozenLQGMeasureExistenceInsertion_holds
+    ConeWholePlaneFieldLaw.coneWholePlaneFieldLawStep_holds FirstPass.Derived.frozenBerestyckiGwynneConeBallMass_holds
+
+/-- **Coded scale invariance of the cone harmonic balls** (Lemma 2.6, coded form), with no hypothesis. -/
+theorem coneScaleInvarianceCodedStmt_holds : ConeScaleInvarianceCodedStmt :=
+  coneScaleInvarianceCoded_ownBinders FirstPass.Derived.frozenBerestyckiGwynneConeBallMass_holds
+    FirstPass.Derived.lqgMeasureNonDyadicDilationPart_holds FirstPass.Derived.quantumConeScalingInput_derived
+    coneCanonicalHalfBallStep_holds coneHalfBallClosureInsideStep_holds coneCircleLawUniqueStep_holds
     FirstPass.Derived.coneReferenceExistsStep_holds
 
 /-- **Lemma 5.3, lower surplus estimate**, for every model satisfying the scaling of the expected exit time. -/

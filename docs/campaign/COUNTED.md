@@ -979,4 +979,12 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   `h37` supplied by the certified model and rows 3.5, 3.7), 4.7, 4.8, 5.1, 5.2, 5.3, 6.1, 6.7-6.9 (`_minimalInputs`),
   6.10, 7.1 and 8.1 hold at `ProbeMi.canonicalSLEModel ν` from `CanonicalHypotheses ν` alone; row 3.6 from
   `CanonicalHypotheses ν` and `FrozenOneSidedBoundaryContinuityFlooredUniform`.
-  `MatedCRT/Audit/MainAxioms.lean` prints the axioms of the declarations of the four files (43 lines).
+  `discreteDirichletProblem_canonical`: the Draft Lemma 3.5 there (`FirstPass35Bridge.discreteDirichletProblem_of_corrected`).
+  With no hypothesis: `coneHarmonicBallsStmt_holds` (2.3), `coneHarmonicBallsUpToFixedTimeStmt_holds` (Draft 2.4, from
+  `coneCanonicalHalfBallStep_holds` and `coneHalfBallClosureInsideStep_holds`, Assembly/ProvedSteps.lean),
+  `coneScaleInvarianceUpToFixedTimeStmt_holds` (Draft 2.5), `coneScaleInvarianceStmt_holds` (2.6),
+  `coneFamilyAEMeasurableStep_holds`, `annulusHit_holds` (6.5), `goodAnnulusPrevalence_holds` (6.4). The Section 2
+  results are proved without the steps `coneHarmonicBallLocality`, `coneHarmonicBallStrictGrowth` and
+  `coneHalfBallFamilyFunctional` of `MainHypotheses`; the last two are still used by the scaling argument of
+  `convergenceOfIDLA_of_coneSteps` (Assembly/Main.lean:354).
+  `MatedCRT/Audit/MainAxioms.lean` prints the axioms of the declarations of the four files (53 lines).

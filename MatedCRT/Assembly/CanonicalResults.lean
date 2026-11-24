@@ -13,6 +13,10 @@ certified model follows from `CanonicalHypotheses ν` (`certifiedReferenceModel_
 `frozenBG20GreenCrudeCanonical_holds`, `fpFirstHitVisits_holds`). So the results below hold at the canonical model from
 the three premises `CanonicalHypotheses ν` only. Lemma 3.6 needs in addition the one-sided boundary continuity
 `FrozenOneSidedBoundaryContinuityFlooredUniform`.
+
+The results of Sections 2 and 6 on the quantum cone and the whole-plane field do not depend on the model; they hold
+with no hypothesis: Lemma 2.3, the Draft Lemmas 2.4 and 2.5 (with the uniqueness of the time `T`), Lemma 2.6, the
+measurability of the family of Lemma 2.4, and Lemmas 6.4 and 6.5.
 -/
 
 set_option autoImplicit false
@@ -20,6 +24,47 @@ set_option autoImplicit false
 open MeasureTheory
 
 namespace MatedCRT
+
+/-- **Lemma 2.3** (harmonic balls of the quantum cone), with no hypothesis. -/
+theorem coneHarmonicBallsStmt_holds : ConeHarmonicBallsStmt :=
+  closed_2_3_lp_derivedInputs FirstPass.Derived.quantumConeScalingInput_derived
+
+/-- **Lemma 2.4** (Draft form: the harmonic balls of the cone up to the half-ball time, with the uniqueness of the
+time), with no hypothesis. -/
+theorem coneHarmonicBallsUpToFixedTimeStmt_holds : ConeHarmonicBallsUpToFixedTimeStmt :=
+  coneHarmonicBallsUpToFixedTimeStmt_of_canonical coneCanonicalHalfBallStep_holds coneHalfBallClosureInsideStep_holds
+
+/-- **Lemma 2.5** (Draft form: scale invariance of the cone harmonic balls up to the half-ball time), with no
+hypothesis. -/
+theorem coneScaleInvarianceUpToFixedTimeStmt_holds : ConeScaleInvarianceUpToFixedTimeStmt :=
+  coneScaleInvarianceUpToFixedTimeStmt_of_canonical coneCanonicalHalfBallStep_holds
+    coneHalfBallClosureInsideStep_holds (closed_2_5_lp_derivedInputs FirstPass.Derived.quantumConeScalingInput_derived)
+    (coneRescaledHalfBallHorizonUnique_fp coneCanonicalHalfBallStep_holds coneHalfBallClosureInsideStep_holds
+      (FirstPass.Derived.coneRescaledMeasureIsConeFieldInput_of_scaling
+        FirstPass.Derived.quantumConeScalingInput_derived))
+
+/-- **Lemma 2.6** (scale invariance of the cone harmonic balls), with no hypothesis. -/
+theorem coneScaleInvarianceStmt_holds : ConeScaleInvarianceStmt :=
+  closed_2_6_lp_derivedInputs FirstPass.Derived.quantumConeScalingInput_derived
+
+/-- The family of Lemma 2.4 is almost surely a measurable function of the field (`ConeFamilyAEMeasurableStep`), with
+no hypothesis. -/
+theorem coneFamilyAEMeasurableStep_holds : ConeFamilyAEMeasurableStep :=
+  coneFamilyAEMeasurableStep_of_numbered_results coneHarmonicBallsUpToFixedTimeStmt_holds
+    coneScaleInvarianceUpToFixedTimeStmt_holds FirstPass.Derived.volumeGrowthStmt_holds
+    FirstPass.Derived.quantumConeScalingInput_derived
+    (lqgMeasurePropertiesStmt_of_scaling FirstPass.Derived.quantumConeScalingInput_derived)
+
+/-- **Lemma 6.5** (hitting of annuli), with no hypothesis. -/
+theorem annulusHit_holds : AnnulusHitStmt :=
+  annulusHit_of_volumeTail FirstPass.Derived.wholePlaneLQGExistenceStep_holds
+    AnnulusHitField.coneWholePlaneWeylComparison FirstPass.Derived.wholePlaneLQGCoordinateChangeStep_holds
+    FirstPass.Derived.wholePlaneUpperVolumeTailStep_holds
+
+/-- **Lemma 6.4** (prevalence of good annuli), with no hypothesis. -/
+theorem goodAnnulusPrevalence_holds : GoodAnnulusPrevalenceStmt :=
+  goodAnnulusPrevalence_of_annulusHit annulusHit_holds ConeMeanZeroRestriction.fpConeMeanZeroRestriction_holds
+    Field.ConeCircle.circleAverageModConstStep
 
 /-- **Lemma 2.19** (explicit bound for the expected exit time) at the canonical model. -/
 theorem expectedExitTimeExplicitBound_canonical (ν : ℝ → Measure SLEPathCode) (H : CanonicalHypotheses ν) :
@@ -47,6 +92,12 @@ theorem integralConvergenceGreenFunction_canonical (ν : ℝ → Measure SLEPath
 theorem discreteDirichletProblemCorrected_canonical (ν : ℝ → Measure SLEPathCode) (H : CanonicalHypotheses ν) :
     DiscreteDirichletProblemCorrectedStmt (ProbeMi.canonicalSLEModel ν) :=
   closed_3_5_lp_derivedInputs _ ν (certifiedReferenceModel_canonical ν H)
+
+/-- **Lemma 3.5** (Draft form, boundary datum `φ(η(b))`) at the canonical model, from the corrected form. -/
+theorem discreteDirichletProblem_canonical (ν : ℝ → Measure SLEPathCode) (H : CanonicalHypotheses ν) :
+    DiscreteDirichletProblemStmt (ProbeMi.canonicalSLEModel ν) :=
+  FirstPass35Bridge.discreteDirichletProblem_of_corrected (certifiedReferenceModel_canonical ν H).cellSizeEstimate
+    closed_2_13_cellRewire (discreteDirichletProblemCorrected_canonical ν H)
 
 /-- **Lemma 3.6** (corrected harmonic convergence and its same-walk annealed form) at the canonical model, given the
 one-sided boundary continuity `FrozenOneSidedBoundaryContinuityFlooredUniform`. -/

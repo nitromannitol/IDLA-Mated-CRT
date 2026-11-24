@@ -49,3 +49,13 @@ Each line must print only `propext`, `Classical.choice` and `Quot.sound`.
 #print axioms MatedCRT.iterativeBound_canonical
 #print axioms MatedCRT.divSandpileUpperBound_canonical
 #print axioms MatedCRT.idlaConstrainedConvergence_canonical
+#print axioms MatedCRT.coneCanonicalHalfBallStep_holds
+#print axioms MatedCRT.coneHalfBallClosureInsideStep_holds
+#print axioms MatedCRT.coneHarmonicBallsStmt_holds
+#print axioms MatedCRT.coneHarmonicBallsUpToFixedTimeStmt_holds
+#print axioms MatedCRT.coneScaleInvarianceUpToFixedTimeStmt_holds
+#print axioms MatedCRT.coneScaleInvarianceStmt_holds
+#print axioms MatedCRT.coneFamilyAEMeasurableStep_holds
+#print axioms MatedCRT.annulusHit_holds
+#print axioms MatedCRT.goodAnnulusPrevalence_holds
+#print axioms MatedCRT.discreteDirichletProblem_canonical
