@@ -2,7 +2,15 @@
 
 Lean 4 formalization of the numbered results of A. Bou-Rabee and E. Gwynne, *Internal DLA on mated-CRT maps*, arXiv:2211.04891.
 
-Each numbered result is stated in Lean (`MatedCRT/Draft` and `MatedCRT/Steps`). Each one is either a field of the structure `MainHypotheses` (`MatedCRT/Assembly/Hypotheses.lean`) or a theorem of the main route (`MatedCRT/Assembly/Main.lean`, and the proofs it names). The two main theorems, Theorems 1.4 and 1.6, are proved from `MainHypotheses`; they are not proved without its fields. The statements follow a corrected version of the paper, included in [`paper/`](paper/).
+Each numbered result is stated in Lean (`MatedCRT/Draft` and `MatedCRT/Steps`). The statements follow a corrected version of the paper, included in [`paper/`](paper/).
+
+The two main theorems, Theorems 1.4 and 1.6, are proved at the canonical space-filling SLE model `ProbeMi.canonicalSLEModel ν` (the curve modulo increasing reparametrization) from three premises, the fields of `CanonicalHypotheses ν` (`MatedCRT/Assembly/Canonical.lean`: `convergenceOfIDLA_canonical`, `convergenceOfDivSandpile_canonical`):
+
+* a mating-of-trees coupling for every `0 < γ < 2` whose Lebesgue-parametrized curve has code law `ν (16 / γ²)` (Duplantier–Miller–Sheffield, arXiv:1409.7055, Theorem 1.9; the record `IsMatingOfTreesCoupling` of Lattice-Probability);
+* the comparison of the stopped curves of the walk and of the space-filling SLE from every selected start, in Lévy–Prokhorov distance (Gwynne–Miller–Sheffield, arXiv:1705.11161, proof of Theorem 3.4, case 1);
+* the chart forms of Berestycki–Gwynne, arXiv:2003.10320, Lemmas 7.20 (the coordinate change of Liouville Brownian motion, Berestycki, arXiv:1301.3356, Theorem 1.3) and 7.21 (`BG20ChartFieldInput`).
+
+Every other input of this route is proved in this repository, in Harmonic-Balls-LQG or in Lattice-Probability; docs/campaign/COUNTED.md records the chain. For an arbitrary space-filling SLE model `𝒮`, Theorems 1.4 and 1.6 are also proved from the 42 fields of the structure `MainHypotheses 𝒮` (`MatedCRT/Assembly/Hypotheses.lean`, `MatedCRT/Assembly/Main.lean`: `convergenceOfIDLA_conditional`, `convergenceOfDivSandpile_conditional`); each numbered result is either a field of that structure or a theorem of that route.
 
 ## Main results
 
@@ -10,8 +18,8 @@ The table gives, for each numbered result, its Lean statement and the declaratio
 
 | Result | Lean statement | Declaration or hypothesis field in the main route | First-pass closure |
 |---|---|---|---|
-| Theorem 1.4 | `ConvergenceOfIDLAStmt` (Draft/Section1.lean:44) | `convergenceOfIDLA_conditional` (Assembly/Main.lean:354) | `closed_1_4_lp_noSC_noSup` (FirstPass/Closure/LssDerived.lean:54; applies `closed_1_4_lp_noSC`, Clean14And16LPNoSC.lean:24) |
-| Theorem 1.6 | `ConvergenceOfDivSandpileStmt` (Draft/Section1.lean:55) | `convergenceOfDivSandpile_conditional` (Assembly/Main.lean:361) | `closed_1_6_lp_noSC_noSup` (FirstPass/Closure/LssDerived.lean:95; applies `closed_1_6_lp_noSC`, Clean14And16LPNoSC.lean:73) |
+| Theorem 1.4 | `ConvergenceOfIDLAStmt` (Draft/Section1.lean:44) | `convergenceOfIDLA_conditional` (Assembly/Main.lean:354); at the canonical model from `CanonicalHypotheses`, `convergenceOfIDLA_canonical` (Assembly/Canonical.lean:64) | `closed_1_4_lp_noSC_noSup` (FirstPass/Closure/LssDerived.lean:54; applies `closed_1_4_lp_noSC`, Clean14And16LPNoSC.lean:24); at the canonical model `closed_1_4_quantumConeScaling_coneDimension_canonical_of_coupling_tutteLP_chartField` (FirstPass/Derived/CanonicalCountedFormsOfCouplingClock.lean:54) |
+| Theorem 1.6 | `ConvergenceOfDivSandpileStmt` (Draft/Section1.lean:55) | `convergenceOfDivSandpile_conditional` (Assembly/Main.lean:361); at the canonical model from `CanonicalHypotheses`, `convergenceOfDivSandpile_canonical` (Assembly/Canonical.lean:71) | `closed_1_6_lp_noSC_noSup` (FirstPass/Closure/LssDerived.lean:95; applies `closed_1_6_lp_noSC`, Clean14And16LPNoSC.lean:73); at the canonical model `closed_1_6_quantumConeScaling_coneDimension_canonical_of_coupling_tutteLP_chartField` (FirstPass/Derived/CanonicalCountedFormsOfCouplingClock.lean:79) |
 | Fact 2.2 | `LQGMeasurePropertiesStmt` (Draft/Section2.lean:39) | hypothesis `lqgMeasureProperties` (Assembly/Hypotheses.lean:65) | not counted (cited result) |
 | Theorem 2.3 | `ConeHarmonicBallsStmt` (Draft/Section2.lean:56) | `coneHarmonicBalls` (Assembly/Main.lean:124) | `closed_2_3_lp` (FirstPass/Closure/Clean2xLP.lean:37) |
 | Lemma 2.4 | `ConeHarmonicBallsUpToFixedTimeStmt` (Draft/Section2.lean:66) | `coneHarmonicBallsUpToFixedTime` (Assembly/Main.lean:109) | `closed_2_4_lp` (FirstPass/Closure/Clean2xLP.lean:77) |
@@ -69,7 +77,7 @@ The table gives, for each numbered result, its Lean statement and the declaratio
 
 ## Verification
 
-`lake build` checks every module. `MatedCRT/Audit/Main.lean` contains `#print axioms` commands for `convergenceOfIDLA_conditional`, `convergenceOfDivSandpile_conditional` and `discretePotentialTightnessAe`; running `lake build MatedCRT.Audit.Main` prints them. The axioms should be `propext`, `Classical.choice` and `Quot.sound`. The same file asserts that each numbered result on the main line is routed through its reduction (`assert_uses`), and that no field of `MainHypotheses` is a statement refuted in Lean (`assert_no_refuted_field`).
+`lake build` checks every module. The modules of `MatedCRT/Audit/` print the axioms of the main declarations: `CanonicalAxioms.lean` those of `convergenceOfIDLA_canonical` and `convergenceOfDivSandpile_canonical`, `CountedAxioms.lean`, `DerivedCountedAxioms.lean` and `MinimalCountedAxioms.lean` those of the counted forms of docs/campaign/COUNTED.md, `AppendixBAxioms.lean` those of Appendix B. Running `lake build MatedCRT.Audit.CanonicalAxioms` (and likewise for the others) prints them; the axioms should be `propext`, `Classical.choice` and `Quot.sound`. `Refutations.lean` and `CorrectedForms.lean` record in Lean how the Draft Lemmas 3.1, 4.4 and 4.5 relate to the corrected forms that the route uses (docs/campaign/CORRECTIONS.md).
 
 ## Size
 
@@ -100,8 +108,8 @@ MatedCRT/Draft/            Statements of the numbered results
 MatedCRT/Steps/            Reduction of each result to its inputs, by section
 MatedCRT/Proofs/           Proofs of the lemmas used by the reductions, by section
 MatedCRT/FirstPass/        Earlier proofs; Frozen/ holds input statements, Closure/ closed results
-MatedCRT/Assembly/         MainHypotheses and the main theorems
-MatedCRT/Audit/            Axiom reports, routing checks, refuted statements
+MatedCRT/Assembly/         CanonicalHypotheses, MainHypotheses and the main theorems
+MatedCRT/Audit/            Axiom reports and refuted statements
 MatedCRT/LPStaging/        General lemmas staged for Lattice-Probability
 docs/                      Inventories, corrections and audits of the formalization
 paper/                     Corrected paper, arXiv source, figures
