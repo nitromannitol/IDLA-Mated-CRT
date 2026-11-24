@@ -20,7 +20,7 @@ properties) and `h10` (reference environments) of the counted forms hold at the 
 `γ ∈ (0, 2)`, some mating-of-trees coupling has a Lebesgue-parametrized curve with code law `ν (16/γ²)`.
 
 For an arbitrary model `𝒮` the reference environments do not follow from anything about laws: they fail for the model
-whose SLE predicate is `False`. The statements here are at the canonical model.
+whose SLE predicate holds for no curve. The statements here are at the canonical model.
 
 ## Main statements
 
