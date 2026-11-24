@@ -967,4 +967,16 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   `referenceHypotheses_canonical` (`:165`) supplies the law, the closure inputs, the reference environments and the
   uniform-start input at the canonical model from `CanonicalHypotheses ν`, and `mainHypotheses_canonical` (`:183`)
   gives `MainHypotheses (ProbeMi.canonicalSLEModel ν)` from `CanonicalHypotheses ν` and the twelve open steps.
-  `MatedCRT/Audit/MainAxioms.lean` prints the axioms of the declarations of the three files.
+- `MatedCRT/Assembly/Reference.lean`: `ReferenceInputs.certifiedReferenceModel` proves `CertifiedReferenceModel ν 𝒮`
+  from `ReferenceInputs 𝒮 ν` (`CertifiedReferenceModelCore.of_runningMinTail_law_degree_derived` and
+  `certifiedReferenceModel_of_core`), and `certifiedReferenceModel_canonical` at the canonical model from
+  `CanonicalHypotheses ν`. `MatedCRT/Assembly/ProvedSteps.lean`: `frozenBG20GreenCrudeCanonical_holds` (BG20 Lemma
+  5.6, canonical killing set, for every model) and `fpFirstHitVisits_holds`.
+- `MatedCRT/Assembly/CanonicalResults.lean`: the counted forms of this ledger applied to
+  `certifiedReferenceModel_canonical`, with `quantumConeScalingInput_derived`, `frozenBG20GreenCrudeCanonical_holds`
+  and `fpFirstHitVisits_holds`: rows 2.19, 3.1 (`firstPass_3_1_faithful_derivedInputs`), 3.3, 3.4, 3.5, 3.7, 4.1, 4.2
+  (`closed_4_2_lp_minimalInputs`), 4.6 (`firstPass_4_6_h35c_derivedInputs`, its DRAFT binders `h218`, `h28`, `h35c`,
+  `h37` supplied by the certified model and rows 3.5, 3.7), 4.7, 4.8, 5.1, 5.2, 5.3, 6.1, 6.7-6.9 (`_minimalInputs`),
+  6.10, 7.1 and 8.1 hold at `ProbeMi.canonicalSLEModel ν` from `CanonicalHypotheses ν` alone; row 3.6 from
+  `CanonicalHypotheses ν` and `FrozenOneSidedBoundaryContinuityFlooredUniform`.
+  `MatedCRT/Audit/MainAxioms.lean` prints the axioms of the declarations of the four files (43 lines).

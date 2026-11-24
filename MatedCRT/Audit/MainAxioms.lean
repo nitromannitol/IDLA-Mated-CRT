@@ -1,4 +1,4 @@
-import MatedCRT.Assembly.Reference
+import MatedCRT.Assembly.CanonicalResults
 
 /-!
 # Axiom audit of Theorems 1.4 and 1.6 for every model
@@ -24,3 +24,28 @@ Each line must print only `propext`, `Classical.choice` and `Quot.sound`.
 #print axioms MatedCRT.convergenceOfDivSandpile_of_reference
 #print axioms MatedCRT.referenceHypotheses_canonical
 #print axioms MatedCRT.mainHypotheses_canonical
+#print axioms MatedCRT.frozenBG20GreenCrudeCanonical_holds
+#print axioms MatedCRT.ReferenceInputs.certifiedReferenceModel
+#print axioms MatedCRT.certifiedReferenceModel_canonical
+#print axioms MatedCRT.expectedExitTimeExplicitBound_canonical
+#print axioms MatedCRT.discretePotentialTightnessPointwise_canonical
+#print axioms MatedCRT.uniformConvergenceGreenKernel_canonical
+#print axioms MatedCRT.integralConvergenceGreenFunction_canonical
+#print axioms MatedCRT.discreteDirichletProblemCorrected_canonical
+#print axioms MatedCRT.correctedHarmonicConvergence_canonical
+#print axioms MatedCRT.convergenceNormalizedExitTime_canonical
+#print axioms MatedCRT.convergenceDivisible_canonical
+#print axioms MatedCRT.divSandpileLowerBound_canonical
+#print axioms MatedCRT.subsequentialConvergencePrepared_canonical
+#print axioms MatedCRT.equibounded_canonical
+#print axioms MatedCRT.subsequentialPropertiesCorrected_canonical
+#print axioms MatedCRT.idlaLowerBound_canonical
+#print axioms MatedCRT.generalIDLALowerBound_canonical
+#print axioms MatedCRT.meanValueInequality_canonical
+#print axioms MatedCRT.idlaUpperBound_canonical
+#print axioms MatedCRT.faithfulConstantOrderLowerBound_canonical
+#print axioms MatedCRT.faithfulConstantOrderLowerBoundDiv_canonical
+#print axioms MatedCRT.faithfulChanceOfBeingAbsorbed_canonical
+#print axioms MatedCRT.iterativeBound_canonical
+#print axioms MatedCRT.divSandpileUpperBound_canonical
+#print axioms MatedCRT.idlaConstrainedConvergence_canonical
