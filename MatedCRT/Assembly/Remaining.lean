@@ -9,11 +9,13 @@ import MatedCRT.Proofs.Sec6.AnnulusHit.FieldWeylComparison
 import MatedCRT.FirstPass.Derived.LQGMeasureInputs
 import MatedCRT.FirstPass.Derived.UpperVolumeTail
 import HarmonicBalls.FirstPass.Phase2.GreenPotentialHolderHolds
+import MatedCRT.FirstPass.LPBridge.BrownianOutwardExcursion
+import MatedCRT.FirstPass.LPBridge.ConeMeanZeroRestrictionFinal
 
 /-!
 # Theorems 1.4 and 1.6 for every model from the fields of `MainHypotheses` that are not proved
 
-Eleven of the 42 fields of `MainHypotheses 𝒮` are proved for every space-filling SLE model `𝒮`:
+Thirteen of the 42 fields of `MainHypotheses 𝒮` are proved for every space-filling SLE model `𝒮`:
 
 * Lemma 2.7 (`volumeGrowth`): `FirstPass.Derived.volumeGrowthStmt_holds`;
 * Lemma 2.8 (`cellSizeEstimate`): `FirstPass.Derived.cellSizeEstimateStmt_holds`;
@@ -22,14 +24,18 @@ Eleven of the 42 fields of `MainHypotheses 𝒮` are proved for every space-fill
   `HarmonicBalls.greenPotentialHolderStmt_holds` of Harmonic-Balls-LQG;
 * `DegreeBoundInput` (`degreeBound`): `degreeBoundInput_holds`;
 * `QuantumConeScalingInput` (`quantumConeScaling`): `FirstPass.Derived.quantumConeScalingInput_derived`;
-* the measurability step of Lemma 3.6 (`lbmPathFunctionalMeasurable`): `lbmPathFunctionalMeasurableStep_holds`;
+* the steps of Lemma 3.6 (`brownianOutwardExcursionAtExit`, the outward excursion of planar Brownian motion after
+  its exit from a disk, Mörters-Peres Theorems 2.16 and 2.7, and `lbmPathFunctionalMeasurable`):
+  `frozenBrownianOutwardExcursionAtExit_holds`, `lbmPathFunctionalMeasurableStep_holds`;
+* the mean-zero restriction step of Lemma 6.4 (`coneMeanZeroRestriction`):
+  `ConeMeanZeroRestriction.fpConeMeanZeroRestriction_holds`;
 * the steps of Lemma 6.5 (`coneWholePlaneWeylComparison`, `wholePlaneLQGExistence`, `wholePlaneLQGCoordinateChange`,
   `wholePlaneUpperVolumeTail`): `AnnulusHitField.coneWholePlaneWeylComparison`,
   `FirstPass.Derived.wholePlaneLQGExistenceStep_holds`, `FirstPass.Derived.wholePlaneLQGCoordinateChangeStep_holds`,
   `FirstPass.Derived.wholePlaneUpperVolumeTailStep_holds`.
 
-`RemainingHypotheses 𝒮` has the other 31 fields, with the same names and types;
-`RemainingHypotheses.toMainHypotheses` supplies the eleven, and `convergenceOfIDLA_of_remaining` and
+`RemainingHypotheses 𝒮` has the other 29 fields, with the same names and types;
+`RemainingHypotheses.toMainHypotheses` supplies the thirteen, and `convergenceOfIDLA_of_remaining` and
 `convergenceOfDivSandpile_of_remaining` are Theorems 1.4 and 1.6 from `RemainingHypotheses 𝒮`. At the canonical model
 the first-pass route needs three premises only (`MatedCRT/Assembly/Canonical.lean`).
 -/
@@ -82,10 +88,6 @@ structure RemainingHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   dirichletInterior : DirichletInteriorStep 𝒮
   /-- Lemma 3.5: boundary estimate. -/
   dirichletBoundary : DirichletBoundaryStep 𝒮
-  /-- Lemma 3.6: planar Brownian motion makes an outward excursion right after its exit from a disk (strong Markov
-  property at the exit time and Blumenthal's 0-1 law, Mörters-Peres Thms 2.16, 2.7; not in MarkovProcess). Used by
-  `convergenceHarmonicFunctions_of_inputs`. -/
-  brownianOutwardExcursionAtExit : BrownianOutwardExcursionAtExitStep
   /-- Propositions 4.2 and 5.1: the least supersolution is strictly above the obstacle on the harmonic ball
   (eq:strictly-above-in-interior). Replaces `ObstacleClusterInnerApproximationStep`
   (`obstacleClusterInnerApproximation_of_strictGap`). -/
@@ -111,8 +113,6 @@ structure RemainingHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   stoppedLayerPotential : StoppedLayerPotentialStep 𝒮
   /-- Lemma 5.3 (through `meanValueSurplusStep_of_lower`): the lower surplus estimate. -/
   meanValueSurplusLower : MeanValueSurplusLowerStep 𝒮
-  /-- Lemma 6.4: restriction of the cone field to annuli has mean zero -/
-  coneMeanZeroRestriction : ConeMeanZeroRestrictionStep
   -- (d) Corrected cited statement
   /-- The corrected cited **Lemma 3.2** (GMS19 Theorem 3.9; correction [C6] of docs/campaign/CORRECTIONS.md).
   Used by both corrected forms of Lemma 3.1. -/
@@ -122,7 +122,8 @@ structure RemainingHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   (not fields). Used by 3.3, 3.5 and the Section 5 stopped steps. -/
   integralConvergenceGreenFunction : IntegralConvergenceGreenFunctionStmt 𝒮
 
-/-- `MainHypotheses 𝒮` from `RemainingHypotheses 𝒮`, with the eleven fields proved for every model supplied. -/
+/-- `MainHypotheses 𝒮` from `RemainingHypotheses 𝒮`, with the thirteen fields proved for every model
+supplied. -/
 theorem RemainingHypotheses.toMainHypotheses {𝒮 : SpaceFillingSLEModel} (H : RemainingHypotheses 𝒮) :
     MainHypotheses 𝒮 :=
   { lqgMeasureProperties := H.lqgMeasureProperties
@@ -149,7 +150,7 @@ theorem RemainingHypotheses.toMainHypotheses {𝒮 : SpaceFillingSLEModel} (H : 
     coneHalfBallFamilyFunctional := H.coneHalfBallFamilyFunctional
     dirichletInterior := H.dirichletInterior
     dirichletBoundary := H.dirichletBoundary
-    brownianOutwardExcursionAtExit := H.brownianOutwardExcursionAtExit
+    brownianOutwardExcursionAtExit := frozenBrownianOutwardExcursionAtExit_holds
     lbmPathFunctionalMeasurable := lbmPathFunctionalMeasurableStep_holds 𝒮
     harmonicBallStrictObstacleGap := H.harmonicBallStrictObstacleGap
     odometerLocalCompactnessCorrected := H.odometerLocalCompactnessCorrected
@@ -161,7 +162,7 @@ theorem RemainingHypotheses.toMainHypotheses {𝒮 : SpaceFillingSLEModel} (H : 
     coneOriginNullMeasurable := H.coneOriginNullMeasurable
     stoppedLayerPotential := H.stoppedLayerPotential
     meanValueSurplusLower := H.meanValueSurplusLower
-    coneMeanZeroRestriction := H.coneMeanZeroRestriction
+    coneMeanZeroRestriction := ConeMeanZeroRestriction.fpConeMeanZeroRestriction_holds
     wholePlaneLQGExistence := FirstPass.Derived.wholePlaneLQGExistenceStep_holds
     coneWholePlaneWeylComparison := AnnulusHitField.coneWholePlaneWeylComparison
     wholePlaneLQGCoordinateChange := FirstPass.Derived.wholePlaneLQGCoordinateChangeStep_holds
