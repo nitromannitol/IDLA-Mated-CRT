@@ -940,3 +940,10 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   `MatedCRT/Audit/CanonicalAxioms.lean` prints the axioms of the four declarations.
 - The forms `convergenceOfIDLA_conditional` and `convergenceOfDivSandpile_conditional` (`Assembly/Main.lean:354`,
   `:361`) from `MainHypotheses 𝒮` are unchanged; they hold for every model `𝒮`.
+- `MatedCRT/Assembly/Remaining.lean`: eleven fields of `MainHypotheses 𝒮` are proved for every model `𝒮`
+  (`volumeGrowth`, `cellSizeEstimate`, `countingMeasureConvergence`, `greenPotentialHolder`, `degreeBound`,
+  `quantumConeScaling`, `lbmPathFunctionalMeasurable`, `coneWholePlaneWeylComparison`, `wholePlaneLQGExistence`,
+  `wholePlaneLQGCoordinateChange`, `wholePlaneUpperVolumeTail`). `RemainingHypotheses 𝒮` has the other 31 fields;
+  `RemainingHypotheses.toMainHypotheses` (`:126`) supplies the eleven, and `convergenceOfIDLA_of_remaining` (`:173`) and
+  `convergenceOfDivSandpile_of_remaining` (`:179`) apply the two conditional forms. `MatedCRT/Audit/MainAxioms.lean`
+  prints their axioms.
