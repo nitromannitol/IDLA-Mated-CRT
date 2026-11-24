@@ -20,11 +20,12 @@ import MatedCRT.Proofs.Sec2.ConeRestriction
 import HarmonicBalls.FirstPass.Phase2.DerivedInputs43
 import MatedCRT.FirstPass.Derived.GreenFunctionCrudeBoundHolds
 import MatedCRT.FirstPass.Derived.CoreGffLowerOfLemma69
+import MatedCRT.Assembly.ProvedSteps
 
 /-!
 # Theorems 1.4 and 1.6 for every model from the fields of `MainHypotheses` that are not proved
 
-Nineteen of the 42 fields of `MainHypotheses 𝒮` are proved for every space-filling SLE model `𝒮`:
+Twenty of the 42 fields of `MainHypotheses 𝒮` are proved for every space-filling SLE model `𝒮`:
 
 * Fact 2.2 (`lqgMeasureProperties`): `lqgMeasurePropertiesStmt_of_scaling` from the quantum cone scaling;
 * the existence and restriction steps of Lemma 2.4 (`wholePlaneLogLQGExistence`, `coneRestriction`: the cone field
@@ -36,6 +37,8 @@ Nineteen of the 42 fields of `MainHypotheses 𝒮` are proved for every space-fi
 * Lemma 2.15 (`greenFunctionCrudeBound`): `greenFunctionCrudeBoundStmt_holds`;
 * the [BG22] Hölder continuity of Green potentials (`greenPotentialHolder`):
   `HarmonicBalls.greenPotentialHolderStmt_holds` of Harmonic-Balls-LQG;
+* the strict obstacle gap of Propositions 4.2 and 5.1 (`harmonicBallStrictObstacleGap`):
+  `harmonicBallStrictObstacleGapStep_holds` (`MatedCRT/Assembly/ProvedSteps.lean`);
 * the [BG22] statements cited in Section 2 (`harmonicBallsDraftInputs`: Theorems 1.1 and 5.5, Proposition 5.6,
   Lemmas 3.1-3.5, Propositions 5.2 and 5.3, Lemma 5.8): their hypothesis-free forms in Harmonic-Balls-LQG,
   `HarmonicBalls.firstPass_1_1_derivedInputs43` and `HarmonicBalls.Closure.closure_*_derivedInputs43`;
@@ -59,8 +62,8 @@ Two more hold for every model that satisfies the SLE closure inputs: the rescale
 (`coneEnvironmentScaling`, through `coneEnvironmentScalingUnderSLE_of_scaling`) and Lemma 2.10
 (`degreeMeasureConvergence`, `FirstPass.Derived.degreeMeasureConvergenceStmt_of_envScaling_derived`); and Lemma 2.18
 (`exitTimeUpperBound`) follows from Lemma 2.14 (`FirstPass.Derived.exitTimeUpperBoundStmt_of_greenKernelUpper`).
-`RemainingHypotheses 𝒮` has these closure inputs and the other 20 fields, with the same names and types;
-`RemainingHypotheses.toMainHypotheses` supplies the twenty-two, and `convergenceOfIDLA_of_remaining` and
+`RemainingHypotheses 𝒮` has these closure inputs and the other 19 fields, with the same names and types;
+`RemainingHypotheses.toMainHypotheses` supplies the twenty-three, and `convergenceOfIDLA_of_remaining` and
 `convergenceOfDivSandpile_of_remaining` are Theorems 1.4 and 1.6 from `RemainingHypotheses 𝒮`. At the canonical model
 the first-pass route needs three premises only (`MatedCRT/Assembly/Canonical.lean`).
 -/
@@ -97,10 +100,6 @@ structure RemainingHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   dirichletInterior : DirichletInteriorStep 𝒮
   /-- Lemma 3.5: boundary estimate. -/
   dirichletBoundary : DirichletBoundaryStep 𝒮
-  /-- Propositions 4.2 and 5.1: the least supersolution is strictly above the obstacle on the harmonic ball
-  (eq:strictly-above-in-interior). Replaces `ObstacleClusterInnerApproximationStep`
-  (`obstacleClusterInnerApproximation_of_strictGap`). -/
-  harmonicBallStrictObstacleGap : HarmonicBallStrictObstacleGapStep 𝒮
   /-- Lemma 4.6 (corrected route): local compactness of the odometers. -/
   odometerLocalCompactnessCorrected : OdometerLocalCompactnessCorrectedStep 𝒮
   /-- Lemma 4.6 (corrected route): boundary upgrade. -/
@@ -127,7 +126,7 @@ structure RemainingHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   (not fields). Used by 3.3, 3.5 and the Section 5 stopped steps. -/
   integralConvergenceGreenFunction : IntegralConvergenceGreenFunctionStmt 𝒮
 
-/-- `MainHypotheses 𝒮` from `RemainingHypotheses 𝒮`, with the twenty-two fields proved from it supplied. -/
+/-- `MainHypotheses 𝒮` from `RemainingHypotheses 𝒮`, with the twenty-three fields proved from it supplied. -/
 theorem RemainingHypotheses.toMainHypotheses {𝒮 : SpaceFillingSLEModel} (H : RemainingHypotheses 𝒮) :
     MainHypotheses 𝒮 :=
   { lqgMeasureProperties := lqgMeasurePropertiesStmt_of_scaling FirstPass.Derived.quantumConeScalingInput_derived
@@ -171,7 +170,7 @@ theorem RemainingHypotheses.toMainHypotheses {𝒮 : SpaceFillingSLEModel} (H : 
     dirichletBoundary := H.dirichletBoundary
     brownianOutwardExcursionAtExit := frozenBrownianOutwardExcursionAtExit_holds
     lbmPathFunctionalMeasurable := lbmPathFunctionalMeasurableStep_holds 𝒮
-    harmonicBallStrictObstacleGap := H.harmonicBallStrictObstacleGap
+    harmonicBallStrictObstacleGap := harmonicBallStrictObstacleGapStep_holds 𝒮
     odometerLocalCompactnessCorrected := H.odometerLocalCompactnessCorrected
     odometerBoundaryUpgradeCorrected := H.odometerBoundaryUpgradeCorrected
     odometerMeasurableSelection := H.odometerMeasurableSelection

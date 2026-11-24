@@ -940,8 +940,9 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   `MatedCRT/Audit/CanonicalAxioms.lean` prints the axioms of the four declarations.
 - The forms `convergenceOfIDLA_conditional` and `convergenceOfDivSandpile_conditional` (`Assembly/Main.lean:354`,
   `:361`) from `MainHypotheses 𝒮` are unchanged; they hold for every model `𝒮`.
-- `MatedCRT/Assembly/Remaining.lean`: nineteen fields of `MainHypotheses 𝒮` are proved for every model `𝒮`
-  (`harmonicBallsDraftInputs` (the hypothesis-free `firstPass_1_1_derivedInputs43` and `closure_*_derivedInputs43` of
+- `MatedCRT/Assembly/Remaining.lean`: twenty fields of `MainHypotheses 𝒮` are proved for every model `𝒮`
+  (`harmonicBallStrictObstacleGap` (`harmonicBallStrictObstacleGapStep_holds`, Assembly/ProvedSteps.lean, from
+  `firstPass_strictObstacleGap` and hypothesis-free inputs), `harmonicBallsDraftInputs` (the hypothesis-free `firstPass_1_1_derivedInputs43` and `closure_*_derivedInputs43` of
   Harmonic-Balls-LQG), `lqgMeasureProperties`, `wholePlaneLogLQGExistence` (`wholePlaneLogLQGExistenceStep_holds`), `coneRestriction`
   (`ConeRestriction.coneRestrictionStep_holds`, Proofs/Sec2/ConeRestriction.lean), `volumeGrowth`, `cellSizeEstimate`, `countingMeasureConvergence`, `greenPotentialHolder`,
   `degreeBound`, `quantumConeScaling`, `brownianOutwardExcursionAtExit`, `lbmPathFunctionalMeasurable`,
@@ -949,18 +950,21 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   from Lattice-Probability), `coneMeanZeroRestriction`, `coneWholePlaneWeylComparison`, `wholePlaneLQGExistence`,
   `wholePlaneLQGCoordinateChange`, `wholePlaneUpperVolumeTail`, `greenFunctionCrudeBound`), `coneEnvironmentScaling` and
   `degreeMeasureConvergence` for every model with the SLE closure inputs, and `exitTimeUpperBound` from
-  `greenKernelUpperBound`. `RemainingHypotheses 𝒮` has these closure inputs and the other 20 fields;
-  `RemainingHypotheses.toMainHypotheses` (`:131`) supplies the twenty-two, and `convergenceOfIDLA_of_remaining` (`:194`)
-  and `convergenceOfDivSandpile_of_remaining` (`:200`) apply the two conditional forms.
+  `greenKernelUpperBound`. `RemainingHypotheses 𝒮` has these closure inputs and the other 19 fields;
+  `RemainingHypotheses.toMainHypotheses` (`:130`) supplies the twenty-three, and `convergenceOfIDLA_of_remaining` (`:193`)
+  and `convergenceOfDivSandpile_of_remaining` (`:199`) apply the two conditional forms.
 - `MatedCRT/Assembly/Reference.lean`: `ReferenceHypotheses 𝒮 ν` has the law `ν`, the SLE closure inputs,
-  `GMS21UniformStartInput 𝒮`, `HasReferenceEnvironments 𝒮`, `BG20ChartFieldInput 𝒮` and the fifteen open steps
-  (`OpenStepHypotheses 𝒮`). `ReferenceHypotheses.toRemainingHypotheses` (`:117`) proves the five cited fields of
+  `GMS21UniformStartInput 𝒮`, `HasReferenceEnvironments 𝒮`, `BG20ChartFieldInput 𝒮` and the twelve open steps
+  (`OpenStepHypotheses 𝒮`). `ReferenceHypotheses.toRemainingHypotheses` (`:113`) proves seven fields of
   `RemainingHypotheses 𝒮`: `randomWalkToLBM` (`randomWalkToLBMStmt_of_markovLimit_bg20ChartField`),
   `greenKernelUpperBound` and `greenKernelLowerBound` (`greenKernelUpperBoundStmt_of_reference`,
   `greenKernelLowerBoundStmt_of_reference` with `exists_matingRigidLEOn_full_derived`), `mepsScaling`
-  (`mepsScalingInput_of_lower`, `mεCdf_lower_of_lemma69`, `exitTimeLowerTail_of_uniformStart`) and
-  `discreteHolderContinuityCorrected` (`frozenDiscreteHolderContinuityCorrected_of_reference`).
-  `referenceHypotheses_canonical` (`:166`) supplies the law, the closure inputs, the reference environments and the
-  uniform-start input at the canonical model from `CanonicalHypotheses ν`, and `mainHypotheses_canonical` (`:184`)
-  gives `MainHypotheses (ProbeMi.canonicalSLEModel ν)` from `CanonicalHypotheses ν` and the fifteen open steps.
-  `MatedCRT/Audit/MainAxioms.lean` prints the axioms of the declarations of both files.
+  (`mepsScalingInput_of_lower`, `mεCdf_lower_of_lemma69`, `exitTimeLowerTail_of_uniformStart`) 
+  `discreteHolderContinuityCorrected` (`frozenDiscreteHolderContinuityCorrected_of_reference`),
+  `integralConvergenceGreenFunction` (Lemma 3.4, `integralConvergenceGreenFunction_of_walk`: `S3S4c.firstPass_3_4` with
+  `frozenLBMGreenOccupationRescaled_holds`) and `meanValueSurplusLower` (`meanValueSurplusLowerStep_of_meps`:
+  `firstPass_5_3_step` with the first-hit property `fpFirstHitVisits_holds` and `coneScaleInvarianceCodedStmt_holds`).
+  `referenceHypotheses_canonical` (`:165`) supplies the law, the closure inputs, the reference environments and the
+  uniform-start input at the canonical model from `CanonicalHypotheses ν`, and `mainHypotheses_canonical` (`:183`)
+  gives `MainHypotheses (ProbeMi.canonicalSLEModel ν)` from `CanonicalHypotheses ν` and the twelve open steps.
+  `MatedCRT/Audit/MainAxioms.lean` prints the axioms of the declarations of the three files.
