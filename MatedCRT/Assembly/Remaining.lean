@@ -11,22 +11,31 @@ import MatedCRT.FirstPass.Derived.UpperVolumeTail
 import HarmonicBalls.FirstPass.Phase2.GreenPotentialHolderHolds
 import MatedCRT.FirstPass.LPBridge.BrownianOutwardExcursion
 import MatedCRT.FirstPass.LPBridge.ConeMeanZeroRestrictionFinal
+import MatedCRT.FirstPass.Derived.EnvironmentScalingHolds
+import MatedCRT.Proofs.Measurability.AnalyticUniversallyMeasurable
+import MatedCRT.Proofs.Sec5.SupersolutionSectionIdentity
+import MatedCRT.FirstPass.SLERef.Extended
 
 /-!
 # Theorems 1.4 and 1.6 for every model from the fields of `MainHypotheses` that are not proved
 
-Thirteen of the 42 fields of `MainHypotheses 𝒮` are proved for every space-filling SLE model `𝒮`:
+Fifteen of the 42 fields of `MainHypotheses 𝒮` are proved for every space-filling SLE model `𝒮`:
 
+* Fact 2.2 (`lqgMeasureProperties`): `lqgMeasurePropertiesStmt_of_scaling` from the quantum cone scaling;
 * Lemma 2.7 (`volumeGrowth`): `FirstPass.Derived.volumeGrowthStmt_holds`;
 * Lemma 2.8 (`cellSizeEstimate`): `FirstPass.Derived.cellSizeEstimateStmt_holds`;
 * Lemma 2.9 (`countingMeasureConvergence`): `countingMeasureConvergenceStmt_of_cellSize` from Lemma 2.8;
 * the [BG22] Hölder continuity of Green potentials (`greenPotentialHolder`):
   `HarmonicBalls.greenPotentialHolderStmt_holds` of Harmonic-Balls-LQG;
 * `DegreeBoundInput` (`degreeBound`): `degreeBoundInput_holds`;
-* `QuantumConeScalingInput` (`quantumConeScaling`): `FirstPass.Derived.quantumConeScalingInput_derived`;
+* `QuantumConeScalingInput` (`quantumConeScaling`, Duplantier-Miller-Sheffield Proposition 4.13(i)):
+  `FirstPass.Derived.quantumConeScalingInput_derived`;
 * the steps of Lemma 3.6 (`brownianOutwardExcursionAtExit`, the outward excursion of planar Brownian motion after
   its exit from a disk, Mörters-Peres Theorems 2.16 and 2.7, and `lbmPathFunctionalMeasurable`):
   `frozenBrownianOutwardExcursionAtExit_holds`, `lbmPathFunctionalMeasurableStep_holds`;
+* the null-measurability of the origin of Proposition 5.1 (`coneOriginNullMeasurable`):
+  `ConeOriginNull.coneOriginNullMeasurableStep_of_preston` with the universal measurability of analytic sets,
+  `prestonAnalyticUniversallyMeasurableStmt_holds`;
 * the mean-zero restriction step of Lemma 6.4 (`coneMeanZeroRestriction`):
   `ConeMeanZeroRestriction.fpConeMeanZeroRestriction_holds`;
 * the steps of Lemma 6.5 (`coneWholePlaneWeylComparison`, `wholePlaneLQGExistence`, `wholePlaneLQGCoordinateChange`,
@@ -34,20 +43,20 @@ Thirteen of the 42 fields of `MainHypotheses 𝒮` are proved for every space-fi
   `FirstPass.Derived.wholePlaneLQGExistenceStep_holds`, `FirstPass.Derived.wholePlaneLQGCoordinateChangeStep_holds`,
   `FirstPass.Derived.wholePlaneUpperVolumeTailStep_holds`.
 
-`RemainingHypotheses 𝒮` has the other 29 fields, with the same names and types;
-`RemainingHypotheses.toMainHypotheses` supplies the thirteen, and `convergenceOfIDLA_of_remaining` and
-`convergenceOfDivSandpile_of_remaining` are Theorems 1.4 and 1.6 from `RemainingHypotheses 𝒮`. At the canonical model
-the first-pass route needs three premises only (`MatedCRT/Assembly/Canonical.lean`).
+A sixteenth field, the rescaled environment of Theorems 1.4 and 1.6 (`coneEnvironmentScaling`), holds for every model
+that satisfies the SLE closure inputs (`coneEnvironmentScalingUnderSLE_of_scaling`). `RemainingHypotheses 𝒮` has these
+closure inputs and the other 26 fields, with the same names and types; `RemainingHypotheses.toMainHypotheses`
+supplies the sixteen, and `convergenceOfIDLA_of_remaining` and `convergenceOfDivSandpile_of_remaining` are Theorems
+1.4 and 1.6 from `RemainingHypotheses 𝒮`. At the canonical model the first-pass route needs three premises only
+(`MatedCRT/Assembly/Canonical.lean`).
 -/
 
 namespace MatedCRT
 
-/-- The fields of `MainHypotheses 𝒮` (`MatedCRT/Assembly/Hypotheses.lean`) that are not proved for every model, with
-the same names and types. -/
+/-- The SLE closure inputs of the model and the fields of `MainHypotheses 𝒮` (`MatedCRT/Assembly/Hypotheses.lean`)
+that are not proved for every model, with the same names and types. -/
 structure RemainingHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   -- (a) Cited results
-  /-- **Fact 2.2** (cited, properties of the LQG measure, DS11). Used by 1.4, 1.6, 2.3 (through 2.5). -/
-  lqgMeasureProperties : LQGMeasurePropertiesStmt
   /-- **Lemma 2.10** (cited, convergence of the degree measure). Used by 3.3. -/
   degreeMeasureConvergence : DegreeMeasureConvergenceStmt 𝒮
   /-- **Theorem 2.11** (cited, random walk on the mated-CRT map converges to Liouville Brownian motion). Used by 3.6. -/
@@ -67,11 +76,10 @@ structure RemainingHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   /-- `MepsScalingInput` (External/SLE.lean): scaling of the expected exit time, used by 3.1 (corrected), 4.7, 7.1. -/
   mepsScaling : MepsScalingInput 𝒮
   -- (c) Open named steps
-  /-- Theorems 1.4, 1.6: the rescaled environment is valid (eq:scale-invariance-of-field-and-eta). Reduced
-  (`coneEnvironmentScalingStep_of_inputs`) to the External SLE and quantum cone scaling inputs,
-  Fact 2.2, and the steps `RescaledConeFieldStep`, `RescaledConeClockStep`, and
-  `RescaledMatingOfTreesStep`. -/
-  coneEnvironmentScaling : ConeEnvironmentScalingStep 𝒮
+  /-- The SLE closure inputs of the model: scale invariance, reparametrization and independence of a smaller
+  σ-algebra (`SLEModelClosureInput`). With the quantum cone scaling they give the rescaled environment of Theorems 1.4
+  and 1.6 (`ConeEnvironmentScalingStep`, through `coneEnvironmentScalingUnderSLE_of_scaling`). -/
+  sleModelClosure : SLEModelClosureInput 𝒮
   /-- Lemma 2.4: existence of the whole-plane log-singular LQG objects. -/
   wholePlaneLogLQGExistence : WholePlaneLogLQGExistenceStep
   /-- Lemma 2.4: restriction to the cone. -/
@@ -105,10 +113,6 @@ structure RemainingHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   stoppedInteriorGeometry : StoppedInterior.StoppedInteriorGeometryStep 𝒮
   /-- Lemma 5.3 on `V^ε(Λ_t)`: measurability of the continuum margin on the random compact set. -/
   stoppedInteriorMeasurable : StoppedInterior.StoppedInteriorMeasurableStep 𝒮
-  /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)`, exterior upper bound of the obstacle surplus. The field
-  `StoppedSurplusExteriorStep` is not assumed: it is supplied by `stoppedSurplusExterior_of_nullMeasurableOrigin`
-  from `mepsScaling` and this origin measurability input. -/
-  coneOriginNullMeasurable : ConeOriginNullMeasurableStep 𝒮
   /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)`, Green potential of the boundary layer `A \ Λ^ε_t`. -/
   stoppedLayerPotential : StoppedLayerPotentialStep 𝒮
   /-- Lemma 5.3 (through `meanValueSurplusStep_of_lower`): the lower surplus estimate. -/
@@ -122,11 +126,10 @@ structure RemainingHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   (not fields). Used by 3.3, 3.5 and the Section 5 stopped steps. -/
   integralConvergenceGreenFunction : IntegralConvergenceGreenFunctionStmt 𝒮
 
-/-- `MainHypotheses 𝒮` from `RemainingHypotheses 𝒮`, with the thirteen fields proved for every model
-supplied. -/
+/-- `MainHypotheses 𝒮` from `RemainingHypotheses 𝒮`, with the sixteen fields proved from it supplied. -/
 theorem RemainingHypotheses.toMainHypotheses {𝒮 : SpaceFillingSLEModel} (H : RemainingHypotheses 𝒮) :
     MainHypotheses 𝒮 :=
-  { lqgMeasureProperties := H.lqgMeasureProperties
+  { lqgMeasureProperties := lqgMeasurePropertiesStmt_of_scaling FirstPass.Derived.quantumConeScalingInput_derived
     volumeGrowth := FirstPass.Derived.volumeGrowthStmt_holds
     cellSizeEstimate := FirstPass.Derived.cellSizeEstimateStmt_holds 𝒮
     countingMeasureConvergence :=
@@ -142,7 +145,9 @@ theorem RemainingHypotheses.toMainHypotheses {𝒮 : SpaceFillingSLEModel} (H : 
     mepsScaling := H.mepsScaling
     degreeBound := degreeBoundInput_holds 𝒮
     quantumConeScaling := FirstPass.Derived.quantumConeScalingInput_derived
-    coneEnvironmentScaling := H.coneEnvironmentScaling
+    coneEnvironmentScaling :=
+      coneEnvironmentScalingUnderSLE_of_scaling 𝒮 FirstPass.Derived.quantumConeScalingInput_derived
+        H.sleModelClosure.1 H.sleModelClosure.2.1 H.sleModelClosure.2.2
     wholePlaneLogLQGExistence := H.wholePlaneLogLQGExistence
     coneRestriction := H.coneRestriction
     coneHarmonicBallLocality := H.coneHarmonicBallLocality
@@ -159,7 +164,8 @@ theorem RemainingHypotheses.toMainHypotheses {𝒮 : SpaceFillingSLEModel} (H : 
     stoppedSurplusPole := H.stoppedSurplusPole
     stoppedInteriorGeometry := H.stoppedInteriorGeometry
     stoppedInteriorMeasurable := H.stoppedInteriorMeasurable
-    coneOriginNullMeasurable := H.coneOriginNullMeasurable
+    coneOriginNullMeasurable :=
+      ConeOriginNull.coneOriginNullMeasurableStep_of_preston 𝒮 prestonAnalyticUniversallyMeasurableStmt_holds
     stoppedLayerPotential := H.stoppedLayerPotential
     meanValueSurplusLower := H.meanValueSurplusLower
     coneMeanZeroRestriction := ConeMeanZeroRestriction.fpConeMeanZeroRestriction_holds

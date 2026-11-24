@@ -940,10 +940,13 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   `MatedCRT/Audit/CanonicalAxioms.lean` prints the axioms of the four declarations.
 - The forms `convergenceOfIDLA_conditional` and `convergenceOfDivSandpile_conditional` (`Assembly/Main.lean:354`,
   `:361`) from `MainHypotheses 𝒮` are unchanged; they hold for every model `𝒮`.
-- `MatedCRT/Assembly/Remaining.lean`: thirteen fields of `MainHypotheses 𝒮` are proved for every model `𝒮`
-  (`volumeGrowth`, `cellSizeEstimate`, `countingMeasureConvergence`, `greenPotentialHolder`, `degreeBound`,
-  `quantumConeScaling`, `brownianOutwardExcursionAtExit`, `lbmPathFunctionalMeasurable`, `coneMeanZeroRestriction`, `coneWholePlaneWeylComparison`, `wholePlaneLQGExistence`,
-  `wholePlaneLQGCoordinateChange`, `wholePlaneUpperVolumeTail`). `RemainingHypotheses 𝒮` has the other 29 fields;
-  `RemainingHypotheses.toMainHypotheses` (`:127`) supplies the thirteen, and `convergenceOfIDLA_of_remaining` (`:174`) and
-  `convergenceOfDivSandpile_of_remaining` (`:180`) apply the two conditional forms. `MatedCRT/Audit/MainAxioms.lean`
+- `MatedCRT/Assembly/Remaining.lean`: fifteen fields of `MainHypotheses 𝒮` are proved for every model `𝒮`
+  (`lqgMeasureProperties`, `volumeGrowth`, `cellSizeEstimate`, `countingMeasureConvergence`, `greenPotentialHolder`,
+  `degreeBound`, `quantumConeScaling`, `brownianOutwardExcursionAtExit`, `lbmPathFunctionalMeasurable`,
+  `coneOriginNullMeasurable` (universal measurability of analytic sets, `prestonAnalyticUniversallyMeasurableStmt_holds`
+  from Lattice-Probability), `coneMeanZeroRestriction`, `coneWholePlaneWeylComparison`, `wholePlaneLQGExistence`,
+  `wholePlaneLQGCoordinateChange`, `wholePlaneUpperVolumeTail`), and `coneEnvironmentScaling` for every model with the
+  SLE closure inputs. `RemainingHypotheses 𝒮` has these closure inputs and the other 26 fields;
+  `RemainingHypotheses.toMainHypotheses` (`:130`) supplies the sixteen, and `convergenceOfIDLA_of_remaining` (`:180`)
+  and `convergenceOfDivSandpile_of_remaining` (`:186`) apply the two conditional forms. `MatedCRT/Audit/MainAxioms.lean`
   prints their axioms.
