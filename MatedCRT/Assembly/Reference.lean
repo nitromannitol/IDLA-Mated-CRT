@@ -21,6 +21,7 @@ import MatedCRT.FirstPass.SLERef.CertifiedCore
 import MatedCRT.FirstPass.Derived.Counted
 import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.StepsOfDraft
 import MatedCRT.FirstPass.Derived.OneSidedBoundaryOfReference
+import MatedCRT.FirstPass.Derived.QuantumConeScalingDimension
 
 /-!
 # The cited fields of `MainHypotheses` from reference environments
@@ -69,8 +70,12 @@ from `CanonicalHypotheses ν` and `OpenStepHypotheses`.
   counted forms from `ReferenceInputs 𝒮 ν`; `certifiedReferenceModel_canonical` at the canonical model from
   `CanonicalHypotheses ν`.
 * `ReferenceHypotheses.toRemainingHypotheses`: `RemainingHypotheses 𝒮` from `ReferenceHypotheses 𝒮 ν`.
-* `convergenceOfIDLA_of_reference`, `convergenceOfDivSandpile_of_reference`: Theorems 1.4 and 1.6 from
-  `ReferenceHypotheses 𝒮 ν`.
+* `convergenceOfIDLA_of_referenceInputs`, `convergenceOfDivSandpile_of_referenceInputs`: Theorems 1.4 and 1.6 for
+  every model from `ReferenceInputs 𝒮 ν` alone, by the counted forms `closed_1_4_quantumConeScaling_coneDimension`
+  and `closed_1_6_quantumConeScaling_coneDimension` with Theorem 2.11 (`ReferenceInputs.randomWalkToLBM`); the open
+  steps are not used.
+* `convergenceOfIDLA_of_reference`, `convergenceOfDivSandpile_of_reference`: Theorems 1.4 and 1.6 through
+  `MainHypotheses`, from `ReferenceHypotheses 𝒮 ν`.
 * `mainHypotheses_canonical`: `MainHypotheses (ProbeMi.canonicalSLEModel ν)` from `CanonicalHypotheses ν` and
   `OpenStepHypotheses (ProbeMi.canonicalSLEModel ν)`.
 -/
@@ -249,6 +254,22 @@ theorem convergenceOfIDLA_of_reference (𝒮 : SpaceFillingSLEModel) (ν : ℝ �
 theorem convergenceOfDivSandpile_of_reference (𝒮 : SpaceFillingSLEModel) (ν : ℝ → Measure SLEPathCode)
     (H : ReferenceHypotheses 𝒮 ν) : ConvergenceOfDivSandpileStmt 𝒮 :=
   convergenceOfDivSandpile_of_remaining 𝒮 H.toRemainingHypotheses
+
+/-- **Theorem 1.4** (convergence of IDLA) for every model, from `ReferenceInputs 𝒮 ν` alone: the counted form
+`closed_1_4_quantumConeScaling_coneDimension` with Theorem 2.11 from `ReferenceInputs.randomWalkToLBM`. The open
+steps `OpenStepHypotheses 𝒮` are not used. -/
+theorem convergenceOfIDLA_of_referenceInputs (𝒮 : SpaceFillingSLEModel) (ν : ℝ → Measure SLEPathCode)
+    (H : ReferenceInputs 𝒮 ν) : ConvergenceOfIDLAStmt 𝒮 :=
+  closed_1_4_quantumConeScaling_coneDimension ν H.law H.sleModelClosure H.uniformStart H.referenceEnvironments
+    H.randomWalkToLBM
+
+/-- **Theorem 1.6** (convergence of the divisible sandpile) for every model, from `ReferenceInputs 𝒮 ν` alone: the
+counted form `closed_1_6_quantumConeScaling_coneDimension` with Theorem 2.11 from `ReferenceInputs.randomWalkToLBM`.
+The open steps `OpenStepHypotheses 𝒮` are not used. -/
+theorem convergenceOfDivSandpile_of_referenceInputs (𝒮 : SpaceFillingSLEModel) (ν : ℝ → Measure SLEPathCode)
+    (H : ReferenceInputs 𝒮 ν) : ConvergenceOfDivSandpileStmt 𝒮 :=
+  closed_1_6_quantumConeScaling_coneDimension ν H.law H.sleModelClosure H.uniformStart H.referenceEnvironments
+    H.randomWalkToLBM
 
 /-- `ReferenceInputs` at the canonical model from `CanonicalHypotheses ν`: the law and the closure inputs from the
 mating-of-trees couplings, the reference environments from the couplings and the dyadic Liouville clocks, and the
