@@ -24,6 +24,10 @@ Each line must print only `propext`, `Classical.choice` and `Quot.sound`.
 #print axioms MatedCRT.convergenceOfDivSandpile_of_reference
 #print axioms MatedCRT.convergenceOfIDLA_of_referenceInputs
 #print axioms MatedCRT.convergenceOfDivSandpile_of_referenceInputs
+#print axioms MatedCRT.ReferenceInputs.stoppedSurplusPole
+#print axioms MatedCRT.StoppedInterior.stoppedSurplusPole_of_steps
+#print axioms MatedCRT.StoppedInterior.stoppedSurplusAnnulus_of_gap
+#print axioms MatedCRT.stoppedPoleLowerBound
 #print axioms MatedCRT.referenceHypotheses_canonical
 #print axioms MatedCRT.mainHypotheses_canonical
 #print axioms MatedCRT.frozenBG20GreenCrudeCanonical_holds

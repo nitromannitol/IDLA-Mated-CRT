@@ -22,6 +22,7 @@ import MatedCRT.FirstPass.Derived.Counted
 import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.StepsOfDraft
 import MatedCRT.FirstPass.Derived.OneSidedBoundaryOfReference
 import MatedCRT.FirstPass.Derived.QuantumConeScalingDimension
+import MatedCRT.Proofs.Sec5.StoppedPoleReduction
 
 /-!
 # The cited fields of `MainHypotheses` from reference environments
@@ -59,7 +60,9 @@ docs/campaign/COUNTED.md (`ReferenceInputs.certifiedReferenceModel`), hence the 
 (`ReferenceInputs.oneSidedBoundaryContinuity`, from Lemma 3.11 of GMS19 in the reference environments), hence the
 corrected Lemma 3.6 (`ReferenceInputs.correctedHarmonicConvergence`).
 
-The remaining fields are the nine open steps collected in `OpenStepHypotheses 𝒮`. At the canonical model
+The pole step of Proposition 5.1 follows from these inputs and the geometry and margin steps
+(`ReferenceInputs.stoppedSurplusPole`). The remaining fields are the eight open steps collected in
+`OpenStepHypotheses 𝒮`. At the canonical model
 `ProbeMi.canonicalSLEModel ν`, `ReferenceInputs` follows from the premises `CanonicalHypotheses ν`
 (`MatedCRT/Assembly/Canonical.lean`), so the certified reference model holds there, and `MainHypotheses` holds there
 from `CanonicalHypotheses ν` and `OpenStepHypotheses`.
@@ -86,7 +89,9 @@ open MeasureTheory
 
 namespace MatedCRT
 
-/-- The nine fields of `MainHypotheses 𝒮` that are open steps, with the same names and types. -/
+/-- The eight fields of `MainHypotheses 𝒮` that are open steps, with the same names and types. The pole step
+`stoppedSurplusPole` follows from `ReferenceInputs` and the geometry and margin steps
+(`ReferenceInputs.stoppedSurplusPole`). -/
 structure OpenStepHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   /-- Lemma 2.4: locality of the cone harmonic balls. -/
   coneHarmonicBallLocality : ConeHarmonicBallLocalityStep
@@ -99,9 +104,6 @@ structure OpenStepHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   odometerLocalCompactnessCorrected : OdometerLocalCompactnessCorrectedStep 𝒮
   /-- Lemma 4.6 (corrected route): boundary upgrade. -/
   odometerBoundaryUpgradeCorrected : OdometerBoundaryUpgradeCorrectedStep 𝒮
-  /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)`, interior lower bound of the obstacle surplus. Not a field: `StoppedSurplusInteriorStep` is supplied by `stoppedSurplusInterior_of_gap` from the strict obstacle gap
-  `harmonicBallStrictObstacleGap`, `mepsScaling` and the three named inputs below. -/
-  stoppedSurplusPole : StoppedInterior.StoppedSurplusPoleStep 𝒮
   /-- Lemma 5.3 on `V^ε(Λ_t)`: the discrete-to-continuum geometry of the `δ`-interior. -/
   stoppedInteriorGeometry : StoppedInterior.StoppedInteriorGeometryStep 𝒮
   /-- Lemma 5.3 on `V^ε(Λ_t)`: measurability of the continuum margin on the random compact set. -/
@@ -213,6 +215,16 @@ theorem correctedHarmonicConvergence (H : ReferenceInputs 𝒮 ν) :
     CorrectedHarmonicConvergenceStmt 𝒮 ∧ FirstPass36.CorrectedHarmonicSameWalkAnnealedStmt 𝒮 :=
   closed_3_6_lp_uniform_derivedInputs 𝒮 ν H.certifiedReferenceModel H.oneSidedBoundaryContinuity
 
+/-- **The pole step of Proposition 5.1** (`StoppedSurplusPoleStep`; the consultant's answer to target 8) from
+`ReferenceInputs` and the geometry and margin steps: `StoppedInterior.stoppedSurplusPole_of_steps` with the strict
+obstacle gap, the scaling of the expected exit time, Theorem 4.1, Lemma 3.3 and Lemmas 2.16 and 2.18. -/
+theorem stoppedSurplusPole (H : ReferenceInputs 𝒮 ν) (hgeo : StoppedInterior.StoppedInteriorGeometryStep 𝒮)
+    (hmeas : StoppedInterior.StoppedInteriorMeasurableStep 𝒮) : StoppedInterior.StoppedSurplusPoleStep 𝒮 :=
+  StoppedInterior.stoppedSurplusPole_of_steps 𝒮 (harmonicBallStrictObstacleGapStep_holds 𝒮) hgeo hmeas
+    H.mepsScaling (closed_4_1_lp_derivedInputs ν H.certifiedReferenceModel)
+    (closed_3_3_ownBinders_derivedInputs 𝒮 ν H.certifiedReferenceModel) H.greenKernelLowerBound
+    H.exitTimeUpperBound
+
 end ReferenceInputs
 
 /-- `RemainingHypotheses 𝒮` from `ReferenceHypotheses 𝒮 ν`: the five cited fields are proved from the law, the
@@ -237,7 +249,8 @@ theorem ReferenceHypotheses.toRemainingHypotheses {𝒮 : SpaceFillingSLEModel} 
     odometerBoundaryUpgradeCorrected := H.steps.odometerBoundaryUpgradeCorrected
     odometerMeasurableSelection :=
       odometerMeasurableSelectionStep_of_prepared H.toReferenceInputs.subsequentialConvergencePrepared
-    stoppedSurplusPole := H.steps.stoppedSurplusPole
+    stoppedSurplusPole := H.toReferenceInputs.stoppedSurplusPole H.steps.stoppedInteriorGeometry
+      H.steps.stoppedInteriorMeasurable
     stoppedInteriorGeometry := H.steps.stoppedInteriorGeometry
     stoppedInteriorMeasurable := H.steps.stoppedInteriorMeasurable
     stoppedLayerPotential := H.steps.stoppedLayerPotential
