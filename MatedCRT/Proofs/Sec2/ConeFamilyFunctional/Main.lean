@@ -82,10 +82,10 @@ theorem coneHalfBallFamilyFunctionalStep_holds : ConeHalfBallFamilyFunctionalSte
       rw [ae_iff]
       exact measure_mono_null (fun x hx => not_not.1 hx) hT
     refine (measurable_restrictDense (measurableSet_strictCode γ)).nullMeasurableSet.congr
-      (Filter.eventuallyEq_set.2 ?_)
+      (Filter.eventuallyEqSet_iff.2 ?_)
     filter_upwards [hae] with x hx
     have hxS : restrictDense x ∉ S := fun h => hx (subset_toMeasurable _ _ h)
-    rw [hSdef, mem_setOf_eq, not_not] at hxS
+    rw [hSdef, mem_ofPred_eq, not_not] at hxS
     exact hxS.symm
   · intro c hc ν hν
     have hy : IsLQGLimit γ (extend (restrictDense (circleProcess c))) ν := isLQGLimit_extend_restrictDense hc hν

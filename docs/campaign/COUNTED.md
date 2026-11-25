@@ -954,8 +954,8 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   `RemainingHypotheses.toMainHypotheses` (`:130`) supplies the twenty-three, and `convergenceOfIDLA_of_remaining` (`:193`)
   and `convergenceOfDivSandpile_of_remaining` (`:199`) apply the two conditional forms.
 - `MatedCRT/Assembly/Reference.lean`: `ReferenceHypotheses 𝒮 ν` has the law `ν`, the SLE closure inputs,
-  `GMS21UniformStartInput 𝒮`, `HasReferenceEnvironments 𝒮`, `BG20ChartFieldInput 𝒮` and the four open steps
-  (`OpenStepHypotheses 𝒮`). `ReferenceHypotheses.toRemainingHypotheses` proves fifteen fields of
+  `GMS21UniformStartInput 𝒮`, `HasReferenceEnvironments 𝒮`, `BG20ChartFieldInput 𝒮` and the three open steps
+  (`OpenStepHypotheses 𝒮`). `ReferenceHypotheses.toRemainingHypotheses` proves sixteen fields of
   `RemainingHypotheses 𝒮`: `randomWalkToLBM` (`randomWalkToLBMStmt_of_markovLimit_bg20ChartField`),
   `greenKernelUpperBound` and `greenKernelLowerBound` (`greenKernelUpperBoundStmt_of_reference`,
   `greenKernelLowerBoundStmt_of_reference` with `exists_matingRigidLEOn_full_derived`), `mepsScaling`
@@ -971,7 +971,16 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   `ReferenceInputs.subsequentialConvergencePrepared`).
   `referenceInputs_canonical` (`:298`) supplies the law, the closure inputs, the reference environments and the
   uniform-start input at the canonical model from `CanonicalHypotheses ν`, and `mainHypotheses_canonical` (`:325`)
-  gives `MainHypotheses (ProbeMi.canonicalSLEModel ν)` from `CanonicalHypotheses ν` and the four open steps.
+  gives `MainHypotheses (ProbeMi.canonicalSLEModel ν)` from `CanonicalHypotheses ν` and the three open steps.
+  The functional step `coneHalfBallFamilyFunctional` of Lemma 2.5 holds with no hypothesis
+  (`ConeFamilyFunctional.coneHalfBallFamilyFunctionalStep_holds`, Proofs/Sec2/ConeFamilyFunctional/Main.lean): `G` is
+  the set of circle average processes whose values at the rational points have a vague limit measure with a strictly
+  growing family of Lemma 2.4, and `Φ` decodes the family from the Borel local code of that measure on `B̄_1` (the
+  Lusin-Souslin section of the graph of the vague limit, LimitMeasure.lean, and the decoder of the obstacle problem,
+  Uniqueness.lean). On the canonical quantum cone of the values at rational points and the pairings
+  (`isConeField_canon`) the existence of a strict family is a.s. the Borel strict-growth test (StrictTest.lean, from
+  Lemma 2.4), and the null sets of the first projection from `DenseCircle × (TestFn → ℝ)` (Hull.lean: measurable sets
+  depend on countably many coordinates, analytic sets are null-measurable) make `G` null-measurable.
   The locality step `coneHarmonicBallLocality` of Lemma 2.4 holds with no hypothesis
   (`coneHarmonicBallLocalityStep_holds`, Assembly/Reference.lean): the event of a stopped family of Lemma 2.4 has
   probability one for the quantum cone (Lemma 2.4) and for `h^ℂ - γ log |·|` (HB22 Theorem 1.1, the family stopped at
@@ -1025,13 +1034,14 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   `coneScaleInvarianceUpToFixedTimeStmt_holds` (Draft 2.5), `coneScaleInvarianceStmt_holds` (2.6),
   `coneFamilyAEMeasurableStep_holds`, `annulusHit_holds` (6.5), `goodAnnulusPrevalence_holds` (6.4). The Section 2
   results are proved without the steps `coneHarmonicBallLocality` (now proved, `coneHarmonicBallLocalityStep_holds`),
-  `coneHarmonicBallStrictGrowth` and `coneHalfBallFamilyFunctional` of `MainHypotheses`; the last two are still used by the scaling argument of
-  `convergenceOfIDLA_of_coneSteps` (Assembly/Main.lean:354).
+  `coneHarmonicBallStrictGrowth` and `coneHalfBallFamilyFunctional` (now proved,
+  `ConeFamilyFunctional.coneHalfBallFamilyFunctionalStep_holds`) of `MainHypotheses`; the last two are still used by the
+  scaling argument of `convergenceOfIDLA_of_coneSteps` (Assembly/Main.lean:354).
   `coneHarmonicBallStrictGrowth` (`cl Λ_s ⊆ Λ_t` for `s < t`) is OPEN: it is not known for the quantum-cone LQG measure,
   and it fails for some general obstacle measures. It remains a named
   step of the old `MainHypotheses` route only; the canonical route (`convergenceOfIDLA_canonical`, the results of
   `CanonicalResults.lean` and the general-model `convergenceOfIDLA_of_referenceInputs`) does not use it.
-  `MatedCRT/Audit/MainAxioms.lean` prints the axioms of the declarations of the four files (68 lines).
+  `MatedCRT/Audit/MainAxioms.lean` prints the axioms of the declarations of the four files (75 lines).
 
 ### The premise `tutteLP` from the zero cone, and the past/future input of the chart forms (2026-11-25)
 

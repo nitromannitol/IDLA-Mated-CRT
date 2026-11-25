@@ -26,6 +26,7 @@ import MatedCRT.Proofs.Sec5.StoppedPoleReduction
 import MatedCRT.Proofs.Sec5.StoppedLayerBound
 import MatedCRT.Proofs.Sec5.StoppedMissingSitesProof
 import MatedCRT.Proofs.Sec4.Prop42Closure.Assembly
+import MatedCRT.Proofs.Sec2.ConeFamilyFunctional.Main
 
 /-!
 # The cited fields of `MainHypotheses` from reference environments
@@ -68,8 +69,10 @@ The geometry and margin steps of Proposition 5.1 hold for every model (`StoppedG
 version of `μ_h`, through the Lusin-Souslin decoder of the obstacle problem). With them the pole step follows from these
 inputs (`ReferenceInputs.stoppedSurplusPole`), and the number of missing sites follows from Proposition 4.2
 (`ReferenceInputs.stoppedMissingSites`), hence the layer step (`ReferenceInputs.stoppedLayerPotential`). The remaining
-fields are the four open steps collected in `OpenStepHypotheses 𝒮`; the locality step of Lemma 2.4 holds with no
-hypothesis (`coneHarmonicBallLocalityStep_holds`). At the canonical model
+fields are the three open steps collected in `OpenStepHypotheses 𝒮`; the locality step of Lemma 2.4 holds with no
+hypothesis (`coneHarmonicBallLocalityStep_holds`), and so does the step of Lemma 2.5 that the family of Lemma 2.4 is a
+measurable functional of the field (`ConeFamilyFunctional.coneHalfBallFamilyFunctionalStep_holds`). At the canonical
+model
 `ProbeMi.canonicalSLEModel ν`, `ReferenceInputs` follows from the premises `CanonicalHypotheses ν`
 (`MatedCRT/Assembly/Canonical.lean`), so the certified reference model holds there, and `MainHypotheses` holds there
 from `CanonicalHypotheses ν` and `OpenStepHypotheses`.
@@ -147,16 +150,15 @@ theorem coneHarmonicBallLocalityStep_holds : ConeHarmonicBallLocalityStep := by
       _root_.HarmonicBalls.Closure.closure_5_8_derivedInputs43.{0} γ hγ hγ2 Ω P hC hcirc μ hP hgff hlqg] with ω hω
     exact iff_of_true hω (Set.mem_univ _)
 
-/-- The four open steps: four fields of `MainHypotheses 𝒮`, with the same names and types. The locality step of
-Lemma 2.4 is proved (`coneHarmonicBallLocalityStep_holds`), and so are the steps of Proposition 5.1: the geometry and
+/-- The three open steps: three fields of `MainHypotheses 𝒮`, with the same names and types. The locality step of
+Lemma 2.4 is proved (`coneHarmonicBallLocalityStep_holds`), and so are the functional step of Lemma 2.5
+(`ConeFamilyFunctional.coneHalfBallFamilyFunctionalStep_holds`) and the steps of Proposition 5.1: the geometry and
 margin steps for every model, the pole step `stoppedSurplusPole` and the layer step `stoppedLayerPotential` from
 `ReferenceInputs` (`ReferenceInputs.stoppedSurplusPole`, `ReferenceInputs.stoppedLayerPotential`). -/
 structure OpenStepHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   /-- Lemmas 2.4, 2.5, Theorems 1.4, 1.6: strict growth of the cone harmonic balls (`T' = T`, not in the
   paper). -/
   coneHarmonicBallStrictGrowth : ConeHarmonicBallStrictGrowthStep
-  /-- Lemma 2.5, Theorems 1.4, 1.6: the half-ball family is a functional of the field. -/
-  coneHalfBallFamilyFunctional : ConeHalfBallFamilyFunctionalStep
   /-- Lemma 4.6 (corrected route): local compactness of the odometers. -/
   odometerLocalCompactnessCorrected : OdometerLocalCompactnessCorrectedStep 𝒮
   /-- Lemma 4.6 (corrected route): boundary upgrade. -/
@@ -308,7 +310,7 @@ theorem ReferenceHypotheses.toRemainingHypotheses {𝒮 : SpaceFillingSLEModel} 
     discreteHolderContinuityCorrected := H.toReferenceInputs.discreteHolderContinuityCorrected
     coneHarmonicBallLocality := coneHarmonicBallLocalityStep_holds
     coneHarmonicBallStrictGrowth := H.steps.coneHarmonicBallStrictGrowth
-    coneHalfBallFamilyFunctional := H.steps.coneHalfBallFamilyFunctional
+    coneHalfBallFamilyFunctional := ConeFamilyFunctional.coneHalfBallFamilyFunctionalStep_holds
     dirichletInterior := dirichletInteriorStep_of_draft H.toReferenceInputs.discreteDirichletProblem
       FirstPass.Derived.volumeGrowthStmt_holds
     dirichletBoundary := dirichletBoundaryStep_of_draft H.toReferenceInputs.discreteDirichletProblem
