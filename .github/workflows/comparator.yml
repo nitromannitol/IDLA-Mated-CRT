@@ -225,14 +225,13 @@ jobs:
           fi
 
       - name: Run the comparator on every pair
-        env:
-          COMPARATOR_LANDRUN: /home/runner/tools/bin/landrun
-          COMPARATOR_LEAN4EXPORT: /home/runner/tools/lean4export/.lake/build/bin/lean4export
-          COMPARATOR_NANODA: /home/runner/tools/nanoda_lib/target/release/nanoda_bin
         shell: bash
         working-directory: IDLA-Mated-CRT
         run: |
           set -euo pipefail
+          export COMPARATOR_LANDRUN="$HOME/tools/bin/landrun"
+          export COMPARATOR_LEAN4EXPORT="$HOME/tools/lean4export/.lake/build/bin/lean4export"
+          export COMPARATOR_NANODA="$HOME/tools/nanoda_lib/target/release/nanoda_bin"
           mkdir -p comparator-logs
           fail=0
           checked=0
