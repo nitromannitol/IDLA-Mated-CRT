@@ -92,14 +92,16 @@ theorem dist_idxPt_roundIdx_le (n : ℕ) (r : ℝ) (z : ℂ) : dist (idxPt (roun
     rw [this]
     exact add_le_add hre him
 
+theorem tendsto_two_div_pow : Tendsto (fun n : ℕ => (2 : ℝ) / 2 ^ n) atTop (𝓝 0) := by
+  have h0 := (tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num : (0 : ℝ) ≤ 1 / 2)
+    (by norm_num : (1 / 2 : ℝ) < 1)).const_mul 2
+  rw [mul_zero] at h0
+  refine h0.congr fun n => ?_
+  rw [one_div, inv_pow, div_eq_mul_inv]
+
 theorem tendsto_idxPt_roundIdx (r : ℝ) (z : ℂ) :
     Tendsto (fun n => idxPt (roundIdx n r z)) atTop (𝓝 (r, z)) := by
-  have h : Tendsto (fun n : ℕ => (2 : ℝ) / 2 ^ n) atTop (𝓝 0) := by
-    have h0 := (tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num : (0 : ℝ) ≤ 1 / 2)
-      (by norm_num : (1 / 2 : ℝ) < 1)).const_mul 2
-    rw [mul_zero] at h0
-    refine h0.congr fun n => ?_
-    rw [one_div, inv_pow, div_eq_mul_inv]
+  have h := tendsto_two_div_pow
   exact tendsto_iff_dist_tendsto_zero.2 (squeeze_zero (fun n => dist_nonneg)
     (fun n => dist_idxPt_roundIdx_le n r z) h)
 
@@ -166,6 +168,122 @@ theorem measurableSet_locUnifCont : MeasurableSet LocUnifCont := by
   simp only [LocUnifCont, mem_ofPred_eq, mem_iInter, mem_iUnion]
   exact ⟨fun h m k => (h m k).imp fun l hl i j hP => hl i j hP.1 hP.2.1 hP.2.2,
     fun h m k => (h m k).imp fun l hl i j h1 h2 h3 => hl i j ⟨h1, h2, h3⟩⟩
+
+/-- A neighbourhood of a point of `(0, ∞) × ℂ` lies in a compact piece. -/
+theorem exists_ball_subset_piece {p : ℝ × ℂ} (hp : 0 < p.1) : ∃ (m : ℕ) (δ : ℝ), 0 < δ ∧ ball p δ ⊆ piece m := by
+  obtain ⟨m, hm⟩ := exists_nat_gt (2 / p.1 + p.1 + ‖p.2‖ + 1)
+  have hm0 : (0 : ℝ) < m + 1 := by positivity
+  refine ⟨m, min (p.1 / 2) 1, lt_min (half_pos hp) one_pos, fun q hq => ?_⟩
+  rw [mem_ball, Prod.dist_eq, max_lt_iff, Real.dist_eq, Complex.dist_eq, lt_min_iff, lt_min_iff] at hq
+  obtain ⟨⟨h1, h1'⟩, h2, h2'⟩ := hq
+  have hr := abs_lt.1 h1
+  have hn : ‖q.2‖ ≤ ‖p.2‖ + ‖q.2 - p.2‖ := by
+    calc ‖q.2‖ = ‖p.2 + (q.2 - p.2)‖ := by rw [add_sub_cancel]
+      _ ≤ ‖p.2‖ + ‖q.2 - p.2‖ := norm_add_le _ _
+  have h2p : 2 / p.1 < (m : ℝ) + 1 := by have := norm_nonneg p.2; linarith
+  have hinv : 1 / ((m : ℝ) + 1) < p.1 / 2 := by
+    rw [div_lt_iff₀ hm0]
+    rw [div_lt_iff₀ hp] at h2p
+    nlinarith
+  have h2pos : 0 ≤ 2 / p.1 := by positivity
+  have hpn := norm_nonneg p.2
+  have hr' := abs_lt.1 h1'
+  refine ⟨⟨by linarith, by linarith⟩, mem_closedBall_zero_iff.2 (by linarith)⟩
+
+/-- The dyadic points of `a` are within `dist a p + 2/2^n` of `p`. -/
+theorem dist_idxPt_roundIdx_le' (n : ℕ) (a p : ℝ × ℂ) :
+    dist (idxPt (roundIdx n a.1 a.2)) p ≤ dist a p + 2 / 2 ^ n :=
+  (dist_triangle _ a p).trans (by rw [add_comm]; exact add_le_add_right (dist_idxPt_roundIdx_le n a.1 a.2) _)
+
+/-- On a locally uniformly continuous `y`, the values at the dyadic points of `a` converge to `extend y a`. -/
+theorem tendsto_extend {y : DenseCircle} (hy : y ∈ LocUnifCont) {a : ℝ × ℂ} (ha : 0 < a.1) :
+    Tendsto (fun n => y (roundIdx n a.1 a.2)) atTop (𝓝 (extend y a.1 a.2)) := by
+  obtain ⟨m, δ, hδ, hball⟩ := exists_ball_subset_piece ha
+  have hcauchy : CauchySeq fun n => y (roundIdx n a.1 a.2) := by
+    rw [Metric.cauchySeq_iff']
+    intro ε hε
+    obtain ⟨k, hk⟩ := exists_nat_one_div_lt hε
+    obtain ⟨l, hl⟩ := hy m k
+    have hev := (tendsto_order.1 tendsto_two_div_pow).2 (min (δ / 2) (1 / (2 * ((l : ℝ) + 1))))
+      (lt_min (half_pos hδ) (by positivity))
+    obtain ⟨N, hN⟩ := eventually_atTop.1 hev
+    refine ⟨N, fun n hn => ?_⟩
+    have hN' := hN N le_rfl
+    have hn' := hN n hn
+    have hmem : ∀ n', N ≤ n' → idxPt (roundIdx n' a.1 a.2) ∈ piece m := fun n' hn'' => hball (by
+      rw [mem_ball]
+      have := dist_idxPt_roundIdx_le n' a.1 a.2
+      have h3 := hN n' hn''
+      linarith [min_le_left (δ / 2) (1 / (2 * ((l : ℝ) + 1)))])
+    rw [Real.dist_eq]
+    refine lt_of_le_of_lt (hl _ _ (hmem n hn) (hmem N le_rfl) ?_) hk
+    have h4 := dist_idxPt_roundIdx_le n a.1 a.2
+    have h5 := dist_idxPt_roundIdx_le N a.1 a.2
+    have h6 : (1 : ℝ) / (2 * ((l : ℝ) + 1)) + 1 / (2 * ((l : ℝ) + 1)) = 1 / ((l : ℝ) + 1) := by
+      field_simp; ring
+    calc dist (idxPt (roundIdx n a.1 a.2)) (idxPt (roundIdx N a.1 a.2))
+        ≤ dist (idxPt (roundIdx n a.1 a.2)) (a.1, a.2) + dist (a.1, a.2) (idxPt (roundIdx N a.1 a.2)) :=
+          dist_triangle _ _ _
+      _ < 1 / ((l : ℝ) + 1) := by
+          rw [dist_comm (a.1, a.2)]
+          linarith [min_le_right (δ / 2) (1 / (2 * ((l : ℝ) + 1)))]
+  obtain ⟨L, hL⟩ := cauchySeq_tendsto_of_complete hcauchy
+  have he : extend y a.1 a.2 = L := by
+    simp only [extend, ha, ↓reduceIte]
+    exact hL.limsup_eq
+  rw [he]
+  exact hL
+
+/-- **On locally uniformly continuous values the extension is continuous** on `(0, ∞) × ℂ`. -/
+theorem continuousOn_extend {y : DenseCircle} (hy : y ∈ LocUnifCont) :
+    ContinuousOn (fun p : ℝ × ℂ => extend y p.1 p.2) (Ioi 0 ×ˢ univ) := by
+  rw [Metric.continuousOn_iff]
+  intro p hp ε hε
+  have hp0 : 0 < p.1 := hp.1
+  obtain ⟨m, δ, hδ, hball⟩ := exists_ball_subset_piece hp0
+  obtain ⟨k, hk⟩ := exists_nat_one_div_lt hε
+  obtain ⟨l, hl⟩ := hy m k
+  set η : ℝ := min (δ / 2) (1 / (4 * ((l : ℝ) + 1))) with hη
+  have hη0 : 0 < η := lt_min (half_pos hδ) (by positivity)
+  refine ⟨η, hη0, fun a ha hap => ?_⟩
+  have ha0 : 0 < a.1 := ha.1
+  have hev := (tendsto_order.1 tendsto_two_div_pow).2 η hη0
+  have hbound : ∀ᶠ n in atTop, |y (roundIdx n a.1 a.2) - y (roundIdx n p.1 p.2)| ≤ 1 / ((k : ℝ) + 1) := by
+    filter_upwards [hev] with n hn
+    have h1 := dist_idxPt_roundIdx_le' n a p
+    have h2 := dist_idxPt_roundIdx_le' n p p
+    rw [dist_self, zero_add] at h2
+    have hηδ : η ≤ δ / 2 := min_le_left _ _
+    have hηl : η ≤ 1 / (4 * ((l : ℝ) + 1)) := min_le_right _ _
+    refine hl _ _ (hball (by rw [mem_ball]; linarith)) (hball (by rw [mem_ball]; linarith)) ?_
+    have h3 : (1 : ℝ) / (4 * ((l : ℝ) + 1)) * 4 = 1 / ((l : ℝ) + 1) := by field_simp
+    calc dist (idxPt (roundIdx n a.1 a.2)) (idxPt (roundIdx n p.1 p.2))
+        ≤ dist (idxPt (roundIdx n a.1 a.2)) p + dist p (idxPt (roundIdx n p.1 p.2)) := dist_triangle _ _ _
+      _ < 1 / ((l : ℝ) + 1) := by
+          rw [dist_comm p]
+          have h4 : (2 : ℝ) / 2 ^ n < η := hn
+          linarith
+  have hlim := ((tendsto_extend hy ha0).sub (tendsto_extend hy hp0)).abs
+  have hle : |extend y a.1 a.2 - extend y p.1 p.2| ≤ 1 / ((k : ℝ) + 1) := le_of_tendsto hlim hbound
+  rw [Real.dist_eq]
+  exact lt_of_le_of_lt hle hk
+
+/-- The values of a continuous process at the rational points are locally uniformly continuous. -/
+theorem restrictDense_mem_locUnifCont {c : ℝ → ℂ → ℝ}
+    (hc : ContinuousOn (fun p : ℝ × ℂ => c p.1 p.2) (Ioi 0 ×ˢ univ)) : restrictDense (circleProcess c) ∈ LocUnifCont := by
+  intro m k
+  have hpiece : piece m ⊆ Ioi 0 ×ˢ univ := fun q hq => ⟨lt_of_lt_of_le (by positivity) hq.1.1, mem_univ _⟩
+  have hK : IsCompact (piece m) := isCompact_Icc.prod (isCompact_closedBall _ _)
+  obtain ⟨δ, hδ, hu⟩ := Metric.uniformContinuousOn_iff.1 (hK.uniformContinuousOn_of_continuous (hc.mono hpiece))
+    (1 / ((k : ℝ) + 1)) (by positivity)
+  obtain ⟨l, hl⟩ := exists_nat_one_div_lt hδ
+  refine ⟨l, fun i j hi hj hij => ?_⟩
+  have hi0 : 0 < (i.1 : ℝ) := lt_of_lt_of_le (by positivity) hi.1.1
+  have hj0 : 0 < (j.1 : ℝ) := lt_of_lt_of_le (by positivity) hj.1.1
+  have h := hu _ hi _ hj (hij.trans hl)
+  simp only [restrictDense, hi0, hj0, dite_true, circleProcess]
+  rw [Real.dist_eq] at h
+  exact h.le
 
 end ConeFamilyFunctional
 
