@@ -225,6 +225,144 @@ theorem measurableSet_codeGraph (γ : ℝ) : MeasurableSet (codeGraph γ) := by
     simp only [codeGraph, mem_ofPred_eq, mem_iInter]
     exact ⟨fun h g => h g g.2, fun h g hg => h ⟨g, hg⟩⟩
 
+theorem cutoff_le_one (z : ℂ) : cutoff z ≤ 1 := by
+  unfold cutoff LatticeProb.VagueLimit.ballCutoff
+  exact max_le zero_le_one (min_le_left _ _)
+
+/-- The density of the cutoff local measure. -/
+noncomputable def cutoffDensity (z : ℂ) : ℝ≥0∞ := ENNReal.ofReal (cutoff z)
+
+theorem measurable_cutoffDensity : Measurable cutoffDensity :=
+  continuous_cutoff.measurable.ennreal_ofReal
+
+theorem cutoffDensity_le_indicator (z : ℂ) :
+    cutoffDensity z ≤ (closedBall (0 : ℂ) 2).indicator 1 z := by
+  by_cases hz : z ∈ closedBall (0 : ℂ) 2
+  · rw [indicator_of_mem hz, Pi.one_apply, cutoffDensity, ENNReal.ofReal_le_one]
+    exact cutoff_le_one z
+  · rw [indicator_of_notMem hz, cutoffDensity, cutoff_eq_zero hz, ENNReal.ofReal_zero]
+
+/-- The cutoff local measure `χ ν` of a locally finite measure, in `M_f(B̄_2)`. -/
+noncomputable def cutoffMeasure (ν : Measure ℂ) [IsLocallyFiniteMeasure ν] : FinMeasDisk 2 :=
+  ⟨ν.withDensity cutoffDensity, by
+    refine ⟨⟨?_⟩, ?_⟩
+    · rw [withDensity_apply _ MeasurableSet.univ, Measure.restrict_univ]
+      refine lt_of_le_of_lt (lintegral_mono cutoffDensity_le_indicator) ?_
+      rw [lintegral_indicator_one measurableSet_closedBall]
+      exact measure_closedBall_lt_top
+    · refine Measure.restrict_eq_self_of_ae_mem ?_
+      rw [ae_iff]
+      show ν.withDensity cutoffDensity (closedBall (0 : ℂ) 2)ᶜ = 0
+      rw [withDensity_apply _ measurableSet_closedBall.compl]
+      refine (setLIntegral_eq_zero_iff measurableSet_closedBall.compl measurable_cutoffDensity).2
+        (Eventually.of_forall fun z hz => ?_)
+      simp [cutoffDensity, cutoff_eq_zero hz]⟩
+
+theorem integral_cutoffMeasure {ν : Measure ℂ} [IsLocallyFiniteMeasure ν] (g : ℂ → ℝ) :
+    ∫ z, g z ∂((cutoffMeasure ν : FinMeasDisk 2) : Measure ℂ) = ∫ z, g z * cutoff z ∂ν := by
+  change ∫ z, g z ∂(ν.withDensity cutoffDensity) = _
+  rw [integral_withDensity_eq_integral_toReal_smul measurable_cutoffDensity
+    (Eventually.of_forall fun _ => ENNReal.ofReal_lt_top)]
+  refine integral_congr_ae (Eventually.of_forall fun z => ?_)
+  simp [cutoffDensity, ENNReal.toReal_ofReal (cutoff_nonneg z), smul_eq_mul, mul_comm]
+
+/-- A vague limit gives a point of the code graph. -/
+theorem mem_codeGraph_of_isLQGLimit {γ : ℝ} {y : DenseCircle} {ν : Measure ℂ} [IsLocallyFiniteMeasure ν]
+    (hν : IsLQGLimit γ (extend y) ν) : (y, cutoffMeasure ν) ∈ codeGraph γ := by
+  intro g hg
+  show Tendsto _ atTop (𝓝 (∫ z, g z ∂((cutoffMeasure ν : FinMeasDisk 2) : Measure ℂ)))
+  rw [integral_cutoffMeasure]
+  exact hν.tendsto_integral _ ((detFamily_spec.2.1 g hg).1.mul continuous_cutoff)
+    ((detFamily_spec.2.1 g hg).2.mul_right)
+
+/-- Finite measures with the same integrals on the determining family agree. -/
+theorem eq_of_integral_eq_detFamily {s s' : Measure ℂ} [IsFiniteMeasure s] [IsFiniteMeasure s']
+    (h : ∀ g ∈ detFamily, ∫ z, g z ∂s = ∫ z, g z ∂s') : s = s' := by
+  let m : ℕ → Measure ℂ := fun k => if k % 2 = 0 then s else s'
+  have hm : ∀ k, IsFiniteMeasureOnCompacts (m k) := fun k => by
+    by_cases hk : k % 2 = 0
+    · have e : m k = s := by simp only [m, hk, ↓reduceIte]
+      rw [e]
+      infer_instance
+    · have e : m k = s' := by simp only [m, hk, ↓reduceIte]
+      rw [e]
+      infer_instance
+  have hconv : ∀ g ∈ detFamily, ∃ ℓ : ℝ, Tendsto (fun k => ∫ x, g x ∂(m k)) atTop (𝓝 ℓ) := by
+    intro g hg
+    refine ⟨∫ z, g z ∂s, tendsto_const_nhds.congr fun k => ?_⟩
+    by_cases hk : k % 2 = 0
+    · have e : m k = s := by simp only [m, hk, ↓reduceIte]
+      rw [e]
+    · have e : m k = s' := by simp only [m, hk, ↓reduceIte]
+      rw [e]
+      exact h g hg
+  obtain ⟨μ, -, hlim⟩ := detFamily_spec.2.2 m hm hconv
+  have e1 : ∀ j : ℕ, m (2 * j) = s := fun j => by
+    have : (2 * j) % 2 = 0 := Nat.mul_mod_right 2 j
+    simp only [m, this, ↓reduceIte]
+  have e2 : ∀ j : ℕ, m (2 * j + 1) = s' := fun j => by
+    have : (2 * j + 1) % 2 ≠ 0 := by omega
+    simp only [m, this, ↓reduceIte]
+  have t1 : Tendsto (fun j : ℕ => 2 * j) atTop atTop := tendsto_atTop_atTop.2 fun b => ⟨b, fun j hj => by omega⟩
+  have t2 : Tendsto (fun j : ℕ => 2 * j + 1) atTop atTop :=
+    tendsto_atTop_atTop.2 fun b => ⟨b, fun j hj => by omega⟩
+  refine measure_eq_of_integral_eq fun f hf hfc => ?_
+  have h1 : Tendsto (fun j : ℕ => ∫ x, f x ∂(m (2 * j))) atTop (𝓝 (∫ x, f x ∂μ)) := (hlim f hf hfc).comp t1
+  have h2 : Tendsto (fun j : ℕ => ∫ x, f x ∂(m (2 * j + 1))) atTop (𝓝 (∫ x, f x ∂μ)) := (hlim f hf hfc).comp t2
+  simp only [e1, tendsto_const_nhds_iff] at h1
+  simp only [e2, tendsto_const_nhds_iff] at h2
+  rw [h1, h2]
+
+/-- Over each `y` the code graph has at most one point. -/
+theorem codeGraph_unique {γ : ℝ} {y : DenseCircle} {s s' : FinMeasDisk 2} (h : (y, s) ∈ codeGraph γ)
+    (h' : (y, s') ∈ codeGraph γ) : s = s' := by
+  have := s.2.1
+  have := s'.2.1
+  exact Subtype.ext (eq_of_integral_eq_detFamily fun g hg => tendsto_nhds_unique (h g hg) (h' g hg))
+
+/-- The zero measure as an element of `M_f(B̄_2)`. -/
+noncomputable def zeroDisk : FinMeasDisk 2 := ⟨0, inferInstance, Measure.restrict_zero _⟩
+
+instance : StandardBorelSpace (FinMeasDisk 2) := frozenFiniteMeasureDiskStandardBorel_holds 2 (by norm_num)
+
+/-- The Lusin-Souslin section of the code graph. -/
+noncomputable def codeSection (γ : ℝ) : DenseCircle → FinMeasDisk 2 :=
+  Classical.choose (exists_measurable_section_of_injective zeroDisk (codeGraph γ) (measurableSet_codeGraph γ)
+    fun _ _ _ h h' => codeGraph_unique h h')
+
+theorem measurable_codeSection (γ : ℝ) : Measurable (codeSection γ) :=
+  (Classical.choose_spec (exists_measurable_section_of_injective zeroDisk (codeGraph γ) (measurableSet_codeGraph γ)
+    fun _ _ _ h h' => codeGraph_unique h h')).1
+
+theorem codeSection_mem {γ : ℝ} {y : DenseCircle} (h : ∃ s, (y, s) ∈ codeGraph γ) :
+    (y, codeSection γ y) ∈ codeGraph γ :=
+  (Classical.choose_spec (exists_measurable_section_of_injective zeroDisk (codeGraph γ) (measurableSet_codeGraph γ)
+    fun _ _ _ h h' => codeGraph_unique h h')).2.1 y h
+
+/-- The Borel local code of `y` on `B̄_ρ`. -/
+noncomputable def codeOf (γ ρ : ℝ) (y : DenseCircle) : FinMeasDisk ρ :=
+  diskMeasOf ρ ((codeSection γ y : FinMeasDisk 2) : Measure ℂ)
+
+theorem measurable_codeOf (γ ρ : ℝ) : Measurable (codeOf γ ρ) :=
+  (measurable_diskMeasOf ρ).comp (measurable_subtype_coe.comp (measurable_codeSection γ))
+
+/-- **The local code is the restricted vague limit.** -/
+theorem codeOf_eq {γ ρ : ℝ} (hρ : ρ ≤ 1) {y : DenseCircle} {ν : Measure ℂ} (hν : IsLQGLimit γ (extend y) ν) :
+    codeOf γ ρ y = diskMeasOf ρ ν := by
+  have := hν.isLocallyFiniteMeasure
+  have hmem := mem_codeGraph_of_isLQGLimit (ν := ν) hν
+  have hs : codeSection γ y = cutoffMeasure ν := codeGraph_unique (codeSection_mem ⟨_, hmem⟩) hmem
+  have hfin : IsFiniteMeasure ((codeSection γ y : FinMeasDisk 2) : Measure ℂ) := (codeSection γ y).2.1
+  apply Subtype.ext
+  change restrictOrZero ρ _ = restrictOrZero ρ ν
+  rw [restrictOrZero_eq_restrict inferInstance, restrictOrZero_eq_restrict inferInstance, hs]
+  change (ν.withDensity cutoffDensity).restrict _ = _
+  rw [restrict_withDensity measurableSet_closedBall]
+  conv_rhs => rw [← withDensity_one (μ := ν.restrict (closedBall (0 : ℂ) ρ))]
+  refine withDensity_congr_ae ?_
+  filter_upwards [ae_restrict_mem measurableSet_closedBall] with z hz
+  simp only [cutoffDensity, Pi.one_apply, cutoff_eq_one (closedBall_subset_closedBall hρ hz), ENNReal.ofReal_one]
+
 end ConeFamilyFunctional
 
 end MatedCRT
