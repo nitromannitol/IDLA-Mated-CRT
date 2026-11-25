@@ -32,6 +32,7 @@ Each line must print only `propext`, `Classical.choice` and `Quot.sound`.
 #print axioms MatedCRT.uniformConvergenceGreenKernel_canonical
 #print axioms MatedCRT.integralConvergenceGreenFunction_canonical
 #print axioms MatedCRT.discreteDirichletProblemCorrected_canonical
+#print axioms MatedCRT.oneSidedBoundaryContinuity_canonical
 #print axioms MatedCRT.correctedHarmonicConvergence_canonical
 #print axioms MatedCRT.convergenceNormalizedExitTime_canonical
 #print axioms MatedCRT.convergenceDivisible_canonical

@@ -20,6 +20,7 @@ import MatedCRT.FirstPass.Derived.DegreeBoundOfLemma25Tail
 import MatedCRT.FirstPass.SLERef.CertifiedCore
 import MatedCRT.FirstPass.Derived.Counted
 import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.StepsOfDraft
+import MatedCRT.FirstPass.Derived.OneSidedBoundaryOfReference
 
 /-!
 # The cited fields of `MainHypotheses` from reference environments
@@ -53,7 +54,9 @@ docs/campaign/COUNTED.md (`ReferenceInputs.certifiedReferenceModel`), hence the 
 (`dirichletInteriorStep_of_draft`, `dirichletBoundaryStep_of_draft`,
 `MatedCRT/Proofs/Sec3/DiscreteDirichletProblem/StepsOfDraft.lean`), and the prepared Lemma 4.6
 (`ReferenceInputs.subsequentialConvergencePrepared`), and with it the measurable selection
-(`odometerMeasurableSelectionStep_of_prepared`).
+(`odometerMeasurableSelectionStep_of_prepared`). They also give the one-sided boundary continuity of Lemma 3.6
+(`ReferenceInputs.oneSidedBoundaryContinuity`, from Lemma 3.11 of GMS19 in the reference environments), hence the
+corrected Lemma 3.6 (`ReferenceInputs.correctedHarmonicConvergence`).
 
 The remaining fields are the nine open steps collected in `OpenStepHypotheses 𝒮`. At the canonical model
 `ProbeMi.canonicalSLEModel ν`, `ReferenceInputs` follows from the premises `CanonicalHypotheses ν`
@@ -188,6 +191,22 @@ theorem subsequentialConvergencePrepared (H : ReferenceInputs 𝒮 ν) : Subsequ
   firstPass_4_6_h35c_derivedInputs H.certifiedReferenceModel.mepsScaling H.certifiedReferenceModel.exitTimeUpperBound
     H.certifiedReferenceModel.frozenDiscreteHolderContinuityCorrected H.certifiedReferenceModel.cellSizeEstimate
     (closed_3_5_lp_derivedInputs 𝒮 ν H.certifiedReferenceModel) (closed_3_7_lp_derivedInputs 𝒮 ν H.certifiedReferenceModel)
+
+/-- **The one-sided boundary continuity of Lemma 3.6** (`FrozenOneSidedBoundaryContinuityFlooredUniform`: GMS19
+(3.31) as proved on p. 32, with the floor `ε ^ β` on the boundary distance and `β` chosen before the radius) from
+`ReferenceInputs`: `FirstPass.Derived.frozenOneSidedBoundaryContinuityFlooredUniform_of_reference`, with Lemma 3.11
+in the reference environments and the full one-sided mating-rigid set `exists_matingRigidLEOn_full_derived`. -/
+theorem oneSidedBoundaryContinuity (H : ReferenceInputs 𝒮 ν) :
+    FirstPass36.FrozenOneSidedBoundaryContinuityFlooredUniform 𝒮 :=
+  FirstPass.Derived.frozenOneSidedBoundaryContinuityFlooredUniform_of_reference H.law H.referenceEnvironments
+    exists_matingRigidLEOn_full_derived
+
+/-- **Lemma 3.6** (corrected harmonic convergence and its same-walk annealed form) from `ReferenceInputs`: the
+counted form `closed_3_6_lp_uniform_derivedInputs` with the certified reference model and the one-sided boundary
+continuity. -/
+theorem correctedHarmonicConvergence (H : ReferenceInputs 𝒮 ν) :
+    CorrectedHarmonicConvergenceStmt 𝒮 ∧ FirstPass36.CorrectedHarmonicSameWalkAnnealedStmt 𝒮 :=
+  closed_3_6_lp_uniform_derivedInputs 𝒮 ν H.certifiedReferenceModel H.oneSidedBoundaryContinuity
 
 end ReferenceInputs
 

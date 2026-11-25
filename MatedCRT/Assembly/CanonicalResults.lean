@@ -11,8 +11,9 @@ the curve or the projections of the certified model. At the canonical model `Pro
 certified model follows from `CanonicalHypotheses ν` (`certifiedReferenceModel_canonical`,
 `MatedCRT/Assembly/Reference.lean`), and the other inputs hold for every model (`quantumConeScalingInput_derived`,
 `frozenBG20GreenCrudeCanonical_holds`, `fpFirstHitVisits_holds`). So the results below hold at the canonical model from
-the three premises `CanonicalHypotheses ν` only. Lemma 3.6 needs in addition the one-sided boundary continuity
-`FrozenOneSidedBoundaryContinuityFlooredUniform`.
+the three premises `CanonicalHypotheses ν` only. This includes Lemma 3.6, whose one-sided boundary continuity
+`FrozenOneSidedBoundaryContinuityFlooredUniform` follows from the reference environments
+(`ReferenceInputs.oneSidedBoundaryContinuity`).
 
 The results of Sections 2 and 6 on the quantum cone and the whole-plane field do not depend on the model; they hold
 with no hypothesis: Lemma 2.3, the Draft Lemmas 2.4 and 2.5 (with the uniqueness of the time `T`), Lemma 2.6, the
@@ -99,13 +100,17 @@ theorem discreteDirichletProblem_canonical (ν : ℝ → Measure SLEPathCode) (H
   FirstPass35Bridge.discreteDirichletProblem_of_corrected (certifiedReferenceModel_canonical ν H).cellSizeEstimate
     closed_2_13_cellRewire (discreteDirichletProblemCorrected_canonical ν H)
 
-/-- **Lemma 3.6** (corrected harmonic convergence and its same-walk annealed form) at the canonical model, given the
-one-sided boundary continuity `FrozenOneSidedBoundaryContinuityFlooredUniform`. -/
-theorem correctedHarmonicConvergence_canonical (ν : ℝ → Measure SLEPathCode) (H : CanonicalHypotheses ν)
-    (hBE : FirstPass36.FrozenOneSidedBoundaryContinuityFlooredUniform (ProbeMi.canonicalSLEModel ν)) :
+/-- **The one-sided boundary continuity of Lemma 3.6** (`FrozenOneSidedBoundaryContinuityFlooredUniform`) at the
+canonical model. -/
+theorem oneSidedBoundaryContinuity_canonical (ν : ℝ → Measure SLEPathCode) (H : CanonicalHypotheses ν) :
+    FirstPass36.FrozenOneSidedBoundaryContinuityFlooredUniform (ProbeMi.canonicalSLEModel ν) :=
+  (referenceInputs_canonical ν H).oneSidedBoundaryContinuity
+
+/-- **Lemma 3.6** (corrected harmonic convergence and its same-walk annealed form) at the canonical model. -/
+theorem correctedHarmonicConvergence_canonical (ν : ℝ → Measure SLEPathCode) (H : CanonicalHypotheses ν) :
     CorrectedHarmonicConvergenceStmt (ProbeMi.canonicalSLEModel ν) ∧
       FirstPass36.CorrectedHarmonicSameWalkAnnealedStmt (ProbeMi.canonicalSLEModel ν) :=
-  closed_3_6_lp_uniform_derivedInputs _ ν (certifiedReferenceModel_canonical ν H) hBE
+  (referenceInputs_canonical ν H).correctedHarmonicConvergence
 
 /-- **Lemma 3.7** (convergence of the normalized exit time) at the canonical model. -/
 theorem convergenceNormalizedExitTime_canonical (ν : ℝ → Measure SLEPathCode) (H : CanonicalHypotheses ν) :
