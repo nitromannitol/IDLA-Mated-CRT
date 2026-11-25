@@ -32,8 +32,9 @@ permissions:
   contents: read
 
 env:
-  # The number of `#print axioms` lines of the audit modules below; bump with each added or removed line.
-  EXPECTED_AXIOM_REPORTS: "244"
+  # The number of `#print axioms <declaration>` commands of the audit modules below; bump with each added
+  # or removed command.
+  EXPECTED_AXIOM_REPORTS: "243"
   AXIOM_AUDIT_MODULES: >-
     MatedCRT/Audit/CanonicalAxioms.lean MatedCRT/Audit/MainAxioms.lean MatedCRT/Audit/CountedAxioms.lean
     MatedCRT/Audit/DerivedCountedAxioms.lean MatedCRT/Audit/MinimalCountedAxioms.lean
@@ -172,10 +173,10 @@ jobs:
           lines=0
           for f in $AXIOM_AUDIT_MODULES; do
             lake env lean "$f" 2>&1 | tee -a axiom-audit.log
-            lines=$((lines + $(grep -c '^#print axioms' "$f")))
+            lines=$((lines + $(grep -cE '^#print axioms [^[:space:]]+$' "$f")))
           done
           test "$lines" -eq "$EXPECTED_AXIOM_REPORTS" \
-            || { echo "The audit modules have $lines #print lines, not EXPECTED_AXIOM_REPORTS."; exit 1; }
+            || { echo "The audit modules have $lines #print axioms commands, not EXPECTED_AXIOM_REPORTS."; exit 1; }
           python3 - axiom-audit.log "$EXPECTED_AXIOM_REPORTS" <<'PY'
           import re, sys
           text = open(sys.argv[1]).read()
