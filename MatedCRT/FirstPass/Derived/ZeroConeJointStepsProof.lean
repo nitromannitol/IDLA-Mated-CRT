@@ -1,5 +1,9 @@
 import MatedCRT.FirstPass.Derived.ZeroConeCurveFactorProof
 import MatedCRT.FirstPass.Derived.ZeroConeLemmaA1PosProof
+import LatticeProb.Bonanno.MatedCRTHarmonic.GMSCase.Defs
+import LatticeProb.Bonanno.MatedCRTHarmonic.MoTPort.Foundations.ConeMeasJoint
+import LatticeProb.Bonanno.MatedCRTHarmonic.GMS4c.ContVersion
+import LatticeProb.Bonanno.MatedCRTHarmonic.GMS4b.JointMeasurable
 
 /-!
 # Lemma A.1 for the zero-cone field jointly with the space-filling SLE
@@ -17,7 +21,12 @@ curve is almost surely constant. The written answer `notes/fp-gaps/CODEX-MQ-sbl-
   (line 44), and Lemma A.1 for the field alone, applied to `v`.
 
 This file proves the measure-theoretic core of that argument for a general random simultaneous action
-(`ae_eq_integral_of_jointInvariance`).
+(`ae_eq_integral_of_jointInvariance`), and from it `ZeroConeJointLemmaA1` (`zeroConeJointLemmaA1`) under Lemma A.1
+for the field alone (`ZeroConeCircleAverageLemmaA1`), the scale and translation invariance of the law of the curve
+(`SpaceFillingSLESimilarityLaw`), and two named inputs stated here: the mixing of the imaginary-geometry field modulo
+`2πχ` under similarities with distant centres (`IGFieldDistantCentreMixing`) and Lemma A.4 of arXiv:1705.11161
+(`ZeroConeLemmaA4`). The curve map of the coupling carries the mixing of the field to the curve
+(`tendsto_igCurve_affineReroot_correlation`).
 -/
 
 set_option autoImplicit false
@@ -586,5 +595,464 @@ theorem ae_eq_integral_of_jointInvariance {μ : Measure α} {ν : Measure β} {�
   rw [hrect V, hrect (fun y => ∫ e, V (y.1, e) ∂ν), hL, hR]
 
 end Abstract
+
+/-! ### The similarity actions on fields and curves -/
+
+section Similarity
+
+open ReflectedGMS.GMS MatedCRTHarmonic MatedCRTHarmonic.MatedCRT MatedCRTHarmonic.GMS4b
+open scoped NNReal
+
+/-- The LQG coordinate change `h ↦ h(C · + z) + Q log C` at the parameter `t = (C, z)`, extended by the identity at
+`C ≤ 0`. -/
+def lqgSimilarityAction (γ : ℝ) (t : ℝ × ℂ) (h : Field) : Field :=
+  if 0 < t.1 then lqgSimilarityField γ t.1 t.2 h else h
+
+theorem lqgSimilarityAction_of_pos (γ : ℝ) {t : ℝ × ℂ} (ht : 0 < t.1) (h : Field) :
+    lqgSimilarityAction γ t h = lqgSimilarityField γ t.1 t.2 h := by
+  simp only [lqgSimilarityAction, ht, ↓reduceIte]
+
+/-- **The LQG coordinate change is jointly measurable in the scale, the centre and the field**:
+`h(C · + z) = (h(· + z))(C ·)` (`LQGMetric.GM.affineComp_comp`), the dilation is jointly measurable in `(C, h)` and
+the translation in `(z, h)`. -/
+theorem measurable_lqgSimilarityAction (γ : ℝ) :
+    Measurable fun q : (ℝ × ℂ) × Field => lqgSimilarityAction γ q.1 q.2 := by
+  have htr : Measurable fun q : (ℝ × ℂ) × Field => LQGMetric.affineComp 1 q.1.2 q.2 :=
+    (MatedCRTHarmonic.GMSCase.measurable_affineComp_center 1).comp
+      (measurable_snd.prodMk (measurable_snd.comp measurable_fst))
+  have hsc : Measurable fun q : (ℝ × ℂ) × Field =>
+      LQGMetric.affineComp q.1.1 0 (LQGMetric.affineComp 1 q.1.2 q.2) :=
+    MatedCRTHarmonic.MoTPort.ConeMeas.measurable_affineComp_joint.comp
+      ((measurable_fst.comp measurable_fst).prodMk htr)
+  have hpos : Measurable fun q : (ℝ × ℂ) × Field => LQGMetric.addConst
+      (LQGMetric.affineComp q.1.1 0 (LQGMetric.affineComp 1 q.1.2 q.2)) (lqgQ γ * Real.log q.1.1) := by
+    refine LQGMetric.measurable_distOn_iff.2 fun φ => ?_
+    simp only [LQGMetric.GFFInv.addConst_apply]
+    exact ((LQGMetric.measurable_distOn_apply φ).comp hsc).add
+      ((measurable_const.mul (Real.measurable_log.comp (measurable_fst.comp measurable_fst))).const_mul _)
+  have e : (fun q : (ℝ × ℂ) × Field => lqgSimilarityAction γ q.1 q.2) = fun q =>
+      if 0 < q.1.1 then LQGMetric.addConst
+        (LQGMetric.affineComp q.1.1 0 (LQGMetric.affineComp 1 q.1.2 q.2)) (lqgQ γ * Real.log q.1.1)
+      else q.2 := by
+    funext q
+    by_cases hq : 0 < q.1.1
+    · simp only [lqgSimilarityAction, lqgSimilarityField, hq, ↓reduceIte]
+      rw [LQGMetric.GM.affineComp_comp hq.ne' one_ne_zero]
+      simp only [one_mul, mul_zero, zero_add]
+    · simp only [lqgSimilarityAction, hq, ↓reduceIte]
+  rw [e]
+  exact Measurable.ite (measurableSet_lt measurable_const (measurable_fst.comp measurable_fst)) hpos
+    measurable_snd
+
+/-- **The rerooting of a curve at `(z, C)` is jointly measurable in `(C, z)` and the curve** (the first hitting time
+is jointly measurable, `GMS4b.measurable_hitTime`; the curves are determined by their rational values). -/
+theorem measurable_affineReroot_joint :
+    Measurable fun q : (ℝ × ℂ) × C(ℝ, ℂ) => affineReroot q.1.2 q.1.1 0 q.2 := by
+  refine (MatedCRTHarmonic.GMS4c.measurableEmbedding_ratRestrict.measurable_comp_iff).1 ?_
+  refine measurable_pi_iff.mpr fun t => ?_
+  have hT : Measurable fun q : (ℝ × ℂ) × C(ℝ, ℂ) => firstHit q.2 q.1.2 + q.1.1 ^ 2 * (t : ℝ) :=
+    (GMS4b.measurable_hitTime.comp (measurable_snd.prodMk (measurable_snd.comp measurable_fst))).add
+      (((measurable_fst.comp measurable_fst).pow_const 2).mul_const _)
+  have hev : Measurable fun q : (ℝ × ℂ) × C(ℝ, ℂ) => q.2 (firstHit q.2 q.1.2 + q.1.1 ^ 2 * (t : ℝ)) :=
+    continuous_eval.measurable.comp (measurable_snd.prodMk hT)
+  have hc : Measurable fun q : (ℝ × ℂ) × C(ℝ, ℂ) =>
+      (((q.1.1 : ℂ) * Complex.exp (((0 : ℝ) : ℂ) * Complex.I))⁻¹) :=
+    ((Complex.measurable_ofReal.comp (measurable_fst.comp measurable_fst)).mul_const _).inv
+  change Measurable fun q : (ℝ × ℂ) × C(ℝ, ℂ) =>
+    (((q.1.1 : ℂ) * Complex.exp (((0 : ℝ) : ℂ) * Complex.I))⁻¹) *
+      (q.2 (firstHit q.2 q.1.2 + q.1.1 ^ 2 * (t : ℝ)) - q.1.2)
+  exact hc.mul (hev.sub (measurable_snd.comp measurable_fst))
+
+theorem measurable_affineReroot (z : ℂ) (s : ℝ) : Measurable (affineReroot z s 0) := by
+  have h := measurable_affineReroot_joint.comp
+    (measurable_const.prodMk measurable_id : Measurable fun x : C(ℝ, ℂ) => (((s, z) : ℝ × ℂ), x))
+  simp only [Function.comp_def] at h
+  exact h
+
+/-- **The normalized similarity step of a circle-average array modulo `2πχ`**: the array of `h(z + s ·)` at positive
+radii, `(ρ, w) ↦ f(sρ, z + sw)`, shifted by the multiple of `2πχ` which brings `f(s, z)` into `[0, 2πχ)`. On the
+array of `(h, u)` it is the array of the normalized pair `(h(z + s ·) − h_s(z), (u + h_s(z)) mod 2πχ)`; at `z = 0` it
+is `igDilationStep γ s`. -/
+def igSimilarityStep (γ : ℝ) (z : ℂ) (s : ℝ) (f : ℝ × ℂ → ℝ) : ℝ × ℂ → ℝ :=
+  fun x => if 0 < x.1 then
+    f (s * x.1, z + (s : ℂ) * x.2) -
+      ((⌊f (s, z) / (2 * Real.pi * igChi γ)⌋ : ℤ) : ℝ) * (2 * Real.pi * igChi γ)
+    else 0
+
+theorem measurable_igSimilarityStep (γ : ℝ) (z : ℂ) (s : ℝ) : Measurable (igSimilarityStep γ z s) := by
+  refine measurable_pi_iff.2 fun x => ?_
+  by_cases hx : 0 < x.1
+  · simp only [igSimilarityStep, hx, ↓reduceIte]
+    exact (measurable_pi_apply (s * x.1, z + (s : ℂ) * x.2)).sub
+      (((measurable_of_countable (fun k : ℤ => (k : ℝ))).comp
+        (Int.measurable_floor.comp ((measurable_pi_apply ((s, z) : ℝ × ℂ)).div_const _))).mul_const _)
+  · simp only [igSimilarityStep, hx, ↓reduceIte]
+    exact measurable_const
+
+/-- **Mixing of the whole-plane GFF modulo `2πχ` under similarities with distant centres** (written answer
+`notes/fp-gaps/CODEX-MQ-sbl-25.md`, "(a) The normalized dilation", lines 15-27: tests by the characters
+`exp(i X(f) + 2πi k U / d)`, the covariance of the whole-plane GFF, Duplantier–Sheffield, arXiv:0808.1560, §3.1, and
+the variance `Var X_r(z) ≥ log |z|` for `|z| > 1` and every `r > 0`; "They also give convergence of correlations to
+the product for any sequence `|z| → ∞` with arbitrary positive scales"). PENDING TRUTH CHECK.
+
+Let `h` be a whole-plane GFF normalized by `h_1(0) = 0` and `u` an independent uniform variable on `[0, 2πχ)`,
+`χ = 2/γ − γ/2`, and let `μ` be the law of the circle-average array of `h + u` at positive radii
+(`igPosCircleProcess`). For all centres `z_n` with `|z_n| → ∞` and all scales `s_n > 0`, the normalized similarity
+steps `T_n = igSimilarityStep γ z_n s_n` satisfy `μ(S₁ ∩ T_n⁻¹ S₂) → μ(S₁) μ(S₂)` for all measurable `S₁`, `S₂`. -/
+def IGFieldDistantCentreMixing (γ : ℝ) (_hγ : γ ∈ Ioo (0 : ℝ) 2) : Prop :=
+  ∀ {Ω' : Type} [MeasurableSpace Ω'] (P' : Measure Ω') (h : Ω' → Field) (u : Ω' → ℝ),
+    LQGMetric.IsNormalizedWPGFF h P' →
+    P'.map u = volume[|Ico (0 : ℝ) (2 * Real.pi * igChi γ)] → IndepFun h u P' →
+    ∀ (z : ℕ → ℂ) (s : ℕ → ℝ), (∀ n, 0 < s n) → Tendsto (fun n => ‖z n‖) atTop atTop →
+    ∀ S₁ S₂ : Set (ℝ × ℂ → ℝ), MeasurableSet S₁ → MeasurableSet S₂ →
+      Tendsto (fun n => (P'.map fun ω => igPosCircleProcess (h ω) (u ω))
+          (S₁ ∩ igSimilarityStep γ (z n) (s n) ⁻¹' S₂)) atTop
+        (𝓝 ((P'.map fun ω => igPosCircleProcess (h ω) (u ω)) S₁ *
+          (P'.map fun ω => igPosCircleProcess (h ω) (u ω)) S₂))
+
+/-- **Lemma A.4 of Gwynne–Miller–Sheffield at uniform points of dyadic squares of growing mass**
+(arXiv:1705.11161, Lemma A.4, `notes/refs/1705.11161.txt` lines 2037-2041: for `m > 0` and `z_m` sampled uniformly
+from the largest square of an independent uniform dyadic system containing `0` with `μ_h`-mass at most `m`, there is
+a random constant `C_m > 0` with `h(C_m · + z_m) + Q log C_m` equal in law to `h`; the divergence `|z_m| → ∞` in
+probability is the written answer `notes/fp-gaps/CODEX-MQ-sbl-25.md`, line 41: "Its area tends to infinity since every
+fixed ancestor has finite mass"). PENDING TRUTH CHECK.
+
+Let `h = coneField X₀' (coneRadial γ 0 b b')` be the circle-average embedding of the `0`-quantum cone built from a
+whole-plane GFF `X₀'` and two independent standard Brownian motions independent of it (`zeroConeFieldOf`), with law
+`μ`. There are an auxiliary probability space `(E, κ)` and measurable `C_m > 0`, `z_m` on `Field × E` such that, under
+`μ ⊗ κ`, `h(C_m · + z_m) + Q log C_m` has law `μ` for every `m` and `P(|z_m| ≤ R) → 0` for every `R`. -/
+def ZeroConeLemmaA4 (γ : ℝ) (_hγ : γ ∈ Ioo (0 : ℝ) 2) : Prop :=
+  ∀ {Ω' : Type} [MeasurableSpace Ω'] (P' : Measure Ω') (X₀' : Ω' → Field) (b b' : ℝ≥0 → Ω' → ℝ),
+    IsProbabilityMeasure P' → LQGMetric.IsWholePlaneGFF X₀' P' → IsBrownianReal b P' → IsBrownianReal b' P' →
+    IndepFun X₀' (fun ω => ((fun t => b t ω), (fun t => b' t ω))) P' →
+    IndepFun (fun ω t => b t ω) (fun ω t => b' t ω) P' →
+    ∃ (E : Type) (_ : MeasurableSpace E) (κ : Measure E) (_ : IsProbabilityMeasure κ)
+      (C : ℕ → Field × E → ℝ) (z : ℕ → Field × E → ℂ),
+      (∀ m, Measurable (C m)) ∧ (∀ m, Measurable (z m)) ∧ (∀ m p, 0 < C m p) ∧
+      (∀ m, ((P'.map (zeroConeFieldOf γ X₀' b b')).prod κ).map
+          (fun p => lqgSimilarityField γ (C m p) (z m p) p.1) = P'.map (zeroConeFieldOf γ X₀' b b')) ∧
+      ∀ R : ℝ, Tendsto (fun m => ((P'.map (zeroConeFieldOf γ X₀' b b')).prod κ) {p | ‖z m p‖ ≤ R})
+        atTop (𝓝 0)
+
+variable {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+  {X X₀ hIG₀ : Ω → Field} {B B' B₀ B₀' : ℝ≥0 → Ω → ℝ} {U : Ω → ℝ}
+  {ηL η η₀ : Ω → C(ℝ, ℂ)} {bm : Ω → Path2}
+
+/-- **The curve map at the normalized similarity steps.** Almost surely the curve map `Φ` of the coupling sends the
+array of `(hIG₀, U)` to `ηL`, and for each fixed `(z, s)`, `s > 0`, almost surely it sends the normalized similarity
+step of the array to `affineReroot z s 0 ηL` (the coordinate change of imaginary geometry, `IsMatingOfTreesCoupling.igMap`,
+at the full turns `φ = −2πm`, which shift the field by `m · 2πχ`). -/
+theorem exists_igMap_igSimilarityStep
+    (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm) :
+    ∃ Φ : (ℝ → ℂ → ℝ) → C(ℝ, ℂ), Measurable Φ ∧
+      (∀ᵐ ω ∂P, Φ (Function.curry (igPosCircleProcess (hIG₀ ω) (U ω))) = ηL ω) ∧
+      ∀ (z : ℂ) (s : ℝ), 0 < s → ∀ᵐ ω ∂P,
+        Φ (Function.curry (igSimilarityStep γ z s (igPosCircleProcess (hIG₀ ω) (U ω)))) =
+          affineReroot z s 0 (ηL ω) := by
+  obtain ⟨Φ, hΦm, hign, hrep, hcov, -⟩ := D.igMap
+  refine ⟨Φ, hΦm, ?_, fun z s hs => ?_⟩
+  · filter_upwards [hrep] with ω hω
+    refine (hign _ _ ?_).trans hω.symm
+    intro ρ hρ
+    exact curry_igPosCircleProcess_of_pos (hIG₀ ω) (U ω) hρ
+  · have hm : ∀ m : ℤ, ∀ᵐ ω ∂P,
+        Φ (fun ρ w => LQGMetric.circleAvg (hIG₀ ω) (s * ρ) (z + (s : ℂ) * w) + U ω +
+          (m : ℝ) * (2 * Real.pi * igChi γ)) = affineReroot z s 0 (ηL ω) := by
+      intro m
+      filter_upwards [hcov z s (-(2 * Real.pi * (m : ℝ))) hs] with ω hω
+      have hexp : Complex.exp ((((-(2 * Real.pi * (m : ℝ))) : ℝ) : ℂ) * Complex.I) = 1 := by
+        rw [show ((((-(2 * Real.pi * (m : ℝ))) : ℝ) : ℂ) * Complex.I) =
+            ((-m : ℤ) : ℂ) * (2 * Real.pi * Complex.I) by push_cast; ring]
+        exact Complex.exp_int_mul_two_pi_mul_I _
+      have e1 : igPullback γ z s (-(2 * Real.pi * (m : ℝ)))
+          (fun ρ w => LQGMetric.circleAvg (hIG₀ ω) ρ w + U ω) = fun ρ w =>
+            LQGMetric.circleAvg (hIG₀ ω) (s * ρ) (z + (s : ℂ) * w) + U ω +
+              (m : ℝ) * (2 * Real.pi * igChi γ) := by
+        funext ρ w
+        simp only [igPullback, hexp, mul_one]
+        ring
+      have e2 : affineReroot z s (-(2 * Real.pi * (m : ℝ))) (ηL ω) = affineReroot z s 0 (ηL ω) := by
+        ext t
+        simp only [affineReroot, ContinuousMap.coe_mk, hexp, Complex.ofReal_zero, zero_mul,
+          Complex.exp_zero]
+      rw [e1, e2] at hω
+      exact hω
+    filter_upwards [ae_all_iff.2 hm] with ω hω
+    refine (hign _ _ fun ρ hρ => ?_).trans
+      (hω (-⌊(U ω + LQGMetric.circleAvg (hIG₀ ω) s z) / (2 * Real.pi * igChi γ)⌋))
+    funext w
+    simp only [Function.curry_apply, igSimilarityStep, igPosCircleProcess, hρ, mul_pos hs hρ, hs,
+      ↓reduceIte]
+    push_cast
+    ring
+
+/-- **Mixing of whole-plane space-filling SLE at distant centres** (written answer
+`notes/fp-gaps/CODEX-MQ-sbl-25.md`, "(c) Joint invariance", lines 33-35: "The mixing estimate in (a) passes to the
+curve: the coupling's positive-radius map reads the IG field modulo `d`, and its affine covariance gives `e^T` from
+the transformed representative"). For all centres `z_n` with `|z_n| → ∞`, all scales `s_n > 0` and measurable sets
+`B₁`, `B₂` of curves, `P(ηL ∈ B₁, affineReroot z_n s_n 0 ηL ∈ B₂) → P(ηL ∈ B₁) P(ηL ∈ B₂)`. -/
+theorem tendsto_igCurve_affineReroot_correlation
+    (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm) (hγ : γ ∈ Ioo (0 : ℝ) 2)
+    (hmix : IGFieldDistantCentreMixing γ hγ) {z : ℕ → ℂ} {s : ℕ → ℝ} (hs : ∀ n, 0 < s n)
+    (hz : Tendsto (fun n => ‖z n‖) atTop atTop) {B₁ B₂ : Set C(ℝ, ℂ)} (hB₁ : MeasurableSet B₁)
+    (hB₂ : MeasurableSet B₂) :
+    Tendsto (fun n => (P.map ηL) (B₁ ∩ affineReroot (z n) (s n) 0 ⁻¹' B₂)) atTop
+      (𝓝 ((P.map ηL) B₁ * (P.map ηL) B₂)) := by
+  have hP : IsProbabilityMeasure P := D.isProbabilityMeasure
+  obtain ⟨hh, hUlaw, hind⟩ := D.igField
+  have hUae : AEMeasurable U P := aemeasurable_of_map_eq_igUniform hUlaw
+  have hKp : AEMeasurable (fun ω => igPosCircleProcess (hIG₀ ω) (U ω)) P :=
+    aemeasurable_igPosCircleProcess hh.1.measurable hUae
+  obtain ⟨Φ, hΦm, h1, h2⟩ := exists_igMap_igSimilarityStep (γ := γ) D
+  have hcurry : Measurable (Function.curry : (ℝ × ℂ → ℝ) → ℝ → ℂ → ℝ) :=
+    measurable_pi_iff.2 fun r => measurable_pi_iff.2 fun w => measurable_pi_apply (r, w)
+  have hΦ' : Measurable fun f : ℝ × ℂ → ℝ => Φ (Function.curry f) := hΦm.comp hcurry
+  have hηm : Measurable ηL := D.measurable_curves.1
+  have hν : P.map ηL = (P.map fun ω => igPosCircleProcess (hIG₀ ω) (U ω)).map
+      fun f => Φ (Function.curry f) := by
+    rw [AEMeasurable.map_map_of_aemeasurable hΦ'.aemeasurable hKp]
+    refine Measure.map_congr ?_
+    filter_upwards [h1] with ω hω
+    exact hω.symm
+  have hpair : ∀ n, (P.map ηL) (B₁ ∩ affineReroot (z n) (s n) 0 ⁻¹' B₂) =
+      (P.map fun ω => igPosCircleProcess (hIG₀ ω) (U ω))
+        ((fun f => Φ (Function.curry f)) ⁻¹' B₁ ∩ igSimilarityStep γ (z n) (s n) ⁻¹'
+          ((fun f => Φ (Function.curry f)) ⁻¹' B₂)) := by
+    intro n
+    have hρ : Measurable (affineReroot (z n) (s n) 0) := measurable_affineReroot (z n) (s n)
+    have hρη : Measurable fun ω => affineReroot (z n) (s n) 0 (ηL ω) := by
+      have h := hρ.comp hηm
+      simp only [Function.comp_def] at h
+      exact h
+    have hg : Measurable fun f : ℝ × ℂ → ℝ =>
+        (Φ (Function.curry f), Φ (Function.curry (igSimilarityStep γ (z n) (s n) f))) :=
+      hΦ'.prodMk (hΦ'.comp (measurable_igSimilarityStep γ (z n) (s n)))
+    have e1 : (P.map ηL) (B₁ ∩ affineReroot (z n) (s n) 0 ⁻¹' B₂) =
+        (P.map fun ω => (ηL ω, affineReroot (z n) (s n) 0 (ηL ω))) (B₁ ×ˢ B₂) := by
+      rw [Measure.map_apply hηm (hB₁.inter (hρ hB₂)),
+        Measure.map_apply (hηm.prodMk hρη) (hB₁.prod hB₂)]
+      exact congrArg (fun S => P S) (Set.ext fun _ => Iff.rfl)
+    have e2 : (P.map fun ω => (ηL ω, affineReroot (z n) (s n) 0 (ηL ω))) =
+        (P.map fun ω => igPosCircleProcess (hIG₀ ω) (U ω)).map fun f =>
+          (Φ (Function.curry f), Φ (Function.curry (igSimilarityStep γ (z n) (s n) f))) := by
+      rw [AEMeasurable.map_map_of_aemeasurable hg.aemeasurable hKp]
+      refine Measure.map_congr ?_
+      filter_upwards [h1, h2 (z n) (s n) (hs n)] with ω hω1 hω2
+      exact Prod.ext hω1.symm hω2.symm
+    rw [e1, e2, Measure.map_apply hg (hB₁.prod hB₂)]
+    exact congrArg (fun S => (P.map fun ω => igPosCircleProcess (hIG₀ ω) (U ω)) S)
+      (Set.ext fun _ => Iff.rfl)
+  refine (tendsto_congr hpair).2 ?_
+  rw [hν, Measure.map_apply hΦ' hB₁, Measure.map_apply hΦ' hB₂]
+  exact hmix P hIG₀ U hh hUlaw hind z s hs hz _ _ (hΦ' hB₁) (hΦ' hB₂)
+
+/-- **Uniform mixing of the curve at distant centres**: the correlation of `{ηL ∈ B₁}` and
+`{affineReroot z s 0 ηL ∈ B₂}` is within `ε` of the product of the probabilities for all scales `s > 0` and all
+centres with `|z| ≥ R` (from the sequential form `tendsto_igCurve_affineReroot_correlation`, by contradiction). -/
+theorem exists_uniform_igCurve_affineReroot_correlation
+    (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm) (hγ : γ ∈ Ioo (0 : ℝ) 2)
+    (hmix : IGFieldDistantCentreMixing γ hγ) {B₁ B₂ : Set C(ℝ, ℂ)} (hB₁ : MeasurableSet B₁)
+    (hB₂ : MeasurableSet B₂) {ε : ℝ} (hε : 0 < ε) :
+    ∃ R : ℝ, ∀ z : ℂ, ∀ s : ℝ, 0 < s → R ≤ ‖z‖ →
+      |(P.map ηL).real (B₁ ∩ affineReroot z s 0 ⁻¹' B₂) - (P.map ηL).real B₁ * (P.map ηL).real B₂| ≤ ε := by
+  have hP : IsProbabilityMeasure P := D.isProbabilityMeasure
+  by_contra hcon
+  push Not at hcon
+  choose z s hs hz hbad using hcon
+  have hzn : Tendsto (fun n : ℕ => ‖z n‖) atTop atTop :=
+    tendsto_atTop_mono (fun n => hz n) tendsto_natCast_atTop_atTop
+  have ht := tendsto_igCurve_affineReroot_correlation D hγ hmix (z := fun n : ℕ => z n)
+    (s := fun n : ℕ => s n) (fun n => hs n) hzn hB₁ hB₂
+  have hne : (P.map ηL) B₁ * (P.map ηL) B₂ ≠ ⊤ :=
+    ENNReal.mul_ne_top (measure_ne_top _ _) (measure_ne_top _ _)
+  have ht' := (ENNReal.tendsto_toReal hne).comp ht
+  rw [ENNReal.toReal_mul] at ht'
+  obtain ⟨N, hN⟩ := Metric.tendsto_atTop.1 ht' ε hε
+  have h1 : |(P.map ηL).real (B₁ ∩ affineReroot (z N) (s N) 0 ⁻¹' B₂) -
+      (P.map ηL).real B₁ * (P.map ηL).real B₂| < ε := by
+    have h := hN N le_rfl
+    rw [Real.dist_eq, Function.comp_apply] at h
+    simp only [measureReal_def]
+    exact h
+  exact absurd h1 (not_lt.2 (hbad N).le)
+
+/-- Integrals of `[0, 1]`-valued functions which are uniformly at most `ε` where `‖Z_m‖ ≥ R(ε)` tend to `0` when
+`P(‖Z_m‖ ≤ R) → 0` for every `R`. -/
+theorem tendsto_integral_of_uniform_of_tendsto_measure_norm_le {E' : Type*} [MeasurableSpace E']
+    {Q : Measure E'} [IsProbabilityMeasure Q] {F : ℕ → E' → ℝ} {Z : ℕ → E' → ℂ}
+    (hZ : ∀ m, Measurable (Z m)) (hF0 : ∀ m p, 0 ≤ F m p) (hF1 : ∀ m p, F m p ≤ 1)
+    (hunif : ∀ ε : ℝ, 0 < ε → ∃ R : ℝ, ∀ m p, R ≤ ‖Z m p‖ → F m p ≤ ε)
+    (hfar : ∀ R : ℝ, Tendsto (fun m => Q {p | ‖Z m p‖ ≤ R}) atTop (𝓝 0)) :
+    Tendsto (fun m => ∫ p, F m p ∂Q) atTop (𝓝 0) := by
+  rw [Metric.tendsto_atTop]
+  intro ε hε
+  obtain ⟨R, hR⟩ := hunif (ε / 2) (half_pos hε)
+  have hreal : Tendsto (fun m => Q.real {p | ‖Z m p‖ ≤ R}) atTop (𝓝 0) := by
+    have h := (ENNReal.tendsto_toReal ENNReal.zero_ne_top).comp (hfar R)
+    rw [ENNReal.toReal_zero, Function.comp_def] at h
+    simp only [measureReal_def]
+    exact h
+  obtain ⟨N, hN⟩ := Metric.tendsto_atTop.1 hreal (ε / 2) (half_pos hε)
+  refine ⟨N, fun m hm => ?_⟩
+  have hS : MeasurableSet {p | ‖Z m p‖ ≤ R} := measurableSet_le (hZ m).norm measurable_const
+  have hiS : Integrable ({p | ‖Z m p‖ ≤ R}.indicator (1 : E' → ℝ)) Q :=
+    (integrable_const (1 : ℝ)).indicator hS
+  have hle : ∫ p, F m p ∂Q ≤ ∫ p, (ε / 2 + {p | ‖Z m p‖ ≤ R}.indicator (1 : E' → ℝ) p) ∂Q := by
+    refine integral_mono_of_nonneg (ae_of_all _ fun p => hF0 m p) ((integrable_const _).add hiS)
+      (ae_of_all _ fun p => ?_)
+    show F m p ≤ ε / 2 + {p | ‖Z m p‖ ≤ R}.indicator (1 : E' → ℝ) p
+    by_cases hp : ‖Z m p‖ ≤ R
+    · rw [Set.indicator_of_mem (show p ∈ {p | ‖Z m p‖ ≤ R} from hp), Pi.one_apply]
+      linarith [hF1 m p]
+    · rw [Set.indicator_of_notMem (show p ∉ {p | ‖Z m p‖ ≤ R} from hp), add_zero]
+      exact hR m p (not_le.1 hp).le
+  have hval : ∫ p, (ε / 2 + {p | ‖Z m p‖ ≤ R}.indicator (1 : E' → ℝ) p) ∂Q =
+      ε / 2 + Q.real {p | ‖Z m p‖ ≤ R} := by
+    rw [integral_add (integrable_const _) hiS, integral_const, probReal_univ, one_smul,
+      integral_indicator_one hS]
+  have h1 : |Q.real {p | ‖Z m p‖ ≤ R}| < ε / 2 := by
+    have h := hN m hm
+    rw [Real.dist_eq, sub_zero] at h
+    exact h
+  have h0 : 0 ≤ ∫ p, F m p ∂Q := integral_nonneg fun p => hF0 m p
+  rw [abs_of_nonneg measureReal_nonneg] at h1
+  rw [Real.dist_eq, sub_zero, abs_of_nonneg h0]
+  linarith
+
+/-- **Lemma A.1 of Gwynne–Miller–Sheffield for the zero-cone field jointly with the space-filling SLE** (written
+answer `notes/fp-gaps/CODEX-MQ-sbl-25.md`, "(c) Joint invariance", lines 33-45). Let `V = G'` be bounded, measurable
+and jointly invariant. With the random similarities `T_m(w) = z_m + C_m w` of Lemma A.4 (`ZeroConeLemmaA4`), which
+preserve the law of the zero-cone field and have `|z_m| → ∞` in probability, the scale and translation invariance of
+the law of the curve (`SpaceFillingSLESimilarityLaw`) and the mixing of the curve at distant centres (which comes
+from `IGFieldDistantCentreMixing` through the curve map of the coupling), `V(h, e)` is almost surely its partial
+mean `v(h) = ∫ V(h, e) ν(de)` (`ae_eq_integral_of_jointInvariance`). The partial mean is invariant under every
+coordinate change of the field, hence almost surely constant by Lemma A.1 for the field alone
+(`ZeroConeCircleAverageLemmaA1`); the zero-cone field is independent of the curve, so `V(h₀, ηL)` is almost surely
+that constant. -/
+theorem zeroConeJointLemmaA1 (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm)
+    (hγ : γ ∈ Ioo (0 : ℝ) 2) (hA1 : ZeroConeCircleAverageLemmaA1 γ hγ)
+    (hlaw : SpaceFillingSLESimilarityLaw D hγ) (hmix : IGFieldDistantCentreMixing γ hγ)
+    (hA4 : ZeroConeLemmaA4 γ hγ) : ZeroConeJointLemmaA1 D hγ := by
+  intro G' hG'm hbd hinv
+  obtain ⟨M, hM⟩ := hbd
+  have hP : IsProbabilityMeasure P := D.isProbabilityMeasure
+  obtain ⟨H', hH'm, hH'ind, hH'eq⟩ := exists_zeroConeField_version_indepFun_igCurve D hγ
+  have hηm : Measurable ηL := D.measurable_curves.1
+  have hνP : IsProbabilityMeasure (P.map ηL) :=
+    (Measure.isProbabilityMeasure_map_iff hηm.aemeasurable).2 inferInstance
+  have hh₀ : AEMeasurable (zeroConeFieldOf γ X₀ B₀ B₀') P := hH'm.aemeasurable.congr hH'eq
+  have hμP : IsProbabilityMeasure (P.map (zeroConeFieldOf γ X₀ B₀ B₀')) :=
+    (Measure.isProbabilityMeasure_map_iff hh₀).2 inferInstance
+  obtain ⟨E, mE, κ, hκ, C, z, hCm, hzm, hCpos, hlawA4, hfar⟩ := hA4 P X₀ B₀ B₀'
+    D.isProbabilityMeasure D.gff₀ D.bm_B₀ D.bm_B₀' D.indep_cone₀.1 D.indep_cone₀.2
+  -- the law of the curve is invariant under the similarities
+  have hρlaw : ∀ t ∈ {t : ℝ × ℂ | 0 < t.1},
+      (P.map ηL).map (affineReroot t.2 t.1 0) = P.map ηL := by
+    intro t ht
+    rw [Measure.map_map (measurable_affineReroot t.2 t.1) hηm, Function.comp_def]
+    exact (hlaw t.1 ht t.2).map_eq
+  -- the curve mixes along the random similarities
+  have hmixcore : ∀ B' B : Set C(ℝ, ℂ), MeasurableSet B' → MeasurableSet B →
+      Tendsto (fun m => ∫ p, |(P.map ηL).real (B' ∩ affineReroot (z m p) (C m p) 0 ⁻¹' B) -
+        (P.map ηL).real B' * (P.map ηL).real B| ∂((P.map (zeroConeFieldOf γ X₀ B₀ B₀')).prod κ))
+        atTop (𝓝 0) := by
+    intro B' B hB' hB
+    refine tendsto_integral_of_uniform_of_tendsto_measure_norm_le hzm (fun m p => abs_nonneg _)
+      (fun m p => ?_) (fun ε hε => ?_) hfar
+    · have ha0 : 0 ≤ (P.map ηL).real (B' ∩ affineReroot (z m p) (C m p) 0 ⁻¹' B) := measureReal_nonneg
+      have ha1 : (P.map ηL).real (B' ∩ affineReroot (z m p) (C m p) 0 ⁻¹' B) ≤ 1 :=
+        toReal_measure_le_one _ _
+      have hb0 : 0 ≤ (P.map ηL).real B' := measureReal_nonneg
+      have hb1 : (P.map ηL).real B' ≤ 1 := toReal_measure_le_one _ _
+      have hc0 : 0 ≤ (P.map ηL).real B := measureReal_nonneg
+      have hbc0 : 0 ≤ (P.map ηL).real B' * (P.map ηL).real B := mul_nonneg hb0 hc0
+      have hbc1 : (P.map ηL).real B' * (P.map ηL).real B ≤ (P.map ηL).real B :=
+        mul_le_of_le_one_left hc0 hb1
+      have hc1 : (P.map ηL).real B ≤ 1 := toReal_measure_le_one _ _
+      exact abs_le.2 ⟨by linarith, by linarith⟩
+    · obtain ⟨R, hR⟩ := exists_uniform_igCurve_affineReroot_correlation D hγ hmix hB' hB hε
+      exact ⟨R, fun m p hp => hR (z m p) (C m p) (hCpos m p) hp⟩
+  -- the random similarities preserve the law of the field
+  have hσlaw : ∀ m, ((P.map (zeroConeFieldOf γ X₀ B₀ B₀')).prod κ).map
+      (fun p => lqgSimilarityAction γ (C m p, z m p) p.1) = P.map (zeroConeFieldOf γ X₀ B₀ B₀') := by
+    intro m
+    have e : (fun p : Field × E => lqgSimilarityAction γ (C m p, z m p) p.1) =
+        fun p => lqgSimilarityField γ (C m p) (z m p) p.1 :=
+      funext fun p => lqgSimilarityAction_of_pos γ (t := (C m p, z m p)) (hCpos m p) p.1
+    rw [e]
+    exact hlawA4 m
+  have hinvcore : ∀ᵐ a ∂P.map (zeroConeFieldOf γ X₀ B₀ B₀'), ∀ᵐ e ∂P.map ηL,
+      ∀ t ∈ {t : ℝ × ℂ | 0 < t.1},
+        G' (lqgSimilarityAction γ t a, affineReroot t.2 t.1 0 e) = G' (a, e) := by
+    filter_upwards [hinv] with a ha
+    filter_upwards [ha] with e he t ht
+    rw [lqgSimilarityAction_of_pos γ ht]
+    exact he t.1 ht t.2
+  -- `G'` is almost surely its partial mean
+  have hcore := ae_eq_integral_of_jointInvariance (σ := lqgSimilarityAction γ)
+    (ρ := fun t : ℝ × ℂ => affineReroot t.2 t.1 0) (T₀ := {t : ℝ × ℂ | 0 < t.1})
+    (τ := fun m p => (C m p, z m p)) (measurable_lqgSimilarityAction γ) measurable_affineReroot_joint
+    (fun m => (hCm m).prodMk (hzm m)) (fun m p => hCpos m p) hσlaw hρlaw hmixcore hG'm hM hinvcore
+  obtain ⟨v, hv_def⟩ : ∃ v : Field → ℝ, v = fun a => ∫ e, G' (a, e) ∂(P.map ηL) := ⟨_, rfl⟩
+  have hvm : Measurable v := by
+    rw [hv_def]
+    exact hG'm.stronglyMeasurable.integral_prod_right'.measurable
+  have hvb : ∀ a, |v a| ≤ M := by
+    intro a
+    rw [hv_def]
+    exact abs_integral_le_of_forall_abs_le_of_isProbabilityMeasure fun e => hM _
+  -- the partial mean is invariant under the coordinate changes of the field
+  have hvinv : ∀ᵐ a ∂P.map (zeroConeFieldOf γ X₀ B₀ B₀'), ∀ C' : ℝ, 0 < C' → ∀ z' : ℂ,
+      v (lqgSimilarityField γ C' z' a) = v a := by
+    filter_upwards [hinv] with a ha C' hC' z'
+    have hl : (P.map ηL).map (affineReroot z' C' 0) = P.map ηL := hρlaw (C', z') hC'
+    rw [hv_def]
+    calc ∫ e, G' (lqgSimilarityField γ C' z' a, e) ∂(P.map ηL)
+        = ∫ e, G' (lqgSimilarityField γ C' z' a, e) ∂((P.map ηL).map (affineReroot z' C' 0)) := by
+          rw [hl]
+      _ = ∫ e, G' (lqgSimilarityField γ C' z' a, affineReroot z' C' 0 e) ∂(P.map ηL) :=
+          integral_map (measurable_affineReroot z' C').aemeasurable
+            (hG'm.comp measurable_prodMk_left).aestronglyMeasurable
+      _ = ∫ e, G' (a, e) ∂(P.map ηL) := by
+          refine integral_congr_ae ?_
+          filter_upwards [ha] with e he
+          exact he C' hC' z'
+  -- Lemma A.1 for the field alone
+  obtain ⟨F, hF_def⟩ : ∃ F : Field → ℝ, F = fun a => v a + M := ⟨_, rfl⟩
+  have hFa : ∀ a, F a = v a + M := fun a => by rw [hF_def]
+  have hFm : Measurable F := by
+    rw [hF_def]
+    exact hvm.add_const M
+  have hFinv : ∀ᵐ ω ∂P, ∀ C' : ℝ, 0 < C' → ∀ z' : ℂ,
+      F (lqgSimilarityField γ C' z' (zeroConeFieldOf γ X₀ B₀ B₀' ω)) = F (zeroConeFieldOf γ X₀ B₀ B₀' ω) :=
+    (ae_of_ae_map hh₀ hvinv).mono fun ω hω C' hC' z' => by rw [hFa, hFa, hω C' hC' z']
+  obtain ⟨c', hc'⟩ := hA1 P X₀ B₀ B₀' D.isProbabilityMeasure D.gff₀ D.bm_B₀ D.bm_B₀'
+    D.indep_cone₀.1 D.indep_cone₀.2 F hFm
+    ⟨M + M, fun a => by rw [hFa a]; linarith [(abs_le.1 (hvb a)).2]⟩
+    (fun a => by rw [hFa a]; linarith [(abs_le.1 (hvb a)).1]) hFinv
+  refine ⟨c' - M, ?_⟩
+  have hvc : ∀ᵐ a ∂P.map (zeroConeFieldOf γ X₀ B₀ B₀'), v a = c' - M := by
+    have hFc : ∀ᵐ a ∂P.map (zeroConeFieldOf γ X₀ B₀ B₀'), F a = c' :=
+      (ae_map_iff hh₀ (measurableSet_eq_fun hFm measurable_const)).2 hc'
+    filter_upwards [hFc] with a ha
+    rw [hFa] at ha
+    linarith
+  -- the field is independent of the curve
+  have hjoint : P.map (fun ω => (H' ω, ηL ω)) =
+      (P.map (zeroConeFieldOf γ X₀ B₀ B₀')).prod (P.map ηL) := by
+    rw [← Measure.map_congr hH'eq]
+    exact (indepFun_iff_map_prod_eq_prod_map_map hH'm.aemeasurable hηm.aemeasurable).1 hH'ind
+  have hprod : ∀ᵐ y ∂(P.map (zeroConeFieldOf γ X₀ B₀ B₀')).prod (P.map ηL), G' y = c' - M := by
+    filter_upwards [hcore, Measure.quasiMeasurePreserving_fst.ae hvc] with y h1 h2
+    rw [h1]
+    rw [hv_def] at h2
+    exact h2
+  rw [← hjoint] at hprod
+  have hω := ae_of_ae_map (hH'm.prodMk hηm).aemeasurable hprod
+  filter_upwards [hω, hH'eq] with ω h1 h2
+  rw [← h2]
+  exact h1
+
+end Similarity
 
 end MatedCRT
