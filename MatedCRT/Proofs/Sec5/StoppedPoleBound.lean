@@ -25,7 +25,7 @@ not depend on the mesh.
 
 Hence `ε v^ε_t(a) ≥ t (K⁻¹ log(ρ/(2r)) - 1) - K M` on `{𝓜 ≤ M}`, outside the failure events of Lemmas 2.16 and 2.18.
 For each `M` a deterministic radius `r(M)` makes the right-hand side at least `1`. This is the discrete logarithmic
-bound at zero of the consultant's answer to target 8 (the stopped sandpile at its pole); the bound on the annulus
+bound at zero of the stopped sandpile at its pole; the bound on the annulus
 `r(M) ≤ |η(a)| < s` comes from Theorem 4.1 and Lemma 3.3 and is not in this file.
 
 ## Main results
@@ -58,7 +58,7 @@ theorem rpow_lt_of_lt_rpow_inv {ε x b : ℝ} (hε : 0 ≤ ε) (hx : 0 < x) (hb 
   calc ε ^ b < (x ^ b⁻¹) ^ b := Real.rpow_lt_rpow hε h hb
     _ = x := Real.rpow_inv_rpow hx.le hb.ne'
 
-/-- **The discrete surplus at the pole** (target 8, the logarithmic bound at zero). For `γ ∈ (0, 2)` and `ρ ∈ (0, 1)`
+/-- **The discrete surplus at the pole** (the logarithmic bound at zero). For `γ ∈ (0, 2)` and `ρ ∈ (0, 1)`
 there is `K > 0`, chosen before the environment, such that for every valid environment, every `t > 0`, `M ≥ 0` and
 `0 < r ≤ ρ/6` with `t (K⁻¹ log(ρ/(2r)) - 1) - K M ≥ 1`, with polynomially high probability as `ε → 0`: if
 `𝓜(B_{(1+ρ)/2}) ≤ M`, then `1/ε ≤ w̃^ε_t(a) + (t/ε) g^ε_D(0, a)` for every vertex `a` with `|η(a)| < r`. -/

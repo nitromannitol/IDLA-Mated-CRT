@@ -15,7 +15,7 @@ vertex `a` of `V^ε(Λ_t)` with `s ≤ |η(a)|`, for a `σ(h, η)`-measurable `c
 step at radius `s/2` and the margin step), with the pole region left out; it does not use the pole step.
 
 `stoppedSurplusPole_of_steps` derives the pole step `StoppedSurplusPoleStep` from the same inputs and Lemmas 2.16 and
-2.18 (the consultant's answer to target 8): near the pole the logarithmic bound `stoppedPoleLowerBound` holds on
+2.18: near the pole the logarithmic bound `stoppedPoleLowerBound` holds on
 `{𝓜 ≤ n}` for `|η(a)| < r_n`, the annulus bound holds for `r_n ≤ |η(a)|`, and the constant is `min 1 c_N` at the
 random index `N = ⌈𝓜⌉`, computed from a `σ(h)`-measurable version of `μ_h` (`frozenLQGMeasureFieldMeasurable_holds`);
 `𝓜` is finite almost surely by Lemma 2.17.
@@ -282,7 +282,7 @@ theorem one_le_of_poleRadius {K t ρ : ℝ} (hK : 0 < K) (ht : 0 < t) (hρ : 0 <
     (show (K * n + 1) / t ≤ K⁻¹ * Real.log (ρ / (2 * r)) - 1 by linarith) ht.le
   linarith
 
-/-- **The pole step `StoppedSurplusPoleStep`** (target 8) from the strict obstacle gap, the geometry and margin
+/-- **The pole step `StoppedSurplusPoleStep`** from the strict obstacle gap, the geometry and margin
 steps, the scaling of the expected exit time, Theorem 4.1 and Lemmas 3.3, 2.16 and 2.18. The cutoff is `s = ρ/6`
 and the constant `c = min 1 c_N` with `N = ⌈𝓜⌉`. -/
 theorem stoppedSurplusPole_of_steps (𝒮 : SpaceFillingSLEModel) (hgap : HarmonicBallStrictObstacleGapStep 𝒮)

@@ -974,8 +974,8 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   gives `MainHypotheses (ProbeMi.canonicalSLEModel ν)` from `CanonicalHypotheses ν` and the five open steps.
   The geometry and margin steps `stoppedInteriorGeometry`, `stoppedInteriorMeasurable` hold for every model
   (`StoppedGeometry.stoppedInteriorGeometryStep_holds`, Proofs/Sec5/StoppedInteriorGeometryProof.lean;
-  `StoppedCode.stoppedInteriorMeasurableStep_holds`, Proofs/Sec5/StoppedClusterCode.lean), following the consultant's
-  answer to target 10: the Lusin-Souslin decoder of the obstacle problem (`exists_decoder_disk`) applied to a
+  `StoppedCode.stoppedInteriorMeasurableStep_holds`, Proofs/Sec5/StoppedClusterCode.lean), from the uniqueness in
+  Theorem 2.3 (the harmonic balls are a Borel function of the area measure): the Lusin-Souslin decoder of the obstacle problem (`exists_decoder_disk`) applied to a
   field-measurable version of `μ_h` gives a `σ(h)`-measurable code of `w̄_t` in `C(B̄_ρ)`, whose cluster closure is a
   Borel random compact set and whose regularized cluster is `Λ_t` on `{t < T}`; the geometry step adds the cell-size
   estimate of Lemma 2.8 and a countable threshold in the code, positive by compactness and regularity.
@@ -983,16 +983,16 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   `StoppedInterior.stoppedSurplusPole_of_steps` (Proofs/Sec5/StoppedPoleReduction.lean) joins the logarithmic bound
   at the pole `stoppedPoleLowerBound` (Proofs/Sec5/StoppedPoleBound.lean: Lemmas 2.16, 2.18 and the basic bound
   `w̃ ≥ -q`, on `{𝓜 ≤ n}`) to the annulus bound `stoppedSurplusAnnulus_of_gap` (the annulus half of
-  `stoppedSurplusInterior_of_gap`) at the random index `⌈𝓜⌉`, following the consultant's answer to target 8.
+  `stoppedSurplusInterior_of_gap`) at the random index `⌈𝓜⌉`, with the logarithmic bound of Lemmas 2.16 and 2.18 at the pole.
   The layer step `stoppedLayerPotential` is `ReferenceInputs.stoppedLayerPotential` from the number of missing sites
   `ReferenceInputs.stoppedMissingSites` (`ε #(V^ε(Λ_t) \ Λ^ε_t) → 0` on `{t < T}`;
   `StoppedMissing.stoppedMissingSites_of_innerBound`, Proofs/Sec5/StoppedMissingSitesProof.lean, from Proposition 4.2,
   the null overlaps of the cells, the cell-size estimate and `μ_h(∂Λ_t) = 0`, the masses near `∂Λ_t` bounded by
-  flagged dyadic squares, a measurable function of the field):
+  flagged half-open squares of side 1/(n+1), a measurable function of the field):
   `stoppedLayerPotential_of_missingSites` (Proofs/Sec5/StoppedLayerBound.lean) splits `ε ∑_{b ∈ S} g^ε_A(a, b)` by
   the distance to `a`: Lemma 2.15 and the count (5.41) below `ε^{β₂}`, Lemma 2.14 and the cell masses against
-  `𝓜(B_{2r})` (Lemma 2.17) up to `r`, and `(C log(1/r) + C) ε #S` beyond. This replaces the square-sum bound of the
-  consultant's answer to target 9; the statement of the step is the one that answer proves (on `{t < T}`).
+  `𝓜(B_{2r})` (Lemma 2.17) up to `r`, and `(C log(1/r) + C) ε #S` beyond. This avoids a bound on the square sum
+  `ε ∑_b g^ε_A(a, b)²`; the step is stated on `{t < T}`, where it holds.
   `convergenceOfIDLA_of_referenceInputs` and `convergenceOfDivSandpile_of_referenceInputs` prove Theorems 1.4 and 1.6
   for every model from `ReferenceInputs 𝒮 ν` alone (`closed_1_4_quantumConeScaling_coneDimension`,
   `closed_1_6_quantumConeScaling_coneDimension` with `ReferenceInputs.randomWalkToLBM`), without the open steps.
@@ -1023,8 +1023,8 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   results are proved without the steps `coneHarmonicBallLocality`, `coneHarmonicBallStrictGrowth` and
   `coneHalfBallFamilyFunctional` of `MainHypotheses`; the last two are still used by the scaling argument of
   `convergenceOfIDLA_of_coneSteps` (Assembly/Main.lean:354).
-  `coneHarmonicBallStrictGrowth` (`cl Λ_s ⊆ Λ_t` for `s < t`) is OPEN: the consultant's answer to target 13 leaves it
-  open for the quantum-cone LQG measure and gives a counterexample for general obstacle measures. It remains a named
+  `coneHarmonicBallStrictGrowth` (`cl Λ_s ⊆ Λ_t` for `s < t`) is OPEN: it is not known for the quantum-cone LQG measure,
+  and it fails for some general obstacle measures. It remains a named
   step of the old `MainHypotheses` route only; the canonical route (`convergenceOfIDLA_canonical`, the results of
   `CanonicalResults.lean` and the general-model `convergenceOfIDLA_of_referenceInputs`) does not use it.
   `MatedCRT/Audit/MainAxioms.lean` prints the axioms of the declarations of the four files (68 lines).

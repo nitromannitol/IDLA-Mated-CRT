@@ -22,7 +22,7 @@ import MatedCRT.Proofs.Sec6.ConstantOrderLowerBound.Model
 /-!
 # The Green potential of the boundary layer, from the number of missing sites
 
-The step `StoppedLayerPotentialStep` of Proposition 5.1 (the consultant's answer to target 9): with `A = V^ε(Λ_t)` and
+The layer step `StoppedLayerPotentialStep` of Proposition 5.1: with `A = V^ε(Λ_t)` and
 `S = A \ Λ^ε_t`, on `{t < T}`, `ε ∑_{b ∈ S} g^ε_A(a, b) ≤ κ` for every `a ∈ A`, with probability tending to one. This
 file splits the sum according to the distance `d = |η(a) - η(b)|`:
 
@@ -31,7 +31,7 @@ file splits the sum according to the distance `d = |η(a) - η(b)|`:
   meet in null sets, `ε ∑ (C log(1/d) + C) ≤ C (1 + log 2) 𝓜(B_{2r}(η(a)))`, which is small for small `r` (Lemma 2.17);
 * `r ≤ d`: `g^ε_A(a, b) ≤ C log(1/r) + C`, so this part is at most `(C log(1/r) + C) ε #S`.
 
-This is a simpler route than the square-sum bound of the answer: it needs only `ε #S → 0` on `{t < T}`.
+This avoids a bound on the square sum `ε ∑_b g^ε_A(a, b)²`: it needs only `ε #S → 0` on `{t < T}`.
 
 ## Main results
 
@@ -259,10 +259,10 @@ theorem eps_mul_layerSum_le {μ : Measure ℂ} {η : ℝ → ℂ} {m : ℤ → �
     linarith
   linarith [hsum, hnearB, hmid, hfar]
 
-/-- **The missing sites of the stopped cluster** (the first part of the consultant's answer to target 9): for every
-`κ > 0`, on `{t < T}`, with probability tending to one, `ε #(V^ε(Λ_t) \ Λ^ε_t) ≤ κ`. The answer derives it from the
-interior bound of target 8, the null overlaps of the cells and `μ_h(∂Λ_t) = 0`. Proved from Proposition 4.2:
-`StoppedMissing.stoppedMissingSites_of_innerBound` (`MatedCRT/Proofs/Sec5/StoppedMissingSitesProof.lean`). -/
+/-- **The missing sites of the stopped cluster** (the first part of the layer step of Proposition 5.1): for every
+`κ > 0`, on `{t < T}`, with probability tending to one, `ε #(V^ε(Λ_t) \ Λ^ε_t) ≤ κ`. Proved from Proposition 4.2,
+the null overlaps of the cells and `μ_h(∂Λ_t) = 0`: `StoppedMissing.stoppedMissingSites_of_innerBound`
+(`MatedCRT/Proofs/Sec5/StoppedMissingSitesProof.lean`). -/
 def StoppedMissingSitesStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
@@ -286,8 +286,8 @@ theorem tendsto_two_mul_rpow {p : ℝ} (hp : 0 < p) : Tendsto (fun r : ℝ => (2
     (hc.tendsto 0).mono_left nhdsWithin_le_nhds
   simpa [Real.zero_rpow hp.ne'] using h
 
-/-- **`StoppedLayerPotentialStep` from Lemma 2.14 and the missing sites** (target 9). For `κ > 0` and a target
-probability `η`, the radius `r` is chosen with `C (1 + log 2) (2r)^q < κ/3` and the failure probability of Lemma 2.17 at
+/-- **`StoppedLayerPotentialStep` from Lemma 2.14 and the missing sites.** For `κ > 0` and a bound
+`η` on the failure probability, the radius `r` is chosen with `C (1 + log 2) (2r)^q < κ/3` and the failure probability of Lemma 2.17 at
 `2r` below `η/3`; then `eps_mul_layerSum_le` bounds `ε ∑_{b ∈ S} g^ε_A(a, b)` by `κ` on the events of Lemmas 2.14,
 2.15, (5.41), 2.8 and 2.17 and on `ε #S ≤ κ / (3 (C log(1/r) + C))`. -/
 theorem stoppedLayerPotential_of_missingSites (𝒮 : SpaceFillingSLEModel) (h214 : GreenKernelUpperBoundStmt 𝒮)

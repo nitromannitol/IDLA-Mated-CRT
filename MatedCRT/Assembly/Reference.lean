@@ -242,7 +242,7 @@ theorem correctedHarmonicConvergence (H : ReferenceInputs 𝒮 ν) :
     CorrectedHarmonicConvergenceStmt 𝒮 ∧ FirstPass36.CorrectedHarmonicSameWalkAnnealedStmt 𝒮 :=
   closed_3_6_lp_uniform_derivedInputs 𝒮 ν H.certifiedReferenceModel H.oneSidedBoundaryContinuity
 
-/-- **The pole step of Proposition 5.1** (`StoppedSurplusPoleStep`; the consultant's answer to target 8) from
+/-- **The pole step of Proposition 5.1** (`StoppedSurplusPoleStep`) from
 `ReferenceInputs`: `StoppedInterior.stoppedSurplusPole_of_steps` with the strict obstacle gap, the geometry and margin
 steps (proved for every model), the scaling of the expected exit time, Theorem 4.1, Lemma 3.3 and Lemmas 2.16 and
 2.18. -/
@@ -253,8 +253,7 @@ theorem stoppedSurplusPole (H : ReferenceInputs 𝒮 ν) : StoppedInterior.Stopp
     (closed_3_3_ownBinders_derivedInputs 𝒮 ν H.certifiedReferenceModel) H.greenKernelLowerBound
     H.exitTimeUpperBound
 
-/-- **The number of missing sites of Proposition 5.1** (`StoppedMissingSitesStep`; the consultant's answer to target 9)
-from `ReferenceInputs`: `StoppedMissing.stoppedMissingSites_of_innerBound` with Proposition 4.2 in the form
+/-- **The number of missing sites of Proposition 5.1** (`StoppedMissingSitesStep`) from `ReferenceInputs`: `StoppedMissing.stoppedMissingSites_of_innerBound` with Proposition 4.2 in the form
 `DiscreteClusterInnerBoundStep` (`discreteClusterInnerBound_prop42`: Theorem 4.1, Lemmas 2.3, 2.4, 2.7, 2.8, 3.3, the
 measurability of the family of Lemma 2.4 and the strict obstacle gap). -/
 theorem stoppedMissingSites (H : ReferenceInputs 𝒮 ν) : StoppedMissingSitesStep 𝒮 :=
@@ -265,7 +264,7 @@ theorem stoppedMissingSites (H : ReferenceInputs 𝒮 ν) : StoppedMissingSitesS
       (closed_3_3_ownBinders_derivedInputs 𝒮 ν H.certifiedReferenceModel) coneFamilyAEMeasurableStep_holds
       (harmonicBallStrictObstacleGapStep_holds 𝒮))
 
-/-- **The layer step of Proposition 5.1** (`StoppedLayerPotentialStep`; the consultant's answer to target 9) from
+/-- **The layer step of Proposition 5.1** (`StoppedLayerPotentialStep`) from
 `ReferenceInputs`: `stoppedLayerPotential_of_missingSites` with Lemma 2.14 and the number of missing sites. -/
 theorem stoppedLayerPotential (H : ReferenceInputs 𝒮 ν) : StoppedLayerPotentialStep 𝒮 :=
   stoppedLayerPotential_of_missingSites 𝒮 H.greenKernelUpperBound H.stoppedMissingSites
