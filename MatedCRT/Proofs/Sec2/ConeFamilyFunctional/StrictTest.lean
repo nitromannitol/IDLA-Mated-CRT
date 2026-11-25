@@ -12,8 +12,8 @@ admissible time, the closure of the decoded cluster at time `q₁` lies in the r
   test for `ν|_{B̄_ρ}` (`isStrictlyGrowingOn_iff_strictTest`): both sides reduce to rational times by monotonicity.
 * The test is Borel (`measurableSet_strictTest`): a compact closure lies in an open set iff it is covered by finitely
   many discs of rational radius with centres in `denseC` whose closures lie in the open set
-  (`closure_subset_iff_exists_finset`), and a closed disc lies in a regularized cluster iff a slightly larger open disc
-  has all its points of `denseC` in the closure of the cluster (`closedBall_subset_codeBall_iff`).
+  (`subset_iff_exists_finset`), and a closed disc lies in a regularized cluster iff a slightly larger open disc
+  has all its points of `denseC` in the closure of the cluster (`closedBall_subset_interior_closure_iff`).
 * For the quantum cone, almost surely a strict family of Lemma 2.4 exists iff the test holds for `μ_h|_{B̄_ρ}`
   (`ae_exists_strict_iff_strictTest`): Lemma 2.4 gives a unique family of Lemma 2.4, and its closures lie in
   `B_{1/2}` before the stopping time (`coneHalfBallClosureInsideStep_holds`).

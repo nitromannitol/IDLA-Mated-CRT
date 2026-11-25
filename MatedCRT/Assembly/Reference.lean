@@ -72,8 +72,7 @@ inputs (`ReferenceInputs.stoppedSurplusPole`), and the number of missing sites f
 fields are the three open steps collected in `OpenStepHypotheses 𝒮`; the locality step of Lemma 2.4 holds with no
 hypothesis (`coneHarmonicBallLocalityStep_holds`), and so does the step of Lemma 2.5 that the family of Lemma 2.4 is a
 measurable functional of the field (`ConeFamilyFunctional.coneHalfBallFamilyFunctionalStep_holds`). At the canonical
-model
-`ProbeMi.canonicalSLEModel ν`, `ReferenceInputs` follows from the premises `CanonicalHypotheses ν`
+model `ProbeMi.canonicalSLEModel ν`, `ReferenceInputs` follows from the premises `CanonicalHypotheses ν`
 (`MatedCRT/Assembly/Canonical.lean`), so the certified reference model holds there, and `MainHypotheses` holds there
 from `CanonicalHypotheses ν` and `OpenStepHypotheses`.
 
