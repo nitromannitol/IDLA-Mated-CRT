@@ -12,7 +12,8 @@ increasing finite family of times `t_0 ≤ … ≤ t_N`,
 `η² P_w(max_{j ≤ N} |A^f_{t_j} - A^g_{t_j}| ≥ η) ≤ 32 δ M`
 
 (`mul_measure_exists_le_abs_killedOccupationGapUpTo_le`), and the same bound holds for all dyadic times at once
-(`mul_measure_iUnion_dyadic_le_abs_killedOccupationGapUpTo_le`).
+(`mul_measure_iUnion_dyadic_le_abs_killedOccupationGapUpTo_le`) and for all times at once
+(`mul_measure_exists_lt_abs_killedOccupationGapUpTo_le`, by left-continuity of the finite functionals in `t`).
 
 The proof is the first-entrance argument for additive functionals: on the event that the grid value `|A^f - A^g|`
 first reaches `η` at the time `t_j` (an event of the canonical filtration at `t_j`, since the occupation functional
@@ -28,7 +29,7 @@ potential of its Revuz measure (Fukushima–Oshima–Takeda (2011), §5.1; Beres
 set_option autoImplicit false
 
 open MeasureTheory Set Filter
-open scoped NNReal ENNReal
+open scoped NNReal ENNReal Topology
 
 namespace MatedCRT
 
@@ -450,5 +451,120 @@ theorem mul_measure_iUnion_dyadic_le_abs_killedOccupationGapUpTo_le (hD : IsOpen
     show (i : ℝ≥0) / 2 ^ m ≤ (j : ℝ≥0) / 2 ^ m
     gcongr
   exact mul_measure_exists_le_abs_killedOccupationGapUpTo_le hD hf hg hM hMf hMg hfg hgf hw hη htm (m * 2 ^ m)
+
+/-! ### All times -/
+
+/-- The dyadic time `⌊t 2^m⌋ / 2^m` below `t`. -/
+noncomputable def dyadicFloor (t : ℝ) (m : ℕ) : ℝ≥0 :=
+  ((⌊t * 2 ^ m⌋₊ : ℕ) : ℝ≥0) / 2 ^ m
+
+theorem coe_dyadicFloor (t : ℝ) (m : ℕ) :
+    ((dyadicFloor t m : ℝ≥0) : ℝ) = (⌊t * 2 ^ m⌋₊ : ℝ) / 2 ^ m := by
+  simp [dyadicFloor]
+
+theorem dyadicFloor_le {t : ℝ} (ht : 0 ≤ t) (m : ℕ) : ((dyadicFloor t m : ℝ≥0) : ℝ) ≤ t := by
+  rw [coe_dyadicFloor, div_le_iff₀ (by positivity)]
+  exact Nat.floor_le (mul_nonneg ht (by positivity))
+
+theorem sub_inv_lt_dyadicFloor (t : ℝ) (m : ℕ) : t - ((2 : ℝ) ^ m)⁻¹ < ((dyadicFloor t m : ℝ≥0) : ℝ) := by
+  have h2 : (0 : ℝ) < 2 ^ m := by positivity
+  rw [coe_dyadicFloor, lt_div_iff₀ h2, sub_mul, inv_mul_cancel₀ h2.ne']
+  linarith [Nat.lt_floor_add_one (t * 2 ^ m)]
+
+theorem tendsto_dyadicFloor {t : ℝ} (ht : 0 ≤ t) :
+    Tendsto (fun m : ℕ => ((dyadicFloor t m : ℝ≥0) : ℝ)) atTop (𝓝 t) := by
+  have h : Tendsto (fun m : ℕ => t - ((2 : ℝ) ^ m)⁻¹) atTop (𝓝 t) := by
+    have := (tendsto_inv_atTop_zero.comp
+      (tendsto_pow_atTop_atTop_of_one_lt (one_lt_two (α := ℝ)))).const_sub t
+    simpa only [Function.comp_apply, sub_zero] using this
+  exact tendsto_of_tendsto_of_tendsto_of_le_of_le h tendsto_const_nhds
+    (fun m => (sub_inv_lt_dyadicFloor t m).le) (fun m => dyadicFloor_le ht m)
+
+/-- Before the time `0` the occupation functional vanishes. -/
+theorem killedOccupationUpTo_of_nonpos (f : ℂ → ℝ≥0∞) (b : ContinuousPath ℂ) {t : ℝ} (ht : t ≤ 0) :
+    killedOccupationUpTo D f b t = 0 := by
+  unfold killedOccupationUpTo
+  refine (lintegral_congr fun s => ?_).trans lintegral_zero
+  by_cases hs : s ∈ Iic t
+  · rw [indicator_of_mem hs]
+    exact indicator_of_notMem (fun h : s ∈ killedTimes D b => absurd h.1 (not_lt.2 ((mem_Iic.1 hs).trans ht))) _
+  · exact indicator_of_notMem hs _
+
+theorem killedOccupationUpTo_le_killedOccupation (f : ℂ → ℝ≥0∞) (b : ContinuousPath ℂ) (t : ℝ) :
+    killedOccupationUpTo D f b t ≤ killedOccupation D f b :=
+  lintegral_mono fun s => indicator_le_self' (fun _ _ => zero_le) s
+
+/-- If the occupation functional is finite, its values at the dyadic times below `t ≥ 0` converge to its value at
+`t` (dominated convergence; the time `t` itself is a null set). -/
+theorem tendsto_killedOccupationUpTo_dyadicFloor (hD : IsOpen D) {f : ℂ → ℝ≥0∞} (hf : Measurable f)
+    {b : ContinuousPath ℂ} (hfin : killedOccupation D f b ≠ ⊤) {t : ℝ} (ht : 0 ≤ t) :
+    Tendsto (fun m : ℕ => killedOccupationUpTo D f b (dyadicFloor t m)) atTop
+      (𝓝 (killedOccupationUpTo D f b t)) := by
+  unfold killedOccupationUpTo
+  refine tendsto_lintegral_of_dominated_convergence (killedRate D f b)
+    (fun m => (measurable_killedRate_path hD hf b).indicator measurableSet_Iic)
+    (fun m => Eventually.of_forall fun s => indicator_le_self' (fun _ _ => zero_le) s) hfin ?_
+  filter_upwards [compl_mem_ae_iff.2 (measure_singleton t)] with s hs
+  have hs' : s ≠ t := hs
+  rcases lt_or_gt_of_ne hs' with hst | hst
+  · have hev : ∀ᶠ m : ℕ in atTop, s < ((dyadicFloor t m : ℝ≥0) : ℝ) :=
+      (tendsto_dyadicFloor ht).eventually (lt_mem_nhds hst)
+    refine tendsto_const_nhds.congr' ?_
+    filter_upwards [hev] with m hm
+    simp only [indicator_of_mem (show s ∈ Iic t from hst.le),
+      indicator_of_mem (show s ∈ Iic ((dyadicFloor t m : ℝ≥0) : ℝ) from hm.le)]
+  · have h0 : ∀ m : ℕ, (Iic ((dyadicFloor t m : ℝ≥0) : ℝ)).indicator (killedRate D f b) s = 0 := fun m =>
+      indicator_of_notMem (fun h => (not_le.2 hst) ((mem_Iic.1 h).trans (dyadicFloor_le ht m))) _
+    have h1 : (Iic t).indicator (killedRate D f b) s = 0 :=
+      indicator_of_notMem (fun h => (not_le.2 hst) (mem_Iic.1 h)) _
+    simp only [h0, h1]
+    exact tendsto_const_nhds
+
+theorem tendsto_killedOccupationGapUpTo_dyadicFloor (hD : IsOpen D) {f g : ℂ → ℝ≥0∞} (hf : Measurable f)
+    (hg : Measurable g) {b : ContinuousPath ℂ} (hfb : killedOccupation D f b ≠ ⊤)
+    (hgb : killedOccupation D g b ≠ ⊤) {t : ℝ} (ht : 0 ≤ t) :
+    Tendsto (fun m : ℕ => killedOccupationGapUpTo D f g b (dyadicFloor t m)) atTop
+      (𝓝 (killedOccupationGapUpTo D f g b t)) := by
+  have h1 := (ENNReal.tendsto_toReal ((killedOccupationUpTo_le_killedOccupation f b t).trans_lt
+    hfb.lt_top).ne).comp (tendsto_killedOccupationUpTo_dyadicFloor hD hf hfb ht)
+  have h2 := (ENNReal.tendsto_toReal ((killedOccupationUpTo_le_killedOccupation g b t).trans_lt
+    hgb.lt_top).ne).comp (tendsto_killedOccupationUpTo_dyadicFloor hD hg hgb ht)
+  exact h1.sub h2
+
+/-- **Maximal inequality at all times.** Under the hypotheses of the grid inequality, the gap `|A^f_t - A^g_t|`
+exceeds `η` at some time `t` with `P_w`-probability at most `32 δ M / η²`: almost surely both functionals are finite
+(their expectations are the potentials at `w`), so the gap is left-continuous in `t` and is read off the dyadic
+times. -/
+theorem mul_measure_exists_lt_abs_killedOccupationGapUpTo_le (hD : IsOpen D) {f g : ℂ → ℝ≥0∞}
+    (hf : Measurable f) (hg : Measurable g) {M δ : ℝ≥0∞} (hM : M ≠ ⊤)
+    (hMf : ∀ y ∈ D, killedPotential D f y ≤ M) (hMg : ∀ y ∈ D, killedPotential D g y ≤ M)
+    (hfg : ∀ y ∈ D, killedPotential D f y ≤ killedPotential D g y + δ)
+    (hgf : ∀ y ∈ D, killedPotential D g y ≤ killedPotential D f y + δ) {w : ℂ} (hw : w ∈ D)
+    {η : ℝ} (hη : 0 < η) :
+    ENNReal.ofReal (η ^ 2) * planarBrownianMotion w
+        {b | ∃ t : ℝ, η < |killedOccupationGapUpTo D f g b t|} ≤ 32 * δ * M := by
+  have h1 := ae_lt_top (measurable_killedOccupation hD hf) ((hMf w hw).trans_lt hM.lt_top).ne
+  have h2 := ae_lt_top (measurable_killedOccupation hD hg) ((hMg w hw).trans_lt hM.lt_top).ne
+  refine le_trans (mul_le_mul_of_nonneg_left (measure_mono_ae ?_) zero_le)
+    (mul_measure_iUnion_dyadic_le_abs_killedOccupationGapUpTo_le hD hf hg hM hMf hMg hfg hgf hw hη)
+  filter_upwards [h1, h2] with b hb1 hb2 hbt
+  obtain ⟨t, ht⟩ := hbt
+  have ht0 : 0 ≤ t := by
+    by_contra hneg
+    have hle : t ≤ 0 := (not_le.1 hneg).le
+    have h0 : killedOccupationGapUpTo D f g b t = 0 := by
+      unfold killedOccupationGapUpTo
+      rw [killedOccupationUpTo_of_nonpos f b hle, killedOccupationUpTo_of_nonpos g b hle, sub_self]
+    rw [h0, abs_zero] at ht
+    exact absurd ht (not_lt.2 hη.le)
+  have hlim := (tendsto_killedOccupationGapUpTo_dyadicFloor hD hf hg hb1.ne hb2.ne ht0).abs
+  obtain ⟨m, hm1, hm2⟩ := ((hlim.eventually (lt_mem_nhds ht)).and
+    ((tendsto_natCast_atTop_atTop (R := ℝ)).eventually_ge_atTop t)).exists
+  have hj : ⌊t * 2 ^ m⌋₊ ≤ m * 2 ^ m := by
+    have hle : t * 2 ^ m ≤ ((m * 2 ^ m : ℕ) : ℝ) := by
+      push_cast
+      exact mul_le_mul_of_nonneg_right hm2 (by positivity)
+    exact Nat.cast_le.1 ((Nat.floor_le (mul_nonneg ht0 (by positivity))).trans hle)
+  exact mem_iUnion.2 ⟨m, ⌊t * 2 ^ m⌋₊, hj, hm1.le⟩
 
 end MatedCRT
