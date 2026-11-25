@@ -188,7 +188,7 @@ jobs:
                   reports[-1] += ' ' + line.strip()
               elif line.strip():
                   reports.append(line.strip())
-          pattern = re.compile(r"^'[^']+' depends on axioms: \[propext, Classical\.choice, Quot\.sound\]$")
+          pattern = re.compile(r"^'.+' depends on axioms: \[propext, Classical\.choice, Quot\.sound\]$")
           bad = [r for r in reports if not pattern.match(r)]
           if bad:
               print('Unexpected output of the axiom audit:')
