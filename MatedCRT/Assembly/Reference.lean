@@ -23,6 +23,7 @@ import MatedCRT.Proofs.Sec3.DiscreteDirichletProblem.StepsOfDraft
 import MatedCRT.FirstPass.Derived.OneSidedBoundaryOfReference
 import MatedCRT.FirstPass.Derived.QuantumConeScalingDimension
 import MatedCRT.Proofs.Sec5.StoppedPoleReduction
+import MatedCRT.Proofs.Sec5.StoppedLayerBound
 
 /-!
 # The cited fields of `MainHypotheses` from reference environments
@@ -89,9 +90,10 @@ open MeasureTheory
 
 namespace MatedCRT
 
-/-- The eight fields of `MainHypotheses 𝒮` that are open steps, with the same names and types. The pole step
-`stoppedSurplusPole` follows from `ReferenceInputs` and the geometry and margin steps
-(`ReferenceInputs.stoppedSurplusPole`). -/
+/-- The eight open steps: seven fields of `MainHypotheses 𝒮`, with the same names and types, and the number of missing
+sites of Proposition 5.1. The pole step `stoppedSurplusPole` follows from `ReferenceInputs` and the geometry and margin
+steps (`ReferenceInputs.stoppedSurplusPole`), and the layer step `stoppedLayerPotential` from `ReferenceInputs` and the
+number of missing sites (`ReferenceInputs.stoppedLayerPotential`). -/
 structure OpenStepHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   /-- Lemma 2.4: locality of the cone harmonic balls. -/
   coneHarmonicBallLocality : ConeHarmonicBallLocalityStep
@@ -108,8 +110,8 @@ structure OpenStepHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   stoppedInteriorGeometry : StoppedInterior.StoppedInteriorGeometryStep 𝒮
   /-- Lemma 5.3 on `V^ε(Λ_t)`: measurability of the continuum margin on the random compact set. -/
   stoppedInteriorMeasurable : StoppedInterior.StoppedInteriorMeasurableStep 𝒮
-  /-- Proposition 5.1: Lemma 5.3 on `V^ε(Λ_t)`, Green potential of the boundary layer `A \ Λ^ε_t`. -/
-  stoppedLayerPotential : StoppedLayerPotentialStep 𝒮
+  /-- Proposition 5.1: the number of missing sites, `ε #(V^ε(Λ_t) \ Λ^ε_t) → 0` on `{t < T}`. -/
+  stoppedMissingSites : StoppedMissingSitesStep 𝒮
 
 /-- A model `𝒮` with normalized space-filling SLE law `ν`, the SLE closure inputs, valid environments on `ℝ`, the
 uniform-start invariance principle and the chart forms of Berestycki-Gwynne, Lemmas 7.20 and 7.21. -/
@@ -225,6 +227,12 @@ theorem stoppedSurplusPole (H : ReferenceInputs 𝒮 ν) (hgeo : StoppedInterior
     (closed_3_3_ownBinders_derivedInputs 𝒮 ν H.certifiedReferenceModel) H.greenKernelLowerBound
     H.exitTimeUpperBound
 
+/-- **The layer step of Proposition 5.1** (`StoppedLayerPotentialStep`; the consultant's answer to target 9) from
+`ReferenceInputs` and the number of missing sites: `stoppedLayerPotential_of_missingSites` with Lemma 2.14. -/
+theorem stoppedLayerPotential (H : ReferenceInputs 𝒮 ν) (hmiss : StoppedMissingSitesStep 𝒮) :
+    StoppedLayerPotentialStep 𝒮 :=
+  stoppedLayerPotential_of_missingSites 𝒮 H.greenKernelUpperBound hmiss
+
 end ReferenceInputs
 
 /-- `RemainingHypotheses 𝒮` from `ReferenceHypotheses 𝒮 ν`: the five cited fields are proved from the law, the
@@ -253,7 +261,7 @@ theorem ReferenceHypotheses.toRemainingHypotheses {𝒮 : SpaceFillingSLEModel} 
       H.steps.stoppedInteriorMeasurable
     stoppedInteriorGeometry := H.steps.stoppedInteriorGeometry
     stoppedInteriorMeasurable := H.steps.stoppedInteriorMeasurable
-    stoppedLayerPotential := H.steps.stoppedLayerPotential
+    stoppedLayerPotential := H.toReferenceInputs.stoppedLayerPotential H.steps.stoppedMissingSites
     meanValueSurplusLower := meanValueSurplusLowerStep_of_meps H.toReferenceInputs.mepsScaling
     integralConvergenceGreenFunction := integralConvergenceGreenFunction_of_walk H.toReferenceInputs.randomWalkToLBM
       H.toReferenceInputs.exitTimeUpperBound H.toReferenceInputs.mepsScaling }
