@@ -954,8 +954,8 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   `RemainingHypotheses.toMainHypotheses` (`:130`) supplies the twenty-three, and `convergenceOfIDLA_of_remaining` (`:193`)
   and `convergenceOfDivSandpile_of_remaining` (`:199`) apply the two conditional forms.
 - `MatedCRT/Assembly/Reference.lean`: `ReferenceHypotheses 𝒮 ν` has the law `ν`, the SLE closure inputs,
-  `GMS21UniformStartInput 𝒮`, `HasReferenceEnvironments 𝒮`, `BG20ChartFieldInput 𝒮` and the five open steps
-  (`OpenStepHypotheses 𝒮`). `ReferenceHypotheses.toRemainingHypotheses` proves fourteen fields of
+  `GMS21UniformStartInput 𝒮`, `HasReferenceEnvironments 𝒮`, `BG20ChartFieldInput 𝒮` and the four open steps
+  (`OpenStepHypotheses 𝒮`). `ReferenceHypotheses.toRemainingHypotheses` proves fifteen fields of
   `RemainingHypotheses 𝒮`: `randomWalkToLBM` (`randomWalkToLBMStmt_of_markovLimit_bg20ChartField`),
   `greenKernelUpperBound` and `greenKernelLowerBound` (`greenKernelUpperBoundStmt_of_reference`,
   `greenKernelLowerBoundStmt_of_reference` with `exists_matingRigidLEOn_full_derived`), `mepsScaling`
@@ -971,7 +971,11 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   `ReferenceInputs.subsequentialConvergencePrepared`).
   `referenceInputs_canonical` (`:298`) supplies the law, the closure inputs, the reference environments and the
   uniform-start input at the canonical model from `CanonicalHypotheses ν`, and `mainHypotheses_canonical` (`:325`)
-  gives `MainHypotheses (ProbeMi.canonicalSLEModel ν)` from `CanonicalHypotheses ν` and the five open steps.
+  gives `MainHypotheses (ProbeMi.canonicalSLEModel ν)` from `CanonicalHypotheses ν` and the four open steps.
+  The locality step `coneHarmonicBallLocality` of Lemma 2.4 holds with no hypothesis
+  (`coneHarmonicBallLocalityStep_holds`, Assembly/Reference.lean): the event of a stopped family of Lemma 2.4 has
+  probability one for the quantum cone (Lemma 2.4) and for `h^ℂ - γ log |·|` (HB22 Theorem 1.1, the family stopped at
+  `∂B_{1/2}`, `wholePlaneHalfBallFamilyStep_of_hb`), so the set of all restrictions to `B_1` has the property.
   The geometry and margin steps `stoppedInteriorGeometry`, `stoppedInteriorMeasurable` hold for every model
   (`StoppedGeometry.stoppedInteriorGeometryStep_holds`, Proofs/Sec5/StoppedInteriorGeometryProof.lean;
   `StoppedCode.stoppedInteriorMeasurableStep_holds`, Proofs/Sec5/StoppedClusterCode.lean), from the uniqueness in
@@ -1020,8 +1024,8 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   `coneCanonicalHalfBallStep_holds` and `coneHalfBallClosureInsideStep_holds`, Assembly/ProvedSteps.lean),
   `coneScaleInvarianceUpToFixedTimeStmt_holds` (Draft 2.5), `coneScaleInvarianceStmt_holds` (2.6),
   `coneFamilyAEMeasurableStep_holds`, `annulusHit_holds` (6.5), `goodAnnulusPrevalence_holds` (6.4). The Section 2
-  results are proved without the steps `coneHarmonicBallLocality`, `coneHarmonicBallStrictGrowth` and
-  `coneHalfBallFamilyFunctional` of `MainHypotheses`; the last two are still used by the scaling argument of
+  results are proved without the steps `coneHarmonicBallLocality` (now proved, `coneHarmonicBallLocalityStep_holds`),
+  `coneHarmonicBallStrictGrowth` and `coneHalfBallFamilyFunctional` of `MainHypotheses`; the last two are still used by the scaling argument of
   `convergenceOfIDLA_of_coneSteps` (Assembly/Main.lean:354).
   `coneHarmonicBallStrictGrowth` (`cl Λ_s ⊆ Λ_t` for `s < t`) is OPEN: it is not known for the quantum-cone LQG measure,
   and it fails for some general obstacle measures. It remains a named

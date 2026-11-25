@@ -68,7 +68,8 @@ The geometry and margin steps of Proposition 5.1 hold for every model (`StoppedG
 version of `μ_h`, through the Lusin-Souslin decoder of the obstacle problem). With them the pole step follows from these
 inputs (`ReferenceInputs.stoppedSurplusPole`), and the number of missing sites follows from Proposition 4.2
 (`ReferenceInputs.stoppedMissingSites`), hence the layer step (`ReferenceInputs.stoppedLayerPotential`). The remaining
-fields are the five open steps collected in `OpenStepHypotheses 𝒮`. At the canonical model
+fields are the four open steps collected in `OpenStepHypotheses 𝒮`; the locality step of Lemma 2.4 holds with no
+hypothesis (`coneHarmonicBallLocalityStep_holds`). At the canonical model
 `ProbeMi.canonicalSLEModel ν`, `ReferenceInputs` follows from the premises `CanonicalHypotheses ν`
 (`MatedCRT/Assembly/Canonical.lean`), so the certified reference model holds there, and `MainHypotheses` holds there
 from `CanonicalHypotheses ν` and `OpenStepHypotheses`.
@@ -121,13 +122,36 @@ theorem coneFamilyAEMeasurableStep_holds : ConeFamilyAEMeasurableStep :=
     FirstPass.Derived.quantumConeScalingInput_derived
     (lqgMeasurePropertiesStmt_of_scaling FirstPass.Derived.quantumConeScalingInput_derived)
 
-/-- The five open steps: five fields of `MainHypotheses 𝒮`, with the same names and types. The steps of Proposition 5.1
-are proved: the geometry and margin steps for every model, the pole step `stoppedSurplusPole` and the layer step
-`stoppedLayerPotential` from `ReferenceInputs` (`ReferenceInputs.stoppedSurplusPole`,
-`ReferenceInputs.stoppedLayerPotential`). -/
+/-- **The locality step of Lemma 2.4** (`ConeHarmonicBallLocalityStep`), with no hypothesis. The event
+`HasConeHarmonicBallsUpToHalfBall` of a stopped family of Lemma 2.4 has probability one both for the quantum cone
+(Lemma 2.4, `coneHarmonicBallsUpToFixedTimeStmt_holds`) and for `h^ℂ - γ log |·|` (HB22, Theorem 1.1, the family
+stopped when it reaches `∂B_{1/2}`: `wholePlaneHalfBallFamilyStep_of_hb`), so the set of all restrictions to `B_1` is a
+measurable set with the two almost sure equivalences. -/
+theorem coneHarmonicBallLocalityStep_holds : ConeHarmonicBallLocalityStep := by
+  intro γ hγ hγ2
+  refine ⟨Set.univ, MeasurableSet.univ, fun Ω _ P hC hcirc μ hcone => ?_,
+    fun Ω _ P hC hcirc μ hP hgff hlqg => ?_⟩
+  · filter_upwards [coneHarmonicBallsUpToFixedTimeStmt_holds γ hγ hγ2 Ω P hC hcirc μ hcone] with ω hω
+    obtain ⟨T, hT, Λ, hΛ, hs, -⟩ := hω
+    exact iff_of_true ⟨T, hT, Λ, hΛ, hs⟩ (Set.mem_univ _)
+  · filter_upwards [wholePlaneHalfBallFamilyStep_of_hb _root_.HarmonicBalls.firstPass_1_1_derivedInputs43.{0}
+      _root_.HarmonicBalls.Closure.closure_5_5_derivedInputs43.{0}
+      _root_.HarmonicBalls.Closure.closure_5_6_derivedInputs43.{0}
+      _root_.HarmonicBalls.Closure.closure_3_1_derivedInputs43.{0}
+      _root_.HarmonicBalls.Closure.closure_3_2_derivedInputs43.{0}
+      _root_.HarmonicBalls.Closure.closure_3_3_derivedInputs43.{0}
+      _root_.HarmonicBalls.Closure.closure_3_4_derivedInputs43.{0}
+      _root_.HarmonicBalls.Closure.closure_3_5_derivedInputs43.{0}
+      _root_.HarmonicBalls.Closure.closure_5_2_derivedInputs43.{0}
+      _root_.HarmonicBalls.Closure.closure_5_3_derivedInputs43.{0}
+      _root_.HarmonicBalls.Closure.closure_5_8_derivedInputs43.{0} γ hγ hγ2 Ω P hC hcirc μ hP hgff hlqg] with ω hω
+    exact iff_of_true hω (Set.mem_univ _)
+
+/-- The four open steps: four fields of `MainHypotheses 𝒮`, with the same names and types. The locality step of
+Lemma 2.4 is proved (`coneHarmonicBallLocalityStep_holds`), and so are the steps of Proposition 5.1: the geometry and
+margin steps for every model, the pole step `stoppedSurplusPole` and the layer step `stoppedLayerPotential` from
+`ReferenceInputs` (`ReferenceInputs.stoppedSurplusPole`, `ReferenceInputs.stoppedLayerPotential`). -/
 structure OpenStepHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
-  /-- Lemma 2.4: locality of the cone harmonic balls. -/
-  coneHarmonicBallLocality : ConeHarmonicBallLocalityStep
   /-- Lemmas 2.4, 2.5, Theorems 1.4, 1.6: strict growth of the cone harmonic balls (`T' = T`, not in the
   paper). -/
   coneHarmonicBallStrictGrowth : ConeHarmonicBallStrictGrowthStep
@@ -282,7 +306,7 @@ theorem ReferenceHypotheses.toRemainingHypotheses {𝒮 : SpaceFillingSLEModel} 
     mepsScaling := H.toReferenceInputs.mepsScaling
     sleModelClosure := H.sleModelClosure
     discreteHolderContinuityCorrected := H.toReferenceInputs.discreteHolderContinuityCorrected
-    coneHarmonicBallLocality := H.steps.coneHarmonicBallLocality
+    coneHarmonicBallLocality := coneHarmonicBallLocalityStep_holds
     coneHarmonicBallStrictGrowth := H.steps.coneHarmonicBallStrictGrowth
     coneHalfBallFamilyFunctional := H.steps.coneHalfBallFamilyFunctional
     dirichletInterior := dirichletInteriorStep_of_draft H.toReferenceInputs.discreteDirichletProblem
