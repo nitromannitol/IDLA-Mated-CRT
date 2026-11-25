@@ -16,8 +16,8 @@ the three premises `CanonicalHypotheses ν` only. This includes Lemma 3.6, whose
 (`ReferenceInputs.oneSidedBoundaryContinuity`).
 
 The results of Sections 2 and 6 on the quantum cone and the whole-plane field do not depend on the model; they hold
-with no hypothesis: Lemma 2.3, the Draft Lemmas 2.4 and 2.5 (with the uniqueness of the time `T`), Lemma 2.6, the
-measurability of the family of Lemma 2.4, and Lemmas 6.4 and 6.5.
+with no hypothesis: Lemma 2.3, the Draft Lemmas 2.4 and 2.5 (with the uniqueness of the time `T`) and the measurability
+of the family of Lemma 2.4 (`MatedCRT/Assembly/Reference.lean`), Lemma 2.6, and Lemmas 6.4 and 6.5.
 -/
 
 set_option autoImplicit false
@@ -26,35 +26,9 @@ open MeasureTheory
 
 namespace MatedCRT
 
-/-- **Lemma 2.3** (harmonic balls of the quantum cone), with no hypothesis. -/
-theorem coneHarmonicBallsStmt_holds : ConeHarmonicBallsStmt :=
-  closed_2_3_lp_derivedInputs FirstPass.Derived.quantumConeScalingInput_derived
-
-/-- **Lemma 2.4** (Draft form: the harmonic balls of the cone up to the half-ball time, with the uniqueness of the
-time), with no hypothesis. -/
-theorem coneHarmonicBallsUpToFixedTimeStmt_holds : ConeHarmonicBallsUpToFixedTimeStmt :=
-  coneHarmonicBallsUpToFixedTimeStmt_of_canonical coneCanonicalHalfBallStep_holds coneHalfBallClosureInsideStep_holds
-
-/-- **Lemma 2.5** (Draft form: scale invariance of the cone harmonic balls up to the half-ball time), with no
-hypothesis. -/
-theorem coneScaleInvarianceUpToFixedTimeStmt_holds : ConeScaleInvarianceUpToFixedTimeStmt :=
-  coneScaleInvarianceUpToFixedTimeStmt_of_canonical coneCanonicalHalfBallStep_holds
-    coneHalfBallClosureInsideStep_holds (closed_2_5_lp_derivedInputs FirstPass.Derived.quantumConeScalingInput_derived)
-    (coneRescaledHalfBallHorizonUnique_fp coneCanonicalHalfBallStep_holds coneHalfBallClosureInsideStep_holds
-      (FirstPass.Derived.coneRescaledMeasureIsConeFieldInput_of_scaling
-        FirstPass.Derived.quantumConeScalingInput_derived))
-
 /-- **Lemma 2.6** (scale invariance of the cone harmonic balls), with no hypothesis. -/
 theorem coneScaleInvarianceStmt_holds : ConeScaleInvarianceStmt :=
   closed_2_6_lp_derivedInputs FirstPass.Derived.quantumConeScalingInput_derived
-
-/-- The family of Lemma 2.4 is almost surely a measurable function of the field (`ConeFamilyAEMeasurableStep`), with
-no hypothesis. -/
-theorem coneFamilyAEMeasurableStep_holds : ConeFamilyAEMeasurableStep :=
-  coneFamilyAEMeasurableStep_of_numbered_results coneHarmonicBallsUpToFixedTimeStmt_holds
-    coneScaleInvarianceUpToFixedTimeStmt_holds FirstPass.Derived.volumeGrowthStmt_holds
-    FirstPass.Derived.quantumConeScalingInput_derived
-    (lqgMeasurePropertiesStmt_of_scaling FirstPass.Derived.quantumConeScalingInput_derived)
 
 /-- **Lemma 6.5** (hitting of annuli), with no hypothesis. -/
 theorem annulusHit_holds : AnnulusHitStmt :=

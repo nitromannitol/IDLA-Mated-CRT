@@ -26,6 +26,11 @@ Each line must print only `propext`, `Classical.choice` and `Quot.sound`.
 #print axioms MatedCRT.convergenceOfDivSandpile_of_referenceInputs
 #print axioms MatedCRT.ReferenceInputs.stoppedSurplusPole
 #print axioms MatedCRT.ReferenceInputs.stoppedLayerPotential
+#print axioms MatedCRT.ReferenceInputs.stoppedMissingSites
+#print axioms MatedCRT.StoppedCode.stoppedMarginCodeStep_holds
+#print axioms MatedCRT.StoppedCode.stoppedInteriorMeasurableStep_holds
+#print axioms MatedCRT.StoppedGeometry.stoppedInteriorGeometryStep_holds
+#print axioms MatedCRT.StoppedMissing.stoppedMissingSites_of_innerBound
 #print axioms MatedCRT.stoppedLayerPotential_of_missingSites
 #print axioms MatedCRT.StoppedInterior.stoppedSurplusPole_of_steps
 #print axioms MatedCRT.StoppedInterior.stoppedSurplusAnnulus_of_gap

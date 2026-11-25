@@ -954,8 +954,8 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   `RemainingHypotheses.toMainHypotheses` (`:130`) supplies the twenty-three, and `convergenceOfIDLA_of_remaining` (`:193`)
   and `convergenceOfDivSandpile_of_remaining` (`:199`) apply the two conditional forms.
 - `MatedCRT/Assembly/Reference.lean`: `ReferenceHypotheses 𝒮 ν` has the law `ν`, the SLE closure inputs,
-  `GMS21UniformStartInput 𝒮`, `HasReferenceEnvironments 𝒮`, `BG20ChartFieldInput 𝒮` and the eight open steps
-  (`OpenStepHypotheses 𝒮`). `ReferenceHypotheses.toRemainingHypotheses` proves twelve fields of
+  `GMS21UniformStartInput 𝒮`, `HasReferenceEnvironments 𝒮`, `BG20ChartFieldInput 𝒮` and the five open steps
+  (`OpenStepHypotheses 𝒮`). `ReferenceHypotheses.toRemainingHypotheses` proves fourteen fields of
   `RemainingHypotheses 𝒮`: `randomWalkToLBM` (`randomWalkToLBMStmt_of_markovLimit_bg20ChartField`),
   `greenKernelUpperBound` and `greenKernelLowerBound` (`greenKernelUpperBoundStmt_of_reference`,
   `greenKernelLowerBoundStmt_of_reference` with `exists_matingRigidLEOn_full_derived`), `mepsScaling`
@@ -971,15 +971,24 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   `ReferenceInputs.subsequentialConvergencePrepared`).
   `referenceInputs_canonical` (`:298`) supplies the law, the closure inputs, the reference environments and the
   uniform-start input at the canonical model from `CanonicalHypotheses ν`, and `mainHypotheses_canonical` (`:325`)
-  gives `MainHypotheses (ProbeMi.canonicalSLEModel ν)` from `CanonicalHypotheses ν` and the eight open steps.
-  The eleventh field, the pole step `stoppedSurplusPole` of Proposition 5.1, is `ReferenceInputs.stoppedSurplusPole`
-  (from the geometry and margin steps `stoppedInteriorGeometry`, `stoppedInteriorMeasurable`, which stay open):
+  gives `MainHypotheses (ProbeMi.canonicalSLEModel ν)` from `CanonicalHypotheses ν` and the five open steps.
+  The geometry and margin steps `stoppedInteriorGeometry`, `stoppedInteriorMeasurable` hold for every model
+  (`StoppedGeometry.stoppedInteriorGeometryStep_holds`, Proofs/Sec5/StoppedInteriorGeometryProof.lean;
+  `StoppedCode.stoppedInteriorMeasurableStep_holds`, Proofs/Sec5/StoppedClusterCode.lean), following the consultant's
+  answer to target 10: the Lusin-Souslin decoder of the obstacle problem (`exists_decoder_disk`) applied to a
+  field-measurable version of `μ_h` gives a `σ(h)`-measurable code of `w̄_t` in `C(B̄_ρ)`, whose cluster closure is a
+  Borel random compact set and whose regularized cluster is `Λ_t` on `{t < T}`; the geometry step adds the cell-size
+  estimate of Lemma 2.8 and a countable threshold in the code, positive by compactness and regularity.
+  The pole step `stoppedSurplusPole` of Proposition 5.1 is `ReferenceInputs.stoppedSurplusPole`:
   `StoppedInterior.stoppedSurplusPole_of_steps` (Proofs/Sec5/StoppedPoleReduction.lean) joins the logarithmic bound
   at the pole `stoppedPoleLowerBound` (Proofs/Sec5/StoppedPoleBound.lean: Lemmas 2.16, 2.18 and the basic bound
   `w̃ ≥ -q`, on `{𝓜 ≤ n}`) to the annulus bound `stoppedSurplusAnnulus_of_gap` (the annulus half of
   `stoppedSurplusInterior_of_gap`) at the random index `⌈𝓜⌉`, following the consultant's answer to target 8.
-  The twelfth, the layer step `stoppedLayerPotential`, is `ReferenceInputs.stoppedLayerPotential` from the number of
-  missing sites `StoppedMissingSitesStep` (`ε #(V^ε(Λ_t) \ Λ^ε_t) → 0` on `{t < T}`, open, the eighth open step):
+  The layer step `stoppedLayerPotential` is `ReferenceInputs.stoppedLayerPotential` from the number of missing sites
+  `ReferenceInputs.stoppedMissingSites` (`ε #(V^ε(Λ_t) \ Λ^ε_t) → 0` on `{t < T}`;
+  `StoppedMissing.stoppedMissingSites_of_innerBound`, Proofs/Sec5/StoppedMissingSitesProof.lean, from Proposition 4.2,
+  the null overlaps of the cells, the cell-size estimate and `μ_h(∂Λ_t) = 0`, the masses near `∂Λ_t` bounded by
+  flagged dyadic squares, a measurable function of the field):
   `stoppedLayerPotential_of_missingSites` (Proofs/Sec5/StoppedLayerBound.lean) splits `ε ∑_{b ∈ S} g^ε_A(a, b)` by
   the distance to `a`: Lemma 2.15 and the count (5.41) below `ε^{β₂}`, Lemma 2.14 and the cell masses against
   `𝓜(B_{2r})` (Lemma 2.17) up to `r`, and `(C log(1/r) + C) ε #S` beyond. This replaces the square-sum bound of the

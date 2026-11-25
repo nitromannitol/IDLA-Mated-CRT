@@ -24,6 +24,8 @@ import MatedCRT.FirstPass.Derived.OneSidedBoundaryOfReference
 import MatedCRT.FirstPass.Derived.QuantumConeScalingDimension
 import MatedCRT.Proofs.Sec5.StoppedPoleReduction
 import MatedCRT.Proofs.Sec5.StoppedLayerBound
+import MatedCRT.Proofs.Sec5.StoppedMissingSitesProof
+import MatedCRT.Proofs.Sec4.Prop42Closure.Assembly
 
 /-!
 # The cited fields of `MainHypotheses` from reference environments
@@ -61,9 +63,12 @@ docs/campaign/COUNTED.md (`ReferenceInputs.certifiedReferenceModel`), hence the 
 (`ReferenceInputs.oneSidedBoundaryContinuity`, from Lemma 3.11 of GMS19 in the reference environments), hence the
 corrected Lemma 3.6 (`ReferenceInputs.correctedHarmonicConvergence`).
 
-The pole step of Proposition 5.1 follows from these inputs and the geometry and margin steps
-(`ReferenceInputs.stoppedSurplusPole`). The remaining fields are the eight open steps collected in
-`OpenStepHypotheses 𝒮`. At the canonical model
+The geometry and margin steps of Proposition 5.1 hold for every model (`StoppedGeometry.stoppedInteriorGeometryStep_holds`,
+`StoppedCode.stoppedInteriorMeasurableStep_holds`: the harmonic ball `Λ_t` is a Borel function of a field-measurable
+version of `μ_h`, through the Lusin-Souslin decoder of the obstacle problem). With them the pole step follows from these
+inputs (`ReferenceInputs.stoppedSurplusPole`), and the number of missing sites follows from Proposition 4.2
+(`ReferenceInputs.stoppedMissingSites`), hence the layer step (`ReferenceInputs.stoppedLayerPotential`). The remaining
+fields are the five open steps collected in `OpenStepHypotheses 𝒮`. At the canonical model
 `ProbeMi.canonicalSLEModel ν`, `ReferenceInputs` follows from the premises `CanonicalHypotheses ν`
 (`MatedCRT/Assembly/Canonical.lean`), so the certified reference model holds there, and `MainHypotheses` holds there
 from `CanonicalHypotheses ν` and `OpenStepHypotheses`.
@@ -90,10 +95,36 @@ open MeasureTheory
 
 namespace MatedCRT
 
-/-- The eight open steps: seven fields of `MainHypotheses 𝒮`, with the same names and types, and the number of missing
-sites of Proposition 5.1. The pole step `stoppedSurplusPole` follows from `ReferenceInputs` and the geometry and margin
-steps (`ReferenceInputs.stoppedSurplusPole`), and the layer step `stoppedLayerPotential` from `ReferenceInputs` and the
-number of missing sites (`ReferenceInputs.stoppedLayerPotential`). -/
+/-- **Lemma 2.3** (harmonic balls of the quantum cone), with no hypothesis. -/
+theorem coneHarmonicBallsStmt_holds : ConeHarmonicBallsStmt :=
+  closed_2_3_lp_derivedInputs FirstPass.Derived.quantumConeScalingInput_derived
+
+/-- **Lemma 2.4** (Draft form: the harmonic balls of the cone up to the half-ball time, with the uniqueness of the
+time), with no hypothesis. -/
+theorem coneHarmonicBallsUpToFixedTimeStmt_holds : ConeHarmonicBallsUpToFixedTimeStmt :=
+  coneHarmonicBallsUpToFixedTimeStmt_of_canonical coneCanonicalHalfBallStep_holds coneHalfBallClosureInsideStep_holds
+
+/-- **Lemma 2.5** (Draft form: scale invariance of the cone harmonic balls up to the half-ball time), with no
+hypothesis. -/
+theorem coneScaleInvarianceUpToFixedTimeStmt_holds : ConeScaleInvarianceUpToFixedTimeStmt :=
+  coneScaleInvarianceUpToFixedTimeStmt_of_canonical coneCanonicalHalfBallStep_holds
+    coneHalfBallClosureInsideStep_holds (closed_2_5_lp_derivedInputs FirstPass.Derived.quantumConeScalingInput_derived)
+    (coneRescaledHalfBallHorizonUnique_fp coneCanonicalHalfBallStep_holds coneHalfBallClosureInsideStep_holds
+      (FirstPass.Derived.coneRescaledMeasureIsConeFieldInput_of_scaling
+        FirstPass.Derived.quantumConeScalingInput_derived))
+
+/-- The family of Lemma 2.4 is almost surely a measurable function of the field (`ConeFamilyAEMeasurableStep`), with
+no hypothesis. -/
+theorem coneFamilyAEMeasurableStep_holds : ConeFamilyAEMeasurableStep :=
+  coneFamilyAEMeasurableStep_of_numbered_results coneHarmonicBallsUpToFixedTimeStmt_holds
+    coneScaleInvarianceUpToFixedTimeStmt_holds FirstPass.Derived.volumeGrowthStmt_holds
+    FirstPass.Derived.quantumConeScalingInput_derived
+    (lqgMeasurePropertiesStmt_of_scaling FirstPass.Derived.quantumConeScalingInput_derived)
+
+/-- The five open steps: five fields of `MainHypotheses 𝒮`, with the same names and types. The steps of Proposition 5.1
+are proved: the geometry and margin steps for every model, the pole step `stoppedSurplusPole` and the layer step
+`stoppedLayerPotential` from `ReferenceInputs` (`ReferenceInputs.stoppedSurplusPole`,
+`ReferenceInputs.stoppedLayerPotential`). -/
 structure OpenStepHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   /-- Lemma 2.4: locality of the cone harmonic balls. -/
   coneHarmonicBallLocality : ConeHarmonicBallLocalityStep
@@ -106,12 +137,6 @@ structure OpenStepHypotheses (𝒮 : SpaceFillingSLEModel) : Prop where
   odometerLocalCompactnessCorrected : OdometerLocalCompactnessCorrectedStep 𝒮
   /-- Lemma 4.6 (corrected route): boundary upgrade. -/
   odometerBoundaryUpgradeCorrected : OdometerBoundaryUpgradeCorrectedStep 𝒮
-  /-- Lemma 5.3 on `V^ε(Λ_t)`: the discrete-to-continuum geometry of the `δ`-interior. -/
-  stoppedInteriorGeometry : StoppedInterior.StoppedInteriorGeometryStep 𝒮
-  /-- Lemma 5.3 on `V^ε(Λ_t)`: measurability of the continuum margin on the random compact set. -/
-  stoppedInteriorMeasurable : StoppedInterior.StoppedInteriorMeasurableStep 𝒮
-  /-- Proposition 5.1: the number of missing sites, `ε #(V^ε(Λ_t) \ Λ^ε_t) → 0` on `{t < T}`. -/
-  stoppedMissingSites : StoppedMissingSitesStep 𝒮
 
 /-- A model `𝒮` with normalized space-filling SLE law `ν`, the SLE closure inputs, valid environments on `ℝ`, the
 uniform-start invariance principle and the chart forms of Berestycki-Gwynne, Lemmas 7.20 and 7.21. -/
@@ -218,20 +243,32 @@ theorem correctedHarmonicConvergence (H : ReferenceInputs 𝒮 ν) :
   closed_3_6_lp_uniform_derivedInputs 𝒮 ν H.certifiedReferenceModel H.oneSidedBoundaryContinuity
 
 /-- **The pole step of Proposition 5.1** (`StoppedSurplusPoleStep`; the consultant's answer to target 8) from
-`ReferenceInputs` and the geometry and margin steps: `StoppedInterior.stoppedSurplusPole_of_steps` with the strict
-obstacle gap, the scaling of the expected exit time, Theorem 4.1, Lemma 3.3 and Lemmas 2.16 and 2.18. -/
-theorem stoppedSurplusPole (H : ReferenceInputs 𝒮 ν) (hgeo : StoppedInterior.StoppedInteriorGeometryStep 𝒮)
-    (hmeas : StoppedInterior.StoppedInteriorMeasurableStep 𝒮) : StoppedInterior.StoppedSurplusPoleStep 𝒮 :=
-  StoppedInterior.stoppedSurplusPole_of_steps 𝒮 (harmonicBallStrictObstacleGapStep_holds 𝒮) hgeo hmeas
+`ReferenceInputs`: `StoppedInterior.stoppedSurplusPole_of_steps` with the strict obstacle gap, the geometry and margin
+steps (proved for every model), the scaling of the expected exit time, Theorem 4.1, Lemma 3.3 and Lemmas 2.16 and
+2.18. -/
+theorem stoppedSurplusPole (H : ReferenceInputs 𝒮 ν) : StoppedInterior.StoppedSurplusPoleStep 𝒮 :=
+  StoppedInterior.stoppedSurplusPole_of_steps 𝒮 (harmonicBallStrictObstacleGapStep_holds 𝒮)
+    (StoppedGeometry.stoppedInteriorGeometryStep_holds 𝒮) (StoppedCode.stoppedInteriorMeasurableStep_holds 𝒮)
     H.mepsScaling (closed_4_1_lp_derivedInputs ν H.certifiedReferenceModel)
     (closed_3_3_ownBinders_derivedInputs 𝒮 ν H.certifiedReferenceModel) H.greenKernelLowerBound
     H.exitTimeUpperBound
 
+/-- **The number of missing sites of Proposition 5.1** (`StoppedMissingSitesStep`; the consultant's answer to target 9)
+from `ReferenceInputs`: `StoppedMissing.stoppedMissingSites_of_innerBound` with Proposition 4.2 in the form
+`DiscreteClusterInnerBoundStep` (`discreteClusterInnerBound_prop42`: Theorem 4.1, Lemmas 2.3, 2.4, 2.7, 2.8, 3.3, the
+measurability of the family of Lemma 2.4 and the strict obstacle gap). -/
+theorem stoppedMissingSites (H : ReferenceInputs 𝒮 ν) : StoppedMissingSitesStep 𝒮 :=
+  StoppedMissing.stoppedMissingSites_of_innerBound 𝒮
+    (discreteClusterInnerBound_prop42 𝒮 (closed_4_1_lp_derivedInputs ν H.certifiedReferenceModel)
+      coneHarmonicBallsStmt_holds coneHarmonicBallsUpToFixedTimeStmt_holds FirstPass.Derived.volumeGrowthStmt_holds
+      (FirstPass.Derived.cellSizeEstimateStmt_holds 𝒮)
+      (closed_3_3_ownBinders_derivedInputs 𝒮 ν H.certifiedReferenceModel) coneFamilyAEMeasurableStep_holds
+      (harmonicBallStrictObstacleGapStep_holds 𝒮))
+
 /-- **The layer step of Proposition 5.1** (`StoppedLayerPotentialStep`; the consultant's answer to target 9) from
-`ReferenceInputs` and the number of missing sites: `stoppedLayerPotential_of_missingSites` with Lemma 2.14. -/
-theorem stoppedLayerPotential (H : ReferenceInputs 𝒮 ν) (hmiss : StoppedMissingSitesStep 𝒮) :
-    StoppedLayerPotentialStep 𝒮 :=
-  stoppedLayerPotential_of_missingSites 𝒮 H.greenKernelUpperBound hmiss
+`ReferenceInputs`: `stoppedLayerPotential_of_missingSites` with Lemma 2.14 and the number of missing sites. -/
+theorem stoppedLayerPotential (H : ReferenceInputs 𝒮 ν) : StoppedLayerPotentialStep 𝒮 :=
+  stoppedLayerPotential_of_missingSites 𝒮 H.greenKernelUpperBound H.stoppedMissingSites
 
 end ReferenceInputs
 
@@ -257,11 +294,10 @@ theorem ReferenceHypotheses.toRemainingHypotheses {𝒮 : SpaceFillingSLEModel} 
     odometerBoundaryUpgradeCorrected := H.steps.odometerBoundaryUpgradeCorrected
     odometerMeasurableSelection :=
       odometerMeasurableSelectionStep_of_prepared H.toReferenceInputs.subsequentialConvergencePrepared
-    stoppedSurplusPole := H.toReferenceInputs.stoppedSurplusPole H.steps.stoppedInteriorGeometry
-      H.steps.stoppedInteriorMeasurable
-    stoppedInteriorGeometry := H.steps.stoppedInteriorGeometry
-    stoppedInteriorMeasurable := H.steps.stoppedInteriorMeasurable
-    stoppedLayerPotential := H.toReferenceInputs.stoppedLayerPotential H.steps.stoppedMissingSites
+    stoppedSurplusPole := H.toReferenceInputs.stoppedSurplusPole
+    stoppedInteriorGeometry := StoppedGeometry.stoppedInteriorGeometryStep_holds 𝒮
+    stoppedInteriorMeasurable := StoppedCode.stoppedInteriorMeasurableStep_holds 𝒮
+    stoppedLayerPotential := H.toReferenceInputs.stoppedLayerPotential
     meanValueSurplusLower := meanValueSurplusLowerStep_of_meps H.toReferenceInputs.mepsScaling
     integralConvergenceGreenFunction := integralConvergenceGreenFunction_of_walk H.toReferenceInputs.randomWalkToLBM
       H.toReferenceInputs.exitTimeUpperBound H.toReferenceInputs.mepsScaling }
