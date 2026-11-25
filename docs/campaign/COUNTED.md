@@ -1064,3 +1064,35 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. GMS21 = Gwynne-Miller-Sheffield
   the window chart on either decorated surface, the joint convergence of the windows, the discrete window law) are open.
 - Open premises of this route: `hZ` and `h33` (for `tutteLP`), and `hchart` through the chart forms of BG20
   Lemmas 7.20 and 7.21.
+
+### The premise `tutteLP` from Theorem 3.10 and the steps of GMS21 Lemmas 3.3 and 3.5 (2026-11-25)
+
+Paths relative to `MatedCRT/FirstPass/Derived/`. Commit 3f846dba.
+- `GMS21CanonicalTutteLPZeroCone.lean`: `tutteLP_canonical_of_theorem310_zeroConeSteps` gives the conclusion of
+  `tutteLP_canonical_of_zeroConeAnnulusLPForm_localConfig` (the field `tutteLP` at `ProbeMi.canonicalSLEModel ν`) with
+  `hZ` and `h33` discharged. Premises: `hcpl`; `h310 : GMSTheorem310` (arXiv:1807.07515 Theorem 3.10; LP P1);
+  `h25 : GMSConditionTwoImpliesFive`; `hA1 : ∀ γ hγ, ZeroConeCircleAverageLemmaA1 γ hγ ∧ IGFieldDilationMixing γ hγ`
+  (`ZeroConeLemmaA1PosProof.lean:335`, `:315`; GMS21 Lemma A.1 and Remark A.2 on general probability spaces); for every
+  mating-of-trees coupling on `Ω = ℝ` (a standard Borel space): `hP31` = the measurability of the cone field,
+  `ZeroConeSpatialAverageInvariance`, `ZeroConeQuantumCurveCovariance`, `ZeroConeCellWeightCode`
+  (`ZeroConeConfigCovarianceProof.lean:116`, `:137`), `SpaceFillingSLESimilarityLaw`, `ZeroConeJointLemmaA1`
+  (`ZeroConeCurveFactorProof.lean:47`), `ZeroConePhaseFactorStep`; `h35` = `ZeroConeConfigRealizable`,
+  `ZeroConeConfigRotationInvariance`, `ZeroConeWeightedMeshScaling`, `ZeroConeWeightedUniformErrorMeasurability`
+  (`GMS21ZeroConeAnnulusRepair.lean:124`, `:146`); `h1`-`h3` (the three inputs of GMS21 Lemma 3.3).
+  The proved steps it uses: `zeroConeLemmaA1Pos` (398dadd4), `zeroConeConfigCovariance` (e2736e58),
+  `zeroConeCurveFactorStep` (5b14bc1d), `zeroConeAnnulusLPForm_of_theorem310Form_code` (9f7d5e5d),
+  `zeroConeAnnulusLPForm_of_theorem310_lemmaA1Pos` (this file).
+  `#print axioms tutteLP_canonical_of_theorem310_zeroConeSteps`: propext, Classical.choice, Quot.sound (lb OK).
+- Also proved: `zeroConePhaseFactorStep` (ac224adc, from `ZeroConeConfigCovariance` and `ZeroConePhasePeriods`) and
+  `zeroConeWeightedMeshScaling_of_curveDilationLaw`, `zeroConeWeightedUniformErrorMeasurability_of_superlevelProjection`
+  (33d1079c); a counted form using them is not yet stated.
+- Sample spaces: the per-coupling premises are needed only for couplings on `ℝ` (the canonical model), which is a
+  standard Borel space; steps proved only for standard Borel sample spaces therefore discharge them there, and
+  Theorems 1.4 and 1.6 at the canonical model are unaffected.
+- Cited input `DMSIntrinsicPastFutureIndependenceLaw ν` (`MatedCRT/External/DMSIntrinsicPastFutureIndependenceLaw.lean:51`,
+  6db07a93; DMS14 Theorem 1.9 with the intrinsic decorations of Gwynne-Miller, arXiv:1701.05174, Definition 2.1, (2.6),
+  §2.3.3), for the couplings whose Lebesgue-area curve has code law `ν (16/γ²)`.
+  `bg20ChartIndependenceInputBG_of_dmsIntrinsicLaw` (`WindowChartBGIntrinsicIndependenceLaw.lean:238`) gives
+  `BG20ChartIndependenceInputBG 𝒮` from it, `HasNormalizedSLELaw 𝒮 ν`, the two intrinsic window steps
+  (`WindowChartBGIntrinsicIndependence.lean:168`, `:189`) and `JordanDomainExteriorRegularity`; its axioms: propext,
+  Classical.choice, Quot.sound.
