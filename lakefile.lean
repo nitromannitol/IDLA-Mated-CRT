@@ -14,3 +14,9 @@ require «lattice-probability» from git
 @[default_target]
 lean_lib «MatedCRT» where
   globs := #[.andSubmodules `MatedCRT]
+
+/-- The comparator pair `MatedCRTAudit/MainTheorems/` (Theorems 1.4 and 1.6 at the canonical model).
+Not a default target: it builds only on demand (`lake build MatedCRTAudit`); the challenge elaborates
+with its intentional `sorry`s. -/
+lean_lib MatedCRTAudit where
+  globs := #[.submodules `MatedCRTAudit]

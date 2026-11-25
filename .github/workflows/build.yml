@@ -1,0 +1,208 @@
+name: CI
+
+# Builds the library on GitHub-hosted runners (`ubuntu-24.04`: 4 vCPU, 16 GB RAM, 6 h per job) and
+# audits the axioms of the main theorems and of the counted forms. The library requires
+# Harmonic-Balls-LQG from the sibling directory `../Harmonic-Balls-LQG`, checked out at the head of its
+# main branch (resolved once per run) or at the commit given to a manual dispatch. The build runs in
+# up to five consecutive stages (`build-stage.yml`), each resuming the build of the previous one; a
+# stage runs only if the build is not yet complete. The audit job requires the complete build. No
+# `pull_request` trigger: a fork's pull request would run with this repository's Actions cache in
+# scope.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - 'paper/**'
+      - 'docs/**'
+      - 'archive/**'
+  workflow_dispatch:
+    inputs:
+      harmonic_balls_rev:
+        description: Commit of Harmonic-Balls-LQG to build against (default the head of its main branch)
+        required: false
+        default: ''
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # The number of `#print axioms` lines of the audit modules below; bump with each added or removed line.
+  EXPECTED_AXIOM_REPORTS: "244"
+  AXIOM_AUDIT_MODULES: >-
+    MatedCRT/Audit/CanonicalAxioms.lean MatedCRT/Audit/MainAxioms.lean MatedCRT/Audit/CountedAxioms.lean
+    MatedCRT/Audit/DerivedCountedAxioms.lean MatedCRT/Audit/MinimalCountedAxioms.lean
+    MatedCRT/Audit/AppendixBAxioms.lean
+
+jobs:
+  resolve:
+    name: Resolve the Harmonic-Balls-LQG commit
+    runs-on: ubuntu-24.04
+    outputs:
+      rev: ${{ steps.rev.outputs.rev }}
+    steps:
+      - id: rev
+        shell: bash
+        env:
+          REQUESTED: ${{ inputs.harmonic_balls_rev }}
+        run: |
+          set -euo pipefail
+          if [ -n "${REQUESTED:-}" ]; then
+            rev="$REQUESTED"
+          else
+            rev=$(git ls-remote https://github.com/nitromannitol/Harmonic-Balls-LQG refs/heads/main | cut -f1)
+          fi
+          [[ "$rev" =~ ^[0-9a-f]{40}$ ]] || { echo "Not a commit: $rev"; exit 1; }
+          echo "rev=$rev" >> "$GITHUB_OUTPUT"
+          echo "Built against Harmonic-Balls-LQG $rev" >> "$GITHUB_STEP_SUMMARY"
+
+  stage1:
+    needs: [resolve]
+    uses: ./.github/workflows/build-stage.yml
+    with:
+      stage: 1
+      harmonic_balls_rev: ${{ needs.resolve.outputs.rev }}
+  stage2:
+    needs: [resolve, stage1]
+    if: needs.stage1.outputs.complete != 'true'
+    uses: ./.github/workflows/build-stage.yml
+    with:
+      stage: 2
+      harmonic_balls_rev: ${{ needs.resolve.outputs.rev }}
+  stage3:
+    needs: [resolve, stage2]
+    if: needs.stage2.outputs.complete != 'true'
+    uses: ./.github/workflows/build-stage.yml
+    with:
+      stage: 3
+      harmonic_balls_rev: ${{ needs.resolve.outputs.rev }}
+  stage4:
+    needs: [resolve, stage3]
+    if: needs.stage3.outputs.complete != 'true'
+    uses: ./.github/workflows/build-stage.yml
+    with:
+      stage: 4
+      harmonic_balls_rev: ${{ needs.resolve.outputs.rev }}
+  stage5:
+    needs: [resolve, stage4]
+    if: needs.stage4.outputs.complete != 'true'
+    uses: ./.github/workflows/build-stage.yml
+    with:
+      stage: 5
+      harmonic_balls_rev: ${{ needs.resolve.outputs.rev }}
+  audit:
+    name: Complete build and axiom audit
+    needs: [resolve, stage1, stage2, stage3, stage4, stage5]
+    if: ${{ !cancelled() && !failure() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          path: IDLA-Mated-CRT
+          persist-credentials: false
+
+      - name: Checkout Harmonic-Balls-LQG
+        uses: actions/checkout@v5
+        with:
+          repository: nitromannitol/Harmonic-Balls-LQG
+          ref: ${{ needs.resolve.outputs.rev }}
+          path: Harmonic-Balls-LQG
+          persist-credentials: false
+
+      - name: Reclaim runner disk space
+        shell: bash
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc \
+                      /usr/local/.ghcup /usr/local/share/powershell \
+                      /usr/share/swift /usr/local/share/boost || true
+          sudo docker system prune --all --force >/dev/null 2>&1 || true
+          df -h /
+
+      - name: Set up Lean and fetch the Mathlib cache
+        uses: leanprover/lean-action@v1
+        with:
+          build: false
+          use-mathlib-cache: true
+          lake-package-directory: IDLA-Mated-CRT
+
+      # The most recent build of this commit, or else of these pins (a stage that found the build
+      # complete saves nothing); the next step checks that it is complete for this commit.
+      - name: Restore the build
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            IDLA-Mated-CRT/.lake/build
+            IDLA-Mated-CRT/.lake/packages/*/.lake/build
+            !IDLA-Mated-CRT/.lake/packages/mathlib/.lake/build
+            Harmonic-Balls-LQG/.lake/build
+          key: lake-all-${{ hashFiles('IDLA-Mated-CRT/lean-toolchain', 'IDLA-Mated-CRT/lake-manifest.json') }}-${{ github.sha }}-
+          restore-keys: |
+            lake-all-${{ hashFiles('IDLA-Mated-CRT/lean-toolchain', 'IDLA-Mated-CRT/lake-manifest.json') }}-${{ github.sha }}-
+            lake-all-${{ hashFiles('IDLA-Mated-CRT/lean-toolchain', 'IDLA-Mated-CRT/lake-manifest.json') }}-
+
+      - name: Require the complete build, with no error and no incomplete proof
+        shell: bash
+        working-directory: IDLA-Mated-CRT
+        run: |
+          set -o pipefail
+          lake build --no-build 2>&1 | tee build.log
+          if grep -E '^error|declaration uses .sorry|sorryAx' build.log; then
+            echo "The library build must have no error and no incomplete proof."
+            exit 1
+          fi
+
+      # The audit modules print the axioms of Theorems 1.4 and 1.6 at the canonical model and for every
+      # model (`CanonicalAxioms`, `MainAxioms`), of the counted forms of docs/campaign/COUNTED.md
+      # (`CountedAxioms`, `DerivedCountedAxioms`, `MinimalCountedAxioms`) and of Appendix B. Every report
+      # must list exactly `propext`, `Classical.choice` and `Quot.sound`, and the number of reports must
+      # be EXPECTED_AXIOM_REPORTS.
+      - name: Axiom audit of the main theorems and of the counted forms
+        shell: bash
+        working-directory: IDLA-Mated-CRT
+        run: |
+          set -euo pipefail
+          : > axiom-audit.log
+          lines=0
+          for f in $AXIOM_AUDIT_MODULES; do
+            lake env lean "$f" 2>&1 | tee -a axiom-audit.log
+            lines=$((lines + $(grep -c '^#print axioms' "$f")))
+          done
+          test "$lines" -eq "$EXPECTED_AXIOM_REPORTS" \
+            || { echo "The audit modules have $lines #print lines, not EXPECTED_AXIOM_REPORTS."; exit 1; }
+          python3 - axiom-audit.log "$EXPECTED_AXIOM_REPORTS" <<'PY'
+          import re, sys
+          text = open(sys.argv[1]).read()
+          expected = int(sys.argv[2])
+          reports = []
+          for line in text.splitlines():
+              if line[:1].isspace() and reports:
+                  reports[-1] += ' ' + line.strip()
+              elif line.strip():
+                  reports.append(line.strip())
+          pattern = re.compile(r"^'[^']+' depends on axioms: \[propext, Classical\.choice, Quot\.sound\]$")
+          bad = [r for r in reports if not pattern.match(r)]
+          if bad:
+              print('Unexpected output of the axiom audit:')
+              print('\n'.join(bad[:40]))
+              raise SystemExit(1)
+          if len(reports) != expected:
+              raise SystemExit(f'Expected {expected} standard-axiom reports, saw {len(reports)}.')
+          print(f'{len(reports)} declarations, each depending only on propext, Classical.choice and Quot.sound.')
+          PY
+
+      - name: Upload the logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-${{ github.sha }}
+          path: |
+            IDLA-Mated-CRT/build.log
+            IDLA-Mated-CRT/axiom-audit.log
+          if-no-files-found: warn

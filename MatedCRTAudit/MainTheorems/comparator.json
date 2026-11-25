@@ -1,0 +1,15 @@
+{
+  "challenge_module": "MatedCRTAudit.MainTheorems.Challenge",
+  "solution_module": "MatedCRTAudit.MainTheorems.Solution",
+  "theorem_names": [
+    "MatedCRTAudit.MainTheorems.convergence_of_idla",
+    "MatedCRTAudit.MainTheorems.convergence_of_div_sandpile"
+  ],
+  "definition_names": [],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}

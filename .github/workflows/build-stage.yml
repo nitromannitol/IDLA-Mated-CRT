@@ -1,0 +1,153 @@
+name: Build stage
+
+# One stage of the library build used by `build.yml` and `comparator.yml`. The library requires
+# Harmonic-Balls-LQG from the sibling directory `../Harmonic-Balls-LQG` (`lakefile.lean`); it is checked
+# out there at the commit `harmonic_balls_rev` that the caller resolved once for the whole run. A
+# build from an empty cache (Lattice-Probability, EllipticRegularityLean, MarkovProcess,
+# Harmonic-Balls-LQG and this library) is longer than one hosted job, so the callers run the stage
+# several times in a row. Each
+# stage restores the most recent build of this commit, or else of these dependency pins, builds for
+# at most `minutes` minutes and saves what it built under its own key; the next stage resumes from
+# it. Mathlib's oleans come from its public cache.
+on:
+  workflow_call:
+    inputs:
+      stage:
+        description: Position of the stage in the chain
+        required: true
+        type: number
+      harmonic_balls_rev:
+        description: Commit of Harmonic-Balls-LQG to build against
+        required: true
+        type: string
+      minutes:
+        description: Time limit of the build step, in minutes
+        required: false
+        type: number
+        default: 310
+    outputs:
+      complete:
+        description: Whether the library build finished in this stage
+        value: ${{ jobs.build.outputs.complete }}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build, stage ${{ inputs.stage }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 355
+    outputs:
+      complete: ${{ steps.build.outputs.complete }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          path: IDLA-Mated-CRT
+          persist-credentials: false
+
+      - name: Checkout Harmonic-Balls-LQG
+        uses: actions/checkout@v5
+        with:
+          repository: nitromannitol/Harmonic-Balls-LQG
+          ref: ${{ inputs.harmonic_balls_rev }}
+          path: Harmonic-Balls-LQG
+          persist-credentials: false
+
+      - name: Reclaim runner disk space
+        shell: bash
+        run: |
+          df -h /
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc \
+                      /usr/local/.ghcup /usr/local/share/powershell \
+                      /usr/share/swift /usr/local/share/boost \
+                      /opt/hostedtoolcache/* /usr/local/lib/node_modules \
+                      /usr/local/share/chromium /opt/google /opt/microsoft \
+                      /usr/lib/jvm /usr/lib/google-cloud-sdk /opt/az \
+                      /usr/share/miniconda /usr/local/julia* /opt/pipx \
+                      /usr/local/aws-cli /usr/local/aws-sam-cli /usr/local/share/vcpkg || true
+          sudo docker system prune --all --force >/dev/null 2>&1 || true
+          df -h /
+
+      - name: Enlarge swap
+        shell: bash
+        run: |
+          sudo swapoff -a || true
+          swapdir=/mnt
+          [ -d "$swapdir" ] || swapdir="${RUNNER_TEMP:-/tmp}"
+          sudo rm -f "$swapdir/lean-swapfile"
+          sudo fallocate -l 16G "$swapdir/lean-swapfile"
+          sudo chmod 600 "$swapdir/lean-swapfile"
+          sudo mkswap "$swapdir/lean-swapfile"
+          sudo swapon "$swapdir/lean-swapfile"
+          free -h
+
+      - name: Set up Lean and fetch the Mathlib cache
+        uses: leanprover/lean-action@v1
+        with:
+          build: false
+          use-mathlib-cache: true
+          lake-package-directory: IDLA-Mated-CRT
+
+      - name: Restore build artifacts
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            IDLA-Mated-CRT/.lake/build
+            IDLA-Mated-CRT/.lake/packages/*/.lake/build
+            !IDLA-Mated-CRT/.lake/packages/mathlib/.lake/build
+            Harmonic-Balls-LQG/.lake/build
+          key: lake-all-${{ hashFiles('IDLA-Mated-CRT/lean-toolchain', 'IDLA-Mated-CRT/lake-manifest.json') }}-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}-${{ inputs.stage }}
+          restore-keys: |
+            lake-all-${{ hashFiles('IDLA-Mated-CRT/lean-toolchain', 'IDLA-Mated-CRT/lake-manifest.json') }}-${{ github.sha }}-
+            lake-all-${{ hashFiles('IDLA-Mated-CRT/lean-toolchain', 'IDLA-Mated-CRT/lake-manifest.json') }}-
+
+      # For each module it compiles, Lake writes `<module>.setup.json`, the list of the module's whole
+      # import closure (several megabytes each). Only `lean` and then `leanir` read it, while compiling
+      # that module, and `leanir` writes the C file last; setup files older than their C file are
+      # deleted during the build, which then fits the runner's disk.
+      - name: Build the library
+        id: build
+        shell: bash
+        working-directory: IDLA-Mated-CRT
+        env:
+          MINUTES: ${{ inputs.minutes }}
+        run: |
+          set -o pipefail
+          prune_setup_files() {
+            find .lake/build/ir .lake/packages/*/.lake/build/ir ../Harmonic-Balls-LQG/.lake/build/ir \
+                 -name '*.setup.json' 2>/dev/null |
+              while IFS= read -r setup; do
+                if [ "${setup%.setup.json}.c" -nt "$setup" ]; then rm -f "$setup"; fi
+              done || true
+          }
+          ( while sleep 60; do prune_setup_files; done ) > /dev/null 2>&1 &
+          pruner=$!
+          trap 'kill "$pruner" 2>/dev/null || true; prune_setup_files; df -h /' EXIT
+          set +e
+          timeout "${MINUTES}m" lake build 2>&1 | tee build.log
+          rc=$?
+          set -e
+          echo "built=$(grep -c ' Built ' build.log || true)" >> "$GITHUB_OUTPUT"
+          if [ "$rc" -eq 0 ]; then
+            echo "complete=true" >> "$GITHUB_OUTPUT"
+          elif [ "$rc" -eq 124 ]; then
+            echo "complete=false" >> "$GITHUB_OUTPUT"
+            echo "The build stopped at the time limit of the stage; the next stage resumes it."
+          else
+            echo "complete=false" >> "$GITHUB_OUTPUT"
+            grep -E '^error' build.log | head -40 || true
+            exit "$rc"
+          fi
+
+      - name: Save build artifacts
+        if: always() && steps.build.outputs.built != '' && steps.build.outputs.built != '0'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            IDLA-Mated-CRT/.lake/build
+            IDLA-Mated-CRT/.lake/packages/*/.lake/build
+            !IDLA-Mated-CRT/.lake/packages/mathlib/.lake/build
+            Harmonic-Balls-LQG/.lake/build
+          key: lake-all-${{ hashFiles('IDLA-Mated-CRT/lean-toolchain', 'IDLA-Mated-CRT/lake-manifest.json') }}-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}-${{ inputs.stage }}

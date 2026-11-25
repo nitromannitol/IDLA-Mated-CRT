@@ -2,6 +2,9 @@
 
 Lean 4 formalization of the numbered results of A. Bou-Rabee and E. Gwynne, *Internal DLA on mated-CRT maps*, arXiv:2211.04891.
 
+[![CI](https://github.com/nitromannitol/IDLA-Mated-CRT/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/nitromannitol/IDLA-Mated-CRT/actions/workflows/build.yml)
+[![Comparator audit](https://github.com/nitromannitol/IDLA-Mated-CRT/actions/workflows/comparator.yml/badge.svg?branch=main)](https://github.com/nitromannitol/IDLA-Mated-CRT/actions/workflows/comparator.yml)
+
 Each numbered result is stated in Lean (`MatedCRT/Draft` and `MatedCRT/Steps`). The statements follow a corrected version of the paper, included in [`paper/`](paper/).
 
 The two main theorems, Theorems 1.4 and 1.6, are proved at the canonical space-filling SLE model `ProbeMi.canonicalSLEModel ν` (the curve modulo increasing reparametrization) from three premises, the fields of `CanonicalHypotheses ν` (`MatedCRT/Assembly/Canonical.lean`: `convergenceOfIDLA_canonical`, `convergenceOfDivSandpile_canonical`):
@@ -79,6 +82,12 @@ The table gives, for each numbered result, its Lean statement and the declaratio
 
 `lake build` checks every module. The modules of `MatedCRT/Audit/` print the axioms of the main declarations: `CanonicalAxioms.lean` those of `convergenceOfIDLA_canonical` and `convergenceOfDivSandpile_canonical`, `MainAxioms.lean` those of `convergenceOfIDLA_conditional`, `convergenceOfDivSandpile_conditional`, their forms from `RemainingHypotheses` and `ReferenceHypotheses`, of `mainHypotheses_canonical` and of the results of `CanonicalResults.lean`, `CountedAxioms.lean`, `DerivedCountedAxioms.lean` and `MinimalCountedAxioms.lean` those of the counted forms of docs/campaign/COUNTED.md, `AppendixBAxioms.lean` those of Appendix B. Running `lake build MatedCRT.Audit.CanonicalAxioms` (and likewise for the others) prints them; the axioms should be `propext`, `Classical.choice` and `Quot.sound`. `Refutations.lean` and `CorrectedForms.lean` record in Lean how the Draft Lemmas 3.1, 4.4 and 4.5 relate to the corrected forms that the route uses (docs/campaign/CORRECTIONS.md).
 
+### Continuous integration and comparator
+
+**CI** ([`.github/workflows/build.yml`](.github/workflows/build.yml)) builds the library on GitHub-hosted runners, with Harmonic-Balls-LQG checked out in `../Harmonic-Balls-LQG` at the head of its main branch (or at the commit given to a manual dispatch), and runs the six axiom modules above: each of their 244 reports must list exactly `propext`, `Classical.choice` and `Quot.sound`. A build from an empty cache is longer than one hosted job, so it runs in up to five consecutive jobs ([`.github/workflows/build-stage.yml`](.github/workflows/build-stage.yml)), each resuming the build of the previous one. CI runs on pushes to `main` that change more than documentation, `paper/`, `docs/` or `archive/`, and on manual dispatch.
+
+**Comparator audit** ([`.github/workflows/comparator.yml`](.github/workflows/comparator.yml), manual dispatch) runs [leanprover/comparator](https://github.com/leanprover/comparator) on the pair [`MatedCRTAudit/MainTheorems/`](MatedCRTAudit/MainTheorems/): `Challenge.lean` states Theorems 1.4 and 1.6 at the canonical model, with the conclusions `ConvergenceOfIDLAStmt` and `ConvergenceOfDivSandpileStmt` of `MatedCRT/Draft/Section1.lean` and the three premises of `CanonicalHypotheses` as explicit hypotheses; `Solution.lean` proves them from `convergenceOfIDLA_canonical` and `convergenceOfDivSandpile_canonical`; and the comparator checks that the statements and their dependency closures agree, that only the three standard axioms are used, and replays the proofs with the Lean kernel and the independent kernel nanoda. The challenge imports the statement and definition modules that the statements use; it is not a mathlib-only restatement.
+
 ## Size
 
 From the repository root:
@@ -110,6 +119,7 @@ MatedCRT/Proofs/           Proofs of the lemmas used by the reductions, by secti
 MatedCRT/FirstPass/        Earlier proofs; Frozen/ holds input statements, Closure/ closed results
 MatedCRT/Assembly/         CanonicalHypotheses, MainHypotheses, RemainingHypotheses, ReferenceHypotheses, the main theorems and the numbered results at the canonical model
 MatedCRT/Audit/            Axiom reports and refuted statements
+MatedCRTAudit/             Comparator pair of Theorems 1.4 and 1.6, outside the default build
 MatedCRT/LPStaging/        General lemmas staged for Lattice-Probability
 docs/                      Inventories, corrections and audits of the formalization
 paper/                     Corrected paper, arXiv source, figures
