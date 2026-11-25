@@ -5,7 +5,7 @@ import MatedCRT.Steps.Sec5.IDLALowerBound
 /-!
 # The number of missing sites of the stopped cluster
 
-`StoppedMissingSitesStep` (the first part of the answer to the question on the layer step of Proposition 5.1): for
+`StoppedMissingSitesStep` (the first part of the layer step of Proposition 5.1): for
 `κ > 0`, on `{t < T}` and with probability tending to one, `ε #(V^ε(Λ_t) \ Λ^ε_t) ≤ κ`, where `Λ^ε_t` is the discrete
 cluster of the divisible sandpile in `B_ρ` (`matedDiscreteCluster`).
 

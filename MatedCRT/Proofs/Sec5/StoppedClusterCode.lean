@@ -9,9 +9,8 @@ import Mathlib.Topology.Sets.VietorisTopology
 For `0 < ρ < 1` and `t > 0`, the least supersolution `w̄_t = leastSupersolution μ_h ρ 0 t` of the obstacle problem on
 `B_ρ` has a `σ(h)`-measurable version with values in `C(B̄_ρ)` (`exists_diskFun_code`): the Lusin-Souslin decoder of
 the Borel graph of the obstacle problem (`exists_decoder_disk`), applied to a `σ(h)`-measurable version of `μ_h`
-restricted to `B̄_ρ`, agrees with `w̄_t` on `{t < T}` almost surely. This is the route of the answer to the
-measurability question of Proposition 5.1 (Bou-Rabee and Gwynne, *Internal DLA on mated-CRT maps*, Theorem 2.3:
-the harmonic balls are a Borel function of the area measure).
+restricted to `B̄_ρ`, agrees with `w̄_t` on `{t < T}` almost surely. By the uniqueness in Theorem 2.3 of Bou-Rabee
+and Gwynne, *Internal DLA on mated-CRT maps*, the harmonic balls are then a Borel function of the area measure.
 
 For a code `w ∈ C(B̄_ρ)` the cluster `codeCluster ρ t w = {x ∈ B_ρ : x = 0 ∨ -t G_{B_ρ}(0, x) < w(x)}` is open, and
 its point memberships are Borel in `w`. Its closure is a Borel function of `w` with values in the nonempty compacts

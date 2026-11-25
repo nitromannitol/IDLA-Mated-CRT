@@ -133,7 +133,8 @@ theorem exists_pos_lower_surplus {μ : Measure ℂ} {ρ t s δ' : ℝ} {Λ : Set
 `σ(h,η)`-measurable `c > 0` such that, on `{t < T}`, with probability tending to one, `c/ε ≤ v^ε_t(a)` for every
 `a ∈ V^ε(Λ_t)` in the `δ`-interior with `|η(a)| < s`, where `v^ε_t = w̃^ε_t + (t/ε) g^ε_{B_ρ}(0, ·)`. Theorem 4.1 and
 Lemma 3.3 are used in the paper only on the annulus `{s ≤ |y|}`; the paper does not treat the discrete surplus at the
-pole, so this is not derived here. -/
+pole. Proved from Lemmas 2.16 and 2.18 and the annulus bound: `stoppedSurplusPole_of_steps`
+(`MatedCRT/Proofs/Sec5/StoppedPoleReduction.lean`). -/
 def StoppedSurplusPoleStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
@@ -152,7 +153,8 @@ def StoppedSurplusPoleStep (𝒮 : SpaceFillingSLEModel) : Prop :=
 `δ`-interior vertex `a` of `V^ε(Λ_t)` has all points of its cell within `r` of the vertex point and at distance at least
 `δ/2` from the complement of `Λ_t`. For fixed `ω` this follows from the cell diameters tending to zero (uniform
 continuity of `η` on compacta, as in `cell_diam_small_of_proper`) and from `Λ_t = int cl 𝒞_t` (regularity), by a
-compactness argument; it is not stated in the paper. -/
+compactness argument; it is not stated in the paper. Proved for every model:
+`StoppedGeometry.stoppedInteriorGeometryStep_holds` (`MatedCRT/Proofs/Sec5/StoppedInteriorGeometryProof.lean`). -/
 def StoppedInteriorGeometryStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
@@ -187,8 +189,8 @@ open StoppedInteriorMargin
 random nonempty compact `K` and a random continuous function `f` on the margin domain `A = closedBall 0 (ρ/2) ∩ {s ≤ |x|}`,
 jointly `S.envSigma`-measurable, such that almost surely on `{t < T}`, `K = closure Λ_t` and
 `f = w̄_t + t G_{B_ρ}(0, ·)` on `A`. The compact set is the field-measurable random compact set of the Borel-version
-construction, and `f` is the Borel decoder of the surplus on `A`. Neither is
-formalized in the repository yet; this is the residual of `StoppedInteriorMeasurableStep`. -/
+construction, and `f` is the Borel decoder of the surplus on `A`. Proved for every model:
+`StoppedCode.stoppedMarginCodeStep_holds` (`MatedCRT/Proofs/Sec5/StoppedClusterCode.lean`). -/
 def StoppedMarginCodeStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →

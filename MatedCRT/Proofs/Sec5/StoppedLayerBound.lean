@@ -37,7 +37,8 @@ This is a simpler route than the square-sum bound of the answer: it needs only `
 
 * `eps_mul_sum_log_le_largestExitTimeRV`: the middle range, deterministic;
 * `eps_mul_layerSum_le`: the three ranges together, deterministic;
-* `StoppedMissingSitesStep`: `ε #(V^ε(Λ_t) \ Λ^ε_t) → 0` in probability on `{t < T}` (open);
+* `StoppedMissingSitesStep`: `ε #(V^ε(Λ_t) \ Λ^ε_t) → 0` in probability on `{t < T}` (proved from Proposition 4.2 in
+  `MatedCRT/Proofs/Sec5/StoppedMissingSitesProof.lean`);
 * `stoppedLayerPotential_of_missingSites`: `StoppedLayerPotentialStep` from Lemma 2.14 and `StoppedMissingSitesStep`.
 -/
 
@@ -259,8 +260,9 @@ theorem eps_mul_layerSum_le {μ : Measure ℂ} {η : ℝ → ℂ} {m : ℤ → �
   linarith [hsum, hnearB, hmid, hfar]
 
 /-- **The missing sites of the stopped cluster** (the first part of the consultant's answer to target 9): for every
-`κ > 0`, on `{t < T}`, with probability tending to one, `ε #(V^ε(Λ_t) \ Λ^ε_t) ≤ κ`. Open: the answer derives it from the
-interior bound of target 8, the null overlaps of the cells and `μ_h(∂Λ_t) = 0`. -/
+`κ > 0`, on `{t < T}`, with probability tending to one, `ε #(V^ε(Λ_t) \ Λ^ε_t) ≤ κ`. The answer derives it from the
+interior bound of target 8, the null overlaps of the cells and `μ_h(∂Λ_t) = 0`. Proved from Proposition 4.2:
+`StoppedMissing.stoppedMissingSites_of_innerBound` (`MatedCRT/Proofs/Sec5/StoppedMissingSitesProof.lean`). -/
 def StoppedMissingSitesStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
   ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
