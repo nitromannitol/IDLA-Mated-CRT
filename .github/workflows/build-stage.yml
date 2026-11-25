@@ -142,7 +142,8 @@ jobs:
           fi
 
       - name: Save build artifacts
-        if: always() && steps.build.outputs.built != '' && steps.build.outputs.built != '0'
+        # Also when the build step was interrupted (its outputs are then unset): the modules it built are kept.
+        if: always() && steps.build.outcome != 'skipped' && steps.build.outputs.built != '0'
         uses: actions/cache/save@v4
         with:
           path: |
