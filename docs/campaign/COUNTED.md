@@ -1028,3 +1028,25 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. DMS14 = Duplantier-Miller-Sheff
   step of the old `MainHypotheses` route only; the canonical route (`convergenceOfIDLA_canonical`, the results of
   `CanonicalResults.lean` and the general-model `convergenceOfIDLA_of_referenceInputs`) does not use it.
   `MatedCRT/Audit/MainAxioms.lean` prints the axioms of the declarations of the four files (68 lines).
+
+### The premise `tutteLP` from the zero cone, and the past/future input of the chart forms (2026-11-25)
+
+Paths relative to `MatedCRT/FirstPass/Derived/`. GMS21 = Gwynne-Miller-Sheffield, arXiv:1705.11161.
+- `GMS21CanonicalTutteLP.lean`: `tutteLP_canonical_of_zeroConeAnnulusLPForm_localConfig` (:102) gives the field `tutteLP`
+  of `CanonicalHypotheses ν`, and `convergenceOfIDLA_canonical_of_zeroCone` (:154),
+  `convergenceOfDivSandpile_canonical_of_zeroCone` (:172) give Theorems 1.4 and 1.6 at `ProbeMi.canonicalSLEModel ν`,
+  from four premises: `hcpl` (the couplings), `hZ : ZeroConeAnnulusLPForm D hγ` for every coupling
+  (`GMS21ZeroConeAnnulusForm.lean:67`, GMS21 Lemma 3.5 on annuli for the phase-shifted zero cone), `h33 :
+  CouplingLocalConfigUMAC D hγ` for every coupling (:69, GMS21 Lemma 3.3 for the local configurations near annuli) and
+  `hchart : BG20ChartFieldInput`. The transfer from the zero cone to the `γ`-cone (GMS21 Theorem 3.4, case 1) is
+  `tendsto_uniformStartSelectedLPData_of_zeroConeAnnulusLPForm` (`GMS21GammaConeAnnulusTransfer.lean:165`).
+  `#print axioms convergenceOfIDLA_canonical_of_zeroCone`: propext, Classical.choice, Quot.sound.
+- Cited input `DMSPastFutureIndependence` (`MatedCRT/External/DMSPastFutureIndependence.lean:82`; DMS14 Theorem 1.9,
+  pp. 26-27, with the stationarity (1.9)), stated for the curve-decorated quantum surfaces of a mating-of-trees coupling;
+  pending truth check of the formal form. `dms21PastFutureIndependence_of_external`
+  (`DMSPastFutureIndependenceOfExternal.lean:224`) derives `DMS21PastFutureIndependence 𝒮` for every model from it with no
+  other premise; its axioms: propext, Classical.choice, Quot.sound. It is the past/future premise of
+  `bg20ChartIndependenceInputBG_of_dms21` (`WindowChartBGIndependence.lean:430`), whose three step premises (the field of
+  the window chart on either decorated surface, the joint convergence of the windows, the discrete window law) are open.
+- Open premises of this route: `hZ` and `h33` (for `tutteLP`), and `hchart` through the chart forms of BG20
+  Lemmas 7.20 and 7.21.
