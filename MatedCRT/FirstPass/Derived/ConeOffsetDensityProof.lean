@@ -185,14 +185,17 @@ data, `β ∈ {0, γ}`, `μ = quantumConeArea γ β X B B'` the `γ`-LQG area me
 For every smooth `f` whose support is a compact subset of `B_1(0) \ {0}`, the law of `(e, μ)` is absolutely
 continuous with respect to the law of `(e, e^{γ f} μ)`.
 
-Source: `notes/fp-gaps/CODEX-MQ-sbl-22.md`, section B (lines 63-67): the field changes by a smooth bump `f`
-with zero average on every centred circle of radius at least one. Here: the cone field of
-`(X + f, B + φ, B')` with `φ(t) = f̄_{e^{-t}}(0)` is `coneField X (coneRadial γ β B B') + f`; the law of `X + f`
-is mutually absolutely continuous with the law of `X` (Cameron–Martin; Berestycki–Powell, *Gaussian free field
-and Liouville quantum gravity*, Proposition 1.36 and §1.7), the law of `B + φ` with the law of `B` (Girsanov,
-`φ` smooth with compact support in `(0, ∞)`), and the area measure of `h + f` is `e^{γ f}` times that of `h`
-(Weyl scaling; Bou-Rabee–Gwynne, arXiv:2211.04891, Fact 2.2(III); Duplantier–Sheffield, Proposition 2.1 and
-Lemma 2.6). -/
+Source: `notes/fp-gaps/CODEX-MQ-sbl-22.md`, section B (lines 63-67), and `notes/fp-gaps/CODEX-MQ-sbl-33.md`:
+the field changes by a smooth bump `f` with zero average on every centred circle of radius at least one. Write
+`f = f_lat + f̄` with `f̄` the rotation average of `f`, and `φ(t) = f̄_{e^{-t}}(0)`. The cone field depends on `X`
+only through its lateral part `L`, and the cone field of `(L + f_lat, B + φ, B')` is
+`coneField X (coneRadial γ β B B') + f`. The law of `(L + f_lat, B + φ, B')` is mutually absolutely continuous
+with the law of `(L, B, B')`: Cameron–Martin for the lateral projection `L` of the whole-plane GFF (the
+definition `IsWholePlaneGFF` leaves a field-dependent additive constant free, so the shift is taken on `L`, not
+on `X`; Berestycki–Powell, *Gaussian free field and Liouville quantum gravity*, Proposition 1.36 and §1.7) and
+Girsanov for `B + φ` (`φ` smooth with compact support in `(0, ∞)`). The area measure of `h + f` is `e^{γ f}`
+times that of `h` (Weyl scaling; Bou-Rabee–Gwynne, arXiv:2211.04891, Fact 2.2(III); Duplantier–Sheffield,
+Proposition 2.1 and Lemma 2.6). Proved as `coneAreaBumpTilt` (`ConeAreaBumpTiltProof.lean`). -/
 def ConeAreaBumpTilt (γ : ℝ) : Prop :=
   ∀ {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P] (β : ℝ) (X : Ω → Field)
     (B B' : ℝ≥0 → Ω → ℝ) (e : Ω → C(ℝ, ℂ)), γ ∈ Ioo (0 : ℝ) 2 → (β = 0 ∨ β = γ) →
