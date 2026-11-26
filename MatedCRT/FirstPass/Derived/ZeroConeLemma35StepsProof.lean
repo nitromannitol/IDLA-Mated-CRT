@@ -3,6 +3,9 @@ import MatedCRT.FirstPass.Derived.GMS21LocalCellConfiguration
 import MatedCRT.FirstPass.Derived.UniformStartStoppedBM
 import MatedCRT.FirstPass.Derived.EuclideanCurveLawSupport
 import LatticeProb.Topology.UnboundedRayProjectionBorel
+import LatticeProb.Bonanno.MatedCRTHarmonic.IGLaw.OCurveScale
+import LatticeProb.Bonanno.MatedCRTHarmonic.IGLaw.OConeScale
+import LatticeProb.LQG.ConeSmallMassRadius
 
 /-!
 # The named steps of the annulus form of Lemma 3.5 of Gwynne–Miller–Sheffield for the zero-cone cells
@@ -21,6 +24,13 @@ Lemma 3.5 and of Proposition 3.1).
   separable space of curve classes is Borel in the two measures (`measurable_levyProkhorovEDist_of_separable`: below
   `c` exactly when, for some rational `r < c`, the two Prokhorov inequalities at `r` hold on the finite unions of a
   countable basis).
+* `zeroConeCurveDilationLaw` (answer, section "(b) The unshifted curve at the random radius", lines 33-42): the radius
+  `R_n = exp (L_y(W))`, `y = γ⁻¹ log (1/n)`, is read off one measurable version `W` of the radial part of the zero
+  cone for all `n` at once, so `R_n → 0` almost surely (`LatticeProb.ae_tendsto_coneScale_small_mass`); the curve
+  `E_n(t) = R_n⁻¹ η₀(t/n)` has the law of `η₀` by the cone scaling identity of Duplantier–Miller–Sheffield
+  (arXiv:1409.7055, Proposition 4.13(i)) at `α = 0` for the field, the fixed-dilation law of `ηL` and the area
+  covariance for the clock (`map_curveRescale_exp_lastLevel_zeroCone`, the proof of
+  `MatedCRTHarmonic.IGLaw.IsMatingOfTreesCoupling.curveScaleInvariant` with the radial path as a parameter).
 -/
 
 set_option autoImplicit false
@@ -375,5 +385,212 @@ theorem weightedErrorSuperlevelBorelProjection : WeightedErrorSuperlevelBorelPro
   exact ⟨fun ε₀ t => ⟨_, measurableSet_unitWitness hA ε₀ t,
       setOf_lt_scaleSup_weightedUnitScaleError _ ε₀ t⟩,
     fun n _ t => ⟨_, measurableSet_meshWitness hA n t, setOf_lt_meshUniformError _ n t⟩⟩
+
+end MatedCRT.GMS310Transfer
+
+/-! ### The unshifted zero-cone curve at the random radius -/
+
+namespace MatedCRT.GMS310Transfer
+
+open ProbabilityTheory MatedCRTHarmonic
+open LQGMetric
+
+/-- If `0 < R`, a curve read at mesh `1/n` is `R` times its rescaling `t ↦ R⁻¹ c(t/n)`. -/
+theorem eq_smul_curveRescale_one_div {R : ℝ} (hR : 0 < R) (n : ℕ) (c : C(ℝ, ℂ)) (t : ℝ) :
+    c (t / (n : ℝ)) = (R.toNNReal : ℝ) • GMS4b.curveRescale R (1 / (n : ℝ)) c t := by
+  rw [Real.coe_toNNReal _ hR.le, GMS4b.curveRescale_apply, Complex.real_smul, ← mul_assoc,
+    ← Complex.ofReal_mul, mul_inv_cancel₀ hR.ne', Complex.ofReal_one, one_mul]
+  congr 1
+  ring
+
+section CurveDilation
+
+variable {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
+  {X X₀ hIG₀ : Ω → MatedCRTHarmonic.MatedCRT.Field} {B B' B₀ B₀' : ℝ≥0 → Ω → ℝ} {U : Ω → ℝ}
+  {ηL η η₀ : Ω → C(ℝ, ℂ)} {bm : Ω → MatedCRTHarmonic.MatedCRT.Path2}
+
+/-- **The law of the zero-cone curve at the random radius read off a fixed radial path** (Duplantier–Miller–Sheffield,
+arXiv:1409.7055, Proposition 4.13(i) at `α = 0`; Gwynne–Miller–Sheffield, arXiv:1705.11161, (2.4)-(2.5); written answer
+`notes/fp-gaps/CODEX-MQ-sbl-27.md`, line 42). This is the proof of
+`MatedCRTHarmonic.IGLaw.IsMatingOfTreesCoupling.curveScaleInvariant` with the radial path `W` as a parameter, so that
+one path serves every `ε`. If `W` is a measurable version of the radial part of the zero cone, independent of `X₀`
+and, jointly with `X₀`, of `ηL`, then `t ↦ R_ε⁻¹ η₀(ε t)` with `R_ε = exp (L_y(W))`, `y = γ⁻¹ log ε`, has the law of
+`η₀`: the rescaled field has the law of the field, the dilated curve has the law of `ηL` independently of it, and
+both curves are the area clock reparametrizations of these pairs. -/
+theorem map_curveRescale_exp_lastLevel_zeroCone
+    (hC : MatedCRTHarmonic.MatedCRT.IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm)
+    (hγ : γ ∈ Ioo (0 : ℝ) 2) {W : Ω → C(ℝ, ℝ)} (hWm : Measurable W) (hXW : IndepFun X₀ W P)
+    (hVη : IndepFun (fun ω => (X₀ ω, W ω)) ηL P)
+    (hW : ∀ᵐ ω ∂P, ∀ t, W ω t = CellScaling.coneRadial γ 0 (fun s => B₀ s ω) (fun s => B₀' s ω) t)
+    {ε : ℝ} (hε : 0 < ε) :
+    P.map (fun ω => GMS4b.curveRescale
+      (Real.exp (ConeScaling.lastLevel (CellScaling.lqgQ γ) (γ⁻¹ * Real.log ε) (W ω))) ε (η₀ ω)) =
+      P.map η₀ := by
+  have : IsProbabilityMeasure P := hC.isProbabilityMeasure
+  obtain ⟨hγ0, hγ2⟩ := hγ
+  have hQ0 : (0 : ℝ) < CellScaling.lqgQ γ := IGLaw.lqgQ_pos' hγ0
+  have hQc : (0 : ℝ) < QuantumZipper.Qc γ := by
+    have : CellScaling.lqgQ γ = QuantumZipper.Qc γ := by dsimp [CellScaling.lqgQ, QuantumZipper.Qc]
+    rw [← this]; exact hQ0
+  let V : Ω → DistC × C(ℝ, ℝ) := fun ω => (X₀ ω, W ω)
+  have hV : Measurable V := hC.gff₀.measurable.prodMk hWm
+  -- the measurable fields `h₀^ε`, `h₀` and scale `R_ε` as functions of `V`
+  let y : ℝ := γ⁻¹ * Real.log ε
+  let Rv : DistC × C(ℝ, ℝ) → ℝ := fun v => Real.exp (ConeScaling.lastLevel (CellScaling.lqgQ γ) y v.2)
+  let F₁ : DistC × C(ℝ, ℝ) → DistC := fun v =>
+    ConeScaling.fieldOf (affineComp (Rv v) 0 (CellScaling.lateralPart v.1))
+      (ConeScaling.radShift (CellScaling.lqgQ γ) y v.2)
+  let F₂ : DistC × C(ℝ, ℝ) → DistC := fun v => ConeScaling.fieldOf (CellScaling.lateralPart v.1) v.2
+  have hRv : Measurable Rv :=
+    Real.measurable_exp.comp
+      ((ConeScaling.measurable_lastLevel (CellScaling.lqgQ γ) y).comp measurable_snd)
+  have hF₁ : Measurable F₁ :=
+    ConeScaling.measurable_fieldOf.comp (Measurable.prodMk
+      (MoTPort.ConeMeas.measurable_affineComp_joint.comp
+        (hRv.prodMk (ConeScaling.measurable_lateralPart.comp measurable_fst)))
+      ((ConeScaling.measurable_radShift (CellScaling.lqgQ γ) y).comp measurable_snd))
+  have hF₂ : Measurable F₂ :=
+    ConeScaling.measurable_fieldOf.comp
+      ((ConeScaling.measurable_lateralPart.comp measurable_fst).prodMk measurable_snd)
+  -- the field law `h₀^ε =d h₀` (DMS Prop 4.13(i) at `α = 0`)
+  have hrad := IGLaw.map_radShift_coneRadial_alpha (γ := γ) (α := 0) hQ0 hC.bm_B₀ hC.bm_B₀'
+    hC.indep_cone₀.2 hWm hW y
+  have hlaw : P.map (fun ω => F₁ (V ω)) = P.map (fun ω => F₂ (V ω)) :=
+    ConeScaling.map_fieldOf_shift_eq hC.gff₀ hWm hXW.symm hrad
+  -- the fixed-scale curve law
+  have hdil : ∀ r : ℝ, 0 < r →
+      P.map (fun ω => CellScaling.JointScalingO.dilCurve r (ηL ω)) = P.map ηL := by
+    intro r hr
+    rw [← IGLaw.IsMatingOfTreesCoupling.map_affineReroot_ηL hC 0 hr 0]
+    refine Measure.map_congr ?_
+    filter_upwards [IGLaw.IsMatingOfTreesCoupling.ae_rootTime_zero hC] with ω hω
+    exact CellScaling.JointScalingO.dilCurve_eq_affineReroot r (ηL ω) hω
+  -- almost sure inputs for the `0`-cone
+  have hXA := IGLaw.indepFun_motConeRadial_alpha (γ := γ) (α := 0) hXW hW
+  have hvague := LQGCone.ae_isVagueLimitC_coneField hγ0 hγ2 hQc hC.gff₀ hC.bm_B₀ hC.bm_B₀'
+    hC.indep_cone₀.2 hXA
+  have hpos := LQGCone.ae_lqgArea_coneField_open_pos hγ0 hγ2 hQc hC.gff₀ hC.bm_B₀ hC.bm_B₀'
+    hC.indep_cone₀.2 hXA
+  have hLR1 := IGLaw.ae_lqgArea_coneRescaleField_alpha (α := 0) hγ0 hγ2 hQ0 hC.gff₀ hC.bm_B₀
+    hC.bm_B₀'
+  have hQ : CellScaling.lqgQ γ = QuantumZipper.Qc γ := by dsimp [CellScaling.lqgQ, QuantumZipper.Qc]
+  have hA : MoTPort.IsConeProcess 0 (QuantumZipper.Qc γ)
+      (fun t ω => LQGCone.motConeRadial γ 0 (fun s => B₀ s ω) (fun s => B₀' s ω) t) P :=
+    LQGCone.isConeProcess_motConeRadial hC.bm_B₀ hC.bm_B₀' hC.indep_cone₀.2
+  have hli : ∀ᵐ ω ∂P, LocallyIntegrable (ConeScaling.radialOf (W ω)) volume := by
+    filter_upwards [hW, MoTPort.ConeArea4.ae_locallyIntegrable_coneProfile hA] with ω hω hl
+    refine hl.congr (Eventually.of_forall fun z => ?_)
+    simp only [ConeScaling.radialOf, hω, LQGCone.coneRadial_eq_Q_add_motConeRadial, hQ]
+  -- the pathwise identification
+  have key : ∀ᵐ ω ∂P,
+      (⇑(GMS4b.curveRescale (Rv (V ω)) ε (η₀ ω)) : ℝ → ℂ) =
+          (fun t => CellScaling.JointScalingO.parEval γ (F₁ (V ω))
+            (CellScaling.JointScalingO.dilCurve (Rv (V ω)) (ηL ω)) t) ∧
+        (⇑(η₀ ω) : ℝ → ℂ) = fun t => CellScaling.JointScalingO.parEval γ (F₂ (V ω)) (ηL ω) t := by
+    filter_upwards [hW, hli, hC.areaParam₀, hvague, hpos, hLR1] with
+      ω hWω hliω hparω hvω hposω hLRω
+    obtain ⟨⟨φ, hφ0, hφ⟩, hareaμ⟩ := hparω
+    let hf : DistC :=
+      CellScaling.coneField (X₀ ω) (CellScaling.coneRadial γ 0 (fun s => B₀ s ω) (fun s => B₀' s ω))
+    have hv : ∃ μ, CellScaling.IsVagueLimitC (CellScaling.lqgAreaApprox γ hf) μ := hvω
+    have harea : ∀ s t : ℝ, s ≤ t →
+        CellScaling.lqgArea γ hf (η₀ ω '' Icc s t) = ENNReal.ofReal (t - s) :=
+      hareaμ (CellScaling.lqgArea γ hf) (CellScaling.JointScalingO.isVagueLimitC_lqgArea_of_exists hv)
+    have hR0 : 0 < Rv (V ω) := Real.exp_pos _
+    have hh : hf = F₂ (V ω) := IGLaw.coneField_eq_fieldOf_alpha γ 0 (X₀ ω) hWω
+    have hhb : CellScaling.coneRescaleField γ (Rv (V ω)) ε hf = F₁ (V ω) := by
+      rw [hh]
+      exact ConeScaling.coneRescaleField_fieldOf γ ε _ hliω
+    have hcov : ∀ A : Set ℂ, CellScaling.lqgArea γ (CellScaling.coneRescaleField γ (Rv (V ω)) ε hf) A =
+        ENNReal.ofReal ε⁻¹ * CellScaling.lqgArea γ hf ((fun w => ((Rv (V ω) : ℝ) : ℂ) * w) '' A) :=
+      fun A => hLRω (Rv (V ω)) hR0 ε hε A
+    have hposR : 0 < CellScaling.lqgArea γ hf (ball 0 (Rv (V ω))) :=
+      hposω _ isOpen_ball (nonempty_ball.2 hR0)
+    have hlhs := CellScaling.JointScalingO.coe_coneRescaleCurve_eq_parEval hR0 hε hφ0 hφ harea hcov
+      hposR
+    have hrhs := CellScaling.JointScalingO.coe_eq_parEval_of_areaParam hv hφ0 hφ harea
+    refine ⟨?_, ?_⟩
+    · rw [IGLaw.curveRescale_eq_coneRescaleCurve, hlhs, hhb]
+    · rw [hrhs, hh]
+  -- the law transfer, set by set
+  show P.map (fun ω => GMS4b.curveRescale (Rv (V ω)) ε (η₀ ω)) = P.map η₀
+  have hη₀m : Measurable η₀ := hC.measurable_curves.2.2.1
+  have hcm : Measurable fun ω => GMS4b.curveRescale (Rv (V ω)) ε (η₀ ω) :=
+    (GMS4b.measurable_curveRescale ε).comp ((hRv.comp hV).prodMk hη₀m)
+  have hΨ : Measurable fun p : DistC × C(ℝ, ℂ) =>
+      (fun t => CellScaling.JointScalingO.parEval γ p.1 p.2 t : ℝ → ℂ) :=
+    measurable_pi_iff.2 fun t => CellScaling.JointScalingO.measurable_parEval γ t
+  ext A hA
+  have hA' : MeasurableSet[MeasurableSpace.comap (fun f : C(ℝ, ℂ) => (⇑f : ℝ → ℂ))
+      MeasurableSpace.pi] A := by
+    rw [← CellScaling.JointScalingO.measurableSpace_continuousMap_complex_eq_comap]
+    exact hA
+  obtain ⟨T, hT, rfl⟩ := hA'
+  rw [Measure.map_apply hcm hA, Measure.map_apply hη₀m hA]
+  have hkey1 : (fun ω => (⇑(GMS4b.curveRescale (Rv (V ω)) ε (η₀ ω)) : ℝ → ℂ)) =ᵐ[P]
+      fun ω => (fun t => CellScaling.JointScalingO.parEval γ (F₁ (V ω))
+        (CellScaling.JointScalingO.dilCurve (Rv (V ω)) (ηL ω)) t) := key.mono fun ω hω => hω.1
+  have hkey2 : (fun ω => (⇑(η₀ ω) : ℝ → ℂ)) =ᵐ[P]
+      fun ω => (fun t => CellScaling.JointScalingO.parEval γ (F₂ (V ω)) (ηL ω) t) :=
+    key.mono fun ω hω => hω.2
+  calc P ((fun ω => GMS4b.curveRescale (Rv (V ω)) ε (η₀ ω)) ⁻¹'
+        ((fun f : C(ℝ, ℂ) => (⇑f : ℝ → ℂ)) ⁻¹' T))
+      = P {ω | (⇑(GMS4b.curveRescale (Rv (V ω)) ε (η₀ ω)) : ℝ → ℂ) ∈ T} := rfl
+    _ = P {ω | (fun t => CellScaling.JointScalingO.parEval γ (F₁ (V ω))
+          (CellScaling.JointScalingO.dilCurve (Rv (V ω)) (ηL ω)) t) ∈ T} :=
+        ConeScaling.measure_setOf_mem_congr hkey1 T
+    _ = P {ω | (fun t => CellScaling.JointScalingO.parEval γ (F₂ (V ω)) (ηL ω) t) ∈ T} :=
+        CellScaling.JointScalingO.measure_dilCurve_indep_eq hV hC.measurable_curves.1 hVη hdil hF₁ hF₂
+          hlaw hRv (fun v => Real.exp_pos _) hΨ hT
+    _ = P {ω | (⇑(η₀ ω) : ℝ → ℂ) ∈ T} := (ConeScaling.measure_setOf_mem_congr hkey2 T).symm
+    _ = P (η₀ ⁻¹' ((fun f : C(ℝ, ℂ) => (⇑f : ℝ → ℂ)) ⁻¹' T)) := rfl
+
+/-- **The dilation law of the zero-cone curve** (written answer `notes/fp-gaps/CODEX-MQ-sbl-27.md`, section "(b) The
+unshifted curve at the random radius", lines 33-42; Gwynne–Miller–Sheffield, arXiv:1705.11161, (2.4)-(2.5) and the
+proof of Lemma 3.5; Duplantier–Miller–Sheffield, arXiv:1409.7055, Proposition 4.13(i)). One measurable version `W` of
+the radial part of the zero cone gives the radii `R_n = exp (L_y(W))`, `y = γ⁻¹ log (1/n)`, for all `n`: they are the
+cone scales at the masses `1/n`, so `R_n → 0` almost surely, and `E_n(t) = R_n⁻¹ η₀(t/n)` has the law of `η₀`. -/
+theorem zeroConeCurveDilationLaw
+    (D : MatedCRTHarmonic.MatedCRT.IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm)
+    (hγ : γ ∈ Ioo (0 : ℝ) 2) : ZeroConeCurveDilationLaw D hγ := by
+  have : IsProbabilityMeasure P := D.isProbabilityMeasure
+  have hQ0 : (0 : ℝ) < CellScaling.lqgQ γ := IGLaw.lqgQ_pos' hγ.1
+  -- `ηL ⟂ (X₀, B₀, B₀')` and the radial path of the `0`-cone
+  have hηcones := IGLaw.IsMatingOfTreesCoupling.indepFun_ηL_coneData D
+  have hproj : Measurable fun q : MatedCRTHarmonic.MatedCRT.Field × (ℝ≥0 → ℝ) × (ℝ≥0 → ℝ) ×
+      MatedCRTHarmonic.MatedCRT.Field × (ℝ≥0 → ℝ) × (ℝ≥0 → ℝ) =>
+      (q.2.2.2.1, (q.2.2.2.2.1, q.2.2.2.2.2)) := by
+    fun_prop
+  have hηX₀BB : IndepFun ηL (fun ω => (X₀ ω, ((fun t => B₀ t ω), (fun t => B₀' t ω)))) P :=
+    hηcones.comp measurable_id hproj
+  obtain ⟨W, hWm, hXW, hVη, hW⟩ := IGLaw.exists_radialPath_alpha (γ := γ) (α := 0)
+    (by simpa using hQ0) D.bm_B₀ D.bm_B₀' D.indep_cone₀.1 hηX₀BB
+  have hRm : ∀ n : ℕ, Measurable fun ω => Real.exp (ConeScaling.lastLevel (CellScaling.lqgQ γ)
+      (γ⁻¹ * Real.log (1 / (n : ℝ))) (W ω)) := fun n =>
+    Real.measurable_exp.comp ((ConeScaling.measurable_lastLevel _ _).comp hWm)
+  refine ⟨fun n ω => (Real.exp (ConeScaling.lastLevel (CellScaling.lqgQ γ)
+      (γ⁻¹ * Real.log (1 / (n : ℝ))) (W ω))).toNNReal,
+    fun n ω => GMS4b.curveRescale (Real.exp (ConeScaling.lastLevel (CellScaling.lqgQ γ)
+      (γ⁻¹ * Real.log (1 / (n : ℝ))) (W ω))) (1 / (n : ℝ)) (η₀ ω),
+    fun n => (hRm n).real_toNNReal,
+    fun n => (GMS4b.measurable_curveRescale _).comp ((hRm n).prodMk D.measurable_curves.2.2.1), ?_, ?_⟩
+  · filter_upwards [LatticeProb.ae_tendsto_coneScale_small_mass (α := 0) hγ.1 hQ0 D.bm_B₀ D.bm_B₀', hW]
+      with ω hω hWω
+    have hn : Tendsto (fun n : ℕ => 1 / (n : ℝ)) atTop (𝓝[>] 0) :=
+      tendsto_nhdsWithin_iff.2 ⟨tendsto_one_div_atTop_nhds_zero_nat,
+        (eventually_gt_atTop 0).mono fun n hn => mem_Ioi.2 (one_div_pos.2 (Nat.cast_pos.2 hn))⟩
+    have h2 : Tendsto (fun n : ℕ => Real.exp (ConeScaling.lastLevel (CellScaling.lqgQ γ)
+        (γ⁻¹ * Real.log (1 / (n : ℝ))) (W ω))) atTop (𝓝 0) :=
+      (hω.comp hn).congr fun n => IGLaw.coneScale_eq_exp_lastLevel_alpha γ 0 _ hWω
+    have h3 := (continuous_real_toNNReal.tendsto 0).comp h2
+    rw [Real.toNNReal_zero] at h3
+    exact h3
+  · intro n hn
+    refine ⟨Eventually.of_forall fun ω => Real.toNNReal_pos.2 (Real.exp_pos _),
+      Eventually.of_forall fun ω t => eq_smul_curveRescale_one_div (Real.exp_pos _) n (η₀ ω) t, ?_⟩
+    exact map_curveRescale_exp_lastLevel_zeroCone D hγ hWm hXW hVη hW
+      (one_div_pos.2 (Nat.cast_pos.2 hn))
+
+end CurveDilation
 
 end MatedCRT.GMS310Transfer
