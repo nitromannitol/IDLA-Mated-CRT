@@ -20,6 +20,11 @@ on:
         description: Commit of Harmonic-Balls-LQG to build against
         required: true
         type: string
+      ref:
+        description: Commit to build (default the commit of the calling run)
+        required: false
+        type: string
+        default: ''
       minutes:
         description: Time limit of the build step, in minutes
         required: false
@@ -45,6 +50,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           path: IDLA-Mated-CRT
+          ref: ${{ inputs.ref }}
           persist-credentials: false
 
       - name: Checkout Harmonic-Balls-LQG

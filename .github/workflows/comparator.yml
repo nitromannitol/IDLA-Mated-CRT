@@ -5,8 +5,13 @@ name: Comparator audit
 # permitted axioms are used, and that the proofs are accepted by BOTH the Lean kernel (replay) and the
 # independent nanoda kernel. The library build is the one of the CI workflow (`build-stage.yml`,
 # resumed here if it is not complete), against Harmonic-Balls-LQG at the head of its main branch or at
-# the commit given to the dispatch. It runs on manual dispatch.
+# the commit given to the dispatch. It runs after each successful CI run on main, on the commit that CI
+# built, and on manual dispatch.
 on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
     inputs:
       harmonic_balls_rev:
@@ -30,6 +35,7 @@ env:
 
 jobs:
   resolve:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     name: Resolve the Harmonic-Balls-LQG commit
     runs-on: ubuntu-24.04
     outputs:
@@ -55,6 +61,7 @@ jobs:
     uses: ./.github/workflows/build-stage.yml
     with:
       stage: 1
+      ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       harmonic_balls_rev: ${{ needs.resolve.outputs.rev }}
   stage2:
     needs: [resolve, stage1]
@@ -62,6 +69,7 @@ jobs:
     uses: ./.github/workflows/build-stage.yml
     with:
       stage: 2
+      ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       harmonic_balls_rev: ${{ needs.resolve.outputs.rev }}
   stage3:
     needs: [resolve, stage2]
@@ -69,6 +77,7 @@ jobs:
     uses: ./.github/workflows/build-stage.yml
     with:
       stage: 3
+      ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       harmonic_balls_rev: ${{ needs.resolve.outputs.rev }}
   stage4:
     needs: [resolve, stage3]
@@ -76,6 +85,7 @@ jobs:
     uses: ./.github/workflows/build-stage.yml
     with:
       stage: 4
+      ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       harmonic_balls_rev: ${{ needs.resolve.outputs.rev }}
   stage5:
     needs: [resolve, stage4]
@@ -83,11 +93,12 @@ jobs:
     uses: ./.github/workflows/build-stage.yml
     with:
       stage: 5
+      ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       harmonic_balls_rev: ${{ needs.resolve.outputs.rev }}
   comparator:
     name: Comparator over the audit pairs
     needs: [resolve, stage1, stage2, stage3, stage4, stage5]
-    if: ${{ !cancelled() && !failure() }}
+    if: ${{ !cancelled() && !failure() && (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 355
     steps:
@@ -95,6 +106,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           path: IDLA-Mated-CRT
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
           persist-credentials: false
 
       - name: Checkout Harmonic-Balls-LQG
