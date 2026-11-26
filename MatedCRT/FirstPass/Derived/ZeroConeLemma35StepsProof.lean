@@ -46,9 +46,9 @@ open LatticeProb LatticeProb.UnboundedRayIntervalIntegrand LatticeProb.Unbounded
   LatticeProb.UnboundedRayCurveSpace LatticeProb.ReparamDistanceIsometry
 open ReflectedGMS.StatementIngredients
 
-local instance : MeasurableSpace (UnboundedRayCurveSpace 2) := borel _
+local instance instMeasurableSpaceRayCurveSpaceDilation : MeasurableSpace (UnboundedRayCurveSpace 2) := borel _
 
-local instance : BorelSpace (UnboundedRayCurveSpace 2) := ⟨rfl⟩
+local instance instBorelSpaceRayCurveSpaceDilation : BorelSpace (UnboundedRayCurveSpace 2) := ⟨rfl⟩
 
 attribute [local instance] isProbabilityMeasure_map_complexToEuclideanPath
 
