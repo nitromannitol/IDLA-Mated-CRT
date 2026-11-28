@@ -119,7 +119,7 @@ theorem measurableSet_reconCurveEvent (α R a L δ M : ℝ) : MeasurableSet (Rec
     (ContinuousMap.isOpen_setOfPred_mapsTo isCompact_Icc isOpen_ball).measurableSet
   have h2 : MeasurableSet {e : C(ℝ, ℂ) | ∀ m : ℕ,
       MapsTo e (Icc (L / 2) (L / 2 + m) ∪ Icc (-(L / 2) - m) (-(L / 2))) (closedBall (0 : ℂ) (2 * R + 2))ᶜ} := by
-    rw [setOf_forall]
+    rw [ofPred_forall]
     exact MeasurableSet.iInter fun m => (ContinuousMap.isOpen_setOfPred_mapsTo
       (isCompact_Icc.union isCompact_Icc) isClosed_closedBall.isOpen_compl).measurableSet
   have h3 : MeasurableSet
