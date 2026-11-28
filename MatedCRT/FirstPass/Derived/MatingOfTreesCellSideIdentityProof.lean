@@ -69,7 +69,8 @@ genuine whole-plane space-filling SLE_κ, `κ > 4` (Gwynne–Holden–Miller, ar
 Lemmas 8.12-8.13), and so for a model whose curves agree with it up to increasing time homeomorphisms, such as the
 canonical model. What the cell-side identity in a valid environment uses is `ValidEnvTriplePointsNoContinuum`
 (`MatingOfTreesCellSideIdentityValid.lean`, `matingOfTreesCellSideIdentity_of_valid`), which is derived from
-`CorrelatedBMPeanosphereTriplePointsNoContinuum` (`validEnvTriplePointsNoContinuum_of_peanosphere`).
+`CorrelatedBMPeanosphereTriplePointsNoContinuum` (`validEnvTriplePointsNoContinuum_of_peanosphere`; that statement is
+proved by `correlatedBMPeanosphereTriplePointsNoContinuum_holds`).
 
 For `κ > 4` and a whole-plane space-filling SLE_κ `η` (independent of `𝓕`, in the model `𝒮`), almost surely the set
 of points visited at least three times (`curveTriplePoints`) contains no continuum of positive diameter. The set is
