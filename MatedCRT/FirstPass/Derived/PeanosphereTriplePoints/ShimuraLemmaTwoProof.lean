@@ -268,4 +268,88 @@ theorem firstThird_event (hK : KilledBarrierPositive) {γ : ℝ} (hγ0 : 0 < γ)
       _ ≤ 2 + 3 := add_le_add h1 h2
       _ = 5 := by norm_num
 
+/-- **The last third**, read backwards from time `1` with `L` first.  With probability at least `c δ`
+the coordinate `L` stays above `L 1 - δ` on `[2/3, 1]` and `L (2/3) - L 1 ≥ 1`, while `R` moves by
+at most `5` from its value at `1`. -/
+theorem lastThird_event (hK : KilledBarrierPositive) {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
+    {μ : Measure Path2} (hμ : IsCorrelatedBM2 γ μ) :
+    ∃ c : ℝ, 0 < c ∧ ∀ δ : ℝ, 0 < δ → δ ≤ 1 →
+      ENNReal.ofReal (c * δ) ≤ μ {ω | (∀ s ∈ Icc (2 / 3 : ℝ) 1, -δ ≤ (ω s).1 - (ω 1).1) ∧
+        1 ≤ (ω (2 / 3)).1 - (ω 1).1 ∧ ∀ s ∈ Icc (2 / 3 : ℝ) 1, |(ω s).2 - (ω 1).2| ≤ 5} := by
+  have : IsProbabilityMeasure μ := hμ.isProbabilityMeasure
+  obtain ⟨hρlo, hρhi⟩ := lrCov_mem_Ioo hγ0 hγ2
+  set ρ := lrCov γ 0 1 with hρ
+  set σ := Real.sqrt (1 - ρ ^ 2) with hσdef
+  have hpos : 0 < 1 - ρ ^ 2 := by nlinarith
+  have hσsq : σ * σ = 1 - ρ ^ 2 := Real.mul_self_sqrt hpos.le
+  have hσ : 0 < σ := Real.sqrt_pos.2 hpos
+  have hσ1 : σ ≤ 1 := by nlinarith
+  have hX : IsBrownianReal (fun v : ℝ≥0 => coneComb 1 0 (1 + -1 * v) 1) μ :=
+    isBrownianReal_coneComb hμ (α := 1) (β := 0) (e := -1) (by norm_num) (by ring) 1
+  have hY : IsBrownianReal (fun v : ℝ≥0 => coneComb (-ρ / σ) (1 / σ) (1 + -1 * v) 1) μ :=
+    isBrownianReal_coneComb hμ (α := -ρ / σ) (β := 1 / σ) (e := -1) (by norm_num)
+      (by linear_combination whitened_norm hσ hσsq) 1
+  have hind : IndepFun (fun ω (v : ℝ≥0) => coneComb 1 0 (1 + -1 * v) 1 ω)
+      (fun ω (v : ℝ≥0) => coneComb (-ρ / σ) (1 / σ) (1 + -1 * v) 1 ω) μ :=
+    indepFun_coneComb_future hμ (-1) 1 σ
+  have hXc : ∀ ω, Continuous fun v : ℝ≥0 => coneComb 1 0 (1 + -1 * v) 1 ω := fun ω =>
+    continuous_coneComb_apply 1 0 1 (-1) ω
+  have hYc : ∀ ω, Continuous fun v : ℝ≥0 => coneComb (-ρ / σ) (1 / σ) (1 + -1 * v) 1 ω :=
+    fun ω => continuous_coneComb_apply (-ρ / σ) (1 / σ) 1 (-1) ω
+  obtain ⟨c, hc, hbd⟩ := barrierPair_lower_bound hK hX hY hXc hYc hind (1 / 3) 3 1 2
+    (by norm_num) (by norm_num) (by norm_num) (by norm_num)
+  refine ⟨c, hc, fun δ hδ hδ1 => (hbd δ hδ hδ1).trans (measure_mono ?_)⟩
+  intro ω hω
+  obtain ⟨⟨hR, hRend⟩, hW⟩ := hω
+  have hLform : ∀ x : ℝ, coneComb 1 0 x 1 ω = (ω x).1 - (ω 1).1 := fun x => by
+    simp [coneComb, coneIncr, lrCoord]
+  have hWform : ∀ x : ℝ, coneComb (-ρ / σ) (1 / σ) x 1 ω =
+      -ρ / σ * ((ω x).1 - (ω 1).1) + 1 / σ * ((ω x).2 - (ω 1).2) := fun x => by
+    simp [coneComb, coneIncr, lrCoord]
+  have h0L : coneComb 1 0 (1 + -1 * ((0 : ℝ≥0) : ℝ)) 1 ω = 0 := by simp [coneComb, coneIncr]
+  have h0W : coneComb (-ρ / σ) (1 / σ) (1 + -1 * ((0 : ℝ≥0) : ℝ)) 1 ω = 0 := by
+    simp [coneComb, coneIncr]
+  have hnn : ∀ s : ℝ, s ∈ Icc (2 / 3 : ℝ) 1 → (1 - s).toNNReal ≤ (1 / 3 : ℝ≥0) := fun s hs => by
+    rw [← NNReal.coe_le_coe, Real.coe_toNNReal _ (by linarith [hs.2])]
+    have h : (((1 / 3 : ℝ≥0)) : ℝ) = 1 / 3 := by norm_num
+    rw [h]
+    linarith [hs.1]
+  have harg : ∀ s : ℝ, s ∈ Icc (2 / 3 : ℝ) 1 → 1 + -1 * (((1 - s).toNNReal : ℝ≥0) : ℝ) = s :=
+    fun s hs => by
+      rw [Real.coe_toNNReal _ (by linarith [hs.2])]
+      ring
+  have hend : 1 + -1 * (((1 / 3 : ℝ≥0)) : ℝ) = 2 / 3 := by
+    have h : (((1 / 3 : ℝ≥0)) : ℝ) = 1 / 3 := by norm_num
+    rw [h]
+    norm_num
+  refine ⟨fun s hs => ?_, ?_, fun s hs => ?_⟩
+  · have h := (hR _ (hnn s hs)).1
+    rw [h0L, sub_zero, harg s hs, hLform] at h
+    exact h
+  · have h := hRend.1
+    rw [h0L, sub_zero, hend, hLform] at h
+    exact h
+  · have hLs := hR _ (hnn s hs)
+    have hWs := hW _ (hnn s hs)
+    rw [h0L, sub_zero, harg s hs, hLform] at hLs
+    rw [h0W, sub_zero, harg s hs, hWform] at hWs
+    have hR2 : (ω s).2 - (ω 1).2 = σ * (-ρ / σ * ((ω s).1 - (ω 1).1) +
+        1 / σ * ((ω s).2 - (ω 1).2)) + ρ * ((ω s).1 - (ω 1).1) := by
+      field_simp
+      ring
+    rw [hR2]
+    have h1 : |σ * (-ρ / σ * ((ω s).1 - (ω 1).1) + 1 / σ * ((ω s).2 - (ω 1).2))| ≤ 2 := by
+      rw [abs_mul, abs_of_pos hσ]
+      have : |-ρ / σ * ((ω s).1 - (ω 1).1) + 1 / σ * ((ω s).2 - (ω 1).2)| ≤ 2 :=
+        abs_le.2 ⟨by linarith [hWs.1], hWs.2⟩
+      nlinarith [abs_nonneg (-ρ / σ * ((ω s).1 - (ω 1).1) + 1 / σ * ((ω s).2 - (ω 1).2))]
+    have h2 : |ρ * ((ω s).1 - (ω 1).1)| ≤ 3 := by
+      rw [abs_mul]
+      have hρa : |ρ| ≤ 1 := abs_le.2 ⟨hρlo.le, hρhi.le⟩
+      have : |(ω s).1 - (ω 1).1| ≤ 3 := abs_le.2 ⟨by linarith [hLs.1], hLs.2⟩
+      nlinarith [abs_nonneg ρ, abs_nonneg ((ω s).1 - (ω 1).1)]
+    calc _ ≤ _ := abs_add_le _ _
+      _ ≤ 2 + 3 := add_le_add h1 h2
+      _ = 5 := by norm_num
+
 end MatedCRT.PeanosphereTriplePoints
