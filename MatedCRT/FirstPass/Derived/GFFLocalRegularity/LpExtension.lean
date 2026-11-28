@@ -14,13 +14,14 @@ The standard facts used are:
 
 * the bounded linear transformation theorem: a bounded linear map on a dense subspace of a normed
   space with values in a Banach space extends to a bounded linear map (Reed–Simon, *Methods of
-  modern mathematical physics I*, Theorem I.7; in Mathlib, `LinearMap.extendOfNorm`);
+  modern mathematical physics I*, Theorem I.7, p. 9; in Mathlib, `LinearMap.extendOfNorm`);
 * the density of `C_c^∞(Ω)` in `L^p(Ω)` for an open set `Ω` and `1 ≤ p < ∞` (Brezis, *Functional
-  analysis, Sobolev spaces and partial differential equations*, Corollary 4.23; in Mathlib the
+  analysis, Sobolev spaces and partial differential equations*, Corollary 4.23, p. 109; in Mathlib the
   density of smooth compactly supported functions in `L^p(ℝⁿ)` is
   `MeasureTheory.MemLp.exist_eLpNorm_sub_le`, which is localised here by a smooth cut-off);
-* the closure of centred Gaussian variables under limits in probability (Janson, *Gaussian Hilbert
-  spaces*, Theorem 1.4; the argument by characteristic functions is
+* the closure of centred Gaussian variables under limits in `L²` or in probability (Le Gall,
+  *Brownian motion, martingales, and stochastic calculus*, Proposition 1.1 (i) and the remark after
+  it, p. 3; the argument by characteristic functions is
   `LQGMetric.exists_gaussianReal_of_ae_tendsto`), together with the passage from convergence in
   `L²` to almost sure convergence of a subsequence.
 -/
