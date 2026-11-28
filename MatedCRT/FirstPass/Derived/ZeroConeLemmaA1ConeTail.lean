@@ -1,5 +1,6 @@
 import MatedCRT.FirstPass.Derived.ZeroConeLemmaA1Tail
 import MatedCRT.FirstPass.Derived.ZeroConeLemmaA1Radial
+import MatedCRT.FirstPass.Derived.ZeroConeLemmaA1Rotation
 import LatticeProb.Bonanno.MatedCRTHarmonic.GMS4O.Prop48OPhaseCone
 import LatticeProb.Bonanno.LQGMetric.Papers.CONF.S3D114S4
 
@@ -380,30 +381,6 @@ end Pairing
 
 /-! ### The radial path of the zero cone -/
 
-/-- The radial path of the `0`-quantum cone as a measurable continuous path `W`, independent of `X₀`, with almost
-surely locally integrable radial profile. -/
-theorem exists_radialPath_zeroCone {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
-    [IsProbabilityMeasure P] {X₀ : Ω → Field} {b b' : ℝ≥0 → Ω → ℝ} (hγ : 0 < γ)
-    (hb : IsBrownianReal b P) (hb' : IsBrownianReal b' P)
-    (hXB : IndepFun X₀ (fun ω => ((fun t => b t ω), (fun t => b' t ω))) P)
-    (hbb : IndepFun (fun ω t => b t ω) (fun ω t => b' t ω) P) :
-    ∃ W : Ω → C(ℝ, ℝ), Measurable W ∧ IndepFun X₀ W P ∧
-      (∀ᵐ ω ∂P, ∀ t, W ω t = CellScaling.coneRadial γ 0 (fun s => b s ω) (fun s => b' s ω) t) ∧
-      (∀ᵐ ω ∂P, LocallyIntegrable (ConeScaling.radialOf (W ω)) volume) := by
-  have hQ0 : (0 : ℝ) < CellScaling.lqgQ γ := GMS4O.p48o_lqgQ_pos hγ
-  have hQ0' : 0 < CellScaling.lqgQ γ - 0 := by rw [sub_zero]; exact hQ0
-  obtain ⟨W, hWm, hXW, -, hW⟩ := IGLaw.exists_radialPath_alpha (γ := γ) (α := 0) hQ0' hb hb' hXB
-    (indepFun_const_left (μ := P) (c := ()) _)
-  have hQ : CellScaling.lqgQ γ = QuantumZipper.Qc γ := by dsimp [CellScaling.lqgQ, QuantumZipper.Qc]
-  have hA : MoTPort.IsConeProcess 0 (QuantumZipper.Qc γ)
-      (fun t ω => LQGCone.motConeRadial γ 0 (fun s => b s ω) (fun s => b' s ω) t) P :=
-    LQGCone.isConeProcess_motConeRadial hb hb' hbb
-  have hli : ∀ᵐ ω ∂P, LocallyIntegrable (ConeScaling.radialOf (W ω)) volume := by
-    filter_upwards [hW, MoTPort.ConeArea4.ae_locallyIntegrable_coneProfile hA] with ω hω hl
-    refine hl.congr (Eventually.of_forall fun z => ?_)
-    simp only [ConeScaling.radialOf, hω, LQGCone.coneRadial_eq_Q_add_motConeRadial, hQ]
-  exact ⟨W, hWm, hXW, hW, hli⟩
-
 /-- For `u > 0`, the radial path of the zero cone at `-u` is the outer process after the last zero, minus `Q u`. -/
 theorem coneRadial_neg_add_eq_coneOuterProc {γ : ℝ} {b b' : ℝ≥0 → ℝ} {u : ℝ≥0} (hu : 0 < u) :
     CellScaling.coneRadial γ 0 b b' (-(u : ℝ)) + CellScaling.lqgQ γ * (u : ℝ) =
@@ -441,7 +418,7 @@ theorem isTrivialSigma_zeroCone_extTail (hT1a : WholePlaneGFFExteriorTailTrivial
     (hi2 : IndepFun (fun ω t => b t ω) (fun ω t => b' t ω) P') :
     LatticeProb.IsTrivialSigma (⨅ k : ℕ, extSigma ((k : ℝ) + 1))
       (P'.map (zeroConeFieldOf γ X₀' b b')) := by
-  obtain ⟨W, hWm, hXW, hW, hli⟩ := exists_radialPath_zeroCone hγ.1 hb hb' hi1 hi2
+  obtain ⟨W, hWm, hXW, hW, hli⟩ := exists_zeroCone_radialPath hγ.1 hb hb' hi1 hi2
   have hQ0 : (0 : ℝ) < lqgQ γ := GMS4O.p48o_lqgQ_pos hγ.1
   set Q : ℝ := lqgQ γ
   have hZ : ∀ᵐ ω ∂P', zeroConeFieldOf γ X₀' b b' ω =
