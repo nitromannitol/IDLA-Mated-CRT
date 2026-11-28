@@ -7,8 +7,7 @@ import MatedCRT.FirstPass.Derived.GMS21Lemma33Cone
 `0 < δ < M` and either cone (`β = γ` or `β = 0`), the offsets `(-μ(ηL([-a, 0])), μ(ηL([0, a])))` are random
 variables and the joint law of the outer data `(ηL, μ|{δ < |z| < M})` and the offsets is absolutely continuous
 with respect to the law of the outer data times Lebesgue measure on `ℝ²` (Gwynne–Miller–Sheffield,
-arXiv:1705.11161, proof of Lemma 3.3, lines 1280-1282; written proof `notes/fp-gaps/CODEX-MQ-sbl-22.md`,
-section B).
+arXiv:1705.11161, proof of Lemma 3.3).
 
 The argument. Almost surely there are two disjoint rational closed disks `D₋, D₊ ⊂ B_{min(1, δ)}(0) \ {0}`
 which `ηL` visits only during `(-a, 0)` and `(0, a)` respectively (`ηL` is continuous, surjective, proper,
@@ -185,8 +184,7 @@ data, `β ∈ {0, γ}`, `μ = quantumConeArea γ β X B B'` the `γ`-LQG area me
 For every smooth `f` whose support is a compact subset of `B_1(0) \ {0}`, the law of `(e, μ)` is absolutely
 continuous with respect to the law of `(e, e^{γ f} μ)`.
 
-Source: `notes/fp-gaps/CODEX-MQ-sbl-22.md`, section B (lines 63-67), and `notes/fp-gaps/CODEX-MQ-sbl-33.md`:
-the field changes by a smooth bump `f` with zero average on every centred circle of radius at least one. Write
+Argument: the field changes by a smooth bump `f` with zero average on every centred circle of radius at least one. Write
 `f = f_lat + f̄` with `f̄` the rotation average of `f`, and `φ(t) = f̄_{e^{-t}}(0)`. The cone field depends on `X`
 only through its lateral part `L`, and the cone field of `(L + f_lat, B + φ, B')` is
 `coneField X (coneRadial γ β B B') + f`. The law of `(L + f_lat, B + φ, B')` is mutually absolutely continuous
@@ -1019,8 +1017,7 @@ theorem offsetDensity_of_bumpTilt {γ : ℝ} (hT : ConeAreaBumpTilt γ) (hγ : �
     filter_upwards [hgood'] with z hz hE N hN
     exact volume_preimage_offsets_tilt hγ.1 k hz hE M hN
 
-/-- **`ConeOffsetDensity` from the tilt input** (Gwynne–Miller–Sheffield, arXiv:1705.11161, proof of Lemma 3.3;
-`notes/fp-gaps/CODEX-MQ-sbl-22.md`, section B): for every mating-of-trees coupling, given the outer data
+/-- **`ConeOffsetDensity` from the tilt input** (Gwynne–Miller–Sheffield, arXiv:1705.11161, proof of Lemma 3.3): for every mating-of-trees coupling, given the outer data
 `(ηL, μ|{δ < |z| < M})`, the two offsets `(-μ(ηL([-a, 0])), μ(ηL([0, a])))` of the `γ`-quantum cone and of the
 `0`-quantum cone have a joint Lebesgue density. -/
 theorem coneOffsetDensity_of_bumpTilt (γ : ℝ) (hT : ConeAreaBumpTilt γ) : ConeOffsetDensity γ := by

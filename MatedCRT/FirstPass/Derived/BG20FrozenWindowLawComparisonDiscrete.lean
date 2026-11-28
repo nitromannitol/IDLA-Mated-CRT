@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.Derived.BG20FrozenWindowLawComparisonPaths
 # The frozen window law is the law of the walk of the map, frozen
 
 The frozen window law (`frozenWindowLaw`) runs the walk with the weights `frozenWindowMult` of the inside rows. In the
-comparison of Berestycki–Gwynne (2020), proof of Lemma 7.21 (written answer MQ-sbl-35, line 21), every neighbour of
+comparison of Berestycki–Gwynne (2020), proof of Lemma 7.21, every neighbour of
 an inside cell is retained, so an inside row keeps all its original weights, and the walks with the two weight arrays
 agree until the first step out of the inside cells. This file proves the corresponding identity of laws.
 

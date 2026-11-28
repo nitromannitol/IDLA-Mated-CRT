@@ -22,7 +22,7 @@ open MatedCRTHarmonic.RouteM (directRel)
 namespace MatedCRT
 
 /-- **Named hypothesis: the windows of the space-filling SLE traversal of a correlated Brownian pair have Jordan
-frontiers.** Truth-checked: TRUE (written answer MQ-idla-jordan, part B2).
+frontiers.** Truth-checked: TRUE.
 
 For `0 < γ < 2`, the law `μ` of the `γ`-correlated two-sided Brownian pair (`IsCorrelatedBM2 γ μ`) and fixed times
 `a < u < b`, for `μ`-almost every pair `z = (L, R)` there is a curve `g : ℝ → ℂ` such that

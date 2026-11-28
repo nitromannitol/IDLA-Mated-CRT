@@ -12,7 +12,7 @@ asks for one Borel map `qc` from (field, Lebesgue-parametrized curve) to curves 
 parametrized by the quantum area of the `0`-quantum cone, and which is covariant under every positive similarity
 `ψ(w) = C w + z` at once: `qc(h(C · + z) + Q log C, ψ⁻¹ ∘ e re-rooted at z) = ψ⁻¹ ∘ qc(h, e)(· + τ)`.
 
-Following the written answer `notes/fp-gaps/CODEX-MQ-sbl-25.md`, "(d) One area clock for every similarity"
+Following the written argument
 (lines 46-51), `qc(h, e)` is the curve `e` run with the inverse of its signed area clock `t ↦ ±μ_h(e[0, t])`
 (`areaClockCurve`), where `h ↦ μ_h` is a Borel field-to-area map with the simultaneous coordinate change
 (`ZeroConeAreaCoordinateChange`, a named input from Sheffield–Wang, arXiv:1605.06171). The clock is tested at
@@ -304,7 +304,7 @@ theorem isFiniteMeasureOnCompacts_of_forall_closedBall {μ : Measure ℂ}
     obtain ⟨n, hn⟩ := exists_nat_ge r
     exact (measure_mono (hr.trans (Metric.closedBall_subset_closedBall hn))).trans_lt (h n)⟩
 
-/-- **The area clock under a positive similarity** (written answer `notes/fp-gaps/CODEX-MQ-sbl-25.md`, line 50).
+/-- **The area clock under a positive similarity**.
 Let the mass clock of the continuous curve `e` under `μ` be good, and let `μ` parametrize the reparametrized curve
 `w = massReparamCurve μ e` by mass at rational times. For `ψ(w) = C w + z`, `C > 0`, the curve `ψ⁻¹ ∘ e` re-rooted at
 the first visit `t_z` of `z` and run at speed `C²`, reparametrized by the image measure `μ ∘ ψ`, is
@@ -474,8 +474,7 @@ theorem areaClockCurve_similarity {M : Field → Measure ℂ} {h : Field} {e : C
   exact hτ
 
 /-- **The simultaneous LQG coordinate change of the area measure of the `0`-quantum cone** (Sheffield–Wang,
-arXiv:1605.06171, Theorems 1.1, 1.2 and 1.4; written answer `notes/fp-gaps/CODEX-MQ-sbl-25.md`, "(d) One area clock
-for every similarity", line 48: "Use the Borel field-to-area map `h ↦ μ_h` from the simultaneous coordinate-change
+arXiv:1605.06171, Theorems 1.1, 1.2 and 1.4; the written argument: "Use the Borel field-to-area map `h ↦ μ_h` from the simultaneous coordinate-change
 theorem ... On the original field its limit agrees a.s. with the circle-average measure in the coupling. The
 simultaneous version gives `μ_{h^T}(A) = μ_h(TA)` for all similarities on one event. For the zero cone, couple to a
 whole-plane GFF with the same lateral part and inward Brownian motion ... Localize the GFF on a countable disk cover").
@@ -502,7 +501,7 @@ variable {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
   {ηL η η₀ : Ω → C(ℝ, ℂ)} {bm : Ω → Path2}
 
 /-- **The quantum-time curve as a Borel function of the field and the curve, with the LQG coordinate change**
-(`ZeroConeQuantumCurveCovariance`; written answer `notes/fp-gaps/CODEX-MQ-sbl-25.md`, lines 46-51). The map is the
+(`ZeroConeQuantumCurveCovariance`; the written argument). The map is the
 area clock curve of the Borel area map of `ZeroConeAreaCoordinateChange`: almost surely it returns `η₀` by the area
 parametrization of the coupling, the pair `(h₀, ηL)` is almost surely good, and the independence of `h₀` and `ηL`
 puts almost every pair in the good set, where the covariance is `areaClockCurve_similarity`. -/

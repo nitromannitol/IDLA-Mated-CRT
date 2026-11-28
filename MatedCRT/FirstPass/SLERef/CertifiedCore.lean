@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S5qe
 import MatedCRT.FirstPass.S3t.BLEnvelopeClosure
 
 /-!
-# The certified reference model from its core (audit finding B5 of `OPUS-AUDIT-R1`)
+# The certified reference model from its core (audit finding B5)
 
 `CertifiedReferenceModelCore ν 𝒮` (`MatedCRT/FirstPass/S5qe.lean:33`) is `CertifiedReferenceModel ν 𝒮`
 (`MatedCRT/FirstPass/SLERef/Certified.lean:54`) without conjunct 17, `FrozenTruncatedQuenchedLawsFixedTime 𝒮`

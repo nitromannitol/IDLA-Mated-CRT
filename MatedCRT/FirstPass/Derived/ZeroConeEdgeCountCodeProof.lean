@@ -6,8 +6,7 @@ import LatticeProb.LQG.CoupledAreaTimeChange
 /-!
 # The edge counts of the zero-cone cells as a dilation-invariant Borel function of the curve
 
-This file proves `ZeroConeEdgeCountCode` (`GMS21ZeroConeAnnulusRepairProofs.lean`), following the written answer
-`notes/fp-gaps/CODEX-MQ-sbl-27.md`, section "(c) One dilation-invariant Borel decoder for all meshes" (lines 44-52),
+This file proves `ZeroConeEdgeCountCode` (`GMS21ZeroConeAnnulusRepairProofs.lean`), following the written argument,
 and Gwynne–Miller–Sheffield, arXiv:1705.11161, (1.2) and the proof of Proposition 2.2.
 
 The decoder is the frontier-side multiplicity of the unit cells, `Ψ q = cellSideMult 1 q` (`CellSideMult.lean`), on
@@ -58,9 +57,7 @@ contain no continuum.** PENDING TRUTH CHECK.
 For `0 < γ < 2` and the law `μ` of a `γ`-correlated two-sided planar Brownian motion, for `μ`-almost every pair `p`,
 every curve `η` forming a Peanosphere with `p` (`RouteM.Peanosphere p η`: the times identified by `η` are exactly
 those identified by the contour functions) has no continuum of positive diameter among its points visited at least
-three times. Two Peanosphere curves of the same pair differ by a homeomorphism of the plane (written answer
-`notes/fp-gaps/CODEX-MQ-sbl-27.md`, line 50: "The two proper quotient maps induce a plane homeomorphism carrying one
-ordered traversal to the other"), and for the space-filling SLE_{16/γ²} of the mating-of-trees theorem the set of
+three times. Two Peanosphere curves of the same pair differ by a homeomorphism of the plane, and for the space-filling SLE_{16/γ²} of the mating-of-trees theorem the set of
 triple points contains no such continuum: Gwynne–Holden–Miller, arXiv:1512.01223, Corollary 6.5 (p. 40) for
 `4 < κ' < 8`, Duplantier–Miller–Sheffield, arXiv:1409.7055, (8.9) and Lemmas 8.12-8.13 for `κ' ≥ 8`. -/
 def CorrelatedBMPeanosphereTriplePointsNoContinuum : Prop :=
@@ -221,8 +218,7 @@ theorem exists_directRel_left {X : ℝ → ℝ} (hX : Continuous X) {u : ℝ}
   rw [heq']
   simpa only [neg_neg] using h1
 
-/-- **At a time visited once by a Peanosphere curve, both contour functions descend on both sides** (written answer
-`notes/fp-gaps/CODEX-MQ-sbl-27.md`, line 48). -/
+/-- **At a time visited once by a Peanosphere curve, both contour functions descend on both sides**. -/
 theorem isTwoSidedDescent_of_forall_eq {p : Path2} {η : ℝ → ℂ} (P : RouteM.Peanosphere p η) {u : ℝ}
     (hu : ∀ t, η t = η u → t = u) :
     IsTwoSidedDescent (RouteM.lCoord p) u ∧ IsTwoSidedDescent (RouteM.rCoord p) u := by
@@ -480,7 +476,7 @@ variable {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
   {X X₀ hIG₀ : Ω → Field} {B B' B₀ B₀' : ℝ≥0 → Ω → ℝ} {U : Ω → ℝ}
   {ηL η η₀ : Ω → C(ℝ, ℂ)} {bm : Ω → Path2}
 
-/-- **`ZeroConeEdgeCountCode`** (written answer `notes/fp-gaps/CODEX-MQ-sbl-27.md`, section "(c)", lines 44-52;
+/-- **`ZeroConeEdgeCountCode`** (the written argument;
 Gwynne–Miller–Sheffield, arXiv:1705.11161, (1.2) and the proof of Proposition 2.2): the decoder
 `Ψ q = cellSideMult 1 q` on `S = univ` is Borel and invariant under positive dilations, and for every boundary-pair
 version `G` and every `n ≥ 1`, for almost every `(ω, θ)`, the edge counts at mesh `1/n` of `t ↦ G(ω)(t + θ/n)` are

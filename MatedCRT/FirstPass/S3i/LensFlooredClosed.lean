@@ -7,7 +7,7 @@ import MatedCRT.FirstPass.S3i.LensFloored
 
 Floored copy of `lensProb_le_fp36_closed` (S3i/LensBEClosed.lean:39) for `FP36GoodEnvFloored` (S3i/LensFloored.lean).
 The body is that of the original, with `H5.lensGeometry_fp36_floored` (S3i/LensFlooredLens.lean) and the floored core
-`lensProb_le_of_BE_fp36_floored` (S3i/LensFloored.lean), which needs `b ≤ β` and `ε ≤ 1` (MQ-li-9 step 2).
+`lensProb_le_of_BE_fp36_floored` (S3i/LensFloored.lean), which needs `b ≤ β` and `ε ≤ 1`.
 The helper `exitHitProb_basic_conj234` does not take the environment and is reused.
 -/
 

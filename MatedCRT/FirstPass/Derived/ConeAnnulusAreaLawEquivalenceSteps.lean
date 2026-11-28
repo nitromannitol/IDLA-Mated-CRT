@@ -28,7 +28,7 @@ The proof has four steps, each a statement of this file, combined in `ConeAnnulu
 together with the almost everywhere measurability of Brownian paths (`BrownianPathAEMeasurable`) and of the outer
 window (`ConeOuterWindowMeasurable`).
 
-Source: the answer to MQ-sbl-18, section "The field laws on a bounded annulus"; Gwynne–Miller–Sheffield
+Source: the written argument; Gwynne–Miller–Sheffield
 (arXiv:1705.11161), §2.3.1; Duplantier–Miller–Sheffield (arXiv:1409.7055), Definition 4.10; Miller–Sheffield,
 Imaginary geometry I (arXiv:1201.1496), Proposition 3.4.
 -/

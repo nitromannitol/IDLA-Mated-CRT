@@ -4,10 +4,9 @@ import LatticeProb.Topology.TranslatedCurveLawUniformContinuity
 /-!
 # The quenched unit-scale convergence for the zero-cone cells from a polygonal cell configuration
 
-The invariance principle at unit mesh in the proof of Lemma 3.5 of Gwynne–Miller–Sheffield (arXiv:1705.11161,
-lines 1327-1330) is the uniform-start invariance principle of Gwynne–Miller–Sheffield (arXiv:1807.07515,
+The invariance principle at unit mesh in the proof of Lemma 3.5 of Gwynne–Miller–Sheffield (arXiv:1705.11161) is the uniform-start invariance principle of Gwynne–Miller–Sheffield (arXiv:1807.07515,
 Theorem 3.10) for the unit-mesh cells `K_j = η₀([j - 1, j] + θ)` of the `0`-quantum cone, read through the embedded
-vertices `η₀(j + θ)`. The written answer `notes/fp-gaps/CODEX-MQ-sbl-32.md` applies Theorem 3.10 to a measurable
+vertices `η₀(j + θ)`. The written argument applies Theorem 3.10 to a measurable
 *polygonal* cell configuration `{C_j}` on the same weighted graph (lines 7-27): the cells `C_j` retain the
 conductances `m_{ij}` of the zero-cone data and contain the vertices `v_j`, and the law of the configuration
 satisfies the hypotheses of Theorem 1.16 of arXiv:1807.07515 and is invariant under a quarter turn (lines 29-42).
@@ -56,7 +55,7 @@ labelling `e : ℤ ≃ cells of H` of the cells of `H` such that
 * every point `z` of the unit-mesh cell `η([j - 1, j])` lies in a cell `K` of `H` and within distance
   `diam K` of the cell `e j`.
 
-(Written answer `notes/fp-gaps/CODEX-MQ-sbl-32.md`, lines 23-25: the polygonal cell `C_j` retains the
+(Written argument: the polygonal cell `C_j` retains the
 conductances `m_{ij}` and contains `v_j`; line 48: the Voronoi tile containing a point `z ∈ K_j` lies in the cell
 of its owner, and its boundary lies in `C_j`.) -/
 def CarriesUnitMeshWalk (w : C(ℝ, ℂ) × (ℤ → ℤ → ℕ)) (H : ReflectedGMS.GMS.GMSSpace) : Prop :=
@@ -71,7 +70,7 @@ def CarriesUnitMeshWalk (w : C(ℝ, ℂ) × (ℤ → ℤ → ℕ)) (H : Reflecte
           Metric.diam ((K : ReflectedGMS.GMS.Cell) : Set ReflectedGMS.Plane)
 
 /-- **The small-cell estimate of Gwynne–Miller–Sheffield** (arXiv:1807.07515, Lemmas 2.8-2.9; the estimate used in
-the written answer `notes/fp-gaps/CODEX-MQ-sbl-32.md`, line 48: "Almost surely the maximum diameter of the scaled
+the written argument: "Almost surely the maximum diameter of the scaled
 polygonal cells meeting a fixed disk tends to zero as the spatial scale `s ↓ 0`. For instance, GMS Lemma 2.9 gives
 this estimate on large origin dyadic squares. Lemma 2.8 gives the same estimate on all four possible parents").
 PENDING TRUTH CHECK. For the coded environments of the reflected invariance principle this is
@@ -97,8 +96,7 @@ theorem isProbabilityMeasure_brownianCurveLaw (target : AnisotropicBrownianTarge
   (translatedCurveProbability (target.pathLaw : Measure (LatticeProb.UnboundedRayIntervalIntegrand.Path 2))
     (ae_unbounded_range_anisotropicBrownian target) z).2
 
-/-- **The unit-scale errors of a weighted datum carried by a GMS configuration** (written answer
-`notes/fp-gaps/CODEX-MQ-sbl-32.md`, lines 44-48). Let the cells of the configuration `H` carry the walk of the
+/-- **The unit-scale errors of a weighted datum carried by a GMS configuration**. Let the cells of the configuration `H` carry the walk of the
 unit-mesh weighted datum `w`, whose edge counts are locally finite with the successor edges, let the Brownian
 covariance of Theorem 3.10 be a positive multiple of the identity, let the second conclusion of Theorem 3.10 hold at
 `H`, and let the cells of `H` meeting `B_R(0)` have diameters `o(R)`. Then for every compact set `A` the uniform
@@ -259,8 +257,7 @@ variable {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
   {X X₀ hIG₀ : Ω → Field} {B B' B₀ B₀' : ℝ≥0 → Ω → ℝ} {U : Ω → ℝ}
   {ηL η η₀ : Ω → C(ℝ, ℂ)} {bm : Ω → Path2}
 
-/-- **The polygonal cell configuration carrying the zero-cone walk** (the construction of the written answer
-`notes/fp-gaps/CODEX-MQ-sbl-32.md`, lines 7-42, for the unit-mesh cells of the `0`-quantum cone in the proof of
+/-- **The polygonal cell configuration carrying the zero-cone walk** (the construction of the written argument, for the unit-mesh cells of the `0`-quantum cone in the proof of
 Lemma 3.5 of Gwynne–Miller–Sheffield, arXiv:1705.11161). A named step: it is not proved here.
 
 For every measurable version `G` of the boundary-length pair of the zero-cone curve there is a map `Φ` from the
@@ -283,8 +280,7 @@ def ZeroConePolygonalConfiguration
       ((P.prod zeroConePhase).map Φ).map (isometryGMS quarterTurn) = (P.prod zeroConePhase).map Φ ∧
       ∀ᵐ p ∂P.prod zeroConePhase, CarriesUnitMeshWalk (phaseShiftedData η₀ G 1 p) (Φ p)
 
-/-- **The quenched unit-scale convergence for the zero-cone cells from the polygonal configuration** (written answer
-`notes/fp-gaps/CODEX-MQ-sbl-32.md`, lines 44-50). Theorem 3.10 of arXiv:1807.07515 applies to the law of the
+/-- **The quenched unit-scale convergence for the zero-cone cells from the polygonal configuration**. Theorem 3.10 of arXiv:1807.07515 applies to the law of the
 polygonal configuration; the quarter-turn invariance makes the limiting covariance a positive multiple of the
 identity; on the event where the configuration carries the zero-cone walk, the small-cell estimate holds and the
 edge counts are locally finite with the successor edges, the comparison of the starting cells gives the

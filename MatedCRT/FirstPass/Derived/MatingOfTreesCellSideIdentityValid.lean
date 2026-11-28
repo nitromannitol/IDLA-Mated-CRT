@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.Derived.MatingOfTreesCellSideIdentityProof
 This file proves `MatingOfTreesCellSideIdentity` (`WindowChartBGDiscreteLawIntrinsic.lean`) from the named
 literature input `CorrelatedBMNoCommonLocalMin` (Le Gall, two-sided cone points) and the step
 `ValidEnvTriplePointsNoContinuum 𝒮`: in every valid environment, almost surely the points visited at least three
-times by the curve `S.η` contain no continuum of positive diameter (written answer MQ-sbl-39, lines 28-39).
+times by the curve `S.η` contain no continuum of positive diameter.
 
 The step is stated on the objects of a valid environment: its curve is, through the mating-of-trees coupling, a
 quotient of the boundary-length pair with the time fibres of a whole-plane space-filling SLE (Duplantier–Miller–
@@ -27,7 +27,7 @@ open MatedCRTHarmonic.MatedCRT (Path2 lrCoord IsCorrelatedBM2)
 
 namespace MatedCRT
 
-/-- **Step (written answer MQ-sbl-39, lines 28-39): the triple points of the curve of a valid environment contain no
+/-- **Step: the triple points of the curve of a valid environment contain no
 continuum.** For `0 < γ < 2` and every valid environment `S`, almost surely the points visited at least three times by
 `S.η ω` (`curveTriplePoints`) contain no continuum of positive diameter. Route (answer lines 37-39): on an extension
 of the sample space, a whole-plane space-filling SLE_κ, `κ = 16/γ²`, coupled with the same boundary-length pair
@@ -41,7 +41,7 @@ def ValidEnvTriplePointsNoContinuum (𝒮 : SpaceFillingSLEModel) : Prop :=
     ∀ᵐ ω ∂S.P, ¬ ContainsNondegenerateContinuum (curveTriplePoints (S.η ω))
 
 /-- **The multiplicities of the mated-CRT map are the frontier-side multiplicities of the cells**
-(`MatingOfTreesCellSideIdentity`; written answer MQ-sbl-31, lines 26-40, with the input of MQ-sbl-39, lines 28-39).
+(`MatingOfTreesCellSideIdentity`).
 Given the named literature input `CorrelatedBMNoCommonLocalMin` (Le Gall) and the step
 `ValidEnvTriplePointsNoContinuum 𝒮`, in every valid environment, for every cell size `ε > 0`, almost surely
 `S.mult ε = cellSideMult ε (S.η ω)`. The Peanosphere, the finite fibres and the Brownian law of the boundary-length

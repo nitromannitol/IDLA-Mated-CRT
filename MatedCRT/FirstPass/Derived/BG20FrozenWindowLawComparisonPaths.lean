@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.Derived.InterpolatedWalkPath
 
 A walk on the cells of a window is *frozen* before its first step to a cell which is not inside the window, and its
 positions are drawn in the inverse chart of the window. This file proves the deterministic part of the comparison of
-Berestycki–Gwynne (2020), proof of Lemma 7.21 (written answer MQ-sbl-35, lines 40-47): if the interpolated planar
+Berestycki–Gwynne (2020), proof of Lemma 7.21: if the interpolated planar
 walks converge locally uniformly to a path `y` which leaves `{D ≥ 0}` no later than the window `{D > 0}`, then the
 interpolated frozen chart paths converge to the chart image `ψ ∘ y(· ∧ τ)` of `y` stopped at its exit time `τ` from
 the window.

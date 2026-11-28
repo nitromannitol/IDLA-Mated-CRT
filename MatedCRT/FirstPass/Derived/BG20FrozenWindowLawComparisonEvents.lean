@@ -5,11 +5,11 @@ import MatedCRT.FirstPass.Derived.WalkLawInterpClosenessInMeasure
 # Almost sure and in-probability events of the frozen window comparison
 
 Probabilistic inputs of the proof of `BG20FrozenWindowLawComparison` (Berestycki–Gwynne (2020), proof of Lemma 7.21;
-written answer MQ-sbl-35).
+the written argument).
 
 * `MatedCRT.FrozenPath.ae_windowGood`: if the frontier of the window domain is almost surely a Jordan curve, then
   almost surely the window has an intrinsic chart, which agrees with the inverse chart of Berestycki–Gwynne on the
-  window domain, and the window domain contains `η(u)` (written answer MQ-sbl-35, line 3).
+  window domain, and the window domain contains `η(u)`.
 * `MatedCRT.FrozenPath.tendsto_measure_of_ae_eventually_notMem`: events which almost surely eventually fail have
   probabilities tending to `0`.
 * `MatedCRT.FrozenPath.mem_cell_ceil`: `η(u)` lies in the cell `⌈u/ε⌉`.
@@ -32,7 +32,7 @@ namespace FrozenPath
 
 variable {Ω : Type} [MeasurableSpace Ω]
 
-/-- **The window is good almost surely** (written answer MQ-sbl-35, line 3). If the frontier of the window domain is
+/-- **The window is good almost surely**. If the frontier of the window domain is
 almost surely a Jordan curve, then almost surely the window `(a, u, b)` of a continuous version `η'` of the curve has an
 inverse chart at `η(u)`, the intrinsic construction succeeds (`WindowGoodIntr`), the intrinsic chart agrees with the
 inverse chart `windowChartBG` on the window domain, and the window domain contains `η(u)`. -/

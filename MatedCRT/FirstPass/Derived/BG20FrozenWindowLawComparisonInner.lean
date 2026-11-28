@@ -5,8 +5,7 @@ import MatedCRT.Proofs.Infra.RandomWalk
 /-!
 # The frozen window laws converge to the chart law of the limiting path law
 
-Deterministic half of the comparison of Berestycki–Gwynne (2020), proof of Lemma 7.21 (written answer MQ-sbl-35,
-lines 40-47). Along a sequence of curves `η_l → η`, cell sizes `ε_l → 0` and time scales `m_l → ∞`, let the
+Deterministic half of the comparison of Berestycki–Gwynne (2020), proof of Lemma 7.21. Along a sequence of curves `η_l → η`, cell sizes `ε_l → 0` and time scales `m_l → ∞`, let the
 interpolated walk laws from the start cell `⌈u/ε_l⌉` converge weakly to a law `K` under which almost every path leaves
 `{D ≥ 0}` no later than `{D > 0}`, where `D` is the limit of the signed distances of the windows and `ψ` the limit of
 their inverse charts. If each window has an intrinsic chart that agrees with the inverse chart on the window, the curves
@@ -25,8 +24,7 @@ namespace MatedCRT
 
 namespace FrozenPath
 
-/-- **The frozen window laws converge to the chart image of the limiting path law** (written answer MQ-sbl-35,
-lines 40-47): the extended continuous mapping theorem on the label sequences of the walks, with the convergence of the
+/-- **The frozen window laws converge to the chart image of the limiting path law**: the extended continuous mapping theorem on the label sequences of the walks, with the convergence of the
 frozen chart paths (`tendsto_linPath_frozen`). -/
 theorem tendsto_integral_frozenWindowLaw {a u b p q : ℝ} (hbq : b ≤ q)
     {ε : ℕ → ℝ} (hε : ∀ l, 0 < ε l) (hε0 : Tendsto ε atTop (𝓝 0)) (hεa : ∀ l, ε l ≤ a - p)

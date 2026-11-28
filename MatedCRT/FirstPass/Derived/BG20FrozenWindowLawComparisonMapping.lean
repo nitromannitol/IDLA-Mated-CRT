@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.Derived.ChartStopPathContinuity
 
 `MatedCRT.limsup_measure_preimage_le_of_ae_tendsto` (Billingsley, *Convergence of Probability Measures*, Theorem 5.5)
 compares maps defined on the space `E` carrying the converging laws. In the comparison of the frozen and stopped window
-walks (Berestycki–Gwynne (2020), proof of Lemma 7.21; written answer MQ-sbl-35, lines 40-47) the maps are functions of
+walks (Berestycki–Gwynne (2020), proof of Lemma 7.21; the written argument) the maps are functions of
 an auxiliary variable: the label sequence of a walk, whose interpolated planar path `I n x ∈ E` has the converging
 laws, or the environment `ω`, whose (curve, kernel) data `I n ω` have the converging joint laws. The functionals `G n x`
 are not functions of `I n x`. They are only required to converge along sequences `x l` on *good* sets of small measure

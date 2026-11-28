@@ -3,10 +3,9 @@ import MatedCRT.FirstPass.Derived.GMS21ZeroConeAnnulusRepair
 /-!
 # The annulus form of Lemma 3.5 of Gwynne–Miller–Sheffield from the quenched unit-scale convergence
 
-Gwynne–Miller–Sheffield (arXiv:1705.11161, proof of Lemma 3.5, lines 1327-1343) deduce the uniform-start invariance
+Gwynne–Miller–Sheffield (arXiv:1705.11161, proof of Lemma 3.5) deduce the uniform-start invariance
 principle at mesh `1/n` for the `0`-quantum cone from the invariance principle for the unit-mesh cells as the spatial
-scale tends to `0`, through the random change of scale `R_b`. The written answer
-`notes/fp-gaps/CODEX-MQ-sbl-30.md` ("Weaker annulus input", lines 47-60) isolates the input this deduction needs at
+scale tends to `0`, through the random change of scale `R_b`. The written argument  isolates the input this deduction needs at
 the level of the code of the weighted cell data: for `λ`-almost every unit-mesh weighted datum `w`, the weighted
 uniform Lévy–Prokhorov error `E_A(s, w)` on the annulus `A = closedBall 0 ρ \ B_b(0)` tends to `0` as `s ↓ 0`
 (line 47). With the scaling law of the weighted cell data and the measurability of the uniform errors for the
@@ -38,9 +37,9 @@ variable {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
   {ηL η η₀ : Ω → C(ℝ, ℂ)} {bm : Ω → Path2}
 
 /-- **Quenched convergence of the unit-scale errors of the zero-cone weighted cell data** (the code-level premise of
-the written answer `notes/fp-gaps/CODEX-MQ-sbl-30.md`, line 47: "For each needed `A = closedBall 0 ρ \ B_b(0)`, it
+the written argument: "For each needed `A = closedBall 0 ρ \ B_b(0)`, it
 suffices that `E_A(s, w) → 0` as `s ↓ 0`, for `λ`-almost every `w`"; the unit-mesh invariance principle in the proof
-of Lemma 3.5 of Gwynne–Miller–Sheffield, arXiv:1705.11161, lines 1327-1330). PENDING TRUTH CHECK (MQ-sbl-32).
+of Lemma 3.5 of Gwynne–Miller–Sheffield, arXiv:1705.11161). PENDING TRUTH CHECK.
 
 For every measurable version `G` of the boundary-length pair of the zero-cone curve and all `0 < b < ρ`, for almost
 every sample and phase `θ` under `P ⊗ Unif[0, 1]`, the uniform Lévy–Prokhorov error at spatial scale `ε`, over starts
@@ -54,7 +53,7 @@ def ZeroConeQuenchedUnitScaleConvergence
         (𝓝[>] 0) (𝓝 0)
 
 /-- **Lemma 3.5 of arXiv:1705.11161 in the annulus form, from the quenched unit-scale convergence and the scaling of
-the weighted cell data** (written answer `notes/fp-gaps/CODEX-MQ-sbl-30.md`, lines 49-60). Let `w_n` be the unit-mesh
+the weighted cell data**. Let `w_n` be the unit-mesh
 weighted data of the rescaled curve, which have the law `λ` of the unit-mesh weighted data, and `R_n → 0` the radii.
 The mesh-`1/n` error equals the unit-mesh error of `w_n` at scale `R_n`, and the probability that it exceeds `δ` is
 at most `P(R_n > r) + λ{sup_{0 < s ≤ r} E_A(s, w) > δ}`, which tends to `0` by the quenched convergence. On the regular

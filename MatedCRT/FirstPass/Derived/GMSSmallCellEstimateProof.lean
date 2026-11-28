@@ -10,7 +10,7 @@ GMS space of cell configurations satisfying the hypotheses of Theorem 1.16 of Gw
 horizontal and vertical lines), almost surely the maximal diameter of the cells meeting the closed ball `B̄_R(0)` is
 `o(R)` as `R → ∞` (arXiv:1807.07515, Lemmas 2.8-2.9).
 
-We follow the written answer `notes/fp-gaps/CODEX-MQ-sbl-36.md`, "Transfer to the coded estimate" (lines 23-33): the
+We follow the written argument: the
 law is transported to the coded environments of the reflected invariance principle by the Borel slot map
 `GMS.codeMap`, the mass transport and the finite rooted-energy moment pass to the coded law, the coded large-cell
 theorem `ReflectedGMS.Spatial.ae_maxDiamHittingBall_finite_and_sublinear` applies there, and its conull event is
@@ -27,8 +27,7 @@ noncomputable section
 
 namespace MatedCRT.GMS310Transfer
 
-/-- **The small-cell estimate of Gwynne–Miller–Sheffield** (arXiv:1807.07515, Lemmas 2.8-2.9; written answer
-`notes/fp-gaps/CODEX-MQ-sbl-36.md`): for every probability law on the GMS space with mass transport, ergodicity modulo
+/-- **The small-cell estimate of Gwynne–Miller–Sheffield** (arXiv:1807.07515, Lemmas 2.8-2.9; the written argument): for every probability law on the GMS space with mass transport, ergodicity modulo
 scaling, finite expectation and connectedness along lines, almost surely, for every `r > 0`, for all large `R`, every
 cell meeting `B̄_R(0)` has diameter at most `r R`. A cell meeting `B̄_R(0)` at `x` contains `ε⁻¹ z` for `ε = R⁻¹` and
 `z = R⁻¹ x` in the unit ball, so the rescaled-cell estimate `ae_scaled_cell_diam_lt` at the unit ball bounds

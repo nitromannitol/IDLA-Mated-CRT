@@ -11,7 +11,7 @@ Bonanno's post-last-zero construction.  Its recovered circles have the
 weak-limit radial law already required by the environment.  This does not
 identify those circles with the explicit radial formula: that is a separate
 circle-average calculation, and no equivalence of conditioning conventions is
-assumed here.  Compare env-steps.tex:217–250.
+assumed here.
 -/
 
 noncomputable section
@@ -504,7 +504,7 @@ def ReferenceConeEmbeddingRadiusStep (𝒮 : SpaceFillingSLEModel) : Prop :=
         (MatedCRTHarmonic.MatedCRT.coneRadial γ γ (fun t => B t ω) (fun t => B' t ω)))
 
 /-- Nonemptiness and upper boundedness of each reference logarithmic level
-set, the path-growth assertion used in env-steps.tex:280–286. -/
+set, the path-growth assertion used in the scaling of the environment. -/
 def ReferenceConeLogLevelSetStep (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (γ : ℝ), 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω]
     (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ → ∀ (b : ℝ), 0 < b →

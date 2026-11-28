@@ -23,8 +23,7 @@ assembly.
   `inf {t : A_t = u}`, which agrees for a strictly increasing clock).
 * `IsInvTC W A ν`: the time change `B ∘ τ` of `W` by `A` leaves `ν` invariant (Definition 7.3 for `P^A`).
 
-The three Props are the literature inputs of the assembly of Proposition 7.10; they are TRUE as typed (desk answer
-MQ-ft-6, verified by an independent check) and hold for the canonical planar Brownian motion, not for arbitrary
+The three Props are the literature inputs of the assembly of Proposition 7.10; they are TRUE as typed (desk-checked and verified by an independent check) and hold for the canonical planar Brownian motion, not for arbitrary
 families `W`.  They take the place of the printed statements at :3452–3459 (a Revuz measure determines its PCAF),
 which are false as printed.
 

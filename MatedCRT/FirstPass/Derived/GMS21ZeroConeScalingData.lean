@@ -11,7 +11,7 @@ import LatticeProb.LQG.CoupledClockedCellEmbedding
 /-!
 # The shifted zero-cone data at mesh `1/n` and their unit-mesh rescalings
 
-In the proof of Lemma 3.5 of Gwynne–Miller–Sheffield (arXiv:1705.11161, lines 1331-1343) the mesh-`1/n` cells of the
+In the proof of Lemma 3.5 of Gwynne–Miller–Sheffield (arXiv:1705.11161) the mesh-`1/n` cells of the
 `0`-quantum cone are compared with the unit-mesh cells of the rescaled pair `(h^b, η^b)`, `b = 1/n`, through the
 dilation by `R_b`. This file records the deterministic and almost sure ingredients of this comparison.
 
@@ -86,7 +86,7 @@ theorem phaseShiftedCurve_mem_properOntoCurves {η : C(ℝ, ℂ)} (hη : η ∈ 
   exact ⟨hη.1.comp (Homeomorph.addRight (ε * θ)).isClosedEmbedding.tendsto_cocompact,
     hη.2.comp (Homeomorph.addRight (ε * θ)).surjective⟩
 
-/-- **Scaling of the uniform error** (arXiv:1705.11161, lines 1336-1342: `G^b` is isometric to `R_b H^b`). If
+/-- **Scaling of the uniform error** (arXiv:1705.11161: `G^b` is isometric to `R_b H^b`). If
 `η(t/n) = R η'(t)` and `G'(t) = c G(t/n)` with `c > 0`, the uniform error at mesh `1/n` of the curve `η` and the edge
 counts of `G`, read on the lattice `n⁻¹ ℤ + n⁻¹ θ`, is the uniform error at spatial scale `R` of the unit-mesh data of
 `(η', G')` read on `ℤ + θ`. -/

@@ -23,8 +23,9 @@ uniformly from Lebesgue measure on `Ŝ_m`, and state that there is a random cons
 * `ZeroConeRoot.rootGen`, `ZeroConeRoot.rootSample`: the generation of the largest square of the chain at the origin
   of mass at most `m`, and the point `corner + side · (u₁ + i u₂)` of that square; jointly measurable.
 * `ZeroConeUniformRootLemmaA4`: Lemma A.4 of Gwynne–Miller–Sheffield with the existence of the square (A.2), stated
-  for every Borel area map which is almost surely the vague limit of the area approximations (named literature
-  input).
+  for every Borel area map which is almost surely the vague limit of the area approximations and with a measurable
+  constant for every prescribed sampler (a named printed input, which strengthens the printed statement in the three
+  respects listed in its docstring).
 
 ## Main statements
 
@@ -33,6 +34,10 @@ uniformly from Lebesgue measure on `Ŝ_m`, and state that there is a random cons
 * `ZeroConeRoot.measurable_massRadius`, `ZeroConeRoot.massRadius_map_similarity`: the mass radius
   `r_s(z) = inf {r > 0 : ν(B_r(z)) > s}` is jointly measurable, and covariant under the LQG coordinate change.
 * `ZeroConeRoot.measurable_rootSample`.
+* `exists_reroot_of_uniformRoot`: from the uniform-root form to the re-rooting of the field at the root, with the
+  escape of the roots to infinity.
+* `zeroConeLemmaA4`: Lemma A.4 for the circle-average embedding of the `0`-quantum cone (`ZeroConeLemmaA4`), from
+  `ZeroConeUniformRootLemmaA4`.
 -/
 
 set_option autoImplicit false
@@ -126,8 +131,9 @@ theorem measurable_measure_ball :
   exact measurable_measure_section_of_isOpen hO
 
 /-- **The mass radius** `r_s(z) = inf {r > 0 : ν(B_r(z)) > s}` of a measure `ν` at `z` (Gwynne–Miller–Sheffield,
-arXiv:1705.11161, (A.7), with balls centred at `z`: written answer `notes/fp-gaps/CODEX-MQ-sbl-38.md`, line 22),
-with value `0` when no ball has mass larger than `s`. -/
+arXiv:1705.11161, (A.7), `T_b(z) = inf {r > 0 : μ_h(B_r(z)) = b}`, with balls centred at `z`). The condition here is
+`> s` and the value is `0` when no ball has mass larger than `s`; it agrees with (A.7) when `r ↦ ν(B_r(z))` is
+continuous and strictly increasing. -/
 def massRadius (ν : Measure ℂ) (s : ℝ) (z : ℂ) : ℝ :=
   sInf {r : ℝ | 0 < r ∧ ENNReal.ofReal s < ν (Metric.ball z r)}
 
@@ -777,7 +783,7 @@ theorem measure_rootSample_le_eq {μ : Measure Field} [SFinite μ] {M : Field �
   show _ = unifSquareLaw {u : ℝ × ℝ | ‖rootSample (M h) q m u‖ ≤ R}
   rw [hset, Measure.prod_prod, measure_univ, mul_one]
 
-/-- **Escape of the uniform roots** (written answer `notes/fp-gaps/CODEX-MQ-sbl-34.md`, lines 49-56): on the good
+/-- **Escape of the uniform roots**: on the good
 pairs the conditional probability that the root of `Ŝ_{m+1}` lies in the closed disc of radius `R` tends to `0`
 (`tendsto_nearMass`), hence so does the probability, by dominated convergence. -/
 theorem tendsto_measure_rootSample_le {μ : Measure Field} [IsProbabilityMeasure μ] {M : Field → Measure ℂ}
@@ -857,13 +863,23 @@ open LatticeProb.DyadicOffset (unifIco dyadicSquares cornerSquare gridFloor squa
   ae_isCompatible_isOffGrid_system)
 open LatticeProb.CappedSquare (IsCappedSquare cappedSquare)
 
-/-- **Lemma A.4 of Gwynne–Miller–Sheffield, with the existence of the square (A.2)** (arXiv:1705.11161, (A.2) and
-Lemma A.4, `notes/refs/1705.11161.txt` lines 2026-2041: "For `m > 0`, let `Ŝ_m` be as in (A.2) and let `z_m` be
+/-- **Lemma A.4 of Gwynne–Miller–Sheffield, with the existence of the square (A.2)** (arXiv:1705.11161v5, p. 38, (A.2)
+and Lemma A.4: "For `m > 0`, let `Ŝ_m` be as in (A.2) and let `z_m` be
 sampled uniformly from Lebesgue measure on `Ŝ_m`, normalized to be a probability measure. Then `(ℂ, h, z_m, ∞)`
 agrees in law with `(ℂ, h, 0, ∞)` as a quantum surface, i.e., there is a random constant `C_m > 0` such that
-`h(C_m · + z_m) + Q log C_m =d h`"; written answers `notes/fp-gaps/CODEX-MQ-sbl-38.md`, line 15, and
-`notes/fp-gaps/CODEX-MQ-sbl-34.md`, line 47; identification of the Lean field with the circle-average embedding of
-the `0`-quantum cone: `notes/fp-gaps/CODEX-MQ-sbl-34.md`, line 45). PENDING TRUTH CHECK.
+`h(C_m · + z_m) + Q log C_m =d h`"; the Lean field is the circle-average embedding of the `0`-quantum cone,
+Duplantier–Miller–Sheffield, arXiv:1409.7055, Remark 4.4 and Definition 4.10). This form holds for every
+`0 < γ < 2`: the existence of `Ŝ_m` follows from local finiteness, infinite total mass and zero mass at the origin,
+and the measurable constant is obtained by sampling the conditional law of the scale given the field and the root
+with the independent variable `v`. Its law clause needs Duplantier–Miller–Sheffield, arXiv:1409.7055,
+Proposition 4.13(ii) (local total-variation convergence to the `0`-quantum cone), which is not formalized. Hence the
+statement is a named printed input of the theorems that use it; no Lean proof of it is claimed.
+
+**Differences from the printed statement.** (A.2) only defines `Ŝ_m`; its existence for every `m ∈ (0, ∞)`
+simultaneously, almost surely, is included here (the first conjunct). GMS give a random constant `C_m` on some
+probability space; here `C_m` is a Borel function of `(h, q, u, v)` for each prescribed measurable sampler `Z(h, q, u)`
+which is almost surely the affine parametrization of `Ŝ_m`, with `v` an independent uniform variable. The area
+measure is any Borel version of the vague limit of the area approximations.
 
 Let `h = coneField X₀' (coneRadial γ 0 b b')` be the circle-average embedding of the `0`-quantum cone built from a
 whole-plane GFF `X₀'` and two independent standard Brownian motions independent of it (`zeroConeFieldOf`), with law
@@ -899,8 +915,9 @@ def ZeroConeUniformRootLemmaA4 (γ : ℝ) (_hγ : γ ∈ Ioo (0 : ℝ) 2) : Prop
             P'.map (zeroConeFieldOf γ X₀' b b')
 
 /-- **Lemma A.4 of Gwynne–Miller–Sheffield for the circle-average embedding of the `0`-quantum cone**
-(`ZeroConeLemmaA4`), from Lemma A.4 at uniform roots of the capped squares (`ZeroConeUniformRootLemmaA4`; written
-answer `notes/fp-gaps/CODEX-MQ-sbl-34.md`, section B, lines 38-60). The auxiliary space carries an independent
+(`ZeroConeLemmaA4`), from Lemma A.4 at uniform roots of the capped squares (`ZeroConeUniformRootLemmaA4`). The escape
+`P(|z_m| ≤ R) → 0` and the measurable parameters on `Field × E` are additions to the printed lemma, proved in this
+file. The auxiliary space carries an independent
 uniform dyadic system `q`, a uniform point `u` of `[0, 1)²` and a uniform variable `v`; the area measure is the
 Borel map `fieldArea γ`, almost surely the vague limit of the area approximations. The root `z_m` is the point
 `corner + side · (u₁ + i u₂)` of the square of generation `rootGen` of the chain of dyadic squares at the origin,

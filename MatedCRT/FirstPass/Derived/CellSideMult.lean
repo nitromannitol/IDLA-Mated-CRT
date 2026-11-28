@@ -34,7 +34,7 @@ namespace MatedCRT
 
 /-! ### The definition -/
 
-/-- **The contact relation `D_η(v, w)` on the times `(a, d)`** (written answer MQ-sbl-31, lines 9-11): for every pair
+/-- **The contact relation `D_η(v, w)` on the times `(a, d)`**: for every pair
 of disjoint rational open intervals about `v` and about `w` whose closures `P`, `Q` lie in `(a, d)`, the set
 `η(P) ∩ η(Q)` contains a continuum (a nonempty compact connected set) of positive diameter. It is used for distinct
 times `v, w ∈ (a, d)`. -/
@@ -43,8 +43,7 @@ def cellSideContact (a d : ℝ) (η : ℝ → ℂ) (v w : ℝ) : Prop :=
     Disjoint (Ioo (p₁ : ℝ) p₂) (Ioo (q₁ : ℝ) q₂) → Icc (p₁ : ℝ) p₂ ⊆ Ioo a d → Icc (q₁ : ℝ) q₂ ⊆ Ioo a d →
     ∃ K ⊆ η '' Icc (p₁ : ℝ) p₂ ∩ η '' Icc (q₁ : ℝ) q₂, IsCompact K ∧ IsConnected K ∧ 0 < diam K
 
-/-- **The branch times `B_η` of the shared frontier sides of the cell intervals `[a, b]` and `[c, d]`** (written answer
-MQ-sbl-31, lines 12-15): the times `u ∈ (b, c)` for which there are `s ∈ (a, b)` and `t ∈ (c, d)` with
+/-- **The branch times `B_η` of the shared frontier sides of the cell intervals `[a, b]` and `[c, d]`**: the times `u ∈ (b, c)` for which there are `s ∈ (a, b)` and `t ∈ (c, d)` with
 `D_η(s, u)`, `D_η(u, t)` and `D_η(s, t)`. -/
 def cellSideBranchTimes (a b c d : ℝ) (η : ℝ → ℂ) : Set ℝ :=
   {u | u ∈ Ioo b c ∧ ∃ s ∈ Ioo a b, ∃ t ∈ Ioo c d,
@@ -52,14 +51,13 @@ def cellSideBranchTimes (a b c d : ℝ) (η : ℝ → ℂ) : Set ℝ :=
 
 open Classical in
 /-- The number of shared frontier sides of two separated cells with time intervals `[a, b]` and `[c, d]`, `b < c`:
-`1_{∃ u ∈ B_η} + 1_{∃ u, v ∈ B_η, u ≠ v}` (written answer MQ-sbl-31, lines 16-21). -/
+`1_{∃ u ∈ B_η} + 1_{∃ u, v ∈ B_η, u ≠ v}`. -/
 noncomputable def cellSideCount (a b c d : ℝ) (η : ℝ → ℂ) : ℕ :=
   (if (cellSideBranchTimes a b c d η).Nonempty then 1 else 0) +
     (if ∃ u ∈ cellSideBranchTimes a b c d η, ∃ v ∈ cellSideBranchTimes a b c d η, u ≠ v then 1 else 0)
 
 open Classical in
-/-- **The frontier-side multiplicity of the cells `εj` and `εk`, read off the curve `η`** (written answer MQ-sbl-31,
-lines 9-22; Gwynne–Miller–Sheffield, arXiv:1705.11161, §2.5 and Proposition 2.2: an edge for each frontier side
+/-- **The frontier-side multiplicity of the cells `εj` and `εk`, read off the curve `η`** (the written argument; Gwynne–Miller–Sheffield, arXiv:1705.11161, §2.5 and Proposition 2.2: an edge for each frontier side
 shared by the two cells). It is `0` if `ε ≤ 0` or `j = k`, `1` for consecutive labels (`|j - k| = 1`), and otherwise,
 with the cell intervals `[ε(lo - 1), ε lo]` and `[ε(hi - 1), ε hi]` of `lo = min j k < hi = max j k` (the conventions
 of `cell` and `cellMult`, `MatedCRT/Defs/Map.lean`), the count `cellSideCount` of the branch times of the shared
@@ -502,7 +500,7 @@ theorem measurable_cellSideCount (a b c d : ℝ) : Measurable fun η : C(ℝ, �
     (Measurable.ite (measurableSet_setOf_cellSideBranchTimes_two a b c d) measurable_const measurable_const)
     (Measurable.ite (measurableSet_setOf_cellSideBranchTimes_two a b c d) measurable_const measurable_const)
 
-/-- **The frontier-side multiplicity is a Borel function of the curve** (written answer MQ-sbl-31, line 24). -/
+/-- **The frontier-side multiplicity is a Borel function of the curve**. -/
 theorem measurable_cellSideMult (ε : ℝ) (j k : ℤ) : Measurable fun η : C(ℝ, ℂ) => cellSideMult ε ⇑η j k := by
   by_cases h1 : ε ≤ 0 ∨ j = k
   · have heq : (fun η : C(ℝ, ℂ) => cellSideMult ε ⇑η j k) = fun _ => 0 := by

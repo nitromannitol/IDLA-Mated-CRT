@@ -11,7 +11,7 @@ import LatticeProb.LQG.ConeSmallMassRadius
 # The named steps of the annulus form of Lemma 3.5 of Gwynne–Miller–Sheffield for the zero-cone cells
 
 This file proves the named steps of `GMS21ZeroConeAnnulusRepairProofs.lean` and `ZeroConePhaseFactorProof.lean`
-following the written answer `notes/fp-gaps/CODEX-MQ-sbl-27.md` (Gwynne–Miller–Sheffield, arXiv:1705.11161, proof of
+following the written argument (Gwynne–Miller–Sheffield, arXiv:1705.11161, proof of
 Lemma 3.5 and of Proposition 3.1).
 
 * `weightedErrorSuperlevelBorelProjection` (answer, section "(d) The two Borel sets of witnesses", lines 54-67): the
@@ -377,8 +377,7 @@ theorem measurableSet_meshWitness {A : Set ℂ} (hA : MeasurableSet A) (n : ℕ)
   have herr := measurable_walkLPError hv measurable_fst.snd measurable_snd.snd.fst j
   exact (measurable_snd.snd.fst hA).inter (hcell.inter (measurableSet_lt measurable_const herr))
 
-/-- **The strict superlevel events of the uniform errors are projections of Borel events** (written answer
-`notes/fp-gaps/CODEX-MQ-sbl-27.md`, section "(d) The two Borel sets of witnesses", lines 54-67). -/
+/-- **The strict superlevel events of the uniform errors are projections of Borel events**. -/
 theorem weightedErrorSuperlevelBorelProjection : WeightedErrorSuperlevelBorelProjection := by
   intro b ρ
   have hA : MeasurableSet (closedBall (0 : ℂ) ρ \ ball 0 b) := measurableSet_closedBall.diff measurableSet_ball
@@ -410,8 +409,7 @@ variable {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
   {ηL η η₀ : Ω → C(ℝ, ℂ)} {bm : Ω → MatedCRTHarmonic.MatedCRT.Path2}
 
 /-- **The law of the zero-cone curve at the random radius read off a fixed radial path** (Duplantier–Miller–Sheffield,
-arXiv:1409.7055, Proposition 4.13(i) at `α = 0`; Gwynne–Miller–Sheffield, arXiv:1705.11161, (2.4)-(2.5); written answer
-`notes/fp-gaps/CODEX-MQ-sbl-27.md`, line 42). This is the proof of
+arXiv:1409.7055, Proposition 4.13(i) at `α = 0`; Gwynne–Miller–Sheffield, arXiv:1705.11161, (2.4)-(2.5); the written argument). This is the proof of
 `MatedCRTHarmonic.IGLaw.IsMatingOfTreesCoupling.curveScaleInvariant` with the radial path `W` as a parameter, so that
 one path serves every `ε`. If `W` is a measurable version of the radial part of the zero cone, independent of `X₀`
 and, jointly with `X₀`, of `ηL`, then `t ↦ R_ε⁻¹ η₀(ε t)` with `R_ε = exp (L_y(W))`, `y = γ⁻¹ log ε`, has the law of
@@ -545,8 +543,7 @@ theorem map_curveRescale_exp_lastLevel_zeroCone
     _ = P {ω | (⇑(η₀ ω) : ℝ → ℂ) ∈ T} := (ConeScaling.measure_setOf_mem_congr hkey2 T).symm
     _ = P (η₀ ⁻¹' ((fun f : C(ℝ, ℂ) => (⇑f : ℝ → ℂ)) ⁻¹' T)) := rfl
 
-/-- **The dilation law of the zero-cone curve** (written answer `notes/fp-gaps/CODEX-MQ-sbl-27.md`, section "(b) The
-unshifted curve at the random radius", lines 33-42; Gwynne–Miller–Sheffield, arXiv:1705.11161, (2.4)-(2.5) and the
+/-- **The dilation law of the zero-cone curve** (the written argument; Gwynne–Miller–Sheffield, arXiv:1705.11161, (2.4)-(2.5) and the
 proof of Lemma 3.5; Duplantier–Miller–Sheffield, arXiv:1409.7055, Proposition 4.13(i)). One measurable version `W` of
 the radial part of the zero cone gives the radii `R_n = exp (L_y(W))`, `y = γ⁻¹ log (1/n)`, for all `n`: they are the
 cone scales at the masses `1/n`, so `R_n → 0` almost surely, and `E_n(t) = R_n⁻¹ η₀(t/n)` has the law of `η₀`. -/

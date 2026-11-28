@@ -7,7 +7,7 @@ import MatedCRT.FirstPass.Frozen.S3S4
 
 The corrected Lemma 3.1 (paper/idla_mated_crt-corrected.tex, lemma:discrete-potential-tightness, last sentence): "The
 subsequence can be chosen simultaneously for any countable collection of such function families and domains indexed by
-the same `𝓔`." Audit notes/fp-gaps/CHATGPT-idla-3-1-audit.md §1.4: diagonalize.
+the same `𝓔`." The proof diagonalizes.
 
 Stage `j` applies `tightness_selection_pointwise` to the family `j`, pulled back along the current random subsequence
 `R_j` (`E' ω n = E ω (R_j ω n)`); `R_{j+1} = R_j ∘ ψ_j`; the diagonal is `Φ ω k = R_{k+1} ω k`. For `k ≥ j` the terms

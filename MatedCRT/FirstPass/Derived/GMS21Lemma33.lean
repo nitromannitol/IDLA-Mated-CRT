@@ -333,13 +333,13 @@ structure IsPhaseReconstruction (P₁ : Measure Ω₁) (C₁ : ℕ → Ω₁ →
   aemeasurable_left : ∀ n, AEMeasurable (C₁ n) P₁
   aemeasurable_right : ∀ n, AEMeasurable (C₂ n) P₂
   /-- The configuration is the reconstruction from the outer data and the residues on events of probability
-  tending to one (p. 25, lines 1267-1271 of the text). -/
+  tending to one (p. 25 of the text). -/
   recon_left : Tendsto (fun n : ℕ =>
     P₁ {ω | C₁ n ω ≠ Ψ n (forgetPhase (countablePhaseMap (n : ℝ) markPhase (Z₁ ω)))}) atTop (𝓝 0)
   recon_right : Tendsto (fun n : ℕ =>
     P₂ {ω | C₂ n ω ≠ Ψ n (forgetPhase (countablePhaseMap (n : ℝ) markPhase (Z₂ ω)))}) atTop (𝓝 0)
   /-- Given the mark, the conditional law of the masses is absolutely continuous with respect to Lebesgue measure
-  (p. 25, lines 1275-1283). -/
+  (p. 25). -/
   ac_left : ∀ k : ℕ,
     let ν := (P₁.map Z₁).comap (@Sigma.mk ℕ (fun j => (Y × ℝ) × (Fin j → ℝ)) k)
     ν ≪ (ν.map Prod.fst).prod (volume : Measure (Fin k → ℝ))
@@ -347,7 +347,7 @@ structure IsPhaseReconstruction (P₁ : Measure Ω₁) (C₁ : ℕ → Ω₁ →
     let ν := (P₂.map Z₂).comap (@Sigma.mk ℕ (fun j => (Y × ℝ) × (Fin j → ℝ)) k)
     ν ≪ (ν.map Prod.fst).prod (volume : Measure (Fin k → ℝ))
   /-- The laws of the number of the sets `A_k` and the outer data are mutually absolutely continuous
-  (p. 25, lines 1271-1272). -/
+  (p. 25). -/
   mark_left_right : (P₁.map Z₁).map countOuter ≪ (P₂.map Z₂).map countOuter
   mark_right_left : (P₂.map Z₂).map countOuter ≪ (P₁.map Z₁).map countOuter
 

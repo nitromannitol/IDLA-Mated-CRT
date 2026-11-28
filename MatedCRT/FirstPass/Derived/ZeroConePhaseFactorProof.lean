@@ -4,13 +4,12 @@ import Mathlib
 /-!
 # The step from `(h, η̂)` to the phase in the ergodicity of the shifted zero-cone configuration
 
-Gwynne–Miller–Sheffield (arXiv:1705.11161, proof of Proposition 3.1, `notes/refs/1705.11161.txt` lines 1193-1196)
+Gwynne–Miller–Sheffield (arXiv:1705.11161, proof of Proposition 3.1)
 infer from the independence of `G = Φ(H)` from `(h, h^IG)` that `G` is a function of the phase `θ` alone, and conclude
-from `G([θ − τ_z]) = G(θ)` that it is constant (`ZeroConePhaseFactorStep`). The written answer on this proof
-(`notes/fp-gaps/CODEX-MQ-sbl-15.md`, lines 37-49, "Removing the time-grid phase") proves instead that for almost every
+from `G([θ − τ_z]) = G(θ)` that it is constant (`ZeroConePhaseFactorStep`). The written argument proves instead that for almost every
 `(h, e)` the circle function `θ ↦ V(h, e, θ)` has arbitrarily small positive periods (a Cameron–Martin bump of the
-field shifts the quantum times of distant roots by the two signed offsets `D_±`, line 41), so that it equals its phase
-average (line 49: "The periods are strictly positive and tend to zero ... so it is the whole circle. Thus `V` equals its
+field shifts the quantum times of distant roots by the two signed offsets `D_±`), so that it equals its phase
+average ("The periods are strictly positive and tend to zero ... so it is the whole circle. Thus `V` equals its
 phase average almost surely").
 
 This file states the periods as the named step `ZeroConePhasePeriods`, proves that a bounded measurable function on the
@@ -84,9 +83,7 @@ theorem ae_eq_const_of_indepFun_self {Ω' : Type*} [MeasurableSpace Ω'] {μ : M
   obtain ⟨c, hc⟩ := exists_eventuallyEq_const_of_forall_separating MeasurableSet h01
   exact ⟨c, hc⟩
 
-/-- **A function on the circle with arbitrarily small positive periods is constant** (written answer
-`notes/fp-gaps/CODEX-MQ-sbl-15.md`, line 49: "The periods are strictly positive and tend to zero ... The period
-subgroup is closed ... so it is the whole circle. Thus `V` equals its phase average"). If `f` is measurable and, for
+/-- **A function on the circle with arbitrarily small positive periods is constant**. If `f` is measurable and, for
 every `j`, `f((θ + D_j) mod 1) = f(θ)` for almost every `θ ∈ [0, 1]`, with `D_j > 0` and `D_j → 0`, then `f` is almost
 everywhere constant on `[0, 1]`. The level sets of the lift of `f` to `ℝ/ℤ` are almost invariant under the rotations
 by `D_j`; if one of them has infinite order it is ergodic, otherwise their orders are at least `1/D_j → ∞`. -/
@@ -193,14 +190,12 @@ variable {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
   {X X₀ hIG₀ : Ω → Field} {B B' B₀ B₀' : ℝ≥0 → Ω → ℝ} {U : Ω → ℝ}
   {ηL η η₀ : Ω → C(ℝ, ℂ)} {bm : Ω → Path2}
 
-/-- **Arbitrarily small phase periods of the configuration observables** (written answer
-`notes/fp-gaps/CODEX-MQ-sbl-15.md`, lines 39-49: for a bounded invariant observable `V(h, e, θ)` of the configuration and
+/-- **Arbitrarily small phase periods of the configuration observables** (the written argument: for a bounded invariant observable `V(h, e, θ)` of the configuration and
 a smooth bump `b`, the field `h' = h + λ b` has an equivalent law (Cameron–Martin), the bump shifts the quantum times
-of distant future and past roots by `D_+ = Δ(e([0, ∞)))` and `D_- = −Δ(e((−∞, 0]))`, `dΔ = (e^{γλb} − 1) dμ_h`
-(line 41), the local approximations at uniform roots of both temporal halves give `V(h', e, {θ + D_±}) = V(h, e, θ)`
-almost surely (lines 45-47), and "for almost every `h, e`, the circle function `V(h, e, ·)` has period `D` in `L¹`. Do
-this for `λ = 1/j`. The periods are strictly positive and tend to zero, by full support and local finite mass"
-(line 49); arXiv:1705.11161, lines 1193-1196). PENDING TRUTH CHECK.
+of distant future and past roots by `D_+ = Δ(e([0, ∞)))` and `D_- = −Δ(e((−∞, 0]))`, `dΔ = (e^{γλb} − 1) dμ_h`,
+the local approximations at uniform roots of both temporal halves give `V(h', e, {θ + D_±}) = V(h, e, θ)`
+almost surely and "for almost every `h, e`, the circle function `V(h, e, ·)` has period `D` in `L¹`. Do
+this for `λ = 1/j`. The periods are strictly positive and tend to zero, by full support and local finite mass"; arXiv:1705.11161). PENDING TRUTH CHECK.
 
 For every realization `F` of the configuration (3.1) and every bounded measurable similarity-invariant `Φ`, almost
 surely there are periods `D_j > 0` tending to `0` such that, for every `j`, `Φ(F(ω, (θ + D_j) mod 1)) = Φ(F(ω, θ))` for
@@ -213,8 +208,7 @@ def ZeroConePhasePeriods (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B�
       ∀ᵐ ω ∂P, ∃ Dp : ℕ → ℝ, (∀ j, 0 < Dp j) ∧ Tendsto Dp atTop (𝓝 0) ∧
         ∀ j, ∀ᵐ θ ∂zeroConePhase, Φ (F (ω, toIcoMod (zero_lt_one' ℝ) 0 (θ + Dp j))) = Φ (F (ω, θ))
 
-/-- **The step from `(h, η̂)` to `θ`** (arXiv:1705.11161, lines 1193-1196; written answer
-`notes/fp-gaps/CODEX-MQ-sbl-15.md`, lines 37-49) from the configuration code (3.1)-(3.2) and the phase periods. With
+/-- **The step from `(h, η̂)` to `θ`** (arXiv:1705.11161; the written argument) from the configuration code (3.1)-(3.2) and the phase periods. With
 `Cfg` the code of `ZeroConeConfigCovariance` and `H'` a measurable version of the zero-cone field, `Φ(F(ω, θ))` is
 almost surely `v(H'(ω), ηL(ω), θ) = Φ(Cfg((H'(ω), ηL(ω)), θ))`; for almost every `ω` the circle function `v(H'(ω), ηL(ω), ·)`
 has arbitrarily small periods, hence equals its phase average `m(H'(ω), ηL(ω))`. So `Φ(F)` is almost surely a measurable

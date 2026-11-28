@@ -3,8 +3,7 @@ import Mathlib
 /-!
 # Agreement event for two occupation measures on a generating π-system
 
-Step B4 of the MQ-li-8 (b) argument (transfer of the occupation measure identity of thm:occ-main to the cone;
-notes/fp-gaps/MATH-ANSWERS.md). For measurable families `m₁ m₂ : α → Measure ℂ` (for instance the killed occupation
+Step B4 of the transfer of the occupation measure identity of thm:occ-main to the cone. For measurable families `m₁ m₂ : α → Measure ℂ` (for instance the killed occupation
 measures of two environments, indexed by the environment `a`), the set of parameters on which `m₁ a` is finite on `D`
 and agrees with `m₂ a` on a countable family `C` is measurable (`measurableSet_occupationAgreementEvent`). On this
 event the two measures agree on every measurable subset of `D`, provided `D ∈ C`, the members of `C` are measurable

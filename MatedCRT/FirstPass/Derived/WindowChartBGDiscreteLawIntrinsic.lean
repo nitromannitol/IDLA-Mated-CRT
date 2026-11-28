@@ -5,9 +5,9 @@ import MatedCRT.FirstPass.Derived.InterpolatedLawWiring
 /-!
 # The discrete window laws of Berestycki–Gwynne as functions of the intrinsic wedges
 
-Step of the proof of Lemma 7.21 of Berestycki–Gwynne (arXiv:2003.10320, 2003.10320.txt lines 3783-3831) with the two
+Step of the proof of Lemma 7.21 of Berestycki–Gwynne (arXiv:2003.10320) with the two
 quantum surfaces of (7.35) taken as intrinsic curve-decorated wedges: `BG20DiscreteWindowLawIntrinsicInput`
-(`WindowChartBGIntrinsicIndependence.lean`), following the written answers MQ-sbl-21 (Q2) and MQ-sbl-31.
+(`WindowChartBGIntrinsicIndependence.lean`).
 
 For a window `(a, u, b)`, a time interval `[p, q] ⊃ [a, b]` and a cell size `ε > 0`, the **frozen window law**
 `frozenWindowLaw` is the law of the following walk, drawn in the intrinsic chart `ψ = windowChartIntr` of the window
@@ -23,15 +23,14 @@ window law is a Borel function of the curve (`measurable_frozenWindowLaw`), and 
 (field, curve) with the same intrinsic curve-decorated surface over a set of times `T ⊇ [p, q]`
 (`IsIntrinsicCurveDecoratedReembedding.frozenWindowLaw_eq`): the re-embedding `f` maps the window domains onto each
 other, `ψ₁ ∘ f = ψ₂` on `U₂`, and a contact of two cells through a point of `U` is carried by `f` and its inverse
-(`cellSideMult_eq_of_map`, written answer MQ-sbl-31, lines 44-46).
+(`cellSideMult_eq_of_map`).
 
 The main result `bg20DiscreteWindowLawIntrinsicInput_of_cellSideIdentity` derives `BG20DiscreteWindowLawIntrinsicInput`
 from two steps on the paper's objects:
 * `MatingOfTreesCellSideIdentity`: the multiplicities of the mated-CRT map (Definition 1.1) are almost surely the
-  frontier-side multiplicities of the cells (written answer MQ-sbl-31, lines 26-40);
+  frontier-side multiplicities of the cells;
 * `BG20FrozenWindowLawComparison`: for the multiplicities of the map, the frozen window law is close in probability to
-  the chart law of the window for the interpolated walk law (Berestycki–Gwynne, lines 3812-3831; written answer
-  MQ-sbl-21, Q2).
+  the chart law of the window for the interpolated walk law (Berestycki–Gwynne, proof of Lemma 7.21).
 -/
 
 set_option autoImplicit false
@@ -43,14 +42,13 @@ namespace MatedCRT
 
 /-! ### The multiplicities of the map are the frontier-side multiplicities of the cells -/
 
-/-- **Step (written answer MQ-sbl-31, lines 26-40): the edge multiplicities of the mated-CRT map are the frontier-side
+/-- **Step: the edge multiplicities of the mated-CRT map are the frontier-side
 multiplicities of the cells of the space-filling SLE.** PENDING TRUTH CHECK.
 
 In a valid environment, for every cell size `ε > 0`, almost surely the multiplicity `S.mult ε` of Definition 1.1 (read
 off the boundary-length pair, `MatedCRTEnv.mult`) equals `cellSideMult ε (S.η)`, the number of frontier sides shared by
 two cells, read off the curve (`CellSideMult.lean`). Sources: Duplantier–Miller–Sheffield, arXiv:1409.7055, Theorem
-8.18 and Lemmas 8.8, 8.12-8.15 (1409.7055.txt lines 8042-8370); Gwynne–Holden–Miller, arXiv:1512.01223, Corollary 6.5
-(1512.01223.txt line 2742); Gwynne–Miller–Sheffield, arXiv:1705.11161, §2.5 and Proposition 2.2. -/
+8.18 and Lemmas 8.8, 8.12-8.15; Gwynne–Holden–Miller, arXiv:1512.01223, Corollary 6.5; Gwynne–Miller–Sheffield, arXiv:1705.11161, §2.5 and Proposition 2.2. -/
 def MatingOfTreesCellSideIdentity (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
     ∀ ε : ℝ, 0 < ε → ∀ᵐ ω ∂S.P, S.mult ε ω = cellSideMult ε (S.η ω)
@@ -382,7 +380,7 @@ noncomputable def frozenWindowMult (a u b p q ε : ℝ) (η : C(ℝ, ℂ)) (m : 
 
 open Classical in
 /-- **The frozen window law** of the window `(a, u, b)` with retained times `[p, q]` at cell size `ε`, for the weights
-`m` (written answer MQ-sbl-21, Q2): the walk on the retained labels from `⌈u/ε⌉` with weights `m` from the inside
+`m`: the walk on the retained labels from `⌈u/ε⌉` with weights `m` from the inside
 cells, frozen before its first step to a cell which is not inside, drawn in the intrinsic chart `windowChartIntr` of
 the window and interpolated at the time step `1/mε`. The constant path at `0` if the window has no intrinsic chart or
 the starting cell is not inside. -/
@@ -464,8 +462,7 @@ theorem frozenChartVertex_eq (hf : IsIntrinsicCurveDecoratedReembedding γ T h�
     rw [← hf.1 _ hT (windowDomain_subset hJ η₂ u hU), hf.windowChartIntr_map_eq hJ hu hG₂ hU]
   · rw [ite_eq_right fun h => hj ((hf.windowCellInside_iff hJ hu hpq hG₂ j).1 h), ite_eq_right hj]
 
-/-- **The frontier-side multiplicities from an inside cell to a retained label correspond under `f`** (written answer
-MQ-sbl-31, line 46): the contacts go through points of the window domains, where `f` and its inverse are continuous and
+/-- **The frontier-side multiplicities from an inside cell to a retained label correspond under `f`**: the contacts go through points of the window domains, where `f` and its inverse are continuous and
 injective. -/
 theorem cellSideMult_eq (hf : IsIntrinsicCurveDecoratedReembedding γ T h₁ η₁ h₂ η₂ f) (hJ : Icc a b ⊆ T)
     (hu : u ∈ Icc a b) (hpq : Icc p q ⊆ T) (hG₂ : WindowGoodIntr a u b η₂) (hε : 0 < ε) {i j : ℤ}
@@ -531,17 +528,17 @@ end IsIntrinsicCurveDecoratedReembedding
 
 /-! ### The comparison with the chart law of the walk -/
 
-/-- **Step of Berestycki–Gwynne (2020), proof of Lemma 7.21 (2003.10320.txt lines 3812-3831): the discrete window law
+/-- **Step of Berestycki–Gwynne (2020), proof of Lemma 7.21: the discrete window law
 is close to the chart law of the window for the walk.** PENDING TRUTH CHECK.
 
 In a valid environment with a measurable version `η'` of the curve, for every sequence `ε_n → 0`, every window
 `a < u < b` and retained times `[p, q]` with `p < a` and `b < q`: for every bounded continuous `g`, the difference of
 the integrals of `g` against the frozen window law (`frozenWindowLaw`) for the multiplicities `S.mult (ε n)` of the map
 and against the chart law of the window for the interpolated walk law at level `ε n` (`windowLawBG`) tends to zero in
-probability. Written argument: answer MQ-sbl-21, Q2 (the comparison with the full interpolated walk: the label walks
+probability. Argument (the comparison with the full interpolated walk: the label walks
 agree until freezing, Proposition 6.1 and Lemma 7.17 of Berestycki–Gwynne give the joint limits, the time-changed
 Brownian paths visit the open exterior of the window arbitrarily soon after exit, and the inverse chart is uniformly
-continuous on the closure of the window), and answer MQ-sbl-31, line 46. -/
+continuous on the closure of the window; contacts of cells go through points of the window domains, where the re-embedding and its inverse are continuous). -/
 def BG20FrozenWindowLawComparison (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
     ∀ η' : Ω → C(ℝ, ℂ), Measurable η' → (∀ᵐ ω ∂S.P, ⇑(η' ω) = S.η ω) →

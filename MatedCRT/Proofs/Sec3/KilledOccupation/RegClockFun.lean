@@ -42,12 +42,12 @@ noncomputable def dyadicGridPoint (n : ℕ) (k : ℤ × ℤ × ℤ) : ℝ × ℂ
   ((k.1 : ℝ) / 2 ^ n, ⟨(k.2.1 : ℝ) / 2 ^ n, (k.2.2 : ℝ) / 2 ^ n⟩)
 
 /-- The circle-average representative `ψ̃(ε, x)`: the limit superior along `n` of the values of `ψ` at the dyadic
-approximants `dyadicGridPoint n (dyadicRound n (ε, x))` of `(ε, x)` (B1 of MQ-li-8 (b)). -/
+approximants `dyadicGridPoint n (dyadicRound n (ε, x))` of `(ε, x)` (step B1 of the transfer of thm:occ-main). -/
 noncomputable def circleAverageRep (ψ : UnitDiskCircleIndex → ℝ) (ε : ℝ) (x : ℂ) : ℝ :=
   limsup (fun n : ℕ => circleValueAt ψ (dyadicGridPoint n (dyadicRound n (ε, x)))) atTop
 
 /-- The regularized occupation clock `Ψ_ε(ψ, b)(s) = ∫_0^{s ∧ σ(b)} ε^{γ²/2} exp(γ ψ̃(ε, b_u)) du`, with Lebesgue
-measure `lebNN` on `ℝ≥0` (B1 of MQ-li-8 (b); eq:occ-clock). -/
+measure `lebNN` on `ℝ≥0` (step B1; eq:occ-clock). -/
 noncomputable def regClockFun (γ ε : ℝ) (ψ : UnitDiskCircleIndex → ℝ) (σ : ContinuousPath ℂ → ℝ≥0)
     (b : ContinuousPath ℂ) (s : ℝ≥0) : ℝ≥0∞ :=
   ∫⁻ u in Icc (0 : ℝ≥0) (min s (σ b)),

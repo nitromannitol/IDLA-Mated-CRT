@@ -201,7 +201,7 @@ noncomputable def walkLawModulus (S : MatedCRTEnv Ω) (η' : Ω → C(ℝ, ℂ))
 noncomputable def maxCellDiam (ε : ℝ) (η : ℝ → ℂ) (R : ℝ) : ℝ≥0∞ :=
   ⨆ (k : ℤ) (_ : (cell ε η k ∩ ball (0 : ℂ) (R + 1)).Nonempty), ENNReal.ofReal (Metric.diam (cell ε η k))
 
-/-- **The walk law against the interpolated law** (MATH-ANSWERS step 3, with `a = 0`): on the event where the
+/-- **The walk law against the interpolated law** (with `a = 0`): on the event where the
 interpolation is defined, if `η(x) ∈ B̄_R`, the cells meeting `B_{R+1}` have diameter at most `d`, `ε + d ≤ δ`,
 `ε + d < 1` and `ω^ε_R(δ) ≤ a`, then `LP(Q^ε(x), P̃^ε_{η(x)}) ≤ a`. -/
 theorem pathLevyProkhorovEDist_walkPathLaw_interpWalkLaw_le (S : MatedCRTEnv Ω) (η' : Ω → C(ℝ, ℂ))
@@ -267,7 +267,7 @@ theorem pathLevyProkhorovEDist_walkPathLaw_interpWalkLaw_le (S : MatedCRTEnv Ω)
 
 /-! ### The exact discrete identity and the replacement estimate -/
 
-/-- **The exact discrete identity** (MATH-ANSWERS step C2): for the cutoff degree weights `c x = ε deg(x) ψ(η(x))`, the
+/-- **The exact discrete identity**: for the cutoff degree weights `c x = ε deg(x) ψ(η(x))`, the
 walk laws `Q^ε(x)` at a lattice time `t` (`m_ε t = N`) and `ψ = 1` on `tsupport f ∪ tsupport g`,
 `Σ_x c x f(η x) ψ(η x) E_{Q(x)}[g(X_t)] = Σ_x c x g(η x) ψ(η x) E_{Q(x)}[f(X_t)]`, by `n`-step detailed balance
 `deg(x) p_N(x,y) = deg(y) p_N(y,x)` (`sum_mdeg_mul_integral_comp_eval_symm`). -/
@@ -315,7 +315,7 @@ theorem sum_degreeCutoffWeight_walkPathLaw_symm (S : MatedCRTEnv Ω) (η' : Ω �
   exact sum_mdeg_mul_integral_comp_eval_symm (S.mult_symm ε ω) hlf N (f := fun k => f (v k))
     (g := fun k => g (v k)) _ (hvan f hψf) (hvan g hψg)
 
-/-- **Replacement of the walk laws by the interpolated law field** (MATH-ANSWERS step C2): at a lattice time `t ≤ T`,
+/-- **Replacement of the walk laws by the interpolated law field**: at a lattice time `t ≤ T`,
 if `LP(Q^ε(x), P̃^ε_{η(x)}) < a` for every vertex `x` with `ψ(η(x)) ≠ 0`, then
 `|Φ_{f,g,t}(ν^ε, P̃^ε)| ≤ (C_f C_ψ B_g(a) + C_g C_ψ B_f(a)) ν^ε(supp ψ)` with `B = levyProkhorovEvalBound`, since the
 atomic pairing with the walk laws vanishes exactly (`sum_degreeCutoffWeight_walkPathLaw_symm`). -/
@@ -366,10 +366,10 @@ theorem abs_reversibilityPairing_degreeCutoffMeasure_le (S : MatedCRTEnv Ω) (η
 /-! ### Convergence in probability -/
 
 /-- **The reversibility pairing at the cutoff degree measure tends to `0` in probability** (BG20 Lemma 7.6 without
-Lemma 7.7, step C2; MATH-ANSWERS N6). Let `S` be a valid environment, `η'` a version of its curve, `ε_n → 0⁺`, and
+Lemma 7.7, step C2). Let `S` be a valid environment, `η'` a version of its curve, `ε_n → 0⁺`, and
 `t_n ≤ T` lattice times of the walks (`m_{ε_n} t_n ∈ ℕ`). Assume that the maps are almost surely locally finite, that
 the walk laws are equicontinuous in law (`hEqLaw`: for all `R` and `a > 0` there is `δ > 0` with
-`P[ω^{ε_n}_R(δ) > a] ≤ a` eventually, the step-3 input of MATH-ANSWERS), that the cell diameters near `B_{R+1}` tend to
+`P[ω^{ε_n}_R(δ) > a] ≤ a` eventually), that the cell diameters near `B_{R+1}` tend to
 `0` in probability (`hdiam`), and that the mass of the cutoff degree measure `ν^{ε_n}` is bounded in probability
 (`hmass`). Then `Φ_{f,g,t_n}(ν^{ε_n}, P̃^{ε_n}) → 0` in probability. -/
 theorem tendstoInMeasure_reversibilityPairing_degreeCutoffMeasure {𝒮 : SpaceFillingSLEModel} {γ : ℝ}

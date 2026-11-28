@@ -241,7 +241,7 @@ theorem measurePreserving_igSimilarityStep_of_measurable {γ s : ℝ} (hs : 0 < 
 `2πχ`.** For every `z ∈ ℂ` and `s > 0`, the array of `(h, u)` and its normalized similarity step have the same law:
 the field `h(z + s ·) − h_s(z)` has the law of `h` (translation and scale invariance), `(u + h_s(z)) mod 2πχ` is
 uniform and independent of `h`, and at each fixed positive radius and centre the circle average of
-`h(z + s ·) − h_s(z)` is almost surely `h_{sρ}(z + sw) − h_s(z)` (`notes/fp-gaps/CODEX-MQ-sbl-34.md`, lines 11-15). -/
+`h(z + s ·) − h_s(z)` is almost surely `h_{sρ}(z + sw) − h_s(z)`. -/
 theorem measurePreserving_igSimilarityStep {γ : ℝ} (hγ : γ ∈ Ioo (0 : ℝ) 2) {s : ℝ} (hs : 0 < s) (z : ℂ)
     {Ω' : Type} [MeasurableSpace Ω'] {P' : Measure Ω'} {h : Ω' → Field} {u : Ω' → ℝ}
     (hh : LQGMetric.IsNormalizedWPGFF h P')
@@ -427,7 +427,7 @@ theorem abs_incCov_far_le_of_dist {c : ℂ} {r : ℝ} (hr : 0 < r) {Z₁ Z : ℂ
     _ ≤ (|r - 1| + ‖c‖) / (m - ‖c‖) + (|r - 1| + ‖c‖) / (m - ‖c‖) := add_le_add hA1 hA2
     _ = 2 * ((|r - 1| + ‖c‖) / (m - ‖c‖)) := by ring
 
-/-- **Decorrelation at distant centres, uniformly in the scale** (`notes/fp-gaps/CODEX-MQ-sbl-34.md`, line 23).
+/-- **Decorrelation at distant centres, uniformly in the scale**.
 A sequence `C_n` equal to both expressions of the covariance of `h_r(c) − h_1(0)` and
 `h_{ρ_n ρ'}(z_n + ρ_n w) − h_{ρ_n}(z_n)` tends to `0` when `|z_n| → ∞`, for arbitrary `ρ_n > 0`. -/
 theorem tendsto_of_incCov_far {c : ℂ} {r : ℝ} (hr : 0 < r) (w : ℂ) {ρ' : ℝ} (hρ' : 0 < ρ')
@@ -522,8 +522,7 @@ theorem inGSpan_sum_igSimGauss (K : Finset (ℝ × ℂ)) (z : ℂ) {s : ℝ} (hs
     InGSpan (incProc h) (fun ω => ∑ x, t x * igSimGauss h K z s ω x) :=
   InGSpan.finset_sum _ fun x _ => (inGSpan_igSimGauss K z hs x).const_mul (t x)
 
-/-- **`Var(h_s(z) − h_1(0)) ≥ log(|z| − 1)` for every scale `s > 0`** (`notes/fp-gaps/CODEX-MQ-sbl-34.md`,
-lines 25-29): the variance is `−log s + ⨍_{∂B_s(z)} log max(1, |x|) + ⨍_{∂B_1(0)} log max(s, |z − x|)`, the first
+/-- **`Var(h_s(z) − h_1(0)) ≥ log(|z| − 1)` for every scale `s > 0`**: the variance is `−log s + ⨍_{∂B_s(z)} log max(1, |x|) + ⨍_{∂B_1(0)} log max(s, |z − x|)`, the first
 average is at least `⨍_{∂B_s(z)} log |x| = log max(s, |z|) ≥ log s`, and the second at least
 `log max(s, |z| − 1)`. -/
 theorem le_variance_cInc_far (hh : IsWholePlaneGFF h P) {ρ : ℝ} (hρ : 0 < ρ) {z : ℂ} (hz : 1 < ‖z‖) :
@@ -1054,7 +1053,7 @@ theorem igFieldDistantCentreMixing_of_measurable (hγ : γ ∈ Ioo (0 : ℝ) 2) 
 end Assembly
 
 /-- **Mixing of the whole-plane GFF modulo `2πχ` under similarities with distant centres**
-(`IGFieldDistantCentreMixing`; `notes/fp-gaps/CODEX-MQ-sbl-34.md`, section A, lines 5-36: law preservation of each
+(`IGFieldDistantCentreMixing`: law preservation of each
 normalized step, character density, cross covariance uniform in the scale, and `Var h_s(z) ≥ log |z|`-type
 divergence of the phase variance). -/
 theorem igFieldDistantCentreMixing (γ : ℝ) (hγ : γ ∈ Ioo (0 : ℝ) 2) : IGFieldDistantCentreMixing γ hγ := by

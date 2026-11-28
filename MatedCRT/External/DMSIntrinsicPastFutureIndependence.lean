@@ -39,7 +39,7 @@ open MeasureTheory ProbabilityTheory Set
 open scoped NNReal
 
 /-- **Intrinsic re-embedding of a curve-decorated quantum surface** (Duplantier–Miller–Sheffield, Section 1.2 and the
-beaded quantum surfaces of pp. 11-12, lines 513-532 of the text, a homeomorphism of the chain of beads conformal on each
+beaded quantum surfaces of pp. 11-12 of the text, a homeomorphism of the chain of beads conformal on each
 bead; Gwynne–Miller, arXiv:1701.05174, Definition 2.1, (2.6)). For a set of times
 `T`, `f` maps the intrinsic curve-decorated surface of `(h₂, η₂)` over `T` onto the one of `(h₁, η₁)`: with
 `K₁ = η₁(T)` and `K₂ = η₂(T)`, `f` is conformal and injective on the interior of `K₂` and maps it onto the interior of
@@ -77,8 +77,8 @@ def intrinsicCurveDecoratedSurfaceSigma (γ : ℝ) (T : Set ℝ) : MeasurableSpa
     exact exists_congr fun i => (hf i).2 p₁ p₂ h⟩
 
 /-- **Literature input (Duplantier–Miller–Sheffield, *Liouville quantum gravity as a mating of trees*,
-arXiv:1409.7055v4, Theorem 1.9, pp. 26-27, lines 1301-1349 of the text; the stationarity is (1.9), line 1347, the
-independence of the two quantum wedges is the last sentence, line 1349; the two wedges as intrinsic curve-decorated
+arXiv:1409.7055v4, Theorem 1.9, pp. 26-27 of the text; the stationarity is (1.9), the
+independence of the two quantum wedges is the last sentence; the two wedges as intrinsic curve-decorated
 surfaces: Gwynne–Miller, arXiv:1701.05174, Definition 2.1, (2.6) and §2.3.3, p. 18).** PENDING TRUTH CHECK. Cited
 input; to be replaced when proved in the mating-of-trees lane.
 

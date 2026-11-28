@@ -3,9 +3,7 @@ import MatedCRT.FirstPass.Derived.ZeroConeTailOfLemmaA1
 /-!
 # Ergodicity modulo scaling of the shifted zero-cone configuration from Lemma A.1, curve form of Remark A.2
 
-Gwynne–Miller–Sheffield (arXiv:1705.11161, proof of Proposition 3.1, paragraph "Ergodicity modulo scaling",
-`notes/refs/1705.11161.txt` lines 1124-1196) use Lemma A.1 (lines 1952-1956) for the `0`-quantum cone, and at lines
-1188-1193 the analogue of Remark A.2 (lines 1958-1964) for the imaginary-geometry field `h^IG`, only through its
+Gwynne–Miller–Sheffield (arXiv:1705.11161, proof of Proposition 3.1, paragraph "Ergodicity modulo scaling") use Lemma A.1 for the `0`-quantum cone, and the analogue of Remark A.2 for the imaginary-geometry field `h^IG`, only through its
 consequence for the space-filling SLE `η̂` that `h^IG` generates: a measurable function `g(η̂)` which is almost surely
 invariant under each coordinate change `η̂ ↦ ψ⁻¹ ∘ η̂` (re-rooted at the hitting time of `ψ(0)`), `ψ(w) = C w + z`, is
 almost surely constant.
@@ -36,16 +34,14 @@ variable {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
   {ηL η η₀ : Ω → C(ℝ, ℂ)} {bm : Ω → Path2}
 
 /-- **Lemma A.1 of Gwynne–Miller–Sheffield, arXiv:1705.11161, with Remark A.2 in the form used for the
-space-filling SLE** (`notes/refs/1705.11161.txt` lines 1952-1964, as used in the proof of Proposition 3.1, lines
-1141-1142, 1186 and 1188-1193; written answer on this proof: `notes/fp-gaps/CODEX-MQ-sbl-15.md`, lines 17-35 for
-Lemma A.1 and the curve, lines 27 and 47 for the dilations, line 59 for this form of the second clause).
+space-filling SLE** (as used in the proof of Proposition 3.1).
 PENDING TRUTH CHECK.
 
-1. (Lemma A.1, lines 1952-1956.) Let `h` be the circle-average embedding of the `0`-quantum cone (the field
+1. (Lemma A.1.) Let `h` be the circle-average embedding of the `0`-quantum cone (the field
    `zeroConeFieldOf γ X₀ B₀ B₀'` of the coupling). Every bounded, non-negative, measurable functional `F` of `h` which
    is scale and translation invariant in the sense that, almost surely, `F(h(C · + z) + Q log C) = F(h)` for all
    `C > 0` and `z ∈ ℂ` (A.1), is almost surely equal to a deterministic constant.
-2. (Remark A.2, lines 1958-1962, for the imaginary-geometry field `h^IG` of the coupling, lines 1188-1192, stated for
+2. (Remark A.2, for the imaginary-geometry field `h^IG` of the coupling, stated for
    the curve it generates.) Let `ηL` be the whole-plane space-filling SLE of the coupling, parametrized by Lebesgue
    measure with `ηL 0 = 0`. Every bounded, non-negative, measurable functional `g` of the curve which is invariant
    under each coordinate change `ηL ↦ ψ⁻¹ ∘ ηL`, `ψ(w) = C w + z` (`C > 0`, `z ∈ ℂ`), re-rooted at the hitting time
@@ -53,7 +49,7 @@ PENDING TRUTH CHECK.
    almost surely constant: the law of `ηL` is ergodic under the coordinate changes by positive similarities. By the
    imaginary-geometry coordinate change of the coupling (`IsMatingOfTreesCoupling.igMap`) this is the statement of
    Remark A.2 for the functionals of `h^IG` modulo `2πχ` that factor through the curve. It already follows from
-   ergodicity under the dilations alone (`z = 0`), the form of the written answer (lines 27 and 47). -/
+   ergodicity under the dilations alone (`z = 0`), the form of the written argument. -/
 def ZeroConeLemmaA1Pos (_D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm)
     (_hγ : γ ∈ Ioo (0 : ℝ) 2) : Prop :=
   (∀ F : Field → ℝ, Measurable F → (∃ M : ℝ, ∀ h, F h ≤ M) → (∀ h, 0 ≤ F h) →
@@ -67,10 +63,9 @@ def ZeroConeLemmaA1Pos (_D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B�
 /-- **Lines 1173-1193 of arXiv:1705.11161: a jointly invariant functional of `(h, η̂)` is almost surely constant**,
 from `ZeroConeLemmaA1Pos`. Let `G'` be a measurable functional of (zero-cone field, curve) with values in `[0, 1]`,
 almost surely invariant under the joint coordinate change (3.3). For every measurable `B`, `G''(h) = P[G'(h, η̂) ∈ B]`
-is invariant under the coordinate change of `h` (law invariance of `η̂`, lines 1179-1185), hence almost surely
-constant by Lemma A.1 (line 1186); so `G'(h, η̂)` is independent of `h` (line 1187), almost surely `g(η̂)` by
-`ZeroConeCurveFactorStep`, and `g(η̂)` is almost surely constant by the second clause of `ZeroConeLemmaA1Pos`
-(lines 1188-1193). -/
+is invariant under the coordinate change of `h` (law invariance of `η̂`), hence almost surely
+constant by Lemma A.1; so `G'(h, η̂)` is independent of `h`, almost surely `g(η̂)` by
+`ZeroConeCurveFactorStep`, and `g(η̂)` is almost surely constant by the second clause of `ZeroConeLemmaA1Pos`. -/
 theorem ae_eq_const_of_jointInvariance_of_lemmaA1Pos
     (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm) (hγ : γ ∈ Ioo (0 : ℝ) 2)
     (hA1 : ZeroConeLemmaA1Pos D hγ) (hlaw : SpaceFillingSLESimilarityLaw D hγ)
@@ -117,7 +112,7 @@ theorem ae_eq_const_of_jointInvariance_of_lemmaA1Pos
       (ae_map_iff hh₀ (measurableSet_eq_fun hLm measurable_const)).2 hc
     filter_upwards [hcL] with h hh
     rw [← hh, ENNReal.ofReal_toReal (measure_ne_top _ _)]
-  -- `G'(h, η̂)` is independent of `h` (line 1187)
+  -- `G'(h, η̂)` is independent of `h`
   have hind : IndepFun (fun ω => G' (H' ω, ηL ω)) H' P :=
     indepFun_of_ae_const_section hH'm hηm hH'ind hG'm hsec
   have hind' : IndepFun (fun ω => G' (zeroConeFieldOf γ X₀ B₀ B₀' ω, ηL ω))
@@ -125,7 +120,7 @@ theorem ae_eq_const_of_jointInvariance_of_lemmaA1Pos
     hind.congr (hH'eq.mono fun ω hω => by simp only [hω]) hH'eq
   obtain ⟨g, hgm, hgae, hginv⟩ := hcurve G' hG'm
     ⟨1, fun x => abs_le.2 ⟨by linarith [(hG'01 x).1], (hG'01 x).2⟩⟩ hG'inv hind'
-  -- the curve form of Remark A.2 (lines 1188-1193)
+  -- the curve form of Remark A.2
   let gc : C(ℝ, ℂ) → ℝ := fun e => max 0 (min 1 (g e))
   have hgcm : Measurable gc := measurable_const.max (measurable_const.min hgm)
   have hinv : ∀ C : ℝ, 0 < C → ∀ z : ℂ, ∀ᵐ ω ∂P, gc (affineReroot z C 0 (ηL ω)) = gc (ηL ω) := by
@@ -144,13 +139,13 @@ theorem ae_eq_const_of_jointInvariance_of_lemmaA1Pos
   rw [min_eq_right h01.2, max_eq_right h01.1]
 
 /-- **Ergodicity modulo scaling of the shifted zero-cone configuration from Lemma A.1, curve form of Remark A.2**
-(arXiv:1705.11161, proof of Proposition 3.1, paragraph "Ergodicity modulo scaling", lines 1124-1196). Under
-`ZeroConeLemmaA1Pos` and the named steps of the paragraph (`ZeroConeConfigCovariance`, lines 1127-1137;
-`SpaceFillingSLESimilarityLaw`, lines 1182-1183; `ZeroConeCurveFactorStep`, lines 1186-1187;
-`ZeroConePhaseFactorStep`, lines 1193-1196), every bounded measurable similarity-invariant functional of the
+(arXiv:1705.11161, proof of Proposition 3.1, paragraph "Ergodicity modulo scaling"). Under
+`ZeroConeLemmaA1Pos` and the named steps of the paragraph (`ZeroConeConfigCovariance`;
+`SpaceFillingSLESimilarityLaw`; `ZeroConeCurveFactorStep`;
+`ZeroConePhaseFactorStep`), every bounded measurable similarity-invariant functional of the
 configuration (3.1) is almost surely constant. For each measurable `A`, the phase average
-`G'(h, η̂) = P[Φ(H) ∈ A | h, η̂]` is invariant (lines 1145-1172) and hence almost surely constant
-(`ae_eq_const_of_jointInvariance_of_lemmaA1Pos`), so `Φ(H)` is independent of `(h, η̂)` (lines 1193-1194). -/
+`G'(h, η̂) = P[Φ(H) ∈ A | h, η̂]` is invariant and hence almost surely constant
+(`ae_eq_const_of_jointInvariance_of_lemmaA1Pos`), so `Φ(H)` is independent of `(h, η̂)`. -/
 theorem zeroConeTailTriviality_of_lemmaA1Pos
     (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm) (hγ : γ ∈ Ioo (0 : ℝ) 2)
     (hA1 : ZeroConeLemmaA1Pos D hγ) (hcov : ZeroConeConfigCovariance D hγ)
@@ -238,7 +233,7 @@ variable {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
 /-- **The hypotheses of the invariance principle for the shifted zero-cone configuration from Lemma A.1, curve form
 of Remark A.2** (Gwynne–Miller–Sheffield, arXiv:1705.11161, Proposition 3.1; hypotheses of arXiv:1807.07515,
 Theorem 1.16): the assembly `exists_zeroCone_config_gmsHypotheses` with the tail triviality of the zero cone replaced
-by `ZeroConeLemmaA1Pos` and the named steps of the paragraph "Ergodicity modulo scaling" (lines 1124-1196). -/
+by `ZeroConeLemmaA1Pos` and the named steps of the paragraph "Ergodicity modulo scaling". -/
 theorem exists_zeroCone_config_gmsHypotheses_of_lemmaA1Pos
     (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm) (hγ : γ ∈ Ioo (0 : ℝ) 2)
     (hf : AEMeasurable (fun ω => coneField (X ω)

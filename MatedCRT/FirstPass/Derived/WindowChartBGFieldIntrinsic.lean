@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.Derived.ValidCurveRegularClosed
 /-!
 # The chart field of a window is a function of the intrinsic curve-decorated wedge
 
-Berestycki–Gwynne (2020), arXiv:2003.10320, proof of Lemma 7.21 (2003.10320.txt lines 3775-3776): the chart field
+Berestycki–Gwynne (2020), arXiv:2003.10320, proof of Lemma 7.21: the chart field
 `(h^D, η^D)` of a window is determined by the quantum surface of (7.35) containing it, with the two quantum surfaces
 taken as intrinsic curve-decorated wedges (`intrinsicCurveDecoratedSurfaceSigma`). The function is the
 **intrinsic chart field** `windowFieldIntr`:
@@ -639,7 +639,7 @@ theorem windowFieldBG_eq_windowFieldIntr {γ a u b : ℝ} {η : C(ℝ, ℂ)} (ha
 
 /-! ### The step of the proof of Lemma 7.21 -/
 
-/-- **Berestycki–Gwynne (2020), proof of Lemma 7.21 (2003.10320.txt lines 3775-3776), with the two quantum surfaces
+/-- **Berestycki–Gwynne (2020), proof of Lemma 7.21, with the two quantum surfaces
 of (7.35) taken as intrinsic curve-decorated wedges (`BG20WindowFieldIntrinsicInput`)**, from `WindowFrontierJordanInput`
 (the frontier of the window domain is almost surely a Jordan curve; Miller–Sheffield, Imaginary geometry IV, used in
 Berestycki–Gwynne, proof of Lemma 7.21). The function is the intrinsic chart field `windowFieldIntr`: it is

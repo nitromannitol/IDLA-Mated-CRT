@@ -15,7 +15,7 @@ the locality of the area measure (`coneAnnulusLocality`), the inner radial paths
 `brownianPathAEMeasurable`), the outer radial windows (`coneOuterWindowLaw`, `coneOuterWindowMeasurable`) and the
 law of the lateral part (`lateralPartLaw`).
 
-Source: the answer to MQ-sbl-18, section "The field laws on a bounded annulus"; Gwynne–Miller–Sheffield
+Source: the written argument; Gwynne–Miller–Sheffield
 (arXiv:1705.11161), §2.3.1, and the local absolute continuity used in the proof of Theorem 3.4, case 1;
 Duplantier–Miller–Sheffield (arXiv:1409.7055), Definition 4.10.
 -/

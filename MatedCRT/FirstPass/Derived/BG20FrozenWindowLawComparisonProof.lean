@@ -8,8 +8,7 @@ import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 /-!
 # The frozen window laws are close to the chart laws of the walk
 
-Proof of `BG20FrozenWindowLawComparison` (Berestycki–Gwynne (2020), proof of Lemma 7.21; written answer MQ-sbl-35,
-lines 5-49): for the multiplicities of the map, the integral of a bounded continuous path functional against the
+Proof of `BG20FrozenWindowLawComparison` (Berestycki–Gwynne (2020), proof of Lemma 7.21; the written argument): for the multiplicities of the map, the integral of a bounded continuous path functional against the
 frozen window law is close in probability to its integral against the chart law of the window for the interpolated
 walk law.
 
@@ -57,7 +56,7 @@ abbrev CompGoodAt (S : MatedCRTEnv Ω) (η' : Ω → C(ℝ, ℂ)) (a u b p q ε 
   CompGood S η' a u b ω ∧ WindowCellInside a u b p q ε (η' ω) ⌈u / ε⌉ ∧ ε ≤ min (a - p) (q - b)
 
 /-- **The comparison along a jointly convergent sequence** (Berestycki–Gwynne (2020), proof of Lemma 7.21; written
-answer MQ-sbl-35, lines 5-49). Let the laws of (curve, interpolated walk law at level `ε n`) converge weakly to `ν₀`,
+the written argument). Let the laws of (curve, interpolated walk law at level `ε n`) converge weakly to `ν₀`,
 under which almost every law family defines a time change of Brownian motion. Then the difference of the integrals of
 `g` against the frozen window law and against the chart law of the window tends to `0` in probability. -/
 theorem tendsto_prob_abs_sub_of_jointLimit {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hγ : 0 < γ) (hγ2 : γ < 2)
@@ -285,8 +284,7 @@ theorem tendsto_prob_abs_sub_of_jointLimit {𝒮 : SpaceFillingSLEModel} {γ : �
 
 end FrozenPath
 
-/-- **`BG20FrozenWindowLawComparison`** (Berestycki–Gwynne (2020), proof of Lemma 7.21; written answer MQ-sbl-35,
-lines 5-49), from the uniform-start invariance principle with the reference environments of the model (`hEnvS`,
+/-- **`BG20FrozenWindowLawComparison`** (Berestycki–Gwynne (2020), proof of Lemma 7.21; the written argument), from the uniform-start invariance principle with the reference environments of the model (`hEnvS`,
 `hN4`, `hν`, `href`, `hU`, as in `hN5_of_defines`), the time-change half `hN5a` of Lemma 7.4 of Berestycki–Gwynne, the
 Jordan frontier of the window domain (`WindowFrontierJordanInput`) and the regularity of Jordan domains for the exterior
 (`JordanDomainExteriorRegularity`). By the subsequence criterion, along a subsequence the pairs (curve, interpolated

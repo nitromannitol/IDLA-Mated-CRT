@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.Derived.DMSPastFutureIndependenceOfExternal
 intrinsic curve-decorated wedges (Duplantier–Miller–Sheffield, Theorem 1.9)
 
 Berestycki–Gwynne (2020), arXiv:2003.10320, prove Lemma 7.21 (lines 3761-3838 of the text) from the independence of
-the past and future curve-decorated quantum surfaces (7.35) at a time `s` between the two windows (line 3768). This
+the past and future curve-decorated quantum surfaces (7.35) at a time `s` between the two windows. This
 file runs the argument of `bg20ChartIndependenceInputBG_of_dms21` with the two halves taken as intrinsic
 curve-decorated wedges (`intrinsicCurveDecoratedSurfaceSigma`, the cited input `DMSIntrinsicPastFutureIndependence`):
 the chart field of each window and the discrete analogue `P^{D,ε}_0` of its chart law are functions of the intrinsic
@@ -103,8 +103,7 @@ end DMSIntrinsicPastFuture
 
 /-- **Independence of the past and future intrinsic curve-decorated wedges at every time** (Duplantier–Miller–Sheffield,
 arXiv:1409.7055v4, Theorem 1.9 with the stationarity (1.9); the two halves as intrinsic curve-decorated wedges,
-Gwynne–Miller, arXiv:1701.05174, Definition 2.1 and §2.3.3; used in Berestycki–Gwynne (2020), (7.35),
-2003.10320.txt line 3768). In a valid environment with measurable versions `H` of the field and `η'` of the curve, for
+Gwynne–Miller, arXiv:1701.05174, Definition 2.1 and §2.3.3; used in Berestycki–Gwynne (2020), (7.35)). In a valid environment with measurable versions `H` of the field and `η'` of the curve, for
 every time `s`, the `σ`-algebras `intrinsicCurveDecoratedSurfaceSigma γ (Iic s)` and
 `intrinsicCurveDecoratedSurfaceSigma γ (Ici s)`, pulled back by `(H, η')`, are independent. -/
 def DMS21IntrinsicPastFutureIndependence (𝒮 : SpaceFillingSLEModel) : Prop :=
@@ -156,9 +155,9 @@ theorem dms21IntrinsicPastFutureIndependence_of_external (hDMS : DMSIntrinsicPas
 
 /-! ### The window data as functions of the intrinsic wedges -/
 
-/-- **Step of Berestycki–Gwynne (2020), proof of Lemma 7.21 (2003.10320.txt lines 3775-3776): "By definition,
+/-- **Step of Berestycki–Gwynne (2020), proof of Lemma 7.21: "By definition,
 `(h^D, η^D)` (resp. `(h̃^D, η̃^D)`) is determined by the first (resp. second) quantum surface in (7.35)", with the two
-quantum surfaces of (7.35) (line 3768) taken as intrinsic curve-decorated wedges.** PENDING TRUTH CHECK.
+quantum surfaces of (7.35) taken as intrinsic curve-decorated wedges.** PENDING TRUTH CHECK.
 
 In a valid environment with measurable versions `H` of the field and `η'` of the curve, for a window `(a, u, b)` and
 a time `s > b` (resp. `s < a`), the chart field of the window for the inverse chart `windowChartBG` of the normalization
@@ -177,11 +176,11 @@ def BG20WindowFieldIntrinsicInput (𝒮 : SpaceFillingSLEModel) : Prop :=
         Measurable[intrinsicCurveDecoratedSurfaceSigma γ (Ici s)] F ∧
           ∀ᵐ ω ∂S.P, windowFieldBG γ a u b (H ω, η' ω) = F (H ω, η' ω))
 
-/-- **Step of Berestycki–Gwynne (2020), proof of Lemma 7.21 (2003.10320.txt lines 3783-3831): the discrete analogue
+/-- **Step of Berestycki–Gwynne (2020), proof of Lemma 7.21: the discrete analogue
 `P^{D,ε}_0` of the window chart law, a function of the intrinsic curve-decorated wedge containing the window.** PENDING
 TRUTH CHECK.
 
-`BG20DiscreteWindowLawInput` with the two quantum surfaces of (7.35) (line 3768) taken as intrinsic curve-decorated
+`BG20DiscreteWindowLawInput` with the two quantum surfaces of (7.35) taken as intrinsic curve-decorated
 wedges: for every sequence `ε_n → 0` there are probability laws `R_n` on path space, functions of (field, curve)
 measurable for `intrinsicCurveDecoratedSurfaceSigma γ (Iic s)` (resp. `intrinsicCurveDecoratedSurfaceSigma γ (Ici s)`),
 such that for every bounded continuous `g`, `∫ g dR_n - ∫ g d(chart law of the window for the interpolated walk law at
@@ -207,7 +206,7 @@ def BG20DiscreteWindowLawIntrinsicInput (𝒮 : SpaceFillingSLEModel) : Prop :=
 
 open DMSIntrinsicPastFuture in
 /-- **Berestycki–Gwynne (2020), Lemma 7.21, for the inverse charts `windowChartBG` (`BG20ChartIndependenceInputBG`),
-following the printed proof (2003.10320.txt lines 3768-3838) with the two halves of (7.35) as intrinsic
+following the printed proof with the two halves of (7.35) as intrinsic
 curve-decorated wedges.** Take `s = (b + a')/2` between the windows. By `DMSIntrinsicPastFutureIndependence` the past
 and future intrinsic curve-decorated wedges at `s` are independent
 (`dms21IntrinsicPastFutureIndependence_of_external`); by `BG20WindowFieldIntrinsicInput` and

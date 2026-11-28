@@ -53,7 +53,7 @@ lemma unitDiskCircleIndex_eq_inter :
     rw [dist_zero_right]
     linarith
 
-/-- The index set `UnitDiskCircleIndex` of the circle averages is open in `ℝ × ℂ` (B1 of MQ-li-8 (b)). -/
+/-- The index set `UnitDiskCircleIndex` of the circle averages is open in `ℝ × ℂ` (step B1 of the transfer of thm:occ-main). -/
 lemma isOpen_unitDiskCircleIndex : IsOpen UnitDiskCircleIndex := by
   rw [unitDiskCircleIndex_eq_inter]
   exact (isOpen_lt continuous_const continuous_fst).inter

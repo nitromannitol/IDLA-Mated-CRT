@@ -21,7 +21,7 @@ open scoped ENNReal NNReal
 namespace MatedCRT.KilledOccupation
 
 /-- The limit occupation clock `Ψ(ψ, b)(s) = inf_{q ∈ ℚ≥0, q > s} limsup_k Ψ_{ε_k}(ψ, b)(q)`, where
-`Ψ_{ε_k}` is the regularized clock `regClockFun` at parameter `ε_k` (B2 of MQ-li-8 (b)). -/
+`Ψ_{ε_k}` is the regularized clock `regClockFun` at parameter `ε_k` (step B2 of the transfer of thm:occ-main). -/
 noncomputable def limClockFun (γ : ℝ) (ε : ℕ → ℝ) (ψ : UnitDiskCircleIndex → ℝ) (σ : ContinuousPath ℂ → ℝ≥0)
     (b : ContinuousPath ℂ) (s : ℝ≥0) : ℝ≥0∞ :=
   ⨅ q : {q : ℚ≥0 // s < (q : ℝ≥0)}, Filter.limsup (fun k => regClockFun γ (ε k) ψ σ b (q.1 : ℝ≥0)) Filter.atTop

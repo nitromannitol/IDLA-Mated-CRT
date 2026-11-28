@@ -7,7 +7,7 @@ import LatticeProb.Bonanno.QuantumZipper.Proofs.Analysis.Pushforward
 /-!
 # The chart field of a window is a function of the past (or future) curve-decorated quantum surface
 
-Berestycki–Gwynne (2020), arXiv:2003.10320, proof of Lemma 7.21 (2003.10320.txt lines 3775-3776): "By definition,
+Berestycki–Gwynne (2020), arXiv:2003.10320, proof of Lemma 7.21: "By definition,
 `(h^D, η^D)` (resp. `(h̃^D, η̃^D)`) is determined by the first (resp. second) quantum surface in (7.35)". This file
 proves this step, `BG20WindowFieldSurfaceInput`, for the chart field `windowFieldBG` of the inverse chart
 `windowChartBG` (normalized by `φ(0) = η(u)` and `φ(1) = η(a')`).
@@ -669,7 +669,7 @@ theorem measurable_curveSurfaceSigma_windowFieldSurfaceBG {γ : ℝ} {T : Set �
 
 /-! ### The step of the proof of Lemma 7.21 -/
 
-/-- **Berestycki–Gwynne (2020), proof of Lemma 7.21 (2003.10320.txt lines 3775-3776): the chart field of a window is
+/-- **Berestycki–Gwynne (2020), proof of Lemma 7.21: the chart field of a window is
 determined by the past (resp. future) curve-decorated quantum surface (`BG20WindowFieldSurfaceInput`).** The function
 is `windowFieldSurfaceBG`: the chart field `windowFieldBG`, set to `0` on the event `η(a') = η(u)`. It is measurable for
 `curveSurfaceSigma γ (Iic s)` when `b < s` and for `curveSurfaceSigma γ (Ici s)` when `s < a`

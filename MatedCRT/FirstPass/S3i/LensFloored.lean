@@ -11,8 +11,8 @@ import MatedCRT.FirstPass.S3i.Proof
 
 Source: Gwynne–Miller–Sheffield, *Harmonic functions on mated-CRT maps*, arXiv:1807.07511v3, Theorem 3.9,
 equation (3.31) and its proof on p. 32, with Lemma 3.11 (p. 31). Quoted from
-the campaign record of the GMS extraction (MQ-li-7 (a)) and from the rendered PDF, pp. 30-32 (MQ-li-14;
-PDF page = printed page; script letters transcribed as in the record):
+the extraction of the GMS paper and from the rendered PDF, pp. 30-32 (PDF page = printed page; script letters
+transcribed as in the extraction):
 
 * (3.31), p. 30: "If D is simply connected, then we also have the boundary continuity estimate
   min_{y∈VGε(∂D∩Bt(η(x)))} fε(y) − A‖fε‖∞ (t/dist(η(x),∂D))^{−ξ} ≤ fε(x) ≤ max_{y∈VGε(∂D∩Bt(η(x)))} fε(y)
@@ -32,7 +32,7 @@ PDF page = printed page; script letters transcribed as in the record):
   x ∈ 𝒱𝒢^ε(B_ρ(0)), so that by Lemma 3.11 and Lemma 2.7, after possibly shrinking α we can arrange that
   ℙ[E^ε] = 1 − O_ε(ε^α). Throughout the proof we assume that E^ε occurs and we let 𝔣^ε : 𝒱𝒢^ε(D) → ℝ be a discrete
   harmonic function as in the theorem statement."
-* Q2, p. 32, the paragraph proving (3.31) (PDF text; the log in (3.38) is corrected, MQ-li-14 reading 3 (i)): "Now
+* Q2, p. 32, the paragraph proving (3.31) (PDF text; the log in (3.38) is corrected): "Now
   assume that D is simply connected. To prove the boundary estimate (3.31), we observe that if x ∈ 𝒱𝒢^ε(D) and
   r ≥ 2 dist(η(x), ∂D), then since ℂ \ D is connected, in order for a random walk started from x to disconnect
   𝒱𝒢^ε(B_{r/2}(0)) from ∞, it must first hit 𝒱𝒢^ε(∂D). By applying the Markov property of X^ε and (3.35) with
@@ -44,13 +44,13 @@ PDF page = printed page; script letters transcribed as in the record):
 
 The floor enters the proof of (3.31) through the event E^ε (Q1): on E^ε, (3.35) holds only for r ∈ [ε^β, ρ], and
 keeping in (3.38) only the k with e^{−k} ≥ ε^β gives the floored form, with dist(η(x),∂D) replaced by
-max(dist(η(x),∂D), ε^β) (MQ-li-14 reading 1). The printed (3.31) has no floor; the floor `ε ^ β` is the one of the
+max(dist(η(x),∂D), ε^β). The printed (3.31) has no floor; the floor `ε ^ β` is the one of the
 proof. No sentence of the proof states that β is fixed before ρ. The order comes from the notation β = β(γ) (Q3) and
-the γ-only choice of β in Q4 (MQ-li-14 reading 2).
+the γ-only choice of β in Q4.
 uniformity in rho: from the printed dependence beta = beta(gamma) (Lemma 3.11, Q3) and the gamma-only choice
 in its proof (Q4); no sentence of the proof states the order explicitly.
-The Q2 text keeps the printed B_{r/2}(0), where the centre η(x) is meant (MQ-li-14 reading 3 (iii)).
-PENDING TRUTH CHECK (docs/campaign/FROZEN-PROVENANCE.md): the uniform form is TRUE per MQ-li-7 (a) and MQ-li-9 only
+The Q2 text keeps the printed B_{r/2}(0), where the centre η(x) is meant.
+PENDING TRUTH CHECK (docs/campaign/FROZEN-PROVENANCE.md): the uniform form is TRUE only
 if `β(γ)` is uniform in `ρ`, which the extraction supports by notation alone.
 -/
 
@@ -119,7 +119,7 @@ def FP36GoodEnvFloored {Ω : Type} [MeasurableSpace Ω]
     interiorCellVertices ε η (ball z r) ∧
   FP36OneSidedBEFlooredAt m ε η ρ₁ ν A β
 
-/-- **Floored deterministic core (MQ-li-9 steps 2-3).** The floored analogue of `lensProb_le_of_BE_fp36`
+/-- **Floored deterministic core.** The floored analogue of `lensProb_le_of_BE_fp36`
 (S3i/LensBE.lean:24). With `b ≤ β` and `ε ≤ 1`, the floor satisfies `ε ^ β ≤ ε ^ b`, so the denominator
 `max (d, ε ^ β)` is at most `6 ε ^ b` whenever `d ≤ 6 ε ^ b`, and the exponent algebra of `boundary_power_le_fp36`
 applies with `d' := max d (ε ^ β)`. -/

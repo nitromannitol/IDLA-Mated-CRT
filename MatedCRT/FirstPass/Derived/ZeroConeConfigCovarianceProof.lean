@@ -3,9 +3,9 @@ import MatedCRT.FirstPass.Derived.ZeroConeTailOfLemmaA1
 /-!
 # The shifted zero-cone configuration as a covariant Borel function of field, curve and phase
 
-Gwynne–Miller–Sheffield (arXiv:1705.11161, proof of Proposition 3.1, `notes/refs/1705.11161.txt` lines 1127-1137)
+Gwynne–Miller–Sheffield (arXiv:1705.11161, proof of Proposition 3.1)
 assert that the configuration `H` of (3.1) is a measurable function of `(h, η̂, θ)` satisfying the coordinate-change
-identity (3.2). The written answer on this proof (`notes/fp-gaps/CODEX-MQ-sbl-15.md`, lines 7-15) builds such a Borel
+identity (3.2). The written argument builds such a Borel
 version in two steps:
 
 * (lines 9 and 11) the quantum-time curve is a Borel function `Q` of the field and the Lebesgue-parametrized curve,
@@ -102,7 +102,7 @@ variable {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
   {ηL η η₀ : Ω → C(ℝ, ℂ)} {bm : Ω → Path2}
 
 /-- **The quantum-time curve as a Borel function of the field and the curve, with the LQG coordinate change**
-(written answer `notes/fp-gaps/CODEX-MQ-sbl-15.md`, line 9: "For every such similarity the new quantum-time curve is
+(the written argument: "For every such similarity the new quantum-time curve is
 `η^T(t) = T⁻¹η(τ_z + t)`"; line 11: "Use the field-to-area map with simultaneous coordinate covariance and the signed
 mass of `e([0, t])` (of `e([t, 0])` for negative `t`) to change clocks ... The compact images, mass evaluations and
 inverse clock are Borel"; sources cited there: Sheffield–Wang, arXiv:1605.06171, Theorem 1.1; Miller–Sheffield,
@@ -122,7 +122,7 @@ def ZeroConeQuantumCurveCovariance (_D : IsMatingOfTreesCoupling γ P X X₀ hIG
         curveSimilarityPullback C z (curveTimeTranslate τ (qc (h, e)))
 
 /-- **The weighted cells of a curve as a Borel code covariant under positive similarities and integer time shifts**
-(written answer `notes/fp-gaps/CODEX-MQ-sbl-15.md`, line 13: the conductances of the cells of the curve on integer
+(the written argument: the conductances of the cells of the curve on integer
 intervals "are determined by the ordered planar curve" (GMS (1.2), Figure 7 and the proof of Proposition 2.2;
 Duplantier–Miller–Sheffield, arXiv:1409.7055, §8.2), "In particular the contour pair at the clock of the zero cone in
 the formal realization computes these very weights"; line 15: "Use the usual standard Borel codes of continuous paths
@@ -145,7 +145,7 @@ def ZeroConeCellWeightCode (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' 
       ∀ᵐ p ∂P.prod zeroConePhase, F p = K (curveTimeTranslate p.2 (η₀ p.1))
 
 /-- **The configuration (3.1) as a measurable function of `(h, η̂, θ)` with the coordinate-change identity (3.2)**
-(arXiv:1705.11161, lines 1127-1137; written answer `notes/fp-gaps/CODEX-MQ-sbl-15.md`, lines 7-15), from the Borel
+(arXiv:1705.11161; the written argument), from the Borel
 quantum-time curve with its LQG coordinate change and the covariant Borel code of the weighted cells. The code is
 `Cfg((h, e), θ) = K(qc(h, e)(· + θ))` and the phase shift for `ψ(w) = C w + z` is `s = −τ`. -/
 theorem zeroConeConfigCovariance (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm)

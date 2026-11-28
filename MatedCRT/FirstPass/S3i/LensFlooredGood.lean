@@ -2,7 +2,7 @@ import MatedCRT.FirstPass.S3i.GoodEvent
 import MatedCRT.FirstPass.S3i.LensFloored
 
 /-!
-# The floored common good event (MQ-li-9 steps 1 and 3)
+# The floored common good event
 
 The good event of Lemma 3 (plan section 3) under the floored boundary estimate. The one-sided boundary clause
 is the floored one `FP36OneSidedBEFlooredAt` at the floor exponent `β`, and the cell exponent `b` is only required to
@@ -33,7 +33,7 @@ theorem flooredBEFixedBeta_of_uniform {𝒮 : SpaceFillingSLEModel}
   obtain ⟨β, hβ0, hβ1, hbody⟩ := hU γ hγ0 hγ2
   exact ⟨β, hβ0, hβ1, hbody⟩
 
-/-- **Lemma 3 core, floored (MQ-li-9).** At fixed `γ`, `β`, `b`, `ρ`, `ρ₀`, `ρ₁`: the good event is the intersection of
+/-- **Lemma 3 core, floored.** At fixed `γ`, `β`, `b`, `ρ`, `ρ₀`, `ρ₁`: the good event is the intersection of
 the cell-size event (`CellSizeEstimateStmt` at `ζ = b`, radius `ρ₁`), the floored one-sided boundary event at radius
 `ρ₁`, the area-parametrization event and the regular-map event. -/
 theorem fp36_good_core_floored {𝒮 : SpaceFillingSLEModel} (h28 : CellSizeEstimateStmt 𝒮)

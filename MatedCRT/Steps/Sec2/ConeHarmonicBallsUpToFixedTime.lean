@@ -104,8 +104,7 @@ def ConeHarmonicBallLocalityStep : Prop :=
 /-- **Step (strict growth of the harmonic balls of the cone).** A.s., every family of harmonic balls for `μ_h` with the
 properties of Theorem 2.3 on an interval `(0, T)` grows strictly: `cl Λ_s ⊆ Λ_t` for `0 < s < t < T`. Not stated in the
 paper; it is what makes the time `T = sup {t : Λ_t ⊆ B_{1/2}}` of Lemmas 2.4 and 2.5 unique among families which stop
-at `∂B_{1/2}` (`IsStoppedAtHalfBall`): without it the radius of `Λ_t` could stay at `1/2` on an interval of times
-(worker A's remark, reports 2026-11-04). Expected from HB22 (obstacle problem for a measure of full support). -/
+at `∂B_{1/2}` (`IsStoppedAtHalfBall`): without it the radius of `Λ_t` could stay at `1/2` on an interval of times. Expected from HB22 (obstacle problem for a measure of full support). -/
 def ConeHarmonicBallStrictGrowthStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
     (hcirc : Ω → ℝ → ℂ → ℝ) (μ : Ω → Measure ℂ), IsConeField γ P hC hcirc μ →

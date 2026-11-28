@@ -4,8 +4,6 @@ import MatedCRT.FirstPass.Frozen.S4S5b
 /-!
 # Locality of the γ-LQG measure: the Harmonic-Balls input to `FPLQGMeasureLocality`
 
-Task `p2-lp-lqg-measure-locality-bridge` (worker q4).
-
 Target: `MatedCRT.FPLQGMeasureLocality` (`MatedCRT/FirstPass/Frozen/S4S5b.lean:38`), which is
 `LQGMeasureLocalityFunctionalStep` (`MatedCRT/Proofs/Sec4/Prop42Closure/LQGMeasureFunctional.lean:46`). That Prop asks
 for ONE measurable `Λ` on the restricted field `(TestB1 → ℝ) × (CircleB1 → ℝ)` such that `μ(U) = Λ(h|_{B₁})` a.s. for

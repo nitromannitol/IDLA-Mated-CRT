@@ -23,8 +23,7 @@ edge of the map of Definition 1.1 have intersecting cells `η([a - ε, a])`, `η
 (a direct `L`- or `R`-identification of times `s < t` gives `η(s) = η(t)`), the bundle field `merge`, together with
 the path properties of the correlated Brownian motion `bm` (bundle field `boundaryLawBM`); equivalently, a consequence
 of the a.s. equality of Definitions 1.1 and 1.2 (DMS14 Theorem 1.9, line 207). Leo proves it from his bundle
-(MatedCRTHarmonic MoTInput/CellAdjacency, "adjacent cells intersect"); the port to Lattice-Probability is pending
-(lp435 fleet), after which this step is proved, not assumed. Used for: local finiteness of `𝒢^ε`,
+(MatedCRTHarmonic MoTInput/CellAdjacency, "adjacent cells intersect"); the port to Lattice-Probability is pending, after which this step is proved, not assumed. Used for: local finiteness of `𝒢^ε`,
 `cl(V^ε(B_ρ) \ V^ε(∂B_ρ)) ⊆ V^ε(cl B_ρ)` (Section 4), the crossing lemma for cells (Section 6). The local
 high-probability form `AdjacentCellsMeetStep` of Lemma 6.10 (MatedCRT/Steps/Sec6/IterativeBound.lean) follows from it. -/
 def AdjacentCellsMeetAeStep (𝒮 : SpaceFillingSLEModel) : Prop :=

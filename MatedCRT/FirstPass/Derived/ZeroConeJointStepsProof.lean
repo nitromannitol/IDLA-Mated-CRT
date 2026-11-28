@@ -8,17 +8,15 @@ import LatticeProb.Bonanno.MatedCRTHarmonic.GMS4b.JointMeasurable
 /-!
 # Lemma A.1 for the zero-cone field jointly with the space-filling SLE
 
-Gwynne–Miller–Sheffield (arXiv:1705.11161, proof of Proposition 3.1, `notes/refs/1705.11161.txt` lines 1186-1187)
+Gwynne–Miller–Sheffield (arXiv:1705.11161, proof of Proposition 3.1)
 use that a functional `V(h, η̂)` invariant under the simultaneous coordinate change of the zero-cone field and the
-curve is almost surely constant. The written answer `notes/fp-gaps/CODEX-MQ-sbl-25.md`, "(c) Joint invariance"
-(lines 33-45), proves this from
+curve is almost surely constant. The written argument proves this from
 
-* the mixing of the curve at distant centres (lines 35-39), which comes from the mixing of the imaginary-geometry
-  field under the normalized similarities (lines 15-27) through the affine covariance of the curve map;
-* Lemma A.4 of arXiv:1705.11161 (lines 42; `notes/refs/1705.11161.txt` lines 2026-2041): random similarities
+* the mixing of the curve at distant centres, which comes from the mixing of the imaginary-geometry
+  field under the normalized similarities through the affine covariance of the curve map;
+* Lemma A.4 of arXiv:1705.11161: random similarities
   `T_m(w) = z_m + C_m w` with `h ∘ T_m + Q log C_m` equal in law to `h` and `|z_m| → ∞` in probability;
-* an approximation of `V` by tensors, which shows that `V(h, e)` is almost surely `v(h) = ∫ V(h, e) ν(de)`
-  (line 44), and Lemma A.1 for the field alone, applied to `v`.
+* an approximation of `V` by tensors, which shows that `V(h, e)` is almost surely `v(h) = ∫ V(h, e) ν(de)`, and Lemma A.1 for the field alone, applied to `v`.
 
 This file proves the measure-theoretic core of that argument for a general random simultaneous action
 (`ae_eq_integral_of_jointInvariance`), and from it `ZeroConeJointLemmaA1` (`zeroConeJointLemmaA1`) under Lemma A.1
@@ -431,7 +429,7 @@ theorem tendsto_integral_randomJointAction_of_bounded {μ : Measure α} {ν : Me
   linarith
 
 /-- **A jointly invariant bounded functional factors through the first coordinate** (the tensor-approximation step
-of the written answer `notes/fp-gaps/CODEX-MQ-sbl-25.md`, "(c) Joint invariance", line 44). Let `μ`, `ν` be
+of the written argument). Let `μ`, `ν` be
 probability laws, `σ_t`, `ρ_t` jointly measurable actions, and `τ_m` random parameters (in `T₀`) built from `a` and
 independent auxiliary randomness of law `κ`, such that `σ_{τ_m}` preserves `μ`, every `ρ_t` (`t ∈ T₀`) preserves
 `ν`, and the second factor mixes along `τ_m`: `∫ |ν(B' ∩ ρ_{τ_m}⁻¹ B) − ν(B') ν(B)| → 0`. Then a bounded measurable
@@ -689,8 +687,7 @@ theorem measurable_igSimilarityStep (γ : ℝ) (z : ℂ) (s : ℝ) : Measurable 
   · simp only [igSimilarityStep, hx, ↓reduceIte]
     exact measurable_const
 
-/-- **Mixing of the whole-plane GFF modulo `2πχ` under similarities with distant centres** (written answer
-`notes/fp-gaps/CODEX-MQ-sbl-25.md`, "(a) The normalized dilation", lines 15-27: tests by the characters
+/-- **Mixing of the whole-plane GFF modulo `2πχ` under similarities with distant centres** (the written argument: tests by the characters
 `exp(i X(f) + 2πi k U / d)`, the covariance of the whole-plane GFF, Duplantier–Sheffield, arXiv:0808.1560, §3.1, and
 the variance `Var X_r(z) ≥ log |z|` for `|z| > 1` and every `r > 0`; "They also give convergence of correlations to
 the product for any sequence `|z| → ∞` with arbitrary positive scales"). PENDING TRUTH CHECK.
@@ -711,11 +708,11 @@ def IGFieldDistantCentreMixing (γ : ℝ) (_hγ : γ ∈ Ioo (0 : ℝ) 2) : Prop
           (P'.map fun ω => igPosCircleProcess (h ω) (u ω)) S₂))
 
 /-- **Lemma A.4 of Gwynne–Miller–Sheffield at uniform points of dyadic squares of growing mass**
-(arXiv:1705.11161, Lemma A.4, `notes/refs/1705.11161.txt` lines 2037-2041: for `m > 0` and `z_m` sampled uniformly
+(arXiv:1705.11161, Lemma A.4: for `m > 0` and `z_m` sampled uniformly
 from the largest square of an independent uniform dyadic system containing `0` with `μ_h`-mass at most `m`, there is
 a random constant `C_m > 0` with `h(C_m · + z_m) + Q log C_m` equal in law to `h`; the divergence `|z_m| → ∞` in
-probability is the written answer `notes/fp-gaps/CODEX-MQ-sbl-25.md`, line 41: "Its area tends to infinity since every
-fixed ancestor has finite mass"). PENDING TRUTH CHECK.
+probability because its area tends to infinity, every fixed ancestor having finite mass). Proved from the
+uniform-root form in `zeroConeLemmaA4` (`ZeroConeLemmaA4Proof.lean`).
 
 Let `h = coneField X₀' (coneRadial γ 0 b b')` be the circle-average embedding of the `0`-quantum cone built from a
 whole-plane GFF `X₀'` and two independent standard Brownian motions independent of it (`zeroConeFieldOf`), with law
@@ -786,10 +783,7 @@ theorem exists_igMap_igSimilarityStep
     push_cast
     ring
 
-/-- **Mixing of whole-plane space-filling SLE at distant centres** (written answer
-`notes/fp-gaps/CODEX-MQ-sbl-25.md`, "(c) Joint invariance", lines 33-35: "The mixing estimate in (a) passes to the
-curve: the coupling's positive-radius map reads the IG field modulo `d`, and its affine covariance gives `e^T` from
-the transformed representative"). For all centres `z_n` with `|z_n| → ∞`, all scales `s_n > 0` and measurable sets
+/-- **Mixing of whole-plane space-filling SLE at distant centres**. For all centres `z_n` with `|z_n| → ∞`, all scales `s_n > 0` and measurable sets
 `B₁`, `B₂` of curves, `P(ηL ∈ B₁, affineReroot z_n s_n 0 ηL ∈ B₂) → P(ηL ∈ B₁) P(ηL ∈ B₂)`. -/
 theorem tendsto_igCurve_affineReroot_correlation
     (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm) (hγ : γ ∈ Ioo (0 : ℝ) 2)
@@ -920,7 +914,7 @@ theorem tendsto_integral_of_uniform_of_tendsto_measure_norm_le {E' : Type*} [Mea
   linarith
 
 /-- **Lemma A.1 of Gwynne–Miller–Sheffield for the zero-cone field jointly with the space-filling SLE** (written
-answer `notes/fp-gaps/CODEX-MQ-sbl-25.md`, "(c) Joint invariance", lines 33-45). Let `V = G'` be bounded, measurable
+the written argument). Let `V = G'` be bounded, measurable
 and jointly invariant. With the random similarities `T_m(w) = z_m + C_m w` of Lemma A.4 (`ZeroConeLemmaA4`), which
 preserve the law of the zero-cone field and have `|z_m| → ∞` in probability, the scale and translation invariance of
 the law of the curve (`SpaceFillingSLESimilarityLaw`) and the mixing of the curve at distant centres (which comes

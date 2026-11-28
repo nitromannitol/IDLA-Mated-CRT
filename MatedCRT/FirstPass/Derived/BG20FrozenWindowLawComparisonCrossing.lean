@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.Derived.WindowChartBGJointConvergence
 A family of path laws that defines a time-changed Brownian motion (Definition 7.2 of Berestycki–Gwynne (2020)) runs a
 planar Brownian path `B` with a continuous strictly increasing clock `τ` with `τ 0 = 0`. Such a clock preserves the
 order of any two exit times, so the paths leave the closure of a Jordan domain as soon as they leave the domain. This
-is the crossing used in the proof of Berestycki–Gwynne (2020), Lemma 7.21 (written answer MQ-sbl-35, line 34: in a
+is the crossing used in the proof of Berestycki–Gwynne (2020), Lemma 7.21 (in a
 bounded Jordan domain the limiting path visits the open exterior arbitrarily soon after its exit).
 
 * `MatedCRT.FrozenPath.pathExitTime_comp_le`: a continuous strictly increasing time change preserves `≤` between

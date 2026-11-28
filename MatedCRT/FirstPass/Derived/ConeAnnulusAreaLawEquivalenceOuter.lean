@@ -26,7 +26,7 @@ read on `[0, S]`.
   to the drift `v₁` (`ConeAnnulusAreaLawEquivalenceOuterCM.lean`), and the remaining probability that the
   last zero is not below `N - S` tends to `0` as `N → ∞`.
 
-The written argument (the answer to MQ-sbl-18) compares the post-last-zero process with a
+The written argument compares the post-last-zero process with a
 three-dimensional Bessel process; this formalization instead uses the Markov property at a fixed time
 and Cameron–Martin.
 

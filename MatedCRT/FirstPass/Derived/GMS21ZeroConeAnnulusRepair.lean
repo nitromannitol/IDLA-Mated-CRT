@@ -3,9 +3,9 @@ import MatedCRT.FirstPass.Derived.GMS21ZeroConeAnnulus
 /-!
 # The annulus form of Lemma 3.5 of Gwynne–Miller–Sheffield from the scaling of the weighted cell data
 
-Gwynne–Miller–Sheffield (arXiv:1705.11161, Lemma 3.5, lines 1319-1343) compare the mesh-`1/n` cells of the
+Gwynne–Miller–Sheffield (arXiv:1705.11161, Lemma 3.5) compare the mesh-`1/n` cells of the
 `0`-quantum cone with the unit-mesh cells of the rescaled pair `(h^b, η^b)`, `b = 1/n`, dilated by `R_b`. The written
-answer on this step (`notes/fp-gaps/CODEX-MQ-sbl-22.md`, lines 41-54) states the scaling law in the form used by the
+argument on this step states the scaling law in the form used by the
 proof: the rescaled curve `η^b(t) = R_b⁻¹ η₀(b t)` together with the integer edge counts of the original `b`-mesh
 intervals (the *weighted* unit-mesh data at the phase `θ`) has the law of the unit-mesh weighted data of `η₀`
 (line 53: "the rescaled *weighted* unit-mesh data have the original law and their dilation is the original `b`-mesh
@@ -71,8 +71,7 @@ theorem measurable_phaseShiftedData {Ω : Type*} [MeasurableSpace Ω] {η : Ω �
     Measurable (phaseShiftedData η G ε) :=
   measurable_phaseShiftedPair hη hG ε hε
 
-/-- **Scaling of the uniform error with retained edge counts** (arXiv:1705.11161, lines 1336-1342; answer
-`notes/fp-gaps/CODEX-MQ-sbl-22.md`, line 53: "the rescaled unit cells are exactly `R_b⁻¹ η₀(b[j − 1 + θ, j + θ])`").
+/-- **Scaling of the uniform error with retained edge counts** (arXiv:1705.11161; the written argument: "the rescaled unit cells are exactly `R_b⁻¹ η₀(b[j − 1 + θ, j + θ])`").
 If `η₀(t/n) = R e(t)`, the uniform error at mesh `1/n` of the curve `η₀` read on the lattice `n⁻¹ ℤ + n⁻¹ θ` with
 edge counts `m` is the uniform error at spatial scale `R` of the unit-mesh datum `(e(· + θ), m)`. -/
 theorem meshUniformError_phaseShifted_eq_weightedUnitScaleError (A : Set ℂ) {n : ℕ} (hn : 0 < n) (θ : ℝ)
@@ -108,8 +107,8 @@ variable {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
   {X X₀ hIG₀ : Ω → Field} {B B' B₀ B₀' : ℝ≥0 → Ω → ℝ} {U : Ω → ℝ}
   {ηL η η₀ : Ω → C(ℝ, ℂ)} {bm : Ω → Path2}
 
-/-- **Scaling of the weighted cell data of the zero-cone curve** (arXiv:1705.11161, Lemma 3.5, lines 1331-1343;
-written answer `notes/fp-gaps/CODEX-MQ-sbl-22.md`, line 43: "Its radius `R_b` is the largest positive solution of
+/-- **Scaling of the weighted cell data of the zero-cone curve** (arXiv:1705.11161, Lemma 3.5;
+the written argument: "Its radius `R_b` is the largest positive solution of
 `h_{0,r}(0) + Q log r = γ⁻¹ log b` ... These hitting times are Borel, finite and tend to infinity as `b ↓ 0` ...
 `η^b(t) = R_b⁻¹ η₀(b t)`. All these path variables admit raw measurable versions; countably many `b = 1/n` share one
 event"; line 53: "Retain the scaled curve and the integer edge counts for its intervals. For the phase `θ` the
@@ -133,8 +132,7 @@ def ZeroConeWeightedMeshScaling (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ 
             phaseShiftedEdgeCount (1 / (n : ℝ)) p.2 (G p.1))) =
           (P.prod zeroConePhase).map (phaseShiftedData η₀ G 1)
 
-/-- **Measurability of the uniform errors for the completions of the laws of the weighted data** (written answer
-`notes/fp-gaps/CODEX-MQ-sbl-22.md`, lines 57-59: "In the unit case the strict superlevel event of the scale supremum
+/-- **Measurability of the uniform errors for the completions of the laws of the weighted data** (the written argument: "In the unit case the strict superlevel event of the scale supremum
 is the projection of the Borel event that there exist `0 < s ≤ ε₀`, `z ∈ A`, `j ∈ ℤ` attaining an error strictly
 above the threshold with `z ∈ s K_j`. In the mesh case omit `s` and use the fixed `1/n` cells. The parameter and data
 spaces are standard Borel, so these projections are analytic, hence measurable in the completion of each indicated

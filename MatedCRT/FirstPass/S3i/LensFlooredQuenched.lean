@@ -59,7 +59,7 @@ theorem quenchedStart_null_of_exit_fp36_floored
         (vExitTime_toNat_not_mem_fp36 hT) (hball h))
 
 /-- **Plan Lemma 7, clauses 1-2, floored good environment** (copy of `quenchedBoundsOnGood_fp36_of_exit`,
-S3i/QuenchedBoundsCorrected.lean:117). The floored lens bound needs `ε ≤ 1` and `b ≤ β` (MQ-li-9 step 2). -/
+S3i/QuenchedBoundsCorrected.lean:117). The floored lens bound needs `ε ≤ 1` and `b ≤ β`. -/
 theorem quenchedBoundsOnGood_fp36_of_exit_floored
     {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
     {ρ₀ ρ₁ b ν A β r ε : ℝ} {z y : ℂ} {ω : Ω}

@@ -13,7 +13,7 @@ surely, for every `R > 0` there are `β, t₀ > 0` with `μ_{ε_n}(B(x, t)) ≤ 
 `t ∈ (0, t₀)`, where `μ_ε = ε^{γ²/2} e^{γ h_ε(z)} dz` are the circle-average approximations of the γ-LQG measure of
 the γ-quantum cone field `h`.
 
-The proof follows the transfer on an arbitrary disc of the written answer (IDLA, Definition 2.1 and (2.3)–(2.4);
+The proof follows the transfer on an arbitrary disc of the IDLA paper (Definition 2.1 and (2.3)–(2.4);
 Duplantier–Miller–Sheffield, Lemma 4.9 and Definition 4.10): the cone is coupled with an independent standard Brownian
 motion `w` (`isWholePlaneGFF_coneGFF`) so that the coupled field `h^ℂ` is a whole-plane GFF under `P ⊗ BM` and
 `h = h^ℂ - γ log |·| + D` with a continuous correction `D = coneCouplingRemainder` vanishing on the unit disc

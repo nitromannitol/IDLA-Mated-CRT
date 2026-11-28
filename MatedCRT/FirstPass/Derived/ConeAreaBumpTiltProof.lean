@@ -18,7 +18,7 @@ import LatticeProb.Bonanno.MatedCRTHarmonic.ConeScaling.RadialPath
 `β`-quantum cone (`β ∈ {0, γ}`), built from a whole-plane GFF `X` and two Brownian motions `B, B'`, its
 `γ`-LQG area measure `μ_h`, a random curve `e` independent of `(X, B, B')`, and a smooth `f` with compact support
 in `B_1(0) \ {0}`, the law of `(e, μ_h)` is absolutely continuous with respect to the law of `(e, e^{γ f} μ_h)`.
-This file proves it (`coneAreaBumpTilt`), following the written proof `notes/fp-gaps/CODEX-MQ-sbl-33.md`.
+This file proves it (`coneAreaBumpTilt`), following the written argument.
 
 * **The Gaussian shifts.** Write `f = f_lat + f̄`, `f̄` the rotation average of `f` (`symmTest`) and
   `g(t) = f̄(e^{-t})`. The cone field depends on `X` only through its lateral part `L` (whose pairings are

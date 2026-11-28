@@ -7,7 +7,7 @@ import MatedCRT.FirstPass.S3c.CommonEquicontinuity
 with the admissibility of the data moved inside the implication on the common event `Ω₀`: the hypotheses are imposed
 at the sample `ω` (`PointwiseTightnessData`), not on the whole carrier. The proof is the same; the data enter only
 through the sample `ω`. Fidelity: the corrected Lemma 3.1 (lemma:discrete-potential-tightness, paper line 979) asserts
-the conclusion "almost surely ... suppose that ..." (notes/fp-gaps/CHATGPT-idla-3-1-audit.md, §1.3).
+the conclusion "almost surely ... suppose that ...".
 -/
 
 open MatedCRT.Tightness

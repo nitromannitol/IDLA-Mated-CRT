@@ -52,7 +52,7 @@ theorem image_frontier_windowComponent (e : ℂ ≃ₜ ℂ) {f g : ℝ → ℂ} 
   rfl
 
 /-- **The windows of a valid environment have Jordan frontiers** (`WindowFrontierJordanInput 𝒮`, for every model
-`𝒮`), from `WindowFrontierJordanGenuineCurve` (written answer MQ-idla-jordan, part B1). In a valid environment the
+`𝒮`), from `WindowFrontierJordanGenuineCurve`. In a valid environment the
 curve is almost surely a Peanosphere curve `ξ` of the boundary-length pair `S.bm ω`, whose law is the correlated
 Brownian law (coupling field `boundaryLawBM`). For almost every pair the curve `g` of the hypothesis, together with
 the conditions on the pair alone carried by `ξ`, is a Peanosphere curve of the same pair; a homeomorphism `e` of the

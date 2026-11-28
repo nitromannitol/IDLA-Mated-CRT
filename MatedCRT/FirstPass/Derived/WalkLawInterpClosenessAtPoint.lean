@@ -19,7 +19,7 @@ attribute [local instance] LatticeProb.dUnifMetricSpace
 
 variable {Ω : Type} [MeasurableSpace Ω]
 
-/-- **The walk law against the interpolated law at a point of the cell** (MATH-ANSWERS step 3 at a point
+/-- **The walk law against the interpolated law at a point of the cell** (at a point
 `z ∈ H^ε_x`): on the event where the interpolation is defined, if `z ∈ H^ε_x`, `|z| ≤ R`, the cells meeting
 `B_{R+1}` have diameter at most `d`, `ε + 2 d ≤ δ`, `ε + d < 1` and `ω^ε_R(δ) ≤ a`, then
 `LP(Q^ε(x), P̃^ε_z) ≤ a`. -/

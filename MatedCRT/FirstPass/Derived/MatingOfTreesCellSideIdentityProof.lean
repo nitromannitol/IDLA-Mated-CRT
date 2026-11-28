@@ -9,8 +9,7 @@ import LatticeProb.LQG.PeanosphereContactContinuity
 This file proves `MatingOfTreesCellSideIdentity` (`WindowChartBGDiscreteLawIntrinsic.lean`): in a valid environment,
 for every cell size `ε > 0`, almost surely the edge multiplicities `S.mult ε` of Definition 1.1 (read off the
 boundary-length pair `(L, R)`) are the frontier-side multiplicities `cellSideMult ε (S.η ω)` of the cells (read off
-the curve, `CellSideMult.lean`). The argument is the written answer MQ-sbl-31, section "Why the count is the Brownian
-count" (lines 26-40).
+the curve, `CellSideMult.lean`). The argument is that the count is the Brownian count.
 
 Validity supplies, on the same probability space, the boundary-length pair `S.bm` with the law of a correlated
 two-sided Brownian motion and the curve `S.η` forming a Peanosphere (`ValidPeanosphere.lean`): the times identified
@@ -19,7 +18,7 @@ Lemmas 8.8 and 8.14, the coupling fields `merge` and `onlyMerge`), and the fibre
 the coupling field `visitBound`). For a coordinate `X = L` or `R`, write a *weak level pair* `v ≤ w` when
 `X v = X w ≤ X` on `[v, w]`.
 
-* **Contacts are weak level pairs** (`isWeakLevelPair_of_cellSideContact`, MQ-sbl-31 lines 28-32): if `D_η(v, w)`,
+* **Contacts are weak level pairs** (`isWeakLevelPair_of_cellSideContact`): if `D_η(v, w)`,
   every common continuum of `η(P) ∩ η(Q)` contains a point visited at most twice (named hypothesis
   `SpaceFillingSLETriplePointsNoContinuum`), so its two visits are directly identified by `L` or `R`; shrinking `P`,
   `Q` and using that the weak level pairs form a closed set gives `v ∼_L w` or `v ∼_R w`.
@@ -70,7 +69,7 @@ of points visited at least three times (`curveTriplePoints`) contains no continu
 invariant under increasing reparametrization of the curve. Sources: for `κ ≥ 8` the set is countable
 (Duplantier–Miller–Sheffield, arXiv:1409.7055, (8.9) and Lemmas 8.12-8.13); for `4 < κ < 8` Gwynne–Holden–Miller,
 arXiv:1512.01223, Corollary 6.5 (p. 40), `dim_H ≤ 3(8 - κ)/8`, applied on the countably many simple frontier subarcs
-of dimension `1 + 2/κ` (written answer MQ-sbl-29, line 23; MQ-sbl-31, line 30). -/
+of dimension `1 + 2/κ`. -/
 def SpaceFillingSLETriplePointsNoContinuum (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ (Ω : Type) (mΩ : MeasurableSpace Ω) (P : @Measure Ω mΩ) (𝓕 : MeasurableSpace Ω) (κ : ℝ)
     (η : Ω → ℝ → ℂ), 4 < κ → @SpaceFillingSLEModel.IsSLE 𝒮 Ω mΩ P 𝓕 κ η →
@@ -84,7 +83,7 @@ correlation `-cos(πγ²/4)`), almost surely no time `u` is a local minimum of b
 with `W` a standard planar Brownian motion, a common local minimum is a two-sided cone time of `W` for the cone
 `A⁻¹[0, ∞)²`, of angle `πγ²/4 < π`. Source: Le Gall, *Some properties of planar Brownian motion* (École d'été de
 Probabilités de Saint-Flour XX, 1990), Chapter III, Theorem 3(i), p. 136 (no two-sided cone points of angle less than
-`π`), localized at rational times; written answer MQ-sbl-31, line 38. -/
+`π`), localized at rational times. -/
 def CorrelatedBMNoCommonLocalMin : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ μ : Measure Path2, IsCorrelatedBM2 γ μ →
     ∀ᵐ p ∂μ, ∀ u : ℝ, ¬ (IsLocalMin (fun t => lrCoord 0 t p) u ∧ IsLocalMin (fun t => lrCoord 1 t p) u)
@@ -177,7 +176,7 @@ theorem LevelContactData.containsNondegenerateContinuum {η : ℝ → ℂ} {X : 
     obtain ⟨x, hx, y, hy, hxy⟩ := hnt
     exact (dist_pos.2 hxy).trans_le (dist_le_diam_of_mem hKc.isBounded hx hy)
 
-/-- **Contact across an excursion above a level** (written answer MQ-sbl-31, lines 36-37): if `X v = X w = g` and
+/-- **Contact across an excursion above a level**: if `X v = X w = g` and
 `X > g` on `(v, w)`, then `D_η(v, w)`. The levels just above `g` are visited last near `v` and first near `w`. -/
 theorem LevelContactData.cellSideContact_of_excursion {η : ℝ → ℂ} {X : ℝ → ℝ} {σ τ : ℝ → ℝ → ℝ}
     (C : LevelContactData η X σ τ) (hfin : ∀ z, (η ⁻¹' {z}).Finite) {a d v w g : ℝ} (hvw : v < w)
@@ -200,7 +199,7 @@ theorem LevelContactData.cellSideContact_of_excursion {η : ℝ → ℂ} {X : �
     (fun x hx => ⟨by linarith [hvp.1, hx.1], by linarith [hx.2]⟩)
     (fun x hx => ⟨by linarith [hx.1], by linarith [hx.2, hwq.2]⟩)
 
-/-- **Contact across a level from below** (written answer MQ-sbl-31, line 37): if `X ≥ g` on `[v, w]` and `X` dips
+/-- **Contact across a level from below**: if `X ≥ g` on `[v, w]` and `X` dips
 below `g` immediately before `v` and immediately after `w`, then `D_η(v, w)`. The levels just below `g` are visited
 last before `v` and first after `w`. -/
 theorem LevelContactData.cellSideContact_of_dips {η : ℝ → ℂ} {X : ℝ → ℝ} {σ τ : ℝ → ℝ → ℝ}
@@ -319,7 +318,7 @@ theorem eq_or_rel_of_eqvGen_of_fiber {α β : Type*} {R : α → α → Prop} {f
       · rw [h] at ih₁
         exact ih₁ ha
 
-/-- **Contacts are weak level pairs** (written answer MQ-sbl-31, lines 28-32). For a Peanosphere whose points
+/-- **Contacts are weak level pairs**. For a Peanosphere whose points
 visited at least three times contain no continuum of positive diameter, if `D_η(v, w)` for times `v < w` of `(a, d)`
 then `v, w` is a weak level pair of `L` or of `R`: otherwise a neighbourhood of `(v, w)` contains no weak level pair,
 a common continuum of the images of two small time intervals about `v` and `w` contains a point visited exactly
@@ -392,8 +391,7 @@ theorem isWeakLevelPair_of_cellSideContact {ω : Path2} {η : ℝ → ℂ} (P : 
 def IsCenteredMin (X : ℝ → ℝ) (s u t : ℝ) : Prop :=
   X s = X u ∧ X t = X u ∧ ∀ r ∈ Icc s t, X u ≤ X r
 
-/-- **Two weak level pairs of the same coordinate among `s, u, t` make `u` a centred minimum** (written answer
-MQ-sbl-31, line 34: transitivity puts all three times in the same tree). -/
+/-- **Two weak level pairs of the same coordinate among `s, u, t` make `u` a centred minimum** (the written argument: transitivity puts all three times in the same tree). -/
 theorem isCenteredMin_of_two {X : ℝ → ℝ} {s u t : ℝ}
     (h : (IsWeakLevelPair X s u ∧ IsWeakLevelPair X u t) ∨ (IsWeakLevelPair X s u ∧ IsWeakLevelPair X s t) ∨
       (IsWeakLevelPair X u t ∧ IsWeakLevelPair X s t)) : IsCenteredMin X s u t := by
@@ -410,7 +408,7 @@ theorem isCenteredMin_of_two {X : ℝ → ℝ} {s u t : ℝ}
     have := h2' r hr
     linarith
 
-/-- **A branch time is a centred minimum of `L` or of `R`** (written answer MQ-sbl-31, lines 28-34). -/
+/-- **A branch time is a centred minimum of `L` or of `R`**. -/
 theorem isCenteredMin_of_mem_cellSideBranchTimes {ω : Path2} {η : ℝ → ℂ} (P : Peanosphere ω η)
     (htriple : ¬ ContainsNondegenerateContinuum (curveTriplePoints η)) {a b c d u : ℝ}
     (hu : u ∈ cellSideBranchTimes a b c d η) :
@@ -434,7 +432,7 @@ theorem isCenteredMin_of_mem_cellSideBranchTimes {ω : Path2} {η : ℝ → ℂ}
       | exact Or.inr (isCenteredMin_of_two (Or.inr (Or.inl ⟨h1, h3⟩)))
       | exact Or.inr (isCenteredMin_of_two (Or.inr (Or.inr ⟨h2, h3⟩)))
 
-/-- The adjacency condition (eq:edge-map, line 175) for the cell intervals `[a, b]`, `[c, d]` and the intervening
+/-- The adjacency condition (eq:edge-map) for the cell intervals `[a, b]`, `[c, d]` and the intervening
 interval `[b, c]`: `(inf_{[a, b]} X) ∨ (inf_{[c, d]} X) ≤ inf_{[b, c]} X`. -/
 def IntervalAdjacent (X : ℝ → ℝ) (a b c d : ℝ) : Prop :=
   max (sInf (X '' Icc a b)) (sInf (X '' Icc c d)) ≤ sInf (X '' Icc b c)
@@ -476,7 +474,7 @@ theorem eq_of_forall_le_of_mem_Ioo {X : ℝ → ℝ}
   exact hlm u v hne (isLocalMin_of_mem_Ioo hu hum) (isLocalMin_of_mem_Ioo hv hvm)
     (le_antisymm (hum v (Ioo_subset_Icc_self hv)) (hvm u (Ioo_subset_Icc_self hu)))
 
-/-- **The adjacency condition is strict** (written answer MQ-sbl-31, line 34): if `X` descends on both sides of
+/-- **The adjacency condition is strict**: if `X` descends on both sides of
 `a, b, c, d` and takes distinct values at distinct local minima, the three minima over `[a, b]`, `[b, c]`, `[c, d]`
 are attained at interior local minima, hence have distinct values. -/
 theorem IntervalAdjacent.strict {X : ℝ → ℝ} {a b c d : ℝ} (h : IntervalAdjacent X a b c d) (hX : Continuous X)
@@ -493,7 +491,7 @@ theorem IntervalAdjacent.strict {X : ℝ → ℝ} {a b c d : ℝ} (h : IntervalA
   exact max_lt (lt_of_le_of_ne ((le_max_left _ _).trans h) h12)
     (lt_of_le_of_ne ((le_max_right _ _).trans h) h32)
 
-/-- **The left witness of a strict window** (written answer MQ-sbl-31, line 36). Let `u ∈ (b, c)` be a local minimum
+/-- **The left witness of a strict window**. Let `u ∈ (b, c)` be a local minimum
 of `X` attaining its minimum `g` over `[b, c]`, let `X` descend immediately after `b`, and let the minimum of `X`
 over `[a, b]` be below `g`. The last time `s` of `[a, b]` at which `X < g` is approached satisfies `s ∈ (a, b)`,
 `X s = g`, `X > g` on `(s, u)`, and `X` dips below `g` immediately before `s`. -/
@@ -572,7 +570,7 @@ theorem exists_left_level_witness {X : ℝ → ℝ} (hX : Continuous X)
     exact lt_irrefl _ hr'.2
   exact ⟨s, ⟨has', hsb'⟩, hXs, hgt, hdip⟩
 
-/-- **The right witness of a strict window** (written answer MQ-sbl-31, line 36), symmetric to
+/-- **The right witness of a strict window**, symmetric to
 `exists_left_level_witness`: the first time `t` of `[c, d]` at which `X < g` is approached satisfies `t ∈ (c, d)`,
 `X t = g`, `X > g` on `(u, t)`, and `X` dips below `g` immediately after `t`. -/
 theorem exists_right_level_witness {X : ℝ → ℝ} (hX : Continuous X)
@@ -650,7 +648,7 @@ theorem exists_right_level_witness {X : ℝ → ℝ} (hX : Continuous X)
     exact lt_irrefl _ hr'.2
   exact ⟨t, ⟨hct', htd'⟩, hXt, hgt, hdip⟩
 
-/-- **A strict window gives a branch time** (written answer MQ-sbl-31, lines 36-38): the minimizer `u` of `X` on
+/-- **A strict window gives a branch time**: the minimizer `u` of `X` on
 `[b, c]` together with the last visit `s` to the minimum in `[a, b]` and the first visit `t` in `[c, d]` is a witness
 of `B_η`: `D_η(s, u)` and `D_η(u, t)` come from the levels just above the minimum, `D_η(s, t)` from the levels just
 below it. -/
@@ -817,7 +815,7 @@ theorem bmEdgeCount_eq_cellSideMult {ω : Path2} {η : ℝ → ℂ} (P : Peanosp
 /-! ### The identity in a valid environment -/
 
 /-- **The multiplicities of the mated-CRT map are the frontier-side multiplicities of the cells**
-(`MatingOfTreesCellSideIdentity`; written answer MQ-sbl-31, lines 26-40). Given the two named literature inputs
+(`MatingOfTreesCellSideIdentity`; the written argument). Given the two named literature inputs
 `CorrelatedBMNoCommonLocalMin` (Le Gall) and `SpaceFillingSLETriplePointsNoContinuum 𝒮` (Gwynne–Holden–Miller,
 Duplantier–Miller–Sheffield), in every valid environment, for every cell size `ε > 0`, almost surely
 `S.mult ε = cellSideMult ε (S.η ω)`. The Peanosphere, the finite fibres and the Brownian law of the boundary-length

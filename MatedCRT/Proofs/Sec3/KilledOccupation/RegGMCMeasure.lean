@@ -3,7 +3,7 @@ import MatedCRT.Proofs.Sec3.KilledOccupation.RegClockFun
 /-!
 # Regularized Gaussian multiplicative chaos measure, measurable in the circle-average family
 
-Step B3 of MQ-li-8 (b) (transfer of thm:occ-main): the regularized Gaussian multiplicative chaos measure
+Step B3 of the transfer of thm:occ-main: the regularized Gaussian multiplicative chaos measure
 `ε^{γ²/2} e^{γ h_ε(x)} dx` on the ball `B_ρ`, where `h_ε` is the circle-average representative
 `circleAverageRep` of step B1 (`RegClockFun.lean`). It is the B1 construction with the clock integrand
 `ε^{γ²/2} exp(γ ψ̃(ε, b_u))` replaced by Lebesgue measure on the ball.
@@ -24,12 +24,12 @@ open scoped ENNReal NNReal
 
 namespace MatedCRT.KilledOccupation
 
-/-- B3 of MQ-li-8 (b): the regularized GMC density `x ↦ ε^{γ²/2} e^{γ h_ε(x)}` for the circle-average family `ψ`,
+/-- Step B3 of the transfer of thm:occ-main: the regularized GMC density `x ↦ ε^{γ²/2} e^{γ h_ε(x)}` for the circle-average family `ψ`,
 with `h_ε(x) = circleAverageRep ψ ε x` the circle-average representative of step B1. -/
 noncomputable def regGMCDensity (γ ε : ℝ) (ψ : UnitDiskCircleIndex → ℝ) (x : ℂ) : ℝ≥0∞ :=
   ENNReal.ofReal (ε ^ (γ ^ 2 / 2) * Real.exp (γ * circleAverageRep ψ ε x))
 
-/-- B3 of MQ-li-8 (b): the regularized Gaussian multiplicative chaos measure `ε^{γ²/2} e^{γ h_ε(x)} dx` on the ball
+/-- Step B3 of the transfer of thm:occ-main: the regularized Gaussian multiplicative chaos measure `ε^{γ²/2} e^{γ h_ε(x)} dx` on the ball
 `B_ρ(0)`, for the circle-average family `ψ` (Duplantier-Sheffield; Berestycki-Powell), given by `withDensity` of
 Lebesgue measure restricted to the ball. -/
 noncomputable def regGMCMeasure (γ ε ρ : ℝ) (ψ : UnitDiskCircleIndex → ℝ) : Measure ℂ :=

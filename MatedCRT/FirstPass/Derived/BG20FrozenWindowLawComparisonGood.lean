@@ -5,8 +5,7 @@ import MatedCRT.FirstPass.Derived.ValidCurveFixedTime
 /-!
 # The inside cells of the window
 
-Deterministic facts on the cells inside the window `(a, u, b)` with retained times `[p, q]` (written answer MQ-sbl-35,
-lines 13-21 and 40-45), and the almost sure visit property of a valid curve.
+Deterministic facts on the cells inside the window `(a, u, b)` with retained times `[p, q]`, and the almost sure visit property of a valid curve.
 
 * `MatedCRT.FrozenPath.modulusOn`: the modulus of continuity of a curve on `[p, q]`; it bounds the diameters of the
   retained cells and tends to `0` along locally uniformly convergent curves (`tendsto_modulusOn`).
@@ -172,7 +171,7 @@ theorem eventually_windowCellInside_ceil {a u b p q : ℝ} {η : C(ℝ, ℂ)} (h
 
 /-! ### Visits of a valid curve to the window domain -/
 
-/-- **A valid curve visits the window domain during `[a, b]` only** (written answer MQ-sbl-35, line 15): otherwise
+/-- **A valid curve visits the window domain during `[a, b]` only**: otherwise
 an open time interval outside `[a, b]` has a rational visit to `U ⊆ η([a, b])`, contradicting the singleton fibre of
 the rational time. -/
 theorem ae_windowDomain_preimage_subset {𝒮 : SpaceFillingSLEModel} {γ : ℝ} {Ω : Type} [MeasurableSpace Ω]

@@ -15,7 +15,7 @@ open scoped ENNReal NNReal
 
 namespace MatedCRT.KilledOccupation
 
-/-- `frozenLBMGreenOccupationRescaled_closed4` with its hypothesis `hm0` discharged by `MatedCRTEnv.IsValid.m₀_pos` (MATH-ANSWERS MQ-li-11: hm0 TRUE). -/
+/-- `frozenLBMGreenOccupationRescaled_closed4` with its hypothesis `hm0` discharged by `MatedCRTEnv.IsValid.m₀_pos`. -/
 theorem frozenLBMGreenOccupationRescaled_closed5 (𝒮 : SpaceFillingSLEModel)
     (ν : (γ : ℝ) → (Ω : Type) → [MeasurableSpace Ω] → MatedCRTEnv Ω → Ω → Measure ℂ)
     (dA : (γ : ℝ) → (Ω : Type) → [MeasurableSpace Ω] → MatedCRTEnv Ω → Ω → ContinuousPath ℂ → Measure ℝ≥0)

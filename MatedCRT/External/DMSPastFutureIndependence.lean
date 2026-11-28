@@ -67,8 +67,8 @@ noncomputable def lqgAreaTimeRecentre (t : ℝ) (p : LQGMetric.DistC × C(ℝ, �
   (LQGMetric.affineComp 1 (p.2 t) p.1, ⟨fun u => p.2 (u + t) - p.2 t, by fun_prop⟩)
 
 /-- **Literature input (Duplantier–Miller–Sheffield, *Liouville quantum gravity as a mating of trees*,
-arXiv:1409.7055v4, Theorem 1.9, pp. 26-27, lines 1301-1349 of the text; the stationarity is (1.9), line 1347, the
-independence is the last sentence, line 1349).** PENDING TRUTH CHECK. Cited input; to be replaced when proved in the
+arXiv:1409.7055v4, Theorem 1.9, pp. 26-27 of the text; the stationarity is (1.9), the
+independence is the last sentence).** PENDING TRUTH CHECK. Cited input; to be replaced when proved in the
 mating-of-trees lane.
 
 For `γ ∈ (0, 2)`, on every probability space carrying a mating-of-trees coupling (the `γ`-quantum cone

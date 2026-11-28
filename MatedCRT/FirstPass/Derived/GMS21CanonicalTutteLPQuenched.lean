@@ -9,7 +9,7 @@ import MatedCRT.FirstPass.Derived.ZeroConeEdgeCountCodeProof
 # The premise `tutteLP` at the canonical model from Theorem 3.10 and the quenched unit-scale convergence
 
 Gwynne–Miller–Sheffield (arXiv:1705.11161), proof of Theorem 3.4, case 1, with Lemma 3.5 proved through the quenched
-unit-scale convergence of the zero-cone cells (proof of Lemma 3.5, lines 1327-1343). The form on annuli of Lemma 3.5
+unit-scale convergence of the zero-cone cells (proof of Lemma 3.5). The form on annuli of Lemma 3.5
 for the shifted zero-cone configuration (`ZeroConeAnnulusLPForm`) follows from
 
 * the quenched convergence of the unit-scale errors (`ZeroConeQuenchedUnitScaleConvergence`), which Theorem 3.10 of

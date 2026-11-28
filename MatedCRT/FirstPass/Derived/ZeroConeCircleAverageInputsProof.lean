@@ -13,7 +13,7 @@ import Mathlib.Analysis.Fourier.AddCircleMulti
 `IGFieldDilationMixing` (`ZeroConeLemmaA1PosProof.lean`) states that for a whole-plane GFF `h` normalized by
 `h_1(0) = 0` and an independent uniform phase `u` on `[0, 2πχ)`, the normalized dilation by `2` of the law of the
 circle-average array `(ρ, w) ↦ u + h_ρ(w)` is mixing (the whole-plane GFF analogue of Lemma A.1 in Remark A.2 of
-Gwynne–Miller–Sheffield, arXiv:1705.11161; written proof `notes/fp-gaps/CODEX-MQ-sbl-25.md`, section (a)).
+Gwynne–Miller–Sheffield, arXiv:1705.11161; the written argument).
 
 The proof (`igFieldDilationMixing`).
 * Mixing on all measurable sets follows from mixing on the measurable cylinders, which form a generating ring of
@@ -1448,8 +1448,7 @@ theorem igFieldDilationMixing_of_measurable (hγ : γ ∈ Ioo (0 : ℝ) 2) (hh :
 end Assembly
 
 /-- **Mixing of the whole-plane GFF modulo `2πχ` under the normalized dilation by `2`** (`IGFieldDilationMixing`;
-Gwynne–Miller–Sheffield, arXiv:1705.11161, Remark A.2, in the mixing form of `notes/fp-gaps/CODEX-MQ-sbl-25.md`,
-section (a)). -/
+Gwynne–Miller–Sheffield, arXiv:1705.11161, Remark A.2, in its mixing form). -/
 theorem igFieldDilationMixing (γ : ℝ) (hγ : γ ∈ Ioo (0 : ℝ) 2) : IGFieldDilationMixing γ hγ := by
   intro Ω' _ P' h u hh hulaw hind S₁ S₂ hS₁ hS₂
   have hP : IsProbabilityMeasure P' := hh.1.gaussian.isProbabilityMeasure

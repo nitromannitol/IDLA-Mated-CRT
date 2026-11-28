@@ -4,8 +4,7 @@ import MatedCRT.FirstPass.S3c.PointwiseEquicontinuity
 # Lemma 3.1 (corrected, [C11]), samplewise admissibility: the measurable selection
 
 `tightness_selection_pointwise` is `tightness_selection_common` (FirstPass/S3c/CommonSelection.lean) with the
-admissibility of the data moved inside the implication on the common event `Ω₀` (§1.3 of
-notes/fp-gaps/CHATGPT-idla-3-1-audit.md). Only the measurability of the data is imposed on the whole carrier.
+admissibility of the data moved inside the implication on the common event `Ω₀`. Only the measurability of the data is imposed on the whole carrier.
 
 The diagonal extraction `Tightness.exists_measurable_diagonal_subseq` needs its input measurable and is pointwise: its
 convergence conclusion at `ω` uses only the boundedness of `y ω · c` at `ω`. The measurability of `y` needs the range

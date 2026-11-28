@@ -6,7 +6,7 @@ import MatedCRT.FirstPass.Derived.StopAtExitNested
 /-!
 # The uniform error of the invariance principle and the comparison on an annulus
 
-In the proof of Theorem 3.4, case 1, of Gwynne–Miller–Sheffield (arXiv:1705.11161, lines 1303-1307), the quantity
+In the proof of Theorem 3.4, case 1, of Gwynne–Miller–Sheffield (arXiv:1705.11161), the quantity
 which tends to `0` in probability is the supremum, over the starts `z` in a compact set, of the Prokhorov distance
 between the law of the embedded walk started from the cell containing `z` and the law of Brownian motion started from
 `z`, modulo time parametrization, in the local metric (2.2).

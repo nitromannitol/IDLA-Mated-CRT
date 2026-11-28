@@ -7,7 +7,7 @@ import Mathlib.MeasureTheory.Constructions.BorelSpace.ContinuousMap
 /-!
 # The area-parametrized curve as a Borel function of the field and the Lebesgue-parametrized curve
 
-The last assertion of the area-scaling lemma (`lem:area-scale`, notes/env-steps/env-steps.tex:748-765): the curve
+The last assertion of the area-scaling lemma (`lem:area-scale`): the curve
 `η`, parametrized by the LQG area of the quantum cone, is almost surely a fixed Borel function of the pairings of the
 field with test functions and of the whole-plane space-filling SLE `ηL` of the mating-of-trees coupling (any
 parametrization of `ηL` that differs from `η` by an increasing homeomorphism of `ℝ` fixing `0`).
@@ -86,7 +86,7 @@ theorem measurable_coneCurveCode (γ : ℝ) (t : ℝ) :
   measurable_curveOfCode (measurable_coneAreaCode γ) t
 
 /-- **The area-parametrized curve is a Borel function of the field and the Lebesgue-parametrized curve**
-(env-steps.tex:748-765). For a valid environment and any random continuous curve `ηL` with `η = ηL ∘ φ` almost
+(`lem:area-scale`). For a valid environment and any random continuous curve `ηL` with `η = ηL ∘ φ` almost
 surely, for an increasing homeomorphism `φ` of `ℝ` fixing `0`, almost surely `η = coneCurveCode γ (h, ηL)`. -/
 theorem MatedCRTEnv.IsValid.ae_coneCurveCode_eq {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
     {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (ηL : Ω → C(ℝ, ℂ))

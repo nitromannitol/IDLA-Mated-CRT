@@ -2,12 +2,12 @@ import MatedCRT.FirstPass.S3i.LensFlooredGood
 import MatedCRT.FirstPass.S3i.LensFlooredQuenched
 
 /-!
-# The quenched lens step from the floored uniform boundary estimate (MQ-li-9)
+# The quenched lens step from the floored uniform boundary estimate
 
 `quenchedLensStep_of_flooredUniform` derives, from
 `FrozenOneSidedBoundaryContinuityFlooredUniform 𝒮` (S3i/LensFloored.lean) and the cell-size and scaling inputs
 (`CellSizeEstimateStmt`, `MepsScalingInput`), the exact `QuenchedLensStep 𝒮`.
-The lens exponent is `b = min (1 / (2 + γ) ^ 2) β` (MQ-li-9 step 1), so `b ≤ β`; the quenched bounds are the closed
+The lens exponent is `b = min (1 / (2 + γ) ^ 2) β`, so `b ≤ β`; the quenched bounds are the closed
 floored form `quenchedBoundsOnGoodFlooredStmt_closed` (S3i/LensFlooredQuenched.lean), which takes `ε ≤ 1` and `b ≤ β`.
 The exit input is the theorem `srwLaw_vExitTime_lt_top_fp36` (as in `quenchedBoundsOnGoodStmt_closed`).
 -/

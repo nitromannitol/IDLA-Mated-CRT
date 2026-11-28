@@ -4,7 +4,7 @@ import MatedCRT.Proofs.Sec3.KilledOccupation.BaseClockBinders
 /-!
 # AE-measurability of the annealed exit-time cdf of Liouville Brownian motion
 
-Step 5 of `MQ-li-11` in `MATH-ANSWERS.md` (the hypothesis `hcdf` of `MatedCRTEnv.m₀_pos`): for a valid
+The hypothesis `hcdf` of `MatedCRTEnv.m₀_pos`: for a valid
 environment and `s : ℝ`, `ω ↦ P₀{b | lbmExitTime (S.clock ω) (ball 0 (1/2)) b ≤ ofReal s}` is AE-measurable.
 
 Notation: `O = ball 0 (1/2)`, `σ b = pathExitTime O b` (planar exit time), `τ b = (σ b).toNNReal`.
@@ -629,7 +629,7 @@ theorem aemeasurable_cdf_core {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
 
 end M0Cdf
 
-/-- **Step 5 of `MQ-li-11`** (`hcdf` of `MatedCRTEnv.m₀_pos`): for a valid environment, the annealed exit-time cdf
+/-- **The hypothesis `hcdf` of `MatedCRTEnv.m₀_pos`**: for a valid environment, the annealed exit-time cdf
 `ω ↦ P₀{b | lbmExitTime (S.clock ω) (ball 0 (1/2)) b ≤ ofReal s}` is AE-measurable. The subsequence convergence
 `hsub` of the dyadic LQG clocks is a named hypothesis (see the module docstring). -/
 theorem MatedCRTEnv.aemeasurable_exitTimeCdf {Ω : Type} [MeasurableSpace Ω] (S : MatedCRTEnv Ω)

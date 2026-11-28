@@ -33,8 +33,8 @@ open MeasureTheory ProbabilityTheory Set
 open scoped NNReal
 
 /-- **Literature input (Duplantier–Miller–Sheffield, *Liouville quantum gravity as a mating of trees*,
-arXiv:1409.7055v4, Theorem 1.9, pp. 26-27, lines 1301-1349 of the text; the stationarity is (1.9), line 1347, the
-independence of the two quantum wedges is the last sentence, line 1349; the two wedges as intrinsic curve-decorated
+arXiv:1409.7055v4, Theorem 1.9, pp. 26-27 of the text; the stationarity is (1.9), the
+independence of the two quantum wedges is the last sentence; the two wedges as intrinsic curve-decorated
 surfaces: Gwynne–Miller, arXiv:1701.05174, Definition 2.1, (2.6) and §2.3.3, p. 18), for the law `ν (16 / γ²)` of
 the Lebesgue-area parametrized whole-plane space-filling SLE_{16/γ²} from `∞` to `∞` rooted at `0`.** PENDING TRUTH
 CHECK. Cited input; to be replaced when proved in the mating-of-trees lane.

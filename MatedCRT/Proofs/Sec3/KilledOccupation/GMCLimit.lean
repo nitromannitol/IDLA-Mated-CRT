@@ -167,7 +167,7 @@ lemma gmcCutDensity_eq_of_lt {γ ρ ρ₂ : ℝ} (hρ : ρ < ρ₂) {H : ℝ →
 /-- **Vague convergence of the cut-off approximations.** If the field `H` has continuous circle averages on
 `(0, ∞) × ℂ`-restrictions to the index set `ψ`, and `μ` is its LQG measure (vague limit along the dyadic
 scales), then the cut-off approximations `gmcApproxCut γ ρ ρ₂ k ψ` are eventually finite on compact sets and
-converge vaguely to `μ.withDensity χ`. Steps B1–B5 of MQ-li-16 (3). -/
+converge vaguely to `μ.withDensity χ`. Steps B1–B5 of the same transfer. -/
 theorem gmcApproxCut_finite_and_isVagueLimitOn_of_continuous {γ ρ ρ₂ : ℝ} (hρρ₂ : ρ < ρ₂)
     (hρ₂ : ρ₂ < 1) {H : ℝ → ℂ → ℝ} {ψ : UnitDiskCircleIndex → ℝ} (hψ : Continuous ψ)
     (hH : ∀ q : UnitDiskCircleIndex, ψ q = H q.1.1 q.1.2) {μ : Measure ℂ} (hL : IsLQGLimit γ H μ)
@@ -252,7 +252,7 @@ theorem gmcApproxCut_finite_and_isVagueLimitOn_of_continuous {γ ρ ρ₂ : ℝ}
 /-- **Cut-off GMC limit as the cut-off LQG measure.** If the field `H` has continuous circle averages on
 `(0, ∞) × ℂ`-restrictions to the index set `ψ`, and `μ` is its LQG measure (vague limit along the dyadic
 scales), then the measurable limit `gmcLimit γ ρ ρ₂ ψ` equals `μ.withDensity χ`. Steps B1–B6 of
-MQ-li-16 (3). -/
+the same transfer. -/
 theorem gmcLimit_eq_withDensity_of_continuous {γ ρ ρ₂ : ℝ} (hρρ₂ : ρ < ρ₂) (hρ₂ : ρ₂ < 1)
     {H : ℝ → ℂ → ℝ} {ψ : UnitDiskCircleIndex → ℝ} (hψ : Continuous ψ)
     (hH : ∀ q : UnitDiskCircleIndex, ψ q = H q.1.1 q.1.2) {μ : Measure ℂ} (hL : IsLQGLimit γ H μ)

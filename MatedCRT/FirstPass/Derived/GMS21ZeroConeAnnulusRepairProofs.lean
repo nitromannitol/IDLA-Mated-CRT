@@ -5,8 +5,7 @@ import LatticeProb.Prob.AnalyticUniversalMeasurable
 /-!
 # The scaling and the measurability steps of the annulus form of Lemma 3.5 of Gwynne–Miller–Sheffield
 
-The written answer `notes/fp-gaps/CODEX-MQ-sbl-22.md` proves the two steps `ZeroConeWeightedMeshScaling` (section A3,
-lines 43 and 53) and `ZeroConeWeightedUniformErrorMeasurability` (section A4, lines 57-59) of
+The written argument proves the two steps `ZeroConeWeightedMeshScaling` (section A3) and `ZeroConeWeightedUniformErrorMeasurability` (section A4) of
 `GMS21ZeroConeAnnulusRepair.lean`. This file follows those sections.
 
 * A3 (lines 43, 53). The radius `R_b`, `b = 1/n`, is a Borel function of the circle-average process of the zero-cone
@@ -113,7 +112,7 @@ variable {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
   {X X₀ hIG₀ : Ω → Field} {B B' B₀ B₀' : ℝ≥0 → Ω → ℝ} {U : Ω → ℝ}
   {ηL η η₀ : Ω → C(ℝ, ℂ)} {bm : Ω → Path2}
 
-/-- **The dilation law of the zero-cone curve** (written answer `notes/fp-gaps/CODEX-MQ-sbl-22.md`, line 43: "Its
+/-- **The dilation law of the zero-cone curve** (the written argument: "Its
 radius `R_b` is the largest positive solution of `h_{0,r}(0) + Q log r = γ⁻¹ log b` ... These hitting times are
 Borel, finite and tend to infinity as `b ↓ 0` ... The scaled field `h^b = h₀(R_b ·) + Q log R_b − γ⁻¹ log b` has the
 zero-cone law. Conditional on `h₀`, `R_b⁻¹ e(R_b² ·)` has the original independent curve law. Coordinate covariance
@@ -132,10 +131,9 @@ def ZeroConeCurveDilationLaw (_D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B 
       (∀ᵐ ω ∂P, ∀ t : ℝ, η₀ ω (t / (n : ℝ)) = (Rsc n ω : ℝ) • E n ω t) ∧
       P.map (E n) = P.map η₀
 
-/-- **The edge counts of the cells as a dilation-invariant Borel function of the curve** (written answer
-`notes/fp-gaps/CODEX-MQ-sbl-22.md`, line 53: "For the phase `θ` the rescaled unit cells are exactly
+/-- **The edge counts of the cells as a dilation-invariant Borel function of the curve** (the written argument: "For the phase `θ` the rescaled unit cells are exactly
 `R_b⁻¹ η₀(b[j − 1 + θ, j + θ])`. Nontrivial common boundary arcs and multiplicities are preserved by this dilation";
-`notes/fp-gaps/CODEX-MQ-sbl-15.md`, line 13: the conductances of the cells "are determined by the ordered planar
+the conductances of the cells "are determined by the ordered planar
 curve"; Gwynne–Miller–Sheffield, arXiv:1705.11161, (1.2) and the proof of Proposition 2.2; Duplantier–Miller–Sheffield,
 arXiv:1409.7055, §8.2). PENDING TRUTH CHECK.
 
@@ -152,8 +150,7 @@ def ZeroConeEdgeCountCode (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B
         phaseShiftedEdgeCount (1 / (n : ℝ)) p.2 (G p.1) =
           Ψ (phaseShiftedCurve 1 p.2 (curveMeshRescale n (η₀ p.1)))
 
-/-- **The scaling law of the weighted cell data** (written answer `notes/fp-gaps/CODEX-MQ-sbl-22.md`, line 53: "Thus
-the rescaled *weighted* unit-mesh data have the original law and their dilation is the original `b`-mesh data") from
+/-- **The scaling law of the weighted cell data** from
 the dilation law of the curve and the dilation-invariant code of the edge counts: both weighted data are almost surely
 `weightedCurveData Ψ` of (curve, phase), with the curves `E_n` and `η₀` of the same law. -/
 theorem zeroConeWeightedMeshScaling_of_curveDilationLaw
@@ -189,8 +186,7 @@ theorem zeroConeWeightedMeshScaling_of_curveDilationLaw
   rw [map_prod_zeroConePhase_comp P (measurable_weightedCurveData hΨm) (hEm n),
     map_prod_zeroConePhase_comp P (measurable_weightedCurveData hΨm) hηm, (hrel n hn).2.2]
 
-/-- **The strict superlevel events of the uniform errors as projections of Borel events** (written answer
-`notes/fp-gaps/CODEX-MQ-sbl-22.md`, line 57: "For a fixed integer start `j`, the interpolated walk law is a Borel
+/-- **The strict superlevel events of the uniform errors as projections of Borel events** (the written argument: "For a fixed integer start `j`, the interpolated walk law is a Borel
 kernel in the countable matrix and vertex locations ... the Prokhorov distance is Borel there and agrees with the
 original distance"; line 59: "For `A = B̄_ρ ∖ B_b`, the conditions `z ∈ A` and `z ∈ K_j` are Borel jointly in the data
 and `z`, also when a positive spatial scale multiplies the cells. In the unit case the strict superlevel event of the
@@ -207,8 +203,7 @@ def WeightedErrorSuperlevelBorelProjection : Prop :=
     ∀ n : ℕ, 0 < n → ∀ t : ℝ≥0∞, ∃ B : Set ((C(ℝ, ℂ) × (ℤ → ℤ → ℕ)) × (ℝ × ℂ × ℤ)), MeasurableSet B ∧
       {w | t < meshUniformError (closedBall (0 : ℂ) ρ \ ball 0 b) (1 / (n : ℝ)) w} = Prod.fst '' B
 
-/-- **Measurability of the uniform errors for the completions of the laws of the weighted data** (written answer
-`notes/fp-gaps/CODEX-MQ-sbl-22.md`, line 59: "The parameter and data spaces are standard Borel, so these projections are
+/-- **Measurability of the uniform errors for the completions of the laws of the weighted data** (the written argument: "The parameter and data spaces are standard Borel, so these projections are
 analytic, hence measurable in the completion of each indicated law ... Rational thresholds give an a.e.-measurable
 function"; Kechris, Theorem 21.10) from the Borel projection form of the superlevel events. -/
 theorem zeroConeWeightedUniformErrorMeasurability_of_superlevelProjection

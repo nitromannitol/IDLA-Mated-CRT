@@ -106,7 +106,7 @@ theorem dms21IntrinsicPastFutureIndependence_of_externalLaw {ν : ℝ → Measur
 open DMSIntrinsicPastFuture in
 /-- **Berestycki–Gwynne (2020), Lemma 7.21, for the inverse charts `windowChartBG` (`BG20ChartIndependenceInputBG`),
 from the independence of the past and future intrinsic curve-decorated wedges at every time
-(`DMS21IntrinsicPastFutureIndependence 𝒮`)**, following the printed proof (2003.10320.txt lines 3768-3838) as in
+(`DMS21IntrinsicPastFutureIndependence 𝒮`)**, following the printed proof as in
 `bg20ChartIndependenceInputBG_of_dmsIntrinsic`: take `s = (b + a')/2` between the windows; by
 `BG20WindowFieldIntrinsicInput` and `BG20DiscreteWindowLawIntrinsicInput` the chart fields and the discrete analogues
 of the window chart laws are functions of the past and future intrinsic wedges at `s`, so at each level the

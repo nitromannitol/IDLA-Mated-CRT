@@ -10,10 +10,9 @@ curve-decorated quantum surfaces (Duplantier–Miller–Sheffield, Theorem 1.9)
 Berestycki–Gwynne (2020), arXiv:2003.10320, prove Lemma 7.21 (lines 3761-3838 of the text) as follows. Fix a time
 `s ∈ (b, a')` between the two windows. By Duplantier–Miller–Sheffield, *Liouville quantum gravity as a mating of
 trees*, Theorem 1.9, the past and future curve-decorated quantum surfaces (7.35) at `s` are independent. The chart
-field of each window is determined by the quantum surface containing it (line 3775). The discrete analogues
-`P^{D,ε}_0` of the window chart laws are determined by the same surfaces (lines 3783-3804), so the triples at level
-`ε` are independent, and their distance to the chart laws of the walk at level `ε` tends to zero in probability
-(lines 3812-3831). The chart laws of the walk converge jointly with the chart fields (7.36) (lines 3831-3838), and
+field of each window is determined by the quantum surface containing it. The discrete analogues
+`P^{D,ε}_0` of the window chart laws are determined by the same surfaces, so the triples at level
+`ε` are independent, and their distance to the chart laws of the walk at level `ε` tends to zero in probability. The chart laws of the walk converge jointly with the chart fields (7.36), and
 independence passes to the limit in law.
 
 This file formalizes that argument for the inverse charts `windowChartBG` of `WindowChartBG.lean`.
@@ -86,8 +85,8 @@ theorem curveSurfaceSigma_le (γ : ℝ) (T : Set ℝ) :
   fun _ hA => hA.1
 
 /-- **Literature input (Duplantier–Miller–Sheffield, *Liouville quantum gravity as a mating of trees*,
-arXiv:1409.7055, Theorem 1.9, last sentence (1409.7055.txt line 1349), with the stationarity (1.9); used in
-Berestycki–Gwynne (2020), proof of Lemma 7.21, (7.35), 2003.10320.txt lines 3768-3774).** PENDING TRUTH CHECK.
+arXiv:1409.7055, Theorem 1.9, last sentence, with the stationarity (1.9); used in
+Berestycki–Gwynne (2020), proof of Lemma 7.21, (7.35)).** PENDING TRUTH CHECK.
 
 For the `γ`-quantum cone `h` and an independent whole-plane space-filling SLE_{16/γ²} `η` from `∞` to `∞`
 parametrized by `γ`-LQG area with `η(0) = 0` (a valid environment), and every time `s`, the past and future
@@ -332,7 +331,7 @@ end Closeness
 
 /-! ### The steps of the printed proof of Lemma 7.21 -/
 
-/-- **Step of Berestycki–Gwynne (2020), proof of Lemma 7.21 (2003.10320.txt lines 3775-3776): "By definition,
+/-- **Step of Berestycki–Gwynne (2020), proof of Lemma 7.21: "By definition,
 `(h^D, η^D)` (resp. `(h̃^D, η̃^D)`) is determined by the first (resp. second) quantum surface in (7.35)", for the chart
 field.** PENDING TRUTH CHECK.
 
@@ -353,14 +352,13 @@ def BG20WindowFieldSurfaceInput (𝒮 : SpaceFillingSLEModel) : Prop :=
         Measurable[curveSurfaceSigma γ (Ici s)] F ∧
           ∀ᵐ ω ∂S.P, windowFieldBG γ a u b (H ω, η' ω) = F (H ω, η' ω))
 
-/-- **Step of Berestycki–Gwynne (2020), proof of Lemma 7.21 (2003.10320.txt lines 3783-3831): the discrete analogue
+/-- **Step of Berestycki–Gwynne (2020), proof of Lemma 7.21: the discrete analogue
 `P^{D,ε}_0` of the window chart law.** PENDING TRUTH CHECK.
 
 In Berestycki–Gwynne, `P^{D,ε}_0` is the conditional law given `(h, η)` of the walk on the subgraph `T^ε` of the
 mated-CRT map induced by the vertices in `[a', b'] ∩ εℤ`, started from `u_ε`, stopped on hitting `∂T^ε`, mapped by
-`φ⁻¹ ∘ η` and interpolated; it is almost surely determined by the past (resp. future) curve-decorated quantum surface
-(lines 3783-3804), and its Prokhorov distance to the law of the chart image of the walk at level `ε` tends to zero in
-probability (lines 3812-3831). Here: for every sequence `ε_n → 0` there are probability laws `R_n` on path space,
+`φ⁻¹ ∘ η` and interpolated; it is almost surely determined by the past (resp. future) curve-decorated quantum surface, and its Prokhorov distance to the law of the chart image of the walk at level `ε` tends to zero in
+probability. Here: for every sequence `ε_n → 0` there are probability laws `R_n` on path space,
 functions of (field, curve) measurable for `curveSurfaceSigma γ (Iic s)` (resp. `curveSurfaceSigma γ (Ici s)`), such
 that for every bounded continuous `g`, `∫ g dR_n - ∫ g d(chart law of the window for the interpolated walk law at
 level ε_n)` tends to zero in probability. The chart law of the walk is stopped at the exit from the window `U`
@@ -382,7 +380,7 @@ def BG20DiscreteWindowLawInput (𝒮 : SpaceFillingSLEModel) : Prop :=
             |∫ x, g x ∂(R n (H ω, η' ω) : Measure (ContinuousPath ℂ)) -
               ∫ x, g x ∂windowLawBG a u b (η' ω) (interpWalkLaw S η' (ε n) ω)|}) atTop (𝓝 0))
 
-/-- **Step of Berestycki–Gwynne (2020), proof of Lemma 7.21 (2003.10320.txt lines 3831-3838), no written argument:
+/-- **Step of Berestycki–Gwynne (2020), proof of Lemma 7.21, no written argument:
 "it is easily seen from the convergence `(h, η, P^ε) → (h, η, P)` in law that (7.36) holds if we replace
 `P^{D,ε}_0` by the `P^ε_{η(u_ε)}`-law of `φ⁻¹(X̂^ε)`".** PENDING TRUTH CHECK.
 
@@ -419,7 +417,7 @@ def BG20WindowJointConvergenceInput (𝒮 : SpaceFillingSLEModel) : Prop :=
 /-! ### Lemma 7.21 -/
 
 /-- **Berestycki–Gwynne (2020), Lemma 7.21, for the inverse charts `windowChartBG` (`BG20ChartIndependenceInputBG`),
-following the printed proof (2003.10320.txt lines 3768-3838).** Take `s = (b + a')/2` between the windows. By
+following the printed proof.** Take `s = (b + a')/2` between the windows. By
 `DMS21PastFutureIndependence` the past and future curve-decorated quantum surfaces at `s` are independent; by
 `BG20WindowFieldSurfaceInput` and `BG20DiscreteWindowLawInput` the chart fields and the discrete analogues of the window
 chart laws are functions of these surfaces, so at each level the coordinates of the two windows built from them are

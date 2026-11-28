@@ -13,7 +13,7 @@ equal (the curve, the lateral part: `LateralPartLaw`) or mutually absolutely con
 `ConeInnerPathLaw`; the outer window: `ConeOuterWindowLaw`), hence so are the products and their images
 (`coneAnnulusAreaLawEquivalence_of_steps`).
 
-Source: the answer to MQ-sbl-18, section "The field laws on a bounded annulus"; Gwynne–Miller–Sheffield
+Source: the written argument; Gwynne–Miller–Sheffield
 (arXiv:1705.11161), §2.3.1; Duplantier–Miller–Sheffield (arXiv:1409.7055), Definition 4.10.
 -/
 

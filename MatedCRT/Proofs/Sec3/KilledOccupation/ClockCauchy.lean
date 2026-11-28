@@ -3,7 +3,7 @@ import MatedCRT.Proofs.Sec3.KilledOccupation.ClockIdentificationConcrete
 /-!
 # Two-parameter Cauchy bound for the regularized clock
 
-Step B2 of the MQ-li-8 (b) argument (transfer of thm:occ-main to the cone). The regularized clocks `φ_ε` and `φ_ε'`
+Step B2 of the transfer of thm:occ-main to the cone. The regularized clocks `φ_ε` and `φ_ε'`
 (`regClock`) are compared through the Brownian-weighted clock: with `ennDist` the extended distance
 `|a - b| = (a - b) + (b - a)` on `ℝ≥0∞`, the sup-distance `clockDistPair ε ε' = sup_s |φ_ε(s) - φ_ε'(s)|` satisfies
 `clockDistPair ε ε' ≤ clockDistD ε + clockDistD ε'` (`clockDistPair_le`, triangle inequality). Hence convergence in

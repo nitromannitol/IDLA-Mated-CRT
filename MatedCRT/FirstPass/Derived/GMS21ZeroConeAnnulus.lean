@@ -12,15 +12,15 @@ import MatedCRT.FirstPass.Derived.JointShiftedMeshMultiplicity
 /-!
 # The annulus form of the uniform-start invariance principle for the shifted zero-cone configuration
 
-Gwynne–Miller–Sheffield (arXiv:1705.11161), Lemma 3.5 (lines 1319-1343): Theorem 3.4 holds in case 1 for the
+Gwynne–Miller–Sheffield (arXiv:1705.11161), Lemma 3.5: Theorem 3.4 holds in case 1 for the
 configuration of the cells `η₀([x - 1 + θ, x + θ])` read on the lattice `n⁻¹ ℤ + n⁻¹ θ`, `θ` an independent uniform
 phase. The proof combines
 
 * Proposition 3.1 with Theorem 1.7 of arXiv:1807.07515 (here the second conclusion of Theorem 3.10 of
-  arXiv:1807.07515, `GMSTheorem310Form`, lines 1328-1331): almost surely the walk on the unit-mesh configuration,
+  arXiv:1807.07515, `GMSTheorem310Form`): almost surely the walk on the unit-mesh configuration,
   dilated by `ε`, converges to Brownian motion uniformly in the start in a compact set, with an isotropic limit
-  since the law of `(h, η)` is invariant under rotations about the origin (lines 1212-1213);
-* the scale invariance of the circle-average embedding (lines 1336-1343): for `b = 1/n`, the pair
+  since the law of `(h, η)` is invariant under rotations about the origin;
+* the scale invariance of the circle-average embedding: for `b = 1/n`, the pair
   `(R_b⁻¹ η₀(b ·), b^{-1/2} G(b ·))` has the law of `(η₀, G)`, and `R_b → 0` almost surely, so the mesh-`1/n`
   configuration is the unit-mesh configuration of an equally distributed pair dilated by `R_b`.
 
@@ -28,9 +28,8 @@ Main declarations:
 
 * `ZeroConeConfigRealizable`, `ZeroConeConfigRotationInvariance`, `ZeroConeAreaScaling`,
   `ZeroConeUniformErrorMeasurability`: the named steps of the printed proof (the realization of the configuration as
-  a random element of the GMS space, line 1127; the rotation invariance, lines 1212-1213; the scale invariance,
-  lines 1336-1343; the measurability of the uniform Lévy–Prokhorov errors, used without comment in "convergence in
-  probability", line 1343).
+  a random element of the GMS space; the rotation invariance; the scale invariance; the measurability of the uniform Lévy–Prokhorov errors, used without comment in "convergence in
+  probability").
 * `zeroConeAnnulusLPForm_of_theorem310Form`: these steps and the conclusion of Theorem 3.10 at the law of every
   realization give `ZeroConeAnnulusLPForm`.
 * `zeroConeAnnulusLPForm_of_theorem310`: the same from Theorem 3.10 (`GMSTheorem310`) and the hypotheses of
@@ -67,7 +66,7 @@ variable {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
   {X X₀ hIG₀ : Ω → Field} {B B' B₀ B₀' : ℝ≥0 → Ω → ℝ} {U : Ω → ℝ}
   {ηL η η₀ : Ω → C(ℝ, ℂ)} {bm : Ω → Path2}
 
-/-- **The shifted zero-cone configuration is a random element of the GMS space** (arXiv:1705.11161, lines 1126-1127:
+/-- **The shifted zero-cone configuration is a random element of the GMS space** (arXiv:1705.11161:
 "By definition, H is a measurable function of h, η̂, and θ"): every measurable version `G` of the boundary-length
 pair has a realization `F` of the configuration, almost measurable for the Borel σ-algebra of `d^CC`. -/
 def ZeroConeConfigRealizable (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm)
@@ -75,7 +74,7 @@ def ZeroConeConfigRealizable (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B
   ∀ G : Ω → Path2, IsZeroConeBoundaryPair D hγ G →
     ∃ F : Ω × ℝ → GMSSpace, IsZeroConeConfigRealization D hγ G F
 
-/-- **Rotation invariance of the shifted zero-cone configuration** (arXiv:1705.11161, lines 1212-1213: "the law of
+/-- **Rotation invariance of the shifted zero-cone configuration** (arXiv:1705.11161: "the law of
 `(h, η)` is invariant under rotations about the origin"): the law of every realization is invariant under the
 quarter turn of the plane. -/
 def ZeroConeConfigRotationInvariance (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm)
@@ -83,7 +82,7 @@ def ZeroConeConfigRotationInvariance (D : IsMatingOfTreesCoupling γ P X X₀ hI
   ∀ (G : Ω → Path2) (F : Ω × ℝ → GMSSpace), IsZeroConeConfigRealization D hγ G F →
     ((P.prod zeroConePhase).map F).map (isometryGMS quarterTurn) = (P.prod zeroConePhase).map F
 
-/-- **Scale invariance of the circle-average embedding** (arXiv:1705.11161, lines 1336-1343, from
+/-- **Scale invariance of the circle-average embedding** (arXiv:1705.11161, from
 Duplantier–Miller–Sheffield, arXiv:1409.7055, Proposition 4.13(i), and the LQG coordinate change formula): for
 `b = 1/n` the pair `E n = (η^b, G^b)`, `η^b = R_b⁻¹ η₀(b ·)` and `G^b = b^{-1/2} G(b ·)`, has the law of `(η₀, G)`,
 with random radii `R_b > 0` tending to `0` almost surely as `b → 0`. -/
@@ -100,7 +99,7 @@ def ZeroConeAreaScaling (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B�
           ∃ c : ℝ, 0 < c ∧ ∀ t : ℝ, (E n ω).2 t = c • G ω (t / (n : ℝ))
 
 /-- **Measurability of the uniform Lévy–Prokhorov errors** on the annuli `closedBall 0 ρ \ B_b(0)` (used without
-comment in the convergence in probability of arXiv:1705.11161, line 1343): the scale suprema of the unit-mesh error
+comment in the convergence in probability of arXiv:1705.11161): the scale suprema of the unit-mesh error
 are almost measurable for the law of `((η₀, G), θ)`, and the mesh-`1/n` error is almost measurable for the law of the
 shifted mesh-`1/n` data. -/
 def ZeroConeUniformErrorMeasurability
