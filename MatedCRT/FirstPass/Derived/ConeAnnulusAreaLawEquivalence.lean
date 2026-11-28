@@ -1,4 +1,4 @@
-import MatedCRT.FirstPass.Derived.ConeAnnulusAreaLawEquivalenceSteps
+import MatedCRT.FirstPass.Derived.ConeAnnulusAreaLawEquivalenceInner
 
 /-!
 # The laws of the area measures of the two quantum cones on a bounded annulus
@@ -24,9 +24,6 @@ namespace MatedCRT
 
 open MatedCRTHarmonic MatedCRTHarmonic.MatedCRT
 open MatedCRTHarmonic.MesoModel.FrozenIdentities (lt_lqgQ lqgQ_pos)
-
-private theorem measurable_coneInnerPath (α T : ℝ) : Measurable (coneInnerPath α T) :=
-  measurable_pi_iff.2 fun t => (measurable_pi_apply t).add measurable_const
 
 /-- **The law of the outer data as the image of a product law.** If the outer data of the cone
 `coneField X (coneRadial γ α B B')` on `{δ < |z| < M}` is almost surely `G` of the curve, `Λ` of the field, the inner

@@ -1,7 +1,7 @@
 import MatedCRT.FirstPass.Derived.GMS21Lemma33Cone
 
 /-!
-# The laws of the area measures of the two quantum cones on a bounded annulus: the three steps
+# The laws of the area measures of the two quantum cones on a bounded annulus: the steps
 
 `ConeAnnulusAreaLawEquivalence γ` (`GMS21Lemma33Cone.lean`) asserts that the laws of the outer data
 `(e, μ_β|{δ < |z| < M})` of the `γ`-quantum cone (`β = γ`) and of the `0`-quantum cone (`β = 0`) are mutually
@@ -14,16 +14,19 @@ absolutely continuous, jointly with an independent curve `e`. Both cone fields a
 * for `t < 0` (outside the unit circle) `A_{-s} = c(ℓ + s) - Q s` with `c(u) = B'_u + (Q - β) u` and `ℓ` the last
   zero of `c`, so that `A` on `[-S, 0)` is read off the path `coneOuterWindow (Q - β) S B'`.
 
-The proof has three steps, each a statement of this file, combined in `ConeAnnulusAreaLawEquivalence.lean`:
+The proof has four steps, each a statement of this file, combined in `ConeAnnulusAreaLawEquivalence.lean`:
 
 * `ConeAnnulusLocality γ δ M` (locality of the LQG area measure): the outer data is almost surely a fixed
   measurable function of the curve, the lateral part of the field, the inner path and the outer window;
 * `ConeInnerPathLaw` (Cameron–Martin): the laws of `coneInnerPath α₁ T B` and `coneInnerPath α₂ T B₀` are
   absolutely continuous for Brownian motions `B, B₀`;
-* `ConeOuterWindowLaw` (Williams' path decomposition and Cameron–Martin): the laws of the outer windows of two
-  Brownian motions with positive drifts `v₁, v₂` are absolutely continuous;
+* `ConeOuterWindowLaw` (the Markov property at a fixed time, the survival probability of Brownian motion with
+  drift, and Cameron–Martin): the laws of the outer windows of two Brownian motions with positive drifts `v₁, v₂`
+  are absolutely continuous;
+* `LateralPartLaw`: the law of the lateral part of a whole-plane GFF is unique;
 
-with the uniqueness of the law of the lateral part of a whole-plane GFF (`LateralPartLaw`).
+together with the almost everywhere measurability of Brownian paths (`BrownianPathAEMeasurable`) and of the outer
+window (`ConeOuterWindowMeasurable`).
 
 Source: the answer to MQ-sbl-18, section "The field laws on a bounded annulus"; Gwynne–Miller–Sheffield
 (arXiv:1705.11161), §2.3.1; Duplantier–Miller–Sheffield (arXiv:1409.7055), Definition 4.10; Miller–Sheffield,
@@ -80,7 +83,8 @@ def ConeInnerPathLaw : Prop :=
       P.map (fun ω => coneInnerPath α₁ T (fun t => B t ω)) ≪
         P.map (fun ω => coneInnerPath α₂ T (fun t => B₀ t ω))
 
-/-- **Step 3, the outer radial windows (Williams' path decomposition and Cameron–Martin).** For Brownian motions
+/-- **Step 3, the outer radial windows (Markov property, survival probability and Cameron–Martin).** For Brownian
+motions
 `B', B₀'`, positive drifts `v₁, v₂` and `S ≥ 0`, the window `coneOuterWindow v₁ S B'` is almost everywhere measurable and its
 law is absolutely continuous with respect to the law of `coneOuterWindow v₂ S B₀'`. -/
 def ConeOuterWindowLaw : Prop :=

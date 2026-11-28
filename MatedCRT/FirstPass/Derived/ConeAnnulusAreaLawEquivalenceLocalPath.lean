@@ -9,7 +9,7 @@ limit of `p (⌊2ⁿ t⌋ / 2ⁿ)` as `n → ∞`; it is jointly measurable in `
 (each approximant reads `p` at countably many times) and it equals `p t` whenever `p` is continuous at `t`.
 
 Dyadic approximation of the time along `⌊2ⁿ t⌋ / 2ⁿ` is the standard device for measurable versions of
-processes with continuous paths (Kallenberg, *Foundations of Modern Probability*, 2nd ed., Chapter 3).
+processes with continuous paths.
 -/
 
 open MeasureTheory Filter Topology

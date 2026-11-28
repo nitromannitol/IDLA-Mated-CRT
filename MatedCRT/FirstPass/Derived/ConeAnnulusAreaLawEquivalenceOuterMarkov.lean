@@ -21,9 +21,7 @@ is positive from time `N` on, so the window of the whole path lies in `A`
 
 Source: the weak Markov property of Brownian motion at a fixed time (for example Le Gall, *Brownian
 Motion, Martingales, and Stochastic Calculus*, Springer GTM 274, 2016, Chapter 2); the survival
-probability `1 - exp(-2 v δ)` of Brownian motion with drift `v` is the standard gambler's-ruin formula
-(see for example Borodin–Salminen, *Handbook of Brownian Motion*, or Revuz–Yor, *Continuous
-Martingales and Brownian Motion*).
+probability `1 - exp(-2 v δ)` of Brownian motion with drift `v` (`LatticeProb.measure_forall_drift_gt`).
 -/
 
 open MeasureTheory ProbabilityTheory Filter Topology Set

@@ -7,7 +7,7 @@ import LatticeProb.Bonanno.MatedCRTHarmonic.MoTPort.Foundations.ConeArea4G
 /-!
 # Locality of the area measure of a quantum cone on an annulus
 
-`coneAnnulusLocality` is the first of the three steps of `ConeAnnulusAreaLawEquivalence`
+`coneAnnulusLocality` is the first of the four steps of `ConeAnnulusAreaLawEquivalence`
 (`ConeAnnulusAreaLawEquivalenceSteps.lean`): the outer data `(e, μ|_{δ < |z| < M})` of the cone `coneField X A`,
 `A = coneRadial γ α B B'`, is almost surely a fixed measurable function of the curve `e`, the lateral part of `X`,
 the inner path `coneInnerPath α T B` and the outer window `coneOuterWindow (Q - α) S B'`, with times `T, S` depending
