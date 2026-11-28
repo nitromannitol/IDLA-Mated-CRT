@@ -1096,3 +1096,16 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. Commit 3f846dba.
   `BG20ChartIndependenceInputBG 𝒮` from it, `HasNormalizedSLELaw 𝒮 ν`, the two intrinsic window steps
   (`WindowChartBGIntrinsicIndependence.lean:168`, `:189`) and `JordanDomainExteriorRegularity`; its axioms: propext,
   Classical.choice, Quot.sound.
+
+### Theorem 3.10 of Gwynne–Miller–Sheffield (2026-11-28)
+
+Paths relative to `MatedCRT/FirstPass/Derived/`.
+- `GMS21Theorem310Bridge.lean`: `gmsTheorem310 : GMSTheorem310` with no hypothesis (arXiv:1807.07515, Theorem 3.10,
+  the invariance principle uniform in the starting point). It is `ReflectedGMS.GMS.theorem3_10` of Lattice-Probability
+  (`LatticeProb/Bonanno/ReflectedGMS/GMS/Theorem310.lean:413`, in the pinned version d6a62a31 of the `idla/phase2`
+  line); `GMSTheorem310` (`GMS21Theorem310Form.lean:112`) copies its statement file `Theorem310Statement.lean`, which
+  is unchanged there, so the two statements agree by unfolding. This discharges the premise `h310` of
+  `tutteLP_canonical_of_theorem310_zeroConeSteps`, `tutteLP_canonical_of_theorem310_quenchedZeroCone`,
+  `tutteLP_canonical_of_theorem310_quenchedZeroCone_literature` and of the zero-cone annulus forms that take it.
+- `#print axioms MatedCRT.gmsTheorem310` (`MatedCRT/Audit/DerivedCountedAxioms.lean`): propext, Classical.choice,
+  Quot.sound.
