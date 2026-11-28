@@ -41,11 +41,11 @@ theorem isTotallyDisconnected_of_interior_eq_empty {E : Set ℝ} (hE : interior 
 disconnected. -/
 theorem isTotallyDisconnected_image_of_injOn {E : Set ℝ} (hE : IsCompact E) (hd : IsTotallyDisconnected E)
     {f : ℝ → ℂ} (hf : ContinuousOn f E) (hinj : InjOn f E) : IsTotallyDisconnected (f '' E) := by
-  haveI : CompactSpace E := isCompact_iff_compactSpace.1 hE
-  haveI : TotallyDisconnectedSpace E := totallyDisconnectedSpace_subtype_iff.2 hd
-  have hemb : IsEmbedding (E.restrict f) :=
-    (hf.restrict.isClosedEmbedding hinj.injective).isEmbedding
-  have h : IsTotallyDisconnected (range (E.restrict f)) :=
+  have : CompactSpace E := isCompact_iff_compactSpace.1 hE
+  have : TotallyDisconnectedSpace E := totallyDisconnectedSpace_subtype_iff.2 hd
+  have hemb : IsEmbedding (E.domRestrict f) :=
+    (hf.domRestrict.isClosedEmbedding hinj.injective).isEmbedding
+  have h : IsTotallyDisconnected (range (E.domRestrict f)) :=
     hemb.isTotallyDisconnected_range.2 inferInstance
   rw [Set.image_eq_range]
   exact h
@@ -56,10 +56,10 @@ theorem not_containsNondegenerateContinuum_of_subset_biUnion {C : Set ℂ} {S : 
     (hS : S.Countable) (hF : ∀ F ∈ S, IsCompact F ∧ IsTotallyDisconnected F)
     (hC : C ⊆ ⋃ F ∈ S, F) : ¬ ContainsNondegenerateContinuum C := by
   rintro ⟨K, hKC, hKc, hKconn, hdiam⟩
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hKc
-  haveI : Nonempty K := hKconn.nonempty.to_subtype
-  haveI : ConnectedSpace K := isConnected_iff_connectedSpace.1 hKconn
-  haveI : Countable S := hS.to_subtype
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hKc
+  have : Nonempty K := hKconn.nonempty.to_subtype
+  have : ConnectedSpace K := isConnected_iff_connectedSpace.1 hKconn
+  have : Countable S := hS.to_subtype
   -- Baire: one member of the cover contains a relatively open part of `K`
   let g : S → Set K := fun F => (Subtype.val : K → ℂ) ⁻¹' (F : Set ℂ)
   have hg_closed : ∀ F, IsClosed (g F) := fun F =>
@@ -87,8 +87,8 @@ theorem not_containsNondegenerateContinuum_of_subset_biUnion {C : Set ℂ} {S : 
     linarith
   -- a clopen neighbourhood of `x` in `F` inside the ball
   have hxF : x ∈ F := hKF k₀ (mem_ball_self hε0)
-  haveI : CompactSpace F := isCompact_iff_compactSpace.1 (hF F hFS).1
-  haveI : TotallyDisconnectedSpace F := totallyDisconnectedSpace_subtype_iff.2 (hF F hFS).2
+  have : CompactSpace F := isCompact_iff_compactSpace.1 (hF F hFS).1
+  have : TotallyDisconnectedSpace F := totallyDisconnectedSpace_subtype_iff.2 (hF F hFS).2
   obtain ⟨V, hVmem, hxV, hVball⟩ := (isTopologicalBasis_isClopen (X := F)).exists_subset_of_mem_open
     (show (⟨x, hxF⟩ : F) ∈ (Subtype.val : F → ℂ) ⁻¹' ball x ε from mem_ball_self hε0)
     (isOpen_ball.preimage continuous_subtype_val)
