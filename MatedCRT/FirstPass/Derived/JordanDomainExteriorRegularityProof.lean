@@ -24,7 +24,8 @@ Brownian motion (`BrownianBeurlingEstimate`; Lawler, *Conformally Invariant Proc
 
 ## Main statements
 
-* `MatedCRT.BrownianBeurlingEstimate`: the Beurling estimate for planar Brownian motion (PENDING TRUTH CHECK).
+* `MatedCRT.BrownianBeurlingEstimate`: the Beurling estimate for planar Brownian motion, proved as
+  `MatedCRT.BrownianBeurling.brownianBeurlingEstimate` (`BrownianBeurling/BrownianBeurlingEstimateProof.lean`).
 * `MatedCRT.IsInverseChart.frontier_subset_closure_compl_closure`: the exterior of a bounded window is open, path
   connected and unbounded, and its closure contains the frontier of the window.
 * `MatedCRT.ae_exitTime_eq_zero_of_mem_closure_compl`: instant exit at a point of the closure of a path connected
@@ -49,8 +50,9 @@ from `w = γ 0` to a point `γ 1` at distance at least `R` from `w`, planar Brow
 
 Source: Lawler, *Conformally Invariant Processes in the Plane*, AMS 2005, Theorem 3.76 (after translation by `w` and
 scaling by `R`; the curve may be stopped at its first visit to the circle `∂B(w, R)`, which only enlarges the event);
-Lawler–Limic (arXiv:math/0403309), Section 1. It is estimate (1) of the answer to the truth check of
-`JordanDomainExteriorRegularity` (notes `CODEX-MQ-sbl-23.md`, line 9). PENDING TRUTH CHECK. -/
+Lawler–Limic (arXiv:math/0403309), Section 1. It is proved as `MatedCRT.BrownianBeurling.brownianBeurlingEstimate`
+(`BrownianBeurling/BrownianBeurlingEstimateProof.lean`), from the analytic Beurling estimate for harmonic majorants of
+Lattice-Probability. -/
 def BrownianBeurlingEstimate : Prop :=
   ∃ C : ℝ, 0 ≤ C ∧ ∀ (γ : C(unitInterval, ℂ)) (y : ℂ) (R : ℝ), R ≤ dist (γ 1) (γ 0) →
     dist y (γ 0) < R →

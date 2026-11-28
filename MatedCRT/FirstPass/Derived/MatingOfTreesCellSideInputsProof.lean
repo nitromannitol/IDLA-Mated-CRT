@@ -23,8 +23,9 @@ from statements of the literature on general objects (written answer MQ-sbl-39).
   (`MatedCRTEnv.IsValid.exists_curve_peanosphere`).
 * `matingOfTreesCellSideIdentity_of_literature`: `MatingOfTreesCellSideIdentity 𝒮` from the two named hypotheses.
 
-Named hypotheses (literature, on general objects; PENDING TRUTH CHECK):
-* `PlanarBMNoTwoSidedConePoints` (Le Gall, *Some properties of planar Brownian motion*, Chapter III, Theorem 3(i)).
+Named hypotheses (literature, on general objects):
+* `PlanarBMNoTwoSidedConePoints` (Le Gall, *Some properties of planar Brownian motion*, Chapter III, Theorem 3(i)),
+  proved as `MatedCRT.planarBMNoTwoSidedConePoints` (`PlanarBMConePoints/Holds.lean`).
 * `CorrelatedBMTraversalTriplePointsNoContinuum` (Duplantier–Miller–Sheffield, arXiv:1409.7055, Theorem 1.9 and
   Lemmas 8.8, 8.11, 8.14-8.15; Gwynne–Holden–Miller–Sun, arXiv:1510.04687, Theorem 1.1; for the triple points DMS
   (8.9) and Lemmas 8.12-8.13, Gwynne–Holden–Miller, arXiv:1512.01223, Corollary 6.5 and Example 2.2).
@@ -40,8 +41,8 @@ namespace MatedCRT
 
 /-! ### No common local minimum of the correlated Brownian pair -/
 
-/-- **Named hypothesis: planar Brownian motion has no two-sided cone points of angle less than `π`.** PENDING TRUTH
-CHECK.
+/-- **Named hypothesis: planar Brownian motion has no two-sided cone points of angle less than `π`.** It is proved as
+`MatedCRT.planarBMNoTwoSidedConePoints` (`PlanarBMConePoints/Holds.lean`).
 
 Let `μ` be the law of a two-sided standard planar Brownian motion `w` (`IsCorrelatedBM2 (√2) μ`: the coordinates are
 independent two-sided standard Brownian motions, `lrCov √2 0 1 = -cos(π/2) = 0`); its restriction to `[0, ∞)` is a
@@ -55,8 +56,7 @@ Source: J.-F. Le Gall, *Some properties of planar Brownian motion*, École d'Ét
 (1990), Lecture Notes in Math. 1527, Chapter III, Theorem 3(i), p. 136: "if `α ∈ (0, π)`, `Γ_α = ∅`" almost surely,
 where `Γ_α` is the set of two-sided cone points with angle `α` (closed wedges, all directions); a cone point for a
 wedge of angle `α` is one for every larger angle, so one event serves all `α < π` along `α_k ↑ π`. Localized at
-rational times by the Markov property and Brownian scaling. Written answer MQ-sbl-39, lines 43-47; a direct proof of
-the local form is sketched at lines 49-51. -/
+rational times by the Markov property and Brownian scaling. -/
 def PlanarBMNoTwoSidedConePoints : Prop :=
   ∀ μ : Measure Path2, IsCorrelatedBM2 (Real.sqrt 2) μ → ∀ᵐ w ∂μ, ∀ t : ℝ, 0 < t →
     ∀ a b : ℝ × ℝ, a.1 * b.2 - a.2 * b.1 ≠ 0 →

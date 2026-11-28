@@ -325,8 +325,10 @@ Imaginary geometry I (arXiv:1201.1496), Proposition 3.4 (local absolute continui
 Duplantier–Miller–Sheffield (arXiv:1409.7055), Definition 4.10. In the radial decomposition the lateral parts have
 the same law; inside the unit circle the radial parts are Brownian motions with drifts `γ` and `0` on a bounded
 time interval, outside they are Brownian motions with drift `Q - β > 0` conditioned to stay positive, both with a
-positive density with respect to a three-dimensional Bessel process on a bounded time interval. PENDING TRUTH
-CHECK. -/
+positive density with respect to a three-dimensional Bessel process on a bounded time interval. It is proved as
+`MatedCRT.coneAnnulusAreaLawEquivalence` (`ConeAnnulusAreaLawEquivalenceHolds.lean`), outside the unit circle by the
+Markov property at a fixed time, the probability `1 - e^{-2 c δ}` that Brownian motion with drift `c > 0` stays above
+`-δ`, and the Cameron–Martin theorem on bounded time intervals, in place of the comparison with the Bessel process. -/
 def ConeAnnulusAreaLawEquivalence (γ : ℝ) : Prop :=
   ∀ {Ω : Type} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P] (X X₀ : Ω → Field)
     (B B' B₀ B₀' : ℝ≥0 → Ω → ℝ) (e : Ω → C(ℝ, ℂ)), γ ∈ Ioo (0 : ℝ) 2 →

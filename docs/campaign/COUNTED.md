@@ -1096,3 +1096,320 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. Commit 3f846dba.
   `BG20ChartIndependenceInputBG 𝒮` from it, `HasNormalizedSLELaw 𝒮 ν`, the two intrinsic window steps
   (`WindowChartBGIntrinsicIndependence.lean:168`, `:189`) and `JordanDomainExteriorRegularity`; its axioms: propext,
   Classical.choice, Quot.sound.
+
+### The coordinate change of the area measure of the zero cone (2026-11-26)
+
+Paths relative to `MatedCRT/FirstPass/Derived/`. Sheffield-Wang = arXiv:1605.06171.
+- `ZeroConeAreaCoordinateChangeProof.lean`: `zeroConeAreaCoordinateChange (γ) (hγ : γ ∈ Ioo 0 2) :
+  ZeroConeAreaCoordinateChange γ hγ` (:1331), with no hypothesis (Sheffield-Wang, Theorems 1.1, 1.2 and 1.4). For every
+  `0 < γ < 2` there is a Borel map `M` from fields to measures on the plane such that, for the circle-average embedding
+  of the `0`-quantum cone built from a whole-plane GFF and two standard Brownian motions, almost surely `M h` is the
+  vague limit of the dyadic area approximations of `h`, and for all `C > 0` and `z` simultaneously `M` of the
+  coordinate change `h(C · + z) + Q log C` is the image of `M h` by `w ↦ (w - z) / C`. The map is `areaMap γ` (:1198),
+  the limit area measure on `goodSet γ` (:1182), the set of scale regular fields (`ScaleRegular`, :440: the mollified
+  circle averages extend continuously to the closed scale `s = 0`) whose dyadic area approximations converge vaguely,
+  and `0` elsewhere; `measurable_areaMap` (:1217) and `measurableSet_goodSet` (:1184) hold because scale regularity is a
+  countable uniform continuity condition and the vague convergence a countable Cauchy condition on a determining
+  family. The cone lies in the good set almost surely (`ae_coneField_mem_goodSet`, :1310): the whole-plane GFF part is
+  scale regular by the Kolmogorov continuity theorem for its mollified circle-average process, and the radial parts are
+  radial, continuous off `0` with a logarithmic singularity at `0`. The independence hypotheses of the statement are
+  not used.
+- It discharges the premise `hSW : ZeroConeAreaCoordinateChange γ hγ` (`ZeroConeQuantumCurveCovarianceProof.lean:489`) of
+  `zeroConeQuantumCurveCovariance` (`ZeroConeQuantumCurveCovarianceProof.lean:509`), which gives
+  `ZeroConeQuantumCurveCovariance D hγ` for every coupling `D` and every `0 < γ < 2`: the premise of that name of
+  `tutteLP_canonical_of_theorem310_zeroConeSteps` (`GMS21CanonicalTutteLPZeroCone.lean:87`) is proved.
+- `#print axioms MatedCRT.zeroConeAreaCoordinateChange` (`MatedCRT/Audit/DerivedCountedAxioms.lean`): the audit requires
+  propext, Classical.choice, Quot.sound.
+
+### Lemma A.4 of Gwynne-Miller-Sheffield at uniform roots of dyadic squares (2026-11-26)
+
+Paths relative to `MatedCRT/FirstPass/Derived/`. GMS21 = Gwynne-Miller-Sheffield, arXiv:1705.11161.
+- `ZeroConeLemmaA4Proof.lean`: `zeroConeLemmaA4 (γ) (hγ : γ ∈ Ioo 0 2) (hA4 : ZeroConeUniformRootLemmaA4 γ hγ) :
+  ZeroConeLemmaA4 γ hγ` (:911). `ZeroConeLemmaA4` (`ZeroConeJointStepsProof.lean:724`) says that for the circle-average
+  embedding `h` of the `0`-quantum cone there are an auxiliary probability space, measurable random constants `C_m > 0`
+  and measurable points `z_m` such that `h(C_m · + z_m) + Q log C_m` has the law of `h` for every `m` and
+  `P(|z_m| ≤ R) → 0` for every `R`. `ZeroConeUniformRootLemmaA4` (:882) is GMS21, (A.2) and Lemma A.4, for the largest
+  square of an independent uniform dyadic system that contains `0` and has area mass at most `m`, with a point sampled
+  uniformly from it, for every Borel area map that is almost surely the vague limit of the area approximations.
+  The proof takes the area map `fieldArea γ` (:630), `rootGen` (:360), the generation of the capped square of the chain
+  of dyadic squares at the origin, and the point `corner + side · (u₁ + i u₂)` of that square. The mass of a closed
+  square is jointly measurable (`sqMass_eq`, :274); for almost every dyadic system the origin lies on no grid line and
+  the square is the capped square (`rootGen_spec`, :499); the generation tends to infinity because every fixed square of
+  the chain has finite mass, so the conditional probability that `z_m` lies in a fixed disc tends to `0`
+  (`tendsto_nearMass`, :570), and `P(|z_m| ≤ R) → 0` follows by dominated convergence.
+- It reduces the premise `hA4 : ZeroConeLemmaA4 γ hγ` of `zeroConeJointLemmaA1` (`ZeroConeJointStepsProof.lean:932`),
+  and so the premise `ZeroConeJointLemmaA1` of `tutteLP_canonical_of_theorem310_zeroConeSteps`, to the literature input
+  `ZeroConeUniformRootLemmaA4`, which remains open.
+- `#print axioms MatedCRT.zeroConeLemmaA4` (`MatedCRT/Audit/DerivedCountedAxioms.lean`): the audit requires propext,
+  Classical.choice, Quot.sound.
+
+### The frozen window law comparison (2026-11-26)
+
+Paths relative to `MatedCRT/FirstPass/Derived/`. BG20 = Berestycki-Gwynne (2020), arXiv:2003.10320.
+- `BG20FrozenWindowLawComparisonProof.lean`: `bg20FrozenWindowLawComparison : BG20FrozenWindowLawComparison 𝒮` (:295;
+  the statement is `WindowChartBGDiscreteLawIntrinsic.lean:545`), BG20, proof of Lemma 7.21. In a valid environment,
+  for every sequence of cell sizes tending to `0`, every window `a < u < b` with retained times `p < a`, `b < q` and
+  every bounded continuous path functional `g`, the integral of `g` against the frozen window law of the
+  multiplicities of the map is close in probability to its integral against the chart law of the window for the
+  interpolated walk law. Hypotheses: `hEnvS : ConeEnvironmentScalingStep 𝒮`, `hN4 : GMS21UniformStartInput 𝒮`,
+  `hν : HasNormalizedSLELaw 𝒮 ν`, `href : HasReferenceEnvironments 𝒮`, `hU` (a set of paths of full measure for every
+  correlated Brownian law on which mating-of-trees rigidity holds), `hN5a` (the time-change half of Lemma 7.4 of BG20),
+  `hJF : WindowFrontierJordanInput 𝒮` and `hJ : JordanDomainExteriorRegularity`. Proof: by the subsequence criterion
+  and tightness from the uniform-start invariance principle the pairs (curve, interpolated walk law) converge jointly
+  in law along a subsequence (`tendsto_prob_abs_sub_of_jointLimit`, :63); the limiting paths cross the frontier of the
+  window by the time-change half and the exterior regularity of Jordan domains; the extended continuous mapping theorem
+  in probability then applies, with the bad environments of vanishing probability.
+- It discharges the premise `hcmp : BG20FrozenWindowLawComparison 𝒮` of
+  `bg20DiscreteWindowLawIntrinsicInput_of_cellSideIdentity` (`WindowChartBGDiscreteLawIntrinsic.lean:592`) under the
+  hypotheses above; at the canonical model they are supplied in the section on the chart input below.
+- `#print axioms MatedCRT.bg20FrozenWindowLawComparison` (`MatedCRT/Audit/DerivedCountedAxioms.lean`): the audit requires
+  propext, Classical.choice, Quot.sound.
+
+### The Brownian inputs of the cell-side identity (2026-11-26)
+
+Paths relative to `MatedCRT/FirstPass/Derived/`.
+- `MatingOfTreesCellSideInputsProof.lean`: the two inputs of `matingOfTreesCellSideIdentity_of_valid`
+  (`MatingOfTreesCellSideIdentityValid.lean:49`) from two named statements of the literature.
+  `PlanarBMNoTwoSidedConePoints` (:60): almost surely a two-sided standard planar Brownian motion has no time `t > 0`
+  that is a two-sided cone point for a closed wedge of angle less than `π` (Le Gall, *Some properties of planar
+  Brownian motion*, Saint-Flour XX (1990), Lecture Notes in Math. 1527, Chapter III, Theorem 3(i), p. 136).
+  `CorrelatedBMTraversalTriplePointsNoContinuum` (:147): for almost every correlated Brownian pair there is a
+  space-filling SLE traversal of the pair whose points visited three times contain no continuum of positive diameter
+  (Duplantier-Miller-Sheffield, arXiv:1409.7055, Theorem 1.9 and Lemmas 8.8-8.15; Gwynne-Holden-Miller-Sun,
+  arXiv:1510.04687, Theorem 1.1; Gwynne-Holden-Miller, arXiv:1512.01223, Corollary 6.5).
+  - `correlatedBMNoCommonLocalMin (hLG : PlanarBMNoTwoSidedConePoints) : CorrelatedBMNoCommonLocalMin` (:74): for
+    `0 < γ < 2` a `γ`-correlated two-sided Brownian pair almost surely has no time that is a local minimum of both
+    coordinates. Whitening the pair at the time `-n` gives a standard planar Brownian motion, and nonnegative
+    increments of both coordinates are increments in a closed wedge of angle `πγ²/4 < π`.
+  - `validEnvTriplePointsNoContinuum (hA : CorrelatedBMTraversalTriplePointsNoContinuum) :
+    ValidEnvTriplePointsNoContinuum 𝒮` (:202): in a valid environment, almost surely the points visited at least three
+    times by the curve contain no continuum of positive diameter. Two Peanosphere curves of the same pair differ by a
+    homeomorphism of the plane (`not_containsNondegenerateContinuum_curveTriplePoints_of_peanosphere`, :160, and
+    `ae_forall_peanosphere_not_containsNondegenerateContinuum`, :188), which carries the triple points of one onto those
+    of the other.
+  - `matingOfTreesCellSideIdentity_of_literature (hLG) (hA) : MatingOfTreesCellSideIdentity 𝒮` (:218) for every model
+    `𝒮`. It discharges the premise `hcell` of `bg20DiscreteWindowLawIntrinsicInput_of_cellSideIdentity`
+    (`WindowChartBGDiscreteLawIntrinsic.lean:592`) from `hLG` and `hA`; `hLG` is proved in the section on cone points
+    below.
+- `#print axioms MatedCRT.correlatedBMNoCommonLocalMin`, `MatedCRT.validEnvTriplePointsNoContinuum` and
+  `MatedCRT.matingOfTreesCellSideIdentity_of_literature` (`MatedCRT/Audit/DerivedCountedAxioms.lean`): the audit
+  requires propext, Classical.choice, Quot.sound.
+
+### The premise `tutteLP` from the quenched unit-scale convergence of the zero cone (2026-11-26)
+
+Paths relative to `MatedCRT/FirstPass/Derived/`. GMS21 = Gwynne-Miller-Sheffield, arXiv:1705.11161; the Theorem 3.10
+cited is that of arXiv:1807.07515.
+- `GMS21CanonicalTutteLPQuenched.lean`: `tutteLP_canonical_of_theorem310_quenchedZeroCone_edgeCountCode` (:55) gives the
+  field `tutteLP` of `CanonicalHypotheses ν` (for every `0 < γ < 2` a valid environment of the canonical model whose
+  walk and Brownian motion stopped at their exits from `B_R(0)` are close in Lévy-Prokhorov distance from every
+  selected start with probability tending to one), GMS21, proof of Theorem 3.4, case 1, and proof of Lemma 3.5.
+  Premises: `hcpl`; `h310 : GMSTheorem310`; `hpoly : ZeroConePolygonalConfiguration
+  D hγ` for every coupling on `ℝ` (`GMS21ZeroConeQuenchedPolygonal.lean:275`); `hcode : ZeroConeEdgeCountCode D hγ` for
+  every coupling on `ℝ` (`GMS21ZeroConeAnnulusRepairProofs.lean:146`); and `h1 : ConeAnnulusAreaLawEquivalence γ`,
+  `h3 : ConeConfigReconstruction γ` for `γ ∈ (0, 2)` (the first and third inputs of GMS21 Lemma 3.3). The form on
+  annuli of Lemma 3.5 for the shifted zero-cone configuration follows from the quenched convergence of the unit-scale
+  errors, which Theorem 3.10 gives on the law of the polygonal configuration, with the small-cell estimate
+  `gmsSmallCellEstimate`; from the scaling law of the weighted cell data (`zeroConeCurveDilationLaw` and the
+  dilation-invariant code of the edge counts); and from the measurability of the uniform errors
+  (`weightedErrorSuperlevelBorelProjection`); Lemma 3.3 for the local configurations follows from its inputs, of which
+  the offset density is proved (`coneOffsetDensity_of_bumpTilt`, `coneAreaBumpTilt`). It is an alternative to
+  `tutteLP_canonical_of_theorem310_zeroConeSteps`, with the premises just listed in place of those of that form.
+- `tutteLP_canonical_of_theorem310_quenchedZeroCone` (:99): the same, with `hcode` replaced by
+  `hcone : CorrelatedBMNoCommonLocalMin` and `htriple : CorrelatedBMPeanosphereTriplePointsNoContinuum`
+  (`ZeroConeEdgeCountCodeProof.lean:66`: for almost every correlated Brownian pair the points visited three times by
+  every Peanosphere curve of the pair contain no continuum), through `zeroConeEdgeCountCode`
+  (`ZeroConeEdgeCountCodeProof.lean:489`).
+- `GMS21CanonicalTutteLPQuenchedLiterature.lean`: `tutteLP_canonical_of_theorem310_quenchedZeroCone_literature` (:49):
+  the same, with `hcone` and `htriple` replaced by `hLG : PlanarBMNoTwoSidedConePoints` and
+  `hA : CorrelatedBMTraversalTriplePointsNoContinuum` (previous section), through `correlatedBMNoCommonLocalMin` and
+  `ae_forall_peanosphere_not_containsNondegenerateContinuum`. The premise `hLG` is proved in the section on cone points
+  below.
+- The measurable-space and Borel instances on the dilation curve space in `ZeroConeLemma35StepsProof.lean` have
+  explicit names so that this module and the modules of `GMS21CanonicalTutteLPQuenched.lean` can be imported together.
+- `#print axioms MatedCRT.tutteLP_canonical_of_theorem310_quenchedZeroCone_edgeCountCode`,
+  `MatedCRT.tutteLP_canonical_of_theorem310_quenchedZeroCone` and
+  `MatedCRT.tutteLP_canonical_of_theorem310_quenchedZeroCone_literature` (`MatedCRT/Audit/DerivedCountedAxioms.lean`): the
+  audit requires propext, Classical.choice, Quot.sound.
+
+### The chart input at the canonical model, and Theorems 1.4 and 1.6 from the steps of its proof (2026-11-26)
+
+Paths relative to `MatedCRT/FirstPass/Derived/`.
+- `CanonicalCountedFormsChartSteps.lean`: `bg20ChartFieldInput_canonical_of_chartSteps` (:78) gives
+  `BG20ChartFieldInput (ProbeMi.canonicalSLEModel ν)`, the premise `hC` of the counted forms
+  `closed_1_4/closed_1_6_quantumConeScaling_coneDimension_canonical_of_coupling_tutteLP_chartField`
+  (`CanonicalCountedFormsOfCouplingClock.lean:54`, `:79`), from `hcpl`, `hTutteLP`, and the premises
+  `hLQG : ∀ γ ∈ (0, 2), LQGMeasureChartStmt γ` (the coordinate change of the LQG measure),
+  `hG : WindowFrontierJordanInput (ProbeMi.canonicalSLEModel ν)`, `hDMS : DMSIntrinsicPastFutureIndependenceLaw ν`,
+  `hLG : PlanarBMNoTwoSidedConePoints`, `hA : CorrelatedBMTraversalTriplePointsNoContinuum` and
+  `hB : BrownianBeurlingEstimate`. Steps: Lévy's conformal invariance of planar Brownian motion
+  (`levyConformalChartStmt`) and the transported Revuz measure (`chartTransportRevuzStmt_of_levyConformalChart`) with
+  `hLQG` give the coordinate change of Liouville Brownian motion
+  (`chartFieldLBMLimitStmt_of_lqgMeasureChart_of_chartTransportRevuz`; Berestycki (2015), Theorem 1.3); the independence
+  of the windows for the inverse charts, BG20 Lemma 7.21, comes from `hDMS` (Duplantier-Miller-Sheffield, Theorem 1.9)
+  through `bg20ChartIndependenceInputBG_of_dmsIntrinsicLaw`, the intrinsic chart field step
+  (`bg20WindowFieldIntrinsicInput_of_windowFrontierJordan`, with `hG`), the intrinsic discrete window law step from the
+  cell-side identity (`matingOfTreesCellSideIdentity_of_literature`, with `hLG` and `hA`) and the frozen window law
+  comparison (`bg20FrozenWindowLawComparison`), and the exterior regularity of Jordan domains
+  (`jordanDomainExteriorRegularity`, with `hB`). At the canonical model the inputs of the frozen window law comparison
+  are proved from the couplings and `hTutteLP`: the normalized law, the closure properties and the reference
+  environments (from the Gaussian Liouville clocks), the uniform-start invariance principle, the scaling of the cone
+  environments, mating-of-trees rigidity and the time-change half of BG20 Lemma 7.4 (`hN5a_of_exitClassLaws`, with the
+  Brownian class laws of the limit).
+- `closed_1_4_quantumConeScaling_coneDimension_canonical_of_coupling_tutteLP_chartSteps` (:150) and
+  `closed_1_6_quantumConeScaling_coneDimension_canonical_of_coupling_tutteLP_chartSteps` (:179) conclude
+  `ConvergenceOfIDLAStmt (ProbeMi.canonicalSLEModel ν)` and `ConvergenceOfDivSandpileStmt (ProbeMi.canonicalSLEModel ν)`
+  from `hcpl`, `hTutteLP`, `hLQG` for `0 < γ < 2`, `hG`, `hDMS`, `hLG`, `hA` and `hB`. They replace the premise `hC`
+  of the earlier forms by these five premises; `hG`, `hLG` and `hB` are discharged in the sections below.
+- `#print axioms MatedCRT.FirstPass.Derived.bg20ChartFieldInput_canonical_of_chartSteps` and the two closed forms
+  (`MatedCRT/Audit/CanonicalAxioms.lean`): the audit requires propext, Classical.choice, Quot.sound.
+
+### The Jordan frontier of the windows from one curve per pair (2026-11-28)
+
+Paths relative to `MatedCRT/FirstPass/Derived/`. BG20 = Berestycki-Gwynne (2020), arXiv:2003.10320.
+- `WindowFrontierJordanGenuineCurve.lean`: the named input `WindowFrontierJordanGenuineCurve` (:49). For `0 < γ < 2`,
+  fixed times `a < u < b` and almost every `γ`-correlated two-sided Brownian pair there is a continuous proper
+  surjection `g : ℝ → ℂ` whose fibres are the classes of the equivalence relation generated by the direct
+  identifications of the pair, with `g(u)` in the interior of `g([a, b])` and a Jordan curve as frontier of the
+  component of that interior containing `g(u)`. The curve is the whole-plane space-filling SLE on the `γ`-quantum cone
+  parametrized by area (Duplantier-Miller-Sheffield, arXiv:1409.7055, Theorem 1.9 and (1.8), p. 27, for the correlated
+  pair for every `κ' > 4`; Gwynne-Holden-Miller-Sun, arXiv:1510.04687, Theorem 1.1, for `κ' > 8`; fibres: DMS Lemmas 8.9
+  and 8.15, pp. 143-144, 148). The interior point is BG20, p. 62; the Jordan frontier is BG20, proof of Lemma 7.21,
+  p. 64: for `κ' ≥ 8` the trace of `g([a, b])` has the topology of a closed disc (BG20, Section 2.2.2, p. 16), and for
+  `4 < κ' < 8` the interiors of the past and future traces at a fixed time are chains of Jordan domains (Gwynne-Sung,
+  Ann. Probab., p. 672, with the stationarity (1.9) of DMS) and a component of the intersection of two Jordan domains
+  is a Jordan domain (Kerékjártó, in the form of Bonino, Proc. Amer. Math. Soc., Section 3, before Proposition 3.1).
+- `WindowFrontierJordanTransfer.lean`: `windowFrontierJordanInput_of_genuineCurve (hJ : WindowFrontierJordanGenuineCurve)
+  (𝒮) : WindowFrontierJordanInput 𝒮` (:61), for every model `𝒮` (`WindowFrontierJordanInput`,
+  `WindowInverseChartJointLimit.lean:46`: in a valid environment, for fixed times `a < u < b`, almost surely the
+  frontier of the window domain of the curve is a Jordan curve). In a valid environment the curve is almost surely a
+  Peanosphere curve of its boundary-length pair, the curve of `hJ` for that pair is another one, and the homeomorphism
+  of the plane between them (`LatticeProb.Peanosphere.exists_homeomorph`) carries the window component and its frontier
+  (`image_frontier_windowComponent`, :45, and `isJordanCurve_image_homeomorph`, :37). It discharges the premise `hG` of
+  `bg20ChartFieldInput_canonical_of_chartSteps` and `hJF` of `bg20FrozenWindowLawComparison`, from
+  `WindowFrontierJordanGenuineCurve`.
+- `#print axioms MatedCRT.windowFrontierJordanInput_of_genuineCurve` (`MatedCRT/Audit/DerivedCountedAxioms.lean`): the
+  audit requires propext, Classical.choice, Quot.sound.
+
+### Planar Brownian motion has no two-sided cone points of angle less than `π` (2026-11-28)
+
+Paths relative to `MatedCRT/FirstPass/Derived/PlanarBMConePoints/`.
+- `NoConePoints.lean`: `noTwoSidedConePoints (hμ : IsCorrelatedBM2 (√2) μ)` (:69), Le Gall, *Some properties of planar
+  Brownian motion*, Saint-Flour XX (1990), Lecture Notes in Math. 1527, Chapter III, Theorem 3(i), p. 136: for the law
+  `μ` of a two-sided standard planar Brownian motion `w`, almost surely there are no time `t > 0`, closed wedge
+  `{v | 0 ≤ ⟪a, v⟫, 0 ≤ ⟪b, v⟫}` with linearly independent inward normals `a`, `b` (angle less than `π`) and `ε ∈ (0, t)`
+  with `w s - w t` in the wedge for all `s ∈ [t - ε, t + ε]`. The proof reduces to one symmetric wedge of rational
+  angle: every such wedge lies, after a rotation by a rational angle, in the closed wedge of a rational angle `θ < π`
+  around the positive first axis (`WedgeCover.lean:104`); the rotated path is again a two-sided standard planar
+  Brownian motion (`Rotation.lean:101`); and for one such wedge, one radius `2/(j+1)` and one time interval `[-K, K]`
+  the cone points form a null event (`FixedWedge.lean:342`, by the modulus of continuity of Brownian motion and the
+  independence of the forward and backward increments at the left ends of cells of length `1/n`). Countably many
+  null events cover all cone points.
+- `Holds.lean`: `planarBMNoTwoSidedConePoints : PlanarBMNoTwoSidedConePoints` (:23), with no hypothesis, so the named
+  input of the cell-side identity (`MatingOfTreesCellSideInputsProof.lean:60`) holds; `correlatedBMNoCommonLocalMin_holds :
+  CorrelatedBMNoCommonLocalMin` (:28); and `matingOfTreesCellSideIdentity_of_triplePoints (hA :
+  CorrelatedBMTraversalTriplePointsNoContinuum) : MatingOfTreesCellSideIdentity 𝒮` (:33), the cell-side identity from the
+  statement on the triple points alone. These discharge the premise `hLG` of
+  `matingOfTreesCellSideIdentity_of_literature`, of `tutteLP_canonical_of_theorem310_quenchedZeroCone_literature`, of
+  `bg20ChartFieldInput_canonical_of_chartSteps` and of the two closed forms `..._chartSteps`, and the premise `hcone` of
+  `tutteLP_canonical_of_theorem310_quenchedZeroCone`.
+- `#print axioms MatedCRT.PlanarBMConePoints.noTwoSidedConePoints`, `MatedCRT.planarBMNoTwoSidedConePoints`,
+  `MatedCRT.correlatedBMNoCommonLocalMin_holds` and `MatedCRT.matingOfTreesCellSideIdentity_of_triplePoints`
+  (`MatedCRT/Audit/DerivedCountedAxioms.lean`): the audit requires propext, Classical.choice, Quot.sound.
+
+### The Beurling estimate for planar Brownian motion (2026-11-27)
+
+Paths relative to `MatedCRT/FirstPass/Derived/`.
+- `BrownianBeurling/BrownianBeurlingEstimateProof.lean`: `MatedCRT.BrownianBeurling.brownianBeurlingEstimate :
+  BrownianBeurlingEstimate` (:127), with no hypothesis (Lawler, *Conformally Invariant Processes in the Plane*, AMS 2005,
+  Theorem 3.76; Lawler-Limic, arXiv:math/0403309, Section 1). `BrownianBeurlingEstimate`
+  (`JordanDomainExteriorRegularityProof.lean:54`): there is `C ≥ 0` such that for every curve `γ` from `w = γ 0` to a
+  point at distance at least `R` from `w`, planar Brownian motion started at `y` with `|y - w| < R` leaves `B(w, R)`
+  before hitting `γ` with probability at most `C (|y - w| / R)^{1/2}`. The proof applies the analytic Beurling estimate
+  for harmonic majorants of Lattice-Probability (`QuantumZipper.Thm18Asm.LWFar.beurlingHarmStmt_holds`, by Carleman's
+  method) to the probability of leaving a disc before hitting the closed `δ`-thickening of the trace of `γ`, and lets
+  the thickening tend to `0`. That probability (`avoidanceProb`, `BrownianBeurling/AvoidanceProbability.lean:26`) has
+  the mean value property on circles whose closed disc avoids the compact set
+  (`circleAverage_avoidanceProb`, `BrownianBeurling/AvoidanceMeanValue.lean:133`, by the strong Markov property at the
+  exit of the disc); a bounded measurable function with the circle mean value property is harmonic
+  (`harmonicOnNhd_of_forall_circleAverage_eq`, `BrownianBeurling/MeanValueHarmonic.lean:197`); and it tends to `0` at a
+  point of the boundary of the thickening that has an exterior disc (`exists_avoidanceProb_le_of_exterior_disc`,
+  `BrownianBeurling/ThickeningBarrier.lean:124`).
+- It discharges the premise `hB : BrownianBeurlingEstimate` of `jordanDomainExteriorRegularity`
+  (`JordanDomainExteriorRegularityProof.lean:206`), of `bg20WindowJointConvergenceInput_proved` (:213) and of
+  `bg20ChartFieldInput_canonical_of_chartSteps` and the two closed forms `..._chartSteps`.
+- `#print axioms MatedCRT.BrownianBeurling.brownianBeurlingEstimate` (`MatedCRT/Audit/DerivedCountedAxioms.lean`): the
+  audit requires propext, Classical.choice, Quot.sound.
+
+### The cell-side identity from the triple points of Peanosphere curves (2026-11-27)
+
+Paths relative to `MatedCRT/FirstPass/Derived/PeanosphereTriplePoints/`.
+- `CellSideOfPeanosphere.lean`: `validEnvTriplePointsNoContinuum_of_peanosphere (hT :
+  GMS310Transfer.CorrelatedBMPeanosphereTriplePointsNoContinuum) : ValidEnvTriplePointsNoContinuum 𝒮` (:31) and
+  `matingOfTreesCellSideIdentity_of_peanosphere (hLG : PlanarBMNoTwoSidedConePoints) (hT) :
+  MatingOfTreesCellSideIdentity 𝒮` (:45). They replace `CorrelatedBMTraversalTriplePointsNoContinuum` by the statement
+  `CorrelatedBMPeanosphereTriplePointsNoContinuum` (`ZeroConeEdgeCountCodeProof.lean:66`) in the inputs of the cell-side
+  identity: the proofs of `validEnvTriplePointsNoContinuum` and `matingOfTreesCellSideIdentity_of_literature` use the
+  traversal statement only through the transfer to every Peanosphere curve of the pair. The same statement `hT` is the
+  premise `htriple` of `tutteLP_canonical_of_theorem310_quenchedZeroCone`.
+- `ContinuumCover.lean`: `not_containsNondegenerateContinuum_of_subset_biUnion` (:55): a subset of the plane covered by
+  countably many compact totally disconnected sets contains no continuum of positive diameter (by Baire's theorem on
+  the continuum, one member of the cover contains a relatively open part of it, and a clopen neighbourhood in that
+  member cuts out a proper clopen subset of the continuum). With `isTotallyDisconnected_of_interior_eq_empty` (:26: a
+  subset of the line with empty interior is totally disconnected) and `isTotallyDisconnected_image_of_injOn` (:42: a
+  continuous injective image of a compact totally disconnected subset of the line is totally disconnected), it is a
+  step towards `CorrelatedBMPeanosphereTriplePointsNoContinuum`, which remains open.
+- `#print axioms MatedCRT.validEnvTriplePointsNoContinuum_of_peanosphere`,
+  `MatedCRT.matingOfTreesCellSideIdentity_of_peanosphere` and
+  `MatedCRT.PeanosphereTriplePoints.not_containsNondegenerateContinuum_of_subset_biUnion`
+  (`MatedCRT/Audit/DerivedCountedAxioms.lean`): the audit requires propext, Classical.choice, Quot.sound.
+
+### Lemmas 5.4, 7.2 and 7.4 at the canonical model (2026-11-28)
+
+Paths relative to `MatedCRT/Assembly/`.
+- `CanonicalWrappers.lean`: `lLowerBound_canonical (ν) (H : CanonicalHypotheses ν) : LLowerBoundStmt
+  (ProbeMi.canonicalSLEModel ν)` (:32), Lemma 5.4, from `closed_5_4_clean` with `certifiedReferenceModel_canonical`
+  and the canonical crude Green bound of Berestycki–Gwynne, Lemma 5.6 (`frozenBG20GreenCrudeCanonical_holds`);
+  `massBoundOdometerAboveScale_canonical (ν) (H)` (:40), Lemma 7.2 in its corrected form above the scale, from
+  `closed_7_2`; `crudeUpperBound_canonical (ν)` (:48), Lemma 7.4 with no hypothesis, from `closed_4_4` and the degree
+  bound, which hold for every model.
+- `#print axioms` of the three (`MatedCRT/Audit/CanonicalAxioms.lean`): the audit requires propext,
+  Classical.choice, Quot.sound.
+
+### The local negative regularity of the zero-boundary Gaussian free field on a disc (2026-11-28)
+
+Paths relative to `MatedCRT/FirstPass/Derived/`.
+- `LQGMeasureChartInputs.lean`: the statement `ZeroBoundaryGFFLocalRegularity`: almost surely, for every `α < 0` and
+  every compact `K` in the disc, the pairings of the zero-boundary GFF with `t⁻² η((· − x)/t)`, `x ∈ K`, `0 < t ≤ t₀`,
+  `η` smooth with `|η|, ‖Dη‖ ≤ 1` and support in the unit disc, are at most `C t^α` (De Nitti–Schweiger,
+  arXiv:2301.13781v4, Proposition 2.1, in its test-function form). `LQGMeasureChartSmooth.lean` holds the smooth
+  approximations of the LQG measure on a disc that the coordinate change of the LQG measure uses.
+- `GFFLocalRegularity/Main.lean`: `zeroBoundaryGFFLocalRegularity : ZeroBoundaryGFFLocalRegularity` with no
+  hypothesis. For `1 < q < 2` the pairing extends to a bounded map `L^q(D) → L²(P)` with centred Gaussian values
+  (`LpExtension.lean`, from the variance formula, Hölder's inequality and the Sobolev inequality, Gilbarg–Trudinger,
+  Theorem 7.10, in `DualBound.lean`); Green's representation formula with the gradient of the Newton kernel
+  (`NewtonGradient.lean`, Gilbarg–Trudinger, (2.17)) writes the pairing as the integral of a Gaussian field against
+  the gradient of the test function (`IdentityFixed.lean`, `IdentityAll.lean`); the field has increments of variance
+  at most `C |x − x'|^{2(2/q − 1)}` and so a version that is Hölder on compacts of every exponent below `2/q − 1`
+  (`HolderVersion.lean`, the Kolmogorov–Chentsov theorem); and the integral of the gradient of a test function
+  vanishes (`RescaledTest.lean`).
+- It discharges the hypothesis `hR : ZeroBoundaryGFFLocalRegularity` of the coordinate change of the LQG measure.
+- `#print axioms MatedCRT.GFFLocalRegularity.zeroBoundaryGFFLocalRegularity` (`MatedCRT/Audit/DerivedCountedAxioms.lean`):
+  propext, Classical.choice, Quot.sound.
+
+### The area measures of the two quantum cones on a bounded annulus (2026-11-28)
+
+Paths relative to `MatedCRT/FirstPass/Derived/`. GMS21 = Gwynne–Miller–Sheffield, arXiv:1705.11161.
+- `ConeAnnulusAreaLawEquivalenceHolds.lean`: `coneAnnulusAreaLawEquivalence (γ) : ConeAnnulusAreaLawEquivalence γ`
+  (:30) with no hypothesis (the statement is `GMS21Lemma33Cone.lean`): for `0 < γ < 2` and a curve independent of the
+  cone data, the laws of `(e, μ_γ|{δ < |z| < M})` and `(e, μ_0|{δ < |z| < M})` for the `γ`-quantum cone and the
+  `0`-quantum cone are mutually absolutely continuous for every `0 < δ < M` (GMS21 §2.3.1 and the local absolute
+  continuity in the proof of Theorem 3.4, case 1). It is `coneAnnulusAreaLawEquivalence_of_steps` with its four steps
+  proved: the locality of the area measure (`ConeAnnulusAreaLawEquivalenceLocal*.lean`, through a law-independent
+  measurable decoder of the cut-off dyadic area approximations), the inner radial paths (Brownian motions with
+  drifts `γ` and `0` on a bounded time interval, the Cameron–Martin theorem), the outer radial windows (the Markov
+  property at a fixed time, the probability `1 - e^{-2 c δ}` that Brownian motion with drift `c > 0` stays above `-δ`,
+  and the Cameron–Martin theorem on `[0, N]`) and the law of the lateral part.
+- It discharges the premise `h1 : ∀ γ ∈ Ioo 0 2, ConeAnnulusAreaLawEquivalence γ` of
+  `tutteLP_canonical_of_theorem310_quenchedZeroCone` and of its `_literature` form.
+- `#print axioms MatedCRT.coneAnnulusAreaLawEquivalence` (`MatedCRT/Audit/DerivedCountedAxioms.lean`): the audit
+  requires propext, Classical.choice, Quot.sound.

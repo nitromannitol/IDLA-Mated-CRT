@@ -118,7 +118,7 @@ approximating laws from `ψ(z) = 0` converge weakly to `K₀` of the chart field
 Source: Berestycki (2015), Theorem 1.3 (the image under a conformal map of Liouville Brownian motion, up to its exit
 time, is the Liouville Brownian motion of the field `h ∘ φ + Q log |φ'|`), whose proof (§2, steps C1-C5 of the
 basis approximation) identifies the limit of the transported clocks; simultaneity in the chart: Sheffield–Wang (2016),
-Theorem 1.1, for the LQG measures. On the Revuz route it follows from `LQGMeasureChartStmt` and
+Theorem 1.4, for the LQG measures. On the Revuz route it follows from `LQGMeasureChartStmt` and
 `ChartTransportRevuzStmt` (`chartFieldLBMLimitStmt_of_lqgMeasureChart_of_chartTransportRevuz`). -/
 def ChartFieldLBMLimitStmt (γ : ℝ) : Prop :=
   ∃ K₀ : (𝓓(unitDiscOpens, ℝ) → ℝ) → ProbabilityMeasure (ContinuousPath ℂ), Measurable K₀ ∧
@@ -134,7 +134,7 @@ at `z`, `M` of the chart field `h ∘ φ + Q log |φ'|` is the image under `ψ` 
 
 Source: Duplantier–Sheffield (2011), *Liouville quantum gravity and KPZ*, Proposition 2.1 (the coordinate change
 `μ_{h ∘ φ + Q log |φ'|} = φ^* μ_h` for a fixed conformal map); Sheffield–Wang (2016), *Field-measure correspondence in
-Liouville quantum gravity almost surely commutes with all conformal maps simultaneously*, Theorem 1.1 (almost surely
+Liouville quantum gravity almost surely commutes with all conformal maps simultaneously*, Theorem 1.4 (almost surely
 for all conformal maps at once). -/
 def LQGMeasureChartStmt (γ : ℝ) : Prop :=
   ∃ M : (𝓓(unitDiscOpens, ℝ) → ℝ) → Measure ℂ, Measurable M ∧
