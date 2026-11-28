@@ -20,7 +20,7 @@ difference of the integrals of a test function by `(e^{C 2^{-k/2}} − 1)` times
 
 This completes the straightening step in the fixed-scale form of the coordinate change of Sheffield–Wang
 (arXiv:1605.06171v2, Theorem 1.4; compare the change of variables in the proof of Duplantier–Sheffield,
-arXiv:0808.1560v2, Proposition 2.1).
+arXiv:0808.1560v2, Proposition 2.1, p. 13).
 -/
 
 set_option autoImplicit false

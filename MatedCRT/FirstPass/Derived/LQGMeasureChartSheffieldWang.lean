@@ -20,7 +20,9 @@ Proposition 2.1, p. 9). The proof has two steps, and the almost sure event is fi
 1. *Variable source radii.* The envelope statement for the bumps `f` and `f_{1/3}` (`log₂(1/3)` is irrational; the
    two circle limits agree since vague limits are unique) gives, for every continuous `b > 0` on the disc, the
    convergence of the smooth approximations at the radius `2^{-k} b(z)` to `μ`
-   (`isVagueLimitOn_varScaleApprox_of_regularity`).
+   (`isVagueLimitOn_varScaleApprox_of_regularity`). The regularity input also enters here: it gives the local
+   finiteness of the envelope measures, which the vague convergence `QuantumZipper.IsVagueLimitOn` (stated with
+   Bochner integrals) does not carry.
 2. *Straightening the bump.* With the local regularity `h ∈ C^{-1/2}_loc`, the smooth approximation of the
    pulled-back field at the fixed scale `2^{-k}` is, after the change of variables `w = ψ(z)`, the smooth approximation
    of `h` at the radius `2^{-k} |φ'(ψ z)|` up to a factor `1 + O(2^{-k/2})`
