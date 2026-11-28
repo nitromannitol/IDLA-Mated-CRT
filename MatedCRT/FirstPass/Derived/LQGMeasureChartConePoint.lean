@@ -4,6 +4,7 @@ import MatedCRT.FirstPass.Derived.LQGMeasureChartOpenPatch
 import MatedCRT.FirstPass.Derived.LQGMeasureChartCone
 import MatedCRT.FirstPass.Derived.LQGMeasureChartPole
 import MatedCRT.FirstPass.Derived.LQGMeasureChartBorel
+import MatedCRT.FirstPass.Derived.LQGMeasureChartWholePlane
 import MatedCRT.FirstPass.Derived.ConeMeasureSingularWeight
 import LatticeProb.Bonanno.LQGMetric.Papers.DFGPS.T12P0
 import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgRate
@@ -30,9 +31,8 @@ gravity and KPZ* (arXiv:0808.1560v2), §3.3 and the paragraph after Proposition 
   `ψ = id`) and uniqueness of vague limits, at `0` because neither measure has an atom there
   (`ae_coneMeasure_singleton_zero`).
 
-The input for the whole-plane GFF itself (the coordinate change on open sets with an atomless measure, almost surely)
-is the hypothesis `hGFF` of `MatedCRTEnv.IsValid.ae_openChartProp_of_wholePlane` (any mollifier `f`) and of
-`MatedCRTEnv.IsValid.ae_openChartProp` (the mollifier `stdMollifier`).
+The property for the normalized whole-plane GFF itself (`ae_openChartPropNoAtom_wholePlane`) holds with its γ-LQG
+area measure (`ae_openChartProp_lqgArea_wholePlane`).
 -/
 
 set_option autoImplicit false
@@ -233,11 +233,11 @@ theorem measure_unitLimitSet_inter_eq_one {ν : Measure LQGMetric.DistC} [IsProb
 /-- A measurable set of full measure inside the property, closed under adding constants: the field normalized by
 its unit circle average `g_1(0)` lies in a measurable full-measure subset of the property. -/
 theorem exists_measurableSet_addConst_mem (hf : IsMollifier f) {ν : Measure LQGMetric.DistC}
-    [IsProbabilityMeasure ν] (hν : LQGMetric.IsNormalizedWPGFF id ν) (hGFF : ∀ᵐ g ∂ν, OpenChartPropNoAtom γ f g) :
+    [IsProbabilityMeasure ν] (hν : LQGMetric.IsNormalizedWPGFF id ν) (hprop : ∀ᵐ g ∂ν, OpenChartPropNoAtom γ f g) :
     ∃ E' : Set LQGMetric.DistC, MeasurableSet E' ∧ (∀ g ∈ E', OpenChartPropNoAtom γ f g) ∧
       (∀ g (c : ℝ), g ∈ E' → LQGMetric.addConst g c ∈ E') ∧ ν E' = 1 := by
   obtain ⟨E, hEm, hES, hE1⟩ :=
-    exists_measurableSet_subset_measure_eq_one (S := {g | OpenChartPropNoAtom γ f g}) hGFF
+    exists_measurableSet_subset_measure_eq_one (S := {g | OpenChartPropNoAtom γ f g}) hprop
   exact ⟨unitLimitSet ∩ unitNormalize ⁻¹' E, measurableSet_unitLimitSet.inter (measurable_unitNormalize hEm),
     fun g hg => noAtom_of_unitNormalize hf (hES hg.2), fun g c hg => addConst_mem_unitNormalize_preimage hg c,
     measure_unitLimitSet_inter_eq_one hν hEm hE1⟩
@@ -257,9 +257,9 @@ theorem noAtom_sub_log_of_affineComp (hf : IsMollifier f) {x : ℂ} (hx : ‖x�
 distributions with the law `ν` of the normalized whole-plane GFF. -/
 theorem ae_openChartPropNoAtom_sub_log (hγ0 : 0 < γ) (hγ2 : γ < 2) (hf : IsMollifier f)
     {ν : Measure LQGMetric.DistC} [IsProbabilityMeasure ν] (hν : LQGMetric.IsNormalizedWPGFF id ν)
-    (hGFF : ∀ᵐ g ∂ν, OpenChartPropNoAtom γ f g) :
+    (hprop : ∀ᵐ g ∂ν, OpenChartPropNoAtom γ f g) :
     ∀ᵐ g ∂ν, OpenChartPropNoAtom γ f (g - γ • MatedCRTHarmonic.MatedCRT.ofFunC fun z => Real.log ‖z‖) := by
-  obtain ⟨E', hE'm, hE'S, hE'c, hE'1⟩ := exists_measurableSet_addConst_mem hf hν hGFF
+  obtain ⟨E', hE'm, hE'S, hE'c, hE'1⟩ := exists_measurableSet_addConst_mem hf hν hprop
   -- rooting at a point `x` of the unit disc, and moving the root to the origin
   have hroot := ae_measure_add_covDist_mem hν hγ0 hγ2 hE'm hE'1
   have : (ae (volume.restrict (ball (0 : ℂ) 1))).NeBot :=
@@ -371,24 +371,29 @@ theorem measure_eq_of_openChartProp (hf : IsMollifier f) {h : LQGMetric.DistC} {
 
 end ConePoint
 
+/-- **The property for the normalized whole-plane GFF.** Given the two cited inputs (`SheffieldWangEnvelope`,
+`ZeroBoundaryGFFLocalRegularity`), `0 < γ < 2` and a bump function `f`: almost surely the normalized whole-plane GFF
+has the coordinate change on every open set with an atomless measure (its γ-LQG area measure). -/
+theorem ae_openChartPropNoAtom_wholePlane (hE : SheffieldWangEnvelope) (hR : ZeroBoundaryGFFLocalRegularity)
+    {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) {f : ℂ → ℝ} (hf : IsMollifier f) {ν : Measure LQGMetric.DistC}
+    [IsProbabilityMeasure ν] (hν : LQGMetric.IsNormalizedWPGFF id ν) : ∀ᵐ g ∂ν, OpenChartPropNoAtom γ f g := by
+  filter_upwards [ae_openChartProp_lqgArea_wholePlane hE hR hγ0 hγ2 hf hν] with g hg
+  exact ⟨_, hg.1, hg.2⟩
+
 end LQGMeasureChart
 
 open LQGMeasureChart LQGMeasureChart.ConePoint
 
-/-- **The coordinate change of the LQG measure on open sets through the cone point**, from the property for the
-whole-plane GFF. Given the two cited inputs (`SheffieldWangEnvelope`, `ZeroBoundaryGFFLocalRegularity`),
-`0 < γ < 2`, a bump function `f`, and the hypothesis `hGFF` that a normalized whole-plane GFF almost surely has the
-coordinate change on open sets with an atomless measure: for a valid environment and a measurable version `H` of its
-field, almost surely `H` has the coordinate change on every open set with the LQG measure `S.μ` of the environment,
-including the open sets containing the cone point `0` (Duplantier–Sheffield (2011), §3.3; Sheffield–Wang (2016),
-Theorem 1.4). -/
+/-- **The coordinate change of the LQG measure on open sets through the cone point.** Given the two cited inputs
+(`SheffieldWangEnvelope`, `ZeroBoundaryGFFLocalRegularity`), `0 < γ < 2` and a bump function `f`: for a valid
+environment and a measurable version `H` of its field, almost surely `H` has the coordinate change on every open
+set with the LQG measure `S.μ` of the environment, including the open sets containing the cone point `0`
+(Duplantier–Sheffield (2011), §3.3; Sheffield–Wang (2016), Theorem 1.4). -/
 theorem MatedCRTEnv.IsValid.ae_openChartProp_of_wholePlane (hE : SheffieldWangEnvelope)
     (hR : ZeroBoundaryGFFLocalRegularity) {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
     {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (h0 : 0 < γ) (h2 : γ < 2) {f : ℂ → ℝ}
     (hf : IsMollifier f) {H : Ω → LQGMetric.DistC}
-    (hH : ∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ)
-    (hGFF : ∀ (ν : Measure LQGMetric.DistC) [IsProbabilityMeasure ν], LQGMetric.IsNormalizedWPGFF id ν →
-      ∀ᵐ g ∂ν, OpenChartPropNoAtom γ f g) :
+    (hH : ∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ) :
     ∀ᵐ ω ∂S.P, OpenChartProp γ f (H ω) (S.μ ω) := by
   have hSW := sheffieldWangDiscConformal_of_inputs hE hR
   have hP : IsProbabilityMeasure S.P := hS.isProbabilityMeasure
@@ -396,7 +401,7 @@ theorem MatedCRTEnv.IsValid.ae_openChartProp_of_wholePlane (hE : SheffieldWangEn
   have : IsProbabilityMeasure (S.P.map G) := (Measure.isProbabilityMeasure_map_iff hGm.aemeasurable).2 hP
   have hν : LQGMetric.IsNormalizedWPGFF id (S.P.map G) :=
     LQGMetric.DFGPS.T12.isNormalizedWPGFF_of_map_eq measurable_id hG (by rw [Measure.map_id])
-  have hcan := ae_openChartPropNoAtom_sub_log h0 h2 hf hν (hGFF _ hν)
+  have hcan := ae_openChartPropNoAtom_sub_log h0 h2 hf hν (ae_openChartPropNoAtom_wholePlane hE hR h0 h2 hf hν)
   have hΩ : ∀ᵐ ω ∂S.P, OpenChartPropNoAtom γ f
       (G ω - γ • MatedCRTHarmonic.MatedCRT.ofFunC fun z => Real.log ‖z‖) :=
     ae_of_ae_map hGm.aemeasurable hcan
@@ -424,13 +429,11 @@ theorem MatedCRTEnv.IsValid.ae_openChartProp_of_wholePlane (hE : SheffieldWangEn
   exact hμ'
 
 /-- **The coordinate change of the LQG measure on open sets, through the cone point**, for the mollifier
-`stdMollifier`, given the property for the normalized whole-plane GFF. -/
+`stdMollifier`. -/
 theorem MatedCRTEnv.IsValid.ae_openChartProp (hE : SheffieldWangEnvelope) (hR : ZeroBoundaryGFFLocalRegularity)
     {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω} {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ)
-    (h0 : 0 < γ) (h2 : γ < 2) {H : Ω → LQGMetric.DistC} (hH : ∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ)
-    (hGFF : ∀ (ν : Measure LQGMetric.DistC) [IsProbabilityMeasure ν], LQGMetric.IsNormalizedWPGFF id ν →
-      ∀ᵐ g ∂ν, OpenChartPropNoAtom γ stdMollifier g) :
+    (h0 : 0 < γ) (h2 : γ < 2) {H : Ω → LQGMetric.DistC} (hH : ∀ᵐ ω ∂S.P, ∀ φ : LQGMetric.TestC, S.hC ω φ = H ω φ) :
     ∀ᵐ ω ∂S.P, OpenChartProp γ stdMollifier (H ω) (S.μ ω) :=
-  hS.ae_openChartProp_of_wholePlane hE hR h0 h2 isMollifier_stdMollifier hH hGFF
+  hS.ae_openChartProp_of_wholePlane hE hR h0 h2 isMollifier_stdMollifier hH
 
 end MatedCRT
