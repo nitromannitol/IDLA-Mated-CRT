@@ -96,6 +96,38 @@ theorem isTrivialSigma_map_of_comap {Ω β : Type*} [MeasurableSpace Ω] {m : Me
   rw [Measure.map_apply_of_aemeasurable hZ (hm s hs)]
   exact h _ ⟨s, hs, rfl⟩
 
+/-- **A function approximated in `L¹` by `m`-measurable functions has an `m`-measurable version**: choose
+approximations with summable errors; they converge almost everywhere, and their `limsup` is `m`-measurable. -/
+theorem exists_stronglyMeasurable_version_of_approx {Ω : Type*} {m : MeasurableSpace Ω} [mΩ : MeasurableSpace Ω]
+    {P : Measure Ω} (hm : m ≤ mΩ) {F : Ω → ℝ} (hF : AEMeasurable F P)
+    (happrox : ∀ ε : ℝ, 0 < ε → ∃ g : Ω → ℝ, StronglyMeasurable[m] g ∧
+      ∫⁻ ω, ENNReal.ofReal |F ω - g ω| ∂P ≤ ENNReal.ofReal ε) :
+    ∃ g : Ω → ℝ, StronglyMeasurable[m] g ∧ F =ᵐ[P] g := by
+  choose g hgm hgi using fun n : ℕ => happrox ((1 / 2 : ℝ) ^ n) (pow_pos (by norm_num) n)
+  have hgm' : ∀ n, Measurable (g n) := fun n => (hgm n).measurable.mono hm le_rfl
+  have hterm : ∀ n, AEMeasurable (fun ω => ENNReal.ofReal |F ω - g n ω|) P := fun n =>
+    ENNReal.measurable_ofReal.comp_aemeasurable ((hF.sub (hgm' n).aemeasurable).abs)
+  have hsum : ∫⁻ ω, ∑' n, ENNReal.ofReal |F ω - g n ω| ∂P ≠ ∞ := by
+    rw [lintegral_tsum hterm]
+    refine ne_top_of_le_ne_top (b := ∑' n : ℕ, ENNReal.ofReal ((1 / 2 : ℝ) ^ n)) ?_
+      (ENNReal.tsum_le_tsum hgi)
+    rw [← ENNReal.ofReal_tsum_of_nonneg (fun n => by positivity) (summable_geometric_of_lt_one (by norm_num)
+      (by norm_num))]
+    exact ENNReal.ofReal_ne_top
+  have hae : ∀ᵐ ω ∂P, Tendsto (fun n => g n ω) atTop (𝓝 (F ω)) := by
+    filter_upwards [ae_lt_top' (AEMeasurable.tsum hterm) hsum] with ω hω
+    have h0 := ENNReal.tendsto_atTop_zero_of_tsum_ne_top hω.ne
+    have h1 : Tendsto (fun n => |F ω - g n ω|) atTop (𝓝 0) := by
+      have := (ENNReal.tendsto_toReal ENNReal.zero_ne_top).comp h0
+      simpa [Function.comp_def, ENNReal.toReal_ofReal (abs_nonneg _)] using this
+    have h2 : Tendsto (fun n => F ω - g n ω) atTop (𝓝 0) := by
+      rw [tendsto_zero_iff_abs_tendsto_zero]; exact h1
+    simpa using (tendsto_const_nhds (x := F ω)).sub h2
+  refine ⟨fun ω => limsup (fun n => g n ω) atTop, ?_, ?_⟩
+  · exact (Measurable.limsup fun n => (hgm n).measurable).stronglyMeasurable
+  · filter_upwards [hae] with ω hω
+    exact hω.limsup_eq.symm
+
 /-- **Functions with exterior versions are constant under a trivial exterior tail.** -/
 theorem exists_const_of_forall_extVersion {μ : Measure Field} [IsProbabilityMeasure μ]
     (htail : LatticeProb.IsTrivialSigma (⨅ k : ℕ, extSigma ((k : ℝ) + 1)) μ) {F : Field → ℝ}
