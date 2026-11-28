@@ -17,10 +17,11 @@ The forms `closed_1_4_quantumConeScaling_coneDimension_canonical_of_coupling_tut
 Remaining premises:
 * `hcpl`: the mating-of-trees coupling (Duplantier–Miller–Sheffield, Theorem 1.9), not proved;
 * `hTutteLP`: the comparison of the stopped curves of the walk and of the space-filling SLE
-  (Gwynne–Miller–Sheffield, proof of Theorem 3.4, case 1), reduced elsewhere to Theorem 3.10 and the
-  quenched zero-cone route;
-* `hLQG`: the coordinate change of the LQG measure under conformal charts (`LQGMeasureChartStmt`),
-  not proved;
+  (Gwynne–Miller–Sheffield, proof of Theorem 3.4, case 1), reduced by
+  `tutteLP_canonical_of_theorem310_quenchedZeroCone_literature` to Theorem 3.10 of Gwynne–Miller–Sheffield,
+  proved as `gmsTheorem310`, and the premises of the quenched zero-cone route;
+* `hLQG`: the coordinate change of the LQG measure under conformal charts (`LQGMeasureChartStmt`), proved
+  from the cited input `SheffieldWangEnvelope` by `lqgMeasureChartStmt_of_envelope`;
 * `hJ`: the Jordan frontier of the windows for one curve per correlated Brownian pair
   (`WindowFrontierJordanGenuineCurve`), which rests on the same coupling as `hcpl`;
 * `hDMS`: the past/future independence law of Duplantier–Miller–Sheffield, Theorem 1.9
