@@ -10,7 +10,7 @@ at most `C ‖x - y‖ ^ (2 θ)` has a modification `Y` all of whose sample path
 compact set, for every `β < θ`.
 
 The proof is the Kolmogorov-Chentsov theorem as printed in Duplantier-Sheffield, *Liouville quantum
-gravity and KPZ*, Invent. Math. 185 (2011), proof of Proposition 3.1, p. 18: the even Gaussian moments
+gravity and KPZ*, arXiv:0808.1560v2, proof of Proposition 3.1, p. 18: the even Gaussian moments
 give `E |X x - X y| ^ (2 m) ≤ M_m ‖x - y‖ ^ (2 m θ)`, and the Kolmogorov-Chentsov criterion with
 exponents `p = 2 m` and `q = 2 m θ` in dimension `d = 2` gives Hölder exponents below
 `(q - d) / p = θ - 1 / m`, hence below `θ`.  The Lean proof of the criterion is the one of the

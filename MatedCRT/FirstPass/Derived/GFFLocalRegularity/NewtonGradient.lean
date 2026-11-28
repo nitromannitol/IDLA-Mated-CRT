@@ -16,7 +16,7 @@ For `Γ(z) = (2π)⁻¹ log |z|`, the fundamental solution of the Laplacian on t
   once. It follows from the radial integral
   `∫ Dφ(y)(y - x) / |y - x|² dy = -2π φ(x)` (`HarmonicBalls.integral_fderiv_div_norm_sq`), which is
   this formula in polar coordinates around `x`.
-* `MatedCRT.GFFLocalRegularity.memLp_newtonGrad`: `x ↦ newtonGrad i x y` is in `L^q` of every ball
+* `MatedCRT.GFFLocalRegularity.memLp_newtonGrad`: `y ↦ newtonGrad i x y` is in `L^q` of every ball
   for `1 < q < 2`, because `|z|^{-q}` is integrable near `0` for `q < 2`
   (`MeasureTheory.integrableOn_ball_of_norm_le_rpow`).
 * `MatedCRT.GFFLocalRegularity.eLpNorm_newtonGrad_sub_le`: the `L^q(ℂ)` norm of
