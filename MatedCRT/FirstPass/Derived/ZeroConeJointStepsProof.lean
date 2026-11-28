@@ -23,9 +23,11 @@ curve is almost surely constant. The written answer `notes/fp-gaps/CODEX-MQ-sbl-
 This file proves the measure-theoretic core of that argument for a general random simultaneous action
 (`ae_eq_integral_of_jointInvariance`), and from it `ZeroConeJointLemmaA1` (`zeroConeJointLemmaA1`) under Lemma A.1
 for the field alone (`ZeroConeCircleAverageLemmaA1`), the scale and translation invariance of the law of the curve
-(`SpaceFillingSLESimilarityLaw`), and two named inputs stated here: the mixing of the imaginary-geometry field modulo
-`2πχ` under similarities with distant centres (`IGFieldDistantCentreMixing`) and Lemma A.4 of arXiv:1705.11161
-(`ZeroConeLemmaA4`). The curve map of the coupling carries the mixing of the field to the curve
+(`SpaceFillingSLESimilarityLaw`), and two statements stated here: the mixing of the imaginary-geometry field modulo
+`2πχ` under similarities with distant centres (`IGFieldDistantCentreMixing`, proved by `igFieldDistantCentreMixing` in
+`IGFieldDistantCentreMixingProof.lean`) and Lemma A.4 of arXiv:1705.11161 (`ZeroConeLemmaA4`, proved by
+`zeroConeLemmaA4` in `ZeroConeLemmaA4Proof.lean` from `ZeroConeUniformRootLemmaA4`). The curve map of the coupling
+carries the mixing of the field to the curve
 (`tendsto_igCurve_affineReroot_correlation`).
 -/
 
@@ -693,7 +695,9 @@ theorem measurable_igSimilarityStep (γ : ℝ) (z : ℂ) (s : ℝ) : Measurable 
 `notes/fp-gaps/CODEX-MQ-sbl-25.md`, "(a) The normalized dilation", lines 15-27: tests by the characters
 `exp(i X(f) + 2πi k U / d)`, the covariance of the whole-plane GFF, Duplantier–Sheffield, arXiv:0808.1560, §3.1, and
 the variance `Var X_r(z) ≥ log |z|` for `|z| > 1` and every `r > 0`; "They also give convergence of correlations to
-the product for any sequence `|z| → ∞` with arbitrary positive scales"). PENDING TRUTH CHECK.
+the product for any sequence `|z| → ∞` with arbitrary positive scales"). Proved: `igFieldDistantCentreMixing`
+(`IGFieldDistantCentreMixingProof.lean`); truth check: written answer MQ-sbl-34, part A, FINAL
+(`53-gms21-distant-centre-mixing-and-rerooting.md`).
 
 Let `h` be a whole-plane GFF normalized by `h_1(0) = 0` and `u` an independent uniform variable on `[0, 2πχ)`,
 `χ = 2/γ − γ/2`, and let `μ` be the law of the circle-average array of `h + u` at positive radii
@@ -715,7 +719,9 @@ def IGFieldDistantCentreMixing (γ : ℝ) (_hγ : γ ∈ Ioo (0 : ℝ) 2) : Prop
 from the largest square of an independent uniform dyadic system containing `0` with `μ_h`-mass at most `m`, there is
 a random constant `C_m > 0` with `h(C_m · + z_m) + Q log C_m` equal in law to `h`; the divergence `|z_m| → ∞` in
 probability is the written answer `notes/fp-gaps/CODEX-MQ-sbl-25.md`, line 41: "Its area tends to infinity since every
-fixed ancestor has finite mass"). PENDING TRUTH CHECK.
+fixed ancestor has finite mass"). Proved: `zeroConeLemmaA4` (`ZeroConeLemmaA4Proof.lean`), from Lemma A.4 at uniform
+roots of the capped squares (`ZeroConeUniformRootLemmaA4`); truth check: written answer MQ-sbl-34, part B, FINAL
+(`53-gms21-distant-centre-mixing-and-rerooting.md`).
 
 Let `h = coneField X₀' (coneRadial γ 0 b b')` be the circle-average embedding of the `0`-quantum cone built from a
 whole-plane GFF `X₀'` and two independent standard Brownian motions independent of it (`zeroConeFieldOf`), with law

@@ -30,10 +30,12 @@ area clock between the zero-cone curve and the γ-cone curve (`LatticeProb.ae_co
   otherwise the first return of the coordinate to its value is a direct identification with a second visit
   (`exists_directRel_right`, `exists_directRel_left`).
 
-Named hypotheses (literature, on general objects; PENDING TRUTH CHECK):
+Inputs:
 * `CorrelatedBMNoCommonLocalMin` (`MatingOfTreesCellSideIdentityProof.lean`): no common local minimum of the two
-  coordinates of a correlated planar Brownian motion (Le Gall, two-sided cone points).
-* `CorrelatedBMPeanosphereTriplePointsNoContinuum` (this file): for almost every correlated Brownian pair, the points
+  coordinates of a correlated planar Brownian motion (Le Gall, two-sided cone points). Proved:
+  `correlatedBMNoCommonLocalMin_holds` (`PlanarBMConePoints/Holds.lean`).
+* `CorrelatedBMPeanosphereTriplePointsNoContinuum` (this file; named hypothesis on general objects, truth-checked
+  TRUE by the written answer MQ-sbl-40, FINAL): for almost every correlated Brownian pair, the points
   visited three times by any Peanosphere curve of the pair contain no continuum of positive diameter (Gwynne–Holden–Miller,
   arXiv:1512.01223, Corollary 6.5; Duplantier–Miller–Sheffield, arXiv:1409.7055, (8.9), Lemmas 8.12-8.13, and the
   homeomorphism between two Peanosphere traversals of the same pair, answer line 50).
@@ -53,7 +55,8 @@ open MatedCRTHarmonic MatedCRTHarmonic.MatedCRT
 /-! ### The named hypothesis on triple points -/
 
 /-- **Named hypothesis: the points visited three times by a Peanosphere curve of a correlated Brownian motion
-contain no continuum.** PENDING TRUTH CHECK.
+contain no continuum.** Truth-checked: TRUE as stated (written answer MQ-sbl-40, FINAL); the statement is not proved
+in Lean.
 
 For `0 < γ < 2` and the law `μ` of a `γ`-correlated two-sided planar Brownian motion, for `μ`-almost every pair `p`,
 every curve `η` forming a Peanosphere with `p` (`RouteM.Peanosphere p η`: the times identified by `η` are exactly

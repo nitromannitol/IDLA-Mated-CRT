@@ -177,7 +177,7 @@ theorem absolutelyContinuous_map_prod_volume_of_tilts {Z Y : Type*} [MeasurableS
 
 /-- **The area measure of a quantum cone is quasi-invariant under smooth tilts away from the origin**
 (Cameron–Martin for the whole-plane GFF, Girsanov for the radial Brownian motion and the Weyl scaling of the
-area measure). PENDING TRUTH CHECK.
+area measure). Truth-checked: TRUE as stated (final answer `52-cone-area-bump-tilt.md`).
 
 Let `X` be a whole-plane GFF and `B, B'` standard Brownian motions with the independence structure of the cone
 data, `β ∈ {0, γ}`, `μ = quantumConeArea γ β X B B'` the `γ`-LQG area measure of the circle-average embedding

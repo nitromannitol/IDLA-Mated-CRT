@@ -40,7 +40,8 @@ variable {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
 /-- **Quenched convergence of the unit-scale errors of the zero-cone weighted cell data** (the code-level premise of
 the written answer `notes/fp-gaps/CODEX-MQ-sbl-30.md`, line 47: "For each needed `A = closedBall 0 ρ \ B_b(0)`, it
 suffices that `E_A(s, w) → 0` as `s ↓ 0`, for `λ`-almost every `w`"; the unit-mesh invariance principle in the proof
-of Lemma 3.5 of Gwynne–Miller–Sheffield, arXiv:1705.11161, lines 1327-1330). PENDING TRUTH CHECK (MQ-sbl-32).
+of Lemma 3.5 of Gwynne–Miller–Sheffield, arXiv:1705.11161, lines 1327-1330). Truth-checked: TRUE for every `0 < γ < 2`
+at the canonical model (written answer MQ-sbl-32, final answer `51-zero-cone-annulus-premise.md`).
 
 For every measurable version `G` of the boundary-length pair of the zero-cone curve and all `0 < b < ρ`, for almost
 every sample and phase `θ` under `P ⊗ Unif[0, 1]`, the uniform Lévy–Prokhorov error at spatial scale `ε`, over starts

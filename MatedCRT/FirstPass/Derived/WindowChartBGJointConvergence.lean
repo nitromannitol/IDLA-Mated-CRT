@@ -32,7 +32,9 @@ the frontier of a Jordan domain leaves its closure at once: Lawler, Theorem 3.76
 
 ## Main statements
 
-* `MatedCRT.JordanDomainExteriorRegularity`: the named input (PENDING TRUTH CHECK).
+* `MatedCRT.JordanDomainExteriorRegularity`: the exterior regularity of the frontier of a window; proved by
+  `jordanDomainExteriorRegularity` (`JordanDomainExteriorRegularityProof.lean`) from `brownianBeurlingEstimate`
+  (`BrownianBeurling/BrownianBeurlingEstimateProof.lean`).
 * `MatedCRT.windowGapBG`, `MatedCRT.measurable_windowGapBG`, `MatedCRT.chartLaw_gapDomain_windowGapBG`.
 * `MatedCRT.ae_jointLimit_crossing_of_speed`: almost every limiting path from `η(u)` crosses.
 * `MatedCRT.bg20WindowJointConvergenceInput`: `BG20WindowJointConvergenceInput 𝒮` for every `𝒮`.
@@ -59,7 +61,10 @@ Behaviour of Conformal Maps*, Springer 1992, Section 2.1); for Brownian motion s
 (Lawler, *Conformally Invariant Processes in the Plane*, AMS 2005, Theorem 3.76) applied to the portion of this arc
 crossing the annulus `{δ < |w - y| < r/2}` bounds the probability of reaching distance `r` from `y` without hitting
 the exterior by `O(√(δ/r))`; let `δ ↓ 0`, then `r ↓ 0`. This is the crossing step of the joint convergence in the proof
-of Berestycki–Gwynne (2020), Lemma 7.21. PENDING TRUTH CHECK. -/
+of Berestycki–Gwynne (2020), Lemma 7.21. Proved: `jordanDomainExteriorRegularity`
+(`JordanDomainExteriorRegularityProof.lean`) from `brownianBeurlingEstimate`
+(`BrownianBeurling/BrownianBeurlingEstimateProof.lean`); truth check: final answer
+`40-bg20-jordan-exterior-regularity.md`. -/
 def JordanDomainExteriorRegularity : Prop :=
   ∀ (U : Set ℂ) (z : ℂ) (ψ : C(ℂ, ℂ)), Bornology.IsBounded U → IsInverseChart U z ψ →
     ∀ y ∈ frontier U, ∀ᵐ b ∂planarBrownianMotion y, ContinuousPath.exitTime (closure U) b = 0

@@ -39,7 +39,7 @@ variable {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
 space-filling SLE** (`notes/refs/1705.11161.txt` lines 1952-1964, as used in the proof of Proposition 3.1, lines
 1141-1142, 1186 and 1188-1193; written answer on this proof: `notes/fp-gaps/CODEX-MQ-sbl-15.md`, lines 17-35 for
 Lemma A.1 and the curve, lines 27 and 47 for the dilations, line 59 for this form of the second clause).
-PENDING TRUTH CHECK.
+Truth-checked: both clauses TRUE as stated (final answer `29-gms21-lemma-a1-restricted.md`).
 
 1. (Lemma A.1, lines 1952-1956.) Let `h` be the circle-average embedding of the `0`-quantum cone (the field
    `zeroConeFieldOf γ X₀ B₀ B₀'` of the coupling). Every bounded, non-negative, measurable functional `F` of `h` which

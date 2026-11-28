@@ -479,7 +479,7 @@ for every similarity", line 48: "Use the Borel field-to-area map `h ↦ μ_h` fr
 theorem ... On the original field its limit agrees a.s. with the circle-average measure in the coupling. The
 simultaneous version gives `μ_{h^T}(A) = μ_h(TA)` for all similarities on one event. For the zero cone, couple to a
 whole-plane GFF with the same lateral part and inward Brownian motion ... Localize the GFF on a countable disk cover").
-PENDING TRUTH CHECK.
+Truth-checked: TRUE as stated (final answer `57-zero-cone-area-coordinate-change.md`).
 
 There is a Borel map `M` from fields to measures on `ℂ` such that, for the circle-average embedding
 `h = coneField X₀' (coneRadial γ 0 b b')` of the `0`-quantum cone built from a whole-plane GFF `X₀'` and two

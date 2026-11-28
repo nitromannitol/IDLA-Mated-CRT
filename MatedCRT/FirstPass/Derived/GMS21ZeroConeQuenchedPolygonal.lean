@@ -74,10 +74,11 @@ def CarriesUnitMeshWalk (w : C(ℝ, ℂ) × (ℤ → ℤ → ℕ)) (H : Reflecte
 the written answer `notes/fp-gaps/CODEX-MQ-sbl-32.md`, line 48: "Almost surely the maximum diameter of the scaled
 polygonal cells meeting a fixed disk tends to zero as the spatial scale `s ↓ 0`. For instance, GMS Lemma 2.9 gives
 this estimate on large origin dyadic squares. Lemma 2.8 gives the same estimate on all four possible parents").
-PENDING TRUTH CHECK. For the coded environments of the reflected invariance principle this is
-`ReflectedGMS.ae_maxDiamHittingBall_finite_and_sublinear` (Lattice-Probability,
+Proved: `gmsSmallCellEstimate` (`GMSSmallCellEstimateProof.lean`). For the coded environments of the reflected
+invariance principle this is `ReflectedGMS.ae_maxDiamHittingBall_finite_and_sublinear` (Lattice-Probability,
 `LatticeProb/Bonanno/ReflectedGMS/Spatial/LargeCellDiameterDecay.lean`, from mass transport and the finite-energy
-moment); its transfer to laws on the GMS space is not available.
+moment), transferred to laws on the GMS space by `LatticeProb.GMSRealMeshDiameter.ae_scaled_cell_diam_lt`. Truth
+check: written answer MQ-sbl-36, FINAL (`56-gms-small-cell-estimate.md`).
 
 For every probability law on the GMS space satisfying the hypotheses of Theorem 1.16 of arXiv:1807.07515, almost
 surely, for every `r > 0`, for all large `R`, every cell meeting `closedBall 0 R` has diameter at most `r R`. -/

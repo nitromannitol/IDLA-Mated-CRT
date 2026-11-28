@@ -532,7 +532,8 @@ end IsIntrinsicCurveDecoratedReembedding
 /-! ### The comparison with the chart law of the walk -/
 
 /-- **Step of Berestycki–Gwynne (2020), proof of Lemma 7.21 (2003.10320.txt lines 3812-3831): the discrete window law
-is close to the chart law of the window for the walk.** PENDING TRUTH CHECK.
+is close to the chart law of the window for the walk.** Truth-checked: TRUE for every `0 < γ < 2` and fixed
+window `p < a < u < b < q` (final answer `55-bg20-frozen-window-walk.md`).
 
 In a valid environment with a measurable version `η'` of the curve, for every sequence `ε_n → 0`, every window
 `a < u < b` and retained times `[p, q]` with `p < a` and `b < q`: for every bounded continuous `g`, the difference of

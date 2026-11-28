@@ -115,7 +115,8 @@ written answer `notes/fp-gaps/CODEX-MQ-sbl-22.md`, line 43: "Its radius `R_b` is
 event"; line 53: "Retain the scaled curve and the integer edge counts for its intervals. For the phase `θ` the
 rescaled unit cells are exactly `R_b⁻¹ η₀(b[j − 1 + θ, j + θ])`. Nontrivial common boundary arcs and multiplicities
 are preserved by this dilation. Thus the rescaled *weighted* unit-mesh data have the original law and their dilation
-is the original `b`-mesh data"; DMS, arXiv:1409.7055, Proposition 4.13(i)). PENDING TRUTH CHECK.
+is the original `b`-mesh data"; DMS, arXiv:1409.7055, Proposition 4.13(i)). Truth-checked: TRUE as stated, on
+arbitrary probability spaces (final answer `41-gms21-weighted-mesh-and-uniform-error.md`).
 
 For every measurable version `G` of the boundary-length pair there are measurable radii `R_n` tending to `0` almost
 surely and measurable curves `E_n` such that, for `n ≥ 1`, `R_n > 0` and `η₀(t/n) = R_n E_n(t)` almost surely, and
@@ -138,7 +139,8 @@ def ZeroConeWeightedMeshScaling (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ 
 is the projection of the Borel event that there exist `0 < s ≤ ε₀`, `z ∈ A`, `j ∈ ℤ` attaining an error strictly
 above the threshold with `z ∈ s K_j`. In the mesh case omit `s` and use the fixed `1/n` cells. The parameter and data
 spaces are standard Borel, so these projections are analytic, hence measurable in the completion of each indicated
-law"; Kechris, Theorem 21.10). PENDING TRUTH CHECK.
+law"; Kechris, Theorem 21.10). Truth-checked: TRUE as stated, on arbitrary probability spaces (final answer
+`41-gms21-weighted-mesh-and-uniform-error.md`).
 
 On the annuli `closedBall 0 ρ \ B_b(0)`, the scale suprema of the unit-mesh error of the weighted data are almost
 measurable for the law of the unit-mesh weighted data of `(η₀, G)`, and the mesh-`1/n` error is almost measurable for
