@@ -14,10 +14,11 @@ distance between the conditional law of `ε Ŷ^{z/ε}` given `H` and the law of 
 started from `z`, for the topology on curves modulo time parametrization of (1.8), tends to `0`.
 
 The definitions and the statement below are copied verbatim from the Lattice-Probability file
-`LatticeProb/Bonanno/ReflectedGMS/GMS/Theorem310Statement.lean` (commit e21c68da), which is not part of the
-Lattice-Probability version this repository depends on (its imports are). The copies live in the namespace
-`MatedCRT.GMS310`; `CellConfig.scaledStepPath` and `CellConfig.walkCurveLaw` there become `GMS310.scaledStepPath` and
-`GMS310.walkCurveLaw` with the cell configuration as explicit first argument.
+`LatticeProb/Bonanno/ReflectedGMS/GMS/Theorem310Statement.lean` (commit e21c68da; the file is unchanged in the
+Lattice-Probability version this repository depends on, where `ReflectedGMS.GMS.theorem3_10` proves it). The copies
+live in the namespace `MatedCRT.GMS310`; `CellConfig.scaledStepPath` and `CellConfig.walkCurveLaw` there become
+`GMS310.scaledStepPath` and `GMS310.walkCurveLaw` with the cell configuration as explicit first argument. The statement
+is proved as `gmsTheorem310` (`GMS21Theorem310Bridge.lean`).
 
 ## Encoding (as in the source file)
 
