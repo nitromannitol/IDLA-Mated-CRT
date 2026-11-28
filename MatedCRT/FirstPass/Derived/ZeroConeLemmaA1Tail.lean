@@ -56,6 +56,46 @@ def WholePlaneGFFExteriorTailTrivial : Prop :=
     IsProbabilityMeasure P → LQGMetric.IsWholePlaneGFF X P →
       LatticeProb.IsTrivialSigma (⨅ k : ℕ, LQGMetric.Blueprint.fieldSigma0On X {w : ℂ | (k : ℝ) < ‖w‖}) P
 
+/-- **Tail triviality along almost-everywhere inclusions**: if every set of `𝒞 k` is almost everywhere equal to a set
+of `𝒟 k`, the `𝒟 k` decrease and their intersection is trivial, then the intersection of the `𝒞 k` is trivial. -/
+theorem isTrivialSigma_iInf_of_ae_le {Ω : Type*} [mΩ : MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {𝒞 𝒟 : ℕ → MeasurableSpace Ω} (hanti : Antitone 𝒟)
+    (hle : ∀ k s, MeasurableSet[𝒞 k] s → ∃ t, MeasurableSet[𝒟 k] t ∧ s =ᵐ[P] t)
+    (htriv : LatticeProb.IsTrivialSigma (⨅ k, 𝒟 k) P) : LatticeProb.IsTrivialSigma (⨅ k, 𝒞 k) P := by
+  intro s hs
+  have hver : ∀ k, ∃ g : Ω → ℝ, StronglyMeasurable[𝒟 k] g ∧ s.indicator (fun _ => (1 : ℝ)) =ᵐ[P] g := by
+    intro k
+    obtain ⟨t, ht, hst⟩ := hle k s (iInf_le 𝒞 k s hs)
+    refine ⟨t.indicator fun _ => (1 : ℝ), stronglyMeasurable_const.indicator ht, ?_⟩
+    filter_upwards [hst] with ω hω
+    have hiff : ω ∈ s ↔ ω ∈ t := Iff.of_eq hω
+    by_cases hωt : ω ∈ t
+    · rw [Set.indicator_of_mem hωt, Set.indicator_of_mem (hiff.2 hωt)]
+    · rw [Set.indicator_of_notMem hωt, Set.indicator_of_notMem (fun h => hωt (hiff.1 h))]
+  obtain ⟨g, hgm, hg⟩ := LatticeProb.exists_iInf_version (P := P) hanti hver
+  have hT : MeasurableSet[⨅ k, 𝒟 k] {ω | (1 / 2 : ℝ) < g ω} := hgm measurableSet_Ioi
+  have hseq : s =ᵐ[P] {ω | (1 / 2 : ℝ) < g ω} := by
+    filter_upwards [hg] with ω hω
+    show (ω ∈ s) = ((1 / 2 : ℝ) < g ω)
+    by_cases hωs : ω ∈ s
+    · rw [Set.indicator_of_mem hωs] at hω
+      rw [← hω]
+      exact propext ⟨fun _ => by norm_num, fun _ => hωs⟩
+    · rw [Set.indicator_of_notMem hωs] at hω
+      rw [← hω]
+      exact propext ⟨fun h => absurd h hωs, fun h => by norm_num at h⟩
+  rw [measure_congr hseq]
+  exact htriv _ hT
+
+/-- **Triviality transfers to the image law**: if the pullback of a sub-σ-algebra `m` along an almost everywhere
+measurable map `Z` is trivial for `P`, then `m` is trivial for the image law `P.map Z`. -/
+theorem isTrivialSigma_map_of_comap {Ω β : Type*} [MeasurableSpace Ω] {m : MeasurableSpace β}
+    [mβ : MeasurableSpace β] {P : Measure Ω} {Z : Ω → β} (hZ : AEMeasurable Z P) (hm : m ≤ mβ)
+    (h : LatticeProb.IsTrivialSigma (m.comap Z) P) : LatticeProb.IsTrivialSigma m (P.map Z) := by
+  intro s hs
+  rw [Measure.map_apply_of_aemeasurable hZ (hm s hs)]
+  exact h _ ⟨s, hs, rfl⟩
+
 /-- **Functions with exterior versions are constant under a trivial exterior tail.** -/
 theorem exists_const_of_forall_extVersion {μ : Measure Field} [IsProbabilityMeasure μ]
     (htail : LatticeProb.IsTrivialSigma (⨅ k : ℕ, extSigma ((k : ℝ) + 1)) μ) {F : Field → ℝ}
