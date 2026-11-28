@@ -197,7 +197,7 @@ theorem brownianBeurlingEstimate : BrownianBeurlingEstimate := by
       exact (ENNReal.ofReal_lt_ofReal_iff he0).2 (hδlt n)
     have hcomp : connectedComponentIn (Knᶜ ∩ ball y ρ) y ⊆ ball y ρ \ Kn := by
       refine (connectedComponentIn_subset _ _).trans ?_
-      rw [inter_comm, diff_eq]
+      rw [inter_comm, sdiff_eq]
     have hh := hB Knᶜ K y d ρ (avoidanceProb (ball y ρ) Kn) isClosed_cthickening.isOpen_compl hyKn hd0
       hdρ (isConnected_range γ.continuous)
       (disjoint_compl_right.mono_left (self_subset_cthickening K))
