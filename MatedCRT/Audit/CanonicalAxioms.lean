@@ -1,6 +1,7 @@
 import MatedCRT.Assembly.Canonical
 import MatedCRT.FirstPass.Derived.CanonicalCountedFormsChartSteps
 import MatedCRT.Assembly.CanonicalWrappers
+import MatedCRT.FirstPass.Derived.CanonicalCountedFormsBrownianInputs
 
 /-!
 # Axiom audit of Theorems 1.4 and 1.6 at the canonical model
@@ -20,3 +21,8 @@ Each line must print only `propext`, `Classical.choice` and `Quot.sound`.
 #print axioms MatedCRT.lLowerBound_canonical
 #print axioms MatedCRT.massBoundOdometerAboveScale_canonical
 #print axioms MatedCRT.crudeUpperBound_canonical
+
+-- Theorems 1.4 and 1.6 at the canonical model with the window geometry, the cone points and the Beurling estimate
+-- proved.
+#print axioms MatedCRT.FirstPass.Derived.closed_1_4_quantumConeScaling_coneDimension_canonical_of_coupling_tutteLP_genuineCurve
+#print axioms MatedCRT.FirstPass.Derived.closed_1_6_quantumConeScaling_coneDimension_canonical_of_coupling_tutteLP_genuineCurve

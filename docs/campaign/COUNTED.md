@@ -1413,3 +1413,65 @@ Paths relative to `MatedCRT/FirstPass/Derived/`. GMS21 = Gwynne–Miller–Sheff
   `tutteLP_canonical_of_theorem310_quenchedZeroCone` and of its `_literature` form.
 - `#print axioms MatedCRT.coneAnnulusAreaLawEquivalence` (`MatedCRT/Audit/DerivedCountedAxioms.lean`): the audit
   requires propext, Classical.choice, Quot.sound.
+### Theorem 3.10 of Gwynne–Miller–Sheffield (2026-11-28)
+
+- `GMS21Theorem310Bridge.lean`: `gmsTheorem310 : GMSTheorem310` with no hypothesis (arXiv:1807.07515, Theorem 3.10,
+  the invariance principle uniform in the starting point). It is `ReflectedGMS.GMS.theorem3_10` of Lattice-Probability
+  (`LatticeProb/Bonanno/ReflectedGMS/GMS/Theorem310.lean:413`, in the pinned version d6a62a31 of the `idla/phase2`
+  line); `GMSTheorem310` (`GMS21Theorem310Form.lean:112`) copies its statement file `Theorem310Statement.lean`, which
+  is unchanged there, so the two statements agree by unfolding. This discharges the premise `h310` of
+  `tutteLP_canonical_of_theorem310_zeroConeSteps`, `tutteLP_canonical_of_theorem310_quenchedZeroCone`,
+  `tutteLP_canonical_of_theorem310_quenchedZeroCone_literature` and of the zero-cone annulus forms that take it.
+- `#print axioms MatedCRT.gmsTheorem310` (`MatedCRT/Audit/DerivedCountedAxioms.lean`): propext, Classical.choice,
+  Quot.sound.
+
+### The coordinate change of the LQG measure for all inverse charts (2026-11-28)
+
+Paths relative to `MatedCRT/FirstPass/Derived/`. SW = Sheffield–Wang, arXiv:1605.06171v2.
+- `LQGMeasureChartMain.lean`: `lqgMeasureChartStmt_of_envelope (hE : SheffieldWangEnvelope) (γ) (h0 : 0 < γ)
+  (h2 : γ < 2) : LQGMeasureChartStmt γ` (:40) and `lqgMeasureChartStmt_of_inputs (hE) (hR :
+  ZeroBoundaryGFFLocalRegularity)` (:32). `LQGMeasureChartStmt γ` (`ChartFieldLBM.lean`) is the coordinate change of
+  the LQG measure simultaneously for all inverse charts: a Borel map `M` from fields on the unit disc to measures such
+  that in every valid environment, almost surely, for all bounded open sets `U` and inverse charts `ψ` of `U`, `M` of
+  the chart field `h ∘ φ + Q log |φ'|` is the image under `ψ` of `μ_h` restricted to `U`. The disc step,
+  the simultaneous fixed-scale coordinate change on a disc (the conclusion of SW Theorem 1.4), is
+  `sheffieldWangDiscConformal_of_inputs` (`LQGMeasureChartSheffieldWang.lean:46`); the global step patches the
+  disc statements by the Markov property of the field on discs, a finite partition of unity and the rooting of the
+  cone at `0`.
+- `SheffieldWangEnvelope` (`LQGMeasureChartInputs.lean`) is the one printed input: SW Theorem 1.1 and the envelope
+  statement at the end of the proof of Theorem 1.2 (pp. 10–11). The regularity input `hR` is proved
+  (`MatedCRT.GFFLocalRegularity.zeroBoundaryGFFLocalRegularity`), which gives the `_envelope` form.
+- It reduces the premise `hLQG : ∀ γ, 0 < γ → γ < 2 → LQGMeasureChartStmt γ` of the canonical counted forms of
+  Theorems 1.4 and 1.6 to `SheffieldWangEnvelope`.
+- `#print axioms MatedCRT.lqgMeasureChartStmt_of_envelope` (`MatedCRT/Audit/DerivedCountedAxioms.lean`): the audit
+  requires propext, Classical.choice, Quot.sound.
+
+### The triple points of the Peanosphere curves of the correlated Brownian pair (2026-11-28)
+
+Paths relative to `MatedCRT/FirstPass/Derived/PeanosphereTriplePoints/`.
+- `PeanosphereTriplePointsHolds.lean`: `correlatedBMPeanosphereTriplePointsNoContinuum_holds :
+  GMS310Transfer.CorrelatedBMPeanosphereTriplePointsNoContinuum` (:24) with no hypothesis: for almost every
+  `γ`-correlated Brownian pair, `0 < γ < 2`, the points visited at least three times by any Peanosphere curve of the
+  pair contain no continuum of positive diameter. It follows from Shimura's theorem for the pair in both orders
+  (`correlatedBMPeanosphereTriplePointsNoContinuum_of_shimuraSteps`), whose four steps are proved: the localization
+  (`shimuraLocalization_holds`), the summation (`shimuraSummation_holds`), the bound for a cell
+  (`shimuraCellBounds_holds`) and the occupation of a later cell (`shimuraOccupancy_holds`); the departures of these
+  steps from the written argument are stated in the module docstrings of `ShimuraLemmaTwoProof.lean` and
+  `ShimuraOccupancyProof.lean`.
+- It discharges the hypothesis `hT` of `validEnvTriplePointsNoContinuum_of_peanosphere` and
+  `matingOfTreesCellSideIdentity_of_peanosphere` (`CellSideOfPeanosphere.lean`), so that with
+  `planarBMNoTwoSidedConePoints` the cell-side identity holds for every space-filling SLE model.
+- `#print axioms MatedCRT.PeanosphereTriplePoints.correlatedBMPeanosphereTriplePointsNoContinuum_holds`
+  (`MatedCRT/Audit/DerivedCountedAxioms.lean`): the audit requires propext, Classical.choice, Quot.sound.
+
+### Theorems 1.4 and 1.6 at the canonical model with the Brownian inputs proved (2026-11-28)
+
+Paths relative to `MatedCRT/FirstPass/Derived/`.
+- `CanonicalCountedFormsBrownianInputs.lean`: `closed_1_4_quantumConeScaling_coneDimension_canonical_of_coupling_tutteLP_genuineCurve`
+  and `closed_1_6_..._genuineCurve` conclude `ConvergenceOfIDLAStmt` and `ConvergenceOfDivSandpileStmt` at
+  `ProbeMi.canonicalSLEModel ν` from `hcpl`, `hTutteLP`, `hLQG`, `hJ : WindowFrontierJordanGenuineCurve`,
+  `hDMS : DMSIntrinsicPastFutureIndependenceLaw ν` and `hA : CorrelatedBMTraversalTriplePointsNoContinuum`. They are the
+  `_chartSteps` forms with the window geometry `hG` from `windowFrontierJordanInput_of_genuineCurve hJ`, the cone points
+  `hLG` from `planarBMNoTwoSidedConePoints` and the Beurling estimate `hB` from `brownianBeurlingEstimate`.
+- `#print axioms` of the two forms (`MatedCRT/Audit/CanonicalAxioms.lean`): the audit requires propext,
+  Classical.choice, Quot.sound.

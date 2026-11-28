@@ -12,6 +12,9 @@ import MatedCRT.FirstPass.Derived.PeanosphereTriplePoints.CellSideOfPeanosphere
 import MatedCRT.FirstPass.Derived.PeanosphereTriplePoints.ContinuumCover
 import MatedCRT.FirstPass.Derived.GFFLocalRegularity.Main
 import MatedCRT.FirstPass.Derived.ConeAnnulusAreaLawEquivalenceHolds
+import MatedCRT.FirstPass.Derived.LQGMeasureChartMain
+import MatedCRT.FirstPass.Derived.PeanosphereTriplePoints.PeanosphereTriplePointsHolds
+import MatedCRT.FirstPass.Derived.GMS21Theorem310Bridge
 
 /-!
 # Axiom audit of the derived counted forms
@@ -94,3 +97,12 @@ Each line must print only `propext`, `Classical.choice` and `Quot.sound`.
 -- A proved input of the premise tutteLP: the mutual absolute continuity of the area measures of the quantum cones
 -- on a bounded annulus.
 #print axioms MatedCRT.coneAnnulusAreaLawEquivalence
+
+-- A proved input of the counted forms: Theorem 3.10 of Gwynne–Miller–Sheffield, arXiv:1807.07515.
+#print axioms MatedCRT.gmsTheorem310
+
+-- The coordinate change of the LQG measure for all inverse charts from the envelope statement of Sheffield–Wang.
+#print axioms MatedCRT.lqgMeasureChartStmt_of_envelope
+
+-- The triple points of the Peanosphere curves of the correlated Brownian pair contain no continuum.
+#print axioms MatedCRT.PeanosphereTriplePoints.correlatedBMPeanosphereTriplePointsNoContinuum_holds
