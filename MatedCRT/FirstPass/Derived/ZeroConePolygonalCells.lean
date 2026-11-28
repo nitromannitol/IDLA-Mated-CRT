@@ -16,7 +16,7 @@ function `r` (`IsSiteSystem`), and weights `e_j`.
 * `cell j`: the polygonal cell `C_j = ⋃_{p : K_j ∩ Q_p ≠ ∅} piece p j`.
 
 Under `PolygonalInput.IsValid` (the old cells are compact, connected, locally finite, cover the plane, the
-labels through every point are connected by edges of positive count, the counts are symmetric with
+labels through every point are connected by edges of positive count, the counts are symmetric with zero diagonal and
 adjacent old cells meeting, and every label owns a tile) the polygonal cells are compact, connected, have
 interior, cover the plane, are locally finite, pairwise distinct, overlap in null sets, adjacent cells meet,
 `v_j ∈ C_j`, every point of `K_j` is within the diameter of a cell through it of `C_j`, and the labels
@@ -123,6 +123,7 @@ structure IsValid : Prop where
   pt : ∀ z i j, z ∈ I.K i → z ∈ I.K j →
     ReflTransGen (fun a b => 0 < I.m a b ∧ z ∈ I.K a ∧ z ∈ I.K b) i j
   m_symm : ∀ i j, I.m i j = I.m j i
+  m_diag : ∀ j, I.m j j = 0
   m_inter : ∀ i j, 0 < I.m i j → (I.K i ∩ I.K j).Nonempty
   vsite : ∀ j, I.v j ∈ I.V
   vmem : ∀ j, I.v j ∈ I.K j
@@ -379,11 +380,10 @@ theorem IsValid.reflTransGen_point (hI : I.IsValid) (z : Plane) {i j : ℤ} (hi 
       exact ReflTransGen.mono (fun a b hab =>
         ⟨hab.1, hB p hp hzp a hab.2.1, hB p hp hzp b hab.2.2⟩)
         _ _ (hI.reflTransGen_labels p l hl k₀ ⟨z, hk₀, hzp⟩)
-    have hsymm : Symmetric (fun a b => 0 < I.m a b ∧ z ∈ I.cell a ∧ z ∈ I.cell b) :=
-      fun a b hab => ⟨by rw [← hI.m_symm a b]; exact hab.1, hab.2.2, hab.2.1⟩
+    have hsymm : Std.Symm (fun a b => 0 < I.m a b ∧ z ∈ I.cell a ∧ z ∈ I.cell b) :=
+      ⟨fun a b hab => ⟨by rw [← hI.m_symm a b]; exact hab.1, hab.2.2, hab.2.1⟩⟩
     obtain ⟨p, hp, hzp, hip⟩ := hA i hi
     obtain ⟨q, hq, hzq, hjq⟩ := hA j hj
-    haveI : Std.Symm (fun a b => 0 < I.m a b ∧ z ∈ I.cell a ∧ z ∈ I.cell b) := ⟨fun _ _ h => hsymm h⟩
     exact (toK p hp hzp i hip).trans (symm_of (ReflTransGen _) (toK q hq hzq j hjq))
 
 end PolygonalInput
