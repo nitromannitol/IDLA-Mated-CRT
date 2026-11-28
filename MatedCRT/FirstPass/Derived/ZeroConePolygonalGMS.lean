@@ -72,12 +72,12 @@ theorem IsValid.cellNC_injective (hI : I.IsValid) : Function.Injective I.cellNC 
 theorem IsValid.cellConfig_c (hI : I.IsValid) (a b : ℤ) :
     I.cellConfig.c (I.cellNC a) (I.cellNC b) = (I.m a b : ℝ) := by
   have h : I.cellNC a ∈ range I.cellNC ∧ I.cellNC b ∈ range I.cellNC := ⟨⟨a, rfl⟩, ⟨b, rfl⟩⟩
-  rw [cellConfig_c_eq, if_pos h, Function.leftInverse_invFun hI.cellNC_injective a,
+  rw [cellConfig_c_eq, ite_eq_left h, Function.leftInverse_invFun hI.cellNC_injective a,
     Function.leftInverse_invFun hI.cellNC_injective b]
 
 theorem cellConfig_c_of_not_mem {K K' : Cell} (h : ¬ (K ∈ range I.cellNC ∧ K' ∈ range I.cellNC)) :
     I.cellConfig.c K K' = 0 := by
-  rw [cellConfig_c_eq, if_neg h]
+  rw [cellConfig_c_eq, ite_eq_right h]
 
 /-- A positive conductance comes from two labels. -/
 theorem IsValid.exists_of_adj (hI : I.IsValid) {K K' : Cell} (h : 0 < I.cellConfig.c K K') :
@@ -122,8 +122,8 @@ theorem isCellConfiguration (I : PolygonalInput) (hI : I.IsValid) :
   c_symm K K' := by
     rw [cellConfig_c_eq, cellConfig_c_eq]
     by_cases h : K ∈ range I.cellNC ∧ K' ∈ range I.cellNC
-    · rw [if_pos h, if_pos ⟨h.2, h.1⟩, hI.m_symm]
-    · rw [if_neg h, if_neg fun h' => h ⟨h'.2, h'.1⟩]
+    · rw [ite_eq_left h, ite_eq_left ⟨h.2, h.1⟩, hI.m_symm]
+    · rw [ite_eq_right h, ite_eq_right fun h' => h ⟨h'.2, h'.1⟩]
   adj_mem K K' h := by
     obtain ⟨a, b, rfl, rfl, -⟩ := hI.exists_of_adj h
     exact ⟨⟨a, rfl⟩, ⟨b, rfl⟩⟩
