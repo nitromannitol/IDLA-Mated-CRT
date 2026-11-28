@@ -14,10 +14,16 @@ For the law `μ` of the pair `(L, R)` of two independent two-sided standard Brow
 
 * `fwdPlanarPath`: the forward planar path of an element of `Path2`.
 * `measurable_fwdPlanarPath`: it is measurable.
-* `map_fwdPlanarPath_eq`: for `IsCorrelatedBM2 (√2) μ`, `μ.map fwdPlanarPath = planarBrownianMotion 0`.
-  The forward coordinates are independent standard Brownian motions (`iIndepFun_halfPathMap`), each of
-  the canonical path law (`map_pathMap_eq_brownianMotion_zero`), and `planarBrownianMotion 0` is the
-  image of the product of two such laws under `complexPathOfReIm`.
+* `map_planarPath_eq_of_isPlanarBM`: every planar Brownian motion `W` in the Gaussian sense
+  (`LQGMetric.KilledHeat.IsPlanarBM`) with measurable continuous paths has the path law
+  `planarBrownianMotion 0`. Its real and imaginary parts are real Brownian motions
+  (`isPreBrownianReal_of_covariance`), independent because they are jointly Gaussian and uncorrelated
+  (`IsGaussianProcess.iIndepFun_of_covariance_eq_zero`), each of the canonical path law
+  (`map_pathMap_eq_brownianMotion_zero`), and `planarBrownianMotion 0` is the image of the product of two
+  such laws under `complexPathOfReIm`.
+* `map_fwdPlanarPath_eq`: for `IsCorrelatedBM2 (√2) μ`, `μ.map fwdPlanarPath = planarBrownianMotion 0`,
+  from `map_planarPath_eq_of_isPlanarBM` for the forward half of the pair (`isPlanarBM_forwardPlanarPath`)
+  and `p 0 = 0` almost surely (`ae_eval_zero_eq_zero`).
 * `planarTubePositive`: `PlanarTubePositive`. The event contains the preimage under `fwdPlanarPath` of
   a tube around a straight path, whose `planarBrownianMotion 0`-measure is positive by the one-step
   window chain `ofReal_oneStepConst_pow_le_planarBrownianMotion_tubeChain` and

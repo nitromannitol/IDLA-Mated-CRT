@@ -11,9 +11,10 @@ as the first Dirichlet mode dominates (`exp(-π² t/(2L²)) ≤ 1/4`). On the sq
 of two killed interval kernels (`LQGMetric.KilledHeatSq.killedHeat_sqOpen`); the kernel of the horizontal coordinate
 is at least `2/L² · exp(-π² t/(2L²)) · e` at distance `e` from the side and that of the vertical coordinate at least
 `1/L · exp(-π² t/(2L²))` at mid-height (`intervalDirKernel_ge_linear`, `intervalDirKernel_ge_firstMode`, from the
-sine series of the kernel, Karatzas–Shreve, *Brownian Motion and Stochastic Calculus*, §2.8.C); the probability is
-the integral of the kernel over the window (`LQGMetric.KilledHeat.lintegral_killedHeat_eq`), for any planar Brownian
-motion `W` (`LQGMetric.KilledHeat.IsPlanarBM`).
+sine series of the kernel, the Fourier expansion of the image series of Karatzas–Shreve, *Brownian Motion and
+Stochastic Calculus*, §2.8.C, Proposition 8.10, (8.12); `LQGMetric.HeatSq.hasSum_intervalDirKernel_sine`); the
+probability is the integral of the kernel over the window (`LQGMetric.KilledHeat.lintegral_killedHeat_eq`), for any
+planar Brownian motion `W` (`LQGMetric.KilledHeat.IsPlanarBM`).
 
 * `layerWindow e L`: the window `(e + 5L/16, e + 7L/16) × (L/4, 3L/4)` of the square `(0, L)²`.
 * `le_measure_layer`: the lower bound `exp(-π² t/(2L²))² / (8L) · e` for `0 < e ≤ L/16`.

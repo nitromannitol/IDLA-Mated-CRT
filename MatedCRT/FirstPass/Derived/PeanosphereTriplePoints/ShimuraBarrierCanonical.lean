@@ -112,7 +112,7 @@ lemma isGaussianProcess_canonical :
     rw [hfun]
     exact hG.map_fun L
 
-/-- The `false` coordinate of the canonical process is the real part. -/
+/-- The first coordinate of the canonical process is its real part. -/
 lemma coordProc_canonical_false (t : ℝ≥0) :
     LQGMetric.KilledHeat.coordProc (fun (t : ℝ≥0) (ω : ContinuousPath ℂ) => ω t) (false, t) =
       fun ω => (ω t).re := by
