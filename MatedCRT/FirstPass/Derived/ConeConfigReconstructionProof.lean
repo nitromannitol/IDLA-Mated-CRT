@@ -7,12 +7,15 @@ import MatedCRT.FirstPass.Derived.ConeOffsetDensityProof
 /-!
 # Recovering the local configurations of the quantum cones from the outer data and the residues
 
-`coneConfigReconstruction_of_literature` proves `ConeConfigReconstruction γ` (the third input of Lemma 3.3 of
-Gwynne–Miller–Sheffield, arXiv:1705.11161, for a mating-of-trees coupling; the answer to MQ-sbl-18, section
-"Recovering the formal configuration") from the two named literature inputs of the cell-side identity,
-`PlanarBMNoTwoSidedConePoints` (Le Gall) and `CorrelatedBMTraversalTriplePointsNoContinuum`
-(Duplantier–Miller–Sheffield, Gwynne–Holden–Miller), which identify the Brownian edge counts of the cells with the
-frontier-side multiplicities of the cells read off the curve.
+The main theorem `coneConfigReconstruction_of_peanosphere` (hypotheses `hLG`, `hT`) proves
+`ConeConfigReconstruction γ` (the third input of Lemma 3.3 of Gwynne–Miller–Sheffield, arXiv:1705.11161, for a
+mating-of-trees coupling; the answer to MQ-sbl-18, section "Recovering the formal configuration") from the two named
+inputs of the cell-side identity, `PlanarBMNoTwoSidedConePoints` (Le Gall) and
+`CorrelatedBMPeanosphereTriplePointsNoContinuum` (the triple points of the Peanosphere curves of a correlated Brownian
+pair), which identify the Brownian edge counts of the cells with the frontier-side multiplicities of the cells read off
+the curve. `coneConfigReconstruction_of_literature` takes `CorrelatedBMTraversalTriplePointsNoContinuum`
+(Duplantier–Miller–Sheffield, Gwynne–Holden–Miller) in place of the second input, through
+`ae_forall_peanosphere_not_containsNondegenerateContinuum`.
 
 The cutoffs come from `exists_cutoffs_reconCurveEvent`, the Borel maps are `coneRecon` (`measurable_coneRecon`). On the
 curve event, almost surely, the local configuration of either cone is eventually equal to `coneRecon` of the outer data

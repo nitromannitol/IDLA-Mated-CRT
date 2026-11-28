@@ -20,6 +20,11 @@ on a compact window of quantum times; every vertex of `V` and every neighbour of
 same multiplicities (the block clocks are the quantum clock, `posBlockTime_eq`, `negBlockTime_eq`; the frontier-side
 count is invariant under the reparametrization `φ`, `cellSideCount_comp_orderIso`); and local configurations forget the
 labels (`localConfig_eq_of_strictMonoOn`).
+
+Departure from the answer: `coneRecon` is defined directly instead of as a Borel version built from conditional point
+masses, and the edges are counted through `bmEdgeCount_eq_cellSideMult`, which brings in `PlanarBMNoTwoSidedConePoints`
+and the triple-point input (`CorrelatedBMPeanosphereTriplePointsNoContinuum` or
+`CorrelatedBMTraversalTriplePointsNoContinuum`).
 -/
 
 set_option autoImplicit false
