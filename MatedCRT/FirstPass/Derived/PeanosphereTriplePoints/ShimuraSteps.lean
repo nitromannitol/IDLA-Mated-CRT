@@ -20,13 +20,14 @@ second-moment steps; the complete argument followed here is the written answer `
 
 * `ShimuraLocalization γ`: the theorem follows from the nullity of the unit event `UnitOppositeSideMin` (a time of
   `[0, 1]` which is a minimum of `L` on `[t - 2, t]` and of `R` on `[t, t + 2]`) for every law of the pair, by
-  translation, scaling and exchange of the coordinates (answer, end of §3).
+  translation, scaling and time reversal (answer, end of §3).
 * `ShimuraCellBounds γ`: the cells `[(k - 1)/n, k/n]` carry Shimura's event `A^n_k` (`cellEvent n k`) with probability
   at most `C/n` (Shimura, Lemma 1, p. 171; answer §2, `P(A_k) ≍ n⁻¹`; the summation uses only the upper bound).
 * `ShimuraOccupancy γ`: given the first occupied cell `k` (`firstCellEvent n k`), the cell `k + j` is occupied with
   conditional probability at least `c/(j - 1)` (Shimura (4.2)–(4.7), pp. 174–176; answer §2, (2)–(3)).
-* `ShimuraSummation γ`: these bounds give `P(S_{2n} > 0) ≲ 1/log n`, hence the nullity of the unit event (Shimura
-  §2 (2.1), §4; answer §3).
+* `ShimuraSummation γ`: with the upper bound for a cell only, these bounds give
+  `P(⋃_{k ≤ n} A^n_k) ≤ 2/n + 2C/(c Σ_{1 + 6 log n < j ≤ n} 1/(j - 1)) → 0`, hence the nullity of the unit event
+  (Shimura §2 (2.1), §4); this simplifies answer §3, which bounds `P(S_{2n} > 0)` through `E[S_{2n} | S_{2n} > 0]`.
 
 The steps `ShimuraCellBounds` and `ShimuraOccupancy` rest on the following statements, also named here:
 `ReflectionBarrier` (the survival bound `P(min_{[0,T]} B > -a) ≤ a √(2/(πT))`, answer §1, DEK (4.2)),
@@ -71,7 +72,8 @@ def firstCellEvent (n k : ℕ) : Set Path2 :=
 /-- **Localization** (answer, end of §3): if the unit event is null for every law of the `γ`-correlated pair, then
 almost surely no time is a minimum of one coordinate on a left neighbourhood and of the other on a right
 neighbourhood. Translation and time reversal (`isCorrelatedBM2_map_recenterPath`), Brownian scaling
-(`isCorrelatedBM2_map_unitRescalePath`) and the exchange of the coordinates preserve the law class. -/
+(`isCorrelatedBM2_map_unitRescalePath`) preserve the law class; the second order comes from the first by time
+reversal (`recenterPath 0 (-1)`). -/
 def ShimuraLocalization (γ : ℝ) : Prop :=
   (∀ μ : Measure Path2, IsCorrelatedBM2 γ μ →
       μ {p | UnitOppositeSideMin (fun t => (p t).1) (fun t => (p t).2)} = 0) →

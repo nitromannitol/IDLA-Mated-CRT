@@ -12,9 +12,9 @@ interior, on each of which `η` is injective.
 
 The fibres of `η` are the classes of the relation joining two times through a minimum of `L` or of
 `R` (`Jrel`). A class with three times either has a middle time, which is a local minimum of one
-coordinate and is isolated among such times, or contains the common left end (or right end) of a
-nonsingleton class of each coordinate; near such a time the sets `Eset` of `TripleCoverSets`
-(or their time reversals) apply.
+coordinate, and the local minima of a coordinate form a countable set (`countable_isLocalMin`), or contains the
+common left end (or right end) of a nonsingleton class of each coordinate; near such a time the sets `Eset` of
+`TripleCoverSets` (or their time reversals) apply.
 -/
 
 set_option autoImplicit false
