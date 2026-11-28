@@ -1,4 +1,5 @@
 import MatedCRT.FirstPass.Derived.Counted
+import MatedCRT.FirstPass.Derived.GMS21Theorem310Bridge
 
 /-!
 # Axiom audit of the derived counted forms
@@ -37,3 +38,6 @@ Each line must print only `propext`, `Classical.choice` and `Quot.sound`.
 #print axioms MatedCRT.LIClosed68Y.firstPass_6_7_derivedInputs
 #print axioms MatedCRT.LIClosed68Y.firstPass_6_8_derivedInputs
 #print axioms MatedCRT.LIClosed68Y.firstPass_6_9_derivedInputs
+
+-- A proved input of the counted forms: Theorem 3.10 of Gwynne–Miller–Sheffield, arXiv:1807.07515.
+#print axioms MatedCRT.gmsTheorem310
