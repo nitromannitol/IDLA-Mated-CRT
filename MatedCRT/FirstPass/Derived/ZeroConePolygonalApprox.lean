@@ -1,4 +1,5 @@
 import MatedCRT.FirstPass.Derived.ZeroConePolygonalMatch
+import MatedCRT.FirstPass.Derived.ZeroConePolygonalRecord
 
 /-!
 # Countably valued approximations of the polygonal configuration
@@ -19,6 +20,9 @@ This file proves the scheme for an arbitrary record map `code n` with countable 
   matched `R`-patches with vertex displacement `2 · 2⁻ⁿ` (`PatchMatch`), with the matched data of
   `w` depending only on `w` and `R`, by the estimate `PatchMatch.dCC_le`.
 * `measurable_polygonalConfig_of_records`: hence `polygonalConfig H₀` is measurable.
+* `measurable_polygonalConfig_of_measurableSet_record`: the scheme for the records `record n` of the
+  polygonal construction (the patches of radii `1, …, n` with dyadic bins of side `2⁻ⁿ`): the
+  polygonal configuration is measurable once the record classes are measurable sets of data.
 -/
 
 set_option autoImplicit false
@@ -134,5 +138,23 @@ theorem measurable_polygonalConfig_of_records [∀ n, Countable (α n)] {N : Typ
     (tendsto_dCC_approxConfig code H₀ hnone hmatch)
 
 end Approx
+
+/-! ## The records of the polygonal construction -/
+
+/-- **The polygonal configuration is measurable once the record classes are measurable**: the
+records `record n` of the polygonal construction take countably many values, the invalid data form
+one class, and equal records give matched patches (`patchMatch_of_record_eq`). -/
+theorem measurable_polygonalConfig_of_measurableSet_record (H₀ : GMSSpace)
+    (hrec : ∀ n c, MeasurableSet {w | record n w = c}) : Measurable (polygonalConfig H₀) := by
+  refine measurable_polygonalConfig_of_records record (N := VName) H₀ hrec ?_ ?_
+  · intro n w w' hw h
+    exact record_eq_none_iff.1 (h.trans (record_eq_none_iff.2 hw))
+  · intro w hw R hR
+    refine ⟨patchLabels w R, patchNames w R, namedPoint w, patchFaces w R,
+      finite_patchNames (w := w) R, fun n hn w' h => ?_⟩
+    have hw' : UnitMeshValid w' := by
+      by_contra hne
+      exact record_eq_none_iff.1 (h.symm.trans (record_eq_none_iff.2 hne)) hw
+    exact ⟨namedPoint w', patchMatch_of_record_eq hw hw' h.symm hR hn⟩
 
 end MatedCRT.ZeroConePolygonal
