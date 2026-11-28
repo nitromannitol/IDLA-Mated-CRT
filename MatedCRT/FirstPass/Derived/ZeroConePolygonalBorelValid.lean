@@ -39,6 +39,18 @@ time of `[j - 1, j]` (the projection along a compact interval is a closed map):
 * `measurable_reflTransGen`: the reflexive transitive closure of measurable relations on a countable
   type is measurable.
 * `measurableSet_unitMeshValid`: **the validity set is Borel**.
+
+The second part proves that the choices made by the construction are Borel functions of the datum:
+the distances to the old cells and their diameters are countable infima and suprema over rational
+times, the areas of the core sets are areas of sections of measurable sets, and a least index
+satisfying measurable conditions is measurable. Hence
+
+* `measurable_coreIndex`, `measurable_coreScale`: the core scale `δ_j = 2⁻ⁿ diam K_j`, with `n` the
+  least exponent for which half the area of `K_j` lies at distance `> δ_j` from the other cells;
+* `measurable_scaleFun`: the scale function `r(z) = inf_j (δ_j + dist(z, K_j))`, jointly in the datum
+  and the point;
+* `measurable_dyadicLevel`: the first dyadic level at which every subinterval of `[j - 1, j]` has an
+  image of diameter at most `(inf_{K_j} r) / 100`.
 -/
 
 set_option autoImplicit false
@@ -402,5 +414,214 @@ theorem measurableSet_unitMeshValid :
     Set.ext fun w => unitMeshValid_iff_test (w := w)
   rw [e]
   exact measurableSet_setOfPred.2 measurable_unitMeshValidTest
+
+/-! ### The Borel selection of the core scales and of the dyadic levels -/
+
+/-- The rational times of the open interval `(a, b)`. -/
+def ratTimes (a b : ℝ) : Set ℝ := Ioo a b ∩ range ((↑) : ℚ → ℝ)
+
+theorem countable_ratTimes (a b : ℝ) : (ratTimes a b).Countable :=
+  (countable_range _).mono inter_subset_right
+
+theorem ratTimes_subset_Icc (a b : ℝ) : ratTimes a b ⊆ Icc a b :=
+  inter_subset_left.trans Ioo_subset_Icc_self
+
+theorem nonempty_ratTimes {a b : ℝ} (hab : a < b) : (ratTimes a b).Nonempty := by
+  obtain ⟨q, h1, h2⟩ := exists_rat_btwn hab
+  exact ⟨q, ⟨h1, h2⟩, q, rfl⟩
+
+/-- The image of `[a, b]`, `a < b`, by a continuous map lies in the closure of the image of the
+rational times of `(a, b)`. -/
+theorem image_Icc_subset_closure_image_ratTimes {X : Type*} [TopologicalSpace X] {g : ℝ → X}
+    (hg : Continuous g) {a b : ℝ} (hab : a < b) : g '' Icc a b ⊆ closure (g '' ratTimes a b) := by
+  have h1 : Icc a b ⊆ closure (ratTimes a b) := by
+    rw [← closure_Ioo hab.ne]
+    exact closure_minimal (Dense.open_subset_closure_inter Rat.denseRange_cast isOpen_Ioo)
+      isClosed_closure
+  exact (image_mono h1).trans (image_closure_subset_closure_image hg)
+
+/-- The distance from a point to the image of `[a, b]`, `a < b`, by a continuous map is an infimum
+over the rational times. -/
+theorem infEDist_image_Icc_eq {X : Type*} [PseudoEMetricSpace X] {g : ℝ → X} (hg : Continuous g)
+    {a b : ℝ} (hab : a < b) (z : X) :
+    infEDist z (g '' Icc a b) = ⨅ t ∈ ratTimes a b, edist z (g t) := by
+  have e : infEDist z (g '' ratTimes a b) = ⨅ t ∈ ratTimes a b, edist z (g t) := by
+    rw [infEDist, iInf_image]
+  refine le_antisymm ((infEDist_anti (image_mono (ratTimes_subset_Icc a b))).trans e.le) ?_
+  calc ⨅ t ∈ ratTimes a b, edist z (g t) = infEDist z (g '' ratTimes a b) := e.symm
+    _ = infEDist z (closure (g '' ratTimes a b)) := infEDist_closure.symm
+    _ ≤ infEDist z (g '' Icc a b) := infEDist_anti (image_Icc_subset_closure_image_ratTimes hg hab)
+
+/-- The diameter of the image of `[a, b]`, `a < b`, by a continuous map is a supremum over pairs of
+rational times. -/
+theorem ediam_image_Icc_eq {X : Type*} [PseudoEMetricSpace X] {g : ℝ → X} (hg : Continuous g)
+    {a b : ℝ} (hab : a < b) :
+    ediam (g '' Icc a b) = ⨆ t ∈ ratTimes a b, ⨆ u ∈ ratTimes a b, edist (g t) (g u) := by
+  have e : ediam (g '' ratTimes a b) = ⨆ t ∈ ratTimes a b, ⨆ u ∈ ratTimes a b, edist (g t) (g u) := by
+    simp only [ediam, iSup_image]
+  refine le_antisymm ?_ (e.ge.trans (ediam_mono (image_mono (ratTimes_subset_Icc a b))))
+  calc ediam (g '' Icc a b) ≤ ediam (closure (g '' ratTimes a b)) :=
+        ediam_mono (image_Icc_subset_closure_image_ratTimes hg hab)
+    _ = ediam (g '' ratTimes a b) := ediam_closure _
+    _ = _ := e
+
+/-- The infimum of a continuous real function over `[a, b]`, `a < b`, is its infimum over the
+rational times. -/
+theorem sInf_image_Icc_eq {h : ℝ → ℝ} (hh : Continuous h) {a b : ℝ} (hab : a < b) :
+    sInf (h '' Icc a b) = ⨅ t : ratTimes a b, h t := by
+  have hsub := ratTimes_subset_Icc a b
+  have hbdd : BddBelow (h '' Icc a b) := (isCompact_Icc.image hh).bddBelow
+  have hne : (h '' ratTimes a b).Nonempty := (nonempty_ratTimes hab).image h
+  rw [← sInf_image']
+  refine le_antisymm (csInf_le_csInf hbdd hne (image_mono hsub)) ?_
+  refine le_csInf ((nonempty_Icc.2 hab.le).image h) fun y hy => ?_
+  have hcl : closure (h '' ratTimes a b) ⊆ Ici (sInf (h '' ratTimes a b)) :=
+    closure_minimal (fun y' hy' => csInf_le (hbdd.mono (image_mono hsub)) hy') isClosed_Ici
+  exact hcl (image_Icc_subset_closure_image_ratTimes hh hab hy)
+
+/-- The least element of a set of natural numbers (`0` for the empty set). -/
+theorem nat_sInf_eq_iff {S : Set ℕ} {m : ℕ} :
+    sInf S = m ↔ (m ∈ S ∧ ∀ k < m, k ∉ S) ∨ (m = 0 ∧ ∀ k, k ∉ S) := by
+  constructor
+  · rintro rfl
+    rcases S.eq_empty_or_nonempty with h | h
+    · right
+      subst h
+      exact ⟨Nat.sInf_empty, fun _ hk => hk⟩
+    · left
+      exact ⟨Nat.sInf_mem h, fun _ hk => Nat.notMem_of_lt_sInf hk⟩
+  · rintro (⟨hm, hlt⟩ | ⟨rfl, h⟩)
+    · exact le_antisymm (Nat.sInf_le hm) (not_lt.1 fun hlt' => hlt _ hlt' (Nat.sInf_mem ⟨m, hm⟩))
+    · rw [eq_empty_iff_forall_notMem.2 h, Nat.sInf_empty]
+
+/-- **The least index satisfying measurable conditions is measurable.** -/
+theorem measurable_sInf_nat {α : Type*} [MeasurableSpace α] {P : ℕ → α → Prop}
+    (hP : ∀ n, Measurable (P n)) : Measurable fun x => sInf {n | P n x} := by
+  refine measurable_to_countable' fun m => ?_
+  have e : (fun x => sInf {n | P n x}) ⁻¹' {m} =
+      {x | (P m x ∧ ∀ k < m, ¬ P k x) ∨ (m = 0 ∧ ∀ k, ¬ P k x)} :=
+    Set.ext fun x => nat_sInf_eq_iff (S := {n | P n x})
+  rw [e]
+  exact measurableSet_setOfPred.2 (((hP m).and (Measurable.forall fun k =>
+    Measurable.imp measurable_const (hP k).not)).or
+      (measurable_const.and (Measurable.forall fun k => (hP k).not)))
+
+theorem measurable_curvePlane_apply (t : ℝ) :
+    Measurable fun w : C(ℝ, ℂ) × (ℤ → ℤ → ℕ) => curvePlane w t :=
+  Complex.orthonormalBasisOneI.repr.continuous.measurable.comp
+    ((ContinuousMap.measurable_eval t).comp measurable_fst)
+
+/-- The distance from a point to an old cell is jointly measurable in the datum and the point. -/
+theorem measurable_infEDist_unitCell (i : ℤ) :
+    Measurable fun q : (C(ℝ, ℂ) × (ℤ → ℤ → ℕ)) × Plane => infEDist q.2 (unitCell q.1 i) := by
+  have e : ∀ q : (C(ℝ, ℂ) × (ℤ → ℤ → ℕ)) × Plane, infEDist q.2 (unitCell q.1 i) =
+      ⨅ t ∈ ratTimes ((i : ℝ) - 1) i, edist q.2 (curvePlane q.1 t) := fun q => by
+    rw [← timeCell_curvePlane]
+    exact infEDist_image_Icc_eq (continuous_curvePlane q.1) (by linarith) q.2
+  simp only [e]
+  exact Measurable.biInf _ (countable_ratTimes _ _) fun t _ =>
+    measurable_snd.edist ((measurable_curvePlane_apply t).comp measurable_fst)
+
+/-- The distance from a point to the union of the other old cells is jointly measurable. -/
+theorem measurable_infDist_otherCells (j : ℤ) :
+    Measurable fun q : (C(ℝ, ℂ) × (ℤ → ℤ → ℕ)) × Plane => infDist q.2 (otherCells (unitCell q.1) j) := by
+  have e : ∀ q : (C(ℝ, ℂ) × (ℤ → ℤ → ℕ)) × Plane, infDist q.2 (otherCells (unitCell q.1) j) =
+      (⨅ i, ⨅ (_ : i ≠ j), infEDist q.2 (unitCell q.1 i)).toReal := fun q => by
+    simp only [infDist, otherCells, infEDist_iUnion]
+  simp only [e]
+  exact (Measurable.iInf fun i => Measurable.iInf fun _ => measurable_infEDist_unitCell i).ennreal_toReal
+
+/-- The diameter of the image of `[a, b]`, `a < b`, by the curve is a measurable function of the
+datum. -/
+theorem measurable_diam_curve_image {a b : ℝ} (hab : a < b) :
+    Measurable fun w : C(ℝ, ℂ) × (ℤ → ℤ → ℕ) => diam (curvePlane w '' Icc a b) := by
+  have e : ∀ w : C(ℝ, ℂ) × (ℤ → ℤ → ℕ), diam (curvePlane w '' Icc a b) =
+      (⨆ t ∈ ratTimes a b, ⨆ u ∈ ratTimes a b, edist (curvePlane w t) (curvePlane w u)).toReal :=
+    fun w => congrArg ENNReal.toReal (ediam_image_Icc_eq (continuous_curvePlane w) hab)
+  simp only [e]
+  exact (Measurable.biSup _ (countable_ratTimes a b) fun t _ =>
+    Measurable.biSup _ (countable_ratTimes a b) fun u _ =>
+      (measurable_curvePlane_apply t).edist (measurable_curvePlane_apply u)).ennreal_toReal
+
+theorem measurable_diam_unitCell (j : ℤ) :
+    Measurable fun w : C(ℝ, ℂ) × (ℤ → ℤ → ℕ) => diam (unitCell w j) := by
+  have e : ∀ w : C(ℝ, ℂ) × (ℤ → ℤ → ℕ),
+      diam (unitCell w j) = diam (curvePlane w '' Icc ((j : ℝ) - 1) j) := fun w => by
+    rw [← timeCell_curvePlane]
+    rfl
+  simp only [e]
+  exact measurable_diam_curve_image (by linarith)
+
+/-- The area of the core set of `K_j` at the scale `2⁻ⁿ diam K_j` is a measurable function of the
+datum. -/
+theorem measurable_volume_coreSet (j : ℤ) (n : ℕ) :
+    Measurable fun w : C(ℝ, ℂ) × (ℤ → ℤ → ℕ) =>
+      volume (coreSet (unitCell w) j (diam (unitCell w j) / 2 ^ n)) := by
+  have hδ : Measurable fun q : (C(ℝ, ℂ) × (ℤ → ℤ → ℕ)) × Plane => diam (unitCell q.1 j) / 2 ^ n :=
+    ((measurable_diam_unitCell j).div_const _).comp measurable_fst
+  have hT : MeasurableSet {q : (C(ℝ, ℂ) × (ℤ → ℤ → ℕ)) × Plane |
+      q.2 ∈ unitCell q.1 j ∧ diam (unitCell q.1 j) / 2 ^ n < infDist q.2 (otherCells (unitCell q.1) j)} :=
+    measurableSet_setOfPred.2 ((measurableSet_setOfPred.1 (measurableSet_mem_unitCell j)).and
+      (measurableSet_setOfPred.1 (measurableSet_lt hδ (measurable_infDist_otherCells j))))
+  exact measurable_measure_prodMk_left (ν := (volume : Measure Plane)) hT
+
+/-- **The exponent of the core scale is a measurable function of the datum.** -/
+theorem measurable_coreIndex (j : ℤ) :
+    Measurable fun w : C(ℝ, ℂ) × (ℤ → ℤ → ℕ) => coreIndex (unitCell w) j := by
+  unfold coreIndex
+  exact measurable_sInf_nat fun n => measurable_const.and (measurableSet_setOfPred.1
+    (measurableSet_le ((measurable_volume_unitCell j).div_const 2) (measurable_volume_coreSet j n)))
+
+/-- **The core scale `δ_j` is a measurable function of the datum.** -/
+theorem measurable_coreScale (j : ℤ) :
+    Measurable fun w : C(ℝ, ℂ) × (ℤ → ℤ → ℕ) => coreScale (unitCell w) j :=
+  (measurable_diam_unitCell j).div
+    ((measurable_from_nat (f := fun n : ℕ => (2 : ℝ) ^ n)).comp (measurable_coreIndex j))
+
+/-- **The scale function `r(z) = inf_j (δ_j + dist(z, K_j))` is jointly measurable** in the datum and
+the point. -/
+theorem measurable_scaleFun :
+    Measurable fun q : (C(ℝ, ℂ) × (ℤ → ℤ → ℕ)) × Plane => scaleFun (unitCell q.1) q.1.2 q.2 := by
+  unfold scaleFun
+  exact Measurable.iInf fun j =>
+    ((measurable_coreScale j).comp measurable_fst).add (measurable_infEDist_unitCell j).ennreal_toReal
+
+/-- The infimum of the scale function over an old cell is a measurable function of the datum. -/
+theorem measurable_scaleMin (j : ℤ) :
+    Measurable fun w : C(ℝ, ℂ) × (ℤ → ℤ → ℕ) =>
+      scaleMin (curvePlane w) (scaleFun (unitCell w) w.2) j := by
+  have e : ∀ w : C(ℝ, ℂ) × (ℤ → ℤ → ℕ), scaleMin (curvePlane w) (scaleFun (unitCell w) w.2) j =
+      ⨅ t : ratTimes ((j : ℝ) - 1) j, scaleFun (unitCell w) w.2 (curvePlane w t) := fun w => by
+    rw [scaleMin, timeCell, image_image]
+    exact sInf_image_Icc_eq ((continuous_of_lip (scaleFun_lip _ _)).comp (continuous_curvePlane w))
+      (by linarith)
+  simp only [e]
+  have _hS : Countable (ratTimes ((j : ℝ) - 1) j) := (countable_ratTimes _ _).to_subtype
+  exact Measurable.iInf fun t => measurable_scaleFun.comp
+    (f := fun w : C(ℝ, ℂ) × (ℤ → ℤ → ℕ) => (w, curvePlane w t))
+    (measurable_id.prodMk (measurable_curvePlane_apply t))
+
+theorem dyadicPoint_lt (j : ℤ) (n k : ℕ) : dyadicPoint j n k < dyadicPoint j n (k + 1) := by
+  have hx : (0 : ℝ) < (1 / 2) ^ n := by positivity
+  unfold dyadicPoint
+  rw [Nat.cast_add_one, add_mul, one_mul]
+  linarith
+
+/-- The fineness of the dyadic subdivision of `[j - 1, j]` at level `n` is a measurable condition on
+the datum. -/
+theorem measurable_dyadicFine (j : ℤ) (n : ℕ) :
+    Measurable fun w : C(ℝ, ℂ) × (ℤ → ℤ → ℕ) =>
+      DyadicFine (curvePlane w) (scaleFun (unitCell w) w.2) j n := by
+  unfold DyadicFine
+  refine Measurable.forall fun k => Measurable.imp measurable_const ?_
+  exact measurableSet_setOfPred.1 (measurableSet_le (measurable_diam_curve_image (dyadicPoint_lt j n k))
+    ((measurable_scaleMin j).div_const 100))
+
+/-- **The dyadic level of the old cell `K_j` is a measurable function of the datum.** -/
+theorem measurable_dyadicLevel (j : ℤ) :
+    Measurable fun w : C(ℝ, ℂ) × (ℤ → ℤ → ℕ) =>
+      dyadicLevel (curvePlane w) (scaleFun (unitCell w) w.2) j := by
+  unfold dyadicLevel
+  exact measurable_sInf_nat fun n => measurable_dyadicFine j n
 
 end MatedCRT.ZeroConePolygonal
