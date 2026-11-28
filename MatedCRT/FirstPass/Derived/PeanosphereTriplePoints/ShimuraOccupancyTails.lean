@@ -1,8 +1,7 @@
-import MatedCRT.FirstPass.Derived.PeanosphereTriplePoints.ShimuraOccupancyPaths
+import MatedCRT.FirstPass.Derived.PeanosphereTriplePoints.ShimuraOccupancyDrop
 import LatticeProb.Prob.BrownianLevyReflection
 import LatticeProb.Prob.CorrelatedBMRationalDescent
 import LatticeProb.Analysis.CorrelatedBMHolder
-import LatticeProb.Gauss.TailMills
 
 /-!
 # Tails of the drops over a cell
@@ -15,7 +14,8 @@ centred Gaussian law of `B T - B 0` bounds that by `exp (-a² / (2 T))`.
 For the `γ`-correlated pair, reading either coordinate backwards from `k/n` gives a Brownian
 motion, so the drop `x < Y (k/n) - Y s` over the cell `[(k - 1)/n, k/n]` has probability at most
 `2 exp (-n x² / 2)` (`measure_drop_le`). With `x = √((j - 1)/n)` and `1 + 6 log n < j` the two
-coordinates together have probability at most `4 / n ^ 3` (`measure_tails_le`).
+coordinates together have probability at most `4 / n ^ 3` (`measure_tails_le`), which is the
+statement `OccupancyTails` (`occupancyTails_holds`).
 -/
 
 set_option autoImplicit false
@@ -41,7 +41,7 @@ theorem measure_exists_gt_le_two_mul_exp {Ω : Type*} [MeasurableSpace Ω] {P : 
   have hch := measure_ge_le_exp_mul_mgf (μ := P) (X := fun ω => B T ω - B 0 ω) a
     (div_nonneg ha hTr.le) hint
   have hmgf : mgf (fun ω => B T ω - B 0 ω) P (a / T) = Real.exp (T * (a / T) ^ 2 / 2) := by
-    have := LatticeProb.brownian_integral_exp_mul_sub hB.toIsPreBrownianReal (a / T) (zero_le T)
+    have := LatticeProb.brownian_integral_exp_mul_sub hB.toIsPreBrownianReal (a / T) hT.le
     simpa [mgf] using this
   have hexp : Real.exp (-(a / T) * a) * Real.exp (T * (a / T) ^ 2 / 2) =
       Real.exp (-(a ^ 2 / (2 * T))) := by
@@ -135,7 +135,8 @@ theorem measure_tails_le {γ : ℝ} {μ : Measure Path2} (hμ : IsCorrelatedBM2 
     rw [h1]
     have h2 : Real.exp (-(((j : ℝ) - 1) / 2)) ≤ Real.exp (-(3 * Real.log n)) :=
       Real.exp_le_exp.2 (by linarith)
-    rw [Real.exp_neg, hexp3] at h2
+    have h2' : Real.exp (-(3 * Real.log n)) = ((n : ℝ) ^ 3)⁻¹ := by rw [Real.exp_neg, hexp3]
+    rw [h2'] at h2
     calc 2 * Real.exp (-(((j : ℝ) - 1) / 2)) ≤ 2 * ((n : ℝ) ^ 3)⁻¹ := by linarith
       _ = 2 / (n : ℝ) ^ 3 := by rw [div_eq_mul_inv]
   have h2R := (measure_drop_snd_le hμ hn k (Real.sqrt_nonneg (((j : ℝ) - 1) / n))).trans
@@ -148,5 +149,21 @@ theorem measure_tails_le {γ : ℝ} {μ : Measure Path2} (hμ : IsCorrelatedBM2 
         rw [← ENNReal.ofReal_add (by positivity) (by positivity)]
         congr 1
         ring
+
+/-- **The tails of the drops** (`OccupancyTails`): for `1 + 6 log n < j` the event that one of the
+two drops across the cell `k` exceeds `√((j - 1)/n)` has probability at most `4 / n ^ 3`. -/
+theorem occupancyTails_holds (γ : ℝ) : OccupancyTails γ := by
+  refine ⟨1, fun μ hμ n hn k j _ _ hj => ?_⟩
+  have hsub : (tameEvent n k j)ᶜ ⊆
+      {p : Path2 | ∃ s ∈ Icc (((k : ℝ) - 1) / n) ((k : ℝ) / n),
+        Real.sqrt (((j : ℝ) - 1) / n) < (p ((k : ℝ) / n)).2 - (p s).2} ∪
+      {p : Path2 | ∃ s ∈ Icc (((k : ℝ) - 1) / n) ((k : ℝ) / n),
+        Real.sqrt (((j : ℝ) - 1) / n) < (p ((k : ℝ) / n)).1 - (p s).1} := by
+    intro p hp
+    simp only [tameEvent, mem_compl_iff, mem_ofPred_eq, not_and_or, not_le] at hp
+    rcases hp with h | h
+    · exact Or.inl ((lt_cellDropR_iff n k p _).1 h)
+    · exact Or.inr ((lt_cellDropL_iff n k p _).1 h)
+  exact (measure_mono hsub).trans ((measure_union_le _ _).trans (measure_tails_le hμ hn k hj))
 
 end MatedCRT.PeanosphereTriplePoints
