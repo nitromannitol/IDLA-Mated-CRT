@@ -14,11 +14,18 @@ observation at a point `z` are measurable functions of the restriction of the fi
 
 * `exists_extArea_decoder`: the area measure of a field of the good set, restricted to `{|w| > k + 1}`, is a measurable
   function of the restriction of the field to `{|w| > k}`.
+* `exists_rootObs_extVersion`: the local observation `J(h, z)` at a point `z` with mass radius `r_{b₀}(z)` below
+  `|z| - (k + 2)` is a jointly measurable function of the restriction of the field to `{|w| > k}` and of `z`.
 
 The decoder reads the dyadic circle averages at scales below `1` on `{|w| > k + 1}` from the restriction (through the
 jointly measurable dyadic version of the local circle process), cuts them off by a partition of unity of
 `{|w| > k + 1}` into continuous functions supported in balls, and decodes the vague limits of the cut-off
 approximations by the measurable decoder `vagueLimitOrZero` of Lattice-Probability.
+
+For the local observation, the restriction `T` to `{|w| > k}` is extended to a whole-plane distribution by a smooth
+cut-off (`extExtend`, a measurable function of `T`); the change of coordinates `lqgSimilarityAction` of the extension
+restricted to the disc `B_a(0)` is then a jointly measurable function of `(C, z, T)`, and it agrees with the one of
+the field itself as long as `B_{aC}(z)` lies in `{|w| > k + 2}`.
 -/
 
 set_option autoImplicit false
@@ -419,5 +426,289 @@ theorem exists_extArea_decoder (γ : ℝ) (hγ : γ ≠ 0) (k : ℕ) :
           (ConeAreaCovariance.areaMap γ h).restrict (extOpen ((k : ℝ) + 1)) :=
   ⟨extAreaDecode γ k, measurable_extAreaDecode γ k, fun _ hh =>
     extAreaDecode_eq hh.1 (ConeAreaCovariance.areaMap_spec hγ hh).1⟩
+
+/-! ### Mass radii of a restricted measure -/
+
+/-- **The mass radius only depends on the masses of the balls it looks at**: if the ball `B_R(z)` lies in `W` and the
+mass radius of `ν` at `z` is below `R`, then `ν` and its restriction to `W` have the same mass radius at `z`. -/
+theorem massRadius_restrict_eq {ν : Measure ℂ} {W : Set ℂ} {s : ℝ} {z : ℂ} {R : ℝ}
+    (hball : ball z R ⊆ W) (hlt : ZeroConeRoot.massRadius ν s z < R) :
+    ZeroConeRoot.massRadius (ν.restrict W) s z = ZeroConeRoot.massRadius ν s z := by
+  set S : Set ℝ := {r : ℝ | 0 < r ∧ ENNReal.ofReal s < ν (ball z r)} with hS
+  set S' : Set ℝ := {r : ℝ | 0 < r ∧ ENNReal.ofReal s < (ν.restrict W) (ball z r)} with hS'
+  have hsub : S' ⊆ S := fun r hr =>
+    ⟨hr.1, hr.2.trans_le (Measure.le_iff'.1 Measure.restrict_le_self _)⟩
+  have hbdd : BddBelow S := ⟨0, fun _ hr => hr.1.le⟩
+  have hbdd' : BddBelow S' := ⟨0, fun _ hr => hr.1.le⟩
+  have hin : ∀ r ∈ S, r < R → r ∈ S' := fun r hr hrR => ⟨hr.1, by
+    rw [Measure.restrict_apply measurableSet_ball,
+      Set.inter_eq_left.2 ((ball_subset_ball hrR.le).trans hball)]
+    exact hr.2⟩
+  show sInf S' = sInf S
+  by_cases hne : S.Nonempty
+  · obtain ⟨r0, hr0, hr0R⟩ := exists_lt_of_csInf_lt hne (show sInf S < R from hlt)
+    have hr0' : r0 ∈ S' := hin r0 hr0 hr0R
+    refine le_antisymm (le_csInf hne fun r hr => ?_) (csInf_le_csInf hbdd ⟨r0, hr0'⟩ hsub)
+    by_cases hrR : r < R
+    · exact csInf_le hbdd' (hin r hr hrR)
+    · exact (csInf_le hbdd' hr0').trans (hr0R.le.trans (not_lt.1 hrR))
+  · have h1 : S = ∅ := not_nonempty_iff_eq_empty.1 hne
+    have h2 : S' = ∅ := eq_empty_of_subset_empty (h1 ▸ hsub)
+    rw [h1, h2]
+
+/-- The mass radius is monotone in the level, where it is positive. -/
+theorem massRadius_le_of_pos {ν : Measure ℂ} {s s' : ℝ} {z : ℂ} (hs : s ≤ s')
+    (hpos : 0 < ZeroConeRoot.massRadius ν s' z) :
+    ZeroConeRoot.massRadius ν s z ≤ ZeroConeRoot.massRadius ν s' z := by
+  have hne : {r : ℝ | 0 < r ∧ ENNReal.ofReal s' < ν (ball z r)}.Nonempty := by
+    by_contra hne
+    rw [not_nonempty_iff_eq_empty] at hne
+    have h0 : ZeroConeRoot.massRadius ν s' z = 0 := by
+      unfold ZeroConeRoot.massRadius
+      rw [hne, Real.sInf_empty]
+    linarith
+  exact csInf_le_csInf ⟨0, fun _ hr => hr.1.le⟩ hne fun r hr =>
+    ⟨hr.1, (ENNReal.ofReal_le_ofReal hs).trans_lt hr.2⟩
+
+/-- The ball `B_{|z| - (k + 1)}(z)` lies in `{|w| > k + 1}`. -/
+theorem ball_subset_extOpen {k : ℕ} (z : ℂ) :
+    ball z (‖z‖ - ((k : ℝ) + 1)) ⊆ ((extOpen ((k : ℝ) + 1) : TopologicalSpace.Opens ℂ) : Set ℂ) := by
+  intro w hw
+  rw [mem_ball, dist_eq_norm] at hw
+  have h1 := norm_sub_norm_le z w
+  rw [norm_sub_rev] at h1
+  change (k : ℝ) + 1 < ‖w‖
+  linarith
+
+/-! ### The extension of a local distribution by a cut-off -/
+
+section Cutoff
+
+open scoped Distributions
+
+/-- The smooth bump equal to `1` on `|w| ≤ k + 1` and to `0` on `|w| ≥ k + 2`. -/
+def extBump (k : ℕ) : ContDiffBump (0 : ℂ) :=
+  ⟨(k : ℝ) + 1, (k : ℝ) + 2, by positivity, by linarith⟩
+
+/-- The smooth cut-off `1 - extBump k`: `0` on `|w| ≤ k + 1` and `1` on `|w| ≥ k + 2`. -/
+def extChi (k : ℕ) (w : ℂ) : ℝ := 1 - extBump k w
+
+theorem contDiff_extChi (k : ℕ) {n : ℕ∞} : ContDiff ℝ n (extChi k) :=
+  contDiff_const.sub (extBump k).contDiff
+
+theorem extChi_of_le {k : ℕ} {w : ℂ} (hw : ‖w‖ ≤ (k : ℝ) + 1) : extChi k w = 0 := by
+  unfold extChi
+  rw [(extBump k).one_of_mem_closedBall (by rw [mem_closedBall, dist_zero_right]; exact hw), sub_self]
+
+theorem extChi_of_ge {k : ℕ} {w : ℂ} (hw : (k : ℝ) + 2 ≤ ‖w‖) : extChi k w = 1 := by
+  unfold extChi
+  rw [(extBump k).zero_of_le_dist (by rw [dist_zero_right]; exact hw), sub_zero]
+
+theorem tsupport_extChi_subset (k : ℕ) : tsupport (extChi k) ⊆ {w : ℂ | (k : ℝ) + 1 ≤ ‖w‖} := by
+  refine closure_minimal (fun w hw => ?_) (isClosed_le continuous_const continuous_norm)
+  by_contra hlt
+  exact hw (extChi_of_le (not_le.1 hlt).le)
+
+/-- The product of a test function with the cut-off `extChi k`, a test function on `{|w| > k}`. -/
+def extCutFun (k : ℕ) (φ : LQGMetric.TestC) : LQGMetric.TestOn (extOpen (k : ℝ)) :=
+  ⟨fun w => φ w * extChi k w, φ.contDiff.mul (contDiff_extChi k), φ.hasCompactSupport.mul_right,
+    (tsupport_mul_subset_right.trans (tsupport_extChi_subset k)).trans fun w hw =>
+      show (k : ℝ) < ‖w‖ from lt_of_lt_of_le (lt_add_one _) hw⟩
+
+/-- The compact set `K ∩ tsupport (extChi k)`. -/
+def extK (k : ℕ) (K : TopologicalSpace.Compacts ℂ) : TopologicalSpace.Compacts ℂ :=
+  ⟨(K : Set ℂ) ∩ tsupport (extChi k), K.isCompact.inter_right (isClosed_tsupport _)⟩
+
+theorem extK_subset (k : ℕ) (K : TopologicalSpace.Compacts ℂ) :
+    ((extK k K : TopologicalSpace.Compacts ℂ) : Set ℂ) ⊆
+      ((extOpen (k : ℝ) : TopologicalSpace.Opens ℂ) : Set ℂ) :=
+  fun w hw => show (k : ℝ) < ‖w‖ from lt_of_lt_of_le (lt_add_one _) (tsupport_extChi_subset k hw.2)
+
+/-- Multiplication by the cut-off, from test functions supported in `K` to test functions supported in
+`K ∩ tsupport (extChi k)` (the Leibniz estimate of `ContDiffMapSupportedIn.bilinLeftCLM`). -/
+noncomputable def extCutLM (k : ℕ) (K : TopologicalSpace.Compacts ℂ) :
+    𝓓_{K}(ℂ, ℝ) →L[ℝ] 𝓓_{extK k K}(ℂ, ℝ) :=
+  ContDiffMapSupportedIn.mkCLM ℝ (fun f w => f w * extChi k w)
+    (fun f g x => by simp [add_mul]) (fun c f x => by simp [mul_assoc])
+    (fun f => f.contDiff.mul (contDiff_extChi k))
+    (fun f w hw => by
+      by_cases hwK : w ∈ (K : Set ℂ)
+      · have hw' : w ∉ tsupport (extChi k) := fun h => hw ⟨hwK, h⟩
+        simp [image_eq_zero_of_notMem_tsupport hw']
+      · simp [f.zero_on_compl hwK])
+    (fun i _ => by
+      have hg : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (extChi k) := contDiff_extChi k
+      have hcont : Continuous fun x ↦ (Finset.range (i + 1)).sup' Finset.nonempty_range_add_one
+          (fun j ↦ ‖iteratedFDeriv ℝ j (extChi k) x‖) :=
+        Continuous.finset_sup'_apply Finset.nonempty_range_add_one fun j _ =>
+          (hg.continuous_iteratedFDeriv (by exact_mod_cast le_top)).norm
+      obtain ⟨C₀, hC₀⟩ := K.isCompact.exists_bound_of_continuousOn hcont.continuousOn
+      have hgC₀ : ∀ j ≤ i, ∀ x ∈ (K : Set ℂ), ‖iteratedFDeriv ℝ j (extChi k) x‖ ≤ ‖C₀‖ :=
+        fun j hj x hx ↦ (Finset.le_sup' _ (Finset.mem_range_succ_iff.2 hj)).trans
+          ((Real.le_norm_self _).trans ((hC₀ x hx).trans (Real.le_norm_self C₀)))
+      refine ⟨Finset.Iic i, ‖ContinuousLinearMap.mul ℝ ℝ‖ * 2 ^ i * ‖C₀‖, by positivity,
+        fun φ x hx ↦ ?_⟩
+      calc ‖iteratedFDeriv ℝ i (fun y ↦ ContinuousLinearMap.mul ℝ ℝ (φ y) (extChi k y)) x‖
+          ≤ ‖ContinuousLinearMap.mul ℝ ℝ‖ * ∑ j ∈ Finset.range (i + 1), (i.choose j : ℝ) *
+              ‖iteratedFDeriv ℝ j φ x‖ * ‖iteratedFDeriv ℝ (i - j) (extChi k) x‖ := by
+            simpa using (ContinuousLinearMap.mul ℝ ℝ).norm_iteratedFDeriv_le_of_bilinear
+              φ.contDiff hg x (by exact_mod_cast le_top)
+        _ ≤ ‖ContinuousLinearMap.mul ℝ ℝ‖ * ∑ j ∈ Finset.range (i + 1), (i.choose j : ℝ) *
+              ((Finset.Iic i).sup fun m ↦ N[ℝ]_{K, ⊤, m}) φ * ‖C₀‖ := by
+            gcongr with j hj
+            · exact (ContDiffMapSupportedIn.norm_iteratedFDeriv_apply_le_seminorm_top ℝ).trans
+                (Seminorm.le_finset_sup_apply (Finset.mem_Iic.2 (Finset.mem_range_succ_iff.mp hj)))
+            · exact hgC₀ (i - j) (Nat.sub_le i j) x hx.1
+        _ = ‖ContinuousLinearMap.mul ℝ ℝ‖ * 2 ^ i * ‖C₀‖ *
+              ((Finset.Iic i).sup fun m ↦ N[ℝ]_{K, ⊤, m}) φ := by
+            simp_rw [← Finset.sum_mul, ← Nat.cast_sum, Nat.sum_range_choose]
+            push_cast
+            ring)
+
+/-- **The cut-off**: `φ ↦ φ · extChi k`, a continuous linear map from test functions on the plane to test functions
+on `{|w| > k}`. -/
+noncomputable def extCutCLM (k : ℕ) : LQGMetric.TestC →L[ℝ] LQGMetric.TestOn (extOpen (k : ℝ)) :=
+  TestFunction.limitCLM ℝ (extCutFun k)
+    (fun K _ => TestFunction.ofSupportedInCLM ℝ (extK_subset k K) ∘L extCutLM k K)
+    (fun _ _ _ => TestFunction.ext fun _ => rfl)
+
+theorem extCutCLM_apply (k : ℕ) (φ : LQGMetric.TestC) (w : ℂ) : extCutCLM k φ w = φ w * extChi k w := by
+  simp [extCutCLM, extCutFun]
+
+/-- The extension of a distribution on `{|w| > k}` to the plane: `φ ↦ T(φ · extChi k)`. -/
+def extExtend (k : ℕ) (T : LQGMetric.DistOn (extOpen (k : ℝ))) : LQGMetric.DistC :=
+  T.comp (extCutCLM k)
+
+theorem extExtend_apply (k : ℕ) (T : LQGMetric.DistOn (extOpen (k : ℝ))) (φ : LQGMetric.TestC) :
+    extExtend k T φ = T (extCutCLM k φ) := rfl
+
+theorem measurable_extExtend (k : ℕ) : Measurable (extExtend k) :=
+  LQGMetric.measurable_distOn_iff.2 fun φ => LQGMetric.measurable_distOn_apply (extCutCLM k φ)
+
+/-- The extension of the restriction of a field agrees with the field on test functions supported in
+`{|w| ≥ k + 2}`. -/
+theorem extExtend_restrictTo (k : ℕ) (h : LQGMetric.DistC) {ψ : LQGMetric.TestC}
+    (hψ : ∀ w, ψ w ≠ 0 → (k : ℝ) + 2 ≤ ‖w‖) :
+    extExtend k (LQGMetric.restrictTo (extOpen (k : ℝ)) h) ψ = h ψ := by
+  have hmono : (TestFunction.monoCLM ℝ (extCutCLM k ψ) : LQGMetric.TestC) = ψ := by
+    refine TestFunction.ext fun w => ?_
+    have h1 : ((TestFunction.monoCLM ℝ (extCutCLM k ψ) : LQGMetric.TestC) : ℂ → ℝ) w =
+        extCutCLM k ψ w := by simp
+    rw [h1, extCutCLM_apply]
+    by_cases hw : ψ w = 0
+    · rw [hw, zero_mul]
+    · rw [extChi_of_ge (hψ w hw), mul_one]
+  change h (TestFunction.monoCLM ℝ (extCutCLM k ψ)) = h ψ
+  rw [hmono]
+
+end Cutoff
+
+/-- **The change of coordinates of the extension of a restriction, restricted to a disc**: for `B_{aC}(z)` in
+`{|w| > k + 2}` it is the restriction to the disc `B_a(0)` of the change of coordinates of the field. -/
+theorem restrictTo_similarity_extExtend (γ : ℝ) (k a : ℕ) (h : LQGMetric.DistC) {C : ℝ} (hC : 0 < C)
+    {z : ℂ} (hz : (a : ℝ) * C < ‖z‖ - ((k : ℝ) + 2)) :
+    LQGMetric.restrictTo (a1Ball a)
+        (lqgSimilarityField γ C z (extExtend k (LQGMetric.restrictTo (extOpen (k : ℝ)) h))) =
+      LQGMetric.restrictTo (a1Ball a) (lqgSimilarityField γ C z h) := by
+  refine DFunLike.ext _ _ fun φ => ?_
+  have hψ : ∀ w, LQGMetric.testAffinePull C z (TestFunction.monoCLM ℝ φ) w ≠ 0 →
+      (k : ℝ) + 2 ≤ ‖w‖ := by
+    intro w hw
+    rw [LQGMetric.testAffinePull_apply C z hC.ne'] at hw
+    have hmem : (w - z) / (C : ℂ) ∈ tsupport (φ : ℂ → ℝ) := subset_tsupport _ (by simpa using hw)
+    have hlt : ‖(w - z) / (C : ℂ)‖ < a := by
+      have := φ.tsupport_subset hmem
+      simpa [a1Ball] using this
+    rw [norm_div, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hC, div_lt_iff₀ hC] at hlt
+    have h1 := norm_sub_norm_le z w
+    rw [norm_sub_rev] at h1
+    linarith
+  change LQGMetric.addConst (LQGMetric.affineComp C z
+      (extExtend k (LQGMetric.restrictTo (extOpen (k : ℝ)) h))) (MatedCRTHarmonic.MatedCRT.lqgQ γ * Real.log C)
+      (TestFunction.monoCLM ℝ φ) =
+    LQGMetric.addConst (LQGMetric.affineComp C z h) (MatedCRTHarmonic.MatedCRT.lqgQ γ * Real.log C)
+      (TestFunction.monoCLM ℝ φ)
+  rw [LQGMetric.GFFInv.addConst_apply, LQGMetric.GFFInv.addConst_apply,
+    LQGMetric.GFFInv.affineComp_apply, LQGMetric.GFFInv.affineComp_apply, extExtend_restrictTo k h hψ]
+
+/-- The change of coordinates of the extension of a local distribution, restricted to the disc `B_a(0)`, is jointly
+measurable in the parameters and the distribution. -/
+theorem measurable_extFieldRestrict (γ : ℝ) (k a : ℕ) :
+    Measurable fun p : (ℝ × ℂ) × LQGMetric.DistOn (extOpen (k : ℝ)) =>
+      LQGMetric.restrictTo (a1Ball a) (lqgSimilarityAction γ p.1 (extExtend k p.2)) :=
+  (LQGMetric.measurable_restrictTo _).comp ((measurable_lqgSimilarityAction γ).comp
+    (measurable_fst.prodMk ((measurable_extExtend k).comp measurable_snd)))
+
+/-- **The exterior version of the local observation.** At a point `z` whose mass radius `r_{b₀}(z)` is below
+`|z| - (k + 2)`, the local observation `J(h, z)` of a field of the good set is a jointly measurable function of the
+restriction of the field to `{|w| > k}` and of `z`: the mass radii are computed from the decoded exterior area, and
+the normalized field on `B_a(0)` only involves the field on `B_{a r_1(z)}(z) ⊆ {|w| > k + 2}`. -/
+theorem exists_rootObs_extVersion (γ : ℝ) (hγ : γ ≠ 0) {a : ℕ} {f : LQGMetric.DistOn (a1Ball a) → ℝ}
+    (hfm : Measurable f) {b₀ : ℝ} (hb₀ : 1 ≤ b₀) (k : ℕ) :
+    ∃ G : LQGMetric.DistOn (extOpen (k : ℝ)) × ℂ → ℝ, Measurable G ∧
+      ∀ h ∈ ConeAreaCovariance.goodSet γ, ∀ z : ℂ,
+        ZeroConeRoot.massRadius (ConeAreaCovariance.areaMap γ h) b₀ z < ‖z‖ - ((k : ℝ) + 2) →
+          G (LQGMetric.restrictTo (extOpen (k : ℝ)) h, z) = rootObs γ f b₀ h z := by
+  classical
+  obtain ⟨D, hDm, hD⟩ := exists_extArea_decoder γ hγ k
+  have hr : ∀ s : ℝ, Measurable fun p : LQGMetric.DistOn (extOpen (k : ℝ)) × ℂ =>
+      ZeroConeRoot.massRadius (D p.1) s p.2 := fun s => by
+    have h3 := (ZeroConeRoot.measurable_massRadius s).comp
+      ((hDm.comp measurable_fst).prodMk measurable_snd)
+    simp only [Function.comp_def] at h3
+    exact h3
+  refine ⟨fun p => if 0 < ZeroConeRoot.massRadius (D p.1) 1 p.2 ∧
+      (a : ℝ) * ZeroConeRoot.massRadius (D p.1) 1 p.2 < ZeroConeRoot.massRadius (D p.1) b₀ p.2 then
+      f (LQGMetric.restrictTo (a1Ball a)
+        (lqgSimilarityAction γ (ZeroConeRoot.massRadius (D p.1) 1 p.2, p.2) (extExtend k p.1)))
+    else 0, ?_, ?_⟩
+  · refine Measurable.ite ((measurableSet_lt measurable_const (hr 1)).inter
+      (measurableSet_lt ((hr 1).const_mul _) (hr b₀))) ?_ measurable_const
+    exact hfm.comp ((measurable_extFieldRestrict γ k a).comp (((hr 1).prodMk measurable_snd).prodMk
+      measurable_fst))
+  · intro h hh z hz
+    have hν := hD h hh
+    set ν := ConeAreaCovariance.areaMap γ h with hνdef
+    have hR : ‖z‖ - ((k : ℝ) + 2) < ‖z‖ - ((k : ℝ) + 1) := by linarith
+    have hball := ball_subset_extOpen (k := k) z
+    have hb : ZeroConeRoot.massRadius (ν.restrict (extOpen ((k : ℝ) + 1))) b₀ z =
+        ZeroConeRoot.massRadius ν b₀ z := massRadius_restrict_eq hball (hz.trans hR)
+    simp only [hν]
+    by_cases hpos : 0 < ZeroConeRoot.massRadius ν b₀ z
+    · have h1 : ZeroConeRoot.massRadius ν 1 z ≤ ZeroConeRoot.massRadius ν b₀ z :=
+        massRadius_le_of_pos hb₀ hpos
+      have ha : ZeroConeRoot.massRadius (ν.restrict (extOpen ((k : ℝ) + 1))) 1 z =
+          ZeroConeRoot.massRadius ν 1 z :=
+        massRadius_restrict_eq hball ((h1.trans_lt hz).trans hR)
+      rw [ha, hb]
+      by_cases ht : RootTest γ a b₀ h z
+      · have hC := ht.1
+        have hrf : rootField γ h z = lqgSimilarityField γ (ZeroConeRoot.massRadius ν 1 z) z h := rfl
+        have hz' : (a : ℝ) * ZeroConeRoot.massRadius ν 1 z < ‖z‖ - ((k : ℝ) + 2) :=
+          ht.2.trans hz
+        have htt : 0 < ZeroConeRoot.massRadius ν 1 z ∧
+            (a : ℝ) * ZeroConeRoot.massRadius ν 1 z < ZeroConeRoot.massRadius ν b₀ z := ht
+        simp only [rootObs, ht, htt, and_self, ↓reduceIte, hrf]
+        congr 1
+        rw [lqgSimilarityAction_of_pos γ (t := (ZeroConeRoot.massRadius ν 1 z, z)) hC]
+        exact restrictTo_similarity_extExtend γ k a h hC hz'
+      · have hnt : ¬ (0 < ZeroConeRoot.massRadius ν 1 z ∧
+            (a : ℝ) * ZeroConeRoot.massRadius ν 1 z < ZeroConeRoot.massRadius ν b₀ z) := ht
+        simp only [rootObs, ht, hnt, ↓reduceIte]
+    · have h0 : ZeroConeRoot.massRadius ν b₀ z = 0 :=
+        le_antisymm (not_lt.1 hpos) (ZeroConeRoot.massRadius_nonneg _ _ _)
+      have hnt : ¬ (0 < ZeroConeRoot.massRadius ν 1 z ∧
+          (a : ℝ) * ZeroConeRoot.massRadius ν 1 z < ZeroConeRoot.massRadius ν b₀ z) := by
+        rintro ⟨h2, h3⟩
+        rw [h0] at h3
+        nlinarith [Nat.cast_nonneg (α := ℝ) a]
+      have hnt' : ¬ (0 < ZeroConeRoot.massRadius (ν.restrict (extOpen ((k : ℝ) + 1))) 1 z ∧
+          (a : ℝ) * ZeroConeRoot.massRadius (ν.restrict (extOpen ((k : ℝ) + 1))) 1 z <
+            ZeroConeRoot.massRadius (ν.restrict (extOpen ((k : ℝ) + 1))) b₀ z) := by
+        rintro ⟨h2, h3⟩
+        rw [hb, h0] at h3
+        nlinarith [Nat.cast_nonneg (α := ℝ) a]
+      have hnt'' : ¬ RootTest γ a b₀ h z := hnt
+      simp only [rootObs, hnt', hnt'', ↓reduceIte]
 
 end MatedCRT
