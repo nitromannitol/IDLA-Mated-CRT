@@ -5,25 +5,36 @@ import LatticeProb.Bonanno.QuantumZipper.Proofs.RS.TransienceCanon
 # The outer radial window of the cone: measurability and absolute continuity of the laws
 
 The two statements of `ConeAnnulusAreaLawEquivalenceSteps.lean` about the outer window
-`coneOuterWindow v S b'` of a quantum cone (the path after the last zero of `b'_u + v u`, read on
-`[0, S]`):
+`coneOuterWindow v S b'` of a quantum cone: the post-last-zero window of Brownian motion with drift
+`v > 0`, that is the path `s ↦ c (ℓ + min s S)` with `c u = b'_u + v u` and `ℓ` the last zero of `c`,
+read on `[0, S]`.
 
 * `coneOuterWindowMeasurable`: the window is almost surely a measurable functional of the Brownian
   path. The last zero is a measurable functional on the space of continuous paths, and a measurable
-  map on continuous paths extends to all paths (`ConeAnnulusAreaLawEquivalenceOuterBase.lean`).
-* `coneOuterWindowLaw`: for Brownian motions `B', B₀'` and positive drifts `v₁, v₂` the law of the
-  window with drift `v₁` is absolutely continuous with respect to the law of the window with drift
-  `v₂`. The two Brownian motions have the same law on path space, so this is a statement about one
-  Brownian motion, `measure_window_eq_zero_of_drift`
-  (`ConeAnnulusAreaLawEquivalenceOuterNull.lean`): Markov property at a fixed time `N` and
-  Cameron–Martin on `[0, N]` (`ConeAnnulusAreaLawEquivalenceOuterMarkov.lean`,
-  `ConeAnnulusAreaLawEquivalenceOuterCM.lean`).
+  map on continuous paths extends to all paths, since restriction to a countable dense set of times is
+  a measurable embedding by the Lusin–Souslin theorem (`ConeAnnulusAreaLawEquivalenceOuterBase.lean`).
+* `coneOuterWindowLaw`: for Brownian motions `B', B₀'` and drifts `v₁, v₂ > 0` the law of the window
+  with drift `v₁` is absolutely continuous with respect to the law of the window with drift `v₂`.
+  The two Brownian motions have the same law on path space, so this is a statement about one
+  Brownian motion (`measure_window_eq_zero_of_drift`,
+  `ConeAnnulusAreaLawEquivalenceOuterNull.lean`). Fix a time `N`. On the event that the drifted path
+  stays positive after `N`, a window ending before `N` is a function of the path stopped at `N`
+  (`ConeAnnulusAreaLawEquivalenceOuterStop.lean`). For the drift `v₂`, the Markov property at the fixed
+  time `N` and the survival probability `1 - exp(-2 v x)` of Brownian motion with drift `v` started at
+  `x > 0` show that the corresponding event of the stopped path is null
+  (`ConeAnnulusAreaLawEquivalenceOuterMarkov.lean`). Cameron–Martin on `[0, N]` transfers the null set
+  to the drift `v₁` (`ConeAnnulusAreaLawEquivalenceOuterCM.lean`), and the remaining probability that the
+  last zero is not below `N - S` tends to `0` as `N → ∞`.
 
-Sources: D. Williams, *Path decomposition and continuity of local time for one-dimensional diffusions
-I*, Proc. LMS 28 (1974); Rogers–Pitman, *Markov functions*, Ann. Probab. 9 (1981), Theorem 1;
-Revuz–Yor, *Continuous Martingales and Brownian Motion*, VII.4; Cameron–Martin (Bogachev, *Gaussian
-Measures*, Chapter 2); Duplantier–Miller–Sheffield, arXiv:1409.7055, Definition 4.10 for the outer
-radial part of the cone.
+The written argument (the answer to MQ-sbl-18) compares the post-last-zero process with a
+three-dimensional Bessel process; this formalization instead uses the Markov property at a fixed time
+and Cameron–Martin.
+
+Sources: Duplantier–Miller–Sheffield, arXiv:1409.7055, Definition 4.10 for the outer radial part of the
+cone; Cameron–Martin (Bogachev, *Gaussian Measures*, AMS 1998, Chapter 2); the survival probability of
+Brownian motion with drift is the standard gambler's-ruin formula (for example Borodin–Salminen,
+*Handbook of Brownian Motion*, Part II, 2.1.1.4, or Revuz–Yor, *Continuous Martingales and Brownian
+Motion*); Kechris, *Classical Descriptive Set Theory*, Theorem 15.1 (Lusin–Souslin).
 -/
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
@@ -47,7 +58,9 @@ theorem coneOuterWindowMeasurable : ConeOuterWindowMeasurable := by
   rw [e, hΦeq, coneOuterWindow_eq hS]
   rfl
 
-/-- **Step 3, the outer radial windows (Williams' path decomposition and Cameron–Martin).** -/
+/-- **Step 3, the outer radial windows.** The laws of the post-last-zero windows of Brownian motion with
+positive drifts `v₁, v₂` read on `[0, S]` are absolutely continuous (Markov property at a fixed time and
+Cameron–Martin on a bounded interval). -/
 theorem coneOuterWindowLaw : ConeOuterWindowLaw := by
   intro v₁ v₂ S hv₁ hv₂ hS Ω _ P _ B' B₀' hB' hB₀'
   obtain ⟨b, hbm, hbc, -, hb, hbB⟩ := QuantumZipper.RS.exists_good_version0 hB'

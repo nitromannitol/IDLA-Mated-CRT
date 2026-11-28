@@ -19,9 +19,11 @@ is positive from time `N` on, so the window of the whole path lies in `A`
 (`LatticeProb.measure_forall_drift_gt`). Hence the probability of the stopped event cut along
 `z N ≥ 1/(k+1)` is zero for every `k`.
 
-Source: Le Gall, *Brownian Motion, Martingales, and Stochastic Calculus*, Theorem 2.20 (weak Markov
-property); the survival probability `1 - exp(-2 v δ)` of Brownian motion with drift `v` is the
-gambler's ruin formula, Revuz–Yor, *Continuous Martingales and Brownian Motion*, Exercise II.3.12.
+Source: the weak Markov property of Brownian motion at a fixed time (for example Le Gall, *Brownian
+Motion, Martingales, and Stochastic Calculus*, Springer GTM 274, 2016, Chapter 2); the survival
+probability `1 - exp(-2 v δ)` of Brownian motion with drift `v` is the standard gambler's-ruin formula
+(for example Borodin–Salminen, *Handbook of Brownian Motion*, Part II, 2.1.1.4, or Revuz–Yor,
+*Continuous Martingales and Brownian Motion*).
 -/
 
 open MeasureTheory ProbabilityTheory Filter Topology Set

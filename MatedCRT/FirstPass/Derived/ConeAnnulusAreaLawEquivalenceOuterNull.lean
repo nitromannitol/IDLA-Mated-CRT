@@ -20,9 +20,9 @@ time `N`: the path after `N` stays positive with positive probability). By Camer
 probability that the window of `x₁` lies in `A` is at most `P(ℓ + S ≥ N)`, which tends to `0` as
 `N → ∞`.
 
-Source: this is the absolute continuity of Williams' path decomposition of Brownian motion with drift
-at its last zero (D. Williams, Proc. LMS 28 (1974); Rogers–Pitman, Ann. Probab. 9 (1981), Theorem 1;
-Revuz–Yor VII.4) proved here directly by the Markov property and Cameron–Martin.
+Source: the Markov property at a fixed time and the survival probability of Brownian motion with drift
+(`ConeAnnulusAreaLawEquivalenceOuterMarkov.lean`), and Cameron–Martin (Bogachev, *Gaussian Measures*,
+AMS 1998, Chapter 2).
 -/
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
