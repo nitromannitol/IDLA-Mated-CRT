@@ -12,12 +12,13 @@ reads a local configuration off the outer data `(e, μ|{δ < |z| < M})` and the 
 Fix time cutoffs `0 < a < L` and an outer radius `M`. On the two time blocks `[-L, -a]` and `[a, L]` of the curve `e`
 the relative quantum clock is the mass clock of the measure along `e(±a + ·)` (`LatticeProb.LQG.massClock`), and the
 Lebesgue times of the cell endpoints are its inverse (`negBlockTime`, `posBlockTime`) at the relative quantum times
-`(j - 1 - r)/n` and `(j - r)/n`. The synthetic label `ℓ ≤ 0` stands for the cell `j = ℓ` of the negative block, the label
-`ℓ ≥ 1` for the cell `j = ℓ - 2` of the positive block, so that labels of different blocks are never consecutive.
-A label is valid (`reconValid`) when its cell lies in its block; the synthetic data (`reconData`) put the terminal
-point `e(t)` of each valid cell and, between valid cells, the multiplicity `0` on the diagonal, `1` for consecutive
-labels and otherwise the frontier-side count `cellSideCount` of `e` at the Lebesgue times of the two cells. Invalid
-labels get the point `0` and no edges. The map `coneRecon` is the local configuration near the annulus of these data.
+`(j - 1 - r)/n` and `(j - r)/n`. The synthetic label `ℓ ≤ 0` stands for the cell `j = ℓ` of the negative block, the
+label `ℓ ≥ 1` for the cell `j = ℓ - 2` of the positive block, so that labels of different blocks are never
+consecutive. A label is valid (`ReconValid`) when its cell lies in its block; the synthetic data (`reconData`) put the
+terminal point `e(t)` of each valid cell and, between valid cells, the multiplicity `0` on the diagonal, `1` for
+consecutive labels and otherwise the frontier-side count `cellSideCount` of `e` at the Lebesgue times of the two
+cells. Invalid labels get the point `0` and no edges. The map `coneRecon` is the local configuration near the annulus
+of these data.
 
 The measure is first capped (`cappedMeasure`): restricted to `closedBall 0 M` when finite there, `0` otherwise, so that
 it is finite on compact sets for every input; on outer data it is the measure itself.

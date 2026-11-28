@@ -9,13 +9,13 @@ import MatedCRT.FirstPass.Derived.ConeConfigReconstructionRelabel
 
 Let `e` be a curve in the curve event `ReconCurveEvent α R a L δ M`, and `ξ = e ∘ φ` a curve parametrized by the mass of
 a locally finite measure `μ` (`IsMassParam`). For every phase `θ ∈ [0, 1]`, for all large `n`, the local configuration
-near the annulus `V = B_R(0) \ closedBall 0 α` of the true data at mesh `1/n` with phase `θ` (`phaseData`) is the value of
-the reconstruction map `coneRecon` at the outer data and the residues of the two offsets
+near the annulus `V = B_R(0) \ closedBall 0 α` of the true data at mesh `1/n` with phase `θ` (`phaseData`) is the value
+of the reconstruction map `coneRecon` at the outer data and the residues of the two offsets
 (`eventually_localConfig_eq_coneRecon`).
 
 The proof (the answer to MQ-sbl-18, section "Recovering the formal configuration"): for large `n` the cells meeting the
-annulus `{α/2 ≤ |z| ≤ 2R}` lie in one of the two time blocks (`good_of_mem_cell`), by uniform continuity of `φ` and `ξ` on
-a compact window of quantum times; every vertex of `V` and every neighbour of such a vertex is such a cell
+annulus `{α/2 ≤ |z| ≤ 2R}` lie in one of the two time blocks (`good_of_mem_cell`), by uniform continuity of `φ` and `ξ`
+on a compact window of quantum times; every vertex of `V` and every neighbour of such a vertex is such a cell
 (`cellSideMult_ne_zero_inter_nonempty`); on these cells the synthetic label `reconLabel` gives the same point and the
 same multiplicities (the block clocks are the quantum clock, `posBlockTime_eq`, `negBlockTime_eq`; the frontier-side
 count is invariant under the reparametrization `φ`, `cellSideCount_comp_orderIso`); and local configurations forget the
@@ -55,7 +55,7 @@ theorem blockOffsets_zero (φ : ℝ ≃o ℝ) (a : ℝ) : blockOffsets φ a 0 = 
 theorem blockOffsets_one (φ : ℝ ≃o ℝ) (a : ℝ) : blockOffsets φ a 1 = φ.symm a := rfl
 
 theorem blockOffsets_lt (φ : ℝ ≃o ℝ) {a : ℝ} (ha : 0 < a) : blockOffsets φ a 0 < blockOffsets φ a 1 := by
-  simp only [blockOffsets, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons]
+  simp only [blockOffsets, Matrix.cons_val_zero, Matrix.cons_val_one]
   exact φ.symm.lt_iff_lt.2 (by linarith)
 
 theorem cell_left_lt_right (hn : 0 < n) (θ : ℝ) (k : ℤ) :
@@ -66,7 +66,7 @@ theorem cell_left_lt_right (hn : 0 < n) (θ : ℝ) (k : ℤ) :
 theorem not_negGood_and_posGood (ha : 0 < a) (hn : 0 < n) {k : ℤ} (h₁ : NegGood φ a L n θ k)
     (h₂ : PosGood φ a L n θ k) : False := by
   have h := blockOffsets_lt φ ha
-  simp only [blockOffsets, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons] at h
+  simp only [blockOffsets, Matrix.cons_val_zero, Matrix.cons_val_one] at h
   have := cell_left_lt_right hn θ k
   linarith [h₁.2, h₂.1]
 
@@ -74,13 +74,13 @@ theorem not_negGood_and_posGood (ha : 0 < a) (hn : 0 < n) {k : ℤ} (h₁ : NegG
 
 variable [IsFiniteMeasureOnCompacts μ]
 
-theorem reconValid_reconLabel_of_negGood (hp : IsMassParam e ξ φ μ) (ha : 0 < a) (haL : a < L) (hδ : 0 < δ)
+theorem reconValid_reconLabel_of_negGood (hp : IsMassParam e ξ φ μ) (haL : a < L) (hδ : 0 < δ)
     (hE : e ∈ ReconCurveEvent α R a L δ M) (hn : 0 < n) {k : ℤ} (hk : NegGood φ a L n θ k) :
     ReconValid a L M n e (μ.restrict (offsetOuterAnnulus δ M)) (offsetResiduesOf n θ (blockOffsets φ a))
       (reconLabel n θ (blockOffsets φ a) k) := by
   have h0 : ((k : ℝ) + θ) / n ≤ blockOffsets φ a 0 := hk.2
   obtain ⟨-, hl0⟩ := reconLabel_le_zero_iff hn h0
-  rw [ReconValid, if_pos hl0, reconRelLeft_reconLabel_neg hn h0, reconRelRight_reconLabel_neg hn h0,
+  rw [ReconValid, ite_eq_left hl0, reconRelLeft_reconLabel_neg hn h0, reconRelRight_reconLabel_neg hn h0,
     negBlockMass_eq hp haL hδ hE]
   simp only [blockOffsets, Matrix.cons_val_zero]
   exact ⟨by linarith [hk.1], by linarith [hk.2]⟩
@@ -93,9 +93,9 @@ theorem reconValid_reconLabel_of_posGood (hp : IsMassParam e ξ φ μ) (ha : 0 <
   have h1 : blockOffsets φ a 1 ≤ ((k : ℝ) - 1 + θ) / n := hk.1
   have h3 := three_le_reconLabel hn hC h1
   have hl0 : ¬ (reconLabel n θ (blockOffsets φ a) k ≤ 0) := by omega
-  rw [ReconValid, if_neg hl0, reconRelLeft_reconLabel_pos hn hC h1, reconRelRight_reconLabel_pos hn hC h1,
+  rw [ReconValid, ite_eq_right hl0, reconRelLeft_reconLabel_pos hn hC h1, reconRelRight_reconLabel_pos hn hC h1,
     posBlockMass_eq hp haL hδ hE]
-  simp only [blockOffsets, Matrix.cons_val_one, Matrix.head_cons, Matrix.cons_val_zero]
+  simp only [blockOffsets, Matrix.cons_val_one, Matrix.cons_val_zero]
   exact ⟨by linarith [hk.1], by linarith [hk.2]⟩
 
 /-- Every valid synthetic label is the label of a good cell. -/
@@ -108,14 +108,14 @@ theorem exists_good_of_reconValid (hp : IsMassParam e ξ φ μ) (ha : 0 < a) (ha
   have hC := blockOffsets_lt φ ha
   set C := blockOffsets φ a with hCdef
   by_cases hl0 : ℓ ≤ 0
-  · rw [ReconValid, if_pos hl0, negBlockMass_eq hp haL hδ hE] at hℓ
+  · rw [ReconValid, ite_eq_left hl0, negBlockMass_eq hp haL hδ hE] at hℓ
     set k := ℓ + ⌊(n : ℝ) * C 0 - θ⌋ with hk
     have hkℓ : k - ⌊(n : ℝ) * C 0 - θ⌋ = ℓ := by omega
     have hR : reconRelRight n (offsetResiduesOf n θ C) ℓ = ((k : ℝ) + θ) / n - C 0 := by
-      rw [reconRelRight, if_pos hl0, offsetResiduesOf_apply, ← hkℓ]
+      rw [reconRelRight, ite_eq_left hl0, offsetResiduesOf_apply, ← hkℓ]
       simpa using shift_sub_fract_div hn θ (C 0) k 0
     have hL : reconRelLeft n (offsetResiduesOf n θ C) ℓ = ((k : ℝ) - 1 + θ) / n - C 0 := by
-      rw [reconRelLeft, if_pos hl0, offsetResiduesOf_apply, ← hkℓ]
+      rw [reconRelLeft, ite_eq_left hl0, offsetResiduesOf_apply, ← hkℓ]
       exact shift_sub_fract_div hn θ (C 0) k 1
     rw [hR, hL] at hℓ
     have hneg : NegGood φ a L n θ k := by
@@ -123,25 +123,25 @@ theorem exists_good_of_reconValid (hp : IsMassParam e ξ φ μ) (ha : 0 < a) (ha
       exact ⟨by linarith [hℓ.1], by linarith [hℓ.2]⟩
     refine ⟨k, Or.inl hneg, ?_⟩
     rw [(reconLabel_le_zero_iff hn hneg.2).1, hkℓ]
-  · rw [ReconValid, if_neg hl0, posBlockMass_eq hp haL hδ hE] at hℓ
+  · rw [ReconValid, ite_eq_right hl0, posBlockMass_eq hp haL hδ hE] at hℓ
     set k := ℓ - 2 + ⌊(n : ℝ) * C 1 - θ⌋ with hk
     have hkℓ : k - ⌊(n : ℝ) * C 1 - θ⌋ = ℓ - 2 := by omega
     have hR : reconRelRight n (offsetResiduesOf n θ C) ℓ = ((k : ℝ) + θ) / n - C 1 := by
       have h := shift_sub_fract_div hn θ (C 1) k 0
       simp only [sub_zero] at h
-      rw [reconRelRight, if_neg hl0, offsetResiduesOf_apply, ← h, hkℓ]
+      rw [reconRelRight, ite_eq_right hl0, offsetResiduesOf_apply, ← h, hkℓ]
       congr 1
       push_cast
       ring
     have hL : reconRelLeft n (offsetResiduesOf n θ C) ℓ = ((k : ℝ) - 1 + θ) / n - C 1 := by
-      rw [reconRelLeft, if_neg hl0, offsetResiduesOf_apply,
+      rw [reconRelLeft, ite_eq_right hl0, offsetResiduesOf_apply,
         ← shift_sub_fract_div hn θ (C 1) k 1, hkℓ]
       congr 1
       push_cast
       ring
     rw [hR, hL] at hℓ
     have hpos : PosGood φ a L n θ k := by
-      simp only [hCdef, blockOffsets, Matrix.cons_val_one, Matrix.head_cons, Matrix.cons_val_zero] at hℓ
+      simp only [hCdef, blockOffsets, Matrix.cons_val_one, Matrix.cons_val_zero] at hℓ
       exact ⟨by linarith [hℓ.1], by linarith [hℓ.2]⟩
     refine ⟨k, Or.inr hpos, ?_⟩
     have hlt : C 0 < ((k : ℝ) + θ) / n := by
@@ -167,7 +167,7 @@ theorem reconTime_reconLabel (hp : IsMassParam e ξ φ μ) (ha : 0 < a) (haL : a
   rcases hk with hk | hk
   · have h0 : ((k : ℝ) + θ) / n ≤ blockOffsets φ a 0 := hk.2
     obtain ⟨-, hl0⟩ := reconLabel_le_zero_iff hn h0
-    rw [reconTime, if_pos hl0, reconTime, if_pos hl0, reconRelLeft_reconLabel_neg hn h0,
+    rw [reconTime, ite_eq_left hl0, reconTime, ite_eq_left hl0, reconRelLeft_reconLabel_neg hn h0,
       reconRelRight_reconLabel_neg hn h0]
     simp only [blockOffsets, Matrix.cons_val_zero]
     refine ⟨?_, ?_⟩
@@ -178,9 +178,9 @@ theorem reconTime_reconLabel (hp : IsMassParam e ξ φ μ) (ha : 0 < a) (haL : a
   · have h1 : blockOffsets φ a 1 ≤ ((k : ℝ) - 1 + θ) / n := hk.1
     have h3 := three_le_reconLabel hn hC h1
     have hl0 : ¬ (reconLabel n θ (blockOffsets φ a) k ≤ 0) := by omega
-    rw [reconTime, if_neg hl0, reconTime, if_neg hl0, reconRelLeft_reconLabel_pos hn hC h1,
+    rw [reconTime, ite_eq_right hl0, reconTime, ite_eq_right hl0, reconRelLeft_reconLabel_pos hn hC h1,
       reconRelRight_reconLabel_pos hn hC h1]
-    simp only [blockOffsets, Matrix.cons_val_one, Matrix.head_cons, Matrix.cons_val_zero]
+    simp only [blockOffsets, Matrix.cons_val_one, Matrix.cons_val_zero]
     refine ⟨?_, ?_⟩
     · rw [posBlockTime_eq hp haL hδ hE (by linarith [hk.1]) (by linarith [hk.2])]
       congr 1; ring
@@ -192,7 +192,7 @@ theorem reconValid_of_good (hp : IsMassParam e ξ φ μ) (ha : 0 < a) (haL : a <
     (hk : NegGood φ a L n θ k ∨ PosGood φ a L n θ k) :
     ReconValid a L M n e (μ.restrict (offsetOuterAnnulus δ M)) (offsetResiduesOf n θ (blockOffsets φ a))
       (reconLabel n θ (blockOffsets φ a) k) :=
-  hk.elim (reconValid_reconLabel_of_negGood hp ha haL hδ hE hn)
+  hk.elim (reconValid_reconLabel_of_negGood hp haL hδ hE hn)
     (reconValid_reconLabel_of_posGood hp ha haL hδ hE hn)
 
 /-- The synthetic point of a good cell is its true point. -/
@@ -202,7 +202,7 @@ theorem reconData_fst_reconLabel (hp : IsMassParam e ξ φ μ) (ha : 0 < a) (haL
     (reconData a L M n e (μ.restrict (offsetOuterAnnulus δ M)) (offsetResiduesOf n θ (blockOffsets φ a))).1
       (reconLabel n θ (blockOffsets φ a) k) = (phaseData n θ ξ).1 k := by
   simp only [reconData, phaseData]
-  rw [if_pos (reconValid_of_good hp ha haL hδ hE hn hk), (reconTime_reconLabel hp ha haL hδ hE hn hk).2,
+  rw [ite_eq_left (reconValid_of_good hp ha haL hδ hE hn hk), (reconTime_reconLabel hp ha haL hδ hE hn hk).2,
     hp.comp]
 
 /-- On good cells the synthetic label is strictly increasing. -/
@@ -273,7 +273,9 @@ theorem reconLabel_sub_of_same (ha : 0 < a) (hn : 0 < n) {k k' : ℤ}
 theorem one_div_mul_add_div (n : ℕ) (θ x : ℝ) : 1 / (n : ℝ) * x + θ / n = (x + θ) / n := by
   rw [one_div_mul_eq_div, ← add_div]
 
-/-- The true multiplicity of two separated cells is the frontier-side count of `e` at the Lebesgue times of the cells. -/
+omit [IsFiniteMeasureOnCompacts μ] in
+/-- The true multiplicity of two separated cells is the frontier-side count of `e` at the Lebesgue times of the
+cells. -/
 theorem phaseData_snd_eq_cellSideCount (hp : IsMassParam e ξ φ μ) (hn : 0 < n) {k k' : ℤ}
     (hne : k ≠ k') (h1 : |k - k'| ≠ 1) :
     (phaseData n θ ξ).2 k k' =
@@ -286,10 +288,10 @@ theorem phaseData_snd_eq_cellSideCount (hp : IsMassParam e ξ φ μ) (hn : 0 < n
     funext t
     rw [Function.comp_apply, hτ, hp.comp]
   simp only [phaseData]
-  rw [cellSideMult, if_neg (by
+  rw [cellSideMult, ite_eq_right (by
     rintro (h | h)
     · exact (not_le.2 (one_div_pos.2 hn')) h
-    · exact hne h), if_neg h1, hg, cellSideCount_comp_orderIso]
+    · exact hne h), ite_eq_right h1, hg, cellSideCount_comp_orderIso]
   simp only [hτ, one_div_mul_add_div]
 
 /-- The synthetic multiplicity of two good cells is their true multiplicity. -/
@@ -300,14 +302,14 @@ theorem reconData_snd_reconLabel (hp : IsMassParam e ξ φ μ) (ha : 0 < a) (haL
     (reconData a L M n e (μ.restrict (offsetOuterAnnulus δ M)) (offsetResiduesOf n θ (blockOffsets φ a))).2
       (reconLabel n θ (blockOffsets φ a) k) (reconLabel n θ (blockOffsets φ a) k') = (phaseData n θ ξ).2 k k' := by
   simp only [reconData]
-  rw [if_pos ⟨reconValid_of_good hp ha haL hδ hE hn hk, reconValid_of_good hp ha haL hδ hE hn hk'⟩]
+  rw [ite_eq_left ⟨reconValid_of_good hp ha haL hδ hE hn hk, reconValid_of_good hp ha haL hδ hE hn hk'⟩]
   -- the diagonal
   rcases eq_or_ne k k' with rfl | hne
-  · rw [if_pos rfl]
+  · rw [ite_eq_left rfl]
     simp [phaseData, cellSideMult]
   have hfne : reconLabel n θ (blockOffsets φ a) k ≠ reconLabel n θ (blockOffsets φ a) k' :=
     fun h => hne ((reconLabel_strictMonoOn ha hn).injOn hk hk' h)
-  rw [if_neg hfne]
+  rw [ite_eq_right hfne]
   -- the differences of the labels
   have hdiff : (|k - k'| = 1 ↔
       |reconLabel n θ (blockOffsets φ a) k - reconLabel n θ (blockOffsets φ a) k'| = 1) := by
@@ -327,15 +329,15 @@ theorem reconData_snd_reconLabel (hp : IsMassParam e ξ φ μ) (ha : 0 < a) (haL
     · rw [show reconLabel n θ (blockOffsets φ a) k - reconLabel n θ (blockOffsets φ a) k' = k - k' from
         reconLabel_sub_of_same (L := L) ha hn (Or.inr ⟨hk', hk⟩)]
   by_cases h1 : |reconLabel n θ (blockOffsets φ a) k - reconLabel n θ (blockOffsets φ a) k'| = 1
-  · rw [if_pos h1]
+  · rw [ite_eq_left h1]
     have h1' := hdiff.2 h1
     have hn' : (0 : ℝ) < n := by exact_mod_cast hn
     simp only [phaseData]
-    rw [cellSideMult, if_neg (by
+    rw [cellSideMult, ite_eq_right (by
       rintro (h | h)
       · exact (not_le.2 (one_div_pos.2 hn')) h
-      · exact hne h), if_pos h1']
-  · rw [if_neg h1, phaseData_snd_eq_cellSideCount hp hn hne (fun h => h1 (hdiff.1 h))]
+      · exact hne h), ite_eq_left h1']
+  · rw [ite_eq_right h1, phaseData_snd_eq_cellSideCount hp hn hne (fun h => h1 (hdiff.1 h))]
     -- the endpoints of the synthetic cells
     have hmin : min (reconLabel n θ (blockOffsets φ a) k) (reconLabel n θ (blockOffsets φ a) k') =
         reconLabel n θ (blockOffsets φ a) (min k k') := by
@@ -371,7 +373,7 @@ theorem reconData_snd_reconLabel (hp : IsMassParam e ξ φ μ) (ha : 0 < a) (haL
         omega
     have hsep' : ((min k k' : ℤ) : ℝ) + 2 ≤ ((max k k' : ℤ) : ℝ) := by exact_mod_cast hsep
     unfold cellSideCountInc
-    rw [if_pos ⟨φ.lt_iff_lt.2 (cell_left_lt_right hn θ _), φ.lt_iff_lt.2 (div_lt_div_of_pos_right
+    rw [ite_eq_left ⟨φ.lt_iff_lt.2 (cell_left_lt_right hn θ _), φ.lt_iff_lt.2 (div_lt_div_of_pos_right
       (by linarith) hn'), φ.lt_iff_lt.2 (cell_left_lt_right hn θ _)⟩]
 
 /-! ### The cells near the annulus are good, for large `n` -/
@@ -412,8 +414,9 @@ theorem eventually_meshFine (hα : 0 < α) (ha : 0 < a) :
     have := h₂ s hs s' hs' (by rw [Real.dist_eq]; linarith)
     rwa [dist_eq_norm] at this
 
+omit [IsFiniteMeasureOnCompacts μ] in
 /-- **A cell containing a point of norm between `α/2` and `2R` is good**, on a fine mesh. -/
-theorem good_of_mem_cell (hp : IsMassParam e ξ φ μ) (hα : 0 < α) (hαR : α < R) (ha : 0 < a) (haL : 4 * a < L)
+theorem good_of_mem_cell (hp : IsMassParam e ξ φ μ) (hα : 0 < α) (ha : 0 < a) (haL : 4 * a < L)
     (hE : e ∈ ReconCurveEvent α R a L δ M) (hfine : MeshFine φ ξ α a L n) {k : ℤ} {s : ℝ}
     (hs : s ∈ Icc (((k : ℝ) - 1 + θ) / n) (((k : ℝ) + θ) / n)) (h1 : α / 2 ≤ ‖ξ s‖) (h2 : ‖ξ s‖ ≤ 2 * R) :
     NegGood φ a L n θ k ∨ PosGood φ a L n θ k := by
@@ -424,13 +427,13 @@ theorem good_of_mem_cell (hp : IsMassParam e ξ φ μ) (hα : 0 < α) (hαR : α
   -- `2a < |t| < L/2`
   have ht1 : 2 * a < |t| := by
     by_contra h
-    push_neg at h
+    rw [not_lt] at h
     have hmem := hE1 (abs_le.1 h)
     rw [mem_ball_zero_iff, ← het] at hmem
     linarith
   have ht2 : |t| < L / 2 := by
     by_contra h
-    push_neg at h
+    rw [not_lt] at h
     obtain ⟨m, hm⟩ := exists_nat_ge |t|
     have hmem : t ∈ Icc (L / 2) (L / 2 + m) ∪ Icc (-(L / 2) - m) (-(L / 2)) := by
       rcases le_or_gt 0 t with h0 | h0
@@ -473,7 +476,7 @@ theorem good_of_mem_cell (hp : IsMassParam e ξ φ μ) (hα : 0 < α) (hαR : α
     · rw [← φ.le_iff_le, φ.apply_symm_apply]; linarith
 
 /-- A good cell lies in the window. -/
-theorem mem_quantumWindow_of_good (hn : 0 < n) (ha : 0 < a) (haL : a < L) {k : ℤ}
+theorem mem_quantumWindow_of_good (ha : 0 < a) (haL : a < L) {k : ℤ}
     (hk : NegGood φ a L n θ k ∨ PosGood φ a L n θ k) {u : ℝ}
     (hu : u ∈ Icc (((k : ℝ) - 1 + θ) / n) (((k : ℝ) + θ) / n)) : u ∈ quantumWindow φ L := by
   have h1 : φ.symm (-L) < φ.symm (-a) := φ.symm.lt_iff_lt.2 (by linarith)
@@ -481,8 +484,9 @@ theorem mem_quantumWindow_of_good (hn : 0 < n) (ha : 0 < a) (haL : a < L) {k : �
   have h3 : φ.symm a < φ.symm L := φ.symm.lt_iff_lt.2 (by linarith)
   rcases hk with hk | hk <;> exact ⟨by linarith [hk.1, hk.2, hu.1, hu.2], by linarith [hk.1, hk.2, hu.1, hu.2]⟩
 
+omit [IsFiniteMeasureOnCompacts μ] in
 /-- **The local vertices of the true data are good cells**, on a fine mesh. -/
-theorem good_of_mem_localVertices (hp : IsMassParam e ξ φ μ) (hα : 0 < α) (hαR : α < R) (ha : 0 < a) (haL : 4 * a < L)
+theorem good_of_mem_localVertices (hp : IsMassParam e ξ φ μ) (hα : 0 < α) (ha : 0 < a) (haL : 4 * a < L)
     (hE : e ∈ ReconCurveEvent α R a L δ M) (hfine : MeshFine φ ξ α a L n) {k : ℤ}
     (hk : k ∈ localVertices (ball (0 : ℂ) R \ closedBall (0 : ℂ) α) (phaseData n θ ξ)) :
     NegGood φ a L n θ k ∨ PosGood φ a L n θ k := by
@@ -491,7 +495,7 @@ theorem good_of_mem_localVertices (hp : IsMassParam e ξ φ μ) (hα : 0 < α) (
   have hvert : ∀ j : ℤ, (phaseData n θ ξ).1 j ∈ ball (0 : ℂ) R \ closedBall (0 : ℂ) α →
       NegGood φ a L n θ j ∨ PosGood φ a L n θ j := fun j hj => by
     simp only [phaseData, Set.mem_sdiff, mem_ball_zero_iff, mem_closedBall_zero_iff, not_le] at hj
-    exact good_of_mem_cell hp hα hαR ha haL hE hfine ⟨(cell_left_lt_right hn θ j).le, le_rfl⟩
+    exact good_of_mem_cell hp hα ha haL hE hfine ⟨(cell_left_lt_right hn θ j).le, le_rfl⟩
       (by linarith) (by linarith)
   rcases (mem_localVertices_iff.1 hk) with hk | ⟨x, hx, hxk⟩
   · exact hvert k hk
@@ -511,8 +515,8 @@ theorem good_of_mem_localVertices (hp : IsMassParam e ξ φ μ) (hα : 0 < α) (
     have hxv := hx
     simp only [phaseData, Set.mem_sdiff, mem_ball_zero_iff, mem_closedBall_zero_iff, not_le] at hxv
     have hcx : ((x : ℝ) + θ) / n - ((x : ℝ) - 1 + θ) / n = 1 / n := by field_simp; ring
-    have hcl := hfine.curve _ (mem_quantumWindow_of_good hn ha (by linarith) hgx hux) _
-      (mem_quantumWindow_of_good hn ha (by linarith) hgx ⟨(cell_left_lt_right hn θ x).le, le_rfl⟩)
+    have hcl := hfine.curve _ (mem_quantumWindow_of_good ha (by linarith) hgx hux) _
+      (mem_quantumWindow_of_good ha (by linarith) hgx ⟨(cell_left_lt_right hn θ x).le, le_rfl⟩)
       (by rw [abs_le]; constructor <;> linarith [hux.1, hux.2, (cell_left_lt_right hn θ x)])
     have hnorm1 : α / 2 ≤ ‖ξ (u' + θ / n)‖ := by
       rw [hzu]
@@ -523,7 +527,7 @@ theorem good_of_mem_localVertices (hp : IsMassParam e ξ φ μ) (hα : 0 < α) (
       rw [hzu]
       have := norm_le_norm_add_norm_sub' (ξ (u + θ / n)) (ξ (((x : ℝ) + θ) / n))
       linarith [hxv.1]
-    exact good_of_mem_cell hp hα hαR ha haL hE hfine huk hnorm1 hnorm2
+    exact good_of_mem_cell hp hα ha haL hE hfine huk hnorm1 hnorm2
 
 /-! ### The reconstruction -/
 
@@ -544,7 +548,7 @@ theorem coneRecon_offsetResidues (α R a L M : ℝ) (n : ℕ) (θ : ℝ) (e : C(
 parametrized by the mass of a locally finite measure `μ`, for every phase `θ`, for all large `n` the local
 configuration near `B_R(0) \ closedBall 0 α` of the true data at mesh `1/n` with phase `θ` is `coneRecon` of the outer
 data and the residues. -/
-theorem eventually_localConfig_eq_coneRecon (hα : 0 < α) (hαR : α < R) (ha : 0 < a) (haL : 4 * a < L)
+theorem eventually_localConfig_eq_coneRecon (hα : 0 < α) (ha : 0 < a) (haL : 4 * a < L)
     (hδ : 0 < δ) (hp : IsMassParam e ξ φ μ) (hE : e ∈ ReconCurveEvent α R a L δ M) (θ : ℝ) :
     ∀ᶠ n : ℕ in atTop, localConfig (ball (0 : ℂ) R \ closedBall (0 : ℂ) α) (phaseData n θ ξ) =
       coneRecon α R a L M n (offsetResidues n θ e μ a δ M) := by
@@ -555,13 +559,13 @@ theorem eventually_localConfig_eq_coneRecon (hα : 0 < α) (hαR : α < R) (ha :
   symm
   refine localConfig_eq_of_strictMonoOn (f := reconLabel n θ (blockOffsets φ a))
     (fun k hk k' hk' hkk => reconLabel_lt_reconLabel ha hn
-      (good_of_mem_localVertices hp hα hαR ha haL hE hfine hk)
-      (good_of_mem_localVertices hp hα hαR ha haL hE hfine hk') hkk) ?_
+      (good_of_mem_localVertices hp hα ha haL hE hfine hk)
+      (good_of_mem_localVertices hp hα ha haL hE hfine hk') hkk) ?_
     (fun k hk => reconData_fst_reconLabel hp ha haL' hδ hE hn
-      (good_of_mem_localVertices hp hα hαR ha haL hE hfine hk))
+      (good_of_mem_localVertices hp hα ha haL hE hfine hk))
     (fun k hk k' hk' => reconData_snd_reconLabel hp ha haL' hδ hE hn hfine.gap
-      (good_of_mem_localVertices hp hα hαR ha haL hE hfine hk)
-      (good_of_mem_localVertices hp hα hαR ha haL hE hfine hk'))
+      (good_of_mem_localVertices hp hα ha haL hE hfine hk)
+      (good_of_mem_localVertices hp hα ha haL hE hfine hk'))
   -- the local vertices correspond
   set V := ball (0 : ℂ) R \ closedBall (0 : ℂ) α with hV
   set d := phaseData n θ ξ with hd
@@ -571,9 +575,9 @@ theorem eventually_localConfig_eq_coneRecon (hα : 0 < α) (hαR : α < R) (ha :
   -- invalid synthetic labels carry the point `0` and no edges
   have hinv : ∀ ℓ, ¬ ReconValid a L M n e (μ.restrict (offsetOuterAnnulus δ M))
       (offsetResiduesOf n θ (blockOffsets φ a)) ℓ → d'.1 ℓ = 0 ∧ ∀ ℓ', d'.2 ℓ' ℓ = 0 := fun ℓ hℓ => by
-    refine ⟨by simp only [hd', reconData, if_neg hℓ], fun ℓ' => ?_⟩
+    refine ⟨by simp only [hd', reconData, ite_eq_right hℓ], fun ℓ' => ?_⟩
     simp only [hd', reconData]
-    rw [if_neg (fun h => hℓ h.2)]
+    rw [ite_eq_right (fun h => hℓ h.2)]
   have hgood : ∀ k, NegGood φ a L n θ k ∨ PosGood φ a L n θ k →
       (k ∈ localVertices V d ↔ reconLabel n θ (blockOffsets φ a) k ∈ localVertices V d') := by
     intro k hk
@@ -582,7 +586,7 @@ theorem eventually_localConfig_eq_coneRecon (hα : 0 < α) (hαR : α < R) (ha :
     constructor
     · rintro (h | ⟨x, hx, hxk⟩)
       · exact Or.inl h
-      · have hgx := good_of_mem_localVertices hp hα hαR ha haL hE hfine (mem_localVertices_iff.2 (Or.inl hx))
+      · have hgx := good_of_mem_localVertices hp hα ha haL hE hfine (mem_localVertices_iff.2 (Or.inl hx))
         refine Or.inr ⟨reconLabel n θ (blockOffsets φ a) x, ?_, ?_⟩
         · rw [reconData_fst_reconLabel hp ha haL' hδ hE hn hgx]; exact hx
         · rw [reconData_snd_reconLabel hp ha haL' hδ hE hn hfine.gap hgx hk]; exact hxk
@@ -607,7 +611,7 @@ theorem eventually_localConfig_eq_coneRecon (hα : 0 < α) (hαR : α < R) (ha :
       · exact h0V ((hinv ℓ hv).1 ▸ h)
       · exact hy ((hinv ℓ hv).2 y)
   · rintro ⟨k, hk, rfl⟩
-    exact (hgood k (good_of_mem_localVertices hp hα hαR ha haL hE hfine hk)).1 hk
+    exact (hgood k (good_of_mem_localVertices hp hα ha haL hE hfine hk)).1 hk
 
 end Deterministic
 

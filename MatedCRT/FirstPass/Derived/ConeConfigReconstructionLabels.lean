@@ -49,7 +49,7 @@ theorem reconLabel_le_zero_iff {n : ℕ} (hn : 0 < n) {θ : ℝ} {C : Fin 2 → 
     (hk : ((k : ℝ) + θ) / n ≤ C 0) : reconLabel n θ C k = k - ⌊(n : ℝ) * C 0 - θ⌋ ∧
       reconLabel n θ C k ≤ 0 := by
   have hn' : (0 : ℝ) < n := by exact_mod_cast hn
-  have hl : reconLabel n θ C k = k - ⌊(n : ℝ) * C 0 - θ⌋ := if_pos hk
+  have hl : reconLabel n θ C k = k - ⌊(n : ℝ) * C 0 - θ⌋ := ite_eq_left hk
   refine ⟨hl, ?_⟩
   rw [hl, sub_nonpos]
   apply Int.le_floor.2
@@ -58,7 +58,7 @@ theorem reconLabel_le_zero_iff {n : ℕ} (hn : 0 < n) {θ : ℝ} {C : Fin 2 → 
 
 theorem reconLabel_of_lt {n : ℕ} {θ : ℝ} {C : Fin 2 → ℝ} {k : ℤ} (hk : C 0 < ((k : ℝ) + θ) / n) :
     reconLabel n θ C k = k - ⌊(n : ℝ) * C 1 - θ⌋ + 2 :=
-  if_neg (not_le.2 hk)
+  ite_eq_right (not_le.2 hk)
 
 /-- In the positive block (`C₊ ≤ (k - 1 + θ)/n`) the synthetic label is at least `3`. -/
 theorem three_le_reconLabel {n : ℕ} (hn : 0 < n) {θ : ℝ} {C : Fin 2 → ℝ} (hC : C 0 < C 1) {k : ℤ}
@@ -80,14 +80,14 @@ theorem reconRelRight_reconLabel_neg {n : ℕ} (hn : 0 < n) {θ : ℝ} {C : Fin 
     (hk : ((k : ℝ) + θ) / n ≤ C 0) :
     reconRelRight n (offsetResiduesOf n θ C) (reconLabel n θ C k) = ((k : ℝ) + θ) / n - C 0 := by
   obtain ⟨hl, hl0⟩ := reconLabel_le_zero_iff hn hk
-  rw [reconRelRight, if_pos hl0, hl, offsetResiduesOf_apply]
+  rw [reconRelRight, ite_eq_left hl0, hl, offsetResiduesOf_apply]
   simpa using shift_sub_fract_div hn θ (C 0) k 0
 
 theorem reconRelLeft_reconLabel_neg {n : ℕ} (hn : 0 < n) {θ : ℝ} {C : Fin 2 → ℝ} {k : ℤ}
     (hk : ((k : ℝ) + θ) / n ≤ C 0) :
     reconRelLeft n (offsetResiduesOf n θ C) (reconLabel n θ C k) = ((k : ℝ) - 1 + θ) / n - C 0 := by
   obtain ⟨hl, hl0⟩ := reconLabel_le_zero_iff hn hk
-  rw [reconRelLeft, if_pos hl0, hl, offsetResiduesOf_apply]
+  rw [reconRelLeft, ite_eq_left hl0, hl, offsetResiduesOf_apply]
   exact shift_sub_fract_div hn θ (C 0) k 1
 
 theorem reconRelRight_reconLabel_pos {n : ℕ} (hn : 0 < n) {θ : ℝ} {C : Fin 2 → ℝ} (hC : C 0 < C 1) {k : ℤ}
@@ -100,7 +100,7 @@ theorem reconRelRight_reconLabel_pos {n : ℕ} (hn : 0 < n) {θ : ℝ} {C : Fin 
       apply div_lt_div_of_pos_right _ hn'; linarith
     linarith
   have hl0 : ¬ (reconLabel n θ C k ≤ 0) := by omega
-  rw [reconRelRight, if_neg hl0, reconLabel_of_lt hlt, offsetResiduesOf_apply]
+  rw [reconRelRight, ite_eq_right hl0, reconLabel_of_lt hlt, offsetResiduesOf_apply]
   have := shift_sub_fract_div hn θ (C 1) k 0
   simp only [sub_zero] at this
   rw [← this]
@@ -118,7 +118,7 @@ theorem reconRelLeft_reconLabel_pos {n : ℕ} (hn : 0 < n) {θ : ℝ} {C : Fin 2
       apply div_lt_div_of_pos_right _ hn'; linarith
     linarith
   have hl0 : ¬ (reconLabel n θ C k ≤ 0) := by omega
-  rw [reconRelLeft, if_neg hl0, reconLabel_of_lt hlt, offsetResiduesOf_apply,
+  rw [reconRelLeft, ite_eq_right hl0, reconLabel_of_lt hlt, offsetResiduesOf_apply,
     ← shift_sub_fract_div hn θ (C 1) k 1]
   congr 1
   push_cast

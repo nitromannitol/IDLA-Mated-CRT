@@ -192,11 +192,10 @@ suitable cutoffs `a, L, δ, M`. -/
 theorem exists_cutoffs_reconCurveEvent {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     [IsProbabilityMeasure P] {ηL : Ω → C(ℝ, ℂ)} (hm : Measurable ηL)
     (h0 : ∀ᵐ ω ∂P, ηL ω 0 = 0) (hprop : ∀ᵐ ω ∂P, Tendsto (ηL ω) (cocompact ℝ) (cocompact ℂ))
-    (hz : ∀ᵐ ω ∂P, ∀ t, ηL ω t = 0 → t = 0) {α R : ℝ} (hα : 0 < α) (hαR : α < R) {ε : ℝ≥0∞}
+    (hz : ∀ᵐ ω ∂P, ∀ t, ηL ω t = 0 → t = 0) {α R : ℝ} (hα : 0 < α) {ε : ℝ≥0∞}
     (hε : 0 < ε) :
     ∃ a L δ M : ℝ, 0 < a ∧ 4 * a < L ∧ 0 < δ ∧ δ < M ∧
       P {ω | ηL ω ∉ ReconCurveEvent α R a L δ M} ≤ ε := by
-  clear hαR
   have hε' : 0 < ε / 4 := ENNReal.div_pos hε.ne' (by norm_num)
   obtain ⟨a, ha, h1⟩ := exists_a_mapsTo hm h0 hα hε'
   obtain ⟨L, haL, h2⟩ := exists_L_tails (R := R) hm hprop ha hε'
