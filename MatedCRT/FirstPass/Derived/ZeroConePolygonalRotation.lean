@@ -1,4 +1,5 @@
 import MatedCRT.FirstPass.Derived.ZeroConeStandardBorelSteps
+import MatedCRT.FirstPass.Derived.ZeroConePolygonalPremises
 import LatticeProb.Bonanno.MatedCRTHarmonic.GMS4O.Prop48OPhase
 
 /-!
@@ -10,6 +11,7 @@ of the zero cone `h`. For the mating-of-trees coupling `D` and `γ ∈ (0, 2)` t
 curve: the zero-cone curve `η₀` and its quarter turn `t ↦ i η₀(t)` have the same law.
 
 * `map_quarterTurnCurve_eta0`: `P.map (fun ω => quarterTurnCurve (η₀ ω)) = P.map η₀`.
+* `zeroConeCurveRotationLaw`: the same statement as the named step `ZeroConeCurveRotationLaw D hγ`.
 
 The proof is the first marginal of the phase-shifted rotation identity of the zero-cone curve
 (`MatedCRTHarmonic.GMS4O.p48o_map_zeroConeCurve_phase_shift`, Lattice-Probability): for every angle `θ`,
@@ -72,5 +74,13 @@ theorem map_quarterTurnCurve_eta0
     exact rotCurve_neg_neg_pi_div_two (η₀ ω)
   rw [e] at hfst
   exact hfst
+
+/-- **The rotation law of the zero-cone curve** `ZeroConeCurveRotationLaw` (Gwynne–Miller–Sheffield,
+arXiv:1705.11161v5, proof of Proposition 3.1, p. 24), from the coupling, through the phase-shifted rotation
+identity of the zero-cone curve. -/
+theorem zeroConeCurveRotationLaw
+    (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm) (hγ : γ ∈ Ioo (0 : ℝ) 2) :
+    ZeroConeCurveRotationLaw D hγ :=
+  map_quarterTurnCurve_eta0 D hγ
 
 end MatedCRT.ZeroConePolygonal
