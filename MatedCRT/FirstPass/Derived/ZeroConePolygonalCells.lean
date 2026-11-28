@@ -1,4 +1,4 @@
-import MatedCRT.FirstPass.Derived.ZeroConePolygonalVoronoi
+import MatedCRT.FirstPass.Derived.ZeroConePolygonalVertices
 
 /-!
 # The polygonal cells
@@ -11,8 +11,8 @@ function `r` (`IsSiteSystem`), and weights `e_j`.
 * `labels p`: the labels `j` whose old cell `K_j` meets the Voronoi tile `Q_p`.
 * `owner p`: the label of least weight among them, ties broken by the label (answer, line 23: "Give the
   whole tile to the label of smallest `e_j` among them, breaking ties by chronological order").
-* `piece p j`: the whole tile `Q_p` for its owner, and the shared piece `S_p` (frontier and axis chords
-  through `p`) for every other label meeting the tile.
+* `piece p j`: the whole tile `Q_p` for its owner, and the shared piece `S_p` (the frontier and the
+  segments from the site `p` to the vertices of the tile) for every other label meeting the tile.
 * `cell j`: the polygonal cell `C_j = ⋃_{p : K_j ∩ Q_p ≠ ∅} piece p j`.
 
 Under `PolygonalInput.IsValid` (the old cells are compact, connected, locally finite, cover the plane, the
@@ -103,7 +103,7 @@ def IsOwner (p : Plane) (j : ℤ) : Prop :=
 def owner (p : Plane) : ℤ := Classical.epsilon (I.IsOwner p)
 
 /-- **The piece of the tile of `p` given to the label `j`**: the whole tile for its owner, the shared
-piece (frontier and axis chords through `p`) for every other label. -/
+piece (the frontier and the segments from the site `p` to the vertices of the tile) for every other label. -/
 def piece (p : Plane) (j : ℤ) : Set Plane := if I.owner p = j then tile I.V p else shared I.V p
 
 /-- The sites whose tile meets the old cell `K_j`. -/
@@ -223,7 +223,7 @@ theorem IsValid.isCompact_cell (hI : I.IsValid) (j : ℤ) : IsCompact (I.cell j)
 its tile"). -/
 theorem IsValid.v_mem_cell (hI : I.IsValid) (j : ℤ) : I.v j ∈ I.cell j :=
   shared_subset_cell (hI.vsite j) ⟨I.v j, hI.vmem j, self_mem_tile I.V (I.v j)⟩
-    (self_mem_shared I.V (I.v j))
+    (self_mem_shared hI.site (I.v j))
 
 /-- **The polygonal cells have interior**: each contains the tile it owns. -/
 theorem IsValid.interior_cell_nonempty (hI : I.IsValid) (j : ℤ) : (interior (I.cell j)).Nonempty := by
@@ -285,9 +285,9 @@ theorem IsValid.volume_cell_inter (hI : I.IsValid) {i j : ℤ} (hij : i ≠ j) :
     by_cases hown : I.owner p = i
     · have hne : I.owner p ≠ j := fun h => hij (hown.symm.trans h)
       rw [piece_of_ne hne]
-      exact measure_mono_null inter_subset_right (volume_shared I.V p)
+      exact measure_mono_null inter_subset_right (volume_shared hI.site p)
     · rw [piece_of_ne hown]
-      exact measure_mono_null inter_subset_left (volume_shared I.V p)
+      exact measure_mono_null inter_subset_left (volume_shared hI.site p)
   · exact measure_mono_null (inter_subset_inter (piece_subset_tile p i) (piece_subset_tile q j))
       (volume_tile_inter I.V hp.1 hq.1 hpq)
 
@@ -315,8 +315,8 @@ theorem IsValid.cell_inter_nonempty (hI : I.IsValid) {i j : ℤ} (h : 0 < I.m i 
     (I.cell i ∩ I.cell j).Nonempty := by
   obtain ⟨z, hzi, hzj⟩ := hI.m_inter i j h
   obtain ⟨p, hp, hzp⟩ := hI.site.exists_mem_tile z
-  exact ⟨p, shared_subset_cell hp ⟨z, hzi, hzp⟩ (self_mem_shared I.V p),
-    shared_subset_cell hp ⟨z, hzj, hzp⟩ (self_mem_shared I.V p)⟩
+  exact ⟨p, shared_subset_cell hp ⟨z, hzi, hzp⟩ (self_mem_shared hI.site p),
+    shared_subset_cell hp ⟨z, hzj, hzp⟩ (self_mem_shared hI.site p)⟩
 
 /-- **Every point of an old cell is close to its polygonal cell** (answer, line 48: the tile containing a
 point `z ∈ K_j` lies in the cell of its owner, and its boundary lies in `C_j`): some polygonal cell `C_k`
@@ -325,7 +325,7 @@ theorem IsValid.exists_near (hI : I.IsValid) {j : ℤ} {z : Plane} (hz : z ∈ I
     ∃ k, z ∈ I.cell k ∧ ∃ y ∈ I.cell j, dist z y ≤ diam (I.cell k) := by
   obtain ⟨p, hp, hzp⟩ := hI.site.exists_mem_tile z
   refine ⟨I.owner p, hI.tile_subset_cell_owner hp hzp, p,
-    shared_subset_cell hp ⟨z, hz, hzp⟩ (self_mem_shared I.V p), ?_⟩
+    shared_subset_cell hp ⟨z, hz, hzp⟩ (self_mem_shared hI.site p), ?_⟩
   exact dist_le_diam_of_mem (hI.isCompact_cell _).isBounded (hI.tile_subset_cell_owner hp hzp)
     (hI.tile_subset_cell_owner hp (self_mem_tile I.V p))
 
