@@ -16,7 +16,10 @@ configuration of the cones from the curve.
   boundary-length pair `bm` (Definition 1.1) are the frontier-side multiplicities of the cells of the
   area-parametrized curve `η` of the `γ`-quantum cone. This is the cell-side identity
   (`matingOfTreesCellSideIdentity`) at the level of the coupling, from Le Gall's theorem on cone points
-  (`PlanarBMNoTwoSidedConePoints`) and the triple-point hypothesis `CorrelatedBMTraversalTriplePointsNoContinuum`.
+  (`PlanarBMNoTwoSidedConePoints`) and the triple-point hypothesis on Peanosphere curves
+  `CorrelatedBMPeanosphereTriplePointsNoContinuum` (which follows from
+  `CorrelatedBMTraversalTriplePointsNoContinuum` by
+  `ae_forall_peanosphere_not_containsNondegenerateContinuum`).
 * `ae_phaseShiftedEdgeCount_eq_cellSideMult`: the same identity for the zero cone on the shifted lattice
   `n⁻¹ ℤ + n⁻¹ θ`, for almost every phase `θ`, with the unit-mesh multiplicities of the rescaled curve
   `t ↦ η₀((t + θ)/n)`.
@@ -61,10 +64,10 @@ theorem ae_finite_fibres_of_isMatingOfTreesCoupling
 surely, for every mesh `1/n` and all `j, k`, the edge count of the boundary-length pair `bm` equals
 `cellSideMult (1/n) (η ω) j k`. The Peanosphere, the finite fibres and the Brownian law of `bm` come from the
 coupling; the absence of common local minima from Le Gall's theorem on cone points; the absence of continua of
-triple points from `CorrelatedBMTraversalTriplePointsNoContinuum`; the descent of both coordinates at the points
+triple points from `CorrelatedBMPeanosphereTriplePointsNoContinuum`; the descent of both coordinates at the points
 `k/n` from the Blumenthal zero-one law; the identity is `bmEdgeCount_eq_cellSideMult`. -/
 theorem ae_bmEdgeCount_eq_cellSideMult_cone (hLG : PlanarBMNoTwoSidedConePoints)
-    (hA : CorrelatedBMTraversalTriplePointsNoContinuum)
+    (hT : CorrelatedBMPeanosphereTriplePointsNoContinuum)
     (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm) (hγ : γ ∈ Ioo (0 : ℝ) 2) :
     ∀ᵐ ω ∂P, ∀ n : ℕ, 0 < n → ∀ j k : ℤ,
       bmEdgeCount (1 / (n : ℝ)) (fun t => (bm ω t).1) (fun t => (bm ω t).2) j k =
@@ -72,7 +75,7 @@ theorem ae_bmEdgeCount_eq_cellSideMult_cone (hLG : PlanarBMNoTwoSidedConePoints)
   have hbm : AEMeasurable bm P := D.measurable_curves.2.2.2.aemeasurable
   have hcn := ae_of_ae_map hbm (correlatedBMNoCommonLocalMin hLG γ hγ.1 hγ.2 _ D.boundaryLawBM)
   have htr := ae_of_ae_map hbm
-    (ae_forall_peanosphere_not_containsNondegenerateContinuum hA hγ.1 hγ.2 D.boundaryLawBM)
+    (hT γ hγ.1 hγ.2 _ D.boundaryLawBM)
   have hd := ae_of_ae_map hbm (ae_all_iff.2 fun n : ℕ => ae_all_iff.2 fun i : Fin 2 =>
     ae_all_iff.2 fun k : ℤ =>
       (ae_forall_exists_lt_right D.boundaryLawBM i (1 / (n : ℝ) * k)).and
@@ -90,7 +93,7 @@ cell endpoints `(k + θ)/n` are almost surely visited once by `η₀` (area addi
 intervals and Fubini in the phase), so both coordinates descend on both sides of them, and the identity is
 `bmEdgeCount_eq_cellSideMult` for the Peanosphere `(bm ∘ e, η ∘ e)` with the time change `e t = ψ ((t + θ)/n)`. -/
 theorem ae_phaseShiftedEdgeCount_eq_cellSideMult (hLG : PlanarBMNoTwoSidedConePoints)
-    (hA : CorrelatedBMTraversalTriplePointsNoContinuum)
+    (hT : CorrelatedBMPeanosphereTriplePointsNoContinuum)
     (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm) (hγ : γ ∈ Ioo (0 : ℝ) 2)
     (G : Ω → Path2) (hG : IsZeroConeBoundaryPair D hγ G) (n : ℕ) (hn : 0 < n) :
     ∀ᵐ p ∂P.prod zeroConePhase, ∀ j k : ℤ,
@@ -134,7 +137,7 @@ theorem ae_phaseShiftedEdgeCount_eq_cellSideMult (hLG : PlanarBMNoTwoSidedConePo
     hlift (LatticeProb.ae_coupled_area_clock D hγ), hlift hGae,
     hlift (ae_finite_fibres_of_isMatingOfTreesCoupling D),
     hlift (ae_of_ae_map hbm
-      (ae_forall_peanosphere_not_containsNondegenerateContinuum hA hγ.1 hγ.2 D.boundaryLawBM)),
+      (hT γ hγ.1 hγ.2 _ D.boundaryLawBM)),
     hlift (ae_of_ae_map hbm (correlatedBMNoCommonLocalMin hLG γ hγ.1 hγ.2 _ D.boundaryLawBM)), hEc]
     with p hPe hclk hGω hfin htr hcn hp
   set ω := p.1
