@@ -24,8 +24,7 @@ dyadic vague limit of `2^{-kγ²/2} e^{γ g_{2^{-k}}(z)} dz`) has the coordinate
 * no atoms: the area measure is almost surely the LQG measure of the circle-average process of the field
   (`LatticeProb.LQG.ae_lqgArea_eq_of_isLQGMeasure_ae`, the circle averages agreeing for Lebesgue-almost every
   centre at every dyadic radius), which has no atoms
-  (`LatticeProb.LQG.LQGMeasureNonatomicUpper.ae_singleton_eq_zero_of_isWholePlaneGFF`; Duplantier–Sheffield,
-  *Liouville quantum gravity and KPZ* (arXiv:0808.1560v2)).
+  (`LatticeProb.LQG.LQGMeasureNonatomicUpper.ae_singleton_eq_zero_of_isWholePlaneGFF`).
 -/
 
 set_option autoImplicit false

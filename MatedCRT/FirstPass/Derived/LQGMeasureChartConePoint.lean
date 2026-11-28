@@ -15,8 +15,9 @@ import LatticeProb.Bonanno.LQGMetric.Field.CircleAvgRate
 The field `h` of a valid environment is, almost surely, a normalized whole-plane GFF `G` minus `γ log |·|` plus a
 continuous function (`MatedCRTEnv.IsValid.exists_hC_eq_normalizedWPGFF_sub_log_add`). This file transports the
 coordinate change of the LQG measure on open sets (`OpenChartProp`) from the whole-plane GFF to `h`, including the
-open sets containing the cone point `0`, following the rooting argument of Duplantier–Sheffield, *Liouville quantum
-gravity and KPZ* (arXiv:0808.1560v2), §3.3 and the paragraph after Proposition 3.4:
+open sets containing the cone point `0`, following the whole-plane analogue of the rooting argument of
+Duplantier–Sheffield, *Liouville quantum gravity and KPZ* (arXiv:0808.1560v2), §3.3, (25), and the paragraph after
+Proposition 3.4:
 
 * the property `OpenChartPropNoAtom γ f g`: `g` has the coordinate change on open sets with a measure without atoms;
   it is invariant under adding constants and continuous functions and under translations
@@ -388,7 +389,7 @@ open LQGMeasureChart LQGMeasureChart.ConePoint
 (`SheffieldWangEnvelope`, `ZeroBoundaryGFFLocalRegularity`), `0 < γ < 2` and a bump function `f`: for a valid
 environment and a measurable version `H` of its field, almost surely `H` has the coordinate change on every open
 set with the LQG measure `S.μ` of the environment, including the open sets containing the cone point `0`
-(Duplantier–Sheffield (2011), §3.3; Sheffield–Wang (2016), Theorem 1.4). -/
+(the whole-plane analogue of Duplantier–Sheffield (2011), §3.3, (25); Sheffield–Wang (2016), Theorem 1.4). -/
 theorem MatedCRTEnv.IsValid.ae_openChartProp_of_wholePlane (hE : SheffieldWangEnvelope)
     (hR : ZeroBoundaryGFFLocalRegularity) {Ω : Type} [MeasurableSpace Ω] {S : MatedCRTEnv Ω}
     {𝒮 : SpaceFillingSLEModel} {γ : ℝ} (hS : S.IsValid 𝒮 γ) (h0 : 0 < γ) (h2 : γ < 2) {f : ℂ → ℝ}

@@ -15,7 +15,8 @@ Sheffield–Wang, Theorems 1.1, 1.2 and 1.4, on the disc, at the scales `2^{-k}`
 (Duplantier–Sheffield, arXiv:0808.1560v2, Proposition 2.1 for a fixed map).
 
 This file formalizes the first localization step of the coordinate change of the LQG measure for all inverse charts:
-the property passes from a zero-boundary GFF on `D` (where it is the cited input `SheffieldWangDiscConformal`) to the
+the property passes from a zero-boundary GFF on `D` (where it is `SheffieldWangDiscConformal`, proved from the two
+cited inputs by `sheffieldWangDiscConformal_of_inputs`) to the
 field `Xz + u` with a continuous remainder `u`, i.e. the Markov harmonic remainder multiplies the limit by its
 exponential with coefficient `γ`, since its averages converge locally uniformly.
 

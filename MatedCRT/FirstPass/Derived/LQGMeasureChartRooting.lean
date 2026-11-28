@@ -12,10 +12,10 @@ import LatticeProb.Bonanno.LQGMetric.Field.Measurable
 
 For the whole-plane Gaussian free field `h` and its `γ`-LQG measure `μ`, `0 < γ < 2`, the rooted law
 `μ(dz) P(dh)` restricted to the unit disc has root marginal Lebesgue measure and, given the root `z`, field law the
-original law shifted by `γ Cov(h(·), h(z))` (Duplantier–Sheffield, *Liouville quantum gravity and KPZ*,
-arXiv:0808.1560v2, §3.3, and the paragraph after Proposition 3.4; the conditional field is "the original GFF plus the
-deterministic function" `γ ξ_0^z`). This is the rooting step in the proof that the coordinate change of the LQG
-measure holds through the cone point.
+original law shifted by `γ Cov(h(·), h(z))`. This is the whole-plane analogue of Duplantier–Sheffield, *Liouville
+quantum gravity and KPZ*, arXiv:0808.1560v2, §3.3, (25), and the paragraph after Proposition 3.4, where, for the
+zero-boundary GFF on a domain, the conditional field is the original GFF plus the deterministic function `γ ξ_0^z`.
+This is the rooting step in the proof that the coordinate change of the LQG measure holds through the cone point.
 
 * `lintegral_lqgMeasure_marked_countable_eq`: the marked rooting identity
   `E ∫_{𝔻} f(z, X) dμ(z) = ∫_{𝔻} E f(z, X + γ c(z)) dz` for countably many (indeed any family of) marks
@@ -43,8 +43,8 @@ open LatticeProb.Gauss in
 /-- **The marked rooting identity for an arbitrary family of marks.** For a whole-plane GFF `h`, its `γ`-LQG measure
 `μ` (`0 < γ < 2`), test functions `φ_i` (`i ∈ ι`) and a measurable `f : ℂ × ℝ^ι → [0, ∞]`,
 `E ∫_{𝔻} f(z, X) dμ(z) = ∫_{𝔻} E f(z, X + γ c(z)) dz` with `X = ((h, φ_i))_i` and
-`c_i(z) = ∫ φ_i(x) Cov(h(x), h(z)) dx` (Duplantier–Sheffield (2011), §3.3); the left integrand is almost everywhere
-measurable. -/
+`c_i(z) = ∫ φ_i(x) Cov(h(x), h(z)) dx` (the whole-plane analogue of Duplantier–Sheffield (2011), §3.3, (25)); the
+left integrand is almost everywhere measurable. -/
 theorem lintegral_lqgMeasure_marked_countable_eq {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {hC : Ω → (ℂ → ℝ) → ℝ} {hcirc : Ω → ℝ → ℂ → ℝ} (hh : IsWholePlaneGFF P hC hcirc) {γ : ℝ}
     (hγ0 : 0 < γ) (hγ2 : γ < 2) {μ : Ω → Measure ℂ} (hμ : LatticeProb.LQG.IsLQGMeasure P γ hcirc μ)
@@ -192,8 +192,8 @@ open LatticeProb.Gauss in
 /-- **Rooting on the canonical space.** Let `ν` be the law, on the space of distributions on `ℂ`, of a normalized
 whole-plane GFF (`IsNormalizedWPGFF id ν`), and `0 < γ < 2`. If a measurable set `E` of distributions has full
 `ν`-measure, then for Lebesgue-almost every `x` in the unit disc the shifted field `g + γ T_x` lies in `E` for
-`ν`-almost every `g` (Duplantier–Sheffield (2011), §3.3: the field seen from a root sampled from its LQG measure is the
-original field plus `γ Cov(h(·), h(x))`). -/
+`ν`-almost every `g` (the whole-plane analogue of Duplantier–Sheffield (2011), §3.3, (25): the field seen from a root
+sampled from its LQG measure is the original field plus `γ Cov(h(·), h(x))`). -/
 theorem ae_measure_add_covDist_mem {ν : Measure LQGMetric.DistC} [IsProbabilityMeasure ν]
     (hν : LQGMetric.IsNormalizedWPGFF id ν) {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     {E : Set LQGMetric.DistC} (hE : MeasurableSet E) (hE1 : ν E = 1) :
