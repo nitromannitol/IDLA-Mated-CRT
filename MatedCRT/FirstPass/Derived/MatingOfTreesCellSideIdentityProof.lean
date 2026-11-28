@@ -42,8 +42,7 @@ the coupling field `visitBound`). For a coordinate `X = L` or `R`, write a *weak
 Hypotheses (literature, on general objects):
 * `SpaceFillingSLETriplePointsNoContinuum 𝒮` (named hypothesis): for whole-plane space-filling SLE_κ, `κ > 4`, almost
   surely the points visited at least three times contain no continuum of positive diameter (Gwynne–Holden–Miller,
-  arXiv:1512.01223, Corollary 6.5; DMS (8.9) and Lemmas 8.12-8.13). It does not hold for every model `𝒮`; see
-  the declaration.
+  arXiv:1512.01223, Corollary 6.5; DMS (8.9) and Lemmas 8.12-8.13).
 * `CorrelatedBMNoCommonLocalMin`: a correlated planar Brownian motion almost surely has no time which is a local
   minimum of both coordinates (Le Gall, two-sided cone points, Chapter III, Theorem 3(i)). Proved:
   `correlatedBMNoCommonLocalMin_holds` (`PlanarBMConePoints/Holds.lean`).
@@ -66,12 +65,10 @@ def curveTriplePoints (η : ℝ → ℂ) : Set ℂ :=
   {z | ∃ t₁ t₂ t₃ : ℝ, t₁ < t₂ ∧ t₂ < t₃ ∧ η t₁ = z ∧ η t₂ = z ∧ η t₃ = z}
 
 /-- **Named hypothesis: the multiple points of whole-plane space-filling SLE contain no continuum.** It holds for the
-genuine whole-plane space-filling SLE_κ, `κ > 4`, and so for a model whose curves agree with it up to increasing time
-homeomorphisms, such as the canonical model; it does not hold for every model `𝒮`, since the field `IsSLE` of the model
-is only a predicate (take it identically true on a one-point space with `κ = 8` and `η t = sin t`). What is used for
-the cell-side identity in a valid environment is `ValidEnvTriplePointsNoContinuum`
-(`MatingOfTreesCellSideIdentityValid.lean`, `matingOfTreesCellSideIdentity_of_valid`), which holds in every valid
-environment by the mating-of-trees coupling; in Lean it is derived from
+genuine whole-plane space-filling SLE_κ, `κ > 4` (Gwynne–Holden–Miller, arXiv:1512.01223, Corollary 6.5; DMS (8.9) and
+Lemmas 8.12-8.13), and so for a model whose curves agree with it up to increasing time homeomorphisms, such as the
+canonical model. What the cell-side identity in a valid environment uses is `ValidEnvTriplePointsNoContinuum`
+(`MatingOfTreesCellSideIdentityValid.lean`, `matingOfTreesCellSideIdentity_of_valid`), which is derived from
 `CorrelatedBMPeanosphereTriplePointsNoContinuum` (`validEnvTriplePointsNoContinuum_of_peanosphere`).
 
 For `κ > 4` and a whole-plane space-filling SLE_κ `η` (independent of `𝓕`, in the model `𝒮`), almost surely the set
