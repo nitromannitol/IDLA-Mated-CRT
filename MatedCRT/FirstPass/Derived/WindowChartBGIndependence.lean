@@ -334,8 +334,7 @@ end Closeness
 
 /-- **Step of Berestycki–Gwynne (2020), proof of Lemma 7.21 (2003.10320.txt lines 3775-3776): "By definition,
 `(h^D, η^D)` (resp. `(h̃^D, η̃^D)`) is determined by the first (resp. second) quantum surface in (7.35)", for the chart
-field.** Truth-checked: TRUE for the entry-marked window of the BG quantum cone, every `0 < γ < 2` (final answer
-`28-bg20-window-proof.md`).
+field.**
 
 In a valid environment with measurable versions `H` of the field and `η'` of the curve, for a window `(a, u, b)` and
 a time `s > b` (resp. `s < a`), the chart field of the window for the inverse chart `windowChartBG` of the normalization
@@ -355,9 +354,7 @@ def BG20WindowFieldSurfaceInput (𝒮 : SpaceFillingSLEModel) : Prop :=
           ∀ᵐ ω ∂S.P, windowFieldBG γ a u b (H ω, η' ω) = F (H ω, η' ω))
 
 /-- **Step of Berestycki–Gwynne (2020), proof of Lemma 7.21 (2003.10320.txt lines 3783-3831): the discrete analogue
-`P^{D,ε}_0` of the window chart law.** Truth-checked: TRUE for the entry-marked window of the BG quantum cone,
-every `0 < γ < 2` (final answer
-`28-bg20-window-proof.md`).
+`P^{D,ε}_0` of the window chart law.**
 
 In Berestycki–Gwynne, `P^{D,ε}_0` is the conditional law given `(h, η)` of the walk on the subgraph `T^ε` of the
 mated-CRT map induced by the vertices in `[a', b'] ∩ εℤ`, started from `u_ε`, stopped on hitting `∂T^ε`, mapped by
@@ -387,9 +384,7 @@ def BG20DiscreteWindowLawInput (𝒮 : SpaceFillingSLEModel) : Prop :=
 
 /-- **Step of Berestycki–Gwynne (2020), proof of Lemma 7.21 (2003.10320.txt lines 3831-3838), no written argument:
 "it is easily seen from the convergence `(h, η, P^ε) → (h, η, P)` in law that (7.36) holds if we replace
-`P^{D,ε}_0` by the `P^ε_{η(u_ε)}`-law of `φ⁻¹(X̂^ε)`".** Truth-checked: TRUE for the entry-marked window of the BG
-quantum cone, every `0 < γ < 2` (final answer
-`28-bg20-window-proof.md`).
+`P^{D,ε}_0` by the `P^ε_{η(u_ε)}`-law of `φ⁻¹(X̂^ε)`".**
 
 In the setting of `BG20ChartIndependenceInputBG` (a weak limit `ν''` of the joint laws of the field coordinates, the
 coordinate `E`, the curve and the interpolated walk laws at levels `ε_n`, almost surely a linear time change of the

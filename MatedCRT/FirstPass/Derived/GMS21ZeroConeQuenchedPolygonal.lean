@@ -77,8 +77,7 @@ this estimate on large origin dyadic squares. Lemma 2.8 gives the same estimate 
 Proved: `gmsSmallCellEstimate` (`GMSSmallCellEstimateProof.lean`). For the coded environments of the reflected
 invariance principle this is `ReflectedGMS.ae_maxDiamHittingBall_finite_and_sublinear` (Lattice-Probability,
 `LatticeProb/Bonanno/ReflectedGMS/Spatial/LargeCellDiameterDecay.lean`, from mass transport and the finite-energy
-moment), transferred to laws on the GMS space by `LatticeProb.GMSRealMeshDiameter.ae_scaled_cell_diam_lt`. Truth
-check: written answer MQ-sbl-36, FINAL (`56-gms-small-cell-estimate.md`).
+moment), transferred to laws on the GMS space by `LatticeProb.GMSRealMeshDiameter.ae_scaled_cell_diam_lt`.
 
 For every probability law on the GMS space satisfying the hypotheses of Theorem 1.16 of arXiv:1807.07515, almost
 surely, for every `r > 0`, for all large `R`, every cell meeting `closedBall 0 R` has diameter at most `r R`. -/

@@ -21,7 +21,7 @@ whole-plane GFF plus an `α log` singularity, the Green-potential form of the bo
 Proofs/Potential/LQGUniformGreenTail.lean); the γ-quantum cone field agrees with such a field on discs up to a
 scaling of the embedding.
 
-Truth-checked: TRUE as stated (written answer MQ-sbl-20, final answer `34-cone-approximation-frostman.md`).
+Proved: `coneApproxBallPowerStmt` (`ConeApproxBallPowerProof.lean`), for `0 < γ < 2`.
 -/
 
 set_option autoImplicit false
@@ -36,7 +36,7 @@ environment, almost surely, for every `R > 0` there are `β > 0` and `t₀ > 0` 
 `x ∈ B̄(0, R)` and all `t ∈ (0, t₀)`, `μ_{ε_n}(B(x, t)) ≤ t^β`, where `μ_{ε_n} = ε_n^{γ²/2} e^{γ h_{ε_n}(z)} dz` is the
 circle-average approximation of the γ-LQG measure of the γ-quantum cone field at `ε_n = 2^{-n}`.
 
-Truth-checked: TRUE as stated (written answer MQ-sbl-20, final answer `34-cone-approximation-frostman.md`). -/
+Proved: `coneApproxBallPowerStmt` (`ConeApproxBallPowerProof.lean`), for `0 < γ < 2`. -/
 def ConeApproxBallPowerStmt (γ : ℝ) : Prop :=
   ∀ (𝒮 : SpaceFillingSLEModel) (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →
     ∀ᵐ ω ∂S.P, ∀ R : ℝ, 0 < R → ∃ β > (0 : ℝ), ∃ t₀ > (0 : ℝ), ∀ n : ℕ, ∀ x ∈ closedBall (0 : ℂ) R,

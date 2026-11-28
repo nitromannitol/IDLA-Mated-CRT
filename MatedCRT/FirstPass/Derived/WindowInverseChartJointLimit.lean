@@ -36,7 +36,7 @@ namespace MatedCRT
 
 /-- **Window-geometry input (Miller–Sheffield, *Imaginary geometry IV*, arXiv:1302.4738, Sections 1.2.3 and 4.3;
 used in Berestycki–Gwynne (2020), arXiv:2003.10320, proof of Lemma 7.21: "`∂U` is a Jordan curve").**
-Truth-checked: TRUE as stated (written answer MQ-idla-jordan, FINAL). Proved from the named hypothesis
+Proved from the named hypothesis
 `WindowFrontierJordanGenuineCurve` (`WindowFrontierJordanGenuineCurve.lean`) by
 `windowFrontierJordanInput_of_genuineCurve`
 (`WindowFrontierJordanTransfer.lean`).

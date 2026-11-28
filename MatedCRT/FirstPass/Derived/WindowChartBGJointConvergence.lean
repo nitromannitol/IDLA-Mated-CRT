@@ -63,8 +63,7 @@ crossing the annulus `{δ < |w - y| < r/2}` bounds the probability of reaching d
 the exterior by `O(√(δ/r))`; let `δ ↓ 0`, then `r ↓ 0`. This is the crossing step of the joint convergence in the proof
 of Berestycki–Gwynne (2020), Lemma 7.21. Proved: `jordanDomainExteriorRegularity`
 (`JordanDomainExteriorRegularityProof.lean`) from `brownianBeurlingEstimate`
-(`BrownianBeurling/BrownianBeurlingEstimateProof.lean`); truth check: final answer
-`40-bg20-jordan-exterior-regularity.md`. -/
+(`BrownianBeurling/BrownianBeurlingEstimateProof.lean`). -/
 def JordanDomainExteriorRegularity : Prop :=
   ∀ (U : Set ℂ) (z : ℂ) (ψ : C(ℂ, ℂ)), Bornology.IsBounded U → IsInverseChart U z ψ →
     ∀ y ∈ frontier U, ∀ᵐ b ∂planarBrownianMotion y, ContinuousPath.exitTime (closure U) b = 0

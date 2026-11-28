@@ -324,11 +324,9 @@ def IGFieldDilationMixing (γ : ℝ) (_hγ : γ ∈ Ioo (0 : ℝ) 2) : Prop :=
 
 /-- **Lemma A.1 of Gwynne–Miller–Sheffield for the circle-average embedding of the `0`-quantum cone**
 (arXiv:1705.11161, `notes/refs/1705.11161.txt` lines 1952-1956; proof in Appendix A, lines 1966-2100; identification
-of the Lean field with the circle-average embedding: `notes/fp-gaps/CODEX-MQ-sbl-17.md`, lines 7-22).
-Truth-checked: TRUE for every `0 < γ < 2` (final answer
-`58-gms21-zero-cone-lemma-a1-proof.md`, sections 1-3, which use Lemma A.4 of arXiv:1705.11161, `ZeroConeLemmaA4`).
-The proof from Lemma A.4 is not yet in Lean (pending package); until then the statement is a named input of the
-theorems that use it.
+of the Lean field with the circle-average embedding).
+It remains a named input of the theorems that use it; its proof from Lemma A.4 of arXiv:1705.11161
+(`ZeroConeLemmaA4`) is not yet in Lean.
 
 Let `X₀'` be a whole-plane GFF and `b`, `b'` standard Brownian motions, with `X₀'` independent of `(b, b')` and `b`
 independent of `b'`, and let `h = coneField X₀' (coneRadial γ 0 b b')` be the circle-average embedding of the
