@@ -25,7 +25,7 @@ namespace MatedCRT
 open MatedCRTHarmonic MatedCRTHarmonic.MatedCRT
 open MatedCRTHarmonic.MesoModel.FrozenIdentities (lt_lqgQ lqgQ_pos)
 
-theorem measurable_coneInnerPath (α T : ℝ) : Measurable (coneInnerPath α T) :=
+private theorem measurable_coneInnerPath (α T : ℝ) : Measurable (coneInnerPath α T) :=
   measurable_pi_iff.2 fun t => (measurable_pi_apply t).add measurable_const
 
 /-- **The law of the outer data as the image of a product law.** If the outer data of the cone

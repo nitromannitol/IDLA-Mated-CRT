@@ -32,9 +32,8 @@ and Cameron–Martin.
 
 Sources: Duplantier–Miller–Sheffield, arXiv:1409.7055, Definition 4.10 for the outer radial part of the
 cone; Cameron–Martin (Bogachev, *Gaussian Measures*, AMS 1998, Chapter 2); the survival probability of
-Brownian motion with drift is the standard gambler's-ruin formula (for example Borodin–Salminen,
-*Handbook of Brownian Motion*, Part II, 2.1.1.4, or Revuz–Yor, *Continuous Martingales and Brownian
-Motion*); Kechris, *Classical Descriptive Set Theory*, Theorem 15.1 (Lusin–Souslin).
+Brownian motion with drift is the standard gambler's-ruin formula (see for example Borodin–Salminen,
+*Handbook of Brownian Motion*, or Revuz–Yor, *Continuous Martingales and Brownian Motion*); Kechris, *Classical Descriptive Set Theory*, Theorem 15.1 (Lusin–Souslin).
 -/
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
