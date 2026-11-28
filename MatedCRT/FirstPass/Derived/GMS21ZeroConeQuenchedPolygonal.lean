@@ -7,21 +7,21 @@ import LatticeProb.Topology.TranslatedCurveLawUniformContinuity
 The invariance principle at unit mesh in the proof of Lemma 3.5 of Gwynne–Miller–Sheffield (arXiv:1705.11161) is the uniform-start invariance principle of Gwynne–Miller–Sheffield (arXiv:1807.07515,
 Theorem 3.10) for the unit-mesh cells `K_j = η₀([j - 1, j] + θ)` of the `0`-quantum cone, read through the embedded
 vertices `η₀(j + θ)`. The written argument applies Theorem 3.10 to a measurable
-*polygonal* cell configuration `{C_j}` on the same weighted graph (lines 7-27): the cells `C_j` retain the
+*polygonal* cell configuration `{C_j}` on the same weighted graph: the cells `C_j` retain the
 conductances `m_{ij}` of the zero-cone data and contain the vertices `v_j`, and the law of the configuration
-satisfies the hypotheses of Theorem 1.16 of arXiv:1807.07515 and is invariant under a quarter turn (lines 29-42).
+satisfies the hypotheses of Theorem 1.16 of arXiv:1807.07515 and is invariant under a quarter turn.
 Theorem 3.10 at this law, the isotropy of the limiting covariance, the small-cell estimate (arXiv:1807.07515,
-Lemmas 2.8-2.9) and a comparison of every starting cell `K_j ∋ z` with a nearby point of `C_j` (lines 44-50) give
+Lemmas 2.8-2.9) and a comparison of every starting cell `K_j ∋ z` with a nearby point of `C_j` give
 the quenched convergence of the unit-scale errors of the zero-cone weighted data on every annulus.
 
 ## Main declarations
 
 * `CarriesUnitMeshWalk w H`: the cells of the GMS configuration `H` carry the walk of the unit-mesh weighted datum
-  `w`, with the comparison of the starting cells (answer, lines 23-25 and 48).
+  `w`, with the comparison of the starting cells.
 * `GMSSmallCellEstimate`: almost surely the diameters of the cells meeting `B_R(0)` are `o(R)`, for every law on
   the GMS space satisfying the hypotheses of Theorem 1.16 (arXiv:1807.07515, Lemmas 2.8-2.9).
-* `tendsto_weightedUnitScaleError_of_carriesUnitMeshWalk`: the deterministic step of answer lines 44-48.
-* `ZeroConePolygonalConfiguration`: the existence of the polygonal configuration of answer lines 7-42.
+* `tendsto_weightedUnitScaleError_of_carriesUnitMeshWalk`: the deterministic step of the written argument.
+* `ZeroConePolygonalConfiguration`: the existence of the polygonal configuration of the written argument.
 * `zeroConeQuenchedUnitScaleConvergence_of_polygonal`: Theorem 3.10, the small-cell estimate and the polygonal
   configuration give `ZeroConeQuenchedUnitScaleConvergence`.
 -/
@@ -56,7 +56,7 @@ labelling `e : ℤ ≃ cells of H` of the cells of `H` such that
   `diam K` of the cell `e j`.
 
 (Written argument: the polygonal cell `C_j` retains the
-conductances `m_{ij}` and contains `v_j`; line 48: the Voronoi tile containing a point `z ∈ K_j` lies in the cell
+conductances `m_{ij}` and contains `v_j`; the Voronoi tile containing a point `z ∈ K_j` lies in the cell
 of its owner, and its boundary lies in `C_j`.) -/
 def CarriesUnitMeshWalk (w : C(ℝ, ℂ) × (ℤ → ℤ → ℕ)) (H : ReflectedGMS.GMS.GMSSpace) : Prop :=
   ∃ e : ℤ ≃ H.1.cells,
@@ -263,11 +263,10 @@ Lemma 3.5 of Gwynne–Miller–Sheffield, arXiv:1705.11161). A named step: it is
 For every measurable version `G` of the boundary-length pair of the zero-cone curve there is a map `Φ` from the
 sample and the phase `θ` to the GMS space, almost measurable for `P ⊗ Unif[0, 1]`, such that
 * the law of `Φ` satisfies the hypotheses of Theorem 1.16 of arXiv:1807.07515: mass transport (translation
-  invariance modulo scaling, answer line 33), ergodicity modulo scaling (line 42), the finite expectation (lines
-  35-40) and connectedness along lines (line 27);
-* the law of `Φ` is invariant under the quarter turn of the plane (lines 31 and 46);
+  invariance modulo scaling), ergodicity modulo scaling, the finite expectation and connectedness along lines;
+* the law of `Φ` is invariant under the quarter turn of the plane;
 * almost surely the cells of `Φ` carry the walk of the unit-mesh weighted data of `t ↦ η₀(t + θ)` and the edge
-  counts of `t ↦ G(t + θ)` (lines 23-27 and 48: the polygonal cells `C_j` retain the conductances and contain the
+  counts of `t ↦ G(t + θ)` (the polygonal cells `C_j` retain the conductances and contain the
   vertices, and the Voronoi tiles compare every starting cell). -/
 def ZeroConePolygonalConfiguration
     (D : IsMatingOfTreesCoupling γ P X X₀ hIG₀ B B' B₀ B₀' U ηL η η₀ bm) (hγ : γ ∈ Ioo (0 : ℝ) 2) : Prop :=

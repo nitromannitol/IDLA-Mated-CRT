@@ -12,20 +12,20 @@ and Gwynne–Miller–Sheffield, arXiv:1705.11161, (1.2) and the proof of Propos
 The decoder is the frontier-side multiplicity of the unit cells, `Ψ q = cellSideMult 1 q` (`CellSideMult.lean`), on
 all curves (`S = univ`). It is Borel (`measurable_cellSideMult`) and invariant under positive dilations of the plane
 (`cellSideMult_smul`: a dilation preserves the continua of positive diameter in the intersections of the cell images).
-Instead of the disintegration of the answer (lines 52), the identity of the edge counts with the decoder is read off
+Instead of the disintegration of the written argument, the identity of the edge counts with the decoder is read off
 the deterministic identity `bmEdgeCount_eq_cellSideMult` (`MatingOfTreesCellSideIdentityProof.lean`) at mesh `1`,
 applied to the Peanosphere `(bm ∘ e, η ∘ e)` with the increasing time change `e t = ψ ((t + θ)/n)`, where `ψ` is the
 area clock between the zero-cone curve and the γ-cone curve (`LatticeProb.ae_coupled_area_clock`):
 
 * the edge counts are invariant under the linear time change `t ↦ t/n` (`bmEdgeCount_comp_mul_left`), and
   `G((t + θ)/n) = bm(e t)` for a boundary-pair version `G`;
-* the cell endpoints `(k + θ)/n` are almost surely visited once by the zero-cone curve (answer, line 48: "Almost surely
+* the cell endpoints `(k + θ)/n` are almost surely visited once by the zero-cone curve (the written argument: "Almost surely
   the independent phase avoids all multiply visited endpoints, by area additivity on disjoint rational intervals and
   `(η₀)_* dt = μ_h`"): the images of two non-overlapping intervals meet in a null set of the area measure
   (`measure_image_Icc_inter_image_Icc_eq_zero`), so the times of a compact interval sent into a null compact set form a
   Lebesgue-null set (`volume_Icc_inter_preimage_eq_zero`), and the multiply visited times are covered by countably many
   such sets (`multipleVisitWitness`, `volume_multipleVisitWitness_eq_zero`); Fubini in the phase concludes;
-* at a time visited once both Brownian coordinates descend on both sides (answer, line 48, `isTwoSidedDescent_of_forall_eq`):
+* at a time visited once both Brownian coordinates descend on both sides (`isTwoSidedDescent_of_forall_eq`):
   otherwise the first return of the coordinate to its value is a direct identification with a second visit
   (`exists_directRel_right`, `exists_directRel_left`).
 
@@ -35,7 +35,7 @@ Named hypotheses (literature, on general objects; PENDING TRUTH CHECK):
 * `CorrelatedBMPeanosphereTriplePointsNoContinuum` (this file): for almost every correlated Brownian pair, the points
   visited three times by any Peanosphere curve of the pair contain no continuum of positive diameter (Gwynne–Holden–Miller,
   arXiv:1512.01223, Corollary 6.5; Duplantier–Miller–Sheffield, arXiv:1409.7055, (8.9), Lemmas 8.12-8.13, and the
-  homeomorphism between two Peanosphere traversals of the same pair, answer line 50).
+  homeomorphism between two Peanosphere traversals of the same pair).
 -/
 
 set_option autoImplicit false

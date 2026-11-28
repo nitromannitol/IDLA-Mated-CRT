@@ -8,17 +8,17 @@ Gwynne–Miller–Sheffield (arXiv:1705.11161, Lemma 3.5) compare the mesh-`1/n`
 argument on this step states the scaling law in the form used by the
 proof: the rescaled curve `η^b(t) = R_b⁻¹ η₀(b t)` together with the integer edge counts of the original `b`-mesh
 intervals (the *weighted* unit-mesh data at the phase `θ`) has the law of the unit-mesh weighted data of `η₀`
-(line 53: "the rescaled *weighted* unit-mesh data have the original law and their dilation is the original `b`-mesh
-data. This suffices for the uniform walk error"). The measurability of the uniform errors (lines 55-60) holds for the
+("the rescaled *weighted* unit-mesh data have the original law and their dilation is the original `b`-mesh
+data. This suffices for the uniform walk error"). The measurability of the uniform errors holds for the
 completions of the laws of these data.
 
 ## Main declarations
 
 * `phaseShiftedData`: the curve and the edge counts read on the lattice `ε ℤ + ε θ`.
 * `weightedUnitScaleError`: the uniform error at spatial scale `ε` of a unit-mesh weighted datum.
-* `ZeroConeWeightedMeshScaling`: the scaling law of the weighted cell data (answer, lines 43 and 53).
+* `ZeroConeWeightedMeshScaling`: the scaling law of the weighted cell data.
 * `ZeroConeWeightedUniformErrorMeasurability`: the measurability of the uniform errors for the completions of the
-  laws of the weighted data (answer, lines 57-59).
+  laws of the weighted data.
 * `zeroConeAnnulusLPForm_of_theorem310Form_code`: these two steps, the realization of the configuration, its rotation
   invariance and the conclusion of Theorem 3.10 of arXiv:1807.07515 at the law of every realization give
   `ZeroConeAnnulusLPForm`.
@@ -111,7 +111,7 @@ variable {γ : ℝ} {Ω : Type} [MeasurableSpace Ω] {P : Measure Ω}
 the written argument: "Its radius `R_b` is the largest positive solution of
 `h_{0,r}(0) + Q log r = γ⁻¹ log b` ... These hitting times are Borel, finite and tend to infinity as `b ↓ 0` ...
 `η^b(t) = R_b⁻¹ η₀(b t)`. All these path variables admit raw measurable versions; countably many `b = 1/n` share one
-event"; line 53: "Retain the scaled curve and the integer edge counts for its intervals. For the phase `θ` the
+event"; "Retain the scaled curve and the integer edge counts for its intervals. For the phase `θ` the
 rescaled unit cells are exactly `R_b⁻¹ η₀(b[j − 1 + θ, j + θ])`. Nontrivial common boundary arcs and multiplicities
 are preserved by this dilation. Thus the rescaled *weighted* unit-mesh data have the original law and their dilation
 is the original `b`-mesh data"; DMS, arXiv:1409.7055, Proposition 4.13(i)). PENDING TRUTH CHECK.

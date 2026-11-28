@@ -16,7 +16,7 @@ namespace MatedCRT.TruncatedLaws
 
 /-- Occupation of the path `w` in the disk `D` up to the truncation time `T`, Duplantier–Sheffield style:
 `∫_{(0, min (T, τ_D(w))]} g(w_t) dt`, where `τ_D` is the exit time `pathExitTime D` of `HarmonicBalls.Defs.LBM`.
-This is the deterministic path functional `stoppedOccupation D T g` of the truncated-laws answer (section 3). -/
+This is the deterministic path functional `stoppedOccupation D T g` of the truncated-laws argument. -/
 noncomputable def stoppedOccupation (D : Set ℂ) (T : ℝ) (g : ℂ → ℝ) (w : ℝ≥0 → ℂ) : ℝ :=
   ∫ t in Ioc (0 : ℝ) (min (ENNReal.ofReal T) (pathExitTime D w)).toReal, g (w t.toNNReal)
 

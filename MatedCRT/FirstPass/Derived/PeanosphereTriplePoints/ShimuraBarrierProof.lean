@@ -8,8 +8,7 @@ import LatticeProb.Prob.BrownianPathCoords
 
 `killedBarrierPositive : KilledBarrierPositive` (`ShimuraSteps.lean`): for real Brownian motion `B`, `T > 0` and
 `0 < y₁ < y₂ < H` there is `c > 0` such that for `0 < e ≤ 1` the increment `B s - B 0` stays in `(-e, H)` up to time
-`T` and ends in `(y₁, y₂)` with probability at least `c e` (the written answer to the question on Shimura's theorem,
-§1, (1); Karatzas–Shreve, *Brownian Motion and Stochastic Calculus*, §2.8.C).
+`T` and ends in `(y₁, y₂)` with probability at least `c e` (Karatzas–Shreve, *Brownian Motion and Stochastic Calculus*, §2.8.C).
 
 The probability depends only on the law of the path: a continuous modification of `B`
 (`IsBrownianReal.exists_continuous_indistinguishable`) has the path law `brownianMotion 0`

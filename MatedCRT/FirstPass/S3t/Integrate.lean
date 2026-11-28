@@ -15,7 +15,7 @@ that bound: `|A - C| ≤ c + M · ∫ R dν`.
 Integrability uses boundedness (Step 1: `abs_quenchedDiscreteOccupation_le`, `abs_stoppedOccupation_le`) and
 measurability in the walk variable `q`. The measurability of the discrete occupation is proved here
 (`measurable_quenchedDiscreteOccupation`). Measurability of the stopped occupation and of the shell functional in `q` is not
-written in the answer; it enters `S3t.lean` as a named hypothesis.
+written in the argument; it enters `S3t.lean` as a named hypothesis.
 
 Terminology: Duplantier–Sheffield (Liouville Brownian motion, boundary-shell functionals), Berestycki–Gwynne (quenched
 random-walk laws on mated-CRT maps).

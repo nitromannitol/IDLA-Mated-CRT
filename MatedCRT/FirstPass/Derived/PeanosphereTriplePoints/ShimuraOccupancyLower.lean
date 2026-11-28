@@ -7,7 +7,7 @@ import MatedCRT.FirstPass.Derived.PeanosphereTriplePoints.ShimuraOccupancyDeterm
 # The lower bound for the occupation of a later cell in Shimura's argument
 
 For the `γ`-correlated two-sided Brownian pair `(L, R)`, this file proves `OccupancyLower γ`:
-`P(B_k ∩ A_{k+j}) ≥ c/(j - 1) E[1_{C_k ∩ F} U_k]` for `1 + 6 log n < j` (answer §2, (3)).
+`P(B_k ∩ A_{k+j}) ≥ c/(j - 1) E[1_{C_k ∩ F} U_k]` for `1 + 6 log n < j`.
 
 Write `b = k/n`, `A = (k + j - 1)/n`, `Bl = (k + j)/n`, `e = n^{-1/2}`, `d = (j - 1)/n`. On a level set
 `{⌊U_k / h⌋ = m}` of the past event `C_k ∩ F`, the gap piece `G` of Lemma 2 on `[b, A]`
@@ -17,7 +17,7 @@ These four events depend on the increments over the four windows `[b - 3, b]`, `
 `[Bl, Bl + 2 - 1/n]` with disjoint interiors, hence are independent (`indep_windows`). Their
 probabilities are bounded below by `exists_le_measure_gap`, `exists_pos_le_measure_polygon` and
 `le_measure_survivalR`; summing over the levels and letting `h → 0` gives the bound. Two departures from
-answer §2, (3): `P` comes from one straight tube in whitened coordinates in place of the polygon `0, -3u, -3v, 0`,
+the written argument: `P` comes from one straight tube in whitened coordinates in place of the polygon `0, -3u, -3v, 0`,
 and `S` is the unconditional survival of `R` in place of the conditional probability `q(U_l) ≥ c e`.
 -/
 
@@ -591,7 +591,7 @@ theorem lower_core {γ : ℝ} {μ : Measure Path2} (hμ : IsCorrelatedBM2 γ μ)
   rw [e1, ENNReal.ofReal_coe_nnreal] at hmain
   exact hmain
 
-/-- **The lower bound for the occupation of a later cell** (answer §2, (3)): `P(B_k ∩ A_{k+j}) ≥
+/-- **The lower bound for the occupation of a later cell**: `P(B_k ∩ A_{k+j}) ≥
 c/(j - 1) E[1_{C_k ∩ F} U_k]` for `1 + 6 log n < j`, from Shimura's Lemma 2 on the gap, a straight tube in
 whitened coordinates on the cell `k + j` and the survival of `R` after it. -/
 theorem occupancyLower_holds {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (hL2 : ShimuraLemmaTwo γ)

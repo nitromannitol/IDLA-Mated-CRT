@@ -14,26 +14,24 @@ neighbourhood (`NoOppositeSideMin`, both orders). This is Shimura's theorem on m
 the projections `L`, `R` of a planar Brownian motion onto two unit vectors at angle `π - πγ²/4`.
 
 The printed proof omits the obtuse case of its Lemma 2 and refers to Dvoretzky–Erdős–Kakutani (1961) for the
-second-moment steps; the complete argument followed here is the written answer `notes/mq-rigD2-shimura-answer.md`
-(FINAL). This file states its steps as named propositions and proves the theorem from them
+second-moment steps; the complete argument is followed here. This file states its steps as named propositions and proves the theorem from them
 (`ae_noOppositeSideMin_of_shimuraSteps`):
 
 * `ShimuraLocalization γ`: the theorem follows from the nullity of the unit event `UnitOppositeSideMin` (a time of
   `[0, 1]` which is a minimum of `L` on `[t - 2, t]` and of `R` on `[t, t + 2]`) for every law of the pair, by
-  translation, scaling and time reversal (answer, end of §3).
+  translation, scaling and time reversal.
 * `ShimuraCellBounds γ`: the cells `[(k - 1)/n, k/n]` carry Shimura's event `A^n_k` (`cellEvent n k`) with probability
-  at most `C/n` (Shimura, Lemma 1, p. 171; answer §2, `P(A_k) ≍ n⁻¹`; the summation uses only the upper bound).
+  at most `C/n` (Shimura, Lemma 1, p. 171; the summation uses only the upper bound).
 * `ShimuraOccupancy γ`: given the first occupied cell `k` (`firstCellEvent n k`), the cell `k + j` is occupied with
-  conditional probability at least `c/(j - 1)` (Shimura (4.2)–(4.7), pp. 174–176; answer §2, (2)–(3)).
+  conditional probability at least `c/(j - 1)` (Shimura (4.2)–(4.7), pp. 174–176).
 * `ShimuraSummation γ`: with the upper bound for a cell only, these bounds give
   `P(⋃_{k ≤ n} A^n_k) ≤ 2/n + 2C/(c Σ_{1 + 6 log n < j ≤ n} 1/(j - 1)) → 0`, hence the nullity of the unit event
-  (Shimura §2 (2.1), §4); this simplifies answer §3, which bounds `P(S_{2n} > 0)` through `E[S_{2n} | S_{2n} > 0]`.
+  (Shimura §2 (2.1), §4); this simplifies the argument that bounds `P(S_{2n} > 0)` through `E[S_{2n} | S_{2n} > 0]`.
 
 The steps `ShimuraCellBounds` and `ShimuraOccupancy` rest on the following statements, also named here:
-`ReflectionBarrier` (the survival bound `P(min_{[0,T]} B > -a) ≤ a √(2/(πT))`, answer §1, DEK (4.2)),
-`KilledBarrierPositive` (the killed interval kernel limit (1) of the answer §1, Karatzas–Shreve §2.8.C),
-`PlanarTubePositive` (planar Brownian motion follows a straight path within any tube with positive probability,
-answer §1) and `ShimuraLemmaTwo` (Shimura, Lemma 2, (3.5), p. 172, for every angle; answer §1).
+`ReflectionBarrier` (the survival bound `P(min_{[0,T]} B > -a) ≤ a √(2/(πT))`, DEK (4.2)),
+`KilledBarrierPositive` (the killed interval kernel limit, Karatzas–Shreve §2.8.C),
+`PlanarTubePositive` (planar Brownian motion follows a straight path within any tube with positive probability) and `ShimuraLemmaTwo` (Shimura, Lemma 2, (3.5), p. 172, for every angle).
 -/
 
 set_option autoImplicit false
@@ -69,7 +67,7 @@ def firstCellEvent (n k : ℕ) : Set Path2 :=
 
 /-! ### The steps -/
 
-/-- **Localization** (answer, end of §3): if the unit event is null for every law of the `γ`-correlated pair, then
+/-- **Localization**: if the unit event is null for every law of the `γ`-correlated pair, then
 almost surely no time is a minimum of one coordinate on a left neighbourhood and of the other on a right
 neighbourhood. Translation and time reversal (`isCorrelatedBM2_map_recenterPath`), Brownian scaling
 (`isCorrelatedBM2_map_unitRescalePath`) preserve the law class; the second order comes from the first by time
@@ -81,15 +79,15 @@ def ShimuraLocalization (γ : ℝ) : Prop :=
       ∀ᵐ p ∂μ, NoOppositeSideMin (fun t => (p t).1) (fun t => (p t).2) ∧
         NoOppositeSideMin (fun t => (p t).2) (fun t => (p t).1)
 
-/-- **The probability of a cell** (Shimura, Lemma 1, p. 171, and (4.1), p. 174; answer §2): `P(A^n_k) ≤ C/n` for
+/-- **The probability of a cell** (Shimura, Lemma 1, p. 171, and (4.1), p. 174): `P(A^n_k) ≤ C/n` for
 every cell of `[0, 2]`, for `n ≥ N`. -/
 def ShimuraCellBounds (γ : ℝ) : Prop :=
   ∃ C : ℝ, ∃ N : ℕ, ∀ μ : Measure Path2, IsCorrelatedBM2 γ μ → ∀ n : ℕ, N ≤ n →
     ∀ k : ℕ, 1 ≤ k → k ≤ 2 * n → μ (cellEvent n k) ≤ ENNReal.ofReal (C / n)
 
-/-- **The occupation of a later cell** (Shimura (4.2)–(4.7), pp. 174–176; answer §2, (2) and (3)): if the first
+/-- **The occupation of a later cell** (Shimura (4.2)–(4.7), pp. 174–176): if the first
 occupied cell is `k ≤ n`, of probability at least `2/n²`, then the cell `k + j`, for `1 + 6 log n < j` and
-`k + j ≤ 2n`, is occupied with conditional probability at least `c/(j - 1)` (answer (3)). -/
+`k + j ≤ 2n`, is occupied with conditional probability at least `c/(j - 1)`. -/
 def ShimuraOccupancy (γ : ℝ) : Prop :=
   ∃ c : ℝ, 0 < c ∧ ∃ N : ℕ, ∀ μ : Measure Path2, IsCorrelatedBM2 γ μ → ∀ n : ℕ, N ≤ n →
     ∀ k j : ℕ, 1 ≤ k → k ≤ n → ENNReal.ofReal (2 / (n : ℝ) ^ 2) ≤ μ (firstCellEvent n k) →
@@ -97,7 +95,7 @@ def ShimuraOccupancy (γ : ℝ) : Prop :=
         ENNReal.ofReal (c / ((j : ℝ) - 1)) * μ (firstCellEvent n k) ≤
           μ (firstCellEvent n k ∩ cellEvent n (k + j))
 
-/-- **Summation** (Shimura (2.1) and §4; answer §3): the cell bounds and the occupation bound give
+/-- **Summation** (Shimura (2.1) and §4): the cell bounds and the occupation bound give
 `P(⋃_{k ≤ n} A^n_k) ≤ 2/n + 2C/(c Σ_{1 + 6 log n < j ≤ n} 1/(j - 1)) → 0` (the first occupied cells of probability
 below `2/n²` contribute at most `2/n`; the others satisfy `P(B_k) c Σ_j 1/(j - 1) ≤ E[1_{B_k} S_{2n}]`, which sums to at
 most `E S_{2n} ≤ 2C`); since a witness of the unit event occupies one of the first `n` cells at every mesh `1/n`, the
@@ -108,7 +106,7 @@ def ShimuraSummation (γ : ℝ) : Prop :=
 
 /-! ### The statements behind the cell and occupation bounds -/
 
-/-- **The survival bound of real Brownian motion** (answer §1; Dvoretzky–Erdős–Kakutani (4.2), p. 106):
+/-- **The survival bound of real Brownian motion** (Dvoretzky–Erdős–Kakutani (4.2), p. 106):
 `P(min_{s ≤ T} (B s - B 0) > -a) ≤ a √(2/(πT))`, from the reflection principle
 `P(min_{s ≤ T} (B s - B 0) ≤ -a) ≥ 2 P(B T - B 0 < -a)`. -/
 def ReflectionBarrier : Prop :=
@@ -116,7 +114,7 @@ def ReflectionBarrier : Prop :=
     ProbabilityTheory.IsBrownianReal B P → ∀ T : ℝ≥0, 0 < T → ∀ a : ℝ, 0 ≤ a →
       P {ω | ∀ s ≤ T, -a < B s ω - B 0 ω} ≤ ENNReal.ofReal (a * Real.sqrt (2 / (Real.pi * T)))
 
-/-- **The killed interval kernel near the lower barrier** (answer §1, (1); Karatzas–Shreve, *Brownian Motion and
+/-- **The killed interval kernel near the lower barrier** (Karatzas–Shreve, *Brownian Motion and
 Stochastic Calculus*, §2.8.C, Proposition 8.10): for `0 < y₁ < y₂ < H`, real Brownian motion stays in `(-e, H)` up
 to time `T` and ends in `(y₁, y₂)` with probability at least `c e`, for `0 < e ≤ 1`. -/
 def KilledBarrierPositive : Prop :=
@@ -126,14 +124,14 @@ def KilledBarrierPositive : Prop :=
         ENNReal.ofReal (c * e) ≤
           P {ω | (∀ s ≤ T, -e < B s ω - B 0 ω ∧ B s ω - B 0 ω < H) ∧ B T ω - B 0 ω ∈ Ioo y₁ y₂}
 
-/-- **Tube positivity** (answer §1): planar Brownian motion, given as the uncorrelated pair (`γ = √2`, independent
+/-- **Tube positivity**: planar Brownian motion, given as the uncorrelated pair (`γ = √2`, independent
 standard coordinates), stays within `ε` of the straight path from `0` to `w` up to time `T` with positive
 probability. -/
 def PlanarTubePositive : Prop :=
   ∀ μ : Measure Path2, IsCorrelatedBM2 (Real.sqrt 2) μ → ∀ (T : ℝ) (w : ℝ × ℝ) (ε : ℝ), 0 < T → 0 < ε →
     0 < μ {p | ∀ s ∈ Icc (0 : ℝ) T, dist (p s - p 0) ((s / T) • w) < ε}
 
-/-- **Shimura's Lemma 2 for every angle** ((3.5), p. 172; answer §1, which proves it also for `π/2 < θ ≤ π`):
+/-- **Shimura's Lemma 2 for every angle** ((3.5), p. 172, proved here also for `π/2 < θ ≤ π`):
 `G(Δ, δ) ≥ c Δ δ` for `0 < Δ, δ ≤ 1`, where `G(Δ, δ)` is the probability that on `[0, 1]` the coordinate `R` stays
 above `-Δ` and ends above `1`, while `L` stays above its final value minus `δ` and ends below `-1`. -/
 def ShimuraLemmaTwo (γ : ℝ) : Prop :=

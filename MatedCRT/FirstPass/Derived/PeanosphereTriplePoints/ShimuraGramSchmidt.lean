@@ -14,9 +14,9 @@ It has `R` as its first coordinate (which the sum and difference whitening of
 `LatticeProb.CorrelatedBM.whitenAt` does not), and the image of the law of the `γ`-correlated pair is
 the law of the uncorrelated pair, `γ = √2`: two independent two-sided standard Brownian motions.
 This is the decomposition `R = v · Z`, `L = u · Z` of the pair as projections of a planar Brownian
-motion `Z` (written answer `notes/mq-rigD2-shimura-answer.md`, opening paragraph; with the roles of the
+motion `Z` (with the roles of the
 two coordinates exchanged), used on the middle third of Shimura's Lemma 2 (M. Shimura, *Meandering
-points of two-dimensional Brownian motion*, Kodai Math. J. 11 (1988), Lemma 2, (3.5), p. 172; answer §1).
+points of two-dimensional Brownian motion*, Kodai Math. J. 11 (1988), Lemma 2, (3.5), p. 172).
 
 ## Main results
 

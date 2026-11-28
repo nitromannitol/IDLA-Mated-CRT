@@ -5,7 +5,7 @@ import MatedCRT.FirstPass.S3t
 
 `blEnvelopeClosureInput_holds` proves the named input `BLEnvelopeClosureInput 𝒮` (`BoundaryShells.lean:221`) for every
 fixed model `𝒮`. It is the measurable closure of a scalar LBM observable `lbm_scalar_measurable_of_bl_envelopes`
-(`BLExtension.lean`; answer 46(a2) §1), applied with the bounded-Lipschitz measurability
+(`BLExtension.lean`), applied with the bounded-Lipschitz measurability
 `lbmPathFunctionalMeasurableStep_holds` (`PathFunctionalStep.lean`) and the almost sure continuity of the rescaled
 LBM paths `ae_continuous_rescaledLBMPath` (`ContinuumUnderDiscrete.lean`).
 

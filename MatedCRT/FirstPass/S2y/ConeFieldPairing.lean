@@ -65,7 +65,7 @@ theorem continuousOn_rescaledCircle (γ b R : ℝ) {h : ℝ → ℂ → ℝ} (hR
 /-- **Named input (section B.2, the pairing decoder).** For every quantum cone and every test function `φ`, the
 pairing `hC · φ` agrees almost surely with a measurable function of the circle average process: `(h, φ)` is
 recovered from the circle averages `h_r(z)` (Duplantier-Sheffield, arXiv:1409.7055, Definition 4.10 and Lemma 4.9;
-Duplantier-Sheffield, arXiv:0808.1560, Section 3.1). Not written in full in the answer (its convergence step is a
+Duplantier-Sheffield, arXiv:0808.1560, Section 3.1). Not written in full in the argument (its convergence step is a
 sketch). -/
 def ConeCircleDecoderStep : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω) (hC : Ω → (ℂ → ℝ) → ℝ)
@@ -74,7 +74,7 @@ def ConeCircleDecoderStep : Prop :=
       ∃ D : (Set.Ioi (0 : ℝ) × ℂ → ℝ) → ℝ, Measurable D ∧
         (fun ω => D (circleProcess (hcirc ω))) =ᵐ[P] (fun ω => hC ω φ)
 
-/-- **Named input (section B.3, lateral transfer; not in the answer).** For a quantum cone `(hC, hcirc)`, a
+/-- **Named input (section B.3, lateral transfer; not in the argument).** For a quantum cone `(hC, hcirc)`, a
 measurable version `c` of the rescaled circle process (`c = rescaledCircle` a.s.), and a family `D` of pairing
 decoders of the cone (`D φ ∘ circleProcess ∘ hcirc = hC φ` a.s.), the joint law of the circle process and of the
 lateral process of the decoded field `ω ↦ (φ ↦ D φ (circleProcess (c ω)))` over `c` equals the joint law of

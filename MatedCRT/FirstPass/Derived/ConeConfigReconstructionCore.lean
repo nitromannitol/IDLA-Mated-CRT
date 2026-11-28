@@ -13,7 +13,7 @@ near the annulus `V = B_R(0) \ closedBall 0 α` of the true data at mesh `1/n` w
 of the reconstruction map `coneRecon` at the outer data and the residues of the two offsets
 (`eventually_localConfig_eq_coneRecon`).
 
-The proof (the answer to MQ-sbl-18, section "Recovering the formal configuration"): for large `n` the cells meeting the
+The proof: for large `n` the cells meeting the
 annulus `{α/2 ≤ |z| ≤ 2R}` lie in one of the two time blocks (`good_of_mem_cell`), by uniform continuity of `φ` and `ξ`
 on a compact window of quantum times; every vertex of `V` and every neighbour of such a vertex is such a cell
 (`cellSideMult_ne_zero_inter_nonempty`); on these cells the synthetic label `reconLabel` gives the same point and the
@@ -21,7 +21,7 @@ same multiplicities (the block clocks are the quantum clock, `posBlockTime_eq`, 
 count is invariant under the reparametrization `φ`, `cellSideCount_comp_orderIso`); and local configurations forget the
 labels (`localConfig_eq_of_strictMonoOn`).
 
-Departure from the answer: `coneRecon` is defined directly instead of as a Borel version built from conditional point
+Departure from the written argument: `coneRecon` is defined directly instead of as a Borel version built from conditional point
 masses, and the edges are counted through `bmEdgeCount_eq_cellSideMult`, which brings in `PlanarBMNoTwoSidedConePoints`
 and the triple-point input (`CorrelatedBMPeanosphereTriplePointsNoContinuum` or
 `CorrelatedBMTraversalTriplePointsNoContinuum`).

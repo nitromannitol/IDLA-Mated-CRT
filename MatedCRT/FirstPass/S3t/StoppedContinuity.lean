@@ -11,7 +11,7 @@ For a continuous path `w` which exits the disk
 `v ↦ min (T, τ_D(v))` is continuous at `w` for the local uniform distance (`PathFunctionalContinuousAt`, the continuity
 notion of `MatedCRT/Proofs/Sec3/ConvergenceHarmonicFunctions/PathEnvelope.lean`).
 
-Two hypotheses are added to the answer's statement, each needed and flagged: `Continuous w` (the compactness of
+Two hypotheses are added to the written argument's statement, each needed and flagged: `Continuous w` (the compactness of
 `w '' [0, s]` in the proof needs it; a jump of the path inside `D` near `∂D` breaks the argument) and `0 ≤ T`.
 -/
 

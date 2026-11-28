@@ -5,8 +5,7 @@ import LatticeProb.LQG.MassReparamBorel
 /-!
 # The reconstruction map of the local configurations of a quantum cone
 
-For the proof of `ConeConfigReconstruction` (Gwynne–Miller–Sheffield, arXiv:1705.11161, proof of Lemma 3.3, and the
-answer to MQ-sbl-18, section "Recovering the formal configuration"), this file defines the Borel map `coneRecon` that
+For the proof of `ConeConfigReconstruction` (Gwynne–Miller–Sheffield, arXiv:1705.11161, proof of Lemma 3.3), this file defines the Borel map `coneRecon` that
 reads a local configuration off the outer data `(e, μ|{δ < |z| < M})` and the residues `(r₋, r₊)` of the two offsets.
 
 Fix time cutoffs `0 < a < L` and an outer radius `M`. On the two time blocks `[-L, -a]` and `[a, L]` of the curve `e`

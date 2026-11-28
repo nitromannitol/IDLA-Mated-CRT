@@ -11,10 +11,10 @@ argument is the Pasch–Hausdorff envelope argument of `MatedCRT/Proofs/Sec3/Con
 (`MatedCRT.tendstoInProbability_of_ae_continuousWithin_pathFunctional`), specialised to the whole path space and rescaled
 so that the bound is `1`.
 
-Differences from the answer's statement, each needed and flagged: the probability measure `P` is a probability measure;
+Differences from the written argument's statement, each needed and flagged: the probability measure `P` is a probability measure;
 the measures `μ ε ω` and `ν` are finite; and the measurability hypotheses `hFW`, `hFX`, `hFXω`, `hHW` are included, since
 without them the integrals need not be defined. `Measurable H` is not needed: `hHW` suffices. Continuity is
-`PathFunctionalContinuousAt` (`PathEnvelope.lean`), which is `ContinuousAtLocalUniform` of the answer.
+`PathFunctionalContinuousAt` (`PathEnvelope.lean`), which is `ContinuousAtLocalUniform` of the written argument.
 -/
 
 open MeasureTheory Set Filter Topology
@@ -106,7 +106,7 @@ lemma pathFunctionalContinuousWithinAt_const_mul {𝒞 : Set (ℝ≥0 → ℂ)} 
         mul_le_mul (by linarith) h1 (abs_nonneg _) (by positivity)
     _ = η := by field_simp
 
-/-- **Measurable closure of a scalar LBM observable** (answer 46(a2) §1, `lbm_scalar_measurable_of_bl_envelopes`).
+/-- **Measurable closure of a scalar LBM observable** (`lbm_scalar_measurable_of_bl_envelopes`).
 If `H` is bounded on the continuous-path set `𝒞`, continuous within `𝒞` at almost every limiting path, and every
 bounded-Lipschitz observable of the limiting path is measurable (`hBLmeas`), then `b ↦ H (X ω b)` is
 `AEStronglyMeasurable` for almost every `ω`, and `ω ↦ ∫ H (X ω b) dν` is `AEMeasurable`. Neither joint measurability of

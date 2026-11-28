@@ -9,8 +9,7 @@ import MatedCRT.FirstPass.Derived.ZeroConeEdgeCountCodeProof
 
 The named statement `MatedCRT.GMS310Transfer.CorrelatedBMPeanosphereTriplePointsNoContinuum` (for almost every
 `γ`-correlated Brownian pair, the points visited three times by any Peanosphere curve of the pair contain no continuum
-of positive diameter) follows from Shimura's theorem on meandering points for the pair alone (written answer
-`notes/mq-idla-triple-answer.md`, FINAL):
+of positive diameter) follows from Shimura's theorem on meandering points for the pair alone:
 
 * `not_containsNondegenerateContinuum_curveTriplePoints_of_noOppositeSideMin` (deterministic): if no time is a minimum
   of one coordinate on a left neighbourhood and of the other on a right neighbourhood, and no coordinate is monotone on

@@ -8,7 +8,7 @@ import MatedCRT.FirstPass.Derived.BrownianTubeChain
 
 For planar Brownian motion `planarBrownianMotion 0`, the real part stays in `(-e, H)` up to time `T` and ends in
 `(y₁, y₂)`, `0 < y₁ < y₂ < H`, with probability at least `c e` for `0 < e ≤ 1` (`exists_le_planarBrownianMotion_killedStrip`;
-the written answer to the question on Shimura's theorem, §1, (1); Karatzas–Shreve, *Brownian Motion and Stochastic
+Karatzas–Shreve, *Brownian Motion and Stochastic
 Calculus*, §2.8.C). Two stages, joined by the Markov property at the deterministic time `t₁ = T/2`
 (`le_planarBrownian_inter_shift_preimage`):
 

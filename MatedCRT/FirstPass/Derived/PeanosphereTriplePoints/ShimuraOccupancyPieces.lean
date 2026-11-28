@@ -15,7 +15,7 @@ For the `γ`-correlated Brownian pair `(L, R)` with `0 < γ < 2` (paths in `Path
   `R c₀ - x` on `[c₀, c₀ + T]` with probability at least `x / (16 √T)` when `x ^ 2 ≤ T`.  This is
   the survival bound of Lévy's reflection inequality (`LatticeProb.le_measure_forall_ge_neg`) for
   the recentred coordinate `shiftedCoordinate 1 c₀`, which is a Brownian motion.  It is used
-  unconditionally, in place of the conditional probability `q(U_l) ≥ c e` of answer §2, (3), step 3.
+  unconditionally, in place of the conditional probability `q(U_l) ≥ c e` of the written argument.
 * `exists_pos_le_measure_polygon`: there is a constant `c₂ > 0`, independent of the law, of the
   base time `a` and of the scale `e > 0`, such that on the cell `[a, a + e ^ 2]` the pair
   `(L, R)` makes the four moves with probability at least `c₂`: `L` drops by `2 e` below `L a`, some
@@ -26,7 +26,7 @@ For the second statement, the whitening `whitenAt γ 0` turns `(L, R)` into the 
 (`isCorrelatedBM2_map_whitenAt`), and `PlanarTubePositive` says that the whitened pair follows a
 straight path within a tube with positive probability.  The straight path is chosen so that `L`
 decreases by `3` and `R` increases by `3`.  One straight tube replaces the polygon `0, -3u, -3v, 0` of
-answer §2, (3), step 2.  The tube event is contained in a measurable event
+the written argument.  The tube event is contained in a measurable event
 defined through rational times, and, after recentring and Brownian scaling
 (`isCorrelatedBM2_map_recenterPath`, `isCorrelatedBM2_map_unitRescalePath`), its probability does
 not depend on `a`, `e` or on the law, since the law of the correlated pair is unique

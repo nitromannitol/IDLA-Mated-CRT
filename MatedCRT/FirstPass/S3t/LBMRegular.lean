@@ -13,9 +13,9 @@ Brownian path `b` from `y`, the rescaled Liouville Brownian motion `rescaledLBMP
 
 `RegularExit` is the regular-exit predicate of Berestycki–Gwynne and Mörters–Peres (Theorem 2.16 and Theorem 2.8): the
 path either never exits `D`, or it leaves the closure of `D` at arbitrarily small positive times after its exit time.
-The answer's Step 4 omits the hypothesis `y ∈ ball z r`, which the existing transfer lemma needs, so it is kept. The
+The written argument's Step 4 omits the hypothesis `y ∈ ball z r`, which the existing transfer lemma needs, so it is kept. The
 positivity `0 < S.m₀` of the transfer lemma is removed: for `S.m₀ ≤ 0` the rescaled path is constant (`clockInverse f 0 = 0`),
-hence never leaves the disk and has exit time `⊤` (answer 47(d) §5, l.221-255). `IsValid` is not changed.
+hence never leaves the disk and has exit time `⊤`. `IsValid` is not changed.
 -/
 
 open MeasureTheory Set Filter Topology HarmonicBalls MarkovProcess Metric

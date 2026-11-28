@@ -11,7 +11,7 @@ import LatticeProb.Bonanno.MatedCRTHarmonic.MatedCRT.IsCorrelatedBM2Unique
 
 This file proves `ShimuraLemmaTwo γ` for `0 < γ < 2` from `KilledBarrierPositive` and
 `PlanarTubePositive` (`shimuraLemmaTwo_of_barriers`), following the proof of Shimura's Lemma 2 for every
-angle in the written answer `notes/mq-rigD2-shimura-answer.md`, §1 (M. Shimura, *Meandering points of
+angle (M. Shimura, *Meandering points of
 two-dimensional Brownian motion*, Kodai Math. J. 11 (1988), Lemma 2, (3.5), p. 172). The unit interval is
 split into thirds.
 
@@ -23,7 +23,7 @@ split into thirds.
   within a tube; positive probability (`middleThird_event`, by tube positivity for the Gram–Schmidt
   coordinates `isCorrelatedBM2_map_gramSchmidtAt`).
 
-The constants depart from answer §1: there the middle path is `w = 20 (v - u)/(1 - u · v)`, along which `L`
+The constants depart from the written argument: there the middle path is `w = 20 (v - u)/(1 - u · v)`, along which `L`
 loses `20`, and the end pieces keep the perpendicular projection in `[-1, 1]` and stay within distance `4` of
 their origin; here the end pieces keep the second coordinate in `[-1, 2]` and the other coordinate moves by at
 most `5`, so the middle path lets `L` lose `30`.
@@ -112,7 +112,7 @@ theorem measure_inter_ge_of_indep {Ω : Type*} [MeasurableSpace Ω] {μ : Measur
 
 /-- **Two independent barrier events.**  For independent Brownian motions `X`, `Y` with continuous
 paths, `X` stays in `[-e, H]` up to `T` and ends in `[y₁, y₂]` while `Y` stays in `[-1, 2]`, with
-probability at least `c e` for `0 < e ≤ 1` (answer §1 keeps the perpendicular coordinate in `[-1, 1]`). -/
+probability at least `c e` for `0 < e ≤ 1` (the written argument keeps the perpendicular coordinate in `[-1, 1]`). -/
 theorem barrierPair_lower_bound (hK : KilledBarrierPositive) {Ω : Type} [MeasurableSpace Ω]
     {μ : Measure Ω} [IsProbabilityMeasure μ] {X Y : ℝ≥0 → Ω → ℝ} (hX : IsBrownianReal X μ)
     (hY : IsBrownianReal Y μ) (hXc : ∀ ω, Continuous fun t => X t ω)
@@ -202,8 +202,7 @@ private theorem whitened_norm {ρ σ : ℝ} (hσ : 0 < σ) (hσsq : σ * σ = 1 
   exact div_self (mul_pos hσ hσ).ne'
 
 /-- **The first third.**  For `R`-first Gram–Schmidt coordinates, with probability at least `c Δ` the
-coordinate `R` stays above `-Δ` on `[0, 1/3]` and ends above `1`, while `L` moves by at most `5` (answer §1:
-within distance `4`). -/
+coordinate `R` stays above `-Δ` on `[0, 1/3]` and ends above `1`, while `L` moves by at most `5`. -/
 theorem firstThird_event (hK : KilledBarrierPositive) {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     {μ : Measure Path2} (hμ : IsCorrelatedBM2 γ μ) :
     ∃ c : ℝ, 0 < c ∧ ∀ Δ : ℝ, 0 < Δ → Δ ≤ 1 →
@@ -278,7 +277,7 @@ theorem firstThird_event (hK : KilledBarrierPositive) {γ : ℝ} (hγ0 : 0 < γ)
 
 /-- **The last third**, read backwards from time `1` with `L` first.  With probability at least `c δ`
 the coordinate `L` stays above `L 1 - δ` on `[2/3, 1]` and `L (2/3) - L 1 ≥ 1`, while `R` moves by
-at most `5` from its value at `1` (answer §1: within distance `4`). -/
+at most `5` from its value at `1`. -/
 theorem lastThird_event (hK : KilledBarrierPositive) {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     {μ : Measure Path2} (hμ : IsCorrelatedBM2 γ μ) :
     ∃ c : ℝ, 0 < c ∧ ∀ δ : ℝ, 0 < δ → δ ≤ 1 →
@@ -363,7 +362,7 @@ theorem lastThird_event (hK : KilledBarrierPositive) {γ : ℝ} (hγ0 : 0 < γ) 
 /-! ### The middle third -/
 
 /-- The end point of the straight path of the middle third in the Gram–Schmidt coordinates
-`(R, (L - ρ R) / σ)`: along this path `R` gains `20` and `L` loses `30` (the vector `w` of answer §1, along which
+`(R, (L - ρ R) / σ)`: along this path `R` gains `20` and `L` loses `30` (the vector `w` of the written argument, along which
 `L` loses `20`, lengthened to absorb the end pieces of this proof, which move by at most `5`). -/
 noncomputable def middleDirection (γ : ℝ) : ℝ × ℝ :=
   (20, (-30 - 20 * lrCov γ 0 1) / Real.sqrt (1 - lrCov γ 0 1 ^ 2))
@@ -407,8 +406,7 @@ private theorem middle_coord_bound {a b t ρ σ : ℝ} (hσ : 0 < σ) (hσ1 : σ
           (mul_le_mul hρ h1 (abs_nonneg _) zero_le_one)
     _ = 1 / 2 := by norm_num
 
-/-- **The middle third** (answer §1: the increments stay within `1/4` of the straight path to `w`,
-an event of fixed positive probability by tube positivity). With positive probability, on
+/-- **The middle third**. With positive probability, on
 `[1/3, 2/3]` the coordinate `R` stays above `R (1/3) - 1/4` and gains at least `20 - 1/4`, while
 `L s - L (1/3)` stays within `1/2` of `-90 (s - 1/3)`. -/
 theorem middleThird_event (hT : PlanarTubePositive) {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
@@ -682,7 +680,7 @@ theorem inter_thirds_subset {Δ δ : ℝ} (hΔ : 0 < Δ) (hδ : 0 < δ) :
 
 /-! ### Shimura's Lemma 2 -/
 
-/-- **Shimura's Lemma 2 for one law of the pair** (answer §1): the product of the bounds on the three
+/-- **Shimura's Lemma 2 for one law of the pair**: the product of the bounds on the three
 independent thirds gives `G(Δ, δ) ≥ c Δ δ` for `0 < Δ, δ ≤ 1`. -/
 theorem lemmaTwo_of_law (hK : KilledBarrierPositive) (hT : PlanarTubePositive) {γ : ℝ}
     (hγ0 : 0 < γ) (hγ2 : γ < 2) {μ : Measure Path2} (hμ : IsCorrelatedBM2 γ μ) :
@@ -719,7 +717,7 @@ theorem lemmaTwo_of_law (hK : KilledBarrierPositive) (hT : PlanarTubePositive) {
     _ ≤ _ := measure_mono (inter_thirds_subset hΔ hδ)
 
 /-- **Shimura's Lemma 2 for every angle** (M. Shimura, Kodai Math. J. 11 (1988), Lemma 2, (3.5),
-p. 172; written answer §1, which covers also the obtuse angles `π/2 < θ ≤ π` omitted in print): for
+p. 172; the proof here covers also the obtuse angles `π/2 < θ ≤ π` omitted in print): for
 `0 < γ < 2`, from the killed kernel bound and tube positivity, `G(Δ, δ) ≥ c Δ δ` with one constant for
 every law of the pair, since that law is unique (`isCorrelatedBM2_unique_holds`). -/
 theorem shimuraLemmaTwo_of_barriers {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)

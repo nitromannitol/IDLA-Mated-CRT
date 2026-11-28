@@ -18,7 +18,7 @@ events for a correlated Brownian pair:
   `R Bl ≥ R A - e`;
 * a final piece: the second coordinate stays above `R Bl - 2 e` on `[Bl, Bl + 2 - 1/n]`.
 
-The proof combines the description of the first occupied cell (answer §2, `mem_firstCellEvent_iff`) for the
+The proof combines the description of the first occupied cell for the
 right test at `k` and the left and right tests at `k + j` directly.  It uses no measure.
 -/
 

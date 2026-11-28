@@ -17,11 +17,11 @@ import MatedCRT.Proofs.MatingOfTrees.AdjacentCells
 Steps 5–12 and section 4 (the replacement theorem).
 
 `truncatedQuenchedLawsFixedTime_of_steps` assembles Steps 11 and 12 with the outputs of Steps 5–8 and 10, taken as
-hypotheses with the answer's Lean types. Concrete now: the disk `D = B_r(z)`, the exhaustion `D_n = ballExhaustion z r a n`
+hypotheses with the written argument's Lean types. Concrete now: the disk `D = B_r(z)`, the exhaustion `D_n = ballExhaustion z r a n`
 and the shell functional `shellTime (D_n) (B_r(z)) T` (`S3t/BoundaryShells.lean`); the walk measurability of the stopped
 occupation and of the shell functional is proved (`S3t/Integrate.lean`).
 
-Notation (answer section 3): `W ε ω q := interpolatedWalk ε (S.η ω) (S.mε ε) q` is the interpolated walk,
+Notation: `W ε ω q := interpolatedWalk ε (S.η ω) (S.mε ε) q` is the interpolated walk,
 `X ω b := rescaledLBMPath (S.clock ω) S.m₀ b` the rescaled LBM path, and the quenched walk law is
 `srwLaw (S.mult ε ω) (vertexOf ε (S.η ω) y)`.
 -/
@@ -61,7 +61,7 @@ theorem tendstoInProbability_add_of_zero_left {Ω : Type*} [MeasurableSpace Ω] 
     linarith
   exact (measure_mono hsub).trans (measure_union_le _ _)
 
-/-- **Staged truncated-laws theorem** (Steps 11–12 and section 4 of the answer). For the disk `D = B_r(z)`, the concentric
+/-- **Staged truncated-laws theorem** (Steps 11–12 of the written argument). For the disk `D = B_r(z)`, the concentric
 exhaustion `D_n = ballExhaustion z r a n` (`a ≥ 0`, Step 6 uses `a = (r - |y - z|)/2`), the fixed-`T` quenched expected
 truncated discrete occupation converges in probability to the quenched expected truncated LBM occupation, given the
 outputs of Steps 5, 6, 7, 8 and 10 as hypotheses. The conclusion is the body of `FrozenTruncatedQuenchedLawsFixedTime`

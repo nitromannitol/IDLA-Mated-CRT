@@ -9,7 +9,7 @@ import MatedCRT.FirstPass.Derived.ConeOffsetDensityProof
 
 The main theorem `coneConfigReconstruction_of_peanosphere` (hypotheses `hLG`, `hT`) proves
 `ConeConfigReconstruction γ` (the third input of Lemma 3.3 of Gwynne–Miller–Sheffield, arXiv:1705.11161, for a
-mating-of-trees coupling; the answer to MQ-sbl-18, section "Recovering the formal configuration") from the two named
+mating-of-trees coupling) from the two named
 inputs of the cell-side identity, `PlanarBMNoTwoSidedConePoints` (Le Gall) and
 `CorrelatedBMPeanosphereTriplePointsNoContinuum` (the triple points of the Peanosphere curves of a correlated Brownian
 pair), which identify the Brownian edge counts of the cells with the frontier-side multiplicities of the cells read off

@@ -3,21 +3,19 @@ import MatedCRT.FirstPass.Derived.PeanosphereTriplePoints.ShimuraOccupancyPaths
 /-!
 # The occupation of a later cell in Shimura's argument: the three steps
 
-`ShimuraOccupancy γ` (`ShimuraSteps.lean`; Shimura (4.2)–(4.7), pp. 174–176; the written answer to the question on
-Shimura's theorem, §2, (2) and (3)) follows from three statements on the cell `I_k = [(k - 1)/n, k/n]`, the drop
+`ShimuraOccupancy γ` (`ShimuraSteps.lean`; Shimura (4.2)–(4.7), pp. 174–176) follows from three statements on the cell `I_k = [(k - 1)/n, k/n]`, the drop
 `U_k = R(k/n) - min_{I_k} R` of the second coordinate across it (`cellDropR`), the past event
-`C_k` (`pastEvent`: the left test at `k` holds and every earlier cell fails its tests truncated at `k/n`; answer
-§2, `mem_firstCellEvent_iff`) and the event `F` that both drops across `I_k` are at most `√d`, `d = (j - 1)/n`
+`C_k` (`pastEvent`: the left test at `k` holds and every earlier cell fails its tests truncated at `k/n`) and the event `F` that both drops across `I_k` are at most `√d`, `d = (j - 1)/n`
 (`tameEvent`):
 
-* `OccupancyUpper γ` (answer (2)): `P(B_k) ≤ K E[1_{C_k ∩ F} U_k] + P(Fᶜ)`; on `C_k` the right test at `k` asks the
+* `OccupancyUpper γ`: `P(B_k) ≤ K E[1_{C_k ∩ F} U_k] + P(Fᶜ)`; on `C_k` the right test at `k` asks the
   future of `R` after `k/n` to stay above `-U_k`, which has probability at most a constant times `U_k` by the
   reflection barrier.
-* `OccupancyLower γ` (answer (3)): `P(B_k ∩ A_{k+j}) ≥ c/(j - 1) · E[1_{C_k ∩ F} U_k]` for `1 + 6 log n < j`, from
+* `OccupancyLower γ`: `P(B_k ∩ A_{k+j}) ≥ c/(j - 1) · E[1_{C_k ∩ F} U_k]` for `1 + 6 log n < j`, from
   Shimura's Lemma 2 on the gap `[k/n, (k + j - 1)/n]`, a straight tube in whitened coordinates on the cell `k + j`
-  and the survival of `R` after it; two departures from answer §2, (3): one straight tube in place of the polygon
+  and the survival of `R` after it; two departures from the written argument: one straight tube in place of the polygon
   `0, -3u, -3v, 0`, and the unconditional survival of `R` in place of the conditional probability `q(U_l) ≥ c e`.
-* `OccupancyTails γ` (answer §2, before (2)): `P(Fᶜ) ≤ 4/n³` for `1 + 6 log n < j`.
+* `OccupancyTails γ`: `P(Fᶜ) ≤ 4/n³` for `1 + 6 log n < j`.
 
 `shimuraOccupancy_of_steps` combines them: for `P(B_k) ≥ 2/n²` and `n ≥ 4`, `P(Fᶜ) ≤ P(B_k)/2`, so
 `E[1_{C_k ∩ F} U_k] ≥ P(B_k)/(2K)`.
@@ -48,12 +46,12 @@ def pastEvent (n k : ℕ) : Set Path2 :=
 def tameEvent (n k j : ℕ) : Set Path2 :=
   {p | cellDropR n k p ≤ Real.sqrt (((j : ℝ) - 1) / n) ∧ cellDropL n k p ≤ Real.sqrt (((j : ℝ) - 1) / n)}
 
-/-- **The tails of the drops** (answer §2): `P(Fᶜ) ≤ 4/n³` for `1 + 6 log n < j`. -/
+/-- **The tails of the drops**: `P(Fᶜ) ≤ 4/n³` for `1 + 6 log n < j`. -/
 def OccupancyTails (γ : ℝ) : Prop :=
   ∃ N : ℕ, ∀ μ : Measure Path2, IsCorrelatedBM2 γ μ → ∀ n : ℕ, N ≤ n → ∀ k j : ℕ, 1 ≤ k → k + j ≤ 2 * n →
     1 + 6 * Real.log n < j → μ (tameEvent n k j)ᶜ ≤ ENNReal.ofReal (4 / (n : ℝ) ^ 3)
 
-/-- **The upper bound** (answer (2)): `P(B_k) ≤ K E[1_{C_k ∩ F} U_k] + P(Fᶜ)`. -/
+/-- **The upper bound**: `P(B_k) ≤ K E[1_{C_k ∩ F} U_k] + P(Fᶜ)`. -/
 def OccupancyUpper (γ : ℝ) : Prop :=
   ∃ K : ℝ, 0 < K ∧ ∃ N : ℕ, ∀ μ : Measure Path2, IsCorrelatedBM2 γ μ → ∀ n : ℕ, N ≤ n →
     ∀ k j : ℕ, 1 ≤ k → k ≤ n → 2 ≤ j → k + j ≤ 2 * n →
@@ -61,7 +59,7 @@ def OccupancyUpper (γ : ℝ) : Prop :=
         ENNReal.ofReal K * ∫⁻ p in pastEvent n k ∩ tameEvent n k j, ENNReal.ofReal (cellDropR n k p) ∂μ +
           μ (tameEvent n k j)ᶜ
 
-/-- **The lower bound** (answer (3)): `P(B_k ∩ A_{k+j}) ≥ c/(j - 1) · E[1_{C_k ∩ F} U_k]` for `1 + 6 log n < j`. -/
+/-- **The lower bound**: `P(B_k ∩ A_{k+j}) ≥ c/(j - 1) · E[1_{C_k ∩ F} U_k]` for `1 + 6 log n < j`. -/
 def OccupancyLower (γ : ℝ) : Prop :=
   ∃ c : ℝ, 0 < c ∧ ∃ N : ℕ, ∀ μ : Measure Path2, IsCorrelatedBM2 γ μ → ∀ n : ℕ, N ≤ n →
     ∀ k j : ℕ, 1 ≤ k → k ≤ n → 1 + 6 * Real.log n < j → k + j ≤ 2 * n →

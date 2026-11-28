@@ -11,7 +11,7 @@ functional at boundary shell `n` (Step 6); `Rlim n ω` its LBM limit. Step 11 gi
 on the mesh-good event `Good ε ω`: `|A - C| ≤ E ε + M · R n ε ω`, with `E → 0` (Steps 7, 8).
 
 Measure-theoretic input. `Rlim n → 0` almost surely (Step 6) is converted to convergence in probability in `n` using
-`AEMeasurable (Rlim n)`. This measurability is not written in the answer; it enters as a hypothesis (see `S3t.lean`).
+`AEMeasurable (Rlim n)`. This measurability is not written in the argument; it enters as a hypothesis (see `S3t.lean`).
 Without it a.s. convergence does not give convergence of outer probabilities (Bernstein-type counterexample), so it
 cannot be dropped.
 -/

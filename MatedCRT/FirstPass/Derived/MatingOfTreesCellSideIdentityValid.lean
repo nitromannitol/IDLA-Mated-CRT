@@ -29,12 +29,12 @@ namespace MatedCRT
 
 /-- **Step: the triple points of the curve of a valid environment contain no
 continuum.** For `0 < γ < 2` and every valid environment `S`, almost surely the points visited at least three times by
-`S.η ω` (`curveTriplePoints`) contain no continuum of positive diameter. Route (answer lines 37-39): on an extension
+`S.η ω` (`curveTriplePoints`) contain no continuum of positive diameter. Route: on an extension
 of the sample space, a whole-plane space-filling SLE_κ, `κ = 16/γ²`, coupled with the same boundary-length pair
 `S.bm` (Duplantier–Miller–Sheffield, arXiv:1409.7055, Theorem 1.9; Gwynne–Holden–Miller–Sun, arXiv:1510.04687,
 Theorem 1.1) has the same time fibres as `S.η ω` (DMS Lemma 8.15), so the two curves differ by a homeomorphism of the
 plane, which carries the triple points of one curve to those of the other; for whole-plane space-filling SLE_κ,
-`κ > 4`, the triple points contain no continuum (answer lines 5-27: DMS (8.9) and Lemmas 8.12-8.13; Gwynne–Holden–
+`κ > 4`, the triple points contain no continuum( DMS (8.9) and Lemmas 8.12-8.13; Gwynne–Holden–
 Miller, arXiv:1512.01223, Corollary 6.5 and the proof of Example 2.2). -/
 def ValidEnvTriplePointsNoContinuum (𝒮 : SpaceFillingSLEModel) : Prop :=
   ∀ γ : ℝ, 0 < γ → γ < 2 → ∀ (Ω : Type) [MeasurableSpace Ω] (S : MatedCRTEnv Ω), S.IsValid 𝒮 γ →

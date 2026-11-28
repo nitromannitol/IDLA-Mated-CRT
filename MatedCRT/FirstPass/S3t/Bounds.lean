@@ -9,7 +9,7 @@ satisfies `|stoppedOccupation D T g w| ≤ T * M`, and the quenched discrete occ
 `|quenchedDiscreteOccupation S ω D g T ε q| ≤ T * M` for `m_ε > 0`. Both bounds are deterministic, so bad mesh events are
 discarded through their environment probabilities alone.
 
-The answer's second bound omits the hypothesis `0 ≤ T`. It is needed: for `T < 0` the occupation is `0` while `T * M < 0`
+The written argument's second bound omits the hypothesis `0 ≤ T`. It is needed: for `T < 0` the occupation is `0` while `T * M < 0`
 whenever `M > 0`. So `hT : 0 ≤ T` is added to `abs_quenchedDiscreteOccupation_le`. The first bound already has it.
 -/
 

@@ -14,7 +14,7 @@ This file proves the named steps of `GMS21ZeroConeAnnulusRepairProofs.lean` and 
 following the written argument (Gwynne–Miller–Sheffield, arXiv:1705.11161, proof of
 Lemma 3.5 and of Proposition 3.1).
 
-* `weightedErrorSuperlevelBorelProjection` (answer, section "(d) The two Borel sets of witnesses", lines 54-67): the
+* `weightedErrorSuperlevelBorelProjection`: the
   strict superlevel sets of the scale supremum of the unit-mesh uniform error and of the mesh-`1/n` uniform error are
   the projections of the Borel sets of witnesses `(s, z, j)`: a scale `0 < s ≤ ε₀` (unit case), a start `z` of the
   annulus in the cell of the label `j`, and an error of the walk from `j` strictly above the threshold. The error of
@@ -24,7 +24,7 @@ Lemma 3.5 and of Proposition 3.1).
   separable space of curve classes is Borel in the two measures (`measurable_levyProkhorovEDist_of_separable`: below
   `c` exactly when, for some rational `r < c`, the two Prokhorov inequalities at `r` hold on the finite unions of a
   countable basis).
-* `zeroConeCurveDilationLaw` (answer, section "(b) The unshifted curve at the random radius", lines 33-42): the radius
+* `zeroConeCurveDilationLaw`: the radius
   `R_n = exp (L_y(W))`, `y = γ⁻¹ log (1/n)`, is read off one measurable version `W` of the radial part of the zero
   cone for all `n` at once, so `R_n → 0` almost surely (`LatticeProb.ae_tendsto_coneScale_small_mass`); the curve
   `E_n(t) = R_n⁻¹ η₀(t/n)` has the law of `η₀` by the cone scaling identity of Duplantier–Miller–Sheffield
