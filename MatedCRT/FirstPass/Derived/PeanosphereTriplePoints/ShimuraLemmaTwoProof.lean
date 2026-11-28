@@ -1,13 +1,33 @@
 import MatedCRT.FirstPass.Derived.PeanosphereTriplePoints.ShimuraSteps
+import MatedCRT.FirstPass.Derived.PeanosphereTriplePoints.ShimuraGramSchmidt
 import LatticeProb.Prob.CorrelatedBMConeTimes
 import LatticeProb.Prob.CorrelatedBMWindowIndependence
 import LatticeProb.Prob.CorrelatedBMRecenter
 import LatticeProb.Prob.BrownianDriftSmallBall
+import LatticeProb.Bonanno.MatedCRTHarmonic.MatedCRT.IsCorrelatedBM2Unique
 
 /-!
 # Shimura's Lemma 2 from the barrier statements
 
-This file assembles the ingredients of `ShimuraLemmaTwo γ` for the correlated Brownian pair `(L, R)`.
+This file proves `ShimuraLemmaTwo γ` for `0 < γ < 2` from `KilledBarrierPositive` and
+`PlanarTubePositive` (`shimuraLemmaTwo_of_barriers`), following the proof of Shimura's Lemma 2 for every
+angle in the written answer `notes/mq-rigD2-shimura-answer.md`, §1 (M. Shimura, *Meandering points of
+two-dimensional Brownian motion*, Kodai Math. J. 11 (1988), Lemma 2, (3.5), p. 172). The unit interval is
+split into thirds.
+
+* First third: `R` stays above `-Δ` and ends above `1`, while `L` moves by at most `5`; probability at
+  least `c Δ` (`firstThird_event`, from the killed kernel bound in the coordinates `R` and `(L - ρ R)/σ`).
+* Last third, read backwards from time `1`: `L` stays above `L 1 - δ` and `L (2/3) - L 1 ≥ 1`, while `R`
+  moves by at most `5`; probability at least `c δ` (`lastThird_event`).
+* Middle third: the increments follow the straight path along which `R` gains `20` and `L` loses `30`,
+  within a tube; positive probability (`middleThird_event`, by tube positivity for the Gram–Schmidt
+  coordinates `isCorrelatedBM2_map_gramSchmidtAt`).
+* The increments on the three thirds are independent (`iIndepFun_thirdIncr`), and the three events
+  together imply the four conditions of `G(Δ, δ)` (`lemmaTwo_deterministic`); the product of the three
+  bounds is `G(Δ, δ) ≥ c Δ δ` (`lemmaTwo_of_law`). The law of the pair is unique, so the constant does
+  not depend on the law (`shimuraLemmaTwo_of_barriers`).
+
+Auxiliary statements:
 
 * `indepFun_coneComb_future_swap`: the increments of `R` and the increments of the whitened coordinate
   `(L - ρ R) / σ` after any base time are independent Brownian motions (the exchange of the roles of
@@ -125,25 +145,6 @@ theorem barrierPair_lower_bound (hK : KilledBarrierPositive) {Ω : Type} [Measur
         obtain ⟨⟨hx1, hx2⟩, ⟨hy1, hy2⟩⟩ := hω
         exact ⟨⟨fun s hs => le_of_mem_windowSet (hXc ω) hx1 hs, ⟨hx2.1.le, hx2.2.le⟩⟩,
           fun s hs => le_of_mem_windowSet (hYc ω) hy1 hs⟩
-
-/-- For `0 < γ < 2` the correlation `-cos (π γ² / 4)` lies strictly between `-1` and `1`. -/
-theorem lrCov_mem_Ioo {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) :
-    -1 < lrCov γ 0 1 ∧ lrCov γ 0 1 < 1 := by
-  have hθ0 : 0 < Real.pi * γ ^ 2 / 4 := by
-    have := mul_pos Real.pi_pos (pow_pos hγ0 2)
-    linarith
-  have hθπ : Real.pi * γ ^ 2 / 4 < Real.pi := by
-    have hγ4 : γ ^ 2 < 4 := by nlinarith [mul_pos hγ0 (sub_pos.2 hγ2)]
-    nlinarith [mul_pos Real.pi_pos (sub_pos.2 hγ4)]
-  have hcos1 : Real.cos (Real.pi * γ ^ 2 / 4) < 1 := by
-    have h := Real.cos_lt_cos_of_nonneg_of_le_pi le_rfl hθπ.le hθ0
-    rwa [Real.cos_zero] at h
-  have hcosm1 : -1 < Real.cos (Real.pi * γ ^ 2 / 4) := by
-    have h := Real.cos_lt_cos_of_nonneg_of_le_pi hθ0.le le_rfl hθπ
-    rwa [Real.cos_pi] at h
-  have hρ : lrCov γ 0 1 = -Real.cos (Real.pi * γ ^ 2 / 4) := rfl
-  rw [hρ]
-  constructor <;> linarith
 
 /-- **The deterministic combination of the three thirds** (Shimura's Lemma 2, `G(Δ, δ)`): the bounds on
 the three thirds of `[0, 1]` imply the four conditions of the event. -/
@@ -351,5 +352,377 @@ theorem lastThird_event (hK : KilledBarrierPositive) {γ : ℝ} (hγ0 : 0 < γ) 
     calc _ ≤ _ := abs_add_le _ _
       _ ≤ 2 + 3 := add_le_add h1 h2
       _ = 5 := by norm_num
+
+/-! ### The middle third -/
+
+/-- The end point of the straight path of the middle third in the Gram–Schmidt coordinates
+`(R, (L - ρ R) / σ)`: along this path `R` gains `20` and `L` loses `30` (answer §1, the vector `w`). -/
+noncomputable def middleDirection (γ : ℝ) : ℝ × ℝ :=
+  (20, (-30 - 20 * lrCov γ 0 1) / Real.sqrt (1 - lrCov γ 0 1 ^ 2))
+
+/-- Paths whose increments up to time `T` stay within distance at most `ε` of the straight path from
+`0` to `w`. -/
+def closedTube (T : ℝ) (w : ℝ × ℝ) (ε : ℝ) : Set Path2 :=
+  {p | ∀ s ∈ Icc (0 : ℝ) T, dist (p s - p 0) ((s / T) • w) ≤ ε}
+
+theorem isClosed_closedTube (T : ℝ) (w : ℝ × ℝ) (ε : ℝ) : IsClosed (closedTube T w ε) := by
+  have h : closedTube T w ε =
+      ⋂ s ∈ Icc (0 : ℝ) T, {p : Path2 | dist (p s - p 0) ((s / T) • w) ≤ ε} := by
+    ext p
+    simp [closedTube]
+  rw [h]
+  refine isClosed_biInter fun s _ => isClosed_le ?_ continuous_const
+  exact ((continuous_eval_const s).sub (continuous_eval_const 0)).dist continuous_const
+
+/-- The coordinate `L` on the middle third from its Gram–Schmidt coordinates: if `a` is within `1/4`
+of `60 t` and `(b - ρ a) / σ` is within `1/4` of `3 t (-30 - 20 ρ) / σ`, then `b` is within `1/2`
+of `-90 t`. -/
+private theorem middle_coord_bound {a b t ρ σ : ℝ} (hσ : 0 < σ) (hσ1 : σ ≤ 1) (hρ : |ρ| ≤ 1)
+    (h1 : |a - t / (1 / 3) * 20| ≤ 1 / 4)
+    (h2 : |(b - ρ * a) / σ - t / (1 / 3) * ((-30 - 20 * ρ) / σ)| ≤ 1 / 4) :
+    |b + 90 * t| ≤ 1 / 2 := by
+  have hX : σ * ((b - ρ * a) / σ - t / (1 / 3) * ((-30 - 20 * ρ) / σ)) =
+      b - ρ * a + 90 * t + 60 * ρ * t := by
+    rw [show (b - ρ * a) / σ - t / (1 / 3) * ((-30 - 20 * ρ) / σ) =
+      (b - ρ * a + 90 * t + 60 * ρ * t) / σ by ring, mul_div_cancel₀ _ hσ.ne']
+  have key : b + 90 * t = σ * ((b - ρ * a) / σ - t / (1 / 3) * ((-30 - 20 * ρ) / σ)) +
+      ρ * (a - t / (1 / 3) * 20) := by
+    rw [hX]
+    ring
+  rw [key]
+  calc _ ≤ |σ * ((b - ρ * a) / σ - t / (1 / 3) * ((-30 - 20 * ρ) / σ))| +
+        |ρ * (a - t / (1 / 3) * 20)| := abs_add_le _ _
+    _ = σ * |(b - ρ * a) / σ - t / (1 / 3) * ((-30 - 20 * ρ) / σ)| +
+        |ρ| * |a - t / (1 / 3) * 20| := by rw [abs_mul, abs_mul, abs_of_pos hσ]
+    _ ≤ 1 * (1 / 4) + 1 * (1 / 4) :=
+        add_le_add (mul_le_mul hσ1 h2 (abs_nonneg _) zero_le_one)
+          (mul_le_mul hρ h1 (abs_nonneg _) zero_le_one)
+    _ = 1 / 2 := by norm_num
+
+/-- **The middle third** (answer §1: the increments stay within `1/4` of the straight path to `w`,
+an event of fixed positive probability by tube positivity). With positive probability, on
+`[1/3, 2/3]` the coordinate `R` stays above `R (1/3) - 1/4` and gains at least `20 - 1/4`, while
+`L s - L (1/3)` stays within `1/2` of `-90 (s - 1/3)`. -/
+theorem middleThird_event (hT : PlanarTubePositive) {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
+    {μ : Measure Path2} (hμ : IsCorrelatedBM2 γ μ) :
+    0 < μ {ω | (∀ s ∈ Icc (1 / 3 : ℝ) (2 / 3), -(1 / 4) ≤ (ω s).2 - (ω (1 / 3)).2) ∧
+      20 - 1 / 4 ≤ (ω (2 / 3)).2 - (ω (1 / 3)).2 ∧
+      ∀ s ∈ Icc (1 / 3 : ℝ) (2 / 3), |((ω s).1 - (ω (1 / 3)).1) + 90 * (s - 1 / 3)| ≤ 1 / 2} := by
+  obtain ⟨hρlo, hρhi⟩ := lrCov_mem_Ioo hγ0 hγ2
+  have hpos : 0 < 1 - lrCov γ 0 1 ^ 2 := by nlinarith
+  have hσsq : Real.sqrt (1 - lrCov γ 0 1 ^ 2) * Real.sqrt (1 - lrCov γ 0 1 ^ 2) =
+      1 - lrCov γ 0 1 ^ 2 := Real.mul_self_sqrt hpos.le
+  have hσ : 0 < Real.sqrt (1 - lrCov γ 0 1 ^ 2) := Real.sqrt_pos.2 hpos
+  have hσ1 : Real.sqrt (1 - lrCov γ 0 1 ^ 2) ≤ 1 := by nlinarith
+  have hρa : |lrCov γ 0 1| ≤ 1 := abs_le.2 ⟨hρlo.le, hρhi.le⟩
+  have hΦ : Measurable (gramSchmidtAt γ (1 / 3)) :=
+    (continuous_gramSchmidtAt γ (1 / 3)).measurable
+  have hν := isCorrelatedBM2_map_gramSchmidtAt hγ0 hγ2 (1 / 3) hμ
+  have htube := hT _ hν (1 / 3) (middleDirection γ) (1 / 4) (by norm_num) (by norm_num)
+  have hle : μ.map (gramSchmidtAt γ (1 / 3))
+      {p | ∀ s ∈ Icc (0 : ℝ) (1 / 3), dist (p s - p 0) ((s / (1 / 3)) • middleDirection γ) < 1 / 4} ≤
+      μ (gramSchmidtAt γ (1 / 3) ⁻¹' closedTube (1 / 3) (middleDirection γ) (1 / 4)) := by
+    rw [← Measure.map_apply hΦ (isClosed_closedTube _ _ _).measurableSet]
+    exact measure_mono fun p hp s hs => (hp s hs).le
+  refine (htube.trans_le hle).trans_le (measure_mono fun ω hω => ?_)
+  have hω' : ∀ u ∈ Icc (0 : ℝ) (1 / 3),
+      dist (gramSchmidtAt γ (1 / 3) ω u - gramSchmidtAt γ (1 / 3) ω 0)
+        ((u / (1 / 3)) • middleDirection γ) ≤ 1 / 4 := hω
+  have hcoord : ∀ s ∈ Icc (1 / 3 : ℝ) (2 / 3),
+      |((ω s).2 - (ω (1 / 3)).2) - (s - 1 / 3) / (1 / 3) * 20| ≤ 1 / 4 ∧
+      |((ω s).1 - (ω (1 / 3)).1) + 90 * (s - 1 / 3)| ≤ 1 / 2 := by
+    intro s hs
+    have hu : s - 1 / 3 ∈ Icc (0 : ℝ) (1 / 3) := ⟨by linarith [hs.1], by linarith [hs.2]⟩
+    have h := hω' (s - 1 / 3) hu
+    have e : (1 / 3 : ℝ) + (s - 1 / 3) = s := by ring
+    rw [Prod.dist_eq, max_le_iff, Real.dist_eq, Real.dist_eq] at h
+    simp only [Prod.fst_sub, Prod.snd_sub, Prod.smul_fst, Prod.smul_snd, smul_eq_mul,
+      gramSchmidtAt_apply, middleDirection, e, add_zero, sub_self, mul_zero, zero_div,
+      sub_zero] at h
+    exact ⟨h.1, middle_coord_bound hσ hσ1 hρa h.1 h.2⟩
+  refine ⟨fun s hs => ?_, ?_, fun s hs => (hcoord s hs).2⟩
+  · have h := (abs_le.1 (hcoord s hs).1).1
+    have e : (s - 1 / 3) / (1 / 3) * 20 = 60 * (s - 1 / 3) := by ring
+    rw [e] at h
+    linarith [hs.1]
+  · have h := (abs_le.1 (hcoord (2 / 3) ⟨by norm_num, le_rfl⟩).1).1
+    have e : ((2 : ℝ) / 3 - 1 / 3) / (1 / 3) * 20 = 20 := by norm_num
+    rw [e] at h
+    linarith
+
+/-! ### Independence of the three thirds -/
+
+/-- The left end points of the thirds of `[0, 1]`. -/
+noncomputable def thirdL : Fin 3 → ℝ := ![0, 1 / 3, 2 / 3]
+
+/-- The right end points of the thirds of `[0, 1]`. -/
+noncomputable def thirdR : Fin 3 → ℝ := ![1 / 3, 2 / 3, 1]
+
+theorem thirdL_le_thirdR (i : Fin 3) : thirdL i ≤ thirdR i := by
+  fin_cases i <;> norm_num [thirdL, thirdR]
+
+theorem thirdR_le_one (i : Fin 3) : thirdR i ≤ 1 := by
+  fin_cases i <;> norm_num [thirdR]
+
+/-- The increments of the pair on the third `i` of `[0, 1]` from its left end point, at the rational
+times clamped to the third. -/
+noncomputable def thirdIncr (i : Fin 3) (ω : Path2) (p : Fin 2 × ℚ) : ℝ :=
+  coneIncr p.1 (projIcc (thirdL i) (thirdR i) (thirdL_le_thirdR i) p.2) (thirdL i) ω
+
+theorem thirdIncr_fst (i : Fin 3) (ω : Path2) (q : ℚ) :
+    thirdIncr i ω (0, q) =
+      (ω (projIcc (thirdL i) (thirdR i) (thirdL_le_thirdR i) q)).1 - (ω (thirdL i)).1 := by
+  simp [thirdIncr, coneIncr, lrCoord]
+
+theorem thirdIncr_snd (i : Fin 3) (ω : Path2) (q : ℚ) :
+    thirdIncr i ω (1, q) =
+      (ω (projIcc (thirdL i) (thirdR i) (thirdL_le_thirdR i) q)).2 - (ω (thirdL i)).2 := by
+  simp [thirdIncr, coneIncr, lrCoord]
+
+theorem thirdIncr_end_fst (i : Fin 3) (ω : Path2) :
+    thirdIncr i ω (0, 1) = (ω (thirdR i)).1 - (ω (thirdL i)).1 := by
+  rw [thirdIncr_fst, Rat.cast_one, projIcc_of_right_le _ (thirdR_le_one i)]
+
+theorem thirdIncr_end_snd (i : Fin 3) (ω : Path2) :
+    thirdIncr i ω (1, 1) = (ω (thirdR i)).2 - (ω (thirdL i)).2 := by
+  rw [thirdIncr_snd, Rat.cast_one, projIcc_of_right_le _ (thirdR_le_one i)]
+
+/-- **Independence of the thirds**: the increments of the pair on the three thirds of `[0, 1]` are
+independent (independent increments of the correlated pair, `iIndepFun_increment_windows`). -/
+theorem iIndepFun_thirdIncr {γ : ℝ} {μ : Measure Path2} (hμ : IsCorrelatedBM2 γ μ) :
+    iIndepFun thirdIncr μ := by
+  have hsep : ∀ i j : Fin 3, i ≠ j → thirdR i ≤ thirdL j ∨ thirdR j ≤ thirdL i := by
+    intro i j hij
+    fin_cases i <;> fin_cases j <;> first | exact absurd rfl hij | norm_num [thirdL, thirdR]
+  exact (iIndepFun_increment_windows hμ thirdL thirdR hsep).comp
+    (fun i f (p : Fin 2 × ℚ) => f (p.1, projIcc (thirdL i) (thirdR i) (thirdL_le_thirdR i) p.2))
+    (fun i => Measurable.of_eval fun p => measurable_pi_apply _)
+
+/-- A closed condition on a continuous function of time that holds at the rational times, clamped to
+`[a, b]`, holds on `[a, b]`. -/
+theorem forall_Icc_of_forall_rat {a b : ℝ} (hab : a ≤ b) {g : ℝ → ℝ} (hg : Continuous g)
+    {C : Set ℝ} (hC : IsClosed C) (h : ∀ q : ℚ, g (projIcc a b hab q) ∈ C) :
+    ∀ s ∈ Icc a b, g s ∈ C := by
+  have hF : Continuous fun x : ℝ => g (projIcc a b hab x) :=
+    hg.comp (continuous_subtype_val.comp continuous_projIcc)
+  have hsub : range ((↑) : ℚ → ℝ) ⊆ (fun x : ℝ => g (projIcc a b hab x)) ⁻¹' C := by
+    rintro _ ⟨q, rfl⟩
+    exact h q
+  have hall := closure_minimal hsub (hC.preimage hF)
+  rw [(Rat.denseRange_cast (𝕜 := ℝ)).closure_range] at hall
+  intro s hs
+  have hs' : g (projIcc a b hab s) ∈ C := hall (mem_univ s)
+  rw [projIcc_of_mem hab hs] at hs'
+  exact hs'
+
+/-- The event of the first third at the rational times, for the increments from time `0`. -/
+def firstThirdSet (Δ : ℝ) : Set (Fin 2 × ℚ → ℝ) :=
+  {f | (∀ q : ℚ, -Δ ≤ f (1, q) ∧ |f (0, q)| ≤ 5) ∧ 1 ≤ f (1, 1)}
+
+/-- The event of the middle third at the rational times, for the increments from time `1/3`. -/
+def middleThirdSet : Set (Fin 2 × ℚ → ℝ) :=
+  {f | (∀ q : ℚ, -(1 / 4) ≤ f (1, q) ∧
+      |f (0, q) + 90 * ((projIcc (thirdL 1) (thirdR 1) (thirdL_le_thirdR 1) q : ℝ) - thirdL 1)| ≤
+        1 / 2) ∧ 20 - 1 / 4 ≤ f (1, 1)}
+
+/-- The event of the last third at the rational times, for the increments from time `2/3`. -/
+def lastThirdSet (δ : ℝ) : Set (Fin 2 × ℚ → ℝ) :=
+  {f | (∀ q : ℚ, -δ ≤ f (0, q) - f (0, 1) ∧ |f (1, q) - f (1, 1)| ≤ 5) ∧ 1 ≤ -f (0, 1)}
+
+/-- The events of the three thirds at the rational times. -/
+def thirdSets (Δ δ : ℝ) : Fin 3 → Set (Fin 2 × ℚ → ℝ) :=
+  ![firstThirdSet Δ, middleThirdSet, lastThirdSet δ]
+
+theorem measurableSet_firstThirdSet (Δ : ℝ) : MeasurableSet (firstThirdSet Δ) := by
+  simp only [firstThirdSet, ofPred_and, ofPred_forall]
+  exact (MeasurableSet.iInter fun q =>
+    (measurableSet_le measurable_const (measurable_pi_apply _)).inter
+      (measurableSet_le (continuous_abs.measurable.comp (measurable_pi_apply _))
+        measurable_const)).inter (measurableSet_le measurable_const (measurable_pi_apply _))
+
+theorem measurableSet_middleThirdSet : MeasurableSet middleThirdSet := by
+  simp only [middleThirdSet, ofPred_and, ofPred_forall]
+  exact (MeasurableSet.iInter fun q =>
+    (measurableSet_le measurable_const (measurable_pi_apply _)).inter
+      (measurableSet_le (continuous_abs.measurable.comp ((measurable_pi_apply _).add_const _))
+        measurable_const)).inter (measurableSet_le measurable_const (measurable_pi_apply _))
+
+theorem measurableSet_lastThirdSet (δ : ℝ) : MeasurableSet (lastThirdSet δ) := by
+  have hm : ∀ p : Fin 2 × ℚ, Measurable fun f : Fin 2 × ℚ → ℝ => f p := fun p =>
+    measurable_pi_apply p
+  simp only [lastThirdSet, ofPred_and, ofPred_forall]
+  refine MeasurableSet.inter (MeasurableSet.iInter fun q => MeasurableSet.inter ?_ ?_) ?_
+  · exact measurableSet_le measurable_const ((hm (0, q)).sub (hm (0, 1)))
+  · exact measurableSet_le (continuous_abs.measurable.comp ((hm (1, q)).sub (hm (1, 1))))
+      measurable_const
+  · exact measurableSet_le measurable_const (hm (0, 1)).neg
+
+theorem firstThird_subset (Δ : ℝ) :
+    {ω : Path2 | (∀ s ∈ Icc (0 : ℝ) (1 / 3), -Δ ≤ (ω s).2 - (ω 0).2) ∧
+        1 ≤ (ω (1 / 3)).2 - (ω 0).2 ∧ ∀ s ∈ Icc (0 : ℝ) (1 / 3), |(ω s).1 - (ω 0).1| ≤ 5} ⊆
+      thirdIncr 0 ⁻¹' firstThirdSet Δ := by
+  intro ω hω
+  show (∀ q : ℚ, -Δ ≤ thirdIncr 0 ω (1, q) ∧ |thirdIncr 0 ω (0, q)| ≤ 5) ∧
+    1 ≤ thirdIncr 0 ω (1, 1)
+  refine ⟨fun q => ⟨?_, ?_⟩, ?_⟩
+  · rw [thirdIncr_snd]
+    exact hω.1 _ (projIcc (thirdL 0) (thirdR 0) (thirdL_le_thirdR 0) q).2
+  · rw [thirdIncr_fst]
+    exact hω.2.2 _ (projIcc (thirdL 0) (thirdR 0) (thirdL_le_thirdR 0) q).2
+  · rw [thirdIncr_end_snd]
+    exact hω.2.1
+
+theorem middleThird_subset :
+    {ω : Path2 | (∀ s ∈ Icc (1 / 3 : ℝ) (2 / 3), -(1 / 4) ≤ (ω s).2 - (ω (1 / 3)).2) ∧
+        20 - 1 / 4 ≤ (ω (2 / 3)).2 - (ω (1 / 3)).2 ∧
+        ∀ s ∈ Icc (1 / 3 : ℝ) (2 / 3), |((ω s).1 - (ω (1 / 3)).1) + 90 * (s - 1 / 3)| ≤ 1 / 2} ⊆
+      thirdIncr 1 ⁻¹' middleThirdSet := by
+  intro ω hω
+  show (∀ q : ℚ, -(1 / 4) ≤ thirdIncr 1 ω (1, q) ∧
+      |thirdIncr 1 ω (0, q) +
+        90 * ((projIcc (thirdL 1) (thirdR 1) (thirdL_le_thirdR 1) q : ℝ) - thirdL 1)| ≤ 1 / 2) ∧
+    20 - 1 / 4 ≤ thirdIncr 1 ω (1, 1)
+  refine ⟨fun q => ⟨?_, ?_⟩, ?_⟩
+  · rw [thirdIncr_snd]
+    exact hω.1 _ (projIcc (thirdL 1) (thirdR 1) (thirdL_le_thirdR 1) q).2
+  · rw [thirdIncr_fst]
+    exact hω.2.2 _ (projIcc (thirdL 1) (thirdR 1) (thirdL_le_thirdR 1) q).2
+  · rw [thirdIncr_end_snd]
+    exact hω.2.1
+
+theorem lastThird_subset (δ : ℝ) :
+    {ω : Path2 | (∀ s ∈ Icc (2 / 3 : ℝ) 1, -δ ≤ (ω s).1 - (ω 1).1) ∧
+        1 ≤ (ω (2 / 3)).1 - (ω 1).1 ∧ ∀ s ∈ Icc (2 / 3 : ℝ) 1, |(ω s).2 - (ω 1).2| ≤ 5} ⊆
+      thirdIncr 2 ⁻¹' lastThirdSet δ := by
+  intro ω hω
+  show (∀ q : ℚ, -δ ≤ thirdIncr 2 ω (0, q) - thirdIncr 2 ω (0, 1) ∧
+      |thirdIncr 2 ω (1, q) - thirdIncr 2 ω (1, 1)| ≤ 5) ∧ 1 ≤ -thirdIncr 2 ω (0, 1)
+  refine ⟨fun q => ⟨?_, ?_⟩, ?_⟩
+  · rw [thirdIncr_end_fst, thirdIncr_fst, sub_sub_sub_cancel_right]
+    exact hω.1 _ (projIcc (thirdL 2) (thirdR 2) (thirdL_le_thirdR 2) q).2
+  · rw [thirdIncr_end_snd, thirdIncr_snd, sub_sub_sub_cancel_right]
+    exact hω.2.2 _ (projIcc (thirdL 2) (thirdR 2) (thirdL_le_thirdR 2) q).2
+  · rw [thirdIncr_end_fst, neg_sub]
+    exact hω.2.1
+
+/-- The events of the three thirds, read at the rational times, together give the four conditions
+of `G(Δ, δ)` (continuity of the paths and `lemmaTwo_deterministic`). -/
+theorem inter_thirds_subset {Δ δ : ℝ} (hΔ : 0 < Δ) (hδ : 0 < δ) :
+    (⋂ i ∈ (Finset.univ : Finset (Fin 3)), thirdIncr i ⁻¹' thirdSets Δ δ i) ⊆
+      {p : Path2 | (∀ s ∈ Icc (0 : ℝ) 1, -Δ ≤ (p s).2 - (p 0).2) ∧ 1 ≤ (p 1).2 - (p 0).2 ∧
+        (∀ s ∈ Icc (0 : ℝ) 1, (p 1).1 - δ ≤ (p s).1) ∧ (p 1).1 - (p 0).1 ≤ -1} := by
+  intro ω hω
+  have h0 : thirdIncr 0 ω ∈ firstThirdSet Δ := mem_iInter₂.1 hω 0 (Finset.mem_univ _)
+  have h1 : thirdIncr 1 ω ∈ middleThirdSet := mem_iInter₂.1 hω 1 (Finset.mem_univ _)
+  have h2 : thirdIncr 2 ω ∈ lastThirdSet δ := mem_iInter₂.1 hω 2 (Finset.mem_univ _)
+  have hc1 : Continuous fun s => (ω s).1 := continuous_fst.comp ω.continuous
+  have hc2 : Continuous fun s => (ω s).2 := continuous_snd.comp ω.continuous
+  have hR1 : ∀ s ∈ Icc (0 : ℝ) (1 / 3), -Δ ≤ (ω s).2 - (ω 0).2 :=
+    forall_Icc_of_forall_rat (thirdL_le_thirdR 0) (g := fun s => (ω s).2 - (ω (thirdL 0)).2)
+      (hc2.sub continuous_const) (C := Ici (-Δ)) isClosed_Ici fun q => by
+        have h := (h0.1 q).1
+        rw [thirdIncr_snd] at h
+        exact h
+  have hL1 : ∀ s ∈ Icc (0 : ℝ) (1 / 3), |(ω s).1 - (ω 0).1| ≤ 5 :=
+    forall_Icc_of_forall_rat (thirdL_le_thirdR 0) (g := fun s => |(ω s).1 - (ω (thirdL 0)).1|)
+      (continuous_abs.comp (hc1.sub continuous_const)) (C := Iic 5) isClosed_Iic fun q => by
+        have h := (h0.1 q).2
+        rw [thirdIncr_fst] at h
+        exact h
+  have hR1e : 1 ≤ (ω (1 / 3)).2 - (ω 0).2 := by
+    have h := h0.2
+    rw [thirdIncr_end_snd] at h
+    exact h
+  have hRm : ∀ s ∈ Icc (1 / 3 : ℝ) (2 / 3), -(1 / 4) ≤ (ω s).2 - (ω (1 / 3)).2 :=
+    forall_Icc_of_forall_rat (thirdL_le_thirdR 1) (g := fun s => (ω s).2 - (ω (thirdL 1)).2)
+      (hc2.sub continuous_const) (C := Ici (-(1 / 4))) isClosed_Ici fun q => by
+        have h := (h1.1 q).1
+        rw [thirdIncr_snd] at h
+        exact h
+  have hRme : 20 - 1 / 4 ≤ (ω (2 / 3)).2 - (ω (1 / 3)).2 := by
+    have h := h1.2
+    rw [thirdIncr_end_snd] at h
+    exact h
+  have hLm : ∀ s ∈ Icc (1 / 3 : ℝ) (2 / 3),
+      |((ω s).1 - (ω (1 / 3)).1) + 90 * (s - 1 / 3)| ≤ 1 / 2 :=
+    forall_Icc_of_forall_rat (thirdL_le_thirdR 1)
+      (g := fun s => |((ω s).1 - (ω (thirdL 1)).1) + 90 * (s - thirdL 1)|)
+      (continuous_abs.comp ((hc1.sub continuous_const).add
+        (continuous_const.mul (continuous_id.sub continuous_const))))
+      (C := Iic (1 / 2)) isClosed_Iic fun q => by
+        have h := (h1.1 q).2
+        rw [thirdIncr_fst] at h
+        exact h
+  have hL3 : ∀ s ∈ Icc (2 / 3 : ℝ) 1, -δ ≤ (ω s).1 - (ω 1).1 :=
+    forall_Icc_of_forall_rat (thirdL_le_thirdR 2) (g := fun s => (ω s).1 - (ω (thirdR 2)).1)
+      (hc1.sub continuous_const) (C := Ici (-δ)) isClosed_Ici fun q => by
+        have h := (h2.1 q).1
+        rw [thirdIncr_end_fst, thirdIncr_fst, sub_sub_sub_cancel_right] at h
+        exact h
+  have hR3 : ∀ s ∈ Icc (2 / 3 : ℝ) 1, |(ω s).2 - (ω 1).2| ≤ 5 :=
+    forall_Icc_of_forall_rat (thirdL_le_thirdR 2) (g := fun s => |(ω s).2 - (ω (thirdR 2)).2|)
+      (continuous_abs.comp (hc2.sub continuous_const)) (C := Iic 5) isClosed_Iic fun q => by
+        have h := (h2.1 q).2
+        rw [thirdIncr_end_snd, thirdIncr_snd, sub_sub_sub_cancel_right] at h
+        exact h
+  have hL3e : 1 ≤ (ω (2 / 3)).1 - (ω 1).1 := by
+    have h := h2.2
+    rw [thirdIncr_end_fst, neg_sub] at h
+    exact h
+  exact lemmaTwo_deterministic (L := fun t => (ω t).1) (R := fun t => (ω t).2) hΔ hδ hR1 hL1 hR1e
+    hRm hRme hLm hL3 hR3 hL3e
+
+/-! ### Shimura's Lemma 2 -/
+
+/-- **Shimura's Lemma 2 for one law of the pair** (answer §1): the product of the bounds on the three
+independent thirds gives `G(Δ, δ) ≥ c Δ δ` for `0 < Δ, δ ≤ 1`. -/
+theorem lemmaTwo_of_law (hK : KilledBarrierPositive) (hT : PlanarTubePositive) {γ : ℝ}
+    (hγ0 : 0 < γ) (hγ2 : γ < 2) {μ : Measure Path2} (hμ : IsCorrelatedBM2 γ μ) :
+    ∃ c : ℝ, 0 < c ∧ ∀ Δ δ : ℝ, 0 < Δ → Δ ≤ 1 → 0 < δ → δ ≤ 1 →
+      ENNReal.ofReal (c * Δ * δ) ≤
+        μ {p | (∀ s ∈ Icc (0 : ℝ) 1, -Δ ≤ (p s).2 - (p 0).2) ∧ 1 ≤ (p 1).2 - (p 0).2 ∧
+          (∀ s ∈ Icc (0 : ℝ) 1, (p 1).1 - δ ≤ (p s).1) ∧ (p 1).1 - (p 0).1 ≤ -1} := by
+  have : IsProbabilityMeasure μ := hμ.isProbabilityMeasure
+  obtain ⟨c₁, hc₁, h₁⟩ := firstThird_event hK hγ0 hγ2 hμ
+  obtain ⟨c₃, hc₃, h₃⟩ := lastThird_event hK hγ0 hγ2 hμ
+  have h₂ := middleThird_event hT hγ0 hγ2 hμ
+  set m := μ {ω : Path2 | (∀ s ∈ Icc (1 / 3 : ℝ) (2 / 3), -(1 / 4) ≤ (ω s).2 - (ω (1 / 3)).2) ∧
+      20 - 1 / 4 ≤ (ω (2 / 3)).2 - (ω (1 / 3)).2 ∧
+      ∀ s ∈ Icc (1 / 3 : ℝ) (2 / 3), |((ω s).1 - (ω (1 / 3)).1) + 90 * (s - 1 / 3)| ≤ 1 / 2}
+    with hm
+  have hm0 : 0 < m.toReal := ENNReal.toReal_pos h₂.ne' (measure_ne_top μ _)
+  refine ⟨c₁ * c₃ * m.toReal, mul_pos (mul_pos hc₁ hc₃) hm0, fun Δ δ hΔ hΔ1 hδ hδ1 => ?_⟩
+  have hind := (iIndepFun_thirdIncr hμ).measure_inter_preimage_eq_mul Finset.univ
+    (sets := thirdSets Δ δ) fun i _ => by
+      fin_cases i
+      exacts [measurableSet_firstThirdSet Δ, measurableSet_middleThirdSet,
+        measurableSet_lastThirdSet δ]
+  rw [Fin.prod_univ_three] at hind
+  have e : c₁ * c₃ * m.toReal * Δ * δ = c₁ * Δ * m.toReal * (c₃ * δ) := by ring
+  rw [e, ENNReal.ofReal_mul (mul_nonneg (mul_nonneg hc₁.le hΔ.le) ENNReal.toReal_nonneg),
+    ENNReal.ofReal_mul (mul_nonneg hc₁.le hΔ.le), ENNReal.ofReal_toReal (measure_ne_top μ _)]
+  calc ENNReal.ofReal (c₁ * Δ) * m * ENNReal.ofReal (c₃ * δ)
+      ≤ μ (thirdIncr 0 ⁻¹' thirdSets Δ δ 0) * μ (thirdIncr 1 ⁻¹' thirdSets Δ δ 1) *
+          μ (thirdIncr 2 ⁻¹' thirdSets Δ δ 2) :=
+        mul_le_mul' (mul_le_mul' ((h₁ Δ hΔ hΔ1).trans (measure_mono (firstThird_subset Δ)))
+          (measure_mono middleThird_subset))
+          ((h₃ δ hδ hδ1).trans (measure_mono (lastThird_subset δ)))
+    _ = μ (⋂ i ∈ (Finset.univ : Finset (Fin 3)), thirdIncr i ⁻¹' thirdSets Δ δ i) := hind.symm
+    _ ≤ _ := measure_mono (inter_thirds_subset hΔ hδ)
+
+/-- **Shimura's Lemma 2 for every angle** (M. Shimura, Kodai Math. J. 11 (1988), Lemma 2, (3.5),
+p. 172; written answer §1, which covers also the obtuse angles `π/2 < θ ≤ π` omitted in print): for
+`0 < γ < 2`, from the killed kernel bound and tube positivity, `G(Δ, δ) ≥ c Δ δ` with one constant for
+every law of the pair, since that law is unique (`isCorrelatedBM2_unique_holds`). -/
+theorem shimuraLemmaTwo_of_barriers {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
+    (hK : KilledBarrierPositive) (hT : PlanarTubePositive) : ShimuraLemmaTwo γ := by
+  unfold ShimuraLemmaTwo
+  by_cases hex : ∃ μ : Measure Path2, IsCorrelatedBM2 γ μ
+  · obtain ⟨μ₀, hμ₀⟩ := hex
+    obtain ⟨c, hc, h⟩ := lemmaTwo_of_law hK hT hγ0 hγ2 hμ₀
+    refine ⟨c, hc, fun μ hμ Δ δ hΔ hΔ1 hδ hδ1 => ?_⟩
+    rw [MatedCRTHarmonic.isCorrelatedBM2_unique_holds γ μ μ₀ hμ hμ₀]
+    exact h Δ δ hΔ hΔ1 hδ hδ1
+  · exact ⟨1, one_pos, fun μ hμ => absurd ⟨μ, hμ⟩ hex⟩
 
 end MatedCRT.PeanosphereTriplePoints
