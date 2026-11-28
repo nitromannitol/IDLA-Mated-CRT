@@ -22,6 +22,11 @@ split into thirds.
 * Middle third: the increments follow the straight path along which `R` gains `20` and `L` loses `30`,
   within a tube; positive probability (`middleThird_event`, by tube positivity for the Gram–Schmidt
   coordinates `isCorrelatedBM2_map_gramSchmidtAt`).
+
+The constants depart from answer §1: there the middle path is `w = 20 (v - u)/(1 - u · v)`, along which `L`
+loses `20`, and the end pieces keep the perpendicular projection in `[-1, 1]` and stay within distance `4` of
+their origin; here the end pieces keep the second coordinate in `[-1, 2]` and the other coordinate moves by at
+most `5`, so the middle path lets `L` lose `30`.
 * The increments on the three thirds are independent (`iIndepFun_thirdIncr`), and the three events
   together imply the four conditions of `G(Δ, δ)` (`lemmaTwo_deterministic`); the product of the three
   bounds is `G(Δ, δ) ≥ c Δ δ` (`lemmaTwo_of_law`). The law of the pair is unique, so the constant does
@@ -30,16 +35,17 @@ split into thirds.
 Auxiliary statements:
 
 * `indepFun_coneComb_future_swap`: the increments of `R` and the increments of the whitened coordinate
-  `(L - ρ R) / σ` after any base time are independent Brownian motions (the exchange of the roles of
-  `L` and `R` in `LatticeProb.CorrelatedBM.whitened_coneComb_brownian_independent`).
+  `(L - ρ R) / σ` after any base time are independent (the exchange of the roles of `L` and `R` in
+  `LatticeProb.CorrelatedBM.whitened_coneComb_brownian_independent`); each is a Brownian motion by
+  `isBrownianReal_coneComb`.
 * `windowSet`: the measurable set of paths whose values at the dyadic times up to `T` stay in an open
   interval; for continuous paths it lies in the closed version of the barrier event, and it contains
   the barrier event itself.
 * `measure_inter_ge_of_indep`: a product lower bound for the probability that two independent
   continuous processes satisfy their barrier events.
 * `barrierPair_lower_bound`: from `KilledBarrierPositive`, two independent Brownian motions with
-  continuous paths satisfy, one in a barrier window `(-e, H)` ending in `(y₁, y₂)` and the other in the
-  window `(-1, 2)`, with probability at least `c e`.
+  continuous paths satisfy, one in the barrier window `[-e, H]` ending in `[y₁, y₂]` and the other in the
+  window `[-1, 2]`, with probability at least `c e`.
 -/
 
 set_option autoImplicit false
@@ -106,7 +112,7 @@ theorem measure_inter_ge_of_indep {Ω : Type*} [MeasurableSpace Ω] {μ : Measur
 
 /-- **Two independent barrier events.**  For independent Brownian motions `X`, `Y` with continuous
 paths, `X` stays in `[-e, H]` up to `T` and ends in `[y₁, y₂]` while `Y` stays in `[-1, 2]`, with
-probability at least `c e` for `0 < e ≤ 1`. -/
+probability at least `c e` for `0 < e ≤ 1` (answer §1 keeps the perpendicular coordinate in `[-1, 1]`). -/
 theorem barrierPair_lower_bound (hK : KilledBarrierPositive) {Ω : Type} [MeasurableSpace Ω]
     {μ : Measure Ω} [IsProbabilityMeasure μ] {X Y : ℝ≥0 → Ω → ℝ} (hX : IsBrownianReal X μ)
     (hY : IsBrownianReal Y μ) (hXc : ∀ ω, Continuous fun t => X t ω)
@@ -196,7 +202,8 @@ private theorem whitened_norm {ρ σ : ℝ} (hσ : 0 < σ) (hσsq : σ * σ = 1 
   exact div_self (mul_pos hσ hσ).ne'
 
 /-- **The first third.**  For `R`-first Gram–Schmidt coordinates, with probability at least `c Δ` the
-coordinate `R` stays above `-Δ` on `[0, 1/3]` and ends above `1`, while `L` moves by at most `5`. -/
+coordinate `R` stays above `-Δ` on `[0, 1/3]` and ends above `1`, while `L` moves by at most `5` (answer §1:
+within distance `4`). -/
 theorem firstThird_event (hK : KilledBarrierPositive) {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     {μ : Measure Path2} (hμ : IsCorrelatedBM2 γ μ) :
     ∃ c : ℝ, 0 < c ∧ ∀ Δ : ℝ, 0 < Δ → Δ ≤ 1 →
@@ -271,7 +278,7 @@ theorem firstThird_event (hK : KilledBarrierPositive) {γ : ℝ} (hγ0 : 0 < γ)
 
 /-- **The last third**, read backwards from time `1` with `L` first.  With probability at least `c δ`
 the coordinate `L` stays above `L 1 - δ` on `[2/3, 1]` and `L (2/3) - L 1 ≥ 1`, while `R` moves by
-at most `5` from its value at `1`. -/
+at most `5` from its value at `1` (answer §1: within distance `4`). -/
 theorem lastThird_event (hK : KilledBarrierPositive) {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)
     {μ : Measure Path2} (hμ : IsCorrelatedBM2 γ μ) :
     ∃ c : ℝ, 0 < c ∧ ∀ δ : ℝ, 0 < δ → δ ≤ 1 →
@@ -356,7 +363,8 @@ theorem lastThird_event (hK : KilledBarrierPositive) {γ : ℝ} (hγ0 : 0 < γ) 
 /-! ### The middle third -/
 
 /-- The end point of the straight path of the middle third in the Gram–Schmidt coordinates
-`(R, (L - ρ R) / σ)`: along this path `R` gains `20` and `L` loses `30` (answer §1, the vector `w`). -/
+`(R, (L - ρ R) / σ)`: along this path `R` gains `20` and `L` loses `30` (the vector `w` of answer §1, along which
+`L` loses `20`, lengthened to absorb the end pieces of this proof, which move by at most `5`). -/
 noncomputable def middleDirection (γ : ℝ) : ℝ × ℝ :=
   (20, (-30 - 20 * lrCov γ 0 1) / Real.sqrt (1 - lrCov γ 0 1 ^ 2))
 

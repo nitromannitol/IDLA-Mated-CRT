@@ -14,17 +14,19 @@ For the `γ`-correlated Brownian pair `(L, R)` with `0 < γ < 2` (paths in `Path
 * `le_measure_survivalR`: after a deterministic time `c₀` the coordinate `R` stays above
   `R c₀ - x` on `[c₀, c₀ + T]` with probability at least `x / (16 √T)` when `x ^ 2 ≤ T`.  This is
   the survival bound of Lévy's reflection inequality (`LatticeProb.le_measure_forall_ge_neg`) for
-  the recentred coordinate `shiftedCoordinate 1 c₀`, which is a Brownian motion.
+  the recentred coordinate `shiftedCoordinate 1 c₀`, which is a Brownian motion.  It is used
+  unconditionally, in place of the conditional probability `q(U_l) ≥ c e` of answer §2, (3), step 3.
 * `exists_pos_le_measure_polygon`: there is a constant `c₂ > 0`, independent of the law, of the
   base time `a` and of the scale `e > 0`, such that on the cell `[a, a + e ^ 2]` the pair
-  `(L, R)` makes the four moves
-  `L` drops by `2 e`, `R` rises by `2 e` above its starting value, `R` stays above `R a - 4 e` and
-  ends above `R a - e` with probability at least `c₂`.
+  `(L, R)` makes the four moves with probability at least `c₂`: `L` drops by `2 e` below `L a`, some
+  point of the cell has `R` at least `2 e` below `R (a + e ^ 2)`, `R` stays above `R a - 4 e`, and
+  `R (a + e ^ 2) ≥ R a - e`.
 
 For the second statement, the whitening `whitenAt γ 0` turns `(L, R)` into the uncorrelated pair
 (`isCorrelatedBM2_map_whitenAt`), and `PlanarTubePositive` says that the whitened pair follows a
 straight path within a tube with positive probability.  The straight path is chosen so that `L`
-decreases by `3` and `R` increases by `3`.  The tube event is contained in a measurable event
+decreases by `3` and `R` increases by `3`.  One straight tube replaces the polygon `0, -3u, -3v, 0` of
+answer §2, (3), step 2.  The tube event is contained in a measurable event
 defined through rational times, and, after recentring and Brownian scaling
 (`isCorrelatedBM2_map_recenterPath`, `isCorrelatedBM2_map_unitRescalePath`), its probability does
 not depend on `a`, `e` or on the law, since the law of the correlated pair is unique
@@ -76,7 +78,7 @@ theorem le_measure_survivalR {γ : ℝ} {μ : Measure Path2} (hμ : IsCorrelated
   show (ω c0).2 - x ≤ (ω u).2
   linarith
 
-/-! ### The cell polygon -/
+/-! ### The four moves on a cell -/
 
 /-- The normalising constant `√(2 (1 + ρ))` of the sum coordinate in `whitenAt`. -/
 private noncomputable def sigU (γ : ℝ) : ℝ := Real.sqrt (2 * (1 + lrCov γ 0 1))
@@ -215,7 +217,7 @@ private lemma measurable_cellMap (a e : ℝ) : Measurable (cellMap a e) :=
 private lemma mul_inv_mul_aux {e X : ℝ} (he : 0 < e) : e * (e⁻¹ * X) = X := by
   field_simp
 
-/-- The four moves of the polygon follow from the tube bounds on the rescaled cell path. -/
+/-- The four moves on the cell follow from the tube bounds on the rescaled cell path. -/
 private lemma polygon_of_bounds {a e : ℝ} (he : 0 < e) (p : Path2)
     (hb : ∀ t ∈ Icc (0 : ℝ) 1,
       |(cellMap a e p t).1 + 3 * t| ≤ 1 / 4 ∧ |(cellMap a e p t).2 - 3 * t| ≤ 1 / 4) :
@@ -259,10 +261,10 @@ private lemma polygon_of_bounds {a e : ℝ} (he : 0 < e) (p : Path2)
   rw [mul_inv_mul_aux he] at hge
   linarith
 
-/-- **The cell polygon.**  For `0 < γ < 2` there is a constant `c₂ > 0` such that for every law
-`μ` of the `γ`-correlated pair, every `a` and every `e > 0`, with probability at least `c₂` on
-the cell `[a, a + e ^ 2]`: `L` drops by `2 e` below `L a`, `R` at time `a` is at least `2 e` below
-`R (a + e ^ 2)`, `R` stays above `R a - 4 e`, and `R (a + e ^ 2) ≥ R a - e`.  The proof uses
+/-- **The four moves on a cell.**  For `0 < γ < 2` there is a constant `c₂ > 0` such that for every
+law `μ` of the `γ`-correlated pair, every `a` and every `e > 0`, with probability at least `c₂` on
+the cell `[a, a + e ^ 2]`: `L` drops by `2 e` below `L a`, some point of the cell has `R` at least
+`2 e` below `R (a + e ^ 2)`, `R` stays above `R a - 4 e`, and `R (a + e ^ 2) ≥ R a - e`.  The proof uses
 `PlanarTubePositive` for the whitened pair and the straight path along which `L` decreases by `3`
 and `R` increases by `3`. -/
 theorem exists_pos_le_measure_polygon {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2)

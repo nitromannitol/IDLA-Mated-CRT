@@ -14,7 +14,7 @@ For the `γ`-correlated two-sided Brownian pair `(L, R)`, the mesh `1/n`, the ce
 `I_k = [(k - 1)/n, k/n]` and `U_k = R(k/n) - min_{I_k} R` (`cellDropR`), this file proves
 `OccupancyUpper γ`: `P(B_k) ≤ E[1_{C_k ∩ F} U_k] + P(Fᶜ)` (answer §2, (2); the constant is `K = 1`).
 
-* On the first occupied cell the right test at `k` (Lemma B, `mem_firstCellEvent_iff`) forces the
+* On the first occupied cell the right test at `k` (answer §2, `mem_firstCellEvent_iff`) forces the
   future `R(u) - R(k/n)`, `u ∈ [k/n, (k - 1)/n + 2]`, to stay above `-U_k`
   (`firstCellEvent_subset_pastFut`).
 * The past event `C_k`, the event `F` and the drop `U_k` depend only on the increments of `(L, R)`

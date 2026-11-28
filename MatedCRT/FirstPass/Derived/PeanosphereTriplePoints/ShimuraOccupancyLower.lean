@@ -11,12 +11,14 @@ For the `γ`-correlated two-sided Brownian pair `(L, R)`, this file proves `Occu
 
 Write `b = k/n`, `A = (k + j - 1)/n`, `Bl = (k + j)/n`, `e = n^{-1/2}`, `d = (j - 1)/n`. On a level set
 `{⌊U_k / h⌋ = m}` of the past event `C_k ∩ F`, the gap piece `G` of Lemma 2 on `[b, A]`
-(`ShimuraLemmaTwo`), the polygonal piece `P` on `[A, Bl]` and the survival piece `S` of `R` on
+(`ShimuraLemmaTwo`), the cell piece `P` on `[A, Bl]` and the survival piece `S` of `R` on
 `[Bl, Bl + 2 - 1/n]` imply the occupation of the cell `k + j` (`mem_firstCell_inter_cell_of_pieces`).
 These four events depend on the increments over the four windows `[b - 3, b]`, `[b, A]`, `[A, Bl]`,
 `[Bl, Bl + 2 - 1/n]` with disjoint interiors, hence are independent (`indep_windows`). Their
 probabilities are bounded below by `exists_le_measure_gap`, `exists_pos_le_measure_polygon` and
-`le_measure_survivalR`; summing over the levels and letting `h → 0` gives the bound.
+`le_measure_survivalR`; summing over the levels and letting `h → 0` gives the bound. Two departures from
+answer §2, (3): `P` comes from one straight tube in whitened coordinates in place of the polygon `0, -3u, -3v, 0`,
+and `S` is the unconditional survival of `R` in place of the conditional probability `q(U_l) ≥ c e`.
 -/
 
 set_option autoImplicit false
@@ -73,7 +75,7 @@ def gapSet (b A θ e s : ℝ) : Set Path2 :=
   {p | (∀ u ∈ Icc b A, (p b).2 - θ ≤ (p u).2) ∧ (p b).2 + s ≤ (p A).2 ∧
     (∀ u ∈ Icc b A, (p A).1 - e ≤ (p u).1) ∧ (p A).1 ≤ (p b).1 - s}
 
-/-- The polygonal piece on `[a, a']`. -/
+/-- The cell piece on `[a, a']`. -/
 def polySet (a a' e : ℝ) : Set Path2 :=
   {p | (∃ s ∈ Icc a a', (p s).1 ≤ (p a).1 - 2 * e) ∧
     (∃ s ∈ Icc a a', (p s).2 ≤ (p a').2 - 2 * e) ∧
@@ -260,7 +262,7 @@ theorem real_ineq {c c₂ θ e sd J T' : ℝ} (hc : 0 < c) (hc₂ : 0 < c₂) (h
 def gapEv (n k j : ℕ) (θ e : ℝ) : Set Path2 :=
   gapSet ((k : ℝ) / n) (((k : ℝ) + j - 1) / n) θ e (Real.sqrt (((j : ℝ) - 1) / n))
 
-/-- The polygonal piece on the cell `k + j`. -/
+/-- The cell piece on the cell `k + j`. -/
 def polyEv (n k j : ℕ) (e : ℝ) : Set Path2 :=
   polySet (((k : ℝ) + j - 1) / n) (((k : ℝ) + j) / n) e
 
@@ -590,8 +592,8 @@ theorem lower_core {γ : ℝ} {μ : Measure Path2} (hμ : IsCorrelatedBM2 γ μ)
   exact hmain
 
 /-- **The lower bound for the occupation of a later cell** (answer §2, (3)): `P(B_k ∩ A_{k+j}) ≥
-c/(j - 1) E[1_{C_k ∩ F} U_k]` for `1 + 6 log n < j`, from Shimura's Lemma 2 on the gap, a polygonal tube
-on the cell `k + j` and the survival of `R` after it. -/
+c/(j - 1) E[1_{C_k ∩ F} U_k]` for `1 + 6 log n < j`, from Shimura's Lemma 2 on the gap, a straight tube in
+whitened coordinates on the cell `k + j` and the survival of `R` after it. -/
 theorem occupancyLower_holds {γ : ℝ} (hγ0 : 0 < γ) (hγ2 : γ < 2) (hL2 : ShimuraLemmaTwo γ)
     (hT : PlanarTubePositive) : OccupancyLower γ := by
   obtain ⟨c, hc, hgap⟩ := exists_le_measure_gap hL2

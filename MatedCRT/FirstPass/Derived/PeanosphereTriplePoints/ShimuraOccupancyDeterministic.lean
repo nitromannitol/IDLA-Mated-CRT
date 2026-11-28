@@ -13,13 +13,13 @@ events for a correlated Brownian pair:
 * a level `θ ≤ cellDropR n k p` and a gap piece on `[b, A]`: the second coordinate stays above its value at
   `b` minus `θ` and ends above it plus `sd`, while the first coordinate stays above its value at `A` minus
   `e` and ends below its value at `b` minus `sd`;
-* a polygonal piece on the cell `l = [A, Bl]`: the first coordinate drops by `2 e` below its value at `A`,
+* a piece on the cell `l = [A, Bl]`: the first coordinate drops by `2 e` below its value at `A`,
   the second drops by `2 e` below its value at `Bl`, stays above its value at `A` minus `4 e`, and
   `R Bl ≥ R A - e`;
 * a final piece: the second coordinate stays above `R Bl - 2 e` on `[Bl, Bl + 2 - 1/n]`.
 
-The proof combines Lemma B (`mem_firstCellEvent_iff`) for the right test at `k` and the left and right
-tests at `k + j` directly.  It uses no measure.
+The proof combines the description of the first occupied cell (answer §2, `mem_firstCellEvent_iff`) for the
+right test at `k` and the left and right tests at `k + j` directly.  It uses no measure.
 -/
 
 set_option autoImplicit false
@@ -30,7 +30,7 @@ open MatedCRTHarmonic.MatedCRT (Path2)
 namespace MatedCRT.PeanosphereTriplePoints
 
 /-- **Occupation of the cell `k + j` from deterministic pieces.** A path in the past event and the tameness
-event of the cell `k`, which has the gap, polygonal and final pieces described in the module documentation
+event of the cell `k`, which has the gap, cell and final pieces described in the module documentation
 at the level `θ ≤ cellDropR n k p`, lies in `firstCellEvent n k ∩ cellEvent n (k + j)`. -/
 theorem mem_firstCell_inter_cell_of_pieces {n k j : ℕ} (hn : 1 ≤ n) (_hk : 1 ≤ k) (hkn : k ≤ n)
     (_hkj : k + j ≤ 2 * n) (_hj : 2 ≤ j) {p : Path2} {θ e : ℝ} (he : 0 < e)
